@@ -127,10 +127,12 @@
   PULSE
   @aref pulse Pulse
 */
+
 #define pulse_exec(obj,in)						\
+  timer2_scan( tp, obj);						\
   if ( in && !obj->StatusOld )						\
   {									\
-    timer_in( tp, obj );						\
+    timer2_in( tp, obj );						\
     obj->Status = true;							\
   }									\
   else									\
@@ -142,9 +144,10 @@
   @aref wait Wait
 */
 #define wait_exec(obj,in)						\
+  timer2_scan( tp, obj);						\
   if ( in && !obj->StatusOld )						\
   {									\
-    timer_in( tp, obj);							\
+    timer2_in( tp, obj);					       	\
   }									\
   obj->StatusOld = in;							\
   obj->Status = in && !obj->TimerFlag;
@@ -154,9 +157,10 @@
   @aref timer Timer
 */
 #define timer_exec(obj,in)						\
+  timer2_scan( tp, obj);						\
   if ( !in && obj->StatusOld )						\
   {									\
-    timer_in( tp, obj);							\
+    timer2_in( tp, obj);					       	\
   }									\
   obj->StatusOld = in;							\
   obj->Status = in || obj->TimerFlag;
@@ -166,11 +170,12 @@
   @aref waith Waith
 */
 #define waith_exec(obj,in,hold)						\
+  timer2_scan( tp, obj);						\
   if ( in )								\
   {									\
     if ( !obj->StatusOld )						\
     {									\
-      timer_in( tp, obj);						\
+      timer2_in( tp, obj);						\
       obj->CountOld = obj->TimerCount;					\
     }									\
     if ( hold ) 							\

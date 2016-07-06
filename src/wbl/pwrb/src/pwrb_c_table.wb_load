@@ -110,6 +110,7 @@ SObject pwrb:Class
         Body SysBody
           Attr PgmName = "TabVect"
           Attr Flags |= PWR_MASK_ARRAY
+          Attr Flags |= PWR_MASK_REDUTRANSFER
 	  Attr Elements = 101
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "TAB"

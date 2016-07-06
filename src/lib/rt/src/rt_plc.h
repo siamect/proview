@@ -73,6 +73,10 @@
 # include "rt_qcom.h"
 #endif
 
+#ifndef rt_redu_h
+# include "rt_redu.h"
+#endif
+
 
 
 static const unsigned int pwr_cInputOffset = pwr_AlignLW(sizeof(void*)) + pwr_AlignLW(sizeof(pwr_tBoolean));
@@ -188,6 +192,7 @@ struct plc_sThread {
   unsigned int		sim_idx;
   unsigned int		sim_halted;
   unsigned int		sim_singlestep;
+  redu_tCtx 		redu;
 };
 
 struct plc_sProcess {

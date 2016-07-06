@@ -148,11 +148,11 @@ static int check_format( char *format, int type)
 
   switch ( type) {
   case pwr_eType_Float32:
-    if ( *s == 'f' || *s == 'F' || *s == 'g' || *s == 'G')
+    if ( *s == 'f' || *s == 'F' || *s == 'g' || *s == 'G' || *s == 'e' || *s == 'E')
       return 1;
     break;
   case pwr_eType_Float64:
-    if ( *s == 'f' || *s == 'F' || *s == 'g' || *s == 'G' ||
+    if ( *s == 'f' || *s == 'F' || *s == 'g' || *s == 'G' || *s == 'e' || *s == 'E' ||
 	 (*s == 'l' && ( *(s+1) == 'f' || *(s+1) == 'F' || *(s+1) == 'g' || *(s+1) == 'G')))
       return 1;
     break;

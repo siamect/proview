@@ -66,6 +66,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr Flags |= PWR_MASK_PUBLICWRITE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
     EndObject

@@ -69,6 +69,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "In"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -79,6 +80,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Idx"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -88,6 +90,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out0"
         EndBody
@@ -99,6 +102,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out1"
         EndBody
@@ -110,6 +114,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out2"
         EndBody
@@ -121,6 +126,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out3"
         EndBody
@@ -132,6 +138,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out4"
         EndBody
@@ -143,6 +150,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out5"
         EndBody
@@ -154,6 +162,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out6"
         EndBody
@@ -165,6 +174,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out7"
         EndBody
@@ -176,6 +186,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out8"
         EndBody
@@ -187,6 +198,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out9"
         EndBody
@@ -198,6 +210,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out10"
         EndBody
@@ -209,6 +222,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out11"
         EndBody
@@ -220,6 +234,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out12"
         EndBody
@@ -231,6 +246,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out13"
         EndBody
@@ -242,6 +258,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out14"
         EndBody
@@ -253,6 +270,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out15"
         EndBody
@@ -264,6 +282,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out16"
         EndBody
@@ -275,6 +294,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out17"
         EndBody
@@ -286,6 +306,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out18"
         EndBody
@@ -297,6 +318,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out19"
         EndBody
@@ -308,6 +330,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out20"
         EndBody
@@ -319,6 +342,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out21"
         EndBody
@@ -330,6 +354,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out22"
         EndBody
@@ -341,6 +366,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out23"
         EndBody

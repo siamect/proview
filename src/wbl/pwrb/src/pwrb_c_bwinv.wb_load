@@ -61,6 +61,7 @@ SObject pwrb:Class
       Object In $Input 1 
         Body SysBody
 	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "In"
         EndBody
@@ -72,6 +73,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Out"
         EndBody

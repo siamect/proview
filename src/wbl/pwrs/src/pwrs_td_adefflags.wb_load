@@ -81,10 +81,10 @@ SObject pwrs:Type
     !/**
     !  Not yet implemented.
     !*/
-    Object Backup $Bit
+    Object ReduTransfer $Bit
      Body SysBody
-       Attr PgmName = "backup"
-       Attr Text = "Backup"
+       Attr PgmName = "redutransfer"
+       Attr Text = "ReduTransfer"
        Attr Value = 4
      EndBody
     EndObject

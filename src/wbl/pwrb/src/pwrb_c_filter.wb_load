@@ -76,6 +76,7 @@ SObject pwrb:Class
       !*/
       Object In $Input 1 
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "IN"
         EndBody
@@ -90,6 +91,7 @@ SObject pwrb:Class
           Attr GraphName = "FB"
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -100,6 +102,7 @@ SObject pwrb:Class
           Attr PgmName = "ActVal"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "VAL"
         EndBody
@@ -124,6 +127,7 @@ SObject pwrb:Class
       !*/
       Object FiltCon $Intern 5 
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "FiltCon"
         EndBody

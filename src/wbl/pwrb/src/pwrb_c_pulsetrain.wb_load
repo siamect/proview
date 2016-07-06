@@ -71,6 +71,7 @@ SObject pwrb:Class
         Body SysBody
           Attr Flags |= PWR_MASK_NOEDIT
           Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr GraphName = "30s"
         EndBody
@@ -82,6 +83,7 @@ SObject pwrb:Class
         Body SysBody
           Attr Flags |= PWR_MASK_NOEDIT
           Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr GraphName = "10s"
         EndBody
@@ -93,6 +95,7 @@ SObject pwrb:Class
         Body SysBody
           Attr Flags |= PWR_MASK_NOEDIT
           Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr GraphName = "5s"
         EndBody
@@ -104,6 +107,7 @@ SObject pwrb:Class
         Body SysBody
           Attr Flags |= PWR_MASK_NOEDIT
           Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr GraphName = "2s"
         EndBody
@@ -115,6 +119,7 @@ SObject pwrb:Class
         Body SysBody
           Attr Flags |= PWR_MASK_NOEDIT
           Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr GraphName = "1s"
         EndBody
@@ -126,6 +131,7 @@ SObject pwrb:Class
         Body SysBody
           Attr Flags |= PWR_MASK_NOEDIT
           Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr GraphName = "500ms"
         EndBody
@@ -137,6 +143,7 @@ SObject pwrb:Class
         Body SysBody
           Attr Flags |= PWR_MASK_NOEDIT
           Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr GraphName = "200ms"
         EndBody
@@ -148,6 +155,7 @@ SObject pwrb:Class
         Body SysBody
           Attr Flags |= PWR_MASK_NOEDIT
           Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr GraphName = "100ms"
         EndBody
@@ -159,6 +167,7 @@ SObject pwrb:Class
         Body SysBody
           Attr Flags |= PWR_MASK_NOEDIT
           Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr GraphName = "50ms"
         EndBody
@@ -170,6 +179,7 @@ SObject pwrb:Class
         Body SysBody
           Attr Flags |= PWR_MASK_NOEDIT
           Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr GraphName = "20ms"
         EndBody
@@ -181,6 +191,7 @@ SObject pwrb:Class
         Body SysBody
           Attr Flags |= PWR_MASK_NOEDIT
           Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr GraphName = "10ms"
         EndBody
@@ -192,6 +203,7 @@ SObject pwrb:Class
         Body SysBody
           Attr Flags |= PWR_MASK_NOEDIT
           Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr GraphName = "5ms"
         EndBody
@@ -203,6 +215,7 @@ SObject pwrb:Class
         Body SysBody
           Attr Flags |= PWR_MASK_NOEDIT
           Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr GraphName = "2ms"
         EndBody
@@ -214,6 +227,7 @@ SObject pwrb:Class
         Body SysBody
           Attr Flags |= PWR_MASK_NOEDIT
           Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr GraphName = "1ms"
         EndBody

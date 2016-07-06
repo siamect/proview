@@ -93,6 +93,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "OUT"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -105,6 +106,7 @@ SObject pwrb:Class
           Attr PgmName = "Order"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "on"
         EndBody
@@ -157,6 +159,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "RunTime"
         EndBody

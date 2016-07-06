@@ -673,7 +673,7 @@ bck_file_process (
 	dcli_translate_filename( fname, backup_confp->BackupFile);
         bckfile = fopen(fname, "r+" A_MODE);
         if (bckfile != NULL) {
-          errh_Info("BACKUP opened existing backupfile %s\n",  FGETNAME);
+          errh_Info("BACKUP opened existing backupfile %s",  FGETNAME);
           csts = fread(&filehead, sizeof filehead, 1, bckfile);
 	  if (csts == 0) {
 	    perror("BACKUP cannot read header");

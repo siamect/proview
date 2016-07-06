@@ -65,6 +65,7 @@ SObject pwrb:Class
       Object Time $Output 2 
         Body SysBody
           Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject

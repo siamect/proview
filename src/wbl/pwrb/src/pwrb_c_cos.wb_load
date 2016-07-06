@@ -80,6 +80,7 @@ SObject pwrb:Class
       !*/
       Object FactorIn $Intern 2 
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
@@ -88,6 +89,7 @@ SObject pwrb:Class
       !*/
       Object FactorVal $Intern 3
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
@@ -98,6 +100,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Val"
         EndBody

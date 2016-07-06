@@ -94,6 +94,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr Flags |= PWR_MASK_POINTER
           Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
 	  Attr Size = 4
         EndBody
       EndObject
@@ -133,11 +134,13 @@ SObject pwrb:Class
       !*/
       Object PresMaxLimit $Attribute 7 
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
       Object PresMinLimit $Attribute 8 
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject

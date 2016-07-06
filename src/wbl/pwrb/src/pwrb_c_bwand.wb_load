@@ -60,6 +60,7 @@ SObject pwrb:Class
       Object In1 $Input 1 
         Body SysBody
 	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "In1"
         EndBody
@@ -70,6 +71,7 @@ SObject pwrb:Class
       Object In2 $Input 2 
         Body SysBody
 	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "In2"
         EndBody
@@ -81,6 +83,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Sts"
         EndBody

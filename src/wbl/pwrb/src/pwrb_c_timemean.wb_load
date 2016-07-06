@@ -65,6 +65,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "IN"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -77,6 +78,7 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
           Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -87,6 +89,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "VAL"
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -99,6 +102,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
@@ -109,6 +113,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "AccTime"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**

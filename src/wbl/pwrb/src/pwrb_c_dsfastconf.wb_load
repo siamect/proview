@@ -95,7 +95,6 @@ SObject pwrb:Class
       Object BaseFrequency $Attribute 1 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
-          Attr Flags |= PWR_MASK_BACKUP
         EndBody
       EndObject
     EndObject

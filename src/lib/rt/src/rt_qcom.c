@@ -723,8 +723,9 @@ qcom_Put (
     qp = qdb_Que(sts, qidp, &np);
     if (qp == NULL) break;
 
-    bp = inPool(sts, pp->data);
-    if (bp == NULL) {
+    if ( !pp->allocate)
+      bp = inPool(sts, pp->data);
+    if ( pp->allocate || bp == NULL) {
       bp = qdb_Alloc(sts, qdb_eBuffer_base, pp->size);
       if ( bp == NULL) {
 	*sts = QDB__QUOTAEXCEEDED;
@@ -741,6 +742,11 @@ qcom_Put (
       bp->c.flags.b.remote = 1;
       bp->b.noderef = pool_Reference(sts, &qdb->pool, np);
       bp->b.msg_id = pp->msg_id;
+      bp->b.prio = pp->prio;
+    }
+    else {
+      bp->b.msg_id = pp->msg_id;
+      bp->b.prio = pp->prio;
     }
 
     qdb_Put(sts, bp, qp);

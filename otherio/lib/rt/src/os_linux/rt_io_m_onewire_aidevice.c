@@ -68,7 +68,7 @@ static pwr_tStatus IoCardInit( io_tCtx ctx,
     local = (io_sLocalAiDevice *) calloc( 1, sizeof(io_sLocalAiDevice));
     cp->Local = local;
 
-    sprintf( name, "%d-%012x", op->Family, op->Super.Address);
+    sprintf( name, "%x-%012x", op->Family, op->Super.Address);
     name_len = strlen(name);
     strncpy( fname, op->DataFile, sizeof(fname));
     
@@ -81,7 +81,7 @@ static pwr_tStatus IoCardInit( io_tCtx ctx,
     }
     local->value_fp = fopen( fname, "r");
     if (!local->value_fp) {
-      errh_Error( "OneWire_AiDevice Unable op open %s, '%ux'", cp->Name, 
+      errh_Error( "OneWire_AiDevice Unable op open %s, '%x'", cp->Name, 
 		  op->Super.Address);
       sts = IO__INITFAIL;
       op->Status = sts;

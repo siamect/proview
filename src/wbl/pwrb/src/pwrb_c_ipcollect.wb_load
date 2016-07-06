@@ -99,144 +99,168 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Ip1"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object IpIn2 $Input 2
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Ip2"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object IpIn3 $Input 3
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Ip3"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object IpIn4 $Input 4
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Ip4"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object IpIn5 $Input 5
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Ip5"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object IpIn6 $Input 6
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Ip6"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object IpIn7 $Input 7
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Ip7"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object IpIn8 $Input 8
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Ip8"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object IpIn9 $Input 9
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Ip9"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object IpIn10 $Input 10
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Ip10"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object IpIn11 $Input 11
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Ip11"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object IpIn12 $Input 12
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Ip12"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object IpIn13 $Input 13
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Ip13"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object IpIn14 $Input 14
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Ip14"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object IpIn15 $Input 15
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Ip15"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object IpIn16 $Input 16
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Ip16"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object IpIn17 $Input 17
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Ip17"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object IpIn18 $Input 18
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Ip18"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object IpIn19 $Input 19
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Ip19"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object IpIn20 $Input 20
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Ip20"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object IpIn21 $Input 21
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Ip21"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object IpIn22 $Input 22
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Ip22"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object IpIn23 $Input 23
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Ip23"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object IpIn24 $Input 24
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Ip24"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -256,6 +280,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_ARRAY
+          Attr Flags |= PWR_MASK_REDUTRANSFER
 	  Attr Elements = 24
         EndBody
       EndObject

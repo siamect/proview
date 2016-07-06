@@ -72,6 +72,8 @@ void drive_exec (
   object->ProdStop = *object->ProdStopP;
   object->NoStart = *object->NoStartP;
 
+  timer2_scan(tp, object);
+
   /* Is there a stop condition ? */
   stop = object->SafeStop;
   if (object->Local) {
@@ -134,7 +136,7 @@ void drive_exec (
   } else if (start && !object->Order) {	/* New start */
     object->Order = TRUE;
     object->TimerTime = object->ProdTim;
-    timer_in( tp, object);
+    timer2_in( tp, object);
     object->Status = 2;			/* Wait for contactor */
   }
 
@@ -143,7 +145,7 @@ void drive_exec (
     if ((object->Status == 2) && object->ConOn) {
       /* Waiting for contactor is finished */
       object->TimerTime = object->SpeedTim;
-      timer_in( tp, object);
+      timer2_in( tp, object);
       object->Status = 3;			/* Wait for Speed */
     } else if ((object->Status == 3) && object->Speed) {
       object->Status = 4;	/* Production */
@@ -182,6 +184,8 @@ void valve_exec (
   object->ProdOpen = *object->ProdOpenP;
   object->ProdClose = *object->ProdCloseP;
 
+  timer2_scan(tp, object);
+
   /* Check different orders after priority */
   if (object->SafeClose) {
     open = FALSE;
@@ -216,7 +220,7 @@ void valve_exec (
   /* Check if new order */
   if (open != object->OrderOpen) {
     object->Status = open;	/* Opening / Closing */
-    timer_in( tp, object);
+    timer2_in( tp, object);
   }
 
   /* Check if alarms */
@@ -314,6 +318,8 @@ void mvalve_exec (
   object->ProdOpen = *object->ProdOpenP;
   object->ProdClose = *object->ProdCloseP;
   object->ProdStop = *object->ProdStopP;
+
+  timer2_scan(tp, object);
 
   /* Remove old alarms */
   if (((object->AutoOpen || object->ProdOpen || object->SafeOpen) &&
@@ -456,7 +462,7 @@ void mvalve_exec (
       object->Status = 0;
     } else {
       object->TimerTime = object->Ctime;
-      timer_in( tp, object);
+      timer2_in( tp, object);
       object->Status = 1;
     }
   }
@@ -467,7 +473,7 @@ void mvalve_exec (
       object->Status = 0;
     } else {
       object->TimerTime = object->Ctime;
-      timer_in( tp, object);
+      timer2_in( tp, object);
       object->Status = -1;
     }
   }
@@ -495,7 +501,7 @@ void mvalve_exec (
 
     if ((object->Status == 1) && object->ConOpen && !object->TimerFlag) {
       object->TimerTime = object->RunTime;
-      timer_in( tp, object);
+      timer2_in( tp, object);
       object->Status = 2;
     }
 
@@ -510,7 +516,7 @@ void mvalve_exec (
 
     if ((object->Status == -1) && object->ConClose && !object->TimerFlag) {
       object->TimerTime = object->RunTime;
-      timer_in( tp, object);
+      timer2_in( tp, object);
       object->Status = -2;
     }
 
@@ -553,6 +559,8 @@ void posit_exec (
   iold = object->InPlace;
   aold = object->AutoPos;
 
+  timer2_scan(tp, object);
+
   /* Read Input data */
   object->PosVal = *object->PosValP;
   if (!object->ManMode)
@@ -586,7 +594,7 @@ void posit_exec (
       object->Order2 = FALSE;
       /* Set up new Time */
       if (!iold && object->TimerTime > 0) {
-	timer_in( tp, object);
+	timer2_in( tp, object);
       }
 
       /* Check  if InPos long enough */

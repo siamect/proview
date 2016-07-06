@@ -51,6 +51,7 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_ARRAY
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
 	  Attr Elements = 2
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
@@ -59,6 +60,7 @@ SObject pwrb:Class
         Body SysBody
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
@@ -69,6 +71,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
@@ -85,6 +88,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
@@ -101,6 +105,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object TimerDODum $Intern 8 

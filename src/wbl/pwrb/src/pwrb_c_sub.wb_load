@@ -63,6 +63,7 @@ SObject pwrb:Class
           Attr PgmName = "In1"
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "In1"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -73,6 +74,7 @@ SObject pwrb:Class
           Attr PgmName = "In2"
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "In2"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -83,6 +85,7 @@ SObject pwrb:Class
           Attr PgmName = "ActVal"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Val"
         EndBody

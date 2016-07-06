@@ -58,6 +58,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr Flags |= PWR_MASK_ARRAY
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr Elements = 100
         EndBody
       EndObject

@@ -91,6 +91,7 @@ SObject pwrb:Class
         Body SysBody
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Sec"
         EndBody
@@ -102,6 +103,7 @@ SObject pwrb:Class
         Body SysBody
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Min"
         EndBody
@@ -113,6 +115,7 @@ SObject pwrb:Class
         Body SysBody
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Hour"
         EndBody
@@ -124,6 +127,7 @@ SObject pwrb:Class
         Body SysBody
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "MDay"
         EndBody
@@ -135,6 +139,7 @@ SObject pwrb:Class
         Body SysBody
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Mon"
         EndBody
@@ -146,6 +151,7 @@ SObject pwrb:Class
         Body SysBody
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Year"
         EndBody
@@ -158,6 +164,7 @@ SObject pwrb:Class
         Body SysBody
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "WDay"
         EndBody
@@ -170,6 +177,7 @@ SObject pwrb:Class
         Body SysBody
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "YDay"
         EndBody

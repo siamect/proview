@@ -86,6 +86,7 @@
   @aref asup ASup
 */
 #define	ASup_exec(o, In, con)\
+  timer2_scan(tp, o);	       				\
   if ((o->High && In <= o->CtrlLimit - o->Hysteres) ||	\
       (!o->High && In >= o->CtrlLimit + o->Hysteres)	\
   ) {							\
@@ -106,7 +107,7 @@
     if (o->AlarmCheck && o->DetectOn && !o->Blocked) {	\
       if (o->DetectCheck) {				\
 	o->ActualValue = In;				\
-	timer_in(tp, o);				\
+	timer2_in(tp, o);				\
 	time_GetTime(&o->DetectTime);			\
 	o->DetectCheck = FALSE;				\
       }							\
@@ -149,6 +150,7 @@
   @aref dsup DSup
 */
 #define	DSup_exec(o, In, con)				\
+  timer2_scan(tp, o);	       				\
   if (In != o->CtrlPosition) {				\
     if (o->Action) o->Action = FALSE;			\
     if (o->ReturnCheck) {				\
@@ -165,7 +167,7 @@
     if (o->AlarmCheck && o->DetectOn && !o->Blocked) {	\
       if (o->DetectCheck) {				\
 	o->ActualValue = In;				\
-	timer_in(tp, o);				\
+	timer2_in(tp, o);				\
         time_GetTime(&o->DetectTime);	\
 	o->DetectCheck = FALSE;				\
       }							\
@@ -208,6 +210,7 @@
   if ( !co)\
     return;\
   co->Control = con;\
+  timer2_scan(tp, co);\
   if (In != co->CtrlPosition) {\
     if (co->Action) co->Action = FALSE;\
     if (co->ReturnCheck) {\
@@ -224,7 +227,7 @@
     if (co->AlarmCheck && co->DetectOn && !co->Blocked) {\
       if (co->DetectCheck) {\
 	co->ActualValue = In;\
-	timer_in(tp, co);\
+	timer2_in(tp, co);\
         time_GetTime(&co->DetectTime);\
 	co->DetectCheck = FALSE;\
       }\
@@ -271,6 +274,7 @@
   if ( !co)\
     return;\
   co->Control = con;\
+  timer2_scan(tp, co);\
   if ((co->High && In <= co->CtrlLimit - co->Hysteres) ||\
       (!co->High && In >= co->CtrlLimit + co->Hysteres)\
   ) {\
@@ -291,7 +295,7 @@
     if (co->AlarmCheck && co->DetectOn && !co->Blocked) {\
       if (co->DetectCheck) {\
 	co->ActualValue = In;\
-	timer_in(tp, co);\
+	timer2_in(tp, co);\
 	time_GetTime(&co->DetectTime);\
 	co->DetectCheck = FALSE;\
       }\

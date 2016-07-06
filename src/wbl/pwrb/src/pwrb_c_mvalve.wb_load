@@ -113,6 +113,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "aop"
         EndBody
@@ -126,6 +127,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "acl"
         EndBody
@@ -143,6 +145,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -158,6 +161,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -174,6 +178,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -190,6 +195,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -204,6 +210,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "loc"
 	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -227,6 +234,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object LocalClose $Input 9 
@@ -236,6 +244,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object LocalStop $Input 10 
@@ -245,6 +254,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -265,6 +275,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -285,6 +296,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -303,6 +315,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -320,6 +333,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -337,6 +351,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -354,6 +369,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -372,6 +388,7 @@ SObject pwrb:Class
           Attr PgmName = "ManMode"
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "man"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -385,6 +402,7 @@ SObject pwrb:Class
           Attr PgmName = "OrderOpen"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "oop"
         EndBody
@@ -400,6 +418,7 @@ SObject pwrb:Class
           Attr PgmName = "OrderClose"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "ocl"
         EndBody
@@ -416,6 +435,7 @@ SObject pwrb:Class
           Attr PgmName = "IndOpen"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "iop"
         EndBody
@@ -431,6 +451,7 @@ SObject pwrb:Class
           Attr PgmName = "IndClosed"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "icl"
         EndBody
@@ -455,6 +476,7 @@ SObject pwrb:Class
           Attr PgmName = "Alarm1"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "al1"
         EndBody
@@ -480,6 +502,7 @@ SObject pwrb:Class
           Attr PgmName = "Alarm2"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "al2"
         EndBody
@@ -503,6 +526,7 @@ SObject pwrb:Class
           Attr PgmName = "Alarm3"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "al3"
         EndBody
@@ -529,6 +553,7 @@ SObject pwrb:Class
           Attr PgmName = "Alarm4"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "al4"
         EndBody
@@ -553,6 +578,7 @@ SObject pwrb:Class
           Attr PgmName = "Alarm5"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "al5"
         EndBody
@@ -577,6 +603,7 @@ SObject pwrb:Class
           Attr PgmName = "Alarm6"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "al6"
         EndBody
@@ -595,6 +622,7 @@ SObject pwrb:Class
           Attr PgmName = "SumAlarm"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "als"
         EndBody
@@ -621,6 +649,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "RunTime"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       ! ++
@@ -634,6 +663,7 @@ SObject pwrb:Class
           Attr PgmName = "TimerFlag"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
@@ -658,6 +688,7 @@ SObject pwrb:Class
           Attr PgmName = "TimerCount"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
@@ -685,6 +716,7 @@ SObject pwrb:Class
           Attr PgmName = "TimerTime"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
@@ -735,6 +767,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Status"
         EndBody
@@ -751,6 +784,7 @@ SObject pwrb:Class
           Attr GraphName = "ManOpen"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -765,6 +799,7 @@ SObject pwrb:Class
           Attr GraphName = "ManClose"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -779,6 +814,7 @@ SObject pwrb:Class
           Attr GraphName = "ManStop"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
     EndObject

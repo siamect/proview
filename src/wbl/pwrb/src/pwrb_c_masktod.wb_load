@@ -69,6 +69,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Mask"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -79,6 +80,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od1"
         EndBody
       EndObject
@@ -90,6 +92,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od2"
         EndBody
       EndObject
@@ -101,6 +104,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od3"
         EndBody
       EndObject
@@ -112,6 +116,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od4"
         EndBody
       EndObject
@@ -123,6 +128,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od5"
         EndBody
       EndObject
@@ -134,6 +140,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od6"
         EndBody
       EndObject
@@ -145,6 +152,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od7"
         EndBody
       EndObject
@@ -156,6 +164,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od8"
         EndBody
       EndObject
@@ -167,6 +176,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od9"
         EndBody
       EndObject
@@ -178,6 +188,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od10"
         EndBody
       EndObject
@@ -189,6 +200,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od11"
         EndBody
       EndObject
@@ -200,6 +212,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od12"
         EndBody
       EndObject
@@ -211,6 +224,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od13"
         EndBody
       EndObject
@@ -222,6 +236,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od14"
         EndBody
       EndObject
@@ -233,6 +248,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od15"
         EndBody
       EndObject
@@ -244,6 +260,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od16"
         EndBody
       EndObject
@@ -255,6 +272,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od17"
         EndBody
       EndObject
@@ -266,6 +284,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od18"
         EndBody
       EndObject
@@ -277,6 +296,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od19"
         EndBody
       EndObject
@@ -288,6 +308,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od20"
         EndBody
       EndObject
@@ -299,6 +320,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od21"
         EndBody
       EndObject
@@ -310,6 +332,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od22"
         EndBody
       EndObject
@@ -321,6 +344,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od23"
         EndBody
       EndObject
@@ -332,6 +356,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od24"
         EndBody
       EndObject
@@ -343,6 +368,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od25"
         EndBody
       EndObject
@@ -354,6 +380,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od26"
         EndBody
       EndObject
@@ -365,6 +392,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od27"
         EndBody
       EndObject
@@ -376,6 +404,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od28"
         EndBody
       EndObject
@@ -387,6 +416,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od29"
         EndBody
       EndObject
@@ -398,6 +428,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od30"
         EndBody
       EndObject
@@ -409,6 +440,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od31"
         EndBody
       EndObject
@@ -420,6 +452,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "od32"
         EndBody
       EndObject

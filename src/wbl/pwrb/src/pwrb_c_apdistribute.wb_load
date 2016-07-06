@@ -117,6 +117,7 @@ SObject pwrb:Class
       !*/
       Object ApOut1 $Output 2
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Ap1"
         EndBody
@@ -126,6 +127,7 @@ SObject pwrb:Class
       !*/
       Object ApOut2 $Output 3
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Ap2"
         EndBody
@@ -135,6 +137,7 @@ SObject pwrb:Class
       !*/
       Object ApOut3 $Output 4
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Ap3"
         EndBody
@@ -144,6 +147,7 @@ SObject pwrb:Class
       !*/
       Object ApOut4 $Output 5
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Ap4"
         EndBody
@@ -153,6 +157,7 @@ SObject pwrb:Class
       !*/
       Object ApOut5 $Output 6
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Ap5"
         EndBody
@@ -162,6 +167,7 @@ SObject pwrb:Class
       !*/
       Object ApOut6 $Output 7
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Ap6"
         EndBody
@@ -171,6 +177,7 @@ SObject pwrb:Class
       !*/
       Object ApOut7 $Output 8
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Ap7"
         EndBody
@@ -180,6 +187,7 @@ SObject pwrb:Class
       !*/
       Object ApOut8 $Output 9
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Ap8"
         EndBody
@@ -189,6 +197,7 @@ SObject pwrb:Class
       !*/
       Object ApOut9 $Output 10
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Ap9"
         EndBody
@@ -198,6 +207,7 @@ SObject pwrb:Class
       !*/
       Object ApOut10 $Output 11
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Ap10"
         EndBody
@@ -207,6 +217,7 @@ SObject pwrb:Class
       !*/
       Object ApOut11 $Output 12
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Ap11"
         EndBody
@@ -216,6 +227,7 @@ SObject pwrb:Class
       !*/
       Object ApOut12 $Output 13
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Ap12"
         EndBody
@@ -225,6 +237,7 @@ SObject pwrb:Class
       !*/
       Object ApOut13 $Output 14
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Ap13"
         EndBody
@@ -234,6 +247,7 @@ SObject pwrb:Class
       !*/
       Object ApOut14 $Output 15
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Ap14"
         EndBody
@@ -243,6 +257,7 @@ SObject pwrb:Class
       !*/
       Object ApOut15 $Output 16
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Ap15"
         EndBody
@@ -252,6 +267,7 @@ SObject pwrb:Class
       !*/
       Object ApOut16 $Output 17
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Ap16"
         EndBody
@@ -261,6 +277,7 @@ SObject pwrb:Class
       !*/
       Object ApOut17 $Output 18
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Ap17"
         EndBody
@@ -270,6 +287,7 @@ SObject pwrb:Class
       !*/
       Object ApOut18 $Output 19
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Ap18"
         EndBody
@@ -279,6 +297,7 @@ SObject pwrb:Class
       !*/
       Object ApOut19 $Output 20
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Ap19"
         EndBody
@@ -288,6 +307,7 @@ SObject pwrb:Class
       !*/
       Object ApOut20 $Output 21
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Ap20"
         EndBody
@@ -297,6 +317,7 @@ SObject pwrb:Class
       !*/
       Object ApOut21 $Output 22
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Ap21"
         EndBody
@@ -306,6 +327,7 @@ SObject pwrb:Class
       !*/
       Object ApOut22 $Output 23
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Ap22"
         EndBody
@@ -315,6 +337,7 @@ SObject pwrb:Class
       !*/
       Object ApOut23 $Output 24
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Ap23"
         EndBody
@@ -324,6 +347,7 @@ SObject pwrb:Class
       !*/
       Object ApOut24 $Output 25
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Ap24"
         EndBody
@@ -333,6 +357,7 @@ SObject pwrb:Class
       !*/
       Object MaxIndex $Intern 26
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Int32"
         EndBody
       EndObject

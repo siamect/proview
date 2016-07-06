@@ -135,7 +135,7 @@ SObject pwrb:Class
       Object Function $Attribute 3
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Mask"
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -144,7 +144,7 @@ SObject pwrb:Class
       Object ScanTime $Attribute 4
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**

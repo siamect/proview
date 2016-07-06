@@ -175,11 +175,12 @@
 */
 
 #define dorder_exec(obj,stepobj)					\
+  timer2_scan( tp, obj );						\
   if (stepobj->Status[0])						\
   {									\
     if ( !obj->Old )							\
     {									\
-      timer_in( tp, obj );						\
+      timer2_in( tp, obj );						\
     }									\
     obj->Status[0] = (obj->TimerFlag) ? false : true;			\
   }									\
@@ -200,11 +201,12 @@
 */
 
 #define lorder_exec(obj,stepobj)					\
+  timer2_scan( tp, obj );						\
   if ( stepobj->Status[0] )						\
   {									\
     if ( !obj->StatusOld )						\
     {									\
-      timer_in( tp, obj );						\
+      timer2_in( tp, obj );						\
       obj->Status[0] = true;						\
     }									\
     else								\

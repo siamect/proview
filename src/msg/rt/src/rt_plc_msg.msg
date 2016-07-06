@@ -72,4 +72,5 @@ ininstep	<initialize init steps>					/error
 iostalled	<IO stalled, cyclesup delay detected>			/fatal
 ioread		<IO stalled, io read error>				/fatal
 iowrite		<IO stalled, io write error>				/fatal
+reduinit	<Redundcancy init error>				/error
 .end

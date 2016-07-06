@@ -152,6 +152,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_NOREMOVE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr Elements = 2
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "Order"
@@ -164,6 +165,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "ResetOld"
           Attr ConPointNr = 0

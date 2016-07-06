@@ -66,7 +66,7 @@ static pwr_tStatus IoCardInit( io_tCtx ctx,
     sprintf( fname, "/sys/bus/w1/devices/w1 bus master/%s/w1_slave", name); 
     local->value_fp = fopen( fname, "r");
     if (!local->value_fp) {
-      errh_Error( "Maxim_DS18B20 Unable op open %s, '%ux'", cp->Name, 
+      errh_Error( "Maxim_DS18B20 Unable op open %s, '%x'", cp->Name, 
 		  op->Super.Address);
       sts = IO__INITFAIL;
       op->Status = sts;

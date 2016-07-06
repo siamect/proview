@@ -65,6 +65,7 @@ SObject pwrb:Class
       !*/
       Object Pan $Attribute 2 
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
@@ -74,6 +75,7 @@ SObject pwrb:Class
       !*/
       Object Tilt $Attribute 3 
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
@@ -83,6 +85,7 @@ SObject pwrb:Class
       !*/
       Object Zoom $Attribute 4 
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject

@@ -81,6 +81,7 @@ SObject pwrb:Class
           Attr GraphName = "PI"
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -99,6 +100,7 @@ SObject pwrb:Class
           Attr PgmName = "CalPos1"
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "CP1"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -121,6 +123,7 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
           Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "co1"
         EndBody
@@ -141,6 +144,7 @@ SObject pwrb:Class
           Attr PgmName = "CalPos2"
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "CP2"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -161,6 +165,7 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
           Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "co2"
         EndBody
@@ -174,6 +179,7 @@ SObject pwrb:Class
           Attr PgmName = "ActVal"
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "POS"
         EndBody
@@ -190,6 +196,7 @@ SObject pwrb:Class
           Attr PgmName = "Gain"
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Gain"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -202,6 +209,7 @@ SObject pwrb:Class
           Attr PgmName = "PICal1"
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "PICal1"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -213,6 +221,7 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
           Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "CalOrder1Old"
         EndBody
@@ -226,6 +235,7 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
           Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "CalOrder2Old"
         EndBody
@@ -244,6 +254,7 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
           Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -257,6 +268,7 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
           Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -365,6 +377,7 @@ SObject pwrb:Class
           Attr PgmName = "MinCalPos1"
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "MinCalPos1"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object MaxCalPos1 $Intern 18 
@@ -372,6 +385,7 @@ SObject pwrb:Class
           Attr PgmName = "MaxCalPos1"
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "MaxCalPos1"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object MinCalPos2 $Intern 19 
@@ -379,6 +393,7 @@ SObject pwrb:Class
           Attr PgmName = "MinCalPos2"
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "MinCalPos2"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object MaxCalPos2 $Intern 20 
@@ -386,6 +401,7 @@ SObject pwrb:Class
           Attr PgmName = "MaxCalPos2"
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "MaxCalPos2"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
     EndObject

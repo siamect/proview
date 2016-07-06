@@ -1697,7 +1697,7 @@ Volume ABB $ClassVolume 0.0.250.2
         Object Super $Attribute 1 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
-            Attr Size = 2400
+            Attr Size = 2432
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseCircuitBreaker"
           EndBody
@@ -1746,7 +1746,7 @@ Volume ABB $ClassVolume 0.0.250.2
         Object Super $Attribute 2 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
-            Attr Size = 4016
+            Attr Size = 4080
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseContactor"
           EndBody
@@ -1871,7 +1871,7 @@ Volume ABB $ClassVolume 0.0.250.2
         Object InIdPar $Attribute 55 01-DEC-2005 10:37:53.43
           Body SysBody 01-DEC-2005 10:37:55.64
             Attr PgmName = "InIdPar"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -1882,7 +1882,7 @@ Volume ABB $ClassVolume 0.0.250.2
         Object InIndPar $Attribute 61 01-DEC-2005 11:08:20.68
           Body SysBody 01-DEC-2005 11:08:22.06
             Attr PgmName = "InIndPar"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -1893,7 +1893,7 @@ Volume ABB $ClassVolume 0.0.250.2
         Object InValuePar $Attribute 56 01-DEC-2005 10:39:10.30
           Body SysBody 01-DEC-2005 10:39:12.50
             Attr PgmName = "InValuePar"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -1904,7 +1904,7 @@ Volume ABB $ClassVolume 0.0.250.2
         Object ActSpeed $Attribute 3 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "ActSpeed"
-            Attr Size = 832
+            Attr Size = 848
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -1915,7 +1915,7 @@ Volume ABB $ClassVolume 0.0.250.2
         Object ActTorque $Attribute 4 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "ActTorque"
-            Attr Size = 832
+            Attr Size = 848
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -1926,7 +1926,7 @@ Volume ABB $ClassVolume 0.0.250.2
         Object ActCurrent $Attribute 5 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "ActCurrent"
-            Attr Size = 832
+            Attr Size = 848
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -1937,7 +1937,7 @@ Volume ABB $ClassVolume 0.0.250.2
         Object StatusWordSW $Attribute 8 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "StatusWordSW"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -1948,7 +1948,7 @@ Volume ABB $ClassVolume 0.0.250.2
         Object FaultWord1 $Attribute 10 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "FaultWord1"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -1959,7 +1959,7 @@ Volume ABB $ClassVolume 0.0.250.2
         Object FaultWord2 $Attribute 11 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "FaultWord2"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -1970,7 +1970,7 @@ Volume ABB $ClassVolume 0.0.250.2
         Object Di6_1 $Attribute 12 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Di6_1"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -1981,7 +1981,7 @@ Volume ABB $ClassVolume 0.0.250.2
         Object StatusWordSW3 $Attribute 41 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "StatusWordSW3"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -1997,7 +1997,7 @@ Volume ABB $ClassVolume 0.0.250.2
         Object AlarmWord5 $Attribute 13 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "AlarmWord5"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -2008,7 +2008,7 @@ Volume ABB $ClassVolume 0.0.250.2
         Object OutIdPar $Attribute 52 01-DEC-2005 10:32:42.66
           Body SysBody 01-DEC-2005 10:32:45.89
             Attr PgmName = "OutIdPar"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Io"
           EndBody
@@ -2019,7 +2019,7 @@ Volume ABB $ClassVolume 0.0.250.2
         Object OutIndPar $Attribute 53 01-DEC-2005 10:32:58.82
           Body SysBody 01-DEC-2005 10:33:02.42
             Attr PgmName = "OutIndPar"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Io"
           EndBody
@@ -2030,7 +2030,7 @@ Volume ABB $ClassVolume 0.0.250.2
         Object OutValuePar $Attribute 54 01-DEC-2005 10:33:09.62
           Body SysBody 01-DEC-2005 10:33:11.85
             Attr PgmName = "OutValuePar"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Io"
           EndBody
@@ -2041,7 +2041,7 @@ Volume ABB $ClassVolume 0.0.250.2
         Object ControlWordCW $Attribute 7 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "ControlWordCW"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Io"
           EndBody
@@ -2052,7 +2052,7 @@ Volume ABB $ClassVolume 0.0.250.2
         Object RefSpeed $Attribute 9 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "RefSpeed"
-            Attr Size = 808
+            Attr Size = 824
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ao"
           EndBody
@@ -2061,9 +2061,10 @@ Volume ABB $ClassVolume 0.0.250.2
         !  Indicator in object graph shows converter warning
         !*/
         Object IndWarning $Attribute 14 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 01-JUL-2016 10:06:04.64
             Attr PgmName = "IndWarning"
             Attr Size = 4
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -2071,9 +2072,10 @@ Volume ABB $ClassVolume 0.0.250.2
         !  Indicator in object graph shows converter Fault
         !*/
         Object IndError $Attribute 15 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 01-JUL-2016 10:06:04.64
             Attr PgmName = "IndError"
             Attr Size = 4
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -2081,10 +2083,10 @@ Volume ABB $ClassVolume 0.0.250.2
         !  Button in object graph reset tripped converter
         !*/
         Object OpReset $Attribute 18 12-OCT-2005 12:58:20.00
-          Body SysBody 21-DEC-2005 09:06:05.95
+          Body SysBody 01-JUL-2016 10:06:04.64
             Attr PgmName = "OpReset"
             Attr Size = 4
-            Attr Flags = 1040
+            Attr Flags = 1044
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -2092,10 +2094,10 @@ Volume ABB $ClassVolume 0.0.250.2
         !  Button in object graph "more..." write parameter
         !*/
         Object OpWritePar $Attribute 62 01-DEC-2005 11:14:25.99
-          Body SysBody 21-DEC-2005 09:06:12.64
+          Body SysBody 01-JUL-2016 10:06:04.65
             Attr PgmName = "OpWritePar"
             Attr Size = 4
-            Attr Flags = 1040
+            Attr Flags = 1044
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -2103,10 +2105,10 @@ Volume ABB $ClassVolume 0.0.250.2
         !  Button in object graph "more..." read parameter
         !*/
         Object OpReadPar $Attribute 63 01-DEC-2005 11:14:39.33
-          Body SysBody 21-DEC-2005 09:06:16.97
+          Body SysBody 01-JUL-2016 10:06:04.65
             Attr PgmName = "OpReadPar"
             Attr Size = 4
-            Attr Flags = 1040
+            Attr Flags = 1044
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -2114,10 +2116,10 @@ Volume ABB $ClassVolume 0.0.250.2
         !  Button in object graph "more..." backup parameters in converter
         !*/
         Object OpBackupPar $Attribute 65 06-DEC-2005 15:22:20.27
-          Body SysBody 21-DEC-2005 09:06:22.01
+          Body SysBody 01-JUL-2016 10:06:04.65
             Attr PgmName = "OpBackupPar"
             Attr Size = 4
-            Attr Flags = 1040
+            Attr Flags = 1044
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -2125,10 +2127,10 @@ Volume ABB $ClassVolume 0.0.250.2
         !  Communikation link to converter okey
         !*/
         Object CommOk $Attribute 16 12-OCT-2005 12:58:20.00
-          Body SysBody 21-DEC-2005 09:06:37.84
+          Body SysBody 01-JUL-2016 10:06:04.65
             Attr PgmName = "CommOk"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -2136,10 +2138,10 @@ Volume ABB $ClassVolume 0.0.250.2
         !  Converter has started up, alarm message "ready"
         !*/
         Object AlarmOk $Attribute 43 12-OCT-2005 12:58:20.00
-          Body SysBody 21-DEC-2005 09:06:50.48
+          Body SysBody 01-JUL-2016 10:06:04.65
             Attr PgmName = "AlarmOk"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -2147,10 +2149,10 @@ Volume ABB $ClassVolume 0.0.250.2
         !  Converter starting up "wait"
         !*/
         Object PowerStartUp $Attribute 21 12-OCT-2005 12:58:20.00
-          Body SysBody 21-DEC-2005 09:06:59.52
+          Body SysBody 01-JUL-2016 10:06:04.65
             Attr PgmName = "PowerStartUp"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -2158,10 +2160,10 @@ Volume ABB $ClassVolume 0.0.250.2
         !  Object ready for remote control
         !*/
         Object ReadyRemote $Attribute 22 12-OCT-2005 12:58:20.00
-          Body SysBody 21-DEC-2005 09:07:03.76
+          Body SysBody 01-JUL-2016 10:06:04.65
             Attr PgmName = "ReadyRemote"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -2169,10 +2171,10 @@ Volume ABB $ClassVolume 0.0.250.2
         !  Converter ready to start (status word)
         !*/
         Object ConvertReady $Attribute 23 12-OCT-2005 12:58:20.00
-          Body SysBody 21-DEC-2005 09:07:08.70
+          Body SysBody 01-JUL-2016 10:06:04.66
             Attr PgmName = "ConvertReady"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -2180,10 +2182,10 @@ Volume ABB $ClassVolume 0.0.250.2
         !  Converter/motor running (status word)
         !*/
         Object ConvertRun $Attribute 24 12-OCT-2005 12:58:20.00
-          Body SysBody 21-DEC-2005 09:07:13.04
+          Body SysBody 01-JUL-2016 10:06:04.66
             Attr PgmName = "ConvertRun"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -2191,10 +2193,10 @@ Volume ABB $ClassVolume 0.0.250.2
         !  Converter has tripped (status word)
         !*/
         Object ConvertTripped $Attribute 25 12-OCT-2005 12:58:20.00
-          Body SysBody 21-DEC-2005 09:07:16.55
+          Body SysBody 01-JUL-2016 10:06:04.66
             Attr PgmName = "ConvertTripped"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -2202,10 +2204,10 @@ Volume ABB $ClassVolume 0.0.250.2
         !  Converter/motor fault (status word)
         !*/
         Object ConvertInhibit $Attribute 28 26-JUN-2013 14:27:59.97
-          Body SysBody 26-JUN-2013 14:28:01.79
+          Body SysBody 01-JUL-2016 10:06:04.66
             Attr PgmName = "ConvertInhibit"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -2213,10 +2215,10 @@ Volume ABB $ClassVolume 0.0.250.2
         !  Converter warning (status word)
         !*/
         Object ConvertWarning $Attribute 26 12-OCT-2005 12:58:20.00
-          Body SysBody 21-DEC-2005 09:07:24.82
+          Body SysBody 01-JUL-2016 10:06:04.66
             Attr PgmName = "ConvertWarning"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -2224,10 +2226,10 @@ Volume ABB $ClassVolume 0.0.250.2
         !  Converter ready (status word) for remote control
         !*/
         Object ConvertRemote $Attribute 27 12-OCT-2005 12:58:20.00
-          Body SysBody 21-DEC-2005 09:07:29.33
+          Body SysBody 01-JUL-2016 10:06:04.66
             Attr PgmName = "ConvertRemote"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -2235,9 +2237,10 @@ Volume ABB $ClassVolume 0.0.250.2
         !  Time to "boot up" converter when energized
         !*/
         Object PowerUpTime $Attribute 19 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 01-JUL-2016 10:06:04.67
             Attr PgmName = "PowerUpTime"
             Attr Size = 4
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
@@ -2245,10 +2248,10 @@ Volume ABB $ClassVolume 0.0.250.2
         !  Value "requested parameter" in object graph "more..."
         !*/
         Object RequestPar $Attribute 58 01-DEC-2005 10:54:06.17
-          Body SysBody 21-DEC-2005 09:07:54.33
+          Body SysBody 01-JUL-2016 10:06:04.67
             Attr PgmName = "RequestPar"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
@@ -2256,10 +2259,10 @@ Volume ABB $ClassVolume 0.0.250.2
         !  Value "write value parameter" in object graph "more..."
         !*/
         Object WriteValuePar $Attribute 57 01-DEC-2005 10:51:59.36
-          Body SysBody 21-DEC-2005 09:07:59.61
+          Body SysBody 01-JUL-2016 10:06:04.67
             Attr PgmName = "WriteValuePar"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
@@ -2267,10 +2270,10 @@ Volume ABB $ClassVolume 0.0.250.2
         !  Value "read value parameter" in object graph "more..."
         !*/
         Object ReadValuePar $Attribute 59 01-DEC-2005 10:58:42.07
-          Body SysBody 21-DEC-2005 09:08:04.77
+          Body SysBody 01-JUL-2016 10:06:04.67
             Attr PgmName = "ReadValuePar"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
@@ -2278,10 +2281,10 @@ Volume ABB $ClassVolume 0.0.250.2
         !  Value "return code value" in object graph "more..."
         !*/
         Object ReadCodePar $Attribute 60 01-DEC-2005 11:10:52.14
-          Body SysBody 21-DEC-2005 09:08:10.00
+          Body SysBody 01-JUL-2016 10:06:04.67
             Attr PgmName = "ReadCodePar"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
@@ -2289,10 +2292,10 @@ Volume ABB $ClassVolume 0.0.250.2
         !  Value "return code subindex value" in object graph "more..."
         !*/
         Object ReadCodeSubPar $Attribute 64 01-DEC-2005 13:27:43.59
-          Body SysBody 21-DEC-2005 09:08:15.90
+          Body SysBody 01-JUL-2016 10:06:04.68
             Attr PgmName = "ReadCodeSubPar"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
@@ -2687,9 +2690,9 @@ by enter code 2303 in parameter 16.3.
         !  Pin name "rdy", Ready for remote control.     
         !*/
         Object ReadyRemote $Output 6 12-OCT-2005 12:58:20.00
-          Body SysBody 21-DEC-2005 09:09:21.49
+          Body SysBody 01-JUL-2016 10:06:04.71
             Attr PgmName = "ReadyRemote"
-            Attr Flags = 9216
+            Attr Flags = 9220
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "rdy"
           EndBody
@@ -2698,9 +2701,9 @@ by enter code 2303 in parameter 16.3.
         !  Pin name "run", motor started/running.     
         !*/
         Object Run $Output 7 12-OCT-2005 12:58:20.00
-          Body SysBody 21-DEC-2005 09:09:44.11
+          Body SysBody 01-JUL-2016 10:06:04.71
             Attr PgmName = "Run"
-            Attr Flags = 9216
+            Attr Flags = 9220
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "run"
           EndBody
@@ -2709,9 +2712,9 @@ by enter code 2303 in parameter 16.3.
         !  Pin name "di1", status input signal DI1 on the converter.     
         !*/
         Object Di1 $Output 9 12-OCT-2005 12:58:20.00
-          Body SysBody 21-DEC-2005 09:09:55.84
+          Body SysBody 01-JUL-2016 10:06:04.72
             Attr PgmName = "Di1"
-            Attr Flags = 9216
+            Attr Flags = 9220
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "di1"
           EndBody
@@ -2720,9 +2723,9 @@ by enter code 2303 in parameter 16.3.
         !  Pin name "di2", status input signal DI2 on the converter.     
         !*/
         Object Di2 $Output 10 12-OCT-2005 12:58:20.00
-          Body SysBody 21-DEC-2005 09:10:00.34
+          Body SysBody 01-JUL-2016 10:06:04.72
             Attr PgmName = "Di2"
-            Attr Flags = 9216
+            Attr Flags = 9220
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "di2"
           EndBody
@@ -2731,9 +2734,9 @@ by enter code 2303 in parameter 16.3.
         !  Pin name "di3", status input signal DI3 on the converter.     
         !*/
         Object Di3 $Output 11 12-OCT-2005 12:58:20.00
-          Body SysBody 21-DEC-2005 09:10:04.69
+          Body SysBody 01-JUL-2016 10:06:04.72
             Attr PgmName = "Di3"
-            Attr Flags = 9216
+            Attr Flags = 9220
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "di3"
           EndBody
@@ -2742,9 +2745,9 @@ by enter code 2303 in parameter 16.3.
         !  Pin name "di4", status input signal DI4 on the converter.     
         !*/
         Object Di4 $Output 12 12-OCT-2005 12:58:20.00
-          Body SysBody 21-DEC-2005 09:10:08.94
+          Body SysBody 01-JUL-2016 10:06:04.72
             Attr PgmName = "Di4"
-            Attr Flags = 9216
+            Attr Flags = 9220
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "di4"
           EndBody
@@ -2753,9 +2756,9 @@ by enter code 2303 in parameter 16.3.
         !  Pin name "di5", status input signal DI5 on the converter.
         !*/
         Object Di5 $Output 13 12-OCT-2005 12:58:20.00
-          Body SysBody 21-DEC-2005 09:10:13.16
+          Body SysBody 01-JUL-2016 10:06:04.72
             Attr PgmName = "Di5"
-            Attr Flags = 9216
+            Attr Flags = 9220
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "di5"
           EndBody
@@ -2764,9 +2767,9 @@ by enter code 2303 in parameter 16.3.
         !  Pin name "di6", status input signal DI6 on the converter.     
         !*/
         Object Di6 $Output 14 12-OCT-2005 12:58:20.00
-          Body SysBody 21-DEC-2005 09:10:16.98
+          Body SysBody 01-JUL-2016 10:06:04.73
             Attr PgmName = "Di6"
-            Attr Flags = 9216
+            Attr Flags = 9220
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "di6"
           EndBody
@@ -2775,9 +2778,9 @@ by enter code 2303 in parameter 16.3.
         !  Pin name "diil", status input signal DIIL (interlock) on the converter.     
         !*/
         Object DiIL $Output 15 12-OCT-2005 12:58:20.00
-          Body SysBody 21-DEC-2005 09:10:22.43
+          Body SysBody 01-JUL-2016 10:06:04.73
             Attr PgmName = "DiIL"
-            Attr Flags = 9216
+            Attr Flags = 9220
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "diil"
           EndBody
@@ -12204,7 +12207,7 @@ ABB ACS800 Typ 1"
         Object InIdPar $Attribute 69 13-MAR-2006 09:34:22.38
           Body SysBody 13-MAR-2006 09:34:22.38
             Attr PgmName = "InIdPar"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -12212,7 +12215,7 @@ ABB ACS800 Typ 1"
         Object InIndPar $Attribute 70 13-MAR-2006 09:34:22.38
           Body SysBody 13-MAR-2006 09:34:22.38
             Attr PgmName = "InIndPar"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -12220,7 +12223,7 @@ ABB ACS800 Typ 1"
         Object InValuePar $Attribute 71 13-MAR-2006 09:34:22.38
           Body SysBody 13-MAR-2006 09:34:22.38
             Attr PgmName = "InValuePar"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -12228,7 +12231,7 @@ ABB ACS800 Typ 1"
         Object StatusWordSW $Attribute 75 14-MAR-2006 09:34:21.25
           Body SysBody 13-MAR-2006 09:34:22.38
             Attr PgmName = "StatusWordSW"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -12236,7 +12239,7 @@ ABB ACS800 Typ 1"
         Object ActSpeed $Attribute 72 13-MAR-2006 09:34:22.38
           Body SysBody 13-MAR-2006 09:34:22.38
             Attr PgmName = "ActSpeed"
-            Attr Size = 832
+            Attr Size = 848
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -12244,7 +12247,7 @@ ABB ACS800 Typ 1"
         Object ActTorque $Attribute 73 13-MAR-2006 09:34:22.38
           Body SysBody 13-MAR-2006 09:34:22.38
             Attr PgmName = "ActTorque"
-            Attr Size = 832
+            Attr Size = 848
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -12252,7 +12255,7 @@ ABB ACS800 Typ 1"
         Object SpeedRef3 $Attribute 74 14-MAR-2006 09:31:47.63
           Body SysBody 14-MAR-2006 09:31:45.16
             Attr PgmName = "SpeedRef3"
-            Attr Size = 832
+            Attr Size = 848
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -12260,7 +12263,7 @@ ABB ACS800 Typ 1"
         Object PosActPPU $Attribute 128 14-MAR-2006 09:32:55.63
           Body SysBody 14-MAR-2006 09:33:02.16
             Attr PgmName = "PosActPPU"
-            Attr Size = 832
+            Attr Size = 848
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -12268,7 +12271,7 @@ ABB ACS800 Typ 1"
         Object ActCurrent $Attribute 130 14-MAR-2006 09:33:39.98
           Body SysBody 14-MAR-2006 09:33:36.91
             Attr PgmName = "ActCurrent"
-            Attr Size = 832
+            Attr Size = 848
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -12276,7 +12279,7 @@ ABB ACS800 Typ 1"
         Object FaultWord1 $Attribute 76 13-MAR-2006 09:34:22.38
           Body SysBody 13-MAR-2006 09:34:22.38
             Attr PgmName = "FaultWord1"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -12284,7 +12287,7 @@ ABB ACS800 Typ 1"
         Object FaultWord2 $Attribute 77 13-MAR-2006 09:34:22.38
           Body SysBody 13-MAR-2006 09:34:22.38
             Attr PgmName = "FaultWord2"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -12292,7 +12295,7 @@ ABB ACS800 Typ 1"
         Object AlarmWord $Attribute 80 14-MAR-2006 09:36:57.21
           Body SysBody 14-MAR-2006 09:36:59.02
             Attr PgmName = "AlarmWord"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -12300,7 +12303,7 @@ ABB ACS800 Typ 1"
         Object MotorVolt $Attribute 131 14-MAR-2006 09:37:27.25
           Body SysBody 14-MAR-2006 09:37:29.08
             Attr PgmName = "MotorVolt"
-            Attr Size = 832
+            Attr Size = 848
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -12308,7 +12311,7 @@ ABB ACS800 Typ 1"
         Object OutIdPar $Attribute 81 13-MAR-2006 09:34:22.38
           Body SysBody 13-MAR-2006 09:34:22.38
             Attr PgmName = "OutIdPar"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Io"
           EndBody
@@ -12316,7 +12319,7 @@ ABB ACS800 Typ 1"
         Object OutIndPar $Attribute 82 13-MAR-2006 09:34:22.38
           Body SysBody 13-MAR-2006 09:34:22.38
             Attr PgmName = "OutIndPar"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Io"
           EndBody
@@ -12324,7 +12327,7 @@ ABB ACS800 Typ 1"
         Object OutValuePar $Attribute 83 13-MAR-2006 09:34:22.38
           Body SysBody 13-MAR-2006 09:34:22.38
             Attr PgmName = "OutValuePar"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Io"
           EndBody
@@ -12332,7 +12335,7 @@ ABB ACS800 Typ 1"
         Object ControlWordCW $Attribute 84 13-MAR-2006 09:34:22.38
           Body SysBody 13-MAR-2006 09:34:22.38
             Attr PgmName = "ControlWordCW"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Io"
           EndBody
@@ -12340,7 +12343,7 @@ ABB ACS800 Typ 1"
         Object RefSpeed $Attribute 85 13-MAR-2006 09:34:22.38
           Body SysBody 13-MAR-2006 09:34:22.38
             Attr PgmName = "RefSpeed"
-            Attr Size = 808
+            Attr Size = 824
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ao"
           EndBody
@@ -12348,7 +12351,7 @@ ABB ACS800 Typ 1"
         Object TorqRef $Attribute 132 14-MAR-2006 09:44:20.24
           Body SysBody 14-MAR-2006 09:44:21.45
             Attr PgmName = "TorqRef"
-            Attr Size = 808
+            Attr Size = 824
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ao"
           EndBody
@@ -12356,7 +12359,7 @@ ABB ACS800 Typ 1"
         Object RampRate $Attribute 133 14-MAR-2006 09:44:31.78
           Body SysBody 14-MAR-2006 09:44:33.09
             Attr PgmName = "RampRate"
-            Attr Size = 808
+            Attr Size = 824
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ao"
           EndBody
@@ -12364,7 +12367,7 @@ ABB ACS800 Typ 1"
         Object SpeedCorr $Attribute 134 14-MAR-2006 09:44:48.50
           Body SysBody 14-MAR-2006 09:44:50.49
             Attr PgmName = "SpeedCorr"
-            Attr Size = 808
+            Attr Size = 824
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ao"
           EndBody
@@ -12372,7 +12375,7 @@ ABB ACS800 Typ 1"
         Object PosPrePPU $Attribute 135 14-MAR-2006 09:45:13.43
           Body SysBody 14-MAR-2006 09:45:14.88
             Attr PgmName = "PosPrePPU"
-            Attr Size = 808
+            Attr Size = 824
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ao"
           EndBody
@@ -12380,7 +12383,7 @@ ABB ACS800 Typ 1"
         Object AuxComWord $Attribute 136 14-MAR-2006 09:45:42.85
           Body SysBody 14-MAR-2006 09:46:00.65
             Attr PgmName = "AuxComWord"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Io"
           EndBody
@@ -12388,7 +12391,7 @@ ABB ACS800 Typ 1"
         Object LoadMeasRef $Attribute 137 14-MAR-2006 09:46:25.80
           Body SysBody 14-MAR-2006 09:46:27.15
             Attr PgmName = "LoadMeasRef"
-            Attr Size = 808
+            Attr Size = 824
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ao"
           EndBody
@@ -12396,245 +12399,248 @@ ABB ACS800 Typ 1"
         Object ParValue1 $Attribute 138 14-MAR-2006 09:47:40.75
           Body SysBody 14-MAR-2006 09:47:43.31
             Attr PgmName = "ParValue1"
-            Attr Size = 808
+            Attr Size = 824
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ao"
           EndBody
         EndObject
         Object IndWarning $Attribute 86 13-MAR-2006 09:34:22.38
-          Body SysBody 13-MAR-2006 09:34:22.38
+          Body SysBody 01-JUL-2016 10:06:04.97
             Attr PgmName = "IndWarning"
             Attr Size = 4
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object IndError $Attribute 87 13-MAR-2006 09:34:22.38
-          Body SysBody 13-MAR-2006 09:34:22.38
+          Body SysBody 01-JUL-2016 10:06:04.97
             Attr PgmName = "IndError"
             Attr Size = 4
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object OpReset $Attribute 88 13-MAR-2006 09:34:22.38
-          Body SysBody 13-MAR-2006 09:34:22.38
+          Body SysBody 01-JUL-2016 10:06:04.97
             Attr PgmName = "OpReset"
             Attr Size = 4
-            Attr Flags = 1040
+            Attr Flags = 1044
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object OpWritePar $Attribute 89 13-MAR-2006 09:34:22.38
-          Body SysBody 13-MAR-2006 09:34:22.38
+          Body SysBody 01-JUL-2016 10:06:04.98
             Attr PgmName = "OpWritePar"
             Attr Size = 4
-            Attr Flags = 1040
+            Attr Flags = 1044
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object OpReadPar $Attribute 90 13-MAR-2006 09:34:22.38
-          Body SysBody 13-MAR-2006 09:34:22.38
+          Body SysBody 01-JUL-2016 10:06:04.98
             Attr PgmName = "OpReadPar"
             Attr Size = 4
-            Attr Flags = 1040
+            Attr Flags = 1044
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object OpBackupPar $Attribute 91 13-MAR-2006 09:34:22.38
-          Body SysBody 13-MAR-2006 09:34:22.38
+          Body SysBody 01-JUL-2016 10:06:04.98
             Attr PgmName = "OpBackupPar"
             Attr Size = 4
-            Attr Flags = 1040
+            Attr Flags = 1044
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object CommOk $Attribute 92 13-MAR-2006 09:34:22.38
-          Body SysBody 13-MAR-2006 09:34:22.38
+          Body SysBody 01-JUL-2016 10:06:04.98
             Attr PgmName = "CommOk"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object AlarmOk $Attribute 93 13-MAR-2006 09:34:22.38
-          Body SysBody 13-MAR-2006 09:34:22.38
+          Body SysBody 01-JUL-2016 10:06:04.98
             Attr PgmName = "AlarmOk"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object PowerStartUp $Attribute 94 13-MAR-2006 09:34:22.38
-          Body SysBody 13-MAR-2006 09:34:22.38
+          Body SysBody 01-JUL-2016 10:06:04.98
             Attr PgmName = "PowerStartUp"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ReadyRemote $Attribute 95 13-MAR-2006 09:34:22.38
-          Body SysBody 13-MAR-2006 09:34:22.38
+          Body SysBody 01-JUL-2016 10:06:04.98
             Attr PgmName = "ReadyRemote"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ConvertRdyOn $Attribute 139 14-MAR-2006 11:07:51.20
-          Body SysBody 14-MAR-2006 11:07:52.57
+          Body SysBody 01-JUL-2016 10:06:04.98
             Attr PgmName = "ConvertRdyOn"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ConvertPowAck $Attribute 140 14-MAR-2006 11:08:12.12
-          Body SysBody 14-MAR-2006 11:08:13.32
+          Body SysBody 01-JUL-2016 10:06:04.99
             Attr PgmName = "ConvertPowAck"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ConvertReady $Attribute 96 13-MAR-2006 09:34:22.38
-          Body SysBody 13-MAR-2006 09:34:22.38
+          Body SysBody 01-JUL-2016 10:06:04.99
             Attr PgmName = "ConvertReady"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ConvertRun $Attribute 97 13-MAR-2006 09:34:22.38
-          Body SysBody 13-MAR-2006 09:34:22.38
+          Body SysBody 01-JUL-2016 10:06:04.99
             Attr PgmName = "ConvertRun"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ConvertZeroSp $Attribute 141 14-MAR-2006 11:08:46.35
-          Body SysBody 14-MAR-2006 11:08:47.82
+          Body SysBody 01-JUL-2016 10:06:05.00
             Attr PgmName = "ConvertZeroSp"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ConvertRemote $Attribute 101 14-MAR-2006 11:08:54.63
-          Body SysBody 13-MAR-2006 09:34:22.38
+          Body SysBody 01-JUL-2016 10:06:05.00
             Attr PgmName = "ConvertRemote"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ConvertTrqOk $Attribute 142 14-MAR-2006 11:09:17.33
-          Body SysBody 14-MAR-2006 11:09:18.59
+          Body SysBody 01-JUL-2016 10:06:05.00
             Attr PgmName = "ConvertTrqOk"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ConvertFault $Attribute 99 13-MAR-2006 09:34:22.38
-          Body SysBody 13-MAR-2006 09:34:22.38
+          Body SysBody 01-JUL-2016 10:06:05.00
             Attr PgmName = "ConvertFault"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ConvertWarning $Attribute 100 13-MAR-2006 09:34:22.38
-          Body SysBody 13-MAR-2006 09:34:22.38
+          Body SysBody 01-JUL-2016 10:06:05.01
             Attr PgmName = "ConvertWarning"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ConvertTrqLim $Attribute 143 14-MAR-2006 11:11:01.72
-          Body SysBody 14-MAR-2006 11:11:02.84
+          Body SysBody 01-JUL-2016 10:06:05.01
             Attr PgmName = "ConvertTrqLim"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ConvertSync $Attribute 144 14-MAR-2006 11:10:51.29
-          Body SysBody 14-MAR-2006 11:10:21.74
+          Body SysBody 01-JUL-2016 10:06:05.01
             Attr PgmName = "ConvertSync"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ConvertSyncRdy $Attribute 145 14-MAR-2006 11:11:29.61
-          Body SysBody 14-MAR-2006 11:11:30.76
+          Body SysBody 01-JUL-2016 10:06:05.02
             Attr PgmName = "ConvertSyncRdy"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ConvertBrakeLongFall $Attribute 146 14-MAR-2006 11:12:49.65
-          Body SysBody 14-MAR-2006 11:12:51.41
+          Body SysBody 01-JUL-2016 10:06:05.02
             Attr PgmName = "ConvertBrakeLongFall"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ConvertSnagLoad $Attribute 147 14-MAR-2006 11:13:17.16
-          Body SysBody 14-MAR-2006 11:13:18.49
+          Body SysBody 01-JUL-2016 10:06:05.02
             Attr PgmName = "ConvertSnagLoad"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object PowerUpTime $Attribute 102 13-MAR-2006 09:34:22.38
-          Body SysBody 13-MAR-2006 09:34:22.38
+          Body SysBody 01-JUL-2016 10:06:05.02
             Attr PgmName = "PowerUpTime"
             Attr Size = 4
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object RequestPar $Attribute 103 13-MAR-2006 09:34:22.38
-          Body SysBody 13-MAR-2006 09:34:22.38
+          Body SysBody 01-JUL-2016 10:06:05.02
             Attr PgmName = "RequestPar"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
         Object WriteValuePar $Attribute 104 13-MAR-2006 09:34:22.38
-          Body SysBody 13-MAR-2006 09:34:22.38
+          Body SysBody 01-JUL-2016 10:06:05.02
             Attr PgmName = "WriteValuePar"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
         Object ReadValuePar $Attribute 105 13-MAR-2006 09:34:22.38
-          Body SysBody 13-MAR-2006 09:34:22.38
+          Body SysBody 01-JUL-2016 10:06:05.02
             Attr PgmName = "ReadValuePar"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
         Object ReadCodePar $Attribute 106 13-MAR-2006 09:34:22.38
-          Body SysBody 13-MAR-2006 09:34:22.38
+          Body SysBody 01-JUL-2016 10:06:05.03
             Attr PgmName = "ReadCodePar"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
         Object ReadCodeSubPar $Attribute 107 13-MAR-2006 09:34:22.38
-          Body SysBody 13-MAR-2006 09:34:22.38
+          Body SysBody 01-JUL-2016 10:06:05.03
             Attr PgmName = "ReadCodeSubPar"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
@@ -13121,25 +13127,25 @@ ABB ACS800 Typ 1"
           EndBody
         EndObject
         Object ReadyRemote $Output 20 13-MAR-2006 09:34:22.38
-          Body SysBody 13-MAR-2006 09:34:22.38
+          Body SysBody 01-JUL-2016 10:06:05.06
             Attr PgmName = "ReadyRemote"
-            Attr Flags = 9216
+            Attr Flags = 9220
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "rdy"
           EndBody
         EndObject
         Object Run $Output 21 13-MAR-2006 09:34:22.38
-          Body SysBody 13-MAR-2006 09:34:22.38
+          Body SysBody 01-JUL-2016 10:06:05.06
             Attr PgmName = "Run"
-            Attr Flags = 9216
+            Attr Flags = 9220
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "run"
           EndBody
         EndObject
         Object SyncReady $Output 22 14-MAR-2006 16:08:39.29
-          Body SysBody 14-MAR-2006 16:08:43.10
+          Body SysBody 01-JUL-2016 10:06:05.06
             Attr PgmName = "SyncReady"
-            Attr Flags = 9216
+            Attr Flags = 9220
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "syr"
           EndBody
@@ -23760,7 +23766,7 @@ ABB ACC800"
         Object Super $Attribute 25 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
-            Attr Size = 760
+            Attr Size = 776
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-Aggregate"
           EndBody
@@ -23773,74 +23779,74 @@ ABB ACC800"
           EndBody
         EndObject
         Object Ready $Attribute 27 12-OCT-2005 12:58:20.00
-          Body SysBody 21-DEC-2005 09:13:58.19
+          Body SysBody 01-JUL-2016 10:06:05.29
             Attr PgmName = "Ready"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ExtInterlock $Attribute 28 12-OCT-2005 12:58:20.00
-          Body SysBody 21-DEC-2005 09:14:02.30
+          Body SysBody 01-JUL-2016 10:06:05.29
             Attr PgmName = "ExtInterlock"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object LocalMode $Attribute 29 12-OCT-2005 12:58:20.00
-          Body SysBody 21-DEC-2005 09:14:06.94
+          Body SysBody 01-JUL-2016 10:06:05.29
             Attr PgmName = "LocalMode"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object OpPowerOn $Attribute 30 12-OCT-2005 12:58:20.00
-          Body SysBody 21-DEC-2005 09:14:22.65
+          Body SysBody 01-JUL-2016 10:06:05.29
             Attr PgmName = "OpPowerOn"
             Attr Size = 4
-            Attr Flags = 1040
+            Attr Flags = 1044
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object OpPowerOff $Attribute 31 12-OCT-2005 12:58:20.00
-          Body SysBody 21-DEC-2005 09:14:26.42
+          Body SysBody 01-JUL-2016 10:06:05.29
             Attr PgmName = "OpPowerOff"
             Attr Size = 4
-            Attr Flags = 1040
+            Attr Flags = 1044
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object PowExtInterlock $Attribute 38 12-OCT-2005 12:58:20.00
-          Body SysBody 21-DEC-2005 09:14:35.91
+          Body SysBody 01-JUL-2016 10:06:05.29
             Attr PgmName = "PowExtInterlock"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object PowOnOffDim $Attribute 37 12-OCT-2005 12:58:20.00
-          Body SysBody 21-DEC-2005 09:14:41.47
+          Body SysBody 01-JUL-2016 10:06:05.32
             Attr PgmName = "PowOnOffDim"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object IndWarning $Attribute 17 12-OCT-2005 12:58:20.00
-          Body SysBody 21-DEC-2005 09:14:45.28
+          Body SysBody 01-JUL-2016 10:06:05.32
             Attr PgmName = "IndWarning"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object IndError $Attribute 18 12-OCT-2005 12:58:20.00
-          Body SysBody 21-DEC-2005 09:14:48.56
+          Body SysBody 01-JUL-2016 10:06:05.32
             Attr PgmName = "IndError"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -23895,7 +23901,7 @@ ABB ACC800"
         Object CircuitBreaker $Attribute 2 12-OCT-2005 12:58:20.00
           Body SysBody 12-OCT-2005 13:06:04.70
             Attr PgmName = "CircuitBreaker"
-            Attr Size = 2400
+            Attr Size = 2432
             Attr Flags = 4325384
             Attr TypeRef = "BaseComponent:Class-BaseCircuitBreaker"
           EndBody
@@ -23919,7 +23925,7 @@ ABB ACC800"
         Object Contactor $Attribute 5 12-OCT-2005 12:58:20.00
           Body SysBody 12-OCT-2005 13:01:17.39
             Attr PgmName = "Contactor"
-            Attr Size = 4016
+            Attr Size = 4080
             Attr Flags = 4325384
             Attr TypeRef = "BaseComponent:Class-BaseContactor"
           EndBody
@@ -23927,7 +23933,7 @@ ABB ACC800"
         Object ACS800 $Attribute 3 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "ACS800"
-            Attr Size = 28008
+            Attr Size = 28280
             Attr Flags = 131072
             Attr TypeRef = "ABB:Class-ABB_ACS800_1"
           EndBody
@@ -23951,7 +23957,7 @@ ABB ACC800"
         Object SafetySwitch $Attribute 7 12-OCT-2005 12:58:20.00
           Body SysBody 12-OCT-2005 13:05:52.02
             Attr PgmName = "SafetySwitch"
-            Attr Size = 2400
+            Attr Size = 2432
             Attr Flags = 4325384
             Attr TypeRef = "BaseComponent:Class-BaseSafetySwitch"
           EndBody
@@ -23967,7 +23973,7 @@ ABB ACC800"
         Object Motor $Attribute 9 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Motor"
-            Attr Size = 10376
+            Attr Size = 10456
             Attr Flags = 131080
             Attr TypeRef = "BaseComponent:Class-BaseMotor"
           EndBody
@@ -23988,10 +23994,10 @@ ABB ACC800"
           EndBody
         EndObject
         Object SupDisabled $Attribute 45 01-OCT-2007 15:28:45.88
-          Body SysBody 01-OCT-2007 15:28:47.98
+          Body SysBody 01-JUL-2016 10:06:05.34
             Attr PgmName = "SupDisabled"
             Attr Size = 4
-            Attr Flags = 1040
+            Attr Flags = 1044
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -24909,73 +24915,73 @@ ABB ACC800"
           EndBody
         EndObject
         Object On $Output 10 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 01-JUL-2016 10:06:05.39
             Attr PgmName = "On"
-            Attr Flags = 8192
+            Attr Flags = 8196
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "on"
           EndBody
         EndObject
         Object Err $Output 11 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 01-JUL-2016 10:06:05.39
             Attr PgmName = "Err"
-            Attr Flags = 8192
+            Attr Flags = 8196
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "err"
           EndBody
         EndObject
         Object Di1 $Output 12 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 01-JUL-2016 10:06:05.39
             Attr PgmName = "Di1"
-            Attr Flags = 8192
+            Attr Flags = 8196
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "di1"
           EndBody
         EndObject
         Object Di2 $Output 13 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 01-JUL-2016 10:06:05.40
             Attr PgmName = "Di2"
-            Attr Flags = 8192
+            Attr Flags = 8196
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "di2"
           EndBody
         EndObject
         Object Di3 $Output 14 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 01-JUL-2016 10:06:05.40
             Attr PgmName = "Di3"
-            Attr Flags = 8192
+            Attr Flags = 8196
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "di3"
           EndBody
         EndObject
         Object Di4 $Output 15 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 01-JUL-2016 10:06:05.40
             Attr PgmName = "Di4"
-            Attr Flags = 8192
+            Attr Flags = 8196
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "di4"
           EndBody
         EndObject
         Object Di5 $Output 16 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 01-JUL-2016 10:06:05.40
             Attr PgmName = "Di5"
-            Attr Flags = 8192
+            Attr Flags = 8196
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "di5"
           EndBody
         EndObject
         Object Di6 $Output 17 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 01-JUL-2016 10:06:05.40
             Attr PgmName = "Di6"
-            Attr Flags = 8192
+            Attr Flags = 8196
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "di6"
           EndBody
         EndObject
         Object DiIL $Output 22 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 01-JUL-2016 10:06:05.40
             Attr PgmName = "DiIL"
-            Attr Flags = 8192
+            Attr Flags = 8196
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "diil"
           EndBody
@@ -34845,7 +34851,7 @@ ABB ACS800 Aggregate
         Object Super $Attribute 1 12-OCT-2005 13:59:28.86
           Body SysBody 12-OCT-2005 13:59:50.40
             Attr PgmName = "Super"
-            Attr Size = 55008
+            Attr Size = 55504
             Attr Flags = 393216
             Attr TypeRef = "ABB:Class-ABB_ACS800MotorAggr"
           EndBody
@@ -34861,7 +34867,7 @@ ABB ACS800 Aggregate
         Object Pump $Attribute 3 12-OCT-2005 14:00:30.76
           Body SysBody 12-OCT-2005 14:01:02.96
             Attr PgmName = "Pump"
-            Attr Size = 760
+            Attr Size = 776
             Attr Flags = 131080
             Attr TypeRef = "BaseComponent:Class-BasePump"
           EndBody
@@ -35234,7 +35240,7 @@ ABB ACS800 Aggregate
         Object Super $Attribute 4 06-DEC-2005 15:52:29.46
           Body SysBody 06-DEC-2005 15:52:29.46
             Attr PgmName = "Super"
-            Attr Size = 55008
+            Attr Size = 55504
             Attr Flags = 393216
             Attr TypeRef = "ABB:Class-ABB_ACS800MotorAggr"
           EndBody
@@ -35250,7 +35256,7 @@ ABB ACS800 Aggregate
         Object Fan $Attribute 6 06-DEC-2005 15:54:00.45
           Body SysBody 06-DEC-2005 15:54:08.17
             Attr PgmName = "Fan"
-            Attr Size = 760
+            Attr Size = 776
             Attr Flags = 131080
             Attr TypeRef = "BaseComponent:Class-BaseFan"
           EndBody
@@ -35572,7 +35578,7 @@ ABB ACS800 Aggregate
         Object Super $Attribute 1 18-MAR-2008 16:41:44.70
           Body SysBody 18-MAR-2008 16:41:56.66
             Attr PgmName = "Super"
-            Attr Size = 13472
+            Attr Size = 13536
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseFcPPO3"
           EndBody
@@ -35688,7 +35694,7 @@ ABB ACS800 Aggregate
         Object Super $Attribute 1 18-MAR-2008 16:40:41.69
           Body SysBody 18-MAR-2008 16:41:04.06
             Attr PgmName = "Super"
-            Attr Size = 31216
+            Attr Size = 31552
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseFcPPO5"
           EndBody
@@ -37337,7 +37343,7 @@ ABB ACS800 Aggregate
         Object Super $Attribute 18 15-MAR-2006 13:10:28.15
           Body SysBody 15-MAR-2006 13:11:28.38
             Attr PgmName = "Super"
-            Attr Size = 760
+            Attr Size = 776
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-Component"
           EndBody
@@ -37360,7 +37366,7 @@ ABB ACS800 Aggregate
         Object Value1 $Attribute 1 09-MAR-2006 13:59:05.99
           Body SysBody 10-MAR-2006 07:29:19.96
             Attr PgmName = "Value1"
-            Attr Size = 7096
+            Attr Size = 7128
             Attr Flags = 131080
             Attr TypeRef = "BaseComponent:Class-BaseSensor"
           EndBody
@@ -37368,7 +37374,7 @@ ABB ACS800 Aggregate
         Object Status1 $Attribute 2 10-MAR-2006 09:58:51.97
           Body SysBody 10-MAR-2006 09:58:52.92
             Attr PgmName = "Status1"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -37392,7 +37398,7 @@ ABB ACS800 Aggregate
         Object Value2 $Attribute 3 09-MAR-2006 13:54:45.48
           Body SysBody 10-MAR-2006 07:29:45.30
             Attr PgmName = "Value2"
-            Attr Size = 7096
+            Attr Size = 7128
             Attr Flags = 4325384
             Attr TypeRef = "BaseComponent:Class-BaseSensor"
           EndBody
@@ -37408,7 +37414,7 @@ ABB ACS800 Aggregate
         Object Status2 $Attribute 4 09-MAR-2006 13:55:12.88
           Body SysBody 09-MAR-2006 14:43:55.41
             Attr PgmName = "Status2"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 4325376
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -37432,7 +37438,7 @@ ABB ACS800 Aggregate
         Object Value3 $Attribute 11 09-MAR-2006 14:44:24.43
           Body SysBody 10-MAR-2006 07:30:16.96
             Attr PgmName = "Value3"
-            Attr Size = 7096
+            Attr Size = 7128
             Attr Flags = 4325384
             Attr TypeRef = "BaseComponent:Class-BaseSensor"
           EndBody
@@ -37448,7 +37454,7 @@ ABB ACS800 Aggregate
         Object Status3 $Attribute 13 09-MAR-2006 14:44:47.79
           Body SysBody 09-MAR-2006 14:44:48.95
             Attr PgmName = "Status3"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 4325376
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -37795,127 +37801,145 @@ ABB ACS800 Aggregate
           EndBody
         EndObject
         Object Value1 $Output 3 09-MAR-2006 14:46:53.20
-          Body SysBody 09-MAR-2006 14:47:03.83
+          Body SysBody 01-JUL-2016 10:06:05.74
             Attr PgmName = "Value1"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Float32"
             Attr GraphName = "VAL1"
           EndBody
         EndObject
         Object HH1 $Output 4 09-MAR-2006 14:47:42.75
-          Body SysBody 09-MAR-2006 14:47:54.48
+          Body SysBody 01-JUL-2016 10:06:05.74
             Attr PgmName = "HH1"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "hh1"
           EndBody
         EndObject
         Object H1 $Output 5 09-MAR-2006 14:48:05.12
-          Body SysBody 09-MAR-2006 14:48:10.22
+          Body SysBody 01-JUL-2016 10:06:05.74
             Attr PgmName = "H1"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "h1"
           EndBody
         EndObject
         Object L1 $Output 6 09-MAR-2006 14:48:21.91
-          Body SysBody 09-MAR-2006 14:48:28.61
+          Body SysBody 01-JUL-2016 10:06:05.74
             Attr PgmName = "L1"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "l1"
           EndBody
         EndObject
         Object LL1 $Output 7 09-MAR-2006 14:48:37.60
-          Body SysBody 09-MAR-2006 14:48:41.16
+          Body SysBody 01-JUL-2016 10:06:05.74
             Attr PgmName = "LL1"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "ll1"
           EndBody
         EndObject
         Object Value2 $Output 8 09-MAR-2006 14:49:01.49
-          Body SysBody 09-MAR-2006 14:49:06.04
+          Body SysBody 01-JUL-2016 10:06:05.75
             Attr PgmName = "Value2"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Float32"
             Attr GraphName = "VAL2"
           EndBody
         EndObject
         Object HH2 $Output 9 09-MAR-2006 14:49:12.07
-          Body SysBody 09-MAR-2006 14:49:25.47
+          Body SysBody 01-JUL-2016 10:06:05.75
             Attr PgmName = "HH2"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "hh2"
           EndBody
         EndObject
         Object H2 $Output 10 09-MAR-2006 14:49:30.59
-          Body SysBody 09-MAR-2006 14:49:34.13
+          Body SysBody 01-JUL-2016 10:06:05.75
             Attr PgmName = "H2"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "h2"
           EndBody
         EndObject
         Object L2 $Output 11 09-MAR-2006 14:49:39.54
-          Body SysBody 09-MAR-2006 14:49:43.38
+          Body SysBody 01-JUL-2016 10:06:05.75
             Attr PgmName = "L2"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "l2"
           EndBody
         EndObject
         Object LL2 $Output 12 09-MAR-2006 14:49:50.85
-          Body SysBody 09-MAR-2006 14:49:55.06
+          Body SysBody 01-JUL-2016 10:06:05.75
             Attr PgmName = "LL2"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "ll2"
           EndBody
         EndObject
         Object Value3 $Output 13 09-MAR-2006 14:50:02.02
-          Body SysBody 09-MAR-2006 14:50:06.59
+          Body SysBody 01-JUL-2016 10:06:05.75
             Attr PgmName = "Value3"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Float32"
             Attr GraphName = "VAL3"
           EndBody
         EndObject
         Object HH3 $Output 14 09-MAR-2006 14:50:11.87
-          Body SysBody 09-MAR-2006 14:50:16.35
+          Body SysBody 01-JUL-2016 10:06:05.76
             Attr PgmName = "HH3"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "hh3"
           EndBody
         EndObject
         Object H3 $Output 15 09-MAR-2006 14:50:21.85
-          Body SysBody 09-MAR-2006 14:50:25.28
+          Body SysBody 01-JUL-2016 10:06:05.76
             Attr PgmName = "H3"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "h3"
           EndBody
         EndObject
         Object L3 $Output 16 09-MAR-2006 14:50:29.80
-          Body SysBody 09-MAR-2006 14:50:33.04
+          Body SysBody 01-JUL-2016 10:06:05.76
             Attr PgmName = "L3"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "l3"
           EndBody
         EndObject
         Object LL3 $Output 17 09-MAR-2006 14:50:37.86
-          Body SysBody 09-MAR-2006 14:50:41.01
+          Body SysBody 01-JUL-2016 10:06:05.76
             Attr PgmName = "LL3"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "ll3"
           EndBody
         EndObject
         Object StsError1 $Output 18 10-MAR-2006 09:59:41.15
-          Body SysBody 10-MAR-2006 10:00:02.21
+          Body SysBody 01-JUL-2016 10:06:05.76
             Attr PgmName = "StsError1"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "err1"
           EndBody
         EndObject
         Object StsError2 $Output 20 10-MAR-2006 10:00:17.70
-          Body SysBody 10-MAR-2006 10:00:34.53
+          Body SysBody 01-JUL-2016 10:06:05.76
             Attr PgmName = "StsError2"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "err2"
           EndBody
         EndObject
         Object StsError3 $Output 19 10-MAR-2006 10:00:25.03
-          Body SysBody 10-MAR-2006 10:00:29.37
+          Body SysBody 01-JUL-2016 10:06:05.76
             Attr PgmName = "StsError3"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "err3"
           EndBody
@@ -44690,7 +44714,7 @@ if (I1 >= 0 && I1 <= 9) {
         Object Super $Attribute 1 03-APR-2006 08:44:42.53
           Body SysBody 23-MAR-2006 10:59:24.92
             Attr PgmName = "Super"
-            Attr Size = 26296
+            Attr Size = 26456
             Attr Flags = 393216
             Attr TypeRef = "ABB:Class-ABB_Sensor_Pb_PA"
           EndBody
@@ -44916,127 +44940,145 @@ if (I1 >= 0 && I1 <= 9) {
           EndBody
         EndObject
         Object Value1 $Output 4 23-MAR-2006 11:24:45.41
-          Body SysBody 23-MAR-2006 11:24:48.05
+          Body SysBody 01-JUL-2016 10:06:05.91
             Attr PgmName = "Value1"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Float32"
             Attr GraphName = "VAL1"
           EndBody
         EndObject
         Object HH1 $Output 5 16-MAR-2006 10:38:32.34
-          Body SysBody 16-MAR-2006 13:38:08.77
+          Body SysBody 01-JUL-2016 10:06:05.91
             Attr PgmName = "HH1"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "hh1"
           EndBody
         EndObject
         Object H1 $Output 6 16-MAR-2006 10:38:32.34
-          Body SysBody 16-MAR-2006 10:38:32.34
+          Body SysBody 01-JUL-2016 10:06:05.91
             Attr PgmName = "H1"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "h1"
           EndBody
         EndObject
         Object L1 $Output 7 16-MAR-2006 10:38:32.34
-          Body SysBody 16-MAR-2006 10:38:32.34
+          Body SysBody 01-JUL-2016 10:06:05.91
             Attr PgmName = "L1"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "l1"
           EndBody
         EndObject
         Object LL1 $Output 8 16-MAR-2006 10:38:32.34
-          Body SysBody 16-MAR-2006 10:38:32.34
+          Body SysBody 01-JUL-2016 10:06:05.91
             Attr PgmName = "LL1"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "ll1"
           EndBody
         EndObject
         Object Value2 $Output 9 16-MAR-2006 10:38:32.34
-          Body SysBody 16-MAR-2006 10:38:32.34
+          Body SysBody 01-JUL-2016 10:06:05.92
             Attr PgmName = "Value2"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Float32"
             Attr GraphName = "VAL2"
           EndBody
         EndObject
         Object HH2 $Output 10 16-MAR-2006 10:38:32.34
-          Body SysBody 16-MAR-2006 10:38:32.34
+          Body SysBody 01-JUL-2016 10:06:05.92
             Attr PgmName = "HH2"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "hh2"
           EndBody
         EndObject
         Object H2 $Output 11 16-MAR-2006 10:38:32.34
-          Body SysBody 16-MAR-2006 10:38:32.34
+          Body SysBody 01-JUL-2016 10:06:05.92
             Attr PgmName = "H2"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "h2"
           EndBody
         EndObject
         Object L2 $Output 12 16-MAR-2006 10:38:32.34
-          Body SysBody 16-MAR-2006 10:38:32.34
+          Body SysBody 01-JUL-2016 10:06:05.93
             Attr PgmName = "L2"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "l2"
           EndBody
         EndObject
         Object LL2 $Output 13 16-MAR-2006 10:38:32.34
-          Body SysBody 16-MAR-2006 10:38:32.34
+          Body SysBody 01-JUL-2016 10:06:05.93
             Attr PgmName = "LL2"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "ll2"
           EndBody
         EndObject
         Object Value3 $Output 14 16-MAR-2006 10:38:32.34
-          Body SysBody 16-MAR-2006 10:38:32.34
+          Body SysBody 01-JUL-2016 10:06:05.93
             Attr PgmName = "Value3"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Float32"
             Attr GraphName = "VAL3"
           EndBody
         EndObject
         Object HH3 $Output 15 16-MAR-2006 10:38:32.34
-          Body SysBody 16-MAR-2006 10:38:32.34
+          Body SysBody 01-JUL-2016 10:06:05.93
             Attr PgmName = "HH3"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "hh3"
           EndBody
         EndObject
         Object H3 $Output 16 16-MAR-2006 10:38:32.34
-          Body SysBody 16-MAR-2006 10:38:32.34
+          Body SysBody 01-JUL-2016 10:06:05.93
             Attr PgmName = "H3"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "h3"
           EndBody
         EndObject
         Object L3 $Output 17 16-MAR-2006 10:38:32.34
-          Body SysBody 16-MAR-2006 10:38:32.34
+          Body SysBody 01-JUL-2016 10:06:05.93
             Attr PgmName = "L3"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "l3"
           EndBody
         EndObject
         Object LL3 $Output 18 16-MAR-2006 10:38:32.34
-          Body SysBody 16-MAR-2006 10:38:32.34
+          Body SysBody 01-JUL-2016 10:06:05.93
             Attr PgmName = "LL3"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "ll3"
           EndBody
         EndObject
         Object StsError1 $Output 19 16-MAR-2006 10:38:32.34
-          Body SysBody 16-MAR-2006 13:45:28.51
+          Body SysBody 01-JUL-2016 10:06:05.96
             Attr PgmName = "StsError1"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "err1"
           EndBody
         EndObject
         Object StsError2 $Output 20 16-MAR-2006 10:38:32.34
-          Body SysBody 16-MAR-2006 10:38:32.34
+          Body SysBody 01-JUL-2016 10:06:05.96
             Attr PgmName = "StsError2"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "err2"
           EndBody
         EndObject
         Object StsError3 $Output 21 16-MAR-2006 10:38:32.34
-          Body SysBody 16-MAR-2006 10:38:32.34
+          Body SysBody 01-JUL-2016 10:06:05.96
             Attr PgmName = "StsError3"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "err3"
           EndBody
@@ -46268,7 +46310,7 @@ if (I1 >= 0 && I1 <= 9) {
         Object Super $Attribute 1 22-MAR-2006 07:53:20.14
           Body SysBody 22-MAR-2006 07:53:51.20
             Attr PgmName = "Super"
-            Attr Size = 26296
+            Attr Size = 26456
             Attr Flags = 393216
             Attr TypeRef = "ABB:Class-ABB_Sensor_Pb_PA"
           EndBody
@@ -46491,127 +46533,145 @@ if (I1 >= 0 && I1 <= 9) {
           EndBody
         EndObject
         Object Value1 $Output 3 22-MAR-2006 16:03:51.39
-          Body SysBody 22-MAR-2006 16:04:11.18
+          Body SysBody 01-JUL-2016 10:06:05.99
             Attr PgmName = "Value1"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Float32"
             Attr GraphName = "Val1"
           EndBody
         EndObject
         Object HH1 $Output 6 22-MAR-2006 16:05:26.78
-          Body SysBody 22-MAR-2006 16:05:33.42
+          Body SysBody 01-JUL-2016 10:06:05.99
             Attr PgmName = "HH1"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "hh1"
           EndBody
         EndObject
         Object H1 $Output 9 22-MAR-2006 16:05:53.40
-          Body SysBody 22-MAR-2006 16:06:01.99
+          Body SysBody 01-JUL-2016 10:06:05.99
             Attr PgmName = "H1"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "h1"
           EndBody
         EndObject
         Object L1 $Output 8 22-MAR-2006 16:06:11.63
-          Body SysBody 22-MAR-2006 16:06:18.91
+          Body SysBody 01-JUL-2016 10:06:05.99
             Attr PgmName = "L1"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "l1"
           EndBody
         EndObject
         Object LL1 $Output 7 22-MAR-2006 16:06:25.53
-          Body SysBody 22-MAR-2006 16:06:31.86
+          Body SysBody 01-JUL-2016 10:06:06.00
             Attr PgmName = "LL1"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "ll1"
           EndBody
         EndObject
         Object Value2 $Output 5 22-MAR-2006 16:04:40.37
-          Body SysBody 22-MAR-2006 16:04:46.71
+          Body SysBody 01-JUL-2016 10:06:06.00
             Attr PgmName = "Value2"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Float32"
             Attr GraphName = "Val2"
           EndBody
         EndObject
         Object HH2 $Output 13 22-MAR-2006 16:07:02.34
-          Body SysBody 22-MAR-2006 16:07:07.96
+          Body SysBody 01-JUL-2016 10:06:06.00
             Attr PgmName = "HH2"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "hh2"
           EndBody
         EndObject
         Object H2 $Output 12 22-MAR-2006 16:07:18.80
-          Body SysBody 22-MAR-2006 16:07:22.07
+          Body SysBody 01-JUL-2016 10:06:06.00
             Attr PgmName = "H2"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "h2"
           EndBody
         EndObject
         Object L2 $Output 11 22-MAR-2006 16:07:32.43
-          Body SysBody 22-MAR-2006 16:07:35.60
+          Body SysBody 01-JUL-2016 10:06:06.00
             Attr PgmName = "L2"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "l2"
           EndBody
         EndObject
         Object LL2 $Output 10 22-MAR-2006 16:07:42.91
-          Body SysBody 22-MAR-2006 16:07:46.90
+          Body SysBody 01-JUL-2016 10:06:06.01
             Attr PgmName = "LL2"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "ll2"
           EndBody
         EndObject
         Object Value3 $Output 4 22-MAR-2006 16:04:52.47
-          Body SysBody 22-MAR-2006 16:05:00.05
+          Body SysBody 01-JUL-2016 10:06:06.01
             Attr PgmName = "Value3"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Float32"
             Attr GraphName = "Val3"
           EndBody
         EndObject
         Object HH3 $Output 17 22-MAR-2006 16:08:13.44
-          Body SysBody 22-MAR-2006 16:08:17.76
+          Body SysBody 01-JUL-2016 10:06:06.01
             Attr PgmName = "HH3"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "hh3"
           EndBody
         EndObject
         Object H3 $Output 16 22-MAR-2006 16:08:26.11
-          Body SysBody 22-MAR-2006 16:08:29.54
+          Body SysBody 01-JUL-2016 10:06:06.01
             Attr PgmName = "H3"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "h3"
           EndBody
         EndObject
         Object L3 $Output 15 22-MAR-2006 16:08:36.08
-          Body SysBody 22-MAR-2006 16:08:39.78
+          Body SysBody 01-JUL-2016 10:06:06.01
             Attr PgmName = "L3"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "l3"
           EndBody
         EndObject
         Object LL3 $Output 14 22-MAR-2006 16:08:46.67
-          Body SysBody 22-MAR-2006 16:08:49.84
+          Body SysBody 01-JUL-2016 10:06:06.01
             Attr PgmName = "LL3"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "ll3"
           EndBody
         EndObject
         Object StsError1 $Output 18 22-MAR-2006 16:09:27.19
-          Body SysBody 22-MAR-2006 16:09:32.87
+          Body SysBody 01-JUL-2016 10:06:06.03
             Attr PgmName = "StsError1"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "err1"
           EndBody
         EndObject
         Object StsError2 $Output 20 22-MAR-2006 16:09:48.17
-          Body SysBody 22-MAR-2006 16:09:51.84
+          Body SysBody 01-JUL-2016 10:06:06.03
             Attr PgmName = "StsError2"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "err2"
           EndBody
         EndObject
         Object StsError3 $Output 19 22-MAR-2006 16:09:57.87
-          Body SysBody 22-MAR-2006 16:10:00.99
+          Body SysBody 01-JUL-2016 10:06:06.04
             Attr PgmName = "StsError3"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "err3"
           EndBody
@@ -47855,7 +47915,7 @@ if (I1 >= 0 && I1 <= 9) {
         Object Super $Attribute 1 16-MAR-2006 14:04:04.08
           Body SysBody 22-MAR-2006 07:53:40.28
             Attr PgmName = "Super"
-            Attr Size = 26296
+            Attr Size = 26456
             Attr Flags = 393216
             Attr TypeRef = "ABB:Class-ABB_Sensor_Pb_PA"
           EndBody
@@ -48081,127 +48141,145 @@ if (I1 >= 0 && I1 <= 9) {
           EndBody
         EndObject
         Object Value1 $Output 3 22-MAR-2006 16:03:46.55
-          Body SysBody 22-MAR-2006 16:04:00.48
+          Body SysBody 01-JUL-2016 10:06:06.06
             Attr PgmName = "Value1"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Float32"
             Attr GraphName = "Val1"
           EndBody
         EndObject
         Object HH1 $Output 6 16-MAR-2006 13:38:30.44
-          Body SysBody 16-MAR-2006 13:38:50.08
+          Body SysBody 01-JUL-2016 10:06:06.07
             Attr PgmName = "HH1"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "hh1"
           EndBody
         EndObject
         Object H1 $Output 7 16-MAR-2006 13:39:17.26
-          Body SysBody 16-MAR-2006 13:39:22.25
+          Body SysBody 01-JUL-2016 10:06:06.07
             Attr PgmName = "H1"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "h1"
           EndBody
         EndObject
         Object L1 $Output 8 16-MAR-2006 13:39:33.54
-          Body SysBody 16-MAR-2006 13:39:43.83
+          Body SysBody 01-JUL-2016 10:06:06.07
             Attr PgmName = "L1"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "l1"
           EndBody
         EndObject
         Object LL1 $Output 9 16-MAR-2006 13:39:59.90
-          Body SysBody 16-MAR-2006 13:40:06.87
+          Body SysBody 01-JUL-2016 10:06:06.07
             Attr PgmName = "LL1"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "ll1"
           EndBody
         EndObject
         Object Value2 $Output 4 16-MAR-2006 13:37:22.08
-          Body SysBody 16-MAR-2006 13:37:31.40
+          Body SysBody 01-JUL-2016 10:06:06.07
             Attr PgmName = "Value2"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Float32"
             Attr GraphName = "Val2"
           EndBody
         EndObject
         Object HH2 $Output 13 16-MAR-2006 13:41:17.29
-          Body SysBody 16-MAR-2006 13:41:24.45
+          Body SysBody 01-JUL-2016 10:06:06.08
             Attr PgmName = "HH2"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "hh2"
           EndBody
         EndObject
         Object H2 $Output 12 16-MAR-2006 13:41:35.32
-          Body SysBody 16-MAR-2006 13:42:55.47
+          Body SysBody 01-JUL-2016 10:06:06.08
             Attr PgmName = "H2"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "h2"
           EndBody
         EndObject
         Object L2 $Output 11 16-MAR-2006 13:43:02.81
-          Body SysBody 16-MAR-2006 13:43:09.14
+          Body SysBody 01-JUL-2016 10:06:06.08
             Attr PgmName = "L2"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "l2"
           EndBody
         EndObject
         Object LL2 $Output 10 16-MAR-2006 13:43:14.73
-          Body SysBody 16-MAR-2006 13:43:19.53
+          Body SysBody 01-JUL-2016 10:06:06.08
             Attr PgmName = "LL2"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "ll2"
           EndBody
         EndObject
         Object Value3 $Output 5 16-MAR-2006 13:37:47.20
-          Body SysBody 16-MAR-2006 13:37:53.50
+          Body SysBody 01-JUL-2016 10:06:06.08
             Attr PgmName = "Value3"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Float32"
             Attr GraphName = "Val3"
           EndBody
         EndObject
         Object HH3 $Output 17 16-MAR-2006 13:43:48.32
-          Body SysBody 16-MAR-2006 13:43:56.52
+          Body SysBody 01-JUL-2016 10:06:06.08
             Attr PgmName = "HH3"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "hh3"
           EndBody
         EndObject
         Object H3 $Output 16 16-MAR-2006 13:44:07.21
-          Body SysBody 16-MAR-2006 13:44:14.21
+          Body SysBody 01-JUL-2016 10:06:06.08
             Attr PgmName = "H3"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "h3"
           EndBody
         EndObject
         Object L3 $Output 15 16-MAR-2006 13:44:19.73
-          Body SysBody 16-MAR-2006 13:44:24.80
+          Body SysBody 01-JUL-2016 10:06:06.08
             Attr PgmName = "L3"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "l3"
           EndBody
         EndObject
         Object LL3 $Output 14 16-MAR-2006 13:44:30.46
-          Body SysBody 16-MAR-2006 13:44:37.63
+          Body SysBody 01-JUL-2016 10:06:06.11
             Attr PgmName = "LL3"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "ll3"
           EndBody
         EndObject
         Object StsError1 $Output 18 22-MAR-2006 16:09:04.43
-          Body SysBody 16-MAR-2006 13:45:54.50
+          Body SysBody 01-JUL-2016 10:06:06.11
             Attr PgmName = "StsError1"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "err1"
           EndBody
         EndObject
         Object StsError2 $Output 20 16-MAR-2006 13:46:12.20
-          Body SysBody 16-MAR-2006 13:46:16.78
+          Body SysBody 01-JUL-2016 10:06:06.12
             Attr PgmName = "StsError2"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "err2"
           EndBody
         EndObject
         Object StsError3 $Output 19 16-MAR-2006 13:46:22.93
-          Body SysBody 16-MAR-2006 13:46:31.10
+          Body SysBody 01-JUL-2016 10:06:06.12
             Attr PgmName = "StsError3"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "err3"
           EndBody
@@ -49445,7 +49523,7 @@ if (I1 >= 0 && I1 <= 9) {
         Object Super $Attribute 1 23-MAR-2006 10:59:44.01
           Body SysBody 23-MAR-2006 10:59:58.56
             Attr PgmName = "Super"
-            Attr Size = 26296
+            Attr Size = 26456
             Attr Flags = 393216
             Attr TypeRef = "ABB:Class-ABB_Sensor_Pb_PA"
           EndBody
@@ -49672,127 +49750,145 @@ if (I1 >= 0 && I1 <= 9) {
           EndBody
         EndObject
         Object Value1 $Output 3 23-MAR-2006 11:24:58.96
-          Body SysBody 23-MAR-2006 11:25:12.29
+          Body SysBody 01-JUL-2016 10:06:06.13
             Attr PgmName = "Value1"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Float32"
             Attr GraphName = "Val1"
           EndBody
         EndObject
         Object HH1 $Output 6 23-MAR-2006 11:26:06.22
-          Body SysBody 23-MAR-2006 11:26:14.31
+          Body SysBody 01-JUL-2016 10:06:06.13
             Attr PgmName = "HH1"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "hh1"
           EndBody
         EndObject
         Object H1 $Output 9 23-MAR-2006 11:26:35.82
-          Body SysBody 23-MAR-2006 11:26:38.73
+          Body SysBody 01-JUL-2016 10:06:06.14
             Attr PgmName = "H1"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "h1"
           EndBody
         EndObject
         Object L1 $Output 8 23-MAR-2006 11:26:48.99
-          Body SysBody 23-MAR-2006 11:26:53.40
+          Body SysBody 01-JUL-2016 10:06:06.14
             Attr PgmName = "L1"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "l1"
           EndBody
         EndObject
         Object LL1 $Output 7 23-MAR-2006 11:27:01.84
-          Body SysBody 23-MAR-2006 11:27:06.34
+          Body SysBody 01-JUL-2016 10:06:06.14
             Attr PgmName = "LL1"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "ll1"
           EndBody
         EndObject
         Object Value2 $Output 5 23-MAR-2006 11:25:30.45
-          Body SysBody 23-MAR-2006 11:25:33.85
+          Body SysBody 01-JUL-2016 10:06:06.14
             Attr PgmName = "Value2"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Float32"
             Attr GraphName = "Val2"
           EndBody
         EndObject
         Object HH2 $Output 13 23-MAR-2006 11:27:34.52
-          Body SysBody 23-MAR-2006 11:27:37.78
+          Body SysBody 01-JUL-2016 10:06:06.15
             Attr PgmName = "HH2"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "hh2"
           EndBody
         EndObject
         Object H2 $Output 12 23-MAR-2006 11:27:43.80
-          Body SysBody 23-MAR-2006 11:27:49.51
+          Body SysBody 01-JUL-2016 10:06:06.15
             Attr PgmName = "H2"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "h2"
           EndBody
         EndObject
         Object L2 $Output 11 23-MAR-2006 11:27:55.68
-          Body SysBody 23-MAR-2006 11:27:59.24
+          Body SysBody 01-JUL-2016 10:06:06.15
             Attr PgmName = "L2"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "l2"
           EndBody
         EndObject
         Object LL2 $Output 10 23-MAR-2006 11:28:06.11
-          Body SysBody 23-MAR-2006 11:28:09.14
+          Body SysBody 01-JUL-2016 10:06:06.15
             Attr PgmName = "LL2"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "ll2"
           EndBody
         EndObject
         Object Value3 $Output 4 23-MAR-2006 11:25:40.45
-          Body SysBody 23-MAR-2006 11:25:43.81
+          Body SysBody 01-JUL-2016 10:06:06.15
             Attr PgmName = "Value3"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Float32"
             Attr GraphName = "Val3"
           EndBody
         EndObject
         Object HH3 $Output 17 23-MAR-2006 11:28:44.53
-          Body SysBody 23-MAR-2006 11:28:48.73
+          Body SysBody 01-JUL-2016 10:06:06.15
             Attr PgmName = "HH3"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "hh3"
           EndBody
         EndObject
         Object H3 $Output 16 23-MAR-2006 11:28:55.05
-          Body SysBody 23-MAR-2006 11:28:58.28
+          Body SysBody 01-JUL-2016 10:06:06.15
             Attr PgmName = "H3"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "h3"
           EndBody
         EndObject
         Object L3 $Output 15 23-MAR-2006 11:29:05.78
-          Body SysBody 23-MAR-2006 11:29:09.46
+          Body SysBody 01-JUL-2016 10:06:06.15
             Attr PgmName = "L3"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "l3"
           EndBody
         EndObject
         Object LL3 $Output 14 23-MAR-2006 11:29:15.01
-          Body SysBody 23-MAR-2006 11:29:18.52
+          Body SysBody 01-JUL-2016 10:06:06.16
             Attr PgmName = "LL3"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "ll3"
           EndBody
         EndObject
         Object StsError1 $Output 18 23-MAR-2006 11:29:36.60
-          Body SysBody 23-MAR-2006 11:29:42.29
+          Body SysBody 01-JUL-2016 10:06:06.16
             Attr PgmName = "StsError1"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "err1"
           EndBody
         EndObject
         Object StsError2 $Output 20 23-MAR-2006 11:30:01.57
-          Body SysBody 23-MAR-2006 11:30:05.41
+          Body SysBody 01-JUL-2016 10:06:06.16
             Attr PgmName = "StsError2"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "err2"
           EndBody
         EndObject
         Object StsError3 $Output 19 23-MAR-2006 11:30:13.01
-          Body SysBody 23-MAR-2006 11:30:15.47
+          Body SysBody 01-JUL-2016 10:06:06.16
             Attr PgmName = "StsError3"
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "err3"
           EndBody
@@ -52154,7 +52250,7 @@ if (I1 >= 0 && I1 <= 9) {
         Object InIdPar $Attribute 138 24-JUN-2013 10:53:43.33
           Body SysBody 05-JUL-2013 14:33:29.76
             Attr PgmName = "InIdPar"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 4325376
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -52173,7 +52269,7 @@ if (I1 >= 0 && I1 <= 9) {
         Object InIndPar $Attribute 139 24-JUN-2013 10:53:43.33
           Body SysBody 05-JUL-2013 14:33:39.89
             Attr PgmName = "InIndPar"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 4325376
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -52192,7 +52288,7 @@ if (I1 >= 0 && I1 <= 9) {
         Object InValuePar $Attribute 140 24-JUN-2013 10:53:43.33
           Body SysBody 05-JUL-2013 14:33:47.83
             Attr PgmName = "InValuePar"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 4325376
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -52263,7 +52359,7 @@ if (I1 >= 0 && I1 <= 9) {
         Object MainStatusSW $Attribute 141 24-JUN-2013 10:53:43.33
           Body SysBody 24-JUN-2013 10:53:43.33
             Attr PgmName = "MainStatusSW"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -52274,7 +52370,7 @@ if (I1 >= 0 && I1 <= 9) {
         Object ActSpeed $Attribute 142 24-JUN-2013 10:53:43.33
           Body SysBody 24-JUN-2013 10:53:43.33
             Attr PgmName = "ActSpeed"
-            Attr Size = 832
+            Attr Size = 848
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -52287,7 +52383,7 @@ if (I1 >= 0 && I1 <= 9) {
         Object ActCurrent $Attribute 143 24-JUN-2013 10:53:43.33
           Body SysBody 24-JUN-2013 10:53:43.33
             Attr PgmName = "ActCurrent"
-            Attr Size = 832
+            Attr Size = 848
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -52300,7 +52396,7 @@ if (I1 >= 0 && I1 <= 9) {
         Object ActTorque $Attribute 144 24-JUN-2013 10:53:43.33
           Body SysBody 24-JUN-2013 10:53:43.33
             Attr PgmName = "ActTorque"
-            Attr Size = 832
+            Attr Size = 848
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -52370,7 +52466,7 @@ if (I1 >= 0 && I1 <= 9) {
         Object UserStatusSW1 $Attribute 145 24-JUN-2013 10:53:43.33
           Body SysBody 24-JUN-2013 10:53:43.33
             Attr PgmName = "UserStatusSW1"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -52381,7 +52477,7 @@ if (I1 >= 0 && I1 <= 9) {
         Object ActiveWarning1 $Attribute 146 24-JUN-2013 10:53:43.33
           Body SysBody 24-JUN-2013 10:53:43.33
             Attr PgmName = "ActiveWarning1"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -52392,7 +52488,7 @@ if (I1 >= 0 && I1 <= 9) {
         Object ActiveFault1 $Attribute 147 24-JUN-2013 10:53:43.33
           Body SysBody 24-JUN-2013 10:53:43.33
             Attr PgmName = "ActiveFault1"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -52411,7 +52507,7 @@ if (I1 >= 0 && I1 <= 9) {
         Object OutIdPar $Attribute 148 24-JUN-2013 10:53:43.33
           Body SysBody 05-JUL-2013 14:33:59.51
             Attr PgmName = "OutIdPar"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 4325376
             Attr TypeRef = "pwrb:Class-Io"
           EndBody
@@ -52430,7 +52526,7 @@ if (I1 >= 0 && I1 <= 9) {
         Object OutIndPar $Attribute 149 24-JUN-2013 10:53:43.33
           Body SysBody 05-JUL-2013 14:34:06.75
             Attr PgmName = "OutIndPar"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 4325376
             Attr TypeRef = "pwrb:Class-Io"
           EndBody
@@ -52449,7 +52545,7 @@ if (I1 >= 0 && I1 <= 9) {
         Object OutValuePar $Attribute 150 24-JUN-2013 10:53:43.33
           Body SysBody 05-JUL-2013 14:34:13.54
             Attr PgmName = "OutValuePar"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 4325376
             Attr TypeRef = "pwrb:Class-Io"
           EndBody
@@ -52527,7 +52623,7 @@ if (I1 >= 0 && I1 <= 9) {
         Object MainControlCW $Attribute 151 24-JUN-2013 10:53:43.33
           Body SysBody 24-JUN-2013 10:53:43.33
             Attr PgmName = "MainControlCW"
-            Attr Size = 784
+            Attr Size = 800
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Io"
           EndBody
@@ -52542,7 +52638,7 @@ if (I1 >= 0 && I1 <= 9) {
         Object RefSpeed $Attribute 152 24-JUN-2013 10:53:43.33
           Body SysBody 24-JUN-2013 10:53:43.33
             Attr PgmName = "RefSpeed"
-            Attr Size = 808
+            Attr Size = 824
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ao"
           EndBody
@@ -52551,9 +52647,10 @@ if (I1 >= 0 && I1 <= 9) {
         !    Indicator in object graph shows converter warning
         !*/
         Object IndWarning $Attribute 153 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 01-JUL-2016 10:06:06.26
             Attr PgmName = "IndWarning"
             Attr Size = 4
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -52561,9 +52658,10 @@ if (I1 >= 0 && I1 <= 9) {
         !    Indicator in object graph shows converter fault/tripped
         !*/
         Object IndError $Attribute 154 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 01-JUL-2016 10:06:06.26
             Attr PgmName = "IndError"
             Attr Size = 4
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -52572,9 +52670,10 @@ if (I1 >= 0 && I1 <= 9) {
         !    shows stop command has been activated.
         !*/
         Object IndStops $Attribute 155 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 01-JUL-2016 10:06:06.27
             Attr PgmName = "IndStops"
             Attr Size = 4
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -52582,10 +52681,10 @@ if (I1 >= 0 && I1 <= 9) {
         !   Button in object graph reset tripped converter
         !*/
         Object OpReset $Attribute 156 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 01-JUL-2016 10:06:06.27
             Attr PgmName = "OpReset"
             Attr Size = 4
-            Attr Flags = 1040
+            Attr Flags = 1044
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -52601,10 +52700,10 @@ if (I1 >= 0 && I1 <= 9) {
         !    Button in object graph "more..." write parameter
         !*/
         Object OpWritePar $Attribute 157 24-JUN-2013 10:53:43.33
-          Body SysBody 11-JUL-2013 11:20:21.94
+          Body SysBody 01-JUL-2016 10:06:06.27
             Attr PgmName = "OpWritePar"
             Attr Size = 4
-            Attr Flags = 4195344
+            Attr Flags = 4195348
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -52620,10 +52719,10 @@ if (I1 >= 0 && I1 <= 9) {
         !    Button in object graph "more..." read parameter
         !*/
         Object OpReadPar $Attribute 158 24-JUN-2013 10:53:43.33
-          Body SysBody 11-JUL-2013 11:20:42.69
+          Body SysBody 01-JUL-2016 10:06:06.27
             Attr PgmName = "OpReadPar"
             Attr Size = 4
-            Attr Flags = 4195344
+            Attr Flags = 4195348
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -52639,10 +52738,10 @@ if (I1 >= 0 && I1 <= 9) {
         !    Button in object graph "more..." backup parameters in converter
         !*/
         Object OpBackupPar $Attribute 159 24-JUN-2013 10:53:43.33
-          Body SysBody 11-JUL-2013 11:21:04.30
+          Body SysBody 01-JUL-2016 10:06:06.27
             Attr PgmName = "OpBackupPar"
             Attr Size = 4
-            Attr Flags = 4195344
+            Attr Flags = 4195348
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -52658,10 +52757,10 @@ if (I1 >= 0 && I1 <= 9) {
         !    Option button in object graph "more..."  Write 16 bit word
         !*/
         Object OpWrite16bit $Attribute 223 08-JAN-2014 16:33:47.75
-          Body SysBody 08-JAN-2014 16:33:49.82
+          Body SysBody 01-JUL-2016 10:06:06.27
             Attr PgmName = "OpWrite16bit"
             Attr Size = 4
-            Attr Flags = 4195344
+            Attr Flags = 4195348
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -52669,10 +52768,10 @@ if (I1 >= 0 && I1 <= 9) {
         !    Communication link to converter okey
         !*/
         Object CommOk $Attribute 160 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 01-JUL-2016 10:06:06.27
             Attr PgmName = "CommOk"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -52680,10 +52779,10 @@ if (I1 >= 0 && I1 <= 9) {
         !    Converter has started up, alarm message "ready"
         !*/
         Object AlarmOk $Attribute 161 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 01-JUL-2016 10:06:06.28
             Attr PgmName = "AlarmOk"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -52691,10 +52790,10 @@ if (I1 >= 0 && I1 <= 9) {
         !   Converter starting up "wait", indicator "Status" in object graph flashing
         !*/
         Object PowerStartUp $Attribute 162 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 01-JUL-2016 10:06:06.28
             Attr PgmName = "PowerStartUp"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -52702,10 +52801,10 @@ if (I1 >= 0 && I1 <= 9) {
         !    Object ready for remote control
         !*/
         Object ReadyRemote $Attribute 163 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 01-JUL-2016 10:06:06.29
             Attr PgmName = "ReadyRemote"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -52715,10 +52814,10 @@ if (I1 >= 0 && I1 <= 9) {
         !    startorders from PLC to avoid unwanted motor restarts. 
         !*/
         Object ConvertReady $Attribute 164 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 01-JUL-2016 10:06:06.29
             Attr PgmName = "ConvertReady"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -52726,10 +52825,10 @@ if (I1 >= 0 && I1 <= 9) {
         !   Converter/motor running (MainStatusSW bit 2 and communication Ok).
         !*/
         Object ConvertRun $Attribute 165 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 01-JUL-2016 10:06:06.29
             Attr PgmName = "ConvertRun"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -52738,10 +52837,10 @@ if (I1 >= 0 && I1 <= 9) {
         !    Message in text form in object graph.
         !*/
         Object ConvertTripped $Attribute 166 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 01-JUL-2016 10:06:06.29
             Attr PgmName = "ConvertTripped"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -52749,10 +52848,10 @@ if (I1 >= 0 && I1 <= 9) {
         !   Converter inhibited (MainStatusSW)
         !*/
         Object ConvertInhibit $Attribute 167 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 01-JUL-2016 10:06:06.29
             Attr PgmName = "ConvertInhibit"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -52761,10 +52860,10 @@ if (I1 >= 0 && I1 <= 9) {
         !    Message in text form in object graph.
         !*/
         Object ConvertWarning $Attribute 168 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 01-JUL-2016 10:06:06.29
             Attr PgmName = "ConvertWarning"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -52772,10 +52871,10 @@ if (I1 >= 0 && I1 <= 9) {
         !   Converter not in local mode, remote/local button on the display-panel (MainStatusSW)
         !*/
         Object ConvertRemote $Attribute 169 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 01-JUL-2016 10:06:06.30
             Attr PgmName = "ConvertRemote"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -52784,10 +52883,10 @@ if (I1 >= 0 && I1 <= 9) {
         !    True if converter is interlocked by STO.
         !*/
         Object ConvertSTO $Attribute 170 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 01-JUL-2016 10:06:06.30
             Attr PgmName = "ConvertSTO"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -52796,10 +52895,10 @@ if (I1 >= 0 && I1 <= 9) {
         !   between converters (UserStatusSW1)
         !*/
         Object ConvertMagnetized $Attribute 171 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 01-JUL-2016 10:06:06.30
             Attr PgmName = "ConvertMagnetized"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -52808,10 +52907,10 @@ if (I1 >= 0 && I1 <= 9) {
         !   control in control word (MainControlWord) 
         !*/
         Object ConvertZeroSpeed $Attribute 172 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 01-JUL-2016 10:06:06.30
             Attr PgmName = "ConvertZeroSpeed"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -52846,9 +52945,10 @@ if (I1 >= 0 && I1 <= 9) {
         !   conveter is energized (power on).
         !*/
         Object PowerUpTime $Attribute 175 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 01-JUL-2016 10:06:06.30
             Attr PgmName = "PowerUpTime"
             Attr Size = 4
+            Attr Flags = 4
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
@@ -52864,10 +52964,10 @@ if (I1 >= 0 && I1 <= 9) {
         !   Value "requested parameter" in object graph "more..."
         !*/
         Object RequestPar $Attribute 176 24-JUN-2013 10:53:43.33
-          Body SysBody 11-JUL-2013 10:50:55.91
+          Body SysBody 01-JUL-2016 10:06:06.32
             Attr PgmName = "RequestPar"
             Attr Size = 4
-            Attr Flags = 4195328
+            Attr Flags = 4195332
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
@@ -52883,10 +52983,10 @@ if (I1 >= 0 && I1 <= 9) {
         !    Value "Write value parameter" in object graph "more..."
         !*/
         Object WriteValuePar $Attribute 177 24-JUN-2013 10:53:43.33
-          Body SysBody 11-JUL-2013 10:53:07.58
+          Body SysBody 01-JUL-2016 10:06:06.32
             Attr PgmName = "WriteValuePar"
             Attr Size = 4
-            Attr Flags = 4195328
+            Attr Flags = 4195332
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
@@ -52902,10 +53002,10 @@ if (I1 >= 0 && I1 <= 9) {
         !    Value "read value parameter" in object graph "more..."
         !*/
         Object ReadValuePar $Attribute 178 24-JUN-2013 10:53:43.33
-          Body SysBody 11-JUL-2013 10:53:57.28
+          Body SysBody 01-JUL-2016 10:06:06.32
             Attr PgmName = "ReadValuePar"
             Attr Size = 4
-            Attr Flags = 4195328
+            Attr Flags = 4195332
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
@@ -52921,10 +53021,10 @@ if (I1 >= 0 && I1 <= 9) {
         !    Value "return code value" in object graph "more..."
         !*/
         Object ReadCodePar $Attribute 179 24-JUN-2013 10:53:43.33
-          Body SysBody 11-JUL-2013 10:54:30.53
+          Body SysBody 01-JUL-2016 10:06:06.33
             Attr PgmName = "ReadCodePar"
             Attr Size = 4
-            Attr Flags = 4195328
+            Attr Flags = 4195332
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
@@ -52940,10 +53040,10 @@ if (I1 >= 0 && I1 <= 9) {
         !    Value "Request/response message" in object graph "more..."
         !*/
         Object ReadCodeParMess $Attribute 226 08-JAN-2014 16:36:58.54
-          Body SysBody 08-JAN-2014 16:36:59.69
+          Body SysBody 01-JUL-2016 10:06:06.33
             Attr PgmName = "ReadCodeParMess"
             Attr Size = 4
-            Attr Flags = 4195328
+            Attr Flags = 4195332
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
@@ -52959,10 +53059,10 @@ if (I1 >= 0 && I1 <= 9) {
         !    Value "Error message" in object graph "more..."
         !*/
         Object ReadCodeParErrMess $Attribute 228 08-JAN-2014 16:37:42.51
-          Body SysBody 08-JAN-2014 16:37:43.66
+          Body SysBody 01-JUL-2016 10:06:06.33
             Attr PgmName = "ReadCodeParErrMess"
             Attr Size = 4
-            Attr Flags = 4195328
+            Attr Flags = 4195332
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
@@ -52978,10 +53078,10 @@ if (I1 >= 0 && I1 <= 9) {
         !    Value "return code subindex value" in object graph "more..."
         !*/
         Object ReadCodeSubPar $Attribute 180 24-JUN-2013 10:53:43.33
-          Body SysBody 11-JUL-2013 10:54:58.41
+          Body SysBody 01-JUL-2016 10:06:06.33
             Attr PgmName = "ReadCodeSubPar"
             Attr Size = 4
-            Attr Flags = 4195328
+            Attr Flags = 4195332
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
@@ -53544,9 +53644,9 @@ this parameter settings menu."
         !  start command is possible from this object. 
         !*/
         Object ReadyRemote $Output 49 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 01-JUL-2016 10:06:06.35
             Attr PgmName = "ReadyRemote"
-            Attr Flags = 9216
+            Attr Flags = 9220
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "rdy"
           EndBody
@@ -53555,9 +53655,9 @@ this parameter settings menu."
         !  Converter is started. 
         !*/
         Object Run $Output 50 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 01-JUL-2016 10:06:06.36
             Attr PgmName = "Run"
-            Attr Flags = 9216
+            Attr Flags = 9220
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "run"
           EndBody
@@ -53566,9 +53666,9 @@ this parameter settings menu."
         !  Status from converter IO digital input Di1. 
         !*/
         Object Di1 $Output 51 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 01-JUL-2016 10:06:06.36
             Attr PgmName = "Di1"
-            Attr Flags = 9216
+            Attr Flags = 9220
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "di1"
           EndBody
@@ -53577,9 +53677,9 @@ this parameter settings menu."
         !  Status from converter IO digital input Di2. 
         !*/
         Object Di2 $Output 52 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 01-JUL-2016 10:06:06.36
             Attr PgmName = "Di2"
-            Attr Flags = 9216
+            Attr Flags = 9220
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "di2"
           EndBody
@@ -53588,9 +53688,9 @@ this parameter settings menu."
         !  Status from converter IO digital input Di3. 
         !*/
         Object Di3 $Output 53 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 01-JUL-2016 10:06:06.36
             Attr PgmName = "Di3"
-            Attr Flags = 9216
+            Attr Flags = 9220
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "di3"
           EndBody
@@ -53599,9 +53699,9 @@ this parameter settings menu."
         !  Status from converter IO digital input Di4. 
         !*/
         Object Di4 $Output 54 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 01-JUL-2016 10:06:06.36
             Attr PgmName = "Di4"
-            Attr Flags = 9216
+            Attr Flags = 9220
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "di4"
           EndBody
@@ -53610,9 +53710,9 @@ this parameter settings menu."
         !  Status from converter IO digital input Di5. 
         !*/
         Object Di5 $Output 55 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 01-JUL-2016 10:06:06.36
             Attr PgmName = "Di5"
-            Attr Flags = 9216
+            Attr Flags = 9220
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "di5"
           EndBody
@@ -53621,9 +53721,9 @@ this parameter settings menu."
         !  Status from converter IO digital input Di6. 
         !*/
         Object Di6 $Output 56 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 01-JUL-2016 10:06:06.36
             Attr PgmName = "Di6"
-            Attr Flags = 9216
+            Attr Flags = 9220
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "di6"
           EndBody
@@ -53632,9 +53732,9 @@ this parameter settings menu."
         !  Status from converter IO digital input DIIL. 
         !*/
         Object DiIL $Output 57 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 01-JUL-2016 10:06:06.39
             Attr PgmName = "DiIL"
-            Attr Flags = 9216
+            Attr Flags = 9220
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "diil"
           EndBody
@@ -53645,9 +53745,9 @@ this parameter settings menu."
         !  safe torque off function.  
         !*/
         Object Sto $Output 58 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 01-JUL-2016 10:06:06.39
             Attr PgmName = "Sto"
-            Attr Flags = 9216
+            Attr Flags = 9220
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "sto"
           EndBody
@@ -69703,7 +69803,7 @@ bit 10 (d11) replace fan"
         Object Super $Attribute 79 24-JUN-2013 10:53:43.34
           Body SysBody 24-JUN-2013 10:53:43.34
             Attr PgmName = "Super"
-            Attr Size = 760
+            Attr Size = 776
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-Aggregate"
           EndBody
@@ -69728,10 +69828,10 @@ bit 10 (d11) replace fan"
         !  PlcPgm. 
         !*/
         Object AggReady $Attribute 81 24-JUN-2013 10:53:43.34
-          Body SysBody 24-JUN-2013 10:53:43.34
+          Body SysBody 01-JUL-2016 10:06:06.70
             Attr PgmName = "AggReady"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -69740,10 +69840,10 @@ bit 10 (d11) replace fan"
         !  as safetey switch, curcuit braker etc. 
         !*/
         Object Ready $Attribute 82 24-JUN-2013 10:53:43.34
-          Body SysBody 24-JUN-2013 10:53:43.34
+          Body SysBody 01-JUL-2016 10:06:06.70
             Attr PgmName = "Ready"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -69751,10 +69851,10 @@ bit 10 (d11) replace fan"
         !  External interlocks, example, low level, high temp etc. 
         !*/
         Object ExtInterlock $Attribute 83 24-JUN-2013 10:53:43.34
-          Body SysBody 24-JUN-2013 10:53:43.34
+          Body SysBody 01-JUL-2016 10:06:06.70
             Attr PgmName = "ExtInterlock"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -69769,10 +69869,10 @@ bit 10 (d11) replace fan"
         !   
         !*/
         Object LocalMode $Attribute 84 24-JUN-2013 10:53:43.34
-          Body SysBody 24-JUN-2013 10:53:43.34
+          Body SysBody 01-JUL-2016 10:06:06.71
             Attr PgmName = "LocalMode"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -69781,10 +69881,10 @@ bit 10 (d11) replace fan"
         !  be reset after commands has detected.
         !*/
         Object OpPowerOn $Attribute 85 24-JUN-2013 10:53:43.34
-          Body SysBody 24-JUN-2013 10:53:43.34
+          Body SysBody 01-JUL-2016 10:06:06.71
             Attr PgmName = "OpPowerOn"
             Attr Size = 4
-            Attr Flags = 1040
+            Attr Flags = 1044
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -69793,10 +69893,10 @@ bit 10 (d11) replace fan"
         !  be reset after commands has detected.
         !*/
         Object OpPowerOff $Attribute 86 24-JUN-2013 10:53:43.34
-          Body SysBody 24-JUN-2013 10:53:43.34
+          Body SysBody 01-JUL-2016 10:06:06.71
             Attr PgmName = "OpPowerOff"
             Attr Size = 4
-            Attr Flags = 1040
+            Attr Flags = 1044
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -69808,10 +69908,10 @@ bit 10 (d11) replace fan"
         ! 
         !*/
         Object PowExtInterlock $Attribute 87 24-JUN-2013 10:53:43.34
-          Body SysBody 24-JUN-2013 10:53:43.34
+          Body SysBody 01-JUL-2016 10:06:06.73
             Attr PgmName = "PowExtInterlock"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -69820,10 +69920,10 @@ bit 10 (d11) replace fan"
         !  if power interlock is true is not allowed to switch on the power.
         !*/
         Object PowOnOffDim $Attribute 88 24-JUN-2013 10:53:43.34
-          Body SysBody 24-JUN-2013 10:53:43.34
+          Body SysBody 01-JUL-2016 10:06:06.73
             Attr PgmName = "PowOnOffDim"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -69831,10 +69931,10 @@ bit 10 (d11) replace fan"
         !  The object has a warning, the object symbol will be yellow.
         !*/
         Object IndWarning $Attribute 89 24-JUN-2013 10:53:43.34
-          Body SysBody 24-JUN-2013 10:53:43.34
+          Body SysBody 01-JUL-2016 10:06:06.74
             Attr PgmName = "IndWarning"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -69842,10 +69942,10 @@ bit 10 (d11) replace fan"
         !  The object has a fault, the object symbol will be red.
         !*/
         Object IndError $Attribute 90 24-JUN-2013 10:53:43.34
-          Body SysBody 24-JUN-2013 10:53:43.34
+          Body SysBody 01-JUL-2016 10:06:06.74
             Attr PgmName = "IndError"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 1028
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -69918,7 +70018,7 @@ bit 10 (d11) replace fan"
         Object CircuitBreaker $Attribute 97 24-JUN-2013 10:53:43.34
           Body SysBody 24-JUN-2013 10:53:43.34
             Attr PgmName = "CircuitBreaker"
-            Attr Size = 2400
+            Attr Size = 2432
             Attr Flags = 4325384
             Attr TypeRef = "BaseComponent:Class-BaseCircuitBreaker"
           EndBody
@@ -69945,7 +70045,7 @@ bit 10 (d11) replace fan"
         Object Contactor $Attribute 100 24-JUN-2013 10:53:43.34
           Body SysBody 24-JUN-2013 10:53:43.34
             Attr PgmName = "Contactor"
-            Attr Size = 4016
+            Attr Size = 4080
             Attr Flags = 4325384
             Attr TypeRef = "BaseComponent:Class-BaseContactor"
           EndBody
@@ -69957,7 +70057,7 @@ bit 10 (d11) replace fan"
         Object ACS880 $Attribute 101 24-JUN-2013 10:53:43.34
           Body SysBody 24-JUN-2013 11:03:08.68
             Attr PgmName = "ACS880"
-            Attr Size = 26656
+            Attr Size = 26896
             Attr Flags = 131072
             Attr TypeRef = "ABB:Class-ABB_ACS880_1"
           EndBody
@@ -69985,7 +70085,7 @@ bit 10 (d11) replace fan"
         Object SafetySwitch $Attribute 104 24-JUN-2013 10:53:43.34
           Body SysBody 24-JUN-2013 10:53:43.34
             Attr PgmName = "SafetySwitch"
-            Attr Size = 2400
+            Attr Size = 2432
             Attr Flags = 4325384
             Attr TypeRef = "BaseComponent:Class-BaseSafetySwitch"
           EndBody
@@ -70005,7 +70105,7 @@ bit 10 (d11) replace fan"
         Object Motor $Attribute 106 24-JUN-2013 10:53:43.34
           Body SysBody 24-JUN-2013 10:53:43.34
             Attr PgmName = "Motor"
-            Attr Size = 10376
+            Attr Size = 10456
             Attr Flags = 131080
             Attr TypeRef = "BaseComponent:Class-BaseMotor"
           EndBody
@@ -70042,10 +70142,10 @@ bit 10 (d11) replace fan"
         ! 
         !*/
         Object SupDisabled $Attribute 109 24-JUN-2013 10:53:43.34
-          Body SysBody 24-JUN-2013 10:53:43.34
+          Body SysBody 01-JUL-2016 10:06:06.75
             Attr PgmName = "SupDisabled"
             Attr Size = 4
-            Attr Flags = 1040
+            Attr Flags = 1044
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -71064,9 +71164,9 @@ this parameter settings menu."
         !    Motor is running.
         !*/
         Object On $Output 57 24-JUN-2013 10:53:43.34
-          Body SysBody 24-JUN-2013 10:53:43.34
+          Body SysBody 01-JUL-2016 10:06:06.80
             Attr PgmName = "On"
-            Attr Flags = 8192
+            Attr Flags = 8196
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "on"
           EndBody
@@ -71077,9 +71177,9 @@ this parameter settings menu."
         !  of the motor or use the attribute AggReady in object ACS880_MotorAggr. 
         !*/
         Object Err $Output 58 24-JUN-2013 10:53:43.34
-          Body SysBody 24-JUN-2013 10:53:43.34
+          Body SysBody 01-JUL-2016 10:06:06.80
             Attr PgmName = "Err"
-            Attr Flags = 8192
+            Attr Flags = 8196
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "err"
           EndBody
@@ -71088,9 +71188,9 @@ this parameter settings menu."
         !  Status from input Di1 in converter.
         !*/
         Object Di1 $Output 59 24-JUN-2013 10:53:43.34
-          Body SysBody 24-JUN-2013 10:53:43.34
+          Body SysBody 01-JUL-2016 10:06:06.81
             Attr PgmName = "Di1"
-            Attr Flags = 8192
+            Attr Flags = 8196
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "di1"
           EndBody
@@ -71099,9 +71199,9 @@ this parameter settings menu."
         !  Status from input Di2 in converter.
         !*/
         Object Di2 $Output 60 24-JUN-2013 10:53:43.34
-          Body SysBody 24-JUN-2013 10:53:43.34
+          Body SysBody 01-JUL-2016 10:06:06.81
             Attr PgmName = "Di2"
-            Attr Flags = 8192
+            Attr Flags = 8196
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "di2"
           EndBody
@@ -71110,9 +71210,9 @@ this parameter settings menu."
         !  Status from input Di3 in converter.
         !*/
         Object Di3 $Output 61 24-JUN-2013 10:53:43.34
-          Body SysBody 24-JUN-2013 10:53:43.34
+          Body SysBody 01-JUL-2016 10:06:06.81
             Attr PgmName = "Di3"
-            Attr Flags = 8192
+            Attr Flags = 8196
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "di3"
           EndBody
@@ -71121,9 +71221,9 @@ this parameter settings menu."
         !  Status from input Di4 in converter.
         !*/
         Object Di4 $Output 62 24-JUN-2013 10:53:43.34
-          Body SysBody 24-JUN-2013 10:53:43.34
+          Body SysBody 01-JUL-2016 10:06:06.81
             Attr PgmName = "Di4"
-            Attr Flags = 8192
+            Attr Flags = 8196
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "di4"
           EndBody
@@ -71132,9 +71232,9 @@ this parameter settings menu."
         !  Status from input Di5 in converter.
         !*/
         Object Di5 $Output 63 24-JUN-2013 10:53:43.34
-          Body SysBody 24-JUN-2013 10:53:43.34
+          Body SysBody 01-JUL-2016 10:06:06.81
             Attr PgmName = "Di5"
-            Attr Flags = 8192
+            Attr Flags = 8196
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "di5"
           EndBody
@@ -71143,9 +71243,9 @@ this parameter settings menu."
         !  Status from input Di6 in converter.
         !*/
         Object Di6 $Output 64 24-JUN-2013 10:53:43.34
-          Body SysBody 24-JUN-2013 10:53:43.34
+          Body SysBody 01-JUL-2016 10:06:06.81
             Attr PgmName = "Di6"
-            Attr Flags = 8192
+            Attr Flags = 8196
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "di6"
           EndBody
@@ -71154,9 +71254,9 @@ this parameter settings menu."
         !  Status from input DIIL in converter.
         !*/
         Object DiIL $Output 65 24-JUN-2013 10:53:43.34
-          Body SysBody 24-JUN-2013 10:53:43.34
+          Body SysBody 01-JUL-2016 10:06:06.81
             Attr PgmName = "DiIL"
-            Attr Flags = 8192
+            Attr Flags = 8196
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "diil"
           EndBody
@@ -71168,9 +71268,9 @@ this parameter settings menu."
         !  the converter.
         !*/
         Object Sto $Output 66 24-JUN-2013 10:53:43.34
-          Body SysBody 24-JUN-2013 10:53:43.34
+          Body SysBody 01-JUL-2016 10:06:06.82
             Attr PgmName = "Sto"
-            Attr Flags = 8192
+            Attr Flags = 8196
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "sto"
           EndBody
@@ -81789,7 +81889,7 @@ ABB ACS880 Aggregate
         Object Super $Attribute 7 24-JUN-2013 10:53:43.34
           Body SysBody 24-JUN-2013 11:01:43.09
             Attr PgmName = "Super"
-            Attr Size = 53664
+            Attr Size = 54128
             Attr Flags = 393216
             Attr TypeRef = "ABB:Class-ABB_ACS880MotorAggr"
           EndBody
@@ -81805,7 +81905,7 @@ ABB ACS880 Aggregate
         Object Pump $Attribute 9 24-JUN-2013 10:53:43.34
           Body SysBody 24-JUN-2013 10:53:43.34
             Attr PgmName = "Pump"
-            Attr Size = 760
+            Attr Size = 776
             Attr Flags = 131080
             Attr TypeRef = "BaseComponent:Class-BasePump"
           EndBody
@@ -82164,7 +82264,7 @@ this parameter settings menu."
         Object Super $Attribute 10 24-JUN-2013 10:53:43.34
           Body SysBody 24-JUN-2013 11:01:24.66
             Attr PgmName = "Super"
-            Attr Size = 53664
+            Attr Size = 54128
             Attr Flags = 393216
             Attr TypeRef = "ABB:Class-ABB_ACS880MotorAggr"
           EndBody
@@ -82180,7 +82280,7 @@ this parameter settings menu."
         Object Fan $Attribute 12 24-JUN-2013 10:53:43.34
           Body SysBody 24-JUN-2013 10:53:43.34
             Attr PgmName = "Fan"
-            Attr Size = 760
+            Attr Size = 776
             Attr Flags = 131080
             Attr TypeRef = "BaseComponent:Class-BaseFan"
           EndBody
@@ -83224,7 +83324,7 @@ this parameter settings menu."
         Object Super $Attribute 2 09-JUL-2013 10:22:22.83
           Body SysBody 09-JUL-2013 13:09:55.50
             Attr PgmName = "Super"
-            Attr Size = 26656
+            Attr Size = 26896
             Attr Flags = 393216
             Attr TypeRef = "ABB:Class-ABB_ACS880_1"
           EndBody
@@ -83633,7 +83733,7 @@ this parameter settings menu."
         Object Super $Attribute 1 11-JUL-2013 09:31:02.11
           Body SysBody 21-JAN-2014 11:20:24.73
             Attr PgmName = "Super"
-            Attr Size = 53664
+            Attr Size = 54128
             Attr Flags = 393216
             Attr TypeRef = "ABB:Class-ABB_ACS880MotorAggr"
           EndBody
@@ -84506,7 +84606,7 @@ this parameter settings menu."
         Object Super $Attribute 1 11-JUL-2013 10:45:59.23
           Body SysBody 11-JUL-2013 10:47:52.79
             Attr PgmName = "Super"
-            Attr Size = 53664
+            Attr Size = 54128
             Attr Flags = 393216
             Attr TypeRef = "ABB:Class-ABB_ACS880EplMotorAggr"
           EndBody
@@ -84522,7 +84622,7 @@ this parameter settings menu."
         Object Pump $Attribute 3 11-JUL-2013 10:46:40.32
           Body SysBody 11-JUL-2013 10:46:40.32
             Attr PgmName = "Pump"
-            Attr Size = 760
+            Attr Size = 776
             Attr Flags = 131080
             Attr TypeRef = "BaseComponent:Class-BasePump"
           EndBody
@@ -84897,7 +84997,7 @@ this parameter settings menu."
         Object Super $Attribute 1 11-JUL-2013 10:47:45.31
           Body SysBody 11-JUL-2013 10:48:08.35
             Attr PgmName = "Super"
-            Attr Size = 53664
+            Attr Size = 54128
             Attr Flags = 393216
             Attr TypeRef = "ABB:Class-ABB_ACS880EplMotorAggr"
           EndBody
@@ -84913,7 +85013,7 @@ this parameter settings menu."
         Object Fan $Attribute 3 11-JUL-2013 10:48:19.81
           Body SysBody 11-JUL-2013 10:48:19.81
             Attr PgmName = "Fan"
-            Attr Size = 760
+            Attr Size = 776
             Attr Flags = 131080
             Attr TypeRef = "BaseComponent:Class-BaseFan"
           EndBody
@@ -86420,7 +86520,7 @@ this parameter settings menu."
         Object Super $Attribute 73 13-JAN-2014 13:56:27.40
           Body SysBody 13-JAN-2014 13:56:27.40
             Attr PgmName = "Super"
-            Attr Size = 26656
+            Attr Size = 26896
             Attr Flags = 393216
             Attr TypeRef = "ABB:Class-ABB_ACS880_1"
           EndBody
@@ -86832,7 +86932,7 @@ this parameter settings menu."
         Object Super $Attribute 1 21-JAN-2014 11:19:47.86
           Body SysBody 21-JAN-2014 11:20:40.52
             Attr PgmName = "Super"
-            Attr Size = 53664
+            Attr Size = 54128
             Attr Flags = 393216
             Attr TypeRef = "ABB:Class-ABB_ACS880MotorAggr"
           EndBody
@@ -87712,7 +87812,7 @@ this parameter settings menu."
         Object Super $Attribute 4 23-JAN-2014 08:40:59.50
           Body SysBody 23-JAN-2014 08:41:27.39
             Attr PgmName = "Super"
-            Attr Size = 53664
+            Attr Size = 54128
             Attr Flags = 393216
             Attr TypeRef = "ABB:Class-ABB_ACS880PnMotorAggr"
           EndBody
@@ -87728,7 +87828,7 @@ this parameter settings menu."
         Object Pump $Attribute 6 23-JAN-2014 08:40:59.50
           Body SysBody 23-JAN-2014 08:40:59.50
             Attr PgmName = "Pump"
-            Attr Size = 760
+            Attr Size = 776
             Attr Flags = 131080
             Attr TypeRef = "BaseComponent:Class-BasePump"
           EndBody
@@ -88109,7 +88209,7 @@ this parameter settings menu."
         Object Super $Attribute 4 23-JAN-2014 08:42:42.17
           Body SysBody 23-JAN-2014 08:43:10.19
             Attr PgmName = "Super"
-            Attr Size = 53664
+            Attr Size = 54128
             Attr Flags = 393216
             Attr TypeRef = "ABB:Class-ABB_ACS880PnMotorAggr"
           EndBody
@@ -88125,7 +88225,7 @@ this parameter settings menu."
         Object Fan $Attribute 6 23-JAN-2014 08:42:42.17
           Body SysBody 23-JAN-2014 08:42:42.17
             Attr PgmName = "Fan"
-            Attr Size = 760
+            Attr Size = 776
             Attr Flags = 131080
             Attr TypeRef = "BaseComponent:Class-BaseFan"
           EndBody

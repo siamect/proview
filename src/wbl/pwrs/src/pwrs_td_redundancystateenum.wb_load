@@ -33,32 +33,56 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_c_packattrref.wb_load -- Defines the class PackAttrRef.
+!  pwrb_td_redundancystateenum.wb_load -- Defines the enum type RedundancyState
 !
-SObject pwrb:Class
-  Object PackAttrRef $ClassDef 169 
+SObject pwrs:Type
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Enumeration for redundancy state.
+!*/
+  Object $RedundancyStateEnum $TypeDef 26
     Body SysBody
-      Attr Editor = pwr_eEditor_AttrEd
-      Attr Method = pwr_eMethod_Standard
+      Attr TypeRef = "pwrs:Type-$Enum"
+      Attr PgmName = "RedundancyStateEnum"
     EndBody
-    Object RtBody $ObjBodyDef 1 
-      Body SysBody
-        Attr StructName = "PackAttrRef"
-      EndBody
-      Object AttrRef $Attribute 1 
-        Body SysBody
-	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$AttrRef"
-        EndBody
-      EndObject
-      Object Value $Attribute 2 
-        Body SysBody
-	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Float64"
-        EndBody
-      EndObject
+    !/**
+    !  Off.
+    !*/
+    Object Off $Value
+     Body SysBody
+       Attr PgmName = "Off"
+       Attr Text = "Off"
+       Attr Value = 0
+     EndBody
     EndObject
-    Object Template PackAttrRef
+    !/**
+    !  Passive.
+    !*/
+    Object Passive $Value
+     Body SysBody
+       Attr PgmName = "Passive"
+       Attr Text = "Passive"
+       Attr Value = 1
+     EndBody
+    EndObject
+    !/**
+    !  Active.
+    !*/
+    Object Active $Value
+     Body SysBody
+       Attr PgmName = "Active"
+       Attr Text = "Active"
+       Attr Value = 2
+     EndBody
     EndObject
   EndObject
 EndSObject
+
+
+
+
+
+
+
+

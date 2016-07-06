@@ -65,6 +65,7 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_ARRAY
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_DYNAMIC
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr Elements = 1
         EndBody
       EndObject

@@ -63,6 +63,7 @@ SObject pwrb:Class
       Object In1 $Input 1 
         Body SysBody
           Attr PgmName = "In1"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Time"
           Attr GraphName = "In1"
         EndBody
@@ -73,6 +74,7 @@ SObject pwrb:Class
       Object In2 $Input 2 
         Body SysBody
           Attr PgmName = "In2"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Time"
           Attr GraphName = "In2"
         EndBody
@@ -83,6 +85,7 @@ SObject pwrb:Class
       Object In3 $Input 3 
         Body SysBody
           Attr PgmName = "In3"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Time"
           Attr GraphName = "In3"
         EndBody
@@ -93,6 +96,7 @@ SObject pwrb:Class
       Object In4 $Input 4 
         Body SysBody
           Attr PgmName = "In4"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Time"
           Attr GraphName = "In4"
         EndBody
@@ -103,6 +107,7 @@ SObject pwrb:Class
       Object In5 $Input 5 
         Body SysBody
           Attr PgmName = "In5"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Time"
           Attr GraphName = "In5"
         EndBody
@@ -113,6 +118,7 @@ SObject pwrb:Class
       Object In6 $Input 6 
         Body SysBody
           Attr PgmName = "In6"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Time"
           Attr GraphName = "In6"
         EndBody
@@ -123,6 +129,7 @@ SObject pwrb:Class
       Object In7 $Input 7 
         Body SysBody
           Attr PgmName = "In7"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Time"
           Attr GraphName = "In7"
         EndBody
@@ -133,6 +140,7 @@ SObject pwrb:Class
       Object In8 $Input 8 
         Body SysBody
           Attr PgmName = "In8"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Time"
           Attr GraphName = "In8"
         EndBody
@@ -145,6 +153,7 @@ SObject pwrb:Class
           Attr PgmName = "ActVal"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Time"
           Attr GraphName = "Val"
         EndBody

@@ -93,6 +93,22 @@ typedef	struct {
 
 #endif
 
+/* Local timer handing in object without timer list */
+#define	timer2_in(tp, o) \
+  o->TimerCount = o->TimerTime / tp->f_scan_time; \
+  if ( o->TimerCount > 0) \
+    o->TimerFlag = 1; \
+  
+#define timer2_scan(tp, o) \
+  if ( o->TimerFlag) { \
+    if ( o->TimerCount <= 0) { \
+      o->TimerCount = 0; \
+      o->TimerFlag = 0; \
+    } \
+    else \
+      o->TimerCount -= (1 + tp->skip_count); \
+  }
+
 #define	timer_in(tp, o)	{				\
   o->TimerCount = o->TimerTime / tp->f_scan_time;	\
   if ( !o->TimerFlag && (o->TimerCount > 0)) {		\

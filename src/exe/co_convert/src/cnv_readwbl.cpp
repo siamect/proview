@@ -1322,7 +1322,7 @@ char *CnvReadWbl::flags_to_string( int value)
   strcpy( str, "");
   if ( value & pwr_mAdef_pointer) 	strcat( str, "Pointer|");
   if ( value & pwr_mAdef_array) 	strcat( str, "Array|");
-  if ( value & pwr_mAdef_backup) 	strcat( str, "Backup|");
+  if ( value & pwr_mAdef_redutransfer) 	strcat( str, "ReduTransfer|");
   if ( value & pwr_mAdef_castattr) 	strcat( str, "CastAttr|");
   if ( value & pwr_mAdef_state) 	strcat( str, "State|");
   if ( value & pwr_mAdef_const) 	strcat( str, "Const|");

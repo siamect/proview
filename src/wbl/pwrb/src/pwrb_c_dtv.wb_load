@@ -70,6 +70,7 @@ SObject pwrb:Class
       Object ActualValue $Attribute 2 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$DeltaTime"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
     EndObject

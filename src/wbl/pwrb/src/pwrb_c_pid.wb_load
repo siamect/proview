@@ -341,6 +341,7 @@ SObject         pwrb:Class
           Attr GraphName = "PV"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -351,6 +352,7 @@ SObject         pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "SV"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -361,6 +363,7 @@ SObject         pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "BIS"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -373,6 +376,7 @@ SObject         pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "FOV"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -387,6 +391,7 @@ SObject         pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "for"
 	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -404,6 +409,7 @@ SObject         pwrb:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -416,6 +422,7 @@ SObject         pwrb:Class
           Attr PgmName = "OutVal"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "OUT"
         EndBody
@@ -429,6 +436,7 @@ SObject         pwrb:Class
           Attr PgmName = "OutChange"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "OC"
         EndBody
@@ -441,6 +449,7 @@ SObject         pwrb:Class
           Attr PgmName = "ControlDiff"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "DIF"
         EndBody
@@ -465,6 +474,7 @@ SObject         pwrb:Class
           Attr GraphName = "max"
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object EndMin $Output 11 
@@ -473,6 +483,7 @@ SObject         pwrb:Class
           Attr GraphName = "min"
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -516,6 +527,7 @@ SObject         pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrb:Type-PidAlgEnum"
           Attr GraphName = "PidAlg"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -527,6 +539,7 @@ SObject         pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Gain"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -538,6 +551,7 @@ SObject         pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "IntTime"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -549,6 +563,7 @@ SObject         pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "DerTime"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -565,6 +580,7 @@ SObject         pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "DerGain"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -580,6 +596,7 @@ SObject         pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "Inverse"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -593,6 +610,7 @@ SObject         pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "BiasGain"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -603,6 +621,7 @@ SObject         pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrb:Type-Boolean"
           Attr GraphName = "PDAbsFlag"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -683,12 +702,14 @@ SObject         pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "SetMinShow"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object SetMaxShow $Intern 40 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "SetMaxShow"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -720,12 +741,14 @@ SObject         pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "OutMinShow"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object OutMaxShow $Intern 42 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "OutMaxShow"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -936,6 +959,7 @@ SObject         pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "FiltDer"
         EndBody
@@ -950,6 +974,7 @@ SObject         pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
          EndBody
       EndObject
       !/**
@@ -962,6 +987,7 @@ SObject         pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
          EndBody
       EndObject
       !/**
@@ -974,6 +1000,7 @@ SObject         pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
          EndBody
       EndObject
     EndObject

@@ -58,6 +58,7 @@
 #include "rt_qini.h"
 #include "rt_qcom.h"
 #include "rt_io_base.h"
+#include "rt_redu.h"
 #include "rt_ini_msg.h"
 #include "rt_errh_msg.h"
 #include "rt_pwr_msg.h"
@@ -126,6 +127,7 @@ start (
 {
   pwr_tStatus sts;
   char console[80];
+  int state;
 
 #if defined OS_POSIX
   int	fd;
@@ -207,6 +209,10 @@ start (
 
   ini_SetSystemStatus( cp, PWR__STARTUP);
   errh_SetStatus( PWR__STARTUP);
+
+  sts = redu_get_initial_state( cp->nodename, cp->busid, &state);
+  if ( ODD(sts))
+    cp->np->RedundancyState = state;
 
   sts = ini_RcReadAndSet(cp->dir, cp->nodename, cp->busid);
   if (EVEN(sts))

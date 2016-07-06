@@ -238,7 +238,7 @@ SObject pwrb:Class
         Body SysBody
           Attr PgmName = "DetectText"
           Attr TypeRef = "pwrs:Type-$String80"
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -248,7 +248,7 @@ SObject pwrb:Class
       Object ReturnText $Attribute 9 
         Body SysBody
           Attr PgmName = "ReturnText"
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$String80"
         EndBody
       EndObject
@@ -519,7 +519,7 @@ SObject pwrb:Class
         Body SysBody
           Attr PgmName = "CtrlLimit"
           Attr TypeRef = "pwrs:Type-$Float32"
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -531,7 +531,7 @@ SObject pwrb:Class
         Body SysBody
           Attr PgmName = "Hysteres"
           Attr TypeRef = "pwrs:Type-$Float32"
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -626,7 +626,7 @@ SObject pwrb:Class
         Body SysBody
           Attr PgmName = "TimerTime"
           Attr TypeRef = "pwrs:Type-$Float32"
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**

@@ -143,7 +143,7 @@ SObject pwrb:Class
       Object Function $Attribute 3
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Mask"
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -164,7 +164,7 @@ SObject pwrb:Class
       Object ScanTime $Attribute 5
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -201,7 +201,7 @@ SObject pwrb:Class
       Object TriggLevel $Attribute 8
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -280,7 +280,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr Flags |= PWR_MASK_ARRAY
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
 	  Attr Elements = 10
         EndBody
       EndObject
@@ -291,7 +291,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr Flags |= PWR_MASK_ARRAY
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
 	  Attr Elements = 10
         EndBody
       EndObject
@@ -301,7 +301,7 @@ SObject pwrb:Class
       Object NoOfPoints $Attribute 16
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -315,7 +315,7 @@ SObject pwrb:Class
       Object NoOfPointsBeforeTrigg $Attribute 17
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**

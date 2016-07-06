@@ -103,6 +103,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr Flags |= PWR_MASK_POINTER
           Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
 	  Attr Size = 4
         EndBody
       EndObject
@@ -142,13 +143,13 @@ SObject pwrb:Class
       Object PresMaxLimit $Attribute 7 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       Object PresMinLimit $Attribute 8 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -261,7 +262,6 @@ SObject pwrb:Class
       Object Note $Attribute 19
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String80"
-          Attr Flags |= PWR_MASK_BACKUP
         EndBody
       EndObject
       !/**
@@ -294,7 +294,7 @@ SObject pwrb:Class
       Object FilterType $Attribute 13 
         Body SysBody
           Attr TypeRef = "pwrb:Type-AiFilterTypeEnum"
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -308,7 +308,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr Flags |= PWR_MASK_ARRAY
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr Elements = 4
         EndBody
       EndObject

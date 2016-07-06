@@ -103,6 +103,7 @@ SObject pwrb:Class
           Attr PgmName = "Status"
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "sts"
         EndBody

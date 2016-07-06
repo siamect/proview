@@ -64,6 +64,7 @@ SObject pwrb:Class
       !*/
       Object In1 $Input 1 
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Time"
           Attr GraphName = "In1"
         EndBody
@@ -73,6 +74,7 @@ SObject pwrb:Class
       !*/
       Object In2 $Input 2 
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Time"
           Attr GraphName = "In2"
         EndBody
@@ -83,6 +85,7 @@ SObject pwrb:Class
       Object Control $Input 3 
         Body SysBody
 	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "con"
         EndBody
@@ -95,6 +98,7 @@ SObject pwrb:Class
           Attr PgmName = "ActVal"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Time"
           Attr GraphName = "Val"
         EndBody

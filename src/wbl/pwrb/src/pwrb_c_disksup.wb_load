@@ -79,7 +79,7 @@ SObject pwrb:Class
       Object DiskName $Attribute 3
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String80"
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -89,7 +89,7 @@ SObject pwrb:Class
       Object ScanTime $Attribute 4
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -98,7 +98,7 @@ SObject pwrb:Class
       Object Action $Attribute 5
         Body SysBody
           Attr TypeRef = "pwrb:Type-DiskSupActionMask"
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -107,7 +107,7 @@ SObject pwrb:Class
       Object DetectText $Attribute 6
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String80"
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -117,7 +117,7 @@ SObject pwrb:Class
       Object Command $Attribute 7
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String80"
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**

@@ -73,6 +73,7 @@ SObject pwrb:Class
           Attr GraphName = "IN"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -89,6 +90,7 @@ SObject pwrb:Class
           Attr GraphName = "VAL"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -97,6 +99,7 @@ SObject pwrb:Class
       Object Gain $Intern 3 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "Gain"
         EndBody
       EndObject
@@ -104,6 +107,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "TimFact"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**

@@ -101,7 +101,7 @@ SObject pwrb:Class
           Attr GraphName = "IN"
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -112,7 +112,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "TIM"
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -123,6 +123,7 @@ SObject pwrb:Class
           Attr PgmName = "ActVal"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "VAL"
         EndBody
@@ -147,7 +148,7 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_ARRAY
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_INVISIBLE
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
 	  Attr Elements = 100
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "TimVect"
@@ -161,7 +162,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_INVISIBLE
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "StoInd"
         EndBody
@@ -174,7 +175,7 @@ SObject pwrb:Class
       Object MaxCount $Intern 7 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "MaxCount"
         EndBody
       EndObject
@@ -198,6 +199,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "Count"
         EndBody
@@ -210,7 +212,7 @@ SObject pwrb:Class
       Object AccTim $Intern 10 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "AccTim"
         EndBody
       EndObject
@@ -233,7 +235,7 @@ SObject pwrb:Class
       Object MinTim $Intern 11 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "MinTim"
         EndBody
       EndObject
@@ -243,7 +245,7 @@ SObject pwrb:Class
       Object MaxTim $Intern 12 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "MaxTim"
         EndBody
       EndObject

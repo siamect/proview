@@ -33,56 +33,80 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_c_packtest.wb_load -- Defines the class PackTest.
+!  pwrb_c_redcomconfig.wb_load -- Defines the class RedcomConfig.
 !
 SObject pwrb:Class
-  Object PackTest $ClassDef 172 
+!/**
+!  @Version 1.0
+!  @Group Servers,NodeConfiguration
+!  @Summary Configuration of redundance communication.
+!  Configuration of redundancy communication.
+!*/
+  Object RedcomConfig $ClassDef 686 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_Standard
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-        Attr StructName = "PackTest"
+        Attr StructName = "RedcomConfig"
       EndBody
-      Object Str40Val $Attribute 1 
+      !/**
+      !  Optional description.
+      !*/
+      Object Description $Attribute 1 
         Body SysBody
-	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$String40"
+          Attr TypeRef = "pwrs:Type-$String80"
         EndBody
       EndObject
-      Object DoubleVal $Attribute 2 
+      !/**
+      !  Cycle time.
+      !*/
+      Object CycleTime $Attribute 2 
         Body SysBody
-	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Float64"
-        EndBody
-      EndObject
-      Object FloatVal $Attribute 3 
-        Body SysBody
-	  Attr Flags |= PWR_MASK_NOEDIT
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
-      Object UIntVal $Attribute 4 
+      !/**
+      !  Set redundancy state Active.
+      !*/
+      Object SetActive $Attribute 3 
         Body SysBody
-	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$UInt32"
-        EndBody
-      EndObject
-      Object IntVal $Attribute 5 
-        Body SysBody
-	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Int32"
-        EndBody
-      EndObject
-      Object BooleanVal $Attribute 6 
-        Body SysBody
-	  Attr Flags |= PWR_MASK_NOEDIT
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
+      !/**
+      !  Set redundancy state Passive.
+      !*/
+      Object SetPassive $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Set redundancy state Off.
+      !*/
+      Object SetOff $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Link state.
+      !*/
+      Object Link $Attribute 6 
+        Body SysBody
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Flags |= PWR_MASK_CLASS
+	  Attr Elements = 2
+          Attr TypeRef = "pwrb:Class-RedcomLink"
+        EndBody
+      EndObject
     EndObject
-    Object Template PackTest
+    Object Template RedcomConfig
+      Body RtBody
+	Attr CycleTime = 0.005
+      EndBody
     EndObject
   EndObject
 EndSObject

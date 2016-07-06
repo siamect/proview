@@ -100,7 +100,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_NOINVERT
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "Dp1"
         EndBody
       EndObject
@@ -108,7 +108,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_NOINVERT
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "Dp2"
         EndBody
       EndObject
@@ -116,7 +116,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_NOINVERT
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "Dp3"
         EndBody
       EndObject
@@ -124,7 +124,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_NOINVERT
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "Dp4"
         EndBody
       EndObject
@@ -132,7 +132,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_NOINVERT
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "Dp5"
         EndBody
       EndObject
@@ -140,7 +140,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_NOINVERT
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "Dp6"
         EndBody
       EndObject
@@ -148,7 +148,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_NOINVERT
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "Dp7"
         EndBody
       EndObject
@@ -156,7 +156,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_NOINVERT
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "Dp8"
         EndBody
       EndObject
@@ -164,7 +164,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_NOINVERT
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "Dp9"
         EndBody
       EndObject
@@ -172,7 +172,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_NOINVERT
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "Dp10"
         EndBody
       EndObject
@@ -180,7 +180,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_NOINVERT
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "Dp11"
         EndBody
       EndObject
@@ -188,7 +188,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_NOINVERT
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "Dp12"
         EndBody
       EndObject
@@ -196,7 +196,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_NOINVERT
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "Dp13"
         EndBody
       EndObject
@@ -204,7 +204,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_NOINVERT
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "Dp14"
         EndBody
       EndObject
@@ -212,7 +212,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_NOINVERT
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "Dp15"
         EndBody
       EndObject
@@ -220,7 +220,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_NOINVERT
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "Dp16"
         EndBody
       EndObject
@@ -228,7 +228,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_NOINVERT
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "Dp17"
         EndBody
       EndObject
@@ -236,7 +236,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_NOINVERT
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "Dp18"
         EndBody
       EndObject
@@ -244,7 +244,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_NOINVERT
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "Dp19"
         EndBody
       EndObject
@@ -252,7 +252,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_NOINVERT
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "Dp20"
         EndBody
       EndObject
@@ -260,7 +260,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_NOINVERT
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "Dp21"
         EndBody
       EndObject
@@ -268,7 +268,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_NOINVERT
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "Dp22"
         EndBody
       EndObject
@@ -276,7 +276,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_NOINVERT
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "Dp23"
         EndBody
       EndObject
@@ -284,7 +284,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_NOINVERT
-          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "Dp24"
         EndBody
       EndObject
@@ -294,6 +294,7 @@ SObject pwrb:Class
       Object MaxIndex $Intern 25
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -305,6 +306,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_ARRAY
+          Attr Flags |= PWR_MASK_REDUTRANSFER
 	  Attr Elements = 24
         EndBody
       EndObject

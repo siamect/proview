@@ -119,6 +119,7 @@ SObject pwrb:Class
       !*/
       Object DpOut1 $Output 2
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "Dp1"
         EndBody
@@ -128,6 +129,7 @@ SObject pwrb:Class
       !*/
       Object DpOut2 $Output 3
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "Dp2"
         EndBody
@@ -137,6 +139,7 @@ SObject pwrb:Class
       !*/
       Object DpOut3 $Output 4
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "Dp3"
         EndBody
@@ -146,6 +149,7 @@ SObject pwrb:Class
       !*/
       Object DpOut4 $Output 5
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "Dp4"
         EndBody
@@ -155,6 +159,7 @@ SObject pwrb:Class
       !*/
       Object DpOut5 $Output 6
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "Dp5"
         EndBody
@@ -164,6 +169,7 @@ SObject pwrb:Class
       !*/
       Object DpOut6 $Output 7
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "Dp6"
         EndBody
@@ -173,6 +179,7 @@ SObject pwrb:Class
       !*/
       Object DpOut7 $Output 8
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "Dp7"
         EndBody
@@ -182,6 +189,7 @@ SObject pwrb:Class
       !*/
       Object DpOut8 $Output 9
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "Dp8"
         EndBody
@@ -191,6 +199,7 @@ SObject pwrb:Class
       !*/
       Object DpOut9 $Output 10
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "Dp9"
         EndBody
@@ -200,6 +209,7 @@ SObject pwrb:Class
       !*/
       Object DpOut10 $Output 11
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "Dp10"
         EndBody
@@ -209,6 +219,7 @@ SObject pwrb:Class
       !*/
       Object DpOut11 $Output 12
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "Dp11"
         EndBody
@@ -218,6 +229,7 @@ SObject pwrb:Class
       !*/
       Object DpOut12 $Output 13
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "Dp12"
         EndBody
@@ -227,6 +239,7 @@ SObject pwrb:Class
       !*/
       Object DpOut13 $Output 14
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "Dp13"
         EndBody
@@ -236,6 +249,7 @@ SObject pwrb:Class
       !*/
       Object DpOut14 $Output 15
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "Dp14"
         EndBody
@@ -245,6 +259,7 @@ SObject pwrb:Class
       !*/
       Object DpOut15 $Output 16
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "Dp15"
         EndBody
@@ -254,6 +269,7 @@ SObject pwrb:Class
       !*/
       Object DpOut16 $Output 17
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "Dp16"
         EndBody
@@ -263,6 +279,7 @@ SObject pwrb:Class
       !*/
       Object DpOut17 $Output 18
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "Dp17"
         EndBody
@@ -272,6 +289,7 @@ SObject pwrb:Class
       !*/
       Object DpOut18 $Output 19
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "Dp18"
         EndBody
@@ -281,6 +299,7 @@ SObject pwrb:Class
       !*/
       Object DpOut19 $Output 20
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "Dp19"
         EndBody
@@ -290,6 +309,7 @@ SObject pwrb:Class
       !*/
       Object DpOut20 $Output 21
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "Dp20"
         EndBody
@@ -299,6 +319,7 @@ SObject pwrb:Class
       !*/
       Object DpOut21 $Output 22
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "Dp21"
         EndBody
@@ -308,6 +329,7 @@ SObject pwrb:Class
       !*/
       Object DpOut22 $Output 23
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "Dp22"
         EndBody
@@ -317,6 +339,7 @@ SObject pwrb:Class
       !*/
       Object DpOut23 $Output 24
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "Dp23"
         EndBody
@@ -326,6 +349,7 @@ SObject pwrb:Class
       !*/
       Object DpOut24 $Output 25
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "Dp24"
         EndBody
@@ -335,6 +359,7 @@ SObject pwrb:Class
       !*/
       Object MaxIndex $Intern 26
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Int32"
         EndBody
       EndObject

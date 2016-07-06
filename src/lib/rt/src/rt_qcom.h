@@ -203,6 +203,7 @@ typedef struct {
   qcom_sType	type;
   unsigned int  msg_id;
   unsigned int  prio;
+  unsigned int  allocate;
   unsigned int	size;
   void		*data;
 } qcom_sPut;

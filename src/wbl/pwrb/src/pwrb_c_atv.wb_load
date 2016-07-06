@@ -69,6 +69,7 @@ SObject pwrb:Class
       !*/
       Object ActualValue $Attribute 2 
         Body SysBody
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Time"
         EndBody
       EndObject

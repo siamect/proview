@@ -71,6 +71,7 @@
 #include "rt_thread.h"
 #include "rt_thread_msg.h"
 #include "rt_sim_msg.h"
+#include "rt_qcom_msg.h"
 #include "rt_que.h"
 #include "rt_io_base.h"
 #include "rt_csup.h"
@@ -95,6 +96,99 @@
 
 static void scan (plc_sThread*);
 
+static pwr_tStatus plc_redu_init( plc_sThread *tp)
+{
+  pwr_tStatus sts;
+  pwr_tOid child;
+  void *p;
+  pwr_tCid cid;
+
+  for ( sts = gdh_GetChild( tp->aref.Objid, &child); ODD(sts); sts = gdh_GetNextSibling( child, &child)) {
+    sts = gdh_GetObjectClass( child, &cid);
+    if ( EVEN(sts)) continue; 
+    if (cid == pwr_cClass_RedcomPacket) {
+      sts = gdh_ObjidToPointer( child, &p);
+      if ( EVEN(sts)) return sts;
+
+      sts = redu_init( &tp->redu, tp->pp->Node, p);
+      if ( EVEN(sts)) return sts;
+
+      break;
+    }
+  }
+  return PLC__SUCCESS;
+}
+
+static pwr_tStatus plc_redu_receive( plc_sThread *tp)
+{
+  pwr_tStatus sts;
+  void *msg;
+  int size;
+  unsigned int timeout = tp->i_scan_time;
+    
+  sts = redu_receive( tp->redu, timeout, &size, &msg);
+  if ( sts == QCOM__TMO)
+    return sts;
+  else if ( EVEN(sts))
+    return sts;
+
+  switch ( ((redu_sHeader *)msg)->type) {
+  case redu_eMsgType_Table:
+    if ( tp->redu->t)
+      redu_free_table( tp->redu);
+            
+    sts = redu_receive_table( tp->redu, msg);
+    if ( EVEN(sts)) return sts;
+      
+    break;
+  case redu_eMsgType_Cyclic:
+    if ( tp->redu->packetp)
+      tp->redu->packetp->PacketSize = size;
+    sts = redu_unpack_message( tp->redu, msg);
+    if ( EVEN(sts)) return sts;
+      
+    break;
+  default:
+    printf( "Redu: Unknown message type\n");
+  }
+  qcom_Free( &sts, msg);
+  return PLC__SUCCESS;
+}
+
+static pwr_tStatus plc_redu_send( plc_sThread *tp)
+{
+  pwr_tStatus sts;
+  void *msg;
+
+  if ( !tp->redu->table_sent) {
+    void *table_msg;
+
+    sts = redu_create_table( tp->redu);
+    if ( EVEN(sts)) return sts;
+
+    sts = redu_send_table( tp->redu, &table_msg);
+    if ( EVEN(sts)) return sts;
+
+    sts = redu_send( tp->redu, table_msg, 
+		     ((redu_sTableMsgHeader *)table_msg)->size + sizeof( redu_sTableMsgHeader), 
+		     tp->redu->msgid_table);
+    if ( EVEN(sts)) return sts;
+    tp->redu->table_sent = 1;
+  }
+
+  sts = redu_create_message( tp->redu, &msg);
+  if ( EVEN(sts)) return sts;
+	
+  tp->redu->packetp->PacketSize = ((redu_sMsgHeader *)msg)->size + 
+    sizeof(redu_sMsgHeader);
+      
+  sts = redu_send( tp->redu, msg, ((redu_sMsgHeader *)msg)->size + 
+		   sizeof(redu_sMsgHeader), tp->redu->msgid_cyclic);
+
+  free( msg);
+
+  return sts;
+}
 
 
 void
@@ -170,6 +264,14 @@ plc_thread (
       tp->pp->IOHandler->IOReadWriteFlag = FALSE;
       errh_Error("IO read, %m", sts);
       errh_SetStatus( PLC__IOREAD);
+    }
+  }
+
+  if ( tp->pp->Node->RedundancyState != pwr_eRedundancyState_Off) {
+    sts = plc_redu_init( tp);
+    if ( EVEN(sts)) {
+      errh_Error("Redundance init, %m", sts);
+      tp->redu = 0;
     }
   }
 
@@ -388,33 +490,63 @@ scan (
     io_swap(tp->plc_io_ctx, io_eEvent_EmergencyBreak);
   tp->emergency_break_old = pp->Node->EmergBreakTrue;
 
-  thread_MutexLock(&pp->io_copy_mutex);
+  if ( tp->redu && tp->pp->Node->RedundancyState == pwr_eRedundancyState_Passive) {
+    time_GetTimeMonotonic(&tp->before_scan);
+    time_GetTime(&tp->before_scan_abs);
 
-  memcpy(tp->copy.ai_a.p, pp->base.ai_a.p, tp->copy.ai_a.size);
-  memcpy(tp->copy.ao_a.p, pp->base.ao_a.p, tp->copy.ao_a.size);
-  memcpy(tp->copy.av_a.p, pp->base.av_a.p, tp->copy.av_a.size);
-  memcpy(tp->copy.ca_a.p, pp->base.ca_a.p, tp->copy.ca_a.size);
-  memcpy(tp->copy.co_a.p, pp->base.co_a.p, tp->copy.co_a.size);
-  memcpy(tp->copy.di_a.p, pp->base.di_a.p, tp->copy.di_a.size);
-  memcpy(tp->copy.do_a.p, pp->base.do_a.p, tp->copy.do_a.size);
-  memcpy(tp->copy.dv_a.p, pp->base.dv_a.p, tp->copy.dv_a.size);
-  memcpy(tp->copy.ii_a.p, pp->base.ii_a.p, tp->copy.ii_a.size);
-  memcpy(tp->copy.io_a.p, pp->base.io_a.p, tp->copy.io_a.size);
-  memcpy(tp->copy.iv_a.p, pp->base.iv_a.p, tp->copy.iv_a.size);
-  memcpy(tp->copy.bi_a.p, pp->base.bi_a.p, tp->copy.bi_a.size);
-  memcpy(tp->copy.bo_a.p, pp->base.bo_a.p, tp->copy.bo_a.size);
+    sts = plc_redu_receive( tp);
+    if ( EVEN(sts)) return;
 
-  thread_MutexUnlock(&pp->io_copy_mutex);
+    time_Aadd(NULL, &tp->sync_time, &tp->scan_time);
+    time_GetTimeMonotonic(&tp->after_scan);
+    time_GetTime(&tp->after_scan_abs);
+    if (tp->log)
+      pwrb_PlcThread_Exec(tp);
 
-  /* Execute all the PLC code */
-  tp->exec(0, tp);
+    if (tp->csup_lh != NULL) {
+      pwr_tTime now;
+      time_GetTime(&now);
+      csup_Exec(&sts, tp->csup_lh, (pwr_tDeltaTime *) &tp->sync_time, (pwr_tDeltaTime *) &tp->after_scan, &now);
+    }
+    tp->one_before_scan = tp->before_scan;
+    tp->ActualScanTime = tp->f_scan_time;
 
-  if (pp->IOHandler->IOReadWriteFlag) {
-    sts = io_write(tp->plc_io_ctx);
-    if (EVEN(sts)) {
-      pp->IOHandler->IOReadWriteFlag = FALSE;
-      errh_Error("IO write, %m", sts);
-      errh_SetStatus( PLC__IOWRITE);
+    return;
+  }
+
+  if ( tp->pp->Node->RedundancyState != pwr_eRedundancyState_Passive) {
+
+    thread_MutexLock(&pp->io_copy_mutex);
+
+    memcpy(tp->copy.ai_a.p, pp->base.ai_a.p, tp->copy.ai_a.size);
+    memcpy(tp->copy.ao_a.p, pp->base.ao_a.p, tp->copy.ao_a.size);
+    memcpy(tp->copy.av_a.p, pp->base.av_a.p, tp->copy.av_a.size);
+    memcpy(tp->copy.ca_a.p, pp->base.ca_a.p, tp->copy.ca_a.size);
+    memcpy(tp->copy.co_a.p, pp->base.co_a.p, tp->copy.co_a.size);
+    memcpy(tp->copy.di_a.p, pp->base.di_a.p, tp->copy.di_a.size);
+    memcpy(tp->copy.do_a.p, pp->base.do_a.p, tp->copy.do_a.size);
+    memcpy(tp->copy.dv_a.p, pp->base.dv_a.p, tp->copy.dv_a.size);
+    memcpy(tp->copy.ii_a.p, pp->base.ii_a.p, tp->copy.ii_a.size);
+    memcpy(tp->copy.io_a.p, pp->base.io_a.p, tp->copy.io_a.size);
+    memcpy(tp->copy.iv_a.p, pp->base.iv_a.p, tp->copy.iv_a.size);
+    memcpy(tp->copy.bi_a.p, pp->base.bi_a.p, tp->copy.bi_a.size);
+    memcpy(tp->copy.bo_a.p, pp->base.bo_a.p, tp->copy.bo_a.size);
+    
+    thread_MutexUnlock(&pp->io_copy_mutex);
+
+    /* Execute all the PLC code */
+    tp->exec(0, tp);
+
+    if (pp->IOHandler->IOReadWriteFlag) {
+      sts = io_write(tp->plc_io_ctx);
+      if (EVEN(sts)) {
+	pp->IOHandler->IOReadWriteFlag = FALSE;
+	errh_Error("IO write, %m", sts);
+	errh_SetStatus( PLC__IOWRITE);
+      }
+    }
+    if ( tp->redu && tp->pp->Node->RedundancyState == pwr_eRedundancyState_Active) {
+      sts = plc_redu_send( tp);
     }
   }
 

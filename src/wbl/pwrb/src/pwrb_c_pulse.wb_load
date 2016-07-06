@@ -90,6 +90,7 @@ SObject pwrb:Class
           Attr PgmName = "Status"
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "sts"
         EndBody
@@ -103,6 +104,7 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
           Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "StatusOld"
         EndBody
@@ -118,6 +120,7 @@ SObject pwrb:Class
           Attr PgmName = "TimerFlag"
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
@@ -144,6 +147,7 @@ SObject pwrb:Class
           Attr PgmName = "TimerCount"
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
@@ -174,6 +178,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr NiNaAnnot = 2
           Attr NiNaCond = 1
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**

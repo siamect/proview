@@ -81,7 +81,7 @@ static pwr_tStatus IoCardInit( io_tCtx ctx,
     }
     local->value_fp = fopen( fname, "w");
     if (!local->value_fp) {
-      errh_Error( "OneWire_AoDevice Unable op open %s, '%ux'", cp->Name, 
+      errh_Error( "OneWire_AoDevice Unable op open %s, '%x'", cp->Name, 
 		  op->Super.Address);
       sts = IO__INITFAIL;
       op->Status = sts;

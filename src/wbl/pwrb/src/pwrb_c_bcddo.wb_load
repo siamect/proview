@@ -93,6 +93,7 @@ SObject pwrb:Class
       Object In $Input 1 
         Body SysBody
           Attr PgmName = "In"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "IN"
         EndBody
@@ -112,6 +113,7 @@ SObject pwrb:Class
           Attr PgmName = "BCD0"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "1"
         EndBody
@@ -121,6 +123,7 @@ SObject pwrb:Class
           Attr PgmName = "BCD1"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "2"
         EndBody
@@ -130,6 +133,7 @@ SObject pwrb:Class
           Attr PgmName = "BCD2"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "4"
         EndBody
@@ -139,6 +143,7 @@ SObject pwrb:Class
           Attr PgmName = "BCD3"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "8"
         EndBody
@@ -157,6 +162,7 @@ SObject pwrb:Class
           Attr PgmName = "BCD4"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "10"
         EndBody
@@ -166,6 +172,7 @@ SObject pwrb:Class
           Attr PgmName = "BCD5"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "20"
         EndBody
@@ -175,6 +182,7 @@ SObject pwrb:Class
           Attr PgmName = "BCD6"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "40"
         EndBody
@@ -184,6 +192,7 @@ SObject pwrb:Class
           Attr PgmName = "BCD7"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "80"
         EndBody
@@ -201,6 +210,7 @@ SObject pwrb:Class
           Attr PgmName = "BCD8"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "100"
         EndBody
@@ -210,6 +220,7 @@ SObject pwrb:Class
           Attr PgmName = "BCD9"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "200"
         EndBody
@@ -219,6 +230,7 @@ SObject pwrb:Class
           Attr PgmName = "BCDA"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "400"
         EndBody
@@ -228,6 +240,7 @@ SObject pwrb:Class
           Attr PgmName = "BCDB"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "800"
         EndBody
@@ -245,6 +258,7 @@ SObject pwrb:Class
           Attr PgmName = "BCDC"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "1000"
         EndBody
@@ -254,6 +268,7 @@ SObject pwrb:Class
           Attr PgmName = "BCDD"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "2000"
         EndBody
@@ -263,6 +278,7 @@ SObject pwrb:Class
           Attr PgmName = "BCDE"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "4000"
         EndBody
@@ -272,6 +288,7 @@ SObject pwrb:Class
           Attr PgmName = "BCDF"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "8000"
         EndBody
@@ -286,6 +303,7 @@ SObject pwrb:Class
           Attr PgmName = "Rest"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "RES"
         EndBody

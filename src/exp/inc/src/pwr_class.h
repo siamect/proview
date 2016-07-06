@@ -4,7 +4,7 @@
  *
  * This file is part of Proview.
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute and/or 
  * modify it under the terms of the GNU General Public License as 
  * published by the Free Software Foundation, either version 2 of 
  * the License, or (at your option) any later version.
@@ -635,6 +635,17 @@ typedef enum {
   pwr_eSafetyLevel_High
 } pwr_eSafetyLevel;
 
+/*_*
+  @aref activepassiveenum ActivePassiveEnum
+*/
+typedef pwr_tEnum pwr_tRedundancyStateEnum;
+
+typedef enum {
+  pwr_eRedundancyState_Off,
+  pwr_eRedundancyState_Passive,
+  pwr_eRedundancyState_Active
+} pwr_eRedundancyState;
+
 
 /* Operating system.  */
 /*_*
@@ -706,7 +717,7 @@ union pwr_m_Adef {
   pwr_32Bits (
     pwr_Bits( pointer	, 1),
     pwr_Bits( array	, 1),
-    pwr_Bits( backup	, 1),
+    pwr_Bits( redutransfer , 1),
     pwr_Bits( castattr	, 1),
     pwr_Bits( state	, 1),
     pwr_Bits( constant	, 1),
@@ -738,7 +749,7 @@ union pwr_m_Adef {
 
 #define pwr_mAdef_pointer	pwr_Bit(0)		/*  1	  */
 #define pwr_mAdef_array		pwr_Bit(1)		/*  2	  */
-#define pwr_mAdef_backup	pwr_Bit(2)		/*  4	  */
+#define pwr_mAdef_redutransfer	pwr_Bit(2)		/*  4	  */
 #define pwr_mAdef_castattr	pwr_Bit(3)		/*  8	  */
 #define pwr_mAdef_state		pwr_Bit(4)		/*  16	  */
 #define pwr_mAdef_const		pwr_Bit(5)		/*  32	  */
@@ -766,7 +777,7 @@ union pwr_m_Adef {
 
 #define PWR_MASK_POINTER	pwr_mAdef_pointer
 #define PWR_MASK_ARRAY		pwr_mAdef_array
-#define PWR_MASK_BACKUP		pwr_mAdef_backup
+#define PWR_MASK_REDUTRANSFER  	pwr_mAdef_redutransfer
 #define PWR_MASK_CASTATTR	pwr_mAdef_castattr
 #define PWR_MASK_STATE		pwr_mAdef_state
 #define PWR_MASK_CONST		pwr_mAdef_const
@@ -1098,6 +1109,7 @@ struct pwr_s_Node {
   pwr_tTime		ProcTimeStamp[110] pwr_dAlignLW;
   pwr_tBoolean		EmergBreakTrue	pwr_dAlignW;
   pwr_tUInt32		EmergBreakSelect pwr_dAlignW;
+  pwr_tRedundancyStateEnum RedundancyState pwr_dAlignW;
 };
 
 #define pwr_mAppl_PLC	1	/* This is the PLC program */
