@@ -1015,16 +1015,25 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
                            pwr_tTime time, void *buf, unsigned int size)
 {
   if ( m_items[item_idx].options & pwr_mSevOptionsMask_DeadBandLinearRegr) {
-    double value;
+    void *value;
+    double dval;
+    pwr_tBoolean bval;
     switch ( m_items[item_idx].attr[0].type) {
     case pwr_eType_Float32:
-      value = *(pwr_tFloat32 *)buf;
+      dval = *(pwr_tFloat32 *)buf;
+      value = &dval;
       break;
     case pwr_eType_Float64:
-      value = *(pwr_tFloat64 *)buf;
+      dval = *(pwr_tFloat64 *)buf;
+      value = &dval;
       break;
     case pwr_eType_Int32:
-      value = *(pwr_tInt32 *)buf;
+      dval = *(pwr_tInt32 *)buf;
+      value = &dval;
+      break;
+    case pwr_eType_Boolean:
+      bval = *(pwr_tBoolean *)buf;
+      value = &bval;
       break;
     default:
       return 0;
@@ -4015,24 +4024,29 @@ int sev_dbms::store_stat( sev_sStat *stat)
   return 1;
 }
 
-void sev_dbms::write_db_cb( void *data, int idx, double value, pwr_tTime *time)
+void sev_dbms::write_db_cb( void *data, int idx, void *value, pwr_tTime *time)
 {
   pwr_tStatus sts;
   sev_dbms *dbms = (sev_dbms *)data;
 
   switch( dbms->m_items[idx].attr[0].type) {
   case pwr_eType_Float32: {
-    pwr_tFloat32 v = value;
+    pwr_tFloat32 v = *(double *)value;
     dbms->write_value( &sts, idx, 0, *time, &v, sizeof(v));
     break;
   }
   case pwr_eType_Float64: {
-    pwr_tFloat64 v = value;
+    pwr_tFloat64 v = *(double *)value;
     dbms->write_value( &sts, idx, 0, *time, &v, sizeof(v));
     break;
   }
   case pwr_eType_Int32: {
-    pwr_tInt32 v = value;
+    pwr_tInt32 v = *(double *)value;
+    dbms->write_value( &sts, idx, 0, *time, &v, sizeof(v));
+    break;
+  }
+  case pwr_eType_Boolean: {
+    pwr_tBoolean v = *(pwr_tBoolean *)value;
     dbms->write_value( &sts, idx, 0, *time, &v, sizeof(v));
     break;
   }
@@ -4042,13 +4056,24 @@ void sev_dbms::write_db_cb( void *data, int idx, double value, pwr_tTime *time)
 
 void sev_dbms::add_cache( int item_idx)
 {
-  if ( m_items[item_idx].options & pwr_mSevOptionsMask_DeadBandMeanValue)
-    m_items[item_idx].cache = new sev_valuecache( sev_eCvType_Mean, m_items[item_idx].deadband, 
-						  m_items[item_idx].scantime);
-  else
-    m_items[item_idx].cache = new sev_valuecache( sev_eCvType_Point, m_items[item_idx].deadband, 
-						  m_items[item_idx].scantime);
-  m_items[item_idx].cache->set_write_cb( write_db_cb, this, item_idx);
+  switch ( m_items[item_idx].attr[0].type) {
+  case pwr_eType_Float32:
+  case pwr_eType_Float64:
+  case pwr_eType_Int32:
+    if ( m_items[item_idx].options & pwr_mSevOptionsMask_DeadBandMeanValue)
+      m_items[item_idx].cache = new sev_valuecache_double( sev_eCvType_Mean, m_items[item_idx].deadband, 
+							   m_items[item_idx].scantime);
+    else
+      m_items[item_idx].cache = new sev_valuecache_double( sev_eCvType_Point, m_items[item_idx].deadband, 
+							   m_items[item_idx].scantime);
+    m_items[item_idx].cache->set_write_cb( write_db_cb, this, item_idx);
+    break;
+  case pwr_eType_Boolean:
+    m_items[item_idx].cache = new sev_valuecache_bool( sev_eCvType_Point);
+    m_items[item_idx].cache->set_write_cb( write_db_cb, this, item_idx);
+    break;
+  default: ;
+  }
 }
 
 int sev_dbms::begin_transaction()

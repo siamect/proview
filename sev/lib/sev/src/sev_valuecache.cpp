@@ -45,9 +45,9 @@
 #include "pwr_baseclasses.h"
 #include "sev_valuecache.h"
 
-const int sev_valuecache::m_size = VALUECACHE_SIZE;
+const int sev_valuecache_double::m_size = VALUECACHE_SIZE;
 
-int sev_valuecache::idx( int index)
+int sev_valuecache_double::idx( int index)
 {
   if ( !m_length)
     return 0;
@@ -59,13 +59,14 @@ int sev_valuecache::idx( int index)
   return i;  
 }
 
-sev_sCacheValue& sev_valuecache::operator[]( const int index)
+sev_sCacheValueDouble& sev_valuecache_double::operator[]( const int index)
 {
   return m_val[idx(index)];
 }
 
-void sev_valuecache::add( double val, pwr_tTime *t)
+void sev_valuecache_double::add( void *value, pwr_tTime *t)
 {
+  double val = *(double *)value;
   double time;
   pwr_tDeltaTime dt;
 
@@ -109,7 +110,7 @@ void sev_valuecache::add( double val, pwr_tTime *t)
     calculate_epsilon(0);
 }
 
-void sev_valuecache::evaluate() 
+void sev_valuecache_double::evaluate() 
 {
   int value_added = 1;
 
@@ -128,7 +129,7 @@ void sev_valuecache::evaluate()
   }
 }
 
-void sev_valuecache::calculate_k()
+void sev_valuecache_double::calculate_k()
 {
   double xysum = 0;
   double x2sum = 0;  
@@ -151,7 +152,7 @@ void sev_valuecache::calculate_k()
   }
 }
 
-void sev_valuecache::write( int index) 
+void sev_valuecache_double::write( int index) 
 {
   int ii = idx(index);
   double wval, wtime;
@@ -189,12 +190,12 @@ void sev_valuecache::write( int index)
   if ( m_write_cb) {
     pwr_tTime time;
     time_Aadd( &time, &m_start_time, time_Float64ToD( 0, wtime));
-    (m_write_cb)( m_userdata, m_useridx, wval, &time);
+    (m_write_cb)( m_userdata, m_useridx, &wval, &time);
   }
 }
 
 // Calculate epsilon for all
-void sev_valuecache::calculate_epsilon()
+void sev_valuecache_double::calculate_epsilon()
 {
   if ( m_length == 1) {
     m_val[m_first].epsilon = 0;
@@ -206,7 +207,7 @@ void sev_valuecache::calculate_epsilon()
 }
  
 // Calculate epsilon for one index
-void sev_valuecache::calculate_epsilon( int index)
+void sev_valuecache_double::calculate_epsilon( int index)
 {
   int ii = idx(index);
   if ( m_k >= 1E32) {
@@ -219,7 +220,7 @@ void sev_valuecache::calculate_epsilon( int index)
 
 // Check deadband for one index
 // Returns true if all values inside deadband.
-bool sev_valuecache::check_deadband( int index)
+bool sev_valuecache_double::check_deadband( int index)
 {
   if ( m_val[idx(index)].epsilon > m_deadband)
     return false;
@@ -228,7 +229,7 @@ bool sev_valuecache::check_deadband( int index)
 
 // Check deadband for all values
 // Returns true if all values inside deadband.
-bool sev_valuecache::check_deadband()
+bool sev_valuecache_double::check_deadband()
 {
   for ( int i = 0; i < m_length; i++) {
     int ii = idx(i);
@@ -238,7 +239,7 @@ bool sev_valuecache::check_deadband()
   return true;
 }
 
-int sev_valuecache::get_optimal_write()
+int sev_valuecache_double::get_optimal_write()
 {
   if ( m_type == sev_eCvType_Mean) {
     m_last_k = m_k;
@@ -265,5 +266,32 @@ int sev_valuecache::get_optimal_write()
     }
   }
   return min_idx;
+}
+
+void sev_valuecache_bool::add( void *value, pwr_tTime *t)
+{
+  m_val.val = *(pwr_tBoolean *)value;
+  m_val.time = *t;
+
+  if ( m_inited) {
+    // Store valeu
+    write( 0);
+    m_inited = true;
+  }
+}
+
+void sev_valuecache_bool::evaluate() 
+{
+  if ( m_val.val != m_wval.val) {
+    write(0);
+  }
+}
+
+void sev_valuecache_bool::write( int index) 
+{
+  m_wval.val = m_val.val;
+  m_wval.time = m_val.time;
+  if ( m_write_cb)
+    (m_write_cb)( m_userdata, m_useridx, &m_wval.val, &m_wval.time);
 }
 
