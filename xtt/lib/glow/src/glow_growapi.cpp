@@ -1298,7 +1298,9 @@ static int grow_name_validation_cb( void *ctx, void *value)
   GlowArrayElem *op = (GlowArrayElem *)ctx;
   GrowCtx *gctx;
 
-  op->get_ctx( (void **)&gctx);
+  gctx = (GrowCtx *)op->get_ctx();
+  if ( !gctx)
+    return 0;
   return gctx->check_object_name( (char *)value);
 }
 
