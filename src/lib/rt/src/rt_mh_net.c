@@ -68,6 +68,7 @@ mh_NetSendMessage(
   if ((msg.data = (char*)qcom_Alloc(&sts, size)) == NULL)
     return sts;
 
+  msg.allocate = 0;
   msg.type.b = mh_cMsgClass;
   msg.type.s = subtype;
   msg.reply = hp->qid;

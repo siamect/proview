@@ -1111,7 +1111,7 @@ int RTTSYS_SHOW_NODES( 	menu_ctx	ctx,
 			char		*objectname,
 			char		**picture)
 { 
-#define SHOW_NODES_PAGESIZE 10
+#define SHOW_NODES_PAGESIZE 15
   int			sts;
   rtt_t_menu_upd	*menu_ptr;
   rtt_t_menu_upd	*menulist;
@@ -1553,13 +1553,13 @@ int RTTSYS_NODE( 	menu_ctx	ctx,
       menu_ptr++;
 
       /* rxmsg */
-      for ( i = net_eMsg_error; i < net_eMsg_; i++) {
+      for ( i = net_eMsg_error; i < net_eMsg_error + 30; i++) {
         menu_ptr->value_ptr = (char *) &nodep->rxmsg[i];
         menu_ptr++;
       }
 
       /* txmsg */
-      for ( i = net_eMsg_error; i < net_eMsg_; i++) {
+      for ( i = net_eMsg_error; i < net_eMsg_error + 30; i++) {
         menu_ptr->value_ptr = (char *) &nodep->txmsg[i];
         menu_ptr++;
       }
@@ -4133,7 +4133,6 @@ int RTTSYS_LOGGING( 	menu_ctx	ctx,
 			char		**picture)
 { 
 
-#define SHOW_NODES_PAGESIZE 10
   int			sts;
   rtt_t_menu_upd	*menu_ptr;
   rtt_t_menu_upd	*menulist;
@@ -11824,7 +11823,7 @@ int RTTSYS_QCOM_NODES( 	menu_ctx	ctx,
   rtt_t_menu_upd	*menu_ptr;
   rtt_t_menu_upd	*menulist;
   static int		page;	
-  int			i, k, l;
+  int			i, k, l, m;
   pool_sQlink		*nl;
   qdb_sNode		*np;
   char 			timbuf[32];
@@ -11845,27 +11844,31 @@ int RTTSYS_QCOM_NODES( 	menu_ctx	ctx,
       l = 0;
 
       qdb_ScopeLock {
-        for (
-	  nl = pool_Qsucc(&sts, &qdb->pool, &qdb->g->node_lh);
-	  nl != &qdb->g->node_lh;
-	  nl = pool_Qsucc(&sts, &qdb->pool, nl)
-        ) 
-        {
-          if ( (k >= page * QCOM_NODES_PAGESIZE) && (k < (page + 1) * QCOM_NODES_PAGESIZE))
-          {
-	    np = pool_Qitem(nl, qdb_sNode, node_ll);
+        for ( nl = pool_Qsucc(&sts, &qdb->pool, &qdb->g->node_lh);
+	      nl != &qdb->g->node_lh;
+	      nl = pool_Qsucc(&sts, &qdb->pool, nl)) {
+	  for ( m = 0; m < 2; m++) {
+	    if ( (k >= page * QCOM_NODES_PAGESIZE) && (k < (page + 1) * QCOM_NODES_PAGESIZE)) {
+	      np = pool_Qitem(nl, qdb_sNode, node_ll);
 
-	    if ( strncmp( np->name, "***", 3) == 0)
-	      continue;
+	      if ( strncmp( np->link[m].name, "***", 3) == 0) {
+		m++;
+		continue;
+	      }
+	      if ( m == 1 && np->link_cnt <= 1)
+		continue;
 
-            /* Name */
-            menu_ptr->value_ptr = (char *) &np->name;
-            menu_ptr->func = &rttsys_qcom_node_start;
-            menu_ptr->arg1 = (void *) (long)np->nid;
-            menu_ptr++;
+	      /* Name */
+	      menu_ptr->value_ptr = (char *) np->link[m].name;
+	      menu_ptr->func = &rttsys_qcom_node_start;
+	      if ( m == 0)
+		menu_ptr->arg1 = (void *) (unsigned int)np->nid;
+	      else
+		menu_ptr->arg1 = (void *) (unsigned int)(np->nid | 0x80000000);
+	      menu_ptr++;
 
-            /* Os */
-	    switch ( np->os) {
+	      /* Os */
+	      switch ( np->os) {
 	      case co_eOS_Lynx: strcpy( menu_ptr->value_ptr, "Lynx"); break;
 	      case co_eOS_Linux: strcpy( menu_ptr->value_ptr, "Linux"); break;
 	      case co_eOS_MacOS: strcpy( menu_ptr->value_ptr, "MacOS"); break;
@@ -11875,10 +11878,10 @@ int RTTSYS_QCOM_NODES( 	menu_ctx	ctx,
 	      case co_eOS_OpenBSD: strcpy( menu_ptr->value_ptr, "OpenBSD"); break;
 	      case co_eOS_Cygwin: strcpy( menu_ptr->value_ptr, "Cygwin"); break;
 	      default: strcpy( menu_ptr->value_ptr, "Unknwn");
-	    }
-            menu_ptr++;
-            /* Hw */
-	    switch ( np->hw) {
+	      }
+	      menu_ptr++;
+	      /* Hw */
+	      switch ( np->hw) {
 	      case co_eHW_x86: strcpy( menu_ptr->value_ptr, "x86"); break;
 	      case co_eHW_x86_64: strcpy( menu_ptr->value_ptr, "x86_64"); break;
 	      case co_eHW_68k: strcpy( menu_ptr->value_ptr, "68k"); break;
@@ -11887,47 +11890,50 @@ int RTTSYS_QCOM_NODES( 	menu_ctx	ctx,
 	      case co_eHW_PPC: strcpy( menu_ptr->value_ptr, "PPC"); break;
 	      case co_eHW_ARM: strcpy( menu_ptr->value_ptr, "ARM"); break;
 	      default: strcpy( menu_ptr->value_ptr, "Unknwn");
+	      }
+	      menu_ptr++;
+	      /* Link */
+	      if (np == qdb->my_node)
+		/* Local node */
+		strcpy( menu_ptr->value_ptr, "Local");
+	      else {
+		if ( np->link[m].qflags.b.initiated)
+		  strcpy( menu_ptr->value_ptr, "Initiated");
+		else if ( np->link[m].qflags.b.active) {
+		  if ( m == np->clx)
+		    strcpy( menu_ptr->value_ptr, "Active");
+		  else
+		    strcpy( menu_ptr->value_ptr, "Passive");
+		}
+		else if ( np->link[m].qflags.b.connected)
+		  strcpy( menu_ptr->value_ptr, "Connected");
+		else
+		  strcpy( menu_ptr->value_ptr, "Down");
+	      }
+	      menu_ptr++;
+	      /* Upcnt */
+	      menu_ptr->value_ptr = (char *) &np->link[m].upcnt;
+	      menu_ptr++;
+	      /* Timeup */
+	      if ( np->link[m].timeup.tv_sec != 0 || np->link[m].timeup.tv_nsec != 0) {
+		time_AtoAscii( &np->link[m].timeup, time_eFormat_DateAndTime, timbuf,
+			       sizeof(timbuf));
+	      }
+	      else
+		timbuf [0] = '\0';
+	      strcpy( menu_ptr->value_ptr, timbuf);
+	      menu_ptr++;
+	      /* Sent */
+	      menu_ptr->value_ptr = (char *) &np->put.segs;
+	      menu_ptr++;
+	      /* Rcvd */
+	      menu_ptr->value_ptr = (char *) &np->get.segs;
+	      menu_ptr++;
+	      l++;
 	    }
-            menu_ptr++;
-            /* Link */
-            if (np == qdb->my_node)
-	      /* Local node */
-              strcpy( menu_ptr->value_ptr, "Local");
-	    else
-	    {
-              if ( np->flags.b.initiated)
-                strcpy( menu_ptr->value_ptr, "Initiated");
-              else if ( np->flags.b.active)
-                strcpy( menu_ptr->value_ptr, "Active");
-              else if ( np->flags.b.connected)
-                strcpy( menu_ptr->value_ptr, "Connected");
-              else
-                strcpy( menu_ptr->value_ptr, "Down");
-	    }
-            menu_ptr++;
-            /* Upcnt */
-            menu_ptr->value_ptr = (char *) &np->upcnt;
-            menu_ptr++;
-  	    /* Timeup */
-	    if ( np->timeup.tv_sec != 0 || np->timeup.tv_nsec != 0)
-	    {
-              time_AtoAscii( &np->timeup, time_eFormat_DateAndTime, timbuf,
-		sizeof(timbuf));
-	    }
-	    else
-              timbuf [0] = '\0';
-            strcpy( menu_ptr->value_ptr, timbuf);
-            menu_ptr++;
-            /* Sent */
-            menu_ptr->value_ptr = (char *) &np->put.segs;
-            menu_ptr++;
-            /* Rcvd */
-            menu_ptr->value_ptr = (char *) &np->get.segs;
-            menu_ptr++;
-  	    l++;
-          }
-          k++;
-        }
+	    k++;
+	  }
+	}
       } qdb_ScopeUnlock;
 
       for ( i = l; i < QCOM_NODES_PAGESIZE; i++)
@@ -12010,27 +12016,28 @@ int RTTSYS_QCOM_NODES( 	menu_ctx	ctx,
       l = 0;
 
       qdb_ScopeLock {
-        for (
-	  nl = pool_Qsucc(&sts, &qdb->pool, &qdb->g->node_lh);
-	  nl != &qdb->g->node_lh;
-	  nl = pool_Qsucc(&sts, &qdb->pool, nl)
-        ) 
-        {
-          if ( (k >= page * QCOM_NODES_PAGESIZE) && (k < (page + 1) * QCOM_NODES_PAGESIZE))
-          {
-	    np = pool_Qitem(nl, qdb_sNode, node_ll);
+        for ( nl = pool_Qsucc(&sts, &qdb->pool, &qdb->g->node_lh);
+	      nl != &qdb->g->node_lh;
+	      nl = pool_Qsucc(&sts, &qdb->pool, nl)) {
+	  for ( m = 0; m < 2; m++) {
+	    if ( (k >= page * QCOM_NODES_PAGESIZE) && (k < (page + 1) * QCOM_NODES_PAGESIZE)) {
+	      np = pool_Qitem(nl, qdb_sNode, node_ll);
 
-	    if ( strncmp( np->name, "***", 3) == 0)
-	      continue;
+	      if ( strncmp( np->link[m].name, "***", 3) == 0) {
+		m++;
+		continue;
+	      }
+	      if ( m > np->link_cnt - 1)
+		continue;
 
-            /* Name */
-            menu_ptr->value_ptr = (char *) &np->name;
-            menu_ptr->func = &rttsys_qcom_node_start;
-            menu_ptr->arg1 = (void *) (long)np->nid;
-            menu_ptr++;
-
-            /* Os */
-	    switch ( np->os) {
+	      /* Name */
+	      menu_ptr->value_ptr = (char *) np->link[m].name;
+	      menu_ptr->func = &rttsys_qcom_node_start;
+	      menu_ptr->arg1 = (void *) (long)np->nid;
+	      menu_ptr++;
+	      
+	      /* Os */
+	      switch ( np->os) {
 	      case co_eOS_Lynx: strcpy( menu_ptr->value_ptr, "Lynx"); break;
 	      case co_eOS_Linux: strcpy( menu_ptr->value_ptr, "Linux"); break;
 	      case co_eOS_MacOS: strcpy( menu_ptr->value_ptr, "MacOS"); break;
@@ -12040,10 +12047,10 @@ int RTTSYS_QCOM_NODES( 	menu_ctx	ctx,
 	      case co_eOS_OpenBSD: strcpy( menu_ptr->value_ptr, "OpenBSD"); break;
 	      case co_eOS_Cygwin: strcpy( menu_ptr->value_ptr, "Cygwin"); break;
 	      default: strcpy( menu_ptr->value_ptr, "Unknwn");
-	    }
-            menu_ptr++;
-            /* Hw */
-	    switch ( np->hw) {
+	      }
+	      menu_ptr++;
+	      /* Hw */
+	      switch ( np->hw) {
 	      case co_eHW_x86: strcpy( menu_ptr->value_ptr, "x86"); break;
 	      case co_eHW_x86_64: strcpy( menu_ptr->value_ptr, "x86_64"); break;
 	      case co_eHW_68k: strcpy( menu_ptr->value_ptr, "68k"); break;
@@ -12052,47 +12059,46 @@ int RTTSYS_QCOM_NODES( 	menu_ctx	ctx,
 	      case co_eHW_PPC: strcpy( menu_ptr->value_ptr, "PPC"); break;
 	      case co_eHW_ARM: strcpy( menu_ptr->value_ptr, "ARM"); break;
 	      default: strcpy( menu_ptr->value_ptr, "Unknwn");
+	      }
+	      menu_ptr++;
+	      /* Link */
+	      if (np == qdb->my_node)
+		/* Local node */
+		strcpy( menu_ptr->value_ptr, "Local");
+	      else {
+		if ( np->link[m].qflags.b.initiated)
+		  strcpy( menu_ptr->value_ptr, "Initiated");
+		else if ( np->link[m].qflags.b.active)
+		  strcpy( menu_ptr->value_ptr, "Active");
+		else if ( np->link[m].qflags.b.connected)
+		  strcpy( menu_ptr->value_ptr, "Connected");
+		else
+		  strcpy( menu_ptr->value_ptr, "Down");
+	      }
+	      menu_ptr++;
+	      /* Upcnt */
+	      menu_ptr->value_ptr = (char *) &np->link[m].upcnt;
+	      menu_ptr++;
+	      /* Timeup */
+	      if ( np->link[m].timeup.tv_sec != 0 || np->link[m].timeup.tv_nsec != 0) {
+		time_AtoAscii( &np->link[m].timeup, time_eFormat_DateAndTime, timbuf,
+			       sizeof(timbuf));
+	      }
+	      else
+		timbuf [0] = '\0';
+	      strcpy( menu_ptr->value_ptr, timbuf);
+	      menu_ptr++;
+	      /* Sent */
+	      menu_ptr->value_ptr = (char *) &np->put.segs;
+	      menu_ptr++;
+	      /* Rcvd */
+	      menu_ptr->value_ptr = (char *) &np->get.segs;
+	      menu_ptr++;
+	      l++;
 	    }
-            menu_ptr++;
-            /* Link */
-            if (np == qdb->my_node)
-	      /* Local node */
-              strcpy( menu_ptr->value_ptr, "Local");
-	    else
-	    {
-              if ( np->flags.b.initiated)
-                strcpy( menu_ptr->value_ptr, "Initiated");
-              else if ( np->flags.b.active)
-                strcpy( menu_ptr->value_ptr, "Active");
-              else if ( np->flags.b.connected)
-                strcpy( menu_ptr->value_ptr, "Connected");
-              else
-                strcpy( menu_ptr->value_ptr, "Down");
-	    }
-            menu_ptr++;
-            /* Upcnt */
-            menu_ptr->value_ptr = (char *) &np->upcnt;
-            menu_ptr++;
-  	    /* Timeup */
-	    if ( np->timeup.tv_sec != 0 || np->timeup.tv_nsec != 0)
-	    {
-              time_AtoAscii( &np->timeup, time_eFormat_DateAndTime, timbuf,
-		sizeof(timbuf));
-	    }
-	    else
-              timbuf [0] = '\0';
-            strcpy( menu_ptr->value_ptr, timbuf);
-            menu_ptr++;
-            /* Sent */
-            menu_ptr->value_ptr = (char *) &np->put.segs;
-            menu_ptr++;
-            /* Rcvd */
-            menu_ptr->value_ptr = (char *) &np->get.segs;
-            menu_ptr++;
-  	    l++;
-          }
-          k++;
-        }
+	    k++;
+	  }
+	}
       } qdb_ScopeUnlock;
 
       for ( i = l; i < QCOM_NODES_PAGESIZE; i++)
@@ -12803,10 +12809,10 @@ static int rttsys_qcom_node_start( 	menu_ctx	ctx,
 }
 
 int RTTSYS_QCOM_NODE( menu_ctx	ctx,
-			int		event,
-			char		*parameter_ptr,
-			char		*objectname,
-			char		**picture)
+		      int		event,
+		      char		*parameter_ptr,
+		      char		*objectname,
+		      char		**picture)
 { 
   int			sts;
   rtt_t_menu_upd	*menu_ptr;
@@ -12814,6 +12820,7 @@ int RTTSYS_QCOM_NODE( menu_ctx	ctx,
   pool_sQlink		*nl;
   qdb_sNode		*np;
   static pwr_tNodeId	nid;
+  static unsigned int   lix;
 
   IF_NOQCOM_RETURN;
 
@@ -12844,9 +12851,9 @@ int RTTSYS_QCOM_NODE( menu_ctx	ctx,
               strcpy( menu_ptr->value_ptr, "Local");
 	    else
             {
-              if ( np->link.flags.m & qdb_mLink_active)
+              if ( np->link[lix].flags.m & qdb_mLink_active)
                 strcpy( menu_ptr->value_ptr, "Active");
-              else if ( np->link.flags.m & qdb_mLink_connected)
+              else if ( np->link[lix].flags.m & qdb_mLink_connected)
                 strcpy( menu_ptr->value_ptr, "Connected");
               else
                 strcpy( menu_ptr->value_ptr, "Down");
@@ -12854,79 +12861,79 @@ int RTTSYS_QCOM_NODE( menu_ctx	ctx,
             menu_ptr++;
 
             /* win count */
-            menu_ptr->value_ptr = (char *) &np->link.win_count;
+            menu_ptr->value_ptr = (char *) &np->link[lix].win_count;
             menu_ptr++;
 
             /* win max */
-            menu_ptr->value_ptr = (char *) &np->link.win_max;
+            menu_ptr->value_ptr = (char *) &np->link[lix].win_max;
             menu_ptr++;
 
             /* rtt rxmax */
-            menu_ptr->value_ptr = (char *) &np->link.rtt_rxmax;
+            menu_ptr->value_ptr = (char *) &np->link[lix].rtt_rxmax;
             menu_ptr++;
 
             /* rtt rxmin */
-            menu_ptr->value_ptr = (char *) &np->link.rtt_rxmin;
+            menu_ptr->value_ptr = (char *) &np->link[lix].rtt_rxmin;
             menu_ptr++;
 
             /* rtt rtt */
-            menu_ptr->value_ptr = (char *) &np->link.rtt_rtt;
+            menu_ptr->value_ptr = (char *) &np->link[lix].rtt_rtt;
             menu_ptr++;
 
             /* rtt srtt */
-            menu_ptr->value_ptr = (char *) &np->link.rtt_srtt;
+            menu_ptr->value_ptr = (char *) &np->link[lix].rtt_srtt;
             menu_ptr++;
 
             /* rtt var */
-            menu_ptr->value_ptr = (char *) &np->link.rtt_var;
+            menu_ptr->value_ptr = (char *) &np->link[lix].rtt_var;
             menu_ptr++;
 
             /* rtt rto */
-            menu_ptr->value_ptr = (char *) &np->link.rtt_rto;
+            menu_ptr->value_ptr = (char *) &np->link[lix].rtt_rto;
             menu_ptr++;
 
             /* lack seq */
-            menu_ptr->value_ptr = (char *) &np->link.lack.seq;
+            menu_ptr->value_ptr = (char *) &np->link[lix].lack.seq;
             menu_ptr++;
 
             /* lack ts */
-            menu_ptr->value_ptr = (char *) &np->link.lack.ts;
+            menu_ptr->value_ptr = (char *) &np->link[lix].lack.ts;
             menu_ptr++;
 
             /* rack seq */
-            menu_ptr->value_ptr = (char *) &np->link.rack.seq;
+            menu_ptr->value_ptr = (char *) &np->link[lix].rack.seq;
             menu_ptr++;
 
             /* rack ts */
-            menu_ptr->value_ptr = (char *) &np->link.rack.ts;
+            menu_ptr->value_ptr = (char *) &np->link[lix].rack.ts;
             menu_ptr++;
 
             /* seq */
-            menu_ptr->value_ptr = (char *) &np->link.seq;
+            menu_ptr->value_ptr = (char *) &np->link[lix].seq;
             menu_ptr++;
 
             /* pending rack */
-            menu_ptr->value_ptr = (char *) &np->link.pending_rack;
+            menu_ptr->value_ptr = (char *) &np->link[lix].pending_rack;
             menu_ptr++;
 
             /* ack delay */
-            menu_ptr->value_ptr = (char *) &np->ack_delay;
+            menu_ptr->value_ptr = (char *) &np->link[lix].ack_delay;
             menu_ptr++;
 
             /* bus */
-            menu_ptr->value_ptr = (char *) &np->link.bus;
+            menu_ptr->value_ptr = (char *) &np->link[lix].bus;
             menu_ptr++;
 
             /* Port */
             if ( pwr_dHost_byteOrder == pwr_dLittleEndian)
             {
               unsigned short tmp;
-              tmp = np->link.sa.sin_port;
+              tmp = np->link[lix].sa.sin_port;
               ENDIAN_SWAP_SHORTP(&tmp);
               *(int *)menu_ptr->value_ptr = tmp;
             }
             else
-              *(int *)menu_ptr->value_ptr = np->link.sa.sin_port;
+              *(int *)menu_ptr->value_ptr = np->link[lix].sa.sin_port;
             menu_ptr++;
 
             /* Address */
@@ -12942,39 +12949,39 @@ int RTTSYS_QCOM_NODE( menu_ctx	ctx,
             menu_ptr++;
 
             /* seg_size */
-            menu_ptr->value_ptr = (char *) &np->seg_size;
+            menu_ptr->value_ptr = (char *) &np->link[lix].seg_size;
             menu_ptr++;
 
             /* timer */
-            menu_ptr->value_ptr = (char *) &np->link.timer;
+            menu_ptr->value_ptr = (char *) &np->link[lix].timer;
             menu_ptr++;
 
             /* err_red */
-            menu_ptr->value_ptr = (char *) &np->link.err_red;
+            menu_ptr->value_ptr = (char *) &np->link[lix].err_red;
             menu_ptr++;
 
             /* err_seq */
-            menu_ptr->value_ptr = (char *) &np->link.err_seq;
+            menu_ptr->value_ptr = (char *) &np->link[lix].err_seq;
             menu_ptr++;
 
             /* err_seg_seq */
-            menu_ptr->value_ptr = (char *) &np->link.err_seg_seq;
+            menu_ptr->value_ptr = (char *) &np->link[lix].err_seg_seq;
             menu_ptr++;
 
             /* export_quota */
-            menu_ptr->value_ptr = (char *) &np->link.export_quota;
+            menu_ptr->value_ptr = (char *) &np->link[lix].export_quota;
             menu_ptr++;
 
             /* export_alloc_cnt */
-            menu_ptr->value_ptr = (char *) &np->link.export_alloc_cnt;
+            menu_ptr->value_ptr = (char *) &np->link[lix].export_alloc_cnt;
             menu_ptr++;
 
             /* export_purge_cnt */
-            menu_ptr->value_ptr = (char *) &np->link.export_purge_cnt;
+            menu_ptr->value_ptr = (char *) &np->link[lix].export_purge_cnt;
             menu_ptr++;
 
             /* node name */
-            menu_ptr->value_ptr = (char *) np->name;
+            menu_ptr->value_ptr = (char *) np->link[lix].name;
             menu_ptr++;
 
             break;
@@ -13014,7 +13021,13 @@ int RTTSYS_QCOM_NODE( menu_ctx	ctx,
     case RTT_APPL_INIT:
 
       nid = (pwr_tNodeId) (unsigned long)objectname;
-
+      if ( nid & 0x80000000) {
+	lix = 1;
+	nid &= 0x7fffffff;
+      }
+      else
+	lix = 0;
+	   
       menulist = (rtt_t_menu_upd *) ctx->menu;
       menu_ptr = menulist;
 
@@ -13035,9 +13048,9 @@ int RTTSYS_QCOM_NODE( menu_ctx	ctx,
               strcpy( menu_ptr->value_ptr, "Local");
 	    else
             {
-              if ( np->link.flags.m & qdb_mLink_active)
+              if ( np->link[lix].flags.m & qdb_mLink_active)
                 strcpy( menu_ptr->value_ptr, "Active");
-              else if ( np->link.flags.m & qdb_mLink_connected)
+              else if ( np->link[lix].flags.m & qdb_mLink_connected)
                 strcpy( menu_ptr->value_ptr, "Connected");
               else
                 strcpy( menu_ptr->value_ptr, "Down");
@@ -13045,107 +13058,107 @@ int RTTSYS_QCOM_NODE( menu_ctx	ctx,
             menu_ptr++;
 
             /* win count */
-            menu_ptr->value_ptr = (char *) &np->link.win_count;
+            menu_ptr->value_ptr = (char *) &np->link[lix].win_count;
             menu_ptr++;
 
             /* win max */
-            menu_ptr->value_ptr = (char *) &np->link.win_max;
+            menu_ptr->value_ptr = (char *) &np->link[lix].win_max;
             menu_ptr++;
 
             /* rtt rxmax */
-            menu_ptr->value_ptr = (char *) &np->link.rtt_rxmax;
+            menu_ptr->value_ptr = (char *) &np->link[lix].rtt_rxmax;
             menu_ptr++;
 
             /* rtt rxmin */
-            menu_ptr->value_ptr = (char *) &np->link.rtt_rxmin;
+            menu_ptr->value_ptr = (char *) &np->link[lix].rtt_rxmin;
             menu_ptr++;
 
             /* rtt rtt */
-            menu_ptr->value_ptr = (char *) &np->link.rtt_rtt;
+            menu_ptr->value_ptr = (char *) &np->link[lix].rtt_rtt;
             menu_ptr++;
 
             /* rtt srtt */
-            menu_ptr->value_ptr = (char *) &np->link.rtt_srtt;
+            menu_ptr->value_ptr = (char *) &np->link[lix].rtt_srtt;
             menu_ptr++;
 
             /* rtt var */
-            menu_ptr->value_ptr = (char *) &np->link.rtt_var;
+            menu_ptr->value_ptr = (char *) &np->link[lix].rtt_var;
             menu_ptr++;
 
             /* rtt rto */
-            menu_ptr->value_ptr = (char *) &np->link.rtt_rto;
+            menu_ptr->value_ptr = (char *) &np->link[lix].rtt_rto;
             menu_ptr++;
 
             /* lack seq */
-            menu_ptr->value_ptr = (char *) &np->link.lack.seq;
+            menu_ptr->value_ptr = (char *) &np->link[lix].lack.seq;
             menu_ptr++;
 
             /* lack ts */
-            menu_ptr->value_ptr = (char *) &np->link.lack.ts;
+            menu_ptr->value_ptr = (char *) &np->link[lix].lack.ts;
             menu_ptr++;
 
             /* rack seq */
-            menu_ptr->value_ptr = (char *) &np->link.rack.seq;
+            menu_ptr->value_ptr = (char *) &np->link[lix].rack.seq;
             menu_ptr++;
 
             /* rack ts */
-            menu_ptr->value_ptr = (char *) &np->link.rack.ts;
+            menu_ptr->value_ptr = (char *) &np->link[lix].rack.ts;
             menu_ptr++;
 
             /* seq */
-            menu_ptr->value_ptr = (char *) &np->link.seq;
+            menu_ptr->value_ptr = (char *) &np->link[lix].seq;
             menu_ptr++;
 
             /* pending rack */
-            menu_ptr->value_ptr = (char *) &np->link.pending_rack;
+            menu_ptr->value_ptr = (char *) &np->link[lix].pending_rack;
             menu_ptr++;
 
             /* rack_tmo */
-            menu_ptr->value_ptr = (char *) &np->link.rack_tmo;
+            menu_ptr->value_ptr = (char *) &np->link[lix].rack_tmo;
             menu_ptr++;
 
             /* bus */
-            menu_ptr->value_ptr = (char *) &np->link.bus;
+            menu_ptr->value_ptr = (char *) &np->link[lix].bus;
             menu_ptr++;
 
             /* Port */
             if ( pwr_dHost_byteOrder == pwr_dLittleEndian)
             {
               unsigned short tmp;
-              tmp = np->link.sa.sin_port;
+              tmp = np->link[lix].sa.sin_port;
               ENDIAN_SWAP_SHORTP(&tmp);
               *(int *)menu_ptr->value_ptr = tmp;
             }
             else
-              *(int *)menu_ptr->value_ptr = np->link.sa.sin_port;
+              *(int *)menu_ptr->value_ptr = np->link[lix].sa.sin_port;
             menu_ptr++;
 
             /* Address */
 #if defined OS_ELN || defined OS_VMS
             sprintf( menu_ptr->value_ptr, "%d.%d.%d.%d", 
-		np->link.sa.sin_addr.S_un.S_un_b.s_b1,
-		np->link.sa.sin_addr.S_un.S_un_b.s_b2,
-		np->link.sa.sin_addr.S_un.S_un_b.s_b3,
-		np->link.sa.sin_addr.S_un.S_un_b.s_b4);
+		np->link[lix].sa.sin_addr.S_un.S_un_b.s_b1,
+		np->link[lix].sa.sin_addr.S_un.S_un_b.s_b2,
+		np->link[lix].sa.sin_addr.S_un.S_un_b.s_b3,
+		np->link[lix].sa.sin_addr.S_un.S_un_b.s_b4);
 #else
             sprintf( menu_ptr->value_ptr, "%d.%d.%d.%d", 0,0,0,0);
 #endif
             menu_ptr++;
 
             /* timer */
-            menu_ptr->value_ptr = (char *) &np->link.timer;
+            menu_ptr->value_ptr = (char *) &np->link[lix].timer;
             menu_ptr++;
 
             /* err_red */
-            menu_ptr->value_ptr = (char *) &np->link.err_red;
+            menu_ptr->value_ptr = (char *) &np->link[lix].err_red;
             menu_ptr++;
 
             /* err_seq */
-            menu_ptr->value_ptr = (char *) &np->link.err_seq;
+            menu_ptr->value_ptr = (char *) &np->link[lix].err_seq;
             menu_ptr++;
 
             /* node name */
-            menu_ptr->value_ptr = (char *) np->name;
+            menu_ptr->value_ptr = (char *) np->link[lix].name;
             menu_ptr++;
 
             break;

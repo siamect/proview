@@ -168,6 +168,7 @@ int sevcli_get_itemlist( pwr_tStatus *sts, sevcli_tCtx ctx, sevcli_sHistItem **l
   put.type.s = (qcom_eStype) sev_eMsgType_HistItemsRequest;
   put.msg_id = ctx->msg_id++;
   put.size = sizeof(*msg);
+  put.allocate = 0;
   msg = (sev_sMsgAny *) qcom_Alloc( sts, put.size);
 
   put.data = msg;
@@ -264,6 +265,7 @@ int sevcli_get_itemlist( pwr_tStatus *sts, sevcli_tCtx ctx, sevcli_sHistItem **l
   put.type.s = (qcom_eStype) sev_eMsgType_HistItemsRequest;
   put.msg_id = ctx->msg_id++;
   put.size = sizeof(*msg);
+  put.allocate = 0;
   msg = (sev_sMsgAny *) qcom_Alloc( sts, put.size);
 
   put.data = msg;
@@ -355,6 +357,7 @@ int sevcli_get_itemdata( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid,
   put.type.s = (qcom_eStype) sev_eMsgType_HistDataGetRequest;
   put.msg_id = ctx->msg_id++;
   put.size = sizeof(*msg);
+  put.allocate = 0;
   msg = (sev_sMsgHistDataGetRequest *) qcom_Alloc( sts, put.size);
   
 
@@ -456,6 +459,7 @@ int sevcli_get_objectitemdata( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid, 
   put.type.s = (qcom_eStype) sev_eMsgType_HistObjectDataGetRequest;
   put.msg_id = ctx->msg_id++;
   put.size = sizeof(*msg);
+  put.allocate = 0;
   msg = (sev_sMsgHistDataGetRequest *) qcom_Alloc( sts, put.size);
   
 
@@ -569,6 +573,7 @@ int sevcli_delete_item( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid, char *a
   put.type.s = (qcom_eStype) sev_eMsgType_HistItemDelete;
   put.msg_id = ctx->msg_id++;
   put.size = sizeof(*msg);
+  put.allocate = 0;
   msg = (sev_sMsgHistItemDelete *) qcom_Alloc( sts, put.size);
   
 

@@ -64,6 +64,7 @@
 #include "rt_net.h"
 #include "rt_qcom.h"
 #include "rt_qcom_msg.h"
+#include "rt_qmon.h"
 #include "rt_gdh.h"
 #include "rt_lst.h"
 #include "rt_que.h"
@@ -361,6 +362,7 @@ static pwr_tStatus     	redu_node_init();
 static redu_sNode*	get_node( pwr_tNodeId nid);
 static void		state_change_request( sLink *lp, sIseg *sp, pwr_eRedundancyState state);
 static sEseg*		request_state_change( sLink *lp, pwr_eRedundancyState state);
+static void		send_state_change();
 
 
 int
@@ -441,7 +443,7 @@ main (int argc, char *argv[])
   }
 
   l.head.nid = l.nid;
-  l.head.birth = qdb->my_node->birth = time_Clock(NULL, NULL);
+  l.head.birth = qdb->my_node->link[0].birth = time_Clock(NULL, NULL);
   ini_link_info(&l.link_info);
 
   do {
@@ -508,7 +510,7 @@ static pwr_tStatus redu_node_init( )
   int 		local_found = 0;
   
   
-  sprintf( fname, pwr_cNameReduNode, "$pwrp_load/", qdb->my_node->name, qdb->g->bus);
+  sprintf( fname, pwr_cNameRedcom, "$pwrp_load/", qdb->my_node->link[0].name, qdb->g->bus);
   dcli_translate_filename( fname, fname);
   fp = fopen( fname, "r");
   if ( !fp)
@@ -529,13 +531,14 @@ static pwr_tStatus redu_node_init( )
       errors++;
     }
 
-    if ( strcmp( name, qdb->my_node->name) == 0) {
+    if ( strcmp( name, qdb->my_node->link[0].name) == 0) {
       local_found = 1;
       l.port = atoi(s_port);
       if ( l.port == 0)
 	l.port = redu_cPort;
       redu_segment_size = atoi(s_seg_size);
       l.nodep->RedundancyState = atoi(s_state);
+      qdb->my_node->redundancy_state = l.nodep->RedundancyState;
       l.min_resend_time = atoi(s_min_resend_time);
       l.max_resend_time = atoi(s_max_resend_time);
       l.export_buf_quota = atoi(s_export_buf_quota);
@@ -1245,11 +1248,11 @@ ini_link_info (
 {
   qdb_sNode	*my_np = qdb->my_node;
 
-  strcpy(lp->name, my_np->name);
+  strcpy(lp->name, my_np->link[0].name);
 
   lp->version = ntohl(my_np->version);
   lp->nid     = ntohl(l.nid);
-  lp->birth   = ntohl(my_np->birth);
+  lp->birth   = ntohl(my_np->link[0].birth);
   lp->bus     = ntohl(qdb->g->bus);
   lp->os      = ntohl(my_np->os);
   lp->hw      = ntohl(my_np->hw);
@@ -1540,7 +1543,7 @@ link_purge (
       alloc_cnt += sp->size;
     i++;
   }
-  printf( "link_purge: %d cnt %d (%d)\n", i, lp->np->link.export_alloc_cnt, alloc_cnt);
+  printf( "redcom link_purge: %d cnt %d (%d)\n", i, lp->np->link.export_alloc_cnt, alloc_cnt);
   lp->np->link.export_alloc_cnt = alloc_cnt;
   lp->np->link.export_purge_cnt++;
   l.config->Link[lp->idx].ExportPurged = lp->np->link.export_purge_cnt;
@@ -2212,6 +2215,8 @@ state_change_request (
   case pwr_eRedundancyState_Passive:
   case pwr_eRedundancyState_Off:
     l.nodep->RedundancyState = state;
+    qdb->my_node->redundancy_state = l.nodep->RedundancyState;
+    
     break;
   }
 }
@@ -2264,6 +2269,8 @@ cyclic_thread ()
 	request_state_change( lp, pwr_eRedundancyState_Passive);
       l.config->SetActive = 0;
       l.nodep->RedundancyState = pwr_eRedundancyState_Active;
+      qdb->my_node->redundancy_state = l.nodep->RedundancyState;
+      send_state_change();
     }
     if ( l.config->SetPassive) {
 
@@ -2271,6 +2278,8 @@ cyclic_thread ()
 	request_state_change( lp, pwr_eRedundancyState_Active);
       l.config->SetPassive = 0;
       l.nodep->RedundancyState = pwr_eRedundancyState_Passive;
+      qdb->my_node->redundancy_state = l.nodep->RedundancyState;
+      send_state_change();
     }
     if ( l.config->SetOff) {
 
@@ -2278,8 +2287,32 @@ cyclic_thread ()
 	request_state_change( lp, pwr_eRedundancyState_Off);
       l.config->SetOff = 0;
       l.nodep->RedundancyState = pwr_eRedundancyState_Off;
+      qdb->my_node->redundancy_state = l.nodep->RedundancyState;
     }
     nanosleep( &ts, NULL);
   }
   return NULL;
+}
+
+void send_state_change()
+{
+  pwr_tStatus sts;
+  qcom_sPut put;
+  qcom_sQid qmon_qid = {qcom_cImonAction, 0};
+
+  memset( &put, 0, sizeof(put));
+  put.type.b = (qcom_eBtype) qmon_cMsgClassAction;
+  switch ( l.nodep->RedundancyState) {
+  case pwr_eRedundancyState_Active:
+    put.type.s = (qcom_eStype) qmon_eMsgTypeAction_NodeActive;
+    break;
+  case pwr_eRedundancyState_Passive:
+    put.type.s = (qcom_eStype) qmon_eMsgTypeAction_NodePassive;
+    break;    
+  }
+  put.size = 4;
+  put.data = qcom_Alloc( &sts, put.size);
+  
+  qcom_Put( &sts, &qmon_qid, &put);
+
 }

@@ -82,6 +82,7 @@
 #include "rt_thread_msg.h"
 #include "rt_pwr_msg.h"
 #include "rt_ini_event.h"
+#include "rt_qmon.h"
 
 #if 1
 # define MAX_SEGSIZE	(8192 - sizeof(sHead))
@@ -93,6 +94,10 @@
 #define RACK_TMO	1
 #define EXPORT_BUF_WARN_LEVEL 300000
 #define EXPORT_BUF_QUOTA 600000
+#define IS_SECONDARY_NID(nid) ((nid) & 0x80000000)
+#define SECONDARY_NID(nid) ((nid) | 0x80000000)
+#define NID_LIX(nid)    (((nid) & 0x80000000) ? 1 : 0)
+#define NID(nid)	((nid) & 0x7fffffff)
 
 #define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 
@@ -187,6 +192,8 @@ typedef union {
 struct sLink {
   tree_sNode		tree;
   pwr_tNodeId		nid;
+  pwr_tNodeId		rnid;
+  unsigned int		lix;
   lst_sEntry		lh_send;
   lst_sEntry		lh_win;
   que_sQue		q_in;
@@ -260,6 +267,9 @@ typedef enum {
   eEvent_down,
   eEvent_user,
   eEvent_ack,
+  eEvent_connectPassive,
+  eEvent_redcomActive,
+  eEvent_redcomPassive,
   eEvent_
 } eEvent;
 
@@ -298,12 +308,16 @@ struct {
   struct {
     thread_s		thread;
   } export;
+  struct {
+    thread_s		thread;
+  } action;
   qdb_sLinkInfo		link_info;
 #if defined OS_VMS
   int			send_ef;
   int			import_ef;
 #endif
   pwr_tStatus		sts;
+  qcom_sQid		action_qid;
 } l;
 
 static pwr_tStatus qcom_sts = PWR__SRVSTARTUP;
@@ -340,6 +354,8 @@ static void		link_import(sLink*, sIseg*);
 static void		link_redisconnect(sLink*);
 static void		link_send(sLink*);
 static void		link_stalled(sLink*);
+static void		link_redcom_active(sLink*, sIseg*);
+static void		link_redcom_passive(sLink*, sIseg*);
 static void*		link_thread(sLink*);
 static pwr_tDeltaTime*	link_tmo (sLink*);
 static sLink*		new_link(pwr_tNodeId, sMsg*);
@@ -359,6 +375,8 @@ static sEseg*		window_tmo (sLink*);
 static void		check_link_status ();
 static void		set_status (pwr_tStatus);
 static void		purge (void);
+static void*		action_thread();
+static sEseg*		send_action( sLink*, qmon_eMsgTypeAction);
 
 
 int
@@ -369,6 +387,7 @@ main (int argc, char *argv[])
   qcom_sQid	neth_qid;
   qcom_sQid	my_q = qcom_cNQid;
   int 		noneth = 0;
+  qcom_sQattr 	qattr;
 
   /* Vänta en stund ... */
 //  sleep(5);
@@ -394,7 +413,7 @@ main (int argc, char *argv[])
   qdb->thread_lock.cond_wait = thread_CondWait;
 #endif
   
-  qcom_segment_size = qdb->my_node->seg_size - sizeof(sHead);
+  qcom_segment_size = qdb->my_node->link[0].seg_size - sizeof(sHead);
   if ( qcom_segment_size == 0)
     qcom_segment_size = 8192 - sizeof(sHead);
 
@@ -404,13 +423,26 @@ main (int argc, char *argv[])
     exit(sts);
   }
 
+  qattr.type = qcom_eQtype_private;
+  qattr.quota = 1000;
+  l.action_qid.qix = qcom_cImonAction;
+  l.action_qid.nid = 0;
+  if (!qcom_CreateQ(&sts, &l.action_qid, &qattr, "Action")) {
+    qcom_DeleteQ(&sts, &l.action_qid);
+    if (!qcom_CreateQ(&sts, &l.action_qid, &qattr, "Action")) {
+      errh_Fatal("qcom_CreateQ, %m", sts);
+      errh_SetStatus( PWR__SRVTERM);
+      exit(sts); 
+    }
+  }
+
   if (!qcom_AttachQ(&sts, &qid)) {
     errh_Fatal("qcom_AttachQ, %m", sts);
     errh_SetStatus( PWR__SRVTERM);
     exit(sts);
   }
   l.head.nid = qdb->my_node->nid;
-  l.head.birth = qdb->my_node->birth = time_Clock(NULL, NULL);
+  l.head.birth = qdb->my_node->link[0].birth = time_Clock(NULL, NULL);
   ini_link_info(&l.link_info);
 
   neth_qid.qix = net_cProcHandler; 
@@ -457,6 +489,7 @@ main (int argc, char *argv[])
 
     thread_Create(&l.import.thread, "import", import_thread, NULL);
     thread_Create(&l.export.thread, "export", export_thread, NULL);
+    thread_Create(&l.action.thread, "action", action_thread, NULL);
 
   } while (0);
 
@@ -480,9 +513,9 @@ main (int argc, char *argv[])
 
 static int export_alloc_check( sLink *lp)
 {
-  if ( lp->np->link.export_alloc_cnt > EXPORT_BUF_WARN_LEVEL && qcom_sts != QCOM__BUFFHIGH)
+  if ( lp->np->link[lp->lix].export_alloc_cnt > EXPORT_BUF_WARN_LEVEL && qcom_sts != QCOM__BUFFHIGH)
     set_status(QCOM__BUFFHIGH);
-  if ( lp->np->link.export_alloc_cnt > lp->exp_buf_quota) {
+  if ( lp->np->link[lp->lix].export_alloc_cnt > lp->exp_buf_quota) {
     link_purge(lp);	
     return 1;
   }
@@ -494,10 +527,10 @@ static void export_alloc_sub( sEseg *sp)
   if ( !sp || !sp->lp)
     return;
 
-  sp->lp->np->link.export_alloc_cnt -= sp->size;
-  if ( sp->lp->np->link.export_alloc_cnt < 0)
-    sp->lp->np->link.export_alloc_cnt = 0;
-  if ( qcom_sts == QCOM__BUFFHIGH && sp->lp->np->link.export_alloc_cnt < EXPORT_BUF_WARN_LEVEL )
+  sp->lp->np->link[sp->lp->lix].export_alloc_cnt -= sp->size;
+  if ( sp->lp->np->link[sp->lp->lix].export_alloc_cnt < 0)
+    sp->lp->np->link[sp->lp->lix].export_alloc_cnt = 0;
+  if ( qcom_sts == QCOM__BUFFHIGH && sp->lp->np->link[sp->lp->lix].export_alloc_cnt < EXPORT_BUF_WARN_LEVEL )
     set_status(PWR__SRUN);
 }
 
@@ -631,8 +664,12 @@ create_connect (
 {
   sEseg *sp;
 
+  printf( "Create connect %d\n", qdb->my_node->redundancy_state);
   sp = eseg_alloc(&l.eseg.mutex);
-  sp->head.flags.b.event = eEvent_connect;
+  if ( qdb->my_node->redundancy_state == pwr_eRedundancyState_Passive)
+    sp->head.flags.b.event = eEvent_connectPassive;
+  else
+    sp->head.flags.b.event = eEvent_connect;
   sp->lp = lp;
   sp->c.action = eAction_export;
 
@@ -657,6 +694,10 @@ create_links ()
       if (np == qdb->my_node) continue;
       if (np == qdb->no_node) continue;
       tree_Insert(&sts, l.links.table, &np->nid);
+      if ( np->link_cnt > 1) {
+	pwr_tNodeId nid = SECONDARY_NID(np->nid);
+	tree_Insert(&sts, l.links.table, &nid);
+      }
     }
   } qdb_ScopeUnlock;
 
@@ -791,11 +832,13 @@ eseg_build (
 	lp != NULL;
 	lp = tree_Successor(&sts, l.links.table, lp)
       ) {
-	if (lp->np->link.flags.b.connected)
+	if (lp->np->link[lp->lix].flags.b.connected)
 	  break;
       }
-    } else {
+    } else {      
       lp = get_link(bp->b.info.receiver.nid, NULL);
+      if ( lp->lix != lp->np->clx)
+	lp = get_link(SECONDARY_NID(bp->b.info.receiver.nid), NULL);      
     }
 
     if (lp == NULL)
@@ -822,7 +865,7 @@ eseg_build (
 	sp->head.flags.b.middle = 1;
 	lst_InsertPred(NULL, &msp->le_seg, &sp->le_seg, sp);
       }
-      lp->np->link.export_alloc_cnt += sp->size;
+      lp->np->link[lp->lix].export_alloc_cnt += sp->size;
     }
 
     sp->head.flags.b.middle = 0;
@@ -855,7 +898,7 @@ eseg_build (
 	  lst_InsertPred(NULL, &sp->le_bcast, &csp->le_bcast, csp);
 	  sp = lst_Succ(NULL, &sp->le_seg, NULL);
 
-	  csp->lp->np->link.export_alloc_cnt += csp->size;
+	  csp->lp->np->link[lp->lix].export_alloc_cnt += csp->size;
 
 	} while (sp != msp);
       }
@@ -1006,6 +1049,7 @@ get_link (
   thread_MutexLock(&l.links.mutex);
 
   lp = tree_Find(&sts, l.links.table, &nid);
+
 #if 0
   // Allow unconfigured links...
   if (lp == NULL)
@@ -1027,16 +1071,16 @@ get_tmo (
   float rto;
   pwr_tTime now;
   
-  rto = lp->np->link.rtt_rto;
+  rto = lp->np->link[lp->lix].rtt_rto;
 
-  if (rto > lp->np->link.rtt_rxmax) {
-    rto = lp->np->link.rtt_rxmax;
-    if (lp->np->link.flags.b.active)
+  if (rto > lp->np->link[lp->lix].rtt_rxmax) {
+    rto = lp->np->link[lp->lix].rtt_rxmax;
+    if (lp->np->link[lp->lix].flags.b.active)
       link_stalled(lp);
   } else if (do_inc) {
-    lp->np->link.rtt_rto *= 2;
-    if (lp->np->link.rtt_rto > lp->np->link.rtt_rxmax)
-      lp->np->link.rtt_rto = lp->np->link.rtt_rxmax + 0.01;
+    lp->np->link[lp->lix].rtt_rto *= 2;
+    if (lp->np->link[lp->lix].rtt_rto > lp->np->link[lp->lix].rtt_rxmax)
+      lp->np->link[lp->lix].rtt_rto = lp->np->link[lp->lix].rtt_rxmax + 0.01;
   }
 
   time_GetTimeMonotonic( &now);
@@ -1107,23 +1151,11 @@ import_thread ()
     }       
 #endif
 
-#if 0
-    // Test of bad network
-    static int cnt = 0;
-    cnt++;
-
-    if ( cnt > 1000) {
-      if ( cnt < 1006)
-	continue;
-      else if ( cnt == 1008)
-	cnt = 1000;
-    }
-    // End Test
-#endif
-
     sp->size = bytes - sizeof(sp->head);
     sp->ts_recv = time_Clock(NULL, NULL);
     decode_head(&sp->head, &msg.head);
+    //if ( IS_SECONDARY_NID(sp->head.nid))
+    //  printf( "Secondary nid\n");
     if (last_link != NULL && sp->head.nid == last_link->nid)
       sp->lp = last_link;
     else
@@ -1132,15 +1164,16 @@ import_thread ()
       errh_Warning("Request from unknown node %s", cdh_VolumeIdToString(0, sp->head.nid,0,0));
       continue;   
     }
+    //printf( "Import from %d %s lix %d clx %d\n", sp->head.nid, sp->lp->np->link[sp->lp->lix].name, sp->lp->lix, sp->lp->np->clx);
     sp->c.action = eAction_import;
     sp->lp->np->get.segs++;
     sp->lp->np->get.bytes += bytes;
 #if defined OS_VMS
-    sp->lp->np->link.sa.sin_family = msg.sa.sin_family;
-    sp->lp->np->link.sa.sin_port = msg.sa.sin_port;
-    sp->lp->np->link.sa.sin_addr.s_addr = msg.sa.sin_addr;
+    sp->lp->np->link[sp->lp->lix].sa.sin_family = msg.sa.sin_family;
+    sp->lp->np->link[sp->lp->lix].sa.sin_port = msg.sa.sin_port;
+    sp->lp->np->link[sp->lp->lix].sa.sin_addr.s_addr = msg.sa.sin_addr;
 #else
-    sp->lp->np->link.sa = msg.sa;
+    sp->lp->np->link[sp->lp->lix].sa = msg.sa;
 #endif
     que_Put(NULL, &sp->lp->q_in, &sp->c.le, sp);
     sp = iseg_alloc();
@@ -1158,11 +1191,11 @@ ini_link_info (
 {
   qdb_sNode	*my_np = qdb->my_node;
 
-  strcpy(lp->name, my_np->name);
+  strcpy(lp->name, my_np->link[0].name);
 
   lp->version = ntohl(my_np->version);
   lp->nid     = ntohl(my_np->nid);
-  lp->birth   = ntohl(my_np->birth);
+  lp->birth   = ntohl(my_np->link[0].birth);
   lp->bus     = ntohl(qdb->g->bus);
   lp->os      = ntohl(my_np->os);
   lp->hw      = ntohl(my_np->hw);
@@ -1210,11 +1243,11 @@ iseg_import (
   qdb_sInfo *ip;
   qdb_sQue *qp;
 
-  if (!lp->np->link.flags.b.connected) {
+  if (!lp->np->link[lp->lix].flags.b.connected) {
     return;
   }
     
-  diff = sp->head.lack.seq - lp->np->link.rack.seq;
+  diff = sp->head.lack.seq - lp->np->link[lp->lix].rack.seq;
   if (diff != 1) {
     return;
   }
@@ -1225,7 +1258,7 @@ iseg_import (
     decode_info(ip);
     qdb_ScopeLock {
       if ( lp->bp != NULL) {
-	lp->np->link.err_seg_seq++;
+	lp->np->link[lp->lix].err_seg_seq++;
 	qdb_Free( NULL, lp->bp);
       }
       lp->bp = qdb_Alloc(&sts, qdb_eBuffer_base, ip->size);
@@ -1240,7 +1273,7 @@ iseg_import (
     // pwr_Assert(lp->bp != NULL);
     // pwr_Assert(lp->p != NULL);
     if ( lp->bp == NULL) {
-      lp->np->link.err_seg_seq++;
+      lp->np->link[lp->lix].err_seg_seq++;
       return;
     }
   }
@@ -1297,7 +1330,7 @@ lack (
       eseg_free(sp);
     } else {
       /* This is the oldest not acked segment. */
-      lp->np->link.lack = sp->head.lack;
+      lp->np->link[lp->lix].lack = sp->head.lack;
       break;
     }
   }
@@ -1310,20 +1343,21 @@ link_active (
 {
   pwr_tStatus sts;
 
-  if (lp->np->link.flags.b.active) {
-    pwr_Assert(lp->np->link.flags.b.connected);
+  if (lp->np->link[lp->lix].flags.b.active) {
+    pwr_Assert(lp->np->link[lp->lix].flags.b.connected);
     return;
   }
 
   start_rto(lp);
-  lp->np->link.flags.b.active = 1;
-  lp->np->link.flags.b.connected = 1;
+  lp->np->link[lp->lix].flags.b.active = 1;
+  lp->np->link[lp->lix].flags.b.connected = 1;
   errh_Info("Active, link to %s (%s)",
-    lp->np->name, cdh_NodeIdToString(NULL, lp->np->nid, 0, 0));
+    lp->np->link[lp->lix].name, cdh_NodeIdToString(NULL, lp->np->nid, 0, 0));
   qdb_ScopeLock {
-    lp->np->flags.b.active = 1;
-    lp->np->flags.b.connected = 1;
-    qdb_NetEvent(&sts, lp->np, qcom_eStype_linkActive);
+    lp->np->link[lp->lix].qflags.b.active = 1;
+    lp->np->link[lp->lix].qflags.b.connected = 1;
+    if ( lp->np->clx == lp->lix)
+      qdb_NetEvent(&sts, lp->np, qcom_eStype_linkActive);
   } qdb_ScopeUnlock;
   check_link_status();
 }
@@ -1337,21 +1371,32 @@ link_connect (
   pwr_tStatus sts;
 
 
-  lp->np->link.flags.b.active = 1;
+  if ( sp->head.flags.b.event == eEvent_connect)
+    lp->np->clx = lp->lix;
+  else if ( sp->head.flags.b.event == eEvent_connectPassive &&
+	    lp->np->clx == lp->lix) {
+    if ( lp->lix == 1)
+      lp->np->clx = 0;
+    else if ( lp->lix == 0 && lp->np->link_cnt > 1)
+      lp->np->clx = 1;
+  }
 
-  if (lp->np->link.flags.b.connected)
+  lp->np->link[lp->lix].flags.b.active = 1;
+
+  if (lp->np->link[lp->lix].flags.b.connected)
     return;
 
-  lp->np->link.flags.b.connected = 1;
+  lp->np->link[lp->lix].flags.b.connected = 1;
   errh_Info("Connected, link to %s (%s)",
-    lp->np->name, cdh_NodeIdToString(NULL, lp->np->nid, 0, 0));
+    lp->np->link[lp->lix].name, cdh_NodeIdToString(NULL, lp->np->nid, 0, 0));
   qdb_ScopeLock {
-    lp->np->birth = sp->head.birth;
-    time_GetTime(&lp->np->timeup);
-    lp->np->flags.b.connected = 1;
-    lp->np->flags.b.active = 1;
+    lp->np->link[lp->lix].birth = sp->head.birth;
+    time_GetTime(&lp->np->link[lp->lix].timeup);
+    lp->np->link[lp->lix].qflags.b.connected = 1;
+    lp->np->link[lp->lix].qflags.b.active = 1;
     set_link_info(lp, (qdb_sLinkInfo *)sp->buff);
-    qdb_NetEvent(&sts, lp->np, qcom_eStype_linkConnect);
+    if ( lp->np->clx == lp->lix)
+      qdb_NetEvent(&sts, lp->np, qcom_eStype_linkConnect);
   } qdb_ScopeUnlock;
 
   check_link_status();
@@ -1365,19 +1410,19 @@ link_disconnect (
   pwr_tStatus sts;
   sEseg *sp;
 
-  if (!lp->np->link.flags.b.connected) {
-    pwr_Assert(!lp->np->link.flags.b.active);
+  if (!lp->np->link[lp->lix].flags.b.connected) {
+    pwr_Assert(!lp->np->link[lp->lix].flags.b.active);
     return;
   }
 
-  lp->np->link.pending_rack = NO;
-  lp->np->link.flags.b.active = 0;
-  lp->np->link.flags.b.connected = 0;
-  memset(&lp->np->link.lack, 0, sizeof(lp->np->link.lack));
-  memset(&lp->np->link.rack, 0, sizeof(lp->np->link.rack));
-  lp->np->link.seq = 0;
+  lp->np->link[lp->lix].pending_rack = NO;
+  lp->np->link[lp->lix].flags.b.active = 0;
+  lp->np->link[lp->lix].flags.b.connected = 0;
+  memset(&lp->np->link[lp->lix].lack, 0, sizeof(lp->np->link[0].lack));
+  memset(&lp->np->link[lp->lix].rack, 0, sizeof(lp->np->link[0].rack));
+  lp->np->link[lp->lix].seq = 0;
   start_rto(lp);
-  lp->np->link.rack_tmo = pwr_cNTime;
+  lp->np->link[lp->lix].rack_tmo = pwr_cNTime;
 
   /* Empty send list */
 
@@ -1401,24 +1446,83 @@ link_disconnect (
     eseg_free(sp);
   }
 
-  lp->np->link.win_count = 0;
+  lp->np->link[lp->lix].win_count = 0;
 
   errh_Info("Disconnected, link to  %s (%s)",
-    lp->np->name, cdh_NodeIdToString(NULL, lp->np->nid, 0, 0));
+    lp->np->link[lp->lix].name, cdh_NodeIdToString(NULL, lp->np->nid, 0, 0));
   qdb_ScopeLock {
     if (lp->bp != NULL) {
       qdb_Free(NULL, lp->bp);
     }
-    lp->np->flags.b.active = 0;
-    lp->np->flags.b.connected = 0;
-    qdb_NetEvent(&sts, lp->np, qcom_eStype_linkDisconnect);
+    lp->np->link[lp->lix].qflags.b.active = 0;
+    lp->np->link[lp->lix].qflags.b.connected = 0;
+    if ( lp->np->clx == lp->lix)
+      qdb_NetEvent(&sts, lp->np, qcom_eStype_linkDisconnect);
   } qdb_ScopeUnlock;
 
   lp->bp = NULL;
   lp->p = NULL;
-  lp->np->link.export_alloc_cnt = 0;
+  lp->np->link[lp->lix].export_alloc_cnt = 0;
   sp = create_connect(lp);
   lst_InsertSucc(NULL, &lp->lh_send, &sp->c.le, sp);
+
+  check_link_status();
+}
+
+static void
+link_redcom_active (
+  sLink *lp,
+  sIseg *sp
+)
+{
+  pwr_tStatus sts;
+
+  if ( lp->np->clx == lp->lix)
+    return;
+
+  // Disconnect previous link
+  qdb_ScopeLock {
+    qdb_NetEvent(&sts, lp->np, qcom_eStype_linkDisconnect);
+  } qdb_ScopeUnlock;
+
+  lp->np->clx = lp->lix;
+  errh_Info("Primary link to %s (%s)",
+    lp->np->link[lp->lix].name, cdh_NodeIdToString(NULL, lp->np->nid, 0, 0));
+  qdb_ScopeLock {
+    if ( lp->np->clx == lp->lix)
+      qdb_NetEvent(&sts, lp->np, qcom_eStype_linkConnect);
+  } qdb_ScopeUnlock;
+
+  check_link_status();
+}
+
+static void
+link_redcom_passive (
+  sLink *lp,
+  sIseg *sp
+)
+{
+  pwr_tStatus sts;
+
+  if ( lp->np->clx != lp->lix)
+    return;
+
+  if ( lp->np->link_cnt < 2)
+    return;
+
+  // Disconnect previous link
+  qdb_ScopeLock {
+    qdb_NetEvent(&sts, lp->np, qcom_eStype_linkDisconnect);
+  } qdb_ScopeUnlock;
+
+  lp->np->clx = !lp->lix;
+
+  errh_Info("Primary link to %s (%s)",
+    lp->np->link[lp->np->clx].name, cdh_NodeIdToString(NULL, lp->np->nid, 0, 0));
+  qdb_ScopeLock {
+    if ( lp->np->link[lp->np->clx].flags.b.active)
+      qdb_NetEvent(&sts, lp->np, qcom_eStype_linkConnect);
+  } qdb_ScopeUnlock;
 
   check_link_status();
 }
@@ -1432,8 +1536,8 @@ link_purge (
   int purge = 0;
   int alloc_cnt = 0;
 
-  if (!lp->np->link.flags.b.connected) {
-    pwr_Assert(!lp->np->link.flags.b.active);
+  if (!lp->np->link[lp->lix].flags.b.connected) {
+    pwr_Assert(!lp->np->link[lp->lix].flags.b.active);
     return;
   }
 
@@ -1456,9 +1560,9 @@ link_purge (
       alloc_cnt += sp->size;
     i++;
   }
-  printf( "link_purge: %d cnt %d (%d)\n", i, lp->np->link.export_alloc_cnt, alloc_cnt);
-  lp->np->link.export_alloc_cnt = alloc_cnt;
-  lp->np->link.export_purge_cnt++;
+  printf( "link_purge: %d cnt %d (%d)\n", i, lp->np->link[lp->lix].export_alloc_cnt, alloc_cnt);
+  lp->np->link[lp->lix].export_alloc_cnt = alloc_cnt;
+  lp->np->link[lp->lix].export_purge_cnt++;
 }
 
 
@@ -1469,30 +1573,54 @@ link_import (
 )
 {
 
-  if (!lp->np->link.flags.b.active && lp->np->birth == sp->head.birth)
+  //if ( IS_SECONDARY_NID(lp->nid))
+  //  printf( "link_import %d\n", lp->nid);
+
+  if (!lp->np->link[lp->lix].flags.b.active && lp->np->link[lp->lix].birth == sp->head.birth)
     link_active(lp);
-  else if (lp->np->birth != sp->head.birth && lp->np->link.flags.b.connected)
+  else if (lp->np->link[lp->lix].birth != sp->head.birth && lp->np->link[lp->lix].flags.b.connected)
     link_disconnect(lp);
-  else if (lp->np->birth != sp->head.birth && !lp->np->link.flags.b.connected)
+  else if (lp->np->link[lp->lix].birth != 0 && lp->np->link[lp->lix].birth != sp->head.birth && !lp->np->link[lp->lix].flags.b.connected)
     link_redisconnect(lp);
 
   switch (sp->head.flags.b.event) {
   case eEvent_user:
-    if (lp->np->link.flags.b.active) {
+    if (lp->lix != lp->np->clx) {
+      lack(lp, sp);
+      set_rack(lp, sp);
+      //printf( "Import from backup, rejected %s\n", lp->np->link[lp->lix].name);
+      break;
+    }
+    if (lp->np->link[lp->lix].flags.b.active) {
       lack(lp, sp);
       iseg_import(lp, sp);
       set_rack(lp, sp);
+      //printf( "Import from %s\n", lp->np->link[lp->lix].name);
     }
     break;
   case eEvent_ack:
-    if (lp->np->link.flags.b.active) {
+    if (lp->np->link[lp->lix].flags.b.active) {
       lack(lp, sp);
     }      
     break;
   case eEvent_connect:
+  case eEvent_connectPassive:
     link_connect(lp, sp);
     lack(lp, sp);
     set_rack(lp, sp);
+    //printf( "Connect from %s\n", lp->np->link[lp->lix].name);
+    break;
+  case eEvent_redcomActive:
+    lack(lp, sp);
+    set_rack(lp, sp);
+    link_redcom_active(lp, sp);
+    printf( "Active from %s\n", lp->np->link[lp->lix].name);
+    break;
+  case eEvent_redcomPassive:
+    lack(lp, sp);
+    set_rack(lp, sp);
+    link_redcom_passive(lp, sp);
+    printf( "Passive from %s\n", lp->np->link[lp->lix].name);
     break;
   default:
     break;
@@ -1508,18 +1636,19 @@ link_redisconnect (
 {
   sEseg *sp;
 
-  pwr_Assert(!lp->np->link.flags.b.connected);
-  pwr_Assert(!lp->np->link.flags.b.active);
+  pwr_Assert(!lp->np->link[lp->lix].flags.b.connected);
+  pwr_Assert(!lp->np->link[lp->lix].flags.b.active);
 
-  lp->np->link.pending_rack = NO;
+  lp->np->link[lp->lix].pending_rack = NO;
   start_rto(lp);
-  lp->np->link.rack_tmo = pwr_cNTime;
+  lp->np->link[lp->lix].rack_tmo = pwr_cNTime;
 
   sp = lst_Succ(NULL, &lp->lh_win, NULL);
   if (sp == NULL)
     sp = lst_Succ(NULL, &lp->lh_send, NULL);
   pwr_Assert(sp != NULL);
-  pwr_Assert(sp->head.flags.b.event == eEvent_connect);
+  pwr_Assert(sp->head.flags.b.event == eEvent_connect ||
+	     sp->head.flags.b.event == eEvent_connectPassive);
 
   sp->tmo = pwr_cNTime;
 
@@ -1537,7 +1666,7 @@ link_send (
   } else if ((sp = pending_send(lp)) != NULL) {
     window_insert(lp, sp);
     seg_send(lp, sp);
-  } else if (lp->np->link.pending_rack && expired(&lp->np->link.rack_tmo)) {
+  } else if (lp->np->link[lp->lix].pending_rack && expired(&lp->np->link[lp->lix].rack_tmo)) {
     send_ack(lp);
   }
 }
@@ -1549,15 +1678,16 @@ link_stalled (
 {
   pwr_tStatus sts;
 
-  if (!lp->np->link.flags.b.active)
+  if (!lp->np->link[lp->lix].flags.b.active)
     return;
 
-  lp->np->link.flags.b.active = 0;
+  lp->np->link[lp->lix].flags.b.active = 0;
   errh_Info("Stalled, link to node %s (%s)",
-    lp->np->name, cdh_NodeIdToString(NULL, lp->np->nid, 0, 0));
+    lp->np->link[lp->lix].name, cdh_NodeIdToString(NULL, lp->np->nid, 0, 0));
   qdb_ScopeLock {
-    lp->np->flags.b.active = 0;
-    qdb_NetEvent(&sts, lp->np, qcom_eStype_linkStalled);
+    lp->np->link[lp->lix].qflags.b.active = 0;
+    if ( lp->np->clx == lp->lix)
+      qdb_NetEvent(&sts, lp->np, qcom_eStype_linkStalled);
   } qdb_ScopeUnlock;
   check_link_status();
 }
@@ -1610,11 +1740,11 @@ link_tmo (
   time_GetTimeMonotonic( &clock);
 
   if (lst_Succ(NULL, &lp->lh_send, NULL) != NULL &&
-      lp->np->link.win_count < lp->np->link.win_max)
-    return time_ZeroD(&lp->np->link.timer);
+      lp->np->link[lp->lix].win_count < lp->np->link[lp->lix].win_max)
+    return time_ZeroD(&lp->np->link[lp->lix].timer);
   
-  if (lp->np->link.pending_rack) {
-    time_Adiff( &diff_rack, &lp->np->link.rack_tmo, &clock);
+  if (lp->np->link[lp->lix].pending_rack) {
+    time_Adiff( &diff_rack, &lp->np->link[lp->lix].rack_tmo, &clock);
     if ( time_Dcomp( &diff_rack, 0) == -1)
       diff_rack = pwr_cNDeltaTime;
   }
@@ -1625,23 +1755,23 @@ link_tmo (
       diff_send = pwr_cNDeltaTime;
   }
 
-  if (lp->np->link.pending_rack && sp != NULL) {
+  if (lp->np->link[lp->lix].pending_rack && sp != NULL) {
     if ( time_Dcomp( &diff_rack, &diff_send) == -1)
       tmo = diff_rack;
     else
       tmo = diff_send;
-  } else if (lp->np->link.pending_rack) {
+  } else if (lp->np->link[lp->lix].pending_rack) {
     tmo = diff_rack;
   } else if (sp != NULL) {
     tmo = diff_send;
   } else {
-    lp->np->link.timer.tv_sec = 999999999;
-    lp->np->link.timer.tv_nsec = 0;
-    return &lp->np->link.timer;
+    lp->np->link[lp->lix].timer.tv_sec = 999999999;
+    lp->np->link[lp->lix].timer.tv_nsec = 0;
+    return &lp->np->link[lp->lix].timer;
   }
   
-  lp->np->link.timer = tmo;
-  return &lp->np->link.timer;
+  lp->np->link[lp->lix].timer = tmo;
+  return &lp->np->link[lp->lix].timer;
 }
 
 static sLink *
@@ -1662,36 +1792,38 @@ new_link (
   lp = tree_Insert(&sts, l.links.table, &nid);
   pwr_Assert(lp != NULL);
 
+  lp->lix = NID_LIX(nid);
+
   if (!tics_per_sec)
     tics_per_sec = sysconf(_SC_CLK_TCK);
 
   l.links.count++;
 
   qdb_ScopeLock {
-    lp->np = qdb_AddNode(&sts, nid, 0);
+    lp->np = qdb_AddNode(&sts, NID(nid), 0);
   } qdb_ScopeUnlock;
 
   pwr_Assert(lp->np != NULL);
 
-  rtt_rxmin = (float)(max(lp->np->min_resend_time,qdb->my_node->min_resend_time))/1000;
+  rtt_rxmin = (float)(max(lp->np->link[lp->lix].min_resend_time,qdb->my_node->link[0].min_resend_time))/1000;
   if ( rtt_rxmin == 0)
     rtt_rxmin = RTT_RXMIN;
-  rtt_rxmax = (float)(max(lp->np->max_resend_time,qdb->my_node->max_resend_time))/1000;
+  rtt_rxmax = (float)(max(lp->np->link[lp->lix].max_resend_time,qdb->my_node->link[0].max_resend_time))/1000;
   if ( rtt_rxmax == 0)
     rtt_rxmax = RTT_RXMAX;
-  ack_delay = max(lp->np->ack_delay,qdb->my_node->ack_delay);
-  time_FloatToD( &lp->ack_delay, qdb->my_node->ack_delay);
-  lp->exp_buf_quota = max(lp->np->export_buf_quota,qdb->my_node->export_buf_quota);
+  ack_delay = max(lp->np->link[lp->lix].ack_delay,qdb->my_node->link[0].ack_delay);
+  time_FloatToD( &lp->ack_delay, qdb->my_node->link[0].ack_delay);
+  lp->exp_buf_quota = max(lp->np->link[lp->lix].export_buf_quota,qdb->my_node->link[0].export_buf_quota);
   if ( lp->exp_buf_quota == 0)
     lp->exp_buf_quota = EXPORT_BUF_QUOTA;    
-  lp->np->link.export_quota = lp->exp_buf_quota;
+  lp->np->link[lp->lix].export_quota = lp->exp_buf_quota;
        
   que_Create(NULL, &lp->q_in);
   lst_Init(NULL, &lp->lh_send, NULL);
   lst_Init(NULL, &lp->lh_win, NULL);
-  lp->np->link.win_max = 1;
-  lp->np->link.rtt_rxmax = rtt_rxmax;
-  lp->np->link.rtt_rxmin = rtt_rxmin;
+  lp->np->link[lp->lix].win_max = 1;
+  lp->np->link[lp->lix].rtt_rxmax = rtt_rxmax;
+  lp->np->link[lp->lix].rtt_rxmin = rtt_rxmin;
   lp->tmo.c.action = eAction_tmo;
                                     
   if (mp != NULL) {
@@ -1707,7 +1839,7 @@ new_link (
   sp = create_connect(lp);
   que_Put(NULL, &lp->q_in, &sp->c.le, sp);
   
-  thread_Create(&lp->thread, lp->np->name, link_thread, lp);
+  thread_Create(&lp->thread, lp->np->link[lp->lix].name, link_thread, lp);
 
   return lp;
 }
@@ -1770,7 +1902,7 @@ pending_send (
 )
 {
 
-  if (lp->np->link.win_count >= lp->np->link.win_max)
+  if (lp->np->link[lp->lix].win_count >= lp->np->link[lp->lix].win_max)
     return NULL;
 
   return lst_RemoveSucc(NULL, &lp->lh_send, NULL);
@@ -1791,11 +1923,13 @@ send_ack (
 
   head.flags.b.event = eEvent_ack;
   head.flags.m |= mSeg_single;
-  head.lack.seq = lp->np->link.seq;
+  head.lack.seq = lp->np->link[lp->lix].seq;
   head.lack.ts  = time_Clock(NULL, NULL);
   head.nid = l.head.nid;
+  if ( qdb->my_node->is_secondary)
+    head.nid = SECONDARY_NID(l.head.nid);
   head.birth = l.head.birth;
-  head.rack = lp->np->link.rack;
+  head.rack = lp->np->link[lp->lix].rack;
 
   set_sendmsg(lp, NULL, &msg);
   encode_head(&msg.head, &head);
@@ -1823,7 +1957,7 @@ send_ack (
   thread_MutexUnlock(&l.send_mutex);
 
   if (bytes != -1) {
-    lp->np->link.pending_rack = NO;
+    lp->np->link[lp->lix].pending_rack = NO;
     lp->np->put.segs++;
     lp->np->put.bytes += bytes;
   }
@@ -1839,12 +1973,12 @@ set_link_info (
 {
   qdb_sNode	*np = lp->np;
 
-  strcpy(np->name, ip->name);
+  strcpy(np->link[lp->lix].name, ip->name);
 
   np->version = ntohl(ip->version);
   np->nid     = ntohl(ip->nid);
-  np->birth   = ntohl(ip->birth);
-  lp->np->link.bus = ntohl(ip->bus);
+  np->link[lp->lix].birth   = ntohl(ip->birth);
+  lp->np->link[lp->lix].bus = ntohl(ip->bus);
   np->os      = ntohl(ip->os);
   np->hw      = ntohl(ip->hw);
   np->bo      = ntohl(ip->bo);
@@ -1859,20 +1993,20 @@ set_rack (
 {
   int diff;
 
-  if (!lp->np->link.flags.b.connected)
+  if (!lp->np->link[lp->lix].flags.b.connected)
     return;
 
   if (sp->head.lack.seq == 0)
     return;
 
-  diff = sp->head.lack.seq - lp->np->link.rack.seq;
+  diff = sp->head.lack.seq - lp->np->link[lp->lix].rack.seq;
   if (diff == 0 || diff == 1) {
-    lp->np->link.rack = sp->head.lack;
+    lp->np->link[lp->lix].rack = sp->head.lack;
   } else if (diff > 1) {
 #if 1
-    if ((++lp->np->link.err_seq % 20) == 1) {
+    if ((++lp->np->link[lp->lix].err_seq % 20) == 1) {
       errh_Info("%s, %d sequence error %d segments %s : (%d)[%d]\n",
-	lp->np->name, lp->np->link.err_seq, diff - 1,
+	lp->np->link[lp->lix].name, lp->np->link[lp->lix].err_seq, diff - 1,
 	event_string(sp->head.flags.b.event),
 	sp->head.lack.seq, sp->head.rack.seq);
     }
@@ -1880,9 +2014,9 @@ set_rack (
     return;
   } else {
 #if 1
-    if ((++lp->np->link.err_red % 20) == 1) {
+    if ((++lp->np->link[lp->lix].err_red % 20) == 1) {
       errh_Info("%s, %d redundant segment %s : (%d)[%d]\n",
-	lp->np->name, lp->np->link.err_red, event_string(sp->head.flags.b.event),
+	lp->np->link[lp->lix].name, lp->np->link[lp->lix].err_red, event_string(sp->head.flags.b.event),
 	sp->head.lack.seq, sp->head.rack.seq);
     }
 #endif
@@ -1893,14 +2027,14 @@ set_rack (
     return;
 
   if (sp->head.flags.b.resent) {
-    lp->np->link.pending_rack = YES;
-    time_GetTimeMonotonic( &lp->np->link.rack_tmo);
-  } else if (lp->np->link.pending_rack) {
-    time_GetTimeMonotonic( &lp->np->link.rack_tmo);
+    lp->np->link[lp->lix].pending_rack = YES;
+    time_GetTimeMonotonic( &lp->np->link[lp->lix].rack_tmo);
+  } else if (lp->np->link[lp->lix].pending_rack) {
+    time_GetTimeMonotonic( &lp->np->link[lp->lix].rack_tmo);
   } else {
-    lp->np->link.pending_rack = YES;
-    time_GetTimeMonotonic( &lp->np->link.rack_tmo);
-    time_Aadd( &lp->np->link.rack_tmo, &lp->np->link.rack_tmo, &lp->ack_delay);  /* lp->rack_tmo; */
+    lp->np->link[lp->lix].pending_rack = YES;
+    time_GetTimeMonotonic( &lp->np->link[lp->lix].rack_tmo);
+    time_Aadd( &lp->np->link[lp->lix].rack_tmo, &lp->np->link[lp->lix].rack_tmo, &lp->ack_delay);  /* lp->rack_tmo; */
   }
 
 }
@@ -1951,8 +2085,10 @@ seg_send (
 
   sp->head.lack.ts = time_Clock(NULL, NULL);
   sp->head.nid     = l.head.nid;
+  if ( qdb->my_node->is_secondary)
+    sp->head.nid = SECONDARY_NID(l.head.nid);
   sp->head.birth   = l.head.birth;
-  sp->head.rack    = sp->lp->np->link.rack;
+  sp->head.rack    = sp->lp->np->link[lp->lix].rack;
 
   thread_MutexLock(&l.send_mutex);
 
@@ -1982,11 +2118,11 @@ seg_send (
 
   if (sp->bytes == -1) {
     if (errno != EHOSTDOWN && errno != EHOSTUNREACH) {
-      errh_Error("sendmsg to node %s (%s) failed\n(%d) %s", sp->lp->np->name, 
+      errh_Error("sendmsg to node %s (%s) failed\n(%d) %s", sp->lp->np->link[lp->lix].name, 
 	cdh_NodeIdToString(NULL, sp->lp->nid, 0, 0), errno, strerror(errno));
     }
   } else {
-    lp->np->link.pending_rack = NO;
+    lp->np->link[lp->lix].pending_rack = NO;
     lp->np->put.segs++;
     lp->np->put.bytes += sp->bytes;
   }
@@ -2014,7 +2150,7 @@ set_sendmsg (
 {
   int i = 0;
   int size = 0;
-  char *p;
+  char *p;  
 
   pwr_Assert(lp != NULL);
 
@@ -2027,7 +2163,8 @@ set_sendmsg (
   if (sp == NULL) {
     mp->iov[i].iov_base = NULL;
     mp->iov[i].iov_len  = 0;
-  } else if (sp->head.flags.b.event == eEvent_connect) {
+  } else if (sp->head.flags.b.event == eEvent_connect || 
+	     sp->head.flags.b.event == eEvent_connectPassive) {
     mp->iov[i].iov_base = (char *) &l.link_info;
     mp->iov[i++].iov_len = sizeof(l.link_info);
   } else if (sp->bp != NULL) {
@@ -2047,9 +2184,9 @@ set_sendmsg (
   mp->desc.len = i * sizeof(mp->iov[0]);
 
   memset(&mp->sa, 0, sizeof(mp->sa));
-  mp->sa.sin_family = lp->np->sa.sin_family;
-  mp->sa.sin_port   = lp->np->sa.sin_port;
-  mp->sa.sin_addr   = lp->np->sa.sin_addr.s_addr;
+  mp->sa.sin_family = lp->np->link[lp->lix].sa.sin_family;
+  mp->sa.sin_port   = lp->np->link[lp->lix].sa.sin_port;
+  mp->sa.sin_addr   = lp->np->link[lp->lix].sa.sin_addr.s_addr;
 
   mp->lsa_d.name     = &mp->sa;
   mp->lsa_d.namelen  = sizeof(mp->sa);
@@ -2062,7 +2199,8 @@ set_sendmsg (
 
   if (sp == NULL) {
     ;
-  } else if (sp->head.flags.b.event == eEvent_connect) {
+  } else if (sp->head.flags.b.event == eEvent_connect || 
+	     sp->head.flags.b.event == eEvent_connectPassive) {
     mp->iov[i].iov_base = (char *) &l.link_info;
     mp->iov[i++].iov_len = sizeof(l.link_info);
   } else if (sp->bp != NULL) {
@@ -2080,8 +2218,8 @@ set_sendmsg (
   }    
 
   mp->msg.msg_iovlen = i;
-  mp->msg.msg_name = (void *) &lp->np->sa;
-  mp->msg.msg_namelen = sizeof(lp->np->sa);
+  mp->msg.msg_name = (void *) &lp->np->link[lp->lix].sa;
+  mp->msg.msg_namelen = sizeof(lp->np->link[0].sa);
 #endif
 }
 
@@ -2092,14 +2230,14 @@ start_rto (
 {
   double rto;
 
-  rto = lp->np->link.rtt_srtt + (4.0 * lp->np->link.rtt_var);
+  rto = lp->np->link[lp->lix].rtt_srtt + (4.0 * lp->np->link[lp->lix].rtt_var);
 
-  if (rto < lp->np->link.rtt_rxmin)
-    rto = lp->np->link.rtt_rxmin;
-  else if (rto > lp->np->link.rtt_rxmax)
-    rto = lp->np->link.rtt_rxmax;
+  if (rto < lp->np->link[lp->lix].rtt_rxmin)
+    rto = lp->np->link[lp->lix].rtt_rxmin;
+  else if (rto > lp->np->link[lp->lix].rtt_rxmax)
+    rto = lp->np->link[lp->lix].rtt_rxmax;
 
-  lp->np->link.rtt_rto = rto;
+  lp->np->link[lp->lix].rtt_rto = rto;
 }
 
 static void
@@ -2117,15 +2255,15 @@ update_rtt (
 
   time_GetTimeMonotonic( &now);
   time_Adiff( &dt, &now, &sp->send_ts);
-  time_DToFloat( &lp->np->link.rtt_rtt, &dt);
+  time_DToFloat( &lp->np->link[lp->lix].rtt_rtt, &dt);
   
-  delta = lp->np->link.rtt_rtt - lp->np->link.rtt_srtt;
-  lp->np->link.rtt_srtt += delta / 8;
+  delta = lp->np->link[lp->lix].rtt_rtt - lp->np->link[lp->lix].rtt_srtt;
+  lp->np->link[lp->lix].rtt_srtt += delta / 8;
 
   if (delta < 0.0)
     delta = -delta; /* |delta| */
 
-  lp->np->link.rtt_var += (delta - lp->np->link.rtt_var) / 4;
+  lp->np->link[lp->lix].rtt_var += (delta - lp->np->link[lp->lix].rtt_var) / 4;
   
 }
 
@@ -2135,11 +2273,10 @@ window_insert (
   sEseg *sp
 )
 {
-
   pwr_Assert(!lst_IsLinked(NULL, &sp->c.le));
   lst_InsertPred(NULL, &lp->lh_win, &sp->c.le, sp);
-  lp->np->link.win_count++;
-  sp->head.lack.seq = ++lp->np->link.seq;
+  lp->np->link[lp->lix].win_count++;
+  sp->head.lack.seq = ++lp->np->link[lp->lix].seq;
 }
 
 static void
@@ -2151,7 +2288,7 @@ window_remove (
 
   pwr_Assert(lst_IsLinked(NULL, &sp->c.le));
   lst_Remove(NULL, &sp->c.le);
-  lp->np->link.win_count--;
+  lp->np->link[lp->lix].win_count--;
 }
 
 static sEseg *
@@ -2176,7 +2313,7 @@ check_link_status(
   sLink *lp;
 
   for (lp = tree_Minimum(&sts, l.links.table); lp != NULL; lp = tree_Successor(&sts, l.links.table, lp)) {
-    if ( !lp->np->link.flags.b.active)
+    if ( !lp->np->link[lp->lix].flags.b.active)
       linksts = QCOM__DOWN;
   }
   if ( linksts != l.sts) {
@@ -2213,4 +2350,67 @@ purge (void)
   for (lp = tree_Minimum(&sts, l.links.table); lp != NULL; lp = tree_Successor(&sts, l.links.table, lp))
     link_purge(lp);
   errh_Error("Links purged, qdb pool exhausted");
+}
+
+static void *
+
+action_thread ()
+{
+  pwr_tStatus sts;
+  qcom_sGet get;
+  void *msg;
+  sLink *lp;
+
+  while (qdb->g->up) {
+    memset( &get, 0, sizeof(get));
+
+    msg = qcom_Get( &sts, &l.action_qid, &get, qcom_cTmoEternal);
+    if ( ODD(sts)) {
+      switch (  get.type.b) {
+      case qmon_cMsgClassAction: {
+	switch ( get.type.s) {
+	case qmon_eMsgTypeAction_NodeActive:
+	case qmon_eMsgTypeAction_NodePassive:
+	  printf( "Node active\n");
+
+	  for (lp = tree_Minimum(&sts, l.links.table); lp != NULL; lp = tree_Successor(&sts, l.links.table, lp))
+	    send_action( lp, get.type.s);
+
+	  break;
+	default: ;
+	}
+	break;
+      }      
+      default: ;	
+      }
+      qcom_Free( &sts, msg);
+    }
+  }
+  return NULL;
+}
+
+
+static sEseg *
+send_action (
+  sLink *lp,
+  qmon_eMsgTypeAction action
+)
+{
+  sEseg *sp;
+
+  sp = eseg_alloc(&l.eseg.mutex);
+  switch ( action) {
+  case qmon_eMsgTypeAction_NodeActive:
+    sp->head.flags.b.event = eEvent_redcomActive;
+    break;
+  case qmon_eMsgTypeAction_NodePassive:
+    sp->head.flags.b.event = eEvent_redcomPassive;
+    break;
+  }
+  sp->lp = lp;
+  sp->c.action = eAction_export;
+
+  que_Put(NULL, &lp->q_in, &sp->c.le, sp);
+
+  return sp;
 }

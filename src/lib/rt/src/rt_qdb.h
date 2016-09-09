@@ -439,32 +439,6 @@ typedef struct {
   int			ts		pwr_dPacked;	/* Time stamp. */
 } qdb_sAck;
 
-typedef struct {
-  qdb_mLink		flags;
-  int			win_count;
-  int			win_max;
-  float			rtt_rxmax;
-  float			rtt_rxmin;
-  float			rtt_rtt;
-  float			rtt_srtt;
-  float			rtt_var;
-  float			rtt_rto;
-  qdb_sAck		lack;
-  qdb_sAck		rack;
-  int			seq;
-  pwr_tBoolean		pending_rack;
-  pwr_tTime		rack_tmo;
-  qcom_tBus		bus;
-  struct sockaddr_in	sa;
-  pwr_tDeltaTime	timer;
-  int			export_quota;
-  int			export_alloc_cnt;
-  int			export_purge_cnt;
-  int			err_red;
-  int			err_seq;
-  int			err_seg_seq;
-} qdb_sLink;
-
 typedef char qdb_tQname[32];
 
 typedef struct {
@@ -602,6 +576,66 @@ typedef struct {
 } qdb_sQbond;
 
 typedef struct {
+  qdb_mLink		flags;
+  pwr_tUInt32		birth;		/* current incarnation identity */
+  int			win_count;
+  int			win_max;
+  float			rtt_rxmax;
+  float			rtt_rxmin;
+  float			rtt_rtt;
+  float			rtt_srtt;
+  float			rtt_var;
+  float			rtt_rto;
+  qdb_sAck		lack;
+  qdb_sAck		rack;
+  int			seq;
+  pwr_tBoolean		pending_rack;
+  pwr_tTime		rack_tmo;
+  qcom_tBus		bus;
+  struct sockaddr_in	sa;
+  pwr_tDeltaTime	timer;
+  int			export_quota;
+  int			export_alloc_cnt;
+  int			export_purge_cnt;
+  int			err_red;
+  int			err_seq;
+  int			err_seg_seq;
+
+  /* Moved from qdb_sNode */
+  char			name[80];	/* ascii name of node (nul-terminated)
+					   zero-length means empty slot */
+  pwr_tBoolean		up;		/* communication is up/down */
+  qdb_mNode		qflags;
+  pwr_tUInt32		upcnt;		/* # of times up */
+  pwr_tTime		timeup;		/* Most recent time link came up */
+  pwr_tTime		timedown;	/* Most recent time link went down */
+
+  pwr_tUInt32		thrown_bufs;
+  pwr_tUInt32		thrown_segs;
+  pwr_tUInt32		lost_segs;
+  
+  /* broadcast */
+
+  qcom_tRid		bc_snd_id;
+  qcom_tRid		bc_rcv_id;
+
+  /* The following attributes may only be used by rt_qimp.  */
+
+  qdb_sBuffer		*bp;
+
+  pwr_tBoolean		in_arp;
+  struct arpreq		arp;
+
+  void			*mon;		/* Monitor private data. */
+  qcom_eNodeConnection	connection;     /* Type of connection */
+  pwr_tUInt32		min_resend_time;
+  pwr_tUInt32		max_resend_time;
+  pwr_tUInt32		export_buf_quota;
+  pwr_tFloat32		ack_delay;
+  pwr_tUInt32		seg_size;
+} qdb_sLink;
+
+typedef struct {
   qcom_tQix		qix;
   pool_sQlink		qix_htl;
   qcom_sAid		aid;
@@ -635,12 +669,11 @@ typedef struct {
 typedef struct {
   pwr_tNodeId		nid;		/* node identity */
   pwr_tBoolean		initiated;	/* are values valid */
-  pwr_tUInt32		birth;		/* current incarnation identity */
   pool_sQlink		nid_htl;	/* link in nid-to-node hash table */
   pool_sQlink		node_ll;	/* link in list of all links */
   pool_sQlink		own_lh;		/*  */
   pwr_tUInt32		own_lc;		/* number of owned volumes */
-  char			name[80];	/* ascii name of node (nul-terminated)
+  char			nidstr[20];	/* ascii name of node (nul-terminated)
 					   zero-length means empty slot */
   int			version;	/* Qcom protocol version */
 
@@ -649,41 +682,15 @@ typedef struct {
   co_eBO                bo;             /* byte order */
   co_eFT                ft;             /* float type */
 
-  qdb_sLink		link;		/* Qmon link information. */
-  pwr_tBoolean		up;		/* communication is up/down */
-  qdb_mNode		flags;
-  pwr_tUInt32		upcnt;		/* # of times up */
-  pwr_tTime		timeup;		/* Most recent time link came up */
-  pwr_tTime		timedown;	/* Most recent time link went down */
-
+  unsigned int		clx;		/* Current link index */
+  unsigned int		is_secondary;   /* Node is secondary */
+  pwr_eRedundancyState 	redundancy_state; /* Redundancy state, active, passive or off */
+  unsigned int		link_cnt;	/* Number of links */
+  qdb_sLink		link[2];	/* Qmon link information for primary and secondary link */
+  struct sockaddr_in	sa;
+  pool_sQlink		bcb_lh;		/* broadcast buffer list header */
   qdb_sCount		get;
   qdb_sCount		put;
-  pwr_tUInt32		thrown_bufs;
-  pwr_tUInt32		thrown_segs;
-  pwr_tUInt32		lost_segs;
-  
-  /* broadcast */
-
-  pool_sQlink		bcb_lh;		/* broadcast buffer list header */
-  qcom_tRid		bc_snd_id;
-  qcom_tRid		bc_rcv_id;
-
-  /* The following attributes may only be used by rt_qimp.  */
-
-  qdb_sBuffer		*bp;
-
-  pwr_tBoolean		in_arp;
-  struct arpreq		arp;
-
-  struct sockaddr_in	sa;
-
-  void			*mon;		/* Monitor private data. */
-  qcom_eNodeConnection	connection;     /* Type of connection */
-  pwr_tUInt32		min_resend_time;
-  pwr_tUInt32		max_resend_time;
-  pwr_tUInt32		export_buf_quota;
-  pwr_tFloat32		ack_delay;
-  pwr_tUInt32		seg_size;
 } qdb_sNode;
 
 typedef struct {

@@ -207,11 +207,11 @@ if [ ! -e $proot ]; then
   mkdir $proot/common/loghist
   mkdir $proot/common/db
   mkdir $proot/common/web
-  mkdir $proot/x86_linux
-  mkdir $proot/x86_linux/exe
-  mkdir $proot/x86_linux/lib
-  mkdir $proot/x86_linux/obj
-  mkdir $proot/x86_linux/lis
+  mkdir $proot/x86_64_linux
+  mkdir $proot/x86_64_linux/exe
+  mkdir $proot/x86_64_linux/lib
+  mkdir $proot/x86_64_linux/obj
+  mkdir $proot/x86_64_linux/lis
 
   chown -R pwrp $proot
   chgrp -R pwrp $proot

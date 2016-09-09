@@ -98,6 +98,7 @@ extern "C"
 #define qcom_cIhdClient		(1<<31 | 105)
 #define qcom_cInacp		(1<<31 | 106)
 #define qcom_cIini		(1<<31 | 107)
+#define qcom_cImonAction       	(1<<31 | 108)
 
 /** @defgroup QCOM_DS Qcom Data Structures
  *  @ingroup QCOM

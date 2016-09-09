@@ -478,18 +478,6 @@ scan (
       tp->ActualScanTime = MIN_SCANTIME;
   }
 
-  if (pp->IOHandler->IOReadWriteFlag) {
-    sts = io_read(tp->plc_io_ctx);
-    if (EVEN(sts)) {
-      pp->IOHandler->IOReadWriteFlag = FALSE;
-      errh_Error("IO read, %m", sts);
-      errh_SetStatus( PLC__IOREAD);
-    }
-  }
-  if ( pp->Node->EmergBreakTrue && !tp->emergency_break_old)
-    io_swap(tp->plc_io_ctx, io_eEvent_EmergencyBreak);
-  tp->emergency_break_old = pp->Node->EmergBreakTrue;
-
   if ( tp->redu && tp->pp->Node->RedundancyState == pwr_eRedundancyState_Passive) {
     time_GetTimeMonotonic(&tp->before_scan);
     time_GetTime(&tp->before_scan_abs);
@@ -511,10 +499,31 @@ scan (
     tp->one_before_scan = tp->before_scan;
     tp->ActualScanTime = tp->f_scan_time;
 
+    tp->redu_state_old = tp->pp->Node->RedundancyState;
     return;
   }
 
   if ( tp->pp->Node->RedundancyState != pwr_eRedundancyState_Passive) {
+
+    if (pp->IOHandler->IOReadWriteFlag) {
+      if ( tp->redu_state_old == pwr_eRedundancyState_Passive)
+	tp->plc_io_ctx->read_reset = 1;
+
+      sts = io_read(tp->plc_io_ctx);
+
+      if ( tp->redu_state_old == pwr_eRedundancyState_Passive)
+	tp->plc_io_ctx->read_reset = 0;      
+      if (EVEN(sts)) {
+	pp->IOHandler->IOReadWriteFlag = FALSE;
+	errh_Error("IO read, %m", sts);
+	errh_SetStatus( PLC__IOREAD);
+      }
+      tp->redu_state_old = tp->pp->Node->RedundancyState;
+    }
+
+    if ( pp->Node->EmergBreakTrue && !tp->emergency_break_old)
+      io_swap(tp->plc_io_ctx, io_eEvent_EmergencyBreak);
+    tp->emergency_break_old = pp->Node->EmergBreakTrue;
 
     thread_MutexLock(&pp->io_copy_mutex);
 

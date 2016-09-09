@@ -430,7 +430,6 @@ subsm_SendBuffer (
       net_Put(&sts, &tgt, mp, net_eMsg_subData, bp->buf_id, size, 0);
 
     gdb_Lock;
-
     free(mp);
     bp->sts = sts;
   }

@@ -855,6 +855,7 @@ log_message (errh_sLog *lp, char severity, const char *msg, va_list ap)
   if (lp != NULL && lp->send) {
     lp->put.data = string;
     lp->put.size = strlen(string) + 1;
+    lp->put.allocate = 1;
     qcom_Put(NULL, &lp->logQ, &lp->put);
   }
 }

@@ -432,6 +432,8 @@ qdb_Alloc (
   bp = pool_Alloc(sts, &qdb->pool, sizeof(*bp) + size);
   if (bp == NULL) return NULL;
 
+  // printf( "qdb_Alloc %u %ld %u\n", bp, pool_Reference(sts,&qdb->pool,bp),size);
+
   bp->c.type = btype;
 
   switch (btype) {
@@ -583,6 +585,8 @@ qdb_Free (
   pwr_dStatus	(sts, status, QCOM__SUCCESS);
 
   qdb_AssumeLocked;
+
+  // printf( "qdb_Free  %u %ld\n", bp, pool_Reference(sts,&qdb->pool,bp));
 
   switch (bp->c.type) {
   case qdb_eBuffer_base:
@@ -767,11 +771,12 @@ qdb_CreateDb (
     np->sa.sin_addr.s_addr = htonl(INADDR_ANY);
     np->sa.sin_port = htons(55000 + qdb->g->bus);  
     time_GetTime(&time);
-    np->birth = time.tv_sec;
+    np->link[0].birth = time.tv_sec;
 
     qdb->no_node = qdb_AddNode(sts, 0, qdb_mAdd_failIfAdded);
     if (qdb->no_node == NULL) errh_Bugcheck(*sts, "creating the unknown node");
-    strcpy(qdb->no_node->name, "*** I am the unknown node ***");
+    strcpy(qdb->no_node->nidstr, "*** 0.0.0.0 ***");
+    strcpy(qdb->no_node->link[0].name, "******");
 
     qdb->g->up = TRUE;
     qdb->g->tmo_export = 10000;
@@ -1473,16 +1478,16 @@ qdb_NodeInfo (
 
   pwr_Status(status, QDB__SUCCESS);
 
-  node->flags.b.initiated = np->flags.b.initiated;
-  node->flags.b.connected = np->flags.b.connected;
-  node->flags.b.active = np->flags.b.active;
+  node->flags.b.initiated = np->link[np->clx].qflags.b.initiated;
+  node->flags.b.connected = np->link[np->clx].qflags.b.connected;
+  node->flags.b.active = np->link[np->clx].qflags.b.active;
   node->nid = np->nid;
-  strncpy(node->name, np->name, sizeof(np->name));
+  strncpy(node->name, np->link[np->clx].name, sizeof(node->name));
   node->os = np->os;
   node->hw = np->hw;
   node->bo = np->bo;
   node->ft = np->ft;
-  node->connection = np->connection;
+  node->connection = np->link[np->clx].connection;
 }
 
 void
@@ -1524,8 +1529,8 @@ qdb_Que (
 
     np = hash_Search(sts, &qdb->nid_ht, &q.pwr.nid);
     if (np == NULL) pwr_Return(NULL, sts, QCOM__NOLINK);
-    if (!np->flags.b.connected) pwr_Return(NULL, sts, QCOM__NOLINK);
-    if (!np->flags.b.active && !qdb->flags.b.ignoreStall) pwr_Return(NULL, sts, QCOM__LINKDOWN);
+    if (!np->link[np->clx].qflags.b.connected) pwr_Return(NULL, sts, QCOM__NOLINK);
+    if (!np->link[np->clx].qflags.b.active && !qdb->flags.b.ignoreStall) pwr_Return(NULL, sts, QCOM__LINKDOWN);
 
     /* the que may exist on the remote node, lets export it */
     qp = qdb->exportque;

@@ -82,6 +82,7 @@
 #include "rt_pwr_msg.h"
 #include "rt_c_node.h"
 #include "rt_c_iohandler.h"
+#include "rt_redu.h"
 
 /* Local defines */
 
@@ -439,6 +440,7 @@ struct sLocal {
   pwr_tOName			nodeName;
   pwr_tUInt32			handlerListCount;
   pwr_tBoolean 			applAlarmQuotaSent;
+  redu_tCtx 			redu;
 }; 
 
 /* Global variables */
@@ -535,6 +537,9 @@ static void		updateAlarmInfo(sActive*);
 static void		updateSupActive(sSupActive*);
 static sNodeInfo 	*node_get( pwr_tNid nid);
 static sNodeInfo 	*node_insert( pwr_tNid nid);
+static pwr_tStatus 	emon_redu_init();
+static pwr_tStatus 	emon_redu_send();
+static pwr_tStatus 	emon_redu_receive();
 
 
 
@@ -644,6 +649,8 @@ int main ()
   }
 
   initNodeDb();
+
+  sts = emon_redu_init();
 
   sts = sendMessage(mh_eMsg_HandlerHello, NULL, NULL, NULL, 0);
 
@@ -2311,7 +2318,7 @@ getHandlerObject ()
   pwr_tDlid dlid;
   pwr_tBoolean created = FALSE;
 
-  sts = gdh_GetClassList(pwr_eClass_Node, &nodeOid);            
+  sts = gdh_GetNodeObject(pwr_cNNodeId, &nodeOid);            
   if (EVEN(sts)) {
     errh_Fatal("Couldn't get node object\n%m", sts);
     exit(sts);
@@ -3895,31 +3902,61 @@ receive (
   SET_TIMEOUT
 
   while (1) {
-    get.maxSize = sizeof(mp);
-    get.data = mp;
-    qcom_Get(&sts,&myQ, &get, tmo);
-    if (sts == QCOM__TMO || sts == QCOM__QEMPTY) {
-      timeOut();
-      SET_TIMEOUT
-    } else if (EVEN(sts))
-      errh_Error("Receive: qcom_Get, timout: %d\n%m", tmo, sts);
-    else {
-      handleMessage(&get);
-
-      if (!l.timerActive) {
-        tmo = qcom_cTmoEternal;
-        continue;
+    if ( l.redu && l.nodep->RedundancyState == pwr_eRedundancyState_Passive) {
+      if (l.supListState == eSupListState_Init) {
+        initSupList();
+	if (!LstEmp(&l.sup_l))
+          l.supListState = eSupListState_Scan;
+        else
+          l.supListState = eSupListState_NoSup;
       }
 
-      time_GetTime(&curTime);
-      if (time_Acomp(&curTime, &next_tmo) > 0) {
-        timeOut();
-        SET_TIMEOUT
-      } else {
-        time_Asub((pwr_tTime *)&diff, &next_tmo, (pwr_tDeltaTime *)&curTime);
-        tmo = diff.tv_sec * 1000 + diff.tv_nsec / 1000000;
-        /* Never wait more than l.timerTime */
-        tmo = MIN(l.timerTime * 1000, tmo); 
+      sts = emon_redu_receive();
+
+      /* Read other messages */
+      while ( ODD(sts)) {
+	get.maxSize = sizeof(mp);
+	get.data = mp;
+	qcom_Get(&sts,&myQ, &get, 0);
+	if (sts == QCOM__TMO || sts == QCOM__QEMPTY)
+	  break;
+	if ( (int)get.type.b == mh_cMsgClass)
+	  continue;
+	handleMessage( &get);
+      }
+    }
+    else {
+
+      get.maxSize = sizeof(mp);
+      get.data = mp;
+      qcom_Get(&sts,&myQ, &get, tmo);
+      if (sts == QCOM__TMO || sts == QCOM__QEMPTY) {
+	timeOut();
+	SET_TIMEOUT;
+
+	if ( l.redu && l.nodep->RedundancyState == pwr_eRedundancyState_Active)
+	  sts = emon_redu_send();
+
+      } else if (EVEN(sts))
+	errh_Error("Receive: qcom_Get, timout: %d\n%m", tmo, sts);
+      else {
+	handleMessage(&get);
+	
+	if (!l.timerActive) {
+	  tmo = qcom_cTmoEternal;
+	  continue;
+	}
+
+	time_GetTime(&curTime);
+	if (time_Acomp(&curTime, &next_tmo) > 0) {
+	  timeOut();
+	  SET_TIMEOUT
+	    } else {
+	  time_Asub((pwr_tTime *)&diff, &next_tmo, (pwr_tDeltaTime *)&curTime);
+	  tmo = diff.tv_sec * 1000 + diff.tv_nsec / 1000000;
+	  /* Never wait more than l.timerTime */
+	  tmo = MIN(l.timerTime * 1000, tmo); 
+	}
       }
     }
     aproc_TimeStamp( ((float)tmo)/1000, 2);
@@ -4841,3 +4878,520 @@ static void node_remove( pwr_tNid nid)
   }    
 }
 #endif
+
+static pwr_tStatus emon_redu_init()
+{
+  pwr_tStatus sts;
+  pwr_tOid child;
+  void *p;
+  pwr_tCid cid;
+
+  l.redu = 0;
+
+  for ( sts = gdh_GetChild( l.emonObject, &child); ODD(sts); sts = gdh_GetNextSibling( child, &child)) {
+    sts = gdh_GetObjectClass( child, &cid);
+    if ( EVEN(sts)) continue; 
+    if (cid == pwr_cClass_RedcomPacket) {
+      sts = gdh_ObjidToPointer( child, &p);
+      if ( EVEN(sts)) return sts;
+
+      sts = redu_init( &l.redu, l.nodep, p);
+      if ( EVEN(sts)) return sts;
+
+      break;
+    }
+  }
+  return MH__SUCCESS;
+}
+
+typedef struct {
+  redu_sHeader h;
+  pwr_tUInt32 size;
+  pwr_tUInt32 actives;
+  pwr_tUInt32 outunits;
+  pwr_tUInt32 events;
+  pwr_tTime time;
+} redu_sEvMsgHeader;
+
+typedef struct {
+  pwr_tUInt32		idx;
+  pwr_tUInt32		returnIdx;
+  pwr_tUInt32		ackIdx;
+  mh_eSource		source;
+  pwr_tAttrRef		object;
+  pwr_tAttrRef		supObject;
+  pwr_tObjid		outunit;
+  mh_mEventFlags	eventFlags;
+  pwr_eEventTypeEnum	eventType;
+  mh_uEventInfo		status;
+  pwr_tTime	  	detectTime;
+  pwr_tTime	  	returnTime;
+  pwr_tTime	  	ackTime;
+} redu_sEvActive;
+
+typedef struct {
+  pwr_tTime 		birthTime;
+  pwr_tObjid		outunit;
+  mh_eOutunitType	type;
+  pwr_tUInt32		ver;
+  pwr_tNodeIndex	nix;
+  qcom_sQid		qid;
+  co_sPlatform		platform;
+  pwr_tUInt32		ackGen;	
+  pwr_tUInt32		blockGen;
+  pwr_tUInt32		eventIdx;
+  pwr_tUInt32		eventGen;
+  pwr_tUInt32		maxIdx;
+  pwr_tUInt32		syncedIdx;
+  pwr_tUInt32		lastSentIdx;
+  pwr_tTime		lastSentTime;
+  pwr_tUInt32		selGen;
+  pwr_tUInt32		selSize;
+  mh_sSelL		sel_l[mh_cSelLSize];
+} redu_sEvOutunit;
+
+typedef struct {
+  pwr_tUInt32	idx;
+  pwr_tUInt32	oldIdx;
+  pwr_tUInt32	size;
+} redu_sEvEventList;
+
+typedef struct {
+  pwr_tUInt32		idx;
+  pwr_tObjid		outunit;
+  pwr_tAttrRef 		object;
+  pwr_tAName		objName;
+  mh_eEvent		event;
+  pwr_eEventTypeEnum	eventType;
+  pwr_tUInt32		msgSize;
+  pwr_tBoolean		local;
+  uEvent		msg;
+} redu_sEvEvent;
+
+static pwr_tStatus emon_redu_send()
+{
+  pwr_tStatus sts;
+  void *msg;
+  LstLink(sActive) *al;
+  sActive *ap;
+  sSupActive *sp;
+  int size;
+  int active_cnt;
+  int outunit_cnt;
+  int event_cnt;
+  redu_sEvActive *activep;
+  redu_sEvOutunit *outunitp;
+  redu_sEvEventList *eventlistp;
+  redu_sEvEvent *eventp;
+  sOutunit *op;
+  LstLink(sOutunit) *ol;
+  sEvent *ep;
+  int i;
+
+  // Count active
+  active_cnt = 0;
+  for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l); al = LstNex(al))
+    active_cnt++;
+
+  // Count outunits
+  outunit_cnt = 0;
+  for (ol = LstFir(&l.outunit_l); ol != LstEnd(&l.outunit_l); ol = LstNex(ol)) {
+    op = LstObj(ol);
+
+    if ( op->outunit.vid != l.nodeObject.vid)
+      outunit_cnt++;
+  }
+  
+  // Count events
+  event_cnt = l.event_l->idx - l.event_l->oldIdx + 1;
+
+  size = sizeof(redu_sEvMsgHeader) + active_cnt * sizeof(redu_sEvEvent) + outunit_cnt * sizeof(redu_sEvOutunit) +
+    + sizeof(redu_sEvEventList) + event_cnt * sizeof(redu_sEvEvent);
+
+  msg = malloc( size);
+  ((redu_sEvMsgHeader *)msg)->h.type = redu_eMsgType_Cyclic;
+  ((redu_sEvMsgHeader *)msg)->size = size - sizeof(redu_sEvMsgHeader);
+  ((redu_sEvMsgHeader *)msg)->actives = active_cnt;
+  ((redu_sEvMsgHeader *)msg)->outunits = outunit_cnt;
+  ((redu_sEvMsgHeader *)msg)->events = event_cnt;
+
+  activep = (redu_sEvActive *)((char *)msg + sizeof(redu_sEvMsgHeader));
+  for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l); al = LstNex(al)) {
+    ap = LstObj(al);
+
+    activep->idx = ap->idx;
+    activep->returnIdx = ap->returnIdx;
+    activep->ackIdx = ap->ackIdx;
+    activep->source = ap->source;
+    activep->object = ap->object;
+    activep->supObject = ap->supObject;
+    activep->outunit = ap->outunit;
+    activep->eventFlags = ap->eventFlags;
+    activep->eventType = ap->eventType;
+    activep->status = ap->status;
+
+    if ( ap->source == mh_eSource_Scanner) {
+      sp = (sSupActive *) ap;
+      activep->detectTime = sp->sup->DetectTime;
+      activep->returnTime = sp->sup->ReturnTime;
+      activep->ackTime = sp->sup->AckTime;
+    }
+    activep++;
+  }
+
+  /* Outunits, only remote */
+  outunitp = (redu_sEvOutunit *)activep;
+  for (ol = LstFir(&l.outunit_l); ol != LstEnd(&l.outunit_l); ol = LstNex(ol)) {
+    op = LstObj(ol);
+
+    if ( op->outunit.vid != l.nodeObject.vid) {
+      outunitp->outunit = op->outunit;
+      outunitp->type = op->type;
+      outunitp->ver = op->ver;
+      outunitp->qid = op->link.qid;
+      outunitp->platform = op->link.platform;
+      outunitp->nix = op->link.nix;
+      outunitp->birthTime = op->birthTime;
+      outunitp->ackGen = op->ackGen;	
+      outunitp->blockGen = op->blockGen;
+      outunitp->eventIdx = op->eventIdx;
+      outunitp->eventGen = op->eventGen;
+      outunitp->maxIdx = op->maxIdx;
+      outunitp->syncedIdx = op->syncedIdx;
+      outunitp->lastSentIdx = op->lastSentIdx;
+      outunitp->lastSentTime = op->lastSentTime;
+      outunitp->selGen = op->selGen;
+      outunitp->selSize = op->selSize;
+      memcpy( outunitp->sel_l, op->sel_l, sizeof(outunitp->sel_l));
+      outunitp++;
+    }
+  }
+
+  /* EventList */
+  eventlistp = (redu_sEvEventList *)outunitp;
+  eventlistp->idx = l.event_l->idx;
+  eventlistp->oldIdx = l.event_l->oldIdx;
+  eventlistp->size = l.event_l->size;
+
+  /* Events */
+  eventp = (redu_sEvEvent *)((char *)outunitp + sizeof(*eventlistp));
+  for ( i = l.event_l->oldIdx; i <= l.event_l->idx; i++) {
+    ep = &l.event_l->list[i % l.event_l->size];
+
+    eventp->idx = ep->idx;
+    eventp->object = ep->object;
+    eventp->outunit = ep->outunit;
+    strncpy( eventp->objName, ep->objName, sizeof(eventp->objName));
+    eventp->event = ep->event;
+    eventp->eventType = ep->eventType;
+    eventp->msgSize = ep->msgSize;
+    eventp->local = ep->local;
+    eventp->msg = ep->msg;
+    eventp++;
+  }
+
+  l.redu->packetp->PacketSize = ((redu_sEvMsgHeader *)msg)->size + 
+    sizeof(redu_sEvMsgHeader);
+      
+  sts = redu_send( l.redu, msg, ((redu_sEvMsgHeader *)msg)->size + 
+		   sizeof(redu_sEvMsgHeader), l.redu->msgid_cyclic);
+
+  free( msg);
+
+  return sts;
+}
+
+static pwr_tStatus emon_redu_receive()
+{
+  pwr_tStatus sts;
+  void *msg;
+  int size;
+  unsigned int timeout = l.timerTime * 1000;
+  pwr_tTime start_time;
+  pwr_tTime end_time;
+  pwr_tDeltaTime dtime;
+  redu_sEvActive *activep;
+  redu_sEvOutunit *outunitp;
+  redu_sEvOutunit *outunit_start;
+  redu_sEvEventList *eventlistp;
+  redu_sEvEvent *eventp;
+  redu_sEvEvent *event_start;
+  int actives;
+  int outunits;
+  int events;
+  int i;
+  LstLink(sActive) *al;
+  sActive *ap;
+  sSupActive *sp;
+  sEvent *ep;
+  sOutunit *op;
+  LstLink(sOutunit) *ol;
+  int found;
+  sEventTab *etp;
+
+  sts = redu_receive( l.redu, timeout, &size, &msg);
+  if ( sts == QCOM__TMO)
+    return sts;
+  else if ( EVEN(sts)) {
+    struct timespec  ts = {timeout/1000, (timeout * 1000000) % 1000000000};
+    // Wait to avoid looping 
+    nanosleep(&ts, NULL);
+    return sts;
+  }
+
+  switch ( ((redu_sHeader *)msg)->type) {
+  case redu_eMsgType_Cyclic:
+    if ( l.redu->packetp)
+      l.redu->packetp->PacketSize = size;
+
+    actives = ((redu_sEvMsgHeader *)msg)->actives;
+    outunits = ((redu_sEvMsgHeader *)msg)->outunits;
+    events = ((redu_sEvMsgHeader *)msg)->events;
+
+    /* Unpack message */
+    
+    time_GetTime( &start_time);
+
+    /* EventList */
+    eventlistp = (redu_sEvEventList *)((char *)msg + sizeof(redu_sEvMsgHeader) + 
+				       ((redu_sEvMsgHeader *)msg)->actives * sizeof(redu_sEvActive) +
+				       ((redu_sEvMsgHeader *)msg)->outunits * sizeof(redu_sEvOutunit));
+				       
+    /* Events */
+    event_start = (redu_sEvEvent *)((char *)eventlistp + sizeof(redu_sEvEventList));
+
+    /* Remove old events */
+    if ( eventlistp->oldIdx != l.event_l->oldIdx) {
+      for ( i = l.event_l->oldIdx; i < MIN(eventlistp->oldIdx,l.event_l->oldIdx + l.event_l->size); i++) {
+	ep = &l.event_l->list[ i % l.event_l->size ];
+	printf( "Event remove, idx %d %s\n", ep->etp->idx, ep->objName);
+	tree_Remove(&sts, l.eventTab, &ep->etp->idx);
+      }
+    }
+
+    /* Add new events */
+    if ( eventlistp->idx != l.event_l->idx) {
+      int istart = l.event_l->idx;
+      if ( istart < (int)eventlistp->idx - (int)l.event_l->size + 1)
+	istart = (int)eventlistp->idx - (int)l.event_l->size + 1;
+	   
+      for ( i = istart; i <= eventlistp->idx; i++) {
+	eventp = event_start + i - eventlistp->oldIdx;
+	ep = &l.event_l->list[ i % l.event_l->size ];
+	ep->idx = eventp->idx;
+	ep->outunit = eventp->outunit;
+	ep->object = eventp->object;
+	ep->local = eventp->local;
+	ep->event = eventp->event;
+	ep->eventType = ep->eventType;
+	strncpy( ep->objName, eventp->objName, sizeof(ep->objName)); 
+	ep->msg = eventp->msg;
+
+	ep->etp = tree_Insert(&sts, l.eventTab, &ep->idx);
+	ep->etp->ep = ep;
+	ep->etp->event = ep->event;
+	printf( "Event add,    idx %d %s\n", ep->etp->idx, ep->objName);
+      }
+    }
+
+    l.event_l->idx = eventlistp->idx;
+    l.event_l->oldIdx = eventlistp->oldIdx;
+
+    /* Active list */
+    /* Find removed elements in active list */
+    for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l) ; al = LstNex(al)) {
+      ap = LstObj(al);
+      if ( ap->source == mh_eSource_Scanner) {
+	sp = (sSupActive *) ap;
+	sp->found = 0;
+      }
+    }
+    
+    activep = (redu_sEvActive *)((char *)msg + sizeof(redu_sEvMsgHeader));
+    for ( i = 0; i < actives; i++) {
+      if ( activep->source == mh_eSource_Scanner) {
+	for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l) ; al = LstNex(al)) {
+	  ap = LstObj(al);
+	  if ( activep->source == mh_eSource_Scanner &&
+	       cdh_ArefIsEqual( &activep->supObject, &ap->supObject)) {
+	    sp = (sSupActive *) ap;
+	    sp->found = 1;
+	    break;
+	  }
+	}
+      }
+      activep++;
+    }
+
+    for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l); ) {
+      ap = LstObj(al);
+      al = LstNex(al);
+      if ( ap->source == mh_eSource_Scanner) {
+	sp = (sSupActive *) ap;
+	if ( !sp->found) {
+	  ap->status.Event.Status &= ~mh_mEventStatus_NotRet;
+	  ap->status.Event.Status &= ~mh_mEventStatus_NotAck;
+	  sp->sup->DetectCheck = TRUE;
+	  sp->sup->AlarmCheck = TRUE;
+	  sp->sup->ReturnCheck = FALSE;
+	  sp->sup->AlarmStatus.All = ap->status.All;
+	  printf( "Active remove, idx %d %s\n", ap->detect_etp->idx, ap->detect_etp->ep->objName);
+	  activeListRemove( ap);
+	}
+      }
+    }
+
+    /* Add new elements in active list and update existing */
+    activep = (redu_sEvActive *)((char *)msg + sizeof(redu_sEvMsgHeader));
+    for ( i = 0; i < actives; i++) {
+      found = 0;
+      if ( activep->source == mh_eSource_Scanner) {
+	for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l) ; al = LstNex(al)) {
+	  ap = LstObj(al);
+	  if ( activep->source == mh_eSource_Scanner &&
+	       cdh_ArefIsEqual( &activep->supObject, &ap->supObject)) {
+	    sp = (sSupActive *) ap;
+	    /* Update status */
+	    ap->status = activep->status;
+	    found = 1;
+	    break;
+	  }
+	}
+      }
+      if ( !found) {
+	/* Add to active list */
+	sp = supListGet( &activep->supObject);
+	ap = (sActive *) sp;
+	if ( sp == NULL) {
+	  activep++;
+	  continue;
+	}
+	sp->sup->DetectTime = activep->detectTime;
+	sp->sup->AckTime = activep->ackTime;
+	sp->sup->ReturnTime = activep->returnTime;
+	sp->sup->AlarmCheck = FALSE;
+	sp->sup->DetectCheck = FALSE;
+	sp->sup->ReturnCheck = TRUE;
+	sp->sup->AlarmStatus.All = activep->status.All;
+	ap->idx = activep->idx;
+	etp = tree_Find(&sts, l.eventTab, &ap->idx);
+	if ( etp) {
+
+	  etp->ap = ap;
+	  ap->detect_etp = etp;
+
+	  activeListInsert((sActive *) sp, etp->ep, mh_eSource_Scanner);
+	  printf( "Active add,    idx %d %s\n", ap->detect_etp->idx, ap->detect_etp->ep->objName);
+
+	}
+	ap->status = activep->status;
+      }
+      activep++;
+    }
+
+    /* Outunits */
+    outunit_start = (redu_sEvOutunit *)activep;
+
+    /* Remove outunits */
+    for (ol = LstFir(&l.outunit_l); ol != LstEnd(&l.outunit_l); ) {
+      op = LstObj(ol);
+      ol = LstNex(ol);
+
+      if ( op->outunit.vid == l.nodeObject.vid)
+	continue;
+
+      found = 0;
+      outunitp = outunit_start;
+      for ( i = 0; i < outunits; i++) {
+	if ( cdh_ObjidIsEqual( outunitp->outunit, op->outunit)) {
+	  found = 1;
+	  break;
+	}
+	outunitp++;
+      }
+      if ( !found) {
+	outunitAborted( op);
+	printf( "Outunit removed, (%d,%d)\n", op->outunit.oix, op->outunit.vid);
+      }
+    }
+
+    /* Add outunits */
+    outunitp = outunit_start;
+    for ( i = 0; i < outunits; i++) {
+      found = 0;
+      for (ol = LstFir(&l.outunit_l); ol != LstEnd(&l.outunit_l); ) {
+	op = LstObj(ol);
+	ol = LstNex(ol);
+
+	if ( cdh_ObjidIsEqual( outunitp->outunit, op->outunit)) {
+	  found = 1;
+	  op->link.qid = outunitp->qid;
+	  op->birthTime = outunitp->birthTime;
+	  op->ackGen = outunitp->ackGen;	
+	  op->blockGen = outunitp->blockGen;
+	  op->eventIdx = outunitp->eventIdx;
+	  op->eventGen = outunitp->eventGen;
+	  op->maxIdx = outunitp->maxIdx;
+	  op->syncedIdx = outunitp->syncedIdx;
+	  op->lastSentIdx = outunitp->lastSentIdx;
+	  op->lastSentTime = outunitp->lastSentTime;
+	  op->selGen = outunitp->selGen;
+	  op->selSize = outunitp->selSize;
+	  memcpy( op->sel_l, outunitp->sel_l, sizeof(op->sel_l));
+	  break;
+	}
+      }
+      if ( !found) {
+	op = (sOutunit*) calloc(1, sizeof(*op));
+	if (op == NULL) {
+	  errh_Error("Error calloc, emon_redu_receive");
+	  return 1;
+	}
+	op->link.source = mh_eSource_Outunit;
+	op->link.qid = outunitp->qid;
+	op->link.aid = qcom_cNAid;
+	op->link.platform = outunitp->platform;
+	op->link.nix = outunitp->nix;
+	op->birthTime = outunitp->birthTime;
+	op->outunit = outunitp->outunit;
+	op->type = outunitp->type;
+	op->ver = outunitp->ver;
+	op->ackGen = outunitp->ackGen;	
+	op->blockGen = outunitp->blockGen;
+	op->eventIdx = outunitp->eventIdx;
+	op->eventGen = outunitp->eventGen;
+	op->maxIdx = outunitp->maxIdx;
+	op->syncedIdx = outunitp->syncedIdx;
+	op->lastSentIdx = outunitp->lastSentIdx;
+	op->lastSentTime = outunitp->lastSentTime;
+	op->selGen = outunitp->selGen;
+	op->selSize = outunitp->selSize;
+	memcpy( op->sel_l, outunitp->sel_l, sizeof(op->sel_l));
+	/* Insert in outunit list */
+	LstIns(&l.outunit_l, op, outunit_l);   
+	/* Insert in process list */
+	LstIns(&l.proc_l, op, link.proc_l);    
+	op->linkUp = TRUE;
+	outunitLog(op, "New outunit");
+	printf( "Outunit added,  (%d,%d)\n", op->outunit.oix, op->outunit.vid);
+      }
+      outunitp++;
+    }
+
+    time_GetTime( &end_time);
+    time_Adiff( &dtime, &end_time, &start_time);
+    time_DToFloat( &l.redu->msg_time, &dtime);
+    if ( l.redu->packetp) {
+      l.redu->packetp->PacketCount++;
+      l.redu->packetp->PackTime = l.redu->msg_time;
+    }
+      
+    break;
+  default:
+    printf( "Redu: Unknown message type\n");
+  }
+  qcom_Free( &sts, msg);
+  return MH__SUCCESS;
+}
+
+

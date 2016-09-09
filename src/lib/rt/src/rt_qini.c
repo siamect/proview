@@ -61,22 +61,42 @@ addNode (
   np = qdb_AddNode(&sts, nep->nid, 0);
   if (np == NULL) return NULL;
 
-  strcpy(np->name, nep->name);
+  strcpy(np->link[0].name, nep->name);
+  strncpy( np->nidstr, cdh_NodeIdToString( 0, nep->nid, 0, 0), sizeof(np->nidstr));
   np->sa.sin_family = AF_INET;  
   np->sa.sin_addr.s_addr = nep->naddr.s_addr;
   if (nep->flags.b.port)
     np->sa.sin_port = htons(nep->port);
   else
-    np->sa.sin_port = htons(55000 + qdb->g->bus);  
+    np->sa.sin_port = htons(55000 + qdb->g->bus);
 
-  memcpy(&np->arp.arp_pa.sa_data, &np->sa.sin_addr.s_addr, sizeof(np->sa.sin_addr.s_addr));
+  memcpy(&np->link[0].arp.arp_pa.sa_data, &np->link[0].sa.sin_addr.s_addr, sizeof(np->link[0].sa.sin_addr.s_addr));
 
-  np->connection = nep->connection;
-  np->min_resend_time = nep->min_resend_time;
-  np->max_resend_time = nep->max_resend_time;
-  np->export_buf_quota = nep->export_buf_quota;
-  np->ack_delay = nep->ack_delay;
-  np->seg_size = nep->seg_size;
+  np->link[0].sa.sin_family = AF_INET;  
+  if ( nep->port)
+    np->link[0].sa.sin_port = nep->port;
+  else
+    np->link[0].sa.sin_port = htons(55000 + qdb->g->bus);
+  np->link[0].sa.sin_addr.s_addr = nep->naddr.s_addr;
+  np->link[0].connection = nep->connection;
+  np->link[0].min_resend_time = nep->min_resend_time;
+  np->link[0].max_resend_time = nep->max_resend_time;
+  np->link[0].export_buf_quota = nep->export_buf_quota;
+  np->link[0].ack_delay = nep->ack_delay;
+  np->link[0].seg_size = nep->seg_size;
+  np->link_cnt++;
+
+  np->is_secondary = nep->is_secondary;
+  if ( strcmp( nep->secondary_name, "") != 0) {
+    strcpy(np->link[1].name, nep->secondary_name);
+    np->link[1].sa.sin_family = AF_INET;  
+    if ( nep->port)
+      np->link[1].sa.sin_port = nep->port;
+    else
+      np->link[1].sa.sin_port = htons(55000 + qdb->g->bus);
+    np->link[1].sa.sin_addr.s_addr = nep->secondary_naddr.s_addr;
+    np->link_cnt++;
+  }
 
   return np;
 }
@@ -138,6 +158,9 @@ qini_ParseFile (
   char		s_export_buf_quota[20];
   char		s_ack_delay[20];
   char		s_seg_size[20];
+  char		s_is_secondary[20];
+  char		secondary_name[80];
+  char		s_secondary_naddr[80];
   pwr_tNodeId	nid;
   struct in_addr	naddr;
   qini_sNode	*nep;
@@ -150,8 +173,9 @@ qini_ParseFile (
       continue;
     }
 
-    n = sscanf(s, "%s %s %s %s %s %s %s %s %s %s", name, s_nid, s_naddr, s_port, s_connection,
-	       s_min_resend_time, s_max_resend_time, s_export_buf_quota, s_ack_delay, s_seg_size);
+    n = sscanf(s, "%s %s %s %s %s %s %s %s %s %s %s %s %s", name, s_nid, s_naddr, s_port, s_connection,
+	       s_min_resend_time, s_max_resend_time, s_export_buf_quota, s_ack_delay, s_seg_size,
+	       s_is_secondary, secondary_name, s_secondary_naddr);
     if (n < 3) {
       errh_Error("error in line, <wrong number of arguments>, skip to next line.\n>> %s", s);
       (*errors)++;
@@ -208,7 +232,7 @@ qini_ParseFile (
 
     nep = tree_Find(&sts, ntp, &nid);
     if (nep != NULL) {
-      errh_Warning("node is allready defined: %s, skip to next line", s);
+      errh_Warning("node is already defined: %s, skip to next line", s);
       (*warnings)++;
       continue;
     } else {
@@ -240,6 +264,21 @@ qini_ParseFile (
     else
       nep->seg_size = 8192;
     
+    if (n > 8) 
+      nep->is_secondary = atoi(s_is_secondary);
+
+    if (n > 9 && strcmp( secondary_name, "-") != 0)
+      strcpy(nep->secondary_name, secondary_name);
+
+    if (n > 10 && strcmp( s_secondary_naddr, "-") != 0) {
+      sts = net_StringToAddr( s_secondary_naddr, &naddr);
+      nep->secondary_naddr.s_addr = htonl(naddr.s_addr);
+      if ( EVEN(sts)) {
+	errh_Error("error in line, <network address>, skip to next line.\n>> %s", s);
+	(*errors)++;
+	continue;
+      }
+    }
 
     memset(&arpreq, 0, sizeof(arpreq));
     memcpy(&arpreq.arp_pa.sa_data, &naddr, sizeof(naddr));

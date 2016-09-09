@@ -197,6 +197,11 @@ void wb_pkg::readConfig()
 	pkg_pattern pnode( fname, "", 'E');
 	n.push_back( pnode);
 
+	// Add ld_redcom file
+	sprintf( fname, pwr_cNameRedcom, load_cDirectory, n.name(), n.bus());
+	pkg_pattern predcom( fname, "", 'S');
+	n.push_back( predcom);
+
 	// Add bootfile
 	sprintf( fname, pwr_cNameBoot, load_cDirectory, n.name(), n.bus());
 	pkg_pattern pboot( fname, "", 'E');

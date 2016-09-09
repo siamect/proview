@@ -221,6 +221,15 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
+      !/**
+      ! Secondary node.
+      !*/
+      Object SecondaryNode $Attribute 17 
+        Body SysBody
+          Attr Flags = PWR_MASK_CLASS
+          Attr TypeRef = "pwrb:Class-RedundanceNodeConfig"
+        EndBody
+      EndObject
     EndObject
     Object Template NodeConfig
       Body RtBody

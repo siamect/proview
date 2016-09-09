@@ -220,6 +220,7 @@ sendMessage (
   put.reply.qix = 0;
   put.reply.nid = 0;
   put.size = sizeof(*head);
+  put.allocate = 1;
 
   qcom_Put(&sts, target, &put);
 

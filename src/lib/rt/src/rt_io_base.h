@@ -215,6 +215,7 @@ struct io_sCtx {
   pwr_sClass_IOHandler	*IOHandler;		/* Pointer to IO Handler object */
   float		ScanTime;	/* Scantime supplied by caller */
   io_tSupCtx	SupCtx;		/* Context for supervise object lists */
+  int		read_reset;	/* Reset pending read buffers */
 };
 
 /*----------------------------------------------------------------------------*\

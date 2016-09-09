@@ -115,6 +115,9 @@ typedef struct {
   pwr_tUInt32		export_buf_quota;
   pwr_tFloat32		ack_delay;
   pwr_tUInt32		seg_size;
+  unsigned int		is_secondary;
+  char			secondary_name[80];
+  struct in_addr	secondary_naddr;
 } qini_sNode;    
 
 int			qini_ParseFile (FILE*, tree_sTable*, int*, int*, int*);

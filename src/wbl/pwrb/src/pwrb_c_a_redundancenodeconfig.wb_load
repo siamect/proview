@@ -33,26 +33,29 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_c_redcompacket.wb_load -- Defines the class RedcomPacket.
+!  pwrb_c_nodeconfig.wb_load -- Defines the class nodeconfig.
 !
 SObject pwrb:Class
 !/**
 !  @Version 1.0
-!  @Group Servers,NodeConfiguration
-!  @Summary Configuration of redundancy packet.
-!  Configuration of redundancy packet.
+!  @Group ProjectConfiguration
+!  @Summary Configures a redundance node.
+!  The NodeConfig object configures a redundance node.
+!
+! @b See also
+!  @classlink NodeConfig pwrb_dnodeconfig.html
 !*/
-  Object RedcomPacket $ClassDef 688 
+  Object RedundanceNodeConfig $ClassDef 689 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_Standard
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-        Attr StructName = "RedcomPacket"
+        Attr StructName = "RedundanceNodeConfig"
       EndBody
       !/**
-      !  Optional description.
+      !  Description of the node
       !*/
       Object Description $Attribute 1 
         Body SysBody
@@ -60,107 +63,91 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Priority.
+      !  The name of the node, i.e. the network node hostname.
       !*/
-      Object Prio $Attribute 2 
+      Object NodeName $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Boot system of the node.
+      !  Boot system of the node.
+      !  Loadfiles, applications and graph-files will be copied to this
+      !  node by the distributor.
+      !  In most cases this is the node itself. 
+      !*/
+      Object BootNode $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      ! IP address of the node in format a.b.c.d, e.g. 192.168.32.144,
+      ! or the host name.
+      !*/
+      Object Address $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      ! Redcom port, if different from standard port.
+      !*/
+      Object RedcomPort $Attribute 5 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
       !/**
-      !  Hierarchies for this packet.
+      ! Redcom minimum resend time in seconds.
       !*/
-      Object Hierarchies $Attribute 3 
+      Object RedcomMinResendTime $Attribute 6 
         Body SysBody
-          Attr Flags |= PWR_MASK_ARRAY
-	  Attr Elements = 40
-          Attr TypeRef = "pwrs:Type-$Objid"
-        EndBody
-      EndObject
-      !/**
-      !  Transmit packet count.
-      !*/
-      Object TransmitCnt $Attribute 4 
-        Body SysBody
-          Attr Flags |= PWR_MASK_NOEDIT
-          Attr Flags |= PWR_MASK_STATE
-          Attr TypeRef = "pwrs:Type-$UInt32"
-        EndBody
-      EndObject
-      !/**
-      !  Receive öacket count.
-      !*/
-      Object ReceiveCnt $Attribute 5 
-        Body SysBody
-          Attr Flags |= PWR_MASK_NOEDIT
-          Attr Flags |= PWR_MASK_STATE
-          Attr TypeRef = "pwrs:Type-$UInt32"
-        EndBody
-      EndObject
-      !/**
-      !  Packet size.
-      !*/
-      Object PacketSize $Attribute 6 
-        Body SysBody
-          Attr Flags |= PWR_MASK_NOEDIT
-          Attr Flags |= PWR_MASK_STATE
-          Attr TypeRef = "pwrs:Type-$UInt32"
-        EndBody
-      EndObject
-      !/**
-      !  Table packet size.
-      !*/
-      Object TablePacketSize $Attribute 7 
-        Body SysBody
-          Attr Flags |= PWR_MASK_NOEDIT
-          Attr Flags |= PWR_MASK_STATE
-          Attr TypeRef = "pwrs:Type-$UInt32"
-        EndBody
-      EndObject
-      !/**
-      !  Number of attributes.
-      !*/
-      Object Attributes $Attribute 8 
-        Body SysBody
-          Attr Flags |= PWR_MASK_NOEDIT
-          Attr Flags |= PWR_MASK_STATE
-          Attr TypeRef = "pwrs:Type-$UInt32"
-        EndBody
-      EndObject
-      !/**
-      !  Pack time.
-      !*/
-      Object PackTime $Attribute 9 
-        Body SysBody
-          Attr Flags |= PWR_MASK_NOEDIT
-          Attr Flags |= PWR_MASK_STATE
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
       !/**
-      !  Unpack time.
+      ! Redcom maxium resend time in seconds.
       !*/
-      Object UnpackTime $Attribute 10 
+      Object RedcomMaxResendTime $Attribute 7 
         Body SysBody
-          Attr Flags |= PWR_MASK_NOEDIT
-          Attr Flags |= PWR_MASK_STATE
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
       !/**
-      !  Coverage.
+      ! Redcom max export buffer quota.
       !*/
-      Object Coverage $Attribute 11 
+      Object RedcomExportBufQuota $Attribute 8 
         Body SysBody
-          Attr Flags |= PWR_MASK_NOEDIT
-          Attr Flags |= PWR_MASK_STATE
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      ! Redcom acknowledge delay time in seconds.
+      !*/
+      Object RedcomAckDelay $Attribute 9 
+        Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      ! Redcom segment size.
+      !*/
+      Object RedcomSegmentSize $Attribute 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
     EndObject
-    Object Template RedcomPacket
+    Object Template RedundanceNodeConfig
       Body RtBody
       EndBody
     EndObject
   EndObject
 EndSObject
+
+
+
+
+

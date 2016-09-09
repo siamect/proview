@@ -415,6 +415,7 @@ Error (
   put.reply	= qcom_cNQid;
   put.data  	= (char *)&err;
   put.size	= sizeof(err);
+  put.allocate  = 1;
 
   qcom_Put(&sts, &tgt, &put);
 
@@ -494,6 +495,7 @@ Put (
   put.type.s = subtype;
   put.msg_id = id;
   put.size   = size;
+  put.allocate = 0;
   put.data   = qcom_Alloc(&lsts, size);
 
   if (put.data == NULL)

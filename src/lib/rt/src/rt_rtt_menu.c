@@ -831,7 +831,7 @@ int	rtt_cli( 	rtt_t_comtbl	*command_table,
 
 	if ( hitnr > 1)
 	{
-	  /* Command not unic */
+	  /* Command not unique */
 	  return RTT__COM_AMBIG;
 	}
 	else if ( hitnr < 1)
@@ -899,7 +899,7 @@ int	rtt_cli( 	rtt_t_comtbl	*command_table,
 	  }
 	  else if ( hitnr > 1)
 	  {
-	    /* qualifier not unic */
+	    /* qualifier not unique */
 	    return RTT__QUAL_AMBIG;
 	  }
 	  /* Place back the / and = within quotes */

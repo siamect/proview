@@ -137,6 +137,7 @@ cvols_Notify (
     put.reply	= qcom_cNQid;
     put.data  	= (char *)&nmp->msg;
     put.size	= nmp->size;
+    put.allocate = 1;
     nmp->msg.hdr.hdr.xdr = 0;
     nmp->msg.hdr.hdr.msn = 0;
     nmp->msg.hdr.hdr.nid = gdbroot->my_node->nid;

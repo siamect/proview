@@ -942,6 +942,11 @@ int rt_report::parse( char *line)
 {
   char line_array[5][80];
   int num;
+  char aline[200];
+  char rline[200];
+
+  replace_value( rline, sizeof(rline), line);
+  dcli_trim( aline, rline);
 
   num = dcli_parse( line, " 	", "",
 		    (char *) line_array, sizeof( line_array)/sizeof( line_array[0]),
@@ -984,6 +989,10 @@ int rt_report::parse( char *line)
     }
     else
       return 0;
+  }
+  else if ( strncmp( aline, "system(", 7) == 0 && aline[strlen(aline)-1] == ')') {
+    aline[strlen(aline)-1] = 0;
+    system( &aline[7]);
   }
   else 
     return 0;

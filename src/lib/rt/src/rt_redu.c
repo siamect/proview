@@ -283,7 +283,7 @@ pwr_tStatus redu_create_message( redu_tCtx ctx, void **msg)
   time_Adiff( &dtime, &end_time, &start_time);
   time_DToFloat( &ctx->msg_time, &dtime);
   if ( ctx->packetp) {
-    ctx->packetp->PacketCount++;
+    ctx->packetp->TransmitCnt++;
     ctx->packetp->PackTime = ctx->msg_time;
   }
   *msg = buf;
@@ -310,8 +310,8 @@ pwr_tStatus redu_unpack_message( redu_tCtx ctx, void *msg)
   time_Adiff( &dtime, &end_time, &start_time);
   time_DToFloat( &ctx->msg_time, &dtime);
   if ( ctx->packetp) {
-    ctx->packetp->PacketCount++;
-    ctx->packetp->PackTime = ctx->msg_time;
+    ctx->packetp->ReceiveCnt++;
+    ctx->packetp->UnpackTime = ctx->msg_time;
   }
   return 1;
 }
@@ -337,6 +337,7 @@ pwr_tStatus redu_send_table( redu_tCtx ctx, void **table_msg)
   }
   
   ctx->packetp->TablePacketSize = size;
+  ctx->packetp->Attributes = ctx->attr_cnt;
   *table_msg = msg;
   return 1;
 }
@@ -519,7 +520,7 @@ pwr_tStatus redu_get_initial_state( char *nodename, int busid, int *state)
   char		*s;
   
   
-  sprintf( fname, pwr_cNameReduNode, "$pwrp_load/", nodename, busid);
+  sprintf( fname, pwr_cNameRedcom, "$pwrp_load/", nodename, busid);
   dcli_translate_filename( fname, fname);
   fp = fopen( fname, "r");
   if ( !fp)

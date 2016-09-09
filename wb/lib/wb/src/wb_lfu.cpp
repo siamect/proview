@@ -91,8 +91,13 @@
 class lfu_nodeconf {
 public:
   lfu_nodeconf() : isfriend(0), port(0), vid(0), connection(0), 
-		   qcom_min_resend_time(0), qcom_max_resend_time(0)
-  { strcpy( address, ""); strcpy( nodename, "");}
+		   qcom_min_resend_time(0), qcom_max_resend_time(0), has_secondary(0),
+		   redcom_port(0), redcom_min_resend_time(0), redcom_max_resend_time(0),
+		   redcom_export_buf_quota(0), redcom_ack_delay(0), redcom_segment_size(0)
+  { 
+    strcpy( address, ""); strcpy( nodename, ""); strcpy( secondary_nodename, "");
+    strcpy( secondary_address, "");
+  }
   int isfriend;
   pwr_tOid oid;
   pwr_tEnum operatingsystem;
@@ -106,6 +111,15 @@ public:
   pwr_tUInt32 qcom_export_buf_quota;
   pwr_tFloat32 qcom_ack_delay;
   pwr_tUInt32 qcom_segment_size;
+  int has_secondary;
+  pwr_tString80 secondary_nodename;
+  pwr_tString80 secondary_address;
+  pwr_tUInt32 redcom_port;
+  pwr_tFloat32 redcom_min_resend_time;
+  pwr_tFloat32 redcom_max_resend_time;
+  pwr_tUInt32 redcom_export_buf_quota;
+  pwr_tFloat32 redcom_ack_delay;
+  pwr_tUInt32 redcom_segment_size;  
 };
       
 
@@ -668,7 +682,9 @@ pwr_tStatus lfu_SaveDirectoryVolume(
   pwr_tObjid	nodeobjid;
   pwr_tObjid	busobjid;
   char		*nodename_ptr;
+  char		*secondary_nodename_ptr;
   char		*bootnode_ptr;
+  char		*secondary_bootnode_ptr;
   char		nodename[80];
   pwr_tUInt32	*os_ptr;
   pwr_tUInt32	os;
@@ -1346,6 +1362,11 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	    nodename_ptr = null_nodename;
 	  }
 
+	  /* Check SecondaryNode.NodeName attribute */
+	  sts = ldh_GetObjectPar( ldhses, nodeobjid, "RtBody",
+				  "SecondaryNode.NodeName", &secondary_nodename_ptr, &size);
+	  if (EVEN(sts)) return sts;
+
 	  /* Check OperatingSystem attribute */
 	  sts = ldh_GetObjectPar( ldhses, nodeobjid, "RtBody",
 				  "OperatingSystem", (char **)&os_ptr, &size);
@@ -1401,72 +1422,91 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  lfu_check_appl_file( ldhses, nodename_ptr, *bus_number_ptr);
 	  // lfu_check_opt_file( ldhses, nodename_ptr, *bus_number_ptr, (pwr_mOpSys) os);
 
-	  /* Find the volumes in this node */
-	  sts = ldh_GetChild( ldhses, nodeobjid, &volobjid);
-	  while ( ODD(sts)) {
-	    sts = ldh_GetObjectClass( ldhses, volobjid, &cid);
-	    if ( EVEN(sts)) return sts;
+	  for ( int j = 0; j < 2; j++) {
+	    // Loop over primary and secondary node
 
-	    if ( cid == pwr_cClass_RootVolumeLoad ||
-		 cid == pwr_cClass_SubVolumeLoad ||
-		 cid == pwr_cClass_ClassVolumeLoad ||
-		 cid == pwr_cClass_DetachedClassVolumeLoad ||
-		 cid == pwr_cClass_SharedVolumeLoad ) {
-	      sts = ldh_ObjidToName( ldhses, volobjid, ldh_eName_Object,
-				     volume_name, sizeof(volume_name), &size);
+	    /* Find the volumes in this node */
+	    sts = ldh_GetChild( ldhses, nodeobjid, &volobjid);
+	    while ( ODD(sts)) {
+	      sts = ldh_GetObjectClass( ldhses, volobjid, &cid);
 	      if ( EVEN(sts)) return sts;
-	      utl_toupper( name, volume_name);
 
-	      /* Check that the name is in the global volume list */
-	      found = 0;
-	      volumelist_ptr = volumelist;
-	      for ( i = 0; i < volumecount; i++) {
-		utl_toupper( volname, volumelist_ptr->volume_name);
-		if ( !strcmp( name, volname)) {
-		  found = 1;
+	      if ( cid == pwr_cClass_RootVolumeLoad ||
+		   cid == pwr_cClass_SubVolumeLoad ||
+		   cid == pwr_cClass_ClassVolumeLoad ||
+		   cid == pwr_cClass_DetachedClassVolumeLoad ||
+		   cid == pwr_cClass_SharedVolumeLoad ) {
+		sts = ldh_ObjidToName( ldhses, volobjid, ldh_eName_Object,
+				       volume_name, sizeof(volume_name), &size);
+		if ( EVEN(sts)) return sts;
+		utl_toupper( name, volume_name);
 
-		  switch (cid) {
-		  case pwr_cClass_RootVolumeLoad :
-		    strcpy( classname, "RootVolume");
-		    break;
-		  case pwr_cClass_SubVolumeLoad :
-		    strcpy( classname, "SubVolume");
-		    break;
-		  case pwr_cClass_ClassVolumeLoad :
-		    strcpy( classname, "ClassVolume");
-		    break;
-		  case pwr_cClass_DetachedClassVolumeLoad :
-		    strcpy( classname, "DetachedClassVolume");
-		    break;
-		  case pwr_cClass_SharedVolumeLoad :
-		    strcpy( classname, "SharedVolume");
+		/* Check that the name is in the global volume list */
+		found = 0;
+		volumelist_ptr = volumelist;
+		for ( i = 0; i < volumecount; i++) {
+		  utl_toupper( volname, volumelist_ptr->volume_name);
+		  if ( !strcmp( name, volname)) {
+		    found = 1;
+
+		    switch (cid) {
+		    case pwr_cClass_RootVolumeLoad :
+		      strcpy( classname, "RootVolume");
+		      break;
+		    case pwr_cClass_SubVolumeLoad :
+		      strcpy( classname, "SubVolume");
+		      break;
+		    case pwr_cClass_ClassVolumeLoad :
+		      strcpy( classname, "ClassVolume");
+		      break;
+		    case pwr_cClass_DetachedClassVolumeLoad :
+		      strcpy( classname, "DetachedClassVolume");
+		      break;
+		    case pwr_cClass_SharedVolumeLoad :
+		      strcpy( classname, "SharedVolume");
+		      break;
+		    }
+
+		    if ( j == 0)
+		      fprintf( file, "%s %s %s %s %d %d %f\n",
+			       volume_name,
+			       cdh_VolumeIdToString( NULL, volumelist_ptr->volume_id, 0, 0),
+			       nodeconfig_name,
+			       nodename_ptr,
+			       *bus_number_ptr,
+			       os,
+			       scantime);
+		    else if ( j == 1)
+		      // Secondary node
+		      fprintf( file, "%s %s %s(%s) %s %d %d %f\n",
+			       volume_name,
+			       cdh_VolumeIdToString( NULL, volumelist_ptr->volume_id, 0, 0),
+			       secondary_nodename_ptr,
+			       nodeconfig_name,
+			       secondary_nodename_ptr,
+			       *bus_number_ptr,
+			       os,
+			       scantime);
 		    break;
 		  }
-
-		  fprintf( file, "%s %s %s %s %d %d %f\n",
-			   volume_name,
-			   cdh_VolumeIdToString( NULL, volumelist_ptr->volume_id, 0, 0),
-			   nodeconfig_name,
-			   nodename_ptr,
-			   *bus_number_ptr,
-			   os,
-			   scantime);
-		  break;
+		  volumelist_ptr++;
 		}
-		volumelist_ptr++;
-	      }
-	      if ( !found) {
-		char msg[200];
-		sprintf( msg, "Error in VolumeLoad object,  '%s' is not configured in the global\
+		if ( !found) {
+		  char msg[200];
+		  sprintf( msg, "Error in VolumeLoad object,  '%s' is not configured in the global\
  volume list", name);
-		MsgWindow::message( 'E', msg, msgw_ePop_Default);
-		syntax_error = 1;
+		  MsgWindow::message( 'E', msg, msgw_ePop_Default);
+		  syntax_error = 1;
+		}
 	      }
+	      sts = ldh_GetNextSibling( ldhses, volobjid, &volobjid);
 	    }
-	    sts = ldh_GetNextSibling( ldhses, volobjid, &volobjid);
+	    if ( strcmp( secondary_nodename_ptr, "") == 0)
+	      break;
 	  }
 	  if ( nodename_ptr != null_nodename)
 	    free( nodename_ptr);
+	  free( secondary_nodename_ptr);
 	  free( (char *) os_ptr);
 	}
 	sts = ldh_GetNextSibling( ldhses, nodeobjid, &nodeobjid);
@@ -1580,6 +1620,71 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	
 	a.value( &nc.qcom_segment_size);
 	if ( !a) return sts;
+	  
+	// Get attribute SecondaryNode.NodeName
+	a = sp->attribute( nodeo.oid(), "RtBody", "SecondaryNode.NodeName");
+	if ( !a) return a.sts();
+	
+	a.value( &nc.secondary_nodename);
+	if ( !a) return sts;
+	  
+	if ( strcmp( nc.secondary_nodename, "") != 0)
+	  nc.has_secondary = 1;
+	else {
+	  strcpy( nc.secondary_nodename, "-");
+	  strcpy( nc.secondary_address, "-");
+	}
+	
+	if ( nc.has_secondary) {
+	  // Get attribute SecondaryNode.Address
+	  a = sp->attribute( nodeo.oid(), "RtBody", "SecondaryNode.Address");
+	  if ( !a) return a.sts();
+	
+	  a.value( &nc.secondary_address);
+	  if ( !a) return sts;
+
+	  // Get attribute SecondaryNode.RedcomPort
+	  a = sp->attribute( nodeo.oid(), "RtBody", "SecondaryNode.RedcomPort");
+	  if ( !a) return a.sts();
+
+	  a.value( &nc.redcom_port);
+	  if ( !a) return sts;
+	
+	  // Get attribute SecondaryNode.RedcomMinResendTime
+	  a = sp->attribute( nodeo.oid(), "RtBody", "SecondaryNode.RedcomMinResendTime");
+	  if ( !a) return a.sts();
+	
+	  a.value( &nc.redcom_min_resend_time);
+	  if ( !a) return sts;
+	  
+	  // Get attribute SecondaryNode.RedcomMaxResendTime
+	  a = sp->attribute( nodeo.oid(), "RtBody", "SecondaryNode.RedcomMaxResendTime");
+	  if ( !a) return a.sts();
+	
+	  a.value( &nc.redcom_max_resend_time);
+	  if ( !a) return sts;
+	  
+	  // Get attribute SecondaryNode.RedcomExportBufSize
+	  a = sp->attribute( nodeo.oid(), "RtBody", "SecondaryNode.RedcomExportBufQuota");
+	  if ( !a) return a.sts();
+	
+	  a.value( &nc.redcom_export_buf_quota);
+	  if ( !a) return sts;
+	  
+	  // Get attribute SecondaryNode.RedcomAckDelay
+	  a = sp->attribute( nodeo.oid(), "RtBody", "SecondaryNode.RedcomAckDelay");
+	  if ( !a) return a.sts();
+	
+	  a.value( &nc.redcom_ack_delay);
+	  if ( !a) return sts;
+	  
+	  // Get attribute SecondaryNode.RedcomSegmentSize
+	  a = sp->attribute( nodeo.oid(), "RtBody", "SecondaryNode.RedcomSegmentSize");
+	  if ( !a) return a.sts();
+	
+	  a.value( &nc.redcom_segment_size);
+	  if ( !a) return sts;	  
+	}
 	  
 	if ( !strcmp( nc.nodename, "")) {
 	  char msg[200];
@@ -1697,7 +1802,35 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	a.value( &nc.qcom_ack_delay);
 	if ( !a) return sts;
 	  
+	if ( nodeo.cid() == pwr_cClass_FriendNodeConfig) {
+	  // Get attribute SecondaryNode.NodeName
+	  a = sp->attribute( nodeo.oid(), "RtBody", "SecondaryNode.NodeName");
+	  if ( !a) return a.sts();
+	
+	  a.value( &nc.secondary_nodename);
+	  if ( !a) return sts;
+	  
+	  if ( strcmp( nc.secondary_nodename, "") != 0)
+	    nc.has_secondary = 1;
+	  else {
+	    strcpy( nc.secondary_nodename, "-");
+	    strcpy( nc.secondary_address, "-");
+	  }
+
+	  if ( nc.has_secondary) {
+	    // Get attribute SecondaryNode.Address
+	    a = sp->attribute( nodeo.oid(), "RtBody", "SecondaryNode.Address");
+	    if ( !a) return a.sts();
+	    
+	    a.value( &nc.secondary_address);
+	    if ( !a) return sts;
+	  }
+	}
+
 	if ( nodeo.cid() == pwr_cClass_SevNodeConfig) {
+	  strcpy( nc.secondary_nodename, "-");
+	  strcpy( nc.secondary_address, "-");
+
 	  // Get attribute QComSegmentSize
 	  a = sp->attribute( nodeo.oid(), "RtBody", "QComSegmentSize");
 	  if ( !a) return a.sts();
@@ -1765,7 +1898,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  MsgWindow::message( 'E', msg, msgw_ePop_Default);
 	  syntax_error = 1;
 	}
-       if ( strcmp( nodevect[i].address, "0.0.0.0") != 0 &&
+	if ( strcmp( nodevect[i].address, "0.0.0.0") != 0 &&
             strcmp( nodevect[i].address, "127.0.0.1") != 0 &&
             strcmp( nodevect[i].address, nodevect[j].address) == 0) {
 	  char msg[200];
@@ -1785,7 +1918,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
       }
     }	       
 
-    // Print file
+    // Print ld_node file
     for ( wb_object nodeo = buso.first(); nodeo; nodeo = nodeo.after()) {
 
       switch ( nodeo.cid()) {
@@ -1794,6 +1927,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	FILE *fp;
 	int idx;
 	int found = 0;
+	int is_secondary;
 
 	for ( idx = 0; idx < (int)nodevect.size(); idx++) {
 	  if ( cdh_ObjidIsEqual( nodevect[idx].oid, nodeo.oid())) {
@@ -1804,132 +1938,159 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	if ( !found)
 	  return 0;
 
-	sprintf( filename, pwr_cNameNode, load_cDirectory, cdh_Low(nodevect[idx].nodename), 
-		 bus_number);
-	dcli_translate_filename( fname, filename);
-        fp = fopen( fname, "w");
-	if ( fp == 0) {
-	  char msg[200];
-	  sprintf( msg, "Error, Unable to open file %s\n", fname);
-	  MsgWindow::message( 'E', msg, msgw_ePop_Default);
-	  return LFU__NOFILE;
-	}
+	for ( int k = 0; k < 2; k++) {
+	  is_secondary = k;
 
-	for ( int i = 0; i < (int)nodevect.size(); i++) {
-	  lfu_nodeconf nc = nodevect[i];
-
-	  if ( qcom_auto_dis == pwr_eYesNoEnum_Yes && i != idx)
-	    continue;
-
-	  fprintf( fp, "%s %s %s %d %d %d %d %d %f %d\n", nc.nodename, 
-		   cdh_VolumeIdToString( NULL, nc.vid, 0, 0), nc.address, nc.port, 
-		   nc.connection, int(nc.qcom_min_resend_time * 1000), 
-		   int(nc.qcom_max_resend_time * 1000), nc.qcom_export_buf_quota, nc.qcom_ack_delay,
-		   nc.qcom_segment_size);
-	}
-
-	// Add specific FriendNodes for the node
-	for ( wb_object fnodeo = nodeo.first(); fnodeo; fnodeo = fnodeo.after()) {
-	  switch ( fnodeo.cid()) {
-	  case pwr_cClass_FriendNodeConfig: {
-	    pwr_tString80 volstr;
-	    lfu_nodeconf nc;
-
-	    nc.isfriend = 1;
-
-	    // Get attribute NodeName
-	    a = sp->attribute( fnodeo.oid(), "RtBody", "NodeName");
-	    if ( !a) return a.sts();
-	  
-	    a.value( nc.nodename);
-	    if ( !a) return sts;
-
-	    // Get attribute Address
-	    a = sp->attribute( fnodeo.oid(), "RtBody", "Address");
-	    if ( !a) return a.sts();
-
-	    a.value( nc.address);
-	    if ( !a) return sts;
-
-	    // Get attribute Port
-	    a = sp->attribute( fnodeo.oid(), "RtBody", "Port");
-	    if ( !a) return a.sts();
-
-	    a.value( &nc.port);
-	    if ( !a) return sts;
-	  
-	    // Get attribute Connection
-	    a = sp->attribute( fnodeo.oid(), "RtBody", "Connection");
-	    if ( !a) return a.sts();
-
-	    a.value( &nc.connection);
-	    if ( !a) return sts;
-	  
-	    // Get attribute Volume
-	    a = sp->attribute( fnodeo.oid(), "RtBody", "Volume");
-	    if ( !a) return a.sts();
-
-	    a.value( volstr);
-	    if ( !a) return sts;
-	
-	    // Get attribute QComMaxResendTime
-	    a = sp->attribute( fnodeo.oid(), "RtBody", "QComMinResendTime");
-	    if ( !a) return a.sts();
-
-	    a.value( &nc.qcom_min_resend_time);
-	    if ( !a) return sts;
-	  
-	    // Get attribute QComMaxResendTime
-	    a = sp->attribute( fnodeo.oid(), "RtBody", "QComMaxResendTime");
-	    if ( !a) return a.sts();
-
-	    a.value( &nc.qcom_max_resend_time);
-	    if ( !a) return sts;
-	  
-	    // Get attribute QComExportBufSize
-	    a = sp->attribute( nodeo.oid(), "RtBody", "QComExportBufQuota");
-	    if ( !a) return a.sts();
-	    
-	    a.value( &nc.qcom_export_buf_quota);
-	    if ( !a) return sts;
-	  
-	    // Get attribute QComAckDelay
-	    a = sp->attribute( nodeo.oid(), "RtBody", "QComAckDelay");
-	    if ( !a) return a.sts();
-	    
-	    a.value( &nc.qcom_ack_delay);
-	    if ( !a) return sts;
-	  
-	    /* Check that the name is in the global volume list */
-	    found = 0;
-	    volumelist_ptr = volumelist;
-	    for ( int j = 0; j < volumecount; j++) {
-	      if ( cdh_NoCaseStrcmp( volstr, volumelist_ptr->volume_name) == 0) {
-		nc.vid = volumelist_ptr->volume_id;
-		found = 1;
-		break;
-	      }
-	      volumelist_ptr++;
-	    }
-
-	    if ( !found) {
-	      char msg[200];
-	      sprintf( msg, "Error in FriendNodeConfig object '%s', Unknown volume", nodeconfig_name);
-	      MsgWindow::message( 'E', msg, msgw_ePop_Default);
-	      syntax_error = 1;
-	    }
-
-	    fprintf( fp, "%s %s %s %d %d %d %d %d %f %d\n", nc.nodename, 
-		     cdh_VolumeIdToString( NULL, nc.vid, 0, 0), nc.address, nc.port, 
-		     nc.connection, (int)(nc.qcom_min_resend_time * 1000), 
-		     (int)(nc.qcom_max_resend_time * 1000), nc.qcom_export_buf_quota, nc.qcom_ack_delay,
-		     nc.qcom_segment_size);
+	  if ( is_secondary && !nodevect[idx].has_secondary)
 	    break;
+
+	  if ( !is_secondary)
+	    sprintf( filename, pwr_cNameNode, load_cDirectory, cdh_Low(nodevect[idx].nodename), 
+		     bus_number);
+	  else
+	    sprintf( filename, pwr_cNameNode, load_cDirectory, cdh_Low(nodevect[idx].secondary_nodename), 
+		     bus_number);
+
+	  dcli_translate_filename( fname, filename);
+	  fp = fopen( fname, "w");
+	  if ( fp == 0) {
+	    char msg[200];
+	    sprintf( msg, "Error, Unable to open file %s\n", fname);
+	    MsgWindow::message( 'E', msg, msgw_ePop_Default);
+	    return LFU__NOFILE;
 	  }
-	  default: ;
+
+	  for ( int i = 0; i < (int)nodevect.size(); i++) {
+	    lfu_nodeconf nc = nodevect[i];
+
+	    if ( qcom_auto_dis == pwr_eYesNoEnum_Yes && i != idx)
+	      continue;
+
+	    if ( i == idx) {
+	      if ( !is_secondary)
+		fprintf( fp, "%s %s %s %d %d %d %d %d %f %d %d %s %s\n", nc.nodename, 
+			 cdh_VolumeIdToString( NULL, nc.vid, 0, 0), nc.address, nc.port, 
+			 nc.connection, int(nc.qcom_min_resend_time * 1000), 
+			 int(nc.qcom_max_resend_time * 1000), nc.qcom_export_buf_quota, nc.qcom_ack_delay,
+			 nc.qcom_segment_size, is_secondary, "-", "-");
+	      else
+		fprintf( fp, "%s %s %s %d %d %d %d %d %f %d %d %s %s\n", nc.secondary_nodename, 
+			 cdh_VolumeIdToString( NULL, nc.vid, 0, 0), nc.secondary_address, nc.port, 
+			 nc.connection, int(nc.qcom_min_resend_time * 1000), 
+			 int(nc.qcom_max_resend_time * 1000), nc.qcom_export_buf_quota, nc.qcom_ack_delay,
+			 nc.qcom_segment_size, is_secondary, "-", "-");
+	    }
+	    else 
+	      fprintf( fp, "%s %s %s %d %d %d %d %d %f %d %d %s %s\n", nc.nodename, 
+		       cdh_VolumeIdToString( NULL, nc.vid, 0, 0), nc.address, nc.port, 
+		       nc.connection, int(nc.qcom_min_resend_time * 1000), 
+		       int(nc.qcom_max_resend_time * 1000), nc.qcom_export_buf_quota, nc.qcom_ack_delay,
+		       nc.qcom_segment_size, 0, nc.secondary_nodename, nc.secondary_address);
 	  }
+
+	  // Add specific FriendNodes for the node
+	  for ( wb_object fnodeo = nodeo.first(); fnodeo; fnodeo = fnodeo.after()) {
+	    switch ( fnodeo.cid()) {
+	    case pwr_cClass_FriendNodeConfig: {
+	      pwr_tString80 volstr;
+	      lfu_nodeconf nc;
+
+	      nc.isfriend = 1;
+
+	      // Get attribute NodeName
+	      a = sp->attribute( fnodeo.oid(), "RtBody", "NodeName");
+	      if ( !a) return a.sts();
+	  
+	      a.value( nc.nodename);
+	      if ( !a) return sts;
+
+	      // Get attribute Address
+	      a = sp->attribute( fnodeo.oid(), "RtBody", "Address");
+	      if ( !a) return a.sts();
+
+	      a.value( nc.address);
+	      if ( !a) return sts;
+
+	      // Get attribute Port
+	      a = sp->attribute( fnodeo.oid(), "RtBody", "Port");
+	      if ( !a) return a.sts();
+
+	      a.value( &nc.port);
+	      if ( !a) return sts;
+	  
+	      // Get attribute Connection
+	      a = sp->attribute( fnodeo.oid(), "RtBody", "Connection");
+	      if ( !a) return a.sts();
+
+	      a.value( &nc.connection);
+	      if ( !a) return sts;
+	  
+	      // Get attribute Volume
+	      a = sp->attribute( fnodeo.oid(), "RtBody", "Volume");
+	      if ( !a) return a.sts();
+
+	      a.value( volstr);
+	      if ( !a) return sts;
+	
+	      // Get attribute QComMaxResendTime
+	      a = sp->attribute( fnodeo.oid(), "RtBody", "QComMinResendTime");
+	      if ( !a) return a.sts();
+
+	      a.value( &nc.qcom_min_resend_time);
+	      if ( !a) return sts;
+	  
+	      // Get attribute QComMaxResendTime
+	      a = sp->attribute( fnodeo.oid(), "RtBody", "QComMaxResendTime");
+	      if ( !a) return a.sts();
+
+	      a.value( &nc.qcom_max_resend_time);
+	      if ( !a) return sts;
+	  
+	      // Get attribute QComExportBufSize
+	      a = sp->attribute( nodeo.oid(), "RtBody", "QComExportBufQuota");
+	      if ( !a) return a.sts();
+	      
+	      a.value( &nc.qcom_export_buf_quota);
+	      if ( !a) return sts;
+	  
+	      // Get attribute QComAckDelay
+	      a = sp->attribute( nodeo.oid(), "RtBody", "QComAckDelay");
+	      if ( !a) return a.sts();
+	      
+	      a.value( &nc.qcom_ack_delay);
+	      if ( !a) return sts;
+	  
+	      /* Check that the name is in the global volume list */
+	      found = 0;
+	      volumelist_ptr = volumelist;
+	      for ( int j = 0; j < volumecount; j++) {
+		if ( cdh_NoCaseStrcmp( volstr, volumelist_ptr->volume_name) == 0) {
+		  nc.vid = volumelist_ptr->volume_id;
+		  found = 1;
+		  break;
+		}
+		volumelist_ptr++;
+	      }
+
+	      if ( !found) {
+		char msg[200];
+		sprintf( msg, "Error in FriendNodeConfig object '%s', Unknown volume", nodeconfig_name);
+		MsgWindow::message( 'E', msg, msgw_ePop_Default);
+		syntax_error = 1;
+	      }
+
+	      fprintf( fp, "%s %s %s %d %d %d %d %d %f %d %d %s %s\n", nc.nodename, 
+		       cdh_VolumeIdToString( NULL, nc.vid, 0, 0), nc.address, nc.port, 
+		       nc.connection, (int)(nc.qcom_min_resend_time * 1000), 
+		       (int)(nc.qcom_max_resend_time * 1000), nc.qcom_export_buf_quota, nc.qcom_ack_delay,
+		       nc.qcom_segment_size, 0, nc.secondary_nodename, nc.secondary_address);
+	      break;
+	    }
+	    default: ;
+	    }
+	  }
+	  fclose( fp);
 	}
-	fclose( fp);
 
 	if ( nodeo.cid() == pwr_cClass_SevNodeConfig) {
 	  // Print a bootfile also
@@ -1967,6 +2128,45 @@ pwr_tStatus lfu_SaveDirectoryVolume(
       }
     }
     
+    // Print ld_recom file
+    for ( unsigned int i = 0; i < nodevect.size(); i++) {
+      lfu_nodeconf nc = nodevect[i];
+
+      if ( nc.has_secondary) {
+	for ( int j = 0; j < 2; j++) {
+	  FILE *fp;
+	  int is_secondary = j;
+
+	  if ( !is_secondary)
+	    sprintf( filename, pwr_cNameRedcom, load_cDirectory, cdh_Low(nodevect[i].nodename), 
+		     bus_number);
+	  else
+	    sprintf( filename, pwr_cNameRedcom, load_cDirectory, cdh_Low(nodevect[i].secondary_nodename), 
+		     bus_number);
+
+	  dcli_translate_filename( fname, filename);
+	  fp = fopen( fname, "w");
+	  if ( fp == 0) {
+	    char msg[200];
+	    sprintf( msg, "Error, Unable to open file %s\n", fname);
+	    MsgWindow::message( 'E', msg, msgw_ePop_Default);
+	    return LFU__NOFILE;
+	  }
+
+	  fprintf( fp, "%s %s %s %d %d %d %d %d %f %d\n", nc.nodename, 
+		   cdh_VolumeIdToString( NULL, nc.vid, 0, 0), nc.address, nc.redcom_port, 
+		   2, int(nc.redcom_min_resend_time * 1000), 
+		   int(nc.redcom_max_resend_time * 1000), nc.redcom_export_buf_quota, nc.redcom_ack_delay,
+		   nc.redcom_segment_size);
+	  fprintf( fp, "%s %s %s %d %d %d %d %d %f %d\n", nc.secondary_nodename, 
+		   cdh_VolumeIdToString( NULL, nc.vid, 0, 0), nc.secondary_address, nc.redcom_port, 
+		   1, int(nc.redcom_min_resend_time * 1000), 
+		   int(nc.redcom_max_resend_time * 1000), nc.redcom_export_buf_quota, nc.redcom_ack_delay,
+		   nc.redcom_segment_size);
+	  fclose( fp);
+	}
+      }
+    }
   }
     
 
@@ -2039,11 +2239,25 @@ pwr_tStatus lfu_SaveDirectoryVolume(
           sts = ldh_GetObjectPar( ldhses, nodeobjid, "RtBody",
 			"NodeName", &nodename_ptr, &size);
           if (EVEN(sts)) return sts;
-
-         if ( !strcmp( nodename_ptr, "")) {
+	  
+	  if ( !strcmp( nodename_ptr, "")) {
             free( nodename_ptr);
             nodename_ptr = null_nodename;
           }
+
+	  if ( cid == pwr_cClass_NodeConfig) {
+	    /* Check SecondaryNode.NodeName attribute */
+	    sts = ldh_GetObjectPar( ldhses, nodeobjid, "RtBody",
+				    "SecondaryNode.NodeName", &secondary_nodename_ptr, &size);
+	    if (EVEN(sts)) return sts;
+	       
+	    if ( strcmp( secondary_nodename_ptr, "") == 0) {
+	      free( secondary_nodename_ptr);
+	      secondary_nodename_ptr = null_nodename;
+	    }
+	  }
+	  else
+	    secondary_nodename_ptr = null_nodename;
 
           /* Check BootNode attribute */
           sts = ldh_GetObjectPar( ldhses, nodeobjid, "RtBody",
@@ -2054,6 +2268,20 @@ pwr_tStatus lfu_SaveDirectoryVolume(
             free( bootnode_ptr);
             bootnode_ptr = null_nodename;
           }
+
+	  if ( cid == pwr_cClass_NodeConfig) {
+	    /* Check SecondaryNode.BootNode attribute */
+	    sts = ldh_GetObjectPar( ldhses, nodeobjid, "RtBody",
+				    "SecondaryNode.BootNode", &secondary_bootnode_ptr, &size);
+	    if (EVEN(sts)) return sts;
+	    
+	    if ( !strcmp( secondary_bootnode_ptr, "") || !strcmp( secondary_bootnode_ptr, "-")) {
+	      free( secondary_bootnode_ptr);
+	      secondary_bootnode_ptr = null_nodename;
+	    }
+	  }
+	  else
+	    secondary_bootnode_ptr = null_nodename;
 
           /* Check OperatingSystem attribute */
           sts = ldh_GetObjectPar( ldhses, nodeobjid, "RtBody",
@@ -2323,6 +2551,15 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		   distr_options,
 		   bootnode_ptr,
 		   custom_platform);
+	  if ( secondary_nodename_ptr != null_nodename) 
+	    fprintf( file, "node %s %s %d %d %s %s\n",
+		     secondary_nodename_ptr,
+		     os_str,
+		     *bus_number_ptr,
+		     distr_options,
+		     secondary_bootnode_ptr,
+		     custom_platform);
+
 
 	  /* Find the applications for this node */
 	  class_vect[0] = pwr_cClass_Distribute;
@@ -2343,130 +2580,144 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
 	  sts = trv_delete_ctx( trvctx);
 
-	  for ( obj_ptr = objlist; obj_ptr; obj_ptr = obj_ptr->next) {
-	    applobjid = obj_ptr->objid;
-	    sts = ldh_GetObjectClass( ldhses, applobjid, &ccid);
-	    if ( EVEN(sts)) return sts;
+	  for ( int k = 0; k < 2; k++) {
+	    char *stored_nodename_ptr = nodename_ptr;
 
-	    switch ( ccid) {
-	    case pwr_cClass_Distribute: {
-	      pwr_mDistrComponentMask *components_ptr;
-
-	      sts = ldh_ObjidToName( ldhses, applobjid, ldh_eName_Object,
-				     appl_name, sizeof(appl_name), &size);
+	    if ( k == 1 && secondary_nodename_ptr == null_nodename)
+	      break;
+	    if ( k == 1)
+	      nodename_ptr = secondary_nodename_ptr;
+	      
+	    
+	    for ( obj_ptr = objlist; obj_ptr; obj_ptr = obj_ptr->next) {
+	      applobjid = obj_ptr->objid;
+	      sts = ldh_GetObjectClass( ldhses, applobjid, &ccid);
 	      if ( EVEN(sts)) return sts;
 
-	      /* Check Components attribute */
-	      sts = ldh_GetObjectPar( ldhses, applobjid, "DevBody",
-				      "Components", (char **)&components_ptr, &size);
-	      if (EVEN(sts)) return sts;
+	      switch ( ccid) {
+	      case pwr_cClass_Distribute: {
+		pwr_mDistrComponentMask *components_ptr;
 
-	      if ( *components_ptr & pwr_mDistrComponentMask_LoadFiles &&
-		   !(distr_options & lfu_mDistrOpt_NoRootVolume)) {
-		fprintf( file, "load %s\n", nodename_ptr);
-	      }
-	      if ( cid == pwr_cClass_SevNodeConfig)
-		fprintf( file, "boot %s\n", nodename_ptr);
+		sts = ldh_ObjidToName( ldhses, applobjid, ldh_eName_Object,
+				       appl_name, sizeof(appl_name), &size);
+		if ( EVEN(sts)) return sts;
 
-	      if ( *components_ptr & pwr_mDistrComponentMask_UserDatabase)
-		fprintf( file, "appl %s W $pwrp_cnf/%s/pwr_user2.dat:$pwra_db/pwr_user2.dat $pwra_db/pwr_user2.dat\n",
-			 nodename_ptr, nodename_ptr);
-	      if ( *components_ptr & pwr_mDistrComponentMask_ApplFile)
-		fprintf( file, "appl %s W "pwr_cNameAppl" $pwrp_load/\n",
-			 nodename_ptr, "$pwrp_load/", nodename_ptr, *bus_number_ptr);
-	      if ( *components_ptr & pwr_mDistrComponentMask_PwrpAliasFile)
-		fprintf( file, "appl %s W $pwrp_load/pwrp_alias.dat $pwrp_load/pwrp_alias.dat\n", 
-			 nodename_ptr);
-	      if ( *components_ptr & pwr_mDistrComponentMask_IncludeFiles)
-		fprintf( file, "appl %s W $pwrp_inc/*.h\n", nodename_ptr);
-	      if ( *components_ptr & pwr_mDistrComponentMask_GraphFiles)
-		fprintf( file, "appl %s W $pwrp_exe/*.pwg\n", nodename_ptr);
-	      if ( *components_ptr & pwr_mDistrComponentMask_XMLFiles)
-		fprintf( file, "appl %s W $pwrp_load/*.xml\n", nodename_ptr);
-	      if ( *components_ptr & pwr_mDistrComponentMask_XttHelpFile) {
-		fprintf( file, "appl %s W $pwrp_load/%s/xtt_help.dat:$pwrp_load/xtt_help.dat $pwrp_load/xtt_help.dat\n", 
-			 nodename_ptr, nodename_ptr);
-	      }
-	      if ( *components_ptr & pwr_mDistrComponentMask_XttResourceFile) {
-		fprintf( file, "appl %s W $pwrp_load/%s/b55/Rt_xtt:$pwrp_load/%s/Rt_xtt:$pwrp_load/Rt_xtt /home/b55/Rt_xtt\n", 
-			 nodename_ptr, nodename_ptr, nodename_ptr);
-		fprintf( file, "appl %s S $pwrp_load/%s/pwrp/Rt_xtt /home/pwrp/Rt_xtt\n", 
-			 nodename_ptr, nodename_ptr);
-	      }
-	      if ( *components_ptr & pwr_mDistrComponentMask_XttSetupFile) {
-		fprintf( file, "appl %s W $pwrp_load/%s/b55/xtt_setup.rtt_com:$pwrp_load/%s/xtt_setup.rtt_com:$pwrp_load/xtt_setup.rtt_com /home/b55/xtt_setup.rtt_com\n",
-			 nodename_ptr, nodename_ptr, nodename_ptr);
-		fprintf( file, "appl %s S $pwrp_load/%s/pwrp/xtt_setup.rtt_com /home/pwrp/xtt_setup.rtt_com\n",
-			 nodename_ptr, nodename_ptr);
-	      }
-	      if ( *components_ptr & pwr_mDistrComponentMask_FlowFiles)
-		fprintf( file, "appl %s W $pwrp_load/*.flw\n", nodename_ptr);
-	      if ( *components_ptr & pwr_mDistrComponentMask_RHostsFile)
-		fprintf( file, "appl %s W $pwrp_cnf/%s/.rhosts:$pwra_db/.rhosts /home/pwrp/.rhosts\n",
-			 nodename_ptr, nodename_ptr);
-	      if ( *components_ptr & pwr_mDistrComponentMask_AuthorizedKeysFile)
-		fprintf( file, "appl %s W $pwrp_cnf/%s/authorized_keys:$pwra_db/authorized_keys /home/pwrp/.ssh/authorized_keys\n",
-			 nodename_ptr, nodename_ptr);
-	      if ( *components_ptr & pwr_mDistrComponentMask_WebFiles) {
-		fprintf( file, "appl %s W $pwrp_web/*.html\n", nodename_ptr);
-		fprintf( file, "appl %s S $pwrp_web/*.jar\n", nodename_ptr);
-		fprintf( file, "appl %s S $pwrp_web/*.gif\n", nodename_ptr);
-		fprintf( file, "appl %s S $pwrp_web/*.png\n", nodename_ptr);
-		fprintf( file, "appl %s S $pwrp_web/*.jpg\n", nodename_ptr);
-		fprintf( file, "appl %s S $pwrp_web/*.pdf\n", nodename_ptr);
-		fprintf( file, "appl %s S $pwrp_web/*.pwg\n", nodename_ptr);
-	      }
-	      if ( *components_ptr & pwr_mDistrComponentMask_PwrpStop)
-		fprintf( file, "appl %s W $pwrp_load/%s/pwrp_stop.sh:$pwrp_load/pwrp_stop.sh $pwrp_exe/pwrp_stop.sh\n", 
-			 nodename_ptr, nodename_ptr);
+		/* Check Components attribute */
+		sts = ldh_GetObjectPar( ldhses, applobjid, "DevBody",
+					"Components", (char **)&components_ptr, &size);
+		if (EVEN(sts)) return sts;
 
+		if ( *components_ptr & pwr_mDistrComponentMask_LoadFiles &&
+		     !(distr_options & lfu_mDistrOpt_NoRootVolume)) {
+		  fprintf( file, "load %s\n", nodename_ptr);
+		}
+		if ( cid == pwr_cClass_SevNodeConfig)
+		  fprintf( file, "boot %s\n", nodename_ptr);
 
-	      free( components_ptr);
-	      
-	      break;
+		if ( *components_ptr & pwr_mDistrComponentMask_UserDatabase)
+		  fprintf( file, "appl %s W $pwrp_cnf/%s/pwr_user2.dat:$pwra_db/pwr_user2.dat $pwra_db/pwr_user2.dat\n",
+			   nodename_ptr, nodename_ptr);
+		if ( *components_ptr & pwr_mDistrComponentMask_ApplFile)
+		  fprintf( file, "appl %s W "pwr_cNameAppl" $pwrp_load/\n",
+			   nodename_ptr, "$pwrp_load/", nodename_ptr, *bus_number_ptr);
+		if ( *components_ptr & pwr_mDistrComponentMask_PwrpAliasFile)
+		  fprintf( file, "appl %s W $pwrp_load/pwrp_alias.dat $pwrp_load/pwrp_alias.dat\n", 
+			   nodename_ptr);
+		if ( *components_ptr & pwr_mDistrComponentMask_IncludeFiles)
+		  fprintf( file, "appl %s W $pwrp_inc/*.h\n", nodename_ptr);
+		if ( *components_ptr & pwr_mDistrComponentMask_GraphFiles)
+		  fprintf( file, "appl %s W $pwrp_exe/*.pwg\n", nodename_ptr);
+		if ( *components_ptr & pwr_mDistrComponentMask_XMLFiles)
+		  fprintf( file, "appl %s W $pwrp_load/*.xml\n", nodename_ptr);
+		if ( *components_ptr & pwr_mDistrComponentMask_XttHelpFile) {
+		  fprintf( file, "appl %s W $pwrp_load/%s/xtt_help.dat:$pwrp_load/xtt_help.dat $pwrp_load/xtt_help.dat\n", 
+			   nodename_ptr, nodename_ptr);
+		}
+		if ( *components_ptr & pwr_mDistrComponentMask_XttResourceFile) {
+		  fprintf( file, "appl %s W $pwrp_load/%s/b55/Rt_xtt:$pwrp_load/%s/Rt_xtt:$pwrp_load/Rt_xtt /home/b55/Rt_xtt\n", 
+			   nodename_ptr, nodename_ptr, nodename_ptr);
+		  fprintf( file, "appl %s S $pwrp_load/%s/pwrp/Rt_xtt /home/pwrp/Rt_xtt\n", 
+			   nodename_ptr, nodename_ptr);
+		}
+		if ( *components_ptr & pwr_mDistrComponentMask_XttSetupFile) {
+		  fprintf( file, "appl %s W $pwrp_load/%s/b55/xtt_setup.rtt_com:$pwrp_load/%s/xtt_setup.rtt_com:$pwrp_load/xtt_setup.rtt_com /home/b55/xtt_setup.rtt_com\n",
+			   nodename_ptr, nodename_ptr, nodename_ptr);
+		  fprintf( file, "appl %s S $pwrp_load/%s/pwrp/xtt_setup.rtt_com /home/pwrp/xtt_setup.rtt_com\n",
+			   nodename_ptr, nodename_ptr);
+		}
+		if ( *components_ptr & pwr_mDistrComponentMask_FlowFiles)
+		  fprintf( file, "appl %s W $pwrp_load/*.flw\n", nodename_ptr);
+		if ( *components_ptr & pwr_mDistrComponentMask_RHostsFile)
+		  fprintf( file, "appl %s W $pwrp_cnf/%s/.rhosts:$pwra_db/.rhosts /home/pwrp/.rhosts\n",
+			   nodename_ptr, nodename_ptr);
+		if ( *components_ptr & pwr_mDistrComponentMask_AuthorizedKeysFile)
+		  fprintf( file, "appl %s W $pwrp_cnf/%s/authorized_keys:$pwra_db/authorized_keys /home/pwrp/.ssh/authorized_keys\n",
+			   nodename_ptr, nodename_ptr);
+		if ( *components_ptr & pwr_mDistrComponentMask_WebFiles) {
+		  fprintf( file, "appl %s W $pwrp_web/*.html\n", nodename_ptr);
+		  fprintf( file, "appl %s S $pwrp_web/*.jar\n", nodename_ptr);
+		  fprintf( file, "appl %s S $pwrp_web/*.gif\n", nodename_ptr);
+		  fprintf( file, "appl %s S $pwrp_web/*.png\n", nodename_ptr);
+		  fprintf( file, "appl %s S $pwrp_web/*.jpg\n", nodename_ptr);
+		  fprintf( file, "appl %s S $pwrp_web/*.pdf\n", nodename_ptr);
+		  fprintf( file, "appl %s S $pwrp_web/*.pwg\n", nodename_ptr);
+		}
+		if ( *components_ptr & pwr_mDistrComponentMask_PwrpStop)
+		  fprintf( file, "appl %s W $pwrp_load/%s/pwrp_stop.sh:$pwrp_load/pwrp_stop.sh $pwrp_exe/pwrp_stop.sh\n", 
+			   nodename_ptr, nodename_ptr);
+		
+
+		free( components_ptr);
+		
+		break;
+	      }
+	      case pwr_cClass_ApplDistribute:
+		sts = ldh_ObjidToName( ldhses, applobjid, ldh_eName_Object,
+				       appl_name, sizeof(appl_name), &size);
+		if ( EVEN(sts)) return sts;
+		
+		/* Check Source attribute */
+		sts = ldh_GetObjectPar( ldhses, applobjid, "DevBody",
+					"Source", &source_ptr, &size);
+		if (EVEN(sts)) return sts;
+		
+		if ( !strcmp( source_ptr, "")) {
+		  char msg[200];
+		  free( source_ptr);
+		  source_ptr = null_nodename;
+		  sprintf( msg, "Error in ApplDistribute object '%s', Source is missing", 
+			   appl_name);
+		  MsgWindow::message( 'E', msg, msgw_ePop_Default);
+		  syntax_error = 1;
+		}         
+		/* Check Target attribute */
+		sts = ldh_GetObjectPar( ldhses, applobjid, "DevBody",
+					"Target", &target_ptr, &size);
+		if (EVEN(sts)) return sts;
+		
+		if ( !strcmp( target_ptr, ""))
+		  fprintf( file, "appl %s E %s\n",
+			   nodename_ptr,
+			   source_ptr);
+		else
+		  fprintf( file, "appl %s E %s %s\n",
+			   nodename_ptr,
+			   source_ptr,
+			   target_ptr);
+		if ( source_ptr != null_nodename)
+		  free( source_ptr);
+		free( target_ptr);
+		break;
+	      default: ;
+	      }
 	    }
-	    case pwr_cClass_ApplDistribute:
-	      sts = ldh_ObjidToName( ldhses, applobjid, ldh_eName_Object,
-				     appl_name, sizeof(appl_name), &size);
-	      if ( EVEN(sts)) return sts;
-	      
-	      /* Check Source attribute */
-	      sts = ldh_GetObjectPar( ldhses, applobjid, "DevBody",
-				      "Source", &source_ptr, &size);
-	      if (EVEN(sts)) return sts;
-
-	      if ( !strcmp( source_ptr, "")) {
-		char msg[200];
-		free( source_ptr);
-		source_ptr = null_nodename;
-		sprintf( msg, "Error in ApplDistribute object '%s', Source is missing", 
-			 appl_name);
-		MsgWindow::message( 'E', msg, msgw_ePop_Default);
-		syntax_error = 1;
-	      }         
-	      /* Check Target attribute */
-	      sts = ldh_GetObjectPar( ldhses, applobjid, "DevBody",
-				      "Target", &target_ptr, &size);
-	      if (EVEN(sts)) return sts;
-	      
-	      if ( !strcmp( target_ptr, ""))
-		fprintf( file, "appl %s E %s\n",
-			 nodename_ptr,
-			 source_ptr);
-	      else
-		fprintf( file, "appl %s E %s %s\n",
-			 nodename_ptr,
-			 source_ptr,
-			 target_ptr);
-	      if ( source_ptr != null_nodename)
-		free( source_ptr);
-	      free( target_ptr);
-	      break;
-	    default: ;
-	    }
+	    if ( k == 1)
+	      nodename_ptr = stored_nodename_ptr;
 	  }
 	  if ( nodename_ptr != null_nodename)
 	    free( nodename_ptr);
+	  if ( secondary_nodename_ptr != null_nodename)
+	    free( secondary_nodename_ptr);
 	  if ( bootnode_ptr != null_nodename)
 	    free( bootnode_ptr);
 	  free( (char *) os_ptr);

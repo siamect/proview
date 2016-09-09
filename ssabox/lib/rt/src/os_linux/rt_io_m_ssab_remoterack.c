@@ -54,6 +54,8 @@
 #include "rt_io_m_ssab_locals.h"
 #include "rt_io_msg.h"
 
+static void udp_reset( int socket);
+
 
 /*----------------------------------------------------------------------------*\
   
@@ -297,6 +299,11 @@ static pwr_tStatus IoRackRead (
   struct bfb_buf rbuf;
   int size;
 
+  if ( ctx->read_reset) {
+    udp_reset(local->s);
+    return IO__SUCCESS;
+  }
+
   // Calc length and send write request
   local->write_req.service = BFB_SERVICE_WRITE;  
   local->write_req.length = local->next_write_req_item*4 + 4;
@@ -316,7 +323,7 @@ static pwr_tStatus IoRackRead (
       size = recv(local->s, &rbuf, sizeof(rbuf), 0);
       if (rbuf.service == BFB_SERVICE_READ) {
         bzero(&local->read_area, sizeof(local->read_area));
-        memcpy(&local->read_area, &rbuf, size);
+	memcpy(&local->read_area, &rbuf, size);
       }
       else if (rbuf.service == BFB_SERVICE_WRITE) {
         bzero(&local->write_area, sizeof(local->write_area));
@@ -348,6 +355,29 @@ static pwr_tStatus IoRackWrite (
   bzero(&local->read_area, sizeof(local->read_area));
 
   return IO__SUCCESS;
+}
+
+/* Empty the UDP in buffer */
+static void udp_reset(
+  int socket
+) 
+{
+  int sts;
+  fd_set fds;
+  struct timeval tv;
+  struct bfb_buf rbuf;
+  int size;
+
+  sts = 1;
+  while (sts > 0) {
+    FD_ZERO(&fds);
+    FD_SET(socket, &fds);
+    tv.tv_sec = 0;
+    tv.tv_usec = 0;
+    sts = select(32, &fds, NULL, NULL, &tv);
+    if (sts > 0)
+      size = recv(socket, &rbuf, sizeof(rbuf), 0);
+  } 
 }
 
 

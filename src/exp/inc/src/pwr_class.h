@@ -636,7 +636,7 @@ typedef enum {
 } pwr_eSafetyLevel;
 
 /*_*
-  @aref activepassiveenum ActivePassiveEnum
+  @aref redundancystateenum RedundancyStateEnum
 */
 typedef pwr_tEnum pwr_tRedundancyStateEnum;
 

@@ -169,7 +169,7 @@ Parameter	RTTSYS_NODE_NAME
 Text/Dualpar	"!"
 Privileges	NO
 Outputflags	
-Characters	6
+Characters	10
 Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
