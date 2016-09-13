@@ -5680,6 +5680,14 @@ void Graph::close_input_all() {
   grow_ResetInputFocusAll( grow->ctx);
 }
 
+int Graph::get_object_name( unsigned int idx, int size, char *name) 
+{ 
+  if ( idx >= sizeof(object_name)/sizeof(object_name[0]))
+    return 0;
+  strncpy( name, object_name[idx], size);
+  return 1;
+}
+
 static void graph_free_dyn( grow_tObject object)
 {
   if ( grow_GetObjectType( object) == glow_eObjectType_GrowNode ||

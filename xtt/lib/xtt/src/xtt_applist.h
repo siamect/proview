@@ -94,6 +94,8 @@ class ApplList {
     int find( applist_eType type, pwr_tObjid objid, void **ctx);
     int find( applist_eType type, void *ctx, char *name, char *instance);
     int find_graph( const char *name, const char *instance, void **ctx);
+    int find_graph_first( const char *name, void **ctx);
+    int find_graph_next( const char *name, char *instance, void **ctx);
     void swap( int mode);
 };
 

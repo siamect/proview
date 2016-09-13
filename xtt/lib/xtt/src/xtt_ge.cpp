@@ -277,6 +277,11 @@ void XttGe::close_input_all()
   graph->close_input_all();
 }
 
+int XttGe::get_object_name( unsigned int idx, int size, char *name)
+{
+  return graph->get_object_name( idx, size, name);
+}
+
 XttGe::XttGe( void *xg_parent_ctx, const char *xg_name, const char *xg_filename,
 	      int xg_scrollbar, int xg_menu, int xg_navigator, int xg_width, int xg_height,
 	      int x, int y, double scan_time, const char *object_name,
