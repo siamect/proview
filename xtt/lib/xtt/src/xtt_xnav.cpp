@@ -4162,6 +4162,43 @@ int ApplList::find_graph( const char *name, const char *instance, void **ctx)
   return 0;
 }
 
+int ApplList::find_graph_first( const char *name, void **ctx)
+{
+  ApplListElem *elem;
+
+  for ( elem = root; elem; elem = elem->next) {
+    if ( elem->type == applist_eType_Graph) {
+      if ( cdh_NoCaseStrcmp( name, elem->name) == 0) {
+	*ctx = elem->ctx;
+	return 1;
+      }
+    }
+  }
+  return 0;
+}
+
+int ApplList::find_graph_next( const char *name, char *instance, void **ctx)
+{
+  ApplListElem *elem;
+
+  int found = 0;
+  for ( elem = root; elem; elem = elem->next) {
+    if ( elem->type == applist_eType_Graph) {
+      if ( cdh_NoCaseStrcmp( name, elem->name) == 0) {
+	if ( found) {
+	  *ctx = elem->ctx;
+	  return 1;
+	}
+	else {
+	  if ( cdh_NoCaseStrcmp( instance, elem->instance) == 0)
+	    found = 1;
+	}
+      }
+    }
+  }
+  return 0;
+}
+
 int ApplList::find( applist_eType type, void *ctx, char *name, char *instance)
 {
   ApplListElem *elem;

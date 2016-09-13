@@ -8648,6 +8648,79 @@ static int xnav_getprivileges_func(
   return 1;
 }
 
+static int xnav_getgraphinstance_func( 
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  XNav		*xnav;
+  XttGe 	*gectx;
+  int		sts;
+
+  if ( arg_count != 1)
+    return CCM__ARGMISM;
+
+  if ( arg_list->value_decl != CCM_DECL_STRING)
+    return CCM__ARGMISM;
+
+  xnav_get_stored_xnav( &xnav);
+
+  if ( xnav->appl.find_graph_first( arg_list->value_string, (void **) &gectx)) {
+    sts = gectx->get_object_name( 0, sizeof(ccm_tString), return_string);
+    if ( EVEN(sts)) strcpy( return_string, "");
+  }
+  else
+    strcpy( return_string, "");
+
+  *return_decl = CCM_DECL_STRING;
+  
+  return 1;
+}
+
+static int xnav_getgraphinstancenext_func( 
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  XNav		*xnav;
+  XttGe 	*gectx;
+  int		sts;
+  ccm_sArg	*arg_p2;
+
+  if ( arg_count != 2)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+
+  if ( arg_list->value_decl != CCM_DECL_STRING)
+    return CCM__ARGMISM;
+
+  if ( arg_p2->value_decl != CCM_DECL_STRING)
+    return CCM__ARGMISM;
+
+  xnav_get_stored_xnav( &xnav);
+
+  if ( xnav->appl.find_graph_next( arg_list->value_string, arg_p2->value_string, 
+				   (void **) &gectx)) {
+    sts = gectx->get_object_name( 0, sizeof(ccm_tString), return_string);
+    if ( EVEN(sts)) strcpy( return_string, "");
+  }
+  else
+    strcpy( return_string, "");
+
+  *return_decl = CCM_DECL_STRING;
+  
+  return 1;
+}
+
 static int xnav_ccm_deffilename_func( char *outfile, char *infile, void *client_data)
 {
   pwr_tFileName fname;
@@ -8730,6 +8803,10 @@ int XNav::readcmdfile( 	char *incommand, char *buffer)
 	  sts = ccm_register_function( "GetUser", xnav_getuser_func);
 	  if ( EVEN(sts)) return sts;
 	  sts = ccm_register_function( "GetPrivileges", xnav_getprivileges_func);
+	  if ( EVEN(sts)) return sts;
+	  sts = ccm_register_function( "GetGraphInstance", xnav_getgraphinstance_func);
+	  if ( EVEN(sts)) return sts;
+	  sts = ccm_register_function( "GetGraphInstanceNext", xnav_getgraphinstancenext_func);
 	  if ( EVEN(sts)) return sts;
 
 	  sts = ccm_create_external_var( "GLOW__SUBTERMINATED", CCM_DECL_INT, 0, GLOW__SUBTERMINATED, 0);

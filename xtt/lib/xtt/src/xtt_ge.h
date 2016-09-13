@@ -104,6 +104,7 @@ class XttGe : XttUtility {
   void set_text_coding( lng_eCoding coding);
   int key_pressed( int key);
   void close_input_all();
+  int get_object_name( unsigned int idx, int size, char *name);
 
   static void graph_init_cb( void *client_data);
   static int graph_close_cb( void *client_data);
