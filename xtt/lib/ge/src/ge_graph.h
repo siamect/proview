@@ -1413,6 +1413,7 @@ class Graph {
   int key_pressed( int key);
   void close_input_all();
   int get_object_name( unsigned int idx, int size, char *name);
+  void signal_send( char *signalname);
 
   static int get_colortheme_colors( char *file, double **colors, int *size);
 

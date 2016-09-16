@@ -259,6 +259,8 @@ static int	xnav_wait_func(       	void		*client_data,
 					void		*client_flag);
 static int	xnav_oplog_func(       	void		*client_data,
 					void		*client_flag);
+static int	xnav_send_func(       	void		*client_data,
+					void		*client_flag);
 
 dcli_tCmdTable	xnav_command_table[] = {
 		{
@@ -448,6 +450,11 @@ dcli_tCmdTable	xnav_command_table[] = {
 			"OPLOG",
 			&xnav_oplog_func,
 			{ "dcli_arg1", "/FILE", "/SPEED", "/PID", "/EVENT", ""}
+		},
+		{
+			"SEND",
+			&xnav_send_func,
+			{ "dcli_arg1", "/SIGNALNAME", ""}
 		},
 		{"",}};
 
@@ -7733,6 +7740,39 @@ static int	xnav_oplog_func(void		*client_data,
     sts = XttLog::play( xnav, file_str, speed, pid);
     if ( EVEN(sts))
       xnav->message(' ', XNav::get_message(sts));
+  }
+  else {
+    xnav->message('E',"Syntax error");
+    return XNAV__HOLDCOMMAND;
+  }
+  return XNAV__SUCCESS;	
+}
+
+static int	xnav_send_func(void		*client_data,
+			       void		*client_flag)
+{
+  XNav *xnav = (XNav *)client_data;
+
+  char	arg1_str[80];
+  int	arg1_sts;
+
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
+
+  if ( cdh_NoCaseStrncmp( arg1_str, "SIGNAL", strlen( arg1_str)) == 0) {
+    pwr_tString80 signalname_str;
+    ApplListElem *elem;
+
+    if ( EVEN( dcli_get_qualifier( "/SIGNALNAME", signalname_str, sizeof(signalname_str)))) {
+      xnav->message('E',"Syntax error");
+      return XNAV__HOLDCOMMAND;
+    }
+
+    for ( elem = xnav->appl.root; elem; elem = elem->next) {
+      if ( elem->type == applist_eType_Graph)
+	((XttGe *)elem->ctx)->signal_send( signalname_str);
+      else if ( elem->type == applist_eType_MultiView)
+	((XttMultiView *)elem->ctx)->signal_send( signalname_str);    
+    }
   }
   else {
     xnav->message('E',"Syntax error");

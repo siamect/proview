@@ -5817,6 +5817,12 @@ int grow_KeyPressed( grow_tCtx ctx, int key)
   return ((GrowCtx *)ctx)->key_pressed( key);
 }
 
+void grow_SignalSend( grow_tCtx ctx, char *signalname)
+{
+  ((GrowCtx *)ctx)->signal_send( signalname);
+}
+
+
 /*@}*/
 
 

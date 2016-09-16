@@ -4858,3 +4858,41 @@ int GrowCtx::key_pressed( int key)
   }
   return 0;
 }
+
+int GrowCtx::signal_send( char *signalname)
+{
+  int sts = 0;
+  
+  // Make a signal event callback for all nodes
+  for ( int i = 0; i < a.a_size; i++) {
+    switch ( a[i]->type()) {
+    case glow_eObjectType_GrowNode:
+    case glow_eObjectType_GrowGroup: {
+      if ( event_callback[glow_eEvent_Signal]) {
+	static glow_sEvent e;
+
+	e.event = glow_eEvent_Signal;
+	e.any.type = glow_eEventType_Signal;
+	e.any.x_pixel = 0;
+	e.any.y_pixel = 0;
+	e.any.x = 0;
+	e.any.y = 0;
+	e.signal.object = a[i];
+	e.signal.object_type = a[i]->type();
+	strncpy( e.signal.signal_name, signalname, sizeof(e.signal.signal_name));
+	sts = event_callback[glow_eEvent_Signal]( this, &e);
+	if ( sts == GLOW__NO_PROPAGATE) return sts;
+      }
+      break;
+    }
+    case glow_eObjectType_GrowWindow:
+    case glow_eObjectType_GrowFolder:
+      sts = ((GrowWindow *)a[i])->window_ctx->signal_send( signalname);
+      if ( sts == GLOW__NO_PROPAGATE) return sts;
+      break;
+    default: ;
+    }
+  }
+  return 1;
+}
+

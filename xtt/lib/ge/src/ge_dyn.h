@@ -197,6 +197,7 @@
     ge_eDynPrio_ColorThemeLightness,
     ge_eDynPrio_DigSwap,
     ge_eDynPrio_DigScript,
+    ge_eDynPrio_CatchSignal,
 
     // This should always be last
     ge_eDynPrio_Script  = 9998,
@@ -281,7 +282,8 @@
     ge_mActionType1_SetValue 	= 1 << 21,
     ge_mActionType1_MethodToolbar = 1 << 22,
     ge_mActionType1_MethodPulldownMenu = 1 << 23,
-    ge_mActionType1_Script	= 1 << 24
+    ge_mActionType1_Script	= 1 << 24,
+    ge_mActionType1_CatchSignal	= 1 << 25
   } ge_mActionType1;
 
   typedef enum {
@@ -393,6 +395,7 @@
     ge_eSave_MethodToolbar     		= 71,
     ge_eSave_MethodPulldownMenu        	= 72,
     ge_eSave_Script	        	= 73,
+    ge_eSave_CatchSignal               	= 74,
     ge_eSave_End		       	= 99,
     ge_eSave_Dyn_dyn_type1	       	= 100,
     ge_eSave_Dyn_action_type1	       	= 101,
@@ -786,7 +789,8 @@
     ge_eSave_MethodPulldownMenu_method_object = 7200,
     ge_eSave_MethodPulldownMenu_menu_type = 7201,
     ge_eSave_Script_script_len		= 7300,
-    ge_eSave_Script_script		= 7301
+    ge_eSave_Script_script		= 7301,
+    ge_eSave_CatchSignal_signal_name   	= 7400
   } ge_eSave;
 
 
@@ -2467,14 +2471,12 @@ class GeSlider : public GeDynElem {
 
   GeSlider( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_Slider, ge_mActionType2_No, ge_eDynPrio_Slider),
-    min_value_p(0), max_value_p(0), old_min_value(0), old_max_value(0), min_value_subid(pwr_cNSubid),
-    max_value_subid(pwr_cNSubid), insensitive_p(0)
+    min_value_p(0), max_value_p(0), old_min_value(0), old_max_value(0), insensitive_p(0)
     { strcpy( attribute, ""); strcpy( minvalue_attr, ""); strcpy( maxvalue_attr, "");
     strcpy( insensitive_attr, ""); strcpy( release_attr, "");}
   GeSlider( const GeSlider& x) : 
     GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio),
-    min_value_p(0), max_value_p(0), old_min_value(0), old_max_value(0), min_value_subid(pwr_cNSubid),
-    max_value_subid(pwr_cNSubid), insensitive_p(0)
+    min_value_p(0), max_value_p(0), old_min_value(0), old_max_value(0), insensitive_p(0)
     { strcpy( attribute, x.attribute); strcpy( minvalue_attr, x.minvalue_attr);
     strcpy( maxvalue_attr, x.maxvalue_attr); strcpy( insensitive_attr, x.insensitive_attr);
      strcpy( release_attr, x.release_attr);}
@@ -2514,13 +2516,11 @@ class GeBar : public GeDynElem {
 
   GeBar( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, ge_mDynType1_Bar, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_Bar), 
-    min_value_p(0), max_value_p(0), old_min_value(0), old_max_value(0), min_value_subid(pwr_cNSubid),
-    max_value_subid(pwr_cNSubid)
+    min_value_p(0), max_value_p(0), old_min_value(0), old_max_value(0)
     { strcpy( attribute, ""); strcpy( minvalue_attr, ""); strcpy( maxvalue_attr, "");}
   GeBar( const GeBar& x) : 
     GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio),
-    min_value_p(0), max_value_p(0), old_min_value(0), old_max_value(0), min_value_subid(pwr_cNSubid),
-    max_value_subid(pwr_cNSubid)
+    min_value_p(0), max_value_p(0), old_min_value(0), old_max_value(0)
     { strcpy( attribute, x.attribute); strcpy( minvalue_attr, x.minvalue_attr);
     strcpy( maxvalue_attr, x.maxvalue_attr);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
@@ -2586,8 +2586,7 @@ class GeTrend : public GeDynElem {
 
   GeTrend( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, ge_mDynType1_Trend, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_Trend),
-    min_value1_p(0), max_value1_p(0), old_min_value1(0), old_max_value1(0), 
-    min_value_subid1(pwr_cNSubid), max_value_subid1(pwr_cNSubid),
+    min_value1_p(0), max_value1_p(0), old_min_value1(0), old_max_value1(0),
     min_value2_p(0), max_value2_p(0), old_min_value2(0), old_max_value2(0),
     hold_p(0), timerange_p(0), old_timerange(0)
     { strcpy( attribute1, ""); strcpy( attribute2, "");
@@ -3167,13 +3166,12 @@ class GeAxis : public GeDynElem {
     GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_Axis, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_Axis),
     min_value(0), max_value(100), keep_settings(0), imin_value(0), imax_value(0), min_value_p(0), 
     max_value_p(0), imin_value_p(0),
-    imax_value_p(0), min_value_subid(pwr_cNSubid), max_value_subid(pwr_cNSubid), attr_type(0)
+    imax_value_p(0), attr_type(0)
     { strcpy( minvalue_attr, ""); strcpy( maxvalue_attr, "");}
   GeAxis( const GeAxis& x) : 
     GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), 
     min_value(x.min_value),max_value(x.max_value), keep_settings(x.keep_settings), 
-    min_value_p(0), max_value_p(0), imin_value_p(0), imax_value_p(0), 
-    min_value_subid(pwr_cNSubid), max_value_subid(pwr_cNSubid)
+    min_value_p(0), max_value_p(0), imin_value_p(0), imax_value_p(0)
     { strcpy( minvalue_attr, x.minvalue_attr); strcpy( maxvalue_attr, x.maxvalue_attr); }
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
@@ -3216,6 +3214,24 @@ class GeTimeoutColor : public GeDynElem {
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
 
+};
+
+//! Catch signal.
+class GeCatchSignal : public GeDynElem {
+ public:
+  pwr_tString80 signal_name;
+
+  GeCatchSignal( GeDyn *e_dyn) : 
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_CatchSignal, ge_mActionType2_No, ge_eDynPrio_CatchSignal)
+    { strcpy( signal_name, "");}
+  GeCatchSignal( const GeCatchSignal& x) : 
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
+    { strcpy( signal_name, x.signal_name);}
+  void get_attributes( attr_sItem *attrinfo, int *item_count);
+  void save( ofstream& fp);
+  void open( ifstream& fp);
+  int action( grow_tObject object, glow_tEvent event);
+  int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 };
 
 

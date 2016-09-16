@@ -888,6 +888,7 @@ class GrowCtx : public GlowCtx {
 		       double *ur_x, double *ur_y);
 
   int key_pressed( int key);
+  int signal_send( char *signalname);
 
   void pop( GlowArrayElem *element) { a.pop( element);}
   void set_text_coding( glow_eTextCoding coding);

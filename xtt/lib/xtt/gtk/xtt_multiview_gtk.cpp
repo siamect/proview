@@ -1385,3 +1385,30 @@ void XttMultiViewGtk::close_input_all()
   }
 }
 
+void XttMultiViewGtk::signal_send( char *signalname)
+{
+  pwr_sClass_XttMultiView mv;
+  pwr_tStatus sts;
+
+  sts = gdh_GetObjectInfoAttrref( &aref, &mv, sizeof(mv));
+  if ( EVEN(sts)) return;
+
+  for ( int i = 0; i < cols; i++) {
+    for ( int j = 0; j < rows; j++) {
+      // Call signal_send in component
+
+      switch ( mv.Action[i*rows+j].Type) {
+      case pwr_eMultiViewContentEnum_Graph:
+      case pwr_eMultiViewContentEnum_ObjectGraph:
+	gectx[i*rows+j]->signal_send( signalname);
+	break;
+      case pwr_eMultiViewContentEnum_MultiView: {
+	mvctx[i*rows+j]->signal_send( signalname);
+	break;
+      }
+      default: ;
+      }
+    }
+  }
+}
+

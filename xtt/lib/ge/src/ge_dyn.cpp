@@ -520,6 +520,8 @@ GeDyn::GeDyn( const GeDyn& x) :
       e = new GeMethodPulldownMenu((const GeMethodPulldownMenu&) *elem); break;
     case ge_mActionType1_Script:
       e = new GeScript((const GeScript&) *elem); break;
+    case ge_mActionType1_CatchSignal:
+      e = new GeCatchSignal((const GeCatchSignal&) *elem); break;
     default: ;
     }
     switch( elem->action_type2) {
@@ -648,6 +650,7 @@ void GeDyn::open( ifstream& fp)
       case ge_eSave_MethodToolbar: e = (GeDynElem *) new GeMethodToolbar(this); break;
       case ge_eSave_MethodPulldownMenu: e = (GeDynElem *) new GeMethodPulldownMenu(this); break;
       case ge_eSave_Script: e = (GeDynElem *) new GeScript(this); break;
+      case ge_eSave_CatchSignal: e = (GeDynElem *) new GeCatchSignal(this); break;
       case ge_eSave_End: end_found = 1; break;
       default:
         cout << "GeDyn:open syntax error" << endl;
@@ -1436,6 +1439,9 @@ GeDynElem *GeDyn::create_action1_element( int mask, int instance)
   case ge_mActionType1_Script:
     e = (GeDynElem *) new GeScript(this);
     break;
+  case ge_mActionType1_CatchSignal:
+    e = (GeDynElem *) new GeCatchSignal(this);
+    break;
   default: ;
   }
   return e;
@@ -1662,6 +1668,9 @@ GeDynElem *GeDyn::copy_element( GeDynElem& x)
       break;
     case ge_mActionType1_Script:
       e = (GeDynElem *) new GeScript((GeScript&) x);
+      break;
+    case ge_mActionType1_CatchSignal:
+      e = (GeDynElem *) new GeCatchSignal((GeCatchSignal&) x);
       break;
     default: ;
     }
@@ -7863,7 +7872,6 @@ int GeBar::connect( grow_tObject object, glow_sTraceData *trace_data)
   pwr_tAName   	parsed_name;
   int		sts;
   int		inverted;
-  graph_eDatabase m_db;
 
   size = 4;
   p = 0;
@@ -7890,37 +7898,21 @@ int GeBar::connect( grow_tObject object, glow_sTraceData *trace_data)
   }
 
   min_value_p = 0;
-  m_db = dyn->parse_attr_name( minvalue_attr, parsed_name,
-			       &inverted, &attr_type, &attr_size);
-  if ( strcmp(parsed_name, "") != 0 && 
-       attr_type == pwr_eType_Float32) {
-    switch ( m_db) {
-    case graph_eDatabase_Gdh:
-      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&min_value_p, 
-					 &min_value_subid, attr_size, object);
-      break;
-    case graph_eDatabase_Local:
-      min_value_p = (pwr_tFloat32 *) dyn->graph->localdb_ref_or_create( parsed_name, attr_type);
-    default:
-      ;
-    }
-  }
-
-  max_value_p = 0;
-  m_db = dyn->parse_attr_name( maxvalue_attr, parsed_name,
+  dyn->parse_attr_name( minvalue_attr, parsed_name,
 				    &inverted, &attr_type, &attr_size);
   if ( strcmp(parsed_name, "") != 0 && 
        attr_type == pwr_eType_Float32) {
-    switch ( m_db) {
-    case graph_eDatabase_Gdh:
-      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value_p, 
-					 &max_value_subid, attr_size, object);
-      break;
-    case graph_eDatabase_Local:
-      max_value_p = (pwr_tFloat32 *) dyn->graph->localdb_ref_or_create( parsed_name, attr_type);
-    default:
-      ;
-    }
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&min_value_p, 
+				       &min_value_subid, attr_size, object);
+  }
+
+  max_value_p = 0;
+  dyn->parse_attr_name( maxvalue_attr, parsed_name,
+				    &inverted, &attr_type, &attr_size);
+  if ( strcmp(parsed_name, "") != 0 && 
+       attr_type == pwr_eType_Float32) {
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value_p, 
+				       &max_value_subid, attr_size, object);
   }
 
   trace_data->p = &pdummy;
@@ -7934,14 +7926,14 @@ int GeBar::disconnect( grow_tObject object)
     gdh_UnrefObjectInfo( subid);
   p = 0;
 
-  if ( min_value_p && cdh_SubidIsNotNull(min_value_subid))
+  if ( min_value_p) {
     gdh_UnrefObjectInfo( min_value_subid);
-  min_value_p = 0;
-
-  if ( max_value_p && cdh_SubidIsNotNull(max_value_subid))
+    min_value_p = 0;
+  }
+  if ( max_value_p) {
     gdh_UnrefObjectInfo( max_value_subid);
-  max_value_p = 0;
-
+    max_value_p = 0;
+  }
   return 1;
 }
 
@@ -8159,7 +8151,6 @@ int GeTrend::connect( grow_tObject object, glow_sTraceData *trace_data)
   int		sts;
   int		inverted;
   int		attr_cnt = 0;
-  graph_eDatabase db;
 
   size1 = 4;
   p1 = 0;
@@ -8214,36 +8205,20 @@ int GeTrend::connect( grow_tObject object, glow_sTraceData *trace_data)
   trend_hold = 0;
 
   min_value1_p = 0;
-  db = dyn->parse_attr_name( minvalue_attr1, parsed_name,
+  dyn->parse_attr_name( minvalue_attr1, parsed_name,
 			&inverted, &attr_type, &attr_size);
   if ( strcmp(parsed_name, "") != 0 && 
        attr_type == pwr_eType_Float32) {
-    switch ( db) {
-    case graph_eDatabase_Gdh:
-      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&min_value1_p, 
-					 &min_value_subid1, attr_size, object);
-      break;
-    case graph_eDatabase_Local:
-      min_value1_p = (pwr_tFloat32 *) dyn->graph->localdb_ref_or_create( parsed_name, attr_type);
-    default:
-      ;
-    }
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&min_value1_p, 
+				       &min_value_subid1, attr_size, object);
   }
   max_value1_p = 0;
-  db = dyn->parse_attr_name( maxvalue_attr1, parsed_name,
+  dyn->parse_attr_name( maxvalue_attr1, parsed_name,
 			&inverted, &attr_type, &attr_size);
   if ( strcmp(parsed_name, "") != 0 && 
        attr_type == pwr_eType_Float32) {
-    switch ( db) {
-    case graph_eDatabase_Gdh:
-      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value1_p, 
-					 &max_value_subid1, attr_size, object);
-      break;
-    case graph_eDatabase_Local:
-      max_value1_p = (pwr_tFloat32 *) dyn->graph->localdb_ref_or_create( parsed_name, attr_type);
-    default:
-      ;
-    }
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value1_p, 
+				       &max_value_subid1, attr_size, object);
   }
   min_value2_p = 0;
   dyn->parse_attr_name( minvalue_attr2, parsed_name,
@@ -8317,14 +8292,14 @@ int GeTrend::disconnect( grow_tObject object)
   if ( p2 && db2 == graph_eDatabase_Gdh)
     gdh_UnrefObjectInfo( subid2);
   p2 = 0;
-  if ( min_value1_p && cdh_SubidIsNotNull(min_value_subid1))
+  if ( min_value1_p) {
     gdh_UnrefObjectInfo( min_value_subid1);
-  min_value1_p = 0;
-  
-  if ( max_value1_p && cdh_SubidIsNotNull(max_value_subid1))
+    min_value1_p = 0;
+  }
+  if ( max_value1_p) {
     gdh_UnrefObjectInfo( max_value_subid1);
-  max_value1_p = 0;
- 
+    max_value1_p = 0;
+  }
   if ( min_value2_p) {
     gdh_UnrefObjectInfo( min_value_subid2);
     min_value2_p = 0;
@@ -8333,14 +8308,14 @@ int GeTrend::disconnect( grow_tObject object)
     gdh_UnrefObjectInfo( max_value_subid2);
     max_value2_p = 0;
   }
-  if ( hold_p && hold_db == graph_eDatabase_Gdh)
+  if ( hold_p && hold_db == graph_eDatabase_Gdh) {
     gdh_UnrefObjectInfo( hold_subid);
-  hold_p = 0;
-  
-  if ( timerange_p && timerange_db == graph_eDatabase_Gdh)
+    hold_p = 0;
+  }
+  if ( timerange_p && timerange_db == graph_eDatabase_Gdh) {
     gdh_UnrefObjectInfo( timerange_subid);
-  timerange_p = 0;
-  
+    timerange_p = 0;
+  }
   return 1;
 }
 
@@ -11130,11 +11105,11 @@ int GeAxis::connect( grow_tObject object, glow_sTraceData *trace_data)
 
 int GeAxis::disconnect( grow_tObject object)
 {
-  if ((min_value_p || imin_value_p) && cdh_SubidIsNotNull( min_value_subid)) {
+  if ( min_value_p || imin_value_p) {
     gdh_UnrefObjectInfo( min_value_subid);
     min_value_p = 0;
   }
-  if ((max_value_p || imax_value_p) && cdh_SubidIsNotNull( max_value_subid)) {
+  if ( max_value_p || imax_value_p) {
     gdh_UnrefObjectInfo( max_value_subid);
     max_value_p = 0;
   }
@@ -15518,7 +15493,6 @@ int GeSlider::connect( grow_tObject object, glow_sTraceData *trace_data)
   pwr_tAName   	parsed_name;
   int		sts;
   int		a_type, a_size;
-  graph_eDatabase m_db;
 
   size = 4;
   p = 0;
@@ -15594,37 +15568,21 @@ int GeSlider::connect( grow_tObject object, glow_sTraceData *trace_data)
   }
 
   min_value_p = 0;
-  m_db = dyn->parse_attr_name( minvalue_attr, parsed_name,
+  dyn->parse_attr_name( minvalue_attr, parsed_name,
 				    &inverted, &a_type, &a_size);
   if ( strcmp(parsed_name, "") != 0 && 
        a_type == pwr_eType_Float32) {
-    switch ( m_db) {
-    case graph_eDatabase_Gdh:
-      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&min_value_p, 
-					 &min_value_subid, a_size, object);
-      break;
-    case graph_eDatabase_Local:
-      min_value_p = (pwr_tFloat32 *) dyn->graph->localdb_ref_or_create( parsed_name, a_type);
-    default:
-      ;
-    }
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&min_value_p, 
+				       &min_value_subid, a_size, object);
   }
 
   max_value_p = 0;
-  m_db = dyn->parse_attr_name( maxvalue_attr, parsed_name,
+  dyn->parse_attr_name( maxvalue_attr, parsed_name,
 				    &inverted, &a_type, &a_size);
   if ( strcmp(parsed_name, "") != 0 && 
        a_type == pwr_eType_Float32) {
-    switch ( m_db) {
-    case graph_eDatabase_Gdh:
-      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value_p, 
-					 &max_value_subid, a_size, object);
-      break;
-    case graph_eDatabase_Local:
-      max_value_p = (pwr_tFloat32 *) dyn->graph->localdb_ref_or_create( parsed_name, a_type);
-    default:
-      ;
-    }
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value_p, 
+				       &max_value_subid, a_size, object);
   }
 
   insensitive_p = 0;
@@ -15652,18 +15610,18 @@ int GeSlider::disconnect( grow_tObject object)
     gdh_UnrefObjectInfo( subid);
   p = 0;
 
-  if ( min_value_p && cdh_SubidIsNotNull(min_value_subid))
+  if ( min_value_p) {
     gdh_UnrefObjectInfo( min_value_subid);
-  min_value_p = 0;
-
-  if ( max_value_p && cdh_SubidIsNotNull(max_value_subid))
+    min_value_p = 0;
+  }
+  if ( max_value_p) {
     gdh_UnrefObjectInfo( max_value_subid);
-  max_value_p = 0;
-
-  if ( insensitive_p && insensitive_db == graph_eDatabase_Gdh)
+    max_value_p = 0;
+  }
+  if ( insensitive_p && insensitive_db == graph_eDatabase_Gdh) {
     gdh_UnrefObjectInfo( insensitive_subid);
-  insensitive_p = 0;
-
+    insensitive_p = 0;
+  }
   return 1;
 }
 
@@ -18918,6 +18876,86 @@ int GeMethodPulldownMenu::action( grow_tObject object, glow_tEvent event)
 }
 
 int GeMethodPulldownMenu::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
+{
+  return 1;
+}
+
+void GeCatchSignal::get_attributes( attr_sItem *attrinfo, int *item_count)
+{
+  int i = *item_count;
+
+  strcpy( attrinfo[i].name, "CatchSignal.SignalName");
+  attrinfo[i].value = signal_name;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( signal_name);
+
+  dyn->display_access = true;
+  *item_count = i;
+}
+
+void GeCatchSignal::save( ofstream& fp)
+{
+  fp << int(ge_eSave_CatchSignal) << endl;
+  fp << int(ge_eSave_CatchSignal_signal_name) << FSPACE << signal_name << endl;
+  fp << int(ge_eSave_End) << endl;
+}
+
+void GeCatchSignal::open( ifstream& fp)
+{
+  int		type;
+  int 		end_found = 0;
+  char		dummy[40];
+
+  for (;;)
+  {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeCatchSignal: \"%d %s\"\n", type, dummy);
+    }
+
+    fp >> type;
+
+    switch( type) {
+    case ge_eSave_CatchSignal: break;
+    case ge_eSave_CatchSignal_signal_name:
+      fp.get();
+      fp.getline( signal_name, sizeof(signal_name));
+      break;
+    case ge_eSave_End: end_found = 1; break;
+    default:
+      cout << "GeCatchSignal:open syntax error" << endl;
+      fp.getline( dummy, sizeof(dummy));
+    }
+    if ( end_found)
+      break;
+  }  
+}
+
+int GeCatchSignal::action( grow_tObject object, glow_tEvent event)
+{
+  if ( !dyn->graph->is_authorized( dyn->access))
+    return 1;
+
+  switch ( event->event) {
+  case glow_eEvent_Signal: {
+    if ( strcmp( event->signal.signal_name, signal_name) != 0)
+      break;
+
+    // Emit a click event
+    glow_sEvent e;
+    e.event = glow_eEvent_MB1Click;
+    e.object.object = object;
+    dyn->action( object, &e);
+
+    break;
+  }
+  default: ;
+  }
+  return 1;
+}
+
+int GeCatchSignal::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
 {
   return 1;
 }

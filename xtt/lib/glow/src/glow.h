@@ -1091,7 +1091,8 @@ typedef enum {
   glow_eEventType_Menu,  		//!< Menu callback.
   glow_eEventType_Table,  		//!< Table callback.
   glow_eEventType_Toolbar, 		//!< Toolbar callback.
-  glow_eEventType_CustomColor 		//!< Custom color modified callback.
+  glow_eEventType_CustomColor, 		//!< Custom color modified callback.
+  glow_eEventType_Signal 		//!< Signal event callback.
 } glow_eEventType;
 
 //! Glow events
@@ -1183,6 +1184,7 @@ typedef enum {
   glow_eEvent_ScrollDown,     		//!< Scroll down.
   glow_eEvent_AnteUndo,     		//!< Before undo.
   glow_eEvent_PostUndo,     		//!< Store undo.
+  glow_eEvent_Signal,     		//!< Signal event.
   glow_eEvent__
 } glow_eEvent;
 
@@ -2268,6 +2270,19 @@ typedef struct {
   double		blue;		//!< rgb blue value
 } glow_sEventCustomColor, *glow_tEventCustomColor;
 
+//! Data structure for signal event callback.
+typedef struct {
+  glow_eEvent		event;  	//!< Event
+  glow_eEventType	type;  		//!< Event type
+  int			x_pixel;  	//!< x-coordinate i pixels
+  int			y_pixel;  	//!< y-coordinate i pixels
+  double		x;  		//!< x-coordinate
+  double	       	y;  		//!< y-coordinate
+  glow_eObjectType	object_type;	//!< Type of object
+  void			*object;        //!< Pointer to object
+  char			signal_name[80]; //!< Signal name
+} glow_sEventSignal, *glow_tEventSignal;
+
 //! Union for event data structures
 typedef union {
 	glow_eEvent		event;
@@ -2285,6 +2300,7 @@ typedef union {
 	glow_sEventTable       	table;
 	glow_sEventToolbar    	toolbar;
 	glow_sEventCustomColor  customcolor;
+	glow_sEventSignal 	signal;
 	} glow_sEvent, *glow_tEvent;
 
 //! Pixmap data structure

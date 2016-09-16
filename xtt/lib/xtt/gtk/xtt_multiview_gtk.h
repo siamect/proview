@@ -94,6 +94,7 @@ class XttMultiViewGtk : public XttMultiView {
 			    int insert = 1, int more = 0);
   int key_pressed( int key);
   void close_input_all();
+  void signal_send( char *signalname);
 
   static void ge_change_value_cb( void *ge_ctx, void *value_object, char *text);
   static void confirm_cb( void *ge_ctx, void *confirm_object, char *text);

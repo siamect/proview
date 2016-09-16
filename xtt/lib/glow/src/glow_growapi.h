@@ -3156,6 +3156,7 @@ extern "C" {
   int grow_SetObjectClass( grow_tObject object, grow_tNodeClass nodeclass);
   int grow_CheckObjectName( grow_tCtx ctx, char *name);
   int grow_KeyPressed( grow_tCtx ctx, int key);
+  void grow_SignalSend( grow_tCtx ctx, char *signalname);
 
   
 /*@}*/
