@@ -1602,6 +1602,8 @@ public class Glow {
     public static final int eEventType_Menu 			= 1;
     public static final int eEventType_Toolbar 			= 2;
     public static final int eEventType_Table 			= 3;
+    public static final int eEventType_CustomColor 	       	= 4;
+    public static final int eEventType_Signal 			= 5;
 
     public static final int eEvent_MB1Click 			= 0;
     public static final int eEvent_MB1Up 			= 2;
@@ -1617,4 +1619,5 @@ public class Glow {
     public static final int eEvent_SliderMoved 			= 12;
     public static final int eEvent_SliderMoveEnd       		= 13;
     public static final int eEvent_MB3Press       		= 14;
+    public static final int eEvent_Signal       		= 15;
 }

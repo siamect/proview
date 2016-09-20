@@ -3853,6 +3853,8 @@ OpenURL   <t>-          <t>Open an URL in a suitable web browser on Click MB1. <
 PulldownMenu <t>- 	<t>Action for pulldown menus. <link>GeDynPulldownMenu
 OptionMenu <t>-		<t>Action for option menus. <link>GeDynOptionMenu
 MethodPulldownMenu <t>- <t>Action for pulldown menus for object methods. <link>GeDynMethodPulldownMenu
+EmitSignal <t>- 	<t>Emit a signal. <link>GeDynEmitSignal
+CatchSignal <t>- 	<t>Catch a signal. <link>GeDynCatchSignal
 </topic>
 
 <headerlevel>
@@ -4234,6 +4236,30 @@ Only the configured methods are displayed in the menu.
 MethodPulldownMenu.Object <t><t>Object which methods are diplayed in the menu.
 MethodPulldownMenu.HelpMenu <t><t>The menu is a help menu and only the help methods
                           <t><t>Help and Help Class is shown in the menu.
+</topic>
+
+<topic>GeDynEmitSignal <style>function
+EmitSignal
+
+Action to emit a signal.
+
+<b>Attribute <t><t>Description
+EmitSignal.SignalName <t><t>Signal name.
+EmitSignal.Global <t><t>If global is set, the signal is emitted to all open
+                  <t><t>graphs and multiviews, Otherwise only to the current
+                  <t><t>graph.
+                       
+</topic>
+
+<topic>GeDynCatchSignal <style>function
+CatchSignal
+
+Action to catch a signal. When the signal is caught, the click actions for the
+current object is executed.
+
+<b>Attribute <t><t>Description
+CatchSignal.SignalName <t><t>Signal name.
+                       
 </topic>
 
 </headerlevel>

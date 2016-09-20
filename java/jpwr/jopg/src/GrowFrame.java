@@ -731,6 +731,10 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
     public boolean isAuthorized(int access) {
 	return graph.gdh.isAuthorized(access);
     }
+
+    public void signalSend( String signalName) {
+	graph.signalSend( signalName);
+    }
 }
 
 

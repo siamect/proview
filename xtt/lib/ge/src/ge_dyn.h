@@ -198,6 +198,7 @@
     ge_eDynPrio_DigSwap,
     ge_eDynPrio_DigScript,
     ge_eDynPrio_CatchSignal,
+    ge_eDynPrio_EmitSignal,
 
     // This should always be last
     ge_eDynPrio_Script  = 9998,
@@ -283,7 +284,8 @@
     ge_mActionType1_MethodToolbar = 1 << 22,
     ge_mActionType1_MethodPulldownMenu = 1 << 23,
     ge_mActionType1_Script	= 1 << 24,
-    ge_mActionType1_CatchSignal	= 1 << 25
+    ge_mActionType1_CatchSignal	= 1 << 25,
+    ge_mActionType1_EmitSignal	= 1 << 26
   } ge_mActionType1;
 
   typedef enum {
@@ -396,6 +398,7 @@
     ge_eSave_MethodPulldownMenu        	= 72,
     ge_eSave_Script	        	= 73,
     ge_eSave_CatchSignal               	= 74,
+    ge_eSave_EmitSignal               	= 75,
     ge_eSave_End		       	= 99,
     ge_eSave_Dyn_dyn_type1	       	= 100,
     ge_eSave_Dyn_action_type1	       	= 101,
@@ -790,7 +793,9 @@
     ge_eSave_MethodPulldownMenu_menu_type = 7201,
     ge_eSave_Script_script_len		= 7300,
     ge_eSave_Script_script		= 7301,
-    ge_eSave_CatchSignal_signal_name   	= 7400
+    ge_eSave_CatchSignal_signal_name   	= 7400,
+    ge_eSave_EmitSignal_signal_name   	= 7500,
+    ge_eSave_EmitSignal_global   	= 7501
   } ge_eSave;
 
 
@@ -3226,6 +3231,25 @@ class GeCatchSignal : public GeDynElem {
     { strcpy( signal_name, "");}
   GeCatchSignal( const GeCatchSignal& x) : 
     GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
+    { strcpy( signal_name, x.signal_name);}
+  void get_attributes( attr_sItem *attrinfo, int *item_count);
+  void save( ofstream& fp);
+  void open( ifstream& fp);
+  int action( grow_tObject object, glow_tEvent event);
+  int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
+};
+
+//! Emit signal.
+class GeEmitSignal : public GeDynElem {
+ public:
+  pwr_tString80 signal_name;
+  int global;
+
+  GeEmitSignal( GeDyn *e_dyn) : 
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_EmitSignal, ge_mActionType2_No, ge_eDynPrio_EmitSignal), global(0)
+    { strcpy( signal_name, "");}
+  GeEmitSignal( const GeEmitSignal& x) : 
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), global(x.global)
     { strcpy( signal_name, x.signal_name);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);

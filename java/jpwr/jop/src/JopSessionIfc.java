@@ -67,4 +67,6 @@ public interface JopSessionIfc {
   public void openTrend( String[] trendList);
   public void openFast( String fastObject);
   public Object getUtility( int type, PwrtObjid objid, String name);
+  public Object getUtilityFirst( int type);
+  public Object getUtilityNext( int type, Object o);
 }

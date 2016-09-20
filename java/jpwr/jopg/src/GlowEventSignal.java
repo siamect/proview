@@ -34,42 +34,10 @@
  * General Public License plus this exception.
  */
 
-
 package jpwr.jopg;
-import jpwr.rt.*;
 
-public interface GraphIfc {
-    public static final int eDatabase_Gdh 	= 0;
-    public static final int eDatabase_User	= 1;
-    public static final int eDatabase_Local 	= 2;
-    public static final int eDatabase_Ccm 	= 3;
+public class GlowEventSignal extends GlowEvent {
+    public String signal_name;
 
-    public static final int eType_Bit 		= (1 << 15) + 1;
-
-    public DynParsedAttrName parseAttrName( String name);    
-    public Gdh getGdh();
-    public GraphLocalDb getLdb();
-    public GrowCtx getCtx();
-    public GrowCmn getCmn();
-    public void cmnPop( GrowCmn cmn);
-    public void cmnPush();
-    public int command(String cmd);
-    public int script(String script);
-    public void closeGraph();
-    public void openConfirmDialog(Object dyn, String text, Object object);
-    public void openValueInputDialog(Object dyn, String text, Object object);
-    public void openPopupMenu(String object, double x, double y);
-    public String get_reference_name(String name);
-    public Object getCurrentSlider();
-    public void setCurrentSlider(GrowSlider currentSlider);
-    public boolean isAuthorized(int access);
-    public void setScanTime(double scan_time);
-    public void setFastScanTime(double fast_scan_time);
-    public void setAnimationScanTime(double animation_scan_time);
-    public double getScanTime();
-    public double getFastScanTime();
-    public double getAnimationScanTime();
-    public String getCommand(String cmd);
-    public void setClickActive(int active);
-    public void signalSend(String signalName);
+    public GlowEventSignal() {}
 }

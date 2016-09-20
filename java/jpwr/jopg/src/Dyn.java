@@ -157,6 +157,8 @@ public class Dyn {
     public static final int mActionType1_MethodToolbar 		= 1 << 22;
     public static final int mActionType1_MethodPulldownMenu    	= 1 << 23;
     public static final int mActionType1_Script		    	= 1 << 24;
+    public static final int mActionType1_CatchSignal	     	= 1 << 25;
+    public static final int mActionType1_EmitSignal        	= 1 << 26;
 
     public static final int mActionType2_No			= 0;
     
@@ -221,6 +223,8 @@ public class Dyn {
     public static final int eDynPrio_ColorThemeLightness       	= 57;
     public static final int eDynPrio_DigSwap		       	= 58;
     public static final int eDynPrio_DigScript		       	= 59;
+    public static final int eDynPrio_CatchSignal           	= 60;
+    public static final int eDynPrio_EmitSignal     	       	= 61;
     public static final int eDynPrio_Script  			= 9998;
     public static final int eDynPrio_Command  			= 9999;
     public static final int eDynPrio_CloseGraph 		= 10000;
@@ -289,6 +293,8 @@ public class Dyn {
     public static final int eSave_MethodToolbar	       		= 71;
     public static final int eSave_MethodPulldownMenu	       	= 72;
     public static final int eSave_Script		       	= 73;
+    public static final int eSave_CatchSignal		       	= 74;
+    public static final int eSave_EmitSignal		       	= 75;
     public static final int eSave_End		       		= 99;
     public static final int eSave_Dyn_dyn_type1	       		= 100;
     public static final int eSave_Dyn_action_type1      	= 101;
@@ -683,6 +689,9 @@ public class Dyn {
     public static final int eSave_MethodPulldownMenu_menu_type  = 7201;
     public static final int eSave_Script_script_len		= 7300;
     public static final int eSave_Script_script			= 7301;
+    public static final int eSave_CatchSignal_signal_name   	= 7400;
+    public static final int eSave_EmitSignal_signal_name   	= 7500;
+    public static final int eSave_EmitSignal_global   		= 7501;
 
     public static final int eAnimSequence_Inherit      	= 0;
     public static final int eAnimSequence_Cycle		= 1;
@@ -880,6 +889,10 @@ public class Dyn {
 		e = new DynMethodPulldownMenu((DynMethodPulldownMenu) x.elements.get(i)); break;
 	    case Dyn.mActionType1_Script:
 		e = new DynScript((DynScript) x.elements.get(i)); break;
+	    case Dyn.mActionType1_EmitSignal:
+		e = new DynEmitSignal((DynEmitSignal) x.elements.get(i)); break;
+	    case Dyn.mActionType1_CatchSignal:
+		e = new DynCatchSignal((DynCatchSignal) x.elements.get(i)); break;
 	    default: ;
 	    }
 	    switch( x.elements.get(i).action_type2) {
@@ -968,6 +981,12 @@ public class Dyn {
 		break;
 	    case mActionType1_Script:
 		e = (DynElem) new DynScript((DynScript) x);
+		break;
+	    case mActionType1_CatchSignal:
+		e = (DynElem) new DynCatchSignal((DynCatchSignal) x);
+		break;
+	    case mActionType1_EmitSignal:
+		e = (DynElem) new DynEmitSignal((DynEmitSignal) x);
 		break;
 	    default: ;
 	    }
@@ -1357,6 +1376,12 @@ public class Dyn {
 		    break;
 		case Dyn.eSave_Script: 
 		    elem = (DynElem) new DynScript(this); 
+		    break;
+		case Dyn.eSave_CatchSignal: 
+		    elem = (DynElem) new DynCatchSignal(this); 
+		    break;
+		case Dyn.eSave_EmitSignal: 
+		    elem = (DynElem) new DynEmitSignal(this); 
 		    break;
 		case Dyn.eSave_End:
 		    end_found = true;
@@ -13341,6 +13366,152 @@ public class Dyn {
 	    default: ;
 	    }
 	    return 1;
+	}
+
+    }
+
+    public class DynCatchSignal extends DynElem {
+	String signal_name;
+
+	public DynCatchSignal( Dyn dyn) {
+	    super(dyn, 0, 0, Dyn.mActionType1_CatchSignal, 0, Dyn.eDynPrio_CatchSignal);
+	}
+
+	public DynCatchSignal( DynCatchSignal x) {
+	    super(x);
+	}
+
+	public int action( GlowArrayElem object, GlowEvent e) {
+	    if ( !dyn.graph.isAuthorized( dyn.access))
+		return 1;
+
+	    switch ( e.event) {
+	    case Glow.eEvent_Signal:
+		if ( signal_name.equals( ((GlowEventSignal)e).signal_name)) {
+		    GlowEvent ce = new GlowEvent();
+		    ce.event = Glow.eEvent_MB1Click;
+		    dyn.action( object, ce);		    
+		}
+		break;
+	    }
+	    return 1;
+	}
+
+	public void open( BufferedReader reader) {
+	    String line;
+	    StringTokenizer token;
+	    boolean end_found = false;
+
+	    try {
+		while( (line = reader.readLine()) != null) {
+		    token = new StringTokenizer(line);
+		    int key = Integer.valueOf(token.nextToken());
+		    if ( Dyn.debug) System.out.println( "DynCatchSignal : " + line);
+
+		    switch ( key) {
+		    case Dyn.eSave_CatchSignal: 
+			break;
+		    case Dyn.eSave_CatchSignal_signal_name: 
+			if ( token.hasMoreTokens())
+			    signal_name = token.nextToken();
+			break;
+		    case Dyn.eSave_End:
+			end_found = true;
+			break;
+		    default:
+			System.out.println( "Syntax error in DynCatchSignal");
+			break;
+		    }
+
+		    if ( end_found)
+			break;
+		}		
+	    } catch ( Exception e) {
+		System.out.println( "IOException DynCatchSignal");
+	    }
+	}
+
+    }
+
+
+    public class DynEmitSignal extends DynElem {
+	String signal_name;
+	int global;
+
+	public DynEmitSignal( Dyn dyn) {
+	    super(dyn, 0, 0, Dyn.mActionType1_EmitSignal, 0, Dyn.eDynPrio_EmitSignal);
+	}
+
+	public DynEmitSignal( DynEmitSignal x) {
+	    super(x);
+	}
+
+	public int action( GlowArrayElem object, GlowEvent e) {
+	    if ( !dyn.graph.isAuthorized( dyn.access))
+		return 1;
+
+	    switch ( e.event) {
+	    case Glow.eEvent_MB1Down:
+		object.setColorInverse( 1);
+		dyn.repaintNow = true;
+		dyn.graph.setClickActive(1);
+		break;
+	    case Glow.eEvent_MB1Up:
+		object.setColorInverse( 0);
+		dyn.repaintNow = true;
+		dyn.graph.setClickActive( 0);
+		break;
+	    case Glow.eEvent_MB1Click:
+		if ( (dyn.action_type1 & Dyn.mActionType1_Confirm) != 0)
+		    break;
+
+		if ( global != 0) {
+		    int sts;	    
+		    String command = "emit signal /signalname=" + signal_name;
+		    command = dyn.graph.getCommand(command);
+		    sts = dyn.graph.command(command);
+		}
+		else
+		    dyn.graph.signalSend(signal_name);
+	    }
+	    return 1;
+	}
+
+	public void open( BufferedReader reader) {
+	    String line;
+	    StringTokenizer token;
+	    boolean end_found = false;
+
+	    try {
+		while( (line = reader.readLine()) != null) {
+		    token = new StringTokenizer(line);
+		    int key = Integer.valueOf(token.nextToken());
+		    if ( Dyn.debug) System.out.println( "DynEmitSignal : " + line);
+
+		    switch ( key) {
+		    case Dyn.eSave_EmitSignal: 
+			break;
+		    case Dyn.eSave_EmitSignal_signal_name: 
+			if ( token.hasMoreTokens())
+			    signal_name = token.nextToken();
+			break;
+		    case Dyn.eSave_EmitSignal_global: 
+			global = Integer.valueOf(token.nextToken());
+			break;
+		    case Dyn.eSave_End:
+			end_found = true;
+			break;
+		    default:
+			System.out.println( "Syntax error in DynEmitSignal");
+			break;
+		    }
+
+		    if ( end_found)
+			break;
+		}		
+	    } catch ( Exception e) {
+		System.out.println( "IOException DynEmitSignal");
+	    }
 	}
 
     }

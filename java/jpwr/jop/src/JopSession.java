@@ -177,6 +177,14 @@ public class JopSession {
   public Object getUtility( int type, PwrtObjid objid, String name) {
       return ((JopSessionIfc) sessionRep).getUtility( type, objid, name);
   }
+
+  public Object getUtilityFirst( int type) {
+      return ((JopSessionIfc) sessionRep).getUtilityFirst( type);
+  }
+
+  public Object getUtilityNext( int type, Object o) {
+      return ((JopSessionIfc) sessionRep).getUtilityNext( type, o);
+  }
 }
 
 

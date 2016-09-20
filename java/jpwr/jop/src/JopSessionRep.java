@@ -402,6 +402,32 @@ public class JopSessionRep implements JopSessionIfc {
 
   }
 
+  public Object getUtilityFirst( int type) {
+    for ( int i = 0; i < frames.size(); i++) {
+      Object o = frames.get(i);
+      if ( ((JopUtilityIfc) o).getUtilityType() == type)
+	return o;
+    }
+    return null;
+  }
+
+  public Object getUtilityNext( int type, Object previous) {
+    boolean found = false;
+    for ( int i = 0; i < frames.size(); i++) {
+      Object o = frames.get(i);
+      if ( found) {
+        if ( ((JopUtilityIfc) o).getUtilityType() == type)
+	  return o;
+      }
+      else {
+        if ( ((JopUtilityIfc) o).getUtilityType() == type &&
+	     o == previous)
+	  found = true;
+      }
+    }
+    return null;
+  }
+
   public int executeCommand( String command) {
     return JopSpider.command( session, command);
   }

@@ -457,6 +457,7 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	case Glow.eEvent_SliderMoveStart:
 	case Glow.eEvent_SliderMoveEnd:
 	case Glow.eEvent_SliderMoved:
+	case Glow.eEvent_Signal:
 	    if ( e.object != null) {
 		int sts;
 		Dyn dyn = (Dyn)((GlowArrayElem)e.object).getUserData();
@@ -628,5 +629,9 @@ public class Graph implements GraphIfc, GrowApplIfc {
 
     public int getClickActive() {
 	return clickActive;
+    }
+
+    public void signalSend( String signalName) {
+	ctx.signalSend( signalName);
     }
 }

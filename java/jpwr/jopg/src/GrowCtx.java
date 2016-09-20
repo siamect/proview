@@ -954,6 +954,32 @@ public class GrowCtx implements GrowCtxIfc {
 	}
 	return 1;
     }
+
+    public int signalSend(String signalName) {
+	for ( int i = 0; i < cmn.a.size(); i++) {
+	    switch ( cmn.a.get(i).type()) {
+	    case Glow.eObjectType_GrowNode:
+	    case Glow.eObjectType_GrowGroup:
+		GlowEventSignal e = new GlowEventSignal();
+
+		e.event = Glow.eEvent_Signal;
+		e.type = Glow.eEventType_Signal;
+		e.x = 0;
+		e.y = 0;
+		e.object_type = cmn.a.get(i).type();
+		e.object = cmn.a.get(i);
+		e.signal_name = signalName;
+		cmn.appl.eventHandler(e);
+		break;
+	    case  Glow.eObjectType_GrowWindow:
+	    case  Glow.eObjectType_GrowFolder:
+		((GrowWindow)cmn.a.get(i)).windowCmn.ctx.signalSend(signalName);
+		break;
+	    }
+	}
+	return 1;
+    }
+
 }
 
 

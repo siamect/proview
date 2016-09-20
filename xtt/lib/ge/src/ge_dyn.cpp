@@ -522,6 +522,8 @@ GeDyn::GeDyn( const GeDyn& x) :
       e = new GeScript((const GeScript&) *elem); break;
     case ge_mActionType1_CatchSignal:
       e = new GeCatchSignal((const GeCatchSignal&) *elem); break;
+    case ge_mActionType1_EmitSignal:
+      e = new GeEmitSignal((const GeEmitSignal&) *elem); break;
     default: ;
     }
     switch( elem->action_type2) {
@@ -651,6 +653,7 @@ void GeDyn::open( ifstream& fp)
       case ge_eSave_MethodPulldownMenu: e = (GeDynElem *) new GeMethodPulldownMenu(this); break;
       case ge_eSave_Script: e = (GeDynElem *) new GeScript(this); break;
       case ge_eSave_CatchSignal: e = (GeDynElem *) new GeCatchSignal(this); break;
+      case ge_eSave_EmitSignal: e = (GeDynElem *) new GeEmitSignal(this); break;
       case ge_eSave_End: end_found = 1; break;
       default:
         cout << "GeDyn:open syntax error" << endl;
@@ -1442,6 +1445,9 @@ GeDynElem *GeDyn::create_action1_element( int mask, int instance)
   case ge_mActionType1_CatchSignal:
     e = (GeDynElem *) new GeCatchSignal(this);
     break;
+  case ge_mActionType1_EmitSignal:
+    e = (GeDynElem *) new GeEmitSignal(this);
+    break;
   default: ;
   }
   return e;
@@ -1671,6 +1677,9 @@ GeDynElem *GeDyn::copy_element( GeDynElem& x)
       break;
     case ge_mActionType1_CatchSignal:
       e = (GeDynElem *) new GeCatchSignal((GeCatchSignal&) x);
+      break;
+    case ge_mActionType1_EmitSignal:
+      e = (GeDynElem *) new GeEmitSignal((GeEmitSignal&) x);
       break;
     default: ;
     }
@@ -18956,6 +18965,103 @@ int GeCatchSignal::action( grow_tObject object, glow_tEvent event)
 }
 
 int GeCatchSignal::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
+{
+  return 1;
+}
+
+void GeEmitSignal::get_attributes( attr_sItem *attrinfo, int *item_count)
+{
+  int i = *item_count;
+
+  strcpy( attrinfo[i].name, "EmitSignal.SignalName");
+  attrinfo[i].value = signal_name;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( signal_name);
+  strcpy( attrinfo[i].name, "EmitSignal.Global");
+  attrinfo[i].value = &global;
+  attrinfo[i].type = glow_eType_Int;
+  attrinfo[i++].size = sizeof(global);
+
+  dyn->display_access = true;
+  *item_count = i;
+}
+
+void GeEmitSignal::save( ofstream& fp)
+{
+  fp << int(ge_eSave_EmitSignal) << endl;
+  fp << int(ge_eSave_EmitSignal_signal_name) << FSPACE << signal_name << endl;
+  fp << int(ge_eSave_EmitSignal_global) << FSPACE << global << endl;
+  fp << int(ge_eSave_End) << endl;
+}
+
+void GeEmitSignal::open( ifstream& fp)
+{
+  int		type;
+  int 		end_found = 0;
+  char		dummy[40];
+
+  for (;;)
+  {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeEmitSignal: \"%d %s\"\n", type, dummy);
+    }
+
+    fp >> type;
+
+    switch( type) {
+    case ge_eSave_EmitSignal: break;
+    case ge_eSave_EmitSignal_signal_name:
+      fp.get();
+      fp.getline( signal_name, sizeof(signal_name));
+      break;
+    case ge_eSave_EmitSignal_global: fp >> global; break;
+    case ge_eSave_End: end_found = 1; break;
+    default:
+      cout << "GeEmitSignal:open syntax error" << endl;
+      fp.getline( dummy, sizeof(dummy));
+    }
+    if ( end_found)
+      break;
+  }  
+}
+
+int GeEmitSignal::action( grow_tObject object, glow_tEvent event)
+{
+  if ( !dyn->graph->is_authorized( dyn->access))
+    return 1;
+
+  switch ( event->event) {
+  case glow_eEvent_MB1Down:
+    grow_SetClickSensitivity( dyn->graph->grow->ctx, glow_mSensitivity_MB1Click);
+    grow_SetObjectColorInverse( object, 1);
+    break;
+  case glow_eEvent_MB1Up:
+    grow_SetObjectColorInverse( object, 0);
+    break;
+  case glow_eEvent_Key_Return:
+  case glow_eEvent_MB1Click: {
+    if ( global) {
+      pwr_tCmd command, cmd;
+      int sts;
+      
+      sprintf( command, "emit signal/signalname=%s", signal_name);
+      dyn->graph->get_command( command, cmd, dyn);
+      sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd, 0);
+    }
+    else {
+      dyn->graph->signal_send( signal_name);
+    }
+    break;
+  }
+  default: ;    
+  }
+  return 1;
+}
+
+
+int GeEmitSignal::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
 {
   return 1;
 }

@@ -180,6 +180,7 @@ static attrnav_sEnumElement elem_action_type[] = {
 	{ (unsigned int) ge_mActionType1_MethodPulldownMenu , "MethodPulldownMenu"},
 	{ (unsigned int) ge_mActionType1_Slider		, "Slider"},
 	{ (unsigned int) ge_mActionType1_CatchSignal   	, "CatchSignal"},
+	{ (unsigned int) ge_mActionType1_EmitSignal   	, "EmitSignal"},
 	{ 0, ""}};
 
 static attrnav_sEnumElement elem_color[] = {

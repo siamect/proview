@@ -72,4 +72,5 @@ public interface GrowCtxIfc {
     public void setSubwindowSource( String name, String source, String owner);
     public void setSliderActive( boolean active);
     public int loadSubgraph( String file);
+    public int signalSend( String signalName);
 }

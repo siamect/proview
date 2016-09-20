@@ -199,6 +199,7 @@ public class JopSpider {
     new CliTable( "LOGIN", new String[] {"cli_arg1", "cli_arg2"}),
     new CliTable( "LOGOUT", null),
     new CliTable( "SHOW", new String[] {"cli_arg1"}),
+    new CliTable( "EMIT", new String[] {"cli_arg1", "/SIGNALNAME", "/GRAPH", "/INSTANCE"}),
   };
 
 
@@ -932,6 +933,45 @@ public class JopSpider {
 	    int priv = gdh.getPrivilege();
             System.out.println( "User: " + username + " " + priv);
 	  }
+	}
+      }
+      else if ( command.equals("EMIT")) {
+        if ( cli.qualifierFound("cli_arg1")) {
+
+          String signalstr = "SIGNAL";
+          String cli_arg1 = cli.getQualValue("cli_arg1").toUpperCase();
+          if ( signalstr.length() >= cli_arg1.length() &&
+               signalstr.substring(0,cli_arg1.length()).equals(cli_arg1)) {
+            // Command is "EMIT SIGNAL"
+	    String signalname;
+	    String graph;
+	    String instance;
+
+            if ( cli.qualifierFound("/SIGNALNAME"))
+	      signalname = cli.getQualValue("/SIGNALNAME");
+	    else {
+              System.out.println( "Cmd: Signalname is missing\n");
+              return 0;
+            }
+
+            if ( cli.qualifierFound("/GRAPH"))
+	      graph = cli.getQualValue("/GRAPH");
+	    else
+	      graph = null;
+
+            if ( cli.qualifierFound("/INSTANCE"))
+	      instance = cli.getQualValue("/INSTANCE");
+	    else
+	      instance = null;
+
+	    if ( graph == null) {
+	      for ( Object utility = session.getUtilityFirst( JopUtility.GRAPH);
+		    utility != null;
+		    utility = session.getUtilityNext( JopUtility.GRAPH, utility)) {
+		  ((GrowFrame)utility).signalSend( signalname);
+	      }
+	    }
+	  }	
 	}
       }
     }

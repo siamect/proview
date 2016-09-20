@@ -1601,7 +1601,8 @@ crossreference<t>Visa korsreferenser		<LINK> crossreference
 define      <t>Definiera en symbol		<LINK> define
 delete opmenuitem <t>Ta bort ett xtt menyalternativ <LINK> delete item
 delete item <t>Ta bort ett menyalternativ i operatörsfönstret <LINK> delete item
-eventlist    <t>Hantera händlselistan		<LINK> eventlist
+emit signal <t>Sänd en Ge signal.		<LINK> emit signal
+eventlist   <t>Hantera händelselistan		<LINK> eventlist
 exit        <t>Stäng xtt			<LINK> exit
 help        <t>Visa hjälp			<LINK> help
 login       <t>Inloggning av användare		<LINK> login
@@ -1932,6 +1933,20 @@ Exempel
 
 xtt> cross /name=hql-hvk-Start
 xtt> cross /function="CreateHvkObject"
+</TOPIC>
+
+<TOPIC> emit signal <style> function
+Command   emit signal
+
+Sänd en Ge signal.
+Signalen är sänd till en specificerad graf, eller till alla grafer och multiview
+om graf inte är specificerad.
+
+<B>xtt> emit signal /signalname= {/graph=] [/instance=]
+
+/signal_name<t>Signalnamn.
+/graph <t>Graf eller multiview till vilken signalen är riktad.
+/instance <t>Instansobjekt om grafen är en objektsbild.
 </TOPIC>
 
 <TOPIC> exit <style> function

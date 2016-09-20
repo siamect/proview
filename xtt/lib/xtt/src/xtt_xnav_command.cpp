@@ -259,7 +259,7 @@ static int	xnav_wait_func(       	void		*client_data,
 					void		*client_flag);
 static int	xnav_oplog_func(       	void		*client_data,
 					void		*client_flag);
-static int	xnav_send_func(       	void		*client_data,
+static int	xnav_emit_func(       	void		*client_data,
 					void		*client_flag);
 
 dcli_tCmdTable	xnav_command_table[] = {
@@ -452,9 +452,9 @@ dcli_tCmdTable	xnav_command_table[] = {
 			{ "dcli_arg1", "/FILE", "/SPEED", "/PID", "/EVENT", ""}
 		},
 		{
-			"SEND",
-			&xnav_send_func,
-			{ "dcli_arg1", "/SIGNALNAME", ""}
+			"EMIT",
+			&xnav_emit_func,
+			{ "dcli_arg1", "/SIGNALNAME", "/GRAPH", "/INSTANCE", ""}
 		},
 		{"",}};
 
@@ -7748,8 +7748,8 @@ static int	xnav_oplog_func(void		*client_data,
   return XNAV__SUCCESS;	
 }
 
-static int	xnav_send_func(void		*client_data,
-			       void		*client_flag)
+static int	xnav_emit_func( void		*client_data,
+				void		*client_flag)
 {
   XNav *xnav = (XNav *)client_data;
 
@@ -7761,17 +7761,43 @@ static int	xnav_send_func(void		*client_data,
   if ( cdh_NoCaseStrncmp( arg1_str, "SIGNAL", strlen( arg1_str)) == 0) {
     pwr_tString80 signalname_str;
     ApplListElem *elem;
+    char *instance_p;
+    char *graph_p;
+    pwr_tAName instance_str;
+    pwr_tString80 graph_str;
+    void *appl_ctx;
 
     if ( EVEN( dcli_get_qualifier( "/SIGNALNAME", signalname_str, sizeof(signalname_str)))) {
       xnav->message('E',"Syntax error");
       return XNAV__HOLDCOMMAND;
     }
 
-    for ( elem = xnav->appl.root; elem; elem = elem->next) {
-      if ( elem->type == applist_eType_Graph)
-	((XttGe *)elem->ctx)->signal_send( signalname_str);
-      else if ( elem->type == applist_eType_MultiView)
-	((XttMultiView *)elem->ctx)->signal_send( signalname_str);    
+
+    if ( ODD( dcli_get_qualifier( "/GRAPH", graph_str, sizeof(graph_str))))
+      graph_p = graph_str;
+    else
+      graph_p = 0;
+
+    if ( ODD( dcli_get_qualifier( "/INSTANCE", instance_str, sizeof(instance_str))))
+      instance_p = instance_str;
+    else
+      instance_p = 0;
+
+    if ( graph_p) {
+      // Send to specified graph
+      if ( xnav->appl.find( applist_eType_Graph, graph_p, instance_p, &appl_ctx))
+	((XttGe *)appl_ctx)->signal_send( signalname_str);
+      else if ( xnav->appl.find( applist_eType_MultiView, graph_p, instance_p, &appl_ctx))
+	((XttMultiView *)appl_ctx)->signal_send( signalname_str);
+    }
+    else {
+      // Graph not specified, send to all
+      for ( elem = xnav->appl.root; elem; elem = elem->next) {
+	if ( elem->type == applist_eType_Graph)
+	  ((XttGe *)elem->ctx)->signal_send( signalname_str);
+	else if ( elem->type == applist_eType_MultiView)
+	  ((XttMultiView *)elem->ctx)->signal_send( signalname_str);    
+      }
     }
   }
   else {

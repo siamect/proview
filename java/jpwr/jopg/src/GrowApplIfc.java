@@ -47,4 +47,5 @@ public interface GrowApplIfc {
     public int getHeight();
     public Object loadCtx( String file);
     public int loadSubgraph( String file);
+    public void signalSend( String signalName);
 }
