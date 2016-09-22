@@ -76,7 +76,8 @@ typedef struct {
 	  void	*Data[16];
 	  pwr_tBoolean Found;
 	} Filter[2];
-	pwr_tTime       ErrTime;
+	unsigned int    ErrReset;
+	unsigned int    ErrScanCnt;
 } io_sLocal;
 
 static pwr_tStatus IoCardInit (
@@ -113,6 +114,10 @@ static pwr_tStatus IoCardInit (
     io_InitPoFilter( local->Filter[i].sop, &local->Filter[i].Found,
 		local->Filter[i].Data, ctx->ScanTime);
   }
+
+  local->ErrReset = 1.0 / ctx->ScanTime + 0.5;
+  if ( local->ErrReset < 2)
+    local->ErrReset = 2;
 
   return 1;
 }
@@ -167,7 +172,6 @@ static pwr_tStatus IoCardWrite (
   int			i;
   qbus_io_write		wb;
   int			sts;
-  pwr_tTime             now;
   pwr_sClass_Do_HVDO32	*op = (pwr_sClass_Do_HVDO32 *) cp->op;
   int 			words = op->MaxNoOfChannels <= 16 ? 1 : 2;
 
@@ -246,16 +250,7 @@ static pwr_tStatus IoCardWrite (
       }
 #endif
       /* Increase error count and check error limits */
-      time_GetTime(&now);
-
-      if (op->ErrorCount > op->ErrorSoftLimit) {
-        /* Ignore if some time has expired */
-        if (now.tv_sec - local->ErrTime.tv_sec < 600)
-          op->ErrorCount++;
-      }
-      else
-        op->ErrorCount++;
-      local->ErrTime = now;
+      op->ErrorCount++;
 
       if ( op->ErrorCount == op->ErrorSoftLimit) {
         errh_Error( "IO Error soft limit reached on card '%s'", cp->Name);
@@ -273,6 +268,15 @@ static pwr_tStatus IoCardWrite (
       continue;
     }
   }
+
+  /* Fix for qbus errors */
+  local->ErrScanCnt++;
+  if ( local->ErrScanCnt >= local->ErrReset) {
+    local->ErrScanCnt = 0;
+    if ( op->ErrorCount > op->ErrorSoftLimit)
+      op->ErrorCount--;
+  }
+
   return 1;
 }
 

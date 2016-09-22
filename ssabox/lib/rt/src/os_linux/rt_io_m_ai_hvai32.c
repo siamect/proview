@@ -76,7 +76,8 @@ typedef struct {
 	unsigned int	Address;
 	int		Qbus_fp;
 	int	ScanCount[IO_MAXCHAN];
-	pwr_tTime       ErrTime;
+	unsigned int    ErrReset;
+	unsigned int    ErrScanCnt;
 } io_sLocal;
 
 static pwr_tStatus AiRangeToCoef( 
@@ -151,6 +152,11 @@ static pwr_tStatus IoCardInit (
     AiRangeToCoef( chanp);
     chanp++;
   }
+
+  local->ErrReset = 1.0 / ctx->ScanTime + 0.5;
+  if ( local->ErrReset < 2)
+    local->ErrReset = 2;
+
   return 1;
 }
 
@@ -198,7 +204,6 @@ static pwr_tStatus IoCardRead (
   qbus_io_read 		rb;
   qbus_io_write		wb;
   int			timeout;
-  pwr_tTime             now;
 
   local = (io_sLocal *) cp->Local;
   op = (pwr_sClass_Ai_HVAI32 *) cp->op;
@@ -261,16 +266,7 @@ static pwr_tStatus IoCardRead (
           }
 #endif
           /* Increase error count and check error limits */
-          time_GetTime( &now);
-
-          if (op->ErrorCount > op->ErrorSoftLimit) {
-            /* Ignore if some time has expired */
-            if (now.tv_sec - local->ErrTime.tv_sec < 600)
               op->ErrorCount++;
-          }
-          else
-            op->ErrorCount++;
-          local->ErrTime = now;
 
           if ( op->ErrorCount == op->ErrorSoftLimit) {
             errh_Error( "IO Error soft limit reached on card '%s'", cp->Name);
@@ -325,6 +321,15 @@ static pwr_tStatus IoCardRead (
     }
     chanp++;
   }
+
+  /* Fix for qbus errors */
+  local->ErrScanCnt++;
+  if ( local->ErrScanCnt >= local->ErrReset) {
+    local->ErrScanCnt = 0;
+    if ( op->ErrorCount > op->ErrorSoftLimit)
+      op->ErrorCount--;
+  }
+
   return 1;
 }
 
