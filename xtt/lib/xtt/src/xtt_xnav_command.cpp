@@ -7269,6 +7269,7 @@ static int	xnav_print_func(void		*client_data,
   {
     pwr_tFileName file_str;
     pwr_tAName instance_str;
+    pwr_tAName object_str;
     XttGe *gectx;
     pwr_tFileName fname;
     int classgraph;
@@ -7368,8 +7369,42 @@ static int	xnav_print_func(void		*client_data,
       }      
     }
 
+    if ( ODD( dcli_get_qualifier( "/OBJECT", object_str, sizeof(object_str)))) {
+      // Find graph from XttGraph object
+      pwr_tObjid objid;
+      pwr_tAName xttgraph_name;
+      char *s;
+      pwr_sClass_XttGraph xttgraph_o;
+
+      xnav_replace_node_str( xttgraph_name, object_str);
+        
+      sts = gdh_NameToObjid( xttgraph_name, &objid);
+      if (EVEN(sts)) {
+        xnav->message('E', "Object not found");
+        return XNAV__HOLDCOMMAND;
+      }
+
+      sts = gdh_GetObjectInfo( xttgraph_name, (void *) &xttgraph_o, sizeof(xttgraph_o));
+      if ( EVEN(sts)) return sts;
+
+      cdh_ToLower( file_str, xttgraph_o.Action);
+      if ( (s = strrchr( file_str, '.')))
+	*s = 0;
+	   
+      if ( cdh_ObjidIsNotNull( xttgraph_o.Object[0])) {
+	
+	sts = gdh_ObjidToName( xttgraph_o.Object[0], 
+			       instance_str, sizeof( instance_str), cdh_mName_volumeStrict);
+	if ( EVEN(sts)) return sts;
+
+	instance_p = instance_str;
+      }
+      else 
+	instance_p  = 0;
+    }
+
     if ( xnav->appl.find( applist_eType_Graph, file_str, instance_p, 
-		  (void **) &gectx))
+			    (void **) &gectx))
       gectx->print();
     else {
       xnav->message('E', "Graph not found");
