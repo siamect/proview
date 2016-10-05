@@ -1286,7 +1286,8 @@ sendAlarmStatus( sOutunit *op)
 
       ep = ap->detect_etp->ep;
 
-      if ( ap->detect_etp->event == mh_eEvent_Info || ap->detect_etp->event == mh_eEvent_InfoSuccess) {
+      if ( ep && 
+	   (ap->detect_etp->event == mh_eEvent_Info || ap->detect_etp->event == mh_eEvent_InfoSuccess)) {
 	if ( !(ep->msg.info.EventFlags & mh_mEventFlags_InfoWindow))
 	  break;
 	if ( ep->msg.info.EventFlags & mh_mEventFlags_InfoWindow &&
@@ -1330,7 +1331,8 @@ sendAlarmStatus( sOutunit *op)
 
       ep = ap->detect_etp->ep;
 
-      if ( ap->detect_etp->event == mh_eEvent_Info || ap->detect_etp->event == mh_eEvent_InfoSuccess) {
+      if ( ep &&
+	   (ap->detect_etp->event == mh_eEvent_Info || ap->detect_etp->event == mh_eEvent_InfoSuccess)) {
 	if ( !(ep->msg.info.EventFlags & mh_mEventFlags_InfoWindow))
 	  break;
 	if ( ep->msg.info.EventFlags & mh_mEventFlags_InfoWindow &&
