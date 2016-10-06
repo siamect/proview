@@ -9183,10 +9183,11 @@ Distribuerar filer till operatörs och processnoder.
 Skapar ett distributions paket, kopierar paketet till
 stationen och packar upp det.
 
-<B>wtt> distribute /node= [/package]
+<B>wtt> distribute /node= [/package] [/file=]
 
 /node		<t>Nod att distribuera till.
 /package	<t>Skapar enbar ett paket. Paketet skapas men kopieras inte.
+/file		<t>Namn på paket. Kopierar angivet paket utan att skapa ett nytt.
 
 </TOPIC>
 

@@ -9300,10 +9300,12 @@ Distribute files to operator or process station.
 Creates a distribution package, copies the package to
 the station and unpacks the package.
 
-<B>wtt> distribute /node= [/package]
+<B>wtt> distribute /node= [/package] [/file=]
 
 /node		<t>Node to distribute to.
-/package	<t>Only create package. The packaged is created but not copied.
+/package	<t>Only create package. The package is created but not copied.
+/file		<t>Package file name. Copies an existing package without creating a
+		<t>new package.
 
 </TOPIC>
 
