@@ -932,7 +932,7 @@ static void	*xtt_logproc( void *arg)
 	{
 	  case xtt_LoggType_Cont:
 	    if ( logg->logg_file)
-	      fprintf( logg->logg_file, "\"\"");
+	      fprintf( logg->logg_file, "\"%s\"", time_str);
 	    /* Find a unic shortname for each parameter */
 	    for ( i = 0; i < RTT_LOGG_MAXPAR; i++)
 	    {
