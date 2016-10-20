@@ -57,6 +57,8 @@
 #include "wb_ldh_msg.h"
 #include "wb_wnav.h"
 #include "wb_utl.h"
+#include "wb_attribute.h"
+#include "wb_session.h"
 //#include "wb_cmd.h"
 
 class WFoe;
@@ -2144,27 +2146,10 @@ static int wccm_attribute_func (
   char		*return_string
 )
 {
-	int		sts, size, i, j;
-	pwr_tClassId	cid;
+	int		sts, size;
 	pwr_tAName     	hier_name;
 	char		*hier_name_p;
-	ldh_sParDef 	*bodydef;
-	int		rows;
-	char		body[20];	
-	char		*object_par;
-	char		*object_element;
-	int		elements;
-	int		element;
-	char		elementstr[20];
-	int		found;
-	char		*s;
-	char		*t;
-	char		upper_name[80];
-	pwr_tAttrRef	aref;
-	pwr_tAName     	aname;
-	char		attrname[32];
-	pwr_tAName     	pname;
-	int		len;
+	char		*valuep;
 	int		decl;
 	int		int_val;
 	float		float_val;
@@ -2172,168 +2157,83 @@ static int wccm_attribute_func (
 	ldh_tSesContext ldhses;
 
 	sts = wccm_get_ldhses( &ldhses);
-	if ( EVEN(sts))
-	{
+	if ( EVEN(sts)) {
   	  strcpy( return_string, "");
   	  *return_decl = CCM_DECL_STRING;
 	  return CMD__NOVOLATTACHED;
 	}
 
-	/* Parse the string in name and attribute */
-	strcpy( aname, name);
-	s = strrchr( aname, '.');
-        if ( s == 0)
-	  return FOE__NOPAR;
-	*s = 0;
+	wb_session *sp = (wb_session *)ldhses;
 
-	strcpy( attrname, s+1);
-	cdh_ToUpper( attrname, attrname);
-
-	/* Check index in parameter */
-	s = strchr( attrname, '[');
-	if ( s == 0)
-	  element = 0;
-	else
-	{
-	  t = strchr( attrname, ']');
-	  if ( t == 0)
-	    return FOE__PARSYNT;
-	  else
-	  {
-	    len = t - s - 1;
-	    strncpy( elementstr, s + 1, len);
-	    elementstr[ len ] = 0;
-	    sscanf( elementstr, "%d", &element);
-	    *s = '\0';
-	    if ( (element < 0) || (element > 100) )
-	      return FOE__PARELSYNT;
-	  }
-	}
-	
-        sts = ldh_NameToAttrRef( ldhses, aname, &aref);
-        if ( EVEN(sts)) return sts;
-
-	/* Get the class of the object */
-	sts = ldh_GetAttrRefTid( ldhses, &aref, &cid);
-
-	found = 0;
-	for ( i = 0; i < 3; i++ )
-	{
-	  if ( i == 0)
-	    strcpy( body, "RtBody");
-	  else if ( i == 1 )
-	    strcpy( body, "DevBody");
-	  else
-	    strcpy( body, "SysBody");
-
-    	  /* Get the parameters for this body */
-	  sts = ldh_GetObjectBodyDef(ldhses, cid, body, 1, 
-	  		&bodydef, &rows);
-	  if ( EVEN(sts) ) continue;
-
-	  for ( j = 0; j < rows; j++)
-	  {
-	    /* Convert parname to upper case */
-	    cdh_ToUpper( upper_name, bodydef[j].ParName);
-
-	    if (strcmp( attrname, upper_name) == 0)
-	    {
-	      found = 1;
-	      break;
-	    }
-	  }
-	  if ( found )
-	    break;
-	  free((char *) bodydef);	
-	}
-	if ( !found)
-	{
-	  /* Parametern fanns ej */
-	  return FOE__NOPAR;
+	wb_attribute a = sp->attribute(name);
+	if (!a) {
+	  strcpy( return_string, "");
+	  *return_decl = CCM_DECL_STRING;
+	  return a.sts();
 	}
 
-	strcpy( attrname, bodydef[j].ParName);
+	valuep = (char *)calloc(1, a.size());
+	a.value( valuep);
 
-	if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_ARRAY )
-	  elements = bodydef[j].Par->Output.Info.Elements;
-	else
-	  elements = 1;
-
-	/* Get the parameter value in object */
-	s = strchr( aname, '.');
-	if ( s) {
-	  strcpy( pname, s+1);
-	  strcat( pname, ".");
-	  strcat( pname, attrname);
-	}
-	else
-	  strcpy( pname, attrname);
-
-	sts = ldh_GetObjectPar( ldhses, aref.Objid, body,   
-			pname, (char **)&object_par, &size); 
-	if ( EVEN(sts)) return sts;
-
-	object_element = object_par + element * size / elements;
-
-        switch ( bodydef[j].Par->Output.Info.Type )
+	switch ( a.type() )
         {
           case pwr_eType_Boolean:
           {
-	    int_val = *(pwr_tBoolean *)object_element;
+	    int_val = *(pwr_tBoolean *)valuep;
 	    decl = CCM_DECL_INT;
             break;
           }
           case pwr_eType_Float32:
           {
-	    float_val = *(pwr_tFloat32 *)object_element;
+	    float_val = *(pwr_tFloat32 *)valuep;
 	    decl = CCM_DECL_FLOAT;
             break;
           }
           case pwr_eType_Float64:
           {
-	    float_val = *(pwr_tFloat64 *)object_element;
+	    float_val = *(pwr_tFloat64 *)valuep;
 	    decl = CCM_DECL_FLOAT;
             break;
           }
           case pwr_eType_Char:
           {
-	    int_val = *(pwr_tChar *)object_element;
+	    int_val = *(pwr_tChar *)valuep;
 	    decl = CCM_DECL_INT;
             break;
           }
           case pwr_eType_Int8:
           {
-	    int_val = *(pwr_tInt8 *)object_element;
+	    int_val = *(pwr_tInt8 *)valuep;
 	    decl = CCM_DECL_INT;
             break;
           }
           case pwr_eType_Int16:
           {
-	    int_val = *(pwr_tInt16 *)object_element;
+	    int_val = *(pwr_tInt16 *)valuep;
 	    decl = CCM_DECL_INT;
             break;
           }
           case pwr_eType_Int32:
           {
-	    int_val = *(pwr_tInt32 *)object_element;
+	    int_val = *(pwr_tInt32 *)valuep;
 	    decl = CCM_DECL_INT;
             break;
           }
           case pwr_eType_Int64:
           {
-	    int_val = *(pwr_tInt64 *)object_element;
+	    int_val = *(pwr_tInt64 *)valuep;
 	    decl = CCM_DECL_INT;
             break;
           }
           case pwr_eType_UInt8:
           {
-	    int_val = *(pwr_tUInt8 *)object_element;
+	    int_val = *(pwr_tUInt8 *)valuep;
 	    decl = CCM_DECL_INT;
             break;
           }
           case pwr_eType_UInt16:
           {
-	    int_val = *(pwr_tUInt16 *)object_element;
+	    int_val = *(pwr_tUInt16 *)valuep;
 	    decl = CCM_DECL_INT;
             break;
           }
@@ -2345,26 +2245,26 @@ static int wccm_attribute_func (
 	  case pwr_eType_VolumeId:
 	  case pwr_eType_ObjectIx:
           {
-	    int_val = *(pwr_tUInt32 *)object_element;
+	    int_val = *(pwr_tUInt32 *)valuep;
 	    decl = CCM_DECL_INT;
             break;
           }
           case pwr_eType_UInt64:
 	  {
-	    int_val = *(pwr_tUInt64 *)object_element;
+	    int_val = *(pwr_tUInt64 *)valuep;
 	    decl = CCM_DECL_INT;
             break;
           }
           case pwr_eType_String:
           {
-	    strncpy( string_val, object_element, sizeof( string_val));
+	    strncpy( string_val, valuep, sizeof( string_val));
 	    string_val[sizeof(string_val)-1] = 0;
 	    decl = CCM_DECL_STRING;
             break;
           }
           case pwr_eType_Text:
           {
-	    strncpy( string_val, object_element, sizeof( string_val));
+	    strncpy( string_val, valuep, sizeof( string_val));
 	    string_val[sizeof(string_val)-1] = 0;
 	    decl = CCM_DECL_STRING;
             break;
@@ -2373,7 +2273,7 @@ static int wccm_attribute_func (
           {
             /* Get the object name from ldh */
             sts = ldh_ObjidToName( ldhses, 
-                 	*(pwr_tObjid *)object_element, ldh_eName_Hierarchy,
+                 	*(pwr_tObjid *)valuep, ldh_eName_Hierarchy,
    		        hier_name, sizeof( hier_name), &size);
  	    if ( EVEN(sts))
 	      strcpy( string_val, "Undefined Object");
@@ -2387,7 +2287,7 @@ static int wccm_attribute_func (
           {
             /* Get the object name from ldh */
 	    sts = ldh_AttrRefToName( ldhses, 
-	           	(pwr_sAttrRef *)object_element,  ldh_eName_Aref, 
+	           	(pwr_sAttrRef *)valuep,  ldh_eName_Aref, 
 			&hier_name_p, &size);
  	    if ( EVEN(sts))
 	      strcpy( string_val, "Undefined attribute");
@@ -2400,7 +2300,7 @@ static int wccm_attribute_func (
           case pwr_eType_Time:
           {
 	    /* Convert time to ascii */	
-	    sts = time_AtoAscii((pwr_tTime *)object_element, 
+	    sts = time_AtoAscii((pwr_tTime *)valuep, 
                       time_eFormat_DateAndTime, 
                       string_val, sizeof(string_val));
 	    string_val[20] = 0;
@@ -2410,7 +2310,7 @@ static int wccm_attribute_func (
           case pwr_eType_DeltaTime:
           {
 	    /* Convert time to ascii */	
-	    sts = time_DtoAscii((pwr_tDeltaTime *)object_element, 
+	    sts = time_DtoAscii((pwr_tDeltaTime *)valuep, 
                       1,
                       string_val, sizeof(string_val));
 	    string_val[20] = 0;
@@ -2420,8 +2320,8 @@ static int wccm_attribute_func (
           default:
             ;
         }
-	free((char *) bodydef);	
 
+	free( valuep);
 	*return_decl = decl;
 	if ( decl == CCM_DECL_INT)
 	  *return_int = int_val;
