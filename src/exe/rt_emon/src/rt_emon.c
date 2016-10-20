@@ -3825,6 +3825,10 @@ outunitAlarmReq (
       ap = LstObj(al);
 
       if ( ap->idx == msg->Idx[i]) {
+	if ( !ap->detect_etp->ap)
+	  /* Not active any more, don't resend */
+	  break;
+
 	ok = reSendEventToOutunit( op, ap->detect_etp);
 #if 0
 	if (ap->detect_etp->ep != NULL)
