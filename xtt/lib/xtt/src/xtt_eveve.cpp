@@ -92,7 +92,9 @@ void EvEve::init()
 {
   if ( !list_copied && ala->browbase && copy_list_cb) {
     list_copied = 1;
+    ala->set_nodraw();
     (copy_list_cb)( parent_ctx, ala);
+    ala->reset_nodraw();
     if ( !cdh_ObjidIsNull(view))
       set_view( view);
   }
@@ -104,7 +106,9 @@ void EvEve::eve_init_cb( void *ctx)
 
   if ( !ev->list_copied && ev->copy_list_cb) {
     ev->list_copied = 1;
+    ev->ala->set_nodraw();
     (ev->copy_list_cb)( ev->parent_ctx, ev->ala);
+    ev->ala->reset_nodraw();
     if ( !cdh_ObjidIsNull(ev->view))
       ev->set_view( ev->view);
   }
