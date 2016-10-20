@@ -4328,7 +4328,7 @@ int Graph::set_object_focus( const char *name, int empty)
     if ( !change_value_cb)
       return 0;
 
-    sts = grow_FindObjectByName( grow->ctx, name, &object);
+    sts = grow_FindObjectByName( grow->base_ctx(), name, &object);
     if ( EVEN(sts)) return GE__OBJNOTFOUND;
 
     grow_GetUserData( object, (void **)&dyn);

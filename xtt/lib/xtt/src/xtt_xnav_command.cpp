@@ -371,7 +371,8 @@ dcli_tCmdTable	xnav_command_table[] = {
 			&xnav_set_func,
 			{ "dcli_arg1", "dcli_arg2", "/NAME", "/VALUE",
 			  "/BYPASS", "/PUBLICWRITE", "/INDEX", "/SOURCE", "/OBJECT", "/CONTINUE", 
-			  "/X0", "/Y0", "/X1", "/Y1", "/INSTANCE", "/ESCAPESTORE", ""}
+			  "/X0", "/Y0", "/X1", "/Y1", "/INSTANCE", "/ESCAPESTORE", "/FOCUS", "/INPUTEMPTY",
+			  ""}
 		},
 		{
 			"SETUP",
@@ -885,6 +886,11 @@ static int	xnav_set_func(	void		*client_data,
     char *object_p;
     pwr_tOName source_str;
     int cont;
+    int inputempty;
+    char focus_str[200];
+    char *focus_p;
+    int sts;
+    char focus[200];
 
     if ( EVEN( dcli_get_qualifier( "dcli_arg2", graph_str, sizeof(graph_str)))) {
       xnav->message('E', "Graph name is missing");
@@ -904,6 +910,13 @@ static int	xnav_set_func(	void		*client_data,
     else
       object_p = 0;
 
+    inputempty = ODD( dcli_get_qualifier( "/INPUTEMPTY", 0, 0));
+
+    if ( ODD( dcli_get_qualifier( "/FOCUS", focus_str, sizeof(focus_str))))
+      focus_p = focus_str;
+    else
+      focus_p = 0;
+
     if ( object_p)
       xnav_replace_node_str( object_p, object_p);
 
@@ -912,14 +925,26 @@ static int	xnav_set_func(	void		*client_data,
     if ( cdh_NoCaseStrcmp(graph_str, "$current") == 0 &&
 	 xnav->current_cmd_ctx) {
       gectx = (XttGe *)xnav->current_cmd_ctx;	
-      return gectx->set_subwindow_source( name_str, source_str, object_p);
+      sts = gectx->set_subwindow_source( name_str, source_str, object_p);
+
+      if ( focus_p) {
+	sprintf( focus, "%s.%s", name_str, focus_p);
+	gectx->set_object_focus( focus, inputempty);
+      }
+      return sts;
     }
     else if ( xnav->appl.find_graph( graph_str, 0, (void **) &gectx)) {
       if ( strcmp( source_str, "") == 0) {
 	xnav->message('E',"Syntax error");
 	return XNAV__HOLDCOMMAND;
       }
-      return gectx->set_subwindow_source( name_str, source_str, object_p); 
+      sts =  gectx->set_subwindow_source( name_str, source_str, object_p); 
+
+      if ( focus_p) {
+	sprintf( focus, "%s.%s", name_str, focus_p);
+	gectx->set_object_focus( focus, inputempty);
+      }
+      return sts;
     }
     else {
       pwr_tStatus sts;
@@ -3281,7 +3306,7 @@ static int	xnav_open_func(	void		*client_data,
 
       if ( ODD( dcli_get_qualifier( "/FOCUS", focus_str, sizeof(focus_str))))
         focus_p = focus_str;
-      else
+       else
         focus_p = 0;
 
       if ( ODD( dcli_get_qualifier( "/ACCESS", tmp_str, sizeof(tmp_str)))) {

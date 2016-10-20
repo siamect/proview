@@ -4896,3 +4896,35 @@ int GrowCtx::signal_send( char *signalname)
   return 1;
 }
 
+int GrowCtx::find_by_name( const char *name, GlowArrayElem **element)
+{ 
+  const char *s;
+  char wname[32];
+
+  if ( (s = strchr( name, '.')) == 0)
+    return a.find_by_name( name, element);
+  else {
+    // Find in subwindow
+    GlowArrayElem *wind;
+    int len;
+    int sts;
+
+    len = s - name;
+    strncpy( wname, name, len);
+    wname[len] = 0;
+
+    sts = a.find_by_name( wname, &wind);
+    if ( EVEN(sts)) return sts;
+
+    switch ( wind->type()) {
+    case glow_eObjectType_GrowWindow:
+    case glow_eObjectType_GrowFolder:
+      break;
+    default:
+      return 0;
+    }
+
+    return ((GrowWindow *)wind)->window_ctx->find_by_name( &name[len+1], element);
+  }
+}
+

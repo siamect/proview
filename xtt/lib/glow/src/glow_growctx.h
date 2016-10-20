@@ -233,8 +233,7 @@ class GrowCtx : public GlowCtx {
     \param element	Pointer to found object.
     \return		Returns 1 if object is found, else 0.
   */
-  int find_by_name( const char *name, GlowArrayElem **element)
-		{ return a.find_by_name( name, element);};
+  int find_by_name( const char *name, GlowArrayElem **element);
 
   //! Find a nodeclass by name.
   /*!
