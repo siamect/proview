@@ -33,65 +33,17 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_td_redundancystateenum.wb_load -- Defines the enum type RedundancyState
+!  rt_redu_msg.msg -- <short description>
 !
-SObject pwrs:Type
-!/**
-!  @Version 1.0
-!  @Group Types
-!  Enumeration for redundancy state.
-!*/
-  Object $RedundancyStateEnum $TypeDef 26
-    Body SysBody
-      Attr TypeRef = "pwrs:Type-$Enum"
-      Attr PgmName = "RedundancyStateEnum"
-    EndBody
-    !/**
-    !  Off.
-    !*/
-    Object Off $Value
-     Body SysBody
-       Attr PgmName = "Off"
-       Attr Text = "Off"
-       Attr Value = 0
-     EndBody
-    EndObject
-    !/**
-    !  Passive.
-    !*/
-    Object Passive $Value
-     Body SysBody
-       Attr PgmName = "Passive"
-       Attr Text = "Passive"
-       Attr Value = 1
-     EndBody
-    EndObject
-    !/**
-    !  Active.
-    !*/
-    Object Active $Value
-     Body SysBody
-       Attr PgmName = "Active"
-       Attr Text = "Active"
-       Attr Value = 2
-     EndBody
-    EndObject
-    !/**
-    !  Initialization.
-    !*/
-    Object Init $Value
-     Body SysBody
-       Attr PgmName = "Init"
-       Attr Text = "Init"
-       Attr Value = 3
-     EndBody
-    EndObject
-  EndObject
-EndSObject
+.facility       REDU,27 /prefix = REDU__
 
-
-
-
+success		<Successful completion>					/succ
+tablereceived	<Table successfully received>				/succ
+tablecreated	<Table successfully created>				/succ
+tablesent	<Table sent>						/succ
+redcomfile	<Unable to open redcom file>				/error
+localnode	<Local node not found>					/error
+.end
 
 
 

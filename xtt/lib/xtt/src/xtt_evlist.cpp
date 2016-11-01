@@ -924,6 +924,8 @@ void EvList::event_alarm( mh_sMessage *msg)
   ItemAlarm	*dest;
   flow_eDest	dest_code;
   brow_tNode	dest_node;
+  ItemAlarm 	*item;
+
 
   if ( type == ev_eType_AlarmList ) {
     if ( !( msg->Status & mh_mEventStatus_NotAck ||
@@ -931,12 +933,18 @@ void EvList::event_alarm( mh_sMessage *msg)
       return;
 
     // Check that this id not already inserted
-    ItemAlarm *item;
-
     if ( id_to_item( &event->Info.Id, (void **)&item))
       return;      
   }
   if ( type != ev_eType_HistList ) {
+
+    // Check that this id not already inserted
+    if ( id_to_item( &event->Info.Id, (void **)&item))
+      return;      
+
+  if ( type != ev_eType_EventList )
+      printf( "New ala %d,%d\n", event->Info.Id.Nix, event->Info.Id.Idx);
+
     sts = get_destination( net_NetTimeToTime( &event->Info.EventTime), (void **)&dest);
     if ( EVEN(sts)) {
       dest_code = flow_eDest_IntoLast;
@@ -952,7 +960,7 @@ void EvList::event_alarm( mh_sMessage *msg)
     dest_node = NULL;
   }
 
-  ItemAlarm *item = new ItemAlarm( this, "Alarm",
+  item = new ItemAlarm( this, "Alarm",
 		 net_NetTimeToTime( &event->Info.EventTime), event->Msg.EventText,
 	         event->Msg.EventName, event->Info.EventType, event->Info.EventFlags,
 		 event->Info.EventPrio, event->Info.Id,
@@ -1129,11 +1137,17 @@ void EvList::event_ack( mh_sAck *msg)
   ala_uEvent 	*event = (ala_uEvent *) msg;
   int		sts;
   ItemAlarm	*dest;
+  ItemAlarm	*item;
   flow_eDest	dest_code;
   brow_tNode	dest_node;
 
   if ( type == ev_eType_EventList || type == ev_eType_HistList) {
     if(type == ev_eType_EventList) {
+      // Check that this id not already inserted
+      if ( id_to_item( &event->Info.Id, (void **)&item))
+	return;      
+      printf( "New ack %d,%d\n", event->Info.Id.Nix, event->Info.Id.Idx);
+
       sts = get_destination( net_NetTimeToTime( &event->Info.EventTime), (void **)&dest);
       if ( EVEN(sts)) {
         dest_code = flow_eDest_IntoLast;
@@ -1217,11 +1231,17 @@ void EvList::event_return( mh_sReturn *msg)
   ala_uEvent 	*event = (ala_uEvent *) msg;
   int		sts;
   ItemAlarm	*dest;
+  ItemAlarm	*item;
   flow_eDest	dest_code;
   brow_tNode	dest_node;
 
   if ( type == ev_eType_EventList || type == ev_eType_HistList) {
     if(type == ev_eType_EventList) {
+      // Check that this id not already inserted
+      if ( id_to_item( &event->Info.Id, (void **)&item))
+	return;      
+      printf( "New ret %d,%d\n", event->Info.Id.Nix, event->Info.Id.Idx);
+
       sts = get_destination( net_NetTimeToTime( &event->Info.EventTime), (void **)&dest);
       if ( EVEN(sts)) {
         dest_code = flow_eDest_IntoLast;
@@ -1920,17 +1940,21 @@ ItemAlarm::ItemAlarm( EvList *item_evlist, const char *item_name, pwr_tTime item
     sts = brow_GetLast( evlist->browbase->ctx, &last_node);
     if ( ODD(sts))
     {
+
       if ( node == last_node)
 	// I'm deleting myself
 	*rsts = 0;
 
       brow_GetUserData( last_node, (void **)&item);
 
+      brow_tNode tree_node = item->tree_node;
+      evlist_eItemType item_type = item->type;
+
       brow_DeleteNode( evlist->browbase->ctx, last_node);
-      if ( item->type == evlist_eItemType_Alarm && evlist->browtree) {
-	if ( item->tree_node)
-	  brow_DeleteNode( evlist->browtree->ctx, item->tree_node);
-	evlist->view_configure();
+      if ( item_type == evlist_eItemType_Alarm && item_evlist->browtree) {
+	if ( tree_node)
+	  brow_DeleteNode( item_evlist->browtree->ctx, tree_node);
+	item_evlist->view_configure();
       }
       
       // Note! This ItemAlarm might be deleted by now if node == last_node
@@ -2784,8 +2808,7 @@ int EvList::id_to_item( mh_sEventId *id, void **item)
     brow_GetUserData( object_list[i], (void **)&object_item);
     switch( object_item->type) {
     case evlist_eItemType_Alarm:
-      if ( memcmp( &object_item->eventid, id, sizeof(object_item->eventid))
-	   == 0) {
+      if ( object_item->eventid.Idx == id->Idx && object_item->eventid.Nix == id->Nix) {
 	*item = (void *)object_item;
 	return 1;
       }

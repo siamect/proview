@@ -204,6 +204,7 @@ struct sLink {
   pwr_tDeltaTime	ack_delay;
   unsigned int		exp_buf_quota;
   sIseg			tmo;
+  thread_sMutex		eseg_mutex;
 };
 
 
@@ -588,6 +589,7 @@ clean_insert (
     
       if ((!pending) && (esp->head.flags.b.first)) {
   
+	thread_MutexLock(&esp->lp->eseg_mutex);
         for (sp = lst_Succ(NULL, le, &se); se != le; sp = nsp) {
 	  li = se;
           nsp = lst_Succ(NULL, se, &se);
@@ -609,12 +611,14 @@ clean_insert (
 	    break;
 	  }
         }
+	thread_MutexUnlock(&esp->lp->eseg_mutex);
 	
         if (!esp->head.flags.b.last && first) ret_pend = TRUE;
 	if (!first) li = le;
       }
       else if (pending) {
 
+	thread_MutexLock(&esp->lp->eseg_mutex);
         for (sp = lst_Succ(NULL, le, &se); se != le; sp = nsp) {
           li = se;
           nsp = lst_Succ(NULL, se, &se);
@@ -631,6 +635,7 @@ clean_insert (
 	    break;
 	  }
         }
+	thread_MutexUnlock(&esp->lp->eseg_mutex);
 	
 	if (!first) li = le;
 	ret_pend = !esp->head.flags.b.last;
@@ -651,7 +656,9 @@ clean_insert (
     }
   }
 #endif
+  thread_MutexLock(&esp->lp->eseg_mutex);
   lst_InsertPred(NULL, li, &esp->c.le, esp);
+  thread_MutexUnlock(&esp->lp->eseg_mutex);
   
   return ret_pend;
 
@@ -1016,17 +1023,19 @@ export_thread ()
 
     thread_MutexLock(&l.bcast);
 
-      esp = sp;
+    thread_MutexLock(&sp->lp->eseg_mutex);
+    esp = sp;
+    do {
+      ssp = esp;
       do {
-        ssp = esp;
-        do {
-	  ssp->c.action = eAction_export;
-	  que_Put(NULL, &ssp->lp->q_in, &ssp->c.le, ssp);
-	  ssp = lst_Succ(NULL, &ssp->le_seg, NULL) ;
-        } while (ssp != esp);
-        esp = lst_Succ(NULL, &ssp->le_bcast, NULL) ;
-      } while (esp != sp);
-
+	ssp->c.action = eAction_export;
+	que_Put(NULL, &ssp->lp->q_in, &ssp->c.le, ssp);
+	ssp = lst_Succ(NULL, &ssp->le_seg, NULL) ;
+      } while (ssp != esp);
+      esp = lst_Succ(NULL, &ssp->le_bcast, NULL) ;
+    } while (esp != sp);
+    thread_MutexUnlock(&sp->lp->eseg_mutex);
+    
     thread_MutexUnlock(&l.bcast);
   }
 
@@ -1312,6 +1321,7 @@ lack (
   lst_sEntry *se;
   int diff;
   sEseg *sp, *nsp;
+  thread_sMutex *mx;
 
   for (sp = lst_Succ(NULL, &lp->lh_win, &se); se != &lp->lh_win; sp = nsp) {
     nsp = lst_Succ(NULL, se, &se);
@@ -1327,7 +1337,10 @@ lack (
 
       window_remove(lp, sp);
 
+      mx = &sp->lp->eseg_mutex;
+      thread_MutexLock(mx);
       eseg_free(sp);
+      thread_MutexUnlock(mx);
     } else {
       /* This is the oldest not acked segment. */
       lp->np->link[lp->lix].lack = sp->head.lack;
@@ -1437,6 +1450,7 @@ link_disconnect (
 
   /* Empty window list */
 
+  thread_MutexLock(&lp->eseg_mutex);
   for (
     sp = lst_Succ(NULL, &lp->lh_win, NULL);
     sp != NULL;
@@ -1445,6 +1459,7 @@ link_disconnect (
     lst_Remove(NULL, &sp->c.le);
     eseg_free(sp);
   }
+  thread_MutexUnlock(&lp->eseg_mutex);
 
   lp->np->link[lp->lix].win_count = 0;
 
@@ -1544,6 +1559,7 @@ link_purge (
   /* Purge send list */
 
   int i = 0;
+  thread_MutexUnlock(&lp->eseg_mutex);
   for (
     sp = lst_Succ(NULL, &lp->lh_send, NULL);
     sp != NULL;
@@ -1560,6 +1576,7 @@ link_purge (
       alloc_cnt += sp->size;
     i++;
   }
+  thread_MutexUnlock(&lp->eseg_mutex);
   printf( "link_purge: %d cnt %d (%d)\n", i, lp->np->link[lp->lix].export_alloc_cnt, alloc_cnt);
   lp->np->link[lp->lix].export_alloc_cnt = alloc_cnt;
   lp->np->link[lp->lix].export_purge_cnt++;
@@ -1825,6 +1842,7 @@ new_link (
   lp->np->link[lp->lix].rtt_rxmax = rtt_rxmax;
   lp->np->link[lp->lix].rtt_rxmin = rtt_rxmin;
   lp->tmo.c.action = eAction_tmo;
+  sts = thread_MutexInit(&lp->eseg_mutex);
                                     
   if (mp != NULL) {
 #if defined OS_VMS
@@ -1901,11 +1919,15 @@ pending_send (
   sLink *lp
 )
 {
+  sEseg *sp;
 
   if (lp->np->link[lp->lix].win_count >= lp->np->link[lp->lix].win_max)
     return NULL;
 
-  return lst_RemoveSucc(NULL, &lp->lh_send, NULL);
+  thread_MutexLock(&lp->eseg_mutex);
+  sp = lst_RemoveSucc(NULL, &lp->lh_send, NULL);
+  thread_MutexUnlock(&lp->eseg_mutex);
+  return sp;
 }
 
 static void 

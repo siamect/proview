@@ -48,6 +48,7 @@
 #include "rt_qcom.h"
 #include "rt_qcom_msg.h"
 #include "rt_redu.h"
+#include "rt_redu_msg.h"
 
 static pwr_tStatus add_table_object( redu_tCtx ctx, pwr_tAttrRef *o);
 static pwr_tStatus add_table_attr( redu_tCtx ctx, pwr_tAttrRef *aref, gdh_sAttrDef *bd);
@@ -80,7 +81,7 @@ pwr_tStatus redu_create_table( redu_tCtx ctx)
   }
 #endif
 
-  return 1;
+  return REDU__TABLECREATED;
 }
 
 void redu_free( redu_tCtx ctx)
@@ -146,7 +147,7 @@ static pwr_tStatus add_table_object( redu_tCtx ctx, pwr_tAttrRef *o)
       o = &maref;
     }
     else
-      return 1;
+      return REDU__SUCCESS;
 
     sts = gdh_GetAttrRefTid( o, &tid);
     if ( EVEN(sts)) return sts;
@@ -220,7 +221,7 @@ static pwr_tStatus add_table_object( redu_tCtx ctx, pwr_tAttrRef *o)
       if ( EVEN(sts)) return sts;      
     }
   }
-  return 1;
+  return REDU__SUCCESS;
 }
 
 static pwr_tStatus add_table_attr( redu_tCtx ctx, pwr_tAttrRef *aref, gdh_sAttrDef *bd)
@@ -234,7 +235,7 @@ static pwr_tStatus add_table_attr( redu_tCtx ctx, pwr_tAttrRef *aref, gdh_sAttrD
 
   if ( aref->Flags.b.Indirect) {
     if ( *(unsigned long *)p == 0)
-      return 1;
+      return REDU__SUCCESS;
     p = gdh_TranslateRtdbPointer( *(unsigned long *)p);
   }
 
@@ -253,7 +254,14 @@ static pwr_tStatus add_table_attr( redu_tCtx ctx, pwr_tAttrRef *aref, gdh_sAttrD
 
   ctx->current_offset += t->size;
   ctx->attr_cnt++;
-  return 1;
+  return REDU__SUCCESS;
+}
+
+pwr_tStatus redu_create_table_request_message( redu_tCtx ctx, void **msg)
+{
+  *msg = malloc( sizeof(redu_sHeader));
+  ((redu_sHeader *)(*msg))->type = redu_eMsgType_TableRequest;
+  return REDU__SUCCESS;
 }
 
 pwr_tStatus redu_create_message( redu_tCtx ctx, void **msg)
@@ -287,7 +295,7 @@ pwr_tStatus redu_create_message( redu_tCtx ctx, void **msg)
     ctx->packetp->PackTime = ctx->msg_time;
   }
   *msg = buf;
-  return 1;
+  return REDU__SUCCESS;
 }
 
 pwr_tStatus redu_unpack_message( redu_tCtx ctx, void *msg)
@@ -313,7 +321,7 @@ pwr_tStatus redu_unpack_message( redu_tCtx ctx, void *msg)
     ctx->packetp->ReceiveCnt++;
     ctx->packetp->UnpackTime = ctx->msg_time;
   }
-  return 1;
+  return REDU__SUCCESS;
 }
 
 pwr_tStatus redu_send_table( redu_tCtx ctx, void **table_msg)
@@ -336,10 +344,12 @@ pwr_tStatus redu_send_table( redu_tCtx ctx, void **table_msg)
     msgp += sizeof(redu_sTableMsgElement);
   }
   
-  ctx->packetp->TablePacketSize = size;
-  ctx->packetp->Attributes = ctx->attr_cnt;
+  if ( ctx->packetp) {
+    ctx->packetp->TablePacketSize = size;
+    ctx->packetp->Attributes = ctx->attr_cnt;
+  }
   *table_msg = msg;
-  return 1;
+  return REDU__TABLESENT;
 }
 
 pwr_tStatus redu_receive_table( redu_tCtx ctx, void *table_msg)
@@ -386,7 +396,7 @@ pwr_tStatus redu_receive_table( redu_tCtx ctx, void *table_msg)
     ctx->attr_cnt++;
     msgp += sizeof(redu_sTableMsgElement);    
   }
-  return 1;
+  return REDU__TABLERECEIVED;
 }
 
 void redu_print_table( redu_tCtx ctx)
@@ -483,7 +493,7 @@ int redu_init( redu_tCtx *ctx, pwr_sNode *nodep, pwr_sClass_RedcomPacket *packet
   c->send_qid.qix = redu_cQixExport;
   c->send_qid.nid = 0;
 
-  return 1;
+  return REDU__SUCCESS;
 }
 
 int redu_receive( redu_tCtx ctx, unsigned int timeout, int *size, void **msg)
@@ -524,7 +534,7 @@ pwr_tStatus redu_get_initial_state( char *nodename, int busid, int *state)
   dcli_translate_filename( fname, fname);
   fp = fopen( fname, "r");
   if ( !fp)
-    return 0;
+    return REDU__REDCOMFILE;
 
   while ((s = fgets(buffer, sizeof(buffer) - 1, fp)) != NULL) {
 
@@ -539,14 +549,15 @@ pwr_tStatus redu_get_initial_state( char *nodename, int busid, int *state)
 
     if ( strcmp( name, nodename) == 0) {
       local_found = 1;
-      *state = atoi(s_state);
+      // *state = atoi(s_state);
+      *state = pwr_eRedundancyState_Init;
       break;
     }
   }
   fclose( fp);
 
   if ( !local_found)
-    return 0;
-  return 1;
+    return REDU__LOCALNODE;
+  return REDU__SUCCESS;
 }
 

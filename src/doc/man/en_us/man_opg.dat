@@ -2822,6 +2822,8 @@ ODD()			<LINK> ODD()
 get_language()		<LINK> get_language()
 GetUser()		<LINK> getuser()
 GetPrivileges()		<LINK> getprivileges()
+GetGraphInstance()	<LINK> getgraphinstance()
+GetGraphInstanceNext()	<LINK> getgraphinstancenext()
 
 <h2>xtt-commands
 xtt-commands		<LINK> xtt-commands
@@ -4044,6 +4046,8 @@ ODD()		<t>Check if value is odd. <LINK> ODD()
 get_language()	<t>Get the current language <LINK> get_language()
 GetUser() 	<t>Get the current user. <LINK> getuser()
 GetPrivileges()	<t>Get the privileges for the current user. <LINK> getprivileges()
+GetGraphInstance() <t>Get the instance object for a graph. <LINK> getgraphinstance()
+GetGraphInstanceNext() <t>Get the instance object for next graph. <LINK> getgraphinstancenext()
 </TOPIC>
 
 <headerlevel>
@@ -4285,6 +4289,58 @@ Get the privileges for the current user.
 <c>    # Has system privilege
 <c>    ...
 <c>  endif
+</TOPIC>
+
+<TOPIC> getgraphinstance() <style> function
+GetGraphInstance()
+
+string GetGraphInstance( string graph)
+
+<b>Description
+
+Get the instance object for an open object graph.
+Returns the instance object, or an empty string if the 
+graph is node open.
+
+<b>Arguments
+
+string		<t>graph	<t>Graph file name.
+
+<b>Example
+
+<c>  string instance;
+
+<c>  instance = GetGraphInstance( "$pwr_exe/pwr_c_dv.pwg");
+
+</TOPIC>
+
+<TOPIC> getgraphinstancenext() <style> function
+GetGraphInstanceNext()
+
+string GetGraphInstanceNext( string graph, string previous)
+
+<b>Description
+
+Get the next instance object for the specified object graph.
+Used when several versions of the same object graph is open for
+different objects.
+Returns the instance object, or an empty string if there is
+no next instance.
+
+<b>Arguments
+
+string		<t>graph	<t>Graph file name.
+string		<t>previous	<t>Previous instance.
+
+<b>Example
+
+<c>  string instance;
+
+<c>  instance = GetGraphInstance( "$pwr_exe/pwr_c_dv.pwg");
+<c>  while ( instance != "")
+<c>    printf( "Instance %s\n", instance);
+<c>    instance = GetGraphInstanceNext( "$pwr_exe/pwr_c_dv.pwg", instance);
+<c>  endwile
 </TOPIC>
 
 </headerlevel>

@@ -3610,9 +3610,11 @@ int gcg_get_outputstring (
 		  }
 		  /* Check that the object is not in a library hierarchy */
 		  if ( gcg_in_libhier( gcgctx, *objdid)) {
-		    gcg_error_msg( gcgctx, GSX__LIBREF, output_node);  
-	  	    free((char *) objdid);
-		    return GSX__NEXTPAR;
+		    if ( !gcg_in_libhier( gcgctx, output_node->ln.oid)) {
+		      gcg_error_msg( gcgctx, GSX__LIBREF, output_node);  
+		      free((char *) objdid);
+		      return GSX__NEXTPAR;
+		    }
 		  }
 
 	  	  strcpy( parstring, 
@@ -3650,9 +3652,11 @@ int gcg_get_outputstring (
 		  }
 		  /* Check that object is not in a library hierarchy */
 		  if ( gcg_in_libhier( gcgctx, attrref->Objid)) {
-		    gcg_error_msg( gcgctx, GSX__LIBREF, output_node);  
-	  	    free((char *) attrref);
-		    return GSX__NEXTPAR;
+		    if ( !gcg_in_libhier( gcgctx, output_node->ln.oid)) {
+		      gcg_error_msg( gcgctx, GSX__LIBREF, output_node);  
+		      free((char *) attrref);
+		      return GSX__NEXTPAR;
+		    }
 		  }
 
 	  	  strcpy( parstring, 
@@ -3780,9 +3784,11 @@ static int	gcg_get_outputstring_spec(
     }
     /* Check that the object is not in a library hierarchy */
     if ( gcg_in_libhier( gcgctx, attrref->Objid)) {
-      gcg_error_msg( gcgctx, GSX__LIBREF, output_node);  
-      free((char *) attrref);
-      return GSX__NEXTPAR;
+      if ( !gcg_in_libhier( gcgctx, output_node->ln.oid)) {
+	gcg_error_msg( gcgctx, GSX__LIBREF, output_node);  
+	free((char *) attrref);
+	return GSX__NEXTPAR;
+      }
     }
 
     /* Get the attribute name of last segment */
@@ -3842,9 +3848,11 @@ static int	gcg_get_outputstring_spec(
     }
     /* Check that the object is not in a library hierarchy */
     if ( gcg_in_libhier( gcgctx, attrref->Objid)) {
-      gcg_error_msg( gcgctx, GSX__LIBREF, output_node);  
-      free((char *) attrref);
-      return GSX__NEXTPAR;
+      if ( !gcg_in_libhier( gcgctx, output_node->ln.oid)) {
+	gcg_error_msg( gcgctx, GSX__LIBREF, output_node);  
+	free((char *) attrref);
+	return GSX__NEXTPAR;
+      }
     }
 
     strcpy( parstring, 
@@ -3895,9 +3903,11 @@ static int	gcg_get_outputstring_spec(
     }
     /* Check that the object is not in a library hierarchy */
     if ( gcg_in_libhier( gcgctx, attrref->Objid)) {
-      gcg_error_msg( gcgctx, GSX__LIBREF, output_node);  
-      free((char *) attrref);
-      return GSX__NEXTPAR;
+      if ( !gcg_in_libhier( gcgctx, output_node->ln.oid)) {
+	gcg_error_msg( gcgctx, GSX__LIBREF, output_node);  
+	free((char *) attrref);
+	return GSX__NEXTPAR;
+      }
     }
 
     /* Get the attribute name of last segment */
@@ -3998,9 +4008,11 @@ static int	gcg_get_outputstring_spec(
     }
     /* Check that the object is not in a library hierarchy */
     if ( gcg_in_libhier( gcgctx, attrref->Objid)) {
-      gcg_error_msg( gcgctx, GSX__LIBREF, output_node);  
-      free((char *) attrref);
-      return GSX__NEXTPAR;
+      if ( !gcg_in_libhier( gcgctx, output_node->ln.oid)) {
+	gcg_error_msg( gcgctx, GSX__LIBREF, output_node);  
+	free((char *) attrref);
+	return GSX__NEXTPAR;
+      }
     }
 
     /* Check if DisableAttr is present */

@@ -184,7 +184,7 @@ SObject pwrb:Class
       !/**
       !  Disable.
       !*/
-      Object Disable $Attribute 14
+      Object Disable $Attribute 15
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody

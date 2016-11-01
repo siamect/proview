@@ -148,7 +148,6 @@ struct s_Appl {
 
 struct s_Active {
   LstLink(sActive)	active_l;	/* Link in active list */
-  LstLink(sActive)	activeIdx_l;	/* Link in active index list */
   pwr_tUInt32		idx;		/* Event index of alarm */
   pwr_tUInt32		returnIdx;	/* Event index of return message */
   pwr_tUInt32		ackIdx;		/* Event index of ack message */
@@ -205,7 +204,6 @@ union u_Event {
 
 struct s_Event {
   pwr_tUInt32	  idx;    
-  LstHead(sActive)	activeIdx_l;
   pwr_tObjid	  outunit;
   pwr_tAttrRef	  object;
   pwr_tAName	  objName;
@@ -673,15 +671,13 @@ activeListGet (
   pwr_tUInt32 idx
 )
 {
-  LstLink(sActive) *al;
-  LstHead(sActive) *ll;
+  sEventTab *etp;
+  pwr_tStatus sts;
 
-  ll = (LstHead(sActive) *)&l.event_l->list[idx % l.event_l->size].activeIdx_l;
-
-  for (al = (LstLink(sActive) *)LstFir(ll); al != LstEnd(ll); al = LstNex(al))
-    if (idx == LstObj(al)->idx)
-      return LstObj(al);
-
+  etp = tree_Find(&sts, l.eventTab, &idx);
+  if ( etp)
+    return etp->ap;
+      
   return NULL;
 }
 
@@ -695,17 +691,26 @@ activeListInsert (
   mh_eSource source
 )
 {
+  int inserted;
   LstLink(sActive) *al;
   LstLink(sBlock) *bl;
+
+  /* Check that not already inserted */
+  inserted = 0;
+  for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l) ; al = LstNex(al)) {
+    if ( ap == LstObj(al)) {
+      inserted = 1;
+      break;
+    }
+  }
 
   ap->idx = ep->idx;
   ap->source = source;
 
-  al = LstEnd(&l.active_l);
-  LstIns(al, ap, active_l);
-
-  al = LstEnd(&ep->activeIdx_l);
-  LstIns(al, ap, activeIdx_l);
+  if ( !inserted) {
+    al = LstEnd(&l.active_l);
+    LstIns(al, ap, active_l);
+  }
 
   switch (ap->event) {
   case  mh_eEvent_Alarm:
@@ -744,10 +749,11 @@ activeListRemove (
   sApplActive *aap;
   sBlock *bp;
 
+  if ( LstIsNul(&ap->active_l))
+    return;
+
   LstRem(&ap->active_l);
   LstNul(&ap->active_l);
-  LstRem(&ap->activeIdx_l);
-  LstNul(&ap->activeIdx_l);
   ap->idx = 0;
   ap->ackIdx = 0;
   ap->returnIdx = 0;
@@ -814,7 +820,6 @@ activeListRemove (
     else
       handlerListFree((sApplActive*)ap);
   }
-
 }
 
 static void
@@ -1280,6 +1285,9 @@ sendAlarmStatus( sOutunit *op)
   for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l); al = LstNex(al)) {
     ap = LstObj(al);
 
+    if ( !ap->detect_etp)
+      continue;
+
     switch (ap->detect_etp->event) {
     case mh_eEvent_Info:
     case mh_eEvent_InfoSuccess:
@@ -1294,9 +1302,9 @@ sendAlarmStatus( sOutunit *op)
       ep = ap->detect_etp->ep;
 
       if ( ap->detect_etp->event == mh_eEvent_Info || ap->detect_etp->event == mh_eEvent_InfoSuccess) {
-	if ( !(ep->msg.info.EventFlags & mh_mEventFlags_InfoWindow))
+	if ( ep && !(ep->msg.info.EventFlags & mh_mEventFlags_InfoWindow))
 	  break;
-	if ( ep->msg.info.EventFlags & mh_mEventFlags_InfoWindow &&
+	if ( ep && ep->msg.info.EventFlags & mh_mEventFlags_InfoWindow &&
 	     ( !(ep->msg.info.EventFlags & mh_mEventFlags_Ack) ||
 	       !(ep->msg.info.EventFlags & mh_mEventFlags_Return)))
 	  break;
@@ -1338,9 +1346,9 @@ sendAlarmStatus( sOutunit *op)
       ep = ap->detect_etp->ep;
 
       if ( ap->detect_etp->event == mh_eEvent_Info || ap->detect_etp->event == mh_eEvent_InfoSuccess) {
-	if ( !(ep->msg.info.EventFlags & mh_mEventFlags_InfoWindow))
+	if ( ep && !(ep->msg.info.EventFlags & mh_mEventFlags_InfoWindow))
 	  break;
-	if ( ep->msg.info.EventFlags & mh_mEventFlags_InfoWindow &&
+	if ( ep && ep->msg.info.EventFlags & mh_mEventFlags_InfoWindow &&
 	     ( !(ep->msg.info.EventFlags & mh_mEventFlags_Ack) ||
 	       !(ep->msg.info.EventFlags & mh_mEventFlags_Return)))
 	  break;
@@ -1559,7 +1567,6 @@ enableQcomAllHandlers (
 static void
 eventListInit ()
 {
-  int i;
 
   l.event_l = (sEventList*) calloc(1, sizeof(sEventList) +
     sizeof(sEvent) * l.emon->EventListSize);
@@ -1571,10 +1578,6 @@ eventListInit ()
   l.event_l->oldIdx = 0;
   l.event_l->size = l.emon->EventListSize;
 
-  /* Initialize all alarm index lists */
-
-  for (i = 0; i  <= l.event_l->size; i++)
-    LstIni(&l.event_l->list[i].activeIdx_l);
 }
 
 static sEvent *
@@ -1672,6 +1675,7 @@ eventListInsert (
     errh_Error("eventListInsert, programming error, source: %d", ap->source);
     break;
   }
+  // printf( "** eventListInsert %s ap: %u\n", ep->objName, (unsigned int)ep->etp->ap);
 
   return ep;
 }
@@ -3552,6 +3556,8 @@ outunitAck (
     return;
   }
 
+  printf( "** Acked %s %u\n", ap->objName, (unsigned int)ap->status.Event.Status);
+
   switch (ap->source) {
   case mh_eSource_Scanner:
     sp = (sSupActive*) ap;
@@ -3830,6 +3836,10 @@ outunitAlarmReq (
       ap = LstObj(al);
 
       if ( ap->idx == msg->Idx[i]) {
+	if ( !ap->detect_etp->ap)
+	  /* Not active any more, don't resend */
+	  break;
+
 	ok = reSendEventToOutunit( op, ap->detect_etp);
 #if 0
 	if (ap->detect_etp->ep != NULL)
@@ -3844,6 +3854,7 @@ outunitAlarmReq (
 	  op->maxIdx = l.event_l->idx;
 	  op->check = 0;
 	}
+	break;
       }
     }
   }
@@ -4927,6 +4938,12 @@ typedef struct {
   pwr_tTime	  	detectTime;
   pwr_tTime	  	returnTime;
   pwr_tTime	  	ackTime;
+  pwr_tUInt32		detect_etp;
+  pwr_tUInt32		return_etp;
+  pwr_tUInt32		ack_etp;
+  pwr_tUInt32		detect_event;
+  pwr_tUInt32		return_event;
+  pwr_tUInt32		ack_event;
 } redu_sEvActive;
 
 typedef struct {
@@ -4966,7 +4983,12 @@ typedef struct {
   pwr_tUInt32		msgSize;
   pwr_tBoolean		local;
   uEvent		msg;
+  mh_eSource		activeSource;
+  pwr_tAttrRef		activeSupObject;
+  pwr_tUInt32		etp;
 } redu_sEvEvent;
+
+#define NOIDX 0xffffffff
 
 static pwr_tStatus emon_redu_send()
 {
@@ -5029,6 +5051,24 @@ static pwr_tStatus emon_redu_send()
     activep->eventFlags = ap->eventFlags;
     activep->eventType = ap->eventType;
     activep->status = ap->status;
+    if ( ap->detect_etp) {
+      activep->detect_etp = ap->detect_etp->idx;
+      activep->detect_event = ap->detect_etp->event;
+    }
+    else
+      activep->detect_etp = NOIDX;
+    if ( ap->return_etp) {
+      activep->return_etp = ap->return_etp->idx;
+      activep->return_event = ap->return_etp->event;
+    }
+    else
+      activep->return_etp = NOIDX;
+    if ( ap->ack_etp) {
+      activep->ack_etp = ap->ack_etp->idx;
+      activep->ack_event = ap->ack_etp->event;
+    }
+    else
+      activep->ack_etp = NOIDX;
 
     if ( ap->source == mh_eSource_Scanner) {
       sp = (sSupActive *) ap;
@@ -5036,6 +5076,7 @@ static pwr_tStatus emon_redu_send()
       activep->returnTime = sp->sup->ReturnTime;
       activep->ackTime = sp->sup->AckTime;
     }
+
     activep++;
   }
 
@@ -5087,11 +5128,23 @@ static pwr_tStatus emon_redu_send()
     eventp->msgSize = ep->msgSize;
     eventp->local = ep->local;
     eventp->msg = ep->msg;
+    if ( ep->etp && ep->etp->ap) {
+      eventp->activeSource = ep->etp->ap->source;
+      if ( ep->etp->ap->source == mh_eSource_Scanner ||
+	   ep->etp->ap->source == mh_eSource_Handler)
+	eventp->activeSupObject = ep->etp->ap->supObject;
+    }
+    if ( ep->etp)
+      eventp->etp = ep->etp->idx;
+    else
+      eventp->etp = NOIDX;
+
     eventp++;
   }
 
   l.redu->packetp->PacketSize = ((redu_sEvMsgHeader *)msg)->size + 
     sizeof(redu_sEvMsgHeader);
+  l.redu->packetp->TransmitCnt++;
       
   sts = redu_send( l.redu, msg, ((redu_sEvMsgHeader *)msg)->size + 
 		   sizeof(redu_sEvMsgHeader), l.redu->msgid_cyclic);
@@ -5121,13 +5174,12 @@ static pwr_tStatus emon_redu_receive()
   int events;
   int i;
   LstLink(sActive) *al;
-  sActive *ap;
+  sActive *ap, *tp;
   sSupActive *sp;
   sEvent *ep;
   sOutunit *op;
   LstLink(sOutunit) *ol;
   int found;
-  sEventTab *etp;
 
   sts = redu_receive( l.redu, timeout, &size, &msg);
   if ( sts == QCOM__TMO)
@@ -5160,38 +5212,28 @@ static pwr_tStatus emon_redu_receive()
     /* Events */
     event_start = (redu_sEvEvent *)((char *)eventlistp + sizeof(redu_sEvEventList));
 
-    /* Remove old events */
-    if ( eventlistp->oldIdx != l.event_l->oldIdx) {
-      for ( i = l.event_l->oldIdx; i < MIN(eventlistp->oldIdx,l.event_l->oldIdx + l.event_l->size); i++) {
-	ep = &l.event_l->list[ i % l.event_l->size ];
-	printf( "Event remove, idx %d %s\n", ep->etp->idx, ep->objName);
-	tree_Remove(&sts, l.eventTab, &ep->etp->idx);
-      }
-    }
+    tree_EmptyTable( &sts, l.eventTab);
 
-    /* Add new events */
-    if ( eventlistp->idx != l.event_l->idx) {
-      int istart = l.event_l->idx;
-      if ( istart < (int)eventlistp->idx - (int)l.event_l->size + 1)
-	istart = (int)eventlistp->idx - (int)l.event_l->size + 1;
-	   
-      for ( i = istart; i <= eventlistp->idx; i++) {
-	eventp = event_start + i - eventlistp->oldIdx;
-	ep = &l.event_l->list[ i % l.event_l->size ];
-	ep->idx = eventp->idx;
-	ep->outunit = eventp->outunit;
-	ep->object = eventp->object;
-	ep->local = eventp->local;
-	ep->event = eventp->event;
-	ep->eventType = ep->eventType;
-	strncpy( ep->objName, eventp->objName, sizeof(ep->objName)); 
-	ep->msg = eventp->msg;
-
+    /* Insert events */
+    for ( i = eventlistp->oldIdx; i <= eventlistp->idx; i++) {
+      eventp = event_start + i - eventlistp->oldIdx;
+      ep = &l.event_l->list[ i % l.event_l->size];
+      ep->idx = eventp->idx;
+      ep->outunit = eventp->outunit;
+      ep->object = eventp->object;
+      ep->local = eventp->local;
+      ep->event = eventp->event;
+      ep->eventType = ep->eventType;
+      strncpy( ep->objName, eventp->objName, sizeof(ep->objName)); 
+      ep->msg = eventp->msg;
+      if ( eventp->etp == NOIDX)
+	ep->etp = 0;
+      else {
 	ep->etp = tree_Insert(&sts, l.eventTab, &ep->idx);
 	ep->etp->ep = ep;
 	ep->etp->event = ep->event;
-	printf( "Event add,    idx %d %s\n", ep->etp->idx, ep->objName);
       }
+      // printf( "Event add,    idx %d %s sup_oix:%d %u %u\n", ep->etp->idx, ep->objName, ep->etp->ap ? ep->etp->ap->supObject.Objid.oix : 0, (unsigned int)ep->etp->node.left, (unsigned int)ep->etp->node.right);
     }
 
     l.event_l->idx = eventlistp->idx;
@@ -5201,7 +5243,8 @@ static pwr_tStatus emon_redu_receive()
     /* Find removed elements in active list */
     for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l) ; al = LstNex(al)) {
       ap = LstObj(al);
-      if ( ap->source == mh_eSource_Scanner) {
+      if ( ap->source == mh_eSource_Scanner ||
+	   ap->source == mh_eSource_Handler) {
 	sp = (sSupActive *) ap;
 	sp->found = 0;
       }
@@ -5209,10 +5252,12 @@ static pwr_tStatus emon_redu_receive()
     
     activep = (redu_sEvActive *)((char *)msg + sizeof(redu_sEvMsgHeader));
     for ( i = 0; i < actives; i++) {
-      if ( activep->source == mh_eSource_Scanner) {
+      if ( activep->source == mh_eSource_Scanner ||
+	   activep->source == mh_eSource_Handler) {
 	for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l) ; al = LstNex(al)) {
 	  ap = LstObj(al);
-	  if ( activep->source == mh_eSource_Scanner &&
+	  if ( (activep->source == mh_eSource_Scanner ||
+		activep->source == mh_eSource_Handler) &&
 	       cdh_ArefIsEqual( &activep->supObject, &ap->supObject)) {
 	    sp = (sSupActive *) ap;
 	    sp->found = 1;
@@ -5226,16 +5271,19 @@ static pwr_tStatus emon_redu_receive()
     for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l); ) {
       ap = LstObj(al);
       al = LstNex(al);
-      if ( ap->source == mh_eSource_Scanner) {
+      if ( ap->source == mh_eSource_Scanner ||
+	   ap->source == mh_eSource_Handler) {
 	sp = (sSupActive *) ap;
 	if ( !sp->found) {
 	  ap->status.Event.Status &= ~mh_mEventStatus_NotRet;
 	  ap->status.Event.Status &= ~mh_mEventStatus_NotAck;
-	  sp->sup->DetectCheck = TRUE;
-	  sp->sup->AlarmCheck = TRUE;
-	  sp->sup->ReturnCheck = FALSE;
-	  sp->sup->AlarmStatus.All = ap->status.All;
-	  printf( "Active remove, idx %d %s\n", ap->detect_etp->idx, ap->detect_etp->ep->objName);
+	  if ( sp->sup) {
+	    sp->sup->DetectCheck = TRUE;
+	    sp->sup->AlarmCheck = TRUE;
+	    sp->sup->ReturnCheck = FALSE;
+	    sp->sup->AlarmStatus.All = ap->status.All;
+	  }
+	  // printf( "Active remove, idx %d %s\n", ap->detect_etp->idx, ap->detect_etp->ep ? ap->detect_etp->ep->objName : "");
 	  activeListRemove( ap);
 	}
       }
@@ -5245,19 +5293,21 @@ static pwr_tStatus emon_redu_receive()
     activep = (redu_sEvActive *)((char *)msg + sizeof(redu_sEvMsgHeader));
     for ( i = 0; i < actives; i++) {
       found = 0;
-      if ( activep->source == mh_eSource_Scanner) {
+      if ( activep->source == mh_eSource_Scanner ||
+	   activep->source == mh_eSource_Handler) {
 	for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l) ; al = LstNex(al)) {
 	  ap = LstObj(al);
-	  if ( activep->source == mh_eSource_Scanner &&
+	  if ( (activep->source == mh_eSource_Scanner ||
+		activep->source == mh_eSource_Handler) &&
 	       cdh_ArefIsEqual( &activep->supObject, &ap->supObject)) {
 	    sp = (sSupActive *) ap;
-	    /* Update status */
-	    ap->status = activep->status;
 	    found = 1;
 	    break;
 	  }
 	}
       }
+
+      
       if ( !found) {
 	/* Add to active list */
 	sp = supListGet( &activep->supObject);
@@ -5266,28 +5316,139 @@ static pwr_tStatus emon_redu_receive()
 	  activep++;
 	  continue;
 	}
-	sp->sup->DetectTime = activep->detectTime;
-	sp->sup->AckTime = activep->ackTime;
-	sp->sup->ReturnTime = activep->returnTime;
-	sp->sup->AlarmCheck = FALSE;
-	sp->sup->DetectCheck = FALSE;
-	sp->sup->ReturnCheck = TRUE;
-	sp->sup->AlarmStatus.All = activep->status.All;
-	ap->idx = activep->idx;
-	etp = tree_Find(&sts, l.eventTab, &ap->idx);
-	if ( etp) {
-
-	  etp->ap = ap;
-	  ap->detect_etp = etp;
-
-	  activeListInsert((sActive *) sp, etp->ep, mh_eSource_Scanner);
-	  printf( "Active add,    idx %d %s\n", ap->detect_etp->idx, ap->detect_etp->ep->objName);
-
+	for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l) ; al = LstNex(al)) {
+	  tp = LstObj(al);
+	  if ( ap == tp)
+	    /* Already in active list */
+	    found = 1;
 	}
-	ap->status = activep->status;
       }
+
+      if ( activep->detect_etp == NOIDX)
+	ap->detect_etp = 0;
+      else {
+	ap->detect_etp = tree_Find(&sts, l.eventTab, &activep->detect_etp);
+	if ( ap->detect_etp == 0) {
+	  ap->detect_etp = tree_Insert(&sts, l.eventTab, &activep->detect_etp);
+	  ap->detect_etp->ep = 0;
+	}
+	ap->detect_etp->event = activep->detect_event;
+	ap->detect_etp->ap = ap;
+      }
+      if ( activep->return_etp == NOIDX)
+	ap->return_etp = 0;
+      else {
+	ap->return_etp = tree_Find(&sts, l.eventTab, &activep->return_etp);
+	if ( ap->return_etp == 0) {
+	  ap->return_etp = tree_Insert(&sts, l.eventTab, &activep->return_etp);
+	  ap->return_etp->ep = 0;
+	}
+	ap->return_etp->event = activep->return_event;
+	ap->return_etp->ap = ap;
+      }
+      if ( activep->ack_etp == NOIDX)
+	ap->ack_etp = 0;
+      else {
+	ap->ack_etp = tree_Find(&sts, l.eventTab, &activep->ack_etp);
+	if ( ap->ack_etp == 0) {
+	  ap->ack_etp = tree_Insert(&sts, l.eventTab, &activep->ack_etp);
+	  ap->ack_etp->ep = 0;
+	}
+	ap->ack_etp->event = activep->ack_event;
+	ap->ack_etp->ap = ap;
+      }
+
+      switch ( ap->detect_etp->event) {
+      case mh_eEvent_Info:
+      case mh_eEvent_InfoSuccess:
+      case mh_eEvent_Alarm:
+      case mh_eEvent_MaintenanceAlarm:
+      case mh_eEvent_SystemAlarm:
+      case mh_eEvent_UserAlarm1:
+      case mh_eEvent_UserAlarm2:
+      case mh_eEvent_UserAlarm3:
+      case mh_eEvent_UserAlarm4:
+	break;
+      default:
+	printf( "** etp type error %s %d\n", ap->objName, ap->detect_etp->event);
+	activep++;
+	continue;
+      }
+      if ( !found) {
+	LstLink(sActive) *al;
+	LstLink(sBlock) *bl;
+
+	// printf( "Active add, idx %d %s\n", ap->detect_etp->idx, ap->detect_etp->ep ? ap->detect_etp->ep->objName : "");
+	//if ( sp->sup) {
+	  // sp->sup->DetectTime = activep->detectTime;
+	  // sp->sup->AckTime = activep->ackTime;
+	  // sp->sup->ReturnTime = activep->returnTime;
+	  // sp->sup->AlarmCheck = FALSE;
+	  // sp->sup->DetectCheck = FALSE;
+	  // sp->sup->ReturnCheck = TRUE;
+	  // sp->sup->AlarmStatus.All = activep->status.All;
+	//}
+	/* Insert in active list */
+
+	al = LstEnd(&l.active_l);
+	LstIns(al, ap, active_l);
+
+	switch (ap->event) {
+	case  mh_eEvent_Alarm:
+	case  mh_eEvent_MaintenanceAlarm:
+	case  mh_eEvent_SystemAlarm:
+	case  mh_eEvent_UserAlarm1:
+	case  mh_eEvent_UserAlarm2:
+	case  mh_eEvent_UserAlarm3:
+	case  mh_eEvent_UserAlarm4:
+	  ++l.emon->AlarmCount;
+	  break;
+	case mh_eEvent_Block:
+	case mh_eEvent_Reblock:
+	  bl = LstEnd(&l.block_l);
+	  LstIns(bl, (sBlock *)ap, block_l);
+	  ++l.emon->BlockCount;
+	  break;
+	case  mh_eEvent_Info:
+	case  mh_eEvent_InfoSuccess:
+	  break;
+	default:
+	  errh_Error("activeListInsert, program error, event: %d", ap->event);
+	  break;
+	}
+
+	// printf( "Active add,    idx %d %s\n", ap->detect_etp->idx, ap->detect_etp->ep ? ap->detect_etp->ep->objName : "");
+      }
+      ap->idx = activep->idx;
+      ap->outunit = activep->outunit;
+      ap->status = activep->status;
       activep++;
     }
+
+#if 0
+    /* Test */
+    printf( "---------------------\n");
+    for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l) ; al = LstNex(al)) {
+      ap = LstObj(al);
+      printf( "   %s %s %s\n", ap->objName, ap->status.All & mh_mEventStatus_NotAck ? "NA" : "  ",ap->status.All & mh_mEventStatus_NotRet ? "NR" : "  " );
+    }
+    printf( "---------------------\n");
+#endif
+
+#if 0
+    /* Check that there are no etp without ap */
+    for (etp = tree_Minimum(&sts, l.eventTab); etp != NULL; etp = tree_Successor(&sts, l.eventTab, etp)) {
+      if ( !etp->ap) {
+	printf( "** etp without ap removed\n");
+	sEventTab *pred = tree_Predecessor(&sts, l.eventTab, etp);
+	tree_Remove(&sts, l.eventTab, &etp->idx);
+	if ( pred != NULL)
+	  etp = pred;
+	else
+	  etp = tree_Minimum(&sts, l.eventTab);
+      }
+    }
+#endif
 
     /* Outunits */
     outunit_start = (redu_sEvOutunit *)activep;
@@ -5382,8 +5543,8 @@ static pwr_tStatus emon_redu_receive()
     time_Adiff( &dtime, &end_time, &start_time);
     time_DToFloat( &l.redu->msg_time, &dtime);
     if ( l.redu->packetp) {
-      l.redu->packetp->PacketCount++;
-      l.redu->packetp->PackTime = l.redu->msg_time;
+      l.redu->packetp->ReceiveCnt++;
+      l.redu->packetp->UnpackTime = l.redu->msg_time;
     }
       
     break;

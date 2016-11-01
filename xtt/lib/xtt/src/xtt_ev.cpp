@@ -766,6 +766,7 @@ pwr_tStatus Ev::mh_alarmstatus_bc( mh_sAlarmStatus *MsgP)
 
 
   brow_GetObjectList( ev->ala->browbase->ctx, &object_list, &object_cnt);
+  ev->ala->size = object_cnt;
 
   // Reset check to find obsolete items
   for ( i = 0; i < object_cnt; i++) {
@@ -839,6 +840,7 @@ pwr_tStatus Ev::mh_alarmstatus_bc( mh_sAlarmStatus *MsgP)
       case evlist_eItemType_Alarm:
 	if ( MsgP->Nix == item->eventid.Nix && !item->check) {
 	  ev->ala->event_delete( &item->eventid);
+	  printf( "Sts ala del %d,%d\n", item->eventid.Nix, item->eventid.Idx);
 	  for ( int k = 0; k < ev->sala_cnt; k++)
 	    ev->sala[k]->event_delete( &item->eventid);
 	  i--;

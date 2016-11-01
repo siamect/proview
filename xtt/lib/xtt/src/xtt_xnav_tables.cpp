@@ -295,8 +295,19 @@ int XNav::show_nethandler()
       t.elem_cnt = 0;
 
       // Node name
-      strcpy( t.elem[t.elem_cnt].fix_str, np->name);
-      t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
+      //strcpy( t.elem[t.elem_cnt].fix_str, np->name);
+      //t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
+      if (np == gdbroot->my_node) {
+        // Local node
+        strcpy( t.elem[t.elem_cnt].fix_str, np->name);
+        t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
+      }
+      else {
+        t.elem[t.elem_cnt].value_p = np->name;
+        t.elem[t.elem_cnt].type_id = pwr_eType_String;
+        t.elem[t.elem_cnt].size = sizeof(np->name);
+        strcpy( t.elem[t.elem_cnt++].format, "%s");
+      }
 
       // Os
       switch ( np->hw) {

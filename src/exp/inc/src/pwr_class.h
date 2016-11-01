@@ -643,7 +643,8 @@ typedef pwr_tEnum pwr_tRedundancyStateEnum;
 typedef enum {
   pwr_eRedundancyState_Off,
   pwr_eRedundancyState_Passive,
-  pwr_eRedundancyState_Active
+  pwr_eRedundancyState_Active,
+  pwr_eRedundancyState_Init
 } pwr_eRedundancyState;
 
 

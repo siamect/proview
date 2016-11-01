@@ -175,6 +175,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr Flags |= PWR_MASK_STATE 
           Attr Flags |= PWR_MASK_NOEDIT 
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "act"
         EndBody
       EndObject
@@ -190,6 +191,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr Flags |= PWR_MASK_STATE 
           Attr Flags |= PWR_MASK_NOEDIT 
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "ack"
         EndBody
       EndObject
@@ -211,6 +213,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr Flags |= PWR_MASK_STATE 
           Attr Flags |= PWR_MASK_NOEDIT 
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr GraphName = "blk"
         EndBody
       EndObject
@@ -239,6 +242,7 @@ SObject pwrb:Class
         Body SysBody
           Attr PgmName = "DetectOn"
           Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -397,6 +401,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$UInt32"
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -408,6 +413,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -421,6 +427,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -434,6 +441,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -445,6 +453,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Time"
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -458,6 +467,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -471,6 +481,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -483,6 +494,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Time"
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -495,6 +507,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Time"
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
       !/**
@@ -554,6 +567,7 @@ SObject pwrb:Class
           Attr PgmName = "TimerFlag"
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
@@ -578,6 +592,7 @@ SObject pwrb:Class
           Attr PgmName = "TimerCount"
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject

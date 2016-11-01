@@ -68,33 +68,60 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Link timeout time.
+      !  If no messages in passive state is received within this
+      !  time the link is regarded as down.
+      !*/
+      Object LinkTimeout $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Force state.
+      !  State can only be changed from Active/Passive buttons in 
+      !  object graph. I will not automatically be changed by system
+      !  events or errors.
+      !*/
+      Object Force $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
       !  Set redundancy state Active.
       !*/
-      Object SetActive $Attribute 3 
+      Object SetActive $Attribute 5 
         Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
       !/**
       !  Set redundancy state Passive.
       !*/
-      Object SetPassive $Attribute 4 
+      Object SetPassive $Attribute 6 
         Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
       !/**
       !  Set redundancy state Off.
       !*/
-      Object SetOff $Attribute 5 
+      Object SetOff $Attribute 7 
         Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
       !/**
       !  Link state.
       !*/
-      Object Link $Attribute 6 
+      Object Link $Attribute 8 
         Body SysBody
           Attr Flags |= PWR_MASK_ARRAY
           Attr Flags |= PWR_MASK_CLASS
@@ -106,6 +133,7 @@ SObject pwrb:Class
     Object Template RedcomConfig
       Body RtBody
 	Attr CycleTime = 0.005
+	Attr LinkTimeout = 0.200
       EndBody
     EndObject
   EndObject

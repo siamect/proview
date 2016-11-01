@@ -87,6 +87,7 @@
     (p)->pre = (void *)(&(o)->e))
 #define LstRem(p) ((p)->nex->pre = (p)->pre,(p)->pre->nex = (p)->nex)
 #define LstNul(p) ((p)->nex = (p)->pre = NULL)
+#define LstIsNul(p) ((p)->nex == NULL && (p)->pre == NULL)
 #define LstInl(p) ((p)->nex != NULL && (p)->pre != NULL)
 #define LstIni(h) ((h)->nex = (h)->pre = (h))
 #define LstObj(p) ((p)->obj)

@@ -66,10 +66,12 @@ extern "C" {
 
 typedef enum {
   redu_eMsgType_Table,
-  redu_eMsgType_Cyclic
+  redu_eMsgType_Cyclic,
+  redu_eMsgType_TableRequest
 } redu_eMsgType;
 
 typedef enum {
+  redu_ePrio_0 = 0,
   redu_ePrio_1 = 1,
   redu_ePrio_2 = 2,
   redu_ePrio_3 = 3,
@@ -136,6 +138,7 @@ pwr_tStatus redu_create_message( redu_tCtx ctx, void **msg);
 pwr_tStatus redu_unpack_message( redu_tCtx ctx, void *msg);
 pwr_tStatus redu_receive_table( redu_tCtx ctx, void *table_msg);
 pwr_tStatus redu_send_table( redu_tCtx ctx, void **table_msg);
+pwr_tStatus redu_create_table_request_message( redu_tCtx ctx, void **msg);
 int redu_init( redu_tCtx *ctx, pwr_sNode *nodep, pwr_sClass_RedcomPacket *packetp);
 int redu_send( redu_tCtx ctx, void *msg, int size, unsigned int msg_id);
 int redu_receive( redu_tCtx ctx, unsigned int timeout, int *size, void **msg);
