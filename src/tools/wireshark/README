@@ -1,19 +1,25 @@
 
-Wireshark dissector for Proview
+Wireshark dissectors for Proview
 
 Built for Wireshark 1.6.4.
 
-This directory contains files to build a wireshark dissector for QCom, and this
-is a description of how to build the dissector.
+This directory contains the subdirectories qcom and redcom that contains files to build 
+the wireshark dissectors for QCom and RedCom.
+
+Build QCom and Redcom dissectors
+--------------------------------
 
 1. Download the wireshark source code.
 
-3. Read README.plugins and README.developer on the wireshark directory.
+2. Read README.plugins and README.developer on the wireshark directory.
 
-2. Create the directory plugin/qcom and copy the files on 
-   $pwre_croot/src/tools/wireshark to this directory.
+3. Create the directory plugin/qcom and copy the files on 
+   $pwre_croot/src/tools/wireshark/qcom to this directory.
 
-3. Edit these files and add qcom analog to the gryphon dissector
+4. Create the directory plugin/redcom and copy the files on 
+   $pwre_croot/src/tools/wireshark/redcom to this directory.
+
+5. Edit these files and add qcom and redcom analog to the gryphon dissector
 
 	configure.in
 	CMakeLists.txt
@@ -24,26 +30,26 @@ is a description of how to build the dissector.
 	plugins/Makefile.am
 	plugins/Makefile.nmake
 
-4. Build wireshark
+6. Build wireshark
 
-  Install autoconf, libtool, bison, libpcap-dev
+   Install autoconf, libtool, bison, libpcap-dev
 
-  > ./autogen.sh
-  > ./configure
-  > make all
+   > ./autogen.sh
+   > ./configure
+   > make all
 
-5. Setup a working root to build and intstall wireshark there.
+7. Setup a working root to build and intstall wireshark there.
 
-  > mkdir -p /data0/wireshark/bld
-  > ./configure --prefix=/data0/wireshark/bld;make install
+   > mkdir -p /data0/wireshark/bld
+   > ./configure --prefix=/data0/wireshark/bld;make install
 
-6. To install changes in the qcom plugin, go to the plugin/qcom directory
+8. To install changes in the qcom plugin, go to the plugin/qcom directory
    and execute 'make install'
 
-  > make all
-  > make install
+   > make all
+   > make install
 
-7. To run wireshark, define PWR_BUS_ID, go to the bin directory in the build
+9. To run wireshark, define PWR_BUS_ID, go to the bin directory in the build
    tree, and define WIRESHARK_RUN_FROM_BUILD_DIRECTORY
 
    > cd /data0/wireshark/bld/bin
@@ -57,7 +63,7 @@ is a description of how to build the dissector.
 
    Specify filter 'qcom' and start capturing.
 
-8. Build debian package.
+10. Build debian package.
 
    Install dependencies, for example
 
