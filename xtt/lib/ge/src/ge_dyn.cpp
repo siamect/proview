@@ -1986,7 +1986,8 @@ int GeDyn::confirmed_action( grow_tObject object, glow_tEvent event)
 
   for ( GeDynElem *elem = elements; elem; elem = elem->next) {
     sts = elem->action( object, event);
-    if ( sts == GE__NO_PROPAGATE || sts == GLOW__TERMINATED)
+    if ( sts == GE__NO_PROPAGATE || sts == GLOW__TERMINATED ||
+	 sts == GLOW__SUBTERMINATED)
       return sts;
   }
 
@@ -18943,6 +18944,8 @@ void GeCatchSignal::open( ifstream& fp)
 
 int GeCatchSignal::action( grow_tObject object, glow_tEvent event)
 {
+  pwr_tStatus sts;
+
   if ( !dyn->graph->is_authorized( dyn->access))
     return 1;
 
@@ -18955,8 +18958,10 @@ int GeCatchSignal::action( grow_tObject object, glow_tEvent event)
     glow_sEvent e;
     e.event = glow_eEvent_MB1Click;
     e.object.object = object;
-    dyn->action( object, &e);
-
+    sts = dyn->action( object, &e);
+    if ( sts == GE__NO_PROPAGATE || sts == GLOW__TERMINATED ||
+	 sts == GLOW__SUBTERMINATED)
+      return sts;
     break;
   }
   default: ;
