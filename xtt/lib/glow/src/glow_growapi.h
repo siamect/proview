@@ -383,6 +383,7 @@ extern "C" {
     \param size		Length of text.
   */
   void grow_SetAnnotation( grow_tNode node, int number, const char *text, int size);
+  void grow_SetAnnotationInput( grow_tNode node, int number, const char *text, int size);
 
   //! Set the text of an annotation in a GrowNode object. Just redraw the background of the annotation.
   /*!

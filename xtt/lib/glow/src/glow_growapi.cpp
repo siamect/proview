@@ -292,6 +292,14 @@ void grow_SetAnnotation( grow_tNode node, int number, const char *text, int size
     ((GrowNode *)node)->set_annotation( number, text, size, 0);
 }
 
+void grow_SetAnnotationInput( grow_tNode node, int number, const char *text, int size)
+{
+  if ( ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowNode ||
+       ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowSlider ||
+       ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowGroup)
+    ((GrowNode *)node)->set_annotation_input( number, text, size, 0);
+}
+
 void grow_SetAnnotationBrief( grow_tNode node, int number, const char *text, int size)
 {
   if ( ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowNode ||

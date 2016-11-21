@@ -445,6 +445,7 @@
     ge_eSave_ValueInput_maxvalue_attr   = 1308,
     ge_eSave_ValueInput_escape_store    = 1309,
     ge_eSave_ValueInput_keyboard_type   = 1310,
+    ge_eSave_ValueInput_update_open     = 1311,
     ge_eSave_Rotate_attribute		= 1400,
     ge_eSave_Rotate_x0			= 1401,
     ge_eSave_Rotate_y0			= 1402,
@@ -1440,15 +1441,16 @@ class GeValue : public GeDynElem {
   int annot_typeid;
   int annot_size;
   pwr_tTid tid;
+  int update_open;
 
   GeValue( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
     GeDynElem(e_dyn, ge_mDynType1_Value, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_Value),
-    zero_blank(0), decimals_decr(0), annot_typeid(0), annot_size(0), tid(0)
+    zero_blank(0), decimals_decr(0), annot_typeid(0), annot_size(0), tid(0), update_open(0)
     { strcpy( attribute, ""); strcpy( format, ""); strcpy( decimals_attr, ""); instance = e_instance;
       memset(old_value, 0, sizeof(old_value));}
   GeValue( const GeValue& x) : 
     GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), zero_blank(x.zero_blank),
-    decimals_decr(x.decimals_decr)
+    decimals_decr(x.decimals_decr), update_open(x.update_open)
     { strcpy( attribute, x.attribute); strcpy( format, x.format); strcpy( decimals_attr, x.decimals_attr);
       instance = x.instance; instance_mask = x.instance_mask;
       memset(old_value, 0, sizeof(old_value));}
@@ -1477,6 +1479,7 @@ class GeValueInput : public GeDynElem {
   pwr_tAName minvalue_attr;
   pwr_tAName maxvalue_attr;
   graph_eKeyboard keyboard_type;
+  int update_open;
 	
   int annot_typeid;
   int annot_size;
@@ -1486,12 +1489,12 @@ class GeValueInput : public GeDynElem {
     GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_ValueInput, ge_mActionType2_No,
 	      ge_eDynPrio_ValueInput),
     min_value(0), max_value(0), clear(0), popup(0), unselect(0), escape_store(0), 
-    keyboard_type(graph_eKeyboard_Standard), value_element(0)
+    keyboard_type(graph_eKeyboard_Standard), update_open(0), value_element(0)
     { strcpy( minvalue_attr, ""); strcpy( maxvalue_attr, "");}
   GeValueInput( const GeValueInput& x) :
     GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), min_value(x.min_value),
     max_value(x.max_value), clear(x.clear), popup(x.popup), unselect(x.unselect), 
-    escape_store(x.escape_store), keyboard_type(x.keyboard_type)
+    escape_store(x.escape_store), keyboard_type(x.keyboard_type), update_open(x.update_open)
     { strcpy( minvalue_attr, x.minvalue_attr); strcpy( maxvalue_attr, x.maxvalue_attr);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);

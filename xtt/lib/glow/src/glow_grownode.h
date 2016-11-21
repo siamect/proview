@@ -683,6 +683,7 @@ class GrowNode : public GlowNode {
     \param brief	Just redraw the background object for the annotation, not the whole area.
   */
   void set_annotation( int num, const char *text, int size, int nodraw, int brief = 0);
+  void set_annotation_input( int num, const char *text, int size, int nodraw, int brief = 0);
 
   //! Store the current transform
   /*! The stored transform can be used as starting point for future scaling or rotations.

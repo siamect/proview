@@ -4689,9 +4689,10 @@ int GeValue::scan( grow_tObject object)
   }
   }
   int annot_num = GeDyn::instance_to_number( instance);
-  if ( annot_num == 1)
+  //if ( annot_num == 1)
     // grow_SetAnnotationBrief( object, annot_num, buf, len);
-    grow_SetAnnotation( object, annot_num, buf, len);
+  if ( update_open)
+    grow_SetAnnotationInput( object, annot_num, buf, len);
   else
     grow_SetAnnotation( object, annot_num, buf, len);
   return 1;
@@ -4756,6 +4757,11 @@ void GeValueInput::get_attributes( attr_sItem *attrinfo, int *item_count)
   attrinfo[i].type = ge_eAttrType_KeyboardType;
   attrinfo[i++].size = sizeof( keyboard_type);
 
+  strcpy( attrinfo[i].name, "ValueInput.UpdateOpen");
+  attrinfo[i].value = &update_open;
+  attrinfo[i].type = glow_eType_Boolean;
+  attrinfo[i++].size = sizeof( update_open);
+
   dyn->display_access = true;
   *item_count = i;
 }
@@ -4778,6 +4784,7 @@ void GeValueInput::save( ofstream& fp)
   fp << int(ge_eSave_ValueInput_maxvalue_attr) << FSPACE << maxvalue_attr << endl;
   fp << int(ge_eSave_ValueInput_escape_store) << FSPACE << escape_store << endl;
   fp << int(ge_eSave_ValueInput_keyboard_type) << FSPACE << (int)keyboard_type << endl;
+  fp << int(ge_eSave_ValueInput_update_open) << FSPACE << update_open << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -4815,6 +4822,7 @@ void GeValueInput::open( ifstream& fp)
         break;
       case ge_eSave_ValueInput_escape_store: fp >> escape_store; break;
       case ge_eSave_ValueInput_keyboard_type: fp >> tmp; keyboard_type = (graph_eKeyboard)tmp; break;
+      case ge_eSave_ValueInput_update_open: fp >> update_open; break;
       case ge_eSave_End: end_found = 1; break;
       default:
         cout << "GeValueInput:open syntax error" << endl;
@@ -4836,6 +4844,7 @@ int GeValueInput::connect( grow_tObject object, glow_sTraceData *trace_data)
       value_element = (GeValue *)elem;
       annot_typeid = value_element->annot_typeid;
       annot_size = value_element->annot_size;
+      value_element->update_open = update_open;
       break;
     }
   }
