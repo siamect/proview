@@ -191,4 +191,44 @@
     obj->Status = false;						\
   }
 
-
+/*_*
+  SUPRESSSUP
+  @aref supresssup SupressSup
+*/
+#define SupressSup_exec(obj,sup,cid,in)\
+  if ( in && !obj->InOld) {\
+    switch ( cid) {\
+    case pwr_cClass_DSup:\
+      ((pwr_sClass_DSup *)sup)->Blocked = 1;\
+      break;\
+    case pwr_cClass_DSupComp:\
+      ((pwr_sClass_DSupComp *)sup)->Blocked = 1;\
+      break;\
+    case pwr_cClass_ASup:\
+      ((pwr_sClass_ASup *)sup)->Blocked = 1;\
+      break;\
+    case pwr_cClass_ASupComp:\
+      ((pwr_sClass_ASupComp *)sup)->Blocked = 1;\
+      break;\
+    default: ;\
+    }\
+  }\
+  else if ( !in && obj->InOld) {\
+    switch ( cid) {\
+    case pwr_cClass_DSup:\
+      ((pwr_sClass_DSup *)sup)->Blocked = 0;\
+      break;\
+    case pwr_cClass_DSupComp:\
+      ((pwr_sClass_DSupComp *)sup)->Blocked = 0;\
+      break;\
+    case pwr_cClass_ASup:\
+      ((pwr_sClass_ASup *)sup)->Blocked = 0;\
+      break;\
+    case pwr_cClass_ASupComp:\
+      ((pwr_sClass_ASupComp *)sup)->Blocked = 0;\
+      break;\
+    default: ;\
+    }\
+  }\
+  obj->Supressed = in;\
+  obj->InOld = in;

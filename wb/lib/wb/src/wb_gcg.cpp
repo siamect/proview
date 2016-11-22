@@ -263,8 +263,10 @@ int	gcg_comp_m66( gcg_ctx gcgctx, vldh_t_node node);
 int	gcg_comp_m67( gcg_ctx gcgctx, vldh_t_node node);
 int	gcg_comp_m68( gcg_ctx gcgctx, vldh_t_node node);
 int	gcg_comp_m69( gcg_ctx gcgctx, vldh_t_node node);
+int	gcg_comp_m70( gcg_ctx gcgctx, vldh_t_node node);
+int	gcg_comp_m71( gcg_ctx gcgctx, vldh_t_node node);
 
-gcg_tMethod gcg_comp_m[70] = {
+gcg_tMethod gcg_comp_m[80] = {
 	(gcg_tMethod)gcg_comp_m0,
 	(gcg_tMethod)gcg_comp_m1,
 	gcg_comp_m2,
@@ -334,7 +336,9 @@ gcg_tMethod gcg_comp_m[70] = {
 	gcg_comp_m66,
 	gcg_comp_m67,
 	gcg_comp_m68,
-	gcg_comp_m69
+	gcg_comp_m69,
+	gcg_comp_m70,
+	gcg_comp_m71
 	};
 
 
@@ -17061,6 +17065,374 @@ int	gcg_comp_m69( gcg_ctx gcgctx, vldh_t_node node)
 	return GSX__SUCCESS;
 }
 
+/*************************************************************************
+*
+* Name:		gcg_comp_m38()
+*
+* Type		void
+*
+* Type		Parameter	IOGF	Description
+* gcg_ctx	gcgctx		I	gcg context.
+* vldh_t_node	node		I	vldh node.
+*
+* Description:
+*	Compile method for SupressSup.
+*
+*	Syntax control:
+*	Checks that the class of the referenced object is correct.
+*
+*	Code generation:
+*	Declares and links a write pointer to the referenced object.
+*	Prints an exec call.
+*	SupressSup_exec( W800005f6, Z800005e2, Z800005f5->Out);
+*
+**************************************************************************/
+
+
+int	gcg_comp_m70( gcg_ctx gcgctx, vldh_t_node node)
+{
+	ldh_sParDef 		*bodydef;
+	int 			rows, sts;
+	int			size;
+	pwr_sAttrRef		refattrref;
+	pwr_sAttrRef		*refattrref_ptr;
+	ldh_tSesContext ldhses;
+	pwr_tClassId		cid;
+	char			*nocondef_ptr;
+	gcg_t_nocondef		nocondef[2];
+	unsigned long		nocontype[2];
+	char			*name;
+	char			cid_str[40];
+
+	nocondef[1].bo = 1;
+	nocontype[1] = GCG_BOOLEAN;
+
+	ldhses = (node->hn.wind)->hw.ldhses;  
+
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
+
+	/* Check that this is objdid of an existing object */
+	sts = ldh_GetObjectClass( ldhses, node->ln.oid, &cid);
+	if ( EVEN(sts)) return sts;
+
+	/* Get the objdid of the referenced io object stored in the
+	  first parameter in defbody */
+
+	/* Get the devbody parameters for this class */
+	sts = ldh_GetObjectBodyDef( ldhses,
+			node->ln.cid, "DevBody", 1, 
+			&bodydef, &rows);
+	if ( EVEN(sts) ) return sts;
+
+	sts = ldh_GetObjectPar( ldhses,
+			node->ln.oid, 
+			"DevBody",
+			bodydef[0].ParName,
+			(char **)&refattrref_ptr, &size); 
+	if ( EVEN(sts)) return sts;
+	refattrref = *refattrref_ptr;
+	free((char *) refattrref_ptr);
+	free((char *) bodydef);	
+
+	sts = gcg_replace_ref( gcgctx, &refattrref, node);
+	if ( EVEN(sts)) return sts;
+
+	/* If the object is not connected the value in the
+	   parameter should be written in the macro call */
+	sts = ldh_GetObjectPar( ldhses, node->ln.oid, 
+				"RtBody", "In", &nocondef_ptr, &size); 
+	if ( EVEN(sts)) return sts;
+
+	/* Check that this is objdid of an existing object */
+	sts = ldh_GetAttrRefOrigTid( ldhses, &refattrref, &cid);
+	if ( EVEN(sts)) {
+	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
+	  return GSX__NEXTNODE;
+	}
+
+	/* Check that the class of the referenced object is correct */
+	
+	switch ( cid) {
+	case pwr_cClass_DSup:
+	case pwr_cClass_DSupComp:
+	case pwr_cClass_ASup:
+	case pwr_cClass_ASupComp:
+	  break;
+	default:
+	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
+	    return GSX__NEXTNODE;
+	}
+
+	free(nocondef_ptr);
+
+	nocondef[0].bo = TRUE;
+	nocontype[0] = GCG_BOOLEAN;
+
+	/* Insert dsup object in ref list */
+	gcg_aref_insert( gcgctx, refattrref, GCG_PREFIX_REF, node);
+
+	/* Print the execute command */
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
+	if ( EVEN(sts)) return sts;
+
+	switch ( cid) {
+	case pwr_cClass_DSup:
+	  strcpy( cid_str, "pwr_cClass_DSup");
+	  break;
+	case pwr_cClass_DSupComp:
+	  strcpy( cid_str, "pwr_cClass_DSupComp");
+	  break;
+	case pwr_cClass_ASup:
+	  strcpy( cid_str, "pwr_cClass_ASup");
+	  break;
+	case pwr_cClass_ASupComp:
+	  strcpy( cid_str, "pwr_cClass_ASupComp");
+	  break;
+	default: ;
+	}
+
+	/* Print the execute command */
+	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
+		       "%s_exec( %c%s, %c%s, %s, ",
+		       name,
+		       GCG_PREFIX_REF,
+		       vldh_IdToStr(0, node->ln.oid),
+		       GCG_PREFIX_REF,
+		       vldh_AttrRefToStr(0, refattrref),
+		       cid_str);
+
+	sts = gcg_print_inputs( gcgctx, node, ", ", GCG_PRINT_ALLPAR, 
+		nocondef, nocontype);
+	if ( EVEN(sts) ) return sts;
+
+	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
+		");\n");
+
+	return GSX__SUCCESS;
+}
+
+/*************************************************************************
+*
+* Name:		gcg_comp_40()
+*
+* Type		void
+*
+* Type		Parameter	IOGF	Description
+* gcg_ctx	gcgctx		I	gcg context.
+* vldh_t_node	node		I	vldh node.
+*
+* Description:
+*	Compile method for Simulink.
+*	Generates code to call simulink functions with in and out signals.
+*
+**************************************************************************/
+
+int	gcg_comp_m71( gcg_ctx gcgctx, vldh_t_node node)
+{
+	unsigned long		point;
+	unsigned long		par_inverted;
+	vldh_t_node		output_node;
+	unsigned long		output_count;
+	unsigned long		output_point;
+	ldh_sParDef 		*bodydef;
+	ldh_sParDef 		output_bodydef;
+	int 			rows, sts;
+	int			i, output_found, first_par;
+	int			size;
+	pwr_sAttrRef		output_attrref;
+	int			output_type;
+	char			output_prefix;
+	char			output_par[80];
+	ldh_tSesContext 	ldhses;
+	pwr_tString32		*modelname_p;
+	pwr_tString32		*ainname_p;
+	pwr_tString32		*dinname_p;
+	pwr_tString32		*outaname_p;
+	pwr_tString32		*outdname_p;
+
+	ldhses = (node->hn.wind)->hw.ldhses; 
+
+	/* Get Model name stored in devbody */
+	sts = ldh_GetObjectPar( ldhses,
+			node->ln.oid, 
+			"DevBody",
+			"ModelName",
+			(char **)&modelname_p, &size); 
+	if ( EVEN(sts)) return sts;
+
+	if ( strcmp( *modelname_p, "") == 0) {
+	  /* There is no expression */
+	  gcg_error_msg( gcgctx, GSX__NOEXPR, node);
+	  free( modelname_p);
+	  return GSX__NEXTNODE;
+	}	
+
+	/* Get Input signals name stored in devbody */
+	sts = ldh_GetObjectPar( ldhses,
+			node->ln.oid, 
+			"DevBody",
+			"AInName",
+			(char **)&ainname_p, &size); 
+	if ( EVEN(sts)) return sts;
+
+	sts = ldh_GetObjectPar( ldhses,
+			node->ln.oid, 
+			"DevBody",
+			"DInName",
+			(char **)&dinname_p, &size); 
+	if ( EVEN(sts)) return sts;
+
+	sts = ldh_GetObjectPar( ldhses,
+			node->ln.oid, 
+			"DevBody",
+			"OutAName",
+			(char **)&outaname_p, &size); 
+	if ( EVEN(sts)) return sts;
+
+	sts = ldh_GetObjectPar( ldhses,
+			node->ln.oid, 
+			"DevBody",
+			"OutDName",
+			(char **)&outdname_p, &size); 
+	if ( EVEN(sts)) return sts;
+
+	/* Print includes */
+	IF_PR fprintf( gcgctx->files[GCGM1_DECL_FILE], "\
+#include \"rtwtypes.h\"\n\
+#include \"%s.h\"\n",
+		       *modelname_p);
+
+	/* Print init */
+	IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], "\
+%s_initialize();\n",
+		       *modelname_p);
+
+		       
+	/* Print step code */
+	for ( i = 0; i < 8; i++) {
+	  if ( strcmp( ainname_p[i], "") != 0)
+	    IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], "  rtU.%s = *%c%s->AIn%dP;\n",
+			   ainname_p[i],
+			   GCG_PREFIX_REF,
+			   vldh_IdToStr(0, node->ln.oid),
+			   i + 1);
+	}
+	for ( i = 0; i < 8; i++) {
+	  if ( strcmp( dinname_p[i], "") != 0)
+	    IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], "  rtU.%s = *%c%s->DIn%dP;\n",
+			   dinname_p[i],
+			   GCG_PREFIX_REF,
+			   vldh_IdToStr(0, node->ln.oid),
+			   i + 1);
+	}
+
+	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], "  %s_step();\n", *modelname_p);
+
+	for ( i = 0; i < 8; i++) {
+	  if ( strcmp( outaname_p[i], "") != 0)
+	    IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], "  %c%s->OutA%d = rtY.%s;\n",
+			   GCG_PREFIX_REF,
+			   vldh_IdToStr(0, node->ln.oid),
+			   i + 1,
+			   outaname_p[i]);
+	}
+	for ( i = 0; i < 8; i++) {
+	  if ( strcmp( outdname_p[i], "") != 0)
+	    IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], "  %c%s->OutD%d = rtY.%s;\n",
+			   GCG_PREFIX_REF,
+			   vldh_IdToStr(0, node->ln.oid),
+			   i + 1,
+			   outdname_p[i]);
+	}
+
+
+	free((char *) modelname_p);
+	free((char *) ainname_p);
+	free((char *) dinname_p);
+	free((char *) outaname_p);
+	free((char *) outdname_p);
+
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
+
+
+	/* Get the runtime parameters for this class */
+	sts = ldh_GetObjectBodyDef((node->hn.wind)->hw.ldhses, 
+			node->ln.cid, "RtBody", 1, 
+			&bodydef, &rows);
+	if ( EVEN(sts) ) return sts;
+
+	i = 0;
+	first_par = 1;
+	while( 	(i < rows) &&
+		(bodydef[i].ParClass == pwr_eClass_Input))
+	{
+	  /* Get the point for this parameter if there is one */
+	  output_found = 0;
+	  sts = gcg_get_inputpoint( node, i, &point, &par_inverted);
+	  if ( ODD( sts))
+	  {
+	    /* Look for an output connected to this point */
+	    sts = gcg_get_output( node, point, &output_count, &output_node,
+			&output_point, &output_bodydef,
+			GOEN_CON_SIGNAL | GOEN_CON_OUTPUTTOINPUT);
+	    if ( EVEN(sts)) return sts;
+
+	    if ( output_count > 0 )
+	    {
+	      output_found = 1;
+	      if ( output_count > 1) 
+	        gcg_error_msg( gcgctx, GSX__CONOUTPUT, output_node);
+
+	      sts = gcg_get_outputstring( gcgctx, output_node, &output_bodydef, 
+			&output_attrref, &output_type, &output_prefix, output_par);
+	      if ( sts == GSX__NEXTPAR ) 
+	      {
+	        i++;
+	        continue;
+	      }
+	      if ( EVEN(sts)) return sts;
+
+	      if ( par_inverted ) 
+	        gcg_error_msg( gcgctx, GSX__INV, node);
+
+	      IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
+			"%c%s->%sP = &%c%s->%s;\n", 
+			GCG_PREFIX_REF,
+			vldh_IdToStr(0, node->ln.oid),
+			bodydef[i].Par->Param.Info.PgmName,
+			output_prefix,
+ 			output_type == GCG_OTYPE_OID ? 
+			     vldh_IdToStr(1, output_attrref.Objid) : 
+			     vldh_AttrRefToStr(0, output_attrref),
+			output_par);
+	    }
+	    else
+	    {
+	      /* Point visible but not connected, errormessage */
+	      gcg_error_msg( gcgctx, GSX__NOTCON, node);  
+	    }
+	    first_par = 0;
+	  }
+	  if ( !output_found )
+	  {
+	    /* The point is not connected and will point to its
+	       own object */
+
+	    IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
+			"%c%s->%sP = &%c%s->%s;\n", 
+			GCG_PREFIX_REF,
+			vldh_IdToStr(0, node->ln.oid),
+			bodydef[i].Par->Param.Info.PgmName,
+			GCG_PREFIX_REF,
+			vldh_IdToStr(1, node->ln.oid),
+			bodydef[i].Par->Param.Info.PgmName);
+	  }
+	  i++;
+	}
+	free((char *) bodydef);	
+
+	return GSX__SUCCESS;
+}
 
 /*************************************************************************
 *

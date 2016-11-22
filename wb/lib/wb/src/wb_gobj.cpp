@@ -58,7 +58,7 @@
 
 #define	BEEP	    putchar( '\7' );
 
-#define	GOBJ_MAX_METHOD 35
+#define	GOBJ_MAX_METHOD 36
 
 typedef int (* gobj_tMethod)( WFoe *, vldh_t_node, unsigned long);
 
@@ -98,6 +98,7 @@ int	gobj_get_object_m32( WFoe *foe, vldh_t_node node, unsigned long index);
 int	gobj_get_object_m33( WFoe *foe, vldh_t_node node, unsigned long index);
 int	gobj_get_object_m34( WFoe *foe, vldh_t_node node, unsigned long index);
 int	gobj_get_object_m35( WFoe *foe, vldh_t_node node, unsigned long index);
+int	gobj_get_object_m36( WFoe *foe, vldh_t_node node, unsigned long index);
 
 gobj_tMethod gobj_get_object_m[40] = {
 	gobj_get_object_m0,
@@ -136,6 +137,7 @@ gobj_tMethod gobj_get_object_m[40] = {
  	gobj_get_object_m33,
  	gobj_get_object_m34,
  	gobj_get_object_m35,
+ 	gobj_get_object_m36,
 	};
 
 static pwr_tAttrRef gobj_selected_aref;
@@ -3164,6 +3166,64 @@ int	gobj_get_object_m35( WFoe *foe, vldh_t_node node, unsigned long index)
 }
 
 //
+//	Method for SupressSup. Inserts the selected Sup-object in the
+//	navigator in the parameter SupObject in a SupressSup object.
+//
+int	gobj_get_object_m36( WFoe *foe, vldh_t_node node, unsigned long index)
+{
+  pwr_tClassId	cid;
+  ldh_tSesContext	ldhses;
+  int		sts;
+  vldh_t_plc	plc;
+  pwr_sAttrRef	attrref;
+  int		is_attr;
+
+
+  /* Get the selected object in the navigator */
+  plc = (node->hn.wind)->hw.plc;
+  ldhses =(node->hn.wind)->hw.ldhses;
+
+  sts = gobj_get_select( foe, &attrref, &is_attr);
+  if ( EVEN(sts)) { 
+    foe->message( "Select a supervision object in the navigator");
+    BEEP;
+    return sts;
+  }
+
+  sts = ldh_GetAttrRefTid( ldhses, &attrref, &cid);
+  if ( EVEN(sts)) return sts;
+
+  switch ( cid) {
+  case pwr_cClass_DSup:
+  case pwr_cClass_ASup:
+  case pwr_cClass_DSupComp:
+  case pwr_cClass_ASupComp:
+    break;
+  default:
+    foe->message( "Selected object is not a di object");
+    BEEP;
+    return 0;
+  }
+
+  if ( cdh_IsClassVolume( node->ln.oid.vid)) {
+    sts = gobj_ref_replace( ldhses, node, &attrref);
+    if ( EVEN(sts)) return sts;
+  }
+
+  /* Set the parameter value */
+  sts = ldh_SetObjectPar( ldhses,
+			  node->ln.oid, 
+			  "DevBody",
+			  "SupObject",
+			  (char *)&attrref, sizeof(attrref)); 
+  if ( EVEN(sts)) return sts;
+
+  foe->gre->node_update( node);
+  
+  return FOE__SUCCESS;
+}
+
+//
 // Description:	Method for objects with nothing to expand
 //
 int	gobj_expand(	WFoe		*foe,
@@ -3246,6 +3306,7 @@ int	gobj_expand(	WFoe		*foe,
     case pwr_cClass_GetBoInt32:
     case pwr_cClass_GetBoFloat32:
     case pwr_cClass_GetBoString80:
+    case pwr_cClass_SupressSup:
       sts = gobj_expand_m1( foe, node, compress);
       break;
     case pwr_cClass_and:
