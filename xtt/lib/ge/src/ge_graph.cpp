@@ -887,7 +887,7 @@ void Graph::change_select_text()
 {
   grow_tObject 	*sel_list;
   int		sel_count;
-  char		text[80];
+  char		text[200];
 
   grow_GetSelectList( grow->ctx, &sel_list, &sel_count);
   if ( sel_count == 1 && 
@@ -897,7 +897,7 @@ void Graph::change_select_text()
     {
       journal_store( journal_eAction_AntePropertiesSelect, 0);
 
-      grow_GetObjectText( *sel_list, text);
+      grow_GetObjectText( *sel_list, text, sizeof(text));
       (change_text_cb)( parent_ctx, *sel_list, text);
 
       journal_store( journal_eAction_PostPropertiesSelect, 0);

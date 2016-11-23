@@ -2104,7 +2104,7 @@ extern "C" {
     \param object	A GrowText object.
     \param text		Text.
   */
-  void grow_GetObjectText( grow_tObject object, char *text);
+  void grow_GetObjectText( grow_tObject object, char *text, int size);
 
   //! Set text size on all selected objects.
   /*!

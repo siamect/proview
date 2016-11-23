@@ -281,7 +281,7 @@ class GrowText : public GlowText {
   /*!
     \param str		buffer where the text is copied.
   */
-  void get_text( char *str) { strcpy( str, text);};
+  void get_text( char *str, int size) { strncpy( str, text, size); str[size-1] = 0;};
 
   //! Set text size
   /*!

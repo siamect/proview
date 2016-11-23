@@ -73,8 +73,13 @@ class GlowText : public GlowArrayElem {
 	glow_eDrawType color_d_type = glow_eDrawType_Line,
 	int t_size = 2, glow_mDisplayLevel display_lev = glow_mDisplayLevel_1) : 
 	ctx(glow_ctx), p(glow_ctx,x,y), draw_type(d_type), text_size(t_size),
-        display_level(display_lev), color_drawtype( color_d_type)
-	{ strncpy( text, text1, sizeof(text));};
+        display_level(display_lev), color_drawtype( color_d_type) { 
+    text = (char *)malloc(strlen(text1)+1); strcpy( text, text1);
+  }
+    
+  ~GlowText() {
+    free( text);
+  }
 
   friend ostream& operator<< ( ostream& o, const GlowText t);
 
@@ -184,7 +189,7 @@ class GlowText : public GlowArrayElem {
 
   GrowCtx *ctx;    	//!< Glow context.
   GlowPoint p;		//!< Position point.
-  char text[80];	//!< The text.
+  char *text;		//!< The text.
   glow_eDrawType draw_type;	//!< Drawtype for the text.
   int	 text_size;	//!< Text size.
   glow_mDisplayLevel display_level; //!< Display level when the object is visible.

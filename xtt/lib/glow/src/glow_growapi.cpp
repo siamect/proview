@@ -4728,9 +4728,9 @@ void grow_SetObjectText( grow_tObject object, char *text)
   ((GrowText *)object)->set_text( text);
 }
 
-void grow_GetObjectText( grow_tObject object, char *text)
+void grow_GetObjectText( grow_tObject object, char *text, int size)
 {
-  ((GrowText *)object)->get_text( text);
+  ((GrowText *)object)->get_text( text, size);
 }
 
 void grow_SetSelectTextSize( grow_tCtx ctx, int size)
