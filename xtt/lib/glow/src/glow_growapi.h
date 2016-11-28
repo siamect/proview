@@ -78,7 +78,8 @@ extern "C" {
     grow_eInfoType_Annot,
     grow_eInfoType_Dynamic,
     grow_eInfoType_Arg,
-    grow_eInfoType_Image
+    grow_eInfoType_Image,
+    grow_eInfoType_DynamicText
   } grow_eInfoType;
 
   typedef struct {
