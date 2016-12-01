@@ -77,6 +77,8 @@ class GrowText : public GlowText {
 		glow_mDisplayLevel display_lev = glow_mDisplayLevel_1,
 		int nodraw = 0);
 
+  GrowText( const GrowText& x);
+
   //! Destructor
   ~GrowText();
 
@@ -502,6 +504,7 @@ class GrowText : public GlowText {
   void export_flow( GlowExportFlow *ef);
 
   glow_eDrawType get_text_color() { return color_drawtype;}
+
 };
 
 /*@}*/

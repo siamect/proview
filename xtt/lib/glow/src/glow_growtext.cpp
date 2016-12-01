@@ -71,6 +71,15 @@ GrowText::GrowText( GrowCtx *glow_ctx, const char *name, const char *text1, doub
     draw( &ctx->mw, (GlowTransform *)NULL, highlight, hot, NULL, NULL);
 }
 
+GrowText::GrowText( const GrowText& n) : GlowText(n) 
+{
+  memcpy( this, &n, sizeof(n));
+  if ( n.text) {
+    text = (char *) malloc( strlen(n.text)+1);
+    strcpy( text, n.text);
+  }
+}
+
 GrowText::~GrowText()
 {
   ctx->object_deleted( this);
@@ -1181,3 +1190,4 @@ void GrowText::export_flow( GlowExportFlow *ef)
 {
   ef->text( this);
 }
+
