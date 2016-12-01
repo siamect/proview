@@ -94,6 +94,7 @@ ge_sTimeComboText curve_timecombo_text[] = {
   {"This Year", time_ePeriod_ThisYear},
   {"All Time", time_ePeriod_AllTime},
   {"Edit", time_ePeriod_UserDefined},
+  {"Markers", ge_ePeriod_Markers},
   {"", time_ePeriod_}};
 
 
@@ -289,8 +290,11 @@ void GeCurveGtk::activate_timecombo( GtkWidget *w, gpointer data)
     
   if ( period == time_ePeriod_UserDefined)
     curve->activate_edit();
+  else if ( period == ge_ePeriod_Markers)
+    curve->activate_period_markers();
   else
     curve->activate_period( period);
+  curve->current_period = period;
 }
 
 void GeCurveGtk::activate_background( GtkWidget *w, gpointer data)
@@ -763,6 +767,7 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
   const int    	nav_height = 120;
   pwr_tFileName fname;
   float height_scale = 1;
+  int   nonav = 0;
 
   if ( gc_width != 0)
     window_width = gc_width;
@@ -1099,13 +1104,17 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
   gtk_box_pack_start( GTK_BOX(sea_timebox), GTK_WIDGET(curvebuttonbox), FALSE, FALSE, 0);
 
   GtkWidget *w;
-  grownames_main_widget = scrolledgrowwidgetgtk_new( init_grownames_cb, this, &w);
+    grownames_main_widget = scrolledgrowwidgetgtk_new( init_grownames_cb, this, &w);
 
-  growcurve_main_widget = curvewidgetgtk_new( init_growcurve_cb, this);
+  if ( nonav)
+    growcurve_main_widget = scrolledcurvewidgetgtk_new( init_growcurve_cb, this, &w);
+  else
+    growcurve_main_widget = curvewidgetgtk_new( init_growcurve_cb, this);
 
   growaxis_main_widget = growwidgetgtk_new( init_growaxis_cb, this);
 
-  nav_widget = curvenavwidgetgtk_new( growcurve_main_widget);
+  if (!nonav)
+    nav_widget = curvenavwidgetgtk_new( growcurve_main_widget);
 
   GtkWidget *hbox = gtk_hbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(hbox), growaxis_main_widget, FALSE, FALSE, 0);
@@ -1120,7 +1129,8 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
   gtk_widget_show_all( vpaned1);
 
   gtk_paned_pack1( GTK_PANED(vpaned2), hbox, TRUE, TRUE);
-  gtk_paned_pack2( GTK_PANED(vpaned2), nav_widget, FALSE, TRUE);
+  if ( !nonav)
+    gtk_paned_pack2( GTK_PANED(vpaned2), nav_widget, FALSE, TRUE);
   gtk_widget_show_all( vpaned2);
 
   GtkWidget *tools_box = gtk_hbox_new( FALSE, 0);
