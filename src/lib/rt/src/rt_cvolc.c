@@ -101,6 +101,8 @@ fetch (
     net_Free(NULL, rsp);
     pwr_Return(NULL, sts, lsts);
   }
+  if ( !vp->l.flags.b.isConnected)
+    pwr_Return(NULL, sts, GDH__CONNLOST);
 
   for (i = 0, gop = &rsp->g[0]; i < rsp->count; i++, gop++) {
     if ( vp->g.vid != gop->oid.vid) {

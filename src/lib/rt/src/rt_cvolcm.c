@@ -65,7 +65,7 @@ cvolcm_AddClassVolume(
   const net_sGvolume	*vp
 )
 {
-  gdb_sCclassVolume	*ccvp;
+  gdb_sCclassVolume	*ccvp, *rp;
   gdb_sVolume		*cvp;
   
 
@@ -89,8 +89,11 @@ cvolcm_AddClassVolume(
     ccvp->equalClasses = time_Acomp(&ccvp->time, &t) == 0 ? 1 : 0;
   }
   
-  ccvp = hash_Insert(sts, gdbroot->ccvol_ht, ccvp);
-  if (ccvp == NULL) errh_Bugcheck(GDH__WEIRD, "adding cached class volume");
+  rp = hash_Insert(sts, gdbroot->ccvol_ht, ccvp);
+  if (rp == NULL) { /* This was previously a bugcheck but obviously can occur */
+    pool_Free(NULL, gdbroot->pool, ccvp);
+    return;
+  }
   
   pool_QinsertPred(NULL, gdbroot->pool, &ccvp->ccvol_ll, &np->ccvol_lh);
 

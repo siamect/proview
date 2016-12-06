@@ -326,9 +326,15 @@ lockMountServers (
     vl = pool_Qsucc(NULL, gdbroot->pool, vl)
   ) {
     vp = pool_Qitem(vl, gdb_sVolume, l.own_ll);
+
+    if ( vl->self == vl->flink) {
+      /* Connection lost and volume removed from own list */
+      errh_Error("Volume not owned any more, %s", vp->g.name.orig);
+      return;
+    }
     if(!vp->l.flags.b.isConnected) {
       /* !!! Todo !!! How do we make this known ?  */
-      errh_Error("Volume not connected, %s", vp->g.name);
+      errh_Error("Volume not connected, %s", vp->g.name.orig);
       continue;
     }
 
@@ -349,7 +355,8 @@ lockMountServers (
       }
       msp->msor = pool_ItemReference(NULL, gdbroot->pool, op);
       op->l.flags.b.isMountServer = 1;
-      pool_QinsertPred(NULL, gdbroot->pool, &msp->nodms_ll, &np->nodms_lh);
+      if ( msp->nodms_ll.self == msp->nodms_ll.flink && msp->nodms_ll.self == msp->nodms_ll.blink)
+	pool_QinsertPred(NULL, gdbroot->pool, &msp->nodms_ll, &np->nodms_lh);
       
       if (0) errh_Info("Locking object %s", op->g.f.name.orig);
       cvolc_LockObject(&sts, op);
