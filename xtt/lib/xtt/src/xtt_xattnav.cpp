@@ -56,6 +56,7 @@
 #include "xtt_item.h"
 #include "pwr_privilege.h"
 #include "cow_wow.h"
+#include "co_error.h"
 
 #define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 #define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
@@ -593,7 +594,10 @@ int XAttNav::trace_scan_bc( brow_tObject object, void *p)
 	// Add signal flags
 	XAttNav *xattnav;
 	brow_GetCtxUserData( brow_GetCtx( item->node), (void **)&xattnav);
-	((ItemCollect *)item)->set_signal_flags( xattnav->brow);
+	try {
+	  ((ItemCollect *)item)->set_signal_flags( xattnav->brow);
+	}
+	catch ( co_error& e) {}
       }
 
       if ( !item->first_scan)

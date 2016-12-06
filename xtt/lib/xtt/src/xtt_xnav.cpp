@@ -2559,7 +2559,10 @@ int XNav::trace_scan_bc( brow_tObject object, void *p)
 	// Add signal flags
 	XNav *xnav;
 	brow_GetCtxUserData( brow_GetCtx( item->node), (void **)&xnav);
-	((ItemCollect *)item)->set_signal_flags( xnav->brow);
+	try {
+	  ((ItemCollect *)item)->set_signal_flags( xnav->brow);
+	}
+	catch ( co_error& e) {}
       }
 
       if ( !item->first_scan)
