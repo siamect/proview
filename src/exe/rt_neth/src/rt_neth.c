@@ -69,6 +69,7 @@
 #include "rt_cvolcm.h"
 #include "rt_cbuf.h"
 #include "rt_pwr_msg.h"
+#include "co_timelog.h"
 
 /* Declare routines used by main.  */
 
@@ -490,8 +491,7 @@ id (
     errh_Info("Received '%s' from nid %s",
       cMsg[get->type.s],  cdh_NodeIdToString(NULL, mp->hdr.nid, 0, 0));
   }
-  printf("Id Received '%s' from nid %s\n",
-	 cMsg[get->type.s],  cdh_NodeIdToString(NULL, mp->hdr.nid, 0, 0));
+  timelog_ss( 1, "Neth Id received from nid", cdh_NodeIdToString(NULL, mp->hdr.nid, 0, 0));
 
   if (get->sender.nid == gdbroot->my_qid.nid && mp->hdr.nid == gdbroot->db->nid) {
     errh_Error("New node using nid %s, conflicts with local node, '%s' ignored",
@@ -936,8 +936,7 @@ sendId (
     errh_Info("Sending 'id' to %s (%s)",
       np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0));
   }
-  printf("Sending 'id' to %s (%s)\n",
-	 np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0));
+  timelog_ss( 1, "Neth sending 'id' to", np->name);
 
   if ( np->handler.nid)
     tgt = np->handler;

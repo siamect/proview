@@ -46,6 +46,7 @@
 #include "cow_wow.h"
 #include "co_lng.h"
 #include "co_time.h"
+#include "co_timelog.h"
 #include "rt_gdh.h"
 #include "flow.h"
 #include "flow_browctx.h"
@@ -942,8 +943,8 @@ void EvList::event_alarm( mh_sMessage *msg)
     if ( id_to_item( &event->Info.Id, (void **)&item))
       return;      
 
-  if ( type != ev_eType_EventList )
-      printf( "New ala %d,%d\n", event->Info.Id.Nix, event->Info.Id.Idx);
+    if ( type != ev_eType_EventList )
+      timelog_sii( 4, "Ev, New alarm", event->Info.Id.Nix, event->Info.Id.Idx);
 
     sts = get_destination( net_NetTimeToTime( &event->Info.EventTime), (void **)&dest);
     if ( EVEN(sts)) {
@@ -1146,7 +1147,7 @@ void EvList::event_ack( mh_sAck *msg)
       // Check that this id not already inserted
       if ( id_to_item( &event->Info.Id, (void **)&item))
 	return;      
-      printf( "New ack %d,%d\n", event->Info.Id.Nix, event->Info.Id.Idx);
+      timelog_sii( 3, "Ev, new ack", event->Info.Id.Nix, event->Info.Id.Idx);
 
       sts = get_destination( net_NetTimeToTime( &event->Info.EventTime), (void **)&dest);
       if ( EVEN(sts)) {
@@ -1240,7 +1241,7 @@ void EvList::event_return( mh_sReturn *msg)
       // Check that this id not already inserted
       if ( id_to_item( &event->Info.Id, (void **)&item))
 	return;      
-      printf( "New ret %d,%d\n", event->Info.Id.Nix, event->Info.Id.Idx);
+      timelog_sii( 4,  "Ev, New return", event->Info.Id.Nix, event->Info.Id.Idx);
 
       sts = get_destination( net_NetTimeToTime( &event->Info.EventTime), (void **)&dest);
       if ( EVEN(sts)) {

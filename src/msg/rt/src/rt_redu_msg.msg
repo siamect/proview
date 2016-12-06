@@ -43,6 +43,9 @@ tablecreated	<Table successfully created>				/succ
 tablesent	<Table sent>						/succ
 redcomfile	<Unable to open redcom file>				/error
 localnode	<Local node not found>					/error
+down		<Link down>						/warning
+buffhigh	<High buffer level>					/warning
+
 .end
 
 

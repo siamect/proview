@@ -210,10 +210,6 @@ start (
   ini_SetSystemStatus( cp, PWR__STARTUP);
   errh_SetStatus( PWR__STARTUP);
 
-  sts = redu_get_initial_state( cp->nodename, cp->busid, &state);
-  if ( ODD(sts))
-    cp->np->RedundancyState = state;
-
   sts = ini_RcReadAndSet(cp->dir, cp->nodename, cp->busid);
   if (EVEN(sts))
     errh_LogError(&cp->log, "ini_RcReadAndSet, %m", sts);
@@ -223,6 +219,12 @@ start (
     errh_LogError(&cp->log, "ini_SetAttribute, %m", sts);
 
   qini_BuildDb(&sts, cp->nid_t, cp->me, NULL, cp->busid);
+
+  sts = redu_get_initial_state( cp->nodename, cp->busid, &state);
+  if ( ODD(sts)) {
+    cp->np->RedundancyState = state;
+    qcom_SetRedundancyState( state); 
+  }
 
   io_init_signals();
 

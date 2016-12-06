@@ -128,6 +128,16 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Table status.
+      !*/
+      Object TableVersion $Attribute 13 
+        Body SysBody
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_STATE
+          Attr TypeRef = "pwrs:Type-$Time"
+        EndBody
+      EndObject
+      !/**
       !  Number of attributes.
       !*/
       Object Attributes $Attribute 8 

@@ -193,6 +193,7 @@ struct plc_sThread {
   unsigned int		sim_halted;
   unsigned int		sim_singlestep;
   pwr_tRedundancyStateEnum redu_state_old;
+  int			redu_table_version_req_sent;
   redu_tCtx 		redu;
 };
 

@@ -95,6 +95,7 @@
 #define USE_RT_TIMER 0
 
 static void scan (plc_sThread*);
+static pwr_tStatus plc_redu_send_table( plc_sThread *tp);
 
 static pwr_tStatus plc_redu_init( plc_sThread *tp)
 {
@@ -119,12 +120,11 @@ static pwr_tStatus plc_redu_init( plc_sThread *tp)
   return PLC__REDUCONFIG;
 }
 
-static pwr_tStatus plc_redu_receive( plc_sThread *tp)
+static pwr_tStatus plc_redu_receive( plc_sThread *tp, unsigned int timeout)
 {
   pwr_tStatus sts;
   void *msg;
   int size;
-  unsigned int timeout = tp->i_scan_time;
     
   sts = redu_receive( tp->redu, timeout, &size, &msg);
   if ( sts == QCOM__TMO)
@@ -138,42 +138,60 @@ static pwr_tStatus plc_redu_receive( plc_sThread *tp)
       redu_free_table( tp->redu);
             
     sts = redu_receive_table( tp->redu, msg);
-    if ( tp->redu->packetp)
+    if ( tp->redu->packetp) {
       tp->redu->packetp->TableStatus = sts;
-    if ( EVEN(sts)) return sts;
-      
+      tp->redu->packetp->TableVersion = tp->redu->table_version;
+    }
+    if ( EVEN(sts)) {
+      qcom_Free( &sts, msg);
+      return sts;
+    }
     tp->redu->table_sent = 1;
     break;
   case redu_eMsgType_Cyclic:
     if ( tp->redu->packetp)
       tp->redu->packetp->PacketSize = size;
     sts = redu_unpack_message( tp->redu, msg);
-    if ( EVEN(sts)) return sts;
-      
+    if ( EVEN(sts)) {
+      qcom_Free( &sts, msg);
+      return sts;
+    }
     break;
   case redu_eMsgType_TableRequest: {
-    void *table_msg;
+    sts =  plc_redu_send_table( tp);
+    if ( ODD(sts))
+      tp->redu->table_sent = 1;
+    break;
+  }
+  case redu_eMsgType_TableVersionRequest: {
+    sts = redu_send_table_version( tp->redu);
+    break;
+  }
+  case redu_eMsgType_TableVersion: {
+    int tsts;
+    pwr_tTime table_version;
 
-    if ( !tp->redu->table_sent) {      
-      sts = redu_create_table( tp->redu);
-      if ( tp->redu->packetp)
-	tp->redu->packetp->TableStatus = sts;
-      if ( EVEN(sts)) return sts;
+    tp->redu_table_version_req_sent = 0;
+    if ( tp->redu->table_version.tv_sec == 0) 
+      table_version = tp->redu->nodep->CurrentVersion;
+    else
+      table_version = tp->redu->table_version;
+
+    tsts = time_Acomp_NE( &table_version, &((redu_sMsgTableVersion *)msg)->version);
+    if ( tsts == 0)
+      sts = redu_send_table_request( tp->redu);
+    else {
+      sts = plc_redu_send_table( tp);
+      if ( EVEN(sts)) {
+	qcom_Free( &sts, msg);
+	return sts;
+      }
+      tp->redu->table_sent = 1;
     }
-    sts = redu_send_table( tp->redu, &table_msg);
-    if ( tp->redu->packetp)
-      tp->redu->packetp->TableStatus = sts;
-    if ( EVEN(sts)) return sts;
-    
-    sts = redu_send( tp->redu, table_msg, 
-		     ((redu_sTableMsgHeader *)table_msg)->size + sizeof( redu_sTableMsgHeader), 
-		     tp->redu->msgid_table);
-    if ( EVEN(sts)) return sts;
-    tp->redu->table_sent = 1;
     break;
   }
   default:
-    printf( "Redu: Unknown message type\n");
+    printf( "Redu: Unknown message type %d\n", ((redu_sHeader *)msg)->type);
   }
   qcom_Free( &sts, msg);
   return PLC__SUCCESS;
@@ -190,35 +208,84 @@ static pwr_tStatus plc_redu_receive_active( plc_sThread *tp)
 
   switch ( ((redu_sHeader *)msg)->type) {
     break;
-  case redu_eMsgType_TableRequest: {
-    void *table_msg;
-
-    if ( !tp->redu->table_sent) {      
-      sts = redu_create_table( tp->redu);
-      if ( tp->redu->packetp)
-	tp->redu->packetp->TableStatus = sts;
-      if ( EVEN(sts)) return sts;
-    }
-    sts = redu_send_table( tp->redu, &table_msg);
-    if ( tp->redu->packetp)
+  case redu_eMsgType_Table:
+    if ( tp->redu->t)
+      redu_free_table( tp->redu);
+            
+    sts = redu_receive_table( tp->redu, msg);
+    if ( tp->redu->packetp) {
       tp->redu->packetp->TableStatus = sts;
-    if ( EVEN(sts)) return sts;
-    
-    sts = redu_send( tp->redu, table_msg, 
-		     ((redu_sTableMsgHeader *)table_msg)->size + sizeof( redu_sTableMsgHeader), 
-		     tp->redu->msgid_table);
+      tp->redu->packetp->TableVersion = tp->redu->table_version;
+    }
+    if ( EVEN(sts)) {
+      qcom_Free( &sts, msg);
+      return sts;
+    }
+    tp->redu->table_sent = 1;
+    break;
+  case redu_eMsgType_Cyclic:
+    break;
+  case redu_eMsgType_TableRequest: {
+    sts =  plc_redu_send_table( tp);
     if ( EVEN(sts)) return sts;
     tp->redu->table_sent = 1;
     break;
   }
-  case redu_eMsgType_Table:
-  case redu_eMsgType_Cyclic:
+  case redu_eMsgType_TableVersionRequest: {
+    sts = redu_send_table_version( tp->redu);
     break;
+  }
+  case redu_eMsgType_TableVersion: {
+    int tsts;
+    pwr_tTime table_version;
+
+    if ( tp->redu->table_version.tv_sec == 0) 
+      table_version = tp->redu->nodep->CurrentVersion;
+    else
+      table_version = tp->redu->table_version;
+
+    tsts = time_Acomp_NE( &table_version, &((redu_sMsgTableVersion *)msg)->version);
+    if ( tsts == 0)
+      sts = redu_send_table_request( tp->redu);
+    else {
+      sts = plc_redu_send_table( tp);
+      if ( ODD(sts))
+	tp->redu->table_sent = 1;
+    }
+    break;
+  }
   default:
     printf( "Redu: Unknown message type\n");
   }
   qcom_Free( &sts, msg);
   return PLC__SUCCESS;
+}
+
+static pwr_tStatus plc_redu_send_table( plc_sThread *tp)
+{
+  void *table_msg;
+  pwr_tStatus sts;
+
+  if ( !tp->redu->table_created) {
+    sts = redu_create_table( tp->redu);
+    if ( tp->redu->packetp) {
+      tp->redu->packetp->TableStatus = sts;
+      tp->redu->packetp->TableVersion = tp->redu->table_version;
+    }
+    if ( EVEN(sts)) return sts;
+    tp->redu->table_created = 1;
+  }
+
+  sts = redu_send_table( tp->redu, &table_msg);
+  if ( tp->redu->packetp)
+    tp->redu->packetp->TableStatus = sts;
+  if ( EVEN(sts)) return sts;
+  
+  sts = redu_send( tp->redu, table_msg, 
+		   ((redu_sTableMsgHeader *)table_msg)->size + sizeof( redu_sTableMsgHeader), 
+		   tp->redu->msgid_table);
+  free( table_msg);
+  return sts;
 }
 
 static pwr_tStatus plc_redu_send( plc_sThread *tp)
@@ -227,21 +294,8 @@ static pwr_tStatus plc_redu_send( plc_sThread *tp)
   void *msg;
 
   if ( !tp->redu->table_sent) {
-    void *table_msg;
 
-    sts = redu_create_table( tp->redu);
-    if ( tp->redu->packetp)
-      tp->redu->packetp->TableStatus = sts;
-    if ( EVEN(sts)) return sts;
-
-    sts = redu_send_table( tp->redu, &table_msg);
-    if ( tp->redu->packetp)
-      tp->redu->packetp->TableStatus = sts;
-    if ( EVEN(sts)) return sts;
-
-    sts = redu_send( tp->redu, table_msg, 
-		     ((redu_sTableMsgHeader *)table_msg)->size + sizeof( redu_sTableMsgHeader), 
-		     tp->redu->msgid_table);
+    sts =  plc_redu_send_table( tp);
     if ( EVEN(sts)) return sts;
     tp->redu->table_sent = 1;
   }
@@ -254,21 +308,6 @@ static pwr_tStatus plc_redu_send( plc_sThread *tp)
       
   sts = redu_send( tp->redu, msg, ((redu_sMsgHeader *)msg)->size + 
 		   sizeof(redu_sMsgHeader), tp->redu->msgid_cyclic);
-
-  free( msg);
-
-  return sts;
-}
-
-static pwr_tStatus plc_redu_send_table_request( plc_sThread *tp)
-{
-  pwr_tStatus sts;
-  void *msg;
-
-  sts = redu_create_table_request_message( tp->redu, &msg);
-  if ( EVEN(sts)) return sts;
-	
-  sts = redu_send( tp->redu, msg, sizeof(redu_sHeader), 0);
 
   free( msg);
 
@@ -565,13 +604,17 @@ scan (
 
   if ( tp->redu && tp->pp->Node->RedundancyState == pwr_eRedundancyState_Passive) {
     if ( tp->redu_state_old == pwr_eRedundancyState_Off || tp->redu_state_old == pwr_eRedundancyState_Init) {
-      /* Send table request */
-      sts = plc_redu_send_table_request( tp);
+      /* Send table version request to see if table should be requested or sent */
+      if ( !tp->redu_table_version_req_sent) {
+	sts = redu_send_table_version_request( tp->redu);
+	if ( ODD(sts))
+	  tp->redu_table_version_req_sent = 1;
+      }
     }
     time_GetTimeMonotonic(&tp->before_scan);
     time_GetTime(&tp->before_scan_abs);
 
-    sts = plc_redu_receive( tp);
+    sts = plc_redu_receive( tp, tp->i_scan_time);
     if ( EVEN(sts)) return;
 
     time_Aadd(NULL, &tp->sync_time, &tp->scan_time);
@@ -594,6 +637,9 @@ scan (
 
   if ( !tp->redu || (tp->pp->Node->RedundancyState != pwr_eRedundancyState_Passive)) {
 
+    if ( tp->redu_state_old == pwr_eRedundancyState_Passive && tp->redu)
+      sts = plc_redu_receive( tp, 0);
+
     if (pp->IOHandler->IOReadWriteFlag) {
       if ( tp->redu_state_old == pwr_eRedundancyState_Passive)
 	tp->plc_io_ctx->read_reset = 1;
@@ -607,8 +653,8 @@ scan (
 	errh_Error("IO read, %m", sts);
 	errh_SetStatus( PLC__IOREAD);
       }
-      tp->redu_state_old = tp->pp->Node->RedundancyState;
     }
+    tp->redu_state_old = tp->pp->Node->RedundancyState;
 
     if ( pp->Node->EmergBreakTrue && !tp->emergency_break_old)
       io_swap(tp->plc_io_ctx, io_eEvent_EmergencyBreak);

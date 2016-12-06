@@ -38,7 +38,7 @@
 .facility	GDB,15 /prefix = GDB__	! Global database
 
 success		<successful completion>					/succ
-lockcheck	<database locking bugckeck>				/fatal
+lockcheck	<database locking bugcheck>				/fatal
 mutexinit	<failed to init mutex>					/error
 dupladd		<item is already added>					/error
 alradd		<item is already added>					/info

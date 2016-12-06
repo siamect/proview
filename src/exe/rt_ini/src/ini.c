@@ -141,6 +141,7 @@
 # define cPrio_remotelogg	(cPrio_base + 5)
 # define cPrio_sim		(cPrio_base + 5)
 # define cPrio_videomgm		(cPrio_base + 5)
+# define cPrio_redcom		(cPrio_base + 17)
 #endif
 
 static pwr_tBoolean	checkSect (pwr_tStatus*, ini_sContext*, int, int);
@@ -2133,6 +2134,9 @@ ini_ProcTable (
   pp->proc.flags.b.system = 1;
 
   pp = ini_ProcInsert(sts, cp, "pwr_videomgm", "pwr_videomgm_%d", 0, 1, "rt_videomgm", cPrio_videomgm, 0, pwr_cClass_VideoMgmServer, "", 0);
+  pp->proc.flags.b.system = 1;
+
+  pp = ini_ProcInsert(sts, cp, "pwr_redcom", "pwr_redcom_%d", 0, 1, "rt_redcom", cPrio_redcom, 0, pwr_cClass_RedcomConfig, "", 0);
   pp->proc.flags.b.system = 1;
 
   pp = ini_ProcInsert(sts, cp, "pwr_sim", "pwr_sim_%d", 0, 1, "rt_sim", cPrio_sim, 0, pwr_cClass_SimulateConfig, "", 0);

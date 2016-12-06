@@ -83,6 +83,7 @@
 #include "rt_pwr_msg.h"
 #include "rt_ini_event.h"
 #include "rt_qmon.h"
+#include "co_timelog.h"
 
 #if 1
 # define MAX_SEGSIZE	(8192 - sizeof(sHead))
@@ -671,12 +672,16 @@ create_connect (
 {
   sEseg *sp;
 
-  printf( "Create connect %d\n", qdb->my_node->redundancy_state);
   sp = eseg_alloc(&l.eseg.mutex);
-  if ( qdb->my_node->redundancy_state == pwr_eRedundancyState_Passive)
+  if ( qdb->my_node->redundancy_state == pwr_eRedundancyState_Passive ||
+       qdb->my_node->redundancy_state == pwr_eRedundancyState_Init) {
     sp->head.flags.b.event = eEvent_connectPassive;
-  else
+    timelog( 1, "qmon sending connect Passive");
+  }
+  else {
     sp->head.flags.b.event = eEvent_connect;
+    timelog( 1, "qmon sending connect");
+  }
   sp->lp = lp;
   sp->c.action = eAction_export;
 
@@ -1386,14 +1391,14 @@ link_connect (
 
   if ( sp->head.flags.b.event == eEvent_connect)
     lp->np->clx = lp->lix;
-  else if ( sp->head.flags.b.event == eEvent_connectPassive &&
-	    lp->np->clx == lp->lix) {
-    if ( lp->lix == 1)
-      lp->np->clx = 0;
-    else if ( lp->lix == 0 && lp->np->link_cnt > 1)
-      lp->np->clx = 1;
+  else if ( sp->head.flags.b.event == eEvent_connectPassive) {
+    if ( lp->np->clx == lp->lix) {
+      if ( lp->lix == 1)
+	lp->np->clx = 0;
+      else if ( lp->lix == 0 && lp->np->link_cnt > 1)
+	lp->np->clx = 1;
+    }
   }
-
   lp->np->link[lp->lix].flags.b.active = 1;
 
   if (lp->np->link[lp->lix].flags.b.connected)
@@ -1408,7 +1413,7 @@ link_connect (
     lp->np->link[lp->lix].qflags.b.connected = 1;
     lp->np->link[lp->lix].qflags.b.active = 1;
     set_link_info(lp, (qdb_sLinkInfo *)sp->buff);
-    if ( lp->np->clx == lp->lix)
+    if ( lp->np->clx == lp->lix && sp->head.flags.b.event == eEvent_connect)
       qdb_NetEvent(&sts, lp->np, qcom_eStype_linkConnect);
   } qdb_ScopeUnlock;
 
@@ -1590,8 +1595,13 @@ link_import (
 )
 {
 
-  //if ( IS_SECONDARY_NID(lp->nid))
-  //  printf( "link_import %d\n", lp->nid);
+#if 0
+  if ( IS_SECONDARY_NID(lp->nid)) {
+    char msg[80];
+    sprintf( msg, "From secondary %s %d", cdh_NodeIdToString(NULL, lp->np->nid, 0, 0), sp->head.flags.b.event);
+    timelog( 1, msg);
+  }
+#endif
 
   if (!lp->np->link[lp->lix].flags.b.active && lp->np->link[lp->lix].birth == sp->head.birth)
     link_active(lp);
@@ -1622,6 +1632,7 @@ link_import (
     break;
   case eEvent_connect:
   case eEvent_connectPassive:
+    timelog_ss( 1, "Qmon connect received from", lp->np->link[lp->lix].name);
     link_connect(lp, sp);
     lack(lp, sp);
     set_rack(lp, sp);
@@ -1631,13 +1642,13 @@ link_import (
     lack(lp, sp);
     set_rack(lp, sp);
     link_redcom_active(lp, sp);
-    printf( "Active from %s\n", lp->np->link[lp->lix].name);
+    timelog_ss( 1, "Active received from", lp->np->link[lp->lix].name);
     break;
   case eEvent_redcomPassive:
     lack(lp, sp);
     set_rack(lp, sp);
     link_redcom_passive(lp, sp);
-    printf( "Passive from %s\n", lp->np->link[lp->lix].name);
+    timelog_ss( 1, "Passive received from", lp->np->link[lp->lix].name);
     break;
   default:
     break;
@@ -2393,8 +2404,6 @@ action_thread ()
 	switch ( get.type.s) {
 	case qmon_eMsgTypeAction_NodeActive:
 	case qmon_eMsgTypeAction_NodePassive:
-	  printf( "Node active\n");
-
 	  for (lp = tree_Minimum(&sts, l.links.table); lp != NULL; lp = tree_Successor(&sts, l.links.table, lp))
 	    send_action( lp, get.type.s);
 
@@ -2423,9 +2432,11 @@ send_action (
   sp = eseg_alloc(&l.eseg.mutex);
   switch ( action) {
   case qmon_eMsgTypeAction_NodeActive:
+    timelog( 1, "qmon send NodeActive");
     sp->head.flags.b.event = eEvent_redcomActive;
     break;
   case qmon_eMsgTypeAction_NodePassive:
+    timelog( 1, "qmon send NodePassive");
     sp->head.flags.b.event = eEvent_redcomPassive;
     break;
   }

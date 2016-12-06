@@ -78,12 +78,21 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Startup timeout time.
+      !  Increased timeout time at startup.
+      !*/
+      Object StartupTimeout $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
       !  Force state.
       !  State can only be changed from Active/Passive buttons in 
-      !  object graph. I will not automatically be changed by system
+      !  object graph. It will not automatically be changed by system
       !  events or errors.
       !*/
-      Object Force $Attribute 4 
+      Object Force $Attribute 5 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
@@ -91,7 +100,7 @@ SObject pwrb:Class
       !/**
       !  Set redundancy state Active.
       !*/
-      Object SetActive $Attribute 5 
+      Object SetActive $Attribute 6 
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
@@ -101,7 +110,7 @@ SObject pwrb:Class
       !/**
       !  Set redundancy state Passive.
       !*/
-      Object SetPassive $Attribute 6 
+      Object SetPassive $Attribute 7 
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
@@ -111,7 +120,7 @@ SObject pwrb:Class
       !/**
       !  Set redundancy state Off.
       !*/
-      Object SetOff $Attribute 7 
+      Object SetOff $Attribute 8
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
@@ -121,7 +130,7 @@ SObject pwrb:Class
       !/**
       !  Link state.
       !*/
-      Object Link $Attribute 8 
+      Object Link $Attribute 9 
         Body SysBody
           Attr Flags |= PWR_MASK_ARRAY
           Attr Flags |= PWR_MASK_CLASS
@@ -134,6 +143,7 @@ SObject pwrb:Class
       Body RtBody
 	Attr CycleTime = 0.005
 	Attr LinkTimeout = 0.200
+	Attr StartupTimeout = 5.0
       EndBody
     EndObject
   EndObject

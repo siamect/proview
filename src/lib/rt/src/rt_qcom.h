@@ -48,6 +48,10 @@
 # include "pwr.h"
 #endif
 
+#ifndef pwr_class_h
+# include "pwr_class.h"
+#endif
+
 #ifndef co_platform_h
 # include "co_platform.h"
 #endif
@@ -460,6 +464,10 @@ pwr_tBoolean		qcom_Unbind (
   const qcom_sQid	*fromQ
 );
 
+void 
+qcom_SetRedundancyState ( 
+  pwr_eRedundancyState state
+);
 
 
 

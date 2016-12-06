@@ -414,7 +414,7 @@ qcom_Get (
 
     if (gp != NULL && gp->data != NULL) {
       br = pool_InPool(&lsts, &qdb->pool, gp->data, gp->size);
-      if (br != pool_cNRef) return NULL;
+      if (br != pool_cNRef) break;
     }
 
     qp = qdb_Que(sts, qid, NULL);
@@ -1358,6 +1358,14 @@ qcom_EventMask (
   } qdb_ScopeUnlock;
 
   return result;
+}
+
+void 
+qcom_SetRedundancyState ( 
+  pwr_eRedundancyState state
+)
+{
+  qdb->my_node->redundancy_state = state;
 }
 
 

@@ -34,7 +34,7 @@
  * General Public License plus this exception.
  */
 
-/* rt_redumon.c -- Redundance communication monitor. */
+/* rt_redcom.c -- Redundance communication monitor. */
 
 #include <stdlib.h>
 #include <string.h>
@@ -75,6 +75,9 @@
 #include "rt_ini_event.h"
 #include "pwr_baseclasses.h"
 #include "rt_redu.h"
+#include "rt_aproc.h"
+#include "rt_redu_msg.h"
+#include "co_timelog.h"
 
 #define redu_qix_import ((1<<31) | 5)
 
@@ -88,6 +91,7 @@
 #define RACK_TMO	1
 #define EXPORT_BUF_WARN_LEVEL 300000
 #define EXPORT_BUF_QUOTA 600000
+#define K_FILTER 0.99
 
 #define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 
@@ -237,6 +241,7 @@ struct sLink {
   sIseg			tmo;
   thread_sMutex		eseg_mutex;
   pwr_tTime		receive_time;
+  int			passive_timeout;
 };
 
 
@@ -312,7 +317,13 @@ struct {
     pwr_tBoolean	emergbreaktrue_old;
     pwr_eUpDownEnum	linkstate_old;
     pwr_tStatus		systemstatus_old;
+    pwr_tTime		startup_time;
+    int			startup_timeout;
   } sup;
+  int			pending_set_active;
+  pwr_tTime		pending_set_active_time;
+  pwr_tTime		last_switch_time;
+  pwr_eRedundancyState	default_redundancy_state;
 } l;
 
 static pwr_tStatus redu_sts = PWR__SRVSTARTUP;
@@ -385,7 +396,7 @@ main (int argc, char *argv[])
   qcom_sQid	my_q = qcom_cNQid;
   pwr_tOid 	oid;
 
-  errh_Init("pwr_redumon", errh_eAnix_appl1);
+  errh_Init("pwr_redcom", errh_eAnix_redcom);
   errh_SetStatus( PWR__SRVSTARTUP);
 
   if (!qcom_Init(&sts, NULL, "pwr_redcom")) {
@@ -427,6 +438,7 @@ main (int argc, char *argv[])
     errh_SetStatus( sts);
     exit(sts);
   }
+  aproc_RegisterObject( oid);
   
   l.nid = ntohl(qdb->my_node->sa.sin_addr.s_addr);
 
@@ -479,6 +491,14 @@ main (int argc, char *argv[])
 
   } while (0);
 
+  if ( l.nodep->RedundancyState == pwr_eRedundancyState_Init ||
+       l.nodep->RedundancyState == pwr_eRedundancyState_Passive) {
+    l.pending_set_active = 1;
+    time_GetTimeMonotonic( &l.pending_set_active_time);
+    l.sup.startup_timeout = 1;
+    l.sup.startup_time = l.pending_set_active_time;
+  }
+
   check_link_status();
   set_status( PWR__SRUN);
 
@@ -493,7 +513,7 @@ main (int argc, char *argv[])
 
   qcom_Exit(&sts);
   errh_Info("Exiting");
-  exit(QCOM__SUCCESS);
+  exit( REDU__SUCCESS);
 }
 static pwr_tStatus redu_node_init( )
 {
@@ -548,8 +568,8 @@ static pwr_tStatus redu_node_init( )
       if ( l.port == 0)
 	l.port = redu_cPort;
       redu_segment_size = atoi(s_seg_size);
-      l.nodep->RedundancyState = atoi(s_state);
-      qdb->my_node->redundancy_state = l.nodep->RedundancyState;
+      // l.nodep->RedundancyState = atoi(s_state);      
+      l.default_redundancy_state = atoi(s_state);
       l.min_resend_time = atoi(s_min_resend_time);
       l.max_resend_time = atoi(s_max_resend_time);
       l.export_buf_quota = atoi(s_export_buf_quota);
@@ -571,7 +591,6 @@ static pwr_tStatus redu_node_init( )
       np->port = atoi(s_port);
       if ( np->port == 0)
 	np->port = redu_cPort;
-      np->redundancy_state = atoi(s_state);
       np->min_resend_time = atoi(s_min_resend_time);
       np->max_resend_time = atoi(s_max_resend_time);
       np->export_buf_quota = atoi(s_export_buf_quota);
@@ -614,8 +633,8 @@ static pwr_tStatus redu_node_init( )
 
 static int export_alloc_check( sLink *lp)
 {
-  if ( lp->np->link.export_alloc_cnt > EXPORT_BUF_WARN_LEVEL && redu_sts != QCOM__BUFFHIGH)
-    set_status(QCOM__BUFFHIGH);
+  if ( lp->np->link.export_alloc_cnt > EXPORT_BUF_WARN_LEVEL && redu_sts != REDU__BUFFHIGH)
+    set_status(REDU__BUFFHIGH);
   if ( lp->np->link.export_alloc_cnt > lp->exp_buf_quota) {
     link_purge(lp);	
     return 1;
@@ -631,7 +650,7 @@ static void export_alloc_sub( sEseg *sp)
   sp->lp->np->link.export_alloc_cnt -= sp->size;
   if ( sp->lp->np->link.export_alloc_cnt < 0)
     sp->lp->np->link.export_alloc_cnt = 0;
-  if ( redu_sts == QCOM__BUFFHIGH && sp->lp->np->link.export_alloc_cnt < EXPORT_BUF_WARN_LEVEL )
+  if ( redu_sts == REDU__BUFFHIGH && sp->lp->np->link.export_alloc_cnt < EXPORT_BUF_WARN_LEVEL )
     set_status(PWR__SRUN);
   l.config->Link[sp->lp->idx].ExportAlloc = sp->lp->np->link.export_alloc_cnt;
 }
@@ -798,9 +817,10 @@ create_connect (
 
   /* Init receive timeout */
   if ( l.nodep->RedundancyState == pwr_eRedundancyState_Init ||
-       l.nodep->RedundancyState == pwr_eRedundancyState_Passive)
+       l.nodep->RedundancyState == pwr_eRedundancyState_Passive) {
     time_GetTimeMonotonic( &lp->receive_time);
-
+    lp->passive_timeout = 0;
+  }
   return sp;
 }
 
@@ -1487,6 +1507,10 @@ link_connect (
   sIseg *sp
 )
 {
+  if ( l.pending_set_active) {
+    l.pending_set_active = 0;
+    timelog( 1, "Pending set active reset");
+  }
 
   lp->np->link.flags.b.active = 1;
   l.config->Link[lp->idx].State = pwr_eUpDownEnum_Up;
@@ -1622,12 +1646,21 @@ link_purge (
 
 static void check_state( sLink *lp, sIseg *sp) 
 {
+  pwr_tDeltaTime dt;
+  pwr_tFloat32 ft;
+
+  time_Adiff( &dt, &lp->receive_time, &l.last_switch_time);
+  time_DToFloat( &ft, &dt);
+  if ( ft < l.config->LinkTimeout)
+    return;
+
   switch ( sp->head.state) {
   case pwr_eRedundancyState_Active:
     switch ( l.nodep->RedundancyState) {
     case pwr_eRedundancyState_Init:
     case pwr_eRedundancyState_Active:
       state_change_request( lp, sp, pwr_eRedundancyState_Passive);
+      timelog( 1, "redcom state to Passive, remote is Active");
       break;
     }
     break;
@@ -1636,13 +1669,18 @@ static void check_state( sLink *lp, sIseg *sp)
     case pwr_eRedundancyState_Init:
     case pwr_eRedundancyState_Passive:
       state_change_request( lp, sp, pwr_eRedundancyState_Active);
+      timelog( 1, "redcom state to Active, remote is Passive");
       break;
     }
     break;
   case pwr_eRedundancyState_Init:
     switch ( l.nodep->RedundancyState) {
     case pwr_eRedundancyState_Init:
-      state_change_request( lp, sp, pwr_eRedundancyState_Active);
+      if ( l.default_redundancy_state == pwr_eRedundancyState_Active)
+	state_change_request( lp, sp, pwr_eRedundancyState_Active);
+      else
+	state_change_request( lp, sp, pwr_eRedundancyState_Passive);
+      timelog( 1, "redcom state to Active, remote is Init");
       break;
     }
     break;
@@ -1667,6 +1705,11 @@ link_import (
   else if (lp->np->birth != sp->head.birth && !lp->np->link.flags.b.connected)
     link_redisconnect(lp);
 
+  if ( l.pending_set_active) {
+    l.pending_set_active = 0;
+    timelog( 1, "Pending set active reset");
+  }
+
   switch (sp->head.flags.b.event) {
   case eEvent_user:
     check_state(lp, sp);
@@ -1689,11 +1732,14 @@ link_import (
     set_rack(lp, sp);
     break;
   case eEvent_set_active:
+    timelog( 1, "redcom Active received");
     state_change_request(lp, sp, pwr_eRedundancyState_Active);
+
     lack(lp, sp);
     set_rack(lp, sp);
     break;
   case eEvent_set_passive:
+    timelog( 1, "redcom Passive received");
     state_change_request(lp, sp, pwr_eRedundancyState_Passive);
     lack(lp, sp);
     set_rack(lp, sp);
@@ -1725,12 +1771,13 @@ link_redisconnect (
   lp->np->link.rack_tmo = pwr_cNTime;
 
   sp = lst_Succ(NULL, &lp->lh_win, NULL);
-  if (sp == NULL)
+  if (sp == NULL) {
     sp = lst_Succ(NULL, &lp->lh_send, NULL);
-  pwr_Assert(sp != NULL);
-  pwr_Assert(sp->head.flags.b.event == eEvent_connect);
+    sp->tmo = pwr_cNTime;
+  }
+  // pwr_Assert(sp != NULL);
+  // pwr_Assert(sp->head.flags.b.event == eEvent_connect);
 
-  sp->tmo = pwr_cNTime;
 
 }
 
@@ -2106,6 +2153,7 @@ seg_send (
   sp->head.nid     = l.head.nid;
   sp->head.birth   = l.head.birth;
   sp->head.rack    = sp->lp->np->link.rack;
+  sp->head.state   = l.nodep->RedundancyState;
 
   thread_MutexLock(&l.send_mutex);
 
@@ -2277,7 +2325,7 @@ check_link_status(
 
   for (lp = tree_Minimum(&sts, l.links.table); lp != NULL; lp = tree_Successor(&sts, l.links.table, lp)) {
     if ( !lp->np->link.flags.b.active)
-      linksts = QCOM__DOWN;
+      linksts = REDU__DOWN;
   }
   if ( linksts != l.sts) {
     if ( errh_Severity(linksts) >= errh_Severity(redu_sts))
@@ -2322,15 +2370,37 @@ state_change_request (
   pwr_eRedundancyState state
 )
 {
-  switch ( state) {
-  case pwr_eRedundancyState_Active:
-  case pwr_eRedundancyState_Passive:
-  case pwr_eRedundancyState_Off:
-  case pwr_eRedundancyState_Init:
-    l.nodep->RedundancyState = state;
-    qdb->my_node->redundancy_state = l.nodep->RedundancyState;
-    
-    break;
+  if ( l.pending_set_active) {
+    l.pending_set_active = 0;
+    timelog( 1, "Pending set active reset");
+  }
+
+  if ( state != l.nodep->RedundancyState) {
+
+    switch ( state) {
+    case pwr_eRedundancyState_Active:
+    case pwr_eRedundancyState_Passive:
+    case pwr_eRedundancyState_Off:
+    case pwr_eRedundancyState_Init:
+      l.nodep->RedundancyState = state;
+      qdb->my_node->redundancy_state = l.nodep->RedundancyState;
+      
+      break;
+    }
+
+    switch ( state) {
+    case pwr_eRedundancyState_Passive:
+      time_GetTimeMonotonic( &lp->receive_time);
+      time_GetTimeMonotonic( &l.last_switch_time);
+      lp->passive_timeout = 1; 
+      send_state_change();
+      break;
+    case pwr_eRedundancyState_Active:
+      time_GetTimeMonotonic( &l.last_switch_time);
+      send_state_change();
+      break;
+    default: ;
+    }
   }
 }
 
@@ -2374,7 +2444,17 @@ static void failover_detection()
 
   time_GetTimeMonotonic( &current);
 
-
+  if (l.sup.startup_timeout) {
+    /* Disable timeout for a while after startup */
+    pwr_tDeltaTime dt;
+    float ftime;
+    float timeout = l.config->StartupTimeout;
+	  
+    time_Adiff( &dt, &current, &l.sup.startup_time);
+    ftime = time_DToFloat( 0, &dt);
+    if ( ftime > timeout)
+      l.sup.startup_timeout = 0;
+  }
 
   /* When force is removed, initialize again */
   if ( !l.config->Force && l.sup.force_old)
@@ -2383,23 +2463,39 @@ static void failover_detection()
   if ( !l.config->Force && l.sup.initialized) {
     if ( l.nodep->RedundancyState == pwr_eRedundancyState_Active) {
       /* State is active */
-      if ( l.nodep->EmergBreakTrue && !l.sup.emergbreaktrue_old)
+      if ( l.nodep->EmergBreakTrue && !l.sup.emergbreaktrue_old) {	
 	l.config->SetPassive = 1;
-      //else if ( EVEN(l.nodep->SystemStatus) && ODD(l.sup.systemstatus_old))
-      //l.config->SetPassive = 1;
+	timelog( 1, "Emergency break, set passive");
+      }
+      // else if ( EVEN(l.nodep->SystemStatus) && ODD(l.sup.systemstatus_old))
+      //   l.config->SetPassive = 1;
     }
     else {
       /* State if passive, check for overtaking */
-      if ( l.config->Link[0].State == pwr_eUpDownEnum_Down && l.sup.linkstate_old == pwr_eUpDownEnum_Up)
+      if ( l.config->Link[0].State == pwr_eUpDownEnum_Down && l.sup.linkstate_old == pwr_eUpDownEnum_Up) {
 	l.config->SetActive = 1;
+	timelog( 1, "Link down, set active");
+      }
 
       for (lp = tree_Minimum(&sts, l.links.table); lp != NULL; lp = tree_Successor(&sts, l.links.table, lp)) {
-	if ( l.config->Link[lp->idx].State == pwr_eUpDownEnum_Up && l.config->LinkTimeout > 0) {
+	if ( l.config->Link[lp->idx].State == pwr_eUpDownEnum_Up && l.config->LinkTimeout > 0 && 
+	     !l.sup.startup_timeout) {
 	  pwr_tDeltaTime dt;
+	  float ftime;
+	  float timeout = l.config->LinkTimeout;
 	  
+	  if ( lp->passive_timeout)
+	    timeout = 2.0 * timeout;
+
 	  time_Adiff( &dt, &current, &lp->receive_time);
-	  if ( time_DToFloat( 0, &dt) > l.config->LinkTimeout)
+	  ftime = time_DToFloat( 0, &dt);
+	  if ( ftime > timeout) {
+	    timelog( 1, "Link timeout, set active");
 	    l.config->SetActive = 1;
+	  }
+	  l.config->Link[lp->idx].TimeMean = K_FILTER * l.config->Link[lp->idx].TimeMean + ( 1.0 - K_FILTER) * ftime;
+	  if ( ftime > l.config->Link[lp->idx].TimeMax)
+	    l.config->Link[lp->idx].TimeMax = ftime;
 	}
       }
     }
@@ -2419,6 +2515,8 @@ cyclic_thread ()
   pwr_tStatus sts;
   struct timespec ts;
   pwr_tDeltaTime dt;
+  pwr_tTime current;
+  pwr_tFloat32 ftime;
 
   time_FloatToD( &dt, l.config->CycleTime);
 
@@ -2427,9 +2525,36 @@ cyclic_thread ()
 
 
   for (;;) {
+    aproc_TimeStamp( l.config->CycleTime, 5.0);
+
+    if ( l.nodep->RedundancyState == pwr_eRedundancyState_Init ||
+	 l.nodep->RedundancyState == pwr_eRedundancyState_Passive) {
+      if ( l.pending_set_active) {      
+	time_GetTimeMonotonic( &current);
+	time_Adiff( &dt, &current, &l.pending_set_active_time);
+	ftime = time_DToFloat( 0, &dt);
+	if ( ftime > 5) {
+	  l.config->SetActive = 1;
+	  l.pending_set_active = 0;
+	  timelog( 1, "Pending set active timed out");
+	}
+      }
+    }
+    else {
+      if ( l.pending_set_active) {
+	timelog( 1, "Pending set active reset");
+	l.pending_set_active = 0;
+      }
+    }
+      
+
     failover_detection();
 
     if ( l.config->SetActive) {
+      timelog( 1, "redcom SetActive");
+
+      if ( l.nodep->RedundancyState != pwr_eRedundancyState_Active)
+	time_GetTimeMonotonic( &l.last_switch_time);
 
       for (lp = tree_Minimum(&sts, l.links.table); lp != NULL; lp = tree_Successor(&sts, l.links.table, lp))
 	request_state_change( lp, pwr_eRedundancyState_Passive);
@@ -2439,15 +2564,23 @@ cyclic_thread ()
       send_state_change();
     }
     if ( l.config->SetPassive) {
+      timelog( 1, "redcom SetPassive");
 
-      for (lp = tree_Minimum(&sts, l.links.table); lp != NULL; lp = tree_Successor(&sts, l.links.table, lp))
+      if ( l.nodep->RedundancyState != pwr_eRedundancyState_Passive)
+	time_GetTimeMonotonic( &l.last_switch_time);
+
+      for (lp = tree_Minimum(&sts, l.links.table); lp != NULL; lp = tree_Successor(&sts, l.links.table, lp)) {
 	request_state_change( lp, pwr_eRedundancyState_Active);
+	time_GetTimeMonotonic( &lp->receive_time);
+	lp->passive_timeout = 1;
+      }
       l.config->SetPassive = 0;
+      l.pending_set_active = 0;
       l.nodep->RedundancyState = pwr_eRedundancyState_Passive;
       qdb->my_node->redundancy_state = l.nodep->RedundancyState;
       send_state_change();
     }
-    if ( l.config->SetOff) {
+    if ( l.config->SetOff) {       
 
       for (lp = tree_Minimum(&sts, l.links.table); lp != NULL; lp = tree_Successor(&sts, l.links.table, lp))
 	request_state_change( lp, pwr_eRedundancyState_Off);
@@ -2471,9 +2604,11 @@ void send_state_change()
   switch ( l.nodep->RedundancyState) {
   case pwr_eRedundancyState_Active:
     put.type.s = (qcom_eStype) qmon_eMsgTypeAction_NodeActive;
+    timelog( 1, "redcom to qmon NodeActive");
     break;
   case pwr_eRedundancyState_Passive:
     put.type.s = (qcom_eStype) qmon_eMsgTypeAction_NodePassive;
+    timelog( 1, "redcom to qmon NodePassive");
     break;    
   }
   put.size = 4;

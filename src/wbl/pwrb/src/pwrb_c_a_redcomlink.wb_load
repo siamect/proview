@@ -182,9 +182,29 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Maximum time between two received transactions.
+      !*/
+      Object TimeMax $Attribute 14 
+        Body SysBody
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Mean time between received transactions.
+      !*/
+      Object TimeMean $Attribute 15 
+        Body SysBody
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
       !  Disable.
       !*/
-      Object Disable $Attribute 15
+      Object Disable $Attribute 16
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody

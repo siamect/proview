@@ -5548,8 +5548,13 @@ static pwr_tStatus emon_redu_receive()
     }
       
     break;
+  case redu_eMsgType_TableVersionRequest:
+    sts = redu_send_table_version( l.redu);
+    break;
+  case redu_eMsgType_TableVersion:
+    break;
   default:
-    printf( "Redu: Unknown message type\n");
+    printf( "Redu: Unknown message type %d\n", ((redu_sHeader *)msg)->type);
   }
   qcom_Free( &sts, msg);
   return MH__SUCCESS;

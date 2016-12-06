@@ -49,6 +49,7 @@
 #include "rt_qcom_msg.h"
 #include "rt_redu.h"
 #include "rt_redu_msg.h"
+#include "co_timelog.h"
 
 static pwr_tStatus add_table_object( redu_tCtx ctx, pwr_tAttrRef *o);
 static pwr_tStatus add_table_attr( redu_tCtx ctx, pwr_tAttrRef *aref, gdh_sAttrDef *bd);
@@ -81,6 +82,8 @@ pwr_tStatus redu_create_table( redu_tCtx ctx)
   }
 #endif
 
+  ctx->table_version = ctx->nodep->CurrentVersion;
+
   return REDU__TABLECREATED;
 }
 
@@ -105,6 +108,7 @@ void redu_free_table( redu_tCtx ctx)
   ctx->t_last = 0;
   ctx->attr_cnt = 0;
   ctx->current_offset = 0;
+  ctx->table_version = pwr_cNTime;
 }
     
 static pwr_tStatus add_table_object( redu_tCtx ctx, pwr_tAttrRef *o) 
@@ -257,13 +261,6 @@ static pwr_tStatus add_table_attr( redu_tCtx ctx, pwr_tAttrRef *aref, gdh_sAttrD
   return REDU__SUCCESS;
 }
 
-pwr_tStatus redu_create_table_request_message( redu_tCtx ctx, void **msg)
-{
-  *msg = malloc( sizeof(redu_sHeader));
-  ((redu_sHeader *)(*msg))->type = redu_eMsgType_TableRequest;
-  return REDU__SUCCESS;
-}
-
 pwr_tStatus redu_create_message( redu_tCtx ctx, void **msg)
 {
   char *buf;
@@ -278,6 +275,7 @@ pwr_tStatus redu_create_message( redu_tCtx ctx, void **msg)
   
   ((redu_sMsgHeader *)buf)->h.type = redu_eMsgType_Cyclic;
   ((redu_sMsgHeader *)buf)->size = ctx->current_offset;  
+  ((redu_sMsgHeader *)buf)->version = ctx->table_version;
 
   time_GetTime( &start_time);
   bufp = buf + sizeof(redu_sMsgHeader);
@@ -305,6 +303,16 @@ pwr_tStatus redu_unpack_message( redu_tCtx ctx, void *msg)
   pwr_tTime start_time;
   pwr_tTime end_time;
   pwr_tDeltaTime dtime;
+  int tsts;
+  
+  tsts = time_Acomp_NE( &ctx->table_version, &((redu_sMsgHeader *)msg)->version);
+  if ( tsts != 0) {
+    if ( tsts == -2)
+      return 0;
+    else
+      // Request new table...
+      return 0;
+  }
 
   time_GetTime( &start_time);
   bufp = msg + sizeof(redu_sMsgHeader);
@@ -336,6 +344,7 @@ pwr_tStatus redu_send_table( redu_tCtx ctx, void **table_msg)
   ((redu_sTableMsgHeader *)msg)->h.type = redu_eMsgType_Table;
   ((redu_sTableMsgHeader *)msg)->attributes = ctx->attr_cnt;
   ((redu_sTableMsgHeader *)msg)->size = size;
+  ((redu_sTableMsgHeader *)msg)->version = ctx->table_version;
 
   msgp = msg + sizeof(redu_sTableMsgHeader);
   for ( e = ctx->t; e; e = e->next) {
@@ -360,13 +369,22 @@ pwr_tStatus redu_receive_table( redu_tCtx ctx, void *table_msg)
   int i;
   redu_sTable *e;
   pwr_tStatus sts;
+  int tsts;
   void *p;
 
-  // Test
   msg = table_msg;
 
   if ( ctx->t)
     redu_free_table( ctx);
+
+  timelog( 2, "Table received");
+  tsts = time_Acomp_NE( &ctx->nodep->CurrentVersion, &((redu_sTableMsgHeader *)msg)->version);
+  if ( tsts != 0) {
+    if ( tsts == -2)
+      return 0;
+    else
+      errh_Warning( "Table version differs from current load version");
+  }
 
   attributes = ((redu_sTableMsgHeader *)msg)->attributes;
 
@@ -396,6 +414,9 @@ pwr_tStatus redu_receive_table( redu_tCtx ctx, void *table_msg)
     ctx->attr_cnt++;
     msgp += sizeof(redu_sTableMsgElement);    
   }
+
+  ctx->table_version = ((redu_sTableMsgHeader *)msg)->version;
+
   return REDU__TABLERECEIVED;
 }
 
@@ -414,7 +435,7 @@ void redu_print_table( redu_tCtx ctx)
   }
 }
 
-int redu_send( redu_tCtx ctx, void *msg, int size, unsigned int msg_id)
+pwr_tStatus redu_send( redu_tCtx ctx, void *msg, int size, unsigned int msg_id)
 {  
   pwr_tStatus sts;
   qcom_sPut put;
@@ -433,7 +454,7 @@ int redu_send( redu_tCtx ctx, void *msg, int size, unsigned int msg_id)
   return sts;
 }
 
-int redu_init( redu_tCtx *ctx, pwr_sNode *nodep, pwr_sClass_RedcomPacket *packetp)
+pwr_tStatus redu_init( redu_tCtx *ctx, pwr_sNode *nodep, pwr_sClass_RedcomPacket *packetp)
 {
   qcom_sQattr 	qattr;
   pwr_tStatus sts;
@@ -496,7 +517,7 @@ int redu_init( redu_tCtx *ctx, pwr_sNode *nodep, pwr_sClass_RedcomPacket *packet
   return REDU__SUCCESS;
 }
 
-int redu_receive( redu_tCtx ctx, unsigned int timeout, int *size, void **msg)
+pwr_tStatus redu_receive( redu_tCtx ctx, unsigned int timeout, int *size, void **msg)
 {
   pwr_tStatus sts;
   qcom_sGet get;
@@ -561,3 +582,130 @@ pwr_tStatus redu_get_initial_state( char *nodename, int busid, int *state)
   return REDU__SUCCESS;
 }
 
+pwr_tStatus redu_send_table_request( redu_tCtx ctx)
+{
+  redu_sHeader *msg;
+  pwr_tStatus sts;
+
+  timelog( 2, "Redu seding table request");
+
+  msg = (redu_sHeader *)malloc( sizeof(redu_sHeader));
+  msg->type = redu_eMsgType_TableRequest;
+
+  sts = redu_send( ctx, msg, sizeof(redu_sHeader), 0);
+
+  free( msg);
+
+  return sts;
+}
+
+pwr_tStatus redu_send_table_version( redu_tCtx ctx)
+{
+  redu_sMsgTableVersion *msg;
+  pwr_tStatus sts;
+
+  timelog( 2, "Redu seding table version");
+
+  msg = (redu_sMsgTableVersion *)malloc( sizeof(redu_sMsgTableVersion));
+  
+  msg->h.type = redu_eMsgType_TableVersion;
+  msg->version = ctx->table_version;  
+
+  sts = redu_send( ctx, msg, sizeof(redu_sMsgTableVersion), 0);
+
+  free( msg);
+
+  return sts;
+}
+
+pwr_tStatus redu_send_table_version_request( redu_tCtx ctx)
+{
+  redu_sHeader *msg;
+  pwr_tStatus sts;
+
+  timelog( 1, "");
+
+  msg = (redu_sHeader *)malloc( sizeof(redu_sHeader));  
+  msg->type = redu_eMsgType_TableVersionRequest;
+
+  sts = redu_send( ctx, msg, sizeof(redu_sHeader), 0);
+
+  free( msg);
+
+  return sts;
+}
+
+pwr_tStatus redu_set_state( pwr_eRedundancyState state)
+{
+  pwr_tStatus sts;
+  pwr_tOid oid;
+  pwr_sClass_RedcomConfig *p;
+
+  sts = gdh_GetClassList( pwr_cClass_RedcomConfig, &oid);
+  if ( EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( oid, (void **)&p);
+  if ( EVEN(sts)) return sts;
+
+  switch ( state) {
+  case pwr_eRedundancyState_Active:
+    p->SetActive = 1;
+    break;
+  case pwr_eRedundancyState_Passive:
+    p->SetPassive = 1;
+    break;
+  case pwr_eRedundancyState_Off:
+    p->SetOff = 1;
+    break;
+  default: ;
+  }
+  return REDU__SUCCESS;
+}
+
+pwr_tStatus redu_appl_init( redu_tCtx *ctx, pwr_sClass_RedcomPacket *packetp)
+{
+  pwr_sNode *nodep;
+  pwr_tOid noid;
+  pwr_tStatus sts;
+
+  sts = gdh_GetNodeObject( pwr_cNNid, &noid);
+  if ( EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( noid, (void **)&nodep);
+  if ( EVEN(sts)) return sts;
+
+  return redu_init( ctx, nodep, packetp);
+}
+
+pwr_tStatus redu_appl_send( redu_tCtx ctx, void *msg, int size, pwr_tTime version, unsigned int msg_id)
+{
+  pwr_tStatus sts;
+
+  ((redu_sMsgHeader *)msg)->h.type = redu_eMsgType_Cyclic;
+  ((redu_sMsgHeader *)msg)->size = size;  
+  ((redu_sMsgHeader *)msg)->version = version;
+
+  sts = redu_send( ctx, msg, size, msg_id);
+  if ( ODD(sts) && ctx->packetp) {
+    ctx->packetp->TransmitCnt++;
+    ctx->packetp->PacketSize = size;
+  }
+  return sts;
+}
+
+pwr_tStatus redu_appl_receive( redu_tCtx ctx, unsigned int timeout, void **msg, int *size)
+{
+  pwr_tStatus sts;
+
+  sts = redu_receive( ctx, timeout, size, msg);
+  if ( EVEN(sts) && sts != QCOM__TMO) {
+    // Wait to avoid looping
+    struct timespec  ts = {timeout/1000, (timeout * 1000000) % 1000000000};
+    nanosleep(&ts, NULL);
+  }
+  if ( ODD(sts) && ctx->packetp) {
+    ctx->packetp->ReceiveCnt++;
+    ctx->packetp->PacketSize = *size;
+  }
+  return sts;
+}
