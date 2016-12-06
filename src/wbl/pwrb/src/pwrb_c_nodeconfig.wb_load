@@ -235,7 +235,6 @@ SObject pwrb:Class
       Body RtBody
         Attr QComExportBufQuota = 600000
         Attr QComAckDelay = 0.002
-        Attr QComSegmentSize = 1500
       EndBody
     EndObject
     Object PostCreate $DbCallBack

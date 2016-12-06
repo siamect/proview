@@ -932,7 +932,7 @@ eseg_free (
 {
   pwr_tBoolean bcast = sp->head.flags.b.bcast;
 
-  if (bcast) thread_MutexLock(&l.bcast); 
+  if (bcast) thread_MutexLock(&l.bcast);
 
   export_alloc_sub(sp);
 
@@ -1040,7 +1040,7 @@ export_thread ()
       esp = lst_Succ(NULL, &ssp->le_bcast, NULL) ;
     } while (esp != sp);
     thread_MutexUnlock(&sp->lp->eseg_mutex);
-    
+
     thread_MutexUnlock(&l.bcast);
   }
 
@@ -1444,6 +1444,7 @@ link_disconnect (
 
   /* Empty send list */
 
+  thread_MutexLock(&lp->eseg_mutex);
   for (
     sp = lst_Succ(NULL, &lp->lh_send, NULL);
     sp != NULL;
@@ -1564,7 +1565,7 @@ link_purge (
   /* Purge send list */
 
   int i = 0;
-  thread_MutexUnlock(&lp->eseg_mutex);
+  thread_MutexLock(&lp->eseg_mutex);
   for (
     sp = lst_Succ(NULL, &lp->lh_send, NULL);
     sp != NULL;

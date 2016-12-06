@@ -1592,7 +1592,8 @@ crossreference<t>Show crossreferenses		<LINK> crossreference
 define      <t>Define a symbol			<LINK> define
 delete item <t>Delete a menu item in the Xtt menu <LINK> delete item
 delete opmenuitem <t>Delete a menu item in the operator window menu <LINK> delete opmenuitem
-eventlist    <t>Handle the eventlist		<LINK> eventlist
+emit signal <t>Emit a Ge signal			<LINK> emit signal
+eventlist   <t>Handle the eventlist		<LINK> eventlist
 exit        <t>close xtt			<LINK> exit
 help        <t>Display help			<LINK> help
 login       <t>User login			<LINK> login
@@ -1963,6 +1964,20 @@ Examles
 
 xtt> cross /name=hql-hvk-Start
 xtt> cross /function="CreateHvkObject"
+</TOPIC>
+
+<TOPIC> emit signal <style> function
+Command   emit signal
+
+Emit a Ge signal.
+The signal is be emitted to a specific graph, or to all graphs and multiviews
+if graph is not specified.
+
+<B>xtt> emit signal /signalname= {/graph=] [/instance=]
+
+/signal_name<t>Name of signal.
+/graph <t>Graph or multiview to which the signal is directed.
+/instance <t>Instance object if the graph is an object graph.
 </TOPIC>
 
 <TOPIC> exit <style> function

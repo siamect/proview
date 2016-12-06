@@ -55,6 +55,7 @@ typedef void *Widget;
 #include "glow_growctx.h"
 #include "glow_growapi.h"
 #include "co_lng.h"
+#include "co_msg.h"
 #include "xtt_ge_gtk.h"
 #include "xtt_trend_gtk.h"
 #include "xtt_sevhist_gtk.h"
@@ -68,6 +69,19 @@ typedef void *Widget;
 #include "pwr_baseclasses.h"
 #include "rt_xnav_msg.h"
 #include "glow_msg.h"
+
+GtkWidget *XttMultiViewGtk::error_msg( const char *msg, pwr_tStatus sts)
+{
+  char str1[200];
+  char str2[400];
+
+  msg_GetMsg( sts, str1, sizeof(str1));
+  strcpy( str2, msg);
+  strcat( str2, "\n");
+  strcat( str2, str1);
+
+  return gtk_label_new( str2);
+}
 
 gboolean XttMultiViewGtk::action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data)
 {
@@ -702,7 +716,10 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 						   oidv, anamev, onamev, sevhistobjectv, 
 						   xnav->scctx, w, h, 
 						   (unsigned int)curve_mOptions_Embedded, color_theme, 0, sts);
-	  if ( EVEN(*sts)) break;
+	  if ( EVEN(*sts)) {
+	    comp_widget[i*rows + j] = error_msg("Unable to load history data", *sts);
+	    break;
+	  }
 
 	  sevhist[i*rows + j]->help_cb = multiview_trend_help_cb;
 	  sevhist[i*rows + j]->get_select_cb = multiview_sevhist_get_select_cb;
@@ -1382,6 +1399,33 @@ void XttMultiViewGtk::close_input_all()
       gectx[i]->close_input_all();
     else if ( mvctx[i] != 0)
       mvctx[i]->close_input_all();
+  }
+}
+
+void XttMultiViewGtk::signal_send( char *signalname)
+{
+  pwr_sClass_XttMultiView mv;
+  pwr_tStatus sts;
+
+  sts = gdh_GetObjectInfoAttrref( &aref, &mv, sizeof(mv));
+  if ( EVEN(sts)) return;
+
+  for ( int i = 0; i < cols; i++) {
+    for ( int j = 0; j < rows; j++) {
+      // Call signal_send in component
+
+      switch ( mv.Action[i*rows+j].Type) {
+      case pwr_eMultiViewContentEnum_Graph:
+      case pwr_eMultiViewContentEnum_ObjectGraph:
+	gectx[i*rows+j]->signal_send( signalname);
+	break;
+      case pwr_eMultiViewContentEnum_MultiView: {
+	mvctx[i*rows+j]->signal_send( signalname);
+	break;
+      }
+      default: ;
+      }
+    }
   }
 }
 

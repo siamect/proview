@@ -115,6 +115,7 @@ class XttMultiView : XttUtility {
 				    int insert = 1, int cont = 0) {return 0;}
   virtual int key_pressed( int key) {return 0;}
   virtual void close_input_all() {}
+  virtual void signal_send( char *signalname) {}
 
   xtt_eUtility get_type() { return xtt_eUtility_MultiView;}
   void message( char severity, const char *msg);

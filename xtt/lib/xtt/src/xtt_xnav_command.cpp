@@ -259,6 +259,8 @@ static int	xnav_wait_func(       	void		*client_data,
 					void		*client_flag);
 static int	xnav_oplog_func(       	void		*client_data,
 					void		*client_flag);
+static int	xnav_emit_func(       	void		*client_data,
+					void		*client_flag);
 
 dcli_tCmdTable	xnav_command_table[] = {
 		{
@@ -369,7 +371,8 @@ dcli_tCmdTable	xnav_command_table[] = {
 			&xnav_set_func,
 			{ "dcli_arg1", "dcli_arg2", "/NAME", "/VALUE",
 			  "/BYPASS", "/PUBLICWRITE", "/INDEX", "/SOURCE", "/OBJECT", "/CONTINUE", 
-			  "/X0", "/Y0", "/X1", "/Y1", "/INSTANCE", "/ESCAPESTORE", ""}
+			  "/X0", "/Y0", "/X1", "/Y1", "/INSTANCE", "/ESCAPESTORE", "/FOCUS", "/INPUTEMPTY",
+			  ""}
 		},
 		{
 			"SETUP",
@@ -448,6 +451,11 @@ dcli_tCmdTable	xnav_command_table[] = {
 			"OPLOG",
 			&xnav_oplog_func,
 			{ "dcli_arg1", "/FILE", "/SPEED", "/PID", "/EVENT", ""}
+		},
+		{
+			"EMIT",
+			&xnav_emit_func,
+			{ "dcli_arg1", "/SIGNALNAME", "/GRAPH", "/INSTANCE", ""}
 		},
 		{"",}};
 
@@ -878,6 +886,11 @@ static int	xnav_set_func(	void		*client_data,
     char *object_p;
     pwr_tOName source_str;
     int cont;
+    int inputempty;
+    char focus_str[200];
+    char *focus_p;
+    int sts;
+    char focus[200];
 
     if ( EVEN( dcli_get_qualifier( "dcli_arg2", graph_str, sizeof(graph_str)))) {
       xnav->message('E', "Graph name is missing");
@@ -897,6 +910,13 @@ static int	xnav_set_func(	void		*client_data,
     else
       object_p = 0;
 
+    inputempty = ODD( dcli_get_qualifier( "/INPUTEMPTY", 0, 0));
+
+    if ( ODD( dcli_get_qualifier( "/FOCUS", focus_str, sizeof(focus_str))))
+      focus_p = focus_str;
+    else
+      focus_p = 0;
+
     if ( object_p)
       xnav_replace_node_str( object_p, object_p);
 
@@ -905,14 +925,26 @@ static int	xnav_set_func(	void		*client_data,
     if ( cdh_NoCaseStrcmp(graph_str, "$current") == 0 &&
 	 xnav->current_cmd_ctx) {
       gectx = (XttGe *)xnav->current_cmd_ctx;	
-      return gectx->set_subwindow_source( name_str, source_str, object_p);
+      sts = gectx->set_subwindow_source( name_str, source_str, object_p);
+
+      if ( focus_p) {
+	sprintf( focus, "%s.%s", name_str, focus_p);
+	gectx->set_object_focus( focus, inputempty);
+      }
+      return sts;
     }
     else if ( xnav->appl.find_graph( graph_str, 0, (void **) &gectx)) {
       if ( strcmp( source_str, "") == 0) {
 	xnav->message('E',"Syntax error");
 	return XNAV__HOLDCOMMAND;
       }
-      return gectx->set_subwindow_source( name_str, source_str, object_p); 
+      sts =  gectx->set_subwindow_source( name_str, source_str, object_p); 
+
+      if ( focus_p) {
+	sprintf( focus, "%s.%s", name_str, focus_p);
+	gectx->set_object_focus( focus, inputempty);
+      }
+      return sts;
     }
     else {
       pwr_tStatus sts;
@@ -3274,7 +3306,7 @@ static int	xnav_open_func(	void		*client_data,
 
       if ( ODD( dcli_get_qualifier( "/FOCUS", focus_str, sizeof(focus_str))))
         focus_p = focus_str;
-      else
+       else
         focus_p = 0;
 
       if ( ODD( dcli_get_qualifier( "/ACCESS", tmp_str, sizeof(tmp_str)))) {
@@ -7262,6 +7294,7 @@ static int	xnav_print_func(void		*client_data,
   {
     pwr_tFileName file_str;
     pwr_tAName instance_str;
+    pwr_tAName object_str;
     XttGe *gectx;
     pwr_tFileName fname;
     int classgraph;
@@ -7361,8 +7394,42 @@ static int	xnav_print_func(void		*client_data,
       }      
     }
 
+    if ( ODD( dcli_get_qualifier( "/OBJECT", object_str, sizeof(object_str)))) {
+      // Find graph from XttGraph object
+      pwr_tObjid objid;
+      pwr_tAName xttgraph_name;
+      char *s;
+      pwr_sClass_XttGraph xttgraph_o;
+
+      xnav_replace_node_str( xttgraph_name, object_str);
+        
+      sts = gdh_NameToObjid( xttgraph_name, &objid);
+      if (EVEN(sts)) {
+        xnav->message('E', "Object not found");
+        return XNAV__HOLDCOMMAND;
+      }
+
+      sts = gdh_GetObjectInfo( xttgraph_name, (void *) &xttgraph_o, sizeof(xttgraph_o));
+      if ( EVEN(sts)) return sts;
+
+      cdh_ToLower( file_str, xttgraph_o.Action);
+      if ( (s = strrchr( file_str, '.')))
+	*s = 0;
+	   
+      if ( cdh_ObjidIsNotNull( xttgraph_o.Object[0])) {
+	
+	sts = gdh_ObjidToName( xttgraph_o.Object[0], 
+			       instance_str, sizeof( instance_str), cdh_mName_volumeStrict);
+	if ( EVEN(sts)) return sts;
+
+	instance_p = instance_str;
+      }
+      else 
+	instance_p  = 0;
+    }
+
     if ( xnav->appl.find( applist_eType_Graph, file_str, instance_p, 
-		  (void **) &gectx))
+			    (void **) &gectx))
       gectx->print();
     else {
       xnav->message('E', "Graph not found");
@@ -7390,6 +7457,7 @@ static int	xnav_export_func(void		*client_data,
     pwr_tFileName file_str;
     pwr_tFileName graph_str;
     pwr_tAName instance_str;
+    pwr_tAName object_str;
     XttGe *gectx;
     pwr_tFileName fname;
     int classgraph;
@@ -7483,6 +7551,40 @@ static int	xnav_export_func(void		*client_data,
 	xnav->message('E',"No classgraph found");
 	return XNAV__HOLDCOMMAND;
       }      
+    }
+
+    if ( ODD( dcli_get_qualifier( "/OBJECT", object_str, sizeof(object_str)))) {
+      // Find graph from XttGraph object
+      pwr_tObjid objid;
+      pwr_tAName xttgraph_name;
+      char *s;
+      pwr_sClass_XttGraph xttgraph_o;
+
+      xnav_replace_node_str( xttgraph_name, object_str);
+        
+      sts = gdh_NameToObjid( xttgraph_name, &objid);
+      if (EVEN(sts)) {
+        xnav->message('E', "Object not found");
+        return XNAV__HOLDCOMMAND;
+      }
+
+      sts = gdh_GetObjectInfo( xttgraph_name, (void *) &xttgraph_o, sizeof(xttgraph_o));
+      if ( EVEN(sts)) return sts;
+
+      cdh_ToLower( graph_str, xttgraph_o.Action);
+      if ( (s = strrchr( graph_str, '.')))
+	*s = 0;
+	   
+      if ( cdh_ObjidIsNotNull( xttgraph_o.Object[0])) {
+	
+	sts = gdh_ObjidToName( xttgraph_o.Object[0], 
+			       instance_str, sizeof( instance_str), cdh_mName_volumeStrict);
+	if ( EVEN(sts)) return sts;
+
+	instance_p = instance_str;
+      }
+      else 
+	instance_p  = 0;
     }
 
     if ( xnav->appl.find( applist_eType_Graph, graph_str, instance_p, 
@@ -7733,6 +7835,65 @@ static int	xnav_oplog_func(void		*client_data,
     sts = XttLog::play( xnav, file_str, speed, pid);
     if ( EVEN(sts))
       xnav->message(' ', XNav::get_message(sts));
+  }
+  else {
+    xnav->message('E',"Syntax error");
+    return XNAV__HOLDCOMMAND;
+  }
+  return XNAV__SUCCESS;	
+}
+
+static int	xnav_emit_func( void		*client_data,
+				void		*client_flag)
+{
+  XNav *xnav = (XNav *)client_data;
+
+  char	arg1_str[80];
+  int	arg1_sts;
+
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
+
+  if ( cdh_NoCaseStrncmp( arg1_str, "SIGNAL", strlen( arg1_str)) == 0) {
+    pwr_tString80 signalname_str;
+    ApplListElem *elem;
+    char *instance_p;
+    char *graph_p;
+    pwr_tAName instance_str;
+    pwr_tString80 graph_str;
+    void *appl_ctx;
+
+    if ( EVEN( dcli_get_qualifier( "/SIGNALNAME", signalname_str, sizeof(signalname_str)))) {
+      xnav->message('E',"Syntax error");
+      return XNAV__HOLDCOMMAND;
+    }
+
+
+    if ( ODD( dcli_get_qualifier( "/GRAPH", graph_str, sizeof(graph_str))))
+      graph_p = graph_str;
+    else
+      graph_p = 0;
+
+    if ( ODD( dcli_get_qualifier( "/INSTANCE", instance_str, sizeof(instance_str))))
+      instance_p = instance_str;
+    else
+      instance_p = 0;
+
+    if ( graph_p) {
+      // Send to specified graph
+      if ( xnav->appl.find( applist_eType_Graph, graph_p, instance_p, &appl_ctx))
+	((XttGe *)appl_ctx)->signal_send( signalname_str);
+      else if ( xnav->appl.find( applist_eType_MultiView, graph_p, instance_p, &appl_ctx))
+	((XttMultiView *)appl_ctx)->signal_send( signalname_str);
+    }
+    else {
+      // Graph not specified, send to all
+      for ( elem = xnav->appl.root; elem; elem = elem->next) {
+	if ( elem->type == applist_eType_Graph)
+	  ((XttGe *)elem->ctx)->signal_send( signalname_str);
+	else if ( elem->type == applist_eType_MultiView)
+	  ((XttMultiView *)elem->ctx)->signal_send( signalname_str);    
+      }
+    }
   }
   else {
     xnav->message('E',"Syntax error");

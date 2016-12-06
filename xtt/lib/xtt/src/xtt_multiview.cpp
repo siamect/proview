@@ -334,6 +334,7 @@ XNav *XttMultiView::get_xnav()
     return (XNav *)parent_ctx;
 }
 
+
 XttMultiView::XttMultiView( void *mv_parent_ctx, const char *mv_name,
 			    pwr_tAttrRef *mv_aref, int mv_width, int mv_height,
 			    int mv_x, int mv_y, unsigned int mv_options, int mv_color_theme,

@@ -1192,10 +1192,12 @@ void EvList::event_ack( mh_sAck *msg)
 	    item->update_text(1);
         }
         else {
+	  brow_tObject item_tree_node = item->tree_node;
+
           brow_DeleteNode( browbase->ctx, item->node);
 	  if ( browtree) {
-	    if ( item->tree_node)
-	      brow_DeleteNode( browtree->ctx, item->tree_node);
+	    if ( item_tree_node)
+	      brow_DeleteNode( browtree->ctx, item_tree_node);
 	    view_configure();
 	  }
           size--;
@@ -1211,10 +1213,12 @@ void EvList::event_ack( mh_sAck *msg)
 	      item->update_text(1);
 	  }
 	  else {
+	    brow_tObject item_tree_node = item->tree_node;
+
 	    brow_DeleteNode( browbase->ctx, item->node);
 	    if ( browtree) {
-	      if ( item->tree_node)
-		brow_DeleteNode( browtree->ctx, item->tree_node);
+	      if ( item_tree_node)
+		brow_DeleteNode( browtree->ctx, item_tree_node);
 	      view_configure();
 	    }
 	    size--;
@@ -1284,10 +1288,12 @@ void EvList::event_return( mh_sReturn *msg)
 	item->update_text(1);
     }
     else {
+      brow_tObject item_tree_node = item->tree_node;
+
       brow_DeleteNode( browbase->ctx, item->node);
       if ( browtree) {
-	if ( item->tree_node)
-	  brow_DeleteNode( browtree->ctx, item->tree_node);
+	if ( item_tree_node)
+	  brow_DeleteNode( browtree->ctx, item_tree_node);
 	view_configure();
       }
       size--;
@@ -1300,14 +1306,19 @@ int EvList::event_delete( mh_sEventId *id)
   if ( type == ev_eType_AlarmList) {
     // Alarmlist
     ItemAlarm 	*item;
+    brow_tObject item_tree_node;
 
     if ( !id_to_item( id, (void **)&item))
       return 0;
 
+    item_tree_node = item->tree_node;
+
     brow_DeleteNode( browbase->ctx, item->node);
+
+    // Note, item is deleted now
     if ( browtree) {
-      if ( item->tree_node)
-	brow_DeleteNode( browtree->ctx, item->tree_node);
+      if ( item_tree_node)
+	brow_DeleteNode( browtree->ctx, item_tree_node);
       view_configure();
     }
     size--;
@@ -1341,10 +1352,11 @@ void EvList::event_clear_alarmlist( pwr_tNodeIndex nix)
     switch( object_item->type) {
     case evlist_eItemType_Alarm:
       if ( object_item->eventid.Nix == nix) {
+	brow_tObject item_tree_node = object_item->tree_node;
 	brow_DeleteNode( browbase->ctx, object_item->node);
 	if ( browtree) {
-	  if ( object_item->tree_node)
-	    brow_DeleteNode( browtree->ctx, object_item->tree_node);
+	  if ( item_tree_node)
+	    brow_DeleteNode( browtree->ctx, item_tree_node);
 	  view_configure();
 	}
       }
@@ -1959,6 +1971,12 @@ ItemAlarm::ItemAlarm( EvList *item_evlist, const char *item_name, pwr_tTime item
       }
       
       // Note! This ItemAlarm might be deleted by now if node == last_node
+      if ( item_type == evlist_eItemType_Alarm && item_evlist->browtree) {
+	if ( item_tree_node)
+	  brow_DeleteNode( item_evlist->browtree->ctx, item_tree_node);
+	item_evlist->view_configure();
+      }
+
       item_evlist->size--;
     }
   }
@@ -2849,6 +2867,7 @@ int EvList::oid_to_item( pwr_tOid oid, void **item)
 void EvList::ack( mh_sEventId *id)
 {
   ItemAlarm 	*item;
+  brow_tObject 	item_tree_node;
 
   if ( !id_to_item( id, (void **)&item))
     return;
@@ -2862,10 +2881,14 @@ void EvList::ack( mh_sEventId *id)
   else if ( type == ev_eType_AlarmList)
   {
     // Detete the item from the alarm list
+    item_tree_node = item->tree_node;
+
     brow_DeleteNode( browbase->ctx, item->node);
+
+    // Note! item is deleted now
     if ( browtree) {
-      if ( item->tree_node)
-	brow_DeleteNode( browtree->ctx, item->tree_node);
+      if ( item_tree_node)
+	brow_DeleteNode( browtree->ctx, item_tree_node);
       view_configure();
     }
     size--;

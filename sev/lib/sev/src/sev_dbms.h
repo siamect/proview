@@ -163,7 +163,7 @@ class sev_dbms : public sev_db {
   char *dbName() { return sev_dbms_env::dbName();}
   char *pwrtype_to_type( pwr_eType type, unsigned int size);
   static int timestr_to_time( char *tstr, pwr_tTime *ts);
-  static void write_db_cb( void *data, int idx, double value, pwr_tTime *time);
+  static void write_db_cb( void *data, int idx, void *value, pwr_tTime *time);
   int check_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, char *aname, 
                          pwr_tDeltaTime storagetime,
 			char *description, pwr_tFloat32 scantime, 

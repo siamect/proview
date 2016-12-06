@@ -1373,6 +1373,11 @@ void GrowNode::set_annotation( int num, const char *text, int size, int nodraw, 
   if ( annotv_inputmode[num])
     return;
 
+  set_annotation_input( num, text, size, nodraw, brief);
+}
+
+void GrowNode::set_annotation_input( int num, const char *text, int size, int nodraw, int brief)
+{
   if ( !root_node) {
     if ( !nodraw && !invisible)
     {

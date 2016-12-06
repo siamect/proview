@@ -4181,6 +4181,31 @@ Endast konfigurerade metoder visas i menyn.
 MethodPulldownMenu.Object <t><t>Objekt för vilket metoderna ska visas.
 MethodPulldownMenu.HelpMenu <t><t>Menyn är en hjälpmeny och endast hjälp-metoderna
                           <t><t>Help och Help Class visas i menyn.
+</topic>
+
+<topic>GeDynEmitSignal <style>function
+EmitSignal
+
+Aktion för att sända en signal.
+
+<b>Attribut <t><t>Beskrivning
+EmitSignal.SignalName <t><t>Signalnamn.
+EmitSignal.Global <t><t>Om global är satt, sänds signalen till all öppna grafer
+                  <t><t>och multiviewer. Annars vara till den nuvarande grafen.
+                       
+</topic>
+
+<topic>GeDynCatchSignal <style>function
+CatchSignal
+
+Aktion för att fånga en signal. När signalen är fångad, exekveras aktionerna för mus-klick för 
+det aktuella objektet.
+
+<b>Attribut <t><t>Beskrivning
+CatchSignal.SignalName <t><t>Signalnamn.
+                       
+</topic>
+
 </headerlevel>
 <pagebreak>
 

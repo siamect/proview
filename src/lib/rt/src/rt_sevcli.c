@@ -38,6 +38,7 @@
 #include "pwr.h"
 #include "co_cdh.h"
 #include "co_time.h"
+#include "co_cnf.h"
 #include "rt_qcom.h"
 #include "rt_qcom_msg.h"
 #include "rt_sev_msg.h"
@@ -341,9 +342,25 @@ int sevcli_get_itemdata( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid,
   sev_sMsgHistDataGetRequest 	*msg;
   qcom_sQid   	tgt;
   qcom_sPut	put;
-  int tmo = 30000;
+  static int tmo = 0;
   qcom_sGet get;
   pwr_tStatus lsts;
+
+  if ( tmo == 0) {
+    int value;
+    char value_str[20];
+    int nr;
+
+    if ( cnf_get_value( "sevTimeout", value_str, sizeof(value_str))) {
+      nr = sscanf( value_str, "%d", &value);
+      if ( nr != 1)
+	tmo = 30000;
+      else
+	tmo = 1000 * value;
+    }
+    else
+      tmo = 30000;
+  }
   
   if ( ctx->server)
     tgt.nid = ctx->server;
@@ -376,8 +393,10 @@ int sevcli_get_itemdata( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid,
   memset( &get, 0, sizeof(get));
   for (;;) {
     rmsg = (sev_sMsgHistDataGet *) qcom_Get(sts, &ctx->qid, &get, 0);
+
     if ( !rmsg)
       break;
+    qcom_Free( sts, rmsg);
   }
 
   if ( !qcom_Put( sts, &tgt, &put)) {
@@ -389,8 +408,9 @@ int sevcli_get_itemdata( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid,
 
   for (;;) {
     rmsg = (sev_sMsgHistDataGet *) qcom_Get(sts, &ctx->qid, &get, tmo);
-    if ( *sts == QCOM__TMO || !rmsg)
+    if ( *sts == QCOM__TMO || !rmsg) {
       return 0;
+    }
 
     if ( get.type.b == sev_cMsgClass && 
 	 get.type.s == (qcom_eStype) sev_eMsgType_HistDataGet &&

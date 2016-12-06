@@ -246,6 +246,11 @@ void XttGe::update_color_theme( int theme)
   graph->update_color_theme( color_theme);
 }
 
+void XttGe::signal_send( char *signalname)
+{
+  graph->signal_send( signalname);
+}
+
 void XttGe::event_exec( int type, void *event, unsigned int size) 
 { 
   switch ( type) {

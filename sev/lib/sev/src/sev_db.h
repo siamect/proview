@@ -128,7 +128,17 @@ class sev_item {
     strncpy( oname, x.oname, sizeof(oname)); 
     strncpy( description, x.description, sizeof(description));
     if ( x.cache)
-      cache = new sev_valuecache(*x.cache);
+      switch ( attr[0].type) {
+      case pwr_eType_Float32:
+      case pwr_eType_Float64:
+      case pwr_eType_Int32:
+	cache = new sev_valuecache_double(*(sev_valuecache_double *)x.cache);
+	break;
+      case pwr_eType_Boolean:
+	cache = new sev_valuecache_bool(*(sev_valuecache_bool *)x.cache);
+	break;
+      default: ;
+      }
   }
   ~sev_item() {
     if ( cache)

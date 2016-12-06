@@ -240,6 +240,83 @@ void GeCurve::activate_period( time_ePeriod period)
   set_times( &from, &to);
 }
 
+void GeCurve::activate_period_markers()
+{
+  set_times_sensitivity( 0);
+  set_times_markers();
+}
+
+void GeCurve::set_times_markers() 
+{
+  if ( time_Acomp( &last_mark1_time, &last_mark2_time) == -1)
+    set_times( &last_mark1_time, &last_mark2_time);
+  else
+    set_times( &last_mark2_time, &last_mark1_time);
+}
+
+void GeCurve::update_times_markers()
+{
+  double x;
+  double ll_x, ll_y, ur_x, ur_y;
+  char str[40];
+  double time;
+  double values[CURVE_MAX_COLS];
+
+  // Mark 1
+  grow_MeasureNode( curve_markobject1, &ll_x, &ll_y, &ur_x, &ur_y);
+
+  x = (ll_x + ur_x) / 2;
+  last_mark1_x = x;
+  x_to_points( x, &time, values);
+
+  for ( int i = 0; i < cd->cols; i++) {
+    sprintf( str, "%7.2f", values[i]);
+    grow_SetAnnotation( mark1_annot[i], 0, str, strlen(str));
+  }
+      
+  if ( !(strcmp( cd->x_format[0], "%10t") == 0 || 
+	 strcmp( cd->x_format[0], "%11t") == 0)) {
+    sprintf( str, "%7.2f", time);
+    grow_SetAnnotation( mark1_annot[cd->cols], 0, str, strlen(str));
+  }
+  else {
+    // Time is a date
+    pwr_tTime t;
+    time_Float64ToD( (pwr_tDeltaTime *) &t, time);
+    last_mark1_time = t;
+    time_AtoAscii( &t, time_eFormat_DateAndTime, str, sizeof(str));
+    grow_SetAnnotation( mark1_annot[cd->cols], 0, str, strlen(str));
+  }
+
+  // Mark 2
+  grow_MeasureNode( curve_markobject2, &ll_x, &ll_y, &ur_x, &ur_y);
+
+  x = (ll_x + ur_x) / 2;
+  last_mark2_x = x;
+  x_to_points( x, &time, values);
+
+  for ( int i = 0; i < cd->cols; i++) {
+    sprintf( str, "%7.2f", values[i]);
+    grow_SetAnnotation( mark2_annot[i], 0, str, strlen(str));
+  }
+      
+  if ( !(strcmp( cd->x_format[0], "%10t") == 0 || 
+	 strcmp( cd->x_format[0], "%11t") == 0)) {
+    sprintf( str, "%7.2f", time);
+    grow_SetAnnotation( mark2_annot[cd->cols], 0, str, strlen(str));
+  }
+  else {
+    // Time is a date
+    pwr_tTime t;
+    time_Float64ToD( (pwr_tDeltaTime *) &t, time);
+    last_mark1_time = t;
+    time_AtoAscii( &t, time_eFormat_DateAndTime, str, sizeof(str));
+    grow_SetAnnotation( mark2_annot[cd->cols], 0, str, strlen(str));
+  }
+  if ( current_period == ge_ePeriod_Markers)
+    set_times_markers();
+}
+
 void GeCurve::activate_minmax_ok( double min_value, double max_value)
 {
 
@@ -340,29 +417,63 @@ int GeCurve::growcurve_cb( GlowCtx *ctx, glow_tEvent event)
     double time;
     double values[CURVE_MAX_COLS];
 
-    grow_MeasureNode( curve->curve_markobject1, &ll_x, &ll_y, &ur_x, &ur_y);
-    grow_MoveNode( curve->curve_markobject1, event->any.x - (ur_x - ll_x)/2, ll_y);
-    grow_Redraw( curve->growcurve_ctx);
+    if ( curve->selected_mark == 0 || curve->selected_mark == 1) {
+      grow_MeasureNode( curve->curve_markobject1, &ll_x, &ll_y, &ur_x, &ur_y);
+      grow_MoveNode( curve->curve_markobject1, event->any.x - (ur_x - ll_x)/2, ll_y);
+      grow_Redraw( curve->growcurve_ctx);
 
-    curve->last_mark1_x = event->any.x;
-    curve->x_to_points( event->any.x, &time, values);
+      curve->last_mark1_x = event->any.x;
+      curve->x_to_points( event->any.x, &time, values);
 
-    for ( int i = 0; i < curve->cd->cols; i++) {
-      sprintf( str, "%7.2f", values[i]);
-      grow_SetAnnotation( curve->mark1_annot[i], 0, str, strlen(str));
-    }
+      for ( int i = 0; i < curve->cd->cols; i++) {
+	sprintf( str, "%7.2f", values[i]);
+	grow_SetAnnotation( curve->mark1_annot[i], 0, str, strlen(str));
+      }
       
-    if ( !(strcmp( curve->cd->x_format[0], "%10t") == 0 || 
-	   strcmp( curve->cd->x_format[0], "%11t") == 0)) {
-      sprintf( str, "%7.2f", time);
-      grow_SetAnnotation( curve->mark1_annot[curve->cd->cols], 0, str, strlen(str));
+      if ( !(strcmp( curve->cd->x_format[0], "%10t") == 0 || 
+	     strcmp( curve->cd->x_format[0], "%11t") == 0)) {
+	sprintf( str, "%7.2f", time);
+	grow_SetAnnotation( curve->mark1_annot[curve->cd->cols], 0, str, strlen(str));
+      }
+      else {
+	// Time is a date
+	pwr_tTime t;
+	time_Float64ToD( (pwr_tDeltaTime *) &t, time);
+	curve->last_mark1_time = t;
+	time_AtoAscii( &t, time_eFormat_DateAndTime, str, sizeof(str));
+	grow_SetAnnotation( curve->mark1_annot[curve->cd->cols], 0, str, strlen(str));
+	if ( curve->current_period == ge_ePeriod_Markers)
+	  curve->set_times_markers();
+      }
     }
-    else {
-      // Time is a date
-      pwr_tTime t;
-      time_Float64ToD( (pwr_tDeltaTime *) &t, time);
-      time_AtoAscii( &t, time_eFormat_DateAndTime, str, sizeof(str));
-      grow_SetAnnotation( curve->mark1_annot[curve->cd->cols], 0, str, strlen(str));
+    else if ( curve->selected_mark == 2) {
+      grow_MeasureNode( curve->curve_markobject2, &ll_x, &ll_y, &ur_x, &ur_y);
+      grow_MoveNode( curve->curve_markobject2, event->any.x - (ur_x - ll_x)/2, ll_y);
+      grow_Redraw( curve->growcurve_ctx);
+
+      curve->last_mark2_x = event->any.x;
+      curve->x_to_points( event->any.x, &time, values);
+
+      for ( int i = 0; i < curve->cd->cols; i++) {
+	sprintf( str, "%7.2f", values[i]);
+	grow_SetAnnotation( curve->mark2_annot[i], 0, str, strlen(str));
+      }
+      
+      if ( !(strcmp( curve->cd->x_format[0], "%10t") == 0 || 
+	     strcmp( curve->cd->x_format[0], "%11t") == 0)) {
+	sprintf( str, "%7.2f", time);
+	grow_SetAnnotation( curve->mark2_annot[curve->cd->cols], 0, str, strlen(str));
+      }
+      else {
+	// Time is a date
+	pwr_tTime t;
+	time_Float64ToD( (pwr_tDeltaTime *) &t, time);
+	curve->last_mark2_time = t;
+	time_AtoAscii( &t, time_eFormat_DateAndTime, str, sizeof(str));
+	grow_SetAnnotation( curve->mark2_annot[curve->cd->cols], 0, str, strlen(str));
+	if ( curve->current_period == ge_ePeriod_Markers)
+	  curve->set_times_markers();
+      }
     }
     break;
   }
@@ -394,8 +505,11 @@ int GeCurve::growcurve_cb( GlowCtx *ctx, glow_tEvent event)
       // Time is a date
       pwr_tTime t;
       time_Float64ToD( (pwr_tDeltaTime *) &t, time);
+      curve->last_mark2_time = t;
       time_AtoAscii( &t, time_eFormat_DateAndTime, str, sizeof(str));
       grow_SetAnnotation( curve->mark2_annot[curve->cd->cols], 0, str, strlen(str));
+      if ( curve->current_period == ge_ePeriod_Markers)
+	curve->set_times_markers();
     }
     break;
   }
@@ -441,8 +555,11 @@ int GeCurve::growcurve_cb( GlowCtx *ctx, glow_tEvent event)
 	// Time is a date
 	pwr_tTime t;
 	time_Float64ToD( (pwr_tDeltaTime *) &t, time);
+	curve->last_mark1_time = t;
 	time_AtoAscii( &t, time_eFormat_DateAndTime, str, sizeof(str));
 	grow_SetAnnotation( curve->mark1_annot[curve->cd->cols], 0, str, strlen(str));
+	if ( curve->current_period == ge_ePeriod_Markers)
+	  curve->set_times_markers();
       }
     }
     else if ( event->object.object == curve->curve_markobject2) {
@@ -466,8 +583,11 @@ int GeCurve::growcurve_cb( GlowCtx *ctx, glow_tEvent event)
 	// Time is a date
 	pwr_tTime t;
 	time_Float64ToD( (pwr_tDeltaTime *) &t, time);
+	curve->last_mark2_time = t;
 	time_AtoAscii( &t, time_eFormat_DateAndTime, str, sizeof(str));
 	grow_SetAnnotation( curve->mark2_annot[curve->cd->cols], 0, str, strlen(str));
+	if ( curve->current_period == ge_ePeriod_Markers)
+	  curve->set_times_markers();
       }
     }
     break;
@@ -599,7 +719,7 @@ int GeCurve::init_growcurve_cb( GlowCtx *fctx, void *client_data)
 
   grow_tNodeClass nc;
   grow_CreateNodeClass( curve->growcurve_ctx, "MarkNc", glow_eNodeGroup_Common, &nc);
-  grow_AddLine( nc, "", 0, 0, 0, 32, glow_eDrawType_LineGray, 1, 0, NULL);
+  grow_AddLine( nc, "", 0, 0, 0, 32, glow_eDrawType_Color34, 1, 0, NULL);
   grow_AddRect( nc, "", -MARK_WIDTH/2, 30.1, MARK_WIDTH, 1.8, glow_eDrawType_LineGray, 1, 0,
 		glow_mDisplayLevel_1, 0, 0, 1,
 		glow_eDrawType_Color33, NULL);
@@ -730,6 +850,30 @@ int GeCurve::grownames_cb( GlowCtx *ctx, glow_tEvent event)
 	    break;
 	  }
         }
+	if ( event->object.object == curve->mark1_rect ||
+	     event->object.object == curve->mark1_text) {
+	  if ( curve->selected_mark == 1) {
+	    grow_SetObjectFillColor( curve->mark1_rect, glow_eCtColor_AreaDelimiter);
+	    curve->selected_mark = 0;
+	  }
+	  else {
+	    grow_SetObjectFillColor( curve->mark1_rect, glow_eCtColor_ButtonActiveFillcolor);
+	    grow_SetObjectFillColor( curve->mark2_rect, glow_eCtColor_AreaDelimiter);
+	    curve->selected_mark = 1;
+	  }
+	}
+	if ( event->object.object == curve->mark2_rect ||
+	     event->object.object == curve->mark2_text) {
+	  if ( curve->selected_mark == 2) {
+	    grow_SetObjectFillColor( curve->mark2_rect, glow_eCtColor_AreaDelimiter);
+	    curve->selected_mark = 0;
+	  }
+	  else {
+	    grow_SetObjectFillColor( curve->mark1_rect, glow_eCtColor_AreaDelimiter);
+	    grow_SetObjectFillColor( curve->mark2_rect, glow_eCtColor_ButtonActiveFillcolor);
+	    curve->selected_mark = 2;
+	  }
+	}
       }
       break;
     }
@@ -882,16 +1026,26 @@ int GeCurve::config_names()
 		       glow_eCtColor_AreaDelimiterTextAndLines, 3, glow_eFont_LucidaSans, 
 		       glow_mDisplayLevel_1, NULL, &o1);
   x += time_size + 0.2;
+  grow_CreateGrowRect( grownames_ctx, "", x - 0.4, 0, time_size, 0.75,
+		       glow_eCtColor_IndicatorBorderColor, 1, 0, glow_mDisplayLevel_1, 1, 1, 1,
+		       glow_eCtColor_AreaDelimiter, NULL, &mark1_rect);
+  grow_SetObjectShadowWidth( mark1_rect, 10);
+
   grow_CreateGrowText( grownames_ctx, "", Lng::translate("Mark 1"),
 		       x, y + 0.6, glow_eDrawType_TextHelvetica, 
 		       glow_eCtColor_AreaDelimiterTextAndLines, 3, glow_eFont_LucidaSans, 
-		       glow_mDisplayLevel_1, NULL, &o1);
+		       glow_mDisplayLevel_1, NULL, &mark1_text);
   // TODO
   x += time_size + 0.2;
+  grow_CreateGrowRect( grownames_ctx, "", x - 0.4, 0, time_size, 0.75,
+		       glow_eCtColor_IndicatorBorderColor, 1, 0, glow_mDisplayLevel_1, 1, 1, 1,
+		       glow_eCtColor_AreaDelimiter, NULL, &mark2_rect);
+  grow_SetObjectShadowWidth( mark2_rect, 10);
+
   grow_CreateGrowText( grownames_ctx, "", Lng::translate("Mark 2"),
 		       x, y + 0.6, glow_eDrawType_TextHelvetica, 
 		       glow_eCtColor_AreaDelimiterTextAndLines, 3, glow_eFont_LucidaSans, 
-		       glow_mDisplayLevel_1, NULL, &o1);
+		       glow_mDisplayLevel_1, NULL, &mark2_text);
   x += time_size + 0.2;
   grow_CreateGrowText( grownames_ctx, "", Lng::translate("Unit"),
 		       x, y + 0.6, glow_eDrawType_TextHelvetica, 
@@ -1194,6 +1348,8 @@ int GeCurve::configure_axes()
   }
   grow_ResetNodraw( growaxis_ctx);
   grow_Redraw( growaxis_ctx);
+
+  update_times_markers();
   return 1;
 }
 
@@ -1581,8 +1737,9 @@ GeCurve::GeCurve( void 	*gc_parent_ctx,
   prev_period_cb(0), next_period_cb(0), add_cb(0), madd_cb(0), remove_cb(0), export_cb(0), new_cb(0),
   save_cb(0), open_cb(0), snapshot_cb(0),
   initial_right_position(pos_right), last_cursor_x(0), last_mark1_x(0), last_mark2_x(0),
+  last_mark1_time(pwr_cNTime), last_mark2_time(pwr_cNTime),
   deferred_configure_axes(0), center_from_window(0), options(gc_options), layout_mask(0), 
-  color_theme(gc_color_theme)
+  color_theme(gc_color_theme), current_period(time_ePeriod_OneHour)
 {
   pwr_tStatus sts;
 

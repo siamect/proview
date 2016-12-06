@@ -1015,16 +1015,25 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
                            pwr_tTime time, void *buf, unsigned int size)
 {
   if ( m_items[item_idx].options & pwr_mSevOptionsMask_DeadBandLinearRegr) {
-    double value;
+    void *value;
+    double dval;
+    pwr_tBoolean bval;
     switch ( m_items[item_idx].attr[0].type) {
     case pwr_eType_Float32:
-      value = *(pwr_tFloat32 *)buf;
+      dval = *(pwr_tFloat32 *)buf;
+      value = &dval;
       break;
     case pwr_eType_Float64:
-      value = *(pwr_tFloat64 *)buf;
+      dval = *(pwr_tFloat64 *)buf;
+      value = &dval;
       break;
     case pwr_eType_Int32:
-      value = *(pwr_tInt32 *)buf;
+      dval = *(pwr_tInt32 *)buf;
+      value = &dval;
+      break;
+    case pwr_eType_Boolean:
+      bval = *(pwr_tBoolean *)buf;
+      value = &bval;
       break;
     default:
       return 0;
@@ -1473,6 +1482,7 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
   char orderby_part[80];
   char jumpstr[40];
   char where_part[200];
+  int rows;
 
   if ( starttime && starttime->tv_sec == 0 && starttime->tv_nsec == 0)
     starttime = 0;
@@ -1611,7 +1621,7 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
     strcpy( column_part, "time,value");
 
   if ( options & pwr_mSevOptionsMask_UseDeadBand)
-    strcpy( jumpstr, "or jump = 1");
+    strcpy( jumpstr, ""); // "or jump = 1" removed
   else
     strcpy( jumpstr, "");
 
@@ -1625,104 +1635,119 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
       strcpy( orderby_part, "time");
   }
 
-  // 'where' part
-  if ( options & pwr_mSevOptionsMask_ReadOptimized) {
-    if ( starttime && endtime) {
-      if ( div == 1) {
-        if ( options & pwr_mSevOptionsMask_PosixTime)
-          sprintf( where_part, "where time >= %ld and time <= %ld", (long int)starttime->tv_sec, (long int)endtime->tv_sec);
-        else
-          sprintf( where_part, "where time >= '%s' and time <= '%s'", starttimstr, endtimstr);
+  for ( int k = 0; k < 2; k++) {
+    // 'where' part
+    if ( options & pwr_mSevOptionsMask_ReadOptimized) {
+      if ( starttime && endtime) {
+	if ( div == 1) {
+	  if ( options & pwr_mSevOptionsMask_PosixTime)
+	    sprintf( where_part, "where time >= %ld and time <= %ld", (long int)starttime->tv_sec, (long int)endtime->tv_sec);
+	  else
+	    sprintf( where_part, "where time >= '%s' and time <= '%s'", starttimstr, endtimstr);
+	}
+	else {
+	  if ( options & pwr_mSevOptionsMask_PosixTime)
+	    sprintf( where_part, "where (id %% %d = 0 %s) and time >= %ld and time <= %ld", 
+		     div, jumpstr, (long int)starttime->tv_sec, (long int)endtime->tv_sec);
+	  else
+	    sprintf( where_part, "where (id %% %d = 0 %s) and time >= '%s' and time <= '%s'", 
+		     div, jumpstr, starttimstr, endtimstr);
+	}
+      }
+      else if ( starttime) {
+	if ( div == 1) {
+	  if ( options & pwr_mSevOptionsMask_PosixTime)
+	    sprintf( where_part, "where time >= %ld", (long int)starttime->tv_sec);
+	  else
+	    sprintf( where_part, "where time >= '%s'", starttimstr);
+	}
+	else {
+	  if ( options & pwr_mSevOptionsMask_PosixTime)
+	    sprintf( where_part, "where (id %% %d = 0 %s) and time >= %ld", div, jumpstr, (long int)starttime->tv_sec);
+	  else
+	    sprintf( where_part, "where (id %% %d = 0 %s) and time >= '%s'", div, jumpstr, starttimstr);
+	}
+      }
+      else if ( endtime) {
+	if ( div == 1) {
+	  if ( options & pwr_mSevOptionsMask_PosixTime)
+	    sprintf( where_part, "where time <= %ld", (long int)endtime->tv_sec);
+	  else
+	    sprintf( where_part, "where time <= '%s'", endtimstr);
+	}
+	else {
+	  if ( options & pwr_mSevOptionsMask_PosixTime)
+	    sprintf( where_part, "where (id %% %d = 0 %s) and time <= %ld", div, jumpstr, (long int)endtime->tv_sec);
+	  else
+	    sprintf( where_part, "where (id %% %d = 0 %s) and time <= '%s'", div, jumpstr, endtimstr);
+	}
       }
       else {
-        if ( options & pwr_mSevOptionsMask_PosixTime)
-          sprintf( where_part, "where (id %% %d = 0 %s) and time >= %ld and time <= %ld", 
-                   div, jumpstr, (long int)starttime->tv_sec, (long int)endtime->tv_sec);
-        else
-          sprintf( where_part, "where (id %% %d = 0 %s) and time >= '%s' and time <= '%s'", 
-                   div, jumpstr, starttimstr, endtimstr);
-      }
-    }
-    else if ( starttime) {
-      if ( div == 1) {
-        if ( options & pwr_mSevOptionsMask_PosixTime)
-          sprintf( where_part, "where time >= %ld", (long int)starttime->tv_sec);
-        else
-          sprintf( where_part, "where time >= '%s'", starttimstr);
-      }
-      else {
-        if ( options & pwr_mSevOptionsMask_PosixTime)
-          sprintf( where_part, "where (id %% %d = 0 %s) and time >= %ld", div, jumpstr, (long int)starttime->tv_sec);
-        else
-          sprintf( where_part, "where (id %% %d = 0 %s) and time >= '%s'", div, jumpstr, starttimstr);
-      }
-    }
-    else if ( endtime) {
-      if ( div == 1) {
-        if ( options & pwr_mSevOptionsMask_PosixTime)
-          sprintf( where_part, "where time <= %ld", (long int)endtime->tv_sec);
-        else
-          sprintf( where_part, "where time <= '%s'", endtimstr);
-      }
-      else {
-        if ( options & pwr_mSevOptionsMask_PosixTime)
-          sprintf( where_part, "where (id %% %d = 0 %s) and time <= %ld", div, jumpstr, (long int)endtime->tv_sec);
-        else
-          sprintf( where_part, "where (id %% %d = 0 %s) and time <= '%s'", div, jumpstr, endtimstr);
+	if ( div == 1)
+	  strcpy( where_part, "");
+	else
+	  sprintf( where_part, "where id %% %d = 0 %s", div, jumpstr);
       }
     }
     else {
-      if ( div == 1)
-        strcpy( where_part, "");
+      // Not read optimized
+      if ( starttime && endtime) {
+	if ( options & pwr_mSevOptionsMask_PosixTime)
+	  sprintf( where_part, "where time >= %ld and time <= %ld", (long int)starttime->tv_sec, (long int)endtime->tv_sec);
+	else
+	  sprintf( where_part, "where time >= '%s' and time <= '%s'", starttimstr, endtimstr);
+      }
+      else if ( starttime) {
+	if ( options & pwr_mSevOptionsMask_PosixTime)
+	  sprintf( where_part, "where time >= %ld", (long int)starttime->tv_sec);
+	else
+	  sprintf( where_part, "where time >= '%s'", starttimstr);
+      }
+      else if ( endtime) {
+	if ( options & pwr_mSevOptionsMask_PosixTime)
+	  sprintf( where_part, "where time <= %ld", (long int)endtime->tv_sec);
+	else
+	  sprintf( where_part, "where time <= '%s'", endtimstr);
+      }
       else
-        sprintf( where_part, "where id %% %d = 0 %s", div, jumpstr);
+	strcpy( where_part, "");
+    }  
+    
+    sprintf( query, "select %s from %s %s order by %s limit %d",
+	     column_part, item.tablename, where_part, orderby_part, maxsize*2);
+    
+    rc = mysql_query( m_env->con(), query);
+    if (rc) {
+      printf("In %s row %d:\n", __FILE__, __LINE__);
+      printf( "Get Values: %s\n", mysql_error(m_env->con()));
+      *sts = SEV__DBERROR;
+      return 0;
     }
-  }
-  else {
-    // Not read optimized
-    if ( starttime && endtime) {
-      if ( options & pwr_mSevOptionsMask_PosixTime)
-        sprintf( where_part, "where time >= %ld and time <= %ld", (long int)starttime->tv_sec, (long int)endtime->tv_sec);
-      else
-        sprintf( where_part, "where time >= '%s' and time <= '%s'", starttimstr, endtimstr);
-    }
-    else if ( starttime) {
-      if ( options & pwr_mSevOptionsMask_PosixTime)
-        sprintf( where_part, "where time >= %ld", (long int)starttime->tv_sec);
-      else
-        sprintf( where_part, "where time >= '%s'", starttimstr);
-    }
-    else if ( endtime) {
-      if ( options & pwr_mSevOptionsMask_PosixTime)
-        sprintf( where_part, "where time <= %ld", (long int)endtime->tv_sec);
-      else
-        sprintf( where_part, "where time <= '%s'", endtimstr);
-    }
-    else
-      strcpy( where_part, "");
-  }  
 
-  sprintf( query, "select %s from %s %s order by %s",
-           column_part, item.tablename, where_part, orderby_part);
+    result = mysql_store_result( m_env->con());
+    if ( !result) {
+      printf("In %s row %d:\n", __FILE__, __LINE__);
+      printf( "GetValues Result Error\n");
+      *sts = SEV__DBERROR;
+      return 0;
+    }
+    rows = mysql_num_rows( result);
 
-  rc = mysql_query( m_env->con(), query);
-  if (rc) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "Get Values: %s\n", mysql_error(m_env->con()));
-    *sts = SEV__DBERROR;
-    return 0;
+    if ( k == 0 && 
+	 options & pwr_mSevOptionsMask_UseDeadBand && 
+	 rows < maxsize / 3 && 
+	 rows != 0 &&
+	 div != 1) {
+      // Try another read with smaller div
+      printf( "Retry: %d old dev: %d, new div %d\n", rows, div, div * rows / maxsize + 1);
+      if ( div == div * rows / maxsize + 1)
+	break;
+      div = div * rows / maxsize + 1;
+      mysql_free_result( result);
+    }
+    else break;
   }
-
-  result = mysql_store_result( m_env->con());
-  if ( !result) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "GetValues Result Error\n");
-    *sts = SEV__DBERROR;
-    return 0;
-  }
-  int rows = mysql_num_rows( result);
   int bufrows = rows;
-
 
   if ( options & pwr_mSevOptionsMask_ReadOptimized) {
 
@@ -4015,24 +4040,29 @@ int sev_dbms::store_stat( sev_sStat *stat)
   return 1;
 }
 
-void sev_dbms::write_db_cb( void *data, int idx, double value, pwr_tTime *time)
+void sev_dbms::write_db_cb( void *data, int idx, void *value, pwr_tTime *time)
 {
   pwr_tStatus sts;
   sev_dbms *dbms = (sev_dbms *)data;
 
   switch( dbms->m_items[idx].attr[0].type) {
   case pwr_eType_Float32: {
-    pwr_tFloat32 v = value;
+    pwr_tFloat32 v = *(double *)value;
     dbms->write_value( &sts, idx, 0, *time, &v, sizeof(v));
     break;
   }
   case pwr_eType_Float64: {
-    pwr_tFloat64 v = value;
+    pwr_tFloat64 v = *(double *)value;
     dbms->write_value( &sts, idx, 0, *time, &v, sizeof(v));
     break;
   }
   case pwr_eType_Int32: {
-    pwr_tInt32 v = value;
+    pwr_tInt32 v = *(double *)value;
+    dbms->write_value( &sts, idx, 0, *time, &v, sizeof(v));
+    break;
+  }
+  case pwr_eType_Boolean: {
+    pwr_tBoolean v = *(pwr_tBoolean *)value;
     dbms->write_value( &sts, idx, 0, *time, &v, sizeof(v));
     break;
   }
@@ -4042,13 +4072,24 @@ void sev_dbms::write_db_cb( void *data, int idx, double value, pwr_tTime *time)
 
 void sev_dbms::add_cache( int item_idx)
 {
-  if ( m_items[item_idx].options & pwr_mSevOptionsMask_DeadBandMeanValue)
-    m_items[item_idx].cache = new sev_valuecache( sev_eCvType_Mean, m_items[item_idx].deadband, 
-						  m_items[item_idx].scantime);
-  else
-    m_items[item_idx].cache = new sev_valuecache( sev_eCvType_Point, m_items[item_idx].deadband, 
-						  m_items[item_idx].scantime);
-  m_items[item_idx].cache->set_write_cb( write_db_cb, this, item_idx);
+  switch ( m_items[item_idx].attr[0].type) {
+  case pwr_eType_Float32:
+  case pwr_eType_Float64:
+  case pwr_eType_Int32:
+    if ( m_items[item_idx].options & pwr_mSevOptionsMask_DeadBandMeanValue)
+      m_items[item_idx].cache = new sev_valuecache_double( sev_eCvType_Mean, m_items[item_idx].deadband, 
+							   m_items[item_idx].scantime/2);
+    else
+      m_items[item_idx].cache = new sev_valuecache_double( sev_eCvType_Point, m_items[item_idx].deadband, 
+							   m_items[item_idx].scantime/2);
+    m_items[item_idx].cache->set_write_cb( write_db_cb, this, item_idx);
+    break;
+  case pwr_eType_Boolean:
+    m_items[item_idx].cache = new sev_valuecache_bool( sev_eCvType_Point);
+    m_items[item_idx].cache->set_write_cb( write_db_cb, this, item_idx);
+    break;
+  default: ;
+  }
 }
 
 int sev_dbms::begin_transaction()

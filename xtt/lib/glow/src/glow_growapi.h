@@ -78,7 +78,8 @@ extern "C" {
     grow_eInfoType_Annot,
     grow_eInfoType_Dynamic,
     grow_eInfoType_Arg,
-    grow_eInfoType_Image
+    grow_eInfoType_Image,
+    grow_eInfoType_DynamicText
   } grow_eInfoType;
 
   typedef struct {
@@ -383,6 +384,7 @@ extern "C" {
     \param size		Length of text.
   */
   void grow_SetAnnotation( grow_tNode node, int number, const char *text, int size);
+  void grow_SetAnnotationInput( grow_tNode node, int number, const char *text, int size);
 
   //! Set the text of an annotation in a GrowNode object. Just redraw the background of the annotation.
   /*!
@@ -2103,7 +2105,7 @@ extern "C" {
     \param object	A GrowText object.
     \param text		Text.
   */
-  void grow_GetObjectText( grow_tObject object, char *text);
+  void grow_GetObjectText( grow_tObject object, char *text, int size);
 
   //! Set text size on all selected objects.
   /*!
@@ -3156,6 +3158,7 @@ extern "C" {
   int grow_SetObjectClass( grow_tObject object, grow_tNodeClass nodeclass);
   int grow_CheckObjectName( grow_tCtx ctx, char *name);
   int grow_KeyPressed( grow_tCtx ctx, int key);
+  void grow_SignalSend( grow_tCtx ctx, char *signalname);
 
   
 /*@}*/

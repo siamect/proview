@@ -233,8 +233,7 @@ class GrowCtx : public GlowCtx {
     \param element	Pointer to found object.
     \return		Returns 1 if object is found, else 0.
   */
-  int find_by_name( const char *name, GlowArrayElem **element)
-		{ return a.find_by_name( name, element);};
+  int find_by_name( const char *name, GlowArrayElem **element);
 
   //! Find a nodeclass by name.
   /*!
@@ -888,6 +887,7 @@ class GrowCtx : public GlowCtx {
 		       double *ur_x, double *ur_y);
 
   int key_pressed( int key);
+  int signal_send( char *signalname);
 
   void pop( GlowArrayElem *element) { a.pop( element);}
   void set_text_coding( glow_eTextCoding coding);

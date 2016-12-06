@@ -49,21 +49,45 @@ typedef struct {
   double val;
   double time;
   double epsilon;
-} sev_sCacheValue;
+} sev_sCacheValueDouble;
+
+typedef struct {
+  pwr_tBoolean val;
+  pwr_tTime time;
+} sev_sCacheValueBool;
 
 #define VALUECACHE_SIZE 20
 
 class sev_valuecache {
-  static const int m_size;
+ public:
   sev_eCvType m_type;
   void *m_userdata;
   int m_useridx;
+  void (*m_write_cb)( void *, int , void *, pwr_tTime *);
+
+  sev_valuecache( sev_eCvType type) : m_type(type), m_userdata(0), m_useridx(0), m_write_cb(0) {}
+  sev_valuecache( const sev_valuecache& x) : m_type(x.m_type), m_userdata(x.m_userdata), m_useridx(x.m_useridx), 
+    m_write_cb(x.m_write_cb) {}
+  virtual ~sev_valuecache() {};
+  virtual void add( void *value, pwr_tTime *time) {};
+  virtual void evaluate() {};
+  virtual void write( int index) {};
+  virtual void set_write_cb( void (*write_cb)( void *, int, void *, pwr_tTime *), void *userdata, int idx) {
+    m_write_cb = write_cb;
+    m_userdata = userdata;
+    m_useridx = idx;
+  }
+};
+
+
+class sev_valuecache_double : public sev_valuecache  {
+  static const int m_size;
   int m_length;
   int m_first;
   int m_last;
   bool m_inited;
-  sev_sCacheValue m_val[VALUECACHE_SIZE];
-  sev_sCacheValue m_wval;
+  sev_sCacheValueDouble m_val[VALUECACHE_SIZE];
+  sev_sCacheValueDouble m_wval;
   double m_k;
   double m_m;
   double m_deadband;
@@ -72,29 +96,28 @@ class sev_valuecache {
   int m_last_opt_write;
   pwr_tTime m_start_time;
   double m_last_k;
-  void (*m_write_cb)( void *, int , double, pwr_tTime *);
 
  public:
-  sev_valuecache( sev_eCvType type, double deadband_value, double deadband_time) : 
-    m_type(type), m_userdata(0), m_useridx(0), m_length(0), m_first(0), m_last(0), m_inited(false), 
-    m_deadband_value(deadband_value), m_deadband_time(deadband_time), m_write_cb(0) {
+  sev_valuecache_double( sev_eCvType type, double deadband_value, double deadband_time) : 
+    sev_valuecache(type), m_length(0), m_first(0), m_last(0), m_inited(false), 
+    m_deadband_value(deadband_value), m_deadband_time(deadband_time) {
     memset( &m_wval, 0, sizeof(m_wval));
     time_GetTime(&m_start_time);
   }
-  sev_valuecache( const sev_valuecache& x) : m_type(x.m_type), m_userdata(x.m_userdata), m_useridx(x.m_useridx),
-    m_length(x.m_length),
+  sev_valuecache_double( const sev_valuecache_double& x) : 
+    sev_valuecache(x), m_length(x.m_length),
     m_first(x.m_first), m_last(x.m_last), m_inited(x.m_inited), m_k(x.m_k), m_deadband(x.m_deadband), 
     m_deadband_value(x.m_deadband_value), m_deadband_time(x.m_deadband_time), m_last_opt_write(x.m_last_opt_write),
-    m_start_time(x.m_start_time), m_last_k(x.m_last_k), m_write_cb(x.m_write_cb) {
+    m_start_time(x.m_start_time), m_last_k(x.m_last_k) {
     memcpy( m_val, x.m_val, sizeof(m_val));
     memcpy( &m_wval, &x.m_wval, sizeof(m_wval));
   }
-  ~sev_valuecache() {}
+  ~sev_valuecache_double() {}
   int length() { return m_length;}
   int idx( int index);
-  sev_sCacheValue& operator[]( const int index);
-  sev_sCacheValue& wval() { return m_wval;}
-  void add( double value, pwr_tTime *time);
+  sev_sCacheValueDouble& operator[]( const int index);
+  sev_sCacheValueDouble& wval() { return m_wval;}
+  void add( void *value, pwr_tTime *time);
   void evaluate();
   void calculate_k();
   void write( int index);
@@ -105,11 +128,27 @@ class sev_valuecache {
   int get_optimal_write();
   double epsilon(int index) { return m_val[idx(index)].epsilon;}
   double get_k() { return m_k;}
-  void set_write_cb( void (*write_cb)( void *, int, double, pwr_tTime *), void *userdata, int idx) {
-    m_write_cb = write_cb;
-    m_userdata = userdata;
-    m_useridx = idx;
+};
+
+class sev_valuecache_bool : public sev_valuecache  {
+  bool m_inited;
+  sev_sCacheValueBool m_val;
+  sev_sCacheValueBool m_wval;
+
+ public:
+  sev_valuecache_bool( sev_eCvType type) : 
+    sev_valuecache(type), m_inited(false) {
+    memset( &m_wval, 0, sizeof(m_wval));
   }
+  sev_valuecache_bool( const sev_valuecache_bool& x) : 
+    sev_valuecache(x), m_inited(x.m_inited) {
+    memcpy( &m_wval, &x.m_wval, sizeof(m_wval));
+  }
+  ~sev_valuecache_bool() {}
+  sev_sCacheValueBool& wval() { return m_wval;}
+  void add( void *value, pwr_tTime *time);
+  void evaluate();
+  void write( int index);
 };
 
 

@@ -47,6 +47,7 @@ local_java_sources := \
 	GlowEventMenu.java,\
 	GlowEventToolbar.java,\
 	GlowEventTable.java,\
+	GlowEventSignal.java,\
 	GrowCtxIfc.java,\
 	GrowCmn.java,\
 	GrowAnnotIfc.java,\

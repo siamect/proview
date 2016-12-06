@@ -484,7 +484,8 @@ bool Lng::read_files( char *fname1, char *fname2, bool first_set, pwr_tStatus *s
       strncpy( key.text, r1.text, sizeof(key.text));
       key.type = r1.type;
       record = (lang_sRecord *) tree_Insert( sts, tree, &key);
-      strcpy( record->transl, r2.text);
+      strncpy( record->transl, r2.text, sizeof(record->transl));
+      record->transl[sizeof(record->transl)-1] = 0;
       // printf ( "%c %d.%d.%d '%s' '%s'\n", r1.type, r1.n1, r1.n2, r1.n3, r1.text,r2.text);
     }
   }    

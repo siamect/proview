@@ -77,6 +77,8 @@ class GrowText : public GlowText {
 		glow_mDisplayLevel display_lev = glow_mDisplayLevel_1,
 		int nodraw = 0);
 
+  GrowText( const GrowText& x);
+
   //! Destructor
   ~GrowText();
 
@@ -281,7 +283,7 @@ class GrowText : public GlowText {
   /*!
     \param str		buffer where the text is copied.
   */
-  void get_text( char *str) { strcpy( str, text);};
+  void get_text( char *str, int size) { strncpy( str, text, size); str[size-1] = 0;};
 
   //! Set text size
   /*!
@@ -502,6 +504,7 @@ class GrowText : public GlowText {
   void export_flow( GlowExportFlow *ef);
 
   glow_eDrawType get_text_color() { return color_drawtype;}
+
 };
 
 /*@}*/

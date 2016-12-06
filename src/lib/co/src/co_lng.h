@@ -209,7 +209,7 @@ typedef struct {
 typedef struct {
   tree_sNode 	n;
   lang_sKey	key;
-  char		transl[80];
+  char		transl[160];
 } lang_sRecord;
 
 class Row {

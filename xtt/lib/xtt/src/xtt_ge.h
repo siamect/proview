@@ -105,6 +105,7 @@ class XttGe : XttUtility {
   int key_pressed( int key);
   void close_input_all();
   int get_object_name( unsigned int idx, int size, char *name);
+  void signal_send( char *signalname);
 
   static void graph_init_cb( void *client_data);
   static int graph_close_cb( void *client_data);

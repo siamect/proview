@@ -292,6 +292,14 @@ void grow_SetAnnotation( grow_tNode node, int number, const char *text, int size
     ((GrowNode *)node)->set_annotation( number, text, size, 0);
 }
 
+void grow_SetAnnotationInput( grow_tNode node, int number, const char *text, int size)
+{
+  if ( ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowNode ||
+       ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowSlider ||
+       ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowGroup)
+    ((GrowNode *)node)->set_annotation_input( number, text, size, 0);
+}
+
 void grow_SetAnnotationBrief( grow_tNode node, int number, const char *text, int size)
 {
   if ( ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowNode ||
@@ -1814,9 +1822,11 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       attrinfo[i++].size = sizeof( op->n_name);
 
       strcpy( attrinfo[i].name, "Text");
-      attrinfo[i].value_p = &op->text;
+      attrinfo[i].value_p = malloc(200);      
+      op->get_text( (char *)attrinfo[i].value_p, 200);
+      attrinfo[i].info_type = grow_eInfoType_DynamicText;
       attrinfo[i].type = glow_eType_String;
-      attrinfo[i++].size = sizeof( op->text);
+      attrinfo[i++].size = 200;
 
       strcpy( attrinfo[i].name, "Adjustment");
       attrinfo[i].value_p = &op->adjustment;
@@ -3593,6 +3603,9 @@ void grow_FreeObjectAttrInfo( grow_sAttrInfo *attrinfo)
       case grow_eInfoType_Dynamic:
         free( (char *) info_p->value_p);
         break;
+      case grow_eInfoType_DynamicText:
+        free( (char *) info_p->value_p);
+        break;
       default:
         ;
     }
@@ -3763,12 +3776,15 @@ void grow_UpdateObject(  grow_tCtx ctx, grow_tObject object,
       ((GrowSubAnnot *)object)->draw( &ctx->mw, INT_MIN, INT_MIN, INT_MAX, INT_MAX);
       break;
     case glow_eObjectType_GrowText:
+
       // Set changed dynamic
       info_p = info;
-      while ( info_p->info_type != grow_eInfoType_End)
-      {
-        switch( info_p->info_type)
-        {
+      while ( info_p->info_type != grow_eInfoType_End) {
+        switch( info_p->info_type) {
+	  case grow_eInfoType_DynamicText:
+	    if ( strcmp( ((GrowText *)object)->text, (char *)info_p->value_p) != 0)
+	      ((GrowText *)object)->set_text( (char *)info_p->value_p);
+	    break;
           case grow_eInfoType_Dynamic:
           {
             char *dynamic;
@@ -4722,9 +4738,9 @@ void grow_SetObjectText( grow_tObject object, char *text)
   ((GrowText *)object)->set_text( text);
 }
 
-void grow_GetObjectText( grow_tObject object, char *text)
+void grow_GetObjectText( grow_tObject object, char *text, int size)
 {
-  ((GrowText *)object)->get_text( text);
+  ((GrowText *)object)->get_text( text, size);
 }
 
 void grow_SetSelectTextSize( grow_tCtx ctx, int size)
@@ -5818,6 +5834,12 @@ int grow_KeyPressed( grow_tCtx ctx, int key)
 {
   return ((GrowCtx *)ctx)->key_pressed( key);
 }
+
+void grow_SignalSend( grow_tCtx ctx, char *signalname)
+{
+  ((GrowCtx *)ctx)->signal_send( signalname);
+}
+
 
 /*@}*/
 

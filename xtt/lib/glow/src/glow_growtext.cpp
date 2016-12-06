@@ -71,6 +71,15 @@ GrowText::GrowText( GrowCtx *glow_ctx, const char *name, const char *text1, doub
     draw( &ctx->mw, (GlowTransform *)NULL, highlight, hot, NULL, NULL);
 }
 
+GrowText::GrowText( const GrowText& n) : GlowText(n) 
+{
+  memcpy( this, &n, sizeof(n));
+  if ( n.text) {
+    text = (char *) malloc( strlen(n.text)+1);
+    strcpy( text, n.text);
+  }
+}
+
 GrowText::~GrowText()
 {
   ctx->object_deleted( this);
@@ -360,8 +369,9 @@ void GrowText::open( ifstream& fp)
   if ( ctx->translate_on && 
        ctx->event_callback[glow_eEvent_Translate]) {
     if ( ctx->translate_cb( this, text, &new_text)) {
-      strncpy( text, new_text, sizeof(text));
-      text[sizeof(text)-1] = 0;
+      free( text);
+      text = (char *)malloc( strlen(new_text)+1);
+      strcpy( text, new_text);
     }
     get_node_borders();
   }
@@ -971,7 +981,9 @@ void GrowText::set_text( char *new_text)
 
   erase( &ctx->mw);
   erase( &ctx->navw);
-  strncpy( text, new_text, sizeof(text)-1);
+  free( text);
+  text = (char *)malloc( strlen(new_text)+1);
+  strcpy( text, new_text);
   get_node_borders();
   // draw();
 
@@ -1178,3 +1190,4 @@ void GrowText::export_flow( GlowExportFlow *ef)
 {
   ef->text( this);
 }
+

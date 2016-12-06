@@ -50,6 +50,8 @@
 
 #define CURVE_MAX_COLS 101
 
+#define ge_ePeriod_Markers ((time_ePeriod)1000)
+
 typedef enum {
         curve_mOptions_FullScreen   = 1 << 0,
         curve_mOptions_Maximize     = 1 << 1,
@@ -167,6 +169,10 @@ class GeCurve {
     grow_tObject curve_markobject1;
     grow_tObject curve_markobject2;
     GeCurveData *cd;
+    grow_tObject mark1_text;
+    grow_tObject mark2_text;
+    grow_tObject mark1_rect;
+    grow_tObject mark2_rect;
     double       axis_window_width;
     int          hide[CURVE_MAX_COLS];
     grow_tObject name_rect[CURVE_MAX_COLS+1];
@@ -203,12 +209,16 @@ class GeCurve {
     double  	 last_cursor_x;
     double  	 last_mark1_x;
     double  	 last_mark2_x;
+    pwr_tTime  	 last_mark1_time;
+    pwr_tTime  	 last_mark2_time;
     int		 deferred_configure_axes;
     CoWow	 *wow;
     int		 center_from_window;
     unsigned int options;
     unsigned int layout_mask;
     int 	 color_theme;
+    int		 selected_mark;
+    time_ePeriod current_period;
 
     GeCurve( void *gc_parent_ctx, char *curve_name,
 	     char *filename, GeCurveData *curve_data, int pos_right, 
@@ -254,6 +264,7 @@ class GeCurve {
     void activate_filledcurves( int set);
     void activate_help();
     void activate_period( time_ePeriod);
+    void activate_period_markers();
     void activate_edit();
     void activate_minmax_ok( double min_value, double max_value);
     void activate_minmax_save( double min_value, double max_value);
@@ -263,6 +274,8 @@ class GeCurve {
     void set_center_from_window( int val) { center_from_window = val;}
     void set_title( const char *str);
     void update_color_theme( int ct);
+    void set_times_markers();
+    void update_times_markers();
     
     static int growcurve_cb( GlowCtx *ctx, glow_tEvent event);
     static int init_growcurve_cb( GlowCtx *fctx, void *client_data);

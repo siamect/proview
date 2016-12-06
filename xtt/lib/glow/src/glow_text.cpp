@@ -80,6 +80,7 @@ void GlowText::open( ifstream& fp)
   int		type;
   int 		end_found = 0;
   char		dummy[40];
+  char		tmp_text[500];
   int		tmp;
 
   for (;;)
@@ -98,7 +99,10 @@ void GlowText::open( ifstream& fp)
       case glow_eSave_Text_color_drawtype: fp >> tmp; color_drawtype = (glow_eDrawType)tmp; break;
       case glow_eSave_Text_text: 
         fp.get();
-        fp.getline( text, sizeof(text));
+        fp.getline( tmp_text, sizeof(tmp_text));
+	free( text);
+	text = (char *)malloc(strlen(tmp_text)+1);
+	strcpy( text, tmp_text);
         break;
       case glow_eSave_Text_p: p.open( fp); break;
       case glow_eSave_End: end_found = 1; break;

@@ -444,7 +444,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 		{
 			"DISTRIBUTE",
 			&wnav_distribute_func,
-			{ "/NODE", "/PACKAGE", ""}
+			{ "/NODE", "/PACKAGE", "/FILE", ""}
 		},
 		{
 			"RELEASE",
@@ -5003,8 +5003,10 @@ static int	wnav_distribute_func(	void		*client_data,
   int		sts;
   char		*node_ptr;
   char		node_str[80];
+  pwr_tFileName	 file_str, file;
   int		package;
   bool 		distribute;
+  char		*s;
 
   if ( ODD( dcli_get_qualifier( "/NODE", node_str, sizeof(node_str))))
     node_ptr = node_str;
@@ -5014,17 +5016,42 @@ static int	wnav_distribute_func(	void		*client_data,
   package = ODD( dcli_get_qualifier( "/PACKAGE", 0, 0));
   distribute = package ? false : true;
 
-  sts = WNAV__SUCCESS;
-  try {
-    wb_pkg *pkg = new wb_pkg( node_ptr, distribute);
-    delete pkg;
+  if ( ODD( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str)))) {
+    if ( !node_ptr) {
+      wnav->message('E', "Syntax error, node is missing");
+      return WNAV__SYNTAX;
+    }
+    if ( (s = strchr( file_str, '/')) != 0)
+      strncpy( file, s+1, sizeof(file));
+    else
+      strncpy( file, file_str, sizeof(file));
+	 
+    sts = WNAV__SUCCESS;
+    try {
+      wb_pkg *pkg = new wb_pkg( node_ptr, false, false);
+      pkg->copyPackage( file);
+      delete pkg;
+    }
+    catch ( wb_error &e) {
+      wnav->message(' ', (char *)e.what().c_str());
+      sts = e.sts();
+    }
+    if ( EVEN(sts))
+      return sts;    
   }
-  catch ( wb_error &e) {
-    wnav->message(' ', (char *)e.what().c_str());
-    sts = e.sts();
+  else {
+    sts = WNAV__SUCCESS;
+    try {
+      wb_pkg *pkg = new wb_pkg( node_ptr, distribute);
+      delete pkg;
+    }
+    catch ( wb_error &e) {
+      wnav->message(' ', (char *)e.what().c_str());
+      sts = e.sts();
+    }
+    if ( EVEN(sts))
+      return sts;
   }
-  if ( EVEN(sts))
-    return sts;
   return 1;
 }
 

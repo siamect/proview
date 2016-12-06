@@ -887,7 +887,7 @@ void Graph::change_select_text()
 {
   grow_tObject 	*sel_list;
   int		sel_count;
-  char		text[80];
+  char		text[200];
 
   grow_GetSelectList( grow->ctx, &sel_list, &sel_count);
   if ( sel_count == 1 && 
@@ -897,7 +897,7 @@ void Graph::change_select_text()
     {
       journal_store( journal_eAction_AntePropertiesSelect, 0);
 
-      grow_GetObjectText( *sel_list, text);
+      grow_GetObjectText( *sel_list, text, sizeof(text));
       (change_text_cb)( parent_ctx, *sel_list, text);
 
       journal_store( journal_eAction_PostPropertiesSelect, 0);
@@ -3422,6 +3422,8 @@ void GraphGrow::grow_trace_setup()
 	graph_grow_cb);
   grow_EnableEvent( ctx, glow_eEvent_MenuDelete, glow_eEventType_CallBack,
 	graph_grow_cb);
+  grow_EnableEvent( ctx, glow_eEvent_Signal, glow_eEventType_CallBack,
+	graph_grow_cb);
 
   grow_RegisterEventLogCallback( ctx, graph_eventlog_cb);
 }
@@ -4251,6 +4253,18 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
       graph->exec_dynamic( event->dynamics.object, event->dynamics.code,
 		event->dynamics.dynamic_type);
       break;
+    case glow_eEvent_Signal: {
+      if ( event->signal.object_type == glow_eObjectType_NoObject)
+        break;
+      if ( grow_GetObjectType( event->signal.object) == glow_eObjectType_GrowNode ||
+           grow_GetObjectType( event->signal.object) == glow_eObjectType_GrowGroup) {
+	GeDyn		*dyn;
+
+	grow_GetUserData( event->signal.object, (void **)&dyn);
+	dyn->action( event->signal.object, event);
+      }
+      break;
+    }
     default:
       ;
   }
@@ -4314,7 +4328,7 @@ int Graph::set_object_focus( const char *name, int empty)
     if ( !change_value_cb)
       return 0;
 
-    sts = grow_FindObjectByName( grow->ctx, name, &object);
+    sts = grow_FindObjectByName( grow->base_ctx(), name, &object);
     if ( EVEN(sts)) return GE__OBJNOTFOUND;
 
     grow_GetUserData( object, (void **)&dyn);
@@ -5686,6 +5700,11 @@ int Graph::get_object_name( unsigned int idx, int size, char *name)
     return 0;
   strncpy( name, object_name[idx], size);
   return 1;
+}
+
+void Graph::signal_send( char *signalname)
+{
+  grow_SignalSend( grow->ctx, signalname);
 }
 
 static void graph_free_dyn( grow_tObject object)
