@@ -1456,7 +1456,6 @@ link_disconnect (
 
   /* Empty window list */
 
-  thread_MutexLock(&lp->eseg_mutex);
   for (
     sp = lst_Succ(NULL, &lp->lh_win, NULL);
     sp != NULL;

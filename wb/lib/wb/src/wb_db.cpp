@@ -65,7 +65,7 @@ wb_db_info::wb_db_info(wb_db *db) :
 void wb_db_info::get(wb_db_txn *txn)
 {
   int index = 1;
-  int ret;
+  int ret = 0;
   Dbt key(&index, sizeof(index));
   Dbt data(&m_volume, sizeof(m_volume));
   data.set_ulen(sizeof(m_volume));
@@ -73,7 +73,7 @@ void wb_db_info::get(wb_db_txn *txn)
 
   try {
     ret = m_db->m_t_info->get(txn, &key, &data, 0);
-    printf("info get: %d\n", ret);
+    // printf("info get: %d\n", ret);
   } catch (DbException &e) {
     printf("info get Error, %d\n", ret);
     m_db->m_t_info->err(ret, "m_db->m_t_info->get(txn, &key, &data, 0)");
@@ -90,7 +90,7 @@ void wb_db_info::put(wb_db_txn *txn)
   m_key.set_size(sizeof(index));
 
   ret = m_db->m_t_info->put(txn, &m_key, &m_data, 0);
-  printf("info put: %d\n", ret);
+  // printf("info put: %d\n", ret);
 }
 
 wb_db_class::wb_db_class(wb_db *db) :
@@ -822,6 +822,8 @@ wb_db::wb_db(pwr_tVid vid) :
 
 void wb_db::close()
 {
+  int rc;
+
   m_t_ohead->close(0);
   m_t_rbody->close(0);
   m_t_dbody->close(0);
@@ -831,8 +833,8 @@ void wb_db::close()
 
   if (m_txn) {
     printstat(m_env, "before abort");
-    int rc =  m_txn->abort();
-    printf("int rc =  m_txn->abort(): %d\n", rc);
+    rc =  m_txn->abort();
+    // printf("int rc =  m_txn->abort(): %d\n", rc);
   }
 
   printstat(m_env, "before m_env->close(0)");
@@ -1075,7 +1077,7 @@ void wb_db::openDb(bool useTxn)
   get_config( m_fileName, &lk_max_locks, &lk_max_objects, &log_autoremove);
 
   m_env = new DbEnv(0/*DB_CXX_NO_EXCEPTIONS*/);
-  printf("%s\n", m_env->version(0, 0, 0));
+  // printf("%s\n", m_env->version(0, 0, 0));
   m_env->set_errpfx("PWR db");
   m_env->set_cachesize(0, 256 * 1024 * 1024, 0);
   rc = m_env->set_lg_bsize(1024*1024*2);

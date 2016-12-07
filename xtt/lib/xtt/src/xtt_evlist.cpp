@@ -1960,16 +1960,11 @@ ItemAlarm::ItemAlarm( EvList *item_evlist, const char *item_name, pwr_tTime item
 
       brow_GetUserData( last_node, (void **)&item);
 
-      brow_tNode tree_node = item->tree_node;
+      brow_tNode item_tree_node = item->tree_node;
       evlist_eItemType item_type = item->type;
 
       brow_DeleteNode( evlist->browbase->ctx, last_node);
-      if ( item_type == evlist_eItemType_Alarm && item_evlist->browtree) {
-	if ( tree_node)
-	  brow_DeleteNode( item_evlist->browtree->ctx, tree_node);
-	item_evlist->view_configure();
-      }
-      
+
       // Note! This ItemAlarm might be deleted by now if node == last_node
       if ( item_type == evlist_eItemType_Alarm && item_evlist->browtree) {
 	if ( item_tree_node)

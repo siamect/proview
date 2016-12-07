@@ -840,7 +840,6 @@ pwr_tStatus Ev::mh_alarmstatus_bc( mh_sAlarmStatus *MsgP)
       case evlist_eItemType_Alarm:
 	if ( MsgP->Nix == item->eventid.Nix && !item->check) {
 	  ev->ala->event_delete( &item->eventid);
-	  printf( "Sts ala del %d,%d\n", item->eventid.Nix, item->eventid.Idx);
 	  for ( int k = 0; k < ev->sala_cnt; k++)
 	    ev->sala[k]->event_delete( &item->eventid);
 	  i--;
