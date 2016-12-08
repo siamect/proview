@@ -66,6 +66,7 @@
 #include "co_cdh.h"
 #include "co_time.h"
 #include "co_tree.h"
+#include "co_timelog.h"
 #include "rt_ini_event.h"
 #include "rt_mh_def.h"
 #include "rt_mh_net.h"
@@ -1217,7 +1218,16 @@ aSup_exec (
     if (!o->Action) {
       o->Action = TRUE;
     }
-    if (o->AlarmCheck && o->DetectOn && !o->Blocked) {
+    if (o->Supressed) {
+      if (o->ReturnCheck) {
+	time_GetTime( &o->ReturnTime);
+	o->ReturnCheck = FALSE;
+	o->ReturnSend = TRUE;
+      }
+      else if (o->DetectSend)
+	o->DetectSend = FALSE;
+    }
+    if (o->AlarmCheck && o->DetectOn && !o->Blocked && !o->Supressed) {
       if (o->DetectCheck) {
         o->ActualValue = In;
         timerIn(sp, (sTimer *)&o->TimerFlag);
@@ -1504,7 +1514,16 @@ dSup_exec (
     if (!o->Action) {
       o->Action = TRUE;
     }
-    if (o->AlarmCheck && o->DetectOn && !o->Blocked) {
+    if (o->Supressed) {
+      if (o->ReturnCheck) {
+	time_GetTime( &o->ReturnTime);
+	o->ReturnCheck = FALSE;
+	o->ReturnSend = TRUE;
+      }
+      else if (o->DetectSend)
+	o->DetectSend = FALSE;
+    }
+    if (o->AlarmCheck && o->DetectOn && !o->Blocked && !o->Supressed) {
       if (o->DetectCheck) {
         o->ActualValue = In;
         timerIn(sp, (sTimer *)&o->TimerFlag);
@@ -3556,7 +3575,7 @@ outunitAck (
     return;
   }
 
-  printf( "** Acked %s %u\n", ap->objName, (unsigned int)ap->status.Event.Status);
+  timelog_ss( 4, "emon, acked", ap->objName);
 
   switch (ap->source) {
   case mh_eSource_Scanner:
@@ -3935,6 +3954,7 @@ receive (
 	  continue;
 	handleMessage( &get);
       }
+      pwrs_Node_Exec( handlerEvent_cb);
     }
     else {
 
@@ -5370,7 +5390,7 @@ static pwr_tStatus emon_redu_receive()
       case mh_eEvent_UserAlarm4:
 	break;
       default:
-	printf( "** etp type error %s %d\n", ap->objName, ap->detect_etp->event);
+	timelog_ss( 4, "emon etp type error", ap->objName);
 	activep++;
 	continue;
       }

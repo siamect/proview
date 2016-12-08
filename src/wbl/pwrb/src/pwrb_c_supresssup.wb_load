@@ -44,7 +44,7 @@ SObject pwrb:Class
 !  @image orm_supresssup_fo.gif
 !
 !*/
-  Object SupressSup $ClassDef 686 
+  Object SupressSup $ClassDef 690 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
@@ -69,21 +69,21 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Value of In from last scan.
+      !  Indicating that alarm is supressed.
       !*/
-      Object InOld $Intern 2 
+      Object Supressed $Intern 2 
         Body SysBody
-          Attr Flags |= PWR_MASK_STATE
-          Attr Flags |= PWR_MASK_NOEDIT
+          Attr PgmName = "Supressed"
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
       !/**
-      !  Output indicating that alarm is supressed.
+      !  Output indicating that alarm is supressed or the associated
+      !  alarm is active.
       !*/
-      Object Supressed $Output 3 
+      Object Out $Output 3 
         Body SysBody
-          Attr PgmName = "Supressed"
+          Attr PgmName = "Out"
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "out"
         EndBody
@@ -141,7 +141,7 @@ SObject pwrb:Class
         Attr connectmethod = 36
         Attr executeordermethod = 6
         Attr objname = "SupressSup"
-        Attr graphname = "SupSup"
+        Attr graphname = "SupressSup"
         Attr debugpar = "Supressed"
       EndBody
     EndObject

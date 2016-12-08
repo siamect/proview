@@ -553,6 +553,16 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
+      !/**
+      !  Used by the SupressSup object to supress the alarm.
+      !*/
+      Object Supressed $Attribute 39 
+        Body SysBody
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
       !
       ! End of DSup inf struct
       ! --

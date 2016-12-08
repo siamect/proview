@@ -3177,18 +3177,44 @@ int	gobj_get_object_m36( WFoe *foe, vldh_t_node node, unsigned long index)
   vldh_t_plc	plc;
   pwr_sAttrRef	attrref;
   int		is_attr;
+  unsigned long		node_count;
+  vldh_t_node		*nodelist;
+  vldh_t_node		object;
 
-
-  /* Get the selected object in the navigator */
   plc = (node->hn.wind)->hw.plc;
   ldhses =(node->hn.wind)->hw.ldhses;
 
-  sts = gobj_get_select( foe, &attrref, &is_attr);
-  if ( EVEN(sts)) { 
-    foe->message( "Select a supervision object in the navigator");
-    BEEP;
-    return sts;
+  /* Get the selected object in current plc window or the navigator */
+  foe->gre->get_selnodes( &node_count, &nodelist);
+
+  if ( ((node_count == 1) && (*nodelist == node)) ||
+       ( node_count == 0) ) {
+    /* Take the orderobject from the navigator */
+    sts = gobj_get_select( foe, &attrref, &is_attr);
+    if ( EVEN(sts)) { 
+      foe->message( "Select a supervision object in the navigator or in the current window");
+      BEEP;
+      return sts;
+    }
   }
+  else if ( (node_count == 2) && 
+	    (( *nodelist == node) || ( *(nodelist + 1) == node))) {
+    if ( *nodelist == node)
+      object = *(nodelist + 1);
+    else
+      object = *nodelist;
+    attrref = cdh_ObjidToAref( object->ln.oid);
+  }
+  else if ( node_count == 1) {
+    object = *nodelist;
+    attrref = cdh_ObjidToAref( object->ln.oid);
+  }
+  else {
+    foe->message( "Select a supervision object in the navigator or in the current window first");
+    BEEP;
+    return 0;
+  }
+  if ( node_count > 0) free((char *) nodelist);
 
   sts = ldh_GetAttrRefTid( ldhses, &attrref, &cid);
   if ( EVEN(sts)) return sts;
@@ -3200,7 +3226,7 @@ int	gobj_get_object_m36( WFoe *foe, vldh_t_node node, unsigned long index)
   case pwr_cClass_ASupComp:
     break;
   default:
-    foe->message( "Selected object is not a di object");
+    foe->message( "Selected object is not a supervision object");
     BEEP;
     return 0;
   }
