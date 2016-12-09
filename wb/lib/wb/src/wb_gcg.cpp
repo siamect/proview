@@ -11390,6 +11390,10 @@ int	gcg_comp_m35( gcg_ctx gcgctx, vldh_t_node node)
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	    return GSX__NEXTPAR;
 	  }
+	  if ( !(info.flags & PWR_MASK_POINTER && !(info.flags & PWR_MASK_PRIVATE))) {
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);
+	    return GSX__NEXTPAR;
+	  }
 	  break;
 	default:;
 	}
