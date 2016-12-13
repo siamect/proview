@@ -628,7 +628,7 @@ usage()
 {
   cat << EOF
 
-  upgrade.sh  Upgrade from V5.3.1 to V5.4.0
+  upgrade.sh  Upgrade from V5.4 to V5.5
 
 
   Pass
@@ -636,7 +636,7 @@ usage()
     savedirectory  Save directory volume.
     classvolumes   Create loadfiles for classvolumes.
     updateclasses  Update classes.
-    cnvobjects     Create OpPlaceWeb objects.
+    cnvobjects     Update Profinet modules.
     compile        Compile all plcprograms in the database
     createload     Create new loadfiles.
     buildnodes     Build all nodes in the project.

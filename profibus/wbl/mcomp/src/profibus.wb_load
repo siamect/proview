@@ -3840,7 +3840,7 @@ Volume Profibus $ClassVolume 0.0.250.7
       Object RtBody $ObjBodyDef 1 21-APR-2009 13:41:08.17
         Body SysBody 21-APR-2009 13:41:08.17
           Attr StructName = "PnModule"
-          Attr NextAix = "_X22"
+          Attr NextAix = "_X23"
         EndBody
         !/**
         ! Description of this module.
@@ -3870,6 +3870,17 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr PgmName = "ModuleName"
             Attr Size = 40
             Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        !/**
+        ! Slot number. Used by the Profinet configurator.
+        !*/
+        Object Slot $Attribute 22 09-DEC-2016 14:42:22.14
+          Body SysBody 09-DEC-2016 14:43:00.76
+            Attr PgmName = "Slot"
+            Attr Size = 40
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         !/**
@@ -3979,7 +3990,7 @@ Volume Profibus $ClassVolume 0.0.250.7
     ! There are two SAP types reflecting the different characteristics of Master Stations and
     ! Slave Stations. Usually, "regular" SAP's are activated o Master Stations whereas Responder
     ! SAP's (RSAP's) are activated on Slave Stations. However both can be used on either one.
-    !
+    ! 
     ! A (R)SAP is defined by an address in the interval 0-63. A SAP is used to issue data transfers
     ! to a remote SAP or RSAP. A SAP can also be used to request data from a remote RSAP.
     ! A RSAP cannot request data from a remote (R)SAP. It is used to respond on a data request
@@ -3988,16 +3999,16 @@ Volume Profibus $ClassVolume 0.0.250.7
     ! This object defines a SAP or RSAP and it's address. Also defined is the slave address
     ! of the node that this SAP will exchange data with. It should be created as a child to a
     ! Pb_Profiboard. 
-    !
+    ! 
     ! See Proview documentation 'Guide to I/O Systems' for more information.
     ! 
     ! @bConfiguration
     ! Instances of the class Pb_FDL_DataTransfer are created as children to the Pb_FDL_SAP object.
-    !
+    ! 
     ! For the SAP more than one instance can be created of the types SDA, SDN and SRD. These
     ! different type are used to send data to a remote SAP (types SDA and SDN) or to request data and 
     ! if needed, at the same time send, data (type SRD). See more on class Pb_FDL_DataTransfer.
-    !
+    ! 
     ! For a RSAP instance only one instance can be created of type RUM used to recieve data and to update
     ! the data that will be sent back by a SRD request.
     ! 
@@ -4257,37 +4268,37 @@ Volume Profibus $ClassVolume 0.0.250.7
     ! 
     ! With Profibus FDL Service Access Points data transfer services between nodes on a Profibus
     ! network is made possible.
-    !
+    ! 
     ! There are two SAP types reflecting the different characteristics of Master Stations and
     ! Slave Stations. Usually, "regular" SAP's are activated on Master Stations whereas Responder
     ! SAP's (RSAP's) are activated on Slave Stations. However both can be used on either one.
-    !
+    ! 
     ! There are five types of data transfer services that can be configured. Three for sending and/or
     ! requesting data and two for preparing reply data (only one supported). 
-    !
+    ! 
     ! The first three of them are used from a SAP and cannot be used with a responder SAP (RSAP). These 
     ! are SDA (Send Data with Acknowledge), SDN (Send Data with No acknowledge) and SRD (Send and Request
     ! Data with reply). When requesting data no data need to be sent. 
-    !
+    ! 
     ! The other two services are used together with a responder SAP (RSAP) to prepare the reply data
     ! that will be sent back to a SAP upon the receipt of a SDA, SDN or SRD. These are RU (Reply-Update, 
     ! this one is not supported) and RUM (Reply-Update-Multiple)
-    !
+    ! 
     ! Each data transfer is configured with the destination address (address of remote (R)SAP).
-    !
+    ! 
     ! The data that is to be sent or received are created as standard I/O channels which should be
     ! created as children to the Pb_FDL_DataTransfer-object. When receiveing data, the data will always 
     ! be directed to the first (top) Pb_FDL_DataTransfer-object found as a child to the 
     ! Pb_FDL_SAP-object. 
-    !
+    ! 
     ! See Proview documentation 'Guide to I/O Systems' for more information.
     ! 
     ! @bConfiguration
     ! Instances of the class Pb_FDL_DataTransfer are created as children to the Pb_FDL_SAP object.
-    !
+    ! 
     ! I/O-channels are created as children to the Pb_FDL_DataTransfer-object to represent the
     ! data being sent and/or received.
-    !
+    ! 
     ! For a RSAP instance only one instance can be created of type RUM used to recieve data and to update
     ! the data that will be sent back by a SRD request.
     ! 
@@ -4341,11 +4352,11 @@ Volume Profibus $ClassVolume 0.0.250.7
         ! FDLIF_SRD - Send and Request Data with reply
         ! FDLIF_RU  - Reply Update (not supprted, RUM will always be used)
         ! FDLIF_RUM - Reply Update Multiple
-        !
+        ! 
         ! SDA and SDN can also receive data explictly sent with a SDA or SDN service from a 
         ! remote SAP. If more than one Pb_FDL_DataTransfer objects have been created for a single
         ! SAP then the first child will receive the data.
-        !*/        
+        !*/
         Object Type $Attribute 16 14-AUG-2014 15:43:27.65
           Body SysBody 14-AUG-2014 15:44:26.58
             Attr PgmName = "Type"
@@ -4356,7 +4367,7 @@ Volume Profibus $ClassVolume 0.0.250.7
         !/**
         ! Result of operation.
         ! FDL_OK - If no error was reported during operation.
-        !*/        
+        !*/
         Object Result $Attribute 18 21-AUG-2014 14:33:17.09
           Body SysBody 21-AUG-2014 15:06:59.67
             Attr PgmName = "Result"
@@ -4367,7 +4378,7 @@ Volume Profibus $ClassVolume 0.0.250.7
         !/**
         ! Send request.
         ! Setting of this flag will trigger the data transfer service.
-        !*/        
+        !*/
         Object SendReq $Attribute 17 14-AUG-2014 15:58:41.14
           Body SysBody 14-AUG-2014 15:58:47.91
             Attr PgmName = "SendReq"

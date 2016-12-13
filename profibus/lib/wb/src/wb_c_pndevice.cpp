@@ -168,98 +168,40 @@ int pndevice_save_cb( void *sctx)
 			ldh_eName_Hierarchy, name, sizeof(name), &size);
   if ( EVEN(sts)) goto return_now;
 
-  // Do a temporary rename all module object to avoid name collisions
-#if 0
+  // Check that Slot attribute corresponds to the and module_oid
+  for ( unsigned int i = 1; i < ctx->attr->attrnav->dev_data.slot_data.size(); i++)
+    ctx->attr->attrnav->dev_data.slot_data[i]->module_oid = pwr_cNOid;
+
   for ( sts = ldh_GetChild( ctx->ldhses, ctx->aref.Objid, &oid);
 	ODD(sts);
 	sts = ldh_GetNextSibling( ctx->ldhses, oid, &oid)) {
-    sts = ldh_ObjidToName( ctx->ldhses,  oid, cdh_mName_object, name,
-			   sizeof(name), &size);
-    if ( EVEN(sts)) goto return_now;
+    unsigned int *slotnumberp, slotnumber;
 
-    strcat( name, "__tmp");
-    sts = ldh_ChangeObjectName( ctx->ldhses, oid, name);
-    if ( EVEN(sts)) goto return_now;
-  }
-#endif
-
-  for ( unsigned int i = 1; i < ctx->attr->attrnav->dev_data.slot_data.size(); i++) {
-    GsdmlSlotData *slot = ctx->attr->attrnav->dev_data.slot_data[i];
-    pwr_tCid cid;
-    pwr_tOid prev;
-    pwr_tObjName mname;
-
-    int found = 0;
-    sprintf( mname, "M%d", slot->slot_idx);
-
-    if ( cdh_ObjidIsNotNull( slot->module_oid)) {
-
-      // Find module object
-      sts = ldh_GetObjectClass( ctx->ldhses, slot->module_oid, &cid);
-      if ( ODD(sts)) {
-	if ( cid == slot->module_class) {
-	  // Module object found and class is ok
-	  found = 1;
-
-	  // Check if name is changed
-	  sts = ldh_ObjidToName( ctx->ldhses, slot->module_oid, cdh_mName_object, name,
-				 sizeof(name), &size);
-	  if ( EVEN(sts)) goto return_now;
-
-#if 0
-	  if ( strcmp( name, mname) != 0) {
-	    // Change name
-	    sts = ldh_ChangeObjectName( ctx->ldhses, slot->module_oid, mname);
-	    if ( EVEN(sts)) goto return_now;
-	  }	  
-#endif
-	  
-	  // Check that sibling position is right
-	  sts = ldh_GetPreviousSibling( ctx->ldhses, slot->module_oid, &prev);
-	  if ( i == 0) {
-	    // Should be first sibling
-	    if ( ODD(sts)) {
-	      // Move to first sibling
-	      sts = ldh_MoveObject( ctx->ldhses, slot->module_oid, ctx->aref.Objid, ldh_eDest_IntoFirst);
-	    }
-	  }
-	  else {
-	    if ( (ODD(sts) && 
-		  cdh_ObjidIsNotEqual( ctx->attr->attrnav->dev_data.slot_data[i-1]->module_oid, prev)) ||
-		 EVEN(sts)) {
-	      // Move to next to i-1
-	      sts = ldh_MoveObject( ctx->ldhses, slot->module_oid, 
-				    ctx->attr->attrnav->dev_data.slot_data[i-1]->module_oid, 
-				    ldh_eDest_After);
-	    }
-	  }
-	}
-	else {
-	  // New class, delete current object, reuse the name
-	  sts = ldh_ObjidToName( ctx->ldhses, slot->module_oid, 
-				 ldh_eName_Object, mname, sizeof(mname), &size);
-	  if ( EVEN(sts)) goto return_now;
-
-	  sts = ldh_DeleteObjectTree( ctx->ldhses, slot->module_oid, 0);
-	  if ( EVEN(sts)) goto return_now;
-	}
-      }
+    sts = ldh_GetObjectPar( ctx->ldhses, oid, "RtBody",
+			    "Slot", (char **)&slotnumberp, &size);
+    if ( EVEN(sts)) {
+      MsgWindow::message( 'E', "Not a Profinet module object", msgw_ePop_Yes, oid);
+      continue;
     }
-    if ( !found && slot->module_class != pwr_cNCid) {
-      // Create a new module object
-      if ( i == 1)
-	sts = ldh_CreateObject( ctx->ldhses, &slot->module_oid, mname, slot->module_class,
-				ctx->aref.Objid, ldh_eDest_IntoFirst);
-      else
-	sts = ldh_CreateObject( ctx->ldhses, &slot->module_oid, mname, slot->module_class,
-				ctx->attr->attrnav->dev_data.slot_data[i-1]->module_oid, 
-				ldh_eDest_After);
-      if ( EVEN(sts)) {
-	printf( "Error creating module object, %d\n", sts);
-	sts = 0;
-	goto return_now;
-      }
+    slotnumber = *slotnumberp;
+    free( slotnumberp);
+
+    if ( slotnumber >= ctx->attr->attrnav->dev_data.slot_data.size()) {
+      MsgWindow::message( 'E', "Slot too large", msgw_ePop_Yes, oid);
+      continue;
     }
+
+    if ( cdh_ObjidIsNotNull( ctx->attr->attrnav->dev_data.slot_data[slotnumber]->module_oid)) {
+      MsgWindow::message( 'E', "Slot already used", msgw_ePop_Yes, oid);
+      continue;
+    }
+
+    if ( ctx->attr->attrnav->dev_data.slot_data[slotnumber]->module_class == pwr_cNCid)
+      // Should be removed
+      continue;
+
+
+    ctx->attr->attrnav->dev_data.slot_data[slotnumber]->module_oid = oid;
   }
 
   // Remove modules that wasn't configured any more
@@ -286,6 +228,54 @@ int pndevice_save_cb( void *sctx)
 
   for ( int i = 0; i < mcnt; i++)
     sts = ldh_DeleteObjectTree( ctx->ldhses, moid[i], 0);
+
+  // Create new module objects
+  for ( unsigned int i = 0; i < ctx->attr->attrnav->dev_data.slot_data.size(); i++) {
+    GsdmlSlotData *slot = ctx->attr->attrnav->dev_data.slot_data[i];
+
+    if ( cdh_ObjidIsNull( slot->module_oid) && slot->module_class != pwr_cNCid) {
+      char mname[20];
+      sprintf( mname, "M%d", i);
+
+      if ( i == 1)
+	sts = ldh_CreateObject( ctx->ldhses, &slot->module_oid, mname, slot->module_class,
+				ctx->aref.Objid, ldh_eDest_IntoFirst);
+      else {	
+	// Find sibling
+	pwr_tOid dest_oid = pwr_cNOid;
+	int dest_found = 0;
+	for ( int j = i - 1; j > 0; j--) {
+	  if ( cdh_ObjidIsNotNull( ctx->attr->attrnav->dev_data.slot_data[j]->module_oid)) {
+	    dest_oid = ctx->attr->attrnav->dev_data.slot_data[j]->module_oid;
+	    dest_found = 1;
+	    break;
+	  }	    
+	}
+	if ( !dest_found)
+	  sts = ldh_CreateObject( ctx->ldhses, &slot->module_oid, mname, slot->module_class,
+				  ctx->aref.Objid, ldh_eDest_IntoFirst);
+	else
+	  sts = ldh_CreateObject( ctx->ldhses, &slot->module_oid, mname, slot->module_class,
+				  dest_oid, ldh_eDest_After);
+      }
+      if ( EVEN(sts)) {
+	MsgWindow::message( 'E', "Error creating module object", mname);
+	sts = 0;
+	goto return_now;
+      }
+
+      pwr_tAttrRef aaref;
+      pwr_tAttrRef modulearef = cdh_ObjidToAref( slot->module_oid);
+
+      // Set Slot
+      pwr_tUInt32 slotnumber = i;
+      sts = ldh_ArefANameToAref( ctx->ldhses, &modulearef, "Slot", &aaref);
+      if ( EVEN(sts)) goto return_now;
+	    
+      sts = ldh_WriteAttribute( ctx->ldhses, &aaref, &slotnumber, sizeof(slotnumber));
+      if ( EVEN(sts)) goto return_now;
+    }
+  }
 
   for ( unsigned int i = 0; i < ctx->attr->attrnav->dev_data.slot_data.size(); i++) {
     GsdmlSlotData *slot = ctx->attr->attrnav->dev_data.slot_data[i];
@@ -810,12 +800,12 @@ pwr_tStatus pndevice_create_ctx( ldh_tSession ldhses, pwr_tAttrRef aref,
 pwr_tStatus pndevice_init( device_sCtx *ctx)
 {
   pwr_tOid module_oid;
-  int corrupt = 1;
+  int corrupt = 0;
   unsigned int idx;
   pwr_tStatus sts;
   
   // Identify module objects
-#if 0
+
   int size;
   pwr_tObjName module_name;
 
@@ -836,7 +826,7 @@ pwr_tStatus pndevice_init( device_sCtx *ctx)
     }
     ctx->attr->attrnav->dev_data.slot_data[idx]->module_oid = module_oid;
   }
-#endif
+
   if ( corrupt) {
     corrupt = 0;
 
