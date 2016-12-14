@@ -207,6 +207,8 @@ class sev_dbms : public sev_db {
   int begin_transaction();
   int commit_transaction();
   int get_closest_time( char *tablename, unsigned int options, pwr_tTime *time, int before, int *id);
+  void string_to_mysqlstring( char *in, char *out, int size);
+  void mysqlstring_to_string( char *in, char *out, int size);
   inline char* create_colName(unsigned int index, char *attributename) {
     static char colName[constMaxColNameLength];
     strncpy(colName, attributename, constMaxColNameLength);

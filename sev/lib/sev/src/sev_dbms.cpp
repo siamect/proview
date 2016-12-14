@@ -1911,6 +1911,7 @@ int sev_dbms::store_event( pwr_tStatus *sts, int item_idx, sev_event *ep)
 {
   char query[400];
   char timstr[40];
+  char eventtext[100];
   int rc;
 
   *sts = time_AtoAscii( &ep->time, time_eFormat_NumDateAndTime, timstr, sizeof(timstr));
@@ -1973,6 +1974,9 @@ int sev_dbms::store_event( pwr_tStatus *sts, int item_idx, sev_event *ep)
   if ( found)
     return 1;
 
+  // Replace " to \" in event text
+  string_to_mysqlstring( ep->eventtext, eventtext, sizeof(eventtext));
+
   if ( m_items[item_idx].options & pwr_mSevOptionsMask_PosixTime) {
     if ( m_items[item_idx].options & pwr_mSevOptionsMask_HighTimeResolution) {
       // Posix time, high resolution
@@ -1980,7 +1984,7 @@ int sev_dbms::store_event( pwr_tStatus *sts, int item_idx, sev_event *ep)
 	       "eventid_idx, eventtext, eventname) values (%ld,%ld,%d,%d,%d,%d,%d,'%s','%s')",
 	       m_items[item_idx].tablename,
 	       (long int)ep->time.tv_sec, (long int)ep->time.tv_nsec,
-	       ep->type, ep->eventprio, ep->eventid.Nix, ep->eventid.BirthTime.tv_sec, ep->eventid.Idx, ep->eventtext,
+	       ep->type, ep->eventprio, ep->eventid.Nix, ep->eventid.BirthTime.tv_sec, ep->eventid.Idx, eventtext,
 	       ep->eventname);
     }
     else {
@@ -1989,7 +1993,7 @@ int sev_dbms::store_event( pwr_tStatus *sts, int item_idx, sev_event *ep)
 	       "eventid_idx, eventtext, eventname) values (%ld,%d,%d,%d,%d,%d,'%s','%s')",
 	       m_items[item_idx].tablename,
 	       (long int)ep->time.tv_sec,
-	       ep->type, ep->eventprio, ep->eventid.Nix, ep->eventid.BirthTime.tv_sec, ep->eventid.Idx, ep->eventtext,
+	       ep->type, ep->eventprio, ep->eventid.Nix, ep->eventid.BirthTime.tv_sec, ep->eventid.Idx, eventtext,
 	       ep->eventname);
     }
   }
@@ -2000,7 +2004,7 @@ int sev_dbms::store_event( pwr_tStatus *sts, int item_idx, sev_event *ep)
 	       "eventid_idx, eventtext, eventname) values ('%s',%ld,%d,%d,%d,%d,%d,'%s','%s')",
 	       m_items[item_idx].tablename,
 	       timstr, (long int)ep->time.tv_nsec,
-	       ep->type, ep->eventprio, ep->eventid.Nix, ep->eventid.BirthTime.tv_sec, ep->eventid.Idx, ep->eventtext,
+	       ep->type, ep->eventprio, ep->eventid.Nix, ep->eventid.BirthTime.tv_sec, ep->eventid.Idx, eventtext,
 	       ep->eventname);
     }
     else {
@@ -2009,7 +2013,7 @@ int sev_dbms::store_event( pwr_tStatus *sts, int item_idx, sev_event *ep)
 	       "eventid_idx, eventtext, eventname) values ('%s',%d,%d,%d,%d,%d,'%s','%s')",
 	       m_items[item_idx].tablename,
 	       timstr,
-	       ep->type, ep->eventprio, ep->eventid.Nix, ep->eventid.BirthTime.tv_sec, ep->eventid.Idx, ep->eventtext,
+	       ep->type, ep->eventprio, ep->eventid.Nix, ep->eventid.BirthTime.tv_sec, ep->eventid.Idx, eventtext,
 	       ep->eventname);
       
     }
@@ -4121,6 +4125,37 @@ int sev_dbms::commit_transaction()
   }
   return 1;
 }
+
+void sev_dbms::string_to_mysqlstring( char *in, char *out, int size)
+{
+  char *s, *t;
+
+  for ( s = in, t = out; *s; s++,t++) {
+    if ( *s == '\"' || *s == '\'') {
+      *t = '\\';
+      t++;
+    }
+    *t = *s;
+    if ( t - out >= size - 1)
+      break;
+  }
+  *t = 0;  
+}
+
+void sev_dbms::mysqlstring_to_string( char *in, char *out, int size)
+{
+  char *s, *t;
+
+  for ( s = in, t = out; *s; s++,t++) {
+    if ( *s == '\\' && (*(s+1) == '\"' || *(s+1) == '\''))
+      s++;
+    *t = *s;
+    if ( t - out >= size - 1)
+      break;
+  }
+  *t = 0;  
+}
+
 
 sev_dbms::~sev_dbms()
 {
