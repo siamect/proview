@@ -1299,7 +1299,7 @@ void Wtt::activate_copykeep()
     return;
   }
 
-  sts = ldh_Copy( ldhses, sel_list, 1, 0, 0);
+  sts = ldh_Copy( ldhses, sel_list, 1, 1, 0);
   if (EVEN(sts)) {
     message( 'E', wnav_get_message( sts));
     return;
