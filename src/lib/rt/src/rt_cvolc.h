@@ -117,4 +117,15 @@ cvolc_FileList (
   int			*filecnt
 );
 
+void
+cvolc_ClassList (
+  pwr_tStatus		*sts,
+  pwr_tNid		nid,
+  int			cidcnt,
+  pwr_tCid		*cid,
+  int			attrobjects,
+  pwr_tAttrRef		*classlist[],
+  int			*listcnt
+);
+
 #endif

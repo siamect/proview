@@ -53,6 +53,7 @@
 #include "co_cdh.h"
 #include "co_time.h"
 #include "co_dcli.h"
+#include "co_array.h"
 #include "rt_gdh_msg.h"
 #include "rt_hash_msg.h"
 #include "rt_pwr_msg.h"
@@ -5138,3 +5139,104 @@ pwr_tStatus gdh_GetNextSubClass( pwr_tCid cid, pwr_tCid psubcid, pwr_tCid *subci
   return GDH__NOSUCHCLASS;
 }
 
+pwr_tStatus gdh_GetGlobalClassList( int cidcnt, pwr_tCid *cid, int attrobjects, pwr_tAttrRef *classlist[], int *listcnt)
+{
+  pwr_tStatus 	sts;
+  qcom_sNode 	mynode, node;
+  pwr_tNid	nid;
+  array_tCtx    arr;
+  pwr_tAttrRef  *clist;
+  int		ccnt;
+  int		i;
+  pwr_tObjid	oid;
+  pwr_tAttrRef	aref;
+
+  array_Init( &arr, sizeof(pwr_tAttrRef), 20);
+
+  /* Add local objects */
+  if ( attrobjects) {
+    for ( i = 0; i < cidcnt; i++) {
+      for ( sts = gdh_GetClassListAttrRef( cid[i], &aref);
+	    ODD(sts);
+	    sts = gdh_GetNextAttrRef( cid[i], &aref, &aref)) {
+	array_Add( arr, &aref);
+      }
+    }
+  }
+  else {
+    for ( i = 0; i < cidcnt; i++) {
+      for ( sts = gdh_GetClassList( cid[i], &oid);
+	    ODD(sts);
+	    sts = gdh_GetNextObject( oid, &oid)) {
+	aref = cdh_ObjidToAref( oid);
+	array_Add( arr, &aref);
+      }
+    }
+  }
+
+  qcom_MyNode(&sts, &mynode);
+  for ( nid = qcom_cNNid; qcom_NextNode(&sts, &node, nid); nid = node.nid) {
+    if ( node.nid == mynode.nid)
+      continue;
+
+    cvolc_ClassList( &sts, node.nid, cidcnt, cid, attrobjects, &clist, &ccnt);
+    if ( EVEN(sts))
+      continue;
+    
+    array_MAdd( arr, clist, ccnt);
+  }
+
+  if ( array_Size(arr))
+    *classlist = array_CopyArray( arr);
+  else {
+    *classlist = 0;
+    sts = GDH__NOSUCHOBJ;
+  }
+  *listcnt = array_Size( arr);
+
+  array_Close( arr);
+  return GDH__SUCCESS;
+}
+
+pwr_tStatus gdh_GetLocalClassList( int cidcnt, pwr_tCid *cid, int attrobjects, pwr_tAttrRef *classlist[], int *listcnt)
+{
+  pwr_tStatus 	sts;
+  array_tCtx    arr;
+  int		i;
+  pwr_tObjid	oid;
+  pwr_tAttrRef	aref;
+
+  array_Init( &arr, sizeof(pwr_tAttrRef), 20);
+
+  /* Add local objects */
+  if ( attrobjects) {
+    for ( i = 0; i < cidcnt; i++) {
+      for ( sts = gdh_GetClassListAttrRef( cid[i], &aref);
+	    ODD(sts);
+	    sts = gdh_GetNextAttrRef( cid[i], &aref, &aref)) {
+	array_Add( arr, &aref);
+      }
+    }
+  }
+  else {
+    for ( i = 0; i < cidcnt; i++) {
+      for ( sts = gdh_GetClassList( cid[i], &oid);
+	    ODD(sts);
+	    sts = gdh_GetNextObject( oid, &oid)) {
+	aref = cdh_ObjidToAref( oid);
+	array_Add( arr, &aref);
+      }
+    }
+  }
+
+  if ( array_Size(arr))
+    *classlist = array_CopyArray( arr);
+  else {
+    *classlist = 0;
+    sts = GDH__NOSUCHOBJ;
+  }
+  *listcnt = array_Size( arr);
+
+  array_Close( arr);
+  return GDH__SUCCESS;
+}

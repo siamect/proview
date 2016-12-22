@@ -70,6 +70,7 @@
 #include "rt_cbuf.h"
 #include "rt_pwr_msg.h"
 #include "co_timelog.h"
+#include "co_array.h"
 
 /* Declare routines used by main.  */
 
@@ -102,6 +103,7 @@ static void		volumesR	(qcom_sGet*);
 static void		volumes7	(qcom_sGet*);
 static void		serverConnect	(qcom_sGet*);
 static void		fileList	(qcom_sGet*);
+static void		classList	(qcom_sGet*);
 #if 0
   static void		linkEvent	(pwr_tUInt32, net_eEvent);
   static void		sendIdAck	(gdb_sNode*);
@@ -149,6 +151,8 @@ static char *cMsg[net_eMsg_end] = {
   "getCircBufferR",
   "updateCircBuffer",
   "updateCircBufferR",
+  "classList",
+  "classListR",
   "net_eMsg_",
   "volumes7"
 };
@@ -190,6 +194,8 @@ static void (*fromApplication[net_eMsg_end])(qcom_sGet *) = {
   bugError,			/* net_eMsg_getCircBufferR, will never reach neth.  */
   cbuf_UpdateCircBufferMsg,     /* net_eMsg_updateCircBuffer */
   bugError,			/* net_eMsg_updateCircBufferR, will never reach neth.  */
+  classList,               	/* net_eMsg_classList */
+  bugError,               	/* net_eMsg_classListR, will never reach neth */
   bugError,                     /* net_eMsg_ */
   volumes7
 };
@@ -1560,7 +1566,7 @@ fileList (
   else
     size = sizeof(*rmp) + filecnt * sizeof(pwr_tString40);
   size = (size + 3) & ~3;   /* Size up to nearest multiple of 4.  */
-  
+     
   rmp = net_Alloc(&sts, &put, size, net_eMsg_fileListR);
   if (rmp == NULL) {
     errh_Error("Failed to allocate 'fileList' to %s (%s)",
@@ -1577,6 +1583,86 @@ fileList (
     memcpy( rmp->files, filelist, filecnt * sizeof(pwr_tString40));
     free( filelist);
   }
+
+  net_Reply(&sts, get, &put, 0);
+}
+
+static void
+classList (
+  qcom_sGet	*get
+)
+{
+  net_sClassList *mp = get->data;
+  net_sClassListR *rmp;
+  gdb_sNode	*np;
+  pwr_tStatus 	sts;
+  pwr_tUInt32  	size;
+  qcom_sPut    	put;
+  int		i;
+  pwr_tOid	oid;
+  int		listcnt;
+  array_tCtx	arr;
+  pwr_tAttrRef  aref;
+
+  gdb_ScopeLock {
+    np = hash_Search(&sts, gdbroot->nid_ht, &mp->hdr.nid);
+  } gdb_ScopeUnlock;
+
+
+  if (gdbroot->db->log.b.id) {
+    errh_Info("Sending 'classList' to %s (%s)",
+      np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0));
+  }
+
+  
+  array_Init( &arr, sizeof(pwr_tAttrRef), 20);
+
+  listcnt = 0;
+  if ( mp->attrobjects) {
+    for ( i = 0; i < mp->cidcnt; i++) {
+      for ( sts = gdh_GetClassListAttrRef( mp->cid[i], &aref);
+	    ODD(sts);
+	    sts = gdh_GetNextAttrRef( mp->cid[i], &aref, &aref)) {
+	array_Add( arr, &aref);
+	listcnt++;
+      }
+    }
+  }
+  else {
+    for ( i = 0; i < mp->cidcnt; i++) {
+      for ( sts = gdh_GetClassList( mp->cid[i], &oid);
+	    ODD(sts);
+	    sts = gdh_GetNextObject( oid, &oid)) {
+	aref = cdh_ObjidToAref( oid);
+	array_Add( arr, &aref);
+	listcnt++;
+      }
+    }
+  }
+
+  if ( listcnt == 0)
+    size = sizeof(*rmp);
+  else
+    size = sizeof(*rmp) + (listcnt - 1) * sizeof(pwr_tAttrRef);
+  size = (size + 3) & ~3;   /* Size up to nearest multiple of 4.  */
+     
+  rmp = net_Alloc(&sts, &put, size, net_eMsg_classListR);
+  if (rmp == NULL) {
+    errh_Error("Failed to allocate 'classList' to %s (%s)",
+      np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0));
+    return;
+  }
+
+  rmp->sts = sts;
+  if ( EVEN(sts) || listcnt == 0) {
+    rmp->listcnt = 0;
+  }
+  else {
+    rmp->listcnt = listcnt;
+    memcpy( rmp->classlist, arr->a, listcnt * sizeof(pwr_tAttrRef));
+  }
+
+  array_Close( arr);
 
   net_Reply(&sts, get, &put, 0);
 }

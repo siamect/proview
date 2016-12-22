@@ -845,6 +845,23 @@ gdh_GetNextSubClass(
   pwr_tCid *subcid
 );
 
+pwr_tStatus 
+gdh_GetGlobalClassList( 
+  int cidcnt, 
+  pwr_tCid *cid, 
+  int attrobjects,
+  pwr_tAttrRef *classlist[], 
+  int *listcnt
+);
+
+pwr_tStatus 
+gdh_GetLocalClassList( 
+  int cidcnt, 
+  pwr_tCid *cid, 
+  int attrobjects,
+  pwr_tAttrRef *classlist[], 
+  int *listcnt
+);
 
 /** @} */
 

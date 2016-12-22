@@ -588,3 +588,60 @@ cvolc_FileList (
   net_Free(NULL, rsp);
 }
 
+
+void
+cvolc_ClassList (
+  pwr_tStatus		*sts,
+  pwr_tNid		nid,
+  int			cidcnt,
+  pwr_tCid		*cid,
+  int			attrobjects,
+  pwr_tAttrRef		*classlist[],
+  int			*listcnt
+)
+{
+  gdb_sNode     *np = NULL;
+  net_sClassList  *mp;
+  net_sClassListR *rsp;
+  qcom_sQid	tgt;
+  qcom_sPut    	put;
+  qcom_sGet	get;
+  gdb_sVolume   *vp = NULL;
+
+  np = hash_Search(sts, gdbroot->nid_ht, &nid);
+  if (np == NULL)
+    pwr_ReturnVoid(sts, GDH__NOSUCHNODE);
+
+  vp = hash_Search(sts, gdbroot->vid_ht, &np->nid); 
+  if (vp == NULL) 
+    pwr_ReturnVoid(sts, GDH__NOSUCHVOL);
+
+  if (!vp->l.flags.b.isMounted) 
+    pwr_ReturnVoid(sts, GDH__NOTMOUNTED);
+  if ( !(vp->l.flags.m & gdb_mLo_global))
+    pwr_ReturnVoid(sts, GDH__NOTMOUNTED);
+
+  tgt = np->handler;
+
+  mp = net_Alloc(sts, &put, sizeof(*mp) + (cidcnt - 1) * sizeof(pwr_tCid), net_eMsg_classList);
+  if (mp == NULL) return;
+
+  memcpy( mp->cid, cid, cidcnt * sizeof(pwr_tCid));
+  mp->cidcnt = cidcnt;
+  mp->attrobjects = attrobjects;
+
+  rsp = net_Request(sts, &tgt, &put, &get, net_eMsg_classListR, 0, 0);
+  
+  if (EVEN(*sts)) return;
+  if (EVEN(rsp->sts)) {
+    *sts = rsp->sts;
+    net_Free(NULL, rsp);
+    return;
+  }
+
+  *listcnt = rsp->listcnt;
+  *classlist = calloc( rsp->listcnt, sizeof(pwr_tAttrRef));
+  memcpy( *classlist, rsp->classlist, rsp->listcnt * sizeof(pwr_tAttrRef));
+
+  net_Free(NULL, rsp);
+}

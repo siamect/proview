@@ -115,6 +115,9 @@ enum net_eMsg {
   net_eMsg_updateCircBuffer,
   net_eMsg_updateCircBufferR,
 
+  net_eMsg_classList,
+  net_eMsg_classListR,
+
   net_eMsg_,			/* Not a valid message */
   
   net_eMsg_volumes7,            /* Version 7. Internal only */
@@ -1538,6 +1541,110 @@ struct  net_sUpdateCircBuffer {
 %	}
 %	if (!xdr_opaque(xdrs, (char *)objp->buf, bsize)) {
 %		return (FALSE);
+%	}
+%	return (TRUE);
+%
+%}
+#endif
+
+#ifdef RPC_HDR
+%
+%
+%typedef struct {
+%  net_sMessage		hdr;
+%  pwr_tUInt32		cidcnt;
+%  pwr_tUInt32		attrobjects;
+%  pwr_tClassId		cid[1];
+%} net_sClassList;
+%
+%bool_t xdr_net_sClassList(XDR *xdrs, net_sClassList *objp);
+%
+#elif defined RPC_XDR
+%
+%bool_t
+%xdr_net_sClassList(XDR *xdrs, net_sClassList *objp)
+%{
+%	int 		cidcnt;
+%       int		i;
+% 
+%	if (xdrs->x_op == XDR_DECODE) {
+%		cidcnt = (int) ntohl(objp->cidcnt);
+%	} else {
+%		cidcnt = objp->cidcnt;
+%	}
+%
+%	if (!xdr_net_sMessage(xdrs, &objp->hdr)) {
+%		return (FALSE);
+%	}
+%
+%	if (!xdr_pwr_tUInt32(xdrs, &objp->cidcnt  )) {
+%		return (FALSE);
+%	} 
+%	if (!xdr_pwr_tUInt32(xdrs, &objp->attrobjects  )) {
+%		return (FALSE);
+%	} 
+%	for ( i = 0; i < cidcnt; i++) {
+%	  if (!xdr_pwr_tClassId(xdrs, &objp->cid[i]))
+%		return (FALSE);
+%	}
+%	return (TRUE);
+%
+%}
+#endif
+
+
+#ifdef RPC_HDR
+%
+%
+%typedef struct {
+%  net_sMessage 	hdr;		/**< Header */
+%  pwr_tStatus          sts;		/**< Status */
+%  pwr_tUInt32		listcnt; 	/**< Number of objects found. */  
+%  pwr_sAttrRef		classlist[1]; 	/**< List of instances */
+%} net_sClassListR;
+%
+%bool_t xdr_net_sClassListR(XDR *xdrs, net_sClassListR *objp);
+%
+#elif defined RPC_XDR
+%
+%bool_t
+%xdr_net_sClassListR(XDR *xdrs, net_sClassListR *objp)
+%{
+%	int 		listcnt;
+%	pwr_tStatus 	sts;
+%       int		i;
+% 
+%	if (xdrs->x_op == XDR_DECODE) {
+%		listcnt = (int) ntohl(objp->listcnt);
+%		sts = (int) ntohl(objp->sts);
+%	} else {
+%		listcnt = objp->listcnt;
+%		sts = objp->sts;
+%	}
+%
+%	if (!xdr_net_sMessage(xdrs, &objp->hdr)) {
+%		return (FALSE);
+%	}
+%	if (!xdr_pwr_tStatus(xdrs, &objp->sts)) {
+%		return (FALSE);
+%	}
+%
+%	if (EVEN(sts)) {
+%		listcnt = 0;
+%		if (!xdr_pwr_tUInt32(xdrs, (unsigned int *)&listcnt)) {
+%				return (FALSE);
+%		}
+%		return (TRUE); 
+%       }  
+%
+%
+%	if (!xdr_pwr_tUInt32(xdrs, &objp->listcnt  )) {
+%		return (FALSE);
+%	} 
+%	for ( i = 0; i < listcnt; i++) {
+%	  if (!xdr_pwr_sAttrRef(xdrs, &objp->classlist[i])) {
+%		return (FALSE);
+%         }
 %	}
 %	return (TRUE);
 %
