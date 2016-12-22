@@ -60,6 +60,7 @@
 
 #include "xtt_xnav.h"
 #include "xtt_trend.h"
+#include "xtt_otree.h"
 
 #include "ge_curve.h"
 
@@ -70,8 +71,9 @@ XttTrend::XttTrend( void *parent_ctx,
 		    unsigned int x_options,
 		    int xn_color_theme,
 		    int *sts) :
-  xnav(parent_ctx), trend_cnt(0), update_time(1000), options(x_options), 
-  close_cb(0), help_cb(0), command_cb(0), get_select_cb(0), color_theme(xn_color_theme)
+  xnav(parent_ctx), trend_cnt(0), gcd(0), curve(0), update_time(1000), options(x_options), timerid(0),
+  close_cb(0), help_cb(0), command_cb(0), get_select_cb(0), color_theme(xn_color_theme),
+  otree(0)
 {
   pwr_sAttrRef *aref_list;
   pwr_sAttrRef *aref_p;
@@ -501,6 +503,9 @@ void XttTrend::pop()
 
 void XttTrend::setup()
 {
+  if ( !curve)
+       return;
+
   if ( trend_tid == pwr_cClass_DsTrendCurve)
     curve->setup( curve_mEnable_Snapshot | curve_mEnable_Add);
   else
@@ -528,160 +533,63 @@ void XttTrend::trend_snapshot_cb( void *ctx)
     (trend->command_cb)( trend->xnav, cmd);
 }
 
-class AttrList {
-public:
-  AttrList( char *a, char *t) : attr(a), trend(t) {}
-  string attr;
-  string trend;
-};
-
-class AttrListCtx {
-public:
-  AttrListCtx( XttTrend *t) : trend(t) {}
-  XttTrend *trend;
-  vector<AttrList> v;
-};
-  
-static void add_objectlist_cb( void *ctx, char *text, int ok_pressed)
-{
-  printf( "%s\n", text);
-
-  pwr_tStatus sts;
-  pwr_tAttrRef trend_aref, attr_aref;
-  AttrListCtx *vctx = (AttrListCtx *)ctx;
-  unsigned int i;
-  int found = 0;
-
-  for ( i = 0; i < vctx->v.size(); i++) {
-    if ( strcmp( vctx->v[i].attr.c_str(), text) == 0) {
-      found = 1;
-      break;
-    }
-  }
-  if ( !found)
-    return;
-
-  sts = gdh_NameToAttrref( pwr_cNOid, vctx->v[i].attr.c_str(), &attr_aref);
-  if ( EVEN(sts)) return;
-
-  sts = gdh_NameToAttrref( pwr_cNOid, vctx->v[i].trend.c_str(), &trend_aref);
-  if ( EVEN(sts)) return;
-
-  vctx->trend->curve_add( &attr_aref, &trend_aref, &sts);
-  if ( EVEN(sts))
-    printf( "Trend add failure\n");
-
-  delete vctx;
-}
-
-static void add_objectlist_cancel_cb( void *ctx)
-{
-  delete (AttrListCtx *)ctx;
-}
-
 void XttTrend::trend_madd_cb( void *ctx)
 {
   XttTrend *trend = (XttTrend *) ctx;
-  pwr_tAttrRef trend_aref, attr_aref;
-  pwr_tAName trend_name, attr_name;
+
+  if ( trend->otree)
+    trend->otree->pop();
+  else {
+    pwr_tAttrRef *list;
+    int listcnt;
+    pwr_tCid cid[2] = {pwr_cClass_DsTrend, pwr_cClass_DsTrendCurve};
+    int options = 0;
+    pwr_tStatus sts;
+
+    sts = gdh_GetGlobalClassList( 2, cid, 1, &list, &listcnt);
+    if ( EVEN(sts)) return;
+
+    if ( !listcnt)
+      return;
+
+    if ( listcnt > 20)
+      options |= tree_mOptions_LayoutTree;
+    else
+      options |= tree_mOptions_LayoutList;
+    options |= tree_mOptions_AlphaOrder;
+
+    trend->otree = trend->tree_new( "Add attribute", list, listcnt, options, trend_otree_action_cb);
+    trend->otree->close_cb = trend_otree_close_cb;
+
+    free( (char *)list);
+  }
+}
+
+pwr_tStatus XttTrend::trend_otree_action_cb( void *ctx, pwr_tAttrRef *aref)
+{
+  XttTrend *trend = (XttTrend *)ctx;
   pwr_tStatus sts;
-  pwr_tAName *names;
-  
-  printf( "Madd\n");
 
-  AttrListCtx *vctx = new AttrListCtx(trend);
+  trend->curve_add( aref, 0, &sts);
+  if ( EVEN(sts))
+    printf( "Trend add failure\n");
+  return sts;
+}
 
-  for ( sts = gdh_GetClassListAttrRef( trend->trend_tid, &trend_aref);
-	ODD(sts);
-	sts = gdh_GetNextAttrRef( trend->trend_tid, &trend_aref, &trend_aref)) {
-    switch ( trend->trend_tid) {
-    case pwr_cClass_DsTrend: {      
-      pwr_tAttrRef dataname_aref;
+void XttTrend::trend_otree_close_cb( void *ctx)
+{
+  XttTrend *trend = (XttTrend *)ctx;
 
-      sts = gdh_ArefANameToAref( &trend_aref, "DataName", &dataname_aref);
-      if ( EVEN(sts)) return;
-
-      sts = gdh_GetObjectInfoAttrref( &dataname_aref, &attr_aref, sizeof(attr_aref));  
-      if ( EVEN(sts)) return;
-
-      sts = gdh_AttrrefToName( &attr_aref, attr_name, sizeof(attr_name),
-			       cdh_mNName);
-      if ( EVEN(sts)) continue;
-
-      sts = gdh_AttrrefToName( &trend_aref, trend_name, sizeof(trend_name),
-			       cdh_mNName);
-      if ( EVEN(sts)) continue;
-
-      AttrList l( attr_name, trend_name);
-      vctx->v.push_back(l);
-      break;
-    }      
-    case pwr_cClass_DsTrendCurve: {      
-      pwr_sClass_DsTrendCurve tp;
-      unsigned int asize = sizeof(tp.Attribute)/sizeof(tp.Attribute[0]);
-
-      sts = gdh_GetObjectInfoAttrref( &trend_aref, &tp, sizeof(tp));
-      if ( EVEN(sts)) return;
-
-      sts = gdh_AttrrefToName( &trend_aref, trend_name, sizeof(trend_name),
-			       cdh_mNName);
-      if ( EVEN(sts)) continue;
-
-      for ( unsigned int j = 0; j < asize; j++) {
-	if ( cdh_ObjidIsNull(tp.Attribute[j].Objid))
-	  break;
-
-	sts = gdh_AttrrefToName( &tp.Attribute[j], attr_name, sizeof(attr_name), 
-				 cdh_mNName);
-	if (EVEN(sts)) continue;
-
-	AttrList l( attr_name, trend_name);
-	vctx->v.push_back(l);
-      }
-      break;
-    }
-    default: ;
-    }
+  if ( trend->otree) {
+    delete trend->otree;
+    trend->otree = 0;
   }
-
-  names = (pwr_tAName *)calloc( vctx->v.size() + 1, sizeof(pwr_tAName));
-  for ( unsigned int i = 0; i < vctx->v.size(); i++) {
-    strcpy( names[i], vctx->v[i].attr.c_str());
-  }
-
-  // Sort
-  pwr_tAName tmp;
-  for ( unsigned int i = vctx->v.size() - 1; i > 0; i--) {
-    for ( unsigned int j = 0; j < i; j++) {
-      if ( strcmp(names[j], names[j+1]) > 0) {
-	strcpy( tmp, names[j+1]);
-	strcpy( names[j+1], names[j]);
-	strcpy( names[j], tmp);
-      }
-    }
-  }
-
-  trend->wow->CreateList( "Add attribute", (char *)names, sizeof(names[0]), 
-			  add_objectlist_cb, add_objectlist_cancel_cb, vctx);
-  free( names);  
 }
 
 void XttTrend::trend_add_cb( void *ctx)
-{
-  XttTrend *trend = (XttTrend *) ctx;
-  pwr_tAttrRef aref;
-  int is_attr;
-  pwr_tStatus sts;
+{  
 
-  if ( !trend->get_select_cb)
-    return;
-
-  sts = trend->get_select_cb( trend->xnav, &aref, &is_attr);
-  if ( EVEN(sts)) return;
-
-  trend->curve_add( &aref, 0, &sts);
-  if ( EVEN(sts))
-    printf( "Trend add failure\n");
+  trend_madd_cb( ctx);
 }
 
 void XttTrend::trend_help_cb( void *ctx)

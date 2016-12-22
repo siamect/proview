@@ -74,7 +74,7 @@ XttSevHist::XttSevHist( void *parent_ctx,
 			int *sts) :
   xnav(parent_ctx), gcd(0), curve(0), rows(0), vsize(0), timerid(0), close_cb(0), help_cb(0), 
   get_select_cb(0), first_scan(1), scctx(xn_scctx), wow(0), time_low_old(0), time_high_old(0), 
-  initial_period(time_ePeriod_), color_theme(xn_color_theme)
+  initial_period(time_ePeriod_), color_theme(xn_color_theme), otree(0)
 {
   pwr_tTime from, to;
 
@@ -888,22 +888,96 @@ void XttSevHist::sevhist_next_period_cb( void *ctx)
 void XttSevHist::sevhist_add_cb( void *ctx)
 {
   XttSevHist *sevhist = (XttSevHist *) ctx;
-  pwr_tOid oid;
-  pwr_tOName aname, oname;
-  int sts;
+  if ( !sevhist->get_select_cb) {
+    if ( sevhist->otree)
+      sevhist->otree->pop();
+    else {
+      pwr_tAttrRef *list;
+      int listcnt;
+      pwr_tCid cid[2] = {pwr_cClass_SevHist, pwr_cClass_SevHistObject};
+      int options = 0;
+      pwr_tStatus sts;
 
-  if ( !sevhist->get_select_cb)
-    return;
+      sts = gdh_GetGlobalClassList( 2, cid, 1, &list, &listcnt);
+      if ( EVEN(sts)) return;
 
-  sts = sevhist->get_select_cb( sevhist->xnav, &oid, aname, oname);
-  if ( EVEN(sts)) return;
+      if ( !listcnt)
+	return;
 
-  sevhist->curve_add( oid, aname, oname, false);
+      if ( listcnt > 20)
+	options |= tree_mOptions_LayoutTree;
+      else
+	options |= tree_mOptions_LayoutList;
+      options |= tree_mOptions_AlphaOrder;
+    
+      sevhist->otree = sevhist->tree_new( "Add attribute", list, listcnt, options, sevhist_otree_action_cb);
+      sevhist->otree->close_cb = sevhist_otree_close_cb;
+
+      free( (char *)list);
+    }
+  }
+  else {
+    pwr_tOid oid;
+    pwr_tOName aname, oname;
+    int sts;
+
+    if ( !sevhist->get_select_cb)
+      return;
+
+    sts = sevhist->get_select_cb( sevhist->xnav, &oid, aname, oname);
+    if ( EVEN(sts)) return;
+
+    sevhist->curve_add( oid, aname, oname, false);
+  }
+}
+
+pwr_tStatus XttSevHist::sevhist_otree_action_cb( void *ctx, pwr_tAttrRef *aref)
+{
+  XttSevHist *sevhist = (XttSevHist *)ctx;
+  pwr_tStatus sts;
+  pwr_tAttrRef aaref;
+  pwr_tAName oname;
+  pwr_tAName aname;
+  char *s;
+  pwr_tCid cid;
+
+  sts = gdh_GetAttrRefTid( aref, &cid);
+  if ( EVEN(sts)) return sts;
+
+  sts = gdh_ArefANameToAref( aref, "Attribute", &aaref);
+  if ( EVEN(sts)) return sts;
+
+  sts = gdh_GetObjectInfoAttrref( &aaref, &aaref, sizeof(pwr_tAttrRef));
+  if ( EVEN(sts)) return sts;
+
+  sts = gdh_AttrrefToName( &aaref, oname, sizeof(oname), cdh_mNName);
+  if ( EVEN(sts)) return sts;
+
+  s = strrchr( oname, '.');
+  if ( s) {
+    *s = 0;
+    strncpy( aname, s+1, sizeof(aname));
+  }
+    
+  sevhist->curve_add( aaref.Objid, aname, oname, cid == pwr_cClass_SevHistObject);
+  if ( EVEN(sts))
+    printf( "SevHist add failure\n");
+  return sts;
+}
+
+void XttSevHist::sevhist_otree_close_cb( void *ctx) 
+{
+  XttSevHist *sevhist = (XttSevHist *)ctx;
+
+  if ( sevhist->otree) {
+    delete sevhist->otree;
+    sevhist->otree = 0;
+  }
 }
 
 void XttSevHist::sevhist_remove_cb( void *ctx)
 {
-  // Do do
+  // To do
 }
 
 int XttSevHist::sevhist_export_cb( void *ctx, pwr_tTime *from, pwr_tTime *to, int rows, int idx, 

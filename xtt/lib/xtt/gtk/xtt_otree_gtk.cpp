@@ -32,61 +32,28 @@
  * the source code of Proview (the version used to produce the 
  * combined work), being distributed under the terms of the GNU 
  * General Public License plus this exception.
- */
+ **/
 
-#ifndef xtt_sevhist_gtk_h
-#define xtt_sevhist_gtk_h
-
-/* xtt_sevhist_gtk.h -- SevHist curves */
-
-#ifndef xtt_sevhist_h
-# include "xtt_sevhist.h"
-#endif
+#include "pwr.h"
+#include "rt_gdh.h"
 #include "xtt_otree_gtk.h"
+#include "cow_tree_gtk.h"
 
-class XttSevHistGtk : public XttSevHist {
- public:
-  GtkWidget    	*parent_widget;		//!< Parent widget.
-  
-  XttSevHistGtk( void *xn_parent_ctx,
-		 GtkWidget *xn_parent_wid,
-		 const char *xn_name,
-		 GtkWidget **w,
-		 pwr_tOid *xn_oidv,
-		 pwr_tOName *xn_anamev,
-		 pwr_tOName *xn_onamev,
-		 bool *sevhistobjectv,
-		 sevcli_tCtx xn_scctx,
-		 int width,
-		 int height,
-		 unsigned int options,
-		 int xn_color_theme, 
-		 void *basewidget,
-		 int *sts);
-  XttSevHistGtk( void *parent_ctx,
-		 GtkWidget *parent_wid,
-		 const char *name,
-		 GtkWidget **w,
-		 char *filename,
-		 int xn_color_theme, 
-		 void *basewidget,
-		 int *sts);
-  ~XttSevHistGtk();
-
-  XttOTree *tree_new( const char *title, pwr_tAttrRef *itemlist, int itemcnt, unsigned int layout,
-		      pwr_tStatus (*action_cb)( void *, pwr_tAttrRef *));
-};
-
-#endif
+/* xtt_otree_gtk.cpp -- Object tree viewer */
 
 
+XttOTreeGtk::XttOTreeGtk( GtkWidget *parent_wid, void *xn_parent_ctx, const char *title, pwr_tAttrRef *xn_itemlist, 
+			  int xn_item_cnt, unsigned int xn_options,
+			  pwr_tStatus (*xn_action_cb)( void *, pwr_tAttrRef *)) :
 
+  XttOTree( xn_parent_ctx, xn_itemlist, xn_item_cnt, xn_options, xn_action_cb)
+{
+  cowtree = new CowTreeGtk( parent_wid, this, title, xn_itemlist, xn_item_cnt, xn_options, &get_object_info, 
+			    &get_node_info, &action);
+  cowtree->close_cb = close;
+}
 
-
-
-
-
-
-
-
-
+XttOTreeGtk::~XttOTreeGtk()
+{
+  delete cowtree;
+}

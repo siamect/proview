@@ -91,6 +91,7 @@ typedef void *Widget;
 #include "ge_curve_gtk.h"
 #include "xtt_fileview_gtk.h"
 #include "xtt_keyboard_gtk.h"
+#include "xtt_otree_gtk.h"
 
 #define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 #define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
@@ -326,6 +327,12 @@ XAttOne *XNavGtk::xattone_new( pwr_tAttrRef *objar, char *title, unsigned int pr
 CLog *XNavGtk::clog_new( const char *name, pwr_tStatus *sts)
 {
   return new CLogGtk( this, parent_wid, name, sts);
+}
+
+XttOTree *XNavGtk::tree_new( const char *title, pwr_tAttrRef *itemlist, int itemcnt, unsigned int options,
+		    pwr_tStatus (*action_cb)( void *, pwr_tAttrRef *))
+{
+  return new XttOTreeGtk( parent_wid, this, title, itemlist, itemcnt, options, action_cb);
 }
 
 XttGe *XNavGtk::xnav_ge_new( const char *name, const char *filename, int scrollbar, int menu, 

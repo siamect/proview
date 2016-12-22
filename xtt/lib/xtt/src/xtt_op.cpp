@@ -181,7 +181,7 @@ void Op::activate_blocklist()
 
 void Op::activate_trend()
 {
-  char cmd[200] = "show objectlist/class=dstrend,dstrendcurve/title=\"Trend List\"/sort";
+  char cmd[200] = "show objecttree/class=dstrend,dstrendcurve/title=\"Trend List\"/alpha/global";
 
   if ( command_cb)
     command_cb( parent_ctx, cmd);
@@ -189,7 +189,7 @@ void Op::activate_trend()
 
 void Op::activate_fast()
 {
-  char cmd[200] = "show objectlist/class=dsfastcurve/title=\"Fast Curve List\"";
+  char cmd[200] = "show objecttree/class=dsfastcurve/title=\"Fast Curve List\"/alpha/global";
 
   if ( command_cb)
     command_cb( parent_ctx, cmd);
@@ -197,14 +197,14 @@ void Op::activate_fast()
 
 void Op::activate_history()
 {
-  char cmd[200] = "show objectlist/class=sevhist,sevhistobject/title=\"Process History List\"/sort";
+  char cmd[200] = "show objecttree/class=sevhist,sevhistobject/title=\"Process History List\"/alpha/global";
   if ( command_cb)
     command_cb( parent_ctx, cmd);
 }
 
 void Op::activate_graph()
 {
-  char cmd[200] = "show objectlist/class=xttgraph/title=\"Process Graphic List\"";
+  char cmd[200] = "show objecttree/class=xttgraph/title=\"Process Graphic List\"";
 
   if ( command_cb)
     command_cb( parent_ctx, cmd);

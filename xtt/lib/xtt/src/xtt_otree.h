@@ -32,61 +32,37 @@
  * the source code of Proview (the version used to produce the 
  * combined work), being distributed under the terms of the GNU 
  * General Public License plus this exception.
- */
+ **/
 
-#ifndef xtt_sevhist_gtk_h
-#define xtt_sevhist_gtk_h
+#ifndef xtt_otree_h
+#define xtt_otree_h
 
-/* xtt_sevhist_gtk.h -- SevHist curves */
-
-#ifndef xtt_sevhist_h
-# include "xtt_sevhist.h"
+#ifndef cow_tree_h
+#include "cow_tree.h"
 #endif
-#include "xtt_otree_gtk.h"
 
-class XttSevHistGtk : public XttSevHist {
+/* xtt_otree.h -- Object tree viewer */
+
+
+class XttOTree {
+ protected:
+  void *parent_ctx;
+  CowTree *cowtree;
+  pwr_tStatus (*action_cb)( void *, pwr_tAttrRef *);
+
  public:
-  GtkWidget    	*parent_widget;		//!< Parent widget.
-  
-  XttSevHistGtk( void *xn_parent_ctx,
-		 GtkWidget *xn_parent_wid,
-		 const char *xn_name,
-		 GtkWidget **w,
-		 pwr_tOid *xn_oidv,
-		 pwr_tOName *xn_anamev,
-		 pwr_tOName *xn_onamev,
-		 bool *sevhistobjectv,
-		 sevcli_tCtx xn_scctx,
-		 int width,
-		 int height,
-		 unsigned int options,
-		 int xn_color_theme, 
-		 void *basewidget,
-		 int *sts);
-  XttSevHistGtk( void *parent_ctx,
-		 GtkWidget *parent_wid,
-		 const char *name,
-		 GtkWidget **w,
-		 char *filename,
-		 int xn_color_theme, 
-		 void *basewidget,
-		 int *sts);
-  ~XttSevHistGtk();
+  XttOTree( void *xn_parent_ctx, pwr_tAttrRef *xn_itemlist, int xn_item_cnt, unsigned int xn_options,
+	    pwr_tStatus (*xn_action_cb)( void *, pwr_tAttrRef *));
+  void pop();
+  void (*close_cb)( void *);
+  static pwr_tStatus get_object_info( void *ctx, pwr_tAttrRef *aref, char *name, int nsize, char *cname, 
+				      char *descr, int dsize);
+  static pwr_tStatus get_node_info( void *ctx, char *name, char *descr, int dsize);  
+  static pwr_tStatus action( void *ctx, pwr_tAttrRef *aref);
+  static void close( void *ctx);
+  virtual ~XttOTree();
 
-  XttOTree *tree_new( const char *title, pwr_tAttrRef *itemlist, int itemcnt, unsigned int layout,
-		      pwr_tStatus (*action_cb)( void *, pwr_tAttrRef *));
 };
 
+
 #endif
-
-
-
-
-
-
-
-
-
-
-
-

@@ -85,6 +85,7 @@ class XttTrend {
   int        (*get_select_cb)( void *, pwr_tAttrRef *, int *); //!< Get selected trend object.
   CoWow	     *wow;
   int	     color_theme;
+  XttOTree   *otree;
 
   XttTrend( void *xn_parent_ctx,
 	    char *xn_name,
@@ -98,7 +99,11 @@ class XttTrend {
   void setup();
   void curve_add( pwr_tAttrRef *arp, pwr_tAttrRef *trend_arp, pwr_tStatus *sts);
   void update_color_theme( int ct) { curve->update_color_theme(ct);}
+  virtual XttOTree *tree_new( const char *title, pwr_tAttrRef *itemlist, int itemcnt, unsigned int layout,
+			      pwr_tStatus (*action_cb)( void *, pwr_tAttrRef *)) {return 0;}
 
+  static pwr_tStatus trend_otree_action_cb( void *ctx, pwr_tAttrRef *aref);
+  static void trend_otree_close_cb( void *ctx);
   static void trend_close_cb( void *ctx);
   static void trend_help_cb( void *ctx);
   static void trend_snapshot_cb( void *ctx);

@@ -146,6 +146,8 @@ XttSevHistGtk::XttSevHistGtk( void *parent_ctx,
 
 XttSevHistGtk::~XttSevHistGtk()
 {
+  if ( otree)
+    delete otree;
   if ( timerid)
     timerid->remove();
   if ( curve)
@@ -156,6 +158,11 @@ XttSevHistGtk::~XttSevHistGtk()
     delete wow;
 }
 
+XttOTree *XttSevHistGtk::tree_new( const char *title, pwr_tAttrRef *itemlist, int itemcnt, unsigned int layout,
+				 pwr_tStatus (*action_cb)( void *, pwr_tAttrRef *))
+{
+  return new XttOTreeGtk( parent_widget, this, title, itemlist, itemcnt, layout, action_cb);
+}
 
 
 

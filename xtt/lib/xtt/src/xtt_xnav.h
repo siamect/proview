@@ -115,6 +115,10 @@ extern "C" {
 #include "xtt_keyboard.h"
 #endif
 
+#ifndef xtt_otree_h
+#include "xtt_otree.h"
+#endif
+
 #define xnav_cVersion	"X3.0b"
 #define XNAV_BROW_MAX	25
 #define XNAV_LOGG_MAX   10
@@ -411,6 +415,8 @@ class XNav {
 				pwr_tStatus  	*status) { return 0;}
     virtual XttKeyboard *keyboard_new( const char *name, keyboard_eKeymap keymap, keyboard_eType type, 
 				       int color_theme, pwr_tStatus *status) {return 0;}
+    virtual XttOTree *tree_new( const char *title, pwr_tAttrRef *itemlist, int itemcnt, unsigned int options,
+				pwr_tStatus (*action_cb)( void *, pwr_tAttrRef *)) {return 0;}
     virtual void bell( int time) {}
     virtual int confirm_dialog( char *title, char *text) { return 0; }
     virtual void set_clock_cursor() {}

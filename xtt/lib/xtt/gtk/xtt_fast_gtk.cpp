@@ -133,12 +133,14 @@ XttFastGtk::XttFastGtk( void *parent_ctx,
 
 XttFastGtk::~XttFastGtk()
 {
-  timerid->remove();
+  if ( timerid)
+    timerid->remove();
 
   for ( int i = 0; i < fast_cnt; i++) {
     gdh_UnrefObjectInfo( new_subid);
   }  
-  delete curve;
+  if ( curve)
+    delete curve;
   if ( gcd)
     delete gcd;
   delete wow;

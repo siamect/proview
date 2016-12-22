@@ -100,6 +100,7 @@
 #include "xtt_fileview.h"
 #include "xtt_log.h"
 #include "xtt_stream.h"
+#include "xtt_otree.h"
 
 class xnav_file {
 public:
@@ -200,6 +201,7 @@ static void xnav_colortheme_selector_ok_cb( void *ctx, char *text, int ok_presse
 static void xnav_keyboard_key_pressed_cb( void *, int);
 static void xnav_keyboard_close_cb( void *);
 static int xnav_replace_node_str( char *out, char *object_str);
+static pwr_tStatus xnav_otree_action_cb( void *xnav, pwr_tAttrRef *aref);
 
 static int	xnav_help_func(		void		*client_data,
 					void		*client_flag);
@@ -273,7 +275,7 @@ dcli_tCmdTable	xnav_command_table[] = {
 			  "/OPTION", "/ENTRY", "/NEW", "/TITLE", "/WINDOW", 
 			  "/ALARMVIEW", "/WIDTH", "/HEIGHT", "/XPOSITION", "/YPOSITION",  
 			  "/FULLSCREEN", "/MAXIMIZE", "/FULLMAXIMIZE",
-			  "/SORT", "/TEXT", ""}
+			  "/SORT", "/TEXT", "/LAYOUT", "/GLOBAL", "/ALPHAORDER", ""}
 		},
 		{
 			"OPEN",
@@ -2702,6 +2704,87 @@ static int	xnav_show_func(	void		*client_data,
 		   xnav_show_objectlist_cancel_cb, ctx);
     free( names);
   }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "OBJECTTREE", strlen( arg1_str)) == 0)
+  {
+    char class_str[80];
+
+    // Command is "SHOW OBJECTTREE"    
+    if ( ODD( dcli_get_qualifier( "/CLASS", class_str, sizeof(class_str)))) {
+      pwr_tCid cid[20];
+      pwr_tObjName class_array[20];
+      int class_num;
+      pwr_tAttrRef *list;
+      int listcnt;
+      unsigned int options = 0;
+      char layout_str[40];
+      int i;
+      int global;
+      int alphaorder;
+      
+      global =  ODD( dcli_get_qualifier( "/GLOBAL", 0, 0));
+      alphaorder =  ODD( dcli_get_qualifier( "/ALPHAORDER", 0, 0));
+
+      // The class string can contain several classes separated by ','
+      class_num = dcli_parse( class_str, ",", "",
+			      (char *) class_array, sizeof( class_array)/sizeof( class_array[0]), 
+			      sizeof( class_array[0]), 0);
+
+      for ( i = 0; i < class_num; i++) {
+	sts = gdh_ClassNameToId( class_array[i], &cid[i]);
+	if ( EVEN(sts)) {
+	  xnav->message('E', "Unknown class");
+	  return XNAV__HOLDCOMMAND;
+	}
+      }
+
+      if ( global)
+	sts = gdh_GetGlobalClassList( class_num, cid, 1, &list, &listcnt);
+      else
+	sts = gdh_GetLocalClassList( class_num, cid, 1, &list, &listcnt);
+      if ( EVEN(sts)) {
+        xnav->message('E', "Class list error");
+        return XNAV__HOLDCOMMAND; 	
+      }
+      if ( listcnt == 0) {
+        xnav->message('E', "No objects found");
+        return XNAV__HOLDCOMMAND; 	
+      }
+
+      if ( ODD( dcli_get_qualifier( "/LAYOUT", layout_str, sizeof(layout_str)))) {
+	if ( cdh_NoCaseStrcmp( layout_str, "list") == 0)
+	  options |= tree_mOptions_LayoutList;
+	else if ( cdh_NoCaseStrcmp( layout_str, "tree") == 0)
+	  options |= tree_mOptions_LayoutTree;
+	else if ( cdh_NoCaseStrcmp( layout_str, "default") == 0) {
+	  if ( listcnt > 20)
+	    options |= tree_mOptions_LayoutTree;
+	  else
+	    options |= tree_mOptions_LayoutList;
+	}
+	else {
+	  xnav->message('E', "No such layout");
+	  return XNAV__HOLDCOMMAND; 	
+	}
+      }
+      else {
+	if ( listcnt > 20)
+	  options |= tree_mOptions_LayoutTree;
+	else
+	  options |= tree_mOptions_LayoutList;
+      }
+      if ( alphaorder)
+	options |= tree_mOptions_AlphaOrder;
+
+      xnav->tree_new( "Objects", list, listcnt, options, xnav_otree_action_cb);
+
+      free( (char *)list);
+      return XNAV__SUCCESS;
+    }
+    else {
+      xnav->message('E', "Syntax error");
+      return XNAV__HOLDCOMMAND;
+    }
+  }
   else
   {
     /* This might be a system picture */
@@ -4513,7 +4596,7 @@ static int	xnav_open_func(	void		*client_data,
       if ( ODD(sts)) {
         hist->help_cb = xnav_sevhist_help_cb;
         hist->close_cb = xnav_sevhist_close_cb;
-	hist->get_select_cb = xnav_sevhist_get_select_cb;
+	// hist->get_select_cb = xnav_sevhist_get_select_cb;
 	xnav->appl.insert( applist_eType_SevHist, (void *)hist, pwr_cNOid, "",
 			   NULL);
       }
@@ -4768,7 +4851,7 @@ static int	xnav_open_func(	void		*client_data,
       if ( ODD(sts)) {
         hist->help_cb = xnav_sevhist_help_cb;
         hist->close_cb = xnav_sevhist_close_cb;
-	hist->get_select_cb = xnav_sevhist_get_select_cb;
+	//hist->get_select_cb = xnav_sevhist_get_select_cb;
 	xnav->appl.insert( applist_eType_SevHist, (void *)hist, oidv[0], "",
 			   NULL);
       }
@@ -4780,7 +4863,7 @@ static int	xnav_open_func(	void		*client_data,
       if ( ODD(sts)) {
         hist->help_cb = xnav_sevhist_help_cb;
         hist->close_cb = xnav_sevhist_close_cb;
-	hist->get_select_cb = xnav_sevhist_get_select_cb;
+	//hist->get_select_cb = xnav_sevhist_get_select_cb;
 	xnav->appl.insert( applist_eType_SevHist, (void *)hist, oidv[0], "",
 			   NULL);
       }
@@ -4792,7 +4875,7 @@ static int	xnav_open_func(	void		*client_data,
       if ( ODD(sts)) {
         hist->help_cb = xnav_sevhist_help_cb;
         hist->close_cb = xnav_sevhist_close_cb;
-	hist->get_select_cb = xnav_sevhist_get_select_cb;
+	//hist->get_select_cb = xnav_sevhist_get_select_cb;
 	xnav->appl.insert( applist_eType_SevHist, (void *)hist, oidv[0], "",
 			   NULL);
       }
@@ -9635,7 +9718,6 @@ int XNav::show_symbols()
   return XNAV__SUCCESS;
 }
 
-
 void xnav_popup_menu_cb( void *xnav, pwr_sAttrRef attrref,
 			 unsigned long item_type,
 			 unsigned long utility, char *arg, int x, int y)
@@ -9661,6 +9743,7 @@ void xnav_start_trace_cb( void *xnav, pwr_tObjid objid, char *name)
 {
   ((XNav *)xnav)->start_trace( objid, name);
 }
+
 
 static void xnav_clog_close_cb( void *ctx)
 {
@@ -9843,6 +9926,44 @@ static void xnav_keyboard_close_cb( void *ctx)
   XNav *xnav = (XNav *) ctx;
 
   xnav->close_keyboard( keyboard_mAction_Close | keyboard_mAction_ResetInput);
+}
+
+static pwr_tStatus xnav_otree_action_cb( void *ctx, pwr_tAttrRef *aref)
+{
+  XNav *xnav = (XNav *)ctx;
+  pwr_tStatus sts;
+  pwr_tAName aname;
+  pwr_tCmd cmd;
+  pwr_tCid cid;
+
+  sts = gdh_GetAttrRefTid( aref, &cid);
+  if ( EVEN(sts)) return sts;
+
+  sts = gdh_AttrrefToName( aref, aname, sizeof(aname), cdh_mNName);
+  if ( EVEN(sts)) return sts;
+
+  switch ( cid) {
+  case pwr_cClass_DsTrend:
+  case pwr_cClass_DsTrendCurve:
+    sprintf( cmd, "open trend/name=%s/title=\"%s\"", aname, aname);
+    break;
+  case pwr_cClass_DsFastCurve:
+    sprintf( cmd, "open fast/name=%s/title=\"%s\"", aname, aname);
+    break;
+  case pwr_cClass_SevHist:
+  case pwr_cClass_SevHistObject:
+    sprintf( cmd, "open history/name=%s/title=\"%s\"", aname, aname);
+    break;
+  case pwr_cClass_XttGraph:
+    sprintf( cmd, "open graph/object=%s", aname);
+    break;
+  default:
+    sprintf( cmd, "open graph/class/inst=%s", aname);
+  }
+
+  xnav->command( cmd);
+
+  return 1;
 }
 
 void XNav::open_graph( const char *name, const char *filename, int scrollbar, int menu, 

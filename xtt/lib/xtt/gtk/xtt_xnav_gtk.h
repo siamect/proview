@@ -121,6 +121,8 @@ class XNavGtk : public XNav {
 			pwr_tStatus  	*status);
     XttKeyboard *keyboard_new( const char *name, keyboard_eKeymap keymap, keyboard_eType type, 
 			       int color_theme, pwr_tStatus *status);
+    XttOTree *tree_new( const char *title, pwr_tAttrRef *itemlist, int itemcnt, unsigned int options,
+			pwr_tStatus (*action_cb)( void *, pwr_tAttrRef *));
     void bell( int time);
     void get_popup_menu( pwr_sAttrRef attrref,
 			 xmenu_eItemType item_type, 

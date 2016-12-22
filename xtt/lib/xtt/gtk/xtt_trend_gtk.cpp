@@ -59,6 +59,7 @@
 #include "xtt_xnav.h"
 #include "xtt_trend_gtk.h"
 #include "ge_curve_gtk.h"
+#include "xtt_otree_gtk.h"
 
 XttTrendGtk::XttTrendGtk( void *parent_ctx,
 			  GtkWidget *parent_wid,
@@ -101,7 +102,8 @@ XttTrendGtk::XttTrendGtk( void *parent_ctx,
 
 XttTrendGtk::~XttTrendGtk()
 {
-  timerid->remove();
+  if ( timerid)
+    timerid->remove();
 
   for ( int i = 0; i < trend_cnt; i++) {
     gdh_UnrefObjectInfo( subid[i]);
@@ -109,7 +111,15 @@ XttTrendGtk::~XttTrendGtk()
   delete curve;
   if ( gcd)
     delete gcd;
+  if ( otree)
+    delete otree;
   delete wow;
+}
+
+XttOTree *XttTrendGtk::tree_new( const char *title, pwr_tAttrRef *itemlist, int itemcnt, unsigned int layout,
+				 pwr_tStatus (*action_cb)( void *, pwr_tAttrRef *))
+{
+  return new XttOTreeGtk( parent_widget, this, title, itemlist, itemcnt, layout, action_cb);
 }
 
 

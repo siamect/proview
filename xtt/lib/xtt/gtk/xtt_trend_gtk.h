@@ -59,6 +59,8 @@ class XttTrendGtk : public XttTrend {
 	       int x_color_theme,
 	       void *basewidget,
 	       int *sts);
+  XttOTree *tree_new( const char *title, pwr_tAttrRef *itemlist, int itemcnt, unsigned int layout,
+		      pwr_tStatus (*action_cb)( void *, pwr_tAttrRef *));
   ~XttTrendGtk();
 };
 

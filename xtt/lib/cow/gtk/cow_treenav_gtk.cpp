@@ -32,61 +32,71 @@
  * the source code of Proview (the version used to produce the 
  * combined work), being distributed under the terms of the GNU 
  * General Public License plus this exception.
- */
+ **/
 
-#ifndef xtt_sevhist_gtk_h
-#define xtt_sevhist_gtk_h
+/* cow_treenav.cpp -- Tree viewer */
 
-/* xtt_sevhist_gtk.h -- SevHist curves */
+#include "glow_std.h"
 
-#ifndef xtt_sevhist_h
-# include "xtt_sevhist.h"
-#endif
-#include "xtt_otree_gtk.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <vector>
 
-class XttSevHistGtk : public XttSevHist {
- public:
-  GtkWidget    	*parent_widget;		//!< Parent widget.
-  
-  XttSevHistGtk( void *xn_parent_ctx,
-		 GtkWidget *xn_parent_wid,
-		 const char *xn_name,
-		 GtkWidget **w,
-		 pwr_tOid *xn_oidv,
-		 pwr_tOName *xn_anamev,
-		 pwr_tOName *xn_onamev,
-		 bool *sevhistobjectv,
-		 sevcli_tCtx xn_scctx,
-		 int width,
-		 int height,
-		 unsigned int options,
-		 int xn_color_theme, 
-		 void *basewidget,
-		 int *sts);
-  XttSevHistGtk( void *parent_ctx,
-		 GtkWidget *parent_wid,
-		 const char *name,
-		 GtkWidget **w,
-		 char *filename,
-		 int xn_color_theme, 
-		 void *basewidget,
-		 int *sts);
-  ~XttSevHistGtk();
+#include "co_cdh.h"
+#include "co_time.h"
 
-  XttOTree *tree_new( const char *title, pwr_tAttrRef *itemlist, int itemcnt, unsigned int layout,
-		      pwr_tStatus (*action_cb)( void *, pwr_tAttrRef *));
-};
+#include "flow.h"
+#include "flow_browctx.h"
+#include "flow_browapi.h"
+#include "flow_browwidget_gtk.h"
+#include "flow_msg.h"
 
-#endif
+#include "glow.h"
+#include "glow_growctx.h"
+#include "glow_growapi.h"
+#include "glow_growwidget_gtk.h"
 
 
+#include "cow_tree_gtk.h"
+#include "cow_treenav_gtk.h"
 
+//
+// Create the navigator widget
+//
+TreeNavGtk::TreeNavGtk(
+	void *xn_parent_ctx,
+	GtkWidget	*xn_parent_wid,
+	pwr_tAttrRef  *xn_itemlist,
+	int xn_item_cnt,
+	unsigned int xn_options,
+	pwr_tStatus (*xn_get_object_info)(void *, pwr_tAttrRef *, char *, int,  char *, char *, int),
+	pwr_tStatus (*xn_get_node_info)(void *, char *, char *, int),
+	GtkWidget **w,
+	pwr_tStatus *status) :
+  TreeNav( xn_parent_ctx, xn_itemlist, xn_item_cnt, xn_options, xn_get_object_info, xn_get_node_info, status),
+  parent_wid(xn_parent_wid)
+{
+  form_widget = scrolledbrowwidgetgtk_new(
+	TreeNav::init_brow_cb, this, &brow_widget);
 
+  gtk_widget_show_all( brow_widget);
 
+  // Create the root item
+  *w = form_widget;
 
+  *status = 1;
+}
+//
+//  Delete a nav context
+//
 
+TreeNavGtk::~TreeNavGtk()
+{
+  delete brow;
+  gtk_widget_destroy( form_widget);
+}
 
-
-
-
-
+void TreeNavGtk::set_inputfocus()
+{
+  gtk_widget_grab_focus( brow_widget);
+}

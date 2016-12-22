@@ -96,6 +96,7 @@ class XttSevHist {
   bool    	sevhistobjectv[XTT_SEVHIST_MAX]; //!< Indicates that it is a SevHistObject
   time_ePeriod	initial_period;
   int		color_theme;
+  XttOTree	*otree;
 
   //! Constructor
   XttSevHist( void *xn_parent_ctx,
@@ -127,6 +128,11 @@ class XttSevHist {
   void setup();
   void update_color_theme( int ct) { curve->update_color_theme(ct);}
 
+  virtual XttOTree *tree_new( const char *title, pwr_tAttrRef *itemlist, int itemcnt, unsigned int layout,
+			      pwr_tStatus (*action_cb)( void *, pwr_tAttrRef *)) {return 0;}
+
+  static pwr_tStatus sevhist_otree_action_cb( void *ctx, pwr_tAttrRef *aref);
+  static void sevhist_otree_close_cb( void *ctx);
   static void sevhist_close_cb( void *ctx);
   static void sevhist_increase_period_cb( void *ctx);
   static void sevhist_decrease_period_cb( void *ctx);
