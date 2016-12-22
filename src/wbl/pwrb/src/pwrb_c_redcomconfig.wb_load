@@ -128,14 +128,22 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Failover reason.
+      !*/
+      Object FailoverReason $Attribute 9
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-FailoverReasonMask"
+        EndBody
+      EndObject
+      !/**
       !  Link state.
       !*/
-      Object Link $Attribute 9 
+      Object Link $Attribute 10 
         Body SysBody
-          Attr Flags |= PWR_MASK_ARRAY
           Attr Flags |= PWR_MASK_CLASS
-	  Attr Elements = 2
+	  Attr Flags |= PWR_MASK_ARRAY
           Attr TypeRef = "pwrb:Class-RedcomLink"
+          Attr Elements = 2
         EndBody
       EndObject
     EndObject
@@ -144,6 +152,7 @@ SObject pwrb:Class
 	Attr CycleTime = 0.005
 	Attr LinkTimeout = 0.200
 	Attr StartupTimeout = 5.0
+	Attr FailoverReason = 15
       EndBody
     EndObject
   EndObject

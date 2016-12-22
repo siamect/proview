@@ -1124,6 +1124,18 @@ dissect_qcom(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree)
     strcpy( info, "Ack");
     break;
   }
+  case eEvent_connectPassive: {
+    strcpy( info, "ConnectPassive");
+    break;
+  }
+  case eEvent_redcomActive: {
+    strcpy( info, "RedcomActive");
+    break;
+  }
+  case eEvent_redcomPassive: {
+    strcpy( info, "RedcomPassive");
+    break;
+  }
   }
 
   is_net = 0;

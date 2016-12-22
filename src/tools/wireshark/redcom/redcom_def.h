@@ -79,7 +79,9 @@ typedef enum {
 typedef enum {
   redu_eMsgType_Table,
   redu_eMsgType_Cyclic,
-  redu_eMsgType_TableRequest
+  redu_eMsgType_TableRequest,
+  redu_eMsgType_TableVersionRequest,
+  redu_eMsgType_TableVersion
 } redu_eMsgType;
 
 typedef enum {

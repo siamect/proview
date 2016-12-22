@@ -6977,12 +6977,18 @@ pwr_exe:
 2730 0
 2721
 1
-100 1
+100 129
 105 0
 101 1
 106 0
 102 4
 103 0
+9
+900 !$object.FailoverReason##Bit[0]
+901 1
+902 1
+903 1
+99
 51
 5100 $object.SetPassive##Boolean
 5101 1
@@ -7113,12 +7119,18 @@ pwr_exe:
 2730 0
 2721
 1
-100 1
+100 129
 105 0
 101 1
 106 0
 102 4
 103 0
+9
+900 !$object.FailoverReason##Bit[0]
+901 1
+902 1
+903 1
+99
 51
 5100 $object.SetActive##Boolean
 5101 1
@@ -7249,12 +7261,18 @@ pwr_exe:
 2730 0
 2721
 1
-100 1
+100 129
 105 0
 101 1
 106 0
 102 4
 103 0
+9
+900 !$object.FailoverReason##Bit[0]
+901 1
+902 1
+903 1
+99
 51
 5100 $object.SetOff##Boolean
 5101 1

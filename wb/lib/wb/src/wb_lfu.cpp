@@ -2531,6 +2531,25 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		}
 		fprintf( optfile, "%s", str);
 		fclose( optfile);
+
+		if ( secondary_nodename_ptr != null_nodename) {
+		  if ( os == pwr_mOpSys_CustomBuild)	      
+		    sprintf( dir, "$pwrp_root/bld/%s/exe/", cdh_OpSysToStr( (pwr_mOpSys)custom_os));
+		  else
+		    sprintf( dir, "$pwrp_root/bld/%s/exe/", cdh_OpSysToStr( (pwr_mOpSys)os));
+		  cdh_ToLower( nodename, secondary_nodename_ptr);
+		  sprintf( fname, pwr_cNameOpt, dir, nodename, *bus_number_ptr, cdh_Low(plcproc));
+		  dcli_translate_filename( fname, fname);
+		  optfile = fopen( fname, "w");
+		  if ( optfile == 0) {
+		    char msg[200];
+		    sprintf( msg, "Error, Unable to open file %s", fname);
+		    MsgWindow::message( 'E', msg, msgw_ePop_Default);
+		    return LFU__NOFILE;
+		  }
+		  fprintf( optfile, "%s", str);
+		  fclose( optfile);
+		}
 	      }
 	      break;
 	    }
@@ -3805,7 +3824,9 @@ pwr_tStatus lfu_check_appl_file( ldh_tSesContext ldhses,
     "#pwr_post,       , noload, norun, , 5, debug, \"\"" << endl <<
     "#pwr_sevhistmon, , noload, norun, , 5, debug, \"\"" << endl <<
     "#pwr_sev_server, , noload, norun, , 5, debug, \"\"" << endl <<
-    "#rt_powerlink,   , noload, norun, , 5, debug, \"\"" << endl;
+    "#pwr_powerlink,  , noload, norun, , 5, debug, \"\"" << endl <<
+    "#pwr_videomgm,   , noload, norun, , 5, debug, \"\"" << endl <<
+    "#pwr_redcom,     , noload, norun, , 5, debug, \"\"" << endl;
 
   fp.close();
   return LFU__SUCCESS;

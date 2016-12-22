@@ -80,14 +80,18 @@ static gint hf_redcom_info_flags = -1;
 static gint hf_redu_msgheader = -1;
 static gint hf_redu_msgheader_type = -1;
 static gint hf_redu_msgheader_size = -1;
-static gint hf_redu_msgheader_time = -1;
+static gint hf_redu_msgheader_version = -1;
 static gint hf_redu_tablemsgheader = -1;
 static gint hf_redu_tablemsgheader_type = -1;
 static gint hf_redu_tablemsgheader_size = -1;
 static gint hf_redu_tablemsgheader_attributes = -1;
-static gint hf_redu_tablemsgheader_time = -1;
+static gint hf_redu_tablemsgheader_version = -1;
 static gint hf_redu_tablereqmsgheader = -1;
 static gint hf_redu_tablereqmsgheader_type = -1;
+static gint hf_redu_tableversionreqmsgheader = -1;
+static gint hf_redu_tableversionreqmsgheader_type = -1;
+static gint hf_redu_tableversionmsgheader = -1;
+static gint hf_redu_tableversionmsgheader_type = -1;
 
 /* These are the ids of the subtrees that we may be creating */
 static gint ett_redcom = -1;
@@ -119,14 +123,18 @@ static gint ett_redcom_info_flags = -1;
 static gint ett_redu_msgheader = -1;
 static gint ett_redu_msgheader_type = -1;
 static gint ett_redu_msgheader_size = -1;
-static gint ett_redu_msgheader_time = -1;
+static gint ett_redu_msgheader_version = -1;
 static gint ett_redu_tablemsgheader = -1;
 static gint ett_redu_tablemsgheader_type = -1;
 static gint ett_redu_tablemsgheader_size = -1;
 static gint ett_redu_tablemsgheader_attributes = -1;
-static gint ett_redu_tablemsgheader_time = -1;
+static gint ett_redu_tablemsgheader_version = -1;
 static gint ett_redu_tablereqmsgheader = -1;
 static gint ett_redu_tablereqmsgheader_type = -1;
+static gint ett_redu_tableversionreqmsgheader = -1;
+static gint ett_redu_tableversionreqmsgheader_type = -1;
+static gint ett_redu_tableversionmsgheader = -1;
+static gint ett_redu_tableversionmsgheader_type = -1;
 
 
 void
@@ -205,8 +213,8 @@ proto_register_redcom(void)
       { "Type", "redcom.msgheader.type", FT_UINT32, BASE_HEX, NULL, 0x0,	NULL, HFILL }},
     { &hf_redu_msgheader_size,
       { "Size", "redcom.msgheader.size", FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }},
-    { &hf_redu_msgheader_time,
-      { "Time", "redcom.msgheader.time", FT_ABSOLUTE_TIME, ABSOLUTE_TIME_LOCAL, NULL, 0x0, NULL, HFILL }},
+    { &hf_redu_msgheader_version,
+      { "Version", "redcom.msgheader.version", FT_ABSOLUTE_TIME, ABSOLUTE_TIME_LOCAL, NULL, 0x0, NULL, HFILL }},
 
     /* Redu TableMsgHeader */
     { &hf_redu_tablemsgheader,
@@ -217,14 +225,26 @@ proto_register_redcom(void)
       { "Size", "redcom.redu.tablemsgheader.size", FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }},
     { &hf_redu_tablemsgheader_attributes,
       { "Attributes", "redcom.redu.tablemsgheader.attributes", FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }},
-    { &hf_redu_tablemsgheader_time,
-      { "Time", "redcom.redu.tablemsgheader.time", FT_ABSOLUTE_TIME, ABSOLUTE_TIME_LOCAL, NULL, 0x0, NULL, HFILL }},
+    { &hf_redu_tablemsgheader_version,
+      { "Version", "redcom.redu.tablemsgheader.version", FT_ABSOLUTE_TIME, ABSOLUTE_TIME_LOCAL, NULL, 0x0, NULL, HFILL }},
 
     /* Redu TableReqMsgHeader */
     { &hf_redu_tablereqmsgheader,
       { "MsgTableReqHeader", "redcom.tablereqmsgheader", FT_NONE, BASE_NONE, NULL, 0x0,"Redcom TableReqeustMsg Header", HFILL }},
     { &hf_redu_tablereqmsgheader_type,
       { "Type", "redcom.tablereqmsgheader.type", FT_UINT32, BASE_HEX, NULL, 0x0,	NULL, HFILL }},
+
+    /* Redu TableVersionReqMsgHeader */
+    { &hf_redu_tableversionreqmsgheader,
+      { "MsgTableVersionReqHeader", "redcom.tableversionreqmsgheader", FT_NONE, BASE_NONE, NULL, 0x0,"Redcom TableVersionReqeustMsg Header", HFILL }},
+    { &hf_redu_tableversionreqmsgheader_type,
+      { "Type", "redcom.tableversionreqmsgheader.type", FT_UINT32, BASE_HEX, NULL, 0x0,	NULL, HFILL }},
+
+    /* Redu TableVersionMsgHeader */
+    { &hf_redu_tableversionmsgheader,
+      { "MsgTableVersionHeader", "redcom.tableversionmsgheader", FT_NONE, BASE_NONE, NULL, 0x0,"Redcom TableVersionMsg Header", HFILL }},
+    { &hf_redu_tableversionmsgheader_type,
+      { "Type", "redcom.tableversionmsgheader.type", FT_UINT32, BASE_HEX, NULL, 0x0,	NULL, HFILL }},
 
   };
 
@@ -258,14 +278,18 @@ proto_register_redcom(void)
     &ett_redu_msgheader,
     &ett_redu_msgheader_type,
     &ett_redu_msgheader_size,
-    &ett_redu_msgheader_time,
+    &ett_redu_msgheader_version,
     &ett_redu_tablemsgheader,
     &ett_redu_tablemsgheader_type,
     &ett_redu_tablemsgheader_size,
     &ett_redu_tablemsgheader_attributes,
-    &ett_redu_tablemsgheader_time,
+    &ett_redu_tablemsgheader_version,
     &ett_redu_tablereqmsgheader,
     &ett_redu_tablereqmsgheader_type,
+    &ett_redu_tableversionreqmsgheader,
+    &ett_redu_tableversionreqmsgheader_type,
+    &ett_redu_tableversionmsgheader,
+    &ett_redu_tableversionmsgheader_type,
     
   };
 
@@ -287,10 +311,14 @@ dissect_redcom(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree)
   proto_tree *redcom_redu_cyclic_tree = NULL;
   proto_tree *redcom_redu_table_tree = NULL;
   proto_tree *redcom_redu_tablerequest_tree = NULL;
+  proto_tree *redcom_redu_tableversionrequest_tree = NULL;
+  proto_tree *redcom_redu_tableversion_tree = NULL;
   int is_user;
   int is_reducyclic;
   int is_redutable;
   int is_redutablerequest;
+  int is_redutableversionrequest;
+  int is_redutableversion;
   guint32 msg_flags;
   gint32 redu_type;
   gchar *protostrp;
@@ -318,6 +346,8 @@ dissect_redcom(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree)
   is_reducyclic = 0;
   is_redutable = 0;
   is_redutablerequest = 0;
+  is_redutableversionrequest = 0;
+  is_redutableversion = 0;
   switch ( msg_flags >> 24) {
   case eEvent_connect: {
   strcpy( info, "Connect");
@@ -353,13 +383,15 @@ dissect_redcom(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree)
   is_reducyclic = 0;
   is_redutable = 0;
   is_redutablerequest = 0;
+  is_redutableversionrequest = 0;
+  is_redutableversion = 0;
   if ( is_user) {
     prio = tvb_get_ntohl( tvb, 28);
 
     if ( msg_flags & mSeg_middle && !(msg_flags & mSeg_first))
       sprintf( info, "P%02d Middle segment", prio);
     else if ( msg_flags & mSeg_last && !(msg_flags & mSeg_first))
-      strcpy( info, "P%02d Last segment");
+      sprintf( info, "P%02d Last segment", prio);
     else {
       redu_type = tvb_get_letohl( tvb, header_size + info_size);
 
@@ -375,6 +407,14 @@ dissect_redcom(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree)
       case redu_eMsgType_TableRequest:
 	sprintf( info, "P%02d TableRequest", prio);
 	is_redutablerequest = 1;
+	break;
+      case redu_eMsgType_TableVersionRequest:
+	sprintf( info, "P%02d TableVersionRequest", prio);
+	is_redutableversionrequest = 1;
+	break;
+      case redu_eMsgType_TableVersion:
+	sprintf( info, "P%02d TableVersion", prio);
+	is_redutableversion = 1;
 	break;
       default:
 	strcpy( info, "Unknown redu_eMsgType");
@@ -519,7 +559,7 @@ dissect_redcom(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree)
 	redcom_sub_item = proto_tree_add_item( redcom_redu_cyclic_tree, hf_redu_msgheader_size, 
 					     tvb, offset, 4, local_endian );
 	offset += 4;    
-	redcom_sub_item = proto_tree_add_item( redcom_redu_cyclic_tree, hf_redu_msgheader_time, 
+	redcom_sub_item = proto_tree_add_item( redcom_redu_cyclic_tree, hf_redu_msgheader_version, 
 					     tvb, offset, 8, local_endian );
 	offset += 8;    
       }
@@ -539,7 +579,7 @@ dissect_redcom(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree)
 	redcom_sub_item = proto_tree_add_item( redcom_redu_table_tree, hf_redu_tablemsgheader_attributes, 
 					     tvb, offset, 4, local_endian );
 	offset += 4;    
-	redcom_sub_item = proto_tree_add_item( redcom_redu_table_tree, hf_redu_tablemsgheader_time, 
+	redcom_sub_item = proto_tree_add_item( redcom_redu_table_tree, hf_redu_tablemsgheader_version, 
 					     tvb, offset, 8, local_endian );
 	offset += 8;    
       }
@@ -551,6 +591,28 @@ dissect_redcom(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree)
 	redcom_redu_tablerequest_tree = proto_item_add_subtree(redcom_sub_item, ett_redcom);
       
 	redcom_sub_item = proto_tree_add_item( redcom_redu_tablerequest_tree, hf_redu_tablereqmsgheader_type, 
+					     tvb, offset, 4, local_endian );
+	offset += 4;
+      }
+      else if ( is_redutableversionrequest) {
+	/* redu table request message map */
+	redcom_sub_item = proto_tree_add_item( redcom_tree, hf_redu_tableversionreqmsgheader, 
+					       tvb, offset, redutable_size, FALSE );
+
+	redcom_redu_tableversionrequest_tree = proto_item_add_subtree(redcom_sub_item, ett_redcom);
+      
+	redcom_sub_item = proto_tree_add_item( redcom_redu_tableversionrequest_tree, hf_redu_tableversionreqmsgheader_type, 
+					     tvb, offset, 4, local_endian );
+	offset += 4;
+      }
+      else if ( is_redutableversion) {
+	/* redu table request message map */
+	redcom_sub_item = proto_tree_add_item( redcom_tree, hf_redu_tableversionmsgheader, 
+					       tvb, offset, redutable_size, FALSE );
+
+	redcom_redu_tableversion_tree = proto_item_add_subtree(redcom_sub_item, ett_redcom);
+      
+	redcom_sub_item = proto_tree_add_item( redcom_redu_tableversion_tree, hf_redu_tableversionmsgheader_type, 
 					     tvb, offset, 4, local_endian );
 	offset += 4;
       }

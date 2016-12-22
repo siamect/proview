@@ -7,6 +7,9 @@ typedef enum {
   eEvent_down,
   eEvent_user,
   eEvent_ack,
+  eEvent_connectPassive,
+  eEvent_redcomActive,
+  eEvent_redcomPassive,
   eEvent_
 } eEvent;
 

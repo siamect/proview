@@ -2463,39 +2463,46 @@ static void failover_detection()
   if ( !l.config->Force && l.sup.initialized) {
     if ( l.nodep->RedundancyState == pwr_eRedundancyState_Active) {
       /* State is active */
-      if ( l.nodep->EmergBreakTrue && !l.sup.emergbreaktrue_old) {	
+      if ( l.config->FailoverReason & pwr_mFailoverReasonMask_EmergencyBreak &&
+	   l.nodep->EmergBreakTrue && !l.sup.emergbreaktrue_old) {
 	l.config->SetPassive = 1;
 	timelog( 1, "Emergency break, set passive");
       }
-      // else if ( EVEN(l.nodep->SystemStatus) && ODD(l.sup.systemstatus_old))
-      //   l.config->SetPassive = 1;
+      else if ( l.config->FailoverReason & pwr_mFailoverReasonMask_SystemStatus &&
+		(errh_SeverityError(l.nodep->SystemStatus) || errh_SeverityFatal(l.nodep->SystemStatus)) && 
+		!(errh_SeverityError(l.sup.systemstatus_old) || errh_SeverityFatal(l.sup.systemstatus_old))) {
+	l.config->SetPassive = 1;
+	timelog( 1, "Even SystemStatus, set passive");
+      }
     }
     else {
       /* State if passive, check for overtaking */
-      if ( l.config->Link[0].State == pwr_eUpDownEnum_Down && l.sup.linkstate_old == pwr_eUpDownEnum_Up) {
-	l.config->SetActive = 1;
-	timelog( 1, "Link down, set active");
-      }
+      if ( l.config->FailoverReason & pwr_mFailoverReasonMask_ActiveTimeout) {
+	if ( l.config->Link[0].State == pwr_eUpDownEnum_Down && l.sup.linkstate_old == pwr_eUpDownEnum_Up) {
+	  l.config->SetActive = 1;
+	  timelog( 1, "Link down, set active");
+	}
 
-      for (lp = tree_Minimum(&sts, l.links.table); lp != NULL; lp = tree_Successor(&sts, l.links.table, lp)) {
-	if ( l.config->Link[lp->idx].State == pwr_eUpDownEnum_Up && l.config->LinkTimeout > 0 && 
-	     !l.sup.startup_timeout) {
-	  pwr_tDeltaTime dt;
-	  float ftime;
-	  float timeout = l.config->LinkTimeout;
-	  
-	  if ( lp->passive_timeout)
-	    timeout = 2.0 * timeout;
+	for (lp = tree_Minimum(&sts, l.links.table); lp != NULL; lp = tree_Successor(&sts, l.links.table, lp)) {
+	  if ( l.config->Link[lp->idx].State == pwr_eUpDownEnum_Up && l.config->LinkTimeout > 0 && 
+	       !l.sup.startup_timeout) {
+	    pwr_tDeltaTime dt;
+	    float ftime;
+	    float timeout = l.config->LinkTimeout;
+	    
+	    if ( lp->passive_timeout)
+	      timeout = 2.0 * timeout;
 
-	  time_Adiff( &dt, &current, &lp->receive_time);
-	  ftime = time_DToFloat( 0, &dt);
-	  if ( ftime > timeout) {
-	    timelog( 1, "Link timeout, set active");
-	    l.config->SetActive = 1;
+	    time_Adiff( &dt, &current, &lp->receive_time);
+	    ftime = time_DToFloat( 0, &dt);
+	    if ( ftime > timeout) {
+	      timelog( 1, "Link timeout, set active");
+	      l.config->SetActive = 1;
+	    }
+	    l.config->Link[lp->idx].TimeMean = K_FILTER * l.config->Link[lp->idx].TimeMean + ( 1.0 - K_FILTER) * ftime;
+	    if ( ftime > l.config->Link[lp->idx].TimeMax)
+	      l.config->Link[lp->idx].TimeMax = ftime;
 	  }
-	  l.config->Link[lp->idx].TimeMean = K_FILTER * l.config->Link[lp->idx].TimeMean + ( 1.0 - K_FILTER) * ftime;
-	  if ( ftime > l.config->Link[lp->idx].TimeMax)
-	    l.config->Link[lp->idx].TimeMax = ftime;
 	}
       }
     }

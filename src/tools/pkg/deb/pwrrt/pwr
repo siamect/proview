@@ -74,6 +74,9 @@ create_killer()
              [ $appid != "pwr_fast" ] &&
              [ $appid != "pwr_remh" ] &&
              [ $appid != "pwr_remlog" ] &&
+             [ $appid != "pwr_remlog" ] &&
+             [ $appid != "pwr_elog" ] &&
+             [ $appid != "pwr_sysmon" ] &&
              [ $appid != "pwr_webmon" ] &&
              [ $appid != "pwr_webmonmh" ] &&
              [ $appid != "pwr_webmonelog" ] &&
@@ -84,6 +87,8 @@ create_killer()
              [ $appid != "pwr_sev_server" ] &&
              [ $appid != "pwr_powerlink" ] &&
              [ $appid != "pwr_sim" ] &&
+             [ $appid != "pwr_videomgm" ] &&
+             [ $appid != "pwr_redcom" ] &&
              [ $appid != "pwr_plc" ] &&
 	     [ "$appfile" != "rt_io_comm" ] &&
              [ ${appid:0:8} != "pwr_plc_" ]; then
