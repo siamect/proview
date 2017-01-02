@@ -2251,6 +2251,12 @@ extern "C" {
   */
   void grow_StoreTransform( grow_tObject object);
 
+  //! Revert transform to stored state.
+  /*!
+    \param object	Object.
+  */
+  void grow_RevertTransform( grow_tObject object);
+
   //! Check if there is a stored transform
   /*! 
     \return Returns 1 if the transform is previously stored with a call to grow_StoreTransform.

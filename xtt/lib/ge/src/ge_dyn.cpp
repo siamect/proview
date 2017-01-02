@@ -6027,6 +6027,13 @@ int GeMove::connect( grow_tObject object, glow_sTraceData *trace_data)
     width_orig = ur_x - x_orig;
     height_orig = ur_y - y_orig;
   }
+  else {
+    grow_RevertTransform( object);
+    grow_GetObjectBorder( object);
+    grow_MeasureNode( object, &x_orig, &y_orig, &ur_x, &ur_y);
+    width_orig = ur_x - x_orig;
+    height_orig = ur_y - y_orig;
+  }
   return 1;
 }
 
@@ -6041,6 +6048,7 @@ int GeMove::disconnect( grow_tObject object)
   if ( scale_y_p && scale_y_db == graph_eDatabase_Gdh)
     gdh_UnrefObjectInfo( scale_y_subid);
   move_x_p = move_y_p = scale_x_p = scale_y_p = 0;
+
   return 1;
 }
 

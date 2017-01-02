@@ -189,6 +189,7 @@ class GlowArrayElem {
     virtual void set_transform( GlowTransform *t) {};
     virtual void set_transform_from_stored(  GlowTransform *t) {};
     virtual void store_transform() {};
+    virtual void revert_transform() {};
     virtual bool transform_is_stored() { return false;};
     virtual void get_node_borders() {};
     virtual void get_ctx( void **ctx) {};

@@ -689,6 +689,7 @@ class GrowNode : public GlowNode {
   /*! The stored transform can be used as starting point for future scaling or rotations.
    */
   void store_transform() { trf.store(); };
+  void revert_transform() { trf.revert(); get_node_borders();};
 
   //! Check if there is a stored transform
   /*! 

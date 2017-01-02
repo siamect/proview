@@ -66,6 +66,8 @@ class GlowTransform {
     double rot() { return rotation;};
     void store() { s_a11=a11;s_a12=a12;s_a13=a13;s_a21=a21;s_a22=a22;s_a23=a23;
 	s_rotation=rotation; stored=true;};
+    void revert() { a11=s_a11;a12=s_a12;a13=s_a13;a21=s_a21;a22=s_a22;a23=s_a23;
+	rotation=s_rotation;};
     void scale_from_stored( double sx, double sy, double x0, double y0);
     void rotate_from_stored( double angle, double x0, double y0);
     void move_from_stored( double x0, double y0);

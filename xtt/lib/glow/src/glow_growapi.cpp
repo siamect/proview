@@ -4831,6 +4831,11 @@ void grow_StoreTransform( grow_tObject object)
   ((GlowArrayElem *)object)->store_transform();
 }
 
+void grow_RevertTransform( grow_tObject object)
+{
+  ((GlowArrayElem *)object)->revert_transform();
+}
+
 int grow_TransformIsStored( grow_tObject object)
 {
   return (int) ((GlowArrayElem *)object)->transform_is_stored();
