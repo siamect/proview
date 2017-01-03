@@ -101,6 +101,7 @@ typedef KeyboardCtx *keyboard_tCtx;
   void keyboard_SetType( keyboard_tCtx ctx, keyboard_eType type);
   void keyboard_SetDefaultConfig( keyboard_eKeymap keymap, keyboard_eType type);
   void keyboard_GetSize( keyboard_tCtx ctx, int *width, int *height);
+  void keyboard_SetSize( keyboard_tCtx ctx, int width, int height);
   void keyboard_SetShift( keyboard_tCtx ctx, int shift);
 
 /*@}*/

@@ -118,11 +118,18 @@ XttKeyboardGtk::XttKeyboardGtk( void *xn_parent_ctx,
   GtkWindow *window = GTK_WINDOW( toplevel);
   GdkScreen *screen = gtk_window_get_screen( window);
 
-  // gtk_widget_set_size_request( toplevel, width, height);
-  gtk_window_resize( GTK_WINDOW(toplevel), width, height);
 
   int screen_width = gdk_screen_get_width( screen);
   int screen_height = gdk_screen_get_height( screen);
+
+  if ( width > screen_width) {
+    height = ((float)screen_width) * 0.9 / width * height; 
+    width = screen_width * 0.9;
+    keyboard_SetSize( keyboardctx, width, height);
+  }
+
+  gtk_window_resize( GTK_WINDOW(toplevel), width, height);
+
   int x = screen_width/2 - width/2;
   int y = screen_height - height;
 

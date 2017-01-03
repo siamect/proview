@@ -92,6 +92,11 @@ void keyboard_GetSize( keyboard_tCtx ctx, int *width, int *height)
   ctx->get_size( width, height);
 }
 
+void keyboard_SetSize( keyboard_tCtx ctx, int width, int height)
+{
+  ctx->set_size( width, height);
+}
+
 void keyboard_SetShift( keyboard_tCtx ctx, int shift)
 {
   ctx->set_shift( shift);

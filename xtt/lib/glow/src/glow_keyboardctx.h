@@ -117,6 +117,7 @@ class KeyboardCtx : public GrowCtx {
   */
   int event_handler( glow_eEvent event, int x, int y, int w, int h);
   void get_size( int *width, int *height);
+  void set_size( int width, int height);
   void set_shift( int shift);
 
   keyboard_eType type;

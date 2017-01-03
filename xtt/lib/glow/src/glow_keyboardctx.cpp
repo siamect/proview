@@ -992,6 +992,14 @@ void KeyboardCtx::get_size( int *width, int *height)
   *height = int((y_high - y_low)*mw.zoom_factor_y);
 }
 
+void KeyboardCtx::set_size( int width, int height)
+{
+  mw.zoom_factor_x = ((float)width)/(x_right - x_left);
+  mw.zoom_factor_y = ((float)height)/(y_high - y_low);
+  a.zoom();
+  redraw();
+}
+
 void KeyboardCtx::set_shift( int shift)
 {
   if ( shift) {
