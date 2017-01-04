@@ -2472,6 +2472,8 @@ class GeSlider : public GeDynElem {
   pwr_tFloat32 old_max_value;
   pwr_tSubid min_value_subid;
   pwr_tSubid max_value_subid;
+  graph_eDatabase min_value_db;
+  graph_eDatabase max_value_db;
   pwr_tBoolean *insensitive_p;
   pwr_tSubid insensitive_subid;
   int insensitive_inverted;
@@ -2521,6 +2523,8 @@ class GeBar : public GeDynElem {
   pwr_tFloat32 old_max_value;
   pwr_tSubid min_value_subid;
   pwr_tSubid max_value_subid;
+  graph_eDatabase min_value_db;
+  graph_eDatabase max_value_db;
 
   GeBar( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, ge_mDynType1_Bar, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_Bar), 
@@ -2577,6 +2581,8 @@ class GeTrend : public GeDynElem {
   pwr_tSubid max_value_subid1;
   pwr_tFloat32 *min_value2_p;
   pwr_tFloat32 *max_value2_p;
+  graph_eDatabase min_value1_db;
+  graph_eDatabase max_value1_db;
   pwr_tFloat32 old_min_value2;
   pwr_tFloat32 old_max_value2;
   pwr_tSubid min_value_subid2;

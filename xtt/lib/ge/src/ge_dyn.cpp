@@ -7925,21 +7925,39 @@ int GeBar::connect( grow_tObject object, glow_sTraceData *trace_data)
   }
 
   min_value_p = 0;
-  dyn->parse_attr_name( minvalue_attr, parsed_name,
-				    &inverted, &attr_type, &attr_size);
+  min_value_db = dyn->parse_attr_name( minvalue_attr, parsed_name,
+				       &inverted, &attr_type, &attr_size);
   if ( strcmp(parsed_name, "") != 0 && 
        attr_type == pwr_eType_Float32) {
-    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&min_value_p, 
+    switch ( min_value_db) {
+    case graph_eDatabase_Gdh:
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&min_value_p, 
 				       &min_value_subid, attr_size, object);
+      break;
+    case graph_eDatabase_Local:
+      min_value_p = (pwr_tFloat32 *) dyn->graph->localdb_ref_or_create( parsed_name, attr_type);
+      break;
+    default:
+      ;
+    }
   }
 
   max_value_p = 0;
-  dyn->parse_attr_name( maxvalue_attr, parsed_name,
-				    &inverted, &attr_type, &attr_size);
+  max_value_db = dyn->parse_attr_name( maxvalue_attr, parsed_name,
+				       &inverted, &attr_type, &attr_size);
   if ( strcmp(parsed_name, "") != 0 && 
        attr_type == pwr_eType_Float32) {
-    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value_p, 
-				       &max_value_subid, attr_size, object);
+    switch ( min_value_db) {
+    case graph_eDatabase_Gdh:
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value_p, 
+					 &max_value_subid, attr_size, object);
+      break;
+    case graph_eDatabase_Local:
+      max_value_p = (pwr_tFloat32 *) dyn->graph->localdb_ref_or_create( parsed_name, attr_type);
+      break;
+    default:
+      ;
+    }
   }
 
   trace_data->p = &pdummy;
@@ -7953,11 +7971,11 @@ int GeBar::disconnect( grow_tObject object)
     gdh_UnrefObjectInfo( subid);
   p = 0;
 
-  if ( min_value_p) {
+  if ( min_value_p && min_value_db == graph_eDatabase_Gdh) {
     gdh_UnrefObjectInfo( min_value_subid);
     min_value_p = 0;
   }
-  if ( max_value_p) {
+  if ( max_value_p  && max_value_db == graph_eDatabase_Gdh) {
     gdh_UnrefObjectInfo( max_value_subid);
     max_value_p = 0;
   }
@@ -8232,20 +8250,38 @@ int GeTrend::connect( grow_tObject object, glow_sTraceData *trace_data)
   trend_hold = 0;
 
   min_value1_p = 0;
-  dyn->parse_attr_name( minvalue_attr1, parsed_name,
-			&inverted, &attr_type, &attr_size);
+  min_value1_db = dyn->parse_attr_name( minvalue_attr1, parsed_name,
+					&inverted, &attr_type, &attr_size);
   if ( strcmp(parsed_name, "") != 0 && 
        attr_type == pwr_eType_Float32) {
-    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&min_value1_p, 
+    switch ( min_value1_db) {
+    case graph_eDatabase_Gdh:
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&min_value1_p, 
 				       &min_value_subid1, attr_size, object);
+      break;
+    case graph_eDatabase_Local:
+      min_value1_p = (pwr_tFloat32 *) dyn->graph->localdb_ref_or_create( parsed_name, attr_type);
+      break;
+    default:
+      ;
+    }
   }
   max_value1_p = 0;
-  dyn->parse_attr_name( maxvalue_attr1, parsed_name,
-			&inverted, &attr_type, &attr_size);
+  max_value1_db = dyn->parse_attr_name( maxvalue_attr1, parsed_name,
+					&inverted, &attr_type, &attr_size);
   if ( strcmp(parsed_name, "") != 0 && 
        attr_type == pwr_eType_Float32) {
-    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value1_p, 
-				       &max_value_subid1, attr_size, object);
+    switch ( max_value1_db) {
+    case graph_eDatabase_Gdh:
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value1_p, 
+					 &max_value_subid1, attr_size, object);
+      break;
+    case graph_eDatabase_Local:
+      max_value1_p = (pwr_tFloat32 *) dyn->graph->localdb_ref_or_create( parsed_name, attr_type);
+      break;
+    default:
+      ;
+    }
   }
   min_value2_p = 0;
   dyn->parse_attr_name( minvalue_attr2, parsed_name,
@@ -8319,11 +8355,11 @@ int GeTrend::disconnect( grow_tObject object)
   if ( p2 && db2 == graph_eDatabase_Gdh)
     gdh_UnrefObjectInfo( subid2);
   p2 = 0;
-  if ( min_value1_p) {
+  if ( min_value1_p && min_value1_db == graph_eDatabase_Gdh) {
     gdh_UnrefObjectInfo( min_value_subid1);
     min_value1_p = 0;
   }
-  if ( max_value1_p) {
+  if ( max_value1_p && max_value1_db == graph_eDatabase_Gdh) {
     gdh_UnrefObjectInfo( max_value_subid1);
     max_value1_p = 0;
   }
@@ -15595,21 +15631,39 @@ int GeSlider::connect( grow_tObject object, glow_sTraceData *trace_data)
   }
 
   min_value_p = 0;
-  dyn->parse_attr_name( minvalue_attr, parsed_name,
-				    &inverted, &a_type, &a_size);
+  min_value_db = dyn->parse_attr_name( minvalue_attr, parsed_name,
+				       &inverted, &a_type, &a_size);
   if ( strcmp(parsed_name, "") != 0 && 
        a_type == pwr_eType_Float32) {
-    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&min_value_p, 
-				       &min_value_subid, a_size, object);
+    switch ( min_value_db) {
+    case graph_eDatabase_Gdh:
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&min_value_p, 
+					 &min_value_subid, a_size, object);
+      break;
+    case graph_eDatabase_Local:
+      min_value_p = (pwr_tFloat32 *) dyn->graph->localdb_ref_or_create( parsed_name, a_type);
+      break;
+    default:
+      ;
+    }
   }
 
   max_value_p = 0;
-  dyn->parse_attr_name( maxvalue_attr, parsed_name,
-				    &inverted, &a_type, &a_size);
+  max_value_db = dyn->parse_attr_name( maxvalue_attr, parsed_name,
+				       &inverted, &a_type, &a_size);
   if ( strcmp(parsed_name, "") != 0 && 
        a_type == pwr_eType_Float32) {
-    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value_p, 
-				       &max_value_subid, a_size, object);
+    switch ( max_value_db) {
+    case graph_eDatabase_Gdh:
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value_p, 
+					 &max_value_subid, a_size, object);
+      break;
+    case graph_eDatabase_Local:
+      max_value_p = (pwr_tFloat32 *) dyn->graph->localdb_ref_or_create( parsed_name, a_type);
+      break;
+    default:
+      ;
+    }
   }
 
   insensitive_p = 0;
@@ -15637,11 +15691,11 @@ int GeSlider::disconnect( grow_tObject object)
     gdh_UnrefObjectInfo( subid);
   p = 0;
 
-  if ( min_value_p) {
+  if ( min_value_p && min_value_db == graph_eDatabase_Gdh) {
     gdh_UnrefObjectInfo( min_value_subid);
     min_value_p = 0;
   }
-  if ( max_value_p) {
+  if ( max_value_p && max_value_db == graph_eDatabase_Gdh) {
     gdh_UnrefObjectInfo( max_value_subid);
     max_value_p = 0;
   }
