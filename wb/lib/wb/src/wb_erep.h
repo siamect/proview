@@ -132,9 +132,9 @@ public:
   void setRefMerep( wb_merep *merep);
   void resetRefMerep();
   bool refMerepOccupied() { return m_ref_merep_occupied;}
-  void printMethods();
   bool check_lock( char *name, ldh_eVolDb type);
   void checkVolumes( pwr_tStatus *sts, char *nodeconfigname);
+  static void printMethods();
   static void volumeNameToFilename( pwr_tStatus *sts, char *name, char *filename);
 
 private:

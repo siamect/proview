@@ -2142,8 +2142,7 @@ static int	wnav_show_func(	void		*client_data,
   else if ( cdh_NoCaseStrncmp( arg1_str, "METHODS", strlen( arg1_str)) == 0)
   {
     // Command is "SHOW METHODS"
-    wb_erep *erep = *(wb_env *)wnav->wbctx;
-    erep->printMethods();
+    wb_erep::printMethods();
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "NEXT_FREE_USER_VID", strlen( arg1_str)) == 0)
   {

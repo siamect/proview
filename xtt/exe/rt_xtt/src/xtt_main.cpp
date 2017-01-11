@@ -561,6 +561,11 @@ Xtt::Xtt( int *argc, char **argv[], int *return_sts) :
   static char 	display[80];
   static char   display_opt[20] = "--display";
 
+  if ( *argc > 1 && strcmp( (*argv)[1], "-m") == 0) {
+    XNav::print_methods();
+    exit(0);
+  }
+
   *return_sts = XNAV__SUCCESS;
 
   strcpy( opplace_str, "");

@@ -107,6 +107,10 @@ WVsel *WbGtk::vsel_new( pwr_tStatus *status, const char *name, ldh_tWBContext ld
 
 int main( int argc, char *argv[])
 {
+  if ( argc >= 2 && strcmp( argv[1], "-m") == 0) {
+    wb_erep::printMethods();
+    exit(0);
+  }
 
   gtk_init( &argc, &argv);
 

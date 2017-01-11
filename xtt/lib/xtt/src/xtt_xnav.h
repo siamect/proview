@@ -571,9 +571,9 @@ class XNav {
     int search_next();
     int create_object( char *classname, char *name);
     int delete_object( char *name);
-    void print_methods();
     void open_keyboard( void *owner, keyboard_eKeymap keymap, int type);
     void close_keyboard( int action);
+    static void print_methods();
     static pwr_tStatus get_instance_classgraph( char *instance_str, pwr_tFileName filename);
 
     // Table module member functions
