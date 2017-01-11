@@ -60,6 +60,7 @@
 
 class CoWow;
 class CoWowTimer;
+class XttOTree;
 
 //! Window that displays sevhist curve in a SevHistCurve object.
 /*!

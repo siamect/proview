@@ -491,28 +491,26 @@ static pwr_tStatus	logg_print(	logg_ctx	loggctx,
 		conflist_ptr->outfile);
 	if (csts == 0)
 */
-	csts = fprintf( conflist_ptr->outfile, "%s\n", msg);
-	if ( csts < 0)
-	{
-	  /* File error, close file and try to open it later */
-	  errh_CErrLog( REM__LOGGWRITE, NULL);
-	  fclose( conflist_ptr->outfile);
-	  conflist_ptr->file_open = 0;
-	}
-	else
-	{
-	  csts = fflush( conflist_ptr->outfile);
-	  if ( csts != 0)	
-	  {
+	if ( conflist_ptr->outfile) {
+	  csts = fprintf( conflist_ptr->outfile, "%s\n", msg);
+	  if ( csts < 0) {
 	    /* File error, close file and try to open it later */
 	    errh_CErrLog( REM__LOGGWRITE, NULL);
 	    fclose( conflist_ptr->outfile);
 	    conflist_ptr->file_open = 0;
 	  }
-	  else
-	    conflist_ptr->loggconf->LoggCount++;
+	  else {
+	    csts = fflush( conflist_ptr->outfile);
+	    if ( csts != 0) {
+	      /* File error, close file and try to open it later */
+	      errh_CErrLog( REM__LOGGWRITE, NULL);
+	      fclose( conflist_ptr->outfile);
+	      conflist_ptr->file_open = 0;
+	    }
+	    else
+	      conflist_ptr->loggconf->LoggCount++;
+	  }
 	}
-
 	return REM__SUCCESS;
 }
 
@@ -713,7 +711,8 @@ int main()
 	      conflist_ptr->loggconf->NewVersion = 0;
 	      if ( conflist_ptr->file_open)
 	      {
-	        fclose( conflist_ptr->outfile);
+		if ( conflist_ptr->outfile)
+		  fclose( conflist_ptr->outfile);
 	        conflist_ptr->file_open = 0;
 	        sts = logg_open_file( conflist_ptr, 1);
 	      }

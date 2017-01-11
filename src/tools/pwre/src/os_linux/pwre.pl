@@ -7,7 +7,8 @@
   "add", 	"add:usage_add",
   "configure", 	"configure:usage_configure",
   "build", 	"build:usage_build",
-  "build_all", 	"build_all:usage_build_all",
+  "build_all", 	"build_module:usage_build_module",
+  "build_module", "build_module:usage_build_module",
   "build_kernel", "build_kernel:usage_build_kernel",
   "build_all_modules", "build_all_modules:usage_build_all_modules",
   "build_all_wbl", "build_all_wbl:usage_build_all_wbl",
@@ -37,6 +38,7 @@
 #
 $user = $ENV{"USER"};
 
+$ver    = 0;
 $label  = $ENV{"pwre_env"};
 $sroot	= "/view/$user/vobs/pwr_src/src";
 $vmsinc = "";
@@ -175,6 +177,21 @@ sub build () # args: branch, subbranch, flavour, phase
 
   read_vars();
 
+  if ( $_[0] eq "-v") {
+    $ver = 1;
+    shift(@_);
+  }
+
+  if ( $_[0] eq "all") {
+    build_all_modules();
+    return;
+  }
+
+  if ( $_[0] eq "module" || $_[0] eq "") {
+    build_module();
+    return;
+  }
+
   my($branch) = $_[0];
   if (!defined($branch)) {
     usage_build();
@@ -215,55 +232,60 @@ sub build () # args: branch, subbranch, flavour, phase
 }
 
 #
-# build_kernel()
+# build_kernel ()
 #
 sub build_kernel # args: flavour
 {
   my $flavour = $_[0];
 
   _module("xtt");
-  build_all("copy", $flavour);
+  build_module("copy", $flavour);
   merge();
   _module("rt");
-  build_all("copy", $flavour);
+  build_module("copy", $flavour);
   merge();
   _module("wb");
-  build_all("copy", $flavour);
+  build_module("copy", $flavour);
   merge();
   _module("nmps");
-  build_all("copy", $flavour);
+  build_module("copy", $flavour);
   merge();
   _module("remote");
-  build_all("copy", $flavour);
+  build_module("copy", $flavour);
   merge();
   _module("opc");
-  build_all("copy", $flavour);
+  build_module("copy", $flavour);
   merge();
   _module("rt");
-  build_all("lib", $flavour);
+  build_module("lib", $flavour);
   merge();
   _module("xtt");
-  build_all("lib", $flavour);
+  build_module("lib", $flavour);
   merge();
   _module("wb");
-  build_all("lib", $flavour);
+  build_module("lib", $flavour);
   merge();
   _module("otherio");
   _build("exp","rt","src","copy");
-  _build("lib","usbio_dummy","src","init lib");
-  _build("lib","usb_dummy","src","init lib");
-  _build("lib","cifx_dummy","src","init lib");
-  _build("lib","nodave_dummy","src","init lib");
-  _build("lib","epl_dummy","src","init lib");
+  _build("lib","usbio_dummy","src","init");
+  _build("lib","usbio_dummy","src","lib");
+  _build("lib","usb_dummy","src","init");
+  _build("lib","usb_dummy","src","lib");
+  _build("lib","cifx_dummy","src","init");
+  _build("lib","cifx_dummy","src","lib");
+  _build("lib","nodave_dummy","src","init");
+  _build("lib","nodave_dummy","src","lib");
+  _build("lib","epl_dummy","src","init");
+  _build("lib","epl_dummy","src","lib");
   merge();
   _module("xtt");
-  build_all("exe", $flavour);
+  build_module("exe", $flavour);
   merge();
   _module("wb");
-  build_all("exe", $flavour);
+  build_module("exe", $flavour);
   merge();
   _module("rt");
-  build_all("exe", $flavour);
+  build_module("exe", $flavour);
   merge();
 }
 
@@ -347,12 +369,16 @@ sub ebuild # args: pass flavour
     merge();
     _module("rt");
     _build("msg", "*", "src", "all");
-    _build("lib", "rt", "src", "init copy");
+    _build("lib", "rt", "src", "init");
+    _build("lib", "rt", "src", "copy");
     _build("lib", "rt", $flavour, "copy");
-    _build("lib", "co", "src", "init copy");
+    _build("lib", "co", "src", "init");
+    _build("lib", "co", "src", "copy");
     _build("lib", "co", $flavour, "copy");
-    _build("lib", "dtt", "src", "init copy");
-    _build("lib", "statussrv", "src", "init copy");
+    _build("lib", "dtt", "src", "init");
+    _build("lib", "dtt", "src", "copy");
+    _build("lib", "statussrv", "src", "init");
+    _build("lib", "statussrv", "src", "copy");
     _build("lib", "co", "src", "all");
     _build("lib", "co", $flavour, "all");
     _build("exe", "co*", "src", "all");
@@ -360,7 +386,9 @@ sub ebuild # args: pass flavour
     _build("exp", "stdsoap2", "src", "copy");  
     _build("lib", "rt", "src", "all");
     _build("lib", "statussrv", "src", "all");
-    _build("lib", "msg_dummy", "src", "init copy lib");
+    _build("lib", "msg_dummy", "src", "init");
+    _build("lib", "msg_dummy", "src", "copy");
+    _build("lib", "msg_dummy", "src", "lib");
     _build("exp", "rt", "src", "all");
     _build("exe", "wb_rtt", "src", "all");
     _build("lib", "dtt", "src", "all");
@@ -617,7 +645,7 @@ sub import ()
 }
 
 #
-# build_all()
+# build_all_modules()
 #
 sub build_all_modules ()
 {
@@ -625,60 +653,60 @@ sub build_all_modules ()
 
   build_kernel( $flavour);
   _module("nmps");
-  build_all( $flavour);
+  build_module( $flavour);
   merge();
   _module("tlog");
-  build_all( $flavour);
+  build_module( $flavour);
   merge();
   _module("remote");
-  build_all( $flavour);
+  build_module( $flavour);
   merge();
   _module("profibus");
-  build_all( $flavour);
+  build_module( $flavour);
   merge();
   _module("bcomp");
-  build_all( $flavour);
+  build_module( $flavour);
   merge();
   if ( $ENV{"PWRE_CONF_JNI"} eq "1") {
     _module("java");
-    build_all( $flavour);
+    build_module( $flavour);
     merge();
   }
   _module("opc");
-  build_all( $flavour);
+  build_module( $flavour);
   merge();
   _module("simul");
-  build_all( $flavour);
+  build_module( $flavour);
   merge();
   _module("misc");
-  build_all( $flavour);
+  build_module( $flavour);
   merge();
   _module("ssabox");
-  build_all( $flavour);
+  build_module( $flavour);
   merge();
   _module("otherio");
-  build_all( $flavour);
+  build_module( $flavour);
   merge();
   _module("othermanu");
-  build_all( $flavour);
+  build_module( $flavour);
   merge();
   _module("sev");
-  build_all( $flavour);
+  build_module( $flavour);
   merge();
   _module("abb");
-  build_all( $flavour);
+  build_module( $flavour);
   merge();
   _module("siemens");
-  build_all( $flavour);
+  build_module( $flavour);
   merge();
   _module("inor");
-  build_all( $flavour);
+  build_module( $flavour);
   merge();
   _module("klocknermoeller");
-  build_all( $flavour);
+  build_module( $flavour);
   merge();
   _module("telemecanique");
-  build_all( $flavour);
+  build_module( $flavour);
   merge();
 
   method_build( $flavour);
@@ -806,6 +834,7 @@ sub build_all_wbl ()
 
 sub method_build ()
 {
+
   my $flavour;
   my $program;
   if ( $_[0] eq "motif" || $_[0] eq "gtk") {
@@ -815,62 +844,46 @@ sub method_build ()
     $program = $_[0];
     $flavour = $_[1];
   }
+
   if (!defined($program)) {
-    printf("-- Relink method dependent programs $flavour");
-    _module("rt");
-    $ENV{"export_type"} = "exp";
-    my($exe_dir) = $ENV{"pwr_exe"};
-    system("rm $exe_dir/rt_io_comm");
-    _build("exe", "rt_io_comm", "src", "all");
-#   system("rm $exe_dir/rt_ini");
-#   _build("exe", "rt_ini", $flavour, "all");
-    merge();
-  
+    printf("-- Relink method dependent programs %s\n", $flavour);
+    method_build( "rt_io_comm");
     method_build( "wb", $flavour);
-#    _module("wb");
-#    my($exe_dir) = $ENV{"pwr_exe"};
-#    system("rm $exe_dir/wb");
-#    _build("exe", "wb", "src", "all");
-#    _build("exe", "wb", $flavour, "all");
-#    merge();
-  
     method_build( "rt_xtt", $flavour);
-#    _module("xtt");
-#    my($exe_dir) = $ENV{"pwr_exe"};
-#    system("rm $exe_dir/rt_xtt");
-#    _build("exe", "rt_xtt", "src", "all");
-#    _build("exe", "rt_xtt", $flavour, "all");
-#    merge();
-  }  
+    return;
+  }
   if ( $_[0] eq "rt_io_comm" ) {
-    printf("-- Method build $program");
+    printf("-- Method build %s\n", $program);
     _module("rt");
     $ENV{"export_type"} = "exp";
-    my($exe_dir) = $ENV{"pwr_exe"};
+     my($exe_dir) = $ENV{"pwr_exe"};
     system("rm $exe_dir/rt_io_comm");
     _build("exe", "rt_io_comm", "src", "all");
     merge();
   }
+  if ( $flavour eq "") {
+    $flavour = "gtk";
+  }
   if ( $_[0] eq "wb" ) {
-    printf("-- Method build $program $flavour");
+    printf("-- Method build %s %s\n", $program, $flavour);
 
     _module("wb");
     $ENV{"export_type"} = "exp";
     my($exe_dir) = $ENV{"pwr_exe"};
-    system("rm $exe_dir/wb");
+    system("rm $exe_dir/wb_$flavour");
     _build("exe", "wb", $flavour, "all");
-    _build("exe", "wb", "src", "all");
-    merge();
+#    _build("exe", "wb", "src", "all");
+     merge();
   }
   if ( $_[0] eq "rt_xtt" ) {
-    printf("-- Method build $program $flavour");
+    printf("-- Method build %s %s\n",  $program, $flavour);
 
     _module("xtt");
     $ENV{"export_type"} = "exp";
     my($exe_dir) = $ENV{"pwr_exe"};
-    system("rm $exe_dir/rt_xtt");
+    system("rm $exe_dir/rt_xtt_$flavour");
     _build("exe", "rt_xtt", $flavour, "all");
-    _build("exe", "rt_xtt", "src", "all");
+#    _build("exe", "rt_xtt", "src", "all");
     merge();
   }  
 }
@@ -926,9 +939,9 @@ sub create_all_modules ()
 }
 
 #
-# build_all()
+# build_module()
 #
-sub build_all ()
+sub build_module ()
 {
   $copy = 0;
   $lib = 0;
@@ -967,9 +980,11 @@ sub build_all ()
   my($bcompclasses) = $einc . "/pwr_basecomponentsclasses.h";
   my($otherioclasses) = $einc . "/pwr_otherioclasses.h";
 
-  printf("--\n");
-  printf("-- Build all\n");
-  show();
+  if ( $ver == 1) {
+    printf("\n");
+  }
+  printf("-- Build module %s\n", $module);
+  #show();
 
   if ( $module eq "rt") {
     if ( $copy == 1) {
@@ -980,10 +995,14 @@ sub build_all ()
       merge("exe/tools_msg2cmsg");
       merge("exe/tools_pdrgen");
       _build("msg", "*", "src", "all");
-      _build("lib", "rt", "src", "init copy");
-      _build("lib", "co", "src", "init copy");
-      _build("lib", "dtt", "src", "init copy");
-      _build("lib", "statussrv", "src", "init copy");
+      _build("lib", "rt", "src", "init");
+      _build("lib", "rt", "src", "copy");
+      _build("lib", "co", "src", "init");
+      _build("lib", "co", "src", "copy");
+      _build("lib", "dtt", "src", "init");
+      _build("lib", "dtt", "src", "copy");
+      _build("lib", "statussrv", "src", "init");
+      _build("lib", "statussrv", "src", "copy");
       _build("lib", "co", "src", "all");
       _build("exe", "co*", "src", "all");
       _build("wbl", "pwrs", "src", "copy");
@@ -996,27 +1015,32 @@ sub build_all ()
       _build("lib", "ge", "all");
       if ( ! -e $nmpsclasses ) {
         _module("nmps");
-        _build("wbl", "nmps", "src", "init copy");
+        _build("wbl", "nmps", "src", "init");
+        _build("wbl", "nmps", "src", "copy");
         merge("inc/pwr_nmpsclasses.h");
       }
       if ( ! -e $remoteclasses ) {
         _module("remote");
-        _build("wbl", "remote", "src", "init copy");
+        _build("wbl", "remote", "src", "init");
+        _build("wbl", "remote", "src", "copy");
         merge("inc/pwr_remoteclasses.h");
       }
       if ( ! -e $profibusclasses ) {
         _module("profibus");
-        _build("wbl", "mcomp", "src", "init copy");
+        _build("wbl", "mcomp", "src", "init");
+        _build("wbl", "mcomp", "src", "copy");
         merge("inc/pwr_profibusclasses.h");
       }
       if ( ! -e $bcompclasses ) {
         _module("bcomp");
-        _build("wbl", "bcomp", "src", "init copy");
+        _build("wbl", "bcomp", "src", "init");
+        _build("wbl", "bcomp", "src", "copy");
         merge("inc/pwr_basecomponentclasses.h");
       }
       if ( ! -e $otherioclasses ) {
         _module("otherio");
-        _build("wbl", "mcomp", "src", "init copy");
+        _build("wbl", "mcomp", "src", "init");
+        _build("wbl", "mcomp", "src", "copy");
         merge("inc/pwr_otherioclasses.h");
       }
       _module("rt");
@@ -1057,8 +1081,6 @@ sub build_all ()
       _build("jpwr", "rt", "src", "all");
       _build("jpwr", "jopg", "src", "all");
       _build("jpwr", "jop", "src", "all");
-#      _build("jpwr", "jopc", "src", "all");
-#      _build("jpwr", "beans", "src", "all");
       _build("jpwr", "rt_client", "src", "all");
     }
     if ( $exe == 1) {
@@ -1068,9 +1090,11 @@ sub build_all ()
   elsif ( $module eq "profibus") {
     if ( $copy == 1) {
       _build("wbl", "*", "src", "copy");
-      _build("lib", "*", "src", "init copy");
+      _build("lib", "*", "src", "init");
+      _build("lib", "*", "src", "copy");
       _build("lib", "*", $flavour, "copy");
-      _build("exp", "*", "src", "init copy");
+      _build("exp", "*", "src", "init");
+      _build("exp", "*", "src", "copy");
       _build("mmi", "*", "src", "copy");
       _build("mmi", "*", $flavour, "copy");
       _build("exe", "*", "src", "copy");
@@ -1093,9 +1117,11 @@ sub build_all ()
   else {
     if ( $copy == 1) {
       _build("wbl", "*", "src", "copy");
-      _build("lib", "*", "src", "init copy");
+      _build("lib", "*", "src", "init");
+      _build("lib", "*", "src", "copy");
       _build("lib", "*", $flavour, "copy");
-      _build("exp", "*", "src", "init copy");
+      _build("exp", "*", "src", "init");
+      _build("exp", "*", "src", "copy");
       _build("mmi", "*", "src", "copy");
       _build("mmi", "*", $flavour, "copy");
       _build("exe", "*", "src", "copy");
@@ -1325,6 +1351,7 @@ sub show ()
 
   read_vars();
   if ($varstr ne "") {
+
     print("--\n");
     printf("-- Environment    : %s\n", $label);
     show_vars();
@@ -1374,6 +1401,10 @@ sub _build () # args: branch, subbranch, flavour, phase
   shift(@_);
   shift(@_);
 
+  if ( $ver == 1) {
+    printf( "--   Build %s %s %s\n", $branch, $subbranch, $flavor);
+  }
+
   my($grepstr) = $ENV{"pwre_target"};
   
   my($globstr) = $ENV{"pwre_sroot"} . "/$branch";
@@ -1407,7 +1438,7 @@ sub _build () # args: branch, subbranch, flavour, phase
         foreach (@mfiles) {
           chomp($_);
           $_ =~ s#/makefile##;
-          print("\n$_\n");
+          #print("\n$_\n");
           chdir($_) || die "cannot cd to $_ ($!)";
           $ENV{"PWD"} = $_;
           system("make @_") && exit 1;
@@ -1427,6 +1458,11 @@ sub merge ()
     exit 1;
   }
 
+  if ( $_[0] eq "-v") {
+    $ver = 1;
+    shift(@_);
+  }
+
   my($eroot) = $ENV{"pwre_broot"};
 
   if (!defined($eroot)) {
@@ -1444,10 +1480,12 @@ sub merge ()
   my($mroot) = $eroot;
   $mroot .= "/" . $ENV{"pwre_module"};
   $eroot .= "/exp";
-  printf("\n");
-  printf("-- Merge %s %s\n", $module, $file);
+  if ( $ver == 1) {
+    printf("\n");
+    printf("-- Merge %s %s\n", $module, $file);
+  }
 
-  my($cmd) = $ENV{pwre_bin} . "/pwre_merge.sh " . $mroot . " " . $eroot . " " . $file;
+  my($cmd) = $ENV{pwre_bin} . "/pwre_merge.sh " . $ver . " " . $mroot . " " . $eroot . " " . $file;
   system("$cmd");
 }
 
@@ -1498,6 +1536,10 @@ sub _print ()
 
 sub _module()
 {
+  if ( $ver == 1) {
+    printf( "-- Set module %s\n", $_[0]);
+  }
+
   my($modu) = $_[0];
   my($sroot) = $ENV{"pwre_sroot"};
   my($idx) = rindex($sroot,"/");
@@ -1573,7 +1615,6 @@ sub create_dir()
 
 sub get_vars ()
 {
-    printf( "Arg: %s\n", $_[1]);
   if ($_[1] eq "") {
     $sroot = 	get_var(" Source root [%s]? ", $sroot);
   } else {
@@ -1676,10 +1717,10 @@ sub usage_build ()
   printf("++ build 'branch' 'subbranch' ['flavour']['phase']: Build, eg. pwre build exe rt* src all\n");
 }
 
-sub usage_build_all ()
+sub usage_build_module ()
 {
   printf("++\n");
-  printf("++ build_all                     : Builds all in current module\n");
+  printf("++ build_module                     : Builds all in current module\n");
 }
 
 sub usage_build_kernel ()

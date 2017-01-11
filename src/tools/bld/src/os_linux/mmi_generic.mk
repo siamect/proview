@@ -97,11 +97,11 @@ clean_png := $(patsubst %.png,clean_%.png,$(png_sources))
 .PHONY : all init copy lib exe clean realclean\
          dirs clean_bld clean_dirs $(clean_uid)
 
-all : init copy
+all : init copy | silent
 
-init : dirs
+init : dirs | silent
 
-copy : $(export_uid) $(export_c_pwg) $(export_pwg) $(export_pwsg) $(export_png)
+copy : $(export_uid) $(export_c_pwg) $(export_pwg) $(export_pwsg) $(export_png) | silent
 
 lib :
 
@@ -112,6 +112,9 @@ clean : $(clean_uid) $(clean_pwg) $(clean_pwsg) $(clean_png)
 realclean : clean
 
 dirs : 
+
+silent :
+	@ :
 
 $(clean_uid) : clean_%.uid : %.uil
 	@ echo "Removing uid"

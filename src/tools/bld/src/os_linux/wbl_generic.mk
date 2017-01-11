@@ -152,17 +152,18 @@ $(load_dir)/%.flw : ../../%.flw
 .PHONY : all init copy lib exe clean realclean\
          $(clean_wbl)
 
-all : init copy exe
+all : init copy exe | silent
 
-init : 
+init : silent
 
-lib  : $(export_wbl_dbs)
+lib  : $(export_wbl_dbs) | silent
 
 copy : $(export_wbl_h) \
        $(export_wbl_hpp) \
        $(export_pwg) \
        $(export_pwsg) \
-       $(export_flw)
+       $(export_flw) \
+       | silent
 
 exe:   $(export_wbl_xtthelp_en_us) \
        $(export_wbl_xtthelp_sv_se) \
@@ -171,7 +172,8 @@ exe:   $(export_wbl_xtthelp_en_us) \
        $(export_wbl_ps_en_us) \
        $(export_wbl_ps_sv_se) \
        $(export_pdf_en_us) \
-       $(export_pdf_sv_se)
+       $(export_pdf_sv_se) \
+       | silent
 
 clean : \
        $(clean_xtthelp_sv_se) $(clean_xtthelp_en_us) \
@@ -182,6 +184,9 @@ realclean : clean \
        $(clean_dbs) \
        $(clean_h) \
        $(clean_hpp) \
+
+silent :
+	@ :
 
 $(clean_dbs) : clean_%.dbs : $(load_dir)/%.dbs
 	@ echo "rm $(source)"

@@ -103,18 +103,18 @@ export_lib = $(lib_dir)/$(lib_name)$(lib_ext)
 	 dirs $(clean_h_includes) $(clean_hpp_includes) \
 	 clean_bld clean_dirs clean_lib export_stuff
 
-all : init copy lib exe
+all : init copy lib exe | silent
 
-init : dirs
+init : dirs | silent
 
-copy : $(export_includes)
+copy : $(export_includes) | silent
 
 lib :   $(export_dtt_m)\
 	$(inc_dir)/dtt_appl_rttsys_m.rdecl\
 	$(inc_dir)/dtt_appl_rttsys_m.rhlp\
 	$(inc_dir)/dtt_appl_rttsys_m.rh\
 	$(export_lib)($(objects))\
-	$(export_obj)
+	$(export_obj) | silent
  
 exe :
 
@@ -152,6 +152,9 @@ clean_lib :
 	@ $(rm) $(rmflags) $(export_lib)
 
 clean_includes : $(clean_h_includes) $(clean_hpp_includes)
+
+silent :
+	@ :
 
 $(clean_h_includes) : clean_%.h : %.h
 	@ echo "Removing h-includes"

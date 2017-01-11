@@ -78,6 +78,7 @@ class CnvWblTo {
   virtual int index_open() { return 0;}
   virtual bool confpass() { return false;}
   virtual void set_confpass( bool conf) {};
+  virtual void add_depend( char *) {};
 };
 
 #if defined __cplusplus

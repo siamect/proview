@@ -37,9 +37,9 @@
 #ifndef cnv_wbltoh_h
 #define cnv_wbltoh_h
 
-#if defined __cplusplus
-extern "C" {
-#endif
+//#if defined __cplusplus
+//extern "C" {
+//#endif
 
 #include "pwr.h"
 #include "cnv_readwbl.h"
@@ -93,8 +93,8 @@ class CnvWblToH : public CnvWblTo {
   
 };
 
-#if defined __cplusplus
-}
-#endif
+//#if defined __cplusplus
+//}
+//#endif
 #endif
 

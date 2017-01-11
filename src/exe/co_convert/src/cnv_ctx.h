@@ -34,25 +34,28 @@
  * General Public License plus this exception.
  */
 
-#ifndef co_convert_h
-#define co_convert_h
+#ifndef co_ctx_h
+#define co_ctx_h
 
 /* cnv_ctx.h -- Setup */
 
 
-#if defined __cplusplus
-extern "C" {
-#endif
-
 #include <stdio.h>
+#include <string>
+#include <vector>
 #include "pwr.h"
 #include "cnv_setup.h"
+
+using namespace std;
 
 class CnvWblTo;
 class CnvReadWbl;
 class CnvReadXtthelp;
 
-class CnvCtx {
+class CnvCtx { 
+ private:
+  vector<string> depend;
+
  public:
   CnvCtx() : generate_html(0), generate_xtthelp(0), generate_src(0),
     generate_struct(0), generate_ps(0), generate_cdp(0), common_structfile_only(0), hpp(0), 
@@ -60,6 +63,7 @@ class CnvCtx {
     {
       strcpy( dir, "");
       strcpy( setup_filename, "");
+      strcpy( depend_filename, "");
     }
   char		dir[120];
   int		generate_html;
@@ -71,21 +75,24 @@ class CnvCtx {
   int		common_structfile_only;
   int		hpp;
   int	       	verbose;
-  char	 	setup_filename[120];
+  pwr_tFileName setup_filename;
+  pwr_tFileName depend_filename;
+  pwr_tFileName	dependfile;
   int		first_class;
   CnvSetup	*setup;
   CnvWblTo	*wblto;
   CnvReadWbl	*rw;
   CnvReadXtthelp *rx;
 
+  void add_depend( char *dname);
+  void set_dependfile( char *dname) {strncpy( dependfile, dname, sizeof(dependfile));}
+  void print_depend();
+
   static int read_line( char *line, int maxsize, FILE *file);
   static int remove_spaces( const char *in, char *out);
   static char *low( const char *in);
 };
 
-#if defined __cplusplus
-}
-#endif
 #endif
 
 

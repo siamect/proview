@@ -60,19 +60,22 @@ export_h := $(patsubst %.h,$(inc_dir)/%.h,$(h_sources))
 
 .PHONY : all init copy lib exe clean realclean
 
-all : init copy lib
+all : init copy lib | silent
 
 init :
 
-copy : $(export_h)
+copy : $(export_h) | silent
 
-lib : $(export_obj)
+lib : $(export_obj) | silent
 
 exe :
 
 clean :
 
 realclean : clean
+
+silent :
+	@ :
 
 .SUFFIXES:
 

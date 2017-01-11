@@ -82,20 +82,24 @@ clean_ge := $(clean_pwg) $(clean_pwsg) $(clean_pwgc) $(clean_html)
 .PHONY : all init copy lib exe clean realclean \
          $(clean_ge)
 
-all : init copy lib exe
+all : init copy lib exe | silent
 
-init :
+init : silent
 
 copy : $(export_ge)\
-       $(exe_dir)/pwr_css.css
+       $(exe_dir)/pwr_css.css \
+       | silent
 
-lib :
+lib : silent
 
-exe :
+exe : silent
 
 clean :
 
 realclean : $(clean_ge)
+
+silent :
+	@ :
 
 $(clean_pwg) : clean_%.pwg : %.pwg
 	@ $(rm) $(rmflags) $(exe_dir)/$*.pwg

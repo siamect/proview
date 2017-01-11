@@ -37,11 +37,8 @@
 #ifndef cnv_classdep_h
 #define cnv_classdep_h
 
-#if defined __cplusplus
-extern "C" {
-#endif
-
 #include <vector>
+#include <string>
 #include "pwr.h"
 #include "cnv_ctx.h"
 
@@ -81,9 +78,6 @@ class CnvClassDep {
   void print_html_classtable_children( ofstream& fp, int idx);
 };
 
-#if defined __cplusplus
-}
-#endif
 #endif
 
 

@@ -27,23 +27,28 @@ endif
 .PHONY : all init copy lib exe clean realclean\
          $(clean_wbl)
 
-all : init copy exe
+all : init copy exe | silent
 
-init :
+init : silent
 
 copy : $(inc_dir)/pwr_baseclasses.h \
-       $(inc_dir)/pwr_baseclasses.hpp
+       $(inc_dir)/pwr_baseclasses.hpp \
+       | silent
 
 
-lib  : $(load_dir)/pwrb.dbs
+lib  : $(load_dir)/pwrb.dbs | silent
 
 exe : $(doc_dir)/en_us/orm/pwrb_allclasses.html \
       $(exe_dir)/en_us/pwrb_xtthelp.dat \
-      $(exe_dir)/sv_se/pwrb_xtthelp.dat
+      $(exe_dir)/sv_se/pwrb_xtthelp.dat \
+      | silent
 
 clean : 
 
 realclean : clean clean_pwrb_xtthelp clean_pwrb_html clean_baseclasses
+
+silent :
+	@ :
 
 $(load_dir)/pwrb.dbs :
 	@ echo "Generating loadfile for pwrb"
@@ -52,15 +57,15 @@ $(load_dir)/pwrb.dbs :
 
 $(inc_dir)/pwr_baseclasses.h :
 	@ echo "Generating struct files for pwrb classes..."
-	@ $(co_convert) -so -d $(inc_dir) "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
+	@ $(co_convert) -so -d $(inc_dir) -y $(release_root)/bld/$(type_name)/pwrb.d_h_wbl "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
 
 $(inc_dir)/pwr_baseclasses.hpp :
 	@ echo "Generating hpp files for pwrb classes..."
-	@ $(co_convert) -po -d $(inc_dir) "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
+	@ $(co_convert) -po -d $(inc_dir) -y $(release_root)/bld/$(type_name)/pwrb.d_hpp_wbl "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
 
 $(doc_dir)/en_us/orm/pwrb_allclasses.html :
 	@ echo "Generating html files for pwrb classes en_us..."
-	@ $(co_convert) -w -d $(doc_dir)/en_us/orm -g $(pwre_sroot)/wbl/pwrb/src/cnv_setup.dat "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
+	@ $(co_convert) -w -d $(doc_dir)/en_us/orm -y $(release_root)/bld/$(type_name)/pwrb.d_html_wbl -g $(pwre_sroot)/wbl/pwrb/src/cnv_setup.dat "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
 	@ echo "Generating html files for pwrb structs en_us..."
 	@ $(co_convert) -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr_baseclasses.h
 	@ $(co_convert) -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr_baseclasses.hpp
@@ -85,11 +90,11 @@ $(doc_dir)/en_us/orm/pwrb_allclasses.html :
 
 $(exe_dir)/en_us/pwrb_xtthelp.dat :
 	@ echo "Generating xtt help files for pwrb classes en_us"
-	@ $(co_convert) -x -d $(exe_dir)/en_us "$(pwre_sroot)/wbl/pwrb/src/pwrb_c_*.wb_load"
+	@ $(co_convert) -x -d $(exe_dir)/en_us -y $(release_root)/bld/$(type_name)/pwrb.d_en_us_xtthelp_wbl "$(pwre_sroot)/wbl/pwrb/src/pwrb_c_*.wb_load"
 
 $(exe_dir)/sv_se/pwrb_xtthelp.dat :
 	@ echo "Generating xtt help files for pwrb classes sv_se"
-	@ $(co_convert) -x -l sv_se -d $(exe_dir)/sv_se "$(pwre_sroot)/wbl/pwrb/src/pwrb_c_*.wb_load"
+	@ $(co_convert) -x -l sv_se -d $(exe_dir)/sv_se -y $(release_root)/bld/$(type_name)/pwrb.d_sv_se_xtthelp_wbl "$(pwre_sroot)/wbl/pwrb/src/pwrb_c_*.wb_load"
 
 #$(export_wbl) : $(cnf_dir)/%.wb_vers : %.wb_load
 #       @ write sys$$output "Exporting $< ..."
@@ -99,6 +104,9 @@ $(exe_dir)/sv_se/pwrb_xtthelp.dat :
 clean_pwrb_xtthelp :
 	@ if [ -e $(exe_dir)/en_us/pwrb_xtthelp.dat ]; then \
 		 $(rm) $(rmflags) $(exe_dir)/en_us/pwrb_xtthelp.dat; \
+	  fi
+	@ if [ -e $(exe_dir)/sv_se/pwrb_xtthelp.dat ]; then \
+		 $(rm) $(rmflags) $(exe_dir)/sv_se/pwrb_xtthelp.dat; \
 	  fi
 clean_pwrb_html :
 	@ if [ -e $(doc_dir)/orm/en_us/pwrb_allclasses.html ]; then \
@@ -116,3 +124,8 @@ clean_wbl :
 		$(rm) $(rmflags) $(load_dir)/pwrb.dbs; \
 	  fi
 
+-include $(release_root)/bld/$(type_name)/pwrb.d_h_wbl
+-include $(release_root)/bld/$(type_name)/pwrb.d_hpp_wbl
+-include $(release_root)/bld/$(type_name)/pwrb.d_html_wbl
+-include $(release_root)/bld/$(type_name)/pwrb.d_en_us_xtthelp_wbl
+-include $(release_root)/bld/$(type_name)/pwrb.d_sv_se_xtthelp_wbl

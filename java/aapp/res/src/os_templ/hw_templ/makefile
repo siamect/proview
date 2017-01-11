@@ -139,12 +139,17 @@ dirs : $(app_res_dir)$(dir_ext) \
 	$(app_res_dir)/menu$(dir_ext) \
 	$(app_res_dir)/values$(dir_ext) \
 	$(app_res_dir)/values-v11$(dir_ext) \
-	$(app_res_dir)/values-v14$(dir_ext)
+	$(app_res_dir)/values-v14$(dir_ext) \
+	| silent
 
 copy: $(res_drawable_objects) $(res_drawable_hdpi_objects) $(res_drawable_ldpi_objects) \
 	$(res_drawable_mdpi_objects) $(res_drawable_xhdpi_objects) $(res_layout_objects) \
 	$(res_menu_objects) $(res_values_objects) $(res_values_v11_objects) \
-	$(res_values_v14_objects)
+	$(res_values_v14_objects) \
+	| silent
+
+silent :
+	@ :
 
 $(app_res_dir)$(dir_ext) :
 	@ echo "Create directory " $(app_res_dir)$(dir_ext)

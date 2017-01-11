@@ -26,22 +26,27 @@ endif
 .PHONY : all init copy lib exe clean realclean\
          $(clean_wbl)
 
-all : init copy lib exe
+all : init copy lib exe | silent
 
-init :
+init : silent
 
 copy : $(inc_dir)/pwr_systemclasses.h \
-       $(inc_dir)/pwr_systemclasses.hpp
+       $(inc_dir)/pwr_systemclasses.hpp \
+       | silent
 
-lib  : $(load_dir)/pwrs.dbs
+lib  : $(load_dir)/pwrs.dbs | silent
 
 exe : $(doc_dir)/en_us/orm/pwrs_allclasses.html \
       $(exe_dir)/en_us/pwrs_xtthelp.dat \
-      $(exe_dir)/sv_se/pwrs_xtthelp.dat
+      $(exe_dir)/sv_se/pwrs_xtthelp.dat \
+      | silent
 
 clean : $(clean_wbl)
 
 realclean : clean clean_pwrs_xtthelp clean_pwrs_html clean_systemclasses
+
+silent :
+	@ :
 
 $(load_dir)/pwrs.dbs :
 	@ echo "Generating loadfile for pwrs"
@@ -50,15 +55,15 @@ $(load_dir)/pwrs.dbs :
 
 $(inc_dir)/pwr_systemclasses.h :
 	@ echo "Generating struct files for pwrs classes..."
-	@ $(co_convert) -so -d $(inc_dir) "$(pwre_sroot)/wbl/pwrs/src/pwrs_c_*.wb_load"
+	@ $(co_convert) -so -d $(inc_dir) -y $(release_root)/bld/$(type_name)/pwrs.d_h_wbl  "$(pwre_sroot)/wbl/pwrs/src/pwrs_c_*.wb_load"
 
 $(inc_dir)/pwr_systemclasses.hpp :
 	@ echo "Generating hpp files for pwrs classes..."
-	@ $(co_convert) -po -d $(inc_dir) "$(pwre_sroot)/wbl/pwrs/src/pwrs_c_*.wb_load"
+	@ $(co_convert) -po -d $(inc_dir) -y $(release_root)/bld/$(type_name)/pwrs.d_hpp_wbl "$(pwre_sroot)/wbl/pwrs/src/pwrs_c_*.wb_load"
 
 $(doc_dir)/en_us/orm/pwrs_allclasses.html :
 	@ echo "Generating html files for pwrs classes en_us..."
-	@ $(co_convert) -w -d $(doc_dir)/en_us/orm -g $(pwre_sroot)/wbl/pwrs/src/cnv_setup.dat "$(pwre_sroot)/wbl/pwrs/src/pwrs_*.wb_load"
+	@ $(co_convert) -w -d $(doc_dir)/en_us/orm -y $(release_root)/bld/$(type_name)/pwrs.d_html_wbl -g $(pwre_sroot)/wbl/pwrs/src/cnv_setup.dat "$(pwre_sroot)/wbl/pwrs/src/pwrs_*.wb_load"
 	@ echo "Generating html files for pwrs structs en_us..."
 	@ $(co_convert) -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr_systemclasses.h
 	@ $(co_convert) -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr.h
@@ -75,11 +80,11 @@ $(doc_dir)/en_us/orm/pwrs_allclasses.html :
 
 $(exe_dir)/en_us/pwrs_xtthelp.dat :
 	@ echo "Generating xtt help files for pwrs classes en_us"
-	@ $(co_convert) -x -d $(exe_dir)/en_us "$(pwre_sroot)/wbl/pwrs/src/pwrs_*.wb_load"
+	@ $(co_convert) -x -d $(exe_dir)/en_us -y $(release_root)/bld/$(type_name)/pwrs.d_en_us_xtthelp_wbl "$(pwre_sroot)/wbl/pwrs/src/pwrs_*.wb_load"
 
 $(exe_dir)/sv_se/pwrs_xtthelp.dat :
 	@ echo "Generating xtt help files for pwrs classes sv_se"
-	@ $(co_convert) -x -l sv_se -d $(exe_dir)/sv_se "$(pwre_sroot)/wbl/pwrs/src/pwrs_*.wb_load"
+	@ $(co_convert) -x -l sv_se -d $(exe_dir)/sv_se -y $(release_root)/bld/$(type_name)/pwrs.d_sv_se_xtthelp_wbl "$(pwre_sroot)/wbl/pwrs/src/pwrs_*.wb_load"
 
 
 #$(export_wbl) : $(cnf_dir)/%.wb_vers : %.wb_load
@@ -108,3 +113,8 @@ clean_systemclasses :
 		$(rm) $(rmflags) $(inc_dir)/pwrs_c_*.h; \
 	  fi
 
+-include $(release_root)/bld/$(type_name)/pwrs.d_h_wbl
+-include $(release_root)/bld/$(type_name)/pwrs.d_hpp_wbl
+-include $(release_root)/bld/$(type_name)/pwrs.d_html_wbl
+-include $(release_root)/bld/$(type_name)/pwrs.d_en_us_xtthelp_wbl
+-include $(release_root)/bld/$(type_name)/pwrs.d_sv_se_xtthelp_wbl

@@ -157,7 +157,7 @@ int main( int argc, char *argv[])
         usage();
         exit(0);
       }
-      strcpy( ctx->setup_filename, argv[i+1]);
+      strncpy( ctx->setup_filename, argv[i+1], sizeof(ctx->setup_filename));
       i++;
     }
     else if ( strcmp( argv[i], "-l") == 0) {
@@ -166,6 +166,14 @@ int main( int argc, char *argv[])
         exit(0);
       }
       Lng::set( argv[i+1]);
+      i++;
+    }
+    else if ( strcmp( argv[i], "-y") == 0) {
+      if ( i+1 >= argc) {
+        usage();
+        exit(0);
+      }
+      strncpy( ctx->depend_filename, argv[i+1], sizeof(ctx->depend_filename));
       i++;
     }
     else if ( argv[i][0] == '-') {

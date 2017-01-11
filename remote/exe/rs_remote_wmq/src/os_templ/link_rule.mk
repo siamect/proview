@@ -6,7 +6,8 @@ ifeq ($(PWRE_CONF_WMQ),1)
 	$(export_obj) $(objects) $(rt_msg_eobjs) \
         $(pwre_conf_libdir) $(pwre_conf_libpwrremote) $(pwre_conf_libpwrrt) \
 	$(pwre_conf_libwmq) $(pwre_conf_lib)
-else
-  link = echo "WMQ not installed"
+else 
+  log_link_exe = echo "$(exe_flv_name): WMQ not installed"
+  link = :
 endif
 endif

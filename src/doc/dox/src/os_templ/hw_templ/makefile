@@ -20,7 +20,7 @@ endif
 
 .PHONY : all init copy lib exe clean realclean
 
-all : init copy lib exe
+all : init copy lib exe | silent
 
 init :
 
@@ -28,12 +28,14 @@ copy :
 
 lib :
 
-exe : $(doc_dir)/dox/index.html
+exe : $(doc_dir)/dox/index.html | silent
 
 clean : $(clean_dox)
 
 realclean : $(clean_html)
 
+silent :
+	@ :
 
 $(clean_html) : clean_%.html : %.html
 	@ $(rm) $(rmflags) $(doc_dir)/dox/$*.html

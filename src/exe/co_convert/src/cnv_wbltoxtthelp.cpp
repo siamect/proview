@@ -134,6 +134,8 @@ int CnvWblToXtthelp::init( char *first)
 
   fp_xtthelp_index.open( fname);
 
+  ctx->set_dependfile( fname);
+
   fp_tmp.open( cread_cTmpFile2);
 
   xtthelp_index_open = 1;
@@ -157,6 +159,9 @@ int CnvWblToXtthelp::close()
   ctx->rw->copy_tmp_file( cread_cTmpFile2, fp_xtthelp_index);
   
   fp_xtthelp_index.close();
+
+  ctx->print_depend();
+
   return 1;
 }
 

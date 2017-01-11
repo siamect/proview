@@ -34,19 +34,22 @@ clean_xdd := $(patsubst %.xdd, clean_%.xdd, $(xdd_sources))
 .PHONY : all init copy lib exe clean realclean\
          $(clean_xdd)
 
-all : init copy
+all : init copy | silent
 
-init :
+init : silent
 
-copy : $(export_xdd)
+copy : $(export_xdd) | silent
 
-lib :
+lib : silent
 
-exe :
+exe : silent
 
 clean :
 
 realclean : clean $(clean_xdd)
+
+silent :
+	@ :
 
 $(export_xdd) : $(exe_dir)/%.xdd : %.xdd
 	@ echo "Exporting $< ..."

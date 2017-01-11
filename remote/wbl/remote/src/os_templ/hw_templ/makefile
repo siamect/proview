@@ -27,22 +27,27 @@ endif
 .PHONY : all init copy lib exe clean realclean\
          $(clean_wbl)
 
-all : init copy exe
+all : init copy exe | silent
 
-init :
+init : silent
 
 copy : $(inc_dir)/pwr_remoteclasses.h \
-       $(inc_dir)/pwr_remoteclasses.hpp
+       $(inc_dir)/pwr_remoteclasses.hpp \
+       | silent
 
-lib  : $(load_dir)/remote.dbs
+lib  : $(load_dir)/remote.dbs | silent
 
 exe : $(doc_dir)/en_us/orm/remote_allclasses.html \
       $(exe_dir)/en_us/remote_xtthelp.dat \
-      $(exe_dir)/sv_se/remote_xtthelp.dat
+      $(exe_dir)/sv_se/remote_xtthelp.dat \
+      | silent
 
 clean : 
 
 realclean : clean $(clean_wbl)
+
+silent :
+	@ :
 
 $(load_dir)/remote.dbs :
 	@ echo "Generating loadfile for remote"
@@ -52,15 +57,15 @@ $(load_dir)/remote.dbs :
 
 $(inc_dir)/pwr_remoteclasses.h :
 	@ echo "Generating struct files for remote classes..."
-	@ $(co_convert) -s -d $(inc_dir) "$(pwre_sroot)/wbl/remote/src/remote_*.wb_load"
+	@ $(co_convert) -s -d $(inc_dir) -y $(release_root)/bld/$(type_name)/remote.d_h_wbl "$(pwre_sroot)/wbl/remote/src/remote_*.wb_load"
 
 $(inc_dir)/pwr_remoteclasses.hpp :
 	@ echo "Generating hpp files for remote classes..."
-	@ $(co_convert) -po -d $(inc_dir) "$(pwre_sroot)/wbl/remote/src/remote_*.wb_load"
+	@ $(co_convert) -po -d $(inc_dir) -y $(release_root)/bld/$(type_name)/remote.d_hpp_wbl "$(pwre_sroot)/wbl/remote/src/remote_*.wb_load"
 
 $(doc_dir)/en_us/orm/remote_allclasses.html :
 	@ echo "Generating html files for remote classes en_us..."
-	@ $(co_convert) -w -d $(doc_dir)/en_us/orm -g $(pwre_sroot)/wbl/remote/src/cnv_setup.dat "$(pwre_sroot)/wbl/remote/src/remote_*.wb_load"
+	@ $(co_convert) -w -d $(doc_dir)/en_us/orm -y $(release_root)/bld/$(type_name)/remote.d_html_wbl -g $(pwre_sroot)/wbl/remote/src/cnv_setup.dat "$(pwre_sroot)/wbl/remote/src/remote_*.wb_load"
 	@ echo "Generating html files for remote structs en_us..."
 	@ $(co_convert) -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr_remoteclasses.h
 	@ $(co_convert) -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr_remoteclasses.hpp
@@ -81,16 +86,21 @@ $(doc_dir)/en_us/orm/remote_allclasses.html :
 
 $(exe_dir)/en_us/remote_xtthelp.dat :
 	@ echo "Generating xtt help files for remote classes"
-	@ $(co_convert) -x -d $(exe_dir)/en_us "$(pwre_sroot)/wbl/remote/src/remote_c_*.wb_load"
+	@ $(co_convert) -x -d $(exe_dir)/en_us -y $(release_root)/bld/$(type_name)/remote.d_en_us_xtthelp_wbl "$(pwre_sroot)/wbl/remote/src/remote_c_*.wb_load"
 
 $(exe_dir)/sv_se/remote_xtthelp.dat :
 	@ echo "Generating xtt help files for remote classes"
-	@ $(co_convert) -x -l sv_se -d $(exe_dir)/sv_se "$(pwre_sroot)/wbl/remote/src/remote_c_*.wb_load"
+	@ $(co_convert) -x -l sv_se -d $(exe_dir)/sv_se -y $(release_root)/bld/$(type_name)/remote.d_sv_se_xtthelp_wbl "$(pwre_sroot)/wbl/remote/src/remote_c_*.wb_load"
 
 clean_wbl :
 	@ if [ -e $(load_dir)/remote.dbs ]; then \
 		$(rm) $(rmflags) $(load_dir)/remote.dbs; \
 	  fi
 
+-include $(release_root)/bld/$(type_name)/remote.d_h_wbl
+-include $(release_root)/bld/$(type_name)/remote.d_hpp_wbl
+-include $(release_root)/bld/$(type_name)/remote.d_html_wbl
+-include $(release_root)/bld/$(type_name)/remote.d_en_us_xtthelp_wbl
+-include $(release_root)/bld/$(type_name)/remote.d_sv_se_xtthelp_wbl
 
 

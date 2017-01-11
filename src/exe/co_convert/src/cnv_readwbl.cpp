@@ -90,6 +90,8 @@ int CnvReadWbl::read_wbl( char *filename)
   if ( !fp)
     return 0;
 
+  ctx->add_depend( filename);
+
   state = 0;
   doc_fresh = 0;
 

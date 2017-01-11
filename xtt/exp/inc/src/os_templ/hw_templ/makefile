@@ -37,19 +37,22 @@ clean_includes := $(patsubst %.h,clean_%.h,$(sources))
 .PHONY : all init copy lib exe clean realclean \
          $(clean_includes)
 
-all : init copy lib exe
+all : init copy lib exe | silent
 
-init :
+init : silent
 
-copy : $(export_includes)
+copy : $(export_includes) | silent
 
-lib :
+lib : silent
 
-exe :
+exe : silent
 
 clean :
 
 realclean : $(clean_includes)
+
+silent :
+	@ :
 
 $(clean_includes) : clean_%.h : %.h
 	@ $(rm) $(rmflags) $(inc_dir)/$*.h

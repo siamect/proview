@@ -84,13 +84,21 @@ hpp_includes := $(sort \
            )
 
 exe_name   := $(comp_name)
+exe_flv_name   := $(comp_name)
+ifneq ($(src_name),src)
+  exe_flv_name := $(comp_name)_$(src_name)
+endif
 exe_source := $(filter $(exe_name).%, $(c_sources))
 
 c_sources  := $(filter-out $(exe_source), $(c_sources))
 
-export_exe := $(exe_dir)/$(exe_name)$(exe_ext)
+export_exe := $(exe_dir)/$(pre_so)$(exe_flv_name)$(exe_ext)
 #export_obj := $(obj_dir)/$(exe_name)$(obj_ext)
 export_obj := $(bld_dir)/$(exe_name)$(obj_ext)
+export_flv_obj := $(bld_dir)/$(exe_name)$(obj_ext)
+ifneq ($(src_name),src)
+  export_flv_obj := $(bld_dir)/$(exe_name)_$(src_name)$(obj_ext)
+endif
 export_includes := $(addprefix $(inc_dir)/,$(h_includes) $(hpp_includes))
 
 l_targets := $(addprefix $(bld_dir)/,$(basename $(l_sources)))
@@ -103,7 +111,7 @@ objects := $(strip $(addsuffix $(obj_ext),$(objects)))
 lc_src_dep := $(objects:$(obj_ext)=$(d_ext)) 
 exe_src_dep := $(obj_dir)/$(exe_name)$(d_ext)
 source_dependencies := $(lc_src_dep) $(exe_src_dep)
-link_dependencies := $(bld_dir)/$(exe_name)$(d_ld_ext)
+link_dependencies := $(bld_dir)/$(exe_flv_name)$(d_ld_ext)
 
 clean_h_includes := $(patsubst %.h,clean_%.h, $(h_includes))
 clean_hpp_includes := $(patsubst %.hpp,clean_%.hpp, $(hpp_includes))
@@ -115,15 +123,15 @@ clean_hpp_includes := $(patsubst %.hpp,clean_%.hpp, $(hpp_includes))
          dirs $(clean_includes) clean_bld clean_dirs\
 	 clean_exe
 
-all : init copy lib exe
+all : init copy lib exe | silent
 
-init : dirs
+init : dirs | silent
 
-copy : $(export_includes)
+copy : $(export_includes) | silent
 
 lib :
 
-exe : $(l_targets) $(objects) $(export_obj) $(export_exe)
+exe : $(l_targets) $(objects) $(export_flv_obj) $(export_exe) | silent
 
 dirs : $(bld_dir)$(dir_ext)
 
@@ -134,24 +142,20 @@ clean : clean_exe clean_bld
 
 realclean : clean $(clean_h_includes) $(clean_hpp_includes) clean_dirs
 
-$(export_exe) : $(link_rule) $(export_obj) $(objects)
+$(export_exe) : $(link_rule) $(export_flv_obj) $(objects)
 	@ $(log_link_exe)
-	@ $(link)
+	@ $(link)  -t | grep $(pwre_broot) | awk -f $(pwre_kroot)/tools/bld/src/$(os_name)/ld_trace_to_d.awk -v target=$(target) > $(link_dependencies)
+	@ if [ "$(linkcp)" != ":" ]; then \
+		$(linkcp); \
+	fi
 
-
-# This is for Lynx 2.5 map files, it doesn't work for Linux. ML 
-# ifeq ($(nodep),)
-#	@ echo "$(export_exe) : \\" > $(link_dependencies)
-#	@ $ sed -n "s|\(.*\)\($(lib_dir)/.*\.a\)\(\]\)\(.*\.o\)\(.*\)|\2(\4) \\\\|p" $(map) \
-#	  | sort | uniq >> $(link_dependencies) 
-# endif
 
 clean_exe :
 	@ if [ -e $(export_exe) ]; then \
 		$(rm) $(export_exe); \
 	fi
-	@ if [ -e $(export_obj) ]; then \
-		$(rm) $(export_obj); \
+	@ if [ -e $(export_flv_obj) ]; then \
+		$(rm) $(export_flv_obj); \
 	fi
 
 clean_bld :
@@ -159,6 +163,9 @@ clean_bld :
 
 clean_dirs :
 	@ $(rm) $(rmflags) $(bld_dir)
+
+silent:
+	@ :
 
 $(clean_h_includes) : clean_%.h : %.h
 	@ $(rm) $(rmflags) $(inc_dir)/$*.h  

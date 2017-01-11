@@ -19,19 +19,22 @@ endif
 .PHONY : all init copy lib exe clean realclean\
          $(clean_c)
 
-all : init copy lib
+all : init copy lib | silent
 
-init :
+init : silent
 
-copy : $(exe_dir)/pb_module_classes.dat $(exe_dir)/pn_module_classes.dat
+copy : $(exe_dir)/pb_module_classes.dat $(exe_dir)/pn_module_classes.dat | silent
 
-lib :
+lib : silent
 
-exe :
+exe : silent
 
 clean :
 
 realclean : clean $(clean_obj) 
+
+silent :
+	@ :
 
 .SUFFIXES:
 

@@ -68,14 +68,15 @@ $(src_dir)/%.dat : %.dat
 .PHONY : all init copy lib exe clean realclean \
          clean_obj $(clean_h) $(clean_c) $(clean_dat)
 
-all : init copy lib exe
+all : init copy lib exe | silent
 
-init :
+init : silent
 
 copy : $(export_h) $(export_c) $(export_dat) \
-	$(exe_dir)/pwr_wb_palette.cnf
+	$(exe_dir)/pwr_wb_palette.cnf \
+	| silent
 
-lib : $(export_obj) 
+lib : $(export_obj) | silent
 
 exe :
 
@@ -83,6 +84,9 @@ exe :
 clean : clean_obj
 
 realclean : clean $(clean_h) $(clean_c) $(clean_dat)
+
+silent :
+	@ :
 
 $(exe_dir)/pwr_wb_palette.cnf : ../../pwr_wb_palette.cnf
 	@ echo "Copying pwr_wb_palette.cnf"

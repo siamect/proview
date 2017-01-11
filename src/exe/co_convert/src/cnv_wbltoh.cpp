@@ -73,6 +73,8 @@ int CnvWblToH::init( char *first)
   strcat( fname, struct_filename);
   fp_struct.open( fname);
 
+  ctx->set_dependfile( fname);
+
   if ( ctx->hpp) {
     if ( strcmp( CnvCtx::low(ctx->rw->volume_name), "pwrb") == 0)
       sprintf( fname, "pwr_%sclasses_hpp", "base");
@@ -145,6 +147,8 @@ int CnvWblToH::close()
 "#endif" << endl;
 
   fp_struct.close();
+
+  ctx->print_depend();
 
   return 1;
 }
@@ -1081,3 +1085,4 @@ int CnvWblToH::check_typename( char *type_volume, char *type_name)
   else
     return 1;
 }
+

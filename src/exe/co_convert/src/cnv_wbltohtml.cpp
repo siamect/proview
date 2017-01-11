@@ -204,6 +204,7 @@ int CnvWblToHtml::init( char *first)
   cdh_ToLower( fname, fname);
   fp_html_index.open( fname);
 
+  ctx->set_dependfile( fname);  
 
   html_index_open = 1;
 
@@ -426,6 +427,8 @@ int CnvWblToHtml::close()
   snprintf( cmd, sizeof(cmd), "if [ -e %s/../../orm_menu.js ]; then cat %s/*.jsf %s/../../orm_menu.js > %s/menu.js; fi", 
 	   ctx->dir, ctx->dir, ctx->dir, ctx->dir);
   system( cmd);
+
+  ctx->print_depend();
 
   return 1;
 }

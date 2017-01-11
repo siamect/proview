@@ -51,10 +51,13 @@ endif
 local_objects := \
 	$(app_package_dir)/$(comp_name)/Gdh.java
 
-copy: $(objects) $(local_objects)
+copy: $(objects) $(local_objects) | silent
 
-dirs : $(app_package_dir)/$(comp_name)$(dir_ext)
+dirs : $(app_package_dir)/$(comp_name)$(dir_ext) | silent
  
+silent :
+	@ :
+
 $(app_package_dir)/$(comp_name)$(dir_ext) :
 	@ echo "Create directory " $(app_package_dir)/$(comp_name)$(dir_ext)
 	@ $(mkdir) -p $(mkdirflags) $(app_package_dir)/$(comp_name)$(dir_ext)

@@ -73,11 +73,11 @@ $(doc_dir)/%.pdf : ../../%.pdf
 	@ $(cp) $(cpflags) $(source) $(target)
 
 
-all : init copy lib exe
+all : init copy lib exe | silent
 
 init :
 
-copy : $(export_doc)
+copy : $(export_doc) | silent
 
 lib :
 
@@ -86,6 +86,9 @@ exe :
 clean : $(clean_dweb)
 
 realclean : $(clean_html)
+
+silent :
+	@ :
 
 
 $(clean_html) : clean_%.html : %.html

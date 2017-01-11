@@ -154,13 +154,13 @@ source_dependencies := $(addsuffix $(d_ext), $(source_dependencies))
 
 #	 dirs $(clean_h_includes) $(clean_hpp_includes)
 
-all : init copy lib exe
+all : init copy lib exe | silent
 
-init : dirs
+init : dirs | silent
 
-copy : $(export_includes) $(l_copy) $(export_pwsg) $(export_meth)
+copy : $(export_includes) $(l_copy) $(export_pwsg) $(export_meth) | silent
 
-lib : $(export_lib)
+lib : $(export_lib) | silent
 
 exe :
 
@@ -194,6 +194,9 @@ clean_lib :
 
 
 clean_includes : $(clean_h_includes) $(clean_hpp_includes)
+
+silent:
+	@ :
 
 $(clean_h_includes) : clean_%.h : %.h
 	@ echo "Removing h-include: $(inc_dir)/$*.h"

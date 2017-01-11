@@ -19,19 +19,22 @@ endif
 .PHONY : all init copy lib exe clean realclean\
          $(clean_c)
 
-all : init copy lib
+all : init copy lib | silent
 
-init :
+init : silent
 
-copy : $(inc_dir)/libusbio.h $(inc_dir)/openSocket.h $(inc_dir)/setport.h $(inc_dir)/pwr_arduino_uno.ino
+copy : $(inc_dir)/libusbio.h $(inc_dir)/openSocket.h $(inc_dir)/setport.h $(inc_dir)/pwr_arduino_uno.ino | silent
 
-lib :
+lib : silent
 
-exe :
+exe : silent
 
 clean :
 
 realclean : clean $(clean_obj) 
+
+silent :
+	@ :
 
 .SUFFIXES:
 

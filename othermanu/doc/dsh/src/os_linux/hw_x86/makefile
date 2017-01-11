@@ -88,21 +88,25 @@ $(doc_dir)/sv_se/dsh/%.html : $(pwre_sroot)/doc/dsh/sv_se/%.html
 .PHONY : all init copy lib exe clean realclean \
          $(clean_pdf)
 
-all : init copy lib exe
+all : init copy lib exe | silent
 
-init :
+init : silent
 
 copy : $(export_pdf_en_us) $(export_html_en_us) \
-       $(export_pdf_sv_se) $(export_html_sv_se)
+       $(export_pdf_sv_se) $(export_html_sv_se) \
+       | silent
 
-lib :
+lib :  silent
 
-exe :
+exe :  silent
 
 
 clean :
 
 realclean : clean $(clean_pdf) $(clean_html)
+
+silent :
+	@ :
 
 $(clean_pdf) : clean_%.pdf : %.pdf
 	@ $(rm) $(rmflags) $(doc_dir)/$*.pdf

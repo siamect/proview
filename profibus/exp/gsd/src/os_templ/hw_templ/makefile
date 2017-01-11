@@ -58,19 +58,22 @@ clean_xml := $(patsubst %.xml, clean_%.xml, $(xml_sources))
 .PHONY : all init copy lib exe clean realclean\
          $(clean_gsd) $(clean_gse) $(clean_xml)
 
-all : init copy
+all : init copy | silent
 
-init :
+init : silent
 
-copy : $(export_gsd) $(export_gse) $(export_xml)
+copy : $(export_gsd) $(export_gse) $(export_xml) | silent
 
-lib :
+lib : silent
 
-exe :
+exe : silent
 
 clean :
 
 realclean : clean $(clean_gsd) $(clean_gse) $(clean_xml)
+
+silent :
+	@ :
 
 $(export_gsd) : $(exe_dir)/%.gsd : %.gsd
 	@ echo "Exporting $< ..."

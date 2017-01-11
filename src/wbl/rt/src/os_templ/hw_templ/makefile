@@ -26,19 +26,22 @@ endif
 .PHONY : all init copy lib exe clean realclean\
          $(clean_wbl)
 
-all : init copy exe
+all : init copy exe | silent
 
-init :
+init : silent
 
-copy : 
+copy : silent
 
-lib  : $(load_dir)/rt.dbs
+lib  : $(load_dir)/rt.dbs | silent
 
-exe  :
+exe  : silent
 
 clean : $(clean_wbl)
 
 realclean : clean
+
+silent :
+	@ :
 
 $(load_dir)/rt.dbs :
 	@ echo "Generating snapshot for rt"

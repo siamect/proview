@@ -58,11 +58,11 @@ clean_awk := $(patsubst %.awk, clean_%.awk, $(awk_sources))
 .PHONY : all init copy lib exe clean realclean\
          $(clean_sh)
 
-all : init copy
+all : init copy | silent
 
 init :
 
-copy : $(export_sh) $(export_pwr_com) $(export_awk)
+copy : $(export_sh) $(export_pwr_com) $(export_awk) | silent
 
 lib :
 
@@ -71,6 +71,9 @@ exe :
 clean :
 
 realclean : clean $(clean_sh) $(clean_pwr_com) $(clean_awk)
+
+silent :
+	@ :
 
 $(export_sh) : $(exe_dir)/%.sh : %.sh
 	@ echo "Exporting $< ..."

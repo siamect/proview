@@ -76,12 +76,12 @@ $(doc_dir)/en_us/orm/%.html : ../../%.html
 .PHONY : all init copy lib exe clean realclean \
          $(clean_gif) $(clean_png)
 
-all : init copy lib exe
+all : init copy lib exe | silent
 
 init :
 
 copy : $(export_gif) $(export_png) $(export_html)\
-       $(doc_dir)/en_us/orm/orm.css
+       $(doc_dir)/en_us/orm/orm.css | silent
 
 lib :
 
@@ -91,6 +91,9 @@ exe :
 clean :
 
 realclean : clean $(clean_gif) $(clean_html) $(clean_c)
+
+silent :
+	@ :
 
 $(clean_gif) : clean_%.gif : %.gif
 	@ $(rm) $(rmflags) $(doc_dir)/orm/$*.gif

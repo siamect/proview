@@ -63,19 +63,22 @@ export_wav := $(patsubst %.wav,$(exe_dir)/%.wav,$(wav_sources))
 .PHONY : all init copy lib exe clean realclean\
          $(clean_c)
 
-all : init copy lib
+all : init copy lib | silent
 
-init :
+init : silent
 
-copy : $(exe_dir)/profibus_xtthelp.dat $(export_gif) $(export_gifdoc) $(export_wav)
+copy : $(exe_dir)/profibus_xtthelp.dat $(export_gif) $(export_gifdoc) $(export_wav) | silent
 
-lib : $(export_obj)
+lib : $(export_obj) | silent
 
-exe :
+exe : | silent
 
 clean :
 
 realclean : clean $(clean_obj) 
+
+silent :
+	@ :
 
 .SUFFIXES:
 

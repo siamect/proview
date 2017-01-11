@@ -1,5 +1,7 @@
 ifndef link_rule_mk
 link_rule_mk := 1
+exe_ext = .so
+pre_so = lib
 
 link =	$(ldxx) -shared -DHW_X86 -DOS_LINUX \
 	-L${pwr_elib} \

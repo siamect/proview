@@ -213,7 +213,7 @@ $(doc_dir)/en_us/%.png : ../../%.png
 .PHONY : all init copy lib exe clean realclean \
          $(clean_pdf)
 
-all : init copy lib exe
+all : init copy lib exe | silent
 
 init :
 
@@ -247,7 +247,7 @@ copy : $(export_pdf) $(export_pdf_en_us) $(export_pdf_sv_se) \
        $(doc_dir)/en_us/man_exlib.ps \
        $(mediatargets) $(csstargets) \
        $(export_html) $(export_html_en_us) $(export_html_sv_se) \
-       $(doc_dir)/en_us/changelog.html
+       $(doc_dir)/en_us/changelog.html | silent
 
 lib :
 
@@ -258,6 +258,9 @@ docbook : $(xi_dependents) $(sv_se_xmltargets) $(en_us_xmltargets) $(en_us_xml_n
 clean :
 
 realclean : clean $(clean_pdf) $(clean_c)
+
+silent :
+	@ :
 
 # added by jonas_h 2006-04-nn
 

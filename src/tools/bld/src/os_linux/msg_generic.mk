@@ -48,17 +48,17 @@ export_obj = $(obj_dir)/pwr_msg_$(comp_name)$(obj_ext)
 .PHONY : all init copy lib exe clean realclean\
          dirs $(clean_includes) clean_lib clean_obj clean_dirs
 
-all : init copy lib
+all : init copy lib | silent
 
-init : dirs 
+init : dirs | silent
 
-copy : $(export_includes) $(export_cmsg)
+copy : $(export_includes) $(export_cmsg) | silent
 
-lib : $(export_obj)
+lib : $(export_obj) | silent
 
 exe :
 
-dirs : $(bld_dir)$(dir_ext)
+dirs : $(bld_dir)$(dir_ext) | silent
 
 $(bld_dir)$(dir_ext) :
 	$(mkdir) $(mkdirflags) $(basename $@)
@@ -67,6 +67,8 @@ clean :
 
 realclean : $(clean_includes) clean_obj clean_dirs
 
+silent :
+	@ :
 
 $(export_cmsg) : $(cmsgs)
 	@ echo Creating: obj_dir/$(notdir $@)

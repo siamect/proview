@@ -89,12 +89,12 @@ clean_ge := $(clean_gif) $(clean_html)
 
 .PHONY : all init copy lib exe clean realclean
 
-all : init copy lib exe
+all : init copy lib exe | silent
 
 init :
 
 copy : $(export_doc) \
-       $(doc_dir)/pcss.css
+       $(doc_dir)/pcss.css | silent
 
 lib :
 
@@ -104,6 +104,8 @@ clean : $(clean_dox)
 
 realclean : $(clean_html) $(clean_js)
 
+silent :
+	@ :
 
 $(clean_html) : clean_%.html : %.html
 	@ $(rm) $(rmflags) $(doc_dir)/dox/$*.html

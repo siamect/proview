@@ -27,22 +27,27 @@ endif
 .PHONY : all init copy lib exe clean realclean\
          $(clean_wbl)
 
-all : init copy exe
+all : init copy exe | silent
 
-init :
+init : silent
 
 copy : $(inc_dir)/pwr_nmpsclasses.h \
-       $(inc_dir)/pwr_nmpsclasses.hpp
+       $(inc_dir)/pwr_nmpsclasses.hpp \
+       | silent
 
-lib  : $(load_dir)/nmps.dbs
+lib  : $(load_dir)/nmps.dbs | silent
 
 exe : $(doc_dir)/en_us/orm/nmps_allclasses.html \
       $(exe_dir)/en_us/nmps_xtthelp.dat \
-      $(exe_dir)/sv_se/nmps_xtthelp.dat
+      $(exe_dir)/sv_se/nmps_xtthelp.dat \
+      | silent
 
 clean : 
 
 realclean : clean $(clean_wbl)
+
+silent :
+	@ :
 
 $(load_dir)/nmps.dbs :
 	@ echo "Generating loadfile for nmps"
@@ -52,15 +57,15 @@ $(load_dir)/nmps.dbs :
 
 $(inc_dir)/pwr_nmpsclasses.h :
 	@ echo "Generating struct files for nmps classes..."
-	@ $(co_convert) -so -d $(inc_dir) "$(pwre_sroot)/wbl/nmps/src/nmps_*.wb_load"
+	@ $(co_convert) -so -d $(inc_dir) -y $(release_root)/bld/$(type_name)/nmps.d_h_wbl "$(pwre_sroot)/wbl/nmps/src/nmps_*.wb_load"
 
 $(inc_dir)/pwr_nmpsclasses.hpp :
 	@ echo "Generating hpp files for nmps classes..."
-	@ $(co_convert) -po -d $(inc_dir) "$(pwre_sroot)/wbl/nmps/src/nmps_*.wb_load"
+	@ $(co_convert) -po -d $(inc_dir) -y $(release_root)/bld/$(type_name)/nmps.d_hpp_wbl "$(pwre_sroot)/wbl/nmps/src/nmps_*.wb_load"
 
 $(doc_dir)/en_us/orm/nmps_allclasses.html :
 	@ echo "Generating html files for nmps classes en_us..."
-	@ $(co_convert) -w -d $(doc_dir)/en_us/orm -g $(pwre_sroot)/wbl/nmps/src/cnv_setup.dat "$(pwre_sroot)/wbl/nmps/src/nmps_*.wb_load"
+	@ $(co_convert) -w -d $(doc_dir)/en_us/orm -y $(release_root)/bld/$(type_name)/nmps.d_html_wbl -g $(pwre_sroot)/wbl/nmps/src/cnv_setup.dat "$(pwre_sroot)/wbl/nmps/src/nmps_*.wb_load"
 	@ echo "Generating html files for nmps structs en_us..."
 	@ $(co_convert) -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr_nmpsclasses.h
 	@ $(co_convert) -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr_nmpsclasses.hpp
@@ -81,17 +86,22 @@ $(doc_dir)/en_us/orm/nmps_allclasses.html :
 
 $(exe_dir)/en_us/nmps_xtthelp.dat :
 	@ echo "Generating xtt help files for nmps classes en_us"
-	@ $(co_convert) -x -d $(exe_dir)/en_us "$(pwre_sroot)/wbl/nmps/src/nmps_c_*.wb_load"
+	@ $(co_convert) -x -d $(exe_dir)/en_us -y $(release_root)/bld/$(type_name)/nmps.d_en_us_xtthelp_wbl "$(pwre_sroot)/wbl/nmps/src/nmps_c_*.wb_load"
 
 $(exe_dir)/sv_se/nmps_xtthelp.dat :
 	@ echo "Generating xtt help files for nmps classes sv_se"
-	@ $(co_convert) -x -l sv_se -d $(exe_dir)/sv_se "$(pwre_sroot)/wbl/nmps/src/nmps_c_*.wb_load"
+	@ $(co_convert) -x -l sv_se -d $(exe_dir)/sv_se -y $(release_root)/bld/$(type_name)/nmps.d_sv_se_xtthelp_wbl "$(pwre_sroot)/wbl/nmps/src/nmps_c_*.wb_load"
 
 clean_wbl :
 	@ if [ -e $(load_dir)/nmps.dbs ]; then \
 		$(rm) $(rmflags) $(load_dir)/nmps.dbs; \
 	  fi
 
+-include $(release_root)/bld/$(type_name)/nmps.d_h_wbl
+-include $(release_root)/bld/$(type_name)/nmps.d_hpp_wbl
+-include $(release_root)/bld/$(type_name)/nmps.d_html_wbl
+-include $(release_root)/bld/$(type_name)/nmps.d_en_us_xtthelp_wbl
+-include $(release_root)/bld/$(type_name)/nmps.d_sv_se_xtthelp_wbl
 
 
 

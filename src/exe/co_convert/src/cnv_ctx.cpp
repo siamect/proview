@@ -104,3 +104,30 @@ int CnvCtx::read_line(
   return 1;
 }
 
+void CnvCtx::add_depend( char *fname)
+{
+  if ( strcmp( depend_filename, "") == 0)
+    return;
+
+  string fnamestr( fname);
+  depend.push_back(fnamestr);
+}
+
+void CnvCtx::print_depend()
+{
+  if ( strcmp( depend_filename, "") == 0)
+    return;
+
+  dcli_translate_filename( dependfile, dependfile);
+  dcli_translate_filename( depend_filename, depend_filename);
+
+  ofstream fp( depend_filename);
+  
+  fp << dependfile << " : \\" << endl;
+  for ( unsigned int i = 0; i < depend.size(); i++)
+    fp << depend[i] << " \\" << endl;
+
+  fp << endl;
+  fp.close();
+}
+

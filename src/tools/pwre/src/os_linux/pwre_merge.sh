@@ -20,12 +20,16 @@ merge_dir_func()
       if [ ! -d $fromdir/$file ]; then
         if [ -e $todir/$file ]; then
           if [ $todir/$file -ot $fromdir/$file ]; then
-            echo "Copy $fromdir/$file"
-            cp $fromdir/$file $todir
+            if [ $ver -eq 1 ]; then
+              echo "Copy $fromdir/$file"
+            fi
+            cp -p $fromdir/$file $todir
           fi
         else
-          echo "Copy $fromdir/$file"
-          cp $fromdir/$file $todir
+	  if [ $ver -eq 1 ]; then
+            echo "Copy $fromdir/$file"
+          fi
+          cp -p $fromdir/$file $todir
 	  if [ ${file##*.} = "dbs" ]; then
             # Change access on dbsfiles
 	    chmod a+w $todir/$file
@@ -36,10 +40,14 @@ merge_dir_func()
   fi
 }
 
-fromroot=$1
-toroot=$2
-file=$3
-
+fromroot=$2
+toroot=$3
+file=$4
+if [ "$1" == "1" ]; then
+  ver=1
+else
+  ver=0
+fi
 
 if [ -z "$pwre_host_exe" ]; then
   co_merge="co_merge"
@@ -70,13 +78,17 @@ else
 
     arname=${lib##/*/}
     if [ $arname = "libpwr_rt.a" ] || [ $arname = "libpwr_cow.a" ] || [ $arname = "libpwr_cow_motif.a" ] || [ $arname = "libpwr_cow_gtk.a" ] || [ $arname = "libpwr_wb.a" ] || [ $arname = "libpwr_wb_motif.a" ] || [ $arname = "libpwr_wb_gtk.a" ] || [ $arname = "libpwr_xtt.a" ] || [ $arname = "libpwr_xtt_motif.a" ] || [ $arname = "libpwr_xtt_gtk.a" ]; then
-      echo "Merge $lib"
+      if [ $ver -eq 1 ]; then
+	  echo "Merge $lib"
+      fi
       modules=`eval ar -tf $lib`
-      ar -xf $lib
-      ar -rc $toroot/lib/$arname $modules
+      ar -xof $lib
+      ar -roc $toroot/lib/$arname $modules
       rm $modules
     else
-      echo "Copy $lib"
+      if [ $ver -eq 1 ]; then 
+        echo "Copy $lib"
+      fi
       cp $lib $toroot/lib/
     fi
   done
@@ -84,19 +96,25 @@ else
   # Merge io methods
   methodfile=$pwr_inc/rt_io_$pwre_module.meth
   if [ -e $methodfile ]; then
-    echo "-- Merge io methods"
+    if [ $ver -eq 1 ]; then
+      echo "-- Merge io methods"
+    fi
     $co_merge io_base $pwr_einc/rt_io_\*.meth $pwr_elib/libpwr_rt.a
   fi
   # Merge wb methods
   methodfile=$pwr_inc/wb_$pwre_module.meth
   if [ -e $methodfile ]; then
-    echo "-- Merge wb methods"
+    if [ $ver -eq 1 ]; then
+      echo "-- Merge wb methods"
+    fi
     $co_merge wb_base $pwr_einc/wb_\*.meth $pwr_elib/libpwr_wb.a
   fi
   # Merge xtt methods
   methodfile=$pwr_inc/xtt_$pwre_module.meth
   if [ -e $methodfile ]; then
-    echo "-- Merge xtt methods"
+    if [ $ver -eq 1 ]; then
+      echo "-- Merge xtt methods"
+    fi
     $co_merge xtt_base $pwr_einc/xtt_\*.meth $pwr_elib/libpwr_xtt.a
   fi
 fi
