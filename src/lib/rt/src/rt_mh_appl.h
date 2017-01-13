@@ -64,7 +64,6 @@ extern "C" {
 
 
 /** @defgroup MSGH_DS MhAppl Data Structures
- *  @ingroup MSGH
  *  @{
  */
 
@@ -135,7 +134,6 @@ struct mhs_ApplMessage {
 /**@}*/
 
 /** @defgroup MSGH_FC MhAppl Functions
- *  @ingroup MSGH
  *  @{
  */
 

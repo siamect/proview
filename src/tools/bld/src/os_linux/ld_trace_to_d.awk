@@ -8,9 +8,9 @@ BEGIN {
   }
   else {
 
-    gsub( "\(/", "/");
-    if ( match( $0, "\)")) {
-      gsub( "\)", "(");
+    gsub( "\\(/", "/");
+    if ( match( $0, "\\)")) {
+      gsub( "\\)", "(");
       printf( "%s) \\\n", $0);
     }
     else

@@ -2399,7 +2399,7 @@ action_thread ()
 
     msg = qcom_Get( &sts, &l.action_qid, &get, qcom_cTmoEternal);
     if ( ODD(sts)) {
-      switch (  get.type.b) {
+      switch (  (int)get.type.b) {
       case qmon_cMsgClassAction: {
 	switch ( get.type.s) {
 	case qmon_eMsgTypeAction_NodeActive:

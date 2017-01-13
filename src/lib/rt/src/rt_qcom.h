@@ -105,7 +105,6 @@ extern "C"
 #define qcom_cImonAction       	(1<<31 | 108)
 
 /** @defgroup QCOM_DS Qcom Data Structures
- *  @ingroup QCOM
  *  @{
  */
 
@@ -268,7 +267,6 @@ typedef struct {
 /** @} */
 
 /** @defgroup QCOM_FC Qcom Functions
- *  @ingroup QCOM
  *  @{
  */
 

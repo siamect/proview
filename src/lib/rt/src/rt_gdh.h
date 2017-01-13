@@ -71,7 +71,6 @@ typedef	pwr_tDlid    gdh_tDlid;
 typedef	pwr_tDlid    DLID;
 
 /** @defgroup DS Gdh Data Structures
- *  @ingroup GDH
  *  @{
  */
 
@@ -175,7 +174,6 @@ typedef struct {
 /** @} */
 /** 
  * @defgroup GDHFC Gdh Functions
- * @ingroup GDH
  * @{
  */
 

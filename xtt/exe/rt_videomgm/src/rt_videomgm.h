@@ -115,6 +115,7 @@ class XttVideoMgm {
   vector<VideoMgmCamera> m_camera;
 
   XttVideoMgm() : m_camera_cnt(0), m_scantime(0.5), m_op(0) {}
+  virtual ~XttVideoMgm() {}
   int cinit();
   void cscan();
   void configure_layout();

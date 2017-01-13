@@ -7,8 +7,7 @@
 /*@{*/
 
 
-/** @defgroup rt_ex Application examples
- *  @ingroup applex
+/** @ingroup rt_ex
  *  @{
  */
 #include "pwr.h"

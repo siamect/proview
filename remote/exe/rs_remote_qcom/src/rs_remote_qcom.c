@@ -116,7 +116,7 @@ unsigned int qcom_receive()
 
   if (debug) printf("Received message %d\n", get.size);
 
-  switch ( get.type.b) {
+  switch ( (int)get.type.b) {
   case remote_cMsgClass: {
     search_remtrans = true;
 
