@@ -7,6 +7,7 @@ ifeq ($(PWRE_CONF_MQ),1)
         $(pwre_conf_libdir) $(pwre_conf_libpwrremote) $(pwre_conf_libpwrrt) \
 	$(pwre_conf_libmq) $(pwre_conf_lib)
 else
-  link = echo "Mq not installed"
+  log_link_exe = echo "$(exe_flv_name): MQ not installed"
+  link = :
 endif
 endif

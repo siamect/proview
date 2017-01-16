@@ -856,8 +856,8 @@ sub method_build ()
     printf("-- Method build %s\n", $program);
     _module("rt");
     $ENV{"export_type"} = "exp";
-     my($exe_dir) = $ENV{"pwr_exe"};
-    system("rm $exe_dir/rt_io_comm");
+#     my($exe_dir) = $ENV{"pwr_exe"};
+#    system("rm $exe_dir/rt_io_comm");
     _build("exe", "rt_io_comm", "src", "all");
     merge();
   }
@@ -869,8 +869,8 @@ sub method_build ()
 
     _module("wb");
     $ENV{"export_type"} = "exp";
-    my($exe_dir) = $ENV{"pwr_exe"};
-    system("rm $exe_dir/wb_$flavour");
+#    my($exe_dir) = $ENV{"pwr_exe"};
+#    system("rm $exe_dir/wb_$flavour");
     _build("exe", "wb", $flavour, "all");
 #    _build("exe", "wb", "src", "all");
      merge();
@@ -880,8 +880,8 @@ sub method_build ()
 
     _module("xtt");
     $ENV{"export_type"} = "exp";
-    my($exe_dir) = $ENV{"pwr_exe"};
-    system("rm $exe_dir/rt_xtt_$flavour");
+#    my($exe_dir) = $ENV{"pwr_exe"};
+#    system("rm $exe_dir/rt_xtt_$flavour");
     _build("exe", "rt_xtt", $flavour, "all");
 #    _build("exe", "rt_xtt", "src", "all");
     merge();
