@@ -54,6 +54,7 @@
 #include "co_pdr.h"
 #include "co_dbs.h"
 #include "co_errno.h"
+#include "co_depend.h"
 #include "wb_dbs.h"
 #include "wb_vrep.h"
 #include "wb_mvrep.h"
@@ -66,7 +67,7 @@ static int comp_dbs_name(tree_sTable *tp, tree_sNode  *x, tree_sNode  *y);
 wb_dbs::wb_dbs(wb_vrep *v) :
   m_oid(pwr_cNOid), m_rtonly(0), m_warnings(0), m_errors(0),
   m_nObjects(0), m_nTreeObjects(0), m_nClassObjects(0),
-  m_nNameObjects(0), m_nRbodyObjects(0), m_nDbodyObjects(0), m_oep(0)
+  m_nNameObjects(0), m_nRbodyObjects(0), m_nDbodyObjects(0), m_oep(0), m_depend(0)
 {
   pwr_tStatus sts;
 
@@ -606,6 +607,9 @@ wb_dbs::prepareSectVolref()
         /* was inserted now */
         dbs_Open(&sts, &vep->env, mvrep->fileName());
 
+	if ( m_depend)
+	  m_depend->add( mvrep->fileName());
+			  
         strcpy(vep->v.name, mvrep->name());
         vep->v.cid  = mvrep->cid();
 	if ( m_volume.cid == pwr_eClass_DetachedClassVolume) {
@@ -633,6 +637,9 @@ wb_dbs::prepareSectVolref()
       
 	    dbs_Open(&sts, &nvep->env, nmvrep->fileName());
 
+	    if ( m_depend)
+	      m_depend->add( nmvrep->fileName());
+			  
             strcpy(nvep->v.name, vp->name);
             nvep->v.cid  = vp->cid;
 	    if ( m_volume.cid == pwr_eClass_DetachedClassVolume) {
@@ -644,6 +651,7 @@ wb_dbs::prepareSectVolref()
 	    // nvep->v.dvVersion = vp->dvVersion;
             nvep->v.size = vp->size;
             nvep->v.offset = 0;
+
           }          
         }
       }

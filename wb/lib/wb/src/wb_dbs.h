@@ -47,6 +47,7 @@
 
 
 class wb_vrep;
+class CoDepend;
 
 class wb_dbs : public wb_status, public wb_import
 {
@@ -136,6 +137,8 @@ public:
   tree_sTable  *m_name_th;
   tree_sTable  *m_class_th;
   tree_sTable  *m_vol_th;
+  CoDepend     *m_depend;
+
     
   wb_dbs();
   wb_dbs(wb_vrep *);
@@ -149,6 +152,7 @@ public:
   bool operator==(const wb_dbs&) const;
     
   void setFileName(const char *name);
+  void getFileName(char *name) { strcpy( name, m_fileName);}
   void setTime(const pwr_tTime t);
   void setRtonly( const int rtonly) { m_rtonly = rtonly;}
 
@@ -181,6 +185,7 @@ public:
   pwr_tStatus  writeSectDbody();
   pwr_tStatus  writeReferencedVolumes();
   pwr_tUInt32  getDvVersion( wb_vrep *v);
+  void	       setDepend( CoDepend *depend) { m_depend = depend;}
 
 
   virtual bool importVolume(wb_export &e);

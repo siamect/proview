@@ -895,47 +895,47 @@ sub create_all_modules ()
   }
 
   _module("rt");
-  create();
+  create_module();
   _module("xtt");
-  create();
+  create_module();
   _module("wb");
-  create();
+  create_module();
   _module("nmps");
-  create();
+  create_module();
   _module("tlog");
-  create();
+  create_module();
   _module("remote");
-  create();
+  create_module();
   _module("java");
-  create();
+  create_module();
   _module("bcomp");
-  create();
+  create_module();
   _module("simul");
-  create();
+  create_module();
   _module("misc");
-  create();
+  create_module();
   _module("profibus");
-  create();
+  create_module();
   _module("sev");
-  create();
+  create_module();
   _module("opc");
-  create();
+  create_module();
   _module("ssabox");
-  create();
+  create_module();
   _module("othermanu");
-  create();
+  create_module();
   _module("otherio");
-  create();
+  create_module();
   _module("abb");
-  create();
+  create_module();
   _module("siemens");
-  create();
+  create_module();
   _module("inor");
-  create();
+  create_module();
   _module("klocknermoeller");
-  create();
+  create_module();
   _module("telemecanique");
-  create();
+  create_module();
 }
 
 #
@@ -1005,7 +1005,9 @@ sub build_module ()
       _build("lib", "statussrv", "src", "copy");
       _build("lib", "co", "src", "all");
       _build("exe", "co*", "src", "all");
+      _build("wbl", "pwrs", "src", "init");
       _build("wbl", "pwrs", "src", "copy");
+      _build("wbl", "pwrb", "src", "init");
       _build("wbl", "pwrb", "src", "copy");
       _build("exe", "*", "src", "copy");
       _build("exp", "stdsoap2", "src", "copy");
@@ -1089,6 +1091,7 @@ sub build_module ()
   }
   elsif ( $module eq "profibus") {
     if ( $copy == 1) {
+      _build("wbl", "*", "src", "init");
       _build("wbl", "*", "src", "copy");
       _build("lib", "*", "src", "init");
       _build("lib", "*", "src", "copy");
@@ -1116,6 +1119,7 @@ sub build_module ()
   }
   else {
     if ( $copy == 1) {
+      _build("wbl", "*", "src", "init");
       _build("wbl", "*", "src", "copy");
       _build("lib", "*", "src", "init");
       _build("lib", "*", "src", "copy");
@@ -1188,10 +1192,26 @@ sub copy ()
   }
 }
 
+
+sub create()
+{
+  if ( $_[0] eq "all" || $_[0] eq "") {
+    create_all_modules();
+    return;
+  }
+
+  if ( $_[0] eq "module" || $_[0] eq "") {
+    create_module();
+    return;
+  }
+
+  printf("++ Undefined command\n");
+}
+
 #
 # create
 #
-sub create()
+sub create_module()
 {
   my($newdir);
   my($root) = $ENV{"pwre_broot"};

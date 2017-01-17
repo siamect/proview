@@ -66,7 +66,7 @@ public:
   dbs_sVenv *dbsenv();
   bool load();
   void objectName(const wb_orep *o, char *str);
-    
+  void fileName( char *fname) { strcpy( m_fileName, fname);}
     
   virtual void unref();
   virtual wb_vrep *ref();

@@ -72,6 +72,8 @@ export_wbl_html_en_us := $(patsubst %.wb_load,$(doc_dir)/en_us/orm/%_allclasses.
 export_wbl_html_sv_se := $(patsubst %.wb_load,$(doc_dir)/sv_se/orm/%_allclasses.html,$(wbl_sources))
 export_wbl_ps_en_us := $(patsubst %.wb_load,$(doc_dir)/en_us/%.ps,$(wbl_sources))
 export_wbl_ps_sv_se := $(patsubst %.wb_load,$(doc_dir)/sv_se/%.ps,$(wbl_sources))
+bld_dir := $(addprefix $(release_root)/bld/$(type_name)/, $(patsubst %.wb_load,%,$(wbl_sources)))
+dbs_dependencies := $(bld_dir)/mcomp.d_wbl
 
 clean_dbs := $(patsubst %.wb_load,clean_%.dbs,$(wbl_sources))
 clean_h := $(patsubst %.wb_load,clean_%.h,$(wbl_sources))
@@ -85,10 +87,13 @@ clean_ps_en_us := $(patsubst %.wb_load,clean_%_en_us.ps,$(wbl_sources))
 
 .SUFFIXES:
 
+$(bld_dir)$(dir_ext) :
+	@ $(mkdir) $(mkdirflags) $(basename $@)
+
 $(load_dir)/%.dbs : ../../%.wb_load
 	@ echo "Generating loadfile for  $(source)"
 	@ export pwr_load=$(pwr_eload);\
-	  wb_cmd -q -i create snapshot $(wblflags) /file=\"$(source)\"/out=\"$(target)\"
+	  wb_cmd -q -i create snapshot $(wblflags) /file=\"$(source)\"/out=\"$(target)\"/depend=\"$(dbs_dependencies)\"
 	@ chmod a+w $(target)
 
 $(inc_dir)/pwr_%classes.h : ../../%.wb_load
@@ -149,12 +154,12 @@ $(load_dir)/%.flw : ../../%.flw
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
 
-.PHONY : all init copy lib exe clean realclean\
+.PHONY : all init copy lib exe dirs clean realclean\
          $(clean_wbl)
 
 all : init copy exe | silent
 
-init : silent
+init : dirs | silent
 
 lib  : $(export_wbl_dbs) | silent
 
@@ -174,6 +179,8 @@ exe:   $(export_wbl_xtthelp_en_us) \
        $(export_pdf_en_us) \
        $(export_pdf_sv_se) \
        | silent
+
+dirs : $(bld_dir)$(dir_ext)
 
 clean : \
        $(clean_xtthelp_sv_se) $(clean_xtthelp_en_us) \
@@ -242,6 +249,7 @@ $(clean_xtthelp_en_us) : clean_%_en_us.xtthelp : $(exe_dir)/en_us/%_xtthelp.dat
 		 $(rm) $(rmflags) $(source); \
 	  fi
 
+-include $(dbs_dependencies)
 
 endif
 

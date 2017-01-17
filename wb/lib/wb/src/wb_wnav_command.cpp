@@ -53,6 +53,7 @@
 #include "co_ccm.h"
 #include "co_time.h"
 #include "co_dcli.h"
+#include "co_depend.h"
 #include "pwr_baseclasses.h"
 #include "co_ccm_msg.h"
 #include "co_regex.h"
@@ -308,7 +309,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 			"/NAME", "/IDENTITY", "/FILES", "/OUT", "/IGNORE",
 			"/DIRECTORY", "/DATABASE", "/SERVER", 
 			"/PLCPGM", "/HIERARCHY", "/FROM_PLCPGM", "/TEMPLATE", 
-			"/SIMULATION", "/RTONLY", ""}
+			"/SIMULATION", "/RTONLY", "/DEPENDENCY", ""}
 		},
 		{
 			"NEW",
@@ -4249,6 +4250,8 @@ static int	wnav_create_func( void		*client_data,
   {
     pwr_tFileName	filestr;
     pwr_tFileName	outstr;
+    pwr_tFileName	dependencystr;
+    int			dependency;
     char        *outstr_p;
     int         ignore;
     int		rtonly;
@@ -4269,9 +4272,16 @@ static int	wnav_create_func( void		*client_data,
     else
       outstr_p = 0;
 
+    dependency = ODD( dcli_get_qualifier( "/DEPENDENCY", dependencystr, sizeof(dependencystr)));
     ignore = ODD( dcli_get_qualifier( "/IGNORE", 0, 0));
     rtonly = ODD( dcli_get_qualifier( "/RTONLY", 0, 0));
 
+    if ( (s = getenv( "PWRE_CONF_LOCKDBS"))) {
+      if ( strcmp( s, "1") == 0) {
+	wnav->message('I', "Snapshots locked");
+	return WNAV__SUCCESS;
+      }
+    }
     if ( (s = getenv( "PWRE_CONF_BUILDVERSION"))) {
       if ( strcmp( s, "") == 0 || 
 	   strcmp( s, "0") == 0)
@@ -4292,12 +4302,22 @@ static int	wnav_create_func( void		*client_data,
 
     sts = WNAV__SUCCESS;
     try {
+      CoDepend *depend = 0;
       wb_erep *erep = *(wb_env *)wnav->wbctx;
       wb_vrepwbl *wbl = new wb_vrepwbl(erep);
       wbl->ref();
+      if ( dependency) {
+	depend = new CoDepend();
+	depend->set_filename( dependencystr);
+	wbl->setDepend( depend);
+      }
       sts = wbl->load( filestr);
       if ( ODD(sts) || ignore)
 	wbl->createSnapshot( outstr_p, timep, rtonly);
+      if ( depend) {
+	depend->print();
+	delete depend;
+      }
       delete wbl;
     }
     catch ( wb_error &e) {

@@ -23,18 +23,20 @@ ifndef rules_mk
 endif
 
 
-.PHONY : all init copy lib exe clean realclean\
+.PHONY : all init copy lib exe dirs clean realclean\
          $(clean_wbl)
 
 all : init copy exe | silent
 
-init : silent
+init : dirs | silent
 
 copy : silent
 
 lib  : $(load_dir)/wb.dbs | silent
 
 exe  :
+
+dirs : $(bld_dir)$(dir_ext)
 
 clean : $(clean_wbl)
 
@@ -45,10 +47,17 @@ silent :
 
 $(load_dir)/wb.dbs :
 	@ echo "Generating snapshot for wb"
-	@ wb_cmd -i -q create snapshot /file=\"$(pwre_sroot)/wbl/wb/src/wb.wb_load\"/out=\"$(target)\"
-	@ chmod a+w $(target)
+	@ wb_cmd -i -q create snapshot /file=\"$(pwre_sroot)/wbl/wb/src/wb.wb_load\"/out=\"$(target)\"/depend=\"$(bld_dir)/wb.d_wbl\"
+	@ if [ -e $(target) ]; then \
+	    chmod a+w $(target); \
+	  fi
 
 clean_wbl :
 	@ if [ -e $(load_dir)/wb.dbs ]; then \
 		$(rm) $(rmflags) $(load_dir)/wb.dbs; \
 	  fi
+
+$(bld_dir)$(dir_ext) :
+	@ $(mkdir) $(mkdirflags) $(basename $@)
+
+-include $(bld_dir)/wb.d_wbl

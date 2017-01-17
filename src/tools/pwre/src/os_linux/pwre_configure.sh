@@ -14,6 +14,8 @@ Arguments
                  > pwre configure --version "29-MAY-2011 16:00:00"
 
 --reset-version  Reset previous version
+--lock-dbs       Lock dbs-files. Dbs-files will not be rebuilt.
+--unlock-dbs     Unlock dbs-files
 
 EOF
 }
@@ -336,25 +338,46 @@ if test ! -e $pwre_croot; then
 fi
 
 # Options
+declare -i buildversion_set=0
+declare -i lockdbs_set=0
+declare -i lockdbs=0
 if [ "$1" = "--help" ]; then
   pwre_help
   exit
 elif [ "$1" = "--version" ] && [ "$2" != "" ] && [ "$3" != "" ]; then
   buildversion=$2" "$3
+  buildversion_set=1
 elif [ "$1" = "--reset-version" ]; then
   buildversion=""
+  buildversion_set=1
+elif [ "$1" = "--lock-dbs" ]; then
+  lockdbs=1
+  lockdbs_set=1
+elif [ "$1" = "--unlock-dbs" ]; then
+  lockdbs=0
+  lockdbs_set=1
 elif [ "$1" = "--ebuild" ]; then
   ebuild=1
 elif [ "$1" != "" ]; then
   echo "Unknown option \"$1\""
   exit
-else
+fi
+
+if [ $buildversion_set -eq 0 ]; then
   # Catch current version
   if [ -e $cfile ]; then
     ver=`eval cat $cfile | grep "\bexport PWRE_CONF_BUILDVERSION"`
     ver=${ver#*=\"}
     ver=${ver%\"}
     buildversion=$ver
+  fi
+fi
+if [ $lockdbs_set -eq 0 ]; then
+  # Catch current version
+  if [ -e $cfile ]; then
+    ver=`eval cat $cfile | grep "\bexport PWRE_CONF_LOCKDBS"`
+    ver=${ver#*=}
+    lockdbs=$ver
   fi
 fi
 
@@ -369,7 +392,8 @@ if [ "$buildversion" != "" ]; then
 else
   echo "export PWRE_CONF_BUILDVERSION=\"0\"" >> $cfile
 fi
-      
+echo "export PWRE_CONF_LOCKDBS=$lockdbs" >> $cfile
+
 if [ $pwre_hw == "hw_arm" ] && [ $ebuild -eq 1 ]; then
   echo "Arm ebuild"
   pwre_config_check_lib gtk    	  GTK      gtk gtk 0 "/usr/lib/libgtk-x11-2.0.so:/usr/lib/$hwpl-linux-$gnu/libgtk-x11-2.0.so"

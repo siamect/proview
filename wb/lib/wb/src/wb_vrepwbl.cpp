@@ -155,6 +155,14 @@ wb_vrepwbl::createSnapshot(const char *fileName, const pwr_tTime *time, const in
       dbs.setTime( *time);
     dbs.setRtonly( rtonly);
 
+    if ( depend) {
+      pwr_tFileName fname;
+
+      // dbs.setDepend( depend);
+      dbs.setDepend( depend);
+      dbs.getFileName( fname);
+      depend->set_dependfile( fname);
+    }
     dbs.importVolume(*this);
 
     return true;
@@ -1418,6 +1426,8 @@ int wb_vrepwbl::load_files( const char *file_spec)
       return LDH__WBLPARSE;
     }
     file_cnt++;
+    if ( depend)
+      depend->add( found_file);
     sts = dcli_search_file( (char *)file_spec, found_file, DCLI_DIR_SEARCH_NEXT);
   }
   dcli_search_file( (char *)file_spec, found_file, DCLI_DIR_SEARCH_END);

@@ -39,6 +39,7 @@
 
 #include <string>
 
+#include "co_depend.h"
 #include "wb_vrep.h"
 #include "antlr/AST.hpp"
 #include "wb_wbllexer.hpp"
@@ -72,7 +73,7 @@ class wb_vrepwbl : public wb_vrep
 
 public:
   wb_vrepwbl( wb_erep *erep) : 
-    m_erep(erep), m_merep(erep->merep()), m_nRef(0), m_ignore_oix(false), root_object(0), error_cnt(0), file_cnt(0), next_oix(0), volume_node(0) {}
+    m_erep(erep), m_merep(erep->merep()), m_nRef(0), m_ignore_oix(false), root_object(0), error_cnt(0), file_cnt(0), next_oix(0), volume_node(0), depend(0) {}
 
   wb_vrepwbl( wb_erep *erep, pwr_tVid vid) :
     wb_vrep(vid), m_erep(erep), m_merep(erep->merep()), m_nRef(0), root_object(0),error_cnt(0), file_cnt(0), next_oix(0), volume_node(0) {}
@@ -130,6 +131,7 @@ public:
   char volume_class[32];
   char volume_name[32];
   wb_wblnode *volume_node;
+  CoDepend *depend;
     
 
   virtual void unref();
@@ -223,6 +225,8 @@ public:
   bool isLocal(const wb_orep *o) {return o->oid().vid == vid();}
 
   void objectName(const wb_orep *o, char *str);
+
+  void setDepend( CoDepend *d) { depend = d;}
 
   virtual bool exportVolume(wb_import &i);
   virtual bool exportHead(wb_import &i);
