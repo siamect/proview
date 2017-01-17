@@ -1,0 +1,38 @@
+
+
+Scripts to change the license text (at new year) and change the version
+in documents and control-files.
+
+
+Change license text
+-------------------
+
+Edit license.awk, license_sh.awk and licence_wbl.awk and insert the new
+Copyright text:
+
+      printf( "# Copyright (C) 2005-2017 SSAB EMEA AB.\n");
+
+Execute the replacement
+
+> ./replace_all.sh c
+> ./replace_all.sh cpp
+> ./replace_all.sh h
+> ./replace_all.sh hpp
+> ./replace_all.sh java
+> ./replace_all.sh sh
+> ./replace_all.sh pwr_com
+> ./replace_all.sh wb_load
+> ./replace_all.sh msg
+> ./replace_all.sh uil
+
+Change version in documentation
+-------------------------------
+
+> ./change_version.sh V5.5.0-1 \"Base release\"
+
+Add version description to control-files
+----------------------------------------
+
+> ./change_version.sh -d \"Base release\"
+ 
+

@@ -1,5 +1,6 @@
 /* 
- * Copyright (C) 2005-2015 SSAB EMEA AB.
+ * Proview   Open Source Process Control.
+ * Copyright (C) 2005-2017 SSAB EMEA AB.
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License as 

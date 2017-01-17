@@ -12,7 +12,7 @@ BEGIN {
     rowcnt++;
 
     if ( rowcnt == 1) {
-      printf( "# Copyright (C) 2005-2016 SSAB EMEA AB.\n");
+      printf( "# Copyright (C) 2005-2017 SSAB EMEA AB.\n");
       inlicense = 0;
     }
     else 
