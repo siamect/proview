@@ -53,7 +53,7 @@ silent :
 
 $(load_dir)/remote.dbs :
 	@ echo "Generating loadfile for remote"
-	export pwr_load=$(pwr_eload);\
+	@ export pwr_load=$(pwr_eload);\
 	  wb_cmd -q -i create snapshot $(wblflags) /file=\"$(pwre_sroot)/wbl/remote/src/\"/out=\"$(target)\"/depend=\"$(bld_dir)/remote.d_wbl\"
 	@ chmod a+w $(target)
 
