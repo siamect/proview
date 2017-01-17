@@ -205,26 +205,31 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 1 06-OCT-2005 14:40:44.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
-            Attr Size = 10376
+            Attr Size = 10496
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseMotor"
           EndBody
         EndObject
       EndObject
       Object Template Siemens_Motor_1LA 2147975168 06-OCT-2005 14:40:44.00
-        Body RtBody 06-OCT-2005 14:41:42.93
+        Body RtBody 17-JAN-2017 14:52:42.16
           Attr Super.Super.Specification = "Siemens 1LA"
           Attr Super.Super.DataSheet = "$pwr_lang/dsh/siemens_motor_1la.pdf"
           Attr Super.GraphConfiguration = 2
           Attr Super.DisableTempSwitch = 1
           Attr Super.TempSwitch.Super.DisableSwitch = 1
           Attr Super.TempSwitch.Super.Alarm.MoreText = ""
+          Attr Super.TempSwitch.Super.Alarm.CtrlPosition = 1
           Attr Super.DisableTempSensor = 1
           Attr Super.TempSensor.Super.DisableValue = 1
           Attr Super.TempSensor.Super.LimitHH.Alarm.MoreText = ""
+          Attr Super.TempSensor.Super.LimitHH.Alarm.CtrlPosition = 1
           Attr Super.TempSensor.Super.LimitH.Alarm.MoreText = ""
+          Attr Super.TempSensor.Super.LimitH.Alarm.CtrlPosition = 1
           Attr Super.TempSensor.Super.LimitL.Alarm.MoreText = ""
+          Attr Super.TempSensor.Super.LimitL.Alarm.CtrlPosition = 1
           Attr Super.TempSensor.Super.LimitLL.Alarm.MoreText = ""
+          Attr Super.TempSensor.Super.LimitLL.Alarm.CtrlPosition = 1
         EndBody
       EndObject
     EndObject
@@ -2367,7 +2372,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 5 24-NOV-2010 13:15:38.65
           Body SysBody 24-NOV-2010 13:16:19.38
             Attr PgmName = "Super"
-            Attr Size = 376
+            Attr Size = 384
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -2412,7 +2417,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 7 24-NOV-2010 13:18:37.48
           Body SysBody 24-NOV-2010 13:18:37.48
             Attr PgmName = "Super"
-            Attr Size = 376
+            Attr Size = 384
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -2451,7 +2456,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 7 24-NOV-2010 13:19:42.05
           Body SysBody 24-NOV-2010 13:19:42.05
             Attr PgmName = "Super"
-            Attr Size = 376
+            Attr Size = 384
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -2492,7 +2497,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 7 24-NOV-2010 13:20:33.65
           Body SysBody 24-NOV-2010 13:20:33.65
             Attr PgmName = "Super"
-            Attr Size = 376
+            Attr Size = 384
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -2529,7 +2534,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 7 24-NOV-2010 13:21:24.46
           Body SysBody 24-NOV-2010 13:21:24.46
             Attr PgmName = "Super"
-            Attr Size = 376
+            Attr Size = 384
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -2655,7 +2660,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 9 24-NOV-2010 13:22:17.40
           Body SysBody 24-NOV-2010 13:22:17.40
             Attr PgmName = "Super"
-            Attr Size = 376
+            Attr Size = 384
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -2735,7 +2740,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 9 24-NOV-2010 13:23:13.91
           Body SysBody 24-NOV-2010 13:23:13.91
             Attr PgmName = "Super"
-            Attr Size = 376
+            Attr Size = 384
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -2845,7 +2850,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 9 24-NOV-2010 13:23:47.05
           Body SysBody 24-NOV-2010 13:23:47.05
             Attr PgmName = "Super"
-            Attr Size = 376
+            Attr Size = 384
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -2902,7 +2907,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 9 24-NOV-2010 13:24:59.96
           Body SysBody 24-NOV-2010 13:24:59.96
             Attr PgmName = "Super"
-            Attr Size = 376
+            Attr Size = 384
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -2996,7 +3001,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 11 24-NOV-2010 13:25:32.83
           Body SysBody 24-NOV-2010 13:25:32.83
             Attr PgmName = "Super"
-            Attr Size = 376
+            Attr Size = 384
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -3060,7 +3065,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 11 24-NOV-2010 13:26:06.33
           Body SysBody 24-NOV-2010 13:26:06.33
             Attr PgmName = "Super"
-            Attr Size = 376
+            Attr Size = 384
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -3109,7 +3114,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 11 24-NOV-2010 13:26:27.69
           Body SysBody 24-NOV-2010 13:26:27.69
             Attr PgmName = "Super"
-            Attr Size = 376
+            Attr Size = 384
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -3247,7 +3252,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 13 24-NOV-2010 13:26:58.08
           Body SysBody 24-NOV-2010 13:26:58.08
             Attr PgmName = "Super"
-            Attr Size = 376
+            Attr Size = 384
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -3333,7 +3338,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 13 24-NOV-2010 13:27:18.55
           Body SysBody 24-NOV-2010 13:27:18.55
             Attr PgmName = "Super"
-            Attr Size = 376
+            Attr Size = 384
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -3393,7 +3398,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 13 24-NOV-2010 13:27:51.44
           Body SysBody 24-NOV-2010 13:27:51.44
             Attr PgmName = "Super"
-            Attr Size = 376
+            Attr Size = 384
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -3515,7 +3520,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 15 24-NOV-2010 13:28:19.30
           Body SysBody 24-NOV-2010 13:28:19.30
             Attr PgmName = "Super"
-            Attr Size = 376
+            Attr Size = 384
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -3593,7 +3598,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 15 24-NOV-2010 13:28:48.99
           Body SysBody 24-NOV-2010 13:28:48.99
             Attr PgmName = "Super"
-            Attr Size = 376
+            Attr Size = 384
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -6709,7 +6714,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 17 24-NOV-2010 13:44:52.26
           Body SysBody 24-NOV-2010 13:44:52.26
             Attr PgmName = "Super"
-            Attr Size = 376
+            Attr Size = 384
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -6868,7 +6873,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 4 25-NOV-2010 09:36:42.49
           Body SysBody 25-NOV-2010 09:37:51.67
             Attr PgmName = "Super"
-            Attr Size = 13472
+            Attr Size = 13576
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseFcPPO3"
           EndBody
