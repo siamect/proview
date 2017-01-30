@@ -841,6 +841,163 @@ void CompModeIMC_Fo_exec( plc_sThread *tp,
 	plant_obj->PrevMode=plant_obj->Mode; // memorize last mode
 }
 
+/*_*
+  CompCurveTabValueFo
+
+  @aref compcurvetabvaluefo CompCurveTabValueFo
+*/
+void CompCurveTabValueFo_init( pwr_sClass_CompCurveTabValueFo *o)
+{
+  pwr_tDlid dlid;
+  pwr_tStatus sts;
+
+  sts = gdh_DLRefObjectInfoAttrref( &o->PlcConnect, (void **)&o->PlcConnectP, &dlid);
+  if ( EVEN(sts)) 
+    o->PlcConnectP = 0;
+
+  if ( ODD(sts))
+    sts = gdh_DLRefObjectInfoAttrref( &((pwr_sClass_CompCurveTabValue *)o->PlcConnectP)->CurveTabObject, 
+				      (void **)&o->CurveTabObjectP, &dlid);
+  if ( EVEN(sts)) 
+    o->CurveTabObjectP = 0;
+}
+
+void CompCurveTabValueFo_exec( plc_sThread		*tp,
+			       pwr_sClass_CompCurveTabValueFo *o)
+{
+  pwr_sClass_CompCurveTabValue *co = (pwr_sClass_CompCurveTabValue *) o->PlcConnectP;
+  pwr_sClass_CompCurveTab *to = (pwr_sClass_CompCurveTab *) o->CurveTabObjectP;
+  int ii;
+  float x0, x1, y0, y1;
+  pwr_tInt32 confError = 0;
+
+  if ( !co || !to)
+    return;
+
+
+  o->ActVal = *o->InP;
+
+  if ( to->NoOfPoints <= 0 )
+    confError = 1;
+  else if ( to->NoOfPoints > 50 )
+    confError = 2;
+  else {
+    for(ii = 1; ii < to->NoOfPoints && !confError; ii++) {
+      if(to->X[ii] < to->X[ii-1])
+	confError = 3;
+    }
+  }
+  to->ConfigurationError = confError;
+
+  if(!confError) {
+    x1 = x0 = to->X[0];
+    y1 = y0 = to->Y[0];
+    for(ii = 1; ii < to->NoOfPoints && *o->InP > x1; ii++) {
+      x0 = x1;
+      x1 = to->X[ii];
+      y0 = y1;
+      y1 = to->Y[ii];
+    }
+    if ( *o->InP <= x0) 
+      o->ActVal = y0; /* End of table */
+    else if ( *o->InP >= x1) 
+      o->ActVal = y1; /* End of table */
+    else  
+      o->ActVal = y0 + (y1 - y0) * (*o->InP - x0) / (x1 - x0); /* Interpolation */
+  }
+  co->ActVal = o->ActVal;
+  co->In = *o->InP;
+}
+
+/*_*
+  CompCurvePolValueFo
+
+  @aref compcurvetabvaluefo CompCurvePolValueFo
+*/
+#define CURVEPOL_POINTS 50
+
+static void CompCurvePolValueFo_draw( pwr_sClass_CompCurvePol *o)
+{
+  int i, j;
+  pwr_tFloat32 x, y;
+  pwr_tFloat32 dx = (o->MaxShowX - o->MinShowX) / CURVEPOL_POINTS;
+  
+  if ( o->Power == 1) {
+    o->DisplayNoOfPoints = 2;
+    o->DisplayX[0] = o->MinShowX;
+    o->DisplayX[1] = o->MaxShowX;
+    o->DisplayY[0] = o->PolyCoeff[0] + o->MinShowX * o->PolyCoeff[1];
+    o->DisplayY[1] = o->PolyCoeff[0] + o->MaxShowX * o->PolyCoeff[1];
+  }
+  else {
+    x = o->MinShowX;
+    for ( i = 0; i <= CURVEPOL_POINTS; i++) {
+      y = 0;
+      for ( j = o->Power; j > 0; j--)
+	y = x * (o->PolyCoeff[j] + y);
+      y += o->PolyCoeff[0];
+      o->DisplayX[i] = x;
+      o->DisplayY[i] = y;
+      x += dx;
+    }
+    o->DisplayNoOfPoints = CURVEPOL_POINTS + 1;
+  }
+  o->UpdateDisplay = 0;
+}
+
+void CompCurvePolValueFo_init( pwr_sClass_CompCurvePolValueFo *o)
+{
+  pwr_tDlid dlid;
+  pwr_tStatus sts;
+
+  sts = gdh_DLRefObjectInfoAttrref( &o->PlcConnect, (void **)&o->PlcConnectP, &dlid);
+  if ( EVEN(sts)) 
+    o->PlcConnectP = 0;
+
+  if ( ODD(sts))
+    sts = gdh_DLRefObjectInfoAttrref( &((pwr_sClass_CompCurvePolValue *)o->PlcConnectP)->CurvePolObject, 
+				      (void **)&o->CurvePolObjectP, &dlid);
+  if ( EVEN(sts)) 
+    o->CurvePolObjectP = 0;
+
+  if ( o->CurvePolObjectP && ((pwr_sClass_CompCurvePol *)o->CurvePolObjectP)->UpdateDisplay)
+    CompCurvePolValueFo_draw(o->CurvePolObjectP);
+}
+
+void CompCurvePolValueFo_exec( plc_sThread		*tp,
+			       pwr_sClass_CompCurvePolValueFo *o)
+{
+  pwr_sClass_CompCurvePolValue *co = (pwr_sClass_CompCurvePolValue *) o->PlcConnectP;
+  pwr_sClass_CompCurvePol *to = (pwr_sClass_CompCurvePol *) o->CurvePolObjectP;
+  int i;
+  float x, y;
+
+  if ( !co || !to)
+    return;
+
+  o->ActVal = *o->InP;
+
+  if ( to->Power > 5) {
+    to->ConfigurationError = 1;
+    return;
+  }
+  else
+    to->ConfigurationError = 0;
+
+  if ( !to->ConfigurationError) {
+    x = *o->InP;
+    y = 0;
+    for ( i = to->Power; i > 0; i--)
+      y = x * (to->PolyCoeff[i] + y);
+    y += to->PolyCoeff[0];
+    o->ActVal = y;
+    
+    if ( to->UpdateDisplay)
+      CompCurvePolValueFo_draw(to);
+  }
+  co->ActVal = o->ActVal;
+  co->In = *o->InP;
+}
 
 
 

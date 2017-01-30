@@ -1237,6 +1237,8 @@ palette PlcEditorPalette
       class BaseSensorFo
       class BaseSupSwitchFo
       class BaseValveIncrDecrFo
+      class CompCurveTabValueFo
+      class CompCurvePolValueFo
       class CompModeDFo
       class CompModeAFo
       class CompModeDMFo

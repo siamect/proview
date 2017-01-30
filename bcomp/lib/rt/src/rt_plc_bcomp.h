@@ -54,5 +54,9 @@ void CompIMC_Fo_init( pwr_sClass_CompIMC_Fo *plc_obj);
 void CompIMC_Fo_exec( plc_sThread *tp, pwr_sClass_CompIMC_Fo *plc_obj);
 void CompModeIMC_Fo_init( pwr_sClass_CompModeIMC_Fo *plc_obj);
 void CompModeIMC_Fo_exec( plc_sThread *tp, pwr_sClass_CompModeIMC_Fo *plc_obj);
+void CompCurveTabValueFo_init( pwr_sClass_CompCurveTabValueFo *o);
+void CompCurveTabValueFo_exec( plc_sThread *tp, pwr_sClass_CompCurveTabValueFo *o);
+void CompCurvePolValueFo_init( pwr_sClass_CompCurvePolValueFo *o);
+void CompCurvePolValueFo_exec( plc_sThread *tp, pwr_sClass_CompCurvePolValueFo *o);
 
 #endif
