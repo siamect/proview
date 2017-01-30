@@ -47,7 +47,7 @@ int aoCnt;
 byte msgType;
 byte msgId;
 byte msgSize;
-byte msgData[100];
+byte msgData[128];
 byte rmsg[40];
 int sizeErrorCnt = 0;
 int noMessageCnt = 0;
@@ -151,9 +151,11 @@ int serialRead()
   msgType = Serial.read();
   msgSize -= 3;
 
-  for ( int i = 0; i < msgSize; i++)
+  for ( int i = 0; i < msgSize; i++) {
+    if ( i >= 128)
+      break;
     msgData[i] = Serial.read();
-    
+  }    
   csum = check_checksum( msgSize + 3, msgId, msgType, msgData);
 
   if ( debug) {
