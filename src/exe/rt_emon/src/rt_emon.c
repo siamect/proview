@@ -4353,7 +4353,7 @@ sendEventListToOutunit (
     float df;
 
     time_GetTime(&current);
-    time_Adiff( &dt, &current, &op->lastSentTime);
+    time_Adiff_NE( &dt, &current, &op->lastSentTime);
     df = time_DToFloat( 0, &dt);
     if ( df < 1)
       return;
@@ -5560,7 +5560,7 @@ static pwr_tStatus emon_redu_receive()
     }
 
     time_GetTime( &end_time);
-    time_Adiff( &dtime, &end_time, &start_time);
+    time_Adiff_NE( &dtime, &end_time, &start_time);
     time_DToFloat( &l.redu->msg_time, &dtime);
     if ( l.redu->packetp) {
       l.redu->packetp->ReceiveCnt++;
