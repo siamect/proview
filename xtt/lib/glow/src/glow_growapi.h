@@ -2317,6 +2317,30 @@ extern "C" {
   void grow_SetTrendRangeY( grow_tObject object, int curve,
 			   double min, double max);
 
+  //! Set vertical mark 1.
+  /*!
+    \param mark		Mark value.
+  */
+  void grow_SetTrendXMark1( grow_tObject object, double mark);
+
+  //! Set vertical mark 2.
+  /*!
+    \param mark		Mark value.
+  */
+  void grow_SetTrendXMark2( grow_tObject object, double mark);
+
+  //! Set horizontal mark 1.
+  /*!
+    \param mark		Mark value.
+  */
+  void grow_SetTrendYMark1( grow_tObject object, double mark);
+
+  //! Set horizontal mark 2.
+  /*!
+    \param mark		Mark value.
+  */
+  void grow_SetTrendYMark2( grow_tObject object, double mark);
+
   //! Set the range of a xy curve object.
   /*!
     \param object	Trend object.
@@ -2337,12 +2361,36 @@ extern "C" {
   void grow_SetXYCurveRangeX( grow_tObject object, int curve, 
 			      double min, double max);
 
+  //! Set vertical mark 1.
+  /*!
+    \param mark		Mark value.
+  */
+  void grow_SetXYCurveXMark1( grow_tObject object, double mark);
+
+  //! Set vertical mark 2.
+  /*!
+    \param mark		Mark value.
+  */
+  void grow_SetXYCurveXMark2( grow_tObject object, double mark);
+
+  //! Set horizontal mark 1.
+  /*!
+    \param mark		Mark value.
+  */
+  void grow_SetXYCurveYMark1( grow_tObject object, double mark);
+
+  //! Set horizontal mark 2.
+  /*!
+    \param mark		Mark value.
+  */
+  void grow_SetXYCurveYMark2( grow_tObject object, double mark);
+
   //! Set number of curves a xy curve object.
   /*!
     \param object	Trend object.
     \param noofcurve	Number of curves.
   */
-  void grow_SetTrendXYNoOfCurves( grow_tObject object, int noofcurves);
+  void grow_SetXYCurveNoOfCurves( grow_tObject object, int noofcurves);
 
   //! Get the scantime of a trend object.
   /*!
@@ -3042,6 +3090,8 @@ extern "C" {
   int grow_GetTrendNoOfPoints( grow_tObject object);
 
   int grow_GetTrendFillCurve( grow_tObject object);
+  void grow_SetTrendMarkColor( grow_tObject object, glow_eDrawType mark1_color,
+			       glow_eDrawType mark2_color);
 
   //! Set fast curve data for a GrowTrend object.
   /*!
@@ -3053,6 +3103,8 @@ extern "C" {
   void grow_SetTrendData( grow_tObject object, double *data[3], int data_curves, int data_points);
   void grow_SetXYCurveCurveColor( grow_tObject object, int curve, glow_eDrawType curve_color,
 				  glow_eDrawType fill_color);
+  void grow_SetXYCurveMarkColor( grow_tObject object, glow_eDrawType mark1_color,
+				 glow_eDrawType mark2_color);
   void grow_SetXYCurveData( grow_tObject object, double *y_data, double *x_data, int curve_idx, 
 			    int data_points);
   void grow_SetPieValues( grow_tObject object, double *values);

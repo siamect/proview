@@ -2367,6 +2367,8 @@ typedef struct {
   int			curve_width;
   glow_eDrawType	curve_drawtype[TREND_MAX_CURVES];
   glow_eDrawType	curve_fill_drawtype[TREND_MAX_CURVES];
+  glow_eDrawType	mark1_color;
+  glow_eDrawType	mark2_color;
 } glow_sTrendInfo;
 
 //! Data for a GrowBar object

@@ -4887,6 +4887,25 @@ void grow_SetTrendRangeY( grow_tObject object, int curve,
   ((GrowTrend *)object)->set_range_y( curve, min, max);
 }
 
+void grow_SetTrendXMark1( grow_tObject object, double mark)
+{
+  ((GrowTrend *)object)->set_x_mark1( mark);
+}
+
+void grow_SetTrendXMark2( grow_tObject object, double mark)
+{
+  ((GrowTrend *)object)->set_x_mark2( mark);
+}
+
+void grow_SetTrendYMark1( grow_tObject object, double mark)
+{
+  ((GrowTrend *)object)->set_y_mark1( mark);
+}
+
+void grow_SetTrendYMark2( grow_tObject object, double mark)
+{
+  ((GrowTrend *)object)->set_y_mark2( mark);
+}
 void grow_SetXYCurveRangeY( grow_tObject object, int curve, 
 	double min, double max)
 {
@@ -4899,7 +4918,27 @@ void grow_SetXYCurveRangeX( grow_tObject object, int curve,
   ((GrowXYCurve *)object)->set_xy_range_x( curve, min, max);
 }
 
-void grow_SetTrendXYNoOfCurves( grow_tObject object, int noofcurves)
+void grow_SetXYCurveXMark1( grow_tObject object, double mark)
+{
+  ((GrowXYCurve *)object)->set_x_mark1( mark);
+}
+
+void grow_SetXYCurveXMark2( grow_tObject object, double mark)
+{
+  ((GrowXYCurve *)object)->set_x_mark2( mark);
+}
+
+void grow_SetXYCurveYMark1( grow_tObject object, double mark)
+{
+  ((GrowXYCurve *)object)->set_y_mark1( mark);
+}
+
+void grow_SetXYCurveYMark2( grow_tObject object, double mark)
+{
+  ((GrowXYCurve *)object)->set_y_mark2( mark);
+}
+
+void grow_SetXYCurveNoOfCurves( grow_tObject object, int noofcurves)
 {
   ((GrowXYCurve *)object)->set_xy_noofcurves( noofcurves);
 }
@@ -5412,10 +5451,21 @@ void grow_SetTrendData( grow_tObject object, double *data[3], int data_curves, i
  ((GrowTrend *)object)->set_data( data, data_curves, data_points);
 }
 
+void grow_SetTrendMarkColor( grow_tObject object, glow_eDrawType mark1_color,
+			     glow_eDrawType mark2_color)
+{
+  ((GrowTrend *)object)->set_mark_color( mark1_color, mark2_color);
+}
 void grow_SetXYCurveCurveColor( grow_tObject object, int curve, glow_eDrawType curve_color,
 				glow_eDrawType fill_color)
 {
   ((GrowXYCurve *)object)->set_xy_curve_color( curve, curve_color, fill_color);
+}
+
+void grow_SetXYCurveMarkColor( grow_tObject object, glow_eDrawType mark1_color,
+			       glow_eDrawType mark2_color)
+{
+  ((GrowXYCurve *)object)->set_mark_color( mark1_color, mark2_color);
 }
 
 void grow_SetXYCurveData( grow_tObject object, double *y_data, double *x_data, int curve_idx, 

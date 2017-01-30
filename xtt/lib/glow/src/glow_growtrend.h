@@ -115,6 +115,16 @@ class GrowTrend : public GrowRect {
   int			curve_cnt;			//!< Number of curves.
   double		scan_time;			//!< Scantime. Time interval between two points.
   void 			*user_data;			//!< User data.
+  int			display_x_mark1;       		//!< Display vertical marker line 1.
+  int			display_x_mark2;       		//!< Display vertical marker line 2.
+  int			display_y_mark1;	       	//!< Display horizontal marker line 1.
+  int			display_y_mark2;	       	//!< Display horizontal marker line 2.
+  double		x_mark1;	       		//!< Vertical marker line 1 position.
+  double		x_mark2;	       		//!< Vertical marker line 2 position.
+  double		y_mark1;		       	//!< Horizontal marker line 1 position.
+  double		y_mark2;		       	//!< Horizontal marker line 2 position.
+  glow_eDrawType	mark1_color; 			//!< Marker line 1 color.
+  glow_eDrawType	mark2_color; 			//!< Marker line 2 color.
 
   void draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void *node, void *colornode);
 
@@ -173,6 +183,11 @@ class GrowTrend : public GrowRect {
   void set_data( double *data[3], int data_curves, int data_points);
   int get_no_of_points() { return no_of_points;}
   int get_fill_curve() { return fill_curve;}
+  void set_mark_color( glow_eDrawType m1color, glow_eDrawType m2color);
+  void set_x_mark1( double mark);
+  void set_x_mark2( double mark);
+  void set_y_mark1( double mark);
+  void set_y_mark2( double mark);
 };
 
 

@@ -476,6 +476,10 @@
     ge_eSave_Trend_maxvalue_attr2      	= 2305,
     ge_eSave_Trend_hold_attr      	= 2306,
     ge_eSave_Trend_timerange_attr      	= 2307,
+    ge_eSave_Trend_mark1_attr     	= 2308,
+    ge_eSave_Trend_mark2_attr     	= 2309,
+    ge_eSave_Trend_mark1_color     	= 2310,
+    ge_eSave_Trend_mark2_color     	= 2311,
     ge_eSave_DigFlash_attribute		= 2600,
     ge_eSave_DigFlash_color		= 2601,
     ge_eSave_DigFlash_color2		= 2602,
@@ -554,6 +558,13 @@
     ge_eSave_XY_Curve_instance_mask    	= 3415,
     ge_eSave_XY_Curve_curve_color    	= 3416,
     ge_eSave_XY_Curve_fill_color    	= 3417,
+    ge_eSave_XY_Curve_horizontal_padding = 3418,
+    ge_eSave_XY_Curve_x_mark1_attr     	= 3419,
+    ge_eSave_XY_Curve_x_mark2_attr     	= 3420,
+    ge_eSave_XY_Curve_y_mark1_attr     	= 3421,
+    ge_eSave_XY_Curve_y_mark2_attr     	= 3422,
+    ge_eSave_XY_Curve_mark1_color     	= 3423,
+    ge_eSave_XY_Curve_mark2_color     	= 3424,
     ge_eSave_DigCommand_attribute      	= 3500,
     ge_eSave_DigCommand_command      	= 3501,
     ge_eSave_DigCommand_instance        = 3502,
@@ -2557,6 +2568,8 @@ class GeTrend : public GeDynElem {
   pwr_tAName maxvalue_attr2;
   pwr_tAName hold_attr;
   pwr_tAName timerange_attr;
+  pwr_tAName mark1_attr;
+  pwr_tAName mark2_attr;
 
   bool first_scan;
   double scan_time;
@@ -2597,22 +2610,34 @@ class GeTrend : public GeDynElem {
   double orig_graph_scan_time;
   double orig_graph_fast_scan_time;
   double orig_graph_animation_scan_time;
+  pwr_tFloat32 *mark1_p;
+  pwr_tFloat32 *mark2_p;
+  pwr_tFloat32 old_mark1;
+  pwr_tFloat32 old_mark2;
+  pwr_tSubid mark1_subid;
+  pwr_tSubid mark2_subid;
+  glow_eDrawType mark1_color;
+  glow_eDrawType mark2_color;
 
   GeTrend( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, ge_mDynType1_Trend, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_Trend),
     min_value1_p(0), max_value1_p(0), old_min_value1(0), old_max_value1(0),
     min_value2_p(0), max_value2_p(0), old_min_value2(0), old_max_value2(0),
-    hold_p(0), timerange_p(0), old_timerange(0)
+    hold_p(0), timerange_p(0), old_timerange(0), mark1_color(glow_eDrawType_Inherit), 
+    mark2_color(glow_eDrawType_Inherit)
     { strcpy( attribute1, ""); strcpy( attribute2, "");
     strcpy( minvalue_attr1, ""); strcpy( maxvalue_attr1, "");
     strcpy( minvalue_attr2, ""); strcpy( maxvalue_attr2, "");
-    strcpy( hold_attr, ""); strcpy( timerange_attr, "");}
+    strcpy( hold_attr, ""); strcpy( timerange_attr, "");
+    strcpy( mark1_attr, ""); strcpy( mark2_attr, "");}
   GeTrend( const GeTrend& x) : 
-    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio),
+    mark1_color(x.mark1_color), mark2_color(x.mark2_color)
     { strcpy( attribute1, x.attribute1); strcpy( attribute2, x.attribute2); 
     strcpy( minvalue_attr1, x.minvalue_attr1); strcpy( maxvalue_attr1, x.maxvalue_attr1); 
     strcpy( minvalue_attr2, x.minvalue_attr2); strcpy( maxvalue_attr2, x.maxvalue_attr2);
-    strcpy( hold_attr, x.hold_attr); strcpy( timerange_attr, x.timerange_attr);}
+    strcpy( hold_attr, x.hold_attr); strcpy( timerange_attr, x.timerange_attr);
+    strcpy( mark1_attr, x.mark1_attr); strcpy( mark2_attr, x.mark2_attr);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
@@ -2634,6 +2659,10 @@ class GeXY_Curve : public GeDynElem {
   pwr_tAName x_maxvalue_attr;
   pwr_tAName noofpoints_attr;
   pwr_tAName update_attr;
+  pwr_tAName x_mark1_attr;
+  pwr_tAName x_mark2_attr;
+  pwr_tAName y_mark1_attr;
+  pwr_tAName y_mark2_attr;
   double y_min_value;
   double y_max_value;
   double x_min_value;
@@ -2642,6 +2671,7 @@ class GeXY_Curve : public GeDynElem {
   int datatype;
   glow_eDrawType curve_color;
   glow_eDrawType fill_color;
+  int horizontal_padding;
   
   bool first_scan;
   pwr_tBoolean *update_p;
@@ -2663,31 +2693,52 @@ class GeXY_Curve : public GeDynElem {
   pwr_tSubid y_max_value_subid;
   pwr_tSubid x_min_value_subid;
   pwr_tSubid x_max_value_subid;
+  pwr_tFloat32 *x_mark1_p;
+  pwr_tFloat32 *x_mark2_p;
+  pwr_tFloat32 *y_mark1_p;
+  pwr_tFloat32 *y_mark2_p;
+  pwr_tFloat32 old_x_mark1;
+  pwr_tFloat32 old_x_mark2;
+  pwr_tFloat32 old_y_mark1;
+  pwr_tFloat32 old_y_mark2;
+  pwr_tSubid x_mark1_subid;
+  pwr_tSubid x_mark2_subid;
+  pwr_tSubid y_mark1_subid;
+  pwr_tSubid y_mark2_subid;
+  glow_eDrawType mark1_color;
+  glow_eDrawType mark2_color;
   int curve_number;  
 
   GeXY_Curve( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
     GeDynElem(e_dyn, ge_mDynType1_XY_Curve, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_XY_Curve),
     y_min_value(0), y_max_value(100), x_min_value(0), x_max_value(100),
     noofpoints(100), datatype(0), curve_color(glow_eDrawType_Inherit),
-    fill_color(glow_eDrawType_Inherit), update_p(0), old_update(0), 
+    fill_color(glow_eDrawType_Inherit), horizontal_padding(0), update_p(0), old_update(0), 
     noofpoints_p(0), old_noofpoints(0),
     y_min_value_p(0), y_max_value_p(0), x_min_value_p(0), x_max_value_p(0), 
-    old_y_min_value(0), old_y_max_value(0), old_x_min_value(0), old_x_max_value(0)
+    old_y_min_value(0), old_y_max_value(0), old_x_min_value(0), old_x_max_value(0),
+    x_mark1_p(0), x_mark2_p(0), y_mark1_p(0), y_mark2_p(0), old_x_mark1(0), old_x_mark2(0), 
+    old_y_mark1(0), old_y_mark2(0), mark1_color(glow_eDrawType_Inherit), mark2_color(glow_eDrawType_Inherit)
     { instance = e_instance; strcpy( x_attr, ""); strcpy( y_attr, "");
     strcpy( y_minvalue_attr, ""); strcpy( y_maxvalue_attr, "");
     strcpy( x_minvalue_attr, ""); strcpy( x_maxvalue_attr, "");
-    strcpy( noofpoints_attr, ""); strcpy( update_attr, "");}
+    strcpy( noofpoints_attr, ""); strcpy( update_attr, "");
+    strcpy( x_mark1_attr, ""); strcpy( x_mark2_attr, "");
+    strcpy( y_mark1_attr, ""); strcpy( y_mark2_attr, "");}
   GeXY_Curve( const GeXY_Curve& x) : 
     GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), 
     y_min_value(x.y_min_value), y_max_value(x.y_max_value),
     x_min_value(x.x_min_value), x_max_value(x.x_max_value),
     noofpoints(x.noofpoints), datatype(x.datatype), curve_color(x.curve_color),
-    fill_color(x.fill_color)
+    fill_color(x.fill_color), horizontal_padding(x.horizontal_padding),
+    mark1_color(x.mark1_color), mark2_color(x.mark2_color)
     { instance = x.instance; instance_mask = x.instance_mask;
     strcpy( x_attr, x.x_attr); strcpy( y_attr, x.y_attr); 
     strcpy( y_minvalue_attr, x.y_minvalue_attr); strcpy( y_maxvalue_attr, x.y_maxvalue_attr); 
     strcpy( x_minvalue_attr, x.x_minvalue_attr); strcpy( x_maxvalue_attr, x.x_maxvalue_attr);
-    strcpy( noofpoints_attr, x.noofpoints_attr); strcpy( update_attr, x.update_attr);}
+    strcpy( noofpoints_attr, x.noofpoints_attr); strcpy( update_attr, x.update_attr);
+    strcpy( x_mark1_attr, x.x_mark1_attr); strcpy( x_mark2_attr, x.x_mark2_attr);
+    strcpy( y_mark1_attr, x.y_mark1_attr); strcpy( y_mark2_attr, x.y_mark2_attr);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);

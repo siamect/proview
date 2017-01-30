@@ -2928,6 +2928,7 @@ med eller utan skroll-lister.
 
 <h2>Begränsningar
 Kopplingar i fönstret skalas inte på rätt sätt.
+I objektsbilder fungerar $object endast i två nivåer av windowobjekt.
 
 <h2>Attribut
 <b>Attribut    <t><t>Beskrivning
@@ -2949,6 +2950,7 @@ och när fliken aktiveras visas en angivna grafen i fönstret.
 
 <h2>Begränsningar
 Kopplingar i fönstret skalas inte på rätt sätt.
+I objektsbilder fungerar $object endast i två nivåer av windowobjekt.
 
 <h2>Attribut
 <b>Attribut    <t><t>Beskrivning

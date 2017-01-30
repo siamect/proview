@@ -5232,12 +5232,16 @@ void Graph::create_trend( grow_tObject *object, double x, double y,
     info.curve_drawtype[1] = glow_eCtColor_OrangeCurve;
     info.curve_fill_drawtype[0] = glow_eCtColor_BarBarColor;
     info.curve_fill_drawtype[1] = glow_eCtColor_OrangeBar;
+    info.mark1_color = glow_eCtColor_YellowCurve;
+    info.mark2_color = glow_eCtColor_RedCurve;
   }
   else {
     info.curve_drawtype[0] = glow_eDrawType_Color145;
     info.curve_drawtype[1] = glow_eDrawType_Color295;
     info.curve_fill_drawtype[0] = glow_eDrawType_Color139;
     info.curve_fill_drawtype[1] = glow_eDrawType_Color289;
+    info.mark1_color = glow_eDrawType_ColorYellow;
+    info.mark2_color = glow_eDrawType_ColorRed;
   }
   grow_SetTrendInfo( *object, &info);
 
@@ -5277,6 +5281,8 @@ void Graph::create_xycurve( grow_tObject *object, double x, double y,
   info.curve_drawtype[1] = glow_eDrawType_Color295;
   info.curve_fill_drawtype[0] = glow_eDrawType_Color139;
   info.curve_fill_drawtype[1] = glow_eDrawType_Color289;
+  info.mark1_color = glow_eDrawType_ColorYellow;
+  info.mark2_color = glow_eDrawType_ColorRed;
   grow_SetTrendInfo( *object, &info);
 
   grow_Redraw( grow->ctx);

@@ -2948,6 +2948,7 @@ with or without scrollbars.
 
 <h2>Limitations
 Connections within the window object are scaled properly.
+In object graphs, $object only works in two levels of window objects.
 
 <h2>Attributes
 <b>Attribute    <t><t>Description
@@ -2970,6 +2971,7 @@ and when that folder is activated, the stated graph is displayed in the window.
 <h2>Limitations
 Sliders within the window object are disabled.
 You can not state an hierarchy or class object.
+In object graphs, $object only works in two levels of window objects.
 
 <h2>Attributes
 <b>Attribute    <t><t>Description
