@@ -9946,6 +9946,7 @@ SetAttribute()		<LINK> setattribute()
 CreateObject()		<LINK> createobject()
 RenameObject()		<LINK> renameobject()
 MoveObject()		<LINK> moveobject()
+InLib()			<LINK> inlib()
 OpenPlcPgm()		<LINK> openplcpgm()
 ClosePlcPgm()		<LINK> closeplcpgm()
 CreatePlcObject()	<LINK> createplcobject()
@@ -10941,6 +10942,7 @@ SetAttribute()	<t>Sätt värde på ett attribut.	<LINK> setattribute()
 CreateObject()	<t>Skapa ett objekt. <LINK> createobject()
 RenameObject()	<t>Ändra namn på ett objekt. <LINK> renameobject()
 MoveObject()	<t>Flytta ett objekt. <LINK> moveobject()
+InLib()		<t>Testa om ett object ligger under en $LibHier. <LINK> inlib()
 OpenPlcPgm()	<t>Öppna ett PlcPgm.	<LINK> openplcpgm()
 ClosePlcPgm()	<t>Stäng ett PlcPgm.	<LINK> closeplcpgm()
 CreatePlcObject() <t>Skapa ett plc-objekt. <LINK> createplcobject()
@@ -11407,6 +11409,32 @@ int             <t>destcode        <t>destinationskod. 1 första barn, 2 sista ba
 <b>Exempel
 
 <c>  MoveObject( "H1-Zon1-Temp2", "H1-Zon2", 1);
+</TOPIC>
+
+<TOPIC> inlib() <style> function
+InLib()
+
+int InLib( string name)
+
+<b>Beskrivning
+
+Testa om ett objekt ligger under en $LibHier.
+Returnerar 1 om objektet ligger under en $LibHier, annars 0.
+
+<b>Argument
+ 
+string          <t>name            <t>objektnamn med path.
+
+<b>Returnerar
+int				<t><t>1 om objektet ligger under en $LibHier,
+				<t><t>annars 0.
+
+
+<b>Exempel
+
+<c>  if ( !InLib( "H1-Motor"))
+<c>    ...
+<c>  endif
 </TOPIC>
 
 <TOPIC> openplcpgm() <style> function

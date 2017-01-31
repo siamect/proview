@@ -2825,6 +2825,12 @@ Trend.MaxValueAttr2 <t>Signal for maximum value curve number 2. Is used when the
 		  <t>max value is dynamic. For static value, Trend.MaxValue1 is used.
 Trend.HoldAttr <t>Signal to freeze the curve.
 Trend.TimeRangeAttr <t>Signal of type Float32 for the time range of the curve.
+Trend.Mark1Attr   <t><t>Database attribute for the position of the first horizonal
+                  <t><t>marker line.
+Trend.Mark2Attr   <t><t>Database attribute for the position of the second horizontal
+                  <t><t>marker line.
+Trend.Mark1Color  <t><t>Color of the first marker line.
+Trend.Mark2Color  <t><t>Color of the second marker line.
 Trend.NoOfPoints  <t><t>Number of points in the curve.
 Trend.ScanTime    <t><t>Time interval between two points.
 Trend.CurveLineWidth <t><t>Linewidth for the curve (1-8)
@@ -3092,6 +3098,18 @@ XY_Curve.CurveLineWidth <t><t>Line width of curve.
 XY_Curve.FillCurve      <t><t>If 1 the curve is filled.
 XY_Curve.HorizontalLines <t><t>Number of horizontal lines in the diagram.
 XY_Curve.VerticalLines  <t><t>Number of vertical lines in the diagram.
+XY_Curve.HorizontalPadding  <t><t>The curve outside the x value range will be drawn with
+                        <t><t>horizonal lines from the first or last point.
+XY_Curve.XMark1Attr     <t><t>Database attribute for the x position of the first vertical
+                        <t><t>marker line.
+XY_Curve.XMark2Attr     <t><t>Database attribute for the x position of the second vertical
+                        <t><t>marker line.
+XY_Curve.YMark1Attr     <t><t>Database attribute for the y position of the first horizonal
+                        <t><t>marker line.
+XY_Curve.YMark2Attr     <t><t>Database attribute for the y position of the second horizontal
+                        <t><t>marker line.
+XY_Curve.Mark1Color     <t><t>Color of the first marker lines (vertical and horizontal).
+XY_Curve.Mark2Color     <t><t>Color of the second marker lines (vertical and horizontal).
 </topic>
 
 </headerlevel>

@@ -2807,6 +2807,10 @@ Trend.MaxValueAttr2 <t>Signal för maxvärde kurva nr 2. Används när maxvärdet
 		  <t>är dynamiskt. För statisk värde används Trend.MaxValue2.
 Trend.HoldAttr <t>Signal för att frysa kurvan.
 Trend.TimeRangeAttr <t>Signal av typen Float32 för kurvans tidskala.
+Trend.Mark1Attr   <t><t>Signal för positionen av markeringslinje nr 1.
+Trend.Mark2Attr   <t><t>Signal för positionen av markeringslinje nr 2.
+Trend.Mark1Color  <t><t>Färg på markeringslinje nr 1.
+Trend.Mark2Color  <t><t>Färg på markeringslinje nr 2.
 Trend.NoOfPoints  <t><t>Antal punkter på kurvan
 Trend.ScanTime    <t><t>Tidsintervall mellan två punkter.
 Trend.CurveLineWidth <t><t>Linjebredd på kurvan (1-8)
@@ -3071,6 +3075,18 @@ XY_Curve.CurveLineWidth <t><t>Kurvans linjebredd.
 XY_Curve.FillCurve      <t><t>Om 1 ritas området mellan kurva och x-axeln med fyllnadsfärg.
 XY_Curve.HorizontalLines <t><t>Antal horisontella linjer i diagrammet.
 XY_Curve.VerticalLines  <t><t>Antal vertikala linjer i diagrammet.
+XY_Curve.HorizontalPadding  <t><t>Kurvan utanför x-området kommera att ritas med 
+                        <t><t>horisontella linjer från första och sista punkt.
+XY_Curve.XMark1Attr     <t><t>Signal för x positionen för den första vertikala 
+                        <t><t>markeringslinjen.
+XY_Curve.XMark2Attr     <t><t>Signal för x positionen för den andra vertikala 
+                        <t><t>markeringslinjen.
+XY_Curve.YMark1Attr     <t><t>Signal för y positionen för den första horisontella 
+                        <t><t>markeringslinjen.
+XY_Curve.YMark2Attr     <t><t>Signal för y positionen för den andra horisontella 
+                        <t><t>markeringslinjen.
+XY_Curve.Mark1Color     <t><t>Färg för markeringslinje nr 1 (vertikal och horisontell).
+XY_Curve.Mark2Color     <t><t>Färg för markeringslinje nr 2 (vertikal och horisontell).
 </topic>
 </headerlevel>
 </chapter>

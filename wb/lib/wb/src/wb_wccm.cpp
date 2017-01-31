@@ -1988,6 +1988,50 @@ static int wccm_plcconnect_func(
   return 1;
 }
 
+static int wccm_inlib_func( 
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  int		sts;
+  pwr_tObjid	oid;
+  pwr_tCid	cid;
+  ldh_tSesContext ldhses;
+  int		in_lib;
+
+  sts = wccm_get_ldhses( &ldhses);
+  if ( EVEN(sts)) {
+    strcpy( return_string, "");
+    *return_decl = CCM_DECL_STRING;
+    return CMD__NOVOLATTACHED;
+  }
+
+  if ( arg_count != 1)
+    return CCM__ARGMISM;
+
+  if ( arg_list->value_decl != CCM_DECL_STRING)
+    return CCM__ARGMISM;
+
+  in_lib = 0;
+  for ( sts = ldh_NameToObjid( ldhses, &oid, arg_list->value_string);
+	ODD(sts);
+	sts = ldh_GetParent( ldhses, oid, &oid)) {
+    sts = ldh_GetObjectClass( ldhses, oid, &cid);
+    if ( ODD(sts) && cid == pwr_eClass_LibHier) {
+      in_lib = 1;
+      break;
+    }
+  }    
+  *return_int = in_lib;
+  *return_decl = CCM_DECL_INT;
+  
+  return 1;
+}
+
 
 /*************************************************************************
 *
@@ -2089,6 +2133,8 @@ int	wccm_register(
     sts = ccm_register_function( "CreatePlcConnection", wccm_createplcconnection_func);
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "PlcConnect", wccm_plcconnect_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "InLib", wccm_inlib_func);
     if ( EVEN(sts)) return sts;
 
     sts = ccm_create_external_var( "cmd_status", CCM_DECL_INT, 0, 1, 

@@ -10081,6 +10081,7 @@ SetAttribute()		<LINK> setattribute()
 CreateObject()		<LINK> createobject()
 RenameObject()		<LINK> renameobject()
 MoveObject()		<LINK> moveobject()
+InLib()			<LINK> inlib()
 OpenPlcPgm()		<LINK> openplcpgm()
 CreatePlcObject()	<LINK> createplcobject()
 ClosePlcObject()	<LINK> closeplcobject()
@@ -11084,6 +11085,7 @@ SetAttribute()	<t>Set attribute value.	<LINK> setattribute()
 CreateObject()	<t>Create an object. <LINK> createobject()
 RenameObject()	<t>Change name of an object. <LINK> renameobject()
 MoveObject()	<t>Move an object. <LINK> moveobject()
+InLib()         <t>Check if an object is in a $LibHier. <LINK> inlib()
 OpenPlcPgm()	<t>Open a PlcPgm.	<LINK> openplcpgm()
 ClosePlcPgm()	<t>Close a PlcPgm.	<LINK> closeplcpgm()
 CreatePlcObject() <t>Create a plc object. <LINK> createplcobject()
@@ -11548,6 +11550,32 @@ int             <t>destcode        <t>destination code. 1 first child, 2 last ch
 <b>Example
 
 <c>  MoveObject( "H1-Zon1-Temp2", "H1-Zon2", 1);
+</TOPIC>
+
+<TOPIC> inlib() <style> function
+InLib()
+
+int InLib( string name)
+
+<b>Description
+
+Check if an object is in a library hierarchy.
+Returns 1 if it is in a library hierarchy, else 0.
+
+<b>Argument
+ 
+string          <t>name            <t>object name with path.
+
+<b>Returns
+int				<t><t>1 if the object is in a library
+				<t><t>hierarchy, else 0.
+
+
+<b>Example
+
+<c>  if ( !InLib( "H1-Motor"))
+<c>    ...
+<c>  endif
 </TOPIC>
 
 <TOPIC> openplcpgm() <style> function
