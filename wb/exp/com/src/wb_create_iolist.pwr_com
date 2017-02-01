@@ -12,6 +12,22 @@
 #
 #  --------------------------------------------------------------------------
 
+function string get_device_name(string object)
+  string parent;
+  string class;
+
+  parent = GetParent(object);
+  while(parent != "")
+    class = GetObjectClass(parent);
+    if(class == "Pb_Profiboard" || class == "$Node" || class == "Modbus_Master" || class == "PnControllerSoftingPNAK")
+      return parent;
+    endif
+    parent = GetParent(parent);
+  endwhile
+  return "";
+endfunction
+
+
 function int print_channels( int fp, string chanclass, string sigclass)
   string signal;
   string attr;
@@ -26,11 +42,17 @@ function int print_channels( int fp, string chanclass, string sigclass)
   string sdescr;
   string cdescr;
   int found;
+  string devname;
 
   sigcnt = 0;
 
   signal = GetClassListAttrRef( sigclass);
   while ( signal != "")
+    if ( InLib( signal))
+      signal = GetNextAttrRef( sigclass, signal);
+      continue;
+    endif
+
     attr = signal + ".SigChanCon";
     sigchancon = GetAttribute( attr);
 
@@ -61,6 +83,13 @@ function int print_channels( int fp, string chanclass, string sigclass)
   channel = GetClassListAttrRef( chanclass);
   while ( channel != "")
 
+    if ( InLib( channel))
+      channel = GetNextAttrRef( chanclass, channel);
+      continue;
+    endif
+
+    devname = get_device_name( channel);
+      
     found = 0;
     for ( i = 0; i < sigcnt; i++)
       if ( sigchancons[i] == channel)
@@ -82,7 +111,7 @@ function int print_channels( int fp, string chanclass, string sigclass)
     cdescr = GetAttribute( attr);
 
     # Write to temporary file
-    fprintf( fp, "%s;%s;\"%s\";\"%s\"\n", channel, signal, sdescr, cdescr);
+    fprintf( fp, "%s;%s;\"%s\";\"%s\";%s;%s\n", channel, signal, sdescr, cdescr, sigclass, devname);
 
     channel = GetNextAttrRef( chanclass, channel);
   endwhile
