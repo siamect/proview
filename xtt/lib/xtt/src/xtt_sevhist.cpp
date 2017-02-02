@@ -419,6 +419,7 @@ int XttSevHist::get_multidata( pwr_tStatus *sts, pwr_tTime from, pwr_tTime to)
   void *vbuf;
   pwr_tDeltaTime trange;
   int curve_cnt = 0;
+  int data_found;
 
   // Create data for time axis
   gcd = new GeCurveData( curve_eDataType_MultiTrend);
@@ -438,12 +439,31 @@ int XttSevHist::get_multidata( pwr_tStatus *sts, pwr_tTime from, pwr_tTime to)
 			 &rows, &vtype, &vsize);
       if ( curve)
 	curve->reset_cursor();
-      if ( EVEN(*sts))
+      if ( EVEN(*sts) && *sts != SEV__NOPOINTS)
 	return 0;
 
-      if ( rows == 0)
-	continue;
+      if ( rows == 0 || *sts == SEV__NOPOINTS) {
+	rows = 0;
+	gcd->x_data[curve_cnt] = (double *) calloc( 1, 8 * rows);
+  
+	gcd->x_axis_type[curve_cnt] = curve_eAxis_x;
+	strcpy( gcd->x_format[curve_cnt], "%10t");
 
+	gcd->x_axis_type[curve_cnt] = curve_eAxis_x;
+	strcpy( gcd->x_format[curve_cnt], "%10t");
+
+	strcpy( gcd->y_name[curve_cnt], onamev[k]);
+	if ( strcmp( onamev[k], "") != 0)
+	  strcat( gcd->y_name[curve_cnt], ".");
+	strcat( gcd->y_name[curve_cnt], anamev[k]);
+	gcd->y_data[curve_cnt] = (double *) calloc( 1, 8 * rows);
+	
+	gcd->y_axis_type[curve_cnt] = curve_eAxis_y;
+
+	gcd->rows[curve_cnt] = rows;
+	curve_cnt++;
+	continue;
+      }
 
       gcd->x_data[curve_cnt] = (double *) calloc( 1, 8 * rows);
       for ( int i = 0; i < rows; i++)
@@ -633,11 +653,20 @@ int XttSevHist::get_multidata( pwr_tStatus *sts, pwr_tTime from, pwr_tTime to)
     return 0;
   }
 
+  data_found = 0;
+  for ( int i = 0; i < curve_cnt; i++) {
+    if ( gcd->rows[i]) {
+      data_found = 1;
+      break;
+    }
+  }
+
   gcd->cols = curve_cnt;
 
-  gcd->get_borders();
-  gcd->get_default_axis();
-
+  if ( data_found) {
+    gcd->get_borders();
+    gcd->get_default_axis();
+  }
   if ( to.tv_sec != 0 && from.tv_sec != 0) {
     time_Adiff( &trange, &to, &from);
     if ( time_DToFloat( 0, &trange) < 600)
