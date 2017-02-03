@@ -371,6 +371,10 @@ public class Dyn {
     public static final int eSave_Trend_maxvalue_attr2      	= 2305;
     public static final int eSave_Trend_hold_attr	      	= 2306;
     public static final int eSave_Trend_timerange_attr	      	= 2307;
+    public static final int eSave_Trend_mark1_attr	      	= 2308;
+    public static final int eSave_Trend_mark2_attr	      	= 2309;
+    public static final int eSave_Trend_mark1_color	      	= 2310;
+    public static final int eSave_Trend_mark2_color	      	= 2311;
     public static final int eSave_DigFlash_attribute		= 2600;
     public static final int eSave_DigFlash_color		= 2601;
     public static final int eSave_DigFlash_color2		= 2602;
@@ -449,6 +453,13 @@ public class Dyn {
     public static final int eSave_XY_Curve_instance_mask    	= 3415;
     public static final int eSave_XY_Curve_curve_color    	= 3416;
     public static final int eSave_XY_Curve_fill_color    	= 3417;
+    public static final int eSave_XY_Curve_horizontal_padding  	= 3418;
+    public static final int eSave_XY_Curve_x_mark1_attr    	= 3419;
+    public static final int eSave_XY_Curve_x_mark2_attr    	= 3420;
+    public static final int eSave_XY_Curve_y_mark1_attr    	= 3421;
+    public static final int eSave_XY_Curve_y_mark2_attr    	= 3422;
+    public static final int eSave_XY_Curve_mark1_color    	= 3423;
+    public static final int eSave_XY_Curve_mark2_color    	= 3424;
     public static final int eSave_DigCommand_attribute      	= 3500;
     public static final int eSave_DigCommand_command      	= 3501;
     public static final int eSave_DigCommand_instance        	= 3502;
@@ -717,7 +728,7 @@ public class Dyn {
     public static final int eMethodToolbarType_Object	= 0;
     public static final int eMethodToolbarType_Simulate	= 1;
 
-    public static final boolean debug = false;
+    public static final boolean debug = true;
 
     Vector<DynElem> elements = new Vector<DynElem>();
     GraphIfc graph;
@@ -6105,6 +6116,10 @@ public class Dyn {
 	String maxvalue_attr2;
 	String hold_attr;
 	String timerange_attr;
+	String mark1_attr;
+	String mark2_attr;
+	int mark1_color;
+	int mark2_color;
 	int p1 = -1;
 	int database1;
 	boolean inverted1;
@@ -6140,6 +6155,12 @@ public class Dyn {
 	int timerange_database;
 	PwrtRefId timerange_subid;
 	float old_timerange;
+	int mark1_p;
+	PwrtRefId mark1_subid;
+	float old_mark1;
+	int mark2_p;
+	PwrtRefId mark2_subid;
+	float old_mark2;
 	double orig_graph_scan_time;
 	double orig_graph_fast_scan_time;
 	double orig_graph_animation_scan_time;
@@ -6330,6 +6351,40 @@ public class Dyn {
 		}
 	    }
 
+	    mark1_p = 0;
+	    pname = dyn.parseAttrName(mark1_attr);
+	    if ( pname != null && !pname.name.equals("")) {
+		ret = null;
+
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		if ( ret == null || ret.evenSts()) {
+		    System.out.println("Trend: " + mark1_attr);
+		    return 1;
+		}
+		else {
+		    mark1_p = ret.id;
+		    mark1_subid = ret.refid;
+		}
+	    }
+
+	    mark2_p = 0;
+	    pname = dyn.parseAttrName(mark2_attr);
+	    if ( pname != null && !pname.name.equals("")) {
+		ret = null;
+
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		if ( ret == null || ret.evenSts()) {
+		    System.out.println("Trend: " + mark2_attr);
+		    return 1;
+		}
+		else {
+		    mark2_p = ret.id;
+		    mark2_subid = ret.refid;
+		}
+	    }
+
+	    if ( mark1_color != Glow.eDrawType_Inherit || mark2_color != Glow.eDrawType_Inherit)
+		object.set_mark_color( mark1_color, mark2_color);
 	    return 1;
 	}
 
@@ -6350,6 +6405,10 @@ public class Dyn {
 		dyn.graph.getGdh().unrefObjectInfo(hold_subid);
 	    if ( timerange_p != 0 && hold_database == GraphIfc.eDatabase_Gdh)
 		dyn.graph.getGdh().unrefObjectInfo(timerange_subid);
+	    if ( mark1_p != 0)
+		dyn.graph.getGdh().unrefObjectInfo(mark1_subid);
+	    if ( mark2_p != 0)
+		dyn.graph.getGdh().unrefObjectInfo(mark2_subid);
 	}
 
 	public void scan( GlowArrayElem o) {
@@ -6454,6 +6513,23 @@ public class Dyn {
  		    object.set_range_y(0, minval, maxval);
 		    old_min_value1 = minval;
 		    old_max_value1 = maxval;
+		}
+	    }
+
+	    if ( mark1_p != 0) {
+		float mark1val;
+		mark1val = dyn.graph.getGdh().getObjectRefInfoFloat(mark1_p);
+		if (firstScan || Math.abs( mark1val - old_mark1) > Float.MIN_VALUE) {
+		    object.set_y_mark1( mark1val);
+		    old_mark1 = mark1val;
+		}
+	    }
+	    if ( mark2_p != 0) {
+		float mark2val;
+		mark2val = dyn.graph.getGdh().getObjectRefInfoFloat(mark2_p);
+		if (firstScan || Math.abs( mark2val - old_mark2) > Float.MIN_VALUE) {
+		    object.set_y_mark2( mark2val);
+		    old_mark2 = mark2val;
 		}
 	    }
 
@@ -6564,6 +6640,20 @@ public class Dyn {
 			if ( token.hasMoreTokens())
 			    timerange_attr = token.nextToken();
 			break;
+		    case Dyn.eSave_Trend_mark1_attr: 
+			if ( token.hasMoreTokens())
+			    mark1_attr = token.nextToken();
+			break;
+		    case Dyn.eSave_Trend_mark2_attr: 
+			if ( token.hasMoreTokens())
+			    mark2_attr = token.nextToken();
+			break;
+		    case Dyn.eSave_Trend_mark1_color: 
+			mark1_color = Integer.valueOf(token.nextToken());
+			break;
+		    case Dyn.eSave_Trend_mark2_color: 
+			mark2_color = Integer.valueOf(token.nextToken());
+			break;
 		    case Dyn.eSave_End:
 			end_found = true;
 			break;
@@ -6593,10 +6683,17 @@ public class Dyn {
 	String x_maxvalue_attr;
 	String noofpoints_attr;
 	String update_attr;
+	String x_mark1_attr;
+	String x_mark2_attr;
+	String y_mark1_attr;
+	String y_mark2_attr;
+	int mark1_color;
+	int mark2_color;
 	double y_min_value;
 	double y_max_value;
 	double x_min_value;
 	double x_max_value;
+	int horizontal_padding;
 	int datatype;
 	int curve_color;
 	int fill_color;
@@ -6626,6 +6723,18 @@ public class Dyn {
 	boolean xMaxvalueAttrFound;
 	PwrtRefId xMaxvalueSubid;
 	int xMaxvalueP;
+	int x_mark1_p;
+	PwrtRefId x_mark1_subid;
+	float old_x_mark1;
+	int x_mark2_p;
+	PwrtRefId x_mark2_subid;
+	float old_x_mark2;
+	int y_mark1_p;
+	PwrtRefId y_mark1_subid;
+	float old_y_mark1;
+	int y_mark2_p;
+	PwrtRefId y_mark2_subid;
+	float old_y_mark2;
 	int curve_number;
 
 	public DynXY_Curve( Dyn dyn) {
@@ -6725,6 +6834,31 @@ public class Dyn {
 		    case Dyn.eSave_XY_Curve_fill_color: 
 			fill_color = Integer.valueOf(token.nextToken());
 			break;
+		    case Dyn.eSave_XY_Curve_horizontal_padding: 
+			horizontal_padding = Integer.valueOf(token.nextToken());
+			break;
+		    case Dyn.eSave_XY_Curve_x_mark1_attr: 
+			if ( token.hasMoreTokens())
+			    x_mark1_attr = token.nextToken();
+			break;
+		    case Dyn.eSave_XY_Curve_x_mark2_attr: 
+			if ( token.hasMoreTokens())
+			    x_mark2_attr = token.nextToken();
+			break;
+		    case Dyn.eSave_XY_Curve_y_mark1_attr: 
+			if ( token.hasMoreTokens())
+			    y_mark1_attr = token.nextToken();
+			break;
+		    case Dyn.eSave_XY_Curve_y_mark2_attr: 
+			if ( token.hasMoreTokens())
+			    y_mark2_attr = token.nextToken();
+			break;
+		    case Dyn.eSave_XY_Curve_mark1_color: 
+			mark1_color = Integer.valueOf(token.nextToken());
+			break;
+		    case Dyn.eSave_XY_Curve_mark2_color: 
+			mark2_color = Integer.valueOf(token.nextToken());
+			break;
 		    case Dyn.eSave_End:
 			end_found = true;
 			break;
@@ -6745,10 +6879,14 @@ public class Dyn {
 
 	public int connect(GlowArrayElem o) {
 	    GrowXYCurve object = (GrowXYCurve) o;
+	    GdhrRefObjectInfo ret;
+
+	    if ( x_attr == null || y_attr == null)
+		return 1;
 
 	    DynParsedAttrName pname = dyn.parseAttrName(update_attr);
 	    if ( pname != null && !pname.name.equals("")) {
-		GdhrRefObjectInfo ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		if ( ret.evenSts())
 		    System.out.println( "XYCurve: " + pname.tname);
 		else {
@@ -6760,7 +6898,7 @@ public class Dyn {
 
 	    pname = dyn.parseAttrName( noofpoints_attr);
 	    if ( pname != null && !pname.name.equals("")) {
-		GdhrRefObjectInfo ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		if ( ret.evenSts())
 		    System.out.println( "XYCurve: " + pname.tname);
 		else {
@@ -6772,7 +6910,7 @@ public class Dyn {
 	    
 	    pname = dyn.parseAttrName( y_minvalue_attr);
 	    if ( pname != null && !pname.name.equals("")) {
-		GdhrRefObjectInfo ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		if ( ret.evenSts())
 		    System.out.println( "XYCurve: " + pname.tname);
 		else {
@@ -6784,7 +6922,7 @@ public class Dyn {
 	    
 	    pname = dyn.parseAttrName( y_maxvalue_attr);
 	    if ( pname != null && !pname.name.equals("")) {
-		GdhrRefObjectInfo ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		if ( ret.evenSts())
 		    System.out.println( "XYCurve: " + pname.tname);
 		else {
@@ -6796,7 +6934,7 @@ public class Dyn {
 
 	    pname = dyn.parseAttrName( x_minvalue_attr);
 	    if ( pname != null && !pname.name.equals("")) {
-		GdhrRefObjectInfo ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		if ( ret.evenSts())
 		    System.out.println( "XYCurve: " + pname.tname);
 		else {
@@ -6808,13 +6946,77 @@ public class Dyn {
 
 	    pname = dyn.parseAttrName( x_maxvalue_attr);
 	    if ( pname != null && !pname.name.equals("")) {
-		GdhrRefObjectInfo ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		if ( ret.evenSts())
 		    System.out.println( "XYCurve: " + pname.tname);
 		else {
 		    xMaxvalueAttrFound = true;
 		    xMaxvalueP = ret.id;
 		    xMaxvalueSubid = ret.refid;
+		}
+	    }
+
+	    x_mark1_p = 0;
+	    pname = dyn.parseAttrName(x_mark1_attr);
+	    if ( pname != null && !pname.name.equals("")) {
+		ret = null;
+
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		if ( ret == null || ret.evenSts()) {
+		    System.out.println("Trend: " + x_mark1_attr);
+		    return 1;
+		}
+		else {
+		    x_mark1_p = ret.id;
+		    x_mark1_subid = ret.refid;
+		}
+	    }
+
+	    x_mark2_p = 0;
+	    pname = dyn.parseAttrName(x_mark2_attr);
+	    if ( pname != null && !pname.name.equals("")) {
+		ret = null;
+
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		if ( ret == null || ret.evenSts()) {
+		    System.out.println("Trend: " + x_mark2_attr);
+		    return 1;
+		}
+		else {
+		    x_mark2_p = ret.id;
+		    x_mark2_subid = ret.refid;
+		}
+	    }
+
+	    y_mark1_p = 0;
+	    pname = dyn.parseAttrName(y_mark1_attr);
+	    if ( pname != null && !pname.name.equals("")) {
+		ret = null;
+
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		if ( ret == null || ret.evenSts()) {
+		    System.out.println("Trend: " + y_mark1_attr);
+		    return 1;
+		}
+		else {
+		    y_mark1_p = ret.id;
+		    y_mark1_subid = ret.refid;
+		}
+	    }
+
+	    y_mark2_p = 0;
+	    pname = dyn.parseAttrName(y_mark2_attr);
+	    if ( pname != null && !pname.name.equals("")) {
+		ret = null;
+
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		if ( ret == null || ret.evenSts()) {
+		    System.out.println("Trend: " + y_mark2_attr);
+		    return 1;
+		}
+		else {
+		    y_mark2_p = ret.id;
+		    y_mark2_subid = ret.refid;
 		}
 	    }
 
@@ -6843,6 +7045,8 @@ public class Dyn {
 	    if ( Math.abs(x_max_value - x_min_value) > Float.MIN_VALUE)
 		object.set_xy_range_x( curve_number - 1, x_min_value, x_max_value);
 	    object.set_xy_curve_color( curve_number - 1, curve_color, fill_color);
+	    if ( mark1_color != Glow.eDrawType_Inherit || mark2_color != Glow.eDrawType_Inherit)
+		object.set_mark_color( mark1_color, mark2_color);
 	    return 1;
 	}
 
@@ -6859,6 +7063,14 @@ public class Dyn {
 		dyn.graph.getGdh().unrefObjectInfo( xMinvalueSubid);
 	    if ( xMaxvalueAttrFound)
 		dyn.graph.getGdh().unrefObjectInfo( xMaxvalueSubid);
+	    if ( x_mark1_p != 0)
+		dyn.graph.getGdh().unrefObjectInfo(x_mark1_subid);
+	    if ( x_mark2_p != 0)
+		dyn.graph.getGdh().unrefObjectInfo(x_mark2_subid);
+	    if ( y_mark1_p != 0)
+		dyn.graph.getGdh().unrefObjectInfo(y_mark1_subid);
+	    if ( y_mark2_p != 0)
+		dyn.graph.getGdh().unrefObjectInfo(y_mark2_subid);
 	}
 
 	public void scan( GlowArrayElem o) {
@@ -6868,6 +7080,9 @@ public class Dyn {
 	    boolean update = false;
 	    int size = 1;
 	    noOfPoints = noofpoints;
+
+	    if ( x_attr == null || y_attr == null)
+		return;
 
 	    if ( firstScan)
 		update = true;
@@ -6926,8 +7141,42 @@ public class Dyn {
 		}
 	    }
 
+	    if ( x_mark1_p != 0) {
+		float mark1val;
+		mark1val = dyn.graph.getGdh().getObjectRefInfoFloat(x_mark1_p);
+		if (firstScan || Math.abs( mark1val - old_x_mark1) > Float.MIN_VALUE) {
+		    object.set_x_mark1( mark1val);
+		    old_x_mark1 = mark1val;
+		}
+	    }
+	    if ( x_mark2_p != 0) {
+		float mark2val;
+		mark2val = dyn.graph.getGdh().getObjectRefInfoFloat(x_mark2_p);
+		if (firstScan || Math.abs( mark2val - old_x_mark2) > Float.MIN_VALUE) {
+		    object.set_x_mark2( mark2val);
+		    old_x_mark2 = mark2val;
+		}
+	    }
+	    if ( y_mark1_p != 0) {
+		float mark1val;
+		mark1val = dyn.graph.getGdh().getObjectRefInfoFloat(y_mark1_p);
+		if (firstScan || Math.abs( mark1val - old_y_mark1) > Float.MIN_VALUE) {
+		    object.set_y_mark1( mark1val);
+		    old_y_mark1 = mark1val;
+		}
+	    }
+	    if ( y_mark2_p != 0) {
+		float mark2val;
+		mark2val = dyn.graph.getGdh().getObjectRefInfoFloat(y_mark2_p);
+		if (firstScan || Math.abs( mark2val - old_y_mark2) > Float.MIN_VALUE) {
+		    object.set_y_mark2( mark2val);
+		    old_y_mark2 = mark2val;
+		}
+	    }
+
 	    if ( update) {
 	        pname = dyn.parseAttrName( x_attr);
+		System.out.println("xycurve xattr: " + x_attr + " pname " + pname);
 		attrSize = pname.elements;
 		xAttrType = pname.type;
 

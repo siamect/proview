@@ -97,6 +97,16 @@ public class GrowXYCurve extends GrowTrend {
     public void set_xy_range_x( int curve, double min, double max) {
 	if ( curve > Glow.TREND_MAX_CURVES || curve < 0)
 	    return;
+	if ( curve == 0) {
+	    if ( display_x_mark1 != 0) {
+		double mark = (x_mark1 - ll.x) * (x_max_value[0] - x_min_value[0]) / (ur.x - ll.x) +  x_min_value[0];
+		x_mark1 = ll.x + (mark - min) / (max - min) * (ur.x - ll.x);
+	    }
+	    if ( display_x_mark2 != 0) {
+		double mark = (x_mark2 - ll.x) * (x_max_value[0] - x_min_value[0]) / (ur.x - ll.x) +  x_min_value[0];
+		x_mark2 = ll.x + (mark - min) / (max - min) * (ur.x - ll.x);
+	    }
+	}
 	x_max_value[curve] = max;
 	x_min_value[curve] = min;
     }
@@ -104,6 +114,18 @@ public class GrowXYCurve extends GrowTrend {
     public void set_xy_range_y( int curve, double min, double max) {
 	if ( curve > Glow.TREND_MAX_CURVES || curve < 0)
 	    return;
+
+	if ( curve == 0) {
+	    if ( display_y_mark1 != 0) {
+		double mark = y_min_value[0] - (y_mark1 - ur.y) *(y_max_value[0] - y_min_value[0]) / (ur.y - ll.y);
+		y_mark1 = ur.y - (mark - min) / (max - min) * (ur.y - ll.y);
+	    }
+	    if ( display_y_mark2 != 0) {
+		double mark = y_min_value[0] - (y_mark2 - ur.y) *(y_max_value[0] - y_min_value[0]) / (ur.y - ll.y);
+		y_mark2 = ur.y - (mark - min) / (max - min) * (ur.y - ll.y);
+	    }
+	}
+
 	y_max_value[curve] = max;
 	y_min_value[curve] = min;
     }

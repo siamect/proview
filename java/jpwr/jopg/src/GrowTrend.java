@@ -66,6 +66,16 @@ public class GrowTrend extends GrowRect {
     int curve_cnt = 1;
     TraceData trace = new TraceData();
     Object userdata;
+    int display_x_mark1 = 0;
+    int display_x_mark2 = 0;
+    int display_y_mark1 = 0;
+    int display_y_mark2 = 0;
+    double x_mark1;
+    double x_mark2;
+    double y_mark1;
+    double y_mark2;
+    int mark1_color;
+    int mark2_color;
 
     public GrowTrend(GrowCmn cmn) {
 	super(cmn);
@@ -361,6 +371,60 @@ public class GrowTrend extends GrowRect {
 		    curve[i].fill = 1;
 	    }
 	}
+
+	if ( display_x_mark1 != 0) {
+	    int xm;
+	    if (t == null)
+		xm = (int)(trf.x( x_mark1, ll.y) * cmn.mw.zoom_factor_x) - cmn.mw.offset_x;
+	    else
+		xm = (int)(trf.x( t, x_mark1, ll.y) * cmn.mw.zoom_factor_x) - cmn.mw.offset_x;
+	    if ( xm >= ll_x && xm <= ur_x) {
+		drawtype = mark1_color;
+		if ( drawtype == Glow.eDrawType_Inherit)
+		    drawtype = Glow.eDrawType_ColorYellow;
+		cmn.gdraw.line( xm, ll_y, xm, ur_y, drawtype, idx, 0);
+	    }
+	}
+	if ( display_x_mark2 != 0) {
+	    int xm;
+	    if (t == null)
+		xm = (int)(trf.x( x_mark2, ll.y) * cmn.mw.zoom_factor_x) - cmn.mw.offset_x;
+	    else
+		xm = (int)(trf.x( t, x_mark2, ll.y) * cmn.mw.zoom_factor_x) - cmn.mw.offset_x;
+	    if ( xm >= ll_x && xm <= ur_x) {
+		drawtype = mark2_color;
+		if ( drawtype == Glow.eDrawType_Inherit)
+		    drawtype = Glow.eDrawType_ColorYellow;
+		cmn.gdraw.line( xm, ll_y, xm, ur_y, drawtype, idx, 0);
+	    }
+	}
+	if ( display_y_mark1 != 0) {
+	    int ym;
+	    if (t == null)
+		ym = (int)( trf.y( ll.x, y_mark1) * cmn.mw.zoom_factor_y) - cmn.mw.offset_y;
+	    else
+		ym = (int)( trf.y( t, ll.x, y_mark1) * cmn.mw.zoom_factor_y) - cmn.mw.offset_y;
+	    if ( ym >= ll_y && ym <= ur_y) {
+		drawtype = mark1_color;
+		if ( drawtype == Glow.eDrawType_Inherit)
+		    drawtype = Glow.eDrawType_ColorYellow;
+		cmn.gdraw.line( ll_x, ym, ur_x, ym, drawtype, idx, 0);
+	    }
+	}
+	if ( display_y_mark2 != 0) {
+	    int ym;
+	    if (t == null)
+		ym = (int)( trf.y( ll.x, y_mark2) * cmn.mw.zoom_factor_y) - cmn.mw.offset_y;
+	    else
+		ym = (int)( trf.y( t, ll.x, y_mark2) * cmn.mw.zoom_factor_y) - cmn.mw.offset_y;
+	    if ( ym >= ll_y && ym <= ur_y) {
+		drawtype = mark2_color;
+		if ( drawtype == Glow.eDrawType_Inherit)
+		    drawtype = Glow.eDrawType_ColorYellow;
+		cmn.gdraw.line( ll_x, ym, ur_x, ym, drawtype, idx, 0);
+	    }
+	}
+
 	if ( border != 0) {
 	    cmn.gdraw.rect( ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, idx, 0);
 	}
@@ -441,6 +505,18 @@ public class GrowTrend extends GrowRect {
     public void set_range_y( int curve, double min, double max) {
 	if ( !( curve == 0 || curve == 1))
 	    return;
+
+	if ( curve == 0) {
+	    if ( display_y_mark1 != 0) {
+		double mark = y_min_value[0] - (y_mark1 - ur.y) *(y_max_value[0] - y_min_value[0]) / (ur.y - ll.y);
+		y_mark1 = ur.y - (mark - min) / (max - min) * (ur.y - ll.y);
+	    }
+	    if ( display_y_mark2 != 0) {
+		double mark = y_min_value[0] - (y_mark2 - ur.y) *(y_max_value[0] - y_min_value[0]) / (ur.y - ll.y);
+		y_mark2 = ur.y - (mark - min) / (max - min) * (ur.y - ll.y);
+	    }
+	}
+
 	y_max_value[curve] = max;
 	y_min_value[curve] = min;
 	configure_curves();
@@ -473,5 +549,34 @@ public class GrowTrend extends GrowRect {
     }
     public int get_no_of_points() {
 	return no_of_points;
+    }
+    public void set_x_mark1( double mark) {
+	display_x_mark1 = 1;
+	x_mark1 = ll.x + (mark - x_min_value[0]) / 
+	    (x_max_value[0] - x_min_value[0]) * (ur.x - ll.x);
+	draw();
+    }
+    public void set_x_mark2( double mark) {
+	display_x_mark2 = 1;
+	x_mark2 = ll.x + (mark - x_min_value[0]) / 
+	    (x_max_value[0] - x_min_value[0]) * (ur.x - ll.x);
+	draw();
+    }
+    public void set_y_mark1( double mark) {
+	display_y_mark1 = 1;
+	y_mark1 = ur.y - (mark - y_min_value[0]) / 
+	    (y_max_value[0] - y_min_value[0]) * (ur.y - ll.y);
+	draw();
+    }
+    public void set_y_mark2( double mark) {
+	display_y_mark2 = 1;
+	y_mark2 = ur.y - (mark - y_min_value[0]) / 
+	    (y_max_value[0] - y_min_value[0]) * (ur.y - ll.y);
+	draw();
+    }
+
+    public void set_mark_color( int m1color, int m2color){
+	mark1_color = m1color;
+	mark2_color = m2color;
     }
 }
