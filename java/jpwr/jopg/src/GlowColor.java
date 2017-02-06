@@ -297,6 +297,14 @@ public class GlowColor {
 		    drawtype = ( drawtype - 4);
 		else if ( 56 <= drawtype && drawtype <= 59)
 		    drawtype = ( drawtype - 4);
+		else if ( is_custom(drawtype)) {
+		    if ( drawtype == Glow.eDrawType_CustomColor37) 
+			// Button border color
+			drawtype = Glow.eDrawType_CustomColor40;	  
+		    if ( drawtype == Glow.eDrawType_CustomColor38)
+			// Button text color
+			drawtype = Glow.eDrawType_CustomColor39;	  
+		}
 	    }
 	}
 	if ( !((drawtype >= 0 && drawtype <= Glow.eDrawType_Color__) || 
