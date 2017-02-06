@@ -69,8 +69,27 @@ public class JopOpWindow extends JPanel {
     en = session.getEngine();
 
     // Get OpPlaceWeb object
-    CdhrObjid oretOpWeb = en.gdh.nameToObjid( pwrPlace);
-    if ( oretOpWeb.evenSts()) return;
+    CdhrObjid oretOpWeb;
+    if ( pwrPlace.indexOf('-') == -1) {
+	boolean found = false;
+	oretOpWeb = en.gdh.getClassList( Pwrb.cClass_OpPlaceWeb);
+	while ( oretOpWeb.oddSts()) {
+	    CdhrString sret = en.gdh.objidToName( oretOpWeb.objid, Cdh.mName_object);            
+	    if ( sret.evenSts()) return;
+	    
+	    if ( sret.str.equalsIgnoreCase( pwrPlace)) {
+		found = true;
+		break;
+	    }
+	    oretOpWeb = en.gdh.getNextObject( oretOpWeb.objid);
+	}
+	if ( !found)
+	    return;
+    }
+    else {
+	oretOpWeb = en.gdh.nameToObjid( pwrPlace);
+	if ( oretOpWeb.evenSts()) return;
+    }
 
     CdhrString sret = en.gdh.objidToName( oretOpWeb.objid, Cdh.mName_volumeStrict);            
     if ( sret.evenSts()) return;
