@@ -326,7 +326,13 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	if ( (idx = str.indexOf('[')) == -1) {
 	    if ((eidx = str.lastIndexOf('#')) != -1 &&
 		str.charAt(eidx-1) != '#') {
-		pname.elements = new Integer(str.substring(eidx+1)).intValue();
+		try {
+		    pname.elements = new Integer(str.substring(eidx+1)).intValue();
+		}
+		catch( NumberFormatException e) {
+		    System.out.println("Element syntax error, " + str);
+		    pname.elements = 1;
+		}
 		str = str.substring(0, eidx);
 	    }
 	    else
