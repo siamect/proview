@@ -92,6 +92,8 @@ rt_msg_eobjs 	:= $(eobj_dir)/pwr_msg_co.o $(eobj_dir)/pwr_msg_rt.o
 rs_msg_eobjs 	:= $(eobj_dir)/pwr_msg_rs.o
 wb_msg_eobjs 	:= $(eobj_dir)/pwr_msg_wb.o $(eobj_dir)/pwr_msg_ge.o $(eobj_dir)/pwr_msg_flow.o
 
+linkcp = :
+
 # Configuration
 #ifeq ($(pwre_conf_mysql),1)
 #  cmysql        := -DPWRE_CONF_MYSQL=1

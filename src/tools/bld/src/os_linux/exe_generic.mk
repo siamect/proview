@@ -147,9 +147,7 @@ $(export_exe) : $(link_rule) $(export_flv_obj) $(objects)
 	@ if [ "$(link)" != ":" ]; then \
 	  $(link)  -t | grep $(pwre_broot) | awk -f $(pwre_kroot)/tools/bld/src/$(os_name)/ld_trace_to_d.awk -v target=$(target) > $(link_dependencies); \
 	fi
-	@ if [ "$(linkcp)" != ":" ]; then \
-		$(linkcp); \
-	fi
+	@ $(linkcp);
 
 
 clean_exe :
