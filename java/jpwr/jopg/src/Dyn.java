@@ -7771,6 +7771,8 @@ public class Dyn {
 		    switch ( type_id[i]) {
 		    case Pwr.eType_Float32: {
 			float[] val = dyn.graph.getGdh().getObjectRefInfoFloatArray(p[i], elements[i]);
+			if ( val == null)
+			    break;
 			for ( int j = 0; j < Math.min(elements[i], val.length); j++) {
 			    if ( oldValueF[i][j] != val[j] || firstScan) {
 				sb = cFormat[i].format( val[j], sb);
@@ -7782,6 +7784,8 @@ public class Dyn {
 		    }
 		    case Pwr.eType_Boolean: {
 			boolean[] val = dyn.graph.getGdh().getObjectRefInfoBooleanArray(p[i], elements[i]);
+			if ( val == null)
+			    break;
 			for ( int j = 0; j < Math.min(elements[i], val.length); j++) {
 			    if ( firstScan || oldValueB[i][j] != val[j]) {
 				if ( val[j])
@@ -7801,6 +7805,8 @@ public class Dyn {
 		    case Pwr.eType_UInt16:
 		    case Pwr.eType_UInt8: {
 			int[] val = dyn.graph.getGdh().getObjectRefInfoIntArray(p[i], elements[i]);
+			if ( val == null)
+			    break;
 			for ( int j = 0; j < Math.min(elements[i], val.length); j++) {
 			    if ( oldValueI[i][j] != val[j] || firstScan) {
 				sb = cFormat[i].format( val[j], sb);
@@ -7817,6 +7823,8 @@ public class Dyn {
 		    case Pwr.eType_DeltaTime: {
 			String[] val = dyn.graph.getGdh().getObjectRefInfoStringArray(p[i], type_id[i],
 										      size[i], elements[i]);
+			if ( val == null)
+			    break;
 			for ( int j = 0; j < Math.min(elements[i], val.length); j++) {
 			    if ( firstScan || !oldValueS[i][j].equals(val[j])) {
 				switch ( type_id[i]) {
@@ -7844,6 +7852,8 @@ public class Dyn {
 		    }
 		    case GraphIfc.eType_Bit: {
 			int[] val = dyn.graph.getGdh().getObjectRefInfoIntArray(p[i], elements[i]);
+			if ( val == null)
+			    break;
 			for ( int j = 0; j < Math.min(elements[i], val.length); j++) {
 			    boolean bitval = ((bitmask[i] & val[j]) != 0);
 			    if ( oldValueB[i][j] != bitval || firstScan) {
@@ -7938,6 +7948,8 @@ public class Dyn {
 		if ( sel_p[i] == 0)
 		    continue;
 		boolean[] val = dyn.graph.getGdh().getObjectRefInfoBooleanArray(sel_p[i], sel_elements[i]);
+		if ( val == null)
+		    continue;
 		for ( int j = 0; j < sel_elements[i]; j++) {
 		    if ( val[j]) {
 			sel_found = true;
