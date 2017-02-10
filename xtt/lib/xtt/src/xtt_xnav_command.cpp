@@ -9545,7 +9545,7 @@ int	XNav::show_par_hier_class_name(
   }
 
 
-  if ( !add == XNAV_MENU_ADD) 
+  if ( !(add == XNAV_MENU_ADD)) 
     brow_pop();
 
   try {

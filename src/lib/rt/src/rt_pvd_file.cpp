@@ -89,7 +89,7 @@ void rt_pvd_file::objectName( co_procom *pcom, char *name, pwr_tOix poix)
 {
 
   for ( int i = 0; i < (int) m_list.size(); i++) {
-    if  ( !m_list[i].flags & procom_obj_mFlags_Deleted) {
+    if  ( !(m_list[i].flags & procom_obj_mFlags_Deleted)) {
       if ( cdh_NoCaseStrcmp( name, longname(m_list[i].oix)) == 0) {
 	objectOid( pcom, i);
 	return;
@@ -526,7 +526,7 @@ bool rt_pvd_file::find( pwr_tOix fthoix, const char *name, pwr_tOix *oix)
 {
 
   for ( int i = 0; i < (int) m_list.size(); i++) {
-    if  ( !m_list[i].flags & procom_obj_mFlags_Deleted) {
+    if  ( !(m_list[i].flags & procom_obj_mFlags_Deleted)) {
       if ( m_list[i].fthoix == fthoix && 
 	   cdh_NoCaseStrcmp( name, m_list[i].name) == 0) {
 	*oix = m_list[i].oix;

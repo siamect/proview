@@ -217,7 +217,7 @@ void *CnvXtthelpToXml::insert( navh_eItemType item_type, const char *t1,
 
   if ( (t2 && strcmp(text2, "") != 0) || 
        (t3 && strcmp(text3, "") != 0) ) {
-    if ( !status & xml_mStatus_table) {
+    if ( !(status & xml_mStatus_table)) {
       fp << 
 tags[xml_eTag_table].start << endl;
       status |= xml_mStatus_table;

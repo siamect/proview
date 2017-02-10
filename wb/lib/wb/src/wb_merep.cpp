@@ -607,7 +607,7 @@ void wb_merep::insertCattObject( pwr_tStatus *sts, pwr_tCid cid,
     key.idx++;
     item = (merep_sClassAttr *) tree_Find( sts, m_catt_tt, &key);
   }
-  if ( !adp->flags() & PWR_MASK_ARRAY) {
+  if ( !(adp->flags() & PWR_MASK_ARRAY)) {
     if ( ODD(*sts)) {
       // Insert in found item
       item->offset[item->numOffset] = offset + adp->offset();
