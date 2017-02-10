@@ -363,7 +363,6 @@ else
   echo "Mandatory :"
   pwre_config_check_lib gtk    	  GTK      gtk gtk 0 "/usr/lib/libgtk-x11-2.0.dll.a"
 
-  pwre_config_check_lib libantlr  LIBANTLR lib wb 0 "/usr/local/lib/libantlr.a"
   pwre_config_check_lib librpcsvc LIBRPCSVC lib lib 0 "/usr/lib/libtirpc.a"
   pwre_config_check_lib libasound LIBASOUND lib lib 0 "/usr/lib/libasound.so:/usr/lib/libasound.a"
   pwre_config_check_lib libpthread LIBPTHREAD lib lib 0 "/usr/lib/libpthread.so:/usr/lib/libpthread.a:/usr/lib/$hwpl-linux-gnu/libpthread.so"
@@ -377,7 +376,6 @@ else
   pwre_config_check_lib libiconv  LIBICONV lib lib 0 "/usr/lib/libiconv.dll.a:/usr/lib/libiconv.a"
   pwre_config_check_lib libX11    LIBX11   lib lib 0 "/usr/lib/libX11.a"
 
-  pwre_config_check_include antlr ANTLR 1 "/usr/local/include/antlr/CommonAST.hpp"
   pwre_config_check_include gtk   GTK   1 "/usr/local/include/gtk-2.0/gtk.h:/usr/local/include/gtk-2.0/gtk/gtk.h:/usr/include/gtk-2.0/gtk"
   pwre_config_check_include jni   JNI   1 "$jdk/include/jni.h"
   pwre_config_check_include jni   JNI   0 "$jdk/include/win32/jni_md.h"

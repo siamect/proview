@@ -279,7 +279,6 @@ fi
   echo "Mandatory :"
 pwre_config_check_lib gtk      	GTK      gtk gtk 0 /usr/local/lib/libgtk-x11-2.0.a
 
-pwre_config_check_lib libantlr 	LIBANTLR lib lib 0 /usr/local/lib/libantlr.a
 pwre_config_check_lib librpcsvc LIBRPCSVC lib lib 0 /usr/lib/librpcsvc.so:/usr/lib/librpcsvc.a
 #pwre_config_check_lib libasound LIBASOUND lib lib 0 /usr/lib/libasound.so:/usr/lib/libasound.a
 pwre_config_check_lib libpthread LIBPTHREAD lib lib 0 /usr/lib/libpthread.so:/usr/lib/libpthread.a
@@ -291,7 +290,6 @@ pwre_config_check_lib librt    LIBRT    lib lib 0 /usr/lib/librt.dylib:/usr/lib/
 pwre_config_check_lib libiconv LIBICONV lib lib 0 /usr/local/lib/libiconv.so:usr/local/lib/libiconv.a
 pwre_config_check_lib libfl    LIBFL    lib lib 0 /usr/lib/libfl.os:/usr/lib/libfl.a
 
-pwre_config_check_include antlr ANTLR 1 /usr/local/include/antlr/CommonAST.hpp
 pwre_config_check_include gtk   GTK   1 /usr/local/include/gtk-2.0/gtk/gtk.h
 pwre_config_check_include jni   JNI   1 /usr/local/jdk1.6.0/include/jni.h
 pwre_config_check_include jni   JNI   0 /usr/local/jdk1.6.0/include/freebsd/jni_md.h

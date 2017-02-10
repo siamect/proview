@@ -37,9 +37,7 @@
 #include <iostream>
 #include <fstream>
 #include <sys/stat.h>
-#include "antlr/AST.hpp"
-#include "wb_wbllexer.hpp"
-#include "wb_wblparser.hpp"
+#include "wb_wbl_parser.h"
 #include "wb_wblnode.h"
 
 #include "wb_vrepwbl.h"
@@ -62,7 +60,6 @@ wb_vrepwbl::~wb_vrepwbl()
 {
   for ( int i = 0; i < file_cnt; i++) {
     delete file[i]->parser;
-    delete file[i]->lexer;
     delete file[i];
   }
 
@@ -264,7 +261,6 @@ int wb_vrepwbl::load( const char *fname)
   int file_cnt_sort = 0;
 
   rsts = LDH__SUCCESS;
-  wblparser_error_cnt = 0;
 
   MsgWindow::dset_nodraw();
 
@@ -312,7 +308,7 @@ int wb_vrepwbl::load( const char *fname)
 	   wbl_sort_files);
 
   for ( i = 0; i < file_cnt; i++) {
-    for ( ref_wblnode n = file[i]->rootAST; n; n = n->getNextSibling())
+    for ( ref_wblnode n = (ref_wblnode)file[i]->rootAST; n; n = (ref_wblnode)n->getNextSibling())
       n->registerNode( this);
   }
   for ( i = 0; i < file_cnt; i++) {
@@ -337,10 +333,10 @@ int wb_vrepwbl::load( const char *fname)
     error_cnt++;
   }
 
-  if ( error_cnt || wblparser_error_cnt) {
+  if ( error_cnt) {
     char str[80];
     sprintf( str, "Errors when loading volume: %d error%s found", 
-	     error_cnt + wblparser_error_cnt, (error_cnt + wblparser_error_cnt == 1) ? "" : "s");
+	     error_cnt, (error_cnt == 1) ? "" : "s");
     MsgWindow::message( 'F', str);
   }
   else
@@ -1364,6 +1360,7 @@ int wb_vrepwbl::load_files( const char *file_spec)
 {
   char found_file[200];
   int sts;
+  wb_wbl_parser p;
 
   sts = dcli_search_file( (char *)file_spec, found_file, DCLI_DIR_SEARCH_INIT);
   while( ODD(sts)) {
@@ -1379,23 +1376,11 @@ int wb_vrepwbl::load_files( const char *file_spec)
       return LDH__MAXWBLFILES;
 
     file[file_cnt] = new wb_wblfile();
-    file[file_cnt]->lexer = new wb_wbllexer(s);
-    file[file_cnt]->lexer->setFilename( found_file);
 
-    file[file_cnt]->parser = new wb_wblparser(*file[file_cnt]->lexer);
-    file[file_cnt]->parser->setFilename( found_file);
-
-    // Antlr 2.7.3 seems to want an ASTFactory here...
-    ASTFactory wblfactory("ref_wblnode", wb_wblnode::factory);
-    file[file_cnt]->parser->initializeASTFactory( wblfactory);
-    file[file_cnt]->parser->setASTNodeFactory( &wblfactory);
-    // file[file_cnt]->parser->setASTNodeFactory( wb_wblnode::factory);
-
+    file[file_cnt]->parser = new wb_wbl_parser();
     try {
-      // Parse the input expression
-      file[file_cnt]->parser->unit();
-      AST *a = file[file_cnt]->parser->getAST();
-      file[file_cnt]->rootAST = (wb_wblnode *) a; 
+      file[file_cnt]->parser->parse( found_file);
+      file[file_cnt]->rootAST = (ref_wblnode)file[file_cnt]->parser->get_root_ast();
       if ( !file[file_cnt]->rootAST) {
         error("File empty", found_file, 0);
         file_cnt--;
@@ -1412,16 +1397,9 @@ int wb_vrepwbl::load_files( const char *file_spec)
         file[file_cnt]->rootAST->setFile( file[file_cnt]);
       }
     }
-    catch(exception& e) {
-      cout << "exception: " << e.what() << " " << found_file << " line: " << 
-        file[file_cnt]->lexer->getLine() << endl;
-      error_cnt++;
-      return LDH__WBLPARSE;
-    }
-    catch(ANTLRException& e) {
-      cout << "E Wbl parse error: " << " " << found_file << " line: " << 
-        file[file_cnt]->lexer->getLine() << endl;
-      cout << "F Wbl terminated" << endl;
+    catch(wb_error_str& e) {
+      cout << "Exception: " << e.what() << " " << found_file << " line: " << 
+        file[file_cnt]->parser->get_line() << endl;
       error_cnt++;
       return LDH__WBLPARSE;
     }
@@ -1747,7 +1725,6 @@ bool wb_vrepwbl::renameObject(pwr_tStatus *sts, wb_orep *orep, wb_name &name)
     
   wb_wblnode *n = ((wb_orepwbl *) orep)->wblNode();
 
-  string sname( name.object());
-  n->setText( sname);
+  n->setText( name.object());
   return true;
 }

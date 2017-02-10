@@ -38,15 +38,11 @@
 #define wb_wblnode_h
 
 #include <iostream>
-#include "antlr/CommonAST.hpp"
-#include "antlr/ASTFactory.hpp"
 #include "pwr.h"
 #include "wb_name.h"
+#include "wb_wbl_parser.h"
 #include "wb_wblfile.h"
 
-
-ANTLR_USING_NAMESPACE(std)
-ANTLR_USING_NAMESPACE(antlr)
 
 class wb_wblnode;
 class wb_vrepwbl;
@@ -70,7 +66,7 @@ typedef enum {
   wbl_eNodeType_Code
 } wbl_eNodeType;
 
-typedef antlr::ASTRefCount<wb_wblnode> ref_wblnode;
+typedef wb_wblnode *ref_wblnode;
 
 typedef struct {
   const char	*sym;
@@ -142,6 +138,7 @@ class wbl_object {
       if ( rbody_size) free( rbody);
       if ( dbody_size) free( dbody);
   }    
+
   size_t rbody_size;
   size_t dbody_size;
   void *rbody;
@@ -169,22 +166,15 @@ class wbl_object {
 };
 
 
-class wb_wblnode : public CommonAST {
+class wb_wblnode : public wbl_ast_node {
 
   friend class wb_vrepwbl;
 
 public:
     wb_wblnode() : 
       node_type(wbl_eNodeType_No), 
-      line_number(0), file(0), o(0)
+      file(0), o(0)
     {
-    }
-    wb_wblnode(antlr::RefToken t) : 
-      node_type(wbl_eNodeType_No), 
-      line_number(0), file(0), o(0)
-    {
-      CommonAST::setType(t->getType());
-      CommonAST::setText(t->getText());
     }
     ~wb_wblnode() 
     {
@@ -192,69 +182,33 @@ public:
 	delete o;
     }
 
-    void initialize(int t, const std::string& txt)
-    {
-      CommonAST::setType(t);
-      CommonAST::setText(txt);
-    }
-
-    void initialize( ref_wblnode t)
-    {
-      CommonAST::setType(t->getType());
-      CommonAST::setText(t->getText());
-    }
-    void initialize( RefAST t )
-   {
-      CommonAST::initialize(t);
-    }
-    void initialize( antlr::RefToken t);
-
-    void setText(const std::string& txt)
-    {
-      CommonAST::setText(txt);
-    }
-
-    void setType(int type)
-    {
-      CommonAST::setType(type);
-    }
-
-    void addChild( ref_wblnode c )
-    {
-      BaseAST::addChild( RefAST(c));
-    }
-
-    static antlr::RefAST factory( void )
-    {
-      antlr::RefAST ret = RefAST(new wb_wblnode);
-      return ret;
-    }
-
-    ref_wblnode getFirstChild()
-    {
-      return ref_wblnode(BaseAST::getFirstChild());
-    }
-
-    ref_wblnode getNextSibling()
-    {
-       return ref_wblnode(BaseAST::getNextSibling());
-    }
-
-
-    // Heterogeneous part
     void info( int level) {
       for ( int i = 0; i < level; i++)
         cout << "  ";
       cout << getType() << " " << getText() << endl;
-      ref_wblnode t = getFirstChild();
+      wb_wblnode *t = (wb_wblnode *)getFirstChild();
       if ( t)
         t->info( level + 1);
 
-      t = getNextSibling();
+      t = (wb_wblnode *)getNextSibling();
       if ( t)
         t->info( level);
     }
-
+    wb_wblnode *getFirstChild() { return (wb_wblnode *)fch;}
+    wb_wblnode *getNextSibling() { return (wb_wblnode *)fws;}
+    void setNextSibling( wb_wblnode *n) { 
+      n->fws = fws; 
+      fws = n; 
+      if ( fth->lch == this)
+	fth->lch = n;
+    }
+    void setFirstChild( wb_wblnode *c) {
+      if ( fch)
+	c->fws = fch;
+      else
+	lch = c;
+      fch = c;
+    }
     bool isType() { return (node_type == wbl_eNodeType_Type);}
     bool isTypeDef() { return (node_type == wbl_eNodeType_TypeDef);}
     bool isClassDef() { return (node_type == wbl_eNodeType_ClassDef);}
@@ -308,12 +262,11 @@ public:
 
     static int lookup( int *type, const char *keyword, wbl_sSym *table);
     static int convconst( int *val, char *str);
-    const char *name() { return getText().c_str();}
+    const char *name() { return getText();}
     bool docBlock( char **block, int *size) const;
 
     wbl_eNodeType node_type;
     wb_vrepwbl *m_vrep;
-    int line_number;
     wb_wblfile *file;
 
     wbl_object *o;

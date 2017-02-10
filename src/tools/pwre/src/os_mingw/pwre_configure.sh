@@ -282,7 +282,6 @@ fi
   echo "Mandatory :"
 pwre_config_check_lib gtk      	GTK      gtk gtk 0 /sw/lib/libgtk-x11-2.0.dylib
 
-pwre_config_check_lib libantlr 	LIBANTLR lib lib 0 /usr/local/lib/libantlr.a
 pwre_config_check_lib librpcsvc LIBRPCSVC lib lib 0 /usr/lib/librpcsvc.dylib:/usr/lib/librpcsvc.a
 #pwre_config_check_lib libasound LIBASOUND lib lib 0 /usr/lib/libasound.dylib:/usr/lib/libasound.a
 pwre_config_check_lib libpthread LIBPTHREAD lib lib 0 /usr/lib/libpthread.dylib:/usr/lib/libpthread.a
@@ -294,7 +293,6 @@ pwre_config_check_lib libz     	LIBZ     lib lib 0 c:/mingw/lib/libz.ddl.a
 pwre_config_check_lib libiconv LIBICONV lib lib 0 c:/mingw/lib/libiconv.a
 pwre_config_check_lib libfl    LIBFL    lib lib 0 c:/mingw/msys/1.0/lib/libfl.a
 
-pwre_config_check_include antlr ANTLR 1 /usr/local/include/antlr/CommonAST.hpp
 pwre_config_check_include gtk   GTK   1 /sw/include/gtk-2.0/gtk/gtk.h
 pwre_config_check_include jni   JNI   1 /Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers/jni.h:$jdk/include/jni.h
 pwre_config_check_include jni   JNI   0 $jdk/include/linux/jni_md.h

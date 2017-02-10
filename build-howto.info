@@ -14,7 +14,6 @@ libdb5.3-dev  (Any Berkeley DB version > 4.3, on Fedora db4-devel)
 libdb5.3++-dev
 libasound2-dev (on Fedora alsa-lib-devel)
 doxygen
-libantlr-dev (version 2.7.7)
 jdk
 
 
@@ -40,7 +39,6 @@ libasound2-dev
 libdb5.1-dev
 libdb5.1++-dev
 doxygen
-libantlr-dev
 
 Optional:
 
@@ -273,9 +271,6 @@ Set default shell of the build user to bash (/usr/local/bin/bash)
 Install BerkeleyDB 4.8 (pkg_add -r db48)
 
 Install jdk (cd /usr/port/java/jdk16; make install clean)
-
-Download and build source package antlr-2.7.7 from www.antlr.org
-Hint: define MAKE to gmake before configure and build (export MAKE=gmake).
 
 Install doxygen (cd /usr/devel/doxygen; make install clean)
 

@@ -41,9 +41,7 @@
 
 #include "co_depend.h"
 #include "wb_vrep.h"
-#include "antlr/AST.hpp"
-#include "wb_wbllexer.hpp"
-#include "wb_wblparser.hpp"
+#include "wb_wbl_parser.h"
 #include "wb_wblnode.h"
 #include "wb_wblfile.h"
 #include "wb_erep.h"

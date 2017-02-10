@@ -45,12 +45,9 @@
 #include "wb_orepwbl.h"
 #include "wb_merep.h"
 #include "wb_cdrep.h"
-#include "wb_wblvocabTokenTypes.hpp"
 #include "wb_dbs.h"
 #include "wb_name.h"
 #include "wb_treeimport.h"
-
-struct wb_wblvocabTokenTypes tokens;
 
 /* Datatypes */
 static wbl_sSym datatypes[] =
@@ -354,9 +351,9 @@ static wbl_sSym attr_flags[] =
 
 static int check_conversion_error( const char *attr);
 
-void wb_wblnode::initialize( antlr::RefToken t )
+#if 0
+void wb_wblnode::initialize()
 {
-  CommonAST::initialize(t);
   line_number = t->getLine();
   
   // Test 
@@ -367,6 +364,7 @@ void wb_wblnode::initialize( antlr::RefToken t )
     last = line_number;
   }
 }
+#endif
 
 int wb_wblnode::classNameToCid( char *class_name, pwr_tCid *cid)
 {
@@ -449,7 +447,7 @@ int wb_wblnode::convconst( int *val, char *str)
 ref_wblnode wb_wblnode::find( wb_name *oname, int level)
 {
 
-  if (getType() == tokens.OBJECT) {
+  if (getType() == wbl_eToken_Object) {
     if ( oname->segmentIsEqual( name(), level)) {
       if ( !oname->hasSegment(level+1))
         return this;
@@ -464,7 +462,7 @@ ref_wblnode wb_wblnode::find( wb_name *oname, int level)
       return 0;
   }
 
-  if ((getType() == tokens.VOLUME) || (getType() == tokens.OBJECT)) {
+  if ((getType() == wbl_eToken_Volume) || (getType() == wbl_eToken_Object)) {
     if ( oname->volumeIsEqual( name()) && !oname->hasSegment(0))
       return this;
     else if ( o->fch)
@@ -1138,7 +1136,7 @@ void wb_wblnode::buildBody( ref_wblnode object)
   ref_wblnode first_child;
   ref_wblnode next_sibling;
 
-  if (getType() == tokens.BODY) {
+  if (getType() == wbl_eToken_Body) {
     if ( cdh_NoCaseStrcmp( name(), "SysBody") == 0)
       bix = pwr_eBix_sys;
     else if ( cdh_NoCaseStrcmp( name(), "RtBody") == 0)
@@ -1153,10 +1151,9 @@ void wb_wblnode::buildBody( ref_wblnode object)
     first_child = getFirstChild();
 
     // First child might be body time
-    if ( first_child && first_child->getType() == tokens.ASC_TIME) {
-      string timestr = first_child->getText();
+    if ( first_child && first_child->getType() == wbl_eToken_Date) {
       pwr_tTime bodytime;
-      if ( stringToTime( timestr.c_str(), &bodytime)) {
+      if ( stringToTime( first_child->getText(), &bodytime)) {
 	if ( bix == pwr_eBix_rt)
 	  object->o->m_rbtime = bodytime;
 	else
@@ -1186,7 +1183,6 @@ void wb_wblnode::buildAttr( ref_wblnode object, pwr_eBix bix)
 {
   ref_wblnode first_child;
   ref_wblnode second_child;
-  ref_wblnode next_sibling;
   int oper;
   char value[8192];
   size_t size, offset;
@@ -1198,7 +1194,7 @@ void wb_wblnode::buildAttr( ref_wblnode object, pwr_eBix bix)
   int int_val, current_int_val;
   bool string_continue = false;
 
-  if (getType() == tokens.ATTRIBUTE) {
+  if (getType() == wbl_eToken_Attr) {
     first_child = getFirstChild();
     if ( !first_child) {
       // Attr exception
@@ -1207,7 +1203,7 @@ void wb_wblnode::buildAttr( ref_wblnode object, pwr_eBix bix)
     }
 
     oper = first_child->getType();
-    if ((oper != tokens.OREQ) && (oper != tokens.EQ)) {
+    if (!(oper == wbl_eToken_Operator_eq || oper == wbl_eToken_Operator_oreq)) {
       // Attr exception
       m_vrep->error( "Attribute value required", getFileName(), line_number);
       goto error_continue;
@@ -1262,7 +1258,7 @@ void wb_wblnode::buildAttr( ref_wblnode object, pwr_eBix bix)
 
     // printf( "Attr %s %s %d %d %s\n", object->name, name, size, offset, value);
     if ( size == sizeof(int_val) && convconst( &int_val, value)) {
-      if ( oper == tokens.EQ) {
+      if ( oper == wbl_eToken_Operator_eq) {
         if ( bix == pwr_eBix_rt || bix == pwr_eBix_sys)
           memcpy( (char *)((unsigned long) object->o->rbody + offset), 
                   &int_val, size);
@@ -1270,7 +1266,7 @@ void wb_wblnode::buildAttr( ref_wblnode object, pwr_eBix bix)
           memcpy( (char *)((unsigned long) object->o->dbody + offset), 
                   &int_val, size);
       }
-      else if ( oper == tokens.OREQ) {
+      else if ( oper == wbl_eToken_Operator_oreq) {
         if ( bix == pwr_eBix_rt || bix == pwr_eBix_sys) {
           current_int_val = *(int *) ((unsigned long) object->o->rbody + offset);
           int_val |= current_int_val;
@@ -1311,7 +1307,7 @@ error_continue:
     ;
 
   }
-  else if (getType() == tokens.BUFFER)
+  else if (getType() == wbl_eToken_Buffer)
   {
     buildBuff( object, bix, 0, 0, 0);
   }
@@ -1325,6 +1321,7 @@ void wb_wblnode::buildBuff( ref_wblnode object, pwr_eBix bix, pwr_tCid buffer_ci
   pwr_tStatus sts;
   pwr_tCid host_cid;
   pwr_tCid cid;
+  wb_attrname aname = wb_attrname( name());
 
   if ( buffer_cid != 0) {
     // Buffer in buffer... Fix
@@ -1332,6 +1329,7 @@ void wb_wblnode::buildBuff( ref_wblnode object, pwr_eBix bix, pwr_tCid buffer_ci
   }
   else
     host_cid = object->o->m_cid;
+
 
   if ( cdh_CidToVid(host_cid) == m_vrep->vid()) {
     pwr_tTypeId tid;
@@ -1348,7 +1346,6 @@ void wb_wblnode::buildBuff( ref_wblnode object, pwr_eBix bix, pwr_tCid buffer_ci
       m_vrep->error( "Unknown class of buffer owner", getFileName(), line_number);
       return;
     }
-    wb_attrname aname = wb_attrname( name());
     wb_adrep *adrep = cdrep->adrep( &sts, aname.attribute());
     if ( EVEN(sts)) {
       m_vrep->error( "Unknown Buffer", getFileName(), line_number);
@@ -1363,8 +1360,13 @@ void wb_wblnode::buildBuff( ref_wblnode object, pwr_eBix bix, pwr_tCid buffer_ci
     delete cdrep;
     delete adrep;
   }
+  if ( aname.hasAttrIndex(0)) {
+    size = size / elements;
+    offset += aname.attrIndex(0) * size;
+  }
   first_child = getFirstChild();
-  if ( first_child && first_child->getType() == tokens.INDEX) {
+#if 0
+  if ( first_child && first_child->getType() == wbl_eToken_Index) {
     int index;
     int nr = sscanf( first_child->name(), "%d", &index);
     if ( nr != 1) {
@@ -1378,6 +1380,7 @@ void wb_wblnode::buildBuff( ref_wblnode object, pwr_eBix bix, pwr_tCid buffer_ci
     size = size / elements;
     offset += index * size;
   }
+#endif
 
   if ( buffer_cid != 0)
     offset += buffer_offset;
@@ -1404,7 +1407,7 @@ void wb_wblnode::buildBuffAttr( ref_wblnode object, pwr_eBix bix, pwr_tCid buffe
   wb_adrep *adrep;
   wb_attrname aname;
 
-  if (getType() == tokens.ATTRIBUTE)
+  if (getType() == wbl_eToken_Attr)
   {
     first_child = getFirstChild();
     if ( !first_child) {
@@ -1414,7 +1417,7 @@ void wb_wblnode::buildBuffAttr( ref_wblnode object, pwr_eBix bix, pwr_tCid buffe
     }
 
     oper = first_child->getType();
-    if ((oper != tokens.OREQ) && (oper != tokens.EQ)) {
+    if (!(oper == wbl_eToken_Operator_eq || oper == wbl_eToken_Operator_oreq)) {
       // Attr exception
       m_vrep->error( "Attribute value required", getFileName(), line_number);
       goto error_continue;
@@ -1533,7 +1536,7 @@ void wb_wblnode::buildBuffAttr( ref_wblnode object, pwr_eBix bix, pwr_tCid buffe
 
     // printf( "Attr %s %s %d %d %s\n", object->name, name, size, offset, value);
     if ( size/elements == sizeof(int_val) && convconst( &int_val, value)) {
-      if ( oper == tokens.EQ) {
+      if ( oper == wbl_eToken_Operator_eq) {
         if ( bix == pwr_eBix_rt || bix == pwr_eBix_sys) 
           memcpy( (char *)((unsigned long) object->o->rbody + offset), 
                   &int_val, size/elements);
@@ -1541,7 +1544,7 @@ void wb_wblnode::buildBuffAttr( ref_wblnode object, pwr_eBix bix, pwr_tCid buffe
           memcpy( (char *)((unsigned long) object->o->dbody + offset), 
                   &int_val, size/elements);
       }
-      else if ( oper == tokens.OREQ) {
+      else if ( oper == wbl_eToken_Operator_oreq) {
         if ( bix == pwr_eBix_rt || bix == pwr_eBix_sys) {
           current_int_val = *(int *) ((unsigned long) object->o->rbody + offset);
           int_val |= current_int_val;
@@ -1572,7 +1575,7 @@ void wb_wblnode::buildBuffAttr( ref_wblnode object, pwr_eBix bix, pwr_tCid buffe
     error_continue:
     ;
   }
-  else if (getType() == tokens.BUFFER)
+  else if (getType() == wbl_eToken_Buffer)
   {
     buildBuff( object, bix, buffer_cid, buffer_offset, buffer_size);
   }
@@ -1587,7 +1590,7 @@ void wb_wblnode::link( wb_vrepwbl *vol, ref_wblnode father, ref_wblnode parent_a
   ref_wblnode first_child;
   ref_wblnode next_sibling;
 
-  if ((getType() == tokens.OBJECT) || (getType() == tokens.VOLUME)) {
+  if ((getType() == wbl_eToken_Object) || (getType() == wbl_eToken_Volume)) {
     if ( !father) {
       // Volume root
       vol->root_object = this;
@@ -1619,12 +1622,12 @@ void wb_wblnode::link( wb_vrepwbl *vol, ref_wblnode father, ref_wblnode parent_a
 	prev = child;
 	child = child->getNextSibling();
       }
-      if ( prev && prev->getType() == tokens.DOCBLOCK)
+      if ( prev && prev->getType() == wbl_eToken_DocBlock)
 	o->docblock = prev;
     }
     // cout << "Linking " << name << endl;
   }
-  else if (getType() == tokens.SOBJECT)
+  else if (getType() == wbl_eToken_SObject)
   {
     ref_wblnode snode = m_vrep->find( name());
     if ( !snode) {
@@ -1655,10 +1658,10 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
   ref_wblnode first_child = getFirstChild();
   m_vrep = vol;
 
-  if (getType() == tokens.DOCBLOCK) {
+  if (getType() == wbl_eToken_DocBlock) {
     string txt = getText();
   }  
-  else if (getType() == tokens.OBJECT)
+  else if (getType() == wbl_eToken_Object)
   {
 
     if ( !o)
@@ -1673,8 +1676,7 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
 
     // Get class
     if ( first_child) {
-      string class_name = first_child->getText();
-      strcpy( o->cname, class_name.c_str());
+      strcpy( o->cname, first_child->getText());
  
       if ( !classNameToCid( o->cname, &o->m_cid)) {
 	o->m_cid = 0;
@@ -1683,27 +1685,27 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
 
       // If $ClassDef, register class in classlist
       if ( !isTemplate()) {
-        if ( first_child->getType() == tokens.VALUE &&
+        if ( first_child->getType() == wbl_eToken_Name &&
              (strcmp( o->cname, "$ClassDef") == 0 ||
               strcmp( o->cname, "pwr_eClass_ClassDef") == 0)) {
           node_type = wbl_eNodeType_ClassDef;
         }
-        else if ( first_child->getType() == tokens.VALUE &&
+        else if ( first_child->getType() == wbl_eToken_Name &&
                   ( strcmp( o->cname, "$Type") == 0 ||
                     strcmp( o->cname, "pwr_eClass_Type") == 0)) {
           node_type = wbl_eNodeType_Type;
         }
-        else if ( first_child->getType() == tokens.VALUE &&
+        else if ( first_child->getType() == wbl_eToken_Name &&
                   ( strcmp( o->cname, "$TypeDef") == 0 ||
                     strcmp( o->cname, "pwr_eClass_TypeDef") == 0)) {
           node_type = wbl_eNodeType_TypeDef;
         }
-        else if ( first_child->getType() == tokens.VALUE &&
+        else if ( first_child->getType() == wbl_eToken_Name &&
                   ( strcmp( o->cname, "$ObjBodyDef") == 0 ||
                     strcmp( o->cname, "pwr_eClass_ObjBodyDef") == 0)) {
           node_type = wbl_eNodeType_ObjBodyDef;
         }
-        else if ( first_child->getType() == tokens.VALUE &&
+        else if ( first_child->getType() == wbl_eToken_Name &&
                   ( strcmp( o->cname, "$Attribute") == 0 ||
                     strcmp( o->cname, "$Input") == 0 ||
                     strcmp( o->cname, "$Output") == 0 ||
@@ -1713,11 +1715,11 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
                     strcmp( o->cname, "pwr_eClass_Param") == 0)) {
           node_type = wbl_eNodeType_Attribute;
         }
-        else if ( first_child->getType() == tokens.VALUE &&
+        else if ( first_child->getType() == wbl_eToken_Name &&
                   ( strcmp( o->cname, "$Buffer") == 0)) {
           node_type = wbl_eNodeType_Buffer;
         }
-        else if ( first_child->getType() == tokens.VALUE &&
+        else if ( first_child->getType() == wbl_eToken_Name &&
                   ( strcmp( o->cname, "$Param") == 0)) {
           m_vrep->error( "Obsolete attribute class, use $Attribute instead",
                          getFileName(), line_number);
@@ -1729,26 +1731,21 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
       if ( second_child) {
 	ref_wblnode third_child = second_child->getNextSibling();
 
-        if ((second_child->getType() == tokens.VALUE) ||
-            (second_child->getType() == tokens.INT)) {
-          string oixstr = second_child->getText();
-          if ( !stringToOix( oixstr.c_str(), &o->m_oid.oix) || m_vrep->m_ignore_oix) {
+        if ( second_child->getType() == wbl_eToken_Index) {
+          if ( !stringToOix( second_child->getText(), &o->m_oid.oix) || m_vrep->m_ignore_oix) {
             o->m_oid.oix = m_vrep->nextOix();
           }
-	  if ( third_child && third_child->getType() == tokens.ASC_TIME) {
-	    string timestr = third_child->getText();
-	    if ( !stringToTime( timestr.c_str(), &o->m_ohtime))
+	  if ( third_child && third_child->getType() == wbl_eToken_Date) {
+	    if ( !stringToTime( third_child->getText(), &o->m_ohtime))
 	      m_vrep->error( "Time syntax", getFileName(), line_number);
 	  }
         }
-        else if (second_child->getType() == tokens.ASC_TIME) {
-	  string timestr = second_child->getText();
-	  if ( !stringToTime( timestr.c_str(), &o->m_ohtime))
+        else if (second_child->getType() == wbl_eToken_Date) {
+	  if ( !stringToTime( second_child->getText(), &o->m_ohtime))
 	    m_vrep->error( "Time syntax", getFileName(), line_number);
 	}
-        else if ((second_child->getType() == tokens.ENDOBJECT) ||
-                 (second_child->getType() == tokens.OBJECT) ||
-                 (second_child->getType() == tokens.BODY)) {
+        else if ((second_child->getType() == wbl_eToken_Object) ||
+                 (second_child->getType() == wbl_eToken_Body)) {
           o->m_oid.oix = m_vrep->nextOix();
         }
         else {
@@ -1783,11 +1780,9 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
       // Find Template object
       ref_wblnode child = first_child;
       ref_wblnode last_child = child;
-      string childname;
       while ( child) {
-        if ( child->getType() == tokens.OBJECT) {
-          childname = child->getText();
-          if ( strcmp( childname.c_str(), "Template") == 0) {
+        if ( child->getType() == wbl_eToken_Object) {
+          if ( strcmp( child->getText(), "Template") == 0) {
 	    ref_wblnode fc = child->getFirstChild();
 	    if ( fc->getText() == name()) {
 	      o->c.templ = child;
@@ -1800,11 +1795,10 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
 	      strcpy( o->c.templ->o->cname, name());
 	      o->c.templ->o->m_cid = o->c.cid;
 	      o->c.templ->node_type = wbl_eNodeType_Template;
-	      string cname(name());
-	      fc->setText(cname);
+	      fc->setText((char *)name());
 	    }
           }
-          else if ( strcmp( childname.c_str(), "Code") == 0) {
+          else if ( strcmp( child->getText(), "Code") == 0) {
             o->c.code = child;
             o->c.code->node_type = wbl_eNodeType_Code;
           }
@@ -1818,13 +1812,12 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
 	wb_wblnode *templ = new wb_wblnode();
 	// ref_wblnode reftempl(templ);
         o->c.templ = templ;
-        o->c.templ->setType( tokens.OBJECT);
-        string tname("Template");
-        o->c.templ->setText( tname);
+        o->c.templ->setType( wbl_eToken_Object);
+        o->c.templ->setText( (char *)"Template");
         if ( last_child)
-          last_child->setNextSibling( (RefAST)o->c.templ);
+          last_child->setNextSibling( o->c.templ);
         else
-          setFirstChild( (RefAST)o->c.templ);
+          setFirstChild( o->c.templ);
         o->c.templ->o = new wbl_object();
         strcpy( o->c.templ->o->cname, name());
         // o->c.templ->o->m_oid.oix = m_vrep->nextOix();
@@ -1847,7 +1840,7 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
         m_vrep->error( "Bad body index", getFileName(), line_number);
     }
   }
-  else if (getType() == tokens.VOLUME)
+  else if (getType() == wbl_eToken_Volume)
   {
     pwr_tVid vid;
     int sts;
@@ -1856,8 +1849,7 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
 
     // Get class
     if ( first_child) {
-      string class_name = first_child->getText();
-      strcpy( o->cname, class_name.c_str());
+      strcpy( o->cname, first_child->getText());
 
       if ( !classNameToCid( o->cname, &o->m_cid)) {
         // Syntax exception -- vid
@@ -1867,9 +1859,8 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
       // Get oid
       ref_wblnode second_child = first_child->getNextSibling();
       if ( second_child) {
-        if ( second_child->getType() == tokens.OID) {
-          string vidstring = second_child->getText();
-          sts = cdh_StringToVolumeId( (char *)vidstring.c_str(), &vid);
+        if ( second_child->getType() == wbl_eToken_Index) {
+          sts = cdh_StringToVolumeId( second_child->getText(), &vid);
           if ( EVEN(sts)) {
             // Syntax exception -- vid
             m_vrep->error( "Volume id syntax", getFileName(), line_number);
@@ -1898,18 +1889,17 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
       build( false);
     }
   }
-  else if (getType() == tokens.CHAR_LITERAL)
+  else if (getType() == wbl_eToken_Char)
   {
     // Remove quotes
     char str[10];
-    string text = getText();
-    const char *text_p = text.c_str();
+    const char *text_p = getText();
     strncpy( str, &text_p[1], sizeof(str));
     str[strlen(str)-1] = 0;
-    string new_text(str);
-    setText(new_text);
+    setText(str);
   }
-  else if (getType() == tokens.STRING_LITERAL)
+  else if (getType() == wbl_eToken_String ||
+	   (getType() == wbl_eToken_Value && text[0] == '\"' && text[size-1] == '\"')) 
   {
     // Remove quotes and replace \" with " and also backslash
     char str[8192];
@@ -1919,7 +1909,7 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
     bool backslash_done = false;
 
     t = str;
-    for ( s = getText().c_str(); *s; s++) {
+    for ( s = getText(); *s; s++) {
       if ( first) {
         first = false;
         continue;
@@ -1937,8 +1927,7 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
     }
     t--;
     *t = 0;
-    string new_text(str);
-    setText(new_text);
+    setText(str);
   }
 
   ref_wblnode child = first_child;
@@ -2371,13 +2360,13 @@ bool wb_wblnode::docBlock( char **block, int *size) const
     return true;
   }
 
-  *size = strlen( o->docblock->getText().c_str()) + 1;
+  *size = strlen( o->docblock->getText()) + 1;
   *block = (char *) calloc( 1, *size);
-  // strncpy( *block, o->docblock->getText().c_str(), *size);
+  // strncpy( *block, o->docblock->getText(), *size);
 
   // Remove first and last row, and the beginning ! on each row
   
-  char *s = (char *)o->docblock->getText().c_str();
+  char *s = (char *)o->docblock->getText();
   char *t = *block;
   char *start_t = t;
   // Skip first line
