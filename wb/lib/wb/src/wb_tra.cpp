@@ -557,7 +557,7 @@ static pwr_tStatus trace_get_attr_m5( 	WGre		*gre,
 	&objar, &info);
   if( EVEN(sts)) return sts;
 
-  if ( !info.flags & PWR_MASK_DISABLEATTR)
+  if ( !(info.flags & PWR_MASK_DISABLEATTR))
     return TRA__NOPAR;
 
   disar = cdh_ArefToDisableAref( &objar);

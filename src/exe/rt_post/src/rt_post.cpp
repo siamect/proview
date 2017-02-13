@@ -215,8 +215,8 @@ pwr_tStatus rt_post::mh_alarm_bc( mh_sMessage *MsgP)
   if ( !post || post->conf->Disable)
     return 1;
 
-  if ( !event->Info.EventFlags & pwr_mEventFlagsMask_Email ||
-       !event->Info.EventFlags & pwr_mEventFlagsMask_SMS)
+  if ( !(event->Info.EventFlags & pwr_mEventFlagsMask_Email) ||
+       !(event->Info.EventFlags & pwr_mEventFlagsMask_SMS))
     return 1;
 
   // Skip events older than 10 minutes

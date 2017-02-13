@@ -134,7 +134,7 @@ static pwr_tStatus SetScanFilter( xmenu_sMenuCall *ip)
   pwr_tClassId classid;
   int enable;
 
-  if ( !ip->Priv & pwr_mPrv_System)
+  if ( !(ip->Priv & pwr_mPrv_System))
     return XNAV__INSENSITIVE;
 
   if ( strcmp( "Enable", ip->ItemList[ip->ChosenItem].FilterArguments[0]) == 0)
