@@ -4379,15 +4379,16 @@ int Graph::set_subwindow_source( const char *name, char *source, char *owner)
   grow_EnableEvent( grow->ctx, glow_eEvent_Translate, 
 		    glow_eEventType_CallBack, graph_grow_cb);
 
-  sts =  grow_SetWindowSource( object, source, owner);
+  sts = grow_SetWindowSource( object, source, owner);
 
   grow_DisableEvent( grow->ctx, glow_eEvent_Translate);
 
   if ( ctx != grow->ctx)
     grow->pop(ctx);
 
-  return GLOW__SUBTERMINATED;
-  // return sts;
+  if ( sts)
+    return GLOW__SUBTERMINATED;
+  return 1;
 }
 
 int Graph::sound( pwr_tAttrRef *aref)
