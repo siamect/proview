@@ -694,6 +694,10 @@ int GrowWindow::event_handler( GlowWind *w, glow_eEvent event, int x, int y, dou
     sts = window_ctx->event_handler( event, x, y, 0, 0);
     if ( sts == GLOW__TERMINATED)
       return sts;
+    else if (sts == GLOW__SUBTERMINATED) {
+      ctx->gdraw->pop_customcolors();
+      return 1;
+    }
 
     window_ctx->redraw_callback = 0;
     window_ctx->redraw_data = 0;
@@ -732,8 +736,10 @@ void GrowWindow::set_input_focus( int focus, glow_eEvent event)
   }
 }
 
-void GrowWindow::update_attributes()
+int GrowWindow::update_attributes()
 {
+  int sts = 0;
+
   if ( strcmp( input_file_name, file_name) != 0 ||
        (window_ctx && strcmp( window_ctx->owner, owner) != 0)) {
     // New graph, create new context
@@ -762,6 +768,7 @@ void GrowWindow::update_attributes()
     }
     strcpy( file_name, input_file_name);
     new_ctx();
+    sts = 1;
 
     //#if 0
     ctx->gdraw->reset_clip_rectangle( &ctx->mw);
@@ -780,6 +787,7 @@ void GrowWindow::update_attributes()
     v_scrollbar->set_colors( scrollbar_bg_color, scrollbar_color);
   if ( h_scrollbar)
     h_scrollbar->set_colors( scrollbar_bg_color, scrollbar_color);
+  return sts;
 }
 
 void GrowWindow::set_transform_from_stored( GlowTransform *t)
@@ -1062,6 +1070,7 @@ int GrowWindow::get_background_object_limits(GlowTransform *t,
 int GrowWindow::set_source( char *source, char *new_owner)
 {
   int clip_removed = 0;
+  int sts;
 
   if ( ctx->gdraw->clip_level( &ctx->mw)) {
     // Remove any clip
@@ -1072,7 +1081,7 @@ int GrowWindow::set_source( char *source, char *new_owner)
   strcpy( input_file_name, source);
   if ( new_owner)
     strncpy( owner, new_owner, sizeof(owner));
-  update_attributes();
+  sts = update_attributes();
 
   window_ctx->gdraw->push_customcolors( window_ctx->customcolors);
   draw();
@@ -1082,5 +1091,5 @@ int GrowWindow::set_source( char *source, char *new_owner)
     // Set a clip to match the previous reset
     ctx->gdraw->set_clip_rectangle( &ctx->mw, 0, 0, ctx->mw.window_width, ctx->mw.window_height);    
    
-  return 1;
+  return sts;
 }
