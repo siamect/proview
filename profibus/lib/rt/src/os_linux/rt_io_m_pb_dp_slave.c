@@ -109,6 +109,8 @@ static pwr_tStatus IoRackInit (
   errh_Info( "Init of Profibus DP Slave and Modules %s", name);
 
   op = (pwr_sClass_Pb_DP_Slave *) rp->op;
+
+  local->start_time = (int)(op->StartupTime / ctx->ScanTime);
   
   // Do configuration check and initialize modules.
 
@@ -329,9 +331,13 @@ static pwr_tStatus IoRackRead (
 {
   pwr_sClass_Pb_Profiboard *mp;
   pwr_sClass_Pb_DP_Slave *sp;
+  io_sRackLocal *local = (io_sRackLocal *)rp->Local;
   
   sp = (pwr_sClass_Pb_DP_Slave *) rp->op;
   mp = (pwr_sClass_Pb_Profiboard *) ap->op;
+
+  if ( local->start_cnt < local->start_time)
+    local->start_cnt++;
 
   /* The reading of the process image is now performed at the agent level,
   this eliminates the need for board specific code at the rack level.  */
@@ -342,7 +348,8 @@ static pwr_tStatus IoRackRead (
       sp->ErrorCount = 0;
     }
     else {
-      sp->ErrorCount++;
+      if ( local->start_cnt >= local->start_time)
+	sp->ErrorCount++;
     }
 
     if (sp->ErrorCount == sp->ErrorSoftLimit) {
@@ -355,11 +362,11 @@ static pwr_tStatus IoRackRead (
       ctx->IOHandler->CardErrorHardLimit = 1;
       ctx->IOHandler->ErrorHardLimitObject = cdh_ObjidToAref( rp->Objid);
     }
-    if (sp->ErrorCount > sp->ErrorSoftLimit && sp->StallAction >= pwr_ePbStallAction_ResetInputs) {
+    if (sp->ErrorCount > sp->ErrorHardLimit && sp->StallAction == pwr_ePbStallAction_ResetInputs) {
       memset(&sp->Inputs, 0, sp->BytesOfInput);
     }
 
-    if (sp->ErrorCount > sp->ErrorHardLimit && sp->StallAction >= pwr_ePbStallAction_EmergencyBreak) {
+    if (sp->ErrorCount > sp->ErrorHardLimit && sp->StallAction == pwr_ePbStallAction_EmergencyBreak) {
       ctx->Node->EmergBreakTrue = 1;
     }
   }

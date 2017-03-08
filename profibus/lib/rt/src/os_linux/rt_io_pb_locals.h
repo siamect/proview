@@ -76,6 +76,8 @@
 typedef struct _io_sRackLocal {
   unsigned char   fdl;
   unsigned char   dp;
+  unsigned int    start_time;
+  unsigned int    start_cnt;
 } io_sRackLocal;
 
 

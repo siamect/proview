@@ -45,6 +45,8 @@ typedef struct _io_sPnRackLocal {
   unsigned char   *inputs;
   unsigned char   *outputs;
   void            *userdata;
+  unsigned int    start_time;
+  unsigned int    start_cnt;
 } io_sPnRackLocal;
 
 typedef struct _io_sPnCardLocal {
