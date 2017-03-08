@@ -879,7 +879,7 @@ palette PlcEditorPalette
     class PulseTrain
     class SR_R
     class SR_S
-    class SupressSup
+    class SuppressSup
     class Timer
     class True
     class Wait

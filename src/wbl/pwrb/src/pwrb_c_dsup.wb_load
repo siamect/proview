@@ -554,9 +554,9 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Used by the SupressSup object to supress the alarm.
+      !  Used by the SuppressSup object to suppress the alarm.
       !*/
-      Object Supressed $Attribute 39 
+      Object Suppressed $Attribute 39 
         Body SysBody
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT

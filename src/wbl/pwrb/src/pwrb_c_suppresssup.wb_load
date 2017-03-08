@@ -33,29 +33,29 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_c_supresssup.wb_load -- Defines the class SupressSup.
+!  pwrb_c_suppresssup.wb_load -- Defines the class SuppressSup.
 !
 SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
 !  @Summary Object to suppress alarms.
-!  Object to supress alarm.
-!  @image orm_supresssup_fo.gif
+!  Object to suppress alarm.
+!  @image orm_suppresssup_fo.gif
 !
 !*/
-  Object SupressSup $ClassDef 690 
+  Object SuppressSup $ClassDef 690 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-        Attr StructName = "SupressSup"
+        Attr StructName = "SuppressSup"
       EndBody
       !/**
-      !  Digital input to supress the alarm.
-      !  When In is high, the alarm is supressed.
+      !  Digital input to suppress the alarm.
+      !  When In is high, the alarm is suppressed.
       !*/
       Object In $Input 1 
         Body SysBody
@@ -69,16 +69,16 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Indicating that alarm is supressed.
+      !  Indicating that alarm is suppressed.
       !*/
-      Object Supressed $Intern 2 
+      Object Suppressed $Intern 2 
         Body SysBody
-          Attr PgmName = "Supressed"
+          Attr PgmName = "Suppressed"
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
       !/**
-      !  Output indicating that alarm is supressed or the associated
+      !  Output indicating that alarm is suppressed or the associated
       !  alarm is active.
       !*/
       Object Out $Output 3 
@@ -140,12 +140,12 @@ SObject pwrb:Class
         Attr traceindex = 1
         Attr connectmethod = 36
         Attr executeordermethod = 6
-        Attr objname = "SupressSup"
-        Attr graphname = "SupressSup"
-        Attr debugpar = "Supressed"
+        Attr objname = "SuppressSup"
+        Attr graphname = "SuppressSup"
+        Attr debugpar = "Suppressed"
       EndBody
     EndObject
-    Object Template SupressSup
+    Object Template SuppressSup
       Body RtBody
       EndBody
       Body DevBody

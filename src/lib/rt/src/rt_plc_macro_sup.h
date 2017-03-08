@@ -104,7 +104,7 @@
 	     ((o->High && In > o->CtrlLimit) ||	       	\
 	      (!o->High && In < o->CtrlLimit))) { 	\
     if (!o->Action) o->Action = TRUE;			\
-    if (o->Supressed) {					\
+    if (o->Suppressed) {					\
       if (o->ReturnCheck) {				\
 	time_GetTime( &o->ReturnTime);					\
 	o->ReturnCheck = FALSE;						\
@@ -113,7 +113,7 @@
       else if (o->DetectSend)						\
 	o->DetectSend = FALSE;						\
     }									\
-    if (o->AlarmCheck && o->DetectOn && !o->Blocked && !o->Supressed) {	\
+    if (o->AlarmCheck && o->DetectOn && !o->Blocked && !o->Suppressed) {	\
       if (o->DetectCheck) {				\
 	o->ActualValue = In;				\
 	timer2_in(tp, o);				\
@@ -128,7 +128,7 @@
       }							\
     }							\
   }							\
-  if (o->Blocked || o->Supressed) {	    		\
+  if (o->Blocked || o->Suppressed) {	    		\
     o->TimerCount = 0;					\
     o->DetectCheck = TRUE;				\
   }
@@ -173,7 +173,7 @@
     }							\
   } else if (con) {					\
     if (!o->Action) o->Action = TRUE;			\
-    if (o->Supressed) {					\
+    if (o->Suppressed) {					\
       if (o->ReturnCheck) {				\
 	time_GetTime( &o->ReturnTime);			\
 	o->ReturnCheck = FALSE;						\
@@ -182,7 +182,7 @@
       else if (o->DetectSend)						\
 	o->DetectSend = FALSE;						\
     }									\
-    if (o->AlarmCheck && o->DetectOn && !o->Blocked && !o->Supressed) {	\
+    if (o->AlarmCheck && o->DetectOn && !o->Blocked && !o->Suppressed) {	\
       if (o->DetectCheck) {				\
 	o->ActualValue = In;				\
 	timer2_in(tp, o);				\
@@ -197,7 +197,7 @@
       }							\
     }							\
   }							\
-  if (o->Blocked || o->Supressed) {	      		\
+  if (o->Blocked || o->Suppressed) {	      		\
     o->TimerCount = 0;					\
     o->DetectCheck = TRUE;				\
   }    
@@ -242,7 +242,7 @@
     }\
   } else if (con) {\
     if (!co->Action) co->Action = TRUE;\
-    if (co->Supressed) {\
+    if (co->Suppressed) {\
       if (co->ReturnCheck) {\
 	time_GetTime( &co->ReturnTime);\
 	co->ReturnCheck = FALSE;\
@@ -251,7 +251,7 @@
       else if (co->DetectSend)\
 	co->DetectSend = FALSE;\
     }\
-    if (co->AlarmCheck && co->DetectOn && !co->Blocked && !co->Supressed) {\
+    if (co->AlarmCheck && co->DetectOn && !co->Blocked && !co->Suppressed) {\
       if (co->DetectCheck) {\
 	co->ActualValue = In;\
 	timer2_in(tp, co);\
@@ -266,7 +266,7 @@
       }\
     }\
   }\
-  if (co->Blocked || co->Supressed) {\
+  if (co->Blocked || co->Suppressed) {\
     co->TimerCount = 0;\
     co->DetectCheck = TRUE;\
   }\
@@ -319,7 +319,7 @@
 	     ((co->High && In > co->CtrlLimit) ||\
 	      (!co->High && In < co->CtrlLimit))) {\
     if (!co->Action) co->Action = TRUE;\
-    if (co->Supressed) {\
+    if (co->Suppressed) {\
       if (co->ReturnCheck) {\
 	time_GetTime( &co->ReturnTime);\
 	co->ReturnCheck = FALSE;\
@@ -328,7 +328,7 @@
       else if (co->DetectSend)\
 	co->DetectSend = FALSE;\
     }\
-    if (co->AlarmCheck && co->DetectOn && !co->Blocked && !co->Supressed) {\
+    if (co->AlarmCheck && co->DetectOn && !co->Blocked && !co->Suppressed) {\
       if (co->DetectCheck) {\
 	co->ActualValue = In;\
 	timer2_in(tp, co);\
@@ -343,7 +343,7 @@
       }\
     }\
   }\
-  if (co->Blocked || co->Supressed) {\
+  if (co->Blocked || co->Suppressed) {\
     co->TimerCount = 0;\
     co->DetectCheck = TRUE;\
   }\

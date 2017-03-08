@@ -3166,8 +3166,8 @@ int	gobj_get_object_m35( WFoe *foe, vldh_t_node node, unsigned long index)
 }
 
 //
-//	Method for SupressSup. Inserts the selected Sup-object in the
-//	navigator in the parameter SupObject in a SupressSup object.
+//	Method for SuppressSup. Inserts the selected Sup-object in the
+//	navigator in the parameter SupObject in a SuppressSup object.
 //
 int	gobj_get_object_m36( WFoe *foe, vldh_t_node node, unsigned long index)
 {
@@ -3332,7 +3332,7 @@ int	gobj_expand(	WFoe		*foe,
     case pwr_cClass_GetBoInt32:
     case pwr_cClass_GetBoFloat32:
     case pwr_cClass_GetBoString80:
-    case pwr_cClass_SupressSup:
+    case pwr_cClass_SuppressSup:
       sts = gobj_expand_m1( foe, node, compress);
       break;
     case pwr_cClass_and:
