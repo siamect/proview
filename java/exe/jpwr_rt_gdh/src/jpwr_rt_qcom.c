@@ -326,6 +326,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Qcom_putString
   data = (*env)->GetStringUTFChars( env, jdata, 0);
   cstr = (char *)data;
   put.data = (char *)data;
+  put.allocate = 1;
   put.size = strlen(data) + 1;
   put.type.b = qcom_eBtype__;
   put.type.s = qcom_eStype__;

@@ -219,6 +219,7 @@ int sev_server::connect()
 
     msg->Type = sev_eMsgType_NodeUp;
     put.data = msg;
+    put.allocate = 0;
 
     if ( !qcom_Put( &sts, &tgt, &put)) {
       qcom_Free( &sts, put.data);
@@ -253,6 +254,7 @@ int sev_server::request_items( pwr_tNid nid)
 
   msg->Type = sev_eMsgType_HistItemsRequest;
   put.data = msg;
+  put.allocate = 0;
   
   if ( !qcom_Put( &sts, &tgt, &put)) {
     qcom_Free( &sts, put.data);
@@ -286,6 +288,7 @@ int sev_server::send_itemlist( qcom_sQid tgt)
 
   put.size = size;
   put.data = qcom_Alloc(&lsts, put.size);
+  put.allocate = 0;
 
   ((sev_sMsgHistItems *)put.data)->Type = sev_eMsgType_HistItems;
 
@@ -341,6 +344,7 @@ int sev_server::send_server_status( qcom_sQid tgt)
 
   put.size = sizeof(sev_sMsgServerStatus);
   put.data = qcom_Alloc(&lsts, put.size);
+  put.allocate = 0;
 
   ((sev_sMsgServerStatus *)put.data)->Type = sev_eMsgType_ServerStatus;
 
@@ -376,6 +380,7 @@ int sev_server::delete_item( qcom_sQid tgt, sev_sMsgHistItemDelete *rmsg)
 
   put.size = sizeof(sev_sMsgHistItemStatus);
   put.data = qcom_Alloc(&lsts, put.size);
+  put.allocate = 0;
 
   m_db->delete_item( &sts, rmsg->Oid, rmsg->AName);
 
@@ -809,6 +814,7 @@ int sev_server::send_histdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *rmsg, 
   msg  = (sev_sMsgHistDataGet *) qcom_Alloc(&lsts, put.size);
 
   put.data = msg;
+  put.allocate = 0;
 
   msg->Type = sev_eMsgType_HistDataGet;
   msg->Oid = rmsg->Oid;
@@ -867,6 +873,7 @@ int sev_server::send_objecthistdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *
   msg  = (sev_sMsgHistObjectDataGet *) qcom_Alloc(&lsts, put.size);
 
   put.data = msg;
+  put.allocate = 0;
 
   msg->Type = sev_eMsgType_HistObjectDataGet;
   msg->Oid = rmsg->Oid;

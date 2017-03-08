@@ -375,6 +375,7 @@ sendAndReceive (
   put.reply.qix = 0;
   put.reply.nid = 0;
   put.size	= size;
+  put.allocate  = 0;
 
   get.data = NULL;
 

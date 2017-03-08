@@ -188,6 +188,7 @@ static pwr_tStatus stop (
   put.reply.qix = 0;
   put.reply.nid = 0;
   put.data = data;
+  put.allocate = 1;
   put.size = sizeof(data) + 1;
   qcom_Put(&sts, &qid, &put);
 

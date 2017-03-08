@@ -313,11 +313,13 @@ interactive (
   
   qid.qix = 550715;
   qid.nid = 0;
-    put.type.b = 10;
-    put.type.s = 1;
-    put.reply = cp->myQ;
-    put.data = bp;
-    put.size = totlen;
+  put.type.b = 10;
+  put.type.s = 1;
+  put.reply = cp->myQ;
+  put.data = bp;
+  put.size = totlen;
+  put.allocate = 1;
+
   qcom_Put(&sts, &qid, &put);
 
   while (1) {
@@ -382,12 +384,13 @@ stop (
   
   qid.qix = 550715;
   qid.nid = 0;
-    put.type.b = 11;
-    put.type.s = 1;
-    put.reply.qix = 0;
-    put.reply.nid = 0;
-    put.data = data;
-    put.size = sizeof(data) + 1;
+  put.type.b = 11;
+  put.type.s = 1;
+  put.reply.qix = 0;
+  put.reply.nid = 0;
+  put.data = data;
+  put.size = sizeof(data) + 1;
+  put.allocate = 1;
   qcom_Put(&sts, &qid, &put);
 
 //  while (1) {
