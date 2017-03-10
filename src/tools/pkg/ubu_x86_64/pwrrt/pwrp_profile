@@ -31,12 +31,12 @@ export pwrp_db=$pwrp_root/common/db
 export pwrp_web=$web_dir
 
 export pwra_db=/usr/pwrp/adm/db
-jdk=`eval ls -t /usr/local | grep -m 1 ^jdk`
+jdk=`eval ls -t /usr/lib/jvm | grep -m 1 -e ^java-[0-9]*-openjdk`
 if [ -z "$jdk" ]; then
-  jdk=`eval ls -t /usr/local | grep -m 1 ^jre`
+  jdk=`eval ls -t /usr/lib/jvm | grep -m 1 jre`
 fi
 
-export jdk=/usr/local/$jdk
+export jdk=/usr/lib/jvm/$jdk
 export jdk_home=$jdk/bin
 PATH=$PATH:$pwr_exe:$pwrp_exe:$jdk_home
 
