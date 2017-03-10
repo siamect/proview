@@ -635,8 +635,8 @@ usage()
 
     savedirectory  Save directory volume.
     classvolumes   Create loadfiles for classvolumes.
-    updateclasses  Update classes.
-    cnvobjects     Update Profinet modules.
+    renamedb	   Rename old databases.
+    loaddb         Load databases.
     compile        Compile all plcprograms in the database
     createload     Create new loadfiles.
     buildnodes     Build all nodes in the project.
@@ -678,7 +678,7 @@ for db in $tmp; do
   fi
 done
 
-passes="savedirectory classvolumes updateclasses cnvobjects compile createload buildnodes createpackage"
+passes="savedirectory classvolumes renamedb loaddb compile createload buildnodes createpackage"
 #echo "Pass: $passes"
 echo ""
 echo -n "Enter start pass [savedirectory] > "
