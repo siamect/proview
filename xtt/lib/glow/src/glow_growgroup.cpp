@@ -92,7 +92,7 @@ void GrowGroup::copy_from( const GrowGroup& n)
     dynamic = (char *) calloc( 1, n.dynamicsize);
     memcpy( dynamic, n.nc->dynamic, n.dynamicsize);
   }
-  // Get unic name
+  // Get unique name
   sprintf( n_name, "Grp%d_", ((GrowCtx *)ctx)->objectname_cnt++); 
 
   nc = new GlowNodeGroup( (GlowNodeGroup &)*n.nc);

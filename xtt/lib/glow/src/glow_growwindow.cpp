@@ -696,6 +696,7 @@ int GrowWindow::event_handler( GlowWind *w, glow_eEvent event, int x, int y, dou
       return sts;
     else if (sts == GLOW__SUBTERMINATED) {
       ctx->gdraw->pop_customcolors();
+      ctx->gdraw->reset_clip_rectangle( &ctx->mw);
       return 1;
     }
 

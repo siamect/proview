@@ -4259,9 +4259,15 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
       if ( grow_GetObjectType( event->signal.object) == glow_eObjectType_GrowNode ||
            grow_GetObjectType( event->signal.object) == glow_eObjectType_GrowGroup) {
 	GeDyn		*dyn;
+	int 		sts;
 
 	grow_GetUserData( event->signal.object, (void **)&dyn);
-	dyn->action( event->signal.object, event);
+	sts = dyn->action( event->signal.object, event);
+	if ( sts == GLOW__TERMINATED || sts == GLOW__SUBTERMINATED) {
+	  if ( ctx_popped) 
+	    graph->grow->push();
+	  return GLOW__NO_PROPAGATE;
+	}
       }
       break;
     }
