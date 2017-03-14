@@ -83,6 +83,17 @@ GlowNodeClass::GlowNodeClass( const GlowNodeClass& nc)
 
 GlowNodeClass::~GlowNodeClass()
 {
+  int		i;
+  GlowArrayElem	*element;
+
+  for ( i = 0; i < a.a_size; i++)
+  {
+    element = a.a[i];
+    a.remove( element);
+    ctx->object_deleted( element);
+    delete element;
+    i--;
+  }
   ctx->object_deleted( this);
 }
 
