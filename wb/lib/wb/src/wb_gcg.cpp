@@ -3739,6 +3739,7 @@ static int	gcg_get_outputstring_spec(
   int		sts, size;
   pwr_sAttrRef	*attrref;
   pwr_tClassId	cid;
+  pwr_tTid	tid;
   ldh_tSesContext ldhses;
   char 		*name_p;
   pwr_tAName     	aname;
@@ -3899,7 +3900,7 @@ static int	gcg_get_outputstring_spec(
     if ( EVEN(sts)) return sts;
 
     /* Check that this is objdid of an existing object */
-    sts = ldh_GetAttrRefOrigTid( ldhses, attrref, &cid);
+    sts = ldh_GetAttrRefOrigTid( ldhses, attrref, &tid);
     if ( EVEN(sts)) {
       gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
       free((char *) attrref);
@@ -3943,6 +3944,9 @@ static int	gcg_get_outputstring_spec(
     }
     sts = gcg_parname_to_pgmname(ldhses, cid, s+1, parstring);
     if ( EVEN(sts)) return sts;
+
+    if ( tid == pwr_eType_DataRef)
+      strcat( parstring, ".Ptr");
 
     *parprefix = GCG_PREFIX_REF;
     *partype = GCG_OTYPE_AREF;
