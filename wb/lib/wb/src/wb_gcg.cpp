@@ -7002,9 +7002,9 @@ int	gcg_comp_m4( gcg_ctx gcgctx, vldh_t_node node)
 
 	    if ( output_count > 0 )
 	    {
-	    output_found = 1;
+	      output_found = 1;
 	      if ( output_count > 1) 
-	      gcg_error_msg( gcgctx, GSX__CONOUTPUT, output_node);
+		gcg_error_msg( gcgctx, GSX__CONOUTPUT, output_node);
 
 	      sts = gcg_get_outputstring( gcgctx, output_node, &output_bodydef, 
 			&output_attrref, &output_type, &output_prefix, output_par);
@@ -7018,6 +7018,8 @@ int	gcg_comp_m4( gcg_ctx gcgctx, vldh_t_node node)
 	      if ( par_inverted ) 
 	        gcg_error_msg( gcgctx, GSX__INV, node);
 
+	      if ( output_bodydef.Par->Output.Info.Type == pwr_eType_DataRef)
+		strcpy( cast, "(pwr_tVoid *)");
 	      IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			     "%c%s->%sP = %s&%c%s->%s;\n", 
 			     GCG_PREFIX_REF,
