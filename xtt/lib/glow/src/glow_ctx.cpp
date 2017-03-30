@@ -1748,7 +1748,7 @@ int GlowCtx::trace_scan()
      return 1;
 
   sts = a.trace_scan();
-  if ( sts == GLOW__TERMINATED || sts == GLOW__SUBTERMINATED)
+  if ( sts == GLOW__TERMINATED || sts == GLOW__SUBTERMINATED || sts == GLOW__SWAPTERMINATED)
     return sts;
 
   if ( ctx_type == glow_eCtxType_Grow)

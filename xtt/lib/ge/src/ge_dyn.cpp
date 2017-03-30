@@ -1959,7 +1959,7 @@ int GeDyn::scan( grow_tObject object)
   for ( GeDynElem *elem = elements; elem; elem = elem->next) {
     sts = elem->scan( object);
     if ( sts == GE__NO_PROPAGATE || sts == GLOW__TERMINATED ||
-	 sts == GLOW__SUBTERMINATED)
+	 sts == GLOW__SUBTERMINATED || sts == GLOW__SWAPTERMINATED)
       return sts;
   }
   return 1;
@@ -1972,7 +1972,7 @@ int GeDyn::action( grow_tObject object, glow_tEvent event)
   for ( GeDynElem *elem = elements; elem; elem = elem->next) {
     sts = elem->action( object, event);
     if ( sts == GE__NO_PROPAGATE || sts == GLOW__TERMINATED ||
-	 sts == GLOW__SUBTERMINATED)
+	 sts == GLOW__SUBTERMINATED || sts == GLOW__SWAPTERMINATED)
       return sts;
   }
   return 1;
@@ -1987,7 +1987,7 @@ int GeDyn::confirmed_action( grow_tObject object, glow_tEvent event)
   for ( GeDynElem *elem = elements; elem; elem = elem->next) {
     sts = elem->action( object, event);
     if ( sts == GE__NO_PROPAGATE || sts == GLOW__TERMINATED ||
-	 sts == GLOW__SUBTERMINATED)
+	 sts == GLOW__SUBTERMINATED || sts == GLOW__SWAPTERMINATED)
       return sts;
   }
 
@@ -7476,7 +7476,7 @@ int GeDigSwap::scan( grow_tObject object)
     dyn->graph->swap(0);
     dyn->graph->swap(1);
     grow_Redraw( dyn->graph->grow->ctx);
-    return GLOW__TERMINATED;
+    return GLOW__SWAPTERMINATED;
   }
   old_value = val;
 
@@ -19321,7 +19321,7 @@ int GeCatchSignal::action( grow_tObject object, glow_tEvent event)
     e.object.object = object;
     sts = dyn->action( object, &e);
     if ( sts == GE__NO_PROPAGATE || sts == GLOW__TERMINATED ||
-	 sts == GLOW__SUBTERMINATED)
+	 sts == GLOW__SUBTERMINATED || sts == GLOW__SWAPTERMINATED)
       return sts;
     break;
   }

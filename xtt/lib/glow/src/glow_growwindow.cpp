@@ -393,7 +393,8 @@ int GrowWindow::trace_scan()
 
   if ( trace.p && ctx->trace_scan_func) {
     sts = ctx->trace_scan_func( (void *) this, trace.p);
-    if ( sts == GLOW__TERMINATED || sts == GLOW__SUBTERMINATED)
+    if ( sts == GLOW__TERMINATED || sts == GLOW__SUBTERMINATED || 
+	 sts == GLOW__SWAPTERMINATED)
       return sts;
   }
 
@@ -410,9 +411,14 @@ int GrowWindow::trace_scan()
       (ctx->trace_ctrl_func) ( glow_eTraceCtrl_CtxPop, window_ctx);
 
     sts = window_ctx->trace_scan();
-    if ( sts == GLOW__TERMINATED || sts == GLOW__SUBTERMINATED)
+    if ( sts == GLOW__TERMINATED)
       return sts;
-
+    else if ( sts == GLOW__SUBTERMINATED || sts == GLOW__SWAPTERMINATED) {
+      if ( ctx->trace_ctrl_func)
+	(ctx->trace_ctrl_func) ( glow_eTraceCtrl_CtxPop, ctx);
+      ctx->gdraw->reset_clip_rectangle( &ctx->mw);
+      return sts;
+    }
     if ( ctx->trace_ctrl_func)
       (ctx->trace_ctrl_func) ( glow_eTraceCtrl_CtxPush, window_ctx);
 
@@ -694,7 +700,7 @@ int GrowWindow::event_handler( GlowWind *w, glow_eEvent event, int x, int y, dou
     sts = window_ctx->event_handler( event, x, y, 0, 0);
     if ( sts == GLOW__TERMINATED)
       return sts;
-    else if (sts == GLOW__SUBTERMINATED) {
+    else if (sts == GLOW__SUBTERMINATED || sts == GLOW__SWAPTERMINATED) {
       ctx->gdraw->pop_customcolors();
       ctx->gdraw->reset_clip_rectangle( &ctx->mw);
       return 1;

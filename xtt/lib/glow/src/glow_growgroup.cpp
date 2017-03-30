@@ -158,7 +158,7 @@ int GrowGroup::trace_scan()
 
   if ( trace.p && ctx->trace_scan_func) {
     sts = ctx->trace_scan_func( (void *) this, trace.p);
-    if ( sts == GLOW__TERMINATED || sts == GLOW__SUBTERMINATED)
+    if ( sts == GLOW__TERMINATED || sts == GLOW__SUBTERMINATED || sts == GLOW__SWAPTERMINATED)
       return sts;
   }
 
