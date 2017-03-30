@@ -415,7 +415,7 @@ int GrowWindow::trace_scan()
       return sts;
     else if ( sts == GLOW__SUBTERMINATED || sts == GLOW__SWAPTERMINATED) {
       if ( ctx->trace_ctrl_func)
-	(ctx->trace_ctrl_func) ( glow_eTraceCtrl_CtxPop, ctx);
+	(ctx->trace_ctrl_func) ( glow_eTraceCtrl_CtxPush, ctx);
       ctx->gdraw->reset_clip_rectangle( &ctx->mw);
       return sts;
     }
