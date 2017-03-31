@@ -17989,15 +17989,21 @@ int GeOptionMenu::connect( grow_tObject object, glow_sTraceData *trace_data)
   }
 
   update_p = 0;
-  if ( strcmp( text_attribute, "") != 0 && strcmp( update_attribute, "") != 0) {
-    db = dyn->parse_attr_name( update_attribute, parsed_name,
+  if ( optionmenu_type == ge_eOptionMenuType_Dynamic) {
+    if ( strcmp( text_attribute, "") != 0 && strcmp( update_attribute, "") != 0) {
+      db = dyn->parse_attr_name( update_attribute, parsed_name,
 			       &inverted, &attr_type, &attr_size);
-    if ( strcmp( parsed_name,"") != 0) {
-      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&update_p, &update_subid, attr_size, object);
-      if ( EVEN(sts)) return sts;
+      if ( strcmp( parsed_name,"") != 0) {
+	sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&update_p, &update_subid, attr_size, object);
+	if ( EVEN(sts)) return sts;
+      }
     }
-  }
 
+    // Reset item_enum
+    for ( int i = 0; i < 32; i++)
+      items_enum[i] = i;
+
+  }
   trace_data->p = &pdummy;
   first_scan = true;
   return 1;
@@ -18285,12 +18291,12 @@ int GeOptionMenu::action( grow_tObject object, glow_tEvent event)
 	  break;
 	}
 	case pwr_eType_Int16: {
-	  pwr_tInt32 value = items_enum[event->menu.item];
+	  pwr_tInt16 value = items_enum[event->menu.item];
 	  sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
 	  break;
 	}
 	case pwr_eType_UInt16: {
-	  pwr_tUInt32 value = items_enum[event->menu.item];
+	  pwr_tUInt16 value = items_enum[event->menu.item];
 	  sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
 	  break;
 	}
