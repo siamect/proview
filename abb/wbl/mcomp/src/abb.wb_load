@@ -35950,7 +35950,7 @@ ABB ACS800 Aggregate
       EndObject
       Object Template ABB_ACS_PnDevice 2158198784 01-JAN-1970 01:00:00.00
         Body RtBody 26-NOV-2010 09:19:26.26
-          Attr Super.Specification = "ABB ACS800 Profibus slave"
+          Attr Super.Specification = "ABB ACS800 Profinet device"
           Attr Super.DataSheet = "$pwr_lang/dsh/abb_acs800.html"
           Attr Super.GSDMLfile = "$pwr_exe/GSDML-V2.0-ABBdrives-RETA02-20070621.xml"
           Attr Super.Process = 1
