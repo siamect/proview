@@ -65,7 +65,7 @@ class CnvCtx {
       strcpy( setup_filename, "");
       strcpy( depend_filename, "");
     }
-  char		dir[120];
+  pwr_tFileName	dir;
   int		generate_html;
   int		generate_xtthelp;
   int		generate_src;

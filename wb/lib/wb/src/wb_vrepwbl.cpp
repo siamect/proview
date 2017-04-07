@@ -256,7 +256,7 @@ static int wbl_sort_files( const void *file1, const void *file2)
 int wb_vrepwbl::load( const char *fname)
 {
   int i;
-  char file_spec[200];
+  pwr_tFileName file_spec;
   pwr_tStatus sts, rsts;
   int file_cnt_sort = 0;
 
@@ -1358,7 +1358,7 @@ int wb_vrepwbl::getTemplateBody( pwr_tCid cid, pwr_eBix bix, size_t *size, void 
 
 int wb_vrepwbl::load_files( const char *file_spec)
 {
-  char found_file[200];
+  pwr_tFileName found_file;
   int sts;
   wb_wbl_parser p;
 
