@@ -206,9 +206,14 @@ class sev_dbms : public sev_db {
   void add_cache( int item_idx);
   int begin_transaction();
   int commit_transaction();
-  int get_closest_time( char *tablename, unsigned int options, pwr_tTime *time, int before, int *id);
+  int get_closest_time( char *tablename, unsigned int options, pwr_tTime *time, int before, 
+			unsigned int *id);
   void string_to_mysqlstring( char *in, char *out, int size);
   void mysqlstring_to_string( char *in, char *out, int size);
+  int get_id_range( pwr_tStatus *sts, sev_item *item, 
+		    pwr_tMask options, unsigned int *first, unsigned int *last);
+  int get_time_range( pwr_tStatus *sts, sev_item *item, 
+		      pwr_tMask options, pwr_tTime *first, pwr_tTime *last);
   inline char* create_colName(unsigned int index, char *attributename) {
     static char colName[constMaxColNameLength];
     strncpy(colName, attributename, constMaxColNameLength);

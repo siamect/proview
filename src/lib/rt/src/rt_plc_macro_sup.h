@@ -229,7 +229,7 @@
     return;\
   co->Control = con;\
   timer2_scan(tp, co);\
-  if (In != co->CtrlPosition) {\
+  if ((In) != co->CtrlPosition) {		\
     if (co->Action) co->Action = FALSE;\
     if (co->ReturnCheck) {\
       time_GetTime( &co->ReturnTime);\

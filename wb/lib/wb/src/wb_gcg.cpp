@@ -3739,6 +3739,7 @@ static int	gcg_get_outputstring_spec(
   int		sts, size;
   pwr_sAttrRef	*attrref;
   pwr_tClassId	cid;
+  pwr_tTid	tid;
   ldh_tSesContext ldhses;
   char 		*name_p;
   pwr_tAName     	aname;
@@ -3899,7 +3900,7 @@ static int	gcg_get_outputstring_spec(
     if ( EVEN(sts)) return sts;
 
     /* Check that this is objdid of an existing object */
-    sts = ldh_GetAttrRefOrigTid( ldhses, attrref, &cid);
+    sts = ldh_GetAttrRefOrigTid( ldhses, attrref, &tid);
     if ( EVEN(sts)) {
       gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
       free((char *) attrref);
@@ -3943,6 +3944,9 @@ static int	gcg_get_outputstring_spec(
     }
     sts = gcg_parname_to_pgmname(ldhses, cid, s+1, parstring);
     if ( EVEN(sts)) return sts;
+
+    if ( tid == pwr_eType_DataRef)
+      strcat( parstring, ".Ptr");
 
     *parprefix = GCG_PREFIX_REF;
     *partype = GCG_OTYPE_AREF;
@@ -6998,9 +7002,9 @@ int	gcg_comp_m4( gcg_ctx gcgctx, vldh_t_node node)
 
 	    if ( output_count > 0 )
 	    {
-	    output_found = 1;
+	      output_found = 1;
 	      if ( output_count > 1) 
-	      gcg_error_msg( gcgctx, GSX__CONOUTPUT, output_node);
+		gcg_error_msg( gcgctx, GSX__CONOUTPUT, output_node);
 
 	      sts = gcg_get_outputstring( gcgctx, output_node, &output_bodydef, 
 			&output_attrref, &output_type, &output_prefix, output_par);
@@ -7014,6 +7018,8 @@ int	gcg_comp_m4( gcg_ctx gcgctx, vldh_t_node node)
 	      if ( par_inverted ) 
 	        gcg_error_msg( gcgctx, GSX__INV, node);
 
+	      if ( output_bodydef.Par->Output.Info.Type == pwr_eType_DataRef)
+		strcpy( cast, "(pwr_tVoid *)");
 	      IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			     "%c%s->%sP = %s&%c%s->%s;\n", 
 			     GCG_PREFIX_REF,

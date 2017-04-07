@@ -1968,7 +1968,7 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
     if ( callback_object_type != glow_eObjectType_NoObject)
       e.object.object = callback_object;
     sts = event_callback[event]( this, &e);
-    if ( sts == GLOW__TERMINATED || sts == GLOW__SUBTERMINATED)
+    if ( sts == GLOW__TERMINATED || sts == GLOW__SUBTERMINATED || sts == GLOW__SWAPTERMINATED)
       return sts;
   }
   return 1;

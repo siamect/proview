@@ -1873,7 +1873,7 @@ int GlowArray::trace_scan()
 
   for ( int i = 0; i < a_size; i++) {
     sts = a[i]->trace_scan();
-    if ( sts == GLOW__TERMINATED || sts == GLOW__SUBTERMINATED)
+    if ( sts == GLOW__TERMINATED || sts == GLOW__SUBTERMINATED || sts == GLOW__SWAPTERMINATED)
       return sts;
   }
   return 1;
