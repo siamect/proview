@@ -82,3 +82,4 @@ udpweirdheader  <UDP message with illegal header received>      /info
 disorder	<Message disorder>				/error
 disabled	<Transport disabled>				/error
 udpnocon	<No UDP connection>				/error
+exception	<Exception from connection>			/error
