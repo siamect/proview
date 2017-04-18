@@ -5355,7 +5355,7 @@ in the Configurator menu. Select the node you want to distribute to, and select
 'Functions/Distribute' in the Distributor menu.
 
 <image> dg_fig105.png
-<b>Fig Distributören
+<b>Fig The distributor
 
 The distributor will now collect the specified files into a package and copy the package to
 the user 'pwrp' on the process node with ssh. ssh requires password, and this has to be 
