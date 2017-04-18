@@ -134,6 +134,7 @@ void RunTimeCounterFo_exec( plc_sThread		*tp,
   o->OldReset = *o->ResetP;
 }
 
+
 /*_*
   CompModePID_Fo
 
@@ -567,6 +568,7 @@ void CompOnOffZoneFo_exec( plc_sThread	    *tp,
     co->CycleCount = 0;
 }
 
+//---- modified v0.3-----------------------------------------------START--------
 
 /*_*
   PLC interface & calculus to discrete time Internal Model Controler component
@@ -574,13 +576,17 @@ void CompOnOffZoneFo_exec( plc_sThread	    *tp,
   @aref compimc
   @aref compimc_fo CompImc_Fo
 
-  2015 - 12 - 19	Bruno: initial object.
-  2016 - 04 - 11	Bruno: cleaning.
+  2015 - 12 - 19	Bruno: initial object. v0.1
+  2016 - 04 - 11	Bruno: cleaning. v0.2
+  2017 - 04 - 14    Bruno: remove "division by zero" potential bugs v0.3
 */
-#define Clamp(x, min, max) x = ((x)<(min)) ? (min) : (((x)>(max)) ? (max) : (x))   
-#define Normalize(x, y, xmin, xmax, ymin, ymax) y = (((((ymax)-(ymin))/((xmax)-(xmin)))*((x)-(xmin)))+(ymin))
+
 #define Te tp->ActualScanTime
 #define MAXCELLS 100
+#define Clamp(x, min, max) x = ((x)<(min)) ? (min) : (((x)>(max)) ? (max) : (x))   
+//#define Normalize(x, y, xmin, xmax, ymin, ymax) y = (((((ymax)-(ymin))/((xmax)-(xmin)))*((x)-(xmin)))+(ymin)) // replaced by a function in v0.3
+
+
 
 void CompIMC_Fo_init( pwr_sClass_CompIMC_Fo *plc_obj) 
 {
@@ -590,7 +596,7 @@ void CompIMC_Fo_init( pwr_sClass_CompIMC_Fo *plc_obj)
 	if ( EVEN(sts))
 	plc_obj->PlcConnectP = 0;
 }
-
+ 
 
 void CompIMC_Fo_exec( plc_sThread *tp, 
                          pwr_sClass_CompIMC_Fo *plc_obj) 
@@ -598,6 +604,11 @@ void CompIMC_Fo_exec( plc_sThread *tp,
 	pwr_sClass_CompIMC *plant_obj = (pwr_sClass_CompIMC *) plc_obj->PlcConnectP;
 	if ( !plant_obj) return;
 	pwr_tFloat32 man_OP, sig,  yr, LSP, PV, nLSP, nPV, Tl1, Tl2;
+	
+	void Normalize (pwr_tFloat32 x, pwr_tFloat32 *y, pwr_tFloat32 xmin, pwr_tFloat32 xmax, pwr_tFloat32 ymin, pwr_tFloat32 ymax) // v0.3
+	{
+		if((xmax-xmin)!=0.0) *y =(ymax-ymin)/(xmax-xmin)*(x-xmin)+ymin; else return;
+	}
 
 	void LagFilter(pwr_tInt16 n, pwr_tFloat32 Tlag)
 	{
@@ -614,7 +625,8 @@ void CompIMC_Fo_exec( plc_sThread *tp,
 		pwr_tFloat32 kd = T2/Te;
 		pwr_tFloat32 ka = 1.0+kd;
 		pwr_tFloat32 kb = 1.0-kc;	
-
+		
+		if (ka<=0) return; // v0.3
 		Clamp (plant_obj->S[n+1], 0.0, 100.0);
 		plant_obj->S[n+1] = 
 			  kd/ka* plant_obj->S[n+1] 
@@ -630,7 +642,8 @@ void CompIMC_Fo_exec( plc_sThread *tp,
 		pwr_tFloat32 a1 = 2.0*(ksi*Te*w0P+1.0);
 		pwr_tFloat32 a2 = -1.0;
 		pwr_tFloat32 b0 = Te*Te*w0P*w0P;
-
+		
+		if (a0<=0) return; // v0.3
 		Clamp (plant_obj->S[n+1], 0.0, 100.0);
 		plant_obj->uOutm2 = plant_obj->uOutm1;
 		plant_obj->uOutm1 = plant_obj->S[n+1];
@@ -651,6 +664,7 @@ void CompIMC_Fo_exec( plc_sThread *tp,
 		pwr_tFloat32 a1 = w0*w0*(2.0*Tl1*Tl2+Te*(Tl1+Tl2));
 		pwr_tFloat32 a2 = -w0*w0*Tl1*Tl2;
 		
+		if (a0<=0) return; // v0.3
 		Clamp (plant_obj->S[n+1], 0.0, 100.0);
 		plant_obj->Outm2 = plant_obj->Outm1;
 		plant_obj->Outm1 = plant_obj->S[n+1];
@@ -706,16 +720,16 @@ void CompIMC_Fo_exec( plc_sThread *tp,
 
 	LSP=plant_obj->SP+plant_obj->Trim_SP; // Calculate working setpoint
 	Clamp (LSP, plant_obj->LL_SP, plant_obj->HL_SP); // Apply limits
-	Normalize(LSP,nLSP, plant_obj->LR_PV, plant_obj->HR_PV,0.0,100.0); // Normalize setpoint value
+	Normalize(LSP,&nLSP, plant_obj->LR_PV, plant_obj->HR_PV,0.0,100.0); // Normalize setpoint value // v0.3
 	
 	PV = plant_obj->PV; // Copy from GUI 
-	Normalize(PV,nPV, plant_obj->LR_PV, plant_obj->HR_PV,0.0,100.0);  // Normalize process value
+	Normalize(PV,&nPV, plant_obj->LR_PV, plant_obj->HR_PV,0.0,100.0);  // Normalize process value // v0.3
 	sig = (plant_obj->Inverse) ? nLSP - nPV : nPV - nLSP; 	// Error signal after direct/inverse Comparator
 	plant_obj->EP=-sig; // Calculate error value to display
 
 	if(!plant_obj->aut){	// Manage manual mode & reset all buffers
 		sig=0; 
-		Normalize(*plc_obj->Man_OPP, man_OP, plant_obj->LR_OP, plant_obj->HR_OP, 0.0, 100.0);
+		Normalize(*plc_obj->Man_OPP, &man_OP, plant_obj->LR_OP, plant_obj->HR_OP, 0.0, 100.0); // v0.3
 
 		for (i=0; i<12; i++) plant_obj->S[i]=man_OP;
 		for (i=0; i<100; i++) plant_obj->D[i]=man_OP;
@@ -729,7 +743,9 @@ void CompIMC_Fo_exec( plc_sThread *tp,
 	} 
 	else{ // Calculate IMC controller
 		
-		sig /= plant_obj->Gain;	// Apply static gain
+		if (Te<=0) return; // v0.3
+		if (plant_obj->Accel<1.0) return; // v0.3
+		if (plant_obj->Gain>0.0) sig /= plant_obj->Gain; else return;	// Apply static gain // v0.3
 		
 		plant_obj->S[0] = sig+plant_obj->S[11];	// Add previous model's feedback 	
 
@@ -757,7 +773,7 @@ void CompIMC_Fo_exec( plc_sThread *tp,
 		
 		OP=plant_obj->S[6];
 		Clamp (OP, 0.0, 100.0); // Apply limits on model output		
-		Normalize(OP,yr,0.0,100.0,plant_obj->LR_OP, plant_obj->HR_OP);	// Denormalize output
+		Normalize(OP,&yr,0.0,100.0,plant_obj->LR_OP, plant_obj->HR_OP);	// Denormalize output // v0.3
 		yr+=plant_obj->FF; // Add feedforward input value
 		Clamp (yr, plant_obj->LL_OP, plant_obj->HL_OP); // Apply limits to control signal
 		plc_obj->OP=plant_obj->OP = yr; // copy to GUI objects
@@ -778,10 +794,12 @@ void CompIMC_Fo_exec( plc_sThread *tp,
 
 		Delay(10, plant_obj->DelayT);
 		
-	
-	// ----
 	}
 } 
+
+
+
+//---- modified v0.3-----------------------------------------------END----
 
 /*_*
   PLC Mode interface to a discrete time Internal Model Controler component
