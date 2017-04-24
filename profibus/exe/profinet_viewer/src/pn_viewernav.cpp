@@ -344,8 +344,8 @@ int PnViewerNav::init_brow_cb( FlowCtx *fctx, void *client_data)
   return 1;
 }
 
-PnViewerNav::PnViewerNav( void *l_parent_ctx) :
-  parent_ctx(l_parent_ctx), change_value_cb(0)
+PnViewerNav::PnViewerNav( void *l_parent_ctx, viewer_eType l_type) :
+  type(l_type), parent_ctx(l_parent_ctx), change_value_cb(0)
 {
 }
 
@@ -562,6 +562,8 @@ int PnViewerNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
       double ll_x, ll_y, ur_x, ur_y;
       int		sts;
 
+      viewernav->set_input_focus();
+
       switch ( event->object.object_type)
       {
         case flow_eObjectType_Node:
@@ -612,6 +614,13 @@ int PnViewerNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
       break;
     }
     case flow_eEvent_MB1DoubleClick:
+      brow_GetUserData( event->object.object, (void **)&item);
+      switch( item->type) {
+      case viewitem_eItemType_Device:
+	sts = item->open_children( viewernav);
+	break;
+      default: ;
+      }
       break;
     default:
       ;
@@ -706,8 +715,9 @@ int PnViewerNav::check_attr_value()
 
   switch( base_item->type) {
   case viewitem_eItemType_DeviceAttr:
-    if (( strcmp( base_item->name, "DeviceName") == 0) ||
-	( strcmp( base_item->name, "IP Address") == 0))
+    if ( type == viewer_eType_Network &&
+	 ( strcmp( base_item->name, "DeviceName") == 0 ||
+	   strcmp( base_item->name, "IP Address") == 0))
       return 1;
     else
       return PB__ATTRNOEDIT;
@@ -724,9 +734,10 @@ void PnViewerNav::set( vector<PnDevice>& dev_vect)
   brow_DeleteAll( brow->ctx);
 
   for ( unsigned int i = 0; i < dev_vect.size(); i++) {
-    new ItemDevice( this, "", dev_vect[i].ipaddress, dev_vect[i].macaddress, 
-		    dev_vect[i].devname, dev_vect[i].vendorid, dev_vect[i].deviceid,
-		    0, flow_eDest_IntoLast);
+    if ( !dev_vect[i].hide)
+      new ItemDevice( this, "", dev_vect[i].ipaddress, dev_vect[i].macaddress, 
+		      dev_vect[i].devname, dev_vect[i].vendorid, dev_vect[i].deviceid,
+		      0, flow_eDest_IntoLast);
   }
 
   brow_ResetNodraw( brow->ctx);
@@ -927,8 +938,9 @@ ItemDeviceAttr::ItemDeviceAttr( PnViewerNav *viewernav, const char *item_name, p
   brow_SetAnnotation( node, 1, value, strlen(value));
 
   brow_SetAnnotPixmap( node, 0, viewernav->brow->pixmap_attr);  
-  if ( strcmp( item_name, "DeviceName") == 0 ||
-       strcmp( item_name, "IP Address") == 0)
+  if ( viewernav->type == viewer_eType_Network && 
+       ( strcmp( item_name, "DeviceName") == 0 ||
+	 strcmp( item_name, "IP Address") == 0))
     brow_SetAnnotPixmap( node, 1, viewernav->brow->pixmap_edit);  
 }
 

@@ -54,17 +54,20 @@
 #include "pn_viewer.h"
 
 
+static int test = 0;
+
 PnViewer::PnViewer(
 	void *v_parent_ctx,
 	const char *v_name,
 	const char *v_device,
 	pwr_tStatus *status) :
-  parent_ctx(v_parent_ctx), viewernav(NULL), wow(0), input_open(0), pnet(0), close_cb(0)
+  parent_ctx(v_parent_ctx), viewernav(NULL), viewernavconf(NULL), wow(0), input_open(0), pnet(0), close_cb(0)
 {
   strcpy( name, v_name);
   strcpy( device, v_device);
 
-  pnet = new PnViewerPNAC( status, device);
+  if ( !test)
+    pnet = new PnViewerPNAC( status, device);
 }
 
 PnViewer::~PnViewer()
@@ -74,10 +77,135 @@ PnViewer::~PnViewer()
 
 void PnViewer::update_devices()
 {
-  dev_vect.clear();
-  pnet->fetch_devices( dev_vect);
+  int sts;
 
-  viewernav->set( dev_vect);    
+  if ( !test) {
+    dev_vect.clear();
+    pnet->fetch_devices( dev_vect);
+
+    conf_vect.clear();
+    sts = fetch_config( dev_vect);
+    if ( EVEN(sts)) printf( "Error reading configuration file\n");
+
+    viewernav->set( dev_vect);
+    viewernavconf->set( conf_vect);    
+  }
+  else {
+    dev_vect.clear();
+    sts = fetch_config( dev_vect);
+    if ( EVEN(sts)) printf( "Error reading configuration file\n");
+    viewernav->set( dev_vect);
+    
+    strcpy( device, "test");  // Test
+    conf_vect.clear();
+    sts = fetch_config( conf_vect);
+    if ( EVEN(sts)) printf( "Error reading configuration file\n");
+    viewernavconf->set( conf_vect);    
+  }
+}
+
+void PnViewer::filter( viewer_eFilterType filtertype)
+{
+  switch ( filtertype) {
+  case viewer_eFilterType_No:
+    for ( unsigned int i = 0; i < dev_vect.size(); i++)
+      dev_vect[i].hide = false;
+    for ( unsigned int i = 0; i < conf_vect.size(); i++)
+      conf_vect[i].hide = false;
+    break;
+  case viewer_eFilterType_NotMatching:
+    // Compare dev_vect and conf_vect and display device that doesn't match
+    // Set all
+    for ( unsigned int i = 0; i < dev_vect.size(); i++)
+      dev_vect[i].hide = false;
+    for ( unsigned int i = 0; i < conf_vect.size(); i++)
+      conf_vect[i].hide = false;
+
+    for ( unsigned int i = 0; i < dev_vect.size(); i++) {
+      for ( unsigned int j = 0; j < conf_vect.size(); j++) {
+	if ( strcmp( dev_vect[i].devname, conf_vect[j].devname) == 0 &&
+	     dev_vect[i].vendorid == conf_vect[j].vendorid &&
+	     dev_vect[i].deviceid == conf_vect[j].deviceid &&
+	     dev_vect[i].ipaddress[0] == conf_vect[j].ipaddress[0] &&
+	     dev_vect[i].ipaddress[1] == conf_vect[j].ipaddress[1] &&
+	     dev_vect[i].ipaddress[2] == conf_vect[j].ipaddress[2] &&
+	     dev_vect[i].ipaddress[3] == conf_vect[j].ipaddress[3]) {
+	  dev_vect[i].hide = true;
+	  conf_vect[j].hide = true;
+	  break;
+	}
+      }
+    }
+    break;
+  }
+
+  viewernav->set( dev_vect);
+  viewernavconf->set( conf_vect);
+}
+
+int PnViewer::fetch_config( vector<PnDevice>& vect)
+{
+  PnDevice pndevice;
+  pwr_tFileName fname;
+  char edev[20];
+  FILE *fp;
+  char line[500];
+  char elemv[7][100];
+  int nr;
+  int sts;
+
+  cdh_ToLower( edev, device);
+  sprintf( fname, "$pwrp_load/pwr_pnviewer_%s.dat", edev);
+  dcli_translate_filename(  fname, fname);
+
+  fp = fopen( fname, "r");
+  if ( !fp)
+    return 0;
+
+  while ( dcli_read_line( line, sizeof( line), fp)) {
+    nr = dcli_parse( line, " ", "", (char *)elemv, sizeof( elemv) / sizeof( elemv[0]), 
+		     sizeof( elemv[0]), 0);
+    if ( nr != 6)
+      continue;
+  
+    strncpy( pndevice.devname, elemv[1], sizeof(pndevice.devname));
+
+    sts = sscanf( elemv[2], "%hhu.%hhu.%hhu.%hhu", 
+		  &pndevice.ipaddress[0], &pndevice.ipaddress[1], 
+		  &pndevice.ipaddress[2], &pndevice.ipaddress[3]);
+    if ( sts != 4) {
+      printf( "Not a valid IP address: %s\n", elemv[2]);
+      pndevice.ipaddress[0] = 0;      
+      pndevice.ipaddress[1] = 0;      
+      pndevice.ipaddress[2] = 0;      
+      pndevice.ipaddress[3] = 0;      
+    }
+
+    sts = sscanf( elemv[3], "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx", 
+		  &pndevice.macaddress[0], &pndevice.macaddress[1], 
+		  &pndevice.macaddress[2], &pndevice.macaddress[3], 
+		  &pndevice.macaddress[4], &pndevice.macaddress[5]);
+    if ( sts != 6) {
+      printf( "Not a valid MAC address: %s\n", elemv[3]);
+      pndevice.macaddress[0] = 0;
+      pndevice.macaddress[1] = 0;
+      pndevice.macaddress[2] = 0;
+      pndevice.macaddress[3] = 0;
+      pndevice.macaddress[4] = 0;
+      pndevice.macaddress[5] = 0;
+    }
+
+    sts = sscanf( elemv[4], "%u", &pndevice.vendorid);
+    if ( sts != 1)
+      return 0;
+    sts = sscanf( elemv[5], "%u", &pndevice.deviceid);
+    if ( sts != 1)
+      return 0;
+    vect.push_back(pndevice);  
+  }
+  fclose( fp);
+
+  return 1;
 }
 
 void PnViewer::set_device_properties( unsigned char *macaddress, unsigned char *ipaddress, 
@@ -108,6 +236,11 @@ void PnViewer::activate_update()
   catch( co_error &e) {
     printf( "** Update exception: %s\n", e.what().c_str());
   }
+}
+
+void PnViewer::activate_filter( viewer_eFilterType filtertype)
+{
+  filter( filtertype);
 }
  
 void PnViewer::activate_setdevice()

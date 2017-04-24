@@ -40,6 +40,7 @@
 /* pn_viewernav.h -- Profinet viewer */
 
 #include <vector>
+#include <string.h>
 
 #ifndef pwr_h
 # include "pwr.h"
@@ -63,15 +64,31 @@
 
 class PnDevice {
  public:
-  PnDevice() {}
+  PnDevice() : vendorid(0), deviceid(0), hide(false)
+    {
+      strcpy( devname, "");
+      memset( &ipaddress, 0, sizeof(ipaddress));
+      memset( &macaddress, 0, sizeof(macaddress));
+    }
   unsigned char ipaddress[4];
   unsigned char macaddress[6];
   char devname[80];
   int vendorid;
   int deviceid;
+  bool hide;
 };
 
 class ItemDevice;
+
+typedef enum {
+  viewer_eType_Network,
+  viewer_eType_Configuration
+} viewer_eType;
+
+typedef enum {
+  viewer_eFilterType_No,
+  viewer_eFilterType_NotMatching
+} viewer_eFilterType;
 
 typedef enum {
   viewitem_eItemType_Device,
@@ -100,9 +117,10 @@ class PnViewerNavBrow {
 
 class PnViewerNav {
   public:
-    PnViewerNav( void *v_parent_ctx);
+    PnViewerNav( void *l_parent_ctx, viewer_eType l_type);
     virtual ~PnViewerNav();
 
+    viewer_eType	type;
     void 		*parent_ctx;
     PnViewerNavBrow	*brow;
     void 		(*change_value_cb)( void *);
@@ -115,7 +133,7 @@ class PnViewerNav {
     void unzoom();
     void set( vector<PnDevice>& dev_vect);
     int set_attr_value( char *value_str);
-    int check_attr_value();
+    virtual int check_attr_value();
     int get_selected_device( ItemDevice **device);
     void vendorid_to_str( unsigned int vendorid, char *vendorid_str, int size);
     void get_device_info( unsigned int vendorid, unsigned int deviceid,

@@ -69,7 +69,10 @@ class PnViewer {
     void update_devices();
     void set_device_properties( unsigned char *macaddress, unsigned char *ipaddress,
 				char *devname);
+    int fetch_config( vector<PnDevice>& vect); 
+    void filter( viewer_eFilterType filtertype);
     void activate_update();
+    void activate_filter( viewer_eFilterType filtertype);
     void activate_setdevice();
     void activate_changevalue();
     void activate_close();
@@ -82,9 +85,11 @@ class PnViewer {
     char 		name[80];
     char 		device[20];
     PnViewerNav		*viewernav;
+    PnViewerNav   	*viewernavconf;
     CoWow		*wow;
     int			input_open;
     vector<PnDevice>	dev_vect;
+    vector<PnDevice>	conf_vect;
     PnViewerPNAC	*pnet;
     void		(*close_cb)( void *);
 
