@@ -1033,6 +1033,12 @@ SObject         pwrb:Class
         Attr debugpar = ""
       EndBody
     EndObject
+    Object ModeObjDId $ReferenceList
+      Body SysBody
+	Attr ObjectClass[0] = pwr_cClass_mode
+	Attr Filter = 145
+      EndBody
+    EndObject
     Object Template PID
       Body RtBody
         Attr PidAlg = 3

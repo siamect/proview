@@ -69,5 +69,11 @@ SObject pwrb:Class
         EndBody
       EndObject
     EndObject
+    Object ObjectName $ReferenceList
+      Body SysBody
+	Attr ObjectClass[0] = pwr_cClass_RootVolumeConfig
+	Attr Filter = 1
+      EndBody
+    EndObject
   EndObject
 EndSObject

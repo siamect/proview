@@ -486,7 +486,7 @@ palette NavigatorPalette
       class OpPlace
       class XttGraph
       class XttMultiView
-      class XttVideo
+      class XttCamera
       class WebBrowserConfig
       class OpPlaceWeb
       class WebGraph
@@ -549,6 +549,7 @@ palette ClassNavigatorPalette
     class $GraphPlcNode
     class $Input
     class $Intern
+    class $ReferenceList
     class $ObjBodyDef
     class $ObjXRef
     class $Output

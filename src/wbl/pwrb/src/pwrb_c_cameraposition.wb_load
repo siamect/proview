@@ -52,7 +52,7 @@ SObject pwrb:Class
         Attr StructName = "CameraPosition"
       EndBody
       !/**
-      !  XttVideo object for the camera.
+      !  XttCamera object for the camera.
       !*/
       Object VideoObject $Attribute 1 
         Body SysBody
@@ -89,6 +89,12 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
+    EndObject
+    Object VideoObject $ReferenceList
+      Body SysBody
+	Attr ObjectClass[0] = pwr_cClass_XttCamera
+	Attr Filter = 1
+      EndBody
     EndObject
   EndObject
 EndSObject

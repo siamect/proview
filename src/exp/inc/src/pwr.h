@@ -515,6 +515,21 @@ typedef pwr_tEnum      pwr_tOpSysEnum;	       	//!< Operating system enum.
 */
 typedef pwr_tMask      pwr_tOpSysMask;	       	//!< Operating system Mask.
 
+/*_*
+  @aref reflistlfiltermask RefListFilterMask
+*/
+typedef enum {
+  pwr_mRefListFilterMask_CurrentVolume 	= 1,
+  pwr_mRefListFilterMask_AllVolumes 	= 2,
+  pwr_mRefListFilterMask_RootVolume 	= 4,
+  pwr_mRefListFilterMask_SharedVolume 	= 8,
+  pwr_mRefListFilterMask_Siblings 	= 16,
+  pwr_mRefListFilterMask_AttrObjects 	= 32,
+  pwr_mRefListFilterMask_PwrsVolume 	= 64,
+  pwr_mRefListFilterMask_Other	 	= 128
+} pwr_mRefListFilterMask;
+typedef pwr_tMask      pwr_tRefListFilterMask;	//!< Reference list filter Mask.
+
 
 /*_*
   @aref attrrefflag AttrRefFlag

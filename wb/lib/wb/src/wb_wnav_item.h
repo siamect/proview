@@ -77,7 +77,8 @@ typedef enum {
 	wnav_eItemType_Text,
 	wnav_eItemType_Crossref,
 	wnav_eItemType_DocBlock,
-	wnav_eItemType_ObjectModTime
+	wnav_eItemType_ObjectModTime,
+	wnav_eItemType_EnumObject
 	} wnav_eItemType;
 
 typedef enum {
@@ -204,6 +205,8 @@ class WItemObjectName : public WItem {
     WNavBrow *brow;
     ldh_tSesContext ldhses;
 
+    int open_children( double x, double y);
+    int close( double x, double y);
     int update();
     int get_value( char **value);	// The value should be freed with free
 };
@@ -455,6 +458,26 @@ class WItemMask : public WItemBaseAttr {
 
     int update();
     int set( int set_value);
+};
+
+class WItemEnumObject : public WItemBaseAttr {
+  public:
+    WItemEnumObject( 
+	WNavBrow *item_brow, ldh_tSesContext item_ldhses, 
+	pwr_tObjid item_objid, 
+	char *attr_enum_name, char *attr_name, 
+	int attr_type_id, pwr_tTid attr_tid, int attr_size, 
+	int attr_flags, char *attr_body,
+	void *item_enum_value, int item_is_element, int item_element,
+	int item_idx, brow_tNode dest, flow_eDest dest_code);
+    pwr_tOName	 	enum_name;
+    pwr_tAttrRef       	enum_aref;
+    pwr_tString80	enum_string;
+    int			is_element;
+    int			element;
+
+    int update();
+    int set();
 };
 
 #if defined __cplusplus

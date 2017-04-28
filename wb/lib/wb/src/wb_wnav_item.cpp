@@ -42,6 +42,7 @@
 #include "wb_ldh.h"
 #include "co_cdh.h"
 #include "co_time.h"
+#include "pwr_systemclasses.h"
 #include "pwr_baseclasses.h"
 #include "co_dcli.h"
 #include "flow.h"
@@ -52,6 +53,11 @@
 #include "wb_wnav_item.h"
 #include "wb_wnav_msg.h"
 #include "co_nav_msg.h"
+#include "wb_session.h"
+#include "wb_merep.h"
+#include "wb_object.h"
+#include "wb_error.h"
+
 
 
 //
@@ -59,6 +65,45 @@
 // The following classes are defined:
 //    WItem		superclass.
 //    WItemObject	Common object.
+
+#define item_eType_ObjectName 1000000
+#define item_eType_Other      1000001
+
+static int item_get_reflist_object( wb_session *sp, pwr_tCid cid, char *attr, pwr_sClass_ReferenceList *op)
+{
+  pwr_tOName oname;
+  bool found = false;
+  wb_object listo;
+  char *s;
+
+  for ( wb_cdef c = sp->cdef( cid);
+	c;
+	c = c.super()) {
+    wb_object o = sp->object( cdh_ClassIdToObjid( cid));
+    if ( !o) return WNAV__NOCHILDREN;
+				
+    strcpy( oname, c.longName().name( cdh_mName_volumeStrict));
+    strcat( oname, "-");
+    if ( (s = strrchr( attr, '.')))
+      strcat( oname, s+1);
+    else
+      strcat( oname, attr);	    
+    
+    listo = sp->object( oname);
+    if ( listo) {
+      found = true;
+      break;
+    }
+  }
+  
+  if ( !found)
+    return WNAV__NOCHILDREN;
+  
+  wb_attribute a = sp->attribute( listo.oid(), "SysBody");
+  a.value( op);
+
+  return WNAV__SUCCESS;
+}
 
 //
 // Member functions for WItem classes
@@ -1088,6 +1133,101 @@ WItemObjectName::WItemObjectName(
     brow_SetAnnotPixmap( node, 1, brow->pixmap_morehelp);
 }
 
+int WItemObjectName::open_children( double x, double y)
+{
+  double	node_x, node_y;
+  int		sts;
+
+  brow_GetNodePosition( node, &node_x, &node_y);
+
+  if ( brow_IsOpen( node)) {
+    // Close
+    brow_SetNodraw( brow->ctx);
+    brow_CloseNode( brow->ctx, node);
+    if ( brow_IsOpen( node) & wnav_mOpen_Children)
+      brow_SetAnnotPixmap( node, 0, brow->pixmap_objname);
+    
+    brow_ResetOpen( node, wnav_mOpen_All);
+    brow_ResetNodraw( brow->ctx);
+    brow_Redraw( brow->ctx, node_y);
+  }
+  else {
+    pwr_sClass_ReferenceList listbody;
+    pwr_tOName oname;
+    int nametype;
+    wb_session *sp = (wb_session *)ldhses;
+    int idx = 0;
+    pwr_tObjName attr = "ObjectName";
+
+    try {
+      wb_object o = sp->object( objid);
+
+      sts = item_get_reflist_object( sp, o.cid(), attr, &listbody);
+      if ( EVEN(sts)) return WNAV__NOCHILDREN;
+
+      brow_SetNodraw( brow->ctx);
+
+      for ( wb_object co = sp->object( listbody.ObjectClass[0]);
+	    co;
+	    co = co.next()) {
+
+	if ( listbody.Filter & pwr_mRefListFilterMask_Siblings) {
+	  // Check if object are siblings
+	  wb_object p1 = o.parent();
+	  wb_object p2 = co.parent();
+	  if ( (!p1 && !p2) ||
+	       (p1 && p2 && cdh_ObjidIsNotEqual( p1.oid(), p2.oid())))
+	    continue;
+	}
+
+	if ( listbody.Filter & pwr_mRefListFilterMask_AllVolumes)
+	  nametype = cdh_mName_volumeStrict;
+	else
+	  nametype = cdh_mName_pathStrict;
+	
+	strcpy( oname, co.name());
+	
+	pwr_tOid oid = co.oid();
+	new WItemEnumObject( brow, ldhses, objid, oname, attr, 
+			     item_eType_ObjectName, 0, 32, 0, (char *)"", oname, 0, 0,
+			     idx++, node, flow_eDest_IntoLast);	    
+      }
+    }
+    catch ( wb_error e) {
+      brow_ResetNodraw( brow->ctx);
+      brow_Redraw( brow->ctx, node_y);
+      return WNAV__NOCHILDREN;
+    }
+
+    brow_SetOpen( node, wnav_mOpen_Children);
+    brow_SetAnnotPixmap( node, 0, brow->pixmap_openmap);
+    brow_ResetNodraw( brow->ctx);
+    brow_Redraw( brow->ctx, node_y);
+  }
+  return 1;
+}
+
+int WItemObjectName::close( double x, double y)
+{
+  double	node_x, node_y;
+
+  brow_GetNodePosition( node, &node_x, &node_y);
+
+  if ( brow_IsOpen( node))
+  {
+    // Close
+    brow_SetNodraw( brow->ctx);
+    brow_CloseNode( brow->ctx, node);
+    if ( brow_IsOpen( node) & wnav_mOpen_Children)
+      brow_SetAnnotPixmap( node, 0, brow->pixmap_objname);
+    
+    brow_ResetOpen( node, wnav_mOpen_All);
+    brow_ResetNodraw( brow->ctx);
+    brow_Redraw( brow->ctx, node_y);
+  }
+  return 1;
+}
+
 int WItemObjectName::update()
 {
   char	segname[120];
@@ -1369,12 +1509,17 @@ WItemAttr::WItemAttr(
 int WItemAttr::open_children( double x, double y)
 {
   double	node_x, node_y;
-  int		sts;
+  pwr_tStatus  	sts;
 
-  switch( type_id)
-  {
+  switch( type_id) {
     case pwr_eType_Enum:
     case pwr_eType_Mask:
+      break;
+    case pwr_eType_Objid:
+    case pwr_eType_AttrRef:
+    case pwr_eType_TypeId:
+      if ( ((wb_session *)ldhses)->access() == ldh_eAccess_ReadOnly)
+	return WNAV__NOCHILDREN;
       break;
     default:
       return WNAV__NOCHILDREN;
@@ -1407,9 +1552,10 @@ int WItemAttr::open_children( double x, double y)
     brow_ResetNodraw( brow->ctx);
     brow_Redraw( brow->ctx, node_y);
   }
-  else // if ( parent && !noedit) 
-  {
-    if ( type_id == pwr_eType_Enum) {
+  else {
+
+    switch ( type_id) {
+    case pwr_eType_Enum: {
       ldh_sValueDef *vd;
       int rows;
 
@@ -1426,8 +1572,9 @@ int WItemAttr::open_children( double x, double y)
 		node, flow_eDest_IntoLast);
       }
       free( (char *)vd);
+      break;
     }
-    else {
+    case pwr_eType_Mask: {
       ldh_sBitDef *bd;
       int rows;
 
@@ -1443,6 +1590,237 @@ int WItemAttr::open_children( double x, double y)
 		node, flow_eDest_IntoLast);
       }
       free( (char *)bd);
+      break;
+    }
+    case pwr_eType_Objid:
+    case pwr_eType_AttrRef:
+    case pwr_eType_TypeId: {
+      pwr_sClass_ReferenceList listbody;
+      pwr_tOName oname;
+      int nametype;
+      wb_session *sp = (wb_session *)ldhses;
+      int idx = 0;
+      char *s;
+      pwr_tCid cid_attrobj;
+      pwr_tOName name_attrobj;
+      pwr_tAName aname;
+
+      try {
+	// Get class for attribute object, lowest level
+	wb_object o = sp->object( objid);
+
+	strcpy( name_attrobj, name);
+	if ( (s = strrchr( name_attrobj, '.'))) {	     
+	  *s = 0;
+	  strcpy( aname, o.longName().name( cdh_mName_volumeStrict));
+	  strcat( aname, ".");
+	  strcat( aname, name_attrobj);
+
+	  wb_attribute a_attrobj = sp->attribute( aname);
+	  cid_attrobj = a_attrobj.tid();
+	}
+	else
+	  cid_attrobj = classid;
+
+	sts = item_get_reflist_object( sp, cid_attrobj, attr, &listbody);
+	if ( EVEN(sts)) return WNAV__NOCHILDREN;
+
+
+	if ( type_id == pwr_eType_Objid) {
+	  brow_SetNodraw( brow->ctx);
+
+	  if ( listbody.Filter & pwr_mRefListFilterMask_Other)
+	    new WItemEnumObject( brow, ldhses, objid, (char *)"Other", attr, 
+				 item_eType_Other, tid,
+				 size, flags, body, &objid, 0, 0,
+				 idx++, node, flow_eDest_IntoLast);
+
+	  for ( unsigned int i = 0; i < sizeof(listbody.ObjectClass)/sizeof(listbody.ObjectClass[0]); i++) {
+	    if ( listbody.ObjectClass[i] == 0)
+	      break;
+
+	    for ( wb_object co = sp->object( listbody.ObjectClass[i]);
+		  co;
+		  co = co.next()) {
+
+	      if ( listbody.Filter & pwr_mRefListFilterMask_Siblings) {
+		// Check if object are siblings
+		wb_object p1 = o.parent();
+		wb_object p2 = co.parent();
+		if ( (!p1 && !p2) ||
+		     (p1 && p2 && cdh_ObjidIsNotEqual( p1.oid(), p2.oid())))
+		  continue;
+	      }
+
+	      if ( listbody.Filter & pwr_mRefListFilterMask_AllVolumes)
+		nametype = cdh_mName_volumeStrict;
+	      else
+		nametype = cdh_mName_pathStrict;
+	      
+	      strcpy( oname, co.longName().name( nametype));
+	      
+	      pwr_tOid oid = co.oid();
+	      new WItemEnumObject( brow, ldhses, objid, oname, attr, 
+				   type_id, tid,
+				   size, flags, body, &oid, 0, 0,
+				   idx++, node, flow_eDest_IntoLast);	    
+	    }
+	  }
+	}
+	else if ( type_id == pwr_eType_TypeId) {
+
+	  wb_vrep *vrep;
+	  wb_mvrep *mvrep;
+	  wb_volume v;
+	  wb_object co;
+	  char *s;
+
+	  // Check Flags if class bit is set
+	  wb_attribute aflags = sp->attribute(objid, "SysBody", "Flags");
+	  if ( aflags) {
+	    unsigned int flags;
+
+	    aflags.value( &flags);
+	    if ( flags & PWR_MASK_CLASS)
+	      return WNAV__NOCHILDREN;
+	  }
+
+	  brow_SetNodraw( brow->ctx);
+
+	  if ( listbody.Filter & pwr_mRefListFilterMask_Other)
+	    new WItemEnumObject( brow, ldhses, objid, (char *)"Other", attr, 
+				 item_eType_Other, tid,
+				 size, flags, body, &objid, 0, 0,
+				 idx++, node, flow_eDest_IntoLast);
+
+	  for ( int j = 0; j < 2; j++) {
+	    // Loop over current volume and pwrs volume
+	    if ( j == 0 && !(listbody.Filter & pwr_mRefListFilterMask_CurrentVolume))
+	      continue;
+	    if ( j == 1 && !(listbody.Filter & pwr_mRefListFilterMask_PwrsVolume))
+	      continue;
+	    
+	    if ( j == 1) {
+	      vrep = *sp;
+	      mvrep = vrep->merep()->volume( &sts, 1);
+	      v = wb_volume(mvrep);
+	    }
+
+	    for ( unsigned int i = 0; i < sizeof(listbody.ObjectClass)/sizeof(listbody.ObjectClass[0]); i++) {
+	      if ( listbody.ObjectClass[i] == 0)
+		break;
+
+	      if ( j == 1)
+		co = v.object( listbody.ObjectClass[i]);
+	      else
+		co = sp->object( listbody.ObjectClass[i]);
+
+	      for ( ;
+		    co;
+		    co = co.next()) {
+
+		strcpy( oname, co.longName().name( cdh_mName_volumeStrict));
+	
+		if ( (s = strrchr( oname, '-')) && strcmp( s+1, "Template") == 0)
+		  continue;
+
+		pwr_tOid oid = co.oid();
+		new WItemEnumObject( brow, ldhses, objid, oname, attr, 
+				     type_id, tid,
+				     size, flags, body, &oid, 0, 0,
+				     idx++, node, flow_eDest_IntoLast);	    
+	      }
+	    }
+	  }
+	}
+	else { 
+	  // type_id is AttrRef
+	  pwr_tAttrRef aref;
+
+	  brow_SetNodraw( brow->ctx);
+
+	  if ( listbody.Filter & pwr_mRefListFilterMask_Other)
+	    new WItemEnumObject( brow, ldhses, objid, (char *)"Other", attr, 
+				 item_eType_Other, tid,
+				 size, flags, body, &objid, 0, 0,
+				 idx++, node, flow_eDest_IntoLast);
+
+	  for ( unsigned int i = 0; i < sizeof(listbody.ObjectClass)/sizeof(listbody.ObjectClass[0]); i++) {
+	    if ( listbody.ObjectClass[i] == 0)
+	      break;
+
+	    if ( listbody.Filter & pwr_mRefListFilterMask_AttrObjects) {
+	      for ( sp->aref( listbody.ObjectClass[i], &aref);
+		    sp->oddSts();
+		    sp->nextAref( listbody.ObjectClass[i], &aref, &aref)) {
+
+		if ( listbody.Filter & pwr_mRefListFilterMask_Siblings) {
+		  // Check if object are siblings
+		  wb_object co = sp->object( aref.Objid);
+		  if ( !co) continue;
+
+		  wb_object p1 = o.parent();
+		  wb_object p2 = co.parent();
+		  if ( (!p1 && !p2) ||
+		       (p1 && p2 && cdh_ObjidIsNotEqual( p1.oid(), p2.oid())))
+		    continue;
+		}
+
+		wb_attribute ca = sp->attribute( &aref); 
+		if ( listbody.Filter & pwr_mRefListFilterMask_AllVolumes)
+		  nametype = cdh_mName_volumeStrict;
+		else
+		  nametype = cdh_mName_pathStrict;
+		
+		strcpy( oname, ca.longName().name( nametype));
+		
+		new WItemEnumObject( brow, ldhses, objid, oname, attr, 
+				     type_id, tid,
+				     size, flags, body, &aref, 0, 0,
+				     idx++, node, flow_eDest_IntoLast);
+	      }
+	    }
+	    else {
+	      for ( wb_object co = sp->object( listbody.ObjectClass[i]);
+		    co;
+		    co = co.next()) {
+
+		if ( listbody.Filter & pwr_mRefListFilterMask_Siblings) {
+		  // Check if object are siblings
+		  wb_object p1 = o.parent();
+		  wb_object p2 = co.parent();
+		  if ( (!p1 && !p2) ||
+		       (p1 && p2 && cdh_ObjidIsNotEqual( p1.oid(), p2.oid())))
+		    continue;
+		}
+
+		if ( listbody.Filter & pwr_mRefListFilterMask_AllVolumes)
+		  nametype = cdh_mName_volumeStrict;
+		else
+		  nametype = cdh_mName_pathStrict;
+		
+		strcpy( oname, co.longName().name( nametype));
+		
+		pwr_tAttrRef aref = cdh_ObjidToAref( co.oid());
+		new WItemEnumObject( brow, ldhses, objid, oname, attr, 
+				     type_id, tid,
+				     size, flags, body, &aref, 0, 0,
+				     idx++, node, flow_eDest_IntoLast);
+	      }
+	    }
+	  }
+	}
+      }
+      catch ( wb_error e) {
+	brow_ResetNodraw( brow->ctx);
+	brow_Redraw( brow->ctx, node_y);
+	return WNAV__NOCHILDREN;
+      }
+	
+      break;
+    }
+    default:
+      return WNAV__NOCHILDREN;
     }
 
     brow_SetOpen( node, wnav_mOpen_Children);
@@ -2854,6 +3232,8 @@ int WItemAttrArrayElem::open_children( double x, double y)
   {
     case pwr_eType_Enum:
     case pwr_eType_Mask:
+    case pwr_eType_Objid:
+    case pwr_eType_AttrRef:
       break;
     default:
       return WNAV__NOCHILDREN;
@@ -2888,7 +3268,8 @@ int WItemAttrArrayElem::open_children( double x, double y)
   }
   else // if ( parent && !noedit)
   {
-    if ( type_id == pwr_eType_Enum) {
+    switch ( type_id) {
+    case pwr_eType_Enum: {
       ldh_sValueDef *vd;
       int rows;
 
@@ -2905,8 +3286,9 @@ int WItemAttrArrayElem::open_children( double x, double y)
 		node, flow_eDest_IntoLast);
       }
       free( (char *)vd);
+      break;
     }
-    else {
+    case pwr_eType_Mask: {
       ldh_sBitDef *bd;
       int rows;
 
@@ -2922,6 +3304,150 @@ int WItemAttrArrayElem::open_children( double x, double y)
 		element, node, flow_eDest_IntoLast);
       }
       free( (char *)bd);
+    }
+    case pwr_eType_Objid:
+    case pwr_eType_AttrRef: {
+      pwr_sClass_ReferenceList listbody;
+      pwr_tOName oname;
+      int nametype;
+      wb_session *sp = (wb_session *)ldhses;
+      int idx = 0;
+      char *s;
+      pwr_tCid cid_attrobj;
+      pwr_tOName name_attrobj;
+      pwr_tAName aname;
+
+      try {
+	// Get class for attribute object, lowest level
+	wb_object o = sp->object( objid);
+
+	strcpy( name_attrobj, name);
+	if ( (s = strrchr( name_attrobj, '.'))) {	     
+	  *s = 0;
+	  strcpy( aname, o.longName().name( cdh_mName_volumeStrict));
+	  strcat( aname, ".");
+	  strcat( aname, name_attrobj);
+
+	  wb_attribute a_attrobj = sp->attribute( aname);
+	  cid_attrobj = a_attrobj.tid();
+	}
+	else
+	  cid_attrobj = classid;
+
+	sts = item_get_reflist_object( sp, classid, attr, &listbody);
+	if ( EVEN(sts)) return WNAV__NOCHILDREN;
+
+	if ( type_id == pwr_eType_Objid) {
+	  brow_SetNodraw( brow->ctx);
+
+	  for ( wb_object co = sp->object( listbody.ObjectClass[0]);
+		co;
+		co = co.next()) {
+
+	    if ( listbody.Filter & pwr_mRefListFilterMask_Siblings) {
+	      // Check if object are siblings
+	      wb_object p1 = o.parent();
+	      wb_object p2 = co.parent();
+	      if ( (!p1 && !p2) ||
+		   (p1 && p2 && cdh_ObjidIsNotEqual( p1.oid(), p2.oid())))
+		continue;
+	    }
+
+	    if ( listbody.Filter & pwr_mRefListFilterMask_AllVolumes)
+	      nametype = cdh_mName_volumeStrict;
+	    else
+	      nametype = cdh_mName_pathStrict;
+	    
+	    strcpy( oname, co.longName().name( nametype));
+	
+	    pwr_tOid oid = co.oid();
+	    new WItemEnumObject( brow, ldhses, objid, oname, attr, 
+				 type_id, tid,
+				 size, flags, body, &oid, 1, element,
+				 idx++, node, flow_eDest_IntoLast);	    
+	  }
+	}
+	else { 
+	  // type_id is AttrRef
+	  pwr_tAttrRef aref;
+
+	  brow_SetNodraw( brow->ctx);
+
+	  for ( unsigned int i = 0; i < sizeof(listbody.ObjectClass)/sizeof(listbody.ObjectClass[0]); i++) {
+	    if ( listbody.ObjectClass[i] == 0)
+	      break;
+
+	    if ( listbody.Filter & pwr_mRefListFilterMask_AttrObjects) {
+	      for ( sp->aref( listbody.ObjectClass[i], &aref);
+		    sp->oddSts();
+		    sp->nextAref( listbody.ObjectClass[i], &aref, &aref)) {
+
+		if ( listbody.Filter & pwr_mRefListFilterMask_Siblings) {
+		  // Check if object are siblings
+		  wb_object co = sp->object( aref.Objid);
+		  if ( !co) continue;
+
+		  wb_object p1 = o.parent();
+		  wb_object p2 = co.parent();
+		  if ( (!p1 && !p2) ||
+		       (p1 && p2 && cdh_ObjidIsNotEqual( p1.oid(), p2.oid())))
+		    continue;
+		}
+
+		wb_attribute ca = sp->attribute( &aref); 
+		if ( listbody.Filter & pwr_mRefListFilterMask_AllVolumes)
+		  nametype = cdh_mName_volumeStrict;
+		else
+		  nametype = cdh_mName_pathStrict;
+		
+		strcpy( oname, ca.longName().name( nametype));
+		
+		new WItemEnumObject( brow, ldhses, objid, oname, attr, 
+				     type_id, tid,
+				     size, flags, body, &aref, 1, element,
+				     idx++, node, flow_eDest_IntoLast);
+	      }
+	    }
+	    else {
+	      for ( wb_object co = sp->object( listbody.ObjectClass[i]);
+		    co;
+		    co = co.next()) {
+
+		if ( listbody.Filter & pwr_mRefListFilterMask_Siblings) {
+		  // Check if object are siblings
+		  wb_object p1 = o.parent();
+		  wb_object p2 = co.parent();
+		  if ( (!p1 && !p2) ||
+		       (p1 && p2 && cdh_ObjidIsNotEqual( p1.oid(), p2.oid())))
+		    continue;
+		}
+
+		if ( listbody.Filter & pwr_mRefListFilterMask_AllVolumes)
+		  nametype = cdh_mName_volumeStrict;
+		else
+		  nametype = cdh_mName_pathStrict;
+		
+		strcpy( oname, co.longName().name( nametype));
+		
+		pwr_tAttrRef aref = cdh_ObjidToAref( co.oid());
+		new WItemEnumObject( brow, ldhses, objid, oname, attr, 
+				     type_id, tid,
+				     size, flags, body, &aref, 1, element,
+				     idx++, node, flow_eDest_IntoLast);
+	      }
+	    }
+	  }
+	}
+      }
+      catch ( wb_error e) {
+	brow_ResetNodraw( brow->ctx);
+	brow_Redraw( brow->ctx, node_y);
+	return WNAV__NOCHILDREN;
+      }
+      break;
+    }
+    default:
+      return WNAV__NOCHILDREN;
     }
 
     brow_SetOpen( node, wnav_mOpen_Children);
@@ -3280,6 +3806,288 @@ int WItemMask::set( int set_value)
       ((WItemAttrArrayElem *)item)->update();
   }
   
+  return WNAV__SUCCESS;
+}
+
+WItemEnumObject::WItemEnumObject( 
+	WNavBrow *item_brow, ldh_tSesContext item_ldhses, 
+	pwr_tObjid item_objid, 
+	char *attr_enum_name, char *attr_name, 
+	int attr_type_id, pwr_tTid attr_tid, 
+	int attr_size, int attr_flags, char *attr_body,
+	void *item_enum_value, int item_is_element, int item_element,
+	int item_idx, brow_tNode dest, flow_eDest dest_code) :
+	WItemBaseAttr( item_brow, item_ldhses, item_objid, attr_name,
+	attr_type_id, attr_tid, attr_size, attr_flags, attr_body),
+        is_element(item_is_element), element(item_element)
+{
+  ldh_sSessInfo info;
+
+  type = wnav_eItemType_EnumObject;
+  switch ( type_id) {
+  case pwr_eType_Objid:
+  case pwr_eType_TypeId:
+    enum_aref.Objid = *(pwr_tObjid *)item_enum_value;
+    break;
+  case pwr_eType_AttrRef:
+    enum_aref = *(pwr_tAttrRef *)item_enum_value;
+    break;
+  case item_eType_ObjectName:
+    strncpy( enum_string, (char *)item_enum_value, sizeof( enum_string));
+    break;
+  case item_eType_Other:
+    break;
+  default: ;
+  }
+
+  sprintf( name, "%s%d", attr_name, item_idx);
+  strcpy( enum_name, attr_enum_name);
+
+  brow_CreateNode( brow->ctx, enum_name, brow->nc_enumobject, 
+		   dest, dest_code, (void *) this, 1, &node);
+
+  brow_SetAnnotPixmap( node, 0, brow->pixmap_attr);
+  brow_SetAnnotation( node, 0, enum_name, strlen(enum_name));
+
+  // Examine access
+  ldh_GetSessionInfo( ldhses, &info);
+  if ( info.Access == ldh_eAccess_ReadWrite &&
+       !(flags & PWR_MASK_NOEDIT || flags & PWR_MASK_STATE))
+    brow_SetAnnotPixmap( node, 1, brow->pixmap_morehelp);
+
+  update();
+}
+
+int WItemEnumObject::update()
+{
+  int 	sts;
+  int	psize;
+  char	*buf;
+
+  switch ( type_id) {
+  case pwr_eType_Objid: {
+    pwr_tOid	*value;
+    // Get the attribute value
+    if ( !is_element) {
+      sts = ldh_GetObjectPar( ldhses, objid, body,
+			      attr, (char **)&value, &psize);
+      if ( EVEN(sts)) return sts;
+    }
+    else {
+      sts = ldh_GetObjectPar( ldhses, objid, body,
+			      attr, &buf, &psize);
+      if ( EVEN(sts)) return sts;
+      value = (pwr_tOid *)(buf + size * element);
+    }
+
+    if ( cdh_ObjidIsEqual( *value, enum_aref.Objid))
+      brow_SetRadiobutton( node, 0, 1);
+    else
+      brow_SetRadiobutton( node, 0, 0);
+    if ( !is_element)
+      free( (char *)value);
+    else
+      free( buf);
+    break;
+  }
+  case pwr_eType_TypeId: {
+    pwr_tTypeId *value;
+    pwr_tOid	oid;
+
+    // Get the attribute value
+    if ( !is_element) {
+      sts = ldh_GetObjectPar( ldhses, objid, body,
+			      attr, (char **)&value, &psize);
+      if ( EVEN(sts)) return sts;
+    }
+    else {
+      sts = ldh_GetObjectPar( ldhses, objid, body,
+			      attr, &buf, &psize);
+      if ( EVEN(sts)) return sts;
+      value = (pwr_tTypeId *)(buf + size * element);
+    }
+
+    oid = cdh_TypeIdToObjid( *value);
+    if ( cdh_ObjidIsEqual( oid, enum_aref.Objid))
+      brow_SetRadiobutton( node, 0, 1);
+    else
+      brow_SetRadiobutton( node, 0, 0);
+    if ( !is_element)
+      free( (char *)value);
+    else
+      free( buf);
+    break;
+  }
+  case pwr_eType_AttrRef: {
+    pwr_tAttrRef	*value;
+    // Get the attribute value
+    if ( !is_element) {
+      sts = ldh_GetObjectPar( ldhses, objid, body,
+			      attr, (char **)&value, &psize);
+      if ( EVEN(sts)) return sts;
+    }
+    else {
+      sts = ldh_GetObjectPar( ldhses, objid, body,
+			      attr, &buf, &psize);
+      if ( EVEN(sts)) return sts;
+      value = (pwr_tAttrRef *)(buf + size * element);
+    }
+
+    if ( cdh_ObjidIsEqual( value->Objid, enum_aref.Objid) &&
+	 value->Offset == enum_aref.Offset &&
+	 value->Size == enum_aref.Size)
+      brow_SetRadiobutton( node, 0, 1);
+    else
+      brow_SetRadiobutton( node, 0, 0);
+    if ( !is_element)
+      free( (char *)value);
+    else
+      free( buf);
+    break;
+  }
+  case item_eType_ObjectName: {
+    pwr_tObjName value;
+    // Get the attribute value
+
+    sts = ldh_ObjidToName( ldhses, objid, cdh_mName_object,
+			   value, sizeof(value), &psize);
+    if ( EVEN(sts)) return sts;
+
+    if ( strcmp( value, enum_string) == 0)
+      brow_SetRadiobutton( node, 0, 1);
+    else
+      brow_SetRadiobutton( node, 0, 0);
+    break;
+  }
+  default: ;
+  }
+  return WNAV__SUCCESS;
+}
+
+int WItemEnumObject::set()
+{
+  int 	sts;
+  WItemAttr *item;
+  WItemEnum *sibling_item;
+  brow_tNode parent, sibling;
+  char	*buf;
+  int	psize;
+  int		ldh_cb_used = brow->ldh_cb_used;
+
+  // Set the attribute value
+
+  switch ( type_id) {
+  case item_eType_Other: {
+    brow_tObject parent;
+    
+    sts = brow_GetParent( brow->ctx, node, &parent);
+    if ( EVEN(sts)) return sts;
+    brow_GetUserData( parent, (void **)&item);
+    
+    item->close( 0, 0);
+
+    // Current item is removed now
+    brow_SelectClear( item->brow->ctx);
+    brow_SelectInsert( item->brow->ctx, item->node);
+    return WNAV__NOCHILDREN;
+  }
+  case pwr_eType_Objid:
+
+    if ( !is_element) {
+      sts = ldh_SetObjectPar( ldhses, objid, body,
+			      attr, (char *) &enum_aref.Objid, sizeof(enum_aref.Objid));
+      if ( EVEN(sts)) return sts;
+    }
+    else {
+      sts = ldh_GetObjectPar( ldhses, objid, body,
+			      attr, &buf, &psize);
+      if ( EVEN(sts)) return sts;
+      *(pwr_tOid *)(buf + size * element) = enum_aref.Objid;
+
+      sts = ldh_SetObjectPar( ldhses, objid, body,
+			      attr, buf, psize);
+      if ( EVEN(sts)) return sts;
+
+      // Warning!! the item will be deleted here by the ldh backcall
+      free( buf);
+    }
+    break;
+  case pwr_eType_TypeId: {
+    pwr_tTypeId value = cdh_TypeObjidToId(enum_aref.Objid);
+    if ( !is_element) {
+      sts = ldh_SetObjectPar( ldhses, objid, body,
+			      attr, (char *) &value, sizeof(value));
+      if ( EVEN(sts)) return sts;
+    }
+    else {
+      sts = ldh_GetObjectPar( ldhses, objid, body,
+			      attr, &buf, &psize);
+      if ( EVEN(sts)) return sts;
+      *(pwr_tTypeId *)(buf + size * element) = value;
+
+      sts = ldh_SetObjectPar( ldhses, objid, body,
+			      attr, buf, psize);
+      if ( EVEN(sts)) return sts;
+
+      // Warning!! the item will be deleted here by the ldh backcall
+      free( buf);
+    }
+    break;
+  }
+  case pwr_eType_AttrRef:
+    if ( !is_element) {
+      sts = ldh_SetObjectPar( ldhses, objid, body,
+			      attr, (char *) &enum_aref, sizeof(enum_aref));
+      if ( EVEN(sts)) return sts;
+    }
+    else {
+      sts = ldh_GetObjectPar( ldhses, objid, body,
+			      attr, &buf, &psize);
+      if ( EVEN(sts)) return sts;
+      *(pwr_tAttrRef *)(buf + size * element) = enum_aref;
+
+      sts = ldh_SetObjectPar( ldhses, objid, body,
+			      attr, buf, psize);
+      if ( EVEN(sts)) return sts;
+
+      // Warning!! the item will be deleted here by the ldh backcall
+      free( buf);
+    }
+    break;
+  case item_eType_ObjectName: {
+
+    sts = ldh_SetObjectName( ldhses, objid, enum_string);
+    if ( EVEN(sts)) return sts;
+
+    // Warning!! the item will be deleted here by the ldh backcall
+
+    break;
+  }
+  default: ;
+  }
+
+  if ( !ldh_cb_used) {
+    brow_SetRadiobutton( node, 0, 1);
+
+    // Update parent
+    sts = brow_GetParent( brow->ctx, node, &parent);
+    if ( EVEN(sts)) return sts;
+    brow_GetUserData( parent, (void **)&item);
+    if ( !is_element)
+      item->update();
+    else
+      ((WItemAttrArrayElem *)item)->update();
+  
+    // Update all siblings
+    sts = brow_GetChild( brow->ctx, parent, &sibling);
+    while( ODD(sts)) {
+      if ( sibling != node) {
+        brow_GetUserData( sibling, (void **)&sibling_item);
+        sibling_item->update();
+      }
+      sts = brow_GetNextSibling( brow->ctx, sibling, &sibling);
+    }
+  }
   return WNAV__SUCCESS;
 }
 

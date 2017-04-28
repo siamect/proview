@@ -166,6 +166,12 @@ SObject pwrb:Class
 	Attr Options = 4
       EndBody
     EndObject
+    Object ThreadObject $ReferenceList
+      Body SysBody
+	Attr ObjectClass[0] = "pwrb:Class-SevHistThread"
+	Attr Filter = 1
+      EndBody
+    EndObject
     Object PostCreate $DbCallBack
       Body SysBody
         Attr MethodName = "SevHist-PostCreate"

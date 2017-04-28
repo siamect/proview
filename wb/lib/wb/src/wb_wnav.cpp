@@ -1404,6 +1404,12 @@ int WNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
             (wnav->change_value_cb)( wnav->parent_ctx);
           break;
         case wnav_eItemType_ObjectName:
+	  sts = ((WItemObjectName *)item)->open_children( 0, 0);
+	  if ( ODD(sts))
+            break;
+          if ( wnav->gbl.advanced_user && wnav->change_value_cb)
+            (wnav->change_value_cb)( wnav->parent_ctx);
+          break;
         case wnav_eItemType_Local:
           if ( wnav->gbl.advanced_user && wnav->change_value_cb)
             (wnav->change_value_cb)( wnav->parent_ctx);
@@ -1439,6 +1445,22 @@ int WNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
             break;
           brow_GetRadiobutton( node_list[0], 0, &value);
 	  ((WItemMask *)item)->set( !value);
+          break;
+        }
+        case wnav_eItemType_EnumObject: 
+        {
+          int value;
+
+	  if ( !wnav->gbl.advanced_user)
+            break;
+          brow_GetRadiobutton( node_list[0], 0, &value);
+          if ( !value) {
+	    sts = ((WItemEnumObject *)item)->set();
+	    if ( sts == WNAV__NOCHILDREN) {
+	      if ( wnav->gbl.advanced_user && wnav->change_value_cb)
+		(wnav->change_value_cb)( wnav->parent_ctx);
+	    }
+	  }
           break;
         }
         default:
@@ -1500,6 +1522,9 @@ int WNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
           break;
         case wnav_eItemType_AttrObject: 
 	  ((WItemAttrObject *)item)->close( 0, 0);
+          break;
+        case wnav_eItemType_ObjectName: 
+	  ((WItemObjectName *)item)->close( 0, 0);
           break;
         case wnav_eItemType_Menu: 
 	  ((WItemMenu *)item)->close( wnav, 0, 0);
@@ -1981,6 +2006,12 @@ int WNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
               break;
             case wnav_eItemType_Mask: 
 	      ((WItemMask *)item)->set( event->radiobutton.value);
+              break;
+            case wnav_eItemType_EnumObject: 
+	      sts = ((WItemEnumObject *)item)->set();
+	      if ( sts == WNAV__NOCHILDREN)
+		if ( wnav->gbl.advanced_user && wnav->change_value_cb)
+		  (wnav->change_value_cb)( wnav->parent_ctx);	      
               break;
             default:
               ;
@@ -2934,6 +2965,9 @@ void WNav::ldh_refresh( pwr_tObjid new_open)
         case wnav_eItemType_AttrObject:
           strcpy( open_attr[open_cnt], object_item->name);
           break;
+        case wnav_eItemType_ObjectName:
+          strcpy( open_attr[open_cnt], object_item->name);
+          break;
         default:
           ;
       }
@@ -2971,6 +3005,7 @@ void WNav::ldh_refresh( pwr_tObjid new_open)
         case wnav_eItemType_AttrArrayElem:
         case wnav_eItemType_Enum:
         case wnav_eItemType_Mask:
+        case wnav_eItemType_EnumObject:
           strcpy( &sel_attr[i * 80], item_sel->name);
           break;
         default:
@@ -2997,6 +3032,7 @@ void WNav::ldh_refresh( pwr_tObjid new_open)
     case wnav_eItemType_AttrArrayElem:
     case wnav_eItemType_Enum:
     case wnav_eItemType_Mask:
+    case wnav_eItemType_EnumObject:
       strcpy( last_sel_attr, item_sel->name);
       break;
     default:
@@ -3023,6 +3059,7 @@ void WNav::ldh_refresh( pwr_tObjid new_open)
     case wnav_eItemType_AttrArrayElem:
     case wnav_eItemType_Enum:
     case wnav_eItemType_Mask:
+    case wnav_eItemType_EnumObject:
       strcpy( prev_sel_attr, item_sel->name);
       break;
     default:
@@ -3124,6 +3161,14 @@ void WNav::ldh_refresh( pwr_tObjid new_open)
             found = 1;
           }
           break;
+        case wnav_eItemType_ObjectName:
+          if ( cdh_ObjidIsEqual( open_objid[i], object_item->objid))
+          {
+            if ( open_type[i] & wnav_mOpen_Children)
+              ((WItemObjectName *)object_item)->open_children( 0, 0);
+            found = 1;
+          }
+          break;
         default:
           ;
       }
@@ -3158,6 +3203,7 @@ void WNav::ldh_refresh( pwr_tObjid new_open)
             case wnav_eItemType_AttrArrayElem:
             case wnav_eItemType_Enum:
             case wnav_eItemType_Mask:
+	    case wnav_eItemType_EnumObject:
               if ( strcmp( &sel_attr[i*80], object_item->name) == 0)
                 found = 1;
               break;
@@ -3199,6 +3245,7 @@ void WNav::ldh_refresh( pwr_tObjid new_open)
 	case wnav_eItemType_AttrArrayElem:
 	case wnav_eItemType_Enum:
 	case wnav_eItemType_Mask:
+	case wnav_eItemType_EnumObject:
 	  if ( strcmp( last_sel_attr, object_item->name) == 0)
 	    found = 1;
 	  break;
@@ -3234,6 +3281,7 @@ void WNav::ldh_refresh( pwr_tObjid new_open)
 	case wnav_eItemType_AttrArrayElem:
 	case wnav_eItemType_Enum:
 	case wnav_eItemType_Mask:
+	case wnav_eItemType_EnumObject:
 	  if ( strcmp( prev_sel_attr, object_item->name) == 0)
 	    found = 1;
 	  break;

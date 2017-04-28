@@ -486,6 +486,17 @@ int WAttNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 	  ((WItemMask *)item)->set( !value);
           break;
         }
+        case wnav_eItemType_EnumObject: 
+        {
+          int value;
+
+	  if ( !wattnav->advanced_user)
+            break;
+          brow_GetRadiobutton( node_list[0], 0, &value);
+          if ( !value)
+	    ((WItemEnumObject *)item)->set();
+          break;
+        }
         default:
           ;
       }

@@ -1225,6 +1225,18 @@ void WNavBrow::create_nodeclasses()
 		0);
   brow_AddFrame( nc_enum, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
  
+  // Create attribute nodeclass
+
+  brow_CreateNodeClass( ctx, "NavigatorEnumObject", 
+		flow_eNodeGroup_Common, &nc_enumobject);
+  brow_AddRadiobutton( nc_enumobject, 2, 0.03, 0.7, 0.7, 0, flow_eDrawType_Line, 1);
+  brow_AddAnnotPixmap( nc_enumobject, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
+  brow_AddAnnotPixmap( nc_enumobject, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
+  brow_AddAnnot( nc_enumobject, 4, 0.6, 0,
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
+		0);
+  brow_AddFrame( nc_enumobject, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
+ 
   // Create table nodeclass
 
   brow_CreateNodeClass( ctx, "NavigatorTable", 

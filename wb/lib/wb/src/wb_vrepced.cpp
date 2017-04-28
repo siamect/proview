@@ -740,6 +740,7 @@ bool wb_vrepced::classeditorCheck( ldh_eDest dest_code, wb_orep *dest, pwr_tCid 
       case pwr_eClass_Method:
       case pwr_eClass_DbCallBack:
       case pwr_eClass_Object:
+      case pwr_eClass_ReferenceList:
       case pwr_cClass_PlcTemplate:
 	break;
       default:
@@ -1099,6 +1100,8 @@ bool wb_vrepced::classeditorCheckMove( wb_orep *o, ldh_eDest dest_code,
       case pwr_eClass_RtMethod:
       case pwr_eClass_Method:
       case pwr_eClass_DbCallBack:
+      case pwr_eClass_Object:
+      case pwr_eClass_ReferenceList:
       case pwr_cClass_PlcTemplate:
 	break;
       default:
