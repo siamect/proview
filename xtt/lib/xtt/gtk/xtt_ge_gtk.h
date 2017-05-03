@@ -80,6 +80,8 @@ class XttGeGtk : public XttGe {
   void confirm_reply( int ok);
   void *get_widget() { return toplevel;}
   GtkWidget *get_graph_widget() { return graph_form;}
+  void iconify( int val);
+  void set_below( int val);
 
   static void ge_change_value_cb( void *ge_ctx, void *value_object, char *text);
   static void confirm_cb( void *ge_ctx, void *confirm_object, char *text);
