@@ -59,6 +59,7 @@ pwr_tStatus remote_logg( int identity, char *str, int size)
   strncat( &logmsg[4], str, size+1);
 
   put.data = logmsg;
+  put.allocate = 1;
   put.size = logsize;
   put.type.b = qcom_eBtype__;
   put.type.s = qcom_eStype__;

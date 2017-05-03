@@ -73,6 +73,8 @@
 
 using namespace std;
 
+static pwr_tStatus generate_viewer_data(device_sCtx *ctx);
+
 class ChanItem {
  public:
   ChanItem() : subslot_number(0), representation(0), number(0), use_as_bit(0), cid(0) {}
@@ -416,11 +418,111 @@ int pndevice_save_cb( void *sctx)
       }
     }
   }
+  
+  // Write data of all devices for profinet viewer
+  // Data is device name, IP and MAC address
+  sts = generate_viewer_data( ctx);
+
   sts = rsts;
 
  return_now:
   ((WNav *)ctx->editor_ctx)->reset_nodraw();
   return sts;
+}
+
+
+static pwr_tStatus generate_viewer_data(device_sCtx *ctx)
+{ 
+  pwr_tOid controller;
+  pwr_tCid ccid;
+  FILE *fp;
+  FILE *ofp;
+  pwr_tFileName fname;
+  char line[500];
+  char elemv[3][200];
+  int nr;
+  char device_text[200];
+  char device_name[80];
+  char ip_address[80];
+  char mac_address[80];
+  unsigned int vendor_id = 0;
+  unsigned int device_id = 0;
+  char *s;
+  pwr_tStatus sts;
+  pwr_tOid oid;
+  char *ethernet_device;
+  int size;
+
+  sts = ldh_GetParent( ctx->ldhses, ctx->aref.Objid, &controller);
+  if ( EVEN(sts)) return sts;
+
+  sts = ldh_GetObjectClass( ctx->ldhses, controller, &ccid);
+  if ( ODD(sts) && ccid == pwr_cClass_PnControllerSoftingPNAK) {
+
+    sts = ldh_GetObjectPar( ctx->ldhses, controller, "RtBody",
+			    "EthernetDevice", (char **)&ethernet_device, &size);
+    if ( EVEN(sts)) return sts;
+
+    dcli_trim( ethernet_device, ethernet_device);
+    cdh_ToLower( ethernet_device, ethernet_device);
+    sprintf( fname, "$pwrp_load/pwr_pnviewer_%s.dat", ethernet_device);
+    free( ethernet_device);
+    dcli_translate_filename( fname, fname);
+    ofp = fopen( fname, "w");
+    if ( !ofp)
+      return 0;
+
+
+    for ( sts = ldh_GetChild( ctx->ldhses, controller, &oid);
+	  ODD(sts);
+	  sts = ldh_GetNextSibling( ctx->ldhses, oid, &oid)) {
+
+      sprintf( fname, "$pwrp_load/pwr_pn_%s.xml", cdh_ObjidToFnString( 0, oid));
+      dcli_translate_filename( fname, fname);
+
+      fp = fopen( fname, "r");
+      if ( !fp)
+	return 0;
+
+      while ( dcli_read_line( line, sizeof( line), fp)) {
+	dcli_trim( line, line);
+	nr = dcli_parse( line, "=", "", (char *)elemv, sizeof( elemv) / sizeof( elemv[0]), 
+			 sizeof( elemv[0]), 0);
+	if ( nr != 2)
+	  continue;
+	
+	if ( strcmp( elemv[0], "DeviceText") == 0) {
+	  strncpy( device_text, elemv[1], sizeof(device_text));
+	}
+	else if ( strcmp( elemv[0], "VendorId") == 0) {
+	  sscanf( elemv[1], "%d", &vendor_id);
+	}
+	else if ( strcmp( elemv[0], "DeviceId") == 0) {
+	  sscanf( elemv[1], "%d", &device_id);
+	}
+	else if ( strcmp( elemv[0], "DeviceName") == 0) {
+	  strncpy( device_name, elemv[1], sizeof(device_name));
+	}
+	else if ( strcmp( elemv[0], "IP_Address") == 0) {
+	  strncpy( ip_address, elemv[1], sizeof(ip_address));
+	}
+	else if ( strcmp( elemv[0], "MAC_Address") == 0) {
+	  strncpy( mac_address, elemv[1], sizeof(mac_address));
+	  if ( (s = strchr( mac_address, '/')))
+	    *s = 0;
+	  dcli_trim( mac_address, mac_address);
+	  break;
+	}
+      }
+      fclose(fp);
+
+      fprintf( ofp, "\"%s\" \"%s\" \"%s\" \"%s\" %d %d\n", device_text, device_name, ip_address, mac_address,
+	       vendor_id, device_id);
+      
+    }
+    fclose(ofp);
+  }      
+  return 1;
 }
   
 static int pndevice_check_io( device_sCtx *ctx, gsdml_VirtualSubmoduleList *vsl, 

@@ -327,16 +327,6 @@ static pwr_tStatus IoCardRead (
 	
       if ( sts1 == -1 || sts2 == -1)
       {
-#if 0
-        if ( io_fatal_error)
-        {
-          /* Activate emergency break */
-          errh_Error( "Fatal read error, card '%s', IO i stopped", cp->Name);
-          ctx->Node->EmergBreakTrue = 1;
-          return IO__ERRDEVICE;
-        }
-#endif
-
         /* Increase error count and check error limits */
 	op->ErrorCount++;
 
@@ -345,14 +335,30 @@ static pwr_tStatus IoCardRead (
 	  ctx->IOHandler->CardErrorSoftLimit = 1;
 	  ctx->IOHandler->ErrorSoftLimitObject = cdh_ObjidToAref( cp->Objid);
 	}
-        if ( op->ErrorCount >= op->ErrorHardLimit)
+        if ( op->ErrorCount == op->ErrorHardLimit)
         {
-          errh_Error( "IO Error hard limit reached on card '%s', IO stopped", cp->Name);
-          ctx->Node->EmergBreakTrue = 1;
 	  ctx->IOHandler->CardErrorHardLimit = 1;
 	  ctx->IOHandler->ErrorHardLimitObject = cdh_ObjidToAref( cp->Objid);
-          return IO__ERRDEVICE;
-        }
+	}
+	if ( op->ErrorCount >= op->ErrorHardLimit) {
+	  if (r_local->Qbus_fp != 0 && r_local->s == 0) {
+	    /* Local I/O, emergency break */
+	    ctx->Node->EmergBreakTrue = 1;
+	    if ( op->ErrorCount == op->ErrorHardLimit)
+	      errh_Error( "IO Error hard limit reached on card '%s', IO stopped", cp->Name);
+	    return IO__ERRDEVICE;	  
+	  }
+	  else {
+	    /* Ethernet I/O, check stall action */
+	    if ( op->ErrorCount == op->ErrorHardLimit)
+	      errh_Error( "IO Error hard limit reached on card '%s', stall action %d", cp->Name, ((pwr_sClass_Ssab_RemoteRack *) rp->op)->StallAction);
+	    if ( ((pwr_sClass_Ssab_RemoteRack *) rp->op)->StallAction == 
+		 pwr_eSsabStallAction_EmergencyBreak ) {
+	      ctx->Node->EmergBreakTrue = 1;
+	      return IO__ERRDEVICE;	  
+	    }
+	  }
+	}
         continue;
       }
     }

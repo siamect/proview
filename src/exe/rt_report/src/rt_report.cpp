@@ -940,7 +940,7 @@ void rt_report::format_cmd( char *cmd, int cmd_size,
 
 int rt_report::parse( char *line) 
 {
-  char line_array[5][80];
+  char line_array[7][80];
   int num;
   char aline[200];
   char rline[200];
@@ -958,18 +958,62 @@ int rt_report::parse( char *line)
       pwr_tFileName fname;
       pwr_tFileName tmpfile = "$pwrp_lis/report_print.rtt_com";
       pwr_tCmd cmd;
+      int sts;
+      float btime = 2;
+      float atime = 0;
+      pwr_tAName object_str = "";
+      char graph_str[80] = "";
+      pwr_tFileName image_str = "";
+      int argcnt;
 
       if ( num < 4)
 	return 0;
+
+      argcnt = 0;
+      for ( int i = 2; i < num; i++) {
+	if ( cdh_NoCaseStrncmp( line_array[i], "btime=", 6) == 0) {
+	  sts = sscanf( &line_array[i][6], "%f", &btime);
+	  if ( sts != 1)
+	    btime = 2;
+	}
+	else if ( cdh_NoCaseStrncmp( line_array[i], "atime=", 6) == 0) {
+	  sts = sscanf( &line_array[i][6], "%f", &atime);
+	  if ( sts != 1)
+	    atime = 2;
+	}
+	else if ( cdh_NoCaseStrncmp( line_array[i], "object=", 6) == 0) {
+	  strncpy( object_str, line_array[i], sizeof(object_str));	  
+	  argcnt++; // Replaces graph
+	}
+	else {
+	  if ( argcnt == 0)
+	    strncpy( graph_str, line_array[i], sizeof(graph_str));
+	  else if ( argcnt == 1)
+	    strncpy( image_str, line_array[i], sizeof(image_str));
+	  argcnt++;
+	}
+      }
 
       dcli_translate_filename( fname, tmpfile);
       fout.open( fname);
       if ( !fout)
 	return 0;
       
-      fout << "open graph  " << line_array[2] << endl; // Should be with /hide but it sometimes doesn't work...
-      fout << "wait 2 " << endl;
-      fout << "export graph /graph=" << line_array[2] << " /file=\"" << line_array[3] << "\"" << endl;
+      fout << "main()" << endl;
+      if ( strcmp( graph_str, "") == 0)
+	fout << "  open graph /" << object_str << endl; // Should be with /hide but it sometimes doesn't work...
+      else
+	fout << "  open graph " << graph_str << endl;
+      if ( btime != 0)
+	fout << "  wait " << btime << endl;
+      if ( strcmp( graph_str, "") == 0)
+	fout << "  export graph /" << object_str << " /file=\"" << line_array[3] << "\"" << endl;
+      else
+	fout << "  export graph /graph=" << graph_str << " /file=\"" << image_str << "\"" << endl;
+      if ( atime != 0)
+	fout << "  wait " << atime << endl;
+      fout << "endmain" << endl;
+      fout.close();
 
       strcpy( cmd, "rt_xtt_cmd ");
       if ( strcmp( display, "") != 0) {

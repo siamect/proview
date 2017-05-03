@@ -174,6 +174,7 @@ unsigned int qcom_send(remnode_item *remnode,
 
   memset( &put, 0, sizeof(put));
   put.data = buf;
+  put.allocate = 1;
   put.size = buf_size;
   put.type.b = remote_cMsgClass;
   put.type.s = remtrans->Address[0];

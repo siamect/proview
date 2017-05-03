@@ -142,7 +142,7 @@ extern "C" {
 #define pwr_cSizOName		199
 #define pwr_cSizAName		399
 #define pwr_cSizFileName       	255
-#define pwr_cSizCmd       	255
+#define pwr_cSizCmd       	399
 
 typedef void            *pwr_tAddress;		//!< Generic pointer type.
 typedef unsigned int    pwr_tBit;		//!< Bit type.
@@ -514,6 +514,21 @@ typedef pwr_tEnum      pwr_tOpSysEnum;	       	//!< Operating system enum.
   @aref opsysenum OpSysMask
 */
 typedef pwr_tMask      pwr_tOpSysMask;	       	//!< Operating system Mask.
+
+/*_*
+  @aref reflistlfiltermask RefListFilterMask
+*/
+typedef enum {
+  pwr_mRefListFilterMask_CurrentVolume 	= 1,
+  pwr_mRefListFilterMask_AllVolumes 	= 2,
+  pwr_mRefListFilterMask_RootVolume 	= 4,
+  pwr_mRefListFilterMask_SharedVolume 	= 8,
+  pwr_mRefListFilterMask_Siblings 	= 16,
+  pwr_mRefListFilterMask_AttrObjects 	= 32,
+  pwr_mRefListFilterMask_PwrsVolume 	= 64,
+  pwr_mRefListFilterMask_Other	 	= 128
+} pwr_mRefListFilterMask;
+typedef pwr_tMask      pwr_tRefListFilterMask;	//!< Reference list filter Mask.
 
 
 /*_*

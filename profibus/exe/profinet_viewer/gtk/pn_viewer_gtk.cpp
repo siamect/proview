@@ -108,6 +108,9 @@ PnViewerGtk::PnViewerGtk (
   GtkWidget *functions_update = gtk_menu_item_new_with_mnemonic("_Update");
   g_signal_connect(functions_update, "activate", G_CALLBACK(activate_update), this);
 
+  GtkWidget *functions_filter = gtk_menu_item_new_with_mnemonic("_Filter");
+  g_signal_connect(functions_filter, "activate", G_CALLBACK(activate_filter), this);
+
   GtkWidget *functions_setdevice = gtk_menu_item_new_with_mnemonic("_Set Device Properties");
   g_signal_connect(functions_setdevice, "activate", G_CALLBACK(activate_setdevice), this);
 
@@ -118,6 +121,7 @@ PnViewerGtk::PnViewerGtk (
 
   GtkMenu *functions_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_update);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_filter);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_setdevice);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_changevalue);
 
@@ -181,12 +185,31 @@ PnViewerGtk::PnViewerGtk (
   gtk_widget_show_all( statusbar);
 
   // Create viewernav
-  viewernav = new PnViewerNavGtk( this, form, &nav_widget);
+  GtkWidget *nav_paned = gtk_hpaned_new();
+  GtkWidget *nav_left = gtk_vbox_new( FALSE, 0);
+  GtkWidget *nav_right = gtk_vbox_new( FALSE, 0);
+  GtkWidget *header_left = gtk_label_new( "Devices on Network");
+  GtkWidget *header_right = gtk_label_new( "Devices from Configuration");
+
+  viewernav = new PnViewerNavGtk( this, nav_right, viewer_eType_Network, &nav_widget);
   viewernav->change_value_cb = &change_value;
   viewernav->message_cb = &message_cb;
 
+  viewernavconf = new PnViewerNavGtk( this, nav_left, viewer_eType_Configuration, &navconf_widget);
+  viewernavconf->change_value_cb = &change_value;
+  viewernavconf->message_cb = &message_cb;
+
+  gtk_box_pack_start( GTK_BOX(nav_left), header_left, FALSE, FALSE, 5);
+  gtk_box_pack_start( GTK_BOX(nav_left), nav_widget, TRUE, TRUE, 5);
+
+  gtk_box_pack_start( GTK_BOX(nav_right), header_right, FALSE, FALSE, 5);
+  gtk_box_pack_start( GTK_BOX(nav_right), navconf_widget, TRUE, TRUE, 5);
+
+  gtk_paned_pack1( GTK_PANED(nav_paned), nav_left, TRUE, TRUE);
+  gtk_paned_pack2( GTK_PANED(nav_paned), nav_right, FALSE, TRUE);
+
   gtk_box_pack_start( GTK_BOX(form), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);
-  gtk_box_pack_start( GTK_BOX(form), GTK_WIDGET(nav_widget), TRUE, TRUE, 0);
+  gtk_box_pack_start( GTK_BOX(form), GTK_WIDGET(nav_paned), TRUE, TRUE, 0);
   gtk_box_pack_start( GTK_BOX(form), GTK_WIDGET(statusbar), FALSE, FALSE, 3);
 
   gtk_container_add( GTK_CONTAINER(toplevel), form);
@@ -309,6 +332,13 @@ void PnViewerGtk::activate_update( GtkWidget *w, gpointer data)
   PnViewer *viewer = (PnViewer *)data;
 
   viewer->activate_update();
+}
+
+void PnViewerGtk::activate_filter( GtkWidget *w, gpointer data)
+{
+  PnViewer *viewer = (PnViewer *)data;
+
+  viewer->activate_filter( viewer_eFilterType_NotMatching);
 }
 
 void PnViewerGtk::activate_setdevice( GtkWidget *w, gpointer data)

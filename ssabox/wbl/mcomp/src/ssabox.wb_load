@@ -1,6 +1,6 @@
 Volume SsabOx $ClassVolume 0.0.250.5 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X257"
+    Attr NextOix = "_X264"
     Attr NextCix = "_X33"
     Attr NextTix[0] = "_X5"
   EndBody
@@ -187,7 +187,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Super $Attribute 1 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
-            Attr Size = 2432
+            Attr Size = 2440
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseSafetySwitch"
           EndBody
@@ -294,10 +294,10 @@ Volume SsabOx $ClassVolume 0.0.250.5
         ! @Summary QBUS address of the card.
         ! QBUS address of the card.
         ! The value is set with address switches on the card.
-        ! Note! The value in RegAddress is a decimal value
+        ! NoteThe value in RegAddress is a decimal value
         ! 
         ! 	Card number	Octal address	Decimal Address
-        !
+        ! 
         ! 	Ai1		167000		4189696
         ! 	Ai2		167100		4189760
         ! 	Ai3		167200		4189824
@@ -306,7 +306,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         ! 	Ai6		167500		4190016
         ! 	Ai7		167600		4190080
         ! 	Ai8		167700		4190144
-        !
+        ! 
         ! 	Ao1		176210		4193416
         ! 	Ao2		176220		4193424
         ! 	Ao3		176230		4193432
@@ -332,7 +332,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         ! from the current position of the object in the rack. If the
         ! positions is changed the settings can be updated with the SetAddress
         ! method in the popup menu.
-        !
+        ! 
         ! The settings are presented with an integer value, and leading zeros
         ! are missing.
         !*/
@@ -389,6 +389,11 @@ Volume SsabOx $ClassVolume 0.0.250.5
           Attr ErrorHardLimit = 50
           Attr MaxNoOfChannels = 32
           Attr Process = 1
+        EndBody
+      EndObject
+      Object ThreadObject $ReferenceList 258 25-APR-2017 15:14:05.32
+        Body SysBody 25-APR-2017 15:14:16.89
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
         EndBody
       EndObject
       Object ConfiguratorPoson $Menu 2 06-OCT-2005 14:45:53.00
@@ -617,7 +622,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         ! from the current position of the object in the rack. If the
         ! positions is changed the settings can be updated with the SetAddress
         ! method in the popup menu.
-        !
+        ! 
         ! The settings are presented with an integer value, and leading zeros
         ! are missing.
         !*/
@@ -721,6 +726,11 @@ Volume SsabOx $ClassVolume 0.0.250.5
       Object PostCreate $DbCallBack 178 05-OCT-2010 16:19:01.60
         Body SysBody 04-MAR-2016 17:49:13.17
           Attr MethodName = "Ssab_BaseDiCard-PostCreate"
+        EndBody
+      EndObject
+      Object ThreadObject $ReferenceList 259 25-APR-2017 15:14:47.31
+        Body SysBody 25-APR-2017 15:14:51.01
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
         EndBody
       EndObject
       Object Template Ssab_BaseDiCard 2148499456 06-OCT-2005 14:45:53.00
@@ -943,7 +953,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         ! from the current position of the object in the rack. If the
         ! positions is changed the settings can be updated with the SetAddress
         ! method in the popup menu.
-        !
+        ! 
         ! The settings are presented with an integer value, and leading zeros
         ! are missing.
         !*/
@@ -1108,6 +1118,11 @@ Volume SsabOx $ClassVolume 0.0.250.5
       Object PostCreate $DbCallBack 179 05-OCT-2010 16:19:07.83
         Body SysBody 04-MAR-2016 17:48:59.70
           Attr MethodName = "Ssab_BaseDoCard-PostCreate"
+        EndBody
+      EndObject
+      Object ThreadObject $ReferenceList 260 25-APR-2017 15:15:08.98
+        Body SysBody 25-APR-2017 15:15:12.13
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
         EndBody
       EndObject
       Object Template Ssab_BaseDoCard 2148761600 06-OCT-2005 14:45:53.00
@@ -1390,6 +1405,11 @@ Volume SsabOx $ClassVolume 0.0.250.5
       Object PostCreate $DbCallBack 180 05-OCT-2010 16:19:16.62
         Body SysBody 05-OCT-2010 16:19:16.62
           Attr MethodName = "BaseIOCard-PostCreate"
+        EndBody
+      EndObject
+      Object ThreadObject $ReferenceList 261 25-APR-2017 15:15:34.33
+        Body SysBody 25-APR-2017 15:15:36.83
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
         EndBody
       EndObject
       Object Template Ssab_BaseMCard 2155839488 01-JAN-1970 01:00:00.00
@@ -4852,7 +4872,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         ! from the current position of the object in the rack. If the
         ! positions is changed the settings can be updated with the SetAddress
         ! method in the popup menu.
-        !
+        ! 
         ! The settings are presented with an integer value, and leading zeros
         ! are missing.
         !*/
@@ -4938,6 +4958,11 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr TypeRef = "pwrb:Class-ChanCo"
           EndBody
         EndObject
+      EndObject
+      Object ThreadObject $ReferenceList 264 25-APR-2017 15:17:02.85
+        Body SysBody 25-APR-2017 15:17:05.69
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
       EndObject
       Object Template Ssab_CO4uP 2150072320 06-OCT-2005 14:45:53.00
         Body RtBody 01-JAN-1970 01:00:00.00
@@ -5255,6 +5280,11 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+      EndObject
+      Object ThreadObject $ReferenceList 263 25-APR-2017 15:16:32.52
+        Body SysBody 25-APR-2017 15:16:34.82
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
       EndObject
       Object IoMethods $RtMethod 163 25-MAR-2009 10:50:23.12
         Object IoCardInit $Method 164 25-MAR-2009 10:52:00.36
@@ -9046,6 +9076,11 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+      EndObject
+      Object ThreadObject $ReferenceList 262 25-APR-2017 15:16:06.50
+        Body SysBody 25-APR-2017 15:16:08.71
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
       EndObject
       Object IoMethods $RtMethod 153 10-FEB-2006 16:02:06.68
         Object IoRackInit $Method 154 10-FEB-2006 16:02:06.68

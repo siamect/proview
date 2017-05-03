@@ -633,7 +633,7 @@ void wb_merep::insertCattObject( pwr_tStatus *sts, pwr_tCid cid,
           ODD(*sts);
           adnext = ad->next( sts), delete ad, ad = adnext) {
       if ( ad->flags() & PWR_MASK_CLASS && cdh_tidIsCid( ad->tid())) {
-        insertCattObject( sts, cid, ad, offset + ad->offset());
+        insertCattObject( sts, cid, ad, offset + adp->offset());
         if ( EVEN(*sts)) return;
       }
     }

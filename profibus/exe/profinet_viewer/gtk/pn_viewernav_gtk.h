@@ -46,8 +46,9 @@
 class PnViewerNavGtk : public PnViewerNav {
   public:
     PnViewerNavGtk(
-	void *ev_parent_ctx,
-	GtkWidget *ev_parent_wid,
+	void *v_parent_ctx,
+	GtkWidget *v_parent_wid,
+	viewer_eType v_type,
 	GtkWidget **w);
     ~PnViewerNavGtk();
 

@@ -238,6 +238,13 @@ SObject pwrs:Class
         Attr Elements = 1
       EndBody
     EndObject
+    Object TypeRef pwr_eClass_ReferenceList
+      Body SysBody
+	Attr ObjectClass[0] = pwr_eClass_Type
+	Attr ObjectClass[1] = pwr_eClass_TypeDef
+	Attr Filter = 193
+      EndBody
+    EndObject
     Object AnteCreate $DbCallBack
       Body SysBody
         Attr MethodName = "$Attribute-AnteCreate"

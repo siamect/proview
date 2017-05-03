@@ -189,6 +189,12 @@ SObject pwrb:Class
         Attr MethodName = "PlcPgm-AnteAdopt"
       EndBody
     EndObject
+    Object ThreadObject $ReferenceList
+      Body SysBody
+	Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+	Attr Filter = 1
+      EndBody
+    EndObject
     Object NavigatorPosnn $Menu
       Object Pointed $Menu
 	Object OpenProgram $MenuButton

@@ -1060,6 +1060,7 @@ applReply (
   put.type.s = mh_eMsg_ApplReply;
   put.reply  = l.head.qid;
   put.size   = size;
+  put.allocate = 0;
 
   qcom_Reply(&sts, get, &put);
   if (EVEN(sts)) {
@@ -1218,7 +1219,7 @@ aSup_exec (
     if (!o->Action) {
       o->Action = TRUE;
     }
-    if (o->Supressed) {
+    if (o->Suppressed) {
       if (o->ReturnCheck) {
 	time_GetTime( &o->ReturnTime);
 	o->ReturnCheck = FALSE;
@@ -1227,7 +1228,7 @@ aSup_exec (
       else if (o->DetectSend)
 	o->DetectSend = FALSE;
     }
-    if (o->AlarmCheck && o->DetectOn && !o->Blocked && !o->Supressed) {
+    if (o->AlarmCheck && o->DetectOn && !o->Blocked && !o->Suppressed) {
       if (o->DetectCheck) {
         o->ActualValue = In;
         timerIn(sp, (sTimer *)&o->TimerFlag);
@@ -1514,7 +1515,7 @@ dSup_exec (
     if (!o->Action) {
       o->Action = TRUE;
     }
-    if (o->Supressed) {
+    if (o->Suppressed) {
       if (o->ReturnCheck) {
 	time_GetTime( &o->ReturnTime);
 	o->ReturnCheck = FALSE;
@@ -1523,7 +1524,7 @@ dSup_exec (
       else if (o->DetectSend)
 	o->DetectSend = FALSE;
     }
-    if (o->AlarmCheck && o->DetectOn && !o->Blocked && !o->Supressed) {
+    if (o->AlarmCheck && o->DetectOn && !o->Blocked && !o->Suppressed) {
       if (o->DetectCheck) {
         o->ActualValue = In;
         timerIn(sp, (sTimer *)&o->TimerFlag);

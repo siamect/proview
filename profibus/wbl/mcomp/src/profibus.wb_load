@@ -1150,7 +1150,7 @@ Volume Profibus $ClassVolume 0.0.250.7
       Object RtBody $ObjBodyDef 1 16-JAN-2006 09:46:40.50
         Body SysBody 16-JAN-2006 09:46:40.50
           Attr StructName = "Pb_DP_Slave"
-          Attr NextAix = "_X44"
+          Attr NextAix = "_X45"
         EndBody
         !/**
         ! Description of slave
@@ -1423,6 +1423,13 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr PgmName = "WdFact2"
             Attr Size = 1
             Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object StartupTime $Attribute 44 22-FEB-2017 12:50:19.18
+          Body SysBody 22-FEB-2017 12:50:20.51
+            Attr PgmName = "StartupTime"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         !/**
@@ -1772,13 +1779,14 @@ Volume Profibus $ClassVolume 0.0.250.7
         EndBody
       EndObject
       Object Template Pb_DP_Slave 2149285888 01-JAN-1970 01:00:00.00
-        Body RtBody 01-JAN-1970 01:00:00.00
+        Body RtBody 22-FEB-2017 12:49:46.90
           Attr Process = 1
           Attr StallAction = 1
           Attr ErrorSoftLimit = 15
           Attr ErrorHardLimit = 50
           Attr WdFact1 = 10
           Attr WdFact2 = 10
+          Attr StartupTime = 5.000000e+00
         EndBody
       EndObject
     EndObject
@@ -3427,7 +3435,7 @@ Volume Profibus $ClassVolume 0.0.250.7
       Object RtBody $ObjBodyDef 1 21-APR-2009 13:41:08.17
         Body SysBody 21-APR-2009 13:41:08.17
           Attr StructName = "PnDevice"
-          Attr NextAix = "_X106"
+          Attr NextAix = "_X108"
         EndBody
         !/**
         ! Description.
@@ -3504,6 +3512,20 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr PgmName = "ThreadObject"
             Attr Size = 8
             Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object StallAction $Attribute 106 22-FEB-2017 15:27:36.86
+          Body SysBody 22-FEB-2017 15:27:36.86
+            Attr PgmName = "StallAction"
+            Attr Size = 4
+            Attr TypeRef = "Profibus:Type-PbStallActionEnum"
+          EndBody
+        EndObject
+        Object StartupTime $Attribute 107 22-FEB-2017 16:11:42.18
+          Body SysBody 22-FEB-2017 16:11:42.18
+            Attr PgmName = "StartupTime"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         !/**
@@ -3798,8 +3820,10 @@ Volume Profibus $ClassVolume 0.0.250.7
         EndBody
       EndObject
       Object Template PnDevice 2151907328 01-JAN-1970 01:00:00.00
-        Body RtBody 30-JUN-2010 11:04:35.19
+        Body RtBody 22-FEB-2017 16:12:07.73
           Attr Process = 1
+          Attr StallAction = 1
+          Attr StartupTime = 5.000000e+00
           Attr ErrorSoftLimit = 100
           Attr ErrorHardLimit = 1000
         EndBody
@@ -3878,7 +3902,7 @@ Volume Profibus $ClassVolume 0.0.250.7
         Object Slot $Attribute 22 09-DEC-2016 14:42:22.14
           Body SysBody 09-DEC-2016 14:43:00.76
             Attr PgmName = "Slot"
-            Attr Size = 40
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody

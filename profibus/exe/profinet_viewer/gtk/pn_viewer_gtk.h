@@ -63,6 +63,7 @@ class PnViewerGtk : public PnViewer {
     GtkWidget		*toplevel;
     GtkWidget		*form;
     GtkWidget		*nav_widget;
+    GtkWidget		*navconf_widget;
     GtkWidget		*msg_label;
     GtkWidget		*cmd_prompt;
     GtkWidget		*cmd_input;
@@ -79,6 +80,7 @@ class PnViewerGtk : public PnViewer {
     static void valchanged_cmd_input( GtkWidget *w, gpointer data);
     static void activate_exit( GtkWidget *w, gpointer data);
     static void activate_update( GtkWidget *w, gpointer data);
+    static void activate_filter( GtkWidget *w, gpointer data);
     static void activate_setdevice( GtkWidget *w, gpointer data);
     static void activate_changevalue( GtkWidget *w, gpointer data);
     static void activate_zoom_in( GtkWidget *w, gpointer data);

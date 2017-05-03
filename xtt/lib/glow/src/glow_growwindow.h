@@ -258,7 +258,7 @@ class GrowWindow : public GrowRect {
 		     double fy);
 
   //! Check if new filename
-  void update_attributes();
+  int update_attributes();
 
   //! Create a new grow context
   void new_ctx();

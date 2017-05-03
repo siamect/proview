@@ -33,7 +33,7 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  remote_c_remnodeudp.wb_load -- Defines the class RemnodeUDP.
+!  remote_c_remnodeqcom.wb_load -- Defines the class RemnodeQCom.
 !
 SObject Remote:Class
 !/**

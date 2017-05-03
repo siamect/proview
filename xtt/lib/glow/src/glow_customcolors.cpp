@@ -213,7 +213,7 @@ int GlowCustomColors::read_colorfile( GrowCtx *ctx, char *name)
   open( fp);
   fp.close();
 
-  if ( ctx)
+  if ( ctx && ctx->gdraw)
     ctx->gdraw->reset_customcolors( this);
 
 

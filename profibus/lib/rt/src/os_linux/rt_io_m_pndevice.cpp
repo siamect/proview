@@ -55,6 +55,7 @@ static pwr_tStatus IoRackInit (
 ) 
 {
   io_sPnCardLocal *local_card;
+  io_sPnRackLocal *local;
   io_sCard *cardp;
   short input_counter;
   short output_counter;
@@ -79,6 +80,9 @@ static pwr_tStatus IoRackInit (
   errh_Info( "Init of Profinet Device and Modules %s", name);
 
   op = (pwr_sClass_PnDevice *) rp->op;
+  local = (io_sPnRackLocal *) rp->Local;
+
+  local->start_time = (int)(op->StartupTime / ctx->ScanTime);
   
   // Do configuration check and initialize modules.
 
@@ -231,9 +235,11 @@ static pwr_tStatus IoRackRead (
   io_sRack	*rp
 ) 
 {
-  pwr_sClass_PnDevice *sp;
+  pwr_sClass_PnDevice *sp = (pwr_sClass_PnDevice *) rp->op;
+  io_sPnRackLocal *local = (io_sPnRackLocal *) rp->Local;
   
-  sp = (pwr_sClass_PnDevice *) rp->op;
+  if ( local->start_cnt < local->start_time)
+    local->start_cnt++;
 
   /* The reading of the process image is now performed at the agent level,
   this eliminates the need for board specific code at the rack level.  */
@@ -242,17 +248,30 @@ static pwr_tStatus IoRackRead (
     sp->ErrorCount = 0;
   }
   else {
+    if ( local->start_cnt >= local->start_time)
+      sp->ErrorCount++;
+  }
+  
+  if ( sp->ErrorCount == sp->ErrorHardLimit) {
+    errh_Error( "IO Error hard limit reached on card '%s', stall action %d", rp->Name, sp->StallAction);
+    ctx->IOHandler->CardErrorHardLimit = 1;
+    ctx->IOHandler->ErrorHardLimitObject = cdh_ObjidToAref( rp->Objid);
     sp->ErrorCount++;
   }
-  
-  if (sp->ErrorCount > sp->ErrorSoftLimit ) {
-    if ( ((io_sPnRackLocal *)(rp->Local))->bytes_of_input > 0)
-      memset(((io_sPnRackLocal *)(rp->Local))->inputs, 0, ((io_sPnRackLocal *)(rp->Local))->bytes_of_input);
+  else if (sp->ErrorCount == sp->ErrorSoftLimit) {
+    errh_Error( "IO Error soft limit reached on card '%s'", rp->Name);
+    ctx->IOHandler->CardErrorSoftLimit = 1;
+    ctx->IOHandler->ErrorSoftLimitObject = cdh_ObjidToAref( rp->Objid);
+    sp->ErrorCount++;
   }
-  
-  //  if (sp->ErrorCount > sp->ErrorHardLimit && sp->StallAction >= pwr_ePbStallAction_EmergencyBreak) {
-  //    ctx->Node->EmergBreakTrue = 1;
-  //  }
+  if (sp->ErrorCount > sp->ErrorHardLimit) {
+    if ( sp->StallAction == pwr_ePbStallAction_ResetInputs) {
+      if ( ((io_sPnRackLocal *)(rp->Local))->bytes_of_input > 0)
+	memset(((io_sPnRackLocal *)(rp->Local))->inputs, 0, ((io_sPnRackLocal *)(rp->Local))->bytes_of_input);
+    }
+    else if (sp->StallAction == pwr_ePbStallAction_EmergencyBreak)
+      ctx->Node->EmergBreakTrue = 1;
+  }
   
   return IO__SUCCESS;
 }
@@ -267,13 +286,37 @@ static pwr_tStatus IoRackWrite (
   io_sRack	*rp
 ) 
 {
-  pwr_sClass_PnDevice *sp;
+  pwr_sClass_PnDevice *sp = (pwr_sClass_PnDevice *) rp->op;
+  io_sPnRackLocal *local = (io_sPnRackLocal *) rp->Local;
   
-  sp = (pwr_sClass_PnDevice *) rp->op;
 
   /* The writing of the process image is now performed at the agent level,
   this eliminates the need for board specific code at the rack level.  */
 
+  if (sp->Status == PB__NORMAL) {
+    sp->ErrorCount = 0;
+  }
+  else {
+    if ( local->start_cnt >= local->start_time)
+      sp->ErrorCount++;
+  }
+  
+  if ( sp->ErrorCount == sp->ErrorHardLimit) {
+    errh_Error( "IO Error hard limit reached on card '%s', stall action %d", rp->Name, sp->StallAction);
+    ctx->IOHandler->CardErrorHardLimit = 1;
+    ctx->IOHandler->ErrorHardLimitObject = cdh_ObjidToAref( rp->Objid);
+    sp->ErrorCount++;
+  }
+  else if (sp->ErrorCount == sp->ErrorSoftLimit) {
+    errh_Error( "IO Error soft limit reached on card '%s'", rp->Name);
+    ctx->IOHandler->CardErrorSoftLimit = 1;
+    ctx->IOHandler->ErrorSoftLimitObject = cdh_ObjidToAref( rp->Objid);
+    sp->ErrorCount++;
+  }
+  if (sp->ErrorCount > sp->ErrorHardLimit) {
+    if (sp->StallAction == pwr_ePbStallAction_EmergencyBreak)
+      ctx->Node->EmergBreakTrue = 1;
+  }
 
   return IO__SUCCESS;
 }

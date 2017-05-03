@@ -368,6 +368,28 @@ SObject pwrb:Class
         Attr MaxNoOfEvents = 500
       EndBody
     EndObject
+    Object FastAvail $ReferenceList
+      Body SysBody
+	Attr ObjectClass[0] = "pwr_cClass_XttGraph"
+	Attr ObjectClass[1] = "pwr_cClass_XttMultiView"
+	Attr ObjectClass[2] = "pwr_cClass_XttCamera"
+	Attr Filter = 137
+      EndBody
+    EndObject
+    Object AutoStart $ReferenceList
+      Body SysBody
+	Attr ObjectClass[0] = "pwr_cClass_XttGraph"
+	Attr ObjectClass[1] = "pwr_cClass_XttMultiView"
+	Attr ObjectClass[2] = "pwr_cClass_XttCamera"
+	Attr Filter = 137
+      EndBody
+    EndObject
+    Object AlarmView $ReferenceList
+      Body SysBody
+	Attr ObjectClass[0] = "pwr_cClass_AlarmView"
+	Attr Filter = 137
+      EndBody
+    EndObject
     Object PostCreate $DbCallBack
       Body SysBody
         Attr MethodName = "OpPlace-PostCreate"

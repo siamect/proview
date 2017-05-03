@@ -666,6 +666,7 @@ int rt_sevhistmon::send_data()
 
     put.size = msize;
     put.data = msg;
+    put.allocate = 0;
 
     msg->Type = sev_eMsgType_HistDataStore;
     time_GetTime( &current_time);
@@ -813,6 +814,7 @@ bool rt_sevhistmon::send_connect( pwr_tNid nid, pwr_tStatus *sts)
   put.size = sizeof(*msg);
   msg = (sev_sMsgAny *) qcom_Alloc(&lsts, put.size);
   put.data = msg;
+  put.allocate = 0;
 
   msg->Type = sev_eMsgType_NodeUp;
 
@@ -864,6 +866,7 @@ bool rt_sevhistmon::send_server_status_request( pwr_tNid nid, pwr_tStatus *sts)
   put.size = sizeof(*msg);
   msg = (sev_sMsgAny *) qcom_Alloc(&lsts, put.size);
   put.data = msg;
+  put.allocate = 0;
 
   msg->Type = sev_eMsgType_NodeUp;
 
@@ -940,6 +943,7 @@ int rt_sevhistmon::send_itemlist( pwr_tNid nid)
 
   put.size = size;
   put.data = qcom_Alloc(&lsts, put.size);
+  put.allocate = 0;
 
   ((sev_sMsgHistItems *)put.data)->Type = sev_eMsgType_HistItems;
   ((sev_sMsgHistItems *)put.data)->Status = SEV__SUCCESS;
@@ -1262,6 +1266,7 @@ void sev_sevhistevents::evbuf_send()
 
   put.size = sizeof(sev_sMsgEventsStore) + (num - 1) * sizeof(sev_sEvent);
   put.data = qcom_Alloc(&sts, put.size);
+  put.allocate = 0;
 
   ((sev_sMsgEventsStore *)put.data)->Type = sev_eMsgType_EventsStore;
   ((sev_sMsgEventsStore *)put.data)->Oid = monitor->m_sevhistevents->hs_oid;

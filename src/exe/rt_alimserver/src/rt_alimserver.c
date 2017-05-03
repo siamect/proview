@@ -346,6 +346,7 @@ int main (int argc, char **argv)
 	put.type.s = alimsrv_eSubType_Answer;
 	put.reply = myQId;
 	put.data = (char *) bp;
+	put.allocate = 1;
 	put.size = size;
 
 	if (!qcom_Reply(&sts, &get, &put))

@@ -110,6 +110,7 @@ class WNavBrow {
     brow_tNodeClass 	nc_header;
     brow_tNodeClass 	nc_headerlarge;
     brow_tNodeClass 	nc_table_header;
+    brow_tNodeClass 	nc_enumobject;
     flow_sAnnotPixmap 	*pixmap_leaf;
     flow_sAnnotPixmap 	*pixmap_map;
     flow_sAnnotPixmap 	*pixmap_openmap;

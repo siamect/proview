@@ -313,6 +313,7 @@ typedef enum {
   pwr_eCix_ClassLost   		=  67,
   pwr_eCix_Security  		=  68,
   pwr_eCix_DetachedClassVolume 	=  69,
+  pwr_eCix_ReferenceList 	=  70,
   pwr_eCix_
 } pwr_eCix;
     
@@ -386,6 +387,7 @@ typedef enum {
   pwr_eClass_ClassLost		= pwr_ClassId(pwr_eCix_ClassLost),
   pwr_eClass_Security		= pwr_ClassId(pwr_eCix_Security),
   pwr_eClass_DetachedClassVolume = pwr_ClassId(pwr_eCix_DetachedClassVolume),
+  pwr_eClass_ReferenceList      = pwr_ClassId(pwr_eCix_ReferenceList),
   pwr_eClass_			
 } pwr_eClass;
     

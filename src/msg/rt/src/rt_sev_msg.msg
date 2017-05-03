@@ -54,6 +54,7 @@ nosuchattr      <No such attribute exist>				/error
 range		<Unable to get range>					/error
 unknowntype	<Unknown data type>					/error
 nosuchtable	<Table doesn't exist>					/error
+norows		<No rows found>						/error
 .end
 
 

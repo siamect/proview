@@ -92,7 +92,7 @@ void GrowGroup::copy_from( const GrowGroup& n)
     dynamic = (char *) calloc( 1, n.dynamicsize);
     memcpy( dynamic, n.nc->dynamic, n.dynamicsize);
   }
-  // Get unic name
+  // Get unique name
   sprintf( n_name, "Grp%d_", ((GrowCtx *)ctx)->objectname_cnt++); 
 
   nc = new GlowNodeGroup( (GlowNodeGroup &)*n.nc);
@@ -158,7 +158,7 @@ int GrowGroup::trace_scan()
 
   if ( trace.p && ctx->trace_scan_func) {
     sts = ctx->trace_scan_func( (void *) this, trace.p);
-    if ( sts == GLOW__TERMINATED || sts == GLOW__SUBTERMINATED)
+    if ( sts == GLOW__TERMINATED || sts == GLOW__SUBTERMINATED || sts == GLOW__SWAPTERMINATED)
       return sts;
   }
 

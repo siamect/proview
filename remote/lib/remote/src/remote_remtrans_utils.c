@@ -209,6 +209,7 @@ void RemTrans_Logg(remtrans_item *remtrans)
 
 /* Send to Logg-job */
     put.data = dynp;
+    put.allocate = 1;
     put.size = size;
     put.type.b = qcom_eBtype__;
     put.type.s = qcom_eStype__;

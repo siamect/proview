@@ -48,6 +48,8 @@
 #include "wb_dbs.h"
 #include "wb_name.h"
 #include "wb_treeimport.h"
+#include "pwr_baseclasses.h"
+#include "pwr_basecomponentclasses.h"
 
 /* Datatypes */
 static wbl_sSym datatypes[] =
@@ -270,6 +272,31 @@ static wbl_sSym classes[] =
   ,{ "pwr_eCix_ClassLost", pwr_eCix_ClassLost }
   ,{ "pwr_eClass_Security", pwr_eClass_Security }
   ,{ "pwr_eCix_Security", pwr_eCix_Security }
+  ,{ "pwr_eClass_ReferenceList", pwr_eClass_ReferenceList }
+  ,{ "pwr_eCix_ReferenceList", pwr_eCix_ReferenceList }
+
+  ,{ "pwr_cClass_ChanDi", pwr_cClass_ChanDi }
+  ,{ "pwr_cClass_ChanDo", pwr_cClass_ChanDo }
+  ,{ "pwr_cClass_ChanAi", pwr_cClass_ChanAi }
+  ,{ "pwr_cClass_ChanAi", pwr_cClass_ChanAo }
+  ,{ "pwr_cClass_ChanIi", pwr_cClass_ChanIi }
+  ,{ "pwr_cClass_ChanIo", pwr_cClass_ChanIo }
+  ,{ "pwr_cClass_RootVolumeConfig", pwr_cClass_RootVolumeConfig }
+  ,{ "pwr_cClass_ClassVolumeConfig", pwr_cClass_ClassVolumeConfig }
+  ,{ "pwr_cClass_SharedVolumeConfig", pwr_cClass_SharedVolumeConfig }
+  ,{ "pwr_cClass_SubVolumeConfig", pwr_cClass_SubVolumeConfig }
+  ,{ "pwr_cClass_pid", pwr_cClass_pid }
+  ,{ "pwr_cClass_mode", pwr_cClass_mode }
+  ,{ "pwr_cClass_XttGraph", pwr_cClass_XttGraph }
+  ,{ "pwr_cClass_XttCamera", pwr_cClass_XttCamera }
+  ,{ "pwr_cClass_XttMultiView", pwr_cClass_XttMultiView }
+  ,{ "pwr_cClass_AlarmView", pwr_cClass_AlarmView }
+  ,{ "pwr_cClass_DsTrend", pwr_cClass_DsTrend }
+  ,{ "pwr_cClass_DsTrendCurve", pwr_cClass_DsTrendCurve }
+  ,{ "BaseComponent:Class-CompModePID", pwr_cClass_CompModePID }
+  ,{ "BaseComponent:Class-CompPID", pwr_cClass_CompPID }
+  ,{ "BaseComponent:Class-CompModeIMC", pwr_cClass_CompModeIMC }
+  ,{ "BaseComponent:Class-CompIMC", pwr_cClass_CompIMC }
   ,{ 0, 0 }
 };
 

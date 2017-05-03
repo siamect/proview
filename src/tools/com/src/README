@@ -30,9 +30,10 @@ Change version in documentation
 
 > ./change_version.sh V5.5.0-1 \"Base release\"
 
+Note! Also change the version in src/exp/inc/src/pwr_version.h
+
 Add version description to control-files
 ----------------------------------------
 
 > ./change_version.sh -d \"Base release\"
- 
 

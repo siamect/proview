@@ -110,7 +110,7 @@ GrowCtx::~GrowCtx()
     free( dynamic);
   if ( gdraw && ctx_type == glow_eCtxType_Grow && customcolors) {
     gdraw->reset_customcolors( customcolors);
-    free( customcolors);
+    delete customcolors;
   }
 }
 
@@ -1968,7 +1968,7 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
     if ( callback_object_type != glow_eObjectType_NoObject)
       e.object.object = callback_object;
     sts = event_callback[event]( this, &e);
-    if ( sts == GLOW__TERMINATED)
+    if ( sts == GLOW__TERMINATED || sts == GLOW__SUBTERMINATED || sts == GLOW__SWAPTERMINATED)
       return sts;
   }
   return 1;

@@ -197,27 +197,27 @@
   }
 
 /*_*
-  SUPRESSSUP
-  @aref supresssup SupressSup
+  SUPPRESSSUP
+  @aref suppresssup SuppressSup
 */
-#define SupressSup_exec(obj,sup,cid,in)\
+#define SuppressSup_exec(obj,sup,cid,in)\
   switch ( cid) {						\
   case pwr_cClass_DSup:						\
-    ((pwr_sClass_DSup *)sup)->Supressed = in;			\
+    ((pwr_sClass_DSup *)sup)->Suppressed = in;			\
     obj->Out = in || ((pwr_sClass_DSup *)sup)->Action;			\
     break;								\
   case pwr_cClass_DSupComp:						\
-    ((pwr_sClass_DSupComp *)sup)->Supressed = in;			\
+    ((pwr_sClass_DSupComp *)sup)->Suppressed = in;			\
     obj->Out = in || ((pwr_sClass_DSupComp *)sup)->Action;		\
     break;								\
   case pwr_cClass_ASup:							\
-    ((pwr_sClass_ASup *)sup)->Supressed = in;				\
+    ((pwr_sClass_ASup *)sup)->Suppressed = in;				\
     obj->Out = in || ((pwr_sClass_ASup *)sup)->Action;			\
     break;								\
   case pwr_cClass_ASupComp:						\
-    ((pwr_sClass_ASupComp *)sup)->Supressed = in;			\
+    ((pwr_sClass_ASupComp *)sup)->Suppressed = in;			\
     obj->Out = in || ((pwr_sClass_ASupComp *)sup)->Action;		\
     break;								\
   default: ;								\
   }									\
-  obj->Supressed = in;
+  obj->Suppressed = in;

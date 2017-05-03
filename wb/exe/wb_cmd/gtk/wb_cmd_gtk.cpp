@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
 
   pwr_tStatus	sts;
   int		i;
-  char 		str[256] ;
+  pwr_tCmd     	str;
   CmdGtk     	*cmd;
   int 		quiet = 0;
   
@@ -140,6 +140,10 @@ int main(int argc, char *argv[])
     else {
       if ( str[0] != 0)
 	strcat( str, " ");
+      if ( strlen(str) + strlen(argv[i]) >= sizeof(str)) {
+	cout << "Command string too long" << endl;
+	exit(0);
+      }
       strcat( str, argv[i]);
     }
   }

@@ -2484,7 +2484,7 @@ int GlowDrawGtk::set_clip_rectangle( GlowWind *wind,
 {
   DrawWindGtk *w = (DrawWindGtk *) wind->window;
   if ( w->clip_cnt >= DRAW_CLIP_SIZE) {
-    printf("** Draw clip refuced\n");
+    printf("** Draw clip refused\n");
     return 0;
   }
   int x0, x1, y0, y1;

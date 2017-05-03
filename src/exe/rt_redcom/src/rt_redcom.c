@@ -2620,6 +2620,7 @@ void send_state_change()
   }
   put.size = 4;
   put.data = qcom_Alloc( &sts, put.size);
+  put.allocate = 0;
   
   qcom_Put( &sts, &qmon_qid, &put);
 

@@ -109,8 +109,8 @@ int main( int argc, char *argv[])
   int	exit_sts = 1;
   CnvCtx *ctx;
   int	sts;
-  char	found_file[200];
-  char  files[200];
+  pwr_tFileName	found_file;
+  pwr_tFileName files;
   char	*s;
   int	i;
   int file_cnt;

@@ -315,6 +315,27 @@ SObject pwrb:Class
     EndObject
     Object Template Ai
     EndObject
+    Object DefGraph $ReferenceList
+      Body SysBody
+	Attr ObjectClass[0] = pwr_cClass_XttGraph
+	Attr ObjectClass[1] = pwr_cClass_XttMultiView
+	Attr ObjectClass[2] = pwr_cClass_XttCamera
+	Attr Filter = 129
+      EndBody
+    EndObject
+    Object DefTrend $ReferenceList
+      Body SysBody
+	Attr ObjectClass[0] = pwr_cClass_DsTrendCurve
+	Attr ObjectClass[1] = pwr_cClass_DsTrend
+	Attr Filter = 161
+      EndBody
+    EndObject
+    Object SigChanCon $ReferenceList
+      Body SysBody
+	Attr ObjectClass[0] = pwr_cClass_ChanAi
+	Attr Filter = 33
+      EndBody
+    EndObject
     Object ConfiguratorPoson $Menu
       Object Pointed $Menu
 	Object Connect $MenuButton

@@ -864,6 +864,7 @@ nodeUp (
   put.type.s  = net_eMsg_nodeUp;
   put.reply   = qcom_cNQid;
   put.data    = (char *)&nu;
+  put.allocate = 1;
   put.size    = sizeof(nu);
 
   qcom_Put(&sts, &qcom_cQnacp, &put);

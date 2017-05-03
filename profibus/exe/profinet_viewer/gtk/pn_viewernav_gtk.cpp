@@ -58,8 +58,9 @@ extern "C" {
 PnViewerNavGtk::PnViewerNavGtk (
 	void *l_parent_ctx,
 	GtkWidget *l_parent_wid,
+	viewer_eType l_type,
 	GtkWidget **w) :
-  PnViewerNav( l_parent_ctx), parent_wid(l_parent_wid)
+  PnViewerNav( l_parent_ctx, l_type), parent_wid(l_parent_wid)
 {
   form_widget = scrolledbrowwidgetgtk_new(
 	PnViewerNav::init_brow_cb, this, &brow_widget);
