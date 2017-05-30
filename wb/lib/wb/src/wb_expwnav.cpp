@@ -1195,9 +1195,29 @@ pwr_tStatus WbExpWNav::exp()
 	printf( "%s\n", cmd);
 	sts = system( cmd);
 	if ( sts != 0) {
-	  char msg[250];
-	  snprintf( msg, sizeof(msg), "Build error %d, %s", WEXITSTATUS(sts), cmd);
-	  MsgWindow::message( 'E', msg, msgw_ePop_Default);
+	  // Check that directory exist, create if it doesn't
+	  pwr_tFileName target_dir;
+	  pwr_tTime target_time;
+	  char *s;
+
+	  strcpy( target_dir, cp->target);
+	  if ( (s = strrchr( target_dir, '/'))) {
+	    *s = 0;
+	    sts = dcli_file_time( target_dir, &target_time);	  
+	    if ( EVEN(sts)) {
+	      sprintf( cmd, "mkdir -p %s", target_dir);
+	      system( cmd);
+
+	      sprintf( cmd, "cp %s %s", cp->source, cp->target);
+	      printf( "%s\n", cmd);
+	      sts = system( cmd);
+	    }
+	  }
+	  if ( sts != 0) {
+	    char msg[250];
+	    snprintf( msg, sizeof(msg), "Build error %d, %s", WEXITSTATUS(sts), cmd);
+	    MsgWindow::message( 'E', msg, msgw_ePop_Default);
+	  }
 	}
       }
     }
