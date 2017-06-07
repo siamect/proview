@@ -482,6 +482,7 @@ else
   pwre_config_check_lib libsqlite3   LIBSQLITE3  lib lib 0 "/usr/lib/libsqlite3.so:/usr/lib/$hwpl-linux-$gnu/libsqlite3.so"
   pwre_config_check_include hdf5  HDF5   1 "/usr/lib/openmpi/include/mpi.h.no"
   pwre_config_check_lib libhdf5   LIBHDF5  lib lib 0 "/usr/lib/libhdf5.so:/usr/lib/$hwpl-linux-$gnu/libhdf5_openmpi.so"
+  pwre_config_check_lib rabbitmq  RABBITMQ lib rabbitmq  1 "/usr/lib/$hwpl-linux-$gnu/librabbitmq.so"
   pwre_config_check_lib mq        MQ       lib mq  1 "/usr/lib/libdmq.so:/usr/local/dmq/lib/libdmq.so"
   pwre_config_check_lib wmq       WMQ      lib wmq 1 "/usr/lib/libmqic.so"
   pwre_config_check_lib libprofinet PNAK     lib pnak 1 "/usr/lib/libprofinet.a"
