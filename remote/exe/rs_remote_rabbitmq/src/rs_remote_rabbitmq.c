@@ -38,6 +38,8 @@
 
 /*_Include files_________________________________________________________*/
 
+#if defined PWRE_CONF_RABBITMQ
+
 #include <amqp.h>
 #include <amqp_framing.h>
 #include <amqp_tcp_socket.h>
@@ -584,3 +586,12 @@ int main(int argc, char *argv[])
 
   }
 }
+
+#else
+#include <stdio.h>
+int main()
+{
+  printf( "Remote RabbitMq not built for this release\n");
+  return 0;
+}
+#endif
