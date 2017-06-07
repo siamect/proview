@@ -130,6 +130,16 @@ SObject pwrs:Type
        Attr Value = 128
      EndBody
     EndObject
+    !/**
+    !  List references that are children
+    !*/
+    Object Children $Bit
+     Body SysBody
+       Attr PgmName = "Children"
+       Attr Text = "Children"
+       Attr Value = 256
+     EndBody
+    EndObject
   EndObject
 EndSObject
 

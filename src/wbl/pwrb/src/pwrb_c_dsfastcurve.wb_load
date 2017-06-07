@@ -400,6 +400,24 @@ SObject pwrb:Class
  	Attr NoOfPoints = 100
       EndBody
     EndObject
+    Object Buffers $ReferenceList
+      Body SysBody
+	Attr ObjectClass[0] = pwr_cClass_Buff256
+	Attr ObjectClass[1] = pwr_cClass_Buff1440
+	Attr ObjectClass[2] = pwr_cClass_Buff4096
+	Attr ObjectClass[3] = pwr_cClass_Buff32k
+	Attr Filter = 384
+      EndBody
+    EndObject
+    Object TimeBuffer $ReferenceList
+      Body SysBody
+	Attr ObjectClass[0] = pwr_cClass_Buff256
+	Attr ObjectClass[1] = pwr_cClass_Buff1440
+	Attr ObjectClass[2] = pwr_cClass_Buff4096
+	Attr ObjectClass[3] = pwr_cClass_Buff32k
+	Attr Filter = 384
+      EndBody
+    EndObject
   EndObject
 EndSObject
 

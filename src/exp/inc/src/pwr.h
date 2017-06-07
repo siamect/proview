@@ -526,7 +526,8 @@ typedef enum {
   pwr_mRefListFilterMask_Siblings 	= 16,
   pwr_mRefListFilterMask_AttrObjects 	= 32,
   pwr_mRefListFilterMask_PwrsVolume 	= 64,
-  pwr_mRefListFilterMask_Other	 	= 128
+  pwr_mRefListFilterMask_Other	 	= 128,
+  pwr_mRefListFilterMask_Children      	= 256
 } pwr_mRefListFilterMask;
 typedef pwr_tMask      pwr_tRefListFilterMask;	//!< Reference list filter Mask.
 

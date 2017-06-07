@@ -293,6 +293,28 @@ SObject pwrb:Class
  	Attr DisplayUpdateTime = 1
       EndBody
     EndObject
+    Object Buffers $ReferenceList
+      Body SysBody
+	Attr ObjectClass[0] = pwr_cClass_CircBuff1k
+	Attr ObjectClass[1] = pwr_cClass_CircBuff2k
+	Attr ObjectClass[2] = pwr_cClass_CircBuff10k
+	Attr ObjectClass[3] = pwr_cClass_CircBuff20k
+	Attr ObjectClass[4] = pwr_cClass_CircBuff100k
+	Attr ObjectClass[5] = pwr_cClass_CircBuff200k
+	Attr Filter = 384
+      EndBody
+    EndObject
+    Object TimeBuffer $ReferenceList
+      Body SysBody
+	Attr ObjectClass[0] = pwr_cClass_CircBuff1k
+	Attr ObjectClass[1] = pwr_cClass_CircBuff2k
+	Attr ObjectClass[2] = pwr_cClass_CircBuff10k
+	Attr ObjectClass[3] = pwr_cClass_CircBuff20k
+	Attr ObjectClass[4] = pwr_cClass_CircBuff100k
+	Attr ObjectClass[5] = pwr_cClass_CircBuff200k
+	Attr Filter = 384
+      EndBody
+    EndObject
   EndObject
 EndSObject
 
