@@ -373,7 +373,8 @@ dcli_tCmdTable	xnav_command_table[] = {
 			&xnav_set_func,
 			{ "dcli_arg1", "dcli_arg2", "/NAME", "/VALUE",
 			  "/BYPASS", "/PUBLICWRITE", "/INDEX", "/SOURCE", "/OBJECT", "/CONTINUE", 
-			  "/X0", "/Y0", "/X1", "/Y1", "/INSTANCE", "/ESCAPESTORE", "/FOCUS", "/INPUTEMPTY",
+			  "/X0", "/Y0", "/X1", "/Y1", "/INSTANCE", "/ESCAPESTORE", "/FOCUS", "/INPUTEMPTY", 
+			  "/ICONIFY", "/BELOW",
 			  ""}
 		},
 		{
@@ -1234,6 +1235,8 @@ static int	xnav_set_func(	void		*client_data,
     pwr_tAName instance_str;
     char *instance_p = 0;
     char name_str[200];
+    char iconify_str[20];
+    char below_str[20];
     XttGe *gectx;
     
     if ( ODD( dcli_get_qualifier( "/INSTANCE", instance_str, sizeof(instance_str))))
@@ -1251,6 +1254,32 @@ static int	xnav_set_func(	void		*client_data,
 
     if ( ODD( dcli_get_qualifier( "/ESCAPESTORE", 0, 0))) {
       gectx->set_object_focus( 0, 0);
+    }
+    else if ( ODD( dcli_get_qualifier( "/ICONIFY", iconify_str, sizeof(iconify_str)))) {
+      int iconify;
+      if ( strcmp( iconify_str, "1") == 0)
+	iconify = 1;
+      else if ( strcmp( iconify_str, "0") == 0)
+	iconify = 0;
+      else {
+	xnav->message('E', "Syntax error");
+	return XNAV__SUCCESS;      
+      }
+       
+      gectx->iconify( iconify);
+    }
+    else if ( ODD( dcli_get_qualifier( "/BELOW", below_str, sizeof(below_str)))) {
+      int below;
+      if ( strcmp( below_str, "1") == 0)
+	below = 1;
+      else if ( strcmp( below_str, "0") == 0)
+	below = 0;
+      else {
+	xnav->message('E', "Syntax error");
+	return XNAV__SUCCESS;      
+      }
+       
+      gectx->set_below( below);
     }
     else {
       xnav->message('E', "Syntax error");

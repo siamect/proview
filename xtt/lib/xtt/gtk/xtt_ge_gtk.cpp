@@ -73,6 +73,19 @@ gboolean XttGeGtk::action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer da
   return FALSE;
 }
 
+void XttGeGtk::iconify( int val)
+{
+  if ( val)
+    gtk_window_iconify( GTK_WINDOW(toplevel));
+  else
+    gtk_window_deiconify( GTK_WINDOW(toplevel));
+}
+
+void XttGeGtk::set_below( int val)
+{
+  gtk_window_set_keep_below( GTK_WINDOW(toplevel), val);
+}
+
 void XttGeGtk::set_size( int width, int height)
 {
   int		default_width;

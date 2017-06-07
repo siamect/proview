@@ -1884,7 +1884,9 @@ void wb_build::directories( char *dir, bld_ePass pass)
 	// Check if file should be updated
 	int update = 0;
 	pwr_tFileName source, target;
+	pwr_tFileName target_dir;
 	pwr_tTime source_time, target_time;
+	char *s;
 
 	strncpy( source, found_file, sizeof(source));
 	strncpy( target, line_item[3], sizeof(target));
@@ -1911,6 +1913,18 @@ void wb_build::directories( char *dir, bld_ePass pass)
 	if ( !opt.force && !update)
 	  continue;
 
+	if ( EVEN(sts)) {
+	  // Check that directory exist, create if it doesn't
+	  strcpy( target_dir, target);
+	  if ( (s = strrchr( target_dir, '/'))) {
+	    *s = 0;
+	    sts = dcli_file_time( target_dir, &target_time);	  
+	    if ( EVEN(sts)) {
+	      sprintf( cmd, "mkdir -p %s", target_dir);
+	      system( cmd);
+	    }
+	  }
+	}
 	sprintf( cmd, "cp %s %s", source, target);
 	system( cmd);
 	sprintf( cmd, "Build:    copy %s %s -> %s", line_item[1], source, target);

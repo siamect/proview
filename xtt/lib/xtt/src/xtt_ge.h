@@ -90,6 +90,8 @@ class XttGe : XttUtility {
   virtual void set_size( int width, int height) {}
   virtual void confirm_reply( int ok) {}
   virtual void *get_widget() { return 0;}
+  virtual void iconify( int val) {}
+  virtual void set_below( int val) {}
 
   xtt_eUtility get_type() { return xtt_eUtility_Graph;}
   void message( char severity, const char *msg);
