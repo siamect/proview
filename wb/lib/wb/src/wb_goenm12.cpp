@@ -138,7 +138,18 @@ int goen_create_nodetype_m12( pwr_sGraphPlcNode	*graphbody,
       dcli_translate_filename( fname, fname);
 
       sts = flow_LoadNodeClass( ctx, fname, &nc);
-      if ( EVEN(sts)) return sts;
+      if ( EVEN(sts)) {
+	float f_width = GOEN_F_GRID * 8;
+	float f_height = GOEN_F_GRID * 2; 
+	printf( "** Function object description file $pwrp_exe/%s.flwn is lost\n", name);
+	flow_CreateNodeClass( ctx, name, flow_eNodeGroup_Common, &nc);
+	flow_AddRect( nc, -f_width/2, -f_height/2, f_width, f_height, 
+		    flow_eDrawType_Line, 2, flow_mDisplayLevel_1);
+	flow_AddText( nc, "Lost description file", -f_width/2 + f_strheight, 0.5 * f_strheight,
+		    flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE);
+	*node_class = nc;
+	return GOEN__SUCCESS;
+      }
     }
   }
 
