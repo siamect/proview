@@ -466,7 +466,8 @@ dcli_tCmdTable	wnav_command_table[] = {
 			"BUILD",
 			&wnav_build_func,
 			{ "dcli_arg1", "dcli_arg2", "/FORCE", "/DEBUG", "/CROSSREFERENCE", 
-			  "/MANUAL", "/NAME", "/WINDOW", "/NODE", ""}
+			  "/MANUAL", "/NAME", "/WINDOW", "/NODE", "/EXPORT", "/NOCLASSVOLUMES", "/FLOWFILES",
+			  ""}
 		},
 		{
 			"CHECK",
@@ -5529,6 +5530,30 @@ static int	wnav_build_func(	void		*client_data,
       wnav->message(' ', wnav_get_message(build.sts()));
       command_sts = build.sts();
     }
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "ALL", strlen( arg1_str)) == 0) {
+    // command  is "BUILD ALL"
+    int exp, noclassvolumes, flowfiles;
+
+    // if ( !(CoLogin::privilege() & pwr_mPrv_DevConfig)) {
+    //   wnav->message( 'E', "User is not authorized to build");
+    //  return WNAV__NOTAUTHORIZED;
+    // }
+
+    if ( ((wb_session *)wnav->ldhses)->cid() != pwr_eClass_DirectoryVolume) {
+      wnav->message( 'E', "Can only build all from Directory volume");
+      return WNAV__SYNTAX;
+    }
+
+    wb_build build( *(wb_session *)wnav->ldhses, wnav);
+    build.opt.debug = ODD( dcli_get_qualifier( "/DEBUG", 0, 0));
+    exp = ODD( dcli_get_qualifier( "/EXPORT", 0, 0));
+    noclassvolumes = ODD( dcli_get_qualifier( "/NOCLASSVOLUMES", 0, 0));
+    flowfiles = ODD( dcli_get_qualifier( "/FLOWFILES", 0, 0));
+
+    build.all( !exp, noclassvolumes, !flowfiles);
+    wnav->message(' ', wnav_get_message(build.sts()));
+    command_sts = build.sts();       
   }
   else {
     wnav->message('E', "Syntax error");

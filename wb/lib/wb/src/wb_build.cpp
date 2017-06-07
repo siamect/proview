@@ -176,6 +176,11 @@ void wb_build::all( int no_export, int no_classvolumes, int no_flowfiles)
   int force = opt.force;
   opt.force = 1;
 
+  // Save directory volume
+  if ( ((wb_session *)m_wnav->ldhses)->cid() == pwr_eClass_DirectoryVolume)
+    sts = lfu_SaveDirectoryVolume( m_wnav->ldhses, m_wnav->wow, 1);
+
+  // Import, export files and build directories
   import_files( bld_ePass_BeforeNode);
   if ( evenSts())
     sumsts = m_sts;
@@ -210,14 +215,6 @@ void wb_build::all( int no_export, int no_classvolumes, int no_flowfiles)
 	sprintf( cmd, "create snapshot/file=\"$pwrp_db/%s.wb_load\"/out=\"$pwrp_load/%s.dbs\"", 
 		 cdh_Low(vol[i].name), cdh_Low(vol[i].name));	
 	m_wnav->command( cmd);
-
-	if ( !no_flowfiles) {
-	  sprintf( cmd, "wb_cmd -c %s create flow/templ/all", cdh_Low(vol[i].name));
-	  sts = system( cmd);
-	  if ( sts != 0) {
-	    printf( "** Create flow for classvolume %s error\n", vol[i].name);
-	  }	  
-	}
 	break;
       default: ;
       }
