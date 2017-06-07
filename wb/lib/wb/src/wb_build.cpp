@@ -53,6 +53,7 @@
 #include "wb_foe.h"
 #include "wb_merep.h"
 #include "wb_log.h"
+#include "wb_dblock.h"
 
 #include "glow.h"
 #include "glow_growctx.h"
@@ -118,6 +119,199 @@ void wb_build::classlist( pwr_tCid cid)
     else if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT && m_sts != PWRB__INLIBHIER)
       sumsts = m_sts;
   }
+  m_sts = sumsts;
+}
+
+void wb_build::all( int no_export, int no_classvolumes, int no_flowfiles)
+{
+  pwr_tFileName fname;
+  int rebuild = 1;
+  char currentnode[80];
+  pwr_tFileName db_dir = "$pwrp_db";
+  int sts;
+  pwr_tTime t;
+  pwr_tCmd cmd;
+  vector<lfu_volume_info> vol;
+  vector<lfu_boot_info> bvect;
+  pwr_tStatus sumsts = PWRB__NOBUILT;
+
+  dcli_translate_filename( db_dir, db_dir);
+
+  sts = lfu_GetVolumeCnfAll( vol);
+
+  // Check that no volume is locked
+  for ( unsigned int i = 0; i < vol.size(); i++) {
+    switch ( vol[i].cid) {
+    case pwr_eClass_RootVolume:
+    case pwr_eClass_SubVolume:
+    case pwr_eClass_SharedVolume:
+    case pwr_eClass_ClassVolume:
+    case pwr_eClass_DetachedClassVolume:
+      if ( vol[i].volrep == ldh_eVolRep_Dbms)
+	sprintf( fname, "%s/%s.dbms.lock", db_dir, cdh_Low(vol[i].name));
+      else if ( vol[i].volrep == ldh_eVolRep_Wbl)
+	sprintf( fname, "%s/%s.wb_load.lock", db_dir, cdh_Low(vol[i].name));
+      else
+	sprintf( fname, "%s/%s.db.lock", db_dir, cdh_Low(vol[i].name));	
+      
+      if ( ODD( dcli_file_time( fname, &t))) {
+	char msg[200];
+	sprintf( msg, "Build:    Volume is locked %s.", vol[i].name);
+	MsgWindow::message('E', msg, msgw_ePop_Yes);
+	return;
+      }
+      break;
+    default: ;
+    }
+  }
+
+  printf( "-- Build all\n");
+
+  wb_log::log( wlog_eCategory_BuildAll, 0, 0);      
+  wb_log::push();
+
+  if ( !opt.manual)
+    rebuild = 0;
+
+  int force = opt.force;
+  opt.force = 1;
+
+  import_files( bld_ePass_BeforeNode);
+  if ( evenSts())
+    sumsts = m_sts;
+  else if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT && m_sts != PWRB__INLIBHIER)
+    sumsts = m_sts;
+
+  directories( 0, bld_ePass_BeforeNode);
+  if ( m_sts == PWRB__MAKEUPDATED) {
+    rebuild = 1;
+    m_sts = PWRB__SUCCESS;
+  }
+  else if ( evenSts())
+    sumsts = m_sts;
+  else if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT && m_sts != PWRB__INLIBHIER)
+    sumsts = m_sts;
+
+  if ( !no_export) {
+    export_files( bld_ePass_BeforeNode);
+    if ( evenSts())
+      sumsts = m_sts;
+    else if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT && m_sts != PWRB__INLIBHIER)
+      sumsts = m_sts;
+  }
+  opt.force = force;
+
+  // Build class volumes
+  if ( !no_classvolumes) {
+    for ( unsigned int i = 0; i < vol.size(); i++) {
+      switch ( vol[i].cid) {
+      case pwr_eClass_ClassVolume:
+      case pwr_eClass_DetachedClassVolume:
+	sprintf( cmd, "create snapshot/file=\"$pwrp_db/%s.wb_load\"/out=\"$pwrp_load/%s.dbs\"", 
+		 cdh_Low(vol[i].name), cdh_Low(vol[i].name));	
+	m_wnav->command( cmd);
+
+	if ( !no_flowfiles) {
+	  sprintf( cmd, "wb_cmd -c %s create flow/templ/all", cdh_Low(vol[i].name));
+	  sts = system( cmd);
+	  if ( sts != 0) {
+	    printf( "** Create flow for classvolume %s error\n", vol[i].name);
+	  }	  
+	}
+	break;
+      default: ;
+      }
+    }
+  }
+
+  if ( !no_flowfiles) {
+    for ( unsigned int i = 0; i < vol.size(); i++) {
+      switch ( vol[i].cid) {
+      case pwr_eClass_ClassVolume:
+      case pwr_eClass_DetachedClassVolume: {
+	bool lock = false;
+	if ( wb_dblock::is_locked( (char *)"$pwrp_db/directory.wb_load")) {	  
+	  wb_dblock::dbunlock( (char *)"$pwrp_db/directory.wb_load");
+	  lock = true;
+	}
+	sprintf( cmd, "wb_cmd -c %s create flow/templ/all", cdh_Low(vol[i].name));
+	sts = system( cmd);
+	if ( lock)
+	  wb_dblock::dblock( (char *)"$pwrp_db/directory.wb_load");
+	if ( sts != 0) {
+	  printf( "** Create flow for classvolume %s error\n", vol[i].name);
+	}	  
+	break;
+      }
+      default: ;
+      }
+    }
+  }
+
+  // Build root, sub and shared volumes
+  for ( unsigned int i = 0; i < vol.size(); i++) {
+    switch ( vol[i].cid) {
+    case pwr_eClass_RootVolume:
+    case pwr_eClass_SubVolume:
+    case pwr_eClass_SharedVolume:
+      if ( !no_classvolumes)
+	sprintf( cmd, "wb_cmd -v %s update classes\\;build volume/name=%s/force", cdh_Low(vol[i].name), vol[i].name);
+      else
+	sprintf( cmd, "wb_cmd -v %s build volume/name=%s/force", cdh_Low(vol[i].name), vol[i].name);
+      sts = system( cmd);
+      if ( sts != 0) {
+	char msg[200];
+	sprintf( msg, "Build:    Volume build error %s, build all terminated", vol[i].name);
+	MsgWindow::message('E', msg, msgw_ePop_Yes);
+	m_sts = 0;
+	wb_log::pull();
+	return;
+      }
+      if ( !no_flowfiles) {
+	sprintf( cmd, "wb_cmd -v %s create flow/all\\; create cross", cdh_Low(vol[i].name));
+	system( cmd);
+      }
+      break;
+    default: ;
+    }
+  }
+
+  // Build all nodes
+  m_sts = lfu_create_bootfiles( 0, 0, 1);
+  if ( EVEN(m_sts)) {
+    char msg[200];
+    sprintf( msg, "Build node error. Build all terminated");
+    MsgWindow::message('E', msg, msgw_ePop_Yes);
+    wb_log::pull();
+    return;
+  }
+
+  syi_NodeName( &m_sts, currentnode, sizeof(currentnode));
+
+  opt.force = 1;
+
+  import_files( bld_ePass_AfterNode);
+  if ( evenSts())
+    sumsts = m_sts;
+  else if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT && m_sts != PWRB__INLIBHIER)
+    sumsts = m_sts;
+
+  directories( 0, bld_ePass_AfterNode);
+  if ( evenSts())
+    sumsts = m_sts;
+  else if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT && m_sts != PWRB__INLIBHIER)
+    sumsts = m_sts;
+
+  export_files( bld_ePass_AfterNode);
+  if ( evenSts())
+    sumsts = m_sts;
+  else if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT && m_sts != PWRB__INLIBHIER)
+    sumsts = m_sts;
+
+  opt.force = force;
+
+  wb_log::pull();
+
   m_sts = sumsts;
 }
 
@@ -201,8 +395,10 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
 	if ( vlist[i].volume_id == m_session.vid()) {
 	  // Build current volume
 	  volume();
-	  if ( evenSts()) 
+	  if ( evenSts()) {
+	    wb_log::pull();
 	    return;
+	  }
 	}
       
 	cdh_ToLower( vname, vlist[i].volume_name);
@@ -216,6 +412,7 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
 	    char msg[200];
 	    sprintf( msg, "Loadfile for volume %s not created", vname);
 	    MsgWindow::message('E', msg, msgw_ePop_Yes);
+	    wb_log::pull();
 	    return;
 	  }
 	  if ( vtime.tv_sec > btime.tv_sec)
@@ -224,7 +421,6 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
       }
     }
   }
-  wb_log::pull();
 
   if ( m_wnav && m_wnav->ldhses) {
     wb_erep *erep = *(wb_env *)ldh_SessionToWB( m_wnav->ldhses);
@@ -274,6 +470,7 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
     sprintf( msg, "Build:    Node     %s", nodename);
     MsgWindow::message('I', msg, msgw_ePop_No);
   }
+  wb_log::pull();
 
   m_sts = sumsts;
 

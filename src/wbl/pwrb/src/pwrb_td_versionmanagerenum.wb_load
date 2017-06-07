@@ -33,3 +33,46 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
+!  pwrb_td_versionmanagerenum.wb_load -- Defines the enum type VersionManager
+!
+SObject pwrb:Type
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Enumeration for version manager.
+!*/
+  Object VersionManagerEnum $TypeDef 87
+    Body SysBody
+      Attr TypeRef = "pwrs:Type-$Enum"
+      Attr PgmName = "VersionManagerEnum"
+    EndBody
+    !/**
+    !  None.
+    !*/
+    Object None $Value
+     Body SysBody
+       Attr PgmName = "None"
+       Attr Text = "None"
+       Attr Value = 0
+     EndBody
+    EndObject
+    !/**
+    !  Git.
+    !*/
+    Object Git $Value
+     Body SysBody
+       Attr PgmName = "Git"
+       Attr Text = "Git"
+       Attr Value = 1
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+
+
+
+
+

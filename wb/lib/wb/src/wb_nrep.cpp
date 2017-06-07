@@ -107,8 +107,14 @@ wb_nrep::wb_nrep( const char *n) throw (wb_error) :
     // Count number of segments and attributes
 
     for ( s = n; *s; s++) {
-      if ( *s == '-') seg_cnt++;
-      else if ( *s == '.') attr_cnt++;
+      switch ( *s) {
+      case '-': 
+	seg_cnt++;
+	break;
+      case '.':
+	attr_cnt++;
+	break;
+      }
       name_len++;
     }
     if ( name_len >= (int) sizeof( oname)) {
@@ -122,13 +128,19 @@ wb_nrep::wb_nrep( const char *n) throw (wb_error) :
     seg_cnt = 2;
     attr_cnt = 1;
     for ( s = n; *s; s++) {
-      if ( *s == ')')
+      switch ( *s) {
+      case ')':
+      case ']':
         enable_cnt = 1;
-      else if ( *s == '[')
+	break;
+      case '[':
         enable_cnt = 0;
-      else if ( *s == ']')
-        enable_cnt = 1;
-      if ( enable_cnt && *s == '.') attr_cnt++;
+	break;
+      case '.':
+	if ( enable_cnt)
+	  attr_cnt++;
+	break;
+      }
       name_len++;
     }
     if ( name_len >= (int) sizeof( oname)) {
@@ -183,18 +195,93 @@ void wb_nrep::parse () throw (wb_error)
   int state = 0;
   char *s, *snn;
 
+#if 0
+  // Fast return for single segment or single attribute names
+  int simple = 1;
+  for ( s = oname; *s; s++) {
+    switch ( *s) {
+    case '.':
+    case '-':
+    case '[':
+    case ']':
+    case ':':
+      simple = 0;
+      break;
+    case '_':
+      if ( s == oname)
+	simple = 0;	
+      break;
+    }
+    if ( simple == 0)
+      break;
+  }
+
+  if ( simple) {
+    num_seg = 1;
+    seg[0].len = strlen(oname);
+
+    snn = norm_name;
+    for ( s = oname; *s; s++, snn++) {
+      switch (normname_tab[*(unsigned char *)s]) {
+      case '!':
+        throw wb_error(LDH__BADNAME);
+      case '^':
+        *snn = *s - 32;
+	break;
+      default:
+        *snn = normname_tab[*(unsigned char *)s];
+      }
+    }
+    return;
+  }
+  if ( oname[0] == '.') {
+    int simple = 1;
+    for ( s = &oname[1]; *s; s++) {
+      switch ( *s) {
+      case '.':
+      case '-':
+      case '[':
+      case ']':
+      case ':':
+	simple = 0;
+	break;
+      }
+    }
+    if ( simple) {
+      num_attr = 1;
+      attr[0].offs = 1;
+      attr[0].len = strlen(oname)-1;
+      snn = norm_name;
+      for ( s = oname; *s; s++, snn++) {
+	switch (normname_tab[*(unsigned char *)s]) {
+	case '!':
+	  throw wb_error(LDH__BADNAME);
+	case '^':
+	  *snn = *s - 32;
+	  break;
+	default:
+	  *snn = normname_tab[*(unsigned char *)s];
+	}
+      }
+      return;
+    }
+  }
+#endif
+
   snn = norm_name;
 
   if (oname[0] == '_') { 
     // This is an identity name.
     for ( s = oname; *s; s++, snn++) {
-      if (idname_tab[*(unsigned char *)s] == '!')
+      switch ( idname_tab[*(unsigned char *)s]) {
+      case '!':
         throw wb_error(LDH__BADNAME);
-      else if (idname_tab[*(unsigned char *)s] == '^')
+      case '^':
         *snn = *s - 32;
-      else
+	break;
+      default:
         *snn = idname_tab[*(unsigned char *)s];
-
+      }
       if ( s == oname)
         continue;
       if ( s == oname + 1) {
@@ -226,112 +313,164 @@ void wb_nrep::parse () throw (wb_error)
 
       switch (state) {
 
-      case 0:	// before ':'
-        if ( *s == ':') {
+      case 0: 	// before ':'
+	switch ( *s) {
+        case ':':
           if ( s == oname)
             throw wb_error(LDH__BADNAME);
           vol_offs = 2;
           vol_len = nameDiff( s, oname) - vol_offs;
           seg[0].offs = nameDiff( s + 1, oname);
           state = 1;
-        } else if (*s == '(' || *s == ')' || *s == '[' || *s == ']') {
-          throw wb_error(LDH__BADNAME);
-        }
+	  break;
+	case '(': 
+	case ')': 
+	case '[':
+	case ']':
+          throw wb_error(LDH__BADNAME);	  
+	}
         break;
       case 1:	// before '('
-        if ( *s == '(') {
+	switch ( *s) {
+	case '(':
           if ( nameDiff( s, oname) == seg[0].offs)
             throw wb_error(LDH__BADNAME);
           seg[1].offs = nameDiff( s + 1, oname);
           seg[0].len = nameDiff( s, oname) - seg[0].offs;
           num_seg++;
           state = 2;
-        } else if (*s == ')' || *s == '[' || *s == ']') {
+	  break;
+	case ')':
+	case '[':
+	case ']':
           throw wb_error(LDH__BADNAME);
         }
         break;
       case 2:	// before ')'
-        if (*s == ')') {
+        switch (*s) {
+	case ')':
           if ( nameDiff( s, oname) == seg[1].offs)
             throw wb_error(LDH__BADNAME);
           attr[0].offs = nameDiff( s + 1, oname);
           seg[1].len = nameDiff( s, oname) - seg[1].offs;
           num_seg++;
           state = 3;
-        } else if (*s == '[' || *s == ']') {
+	  break;
+        case '[':
+	case ']':
           throw wb_error(LDH__BADNAME);
         }  
         break;
       case 3:	// after ')'
-        if (*s == '[') {
+        switch (*s) {
+	case '[':
           if ( nameDiff( s, oname) == seg[1].offs + seg[1].len + 1) {
             // offset.size
             state = 7;	      
           }
-        } else if ( *s == ']' || *s == '.') {
+	  break;
+        case ']':
+	case '.':
           throw wb_error(LDH__BADNAME);
-        } else {
+        default:
           attr[num_attr].len = nameDiff( s, oname) - attr[num_attr].offs;
           attr[num_attr].index = -1;
           state = 4;
         }
         break;
       case 4:	// attribute before '['
-        if (*s == '.') {
+	switch (*s) {
+	case '.':
           if ( nameDiff( s, oname) == attr[num_attr].offs)
             throw wb_error(LDH__BADNAME);
           attr[num_attr].len = nameDiff( s, oname) - attr[num_attr].offs;
           num_attr++;
           attr[num_attr].offs = nameDiff( s + 1, oname);
           state = 4;
-        } else if (*s == '[') {
+	  break;
+        case '[':
           attr[num_attr].len = nameDiff( s, oname) - attr[num_attr].offs;
           attr[num_attr].index = 0;
           state = 5;
         }
         break;
       case 5:	// attribute index before ']'
-        if (*s == ']') {
+	switch ( *s) {
+	case ']':
           num_attr++;
           state = 6;
-        } else if ((*s < '0') || (*s > '9')) {
-          throw wb_error(LDH__BADNAME);
-        } else {
+	case '0':
+	case '1':
+	case '2':
+	case '3':
+	case '4':
+	case '5':
+	case '6':
+	case '7':
+	case '8':
+	case '9':
           attr[num_attr].index = attr[num_attr].index * 10 + (*s - '0');
           if (attr[num_attr].index > 65535) throw wb_error(LDH__BADNAME);
+	  break;
+        default:
+          throw wb_error(LDH__BADNAME);
         }
         break;
       case 6:	// attribute after ']', '.' or nothing
-        if ( *s == '.') {
+	switch ( *s) {
+	case '.':
           attr[num_attr].offs = nameDiff( s + 1, oname);
           state = 4;
-        }
-        else
+	  break;
+        default:
           throw wb_error(LDH__BADNAME);
+	}
         break;
       case 7:	// offset.size before '.'
-        if (*s == '.') {
+	switch ( *s) {
+	case '.':
           b_size = 0;
           state = 8;
-        } else if (*s == ']') {
+	  break;
+        case ']':
           throw wb_error(LDH__BADNAME);
-        } else {
-          if ((*s < '0') || (*s > '9')) {
-            throw wb_error(LDH__BADNAME);
-          } else {
-            b_offset = b_offset * 10 + (*s - '0');
-            if (b_offset > 65535) throw wb_error(LDH__BADNAME);
-          }
+	case '0':
+	case '1':
+	case '2':
+	case '3':
+	case '4':
+	case '5':
+	case '6':
+	case '7':
+	case '8':
+	case '9':
+	  b_offset = b_offset * 10 + (*s - '0');
+	  if (b_offset > 65535) throw wb_error(LDH__BADNAME);
+	  break;
+	default:
+	  throw wb_error(LDH__BADNAME);
         }
         break;
       case 8:	// offset.size before ']'
-        if (*s == ']') {
+	switch( *s) {
+        case ']':
           state = 9;
-        } else if ((*s < '0') || (*s > '9')) {
-          throw wb_error(LDH__BADNAME);
-        } else {
+	  break;
+	case '0':
+	case '1':
+	case '2':
+	case '3':
+	case '4':
+	case '5':
+	case '6':
+	case '7':
+	case '8':
+	case '9':
           b_size = b_size * 10 + (*s - '0');
           if (b_size > 65535) throw wb_error(LDH__BADNAME);
+	  break;
+        default:
+          throw wb_error(LDH__BADNAME);
         }
         break;
       case 9:	// offset.size after ']', must be nothing there!
@@ -377,12 +516,15 @@ void wb_nrep::parse () throw (wb_error)
   else {
 
     for ( s = oname; *s; s++, snn++) {
-      if (normname_tab[*(unsigned char *)s] == '!')
+      switch (normname_tab[*(unsigned char *)s]) {
+      case '!':
         throw wb_error(LDH__BADNAME);
-      else if (normname_tab[*(unsigned char *)s] == '^')
+      case '^':
         *snn = *s - 32;
-      else
+	break;
+      default:
         *snn = normname_tab[*(unsigned char *)s];
+      }
 
       /* States
          0: before ':'
@@ -393,14 +535,16 @@ void wb_nrep::parse () throw (wb_error)
 
       switch (state) {
       case 0:	// before ':'
-        if ( *s == ':') {
+	switch ( *s) {
+	case ':':
           if ( s == oname) 
             throw wb_error(LDH__BADNAME);  // No volume name
           vol_len = nameDiff( s, oname);
           if ( *(s+1))
             seg[0].offs = nameDiff(s+1, oname);
           state = 1;
-        } else if ( *s == '-') {
+	  break;
+        case '-':
           if ( s == oname) 
             throw wb_error(LDH__BADNAME);  // No segment name
           seg[0].offs = 0;
@@ -408,7 +552,8 @@ void wb_nrep::parse () throw (wb_error)
           num_seg++;
           seg[1].offs = nameDiff( s+1, oname);
           state = 1;
-        } else if ( *s == '.') {
+	  break;
+        case '.':
           if ( s != oname) {
             seg[0].offs = 0;
             seg[0].len = nameDiff( s, oname);
@@ -416,28 +561,34 @@ void wb_nrep::parse () throw (wb_error)
           }
           attr[0].offs = nameDiff( s+1, oname);
           state = 2;
-        }
-        else if ( *s == '[' || *s == ']')
+	  break;
+        case '[':
+	case ']':
           throw wb_error(LDH__BADNAME);
+	}
         break;
       case 1:	// before '.'
-        if ( *s == '-') {
+	switch ( *s) {
+	case '-':
           if ( nameDiff( s, oname) == seg[num_seg].offs)
             throw wb_error(LDH__BADNAME);
           seg[num_seg+1].offs = nameDiff( s+1, oname);
           seg[num_seg].len = seg[num_seg+1].offs - seg[num_seg].offs - 1;
           num_seg++;
-        } else if ( *s == '.') {
+	  break;
+        case '.':
           // if ( nameDiff( s, oname) == seg[num_seg].offs) // Could be volume object !!
           //   throw wb_error(LDH__BADNAME);
           attr[0].offs = nameDiff( s+1, oname);
           seg[num_seg].len = attr[0].offs - seg[num_seg].offs - 1;
           num_seg++;
           state = 2;
-        }
+	  break;
+	}
         break;
       case 2:	// before '['
-        if ( *s == '.') {
+	switch( *s) {
+        case '.':
           if ( nameDiff( s, oname) == attr[num_attr].offs)
             throw wb_error(LDH__BADNAME);
           attr[num_attr+1].offs = nameDiff( s+1, oname);
@@ -448,33 +599,48 @@ void wb_nrep::parse () throw (wb_error)
 	    m_hasSuper = true;
 	  }
           num_attr++;
-        }
-        else if ( *s == '[') {
+	  break;
+        case '[':
           if ( nameDiff( s, oname) == attr[num_attr].offs)
             throw wb_error(LDH__BADNAME);
           attr[num_attr].len = nameDiff( s, oname) - attr[num_attr].offs;
           attr[num_attr].index = 0;
           state = 3;
+	  break;
         }
         break;
       case 3:	/* within brackets */
-        if (*s == ']') {
+	switch ( *s) {
+	case ']':
           num_attr++;
           state = 4;
-        } else if ((*s < '0') || (*s > '9')) {
-          throw wb_error(LDH__BADNAME);
-        } else {
+	  break;
+	case '0':
+	case '1':
+	case '2':
+	case '3':
+	case '4':
+	case '5':
+	case '6':
+	case '7':
+	case '8':
+	case '9':
           attr[num_attr].index = attr[num_attr].index * 10 + (*s - '0');
           if (attr[num_attr].index > 65535) throw wb_error(LDH__BADNAME);
+	  break;
+        default:
+          throw wb_error(LDH__BADNAME);
         }
         break;
       case 4:	// after brackets
-        if ( *s == '.') {
+	switch ( *s) {
+	case '.':
           attr[num_attr].offs = nameDiff( s+1, oname);
           state = 2;
-        }
-        else
+	  break;
+	default:
           throw wb_error(LDH__BADNAME);
+	}
         break;
       }
     }

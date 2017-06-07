@@ -95,7 +95,6 @@
 #include "wb_watttext.h"
 #endif
 
-
 #define wnav_cVersion	"X3.3a"
 #define wnav_cScriptDescKey	"!** Description"
 #define wnav_cScriptInvisKey	"!** Invisible"
@@ -171,6 +170,7 @@ class WGe;
 class wb_utl;
 class CoLogin;
 class WCrr;
+class WRev;
 
 class ApplListElem {
   public:
@@ -322,6 +322,7 @@ class WNav : public WUtility{
     CoWow		*wow;
     int			admin_login;
     int			nodraw;
+    WRev		*rev;
 
     virtual void pop() {}
     virtual void set_inputfocus( int focus) {}
@@ -346,6 +347,7 @@ class WNav : public WUtility{
     virtual void wge_modal_loop( WGe *wge) {}
     virtual bool has_window() {return false;}
     virtual wb_utl *utl_new() {return 0;}
+    virtual WRev *rev_new() {return 0;}
     virtual void logw_new( char *item, wlog_eCategory *categories, int show_item) {}
     virtual CoLogin *login_new( const char *name, const char *groupname,
 				void (* bc_success)( void *), void (* bc_cancel)( void *), 
@@ -426,6 +428,7 @@ class WNav : public WUtility{
     int show_volume( int pop);
     int get_rootlist();
     int check_toplevel_class( pwr_tCid cid);
+    pwr_tStatus get_command_sts();
     int command( char* input_str);
     int readcmdfile( 	char		*incommand);
     int get_current_object(

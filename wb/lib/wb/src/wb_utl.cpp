@@ -1410,7 +1410,13 @@ int wb_utl::exec_plcpgms( ldh_tSesContext ldhses,
   class_vect[1] = 0;
   classp = class_vect;
 
-  if ( !all) {
+  if ( templ) {
+    /* Get objdid for the hierarchy object */
+    sts = ldh_NameToObjid( ldhses, &hierobjdid, "Class");
+    if ( EVEN(sts))
+      return FOE__HIERNAME;
+  }
+  else if ( !all) {
     /* Get objdid for the hierarchy object */
     sts = ldh_NameToObjid( ldhses, &hierobjdid, hiername);
     if ( EVEN(sts))

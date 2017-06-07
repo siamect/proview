@@ -65,10 +65,14 @@
 #include "wb_wnav_msg.h"
 #include "wb_cmdc.h"
 #include "wb.h"
+#include "wb_erep.h"
+#include "wb_vrepmem.h"
+#include "wb_env.h"
 #include "cow_msgwindow.h"
 
 char Cmd::cmd_volume[80];
 char *Cmd::cmd_volume_p = 0;
+char Cmd::cmd_classvolume[80] = "";
 unsigned int Cmd::cmd_options = 0;
 
 void Cmd::usage()
@@ -154,11 +158,31 @@ int Cmd::attach_volume_cb( void *ctx,
     }
   }
 
-  cmd->volid = volid;
+  if  ( strcmp( Cmd::cmd_classvolume, "") != 0) {
+    // Load volume as extern
+    pwr_tFileName filename;    
+    wb_erep *erep = (wb_erep *)(*(wb_env *)cmd->wbctx);
 
-  // Open ldh session
-  sts = ldh_AttachVolume( cmd->wbctx, cmd->volid, &cmd->volctx);
-  if ( EVEN(sts)) return sts;
+    sprintf( filename, "$pwrp_db/%s.wb_load", Cmd::cmd_classvolume);
+    dcli_translate_filename( filename, filename);
+
+    wb_vrepmem *vrep = new wb_vrepmem(erep, 0);
+    vrep->loadWbl( filename, &sts);
+    if ( EVEN(sts)) {
+      delete vrep;
+      return sts;
+    }
+    erep->addExtern( &sts, vrep);
+    cmd->volid = vrep->vid();
+    cmd->volctx = (ldh_tVolume *) new wb_volume(vrep);
+  }
+  else {
+    cmd->volid = volid;
+
+    // Open ldh session
+    sts = ldh_AttachVolume( cmd->wbctx, cmd->volid, &cmd->volctx);
+    if ( EVEN(sts)) return sts;
+  }
 
   sts = ldh_OpenSession( &cmd->ldhses,
     cmd->volctx,

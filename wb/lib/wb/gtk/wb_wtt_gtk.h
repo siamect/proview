@@ -207,6 +207,7 @@ class WttGtk : public Wtt {
     static void activate_revert( GtkWidget *w, gpointer data);
     static void activate_syntax( GtkWidget *w, gpointer data);
     static void activate_history( GtkWidget *w, gpointer data);
+    static void activate_revisions( GtkWidget *w, gpointer data);
     static void activate_find( GtkWidget *w, gpointer data);
     static void activate_findregex( GtkWidget *w, gpointer data);
     static void activate_findnext( GtkWidget *w, gpointer data);

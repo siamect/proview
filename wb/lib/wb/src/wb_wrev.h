@@ -32,61 +32,81 @@
  * the source code of Proview (the version used to produce the 
  * combined work), being distributed under the terms of the GNU 
  * General Public License plus this exception.
- */
+ **/
 
-#ifndef wb_cmdc_h
-#define wb_cmdc_h
+#ifndef wb_wrev_h
+#define wb_wrev_h
+
+/* wb_wrev.h -- Revision window */
 
 #ifndef pwr_h
 # include "pwr.h"
 #endif
 
-#ifndef wb_h
-# include "wb.h"
+#ifndef wb_utility_h
+# include "wb_utility.h"
 #endif
 
 #ifndef wb_ldh_h
 # include "wb_ldh.h"
 #endif
 
-#ifndef wb_wnav_h
-# include "wb_wnav.h"
+#ifndef wb_revision_h
+# include "wb_wrevnav.h"
 #endif
 
-#ifndef co_dcli_input_h
-# include "co_dcli_input.h"
-#endif
+class WRevNav;
+class CoWow;
 
-class Cmd {
+class WRev {
   public:
-    Cmd();
-    
-    wb_eUtility		ctx_type;
-    ldh_tSesContext 	ldhses;
-    ldh_tWBContext 	wbctx;
-    ldh_tVolContext 	volctx;
-    pwr_tVolumeId	volid;
-    WNav 		*wnav;
-    int			wb_type;
-    dcli_sChannel 	chn;
-    dcli_sRecall 	*recall_buf;
-    static char cmd_volume[80];
-    static char *cmd_volume_p;
-    static char cmd_classvolume[80];
-    static unsigned int cmd_options;
+    WRev(  void *wa_parent_ctx, ldh_tSession wa_ldhses);
+    virtual ~WRev();
+    void 	*parent_ctx;
+    ldh_tSession ldhses;
+    char 	name[80];
+    WRevNav	*wrevnav;
+    void	(*close_cb) ( void *);
+    int		(*command_cb) ( void *, char *);
+    void 	(*india_ok_cb)( WRev *, char *, char *);
+    wb_eUtility	utility;
+    CoWow	*wow;
+    int		dialog_count;
 
-    int detach_volume();
-    static void usage();
-    static int get_wbctx( void *ctx, ldh_tWBContext *wbctx);
-    static int attach_volume_cb( void *ctx,
-				 pwr_tVolumeId	volid,
-				 int pop);
-    static int detach_volume_cb( void *ctx);
-    static void save_cb( void *ctx, int quiet);
-    static void revert_ok( Cmd *cmd);
-    static void revert_cb( void *ctx, int confirm);
-    static void close_cb( void *ctx);
-  
+    void activate_store();
+    void activate_restore();
+    void activate_delete();
+    void activate_build();
+    void activate_zoom_in();
+    void activate_zoom_out();
+    void activate_zoom_reset();
+    void next_name( char *name);
+
+    virtual void message( char severity, const char *message) {}
+    virtual void pop() {}
+    virtual void set_clock_cursor() {}
+    virtual void reset_cursor() {}
+    virtual void flush() {}
+    virtual void open_input_dialog( const char *text1, const char *text2, const char *title,
+				    const char *init_text1, const char *init_text2,
+				    void (*ok_cb)( WRev *, char *, char *)) {}
+
+    static void message_cb( void *wrev, char severity, const char *message);
+    static void set_clock_cursor_cb( void *wrev);
+    static void reset_cursor_cb( void *wrev);
+    static int rev_command_cb( void *ctx, char *cmd);
+    static void restore_cancel( void *ctx, void *data);
+    static void restore_ok( void *ctx, void *data);
+    static void delete_cancel( void *ctx, void *data);
+    static void delete_ok( void *ctx, void *data);
+    static void store_ok_cb( WRev *wrev, char *text1, char *text2);
 };
 
 #endif
+
+
+
+
+
+
+

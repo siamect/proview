@@ -32,61 +32,83 @@
  * the source code of Proview (the version used to produce the 
  * combined work), being distributed under the terms of the GNU 
  * General Public License plus this exception.
- */
+ **/
 
-#ifndef wb_cmdc_h
-#define wb_cmdc_h
 
-#ifndef pwr_h
-# include "pwr.h"
-#endif
+#include <iostream>
+#include <fstream>
+#include <stdio.h>
+#include <stdlib.h>
 
-#ifndef wb_h
-# include "wb.h"
-#endif
+#include "co_cdh.h"
+#include "co_dcli.h"
+#include "co_time.h"
+#include "rt_load.h"
+#include "wb_pkg_msg.h"
 
-#ifndef wb_ldh_h
-# include "wb_ldh.h"
-#endif
+#include "flow.h"
+#include "flow_browctx.h"
+#include "flow_browapi.h"
+#include "flow_browwidget_gtk.h"
 
-#ifndef wb_wnav_h
-# include "wb_wnav.h"
-#endif
+#include "wb_wrev_gtk.h"
+#include "wb_wrevnav_gtk.h"
+#include "wb_wnav.h"
+#include "wb_wnav_brow.h"
+#include "wb_wnav_item.h"
+#include "wb_error.h"
 
-#ifndef co_dcli_input_h
-# include "co_dcli_input.h"
-#endif
+//
+// Create the navigator widget
+//
+WRevNavGtk::WRevNavGtk(
+	void 		*wa_parent_ctx,
+	GtkWidget      	*wa_parent_wid,
+	ldh_tSession	wa_ldhses,
+	const char     	*wa_name,
+	wb_eUtility	wa_utility,
+	GtkWidget      	**w,
+	pwr_tStatus 	*status) :
+  WRevNav(wa_parent_ctx,wa_ldhses,wa_name,wa_utility,status), parent_wid(wa_parent_wid)
+{
+  form_widget = scrolledbrowwidgetgtk_new(
+	init_brow_cb, this, &brow_widget);
 
-class Cmd {
-  public:
-    Cmd();
-    
-    wb_eUtility		ctx_type;
-    ldh_tSesContext 	ldhses;
-    ldh_tWBContext 	wbctx;
-    ldh_tVolContext 	volctx;
-    pwr_tVolumeId	volid;
-    WNav 		*wnav;
-    int			wb_type;
-    dcli_sChannel 	chn;
-    dcli_sRecall 	*recall_buf;
-    static char cmd_volume[80];
-    static char *cmd_volume_p;
-    static char cmd_classvolume[80];
-    static unsigned int cmd_options;
+  gtk_widget_show_all( brow_widget);
 
-    int detach_volume();
-    static void usage();
-    static int get_wbctx( void *ctx, ldh_tWBContext *wbctx);
-    static int attach_volume_cb( void *ctx,
-				 pwr_tVolumeId	volid,
-				 int pop);
-    static int detach_volume_cb( void *ctx);
-    static void save_cb( void *ctx, int quiet);
-    static void revert_ok( Cmd *cmd);
-    static void revert_cb( void *ctx, int confirm);
-    static void close_cb( void *ctx);
-  
-};
+  *w = form_widget;
+  *status = 1;
+}
 
-#endif
+//
+//  Delete a nav context
+//
+WRevNavGtk::~WRevNavGtk()
+{
+  delete brow;
+  gtk_widget_destroy( form_widget);
+}
+
+void WRevNavGtk::set_inputfocus()
+{
+  if ( !displayed)
+    return;
+
+  gtk_widget_grab_focus( brow_widget);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

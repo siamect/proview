@@ -49,6 +49,7 @@
 #include "wb_name.h"
 #include "wb_treeimport.h"
 #include "pwr_baseclasses.h"
+#include "pwr_remoteclasses.h"
 #include "pwr_basecomponentclasses.h"
 
 /* Datatypes */
@@ -293,6 +294,17 @@ static wbl_sSym classes[] =
   ,{ "pwr_cClass_AlarmView", pwr_cClass_AlarmView }
   ,{ "pwr_cClass_DsTrend", pwr_cClass_DsTrend }
   ,{ "pwr_cClass_DsTrendCurve", pwr_cClass_DsTrendCurve }
+  ,{ "pwr_cClass_CircBuff1k", pwr_cClass_CircBuff1k }
+  ,{ "pwr_cClass_CircBuff2k", pwr_cClass_CircBuff2k }
+  ,{ "pwr_cClass_CircBuff10k", pwr_cClass_CircBuff10k }
+  ,{ "pwr_cClass_CircBuff20k", pwr_cClass_CircBuff20k }
+  ,{ "pwr_cClass_CircBuff100k", pwr_cClass_CircBuff100k }
+  ,{ "pwr_cClass_CircBuff200k", pwr_cClass_CircBuff200k }
+  ,{ "pwr_cClass_Buff256", pwr_cClass_Buff256 }
+  ,{ "pwr_cClass_Buff1440", pwr_cClass_Buff1440 }
+  ,{ "pwr_cClass_Buff4096", pwr_cClass_Buff4096 }
+  ,{ "pwr_cClass_Buff32k", pwr_cClass_Buff32k }
+  ,{ "pwr_cClass_BuffStr80", pwr_cClass_BuffStr80 }
   ,{ "BaseComponent:Class-CompModePID", pwr_cClass_CompModePID }
   ,{ "BaseComponent:Class-CompPID", pwr_cClass_CompPID }
   ,{ "BaseComponent:Class-CompModeIMC", pwr_cClass_CompModeIMC }

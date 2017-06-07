@@ -34,6 +34,8 @@
  * General Public License plus this exception.
  **/
 
+#include <vector>
+
 #ifndef wb_lfu_h
 #define wb_lfu_h
 
@@ -76,6 +78,48 @@ typedef struct {
 	pwr_tTime      	version;
         char		name[80];
 	} lfu_t_volref;
+
+class lfu_volume_info
+{
+ public:
+  pwr_tObjName name;
+  pwr_tVid vid;
+  pwr_tCid cid;
+  ldh_eVolRep volrep;
+  char server[80];
+
+  lfu_volume_info() : vid(0), cid(0), volrep(ldh_eVolRep_Db) {
+    strcpy( name, "");
+    strcpy( server, "");
+  }
+  lfu_volume_info( const lfu_volume_info& x) : vid(x.vid), cid(x.cid), volrep(x.volrep) {
+    strncpy( name, x.name, sizeof(name));
+    strncpy( server, x.server, sizeof(server));
+  }
+};    
+
+class lfu_boot_info
+{
+ public:
+  pwr_tObjName node_name;
+  pwr_tString80 node_text;
+  pwr_tObjName volume_name;
+  pwr_tVid vid;
+  pwr_tUInt32 bus;
+  pwr_tOpSysEnum opsys;
+  int number;
+
+  lfu_boot_info() : vid(0), bus(0), opsys(0), number(0) {
+    strcpy( node_name, "");
+    strcpy( node_text, "");
+    strcpy( volume_name, "");
+  }
+    lfu_boot_info( const lfu_boot_info& x) : vid(x.vid), bus(x.bus), opsys(x.opsys), number(x.number) {
+    strncpy( node_name, x.node_name, sizeof(node_name));
+    strncpy( node_text, x.node_text, sizeof(node_text));
+    strncpy( volume_name, x.volume_name, sizeof(volume_name));
+  }
+};    
 
 pwr_tStatus lfu_volumelist_load( const char *filename, 
 				 lfu_t_volumelist **vollist,
@@ -141,6 +185,10 @@ pwr_tStatus lfu_ParseDbmsServer( char *server, char *user, char *passw,
 pwr_tStatus lfu_check_appl_file( ldh_tSesContext ldhses,
 				 char *nodename, int bus_number);
 pwr_tStatus lfu_check_opt_file( ldh_tSesContext ldhses, char *nodename, int bus_number, pwr_mOpSys opsys);
+
+pwr_tStatus lfu_GetVolumeCnfAll( vector<lfu_volume_info>& vect);
+
+pwr_tStatus lfu_GetBootList( vector<lfu_boot_info>& vect, int *nodes);
 
 #ifdef __cplusplus
 }

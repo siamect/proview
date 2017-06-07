@@ -47,6 +47,7 @@
 #include "wb_print_wbl.h"
 
 #include "co_time.h"
+#include "co_tree.h"
 
 #include "wb_attribute.h"
 #include "wb_object.h"
@@ -54,6 +55,7 @@
 
 wb_print_wbl::wb_print_wbl(ostream& os, int levelIndentation) :
   m_errCnt(0),
+  m_lineCnt(0),
   m_idxFlag(true),
   m_noFoCodeFlag(false),
   m_timeFlag(true),
@@ -61,7 +63,8 @@ wb_print_wbl::wb_print_wbl(ostream& os, int levelIndentation) :
   m_levelInd(levelIndentation),
   m_keepName(false),
   m_isTemplateObject(false),
-  m_os(os)
+  m_os(os),
+  m_body_cache(0)
 {
   memset(m_indBuf, ' ', sizeof(m_indBuf));
   m_indBuf[sizeof(m_indBuf) -1] = 0;
@@ -70,341 +73,11 @@ wb_print_wbl::wb_print_wbl(ostream& os, int levelIndentation) :
 
 wb_print_wbl::~wb_print_wbl()
 {
+  printf( "-- Writing line: %d\n", m_lineCnt); 
+  bodyCacheFree();
 }
 
 
-
-
-
-
-
-//
-// printAttribute
-//
-void wb_print_wbl::printAttribute(wb_volume& v, 
-                                  wb_attribute& attr, 
-                                  wb_attribute& tattr, ///< template 
-                                  wb_adef& adef, 
-				  int force)
-{
-  if ( !force &&
-       (adef.flags() & PWR_MASK_POINTER || 
-	adef.flags() & PWR_MASK_NOWBL))
-    return;
-
-  if (attr.isClass() && adef.cid() == pwr_eClass_Buffer)
-    printBuffer(v, attr, tattr, adef);
-  else if (attr.isClass())
-    printClass(v, attr, tattr, adef);
-  else {
-    switch (adef.cid()) {
-    case pwr_eClass_Param:
-    case pwr_eClass_Input:
-    case pwr_eClass_Intern:
-    case pwr_eClass_Output:
-    case pwr_eClass_ObjXRef:
-      printParameter(v, attr, tattr, adef);
-      break;
-    default:
-      m_os << "! %%WBDUMP-E-Error Unknown attribute class: " 
-           << adef.name() << ", cid: " << adef.cid() << endl;
-      m_errCnt++;
-      break;
-    }
-  }
-  
-}
-
-//
-// printBody
-//
-void wb_print_wbl::printBody(wb_volume& v, 
-                             wb_object& o, 
-                             wb_object& templ,
-                             wb_cdef& cdef,
-                             pwr_eBix bix)
-{
-  wb_adef adef;
-  wb_attribute attr;
-  wb_attribute tattr;
-  const char* bname;
-  char timestr[40] = " ";
-  int force = 0;
-    
-  wb_bdef bdef = cdef.bdef(bix);
-    
-
-  if (!bdef)
-    return;
-
-  bname = bdef.name();
-
-  wb_bdef tbdef = templ.bdef(bix);
-  if (!tbdef) {
-    m_errCnt++;
-    m_os << "Couldn't find template body def for object " << o.name() << endl;
-    return;
-  }
-    
-  if ( m_timeFlag) {
-    // Get body time
-    pwr_tTime btime;
-    switch ( bix) {
-    case pwr_eBix_rt:
-      btime = o.rbTime();
-
-      // Bugcheck in 4.2 btime can be corrupt
-      if ( btime.tv_nsec < 0 || btime.tv_nsec >= 1000000000)
-	break;
-
-      strcpy( timestr, " ");
-      time_AtoAscii( &btime, time_eFormat_DateAndTime, &timestr[1], sizeof(timestr)-1);
-      break;
-    case pwr_eBix_dev:
-      btime = o.dbTime();
-      strcpy( timestr, " ");
-      time_AtoAscii( &btime, time_eFormat_DateAndTime, &timestr[1], sizeof(timestr)-1);
-      break;
-    default: ;
-    }
-  }
-
-  indent(1) << "Body " << bdef.name() << timestr << endl;
-  for (adef = bdef.adef(); adef; adef = adef.next()) {
-    if ( cdef.cid() == pwr_eClass_Param && strcmp( adef.name(), "Size") == 0) {
-      // Print Size for Pointers that is not private
-      wb_attribute flags_attr = o.attribute(bname, "Flags");
-      pwr_tMask *flagsp = (pwr_tMask *)flags_attr.value();
-      if (*flagsp & PWR_MASK_POINTER && !(*flagsp & PWR_MASK_PRIVATE))
-	force = 1;
-    }
-
-    attr = o.attribute(bname, adef.name());
-    tattr = templ.attribute(bname, adef.name());
-    //    if (tattr == attr)
-    //  continue;
-    printAttribute(v, attr, tattr, adef, force);
-  }
-
-  indent(-1) << "EndBody" << endl;
-    
-  return;
-}
-
-
-//
-// printBuffer
-//
-void wb_print_wbl::printBuffer(wb_volume& v,
-                              wb_attribute& attr,
-                              wb_attribute& tattr,
-                              wb_adef& adef) 
-{
-  pwr_tCid subClass = attr.subClass();
-  wb_object templ;
-  wb_object sysbo;
-  wb_attribute tattr2;
-  wb_attribute attr2;
-  wb_adef adef2;
-  const char* bname;
-
-  if ( strcmp( attr.name(), "Template") == 0 && cdh_isClassVolumeClass( v.cid()))
-    // The parser can't handle subclasses in template objects yet...
-    return;
-
-  wb_object co = v.object(cdh_ClassIdToObjid(subClass));
-  if (!co) {
-    m_os << "! %WBDUMP-E-Error Unknown sub class: " << subClass << endl;
-    m_errCnt++;
-    return;
-  }
-
-  wb_cdef cdef = v.cdef(subClass);
-  if (!cdef) {
-    m_os << "! %WBDUMP-E-Error Unknown sub class: " << subClass << endl;
-    m_errCnt++;
-    return;
-  }
-
-  wb_name t("Template");
-  
-  templ = co.child(t);
-  if (!templ) {
-    m_errCnt++;
-    m_os << "! %WBDUMP-E-Error Template not found for class " << cdef.longName() << endl;
-    return;
-  }
-
-  wb_bdef bdef = cdef.bdef(pwr_eBix_sys);
-  if (!bdef) {
-    m_os << "! %WBDUMP-E-Error sub class: " << subClass 
-         << " not defined" << endl;
-    m_errCnt++;
-    return;
-  }    
-  bname = bdef.name();
-
-  for (int i = 0; i < adef.nElement(); i++) {
-    if (adef.flags() & PWR_MASK_ARRAY)
-      indent(1) << "Buffer " << adef.name() << "[" << i << "]" << endl;
-    else
-      indent(1) << "Buffer " << adef.name() << endl;
-
-
-    adef2 = bdef.adef(); 
-    attr2 = attr.first(i);
-    
-    while (1) {
-      tattr2 = templ.attribute(bname, adef2.name());
-      printAttribute(v, attr2, tattr2, adef2, 0);
-
-      if (!(adef2 = adef2.next()))
-        break;
-      
-      if (!(attr2 = attr2.after()))
-        break;
-    }                   
-
-    indent(-1) << "EndBuffer" << endl;
-  }
-}
-
-//
-// printClass
-//
-void wb_print_wbl::printClass(wb_volume& v,
-                              wb_attribute& attr,
-                              wb_attribute& tattr,
-                              wb_adef& adef) 
-{
-  pwr_tCid subClass = attr.subClass();
-  wb_object templ;
-  wb_object sysbo;
-  wb_attribute tattr2;
-  wb_attribute attr2;
-  wb_adef adef2;
-
-  //  if ( strcmp( attr.name(), "Template") == 0 && v.cid() == pwr_eClass_ClassVolume)
-    // The parser can't handle subclasses in template objects yet...
-  //  return;
-
-  wb_cdef cdef = v.cdef(attr.cid());
-  if (!cdef) {
-    m_os << "! %WBDUMP-E-Error Unknown sub class: " << subClass << endl;
-    m_errCnt++;
-    return;
-  }
-
-  wb_bdef bdef = cdef.bdef(pwr_eBix_sys);
-  if (!bdef) {
-    m_os << "! %WBDUMP-E-Error sub class: " << subClass 
-         << " not defined" << endl;
-    m_errCnt++;
-    return;
-  }    
-
-  for (int i = 0; i < adef.nElement(); i++) {
-    attr2 = attr.first(i);
-    tattr2 = tattr.first(i);
-  
-    while ( attr2.oddSts()) {
-
-      adef2 = bdef.adef( attr2.attrName()); 
-      
-      printAttribute(v, attr2, tattr2, adef2, 0);
-    
-      attr2 = attr2.after();
-      if ( tattr2.oddSts())
-	tattr2 = tattr2.after();
-    }
-  }
-
-#if 0
-  wb_object co = v.object(cdh_ClassIdToObjid(subClass));
-  if (!co) {
-    m_os << "! %WBDUMP-E-Error Unknown sub class: " << subClass << endl;
-    m_errCnt++;
-    return;
-  }
-
-  wb_cdef cdef = v.cdef(subClass);
-  if (!cdef) {
-    m_os << "! %WBDUMP-E-Error Unknown sub class: " << subClass << endl;
-    m_errCnt++;
-    return;
-  }
-
-  wb_name t("Template");
-  
-  templ = co.child(t);
-  if (!templ) {
-    m_errCnt++;
-    m_os << "! %WBDUMP-E-Error Template not found for class " << cdef.longName() << endl;
-    return;
-  }
-
-  wb_bdef bdef = cdef.bdef(pwr_eBix_sys);
-  if (!bdef) {
-    m_os << "! %WBDUMP-E-Error sub class: " << subClass 
-         << " not defined" << endl;
-    m_errCnt++;
-    return;
-  }    
-  bname = bdef.name();
-
-  for (int i = 0; i < adef.nElement(); i++) {
-
-    if (adef.flags() & PWR_MASK_ARRAY)
-      indent(1) << "Buffer " << adef.name() << "[" << i << "]" << endl;
-    else
-      indent(1) << "Buffer " << adef.name() << endl;
-
-
-    adef2 = bdef.adef(); 
-    attr2 = attr.first(i);
-    
-    while (1) {
-      tattr2 = templ.attribute(bname, adef2.name());
-      printAttribute(v, attr2, tattr2, adef2, 0);
-
-      if (!(adef2 = adef2.next()))
-        break;
-      
-      if (!(attr2 = attr2.after()))
-        break;
-    }                   
-
-    indent(-1) << "EndBuffer" << endl;
-
-    if (adef.flags() & PWR_MASK_ARRAY)
-      indent(1) << "Buffer " << adef.name() << "[" << i << "]" << endl;
-    else
-      indent(1) << "Buffer " << adef.name() << endl;
-
-
-    adef2 = bdef.adef(); 
-    attr2 = attr.first(i);
-    
-    while (1) {
-      strcpy( aname, adef.subName());
-      strcat( aname, ".");
-      strcat( aname, attr2.name());
-
-      attr2
-      tattr2 = templ.attribute(bname, adef2.name());
-      printAttribute(v, attr2, tattr2, adef2, 0);
-
-      if (!(adef2 = adef2.next()))
-        break;
-      
-      if (!(attr2 = attr2.after()))
-        break;
-    }                   
-
-  }
-#endif
-}
-
 //
 // printHierarchy
 //
@@ -513,8 +186,8 @@ void wb_print_wbl::printObject(wb_volume& v, wb_object& o, bool recursive)
     m_isTemplateObject = false;
   
  
-  printBody(v, o, templ, cdef, pwr_eBix_rt);
-  printBody(v, o, templ, cdef, pwr_eBix_dev);
+  printBody(v, o.oid(), templ.oid(), cdef.cid(), pwr_eBix_rt);
+  printBody(v, o.oid(), templ.oid(), cdef.cid(), pwr_eBix_dev);
 
   if (recursive) {
     if ( !(m_noFoCodeFlag && isFoCodeObject( v, o))) {
@@ -525,139 +198,122 @@ void wb_print_wbl::printObject(wb_volume& v, wb_object& o, bool recursive)
 
   indent(-1) << "EndObject" << endl;
 }
-
+
 //
-// printParameter
+// printVolume
 //
-void wb_print_wbl::printParameter(wb_volume& v, 
-                                  wb_attribute& attr, 
-                                  wb_attribute& tattr, ///< template 
-                                  wb_adef& adef)
+void wb_print_wbl::printVolume(wb_volume& v, bool recursive)
 {
-
-  int nElement = adef.nElement();
-  int varSize = adef.size() / nElement;
-  char* valueb = (char *)attr.value();
-  char* val;
-  char* tvalueb;
-  char* tval;
-  char* svalp;
-  int varOffset;
-  bool parValOk;
-  bool print_all = false;
-  const char* name = adef.subName();   
-
-  if (valueb == NULL) {
-    m_os << "! %WBDUMP-E-Error Failed to get attribute address for " 
-         << adef.name() << endl;
+  if (!v) {
+    m_os << "%WBDUMP-E-Error Not a valid volume" << endl;
     m_errCnt++;
     return;
   }
 
-  if (adef.type() == pwr_eType_Text) {
-    printText(v, adef, valueb, adef.size());
+  wb_object o = v.object();
+  const char* cname = v.cdef(v.cid()).name();
+    
+    
+  indent(1) << "Volume " << v.name() << " " <<  cname << " "
+            << cdh_VolumeIdToString(NULL, v.vid(), 0, 0) << " " << endl;
+
+
+  // Print volume body
+  pwr_tOid oid;
+  oid.vid = v.vid();
+  oid.oix= 0;
+  wb_object vo = v.object( oid);
+  wb_cdef cdef = v.cdef(vo);
+
+  wb_object co = v.object(cdh_ClassIdToObjid(v.cid()));
+  wb_name t("Template");
+  
+  wb_object templ = co.child(t);
+  if (!templ) {
+    m_errCnt++;
+    m_os << "Template not found for class " << cdef.name() << endl;
     return;
   }
+  printBody(v, oid, templ.oid(), cdef.cid(), pwr_eBix_sys);
 
-  if ( tattr.evenSts()) {
-    // Template attribute not found, should not happen
-    tvalueb = (char *)calloc( 1, attr.size());
-    print_all = true;
+  // Print top objects and their children 
+  if (recursive) {
+    for (; o; o = o.after())
+      printObject(v, o, recursive);
   }
-  else if ( attr == tattr || m_isTemplateObject)
-    // This is the template object itself, print all nonzero
-    tvalueb = (char *)calloc( 1, tattr.size());
-  else
-    tvalueb = (char *)tattr.value();
-
-  for (int i = 0; i < nElement; i++) {
-    switch (adef.type()) {
-    case pwr_eType_Boolean:
-    case pwr_eType_Float32:
-    case pwr_eType_Float64:
-    case pwr_eType_Char:
-    case pwr_eType_String:
-    case pwr_eType_ProString:
-    case pwr_eType_Int8:
-    case pwr_eType_Int16:
-    case pwr_eType_Int32:
-    case pwr_eType_Int64:
-    case pwr_eType_UInt8:
-    case pwr_eType_UInt16:
-    case pwr_eType_UInt32:
-    case pwr_eType_UInt64:
-    case pwr_eType_Objid:
-    case pwr_eType_TypeId:
-    case pwr_eType_CastId:
-    case pwr_eType_DisableAttr:
-    case pwr_eType_ClassId:
-    case pwr_eType_AttrRef:
-    case pwr_eType_Time:
-    case pwr_eType_VolumeId:
-    case pwr_eType_ObjectIx:
-    case pwr_eType_RefId:
-    case pwr_eType_DeltaTime:
-    case pwr_eType_Mask:
-    case pwr_eType_Enum:
-    case pwr_eType_Status:
-    case pwr_eType_NetStatus:
-    case pwr_eType_DataRef:
-      varOffset = varSize * i;
-      val = valueb + varOffset;
-      tval = tvalueb + varOffset;
-            
-      if (memcmp(val, tval, varSize) == 0 && !(adef.flags() & PWR_MASK_ALWAYSWBL) && !print_all)
-        continue;
-
-      parValOk = printValue(v, adef, val, varSize, &svalp);
-      if (parValOk)
-        indent();
-      else
-        m_os << "! %WBDUMP-E-Error ";
-      
-      if (adef.flags() & PWR_MASK_ARRAY) {
-        m_os << "Attr " << name << "[" << i << "] = " << svalp << endl;
-      } else {
-        m_os << "Attr " << name << " = " << svalp << endl;
-      }
-      break;
-    case pwr_eType_Array:
-      m_os << "! %WBDUMP-E-Error Type pwr_eType_Array is not yet implemented" << endl;
-      m_errCnt++;
-      break;
-    case pwr_eType_Buffer:
-      m_os << "! %WBDUMP-E-Error Type pwr_eType_Buffer is not yet implemented" << endl; 
-      m_errCnt++;
-      break;
-    case pwr_eType_Struct:
-      m_os << "! %WBDUMP-E-Error Type pwr_eType_Struct is not yet implemented" << endl;
-      m_errCnt++;
-      break;
-    default:
-      m_os << "! %WBDUMP-E-Error Attribute " << adef.name() 
-           << " is of unknown type: " <<  adef.type() <<  endl;
-      m_errCnt++;
-      break;
-    }
-  }
-  if ( tattr.evenSts() || attr == tattr)
-    free( tvalueb);
+    
+  indent(-1) << "EndVolume" << endl;
 }
+
 
+//
+// indent
+//
+ostream& wb_print_wbl::indent(int levelIncr)
+{
+  m_lineCnt++;
+  if ( m_lineCnt == 0)
+    printf( "\n");
+  if ( m_lineCnt % 1000 == 0) {
+    printf( "-- Writing line: %d\r", m_lineCnt); 
+    fflush(stdout);
+  }  
+
+  if (levelIncr < 0)
+    m_level += levelIncr;
+
+  assert(m_level >= 0);
+    
+  m_indBuf[m_level * m_levelInd] = '\0';
+
+  m_os << m_indBuf;
+
+  m_indBuf[m_level * m_levelInd] = ' ';
+
+  if (levelIncr > 0) 
+    m_level += levelIncr;
+    
+  return m_os;
+}
+
+bool wb_print_wbl::isFoCodeObject( wb_volume& v, wb_object& o)
+{
+  pwr_tInt32 compmethod;
+
+  // Check if object has GraphPlcNode body and compmethod 58
+  wb_cdef cd = v.cdef( o);
+  if ( !cd)
+    return false;
+
+  wb_object go = cd.classBody( "GraphPlcNode");
+  if ( !go) 
+    return false;
+
+  wb_attribute a = v.attribute( go, "compmethod");
+  if ( !a) 
+    return false;
+
+  a.value( &compmethod);
+
+  if ( compmethod == 58)
+    return true;
+  return false;
+}
+
+
 //
 // printText
 //
 void wb_print_wbl::printText(wb_volume& v, 
-                             wb_adef& adef,
+                             const char *aname,
                              const char *text,
                              int varSize)
 {
   const char* ip;
   int i;
   int end = varSize - 1;
-  const char* name = adef.subName();   
 
-  indent() << "Attr " << name << " = \"";
+  indent() << "Attr " << aname << " = \"";
 
   for (ip = text, i = 0; *ip != 0 && i < end; ip++) {
     if (*ip == '"')
@@ -672,15 +328,15 @@ void wb_print_wbl::printText(wb_volume& v,
   return;      
 }
 
-
 //
 // printValue
 //
-bool wb_print_wbl::printValue (wb_volume& v,
-                               wb_adef& adef,
-                               void *val,
-                               int varSize,
-                               char **svalp) 
+bool wb_print_wbl::printValue ( wb_volume& v,
+				pwr_eType type,
+				unsigned int flags,
+				void *val,
+				int varSize,
+				char **svalp) 
 {
   unsigned long sts;
   char timbuf[24];
@@ -692,13 +348,13 @@ bool wb_print_wbl::printValue (wb_volume& v,
 
   sval[0] = '\0';
 
-  if (adef.flags() & PWR_MASK_POINTER) {
+  if (flags & PWR_MASK_POINTER) {
     sprintf(sval, "%u", *(unsigned int *) val);
     *svalp = sval;
     return TRUE;
   }
-
-  switch (adef.type()) {
+  
+  switch (type) {
   case pwr_eType_Boolean:
     sprintf(sval, "%d", *(pwr_tBoolean *) val);
     break;
@@ -839,7 +495,7 @@ bool wb_print_wbl::printValue (wb_volume& v,
       }
     }
 #if 0      
-    } else {
+    else {
       ConvertObjectName( root, sp, conv_name);
       sprintf(sval, "\"%s\"", conv_name);
     }
@@ -856,7 +512,7 @@ bool wb_print_wbl::printValue (wb_volume& v,
         sprintf(sval, "\"%s\"", cdh_ArefToString(NULL, &((pwr_tDataRef*)val)->Aref, 1));
       }
     }
-
+    
     break;
   case pwr_eType_String:
   case pwr_eType_ProString: {
@@ -917,106 +573,467 @@ bool wb_print_wbl::printValue (wb_volume& v,
     sprintf(sval, "%d", *(pwr_tNetStatus *) val);
     break;
   default:
-    sprintf(sval, "Unknown attribute type: %d", adef.type());
+    sprintf(sval, "Unknown attribute type: %d", type);
     m_errCnt++;
     retval = FALSE;
     break;
+  }
+
+  *svalp = sval;
+  return retval;
 }
 
-*svalp = sval;
-return retval;
-}
-
-//
-// printVolume
-//
-void wb_print_wbl::printVolume(wb_volume& v, bool recursive)
+void wb_print_wbl::printBody( wb_volume& vol,
+			      pwr_tOid oid,			      
+			      pwr_tOid toid,
+			      pwr_tCid cid,
+			      pwr_eBix bix)
 {
-  if (!v) {
-    m_os << "%WBDUMP-E-Error Not a valid volume" << endl;
+  ldh_sParDef *bd;
+  int rows;
+  int size;
+  char bname[10];
+  pwr_tStatus sts;
+  char *body, *tbody;
+  char timestr[40] = " ";
+  char* svalp;
+  bool print_all = false;
+
+  switch ( bix) {
+  case pwr_eBix_rt:
+    if ( cdh_CidToVid(cid) == 1)
+      strcpy( bname, "SysBody");
+    else 
+      strcpy( bname, "RtBody");
+    break; 
+  case pwr_eBix_dev:
+    strcpy( bname, "DevBody");
+    break; 
+  default: ;
+  }  
+
+  if ( m_timeFlag) {
+    // Get body time
+    pwr_tTime btime;
+    wb_object o = vol.object(oid);
+    switch ( bix) {
+    case pwr_eBix_rt:
+      btime = o.rbTime();
+
+      // Bugcheck in 4.2 btime can be corrupt
+      if ( btime.tv_nsec < 0 || btime.tv_nsec >= 1000000000)
+	break;
+
+      strcpy( timestr, " ");
+      time_AtoAscii( &btime, time_eFormat_DateAndTime, &timestr[1], sizeof(timestr)-1);
+      break;
+    case pwr_eBix_dev:
+      btime = o.dbTime();
+      strcpy( timestr, " ");
+      time_AtoAscii( &btime, time_eFormat_DateAndTime, &timestr[1], sizeof(timestr)-1);
+      break;
+    default: ;
+    }
+  }
+
+
+
+  sts = ldh_GetObjectBody( (ldh_tSession)&vol, oid, bname, (void **)&body, &size);
+  if ( sts == LDH__NOSUCHOBJ) return;
+  if ( EVEN(sts)) throw wb_error(sts);
+
+  sts = getBody( vol, cid, bname, size, &bd, &rows, &tbody);
+  if ( sts == LDH__NOSUCHBODY) return;
+  else if ( EVEN(sts)) throw wb_error(sts);
+
+  indent(1) << "Body " << bname << timestr << endl;
+
+  for ( int i = 0; i < rows; i++) {
+    if ( bd[i].ParClass == pwr_eClass_Param && strcmp( bd[i].ParName, "Size") == 0 &&
+	 bd[i].Par->Param.Info.Flags & PWR_MASK_POINTER &&
+	 !(bd[i].Par->Param.Info.Flags & PWR_MASK_PRIVATE)) {
+      // Print Size for Pointers that is not private
+    }
+    else if ( bd[i].Par->Param.Info.Flags & PWR_MASK_POINTER ||
+	      bd[i].Par->Param.Info.Flags & PWR_MASK_NOWBL)
+      continue;
+    switch ( bd[i].ParClass) {
+    case pwr_eClass_Input:
+    case pwr_eClass_Intern:
+    case pwr_eClass_Output:
+    case pwr_eClass_Param:
+      if ( cdh_tidIsCid( bd[i].Par->Param.TypeRef)) {
+	if ( bd[i].Par->Param.Info.Flags & PWR_MASK_ARRAY) {
+	  for ( unsigned int j = 0; j < bd[i].Par->Param.Info.Elements; j++) {
+	    pwr_tOName aname;
+	    sprintf( aname, "%s[%d]", bd[i].ParName, j);
+	    printClass( vol, &bd[i],
+			&body[bd[i].Par->Param.Info.Offset] + bd[i].Par->Param.Info.Size/bd[i].Par->Param.Info.Elements * j, 
+			&tbody[bd[i].Par->Param.Info.Offset] + bd[i].Par->Param.Info.Size/bd[i].Par->Param.Info.Elements * j, 
+			aname);
+	  }
+	}
+	else
+	  printClass( vol, &bd[i], &body[bd[i].Par->Param.Info.Offset], &tbody[bd[i].Par->Param.Info.Offset],
+		      bd[i].ParName);
+	break;
+      }
+      // No break if not class
+    case pwr_eClass_ObjXRef:
+      if ( bd[i].Par->Param.Info.Flags & PWR_MASK_ARRAY) {
+	for ( unsigned int j = 0; j < bd[i].Par->Param.Info.Elements; j++) {
+	  if ( print_all || bd[i].Par->Param.Info.Flags & PWR_MASK_ALWAYSWBL ||
+	       attrCmp( &body[bd[i].Par->Param.Info.Offset + bd[i].Par->Param.Info.Size/bd[i].Par->Param.Info.Elements * j], 
+			&tbody[bd[i].Par->Param.Info.Offset + bd[i].Par->Param.Info.Size/bd[i].Par->Param.Info.Elements * j],
+			bd[i].Par->Param.Info.Size/bd[i].Par->Param.Info.Elements, bd[i].Par->Param.Info.Type) != 0) {
+	    printValue( vol, bd[i].Par->Param.Info.Type, bd[i].Par->Param.Info.Flags,
+			&body[bd[i].Par->Param.Info.Offset] + bd[i].Par->Param.Info.Size/bd[i].Par->Param.Info.Elements * j, 
+			bd[i].Par->Param.Info.Size/bd[i].Par->Param.Info.Elements,
+			&svalp);
+	    indent() << "Attr " << bd[i].ParName << "[" << j << "] = " << svalp << endl;
+	  }
+	}
+      }
+      else {
+	if ( print_all || bd[i].Par->Param.Info.Flags & PWR_MASK_ALWAYSWBL ||
+	     attrCmp( &body[bd[i].Par->Param.Info.Offset], &tbody[bd[i].Par->Param.Info.Offset], 
+		      bd[i].Par->Param.Info.Size, bd[i].Par->Param.Info.Type) != 0) {
+	  if (bd[i].Par->Param.Info.Type == pwr_eType_Text) {
+	    printText(vol, bd[i].ParName, &body[bd[i].Par->Param.Info.Offset], bd[i].Par->Param.Info.Size);
+	    break;
+	  }
+	  printValue( vol, bd[i].Par->Param.Info.Type, bd[i].Par->Param.Info.Flags,
+		      &body[bd[i].Par->Param.Info.Offset], 
+		      bd[i].Par->Param.Info.Size,
+		      &svalp); 
+	  indent() << "Attr " << bd[i].ParName << " = " << svalp << endl;
+	}
+      }
+      break;
+    case pwr_eClass_Buffer:
+      printBuffer( vol, &bd[i], &body[bd[i].Par->Param.Info.Offset]);
+      break;
+    default: ;
+    }
+  }
+  indent(-1) << "EndBody" << endl;
+
+  free( body);
+}
+
+void wb_print_wbl::printBuffer( wb_volume& vol,
+				ldh_sParDef *par_bd,
+				char *body)
+{
+  pwr_tStatus sts;
+  int rows;
+  char *tbody;
+  ldh_sParDef *bd;
+  char* svalp;
+  bool print_all = false;
+
+  if ( m_isTemplateObject)
+    return;
+
+  sts = getBody( vol, par_bd->Par->Buffer.Class, "SysBody", 0, &bd, &rows, &tbody);
+  if ( EVEN(sts)) {
+    m_os << "! %WBDUMP-E-Error Unknown sub class: " << par_bd->Par->Buffer.Class << endl;
+    m_errCnt++;
+    return;
+  }
+#if 0
+  int size;
+  pwr_tOid toid;
+
+  sts = ldh_GetObjectBodyDef( (ldh_tSession)&vol, par_bd->Par->Buffer.Class, "SysBody", 1, &bd, &rows);
+  if ( EVEN(sts)) {
+    m_os << "! %WBDUMP-E-Error Unknown sub class: " << par_bd->Par->Buffer.Class << endl;
     m_errCnt++;
     return;
   }
 
-  wb_object o = v.object();
-  const char* cname = v.cdef(v.cid()).name();
-    
-    
-  indent(1) << "Volume " << v.name() << " " <<  cname << " "
-            << cdh_VolumeIdToString(NULL, v.vid(), 0, 0) << " " << endl;
+  // Get template body
+  toid.vid = cdh_CidToVid( par_bd->ParClass);
+  toid.oix = cdh_cixToOix( cdh_cidToCix(par_bd->Par->Buffer.Class), pwr_eBix_template, 0);
 
-
-  // Print volume body
-  pwr_tOid oid;
-  oid.vid = v.vid();
-  oid.oix= 0;
-  wb_object vo = v.object( oid);
-  wb_cdef cdef = v.cdef(vo);
-
-  wb_object co = v.object(cdh_ClassIdToObjid(v.cid()));
-  wb_name t("Template");
-  
-  wb_object templ = co.child(t);
-  if (!templ) {
+  sts = ldh_GetObjectBody( (ldh_tSession)&vol, toid, "SysBody", (void **)&tbody, &size);
+  if (EVEN(sts)) {
+    m_os << "! %WBDUMP-E-Error Template not found for class " << par_bd->ParClass << endl;
     m_errCnt++;
-    m_os << "Template not found for class " << cdef.name() << endl;
     return;
   }
-  printBody(v, vo, templ, cdef, pwr_eBix_sys);
+#endif
 
-  // Print top objects and their children 
-  if (recursive) {
-    for (; o; o = o.after())
-      printObject(v, o, recursive);
+  for ( unsigned int k = 0; k < par_bd->Par->Param.Info.Elements; k++) {
+    if ( par_bd->Par->Param.Info.Flags & PWR_MASK_ARRAY)
+      indent(1) << "Buffer " << par_bd->ParName << "[" << k << "]" << endl;
+    else
+      indent(1) << "Buffer " << par_bd->ParName << endl;
+
+    for ( int i = 0; i < rows; i++) {
+      switch ( bd[i].ParClass) {
+      case pwr_eClass_Input:
+      case pwr_eClass_Intern:
+      case pwr_eClass_Output:
+      case pwr_eClass_Param:
+      case pwr_eClass_AttrXRef:
+      case pwr_eClass_ObjXRef:
+	if ( bd[i].Par->Param.Info.Flags & PWR_MASK_ARRAY) {
+	  for ( unsigned int j = 0; j < bd[i].Par->Param.Info.Elements; j++) {
+	    if ( print_all || bd[i].Par->Param.Info.Flags & PWR_MASK_ALWAYSWBL ||
+		 attrCmp( &body[bd[i].Par->Param.Info.Offset + bd[i].Par->Param.Info.Size/bd[i].Par->Param.Info.Elements * j], 
+			  &tbody[bd[i].Par->Param.Info.Offset],
+			  bd[i].Par->Param.Info.Size/bd[i].Par->Param.Info.Elements, bd[i].Par->Param.Info.Type) != 0) {
+	      printValue( vol, bd[i].Par->Param.Info.Type, bd[i].Par->Param.Info.Flags,
+			  &body[bd[i].Par->Param.Info.Offset] + bd[i].Par->Param.Info.Size/bd[i].Par->Param.Info.Elements * j, 
+			  bd[i].Par->Param.Info.Size/bd[i].Par->Param.Info.Elements,
+			  &svalp);
+	      indent() << "Attr " << bd[i].ParName << "[" << j << "] = " << svalp << endl;
+	    }
+	  }
+	}
+	else {
+	  if ( print_all || bd[i].Par->Param.Info.Flags & PWR_MASK_ALWAYSWBL ||
+	       attrCmp( &body[bd[i].Par->Param.Info.Offset], &tbody[bd[i].Par->Param.Info.Offset], 
+			bd[i].Par->Param.Info.Size, bd[i].Par->Param.Info.Type) != 0) {
+	    printValue( vol, bd[i].Par->Param.Info.Type, bd[i].Par->Param.Info.Flags,
+			&body[bd[i].Par->Param.Info.Offset], 
+			bd[i].Par->Param.Info.Size,
+			&svalp); 
+	    indent() << "Attr " << bd[i].ParName << " = " << svalp << endl;
+	  }
+	}
+	break;
+      case pwr_eClass_Buffer:
+	printBuffer( vol, &bd[i], &body[bd[i].Par->Param.Info.Offset]);
+	break;
+      default:
+	m_os << "! %WBDUMP-E-Error Undefined parameter class in buffer" << par_bd->ParName << endl;
+	m_errCnt++;
+      }
+    }
+    indent(-1) << "EndBuffer" << endl;
+
+    body += par_bd->Par->Param.Info.Size/par_bd->Par->Param.Info.Elements;
   }
-    
-  indent(-1) << "EndVolume" << endl;
+#if 0
+  free( tbody);
+  free( (char *)bd);
+#endif
 }
 
-
 //
-// indent
+// printClass
 //
-ostream& wb_print_wbl::indent(int levelIncr)
+void wb_print_wbl::printClass( wb_volume& vol,
+			       ldh_sParDef *par_bd,
+			       char *body,
+			       char *tbody,
+			       char *par_path
+			       )
 {
+  pwr_tStatus sts;
+  int rows;
+  ldh_sParDef *bd;
+  char* svalp;
+  bool print_all = false;
+  char *tb;
 
-  if (levelIncr < 0)
-    m_level += levelIncr;
+  sts = getBody( vol, par_bd->Par->Param.TypeRef, "RtBody", par_bd->Par->Param.Info.Size/par_bd->Par->Param.Info.Elements, 
+		  &bd, &rows, &tb);
+  if ( EVEN(sts)) {
+    m_os << "! %WBDUMP-E-Error Unknown sub class: " << par_bd->Par->Buffer.Class << endl;
+    m_errCnt++;
+    return;
+  }
 
-  assert(m_level >= 0);
-    
-  m_indBuf[m_level * m_levelInd] = '\0';
+  for ( int i = 0; i < rows; i++) {
+    switch ( bd[i].ParClass) {
+    case pwr_eClass_Input:
+    case pwr_eClass_Intern:
+    case pwr_eClass_Output:
+    case pwr_eClass_Param:
+      if ( cdh_tidIsCid( bd[i].Par->Param.TypeRef)) {
+	pwr_tOName aname;
+	if ( bd[i].Par->Param.Info.Flags & PWR_MASK_ARRAY) {
+	  for ( unsigned int j = 0; j < bd[i].Par->Param.Info.Elements; j++) {
+	    sprintf( aname, "%s.%s[%d]", par_path, bd[i].ParName, j);
+	    printClass( vol, &bd[i],
+			&body[bd[i].Par->Param.Info.Offset] + bd[i].Par->Param.Info.Size/bd[i].Par->Param.Info.Elements * j, 
+			&tbody[bd[i].Par->Param.Info.Offset] + bd[i].Par->Param.Info.Size/bd[i].Par->Param.Info.Elements * j, 
+			aname);
+	  }
+	}
+	else {
+	  sprintf( aname, "%s.%s", par_path, bd[i].ParName);
+	  printClass( vol, &bd[i], &body[bd[i].Par->Param.Info.Offset], &tbody[bd[i].Par->Param.Info.Offset],
+		      aname);
+	}
+	break;
+      }
+      // No break if not class
 
-  m_os << m_indBuf;
-
-  m_indBuf[m_level * m_levelInd] = ' ';
-
-  if (levelIncr > 0) 
-    m_level += levelIncr;
-    
-  return m_os;
+    case pwr_eClass_ObjXRef:
+      if ( bd[i].Par->Param.Info.Flags & PWR_MASK_ARRAY) {
+	for ( unsigned int j = 0; j < bd[i].Par->Param.Info.Elements; j++) {
+	  if ( print_all || bd[i].Par->Param.Info.Flags & PWR_MASK_ALWAYSWBL ||
+	       attrCmp( &body[bd[i].Par->Param.Info.Offset + bd[i].Par->Param.Info.Size/bd[i].Par->Param.Info.Elements * j], 
+			&tbody[bd[i].Par->Param.Info.Offset + bd[i].Par->Param.Info.Size/bd[i].Par->Param.Info.Elements * j],
+			bd[i].Par->Param.Info.Size/bd[i].Par->Param.Info.Elements, bd[i].Par->Param.Info.Type) != 0) {
+	    printValue( vol, bd[i].Par->Param.Info.Type, bd[i].Par->Param.Info.Flags,
+			&body[bd[i].Par->Param.Info.Offset] + bd[i].Par->Param.Info.Size/bd[i].Par->Param.Info.Elements * j, 
+			bd[i].Par->Param.Info.Size/bd[i].Par->Param.Info.Elements,
+			&svalp);
+	    indent() << "Attr " << par_path << "." << bd[i].ParName << "[" << j << "] = " << svalp << endl;
+	  }
+	}
+      }
+      else {
+	if ( print_all || bd[i].Par->Param.Info.Flags & PWR_MASK_ALWAYSWBL ||
+	     attrCmp( &body[bd[i].Par->Param.Info.Offset], &tbody[bd[i].Par->Param.Info.Offset], 
+		     bd[i].Par->Param.Info.Size, bd[i].Par->Param.Info.Type) != 0) {
+	  if (bd[i].Par->Param.Info.Type == pwr_eType_Text) {
+	    pwr_tOName aname;
+	    sprintf( aname, "%s.%s", par_path, bd[i].ParName);
+	    printText(vol, aname, &body[bd[i].Par->Param.Info.Offset], bd[i].Par->Param.Info.Size);
+	    break;
+	  }
+	  printValue( vol, bd[i].Par->Param.Info.Type, bd[i].Par->Param.Info.Flags,
+		      &body[bd[i].Par->Param.Info.Offset], 
+		      bd[i].Par->Param.Info.Size,
+		      &svalp); 
+	  indent() << "Attr " << par_path << "." << bd[i].ParName << " = " << svalp << endl;
+	}
+      }
+      break;
+    default:
+      m_os << "! %WBDUMP-E-Error Undefined parameter class in attribute " << par_bd->ParName << endl;
+      m_errCnt++;
+    }
+  }
 }
 
-bool wb_print_wbl::isFoCodeObject( wb_volume& v, wb_object& o)
+typedef struct {
+  pwr_tCid cid;
+  pwr_eBix bix;
+} pwbl_sBodyItemKey;
+
+typedef struct {
+  tree_sNode n;
+  pwbl_sBodyItemKey key;
+  ldh_sParDef *bd;
+  int rows;
+  char *tbody;
+} pwbl_sBodyItem;
+
+static int comp_cid( tree_sTable *tp, tree_sNode *x, tree_sNode *y)
 {
-  pwr_tInt32 compmethod;
+  pwbl_sBodyItemKey *xKey = (pwbl_sBodyItemKey *)((char *)x + tp->keyOffset);
+  pwbl_sBodyItemKey *yKey = (pwbl_sBodyItemKey *)((char *)y + tp->keyOffset);
 
-  // Check if object has GraphPlcNode body and compmethod 58
-  wb_cdef cd = v.cdef( o);
-  if ( !cd)
-    return false;
+  if ( xKey->cid == yKey->cid) {
+    if ( xKey->bix == yKey->bix)
+      return 0;
+    if ( xKey->bix < yKey->bix)
+      return -1;
+    else
+      return 1;
+  }
+  if ( xKey->cid < yKey->cid)
+    return -1;
+  else
+    return 1;
+}
 
-  wb_object go = cd.classBody( "GraphPlcNode");
-  if ( !go) 
-    return false;
+pwr_tStatus wb_print_wbl::getBody( wb_volume& vol, pwr_tCid cid, const char *bname, int tsize,
+				   ldh_sParDef **bdef, int *rows, char **tbody)
+{
+  pwr_tStatus sts;
+  ldh_sParDef *bd;
+  char *tb;
+  int size;
+  pwbl_sBodyItemKey key;
+  pwr_eBix bix;
+  pwr_tOid toid;
 
-  wb_attribute a = v.attribute( go, "compmethod");
-  if ( !a) 
-    return false;
+  if ( !m_body_cache)
+    m_body_cache = tree_CreateTable( &sts, sizeof(pwbl_sBodyItemKey),
+				    offsetof(pwbl_sBodyItem, key),
+				    sizeof(pwbl_sBodyItem), 100, comp_cid);
 
-  a.value( &compmethod);
+  if ( strcmp( bname, "DevBody") == 0)
+    bix = pwr_eBix_dev;
+  else
+    bix = pwr_eBix_rt;
+	 
+  key.cid = cid;
+  key.bix = bix;
+  pwbl_sBodyItem *item = (pwbl_sBodyItem *) tree_Find( &sts, m_body_cache, &key);
+  if ( ODD(sts)) {
+    *bdef = item->bd;
+    *tbody = item->tbody;
+    *rows =  item->rows;
+    // printf( " found:  %10d %d\n", key.cid, key.bix);
+  }
+  else {
+    sts = ldh_GetTrueObjectBodyDef( (ldh_tSession)&vol, cid, (char *)bname, 1, &bd, rows);
+    if ( EVEN(sts)) return sts;
+    
+    if ( m_isTemplateObject)
+      tb = (char *)calloc( 1, tsize);
+    else {
+	  
+      toid.vid = cdh_CidToVid( cid);
+      toid.oix = cdh_cixToOix( cdh_cidToCix(cid), pwr_eBix_template, 0);
+      
+      sts = ldh_GetObjectBody( (ldh_tSession)&vol,toid, bname, (void **) &tb, &size);
+      if ( EVEN(sts)) {
+	// Template attribute not found, should not happen
+	*tbody = (char *)calloc( 1, tsize);
+	
+	m_os << "! %WBDUMP-E-Error Template not found for body " << bname << endl;
+	m_errCnt++;
+      }
+    }
+      
+    item = (pwbl_sBodyItem *) tree_Insert( &sts, m_body_cache, &key);
+    item->bd = bd;
+    item->rows = *rows;
+    item->tbody = tb;      
+    
+    *bdef = bd;
+    *tbody = tb;
+    // printf( "*insert: %10d %d\n", key.cid, key.bix);
 
-  if ( compmethod == 58)
-    return true;
-  return false;
+  }
+  return LDH__SUCCESS;
+}
+
+void wb_print_wbl::bodyCacheFree()
+{
+  pwr_tStatus sts;
+
+  if ( !m_body_cache)
+    return;
+
+  for ( pwbl_sBodyItem *item = (pwbl_sBodyItem *) tree_Minimum( &sts, m_body_cache);
+        item;
+	item = (pwbl_sBodyItem *) tree_Successor( &sts, m_body_cache, item)) {
+    free( item->bd);
+    free( item->tbody);
+  }    
+
+  tree_DeleteTable( &sts, m_body_cache);
+  m_body_cache = 0;
+}
+
+int wb_print_wbl::attrCmp( char *a1, char *a2, int size, pwr_eType type)
+{
+  switch ( type) {
+  case pwr_eType_String:
+  case pwr_eType_Text:
+    return strcmp( a1, a2);
+  default:
+    return memcmp( a1, a2, size);
+  }
 }

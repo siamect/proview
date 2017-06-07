@@ -82,6 +82,7 @@
 #include "wb_session.h"
 #include "wb_object.h"
 #include "wb_vrepdb.h"
+#include "wb_revision.h"
 
 
 #define LFU_MAX_NODE_VOLUMES  	100
@@ -2991,6 +2992,25 @@ pwr_tStatus lfu_SaveDirectoryVolume(
   pwr_tObjName oname;
   pwr_tOName fullname;
   pwr_tOid poid;
+  pwr_tOid buildconfig_oid;
+
+  // Build config object, check version manager
+  sts = ldh_GetClassList( ldhses, pwr_cClass_BuildConfig, &buildconfig_oid);
+  if ( ODD(sts)) {
+    pwr_tEnum version_manager;
+
+    wb_attribute a = sp->attribute( buildconfig_oid, "DevBody", "VersionManager");
+    if ( !a) return a.sts();
+
+    a.value( &version_manager);
+    if ( !a) return sts;
+
+    wb_revision rev( 0, 0);
+    if ( rev.manager_enum() != version_manager) {
+      rev.set_manager_enum( (pwr_eVersionManagerEnum)version_manager);
+      rev.write_file();
+    }
+  }
 
   for ( sts = ldh_GetClassList( ldhses, pwr_cClass_BuildDirectory, &builddir_oid);
 	ODD(sts);
@@ -3702,6 +3722,151 @@ pwr_tStatus lfu_GetVolumeCnf( char *name, pwr_tVid *vid, pwr_tCid *cid, ldh_eVol
     break;
   }
   fpm.close();
+
+  if ( found)
+    return LFU__SUCCESS;
+  return 0;
+}
+
+pwr_tStatus lfu_GetVolumeCnfAll( vector<lfu_volume_info>& vect)
+{
+  pwr_tStatus sts;
+  pwr_tFileName fname;
+  char line[200];
+  char vol_array[7][80];
+  int found = 0;
+
+  strcpy( fname, pwr_cNameVolumeList);
+  dcli_translate_filename( fname, fname);
+      
+  ifstream fpm( fname, ios::in);
+  if ( !fpm)
+    return 0;
+  
+  while ( fpm.getline( line, sizeof(line))) {
+    int nr;
+    lfu_volume_info vol;
+
+    if ( line[0] == '#')
+      continue;
+      
+    nr = dcli_parse( line, " ", "", (char *)vol_array,
+		     sizeof(vol_array)/sizeof(vol_array[0]),
+		     sizeof(vol_array[0]), 0);
+      
+    strncpy( vol.name, vol_array[0], sizeof(vol.name));
+
+    found = 1;
+
+    sts =  cdh_StringToVolumeId( vol_array[1], &vol.vid);
+    if ( EVEN(sts)) return sts;
+
+    if ( cdh_NoCaseStrcmp( vol_array[2], "RootVolume") == 0)
+      vol.cid = pwr_eClass_RootVolume;
+    else if ( cdh_NoCaseStrcmp( vol_array[2], "SubVolume") == 0)
+      vol.cid = pwr_eClass_SubVolume;
+    else if ( cdh_NoCaseStrcmp( vol_array[2], "SharedVolume") == 0)
+      vol.cid = pwr_eClass_SharedVolume;
+    else if ( cdh_NoCaseStrcmp( vol_array[2], "ClassVolume") == 0)
+      vol.cid = pwr_eClass_ClassVolume;
+    else if ( cdh_NoCaseStrcmp( vol_array[2], "DetachedClassVolume") == 0)
+      vol.cid = pwr_eClass_DetachedClassVolume;
+    
+    switch ( vol.cid) {
+    case pwr_eClass_RootVolume:
+    case pwr_eClass_SubVolume:
+    case pwr_eClass_SharedVolume:
+      vol.volrep = ldh_eVolRep_Db;
+      if ( nr > 4 && strcmp( vol_array[4], "1") == 0) {
+	vol.volrep = ldh_eVolRep_Dbms;
+	if ( nr > 5)
+	  strncpy( vol.server, vol_array[5], sizeof(vol.server));
+	else
+	  strcpy( vol.server, "");
+      }
+      break;
+    case pwr_eClass_ClassVolume:
+    case pwr_eClass_DetachedClassVolume:
+      vol.volrep = ldh_eVolRep_Wbl;
+      if ( nr > 4 && strcmp( vol_array[4], "1") == 0)
+	vol.volrep = ldh_eVolRep_Db;
+      else if ( nr > 4 && strcmp( vol_array[4], "2") == 0) {
+	vol.volrep = ldh_eVolRep_Dbms;
+	if ( nr > 5)
+	  strncpy( vol.server, vol_array[5], sizeof(vol.server));
+	else
+	  strcpy( vol.server, "");
+      }
+      break;
+    default: ;
+    }
+    vect.push_back(vol);
+
+  }
+  fpm.close();
+
+  if ( found)
+    return LFU__SUCCESS;
+  return 0;
+}
+
+pwr_tStatus lfu_GetBootList( vector<lfu_boot_info>& vect, int *nodes)
+{
+  pwr_tStatus sts;
+  pwr_tFileName fname;
+  char line[200];
+  char boot_array[7][80];
+  int found = 0;
+  int cnt = 0;
+
+  strcpy( fname, pwr_cNameBootList);
+  dcli_translate_filename( fname, fname);
+      
+  ifstream fpm( fname, ios::in);
+  if ( !fpm)
+    return 0;
+  
+  while ( fpm.getline( line, sizeof(line))) {
+    int nr;
+    lfu_boot_info boot;
+
+    if ( line[0] == '#')
+      continue;
+      
+    nr = dcli_parse( line, " ", "", (char *)boot_array,
+		     sizeof(boot_array)/sizeof(boot_array[0]),
+		     sizeof(boot_array[0]), 0);
+      
+    strncpy( boot.volume_name, boot_array[0], sizeof(boot.volume_name));
+    strncpy( boot.node_name, boot_array[3], sizeof(boot.node_name));
+    sts = sscanf( boot_array[4], "%d", &boot.bus);
+    if ( sts != 1) 
+      printf( "File syntax error %s\n", fname);
+    sts = sscanf( boot_array[5], "%d", &boot.opsys);
+    if ( sts != 1) 
+      printf( "File syntax error %s\n", fname);
+
+    found = 1;
+
+    sts =  cdh_StringToVolumeId( boot_array[1], &boot.vid);
+    if ( EVEN(sts)) return sts;
+
+    bool num_found = false;
+    for ( unsigned int j = 0; j < vect.size(); j++) {
+      if ( strcmp( vect[j].node_name, boot.node_name) == 0) {
+	boot.number = vect[j].number;
+	num_found = true;
+      }
+    }
+    if ( !num_found)
+      boot.number = cnt++;
+
+    vect.push_back(boot);
+
+  }
+  fpm.close();
+
+  *nodes = cnt;
 
   if ( found)
     return LFU__SUCCESS;

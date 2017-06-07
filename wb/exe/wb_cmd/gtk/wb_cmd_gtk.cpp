@@ -49,6 +49,7 @@
 #include "ge.h"
 #include "rt_load.h"
 #include "wb_foe_msg.h"
+#include "co_dcli.h"
 #include "co_dcli_input.h"
 #include "flow.h"
 #include "flow_ctx.h"
@@ -124,6 +125,16 @@ int main(int argc, char *argv[])
 	else
 	  cout << "Syntax error, volume is missing" << endl;
 	break;
+      case 'c':
+	// Load specified class volume
+	if ( argc >= i) {
+	  strcpy( Cmd::cmd_classvolume, argv[i+1]);
+	  i++;
+	  continue;
+	}
+	else
+	  cout << "Syntax error, volume is missing" << endl;
+	break;
       case 'q':
 	// Quiet
 	quiet = 1;
@@ -159,11 +170,25 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the \n\
 GNU General Public License for more details.\n\n";
 
   if ( str[0] != 0) {
+    int nr;
+    char cmd_array[10][200];
+
     dcli_remove_blank( str, str);
-    sts = cmd->wnav->command(str);
-    if ( ODD(sts))
-      return 0;
-    exit(sts);
+    nr = dcli_parse( str, ";", "", (char *)cmd_array,
+		     sizeof(cmd_array)/sizeof(cmd_array[0]),
+		     sizeof(cmd_array[0]), 1);
+    for ( int i = 0; i < nr; i++) {
+      dcli_remove_blank( cmd_array[i], cmd_array[i]);
+      printf( "-- Executing \"%s\"\n", cmd_array[i]);
+      sts = cmd->wnav->command(cmd_array[i]);
+      if ( ODD(sts)) {
+	sts = cmd->wnav->get_command_sts();
+	if ( EVEN(sts)) exit(sts);
+      }
+      else
+	exit(sts);
+    }
+    exit(0);
   }
   sts = dcli_input_init( &cmd->chn, &cmd->recall_buf);
   if ( EVEN(sts)) exit(sts);

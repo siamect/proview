@@ -639,7 +639,7 @@ WNav::WNav(
 	layout_objid(pwr_cNObjid), search_last(pwr_cNObjid), search_compiled(0),
 	search_type(wnav_eSearchType_No), selection_owner(0), last_selected(0),
 	prev_selected(0), displayed(0), scriptmode(0), dialog_width(0), dialog_height(0),
-	dialog_x(0), dialog_y(0), menu(0), admin_login(0), nodraw(0)
+	dialog_x(0), dialog_y(0), menu(0), admin_login(0), nodraw(0), rev(0)
 {
   strcpy( name, xn_name);
 

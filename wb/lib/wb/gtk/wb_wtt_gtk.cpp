@@ -43,12 +43,14 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
+#include "pwr_privilege.h"
 #include "co_cdh.h"
 #include "co_time.h"
 #include "co_dcli.h"
 #include "pwr_baseclasses.h"
 #include "wb_ldh.h"
 #include "cow_wow.h"
+#include "cow_login.h"
 #include "wb_utl_api.h"
 #include "wb_lfu.h"
 #include "pwr_names.h"
@@ -80,6 +82,7 @@
 #include "wb_pwrs.h"
 #include "wb_build.h"
 #include "wb_wcast_gtk.h"
+#include "wb_revision.h"
 #include "ge_gtk.h"
 
 
@@ -1132,6 +1135,12 @@ void WttGtk::activate_history( GtkWidget *w, gpointer data)
   logw->show( categories, vname);
 }
 
+void WttGtk::activate_revisions( GtkWidget *w, gpointer data)
+{
+  Wtt *wtt = (Wtt *)data;
+  wtt->activate_revisions();
+}
+
 void WttGtk::activate_find( GtkWidget *w, gpointer data)
 {
   Wtt *wtt = (Wtt *)data;
@@ -2082,7 +2091,17 @@ WttGtk::WttGtk(
   char		title_w1[40];
   char		title_w2[40];
   pwr_tFileName fname;
+  wb_rev_info   rev_info;
+  char		version[80];
 
+
+  wb_revision::info( &rev_info);
+  if ( !rev_info.in_master)
+    strcpy( version, rev_info.name);
+  else
+    strcpy( version, "");
+  
+  
   if ( wbctx && volid) {
     // Get the volume class and decide what type of navigator */
     sts = ldh_GetVolumeClass( wbctx, volid, &volclass);
@@ -2121,7 +2140,7 @@ WttGtk::WttGtk(
     switch( volclass) {
     case pwr_eClass_DirectoryVolume:
       wb_type = wb_eType_Directory;
-      sprintf( title, "PwR Directory,   %s", name);
+      sprintf( title, "PwR Directory,   %s  %s", name, version);
       strcpy( layout_w1, "ProjectNavigatorW1");
       strcpy( layout_w2, "ProjectNavigatorW2");
       strcpy( layout_palette, "ProjectNavigatorPalette");
@@ -2135,11 +2154,11 @@ WttGtk::WttGtk(
       if ( ldh_VolRepType( ldhses) == ldh_eVolRep_Mem ||
 	   ldh_VolRepType( ldhses) == ldh_eVolRep_Ced) {
 	wb_type = wb_eType_ClassEditor;
-	sprintf( title, "PwR ClassEditor %s,   %s", volname, name);
+	sprintf( title, "PwR ClassEditor %s,   %s  %s", volname, name, version);
       }
       else {
 	wb_type = wb_eType_Class;
-	sprintf( title, "PwR %s,   %s", volname, name);
+	sprintf( title, "PwR %s,   %s  %s", volname, name, version);
       }
       strcpy( layout_w1, "ClassNavigatorW1");
       strcpy( layout_w2, "ClassNavigatorW2");
@@ -2204,7 +2223,7 @@ WttGtk::WttGtk(
 	strcpy( layout_palette, "NavigatorPalette");
 	strcpy( title_w1, "Plant Configuration");
 	strcpy( title_w2, "Node Configuration");
-	sprintf( title, "PwR %s,   %s", volname, name);
+	sprintf( title, "PwR %s,   %s  %s", volname, name, version);
       }
       break;
     }
@@ -2215,7 +2234,7 @@ WttGtk::WttGtk(
       strcpy( layout_palette, "NavigatorPalette");
       strcpy( title_w1, "Plant Configuration");
       strcpy( title_w2, "Node Configuration");
-      sprintf( title, "PwR %s,   %s", volname, name);
+      sprintf( title, "PwR %s,   %s  %s", volname, name, version);
     }
   }
   else {
@@ -2306,6 +2325,9 @@ WttGtk::WttGtk(
   GtkWidget *file_history = gtk_menu_item_new_with_mnemonic( "_History");
   g_signal_connect(file_history, "activate", G_CALLBACK(WttGtk::activate_history), this);
 
+  GtkWidget *file_revisions = gtk_menu_item_new_with_mnemonic( "R_evisions");
+  g_signal_connect(file_revisions, "activate", G_CALLBACK(WttGtk::activate_revisions), this);
+
   GtkMenu *file_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_open_volume);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_open);
@@ -2314,6 +2336,7 @@ WttGtk::WttGtk(
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), menu_save_w);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), menu_revert_w);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_history);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_revisions);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_close);
 
   GtkWidget *file = gtk_menu_item_new_with_mnemonic("_File");
@@ -3070,6 +3093,11 @@ WttGtk::WttGtk(
 
   menu_setup();
   update_title();
+
+  if ( !rev_info.in_end_of_branch) {
+    wnav->wow->DisplayError( "Revision", "Revision is not at end o branch.\nNo changes can be made.");
+    CoLogin::reduce_privilege( pwr_mPrv_DevConfig | pwr_mPrv_DevPlc | pwr_mPrv_DevClass);
+  }
 
   *status = 1;
 }
