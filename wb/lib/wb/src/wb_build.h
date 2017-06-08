@@ -64,6 +64,7 @@ class wb_build : public wb_status
     m_session(ses), m_wnav(wnav), m_hierarchy(pwr_cNOid) {};
 
   void classlist( pwr_tCid cid);
+  void all( int no_export = 0, int no_classvolumes = 0, int no_flowfiles = 0);
   void node( char *nodename, void *volumelist, int volumecnt);
   void volume();
   void rootvolume( pwr_tVid vid);

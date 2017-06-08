@@ -3898,14 +3898,23 @@ public class Dyn {
 
 	    if ( (dyn.total_dyn_type1 & Dyn.mDynType1_Tone) != 0) {
 		if ( set_color) {
-		    if ( color < Glow.eDrawTone__)
-			object.setColorTone( color);
+		    if ( color >= Glow.eDrawTone__) {
+			if ( border == 0)
+			    object.setFillColor( color);
+			else
+			    object.setBorderColor( color);
+		    }
 		    else
-			object.setFillColor( color);
+			object.setColorTone( color);
 		    dyn.ignoreColor = true;
 		}
 		else {
-		    object.resetFillColor();
+		    if ( color >= Glow.eDrawTone__) {
+			if ( border == 0)
+			    object.resetFillColor();
+			else
+			    object.resetBorderColor();
+		    }
 		    object.resetColorTone();
 		    dyn.resetColor = true;
 		}
@@ -3913,11 +3922,17 @@ public class Dyn {
 	    }
 	    else {
 		if ( set_color) {
-		    object.setFillColor( color);
+		    if ( border == 0)
+			object.setFillColor( color);
+		    else
+			object.setBorderColor( color);
 		    dyn.ignoreColor = true;
 		}
 		else {
-		    object.resetFillColor();
+		    if ( border == 0)
+			object.resetFillColor();
+		    else
+			object.resetBorderColor();
 		    dyn.resetColor = true;
 		}
 		dyn.repaintNow = true;

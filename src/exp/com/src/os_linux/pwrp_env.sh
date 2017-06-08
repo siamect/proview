@@ -1551,6 +1551,9 @@ pwrc_save_file_func()
       old_file=$new_file.$version
       old_file_ren=$new_file.$((version+1))
       if [ -e $old_file ]; then
+        if [ $version -eq 9 ] && [ -e $old_file_ren ] && [ -d $old_file_ren ]; then
+          rm -rf $old_file_ren
+        fi
         mv $old_file $old_file_ren
       fi
       let version=$version-1

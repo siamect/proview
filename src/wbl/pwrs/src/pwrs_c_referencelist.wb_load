@@ -62,7 +62,7 @@ SObject pwrs:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$ClassId"
 	  Attr Flags |= PWR_MASK_ARRAY
-	  Attr Elements = 5
+	  Attr Elements = 10
         EndBody
       EndObject
       !/**

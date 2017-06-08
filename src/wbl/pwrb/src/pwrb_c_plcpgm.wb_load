@@ -195,6 +195,12 @@ SObject pwrb:Class
 	Attr Filter = 1
       EndBody
     EndObject
+    Object ResetObject $ReferenceList
+      Body SysBody
+	Attr ObjectClass[0] = "pwrb:Class-Dv"
+	Attr Filter = 145
+      EndBody
+    EndObject
     Object NavigatorPosnn $Menu
       Object Pointed $Menu
 	Object OpenProgram $MenuButton

@@ -74,6 +74,7 @@ extern "C" {
 #include "wb_bckw_gtk.h"
 #include "wb_expw_gtk.h"
 #include "wb_watttext_gtk.h"
+#include "wb_wrev_gtk.h"
 
 #define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 #define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
@@ -292,6 +293,12 @@ wb_utl *WNavGtk::utl_new()
 {
   wb_utl_gtk *utl = new wb_utl_gtk( parent_wid);
   return utl;
+}
+
+WRev *WNavGtk::rev_new()
+{
+  WRev *rev = new WRevGtk( parent_wid, this, ldhses);
+  return rev;
 }
 
 void WNavGtk::logw_new( char *item, wlog_eCategory *categories, int show_item)

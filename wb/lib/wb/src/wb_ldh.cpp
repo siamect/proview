@@ -1967,7 +1967,7 @@ ldh_WbLoad( ldh_tSession session, char *loadfile, int ignore_oix)
       return e.sts();
     }
   }
-  else if ( strstr( loadfile, ".wb_load") || strstr( loadfile, ".wb_dmp")) {
+  else if ( strstr( loadfile, ".wb_load") || strstr( loadfile, ".wb_dmp") || strstr( loadfile, ".wb_rev")) {
     // load vrepwbl
     try {
       dcli_translate_filename( fname, loadfile);

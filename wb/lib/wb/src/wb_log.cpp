@@ -137,6 +137,15 @@ void wb_log::category_to_string( wlog_eCategory category, char *str)
   case wlog_eCategory_DirectoryBuild:
     strcpy( str, "DirectoryBuild");
     break;
+  case wlog_eCategory_NewRevision:
+    strcpy( str, "NewRevision");
+    break;
+  case wlog_eCategory_RevisionRestore:
+    strcpy( str, "RevisionRestore");
+    break;
+  case wlog_eCategory_BuildAll:
+    strcpy( str, "BuildAll");
+    break;
   default:
     strcpy( str, "");
   }
@@ -174,6 +183,12 @@ void wb_log::string_to_category( char *str, wlog_eCategory *category)
     *category = wlog_eCategory_VolumeClone;
   else if ( strcmp( str, "DirectoryBuild") == 0)
     *category = wlog_eCategory_DirectoryBuild;
+  else if ( strcmp( str, "NewRevision") == 0)
+    *category = wlog_eCategory_NewRevision;
+  else if ( strcmp( str, "RevisionRestore") == 0)
+    *category = wlog_eCategory_RevisionRestore;
+  else if ( strcmp( str, "BuildAll") == 0)
+    *category = wlog_eCategory_BuildAll;
   else
     *category = wlog_eCategory_;
 }
@@ -272,6 +287,8 @@ DirectoryBuild	Directory built. Directory displayed in item.\n\
 UpdateClasses	Classes updated.\n\
 CreatePackage	Distribution package created. Created package displayed in item.\n\
 CopyPackage	Package distributed to process or operator station. Package displayed in item.\n\
+NewRevision	A new reivison is created. Revision displayed in item\n\
+RevisionRestored A revision is restored. Revision displayed in item.\n\
 </XMP>\n\
   </body>\n\
 </html>\n");

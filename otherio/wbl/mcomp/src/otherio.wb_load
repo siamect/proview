@@ -1,6 +1,6 @@
 Volume OtherIO $ClassVolume 0.0.250.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X633"
+    Attr NextOix = "_X668"
     Attr NextCix = "_X47"
     Attr NextTix[0] = "_X18"
   EndBody
@@ -2000,6 +2000,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
       EndObject
+      Object ThreadObject $ReferenceList 634 02-MAY-2017 13:32:34.98
+        Body SysBody 02-MAY-2017 13:32:45.57
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
+      EndObject
       Object ConfiguratorPoson $Menu 21 15-NOV-2007 14:36:42.44
         Object Pointed $Menu 22 15-NOV-2007 14:36:42.44
           Object Connect $MenuButton 23 15-NOV-2007 14:36:42.44
@@ -2488,6 +2493,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
       EndObject
+      Object ThreadObject $ReferenceList 635 02-MAY-2017 13:33:14.39
+        Body SysBody 02-MAY-2017 13:33:14.39
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
+      EndObject
       Object PostCreate $DbCallBack 125 05-OCT-2010 15:36:59.75
         Body SysBody 05-OCT-2010 15:36:59.75
           Attr MethodName = "BaseIORack-PostCreate"
@@ -2723,6 +2733,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr MethodName = "Modbus_Module-IoCardWrite"
           EndBody
         EndObject
+      EndObject
+      Object ThreadObject $ReferenceList 636 02-MAY-2017 13:33:22.20
+        Body SysBody 02-MAY-2017 13:33:22.20
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
       EndObject
       Object PostCreate $DbCallBack 126 05-OCT-2010 15:37:20.63
         Body SysBody 05-OCT-2010 15:37:26.85
@@ -2961,6 +2976,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
       EndObject
+      Object ThreadObject $ReferenceList 637 02-MAY-2017 13:33:43.62
+        Body SysBody 02-MAY-2017 13:33:43.62
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
+      EndObject
       Object PostCreate $DbCallBack 267 17-OCT-2011 16:58:28.81
         Body SysBody 17-OCT-2011 16:58:28.81
           Attr MethodName = "BaseIOCard-PostCreate"
@@ -3066,6 +3086,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr MethodName = "Modbus_Master-IoAgentClose"
           EndBody
         EndObject
+      EndObject
+      Object ThreadObject $ReferenceList 638 02-MAY-2017 13:33:49.00
+        Body SysBody 02-MAY-2017 13:33:49.00
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
       EndObject
       Object PostCreate $DbCallBack 127 05-OCT-2010 15:37:42.26
         Body SysBody 05-OCT-2010 15:37:42.26
@@ -3292,6 +3317,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
       EndObject
+      Object ThreadObject $ReferenceList 639 02-MAY-2017 13:33:55.26
+        Body SysBody 02-MAY-2017 13:33:55.26
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
+      EndObject
       Object PostCreate $DbCallBack 128 05-OCT-2010 15:38:02.12
         Body SysBody 05-OCT-2010 15:38:02.12
           Attr MethodName = "BaseIORack-PostCreate"
@@ -3440,6 +3470,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr MethodName = "Modbus_TCP_ServerModule-IoCardWrite"
           EndBody
         EndObject
+      EndObject
+      Object ThreadObject $ReferenceList 640 02-MAY-2017 13:34:03.46
+        Body SysBody 02-MAY-2017 13:34:03.46
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
       EndObject
       Object PostCreate $DbCallBack 129 05-OCT-2010 15:38:06.84
         Body SysBody 05-OCT-2010 15:38:16.94
@@ -3633,6 +3668,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr MethodName = "Modbus_RTU_Master-IoAgentClose"
           EndBody
         EndObject
+      EndObject
+      Object ThreadObject $ReferenceList 641 02-MAY-2017 13:34:07.63
+        Body SysBody 02-MAY-2017 13:34:07.63
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
       EndObject
       Object PostCreate $DbCallBack 273 18-OCT-2011 11:07:05.53
         Body SysBody 18-OCT-2011 11:07:05.53
@@ -3856,6 +3896,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr MethodName = "Modbus_RTU_Slave-IoRackWrite"
           EndBody
         EndObject
+      EndObject
+      Object ThreadObject $ReferenceList 642 02-MAY-2017 13:34:13.42
+        Body SysBody 02-MAY-2017 13:34:13.42
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
       EndObject
       Object PostCreate $DbCallBack 279 18-OCT-2011 11:14:17.41
         Body SysBody 18-OCT-2011 11:14:17.41
@@ -4088,6 +4133,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr MethodName = "Modbus_RTU_Module-IoCardWrite"
           EndBody
         EndObject
+      EndObject
+      Object ThreadObject $ReferenceList 643 02-MAY-2017 13:34:20.70
+        Body SysBody 02-MAY-2017 13:34:20.70
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
       EndObject
       Object PostCreate $DbCallBack 284 18-OCT-2011 11:18:07.74
         Body SysBody 18-OCT-2011 11:18:07.74
@@ -4372,6 +4422,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
       EndObject
+      Object ThreadObject $ReferenceList 644 02-MAY-2017 13:34:24.92
+        Body SysBody 02-MAY-2017 13:34:24.92
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
+      EndObject
       Object PostCreate $DbCallBack 290 24-OCT-2011 08:03:46.50
         Body SysBody 24-OCT-2011 08:03:46.50
           Attr MethodName = "BaseIORack-PostCreate"
@@ -4523,6 +4578,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
       EndObject
+      Object ThreadObject $ReferenceList 645 02-MAY-2017 13:34:29.28
+        Body SysBody 02-MAY-2017 13:34:29.28
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
+      EndObject
       Object PostCreate $DbCallBack 295 24-OCT-2011 08:04:13.86
         Body SysBody 24-OCT-2011 08:04:13.86
           Attr MethodName = "BaseIOCard-PostCreate"
@@ -4618,6 +4678,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr MethodName = "GPIO-IoRackClose"
           EndBody
         EndObject
+      EndObject
+      Object ThreadObject $ReferenceList 646 02-MAY-2017 13:34:38.21
+        Body SysBody 02-MAY-2017 13:34:38.21
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
       EndObject
       Object PostCreate $DbCallBack 130 05-OCT-2010 15:38:41.84
         Body SysBody 05-OCT-2010 15:38:41.84
@@ -4716,6 +4781,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
       EndObject
+      Object ThreadObject $ReferenceList 647 02-MAY-2017 13:34:43.42
+        Body SysBody 02-MAY-2017 13:34:43.42
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
+      EndObject
       Object PostCreate $DbCallBack 131 05-OCT-2010 15:38:45.44
         Body SysBody 05-OCT-2010 15:38:49.68
           Attr MethodName = "BaseIOCard-PostCreate"
@@ -4768,6 +4838,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$Status"
           EndBody
         EndObject
+      EndObject
+      Object ThreadObject $ReferenceList 648 02-MAY-2017 13:34:50.47
+        Body SysBody 02-MAY-2017 13:34:50.47
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
       EndObject
       Object ConfiguratorPoson $Menu 112 06-JUN-2010 13:05:26.98
         Object Pointed $Menu 113 06-JUN-2010 13:05:26.98
@@ -4823,8 +4898,8 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndObject
         !/**
         ! Family code.
-        !
-        ! Note! The family code is usually presented with a hexadecimal value
+        ! 
+        ! NoteThe family code is usually presented with a hexadecimal value
         ! but should here be entered as a decimal value.
         !*/
         Object Family $Attribute 22 06-JUN-2010 13:56:28.16
@@ -4931,8 +5006,8 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndObject
         !/**
         ! Family code.
-        !
-        ! Note! The family code is usually presented with a hexadecimal value
+        ! 
+        ! NoteThe family code is usually presented with a hexadecimal value
         ! but should here be entered as a decimal value.
         !*/
         Object Family $Attribute 26 08-JUN-2011 14:01:02.86
@@ -5059,8 +5134,8 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndObject
         !/**
         ! Family code.
-        !
-        ! Note! The family code is usually presented with a hexadecimal value
+        ! 
+        ! NoteThe family code is usually presented with a hexadecimal value
         ! but should here be entered as a decimal value.
         !*/
         Object Family $Attribute 35 01-NOV-2011 13:31:33.55
@@ -5225,6 +5300,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
       EndObject
+      Object ThreadObject $ReferenceList 649 02-MAY-2017 13:35:09.66
+        Body SysBody 02-MAY-2017 13:35:09.66
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
+      EndObject
       Object ConfiguratorPoson $Menu 92 23-MAY-2010 11:38:08.72
         Object Pointed $Menu 93 23-MAY-2010 11:38:08.72
           Object Connect $MenuButton 94 23-MAY-2010 11:38:08.72
@@ -5336,6 +5416,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$Status"
           EndBody
         EndObject
+      EndObject
+      Object ThreadObject $ReferenceList 650 02-MAY-2017 13:35:15.66
+        Body SysBody 02-MAY-2017 13:35:15.66
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
       EndObject
       Object ConfiguratorPoson $Menu 98 23-MAY-2010 11:43:07.03
         Object Pointed $Menu 99 23-MAY-2010 11:43:07.03
@@ -5616,6 +5701,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
       EndObject
+      Object ThreadObject $ReferenceList 651 02-MAY-2017 13:35:25.29
+        Body SysBody 02-MAY-2017 13:35:25.29
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
+      EndObject
       Object ConfiguratorPoson $Menu 137 13-DEC-2010 21:36:40.01
         Object Pointed $Menu 138 13-DEC-2010 21:36:40.01
           Object Connect $MenuButton 139 13-DEC-2010 21:36:40.01
@@ -5884,6 +5974,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr MethodName = "Arduino_Uno-IoCardWrite"
           EndBody
         EndObject
+      EndObject
+      Object ThreadObject $ReferenceList 652 02-MAY-2017 13:35:33.64
+        Body SysBody 02-MAY-2017 13:35:33.64
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
       EndObject
       Object ConfiguratorPoson $Menu 222 13-MAY-2011 13:09:08.36
         Object Pointed $Menu 223 13-MAY-2011 13:09:08.36
@@ -6361,6 +6456,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
       EndObject
+      Object ThreadObject $ReferenceList 653 02-MAY-2017 13:35:55.59
+        Body SysBody 02-MAY-2017 13:35:55.59
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
+      EndObject
       Object ConfiguratorPoson $Menu 239 23-MAY-2011 11:01:37.07
         Object Pointed $Menu 240 23-MAY-2011 11:01:37.07
           Object Connect $MenuButton 241 23-MAY-2011 11:01:37.07
@@ -6602,6 +6702,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
       EndObject
+      Object ThreadObject $ReferenceList 654 02-MAY-2017 13:36:01.56
+        Body SysBody 02-MAY-2017 13:36:01.56
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
+      EndObject
       Object ConfiguratorPoson $Menu 172 23-FEB-2011 13:54:52.05
         Object Pointed $Menu 173 23-FEB-2011 13:54:52.05
           Object Connect $MenuButton 174 23-FEB-2011 13:54:52.05
@@ -6762,6 +6867,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
       EndObject
+      Object ThreadObject $ReferenceList 655 02-MAY-2017 13:36:14.06
+        Body SysBody 02-MAY-2017 13:36:09.18
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
+      EndObject
       Object ConfiguratorPoson $Menu 186 23-FEB-2011 14:01:08.18
         Object Pointed $Menu 187 23-FEB-2011 14:01:08.18
           Object Connect $MenuButton 188 23-FEB-2011 14:01:08.18
@@ -6910,6 +7020,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr MethodName = "Hilscher_cifX_Module-IoCardClose"
           EndBody
         EndObject
+      EndObject
+      Object ThreadObject $ReferenceList 656 02-MAY-2017 13:36:21.96
+        Body SysBody 02-MAY-2017 13:36:21.96
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
       EndObject
       Object ConfiguratorPoson $Menu 195 23-FEB-2011 14:02:24.06
         Object Pointed $Menu 196 23-FEB-2011 14:02:24.06
@@ -7110,6 +7225,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr MethodName = "USB_Joystick-IoCardRead"
           EndBody
         EndObject
+      EndObject
+      Object ThreadObject $ReferenceList 657 02-MAY-2017 13:36:27.12
+        Body SysBody 02-MAY-2017 13:36:27.12
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
       EndObject
       Object ConfiguratorPoson $Menu 219 13-MAY-2011 13:08:50.00
         Object Pointed $Menu 220 13-MAY-2011 13:08:50.00
@@ -7693,6 +7813,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
       EndObject
+      Object ThreadObject $ReferenceList 658 02-MAY-2017 13:36:36.55
+        Body SysBody 02-MAY-2017 13:36:36.55
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
+      EndObject
       Object ConfiguratorPoson $Menu 229 18-MAY-2011 08:11:44.90
         Object Pointed $Menu 230 18-MAY-2011 08:11:44.90
           Object Connect $MenuButton 231 18-MAY-2011 08:11:44.90
@@ -7994,6 +8119,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr MethodName = "SPI_Slave-IoCardWrite"
           EndBody
         EndObject
+      EndObject
+      Object ThreadObject $ReferenceList 659 02-MAY-2017 13:36:44.88
+        Body SysBody 02-MAY-2017 13:36:44.88
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
       EndObject
       Object ConfiguratorPoson $Menu 253 10-JUL-2011 07:17:08.04
         Object Pointed $Menu 254 10-JUL-2011 07:17:08.04
@@ -8362,6 +8492,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
       EndObject
+      Object ThreadObject $ReferenceList 660 02-MAY-2017 13:36:53.76
+        Body SysBody 02-MAY-2017 13:36:53.76
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
+      EndObject
       Object ConfiguratorPoson $Menu 352 27-FEB-2012 11:17:37.94
         Object Pointed $Menu 353 27-FEB-2012 11:17:37.94
           Object Connect $MenuButton 354 27-FEB-2012 11:17:37.94
@@ -8582,6 +8717,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
       EndObject
+      Object ThreadObject $ReferenceList 661 02-MAY-2017 13:36:57.76
+        Body SysBody 02-MAY-2017 13:36:57.76
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
+      EndObject
       Object ConfiguratorPoson $Menu 343 27-FEB-2012 11:15:14.21
         Object Pointed $Menu 344 27-FEB-2012 11:15:14.21
           Object Connect $MenuButton 345 27-FEB-2012 11:15:14.21
@@ -8737,6 +8877,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr MethodName = "Epl_Module-IoCardWrite"
           EndBody
         EndObject
+      EndObject
+      Object ThreadObject $ReferenceList 662 02-MAY-2017 13:37:02.91
+        Body SysBody 02-MAY-2017 13:37:02.91
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
       EndObject
       Object Template Epl_Module 2157674496 01-JAN-1970 01:00:00.00
         Body RtBody 04-JUL-2013 08:54:19.42
@@ -8930,6 +9075,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+      EndObject
+      Object ThreadObject $ReferenceList 663 02-MAY-2017 13:37:10.80
+        Body SysBody 02-MAY-2017 13:37:10.80
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
       EndObject
       Object Template Epl_CN 2157936640 01-JAN-1970 01:00:00.00
         Body RtBody 25-JUL-2013 15:23:16.85
@@ -9231,6 +9381,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
+      EndObject
+      Object ThreadObject $ReferenceList 664 02-MAY-2017 13:37:16.68
+        Body SysBody 02-MAY-2017 13:37:16.68
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
       EndObject
       Object ConfiguratorPosnn $Menu 525 05-JUL-2013 08:38:07.59
         Object Pointed $Menu 526 05-JUL-2013 08:38:07.59
@@ -9617,6 +9772,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
       EndObject
+      Object ThreadObject $ReferenceList 665 02-MAY-2017 13:37:24.13
+        Body SysBody 02-MAY-2017 13:37:24.13
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
+      EndObject
       Object ConfiguratorPosnn $Menu 586 17-JUL-2013 16:46:27.38
         Object Pointed $Menu 587 17-JUL-2013 16:46:27.38
           Object GenerateXddFile $MenuButton 588 17-JUL-2013 16:46:44.93
@@ -9866,6 +10026,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
       EndObject
+      Object ThreadObject $ReferenceList 666 02-MAY-2017 13:37:31.23
+        Body SysBody 02-MAY-2017 13:37:31.23
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
+      EndObject
       Object Template Epl_CnServerModule 2159247360 01-JAN-1970 01:00:00.00
         Body RtBody 08-JUL-2013 10:37:52.25
           Attr Process = 128
@@ -10040,6 +10205,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
         EndObject
+      EndObject
+      Object ThreadObject $ReferenceList 667 02-MAY-2017 13:37:49.08
+        Body SysBody 02-MAY-2017 13:37:49.08
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
       EndObject
       Object ConfiguratorPoson $Menu 617 22-FEB-2014 16:16:47.72
         Object Pointed $Menu 618 22-FEB-2014 16:16:47.72
@@ -10397,6 +10567,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
         EndObject
+      EndObject
+      Object ThreadObject $ReferenceList 668 02-MAY-2017 13:37:58.16
+        Body SysBody 02-MAY-2017 13:37:58.16
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
       EndObject
       Object ConfiguratorPoson $Menu 621 28-FEB-2014 20:42:04.54
         Object Pointed $Menu 622 28-FEB-2014 20:42:04.54

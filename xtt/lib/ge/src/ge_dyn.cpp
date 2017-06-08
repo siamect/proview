@@ -2213,6 +2213,7 @@ int GeDigLowColor::connect( grow_tObject object, glow_sTraceData *trace_data)
   color = dyn->get_color1( object, color);
   if ( color < 0 || color >= glow_eDrawType__) {
     printf( "** Color out of range, %s\n", attribute);
+    p = 0;
     return 0;
   }
 
@@ -2498,6 +2499,7 @@ int GeDigColor::connect( grow_tObject object, glow_sTraceData *trace_data)
   color = dyn->get_color2( object, color);
   if ( color < 0 || color >= glow_eDrawType__) {
     printf( "** Color out of range, %s\n", attribute);
+    p = 0;
     return 0;
   }
 
@@ -3057,6 +3059,7 @@ int GeDigFlash::connect( grow_tObject object, glow_sTraceData *trace_data)
   color = dyn->get_color1( object, color);
   if ( color < 0 || color >= glow_eDrawType__) {
     printf( "** Color out of range, %s\n", attribute);
+    p = 0;
     return 0;
   }
 
@@ -3506,6 +3509,7 @@ int GeDigTextColor::connect( grow_tObject object, glow_sTraceData *trace_data)
   color = dyn->get_color1( object, color);
   if ( color < 0 || color >= glow_eDrawType__) {
     printf( "** Color out of range, %s\n", attribute);
+    p = 0;
     return 0;
   }
 
@@ -3658,6 +3662,7 @@ int GeDigBorder::connect( grow_tObject object, glow_sTraceData *trace_data)
   color = dyn->get_color1( object, color);
   if ( color < 0 || color >= glow_eDrawType__) {
     printf( "** Color out of range, %s\n", attribute);
+    p = 0;
     return 0;
   }
 
@@ -7254,6 +7259,7 @@ int GeDigBackgroundColor::connect( grow_tObject object, glow_sTraceData *trace_d
   color = dyn->get_color2( object, color);
   if ( color < 0 || color >= glow_eDrawType__) {
     printf( "** Color out of range, %s\n", attribute);
+    p = 0;
     return 0;
   }
 
@@ -10672,6 +10678,7 @@ int GeStatusColor::connect( grow_tObject object, glow_sTraceData *trace_data)
   nostatus_color = dyn->get_color1( object, nostatus_color);
   if ( nostatus_color < 0 || nostatus_color >= glow_eDrawType__) {
     printf( "** Color out of range, %s\n", attribute);
+    p = 0;
     return 0;
   }
 
@@ -12324,6 +12331,7 @@ int GeFillLevel::connect( grow_tObject object, glow_sTraceData *trace_data)
   color = dyn->get_color2( object, color);
   if ( color < 0 || color >= glow_eDrawType__) {
     printf( "** Color out of range, %s\n", attribute);
+    p = 0;
     return 0;
   }
 

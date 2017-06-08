@@ -69,6 +69,7 @@
 #include "wb_dir.h"
 #include "wb_trv.h"
 #include "wb_crrgen.h"
+#include "wb_revision.h"
 
 #include "flow.h"
 #include "flow_browctx.h"
@@ -98,6 +99,7 @@
 #include "wb_utl.h"
 #include "wb_bck.h"
 #include "wb_watttext.h"
+#include "wb_wrev.h"
 
 #define	WNAV_MENU_CREATE	0
 #define	WNAV_MENU_ADD		1
@@ -105,6 +107,7 @@
 static char wtt_version[] = pwrv_cPwrVersionStr;
 static WNav *current_wnav[20];
 static int wnav_cnt = 0;
+static pwr_tStatus command_sts = 1;
 
 static int wnav_wccm_get_ldhsession_cb( void *ctx, ldh_tWBContext *wbctx);
 static int wnav_wccm_get_wbctx_cb( void *ctx, ldh_tSesContext *ldhses);
@@ -178,6 +181,8 @@ static int	wnav_search_func(	void		*client_data,
 static int	wnav_save_func(		void		*client_data,
 					void		*client_flag);
 static int	wnav_revert_func(	void		*client_data,
+					void		*client_flag);
+static int	wnav_revision_func(	void		*client_data,
 					void		*client_flag);
 static int	wnav_display_func(	void		*client_data,
 					void		*client_flag);
@@ -309,7 +314,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 			"/NAME", "/IDENTITY", "/FILES", "/OUT", "/IGNORE",
 			"/DIRECTORY", "/DATABASE", "/SERVER", 
 			"/PLCPGM", "/HIERARCHY", "/FROM_PLCPGM", "/TEMPLATE", 
-			"/SIMULATION", "/RTONLY", "/DEPENDENCY", ""}
+			"/SIMULATION", "/RTONLY", "/DEPENDENCY", "/DESCRIPTION", ""}
 		},
 		{
 			"NEW",
@@ -425,6 +430,11 @@ dcli_tCmdTable	wnav_command_table[] = {
 			{ "/NOCONFIRM", "/CONFIRM", ""}
 		},
 		{
+			"REVISION",
+			&wnav_revision_func,
+			{ "dcli_arg1", "/NAME", ""}
+		},
+		{
 			"DISPLAY",
 			&wnav_display_func,
 			{ "dcli_arg1", "/NAME", "/CLASS", 
@@ -456,7 +466,8 @@ dcli_tCmdTable	wnav_command_table[] = {
 			"BUILD",
 			&wnav_build_func,
 			{ "dcli_arg1", "dcli_arg2", "/FORCE", "/DEBUG", "/CROSSREFERENCE", 
-			  "/MANUAL", "/NAME", "/WINDOW", "/NODE", ""}
+			  "/MANUAL", "/NAME", "/WINDOW", "/NODE", "/EXPORT", "/NOCLASSVOLUMES", "/FLOWFILES",
+			  ""}
 		},
 		{
 			"CHECK",
@@ -510,6 +521,25 @@ static int wnav_wge_command_cb( void *ctx, char *cmd)
 {
   WGe *wge = (WGe *)ctx;
   return ((WNav *)wge->parent_ctx)->command( cmd);
+}
+
+static int wnav_rev_command_cb( void *ctx, char *cmd)
+{
+  wb_revision *rev = (wb_revision *)ctx;
+  return ((WNav *)rev->parent_ctx())->command( cmd);
+}
+
+static int wnav_wrev_command_cb( void *ctx, char *cmd)
+{
+  WRev *rev = (WRev *)ctx;
+  return ((WNav *)rev->parent_ctx)->command( cmd);
+}
+
+static void wnav_wrev_close_cb( void *ctx)
+{
+  WNav *wnav = (WNav *)ctx;
+  delete wnav->rev;
+  wnav->rev = 0;
 }
 
 static int	wnav_help_func(		void		*client_data,
@@ -1367,6 +1397,17 @@ static int	wnav_set_func(	void		*client_data,
       (wnav->gbl_command_cb)( wnav->parent_ctx, "SET NOVERIFY");
     else
       wnav->gbl.verify = 0;
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "REFRESH", strlen( arg1_str)) == 0)
+  {
+    if ( wnav->window_type == wnav_eWindowType_No)
+      return WNAV__CMDMODE;
+
+    if ( EVEN( dcli_get_qualifier( "/LOCAL", 0, 0)))
+      // Global command to all windows
+      (wnav->gbl_command_cb)( wnav->parent_ctx, "SET REFRESH");
+    else
+      wnav->ldh_refresh( pwr_cNObjid);
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "SYMBOLFILE", strlen( arg1_str)) == 0)
   {
@@ -3870,6 +3911,18 @@ static int	wnav_open_func(	void		*client_data,
       return WNAV__SUCCESS;
     }
   }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "REVISIONS", strlen( arg1_str)) == 0)
+  {
+    // Command is "OPEN REVISIONS" 
+
+    if ( wnav->rev)
+      wnav->rev->pop();
+    else {
+      wnav->rev = wnav->rev_new();
+      wnav->rev->command_cb = wnav_wrev_command_cb;
+      wnav->rev->close_cb = wnav_wrev_close_cb;
+    }
+  }
   else
   {
     wnav->message('E', "Syntax error");
@@ -4325,6 +4378,32 @@ static int	wnav_create_func( void		*client_data,
     }
     if ( EVEN(sts))
       wnav->message(' ', wnav_get_message(sts));
+    return sts;
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "REVISION", strlen( arg1_str)) == 0)
+  {
+    // Command is "CREATE REVISION"
+    int all;
+    char namestr[80];
+    char descriptionstr[80];
+
+    all = ODD( dcli_get_qualifier( "/ALL", 0, 0));
+    if ( EVEN( dcli_get_qualifier( "/NAME", namestr, sizeof(namestr)))) {
+      wnav->message('E', "Name is missing");
+      return WNAV__SYNTAX;
+    }
+    if ( EVEN( dcli_get_qualifier( "/DESCRIPTION", descriptionstr, sizeof(descriptionstr)))) {
+      wnav->message('E', "Description is missing");
+      return WNAV__SYNTAX;
+    }
+
+    wb_revision rev( wnav, (wb_session *)wnav->ldhses);
+    rev.command_cb( wnav_rev_command_cb);
+
+    sts = rev.create( all, namestr, descriptionstr);
+    if ( EVEN(sts))
+      wnav->message(' ', wnav_get_message(sts));
+    
     return sts;
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "FLOWFILES", strlen( arg1_str)) == 0) {
@@ -4869,6 +4948,48 @@ static int	wnav_revert_func(	void		*client_data,
   return 1;
 }
 
+static int	wnav_revision_func(	void		*client_data,
+					void		*client_flag)
+{
+  WNav *wnav = (WNav *)client_data;
+  char	arg1_str[80];
+  int	arg1_sts;
+
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
+
+  if ( cdh_NoCaseStrncmp( arg1_str, "RESTORE", strlen( arg1_str)) == 0) {
+    // Command is "REVISION RESTORE"
+    char namestr[80];
+    pwr_tStatus sts;
+
+    if ( EVEN( dcli_get_qualifier( "/NAME", namestr, sizeof(namestr)))) {
+      wnav->message('E',"Syntax error");
+      return WNAV__SYNTAX;
+    }
+
+    wb_revision rev( wnav, (wb_session *)wnav->ldhses);
+    rev.command_cb( wnav_rev_command_cb);
+
+    sts = rev.restore( namestr);
+    if ( EVEN(sts))
+      wnav->message(' ', wnav_get_message(sts));
+
+    return WNAV__SUCCESS;
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "LIST", strlen( arg1_str)) == 0) {
+    // Command is "REVISION LIST"
+    wb_revision rev( wnav, (wb_session *)wnav->ldhses);
+    rev.list();
+
+    return WNAV__SUCCESS;
+  }
+  else {
+    wnav->message('E', "Syntax error");
+    return WNAV__SYNTAX;
+  }
+  return WNAV__SUCCESS;
+}
+
 static int	wnav_crossref_func(	void		*client_data,
 					void		*client_flag)
 {
@@ -5156,6 +5277,7 @@ static int	wnav_build_func(	void		*client_data,
 
     build.node( namestr, volumelist, volumecount);
     wnav->message(' ', wnav_get_message(build.sts()));
+    command_sts = build.sts();
 
     free( (char *) volumelist);
   }
@@ -5187,6 +5309,7 @@ static int	wnav_build_func(	void		*client_data,
 
     build.cnf( nodestr, volumelist, volumecount);
     wnav->message(' ', wnav_get_message(build.sts()));
+    command_sts = build.sts();
 
     free( (char *) volumelist);
   }
@@ -5209,6 +5332,7 @@ static int	wnav_build_func(	void		*client_data,
 
     build.volume();
     wnav->message(' ', wnav_get_message(build.sts()));
+    command_sts = build.sts();
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "OBJECT", strlen( arg1_str)) == 0) {
     char 	namestr[80];
@@ -5298,6 +5422,7 @@ static int	wnav_build_func(	void		*client_data,
       wnav->gbl.build = stored_opt;
       if ( EVEN(sts)) {
 	wnav->message(' ', wnav_get_message(sts));
+	command_sts = sts;
 	return sts;
       }
     }
@@ -5341,6 +5466,7 @@ static int	wnav_build_func(	void		*client_data,
       
       build.directories( dirp, bld_ePass_None);
       wnav->message(' ', wnav_get_message(build.sts()));
+      command_sts = build.sts();
     }
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "EXPORT", strlen( arg1_str)) == 0) {
@@ -5371,6 +5497,7 @@ static int	wnav_build_func(	void		*client_data,
 
       build.export_files( bld_ePass_None);
       wnav->message(' ', wnav_get_message(build.sts()));
+      command_sts = build.sts();
     }
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "IMPORT", strlen( arg1_str)) == 0) {
@@ -5401,7 +5528,32 @@ static int	wnav_build_func(	void		*client_data,
 
       build.import_files( bld_ePass_None);
       wnav->message(' ', wnav_get_message(build.sts()));
+      command_sts = build.sts();
     }
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "ALL", strlen( arg1_str)) == 0) {
+    // command  is "BUILD ALL"
+    int exp, noclassvolumes, flowfiles;
+
+    // if ( !(CoLogin::privilege() & pwr_mPrv_DevConfig)) {
+    //   wnav->message( 'E', "User is not authorized to build");
+    //  return WNAV__NOTAUTHORIZED;
+    // }
+
+    if ( ((wb_session *)wnav->ldhses)->cid() != pwr_eClass_DirectoryVolume) {
+      wnav->message( 'E', "Can only build all from Directory volume");
+      return WNAV__SYNTAX;
+    }
+
+    wb_build build( *(wb_session *)wnav->ldhses, wnav);
+    build.opt.debug = ODD( dcli_get_qualifier( "/DEBUG", 0, 0));
+    exp = ODD( dcli_get_qualifier( "/EXPORT", 0, 0));
+    noclassvolumes = ODD( dcli_get_qualifier( "/NOCLASSVOLUMES", 0, 0));
+    flowfiles = ODD( dcli_get_qualifier( "/FLOWFILES", 0, 0));
+
+    build.all( !exp, noclassvolumes, !flowfiles);
+    wnav->message(' ', wnav_get_message(build.sts()));
+    command_sts = build.sts();       
   }
   else {
     wnav->message('E', "Syntax error");
@@ -6184,6 +6336,11 @@ int WNav::check_toplevel_class( pwr_tCid cid)
   }
   // Not found
   return 0;
+}
+
+pwr_tStatus WNav::get_command_sts()
+{
+  return command_sts;
 }
 
 int WNav::command( char* input_str)

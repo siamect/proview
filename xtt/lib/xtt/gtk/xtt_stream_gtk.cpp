@@ -1298,6 +1298,9 @@ void XttStreamGtk::activate_zoomreset( GtkWidget *w, gpointer data)
 {
   XttStreamGtk *strm = (XttStreamGtk *)data;
 
+  if ( !strm->camera_control)
+    return;
+
   strm->camera_control->zoom_absolute( 0);
   if ( strm->ptz_box_displayed) {
     g_object_set( strm->ptz_box, "visible", FALSE, NULL);
@@ -1308,6 +1311,9 @@ void XttStreamGtk::activate_zoomreset( GtkWidget *w, gpointer data)
 void XttStreamGtk::activate_zoomin( GtkWidget *w, gpointer data)
 {
   XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  if ( !strm->camera_control)
+    return;
 
   strm->camera_control->zoom_relative( 5);
   if ( strm->ptz_box_displayed) {
@@ -1320,6 +1326,9 @@ void XttStreamGtk::activate_zoomout( GtkWidget *w, gpointer data)
 {
   XttStreamGtk *strm = (XttStreamGtk *)data;
 
+  if ( !strm->camera_control)
+    return;
+
   strm->camera_control->zoom_relative( -5);
   if ( strm->ptz_box_displayed) {
     g_object_set( strm->ptz_box, "visible", FALSE, NULL);
@@ -1330,6 +1339,9 @@ void XttStreamGtk::activate_zoomout( GtkWidget *w, gpointer data)
 void XttStreamGtk::activate_scroll_left( GtkWidget *w, gpointer data)
 {
   XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  if ( !strm->camera_control)
+    return;
 
   strm->camera_control->pan_relative( -3);
   if ( strm->ptz_box_displayed) {
@@ -1342,6 +1354,9 @@ void XttStreamGtk::activate_scroll_right( GtkWidget *w, gpointer data)
 {
   XttStreamGtk *strm = (XttStreamGtk *)data;
 
+  if ( !strm->camera_control)
+    return;
+
   strm->camera_control->pan_relative( 3);
   if ( strm->ptz_box_displayed) {
     g_object_set( strm->ptz_box, "visible", FALSE, NULL);
@@ -1352,6 +1367,9 @@ void XttStreamGtk::activate_scroll_right( GtkWidget *w, gpointer data)
 void XttStreamGtk::activate_page_left( GtkWidget *w, gpointer data)
 {
   XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  if ( !strm->camera_control)
+    return;
 
   strm->camera_control->pan_relative( -15);
   if ( strm->ptz_box_displayed) {
@@ -1364,6 +1382,9 @@ void XttStreamGtk::activate_page_right( GtkWidget *w, gpointer data)
 {
   XttStreamGtk *strm = (XttStreamGtk *)data;
 
+  if ( !strm->camera_control)
+    return;
+
   strm->camera_control->pan_relative( 15);
   if ( strm->ptz_box_displayed) {
     g_object_set( strm->ptz_box, "visible", FALSE, NULL);
@@ -1374,6 +1395,9 @@ void XttStreamGtk::activate_page_right( GtkWidget *w, gpointer data)
 void XttStreamGtk::activate_scroll_down( GtkWidget *w, gpointer data)
 {
   XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  if ( !strm->camera_control)
+    return;
 
   strm->camera_control->tilt_relative( -3);
   if ( strm->ptz_box_displayed) {
@@ -1386,6 +1410,9 @@ void XttStreamGtk::activate_scroll_up( GtkWidget *w, gpointer data)
 {
   XttStreamGtk *strm = (XttStreamGtk *)data;
 
+  if ( !strm->camera_control)
+    return;
+
   strm->camera_control->tilt_relative( 3);
   if ( strm->ptz_box_displayed) {
     g_object_set( strm->ptz_box, "visible", FALSE, NULL);
@@ -1397,6 +1424,9 @@ void XttStreamGtk::activate_page_down( GtkWidget *w, gpointer data)
 {
   XttStreamGtk *strm = (XttStreamGtk *)data;
 
+  if ( !strm->camera_control)
+    return;
+
   strm->camera_control->tilt_relative( -15);
   if ( strm->ptz_box_displayed) {
     g_object_set( strm->ptz_box, "visible", FALSE, NULL);
@@ -1407,6 +1437,9 @@ void XttStreamGtk::activate_page_down( GtkWidget *w, gpointer data)
 void XttStreamGtk::activate_page_up( GtkWidget *w, gpointer data)
 {
   XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  if ( !strm->camera_control)
+    return;
 
   strm->camera_control->tilt_relative( 15);
   if ( strm->ptz_box_displayed) {
@@ -1641,6 +1674,9 @@ void XttStreamGtk::activate_get_position( GtkWidget *w, gpointer data)
   double pan, tilt, zoom;
   int sts;
   char pan_str[20], tilt_str[20], zoom_str[20];
+
+  if ( !strm->camera_control)
+    return;
 
   sts = strm->camera_control->get_position( &pan, &tilt, &zoom);
   if ( EVEN(sts)) return;

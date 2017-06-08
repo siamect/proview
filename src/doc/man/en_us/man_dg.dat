@@ -8469,6 +8469,15 @@ The path is the root directory of this tree.
 </chapter>
 
 <chapter>
+<topic> revisions
+Revisions
+<h1>Revisions window
+Revisions are handled from the Revisions window. It's opened from the menu in the configurator, 
+File/Revisions. 
+</topic>
+</chapter>
+
+<chapter>
 <topic> dg_tools
 Verktyg
 

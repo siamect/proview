@@ -47,6 +47,8 @@
 #include <iostream>
 
 #include "pwr_class.h"
+#include "wb_ldh.h"
+#include "co_tree.h"
 
 using namespace std;
 
@@ -61,6 +63,7 @@ class wb_print_wbl
 {
 protected:
   int  m_errCnt;
+  int  m_lineCnt;
   bool m_idxFlag;
   bool m_noFoCodeFlag;
   bool m_timeFlag;
@@ -70,47 +73,35 @@ protected:
   bool m_keepName;
   bool m_isTemplateObject;
   ostream& m_os;
+  tree_sTable *m_body_cache;
     
 
   ostream& indent(int levelIncr = 0);    
 
-  void printAttribute(wb_volume& v, 
-                      wb_attribute& attr, 
-                      wb_attribute& tattr, ///< template attribute
-                      wb_adef& adef,
-		      int force);
-
-  void printBody(wb_volume& v, 
-                 wb_object& o,
-                 wb_object& templ,
-                 wb_cdef& cdef, 
-                 pwr_eBix bix);
-
-  void printBuffer(wb_volume& v,
-                  wb_attribute& attr,
-                  wb_attribute& tattr, ///< template attribute
-                  wb_adef& adef);
-    
-  void printClass(wb_volume& v,
-                  wb_attribute& attr,
-                  wb_attribute& tattr, ///< template attribute
-                  wb_adef& adef);
-    
-  void printParameter(wb_volume& v, 
-                      wb_attribute& attr, 
-                      wb_attribute& tattr, ///< template attribute
-                      wb_adef& adef);
-
+  void printBody( wb_volume& vol, pwr_tOid oid, pwr_tOid toid, pwr_tCid cid,
+		  pwr_eBix bix);
+  bool printValue( wb_volume& v,
+		   pwr_eType type,
+		   unsigned int flags,
+		   void *val,
+		   int varSize,
+		   char **svalp);
+  void printBuffer( wb_volume& vol,
+		    ldh_sParDef *par_bd,
+		    char *body);
+  void printClass( wb_volume& vol,
+		   ldh_sParDef *par_bd,
+		   char *body,
+		   char *tbody,
+		   char *par_path);
   void printText(wb_volume& v, 
-                 wb_adef& adef,
-                 const char* text,
-                 int varSize);
-
-  bool printValue(wb_volume& v, 
-                  wb_adef& adef,
-                  void *val,
-                  int varSize,
-                  char **svalp);
+		 const char *aname,
+		 const char *text,
+		 int varSize);
+  pwr_tStatus getBody( wb_volume& vol, pwr_tCid cid, const char *bname, int tsize,
+		       ldh_sParDef **bdef, int *rows, char **tbody);
+  void bodyCacheFree();
+  int attrCmp( char *a1, char *a2, int size, pwr_eType type);
   bool isFoCodeObject( wb_volume& v, 
 		       wb_object& o);
     

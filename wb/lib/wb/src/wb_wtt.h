@@ -224,6 +224,7 @@ class Wtt : public WUtility {
     void activate_collapse();
     void activate_save();
     void activate_revert();
+    void activate_revisions();
     void activate_syntax();
     void activate_find();
     void activate_findregex();

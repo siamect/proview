@@ -1002,6 +1002,11 @@ void Wtt::activate_revert()
 	&Wtt::revert_ok, NULL);
 }
 
+void Wtt::activate_revisions()
+{
+  wnavnode->command( (char *)"open revisions");
+}
+
 void Wtt::activate_syntax()
 {
   int sts;

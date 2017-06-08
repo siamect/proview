@@ -1,6 +1,6 @@
 Volume Profibus $ClassVolume 0.0.250.7 
   Body SysBody 05-SEP-2005 17:51:40.00
-    Attr NextOix = "_X253"
+    Attr NextOix = "_X262"
     Attr NextCix = "_X22"
     Attr NextTix[0] = "_X14"
   EndBody
@@ -1644,6 +1644,11 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
       EndObject
+      Object ThreadObject $ReferenceList 262 02-MAY-2017 13:30:03.78
+        Body SysBody 02-MAY-2017 13:29:55.00
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
+      EndObject
       Object ConfiguratorPosnn $Menu 18 16-JAN-2006 09:46:40.50
         Object Pointed $Menu 19 16-JAN-2006 09:46:40.50
           Object ConfigureSlave $MenuButton 20 14-MAR-2006 07:38:53.51
@@ -2103,6 +2108,11 @@ Volume Profibus $ClassVolume 0.0.250.7
           Attr Process = 1
         EndBody
       EndObject
+      Object ThreadObject $ReferenceList 254 02-MAY-2017 13:27:20.02
+        Body SysBody 02-MAY-2017 13:27:39.87
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
+      EndObject
       Object ConfiguratorPoson $Menu 82 05-MAY-2006 15:41:43.54
         Object Pointed $Menu 83 05-MAY-2006 15:41:43.54
           Object ConnectThread $MenuButton 84 05-MAY-2006 15:41:43.54
@@ -2541,6 +2551,11 @@ Volume Profibus $ClassVolume 0.0.250.7
           Attr DataControlTime = 100
         EndBody
       EndObject
+      Object ThreadObject $ReferenceList 255 02-MAY-2017 13:28:23.09
+        Body SysBody 02-MAY-2017 13:28:23.09
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
+      EndObject
       Object IoMethods $RtMethod 48 16-JAN-2006 09:46:40.51
         Object IoAgentInit $Method 49 16-JAN-2006 09:46:40.51
           Body SysBody 16-JAN-2006 09:46:40.51
@@ -2902,6 +2917,11 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr TypeRef = "pwrs:Type-$UInt8"
           EndBody
         EndObject
+      EndObject
+      Object ThreadObject $ReferenceList 256 02-MAY-2017 13:28:39.87
+        Body SysBody 02-MAY-2017 13:28:39.87
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
       EndObject
       Object IoMethods $RtMethod 110 09-DEC-2008 13:19:32.10
         Object IoAgentInit $Method 111 09-DEC-2008 13:19:32.10
@@ -3352,6 +3372,11 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
       EndObject
+      Object ThreadObject $ReferenceList 257 02-MAY-2017 13:28:55.45
+        Body SysBody 02-MAY-2017 13:28:55.45
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
+      EndObject
       Object IoMethods $RtMethod 116 21-APR-2009 13:41:08.17
         Object IoAgentInit $Method 117 21-APR-2009 13:41:08.17
           Body SysBody 21-APR-2009 13:41:08.17
@@ -3657,6 +3682,11 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
       EndObject
+      Object ThreadObject $ReferenceList 258 02-MAY-2017 13:29:04.30
+        Body SysBody 02-MAY-2017 13:29:04.30
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
+      EndObject
       Object ConfiguratorPosnn $Menu 122 21-APR-2009 13:41:08.17
         Object Pointed $Menu 123 21-APR-2009 13:41:08.17
           Object ConfigureDevice $MenuButton 124 21-APR-2009 13:41:08.17
@@ -3954,6 +3984,11 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
       EndObject
+      Object ThreadObject $ReferenceList 259 02-MAY-2017 13:29:14.23
+        Body SysBody 02-MAY-2017 13:29:14.23
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
+      EndObject
       Object ConfiguratorPoson $Menu 154 21-APR-2009 13:41:08.17
         Object Pointed $Menu 155 21-APR-2009 13:41:08.17
           Object ConnectThread $MenuButton 156 21-APR-2009 13:41:08.17
@@ -4243,6 +4278,11 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
       EndObject
+      Object ThreadObject $ReferenceList 260 02-MAY-2017 13:29:29.13
+        Body SysBody 02-MAY-2017 13:29:29.13
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
+      EndObject
       Object ConfiguratorPoson $Menu 219 14-AUG-2014 13:10:10.59
         Object Pointed $Menu 220 14-AUG-2014 13:10:10.59
           Object ConnectThread $MenuButton 221 14-AUG-2014 13:10:10.59
@@ -4460,6 +4500,11 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+      EndObject
+      Object ThreadObject $ReferenceList 261 02-MAY-2017 13:29:37.11
+        Body SysBody 02-MAY-2017 13:29:37.11
+          Attr ObjectClass[0] = "pwrb:Class-PlcThread"
+        EndBody
       EndObject
       Object ConfiguratorPoson $Menu 228 14-AUG-2014 15:41:08.64
         Object Pointed $Menu 229 14-AUG-2014 15:41:08.64

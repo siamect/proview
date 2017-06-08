@@ -63,6 +63,9 @@ typedef enum {
   wlog_eCategory_WbLoad,
   wlog_eCategory_VolumeClone,
   wlog_eCategory_DirectoryBuild,
+  wlog_eCategory_NewRevision,
+  wlog_eCategory_RevisionRestore,
+  wlog_eCategory_BuildAll,
   wlog_eCategory__,
 } wlog_eCategory;
 

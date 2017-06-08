@@ -86,7 +86,8 @@ class CoLogin {
 					unsigned long priv, unsigned long attr);
   static pwr_tStatus get_login_info( char *groupname, char *password, char *username, 
 			      unsigned long *priv, unsigned long *attr);
-  static unsigned long privilege() { return m_priv;}
+  static unsigned int privilege() { return m_priv;}
+  static void reduce_privilege( unsigned int mask) { m_priv = (pwr_mPrv) (m_priv & ~mask);}
   static char *username() { return m_username;}
   static char *ucpassword() { return m_ucpassword;}
 };

@@ -170,6 +170,12 @@ wb_vrepmem::~wb_vrepmem()
   clear();
 }
 
+void wb_vrepmem::reloadWbl( pwr_tStatus *sts)
+{
+  clear();
+  loadWbl( m_filename, sts, true);
+}
+
 void wb_vrepmem::loadWbl( const char *filename, pwr_tStatus *sts, bool reload)
 {
   if ( !reload && m_erep->refMerepOccupied()) {
@@ -2097,7 +2103,9 @@ bool wb_vrepmem::commit(pwr_tStatus *sts)
   }
 
   if ( m_classeditor) {
+    printf("Check commit\n");
     classeditorCheckCommit();
+    printf("Commit\n");
     classeditorCommit();
   }
 
@@ -2111,6 +2119,7 @@ bool wb_vrepmem::commit(pwr_tStatus *sts)
     return false;
   }
 
+  printf( "Print wbl\n");
   try {
     wb_volume vol(this);
 

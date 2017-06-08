@@ -112,6 +112,19 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$String80"
         EndBody
       EndObject
+      !/**
+      ! Version manager.
+      !*/
+      Object VersionManager $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-VersionManagerEnum"
+        EndBody
+      EndObject
+    EndObject
+    Object Template BuildConfig
+      Body DevBody
+        Attr VersionManager = 1
+      EndBody
     EndObject
   EndObject
 EndSObject

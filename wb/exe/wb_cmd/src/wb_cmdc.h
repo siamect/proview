@@ -72,6 +72,7 @@ class Cmd {
     dcli_sRecall 	*recall_buf;
     static char cmd_volume[80];
     static char *cmd_volume_p;
+    static char cmd_classvolume[80];
     static unsigned int cmd_options;
 
     int detach_volume();

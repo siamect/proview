@@ -1766,6 +1766,18 @@ int WItemAttr::open_children( double x, double y)
 		    continue;
 		}
 
+		if ( listbody.Filter & pwr_mRefListFilterMask_Children) {
+		  // Check if object are children
+		  wb_object co = sp->object( aref.Objid);
+		  if ( !co) continue;
+
+		  wb_object p1 = co.parent();
+		  if ( !p1) continue;
+		  
+		  if  (cdh_ObjidIsNotEqual( p1.oid(), o.oid()))
+		    continue;
+		}
+
 		wb_attribute ca = sp->attribute( &aref); 
 		if ( listbody.Filter & pwr_mRefListFilterMask_AllVolumes)
 		  nametype = cdh_mName_volumeStrict;
@@ -1791,6 +1803,15 @@ int WItemAttr::open_children( double x, double y)
 		  wb_object p2 = co.parent();
 		  if ( (!p1 && !p2) ||
 		       (p1 && p2 && cdh_ObjidIsNotEqual( p1.oid(), p2.oid())))
+		    continue;
+		}
+
+		if ( listbody.Filter & pwr_mRefListFilterMask_Children) {
+		  // Check if object are children
+		  wb_object p1 = co.parent();
+		  if ( !p1) continue;
+		  
+		  if  (cdh_ObjidIsNotEqual( p1.oid(), o.oid()))
 		    continue;
 		}
 
@@ -3340,16 +3361,31 @@ int WItemAttrArrayElem::open_children( double x, double y)
 	if ( type_id == pwr_eType_Objid) {
 	  brow_SetNodraw( brow->ctx);
 
+	  if ( listbody.Filter & pwr_mRefListFilterMask_Other)
+	    new WItemEnumObject( brow, ldhses, objid, (char *)"Other", attr, 
+				 item_eType_Other, tid,
+				 size, flags, body, &objid, 0, 0,
+				 idx++, node, flow_eDest_IntoLast);
+
 	  for ( wb_object co = sp->object( listbody.ObjectClass[0]);
 		co;
 		co = co.next()) {
 
 	    if ( listbody.Filter & pwr_mRefListFilterMask_Siblings) {
-	      // Check if object are siblings
+	      // Check if objects are siblings
 	      wb_object p1 = o.parent();
 	      wb_object p2 = co.parent();
 	      if ( (!p1 && !p2) ||
 		   (p1 && p2 && cdh_ObjidIsNotEqual( p1.oid(), p2.oid())))
+		continue;
+	    }
+
+	    if ( listbody.Filter & pwr_mRefListFilterMask_Children) {
+	      // Check if object is child
+	      wb_object p1 = co.parent();
+	      if ( !p1) continue;
+
+	      if ( cdh_ObjidIsNotEqual( p1.oid(), o.oid()))
 		continue;
 	    }
 
@@ -3373,6 +3409,12 @@ int WItemAttrArrayElem::open_children( double x, double y)
 
 	  brow_SetNodraw( brow->ctx);
 
+	  if ( listbody.Filter & pwr_mRefListFilterMask_Other)
+	    new WItemEnumObject( brow, ldhses, objid, (char *)"Other", attr, 
+				 item_eType_Other, tid,
+				 size, flags, body, &objid, 0, 0,
+				 idx++, node, flow_eDest_IntoLast);
+
 	  for ( unsigned int i = 0; i < sizeof(listbody.ObjectClass)/sizeof(listbody.ObjectClass[0]); i++) {
 	    if ( listbody.ObjectClass[i] == 0)
 	      break;
@@ -3391,6 +3433,18 @@ int WItemAttrArrayElem::open_children( double x, double y)
 		  wb_object p2 = co.parent();
 		  if ( (!p1 && !p2) ||
 		       (p1 && p2 && cdh_ObjidIsNotEqual( p1.oid(), p2.oid())))
+		    continue;
+		}
+
+		if ( listbody.Filter & pwr_mRefListFilterMask_Children) {
+		  // Check if object is child
+		  wb_object co = sp->object( aref.Objid);
+		  if ( !co) continue;
+
+		  wb_object p1 = co.parent();
+		  if ( !p1) continue;
+
+		  if ( cdh_ObjidIsNotEqual( p1.oid(), o.oid()))
 		    continue;
 		}
 
@@ -3419,6 +3473,15 @@ int WItemAttrArrayElem::open_children( double x, double y)
 		  wb_object p2 = co.parent();
 		  if ( (!p1 && !p2) ||
 		       (p1 && p2 && cdh_ObjidIsNotEqual( p1.oid(), p2.oid())))
+		    continue;
+		}
+
+		if ( listbody.Filter & pwr_mRefListFilterMask_Children) {
+		  // Check if object is child
+		  wb_object p1 = co.parent();
+		  if ( !p1) continue;
+
+		  if ( cdh_ObjidIsNotEqual( p1.oid(), o.oid()))
 		    continue;
 		}
 
@@ -3821,7 +3884,6 @@ WItemEnumObject::WItemEnumObject(
 	attr_type_id, attr_tid, attr_size, attr_flags, attr_body),
         is_element(item_is_element), element(item_element)
 {
-  ldh_sSessInfo info;
 
   type = wnav_eItemType_EnumObject;
   switch ( type_id) {
@@ -3846,14 +3908,17 @@ WItemEnumObject::WItemEnumObject(
   brow_CreateNode( brow->ctx, enum_name, brow->nc_enumobject, 
 		   dest, dest_code, (void *) this, 1, &node);
 
-  brow_SetAnnotPixmap( node, 0, brow->pixmap_attr);
+  // brow_SetAnnotPixmap( node, 0, brow->pixmap_attr);
   brow_SetAnnotation( node, 0, enum_name, strlen(enum_name));
 
   // Examine access
+#if 0
+  ldh_sSessInfo info;
   ldh_GetSessionInfo( ldhses, &info);
   if ( info.Access == ldh_eAccess_ReadWrite &&
        !(flags & PWR_MASK_NOEDIT || flags & PWR_MASK_STATE))
     brow_SetAnnotPixmap( node, 1, brow->pixmap_morehelp);
+#endif
 
   update();
 }
