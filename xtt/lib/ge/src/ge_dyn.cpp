@@ -5399,6 +5399,12 @@ int GeAnalogColor::connect( grow_tObject object, glow_sTraceData *trace_data)
   bool		found = false;
   GeDynElem	*elem;
 
+  color = dyn->get_color1( object, color); 
+  if ( color < 0 || color >= glow_eDrawType__) {
+    printf( "** Color out of range, %s\n", attribute);
+    return 0;
+  }
+
   // Get attribute for instance 1
   if ( instance == ge_mInstance_1)
     e = this;
