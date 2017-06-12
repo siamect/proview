@@ -54,6 +54,7 @@
 #include "wb_merep.h"
 #include "wb_log.h"
 #include "wb_dblock.h"
+#include "wb_revision.h"
 
 #include "glow.h"
 #include "glow_growctx.h"
@@ -1073,6 +1074,8 @@ void wb_build::xttgraph( pwr_tOid oid)
       strcpy( name, action);
       if (( s = strrchr( name, '.')))
 	*s = 0;
+
+      wb_revision::check_add_file( src_fname);
       wb_log::log( wlog_eCategory_GeBuild, name, 0);
       m_sts = PWRB__SUCCESS;
     }
@@ -1328,6 +1331,8 @@ void wb_build::webgraph( pwr_tOid oid)
       strcpy( name, graph_name);
       if (( s = strrchr( name, '.')))
 	*s = 0;
+
+      wb_revision::check_add_file( src_fname);
       wb_log::log( wlog_eCategory_GeBuild, name, 0);
       m_sts = PWRB__SUCCESS;
     }
@@ -1418,6 +1423,7 @@ void wb_build::appgraph( pwr_tOid oid)
     strcpy( name, graph_name);
     if (( s = strrchr( name, '.')))
       *s = 0;
+    wb_revision::check_add_file( src_fname);
     wb_log::log( wlog_eCategory_GeBuild, name, 0);
     m_sts = PWRB__SUCCESS;
   }

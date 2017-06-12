@@ -8463,23 +8463,77 @@ the same development environment. A project points at a Proview base, e.g. V3.4,
 when creating a project you have to choose which base the project should point at.
 
 <h2>Path
-The project consists of a directory tree where databases, source files, archives etc are stored. 
-The path is the root directory of this tree.
+The project consists of a directory tree where databases, source files, archives etc are
+stored. The path is the root directory of this tree.
 </topic>
 </chapter>
 
 <chapter>
 <topic> revisions
 Revisions
-<h1>Revisions window
-Revisions are handled from the Revisions window. It's opened from the menu in the configurator, 
-File/Revisions. 
+
+A revision is a state in the development environment that is stored in a version control 
+system. The revision should include all source files to make it possible to restore a revision.
+A revision can be used to review the state when the revision was created, and also to build 
+runable systems from the restored source to test or run aa restore revision in production.
+
+The currently supported version control system is Git. A new repository will be created on 
+$pwrp_root/src when the first revision is created.
+
+<h1>Revision window
+Revisions are handled from the Revision window that is opened from the File menu in the 
+configurator.
+
+<h1>Create a revision
+A new revision is created from Functions/New Revison in the menu. New revisions can only be
+created if the currently checkedout revision is the end point of a branch.
+
+<image>dg_fig124.png
+<b>Fig Create a new revision
+
+<h1>Restore a revision
+A revision is restored from Functions/Restore in the menu. Select the revision to restore 
+first.
+
+<image>dg_fig125.png
+<b>Fig Restore a revision
+
+When a revision is restored the checked out revision is marked with a radio button in the list. 
+Also in the configurator title bar, the current revision is written.
+
+<image>dg_fig126.png
+<b>Fig An old revision is restored
+
+<h1>Create a branch
+If on old revision in the main line is restored, a branch can be created by creating a new
+revision from this point. In the figure above, a branch has be created from revision V2.0.1.
+New revisions can also be created from the end point of the branch. In the figure above, a 
+new revision can be created from V2.0.1-2 that is an end point, but not from V2.0.1-1.
+
+<h1>New files
+New files, e.g. c-applications, are not automatically added to the git repository.
+This has to be done manually. New files are displayed by Git as untracked files in the
+'git status' command. Untracked files can be added with the 'git add' command and will then
+be included in the next revision.
+
+Note! It's important to add new files to be able to restore a complete revision.
+
+<b>Example
+<c>> git status
+<c>On branch B_V2.0.5
+<c>Untracked files:
+<c>  (use "git add <file>..." to include in what will be committed)
+
+<c>      appl/ra_appl.c
+
+<c>> git add appl/ra_appl.c
+
 </topic>
 </chapter>
 
 <chapter>
 <topic> dg_tools
-Verktyg
+Tools
 
 pwrc 		<t>Command interface to development database. <link> dg_pwrc
 wb_ge 		<t>Ge editor				<link> wb_ge

@@ -8353,6 +8353,68 @@ Path är rot katalogen till det här trädet.
 </chapter>
 
 <chapter>
+<topic> revisions
+Revisioner
+
+En revision är ett tillstånd i utvecklingsmiljön som lagras i ett versionskontrollsystem. 
+Revisionen ska innehålla alla källkodsfiler så att det är möjligt att återskapa en revision.
+En revision kan användas för att visa det tillstånd som rådde när revisionen skapades, men
+också för att bygga körbara system från den återskapade koden för test eller för att köra
+revisionen in produktion.
+
+Det versionskontrollsystem som supportas för närvarande är Git. Ett nytt repository skapas
+på katalogen $pwrp_root/src när det första revisionen skapas.
+
+<h1>Revisionsfönstret
+Revisioner hanteras från revisionsfönstret som öppnas från File menyn i konfiguratorn.
+
+<h1>Skapa en revision
+En ny revision skapas från Functions/New Revision i menyn. Nya revisioner kan endast skapas
+om den utcheckade revisionen är en ändpunkt på en gren.
+
+<image>dg_fig124.png
+<b>Fig Skapa en ny revision
+
+<h1>Återskapa en revision
+En revision återskapas från Functions/Restore i menyn. Välj ut den revision som ska återskapas
+först.
+<image>dg_fig125.png
+<b>Fig Återskapa en revision
+
+Utcheckad revision markeras med en radioknapp i listan. Även i konfiguratorns titel anges 
+den utcheckade revisionen.
+
+<image>dg_fig126.png
+<b>Fig En revision återskapas
+
+<h1>Skapa en gren
+Om en gammal revision i huvudlinjen återskapas, kan en gren skapas genom att skapa en ny
+revision från denna punkt. I figuren ovan har en gren skapats från revision V2.0.1. Nya
+revisioner kan även skapas från ändpunkter av grenar. I figuren ovan, kan en ny revision
+skapas frän V2.0.1-2, som är en ändpunkt, men inte från V2.0.1-1.
+
+<h1>Nya filer
+Nya filer, t ex c-applikationer, adderas inte automatiskt till git-repositoryt. Detta måste
+göras manuellt. Nya filer visas av Git som 'untracked files' med 'git status' kommandot.
+Untracked files kan adderas med 'git add' kommandot och kommer sedan att inkluderas i
+nästa revision.
+
+OBS! Det är viktigt att addera nya filer för att kunna återskapa en komplett revision.
+
+<b>Exampel
+<c>> git status
+<c>On branch B_V2.0.5
+<c>Untracked files:
+<c>  (use "git add <file>..." to include in what will be committed)
+
+<c>      appl/ra_appl.c
+
+<c>> git add appl/ra_appl.c
+
+</topic>
+</chapter>
+
+<chapter>
 <topic> dg_tools
 Verktyg
 
