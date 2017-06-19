@@ -5205,7 +5205,7 @@ void GeAnalogColor::get_attributes( attr_sItem *attrinfo, int *item_count)
       attrinfo[i].type = glow_eType_ToneOrColor;
       attrinfo[i++].size = sizeof( limit_type);
 
-      sprintf( attrinfo[i].name, "AnalogTone%d.LimitType", inst);
+       sprintf( attrinfo[i].name, "AnalogTone%d.LimitType", inst);
       attrinfo[i].value = &limit_type;
       attrinfo[i].type = ge_eAttrType_LimitType;
       attrinfo[i++].size = sizeof( limit_type);
@@ -18662,7 +18662,11 @@ int GeSetValue::action( grow_tObject object, glow_tEvent event)
       break;
 
     db = dyn->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, 
-				      &attr_size);
+			       &attr_size);
+    if ( parsed_name[0] == '&')
+      // Attribute starting with '&' indicates reference
+      dyn->graph->get_reference_name( parsed_name, parsed_name);
+    
     sts = graph_attr_string_to_value( attr_type, value,
 				      (void *)&buf, sizeof( buf), sizeof(buf));
     if ( EVEN(sts)) {

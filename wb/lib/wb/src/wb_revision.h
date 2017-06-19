@@ -85,7 +85,7 @@ class wb_version_manager
   virtual int restore_revision( char *name, char *branch, int checkout_master, int checkout_branch) { return 0;}
   virtual int get_current( char *name) { return 0;}
   virtual int check( vector<wb_rev_item>& v) { return 0;}
-  
+  virtual int check_add( char *filename) { return 0;}
 };
 
 class wb_version_manager_git : public wb_version_manager
@@ -98,6 +98,7 @@ class wb_version_manager_git : public wb_version_manager
   int restore_revision( char *name, char *branch, int checkout_master, int checkout_branch);
   int get_current( char *name);
   int check( vector<wb_rev_item>& v);
+  int check_add( char *filename);
 };
 
 class wb_revision : public wb_status
@@ -115,6 +116,7 @@ class wb_revision : public wb_status
   int (*m_command_cb)( void *ctx, char *cmd);
 
  public:
+  wb_revision();
   wb_revision( void *parent_ctx, wb_session *ses);
   ~wb_revision() {
     if ( m_manager)
@@ -126,6 +128,7 @@ class wb_revision : public wb_status
   pwr_tStatus build_all();
   pwr_tStatus remove( char *name);
   void read_file();
+  void read_file_meta();
   void write_file();
   int add( char *name, char *description, char *version, pwr_tTime *date, bool in_main, int sub_idx);
   void list();
@@ -142,6 +145,7 @@ class wb_revision : public wb_status
 
   static char *branch_name( char *name);
   static void info( wb_rev_info *info);
+  static int check_add_file( char *filename);
 };
 
 #endif

@@ -79,7 +79,7 @@
 #include "wb_wnav_selformat.h"
 #include "wb_nav.h"
 #include "wb_log.h"
-
+#include "wb_revision.h"
 
 void Ge::set_title()
 {
@@ -1205,6 +1205,7 @@ void Ge::activate_build()
 {
   char name[40];
   pwr_tCmd cmd;
+  pwr_tFileName fname;
 
   graph->get_name( name);
   if ( strcmp( name, "") == 0 || graph->is_modified()) {
@@ -1214,6 +1215,9 @@ void Ge::activate_build()
 
   sprintf( cmd, "cp -a $pwrp_pop/%s.pwg $pwrp_exe/", name);
   system( cmd);
+
+  sprintf( fname, "$pwrp_pop/%s.pwg", name);
+  wb_revision::check_add_file( fname);
 
   message( 'I', "Graph built");
 }

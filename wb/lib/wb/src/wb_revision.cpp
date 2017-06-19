@@ -53,8 +53,6 @@ wb_revision::wb_revision( void *parent_ctx, wb_session *ses):
 {
   char current[80];
 
-  m_manager = new wb_version_manager_git();
-
   read_file();
 
   switch ( m_manager_enum) {
@@ -94,6 +92,20 @@ wb_revision::wb_revision( void *parent_ctx, wb_session *ses):
 	  break;
       }
     }
+  }
+}
+
+wb_revision::wb_revision(): 
+  m_parent_ctx(0), m_session(0), m_manager(0), m_manager_enum(pwr_eVersionManagerEnum_None),
+  m_read(false), m_current_idx(-1), m_current_main_idx(-1), m_current_sub_idx(-1), m_command_cb(0) 
+{
+  read_file_meta();
+
+  switch ( m_manager_enum) {
+  case pwr_eVersionManagerEnum_Git:
+    m_manager = new wb_version_manager_git();
+    break;
+  default: ;
   }
 }
 
@@ -541,6 +553,40 @@ void wb_revision::read_file()
   m_read = true;
 }
 
+void wb_revision::read_file_meta()
+{
+  pwr_tFileName fname;
+  char line[200];
+  char item_array[6][80];
+
+  dcli_translate_filename( fname, "$pwrp_db/pwrp_cnf_revision.dat");
+  ifstream fp( fname, ios::in);
+  if ( !fp) {
+    m_read = true;
+    return;
+  }
+ 
+  while ( fp.getline( line, sizeof(line))) {
+    wb_rev_item item;
+    int nr;
+
+    nr = dcli_parse( line, " ", "", (char *)item_array,
+		     sizeof(item_array)/sizeof(item_array[0]),
+		     sizeof(item_array[0]), 0);
+
+    if ( nr == 3 && strcmp( item_array[0], "#!") == 0 && strcmp( item_array[1], "RevisionManager") == 0) {
+      if ( strcmp( item_array[2], "1") == 0)
+	m_manager_enum = pwr_eVersionManagerEnum_Git;
+      else
+	m_manager_enum = pwr_eVersionManagerEnum_None;
+      continue;
+    }
+    if ( strcmp( item_array[0], "#!") != 0)
+      break;
+  }
+  fp.close();
+}
+
 void wb_revision::write_file()
 {
   pwr_tFileName fname;
@@ -711,6 +757,14 @@ void wb_revision::next_name( char *name)
     }
   }
   strcpy( name, "");
+}
+
+int wb_revision::check_add_file( char *filename)
+{
+  wb_revision rev;
+  if ( rev.m_manager)
+    return rev.m_manager->check_add( filename);
+  return 0;
 }
 
 void wb_version_manager_git::init()
@@ -924,4 +978,60 @@ int wb_version_manager_git::check( vector<wb_rev_item>& v)
   system( cmd);
 	 
   return REV__SUCCESS;
+}
+
+int wb_version_manager_git::check_add( char *filename)
+{
+  pwr_tCmd cmd;
+  pwr_tFileName fname, f2name;
+  char *s, *s1 = 0;
+  pwr_tFileName rname = "$pwrp_tmp/gitresult.tmp";
+  char line[200];
+  int sts;
+
+  dcli_translate_filename( rname, rname);
+  dcli_translate_filename( f2name, filename);
+
+  int cnt = 0;
+  bool found = false;
+  for ( s = &f2name[strlen(f2name)-1]; s != f2name; s--) {
+    if ( *s == '/') {
+      cnt++;
+      if ( cnt == 2) {
+	strncpy( fname, s + 1, sizeof(fname));
+	found = true;
+	break;
+      }
+      else 
+	s1 = s;
+    }
+  }
+  if ( !found && s1)
+    strncpy( fname, s1 + 1, sizeof(fname));
+  else  if ( !found)
+    strncpy( fname, filename, sizeof(fname));
+  
+  sprintf( cmd, "cd $pwrp_root/src; git ls-files -o --exclude-standard | grep %s$ > %s", fname, rname);
+  sts = system( cmd);
+  if ( sts != 0)
+    return 0;
+
+  ifstream fp( rname);
+  fp.getline( line, sizeof(line));
+  fp.close();
+  
+  dcli_trim( line, line);
+
+  if ( strcmp( line, "") == 0)
+    return 0;
+
+  sprintf( cmd, "cd $pwrp_root/src; git add %s", line);
+  sts = system( cmd);
+  if ( sts != 0)
+    printf( "** Git error %d\n", sts);
+  
+  sprintf( cmd, "rm -f %s", rname);
+  system( cmd);
+  
+  return 1;
 }
