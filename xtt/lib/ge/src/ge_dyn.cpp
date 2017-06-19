@@ -7488,6 +7488,7 @@ int GeDigSwap::scan( grow_tObject object)
     dyn->graph->swap(0);
     dyn->graph->swap(1);
     grow_Redraw( dyn->graph->grow->ctx);
+    old_value = val;
     return GLOW__SWAPTERMINATED;
   }
   old_value = val;
