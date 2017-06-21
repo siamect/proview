@@ -78,7 +78,7 @@ void CnvXtthelpToPdf::subject_to_fname( char *fname, const char *subject, int pa
   else
     strcpy( fname, ctx->rx->name);
   strcat( fname, ".pdf");
-  cdh_ToLower( fname, fname);
+  //cdh_ToLower( fname, fname);  // TODO: remove? Was used historically, but causes trouble on modern Linux OS
 }
 
 CnvXtthelpToPdf::~CnvXtthelpToPdf()

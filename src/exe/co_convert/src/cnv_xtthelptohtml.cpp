@@ -91,7 +91,7 @@ void CnvXtthelpToHtml::subject_to_fname( char *fname, const char *subject, int p
   }
   *t = 0;
   strcat( fname, ".html");
-  cdh_ToLower( fname, fname);
+  //cdh_ToLower( fname, fname);  // TODO: remove? Was used historically, but causes trouble on modern Linux OS
 }
 
 void *CnvXtthelpToHtml::insert( navh_eItemType item_type, const char *text1,

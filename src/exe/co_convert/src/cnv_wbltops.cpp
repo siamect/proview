@@ -62,7 +62,7 @@ int CnvWblToPs::init( char *first)
   strcpy( fname, ctx->dir);
   strcat( fname, ctx->rw->volume_name);
   strcat( fname, ".ps");
-  cdh_ToLower( fname, fname);
+  //cdh_ToLower( fname, fname);  // TODO: remove? Was used historically, but causes trouble on modern Linux OS
 
   tops.set_filename( ps_eFile_Info, fname);
   tops.set_filename( ps_eFile_Body, ps_cTmpFile);

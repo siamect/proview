@@ -76,7 +76,7 @@ int CnvWblToHtml::init( char *first)
     strcpy( fname, ctx->dir);
     strcat( fname, ctx->rw->volume_name);
     strcat( fname, "_index.html");
-    cdh_ToLower( fname, fname);
+    //cdh_ToLower( fname, fname);  // TODO: remove? Was used historically, but causes trouble on modern Linux OS
 
     ofstream fp( fname);
 
@@ -84,7 +84,7 @@ int CnvWblToHtml::init( char *first)
     if ( ctx->setup->group_cnt) {
       strcpy( gname, CnvCtx::low(ctx->rw->volume_name));
       strcat( gname, "_menu_group.html");
-      cdh_ToLower( fname, fname);
+      //cdh_ToLower( fname, fname);  // TODO: remove? Was used historically, but causes trouble on modern Linux OS
     }
 
     fp <<
@@ -128,7 +128,7 @@ int CnvWblToHtml::init( char *first)
   strcpy( fname, ctx->dir);
   strcat( fname, ctx->rw->volume_name);
   strcat( fname, "_allclasses.jsf");
-  cdh_ToLower( fname, fname);
+  //cdh_ToLower( fname, fname);  // TODO: remove? Was used historically, but causes trouble on modern Linux OS
 
   fp_js_all.open( fname);
   js_all_first = true;
@@ -141,7 +141,7 @@ int CnvWblToHtml::init( char *first)
   if ( ctx->setup->group_cnt) {
     strcpy( fname, ctx->dir);
     strcat( fname, gname);
-    cdh_ToLower( fname, fname);
+    //cdh_ToLower( fname, fname);  // TODO: remove? Was used historically, but causes trouble on modern Linux OS
 
     ofstream fp( fname);
 
@@ -169,7 +169,7 @@ int CnvWblToHtml::init( char *first)
     // Put index filename in fname
     strcpy( fname, ctx->rw->volume_name);
     strcat( fname, "_index.html");
-    cdh_ToLower( fname, fname);
+    //cdh_ToLower( fname, fname);  // TODO: remove? Was used historically, but causes trouble on modern Linux OS
 
     fp <<
 "<A HREF=\"" << fname << "\" TARGET=\"_parent\">AllClasses</A>" << endl <<
@@ -181,7 +181,7 @@ int CnvWblToHtml::init( char *first)
       strcat( fname, "_group_");
       strcat( fname, ctx->setup->groups[i]);
       strcat( fname, "_index.html");
-      cdh_ToLower( fname, fname);
+      //cdh_ToLower( fname, fname);  // TODO: remove? Was used historically, but causes trouble on modern Linux OS
 
       fp <<
 "<A HREF=\"" << fname << "\" TARGET=\"_parent\">" << ctx->setup->groups[i] << "</A>" << endl <<
@@ -201,7 +201,7 @@ int CnvWblToHtml::init( char *first)
   // Open allclasses file
   strcpy( fname, ctx->dir);
   strcat( fname, allclasses_name);
-  cdh_ToLower( fname, fname);
+  //cdh_ToLower( fname, fname);  // TODO: remove? Was used historically, but causes trouble on modern Linux OS
   fp_html_index.open( fname);
 
   ctx->set_dependfile( fname);  
@@ -237,7 +237,7 @@ int CnvWblToHtml::init( char *first)
     strcat( fname, "_group_");
     strcat( fname, ctx->setup->groups[i]);
     strcat( fname, "_index.html");
-    cdh_ToLower( fname, fname);
+    //cdh_ToLower( fname, fname);  // TODO: remove? Was used historically, but causes trouble on modern Linux OS
     {
       ofstream fp( fname);
 
@@ -246,7 +246,7 @@ int CnvWblToHtml::init( char *first)
       strcat( fname, "_group_");
       strcat( fname, ctx->setup->groups[i]);
       strcat( fname, ".html");
-      cdh_ToLower( fname, fname);
+      //cdh_ToLower( fname, fname);  // TODO: remove? Was used historically, but causes trouble on modern Linux OS
 
       fp <<
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\"\"http://www.w3.org/TR/REC-html40/loose.dtd>" << endl <<
@@ -291,7 +291,7 @@ int CnvWblToHtml::init( char *first)
     strcat( fname, "_group_");
     strcat( fname, ctx->setup->groups[i]);
     strcat( fname, ".html");
-    cdh_ToLower( fname, fname);
+    //cdh_ToLower( fname, fname);  // TODO: remove? Was used historically, but causes trouble on modern Linux OS
     fp_html_group[i].open( fname);
 
     strcpy( fname, ctx->dir);
@@ -299,7 +299,7 @@ int CnvWblToHtml::init( char *first)
     strcat( fname, "_group_");
     strcat( fname, ctx->setup->groups[i]);
     strcat( fname, ".jsf");
-    cdh_ToLower( fname, fname);
+    //cdh_ToLower( fname, fname);  // TODO: remove? Was used historically, but causes trouble on modern Linux OS
     fp_js_group[i].open( fname);
 
     fp_html_group[i] <<
@@ -336,7 +336,7 @@ ctx->setup->groups[i] << endl <<
     strcpy( fname, ctx->dir);
     strcat( fname, ctx->rw->volume_name);
     strcat( fname, "_groups.jsf");
-    cdh_ToLower( fname, fname);
+    //cdh_ToLower( fname, fname);  // TODO: remove? Was used historically, but causes trouble on modern Linux OS
     ofstream fp( fname);
  
    fp <<
@@ -350,7 +350,7 @@ ctx->setup->groups[i] << endl <<
       strcat( fname, "_group_");
       strcat( fname, ctx->setup->groups[i]);
       strcat( fname, "_index.html");
-      cdh_ToLower( fname, fname);
+      //cdh_ToLower( fname, fname);  // TODO: remove? Was used historically, but causes trouble on modern Linux OS
 
       fp <<
 "  aux = insFld(parent, gFld(\"" << ctx->setup->groups[i] << "\",\"" << fname << "\"))" << endl <<
@@ -404,7 +404,7 @@ int CnvWblToHtml::close()
 
     strcpy( fname, ctx->dir);
     strcat( fname, "index.jsm");
-    cdh_ToLower( fname, fname);
+    //cdh_ToLower( fname, fname);  // TODO: remove? Was used historically, but causes trouble on modern Linux OS
     ofstream fp( fname);
  
    fp <<
@@ -515,7 +515,7 @@ int CnvWblToHtml::class_exec()
   strcpy( fname, ctx->dir);
   strcat( fname, html_file_name);
   strcat( fname, ".html");
-  cdh_ToLower( fname, fname);
+  //cdh_ToLower( fname, fname);  // TODO: remove? Was used historically, but causes trouble on modern Linux OS
   html_clf = new CnvFile();
   html_clf->f.open( fname);
 
@@ -1180,7 +1180,7 @@ int CnvWblToHtml::typedef_exec()
   strcpy( fname, ctx->dir);
   strcat( fname, html_file_name);
   strcat( fname, ".html");
-  cdh_ToLower( fname, fname);
+  //cdh_ToLower( fname, fname);  // TODO: remove? Was used historically, but causes trouble on modern Linux OS
   html_clf = new CnvFile();
   html_clf->f.open( fname);
 
