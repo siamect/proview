@@ -54,6 +54,7 @@ openPOWERLINK-V1.08.2       Ethernet Powerlink zip-file. Build from sources.
 libpcap-dev                 Ethernet Powerlink
 
 There has to be a valid display when building proview.
+If you do not have a display, or want to build Proview on a server, see section "Building without a display" below
 
 2. Easy way
 -----------
@@ -217,6 +218,8 @@ source $pwra_db/pwr_setup.sh
 
 Voila, finished !
 
+
+
 Powerlink (optional)
 --------------------
 Install
@@ -234,6 +237,8 @@ openPOWERLINK-V1.08.2/buildcn
 
 Configure and generate MN with cmake-gui from openPOWERLINK-V1.08.2/build, and build with make
 Configure and generate CN with cmake-gui from openPOWERLINK-V1.08.2/buildcn, and build with make
+
+
 
 Building Motif version
 ----------------------
@@ -259,6 +264,7 @@ Start wb and motif with
 > rt_xtt_motif
 
 
+
 Build on FreeBSD
 ----------------
 
@@ -279,6 +285,7 @@ Continue to build Proview following the instructions in section 2 or 3 above.
 Increase the default value of kern.ipc.shmmax to 67108864. Add the following row to /etc/sysctl.conf
 
 kern.ipc.shmmax=67108864
+
 
 
 Build on Mac OS X 1.6
@@ -304,4 +311,21 @@ kern.sysv.symmax=167772160
 kern.sysv.shmseg=16
 kern.sysv.shmall=65536
 
+
+
+Building without a display
+--------------------------
+
+Install the xserver-xorg-video-dummy package:
+> apt-get install xserver-xorg-video-dummy
+
+Start the dummy display with:
+> Xorg -noreset +extension GLX +extension RANDR +extension RENDER -config src/tools/dummy_display/xorg.conf :99 &
+
+Set the DISPLAY environment variable accordingly:
+> export DISPLAY=:99
+
+Build proview as normal, either by executing the makefile:
+> make
+or by configuring the build yourself, see section "3. Thorough way" above.
 
