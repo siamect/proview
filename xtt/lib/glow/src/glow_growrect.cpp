@@ -188,10 +188,10 @@ int GrowRect::local_event_handler( glow_eEvent event, double x, double y)
 {
   double ll_x, ur_x, ll_y, ur_y;
 
-  ll_x = min( ll.x, ur.x);
-  ur_x = max( ll.x, ur.x);
-  ll_y = min( ll.y, ur.y);
-  ur_y = max( ll.y, ur.y);
+  ll_x = glmin( ll.x, ur.x);
+  ur_x = glmax( ll.x, ur.x);
+  ll_y = glmin( ll.y, ur.y);
+  ur_y = glmax( ll.y, ur.y);
 
   if ( ll_x <= x && x <= ur_x &&
        ll_y <= y && y <= ur_y) {
@@ -748,8 +748,8 @@ void GrowRect::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
       idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
     idx += hot;
   }
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = glmax( 0, idx);
+  idx = glmin( idx, DRAW_TYPE_SIZE-1);
   int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
   if (!t) {
@@ -766,12 +766,12 @@ void GrowRect::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
     y2 = int( trf.y( t, ur.x, ur.y) * w->zoom_factor_y + 0.5) - w->offset_y;
   }
 
-  ll_x = min( x1, x2);
-  ur_x = max( x1, x2);
-  ll_y = min( y1, y2);
-  ur_y = max( y1, y2);
+  ll_x = glmin( x1, x2);
+  ur_x = glmax( x1, x2);
+  ll_y = glmin( y1, y2);
+  ur_y = glmax( y1, y2);
 
-  int ish = int( shadow_width / 100 * min(ur_x - ll_x, ur_y - ll_y) + 0.5);
+  int ish = int( shadow_width / 100 * glmin(ur_x - ll_x, ur_y - ll_y) + 0.5);
   int display_shadow = ((node && ((GrowNode *)node)->shadow) || shadow) && !disable_shadow;
   glow_eDrawType fillcolor;
   if ( fill_eq_background)
@@ -939,8 +939,8 @@ void GrowRect::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
       idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
     idx += hot;
   }
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = glmax( 0, idx);
+  idx = glmin( idx, DRAW_TYPE_SIZE-1);
   int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
   if (!t) {
@@ -955,10 +955,10 @@ void GrowRect::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
     x2 = int( trf.x( t, ur.x, ur.y) * w->zoom_factor_x + 0.5) - w->offset_x;
     y2 = int( trf.y( t, ur.x, ur.y) * w->zoom_factor_y + 0.5) - w->offset_y;
   }
-  ll_x = min( x1, x2);
-  ur_x = max( x1, x2);
-  ll_y = min( y1, y2);
-  ur_y = max( y1, y2);
+  ll_x = glmin( x1, x2);
+  ur_x = glmax( x1, x2);
+  ll_y = glmin( y1, y2);
+  ur_y = glmax( y1, y2);
 
   int display_shadow = ((node && ((GrowNode *)node)->shadow) || shadow) && !disable_shadow;
 
@@ -1002,10 +1002,10 @@ void GrowRect::get_borders( GlowTransform *t, double *x_right,
     y2 = trf.y( ur.x, ur.y);
   }
 
-  ll_x = min( x1, x2);
-  ur_x = max( x1, x2);
-  ll_y = min( y1, y2);
-  ur_y = max( y1, y2);
+  ll_x = glmin( x1, x2);
+  ur_x = glmax( x1, x2);
+  ll_y = glmin( y1, y2);
+  ur_y = glmax( y1, y2);
 
   if ( display_level != glow_mDisplayLevel_1)
     return;
@@ -1149,8 +1149,8 @@ void GrowRect::export_javabean( GlowTransform *t, void *node,
       idx = int( ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * line_width - 1);
     idx += hot;
   }
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = glmax( 0, idx);
+  idx = glmin( idx, DRAW_TYPE_SIZE-1);
   double x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
   if (!t)
@@ -1168,14 +1168,14 @@ void GrowRect::export_javabean( GlowTransform *t, void *node,
     y2 = trf.y( t, ur.x, ur.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
   }
 
-  ll_x = min( x1, x2);
-  ur_x = max( x1, x2);
-  ll_y = min( y1, y2);
-  ur_y = max( y1, y2);
+  ll_x = glmin( x1, x2);
+  ur_x = glmax( x1, x2);
+  ll_y = glmin( y1, y2);
+  ur_y = glmax( y1, y2);
 
   double ish;
   if ( !disable_shadow)
-    ish = shadow_width / 100 * min(ur_x - ll_x, ur_y - ll_y);
+    ish = shadow_width / 100 * glmin(ur_x - ll_x, ur_y - ll_y);
   else
     ish = 0;
 

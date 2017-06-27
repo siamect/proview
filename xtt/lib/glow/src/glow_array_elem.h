@@ -79,6 +79,7 @@ class GlowArrayElem {
     virtual void save( ofstream& fp, glow_eSaveMode mode) {};
     virtual void open( ifstream& fp) {};
     virtual void print( void *pos, void *node) {};
+    virtual void draw() {};
     virtual void draw( GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y) {};
     virtual void draw( GlowWind *w, int *ll_x, int *ll_y, int *ur_x, int *ur_y) {};
     virtual void draw( GlowWind *w, void *pos, int highlight, int hot, void *node) {};

@@ -53,9 +53,9 @@
 #include "glow_growapi.h"
 #include "flow_msg.h"
 
+#include "ge_dyn.h"
 #include "ge_attr.h"
 #include "ge_attrnav.h"
-#include "ge_dyn.h"
 #include "ge_msg.h"
 
 Attr::~Attr()
@@ -64,16 +64,20 @@ Attr::~Attr()
 
 Attr::Attr(
   void			*a_parent_ctx,
+  attr_eType		a_type,
   void 			*a_object,
   attr_sItem  		*itemlist,
   int			item_cnt ) :
-  parent_ctx(a_parent_ctx), input_open(0), object(a_object), 
+  parent_ctx(a_parent_ctx), type(a_type), embedded(0), input_open(0), object(a_object), 
   close_cb(0), redraw_cb(0), get_subgraph_info_cb(0), get_dyn_info_cb(0),
   reconfigure_attr_cb(0),
   store_cb(0), recall_cb(0), set_data_cb(0), get_plant_select_cb(0), get_current_colors_cb(0),
-  get_current_color_tone_cb(0), client_data(0), recall_idx(-1),
-  original_data(0)
+  get_current_color_tone_cb(0), open_value_input_cb(), set_inputfocus_cb(0), 
+  traverse_inputfocus_cb(0), client_data(0), 
+  recall_idx(-1), original_data(0)
 {
+  if ( type == attr_eType_ObjectTree)
+    embedded = 1;
 }
 
 void Attr::store()
@@ -193,6 +197,30 @@ int Attr::reconfigure_attr_c( void *attr)
   return ((Attr *)attr)->reconfigure_attr();
 }
 
+void Attr::get_object_list_c( void *attr_ctx, unsigned int type, grow_tObject **list, 
+			      int *list_cnt, grow_tObject *parent, int parent_cnt)
+{
+  Attr *attr = (Attr *) attr_ctx;
+  if ( attr->get_object_list_cb)
+    attr->get_object_list_cb( attr->parent_ctx, type, list, list_cnt, parent, parent_cnt);  
+}
+
+int Attr::set_inputfocus_c( void *attr_ctx)
+{
+  Attr *attr = (Attr *) attr_ctx;
+  if ( attr->set_inputfocus_cb)
+    return attr->set_inputfocus_cb( attr->parent_ctx, attr);  
+  return 0;
+}
+
+int Attr::traverse_inputfocus_c( void *attr_ctx)
+{
+  Attr *attr = (Attr *) attr_ctx;
+  if ( attr->traverse_inputfocus_cb)
+    return attr->traverse_inputfocus_cb( attr->parent_ctx, attr);  
+  return 0;
+}
+
 void Attr::message( void *attr, int popup, char severity, const char *message)
 {
   if ( popup)
@@ -201,4 +229,20 @@ void Attr::message( void *attr, int popup, char severity, const char *message)
     ((Attr *)attr)->message( severity, message);
 }
 
+void Attr::refresh_objects( unsigned int type)
+{
+  attrnav->refresh_objects( type);
+}
+
+int Attr::set_attr_value( char *value_str) 
+{ 
+  int sts;
+  grow_tObject id;
+
+  sts = attrnav->set_attr_value(value_str, &id, &client_data);
+  if ( redraw_cb)
+    (redraw_cb)( parent_ctx, this, id, client_data);
+  client_data = 0;
+  return sts;
+}
 

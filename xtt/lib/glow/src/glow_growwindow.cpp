@@ -242,8 +242,8 @@ void GrowWindow::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, vo
 
   idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = glmax( 0, idx);
+  idx = glmin( idx, DRAW_TYPE_SIZE-1);
   int ll_x, ll_y, ur_x, ur_y;
   double dx1, dy1, dx2, dy2;
 
@@ -259,10 +259,10 @@ void GrowWindow::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, vo
     dx2 = trf.x( t, ur.x, ur.y);
     dy2 = trf.y( t, ur.x, ur.y);
   }
-  dx1 = min( dx1, dx2);
-  dx2 = max( dx1, dx2);
-  dy1 = min( dy1, dy2);
-  dy2 = max( dy1, dy2);
+  dx1 = glmin( dx1, dx2);
+  dx2 = glmax( dx1, dx2);
+  dy1 = glmin( dy1, dy2);
+  dy2 = glmax( dy1, dy2);
 
   if ( v_scrollbar) {
     if ( !h_scrollbar)
@@ -322,8 +322,8 @@ void GrowWindow::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
   idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
 
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = glmax( 0, idx);
+  idx = glmin( idx, DRAW_TYPE_SIZE-1);
   int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
   if (!t) {
@@ -338,10 +338,10 @@ void GrowWindow::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
     x2 = int( trf.x( t, ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
     y2 = int( trf.y( t, ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
   }
-  ll_x = min( x1, x2);
-  ur_x = max( x1, x2);
-  ll_y = min( y1, y2);
-  ur_y = max( y1, y2);
+  ll_x = glmin( x1, x2);
+  ur_x = glmax( x1, x2);
+  ll_y = glmin( y1, y2);
+  ur_y = glmax( y1, y2);
 
   w->set_draw_buffer_only();
   ctx->gdraw->rect_erase( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, idx);
@@ -357,8 +357,8 @@ void GrowWindow::draw_brief( GlowWind *w, GlowTransform *t, int highlight, int h
   int idx;
   idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
 
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = glmax( 0, idx);
+  idx = glmin( idx, DRAW_TYPE_SIZE-1);
   int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
   if (!t) {
@@ -373,10 +373,10 @@ void GrowWindow::draw_brief( GlowWind *w, GlowTransform *t, int highlight, int h
     x2 = int( trf.x( t, ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
     y2 = int( trf.y( t, ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
   }
-  ll_x = min( x1, x2);
-  ur_x = max( x1, x2);
-  ll_y = min( y1, y2);
-  ur_y = max( y1, y2);
+  ll_x = glmin( x1, x2);
+  ur_x = glmax( x1, x2);
+  ll_y = glmin( y1, y2);
+  ur_y = glmax( y1, y2);
 
   if ( window_ctx && fill)
     ctx->gdraw->fill_rect( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, fill_drawtype);
@@ -444,10 +444,10 @@ int GrowWindow::trace_init()
     dy1 = trf.y( ll.x, ll.y);
     dx2 = trf.x( ur.x, ur.y);
     dy2 = trf.y( ur.x, ur.y);
-    dx1 = min( dx1, dx2);
-    dx2 = max( dx1, dx2);
-    dy1 = min( dy1, dy2);
-    dy2 = max( dy1, dy2);
+    dx1 = glmin( dx1, dx2);
+    dx2 = glmax( dx1, dx2);
+    dy1 = glmin( dy1, dy2);
+    dy2 = glmax( dy1, dy2);
 
     int ll_x = int( dx1 * ctx->mw.zoom_factor_x) - ctx->mw.offset_x;
     int ll_y = int( (dy1 + y_low_offs) * ctx->mw.zoom_factor_y) - ctx->mw.offset_y;
@@ -556,10 +556,10 @@ void GrowWindow::export_javabean( GlowTransform *t, void *node,
     y2 = trf.y( t, ur.x, ur.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
   }
 
-  ll_x = min( x1, x2);
-  ur_x = max( x1, x2);
-  ll_y = min( y1, y2);
-  ur_y = max( y1, y2);
+  ll_x = glmin( x1, x2);
+  ur_x = glmax( x1, x2);
+  ll_y = glmin( y1, y2);
+  ur_y = glmax( y1, y2);
 
   ctx->export_jbean->window( ll_x, ll_y, ur_x, ur_y,
 				       file_name, vertical_scrollbar, horizontal_scrollbar,
@@ -1017,8 +1017,8 @@ void GrowWindow::draw_background()
 
   idx = int( ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * line_width - 1);
   idx += hot;
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = glmax( 0, idx);
+  idx = glmin( idx, DRAW_TYPE_SIZE-1);
   int ll_x, ll_y, ur_x, ur_y;
   double dx1, dy1, dx2, dy2;
 
@@ -1027,10 +1027,10 @@ void GrowWindow::draw_background()
   dx2 = trf.x( ur.x, ur.y);
   dy2 = trf.y( ur.x, ur.y);
 
-  dx1 = min( dx1, dx2);
-  dx2 = max( dx1, dx2);
-  dy1 = min( dy1, dy2);
-  dy2 = max( dy1, dy2);
+  dx1 = glmin( dx1, dx2);
+  dx2 = glmax( dx1, dx2);
+  dy1 = glmin( dy1, dy2);
+  dy2 = glmax( dy1, dy2);
 
   if ( v_scrollbar)
     v_scrollbar->draw( &ctx->mw, 0, 0, 0, 0, 0);

@@ -54,6 +54,11 @@ extern "C" {
 #include "flow_browapi.h"
 #include "flow_browwidget_gtk.h"
 
+#include "glow.h"
+#include "glow_growctx.h"
+#include "glow_growapi.h"
+
+#include "ge_dyn.h"
 #include "ge_attr_gtk.h"
 #include "ge_subgraphs_gtk.h"
 #include "ge_graph.h"
@@ -295,5 +300,5 @@ void SubGraphsGtk::trace_scan( SubGraphsGtk *subgraphs)
 
 Attr *SubGraphsGtk::new_attr( void *object, attr_sItem *items, int num) 
 {
-  return new AttrGtk( parent_wid, this, object, items, num);
+  return new AttrGtk( parent_wid, this, attr_eType_Attributes, object, items, num);
 }

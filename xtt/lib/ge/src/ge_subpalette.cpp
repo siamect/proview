@@ -51,6 +51,7 @@
 #include "glow.h"
 #include "glow_growctx.h"
 #include "glow_growapi.h"
+#include "ge_dyn.h"
 #include "ge_attr.h"
 #include "ge_subpalette.h"
 

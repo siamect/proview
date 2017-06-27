@@ -102,28 +102,23 @@ static char null_str[] = "";
 
 static void graph_remove_space( char *out_str, char *in_str);
 // static int graph_init_grow_cb( GrowCtx *ctx, void *client_data);
-static void graph_attr_redraw_cb( Attr *attrctx);
-static void graph_attr_close_cb( Attr *attrctx);
-static int graph_attr_set_data_cb( void *g, grow_tObject object, 
-				 GeDyn *data);
-static void graph_graphattr_redraw_cb( Attr *attrctx);
-static void graph_graphattr_close_cb( Attr *attrctx);
+// static void graph_attr_redraw_cb( Attr *attrctx);
+// static void graph_attr_close_cb( Attr *attrctx);
+// static int graph_attr_set_data_cb( void *g, grow_tObject object, GeDyn *data);
+static void graph_graphattr_redraw_cb( void *ctx, void *attrctx, brow_tObject o, void *info);
+static void graph_graphattr_close_cb( void *ctx, void *attrctx, brow_tObject o, void *info, int keep);
 static int graph_trace_disconnect_bc( grow_tObject object);
 static int graph_trace_scan_bc( grow_tObject object, void *p);
 static int graph_trace_connect_bc( grow_tObject object, 
 	glow_sTraceData *trace_data);
 static int graph_trace_ctrl_bc( int type, void *data);
 static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event);
-static int graph_get_subgraph_info_cb( void *g, char *name, 
-	attr_sItem **itemlist, int *itemlist_cnt);
-static int graph_get_dyn_info_cb( void *g, GeDyn *dyn, 
-	attr_sItem **itemlist, int *itemlist_cnt);
-static int graph_reconfigure_attr_cb( void *g, grow_tObject object,
-	attr_sItem **itemlist, int *itemlist_cnt, void **client_data);
-static int graph_get_plant_select_cb( void *g, char *value, int size);
-static int graph_get_current_colors_cb( void *g, glow_eDrawType *fill_color, 
-					glow_eDrawType *border_color, glow_eDrawType *text_color);
-static int graph_get_current_color_tone_cb( void *g, glow_eDrawType *color_tone);
+// static int graph_get_subgraph_info_cb( void *g, char *name, attr_sItem **itemlist, int *itemlist_cnt);
+// static int graph_get_dyn_info_cb( void *g, GeDyn *dyn, attr_sItem **itemlist, int *itemlist_cnt);
+// static int graph_reconfigure_attr_cb( void *g, grow_tObject object, attr_sItem **itemlist, int *itemlist_cnt, void **client_data);
+// static int graph_get_plant_select_cb( void *g, char *value, int size);
+// static int graph_get_current_colors_cb( void *g, glow_eDrawType *fill_color, glow_eDrawType *border_color, glow_eDrawType *text_color);
+// static int graph_get_current_color_tone_cb( void *g, glow_eDrawType *color_tone);
 static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event);
 static void graph_free_dyn( grow_tObject object);
 
@@ -171,7 +166,7 @@ Graph::Graph(
 	traverse_focus_cb(NULL), set_focus_cb(NULL), get_ldhses_cb(NULL),
 	get_current_objects_cb(NULL), popup_menu_cb(NULL), call_method_cb(NULL),
 	sound_cb(0), create_modal_dialog_cb(0), eventlog_cb(0), update_colorpalette_cb(0),
-	keyboard_cb(xn_keyboard_cb),
+	keyboard_cb(xn_keyboard_cb), refresh_objects_cb(0),
 	linewidth(1), linetype(glow_eLineType_Solid), textsize(2), 
 	textbold(0), textfont(glow_eFont_Helvetica),
 	border_color(1), fill_color(1), fill(0), border(1), shadow(0),
@@ -268,6 +263,8 @@ void Graph::push_select()
   journal_store( journal_eAction_PushSelect, 0);
 
   grow_PushSelectedObjects( grow->ctx);
+
+  refresh_objects( attr_mRefresh_Objects);
 }
 
 //
@@ -278,6 +275,8 @@ void Graph::pop_select()
   journal_store( journal_eAction_PopSelect, 0);
 
   grow_PopSelectedObjects( grow->ctx);
+
+  refresh_objects( attr_mRefresh_Objects);
 }
 
 //! Scale selected objects.
@@ -357,6 +356,8 @@ void Graph::cut()
   journal_store( journal_eAction_DeleteSelect, 0);
 
   grow_Cut( grow->ctx);
+
+  refresh_objects( attr_mRefresh_Objects);
 }
 
 //
@@ -603,6 +604,8 @@ void Graph::open( char *filename)
   grid = grow_attr.grid_on;
 
   was_subgraph = is_subgraph();
+
+  refresh_objects( attr_mRefresh_Objects);
 }
 
 //
@@ -741,6 +744,8 @@ int Graph::group_select( grow_tObject *object, char *last_group)
     }
   }
 
+  refresh_objects( attr_mRefresh_Objects);
+
   journal_store( journal_eAction_PostGroupSelect, group);
 
   return 1;
@@ -766,6 +771,7 @@ int Graph::ungroup_select( int force)
   int           i;
   GeDyn 	*dyn;
   char          name[80];
+  int		sts;
 
   if ( !force) {
     grow_GetSelectList( grow->ctx, &sel_list, &sel_count);
@@ -794,7 +800,11 @@ int Graph::ungroup_select( int force)
 
   journal_store( journal_eAction_UngroupSelect, 0);
 
-  return grow_UngroupSelect( grow->ctx);
+  sts =  grow_UngroupSelect( grow->ctx);
+
+  refresh_objects( attr_mRefresh_Objects);
+
+  return sts;
 }
 
 void Graph::set_gridsize( double gridsize)
@@ -1297,6 +1307,25 @@ void Graph::select_all_objects()
       grow_SelectInsert( grow->ctx, *object_p);
     }
     object_p++;
+  }
+}
+
+void Graph::select_object( grow_tObject o)
+{
+  grow_SelectClear( grow->ctx);
+  grow_SetHighlight( o, 1);
+  grow_SelectInsert( grow->ctx, o);
+}
+
+void Graph::add_select_object( grow_tObject o, int select)
+{
+  if ( select) {
+    grow_SetHighlight( o, 1);
+    grow_SelectInsert( grow->ctx, o);
+  }
+  else {
+    grow_SetHighlight( o, 0);
+    grow_SelectRemove( grow->ctx, o);
   }
 }
 
@@ -1939,7 +1968,7 @@ int Graph::edit_attributes( grow_tObject object)
 
   get_attr_items( object, &itemlist, &item_cnt, &client_data);
 
-  attr = attr_new( this, object, itemlist, item_cnt);
+  attr = attr_new( this, attr_eType_Attributes, object, itemlist, item_cnt);
   attr->client_data = client_data;
   attr->close_cb = graph_attr_close_cb;
   attr->redraw_cb = graph_attr_redraw_cb;
@@ -1961,7 +1990,7 @@ int Graph::edit_attributes( grow_tObject object)
 }
 
 
-static int graph_get_plant_select_cb( void *g, char *value, int size)
+int Graph::graph_get_plant_select_cb( void *g, char *value, int size)
 {
   Graph	*graph = (Graph *)g;
   if ( graph->get_plant_select_cb)
@@ -1969,7 +1998,7 @@ static int graph_get_plant_select_cb( void *g, char *value, int size)
   return 0;
 }
 
-static int graph_get_current_colors_cb( void *g, glow_eDrawType *fill_color, 
+int Graph::graph_get_current_colors_cb( void *g, glow_eDrawType *fill_color, 
 					glow_eDrawType *border_color, glow_eDrawType *text_color)
 {
   Graph	*graph = (Graph *)g;
@@ -1981,7 +2010,7 @@ static int graph_get_current_colors_cb( void *g, glow_eDrawType *fill_color,
   return 0;
 }
 
-static int graph_get_current_color_tone_cb( void *g, glow_eDrawType *color_tone)
+int Graph::graph_get_current_color_tone_cb( void *g, glow_eDrawType *color_tone)
 {
   Graph	*graph = (Graph *)g;
 
@@ -1992,7 +2021,7 @@ static int graph_get_current_color_tone_cb( void *g, glow_eDrawType *color_tone)
   return 0;
 }
 
-static int graph_reconfigure_attr_cb( void *g, grow_tObject object,
+int Graph::graph_reconfigure_attr_cb( void *g, grow_tObject object,
 	attr_sItem **itemlist, int *itemlist_cnt, void **client_data)
 {
   Graph	*graph = (Graph *)g;
@@ -2062,14 +2091,14 @@ int Graph::graph_attr_recall_cb( void *g, grow_tObject object, int idx,
     return 0;
 }
 
-static int graph_attr_set_data_cb( void *g, grow_tObject object,
+int Graph::graph_attr_set_data_cb( void *g, grow_tObject object,
 				 GeDyn *data)
 {
   grow_SetUserData( object, (void *)data);
   return 1;
 }
 
-static int graph_get_dyn_info_cb( void *g, GeDyn *dyn,
+int Graph::graph_get_dyn_info_cb( void *g, GeDyn *dyn,
 	attr_sItem **itemlist, int *itemlist_cnt)
 {
   static attr_sItem	items[40];
@@ -2082,8 +2111,8 @@ static int graph_get_dyn_info_cb( void *g, GeDyn *dyn,
   return 1;
 }
 
-static int graph_get_subgraph_info_cb( void *g, char *name, 
-	attr_sItem **itemlist, int *itemlist_cnt)
+int Graph::graph_get_subgraph_info_cb( void *g, char *name, 
+				       attr_sItem **itemlist, int *itemlist_cnt)
 {
   Graph	*graph = (Graph *)g;
   static attr_sItem	items[40];
@@ -2147,6 +2176,31 @@ static int graph_get_subgraph_info_cb( void *g, char *name,
   *itemlist = items;
   *itemlist_cnt = grow_info_cnt + item_cnt;
   return 1;
+}
+
+void Graph::graph_get_object_list_cb( void *g, unsigned int type, grow_tObject **list, 
+				      int *list_cnt, grow_tObject *parent, int parent_cnt)
+{
+  Graph	*graph = (Graph *)g;
+
+  if ( !graph->grow) {
+    *list_cnt = 0;
+    return;
+  }
+
+  switch ( type) {
+  case attr_eList_Objects:
+    grow_GetObjectList( graph->grow->ctx, list, list_cnt);
+    break;
+  case attr_eList_Group:
+    grow_GetGroupObjectList( *parent, list, list_cnt);
+    break;
+  case attr_eList_Select:
+    grow_GetSelectList( graph->grow->ctx, list, list_cnt);
+    break;
+  default:
+    *list_cnt = 0;
+  }
 }
 
 int Graph::get_subgraph_attr_items( attr_sItem **itemlist,
@@ -2241,7 +2295,7 @@ int Graph::edit_subgraph_attributes()
   Attr   		*attr;
 
   get_subgraph_attr_items( &items, &item_cnt, &client_data);
-  attr = attr_new( this, NULL, items, item_cnt);
+  attr = attr_new( this, attr_eType_Attributes, NULL, items, item_cnt);
 
   attr->client_data = client_data;
   attr->close_cb = graph_graphattr_close_cb;
@@ -2297,7 +2351,7 @@ int Graph::edit_graph_attributes()
   Attr   		*attr;
 
   get_graph_attr_items( &items, &item_cnt, &client_data);
-  attr = attr_new( this, NULL, items, item_cnt);
+  attr = attr_new( this, attr_eType_Attributes, NULL, items, item_cnt);
   attr->client_data = client_data;
   attr->close_cb = graph_graphattr_close_cb;
   attr->redraw_cb = graph_graphattr_redraw_cb;
@@ -2541,6 +2595,8 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
           break;
         }
       }
+      graph->refresh_objects( attr_mRefresh_Objects);
+      break;
     case glow_eEvent_SelectClear:
       grow_ResetSelectHighlight( graph->grow->ctx);
       break;
@@ -2586,6 +2642,7 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
       else {
 	graph->delete_select();
       }
+      graph->refresh_objects( attr_mRefresh_Objects);
       break;
     case glow_eEvent_MB2Click:
     {
@@ -2794,6 +2851,7 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	}
       }
       grow_SetModified( graph->grow->ctx, 1);
+      graph->refresh_objects( attr_mRefresh_Objects);
       break;
     }
     case glow_eEvent_MB1Click:
@@ -2818,6 +2876,8 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
           grow_SetModified( graph->grow->ctx, 1);
 	  if ( !graph->keep_mode)
 	    grow_SetMode( graph->grow->ctx, grow_eMode_Edit);
+
+	  graph->refresh_objects( attr_mRefresh_Objects);
           break;
         }
         case grow_eMode_Annot:
@@ -2851,6 +2911,8 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
           grow_SetModified( graph->grow->ctx, 1);
 	  if ( !graph->keep_mode)
 	    grow_SetMode( graph->grow->ctx, grow_eMode_Edit);
+
+	  graph->refresh_objects( attr_mRefresh_Objects);
           break;
         }
         case grow_eMode_Text:
@@ -2888,6 +2950,7 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
 
 	  graph->journal_store( journal_eAction_CreateObject, t1);
 
+	  graph->refresh_objects( attr_mRefresh_Objects);
           break;
         }
         case grow_eMode_Edit:
@@ -2908,6 +2971,8 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
               grow_SelectInsert( graph->grow->ctx, event->object.object);
             }
           }
+
+	  graph->refresh_objects( attr_mRefresh_Select);
 	  break;
         }
         case grow_eMode_Scale:
@@ -2936,15 +3001,21 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
           grow_SetHighlight( event->object.object, 1);
           grow_SelectInsert( graph->grow->ctx, event->object.object);
         }
+
+	graph->refresh_objects( attr_mRefresh_Select);
       }
       break;
     case glow_eEvent_MB1Press:
       /* Select region */
       grow_SetSelectHighlight( graph->grow->ctx);
+
+      graph->refresh_objects( attr_mRefresh_Select);
       break;
     case glow_eEvent_MB1PressShift:
       /* Select region */
       grow_SetSelectHighlight( graph->grow->ctx);
+
+      graph->refresh_objects( attr_mRefresh_Select);
       break;
     case glow_eEvent_PasteSequenceStart:
     {
@@ -2975,6 +3046,8 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
     case glow_eEvent_PasteSequenceEnd:
     {
       graph->journal_store( journal_eAction_PostPaste, 0);
+
+      graph->refresh_objects( attr_mRefresh_Objects);
       break;
     }
     case glow_eEvent_GrowDynamics:
@@ -3475,18 +3548,17 @@ static int graph_init_grow_cb( GrowCtx *ctx, void *client_data)
 }
 #endif
 
-static void graph_attr_redraw_cb( Attr *attrctx)
+void Graph::graph_attr_redraw_cb( void *gctx, void *attrctx, grow_tObject object, void *info)
 {
-  Graph *graph = (Graph *) attrctx->parent_ctx;
+  Graph *graph = (Graph *)gctx;
 
-  if ( attrctx->client_data)
-    grow_UpdateObject( graph->grow->ctx, attrctx->object,
-		       (grow_sAttrInfo *)attrctx->client_data);
+  if ( info)
+    grow_UpdateObject( graph->grow->ctx, object, (grow_sAttrInfo *)info);
 }
 
-static void graph_graphattr_redraw_cb( Attr *attrctx)
+static void graph_graphattr_redraw_cb( void *gctx, void *attrctx, grow_tObject object, void *info)
 {
-  Graph *graph = (Graph *) attrctx->parent_ctx;
+  Graph *graph = (Graph *) gctx;
   if ( graph->is_subgraph()) {
     char 	*argnames;
     int  	*argtypes;
@@ -3494,8 +3566,7 @@ static void graph_graphattr_redraw_cb( Attr *attrctx)
     char	*code;
     int		size;
 
-    grow_UpdateSubGraph( graph->grow->ctx,
-			 (grow_sAttrInfo *)attrctx->client_data);
+    grow_UpdateSubGraph( graph->grow->ctx, (grow_sAttrInfo *)info);
 
     grow_GetSubGraphDynamic( graph->grow->ctx, &code, &size);
     if ( size) {
@@ -3504,39 +3575,39 @@ static void graph_graphattr_redraw_cb( Attr *attrctx)
     }
   }
   else {
-    grow_UpdateGraph( graph->grow->ctx,
-		      (grow_sAttrInfo *)attrctx->client_data);
+    grow_UpdateGraph( graph->grow->ctx, (grow_sAttrInfo *) info);
   }
 }
 
-static void graph_attr_close_cb( Attr *attrctx)
+void Graph::graph_attr_close_cb( void *gctx, void *attrctx, grow_tObject object, void *info, int keep)
 {
-  Graph *graph = (Graph *) attrctx->parent_ctx;
+  Graph *graph = (Graph *) gctx;
 
-  if ( attrctx->client_data)
-    grow_UpdateObject( graph->grow->ctx, attrctx->object,
-		       (grow_sAttrInfo *)attrctx->client_data);
+  if ( info)
+    grow_UpdateObject( graph->grow->ctx, object, (grow_sAttrInfo *)info);
 
-  ((Graph *)attrctx->parent_ctx)->attr_list.remove( (void *) attrctx);
-  grow_FreeObjectAttrInfo( (grow_sAttrInfo *)attrctx->client_data);
+  graph->attr_list.remove( attrctx);
+  grow_FreeObjectAttrInfo( (grow_sAttrInfo *)info);
 
-  graph->journal_store( journal_eAction_PostPropertiesObject, attrctx->object);
+  graph->journal_store( journal_eAction_PostPropertiesObject, object);
 
-  delete attrctx;
+  if ( !keep)
+    delete (Attr *)attrctx;
 
 }
 
-static void graph_graphattr_close_cb( Attr *attrctx)
+static void graph_graphattr_close_cb( void *gctx, void *attrctx, grow_tObject object, void *info, int keep)
 {
-  Graph *graph = (Graph *) attrctx->parent_ctx;
+  Graph *graph = (Graph *) gctx;
 
   if ( graph->is_subgraph())
-    grow_FreeSubGraphAttrInfo( (grow_sAttrInfo *)attrctx->client_data);
+    grow_FreeSubGraphAttrInfo( (grow_sAttrInfo *)info);
   else
-    grow_FreeGraphAttrInfo( (grow_sAttrInfo *)attrctx->client_data);
+    grow_FreeGraphAttrInfo( (grow_sAttrInfo *)info);
 
-  graph->attr_list.remove( (void *) attrctx);
-  delete attrctx;
+  graph->attr_list.remove( attrctx);
+  if ( !keep)
+    delete (Attr *)attrctx;
 }
 
 int Graph::is_modified()
@@ -5745,6 +5816,12 @@ static void graph_free_dyn( grow_tObject object)
     if ( dyn)
       delete dyn;
   }
+}
+
+void Graph::refresh_objects( unsigned int type) 
+{
+  if ( refresh_objects_cb)
+    (refresh_objects_cb)( parent_ctx, type);
 }
 
 void GraphApplList::insert( void *key, void *ctx)

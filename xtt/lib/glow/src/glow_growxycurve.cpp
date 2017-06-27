@@ -175,12 +175,12 @@ void GrowXYCurve::set_xy_data( double *y_data, double *x_data, int curve_idx, in
   if ( curve_idx > TREND_MAX_CURVES)
     return;
 
-  no_of_points = max( 2, no_of_points);
-  points = cpoints = min( no_of_points, data_points);
+  no_of_points = glmax( 2, no_of_points);
+  points = cpoints = glmin( no_of_points, data_points);
   if ( fill_curve)
     cpoints += 2;
   
-  curve_width = min( DRAW_TYPE_SIZE, max( 1, curve_width));
+  curve_width = glmin( DRAW_TYPE_SIZE, glmax( 1, curve_width));
 
   pointarray = (glow_sPoint *) calloc( cpoints, sizeof(glow_sPoint));
   point_p = pointarray;
@@ -193,13 +193,13 @@ void GrowXYCurve::set_xy_data( double *y_data, double *x_data, int curve_idx, in
 	point_p->y = ur.y - (y_data[idx] - y_min_value[j]) / 
 	  (y_max_value[j] - y_min_value[j]) * (ur.y - ll.y);
       
-      point_p->y = max( ll.y, min( point_p->y, ur.y));	
+      point_p->y = glmax( ll.y, glmin( point_p->y, ur.y));	
 
       if ( x_max_value[j] != x_min_value[j])
 	point_p->x = ll.x + (x_data[idx] - x_min_value[j]) / 
 	  (x_max_value[j] - x_min_value[j]) * (ur.x - ll.x);
 
-      point_p->x = max( ll.x, min( point_p->x, ur.x));	
+      point_p->x = glmax( ll.x, glmin( point_p->x, ur.x));	
     }
     else {
       
@@ -208,7 +208,7 @@ void GrowXYCurve::set_xy_data( double *y_data, double *x_data, int curve_idx, in
 	  point_p->x = ll.x + (x_data[idx] - x_min_value[j]) / 
 	    (x_max_value[j] - x_min_value[j]) * (ur.x - ll.x);
 	
-	point_p->x = max( ll.x, min( point_p->x, ur.x));	
+	point_p->x = glmax( ll.x, glmin( point_p->x, ur.x));	
 	point_p->y = ur.y;
 	idx--;
       }
@@ -217,7 +217,7 @@ void GrowXYCurve::set_xy_data( double *y_data, double *x_data, int curve_idx, in
 	  point_p->x = ll.x + (x_data[idx-1] - x_min_value[j]) / 
 	    (x_max_value[j] - x_min_value[j]) * (ur.x - ll.x);
 	
-	point_p->x = max( ll.x, min( point_p->x, ur.x));	
+	point_p->x = glmax( ll.x, glmin( point_p->x, ur.x));	
 	point_p->y = ur.y;
       }
       else {
@@ -225,13 +225,13 @@ void GrowXYCurve::set_xy_data( double *y_data, double *x_data, int curve_idx, in
 	  point_p->y = ur.y - (y_data[idx] - y_min_value[j]) / 
 	    (y_max_value[j] - y_min_value[j]) * (ur.y - ll.y);
 	
-	point_p->y = max( ll.y, min( point_p->y, ur.y));	
+	point_p->y = glmax( ll.y, glmin( point_p->y, ur.y));	
 	
 	if ( x_max_value[j] != x_min_value[j])
 	  point_p->x = ll.x + (x_data[idx] - x_min_value[j]) / 
 	    (x_max_value[j] - x_min_value[j]) * (ur.x - ll.x);
 	
-	point_p->x = max( ll.x, min( point_p->x, ur.x));	
+	point_p->x = glmax( ll.x, glmin( point_p->x, ur.x));	
       }
     }
     point_p++;
@@ -293,10 +293,10 @@ void GrowXYCurve::export_javabean( GlowTransform *t, void *node,
     y2 = trf.y( t, ur.x, ur.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
   }
 
-  ll_x = min( x1, x2);
-  ur_x = max( x1, x2);
-  ll_y = min( y1, y2);
-  ur_y = max( y1, y2);
+  ll_x = glmin( x1, x2);
+  ur_x = glmax( x1, x2);
+  ll_y = glmin( y1, y2);
+  ur_y = glmax( y1, y2);
 
   if ( t)
     rotation = (trf.rot( t) / 360 - floor( trf.rot( t) / 360)) * 360;

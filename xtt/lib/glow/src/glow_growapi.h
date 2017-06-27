@@ -1899,6 +1899,8 @@ extern "C" {
     \param code	        Destination code, glow_eDest_After or glow_eDest_Before.
   */
   int grow_OrderObject( grow_tCtx ctx, grow_tObject object, grow_tObject destination, glow_eDest code);
+
+  int grow_OrderGroupObject( grow_tObject group, grow_tObject object, grow_tObject destination, glow_eDest code);
        
   //! Set default layout. Adjust zoom factor to the current size of the window.
   /*! \param ctx	Grow context. */
@@ -3217,6 +3219,7 @@ extern "C" {
   int grow_CheckObjectName( grow_tCtx ctx, char *name);
   int grow_KeyPressed( grow_tCtx ctx, int key);
   void grow_SignalSend( grow_tCtx ctx, char *signalname);
+  void grow_DrawObject( grow_tObject object);
 
   
 /*@}*/

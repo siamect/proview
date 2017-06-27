@@ -67,27 +67,27 @@ int GlowCustomColors::set_color( glow_eDrawType dtype, double r, double g, doubl
   colors[idx][2] = b;
 
   // Shadow
-  colors[idx+1][0] = max( r - 0.12, 0);
-  colors[idx+1][1] = max( g - 0.12, 0);
-  colors[idx+1][2] = max( b - 0.12, 0);;
+  colors[idx+1][0] = glmax( r - 0.12, 0);
+  colors[idx+1][1] = glmax( g - 0.12, 0);
+  colors[idx+1][2] = glmax( b - 0.12, 0);;
 
   // Light  
   double mv = ( r + g + b) / 3;
   if ( mv > 0.4) {
-    colors[idx+2][0] = min( r + 0.18, 1);
-    colors[idx+2][1] = min( g + 0.18, 1);
-    colors[idx+2][2] = min( b + 0.18, 1);
+    colors[idx+2][0] = glmin( r + 0.18, 1);
+    colors[idx+2][1] = glmin( g + 0.18, 1);
+    colors[idx+2][2] = glmin( b + 0.18, 1);
   }
   else {
-    colors[idx+2][0] = min( r + 0.35 * mv + 0.04, 1);
-    colors[idx+2][1] = min( g + 0.35 * mv + 0.04, 1);
-    colors[idx+2][2] = min( b + 0.35 * mv + 0.04, 1);
+    colors[idx+2][0] = glmin( r + 0.35 * mv + 0.04, 1);
+    colors[idx+2][1] = glmin( g + 0.35 * mv + 0.04, 1);
+    colors[idx+2][2] = glmin( b + 0.35 * mv + 0.04, 1);
   }
 
   // Hot
-  colors[idx+3][0] = min( r + 0.12, 1);
-  colors[idx+3][1] = min( g + 0.12, 1);
-  colors[idx+3][2] = min( b + 0.12, 1);
+  colors[idx+3][0] = glmin( r + 0.12, 1);
+  colors[idx+3][1] = glmin( g + 0.12, 1);
+  colors[idx+3][2] = glmin( b + 0.12, 1);
 
   return 1;
 }

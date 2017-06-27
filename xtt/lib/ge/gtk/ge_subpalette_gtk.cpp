@@ -36,6 +36,7 @@
 
 #include "glow_std.h"
 
+#include <vector>
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -58,6 +59,7 @@ extern "C" {
 #include "glow_growapi.h"
 #include "glow_growwidget_gtk.h"
 
+#include "ge_dyn.h"
 #include "ge_attr.h"
 #include "ge_subpalette_gtk.h"
 
@@ -94,8 +96,8 @@ SubPaletteGtk::~SubPaletteGtk()
 void SubPaletteGtk::set_inputfocus( int focus)
 {
   // TODO if ( focus) Set border ...
-  
-  gtk_widget_grab_focus( brow_widget);
+  if ( focus)
+    gtk_widget_grab_focus( brow_widget);
 }
 
 void SubPaletteGtk::create_popup_menu( char *filename, int x, int y) 

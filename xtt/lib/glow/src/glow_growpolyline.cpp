@@ -377,8 +377,8 @@ void GrowPolyLine::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, 
   else
     idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = glmax( 0, idx);
+  idx = glmin( idx, DRAW_TYPE_SIZE-1);
   glow_sPointX *point_p = points;
   double x1, y1;
 
@@ -478,7 +478,7 @@ void GrowPolyLine::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, 
 
     double trf_scale = trf.vertical_scale( t);
     int ish = int( shadow_width / 100 * trf_scale * 
-      min((x_right - x_left)*w->zoom_factor_x, (y_high - y_low)*w->zoom_factor_y) + 0.5);
+      glmin((x_right - x_left)*w->zoom_factor_x, (y_high - y_low)*w->zoom_factor_y) + 0.5);
 
     if ( ish >= 1) {
       calculate_shadow( &sp, &p_num, ish, highlight, colornode, 0, chot);
@@ -524,8 +524,8 @@ void GrowPolyLine::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
   else
     idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = glmax( 0, idx);
+  idx = glmin( idx, DRAW_TYPE_SIZE-1);
   glow_sPointX *point_p = points;
   double x1, y1;
 
@@ -1546,8 +1546,8 @@ void GrowPolyLine::export_javabean( GlowTransform *t, void *node,
   else
     idx = int( ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * line_width - 1);
   idx += hot;
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = glmax( 0, idx);
+  idx = glmin( idx, DRAW_TYPE_SIZE-1);
   double x1, y1;
   int jshadow = !disable_shadow && shadow_width != 0 && !fill_eq_light && !fill_eq_shadow;
 
@@ -1579,7 +1579,7 @@ void GrowPolyLine::export_javabean( GlowTransform *t, void *node,
   if ( jshadow) {
     double trf_scale = trf.vertical_scale( t);
     int ish = int( shadow_width / 100 * trf_scale *
-	  min((x_right - x_left)*ctx->mw.zoom_factor_x, (y_high - y_low)*ctx->mw.zoom_factor_y) + round);
+	  glmin((x_right - x_left)*ctx->mw.zoom_factor_x, (y_high - y_low)*ctx->mw.zoom_factor_y) + round);
 
     if ( ish)
       calculate_shadow( &sp, &p_num, ish, 0, 0, 1, 0);

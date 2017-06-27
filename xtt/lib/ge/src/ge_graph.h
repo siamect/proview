@@ -459,7 +459,7 @@ class Graph {
 
   virtual void trace_timer_remove() {}
   virtual void trace_timer_add( int time) {}
-  virtual Attr *attr_new( void *parent_ctx, void *object, attr_sItem *itemlist, int item_cnt) 
+  virtual Attr *attr_new( void *parent_ctx, attr_eType type, void *object, attr_sItem *itemlist, int item_cnt) 
     { return 0;}
   virtual void popup_position( int event_x, int event_y, int *x, int *y) {}
   static void trace_scan( Graph *graph);
@@ -509,6 +509,7 @@ class Graph {
   void         	(*eventlog_cb)(void *, void *, unsigned int);
   void         	(*update_colorpalette_cb)(void *);
   void         	(*keyboard_cb)(void *, int, int);
+  void         	(*refresh_objects_cb)(void *, unsigned int);
   int			linewidth;		//!< Selected linewidth.
   glow_eLineType	linetype;		//!< Selected linetype.
   int			textsize;		//!< Selected text size.
@@ -946,6 +947,10 @@ class Graph {
   //! Select all objects.
   /*! Select all objects in the graph. */
   void select_all_objects();
+
+  //! Select an object.
+  void select_object( grow_tObject o);
+  void add_select_object( grow_tObject o, int select);
 
   //! Select next object. */
   void select_nextobject( glow_eDirection dir);
@@ -1414,6 +1419,7 @@ class Graph {
   void close_input_all();
   int get_object_name( unsigned int idx, int size, char *name);
   void signal_send( char *signalname);
+  void refresh_objects( unsigned int type);
 
   static int get_colortheme_colors( char *file, double **colors, int *size);
 
@@ -1423,6 +1429,24 @@ class Graph {
   static void graph_attr_store_cb( void *g, grow_tObject object);
   static int graph_attr_recall_cb( void *g, grow_tObject object, int idx, 
 				   GeDyn **old_dyn);
+  static int graph_get_plant_select_cb( void *g, char *value, int size);
+  static int graph_get_current_colors_cb( void *g, glow_eDrawType *fill_color, 
+					  glow_eDrawType *border_color, glow_eDrawType *text_color);
+  static int graph_get_current_color_tone_cb( void *g, glow_eDrawType *color_tone);
+  static int graph_reconfigure_attr_cb( void *g, grow_tObject object,
+					attr_sItem **itemlist, int *itemlist_cnt, void **client_data);
+  static int graph_attr_set_data_cb( void *g, grow_tObject object,
+				     GeDyn *data);
+  static int graph_get_dyn_info_cb( void *g, GeDyn *dyn,
+				    attr_sItem **itemlist, int *itemlist_cnt);
+  static int graph_get_subgraph_info_cb( void *g, char *name, 
+					 attr_sItem **itemlist, int *itemlist_cnt);
+  static void graph_attr_redraw_cb( void *gctx, void *attrctx, grow_tObject object, void *info);
+  static void graph_attr_close_cb( void *gctx, void *attrctx, grow_tObject object, void *info,
+				   int keep);
+  static void graph_get_object_list_cb( void *g, unsigned int type, grow_tObject **list, 
+					int *list_cnt, grow_tObject *parent, int parent_cnt);
+
   
 
   //

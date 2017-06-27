@@ -685,10 +685,10 @@ void GlowNodeClass::get_borders( GlowTransform *t, double *x_right,
       ky2 = base->y1;
     }
 
-    ll_x = min( kx1, kx2);
-    ur_x = max( kx1, kx2);
-    ll_y = min( ky1, ky2);
-    ur_y = max( ky1, ky2);
+    ll_x = glmin( kx1, kx2);
+    ur_x = glmax( kx1, kx2);
+    ll_y = glmin( ky1, ky2);
+    ur_y = glmax( ky1, ky2);
 
     if ( ll_x < *x_left)
       *x_left = ll_x;

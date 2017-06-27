@@ -143,15 +143,16 @@ int GraphGtk::create_navigator( GtkWidget *parent)
   return 1;
 }
 
-Attr *GraphGtk::attr_new( void *parent_ctx, void *object, attr_sItem *itemlist, int item_cnt)
+Attr *GraphGtk::attr_new( void *parent_ctx, attr_eType type,  void *object, attr_sItem *itemlist, int item_cnt)
 {
-  AttrGtk *attr =  new AttrGtk( parent_wid, parent_ctx, object, itemlist, item_cnt);
+  AttrGtk *attr =  new AttrGtk( parent_wid, parent_ctx, type, object, itemlist, item_cnt);
   return attr;
 }
 
 void GraphGtk::set_inputfocus( int focus)
 {
-  gtk_widget_grab_focus( grow_widget);
+  if ( focus)
+    gtk_widget_grab_focus( grow_widget);
 }
 
 void GraphGtk::popup_position( int event_x, int event_y, int *x, int *y) 

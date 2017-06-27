@@ -382,10 +382,10 @@ int GrowImage::local_event_handler( glow_eEvent event, double x, double y)
 {
   double ll_x, ur_x, ll_y, ur_y;
 
-  ll_x = min( ll.x, ur.x);
-  ur_x = max( ll.x, ur.x);
-  ll_y = min( ll.y, ur.y);
-  ur_y = max( ll.y, ur.y);
+  ll_x = glmin( ll.x, ur.x);
+  ur_x = glmax( ll.x, ur.x);
+  ll_y = glmin( ll.y, ur.y);
+  ur_y = glmax( ll.y, ur.y);
 
   if ( ll_x <= x && x <= ur_x &&
        ll_y <= y && y <= ur_y) {
@@ -893,10 +893,10 @@ void GrowImage::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
     y2 = ( trf.y( t, ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
   }
 
-  ll_x = min( x1, x2);
-  ur_x = max( x1, x2);
-  ll_y = min( y1, y2);
-  ur_y = max( y1, y2);
+  ll_x = glmin( x1, x2);
+  ur_x = glmax( x1, x2);
+  ll_y = glmin( y1, y2);
+  ur_y = glmax( y1, y2);
 
   if ( ll_x == ur_x || ll_y == ur_y)
     return;
@@ -1064,10 +1064,10 @@ void GrowImage::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
     x2 = int( trf.x( t, ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
     y2 = int( trf.y( t, ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
   }
-  ll_x = min( x1, x2);
-  ur_x = max( x1, x2);
-  ll_y = min( y1, y2);
-  ur_y = max( y1, y2);
+  ll_x = glmin( x1, x2);
+  ur_x = glmax( x1, x2);
+  ll_y = glmin( y1, y2);
+  ur_y = glmax( y1, y2);
 
   w->set_draw_buffer_only();
   if ( ctx->enable_bg_pixmap)
@@ -1109,10 +1109,10 @@ void GrowImage::get_borders( GlowTransform *t, double *x_right,
     y2 = trf.y( ur.x, ur.y);
   }
 
-  ll_x = min( x1, x2);
-  ur_x = max( x1, x2);
-  ll_y = min( y1, y2);
-  ur_y = max( y1, y2);
+  ll_x = glmin( x1, x2);
+  ur_x = glmax( x1, x2);
+  ll_y = glmin( y1, y2);
+  ur_y = glmax( y1, y2);
 
   if ( display_level != glow_mDisplayLevel_1)
     return;
@@ -1209,10 +1209,10 @@ void GrowImage::export_javabean( GlowTransform *t, void *node,
     rot = trf.rot(t);
   }
 
-  ll_x = min( x1, x2);
-  ur_x = max( x1, x2);
-  ll_y = min( y1, y2);
-  ur_y = max( y1, y2);
+  ll_x = glmin( x1, x2);
+  ur_x = glmax( x1, x2);
+  ll_y = glmin( y1, y2);
+  ur_y = glmax( y1, y2);
   if ( clip_mask)
     transparent = 1;
 

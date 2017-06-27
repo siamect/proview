@@ -36,6 +36,8 @@
 
 /* wb_ge_gtk.cpp -- graphical editor */
 
+#include "glow_std.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
@@ -47,6 +49,10 @@
 
 typedef void *ldh_tSesContext;
 
+#include "glow.h"
+#include "glow_growctx.h"
+#include "glow_growapi.h"
+#include "ge_dyn.h"
 #include "ge_gtk.h"
 #include "co_lng.h"
 #include "cow_xhelp_gtk.h"

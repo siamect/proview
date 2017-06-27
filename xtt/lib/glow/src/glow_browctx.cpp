@@ -97,7 +97,7 @@ void BrowCtx::configure( double y_redraw)
   
   a.configure();
   get_borders();
-  frame_x_right = max( x_right, 
+  frame_x_right = glmax( x_right, 
 	1.0 * (mw.window_width + mw.offset_x) / mw.zoom_factor_x);
   a.zoom();
   redraw( y_redraw);
@@ -162,8 +162,8 @@ void BrowCtx::zoom( double factor)
   if ( mw.offset_y != 0)
     mw.offset_y = int( (mw.offset_y  - mw.window_height / 2.0 * ( 1.0/factor - 1)) 
 		* factor);
-  mw.offset_x = max( mw.offset_x, 0);
-  mw.offset_y = max( mw.offset_y, 0);
+  mw.offset_x = glmax( mw.offset_x, 0);
+  mw.offset_y = glmax( mw.offset_y, 0);
   if ( (x_right - x_left) * mw.zoom_factor_x <= mw.window_width)
     mw.offset_x = 0;
   if ( (y_high - y_low) * mw.zoom_factor_y <= mw.window_height)

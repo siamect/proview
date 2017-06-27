@@ -325,7 +325,7 @@ glow_eDrawType GlowColor::get_drawtype( glow_eDrawType local_drawtype,
       if ( drawtype >= 60 && drawtype < 300) {
         base_drawtype = drawtype / 30 * 30;
         incr = drawtype - base_drawtype;
-	drawtype = glow_eDrawType( drawtype + min( 2 - incr / 10, intensity) * 10);
+	drawtype = glow_eDrawType( drawtype + glmin( 2 - incr / 10, intensity) * 10);
 	if ( drawtype < base_drawtype)
 	  drawtype = (glow_eDrawType)( glow_eDrawType_Color41 + incr);
 	/*

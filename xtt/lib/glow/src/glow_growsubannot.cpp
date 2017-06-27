@@ -549,7 +549,7 @@ void GrowSubAnnot::export_javabean( GlowTransform *t, void *node,
   int idx = int( trf_scale * ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (text_size +4) - 4);
   if ( idx < 0)
     return;
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = glmin( idx, DRAW_TYPE_SIZE-1);
 
   if (!t) {
     x1 = int( trf.x( p.x, p.y) * ctx->mw.zoom_factor_x) - ctx->mw.offset_x;

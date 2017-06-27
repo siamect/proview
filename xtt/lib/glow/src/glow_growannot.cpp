@@ -124,7 +124,7 @@ void GrowAnnot::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
   double tsize = trf_scale * w->zoom_factor_y / w->base_zoom_factor * (8+2*text_size);
   if ( idx < 0)
     return;
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = glmin( idx, DRAW_TYPE_SIZE-1);
 
   glow_eFont lfont;
   glow_eDrawType ldraw_type;
@@ -167,7 +167,7 @@ void GrowAnnot::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
 					    highlight, (GrowNode *)colornode, 2);
 
     if ( protect) {
-      text_len = min(strlen(((GlowNode *) node)->annotv[number]), sizeof(stars)-2);
+      text_len = glmin(strlen(((GlowNode *) node)->annotv[number]), sizeof(stars)-2);
       textp = &stars[sizeof(stars) - 1 - text_len];
     }
     else {
@@ -304,7 +304,7 @@ void GrowAnnot::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
   double tsize = trf_scale * w->zoom_factor_y / w->base_zoom_factor * (8+2*text_size);
   if ( idx < 0)
     return;
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = glmin( idx, DRAW_TYPE_SIZE-1);
 
   glow_eFont lfont;
   glow_eDrawType ldraw_type;
@@ -337,7 +337,7 @@ void GrowAnnot::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
       int text_len;
 
       if ( protect) {
-	text_len = min(strlen(((GlowNode *) node)->annotv[number]), sizeof(stars)-2);
+	text_len = glmin(strlen(((GlowNode *) node)->annotv[number]), sizeof(stars)-2);
 	textp = &stars[sizeof(stars) - 1 - text_len];
       }
       else {
@@ -457,7 +457,7 @@ void GrowAnnot::erase_background( GlowWind *w, GlowTransform *t, int hot, void *
   double tsize = trf_scale * w->zoom_factor_y / w->base_zoom_factor * (8+2*text_size);
   if ( idx < 0)
     return;
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = glmin( idx, DRAW_TYPE_SIZE-1);
 
   glow_eFont lfont;
   glow_eDrawType ldraw_type;
@@ -498,7 +498,7 @@ void GrowAnnot::erase_background( GlowWind *w, GlowTransform *t, int hot, void *
 				  strlen(((GlowNode *) node)->annotv[number]), ldraw_type, idx, 0, 
 				  lfont, tsize, 0);
 	else {
-	  int text_len = min(strlen(((GlowNode *) node)->annotv[number]), sizeof(stars)-2);
+	  int text_len = glmin(strlen(((GlowNode *) node)->annotv[number]), sizeof(stars)-2);
 	  ctx->gdraw->text_erase( w, x1, y1,
 				  &stars[sizeof(stars) - 1 - text_len], 
 				  text_len, 
@@ -575,7 +575,7 @@ void GrowAnnot::export_javabean( GlowTransform *t, void *node,
 		 (text_size +4) - 4);
   if ( idx < 0)
     return;
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = glmin( idx, DRAW_TYPE_SIZE-1);
 
   if (!t) {
     x1 = int( trf.x( p.x, p.y) * ctx->mw.zoom_factor_x) - ctx->mw.offset_x;
@@ -604,7 +604,7 @@ void GrowAnnot::export_javabean_font( GlowTransform *t, void *node,
 		 (text_size +4) - 4);
   if ( idx < 0)
     return;
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = glmin( idx, DRAW_TYPE_SIZE-1);
 
   glow_eFont lfont;
   glow_eDrawType ldraw_type;
@@ -679,7 +679,7 @@ void GrowAnnot::get_text_extent( GlowTransform *t, void *node, double *width, do
   double tsize = trf_scale * ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (8+2*text_size);
   if ( idx < 0)
     return;
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = glmin( idx, DRAW_TYPE_SIZE-1);
 
   char *textp = ((GlowNode *) node)->annotv[number];
   int text_len = strlen(((GlowNode *) node)->annotv[number]);

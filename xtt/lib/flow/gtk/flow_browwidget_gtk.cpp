@@ -45,6 +45,8 @@
 #include "flow_draw_gtk.h"
 #include "flow_browwidget_gtk.h"
 
+#define NOTDESTROYED 0xAAAAAAAA
+
 typedef struct _BrowWidgetGtk		BrowWidgetGtk;
 typedef struct _BrowWidgetGtkClass	BrowWidgetGtkClass;
 
@@ -81,7 +83,7 @@ struct _BrowWidgetGtk {
   gint 		scroll_timerid;
   flow_sScroll  scroll_data;
   int           scroll_configure;
-  int		destroyed;
+  unsigned int 	destroyed;
 };
 
 struct _BrowWidgetGtkClass {
@@ -367,7 +369,7 @@ static void browwidgetgtk_destroy( GtkObject *object)
 {
   BrowWidgetGtk *brow = (BrowWidgetGtk *)object;
 
-  if ( !brow->destroyed) {
+  if ( brow->destroyed == NOTDESTROYED) {
     brow->destroyed = 1;
     if ( brow->scroll_timerid)
       g_source_remove( brow->scroll_timerid);
@@ -406,7 +408,7 @@ GtkWidget *browwidgetgtk_new(
   w->client_data = client_data;
   w->scroll_h = 0;
   w->scroll_v = 0;
-  w->destroyed = 0;
+  w->destroyed = NOTDESTROYED;
   return (GtkWidget *) w;  
 }
 
@@ -431,6 +433,7 @@ GtkWidget *scrolledbrowwidgetgtk_new(
   w->scroll_v_value = 0;
   w->scroll_configure = 0;
   w->form = form;
+  w->destroyed = NOTDESTROYED;
   *browwidget = GTK_WIDGET( w);
 
   g_signal_connect( ((GtkScrollbar *)w->scroll_h)->range.adjustment, 

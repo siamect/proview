@@ -1125,6 +1125,12 @@ int Ge::get_plant_select_cb( void *ge_ctx, char *select_name, int size)
   return ((Ge *)ge_ctx)->get_plant_select( select_name, size);
 }
 
+void Ge::refresh_objects_cb( void *ge_ctx, unsigned int type)
+{
+  if ( ((Ge *)ge_ctx)->objectnav)
+    ((Ge *)ge_ctx)->objectnav->refresh_objects( type);;
+}
+
 void Ge::activate_exit()
 {
   if ( graph->is_modified())
@@ -2199,10 +2205,20 @@ int Ge::traverse_focus( void *ctx, void *component)
       gectx->set_focus( gectx->plantctx);
   }
   else if ( component == (void *) gectx->subpalette) {
+    if ( gectx->objectnav_mapped)
+      gectx->set_focus( gectx->objectnav);
     gectx->set_focus( gectx->graph);
   }
   else if ( component == (void *) gectx->plantctx) {
+    if ( gectx->objectnav_mapped)
+      gectx->set_focus( gectx->objectnav);
     gectx->set_focus( gectx->graph);
+  }
+  else if ( component == (void *) gectx->objectnav) {
+    if ( gectx->subpalette_mapped)
+      gectx->set_focus( gectx->subpalette);
+    else if ( gectx->plant_mapped)
+      gectx->set_focus( gectx->plantctx);
   }
   else
     return 0;
@@ -2217,26 +2233,40 @@ int Ge::set_focus_cb( void *ctx, void *component)
 int Ge::set_focus( void *component)
 {
   if ( component == 0) {
-    if ( subpalette_mapped)
-      set_focus( subpalette);
-    else if ( plant_mapped)
-      set_focus( plantctx);
+    if ( prev_focused_component != 0)
+      set_focus( prev_focused_component);
+    else {
+      if ( objectnav_mapped)
+	set_focus( objectnav);
+      else if ( subpalette_mapped)
+	set_focus( subpalette);
+      else if ( plant_mapped)
+	set_focus( plantctx);
+    }
   }
   else if ( component == (void *)graph) {
-    graph->set_inputfocus( 1);
-    if ( subpalette_mapped)
-      subpalette->set_inputfocus( 0);
-    if ( plant_mapped)
-      plantctx->set_inputfocus(0);
-    focused_component = component;
+    if ( focused_component != 0)
+      set_focus( focused_component);
+    else {
+      if ( objectnav_mapped)
+	set_focus( objectnav);
+      else if ( subpalette_mapped)
+	set_focus( subpalette);
+      else if ( plant_mapped)
+	set_focus( plantctx);
+    }
   }
   else if ( component == (void *)subpalette) {
     if ( subpalette_mapped) {
       graph->set_inputfocus( 0);
       subpalette->set_inputfocus( 1);
+      if ( focused_component != component)
+	prev_focused_component = focused_component;
       focused_component = component;
       if ( plant_mapped)
 	plantctx->set_inputfocus(0);
+      if ( objectnav_mapped)
+	objectnav->set_inputfocus(0);
     }
   }
   else if ( component == (void *)plantctx) {
@@ -2244,9 +2274,25 @@ int Ge::set_focus( void *component)
       if ( subpalette_mapped)
 	subpalette->set_inputfocus(0);
       graph->set_inputfocus( 0);
+      if ( objectnav_mapped)
+	objectnav->set_inputfocus(0);
       plantctx->set_inputfocus( 1);
+      if ( focused_component != component)
+	prev_focused_component = focused_component;
       focused_component = component;
     }
+  }
+  else if ( component == (void *)objectnav) {
+    if ( plant_mapped)
+      plantctx->set_inputfocus(0);
+    if ( subpalette_mapped)
+      subpalette->set_inputfocus(0);
+    graph->set_inputfocus( 0);
+
+    objectnav->set_inputfocus( 1);
+    if ( focused_component != component)
+      prev_focused_component = focused_component;
+    focused_component = component;
   }
 
   return 1;
@@ -2272,6 +2318,61 @@ void Ge::help_cb( void *ctx, char *topic, char *helpfile)
   CoXHelp::dhelp( topic, "", navh_eHelpFile_Other, helpfile, false);
 }
 
+void Ge::graph_get_object_list_cb( void *g, unsigned int type, grow_tObject **list, int *list_cnt, 
+				  grow_tObject *parent, int parent_cnt)
+{
+  Graph::graph_get_object_list_cb( ((Ge *)g)->graph, type, list, list_cnt, parent, parent_cnt);
+}
+void Ge::graph_attr_store_cb( void *g, grow_tObject object)
+{
+  Graph::graph_attr_store_cb( ((Ge *)g)->graph, object);
+}
+int Ge::graph_attr_recall_cb( void *g, grow_tObject object, int idx, 
+				   GeDyn **old_dyn)
+{
+  return Graph::graph_attr_recall_cb( ((Ge *)g)->graph, object, idx, old_dyn);
+}
+int Ge::graph_get_plant_select_cb( void *g, char *value, int size)
+{
+  return Graph::graph_get_plant_select_cb( ((Ge *)g)->graph, value, size);
+}
+int Ge::graph_get_current_colors_cb( void *g, glow_eDrawType *fill_color, 
+				     glow_eDrawType *border_color, glow_eDrawType *text_color) {
+  return Graph::graph_get_current_colors_cb( ((Ge *)g)->graph, fill_color, border_color, text_color);
+}
+int Ge::graph_get_current_color_tone_cb( void *g, glow_eDrawType *color_tone)
+{
+  return Graph::graph_get_current_color_tone_cb( ((Ge *)g)->graph, color_tone);
+}
+int Ge::graph_reconfigure_attr_cb( void *g, grow_tObject object,
+				   attr_sItem **itemlist, int *itemlist_cnt, void **client_data)
+{
+  return graph_reconfigure_attr_cb( ((Ge *)g)->graph, object, itemlist, itemlist_cnt, client_data);
+}
+int Ge::graph_attr_set_data_cb( void *g, grow_tObject object,
+				GeDyn *data)
+{
+  return Graph::graph_attr_set_data_cb( ((Ge *)g)->graph, object, data);
+}
+int Ge::graph_get_dyn_info_cb( void *g, GeDyn *dyn,
+			       attr_sItem **itemlist, int *itemlist_cnt)
+{
+  return Graph::graph_get_dyn_info_cb( ((Ge *)g)->graph, dyn, itemlist, itemlist_cnt);
+}
+int Ge::graph_get_subgraph_info_cb( void *g, char *name, 
+				    attr_sItem **itemlist, int *itemlist_cnt)
+{
+  return Graph::graph_get_subgraph_info_cb( ((Ge *)g)->graph, name, itemlist, itemlist_cnt);
+}
+void Ge::graph_attr_close_cb( void *g, void *attrctx, grow_tObject o, void *info, int keep)
+{
+  Graph::graph_attr_close_cb( ((Ge *)g)->graph, attrctx, o, info, keep);
+}
+void Ge::graph_attr_redraw_cb( void *g, void *attrctx, grow_tObject o, void *info)
+{
+  Graph::graph_attr_redraw_cb( ((Ge *)g)->graph, attrctx, o, info);
+}
+
 Ge::~Ge()
 {
 
@@ -2287,12 +2388,12 @@ Ge::Ge( 	void 	*x_parent_ctx,
 		unsigned int x_options) :
   parent_ctx(x_parent_ctx), graph(0), subpalette(0),
   subgraphs(0), colorpalette_ctx(0), text_input_open(0), name_input_open(0),
-  value_input_open(0), command_open(0), confirm_open(0), yesnodia_open(0), 
+  value_input_open(0), objectnav_input_open(0), command_open(0), confirm_open(0), yesnodia_open(0), 
   yesnodia_yes_cb(0), yesnodia_no_cb(0), india_ok_cb(0), current_text_object(0),
   current_value_object(0), current_confirm_object(0), ldhses(0), plantctx(0),
-  exit_when_close(x_exit_when_close), prev_count(0), focused_component(0),
-  recover_object(0), plant_mapped(0), subpalette_mapped(0), options(x_options),
-  open_dialog(0)
+  exit_when_close(x_exit_when_close), prev_count(0), focused_component(0), 
+  prev_focused_component(0), recover_object(0), plant_mapped(0), subpalette_mapped(0), 
+  objectnav_mapped(0), options(x_options), open_dialog(0), objectnav(0)
 {
   strcpy( name, "PwR Ge");
 

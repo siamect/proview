@@ -343,12 +343,12 @@ void GrowFolder::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, vo
 
   idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = glmax( 0, idx);
+  idx = glmin( idx, DRAW_TYPE_SIZE-1);
 
   int text_idx = int( w->zoom_factor_y / w->base_zoom_factor * (text_size +4) - 4);
   double tsize = w->zoom_factor_y / w->base_zoom_factor * (8+2*text_size);
-  text_idx = min( text_idx, DRAW_TYPE_SIZE-1);
+  text_idx = glmin( text_idx, DRAW_TYPE_SIZE-1);
 
   int ll_x, ll_y, ur_x, ur_y;
   double dx1, dy1, dx2, dy2;
@@ -365,10 +365,10 @@ void GrowFolder::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, vo
     dx2 = trf.x( t, ur.x, ur.y);
     dy2 = trf.y( t, ur.x, ur.y);
   }
-  dx1 = min( dx1, dx2);
-  dx2 = max( dx1, dx2);
-  dy1 = min( dy1, dy2);
-  dy2 = max( dy1, dy2);
+  dx1 = glmin( dx1, dx2);
+  dx2 = glmax( dx1, dx2);
+  dy1 = glmin( dy1, dy2);
+  dy2 = glmax( dy1, dy2);
 
   ll_x = int( dx1 * w->zoom_factor_x) - w->offset_x;
   ur_x = int( dx2 * w->zoom_factor_x) - w->offset_x;
@@ -467,8 +467,8 @@ void GrowFolder::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
   idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
 
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = glmax( 0, idx);
+  idx = glmin( idx, DRAW_TYPE_SIZE-1);
   int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
   if (!t) {
@@ -483,10 +483,10 @@ void GrowFolder::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
     x2 = int( trf.x( t, ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
     y2 = int( trf.y( t, ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
   }
-  ll_x = min( x1, x2);
-  ur_x = max( x1, x2);
-  ll_y = min( y1, y2);
-  ur_y = max( y1, y2);
+  ll_x = glmin( x1, x2);
+  ur_x = glmax( x1, x2);
+  ll_y = glmin( y1, y2);
+  ur_y = glmax( y1, y2);
 
   w->set_draw_buffer_only();
   ctx->gdraw->rect_erase( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, idx);
@@ -524,10 +524,10 @@ void GrowFolder::export_javabean( GlowTransform *t, void *node,
     y2 = trf.y( t, ur.x, ur.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
   }
 
-  ll_x = min( x1, x2);
-  ur_x = max( x1, x2);
-  ll_y = min( y1, y2);
-  ur_y = max( y1, y2);
+  ll_x = glmin( x1, x2);
+  ur_x = glmax( x1, x2);
+  ll_y = glmin( y1, y2);
+  ur_y = glmax( y1, y2);
 
   ctx->export_jbean->folder( ll_x, ll_y, ur_x, ur_y, folders,
 			     (char *)folder_file_names, (char *)folder_text, 

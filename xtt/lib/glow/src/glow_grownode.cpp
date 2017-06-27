@@ -1649,10 +1649,10 @@ void GrowNode::set_nodeclass( GlowNodeClass *new_nc)
   nc = new_nc;
   get_node_borders();
 //  call_redraw_node_cons();
-  old_x_left = min( old_x_left, x_left);
-  old_x_right = max( old_x_right, x_right);
-  old_y_low = min( old_y_low, y_low);
-  old_y_high = max( old_y_high, y_high);
+  old_x_left = glmin( old_x_left, x_left);
+  old_x_right = glmax( old_x_right, x_right);
+  old_y_low = glmin( old_y_low, y_low);
+  old_y_high = glmax( old_y_high, y_high);
   if ( root_node)
     root_node->draw();
   else

@@ -1333,7 +1333,7 @@ int GeCurve::configure_axes()
       x += cd->y_axis_width[i];
     }
   }
-  axis_window_width = max( x, 1);
+  axis_window_width = glmax( x, 1);
 
   double zoom_x, zoom_y;
   int width;

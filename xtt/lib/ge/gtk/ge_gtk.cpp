@@ -78,6 +78,7 @@
 #include "ge_util.h"
 #include "ge_msg.h"
 #include "ge_item_view_gtk.h"
+#include "ge_attr_gtk.h"
 #include "wb_wnav_selformat.h"
 #include "cow_wow_gtk.h"
 #include "cow_logw_gtk.h"
@@ -285,6 +286,44 @@ void GeGtk::change_value_cb( void *ge_ctx, void *value_object, char *text)
   gectx->recall_entry->set_recall_buffer( gectx->value_recall);
   gectx->value_input_open = 1;
   gectx->current_value_object = value_object;
+}
+
+void GeGtk::objectnav_change_value_cb( void *ge_ctx, int multiline, int size, char *text)
+{
+  GeGtk    *gectx = (GeGtk *)ge_ctx;
+
+  if ( gectx->text_input_open || gectx->value_input_open ||
+       gectx->name_input_open || gectx->objectnav_input_open)  {
+    g_object_set( gectx->cmd_input, "visible", FALSE, NULL);
+    gectx->set_prompt( "");
+    gectx->value_input_open = 0;
+    gectx->text_input_open = 0;
+    gectx->name_input_open = 0;
+    gectx->objectnav_input_open = 0;
+    return;
+  }
+
+  if ( gectx->command_open)
+    gectx->command_open = 0;
+  else {
+    g_object_set( gectx->cmd_input, "visible", TRUE, NULL);
+    g_object_set( gectx->msg_label, "visible", FALSE, NULL);
+  }
+  gectx->message( ' ', "");
+  gtk_widget_grab_focus( gectx->cmd_input);
+
+  char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+  gint pos = 0;
+  gtk_editable_delete_text( GTK_EDITABLE(gectx->cmd_input), 0, -1);
+  gtk_editable_insert_text( GTK_EDITABLE(gectx->cmd_input), textutf8, strlen(textutf8), &pos);
+  g_free( textutf8);
+
+  // Select the text
+  gtk_editable_set_position( GTK_EDITABLE(gectx->cmd_input), -1);
+  gtk_editable_select_region( GTK_EDITABLE(gectx->cmd_input), 0, -1);
+  gectx->set_prompt( "value >");
+  gectx->recall_entry->set_recall_buffer( gectx->value_recall);
+  gectx->objectnav_input_open = 1;
 }
 
 int GeGtk::get_plant_select( char *select_name, int size)
@@ -640,14 +679,18 @@ void GeGtk::activate_paste(GtkWidget *w, gpointer gectx)
 
 void GeGtk::activate_undo(GtkWidget *w, gpointer gectx)
 {
-  if ( ((Ge *)gectx)->graph->journal)
+  if ( ((Ge *)gectx)->graph->journal) {
     ((Ge *)gectx)->graph->journal->undo();
+    ((Ge *)gectx)->graph->refresh_objects( attr_mRefresh_Objects);
+  }
 }
 
 void GeGtk::activate_redo(GtkWidget *w, gpointer gectx)
 {
-  if ( ((Ge *)gectx)->graph->journal)
+  if ( ((Ge *)gectx)->graph->journal) {
     ((Ge *)gectx)->graph->journal->redo();
+    ((Ge *)gectx)->graph->refresh_objects( attr_mRefresh_Objects);
+  }
 }
 
 void GeGtk::activate_command(GtkWidget *w, gpointer data)
@@ -1307,7 +1350,11 @@ void GeGtk::activate_view_plant(GtkWidget *w, gpointer data)
 void GeGtk::activate_view_graphlist(GtkWidget *w, gpointer data)
 {
   Ge *ge = (Ge *)data;
+  int pane_visible;
+  int objectnav_visible;
 
+  g_object_get( ((GeGtk *)ge)->hpaned3, "visible", &pane_visible, NULL);
+  g_object_get( ((GeGtk *)ge)->objectnav_w, "visible", &objectnav_visible, NULL);
   int set = (int) gtk_check_menu_item_get_active( GTK_CHECK_MENU_ITEM( ((GeGtk *)ge)->view_graphlist_w));
   if ( w != ((GeGtk *)ge)->view_graphlist_w) {
     set = !set;
@@ -1315,12 +1362,46 @@ void GeGtk::activate_view_graphlist(GtkWidget *w, gpointer data)
   }
 
   if ( set) {
+    if ( !pane_visible)
+      g_object_set( ((GeGtk *)ge)->hpaned3, "visible", TRUE, NULL);
     g_object_set( ((GeGtk *)ge)->graph_list, "visible", TRUE, NULL);
   }
   else {
     g_object_set( ((GeGtk *)ge)->graph_list, "visible", FALSE, NULL);
+    if ( !objectnav_visible && pane_visible)
+      g_object_set( ((GeGtk *)ge)->hpaned3, "visible", FALSE, NULL);
   }
   ge->set_focus(0);
+}
+
+void GeGtk::activate_view_objectnav(GtkWidget *w, gpointer data)
+{
+  Ge *ge = (Ge *)data;
+  int pane_visible;
+  int graph_list_visible;
+
+  g_object_get( ((GeGtk *)ge)->hpaned3, "visible", &pane_visible, NULL);
+  g_object_get( ((GeGtk *)ge)->graph_list, "visible", &graph_list_visible, NULL);
+  int set = (int) gtk_check_menu_item_get_active( GTK_CHECK_MENU_ITEM( ((GeGtk *)ge)->view_objectnav_w));
+  if ( w != ((GeGtk *)ge)->view_objectnav_w) {
+    set = !set;
+    gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM( ((GeGtk *)ge)->view_objectnav_w), set ? TRUE : FALSE);
+  }
+
+  if ( set) {
+    if ( !pane_visible)
+      g_object_set( ((GeGtk *)ge)->hpaned3, "visible", TRUE, NULL);
+    g_object_set( ((GeGtk *)ge)->objectnav_w, "visible", TRUE, NULL);
+    ge->set_focus(ge->objectnav);
+    ge->objectnav_mapped = 1;
+  }
+  else {
+    g_object_set( ((GeGtk *)ge)->objectnav_w, "visible", FALSE, NULL);
+    if ( !graph_list_visible && pane_visible)
+      g_object_set( ((GeGtk *)ge)->hpaned3, "visible", FALSE, NULL);
+    ge->set_focus(0);
+    ge->objectnav_mapped = 0;
+  }
 }
 
 
@@ -1491,28 +1572,35 @@ void GeGtk::valchanged_cmd_input( GtkWidget *w, gpointer data)
     g_object_set( w, "visible", FALSE, NULL);
     gectx->set_prompt( "");
     gectx->text_input_open = 0;
-    gectx->set_focus(0);
+    gectx->set_focus(gectx->focused_component);
   }
   else if ( gectx->name_input_open) {
     gectx->graph->change_name( gectx->current_text_object, text);
     g_object_set( w, "visible", FALSE, NULL);
     gectx->set_prompt( "");
     gectx->name_input_open = 0;
-    gectx->set_focus(0);
+    gectx->set_focus(gectx->focused_component);
   }
   else if ( gectx->value_input_open) {
     gectx->graph->change_value( gectx->current_value_object, text);
     g_object_set( w, "visible", FALSE, NULL);
     gectx->set_prompt( "");
     gectx->value_input_open = 0;
-    gectx->set_focus(0);
+    gectx->set_focus(gectx->focused_component);
+  }
+  else if ( gectx->objectnav_input_open) {
+    gectx->objectnav->set_attr_value( text);
+    g_object_set( w, "visible", FALSE, NULL);
+    gectx->set_prompt( "");
+    gectx->objectnav_input_open = 0;
+    gectx->set_focus(gectx->focused_component);
   }
   else if ( gectx->command_open) {
     sts = gectx->graph->command( text);
     g_object_set( w, "visible", FALSE, NULL);
     gectx->set_prompt( "");
     gectx->command_open = 0;
-    gectx->set_focus(0);
+    gectx->set_focus(gectx->focused_component);
   }
   g_free(text);
 }
@@ -1607,6 +1695,8 @@ GeGtk::~GeGtk()
   if ( plantctx)
     delete plantctx;
 #endif
+  if ( objectnav)
+    delete objectnav;
   gtk_widget_destroy( india_widget);
   gtk_widget_destroy( confirm_widget);
   gtk_widget_destroy( yesnodia_widget);
@@ -2329,9 +2419,15 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_widget_add_accelerator( view_plant_w, "activate", accel_g,
 			      'p', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
-  view_graphlist_w = gtk_check_menu_item_new_with_mnemonic( "Vie_w graph list");
+  view_graphlist_w = gtk_check_menu_item_new_with_mnemonic( "Vie_w Graph List");
   g_signal_connect( view_graphlist_w, "activate", 
 		    G_CALLBACK(activate_view_graphlist), this);
+
+  view_objectnav_w = gtk_check_menu_item_new_with_mnemonic( "View Object _Tree");
+  g_signal_connect( view_objectnav_w, "activate", 
+		    G_CALLBACK(activate_view_objectnav), this);
+  gtk_widget_add_accelerator( view_objectnav_w, "activate", accel_g,
+			      'o', GdkModifierType(GDK_CONTROL_MASK | GDK_SHIFT_MASK), GTK_ACCEL_VISIBLE);
 
   GtkMenu *view_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_preview_start);
@@ -2341,6 +2437,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_zoom_reset);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_plant_w);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_graphlist_w);
+  gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_objectnav_w);
 
   GtkWidget *view = gtk_menu_item_new_with_mnemonic("_View");
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), view);
@@ -3107,6 +3204,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   graph->get_ldhses_cb = &Ge::get_ldhses_cb;
   graph->create_modal_dialog_cb = &Ge::create_modal_dialog_cb;
   graph->update_colorpalette_cb = &Ge::update_colorpalette;
+  graph->refresh_objects_cb = &Ge::refresh_objects_cb;
 
   // Vertical palette pane
   GtkWidget *vpaned1 = gtk_vpaned_new();
@@ -3137,9 +3235,33 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
 			   ldhses, "NavigatorW1", 
 			   &plant_widget, &sts);
     ((NavGtk *)plantctx)->get_plant_select_cb = Ge::get_plant_select_cb;
+    ((NavGtk *)plantctx)->set_focus_cb = Ge::set_focus_cb;
+    ((NavGtk *)plantctx)->traverse_focus_cb = Ge::traverse_focus;
     gtk_box_pack_start( GTK_BOX(palbox), plant_widget, TRUE, TRUE, 0);
   }
 #endif
+
+  GtkWidget *hpaned2 = gtk_hpaned_new();
+  hpaned3 = gtk_hpaned_new();
+
+  objectnav = new AttrGtk( hpaned3, this, attr_eType_ObjectTree, 0, 0, 0);
+  objectnav_w = ((AttrGtk *)objectnav)->brow_widget;
+  objectnav->set_graph( graph);
+  objectnav->close_cb = graph_attr_close_cb;
+  objectnav->redraw_cb = graph_attr_redraw_cb;
+  objectnav->get_subgraph_info_cb = graph_get_subgraph_info_cb;
+  objectnav->get_dyn_info_cb = graph_get_dyn_info_cb;
+  objectnav->reconfigure_attr_cb = graph_reconfigure_attr_cb;
+  objectnav->store_cb = graph_attr_store_cb;
+  objectnav->recall_cb = graph_attr_recall_cb;
+  objectnav->set_data_cb = graph_attr_set_data_cb;
+  objectnav->get_plant_select_cb = graph_get_plant_select_cb;
+  objectnav->get_current_colors_cb = graph_get_current_colors_cb;
+  objectnav->get_current_color_tone_cb = graph_get_current_color_tone_cb;
+  objectnav->get_object_list_cb = graph_get_object_list_cb;
+  objectnav->open_value_input_cb = objectnav_change_value_cb;
+  objectnav->set_inputfocus_cb = set_focus_cb;
+  objectnav->traverse_inputfocus_cb = traverse_focus;
 
   gtk_paned_pack1( GTK_PANED(vpaned1), palbox, TRUE, TRUE);
   gtk_paned_pack2( GTK_PANED(vpaned1), colpal_main_widget, FALSE, TRUE);
@@ -3156,9 +3278,13 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_widget_show( vpaned1);
 
   GeItemViewGtk *item_view = new GeItemViewGtk( this);
-  GtkWidget *hpaned2 = gtk_hpaned_new();
   graph_list = item_view->widget();
-  gtk_paned_pack1( GTK_PANED(hpaned2), graph_list, FALSE, FALSE);
+
+  gtk_paned_pack1( GTK_PANED(hpaned3), graph_list, FALSE, FALSE);
+  gtk_paned_pack2( GTK_PANED(hpaned3), objectnav_w, TRUE, TRUE);
+  //gtk_widget_show( hpaned3);
+
+  gtk_paned_pack1( GTK_PANED(hpaned2), hpaned3, FALSE, FALSE);
   gtk_paned_pack2( GTK_PANED(hpaned2), hpaned, TRUE, TRUE);
   gtk_widget_show( hpaned2);
 
@@ -3175,6 +3301,8 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_widget_show_all( toplevel);
 
   g_object_set( graph_list, "visible", FALSE, NULL);
+  g_object_set( objectnav_w, "visible", FALSE, NULL);
+  g_object_set( hpaned3, "visible", FALSE, NULL);
 
   gtk_paned_set_position( GTK_PANED(hpaned2), 150);
   gtk_paned_set_position( GTK_PANED(hpaned), window_width - palette_width - 45);

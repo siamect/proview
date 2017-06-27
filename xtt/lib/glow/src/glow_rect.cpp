@@ -147,8 +147,8 @@ void GlowRect::draw( GlowWind *w, void *pos, int highlight, int hot, void *node)
     idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
     idx += hot;
   }
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = glmax( 0, idx);
+  idx = glmin( idx, DRAW_TYPE_SIZE-1);
   if ( !fill)
     ctx->gdraw->rect( w, ll_x + ((GlowPoint *)pos)->z_x - w->offset_x, ll_y + 
 	((GlowPoint *)pos)->z_y - w->offset_y, 
@@ -189,8 +189,8 @@ void GlowRect::erase( GlowWind *w, void *pos, int hot, void *node)
     idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
     idx += hot;
   }
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = glmax( 0, idx);
+  idx = glmin( idx, DRAW_TYPE_SIZE-1);
   if ( !fill)
     ctx->gdraw->rect_erase( w, ll_x + ((GlowPoint *)pos)->z_x - w->offset_x, ll_y + 
 	((GlowPoint *)pos)->z_y - w->offset_y, 

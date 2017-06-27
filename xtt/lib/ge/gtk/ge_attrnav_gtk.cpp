@@ -57,9 +57,10 @@
 #include "glow_growwidget_gtk.h"
 
 
+#include "glow_growapi.h"
+#include "ge_dyn.h"
 #include "ge_attr.h"
 #include "ge_attrnav_gtk.h"
-#include "ge_dyn.h"
 #include "ge_msg.h"
 
 //
@@ -67,13 +68,14 @@
 //
 AttrNavGtk::AttrNavGtk(
 	void *xn_parent_ctx,
-	GtkWidget	*xn_parent_wid,
+	GtkWidget *xn_parent_wid,
+	attr_eType xn_type,
 	const char *xn_name,
 	attr_sItem  *xn_itemlist,
 	int xn_item_cnt,
 	GtkWidget **w,
 	pwr_tStatus *status) :
-  AttrNav( xn_parent_ctx, xn_name, xn_itemlist, xn_item_cnt, status),
+  AttrNav( xn_parent_ctx, xn_type, xn_name, xn_itemlist, xn_item_cnt, status),
   parent_wid(xn_parent_wid), trace_timerid(0)
 {
   form_widget = scrolledbrowwidgetgtk_new(

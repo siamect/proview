@@ -51,6 +51,9 @@
 class SubGraphs;
 #endif
 
+#ifndef ge_cmn_h
+#include "ge_cmn.h"
+#endif
 #ifndef glow_h
 #include "glow.h"
 #endif
@@ -85,6 +88,8 @@ class ColPalCtx;
 class Graph;
 class Nav;
 class CoWow;
+class Attr;
+class GeDyn;
 
 class Ge {
  public:
@@ -97,6 +102,7 @@ class Ge {
   int		text_input_open;
   int		name_input_open;
   int		value_input_open;
+  int		objectnav_input_open;
   int		command_open;
   int		confirm_open;
   int		yesnodia_open;
@@ -112,13 +118,16 @@ class Ge {
   ge_tPrevPage	prev_table[40];
   int		prev_count;
   void		*focused_component;
+  void		*prev_focused_component;
   grow_tObject  recover_object;
   char          recover_name[80];
   int		plant_mapped;
   int		subpalette_mapped;
-  unsigned int	options;
+  int		objectnav_mapped;
+ unsigned int	options;
   CoWow		*wow;
   void		*open_dialog;
+  Attr		*objectnav;
 
   Ge( void *parent_ctx,
       ldh_tSesContext ldhses, int exit_when_close, unsigned int x_options);
@@ -292,6 +301,7 @@ class Ge {
   void activate_confirm_cancel();
 
   static int get_plant_select_cb( void *ge_ctx, char *select_name, int size);
+  static void refresh_objects_cb( void *ge_ctx, unsigned int type);
   static void customcolors_selected_cb( void *ctx, char *filename, wow_eFileSelType file_type);
   static void customcolors_write_cb( Ge *gectx, char *name);
   static void load_graph_cb( void *ge_ctx, char *name);
@@ -337,6 +347,25 @@ class Ge {
 				     const char *button1, const char *button2, const char *button3, 
 				     const char *image);
   static void search_object_cb( void *ge_ctx, void *data, char *name);
+  static void graph_get_object_list_cb( void *g, unsigned int type, grow_tObject **list, 
+					int *list_cnt, grow_tObject *parent, int parent_cnt);
+  static void graph_attr_store_cb( void *g, grow_tObject object);
+  static int graph_attr_recall_cb( void *g, grow_tObject object, int idx, 
+				   GeDyn **old_dyn);
+  static int graph_get_plant_select_cb( void *g, char *value, int size);
+  static int graph_get_current_colors_cb( void *g, glow_eDrawType *fill_color, 
+					  glow_eDrawType *border_color, glow_eDrawType *text_color);
+  static int graph_get_current_color_tone_cb( void *g, glow_eDrawType *color_tone);
+  static int graph_reconfigure_attr_cb( void *g, grow_tObject object,
+					attr_sItem **itemlist, int *itemlist_cnt, void **client_data);
+  static int graph_attr_set_data_cb( void *g, grow_tObject object,
+				     GeDyn *data);
+  static int graph_get_dyn_info_cb( void *g, GeDyn *dyn,
+				    attr_sItem **itemlist, int *itemlist_cnt);
+  static int graph_get_subgraph_info_cb( void *g, char *name, 
+					 attr_sItem **itemlist, int *itemlist_cnt);
+  static void graph_attr_close_cb( void *g, void *attrctx, grow_tObject o, void *info, int keep);
+  static void graph_attr_redraw_cb( void *g, void *attrctx, grow_tObject o, void *info);
 };
 
 #endif

@@ -181,6 +181,8 @@ class GrowGroup : public GrowNode {
   //! Get first object. */
   int get_first_object( GlowArrayElem **first) { return nc->a.get_first( first);}
 
+  int order_object( GlowArrayElem *o, GlowArrayElem *dest, glow_eDest code) { return nc->a.move( o, dest, code);}
+
 };
 
 /*@}*/

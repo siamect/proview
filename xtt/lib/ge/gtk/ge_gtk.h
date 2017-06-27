@@ -80,7 +80,10 @@ class GeGtk : public Ge {
   GtkWidget	*show_grid_w;
   GtkWidget	*view_plant_w;
   GtkWidget	*view_graphlist_w;
+  GtkWidget	*view_objectnav_w;
   GtkWidget	*graph_list;
+  GtkWidget	*objectnav_w;
+  GtkWidget	*hpaned3;
   GdkAtom	graph_atom;
   CoWowRecall	*text_recall;
   CoWowRecall	*name_recall;
@@ -116,6 +119,7 @@ class GeGtk : public Ge {
   static void change_text_cb( void *ge_ctx, void *text_object, const char *text);
   static void change_name_cb( void *ge_ctx, void *text_object, char *text);
   static void change_value_cb( void *ge_ctx, void *value_object, char *text);
+  static void objectnav_change_value_cb( void *ge_ctx, int multiline, int size, char *text);
   static void confirm_cb( void *ge_ctx, void *confirm_object, char *text);
 
   static void create_cursor_position( GtkWidget *w, gpointer gectx);
@@ -285,6 +289,7 @@ class GeGtk : public Ge {
   static void activate_zoom_reset( GtkWidget *w, gpointer gectx);
   static void activate_view_plant( GtkWidget *w, gpointer gectx);
   static void activate_view_graphlist( GtkWidget *w, gpointer gectx);
+  static void activate_view_objectnav( GtkWidget *w, gpointer gectx);
   static void activate_concorner_right( GtkWidget *w, gpointer gectx);
   static void activate_concorner_rounded( GtkWidget *w, gpointer gectx);
   static void activate_round_amount_1( GtkWidget *w, gpointer gectx);

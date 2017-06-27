@@ -38,6 +38,7 @@
 #define ge_attr_h
 
 #include "glow.h"
+#include "ge_attrnav.h"
 
 /* ge_attr.h -- Ge attribute editor */
 
@@ -48,19 +49,6 @@
 
 class GeDyn;
 
-typedef struct {
-	void	*value;
-	char	name[80];
-	int	type;
-	int	size;
-	double	minlimit;
-	double	maxlimit;
-	int	noedit;
-	int	multiline;
-    	int	mask;
-        int	(*input_validation_cb)( void *ctx, void *value);
-        void	*validation_ctx;
-} attr_sItem;
 
 class AttrNav;
 
@@ -70,16 +58,19 @@ class Attr {
   public:
     Attr(
       void			*a_parent_ctx,
+      attr_eType		a_type,
       void 			*a_object,
       attr_sItem  		*itemlist,
       int			item_cnt);
     void 	*parent_ctx;
+    attr_eType	type;
+    int		embedded;
     char 	name[80];
     AttrNav	*attrnav;
     int		input_open;
     void 	*object;
-    void	(*close_cb) (Attr *);
-    void	(*redraw_cb) (Attr *);
+    void	(*close_cb) (void *, void *, grow_tObject, void *, int);
+    void	(*redraw_cb) (void *, void *, grow_tObject, void *);
     int		(*get_subgraph_info_cb)( void *, char *, attr_sItem  **, 
                           int *);
     int		(*get_dyn_info_cb)( void *, GeDyn *, attr_sItem  **, 
@@ -93,6 +84,11 @@ class Attr {
     int 	(*get_current_colors_cb)( void *, glow_eDrawType *, glow_eDrawType *,
 						  glow_eDrawType *);
     int 	(*get_current_color_tone_cb)( void *, glow_eDrawType *);
+    void 	(*get_object_list_cb)( void *, unsigned int type, grow_tObject **, int *, 
+				       grow_tObject *, int);
+    void 	(*open_value_input_cb)( void *, int, int, char*);
+    int 	(*set_inputfocus_cb)( void *, void *);
+    int 	(*traverse_inputfocus_cb)( void *, void *);
     void	*client_data;
     int         recall_idx;
     GeDyn 	*original_data;
@@ -105,6 +101,10 @@ class Attr {
     virtual void store();
     virtual void recall_next();
     virtual void recall_prev();
+    void refresh_objects( unsigned int type);
+    void set_graph( Graph *g) { attrnav->graph = g;}
+    void set_inputfocus( int focus) { if ( focus) attrnav->set_inputfocus();}
+    int set_attr_value( char *value_str);
     static int get_plant_select_c( void *attr_ctx, char *value, int size);
     static int get_current_colors_c( void *attr_ctx, glow_eDrawType *fill_color, 
 				      glow_eDrawType *border_color, 
@@ -116,6 +116,10 @@ class Attr {
 				attr_sItem **itemlist, int *item_cnt);
     static void change_value_c( void *attr);
     static int reconfigure_attr_c( void *attr);
+    static void get_object_list_c( void *attr_ctx, unsigned int type, grow_tObject **list, 
+				   int *list_cnt, grow_tObject *parent, int parent_cnt);
+    static int set_inputfocus_c( void *attr_ctx);
+    static int traverse_inputfocus_c( void *attr_ctx);
     static void message( void *attr, int popup, char severity, const char *message);
     virtual ~Attr();
 };

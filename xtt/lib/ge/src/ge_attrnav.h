@@ -43,6 +43,10 @@
 # include "pwr.h"
 #endif
 
+#ifndef ge_cmn_h
+#include "ge_cmn.h"
+#endif
+
 #ifndef flow_h
 #include "flow.h"
 #endif
@@ -76,9 +80,26 @@
 #define ATTRNAV_BROW_MAX	25
 
 typedef enum {
+  attr_mRefresh_Objects	= 1 << 0,
+  attr_mRefresh_Select 	= 1 << 1
+} attr_mRefresh;
+
+typedef enum {
+  attr_eList_Objects,
+  attr_eList_Group,
+  attr_eList_Select
+} attr_eList;
+
+typedef enum {
+  attr_eType_Attributes,
+  attr_eType_ObjectTree
+} attr_eType;
+
+typedef enum {
 	attrnav_eItemType_Local,
 	attrnav_eItemType_Enum,
-	attrnav_eItemType_Mask
+	attrnav_eItemType_Mask,
+	attrnav_eItemType_Object
 	} attrnav_eItemType;
 
 typedef enum {
@@ -105,6 +126,9 @@ typedef struct {
 	attrnav_sEnumElement	*elements;
 	} attrnav_sEnum;
 
+class GeDyn;
+class Graph;
+class AItemObject;
 
 //! Class for handling of brow.
 class AttrNavBrow {
@@ -126,6 +150,7 @@ class AttrNavBrow {
     flow_sAnnotPixmap 	*pixmap_openmap;
     flow_sAnnotPixmap 	*pixmap_attr;
     flow_sAnnotPixmap 	*pixmap_attrarray;
+    flow_sAnnotPixmap 	*pixmap_openattr;
 
     void free_pixmaps();
     void allocate_pixmaps();
@@ -139,6 +164,7 @@ class AttrNav {
   public:
     AttrNav(
 	void *xn_parent_ctx,
+	attr_eType xn_type,
 	const char *xn_name,
 	attr_sItem  *xn_itemlist,
 	int xn_item_cnt,
@@ -146,11 +172,15 @@ class AttrNav {
     virtual ~AttrNav();
 
     void 		*parent_ctx;
+    attr_eType		type;
     char 		name[80];
     AttrNavBrow		*brow;
     attr_sItem  	*itemlist;
     int			item_cnt;
     int			trace_started;
+    Graph		*graph;
+    brow_tObject	last_selected;
+    grow_tObject	last_selected_id;
     void 		(*message_cb)( void *, int, char, const char *);
     void 		(*change_value_cb)( void *);
     int			(*get_subgraph_info_cb)( void *, char *, attr_sItem  **, int *);
@@ -160,24 +190,33 @@ class AttrNav {
     int 		(*get_current_colors_cb)( void *, glow_eDrawType *, glow_eDrawType *,
 						  glow_eDrawType *);
     int 		(*get_current_color_tone_cb)( void *, glow_eDrawType *);
+    void 		(*get_object_list_cb)( void *, unsigned int type, grow_tObject **, int *, 
+					       grow_tObject *, int);
+    int			(*set_inputfocus_cb)( void *);
+    int			(*traverse_inputfocus_cb)( void *);
 
-    virtual int set_attr_value( char *value_str);
-    virtual int check_attr_value( int *multiline, int *size, char **value);
-    virtual void message( int popup, char sev, const char *text);
+    int set_attr_value( char *value_str, grow_tObject *id, void **client_data);
+    int check_attr_value( int *multiline, int *size, char **value);
+    void message( int popup, char sev, const char *text);
+    void force_trace_scan();
+    int object_attr();
+    int object_tree();
+    void refresh_objects( unsigned int type);
+    void object_open_check( AItemObject *item, grow_tObject *open_list, int *open_type, int open_cnt);
+    brow_tObject gobject_to_bobject( grow_tObject gobject);
     virtual void set_inputfocus() {}
-    virtual void force_trace_scan();
-    virtual int object_attr();
     virtual void trace_start() {}
     static int init_brow_cb( FlowCtx *fctx, void *client_data);
     static int string_to_mask( int type_id, char *str, pwr_tMask *mask);
     static int string_to_enum( int type_id, char *str, pwr_tEnum *enumval);
     static int enum_to_string( int type_id, pwr_tEnum enumval, char *str, int strsize);
+    static void object_type_to_str( glow_eObjectType object_type, char *object_type_str);
 };
 
 //! Item for a normal attribute.
-class ItemLocal {
+class AItemLocal {
   public:
-    ItemLocal( AttrNav *attrnav, const char *item_name, const char *attr,
+    AItemLocal( AttrNav *attrnav, const char *item_name, const char *attr,
 	int attr_type, int attr_size, double attr_min_limit,
 	double attr_max_limit, void *attr_value_p, int attr_multiline, 
         int attr_noedit, int attr_mask, 
@@ -207,9 +246,9 @@ class ItemLocal {
 };
 
 //! Item for an enum attribute.
-class ItemEnum {
+class AItemEnum {
   public:
-    ItemEnum( AttrNav *attrnav, char *item_name, int item_num, 
+    AItemEnum( AttrNav *attrnav, char *item_name, int item_num, 
 	int item_type_id,
 	void *attr_value_p, brow_tNode dest, flow_eDest dest_code);
     attrnav_eItemType	type;
@@ -223,9 +262,9 @@ class ItemEnum {
 };
 
 //! Item for a mask attribute.
-class ItemMask {
+class AItemMask {
   public:
-    ItemMask( AttrNav *attrnav, char *item_name, unsigned int item_mask, 
+    AItemMask( AttrNav *attrnav, char *item_name, unsigned int item_mask, 
 	int item_type_id,
 	void *attr_value_p, brow_tNode dest, flow_eDest dest_code);
     attrnav_eItemType	type;
@@ -236,6 +275,25 @@ class ItemMask {
     void		*value_p;
     int 		old_value;
     int 		first_scan;
+};
+
+//! Item for an object.
+class AItemObject {
+  public:
+    AItemObject( AttrNav *attrnav, char *item_name, glow_eObjectType item_object_type, 
+		grow_tObject item_id, char *item_subgraph,
+		brow_tNode dest, flow_eDest dest_code);
+     attrnav_eItemType	type;
+    brow_tNode		node;
+    char	 	name[80];
+    char		subgraph[80];
+    glow_eObjectType	object_type;
+    grow_tObject	id;
+    void		*attr_client_data;
+
+    int open_children( AttrNav *attrnav, double x, double y);
+    int open_attributes( AttrNav *attrnav, double x, double y);
+    int	close( AttrNav *attrnav, double x, double y);
 };
 
 /*@}*/

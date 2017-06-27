@@ -389,10 +389,10 @@ void GrowConGlue::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, v
     y2 = t->y( x_right, y_high) * w->zoom_factor_y - w->offset_y;
   }
 
-  ll_x = int( min( x1, x2) + 0.5);
-  ur_x = int( max( x1, x2) + 0.5);
-  ll_y = int( min( y1, y2) + 0.5);
-  ur_y = int( max( y1, y2) + 0.5);
+  ll_x = int( glmin( x1, x2) + 0.5);
+  ur_x = int( glmax( x1, x2) + 0.5);
+  ll_y = int( glmin( y1, y2) + 0.5);
+  ur_y = int( glmax( y1, y2) + 0.5);
   m_x = int((x1 + x2) / 2 + 0.5);
   m_y = int((y1 + y2) / 2 + 0.5);
 
@@ -415,16 +415,16 @@ void GrowConGlue::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, v
   idx_right = int( w->zoom_factor_x / w->base_zoom_factor * lw_right - 1);
   idx_right += hot;
 
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
-  idx_up = max( 0, idx_up);
-  idx_up = min( idx_up, DRAW_TYPE_SIZE-1);
-  idx_down = max( 0, idx_down);
-  idx_down = min( idx_down, DRAW_TYPE_SIZE-1);
-  idx_left = max( 0, idx_left);
-  idx_left = min( idx_left, DRAW_TYPE_SIZE-1);
-  idx_right = max( 0, idx_right);
-  idx_right = min( idx_right, DRAW_TYPE_SIZE-1);
+  idx = glmax( 0, idx);
+  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx_up = glmax( 0, idx_up);
+  idx_up = glmin( idx_up, DRAW_TYPE_SIZE-1);
+  idx_down = glmax( 0, idx_down);
+  idx_down = glmin( idx_down, DRAW_TYPE_SIZE-1);
+  idx_left = glmax( 0, idx_left);
+  idx_left = glmin( idx_left, DRAW_TYPE_SIZE-1);
+  idx_right = glmax( 0, idx_right);
+  idx_right = glmin( idx_right, DRAW_TYPE_SIZE-1);
 
   w->set_draw_buffer_only();
   if ( lw_up != -1 && lw_down == -1 &&
@@ -1009,10 +1009,10 @@ void GrowConGlue::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
     x2 = t->x( x_right, y_high) * w->zoom_factor_x - w->offset_x;
     y2 = t->y( x_right, y_high) * w->zoom_factor_y - w->offset_y;
   }
-  ll_x = int( min( x1, x2) + 0.5);
-  ur_x = int( max( x1, x2) + 0.5);
-  ll_y = int( min( y1, y2) + 0.5);
-  ur_y = int( max( y1, y2) + 0.5);
+  ll_x = int( glmin( x1, x2) + 0.5);
+  ur_x = int( glmax( x1, x2) + 0.5);
+  ll_y = int( glmin( y1, y2) + 0.5);
+  ur_y = int( glmax( y1, y2) + 0.5);
 
   ctx->gdraw->fill_rect( w, ll_x, ll_y, ur_x - ll_x + 1, ur_y - ll_y + 1, glow_eDrawType_LineErase);
 }
@@ -1086,7 +1086,7 @@ void GrowConGlue::export_javabean( GlowTransform *t, void *node,
   int idx_up, idx_down, idx_left, idx_right;
 
   int idx = int( ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * line_width - 1);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = glmin( idx, DRAW_TYPE_SIZE-1);
 
   if (!t)
   {
@@ -1102,10 +1102,10 @@ void GrowConGlue::export_javabean( GlowTransform *t, void *node,
     x2 = t->x( x_right, y_high) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
     y2 = t->y( x_right, y_high) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
   }
-  ll_x = int( min( x1, x2) + 0.5);
-  ur_x = int( max( x1, x2) + 0.5);
-  ll_y = int( min( y1, y2) + 0.5);
-  ur_y = int( max( y1, y2) + 0.5);
+  ll_x = int( glmin( x1, x2) + 0.5);
+  ur_x = int( glmax( x1, x2) + 0.5);
+  ll_y = int( glmin( y1, y2) + 0.5);
+  ur_y = int( glmax( y1, y2) + 0.5);
 
   m_x = int((x1 + x2) / 2 + 0.5);
   m_y = int((y1 + y2) / 2 + 0.5);
@@ -1129,16 +1129,16 @@ void GrowConGlue::export_javabean( GlowTransform *t, void *node,
   idx_right = int( ctx->mw.zoom_factor_x / ctx->mw.base_zoom_factor * lw_right - 1);
   idx_right += hot;
 
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
-  idx_up = max( 0, idx_up);
-  idx_up = min( idx_up, DRAW_TYPE_SIZE-1);
-  idx_down = max( 0, idx_down);
-  idx_down = min( idx_down, DRAW_TYPE_SIZE-1);
-  idx_left = max( 0, idx_left);
-  idx_left = min( idx_left, DRAW_TYPE_SIZE-1);
-  idx_right = max( 0, idx_right);
-  idx_right = min( idx_right, DRAW_TYPE_SIZE-1);
+  idx = glmax( 0, idx);
+  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx_up = glmax( 0, idx_up);
+  idx_up = glmin( idx_up, DRAW_TYPE_SIZE-1);
+  idx_down = glmax( 0, idx_down);
+  idx_down = glmin( idx_down, DRAW_TYPE_SIZE-1);
+  idx_left = glmax( 0, idx_left);
+  idx_left = glmin( idx_left, DRAW_TYPE_SIZE-1);
+  idx_right = glmax( 0, idx_right);
+  idx_right = glmin( idx_right, DRAW_TYPE_SIZE-1);
 
   if ( lw_up != -1 && lw_down == -1 &&
        lw_right == -1 && lw_left == -1) {

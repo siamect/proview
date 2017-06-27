@@ -50,8 +50,8 @@ extern "C" {
 
 #define ODD(a)	(((int)(a) & 1) != 0)
 #define EVEN(a)	(((int)(a) & 1) == 0)
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
+#define glmax(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
+#define glmin(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
 #ifndef __ALPHA
 #define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
 #endif

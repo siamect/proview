@@ -1563,20 +1563,20 @@ int GlowCon::con_route( double src_x, double src_y, glow_eDirection src_dir,
   double doc_ll_x, doc_ur_x, doc_ll_y, doc_ur_y;
   GlowNode *doc;
 
-  ll_x = min( source_node->x_left, dest_node->x_left) - 10 * ctx->draw_delta;
-  ur_x = max( source_node->x_right, dest_node->x_right) + 10 * ctx->draw_delta;
-  ll_y = min( source_node->y_low, dest_node->y_low) - 10 * ctx->draw_delta;
-  ur_y = max( source_node->y_high, dest_node->y_high) + 10 * ctx->draw_delta;
+  ll_x = glmin( source_node->x_left, dest_node->x_left) - 10 * ctx->draw_delta;
+  ur_x = glmax( source_node->x_right, dest_node->x_right) + 10 * ctx->draw_delta;
+  ll_y = glmin( source_node->y_low, dest_node->y_low) - 10 * ctx->draw_delta;
+  ur_y = glmax( source_node->y_high, dest_node->y_high) + 10 * ctx->draw_delta;
 
   /* Find the document node */
   doc = (GlowNode *) ctx->get_document( src_x, src_y);
   if ( doc )
   {
     doc->measure( &doc_ll_x, &doc_ll_y, &doc_ur_x, &doc_ur_y);
-    ll_x = max( ll_x, doc_ll_x);
-    ur_x = min( ur_x, doc_ur_x);
-    ll_y = max( ll_y, doc_ll_y);
-    ur_y = min( ur_y, doc_ur_y);
+    ll_x = glmax( ll_x, doc_ll_x);
+    ur_x = glmin( ur_x, doc_ur_x);
+    ll_y = glmax( ll_y, doc_ll_y);
+    ur_y = glmin( ur_y, doc_ur_y);
   }
 
   sts = con_route_area( ll_x, ll_y, ur_x, ur_y);
@@ -1639,8 +1639,8 @@ int GlowCon::con_route_area( double wind_ll_x, double wind_ll_y,
 	if ( node_p == dest_node || node_p == source_node)
 	  continue;
 	if ( node_p->in_horiz_line( dest_y, 
-				    min( dest_x, src_x) + ctx->draw_delta + CON_EPSILON,
-				    max( dest_x, src_x) - ctx->draw_delta - CON_EPSILON)) {
+				    glmin( dest_x, src_x) + ctx->draw_delta + CON_EPSILON,
+				    glmax( dest_x, src_x) - ctx->draw_delta - CON_EPSILON)) {
 	  found = 1;
 	  break;
 	}        
@@ -1672,8 +1672,8 @@ int GlowCon::con_route_area( double wind_ll_x, double wind_ll_y,
 	if ( node_p == dest_node || node_p == source_node)
 	  continue;
 	if ( node_p->in_vert_line( dest_x, 
-				   min( dest_y, src_y) + ctx->draw_delta + CON_EPSILON,
-				   max( dest_y, src_y) - ctx->draw_delta - CON_EPSILON)) {
+				   glmin( dest_y, src_y) + ctx->draw_delta + CON_EPSILON,
+				   glmax( dest_y, src_y) - ctx->draw_delta - CON_EPSILON)) {
 	  found = 1;
 	  break;
 	}        
@@ -2489,8 +2489,8 @@ int GlowCon::find_horiz_line_up( double check_y, double check_l_x,
       }
       else
       {
-         check_wind_l_x = max( check_l_x, node_p->obst_x_left);
-         check_wind_u_x = min( check_u_x, node_p->obst_x_right);
+         check_wind_l_x = glmax( check_l_x, node_p->obst_x_left);
+         check_wind_u_x = glmin( check_u_x, node_p->obst_x_right);
       }
       found = 0;
       for ( node_p2 = nodelist; node_p2; node_p2 = node_p2->link)
@@ -2573,8 +2573,8 @@ int GlowCon::find_horiz_line_up( double check_y, double check_l_x,
           }
           else
           {
-             check_wind_l_x = max( check_l_x, l_x);
-             check_wind_u_x = min( check_u_x, u_x);
+             check_wind_l_x = glmax( check_l_x, l_x);
+             check_wind_u_x = glmin( check_u_x, u_x);
           }
           found = 0;
           for ( node_p2 = nodelist; node_p2; node_p2 = node_p2->link)
@@ -2650,8 +2650,8 @@ int GlowCon::find_horiz_line_down( double check_y, double check_l_x,
       }
       else
       {
-         check_wind_l_x = max( check_l_x, node_p->obst_x_left);
-         check_wind_u_x = min( check_u_x, node_p->obst_x_right);
+         check_wind_l_x = glmax( check_l_x, node_p->obst_x_left);
+         check_wind_u_x = glmin( check_u_x, node_p->obst_x_right);
       }
       found = 0;
       for ( node_p2 = nodelist; node_p2; node_p2 = node_p2->link)
@@ -2734,8 +2734,8 @@ int GlowCon::find_horiz_line_down( double check_y, double check_l_x,
           }
           else
           {
-             check_wind_l_x = max( check_l_x, l_x);
-             check_wind_u_x = min( check_u_x, u_x);
+             check_wind_l_x = glmax( check_l_x, l_x);
+             check_wind_u_x = glmin( check_u_x, u_x);
           }
           found = 0;
           for ( node_p2 = nodelist; node_p2; node_p2 = node_p2->link)
@@ -2811,8 +2811,8 @@ int GlowCon::find_vert_line_right( double check_x, double check_l_y,
       }
       else
       {
-         check_wind_l_y = max( check_l_y, node_p->obst_y_low);
-         check_wind_u_y = min( check_u_y, node_p->obst_y_high);
+         check_wind_l_y = glmax( check_l_y, node_p->obst_y_low);
+         check_wind_u_y = glmin( check_u_y, node_p->obst_y_high);
       }
       found = 0;
       for ( node_p2 = nodelist; node_p2; node_p2 = node_p2->link)
@@ -2896,8 +2896,8 @@ int GlowCon::find_vert_line_right( double check_x, double check_l_y,
           }
           else
           {
-            check_wind_l_y = max( check_l_y, l_y);
-            check_wind_u_y = min( check_u_y, u_y);
+            check_wind_l_y = glmax( check_l_y, l_y);
+            check_wind_u_y = glmin( check_u_y, u_y);
           }
           found = 0;
           for ( node_p2 = nodelist; node_p2; node_p2 = node_p2->link)
@@ -2974,8 +2974,8 @@ int GlowCon::find_vert_line_left( double check_x, double check_l_y,
       }
       else
       {
-         check_wind_l_y = max( check_l_y, node_p->obst_y_low);
-         check_wind_u_y = min( check_u_y, node_p->obst_y_high);
+         check_wind_l_y = glmax( check_l_y, node_p->obst_y_low);
+         check_wind_u_y = glmin( check_u_y, node_p->obst_y_high);
       }
       found = 0;
       for ( node_p2 = nodelist; node_p2; node_p2 = node_p2->link)
@@ -3058,8 +3058,8 @@ int GlowCon::find_vert_line_left( double check_x, double check_l_y,
           }
           else
           {
-            check_wind_l_y = max( check_l_y, l_y);
-            check_wind_u_y = min( check_u_y, u_y);
+            check_wind_l_y = glmax( check_l_y, l_y);
+            check_wind_u_y = glmin( check_u_y, u_y);
           }
           found = 0;
           for ( node_p2 = nodelist; node_p2; node_p2 = node_p2->link)

@@ -283,8 +283,8 @@ void GrowPie::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void 
   else
     idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = glmax( 0, idx);
+  idx = glmin( idx, DRAW_TYPE_SIZE-1);
   int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
   if (!t) {
@@ -302,10 +302,10 @@ void GrowPie::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void 
     rot = int( trf.rot( t));
   }
 
-  ll_x = min( x1, x2);
-  ur_x = max( x1, x2);
-  ll_y = min( y1, y2);
-  ur_y = max( y1, y2);
+  ll_x = glmin( x1, x2);
+  ur_x = glmax( x1, x2);
+  ll_y = glmin( y1, y2);
+  ur_y = glmax( y1, y2);
 
   int display_shadow = ((node && ((GrowNode *)node)->shadow) || shadow) && !disable_shadow;
   glow_eGradient grad = gradient;
@@ -364,7 +364,7 @@ void GrowPie::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void 
 				     ia2, fillcolor, f1, f2, grad);
     }
     else {
-      int ish = int( shadow_width / 100 * min(ur_x - ll_x, ur_y - ll_y) + 0.5);
+      int ish = int( shadow_width / 100 * glmin(ur_x - ll_x, ur_y - ll_y) + 0.5);
       int drawtype_incr = shadow_contrast;
       if ( relief == glow_eRelief_Down)
 	drawtype_incr = -shadow_contrast;
@@ -422,8 +422,8 @@ void GrowPie::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
   else
     idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = glmax( 0, idx);
+  idx = glmin( idx, DRAW_TYPE_SIZE-1);
 
   int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
   int rot;
@@ -443,10 +443,10 @@ void GrowPie::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
     rot = int( trf.rot( t));
   }
 
-  ll_x = min( x1, x2);
-  ur_x = max( x1, x2);
-  ll_y = min( y1, y2);
-  ur_y = max( y1, y2);
+  ll_x = glmin( x1, x2);
+  ur_x = glmax( x1, x2);
+  ll_y = glmin( y1, y2);
+  ur_y = glmax( y1, y2);
 
   // printf( "eras: %d %d\n", ll_x, ll_y);
 
@@ -542,17 +542,17 @@ void GrowPie::export_javabean( GlowTransform *t, void *node,
     y2 = trf.y( t, ur.x, ur.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
   }
 
-  ll_x = min( x1, x2);
-  ur_x = max( x1, x2);
-  ll_y = min( y1, y2);
-  ur_y = max( y1, y2);
+  ll_x = glmin( x1, x2);
+  ur_x = glmax( x1, x2);
+  ll_y = glmin( y1, y2);
+  ur_y = glmax( y1, y2);
 
   if ( t)
     rotation = (trf.rot( t) / 360 - floor( trf.rot( t) / 360)) * 360;
   else
     rotation = (trf.rot() / 360 - floor( trf.rot() / 360)) * 360;
 
-  ish = shadow_width / 100 * min(ur_x - ll_x, ur_y - ll_y);
+  ish = shadow_width / 100 * glmin(ur_x - ll_x, ur_y - ll_y);
 
   if ( gradient_contrast >= 0) {
     gc1 = gradient_contrast/2;

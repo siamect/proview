@@ -82,7 +82,7 @@ class GraphGtk : public Graph {
   void trace_timer_remove();
   void trace_timer_add( int time);
   int create_navigator( GtkWidget *parent);
-  Attr *attr_new( void *parent_ctx, void *object, attr_sItem *itemlist, int item_cnt);
+  Attr *attr_new( void *parent_ctx, attr_eType type, void *object, attr_sItem *itemlist, int item_cnt);
   void set_inputfocus( int focus);
   void popup_position( int event_x, int event_y, int *x, int *y);
 

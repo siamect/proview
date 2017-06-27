@@ -636,8 +636,8 @@ gboolean XttStreamGtk::mousebutton_cb( GtkWidget *widget, GdkEvent *event, void 
       }
       else if ( abs( event->button.x - strm->mb_press_x) > 20 &&
 		abs( event->button.y - strm->mb_press_y) > 20) {
-	int x = min( event->button.x, strm->mb_press_x) - offset_x;
-	int y = min( event->button.y, strm->mb_press_y) - offset_y;
+	int x = glmin( event->button.x, strm->mb_press_x) - offset_x;
+	int y = glmin( event->button.y, strm->mb_press_y) - offset_y;
 	int w = abs( event->button.x - strm->mb_press_x);
 	int h = abs( event->button.y - strm->mb_press_y);
 	printf( "Mb zoom (%d,%d) rect %d,%d\n", x, y, w, h);
@@ -650,8 +650,8 @@ gboolean XttStreamGtk::mousebutton_cb( GtkWidget *widget, GdkEvent *event, void 
       break;
     }
     case 2: {
-      int x = min( event->button.x, strm->mb_press_x) - offset_x;
-      int y = min( event->button.y, strm->mb_press_y) - offset_y;
+      int x = glmin( event->button.x, strm->mb_press_x) - offset_x;
+      int y = glmin( event->button.y, strm->mb_press_y) - offset_y;
       strm->action_mb2click( x, y);
       break;
     }

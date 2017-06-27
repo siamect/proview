@@ -51,6 +51,7 @@ class AttrNavGtk : public AttrNav {
     AttrNavGtk(
 	void *xn_parent_ctx,
 	GtkWidget	*xn_parent_wid,
+	attr_eType	xn_type,
 	const char *xn_name,
 	attr_sItem  *xn_itemlist,
 	int xn_item_cnt,

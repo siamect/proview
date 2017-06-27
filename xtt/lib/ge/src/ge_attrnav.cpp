@@ -55,9 +55,9 @@
 #include "glow_growctx.h"
 #include "glow_growapi.h"
 
+#include "ge_dyn.h"
 #include "ge_attr.h"
 #include "ge_attrnav.h"
-#include "ge_dyn.h"
 #include "ge_msg.h"
 
 #include "xnav_bitmap_leaf12.h"
@@ -65,6 +65,7 @@
 #include "xnav_bitmap_openmap12.h"
 #include "xnav_bitmap_attr12.h"
 #include "xnav_bitmap_attrarra12.h"
+#include "xnav_bitmap_openattr12.h"
 
 #if defined OS_VMS
 # pragma message disable (INTSIGNCHANGE)
@@ -1500,53 +1501,56 @@ void AttrNavBrow::free_pixmaps()
 //
 void AttrNavBrow::allocate_pixmaps()
 {
-	flow_sPixmapData pixmap_data;
-	int i;
+  flow_sPixmapData pixmap_data;
+  int i;
 
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width =xnav_bitmap_leaf12_width;
-	    pixmap_data[i].height =xnav_bitmap_leaf12_height;
-	    pixmap_data[i].bits = xnav_bitmap_leaf12_bits;
-          }
+  for ( i = 0; i < 9; i++) {
+    pixmap_data[i].width =xnav_bitmap_leaf12_width;
+    pixmap_data[i].height =xnav_bitmap_leaf12_height;
+    pixmap_data[i].bits = xnav_bitmap_leaf12_bits;
+  }
 
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_leaf);
+  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_leaf);
 
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width =xnav_bitmap_map12_width;
-	    pixmap_data[i].height =xnav_bitmap_map12_height;
-	    pixmap_data[i].bits = xnav_bitmap_map12_bits;
-          }
+  for ( i = 0; i < 9; i++) {
+    pixmap_data[i].width =xnav_bitmap_map12_width;
+    pixmap_data[i].height =xnav_bitmap_map12_height;
+    pixmap_data[i].bits = xnav_bitmap_map12_bits;
+  }
 
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_map);
+  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_map);
 
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width =xnav_bitmap_openmap12_width;
-	    pixmap_data[i].height =xnav_bitmap_openmap12_height;
-	    pixmap_data[i].bits = xnav_bitmap_openmap12_bits;
-          }
+  for ( i = 0; i < 9; i++) {
+    pixmap_data[i].width =xnav_bitmap_openmap12_width;
+    pixmap_data[i].height =xnav_bitmap_openmap12_height;
+    pixmap_data[i].bits = xnav_bitmap_openmap12_bits;
+  }
 
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_openmap);
+  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_openmap);
 
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width =xnav_bitmap_attr12_width;
-	    pixmap_data[i].height =xnav_bitmap_attr12_height;
-	    pixmap_data[i].bits = xnav_bitmap_attr12_bits;
-          }
+  for ( i = 0; i < 9; i++) {
+    pixmap_data[i].width =xnav_bitmap_attr12_width;
+    pixmap_data[i].height =xnav_bitmap_attr12_height;
+    pixmap_data[i].bits = xnav_bitmap_attr12_bits;
+  }
 
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_attr);
+  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_attr);
 
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width =xnav_bitmap_attrarra12_width;
-	    pixmap_data[i].height =xnav_bitmap_attrarra12_height;
-	    pixmap_data[i].bits = xnav_bitmap_attrarra12_bits;
-          }
+  for ( i = 0; i < 9; i++) {
+    pixmap_data[i].width =xnav_bitmap_attrarra12_width;
+    pixmap_data[i].height =xnav_bitmap_attrarra12_height;
+    pixmap_data[i].bits = xnav_bitmap_attrarra12_bits;
+  }
+  
+  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_attrarray);
 
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_attrarray);
+  for ( i = 0; i < 9; i++) {
+    pixmap_data[i].width =xnav_bitmap_openattr12_width;
+    pixmap_data[i].height =xnav_bitmap_openattr12_height;
+    pixmap_data[i].bits = xnav_bitmap_openattr12_bits;
+  }
+  
+  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_openattr);
 
 }
 
@@ -1554,16 +1558,16 @@ void AttrNavBrow::allocate_pixmaps()
 //
 // Create the navigator widget
 //
-AttrNav::AttrNav(
-	void *xn_parent_ctx,
-	const char *xn_name,
-	attr_sItem  *xn_itemlist,
-	int xn_item_cnt,
-	pwr_tStatus *status) :
-	parent_ctx(xn_parent_ctx),
-	itemlist(xn_itemlist),item_cnt(xn_item_cnt),
-	trace_started(0),
-	message_cb(NULL)
+AttrNav::AttrNav( void *xn_parent_ctx,
+		  attr_eType xn_type,
+		  const char *xn_name,
+		  attr_sItem  *xn_itemlist,
+		  int xn_item_cnt,
+		  pwr_tStatus *status) :
+  parent_ctx(xn_parent_ctx), type(xn_type),
+  itemlist(xn_itemlist),item_cnt(xn_item_cnt),
+  trace_started(0), graph(0), last_selected(0), last_selected_id(0),
+  message_cb(NULL), get_object_list_cb(0), set_inputfocus_cb(0), traverse_inputfocus_cb(0)
 {
   strcpy( name, xn_name);
   *status = 1;
@@ -1584,14 +1588,22 @@ AttrNavBrow::~AttrNavBrow()
 //
 // Set attribute value
 //
-int AttrNav::set_attr_value( char *value_str)
+int AttrNav::set_attr_value( char *value_str, grow_tObject *id, void **client_data)
 {
   brow_tNode	*node_list;
   int		node_count;
-  ItemLocal	*item;
+  AItemLocal	*item;
+  AItemObject 	*oitem;
   int		sts;
   char		buffer[2048];
+  brow_tObject	parent;
+  char		name[80];
   
+  if ( client_data)
+    *client_data = 0;
+  if ( id)
+    *id = 0;
+
   brow_GetSelectedNodes( brow->ctx, &node_list, &node_count);
   if ( !node_count)
     return 0;
@@ -1642,6 +1654,28 @@ int AttrNav::set_attr_value( char *value_str)
 	return FLOW__DESTROYED;
       }
 
+      if ( type == attr_eType_ObjectTree) {
+	// Redraw graph object
+	sts = brow_GetParent( brow->ctx, item->node, &parent);
+	if ( ODD(sts)) {
+	  brow_GetUserData( parent, (void **)&oitem);
+	  if ( oitem->type == attrnav_eItemType_Object) {
+	    // grow_DrawObject( oitem->id);
+	    if ( client_data)
+	      *client_data = oitem->attr_client_data;
+	    if ( id)
+	      *id = oitem->id;
+
+	    // Check if name is changed
+	    grow_GetObjectName( oitem->id, name);
+	    if ( strcmp( oitem->name, name) != 0) {
+	      strcpy( oitem->name, name);
+	      brow_SetAnnotation( oitem->node, 0, name, strlen(name));
+	    }
+	  }
+	}
+      }
+
       break;
     }
     default:
@@ -1657,7 +1691,7 @@ int AttrNav::check_attr_value( int *multiline, int *size, char **value)
 {
   brow_tNode	*node_list;
   int		node_count;
-  ItemLocal	*base_item;
+  AItemLocal	*base_item;
   static char   buf[2048];
   int           len;
   
@@ -1672,9 +1706,9 @@ int AttrNav::check_attr_value( int *multiline, int *size, char **value)
   {
     case attrnav_eItemType_Local:
     {
-      ItemLocal	*item;
+      AItemLocal	*item;
 
-      item = (ItemLocal *)base_item;
+      item = (AItemLocal *)base_item;
 
       if ( base_item->noedit) {
         *multiline = 0;
@@ -1708,10 +1742,9 @@ int AttrNav::check_attr_value( int *multiline, int *size, char **value)
 static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
 {
   AttrNav		*attrnav;
-  ItemLocal 		*item;
+  AItemLocal 		*item;
 
-  if ( event->event == flow_eEvent_ObjectDeleted)
-  {
+  if ( event->event == flow_eEvent_ObjectDeleted) {
     brow_GetUserData( event->object.object, (void **)&item);
     delete item;
     return 1;
@@ -1719,8 +1752,7 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
 
   brow_GetCtxUserData( (BrowCtx *)ctx, (void **) &attrnav);
   attrnav->message( 0, ' ', null_str);
-  switch ( event->event)
-  {
+  switch ( event->event) {
     case flow_eEvent_Key_PageDown: {
       brow_Page( attrnav->brow->ctx, 0.8);
       break;
@@ -1738,24 +1770,55 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       break;
     }
     case flow_eEvent_Key_Up:
-    {
+    case flow_eEvent_Key_ShiftUp: {
       brow_tNode	*node_list;
       int		node_count;
-      brow_tObject	object;
+      brow_tObject	object, parent, current;
       int		sts;
+
+      if ( event->event == flow_eEvent_Key_ShiftUp && attrnav->type != attr_eType_ObjectTree)
+	return 1;
 
       brow_GetSelectedNodes( attrnav->brow->ctx, &node_list, &node_count);
       if ( !node_count) {
-        sts = brow_GetLastVisible( attrnav->brow->ctx, &object);
-        if ( EVEN(sts)) return 1;
+	current = 0;
+	if ( attrnav->last_selected_id) {
+	  object = attrnav->gobject_to_bobject( attrnav->last_selected_id);
+	  if ( !object) {
+	    sts = brow_GetLastVisible( attrnav->brow->ctx, &object);
+	    if ( EVEN(sts)) return 1;
+	  }
+	  if ( !brow_IsVisible( attrnav->brow->ctx, object, flow_eVisible_Partial)) {
+	    sts = brow_GetLastVisible( attrnav->brow->ctx, &object);
+	    if ( EVEN(sts)) return 1;
+	  }
+	}
+	else {
+	  sts = brow_GetLastVisible( attrnav->brow->ctx, &object);
+	  if ( EVEN(sts)) return 1;
+	}
       }
       else {
-	if ( !brow_IsVisible( attrnav->brow->ctx, node_list[0], flow_eVisible_Partial)) {
+	if ( node_count == 1)
+	  current = node_list[0];
+	else {
+	  bool found = false;
+          for ( int i = 0; i < node_count; i++) {
+	    if ( node_list[i] == attrnav->last_selected)
+	      found = true;
+	  }
+	  if ( found)
+	    current = attrnav->last_selected;
+	  else
+	    current = node_list[0];
+	}
+	if ( !brow_IsVisible( attrnav->brow->ctx, node_list[0], flow_eVisible_Partial) &&
+	     event->event == flow_eEvent_Key_Up) {
 	  sts = brow_GetLastVisible( attrnav->brow->ctx, &object);
 	  if ( EVEN(sts)) return 1;
 	}
 	else {
-	  sts = brow_GetPrevious( attrnav->brow->ctx, node_list[0], &object);
+	  sts = brow_GetPrevious( attrnav->brow->ctx, current, &object);
 	  if ( EVEN(sts)) {
             if ( node_count)
 	      free( node_list);
@@ -1763,34 +1826,132 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
  	  }
         }
       }
-      brow_SelectClear( attrnav->brow->ctx);
-      brow_SetInverse( object, 1);
-      brow_SelectInsert( attrnav->brow->ctx, object);
+      if ( event->event ==  flow_eEvent_Key_ShiftUp) {
+	bool found = false;
+	for ( int i = 0; i < node_count; i++) {
+	  if ( node_list[i] == object)
+	    found = true;
+	}
+	if ( found) {
+	  // Next object is already selected, unselect current
+	  if ( current) {
+	    brow_SetInverse( current, 0);
+	    brow_SelectRemove( attrnav->brow->ctx, current);
+	    attrnav->last_selected = object;
+
+	    if ( !brow_IsVisible( attrnav->brow->ctx, object, flow_eVisible_Full))
+	      brow_CenterObject( attrnav->brow->ctx, object, 0.75);
+
+	    brow_GetUserData( current, (void **)&item);
+	    if ( item->type == attrnav_eItemType_Object) {
+	      if ( attrnav->type == attr_eType_ObjectTree)
+		attrnav->graph->add_select_object( ((AItemObject *)item)->id, 0);
+	    }
+	    if ( node_count)
+	      free( node_list);
+	    return 1;
+	  }
+	}
+	else {
+	  brow_SetInverse( object, 1);
+	  brow_SelectInsert( attrnav->brow->ctx, object);
+	  attrnav->last_selected = object;
+
+	  brow_GetUserData( object, (void **)&item);
+	  if ( item->type == attrnav_eItemType_Object &&
+	       attrnav->type == attr_eType_ObjectTree) {
+	    attrnav->graph->add_select_object( ((AItemObject *)item)->id, 1);
+	    attrnav->last_selected_id = ((AItemObject *)item)->id;
+	  }
+	  if ( !brow_IsVisible( attrnav->brow->ctx, object, flow_eVisible_Full))
+	    brow_CenterObject( attrnav->brow->ctx, object, 0.75);
+	  if ( node_count)
+	    free( node_list);
+	  return 1;
+	}
+      }
+      else {
+	brow_SelectClear( attrnav->brow->ctx);
+	brow_SetInverse( object, 1);
+	brow_SelectInsert( attrnav->brow->ctx, object);
+      }
       if ( !brow_IsVisible( attrnav->brow->ctx, object, flow_eVisible_Full))
         brow_CenterObject( attrnav->brow->ctx, object, 0.25);
       if ( node_count)
         free( node_list);
+
+      brow_GetUserData( object, (void **)&item);
+
+      attrnav->last_selected = object;
+      if ( item->type == attrnav_eItemType_Object) {
+	if ( attrnav->type == attr_eType_ObjectTree)
+	  attrnav->graph->select_object( ((AItemObject *)item)->id);
+
+	attrnav->last_selected_id = ((AItemObject *)item)->id;
+      }
+      else {
+	for ( sts = brow_GetParent( attrnav->brow->ctx, object, &parent);
+	      ODD(sts);
+	      sts = brow_GetParent( attrnav->brow->ctx, parent, &parent)) {
+	  brow_GetUserData( parent, (void **)&item);
+	  if ( item->type == attrnav_eItemType_Object) {
+	    attrnav->last_selected_id = ((AItemObject *)item)->id;
+	    break;
+	  }
+	}
+      }
       break;
     }
     case flow_eEvent_Key_Down:
-    {
+    case flow_eEvent_Key_ShiftDown: {
       brow_tNode	*node_list;
       int		node_count;
-      brow_tObject	object;
+      brow_tObject	object, parent, current;
       int		sts;
+
+      if ( event->event == flow_eEvent_Key_ShiftDown && attrnav->type != attr_eType_ObjectTree)
+	return 1;
 
       brow_GetSelectedNodes( attrnav->brow->ctx, &node_list, &node_count);
       if ( !node_count) {
-        sts = brow_GetFirstVisible( attrnav->brow->ctx, &object);
-        if ( EVEN(sts)) return 1;
+	current = 0;
+	if ( attrnav->last_selected_id) {
+	  object = attrnav->gobject_to_bobject( attrnav->last_selected_id);
+	  if ( !object) {
+	    sts = brow_GetFirstVisible( attrnav->brow->ctx, &object);
+	    if ( EVEN(sts)) return 1;
+	  }
+	  if ( !brow_IsVisible( attrnav->brow->ctx, object, flow_eVisible_Partial)) {
+	    sts = brow_GetFirstVisible( attrnav->brow->ctx, &object);
+	    if ( EVEN(sts)) return 1;
+	  }
+	}
+	else {
+	  sts = brow_GetFirstVisible( attrnav->brow->ctx, &object);
+	  if ( EVEN(sts)) return 1;
+	}
       }
       else {
-	if ( !brow_IsVisible( attrnav->brow->ctx, node_list[0], flow_eVisible_Partial)) {
+	if ( node_count == 1)
+	  current = node_list[0];
+	else {
+	  bool found = false;
+          for ( int i = 0; i < node_count; i++) {
+	    if ( node_list[i] == attrnav->last_selected)
+	      found = true;
+	  }
+	  if ( found)
+	    current = attrnav->last_selected;
+	  else
+	    current = node_list[0];
+	}
+	if ( !brow_IsVisible( attrnav->brow->ctx, current, flow_eVisible_Partial) &&
+	     event->event == flow_eEvent_Key_Down) {
 	  sts = brow_GetFirstVisible( attrnav->brow->ctx, &object);
 	  if ( EVEN(sts)) return 1;
 	}
 	else {
-	  sts = brow_GetNext( attrnav->brow->ctx, node_list[0], &object);
+	  sts = brow_GetNext( attrnav->brow->ctx, current, &object);
 	  if ( EVEN(sts)) {
             if ( node_count)
 	      free( node_list);
@@ -1798,40 +1959,246 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
  	  }
         }
       }
-      brow_SelectClear( attrnav->brow->ctx);
-      brow_SetInverse( object, 1);
-      brow_SelectInsert( attrnav->brow->ctx, object);
+      if ( event->event ==  flow_eEvent_Key_ShiftDown) {
+	bool found = false;
+	for ( int i = 0; i < node_count; i++) {
+	  if ( node_list[i] == object)
+	    found = true;
+	}
+	if ( found) {
+	  // Next object is already selected, unselect current
+	  if ( current) {
+	    brow_SetInverse( current, 0);
+	    brow_SelectRemove( attrnav->brow->ctx, current);
+	    attrnav->last_selected = object;
+
+	    if ( !brow_IsVisible( attrnav->brow->ctx, object, flow_eVisible_Full))
+	      brow_CenterObject( attrnav->brow->ctx, object, 0.25);
+	  
+	    brow_GetUserData( current, (void **)&item);
+	    if ( item->type == attrnav_eItemType_Object) {
+	      if ( attrnav->type == attr_eType_ObjectTree)
+		attrnav->graph->add_select_object( ((AItemObject *)item)->id, 0);
+	    }
+	    if ( node_count)
+	      free( node_list);
+	    return 1;
+	  }
+	}
+	else {
+	  brow_SetInverse( object, 1);
+	  brow_SelectInsert( attrnav->brow->ctx, object);
+	  attrnav->last_selected = object;
+
+	  brow_GetUserData( object, (void **)&item);
+	  if ( item->type == attrnav_eItemType_Object &&
+	       attrnav->type == attr_eType_ObjectTree) {
+	    attrnav->graph->add_select_object( ((AItemObject *)item)->id, 1);
+	    attrnav->last_selected_id = ((AItemObject *)item)->id;
+	  }
+	  if ( !brow_IsVisible( attrnav->brow->ctx, object, flow_eVisible_Full))
+	    brow_CenterObject( attrnav->brow->ctx, object, 0.25);
+	  if ( node_count)
+	    free( node_list);
+	  return 1;
+	}
+      }
+      else {
+	brow_SelectClear( attrnav->brow->ctx);
+	brow_SetInverse( object, 1);
+	brow_SelectInsert( attrnav->brow->ctx, object);
+      }
       if ( !brow_IsVisible( attrnav->brow->ctx, object, flow_eVisible_Full))
         brow_CenterObject( attrnav->brow->ctx, object, 0.75);
       if ( node_count)
         free( node_list);
+
+      brow_GetUserData( object, (void **)&item);
+
+      attrnav->last_selected = object;
+      if ( item->type == attrnav_eItemType_Object) {
+	if ( attrnav->type == attr_eType_ObjectTree)
+	  attrnav->graph->select_object( ((AItemObject *)item)->id);
+
+	attrnav->last_selected_id = ((AItemObject *)item)->id;
+      }
+      else {
+	for ( sts = brow_GetParent( attrnav->brow->ctx, object, &parent);
+	      ODD(sts);
+	      sts = brow_GetParent( attrnav->brow->ctx, parent, &parent)) {
+	  brow_GetUserData( parent, (void **)&item);
+	  if ( item->type == attrnav_eItemType_Object) {
+	    attrnav->last_selected_id = ((AItemObject *)item)->id;
+	    break;
+	  }
+	}
+      }
       break;
     }
     case flow_eEvent_SelectClear:
       brow_ResetSelectInverse( attrnav->brow->ctx);
       break;
-    case flow_eEvent_MB1Click:
+    case flow_eEvent_MB2Click: {
+      brow_tObject *list;
+      int list_cnt;
+      AItemObject *dest_item, *sel_item, *parent_item;
+      brow_tObject parent, sel_parent;
+      int sts;
+
+      if ( attrnav->set_inputfocus_cb)
+	(attrnav->set_inputfocus_cb)( attrnav->parent_ctx);
+      else
+	attrnav->set_inputfocus();
+
+      // Move object
+      if ( !event->object.object)
+	break;
+
+      // Clicked object is destination
+      brow_GetUserData( event->object.object, (void **)&dest_item);
+      if ( dest_item->type != attrnav_eItemType_Object)
+	break;
+
+      sts = brow_GetParent( attrnav->brow->ctx, event->object.object, &parent);
+      if ( EVEN(sts))
+	parent = 0;
+
+      // Selected object is moved
+      brow_GetSelectList( attrnav->brow->ctx, &list, &list_cnt);
+      if ( list_cnt == 0)
+	break;
+
+      brow_GetUserData( list[list_cnt-1], (void **)&sel_item);
+      if ( sel_item->type != attrnav_eItemType_Object)
+	break;
+
+      sts = brow_GetParent( attrnav->brow->ctx, list[list_cnt-1], &sel_parent);
+      if ( EVEN(sts))
+	sel_parent = 0;
+
+      if ( parent != sel_parent)
+	break;
+      
+      if ( parent == 0)
+	grow_OrderObject( attrnav->graph->grow->ctx, sel_item->id, dest_item->id, glow_eDest_Before);
+      else {
+	brow_GetUserData( parent, (void **)&parent_item);
+	if ( parent_item->type != attrnav_eItemType_Object)
+	  break;
+	
+	grow_OrderGroupObject( parent_item->id, sel_item->id, dest_item->id, glow_eDest_Before);
+      }
+      grow_DrawObject( sel_item->id);
+      grow_DrawObject( dest_item->id);
+      attrnav->refresh_objects( attr_mRefresh_Objects);
+      break;
+    }
+    case flow_eEvent_MB1Click: {
       // Select
-      switch ( event->object.object_type)
-      {
+      double ll_x, ll_y, ur_x, ur_y;
+      int sts;
+
+      if ( attrnav->set_inputfocus_cb)
+	(attrnav->set_inputfocus_cb)( attrnav->parent_ctx);
+      else
+	attrnav->set_inputfocus();
+
+      switch ( event->object.object_type) {
         case flow_eObjectType_Node:
-          if ( brow_FindSelectedObject( attrnav->brow->ctx, event->object.object))
+          brow_MeasureNode( event->object.object, &ll_x, &ll_y,
+			&ur_x, &ur_y);
+	  if ( event->object.x < ll_x + 1.0)
           {
+            // Simulate doubleclick
+            flow_tEvent doubleclick_event;
+
+            doubleclick_event = (flow_tEvent) calloc( 1, sizeof(*doubleclick_event));
+            memcpy( doubleclick_event, event, sizeof(*doubleclick_event));
+            doubleclick_event->event = flow_eEvent_MB1DoubleClick;
+            sts = attrnav_brow_cb( ctx, doubleclick_event);
+            free( (char *) doubleclick_event);
+            return sts;
+          }
+
+          if ( brow_FindSelectedObject( attrnav->brow->ctx, event->object.object)) {
             brow_SelectClear( attrnav->brow->ctx);
-         }
-          else
-          {
+	  }
+          else {
             brow_SelectClear( attrnav->brow->ctx);
             brow_SetInverse( event->object.object, 1);
             brow_SelectInsert( attrnav->brow->ctx, event->object.object);
-          }
+
+	    attrnav->last_selected = event->object.object;
+	    if ( attrnav->type == attr_eType_ObjectTree) {
+	      brow_GetUserData( event->object.object, (void **)&item);
+	      if ( item->type == attrnav_eItemType_Object) {
+		attrnav->graph->select_object( ((AItemObject *)item)->id);
+		attrnav->last_selected_id = ((AItemObject *)item)->id;
+	      }
+	    }
+
+          }	  
           break;
         default:
           brow_SelectClear( attrnav->brow->ctx);
       }
       break;
-    case flow_eEvent_Key_Left:
-    {
+    }
+    case flow_eEvent_MB1ClickShift: {
+      // Add select
+      double ll_x, ll_y, ur_x, ur_y;
+      int sts;
+
+      if ( attrnav->set_inputfocus_cb)
+	(attrnav->set_inputfocus_cb)( attrnav->parent_ctx);
+      else
+	attrnav->set_inputfocus();
+
+      switch ( event->object.object_type) {
+      case flow_eObjectType_Node:
+	brow_MeasureNode( event->object.object, &ll_x, &ll_y,
+			  &ur_x, &ur_y);
+	if ( event->object.x < ll_x + 1.0) {
+	  // Simulate doubleclick
+	  flow_tEvent doubleclick_event;
+
+	  doubleclick_event = (flow_tEvent) calloc( 1, sizeof(*doubleclick_event));
+	  memcpy( doubleclick_event, event, sizeof(*doubleclick_event));
+	  doubleclick_event->event = flow_eEvent_MB1DoubleClickShift;
+	  sts = attrnav_brow_cb( ctx, doubleclick_event);
+	  free( (char *) doubleclick_event);
+	  return sts;
+	}
+	if ( attrnav->type != attr_eType_ObjectTree)
+	  return 1;
+
+	if ( brow_FindSelectedObject( attrnav->brow->ctx, event->object.object)) {
+	  brow_SetInverse( event->object.object, 0);
+	  brow_SelectRemove( attrnav->brow->ctx, event->object.object);
+
+	  if ( attrnav->type == attr_eType_ObjectTree) {
+	    brow_GetUserData( event->object.object, (void **)&item);
+	    if ( item->type == attrnav_eItemType_Object)
+	      attrnav->graph->add_select_object( ((AItemObject *)item)->id, 0);
+	  }
+	}
+	else {
+	  brow_SetInverse( event->object.object, 1);
+	  brow_SelectInsert( attrnav->brow->ctx, event->object.object);
+	  
+	  if ( attrnav->type == attr_eType_ObjectTree) {
+	    brow_GetUserData( event->object.object, (void **)&item);
+	    if ( item->type == attrnav_eItemType_Object)
+	      attrnav->graph->add_select_object( ((AItemObject *)item)->id, 1);
+	  }
+	  
+	}	  
+	break;
+      default: ;
+      }
+      break;
+    }
+    case flow_eEvent_Key_Left: {
       brow_tNode	*node_list;
       int		node_count;
       brow_tObject	object;
@@ -1844,21 +2211,21 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       if ( brow_IsOpen( node_list[0]))
         // Close this node
         object = node_list[0];
-      else
-      {
+      else {
         // Close parent
         sts = brow_GetParent( attrnav->brow->ctx, node_list[0], &object);
-        if ( EVEN(sts))
-        {
+        if ( EVEN(sts)) {
           free( node_list);
           return 1;
         }
       }
       brow_GetUserData( object, (void **)&item);
-      switch( item->type)
-      {
+      switch( item->type) {
         case attrnav_eItemType_Local:
-	  ((ItemLocal *)item)->close( attrnav, 0, 0);
+	  ((AItemLocal *)item)->close( attrnav, 0, 0);
+          break;
+        case attrnav_eItemType_Object:
+	  ((AItemObject *)item)->close( attrnav, 0, 0);
           break;
         default:
           ;
@@ -1871,8 +2238,7 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       free( node_list);
       break;
     }
-    case flow_eEvent_Key_Right:
-    {
+    case flow_eEvent_Key_Right: {
       brow_tNode	*node_list;
       int		node_count;
 
@@ -1881,75 +2247,113 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
         return 1;
 
       brow_GetUserData( node_list[0], (void **)&item);
-      switch( item->type)
-      {
+      switch( item->type) {
         case attrnav_eItemType_Local:
-          if ( ((ItemLocal *)item)->parent || ((ItemLocal *)item)->subgraph ||
+          if ( ((AItemLocal *)item)->parent || ((AItemLocal *)item)->subgraph ||
 	       item->type_id == ge_eAttrType_Dyn)
-	    ((ItemLocal *)item)->open_children( attrnav, 0, 0);
-          else if ( !((ItemLocal *)item)->parent && attrnav->change_value_cb)
+	    ((AItemLocal *)item)->open_children( attrnav, 0, 0);
+          else if ( !((AItemLocal *)item)->parent && attrnav->change_value_cb)
 	    (attrnav->change_value_cb) ( attrnav->parent_ctx);
           break;
-        case attrnav_eItemType_Enum: 
-        {
+        case attrnav_eItemType_Enum:  {
           int value;
 
           brow_GetRadiobutton( node_list[0], 0, &value);
-          if ( !value)
-          {
+          if ( !value) {
              brow_SetRadiobutton( node_list[0], 0, 1);
-	     *(int *)((ItemEnum *)item)->value_p = ((ItemEnum *)item)->num;
+	     *(int *)((AItemEnum *)item)->value_p = ((AItemEnum *)item)->num;
 
           }
-	  if ( (((ItemEnum *)item)->type_id == ge_eAttrType_OptionMenuType) &&
+	  if ( (((AItemEnum *)item)->type_id == ge_eAttrType_OptionMenuType) &&
 	       attrnav->reconfigure_attr_cb) {
 	    (attrnav->reconfigure_attr_cb)(attrnav->parent_ctx);
 	    return FLOW__DESTROYED;
 	  }
           break;
         }
-        case attrnav_eItemType_Mask: 
-        {
+        case attrnav_eItemType_Mask: {
           int value;
 
           brow_GetRadiobutton( node_list[0], 0, &value);
-          if ( value)
-          {
+          if ( value) {
              brow_SetRadiobutton( node_list[0], 0, 0);
-	     *(unsigned int *)((ItemEnum *)item)->value_p &= 
-			~(((ItemMask *)item)->mask);
+	     *(unsigned int *)((AItemEnum *)item)->value_p &= 
+			~(((AItemMask *)item)->mask);
           }
-          else
-          {
+          else {
              brow_SetRadiobutton( node_list[0], 0, 1);
-	     *(unsigned int *)((ItemEnum *)item)->value_p |= 
-			((ItemMask *)item)->mask;
+	     *(unsigned int *)((AItemEnum *)item)->value_p |= 
+			((AItemMask *)item)->mask;
           }
-	  if ( (((ItemMask *)item)->type_id == ge_eAttrType_DynType1 ||
-	        ((ItemMask *)item)->type_id == ge_eAttrType_DynType2 ||
-	        ((ItemMask *)item)->type_id == ge_eAttrType_DynTypeTone ||
-		((ItemMask *)item)->type_id == ge_eAttrType_ActionType1 ||
-		((ItemMask *)item)->type_id == ge_eAttrType_InstanceMask) &&
+	  if ( (((AItemMask *)item)->type_id == ge_eAttrType_DynType1 ||
+	        ((AItemMask *)item)->type_id == ge_eAttrType_DynType2 ||
+	        ((AItemMask *)item)->type_id == ge_eAttrType_DynTypeTone ||
+		((AItemMask *)item)->type_id == ge_eAttrType_ActionType1 ||
+		((AItemMask *)item)->type_id == ge_eAttrType_InstanceMask) &&
 	       attrnav->reconfigure_attr_cb) {
-	    (attrnav->reconfigure_attr_cb)(attrnav->parent_ctx);
+	    if ( attrnav->type == attr_eType_Attributes)
+	      (attrnav->reconfigure_attr_cb)(attrnav->parent_ctx);
+	    else
+	      attrnav->refresh_objects( attr_mRefresh_Objects);
 	    return FLOW__DESTROYED;
 	  }
           break;
         }
+        case attrnav_eItemType_Object:
+	  ((AItemObject *)item)->open_attributes( attrnav, 0, 0);
+          break;
         default:
           ;
       }
+      break;
+    }
+    case flow_eEvent_Key_ShiftRight: {
+      brow_tNode	*node_list;
+      int		node_count;
+
+      brow_GetSelectedNodes( attrnav->brow->ctx, &node_list, &node_count);
+      if ( !node_count)
+        return 1;
+
+      brow_GetUserData( node_list[0], (void **)&item);
+      switch( item->type) {
+        case attrnav_eItemType_Object:
+	  ((AItemObject *)item)->open_children( attrnav, 0, 0);
+          break;
+        default:
+          ;
+      }
+      break;
     }
     case flow_eEvent_MB1DoubleClick:
-      switch ( event->object.object_type)
-      {
+      switch ( event->object.object_type) {
         case flow_eObjectType_Node:
           brow_GetUserData( event->object.object, (void **)&item);
-          switch( item->type)
-          {
+          switch( item->type) {
             case attrnav_eItemType_Local: 
-	      ((ItemLocal *)item)->open_children( attrnav,
+	      ((AItemLocal *)item)->open_children( attrnav,
 			event->object.x, event->object.y);
+              break;
+            case attrnav_eItemType_Object: 
+	      ((AItemObject *)item)->open_attributes( attrnav,
+		        event->object.x, event->object.y);
+              break;
+            default:
+              ;
+          }
+          break;
+        default:
+          ;
+      }
+      break;
+    case flow_eEvent_MB1DoubleClickShift:
+      switch ( event->object.object_type) {
+        case flow_eObjectType_Node:
+          brow_GetUserData( event->object.object, (void **)&item);
+          switch( item->type) {
+            case attrnav_eItemType_Object: 
+	      ((AItemObject *)item)->open_children( attrnav,
+		        event->object.x, event->object.y);
               break;
             default:
               ;
@@ -2009,25 +2413,24 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
 	;
       }
       break;
-    case flow_eEvent_Radiobutton:
-    {
-      switch ( event->object.object_type)
-      {
+    case flow_eEvent_Radiobutton: {
+      switch ( event->object.object_type) {
         case flow_eObjectType_Node:
           brow_GetUserData( event->object.object, (void **)&item);
-          switch( item->type)
-          {
+          switch( item->type) {
             case attrnav_eItemType_Enum: 
-              if ( !event->radiobutton.value)
-              {
+              if ( !event->radiobutton.value) {
                  brow_SetRadiobutton( event->radiobutton.object, 
 			event->radiobutton.number, !event->radiobutton.value);
-	         *(int *)((ItemEnum *)item)->value_p = ((ItemEnum *)item)->num;
+	         *(int *)((AItemEnum *)item)->value_p = ((AItemEnum *)item)->num;
 
               }
-	      if ( (((ItemEnum *)item)->type_id == ge_eAttrType_OptionMenuType) &&
+	      if ( (((AItemEnum *)item)->type_id == ge_eAttrType_OptionMenuType) &&
 		   attrnav->reconfigure_attr_cb) {
-		(attrnav->reconfigure_attr_cb)(attrnav->parent_ctx);
+		if ( attrnav->type == attr_eType_Attributes)
+		  (attrnav->reconfigure_attr_cb)(attrnav->parent_ctx);
+		else
+		  attrnav->refresh_objects( attr_mRefresh_Objects);
 		return FLOW__DESTROYED;
 	      }
               break;
@@ -2035,20 +2438,23 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
                brow_SetRadiobutton( event->radiobutton.object, 
 			event->radiobutton.number, !event->radiobutton.value);
                if ( event->radiobutton.value)
-	         *(unsigned int *)((ItemMask *)item)->value_p &= 
-			~(((ItemMask *)item)->mask);
+	         *(unsigned int *)((AItemMask *)item)->value_p &= 
+			~(((AItemMask *)item)->mask);
                else
-	         *(unsigned int *)((ItemMask *)item)->value_p |= 
-			((ItemMask *)item)->mask;
+	         *(unsigned int *)((AItemMask *)item)->value_p |= 
+			((AItemMask *)item)->mask;
 
-	       if ( (((ItemMask *)item)->type_id == ge_eAttrType_DynType1 ||
-	             ((ItemMask *)item)->type_id == ge_eAttrType_DynType2 ||
-	             ((ItemMask *)item)->type_id == ge_eAttrType_DynTypeTone ||
-		     ((ItemMask *)item)->type_id == ge_eAttrType_ActionType1 ||
-		     ((ItemMask *)item)->type_id == ge_eAttrType_OptionMenuType ||
-		     ((ItemMask *)item)->type_id == ge_eAttrType_InstanceMask) &&
+	       if ( (((AItemMask *)item)->type_id == ge_eAttrType_DynType1 ||
+	             ((AItemMask *)item)->type_id == ge_eAttrType_DynType2 ||
+	             ((AItemMask *)item)->type_id == ge_eAttrType_DynTypeTone ||
+		     ((AItemMask *)item)->type_id == ge_eAttrType_ActionType1 ||
+		     ((AItemMask *)item)->type_id == ge_eAttrType_OptionMenuType ||
+		     ((AItemMask *)item)->type_id == ge_eAttrType_InstanceMask) &&
 		    attrnav->reconfigure_attr_cb) {
-		 (attrnav->reconfigure_attr_cb)(attrnav->parent_ctx);
+		 if ( attrnav->type == attr_eType_Attributes)
+		   (attrnav->reconfigure_attr_cb)(attrnav->parent_ctx);
+		 else
+		   attrnav->refresh_objects( attr_mRefresh_Objects);
 		 return FLOW__DESTROYED;
 	       }
               break;
@@ -2061,6 +2467,11 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       }
 
 
+      break;
+    }
+    case flow_eEvent_Key_Tab: {
+      if ( attrnav->traverse_inputfocus_cb)
+	(attrnav->traverse_inputfocus_cb)( attrnav->parent_ctx);
       break;
     }
     default:
@@ -2077,7 +2488,7 @@ void AttrNav::force_trace_scan()
 
 static int attrnav_trace_scan_bc( brow_tObject object, void *p)
 {
-  ItemLocal		*base_item;
+  AItemLocal		*base_item;
   char		buf[200];
   int		len;
 
@@ -2086,9 +2497,9 @@ static int attrnav_trace_scan_bc( brow_tObject object, void *p)
   {
     case attrnav_eItemType_Local:
     {
-      ItemLocal	*item;
+      AItemLocal	*item;
 
-      item = (ItemLocal *)base_item;
+      item = (AItemLocal *)base_item;
       if ( item->size == 0)
         break;
 
@@ -2124,9 +2535,9 @@ static int attrnav_trace_scan_bc( brow_tObject object, void *p)
     }
     case attrnav_eItemType_Enum:
     {
-      ItemEnum	*item;
+      AItemEnum	*item;
 
-      item = (ItemEnum *)base_item;
+      item = (AItemEnum *)base_item;
       if ( !item->first_scan)
       {
         if ( item->old_value == *(int *)p)
@@ -2146,9 +2557,9 @@ static int attrnav_trace_scan_bc( brow_tObject object, void *p)
     }
     case attrnav_eItemType_Mask:
     {
-      ItemMask	*item;
+      AItemMask	*item;
 
-      item = (ItemMask *)base_item;
+      item = (AItemMask *)base_item;
       if ( !item->first_scan)
       {
         if ( item->old_value == *(int *)p)
@@ -2175,7 +2586,7 @@ static int attrnav_trace_scan_bc( brow_tObject object, void *p)
 static int attrnav_trace_connect_bc( brow_tObject object, char *name, char *attr, 
 	flow_eTraceType type, /* flow_eDrawType color, */ void **p)
 {
-  ItemLocal 		*base_item;
+  AItemLocal 		*base_item;
 
   /*  printf( "Connecting %s.%s\n", name, attr);  */
 
@@ -2187,9 +2598,9 @@ static int attrnav_trace_connect_bc( brow_tObject object, char *name, char *attr
   {
     case attrnav_eItemType_Local:
     {
-      ItemLocal	*item;
+      AItemLocal	*item;
 
-      item = (ItemLocal *) base_item;
+      item = (AItemLocal *) base_item;
       if (item->size == 0)
 	break;
 
@@ -2198,17 +2609,17 @@ static int attrnav_trace_connect_bc( brow_tObject object, char *name, char *attr
     }
     case attrnav_eItemType_Enum:
     {
-      ItemEnum	*item;
+      AItemEnum	*item;
 
-      item = (ItemEnum *) base_item;
+      item = (AItemEnum *) base_item;
       *p = item->value_p;
       break;
     }
     case attrnav_eItemType_Mask:
     {
-      ItemMask	*item;
+      AItemMask	*item;
 
-      item = (ItemMask *) base_item;
+      item = (AItemMask *) base_item;
       *p = item->value_p;
       break;
     }
@@ -2220,7 +2631,7 @@ static int attrnav_trace_connect_bc( brow_tObject object, char *name, char *attr
 
 static int attrnav_trace_disconnect_bc( brow_tObject object)
 {
-  ItemLocal 		*base_item;
+  AItemLocal 		*base_item;
 
   brow_GetUserData( object, (void **)&base_item);
   switch( base_item->type)
@@ -2393,7 +2804,7 @@ int	AttrNav::object_attr()
   item_p = itemlist;
   for ( i = 0; i < item_cnt; i++)
   {
-    new ItemLocal( this, item_p->name, "LocalAttr", 
+    new AItemLocal( this, item_p->name, "LocalAttr", 
 		   item_p->type, item_p->size, item_p->minlimit, item_p->maxlimit,
 		   item_p->value, item_p->multiline, item_p->noedit, item_p->mask,
 		   item_p->input_validation_cb, item_p->validation_ctx, 
@@ -2405,6 +2816,298 @@ int	AttrNav::object_attr()
   brow_Redraw( brow->ctx, 0);
   force_trace_scan();
   return ATTRNAV__SUCCESS;
+}
+
+int	AttrNav::object_tree()
+{
+  refresh_objects( attr_mRefresh_Objects);
+  return ATTRNAV__SUCCESS;
+}
+
+void AttrNav::refresh_objects( unsigned int type)
+{
+  int	i;
+  grow_tObject *list;
+  int list_cnt;
+  char oname[80];
+  char ncname[80];
+  grow_tNodeClass nc;
+  glow_eObjectType otype;
+  grow_tObject open_list[100];
+  int open_type[100];
+  int open_cnt = 0;
+  grow_tObject select_list[20];
+  char select_name[20][80];
+  int select_type[20];
+  int select_cnt = 0;
+  AItemObject *item;
+  int sts;
+
+  if ( !brow)
+    return;
+
+  if ( !get_object_list_cb)
+    return;
+
+  if ( type == attr_mRefresh_Objects) {
+    // Store open objects
+    brow_tObject *blist;
+    int blist_cnt;
+    int open;
+
+    // Find open objects
+    brow_GetObjectList( brow->ctx, &blist, &blist_cnt);
+    for ( int i = 0; i < blist_cnt; i++) {
+      open = brow_IsOpen( blist[i]);
+      if ( open & attrnav_mOpen_Attributes || open & attrnav_mOpen_Children) {
+	brow_GetUserData( blist[i], (void **)&item);
+	if ( item->type == attrnav_eItemType_Object) {
+	  open_list[open_cnt] = item->id;
+	  open_type[open_cnt] = open;
+	  open_cnt++;
+	  if ( open_cnt >= (int)(sizeof(open_list)/sizeof(open_list[0])))
+	    break;
+	}
+      }
+    }
+
+    // Find selected attribute
+    brow_GetSelectList( brow->ctx, &blist, &blist_cnt);
+    for ( int i = 0; i < blist_cnt; i++) {
+      brow_GetUserData( blist[i], (void **)&item);
+      
+      switch ( item->type) {
+      case attrnav_eItemType_Object:
+	select_list[select_cnt] = item->id;
+	select_type[select_cnt] = item->type;
+	select_cnt++;
+	break;
+      case attrnav_eItemType_Local: {
+	AItemObject *pitem;
+	brow_tObject parent;
+
+        sts = brow_GetParent( brow->ctx, blist[i], &parent);
+        if ( EVEN(sts)) break;
+	
+	brow_GetUserData( parent, (void **)&pitem);
+	if ( pitem->type != attrnav_eItemType_Object)
+	  break;
+
+	select_list[select_cnt] = pitem->id;
+	select_type[select_cnt] = item->type;
+	strcpy( select_name[select_cnt], ((AItemLocal *)item)->name);
+	select_cnt++;
+	break;
+      }
+      case attrnav_eItemType_Enum:
+      case attrnav_eItemType_Mask: {
+	AItemObject *pitem, *ppitem;
+	brow_tObject parent;
+
+	// Enum and Mask will be closed, select parent instead
+        sts = brow_GetParent( brow->ctx, blist[i], &parent);
+        if ( EVEN(sts)) break;
+
+	brow_GetUserData( parent, (void **)&pitem);
+	if ( pitem->type != attrnav_eItemType_Local) 
+	  break;
+
+        sts = brow_GetParent( brow->ctx, pitem->node, &parent);
+        if ( EVEN(sts)) break;
+	
+	brow_GetUserData( parent, (void **)&ppitem);
+	if ( ppitem->type != attrnav_eItemType_Object) 
+	  break;
+
+	select_list[select_cnt] = ppitem->id;
+	select_type[select_cnt] = pitem->type;
+	strcpy( select_name[select_cnt], ((AItemLocal *)pitem)->name);
+	select_cnt++;
+	break;
+      }
+      default: ;
+      }
+      if ( select_cnt >= (int)(sizeof(select_list) / sizeof(select_list[0])))
+	break;
+    }
+
+
+    brow_SetNodraw( brow->ctx);
+
+    brow_DeleteAll( brow->ctx);
+
+
+    (get_object_list_cb)( parent_ctx, attr_eList_Objects, &list, &list_cnt, 0, 0);
+
+    for ( int i = list_cnt - 1; i >= 0; i--) {
+      grow_GetObjectName( list[i], oname);
+      otype = grow_GetObjectType( list[i]);
+
+      switch ( otype) {
+      case glow_eObjectType_GrowNode:
+      case glow_eObjectType_GrowSlider: {
+	grow_GetObjectClass( list[i], &nc);
+	grow_GetNodeClassName( nc, ncname);
+	break;
+      }
+      case glow_eObjectType_Con:
+	continue;
+      default:
+	strcpy( ncname, "");
+      }
+      item = new AItemObject( this, oname, otype, list[i], ncname, NULL, flow_eDest_IntoLast);    
+
+      // Open previously open objects
+      object_open_check( item, open_list, open_type, open_cnt);
+    }
+
+    // Reselect
+    brow_GetObjectList( brow->ctx, &blist, &blist_cnt);
+    for ( int i = 0; i < select_cnt; i++) {
+      switch ( select_type[i]) {
+      case attrnav_eItemType_Object:
+	for ( int j = 0; j < blist_cnt; j++) {
+	  brow_GetUserData( blist[j], (void **)&item);
+	  if ( item->id == select_list[i]) {
+	    brow_SetInverse( blist[j], 1);
+	    brow_SelectInsert( brow->ctx, blist[j]);
+	    break;
+	  }
+	}
+	break;
+      case attrnav_eItemType_Local: {
+	AItemObject *pitem;
+	brow_tObject parent;
+
+	for ( int j = 0; j < blist_cnt; j++) {
+	  brow_GetUserData( blist[j], (void **)&item);
+
+	  sts = brow_GetParent( brow->ctx, blist[j], &parent);
+	  if ( EVEN(sts)) continue;
+	
+	  brow_GetUserData( parent, (void **)&pitem);
+	  if ( pitem->type != attrnav_eItemType_Object)
+	    continue;
+
+	  if ( select_list[i] == pitem->id &&
+	       strcmp( select_name[i], ((AItemLocal *)item)->name) == 0) {
+	    brow_SetInverse( blist[j], 1);
+	    brow_SelectInsert( brow->ctx, blist[j]);
+	    break;
+	  }
+	}
+	break;
+      }
+      default: ;
+      }
+    }
+
+    brow_ResetNodraw( brow->ctx);
+    brow_Redraw( brow->ctx, 0);  
+  }
+  else if ( type == attr_mRefresh_Select) {
+    brow_tObject *blist;
+    int blist_cnt;
+    AItemObject *item;
+
+    (get_object_list_cb)( parent_ctx, attr_eList_Select, &list, &list_cnt, 0, 0);
+
+    brow_SelectClear( brow->ctx);
+    for ( i = 0; i < list_cnt; i++) {      
+      brow_GetObjectList( brow->ctx, &blist, &blist_cnt);
+      for ( int j = 0; j < blist_cnt; j++) {
+	brow_GetUserData( blist[j], (void **)&item);
+	if ( item->id == list[i]) {
+	  brow_SetInverse( blist[j], 1);
+	  brow_SelectInsert( brow->ctx, blist[j]);
+	  if ( i == 0)
+	    if ( !brow_IsVisible( brow->ctx, item->node, flow_eVisible_Partial))
+	      brow_CenterObject( brow->ctx, item->node, 0.25);
+	  break;
+	}
+      }
+    }
+  }
+}
+
+void AttrNav::object_open_check( AItemObject *item, grow_tObject *open_list, int *open_type, int open_cnt)
+{
+  brow_tObject child;
+  AItemObject *child_item;
+  int sts;
+
+  for ( int i = 0; i < open_cnt; i++) {
+    if ( open_list[i] == item->id) {
+      if ( open_type[i] == attrnav_mOpen_Children) {
+
+	item->open_children( this, 0, 0);
+
+	for ( sts = brow_GetChild( brow->ctx, item->node, &child);
+	      ODD(sts);
+	      sts = brow_GetNextSibling( brow->ctx, child, &child)) {
+	  // Check if any open group members
+	  brow_GetUserData( child, (void **)&child_item);
+	  if ( child_item->type == attrnav_eItemType_Object) {
+	    object_open_check( child_item, open_list, open_type, open_cnt);
+	  }
+	}
+      }
+      else if ( open_type[i] == attrnav_mOpen_Attributes)
+	item->open_attributes( this, 0, 0);
+      break;
+    }
+  }
+}
+
+brow_tObject AttrNav::gobject_to_bobject( grow_tObject gobject)
+{
+  brow_tObject *blist;
+  int blist_cnt;
+  AItemObject *item;
+
+  brow_GetObjectList( brow->ctx, &blist, &blist_cnt);
+  for ( int j = 0; j < blist_cnt; j++) {
+    brow_GetUserData( blist[j], (void **)&item);
+    if ( item->type == attrnav_eItemType_Object && item->id == gobject)
+      return item->node;
+  }
+  return 0;
+}
+
+void AttrNav::object_type_to_str( glow_eObjectType object_type, char *object_type_str)
+{
+  switch( object_type) {
+  case glow_eObjectType_NoObject: strcpy( object_type_str, "NoObject"); break;
+  case glow_eObjectType_Con: strcpy( object_type_str, "Connection"); break;
+  case glow_eObjectType_GrowRect: strcpy( object_type_str, "Rectangle"); break;
+  case glow_eObjectType_GrowLine: strcpy( object_type_str, "Line"); break;
+  case glow_eObjectType_GrowArc: strcpy( object_type_str, "Arc"); break;
+  case glow_eObjectType_GrowConPoint: strcpy( object_type_str, "ConPoint"); break;
+  case glow_eObjectType_GrowSubAnnot: strcpy( object_type_str, "SubAnnot"); break;
+  case glow_eObjectType_GrowPolyLine: strcpy( object_type_str, "PolyLine"); break;
+  case glow_eObjectType_GrowNode: strcpy( object_type_str, "Node"); break;
+  case glow_eObjectType_GrowAnnot: strcpy( object_type_str, "Annotation"); break;
+  case glow_eObjectType_GrowText: strcpy( object_type_str, "Text"); break;
+  case glow_eObjectType_GrowBar: strcpy( object_type_str, "Bar"); break;
+  case glow_eObjectType_GrowTrend: strcpy( object_type_str, "Trend"); break;
+  case glow_eObjectType_GrowSlider: strcpy( object_type_str, "Slider"); break;
+  case glow_eObjectType_GrowImage: strcpy( object_type_str, "Image"); break;
+  case glow_eObjectType_GrowGroup: strcpy( object_type_str, "Group"); break;
+  case glow_eObjectType_GrowAxis: strcpy( object_type_str, "Axis"); break;
+  case glow_eObjectType_GrowRectRounded: strcpy( object_type_str, "RectRounded"); break;
+  case glow_eObjectType_GrowConGlue: strcpy( object_type_str, "ConGlue"); break;
+  case glow_eObjectType_GrowMenu: strcpy( object_type_str, "Menu"); break;
+  case glow_eObjectType_GrowWindow: strcpy( object_type_str, "Window"); break;
+  case glow_eObjectType_GrowScrollBar: strcpy( object_type_str, "Scrollbar"); break;
+  case glow_eObjectType_GrowTable: strcpy( object_type_str, "Table"); break;
+  case glow_eObjectType_GrowFolder: strcpy( object_type_str, "Folder"); break;
+  case glow_eObjectType_GrowXYCurve: strcpy( object_type_str, "XYCurve"); break;
+  case glow_eObjectType_GrowAxisArc: strcpy( object_type_str, "AxisArc"); break;
+  case glow_eObjectType_GrowPie: strcpy( object_type_str, "Pie"); break;
+  case glow_eObjectType_GrowBarChart: strcpy( object_type_str, "BarChart"); break;
+  case glow_eObjectType_GrowToolbar: strcpy( object_type_str, "Toolbar"); break;
+  default: strcpy( object_type_str, "Unknown type");
+  }
 }
 
 void AttrNavBrow::brow_setup()
@@ -2422,9 +3125,15 @@ void AttrNavBrow::brow_setup()
 
   brow_EnableEvent( ctx, flow_eEvent_MB1Click, flow_eEventType_CallBack, 
 	attrnav_brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_MB1ClickShift, flow_eEventType_CallBack, 
+	attrnav_brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_MB1DoubleClick, flow_eEventType_CallBack, 
 	attrnav_brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_MB1DoubleClickShift, flow_eEventType_CallBack, 
+	attrnav_brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_MB1DoubleClickCtrl, flow_eEventType_CallBack, 
+	attrnav_brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_MB2Click, flow_eEventType_CallBack, 
 	attrnav_brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_SelectClear, flow_eEventType_CallBack, 
 	attrnav_brow_cb);
@@ -2432,9 +3141,15 @@ void AttrNavBrow::brow_setup()
 	attrnav_brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_Up, flow_eEventType_CallBack, 
 	attrnav_brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_Key_ShiftUp, flow_eEventType_CallBack, 
+	attrnav_brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_Down, flow_eEventType_CallBack, 
 	attrnav_brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_Key_ShiftDown, flow_eEventType_CallBack, 
+	attrnav_brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_Right, flow_eEventType_CallBack, 
+	attrnav_brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_Key_ShiftRight, flow_eEventType_CallBack, 
 	attrnav_brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_Left, flow_eEventType_CallBack, 
 	attrnav_brow_cb);
@@ -2445,6 +3160,8 @@ void AttrNavBrow::brow_setup()
   brow_EnableEvent( ctx, flow_eEvent_Key_PageUp, flow_eEventType_CallBack, 
 	attrnav_brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_PageDown, flow_eEventType_CallBack, 
+	attrnav_brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_Key_Tab, flow_eEventType_CallBack, 
 	attrnav_brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_ScrollUp, flow_eEventType_CallBack, 
 	attrnav_brow_cb);
@@ -2468,7 +3185,10 @@ int AttrNav::init_brow_cb( FlowCtx *fctx, void *client_data)
   attrnav->brow->create_nodeclasses();
 
   // Create the root item
-  attrnav->object_attr();
+  if ( attrnav->type == attr_eType_Attributes)
+    attrnav->object_attr();
+  else
+    attrnav->object_tree();
 
   sts = brow_TraceInit( ctx, attrnav_trace_connect_bc, 
 		attrnav_trace_disconnect_bc, attrnav_trace_scan_bc);
@@ -2480,7 +3200,7 @@ int AttrNav::init_brow_cb( FlowCtx *fctx, void *client_data)
 }
 
 
-ItemLocal::ItemLocal( AttrNav *attrnav, const char *item_name, const char *attr, 
+AItemLocal::AItemLocal( AttrNav *attrnav, const char *item_name, const char *attr, 
 	int attr_type, int attr_size, double attr_min_limit, 
 	double attr_max_limit, void *attr_value_p, int attr_multiline,
 	int attr_noedit, int attr_mask,
@@ -2566,7 +3286,7 @@ ItemLocal::ItemLocal( AttrNav *attrnav, const char *item_name, const char *attr,
   brow_SetTraceAttr( node, attr, "", flow_eTraceType_User);
 }
 
-int ItemLocal::open_children( AttrNav *attrnav, double x, double y)
+int AItemLocal::open_children( AttrNav *attrnav, double x, double y)
 {
   double	node_x, node_y;
 
@@ -2601,7 +3321,7 @@ int ItemLocal::open_children( AttrNav *attrnav, double x, double y)
     item_p = itemlist;
     for ( i = 0; i < item_cnt; i++)
     {
-      new ItemLocal( attrnav, item_p->name, "LocalAttr", 
+      new AItemLocal( attrnav, item_p->name, "LocalAttr", 
 	item_p->type, item_p->size, item_p->minlimit, item_p->maxlimit,
 	item_p->value, item_p->multiline, item_p->noedit, item_p->mask,
 	item_p->input_validation_cb, item_p->validation_ctx, 
@@ -2636,7 +3356,7 @@ int ItemLocal::open_children( AttrNav *attrnav, double x, double y)
 
       for ( ; elem_p->name[0] != 0; elem_p++)
       {
-        new ItemEnum( attrnav, elem_p->name, elem_p->num, type_id, 
+        new AItemEnum( attrnav, elem_p->name, elem_p->num, type_id, 
 		this->value_p, node, flow_eDest_IntoLast);
       }
     }
@@ -2661,7 +3381,7 @@ int ItemLocal::open_children( AttrNav *attrnav, double x, double y)
       {
 	if ( mask && !(mask & elem_p->num))
 	  continue;
-        new ItemMask( attrnav, elem_p->name, (unsigned int) elem_p->num, 
+        new AItemMask( attrnav, elem_p->name, (unsigned int) elem_p->num, 
 		type_id, this->value_p, node, flow_eDest_IntoLast);
       }
     }
@@ -2687,7 +3407,7 @@ int ItemLocal::open_children( AttrNav *attrnav, double x, double y)
     item_p = itemlist;
     for ( i = 0; i < item_cnt; i++)
     {
-      new ItemLocal( attrnav, item_p->name, "LocalAttr", 
+      new AItemLocal( attrnav, item_p->name, "LocalAttr", 
 	item_p->type, item_p->size, item_p->minlimit, item_p->maxlimit,
 	item_p->value, item_p->multiline, item_p->noedit, item_p->mask,
 	item_p->input_validation_cb, item_p->validation_ctx, 
@@ -2702,7 +3422,7 @@ int ItemLocal::open_children( AttrNav *attrnav, double x, double y)
   return 1;
 }
 
-int ItemLocal::close( AttrNav *attrnav, double x, double y)
+int AItemLocal::close( AttrNav *attrnav, double x, double y)
 {
   double	node_x, node_y;
 
@@ -2724,7 +3444,7 @@ int ItemLocal::close( AttrNav *attrnav, double x, double y)
   return 1;
 }
 
-ItemEnum::ItemEnum( AttrNav *attrnav, char *item_name, int item_num, 
+AItemEnum::AItemEnum( AttrNav *attrnav, char *item_name, int item_num, 
 	int item_type_id, void *attr_value_p, 
 	brow_tNode dest, flow_eDest dest_code) :
 	num(item_num), type_id(item_type_id), value_p(attr_value_p), first_scan(1)
@@ -2747,7 +3467,7 @@ ItemEnum::ItemEnum( AttrNav *attrnav, char *item_name, int item_num,
 }
 
 
-ItemMask::ItemMask( AttrNav *attrnav, char *item_name, unsigned int item_mask, 
+AItemMask::AItemMask( AttrNav *attrnav, char *item_name, unsigned int item_mask, 
 	int item_type_id, void *attr_value_p, 
 	brow_tNode dest, flow_eDest dest_code) :
 	mask(item_mask), type_id(item_type_id), value_p(attr_value_p), first_scan(1)
@@ -2801,4 +3521,171 @@ static char *attrnav_mask_to_string( int type_id, int value)
     }
   }
   return str;
+}
+
+AItemObject::AItemObject( AttrNav *attrnav, char *item_name, 
+			glow_eObjectType item_object_type, grow_tObject item_id, 
+			char *item_subgraph,
+			brow_tNode dest, flow_eDest dest_code) :
+  type( attrnav_eItemType_Object), object_type(item_object_type), id(item_id),
+  attr_client_data(0)
+
+{
+  char object_type_str[40];
+
+  strcpy( name, item_name);
+  if ( item_subgraph)
+    strcpy( subgraph, item_subgraph);
+  else
+    strcpy( subgraph, "");
+
+  brow_CreateNode( attrnav->brow->ctx, item_name, attrnav->brow->nc_object, 
+		dest, dest_code, (void *) this, 1, &node);
+
+  AttrNav::object_type_to_str( object_type, object_type_str);
+
+  if ( object_type == glow_eObjectType_GrowGroup)
+    brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_map);
+  else
+    brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_leaf);
+  brow_SetAnnotation( node, 0, item_name, strlen(item_name));
+  if ( object_type == glow_eObjectType_GrowNode ||
+       object_type == glow_eObjectType_GrowSlider)
+    brow_SetAnnotation( node, 1, subgraph, strlen(subgraph));
+  else
+    brow_SetAnnotation( node, 1, object_type_str, strlen(object_type_str));
+}
+
+int AItemObject::close( AttrNav *attrnav, double x, double y)
+{
+  double	node_x, node_y;
+
+  brow_GetNodePosition( node, &node_x, &node_y);
+
+  if ( brow_IsOpen( node))
+  {
+    // Close
+    brow_SetNodraw( attrnav->brow->ctx);
+    brow_CloseNode( attrnav->brow->ctx, node);
+    if ( brow_IsOpen( node) & attrnav_mOpen_Attributes)
+      brow_RemoveAnnotPixmap( node, 1);
+    if ( brow_IsOpen( node) & attrnav_mOpen_Children)
+      brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_map);
+    brow_ResetOpen( node, attrnav_mOpen_All);
+    brow_ResetNodraw( attrnav->brow->ctx);
+    brow_Redraw( attrnav->brow->ctx, node_y);
+    attr_client_data = 0;
+  }
+  return 1;
+}
+
+int AItemObject::open_children( AttrNav *attrnav, double x, double y)
+{
+  double	node_x, node_y;
+
+  if ( !(object_type == glow_eObjectType_GrowGroup))
+    return 1;
+
+  brow_GetNodePosition( node, &node_x, &node_y);
+
+  if ( brow_IsOpen( node)) {
+    // Close
+    brow_SetNodraw( attrnav->brow->ctx);
+    brow_CloseNode( attrnav->brow->ctx, node);
+    if ( brow_IsOpen( node) & attrnav_mOpen_Attributes)
+      brow_RemoveAnnotPixmap( node, 1);
+    if ( brow_IsOpen( node) & attrnav_mOpen_Children)
+      brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_map);
+
+    brow_ResetOpen( node, attrnav_mOpen_All);
+    brow_ResetNodraw( attrnav->brow->ctx);
+    brow_Redraw( attrnav->brow->ctx, node_y);
+  }
+  else
+  {
+    grow_tObject *list;
+    int list_cnt;
+    char oname[80];
+    char ncname[80];
+    grow_tNodeClass nc;
+    glow_eObjectType otype;
+
+    // Create some children
+    brow_SetNodraw( attrnav->brow->ctx);
+
+    (attrnav->get_object_list_cb)( attrnav->parent_ctx, attr_eList_Group, &list, &list_cnt, &id, 1);
+
+    for ( int i = list_cnt - 1; i >= 0; i--) {
+      grow_GetObjectName( list[i], oname);
+      otype = grow_GetObjectType( list[i]);
+
+      switch ( otype) {
+      case glow_eObjectType_GrowNode:
+      case glow_eObjectType_GrowSlider: {
+	grow_GetObjectClass( list[i], &nc);
+	grow_GetNodeClassName( nc, ncname);
+	break;
+      }
+      default:
+	strcpy( ncname, "");
+      }
+      new AItemObject( attrnav, oname, otype, list[i], ncname, node, flow_eDest_IntoLast);    
+    }
+
+    brow_SetOpen( node, attrnav_mOpen_Children);
+    brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_openmap);
+    brow_ResetNodraw( attrnav->brow->ctx);
+    brow_Redraw( attrnav->brow->ctx, node_y);
+  }
+  return 1;
+}
+
+int AItemObject::open_attributes( AttrNav *attrnav, double x, double y)
+{
+  double	node_x, node_y;
+
+  brow_GetNodePosition( node, &node_x, &node_y);
+
+  if ( brow_IsOpen( node)) {
+    // Close
+    brow_SetNodraw( attrnav->brow->ctx);
+    brow_CloseNode( attrnav->brow->ctx, node);
+    if ( brow_IsOpen( node) & attrnav_mOpen_Attributes)
+      brow_RemoveAnnotPixmap( node, 1);
+    if ( brow_IsOpen( node) & attrnav_mOpen_Children)
+      brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_map);
+
+    brow_ResetOpen( node, attrnav_mOpen_All);
+    brow_ResetNodraw( attrnav->brow->ctx);
+    brow_Redraw( attrnav->brow->ctx, node_y);
+    attr_client_data = 0;
+  }
+  else {
+    // Create some attributes
+    attr_sItem *item_p;
+    attr_sItem *itemlist;
+    int item_cnt;
+    int	i;
+
+    brow_SetNodraw( attrnav->brow->ctx);
+
+    attrnav->graph->get_attr_items( id, &itemlist, &item_cnt, &attr_client_data);
+
+    item_p = itemlist;
+    for ( i = 0; i < item_cnt; i++) {
+      new AItemLocal( attrnav, item_p->name, "LocalAttr", 
+		     item_p->type, item_p->size, item_p->minlimit, item_p->maxlimit,
+		     item_p->value, item_p->multiline, item_p->noedit, item_p->mask,
+		     item_p->input_validation_cb, item_p->validation_ctx, 
+		     node, flow_eDest_IntoLast);
+      
+      item_p++;
+    }
+
+    brow_SetOpen( node, attrnav_mOpen_Attributes);
+    brow_SetAnnotPixmap( node, 1, attrnav->brow->pixmap_openattr);
+    brow_ResetNodraw( attrnav->brow->ctx);
+    brow_Redraw( attrnav->brow->ctx, node_y);
+  }
+  return 1;
 }

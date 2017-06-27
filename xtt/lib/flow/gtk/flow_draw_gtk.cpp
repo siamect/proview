@@ -1749,6 +1749,7 @@ static gboolean draw_timer_cb( void *data)
 
 static gboolean event_timer_cb( void *ctx)
 {
+  ((FlowDrawGtk *)((FlowCtx *)ctx)->fdraw)->timer_id = 0;
   ((FlowDrawGtk *)((FlowCtx *)ctx)->fdraw)->event_handler( (FlowCtx *)ctx, last_event);
   return FALSE;
 }

@@ -847,13 +847,13 @@ void GlowCtx::nav_zoom()
     get_borders();
 //    cout << "Borders : <" << x_left << " > " << x_right << " ^ " << 
 //		y_high << " Y " << y_low << endl;
-    x_nav_left = min( x_left, mw.offset_x / mw.zoom_factor_x);
-    x_nav_right = max( x_right, (mw.offset_x + mw.window_width) / mw.zoom_factor_x);
-    y_nav_low = min( y_low, mw.offset_y / mw.zoom_factor_y);
-    y_nav_high = max( y_high, (mw.offset_y + mw.window_height) / mw.zoom_factor_y);
+    x_nav_left = glmin( x_left, mw.offset_x / mw.zoom_factor_x);
+    x_nav_right = glmax( x_right, (mw.offset_x + mw.window_width) / mw.zoom_factor_x);
+    y_nav_low = glmin( y_low, mw.offset_y / mw.zoom_factor_y);
+    y_nav_high = glmax( y_high, (mw.offset_y + mw.window_height) / mw.zoom_factor_y);
     if ( x_nav_right - x_nav_left == 0 || y_nav_high - y_nav_low == 0)
       return;
-    navw.zoom_factor_x = min( navw.window_width / (x_nav_right - x_nav_left),
+    navw.zoom_factor_x = glmin( navw.window_width / (x_nav_right - x_nav_left),
 	navw.window_height / (y_nav_high - y_nav_low));
     navw.zoom_factor_y = navw.zoom_factor_x;
     navw.offset_x = int( x_nav_left * navw.zoom_factor_x);
@@ -1194,10 +1194,10 @@ int GlowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
 	  select_rect_ur_x - select_rect_ll_x,
 	  select_rect_ur_y - select_rect_ll_y, 0);
 
-        select_rect_ll_x = min( x, select_rect_start_x);
-        select_rect_ll_y = min( y, select_rect_start_y); 
-        select_rect_ur_x = max( x, select_rect_start_x);
-        select_rect_ur_y = max( y, select_rect_start_y); 
+        select_rect_ll_x = glmin( x, select_rect_start_x);
+        select_rect_ll_y = glmin( y, select_rect_start_y); 
+        select_rect_ur_x = glmax( x, select_rect_start_x);
+        select_rect_ur_y = glmax( y, select_rect_start_y); 
 
         draw( &mw, select_rect_ll_x, select_rect_ll_y,
 	  select_rect_ur_x, select_rect_ur_y);
@@ -1255,10 +1255,10 @@ int GlowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
         select_rect_active = 0;
         select_rect_last_x = x;
         select_rect_last_y = y;
-        select_rect_ll_x = min( x, select_rect_start_x);
-        select_rect_ll_y = min( y, select_rect_start_y); 
-        select_rect_ur_x = max( x, select_rect_start_x);
-        select_rect_ur_y = max( y, select_rect_start_y);
+        select_rect_ll_x = glmin( x, select_rect_start_x);
+        select_rect_ll_y = glmin( y, select_rect_start_y); 
+        select_rect_ur_x = glmax( x, select_rect_start_x);
+        select_rect_ur_y = glmax( y, select_rect_start_y);
 
         gdraw->rect_erase( &mw, select_rect_ll_x, select_rect_ll_y,
 	  select_rect_ur_x - select_rect_ll_x,

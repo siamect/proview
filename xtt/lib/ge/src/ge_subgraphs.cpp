@@ -53,6 +53,7 @@
 #include "glow_growctx.h"
 #include "glow_growapi.h"
 
+#include "ge_dyn.h"
 #include "ge_attr.h"
 #include "ge_subgraphs.h"
 #include "ge_graph.h"
@@ -70,8 +71,8 @@
 
 static char null_str[] = "";
 
-static void subgraphs_attr_close_cb( Attr *attrctx);
-static void subgraphs_attr_redraw_cb( Attr *attrctx);
+static void subgraphs_attr_close_cb( void *ctx, void *attrctx, grow_tObject object, void *info, int keep);
+static void subgraphs_attr_redraw_cb( void *sctx, void  *attrctx, grow_tObject o, void *info);
 static int subgraphs_trace_scan_bc( brow_tObject object, void *p);
 static int subgraphs_trace_connect_bc( brow_tObject object, char *name, char *attr, 
 	flow_eTraceType type, /* flow_eDrawType color, */ void **p);
@@ -722,9 +723,9 @@ int SubGraphs::edit_attributes( void *object)
   return 1;
 }
 
-static void subgraphs_attr_close_cb( Attr *attrctx)
+static void subgraphs_attr_close_cb( void *sctx, void *attrctx, grow_tObject object, void *info, int keep)
 {
-  SubGraphs *subgraphs = (SubGraphs *) attrctx->parent_ctx;
+  SubGraphs *subgraphs = (SubGraphs *) sctx;
   subgraphs_tAttr attrlist_p, prev_p;
 
 //  if ( attrctx->object)
@@ -750,10 +751,10 @@ static void subgraphs_attr_close_cb( Attr *attrctx)
     attrlist_p = attrlist_p->next;    
   }
 
-  delete attrctx;
+  delete (Attr *)attrctx;
 }
 
-static void subgraphs_attr_redraw_cb( Attr *attrctx)
+static void subgraphs_attr_redraw_cb( void *sctx, void *attrctx, grow_tObject o, void *info)
 {
   printf( "Here in attr redraw\n");
 }

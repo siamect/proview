@@ -4546,6 +4546,13 @@ int grow_OrderObject( grow_tCtx ctx, grow_tObject object, grow_tObject destinati
   return ctx->order_object( (GlowArrayElem *)object, (GlowArrayElem *)destination, code);
 }
 
+int grow_OrderGroupObject( grow_tObject group, grow_tObject object, grow_tObject destination, glow_eDest code)
+{
+  if ( ((GlowArrayElem *)group)->type() == glow_eObjectType_GrowGroup)
+    return ((GrowGroup *)group)->order_object( (GlowArrayElem *)object, (GlowArrayElem *)destination, code);
+  return 0;
+}
+
 void grow_SetDefaultLayout( grow_tCtx ctx)
 {
   ctx->set_default_layout();
@@ -5895,6 +5902,10 @@ void grow_SignalSend( grow_tCtx ctx, char *signalname)
   ((GrowCtx *)ctx)->signal_send( signalname);
 }
 
+void grow_DrawObject( grow_tObject object)
+{
+  ((GlowArrayElem *)object)->draw();
+}
 
 /*@}*/
 
