@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+
 root=`eval pwd`
 
 if [ -e $root/src/exp/inc/src/pwr_version.h ]; then

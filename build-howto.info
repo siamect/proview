@@ -97,7 +97,8 @@ export pwre_env_db="/home/robert/pwre_new"
 ----------------------------
 
 Creating and handling your environment is done with the pwre-function (added
-by sourcing $pwre_bin/pwre_function).
+by sourcing $pwre_bin/pwre_function). See section "Cross-compiling" below
+about compiling a 32-bit version of Proview on a 64-bit machine.
 
 > pwre 
 
@@ -329,3 +330,31 @@ Build proview as normal, either by executing the makefile:
 > make
 or by configuring the build yourself, see section "3. Thorough way" above.
 
+
+
+Cross-compiling
+---------------
+To compile a 32-bit version of Proview on a 64-bit system, you need to install
+multiarch support and add a 32-bit architecture:
+
+> apt-get install multiarch
+> dpkg --add-architecture i386
+> apt-get update
+
+Then you need to install the libraries required to build 32-bit executables:
+
+> apt-get install gcc-multilib g++-multilib libc6:i386 libc6-dev:i386 libc6-i386 libc6-dev-i386
+
+You also need 32-bit versions of all the libraries required by Proview. The
+easiest way to get these is to copy the /usr/lib/i386-linux-gnu folder and the
+/lib/i386-linux-gnu/ folder from a 32-bit machine to your 64-bit machine. If
+you try to install all libraries using "apt-get install x:i386" you will most
+likely run into problems with some 32-bit packages replacing your 64-bit
+packages and vice versa.
+
+After that, you should be able to compile 32-bit versions by specifying "x86"
+as hardware during "pwre add", see section "3.2 Creating the environment" above.
+
+> pwre add proview32bit
+...
+Hardware [x86] ? x86
