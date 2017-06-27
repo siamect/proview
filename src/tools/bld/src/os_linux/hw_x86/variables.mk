@@ -196,21 +196,21 @@ mkdir		:= mkdir
 wblflags	:= 
 
 ifeq ($(pwre_btype),rls)			 
-  cflags	:= -c -O3 -D_GNU_SOURCE -DPWR_NDEBUG -D_REENTRANT -fPIC -Wno-deprecated-declarations -Wno-unused-but-set-variable
-  cxxflags	:= $(cflags) 
-  linkflags	:= -O3 -L$(lib_dir)
-  elinkflags	:= -O3 -L$(lib_dir) -L$(elib_dir)
-  explinkflags	:= -g -L$(elib_dir)
+  cflags	:= $(cross_compile) -c -O3 -D_GNU_SOURCE -DPWR_NDEBUG -D_REENTRANT -fPIC -Wno-deprecated-declarations -Wno-unused-but-set-variable 
+  linkflags	:= $(cross_compile) -O3 -L$(lib_dir)
+  elinkflags	:= $(cross_compile) -O3 -L$(lib_dir) -L$(elib_dir)
+  explinkflags	:= $(cross_compile) -g -L$(elib_dir)
+  cxxflags	:= $(cflags)
   clis		= /lis=$(list)
   dolist	= /lis=$(list)
   domap		= -Xlinker -Map -Xlinker $(map)
 else
-  cflags	:= -c -g -Wall -D_GNU_SOURCE -D_REENTRANT -fPIC -Wno-deprecated-declarations -Wno-unused-but-set-variable 
-  cxxflags	:= $(cflags) -Wno-deprecated
+  cflags	:= $(cross_compile) -c -g -Wall -D_GNU_SOURCE -D_REENTRANT -fPIC -Wno-deprecated-declarations -Wno-unused-but-set-variable 
   mmflags	:= -Wno-deprecated
-  linkflags	:= -g -L$(lib_dir)
-  elinkflags	:= -g -L$(lib_dir) -L$(elib_dir)
-  explinkflags	:= -g -L$(elib_dir)
+  linkflags	:= $(cross_compile) -g -L$(lib_dir)
+  elinkflags	:= $(cross_compile) -g -L$(lib_dir) -L$(elib_dir)
+  explinkflags	:= $(cross_compile) -g -L$(elib_dir)
+  cxxflags	:= $(cflags) -Wno-deprecated
   dolist	= /lis=$(list)
   clis		:= 
   domap		= -Xlinker -Map -Xlinker $(map)

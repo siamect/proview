@@ -80,14 +80,14 @@ then
 
     cc=gcc
     cinc="-I$pwr_inc -I$pwrp_rttbld -I-"
-    cflags="-DOS_LINUX=1 -DOS_POSIX=1 -DOS=linux -DHW_X86=1 -DHW=x86 -O3 -DGNU_SOURCE -DPWR_NDEBUG -D_REENTRANT"
+    cflags="${cross_compile} -DOS_LINUX=1 -DOS_POSIX=1 -DOS=linux -DHW_X86=1 -DHW=x86 -O3 -DGNU_SOURCE -DPWR_NDEBUG -D_REENTRANT"
 
     ${cc} -c -o $pwrp_obj/${menuname}.o \
         $pwrp_rttbld/${menuname}.c \
         ${cinc} ${cflags}
 
     ld=g++
-    linkflags="-g -L/lib/thread -L$pwrp_lib -L$pwr_lib"
+    linkflags="${cross_compile} -g -L/lib/thread -L$pwrp_lib -L$pwr_lib"
 
     ${ld} ${linkflags} -o $pwrp_exe/${exename} $pwrp_obj/${menuname}.o \
      $pwr_obj/dtt_rttsys.o $pwr_obj/rt_io_user.o \
@@ -102,7 +102,7 @@ then
 #   echo "Compile"
     cc=gcc
     cinc="-I$pwr_inc -I$pwrp_rttbld -I$pwrp_inc -I$pwrp_cmn/common/inc -I-"
-    cflags="-DOS_LINUX=1 -DOS=linux -DHW_X86=1 -DHW=x86 -O3 -DGNU_SOURCE -DPWR_NDEBUG -D_REENTRANT"
+    cflags="${cross_compile} -DOS_LINUX=1 -DOS=linux -DHW_X86=1 -DHW=x86 -O3 -DGNU_SOURCE -DPWR_NDEBUG -D_REENTRANT"
 
     ${cc} -c -o $pwrp_obj/${applname}.o \
         $pwrp_rtt/${applname}.c \

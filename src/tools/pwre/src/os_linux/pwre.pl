@@ -54,6 +54,7 @@ if ($ENV{"pwre_hosttype"} eq "rs6000") {
     $hw	= "x86";
   }
 }
+$real_hw = $hw;
 
 $desc	= $user. "'s environment";
 @vars;
@@ -139,7 +140,6 @@ sub add ()
     update_db();
   }
   untie(%envdb)|| die "++ can't untie $dbname!";
-
 }
 
 #
@@ -152,6 +152,9 @@ sub configure()
     exit 1;
   }
 
+  if ($hw eq "x86" && $real_hw eq "x86_64") {
+    $ENV{"cross_compile"} = "-m32";
+  }
   my $fname = $ENV{"pwre_bin"} . "/pwre_configure.sh"." ".$_[0]." ".$_[1]." ".$_[2];
   system( $fname);
 }
@@ -1176,6 +1179,9 @@ sub copy ()
     system("$cmd");
   }
   else {
+    if ($hw eq "x86" && $real_hw eq "x86_64") {
+      $ENV{"cross_compile"} = "-m32";
+    }
     my($cmd) = "make -f $bindir/import_files.mk" . " " . $_[0]; 
     system("$cmd");
 
@@ -1461,6 +1467,9 @@ sub _build () # args: branch, subbranch, flavour, phase
           #print("\n$_\n");
           chdir($_) || die "cannot cd to $_ ($!)";
           $ENV{"PWD"} = $_;
+          if ($hw eq "x86" && $real_hw eq "x86_64") {
+            $ENV{"cross_compile"} = "-m32";
+          }
           system("make @_") && exit 1;
         }
       }

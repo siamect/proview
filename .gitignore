@@ -6,3 +6,7 @@
 #Ignore build files
 *.os_*
 *.hw_*
+rls/
+adm/
+pwre_db
+

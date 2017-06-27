@@ -283,25 +283,13 @@ conf_incdirgst=""
 let inc_cnt=0
 let lib_cnt=0
 let i=0
-hwpl=`eval uname -i`
-machine=`eval uname -m`
-if [ $machine == "i686" ] || [ $machine == "x86_64" ]; then
-  hwpl=$machine
-fi
-if [ ${machine:0:3} == "arm" ]; then
+
+hwpl=i386
+if [ ${pwre_hw:3} == "arm" ]; then
   hwpl=arm
-else
-  ubuntu_ver=`cat /etc/issue | grep Ubuntu | awk '{ print $2 }'`
-  debian_ver=`cat /etc/issue | grep Debian | awk '{ print $3 }'`
-  if [ "$ubuntu_ver" == "" ]; then
-    ubuntu_ver=`cat /etc/issue | grep Mint | awk '{ print $3 }'`
-  fi
-  if [ "$ubuntu_ver" != "" ] && [ $hwpl == "i686" ] ; then
-    hwpl=i386
-  fi
-  if [ "$debian_ver" != "" ] && [ "$debian_ver" != "6" ] && [ $hwpl == "i686" ] ; then
-    hwpl=i386
-  fi
+fi
+if [ ${pwre_hw:3} == "x86_64" ]; then
+  hwpl=x86_64
 fi
 
 # Bash

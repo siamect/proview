@@ -82,6 +82,13 @@ static int check_os( char *str, char *os)
   return 0;
 }
 
+const char* getenvsafe(const char* name) {
+  const char* s = getenv(name);
+  if (s == NULL)
+    return "";
+  return s;
+}
+
 int main(  int argc, char *argv[])
 {
   pwr_tFileName filespec;
@@ -288,10 +295,10 @@ int main(  int argc, char *argv[])
   dcli_translate_filename( incdir, "$pwr_einc");
   switch ( mtype) {
   case merge_eMtype_WbBase:
-    snprintf( cmd, sizeof(cmd), "%s -c %s -I%s %s -o %s %s", pwre_cxx, cflags, incdir, dos, ofile, cfile);
+    snprintf( cmd, sizeof(cmd), "%s -c %s %s -I%s %s -o %s %s", pwre_cxx, getenvsafe("cross_compile"), cflags, incdir, dos, ofile, cfile);
     break;
   default:
-    snprintf( cmd, sizeof(cmd), "%s -c %s -I%s %s -o %s %s", pwre_cc, cflags, incdir, dos, ofile, cfile);
+    snprintf( cmd, sizeof(cmd), "%s -c %s %s -I%s %s -o %s %s", pwre_cc, getenvsafe("cross_compile"), cflags, incdir, dos, ofile, cfile);
   }
   if ( arg_verbose)
     printf( "co_merge: %s\n", cmd);
