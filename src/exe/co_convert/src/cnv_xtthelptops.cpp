@@ -78,7 +78,6 @@ void CnvXtthelpToPs::subject_to_fname( char *fname, const char *subject, int pat
   else
     strcpy( fname, ctx->rx->name);
   strcat( fname, ".ps");
-  //cdh_ToLower( fname, fname); // TODO: remove? Was used historically, but causes trouble on modern Linux OS
 }
 
 CnvXtthelpToPs::~CnvXtthelpToPs()

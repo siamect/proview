@@ -157,7 +157,6 @@ void CnvClassDep::print_html_classtable( int idx)
 
   sprintf( fname, "%s%s_%s_ctree.html", ctx->dir, classlist[idx].volumename, 
 	   classlist[idx].name);
-  //cdh_ToLower( fname, fname);  // TODO: remove? Was used historically, but causes trouble on modern Linux OS
   dcli_translate_filename( fname, fname);
   ofstream fp( fname);
 

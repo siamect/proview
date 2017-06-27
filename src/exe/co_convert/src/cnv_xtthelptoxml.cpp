@@ -184,7 +184,6 @@ void CnvXtthelpToXml::subject_to_fname( char *fname, const char *subject, int pa
     *t = 0;
   }
   strcat( fname, ".xml");
-  //cdh_ToLower( fname, fname);  // TODO: remove? Was used historically, but causes trouble on modern Linux OS
 }
 
 CnvXtthelpToXml::~CnvXtthelpToXml()

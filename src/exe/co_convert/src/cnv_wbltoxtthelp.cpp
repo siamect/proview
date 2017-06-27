@@ -130,7 +130,6 @@ int CnvWblToXtthelp::init( char *first)
   strcpy( fname, ctx->dir);
   strcat( fname, ctx->rw->volume_name);
   strcat( fname, "_xtthelp.dat");
-  //cdh_ToLower( fname, fname);  // TODO: remove? Was used historically, but causes trouble on modern Linux OS
 
   fp_xtthelp_index.open( fname);
 
