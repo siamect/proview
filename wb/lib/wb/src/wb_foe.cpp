@@ -2106,6 +2106,8 @@ void WFoe::gre_popupmenu( WGre *gre, int x_pix, int y_pix, int popupmenu_type,
 	switch ( node->ln.cid) {
 	case pwr_cClass_dataarithm:
 	case pwr_cClass_dataarithml:
+	case pwr_cClass_dataarithmt:
+	case pwr_cClass_dataarithmtl:
 	case pwr_cClass_carithm:
 	  mask |= foe_ePopupmenu_editcode;
 	  break;

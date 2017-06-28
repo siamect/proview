@@ -750,6 +750,8 @@ palette PlcEditorPalette
     class DArithm
     class DataArithm
     class DataArithmL
+    class DataArithmT
+    class DataArithmTL
     class Demux
     class Div
     class Equal

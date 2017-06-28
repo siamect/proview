@@ -149,17 +149,23 @@ int goen_create_nodetype_m14(
   int		annot_rows;
   static int	idx = 0;
   flow_tObject	cp;
+  pwr_tObjName  size_attr;
 
   sts = ldh_ClassIdToName(ldhses, cid, name, sizeof(name), &size);
   if ( EVEN(sts) ) return sts;
   sprintf( &name[strlen(name)], "%d", idx++);
 
   /* Get the text in the parameter Code */
+  if ( graphbody->graphindex == 1)
+    strcpy( size_attr, "Text");
+  else
+    strcpy( size_attr, "Code");
+
   sts = ldh_GetObjectPar(
 			(node->hn.wind)->hw.ldhses,  
 			node->ln.oid, 
 			"DevBody",
-			"Code",
+			size_attr,
 			&parvalue, &size); 
   if ( EVEN(sts)) return sts;
 
