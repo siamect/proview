@@ -5211,6 +5211,7 @@ create 			<link>gecmd_create
   <t>create subgraph 	<link>gecmd_create_subgraph
   <t>create bar 	<link>gecmd_create_bar
 exit 			<link>gecmd_exit
+filter navigator	<link>gecmd_filter_navigator
 group 			<link>gecmd_group
 move 			<link>gecmd_move
   <t>move currentobject	<link>gecmd_move_currentobject
@@ -5426,6 +5427,27 @@ Save the current graph and close Ge.
 <b>Syntax
 
 <c>ge> exit ['filename']
+</topic>
+
+<topic>gecmd_filter_navigator
+filter navigator
+
+Filter objects in the object navigator.
+Filtering can be made on object name or subgraph with
+wildcard pattern.
+
+<b>Syntax
+
+<c>ge> filter navigator /type= /pattern=
+<c>ge> filter navigator /reset
+
+/reset   <t>Reset filter and show all objects.
+/type    <t>'name' or 'class'. Name will filter on object name
+         <t>and class on subgraph.
+/pattern <t>Filter pattern. Can contain wildcard (*).
+
+<b>Example
+<c>ge> filter navigator /type=class /pattern=*button*
 </topic>
 
 <topic>gecmd_group <style>function

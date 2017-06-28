@@ -1567,7 +1567,8 @@ AttrNav::AttrNav( void *xn_parent_ctx,
   parent_ctx(xn_parent_ctx), type(xn_type),
   itemlist(xn_itemlist),item_cnt(xn_item_cnt),
   trace_started(0), graph(0), last_selected(0), last_selected_id(0),
-  message_cb(NULL), get_object_list_cb(0), set_inputfocus_cb(0), traverse_inputfocus_cb(0)
+  filter_type(attr_eFilterType_No),  message_cb(NULL), get_object_list_cb(0), 
+  set_inputfocus_cb(0), traverse_inputfocus_cb(0)
 {
   strcpy( name, xn_name);
   *status = 1;
@@ -2955,6 +2956,20 @@ void AttrNav::refresh_objects( unsigned int type)
       default:
 	strcpy( ncname, "");
       }
+
+      switch ( filter_type) {
+      case attr_eFilterType_No:
+	break;
+      case attr_eFilterType_Name:
+	if ( dcli_wildcard( filter_pattern, oname) != 0)
+	  continue;
+	break;
+      case attr_eFilterType_Class:
+	if ( dcli_wildcard( filter_pattern, ncname) != 0)
+	  continue;
+	break;
+      }
+
       item = new AItemObject( this, oname, otype, list[i], ncname, NULL, flow_eDest_IntoLast);    
 
       // Open previously open objects
@@ -3057,6 +3072,16 @@ void AttrNav::object_open_check( AItemObject *item, grow_tObject *open_list, int
       break;
     }
   }
+}
+
+void AttrNav::filter( int type, char *pattern)
+{
+  filter_type = (attr_eFilterType) type;
+  if ( filter_type == attr_eFilterType_No)
+    strcpy( filter_pattern, "");
+  else
+    strncpy( filter_pattern, pattern, sizeof(filter_pattern));
+  refresh_objects( attr_mRefresh_Objects);
 }
 
 brow_tObject AttrNav::gobject_to_bobject( grow_tObject gobject)

@@ -1719,7 +1719,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   int		path_cnt;
   char		*path;
   char          systemname[80];
-  const int	window_width = 900;
+  const int	window_width = 980;
   const int    	window_height = 800;
   const int    	palette_width = 200;
   pwr_tFileName	fname;
@@ -3305,7 +3305,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   g_object_set( hpaned3, "visible", FALSE, NULL);
 
   gtk_paned_set_position( GTK_PANED(hpaned2), 150);
-  gtk_paned_set_position( GTK_PANED(hpaned), window_width - palette_width - 45);
+  gtk_paned_set_position( GTK_PANED(hpaned), window_width - palette_width - 175);
   gtk_paned_set_position( GTK_PANED(vpaned1), window_height - 380);
   gtk_paned_set_position( GTK_PANED(vpaned2), window_height - 290);
 

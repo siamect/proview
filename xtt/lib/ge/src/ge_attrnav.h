@@ -96,6 +96,12 @@ typedef enum {
 } attr_eType;
 
 typedef enum {
+  attr_eFilterType_No,
+  attr_eFilterType_Name,
+  attr_eFilterType_Class
+} attr_eFilterType;
+
+typedef enum {
 	attrnav_eItemType_Local,
 	attrnav_eItemType_Enum,
 	attrnav_eItemType_Mask,
@@ -181,6 +187,8 @@ class AttrNav {
     Graph		*graph;
     brow_tObject	last_selected;
     grow_tObject	last_selected_id;
+    attr_eFilterType   	filter_type;
+    char		filter_pattern[80];
     void 		(*message_cb)( void *, int, char, const char *);
     void 		(*change_value_cb)( void *);
     int			(*get_subgraph_info_cb)( void *, char *, attr_sItem  **, int *);
@@ -204,6 +212,7 @@ class AttrNav {
     void refresh_objects( unsigned int type);
     void object_open_check( AItemObject *item, grow_tObject *open_list, int *open_type, int open_cnt);
     brow_tObject gobject_to_bobject( grow_tObject gobject);
+    void filter( int type, char *pattern);
     virtual void set_inputfocus() {}
     virtual void trace_start() {}
     static int init_brow_cb( FlowCtx *fctx, void *client_data);

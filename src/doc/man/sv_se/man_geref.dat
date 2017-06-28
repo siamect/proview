@@ -5156,6 +5156,7 @@ create 			<link>gecmd_create
   <t>create text 	<link>gecmd_create_text
   <t>create subgraph 	<link>gecmd_create_subgraph
 exit 			<link>gecmd_exit
+filter navigator	<link>gecmd_filter_navigator
 group 			<link>gecmd_group
 move 			<link>gecmd_move
   <t>move currentobject	<link>gecmd_move_currentobject
@@ -5343,6 +5344,26 @@ Avsluta ge och spara aktuell graf först.
 <b>Syntax
 
 <c>ge> exit ['filename']
+</topic>
+
+<topic>gecmd_filter_navigator
+filter navigator
+
+Filtrera objekt i objektsnavigatorn.
+Filtrering kan göras på objektsnamn eller subgraf med wildcard.
+
+<b>Syntax
+
+<c>ge> filter navigator /type= /pattern=
+<c>ge> filter navigator /reset
+
+/reset   <t>Återställer filtreringen och visar alla objekt.
+/type    <t>'name' eller 'class'. Name filtrerar på objektsnamn
+         <t>och class på subgraf.
+/pattern <t>Filter mönster. Kan innehålla wildcard (*).
+
+<b>Exempel
+<c>ge> filter navigator /type=class /pattern=*button*
 </topic>
 
 <topic>gecmd_group <style>function

@@ -1308,6 +1308,7 @@ void Graph::select_all_objects()
     }
     object_p++;
   }
+  refresh_objects( attr_mRefresh_Select);
 }
 
 void Graph::select_object( grow_tObject o)
@@ -1367,6 +1368,7 @@ void Graph::select_nextobject( glow_eDirection dir)
     if ( !grow_IsVisible( grow->ctx, next, glow_eVisible_Partial))
       grow_CenterObject( grow->ctx, next);
   }
+  refresh_objects( attr_mRefresh_Select);
 }
 
 int Graph::get_selected_object( grow_tObject *object)
@@ -2385,8 +2387,10 @@ void Graph::reset_mode( bool select_clear, bool keep)
   grow_SetMoveRestrictions( grow->ctx, glow_eMoveRestriction_No, 0, 0, NULL);
   grow_SetScaleEqual( grow->ctx, 0);
   keep_mode = keep;
-  if ( select_clear)
+  if ( select_clear) {
     grow_SelectClear( grow->ctx);
+    refresh_objects( attr_mRefresh_Select);
+  }
 }
 //
 // Callbacks from grow

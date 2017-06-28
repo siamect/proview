@@ -121,6 +121,8 @@ static int	graph_customcolor_func( void   	*client_data,
 				  void		*client_flag);
 static int	graph_search_func( void   	*client_data,
 				  void		*client_flag);
+static int	graph_filter_func( void   	*client_data,
+				  void		*client_flag);
 
 dcli_tCmdTable	graph_command_table[] = {
 		{
@@ -252,6 +254,11 @@ dcli_tCmdTable	graph_command_table[] = {
 			"SEARCH",
 			&graph_search_func,
 			{"dcli_arg", "dcli_arg2", "/NAME", ""}
+		},
+		{
+			"FILTER",
+			&graph_filter_func,
+			{"dcli_arg", "/RESET", "/TYPE", "/PATTERN", ""}
 		},
 		{"",}};
 
@@ -472,6 +479,57 @@ static int	graph_search_func(void		*client_data,
     sts = graph->search_object( name_str);
     if ( EVEN( sts))
       graph->message('E', "No such object");
+  }
+  else {
+    graph->message('E', "Syntax error");
+    return GE__SYNTAX;
+  }
+  return GE__SUCCESS;
+}
+
+static int	graph_filter_func(void		*client_data,
+				  void		*client_flag)
+{
+  Graph *graph = (Graph *)client_data;
+  char	arg1_str[80];
+  int	arg1_sts;
+  int   sts;
+
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
+
+  if ( cdh_NoCaseStrncmp( arg1_str, "NAVIGATOR", strlen( arg1_str)) == 0) {
+    // Command is "FILTER NAVIGATOR"
+    char type_str[80];
+    char pattern_str[80];
+    int type;
+ 
+    if ( ODD( dcli_get_qualifier( "/RESET", 0, 0))) {
+      ((Ge *)graph->parent_ctx)->objectnav->filter( 0, 0);
+      return GE__SUCCESS;
+    }
+
+    sts = dcli_get_qualifier( "/TYPE", type_str, sizeof(type_str));
+    if ( EVEN(sts)) {
+      graph->message('E', "Syntax error");
+      return GE__SYNTAX;
+    }
+
+    if ( cdh_NoCaseStrcmp( type_str, "name") == 0)
+      type = 1;
+    else if ( cdh_NoCaseStrcmp( type_str, "class") == 0)
+      type = 2;
+    else {
+      graph->message('E', "Syntax error in filter type");
+      return GE__SYNTAX;
+    }
+
+    sts = dcli_get_qualifier( "/PATTERN", pattern_str, sizeof(pattern_str));
+    if ( EVEN(sts)) {
+      graph->message('E', "Syntax error");
+      return GE__SYNTAX;
+    }
+
+    ((Ge *)graph->parent_ctx)->objectnav->filter( type, pattern_str);;
   }
   else {
     graph->message('E', "Syntax error");
