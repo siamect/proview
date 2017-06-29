@@ -41,21 +41,15 @@
    This include file contains the internal datastructures and
    data entities in GDH.  */
 
-#if defined(OS_VMS) || defined(OS_ELN)
+#if defined(OS_VMS)
 #pragma builtins
 #endif
 
-#ifdef	OS_ELN
-# include $vaxelnc
-# include $mutex
-# include unistd
-#elif defined OS_POSIX
+#if defined OS_POSIX
 # include <pthread.h>
 #endif
 
-#ifndef	OS_ELN
 #include <unistd.h>
-#endif
 
 #ifndef rt_gdb_msg_h
 # include "rt_gdb_msg.h"
@@ -111,7 +105,7 @@
 
 #define	gdb_cVersion 7
 
-#if defined OS_VMS || defined OS_ELN
+#if defined OS_VMS
 #  define	gdb_cNameDatabase	"pwr_gdb"
 #  define	gdb_cNamePool		"pwr_pool"
 #  define	gdb_cNameRtdb		"pwr_rtdb"
@@ -141,13 +135,7 @@
 # define gdb_cMin_scObjects	300
 
 
-#if defined(OS_ELN)
-# define gdb_cMin_cvol_max	200
-# define gdb_cMin_cvol_min	100
-# define gdb_cMin_subServers	200
-# define gdb_cMin_subClients	2000
-# define gdb_cMin_sanServers	200
-#elif defined(OS_VMS)
+#if defined(OS_VMS)
 # define gdb_cMin_cvol_max	2000
 # define gdb_cMin_cvol_min	1900
 # define gdb_cMin_subServers	500
@@ -1104,9 +1092,7 @@ typedef struct {
 /* Job local GDH data, pointed to by gdhi_gLocal, the root of all tables.  */
 
 typedef struct {
-#ifdef	OS_ELN
-  MUTEX			thread_lock;	/**< ELN lock only */
-#elif defined OS_POSIX
+#if defined OS_POSIX
   pthread_mutex_t	thread_lock;	/**< LYNX and LINUX lock only */
 #endif
   struct {
@@ -1169,11 +1155,7 @@ typedef struct {
 
 /* The root of all data, the only `global' variable...  */
 
-#if defined (OS_ELN)
-  extern noshare gdb_sLocal	*gdbroot;	/**< root of all data in database */
-#else
   extern gdb_sLocal	*gdbroot;	/**< root of all data in database */
-#endif
 
 typedef enum {
   gdb_eTmon__ = 0,

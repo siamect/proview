@@ -40,12 +40,6 @@
 #include <string.h>
 #endif
 
-#ifdef OS_ELN
-#include stdio
-#include float
-#include string
-#endif
-
 #include "pwr.h"
 #include "pwr_baseclasses.h"
 #include "pwr_nmpsclasses.h"

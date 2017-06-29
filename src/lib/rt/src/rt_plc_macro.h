@@ -34,10 +34,6 @@
  * General Public License plus this exception.
  */
 
-#if defined OS_ELN
-#include $mutex
-#endif
-
 #include <math.h>
 #include <float.h>
 

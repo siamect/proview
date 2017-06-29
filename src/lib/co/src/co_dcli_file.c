@@ -273,7 +273,7 @@ int     dcli_replace_env( const char *str, char *newstr)
 **************************************************************************/
 char	*dcli_fgetname( FILE *fp, char *name, char *def_name)
 {
-#if defined(OS_VMS) || defined(OS_ELN)
+#if defined(OS_VMS)
 	return fgetname( fp, name);
 #else
 	dcli_translate_filename( name, def_name);
@@ -386,23 +386,6 @@ int dcli_translate_filename( char *out, const char *in)
   {
     // Already VMS syntax
     strcpy( out_name, in);
-    strcpy( out, out_name);
-  }
-  return DCLI__SUCCESS;
-#elif defined OS_ELN
-  if ( (s = strrchr( in, ']')) != 0 ||
-       (s = strrchr( in, '>')) != 0 ||
-       (s = strrchr( in, ':')) != 0 ||
-       (s = strrchr( in, '/')) != 0)
-  {
-    strcpy( out_name, "[sys0.sysexe]");
-    strcat( out_name, s+1);
-    strcpy( out, out_name);
-  }
-  else
-  {
-    strcpy( out_name, "[sys0.sysexe]");
-    strcat( out_name, in);
     strcpy( out, out_name);
   }
   return DCLI__SUCCESS;

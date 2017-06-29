@@ -37,15 +37,6 @@
 /* rt_cmvolc.c -- Cached class volumes, client side
    This module contains the meta cache handling routines.  */
 
-#ifndef OS_ELN
-# include <stdio.h>
-# include <string.h>
-#endif
-
-#if defined(OS_ELN)
-# include $vaxelnc
-#endif
-
 #include "pwr.h"
 #include "pwr_class.h"
 #include "co_time.h"
@@ -57,8 +48,6 @@
 #include "rt_cmvolc.h"
 #include "rt_errh.h"
 #include "rt_qdb.h"
-
-
 
 static gdb_sObject *
 createObject (

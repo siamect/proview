@@ -36,9 +36,7 @@
 
 
 /* This defines the various regexp syntaxes.  */
-#if !defined(OS_ELN)
   extern int obscure_syntax;
-#endif
 
 
 /* The following bits are used in the obscure_syntax variable to choose among

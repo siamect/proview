@@ -151,8 +151,6 @@ char				rtt_hw[20];
 char				rtt_platform[20];
 #if defined OS_VMS
 char				rtt_os[20] = "vms";
-#elif defined OS_ELN
-char				rtt_os[20] = "eln";
 #elif defined OS_LYNX
 char				rtt_os[20] = "lynx";
 #elif defined OS_LINUX

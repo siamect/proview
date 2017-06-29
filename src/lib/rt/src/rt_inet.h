@@ -41,12 +41,8 @@
 
 #include "pwr.h"
 
-#if defined(OS_VMS) || defined(OS_ELN)
-# if defined(OS_ELN) 
-#  include socket
-# else
+#if defined(OS_VMS)
 #  include <socket.h>
-# endif
 
 # define ATF_COM  2   /* completed entry (arp_ha valid) */
 # define ATF_PERM 4   /* permanent entry */

@@ -37,11 +37,8 @@
 #ifndef	rt_pool_h
 #define	rt_pool_h
 
-#if defined(OS_ELN)
-# include stddef
-#else
-# include <stddef.h>
-#endif
+#include <stddef.h>
+
 #include "pwr.h"
 #include "rt_sect.h"
 

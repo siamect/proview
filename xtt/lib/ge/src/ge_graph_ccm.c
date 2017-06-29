@@ -4865,11 +4865,7 @@ static int gccm_func_system(
   if ( arg_list->value_decl != K_DECL_STRING)
     return CCM__VARTYPE;
 
-#if !defined( OS_ELN)
   sts = system( arg_list->value_string);
-#else
-  sts = 0;
-#endif
   *return_int = sts;
   *return_decl = K_DECL_INT;
   return 1;

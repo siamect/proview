@@ -34,19 +34,10 @@
  * General Public License plus this exception.
  */
 
-#ifdef	OS_ELN
-# include $vaxelnc
-# include $kernelmsg
-# include stdio
-# include stdlib
-# include string
-# include descrip
-#else
-# include <stdio.h>
-# include <stdlib.h>
-# include <string.h>
-# include <errno.h>
-#endif
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
 
 #ifdef OS_VMS
 # include <starlet.h>
@@ -79,15 +70,7 @@ thread_CondInit (
 )
 {
 
-#if defined OS_ELN
-
-  pwr_tStatus sts;
-
-  ker$create_event(&sts, cp, EVENT$CLEARED);
-
-  return sts;
-
-#elif defined OS_VMS
+#if defined OS_VMS
 
   return errno_Status(tis_cond_init(&cp->c));
 
@@ -114,15 +97,7 @@ thread_MutexInit (
 )
 {
 
-#if defined OS_ELN
-
-  pwr_tStatus sts = THREAD__SUCCESS;
-
-  ELN$CREATE_MUTEX(*mp, &sts);
-
-  return sts;
-
-#elif defined OS_VMS
+#if defined OS_VMS
 
   return errno_Status(tis_mutex_init(mp));
 
@@ -145,12 +120,7 @@ thread_MutexLock (
 )
 {
 
-#if defined OS_ELN
-
-  ELN$LOCK_MUTEX(*mp);
-  return THREAD__SUCCESS;
-
-#elif defined OS_LYNX && defined PWR_LYNX_30
+#if defined OS_LYNX && defined PWR_LYNX_30
 
   return errno_Pstatus(pthread_mutex_lock(mp));
 
@@ -174,12 +144,7 @@ thread_MutexUnlock (
 )
 {
 
-#if defined OS_ELN
-
-  ELN$UNLOCK_MUTEX(*mp);
-  return THREAD__SUCCESS;
-
-#elif defined OS_LYNX && defined PWR_LYNX_30
+#if defined OS_LYNX && defined PWR_LYNX_30
 
   return errno_Pstatus(pthread_mutex_unlock(mp));
 
@@ -203,15 +168,7 @@ thread_Cancel (
 )
 {
   
-#if defined OS_ELN
-
-  pwr_tStatus sts = THREAD__SUCCESS;
-
-  ker$delete(&sts, *tp);
-
-  return sts;
-
-#elif defined OS_LYNX && defined PWR_LYNX_30
+#if defined OS_LYNX && defined PWR_LYNX_30
 
     return errno_Pstatus(pthread_cancel(*tp));
 
@@ -237,26 +194,7 @@ thread_Create (
 )
 {
 
-#if defined OS_ELN
-
-  pwr_tStatus	sts = THREAD__SUCCESS;
-  struct dsc$descriptor dsc;
-  
-  ker$create_process(&sts, &tp->id, routine, NULL, arg);
-
-  strncpy(tp->name, name, MIN(strlen(name), sizeof(tp->name) - 1));
-  tp->name[sizeof(tp->name) - 1] = '\0';
-
-  dsc.dsc$a_pointer  = tp->name;
-  dsc.dsc$w_length   = MIN(31, strlen(tp->name));	
-  dsc.dsc$b_dtype    = DSC$K_DTYPE_T;
-  dsc.dsc$b_class    = DSC$K_CLASS_S;
-
-  ker$create_name(NULL, &tp->name_id, &dsc, tp->id, NULL);
-
-  return sts;
-
-#elif defined OS_LYNX && defined PWR_LYNX_30
+#if defined OS_LYNX && defined PWR_LYNX_30
 
   return errno_Pstatus(pthread_create(tp, pthread_attr_default, routine, arg));
 
@@ -281,22 +219,7 @@ thread_CondWait (
 )
 {
 
-#if defined OS_ELN
-
-  pwr_tStatus sts = THREAD__SUCCESS;
-
-  ker$clear_event(&sts, *cp);
-  if (EVEN(sts)) return sts;
-
-  ELN$UNLOCK_MUTEX(*mp);
-
-  ker$wait_any(&sts, NULL, NULL, *cp);
-
-  ELN$LOCK_MUTEX(*mp);
-
-  return sts;
-
-#elif defined OS_POSIX
+#if defined OS_POSIX
 
   pwr_tStatus sts = THREAD__SUCCESS;
 
@@ -345,42 +268,7 @@ thread_CondTimedWait (
 )
 {
 
-#if defined OS_ELN
-  {
-    pwr_tStatus sts = THREAD__SUCCESS;
-    int tv_nsec;
-    int vmstime[2];
-    int multiplier = -10000000;	      /* Used to convert 1 s to 100 ns, delta time.  */
-    int result;
-
-    if (time == NULL) {
-      ;
-    } else if ((int)time->tv_sec < 0 || time->tv_nsec < 0 || (time->tv_sec == 0 && time->tv_nsec == 0)) {
-      return THREAD__TIMEDOUT;
-    } else {
-      tv_nsec = -time->tv_nsec/100;   /* Convert to 100 ns.  */
-      sts = lib$emul(&time->tv_sec, &multiplier, &tv_nsec, vmstime);
-      if (EVEN(sts)) return sts;
-    }
-
-    ker$clear_event(&sts, *cp);
-    if (EVEN(sts)) return sts;
-
-    ELN$UNLOCK_MUTEX(*mp);
-
-    if (time != NULL) {
-      ker$wait_any(&sts, &result, vmstime, *cp);
-      if (ODD(sts) && result == 0)
-	sts = THREAD__TIMEDOUT;
-    } else {
-      ker$wait_any(&sts, NULL, NULL, *cp);
-    }
-
-    ELN$LOCK_MUTEX(*mp);
-
-    return sts;
-  }
-#elif defined OS_LYNX && defined PWR_LYNX_30
+#if defined OS_LYNX && defined PWR_LYNX_30
   {
     pwr_tStatus sts;
 
@@ -464,15 +352,7 @@ thread_CondSignal (
 )
 {
 
-#if defined OS_ELN
-
-  pwr_tStatus sts = THREAD__SUCCESS;
-
-  ker$signal(&sts, *cp);
-
-  return sts;
-
-#elif defined OS_POSIX
+#if defined OS_POSIX
 
   cp->f = 1;
 
@@ -508,17 +388,6 @@ thread_Wait (
 
     sts = errno_Status(pthread_delay_np((struct timespec *)tp));
 
-#elif defined OS_ELN
-
-    int tv_nsec;
-    int vmstime[2];
-    int multiplier = -10000000;	      /* Used to convert 1 s to 100 ns, delta time.  */
-
-    tv_nsec = -tp->tv_nsec/100;   /* Convert to 100 ns.  */
-    sts = lib$emul(&tp->tv_sec, &multiplier, &tv_nsec, vmstime);
-
-    ker$wait_any(&sts, NULL, vmstime);
-
 #elif defined OS_POSIX
 
     struct timespec rmt;
@@ -542,25 +411,7 @@ thread_Wait (
 
   return sts;
 }
-
-#if 0
-thread_s
-thread_Self ()
-{
 
-#if defined OS_ELN
-
-  return NULL;
-
-#elif defined OS_POSIX || defined OS_VMS
-
-  return pthread_self();
-
-#else
-# error Not defined for this platform
-#endif
-}
-#endif
 
 pwr_tStatus
 thread_SetPrio (
@@ -569,23 +420,7 @@ thread_SetPrio (
 )
 {
 
-#if defined OS_ELN
-
-  pwr_tStatus sts = THREAD__SUCCESS;
-  PROCESS id;
-
-  prio = 15 - MIN(MAX(prio, 0), 15);
-  if (tp == NULL)
-    ker$current_process(&sts, &id);
-  else
-    id = tp->id;
-
-  if (ODD(sts))
-    ker$set_process_priority(&sts, id, prio);
-
-  return sts;
-
-#elif defined OS_VMS
+#if defined OS_VMS
   {
     struct sched_param par;
     pthread_t id;

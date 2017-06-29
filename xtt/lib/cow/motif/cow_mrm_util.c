@@ -36,8 +36,6 @@
 
 /* cow_mrm_util.c -- Motif utitlities */
 
-#if !defined OS_ELN
-
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -453,4 +451,3 @@ void mrm_PositionPopup( Widget popup, Widget parent, int x, int y)
   XtSetArg(args[1], XmNy, y0);
   XtSetValues( popup, args, 2);
 }
-#endif

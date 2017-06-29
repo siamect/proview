@@ -34,15 +34,9 @@
  * General Public License plus this exception.
  */
 
-#if defined(OS_ELN)
-# include stdlib
-# include string
-# include time
-#else
-# include <stdlib.h>
-# include <string.h>
-# include <time.h>
-#endif
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
 #if defined(OS_VMS)
 # include <lib$routines.h>

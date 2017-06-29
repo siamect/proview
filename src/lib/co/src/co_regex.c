@@ -27,11 +27,7 @@
    can run some tests we've already thought of.  */
 
 /* isalpha(3) etc. are used for the character classes.  */
-#ifdef OS_ELN
-# include ctype
-#else
 # include <ctype.h>
-#endif
 
 #ifndef pwr_regex_posix
 # define pwr_regex_posix
@@ -70,11 +66,7 @@
 # define STDC_HEADERS
 # if defined (USG) || defined (STDC_HEADERS)
 #   ifndef BSTRING
-#     ifdef OS_ELN
-#       include string
-#     else
-#       include <string.h>
-#     endif
+#     include <string.h>
 #     undef  bcopy
 #     define bcopy(s,d,n)	memcpy((d),(s),(n))
 #     undef  bcmp
@@ -85,11 +77,7 @@
 # endif
 
 # ifdef STDC_HEADERS
-#   ifdef OS_ELN
-#     include stdlib
-#   else
-#     include <stdlib.h>
-#   endif
+#   include <stdlib.h>
 # else
     char *malloc ();
     char *realloc ();
@@ -143,11 +131,7 @@
 
 /* We write fatal error messages on standard error.  */
 
-#ifdef OS_ELN
-# include stdio
-#else
 # include <stdio.h>
-#endif
 
 /* Sequents are missing isgraph.  */
 #ifndef isgraph
@@ -287,11 +271,7 @@ enum regexpcode
 
 
 /* Set by re_set_syntax to the current regexp syntax to recognize.  */
-#if defined(OS_ELN)
-static int obscure_syntax = 0;
-#else
 int obscure_syntax = 0;
-#endif
 
 /* Specify the precise syntax of regexps for compilation.  This provides
    for compatibility for various utilities which historically have

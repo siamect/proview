@@ -36,19 +36,11 @@
 
 /* rt_io_bus.c -- general io bus routines. */
 
-#if defined(OS_ELN)
-# include string
-# include stdlib
-# include stdio
-# include float
-# include math
-#else
 # include <string.h>
 # include <stdlib.h>
 # include <stdio.h>
 # include <float.h>
 # include <math.h>
-#endif
 
 #include "pwr.h"
 #include "pwr_class.h"

@@ -38,30 +38,16 @@
    This module contains the API-routines to the
    Class Definition Handler, CDH.  */
 
-#ifdef OS_ELN
-# include ctype
-# include $vaxelnc
-# include stdio
-# include math
-# include string
-# include time
-# include stdlib
-# include float
-# include stddef
-# include errno
-# include limits
-#else
-# include <stdio.h>
-# include <math.h>
-# include <string.h>
-# include <time.h>
-# include <stdlib.h>
-# include <float.h>
-# include <ctype.h>
-# include <stddef.h>
-# include <errno.h>
-# include <limits.h>
-#endif
+#include <stdio.h>
+#include <math.h>
+#include <string.h>
+#include <time.h>
+#include <stdlib.h>
+#include <float.h>
+#include <ctype.h>
+#include <stddef.h>
+#include <errno.h>
+#include <limits.h>
 
 #include "pwr.h"
 #include "pwr_class.h"
@@ -75,15 +61,6 @@
 */
 /*! \addtogroup Cdh */
 /*@{*/
-
-#ifdef OS_ELN
-struct  p1_ctx {
-  int             p1$errno;                       /* UNIX-style error code */
-  int             p1$vaxc$errno;                  /* VAX equivalent of errno above */
-  int             p1$randx;                       /* random number seed */
-  /* More members follows in the real struct */ 
-};
-#endif
 
 //! Compare two object identities.
 /*!
@@ -632,12 +609,7 @@ cdh_StringToAttrValue (
   unsigned int		timlen;
   char			*endp;
 
-#ifdef OS_ELN
-  struct p1_ctx *ctx_pointer = eln$locate_crtl_ctx();
-  ctx_pointer->p1$errno = 0;
-#else
   errno = 0;
-#endif
 
   pwr_Assert(String != NULL);
   pwr_Assert(Value != NULL);

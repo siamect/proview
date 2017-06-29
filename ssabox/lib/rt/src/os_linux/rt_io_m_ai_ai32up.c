@@ -229,10 +229,6 @@ static pwr_tStatus IoCardRead (
     {
       if ( local->ScanCount[i] <= 1)
       {
-
-#if defined(OS_ELN)
-        vaxc$establish(machfailread);
-#endif
         if (r_local->Qbus_fp != 0 && r_local->s == 0) {
           rb.Address = local->Address + 2*i;
           sts = read( local->Qbus_fp, &rb, sizeof(rb));

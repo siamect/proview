@@ -37,22 +37,11 @@
 /* co_pdr.c -- pdr routines
    This module contains the PDR-routines */
 
-#if defined OS_ELN
-#include string
-#else
 #include <string.h>
-#endif
+#include <netinet/in.h>
 
 #include "co_pdr.h"
 #include "co_float.h"
-
-#if defined OS_ELN
-#include in
-#else
-#include <netinet/in.h>
-#endif
-
-
 
 #define PWR_PDR_BYTES(pdrs, addr, len)				\
 {								\

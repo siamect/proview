@@ -36,11 +36,7 @@
 
 /* rt_cvolcm.c -- Cached volumes, client monitor API. */
 
-#if defined(OS_ELN)
-# include $vaxelnc
-#else
-# include <stdio.h>
-#endif
+#include <stdio.h>
 
 #include "pwr.h"
 #include "pwr_class.h"
@@ -52,7 +48,6 @@
 #include "rt_net.h"
 #include "rt_cvol.h"
 #include "rt_cvolcm.h"
-
 
 
 /**
@@ -159,11 +154,7 @@ cvolcm_ConnectVolume (
 
   tqp = &vp->u.c.cacheVol;
   pool_Qinit(NULL, gdbroot->pool, &tqp->lh);
-#if defined OS_ELN
-  tqp->lc_max = 100;
-#else
   tqp->lc_max = 200;
-#endif
   tqp->flags.b.cacheVol = 1;
   tqp->next = pool_Reference(NULL, gdbroot->pool, &np->cacheNode);
 

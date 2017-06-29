@@ -366,13 +366,8 @@ pwr_tStatus ph_SendPacket
     memcpy(MsgP, Pack, sizeof(ph_uPack));
     memcpy(MsgP + sizeof(ph_uPack), ClassData, ClassSize);
 
-#ifdef OS_ELN
-    sts = pams_put_msg (MsgP, &Prio, &Address, &Class, &Type, &Delivery, &Size,
-      NULL, NULL, NULL, NULL, NULL);
-#else
     sts = pams_put_msg (MsgP, &Prio, &Address, &Class, &Type, &Delivery, &Size,
       NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-#endif
     free (MsgP);
     if (EVEN (sts))
 	return sts;

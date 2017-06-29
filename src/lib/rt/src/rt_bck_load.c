@@ -38,19 +38,10 @@
    This module contains the code for reading and
    restoring the information in the backup data file.  */
 
-#ifdef OS_ELN
-# include $vaxelnc
-# include stdlib
-# include stdio
-# include descrip
-# include string
-# include errno
-#else
 # include <stdlib.h>
 # include <stdio.h>
 # include <string.h>
 # include <errno.h>
-#endif
 
 #ifdef OS_VMS
 # include <descrip.h>
@@ -70,7 +61,7 @@
 #include "co_cdh.h"
 
 
-#if defined OS_VMS || defined OS_ELN
+#if defined OS_VMS
 # define SET_ERRNO_STS  sts = vaxc$errno
 # define A_MODE 	, "shr=get"
 # define FGETNAME	fgetname (f, (char *)&tmpstr)
@@ -104,7 +95,7 @@ bck_LoadBackup ()
   char			fname[200];
   pwr_tAName            objectname;
 
-#if defined OS_VMS || defined OS_ELN
+#if defined OS_VMS
   short			msglen;
   struct dsc$descriptor tmpstrdsc;
   char			tmpstr [256];

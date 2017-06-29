@@ -208,37 +208,6 @@ pwr_rtt> show event\n\
 pwr_rtt> show symbol\n\
 pwr_rtt> show user\n\
 "},
-#ifdef OS_ELN
-{1,	"SHOW SYSTEM","",
-"\
-Display information about the jobs an processes of the system.\n\
-The parameters shown is:\n\
-- job name.\n\
-- job number.\n\
-- job priority.\n\
-- state.\n\
-- cpu time since boot.\n\
-- current cpu.\n\
-- mean cpu since the picture was started.\n\n\
-By selecting a job and pressing PF1 more information about the job will be\n\
-displayed:\n\n\
-- job name.\n\
-- file name.\n\
-- options.\n\
-- peak cpu since the picture was started.\n\
-- kernel stack.\n\
-- mode.\n\
-- the processes of the job.\n\
-For eatch process is displayed:\n\
-- process name.\n\
-- process number.\n\
-- process priority.\n\
-- process state.\n\
-- process cputime.\n\
-- current cpu.\n\
-- mean cpu since the picture was started.\n\
-"},
-#endif
 #ifdef OS_VMS
 {1,	"SHOW SYSTEM","",
 "\

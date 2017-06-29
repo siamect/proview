@@ -37,11 +37,7 @@
 /* plc_thread.c -- Run a PLC thread
    Run a PLC thread.  */
 
-#if defined(OS_ELN)
-# include $vaxelnc
-#else
 # include <string.h>
-#endif
 
 #if defined OS_LINUX
 # include <pwd.h>
@@ -434,14 +430,6 @@ plc_thread (
   while (!tp->exit) {
     scan(tp);
   }
-#if 0 /*defined(OS_ELN)*/
-  if (wfp) {
-    /* We have exited the PLC loop. Clean up watchdog object */
-    wfp->delete(&sts, wp);
-    if (EVEN(sts))
-      errh_Error("Cleaning up watchdog, %m", sts);
-  }
-#endif
 
 //  sts = io_close(tp->plc_io_ctx);
 

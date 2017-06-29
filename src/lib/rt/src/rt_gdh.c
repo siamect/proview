@@ -38,16 +38,10 @@
    This module contains the access routines to the Global Data
    Handler. Those routines are callable from application level.  */
 
-#if defined(OS_ELN)
-# include $vaxelnc
-# include stdio
-# include string
-#else
-# include <stdio.h>
-# include <stdlib.h>
-# include <string.h>
-# include <float.h>
-#endif
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <float.h>
 
 #include "pwr.h"              
 #include "co_cdh.h"
@@ -74,17 +68,7 @@
 #include "rt_sanc.h"
 #include "rt_dl.h"
 
-#if defined(OS_ELN)
-  /* For ELN and Lynx , the 'gdh_Lock' code also takes out a mutex lock 
-     to prevent 'gdh' from being called simultaneously from more than 
-     1 process/thread in a job. 
-     If this happens, there is a potential risk of deadlocking
-     in the 'net' interface.  */
-
-# define gdh_Lock	ELN$LOCK_MUTEX(gdbroot->thread_lock); gdb_Lock
-# define gdh_Unlock	gdb_Unlock; ELN$UNLOCK_MUTEX(gdbroot->thread_lock)
-
-#elif defined (OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS
+#if defined (OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS
 # define gdh_Lock	pthread_mutex_lock(&gdbroot->thread_lock); gdb_Lock
 # define gdh_Unlock	gdb_Unlock; pthread_mutex_unlock(&gdbroot->thread_lock)
 

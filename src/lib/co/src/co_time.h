@@ -58,7 +58,7 @@ extern "C" {
 #endif
 
 typedef unsigned int time_tClock;
-#if defined OS_VMS || defined OS_ELN
+#if defined OS_VMS
  typedef pwr_tVaxTime time_tOs;
  typedef pwr_tVaxTime time_tOsDelta;
 #elif defined OS_POSIX
@@ -129,7 +129,7 @@ typedef enum {
 #define HUNDRED   1
 #define MINUTE    2
 
-#if defined(OS_VMS) || defined(OS_ELN) || defined(OS_MACOS)
+#if defined(OS_VMS) || defined(OS_MACOS)
 
 # define CLOCK_REALTIME 1
 # define CLOCK_MONOTONIC 2
@@ -177,7 +177,7 @@ pwr_tDeltaTime *  time_Dneg_NE (pwr_tDeltaTime*, pwr_tDeltaTime*);
 pwr_tDeltaTime *  time_Dsub (pwr_tDeltaTime*, pwr_tDeltaTime*, pwr_tDeltaTime*);
 pwr_tDeltaTime *  time_Dsub_NE (pwr_tDeltaTime*, pwr_tDeltaTime*, pwr_tDeltaTime*);
 
-#if defined (OS_VMS) || defined(OS_ELN)
+#if defined (OS_VMS)
 pwr_tStatus   time_Dmul (pwr_tDeltaTime*, pwr_tDeltaTime*, pwr_tInt32);
 #endif
 
@@ -193,7 +193,7 @@ pwr_tStatus   time_FormAsciiToA(const char*, short, short, pwr_tTime*);
 void      time_AtoFormAscii(pwr_tTime*, short, short, char[], int);
 pwr_tDeltaTime *  time_MsToD  (pwr_tDeltaTime*, pwr_tInt32);
 
-#if defined(OS_VMS) || defined(OS_ELN)
+#if defined(OS_VMS)
 pwr_tStatus   time_PwrDeltaToVms  (pwr_tDeltaTime*, pwr_tVaxTime*);
 pwr_tStatus   time_PwrToVms (pwr_tTime*, pwr_tVaxTime*);
 pwr_tStatus   time_VmsToPwr (pwr_tVaxTime*, pwr_tTime*);
@@ -229,19 +229,6 @@ void 	      time_NextPeriod( time_ePeriod period, pwr_tTime *prev_from, pwr_tTim
 int 	      time_PeriodZoomIn( time_ePeriod *period);
 int 	      time_PeriodZoomOut( time_ePeriod *period);
 int 	      time_PrintA( const char *format, pwr_tTime *ts);
-
-
-#if defined(OS_ELN)
-int     eln_clock_gettime (clockid_t, struct timespec*);
-struct tm     *eln_localtime  (const time_t*);
-time_t      eln_mktime (tm_t*);
-int     eln_clock_getres (clockid_t, struct timespec*);
-
-#define clock_gettime eln_clock_gettime
-#define localtime eln_localtime
-#define mktime eln_mktime
-#define clock_getres eln_clock_getres
-#endif
 
 /*@}*/
 

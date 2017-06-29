@@ -36,15 +36,11 @@
 
 /* rt_io_comm.c -- io handler */
 
-#if defined(OS_ELN)
-# include $vaxelnc
-#else
-# include <stdio.h>
-# include <stddef.h>
-# include <stdlib.h>
-# include <string.h>
-# include <math.h>
-#endif
+#include <stdio.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
 
 #include "pwr.h"
 #include "co_time.h"
@@ -60,16 +56,6 @@
 #include "rt_qcom_msg.h"
 #include "rt_ini_event.h"
 #include "rt_pwr_msg.h"
-
-#if defined(OS_ELN)
-#include "rt_io_dioc.h"
-#endif
-
-
-#if defined(OS_ELN)
- extern EVENT    io_comm_terminate;
- EVENT           io_comm_terminate;
-#endif
 
 static pwr_sClass_IOHandler *init (qcom_sQid *qid, lst_sEntry **csup_lh, pwr_sNode **nodep, io_mProcess process, errh_eAnix errh_anix, char *oname, float *cycletime);
 
@@ -192,11 +178,6 @@ int main (int argc, char **argv)
       sts = io_init(process, pwr_cNObjid, &io_ctx, 1, cycletime);
       if ( ODD(sts)) 
 	errh_SetStatus( PWR__SRUN);
-#if defined(OS_ELN)
-      ker$clear_event( &sts, io_comm_terminate);
-      io_dioc_init();
-      io_dioc_start();
-#endif
       init_io = 0;
       tmo = cycletime * 1000.;
       f = floor(cycletime);
@@ -263,9 +244,6 @@ int main (int argc, char **argv)
       }
       if (close_io) {    
 	io_close(io_ctx);
-#if defined(OS_ELN)
-	ker$signal( &sts, io_comm_terminate);
-#endif
 	close_io = 0;
       }
     }
@@ -302,11 +280,6 @@ init (qcom_sQid *qid, lst_sEntry **csup_lh, pwr_sNode **nodep, io_mProcess proce
   }
 
   errh_Init(pname, errh_anix);
-
-#if defined(OS_ELN)
-  /* Event to kill dioc */
-  ker$create_event(&sts, &io_comm_terminate, EVENT$CLEARED);
-#endif
 
   if (!qcom_Init(&sts, 0, pname)) {
     errh_Fatal("qcom_Init, %m", sts);

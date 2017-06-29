@@ -45,22 +45,7 @@
 
 
 
-#if defined(OS_ELN)
-# include stdio
-# include stdarg
-# include stdlib
-# include chfdef
-# include signal
-# include string
-# include float
-# include descrip
-# include starlet
-# include lib$routines
-# include $vaxelnc
-# include $kernelmsg
-# include $elnmsg
-# include $get_message_text
-#elif defined(OS_VMS)
+#if defined(OS_VMS)
 # include <stdio.h>
 # include <stdarg.h>
 # include <stdlib.h>
@@ -7496,11 +7481,7 @@ static int	rtt_set_value(
 	    pwr_tInt8 	i8;
 	    pwr_tInt16	i16;
 	    size = sizeof(pwr_tInt8);
-#if defined OS_ELN
-	    if ( sscanf( value_str, "%d", &i16) != 1)
-#else
 	    if ( sscanf( value_str, "%hd", &i16) != 1)
-#endif
 	      return RTT__INPUT_SYNTAX;
 	    i8 = i16;
 	    memcpy( buffer_ptr, (char *)&i8, sizeof(i8));
@@ -7516,11 +7497,7 @@ static int	rtt_set_value(
 	  case pwr_eType_Int16:
 	  {
 	    size = sizeof(pwr_tInt16);
-#if defined OS_ELN
-	    if ( sscanf( value_str, "%d", (short *)buffer_ptr) != 1)
-#else
 	    if ( sscanf( value_str, "%hd", (short *)buffer_ptr) != 1)
-#endif
 	      return RTT__INPUT_SYNTAX;
 	    if ( (menu_ptr->maxlimit != 0.0) || (menu_ptr->minlimit != 0.0))
 	    {
@@ -7564,11 +7541,7 @@ static int	rtt_set_value(
 	    pwr_tUInt8 	i8;
 	    pwr_tUInt16	i16;
 	    size = sizeof(pwr_tUInt8);
-#if defined OS_ELN
-	    if ( sscanf( value_str, "%d", (unsigned char *) &i16) != 1)
-#else
 	    if ( sscanf( value_str, "%hu", &i16) != 1)
-#endif
 	      return RTT__INPUT_SYNTAX;
 	    i8 = i16;
 	    memcpy( buffer_ptr, (char *)&i8, sizeof(i8));
@@ -7584,11 +7557,7 @@ static int	rtt_set_value(
 	  case pwr_eType_UInt16:
 	  {
 	    size = sizeof(pwr_tUInt16);
-#if defined OS_ELN
-	    if ( sscanf( value_str, "%d", (unsigned short *)buffer_ptr) != 1)
-#else
 	    if ( sscanf( value_str, "%hu", (unsigned short *)buffer_ptr) != 1)
-#endif
 	      return RTT__INPUT_SYNTAX;
 	    if ( (menu_ptr->maxlimit != 0.0) || (menu_ptr->minlimit != 0.0))
 	    {
@@ -7604,11 +7573,7 @@ static int	rtt_set_value(
 	  case pwr_eType_Enum:
 	  {
 	    size = sizeof(pwr_tUInt32);
-#if defined OS_ELN
-	    if ( sscanf( value_str, "%d", (unsigned long *)buffer_ptr) != 1)
-#else
 	    if ( sscanf( value_str, "%lu", (unsigned long *)buffer_ptr) != 1)
-#endif
 	      return RTT__INPUT_SYNTAX;
 	    if ( (menu_ptr->maxlimit != 0.0) || (menu_ptr->minlimit != 0.0))
 	    {
@@ -8448,17 +8413,6 @@ void rtt_error_msg(
 	  lib$sys_getmsg(&msgsts, &msglen, &msgdesc, 0, 0);
 	  msg[msglen]='\0';
 	  rtt_printf("%s\n\r", msg);
-	}
-}
-#elif OS_ELN
-void rtt_error_msg( unsigned long 	sts)
-{
-	VARYING_STRING(256) msg;
-
-	if (EVEN(sts))
-	{
-	  eln$get_status_text(sts, 0, &msg);
-	  rtt_printf("%s\n\r", &msg.data);
 	}
 }
 #else
@@ -9907,19 +9861,6 @@ int	rtt_sleep(
 	  qio_read( (int *) rtt_chn, rtt_scantime, (char *) &c, 1);
 	  rtt_scan( ctx);
 	}
-#elif defined OS_ELN
-	int		i;
-	int		num;
-	LARGE_INTEGER	l_time;
-
-	l_time.high = -1;
-	l_time.low = - rtt_scantime * 10000;
-	num = (1.0 / rtt_scantime + FLT_EPSILON) * time;
-	for ( i = 0; i < num; i++)
-	{
-	  ker$wait_any( NULL, NULL, &l_time);
-	  rtt_scan( ctx);
-	}
 #elif defined OS_POSIX
 	int		i;
 	int		num;
@@ -9961,29 +9902,7 @@ int	rtt_get_defaultfilename(
 	pwr_tFileName	filename;
 	char 		*s, *s2;
 
-#if defined(OS_ELN)
-	/* Add default vmsnode if no node is suplied */
-	s = strstr( inname, "::");
-	if ( s == 0)
-	{
-	  if ( !strcmp( rtt_DefaultVMSNode, ""))
-	  {
-	    /* Use the system directory as default */
-	    if ( strchr( inname, '<') || strchr( inname, '[') || 
-		 strchr( inname, ':'))
-	      strcpy( filename, "");
-	    else
-	      strcpy( filename, "disk$sys:[sys0.sysexe]");
-	  }
-	  else
-	    strcpy( filename, rtt_DefaultVMSNode);
-	  strcat( filename, inname);
-	  strcpy( outname, filename);
-	}
-	else
-	  strcpy( outname, inname);
-	
-#elif defined(OS_VMS)
+#if defined(OS_VMS)
 	if ( strchr( inname, '<') || strchr( inname, '[') || 
 	     strchr( inname, ':'))
 	  strcpy( outname, inname);
@@ -10077,7 +9996,7 @@ void	rtt_exit_now( int disconnected, pwr_tStatus exit_sts)
 	else
 	  exit( 0);
 #endif
-#if defined(OS_VMS) || defined(OS_ELN)
+#if defined(OS_VMS)
 	exit( exit_sts);
 #endif
 }
@@ -10338,8 +10257,6 @@ unsigned int	rtt_exception(
 {
 #ifdef OS_VMS
 	exit( ((struct chf$signal_array *) signalP)->chf$l_sig_name);
-#elif OS_ELN
-	ker$exit( NULL, ((struct chf$signal_array *) signalP)->chf$l_sig_name);
 #endif
 	return 1;
 }
@@ -10729,16 +10646,7 @@ char	*rtt_pwr_dir( char *dir)
 	static char pwr_dir[120];
 	char 	*s;
 
-#if defined(OS_ELN)
-	if ( strcmp( rtt_DefaultVMSNode, "") == 0)
-	  strcpy( pwr_dir, "[sys0.sysexe]");
-	else
-	{
-	  strcpy( pwr_dir, rtt_DefaultVMSNode);
-	  strcat( pwr_dir, dir);
-	  strcat( pwr_dir, ":");
-	}
-#elif defined(OS_VMS)
+#if defined(OS_VMS)
 	strcpy( pwr_dir, dir);
 	strcat( pwr_dir, ":");
 #elif defined OS_POSIX

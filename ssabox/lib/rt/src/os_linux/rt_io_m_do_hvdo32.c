@@ -175,11 +175,6 @@ static pwr_tStatus IoCardWrite (
   pwr_sClass_Do_HVDO32	*op = (pwr_sClass_Do_HVDO32 *) cp->op;
   int 			words = op->MaxNoOfChannels <= 16 ? 1 : 2;
 
-
-#if defined(OS_ELN)
-  vaxc$establish(machfailwrite);
-#endif
-
   for ( i = 0; i < words; i++)
   { 
     if ( i == 1 && op->MaxNoOfChannels <= 16)

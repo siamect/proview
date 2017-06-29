@@ -41,21 +41,7 @@
 
 
 
-#if defined(OS_ELN)
-# include stdio
-# include string
-# include stdlib
-# include descrip
-# include chfdef
-# include stdarg
-# include $vaxelnc
-# include $kerneldef
-# include $mutex
-# include prdef
-# include $kernelmsg
-# include $elnmsg
-# include $get_message_text
-#elif defined(OS_VMS)
+#if defined(OS_VMS)
 # include <stdio.h>
 # include <string.h>
 # include <stdlib.h>
@@ -101,11 +87,6 @@
 #define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
 #endif
 
-/* Local static variables */
-#if defined OS_ELN
-static int      psts;
-#endif
-
 /*_Local function prototypes____________________________________________*/
 
 static int	rtt_logging_show_entry(
@@ -114,12 +95,7 @@ static int	rtt_logging_show_entry(
 			int		*buff_cnt);
 static int	rtt_logging_entry_stop(
 			rtt_t_loggtable	*entry_ptr);
-#if defined(OS_ELN)
-pwr_tStatus	rtt_logging_logproc(
-			rtt_t_loggtable	*entry_ptr);
-#else
 void	*rtt_logging_logproc(void *arg);
-#endif
 static int	rtt_get_parinfo(
 			char		*parameter_name,
 			pwr_sParInfo	*parinfo);
@@ -1095,11 +1071,7 @@ int	rtt_logging_start(
 	entry_ptr->stop = 0;
 
 	/* Create a subprocess */
-#if defined(OS_ELN)
-	ker$create_process( &sts, &(entry_ptr->process_id), 
-		&rtt_logging_logproc, &psts, entry_ptr);
-        if ( EVEN(sts)) return sts;
-#elif defined OS_LYNX && defined PWR_LYNX_30
+#if defined OS_LYNX && defined PWR_LYNX_30
 	sts = pthread_create (
 		&entry_ptr->thread,
 		pthread_attr_default,		/* attr */
@@ -1286,12 +1258,7 @@ int	rtt_logging_delete(
 *
 **************************************************************************/
 
-#if defined(OS_ELN)
-pwr_tStatus	rtt_logging_logproc(
-	rtt_t_loggtable	*entry_ptr)
-#else
 void	*rtt_logging_logproc( void *arg)
-#endif
 {
 	int		sts;
 	int		i, j, k;
@@ -1313,10 +1280,6 @@ void	*rtt_logging_logproc( void *arg)
 	pwr_tTime	restime;
 	pwr_tDeltaTime	deltatime;
 	pwr_tDeltaTime	wait_time;
-#ifdef OS_ELN
- 	pwr_tVaxTime 	vmstime;
-	TIME_RECORD	time_rec;
-#endif
 #ifdef OS_VMS
  	pwr_tVaxTime 	vmstime;
 #endif
@@ -1451,10 +1414,6 @@ void	*rtt_logging_logproc( void *arg)
 	      if ( !*(entry_ptr->condition_ptr))
 	      {
 	        /*  Don't log, wait until next scan */
-#ifdef OS_ELN
-	        time_PwrToVms( &nextime, &vmstime);
-	        ker$wait_any( NULL, NULL, &vmstime);
-#endif
 #ifdef OS_VMS
 	        time_PwrToVms( &nextime, &vmstime);
 	        sys$clref( entry_ptr->event_flag);
@@ -1863,9 +1822,6 @@ void	*rtt_logging_logproc( void *arg)
 
 	    if ( entry_ptr->logg_priority != 0)
 	      sts = rtt_set_default_prio();
-#ifdef OS_ELN
-	    ker$exit(NULL,RTT__SUCCESS);
-#endif
 #if defined OS_VMS || defined OS_POSIX
 /*	    sts = pthread_detach( &entry_ptr->thread); */
 	    pthread_exit( (void *) 1);
@@ -1885,10 +1841,6 @@ void	*rtt_logging_logproc( void *arg)
 	  sys$setimr( entry_ptr->event_flag, &vmstime, 0, 0, 0);
 	  sys$waitfr( entry_ptr->event_flag);
 #endif
-#ifdef OS_ELN
-	  time_PwrToVms( &nextime, &vmstime);
-	  ker$wait_any( NULL, NULL, &vmstime);
-#endif
 #if defined OS_POSIX
 	  time_Adiff( &wait_time, &nextime, &time);
 
@@ -1899,9 +1851,6 @@ void	*rtt_logging_logproc( void *arg)
 #endif
 
 	}
-#ifdef OS_ELN
-	ker$exit(NULL,KER$_BAD_STATE);
-#endif
 #if defined OS_VMS || defined OS_POSIX
 	pthread_exit(0);
 #endif

@@ -57,10 +57,6 @@
 # include <pthread.h>
 #endif
 
-#ifdef OS_ELN
-#include stdio
-#endif
-
 #ifndef rt_gdh_h
 #include "rt_gdh.h"
 #endif
@@ -446,9 +442,6 @@ typedef struct {
 	void		*logg_file;	
 	char		old_value[RTT_LOGG_MAXPAR][8];
 	pwr_tTime	starttime;
-#ifdef OS_ELN
-	PROCESS		process_id;
-#endif
 #ifdef OS_VMS
 	pthread_t 	thread;
 	unsigned int    event_flag;

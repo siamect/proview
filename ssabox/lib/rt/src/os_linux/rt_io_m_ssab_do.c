@@ -179,10 +179,6 @@ static pwr_tStatus IoCardWrite (
   local = (io_sLocal *) cp->Local;
   op = (pwr_sClass_Ssab_BaseDoCard *) cp->op;
 
-#if defined(OS_ELN)
-  vaxc$establish(machfailwrite);
-#endif
-
   for ( i = 0; i < 2; i++)
   { 
     if ( i == 1 && op->MaxNoOfChannels <= 16)

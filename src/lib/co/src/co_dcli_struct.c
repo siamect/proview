@@ -39,21 +39,11 @@
 
 /*_Include files_________________________________________________________*/
 
-#if defined(OS_ELN)
-# include stdio
-# include stdarg
-# include stdlib
-# include chfdef
-# include signal
-# include string
-# include float
-#else
 # include <stdio.h>
 # include <stdarg.h>
 # include <stdlib.h>
 # include <string.h>
 # include <float.h>
-#endif
 
 #include "pwr.h"
 #include "pwr_class.h"
@@ -959,17 +949,6 @@ static int	find_struct( 	t_ctx	ctx,
 	  
 /*	printf( "Processing file %s\n", filename);*/
 
-#if defined (OS_ELN)
-	/* Remove any logical device */
-	if ( strstr( filename, "::") == 0)
-	{
-	  if ( (s = strchr( filename, ':')) != 0)
-	  {
-	    s++;
-	    strcpy( fname, s);
-	  }
-	}
-#else
         /* If no path is given, set pwrp_inc a default */
         if ( strchr( filename, ':') == 0 &&
 	     strchr( filename, '<') == 0 &&
@@ -982,7 +961,6 @@ static int	find_struct( 	t_ctx	ctx,
 	}
 	else
 	  dcli_translate_filename( fname, filename);
-#endif
 	dcli_get_defaultfilename( fname, normfilename, ".h");
 	file = fopen( normfilename, "r");
 	if ( file == NULL)

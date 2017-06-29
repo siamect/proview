@@ -36,15 +36,9 @@
 
 /* rt_mh_outunit.c -- Out unit */
 
-#ifdef OS_ELN
-# include stdio
-# include stdlib
-# include string
-#else
-# include <stdio.h>
-# include <stdlib.h>
-# include <string.h>
-#endif
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #ifdef OS_VMS
 #include <starlet.h>

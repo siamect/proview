@@ -36,15 +36,9 @@
 
 /* rt_gdb.c -- Global Database */
 
-#if defined(OS_ELN)
-# include $vaxelnc
-# include stdarg
-# include stsdef
-#else
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
-#endif
 
 #if defined (OS_LYNX)
 # include <sys/mman.h>
@@ -70,13 +64,7 @@
 #include "rt_san.h"
 #include "rt_net.h"
 
-#if defined (OS_ELN)
-#if 0
-  noshare gdb_sLocal *gdbroot = NULL;
-#endif
-#else
   gdb_sLocal *gdbroot = NULL;
-#endif
 
 
 /** Compare two keys in class attribute binary tree 
@@ -212,9 +200,7 @@ mapLocalDb (
   if (gdbroot->db->version != gdb_cVersion)
     pwr_Return(NULL, sts, GDH__REVLEVEL);
 
-#ifdef	OS_ELN
-  ELN$CREATE_MUTEX(gdbroot->thread_lock, NULL);
-#elif defined OS_LYNX && defined PWR_LYNX_30
+#if defined OS_LYNX && defined PWR_LYNX_30
   pthread_mutexattr_create(&mattr);
   if (pthread_mutex_init(&gdbroot->thread_lock, mattr) == -1) {
     perror("mapLocalDb: pthread_mutex_init, ");
@@ -537,11 +523,7 @@ gdb_AddNode (
   pool_Qinit(NULL, gdbroot->pool, &np->sancAct_lh);
 
   pool_Qinit(NULL, gdbroot->pool, &np->cacheNode.lh);
-#if defined OS_ELN
-  np->cacheNode.lc_max = 100;
-#else
   np->cacheNode.lc_max = 200;
-#endif
 
   np->cacheNode.flags.b.cacheNode = 1;
   np->cacheNode.next = pool_Reference(NULL, gdbroot->pool, &gdbroot->db->cacheCom);
@@ -812,21 +794,13 @@ gdb_CreateDb (
 
     tqp = &gdbroot->db->cacheCom;
     pool_Qinit(NULL, gdbroot->pool, &tqp->lh);
-#if defined OS_ELN
-    tqp->lc_max = 100;
-#else
     tqp->lc_max = 2000;
-#endif
     tqp->flags.b.cacheCom = 1;
     tqp->next = pool_Reference(NULL, gdbroot->pool, &gdbroot->db->cacheOld);
 
     tqp = &gdbroot->db->cacheNew;
     pool_Qinit(NULL, gdbroot->pool, &tqp->lh);
-#if defined OS_ELN
-    tqp->lc_max = 100;
-#else
     tqp->lc_max = 400;
-#endif
     tqp->flags.b.cacheNew = 1;
     tqp->next = pool_Reference(NULL, gdbroot->pool, &gdbroot->db->cacheOld);
 
@@ -861,11 +835,7 @@ gdb_CreateDb (
 
     tqp = &gdbroot->db->cacheCclass;
     pool_Qinit(NULL, gdbroot->pool, &tqp->lh);
-#if defined OS_ELN
-    tqp->lc_max = 100;
-#else
     tqp->lc_max = 1000; /** @todo What is the max number of cached classes? */
-#endif
     tqp->flags.m = 0;
     tqp->next = pool_cNRef;
 

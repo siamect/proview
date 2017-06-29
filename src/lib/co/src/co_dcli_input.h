@@ -59,11 +59,7 @@ typedef struct {
 	char	command[DCLI_RECALL_MAX][200];
 	} dcli_sRecall;
 
-#if defined OS_ELN
-typedef unsigned long dcli_sChannel[4];
-#else
 typedef int dcli_sChannel;
-#endif
 
 int	dcli_input_init( dcli_sChannel *chn, dcli_sRecall **recall_buf);
 int	dcli_input_end( dcli_sChannel *chn, dcli_sRecall *recall_buf);

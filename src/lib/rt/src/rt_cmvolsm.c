@@ -37,13 +37,8 @@
 /* rt_cmvolsm.c -- Cached volumes
    This module contains the meta cache handling routines for the server monitor.  */
 
-
-#ifdef	OS_ELN
-# include $vaxelnc
-#else
-# include <stdio.h>
-# include <string.h>
-#endif
+#include <stdio.h>
+#include <string.h>
 
 #include "pwr.h"
 #include "pwr_class.h"
@@ -54,8 +49,6 @@
 #include "rt_vol.h"
 #include "rt_net.h"
 #include "rt_cmvolsm.h"
-
-
 
 
 /** Handle GetCclass message */

@@ -48,13 +48,8 @@
 
 /*_Include filer_________________________________________________________*/
 
-#if defined OS_ELN
-#include stdlib
-#include float
-#else
 #include <stdlib.h>
 #include <float.h>
-#endif
 
 #include "pwr.h"
 #include "ssabox_ssabutil.h"

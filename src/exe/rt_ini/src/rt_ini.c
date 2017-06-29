@@ -82,17 +82,6 @@ static void             ini_errl_cb( void *userdata, char *str, char severity,
 void set_valid_time()
 {
   /* Set valid utc time */
-#if defined(OS_ELN)
-  pwr_tTime current_time;
-  int sts;
-
-  sys$gettim( &current_time);
-  if ( current_time.tv_nsec < 10400000)
-  {
-    current_time.tv_nsec = 10400000;
-    ker$set_time( &sts, &current_time);
-  }
-#endif
 }
 
 
@@ -229,10 +218,6 @@ start (
   io_init_signals();
 
   load_backup();
-
-#if defined OS_ELN
-  ker$initialization_done(NULL);
-#endif
 
   ini_ProcTable(&sts, cp);
   ini_ProcIter(&sts, cp, proc_mProcess_system, 0, ini_ProcLoad);

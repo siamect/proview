@@ -42,16 +42,11 @@
    This include file contains the internal datastructures and
    data entities in QDB.  */
 
-#if defined(OS_VMS) || defined(OS_ELN)
+#if defined(OS_VMS)
 # pragma builtins
 #endif
 
-#ifdef	OS_ELN
-# include $vaxelnc
-# include $mutex
-# include unistd
-# include socket
-#elif defined OS_POSIX
+#if defined OS_POSIX
 # include <unistd.h>
 # include <sys/socket.h>
 #else
@@ -63,8 +58,6 @@
 # include <netinet/in.h>
 # include <pthread.h>
 # include <signal.h>
-#elif defined OS_ELN
-# include in
 #else
 # include <in.h>
 #endif
@@ -129,7 +122,7 @@ static const qcom_sQid qdb_cQimport	= {qdb_cIimport, 0};
 static const qcom_sQid qdb_cQexport	= {qdb_cIexport, 0};
 static const qcom_sQid qdb_cQmonitor	= {qdb_cImonitor, 0};
 
-#if defined OS_VMS || defined OS_ELN
+#if defined OS_VMS
 #  define	qdb_cNameDatabase	"pwr_qdb"
 
 #  define	qdb_cNamePool		"pwr_qpool"
@@ -462,15 +455,6 @@ typedef struct {
     int			waiting;
   } qdb_sQlock;
 
-#elif defined OS_ELN
-
-  typedef struct {
-    AREA		id;
-    qdb_tQname		name;
-    int			nlen;
-    int			waiting;
-  } qdb_sQlock;
-
 #elif defined OS_POSIX
 
   typedef struct {
@@ -786,11 +770,7 @@ typedef struct {
 
 /* The root of all data, the only `global' variable...  */
 
-#if defined (OS_ELN)
-  extern noshare qdb_sLocal	*qdb;
-#else
   extern qdb_sLocal	*qdb;		/* root of all data in database */
-#endif
 
 qdb_sAppl*	qdb_AddAppl	(pwr_tStatus*, pwr_tBoolean);
 qdb_sNode*	qdb_AddNode	(pwr_tStatus*, pwr_tUInt32, pwr_tBitMask);

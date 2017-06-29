@@ -34,18 +34,10 @@
  * General Public License plus this exception.
  */
 
-#ifdef OS_ELN
-# include ctype
-# include $vaxelnc
-# include stdio
-# include stdlib
-# include string
-#else
 # include <stdio.h>
 # include <stdlib.h>
 # include <ctype.h>
 # include <string.h>
-#endif
 
 #include "pwr.h"
 #include "pwr_class.h"

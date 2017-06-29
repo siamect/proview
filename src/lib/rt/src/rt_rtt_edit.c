@@ -5313,11 +5313,7 @@ static int	dtt_edit_write( edit_ctx	ctx,
 	fprintf( fout, "/* c file for picture %s */\n", picture_name);
 	fprintf( fout, "#include \"rt_rtt.h\"\n");
 	fprintf( fout, "#include \"%s.rh\"\n", menu_filename);
-	fprintf( fout, "#if defined(OS_ELN)\n");
-	fprintf( fout, "globaldef rtt_t_backgr %s_bg = {\n", picture_name);
-	fprintf( fout, "#else\n");
 	fprintf( fout, "rtt_t_backgr %s_bg = {\n", picture_name);
-	fprintf( fout, "#endif\n");
 	for ( i = 0; i < 2; i++)
 	{
 	  fprintf( fout, "{\n");
@@ -5342,11 +5338,7 @@ static int	dtt_edit_write( edit_ctx	ctx,
 
 	/* Write update items */
 	item_ptr = ctx->upd_items;
-	fprintf( fout, "#if defined(OS_ELN)\n");
-	fprintf( fout, "globaldef rtt_t_menu_update %s_eu[] = {\n", picture_name);
-	fprintf( fout, "#else\n");
 	fprintf( fout, "rtt_t_menu_update %s_eu[] = {\n", picture_name);
-	fprintf( fout, "#endif\n");
 	if ( item_ptr != 0)
 	{
 	  while ( item_ptr->number != 0)
@@ -7229,19 +7221,11 @@ static int	dtt_edit_save_one_menu(	FILE		*fout,
 		"RTT_MENU_UPEDITPERM_NEW( \"%s\", %s, NULL)\n", 
 		menu_ptr->text, item_menu_name);	
 	    /* h file: write in include for this picture file */
-	    fprintf( fout_h, "#if defined(OS_ELN)\n");
-	    fprintf( fout_h, "globalref rtt_t_menu_update %s_eu[];\n", 
-		item_menu_name);
-	    fprintf( fout_h, "globalref rtt_t_backgr %s_bg;\n", item_menu_name);
-	    fprintf( fout_h, "globalref rtt_t_menu_update *%s_euptr;\n", 
-		item_menu_name);
-	    fprintf( fout_h, "#else\n");
 	    fprintf( fout_h, "extern rtt_t_menu_update %s_eu[];\n", 
 		item_menu_name);
 	    fprintf( fout_h, "extern rtt_t_backgr %s_bg;\n", item_menu_name);
 	    fprintf( fout_h, "extern rtt_t_menu_update *%s_euptr;\n", 
 		item_menu_name);
-	    fprintf( fout_h, "#endif\n");
 
 	    /* db1 and db2 file: write include files for database */
 	    dtt_get_picturefilename( menu_ptr->index, picture_name);
@@ -7261,17 +7245,10 @@ static int	dtt_edit_save_one_menu(	FILE		*fout,
 		"RTT_MENU_UPEDITPERM_NEW( \"%s\", %s, &%s)\n", 
 		menu_ptr->text, item_menu_name, (char *) menu_ptr->arg1);	
 	    /* h file: write in include for this picture file */
-	    fprintf( fout_h, "#if defined(OS_ELN)\n");
-	    fprintf( fout_h, "globalref rtt_t_menu_update %s_eu[];\n",item_menu_name);
-	    fprintf( fout_h, "globalref rtt_t_backgr %s_bg;\n", item_menu_name);
-	    fprintf( fout_h, "globalref rtt_t_menu_update *%s_euptr;\n", 
-		item_menu_name);
-	    fprintf( fout_h, "#else\n");
 	    fprintf( fout_h, "extern rtt_t_menu_update %s_eu[];\n",item_menu_name);
 	    fprintf( fout_h, "extern rtt_t_backgr %s_bg;\n", item_menu_name);
 	    fprintf( fout_h, "extern rtt_t_menu_update *%s_euptr;\n", 
 		item_menu_name);
-	    fprintf( fout_h, "#endif\n");
 
 	    /* db1 and db2 file: write include files for database */
 	    dtt_get_picturefilename( menu_ptr->index, picture_name);

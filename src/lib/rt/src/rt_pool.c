@@ -45,17 +45,9 @@
    costs CPU-time and implementation effort, and is considered as an
    `overkill' currently.  */
 
-#ifdef	OS_ELN
-# include $vaxelnc
-# include $kernelmsg
-# include stdio
-# include stdlib
-# include string
-#else
-# include <stdio.h>
-# include <stdlib.h>
-# include <string.h>
-#endif
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #ifdef OS_VMS
 # include <lib$routines.h>

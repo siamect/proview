@@ -38,14 +38,8 @@
    This module contains all routines to handle direct linking
    for the PLC-program.  */
 
-#ifdef	OS_ELN
-#include $vaxelnc
-#include $kernelmsg
-#include $kerneldef
-#else
 #include <stdio.h>
 #include <string.h>
-#endif
 
 #include "pwr.h"
 #include "pwr_class.h"

@@ -39,17 +39,9 @@
 
 /* rt_qini.h -- Initiate the Qcom database. */
 
-#if defined(OS_ELN)
-# include stdlib
-# include string
-# include time
-# include <in.h>
-# include <inet.h>
-#else
-# include <stdlib.h>
-# include <string.h>
-# include <time.h>
-#endif
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
 #if defined(OS_VMS)
 # include <lib$routines.h>

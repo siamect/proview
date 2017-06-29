@@ -36,12 +36,8 @@
 
 /* rt_ndc.c -- Network data conversion.  */
 
-#ifdef	OS_ELN
-# include $vaxelnc
-#else
 # include <stdio.h>
 # include <string.h>
-#endif
 
 #include "pwr.h"
 #include "pwr_class.h"
@@ -295,7 +291,7 @@ decode_null (
   return FALSE;
 }    
 
-#if defined(OS_VMS) || defined(OS_ELN)
+#if defined(OS_VMS)
 /* .  */
 
 static pwr_tBoolean
@@ -357,7 +353,7 @@ encode_sfloat (
 }
 #endif
 
-#if defined(OS_VMS) || defined(OS_ELN)
+#if defined(OS_VMS)
 /* .  */
 
 static pwr_tBoolean

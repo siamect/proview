@@ -46,11 +46,6 @@
    A volume owned by another node can either be structure mounted
    or cahce mounted. Cache mounted volumes are handeled by rt_cvol.  */
 
-
-#ifdef	OS_ELN
-#include $vaxelnc
-#endif
-
 #ifndef pwr_h
 #include "pwr.h"
 #endif

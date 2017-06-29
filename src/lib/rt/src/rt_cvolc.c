@@ -36,12 +36,8 @@
 
 /* rt_cvolc.c -- Cached volumes, client user API. */
 
-#ifdef	OS_ELN
-# include $vaxelnc
-#else
-# include <stdio.h>
-# include <string.h>
-#endif
+#include <stdio.h>
+#include <string.h>
 
 #include "pwr.h"
 #include "pwr_class.h"

@@ -52,31 +52,6 @@
 
 /*_Include files_________________________________________________________*/
 
-#ifdef  OS_ELN
-#include $vaxelnc
-#include $exit_utility
-#include $function_descriptor
-#include ssdef
-#include stdio
-#include stdlib
-#include string
-#include math
-#include iodef
-#include descrip
-#include psldef
-#include libdtdef
-#include lib$routines
-/***
-#include pams_c_process
-#include pams_c_group
-#include pams_c_type_class
-#include pams_c_return_status_def
-#include pams_c_symbol_def
-#include pams_c_entry_point
-#include sbs_msg_def
-***/
-#endif
-
 #ifdef  OS_VMS
 #include <ssdef.h>
 #include <stdio.h>
@@ -107,11 +82,6 @@
 
 #define CLASS_APL_RESP	101
 #define CLASS_RESP	102
-
-#ifdef OS_ELN
-  PROCESS my_proc;
-  PORT job_port;
-#endif
 
 mq_uAddress my_pams_process;		/* Pams processnumber for this job */
 char receive_buffer[32767];			/* Pointer to received message */
@@ -167,16 +137,7 @@ void exith(void)
 
 void DeclareExitHandler(void)
 {
-#ifdef OS_ELN
-
-  FUNCTION_DESCRIPTOR fn_descriptor;
-
-  eln$declare_exit_handler(ELN$PASS_FUNCTION_DESCRIPTOR(fn_descriptor, exith),
-			   NULL);
-#else
-
   atexit(exith);
-#endif
 }
 
 /*************************************************************************
@@ -437,32 +398,6 @@ unsigned int ReceiveComplete()
   return(1);
 }
 
-#ifdef OS_ELN
-/*************************************************************************
-**************************************************************************
-*
-* Namn : WaitFor_PLC_Change
-*
-* Typ  : int
-*
-* Typ		Parameter	       IOGF	Beskrivning
-*
-* Beskrivning : Subprocess  waits for message from REMOTEHANDLER on job_port,
-*		that will kill the process at PLC-change.
-*
-**************************************************************************
-**************************************************************************/
-
-int WaitFor_PLC_Change()
-{
-  pwr_tStatus sts;
-
-  ker$wait_any(&sts, NULL, NULL, &job_port);
-  exith();
-  ker$delete(&sts, my_proc);
-}
-#endif
-
 /*
  * Main routine
  */
@@ -480,26 +415,6 @@ main(int argc, char *argv[])
   int		mygroup;			/* PAMS group no */
  
   mq_uAddress gdhpams_process;
-
-#ifdef OS_ELN
-  PROCESS id;
-  static struct dsc$descriptor_s name_desc = {0, DSC$K_DTYPE_T,DSC$K_CLASS_S,0};
-  NAME name_id;
-
-  /* Get process-id to be able to kill myself. Create subprocess to kill. */
-  ker$job_port(&sts, &job_port);
-  ker$current_process(&sts, &my_proc);
-
-  /* Create a name for my own process (first process in job) */
-
-  name_desc.dsc$a_pointer = argv[3];
-  name_desc.dsc$w_length = strlen(argv[3]);
-  ker$create_name(&sts, &name_id, &name_desc, my_proc, NULL);
-
-  /* Create process that waits for PLC-change (hotswitch) */
-
-  ker$create_process( &sts, &id, WaitFor_PLC_Change, NULL);
-#endif
 
   DeclareExitHandler();
 

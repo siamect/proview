@@ -39,23 +39,7 @@
 
 /*_Include files_________________________________________________________*/
 
-#if defined(OS_ELN)
-# include stdio
-# include chfdef
-# include string
-# include starlet
-# include iodef   
-# include descrip
-# include $vaxelnc
-# include $elnmsg
-# include $kernelmsg
-# include $lat_utility
-# include $dda_utility
-
-# define STDIN_IDX  1
-# define STDOUT_IDX 2
-# define STDERR_IDX 3
-#elif defined(OS_VMS)
+#if defined(OS_VMS)
 # include <stdio.h>
 # include <chfdef.h>
 # include <string.h>
@@ -95,7 +79,7 @@
 
 /*__Local function prototypes_________________________________________*/
 
-#if defined(OS_VMS) || defined(OS_ELN)
+#if defined(OS_VMS)
 static int qio_ltconnect( int *chn);
 static int qio_ltdisconnect( int *chn);
 #endif
@@ -130,84 +114,6 @@ int qio_assign( char *s, int *chn)
 	device.dsc$w_length  = strlen(devn);
 
 	return sys$assign(&device, chn,0,0);
-}
-#elif  OS_ELN
-{
-	/* Deklarationer som behävs vid ELN */
-    static	 $DESCRIPTOR(device,"");
-    static	 char *stdin = "CONSOLE$";
-    static	 char *stdinsufx = "ACCESS";
-    int	    	nbbyte,bytebuff;
-    unsigned char	typaheadbuf[200];
-
-    DDA$_EXTENDED_STATUS_INFO	ext_sts;
-
-    VARYING_STRING(255)	varyingstdin;
-	static   char devn[40];
-	static   unsigned int sts;
-	static   PORT tmp;
-	static   char *stp;
-
-	/* Om stdin , ta eln-argumentet för detta */
-	if ( strcmp(s,"stdin") == 0)
-
-	   /* Kolla om programmet startades med parametrar enl. ELN */
-		if (eln$program_argument_count() != 0) {
-			eln$program_argument( &varyingstdin, STDIN_IDX);
-			VARYING_TO_CSTRING(varyingstdin, stdin);
-		}
-			else return 0;
-	else
-		/* Inte stdin, ta s */
-		stdin = s;
-
-	/* Gör om "stdin:" till "stdin$ACCESS" */
-	strcpy(devn,stdin);
-	strcat(devn,stdinsufx);
-	if ( (stp = strchr(devn,':')) != NULL)
-		 *stp = '$';
-	else
-		if ((stp = strchr(devn,'$')) == NULL)
-			return 0;
-
-    device.dsc$a_pointer = devn;
-    device.dsc$w_length  = strlen(devn);
-
-    ker$create_port( &sts, (PORT *) chn, NULL);
-	if ( sts ) 
-	   ker$translate_name( &sts, &tmp, &device, NAME$LOCAL);
-	   if ( sts ) 
-		  ker$connect_circuit( &sts, (PORT *) chn, NULL, &device, NULL, NULL, NULL);
-    /* 
-    sylvie's modifications the 12.12.91 :
-    When the terminal to which you want to redirect input/output is connected
-    to the rt vax via a terminal driver(DH driver) you may get a lot of unwanted
-    characters at the first read request because the DH driver keeps the
-    characters in a type ahead buffer .
-    So before requesting the user for some characters empty the typeahead
-    driver:
-    */
-
-    bytebuff = sizeof(typaheadbuf);
-    do
-    {
-     
-      eln$tty_read(&sts,	/* Status		     */
-      		  (PORT *) chn,	/* DDA port 		     */
-		  bytebuff,	/* Antal tecken att läsa     */
-		  &typaheadbuf,	/* Meddelande buffer	     */
-		  &nbbyte,	/* Antal lästa tecken	     */
-		  1,		/* Läs option		     */
-		  NULL,		/* Termineringsmask	     */
-		  NULL,		/* Timeout 		     */
-		  0,		/* Minsta antal läsbyte	     */
-		  &ext_sts,	/* Extended status	     */
-		  NULL,		/* Message objekt	     */
-	          NULL);	/* Message pointer	     */
-
-      if(!sts)return(sts);
-    }while( nbbyte >= bytebuff );		
-	return sts;
 }
 #elif defined OS_POSIX
 {
@@ -247,7 +153,7 @@ int qio_assign( char *s, int *chn)
 * Description:	Set rtt attributes to a tty
 *************************************************************************/
 int qio_set_attr( int *chn)
-#if defined(OS_VMS) || defined(OS_ELN)
+#if defined(OS_VMS)
 {
 	return RTT__SUCCESS;
 }
@@ -287,7 +193,7 @@ int qio_set_attr( int *chn)
 * Description:	Reset the channel before exit
 *************************************************************************/
 int qio_reset( int *chn)
-#if defined(OS_VMS) || defined(OS_ELN)
+#if defined(OS_VMS)
 {
 	return RTT__SUCCESS;
 }
@@ -348,29 +254,6 @@ int qio_readw( int *chn, char *buf, int len)
 	rtt_exit_now(1, sts);
 	return 1;
 }
-#elif  OS_ELN
-{
-	static int                       nob=1;
-	static int                       opt=1;
-	static unsigned int 			 sts;
-	static DDA$BREAK_MASK            code={0,0,0,0,0,0,0,0};
-	static DDA$_EXTENDED_STATUS_INFO stsblk;
-	int	i;
-	
-
-	for ( i = 0; i < RTT_QIO_RETRY; i++)
-	{
-	  eln$tty_read( &sts, (PORT *) chn, 1, buf, &nob, opt, code, NULL,
-	 	1, stsblk,NULL, NULL);
-	  if (ODD(sts)) return sts;
-	}
-
-	/* even return status ten times */
-/*	 if (sts == KER$_DISCONNECT) rtt_exit_now(1);
-*/
-	rtt_exit_now(1, sts);
-
-}
 #elif defined OS_POSIX
 {
 	int n = 0;
@@ -421,35 +304,6 @@ int qio_read( int *chn, int tmo, char *buf, int len)
 	return 1;
 
 }
-#elif  OS_ELN
-{
-    static LARGE_INTEGER	timout;
-	static int                       nob=1;
-	static int                       opt=2;
-	static unsigned int 			 sts;
-    static DDA$BREAK_MASK            code={0,0,0,0,0,0,0,0};
-    static DDA$_EXTENDED_STATUS_INFO stsblk;
-	int			i;
-
-	
-    if ( tmo < 1000)
-      tmo = 1000;
-
-    timout.low  = - (tmo * 10000);
-    timout.high = -1;
-
-	for ( i = 0; i < RTT_QIO_RETRY; i++)
-	{
-	  eln$tty_read( &sts, (PORT *) chn, 1, buf, &nob, opt, NULL, &timout,
- 		1, stsblk, NULL, NULL);
-	  if ( sts == ELN$_TIMEOUT ) return 0;
-	  if (ODD(sts)) return 1;
-	}
-
-
-	rtt_exit_now( 1, sts);
-	return 1;
-}
 #elif defined OS_POSIX
 {
 	int n;
@@ -488,13 +342,6 @@ static unsigned int sts;
 	sts   = sys$qiow( 0, *chn, code, &stsblk,0,0,0,0,0,0,0,0);
 	return sts;
 }
-#elif OS_ELN
-static int qio_ltconnect( int *chn)
-{
-static unsigned int sts;
-	eln$lat_wait_for_connection( (PORT *) chn,&sts);
-	return sts;
-}
 #endif
 
 /************************************************************************
@@ -523,11 +370,6 @@ static unsigned int sts;
 	sts   = sys$qiow( 0, *chn, code, &stsblk,0,0,0,0,0,0,0,0);
 	return sts;
 }
-#elif OS_ELN
-static int qio_ltdisconnect( int *chn)
-{
-	return RTT__SUCCESS;
-}
 #endif
 
 /************************************************************************
@@ -555,28 +397,6 @@ int qio_writew( int *chn, char *buf, int len)
 
 	code  = IO$_WRITELBLK | IO$M_NOECHO | IO$M_NOFILTR;
 	return sys$qiow( 0, *chn, code, &stsblk,0,0,buf,len,0,0,0,0);
-
-}
-#elif  OS_ELN
-{
-	static int                       nob;
-	static unsigned int 		 sts;
-
-	while (len > 0)
-	{
-	  eln$tty_write(&sts,
-			(PORT *) chn,
-			len,
-			buf,
-			&nob,
-			NULL,
-			NULL);
-	  if (sts == KER$_DISCONNECT || sts == KER$_NO_SUCH_PORT) rtt_exit_now(1, sts);
-	  len -= nob;
-	  buf += nob;
-	}
-
-	return sts;
 
 }
 #elif defined OS_POSIX
@@ -622,39 +442,6 @@ int qio_write( int *chn, int tmo, char *buf, int len)
         return stsblk.condval == SS$_TIMEOUT ? 0 : 1;        
 
 }
-#elif  OS_ELN
-{
-    static LARGE_INTEGER	timout;
-	static int                       nob;
-	static int                       opt=2;
-	static unsigned int 			 sts;
-    static DDA$BREAK_MASK            code={0,0,0,0,0,0,0,0};
-    static DDA$_EXTENDED_STATUS_INFO stsblk;
-
-    if ( tmo < 1000)
-      tmo = 1000;
-
-    nob = len;	
-    timout.low  = - (tmo * 10000);
-    timout.high = -1;
-
-	eln$tty_write(&sts, 
-                  (PORT *) chn,
-		  1,
-                  buf,
-                 &nob,
-                  opt,
-                 NULL,
-              &timout,
-                    1,
-               stsblk,
-                 NULL,
-                 NULL);
-
-	if (sts == KER$_DISCONNECT || sts == KER$_NO_SUCH_PORT) rtt_exit_now(1, sts);
-	return sts == ELN$_TIMEOUT ? 0 : 1;
-
-}
 #elif defined OS_POSIX
 {
 	if ( *chn == STDIN_FILENO)
@@ -664,4 +451,3 @@ int qio_write( int *chn, int tmo, char *buf, int len)
 	return 1;
 }
 #endif
-

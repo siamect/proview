@@ -55,15 +55,6 @@
 #include <ctype.h>
 #endif
 
-#ifdef	OS_ELN
-#include descrip
-#include stdio
-#include stdlib
-#include ctype
-#include starlet
-#include $vaxelnc
-#endif
-
 #include "rt_gdb.h"
 #include "rt_qdb.h"
 #include "rt_hash.h"
@@ -219,14 +210,6 @@ typedef struct {
 	gdh_tDlid	runningtime_subid;
 	} rttsys_t_runningtime_list;
 
-
-#ifdef OS_ELN
-typedef struct {
-	int	low;
-	int	high;
-} t_VAXTime;
-#endif
-
 /* Static variables ****/
   static  rttsys_t_plcpgm_list	*plclist;
   static  int			plclist_count;
@@ -310,12 +293,6 @@ static int rttsys_pidobject_add( pwr_tClassId		class,
 				int			*object_alloc,
 				char			*attrstr,
 				int			attrsize);
-#ifdef OS_ELN
-static int rttsys_cpu( int key, pwr_tTime *time, float cputim, 
-		float *cpu_current, float *cpu_mean, int init);
-static int rttsys_proc_cpu( int key, pwr_tTime *time, float cputim, 
-		float *cpu_current, float *cpu_mean, int init);
-#endif
 
 static int	rttsys_cell_object_start( 	menu_ctx	ctx, 
 				pwr_tObjid	objid,
@@ -1162,7 +1139,6 @@ int RTTSYS_SHOW_NODES( 	menu_ctx	ctx,
 	      case co_eOS_Linux: strcpy( menu_ptr->value_ptr, "Linux"); break;
 	      case co_eOS_MacOS: strcpy( menu_ptr->value_ptr, "MacOS"); break;
 	      case co_eOS_VMS: strcpy( menu_ptr->value_ptr, "VMS"); break;
-	      case co_eOS_ELN: strcpy( menu_ptr->value_ptr, "ELN"); break;
 	      case co_eOS_FreeBSD: strcpy( menu_ptr->value_ptr, "FreeBSD"); break;
 	      case co_eOS_OpenBSD: strcpy( menu_ptr->value_ptr, "OpenBSD"); break;
 	      case co_eOS_Cygwin: strcpy( menu_ptr->value_ptr, "Cygwin"); break;
@@ -1332,7 +1308,6 @@ int RTTSYS_SHOW_NODES( 	menu_ctx	ctx,
 	      case co_eOS_Linux: strcpy( menu_ptr->value_ptr, "Linux"); break;
 	      case co_eOS_MacOS: strcpy( menu_ptr->value_ptr, "MacOS"); break;
 	      case co_eOS_VMS: strcpy( menu_ptr->value_ptr, "VMS"); break;
-	      case co_eOS_ELN: strcpy( menu_ptr->value_ptr, "ELN"); break;
 	      case co_eOS_FreeBSD: strcpy( menu_ptr->value_ptr, "FreeBSD"); break;
 	      case co_eOS_OpenBSD: strcpy( menu_ptr->value_ptr, "OpenBSD"); break;
 	      case co_eOS_Cygwin: strcpy( menu_ptr->value_ptr, "Cygwin"); break;
@@ -4738,10 +4713,7 @@ int RTTSYS_VMSPROC( 	menu_ctx	ctx,
 			char		*objectname,
 			char		**picture)
 { 
-#ifdef OS_ELN
-    rtt_message('E', "Picture is not implemented in ELN");
-    return RTT__NOPICTURE;
-#elif OS_POSIX
+#ifdef OS_POSIX
     rtt_message('E', "Picture is not implemented for this platform");
     return RTT__NOPICTURE;
 #elif OS_VMS
@@ -4911,262 +4883,6 @@ int RTTSYS_VMSPROC( 	menu_ctx	ctx,
 
 /*************************************************************************
 *
-* Name:		RTTSYS_ELNSYS()
-*
-* Type		int
-*
-* Type		Parameter	IOGF	Description
-* menu_ctx	ctx		I	context of the picture.
-* int		event		I 	type of event.
-* char		*parameter_ptr	I	pointer to the parameter which value
-*					has been changed.
-*
-* Description:
-*	Show proview ELN processes.
-*
-**************************************************************************/
-
-#ifdef OS_ELN
-static int rttsys_cpu( int key, pwr_tTime *time, float cputim, 
-		float *cpu_current, float *cpu_mean, int init)
-{
-#define RTTSYS_LOWKEY 100
-#define RTTSYS_HIGHKEY 100
-	int			i;
-	int			sts;
-	int			found;
-	static t_VAXTime	start_time[RTTSYS_LOWKEY+RTTSYS_HIGHKEY];
-	static t_VAXTime	last_time[RTTSYS_LOWKEY+RTTSYS_HIGHKEY];
-	static float		start_cputim[RTTSYS_LOWKEY+RTTSYS_HIGHKEY];
-	static float		last_cputim[RTTSYS_LOWKEY+RTTSYS_HIGHKEY];
-	static short		key_array[RTTSYS_HIGHKEY];
-	static int		key_count;
-	int			index;
-	short			timbuf[7];
-	float			time_since_start;
-	float			time_since_last;
-	t_VAXTime		time_diff;
-
-	if (init)
-	{
-	  memset( &start_time, 0, sizeof( start_time));
-	  memset( &last_time, 0, sizeof( last_time));
-	  memset( &start_cputim, 0, sizeof( start_cputim));
-	  memset( &last_cputim, 0, sizeof( last_cputim));
-	  key_count = 0;
-          return RTT__SUCCESS;
-	}
-
-	/* Get the index */
-	if ( key < RTTSYS_LOWKEY)
-	  index = key;
-	else
-	{
-	  /* Search in key array */
-	  found = 0;
-	  for ( i = 0; i < key_count; i++)
-	  {
-	    if ( key_array[i] == key)
-	    {
-              found = 1;
-	      index = i + RTTSYS_LOWKEY;
-              break;
-            }
-	  }
-	  if ( !found)
-	  {
-	    if ( key_count >= RTTSYS_HIGHKEY)
-	    {
-	      /* Max size exceeded */
-	      *cpu_current = -1;
-	      *cpu_mean = -1;
-	      return 0;
-	    }
-	    index = key_count + RTTSYS_LOWKEY;
-	    key_array[ key_count] = key;
-	    key_count++;
-	  }
-	}
-	if ( start_time[index].high == 0 && start_time[index].low == 0)
-	{
-	  /* New key */
-	  memcpy( &start_time[index], time, sizeof(*time));
-	  memcpy( &last_time[index], time, sizeof(*time));
-	  start_cputim[index] = cputim;
-	  last_cputim[index] = cputim;
-	  *cpu_current = 0;
-	  *cpu_mean = 0;
-	}
-	else
-	{
-	  /* Time since start */
-          sts = lib$sub_times( time, &start_time[index], &time_diff);
-          sys$numtim( &timbuf, &time_diff);
-          time_since_start = timbuf[6]/100. + timbuf[5]+
-		60.*(timbuf[4] + 60.*(timbuf[3] + 24.*timbuf[2]));
-
-	  /* Time since last */
-          sts = lib$sub_times( time, &last_time[index], &time_diff);
-          sys$numtim( &timbuf, &time_diff);
-          time_since_last = timbuf[6]/100. + timbuf[5]+
-		60.*(timbuf[4] + 60.*(timbuf[3] + 24.*timbuf[2]));
-
-	  *cpu_mean = (cputim - start_cputim[index]) / time_since_start * 100;
-	  *cpu_current = (cputim - last_cputim[index]) / time_since_last * 100;
-
-	  memcpy( &last_time[index], time, sizeof(*time));
-	  last_cputim[index] = cputim;
-	}
-	return RTT__SUCCESS;
-} 
-
-int RTTSYS_SHOW_SYS( 	menu_ctx	ctx,
-			int		event,
-			char		*parameter_ptr,
-			char		*objectname,
-			char		**picture)
-{ 
-
-#define VMSSYS_MAXSIZE 54
-#define VMSSYS_PAGESIZE 18
-
-  int			i;
-  int			sts;
-  static int		page;	
-  short 		uic[2];
-  float			total_cputim;
-  static int		proc_pid[VMSSYS_MAXSIZE];
-  static pwr_tString32	proc_name[VMSSYS_MAXSIZE];
-  static int		proc_pri[VMSSYS_MAXSIZE];
-  static pwr_tString16	proc_state[VMSSYS_MAXSIZE];
-  static float		proc_cputim[VMSSYS_MAXSIZE];
-  static float		proc_cputim_rel[VMSSYS_MAXSIZE];
-  static float		proc_cputim_mean[VMSSYS_MAXSIZE];
-  static int		proc_count;
-  rtt_t_menu_upd	*menu_ptr;
-  pwr_tTime		uptime;
-  short			timbuf[7];
-
-  switch ( event)
-  {
-    /**********************************************************
-    *	Return address of background
-    ***********************************************************/
-    case RTT_APPL_PICTURE:
-      *picture = &dtt_systempicture_p23_bg;
-      return RTT__SUCCESS;
-
-    /**********************************************************
-    * 	Return adress of menu
-    ***********************************************************/
-    case RTT_APPL_MENU:
-      *picture = &dtt_systempicture_p23_eu;
-      return RTT__SUCCESS;
-
-    /**********************************************************
-    *	Previous page
-    ***********************************************************/
-    case RTT_APPL_PREVPAGE:
-      page--;
-      page = max( page, 0);
-      return RTT__SUCCESS;
-
-    /**********************************************************
-    *	Next page
-    ***********************************************************/
-    case RTT_APPL_NEXTPAGE:
-      page++;
-      page = min( page, (proc_count - 1)/VMSSYS_PAGESIZE );
-      return RTT__SUCCESS;
-
-    /**********************************************************
-    *	Initialization of the picture
-    ***********************************************************/
-    case RTT_APPL_INIT:
-      page = 0; 
-      sts = rttsys_cpu( 0,0,0,0,0,1);
-
-      /* Continue with update... */
-
-    /**********************************************************
-    *	Update the picture.
-    ***********************************************************/
-    case RTT_APPL_UPDATE:
-      sts = rtteln_get_jobs( proc_pid, proc_name, proc_pri, 
-	proc_state, proc_cputim, VMSSYS_MAXSIZE, &proc_count);
-      if ( EVEN(sts)) return sts;
-
-      ker$get_uptime( &sts, &uptime);
-
-      /* Calculate total cpu time */
-      total_cputim = 0;
-      for ( i = 0; i < proc_count; i++)
-        total_cputim += proc_cputim[i];
-
-      rttsys_cpu( 1000, &uptime, total_cputim,
-		&ELNSYS_CPUTIM_REL, &ELNSYS_CPUTIM_MEAN, 0);
-
-      menu_ptr = ctx->menu;
-      for ( i = page * VMSSYS_PAGESIZE ; 
-		i < min( proc_count, (page+1)*VMSSYS_PAGESIZE) ; i++)
-      {
-        menu_ptr->value_ptr = &proc_name[i];
-        menu_ptr->func = NULL;
-        menu_ptr->func2 = &rtt_menu_new_sysedit;
-        menu_ptr->func3 = NULL;
-        menu_ptr->arg1 = (void *) proc_pid[i];
-        menu_ptr->arg2 = &proc_name[i];
-        menu_ptr->arg3 = 0;
-        menu_ptr->arg4 = &RTTSYS_ELNPROC;
-        menu_ptr++;
-        menu_ptr->value_ptr = &proc_pid[i];
-        menu_ptr++;
-        menu_ptr->value_ptr = &proc_pri[i];
-        menu_ptr++;
-        menu_ptr->value_ptr = &proc_state[i];
-        menu_ptr++;
-        menu_ptr->value_ptr = &proc_cputim[i];
-        menu_ptr++;
-	rttsys_cpu( proc_pid[i], &uptime, proc_cputim[i],
-		&proc_cputim_rel[i], &proc_cputim_mean[i], 0);
-        menu_ptr->value_ptr = &proc_cputim_rel[i];
-        menu_ptr++;
-        menu_ptr->value_ptr = &proc_cputim_mean[i];
-        menu_ptr++;
-      }
-      for ( i = min( proc_count, (page+1)*VMSSYS_PAGESIZE);
-		i < (page+1)*VMSSYS_PAGESIZE; i++)
-      {
-        menu_ptr->value_ptr = (char *) RTT_ERASE;
-        menu_ptr->func2 = NULL;
-        menu_ptr++;
-        menu_ptr->value_ptr = (char *) RTT_ERASE;
-        menu_ptr++;
-        menu_ptr->value_ptr = (char *) RTT_ERASE;
-        menu_ptr++;
-        menu_ptr->value_ptr = (char *) RTT_ERASE;
-        menu_ptr++;
-        menu_ptr->value_ptr = (char *) RTT_ERASE;
-        menu_ptr++;
-        menu_ptr->value_ptr = (char *) RTT_ERASE;
-        menu_ptr++;
-        menu_ptr->value_ptr = (char *) RTT_ERASE;
-        menu_ptr++;
-      }
-      return RTT__SUCCESS;
-    /**********************************************************
-    *	Exit of the picture
-    ***********************************************************/
-    case RTT_APPL_EXIT:
-      return RTT__SUCCESS;
-
-  }
-  return RTT__SUCCESS;
-}
-#endif
-
-/*************************************************************************
-*
 * Name:		RTTSYS_ELNPROC()
 *
 * Type		int
@@ -5182,102 +4898,6 @@ int RTTSYS_SHOW_SYS( 	menu_ctx	ctx,
 *
 **************************************************************************/
 
-#ifdef OS_ELN
-
-static int rttsys_proc_cpu( int key, pwr_tTime *time, float cputim, 
-		float *cpu_current, float *cpu_mean, int init)
-{
-#define RTTSYS_LOWKEY 100
-#define RTTSYS_HIGHKEY 100
-	int			i;
-	int			sts;
-	int			found;
-	static t_VAXTime	start_time[RTTSYS_LOWKEY+RTTSYS_HIGHKEY];
-	static t_VAXTime	last_time[RTTSYS_LOWKEY+RTTSYS_HIGHKEY];
-	static float		start_cputim[RTTSYS_LOWKEY+RTTSYS_HIGHKEY];
-	static float		last_cputim[RTTSYS_LOWKEY+RTTSYS_HIGHKEY];
-	static short		key_array[RTTSYS_HIGHKEY];
-	static int		key_count;
-	int			index;
-	short			timbuf[7];
-	float			time_since_start;
-	float			time_since_last;
-	t_VAXTime		time_diff;
-
-	if (init)
-	{
-	  memset( &start_time, 0, sizeof( start_time));
-	  memset( &last_time, 0, sizeof( last_time));
-	  memset( &start_cputim, 0, sizeof( start_cputim));
-	  memset( &last_cputim, 0, sizeof( last_cputim));
-	  key_count = 0;
-          return RTT__SUCCESS;
-	}
-
-	/* Get the index */
-	if ( key < RTTSYS_LOWKEY)
-	  index = key;
-	else
-	{
-	  /* Search in key array */
-	  found = 0;
-	  for ( i = 0; i < key_count; i++)
-	  {
-	    if ( key_array[i] == key)
-	    {
-              found = 1;
-	      index = i + RTTSYS_LOWKEY;
-              break;
-            }
-	  }
-	  if ( !found)
-	  {
-	    if ( key_count >= RTTSYS_HIGHKEY)
-	    {
-	      /* Max size exceeded */
-	      *cpu_current = -1;
-	      *cpu_mean = -1;
-	      return 0;
-	    }
-	    index = key_count + RTTSYS_LOWKEY;
-	    key_array[ key_count] = key;
-	    key_count++;
-	  }
-	}
-	if ( start_time[index].high == 0 && start_time[index].low == 0)
-	{
-	  /* New key */
-	  memcpy( &start_time[index], time, sizeof(*time));
-	  memcpy( &last_time[index], time, sizeof(*time));
-	  start_cputim[index] = cputim;
-	  last_cputim[index] = cputim;
-	  *cpu_current = 0;
-	  *cpu_mean = 0;
-	}
-	else
-	{
-	  /* Time since start */
-          sts = lib$sub_times( time, &start_time[index], &time_diff);
-          sys$numtim( &timbuf, &time_diff);
-          time_since_start = timbuf[6]/100. + timbuf[5]+
-		60.*(timbuf[4] + 60.*(timbuf[3] + 24.*timbuf[2]));
-
-	  /* Time since last */
-          sts = lib$sub_times( time, &last_time[index], &time_diff);
-          sys$numtim( &timbuf, &time_diff);
-          time_since_last = timbuf[6]/100. + timbuf[5]+
-		60.*(timbuf[4] + 60.*(timbuf[3] + 24.*timbuf[2]));
-
-	  *cpu_mean = (cputim - start_cputim[index]) / time_since_start * 100;
-	  *cpu_current = (cputim - last_cputim[index]) / time_since_last * 100;
-
-	  memcpy( &last_time[index], time, sizeof(*time));
-	  last_cputim[index] = cputim;
-	}
-	return RTT__SUCCESS;
-} 
-#endif
-
 int RTTSYS_ELNPROC( 	menu_ctx	ctx,
 			int		event,
 			char		*parameter_ptr,
@@ -5288,169 +4908,6 @@ int RTTSYS_ELNPROC( 	menu_ctx	ctx,
 #if defined OS_VMS || defined OS_POSIX
     rtt_message('E', "Picture is not implemented for this platform");
     return RTT__NOPICTURE;
-#elif OS_ELN
-
-#define ELNPROC_MAXSIZE 54
-#define ELNPROC_PAGESIZE 13
-
-  int			i;
-  int			sts;
-  static int		page;
-  static int		proc_pid[ELNPROC_MAXSIZE];
-  static pwr_tString32	proc_name[ELNPROC_MAXSIZE];
-  static int		proc_pri[ELNPROC_MAXSIZE];
-  static pwr_tString16	proc_state[ELNPROC_MAXSIZE];
-  static float		proc_cputim[ELNPROC_MAXSIZE];
-  static float		proc_cputim_rel[ELNPROC_MAXSIZE];
-  static float		proc_cputim_mean[ELNPROC_MAXSIZE];
-  static int		proc_count;
-  rtt_t_menu_upd	*menu_ptr;
-  static int		job_nr;
-  pwr_tTime		uptime;
-
-  switch ( event)
-  {
-    /**********************************************************
-    *	Return address of background
-    ***********************************************************/
-    case RTT_APPL_PICTURE:
-      *picture = &dtt_systempicture_p24_bg;
-      return RTT__SUCCESS;
-
-    /**********************************************************
-    * 	Return adress of menu
-    ***********************************************************/
-    case RTT_APPL_MENU:
-      job_nr = objectname;
-      if ( !job_nr) 
-      {
-        rtt_message('E', "No access to job");
-        return RTT__NOPICTURE;
-      }
-      *picture = &dtt_systempicture_p24_eu;
-      return RTT__SUCCESS;
-
-    /**********************************************************
-    *	Previous page
-    ***********************************************************/
-    case RTT_APPL_PREVPAGE:
-      page--;
-      page = max( page, 0);
-      return RTT__SUCCESS;
-
-    /**********************************************************
-    *	Next page
-    ***********************************************************/
-    case RTT_APPL_NEXTPAGE:
-      page++;
-      page = min( page, (proc_count - 1)/ELNPROC_PAGESIZE );
-      return RTT__SUCCESS;
-
-    /**********************************************************
-    *	Initialization of the picture
-    ***********************************************************/
-    case RTT_APPL_INIT:
-      page = 0; 
-      ELNPROC_NR = job_nr;
-      ELNPROC_CPUTIM_MAX = 0;
-      sts = rttsys_proc_cpu( 0,0,0,0,0,1);
-      return RTT__SUCCESS;
-
-    /**********************************************************
-    *	Update the picture.
-    ***********************************************************/
-    case RTT_APPL_UPDATE:
-      ker$get_uptime( &sts, &uptime);
-
-      sts = rtteln_get_job_info( 	job_nr, 
-					&ELNPROC_NAME,
-					&ELNPROC_PRI,
-					&ELNPROC_STATE,
-					&ELNPROC_CPUTIM,
-					&ELNPROC_FILE,
-					&ELNPROC_MODE,
-					&ELNPROC_USER_STACK,
-					&ELNPROC_KERNEL_STACK,
-					&ELNPROC_OPTIONS);
-      if ( ODD(sts))
-      {
-	rttsys_cpu( job_nr, &uptime, ELNPROC_CPUTIM,
-		&ELNPROC_CPUTIM_REL, &ELNPROC_CPUTIM_MEAN, 0);
-        ELNPROC_CPUTIM_MAX = max( ELNPROC_CPUTIM_MAX, ELNPROC_CPUTIM_REL);
-
-        sts = rtteln_get_job_proc( job_nr, proc_pid, proc_name, proc_pri, 
-	  proc_state, proc_cputim, ELNPROC_MAXSIZE, &proc_count);
-      }
-      if ( EVEN(sts)) 
-      {
-        menu_ptr = ctx->menu;
-        for ( i = 0; i < ELNPROC_PAGESIZE; i++)
-        {
-          menu_ptr->value_ptr = (char *) RTT_ERASE;
-          menu_ptr++;
-          menu_ptr->value_ptr = (char *) RTT_ERASE;
-          menu_ptr++;
-          menu_ptr->value_ptr = (char *) RTT_ERASE;
-          menu_ptr++;
-          menu_ptr->value_ptr = (char *) RTT_ERASE;
-          menu_ptr++;
-          menu_ptr->value_ptr = (char *) RTT_ERASE;
-          menu_ptr++;
-          menu_ptr->value_ptr = (char *) RTT_ERASE;
-          menu_ptr++;
-          menu_ptr->value_ptr = (char *) RTT_ERASE;
-          menu_ptr++;
-        }
-        return RTT__SUCCESS;
-      }
-      menu_ptr = ctx->menu;
-      for ( i = page * ELNPROC_PAGESIZE ; 
-		i < min( proc_count, (page+1)*ELNPROC_PAGESIZE) ; i++)
-      {
-        menu_ptr->value_ptr = &proc_name[i];
-        menu_ptr++;
-        menu_ptr->value_ptr = &proc_pid[i];
-        menu_ptr++;
-        menu_ptr->value_ptr = &proc_pri[i];
-        menu_ptr++;
-        menu_ptr->value_ptr = &proc_state[i];
-        menu_ptr++;
-        menu_ptr->value_ptr = &proc_cputim[i];
-        menu_ptr++;
-	rttsys_proc_cpu( proc_pid[i], &uptime, proc_cputim[i],
-		&proc_cputim_rel[i], &proc_cputim_mean[i], 0);
-        menu_ptr->value_ptr = &proc_cputim_rel[i];
-        menu_ptr++;
-        menu_ptr->value_ptr = &proc_cputim_mean[i];
-        menu_ptr++;
-      }
-      for ( i = min( proc_count, (page+1)*ELNPROC_PAGESIZE); 
-		i < (page+1)*ELNPROC_PAGESIZE; i++)
-      {
-        menu_ptr->value_ptr = (char *) RTT_ERASE;
-        menu_ptr++;
-        menu_ptr->value_ptr = (char *) RTT_ERASE;
-        menu_ptr++;
-        menu_ptr->value_ptr = (char *) RTT_ERASE;
-        menu_ptr++;
-        menu_ptr->value_ptr = (char *) RTT_ERASE;
-        menu_ptr++;
-        menu_ptr->value_ptr = (char *) RTT_ERASE;
-        menu_ptr++;
-        menu_ptr->value_ptr = (char *) RTT_ERASE;
-        menu_ptr++;
-        menu_ptr->value_ptr = (char *) RTT_ERASE;
-        menu_ptr++;
-      }
-      return RTT__SUCCESS;
-    /**********************************************************
-    *	Exit of the picture
-    ***********************************************************/
-    case RTT_APPL_EXIT:
-      return RTT__SUCCESS;
-
-  }
-  return RTT__SUCCESS;
 #endif
 }
 
@@ -11873,7 +11330,6 @@ int RTTSYS_QCOM_NODES( 	menu_ctx	ctx,
 	      case co_eOS_Linux: strcpy( menu_ptr->value_ptr, "Linux"); break;
 	      case co_eOS_MacOS: strcpy( menu_ptr->value_ptr, "MacOS"); break;
 	      case co_eOS_VMS: strcpy( menu_ptr->value_ptr, "VMS"); break;
-	      case co_eOS_ELN: strcpy( menu_ptr->value_ptr, "ELN"); break;
 	      case co_eOS_FreeBSD: strcpy( menu_ptr->value_ptr, "FreeBSD"); break;
 	      case co_eOS_OpenBSD: strcpy( menu_ptr->value_ptr, "OpenBSD"); break;
 	      case co_eOS_Cygwin: strcpy( menu_ptr->value_ptr, "Cygwin"); break;
@@ -12042,7 +11498,6 @@ int RTTSYS_QCOM_NODES( 	menu_ctx	ctx,
 	      case co_eOS_Linux: strcpy( menu_ptr->value_ptr, "Linux"); break;
 	      case co_eOS_MacOS: strcpy( menu_ptr->value_ptr, "MacOS"); break;
 	      case co_eOS_VMS: strcpy( menu_ptr->value_ptr, "VMS"); break;
-	      case co_eOS_ELN: strcpy( menu_ptr->value_ptr, "ELN"); break;
 	      case co_eOS_FreeBSD: strcpy( menu_ptr->value_ptr, "FreeBSD"); break;
 	      case co_eOS_OpenBSD: strcpy( menu_ptr->value_ptr, "OpenBSD"); break;
 	      case co_eOS_Cygwin: strcpy( menu_ptr->value_ptr, "Cygwin"); break;
@@ -12937,7 +12392,7 @@ int RTTSYS_QCOM_NODE( menu_ctx	ctx,
             menu_ptr++;
 
             /* Address */
-#if defined OS_ELN || defined OS_VMS
+#if defined OS_VMS
             sprintf( menu_ptr->value_ptr, "%d.%d.%d.%d", 
 		np->link.sa.sin_addr.S_un.S_un_b.s_b1,
 		np->link.sa.sin_addr.S_un.S_un_b.s_b2,
@@ -13134,7 +12589,7 @@ int RTTSYS_QCOM_NODE( menu_ctx	ctx,
             menu_ptr++;
 
             /* Address */
-#if defined OS_ELN || defined OS_VMS
+#if defined OS_VMS
             sprintf( menu_ptr->value_ptr, "%d.%d.%d.%d", 
 		np->link[lix].sa.sin_addr.S_un.S_un_b.s_b1,
 		np->link[lix].sa.sin_addr.S_un.S_un_b.s_b2,

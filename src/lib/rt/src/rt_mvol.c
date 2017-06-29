@@ -36,12 +36,8 @@
 
 /* rt_mvol.c -- Meta Volumes */
 
-#if defined(OS_ELN)
-# include $vaxelnc
-#else
-# include <stdio.h>
-# include <string.h>
-#endif
+#include <stdio.h>
+#include <string.h>
 
 #include "pwr.h"
 #include "pwr_class.h"

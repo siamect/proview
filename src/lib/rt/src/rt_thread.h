@@ -50,19 +50,6 @@ typedef struct {
 } thread_sCond;
 
 typedef pthread_mutex_t thread_sMutex;
-
-#elif defined OS_ELN
-# include $mutex
-
-  typedef struct {
-    PROCESS		id;
-    char		name[32];
-    NAME		name_id;
-  } thread_s;
-
-  typedef EVENT		thread_sCond;
-  typedef MUTEX		thread_sMutex;
-
 #else
 # error Not defined for this platform !
 #endif

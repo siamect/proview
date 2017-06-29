@@ -40,14 +40,10 @@
    in the context of the neth to this program. Normally
    transactions that causes cache fetch operations.  */
 
-#if defined(OS_ELN)
-# include $vaxelnc
-#else
-# include <stdio.h>
-# include <stdlib.h>
-# include <stddef.h>
-# include <string.h>
-#endif
+#include <stdio.h>
+#include <stdlib.h>
+#include <stddef.h>
+#include <string.h>
 
 #include "pwr.h"
 #include "rt_qcom.h"

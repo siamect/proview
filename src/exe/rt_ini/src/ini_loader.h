@@ -37,21 +37,6 @@
 #ifndef ini_loader_h
 #define ini_loader_h
 
-#ifdef	OS_ELN
-pwr_tStatus
-ini_PlcLoad (
-  pwr_tUInt32		plcversion,
-  char			*plcfile,
-  int			debugflag
-);
-
-pwr_tStatus
-ini_PlcStart (
-  pwr_tUInt32		plcversion
-);
-
-#endif
-
 #ifdef  OS_VMS
 pwr_tStatus
 ini_PlcStart (

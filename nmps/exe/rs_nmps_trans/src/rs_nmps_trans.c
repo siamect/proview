@@ -67,17 +67,6 @@
 #include <float.h>
 #endif
 
-#ifdef OS_ELN
-#include stdio
-#include stdlib
-#include string
-#include math
-#include float
-#include libdef
-#include starlet
-#include lib$routines
-#endif
-
 #include "pwr.h"
 #include "pwr_baseclasses.h"
 #include "pwr_nmpsclasses.h"

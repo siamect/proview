@@ -84,22 +84,12 @@
 #include "rt_gdh_msg.h"
 
 
-#ifdef OS_ELN
-# include $vaxelnc
-# include $kernelmsg
-# include $mutex
-# include descrip
-# include stdio
-# include ctype
-#elif defined OS_VMS
+#if defined OS_VMS
 # include <descrip.h>
 #endif
 
-#ifndef OS_ELN
-# include <stdio.h>
-# include <ctype.h>
-#endif
-
+#include <stdio.h>
+#include <ctype.h>
 
 #define mh_cScanRate		10	/* Tenths of seconds between scans of sup objects */
 #define mh_cMaxApplAlarm	50      /* Default value*/

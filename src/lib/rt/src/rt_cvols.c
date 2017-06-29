@@ -36,12 +36,8 @@
 
 /* rt_cvols.c -- Cached volumes, server calls. */
 
-#if defined(OS_ELN)
-# include $vaxelnc
-#else
-# include <stdio.h>
-# include <string.h>
-#endif
+#include <stdio.h>
+#include <string.h>
 
 #include "pwr.h"
 #include "rt_errh.h"

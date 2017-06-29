@@ -54,26 +54,6 @@
 
 /*_Include files_________________________________________________________*/
 
-#ifdef  OS_ELN
-#include $vaxelnc
-#include $exit_utility
-#include $function_descriptor
-#include $dda_utility
-#include $elnmsg
-#include $kernelmsg
-#include ssdef
-#include stdio
-#include stdlib
-#include string
-#include math
-#include iodef
-#include descrip
-#include psldef
-#include libdtdef
-#include starlet
-#include lib$routines
-#endif
-
 #ifdef  OS_VMS
 #include <ssdef.h>
 #include <stdio.h>
@@ -134,26 +114,12 @@ int                     WaitFor_PLC_Change();
 
 /*_variables_______________________________________________________________*/
 
-#ifdef  OS_ELN
-/*
- * ELN specific variables
- */
-PORT           virtual_serial_line_port;
-PORT           job_port;
-PROCESS        my_proc;
-LARGE_INTEGER  timeout_ack;    /* Ack. time out on STX request */
-LARGE_INTEGER  timeout_char;   /* Time out receive of next character */
-LARGE_INTEGER  timeout_cycle;  /* Init. from remnode:CycleTime */
-
-#else
 /*
  * VMS specific variables
  */
 unsigned int   receive_ef;
 unsigned int   timer_ef;
 unsigned int   ef_mask;
-
-#endif
 
 /*
  * Variables common for VMS and ELN
@@ -177,15 +143,7 @@ remnode_item   *remnode = &remnode_struct;
 
 static void exith(void)
 {
-#ifdef OS_ELN
-
   return;
-
-#else
-
-  return;
-
-#endif
 }
 
 /*************************************************************************
@@ -205,16 +163,7 @@ static void exith(void)
 
 static void DeclareExitHandler(void)
 {
-#ifdef OS_ELN
-
-  FUNCTION_DESCRIPTOR fn_descriptor;
-
-  eln$declare_exit_handler(ELN$PASS_FUNCTION_DESCRIPTOR(fn_descriptor, exith),
-                           NULL);
-#else
-
   atexit(exith);
-#endif
 }
 
 /************************************************************************
@@ -752,52 +701,6 @@ static unsigned int ReceiveHandler()
 }
 
 
-#ifdef OS_ELN
-/*************************************************************************
-**************************************************************************
-*
-* Namn : WaitFor_PLC_Change
-*
-* Typ  : int
-*
-* Typ           Parameter              IOGF     Beskrivning
-*
-* Beskrivning : Subprocess  waits for message from REMOTEHANDLER on job_port,
-*               that will kill transport when switch is done.
-*
-**************************************************************************
-**************************************************************************/
-
-int WaitFor_PLC_Change()
-{
-  pwr_tStatus sts;
-  MESSAGE msg_id;
-  char *mess;
-  int size;
-
-  while (TRUE) {
-    ker$wait_any(&sts, NULL, NULL, &job_port);
-    ker$receive(&sts, &msg_id, &mess, &size, &job_port, NULL, NULL);
-
-    if (*mess == 1){
-      /* Hot switch init. Do nothing but delete the message */
-      ker$delete(&sts, msg_id);
-    }
-    else if (*mess == 2){
-      /* Switch is done. Execute harakiri! */
-      ker$delete(&sts, msg_id); /* Delete message */
-      exith();
-      ker$delete(&sts, my_proc);
-    }
-    else {
-      printf("Fel telegram PLC-byte %%x%x\n",*mess);
-      ker$delete(&sts, msg_id);
-    }
-  }
-}
-#endif
-
-
 /*
  * Main routine
  */
@@ -812,26 +715,6 @@ main(int argc, char *argv[])
   char                first;              /* Send Hello first time */
   pssupd_buffer_vnet  buff;               /* Buffer for 'Hello' */
   pssupd_order_header *header;            /* Header for Hello */
-
-#ifdef OS_ELN
-  PROCESS id_p;
-  static struct dsc$descriptor_s name_desc = {0, DSC$K_DTYPE_T,DSC$K_CLASS_S,0};
-  NAME name_id;
-
-  /* Get process-id to be able to kill myself.
-     Create subprocess to kill or to signal switch. */
-
-  ker$job_port(&sts, &job_port);
-  ker$current_process(&sts, &my_proc);
-
-  /* Create a name for my own process (first process in job) */
-
-  name_desc.dsc$a_pointer = argv[3];
-  name_desc.dsc$w_length = strlen(argv[3]);
-  ker$create_name(&sts, &name_id, &name_desc, my_proc, NULL);
-
-  ker$create_process( &sts, &id_p, WaitFor_PLC_Change,NULL);
-#endif
 
   DeclareExitHandler();
 

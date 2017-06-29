@@ -42,11 +42,6 @@
 # include <string.h>
 # include <chfdef.h>
 # include <signal.h>
-#elif OS_ELN
-# include stdio
-# include string
-# include chfdef
-# include signal
 #else
 # include <stdio.h>
 # include <string.h>
@@ -99,29 +94,16 @@ rtt_t_db rtt_rttsys_db[] = {
 #define	RTT_MENU_START( menu_name)	\
 rtt_t_menu	menu_name[] = {		
 
-#ifdef OS_ELN
-#define RTT_MENU_END( menu_name)	\
-{"",0,0,0,NULLOI,0,0,0,0} };				\
-rtt_t_menu	*menu_name/**/_ptr = (rtt_t_menu *) &menu_name;
-#else
 #define RTT_MENU_END( menu_name)	\
 {"",0,0,0,NULLOI,0,0,0,0} };				\
 rtt_t_menu	*menu_name##_ptr = (rtt_t_menu *) &menu_name;
-#endif
-
 
 #define	RTT_MENU_UPDATE_START( menu_name)	\
 rtt_t_menu_update	menu_name[] = {		
 
-#ifdef OS_ELN
-#define RTT_MENU_UPDATE_END( menu_name)	\
-{"",} };				\
-rtt_t_menu_update	*menu_name/**/_ptr = (rtt_t_menu_update *) &menu_name;
-#else
 #define RTT_MENU_UPDATE_END( menu_name)	\
 {"",} };				\
 rtt_t_menu_update	*menu_name##_ptr = (rtt_t_menu_update *) &menu_name;
-#endif
 
 /***********************************************************
 * macroname	RTT_MENU_UPDATE
@@ -302,59 +284,27 @@ priv | RTT_MENU_NOINPUT, 0, 0, 0, 0, 0.0, 0.0},
 #define	RTT_MENU_NO( title)	\
 { title, 0, 0, 0, NULLOI, 0, 0, 0, 0},
 
-#ifdef OS_ELN
-#define	RTT_MENU_NEW( title, menu_name)	\
-{ title, &rtt_menu_new, 0, 0, NULLOI, (void *) &menu_name/**/_ptr, \
-(void *) title, 0, (void *) RTT_MENUTYPE_STAT},
-#else
 #define	RTT_MENU_NEW( title, menu_name)	\
 { title, &rtt_menu_new, 0, 0, NULLOI, (void *) &menu_name##_ptr, \
 (void *) title, 0, (void *) RTT_MENUTYPE_STAT},
-#endif
 
-#ifdef OS_ELN
-#define	RTT_MENU_KEYS_NEW( title, menu_name)	\
-{ title, &rtt_menu_keys_new, 0, 0, NULLOI, (void *) &menu_name/**/_ptr, \
-(void *) title, 0, (void *) RTT_MENUTYPE_STAT},
-#else
 #define	RTT_MENU_KEYS_NEW( title, menu_name)	\
 { title, &rtt_menu_keys_new, 0, 0, NULLOI, (void *) &menu_name##_ptr, \
 (void *) title, 0, (void *) RTT_MENUTYPE_STAT},
-#endif
 
-#ifdef OS_ELN
-#define	RTT_MENU_UPDATE_NEW( title, menu_name)	\
-{ title, &rtt_menu_new_update, 0, 0, NULLOI, (void *) &menu_name/**/_ptr, \
-(void *) title, 0, (void *) RTT_MENUTYPE_DYN},
-#else
 #define	RTT_MENU_UPDATE_NEW( title, menu_name)	\
 { title, &rtt_menu_new_update, 0, 0, NULLOI, (void *) &menu_name##_ptr, \
 (void *) title, 0, (void *) RTT_MENUTYPE_DYN},
-#endif
 
-#ifdef OS_ELN
-#define	RTT_MENU_UPEDIT_NEW( title, picture_name, function)	\
-{ title, &rtt_menu_new_upedit, 0, 0, NULLOI, \
-(void *) &picture_name/**/_euptr, \
-(void *)  title, (void *) &picture_name/**/_bg, (void *) function },
-#else
 #define	RTT_MENU_UPEDIT_NEW( title, picture_name, function)	\
 { title, &rtt_menu_new_upedit, 0, 0, NULLOI, \
 (void *) &picture_name##_euptr, \
 (void *)  title, (void *) &picture_name##_bg, (void *) function },
-#endif
 
-#ifdef OS_ELN
-#define	RTT_MENU_UPEDITPERM_NEW( title, picture_name, function)	\
-{ title, &rtt_menu_new_upeditperm, 0, 0, NULLOI, \
-(void *) &picture_name/**/_euptr, \
-(void *)  title, (void *) &picture_name/**/_bg, (void *) function },
-#else
 #define	RTT_MENU_UPEDITPERM_NEW( title, picture_name, function)	\
 { title, &rtt_menu_new_upeditperm, 0, 0, NULLOI, \
 (void *) &picture_name##_euptr,\
 (void *)  title, (void *) &picture_name##_bg, (void *) function },
-#endif
 
 #define	RTT_MENU_SYSEDIT_NEW( title, objectname, function)	\
 { title, &rtt_menu_new_sysedit, 0, 0, NULLOI, (void *) objectname, \

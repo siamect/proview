@@ -49,10 +49,7 @@
 # include "rt_errh.h"
 #endif
 
-#ifdef OS_ELN
-  MUTEX timer_mutex;
-
-#elif defined OS_POSIX
+#if defined OS_POSIX
   pthread_mutex_t timer_mutex;
 #endif
 
@@ -64,14 +61,7 @@ void plc_inittimer (
 
 #if 0
   /* Create the timer mutex */
-#ifdef OS_ELN
-  {
-    int	sts;
-    ELN$CREATE_MUTEX(tp->timer_mutex, &sts);
-    if (EVEN(sts))
-      pwr_Bugcheck(sts, "Cannot create timer_mutex");
-  }
-#elif defined OS_POSIX
+#if defined OS_POSIX
   {
     pthread_mutexattr_t attr;
 

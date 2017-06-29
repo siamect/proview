@@ -226,10 +226,6 @@ static pwr_tStatus IoCardRead (
     {
       if ( local->ScanCount[i] <= 1)
       {
-
-#if defined(OS_ELN)
-        vaxc$establish(machfailread);
-#endif
 	/* Write channel */
 	wb.Address = local->Address;
 	wb.Data = i;

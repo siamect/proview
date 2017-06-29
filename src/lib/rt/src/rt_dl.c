@@ -38,12 +38,8 @@
    This module contains routines to handle direct linkage.
    Those routines can be called from the GDH API.  */
 
-#if defined(OS_ELN)
-#  include $vaxelnc
-#else
-#  include <stdio.h>
-#  include <string.h>
-#endif
+#include <stdio.h>
+#include <string.h>
 
 #include "pwr.h"
 #include "rt_gdh_msg.h"

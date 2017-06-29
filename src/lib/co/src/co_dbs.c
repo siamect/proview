@@ -34,12 +34,6 @@
  * General Public License plus this exception.
  **/
 
-#if defined OS_ELN
-#include string
-#include unistd
-#include types
-#include errno
-#else
 #include <string.h>
 #include <unistd.h>
 #include <sys/mman.h>
@@ -47,7 +41,6 @@
 #include <sys/stat.h>
 #include <errno.h>
 #include <fcntl.h>
-#endif
 
 #include "pwr.h"
 #include "co_dbs.h"
@@ -55,7 +48,6 @@
 #include "co_dbs_msg.h"
 #include "co_errno.h"
 #include "co_platform.h"
-
 
 pwr_tBoolean 
 dbs_AlignedRead(pwr_tStatus *sts, void *buf, pwr_tUInt32 size, const dbs_sEnv *ep)

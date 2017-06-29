@@ -130,11 +130,7 @@ extern "C" {
 
 */
 
-#if defined(OS_ELN)
-# include stddef
-#else
 # include <stddef.h>
-#endif
 
 #include "co_pdr.h"
 
@@ -144,7 +140,7 @@ extern "C" {
 
 
 
-#if defined OS_VMS || defined OS_ELN
+#if defined OS_VMS
 
 # define dbs_cNameBaseDirectory "pwr_load:"
 # define dbs_cNameDirectory     "pwrp_load:"

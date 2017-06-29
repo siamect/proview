@@ -39,15 +39,6 @@
    This module contains the basic internal routines and
    processing done by the backup class.  */
 
-#ifdef OS_ELN
-# include $vaxelnc
-# include stdio
-# include stdlib
-# include descrip
-# include string
-# include errno
-#endif
-
 #ifdef OS_VMS
 # include <stdio.h>
 # include <stdlib.h>
@@ -100,7 +91,7 @@ pwr_tStatus bck_print( char *);
 
 #define	check4a(sts,str) if((sts)==-1)perror(str)
 
-#if defined OS_VMS || defined OS_ELN
+#if defined OS_VMS
 # define A_MODE 	, "shr=get"
 # define FGETNAME	fgetname(bckfile, (char *)&tmpstr)
 # define LOCK 		pthread_lock_global_np ()
@@ -114,16 +105,6 @@ pwr_tStatus bck_print( char *);
 
 #else
 # define A_MODE
-#endif
-
-#ifdef OS_ELN
-/* Pthreads debugger workaround from VAXELN V4.4 release notes.  */
-
-void
-pdebug ()
-{
-  cma_debug();
-} 
 #endif
 
 #if defined (OS_VMS) && !defined(__ALPHA)
@@ -449,23 +430,13 @@ bck_wrtblk_insert (
 
   if (replace) {
     if (wrtblkque [c] != NULL) {
-#ifdef OS_ELN
-      int sts;
-      ker$free_memory(&sts, wrtblkque[c]->cyclehead.length, wrtblkque [c]);
-#else
       free(wrtblkque [c]);
-#endif
     }
     wrtblkque [c] = wrtblk;
   }
   else {
     if (wrtblkque [c] != NULL) {
-#ifdef OS_ELN
-      int sts;
-      ker$free_memory(&sts, wrtblk->cyclehead.length, wrtblk);
-#else
       free(wrtblk);
-#endif
     }
     else wrtblkque [c] = wrtblk;
   }
@@ -623,7 +594,7 @@ bck_file_process (
   int         fd;
 
 
-#if defined OS_VMS || defined OS_ELN
+#if defined OS_VMS
   pwr_tUInt32 sts;
   char tmpstr [256];
 #endif
@@ -826,9 +797,7 @@ bck_file_process (
       /* Signal bck_write_done */
 
       /* Change to Posix 1003.4 signal */
-#ifdef OS_ELN
-      ker$signal(NULL, bck_write_done);
-#elif defined OS_VMS
+#if defined OS_VMS
       sts = sys$setef(BCK_WRITE_DONE);
       if (EVEN(sts)) lib$signal(sts);			/* BUG */
 #else
@@ -836,25 +805,8 @@ bck_file_process (
 #endif
 
       /* Throw away the writeblock data */
-
-#ifdef OS_ELN
-      ker$free_memory(&sts, wrtblk->cyclehead.length, wrtblk);
-#else
       free(wrtblk);
-#endif
-
     } /* We leave this loop when a file error occurs */
-
-    /* Save the error code for informational purposes */
-
-/*
-#if defined OS_ELN || defined OS_VMS
-    backup_confp->DiskStatus = vaxc$errno;
-#else
-    backup_confp->DiskStatus = errno;
-#endif
-    perror("BACKUP diskerror");
-*/
 
     /* Put back the writeblock, if there isn't a new writeblock	*/
 
@@ -1255,10 +1207,6 @@ void *bck_coll_process (
 #elif defined OS_LYNX && defined(PWR_LYNX_30)
     abstime.tv_sec = delta.tv_sec;
     abstime.tv_nsec = delta.tv_nsec;
-#elif defined OS_ELN
-#undef clock_gettime
-    clock_gettime(CLOCK_REALTIME, &abstime);
-    time_Aadd(&abstime, &abstime, &delta);
 #else
     time_GetTime( &abstime);
     time_Aadd(&abstime, &abstime, &delta);
@@ -1307,11 +1255,7 @@ void *bck_coll_process (
 
     /* Allocate a wrtblk using size in cycle head */
 
-#ifdef OS_ELN
-    ker$allocate_memory(&sts, &wrtblk, bcklist->cyclehead.length, NULL, NULL);
-#else
     wrtblk = malloc(bcklist->cyclehead.length);
-#endif
 
     wrtblk->cyclehead = bcklist->cyclehead;
 
@@ -1398,7 +1342,7 @@ pwr_tUInt32 bck_init ()
   /* Create and initialize all memory structures */
 
   slowtick = 0;
-#if defined OS_ELN || defined OS_VMS
+#if defined OS_VMS
   sts4a = pthread_mutex_init(&wrtblkmtx, pthread_mutexattr_default);
   check4a(sts4a, "pthread_mutex_init wrtblkmtx");
   sts4a = pthread_cond_init(&wrtblkevt, pthread_condattr_default);
@@ -1412,7 +1356,7 @@ pwr_tUInt32 bck_init ()
 
   for (c=0; c<2; c++) wrtblkque [c] = NULL;
 
-#if defined OS_ELN || defined OS_VMS
+#if defined OS_VMS
   sts4a = pthread_mutex_init(&frcactmtx, pthread_mutexattr_default);
   check4a(sts4a, "pthread_mutex_init frcactmtx");
   sts4a = pthread_cond_init(&frcactevt, pthread_condattr_default);
@@ -1426,10 +1370,7 @@ pwr_tUInt32 bck_init ()
   for (c=0; c<2; c++) frcact [c] = FALSE;
 
   /* This should eventually use Posix 1003.4 signals */
-#ifdef OS_ELN
-  BCK_MAP_AREAS;
-
-#elif defined OS_VMS
+#if defined OS_VMS
   sts = sys$ascefc(BCK_EFC, &efcname, 0, 0);
   if (EVEN(sts)) lib$signal(sts);			/* BUG */
 #else
@@ -1542,10 +1483,7 @@ int main( int argc, char *argv[])
   }
 
   for (;;) {
-#ifdef OS_ELN
-    ker$clear_event(NULL, bck_forced_activation);
-    ker$wait_any(NULL, NULL, NULL, bck_forced_activation);
-#elif defined OS_VMS
+#if defined OS_VMS
     sts = sys$clref(BCK_ACTIVATE);
     if (EVEN(sts)) lib$signal(sts);			/* BUG */
     sts = sys$waitfr(BCK_ACTIVATE);

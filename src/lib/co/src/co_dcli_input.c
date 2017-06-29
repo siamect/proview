@@ -40,24 +40,7 @@
 
 /*_Include files_________________________________________________________*/
 
-#if defined(OS_ELN)
-# include stdio
-# include stdlib
-# include chfdef
-# include string
-# include starlet
-# include iodef   
-# include descrip
-# include stdarg
-# include $vaxelnc
-# include $elnmsg
-# include $kernelmsg
-# include $dda_utility
-
-# define STDIN_IDX  1
-# define STDOUT_IDX 2
-# define STDERR_IDX 3
-#elif defined(OS_VMS)
+#if defined(OS_VMS)
 # include <stdio.h>
 # include <stdlib.h>
 # include <chfdef.h>
@@ -681,83 +664,6 @@ int dcli_qio_assign( char *s, dcli_sChannel *chn)
 
   return sys$assign(&device, (int *) chn,0,0);
 }
-#elif  OS_ELN
-{
-  static	 $DESCRIPTOR(device,"");
-  static	 char *stdin = "CONSOLE$";
-  static	 char *stdinsufx = "ACCESS";
-  int	    	nbbyte,bytebuff;
-  unsigned char	typaheadbuf[200];
-
-  DDA$_EXTENDED_STATUS_INFO	ext_sts;
-
-  VARYING_STRING(255)	varyingstdin;
-  static   char devn[40];
-  static   unsigned int sts;
-  static   PORT tmp;
-  static   char *stp;
-
-  /* Om stdin , ta eln-argumentet för detta */
-  if ( strcmp(s,"stdin") == 0)
-
-    /* Kolla om programmet startades med parametrar enl. ELN */
-    if (eln$program_argument_count() != 0) {
-      eln$program_argument( &varyingstdin, STDIN_IDX);
-			VARYING_TO_CSTRING(varyingstdin, stdin);
-    }
-    else return 0;
-  else
-    /* Inte stdin, ta s */
-    stdin = s;
-
-  /* Gör om "stdin:" till "stdin$ACCESS" */
-  strcpy(devn,stdin);
-  strcat(devn,stdinsufx);
-  if ( (stp = strchr(devn,':')) != NULL)
-    *stp = '$';
-  else
-    if ((stp = strchr(devn,'$')) == NULL)
-      return 0;
-
-  device.dsc$a_pointer = devn;
-  device.dsc$w_length  = strlen(devn);
-
-  ker$create_port( &sts, (PORT *) chn, NULL);
-  if ( sts ) 
-    ker$translate_name( &sts, &tmp, &device, NAME$LOCAL);
-  if ( sts ) 
-    ker$connect_circuit( &sts, (PORT *) chn, NULL, &device, NULL, NULL, NULL);
-  /* 
-    sylvie's modifications the 12.12.91 :
-    When the terminal to which you want to redirect input/output is connected
-    to the rt vax via a terminal driver(DH driver) you may get a lot of unwanted
-    characters at the first read request because the DH driver keeps the
-    characters in a type ahead buffer .
-    So before requesting the user for some characters empty the typeahead
-    driver:
-  */
-
-  bytebuff = sizeof(typaheadbuf);
-  do
-  {
-     
-    eln$tty_read(&sts,	/* Status		     */
-      		  (PORT *) chn,	/* DDA port 		     */
-		  bytebuff,	/* Antal tecken att läsa     */
-		  &typaheadbuf,	/* Meddelande buffer	     */
-		  &nbbyte,	/* Antal lästa tecken	     */
-		  1,		/* Läs option		     */
-		  NULL,		/* Termineringsmask	     */
-		  NULL,		/* Timeout 		     */
-		  0,		/* Minsta antal läsbyte	     */
-		  &ext_sts,	/* Extended status	     */
-		  NULL,		/* Message objekt	     */
-	          NULL);	/* Message pointer	     */
-
-    if(!sts)return(sts);
-  } while( nbbyte >= bytebuff );		
-  return sts;
-}
 #elif defined OS_POSIX
 {
   int chan = -1;
@@ -796,7 +702,7 @@ int dcli_qio_assign( char *s, dcli_sChannel *chn)
 * Description:	Set attributes to a tty
 *************************************************************************/
 int dcli_qio_set_attr( dcli_sChannel *chn, int tmo)
-#if defined(OS_VMS) || defined(OS_ELN)
+#if defined(OS_VMS)
 {
   return DCLI__SUCCESS;
 }
@@ -836,7 +742,7 @@ int dcli_qio_set_attr( dcli_sChannel *chn, int tmo)
 * Description:	Reset the channel before exit
 *************************************************************************/
 int dcli_qio_reset( dcli_sChannel *chn)
-#if defined(OS_VMS) || defined(OS_ELN)
+#if defined(OS_VMS)
 {
   return DCLI__SUCCESS;
 }
@@ -893,20 +799,6 @@ int dcli_qio_readw( dcli_sChannel *chn, char *buf, int len)
   sts = sys$qiow( 1, *chn, code, &stsblk,0,0,buf,len,0,0,0,0);
   return sts;
 }
-#elif  OS_ELN
-{
-  static int                       nob=1;
-  static int                       opt=1;
-  static unsigned int 			 sts;
-  static DDA$BREAK_MASK            code={0,0,0,0,0,0,0,0};
-  static DDA$_EXTENDED_STATUS_INFO stsblk;
-  int	i;
-	
-
-  eln$tty_read( &sts, (PORT *) chn, 1, buf, &nob, opt, code, NULL,
-	 	1, stsblk,NULL, NULL);
-  return sts;
-}
 #elif defined OS_POSIX
 {
   int n = 0;
@@ -952,28 +844,6 @@ int dcli_qio_read( dcli_sChannel *chn, int tmo, char *buf, int len)
   if (ODD(sts)) return 1;
   return sts;
 }
-#elif  OS_ELN
-{
-  static LARGE_INTEGER	timout;
-  static int                       nob=1;
-  static int                       opt=2;
-  static unsigned int 			 sts;
-  static DDA$BREAK_MASK            code={0,0,0,0,0,0,0,0};
-  static DDA$_EXTENDED_STATUS_INFO stsblk;
-  int			i;
-
-  if ( tmo < 1000)
-    tmo = 1000;
-
-  timout.low  = - (tmo * 10000);
-  timout.high = -1;
-
-  eln$tty_read( &sts, (PORT *) chn, 1, buf, &nob, opt, NULL, &timout,
- 		1, stsblk, NULL, NULL);
-  if ( sts == ELN$_TIMEOUT ) return 0;
-  if (ODD(sts)) return 1;
-  return sts;
-}
 #elif defined OS_POSIX
 {
   int n;
@@ -1011,28 +881,6 @@ int dcli_qio_writew( dcli_sChannel *chn, char *buf, int len)
 
   code  = IO$_WRITELBLK | IO$M_NOECHO | IO$M_NOFILTR;
   return sys$qiow( 0, *(int *)chn, code, &stsblk,0,0,buf,len,0,0,0,0);
-
-}
-#elif  OS_ELN
-{
-  static int                       nob;
-  static unsigned int 		 sts;
-
-  while (len > 0)
-  {
-    eln$tty_write(&sts,
-			(PORT *) chn,
-			len,
-			buf,
-			&nob,
-			NULL,
-			NULL);
-    if (sts == KER$_DISCONNECT || sts == KER$_NO_SUCH_PORT) dcli_exit_now(1, sts);
-    len -= nob;
-    buf += nob;
-  }
-
-  return sts;
 
 }
 #elif defined OS_POSIX
@@ -1078,39 +926,6 @@ int dcli_qio_write( dcli_sChannel *chn, int tmo, char *buf, int len)
   return stsblk.condval == SS$_TIMEOUT ? 0 : 1;        
 
 }
-#elif  OS_ELN
-{
-  static LARGE_INTEGER	timout;
-	static int                       nob;
-	static int                       opt=2;
-	static unsigned int 			 sts;
-  static DDA$BREAK_MASK            code={0,0,0,0,0,0,0,0};
-  static DDA$_EXTENDED_STATUS_INFO stsblk;
-
-  if ( tmo < 1000)
-    tmo = 1000;
-
-  nob = len;	
-  timout.low  = - (tmo * 10000);
-  timout.high = -1;
-
-  eln$tty_write(&sts, 
-                  (PORT *) chn,
-		  1,
-                  buf,
-                 &nob,
-                  opt,
-                 NULL,
-              &timout,
-                    1,
-               stsblk,
-                 NULL,
-                 NULL);
-
-  if (sts == KER$_DISCONNECT || sts == KER$_NO_SUCH_PORT) dcli_exit_now(1, sts);
-  return sts == ELN$_TIMEOUT ? 0 : 1;
-
-}
 #elif defined OS_POSIX
 {
   if ( *(int *)chn == STDIN_FILENO)
@@ -1120,6 +935,3 @@ int dcli_qio_write( dcli_sChannel *chn, int tmo, char *buf, int len)
   return 1;
 }
 #endif
-
-
-

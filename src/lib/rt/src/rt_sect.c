@@ -34,14 +34,7 @@
  * General Public License plus this exception.
  */
 
-#if	defined(OS_ELN)
-# include $vaxelnc
-# include $kernelmsg
-# include $mutex
-# include stdlib
-# include descrip
-# include string
-#elif	defined(OS_VMS)
+#if	defined(OS_VMS)
 # pragma builtins
 # include <stdlib.h>
 # include <descrip.h>
@@ -99,7 +92,7 @@ segName (
   char			*name
 )
 {
-#if defined(OS_ELN) || defined(OS_VMS)
+#if defined(OS_VMS)
     strncpy(shp->name, name, sizeof(shp->name) - 1);
     shp->name[sizeof(shp->name) - 1] = '\0';
 
@@ -146,22 +139,14 @@ sect_Alloc (
     shp->base = NULL;
     segName(shp, name);
 
-#if defined(OS_ELN) || defined (OS_VMS)
+#if defined (OS_VMS)
     shp->namedsc.dsc$w_length	= strlen(name);
     shp->namedsc.dsc$b_dtype	= DSC$K_DTYPE_T;
     shp->namedsc.dsc$b_class	= DSC$K_CLASS_S;
     shp->namedsc.dsc$a_pointer	= shp->name;
 #endif
 
-#if defined(OS_ELN)
-    ker$create_area(&lsts, &shp->area, &shp->base, size, &shp->namedsc, NULL);
-    if (EVEN(lsts)) break;
-
-    shp->flags.b.mapped = 1;
-    *created = (lsts != KER$_AREA_EXISTS);
-    if (*created) memset(shp->base, 0, size);
-
-#elif defined(OS_VMS)
+#if defined(OS_VMS)
     {
       pwr_tUInt32	inadr[2];
       pwr_tUInt32	retadr[2];
@@ -364,9 +349,7 @@ sect_Free (
   if (!shp->flags.b.mapped)
     pwr_Return(FALSE, sts, 4/*SECT__NOTMAPPED*/);
 
-#if defined(OS_ELN)
-  ker$delete(&lsts, shp->area);
-#elif defined(OS_VMS)
+#if defined(OS_VMS)
   lsts = sys$deltva(shp->sectadr, NULL, 0);
 #elif defined OS_POSIX
   lsts = 1; /* TODO ? */
@@ -389,10 +372,7 @@ sect_InitLock (
 {
   pwr_tStatus		lsts = 1;
 
-#ifdef	OS_ELN
-  ELN$INITIALIZE_AREA_LOCK((AREA)shp->area, *mp, &lsts);
-
-#elif defined(OS_VMS)
+#if defined(OS_VMS)
   {
     pwr_tUInt32		i;
 
@@ -436,9 +416,7 @@ sect_Lock (
 {
   pwr_tStatus		lsts = 1;
 
-#if defined(OS_ELN)
-  ELN$LOCK_AREA((AREA)shp->area, *mp);
-#elif defined(OS_VMS)
+#if defined(OS_VMS)
   {
     sect_sMutexEntry	*ep;
     int			i;
@@ -499,9 +477,7 @@ sect_Unlock (
 {
   pwr_tStatus		lsts = 1;
 
-#if defined(OS_ELN)
-  ELN$UNLOCK_AREA((AREA)shp->area, *mp);
-#elif defined(OS_VMS)
+#if defined(OS_VMS)
   {
     sect_sMutexEntry	*ep;
     pwr_tUInt32		i;

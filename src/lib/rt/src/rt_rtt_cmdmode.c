@@ -39,26 +39,11 @@
 
 /*_Include files_________________________________________________________*/
 
-
-
-#if defined(OS_ELN)
-# include $vaxelnc
-# include stdio
-# include string
-# include stdlib
-# include float
-# include math
-# include ctype
-# include chfdef
-# include starlet
-# include descrip
-#else
-# include <stdio.h>
-# include <string.h>
-# include <stdlib.h>
-# include <float.h>
-# include <math.h>
-#endif
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <float.h>
+#include <math.h>
 
 #include "pwr.h"
 #include "pwr_class.h"

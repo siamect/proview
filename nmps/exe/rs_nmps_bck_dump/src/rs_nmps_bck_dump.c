@@ -65,18 +65,6 @@
 #include <descrip.h>
 #endif
 
-#ifdef OS_ELN
-#include stdio
-#include stdlib
-#include string
-#include math
-#include float
-#include libdef
-#include starlet
-#include lib$routines
-#include descrip
-#endif
-
 #include "pwr.h"
 #include "pwr_baseclasses.h"
 #include "pwr_nmpsclasses.h"
@@ -586,9 +574,7 @@ static pwr_tStatus	nmpsbck_read( bck_ctx	bckctx)
 	pwr_tStatus		bckfile1_sts;
 
 	/* Open file 1 */
-#if defined(OS_ELN)
-	bckfile1 = fopen( bckctx->bckconfig->BackupFile, "r+", "shr=get", "ctx=rec");
-#elif defined(OS_VMS)
+#if defined(OS_VMS)
 	bckfile1 = fopen( bckctx->bckconfig->BackupFile, "r+", "shr=get");
 #else
 	bckfile1 = fopen( bckctx->bckconfig->BackupFile, "r+");

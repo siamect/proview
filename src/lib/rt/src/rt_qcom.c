@@ -34,22 +34,12 @@
  * General Public License plus this exception.
  */
 
-#ifdef OS_ELN
-# include $vaxelnc
-# include $exit_utility
-# include $function_descriptor
-# include descrip
-# include stdlib
-# include string
-#else
 #include <stdlib.h>
 #include <string.h>
-#endif
 
 #ifdef OS_VMS
 # include <lib$routines.h>
 #endif
-
 
 #include "co_cdh.h"
 
@@ -607,9 +597,7 @@ qcom_Init (
   pwr_tStatus	lsts;
   qcom_sAid	laid;
   pwr_tBoolean	added = 0;
-#ifdef OS_ELN
-  FUNCTION_DESCRIPTOR   f_dsc;
-#elif defined OS_POSIX
+#if defined OS_POSIX
   struct sigaction sa;
   sigset_t         ss;
 #endif
@@ -662,19 +650,8 @@ qcom_Init (
 
   *aid = ap->aid;
 
-#if defined OS_ELN
-  if (ODD(*sts))
-    errh_Info("Adding application. aix: %d, pid: %d", ap->aid.aix, ap->pid);
-#else
     errh_Info("Adding application. aix: %d", ap->aid.aix);
-#endif
-#if defined OS_ELN
-  f_dsc.function = exitHandler;
-  f_dsc.display  = 0;
-
-  eln$declare_exit_handler(&f_dsc, NULL);
-
-#elif defined OS_POSIX
+#if defined OS_POSIX
   atexit(exitHandler);
   sa.sa_handler = sigHandler;
   sa.sa_flags = 0;

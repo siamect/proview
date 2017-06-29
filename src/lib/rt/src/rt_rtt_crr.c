@@ -39,19 +39,10 @@
 
 /*_Include files_________________________________________________________*/
 
-#if defined(OS_ELN)
-# include $vaxelnc
-# include stdio
-# include ctype
-# include string
-# include chfdef
-# include stdlib
-#else
 # include <stdio.h>
 # include <ctype.h>
 # include <string.h>
 # include <stdlib.h>
-#endif
 
 #include "pwr.h"
 #include "pwr_class.h"
@@ -1151,13 +1142,8 @@ static char	*rtt_VolumeIdToStr( pwr_tVolumeId volumeid)
 	unsigned char	volid[4];
 
 	memcpy( &volid, &volumeid, sizeof(volid));
-#if defined OS_ELN
-	sprintf( str, "%03.3u_%03.3u_%03.3u_%03.3u",
-		volid[3], volid[2], volid[1], volid[0]);
-#else
 	sprintf( str, "%3.3u_%3.3u_%3.3u_%3.3u",
 		volid[3], volid[2], volid[1], volid[0]);
-#endif
 	return str;
 }
 

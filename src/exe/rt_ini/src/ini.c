@@ -62,9 +62,6 @@
 #include "rt_qcom.h"
 #include "rt_io_base.h"
 #include "ini.h"
-#if defined OS_ELN
-# include "ini_time.h"
-#endif
 #include "rt_ini_event.h"
 #include "rt_ini_alias.h"
 #include "rt_ini_msg.h"
@@ -85,19 +82,6 @@
 # define cPrio_fast		5
 # define cPrio_trend		5
 # define cPrio_plc_init		5
-#elif defined OS_ELN
-# define cPrio_neth		7
-# define cPrio_qmon		6
-# define cPrio_neth_acp		8
-# define cPrio_io_comm		6
-# define cPrio_tmon		8
-# define cPrio_emon		8
-# define cPrio_alimserver	8
-# define cPrio_bck		10
-# define cPrio_linksup		10
-# define cPrio_fast		10
-# define cPrio_trend		10
-# define cPrio_plc_init		16
 #elif defined OS_LYNX
 # define cPrio_neth		18
 # define cPrio_qmon		19
@@ -964,25 +948,7 @@ ini_LoadDirectory (
   syi_HostSpec(sts, cp->hostspec, sizeof(cp->hostspec));
   syi_BootDisk(sts, cp->bootdisk, sizeof(cp->bootdisk));
 
-#if defined(OS_ELN)
-
-  if (syi_LocalBoot(sts)) {
-    sprintf(cp->dir, "%s[sys0.sysexe]", cp->bootdisk);
-    if (cp->flags.b.restart) {
-      cp->busid = qcom_MyBus(sts);
-    }
-  } else {
-    if (!cp->flags.b.restart) {
-      if(!ini_Time(sts, &cp->busid))
-	exit(*sts);
-    } else {
-      cp->busid = qcom_MyBus(sts);
-    }
-    sprintf(cp->dir, "%s::%s", cp->hostspec, dbs_cNameDirectory);
-    sprintf(cp->bdir, "%s::%s", cp->hostspec, dbs_cNameBaseDirectory);
-  }
-
-#elif defined(OS_VMS)
+#if defined(OS_VMS)
   {
     char *s;
 
@@ -1832,13 +1798,8 @@ ini_CreateDb (
   cp->gdbInit.objects     = cp->node.cardinality;
   cp->gdbInit.rtdb_isize  = cp->node.bodySize;
 
-#if defined(OS_ELN) 
-  cp->gdbInit.cvol_max = MAX(200, cp->node.cvolMaxCount);
-  cp->gdbInit.cvol_min = MAX(100, cp->node.cvolMinCount);
-#else
   cp->gdbInit.cvol_max = MAX(10000, cp->node.cvolMaxCount);
   cp->gdbInit.cvol_min = MAX(900, cp->node.cvolMinCount);
-#endif
 
   lgdb = gdb_CreateDb(sts, &cp->gdbInit);
 
@@ -1947,23 +1908,7 @@ ini_ProcLoad (
 
   pwr_dStatus(sts, status, INI__SUCCESS);
 
-#if !defined(OS_ELN)
   return;
-#else
-  if (pp->flags.b.running) 
-    return;
-  
-  if (pp->proc.flags.b.load) {
-    errh_LogInfo(&cp->log, "Loading %s, file: %s, prio: %d", pp->id, pp->proc.file, pp->proc.p_prio);
-  } else {
-    errh_LogInfo(&cp->log, "%s, file: %s, prio: %d, will not be loaded.", pp->id, pp->proc.file, pp->proc.p_prio);
-    return;
-  }
-
-  *sts = proc_Load(&pp->proc);
-  if (EVEN(*sts))
-    errh_Error(&cp->log, "Error loading %s, %m", pp->id, *sts);
-#endif
 }
 
 void 

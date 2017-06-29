@@ -34,11 +34,7 @@
  * General Public License plus this exception.
  */
 
-#ifdef OS_ELN
-# include stdio
-#else
-# include <stdio.h>
-#endif
+#include <stdio.h>
 
 #include "pwr.h"
 #include "pwr_baseclasses.h"

@@ -34,12 +34,7 @@
  * General Public License plus this exception.
  **/
 
-#if defined OS_ELN
-# include $kerneldef
-# include $vaxelnc
-# include stdio
-# include descrip
-#elif defined OS_VMS
+#if defined OS_VMS
 # include <string.h>
 # include <descrip.h>
 # include <starlet.h>
@@ -180,7 +175,7 @@ IsRightHead (
 }
 #endif
 
-#if defined(OS_VMS) || defined(OS_ELN)
+#if defined(OS_VMS)
 
 char *
 msg_GetMessage (

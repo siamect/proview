@@ -39,20 +39,9 @@
 
 /*_Include files_________________________________________________________*/
 
-
-
-#if defined(OS_ELN)
-# include $vaxelnc
-# include stdio
-# include string
-# include chfdef
-# include stdlib
-# include $get_message_text
-#else
-# include <stdio.h>
-# include <string.h>
-# include <stdlib.h>
-#endif
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 #include "pwr.h"
 #include "pwr_class.h"
@@ -650,12 +639,6 @@ int	rtt_alarm_connect (
  	pwr_tObjid	Objid;
 	pwr_tObjid	OutUnit;
 	pwr_sClass_User	*userobject_ptr;
-
-#ifdef OS_ELN
-	mh_UtilWaitForMh();
-	/* Wait for mh has flagged initizated */
-	mh_UtilWaitForMh();
-#endif
 
 	if ( rtt_alarm_connected != 0)
 	  return RTT__SUCCESS;

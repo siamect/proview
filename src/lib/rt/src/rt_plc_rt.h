@@ -34,13 +34,8 @@
  * General Public License plus this exception.
  */
 
-#ifdef OS_ELN
-#  include stdlib
-#  include math
-#else
-#  include <stdlib.h>
-#  include <math.h>
-#endif
+#include <stdlib.h>
+#include <math.h>
 
 #ifndef rt_plc_h
 # include "rt_plc.h"

@@ -48,13 +48,8 @@
 
 /*_Include files_________________________________________________________*/
 
-#ifdef OS_ELN
-#include stdio
-#include string
-#else
 #include <stdio.h>
 #include <string.h>
-#endif
 
 #include "pwr.h"
 #include "rt_gdh.h"
@@ -213,12 +208,6 @@ pwr_tStatus sutl_sleep( float time)
 #ifdef OS_VMS
         int sts;
         sts = lib$wait(&time);
-#elif OS_ELN
-        LARGE_INTEGER   l_time;
-
-        l_time.high = -1;
-        l_time.low = - time * 10000000;
-        ker$wait_any( NULL, NULL, &l_time);
 #elif defined(OS_LYNX) || defined (OS_LINUX)
         pwr_tDeltaTime  p_time;
 	struct timespec p_time_ts;

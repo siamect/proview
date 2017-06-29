@@ -34,14 +34,10 @@
  * General Public License plus this exception.
  */
 
-#if defined OS_ELN
-# include $vaxelnc
-#else
-# include <stdio.h>
-# include <stddef.h>
-# include <stdlib.h>
-# include <string.h>
-#endif
+#include <stdio.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "rt_gdh.h"
 #include "rt_gdb.h"

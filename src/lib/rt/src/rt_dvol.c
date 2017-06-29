@@ -36,12 +36,7 @@
 
 /* rt_dvol.c -- Dynamic volumes */
 
-#if defined(OS_ELN)
-# include $vaxelnc
-# include stsdef
-#else 
-# include <stdio.h>
-#endif
+#include <stdio.h>
 
 #include "pwr.h"
 #include "rt_gdh_msg.h"

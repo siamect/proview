@@ -264,9 +264,6 @@ static pwr_tStatus IoCardWrite (
         sop->RawValue = rawvalue - 0.5;
       data = sop->RawValue;
 
-#if defined(OS_ELN)
-      vaxc$establish(machfailwrite);
-#endif
       if (r_local->Qbus_fp != 0 && r_local->s == 0) {
         wb.Data = data;
         wb.Address = local->Address + 2*i;

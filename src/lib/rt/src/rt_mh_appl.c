@@ -36,13 +36,8 @@
 
 /* rt_mh_appl.c -- Runtime environment - Message Handler */
 
-#ifdef OS_ELN
-# include stdio
-# include ssdef
-#else
-# include <stdio.h>
-# include <string.h>
-#endif
+#include <stdio.h>
+#include <string.h>
 
 #ifdef OS_VMS
 # include <starlet.h>

@@ -36,11 +36,7 @@
 
 /* rt_vol.c -- Volumes */
 
-#ifdef OS_ELN
-# include $vaxelnc
-#else
 # include <string.h>
-#endif
 
 #include "pwr.h"
 #include "rt_gdh_msg.h"

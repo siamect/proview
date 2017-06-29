@@ -35,11 +35,7 @@
  */
 
 #ifndef rt_plc_timer_h
-#define rt_plc_timer_h 
-
-#ifdef OS_ELN
-# include $mutex
-#endif
+#define rt_plc_timer_h
 
 #if defined OS_POSIX
 # include <pthread.h>
@@ -73,13 +69,7 @@ typedef	struct {
 ((unsigned long)r == 0) ? NULL : gdh_TranslateRtdbPointer((unsigned long)r)
 
 /*	Insert timer into timer-queue	*/
-#ifdef OS_ELN
-
-  extern MUTEX timer_mutex;
-# define PLC_LOCK_MUTEX(m)  	ELN$LOCK_MUTEX(m)
-# define PLC_UNLOCK_MUTEX(m)  	ELN$UNLOCK_MUTEX(m)
-
-#elif defined OS_POSIX
+#if defined OS_POSIX
 
   extern pthread_mutex_t timer_mutex;
 # define PLC_LOCK_MUTEX(m)  pthread_mutex_lock(&m)

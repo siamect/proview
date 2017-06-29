@@ -107,8 +107,6 @@ int main (
   fprintf(fp, "\n");
   fprintf(fp, "#if defined OS_VMS\n");
   fprintf(fp, "#define pwrv_cOpSys              \"OpenVMS\"\n");
-  fprintf(fp, "#elif defined OS_ELN\n");
-  fprintf(fp, "#define pwrv_cOpSys              \"VAXELN\"\n");
   fprintf(fp, "#else\n");
   fprintf(fp, "#define pwrv_cOpSys              \"Unknown Operating System\"\n");
   fprintf(fp, "#endif\n");

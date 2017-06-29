@@ -56,33 +56,7 @@ typedef struct {
 } plc_sLoopWait;
 #endif
 
-#ifdef OS_ELN
-/*
- * plc_LoopInit()
- *
- * Description: 
- *  Gets the Uptime which will be used as NextTime the first time
- *  plc_LoopWait is called. 
- *
- */ 
-pwr_tStatus plc_LoopInit(pwr_tVaxTime *NextTime);
-
-/*
- * plc_LoopWait()
- *
- * Description:
- *  Returns False if a slip is detected.
- */ 
-pwr_tBoolean plc_LoopWait (
-    int		*WaitResult,     /* Set to 1 when Event */
-    pwr_tVaxTime	*DeltaTime,
-    pwr_tVaxTime	*NextTime,
-    unsigned long Event
-);
-#endif
-
 #ifdef OS_VMS
-
 
 /*
  * plc_LoopGetVmsUpTime()

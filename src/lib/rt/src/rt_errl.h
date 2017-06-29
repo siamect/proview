@@ -52,7 +52,6 @@
 # else
 #  define LOG_QUEUE_NAME "/tmp/pwrlogqueue"
 # endif
-#elif defined OS_ELN
 #endif
 
 #define LOG_MAX_MSG_SIZE  256           /* length of logstring */

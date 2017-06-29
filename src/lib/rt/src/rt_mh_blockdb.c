@@ -36,19 +36,11 @@
 
 /* rt_mh_blockdb.c -- Runtime environment - MH Block database */
 
-#ifdef OS_ELN
-# include ctype
-# include stdio
-# include stdlib
-# include errno
-# include string
-#else
-# include <stdio.h>
-# include <stdlib.h>
-# include <ctype.h>
-# include <errno.h>
-# include <string.h>
-#endif
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <errno.h>
+#include <string.h>
 
 #ifdef OS_VMS
 # include <starlet.h>
@@ -92,7 +84,7 @@ mh_BlockDbOpen (
   hp = &dp->Head;
 
   /* try to open old blocking file */
-#if defined OS_VMS || defined OS_ELN
+#if defined OS_VMS
   dp->File = fopen(FileName, "r+b", "shr=get");
 #else
   dp->File = fopen(FileName, "r+");
@@ -102,7 +94,7 @@ mh_BlockDbOpen (
     sprintf(msg, "BlockDbOpen: old file: %s", FileName);
     Log(msg);
     if (fread(hp, sizeof(*hp), 1, dp->File) != 1) {
-#if defined OS_VMS || defined OS_ELN
+#if defined OS_VMS
       sprintf(msg, "BlockDbOpen: read header, %s", strerror(errno, vaxc$errno));
 #else
       sprintf(msg, "BlockDbOpen: read header, %s", strerror(errno));
@@ -119,14 +111,14 @@ mh_BlockDbOpen (
   }
 
   /* try to create new blocking file */
-#if defined OS_VMS || defined OS_ELN
+#if defined OS_VMS
   dp->File = fopen(FileName, "w+b", "shr=get");
 #else
   dp->File = fopen(FileName, "w+");
 #endif
 
   if (dp->File == NULL) {
-#if defined OS_VMS || defined OS_ELN
+#if defined OS_VMS
     sprintf(msg, "BlockDbOpen: %s", strerror(errno, vaxc$errno));
 #else
     sprintf(msg, "BlockDbOpen: %s", strerror(errno));
@@ -152,7 +144,7 @@ mh_BlockDbOpen (
 	return(dp);
     }
 
-#if defined OS_VMS || defined OS_ELN
+#if defined OS_VMS
     sprintf(msg, "BlockDbOpen: write header, %s", strerror(errno, vaxc$errno));
 #else
     sprintf(msg, "BlockDbOpen: write header, %s", strerror(errno));
@@ -199,7 +191,7 @@ mh_BlockDbGet (
   return(dp);
 
 error:
-#if defined OS_VMS || defined OS_ELN
+#if defined OS_VMS
   sprintf(msg, "BlockDbGet: %s", strerror(errno, vaxc$errno));
 #else
   sprintf(msg, "BlockDbGet: %s", strerror(errno));
@@ -267,7 +259,7 @@ mh_BlockDbPut (
   return(dp);
 
 error:
-#if defined OS_VMS || defined OS_ELN
+#if defined OS_VMS
   errc = strerror(errno, vaxc$errno);
 #else
   errc = strerror(errno);

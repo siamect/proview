@@ -36,13 +36,8 @@
 
 /* rt_sancm.c -- Subscribed alarm (and block) notification, client monitor calls. */
 
-#ifdef OS_ELN
-# include stdlib
-# include stdio
-#else
-# include <stdio.h>
-# include <stdlib.h>
-#endif
+#include <stdio.h>
+#include <stdlib.h>
 
 #include "pwr.h"
 #include "co_cdh.h"

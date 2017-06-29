@@ -36,12 +36,9 @@
 
 /* rt_linksup.c -- Runtime environment - Link Watch */
 
-#if defined OS_ELN
-# include $vaxelnc
-#else
-# include <stdlib.h>
-# include <string.h>
-#endif
+#include <stdlib.h>
+#include <string.h>
+
 #include "pwr.h"
 #include "pwr_class.h"
 #include "pwr_lst.h"

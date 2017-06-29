@@ -64,16 +64,6 @@
 #include <string.h>
 #endif
 
-#ifdef OS_ELN
-#include stdio
-#include stdlib
-#include signal
-#include descrip
-#include string
-#include starlet
-#include lib$routines
-#endif
-
 #include "pwr.h"
 #include "pwr_class.h"
 #include "pwr_baseclasses.h"
@@ -279,12 +269,6 @@ static pwr_tUInt32 tlog_sleep( float time)
 #ifdef OS_VMS
         int sts;
         sts = lib$wait(&time);
-#elif OS_ELN
-	LARGE_INTEGER	l_time;
-
-	l_time.high = -1;	
-	l_time.low = - time * 10000000;	
-	ker$wait_any( NULL, NULL, &l_time);
 #else
         pwr_tDeltaTime  p_time;
 	struct timespec p_time_ts;
@@ -1487,11 +1471,6 @@ int main( int argc, char **argv)
 	filectx.open_time.tv_sec = 0;
 	filectx.open_time.tv_nsec = 0;
 	selectlist_count = 0;
-
-#ifdef OS_ELN
-	/* Wait for the plcpgm has flagged initizated */
-	plc_UtlWaitForPlc();
-#endif
 
 	/* Init gdh */
 	sts = gdh_Init("rs_tlog");

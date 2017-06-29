@@ -153,7 +153,7 @@ int main(int argc, char **argv)
     char fname[256];
     char *p;
 
-#if defined OS_VMS || defined OS_ELN
+#if defined OS_VMS
     p = strpbrk(argv[2], "]>");
     if (!p)
       p = strchr(argv[2], ':');
@@ -187,7 +187,7 @@ int main(int argc, char **argv)
   fclose(cfp);
   fclose(hfp);
 
-#if defined OS_VMS || defined OS_ELN
+#if defined OS_VMS
   exit(1);
 #elif defined OS_POSIX
   exit(EXIT_SUCCESS);
@@ -281,7 +281,7 @@ static void WriteFiles(char *fname, FILE *cfp, FILE *hfp)
 
   for (fl = LstFir(&lFacH); fl != LstEnd(&lFacH); fl = LstNex(fl)) {
     facid = 0x800 + LstObj(fl)->f.FacNum;
-#if defined OS_VMS || OS_ELN
+#if defined OS_VMS
     snprintf(name, sizeof(name), "%s$_FACILITY", LstObj(fl)->f.FacName);
 #else
     snprintf(name, sizeof(name), "%s_FACILITY", LstObj(fl)->f.FacName);

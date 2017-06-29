@@ -38,14 +38,9 @@
    Hash table routines. Dynamic, using chaining.
    Requires a pool package where all structures are allocated.  */
 
-#ifdef	OS_ELN
-# include $vaxelnc
-# include math
-#else
-# include <stdio.h>
-# include <string.h>
-# include <math.h>
-#endif
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
 
 #include "rt_hash_msg.h"
 #include "pwr.h"

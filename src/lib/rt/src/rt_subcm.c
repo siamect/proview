@@ -40,17 +40,12 @@
    Those routines can NOT be called in a job context other than
    that of the nethandler.  */
 
-#ifndef OS_ELN
 # include <stdio.h>
 # include <stddef.h>
 # include <stdlib.h>
 # include <string.h>
-#endif
 
-
-#if defined(OS_ELN)
-# include $vaxelnc
-#elif defined (OS_VMS)
+#if defined (OS_VMS)
 # include <lib$routines.h>
 #endif
 

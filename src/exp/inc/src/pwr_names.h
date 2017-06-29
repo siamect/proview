@@ -71,7 +71,7 @@
 # define        pwr_cNamePlcXttHelp     "$pwrp_load/xtthelp_%s_plc.dat"
 # define	pwr_cNameRedcom         "%sld_redcom_%s_%04d.dat"
 
-#elif defined OS_VMS || defined OS_ELN
+#elif defined OS_VMS
 
 # define	pwr_cNamePlc		"%splc_%s_%04d_%s.exe"
 # define	pwr_cNameBootList	"pwrp_root:[src.db]pwrp_cnf_bootlist.dat"

@@ -34,14 +34,7 @@
  * General Public License plus this exception.
  */
 
-#if defined OS_ELN
-# include $vaxelnc
-# include $kernelmsg
-# include $kerneldef
-# include descrip
-# include ssdef
-# include stdio
-#elif defined OS_VMS
+#if defined OS_VMS
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
@@ -84,16 +77,6 @@
 
 /* Local definitions */
 
-#if defined OS_ELN
-  typedef struct {
-    pwr_tBoolean isStarted;
-  } sInfo;
-
-  static AREA lMhUtilSyncArea;
-  static sInfo *lInfo;
-#endif
-
-
 #if defined OS_LYNX
 # define SEM_NAME "/pwr_mh_sem_"
   static sem_t *sem = (sem_t *)-1;
@@ -108,16 +91,13 @@
 static pwr_tStatus sendMessage(qcom_sQid *, mh_sHead*);
 
 
-#if defined OS_VMS || defined OS_ELN
+#if defined OS_VMS
 
 static pwr_tStatus
 map ()
 {
   pwr_tStatus sts;
-#ifdef OS_ELN
-  static $DESCRIPTOR(name, "MH_UTL_SYNC_AREA");
-
-#elif defined OS_VMS
+#if defined OS_VMS
   static $DESCRIPTOR(name, "PWR_WAIT_EF");
 #endif
 
@@ -126,22 +106,14 @@ map ()
   /* map MH_UTL_SYNC_AREA */
 
 
-#ifdef OS_ELN
-  if (isMapped) return;
-  ker$create_area_event(&sts, &lMhUtilSyncArea,
-    &lInfo, sizeof(*lInfo), &name, EVENT$CLEARED, NULL);
-  if (sts != KER$_AREA_EXISTS)
-    memset(lInfo, 0, sizeof(lInfo));
-  isMapped = TRUE;
-
-#elif defined OS_VMS
+#if defined OS_VMS
   sts = sys$ascefc(PWR_WAIT_MH, &name, 0, 0);
 
 #endif
 
   return (sts);
 }
-#endif /* OS_ELN || OS_VMS */
+#endif /* OS_VMS */
 
 
 #if defined OS_POSIX
@@ -317,14 +289,7 @@ mh_UtilIsStartedMh ()
 
   sts = map();
 
-#ifdef OS_ELN
-
-  if (EVEN(sts))
-    return FALSE;
-
-  return lInfo->isStarted;
-
-#elif defined OS_VMS
+#if defined OS_VMS
 
   if (EVEN(sts))
     return FALSE;
@@ -434,10 +399,7 @@ mh_UtilWaitForMh ()
   if (EVEN(sts))
     return sts;
 
-#ifdef OS_ELN
-  ker$wait_any(NULL, NULL, NULL, lMhUtilSyncArea);
-
-#elif defined OS_VMS
+#if defined OS_VMS
   sys$waitfr(PWR_WAIT_MH);
 
 #elif defined OS_LYNX
@@ -469,11 +431,7 @@ mh_UtilWake ()
   if (EVEN(sts))
     return (sts);
 
-#if defined OS_ELN
-  lInfo->isStarted = TRUE;
-  ker$signal(NULL, lMhUtilSyncArea);
-
-#elif defined OS_VMS
+#if defined OS_VMS
   sys$setef(PWR_WAIT_MH);
 #elif defined OS_LYNX
   sem_post(sem);

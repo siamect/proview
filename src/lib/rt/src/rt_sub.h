@@ -48,9 +48,7 @@
 	SUBMSG	Subscription update data, the actual message
 	SUBDATA	The actual update data for one SUBCLI, inside SUBMSG  */
 
-#if !defined(OS_ELN)
-# include <sys/types.h>
-#endif
+#include <sys/types.h>
 
 #ifndef pwr_h
 #include "pwr.h"

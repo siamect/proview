@@ -38,12 +38,7 @@
 
    Runs the PLC programs of a node.  */
 
-#if defined(OS_ELN)
-# include $vaxelnc
-# include $kernelmsg
-# include $kerneldef
-# include descrip
-#elif defined(OS_VMS)
+#if defined(OS_VMS)
 #elif defined(OS_LYNX)
 #endif
 
@@ -251,10 +246,6 @@ int main (
     save_values(pp);
 
     qcom_SignalOr(&sts, &qcom_cQini, ini_mEvent_oldPlcStopDone | pp->sigmask);
-
-#if defined OS_ELN
-    sts = proc_SetPriority(31);
-#endif
 
     clean_all(pp);
     break;

@@ -36,11 +36,7 @@
 
 /*		 PREPROCESSOR RUTINER					    */
 
-#if defined OS_ELN
-# include float
-#else
-# include <float.h>
-#endif
+#include <float.h>
 
 #ifndef nmps_data_info
 #define nmps_data_info

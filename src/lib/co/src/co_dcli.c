@@ -37,15 +37,6 @@
 /* co_dcli.c 
    Command line interpreter. */
 
-#if defined(OS_ELN)
-# include stdarg
-# include stdio
-# include stdlib
-# include signal
-# include string
-# include float
-# include math
-#else
 # include <stdarg.h>
 # include <stdio.h>
 # include <stdlib.h>
@@ -53,7 +44,6 @@
 # include <string.h>
 # include <float.h>
 # include <math.h>
-#endif
 
 #include "pwr.h"
 #include "pwr_class.h"

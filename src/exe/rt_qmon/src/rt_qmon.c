@@ -36,25 +36,20 @@
 
 /* rt_qmon.c -- Qcom monitor. */
 
-#if defined OS_ELN
-# include $vaxelnc
-# include errno
-#else
-# include <stdlib.h>
-# include <string.h>
-# include <errno.h>
-# include <netinet/in.h>
-# include <arpa/inet.h>
-# include <errno.h>
-# include <unistd.h>
-# include <sched.h>
-# if defined OS_LYNX
-#   include <uio.h>
-#   include <socket.h>
-# elif defined OS_POSIX
-#   include <sys/uio.h>
-#   include <sys/socket.h>
-# endif
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <errno.h>
+#include <unistd.h>
+#include <sched.h>
+#if defined OS_LYNX
+# include <uio.h>
+# include <socket.h>
+#elif defined OS_POSIX
+# include <sys/uio.h>
+# include <sys/socket.h>
 #endif
 
 #if defined OS_VMS

@@ -175,7 +175,7 @@ int main(int argc, char **argv)
   fclose(yyin);
   fclose(cfp);
 
-#if defined OS_VMS || defined OS_ELN
+#if defined OS_VMS
   exit(1);
 #elif defined OS_POSIX
   exit(EXIT_SUCCESS);

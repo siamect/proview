@@ -42,15 +42,9 @@
 
    */
 
-#ifdef OS_ELN
-# include stdio
-# include stdlib
-# include string
-#else
-# include <stdio.h>
-# include <stdlib.h>
-# include <string.h>
-#endif
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "pwr_lst.h"
 #include "co_cdh.h"
@@ -63,7 +57,6 @@
 #include "rt_qcom.h"
 #include "rt_alimsrv.h"
 #include "rt_pwr_msg.h"
-
 
 typedef struct sAttribute sAttribute;
 typedef struct sObject sObject;

@@ -37,15 +37,8 @@
 /* rt_c_plcthread.c
    Functions for the class PlcThread. */
 
-#ifdef OS_ELN
-# include $kerneldef
-# include $vaxelnc
-# include stdio
-# include string
-#else
-# include <stdio.h>
-# include <string.h>
-#endif
+#include <stdio.h>
+#include <string.h>
 
 #if defined OS_POSIX
 # include <pthread.h>

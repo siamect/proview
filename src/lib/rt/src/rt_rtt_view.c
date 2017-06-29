@@ -39,19 +39,10 @@
 
 /*_Include files_________________________________________________________*/
 
-#if defined(OS_ELN)
-# include $vaxelnc
-# include stdio
-# include stdlib
-# include string
-# include ctype
-# include chfdef
-#else
-# include <stdio.h>
+#include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
 # include <ctype.h>
-#endif
 
 #include "pwr.h"
 #include "pwr_class.h"

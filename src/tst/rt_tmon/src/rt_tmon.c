@@ -37,19 +37,10 @@
 /* rt_tmon.c -- Timer Monitor
 */
 
-#if defined(OS_ELN)
-# include $vaxelnc
-# include stdio.h
-# include stddef.h
-# include stdlib.h
-# include string.h
-# include descrip
-#else
-# include <stdio.h>
-# include <stddef.h>
-# include <stdlib.h>
-# include <string.h>
-#endif
+#include <stdio.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
 
 #ifdef OS_VMS
 # include <starlet.h>
@@ -224,18 +215,6 @@ nowTime (
   tp->tv_nsec %= 100;
   tp->tv_nsec *= 10000000;
 
-#elif defined OS_ELN
-
-  pwr_tStatus		sts;
-  int			tmp[2];
-  int			div = -10000000;
-
-  ker$get_uptime(&sts, &tmp);
-
-  sts = lib$ediv(&div, &tmp, &tp->tv_sec, &tp->tv_nsec);
-
-  tp->tv_nsec *= -100;
-
 #elif defined OS_LYNX
   clock_gettime(CLOCK_REALTIME, tp);
 #endif
@@ -263,7 +242,7 @@ waitTime (
 #endif
 
   if ((int)then.tv_sec > 0 || ((int)then.tv_sec == 0 && then.tv_nsec > 0)) {
-#if defined OS_VMS || defined OS_ELN
+#if defined OS_VMS
     int			tv_nsec;
     int			vmstime[2];
     int			multiplier = -10000000;	      /* Used to convert 1 s to 100 ns, delta time.  */
@@ -282,13 +261,6 @@ waitTime (
     sts = sys$clref(timerFlag);
     sts = sys$setimr(timerFlag, vmstime, 0, 0, 0);
     sts = sys$waitfr(timerFlag);
-#endif
-#elif defined OS_ELN
-    eln$time_string(tims, vmstime);
-    tims[23] = '\0';
-    printf("  %s\n", tims);
-#if 0
-    ker$wait_any(&sts, NULL, vmstime);
 #endif
 #endif
 

@@ -36,14 +36,10 @@
 
 /* rt_neth.c -- net handler */
 
-#if defined OS_ELN
-# include $vaxelnc
-#else
-# include <stdio.h>
-# include <stddef.h>
-# include <stdlib.h>
-# include <string.h>
-#endif
+#include <stdio.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "pwr.h"
 #include "co_time.h"

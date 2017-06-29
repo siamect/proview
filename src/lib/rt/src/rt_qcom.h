@@ -60,18 +60,11 @@
 #pragma builtins
 #endif
 
-#ifdef	OS_ELN
-# include $vaxelnc
-# include $mutex
-#elif defined OS_POSIX
+#if defined OS_POSIX
 # include <pthread.h>
 #endif
 
-#ifdef	OS_ELN
-# include unistd
-#else
-# include <unistd.h>
-#endif
+#include <unistd.h>
 
 #ifndef rt_gdb_msg_h
 # include "rt_gdb_msg.h"

@@ -73,18 +73,6 @@
 */
 #endif
 
-#ifdef OS_ELN
-#include stdio
-#include stdlib
-#include string
-#include math
-#include float
-#include descrip
-#include libdef
-#include lib$routines
-#include starlet
-#endif
-
 #if defined OS_POSIX
 #include <signal.h>
 #include <stdio.h>
@@ -410,7 +398,7 @@ static pwr_tStatus	logg_open_file( logg_t_loggconf_list	*conflist_ptr,
 	  if (csts >= 0)
 	  {
 	    conflist_ptr->loggconf->FileOpenCount++;
-#if defined OS_ELN || defined OS_VMS
+#if defined OS_VMS
 	    fgetname( conflist_ptr->outfile, filename);
 #endif
 	    errh_CErrLog( REM__LOGGFILEOPEN, errh_ErrArgAF(filename), NULL);

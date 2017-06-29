@@ -36,13 +36,11 @@
 
 /* rt_eventmonitor.c -- Runtime environment - Message Handler */
 
-#ifndef OS_ELN
-# include <stdio.h>
-# include <stdlib.h>
-# include <string.h>
-# include <ctype.h>
-# include <math.h>
-#endif
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include <math.h>
 
 #if defined OS_VMS
 # include <starlet.h>
@@ -50,16 +48,6 @@
 # include <signal.h>
 # include <processes.h>
 # include <descrip.h>
-#elif defined OS_ELN
-# include ctype
-# include stdio
-# include stdlib
-# include string
-# include $vaxelnc
-# include $kernelmsg
-# include $dda_utility
-# include $elnmsg
-# include math
 #endif
 
 #include "pwr_baseclasses.h"
@@ -2855,10 +2843,6 @@ initBlockList ()
   char *env = getenv("pwrp_load"); 
   hostspec[0] = '\0'; /* Prevent warnings from gcc */
 
-#elif defined OS_ELN
-
-  syi_HostSpec(NULL, hostspec, sizeof(hostspec));
-
 #elif defined OS_VMS
 
   hostspec[0] = '\0';
@@ -2868,7 +2852,7 @@ initBlockList ()
 #endif
 
 
-#if defined OS_ELN || defined OS_VMS
+#if defined OS_VMS
   sprintf(l.blockDbName, "%spwrp_load:ld_bdb_%06x.dat", hostspec, l.head.nix);
 #else
   sprintf(l.blockDbName, "%s/ld_bdb_%06x.dat", env != NULL ? env : "", l.head.nix);

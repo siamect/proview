@@ -50,8 +50,6 @@
 
 #if defined OS_VMS
 # define pwrv_cOpSys              "OpenVMS"
-#elif defined OS_ELN
-# define pwrv_cOpSys              "VAXELN"
 #elif defined OS_LYNX
 # define pwrv_cOpSys              "LynxOS"
 #elif defined OS_LINUX

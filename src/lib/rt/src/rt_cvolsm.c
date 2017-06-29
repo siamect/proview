@@ -37,12 +37,8 @@
 /* rt_cvolsm.c -- Cached volumes, server monitor API.
    This module contains the cache handling routines.  */
 
-#if defined(OS_ELN)
-# include $vaxelnc
-#else
-# include <stdio.h>
-# include <string.h>
-#endif
+#include <stdio.h>
+#include <string.h>
 
 #include "pwr.h"
 #include "rt_errh.h"

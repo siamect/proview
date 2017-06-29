@@ -36,8 +36,6 @@
 
 #if defined(OS_VMS)
 #  include <descrip.h>
-#elif defined(OS_ELN)
-#  include descrip.h
 #endif
 
 #include "pwr.h"
@@ -54,7 +52,7 @@
 
 /* Backup process names */
 
-#if defined(OS_VMS) || defined(OS_ELN)
+#if defined(OS_VMS)
 #  define BCK_FILE_PROC_NAME "BCK file proc"
 #  define BCK_FAST_PROC_NAME "BCK fast proc"
 #  define BCK_SLOW_PROC_NAME "BCK slow proc"
@@ -62,10 +60,6 @@
 /**************************/
 /* File format definition */
 /**************************/
-
-#ifdef OS_ELN
-#  define	seekbug	1		/* Enable workaround code */
-#endif				/* but only for VAXELN... */
 
 /* The backup file consists of 2 areas,
    o a header which contains file info and pointers. This area is
@@ -166,40 +160,7 @@ typedef struct {
 	} bck_t_writeheader;
 
 
-#ifdef OS_ELN
-
-/* Areas for synchronisation between methods and the main
-   processing component in bck.  */
-
-#  define BCK_WRITE_DONE_NAME		"bck_write_done"
-#  define	BCK_FORCED_ACTIVATION_NAMES	"bck_activation"
-
-  static AREA		bck_forced_activation;
-  static AREA		bck_write_done;
-
-#  define	BCK_MAP_AREAS							\
-{									\
-  void *adrs;								\
-  $DESCRIPTOR (actdsc, BCK_FORCED_ACTIVATION_NAMES);			\
-  $DESCRIPTOR (namedsc, BCK_WRITE_DONE_NAME);				\
-  ker$create_area_event (						\
-		NULL,				/* status */		\
-		&bck_write_done,		/* area_id */		\
-		&adrs,				/* data_pointer */	\
-		0,				/* area_size */		\
-		&namedsc,			/* area_name */		\
-		EVENT$CLEARED,			/* initial_state */	\
-		NULL);				/* virtual_address */	\
-  ker$create_area_event (						\
-		NULL,				/* status */		\
-		&bck_forced_activation,		/* area_id */		\
-		&adrs,				/* data_pointer */	\
-		0,				/* area_size */		\
-		&actdsc,			/* area_name */		\
-		EVENT$CLEARED,			/* initial_state */	\
-		NULL);				/* virtual_address */	\
-}
-#elif defined (OS_VMS)
+#if defined (OS_VMS)
 
 #  define BCK_EFC	(32*3)		/* First flag of EF cluster 3 */
 #  define BCK_EFC_NAME	"BCK_EFC"	/* Name of EF cluster */

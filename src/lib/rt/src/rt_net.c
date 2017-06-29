@@ -38,11 +38,7 @@
    This module contains routines to handle Qcom calls.
    It is common to both application code and nethandler code.  */
 
-#if defined(OS_ELN)
-# include $vaxelnc
-# include $mutex
-# include $kernelmsg
-#elif defined(OS_VMS)
+#if defined(OS_VMS)
 # include <stdio.h>
 # include <stddef.h>
 # include <descrip.h>
@@ -87,13 +83,7 @@
    before reading the result from the variables. Finally, the
    l_mutex should be released.  */
 
-#if defined (OS_ELN)
-# define NET_LOCK	ELN$LOCK_MUTEX(l_mutex)
-# define NET_UNLOCK	ELN$UNLOCK_MUTEX(l_mutex)
-
-  static MUTEX		l_mutex;
-
-#elif defined OS_POSIX
+#if defined OS_POSIX
 # define NET_LOCK	pthread_mutex_lock(&l_mutex)
 # define NET_UNLOCK	pthread_mutex_unlock(&l_mutex)
 
@@ -787,8 +777,6 @@ net_Connect (
 
 
   }
-#elif defined OS_ELN 
-  ELN$CREATE_MUTEX(l_mutex, NULL);
 #endif
 
   NET_LOCK;

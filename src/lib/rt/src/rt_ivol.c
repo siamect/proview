@@ -39,14 +39,8 @@
    from loadfiles into the global PROVIEW/R database.  */
 
 
-#if defined(OS_ELN)
-# include $vaxelnc
-# include stdio
-# include string
-#else
-# include <stdio.h>
-# include <string.h>
-#endif
+#include <stdio.h>
+#include <string.h>
 
 #include "pwr.h"
 #include "rt_gdh_msg.h"
@@ -843,7 +837,7 @@ ivol_DecodeBody (
 )
 {
 
-#if 1 /* defined(OS_VMS) || defined(OS_ELN) */
+#if 1
   return TRUE;
 #else
   int			i;
@@ -852,11 +846,11 @@ ivol_DecodeBody (
   pwr_dStatus(sts, status, GDH__SUCCESS);
 
   for (i = 0, ap = cp->attr; i < cp->acount; i++, ap++) {
-    if (ap->flags.b.state) 
+    if (ap->flags.b.state)
       continue;
-    if (dvms[pwr_Tix(ap->type)] == NULL) 
+    if (dvms[pwr_Tix(ap->type)] == NULL)
       continue;
-    if (!dvms[pwr_Tix(ap->type)]((char *)bp, ap)) 
+    if (!dvms[pwr_Tix(ap->type)]((char *)bp, ap))
       return NO;
   }
 

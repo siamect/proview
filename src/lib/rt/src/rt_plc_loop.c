@@ -44,10 +44,6 @@
 #include <lib$routines.h>
 #endif
 
-#if defined OS_ELN
-#include libdef
-#endif
-
 #include "rt_plc_loop.h"
 
 extern void plc_ConvMSToLI(pwr_tUInt32 Time, pwr_tVaxTime *TimeLI);
@@ -66,60 +62,6 @@ static int GetVmsUpTime (unsigned int *Seconds, unsigned int *Ticks)
 }
 #endif
 
-#ifdef OS_ELN
-/*
- * plc_LoopInit()
- *
- * Description: T
- *  Gets the Uptime which will be used as NextTime the first time
- *  plc_LoopWait is called. 
- *
- */ 
-pwr_tStatus plc_LoopInit (pwr_tVaxTime *NextTime)
-{
-    pwr_tStatus sts;
-
-    ker$get_uptime(&sts, NextTime);
-    return sts;
-}
-
-/*
- * plc_LoopWait()
- *
- * Description:
- *  Returns FALSE if a slip is detected.
- */ 
-pwr_tBoolean plc_LoopWait (
-    int		*WaitResult,     /* Set to 1 when Event */
-    pwr_tVaxTime	*DeltaTime,
-    pwr_tVaxTime	*NextTime,
-    unsigned long Event
-)
-{
-    pwr_tStatus sts;
-    pwr_tVaxTime NextLoop, UpTime, DiffTime;
-    pwr_tBoolean Result;
-
-    sts = lib$add_times(NextTime, DeltaTime, &NextLoop);
-    *NextTime = NextLoop;
-    ker$get_uptime(&sts, &UpTime);
-    
-    sts = lib$sub_times(NextTime, &UpTime, &DiffTime);
-    if (sts == LIB$_NEGTIM) 
-	Result = FALSE; /* Slip */
-    else  if (NextTime->high == UpTime.high && NextTime->low == UpTime.low)
-	Result = TRUE; /* Equal Times */
-    else {
-	if (Event)
-	    ker$wait_any(&sts, WaitResult, &DiffTime, Event);
-	else
-	    ker$wait_any(&sts, WaitResult, &DiffTime);
-	Result = TRUE;
-    }	
-
-    return Result;
-}
-#endif
 
 #ifdef OS_VMS
 /*
@@ -218,4 +160,3 @@ pwr_tBoolean plc_LoopWait (
   return TRUE;  
 }
 #endif
-

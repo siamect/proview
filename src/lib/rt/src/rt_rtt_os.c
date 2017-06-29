@@ -39,16 +39,7 @@
 
 /*_Include files_________________________________________________________*/
 
-#if defined OS_ELN
-# include $kerneldef
-# include $vaxelnc
-# include string
-# include stdio
-# include stdlib
-# include descrip
-# include starlet
-# include chfdef
-#elif defined OS_VMS
+#if defined OS_VMS
 # include <string.h>
 # include <stdio.h>
 # include <stdlib.h>
@@ -95,8 +86,6 @@ static int	rttvms_get_state( int prcnum, char *state);
 static int	rttvms_get_pid( char *proc_name, int *pid);
 static int	rttvms_get_subproc( int owner, int *subproc, int subproc_size,
 		int *subproc_count);
-#elif OS_ELN
-static int	rtteln_get_nodename( char *nodename, int size);
 #endif	
 
 /*************************************************************************
@@ -115,8 +104,6 @@ int	rtt_get_nodename( char *nodename, int size)
 {
 #if defined(OS_VMS)
 	return rttvms_get_nodename( nodename, size);
-#elif defined(OS_ELN)
-	return rtteln_get_nodename( nodename, size);
 #elif defined OS_POSIX
 	struct	utsname buf;
 
@@ -143,7 +130,7 @@ int	rtt_get_nodename( char *nodename, int size)
 **************************************************************************/
 char	*rtt_fgetname( FILE *fp, char *name, char *def_name)
 {
-#if defined(OS_VMS) || defined(OS_ELN)
+#if defined(OS_VMS)
 	return fgetname( fp, name);
 #else
 	strcpy( name, def_name);
@@ -173,14 +160,6 @@ int	rtt_set_prio( int prio)
 	sts = sys$setpri(NULL, NULL, prio, NULL, NULL, NULL);
 	return sts;
 
-#elif  defined(OS_ELN)
-	int sts;
-
-	if ( prio == -1)
-	  prio = 16;
-	ker$set_job_priority( &sts, prio);
-	return sts;
-
 #else
 	/* TODO.... */
 	return 1;
@@ -206,14 +185,6 @@ int	rtt_set_default_prio()
 
 	prio = 4;
 	sts = sys$setpri(NULL, NULL, prio, NULL, NULL, NULL);
-	return sts;
-
-#elif  defined(OS_ELN)
-	int sts;
-	int prio;
-
-	prio = 16;
-	ker$set_job_priority( &sts, prio);
 	return sts;
 
 #else
@@ -1088,353 +1059,6 @@ main()
 */
 #endif
 
-#ifdef OS_ELN
-
-#define NOJOBPTR 0x80001000
-
-/*************************************************************************
-*
-* Name:		rtteln_get_nodename()
-*
-* Type		int
-*
-* Type		Parameter	IOGF	Description
-*
-* Description:
-*	Get nodename for the current system.
-*
-**************************************************************************/
-static int	rtteln_get_nodename( char *nodename, int size)
-{
-	globalref VARYING_STRING (6) ker$gt_node_name;
-
-	VARYING_TO_CSTRING (ker$gt_node_name, nodename);
-	return 1;
-}
-
-/*************************************************************************
-*
-* Name:		rtteln_get_pwr_proc()
-*
-* Type		int
-*
-* Type		Parameter	IOGF	Description
-*
-* Description:
-*	Get the eln jobs.
-*
-**************************************************************************/
-int	rtteln_get_jobs( 
-		int		*proc_pid_p,
-		pwr_tString32	*proc_name_p,
-		int		*proc_pri_p,
-		pwr_tString16	*proc_state_p,
-		float		*proc_cputim_p,
-		int		max_proc,
-		int		*proc_count)
-{
-	int		i;
-	int		sts;
-	struct jcb 	*jcb_ptr;
-	struct jcb 	*test_jcb_ptr;
-	struct jcb 	*next_jcb_ptr;
-	struct jcb 	*first_jcb_ptr;
-	char		program_name[80];
-	struct pcb 	*pcb_ptr;
-	int		joffs;
-	int		poffs;
-	char		*flink;
-
-
-	memset( proc_pid_p, 0, max_proc*sizeof(*proc_pid_p));
-	memset( proc_name_p, 0, max_proc*sizeof(*proc_name_p));
-	memset( proc_pri_p, 0, max_proc*sizeof(*proc_pri_p));
-	memset( proc_state_p, 0, max_proc*sizeof(*proc_state_p));
-	memset( proc_cputim_p, 0, max_proc*sizeof(*proc_cputim_p));
-
-	ker$get_jcb(&sts, &jcb_ptr);
-	if ( EVEN(sts)) return sts;
-
-        joffs = &jcb_ptr->jcb$a_job_flink;
-	joffs = joffs - (int)jcb_ptr;
-	pcb_ptr = jcb_ptr->jcb$a_current_pcb;
-	poffs = &pcb_ptr->pcb$a_process_flink;
-	poffs = poffs - (int)pcb_ptr;
-
-	/* Get the first jcb */
-	test_jcb_ptr = (char *)jcb_ptr->jcb$a_job_flink - joffs; 
-	while( test_jcb_ptr > NOJOBPTR )
-	{
-	  next_jcb_ptr = test_jcb_ptr;
-	  test_jcb_ptr = (char *)next_jcb_ptr->jcb$a_job_flink - joffs;
-	}
-	first_jcb_ptr = next_jcb_ptr;
-
-	*proc_count = 0;
-	/* Get info from the jbc */
-	do {
-	  if ( *proc_count == max_proc) break;
-
-	  strcpy( proc_name_p, next_jcb_ptr->jcb$a_program->prg$t_name.string_text);
-	  *proc_pid_p = next_jcb_ptr->jcb$w_generation;
-	  switch( next_jcb_ptr->jcb$b_state)
-	  {
-	    case JCB$K_WAITING: strcpy( proc_state_p, "WAIT"); break;
-	    case JCB$K_READY: strcpy( proc_state_p, "READY"); break;
-	    case JCB$K_RUNNING: strcpy( proc_state_p, "RUN"); break;
-	    default: strcpy( proc_state_p, "");
-	  }
-	  *proc_pri_p = next_jcb_ptr->jcb$b_priority;
-
-	  pcb_ptr = (char *)next_jcb_ptr->jcb$a_process_flink - poffs;
-	  flink = 0;
-	  *proc_cputim_p = (float)pcb_ptr->pcb$l_job_cpu_time / 100.;
-	  while ( flink != next_jcb_ptr->jcb$a_process_flink)
-	  {
-	    *proc_cputim_p += (float)pcb_ptr->pcb$l_cpu_time / 100.;
-	    pcb_ptr = (char *)pcb_ptr->pcb$a_process_flink - poffs;
-	    flink = pcb_ptr->pcb$a_process_flink;
-	  }
-	  proc_pid_p++;
-	  proc_name_p++;
-	  proc_pri_p++;
-	  proc_state_p++;
-	  proc_cputim_p++;
-	  (*proc_count)++;
-	  
-	  next_jcb_ptr = (char *)next_jcb_ptr->jcb$a_job_blink - joffs;
-	} while ( next_jcb_ptr > NOJOBPTR);
-
-	return 1;
-}
-
-/*************************************************************************
-*
-* Name:		rtteln_get_proc_info()
-*
-* Type		int
-*
-* Type		Parameter	IOGF	Description
-*
-* Description:
-*	Get info from one eln job.
-*
-**************************************************************************/
-int	rtteln_get_job_info( 
-		int		job_generation,
-		pwr_tString32	*proc_name_p,
-		int		*proc_pri_p,
-		pwr_tString16	*proc_state_p,
-		float		*proc_cputim_p,
-		pwr_tString	*proc_filename_p,
-		char		*pgm_mode,
-		int		*user_stack,
-		int		*kernel_stack,
-		char		*optionflags)
-{
-	int		i;
-	int		sts;
-	struct jcb 	*jcb_ptr;
-	struct jcb 	*test_jcb_ptr;
-	struct jcb 	*next_jcb_ptr;
-	struct jcb 	*first_jcb_ptr;
-	char		program_name[80];
-	struct pcb 	*pcb_ptr;
-	struct prg 	*pgm_ptr;
-	int		joffs;
-	int		poffs;
-	char		*flink;
-	int		found;
-
-	ker$get_jcb(&sts, &jcb_ptr);
-	if ( EVEN(sts)) return sts;
-
-        joffs = &jcb_ptr->jcb$a_job_flink;
-	joffs = joffs - (int)jcb_ptr;
-	pcb_ptr = jcb_ptr->jcb$a_current_pcb;
-	poffs = &pcb_ptr->pcb$a_process_flink;
-	poffs = poffs - (int)pcb_ptr;
-
-	/* Get the first jcb */
-	test_jcb_ptr = (char *)jcb_ptr->jcb$a_job_flink - joffs; 
-	while( test_jcb_ptr > NOJOBPTR )
-	{
-	  next_jcb_ptr = test_jcb_ptr;
-	  test_jcb_ptr = (char *)next_jcb_ptr->jcb$a_job_flink - joffs;
-	}
-	first_jcb_ptr = next_jcb_ptr;
-
-	found = 0;
-	/* Find the jbc */
-	do {
-
-	  pcb_ptr = (char *)next_jcb_ptr->jcb$a_process_flink - poffs;
-	  flink = 0;
-	  if ( job_generation == next_jcb_ptr->jcb$w_generation)
-	  {
-	    pgm_ptr = next_jcb_ptr->jcb$a_program;
-	    strncpy( proc_name_p, pgm_ptr->prg$t_name.string_text, 79);
-	    strncpy( proc_filename_p, 
-	      pgm_ptr->prg$r_filename_overlay.prg$t_filename.string_text, 79);
-	    switch( next_jcb_ptr->jcb$b_state)
-	    {
-	      case JCB$K_WAITING: strcpy( proc_state_p, "WAIT"); break;
-	      case JCB$K_READY: strcpy( proc_state_p, "READY"); break;
-	      case JCB$K_RUNNING: strcpy( proc_state_p, "RUN"); break;
-	      default: strcpy( proc_state_p, "");
-	    }
-	    *proc_pri_p = next_jcb_ptr->jcb$b_priority;
-
-	    pcb_ptr = (char *)next_jcb_ptr->jcb$a_process_flink - poffs;
-	    flink = 0;
-	    *proc_cputim_p = (float)pcb_ptr->pcb$l_job_cpu_time / 100.;
-	    while ( flink != next_jcb_ptr->jcb$a_process_flink)
-	    {
-	      *proc_cputim_p += (float)pcb_ptr->pcb$l_cpu_time / 100.;
-	      pcb_ptr = (char *)pcb_ptr->pcb$a_process_flink - poffs;
-	      flink = pcb_ptr->pcb$a_process_flink; 
-	    }	  
-	    if ( !pgm_ptr->prg$b_mode)
-	      strcpy( pgm_mode, "KERNEL");
-	    else
-	      strcpy( pgm_mode, "USER");
-	    *kernel_stack = pgm_ptr->prg$w_kernel_stack;
-	    *user_stack = pgm_ptr->prg$w_user_stack;
-	    strcpy( optionflags, "");
-	    if ( pgm_ptr->prg$b_option_flags.prg$v_auto_start)
-	      strcat( optionflags, "AUTOSTART ");
-	    if ( pgm_ptr->prg$b_option_flags.prg$v_seq_initial)
-	      strcat( optionflags, "INIT ");
-	    if ( pgm_ptr->prg$b_option_flags.prg$v_start_debug)
-	      strcat( optionflags, "DEBUG ");
-	    if ( pgm_ptr->prg$b_option_flags.prg$v_dynamic_program)
-	      strcat( optionflags, "DYN ");
-	    if ( pgm_ptr->prg$b_option_flags.prg$v_debug_warm)
-	      strcat( optionflags, "DBGWARM ");
-	    found = 1;
-	    break;
-	  }
-	  next_jcb_ptr = (char *)next_jcb_ptr->jcb$a_job_blink - joffs;
-	} while ( next_jcb_ptr > NOJOBPTR);
-
-	if ( !found)
-	  return 0;
-
-	return 1;
-}
-
-/*************************************************************************
-*
-* Name:		rtteln_get_job_proc()
-*
-* Type		int
-*
-* Type		Parameter	IOGF	Description
-*
-* Description:
-*	Get the pwr processes in the system.
-*
-**************************************************************************/
-int	rtteln_get_job_proc( 
-		int		job_generation,
-		int		*proc_generation_p,
-		pwr_tString32	*proc_name_p,
-		int		*proc_pri_p,
-		pwr_tString16	*proc_state_p,
-		float		*proc_cputim_p,
-		int		max_proc,
-		int		*proc_count)
-{
-	int		i;
-	int		sts;
-	struct jcb 	*jcb_ptr;
-	struct jcb 	*test_jcb_ptr;
-	struct jcb 	*next_jcb_ptr;
-	struct jcb 	*first_jcb_ptr;
-	char		program_name[80];
-	struct pcb 	*pcb_ptr;
-	int		joffs;
-	int		poffs;
-	char		*flink;
-	int		found;
-
-
-	memset( proc_generation_p, 0, max_proc*sizeof(*proc_generation_p));
-	memset( proc_name_p, 0, max_proc*sizeof(*proc_name_p));
-	memset( proc_pri_p, 0, max_proc*sizeof(*proc_pri_p));
-	memset( proc_state_p, 0, max_proc*sizeof(*proc_state_p));
-	memset( proc_cputim_p, 0, max_proc*sizeof(*proc_cputim_p));
-
-	ker$get_jcb(&sts, &jcb_ptr);
-	if ( EVEN(sts)) return sts;
-
-        joffs = &jcb_ptr->jcb$a_job_flink;
-	joffs = joffs - (int)jcb_ptr;
-	pcb_ptr = jcb_ptr->jcb$a_current_pcb;
-	poffs = &pcb_ptr->pcb$a_process_flink;
-	poffs = poffs - (int)pcb_ptr;
-
-	/* Get the first jcb */
-	test_jcb_ptr = (char *)jcb_ptr->jcb$a_job_flink - joffs; 
-	while( test_jcb_ptr > NOJOBPTR )
-	{
-	  next_jcb_ptr = test_jcb_ptr;
-	  test_jcb_ptr = (char *)next_jcb_ptr->jcb$a_job_flink - joffs;
-	}
-	first_jcb_ptr = next_jcb_ptr;
-
-	*proc_count = 0;
-	found = 0;
-	/* Find the jbc */
-	do {
-
-	  pcb_ptr = (char *)next_jcb_ptr->jcb$a_process_flink - poffs;
-	  flink = 0;
-	  if ( job_generation == next_jcb_ptr->jcb$w_generation)
-	  {
-	    while ( flink != next_jcb_ptr->jcb$a_process_flink)
-	    {
-	      if ( *proc_count == max_proc) break;
-
-	      *proc_cputim_p = (float)pcb_ptr->pcb$l_cpu_time / 100.;
-	      strcpy( proc_name_p, "");
-	      *proc_generation_p = pcb_ptr->pcb$w_generation;
-	      switch( pcb_ptr->pcb$b_state)
-	      {
-	        case PCB$K_WAITING: strcpy( proc_state_p, "WAIT"); break;
-	        case PCB$K_READY: strcpy( proc_state_p, "READY"); break;
-	        case PCB$K_RUNNING: strcpy( proc_state_p, "RUN"); break;
-	        case PCB$K_SUSPENDED: strcpy( proc_state_p, "SUSP"); break;
-	        default: strcpy( proc_state_p, "");
-	      }
-	      if ( pcb_ptr->pcb$b_reason.pcb$v_signal_debug)
-	        strcpy( proc_state_p, "DEBUG");
-	      *proc_pri_p = pcb_ptr->pcb$b_priority;
-
-	      proc_generation_p++;
-	      proc_name_p++;
-	      proc_pri_p++;
-	      proc_state_p++;
-	      proc_cputim_p++;
-	      (*proc_count)++;
-
-	      pcb_ptr = (char *)pcb_ptr->pcb$a_process_flink - poffs;
-	      flink = pcb_ptr->pcb$a_process_flink; 
-	    }
-	    found = 1;
-	    break;
-	  }
-	  next_jcb_ptr = (char *)next_jcb_ptr->jcb$a_job_blink - joffs;
-	} while ( next_jcb_ptr > NOJOBPTR);
-
-	if ( !found)
-	  return 0;
-
-	return 1;
-}
-#endif
-
-
 /*************************************************************************
 *
 * Name:		rtt_get_platform()
@@ -1468,9 +1092,6 @@ int	rtt_get_platform( char *platform)
 	  strcpy( platform, "VAX_VMS");
 	else
 	  strcpy( platform, "AXP_VMS");
-	return 1;
-#elif defined(OS_ELN)
-	strcpy( platform, "VAX_ELN");
 	return 1;
 #elif defined OS_POSIX
 	struct	utsname buf;
@@ -1515,9 +1136,6 @@ int	rtt_get_hw( char *hw)
 	  strcpy( hw, "vax");
 	else
 	  strcpy( hw, "axp");
-	return 1;
-#elif defined(OS_ELN)
-	strcpy( hw, "vax");
 	return 1;
 #elif defined(OS_LYNX) || defined(OS_LINUX)
 	struct	utsname buf;
@@ -1632,4 +1250,3 @@ int     rtt_replace_env( char *str, char *newstr)
         return 1;
 }
 #endif
-

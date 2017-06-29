@@ -65,17 +65,6 @@
 #include <float.h>
 #endif
 
-#ifdef OS_ELN
-#include stdio
-#include stdlib
-#include string
-#include math
-#include float
-#include libdef
-#include starlet
-#include lib$routines
-#endif
-
 #include "pwr.h"
 #include "pwr_baseclasses.h"
 #include "pwr_nmpsclasses.h"
@@ -265,7 +254,7 @@ static pwr_tStatus	nmpsbck_free( bck_ctx bckctx);
 **************************************************************************/
 static char	*nmps_fgetname( FILE *fp, char *name, char *def_name)
 {
-#if defined(OS_VMS) || defined(OS_ELN)
+#if defined(OS_VMS)
 	return fgetname( fp, name);
 #else
 	strcpy( name, def_name);
@@ -1216,9 +1205,7 @@ static pwr_tStatus	nmpsbck_open_file( 	bck_ctx	bckctx)
 			filename, NMPSBCK_FILE_EXT1);
 
 
-#if defined(OS_ELN)
-	    bckctx->bckfile1 = fopen( filename, "w+", "shr=get");
-#elif defined(OS_VMS)
+#if defined(OS_VMS)
 	    bckctx->bckfile1 = fopen( filename, "r+", "shr=get");
 	    if (bckctx->bckfile1 == NULL)
 	      bckctx->bckfile1 = fopen( filename, "w+", "shr=get");
@@ -1277,9 +1264,7 @@ static pwr_tStatus	nmpsbck_open_file( 	bck_ctx	bckctx)
 	    nmpsbck_get_filename( bckctx->bckconfig->BackupFile,
 			filename, NMPSBCK_FILE_EXT2);
 
-#if defined(OS_ELN)
-	    bckctx->bckfile2 = fopen( filename, "w+", "shr=get");
-#elif defined(OS_VMS)
+#if defined(OS_VMS)
 	    bckctx->bckfile2 = fopen( filename, "r+", "shr=get");
 	    if (bckctx->bckfile2 == NULL) 
 	      bckctx->bckfile2 = fopen( filename, "w+", "shr=get");
@@ -1672,9 +1657,7 @@ static pwr_tStatus	nmpsbck_read( bck_ctx	bckctx, char *backupfile)
 	nmpsbck_get_filename( backupfile,
 			      filename, NMPSBCK_FILE_EXT1);
 
-#if defined(OS_ELN)
-	bckfile1 = fopen( filename, "r+", "shr=get");
-#elif defined(OS_VMS)
+#if defined(OS_VMS)
 	bckfile1 = fopen( filename, "r+", "shr=get");
 #else
 	bckfile1 = fopen( filename, "r+");
@@ -1701,9 +1684,7 @@ static pwr_tStatus	nmpsbck_read( bck_ctx	bckctx, char *backupfile)
 	nmpsbck_get_filename( backupfile,
 			      filename, NMPSBCK_FILE_EXT2);
 
-#if defined(OS_ELN)
-	bckfile2 = fopen( filename, "r+", "shr=get");
-#elif defined(OS_VMS)
+#if defined(OS_VMS)
 	bckfile2 = fopen( filename, "r+", "shr=get");
 #else
 	bckfile2 = fopen( filename, "r+");

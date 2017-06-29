@@ -34,17 +34,9 @@
  * General Public License plus this exception.
  */
 
-#ifdef	OS_ELN
-# include $vaxelnc
-# include $kernelmsg
-# include stdio
-# include stdlib
-# include string
-#else
-# include <stdio.h>
-# include <stdlib.h>
-# include <string.h>
-#endif
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #ifdef OS_VMS
 # include <starlet.h>
@@ -65,15 +57,7 @@ sync_CondInit (
 )
 {
 
-#if defined OS_ELN
-
-  pwr_tStatus sts;
-
-  ker$create_event(&sts, cp, EVENT$CLEARED);
-
-  return sts;
-
-#elif defined OS_LYNX && defined PWR_LYNX_30
+#if defined OS_LYNX && defined PWR_LYNX_30
 
   return errno_Pstatus(pthread_cond_init(&cp->c, NULL));
 
@@ -96,15 +80,7 @@ sync_CondSignal (
 )
 {
 
-#if defined OS_ELN
-
-  pwr_tStatus sts = SYNC__SUCCESS;
-
-  ker$signal(&sts, *cp);
-
-  return sts;
-
-#elif defined OS_LYNX && defined PWR_LYNX_30
+#if defined OS_LYNX && defined PWR_LYNX_30
   cp->f = 1;
   return errno_Pstatus(pthread_cond_signal(&cp->c));
 
@@ -127,15 +103,7 @@ sync_MutexInit (
 )
 {
 
-#if defined OS_ELN
-
-  pwr_tStatus sts = SYNC__SUCCESS;
-
-  ELN$CREATE_MUTEX(*mp, &sts);
-
-  return sts;
-
-#elif defined OS_LYNX && defined PWR_LYNX_30
+#if defined OS_LYNX && defined PWR_LYNX_30
 
   return errno_Pstatus(pthread_mutex_init(mp, NULL));
 
@@ -158,12 +126,7 @@ sync_MutexLock (
 )
 {
 
-#if defined OS_ELN
-
-  ELN$LOCK_MUTEX(*mp);
-  return SYNC__SUCCESS;
-
-#elif defined OS_LYNX && defined PWR_LYNX_30
+#if defined OS_LYNX && defined PWR_LYNX_30
 
   return errno_Pstatus(pthread_mutex_lock(mp));
 
@@ -187,12 +150,7 @@ sync_MutexUnlock (
 )
 {
 
-#if defined OS_ELN
-
-  ELN$UNLOCK_MUTEX(*mp);
-  return SYNC__SUCCESS;
-
-#elif defined OS_LYNX && defined PWR_LYNX_30
+#if defined OS_LYNX && defined PWR_LYNX_30
 
   return errno_Pstatus(pthread_mutex_unlock(mp));
 

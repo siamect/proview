@@ -778,35 +778,6 @@ int	rttvms_get_pwr_proc(
 		float		*proc_cputim_p,
 		int		max_proc,
 		int		*proc_count);
-#elif defined OS_ELN
-int	rtteln_get_jobs( 
-		int		*proc_pid_p,
-		pwr_tString32	*proc_name_p,
-		int		*proc_pri_p,
-		pwr_tString16	*proc_state_p,
-		float		*proc_cputim_p,
-		int		max_proc,
-		int		*proc_count);
-int	rtteln_get_job_info( 
-		int		job_generation,
-		pwr_tString32	*proc_name_p,
-		int		*proc_pri_p,
-		pwr_tString16	*proc_state_p,
-		float		*proc_cputim_p,
-		pwr_tString	*proc_filename_p,
-		char		*pgm_mode,
-		int		*user_stack,
-		int		*kernel_stack,
-		char		*optionflags);
-int	rtteln_get_job_proc( 
-		int		job_generation,
-		int		*proc_generation_p,
-		pwr_tString32	*proc_name_p,
-		int		*proc_pri_p,
-		pwr_tString16	*proc_state_p,
-		float		*proc_cputim_p,
-		int		max_proc,
-		int		*proc_count);
 #elif defined OS_POSIX
 int     rtt_replace_env( char *str, char *newstr);
 #endif
@@ -839,10 +810,3 @@ int 	rtt_attribute_func (
   ccm_tFloat   	*return_float,
   ccm_tInt     	*return_int,
   char		*return_string);
-
-/* Module rt_rtt_rtc.c */
-#ifdef OS_ELN
-int rtt_rtc( int function);
-#endif
-
-

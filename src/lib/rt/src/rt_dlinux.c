@@ -38,7 +38,7 @@
    Functions to convert data to load in file, from linux to VMS format */
 
 
-#if defined(OS_VMS) || defined(OS_ELN)
+#if defined(OS_VMS)
 static char dlinux_id = 0;
 #else
 

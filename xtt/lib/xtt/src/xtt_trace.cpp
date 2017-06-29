@@ -36,8 +36,6 @@
 
 /* xtt_trace.cpp -- trace in runtime environment */
 
-#if !defined OS_ELN
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -1646,4 +1644,3 @@ RtTrace::RtTrace( void *tr_parent_ctx, pwr_tObjid tr_objid,
   call_method_cb(0), trace_list(0), version(0), m_has_host(0), wow(0)
 {
 }
-#endif

@@ -36,19 +36,10 @@
 
 /* rt_tmon.c -- Timer Monitor */
 
-#if defined(OS_ELN)
-# include $vaxelnc
-# include stdio.h
-# include stddef.h
-# include stdlib.h
-# include string.h
-#else
-# include <stdio.h>
-# include <stddef.h>
-# include <stdlib.h>
-# include <string.h>
-// # include <mcheck.h>
-#endif
+#include <stdio.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
 
 #ifdef OS_VMS
 # include <starlet.h>
@@ -696,7 +687,7 @@ waitClock (
   int			*tmo_ms
 )
 {
-#if defined OS_VMS || defined OS_ELN
+#if defined OS_VMS
     pwr_tStatus		sts;
     int			sec;
     int			nsec;
@@ -711,8 +702,6 @@ waitClock (
     sts = sys$clref(timer_flag);
     sts = sys$setimr(timer_flag, vmstime, 0, 0, 0);
     sts = sys$waitfr(timer_flag);
-# elif defined OS_ELN
-    ker$wait_any(&sts, NULL, vmstime);
 # endif
 
 #elif defined OS_POSIX

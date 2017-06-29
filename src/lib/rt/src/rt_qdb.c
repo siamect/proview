@@ -36,16 +36,9 @@
 
 /* rt_qdb.c -- Queue Communication Database */
 
-#if defined(OS_ELN)
-# include $vaxelnc
-# include stdarg
-# include stsdef
-# include descrip
-#else 
-# include <stdio.h>
-# include <stdlib.h>
-# include <string.h>
-#endif
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #if defined OS_POSIX
 # include <signal.h>
@@ -73,13 +66,7 @@
 #include "rt_pool.h"
 #include "rt_hash.h"
 
-#if defined (OS_ELN)
-#if 0
-  noshare qdb_sLocal *qdb = NULL;
-#endif
-#else
-  qdb_sLocal *qdb = NULL;
-#endif
+qdb_sLocal *qdb = NULL;
 
 static int
 copyBufferData (

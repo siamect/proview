@@ -42,21 +42,7 @@
 
 
 
-#if defined(OS_ELN)
-# include stdio
-# include stdarg
-# include stdlib
-# include signal
-# include string
-# include descrip
-# include starlet
-# include lib$routines
-# include $vaxelnc
-# include $kernelmsg
-# include $elnmsg
-# include $get_message_text
-# include $file_utility
-#elif defined(OS_VMS)
+#if defined(OS_VMS)
 # include <stdio.h>
 # include <stdlib.h>
 # include <ctype.h>
@@ -162,44 +148,6 @@ int rtt_search_file( 		char 	*name ,
 	  strcpy( found_file, result_name);
 	}
 	return 1;
-#elif defined (OS_ELN)
-
-	static ELN$DIR_FILE *dir_file;
-	VARYING_STRING(255) search_name, volume_name, directory_name,
-			file_name, server_name;
-	char	directory_str[255], file_str[255],
-		volume_str[255], server_str[255];
-	int	sts;
-	static FILE$ATTRIBUTES_RECORD *fattr;
-
-	if ( new == RTT_DIR_SEARCH_INIT)
-	{
-	  dir_file = calloc( 1, sizeof(*dir_file));
-	  CSTRING_TO_VARYING( name, search_name);
-	  eln$directory_open( &dir_file, &search_name, &volume_name, 
-		&directory_name, &sts, &server_name, &fattr);
-	  if ( EVEN(sts)) return sts;
-	}
-
-	if ( new == RTT_DIR_SEARCH_INIT || new == RTT_DIR_SEARCH_NEXT)
-	{
-	  eln$directory_list( &dir_file, &directory_name, &file_name, &sts,
-		&fattr);
-	  if (EVEN(sts)) return sts;
-
-	  VARYING_TO_CSTRING( directory_name, directory_str);
-	  VARYING_TO_CSTRING( file_name, file_str);
-	  VARYING_TO_CSTRING( volume_name, volume_str);
-	  VARYING_TO_CSTRING( server_name, server_str);
-	  strcpy( found_file, server_str);
-	  strcat( found_file, volume_str);
-	  strcat( found_file, directory_str);
-	  strcat( found_file, file_str);
-	}
-	if ( new == RTT_DIR_SEARCH_END)
-	  eln$directory_close( &dir_file, &sts);
-
-	return sts;
 #elif defined OS_POSIX
 
 	static DIR *directory;
@@ -359,81 +307,6 @@ int	rtt_parse_filename( 	char	*filename,
 	  *version = -1;
 
 	return 1;
-#elif defined (OS_ELN)
-	char	*s, *t;
-	char	ldev[200];
-	char	ldir[200];
-	char	lfile[200];
-	char	ltype[80];
-	char	lversion[80];
-	int	sts;
-
-	if ( s = strstr( filename, "::"))
-	  s += 2;
-	else
-	  s = filename;
-	strcpy( ldev, s);
-
-	/* Device */
-	if ( s = strchr( ldev, ':'))
-	  s++;
-	else
-	  s = ldev;
-	strcpy( ldir, s);
-	*s = 0;
-
-	/* Directory */
-	if ( s = strchr( ldir, '>'))
-	  s++;
-	else
-	{
-	  if ( s = strchr( ldir, ']'))
-	    s++;
-	  else
-	    s = ldir;
-	}
-	strcpy( lfile, s);
-	*s = 0;
-
-	/* File */
-	if ( (s = strchr( lfile, '.')) == 0)
-	  s = lfile;
-	strcpy( ltype, s);
-	*s = 0;
-
-	/* Directory */
-	if ( s = strchr( ltype, ';'))
-	  t = s++;
-	else
-	{
-	  if ( s = strchr( ltype + 1, '.'))
-	    t = s++;
-	  else
-	  {
-	    s = ltype;
-	    t = s + strlen(s);
-	  }
-	}
-	strcpy( lversion, t);
-	*t = 0;
-
-	if ( strcmp( lversion, "") == 0)
-	{
-	  *version = 0;
-	}
-	else
-	{
-	  sts = sscanf( lversion, "%d", version);
-	  if ( sts != 1)
-	    *version = 0;
-	}
-
-	strcpy( dev, ldev);
-	strcpy( dir, ldir);
-	strcpy( file, lfile);
-	strcpy( type, ltype);
-	return 1;
-
 #elif defined OS_POSIX
 
 	char	*s;

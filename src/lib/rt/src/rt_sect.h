@@ -37,11 +37,7 @@
 #ifndef	rt_sect_h
 #define rt_sect_h
 
-#if defined(OS_ELN)
-# include stddef
-#else
-# include <stddef.h>
-#endif
+#include <stddef.h>
 
 #include "pwr.h"
 
@@ -59,13 +55,6 @@ typedef enum {
 
   typedef sem_t sect_sMutex;
 
-#endif
-
-#ifdef	OS_ELN
-# include $mutex
-# include descrip
-
-  typedef AREA_LOCK_VARIABLE sect_sMutex;
 #endif
 
 #ifdef	OS_VMS
@@ -97,7 +86,7 @@ typedef union {
 #define sect_mHead_		(~sect_mHead__)
 } sect_mHead;
 
-#if defined OS_VMS || defined OS_ELN
+#if defined OS_VMS
 
   typedef	struct { 
     void		*base;		/* Virtual address of section.  */

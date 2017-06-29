@@ -40,9 +40,8 @@
 /* remote_mq.h -- Runtime environment - Message Queue
 */
 
-
 /* Define types used by PAMS  */
-#if defined(OS_VMS) || defined(OS_ELN)
+#if defined(OS_VMS)
 
 #ifndef __INTS_LOADED
 
@@ -67,27 +66,9 @@ typedef unsigned long  uint32;
 #endif  /* __DECC             */
 #endif  /* __INTS_LOADED      */
 
-
-
-
-/* In PAMS 'queue' is named 'process', so do a fix  */
-
-#ifdef OS_ELN
-typedef union {
-       unsigned long all;
-       struct {
-          unsigned short queue;
-          unsigned short group;
-       } au;
-} PAMS_ADDRESS;
-#define PAMS_ADDRESS_DEFINED
-
-#else
-
 /* Include p_entry.h otherwise we won't get any prototypes  */
 
 #include "p_entry.h"
-#endif
 
 #include pams_c_process
 #include pams_c_group
@@ -97,8 +78,6 @@ typedef union {
 #include pams_c_entry_point
 #include avail_msg_def
 #include sbs_msg_def
-
-
 
 typedef union {
   unsigned long All;

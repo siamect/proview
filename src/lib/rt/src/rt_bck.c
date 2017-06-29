@@ -57,17 +57,6 @@ pwr_tUInt32 bck_WaitBackup (
 
 #else
 
-#ifdef OS_ELN
-# include $vaxelnc
-#include stdio
-#include stdlib
-#include descrip
-#include string
-#include errno
-#include time
-#include "sys$library:ssdef.h"
-#endif
-
 #ifdef OS_VMS
 #include <stdio.h>
 #include <stdlib.h>
@@ -86,10 +75,6 @@ pwr_tUInt32 bck_WaitBackup (
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
 #include "rt_bckdef.h"
-
-#ifdef OS_ELN
-static pwr_tBoolean areas_mapped = FALSE;
-#endif
 
 #ifdef OS_VMS
 static pwr_tBoolean timed_out = FALSE;
@@ -128,17 +113,6 @@ void bck_ForceBackup (
 #endif
 
 /*
- * Initialize
- */
-
-#ifdef OS_ELN
-  if (!areas_mapped) {
-    BCK_MAP_AREAS;
-    areas_mapped = TRUE;
-  }
-#endif
-
-/*
  * Build the context block (i.e. current time)
  */
 
@@ -152,14 +126,10 @@ void bck_ForceBackup (
  * Kick the backup processes
  */
 
-#ifdef OS_ELN
-  ker$signal (NULL, bck_forced_activation);
-#else
   sts = sys$ascefc (BCK_EFC, &efcname, 0, 0);
   if (EVEN (sts)) lib$signal (sts);
   sts = sys$setef (BCK_ACTIVATE);
   if (EVEN (sts)) lib$signal (sts);
-#endif
 
 } /* bck_ForceBackup */
 
@@ -199,24 +169,8 @@ pwr_tUInt32 bck_WaitBackup (
   $DESCRIPTOR (timeunitdsc, "0 0:0:0.1");	/* 0.1 second units */
   int cycletime;
 
-#ifdef OS_ELN
-  pwr_tInt32 res;
-  pwr_tVaxTime *tmop;
-#endif
-
 #ifdef OS_VMS
   $DESCRIPTOR (efcname, BCK_EFC_NAME);
-#endif
-
-/*
- * Initialize
- */
-
-#ifdef OS_ELN
-  if (!areas_mapped) {
-    BCK_MAP_AREAS;
-    areas_mapped = TRUE;
-  }
 #endif
 
 /*
@@ -241,24 +195,16 @@ pwr_tUInt32 bck_WaitBackup (
     free (context);
   }
 
-#ifdef OS_ELN
-  tmop = NULL;
-#else
   timed_out = FALSE;  
   sts = sys$ascefc (BCK_EFC, &efcname, 0, 0);
   if (EVEN (sts)) lib$signal (sts);			/* BUG */
-#endif
 
   if (timeout) {
     cycletime = backup_confp->CycleSlow * 2;
     if (cycletime == 0) cycletime = BCK_DEFAULT_SLOW * 2;
 
-#ifdef OS_ELN
-    tmo = eln$time_value (&timeunitdsc);
-#else
     sts = sys$bintim (&timeunitdsc, &tmo);
     if (EVEN (sts)) lib$signal (sts);		/* BUG, should not happen */
-#endif
 
     lib$mult_delta_time (
 		&cycletime,		/* multiplier */
@@ -266,12 +212,8 @@ pwr_tUInt32 bck_WaitBackup (
     sys$gettim (&tmptime);
     lib$add_times (&tmo, &tmptime, &tmo); /* Make absolute time */
 
-#ifdef OS_ELN
-    tmop = &tmo;
-#else
     sts = sys$setimr (BCK_WRITE_DONE, &tmo, &astrtn, 4711, 0);
     if (EVEN (sts)) lib$signal (sts);			/* BUG */
-#endif
   }
 
 /*
@@ -279,15 +221,6 @@ pwr_tUInt32 bck_WaitBackup (
  */
 
   while (TRUE) {
-#ifdef OS_ELN
-    ker$clear_event (NULL, bck_write_done);
-    ker$wait_any (NULL, &res, tmop, bck_write_done);
-
-    /* Check for timeout */
-
-    if (res == 0) return SS$_TIMEOUT;
-#else
-
     sts = sys$clref (BCK_WRITE_DONE);
     if (EVEN (sts)) lib$signal (sts);			/* BUG */
     sts = sys$waitfr (BCK_WRITE_DONE);
@@ -296,8 +229,6 @@ pwr_tUInt32 bck_WaitBackup (
     /* Check for timeout */
 
     if (timed_out) return SS$_TIMEOUT;
-
-#endif
 
     /* Check if both cycles done */
 

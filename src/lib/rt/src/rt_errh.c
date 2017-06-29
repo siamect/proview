@@ -37,22 +37,11 @@
 /* rt_errh.c -- Logg errors and more.
   The routines in this module are the error logging package.  */
 
-
-#ifdef OS_ELN
-
-# include ctype
-# include $kerneldef
-# include $vaxelnc
-# include stdio
-# include stdarg
-# include descrip
-#else
-# include <stdlib.h>
-# include <stdarg.h>
-# include <stdio.h>    /* for EOF */
-# include <string.h>
-# include <ctype.h>
-#endif
+#include <stdlib.h>
+#include <stdarg.h>
+#include <stdio.h>    /* for EOF */
+#include <string.h>
+#include <ctype.h>
 
 #if defined OS_POSIX
 # include <sys/types.h>
@@ -122,17 +111,6 @@ typedef struct {
 
   static sPid pid = 0;
 
-#elif defined OS_ELN
-
-# define LOG_MAX_MSG_SIZE 255
-
-  typedef struct {
-    int job;
-    int proc;
-  } sPid;
-
-  static sPid pid = {0, 0};
-
 #elif defined OS_LYNX || defined OS_LINUX || defined OS_CYGWIN
 
   typedef pid_t sPid;
@@ -165,7 +143,7 @@ static void errh_send (char*, char, pwr_tStatus, errh_eMsgType);
 static void log_message (errh_sLog*, char, const char*, va_list);
 static int msg_vsprintf (char *, const char *, aa_list, va_list);
 
-#if defined OS_POSIX || defined OS_ELN
+#if defined OS_POSIX
  static size_t errh_strnlen (const char*, size_t);
 #else
 #define errh_strnlen strnlen
@@ -736,39 +714,6 @@ get_pid (sPid *pid)
    
   return pid;
 }
-#elif defined OS_ELN
-static char *
-get_name (char *name, int size)
-{
-  pwr_tStatus	sts; 
-  struct jcb	*jcb;
-  struct pcb	*pcb;
-
-  ker$get_jcb(&sts, &jcb);
-  pcb = (struct pcb *)jcb->jcb$a_current_pcb;
-
-  strncpy(name, jcb->jcb$a_program->prg$t_name.string_text, 
-    MIN(jcb->jcb$a_program->prg$t_name.string_length, size));
-
-  name[size] = '\0';
-
-  return sts;
-}
-static sPid *
-get_pid (sPid *pid)
-{
-  pwr_tStatus	sts; 
-  struct jcb	*jcb;
-  struct pcb	*pcb;
-
-  ker$get_jcb(&sts, &jcb);
-  pcb = (struct pcb *)jcb->jcb$a_current_pcb;
-
-  pid->job = jcb->jcb$w_generation;
-  pid->proc = pcb->pcb$w_generation;
-
-  return pid;
-}
 #elif defined OS_POSIX
 static char *
 get_name (char *name, int size)
@@ -825,10 +770,7 @@ get_header (char severity, char *s)
 # elif defined OS_VMS 
   t = localtime(&time.tv_sec);
   s += sprintf(s, " %08X ", pid);
-# elif defined OS_ELN 
-  t = localtime(&time.tv_sec);
-  s += sprintf(s, " % 4d,% 4d ", pid.job, pid.proc);
-# endif 
+# endif
   
   s += sprintf(s, "%02d-%02d-%02d %02d:%02d:%02d.%02d ",
     t->tm_year % 100, t->tm_mon + 1, t->tm_mday, t->tm_hour,
@@ -1084,7 +1026,7 @@ repeat:
 
 
 
-#if defined OS_POSIX || defined OS_ELN
+#if defined OS_POSIX
 /* Different strlen function, returns len OR count,
    whatever comes true first.  */
 
@@ -1281,46 +1223,6 @@ errh_send (char *s, char severity, pwr_tStatus sts, errh_eMsgType message_type)
   } else if (s) {
     puts(s);
     return;
-  }
-
-#elif defined OS_ELN
-
-  pwr_tStatus		sts; 
-  char                 *ms;
-  MESSAGE		mid;
-  static PORT	  	port;
-  static pwr_tBoolean   portTrans = FALSE;
-  static int		errorPrinted = 0;
-
-  if ( message_type != errh_eMsgType_Log)
-    return;
-
-  if (!portTrans) {
-    $DESCRIPTOR(dsc, "ERR_LOG_PORT");
-    ker$translate_name(&sts, &port, &dsc, NAME$LOCAL);
-    if (ODD(sts)) {
-      portTrans = TRUE;
-    } else if (!errorPrinted) {
-      printf("errh: ker$translate_name failed, status = %d\n", sts);
-      errorPrinted = 1;
-    } 
-  }
-
-  if (portTrans) {
-    ker$create_message(&sts, &mid, &ms, len);
-    if (EVEN(sts)) {
-      printf("errh: ker$create_message failed, status = %d\n", sts);
-      return;
-    }
-
-    strncpy(ms, s, len);
-    ker$send(&sts, mid, -1, &port, NULL, FALSE);
-    if (EVEN(sts)) {
-      printf("errh: ker$send failed, status = %d\n", sts);
-      ker$delete(NULL, mid);
-    }
-  } else {
-    printf("%s\n", s);
   }
 
 #else

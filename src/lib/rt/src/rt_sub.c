@@ -38,9 +38,7 @@
    This module contains routines to handle subscription.
    Those routines can be called from the GDH API.  */
 
-#if defined(OS_ELN)
-# include $vaxelnc
-#elif defined(OS_VMS)
+#if defined(OS_VMS)
 # include <stddef.h>
 # include <stdlib.h>
 # include <descrip.h>

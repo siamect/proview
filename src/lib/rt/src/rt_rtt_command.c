@@ -41,16 +41,7 @@
 
 
 
-#if defined(OS_ELN)
-# include $vaxelnc
-# include stdio
-# include string
-# include stdlib
-# include ctype
-# include chfdef
-# include descrip
-# include starlet
-#elif defined (OS_VMS)
+#if defined (OS_VMS)
 # include <stdio.h>
 # include <string.h>
 # include <stdlib.h>
@@ -615,10 +606,6 @@ static int	show_func(	menu_ctx	ctx,
 	  {
 	    filename[0] = '!';
 	    rtt_get_defaultfilename( "*", &filename[1], ".rtt_com");
-#if defined OS_ELN
-	    /* VAXELN selects all versions of files, select the last version */
-	    strcat( filename, ".0");
-#endif
 	    strcpy( title, "STORED PICTURES AND COMMANDFILES");
 	  }
 	  else
@@ -682,10 +669,6 @@ static int	show_func(	menu_ctx	ctx,
 #ifdef OS_VMS
 	  rtt_message('E' ,"Not implemented in VMS");
 	  return RTT__NOPICTURE;
-#endif
-#ifdef OS_ELN
-	  sts = rtt_rtc( RTT_RTC_SHOW);
-	  return sts;
 #endif
 	}
 	else if ( cdh_NoCaseStrncmp( arg1_str, "DEFAULT", strlen( arg1_str)) == 0)
@@ -2768,20 +2751,6 @@ static int	rtt_get_func(	menu_ctx	ctx,
 	  rtt_message('E' ,"Not implemented in VMS");
 	  return RTT__NOPICTURE;
 #endif
-#ifdef OS_ELN
-	  int sts;
-
-	  if ( !(rtt_priv & RTT_PRIV_SYS) )
-	  {
-	    rtt_message('E',"Not authorized for this operation");
-	    return RTT__NOPICTURE;
-	  }
-	  sts = rtt_confirm( "Do you really want to set system time from clock");
-	  if ( EVEN(sts)) return RTT__NOPICTURE;
-
-	  sts = rtt_rtc( RTT_RTC_GET);
-	  return sts;
-#endif
 	}
 	else
 	{
@@ -2947,11 +2916,7 @@ static int	rtt_set_func(	menu_ctx	ctx,
 	  char alias_node[20];
 	  char alias_file[80];
 
-#ifdef OS_ELN
-          sprintf( alias_file, "%spwrp_alias.dat", "<sys0.sysexe>");
-#else
           sprintf( alias_file, "%spwrp_alias.dat", rtt_pwr_dir("pwrp_load"));
-#endif
           sts = ini_GetAlias( alias_file, rtt_node, alias_node);
 	  if (EVEN(sts))
 	    strcpy( alias_node, rtt_node);
@@ -2968,14 +2933,6 @@ static int	rtt_set_func(	menu_ctx	ctx,
 	    rtt_message('E', "pwrp_alias error");
 	    return RTT__NOPICTURE;
 	  }
-#ifdef OS_ELN
-	  sts = ini_SetAttributeAfterPlc( alias_file, alias_node, 1);
-	  if (EVEN(sts))
-	  {
-	    rtt_message('E', "pwrp_alias error");
-	    return RTT__NOPICTURE;
-	  }
-#endif
 	  rtt_wait_for_return();
 	  return RTT__SUCCESS;
 	}
@@ -3000,9 +2957,6 @@ static int	rtt_set_func(	menu_ctx	ctx,
 	    }
 	    /* Set job priority */
 	    sts = 0;
-#ifdef OS_ELN
-	    ker$set_job_priority( &sts, priority);
-#endif
 #ifdef OS_VMS
 	    sts = sys$setpri(NULL, NULL, priority, NULL, NULL, NULL);
 #endif
@@ -3054,7 +3008,7 @@ static int	rtt_set_func(	menu_ctx	ctx,
 	  if ( EVEN(sts)) return RTT__NOPICTURE;
 
 	  sts = 0;
-#if defined (OS_ELN) || defined (OS_VMS)
+#if defined (OS_VMS)
 	  sts = time_SetTime( &time);
 #endif
 	  if ( EVEN(sts))
@@ -3075,18 +3029,6 @@ static int	rtt_set_func(	menu_ctx	ctx,
 	  rtt_message('E' ,"Not implemented in VMS");
 	  return RTT__NOPICTURE;
 #endif
-#ifdef OS_ELN
-	  if ( !(rtt_priv & RTT_PRIV_SYS) )
-	  {
-	    rtt_message('E',"Not authorized for this operation");
-	    return RTT__NOPICTURE;
-	  }
-	  sts = rtt_confirm( "Do you really want to set clock from system time");
-	  if ( EVEN(sts)) return RTT__NOPICTURE;
-
-	  sts = rtt_rtc( RTT_RTC_SET);
-	  return sts;
-#endif
 	}
 	else if ( cdh_NoCaseStrncmp( arg1_str, "DEFAULT", strlen( arg1_str)) == 0)
 	{
@@ -3094,7 +3036,7 @@ static int	rtt_set_func(	menu_ctx	ctx,
 	  {
 	    if ( strcmp( arg2_str, "") != 0)
 	    {
-#if defined(OS_VMS) || defined(OS_ELN)
+#if defined(OS_VMS)
 	      if ( !( arg2_str[strlen(arg2_str)-1] == ':' ||
 	              arg2_str[strlen(arg2_str)-1] == ']' ||
 	              arg2_str[strlen(arg2_str)-1] == '>' ))
@@ -4295,10 +4237,7 @@ static int	wait_func(	menu_ctx	ctx,
 
 	if ( ODD( rtt_get_qualifier( "/PLCPGM", dum_str)))
 	{
-#ifdef OS_ELN
-	  /* Wait for the plcpgm has flagged initizated */
-	  plc_UtlWaitForPlc();
-#elif OS_VMS
+#ifdef OS_VMS
 	  rtt_message('E', "Not implemented for VMS");
 #endif
 	  return RTT__NOPICTURE;
@@ -5184,9 +5123,6 @@ int	rtt_menu_vmscommand(
 			void		*arg3,
 			void		*arg4)
 {
-#if defined OS_ELN
-	rtt_message('E', "Function not defined in ELN");
-#else
 	int		sts;
 	char		command[256];
 
@@ -5202,7 +5138,6 @@ int	rtt_menu_vmscommand(
 	{
 	  rtt_message('E', "Error in executing command");
 	}
-#endif
 	return RTT__SUCCESS;
 }
 
@@ -5247,8 +5182,6 @@ int	rtt_menu_vmscommand_nowait(
 	sts = lib$spawn (&cmd_desc , 0 , 0 , &cli_flag );
 	if ( sts != SS$_NORMAL )
 	  rtt_message('E',"Unable to create subprocess");
-#elif OS_ELN
-	rtt_message('E', "Function not defined in ELN");
 #endif
 	return RTT__SUCCESS;
 }
@@ -5276,9 +5209,6 @@ int	rtt_menu_vmscommandconf(
 			void		*arg4)
 {
 
-#if defined OS_ELN
-	rtt_message('E', "Function not defined in ELN");
-#else
 	int		sts;
 	char		message[120];
 	rtt_t_menu	*menu_ptr;
@@ -5311,7 +5241,6 @@ int	rtt_menu_vmscommandconf(
 	{
 	  rtt_message('E', "Error in executing command");
 	}
-#endif
 	return RTT__SUCCESS;
 }
 
@@ -5338,9 +5267,6 @@ int	rtt_menu_vmscommandhold(
 			void		*arg4)
 {
 
-#if defined OS_ELN
-	rtt_message('E', "Function not defined in ELN");
-#else
 	int		sts;
 	char		command[256];
 
@@ -5356,7 +5282,6 @@ int	rtt_menu_vmscommandhold(
 	{
 	  rtt_message('E', "Error in executing command");
 	}
-#endif
 	return RTT__NOPICTURE;
 }
 

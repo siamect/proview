@@ -40,12 +40,8 @@
    Those routines can NOT be called in a job context other than
    that of the nethandler.  */
 
-#if defined(OS_ELN)
-# include $vaxelnc
-#else
-# include <stdlib.h>
-# include <string.h>
-#endif
+#include <stdlib.h>
+#include <string.h>
 
 #include "pwr.h"
 #include "co_cdh.h"

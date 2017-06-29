@@ -34,13 +34,7 @@
  * General Public License plus this exception.
  */
 
-#if defined(OS_ELN)
-# include $vaxelnc
-# include $loader_utility
-# include $kernelmsg
-# include stdio
-# include descrip
-#elif defined(OS_VMS)
+#if defined(OS_VMS)
 # include <stdio.h>
 # include <descrip.h>
 # include <jpidef.h>
@@ -76,87 +70,6 @@
 #define	PLC_KERNELSTACK	30
 #define	PLC_DEBUG	FALSE
 #define PLC_NAME	"PLC_%d_%d"
-
-#ifdef OS_ELN
-  static pwr_tUInt32 loadcount=0;	/* # of times ini_PlcLoad was called */
-#endif
-
-#ifdef	OS_ELN
-pwr_tStatus
-ini_PlcLoad (
-  pwr_tUInt32		plcversion,
-  char			*plcfile,
-  int			debugflag
-)
-{
-  pwr_tStatus		sts;
-  char			progname[255];
-  char			filename[255];
-  VARYING_STRING(255)	filenamevar;
-  VARYING_STRING(41)	prognamevar;
-  pwr_tBoolean		PlcDebug;
-
-  /* Increase loadcount.  */
-
-  PlcDebug = debugflag;
-  loadcount++;
-
-  /* Construct the filename and the progname.  */
-
-  strcpy (filename, plcfile);
-  CSTRING_TO_VARYING(filename, filenamevar);
-
-  sprintf (progname, PLC_NAME, plcversion, loadcount);
-  CSTRING_TO_VARYING(progname, prognamevar);
-
-  /* Start loading.  */
-
-  errh_Info("Loading plc '%s'", progname);
-
-  eln$load_program (
-		&filenamevar,		/* Name of .EXE-file		*/
-		&prognamevar,		/* Internal ELN prog. name	*/
-		TRUE,			/* Kernel mode? 		*/
-		PlcDebug,		/* Start with debug?		*/
-		FALSE,			/* Power recovery?		*/
-		PLC_KERNELSTACK,	/* Kernel Stack size		*/
-		1,			/* Initial User stack size	*/
-		100,			/* Message limit		*/
-		10,			/* Job Priority			*/
-		8,			/* Process Priority		*/
-		&sts);
-
-  return sts;
-}
-#endif
-
-
-#ifdef	OS_ELN
-pwr_tStatus
-ini_PlcStart (
-  pwr_tUInt32		plcversion
-)
-{
-  pwr_tStatus		sts;
-  PORT			jobport;
-  char			progname[80];
-  struct dsc$descriptor	prognamedsc;
-
-  /* Build program name.  */
-
-  sprintf(progname, PLC_NAME, plcversion, loadcount);
-  prognamedsc.dsc$b_dtype = DSC$K_DTYPE_T;
-  prognamedsc.dsc$b_class = DSC$K_CLASS_S;
-  prognamedsc.dsc$a_pointer = progname;
-  prognamedsc.dsc$w_length = strlen(progname);
-
-  /* Start it.  */
-
-  ker$create_job(&sts, &jobport, &prognamedsc, NULL);
-  return sts;
-}
-#endif
-
 
 #ifdef	OS_VMS
 pwr_tStatus
@@ -192,15 +105,6 @@ void ini_StartApplications ()
   pwr_tStatus sts;
   pwr_sAppl *applp;
   pwr_tObjid objid;
-#ifdef	OS_ELN
-  $DESCRIPTOR(prognamedsc, "");
-  $DESCRIPTOR(nulldsc, "");
-  $DESCRIPTOR(argdsc, "");
-  VARYING_STRING(255) filename;
-  VARYING_STRING(41) progname;
-  char tmpfilename[255],hostspec[20],*cp;
-  PORT jobport;
-#endif
 #ifdef	OS_VMS
   $DESCRIPTOR(prognamedsc, "");
   $DESCRIPTOR(nulldsc, "");
@@ -219,68 +123,7 @@ void ini_StartApplications ()
 
       /* Found an object on this node, load the program */
 
-#ifdef	OS_ELN
-
-      if (strlen(applp->FileName) > 0) {
-
-        /* Check whether we booted from a local disk or not */
-        if (ini_LocalBoot()) {
-
-	  /* Local boot */
-
-	  /* Find the filename. Beyond the last ':' */
-          cp = strrchr(applp->FileName,':');
-          if ( cp ) 
-	    *cp++;
-	  else
-	     cp = applp->FileName;
-
-	  /* Build the application filename. */
-	  sprintf(tmpfilename,"%s%s",ini_BootFilesLocation(),cp);
-
-	} else {
-
-	  /* Remote boot */
-
-	  /* Check if application name contains '::'. If not - add hostspec */
-          cp = strstr(applp->FileName,"::");
-	  if (!cp ) {
-	    ini_GetNodeInfo(NULL, NULL, NULL, hostspec, NULL, NULL);
-	    sprintf(tmpfilename,"%s::%s",hostspec,applp->FileName);
-	  } else {
-	    strcpy(tmpfilename,applp->FileName);
-	  }
-	}
-        errh_Info("Load program '%s'", tmpfilename);
-
-        CSTRING_TO_VARYING(tmpfilename, filename);
-	CSTRING_TO_VARYING(applp->ProgramName, progname);
-
-	eln$load_program(&filename, &progname, applp->KernelMode,
-	  applp->StartWithDebug, FALSE, applp->KernelStackSize, 1,
-	  10, applp->JobPriority, applp->ProcessPriority, &sts);
-        if (EVEN(sts)) errh_Error("eln$load_program '%s'\n%m", applp->ProgramName, sts);
-      }
-
-      if (ODD(sts)) {
-
-        /* Start it */
-
-        errh_Info("Start program '%s'", applp->ProgramName);
-
-	prognamedsc.dsc$a_pointer = applp->ProgramName;
-	prognamedsc.dsc$w_length = strlen(applp->ProgramName);
-
-	argdsc.dsc$a_pointer = applp->Arg;
-	argdsc.dsc$w_length = strlen (applp->Arg);
-
-	ker$create_job(&sts, &jobport, &prognamedsc, NULL, &nulldsc, &nulldsc, &nulldsc, &argdsc);
-
-	if (EVEN(sts)) errh_Error("ker$create_job '%s'\n%m", applp->ProgramName, sts);
-      }
-
-
-#elif defined(OS_VMS)
+#if defined(OS_VMS)
 
       sprintf(spawnbuf, "$ @pwr_exe:rt_ini_appl_start %s \"%s\" %d %d \"%s\"",
 	applp->FileName, applp->ProgramName,

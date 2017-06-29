@@ -54,10 +54,6 @@
   const char *rt_utl_convmstoli_str = "rt_utl_convmstoli, Not needed for LYNX and LINUX";
 #else
 
-#ifdef	OS_ELN
-#include descrip
-#endif
-
 #ifdef	OS_VMS
 #include <descrip.h>
 #include <lib$routines.h>
