@@ -224,8 +224,8 @@ pwre_create_makedir()
 #pwre_hw="hw_x86"
 
 cfile="$pwre_broot/pwre_${pwre_hw:3}_${pwre_os:3}.cnf"
-dos=`eval echo ${pwre_os} | tr [:lower:] [:upper:]`
-dhw=`eval echo ${pwre_hw} | tr [:lower:] [:upper:]`
+dos=`eval echo ${pwre_os} | tr '[:lower:]' '[:upper:]'`
+dhw=`eval echo ${pwre_hw} | tr '[:lower:]' '[:upper:]'`
 conf_cc_define="-D$dos=1 -DOS_POSIX -D$dhw=1 -DOS=${pwre_os:3} -DHW=${pwre_hw:3} -D_${dos:3}"
 conf_lib=""
 conf_libwb=""
