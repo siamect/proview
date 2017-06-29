@@ -7,10 +7,12 @@
 !
 ! <h1>Description
 ! Circular axis with dynamic range.
+! The object is drawn with colortheme colors and requires that a 
+! colortheme is set.
 !
 ! <h1>Default dynamics
-! AxisArc is a complex object.
-! See AxisArc in Ge Reference Manual <link>geref_axisarc, ,$pwr_lang/man_geref.dat
+! DynamicAxisArc is a complex object.
+! See DynamicAxisArc in Ge Reference Manual <link>geref_axisarc, ,$pwr_lang/man_geref.dat
 !
 !*/
 99

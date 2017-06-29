@@ -1,0 +1,17 @@
+199
+!/** This file is only for generatíon of man_subgraph.dat
+! GtkWarning
+! Group Images
+!
+! <image> pwr_gtk_warning_gs.png
+!
+! <h1>Description
+! Warning symbol.
+!
+! <h1>Default dynamics
+! No default dynamics.
+! To set dynamics, a group has to be created for the image.
+!
+! See images in Ge Reference Manual <link>geg_images, ,$pwr_lang/man_geref.dat 
+!*/
+99

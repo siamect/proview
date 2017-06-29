@@ -1,0 +1,16 @@
+199
+!/** This file is only for generatíon of man_subgraph.dat
+! Table
+! Group Other
+!
+! <image> pwr_table_gs.png
+!
+! <h1>Description
+! Table.
+!
+! <h1>Default dynamics
+! Table is a complex object.
+! See Table in Ge Reference Manual <link>geref_table, ,$pwr_lang/man_geref.dat
+!
+!*/
+99

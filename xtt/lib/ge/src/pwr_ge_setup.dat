@@ -7,8 +7,8 @@ path
 }
 menu Images
 {
-  subgraph	GrayInd		jpwr/jop/jop_grayind.gif 	6
-  subgraph	GreenInd	jpwr/jop/jop_greenind.gif 	6
+  subgraph	GrayInd		$pwr_exe/pwr_grayind.png	6
+  subgraph	GreenInd	$pwr_exe/pwr_greenind.png 	6
   subgraph	GtkQuestion	$pwr_exe/pwr_gtk_question.png	6
   subgraph	GtkError	$pwr_exe/pwr_gtk_error.png	6
   subgraph	GtkWarning	$pwr_exe/pwr_gtk_warning.png	6
@@ -78,7 +78,7 @@ menu Process
   subgraph 	Valve	 	pwr_exe:pwr_valve.pwsg 			1
   subgraph 	ValveAnim 	pwr_exe:pwr_valveanim.pwsg		1
   subgraph 	ValveAnim2 	pwr_exe:pwr_valveanim2.pwsg		1
-  subgraph 	ValveManual	pwr_exe:pwr_valvemanuel.pwsg 		4
+  subgraph 	ValveManuel	pwr_exe:pwr_valvemanuel.pwsg 		4
   subgraph 	ValveControl	pwr_exe:pwr_valvecontrol.pwsg 		2
   subgraph 	ValveControl2	pwr_exe:pwr_valvecontrol2.pwsg 		53
   subgraph 	Valve3Way	pwr_exe:pwr_valve3way.pwsg 		99

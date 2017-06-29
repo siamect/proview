@@ -85,6 +85,7 @@ CnvPwgToXtthelp::CnvPwgToXtthelp( CnvCtx *cnv_ctx) :
     "$pwre_croot/xtt/mmi/ssg/src/ssg*.pwg", 
     "$pwre_croot/bcomp/mmi/bcomp/src/bcomp*.pwg", 
     "$pwre_croot/abb/mmi/mcomp/src/mcomp*.pwg", 
+    "$pwre_croot/profibus/mmi/mcomp/src/mcomp*.pwg", 
     ""};
   static pwr_tFileName titles[10] = {
     "General", 
@@ -93,6 +94,7 @@ CnvPwgToXtthelp::CnvPwgToXtthelp( CnvCtx *cnv_ctx) :
     "CircuitDiagram", 
     "BaseComponent", 
     "ABB", 
+    "Profibus", 
     ""};
 
   pwr_tFileName found_file;

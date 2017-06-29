@@ -2,13 +2,13 @@
 0! DefaultHeight 0
 199
 !/**
-! Tank2
+! Pool
 ! Group Hydraulics
 !
-! <image> pwr_tank2_gs.gif
+! <image> pwr_pool_gs.png
 !
 ! <h1>Description
-! Tank.
+! Pool.
 !
 ! <h1>Default dynamics
 ! No default dynamics.

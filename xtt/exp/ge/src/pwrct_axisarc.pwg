@@ -7,6 +7,8 @@
 !
 ! <h1>Description
 ! Circular axis.
+! The object is drawn with colortheme colors and requires that a 
+! colortheme is set.
 !
 ! <h1>Default dynamics
 ! AxisArc is a complex object.

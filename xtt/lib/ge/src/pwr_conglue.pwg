@@ -1,0 +1,24 @@
+199
+!/** This file is only for generatíon of man_subgraph.dat
+! ConGlue
+! Group Other
+!
+! <image> pwr_conglue_gs.png
+!
+! <h1>Description
+! A ConGlue is an end point or a ramification for connections. It has four connection
+! points and is in it's virgin form drawn as a cross with one connection point on each side. 
+! Once connected to a connections it's shaped and colored after the connection. Even after
+! the ConGlue is reshaped it still has the four connection points that can be connected
+! to other connections in different directions.
+! If a connection is drawn from a connection point and released in the working area, a 
+! ConGlue is automatically created as an endpoint for the connection.
+!
+! A ConGlue is used as end point for a connection, for ramifications of connections. or
+! to control the route of a connection.
+!
+! ConGlue is a complex object.
+! See connnections in Ge Reference Manual <link>geref_connections, ,$pwr_lang/man_geref.dat
+!
+!*/
+99

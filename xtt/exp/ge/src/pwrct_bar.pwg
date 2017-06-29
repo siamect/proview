@@ -1,0 +1,18 @@
+199
+!/** This file is only for generatíon of man_subgraph.dat
+! Bar
+! Group Analog
+!
+! <image> pwr_bar_gs.gif
+!
+! <h1>Description
+! A bar displaying an analog value.
+! The object is drawn with colortheme colors and requires that a 
+! colortheme is set.
+!
+! <h1>Default dynamics
+! Bar is a complex object.
+! See Bar in Ge Reference Manual<link>geref_bar, ,$pwr_lang/man_geref.dat
+!
+!*/
+99

@@ -1,0 +1,17 @@
+199
+!/** This file is only for generatíon of man_subgraph.dat
+! Window
+! Group Other
+!
+! <image> pwr_window_gs.png
+!
+! <h1>Description
+! Window to display another graph.
+! The original graph can be replaced in runtime by another graph with the  
+! 'set subwindow' command.
+! 
+! Window is a complex object.
+! See Window in Ge Reference Manual <link>geref_windowobject, ,$pwr_lang/man_geref.dat
+!
+!*/
+99

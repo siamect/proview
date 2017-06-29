@@ -2,13 +2,13 @@
 0! DefaultHeight 0
 199
 !/**
-! ValueInputMediumBg
+! ValueInputMediumCenterBg
 ! Group Values
 !
 ! <image> pwrct_valueinputmediumbg_gs.png
 !
 ! <h1>Description
-! Medium value input field with background relief.
+! Medium value input field with center aligned text and background relief.
 ! The object is drawn with colortheme colors.
 ! The background relief is drawn with the background color of 
 ! the object.

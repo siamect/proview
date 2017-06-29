@@ -2186,8 +2186,8 @@ An object that has input focus is usually marked with a relief that surrounds th
 </headerlevel>
 
 <topic> geg_images
-Gif and JPEG-images
-You insert a gif or JPEG image in the following way. Copy the image file to $pwrp_pop. It is
+Images
+You insert a png, gif or jpg image in the following way. Copy the image file to $pwrp_pop. It is
 now displayed under the folder Local/Images in the subgraph palette. Select the picture and
 click with MB2 in the working area.
 
@@ -2196,11 +2196,10 @@ The functions to change colors for subgraphs, i.e. color tone, lightness, intens
 shift, also applies to image objects.
 
 <h2>Dynamics
-You can not set any dynamic on the image object directory. You can though let them be a member
+You can not set any dynamic on the image object directly. You can though let them be a member
 of a group or subgraph, and state dynamics for the group or subgraph. If you dynamically want
 to change the color of an image object, you should use a dynamic type that changes the color
 tone, e.g. DigTone.
-DigTone.
 </topic>
 
 <topic> geg_createsubgraph

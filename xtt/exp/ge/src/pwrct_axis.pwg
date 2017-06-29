@@ -1,12 +1,14 @@
 199
 !/** This file is only for generatíon of man_subgraph.dat
-! DynamicAxis
+! Axis
 ! Group Analog
 !
 ! <image> pwr_axis_gs.gif
 !
 ! <h1>Description
-! Axis with dynamic range.
+! Axis.
+! The object is drawn with colortheme colors and requires that a 
+! colortheme is set.
 !
 ! <h1>Default dynamics
 ! Axis is a complex object.

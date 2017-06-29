@@ -34,15 +34,15 @@
 
 
 <hr>
-2015-12-21
-Version V5.3.0
+2017-06-29
+Version V5.5.0
 <hr>
 </topic>
 
 <topic> __DocumentInfoPage
 
 
-Copyright (C) 2005-2016 SSAB EMEA AB
+Copyright (C) 2005-2017 SSAB EMEA AB
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.2
@@ -59,6 +59,7 @@ Subgraph documentation
 <b>CircuitDiagram <link>CircuitDiagram
 <b>BaseComponent <link>BaseComponent
 <b>ABB <link>ABB
+<b>Profibus <link>Profibus
 </topic>
 <option> printenable
 <chapter>
@@ -69,6 +70,7 @@ General
 <b>Group Electric <link>General_Electric
 <b>Group Grafcet <link>General_Grafcet
 <b>Group Hydraulics <link>General_Hydraulics
+<b>Group Images <link>General_Images
 <b>Group Indicators <link>General_Indicators
 <b>Group Layout <link>General_Layout
 <b>Group Other <link>General_Other
@@ -120,8 +122,8 @@ SafetySwitch <link>pwr_safetyswitch
 Group Grafcet
 InitStep <link>pwr_initstep
 Order <link>pwr_order
-Step <link>pwr_stopwatch
 Step <link>pwr_step
+Step <link>pwr_stopwatch
 Trans <link>pwr_trans
 </topic>
 
@@ -129,13 +131,24 @@ Trans <link>pwr_trans
 Group Hydraulics
 CheckValve <link>pwr_checkvalve
 HydraulicPump <link>pwr_hydraulicpump
+Lake <link>pwr_lake
+Pool <link>pwr_pool
 PressureGauge <link>pwr_pressuregauge
 PressureSwitch <link>pwr_pressureswitch
 ReleaseValve <link>pwr_releasevalve
 ReleaseValveRight <link>pwr_releasevalveright
 Tank <link>pwr_tank
-Tank2 <link>pwr_pool
 Tank2 <link>pwr_tank2
+</topic>
+
+<topic> General_Images
+Group Images
+GrayInd <link>pwr_grayind
+GreenInd <link>pwr_greenind
+GtkError <link>pwr_gtk_error
+GtkInfo <link>pwr_gtk_info
+GtkQuestion <link>pwr_gtk_question
+GtkWarning <link>pwr_gtk_warning
 </topic>
 
 <topic> General_Indicators
@@ -182,8 +195,10 @@ ThreeWayConnection <link>pwr_threewayconnection
 <topic> General_Other
 Group Other
 Camera <link>pwr_camera
+ConGlue <link>pwr_conglue
 Menubar <link>pwr_menubar
 Menubar2 <link>pwr_menubar2
+MethodToolbar <link>pwr_methodtoolbar
 Needle <link>pwr_needle
 OptionMenu <link>pwr_optionmenu
 Pc <link>pwr_pc
@@ -193,8 +208,11 @@ Pulpet <link>pwr_pulpet
 PwrLogotype <link>pwr_logga
 Rack <link>pwr_rack
 Smiley <link>pwr_smiley
+TabbedWindow <link>pwr_folder
+Table <link>pwr_table
 Terminal <link>pwr_terminal
 VideoCamera <link>pwr_videocamera
+Window <link>pwr_window
 </topic>
 
 <topic> General_Process
@@ -228,7 +246,7 @@ HandWheel <link>pwr_handwheel
 LimitSwitch <link>pwr_limitswitch
 M3WayValve <link>pwr_m3wayvalve
 MDamper <link>pwr_mdamper
-MDamper <link>pwr_mdamper2
+MDamper2 <link>pwr_mdamper2
 MValve <link>pwr_mvalve
 Motor <link>pwr_motor
 Motor2 <link>pwr_motor2
@@ -260,7 +278,6 @@ ValveAnim2 <link>pwr_valveanim2
 ValveControl <link>pwr_valvecontrol
 ValveControl2 <link>pwr_valvecontrol2
 ValveManuel <link>pwr_valvemanuel
-pwr_scrollingtext <link>pwr_scrollingtext
 </topic>
 
 <topic> General_Pushbuttons
@@ -360,6 +377,7 @@ SliderBackground3 <link>pwr_sliderbackground3
 <topic> General_Values
 Group Values
 PasswordInput <link>pwr_passwordinput
+ScrollingText <link>pwr_scrollingtext
 ValueInputLarge <link>pwr_valueinputlarge
 ValueInputLargeCenter <link>pwr_valueinputlargecenter
 ValueInputLargeRd <link>pwr_valueinputlargerd
@@ -386,7 +404,6 @@ ValueReliefUp <link>pwr_valuereliefup
 ValueSmall <link>pwr_valuesmall
 ValueSmallCenter <link>pwr_valuesmallcenter
 ValueSmallRight <link>pwr_valuesmallright
-pwr_lake <link>pwr_lake
 </topic>
 
 <topic> General_Ventilation
@@ -897,7 +914,7 @@ Group Grafcet
 
 </topic>
 
-<topic> pwr_stopwatch <style> function
+<topic> pwr_step <style> function
  Step
  Group Grafcet
 
@@ -912,7 +929,7 @@ Group Grafcet
 
 </topic>
 
-<topic> pwr_step <style> function
+<topic> pwr_stopwatch <style> function
  Step
  Group Grafcet
 
@@ -972,6 +989,34 @@ Group Hydraulics
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  DigError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwr_lake <style> function
+ Lake
+ Group Hydraulics
+
+ <image> pwr_lake_gs.png
+
+ <h1>Description
+ Lake.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> pwr_pool <style> function
+ Pool
+ Group Hydraulics
+
+ <image> pwr_pool_gs.png
+
+ <h1>Description
+ Pool.
+
+ <h1>Default dynamics
+ No default dynamics.
 
 </topic>
 
@@ -1039,7 +1084,7 @@ Group Hydraulics
 
 </topic>
 
-<topic> pwr_pool <style> function
+<topic> pwr_tank2 <style> function
  Tank2
  Group Hydraulics
 
@@ -1053,18 +1098,105 @@ Group Hydraulics
 
 </topic>
 
-<topic> pwr_tank2 <style> function
- Tank2
- Group Hydraulics
+</headerlevel>
+<topic>Images__dummy <style> function
+Group Images
+</topic>
+<headerlevel>
+<topic> pwr_grayind <style> function
+ GrayInd
+ Group Images
 
- <image> pwr_tank2_gs.gif
+ <image> pwr_grayind_gs.png
 
  <h1>Description
- Tank.
+ Gray indicator.
 
  <h1>Default dynamics
  No default dynamics.
+ To set dynamics, a group has to be created for the image.
 
+ See images in Ge Reference Manual <link>geg_images, ,$pwr_lang/man_geref.dat 
+</topic>
+
+<topic> pwr_greenind <style> function
+ GreenInd
+ Group Images
+
+ <image> pwr_greenind_gs.png
+
+ <h1>Description
+ Green indicator.
+
+ <h1>Default dynamics
+ No default dynamics.
+ To set dynamics, a group has to be created for the image.
+
+ See images in Ge Reference Manual <link>geg_images, ,$pwr_lang/man_geref.dat 
+</topic>
+
+<topic> pwr_gtk_error <style> function
+ GtkError
+ Group Images
+
+ <image> pwr_gtk_error_gs.png
+
+ <h1>Description
+ Error symbol.
+
+ <h1>Default dynamics
+ No default dynamics.
+ To set dynamics, a group has to be created for the image.
+
+ See images in Ge Reference Manual <link>geg_images, ,$pwr_lang/man_geref.dat 
+</topic>
+
+<topic> pwr_gtk_info <style> function
+ GtkInfo
+ Group Images
+
+ <image> pwr_gtk_info_gs.png
+
+ <h1>Description
+ Info symbol.
+
+ <h1>Default dynamics
+ No default dynamics.
+ To set dynamics, a group has to be created for the image.
+
+ See images in Ge Reference Manual <link>geg_images, ,$pwr_lang/man_geref.dat 
+</topic>
+
+<topic> pwr_gtk_question <style> function
+ GtkQuestion
+ Group Images
+
+ <image> pwr_gtk_question_gs.png
+
+ <h1>Description
+ Question symbol.
+
+ <h1>Default dynamics
+ No default dynamics.
+ To set dynamics, a group has to be created for the image.
+
+ See images in Ge Reference Manual <link>geg_images, ,$pwr_lang/man_geref.dat 
+</topic>
+
+<topic> pwr_gtk_warning <style> function
+ GtkWarning
+ Group Images
+
+ <image> pwr_gtk_warning_gs.png
+
+ <h1>Description
+ Warning symbol.
+
+ <h1>Default dynamics
+ No default dynamics.
+ To set dynamics, a group has to be created for the image.
+
+ See images in Ge Reference Manual <link>geg_images, ,$pwr_lang/man_geref.dat 
 </topic>
 
 </headerlevel>
@@ -1527,6 +1659,29 @@ Group Other
 
 </topic>
 
+<topic> pwr_conglue <style> function
+ ConGlue
+ Group Other
+
+ <image> pwr_conglue_gs.png
+
+ <h1>Description
+ A ConGlue is an end point or a ramification for connections. It has four connection
+ points and is in it's virgin form drawn as a cross with one connection point on each side. 
+ Once connected to a connections it's shaped and colored after the connection. Even after
+ the ConGlue is reshaped it still has the four connection points that can be connected
+ to other connections in different directions.
+ If a connection is drawn from a connection point and released in the working area, a 
+ ConGlue is automatically created as an endpoint for the connection.
+
+ A ConGlue is used as end point for a connection, for ramifications of connections. or
+ to control the route of a connection.
+
+ ConGlue is a complex object.
+ See connnections in Ge Reference Manual <link>geref_connections, ,$pwr_lang/man_geref.dat
+
+</topic>
+
 <topic> pwr_menubar <style> function
  Menubar
  Group Other
@@ -1554,6 +1709,22 @@ Group Other
 
  <h1>Default dynamics
  No default dynamics.
+
+</topic>
+
+<topic> pwr_methodtoolbar <style> function
+ MethodToolbar
+ Group Other
+
+ <image> geg_fig159.png
+
+ <h1>Description
+ Method toolbar. the method toolbar is used in object graphs to activate the 
+ methods of the object.
+
+ <h1>Default dynamics
+ MethodToolbar is a complex object.
+ See Table in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
 
 </topic>
 
@@ -1686,6 +1857,36 @@ Group Other
 
 </topic>
 
+<topic> pwr_folder <style> function
+ TabbedWindow
+ Group Other
+
+ <image> geref_fig17.png
+
+ <h1>Description
+ Tabbed window.
+
+ <h1>Default dynamics
+ TabbedWindow is a complex object.
+ See TabbedWindow in Ge Reference Manual <link>geref_tabbedwind, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwr_table <style> function
+ Table
+ Group Other
+
+ <image> pwr_table_gs.png
+
+ <h1>Description
+ Table.
+
+ <h1>Default dynamics
+ Table is a complex object.
+ See Table in Ge Reference Manual <link>geref_table, ,$pwr_lang/man_geref.dat
+
+</topic>
+
 <topic> pwr_terminal <style> function
  Terminal
  Group Other
@@ -1711,6 +1912,22 @@ Group Other
 
  <h1>Default dynamics
  Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwr_window <style> function
+ Window
+ Group Other
+
+ <image> pwr_window_gs.png
+
+ <h1>Description
+ Window to display another graph.
+ The original graph can be replaced in runtime by another graph with the  
+ 'set subwindow' command.
+ 
+ Window is a complex object.
+ See Window in Ge Reference Manual <link>geref_windowobject, ,$pwr_lang/man_geref.dat
 
 </topic>
 
@@ -2202,10 +2419,10 @@ Group Process
 </topic>
 
 <topic> pwr_mdamper2 <style> function
- MDamper
+ MDamper2
  Group Process
 
- <image> pwr_mdamper_gs.gif
+ <image> pwr_mdamper2_gs.png
 
  <h1>Description
  Solenoid damper.
@@ -4294,6 +4511,20 @@ Group Values
 
 </topic>
 
+<topic> pwr_scrollingtext <style> function
+ ScrollingText
+ Group Values
+
+ <image> pwr_scrollingtext_gs.png
+
+ <h1>Description
+ Field to display a scrolling text.
+
+ <h1>Default dynamics
+ ScrollingText <link>GeDynScrollingText, ,$pwr_lang/man_geref.dat
+
+</topic>
+
 <topic> pwr_valueinputlarge <style> function
  ValueInputLarge
  Group Values
@@ -4713,11 +4944,22 @@ Group Ventilation
 <topic> ColorTheme
 ColorTheme
 <option> printdisable
+<b>Group Analog <link>ColorTheme_Analog
 <b>Group Indicators <link>ColorTheme_Indicators
 <b>Group Other <link>ColorTheme_Other
 <b>Group Pushbuttons <link>ColorTheme_Pushbuttons
 <b>Group Sliders <link>ColorTheme_Sliders
 <b>Group Values <link>ColorTheme_Values
+</topic>
+
+<topic> ColorTheme_Analog
+Group Analog
+Axis <link>pwrct_axis
+AxisArc <link>pwrct_axisarc
+Bar <link>pwrct_bar
+DynamicAxis <link>pwrct_dynamicaxis
+DynamicAxisArc <link>pwrct_dynamicaxisarc
+Trend <link>pwrct_trend
 </topic>
 
 <topic> ColorTheme_Indicators
@@ -4767,9 +5009,13 @@ Group Values
 ValueInputLarge <link>pwrct_valueinputlarge
 ValueInputLargeBg <link>pwrct_valueinputlargebg
 ValueInputMedium <link>pwrct_valueinputmedium
+ValueInputMediumBg <link>pwrct_valueinputmediumbgs
 ValueInputMediumBg <link>pwrct_valueinputmediumbg
+ValueInputMediumCenterBg <link>pwrct_valueinputmediumcenterbg
+ValueInputMediumCenterBgs <link>pwrct_valueinputmediumcenterbgs
 ValueInputSmall <link>pwrct_valueinputsmall
 ValueInputSmallBg <link>pwrct_valueinputsmallbg
+ValueInputSmallCenterBg <link>pwrct_valueinputsmallcenterbg
 ValueLarge <link>pwrct_valuelarge
 ValueLargeCenter <link>pwrct_valuelargecenter
 ValueMedium <link>pwrct_valuemedium
@@ -4780,6 +5026,113 @@ ValueSmallCenter <link>pwrct_valuesmallcenter
 
 <option> printenable
 <headerlevel>
+<topic>Analog__dummy <style> function
+Group Analog
+</topic>
+<headerlevel>
+<topic> pwrct_axis <style> function
+ Axis
+ Group Analog
+
+ <image> pwr_axis_gs.gif
+
+ <h1>Description
+ Axis.
+ The object is drawn with colortheme colors and requires that a 
+ colortheme is set.
+
+ <h1>Default dynamics
+ Axis is a complex object.
+ See Axis in Ge Reference Manual <link>geref_axis, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwrct_axisarc <style> function
+ AxisArc
+ Group Analog
+
+ <image> pwr_axisarc_gs.png
+
+ <h1>Description
+ Circular axis.
+ The object is drawn with colortheme colors and requires that a 
+ colortheme is set.
+
+ <h1>Default dynamics
+ AxisArc is a complex object.
+ See AxisArc in Ge Reference Manual <link>geref_axisarc, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwrct_bar <style> function
+ Bar
+ Group Analog
+
+ <image> pwr_bar_gs.gif
+
+ <h1>Description
+ A bar displaying an analog value.
+ The object is drawn with colortheme colors and requires that a 
+ colortheme is set.
+
+ <h1>Default dynamics
+ Bar is a complex object.
+ See Bar in Ge Reference Manual<link>geref_bar, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwrct_dynamicaxis <style> function
+ DynamicAxis
+ Group Analog
+
+ <image> pwr_axis_gs.gif
+
+ <h1>Description
+ Axis with dynamic range.
+ The object is drawn with colortheme colors and requires that a 
+ colortheme is set.
+
+ <h1>Default dynamics
+ DynamicAxis is a complex object.
+ See DynamicAxis in Ge Reference Manual <link>geref_axis, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwrct_dynamicaxisarc <style> function
+ DynamicAxisArc
+ Group Analog
+
+ <image> pwr_axisarc_gs.png
+
+ <h1>Description
+ Circular axis with dynamic range.
+ The object is drawn with colortheme colors and requires that a 
+ colortheme is set.
+
+ <h1>Default dynamics
+ DynamicAxisArc is a complex object.
+ See DynamicAxisArc in Ge Reference Manual <link>geref_axisarc, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwrct_trend <style> function
+ Trend
+ Group Analog
+
+ <image> pwr_trend_gs.gif
+
+ <h1>Description
+ Trend with one or two curves.
+ The object is drawn with colortheme colors and requires that a 
+ colortheme is set.
+
+ <h1>Default dynamics
+ Trend is a complex object. 
+ See Trend in Ge Reference manual <link>geref_trend, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+</headerlevel>
 <topic>Indicators__dummy <style> function
 Group Indicators
 </topic>
@@ -5300,6 +5653,26 @@ Group Values
 
 </topic>
 
+<topic> pwrct_valueinputmediumbgs <style> function
+ ValueInputMediumBg
+ Group Values
+
+ <image> pwrct_valueinputmediumbgs_gs.png
+
+ <h1>Description
+ Medium value input field with vertical background relief.
+ The horizontal relief in missing and the field can be used
+ in a column.
+ The object is drawn with colortheme colors.
+ The background relief is drawn with the background color of 
+ the object.
+
+ <h1>Default dynamics
+ Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+ ValueInput <link>GeDynValueInput, ,$pwr_lang/man_geref.dat
+
+</topic>
+
 <topic> pwrct_valueinputmediumbg <style> function
  ValueInputMediumBg
  Group Values
@@ -5308,6 +5681,44 @@ Group Values
 
  <h1>Description
  Medium value input field with background relief.
+ The object is drawn with colortheme colors.
+ The background relief is drawn with the background color of 
+ the object.
+
+ <h1>Default dynamics
+ Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+ ValueInput <link>GeDynValueInput, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwrct_valueinputmediumcenterbg <style> function
+ ValueInputMediumCenterBg
+ Group Values
+
+ <image> pwrct_valueinputmediumbg_gs.png
+
+ <h1>Description
+ Medium value input field with center aligned text and background relief.
+ The object is drawn with colortheme colors.
+ The background relief is drawn with the background color of 
+ the object.
+
+ <h1>Default dynamics
+ Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+ ValueInput <link>GeDynValueInput, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwrct_valueinputmediumcenterbgs <style> function
+ ValueInputMediumCenterBgs
+ Group Values
+
+ <image> pwrct_valueinputmediumbgs_gs.png
+
+ <h1>Description
+ Medium value input field with center aligned text and
+ vertical background relief. The horizontal relief in missing 
+ and the field can be used in a column.
  The object is drawn with colortheme colors.
  The background relief is drawn with the background color of 
  the object.
@@ -5342,6 +5753,24 @@ Group Values
 
  <h1>Description
  Small value input field with background relief.
+ The object is drawn with colortheme colors.
+ The background relief is drawn with the background color of 
+ the object.
+
+ <h1>Default dynamics
+ Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+ ValueInput <link>GeDynValueInput, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwrct_valueinputsmallcenterbg <style> function
+ ValueInputSmallCenterBg
+ Group Values
+
+ <image> pwrct_valueinputsmallbg_gs.png
+
+ <h1>Description
+ Small value input field with center aligned text and background relief.
  The object is drawn with colortheme colors.
  The background relief is drawn with the background color of 
  the object.
@@ -9651,8 +10080,8 @@ ABB
 Group Components/ABB
 ACS800FanAggr <link>mcomp_abb_acs800fanaggr
 ACS800MotorAggr <link>mcomp_abb_acs800motoraggr
-ACS800PumpAggr <link>mcomp_abb_acs880
 ACS800PumpAggr <link>mcomp_abb_acs800pumpaggr
+ACS880 <link>mcomp_abb_acs880
 </topic>
 
 <option> printenable
@@ -9728,7 +10157,7 @@ Group Components/ABB
 
 </topic>
 
-<topic> mcomp_abb_acs880 <style> function
+<topic> mcomp_abb_acs800pumpaggr <style> function
  ACS800PumpAggr
  Group Components/ABB
 
@@ -9764,36 +10193,90 @@ Group Components/ABB
 
 </topic>
 
-<topic> mcomp_abb_acs800pumpaggr <style> function
- ACS800PumpAggr
+<topic> mcomp_abb_acs880 <style> function
+ ACS880
  Group Components/ABB
 
- <image> bcomp_pumpaggr_gs.gif
+ <image> mcomp_acs880_gs.png
 
  <h1>Description
- Pump aggregate. Graphic symbol for component ABB_ACS800PumpAggr.
- Should be connected to an instance of ABB_ACS800PumpAggr, or a 
- subclass to this class.
+ Graphic symbol for component ABB_ACS880.
 
- Subgraph with two pages, pump off (page 1) and pump on (page 2).
- <image> bcomp_pumpaggr_ags.gif
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+</headerlevel>
+</headerlevel>
+</chapter>
+<chapter>
+<topic> Profibus
+Profibus
+<option> printdisable
+<b>Group Components/Profibus <link>Profibus_Components_Profibus
+</topic>
+
+<topic> Profibus_Components_Profibus
+Group Components/Profibus
+Profibus slave <link>mcomp_pb_dp_slave
+Profinet device <link>mcomp_pndevice
+</topic>
+
+<option> printenable
+<headerlevel>
+<topic>Components_Profibus__dummy <style> function
+Group Components/Profibus
+</topic>
+<headerlevel>
+<topic> mcomp_pb_dp_slave <style> function
+ Profibus slave
+ Group Components/Profibus
+
+ <image> mcomp_pb_dp_slave_gs.png
+
+ <h1>Description
+ Profibus slave. Graphic symbol for a Profibus slave.
+ Should be connected to an instance of Pb_Dp_Slave, or a 
+ subclass to this class.
+ The name of the slave can be inserted in A2. A1 is used
+ by the HostObject dynamic to display the slave address.
 
  <h1>Default dynamics
  HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
 
  Dynamics for the symbol
- - colored red when an error occurs.
- - colored yellow when a warning occurs.
- - colored darkgray when the pump is off.
- - the mode (manual or local) is displayed with a M or L.
- - pump on and off is displayed with different pages.
- - popupmenu with the methods of the connected object.
+ - yellow or red at warning or error status.
+ - slave address displayed in A1.
 
- DigError <t>$hostobject.IndError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
- DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
- DigLowColor <t>$hostobject.ACS800.ConvertRun <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
- Value <t>$hostobject.Mode.IndMode <link>GeDynValue, ,$pwr_lang/man_geref.dat
- DigShift <t>$hostobject.ACS800.ConvertRun <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+ Value <t>$hostobject.Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+ StatusColor <t>$hostobject.StatusColor <link>GeDynStatusColor, ,$pwr_lang/man_geref.dat
+ PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+
+ Default Cycle Slow 
+
+</topic>
+
+<topic> mcomp_pndevice <style> function
+ Profinet device
+ Group Components/Profibus
+
+ <image> mcomp_pndevice_gs.png
+
+ <h1>Description
+ Profinet device. Graphic symbol for a Profinet device.
+ Should be connected to an instance of PnDevice, or a 
+ subclass to this class.
+ The name of the device can be inserted in A2, and for example
+ the last digits of the IP address in A1.
+
+ <h1>Default dynamics
+ HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+
+ Dynamics for the symbol
+ - yellow or red at warning or error status.
+
+ StatusColor <t>$hostobject.StatusColor <link>GeDynStatusColor, ,$pwr_lang/man_geref.dat
  PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 
  Default Cycle Slow 

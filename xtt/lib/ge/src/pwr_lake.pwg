@@ -1,5 +1,19 @@
 0! DefaultWidth 0
 0! DefaultHeight 0
+199
+!/**
+! Lake
+! Group Hydraulics
+!
+! <image> pwr_lake_gs.png
+!
+! <h1>Description
+! Lake.
+!
+! <h1>Default dynamics
+! No default dynamics.
+!
+!*/
 1
 100 61.7041
 135 61.7041

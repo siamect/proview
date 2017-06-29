@@ -5,10 +5,12 @@
 ! ValueInputMediumBg
 ! Group Values
 !
-! <image> pwrct_valueinputmediumbg_gs.png
+! <image> pwrct_valueinputmediumbgs_gs.png
 !
 ! <h1>Description
-! Medium value input field with background relief.
+! Medium value input field with vertical background relief.
+! The horizontal relief in missing and the field can be used
+! in a column.
 ! The object is drawn with colortheme colors.
 ! The background relief is drawn with the background color of 
 ! the object.

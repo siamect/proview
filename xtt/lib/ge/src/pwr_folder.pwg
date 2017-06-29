@@ -1,0 +1,16 @@
+199
+!/** This file is only for generatíon of man_subgraph.dat
+! TabbedWindow
+! Group Other
+!
+! <image> geref_fig17.png
+!
+! <h1>Description
+! Tabbed window.
+!
+! <h1>Default dynamics
+! TabbedWindow is a complex object.
+! See TabbedWindow in Ge Reference Manual <link>geref_tabbedwind, ,$pwr_lang/man_geref.dat
+!
+!*/
+99

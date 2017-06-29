@@ -2,10 +2,10 @@
 0! DefaultHeight 0
 199
 !/**
-! MDamper
+! MDamper2
 ! Group Process
 !
-! <image> pwr_mdamper_gs.gif
+! <image> pwr_mdamper2_gs.png
 !
 ! <h1>Description
 ! Solenoid damper.

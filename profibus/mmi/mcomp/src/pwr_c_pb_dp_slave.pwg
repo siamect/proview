@@ -2,24 +2,27 @@
 0! DefaultHeight 540
 199
 !/**
-! TempSwitch
-! Group Components/BaseComponent
+! Profibus slave
+! Group Components/Profibus
 !
-! <image> bcomp_tempswitch_gs.gif
+! <image> mcomp_pb_dp_slave_gs.png
 !
 ! <h1>Description
-! Temperature switch. Graphic symbol for basecomponent BaseTempSwitch.
-! Should be connected to an instance of BaseTempSwitch, or a 
+! Profibus slave. Graphic symbol for a Profibus slave.
+! Should be connected to an instance of Pb_Dp_Slave, or a 
 ! subclass to this class.
+! The name of the slave can be inserted in A2. A1 is used
+! by the HostObject dynamic to display the slave address.
 !
 ! <h1>Default dynamics
 ! HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
 !
 ! Dynamics for the symbol
-! - flashing red at alarm status.
-! - popupmenu with the methods of the connected object.
+! - yellow or red at warning or error status.
+! - slave address displayed in A1.
 !
-! DigFlash <t>$hostobject.AlarmStatus <link>GeDynDigFlash, ,$pwr_lang/man_geref.dat
+! Value <t>$hostobject.Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+! StatusColor <t>$hostobject.StatusColor <link>GeDynStatusColor, ,$pwr_lang/man_geref.dat
 ! PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 !
 ! Default Cycle Slow 

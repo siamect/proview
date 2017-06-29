@@ -1,0 +1,17 @@
+199
+!/** This file is only for generatíon of man_subgraph.dat
+! MethodToolbar
+! Group Other
+!
+! <image> geg_fig159.png
+!
+! <h1>Description
+! Method toolbar. the method toolbar is used in object graphs to activate the 
+! methods of the object.
+!
+! <h1>Default dynamics
+! MethodToolbar is a complex object.
+! See Table in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+!
+!*/
+99

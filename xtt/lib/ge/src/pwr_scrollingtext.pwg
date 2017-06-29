@@ -1,5 +1,19 @@
 0! DefaultWidth 0
 0! DefaultHeight 0
+199
+!/**
+! ScrollingText
+! Group Values
+!
+! <image> pwr_scrollingtext_gs.png
+!
+! <h1>Description
+! Field to display a scrolling text.
+!
+! <h1>Default dynamics
+! ScrollingText <link>GeDynScrollingText, ,$pwr_lang/man_geref.dat
+!
+!*/
 1
 100 20
 135 20
