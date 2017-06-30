@@ -39,12 +39,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifdef OS_VMS
-#include <descrip.h>
-#include <lib$routines.h>
-#include <clidef.h>
-#endif
-
 #include "wb_pwrs.h"
 #include "wb_ldh_msg.h"
 #include "wb_ldh.h"

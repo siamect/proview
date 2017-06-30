@@ -149,9 +149,7 @@ char				rtt_user[40] = "";
 char				rtt_time[80];
 char				rtt_hw[20];
 char				rtt_platform[20];
-#if defined OS_VMS
-char				rtt_os[20] = "vms";
-#elif defined OS_LYNX
+#if defined OS_LYNX
 char				rtt_os[20] = "lynx";
 #elif defined OS_LINUX
 char				rtt_os[20] = "linux";

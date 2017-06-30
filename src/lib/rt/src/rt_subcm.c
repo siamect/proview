@@ -45,10 +45,6 @@
 # include <stdlib.h>
 # include <string.h>
 
-#if defined (OS_VMS)
-# include <lib$routines.h>
-#endif
-
 #include "pwr.h"
 #include "co_cdh.h"
 #include "co_time.h"

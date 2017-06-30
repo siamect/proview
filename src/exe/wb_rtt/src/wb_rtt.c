@@ -75,9 +75,6 @@ int main(int argc, char *argv[])
 	  strcpy( buffername, argv[1]);
 
 	/* Convert name to upper case */
-#if defined(OS_VMS)
-	rtt_toupper( buffername, buffername);
-#endif
 
 	if ( argc > 2 )
 	{

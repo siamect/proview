@@ -37,9 +37,6 @@
 #ifndef rt_sync_h
 #define rt_sync_h
 
-#if defined OS_VMS
-# include <tis.h>
-#endif
 #include "pwr.h"
 #include "rt_thread.h"
 

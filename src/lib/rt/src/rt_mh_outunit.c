@@ -40,11 +40,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef OS_VMS
-#include <starlet.h>
-#include <signal.h>
-#endif
-
 #include "pwr.h"
 #include "pwr_class.h"
 #include "pwr_baseclasses.h"

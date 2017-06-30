@@ -42,10 +42,6 @@
 #include <errno.h>
 #include <string.h>
 
-#ifdef OS_VMS
-# include <starlet.h>
-#endif
-
 #include "pwr_class.h"
 #include "co_time.h"
 #include "rt_mh_msg.h"
@@ -84,21 +80,13 @@ mh_BlockDbOpen (
   hp = &dp->Head;
 
   /* try to open old blocking file */
-#if defined OS_VMS
-  dp->File = fopen(FileName, "r+b", "shr=get");
-#else
   dp->File = fopen(FileName, "r+");
-#endif
 
   if (dp->File != NULL) {
     sprintf(msg, "BlockDbOpen: old file: %s", FileName);
     Log(msg);
     if (fread(hp, sizeof(*hp), 1, dp->File) != 1) {
-#if defined OS_VMS
-      sprintf(msg, "BlockDbOpen: read header, %s", strerror(errno, vaxc$errno));
-#else
       sprintf(msg, "BlockDbOpen: read header, %s", strerror(errno));
-#endif
       Log(msg);
     } else {
       time_GetTime(&hp->OpenTime);
@@ -111,18 +99,10 @@ mh_BlockDbOpen (
   }
 
   /* try to create new blocking file */
-#if defined OS_VMS
-  dp->File = fopen(FileName, "w+b", "shr=get");
-#else
   dp->File = fopen(FileName, "w+");
-#endif
 
   if (dp->File == NULL) {
-#if defined OS_VMS
-    sprintf(msg, "BlockDbOpen: %s", strerror(errno, vaxc$errno));
-#else
     sprintf(msg, "BlockDbOpen: %s", strerror(errno));
-#endif
     Log(msg);
   } else {
     sprintf(msg, "BlockDbOpen: new file, %s", FileName);
@@ -144,11 +124,7 @@ mh_BlockDbOpen (
 	return(dp);
     }
 
-#if defined OS_VMS
-    sprintf(msg, "BlockDbOpen: write header, %s", strerror(errno, vaxc$errno));
-#else
     sprintf(msg, "BlockDbOpen: write header, %s", strerror(errno));
-#endif
     Log(msg);
     fclose(dp->File);
   }
@@ -191,11 +167,7 @@ mh_BlockDbGet (
   return(dp);
 
 error:
-#if defined OS_VMS
-  sprintf(msg, "BlockDbGet: %s", strerror(errno, vaxc$errno));
-#else
   sprintf(msg, "BlockDbGet: %s", strerror(errno));
-#endif
   Log(msg);
   return mh_BlockDbClose(dp);
 }
@@ -259,11 +231,7 @@ mh_BlockDbPut (
   return(dp);
 
 error:
-#if defined OS_VMS
-  errc = strerror(errno, vaxc$errno);
-#else
   errc = strerror(errno);
-#endif
   sprintf(msg, "BlockDbPut: %s", errc);
   Log(msg);
   return mh_BlockDbClose(dp);

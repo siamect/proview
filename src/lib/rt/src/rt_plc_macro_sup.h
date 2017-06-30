@@ -38,10 +38,6 @@
    Contains macros for analog and digital supervision of parameters.
    This code is used in the PLC-program environment.  */
 
-#ifdef OS_VMS
-#include <starlet.h>
-#endif
-
 /*
  Name:
    Sup_init(object, In, con)				

@@ -49,16 +49,6 @@
 #if defined OS_POSIX
 #include <string.h>
 #endif
-#ifdef OS_VMS
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <float.h>
-#include <libdef.h>
-#include <starlet.h>
-#include <lib$routines.h>
-#endif
 
 #include "pwr.h"
 #include "pwr_baseclasses.h"

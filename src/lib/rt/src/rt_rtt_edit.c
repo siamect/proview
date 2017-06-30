@@ -40,17 +40,7 @@
 
 /*_Include files_________________________________________________________*/
 
-#if defined(OS_VMS)
- #include <stdio.h>
- #include <ctype.h>
- #include <descrip.h>
- #include <lib$routines.h>
- #include <clidef.h>
- #include <ssdef.h>
- #include <string.h>
- #include <chfdef.h>
- #include <stdlib.h>
-#elif defined OS_POSIX
+#if defined OS_POSIX
  #include <stdio.h>
  #include <ctype.h>
  #include <string.h>
@@ -1957,9 +1947,7 @@ static int	dtt_edit_func(	edit_ctx	ctx,
 	  /* Edit help is default */
 
 	  sprintf( filename, "%s%s.rhlp", dtt_source_dir, menuname);
-#if defined(OS_VMS)
-	  sprintf( cmd, "spawn edit/edt %s", filename); 
-#elif defined OS_POSIX
+#if defined OS_POSIX
 	  sprintf( cmd, "vi %s", filename); 
 #endif
 	  system( cmd);
@@ -1969,9 +1957,7 @@ static int	dtt_edit_func(	edit_ctx	ctx,
 	  /* Edit the help file */
 	  dtt_get_menufilename( menuname);
 	  sprintf( filename, "%s%s.rhlp", dtt_source_dir, menuname);
-#if defined(OS_VMS)
-	  sprintf( cmd, "spawn edit/edt %s", filename); 
-#elif defined OS_POSIX
+#if defined OS_POSIX
 	  sprintf( cmd, "vi %s", filename); 
 #endif
 	  system( cmd);
@@ -1979,10 +1965,7 @@ static int	dtt_edit_func(	edit_ctx	ctx,
 	else if ( cdh_NoCaseStrncmp( arg1_str, "FUNCTIONS", strlen( arg1_str)) == 0)
 	{
 	  /* Edit the function file */
-#if defined(OS_VMS)
-	  sprintf( cmd, "spawn edit/edt %ra_rtt_%s.c", 
-		dtt_source_dir, dtt_programname); 
-#elif defined OS_POSIX
+#if defined OS_POSIX
 	  sprintf( cmd, "vi %sra_rtt_%s.c", dtt_source_dir, dtt_programname); 
 #endif
 	  system( cmd);
@@ -2012,13 +1995,6 @@ static int	dtt_edit_func(	edit_ctx	ctx,
 static int	dtt_run_func(	edit_ctx	ctx,
 				int		flag)
 {
-#if defined(OS_VMS)
-	char	cmd[100];
-	sprintf( cmd, "spawn run pwrp_exe:rt_rtt_%s", 
-		dtt_programname); 
-	system( cmd);
-#endif
-
 	return RTT__SUCCESS;
 }
 /*************************************************************************
@@ -6972,10 +6948,7 @@ static int	dtt_edit_save_menues(	char		*filename,
 	if ( !nocompile)
 	{
 	  /* Export help file */
-#if defined(OS_VMS)
-	  sprintf( cmd, "copy /nolog %s.rhlp %s.rhlp", fname_noext, 
-		fnamebld_noext); 
-#elif defined(OS_LYNX)
+#if defined(OS_LYNX)
 	  sprintf( cmd, "cp %s.rhlp %s.rhlp", fname_noext, 
 		fnamebld_noext); 
 #elif defined OS_POSIX
@@ -7779,12 +7752,7 @@ int	dtt_start( char		*programname)
 
 
 	/* Figure out the current opsys */
-#if defined(OS_VMS)
-	if ( strcmp( rtt_hw, "axp") ==0)
-	  dtt_current_opsys = pwr_mOpSys_AXP_VMS;
-	else
-	  dtt_current_opsys = pwr_mOpSys_VAX_VMS;
-#elif defined(OS_LYNX)
+#if defined(OS_LYNX)
 	if ( strcmp( rtt_hw, "x86") == 0)
 	  dtt_current_opsys = pwr_mOpSys_X86_LYNX;
 	else
@@ -7814,20 +7782,7 @@ int	dtt_start( char		*programname)
 #endif	  
 
 	/* Create path for source and build directories */
-#if defined(OS_VMS)
-	if ( dtt_is_rttsys)
-	{
-	  sprintf( dtt_build_dir, "pwrb_bldroot:[lib.dtt]");
-	  strcpy( dtt_source_dir, "pwr_root:[src.lib.dtt.src]");
-	  strcpy( dtt_exe_dir, "pwr_exe:");
-	}
-	else
-	{
-	  strcpy( dtt_source_dir, "pwrp_rtt:");
-	  strcpy( dtt_build_dir, "pwrp_rttbld:");
-	  strcpy( dtt_exe_dir, "pwr_exe:");
-	}
-#elif defined OS_POSIX
+#if defined OS_POSIX
 	if ( dtt_is_rttsys)
 	{
 	  pwr_tFileName dir;
@@ -8025,11 +7980,7 @@ static int dtt_cc(	int	opsys,
 { 
 	char	cmd[100];
 
-#if defined(OS_VMS)
-	sprintf( cmd, "@%swb_rtt_appl %s %d %d %d", dtt_exe_dir, 
-		dtt_programname, action, opsys, debug);
-
-#elif defined OS_POSIX
+#if defined OS_POSIX
 	sprintf( cmd, "%s/wb_rtt_appl.sh %s %d %d %d", dtt_exe_dir, 
 		dtt_programname, action, dtt_is_rttsys, opsys);
 #endif
@@ -8065,12 +8016,7 @@ static int dtt_compile_picture( char	*filename,
 	  rtt_message('I', msg);
 	  rtt_cursor_abs( 0, 21);
 	  r_print_buffer();
-#if defined(OS_VMS)
-	  sprintf( cmd, "@%swb_rtt_comppicture %s %s %d %d", dtt_exe_dir, filename,
-		dtt_programname, dtt_is_rttsys, dtt_current_opsys);
-
-	  system( cmd);
-#elif defined OS_POSIX
+#if defined OS_POSIX
 	  sprintf( cmd, "%swb_rtt_comppicture.sh %s %s %d %d", dtt_exe_dir, filename,
 		dtt_programname, dtt_is_rttsys, dtt_current_opsys);
 
@@ -8087,12 +8033,7 @@ static int dtt_compile_picture( char	*filename,
 	      rtt_message('I', msg);
 	      rtt_cursor_abs( 0, 21);
 	      r_print_buffer();
-#if defined(OS_VMS)
-	      sprintf( cmd, "@%swb_rtt_comppicture %s %s %d %d", dtt_exe_dir, filename,
-		dtt_programname, dtt_is_rttsys, os);
-
-	      system( cmd);
-#elif defined OS_POSIX
+#if defined OS_POSIX
 	      sprintf( cmd, "%swb_rtt_comppicture.sh %s %s %d %d", dtt_exe_dir, filename,
 		dtt_programname, dtt_is_rttsys, os);
 
@@ -10620,11 +10561,7 @@ static void	dtt_exit_now( pwr_tStatus exit_sts)
 	else
 	  exit( 0);
 #endif
-#if defined(OS_VMS)
-	exit( exit_sts);
-#endif
 }
-
 
 static char *dtt_opsys_to_name( int opsys)
 {

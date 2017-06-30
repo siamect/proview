@@ -42,18 +42,9 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-#ifdef OS_VMS
-#include <starlet.h>
-#include <rms.h>
-#include <descrip.h>
-#include <libdef.h>
-#include <libdtdef.h>
-#include <lib$routines.h>
-#else
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#endif
 
 #include "pwr.h"
 #include "co_time.h"
@@ -185,57 +176,6 @@ pwr_tStatus dir_get_fileinfo( 	char 	*file_name,
 				int 	*vmsvers_p,
 				char	*found_file) 
 {
-#ifdef OS_VMS
-  static struct NAM 	nam1;
-  static struct FAB 	fab1;
-  static struct	XABDAT	dat1; 
-  static pwr_tTime    	zero2 = {0 ,0};
-  char			result_name[NAM$C_MAXRSS];
-  int 			sys1_sts , sys2_sts; 
-
-  /* Initialize RMS user structures for the checking file. */
-  fab1  	 = cc$rms_fab;
-  fab1.fab$l_xab = (char *) &dat1;
-  fab1.fab$l_nam = &nam1;
-  
-  dat1  	 = cc$rms_xabdat;
-  dat1.xab$l_nxt = 0;
-
-  fab1.fab$l_fna = file_name;
-  fab1.fab$b_fns = strlen (file_name);
-
-  nam1  	 = cc$rms_nam;
-  nam1.nam$l_rsa = result_name;
-  nam1.nam$b_rss = sizeof(result_name);
-
-  sys1_sts= sys$open (&fab1);
-
-  if ((sys1_sts & 1) == 0) 
-  { 
-    time_VmsToPwr((pwr_tVaxTime *)&dat1.xab$q_cdt, time2_ptr);
-    return (sys1_sts); 
-  }
-  else
-  {
-    if ( size_p != NULL) 
-        *size_p = fab1.fab$l_alq; 
-
-    if ( vmsvers_p != NULL) 
-    {
-      nam1.nam$l_ver[nam1.nam$b_ver] = '\0'; 
-      nam1.nam$l_ver++;
-        
-      sscanf ( nam1.nam$l_ver , "%d" , vmsvers_p );
-    }
-    time_VmsToPwr((pwr_tVaxTime *)&dat1.xab$q_cdt, time2_ptr);
-    result_name[nam1.nam$b_rsl] = 0;
-    if ( found_file != NULL)
-      strcpy( found_file, result_name);
-    sys2_sts = sys$close (&fab1);
-  }
-
-  sys2_sts = sys$close (&fab1);
-#else
   struct stat info;
   int	sts;
   char  fname[200];
@@ -256,8 +196,7 @@ pwr_tStatus dir_get_fileinfo( 	char 	*file_name,
   if ( found_file != NULL)
     strcpy( found_file, file_name);
   
-#endif
-  return 1; 
+  return 1;
 }  
 
 
@@ -306,10 +245,7 @@ pwr_tStatus dir_CopyFile(
 {
 	int		sts;
 	static char	cmd[100];
-#ifdef OS_VMS
-	$DESCRIPTOR(cmd_desc,cmd);
-	sprintf( cmd, "copy/nolog %s %s", from, to);
-#elif OS_LINUX
+#ifdef OS_LINUX
 	sprintf( cmd, "cp %s %s", from, to);
 #endif
 	sts = system( cmd);
@@ -335,16 +271,7 @@ pwr_tStatus dir_PurgeFile(
 	int	keep
 )
 {
-#ifdef OS_VMS
-	int		sts;
-	static char	cmd[100];
-	$DESCRIPTOR(cmd_desc,cmd);
-	sprintf( cmd, "purge/nolog/keep=%d %s", keep, filename);
-	sts = system( cmd);
-	return sts;
-#else
 	return 1;
-#endif
 }
 
 
@@ -366,10 +293,7 @@ pwr_tStatus dir_DeleteFile(
 {
 	int		sts;
 	static char	cmd[100];
-#ifdef OS_VMS
-	$DESCRIPTOR(cmd_desc,cmd);
-	sprintf( cmd, "delete_/nolog %s", filename);
-#elif OS_LINUX
+#ifdef OS_LINUX
 	sprintf( cmd, "rm %s", filename);
 #endif	
 	sts = system( cmd);
@@ -397,29 +321,8 @@ pwr_tStatus dir_DefineLogical(
 	char	*table
 )
 {
-#ifdef OS_VMS
-	pwr_tStatus sts;
-	struct dsc$descriptor_s name_desc = 
-			{0, DSC$K_DTYPE_T, DSC$K_CLASS_S, 0};
-	struct dsc$descriptor_s table_desc = 
-			{0, DSC$K_DTYPE_T, DSC$K_CLASS_S, 0};
-	struct dsc$descriptor_s value_desc = 
-			{0, DSC$K_DTYPE_T, DSC$K_CLASS_S, 0};
-
-	name_desc.dsc$w_length = strlen( name);
-	name_desc.dsc$a_pointer = name;
-	table_desc.dsc$w_length = strlen( table);
-	table_desc.dsc$a_pointer = table;
-	value_desc.dsc$w_length = strlen( value);
-	value_desc.dsc$a_pointer = value;
-
-	sts = lib$set_logical( &name_desc, &value_desc, &table_desc,
-		NULL,NULL);
-	return sts;
-#else
 	printf("DefineLogical: NYI\n");
 	return 0;
-#endif
 }
 /*************************************************************************
 *
@@ -438,26 +341,9 @@ pwr_tStatus dir_DeassignLogical(
 	char	*table
 )
 {
-#ifdef OS_VMS
-	pwr_tStatus sts;
-	struct dsc$descriptor_s name_desc = 
-			{0, DSC$K_DTYPE_T, DSC$K_CLASS_S, 0};
-	struct dsc$descriptor_s table_desc = 
-			{0, DSC$K_DTYPE_T, DSC$K_CLASS_S, 0};
-
-	name_desc.dsc$w_length = strlen( name);
-	name_desc.dsc$a_pointer = name;
-	table_desc.dsc$w_length = strlen( table);
-	table_desc.dsc$a_pointer = table;
-
-	sts = lib$delete_logical( &name_desc, &table_desc);
-	return sts;
-#else
 	printf("DeassignLogical: NYI\n");
 	return 0;
-#endif
 }
-
 
 #ifdef RMS_TEST
 main()

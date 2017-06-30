@@ -142,15 +142,8 @@ int main( int argc, char *argv[])
       }
       strcpy( ctx->dir, argv[i+1]);
       i++;
-#if defined OS_VMS
-      if ( ctx->dir[strlen(ctx->dir)-1] != ':' &&
-	   (ctx->dir[strlen(ctx->dir)-1] != '>' &&
-	    ctx->dir[strlen(ctx->dir)-1] != ']' ))
-        strcat( ctx->dir , ":");
-#else
       if ( ctx->dir[strlen(ctx->dir)-1] != '/')
         strcat( ctx->dir , "/");
-#endif
     }
     else if ( strcmp( argv[i], "-g") == 0) {
       if ( i+1 >= argc) {
@@ -424,12 +417,8 @@ int main( int argc, char *argv[])
     delete ctx->wblto;
 
   if ( EVEN(exit_sts))
-#if defined OS_VMS
-    exit(exit_sts);
-#else
     exit(1);
   exit(0);
-#endif
 }
 
 

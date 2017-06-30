@@ -153,29 +153,10 @@ int main(int argc, char **argv)
     char fname[256];
     char *p;
 
-#if defined OS_VMS
-    p = strpbrk(argv[2], "]>");
-    if (!p)
-      p = strchr(argv[2], ':');
-    else {
-      char *p2;
-      while(p2 = strpbrk(p + 1, "]>"))
-	p = p2;
-    }
-    if (p)
-      for (i = 0; p[i+1]; i++)
-	fname[i] = tolower(p[i+1]);
-    else
-      for (i = 0; argv[2][i]; i++)
-	fname[i] = tolower(argv[2][i]);
-    fname[i] = '\0';
-#else
     if ((p = strrchr(argv[2], '/')))
       strncpy(fname, p+1, sizeof(fname));
     else
       strncpy(fname, argv[2], sizeof(fname));
-    
-#endif
 
     if ((p = strchr(fname, '.')))
       *p = '\0';
@@ -187,9 +168,7 @@ int main(int argc, char **argv)
   fclose(cfp);
   fclose(hfp);
 
-#if defined OS_VMS
-  exit(1);
-#elif defined OS_POSIX
+#if defined OS_POSIX
   exit(EXIT_SUCCESS);
 #endif
 }
@@ -281,11 +260,7 @@ static void WriteFiles(char *fname, FILE *cfp, FILE *hfp)
 
   for (fl = LstFir(&lFacH); fl != LstEnd(&lFacH); fl = LstNex(fl)) {
     facid = 0x800 + LstObj(fl)->f.FacNum;
-#if defined OS_VMS
-    snprintf(name, sizeof(name), "%s$_FACILITY", LstObj(fl)->f.FacName);
-#else
     snprintf(name, sizeof(name), "%s_FACILITY", LstObj(fl)->f.FacName);
-#endif
     fprintf(hfp, "#define %-29s %9d /* x%08x */\n", name, facid, facid);
     facid = facid << 16;
 

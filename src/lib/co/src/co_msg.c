@@ -34,11 +34,7 @@
  * General Public License plus this exception.
  **/
 
-#if defined OS_VMS
-# include <string.h>
-# include <descrip.h>
-# include <starlet.h>
-#elif defined OS_POSIX
+#if defined OS_POSIX
 # include <string.h>
 #endif
 
@@ -175,37 +171,6 @@ IsRightHead (
 }
 #endif
 
-#if defined(OS_VMS)
-
-char *
-msg_GetMessage (
-  const pwr_tStatus	sts,
-  unsigned int		flags,
-  char			*buf,
-  int			bufSize
-)
-{
-  char			dsc_buf[256];
-  struct dsc$descriptor desc;
-  unsigned short	msglen;
-
-  desc.dsc$a_pointer  = dsc_buf;
-  desc.dsc$w_length   = sizeof(dsc_buf);	
-  desc.dsc$b_dtype    = DSC$K_DTYPE_T;
-  desc.dsc$b_class    = DSC$K_CLASS_S;
-
-  sys$getmsg(sts, &msglen, &desc, flags, NULL);
-  if (flags == 0xf || flags == 1) {
-    strncpy(buf, dsc_buf, MIN(bufSize, msglen));
-    buf[MIN(msglen, bufSize)] = '\0';
-  } else {
-    strncpy(buf, &dsc_buf[1], MIN(bufSize, msglen-1));
-    buf[MIN(msglen-1, bufSize)] = '\0';
-  }
-  return buf;
-
-}
-#else
 static char
 get_severity (
   pwr_tStatus sts
@@ -276,4 +241,3 @@ msg_GetMessage (
   return buf;
 
 }
-#endif

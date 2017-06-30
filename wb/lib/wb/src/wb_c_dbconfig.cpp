@@ -39,12 +39,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifdef OS_VMS
-#include <descrip.h>
-#include <lib$routines.h>
-#include <clidef.h>
-#endif
-
 #include "wb_pwrs.h"
 #include "wb_ldh_msg.h"
 #include "wb_ldh.h"
@@ -62,35 +56,6 @@ static pwr_tStatus OpenDb (
   ldh_sMenuCall *ip
 )
 {
-#ifdef OS_VMS
-  int size;
-  char *db_id;
-  int	sts;
-  char name[80];
-  static char	cmd[100];
-  $DESCRIPTOR(cmd_desc,cmd);
-  unsigned long cli_flag = CLI$M_NOWAIT;
-
-  sts = ldh_GetObjectPar( ip->PointedSession,
-			ip->Pointed.Objid, "RtBody",
-			"Id", (char **) &db_id, &size);
-  if (EVEN(sts)) return sts;
-
-  sts = ldh_ObjidToName ( ip->PointedSession, ip->Pointed.Objid,
-		ldh_eName_Object, name, sizeof(name), &size);
-  if ( EVEN(sts)) return sts;
-
-  sprintf( cmd,
-	"@pwr_exe:wb_open_db \"%s\" \"%s\" \"%s\" \"\" \"%s\"",
-	db_id, CoLogin::username(), CoLogin::uspassword(), name);
-  free( db_id);
-
-  sts = lib$spawn (&cmd_desc , 0 , 0 , &cli_flag );
-  if (EVEN(sts)) {
-    printf("-- Error when creating subprocess.\n");
-    return sts;
-  }
-#else
   int size;
   char *db_id_p;
   char db_id[80];
@@ -120,7 +85,6 @@ static pwr_tStatus OpenDb (
     printf("-- Error when creating process.\n");
     return sts;
   }
-#endif
   return 1;
 }
 

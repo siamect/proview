@@ -43,12 +43,7 @@
 #include <string.h>
 #include <time.h>
 
-#if defined(OS_VMS)
-# include <lib$routines.h>
-# include <in.h>
-# include <inet.h>
-# include <ucx$inetdef.h>
-#elif defined OS_POSIX
+#if defined OS_POSIX
 # include <netinet/in.h>
 # include <arpa/inet.h>
 #endif

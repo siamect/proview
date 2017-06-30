@@ -61,9 +61,6 @@
 #include "co_ccm.h"
 #include "co_lng.h"
 
-#if defined OS_VMS
-# pragma message disable (INTSIGNCHANGE)
-#endif
 #define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 #define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
 

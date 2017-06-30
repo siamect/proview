@@ -741,44 +741,7 @@ int	rtt_get_nodename( char *nodename, int size);
 char	*rtt_fgetname( FILE *fp, char *name, char *def_name);
 int	rtt_set_prio( int prio);
 int	rtt_set_default_prio();
-#if defined OS_VMS
-int	rttvms_get_nodename( char *nodename, int size);
-int	rttvms_get_uic( int *uic);
-int	rttvms_get_identname( int id, char *name);
-int	rttvms_get_procinfo( int prcnum, char *state, int *pri, int *cputim);
-int	rttvms_get_procinfo_full( 	int 		prcnum, 
-					char		*state,
-				 	int 		*pri,
-					int		*prib,
-				 	int 		*cputim,
-					int		*logintim,
-					int		*uic,
-					int		*bufio,
-					char		*imagname,
-					int		*gpgcnt,
-					int		*jobprccnt,
-					int		*pageflts,
-					int		*pagfilcnt,
-					int		*pgflquota,
-					char		*prcnam,
-					int		*fillm,
-					int		*virtpeak,
-					int		*wspeak,
-					int		*wsquota,
-					int		*wsextent,
-					int		*wssize,
-					int		*ppgcnt,
-					int		*dirio);
-int	rttvms_get_pwr_proc( 
-		int		*proc_pid_p,
-		pwr_tString32	*proc_name_p,
-		pwr_tString16	*proc_pidstr_p,
-		int		*proc_pri_p,
-		pwr_tString16	*proc_state_p,
-		float		*proc_cputim_p,
-		int		max_proc,
-		int		*proc_count);
-#elif defined OS_POSIX
+#if defined OS_POSIX
 int     rtt_replace_env( char *str, char *newstr);
 #endif
 

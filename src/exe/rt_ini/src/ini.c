@@ -69,20 +69,7 @@
 #include "rt_errh.h"
 #include "co_syi.h"
 
-#if defined OS_VMS
-# define cPrio_neth		8
-# define cPrio_qmon		9
-# define cPrio_neth_acp		6
-# define cPrio_io_comm		7
-# define cPrio_tmon		6
-# define cPrio_emon		7
-# define cPrio_alimserver	6
-# define cPrio_bck		5
-# define cPrio_linksup		5
-# define cPrio_fast		5
-# define cPrio_trend		5
-# define cPrio_plc_init		5
-#elif defined OS_LYNX
+#if defined OS_LYNX
 # define cPrio_neth		18
 # define cPrio_qmon		19
 # define cPrio_neth_acp		17
@@ -948,19 +935,7 @@ ini_LoadDirectory (
   syi_HostSpec(sts, cp->hostspec, sizeof(cp->hostspec));
   syi_BootDisk(sts, cp->bootdisk, sizeof(cp->bootdisk));
 
-#if defined(OS_VMS)
-  {
-    char *s;
-
-    if (!cp->flags.b.busid) {
-      s = getenv(pwr_dEnvBusId);
-      if (s != NULL)
-	cp->busid = atoi(s);
-    }
-    sprintf(cp->bdir, "%s", dbs_cNameBaseDirectory);
-    sprintf(cp->dir, "%s", dbs_cNameDirectory);
-  }
-#elif defined OS_POSIX
+#if defined OS_POSIX
   {
     char *s;
 
@@ -1116,8 +1091,6 @@ ini_ReadBootFile (
 	for ( j = 0; j < progs; j++) {
 #if defined OS_POSIX
 	  snprintf(cp->plcfile[j].name, sizeof(cp->plcfile[0].name), "%s", prog_array[j]);
-#elif defined OS_VMS
-	  snprintf(cp->plcfile[j].name, sizeof(cp->plcfile[0].name), "%s%s", "pwrp_exe:", prog_array[j]);
 #else
 	  snprintf(cp->plcfile[j].name, sizeof(cp->plcfile[0].name), "%s%s", cp->dir, prog_array[j]);
 #endif

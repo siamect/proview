@@ -42,16 +42,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef OS_VMS
-# include <starlet.h>
-# include <descrip.h>
-#endif
-
 #include "pwr.h"
-
-#ifdef OS_VMS
-  static int		timerFlag;
-#endif
 
 static pwr_tTime *
 addTime (
@@ -91,11 +82,6 @@ main (
   pwr_tTime		time;
   pwr_tTime		now;
   int			sec,nsec;
-
-#ifdef OS_VMS
-  sts = lib$get_ef(&timerFlag);
-  if (EVEN(sts)) exit(sts);
-#endif
 
   for (sec=0,nsec=10000000;;) {
     nowTime(&now);
@@ -172,27 +158,7 @@ subTime (
   t1->tv_nsec = tv_nsec;
   return t1;
 }
-
-#ifdef OS_VMS
-/* Help function to do a change mode to executive call.
-   Ticks are in 10-millisecond units.  */
 
-static int
-vmsUpTime (
-  unsigned int *sec,
-  unsigned int *tick
-)
-{
-  extern unsigned int EXE$GL_ABSTIM;
-  extern unsigned int EXE$GL_ABSTIM_TICS;
-
-  *sec	= EXE$GL_ABSTIM;
-  *tick	= EXE$GL_ABSTIM_TICS;
-
-   return 1;
-}
-#endif
-
 /* Get current uptime.  */
 
 static pwr_tTime *
@@ -200,22 +166,7 @@ nowTime (
   pwr_tTime		*tp
 )
 {
-#if defined OS_VMS
-  /* This code is valid up to 497 days after boot.  */
-
-  void			*argv[3];
-  pwr_tStatus		sts;
-
-  argv[0] = (void *) 2;
-  argv[1] = &tp->tv_sec;
-  argv[2] = &tp->tv_nsec;
-
-  sts = sys$cmexec(&vmsUpTime, argv);
-
-  tp->tv_nsec %= 100;
-  tp->tv_nsec *= 10000000;
-
-#elif defined OS_LYNX
+#if defined OS_LYNX
   clock_gettime(CLOCK_REALTIME, tp);
 #endif
  
@@ -242,29 +193,7 @@ waitTime (
 #endif
 
   if ((int)then.tv_sec > 0 || ((int)then.tv_sec == 0 && then.tv_nsec > 0)) {
-#if defined OS_VMS
-    int			tv_nsec;
-    int			vmstime[2];
-    int			multiplier = -10000000;	      /* Used to convert 1 s to 100 ns, delta time.  */
-    static pwr_tTime	tick = {0, 10000000};
-
-    addTime(&then, &tick);
-    tv_nsec = -then.tv_nsec/100;   /* Convert to 100 ns.  */
-    sts = lib$emul(&then.tv_sec, &multiplier, &tv_nsec, vmstime);
-
-#if defined OS_VMS
-    tims_desc.dsc$a_pointer = tims;
-    sys$asctim( &len, &tims_desc, vmstime, 0);
-    tims[len] = '\0';
-    printf("  %s\n", tims);
-#if 0
-    sts = sys$clref(timerFlag);
-    sts = sys$setimr(timerFlag, vmstime, 0, 0, 0);
-    sts = sys$waitfr(timerFlag);
-#endif
-#endif
-
-#elif defined OS_LYNX
+#if defined OS_LYNX
     pwr_tTime rmt;
 
     nanosleep(&then, &rmt);

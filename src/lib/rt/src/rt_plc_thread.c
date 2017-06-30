@@ -74,7 +74,6 @@
 #if 0
 #include "rt_io_supervise.h"
 #endif
-#include "rt_plc_loop.h"
 #include "rt_c_plcthread.h"
 #include "rt_c_node.h"
 

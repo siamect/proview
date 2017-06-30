@@ -39,10 +39,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifdef __OS_VMS
-#pragma member_alignment
-#endif
-
 #include <Xm/Xm.h>
 #include <Xm/XmP.h>
 #include <Xm/ScrollBar.h>

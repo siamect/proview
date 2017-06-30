@@ -42,14 +42,6 @@
 #include <ctype.h>
 #include <math.h>
 
-#if defined OS_VMS
-# include <starlet.h>
-# include <lib$routines.h>
-# include <signal.h>
-# include <processes.h>
-# include <descrip.h>
-#endif
-
 #include "pwr_baseclasses.h"
 #include "co_cdh.h"
 #include "co_time.h"
@@ -2410,22 +2402,6 @@ getHandlerObject ()
 
   aproc_RegisterObject( l.emonObject);
 
-#if defined OS_VMS
-
-  if (l.emon->EventLogSize > 0) {
-    $DESCRIPTOR(CmdDsc,"mc pwr_exe:rt_elog.exe");
-    unsigned int Flags = 1; /* Nowait */
-
-    sts = lib$spawn(&CmdDsc, NULL, NULL, &Flags);
-    if (EVEN(sts))
-      errh_Info("Couldn't start Historical Event Logger.");
-
-  } else {
-    errh_Info("No Historical Event Logger will be started on this node.");
-  }
-
-#endif
-
   /* Get IOHandler object */
   sts = gdh_GetClassList(pwr_cClass_IOHandler, &l.iohObject);
   if (EVEN(sts)) {
@@ -2842,21 +2818,11 @@ initBlockList ()
 #if defined OS_POSIX
   char *env = getenv("pwrp_load"); 
   hostspec[0] = '\0'; /* Prevent warnings from gcc */
-
-#elif defined OS_VMS
-
-  hostspec[0] = '\0';
-
 #else
 # error "Block Db not implemented for this platform."
 #endif
 
-
-#if defined OS_VMS
-  sprintf(l.blockDbName, "%spwrp_load:ld_bdb_%06x.dat", hostspec, l.head.nix);
-#else
   sprintf(l.blockDbName, "%s/ld_bdb_%06x.dat", env != NULL ? env : "", l.head.nix);
-#endif
 
   l.blockDb = mh_BlockDbOpen(l.blockDbName, &size);
   if (l.blockDb == NULL) return;

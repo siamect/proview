@@ -47,17 +47,8 @@
 
 
 /*_Include files_________________________________________________________*/
-#ifdef OS_VMS
-#include <stdio.h>
-#include <stdlib.h>
-#include <signal.h>
-#include <descrip.h>
-#include <string.h>
-#include <starlet.h>
-#include <lib$routines.h>
-#endif
 
-#if defined  OS_POSIX
+#if defined OS_POSIX
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
@@ -266,18 +257,13 @@ static pwr_tUInt32 tlog_timestring();
 **************************************************************************/
 static pwr_tUInt32 tlog_sleep( float time)
 {
-#ifdef OS_VMS
-        int sts;
-        sts = lib$wait(&time);
-#else
-        pwr_tDeltaTime  p_time;
+    pwr_tDeltaTime  p_time;
 	struct timespec p_time_ts;
 
-        time_FloatToD( &p_time, time);
+    time_FloatToD( &p_time, time);
 	p_time_ts.tv_sec = p_time.tv_sec;
 	p_time_ts.tv_nsec = p_time.tv_nsec;
-        nanosleep( &p_time_ts, NULL);
-#endif
+    nanosleep( &p_time_ts, NULL);
 	return TLOG__SUCCESS;
 }
 

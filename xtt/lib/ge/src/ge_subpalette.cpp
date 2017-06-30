@@ -1095,10 +1095,8 @@ void SubPalette::menu_tree_build( char *filename)
     return;
 
   fp.open( filename);
-#ifndef OS_VMS
   if ( !fp)
     return;
-#endif
 
   line_cnt = 0;
   menu_tree = menu_tree_build_children( &fp, &line_cnt, filename, NULL);

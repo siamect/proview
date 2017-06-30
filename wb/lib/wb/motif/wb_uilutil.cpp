@@ -169,18 +169,8 @@ void vms_perror(
 	int	msgid)
 {
   static char	msgbuf[257];
-#if defined OS_VMS
-  short	msglen;
-  int	outadr;
-  static $DESCRIPTOR( buf, msgbuf );
-#endif
 
   if (userstring == NULL) userstring = (char*) "";
-#if defined OS_VMS
-  sys$getmsg( msgid, &msglen, &buf, 15, &outadr );
-  msgbuf[msglen] = '\0';
-#else
   sprintf( msgbuf, "uilutil: %x", msgid);
-#endif
   printf("%s%s%s\n", userstring, strlen( userstring ) > 0 ? ": " : "", msgbuf);
 }

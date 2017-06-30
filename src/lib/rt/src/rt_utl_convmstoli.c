@@ -54,14 +54,8 @@
   const char *rt_utl_convmstoli_str = "rt_utl_convmstoli, Not needed for LYNX and LINUX";
 #else
 
-#ifdef	OS_VMS
-#include <descrip.h>
-#include <lib$routines.h>
-#endif
-
 #include "pwr.h"
 #include "pwr_class.h"
-
 
 #if 1 
 void plc_ConvMSToLI(pwr_tUInt32 Time, pwr_tVaxTime *TimeLI)
@@ -75,12 +69,7 @@ void plc_ConvMSToLI(pwr_tUInt32 Time, pwr_tVaxTime *TimeLI)
     lib$emul (&Multiplier, &Time, &Addend, TimeLI);
 
 } /* END plc_ConvMSToLI */
-
-
 #else  /* Old code */
-
-   
-
 #include $vaxelnc
 
 void 
@@ -158,5 +147,3 @@ pwr_tInt32	i;
 #endif
 
 #endif /* Not OS_LYNX || OS_LINUX || defined OS_MACOS || defined OS_FREEBSD */
-
-

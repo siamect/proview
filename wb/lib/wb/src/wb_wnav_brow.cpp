@@ -38,9 +38,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#if defined(OS_VMS)
-#include <descrip.h>
-#endif
 
 #include "pwr_privilege.h"
 #include "co_cdh.h"

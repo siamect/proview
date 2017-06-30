@@ -37,10 +37,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef OS_VMS
-# include <lib$routines.h>
-#endif
-
 #include "co_cdh.h"
 
 #include "rt_errh.h"
@@ -661,11 +657,6 @@ qcom_Init (
   sigemptyset(&ss);
   sigaddset(&ss, qdb_cSigMsg);
   sigprocmask(SIG_BLOCK, &ss, NULL);
-
-#elif defined OS_VMS
-  atexit(exitHandler);
-  *sts = lib$get_ef(&qdb->ap->ef);
-  if (EVEN(*sts)) errh_Bugcheck(sts, "lib$get_ef()");
 #endif
 
   qdb_ScopeLock {

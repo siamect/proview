@@ -40,23 +40,13 @@
 
 /*_Include files_________________________________________________________*/
 
-
-
-#if defined(OS_VMS)
-# include <stdio.h>
-# include <stdlib.h>
-# include <ctype.h>
-# include <string.h>
-# include <starlet.h>
-# include <rms.h>
-# include <descrip.h>
-#elif defined OS_POSIX
-# include <stdio.h>
-# include <stdlib.h>
-# include <unistd.h>
-# include <ctype.h>
-# include <string.h>
-# include <dirent.h>
+#if defined OS_POSIX
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <ctype.h>
+#include <string.h>
+#include <dirent.h>
 #endif
 
 #include "pwr.h"
@@ -104,51 +94,7 @@ int rtt_search_file( 		char 	*name ,
 				char	*found_file,
 				int	new)
 {
-#if defined (OS_VMS)
-	static struct NAM 	nam1;
-	static struct FAB 	fab1;
-	static struct	XABDAT	dat1; 
-	static char		result_name[NAM$C_MAXRSS];
-	static char		expand_name[NAM$C_MAXRSS];
-	int 			sts;
-
-
-	if ( new == RTT_DIR_SEARCH_END)
-	  return 1;
-
-	if ( new == RTT_DIR_SEARCH_INIT)
-	{
-	  /* Initialize RMS user structures for the checking file. */
-	  fab1  	   = cc$rms_fab;
-	  fab1.fab$l_xab = (char *) &dat1;
-	  fab1.fab$l_nam = &nam1;
-	  fab1.fab$w_ifi = 0;
-  
-	  dat1  	   = cc$rms_xabdat;
-	  dat1.xab$l_nxt = 0;
-
-	  fab1.fab$l_fna = name;
-	  fab1.fab$b_fns = strlen (name);
-
-	  nam1  	   = cc$rms_nam;
-	  nam1.nam$l_rsa = result_name;
-	  nam1.nam$b_rss = sizeof(result_name);
-	  nam1.nam$l_esa = expand_name;
-	  nam1.nam$b_ess = sizeof(expand_name);
-
-	  sts = sys$parse(&fab1);
-	  if (EVEN(sts)) return sts;
-	}
-
-	if ( new == RTT_DIR_SEARCH_INIT || new == RTT_DIR_SEARCH_NEXT)
-	{
-	  sts= sys$search (&fab1);
-	  if (EVEN(sts)) return sts;
-	  result_name[nam1.nam$b_rsl] = 0;
-	  strcpy( found_file, result_name);
-	}
-	return 1;
-#elif defined OS_POSIX
+#if defined OS_POSIX
 
 	static DIR *directory;
 	static char pattern[80];
@@ -262,52 +208,7 @@ int	rtt_parse_filename( 	char	*filename,
 				char	*type,
 				int	*version)
 {
-#if defined (OS_VMS)
-	struct NAM 	nam1;
-	struct FAB 	fab1;
-	struct	XABDAT	dat1; 
-	char		result_name[NAM$C_MAXRSS];
-	char		expand_name[NAM$C_MAXRSS];
-	int 		sts;
-	int		nr;
-
-
-	/* Initialize RMS user structures for the checking file. */
-	fab1  	   = cc$rms_fab;
-	fab1.fab$l_xab = (char *) &dat1;
-	fab1.fab$l_nam = &nam1;
-	fab1.fab$w_ifi = 0;
-  
-	dat1  	   = cc$rms_xabdat;
-	dat1.xab$l_nxt = 0;
-
-	fab1.fab$l_fna = filename;
-	fab1.fab$b_fns = strlen (filename);
-
-	nam1  	   = cc$rms_nam;
-	nam1.nam$l_rsa = result_name;
-	nam1.nam$b_rss = sizeof(result_name);
-	nam1.nam$l_esa = expand_name;
-	nam1.nam$b_ess = sizeof(expand_name);
-
-	sts = sys$parse(&fab1);
-	if (EVEN(sts)) return sts;
-
-	strcpy( dev, nam1.nam$l_dev);
-	dev[nam1.nam$b_dev] = 0;
-	strcpy( dir, nam1.nam$l_dir);
-	dir[nam1.nam$b_dir] = 0;
-	strcpy( file, nam1.nam$l_name);
-	file[nam1.nam$b_name] = 0;
-	strcpy( type, nam1.nam$l_type);
-	type[nam1.nam$b_type] = 0;
-	nam1.nam$l_ver[nam1.nam$b_ver] = 0;
-	nr = sscanf( nam1.nam$l_ver+1, "%d", version);
-	if ( nr != 1)
-	  *version = -1;
-
-	return 1;
-#elif defined OS_POSIX
+#if defined OS_POSIX
 
 	char	*s;
 	char	ldev[200];

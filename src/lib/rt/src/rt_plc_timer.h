@@ -70,17 +70,9 @@ typedef	struct {
 
 /*	Insert timer into timer-queue	*/
 #if defined OS_POSIX
-
   extern pthread_mutex_t timer_mutex;
 # define PLC_LOCK_MUTEX(m)  pthread_mutex_lock(&m)
 # define PLC_UNLOCK_MUTEX(m)  pthread_mutex_unlock(&m)
-
-#elif defined OS_VMS
-
-# define timer_mutex 0
-# define PLC_LOCK_MUTEX(m) 
-# define PLC_UNLOCK_MUTEX(m)
-
 #endif
 
 /* Local timer handing in object without timer list */

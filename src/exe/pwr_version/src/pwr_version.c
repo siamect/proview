@@ -105,11 +105,7 @@ int main (
   fprintf(fp, "#include \"pwr.h\"\n");
   fprintf(fp, "#endif\n");
   fprintf(fp, "\n");
-  fprintf(fp, "#if defined OS_VMS\n");
-  fprintf(fp, "#define pwrv_cOpSys              \"OpenVMS\"\n");
-  fprintf(fp, "#else\n");
   fprintf(fp, "#define pwrv_cOpSys              \"Unknown Operating System\"\n");
-  fprintf(fp, "#endif\n");
   fprintf(fp, "\n");
   fprintf(fp, "#if defined VAX || defined __VAX\n");
   fprintf(fp, "#define pwrv_cHardware           \"VAX\"\n");

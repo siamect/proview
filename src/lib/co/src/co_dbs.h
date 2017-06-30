@@ -140,27 +140,7 @@ extern "C" {
 
 
 
-#if defined OS_VMS
-
-# define dbs_cNameBaseDirectory "pwr_load:"
-# define dbs_cNameDirectory     "pwrp_load:"
-# define dbs_cDirectory         "pwrp_load:"
-# define dbs_cBaseDirectory     "pwr_load:"
-# define dbs_cNamePlc           "%splc_%s_%04d_%05d.exe"
-
-# define dbs_cNameBootList      "pwrp_root:[common.db]pwrp_cnf_bootlist.dat"
-# define dbs_cNameVolumeList    "pwrp_root:[common.db]pwrp_cnf_volumelist.dat"
-# define dbs_cNamePlcVersion    "pwrp_root:[common.db]pwrp_cnf_plcvers_%s.dat"
-# define dbs_cNameDistribute    "pwrp_root:[common.db]pwrp_cnf_distribute.dat"
-# define dbs_cNameSysObject     "pwrp_root:[common.db]pwrp_cnf_sysobject.dat"
-# define dbs_cNameGblVolumeList "pwra_db:pwr_volumelist.dat"
-# define dbs_cNameRttCrr        "rtt_crr_%03.3d_%03.3d_%03.3d_%03.3d.dat"
-# define dbs_cNameRttCrrObj     "rtt_crro_%03.3d_%03.3d_%03.3d_%03.3d.dat"
-# define dbs_cNameRttCrrCode    "rtt_crrc_%03.3d_%03.3d_%03.3d_%03.3d.dat"
-# define dbs_cNameRttPlc        "rtt_plc_%03.3d_%03.3d_%03.3d_%03.3d.dat"
-
-#elif defined OS_POSIX
-
+#if defined OS_POSIX
 # define dbs_cNameBaseDirectory "pwr_load"
 # define dbs_cNameDirectory     "pwrp_load"
 # define dbs_cDirectory         "$pwrp_load/"
@@ -176,7 +156,6 @@ extern "C" {
 # define dbs_cNameRttCrrObj     "rtt_crro_%03.3d_%03.3d_%03.3d_%03.3d.dat"
 # define dbs_cNameRttCrrCode    "rtt_crrc_%03.3d_%03.3d_%03.3d_%03.3d.dat"
 # define dbs_cNameRttPlc        "rtt_plc_%03.3d_%03.3d_%03.3d_%03.3d.dat"
-
 #endif
 
 #define dbs_cNameVolume         "%s%s.dbs" /* <volume name>.dbs  */

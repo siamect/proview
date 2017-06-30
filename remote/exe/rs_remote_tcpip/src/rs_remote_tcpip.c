@@ -130,10 +130,7 @@ enum cs_modes {TCP_CLIENT, TCP_SERVER} cs_mode;
 
 void RemoteSleep(float time)
 {
-#ifdef OS_VMS
-        int sts;
-        sts = lib$wait(&time);
-#elif defined(OS_LYNX) || defined(OS_LINUX)
+#if defined(OS_LYNX) || defined(OS_LINUX)
         struct timespec rqtp, rmtp;
 
         rqtp.tv_sec = 0;

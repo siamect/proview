@@ -39,18 +39,6 @@
    This module contains the basic internal routines and
    processing done by the backup class.  */
 
-#ifdef OS_VMS
-# include <stdio.h>
-# include <stdlib.h>
-# include <descrip.h>
-# include <string.h>
-# include <errno.h>
-# include <signal.h>
-# include <lib$routines.h>
-# include <starlet.h>
-# include <unixio.h>
-#endif
-
 #if defined OS_POSIX
 # ifdef seekbug
 #   error "seekbug not ready for Lynx"
@@ -61,10 +49,6 @@
 # include <errno.h>
 # include <signal.h>
 # include <unistd.h>
-#endif
-
-#ifdef OS_VMS
-# define _PTHREAD_USE_D4 
 #endif
 
 #include <pthread.h>
@@ -91,25 +75,13 @@ pwr_tStatus bck_print( char *);
 
 #define	check4a(sts,str) if((sts)==-1)perror(str)
 
-#if defined OS_VMS
-# define A_MODE 	, "shr=get"
-# define FGETNAME	fgetname(bckfile, (char *)&tmpstr)
-# define LOCK 		pthread_lock_global_np ()
-# define UNLOCK 	pthread_unlock_global_np ()
-
-#elif defined OS_POSIX
+#if defined OS_POSIX
 # define A_MODE
 # define FGETNAME	backup_confp->BackupFile
 # define LOCK
 # define UNLOCK
-
 #else
 # define A_MODE
-#endif
-
-#if defined (OS_VMS) && !defined(__ALPHA)
-  extern void *lib$vm_malloc(size_t size);
-  extern void lib$vm_free(void *ptr);
 #endif
 
 /* Interface between the collector and the file writer  */
@@ -593,12 +565,6 @@ bck_file_process (
   char fname[200];
   int         fd;
 
-
-#if defined OS_VMS
-  pwr_tUInt32 sts;
-  char tmpstr [256];
-#endif
-
 #ifdef seekbug
   int dapsts;
 #endif
@@ -797,12 +763,7 @@ bck_file_process (
       /* Signal bck_write_done */
 
       /* Change to Posix 1003.4 signal */
-#if defined OS_VMS
-      sts = sys$setef(BCK_WRITE_DONE);
-      if (EVEN(sts)) lib$signal(sts);			/* BUG */
-#else
 	/* NYI */
-#endif
 
       /* Throw away the writeblock data */
       free(wrtblk);
@@ -1195,16 +1156,7 @@ void *bck_coll_process (
     delta.tv_sec = cycletime / 10;
     delta.tv_nsec = (cycletime % 10) * 100000000;
 
-#if defined OS_VMS
-    {
-      unsigned long t = 0;
-      struct tm	*tmpTm;
-      time_GetTime(&abstime);
-      time_Aadd(&abstime, &abstime, &delta);
-      tmpTm = localtime(&t);
-      abstime.tv_sec += tmpTm->tm_gmtoff;
-    }
-#elif defined OS_LYNX && defined(PWR_LYNX_30)
+#if defined OS_LYNX && defined(PWR_LYNX_30)
     abstime.tv_sec = delta.tv_sec;
     abstime.tv_nsec = delta.tv_nsec;
 #else
@@ -1342,41 +1294,20 @@ pwr_tUInt32 bck_init ()
   /* Create and initialize all memory structures */
 
   slowtick = 0;
-#if defined OS_VMS
-  sts4a = pthread_mutex_init(&wrtblkmtx, pthread_mutexattr_default);
-  check4a(sts4a, "pthread_mutex_init wrtblkmtx");
-  sts4a = pthread_cond_init(&wrtblkevt, pthread_condattr_default);
-  check4a(sts4a, "pthread_cond_init wrtblkevt");
-#else
   sts4a = pthread_mutex_init(&wrtblkmtx, NULL);
   check4a(sts4a, "pthread_mutex_init wrtblkmtx");
   sts4a = pthread_cond_init(&wrtblkevt, NULL);
   check4a(sts4a, "pthread_cond_init wrtblkevt");
-#endif
 
   for (c=0; c<2; c++) wrtblkque [c] = NULL;
 
-#if defined OS_VMS
-  sts4a = pthread_mutex_init(&frcactmtx, pthread_mutexattr_default);
-  check4a(sts4a, "pthread_mutex_init frcactmtx");
-  sts4a = pthread_cond_init(&frcactevt, pthread_condattr_default);
-  check4a(sts4a, "pthread_cond_init frcactevt");
-#else
   sts4a = pthread_mutex_init(&frcactmtx, NULL);
   check4a(sts4a, "pthread_mutex_init frcactmtx");
   sts4a = pthread_cond_init(&frcactevt, NULL);
   check4a(sts4a, "pthread_cond_init frcactevt");
-#endif
   for (c=0; c<2; c++) frcact [c] = FALSE;
 
   /* This should eventually use Posix 1003.4 signals */
-#if defined OS_VMS
-  sts = sys$ascefc(BCK_EFC, &efcname, 0, 0);
-  if (EVEN(sts)) lib$signal(sts);			/* BUG */
-#else
-
-
-#endif
 
   /* Find the local Backup_Conf object */
 
@@ -1483,18 +1414,11 @@ int main( int argc, char *argv[])
   }
 
   for (;;) {
-#if defined OS_VMS
-    sts = sys$clref(BCK_ACTIVATE);
-    if (EVEN(sts)) lib$signal(sts);			/* BUG */
-    sts = sys$waitfr(BCK_ACTIVATE);
-    if (EVEN(sts)) lib$signal(sts);			/* BUG */
-#else
     while(1) {
       qcom_WaitAnd(&sts, &my_q, &qcom_cQini, ini_mEvent_terminate, qcom_cTmoEternal);
 //      pause();
       exit(0);
     }
-#endif
 
     /* We were activated from the outer world. Trigger */
     /* the collector threads... */

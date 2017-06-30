@@ -95,10 +95,8 @@ int GeUser::load( char *filename)
 
 
   fp.open( filename);
-#ifndef OS_VMS
   if ( !fp)
     return USER__FILEOPEN;
-#endif
 
   for (;;) {
     fp >> type;
@@ -134,10 +132,8 @@ int GeUser::save( char *filename)
   SystemList	*sl;
 
   fp.open( filename);
-#ifndef OS_VMS
   if ( !fp)
     return USER__FILEOPEN;
-#endif
 
   fp << int(user_eData_GeUser) << endl;
 

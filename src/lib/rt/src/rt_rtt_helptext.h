@@ -208,12 +208,6 @@ pwr_rtt> show event\n\
 pwr_rtt> show symbol\n\
 pwr_rtt> show user\n\
 "},
-#ifdef OS_VMS
-{1,	"SHOW SYSTEM","",
-"\
-Display information about the proview processes of the system.\n\
-"},
-#endif
 {1,	"SHOW NODES","",
 "\
 Display the node known by the nethandler.\n\

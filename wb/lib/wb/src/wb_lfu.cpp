@@ -43,14 +43,6 @@
 #include <fstream>
 #include <vector>
 
-#if defined OS_VMS
-#include <starlet.h>
-#include <libdef.h>
-#include <libdtdef.h>
-#include <lib$routines.h>
-#include <clidef.h>
-#include <descrip.h>
-#endif
 #include "pwr.h"
 #include "pwr_baseclasses.h"
 #include "wb.h"
@@ -432,13 +424,8 @@ pwr_tStatus lfu_GetPlcFileVersion(
 	unsigned char	volid[4];
 
 	memcpy( &volid, &volumeid, sizeof(volid));
-#if defined OS_VMS
-	sprintf( filename, "pwrp_load:plc_%3.3u_%3.3u_%3.3u_%3.3u_%%%%%%%%%%.exe.0",
-		volid[3], volid[2], volid[1], volid[0]);
-#else
 	sprintf( filename, "pwrp_load:plc_%3.3u_%3.3u_%3.3u_%3.3u_*.exe",
 		volid[3], volid[2], volid[1], volid[0]);
-#endif
 	sts = lfu_GetFileVersion( filename, 5, version, date);
 	return sts;
 }
@@ -1283,9 +1270,6 @@ pwr_tStatus lfu_SaveDirectoryVolume(
     }
   }
   fclose( file);
-#if defined OS_VMS
-  system( "purge/nolog " pwr_cNameVolumeList);
-#endif
 
   if ( !path_file_created) {
     // Create an empty path file
@@ -1518,9 +1502,6 @@ pwr_tStatus lfu_SaveDirectoryVolume(
   }
 
   fclose( file);
-#if defined OS_VMS
-  system( "purge/nolog " pwr_cNameBootList);
-#endif
 
   // Generate data for nodefiles */
 
@@ -3133,9 +3114,6 @@ pwr_tStatus lfu_SaveDirectoryVolume(
   }
 
   fclose( file);
-#if defined OS_VMS
-  system( "purge/nolog " pwr_cNameDistribute);
-#endif
 
   // Generate custom_build files
   for ( wb_object buso = sp->object(); buso; buso = buso.after()) {

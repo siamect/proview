@@ -13,10 +13,6 @@
 #include <limits.h>
 #include <float.h>
 #include <math.h>
-#ifdef OS_VMS
-#include <descrip.h>
-#include <lib$routines.h>
-#endif
 #include <X11/Intrinsic.h>
 #include "pwr.h"
 #include "pwr_class.h"

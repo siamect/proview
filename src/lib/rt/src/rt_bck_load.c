@@ -38,16 +38,10 @@
    This module contains the code for reading and
    restoring the information in the backup data file.  */
 
-# include <stdlib.h>
-# include <stdio.h>
-# include <string.h>
-# include <errno.h>
-
-#ifdef OS_VMS
-# include <descrip.h>
-# include <starlet.h>
-#endif
-
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <errno.h>
 
 #include "pwr.h"
 #include "pwr_class.h"
@@ -60,17 +54,10 @@
 #include "co_dcli.h"
 #include "co_cdh.h"
 
+#define SET_ERRNO_STS  perror("rt_bck_load"); sts = 2
+#define A_MODE
+#define FGETNAME	backup_confp->BackupFile
 
-#if defined OS_VMS
-# define SET_ERRNO_STS  sts = vaxc$errno
-# define A_MODE 	, "shr=get"
-# define FGETNAME	fgetname (f, (char *)&tmpstr)
-#else
-# define SET_ERRNO_STS  perror("rt_bck_load"); sts = 2
-# define A_MODE
-# define FGETNAME	backup_confp->BackupFile
-#endif
-
 /* Open the backup datafile, read the information and load it into rtdb.
    This should be done before bck_Init is invoked.  */
 
@@ -94,12 +81,6 @@ bck_LoadBackup ()
   char                  *namep;
   char			fname[200];
   pwr_tAName            objectname;
-
-#if defined OS_VMS
-  short			msglen;
-  struct dsc$descriptor tmpstrdsc;
-  char			tmpstr [256];
-#endif
 
   /* Find the local Backup_Conf object.  */
 

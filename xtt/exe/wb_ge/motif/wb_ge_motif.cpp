@@ -91,7 +91,6 @@ int main( int argc, char *argv[])
   int		i;
   unsigned int opt = ge_mOption_EnableComment;
   
-#if !defined OS_VMS
   {
     char *s;
 
@@ -102,7 +101,6 @@ int main( int argc, char *argv[])
     }
     sprintf( uid_filename, "%s/wb.uid", s);
   }
-#endif
 
   strcpy( title, "PROVIEW/R Ge ");
 

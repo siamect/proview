@@ -50,10 +50,6 @@
 #define XK_MISCELLANY
 #include <X11/keysymdef.h>
 
-#if defined OS_VMS
-#include <Xm/DECWmHints.h>
-#endif
-
 #include "flow_x.h"
 #include "cow_mrm_util.h"
 
@@ -318,58 +314,6 @@ int mrm_TextInput( Widget w, XEvent *event, char *recall, int line_size,
 
 int mrm_IsIconicState( Widget W)
 {
-#if defined OS_VMS
-   static Atom	    WmStateAtom = 0;
-   int		    state, sts;
-   int		    Iconic = 0;
-   WmIconStateRec   *IconStateData;
-   Atom		    atom_ret;
-   int		    format_ret;
-   unsigned long    nitems_ret, bytesleft;
-   Widget	    Shell;
-
-   if (W == NULL)
-      return FALSE;
-
-   Shell = W;
-   while(!XtIsShell(Shell))    
-      Shell = XtParent(Shell);
-
-   if (WmStateAtom == 0)
-   {
-      WmStateAtom = XInternAtom(XtDisplay(Shell), "WM_STATE", 1);
-   }
-
-   if (WmStateAtom)
-   {    
-      sts = XGetWindowProperty(
-	    XtDisplay(Shell), 
-	    XtWindow(Shell),
-	    WmStateAtom, 
-	    0L, 
-	    (sizeof(*IconStateData)/sizeof(long)), 
-	    FALSE,
-	    AnyPropertyType, 
-	    &atom_ret, 
-	    &format_ret, 
-	    &nitems_ret, 
-	    &bytesleft, 
-	    (unsigned char **)&IconStateData
-	    );
-
-      if ( sts == Success && 
-	   IconStateData != NULL && 
-	   IconStateData->state == IconicState)
-	Iconic = TRUE;
-      else
-	Iconic = FALSE;
-
-      if (sts == Success && IconStateData != NULL)
-	 XFree(IconStateData);
-   }
-   return Iconic;
-#else
-
 #define WM_STATE_ELEMENTS 1
 
    static Atom	    WmStateAtom = 0;
@@ -424,7 +368,6 @@ int mrm_IsIconicState( Widget W)
    }
    return Iconic;
    //  return 0;
-#endif
 }
 
 void mrm_PositionPopup( Widget popup, Widget parent, int x, int y)

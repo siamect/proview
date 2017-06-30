@@ -34,7 +34,7 @@
  * General Public License plus this exception.
  */
 
-#if defined OS_VMS || defined OS_POSIX
+#if defined OS_POSIX
 #include <stdio.h>
 #include <float.h>
 #include <string.h>

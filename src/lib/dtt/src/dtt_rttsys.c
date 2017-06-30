@@ -41,14 +41,6 @@
 
 /*_Include files_________________________________________________________*/
 
-#ifdef OS_VMS
-#include <descrip.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <starlet.h>
-#endif
-
 #if defined OS_POSIX
 #include <stdio.h>
 #include <stdlib.h>
@@ -1138,7 +1130,6 @@ int RTTSYS_SHOW_NODES( 	menu_ctx	ctx,
 	      case co_eOS_Lynx: strcpy( menu_ptr->value_ptr, "Lynx"); break;
 	      case co_eOS_Linux: strcpy( menu_ptr->value_ptr, "Linux"); break;
 	      case co_eOS_MacOS: strcpy( menu_ptr->value_ptr, "MacOS"); break;
-	      case co_eOS_VMS: strcpy( menu_ptr->value_ptr, "VMS"); break;
 	      case co_eOS_FreeBSD: strcpy( menu_ptr->value_ptr, "FreeBSD"); break;
 	      case co_eOS_OpenBSD: strcpy( menu_ptr->value_ptr, "OpenBSD"); break;
 	      case co_eOS_Cygwin: strcpy( menu_ptr->value_ptr, "Cygwin"); break;
@@ -1307,7 +1298,6 @@ int RTTSYS_SHOW_NODES( 	menu_ctx	ctx,
 	      case co_eOS_Lynx: strcpy( menu_ptr->value_ptr, "Lynx"); break;
 	      case co_eOS_Linux: strcpy( menu_ptr->value_ptr, "Linux"); break;
 	      case co_eOS_MacOS: strcpy( menu_ptr->value_ptr, "MacOS"); break;
-	      case co_eOS_VMS: strcpy( menu_ptr->value_ptr, "VMS"); break;
 	      case co_eOS_FreeBSD: strcpy( menu_ptr->value_ptr, "FreeBSD"); break;
 	      case co_eOS_OpenBSD: strcpy( menu_ptr->value_ptr, "OpenBSD"); break;
 	      case co_eOS_Cygwin: strcpy( menu_ptr->value_ptr, "Cygwin"); break;
@@ -4535,163 +4525,6 @@ int RTTSYS_SHOW_SYS( 	menu_ctx	ctx,
 
 /*************************************************************************
 *
-* Name:		RTTSYS_VMSSYS()
-*
-* Type		int
-*
-* Type		Parameter	IOGF	Description
-* menu_ctx	ctx		I	context of the picture.
-* int		event		I 	type of event.
-* char		*parameter_ptr	I	pointer to the parameter which value
-*					has been changed.
-*
-* Description:
-*	Show proview VMS processes.
-*
-**************************************************************************/
-
-#ifdef OS_VMS
-
-int RTTSYS_SHOW_SYS( 	menu_ctx	ctx,
-			int		event,
-			char		*parameter_ptr,
-			char		*objectname,
-			char		**picture)
-{
-
-#define VMSSYS_MAXSIZE 18
-#define VMSSYS_PAGESIZE 18
-
-  int			i;
-  int			sts;
-  static int		page;	
-  short 		uic[2];
-  int			proc_pid[VMSSYS_MAXSIZE];
-  static pwr_tString32	proc_name[VMSSYS_MAXSIZE];
-  static pwr_tString16	proc_pidstr[VMSSYS_MAXSIZE];
-  static int		proc_pri[VMSSYS_MAXSIZE];
-  static pwr_tString16	proc_state[VMSSYS_MAXSIZE];
-  static float		proc_cputim[VMSSYS_MAXSIZE];
-  static int		proc_count;
-  rtt_t_menu_upd	*menu_ptr;
-  unsigned long		ident;
-
-  switch ( event)
-  {
-    /**********************************************************
-    *	Return address of background
-    ***********************************************************/
-    case RTT_APPL_PICTURE:
-      *picture = (char *) &dtt_systempicture_p21_bg;
-      return RTT__SUCCESS;
-
-    /**********************************************************
-    * 	Return adress of menu
-    ***********************************************************/
-    case RTT_APPL_MENU:
-      *picture = (char *) &dtt_systempicture_p21_eu;
-      return RTT__SUCCESS;
-
-    /**********************************************************
-    *	Previous page
-    ***********************************************************/
-    case RTT_APPL_PREVPAGE:
-      return RTT__SUCCESS;
-
-    /**********************************************************
-    *	Next page
-    ***********************************************************/
-    case RTT_APPL_NEXTPAGE:
-      return RTT__SUCCESS;
-
-    /**********************************************************
-    *	Initialization of the picture
-    ***********************************************************/
-    case RTT_APPL_INIT:
-      sts = rttvms_get_nodename( VMSSYS_NODE, sizeof( VMSSYS_NODE));
-      if ( EVEN(sts)) return sts;
-
-      sts = rttvms_get_uic( (int *) &uic);
-      if ( EVEN(sts)) return sts;
-      sprintf ( VMSSYS_UIC, "%o", uic[1]);
-
-      memcpy( &ident, &uic, 4);
-      sts = rttvms_get_identname( ident, VMSSYS_PROJ);
-
-      /* Continue with update... */
-
-    /**********************************************************
-    *	Update the picture.
-    ***********************************************************/
-    case RTT_APPL_UPDATE:
-      sts = rttvms_get_pwr_proc( proc_pid, proc_name, proc_pidstr, proc_pri, 
-	proc_state, proc_cputim, VMSSYS_MAXSIZE, &proc_count);
-      if ( EVEN(sts)) return sts;
-
-      menu_ptr = (rtt_t_menu_upd *) ctx->menu;
-      for ( i = 0; i < proc_count; i++)
-      {
-        menu_ptr->value_ptr = (char *) proc_name[i];
-        menu_ptr->func = NULL;
-        menu_ptr->func2 = &rtt_menu_new_sysedit;
-        menu_ptr->func3 = NULL;
-        menu_ptr->arg1 = (void *) proc_pid[i];
-        menu_ptr->arg2 = proc_pidstr[i];
-        menu_ptr->arg3 = 0;
-        menu_ptr->arg4 = (void *) RTTSYS_VMSPROC;
-        menu_ptr++;
-	if ( 	!strcmp(proc_name[i], "Not started") ||
-		!strcmp(proc_name[i], "No privileges"))
-	{
-          menu_ptr->value_ptr = (char *) RTT_ERASE;
-          menu_ptr++;
-          menu_ptr->value_ptr = (char *) RTT_ERASE;
-          menu_ptr++;
-          menu_ptr->value_ptr = (char *) RTT_ERASE;
-          menu_ptr++;
-          menu_ptr->value_ptr = (char *) RTT_ERASE;
-          menu_ptr++;
-	}
-	else
-	{
-          menu_ptr->value_ptr = (char *) proc_pidstr[i];
-          menu_ptr++;
-          menu_ptr->value_ptr = (char *) &proc_pri[i];
-          menu_ptr++;
-          menu_ptr->value_ptr = (char *) proc_state[i];
-          menu_ptr++;
-          menu_ptr->value_ptr = (char *) &proc_cputim[i];
-          menu_ptr++;
-        }
-      }
-      for ( i = proc_count; i < VMSSYS_PAGESIZE; i++)
-      {
-        menu_ptr->value_ptr = (char *) RTT_ERASE;
-        menu_ptr->func2 = NULL;
-        menu_ptr++;
-        menu_ptr->value_ptr = (char *) RTT_ERASE;
-        menu_ptr++;
-        menu_ptr->value_ptr = (char *) RTT_ERASE;
-        menu_ptr++;
-        menu_ptr->value_ptr = (char *) RTT_ERASE;
-        menu_ptr++;
-        menu_ptr->value_ptr = (char *) RTT_ERASE;
-        menu_ptr++;
-      }
-      return RTT__SUCCESS;
-    /**********************************************************
-    *	Exit of the picture
-    ***********************************************************/
-    case RTT_APPL_EXIT:
-      return RTT__SUCCESS;
-
-  }
-  return RTT__SUCCESS;
-}
-#endif
-
-/*************************************************************************
-*
 * Name:		RTTSYS_VMSPROC()
 *
 * Type		int
@@ -4716,167 +4549,6 @@ int RTTSYS_VMSPROC( 	menu_ctx	ctx,
 #ifdef OS_POSIX
     rtt_message('E', "Picture is not implemented for this platform");
     return RTT__NOPICTURE;
-#elif OS_VMS
-
-#define VMSSYS_MAXSIZE 18
-#define VMSSYS_PAGESIZE 18
-
-  int			i;
-  int			sts;
-  static int		pid;
-  static int		page;	
-  short 		uic[2];
-  rtt_t_menu_upd	*menu_ptr;
-  unsigned long		ident;
-  pwr_tTime		logintim;
-  int			cputim;
-  int			timlen;
-  char			timbuf[64];
-  struct dsc$descriptor_s	timbuf_desc = {sizeof(timbuf)-1,DSC$K_DTYPE_T,
-					DSC$K_CLASS_S,};
-
-  timbuf_desc.dsc$a_pointer = timbuf;
-
-  switch ( event)
-  {
-    /**********************************************************
-    *	Return address of background
-    ***********************************************************/
-    case RTT_APPL_PICTURE:
-      *picture = (char *) &dtt_systempicture_p22_bg;
-      return RTT__SUCCESS;
-
-    /**********************************************************
-    * 	Return adress of menu
-    ***********************************************************/
-    case RTT_APPL_MENU:
-      pid = (int) objectname;
-      if ( !pid) 
-      {
-        rtt_message('E', "No access to process");
-        return RTT__NOPICTURE;
-      }
-      *picture = (char *) &dtt_systempicture_p22_eu;
-      return RTT__SUCCESS;
-
-    /**********************************************************
-    *	Previous page
-    ***********************************************************/
-    case RTT_APPL_PREVPAGE:
-      return RTT__SUCCESS;
-
-    /**********************************************************
-    *	Next page
-    ***********************************************************/
-    case RTT_APPL_NEXTPAGE:
-      return RTT__SUCCESS;
-
-    /**********************************************************
-    *	Initialization of the picture
-    ***********************************************************/
-    case RTT_APPL_INIT:
-      sts = rttvms_get_procinfo_full( pid, 
-					VMSPROC_STATE,
-				 	&VMSPROC_PRI,
-					&VMSPROC_PRIB,
-				 	&cputim,
-					(int *) &logintim,
-					(int *) &uic,
-					&VMSPROC_BUFIO,
-					VMSPROC_IMAGNAME,
-					&VMSPROC_GPGCNT,
-					&VMSPROC_JOPRCCNT,
-					&VMSPROC_PAGEFLTS,
-					&VMSPROC_PAGFILCNT,
-					&VMSPROC_PGFLQUOTA,
-					VMSPROC_PRCNAM,
-					&VMSPROC_FILLM,
-					&VMSPROC_VIRTPEAK,
-					&VMSPROC_WSPEAK,
-					&VMSPROC_WSQUOTA,
-					&VMSPROC_WSEXTENT,
-					&VMSPROC_WSSIZE,
-					&VMSPROC_PPGCNT,
-					&VMSPROC_DIRIO);
-
-      sprintf ( VMSPROC_UIC1, "%o", uic[1]);
-      sprintf ( VMSPROC_UIC2, "%03.3o", uic[0]);
-
-      memcpy( &ident, &uic, 4);
-      sts = rttvms_get_identname( ident, VMSPROC_IDENT);
-      sprintf ( VMSPROC_PID, "%lx", pid);
-
-      return RTT__SUCCESS;
-
-    /**********************************************************
-    *	Update the picture.
-    ***********************************************************/
-    case RTT_APPL_UPDATE:
-      sts = rttvms_get_procinfo_full( pid, 
-					VMSPROC_STATE,
-				 	&VMSPROC_PRI,
-					&VMSPROC_PRIB,
-				 	&cputim,
-					(int *) &logintim,
-					(int *) &uic,
-					&VMSPROC_BUFIO,
-					VMSPROC_IMAGNAME,
-					&VMSPROC_GPGCNT,
-					&VMSPROC_JOPRCCNT,
-					&VMSPROC_PAGEFLTS,
-					&VMSPROC_PAGFILCNT,
-					&VMSPROC_PGFLQUOTA,
-					VMSPROC_PRCNAM,
-					&VMSPROC_FILLM,
-					&VMSPROC_VIRTPEAK,
-					&VMSPROC_WSPEAK,
-					&VMSPROC_WSQUOTA,
-					&VMSPROC_WSEXTENT,
-					&VMSPROC_WSSIZE,
-					&VMSPROC_PPGCNT,
-					&VMSPROC_DIRIO);
-      if ( EVEN(sts))
-      {
-        strcpy( VMSPROC_PID, "");
-        strcpy( VMSPROC_IDENT, "");
-        strcpy( VMSPROC_STATE, "");
-        VMSPROC_PRI = 0;
-        VMSPROC_PRIB = 0;
-        VMSPROC_CPUTIM = 0;
-        strcpy( VMSPROC_LOGINTIM, "");
-        strcpy( VMSPROC_UIC1, "");
-        strcpy( VMSPROC_UIC2, "");
-        VMSPROC_BUFIO = 0;
-        strcpy( VMSPROC_IMAGNAME, "");
-        VMSPROC_GPGCNT = 0;
-        VMSPROC_JOPRCCNT = 0;
-        VMSPROC_PAGEFLTS = 0;
-        VMSPROC_PAGFILCNT = 0;
-        VMSPROC_PGFLQUOTA = 0;
-        strcpy( VMSPROC_PRCNAM, "No access to process");
-        VMSPROC_FILLM = 0;
-        VMSPROC_VIRTPEAK = 0;
-        VMSPROC_WSPEAK = 0;
-        VMSPROC_WSQUOTA = 0;
-        VMSPROC_WSEXTENT = 0;
-        VMSPROC_WSSIZE = 0;
-        VMSPROC_PPGCNT = 0;
-        VMSPROC_DIRIO = 0;
-      }
-      else
-      {
-        sts = sys$asctim( &timlen, &timbuf_desc, &logintim, 0);
-        strcpy( VMSPROC_LOGINTIM, timbuf);
-        VMSPROC_CPUTIM = (float)cputim / 100.;
-      }
-      return RTT__SUCCESS;
-    /**********************************************************
-    *	Exit of the picture
-    ***********************************************************/
-    case RTT_APPL_EXIT:
-      return RTT__SUCCESS;
-
-  }
 #endif
   return RTT__SUCCESS;
 }
@@ -4905,7 +4577,7 @@ int RTTSYS_ELNPROC( 	menu_ctx	ctx,
 			char		**picture)
 { 
 
-#if defined OS_VMS || defined OS_POSIX
+#if defined OS_POSIX
     rtt_message('E', "Picture is not implemented for this platform");
     return RTT__NOPICTURE;
 #endif
@@ -11329,7 +11001,6 @@ int RTTSYS_QCOM_NODES( 	menu_ctx	ctx,
 	      case co_eOS_Lynx: strcpy( menu_ptr->value_ptr, "Lynx"); break;
 	      case co_eOS_Linux: strcpy( menu_ptr->value_ptr, "Linux"); break;
 	      case co_eOS_MacOS: strcpy( menu_ptr->value_ptr, "MacOS"); break;
-	      case co_eOS_VMS: strcpy( menu_ptr->value_ptr, "VMS"); break;
 	      case co_eOS_FreeBSD: strcpy( menu_ptr->value_ptr, "FreeBSD"); break;
 	      case co_eOS_OpenBSD: strcpy( menu_ptr->value_ptr, "OpenBSD"); break;
 	      case co_eOS_Cygwin: strcpy( menu_ptr->value_ptr, "Cygwin"); break;
@@ -11497,7 +11168,6 @@ int RTTSYS_QCOM_NODES( 	menu_ctx	ctx,
 	      case co_eOS_Lynx: strcpy( menu_ptr->value_ptr, "Lynx"); break;
 	      case co_eOS_Linux: strcpy( menu_ptr->value_ptr, "Linux"); break;
 	      case co_eOS_MacOS: strcpy( menu_ptr->value_ptr, "MacOS"); break;
-	      case co_eOS_VMS: strcpy( menu_ptr->value_ptr, "VMS"); break;
 	      case co_eOS_FreeBSD: strcpy( menu_ptr->value_ptr, "FreeBSD"); break;
 	      case co_eOS_OpenBSD: strcpy( menu_ptr->value_ptr, "OpenBSD"); break;
 	      case co_eOS_Cygwin: strcpy( menu_ptr->value_ptr, "Cygwin"); break;
@@ -12392,15 +12062,7 @@ int RTTSYS_QCOM_NODE( menu_ctx	ctx,
             menu_ptr++;
 
             /* Address */
-#if defined OS_VMS
-            sprintf( menu_ptr->value_ptr, "%d.%d.%d.%d", 
-		np->link.sa.sin_addr.S_un.S_un_b.s_b1,
-		np->link.sa.sin_addr.S_un.S_un_b.s_b2,
-		np->link.sa.sin_addr.S_un.S_un_b.s_b3,
-		np->link.sa.sin_addr.S_un.S_un_b.s_b4);
-#else
             sprintf( menu_ptr->value_ptr, "%d.%d.%d.%d", 0,0,0,0);
-#endif
             menu_ptr++;
 
             /* seg_size */
@@ -12589,15 +12251,7 @@ int RTTSYS_QCOM_NODE( menu_ctx	ctx,
             menu_ptr++;
 
             /* Address */
-#if defined OS_VMS
-            sprintf( menu_ptr->value_ptr, "%d.%d.%d.%d", 
-		np->link[lix].sa.sin_addr.S_un.S_un_b.s_b1,
-		np->link[lix].sa.sin_addr.S_un.S_un_b.s_b2,
-		np->link[lix].sa.sin_addr.S_un.S_un_b.s_b3,
-		np->link[lix].sa.sin_addr.S_un.S_un_b.s_b4);
-#else
             sprintf( menu_ptr->value_ptr, "%d.%d.%d.%d", 0,0,0,0);
-#endif
             menu_ptr++;
 
             /* timer */

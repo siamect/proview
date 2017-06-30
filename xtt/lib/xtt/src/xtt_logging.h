@@ -47,10 +47,6 @@
 #include "rt_gdh.h"
 #endif
 
-#if defined OS_VMS
-# include <pthread.h>
-#endif
-
 #define	RTT_LOGG_MAXENTRY	10
 #define	RTT_LOGG_MAXPAR		100
 #define RTT_BUFFER_DEFSIZE	100
@@ -87,10 +83,6 @@ class XttLogging {
     FILE	*logg_file;	
     char	old_value[RTT_LOGG_MAXPAR][8];
     pwr_tTime	starttime;
-#ifdef OS_VMS
-    pthread_t 	thread;
-    unsigned int    event_flag;
-#endif
 #if defined OS_POSIX
     pthread_t 	thread;
 #endif

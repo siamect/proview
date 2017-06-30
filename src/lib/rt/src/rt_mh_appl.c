@@ -39,11 +39,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#ifdef OS_VMS
-# include <starlet.h>
-# include <ssdef.h>
-#endif
-
 #include "pwr_class.h"
 #include "co_time.h"
 #include "rt_mh_def.h"

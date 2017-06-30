@@ -70,17 +70,7 @@ int	dcli_get_defaultfilename(
   char	filename[80];
   char 	*s, *s2;
 
-#if defined(OS_VMS)
-  if ( strchr( inname, '<') || strchr( inname, '[') || 
-       strchr( inname, ':'))
-    strcpy( outname, inname);
-  else
-  {
-    strcpy( filename, dcli_default_directory);
-    strcat( filename, inname);
-    strcpy( outname, filename);
-  }
-#elif defined OS_POSIX
+#if defined OS_POSIX
   if ( strchr( inname, '/'))
     cdh_Strcpy( outname, inname);
   else if ( ( s = strchr( inname, ':')))
@@ -273,12 +263,8 @@ int     dcli_replace_env( const char *str, char *newstr)
 **************************************************************************/
 char	*dcli_fgetname( FILE *fp, char *name, char *def_name)
 {
-#if defined(OS_VMS)
-	return fgetname( fp, name);
-#else
 	dcli_translate_filename( name, def_name);
 	return name;
-#endif	
 }
 
 
@@ -302,94 +288,6 @@ int dcli_translate_filename( char *out, const char *in)
   char *t;
   int i;
   int state;
-
-#if defined OS_VMS
-  if ( strchr( in, '/') != 0)
-  {
-    // Convert from unix to VMS
-    for ( i = 0, s = in, t = out_name; *s; i++, s++)
-    {
-      if ( i == 0)
-      {
-        if ( *s == '$') 
-          state = dcli_eTrans_EnvVar;
-        else if ( *s == '/')
-        {
-          if ( strchr( s+1, '/') == 0)
-            state = dcli_eTrans_File;
-          else
-          {
-            state = dcli_eTrans_Dir;
-            *t++ = '[';
-          }
-        }
-        else
-        {
-          if ( strchr( s, '/') == 0)
-          {
-            state = dcli_eTrans_File;
-            *t++ = *s;
-          }
-          else
-          {
-            state = dcli_eTrans_Dir;
-            *t++ = '[';
-            *t++ = '.';
-            *t++ = *s;
-          }
-        }
-        continue;
-      }
-      switch ( state)
-      {
-        case dcli_eTrans_EnvVar:
-          if ( *s == '/')
-          {
-            if ( strchr( s+1, '/') != 0)
-            {
-              *t++ = ':';
-              *t++ = '[';
-              state = dcli_eTrans_Dir;
-            }
-            else
-            {
-              state = dcli_eTrans_File;
-              *t++ = ':';
-            }
-          }
-          else
-            *t++ = *s;
-          break;
-        case dcli_eTrans_Dir:
-          if ( *s == '/')
-          {
-            if ( strchr( s+1, '/') == 0)
-            {
-              *t++ = ']';
-              state = dcli_eTrans_File;
-            }
-            else
-              *t++ = '.';
-          }
-          else
-            *t++ = *s;
-          break;
-        case dcli_eTrans_File:
-          *t++ = *s;
-          break;
-      }
-    }
-    *t = 0;
-    strcpy( out, out_name);
-  }
-  else
-  {
-    // Already VMS syntax
-    strcpy( out_name, in);
-    strcpy( out, out_name);
-  }
-  return DCLI__SUCCESS;
-#else
   int sts;
 
   if ( strchr( in, ':') != 0 ||
@@ -477,7 +375,6 @@ int dcli_translate_filename( char *out, const char *in)
     sts = dcli_replace_env( out_name, out);
     return sts;
   }
-#endif
 }
 
 

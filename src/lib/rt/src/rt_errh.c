@@ -61,11 +61,6 @@
 # elif defined OS_LYNX
 #   include <mqueue.h>
 # endif
-
-#elif defined(OS_VMS)
-# include <descrip.h>
-# include <starlet.h>
-# include <jpidef.h>
 #endif
 
 #include "pwr_msg.h"
@@ -97,29 +92,13 @@ typedef struct {
   } u;
 } sArg;
 
-#if defined OS_VMS
-
-# define LOG_MAX_MSG_SIZE 256
-  typedef int sPid;
-
-  typedef struct {
-    short buffer_length;	
-    short item_code;	
-    void *buffer_addr;
-    unsigned short *return_length_addr;
-  } item_descr;
-
-  static sPid pid = 0;
-
-#elif defined OS_LYNX || defined OS_LINUX || defined OS_CYGWIN
-
+#if defined OS_LYNX || defined OS_LINUX || defined OS_CYGWIN
   typedef pid_t sPid;
 
   static mqd_t mqid = (mqd_t)-1;
   static unsigned int prio = 0;
   static int mq_send_errno = 0;
 #elif defined OS_MACOS || defined OS_FREEBSD || defined OS_OPENBSD
-
   typedef pid_t sPid;
 
   static int mqid = -1;
@@ -670,51 +649,7 @@ openLog ()
 #endif
 }
 
-#if defined OS_VMS
-static char *
-get_name (char *name, int size)
-{
-  item_descr itmlst[2];
-  pwr_tStatus sts = 1;
-  unsigned short int len = 0;
-  int iosb[2];
-
-  itmlst[0].item_code = JPI$_PRCNAM;
-  itmlst[0].buffer_length = size;
-  itmlst[0].buffer_addr = name;
-  itmlst[0].return_length_addr = &len;
-
-  itmlst[1].item_code = 0;
-  itmlst[1].buffer_length = 0;
-
-  sts = sys$getjpiw(0, 0, 0, itmlst, iosb, 0, 0);
-  if (ODD(sts))
-    name[MIN(size, len)] = '\0';
-   
-  return name;
-}
-static sPid *
-get_pid (sPid *pid)
-{
-  item_descr itmlst[2];
-  pwr_tStatus sts = 1;
-  int iosb[2];
-
-  itmlst[0].item_code = JPI$_PID;
-  itmlst[0].buffer_length = sizeof(*pid);
-  itmlst[0].buffer_addr = pid;
-  itmlst[0].return_length_addr = 0;
-
-  itmlst[1].item_code = 0;
-  itmlst[1].buffer_length = 0;
-
-  sts = sys$getjpiw(0, 0, 0, itmlst, iosb, 0, 0);
-  if (EVEN(sts))
-    return NULL;
-   
-  return pid;
-}
-#elif defined OS_POSIX
+#if defined OS_POSIX
 static char *
 get_name (char *name, int size)
 {
@@ -767,9 +702,6 @@ get_header (char severity, char *s)
   localtime_r(&sec, &tp);
   t = &tp;
   s += sprintf(s, " %8d ", pid);
-# elif defined OS_VMS 
-  t = localtime(&time.tv_sec);
-  s += sprintf(s, " %08X ", pid);
 # endif
   
   s += sprintf(s, "%02d-%02d-%02d %02d:%02d:%02d.%02d ",

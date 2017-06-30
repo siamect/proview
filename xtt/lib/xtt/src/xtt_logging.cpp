@@ -42,25 +42,12 @@
 
 #include "flow_std.h"
 
-#if defined(OS_VMS)
-# include <stdio.h>
-# include <string.h>
-# include <stdlib.h>
-# include <descrip.h>
-# include <chfdef.h>
-# include <stdarg.h>
-# include <processes.h>
-# include <lib$routines.h>
-# include <libdef.h>
-# include <libdtdef.h>
-# include <starlet.h>
-#else
-# include <stdarg.h>
-# include <stdio.h>
-# include <string.h>
-# include <stdlib.h>
-# include <pthread.h>
-#endif
+#include <stdarg.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <pthread.h>
+
 #if defined OS_POSIX
 # include <time.h>
 #endif
@@ -747,7 +734,7 @@ int XttLogging::start()
 		xtt_logproc,		/* start_routine */
 		(void *)this);			/* arg */
         if ( sts != 0) return sts;
-#elif defined OS_VMS || defined OS_POSIX
+#elif defined OS_POSIX
 	sts = pthread_create (
 		&thread,
 		NULL,			 /* attr */
@@ -911,9 +898,6 @@ static void	*xtt_logproc( void *arg)
 	pwr_tTime	restime;
 	pwr_tDeltaTime	deltatime;
 	pwr_tDeltaTime	wait_time;
-#ifdef OS_VMS
- 	pwr_tVaxTime 	vmstime;
-#endif
 	XttLogging *logg = (XttLogging *) arg;
 
 
@@ -1047,12 +1031,6 @@ static void	*xtt_logproc( void *arg)
 
 	      if ( !cond) {
 	        /*  Don't log, wait until next scan */
-#ifdef OS_VMS
-	        time_PwrToVms( &nextime, &vmstime);
-	        sys$clref( logg->event_flag);
-	        sys$setimr( logg->event_flag, &vmstime, 0, 0, 0);
-	        sys$waitfr( logg->event_flag);
-#endif
 #if defined OS_POSIX
 	        time_GetTime( &time);
 	        time_Adiff( &wait_time, &nextime, &time);
@@ -1466,13 +1444,6 @@ static void	*xtt_logproc( void *arg)
 	    time_Aadd( &restime, &nextime, &deltatime);
 	    nextime = restime;
 	  }
-
-#ifdef OS_VMS
-	  time_PwrToVms( &nextime, &vmstime);
-	  sys$clref( logg->event_flag);
-	  sys$setimr( logg->event_flag, &vmstime, 0, 0, 0);
-	  sys$waitfr( logg->event_flag);
-#endif
 #if defined OS_POSIX
 	  time_Adiff( &wait_time, &nextime, &time);
 
@@ -1481,14 +1452,11 @@ static void	*xtt_logproc( void *arg)
 	  wait_time_ts.tv_nsec = wait_time.tv_nsec;
           nanosleep( &wait_time_ts, NULL);
 #endif
-
 	}
-
 	// pthread_exit(0);
 
 	// return NULL;
 }
-
 
 /*************************************************************************
 *

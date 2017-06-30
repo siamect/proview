@@ -34,17 +34,7 @@
  * General Public License plus this exception.
  */
 
-#if	defined(OS_VMS)
-# pragma builtins
-# include <stdlib.h>
-# include <descrip.h>
-# include <string.h>
-# include <secdef.h>
-# include <ssdef.h>
-# include <libdef.h>
-# include <starlet.h>
-# include <lib$routines.h>
-#elif	defined(OS_LYNX)
+#if	defined(OS_LYNX)
 # include <errno.h>
 # include <stdio.h>
 # include <stdlib.h>
@@ -92,12 +82,7 @@ segName (
   char			*name
 )
 {
-#if defined(OS_VMS)
-    strncpy(shp->name, name, sizeof(shp->name) - 1);
-    shp->name[sizeof(shp->name) - 1] = '\0';
-
-#elif defined OS_POSIX
-
+#if defined OS_POSIX
   static int doinit = 1;
   static char buf[4];
   if (doinit) {
@@ -139,44 +124,7 @@ sect_Alloc (
     shp->base = NULL;
     segName(shp, name);
 
-#if defined (OS_VMS)
-    shp->namedsc.dsc$w_length	= strlen(name);
-    shp->namedsc.dsc$b_dtype	= DSC$K_DTYPE_T;
-    shp->namedsc.dsc$b_class	= DSC$K_CLASS_S;
-    shp->namedsc.dsc$a_pointer	= shp->name;
-#endif
-
-#if defined(OS_VMS)
-    {
-      pwr_tUInt32	inadr[2];
-      pwr_tUInt32	retadr[2];
-
-      inadr[0] = 10000;
-      inadr[1] = inadr[0] + size;
-
-      lsts = sys$crmpsc(inadr, retadr, 0, 
-			SEC$M_WRT | SEC$M_EXPREG | SEC$M_GBL | SEC$M_PAGFIL,
-			&shp->namedsc, NULL, 0, 0,
-			(((size + 511) / 512) + 1), 0, 0, 0);
-
-      if (EVEN(lsts)) {
-	errh_Error("sect_Alloc, new section: %s, size = %d\n%m", name, size, lsts);
-	break;
-      }
-
-      shp->base		    = (void *)retadr[0];
-      shp->sectadr[0]	    = retadr[0];
-      shp->sectadr[1]	    = retadr[1];
-      shp->size		    = retadr[1] - retadr[0] + 1;
-      shp->flags.b.mapped   = 1;
-
-      pwr_Assert(size <= shp->size);
-      *created = (lsts == SS$_CREATED);
-      if (*created)
-	errh_Info("sect_Alloc, new section: %s, size = %d", name, size);
-    }
-
-#elif defined(OS_LYNX)
+#if defined(OS_LYNX)
     {
       int    shm_fd;                                              
       int    shMemFlags = O_RDWR;              
@@ -349,9 +297,7 @@ sect_Free (
   if (!shp->flags.b.mapped)
     pwr_Return(FALSE, sts, 4/*SECT__NOTMAPPED*/);
 
-#if defined(OS_VMS)
-  lsts = sys$deltva(shp->sectadr, NULL, 0);
-#elif defined OS_POSIX
+#if defined OS_POSIX
   lsts = 1; /* TODO ? */
 #endif
 
@@ -372,25 +318,7 @@ sect_InitLock (
 {
   pwr_tStatus		lsts = 1;
 
-#if defined(OS_VMS)
-  {
-    pwr_tUInt32		i;
-
-    /* Clear mutex variable and build free list.  */
-
-    memset(mp, 0, sizeof(*mp));
-    lsts = sys$ascefc(64, &shp->namedsc, 0, 0);
-    if (ODD(lsts)) {
-      for (i=0; i<32; i++) {
-	while (_INSQTI(&mp->list[i].entry, &mp->freeroot) == 1);
-	mp->list[i].flag = 64+i;
-	lsts = sys$clref(mp->list[i].flag);
-	if (EVEN(lsts)) break;
-      }
-    }
-  }
-
-#elif defined(OS_LYNX)
+#if defined(OS_LYNX)
   if (sem_init(mp, 1, 1) != 0) {
     errh_Error("sect_InitLock: sem_init, errno: %d", errno);
     lsts = 2;
@@ -416,36 +344,7 @@ sect_Lock (
 {
   pwr_tStatus		lsts = 1;
 
-#if defined(OS_VMS)
-  {
-    sect_sMutexEntry	*ep;
-    int			i;
-
-    /* Get free list entry.  */
-
-    while ( 1) {
-      i = _REMQHI(&mp->freeroot, (void **)&ep);
-      if ( i == 1)
-        continue;
-      else if (i == 3) 
-        sleep(1);
-      else
-        break;
-    }
-
-    /* Insert in ownership list.  */
-
-    while ((i = _INSQTI(ep, &mp->ownerroot)) == 1);
-    if (i == 0) {
-
-      /* Contention, we must wait for the resource.  */
-
-      lsts = sys$ascefc(64, &shp->namedsc, 0, 0);
-      if (ODD(lsts)) lsts = sys$waitfr(ep->flag);
-      if (ODD(lsts)) lsts = sys$clref(ep->flag);
-    }
-  }
-#elif defined(OS_LYNX)
+#if defined(OS_LYNX)
   while (sem_wait(mp) != 0) {
     if (errno != EINTR) {
       perror("sect_Lock: sem_wait ");
@@ -477,35 +376,7 @@ sect_Unlock (
 {
   pwr_tStatus		lsts = 1;
 
-#if defined(OS_VMS)
-  {
-    sect_sMutexEntry	*ep;
-    pwr_tUInt32		i;
-
-    /* When the entry is removed the resource becomes
-       free if noone else is waiting...  */
-
-    while ((i = _REMQHI(&mp->ownerroot, (void **)&ep)) == 1);
-    if (i == 3) {
-      lsts = LIB$_QUEWASEMP;
-    } else {
-
-      /* Reinsert entry in free list */
-
-      while (_INSQTI(ep, &mp->freeroot) == 1);
-
-      if (i == 0) {
-	/* Someone was waiting.  */
-
-	ep = (sect_sMutexEntry *)(
-	  ((pwr_tUInt32)&mp->ownerroot) +
-	  mp->ownerroot.low /* flink */);
-	lsts = sys$ascefc(64, &shp->namedsc, 0, 0);
-	if (ODD(lsts)) lsts = sys$setef(ep->flag);
-      }
-    }
-  }
-#elif defined(OS_LYNX)
+#if defined(OS_LYNX)
   if (sem_post(mp) != 0) {
     perror("sect_Unlock: sem_signal ");
     lsts = 2;

@@ -44,21 +44,6 @@
 #include <math.h>
 #include <ctype.h>
 
-#if defined OS_VMS
-#include <descrip.h>
-#include <processes.h>
-#include <starlet.h>
-#include <lib$routines.h>
-#include <libdef.h>
-#include <libdtdef.h>
-#include <clidef.h>
-#include <ssdef.h>
-#include <lbrdef.h>
-#include <lbr$routines.h>
-#include <mhddef.h>
-#include <credef.h>
-#endif
-
 #include "pwr.h"
 #include "pwr_class.h"
 #include "pwr_version.h"
@@ -3622,23 +3607,12 @@ int utl_revert (
 {
 	static char	yes_or_no[200];	
 	int		sts;
-#if defined OS_VMS
-	$DESCRIPTOR ( yon_prompt_desc , "(Y/N: " );
-	static $DESCRIPTOR ( yon_desc , yes_or_no );
-  	short 		len ;
-#endif
 
 	if ( confirm )	
 	{
-#if defined OS_VMS
-	  printf("Do you really want to revert ");
- 	  sts = lib$get_input ( &yon_desc , &yon_prompt_desc , &len ) ; 
-	  if ( EVEN(sts)) return sts;
-#else
 	  // TODO
 	  printf( "(Y/N: ");
 	  sts = scanf( "%s", yes_or_no);
-#endif
 
 	  if ( !((yes_or_no[0] == 'Y') || (yes_or_no[0] == 'y')))
             return FOE__SUCCESS;
@@ -6105,14 +6079,6 @@ static int utl_set_parameter (
   ldh_sAttrRefInfo info;
   char *np;
 
-#if defined OS_VMS
-	int len;
-  	$DESCRIPTOR ( prompt_desc , "Enter value: " );
-  	static $DESCRIPTOR ( value_desc , value );
-  	$DESCRIPTOR ( yon_prompt_desc , "(Y/N/Q/A): " );
-  	static $DESCRIPTOR ( yon_desc , yes_or_no );
-#endif
-
 	sts = ldh_AttrRefToName( ldhses, arp, cdh_mNName, &np, &size);
   	if ( EVEN(sts)) return sts;
 
@@ -6173,15 +6139,9 @@ static int utl_set_parameter (
 	  /* Get the value if not passed */
 	  if ( invaluestr == NULL ) {
 	    printf( "%s\n", logstr);
-#if defined OS_VMS
- 	    sts = lib$get_input ( &value_desc , &prompt_desc , &len ) ; 
-	    if ( EVEN(sts)) return sts;
-            value[len] = '\0' ;
-#else
 	    // TODO
 	    printf( "Enter value: ");
 	    sts = scanf( "%s", value);
-#endif
 	    valuestr = (char *)&value;
 	    if ( *valuestr == '\0' )
 	      continue;
@@ -6428,14 +6388,9 @@ static int utl_set_parameter (
 	  if ( utlctx->confirm )	
 	  {
 	    printf("%s ", logstr);
-#if defined OS_VMS
- 	    sts = lib$get_input ( &yon_desc , &yon_prompt_desc , &len ) ; 
-	    if ( EVEN(sts)) return sts;
-#else
 	    // TODO
 	    printf( "(Y/N/Q/A): ");
 	    sts = scanf( "%s", yes_or_no);
-#endif
 	    if ( ((yes_or_no[0] == 'Q') || (yes_or_no[0] == 'q')))
 	      return FOE__ABORTSEARCH;
 	    else if ( ((yes_or_no[0] == 'A') || (yes_or_no[0] == 'a')))
@@ -9854,11 +9809,6 @@ int utl_get_projectname(
   char		*projectname
 )
 {
-#if defined OS_VMS
-  char systemgroup[80];
-
-  return utl_get_systemname( projectname, systemgroup);
-#else
   char *env_p;
 
   env_p = getenv( "pwrp_projectname");
@@ -9867,7 +9817,6 @@ int utl_get_projectname(
 
   strcpy( projectname, env_p);
   return FOE__SUCCESS;
-#endif
 }
 
 
@@ -10086,67 +10035,7 @@ pwr_tStatus utl_get_module_time (
     pwr_tTime		*time
 )
 {
-#if defined OS_VMS	
-	pwr_tStatus	sts;
-	int		size;
-	unsigned long	libr_index;
-	int		libr_func = LBR$C_READ;
-#if defined  __ALPHA
-	int		libr_type = LBR$C_TYP_EOBJ;	
-#else
-	int		libr_type = LBR$C_TYP_OBJ;	
-#endif
-	int		txtrfa[2];
-	char 		modulebuf[100];
-	int		modulebuf_len;
-
-/* The size of the mhdbuf must be greater than struct mhddef
- * otherwise lbr$set_module returns HDRTRUNC.
- */ 
-	char		mhdbuf[LBR$C_MAXHDRSIZ];
-	struct	mhddef  *mhd = (struct mhddef *)mhdbuf;
-	int		mhd_len;
-	struct dsc$descriptor_s libr_name_desc = 
-			{0, DSC$K_DTYPE_T, DSC$K_CLASS_S, 0};
-	struct dsc$descriptor_s module_name_desc = 
-			{0, DSC$K_DTYPE_T, DSC$K_CLASS_S, 0};
-	struct dsc$descriptor_s mhd_desc = 
-			{0, DSC$K_DTYPE_T, DSC$K_CLASS_S, 0};
-
-
-	libr_name_desc.dsc$w_length = strlen(libr_name);
-	libr_name_desc.dsc$a_pointer = libr_name;
-	module_name_desc.dsc$w_length = strlen(module_name);
-	module_name_desc.dsc$a_pointer = module_name;
-	mhd_desc.dsc$w_length = sizeof(mhdbuf);
-	mhd_desc.dsc$a_pointer = mhdbuf;
-
-	sts = lbr$ini_control( &libr_index, &libr_func, &libr_type, 0);
-	if ( EVEN(sts)) return sts;
-	sts = lbr$open( &libr_index, &libr_name_desc);
-	if ( EVEN(sts) && !(!(sts & 2) && !(sts & 1))) return sts; /* Accept warnings */
-	sts = lbr$lookup_key( &libr_index, &module_name_desc, txtrfa); 
-	if ( EVEN(sts)) 
-	{	
-	  lbr$close( &libr_index);
-	  return sts;
-	}
-	sts = lbr$set_module( &libr_index, txtrfa, &mhd_desc, 
-		&mhd_len, 0);
-	if ( EVEN(sts)) 
-	{	
-	  lbr$close( &libr_index);
-	  return sts;
-	}
-
-	time_VmsToPwr((pwr_tVaxTime *)&mhd->mhd$l_datim, time);
-
-	sts = lbr$close( &libr_index);
-	if ( EVEN(sts)) return sts;
-	return FOE__SUCCESS;
-#else
 	return 0;
-#endif
 }
 
 
@@ -10412,64 +10301,6 @@ int utl_copy_objects (
   int		before
 )
 {
-#if defined OS_VMS
-	int		sts;
-	pwr_tObjid	destination;
-	pwr_tObjid	source;
-	int		code;
-	pwr_tObjid	new_objid;
-	pwr_sAttrRef	attrref[2];
-	pwr_tObjid	objid;
-
-	if ( first) 
-	  code = ldh_eDest_IntoFirst;
-	else if ( last)
-	  code = ldh_eDest_IntoLast;
-	else if ( after)
-	  code = ldh_eDest_After;
-	else if ( before)
-	  code = ldh_eDest_Before;
-	else
-	  code = ldh_eDest_IntoLast;
-
-	/* Check source name */
-	sts = ldh_NameToObjid( ldhses, &source, source_name);
-	if ( EVEN(sts))
-	{
-	  return FOE__OBJNAME;
-	}	
-
-	/* Check destination name */
-	sts = ldh_NameToObjid( ldhses, &destination, destination_name);
-	if ( EVEN(sts))
-	{
-	  return FOE__OBJNAME;
-	}	
-
-	if ( !hier)
-	{
-	  sts = ldh_CopyObject( ldhses, &new_objid, name,
-		source, destination, code);
-	  if (EVEN(sts)) return sts;
-	}
-	else
-	{
-	  memset( attrref, 0, sizeof(attrref));
-	  attrref[0].Objid = source;
-	  attrref[1].Objid = pwr_cNObjid;
-
-	  sts = ldh_CopyObjectTrees( ldhses, &attrref, destination,
-				     code,  0, 0, 0, 0);
-	  if ( EVEN(sts)) return sts;
-
-	  /* Fetch the created root object, and change the name */
-	  sts = foe_show_get_created_object( &objid);
-	  if (EVEN(sts)) return sts;
-
-	  sts = ldh_ChangeObjectName( ldhses, objid, name);
-	  if ( EVEN(sts)) return sts;
-	}
-#endif
 	return FOE__SUCCESS;
 }
 
@@ -10703,13 +10534,6 @@ static int utl_object_delete (
 	pwr_tOName     	hier_name;
 	int		sts, size;
 
-#if defined OS_VMS
-	int		len;
-  	$DESCRIPTOR ( yon_prompt_desc , "(Y/N/Q/A): " );
-  	static $DESCRIPTOR ( yon_desc , yes_or_no );
-#endif
-
-
 	sts = ldh_ObjidToName( ldhses, 
 	           	Objdid, ldh_eName_Hierarchy,
   		        hier_name, sizeof( hier_name), &size);
@@ -10718,14 +10542,9 @@ static int utl_object_delete (
 	if ( utlctx->confirm )
 	{
 	  printf("Delete object %s ", hier_name);
-#if defined OS_VMS
- 	  sts = lib$get_input ( &yon_desc , &yon_prompt_desc , &len ) ; 
-	  if ( EVEN(sts)) return sts;
-#else
 	  // TODO
 	  printf( "(Y/N/Q/A): ");
 	  sts = scanf( "%s", yes_or_no);
-#endif
 	  if ( ((yes_or_no[0] == 'Q') || (yes_or_no[0] == 'q')))
 	    return FOE__ABORTSEARCH;
 	  else if ( ((yes_or_no[0] == 'A') || (yes_or_no[0] == 'a')))
@@ -10777,12 +10596,6 @@ static int utl_tree_delete (
 	pwr_tOName     	hier_name;
 	int		sts, size;
 
-#if defined OS_VMS
-	int		len;
-  	$DESCRIPTOR ( yon_prompt_desc , "(Y/N/Q): " );
-  	static $DESCRIPTOR ( yon_desc , yes_or_no );
-#endif
-
 	sts = ldh_ObjidToName( ldhses, 
 	           	Objdid, ldh_eName_Hierarchy,
   		        hier_name, sizeof( hier_name), &size);
@@ -10791,14 +10604,9 @@ static int utl_tree_delete (
 	if ( utlctx->confirm )
 	{
 	  printf("Delete tree %s ", hier_name);
-#if defined OS_VMS
- 	  sts = lib$get_input ( &yon_desc , &yon_prompt_desc , &len ) ; 
-	  if ( EVEN(sts)) return sts;
-#else
 	  // TODO
 	  printf( "(Y/N/Q): ");
 	  sts = scanf( "%s", yes_or_no);
-#endif
 	  if ( !((yes_or_no[0] == 'Y') || (yes_or_no[0] == 'y')))
 	    return FOE__SUCCESS;
 	}
@@ -11031,12 +10839,6 @@ int utl_delete_volume (
 	static char	yes_or_no[200];	
 	pwr_tVolumeId	volid;
 
-#if defined OS_VMS
-	int		len;
-  	$DESCRIPTOR ( yon_prompt_desc , "(Y/N/Q): " );
-  	static $DESCRIPTOR ( yon_desc , yes_or_no );
-#endif
-
 	/* Get volid for the volume */
 	sts = ldh_VolumeNameToId( ldhwb, name, &volid);
 	if ( EVEN(sts)) return sts;
@@ -11048,14 +10850,9 @@ int utl_delete_volume (
 	if ( utlctx->confirm )
 	{
 	  printf("Delete volume %s ", name);
-#if defined OS_VMS
- 	  sts = lib$get_input ( &yon_desc , &yon_prompt_desc , &len ) ; 
-	  if ( EVEN(sts)) return sts;
-#else
 	  // TODO
 	  printf( "(Y/N/Q): ");
 	  sts = scanf( "%s", yes_or_no);
-#endif
 	  if ( !((yes_or_no[0] == 'Y') || (yes_or_no[0] == 'y')))
 	    return FOE__SUCCESS;
 	}

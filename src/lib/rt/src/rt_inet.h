@@ -41,20 +41,7 @@
 
 #include "pwr.h"
 
-#if defined(OS_VMS)
-#  include <socket.h>
-
-# define ATF_COM  2   /* completed entry (arp_ha valid) */
-# define ATF_PERM 4   /* permanent entry */
-# define ATF_PUBL 8   /* publish (respond for other host) */
-
-struct arpreq {
-  struct  sockaddr arp_pa;                /* protocol address */
-  struct  sockaddr arp_ha;                /* hardware address */
-  int     arp_flags;                      /* flags */
-};
-
-#elif defined OS_CYGWIN
+#if defined OS_CYGWIN
 # include <sys/ioctl.h>
 # include <sys/socket.h>
 # include <net/if.h>

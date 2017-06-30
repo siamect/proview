@@ -44,13 +44,6 @@
 #include <assert.h>
 #include <stdarg.h>
 #include <fstream>
-#ifdef OS_VMS
-#include <descrip.h>
-#include <libdef.h>
-#include <lnmdef.h>
-#include <starlet.h>
-#include <lib$routines.h>
-#endif
 #include <stdarg.h>
 #include "pwr.h"
 //#include "wb_ldhi.h"

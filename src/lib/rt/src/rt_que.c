@@ -38,10 +38,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef OS_VMS
-# include <lib$routines.h>
-#endif
-
 #include "pwr.h"
 #include "pwr_msg.h"
 #include "rt_errh.h"

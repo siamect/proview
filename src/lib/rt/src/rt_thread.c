@@ -39,16 +39,9 @@
 #include <string.h>
 #include <errno.h>
 
-#ifdef OS_VMS
-# include <starlet.h>
-# include <lib$routines.h>
-# include <tis.h>
-#endif
-
 #ifdef OS_LYNX
 # include <signal.h>
 #endif
-
 
 #include "pwr.h"
 #include "co_errno.h"
@@ -57,58 +50,31 @@
 #include "rt_thread.h"
 #include "rt_thread_msg.h"
 
-#if defined OS_VMS
-typedef struct {
-  pthread_cond_t *cp;
-  pwr_tStatus sts;
-} sTimerAst;
-#endif
-
 pwr_tStatus
 thread_CondInit (
   thread_sCond	*cp
 )
 {
-
-#if defined OS_VMS
-
-  return errno_Status(tis_cond_init(&cp->c));
-
-#elif defined OS_LYNX && defined PWR_LYNX_30
-
+#if defined OS_LYNX && defined PWR_LYNX_30
   return errno_Pstatus(pthread_cond_init(&cp->c, 0));
-
 #elif defined OS_POSIX
-
   pthread_condattr_t attr;
-  
   pthread_condattr_init(&attr);
-
   return errno_Status(pthread_cond_init(&cp->c, &attr));
-
 #else
 # error Not defined for this platform !
 #endif
 }
-
+
 pwr_tStatus
 thread_MutexInit (
   thread_sMutex		*mp
 )
 {
-
-#if defined OS_VMS
-
-  return errno_Status(tis_mutex_init(mp));
-
-#elif defined OS_LYNX && defined PWR_LYNX_30
-
+#if defined OS_LYNX && defined PWR_LYNX_30
   return errno_Pstatus(pthread_mutex_init(mp, NULL));
-
 #elif defined OS_POSIX
-
   return errno_Status(pthread_mutex_init(mp, NULL));
-
 #else
 # error Not defined for this platform !
 #endif
@@ -119,23 +85,13 @@ thread_MutexLock (
   thread_sMutex		*mp
 )
 {
-
 #if defined OS_LYNX && defined PWR_LYNX_30
-
   return errno_Pstatus(pthread_mutex_lock(mp));
-
 #elif defined OS_POSIX
-
   return errno_Status(pthread_mutex_lock(mp));
-
-#elif defined OS_VMS
-
-  return errno_Status(tis_mutex_lock(mp));
-
 #else
 # error Not defined for this platform !
 #endif
-
 }
 
 pwr_tStatus
@@ -143,23 +99,13 @@ thread_MutexUnlock (
   thread_sMutex		*mp
 )
 {
-
 #if defined OS_LYNX && defined PWR_LYNX_30
-
   return errno_Pstatus(pthread_mutex_unlock(mp));
-
 #elif defined OS_POSIX
-
   return errno_Status(pthread_mutex_unlock(mp));
-
-#elif defined OS_VMS
-
-  return errno_Status(tis_mutex_unlock(mp));
-
 #else
 # error Not defined for this platform !
 #endif
-
 }
 
 pwr_tStatus
@@ -167,19 +113,10 @@ thread_Cancel (
   thread_s	*tp
 )
 {
-  
 #if defined OS_LYNX && defined PWR_LYNX_30
-
     return errno_Pstatus(pthread_cancel(*tp));
-
 #elif defined OS_POSIX
-
     return errno_Status(pthread_cancel(*tp));
-
-#elif defined OS_VMS
-
-    return errno_Status(pthread_cancel(*tp));
-
 #else
 # error Not defined for this platform !
 #endif
@@ -193,20 +130,15 @@ thread_Create (
   void		*arg
 )
 {
-
 #if defined OS_LYNX && defined PWR_LYNX_30
-
   return errno_Pstatus(pthread_create(tp, pthread_attr_default, routine, arg));
-
-#elif defined OS_VMS || defined OS_POSIX
-
+#elif defined OS_POSIX
   pthread_attr_t  attr;
   
   pthread_attr_init(&attr);
   pthread_attr_setinheritsched(&attr, PTHREAD_INHERIT_SCHED);
 
   return errno_Status(pthread_create(tp, &attr, routine, arg));
-
 #else
 # error Not defined for this platform !
 #endif
@@ -218,9 +150,7 @@ thread_CondWait (
   thread_sMutex		*mp
 )
 {
-
 #if defined OS_POSIX
-
   pwr_tStatus sts = THREAD__SUCCESS;
 
   cp->f = 0;
@@ -235,30 +165,10 @@ thread_CondWait (
       break; 
   }
   return cp->f ? THREAD__SUCCESS : sts;
-  
-
-#elif defined OS_VMS
-
-  return errno_Status(pthread_cond_wait(&cp->c, mp));
-
 #else
 # error Not defined for this platform !
 #endif
-
 }
-
-#if defined OS_VMS
-static void
-timerAst (
-  sTimerAst	*ap
-)
-{
-
-  ap->sts = THREAD__TIMEDOUT;
-  pthread_cond_signal_int_np(ap->cp);
-}
-#endif
-
 
 pwr_tStatus
 thread_CondTimedWait (
@@ -267,7 +177,6 @@ thread_CondTimedWait (
   pwr_tDeltaTime	*time
 )
 {
-
 #if defined OS_LYNX && defined PWR_LYNX_30
   {
     pwr_tStatus sts;
@@ -303,47 +212,9 @@ thread_CondTimedWait (
     return errno_Status(pthread_cond_timedwait(&cp->c, mp, &then_ts));
 
   }
-#elif defined OS_VMS
-  {
-    pwr_tStatus sts = THREAD__SUCCESS;
-    int		dtime[2];
-    int		multiplier = -10000000;	      /* Used to convert 1 s to 100 ns, delta time.  */
-    int		tv_nsec;
-    sTimerAst	ast;
-    int		ret;
-
-    ast.sts = THREAD__SUCCESS;
-    ast.cp = NULL;
-
-    if (time == NULL) {
-      ;
-    } else if ((int)time->tv_sec < 0 || time->tv_nsec < 0 || (time->tv_sec == 0 && time->tv_nsec == 0)) {
-      return THREAD__TIMEDOUT;
-    } else {
-      ast.cp = &cp->c;
-      tv_nsec = -time->tv_nsec/100;   /* Convert to 100 ns.  */
-      sts = lib$emul(&time->tv_sec, &multiplier, &tv_nsec, dtime);
-      if (EVEN(sts)) return sts;
-      sts = sys$setimr(0, dtime, timerAst, &ast, 0);
-      if (EVEN(sts)) return sts;
-    }
-
-    ret = pthread_cond_wait(&cp->c, mp);
-    if (ret != 0)
-      sts = errno_Status(ret);
-    else {
-      sts = ast.sts;
-    }
-
-    if (time != NULL)
-      sys$cantim(&ast, 0);
-
-    return sts;
-  }
 #else
 # error Not defined for this platform !
 #endif
-
 }
 
 pwr_tStatus
@@ -351,9 +222,7 @@ thread_CondSignal (
   thread_sCond	*cp
 )
 {
-
 #if defined OS_POSIX
-
   cp->f = 1;
 
 # if defined OS_LYNX && defined PWR_LYNX_30
@@ -361,12 +230,6 @@ thread_CondSignal (
 # else
   return errno_Status(pthread_cond_signal(&cp->c));
 # endif
-
-
-#elif defined OS_VMS
-
-  return errno_Status(pthread_cond_signal(&cp->c));
-
 #else
 # error Not defined for this platform !
 #endif
@@ -384,12 +247,7 @@ thread_Wait (
     tp = &time;
 
   if ((int)tp->tv_sec > 0 || ((int)tp->tv_sec == 0 && tp->tv_nsec > 0)) {
-#if defined OS_VMS
-
-    sts = errno_Status(pthread_delay_np((struct timespec *)tp));
-
-#elif defined OS_POSIX
-
+#if defined OS_POSIX
     struct timespec rmt;
     struct timespec ttime = {9999999, 0};
     struct timespec ts;
@@ -419,23 +277,7 @@ thread_SetPrio (
   int		prio
 )
 {
-
-#if defined OS_VMS
-  {
-    struct sched_param par;
-    pthread_t id;
-
-    par.sched_priority = MIN(PRI_FIFO_MAX, PRI_FIFO_MIN + prio);
-
-    if (tp == NULL)
-      id = pthread_self();
-    else
-      id = *tp;
-
-    return errno_Status(pthread_setschedparam(id, SCHED_FIFO, &par));
-
-  }
-#elif defined OS_LYNX && defined PWR_LYNX_30
+#if defined OS_LYNX && defined PWR_LYNX_30
   {
     pthread_t id;
     int sts;
@@ -485,12 +327,9 @@ thread_SetPrio (
 #else
 # error Not defined for this platform !
 #endif
-
 }
 
-
 #if defined OS_LYNX
-
 pwr_tStatus	
 thread_Signal (
   thread_s	*tp, 
@@ -520,8 +359,6 @@ thread_Signal (
   return sts;
 }
 
-
-
 pwr_tBoolean
 thread_SigTimedWait (
   thread_s*	tp,
@@ -534,8 +371,6 @@ thread_SigTimedWait (
   siginfo_t		info;
   int			ok;
   pwr_tBoolean		signal = FALSE;
-
-
 
   sigemptyset(&newset);
   sigaddset(&newset, signo);
@@ -553,7 +388,6 @@ thread_SigTimedWait (
     }
   } else
    signal = TRUE;
-
 
   sigprocmask(SIG_SETMASK, &oldset, NULL);
 

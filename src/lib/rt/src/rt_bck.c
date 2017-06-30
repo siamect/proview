@@ -54,19 +54,7 @@ pwr_tUInt32 bck_WaitBackup (
     printf("bck_WaitBackup is not implemented\n");
     return 2;
 }
-
 #else
-
-#ifdef OS_VMS
-#include <stdio.h>
-#include <stdlib.h>
-#include <descrip.h>
-#include <string.h>
-#include <errno.h>
-#include <ssdef.h>
-#include <starlet.h>
-#include <lib$routines.h>
-#endif
 
 #include "pwr.h"
 #include "pwr_class.h"
@@ -75,15 +63,6 @@ pwr_tUInt32 bck_WaitBackup (
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
 #include "rt_bckdef.h"
-
-#ifdef OS_VMS
-static pwr_tBoolean timed_out = FALSE;
-
-static void astrtn ()
-{
-  timed_out = TRUE;
-}
-#endif
 
 
 /************************************************************************
@@ -108,9 +87,6 @@ void bck_ForceBackup (
 {
   pwr_tInt32 sts;
   pwr_tTime *t;
-#ifdef OS_VMS
-  $DESCRIPTOR (efcname, BCK_EFC_NAME);
-#endif
 
 /*
  * Build the context block (i.e. current time)
@@ -168,10 +144,6 @@ pwr_tUInt32 bck_WaitBackup (
   pwr_sClass_Backup_Conf *backup_confp;	/* Backup_Conf object pointer */
   $DESCRIPTOR (timeunitdsc, "0 0:0:0.1");	/* 0.1 second units */
   int cycletime;
-
-#ifdef OS_VMS
-  $DESCRIPTOR (efcname, BCK_EFC_NAME);
-#endif
 
 /*
  * Find the local Backup_Conf object
@@ -241,22 +213,8 @@ pwr_tUInt32 bck_WaitBackup (
 
   } /* Loop */
 
-#ifdef OS_VMS
-  sys$cantim (4711, 0);
-#endif
-
   return 1;	/* Done. */
 
 } /* bck_WaitBackup */
 
 #endif
-
-
-
-
-
-
-
-
-
-

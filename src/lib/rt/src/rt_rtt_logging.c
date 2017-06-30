@@ -39,27 +39,12 @@
 
 /*_Include files_________________________________________________________*/
 
+#include <stdarg.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <pthread.h>
 
-
-#if defined(OS_VMS)
-# include <stdio.h>
-# include <string.h>
-# include <stdlib.h>
-# include <descrip.h>
-# include <chfdef.h>
-# include <stdarg.h>
-# include <processes.h>
-# include <lib$routines.h>
-# include <libdef.h>
-# include <libdtdef.h>
-# include <starlet.h>
-#else
-# include <stdarg.h>
-# include <stdio.h>
-# include <string.h>
-# include <stdlib.h>
-# include <pthread.h>
-#endif
 #if defined OS_POSIX
 # include <time.h>
 #endif
@@ -350,10 +335,6 @@ int	rtt_logging_create(
 	    entry_ptr->parameter_count++;
 	}
 
-#ifdef OS_VMS
-	sts = lib$get_ef(&entry_ptr->event_flag);
-	if (EVEN(sts)) return sts;
-#endif
 	return RTT__NOPICTURE;
 }
 
@@ -1280,10 +1261,7 @@ void	*rtt_logging_logproc( void *arg)
 	pwr_tTime	restime;
 	pwr_tDeltaTime	deltatime;
 	pwr_tDeltaTime	wait_time;
-#ifdef OS_VMS
- 	pwr_tVaxTime 	vmstime;
-#endif
-#if defined OS_VMS || defined OS_POSIX
+#if defined OS_POSIX
 	rtt_t_loggtable	*entry_ptr;
 
 	entry_ptr = (rtt_t_loggtable *) arg;
@@ -1414,12 +1392,6 @@ void	*rtt_logging_logproc( void *arg)
 	      if ( !*(entry_ptr->condition_ptr))
 	      {
 	        /*  Don't log, wait until next scan */
-#ifdef OS_VMS
-	        time_PwrToVms( &nextime, &vmstime);
-	        sys$clref( entry_ptr->event_flag);
-	        sys$setimr( entry_ptr->event_flag, &vmstime, 0, 0, 0);
-	        sys$waitfr( entry_ptr->event_flag);
-#endif
 #if defined OS_POSIX
 	        time_GetTime( &time);
 	        time_Adiff( &wait_time, &nextime, &time);
@@ -1822,7 +1794,7 @@ void	*rtt_logging_logproc( void *arg)
 
 	    if ( entry_ptr->logg_priority != 0)
 	      sts = rtt_set_default_prio();
-#if defined OS_VMS || defined OS_POSIX
+#if defined OS_POSIX
 /*	    sts = pthread_detach( &entry_ptr->thread); */
 	    pthread_exit( (void *) 1);
 #endif
@@ -1834,13 +1806,6 @@ void	*rtt_logging_logproc( void *arg)
 	    time_Aadd( &restime, &nextime, &deltatime);
 	    nextime = restime;
 	  }
-
-#ifdef OS_VMS
-	  time_PwrToVms( &nextime, &vmstime);
-	  sys$clref( entry_ptr->event_flag);
-	  sys$setimr( entry_ptr->event_flag, &vmstime, 0, 0, 0);
-	  sys$waitfr( entry_ptr->event_flag);
-#endif
 #if defined OS_POSIX
 	  time_Adiff( &wait_time, &nextime, &time);
 
@@ -1851,7 +1816,7 @@ void	*rtt_logging_logproc( void *arg)
 #endif
 
 	}
-#if defined OS_VMS || defined OS_POSIX
+#if defined OS_POSIX
 	pthread_exit(0);
 #endif
 	return NULL;

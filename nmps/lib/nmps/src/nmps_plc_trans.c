@@ -34,8 +34,7 @@
  * General Public License plus this exception.
  */
 
-
-#if defined(OS_VMS) || defined(OS_LYNX)
+#if defined(OS_LYNX)
 #include <stdio.h>
 #include <float.h>
 #include <string.h>

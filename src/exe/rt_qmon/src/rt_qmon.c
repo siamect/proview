@@ -52,13 +52,6 @@
 # include <sys/socket.h>
 #endif
 
-#if defined OS_VMS
-# include <descrip.h>        /* VMS descriptor stuff */
-# include <ucx$inetdef.h>    /* UCX network definitions */
-# include <starlet.h>        /* Sys ser calls */
-# include <iodef.h>          /* I/O FUNCTION CODE DEFS */
-# include <ssdef.h>
-#endif
 #include "pwr.h"
 #include "co_time.h"
 #include "co_tree.h"
@@ -203,61 +196,14 @@ struct sLink {
   thread_sMutex		eseg_mutex;
 };
 
+typedef struct {
+  sHead			head;
+  qdb_sInfo			info;
+  struct sockaddr_in		sa;
+  struct iovec		iov[3];
+  struct msghdr		msg;
+} sMsg;
 
-#if defined OS_VMS
-  typedef struct {
-    short		sts;
-    short		tsize;
-    void*		base;
-  } sIosb;
-
-  typedef struct {
-    sIosb		*iosb;
-    thread_sCond	*cp;
-    int			lock_count;
-    int			*lock_count_p;
-  } sReadAst;
-
-  typedef struct {
-    short sin_family;
-    short sin_port;
-    int   sin_addr;
-    char  blkb[8];
-  } sSockaddr;
-
-  typedef struct {
-    sHead		head;
-    qdb_sInfo		info;
-    sSockaddr		sa;
-     struct {
-      int		iov_len;
-      char*		iov_base;
-    } iov[3];
-    struct {
-      int		namelen;
-      sSockaddr*	name;
-      int*		retlen;
-    } rsa_d;
-   int			sa_retlen;
-    struct {
-      int		namelen;
-      sSockaddr*	name;
-    } lsa_d;
-    struct {
-      int		len;
-      void*		base;
-    } desc;
-  } sMsg;
-#else
-  typedef struct {
-    sHead			head;
-    qdb_sInfo			info;
-    struct sockaddr_in		sa;
-    struct iovec		iov[3];
-    struct msghdr		msg;
-  } sMsg;
-#endif  
- 
 typedef enum {
   eEvent__ = 0 ,
   eEvent_connect,
@@ -274,12 +220,7 @@ typedef enum {
 struct {
   sHead			head;
   struct sockaddr_in	sa;
-#if defined OS_VMS
-  short			sock;
-  short			fill;
-#else
   int			sock;
-#endif
   struct {
     lst_sEntry		lh;
     thread_sMutex	mutex;
@@ -309,10 +250,6 @@ struct {
     thread_s		thread;
   } action;
   qdb_sLinkInfo		link_info;
-#if defined OS_VMS
-  int			send_ef;
-  int			import_ef;
-#endif
   pwr_tStatus		sts;
   qcom_sQid		action_qid;
 } l;
@@ -403,12 +340,6 @@ main (int argc, char *argv[])
     errh_SetStatus( PWR__SRVTERM);
     exit(sts);
   }
-
-#if defined OS_VMS
-  qdb->thread_lock.isThreaded = 1;
-  qdb->thread_lock.cond_signal = thread_CondSignal;
-  qdb->thread_lock.cond_wait = thread_CondWait;
-#endif
   
   qcom_segment_size = qdb->my_node->link[0].seg_size - sizeof(sHead);
   if ( qcom_segment_size == 0)
@@ -462,12 +393,6 @@ main (int argc, char *argv[])
   }
 
   do {
-#if defined OS_VMS
-    sts = lib$get_ef(&l.send_ef);
-    pwr_Assert(ODD(sts));
-    sts = lib$get_ef(&l.import_ef);
-    pwr_Assert(ODD(sts));
-#endif
     lst_Init(NULL, &l.eseg.lh, NULL);
     lst_Init(NULL, &l.iseg.lh, NULL);
     open_socket();
@@ -1095,18 +1020,7 @@ get_tmo (
   time_GetTimeMonotonic( &now);
   time_Aadd( tmo, &now, time_FloatToD( 0, rto));
 }
-
-#if defined OS_VMS
-static void
-read_ast (
-  thread_sCond *cp
-)
-{
 
-  pthread_cond_signal_int_np(&cp->c);
-}
-#endif
-
 static void *
 import_thread ()
 {
@@ -1115,42 +1029,11 @@ import_thread ()
   sLink *last_link = NULL;
   int bytes;
   thread_sMutex *mp = &l.import.mutex;
-#if defined OS_VMS
-  pwr_tStatus sts;
-  int state;
-  thread_sCond *cp = &l.import.cond;
-  sIosb iosb;
-#endif
-
 
   thread_MutexLock(mp);
 
   for (sp = iseg_alloc() ; ; ) {
     set_recvmsg(sp, &msg);
-#if defined(OS_VMS)
-
-    memset(&iosb, 0, sizeof(iosb));
-    
-    sts = sys$qio(l.import_ef, l.sock, IO$_READVBLK, &iosb, read_ast, cp, 0, 0, &msg.rsa_d, 0, 0, &msg.desc);
-
-    if (EVEN(sts)) {
-      errh_Error("import, sys$qio, sts = %m", sts);
-      continue;
-    }
-
-    while ((sts = sys$readef(l.import_ef, &state)) == SS$_WASCLR)
-      thread_CondWait(cp, mp);
-
-    pwr_Assert(sts == SS$_WASSET);
-
-    if (ODD(iosb.sts)) {
-      bytes = iosb.tsize;
-    } else {
-      errh_Error("import, sys$qio, iosb.sts %m", (int)iosb.sts);
-      sched_yield();
-      continue;
-    }
-#else
     bytes = recvmsg(l.sock, &msg.msg, 0);
 
     if (bytes == -1 && errno != EHOSTDOWN && errno != EHOSTUNREACH) {
@@ -1158,7 +1041,6 @@ import_thread ()
       sched_yield();
       continue;
     }       
-#endif
 
     sp->size = bytes - sizeof(sp->head);
     sp->ts_recv = time_Clock(NULL, NULL);
@@ -1177,13 +1059,7 @@ import_thread ()
     sp->c.action = eAction_import;
     sp->lp->np->get.segs++;
     sp->lp->np->get.bytes += bytes;
-#if defined OS_VMS
-    sp->lp->np->link[sp->lp->lix].sa.sin_family = msg.sa.sin_family;
-    sp->lp->np->link[sp->lp->lix].sa.sin_port = msg.sa.sin_port;
-    sp->lp->np->link[sp->lp->lix].sa.sin_addr.s_addr = msg.sa.sin_addr;
-#else
     sp->lp->np->link[sp->lp->lix].sa = msg.sa;
-#endif
     que_Put(NULL, &sp->lp->q_in, &sp->c.le, sp);
     sp = iseg_alloc();
   }
@@ -1851,13 +1727,7 @@ new_link (
   sts = thread_MutexInit(&lp->eseg_mutex);
                                     
   if (mp != NULL) {
-#if defined OS_VMS
-    lp->np->sa.sin_family = mp->sa.sin_family;
-    lp->np->sa.sin_port = mp->sa.sin_port;
-    lp->np->sa.sin_addr.s_addr = mp->sa.sin_addr;
-#else
     lp->np->sa = mp->sa;
-#endif
   }
 
   sp = create_connect(lp);
@@ -1871,38 +1741,6 @@ new_link (
 static void
 open_socket ()
 {
-
-#if defined OS_VMS
-  pwr_tStatus sts;
-  short sock_args[2] = {UCX$C_UDP, INET_PROTYP$C_DGRAM};
-  struct dsc$descriptor dev = {10, DSC$K_CLASS_S, DSC$K_DTYPE_T, "UCX$DEVICE"};
-  sSockaddr sa;
-  struct itlst {
-    int len;
-    sSockaddr *sa;
-  } sa_d;
-  sIosb iosb;
-
-  sts = sys$assign(&dev, &l.sock, 0, 0);
-  if (EVEN(sts)) {
-    errh_Error("sys$assign, %m", sts);
-    exit(sts);
-  }
-  
-  sa.sin_family = UCX$C_AF_INET;
-  sa.sin_addr = UCX$C_INADDR_ANY;
-  sa.sin_port = qdb->my_node->sa.sin_port;
-  memset(sa.blkb, 0, sizeof(sa.blkb));
-
-  sa_d.len = sizeof(sa);
-  sa_d.sa  = &sa;
-
-  sts = sys$qiow(l.send_ef, l.sock, IO$_SETMODE, &iosb, 0, 0, sock_args, 0, &sa_d, 0,0,0);
-  if (EVEN(sts)) {
-    errh_Error("bind, %m", sts) ;
-    exit(sts);
-  }
-#else
   if ((l.sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
     errh_Error("socket failed: %s", strerror(errno));
     exit(errno_ExitErrno(errno));
@@ -1917,7 +1755,6 @@ open_socket ()
     close(l.sock);
     exit(errno_ExitErrno(errno));
   }
-#endif
 }
 
 static sEseg *
@@ -1944,10 +1781,6 @@ send_ack (
   sHead head;
   sMsg msg;
   int bytes;
-#if defined OS_VMS
-  pwr_tStatus sts;
-  sIosb iosb;
-#endif
 
   head.flags.b.event = eEvent_ack;
   head.flags.m |= mSeg_single;
@@ -1963,25 +1796,8 @@ send_ack (
   encode_head(&msg.head, &head);
 
   thread_MutexLock(&l.send_mutex);
-#if defined OS_VMS
-    sts = sys$qiow(l.send_ef, l.sock, IO$_WRITEVBLK, &iosb, 0, 0, 0, 0, &msg.lsa_d, 0, &msg.desc, 0);
-
-    if (EVEN(sts)) {
-      errh_Error("ack, sys$qiow, sts %m", sts);
-      exit(sts);
-    }
-
-    if (ODD(iosb.sts)) {
-      bytes = iosb.tsize;
-    } else {
-      errh_Error("ack, sys$qiow, iosb.sts %m", (int)iosb.sts);
-      bytes = -1;
-      errno = iosb.tsize;
-    }
-#else
     // printf( "sendmsg ack\n");
     bytes = sendmsg(l.sock, &msg.msg, 0);
-#endif
   thread_MutexUnlock(&l.send_mutex);
 
   if (bytes != -1) {
@@ -2073,30 +1889,18 @@ set_recvmsg (
   sMsg *mp
 )
 {
-
   mp->iov[0].iov_base = (char *) &mp->head;
   mp->iov[0].iov_len  = sizeof(mp->head);
   mp->iov[1].iov_base = (char *)sp->buff;
   mp->iov[1].iov_len  = qcom_segment_size;
 
   memset(&mp->sa, 0, sizeof(mp->sa));
-
-#if defined OS_VMS
-  mp->desc.base = (char*) &mp->iov;
-  mp->desc.len = sizeof(mp->iov);
-
-  mp->rsa_d.name     = &mp->sa;
-  mp->rsa_d.namelen  = sizeof(mp->sa);
-  mp->rsa_d.retlen   = &mp->sa_retlen;
-#else
   memset(&mp->msg, 0, sizeof(mp->msg));
   mp->msg.msg_iov = mp->iov;
   mp->msg.msg_iovlen = 2;
 
   mp->msg.msg_name = (void *) &mp->sa;
   mp->msg.msg_namelen = sizeof(mp->sa);
-
-#endif
 }
 
 static void 
@@ -2106,10 +1910,6 @@ seg_send (
 )
 {
   sMsg msg;
-#if defined OS_VMS
-  pwr_tStatus sts;
-  sIosb iosb;
-#endif
 
   sp->head.lack.ts = time_Clock(NULL, NULL);
   sp->head.nid     = l.head.nid;
@@ -2123,25 +1923,8 @@ seg_send (
   set_sendmsg(lp, sp, &msg);
   encode_head(&msg.head, &sp->head);
 
-#if defined OS_VMS
-    sts = sys$qiow(l.send_ef, l.sock, IO$_WRITEVBLK, &iosb, 0, 0, 0, 0, &msg.lsa_d, 0, &msg.desc, 0);
-
-    if (EVEN(sts)) {
-      errh_Error("seg, sys$qiow, sts = %m", sts);
-      exit(sts);
-    }
-
-    if (ODD(iosb.sts)) {
-      sp->bytes = iosb.tsize;
-    } else {
-      errh_Error("seg, sys$qiow, iosb.sts = %m", (int)iosb.sts);
-      sp->bytes = -1;
-      errno = iosb.tsize;
-    }
-#else
     // printf( "sendmsg segment\n");
     sp->bytes = sendmsg(l.sock, &msg.msg, 0);
-#endif
   thread_MutexUnlock(&l.send_mutex);
 
   if (sp->bytes == -1) {
@@ -2182,43 +1965,6 @@ set_sendmsg (
 
   pwr_Assert(lp != NULL);
 
-#if defined OS_VMS
-  mp->desc.base = &mp->iov;
-
-  mp->iov[i].iov_base = (char *) &mp->head;
-  mp->iov[i++].iov_len  = sizeof(mp->head);
-
-  if (sp == NULL) {
-    mp->iov[i].iov_base = NULL;
-    mp->iov[i].iov_len  = 0;
-  } else if (sp->head.flags.b.event == eEvent_connect || 
-	     sp->head.flags.b.event == eEvent_connectPassive) {
-    mp->iov[i].iov_base = (char *) &l.link_info;
-    mp->iov[i++].iov_len = sizeof(l.link_info);
-  } else if (sp->bp != NULL) {
-    p = (char *) sp->p;
-    size = sp->size;
-    if (sp->head.flags.b.first) {
-      encode_info(&mp->info, (qdb_sInfo *)p);
-      mp->iov[i].iov_base = (char *) &mp->info;
-      mp->iov[i++].iov_len  = sizeof(mp->info);
-      p += sizeof(mp->info);
-      size -= sizeof(mp->info);
-    }
-    mp->iov[i].iov_base = p;
-    mp->iov[i++].iov_len = size;
-  }
-
-  mp->desc.len = i * sizeof(mp->iov[0]);
-
-  memset(&mp->sa, 0, sizeof(mp->sa));
-  mp->sa.sin_family = lp->np->link[lp->lix].sa.sin_family;
-  mp->sa.sin_port   = lp->np->link[lp->lix].sa.sin_port;
-  mp->sa.sin_addr   = lp->np->link[lp->lix].sa.sin_addr.s_addr;
-
-  mp->lsa_d.name     = &mp->sa;
-  mp->lsa_d.namelen  = sizeof(mp->sa);
-#else
   memset(&mp->msg, 0, sizeof(mp->msg));
   mp->msg.msg_iov = mp->iov;
 
@@ -2248,7 +1994,6 @@ set_sendmsg (
   mp->msg.msg_iovlen = i;
   mp->msg.msg_name = (void *) &lp->np->link[lp->lix].sa;
   mp->msg.msg_namelen = sizeof(lp->np->link[0].sa);
-#endif
 }
 
 static void

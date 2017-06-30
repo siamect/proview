@@ -93,7 +93,6 @@ extern "C" {
 typedef enum {
     co_eOS__ = 0,
     co_eOS_Lynx,
-    co_eOS_VMS,
     co_eOS_WNT,   /**< Pay me and I will do it */
     co_eOS_W95,   /**< Never!! */
     co_eOS_Amiga, /**< We are working on it ;-) */
@@ -107,8 +106,6 @@ typedef enum {
 
 #if defined(OS_LYNX) 
 #   define co_dHostOS co_eOS_Lynx
-#elif defined(OS_VMS) 
-#   define co_dHostOS co_eOS_VMS
 #elif defined(OS_WNT)
 #   define co_dHostOS co_eOS_WNT
 #elif defined(OS_LINUX) 
@@ -215,16 +212,7 @@ typedef enum {
     co_eFT_
 } co_eFT;
 
-#if (defined(OS_VMS))
-#   if defined(HW_AXP)
-#       define co_dHostFloatType co_eFT_vaxF
-#   else
-#       define co_dHostFloatType co_eFT_vaxF
-#   endif
-#else
-#   define co_dHostFloatType co_eFT_ieeeS
-#endif
-
+#define co_dHostFloatType co_eFT_ieeeS
 
 typedef union {
     pwr_tBitMask m;

@@ -418,7 +418,6 @@ AttrMotif::AttrMotif( Widget a_parent_wid,
 
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
 
-#if !defined OS_VMS
   {
     char *s;
 
@@ -429,7 +428,6 @@ AttrMotif::AttrMotif( Widget a_parent_wid,
     }
     sprintf( uid_filename, "%s/ge_attr.uid", s);
   }
-#endif
 
   // Motif
   MrmInitialize();

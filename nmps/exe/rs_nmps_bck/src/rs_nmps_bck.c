@@ -46,17 +46,6 @@
 
 /*_Include filer_________________________________________________________*/
 
-#ifdef OS_VMS
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <float.h>
-#include <libdef.h>
-#include <starlet.h>
-#include <lib$routines.h>
-#endif
-
 #if defined OS_POSIX
 #include <stdio.h>
 #include <stdlib.h>
@@ -254,12 +243,8 @@ static pwr_tStatus	nmpsbck_free( bck_ctx bckctx);
 **************************************************************************/
 static char	*nmps_fgetname( FILE *fp, char *name, char *def_name)
 {
-#if defined(OS_VMS)
-	return fgetname( fp, name);
-#else
 	strcpy( name, def_name);
 	return name;
-#endif	
 }
 
 /*************************************************************************
@@ -1204,14 +1189,7 @@ static pwr_tStatus	nmpsbck_open_file( 	bck_ctx	bckctx)
 	    nmpsbck_get_filename( bckctx->bckconfig->BackupFile,
 			filename, NMPSBCK_FILE_EXT1);
 
-
-#if defined(OS_VMS)
-	    bckctx->bckfile1 = fopen( filename, "r+", "shr=get");
-	    if (bckctx->bckfile1 == NULL)
-	      bckctx->bckfile1 = fopen( filename, "w+", "shr=get");
-#else
 	    bckctx->bckfile1 = fopen( filename, "w+");
-#endif
 	    if (bckctx->bckfile1 != NULL)
 	    {
 	      /* Write a file header */
@@ -1264,14 +1242,8 @@ static pwr_tStatus	nmpsbck_open_file( 	bck_ctx	bckctx)
 	    nmpsbck_get_filename( bckctx->bckconfig->BackupFile,
 			filename, NMPSBCK_FILE_EXT2);
 
-#if defined(OS_VMS)
-	    bckctx->bckfile2 = fopen( filename, "r+", "shr=get");
-	    if (bckctx->bckfile2 == NULL) 
-	      bckctx->bckfile2 = fopen( filename, "w+", "shr=get");
-#else
 	    bckctx->bckfile2 = fopen( filename, "w+");
-#endif
-	    if (bckctx->bckfile2 != NULL) 
+	    if (bckctx->bckfile2 != NULL)
 	    {
 	      /* Write a file header */
 	      time_GetTime( &fileheader.creationtime);
@@ -1657,11 +1629,7 @@ static pwr_tStatus	nmpsbck_read( bck_ctx	bckctx, char *backupfile)
 	nmpsbck_get_filename( backupfile,
 			      filename, NMPSBCK_FILE_EXT1);
 
-#if defined(OS_VMS)
-	bckfile1 = fopen( filename, "r+", "shr=get");
-#else
 	bckfile1 = fopen( filename, "r+");
-#endif
 	if (bckfile1 == NULL)
 	  bckfile1_sts = NMPS__BCKOPEN;
 	else
@@ -1684,11 +1652,7 @@ static pwr_tStatus	nmpsbck_read( bck_ctx	bckctx, char *backupfile)
 	nmpsbck_get_filename( backupfile,
 			      filename, NMPSBCK_FILE_EXT2);
 
-#if defined(OS_VMS)
-	bckfile2 = fopen( filename, "r+", "shr=get");
-#else
 	bckfile2 = fopen( filename, "r+");
-#endif
 	if (bckfile2 == NULL)
 	  bckfile2_sts = NMPS__BCKOPEN;
 	else

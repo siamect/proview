@@ -37,26 +37,6 @@
 #ifndef rt_rtt_h
 #define rt_rtt_h
 
-#if 0
-#ifdef OS_VMS
-# include <stdio.h>
-# define int32 ___int32
-# define uint32 ___uint32
-# define int64 ___int64
-# define uint64 ___uint64
-# include <pthread.h>
-# undef int32
-# undef uint32
-# undef int64
-# undef uint64
-#endif
-#endif
-
-#ifdef OS_VMS
-# include <stdio.h>
-# include <pthread.h>
-#endif
-
 #ifndef rt_gdh_h
 #include "rt_gdh.h"
 #endif
@@ -442,10 +422,6 @@ typedef struct {
 	void		*logg_file;	
 	char		old_value[RTT_LOGG_MAXPAR][8];
 	pwr_tTime	starttime;
-#ifdef OS_VMS
-	pthread_t 	thread;
-	unsigned int    event_flag;
-#endif
 #if defined  OS_POSIX
 	pthread_t 	thread;
 #endif

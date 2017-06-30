@@ -198,11 +198,7 @@ qini_ParseFile (
 
 #if 0
     naddr.s_addr = inet_network(s_naddr);
-#if defined(OS_VMS) 
-    if (naddr.s_addr == (in_addr_t)-1) {
-#else
     if (naddr.s_addr == (unsigned int)-1) {
-#endif
       /* Try name instead */
       struct addrinfo hints;
       struct addrinfo *res;

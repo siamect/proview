@@ -57,22 +57,6 @@ typedef enum {
 
 #endif
 
-#ifdef	OS_VMS
-# include <descrip.h>
-
-  typedef struct {
-    pwr_tInt64		entry;
-    pwr_tInt32		flag;
-    pwr_tInt32		fill;
-  } sect_sMutexEntry;
-
-  typedef struct {
-    pwr_tInt64		ownerroot;
-    pwr_tInt64		freeroot;
-    sect_sMutexEntry	list[32];
-  } sect_sMutex;
-#endif
-
 typedef union {
   pwr_tBitMask m;
   pwr_32Bits (
@@ -86,19 +70,7 @@ typedef union {
 #define sect_mHead_		(~sect_mHead__)
 } sect_mHead;
 
-#if defined OS_VMS
-
-  typedef	struct { 
-    void		*base;		/* Virtual address of section.  */
-    size_t		size;
-    pwr_tUInt32		sectadr[2];	/* Retadr info from create.  */
-    struct dsc$descriptor namedsc;	/* Descriptor to name string.  */
-    char		name[16];	/* Name of section.  */
-    pwr_tUInt32		area;		/* Used by ELN.  */
-    sect_mHead		flags;
-  } sect_sHead;
-
-#elif defined OS_POSIX
+#if defined OS_POSIX
   typedef struct { 
     void		*base;		/* Virtual address of section.  */
     size_t		size;

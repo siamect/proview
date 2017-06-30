@@ -34,14 +34,7 @@
  * General Public License plus this exception.
  */
 
-#if defined(OS_VMS)
-# include <stdio.h>
-# include <descrip.h>
-# include <jpidef.h>
-# include <string.h>
-# include <starlet.h>
-# include <lib$routines.h>
-#elif defined OS_POSIX
+#if defined OS_POSIX
 # include <stdio.h>
 # include <string.h>
 #endif
@@ -54,66 +47,18 @@
 #include "rt_load.h"
 #include "ini_loader.h"
 
-#if defined(OS_VMS)
-  struct item_descr {
-      short	buffer_length;	        /* Item buffer length */
-      short	item_code;		/* Item code */
-      void	*buffer_addr;		/* Item buffer address */
-      short	*return_length_addr;	/* Item resultant length */
-      };
-#endif
-
-
 /* PLC job behaviour  */
 
 #define	PLC_PRIORITY	5
 #define	PLC_KERNELSTACK	30
 #define	PLC_DEBUG	FALSE
 #define PLC_NAME	"PLC_%d_%d"
-
-#ifdef	OS_VMS
-pwr_tStatus
-ini_PlcStart (
-  pwr_tUInt32	    plcversion,
-  char		    *plcfile,
-  pwr_tUInt32	    busid
-)
-{
-  pwr_tUInt32	    sts;
-  unsigned int	    flags;
-  char		    command[128];
-  char		    procname[20];
-  $DESCRIPTOR(commanddsc, "");
-  $DESCRIPTOR(procnamedsc, "");
 
-  commanddsc.dsc$a_pointer  = command;
-  commanddsc.dsc$w_length   = sprintf(command, "run %s", plcfile);
-  procnamedsc.dsc$a_pointer = procname;
-  procnamedsc.dsc$w_length  = sprintf(procname, "PWR_PLC_%d", busid);
-
-  flags = 1; /* Nowait and Notify */
-  sts = lib$spawn(&commanddsc, NULL, NULL, &flags, &procnamedsc);
-  if (EVEN(sts)) errh_Error("lib$spawn %s\n%m", command, sts);
-
-  return sts;
-}
-#endif
-
-
 void ini_StartApplications ()
 {
   pwr_tStatus sts;
   pwr_sAppl *applp;
   pwr_tObjid objid;
-#ifdef	OS_VMS
-  $DESCRIPTOR(prognamedsc, "");
-  $DESCRIPTOR(nulldsc, "");
-  $DESCRIPTOR(argdsc, "");
-  char spawnbuf [512] = "";
-  $DESCRIPTOR (SpawnCommand, "");
-  $DESCRIPTOR (SpawnPrcnam, "Appl Start");
-  pwr_tUInt32 Flags;
-#endif
 
   /* Find the $Appl objects on this particular node */
 
@@ -123,21 +68,7 @@ void ini_StartApplications ()
 
       /* Found an object on this node, load the program */
 
-#if defined(OS_VMS)
-
-      sprintf(spawnbuf, "$ @pwr_exe:rt_ini_appl_start %s \"%s\" %d %d \"%s\"",
-	applp->FileName, applp->ProgramName,
-	applp->StartWithDebug, applp->JobPriority,
-	applp->Arg);
-      SpawnCommand.dsc$w_length = strlen(spawnbuf);
-      SpawnCommand.dsc$a_pointer = spawnbuf;
-      Flags = 1; /* Nowait and Notify */
-      errh_Info("Starting %s\nin process %s", applp->FileName, applp->ProgramName);
-      sts = lib$spawn(&SpawnCommand, NULL, NULL, &Flags);
-      if (EVEN(sts)) errh_Error("lib$spawn '%s'\n%m", spawnbuf, sts);
-
-#elif defined OS_POSIX
-
+#if defined OS_POSIX
       errh_Error("NYI. start %s \"%s\" %d %d \"%s\"",
 	applp->FileName, applp->ProgramName,
 	applp->StartWithDebug, applp->JobPriority,

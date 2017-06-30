@@ -34,14 +34,7 @@
  * General Public License plus this exception.
  */
 
-#if defined OS_VMS
-# include <stdio.h>
-# include <stdlib.h>
-# include <string.h>
-# include <starlet.h>
-# include <descrip.h>
-# include <ssdef.h>
-#elif defined OS_LYNX
+#if defined OS_LYNX
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
@@ -85,39 +78,11 @@
   static sem_t *sem = (sem_t *)-1;
 #endif
 
-
 /* Local function prototypes */
 
 static pwr_tStatus sendMessage(qcom_sQid *, mh_sHead*);
 
-
-#if defined OS_VMS
-
-static pwr_tStatus
-map ()
-{
-  pwr_tStatus sts;
-#if defined OS_VMS
-  static $DESCRIPTOR(name, "PWR_WAIT_EF");
-#endif
-
-  static pwr_tBoolean isMapped = FALSE;
-
-  /* map MH_UTL_SYNC_AREA */
-
-
-#if defined OS_VMS
-  sts = sys$ascefc(PWR_WAIT_MH, &name, 0, 0);
-
-#endif
-
-  return (sts);
-}
-#endif /* OS_VMS */
-
-
 #if defined OS_POSIX
-
 static char *
 SemName ()
 {
@@ -283,21 +248,10 @@ pwr_tBoolean
 mh_UtilIsStartedMh ()
 {
   pwr_tStatus sts;
-#ifdef OS_VMS
-  pwr_tUInt32 state;
-#endif
 
   sts = map();
 
-#if defined OS_VMS
-
-  if (EVEN(sts))
-    return FALSE;
-
-  sts = sys$readef(PWR_WAIT_MH, &state);
-  return ((pwr_tBoolean) (sts == SS$_WASSET));
-
-#elif defined OS_LYNX
+#if defined OS_LYNX
   if (EVEN(sts))
     return FALSE;
   sts = sem_trywait(sem);
@@ -307,7 +261,6 @@ mh_UtilIsStartedMh ()
   } 
 
   return (sts == 0);
-
 #elif defined OS_POSIX
   if (EVEN(sts))
     return FALSE;
@@ -318,7 +271,6 @@ mh_UtilIsStartedMh ()
   } 
 
   return (sts == 0);
-
 #endif
 }
 
@@ -399,19 +351,14 @@ mh_UtilWaitForMh ()
   if (EVEN(sts))
     return sts;
 
-#if defined OS_VMS
-  sys$waitfr(PWR_WAIT_MH);
-
-#elif defined OS_LYNX
+#if defined OS_LYNX
   sem_wait(sem);
   sem_post(sem);
   unmap();
-
 #elif defined OS_POSIX
   posix_sem_wait(sem);
   posix_sem_post(sem);
   unmap();
-
 #endif
 
   return 1;
@@ -423,17 +370,12 @@ pwr_tStatus
 mh_UtilWake ()
 {
   pwr_tStatus sts;
-#ifdef OS_VMS
-  pwr_tUInt32 State;
-#endif
 
   sts = map();
   if (EVEN(sts))
     return (sts);
 
-#if defined OS_VMS
-  sys$setef(PWR_WAIT_MH);
-#elif defined OS_LYNX
+#if defined OS_LYNX
   sem_post(sem);
   unmap();
 #elif defined OS_POSIX

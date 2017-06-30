@@ -38,15 +38,6 @@
    This module contains routines to handle subscription.
    Those routines can be called from the GDH API.  */
 
-#if defined(OS_VMS)
-# include <stddef.h>
-# include <stdlib.h>
-# include <descrip.h>
-# include <string.h>
-# include <stsdef.h>
-# include <lib$routines.h>
-#endif
-
 #include "pwr.h"
 #include "rt_gdh_msg.h"
 #include "rt_hash_msg.h"

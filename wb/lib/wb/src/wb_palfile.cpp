@@ -36,14 +36,6 @@
 
 /* wb_palfile.cpp -- Palette of configurator or plc-editor */
 
-#if defined OS_VMS && defined __ALPHA
-# pragma message disable (NOSIMPINT,EXTROUENCUNNOBJ)
-#endif
-
-#if defined OS_VMS && !defined __ALPHA
-# pragma message disable (LONGEXTERN)
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -75,10 +67,8 @@ PalFileMenu *PalFile::config_tree_build( ldh_tSession ldhses, const char *filena
   dcli_translate_filename( fname, filename);
 
   fp.open( fname);
-#ifndef OS_VMS
   if ( !fp)
     return menu_tree;
-#endif
 
   line_cnt = 0;
   while ( 1)
@@ -336,12 +326,10 @@ void PalFile::config_tree_print( const char *filename, PalFileMenu *menu_tree, p
   *sts = 1;
   dcli_translate_filename( fname, filename);
   fp.open( fname);
-#ifndef OS_VMS
   if ( !fp) {
     *sts = 0;
     return;
   }
-#endif
 
   for ( menu_p = menu_tree;
 	 menu_p;

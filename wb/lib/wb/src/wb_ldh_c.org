@@ -11,12 +11,6 @@
 #include <descrip.h>
 #include <assert.h>
 #include <stdarg.h>
-#ifdef OS_VMS
-#include <libdef.h>
-#include <lnmdef.h>
-#include <starlet.h>
-#include <lib$routines.h>
-#endif
 #include <stdarg.h>
 #include <X11/Intrinsic.h>
 #include "pwr.h"
@@ -544,38 +538,6 @@ GetAllMenuItems (
 static void
 GetLogging ()
 {
-#ifdef OS_VMS
-  pwr_tStatus		sts;
-  char			logname[] = "pwr_ldh_log";
-  unsigned short	len	    = 0;
-  char			pwr_ldh_log[256];
-
-  $DESCRIPTOR(logname_d, "pwr_ldh_log");
-  $DESCRIPTOR(tab, "LNM$PROCESS_TABLE");
-
-  unsigned long		attr = LNM$M_CASE_BLIND;
-  struct {
-    unsigned short	item_length;
-    unsigned short	item_code;
-    void*		item_address;
-    void*		item_reslen;
-  } itmlst[2] = {
-    {sizeof(pwr_ldh_log), LNM$_STRING, NULL, NULL},
-    {0, 0, NULL, NULL}
-  };
-
-  itmlst[0].item_address = pwr_ldh_log;
-  itmlst[0].item_reslen = &len;
-  sts = sys$trnlnm(&attr, &tab, &logname_d, NULL, itmlst);      
-  if (EVEN(sts))
-    return;
-
-  pwr_ldh_log[len] = '\0';
-
-  ldh_gLog_a = strchr(pwr_ldh_log, 'a') != NULL;
-  ldh_gLog_b = strchr(pwr_ldh_log, 'b') != NULL;
-  ldh_gLog_c = strchr(pwr_ldh_log, 'c') != NULL;
-#endif
 }
 
 static int
@@ -4492,18 +4454,6 @@ ldh_OpenSession (
     return LDH__BADPARAM;
   if (Utility <= ldh_eUtility__ || Utility >= ldh_eUtility_)
     return LDH__BADPARAM;
-
-#ifdef OS_VMS
-  cvararg_dVaCount(parcount);
-
-  va_start (ap, Utility);
-  if (parcount > 5) {
-    EditorContext = (void *) va_arg(ap, void *);
-    SendThisSession = va_arg(ap, ldhi_tSesEventCB);
-    SendOtherSession = va_arg(ap, ldhi_tSesEventCB);
-  }
-  va_end (ap);
-#endif
 
   /* Create new session context. */
 

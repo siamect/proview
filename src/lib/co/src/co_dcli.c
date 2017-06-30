@@ -1094,10 +1094,7 @@ char	*dcli_pwr_dir( const char *dir)
 	static char pwr_dir[120];
 	char 	*s;
 
-#if defined(OS_VMS)
-	strcpy( pwr_dir, dir);
-	strcat( pwr_dir, ":");
-#elif defined OS_POSIX
+#if defined OS_POSIX
 	if ( (s = getenv( dir)) == NULL)
 	  strcpy( pwr_dir, "");
         else

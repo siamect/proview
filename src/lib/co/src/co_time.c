@@ -1471,10 +1471,7 @@ time_ZeroD (
 
 void time_Sleep( float time)
 {
-#ifdef OS_VMS
-	int sts;
-        sts = lib$wait(&time);
-#elif defined OS_POSIX
+#if defined OS_POSIX
 	pwr_tDeltaTime	p_time;
 	struct timespec ts;
 

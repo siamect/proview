@@ -32,12 +32,7 @@
 %
 %#define load_cLffVersionStr	"V4.7.0"
 %
-%#if defined OS_VMS
-%# define	load_cNameDirectory	"pwrp_load:"
-%# define	load_cDirectory		"pwrp_load:"
-
-%
-%#elif defined OS_POSIX
+%#if defined OS_POSIX
 %# define	load_cNameDirectory	"pwrp_load"
 %# define	load_cDirectory		"$pwrp_load/"
 %#endif

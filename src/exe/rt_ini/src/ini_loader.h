@@ -37,15 +37,6 @@
 #ifndef ini_loader_h
 #define ini_loader_h
 
-#ifdef  OS_VMS
-pwr_tStatus
-ini_PlcStart (
-  pwr_tUInt32		plcversion,
-  char			*plcfile,
-  pwr_tUInt32		busid
-);
-#endif
-
 void ini_StartApplications ();
 
 #endif

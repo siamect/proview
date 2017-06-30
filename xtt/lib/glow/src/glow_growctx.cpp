@@ -2360,10 +2360,8 @@ int GrowCtx::save_subgraph( char *filename, glow_eSaveMode mode)
   if ( (s = strrchr( nc_name, '.')))
     *s = 0;
   fp.open( filename);
-#ifndef OS_VMS
   if ( !fp)
     return GLOW__FILEOPEN;
-#endif
 
 
   // Save as nc_array
@@ -2480,10 +2478,8 @@ int GrowCtx::open_subgraph( char *filename, glow_eSaveMode mode)
     return GLOW__FILEOPEN;
 
   fp.open( fname);
-#ifndef OS_VMS
   if ( !fp)
     return GLOW__FILEOPEN;
-#endif
 
   for (;;)
   {

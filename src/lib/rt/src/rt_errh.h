@@ -57,10 +57,7 @@ extern "C" {
 /*@{*/
 
 #ifndef errh_Bugcheck
-# if defined OS_VMS
-#   define errh_Bugcheck(sts, str) \
-	(errh_Fatal("pwr bugcheck: <%s>, in file %s, at line %d\n", (str),__FILE__,__LINE__),(lib$signal(sts)))
-# elif defined OS_POSIX
+# if defined OS_POSIX
 #   define errh_Bugcheck(sts, str) \
 	(errh_Fatal("pwr bugcheck: <%s>, in file %s, at line %d\n%m", (str),__FILE__,__LINE__, sts),(exit(sts)))
 # else

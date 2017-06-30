@@ -41,10 +41,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef OS_VMS
-# include <starlet.h>
-#endif
-
 #include "pwr.h"
 #include "pwr_lst.h"
 #include "co_time.h"
@@ -94,11 +90,6 @@ static LstHead(sTimer)	free_lh;
 
 static time_tClock	now_clock;
 static time_tClock	last_clock;
-
-
-#ifdef OS_VMS
-  static int		timer_flag;
-#endif
 
 static void
 event (
@@ -687,24 +678,7 @@ waitClock (
   int			*tmo_ms
 )
 {
-#if defined OS_VMS
-    pwr_tStatus		sts;
-    int			sec;
-    int			nsec;
-    int			vmstime[2];
-    int			multiplier = -10000000;	      /* Used to convert 1 s to 100 ns, delta time.  */
-
-    sec = diff / CLK_TCK;
-    nsec = - (diff % CLK_TCK * 10000000 / CLK_TCK);   /* Convert to 100 ns.  */
-    sts = lib$emul(&sec, &multiplier, &nsec, vmstime);
-
-# if defined OS_VMS
-    sts = sys$clref(timer_flag);
-    sts = sys$setimr(timer_flag, vmstime, 0, 0, 0);
-    sts = sys$waitfr(timer_flag);
-# endif
-
-#elif defined OS_POSIX
+#if defined OS_POSIX
 //    pwr_tTime  rmt;
 //    pwr_tTime  wait;
     static int tics_per_sec = 0;
@@ -873,14 +847,6 @@ init(
 
   gdbroot->db->tmon = gdbroot->my_qid;
   gdbroot->is_tmon = 1;
-
-#ifdef OS_VMS
-  sts = lib$get_ef(&timer_flag);
-  if (EVEN (sts)) {
-    errh_Error("lib$get_ef, %m", sts);
-    exit(sts);
-  }
-#endif
 
   LstIni(&timer_lh);
   LstIni(&wrap_lh);

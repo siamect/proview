@@ -42,10 +42,6 @@
    This include file contains the internal datastructures and
    data entities in QDB.  */
 
-#if defined(OS_VMS)
-# pragma builtins
-#endif
-
 #if defined OS_POSIX
 # include <unistd.h>
 # include <sys/socket.h>
@@ -122,12 +118,7 @@ static const qcom_sQid qdb_cQimport	= {qdb_cIimport, 0};
 static const qcom_sQid qdb_cQexport	= {qdb_cIexport, 0};
 static const qcom_sQid qdb_cQmonitor	= {qdb_cImonitor, 0};
 
-#if defined OS_VMS
-#  define	qdb_cNameDatabase	"pwr_qdb"
-
-#  define	qdb_cNamePool		"pwr_qpool"
-#  define	qdb_cNameDbLock		"pwr_qdb_lock"
-#elif defined OS_LYNX
+#if defined OS_LYNX
 #  define	qdb_cNameDatabase	"/pwr_qdb"
 
 #  define	qdb_cNamePool		"/pwr_qpool"
@@ -442,28 +433,13 @@ typedef struct {
   int		(*cond_wait)(thread_sCond*, thread_sMutex*);
 } qdb_sLock;
 
-#if defined OS_VMS
-
-  typedef struct {
-    struct {
-      unsigned short	condition;
-      unsigned short	reserved;
-      unsigned int	id;
-    } enq;
-    qdb_tQname		name;
-    int			nlen;
-    int			waiting;
-  } qdb_sQlock;
-
-#elif defined OS_POSIX
-
+#if defined OS_POSIX
   typedef struct {
     int			pid;
     int			waiting;
     pthread_mutex_t     mutex;
     pthread_cond_t      cond;
   } qdb_sQlock;
-
 #endif
 
 typedef struct {

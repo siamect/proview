@@ -1307,11 +1307,7 @@ int CnvReadWbl::copy_tmp_file( const char *tmpfilename, ofstream& fp_to)
     fp_to.put(c);
   fclose(fp);
 
-#if defined OS_VMS
-  sprintf( cmd, "delete/noconf/nolog %s.*", tmpfilename);
-#else
   sprintf( cmd, "rm %s", tmpfilename);
-#endif
   system( cmd);
 
   return 1;

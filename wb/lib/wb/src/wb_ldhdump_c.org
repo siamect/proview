@@ -9,9 +9,6 @@
 #include <descrip.h>
 #include <float.h>
 #include <string.h>
-#ifdef OS_VMS
-#include <lib$routines.h>
-#endif
 #include "wb_ldhi.h"
 #include "wb_ldhdb.h"
 #include "wb_ldhdump.h"

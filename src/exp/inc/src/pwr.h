@@ -43,11 +43,7 @@
 /* pwr.h -- basic definitions for PROVIEW/R
  */
 
-#if defined(OS_VMS)
-# include <stdio.h>
-# include <time.h>
-# include <lib$routines.h>
-#elif defined OS_POSIX
+#if defined OS_POSIX
 # include <stdio.h>
 # include <stdlib.h>  /* EXIT_FAILURE */
 # include <time.h>
@@ -85,10 +81,6 @@ extern "C" {
 #   define pwr_dPacked
 # endif
 #endif
-
-#if defined OS_VMS && defined __cplusplus
-  namespace std {};
-#endif 
 
 #define pwr_dLittleEndian 1
 #define pwr_dBigEndian	  2
@@ -376,14 +368,6 @@ typedef union {
 #endif
   } s;
 } pwr_uPwrVersion;
-
-#if (defined OS_VMS) && (! defined _TIMESPEC_T_ && !defined TIMERS_INCLUDED)
-# define _TIMESPEC_T_
-  typedef struct timespec {
-    unsigned long tv_sec;
-    long	  tv_nsec;
-  } timespec_t;
-#endif
 
 /*_*
   @aref time Time
@@ -788,9 +772,6 @@ static const pwr_tDeltaTime pwr_cDtMin      = PWR_DTTIME_MIN;
 
 #ifdef PWR_NDEBUG
 # define pwr_Assert(a) ((void) 0)
-#elif defined OS_VMS
-# define pwr_Assert(a) ((a)?(void)0:(void)(printf("pwr assertion (%s) failed,\n    in file %s, at line %d\n",\
-			#a,__FILE__,__LINE__),lib$signal(8)))
 #else
 # define pwr_Assert(a) ((a)?(void)0:(void)(printf("pwr assertion (%s) failed,\n    in file %s, at line %d\n",\
 			#a,__FILE__,__LINE__),exit(EXIT_FAILURE)))

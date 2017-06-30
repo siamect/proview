@@ -43,11 +43,6 @@
 
 /* X Toolkit is compiled with member alignment */
 
-#if defined OS_VMS
-#pragma member_alignment save
-#pragma member_alignment
-#endif
-
 #include <X11/IntrinsicP.h>
 #include <X11/CoreP.h>
 #include <X11/CompositeP.h>
@@ -107,10 +102,6 @@ Widget ScrolledBrowCreate(
 );	
 
 void BrowCtxFromWidget( Widget w, void **ctx);
-
-#if defined OS_VMS
-#pragma member_alignment restore
-#endif
 
 #if defined __cplusplus
   }

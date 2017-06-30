@@ -39,7 +39,7 @@
 
 #include "pwr.h"
 
-#if defined OS_VMS || defined OS_POSIX
+#if defined OS_POSIX
 #include <pthread.h>
 
 typedef pthread_t	thread_s;

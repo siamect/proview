@@ -41,10 +41,6 @@
    This include file contains the internal datastructures and
    data entities in GDH.  */
 
-#if defined(OS_VMS)
-#pragma builtins
-#endif
-
 #if defined OS_POSIX
 # include <pthread.h>
 #endif
@@ -105,12 +101,7 @@
 
 #define	gdb_cVersion 7
 
-#if defined OS_VMS
-#  define	gdb_cNameDatabase	"pwr_gdb"
-#  define	gdb_cNamePool		"pwr_pool"
-#  define	gdb_cNameRtdb		"pwr_rtdb"
-#  define	gdb_cNameDbLock		"pwr_db_lock"
-#elif defined OS_LYNX
+#if defined OS_LYNX
 #  define	gdb_cNameDatabase	"/pwr_gdb"
 #  define	gdb_cNamePool		"/pwr_pool"
 #  define	gdb_cNameRtdb		"/pwr_rtdb"
@@ -134,14 +125,7 @@
 # define gdb_cMin_cclasses	300
 # define gdb_cMin_scObjects	300
 
-
-#if defined(OS_VMS)
-# define gdb_cMin_cvol_max	2000
-# define gdb_cMin_cvol_min	1900
-# define gdb_cMin_subServers	500
-# define gdb_cMin_subClients	2000
-# define gdb_cMin_sanServers	200
-#elif defined (OS_LYNX)
+#if defined (OS_LYNX)
 # define gdb_cMin_cvol_max	500
 # define gdb_cMin_cvol_min	400
 # define gdb_cMin_subServers	500

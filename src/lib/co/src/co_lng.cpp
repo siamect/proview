@@ -34,7 +34,6 @@
  * General Public License plus this exception.
  **/
 
-
 #include <string.h>
 #include <stdio.h>
 #include <locale.h>
@@ -544,22 +543,8 @@ void Lng::get_uid( char *in, char *out)
 {
   char result[200];
 
-#if defined OS_VMS
-  {
-    char dev[80], dir[80], file[80], type[80];
-    int version;
-    char c;
-
-    dcli_parse_filename( "pwr_exe:", dev, dir, file, type, &version);
-    sprintf( result, "%s%s", dev, dir);
-    c = result[strlen(result)-1];
-    sprintf( &result[strlen(result)-1], ".%s%c%s%", get_language_str(), 
-	     c, in);
-  }
-#else
   sprintf( result, "$pwr_exe/%s/%s", get_language_str(), in);
   dcli_translate_filename( result, result);
-#endif
   strcpy( out, result);
 }
 

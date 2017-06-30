@@ -38,17 +38,10 @@
 #include <string.h>
 #include <time.h>
 
-#if defined(OS_VMS)
-# include <lib$routines.h>
-# include <in.h>
-# include <inet.h>
-#endif
-
 #include "pwr.h"
 #include "rt_qcom.h"
 #include "rt_qdb.h"
 #include "rt_qdb_msg.h"
-
 
 main (int argc, char *argv[])
 {

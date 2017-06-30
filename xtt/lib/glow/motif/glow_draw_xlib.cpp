@@ -2270,10 +2270,8 @@ static int glow_read_color_file( const char *filename, draw_sColor **color_array
     printf( "** Opening color file %s\n", filename);
 
     fp.open( filename);
-#ifndef OS_VMS
     if ( !fp)
       return GLOW__FILEOPEN;
-#endif
 
     *color_array = (draw_sColor *) calloc( 300, sizeof( draw_sColor));
     *size = 0;

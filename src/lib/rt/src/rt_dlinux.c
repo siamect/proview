@@ -37,11 +37,6 @@
 /* rt_dlinux.c -- Encode Linux-data
    Functions to convert data to load in file, from linux to VMS format */
 
-
-#if defined(OS_VMS)
-static char dlinux_id = 0;
-#else
-
 #include <stdio.h>
 #include <string.h>
 
@@ -306,7 +301,5 @@ pwr_tBoolean (*dlinux[pwr_eTix_])() = {
   NULL,			/* pwr_eTix_ObjectIx	*/
   NULL,			/* pwr_eTix_RefId	*/
 };
-
-#endif
 
 #endif

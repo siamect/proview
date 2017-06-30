@@ -9,11 +9,6 @@
 #include <string.h>
 #include <time.h>
 #include <assert.h>
-#ifdef OS_VMS
-#include <descrip.h>
-#include <libdef>
-#include <lib$routines.h>
-#endif
 #include <X11/Intrinsic.h>
 #include "pwr.h"
 #include "wb_ldhi.h"

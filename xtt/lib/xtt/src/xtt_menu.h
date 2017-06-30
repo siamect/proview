@@ -152,16 +152,6 @@ typedef struct {
 # define pwr_BindXttClass(Class) {#Class, (xtt_sMethodBinding (*)[])pwr_g ## Class ## _XttMethods}
 # endif
 # define pwr_BindXttMethod(Method) {#Method, (pwr_tStatus (*)( xmenu_sMenuCall *))Method}
-#elif defined (OS_VMS)
-# define pwr_BindXttMethods(Class) xtt_sMethodBinding pwr_g## Class ##_XttMethods[]
-# define pwr_BindXttClasses(Type) xtt_sClassBinding pwr_g## Type ##_XttClassMethods[]
-# define pwr_BindXttClass(Class) {#Class, (xtt_sMethodBinding (*)[])pwr_g## Class ##_XttMethods}
-# define pwr_BindXttMethod(Method) {#Method, (pwr_tStatus (*)( xmenu_sMenuCall *))Method}
-#else
-# define pwr_BindXttMethods(Class) xtt_sMethodBinding pwr_g/**/Class/**/_XttMethods[]
-# define pwr_BindXttClasses(Type) xtt_sClassBinding pwr_g/**/Type/**/_XttClassMethods[]
-# define pwr_BindXttClass(Class) {"Class", pwr_g/**/Class/**/_XttMethods}
-# define pwr_BindXttMethod(Method) {"Method", (pwr_tStatus (*)())Method}
 #endif
 
 #define pwr_NullMethod {"", NULL}

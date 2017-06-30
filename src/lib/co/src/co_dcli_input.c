@@ -40,17 +40,7 @@
 
 /*_Include files_________________________________________________________*/
 
-#if defined(OS_VMS)
-# include <stdio.h>
-# include <stdlib.h>
-# include <chfdef.h>
-# include <string.h>
-# include <starlet.h>
-# include <iodef.h>   
-# include <descrip.h>
-# include <ssdef.h>
-# include <stdarg.h>
-#elif defined OS_POSIX
+#if defined OS_POSIX
 # include <stdio.h>
 # include <string.h>
 # include <termios.h>
@@ -483,11 +473,7 @@ int	dcli_get_input_string( 	dcli_sChannel	*chn,
 	int		recall_index = 0;
 	
 	if ( prompt != NULL)
-#if defined OS_VMS
-	  r_print( chn, "\n%s", prompt);
-#else
 	  r_print( chn, "%s", prompt);
-#endif
 
 	terminator = 0;
 	index = 0;
@@ -647,24 +633,7 @@ int	dcli_get_input_string( 	dcli_sChannel	*chn,
 * Description:	Gör en assign av s till kanalnummer chn
 *************************************************************************/
 int dcli_qio_assign( char *s, dcli_sChannel *chn)
-#ifdef OS_VMS
-{
-  static $DESCRIPTOR(device,"");
-  static char *stin = "SYS$OUTPUT:";
-  char   *devn;
-
-  /* Om input ska vara stdin, sätt stdinput */
-  if ( strcmp(s,"stdin") == 0) 
-    devn = stin; 
-  else
-    devn = s;
-
-  device.dsc$a_pointer = devn;
-  device.dsc$w_length  = strlen(devn);
-
-  return sys$assign(&device, (int *) chn,0,0);
-}
-#elif defined OS_POSIX
+#if defined OS_POSIX
 {
   int chan = -1;
   int sts;
@@ -702,11 +671,7 @@ int dcli_qio_assign( char *s, dcli_sChannel *chn)
 * Description:	Set attributes to a tty
 *************************************************************************/
 int dcli_qio_set_attr( dcli_sChannel *chn, int tmo)
-#if defined(OS_VMS)
-{
-  return DCLI__SUCCESS;
-}
-#elif defined OS_POSIX
+#if defined OS_POSIX
 {
   int chan;
   int sts;
@@ -742,11 +707,7 @@ int dcli_qio_set_attr( dcli_sChannel *chn, int tmo)
 * Description:	Reset the channel before exit
 *************************************************************************/
 int dcli_qio_reset( dcli_sChannel *chn)
-#if defined(OS_VMS)
-{
-  return DCLI__SUCCESS;
-}
-#elif defined OS_POSIX
+#if defined OS_POSIX
 {
   int chan;
   int sts;
@@ -783,23 +744,7 @@ int dcli_qio_reset( dcli_sChannel *chn)
 * Description:	Läser med qiow från chn till buf
 *************************************************************************/
 int dcli_qio_readw( dcli_sChannel *chn, char *buf, int len)
-#ifdef OS_VMS
-{
-  struct statusblk {
-		short condval;
-		short transcount;
-		int   devstat;
-		} stsblk;
-  static unsigned int code;
-  int	i;
-  int 	sts;
-
-  code  = IO$_READLBLK | IO$M_NOECHO | IO$M_NOFILTR;
-
-  sts = sys$qiow( 1, *chn, code, &stsblk,0,0,buf,len,0,0,0,0);
-  return sts;
-}
-#elif defined OS_POSIX
+#if defined OS_POSIX
 {
   int n = 0;
 
@@ -824,27 +769,7 @@ int dcli_qio_readw( dcli_sChannel *chn, char *buf, int len)
 * Description:	Läser med qio från chn till buf med timout-tid tmo (ms)
 *************************************************************************/
 int dcli_qio_read( dcli_sChannel *chn, int tmo, char *buf, int len)
-#ifdef OS_VMS
-{
-  struct statusblk {
-		short condval;
-		short transcount;
-		int   devstat;
-		} stsblk;
-  static unsigned int code;
-  static unsigned int sts;
-  int	i;
-
-  if ( tmo < 1000)
-    tmo = 1000;
-
-  code = IO$_READLBLK | IO$M_NOECHO | IO$M_NOFILTR | IO$M_TIMED;
-  sts = sys$qiow( 1, * (int *) chn, code, &stsblk,0,0,buf,len,tmo/1000,0,0,0);
-  if ( stsblk.condval == SS$_TIMEOUT) return 0;
-  if (ODD(sts)) return 1;
-  return sts;
-}
-#elif defined OS_POSIX
+#if defined OS_POSIX
 {
   int n;
 
@@ -870,20 +795,7 @@ int dcli_qio_read( dcli_sChannel *chn, int tmo, char *buf, int len)
 * Description:	Skriver med qiow från buf till chn
 *************************************************************************/
 int dcli_qio_writew( dcli_sChannel *chn, char *buf, int len)
-#ifdef OS_VMS
-{
-  struct statusblk {
-		short condval;
-		short transcount;
-		int   devstat;
-		} stsblk;
-  static unsigned int code;
-
-  code  = IO$_WRITELBLK | IO$M_NOECHO | IO$M_NOFILTR;
-  return sys$qiow( 0, *(int *)chn, code, &stsblk,0,0,buf,len,0,0,0,0);
-
-}
-#elif defined OS_POSIX
+#if defined OS_POSIX
 {
   if ( *(int *) chn == STDIN_FILENO)
     write( STDOUT_FILENO, buf, len);
@@ -908,25 +820,7 @@ int dcli_qio_writew( dcli_sChannel *chn, char *buf, int len)
 * Description:	Skriver med qio från buf till chn med timout-tid tmo (ms)
 *************************************************************************/
 int dcli_qio_write( dcli_sChannel *chn, int tmo, char *buf, int len)
-#ifdef OS_VMS
-{
-  struct statusblk {
-		short condval;
-		short transcount;
-		int   devstat;
-		} stsblk;
-  static unsigned int code;
-  static unsigned int sts;
-
-  if ( tmo < 1000)
-    tmo = 1000;
-
-  code  = IO$_WRITELBLK | IO$M_NOECHO | IO$M_NOFILTR | IO$M_TIMED;
-  sts   = sys$qiow( 0, (int *)chn, code, &stsblk,0,0,buf,len,tmo/1000,0,0,0);
-  return stsblk.condval == SS$_TIMEOUT ? 0 : 1;        
-
-}
-#elif defined OS_POSIX
+#if defined OS_POSIX
 {
   if ( *(int *)chn == STDIN_FILENO)
     write( STDOUT_FILENO, buf, len);

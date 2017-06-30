@@ -157,10 +157,8 @@ int FlowCtx::save( char *filename, flow_eSaveMode mode)
   ofstream	fp;
 
   fp.open( filename);
-#ifndef OS_VMS
   if ( !fp)
     return FLOW__FILEOPEN;
-#endif
 
   fp << int(flow_eSave_Ctx) << endl;
 
@@ -216,10 +214,8 @@ int FlowCtx::open( char *filename, flow_eSaveMode mode)
   char		dummy[40];
 
   fp.open( filename);
-#ifndef OS_VMS
   if ( !fp)
     return FLOW__FILEOPEN;
-#endif
 
   for (;;)
   {

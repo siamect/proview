@@ -38,10 +38,6 @@
 
    Runs the PLC programs of a node.  */
 
-#if defined(OS_VMS)
-#elif defined(OS_LYNX)
-#endif
-
 #include <stdio.h>
 #include <sys/time.h>
 #include <sys/resource.h>
@@ -360,13 +356,6 @@ init_process ( char *name)
     sts = gdh_ObjidToPointer(sim_oid, (void *)&pp->SimConfig);
     if (EVEN(sts)) return 0;
   }
-
-
-#if defined OS_VMS
-  qdb->thread_lock.isThreaded = 1;
-  qdb->thread_lock.cond_signal = thread_CondSignal;
-  qdb->thread_lock.cond_wait = thread_CondWait;
-#endif
 
   qcom_CreateQ(&sts, &pp->eventQ, NULL, "plcEvent");
   if (EVEN(sts)) {

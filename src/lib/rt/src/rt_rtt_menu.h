@@ -37,15 +37,8 @@
 #ifndef rt_rtt_menu_h
 #define rt_rtt_menu_h
 
-#ifdef OS_VMS
-# include <stdio.h>
-# include <string.h>
-# include <chfdef.h>
-# include <signal.h>
-#else
-# include <stdio.h>
-# include <string.h>
-#endif
+#include <stdio.h>
+#include <string.h>
 
 #include "rt_gdh.h"
 #include "rt_rtt.h"

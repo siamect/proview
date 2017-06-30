@@ -52,23 +52,6 @@
 
 /*_Include files_________________________________________________________*/
 
-#ifdef  OS_VMS
-#include <ssdef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <iodef.h>
-#include <descrip.h>
-#include <psldef.h>
-#include <libdtdef.h>
-#include <lib$routines.h>
-#include <pams_c_process.h>
-#include <pams_c_type_class.h>
-#include <pams_c_return_status.h>
-#include <sbs_msg_def.h>
-#endif
-
 #include "pwr_class.h"
 #include "pwrs_c_node.h"
 #include "rs_remote_mq.h"

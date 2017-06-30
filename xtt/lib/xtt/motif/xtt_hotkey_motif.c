@@ -150,15 +150,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#if defined (OS_VMS)
-# pragma nostandard
-#endif
 #include <X11/Intrinsic.h>
 #include <X11/StringDefs.h>
 #include <X11/keysym.h>
-#if defined (OS_VMS)
-# pragma standard
-#endif
 #include "xtt_hotkey_motif.h"
 
 #define CLONESTR(str)	    ((char*)strcpy(XtMalloc(strlen(str)+1),(str)))

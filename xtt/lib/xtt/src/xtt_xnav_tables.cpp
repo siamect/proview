@@ -323,7 +323,6 @@ int XNav::show_nethandler()
       switch ( np->os) {
         case co_eOS_Lynx: strcat( t.elem[t.elem_cnt].fix_str, "_Lynx"); break;
         case co_eOS_Linux: strcat( t.elem[t.elem_cnt].fix_str, "_Linux"); break;
-        case co_eOS_VMS: strcat( t.elem[t.elem_cnt].fix_str, "_VMS"); break;
         case co_eOS_MacOS: strcat( t.elem[t.elem_cnt].fix_str, "_MacOS"); break;
         case co_eOS_FreeBSD: strcat( t.elem[t.elem_cnt].fix_str, "_FreeBSD"); break;
         case co_eOS_OpenBSD: strcat( t.elem[t.elem_cnt].fix_str, "_OpenBSD"); break;

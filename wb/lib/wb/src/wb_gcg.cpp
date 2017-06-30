@@ -880,40 +880,6 @@ static pwr_tStatus gcg_get_build_host(
 	else
 	  return GSX__NOBUILDHOST;
 
-#if defined OS_VMS
-	{
-	  unsigned int attr = LNM$M_CASE_BLIND;
-	  struct dsc$descriptor tabdsc;
-	  char *tabname = "LNM$DCL_LOGICAL";
-	  struct dsc$descriptor logdsc;
-	  short namelen;
-	  itemdsc itemlist[2];
-
-	  itemlist[0].buflen = bufsize - 1;
-	  itemlist[0].itemcode = LNM$_STRING;
-	  itemlist[0].buf = buf; 
-	  itemlist[0].retlen = &namelen;
-
-	  itemlist[1].buflen = 0;
-	  itemlist[1].itemcode = 0;
-	  itemlist[1].buf = NULL; 
-	  itemlist[1].retlen = NULL;
-
-	  tabdsc.dsc$w_length   = strlen(tabname);
-	  tabdsc.dsc$b_dtype = DSC$K_DTYPE_T;
-	  tabdsc.dsc$b_class = DSC$K_CLASS_S;
-	  tabdsc.dsc$a_pointer = tabname;
-
-	  logdsc.dsc$w_length   = strlen(logname);
-	  logdsc.dsc$b_dtype = DSC$K_DTYPE_T;
-	  logdsc.dsc$b_class = DSC$K_CLASS_S;
-	  logdsc.dsc$a_pointer = logname;
-
-	  sts = sys$trnlnm(&attr, &tabdsc, &logdsc, NULL, itemlist);
-	  if (ODD(sts)) 
-	    buf[namelen] = '\0';  
-	}
-#else
 	{
 	  char *value;
 
@@ -922,7 +888,6 @@ static pwr_tStatus gcg_get_build_host(
 
 	  strncpy( value, buf, bufsize);
 	}
-#endif
 
 	return sts;
 }
@@ -969,102 +934,6 @@ static int gcg_cc(
 )
 { 
 	char		build_host[32];
-#if defined OS_VMS
-	int		sts;
-	static char	cmd[256];
-	char		queue[32];
-	$DESCRIPTOR(cmd_desc,cmd);
-        unsigned long 	cli_flag = CLI$M_NOWAIT;
-	pwr_tBoolean  	batch;
-	char		systemname[80];
-	char		systemgroup[80];
-
-	utl_get_systemname( systemname, systemgroup);
-
-        if (IS_UNIX(os)) {
-	  sts = gcg_get_build_host(os, build_host, sizeof(build_host));
-	  if (EVEN(sts)) {
-	    printf("Couldn't get build host for pwr_mOpSys = %d\n", os);
-	    return sts;
-	  }
-	}
-
-	if ( os & pwr_mOpSys_VAX_VMS)
-	{
-#if defined(VAX) || defined(__VAX)
-	  batch = 0;
-#else
-	  batch = 1;
-	  strcpy(queue, "PWR_VAX_VMS_BATCH");
-#endif
-	}
-	else if ( os & pwr_mOpSys_VAX_ELN)
-	{
-#if defined(VAX) || defined(__VAX)
-	  batch = 0;
-#else
-	  batch = 1;
-	  strcpy(queue, "PWR_VAX_ELN_BATCH");
-#endif
-	}
-	else if ( os & pwr_mOpSys_AXP_VMS)
-	{
-#if defined(__ALPHA) && defined(__VMS) 
-	  batch = 0;
-#else
-	  batch = 1;
-	  strcpy(queue, "PWR_AXP_VMS_BATCH");
-#endif
-	}
-	else if (IS_UNIX(os))
-	  batch = 0;
-	else
-	  return GSX__UNKNOPSYS;
-
-	if (batch) {
-	  sts = utl_BatchFindQueue(queue);
-	  if (EVEN(sts)) {
-	    printf("- ,Could not find batch queue: %s\n", queue);
-	    return sts;
-	  }
-	}
-
-	if (p2 == NULL) {
-	  p2 = "Dummy";
-	}
-	if (p3 == NULL) {
-	  p3 = "Dummy";
-	}
-
-	if (batch) {
-	  sprintf(cmd, "%s %s %s %d %d %s %d %s \"%s\"", "mc pwr_exe:pwr_batch",
-	    queue, CC_COMMAND, gcg_debug, filetype, p1, os, p2, p3);
-#if 0
-	} else if (IS_UNIX(os)) {
- 	  char *p = cmd;
-
-	  sprintf( cmd, "rsh %s %s %d %d %s %d %s %s", 
-	    build_host, CC_COMMAND_UNIX, gcg_debug, filetype, p1, os, p2, p3);
-	  while (*p++)
-	    *p = tolower(*p);
-#endif
-	} else {
- 	  sprintf( cmd, "@%s %d %d %s %d %s \"%s\" \"%s\"", 
-	    CC_COMMAND, gcg_debug, filetype, p1, os, p2, p3, systemname);
-	}
-
-	if ( spawn == GCG_SPAWN && IS_NOT_UNIX(os)) {
-	  sts = lib$spawn (&cmd_desc , 0 , 0 , &cli_flag );
-	  if (EVEN(sts)) {
-	    printf("** Error in lib$spawn, when creating subprocess.\n");
-	    return sts;
-	  }
-	} else {
-	  sts = system( cmd);
-	  if ( EVEN(sts)) return sts;
-	}
-
-#else
 	char		systemname[80];
 	int		sts;
 	static pwr_tCmd	cmd;
@@ -1142,7 +1011,6 @@ static int gcg_cc(
 	  printf("NYI...\n");
 	  gcg_get_build_host(os, build_host, sizeof(build_host));
 	}
-#endif
 	return GSX__SUCCESS;
 }
 

@@ -81,11 +81,6 @@ ini_RcReadAndSet(
   const char		*nodename,
   int			busid
 ) {
-
-#ifdef OS_VMS
-#pragma message disable NEEDCONSTEXT
-#endif
-
   ini_sRc 		def_rc[] = {
     {"cacheTrim",  	(int *)&gdbroot->db->cache_trim_int, 	1000},
     {"sancAdd",     	(int *)&gdbroot->db->sanc_add_int, 	1000},
@@ -94,10 +89,6 @@ ini_RcReadAndSet(
     {"subcCheck",	(int *)&gdbroot->db->subc_chk_int, 	3000},
     {NULL,NULL,0}
   };
-
-#ifdef OS_VMS
-#pragma message enable NEEDCONSTEXT
-#endif
 
   FILE 			*fp;
   ini_sRc 		*rc;

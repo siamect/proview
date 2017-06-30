@@ -54,25 +54,6 @@
 #pragma message disable GLOBALEXT
 #endif
 
-#ifdef OS_VMS
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <float.h>
-#include <descrip.h>
-#include <libdef.h>
-#include <starlet.h>
-#include <lib$routines.h>
-/*
-#include <pams_c_entry_point.h>
-#include <pams_c_process.h>
-#include <pams_c_type_class.h>
-#include <pams_c_return_status.h>
-#include <sbs_msg_def.h>
-*/
-#endif
-
 #if defined OS_POSIX
 #include <signal.h>
 #include <stdio.h>
@@ -398,9 +379,6 @@ static pwr_tStatus	logg_open_file( logg_t_loggconf_list	*conflist_ptr,
 	  if (csts >= 0)
 	  {
 	    conflist_ptr->loggconf->FileOpenCount++;
-#if defined OS_VMS
-	    fgetname( conflist_ptr->outfile, filename);
-#endif
 	    errh_CErrLog( REM__LOGGFILEOPEN, errh_ErrArgAF(filename), NULL);
 	    conflist_ptr->file_open = 1;
 	    return REM__SUCCESS;

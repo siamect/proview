@@ -39,16 +39,7 @@
 
 /*_Include files_________________________________________________________*/
 
-#if defined(OS_VMS)
-# include <stdio.h>
-# include <chfdef.h>
-# include <string.h>
-# include <starlet.h>
-# include <iodef.h>   
-# include <descrip.h>
-# include <latdef.h>   
-# include <ssdef.h>
-#elif defined OS_POSIX
+#if defined OS_POSIX
 # include <stdio.h>
 # include <string.h>
 # include <termios.h>
@@ -73,17 +64,7 @@
 /***********************  D E F I N E ' S *******************************/
 #define ODD(a)	(((int)(a) & 1) != 0)
 #define EVEN(a)	(((int)(a) & 1) == 0)
-/***********************  T Y P E D E F ' S *****************************/
-/***********************  G L O B A L   V A R I A B L E S ***************/
-/***********************  L O C A L   V A R I A B L E S *****************/
 
-/*__Local function prototypes_________________________________________*/
-
-#if defined(OS_VMS)
-static int qio_ltconnect( int *chn);
-static int qio_ltdisconnect( int *chn);
-#endif
-
 /************************************************************************
 *
 * Name:	qio_assign(char *s, int *chn)
@@ -97,25 +78,7 @@ static int qio_ltdisconnect( int *chn);
 * Description:	Gör en assign av s till kanalnummer chn
 *************************************************************************/
 int qio_assign( char *s, int *chn)
-#ifdef OS_VMS
-{
-	/* Deklarationer som behövs i VMS */
-	static $DESCRIPTOR(device,"");
-	static char *stin = "SYS$OUTPUT:";
-	char   *devn;
-
-	/* Om input ska vara stdin, sätt stdinput */
-	if ( strcmp(s,"stdin") == 0) 
-		devn = stin; 
-	else
-		devn = s;
-
-	device.dsc$a_pointer = devn;
-	device.dsc$w_length  = strlen(devn);
-
-	return sys$assign(&device, chn,0,0);
-}
-#elif defined OS_POSIX
+#if defined OS_POSIX
 {
 	int chan = -1;
   	int sts;
@@ -153,11 +116,7 @@ int qio_assign( char *s, int *chn)
 * Description:	Set rtt attributes to a tty
 *************************************************************************/
 int qio_set_attr( int *chn)
-#if defined(OS_VMS)
-{
-	return RTT__SUCCESS;
-}
-#elif defined OS_POSIX
+#if defined OS_POSIX
 {
 	int chan;
   	int sts;
@@ -193,11 +152,7 @@ int qio_set_attr( int *chn)
 * Description:	Reset the channel before exit
 *************************************************************************/
 int qio_reset( int *chn)
-#if defined(OS_VMS)
-{
-	return RTT__SUCCESS;
-}
-#elif defined OS_POSIX
+#if defined OS_POSIX
 {
 	int chan;
   	int sts;
@@ -234,27 +189,7 @@ int qio_reset( int *chn)
 * Description:	Läser med qiow från chn till buf
 *************************************************************************/
 int qio_readw( int *chn, char *buf, int len)
-#ifdef OS_VMS
-{
-	struct statusblk {
-		short condval;
-		short transcount;
-		int   devstat;
-		} stsblk;
-	static unsigned int code;
-	int	i;
-	int 	sts;
-
-	code  = IO$_READLBLK | IO$M_NOECHO | IO$M_NOFILTR;
-	for ( i = 0; i < RTT_QIO_RETRY; i++)
-	{
-	  sts = sys$qiow( 1, *chn, code, &stsblk,0,0,buf,len,0,0,0,0);
-	  if ( ODD(sts)) return sts;
-	}
-	rtt_exit_now(1, sts);
-	return 1;
-}
-#elif defined OS_POSIX
+#if defined OS_POSIX
 {
 	int n = 0;
 
@@ -279,32 +214,7 @@ int qio_readw( int *chn, char *buf, int len)
 * Description:	Läser med qio från chn till buf med timout-tid tmo (ms)
 *************************************************************************/
 int qio_read( int *chn, int tmo, char *buf, int len)
-#ifdef OS_VMS
-{
-	struct statusblk {
-		short condval;
-		short transcount;
-		int   devstat;
-		} stsblk;
-	static unsigned int code;
-	static unsigned int sts;
-	int	i;
-
-	if ( tmo < 1000)
-	  tmo = 1000;
-
-	code  = IO$_READLBLK | IO$M_NOECHO | IO$M_NOFILTR | IO$M_TIMED;
-	for ( i = 0; i < RTT_QIO_RETRY; i++)
-	{
-	  sts   = sys$qiow( 1, *chn, code, &stsblk,0,0,buf,len,tmo/1000,0,0,0);
-          if ( stsblk.condval == SS$_TIMEOUT) return 0;
-	  if (ODD(sts)) return 1;
-	}
-	rtt_exit_now(1, sts);
-	return 1;
-
-}
-#elif defined OS_POSIX
+#if defined OS_POSIX
 {
 	int n;
 
@@ -315,63 +225,7 @@ int qio_read( int *chn, int tmo, char *buf, int len)
 	return 1;
 }
 #endif
-
-/************************************************************************
-*
-* Name:	qio_ltconnect(int chn)
-*
-* Type:	int
-*
-* TYPE		PARAMETER	IOGF	DESCRIPTION
-* int		chn         I       Kanal
-*
-* Description:	Väntar med qio på en LAT-service
-*************************************************************************/
-#ifdef OS_VMS
-static int qio_ltconnect( int *chn)
-{
-struct statusblk {
-	short condval;
-	short transcount;
-	int   devstat;
-	} stsblk;
-static unsigned int code;
-static unsigned int sts;
 
-	code = IO$_TTY_PORT | IO$M_LT_CONNECT; /* Vänta på LAT */
-	sts   = sys$qiow( 0, *chn, code, &stsblk,0,0,0,0,0,0,0,0);
-	return sts;
-}
-#endif
-
-/************************************************************************
-*
-* Name:	qio_ltdisconnect(int chn)
-*
-* Type:	int
-*
-* TYPE		PARAMETER	IOGF	DESCRIPTION
-* int		chn         I       Kanal
-*
-* Description:	Kopplar ned en LAT LAT-service
-*************************************************************************/
-#ifdef OS_VMS
-static int qio_ltdisconnect( int *chn)
-{
-struct statusblk {
-	short condval;
-	short transcount;
-	int   devstat;
-	} stsblk;
-static unsigned int code;
-static unsigned int sts;
-
-	code = IO$_TTY_PORT | IO$M_LT_DISCON; /* Koppla ned LAT */
-	sts   = sys$qiow( 0, *chn, code, &stsblk,0,0,0,0,0,0,0,0);
-	return sts;
-}
-#endif
-
 /************************************************************************
 *
 * Name:	qio_writew(int chn, char *buf, int len)
@@ -386,20 +240,7 @@ static unsigned int sts;
 * Description:	Skriver med qiow från buf till chn
 *************************************************************************/
 int qio_writew( int *chn, char *buf, int len)
-#ifdef OS_VMS
-{
-	struct statusblk {
-		short condval;
-		short transcount;
-		int   devstat;
-		} stsblk;
-    static unsigned int code;
-
-	code  = IO$_WRITELBLK | IO$M_NOECHO | IO$M_NOFILTR;
-	return sys$qiow( 0, *chn, code, &stsblk,0,0,buf,len,0,0,0,0);
-
-}
-#elif defined OS_POSIX
+#if defined OS_POSIX
 {
 	if ( *chn == STDIN_FILENO)
 	  write( STDOUT_FILENO, buf, len);
@@ -424,25 +265,7 @@ int qio_writew( int *chn, char *buf, int len)
 * Description:	Skriver med qio från buf till chn med timout-tid tmo (ms)
 *************************************************************************/
 int qio_write( int *chn, int tmo, char *buf, int len)
-#ifdef OS_VMS
-{
-	struct statusblk {
-		short condval;
-		short transcount;
-		int   devstat;
-		} stsblk;
-    static unsigned int code;
-    static unsigned int sts;
-
-	if ( tmo < 1000)
-	  tmo = 1000;
-
-	code  = IO$_WRITELBLK | IO$M_NOECHO | IO$M_NOFILTR | IO$M_TIMED;
-	sts   = sys$qiow( 0, chn, code, &stsblk,0,0,buf,len,tmo/1000,0,0,0);
-        return stsblk.condval == SS$_TIMEOUT ? 0 : 1;        
-
-}
-#elif defined OS_POSIX
+#if defined OS_POSIX
 {
 	if ( *chn == STDIN_FILENO)
 	  write( STDOUT_FILENO, buf, len);

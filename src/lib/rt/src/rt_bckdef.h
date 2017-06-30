@@ -34,10 +34,6 @@
  * General Public License plus this exception.
  */
 
-#if defined(OS_VMS)
-#  include <descrip.h>
-#endif
-
 #include "pwr.h"
 #include "rt_net.h"
 
@@ -50,13 +46,6 @@
 #define	BCK_DEFAULT_SLOW 600
 #define BCK_DEFAULT_FAST 100
 
-/* Backup process names */
-
-#if defined(OS_VMS)
-#  define BCK_FILE_PROC_NAME "BCK file proc"
-#  define BCK_FAST_PROC_NAME "BCK fast proc"
-#  define BCK_SLOW_PROC_NAME "BCK slow proc"
-#endif
 /**************************/
 /* File format definition */
 /**************************/
@@ -159,18 +148,7 @@ typedef struct {
 	pwr_tUInt32     size;           /* Size of data */
 	} bck_t_writeheader;
 
-
-#if defined (OS_VMS)
-
-#  define BCK_EFC	(32*3)		/* First flag of EF cluster 3 */
-#  define BCK_EFC_NAME	"BCK_EFC"	/* Name of EF cluster */
-#  define BCK_ACTIVATE	BCK_EFC		/* Forced activation flag */
-#  define BCK_WRITE_DONE (BCK_EFC+1)	/* write done flag */
-
-#elif defined OS_POSIX
-
+#if defined OS_POSIX
 #  define SIG_BCK_FORCE (SIGRTMIN + 1)        /* forced activation sig  */
 #  define SIG_BCK_WRITE_DONE (SIGRTMIN + 2)   /* backup done            */
-
 #endif
-

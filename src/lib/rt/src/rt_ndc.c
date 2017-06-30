@@ -291,47 +291,7 @@ decode_null (
   return FALSE;
 }    
 
-#if defined(OS_VMS)
-/* .  */
-
-static pwr_tBoolean
-encode_sfloat (
-  int	count,
-  int	asize,
-  char	*tp,
-  char	*sp,
-  int	*size
-)
-{
-  union vax_f_le	*vp;
-  union i3e_s_le	i3e;
-
-  for (; count > 0 && *size >= sizeof(float); count--) {
-    vp = ((union vax_f_le *)sp);
-    
-    if (vp->b.f22_16 == 0x7f && vp->b.exp == 0xff && vp->b.f15_0 == 0xffff) {  /* High value.  */
-      i3e.i = 0, i3e.v.exp = 0xff;
-    } else if (vp->b.f22_16 == 0 && vp->b.exp == 0 && vp->b.f15_0 == 0) {  /* Low value.  */
-      i3e.i = 0;
-    } else {
-      i3e.v.exp	    = vp->b.exp - VAX_F_BIAS + I3E_S_BIAS;
-      i3e.v.f15_0   = vp->b.f15_0;
-      i3e.v.f22_16  = vp->b.f22_16;
-    }
-
-    i3e.b.sign = vp->b.sign;
-
-    ENDIAN_SWAP_INT(tp, &i3e.i);
-    tp += sizeof(float);
-    sp += sizeof(float);
-    *size -= sizeof(float);
-  }
-
-  return TRUE;
-}    
-
-#elif (defined OS_POSIX) && (defined(HW_X86) || defined(HW_X86_64) || defined(HW_ARM))
-
+#if (defined OS_POSIX) && (defined(HW_X86) || defined(HW_X86_64) || defined(HW_ARM))
 static pwr_tBoolean
 encode_sfloat (
   int	count,
@@ -353,55 +313,7 @@ encode_sfloat (
 }
 #endif
 
-#if defined(OS_VMS)
-/* .  */
-
-static pwr_tBoolean
-decode_sfloat (
-  int	count,
-  int	asize,
-  char	*tp,
-  char	*sp,
-  int	*size
-)
-{
-  union vax_f_le	*vp;
-  union i3e_s_le	i3e;
-
-  for (; count > 0 && *size >= sizeof(float); count--) {
-    vp = ((union vax_f_le *)tp);
-    ENDIAN_SWAP_INT(&i3e.i, sp);
-    
-    /* PPC some times sets the sign bit for zero (-0), which isn't valid
-     * for f-float. ML 971025
-     */ 
-    if (i3e.i == 0x80000000)
-      i3e.i = 0; /* Clear sign bit */
-
-    if (i3e.b.f22_0 == 0x0 && i3e.b.exp == 0xff) {  /* High value.  */
-      vp->b.f22_16 = 0x7f;
-      vp->b.exp	   = 0xff;
-      vp->b.f15_0  = 0xffff;
-    } else if (i3e.b.f22_0 == 0x0 && i3e.b.exp == 0x00) {  /* Low value.  */
-      vp->i = 0;
-    } else {
-      vp->b.exp	   = i3e.v.exp - I3E_S_BIAS + VAX_F_BIAS;
-      vp->b.f22_16 = i3e.v.f22_16;
-      vp->b.f15_0  = i3e.v.f15_0;
-    }
-
-    vp->b.sign = i3e.b.sign;
-
-    tp += sizeof(float);
-    sp += sizeof(float);
-    *size -= sizeof(float);
-  }
-
-  return TRUE;
-}    
-
-#elif (defined OS_POSIX) && (defined(HW_X86) || defined(HW_X86_64) || defined(HW_ARM))
-
+#if (defined OS_POSIX) && (defined(HW_X86) || defined(HW_X86_64) || defined(HW_ARM))
 static pwr_tBoolean
 decode_sfloat(
   int	count,

@@ -83,11 +83,7 @@ int main (int argc, char **argv)
   } else
     strcpy(filename, argv[1]);
 
-#if defined OS_VMS
-  f = fopen (filename, "rb", "shr=upd");
-#else
   f = fopen (filename, "rb");
-#endif
   if (f == NULL) {
     perror ("fopen");
     return 1;

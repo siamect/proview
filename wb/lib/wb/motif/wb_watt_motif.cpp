@@ -36,14 +36,6 @@
 
 /* wb_watt.cpp -- Display object attributes */
 
-#if defined OS_VMS && defined __ALPHA
-# pragma message disable (NOSIMPINT,EXTROUENCUNNOBJ)
-#endif
-
-#if defined OS_VMS && !defined __ALPHA
-# pragma message disable (LONGEXTERN)
-#endif
-
 #include "glow_std.h"
 
 #include <stdio.h>

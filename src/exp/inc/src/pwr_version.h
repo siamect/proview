@@ -48,9 +48,7 @@
 # include "pwr.h"
 #endif
 
-#if defined OS_VMS
-# define pwrv_cOpSys              "OpenVMS"
-#elif defined OS_LYNX
+#if defined OS_LYNX
 # define pwrv_cOpSys              "LynxOS"
 #elif defined OS_LINUX
 # define pwrv_cOpSys              "Linux"

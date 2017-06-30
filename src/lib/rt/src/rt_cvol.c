@@ -40,11 +40,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#if defined(OS_VMS)
-# include <descrip.h>
-# include <lib$routines.h>
-#endif
-
 #include "pwr.h"
 #include "pwr_class.h"
 #include "rt_gdh_msg.h"

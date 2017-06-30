@@ -38,12 +38,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef OS_VMS
-# include <starlet.h>
-# include <lib$routines.h>
-# include <tis.h>
-#endif
-
 #include "pwr.h"
 #include "co_errno.h"
 #include "rt_errh.h"
@@ -56,19 +50,10 @@ sync_CondInit (
   thread_sCond	*cp
 )
 {
-
 #if defined OS_LYNX && defined PWR_LYNX_30
-
   return errno_Pstatus(pthread_cond_init(&cp->c, NULL));
-
 #elif defined OS_POSIX
-
   return errno_Status(pthread_cond_init(&cp->c, NULL));
-
-#elif defined OS_VMS
-
-  return errno_Status(tis_cond_init(&cp->c));
-
 #else
 # error Not defined for this platform !
 #endif
@@ -79,19 +64,12 @@ sync_CondSignal (
   thread_sCond	*cp
 )
 {
-
 #if defined OS_LYNX && defined PWR_LYNX_30
   cp->f = 1;
   return errno_Pstatus(pthread_cond_signal(&cp->c));
-
 #elif defined OS_POSIX
   cp->f = 1;
   return errno_Status(pthread_cond_signal(&cp->c));
-
-#elif defined OS_VMS
-
-  return errno_Status(tis_cond_signal(&cp->c));
-
 #else
 # error Not defined for this platform !
 #endif
@@ -102,19 +80,10 @@ sync_MutexInit (
   thread_sMutex		*mp
 )
 {
-
 #if defined OS_LYNX && defined PWR_LYNX_30
-
   return errno_Pstatus(pthread_mutex_init(mp, NULL));
-
 #elif defined OS_POSIX
-
   return errno_Status(pthread_mutex_init(mp, NULL));
-
-#elif defined OS_VMS
-
-  return errno_Status(tis_mutex_init(mp));
-
 #else
 # error Not defined for this platform !
 #endif
@@ -125,19 +94,10 @@ sync_MutexLock (
   thread_sMutex		*mp
 )
 {
-
 #if defined OS_LYNX && defined PWR_LYNX_30
-
   return errno_Pstatus(pthread_mutex_lock(mp));
-
 #elif defined OS_POSIX
-
   return errno_Status(pthread_mutex_lock(mp));
-
-#elif defined OS_VMS
-
-  return errno_Status(tis_mutex_lock(mp));
-
 #else
 # error Not defined for this platform !
 #endif
@@ -149,21 +109,11 @@ sync_MutexUnlock (
   thread_sMutex		*mp
 )
 {
-
 #if defined OS_LYNX && defined PWR_LYNX_30
-
   return errno_Pstatus(pthread_mutex_unlock(mp));
-
 #elif defined OS_POSIX
-
   return errno_Status(pthread_mutex_unlock(mp));
-
-#elif defined OS_VMS
-
-  return errno_Status(tis_mutex_unlock(mp));
-
 #else
 # error Not defined for this platform !
 #endif
-
 }

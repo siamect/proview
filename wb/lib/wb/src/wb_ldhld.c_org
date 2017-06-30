@@ -8,10 +8,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-#ifdef OS_VMS
-#include <descrip.h>
-#include <lib$routines.h>
-#endif
 
 #include <X11/Intrinsic.h>
 

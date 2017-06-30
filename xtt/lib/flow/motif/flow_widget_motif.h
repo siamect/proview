@@ -41,11 +41,6 @@
   extern "C" {
 #endif
 
-#if defined OS_VMS
-#pragma member_alignment save
-#pragma member_alignment
-#endif
-
 #include <X11/CoreP.h>
 #include <X11/CompositeP.h>
 
@@ -99,11 +94,7 @@ Widget ScrolledFlowCreate(
         int (*init_proc)(FlowCtx *ctx, void *client_data),
 	void *client_data, 
 	Widget *flow_w
-);	
-
-#if defined OS_VMS
-#pragma member_alignment restore
-#endif
+);
 
 #if defined __cplusplus
   }

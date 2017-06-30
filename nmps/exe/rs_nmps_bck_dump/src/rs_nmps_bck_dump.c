@@ -53,18 +53,6 @@
 
 /*_Include filer_________________________________________________________*/
 
-#ifdef OS_VMS
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <float.h>
-#include <libdef.h>
-#include <starlet.h>
-#include <lib$routines.h>
-#include <descrip.h>
-#endif
-
 #include "pwr.h"
 #include "pwr_baseclasses.h"
 #include "pwr_nmpsclasses.h"
@@ -574,11 +562,7 @@ static pwr_tStatus	nmpsbck_read( bck_ctx	bckctx)
 	pwr_tStatus		bckfile1_sts;
 
 	/* Open file 1 */
-#if defined(OS_VMS)
-	bckfile1 = fopen( bckctx->bckconfig->BackupFile, "r+", "shr=get");
-#else
 	bckfile1 = fopen( bckctx->bckconfig->BackupFile, "r+");
-#endif
 	if (bckfile1 == NULL)
 	  bckfile1_sts = NMPS__FILEREAD;
 	bckfile1_sts = nmpsbck_check_file( bckctx, bckfile1, &record_count, record_start,

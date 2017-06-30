@@ -83,11 +83,6 @@
 #include "rt_mh_msg.h"
 #include "rt_gdh_msg.h"
 
-
-#if defined OS_VMS
-# include <descrip.h>
-#endif
-
 #include <stdio.h>
 #include <ctype.h>
 

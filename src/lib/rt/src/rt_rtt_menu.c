@@ -37,34 +37,17 @@
 /* rt_rtt_menu.c 
    This module contains routines for handling of menues in rtt. */
 
-
 #define RTT_MENU_MODULE
 #define RTT_ISAREF 0x99990000
 
 /*_Include files_________________________________________________________*/
 
-
-
-#if defined(OS_VMS)
-# include <stdio.h>
-# include <stdarg.h>
-# include <stdlib.h>
-# include <chfdef.h>
-# include <signal.h>
-# include <string.h>
-# include <float.h>
-# include <descrip.h>
-# include <starlet.h>
-# include <lib$routines.h>
-# include <processes.h>
-#else
-# include <stdarg.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <signal.h>
-# include <string.h>
-# include <float.h>
-#endif
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <signal.h>
+#include <string.h>
+#include <float.h>
 
 #include "pwr.h"
 #include "pwr_class.h"
@@ -405,13 +388,6 @@ int	rtt_initialize( char	*username,
 	sts = rtt_get_nodename( rtt_node, sizeof(rtt_node));
 	if ( rtt_gdh_started)
 	  sts = rtt_get_system_name( rtt_sys, sizeof(rtt_sys));
-#ifdef OS_VMS
-	{
-	  unsigned long		ident;
-	  sts = rttvms_get_uic( (int *)&ident);
-          sts = rttvms_get_identname( ident, rtt_ident);
-	}
-#endif
 
 	rtt_parse_mainmenu( mainmenu_title);
 
@@ -8398,24 +8374,6 @@ int	rtt_logon_pict( unsigned long *chn,
 *
 **************************************************************************/
 
-#ifdef OS_VMS
-void rtt_error_msg(
-			unsigned long 	sts)
-{
-	static int msgsts;
-	static int msglen;
-	static char msg[256];
-	static $DESCRIPTOR(msgdesc, msg);
-
-	if (EVEN(sts))
-	{
-	  msgsts = sts;
-	  lib$sys_getmsg(&msgsts, &msglen, &msgdesc, 0, 0);
-	  msg[msglen]='\0';
-	  rtt_printf("%s\n\r", msg);
-	}
-}
-#else
 void rtt_error_msg( unsigned long 	sts)
 {
 	if (EVEN(sts))
@@ -8423,7 +8381,6 @@ void rtt_error_msg( unsigned long 	sts)
 	  rtt_printf("%%RTT-E-UNKNWN, unknown message %d\n\r", sts);
 	}
 }
-#endif
 
 /*************************************************************************
 *
@@ -9850,18 +9807,7 @@ int	rtt_sleep(
 			menu_ctx	ctx,
 			int	time)
 {
-#if defined OS_VMS
-	int		i;
-	int		num;
-	unsigned char	c;
-
-	num = (1.0 / rtt_scantime + FLT_EPSILON) * time;
-	for ( i = 0; i < num; i++)
-	{
-	  qio_read( (int *) rtt_chn, rtt_scantime, (char *) &c, 1);
-	  rtt_scan( ctx);
-	}
-#elif defined OS_POSIX
+#if defined OS_POSIX
 	int		i;
 	int		num;
 	pwr_tDeltaTime	p_time;
@@ -9902,17 +9848,7 @@ int	rtt_get_defaultfilename(
 	pwr_tFileName	filename;
 	char 		*s, *s2;
 
-#if defined(OS_VMS)
-	if ( strchr( inname, '<') || strchr( inname, '[') || 
-	     strchr( inname, ':'))
-	  strcpy( outname, inname);
-	else
-	{
-	  strcpy( filename, rtt_default_directory);
-	  strcat( filename, inname);
-	  strcpy( outname, filename);
-	}
-#elif defined OS_POSIX
+#if defined OS_POSIX
 	if ( strchr( inname, '/'))
 	  strcpy( outname, inname);
 	else
@@ -9995,9 +9931,6 @@ void	rtt_exit_now( int disconnected, pwr_tStatus exit_sts)
 	  exit( exit_sts);
 	else
 	  exit( 0);
-#endif
-#if defined(OS_VMS)
-	exit( exit_sts);
 #endif
 }
 
@@ -10255,9 +10188,6 @@ unsigned int	rtt_exception(
 	void	*signalP,
 	void	*mechanismP)
 {
-#ifdef OS_VMS
-	exit( ((struct chf$signal_array *) signalP)->chf$l_sig_name);
-#endif
 	return 1;
 }
 
@@ -10646,10 +10576,7 @@ char	*rtt_pwr_dir( char *dir)
 	static char pwr_dir[120];
 	char 	*s;
 
-#if defined(OS_VMS)
-	strcpy( pwr_dir, dir);
-	strcat( pwr_dir, ":");
-#elif defined OS_POSIX
+#if defined OS_POSIX
 	if ( (s = getenv( dir)) == NULL)
 	  strcpy( pwr_dir, "");
         else
@@ -10680,4 +10607,3 @@ menu_ctx rtt_current_ctx()
 {
   return rtt_ctxlist[rtt_ctxlist_count-1];
 }
-

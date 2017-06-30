@@ -67,11 +67,6 @@
 #include "xnav_bitmap_attrarra12.h"
 #include "xnav_bitmap_openattr12.h"
 
-#if defined OS_VMS
-# pragma message disable (INTSIGNCHANGE)
-#endif
-
-
 #define ATTRNAV__INPUT_SYNTAX 2
 #define ATTRNAV__OBJNOTFOUND 4
 #define ATTRNAV__STRINGTOLONG 6

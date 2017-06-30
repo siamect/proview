@@ -84,9 +84,6 @@ static char *cmdname;
 #ifdef WIN32
 static char CPP[] = "cl";
 static char CPPFLAGS[] = "/C /EP /nologo";
-#elif defined OS_VMS
-static char CPP[] = "cc";
-static char CPPFLAGS[] = "/decc/prep=";
 #elif defined OS_MACOS || defined OS_FREEBSD || defined OS_OPENBSD || defined OS_CYGWIN
 static char CPP[] = "/usr/bin/cpp";
 static char CPPFLAGS[] = "-C";
@@ -95,18 +92,10 @@ static char CPP[] = "/lib/cpp";
 static char CPPFLAGS[] = "-C";
 #endif
 
-#ifdef OS_VMS
-static char H_DEFINE[] = "/define=\"PDR_HDR\"";
-static char C_DEFINE[] = "/define=PDR_PDR";
-static char CL_DEFINE[] = "/define=PDR_CLNT";
-static char S_DEFINE[] = "/define=PDR_SVC";
-#else
 static char H_DEFINE[] = "-DPDR_HDR";
 static char C_DEFINE[] = "-DPDR_PDR";
 static char CL_DEFINE[] = "-DPDR_CLNT";
 static char S_DEFINE[] = "-DPDR_SVC";
-#endif
-
 
 static char *allv[] = {
 	"rpcgen", "-s", "udp", "-s", "tcp",
@@ -200,19 +189,7 @@ int main(int argc,
 			 "_svc.c", cmd.mflag);
 	}
 
-#ifdef OS_VMS
-	if (fin != NULL) {
-		char name[256];
-		fgetname(fin, name);
-		remove(name);
-	}
-#endif
-        
-#ifdef OS_VMS
-	exit(1);
-#else
 	exit(0);
-#endif
 }
 
 /*
@@ -315,30 +292,6 @@ open_input(char *infile,
 		perror(infilename);
 		crash();
 	}
-#elif defined OS_VMS
-        char cmd[1024];
-	char tmpfile[256];
-	char *cp, *fp;
-	
-	fp = outfile ? outfile : infile;
-        fin = NULL;
-	
-	if ((cp = strrchr(fp, '.')) != NULL) {
-		*cp = 0;
-		sprintf(tmpfile, "%s.i", fp);
-		*cp = '.';
-		sprintf(cmd, "%s;*", tmpfile);
-		remove(cmd);
-		sprintf(cmd, "%s%s%s%s %s", CPP, CPPFLAGS, tmpfile, define, infile);
-		system(cmd);
-        	fin = fopen(tmpfile, "r");
-	}
-	if (fin == NULL) {
-		f_print(stderr, "%s: ", cmdname);
-		perror(infilename);
-		crash();
-	}
-	
 #else
 	int pd[2];
 

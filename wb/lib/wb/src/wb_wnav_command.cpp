@@ -4865,11 +4865,7 @@ static int	wnav_exit_func(	void		*client_data,
   if ( wnav->close_cb)
     (wnav->close_cb)( wnav->parent_ctx);
   else
-#if defined OS_VMS
-    exit(1);
-#else
     exit(0);
-#endif
   return 1;
 }
 

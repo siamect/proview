@@ -49,7 +49,6 @@
 #define	pwr_cNameRc		"%sld_rc_%s_%04d.dat"
 
 #if defined OS_POSIX
-
 # define	pwr_cNamePlc		"%splc_%s_%04d_%s"
 # define        pwr_cNameBootList	"$pwrp_root/src/db/pwrp_cnf_bootlist.dat"
 # define	pwr_cNameVolumeList	"$pwrp_root/src/db/pwrp_cnf_volumelist.dat"
@@ -70,19 +69,6 @@
 # define        pwr_cNameProjectXttHelp "$pwrp_load/xtt_help.dat"
 # define        pwr_cNamePlcXttHelp     "$pwrp_load/xtthelp_%s_plc.dat"
 # define	pwr_cNameRedcom         "%sld_redcom_%s_%04d.dat"
-
-#elif defined OS_VMS
-
-# define	pwr_cNamePlc		"%splc_%s_%04d_%s.exe"
-# define	pwr_cNameBootList	"pwrp_root:[src.db]pwrp_cnf_bootlist.dat"
-# define	pwr_cNameVolumeList	"pwrp_root:[src.db]pwrp_cnf_volumelist.dat"
-# define	pwr_cNameDistribute	"pwrp_root:[src.db]pwrp_cnf_distribute.dat"
-# define	pwr_cNameSysObject	"pwrp_root:[src.db]pwrp_cnf_sysobject.dat"
-# define	pwr_cNameGblVolumeList	"pwra_db:pwr_volumelist.dat"
-# define        pwr_cNameRttCrr        "rtt_crr_%03.3d_%03.3d_%03.3d_%03.3d.dat"
-# define        pwr_cNameRttCrrObj     "rtt_crro_%03.3d_%03.3d_%03.3d_%03.3d.dat"
-# define        pwr_cNameRttCrrCode    "rtt_crrc_%03.3d_%03.3d_%03.3d_%03.3d.dat"
-# define        pwr_cNameRttSignals    "rtt_crrs_%03.3d_%03.3d_%03.3d_%03.3d.dat"
 #endif
 
 #endif

@@ -39,10 +39,7 @@
    This file contains the access routines to the datastorage 
    of data to trendplot.   */
 
-#if defined OS_VMS
-# include <stdio.h>
-# include <stdlib.h>
-#elif defined OS_POSIX
+#if defined OS_POSIX
 # include <stdio.h>
 # include <stdlib.h>
 # include <signal.h>

@@ -38,19 +38,7 @@
    This module contains routines to handle Qcom calls.
    It is common to both application code and nethandler code.  */
 
-#if defined(OS_VMS)
-# include <stdio.h>
-# include <stddef.h>
-# include <descrip.h>
-# include <string.h>
-# include <lib$routines.h>
-# if defined int32
-#  error int32 is defined
-# endif
-# if defined uint32
-#  undefine uint32
-# endif
-#elif defined OS_POSIX
+#if defined OS_POSIX
 # include <stdio.h>
 # include <stddef.h>
 # include <string.h>

@@ -36,14 +36,6 @@
 
 /* wb_wdanav_motif.cpp -- Display object info */
 
-#if defined OS_VMS && defined __ALPHA
-# pragma message disable (NOSIMPINT,EXTROUENCUNNOBJ)
-#endif
-
-#if defined OS_VMS && !defined __ALPHA
-# pragma message disable (LONGEXTERN)
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 

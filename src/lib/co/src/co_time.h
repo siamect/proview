@@ -58,10 +58,7 @@ extern "C" {
 #endif
 
 typedef unsigned int time_tClock;
-#if defined OS_VMS
- typedef pwr_tVaxTime time_tOs;
- typedef pwr_tVaxTime time_tOsDelta;
-#elif defined OS_POSIX
+#if defined OS_POSIX
  typedef pwr_tTime time_tOs;
  typedef pwr_tDeltaTime time_tOsDelta;
 #else
@@ -129,8 +126,7 @@ typedef enum {
 #define HUNDRED   1
 #define MINUTE    2
 
-#if defined(OS_VMS) || defined(OS_MACOS)
-
+#if defined(OS_MACOS)
 # define CLOCK_REALTIME 1
 # define CLOCK_MONOTONIC 2
   typedef int clockid_t;
@@ -177,10 +173,6 @@ pwr_tDeltaTime *  time_Dneg_NE (pwr_tDeltaTime*, pwr_tDeltaTime*);
 pwr_tDeltaTime *  time_Dsub (pwr_tDeltaTime*, pwr_tDeltaTime*, pwr_tDeltaTime*);
 pwr_tDeltaTime *  time_Dsub_NE (pwr_tDeltaTime*, pwr_tDeltaTime*, pwr_tDeltaTime*);
 
-#if defined (OS_VMS)
-pwr_tStatus   time_Dmul (pwr_tDeltaTime*, pwr_tDeltaTime*, pwr_tInt32);
-#endif
-
 int     time_Dcomp  (pwr_tDeltaTime*, pwr_tDeltaTime*);
 int     time_Dcomp_NE  (pwr_tDeltaTime*, pwr_tDeltaTime*);
 pwr_tStatus   time_DtoAscii (pwr_tDeltaTime*, int, char*, int);
@@ -192,13 +184,6 @@ pwr_tStatus   time_AsciiToTm  (const char*, struct tm*);
 pwr_tStatus   time_FormAsciiToA(const char*, short, short, pwr_tTime*);
 void      time_AtoFormAscii(pwr_tTime*, short, short, char[], int);
 pwr_tDeltaTime *  time_MsToD  (pwr_tDeltaTime*, pwr_tInt32);
-
-#if defined(OS_VMS)
-pwr_tStatus   time_PwrDeltaToVms  (pwr_tDeltaTime*, pwr_tVaxTime*);
-pwr_tStatus   time_PwrToVms (pwr_tTime*, pwr_tVaxTime*);
-pwr_tStatus   time_VmsToPwr (pwr_tVaxTime*, pwr_tTime*);
-pwr_tStatus   time_SetTime  (pwr_tTime*);
-#endif
 
 pwr_tDeltaTime *  time_FloatToD (pwr_tDeltaTime*, pwr_tFloat32);
 pwr_tDeltaTime *  time_Float64ToD (pwr_tDeltaTime*, pwr_tFloat64);

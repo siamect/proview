@@ -168,10 +168,8 @@ int GlowCtx::save( char *filename, glow_eSaveMode mode)
   int		i;
 
   fp.open( filename);
-#ifndef OS_VMS
   if ( !fp)
     return GLOW__FILEOPEN;
-#endif
 
   version = GLOW_VERSION;
 
@@ -305,10 +303,8 @@ int GlowCtx::open( char *filename, glow_eSaveMode mode)
     return GLOW__FILEOPEN;
 
   fp.open( filename);
-#ifndef OS_VMS
   if ( !fp)
     return GLOW__FILEOPEN;
-#endif
 
   version = 0;
 

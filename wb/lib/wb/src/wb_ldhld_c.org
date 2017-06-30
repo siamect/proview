@@ -9,9 +9,6 @@
 #include <string.h>
 #include <ctype.h>
 #include <descrip.h>
-#ifdef OS_VMS
-#include <lib$routines.h>
-#endif
 #include <X11/Intrinsic.h>
 #include "pwr.h"
 #include "wb_ldhi.h"

@@ -39,25 +39,10 @@
 
 /*_Include files_________________________________________________________*/
 
-
-
-#if defined (OS_VMS)
-# include <stdio.h>
-# include <string.h>
-# include <stdlib.h>
-# include <ctype.h>
-# include <chfdef.h>
-# include <descrip.h>
-# include <lib$routines.h>
-# include <clidef.h>
-# include <ssdef.h>
-# include <starlet.h>
-#else
-# include <stdio.h>
-# include <string.h>
-# include <stdlib.h>
-# include <ctype.h>
-#endif
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
 
 #if defined OS_POSIX
 # include <time.h>
@@ -665,11 +650,6 @@ static int	show_func(	menu_ctx	ctx,
 	else if ( cdh_NoCaseStrncmp( arg1_str, "CLOCK", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "SHOW CLOCK" */
-	 
-#ifdef OS_VMS
-	  rtt_message('E' ,"Not implemented in VMS");
-	  return RTT__NOPICTURE;
-#endif
 	}
 	else if ( cdh_NoCaseStrncmp( arg1_str, "DEFAULT", strlen( arg1_str)) == 0)
 	{
@@ -2747,10 +2727,6 @@ static int	rtt_get_func(	menu_ctx	ctx,
 	if ( cdh_NoCaseStrncmp( arg1_str, "CLOCK", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "GET CLOCK" */
-#ifdef OS_VMS
-	  rtt_message('E' ,"Not implemented in VMS");
-	  return RTT__NOPICTURE;
-#endif
 	}
 	else
 	{
@@ -2957,9 +2933,6 @@ static int	rtt_set_func(	menu_ctx	ctx,
 	    }
 	    /* Set job priority */
 	    sts = 0;
-#ifdef OS_VMS
-	    sts = sys$setpri(NULL, NULL, priority, NULL, NULL, NULL);
-#endif
 	    if ( EVEN(sts))
 	    {
 	      rtt_message('E',"Unable to set priority");	
@@ -3008,9 +2981,6 @@ static int	rtt_set_func(	menu_ctx	ctx,
 	  if ( EVEN(sts)) return RTT__NOPICTURE;
 
 	  sts = 0;
-#if defined (OS_VMS)
-	  sts = time_SetTime( &time);
-#endif
 	  if ( EVEN(sts))
 	  {
 	    rtt_message('E', "Unable to set time");
@@ -3025,10 +2995,6 @@ static int	rtt_set_func(	menu_ctx	ctx,
 	else if ( cdh_NoCaseStrncmp( arg1_str, "CLOCK", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "SET CLOCK" */
-#ifdef OS_VMS
-	  rtt_message('E' ,"Not implemented in VMS");
-	  return RTT__NOPICTURE;
-#endif
 	}
 	else if ( cdh_NoCaseStrncmp( arg1_str, "DEFAULT", strlen( arg1_str)) == 0)
 	{
@@ -3036,12 +3002,7 @@ static int	rtt_set_func(	menu_ctx	ctx,
 	  {
 	    if ( strcmp( arg2_str, "") != 0)
 	    {
-#if defined(OS_VMS)
-	      if ( !( arg2_str[strlen(arg2_str)-1] == ':' ||
-	              arg2_str[strlen(arg2_str)-1] == ']' ||
-	              arg2_str[strlen(arg2_str)-1] == '>' ))
-	        strcat( arg2_str, ":");
-#elif defined OS_POSIX
+#if defined OS_POSIX
 	      cdh_ToLower( arg2_str, arg2_str);
 #endif
 	    }
@@ -4237,9 +4198,6 @@ static int	wait_func(	menu_ctx	ctx,
 
 	if ( ODD( rtt_get_qualifier( "/PLCPGM", dum_str)))
 	{
-#ifdef OS_VMS
-	  rtt_message('E', "Not implemented for VMS");
-#endif
 	  return RTT__NOPICTURE;
 	}
 
@@ -5163,26 +5121,6 @@ int	rtt_menu_vmscommand_nowait(
 			void		*arg3,
 			void		*arg4)
 {
-#if defined OS_VMS
-	int		sts;
-	char	cmd[100];
-	struct dsc$descriptor_s	cmd_desc;
-        unsigned long cli_flag = CLI$M_NOWAIT;
-
-	cmd_desc.dsc$w_length = sizeof(cmd) - 1;
-	cmd_desc.dsc$b_dtype = DSC$K_DTYPE_T;
-	cmd_desc.dsc$b_class = DSC$K_CLASS_S;
-	cmd_desc.dsc$a_pointer = cmd;
-
-	rtt_command_toupper( cmd, command);
-
-	/* Place cursor in message position */
-	rtt_cursor_abs( 0, RTT_ROW_COMMAND);
-	r_print_buffer();
-	sts = lib$spawn (&cmd_desc , 0 , 0 , &cli_flag );
-	if ( sts != SS$_NORMAL )
-	  rtt_message('E',"Unable to create subprocess");
-#endif
 	return RTT__SUCCESS;
 }
 

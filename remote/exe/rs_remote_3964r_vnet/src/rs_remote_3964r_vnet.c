@@ -54,20 +54,6 @@
 
 /*_Include files_________________________________________________________*/
 
-#ifdef  OS_VMS
-#include <ssdef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <iodef.h>
-#include <descrip.h>
-#include <psldef.h>
-#include <libdtdef.h>
-#include <starlet.h>
-#include <lib$routines.h>
-#endif
-
 #include "pwr_class.h"
 #include "pwr_systemclasses.h"
 #include "co_time.h"
@@ -94,10 +80,6 @@ static unsigned int     send_it(char *buf,
                                 int  buf_size);
 static unsigned int     Receive();
 static unsigned int     ReceiveHandler();
-
-#ifdef OS_VMS
-int                     WaitFor_PLC_Change();
-#endif
 
 /*_defines_________________________________________________________________*/
 
