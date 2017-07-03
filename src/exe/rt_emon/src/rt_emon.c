@@ -1343,6 +1343,9 @@ sendAlarmStatus( sOutunit *op)
   for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l); al = LstNex(al)) {
     ap = LstObj(al);
 
+    if ( !ap->detect_etp)
+      continue;
+
     switch (ap->detect_etp->event) {
     case mh_eEvent_Info:
     case mh_eEvent_InfoSuccess:
