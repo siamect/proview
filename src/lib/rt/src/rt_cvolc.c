@@ -58,7 +58,7 @@ fetch (
   qcom_sPut	*put
 );
 
-
+
 /* General cache fetch routine.  */
 
 static gdb_sObject *
@@ -121,7 +121,7 @@ fetch (
   return rop;
 }
 
-
+
 #if 1
 void *
 cvolc_GetObjectInfo (
@@ -272,7 +272,7 @@ cvolc_GetObjectInfo (
   }
 }
 #endif
-
+
 /* Lock a cached object, i.e. exclude it
    from cache trim.  */
 
@@ -294,7 +294,7 @@ cvolc_LockObject (
 
   cvol_QmoveSucc(op, cvol_Qget(op), &vp->u.c.cacheLock);
 }
-
+
 /* Fetch an object identified by its name.  */
 
 gdb_sObject *
@@ -343,7 +343,7 @@ cvolc_NameToObject (
   return fetch(sts, vp, &put);
 
 }
-
+
 /* Fetch an object identified by its object identifier.  */
 
 gdb_sObject *
@@ -385,7 +385,7 @@ cvolc_OidToObject (
     
   return fetch(sts, vp, &put);
 }
-
+
 /* Update the object body of an object residing on
    a remote node.  */
 
@@ -467,7 +467,7 @@ cvolc_SetObjectInfo (
     return YES;
   }
 }
-
+
 /* Move an object to the head of its volume touched list. */
 void
 cvolc_TouchObject (
@@ -491,7 +491,7 @@ cvolc_TouchObject (
   cvol_QmoveSucc(op, fqp, vqp);
   if (fqp != vqp) cvol_Qtrim(vqp);
 }
-
+
 /* Unlock a cached object, i.e. include it
    in cache trim.  */
 

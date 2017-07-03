@@ -88,7 +88,7 @@ typedef struct {
 /*----------------------------------------------------------------------------*\
   Prototypes for DbCallbacks
 \*----------------------------------------------------------------------------*/
-
+
 typedef pwr_tStatus (* wb_tMethodMenu)( ldh_sMenuCall *);
 typedef pwr_tStatus (* wb_tMethodMenuFilter) (ldh_sMenuCall *, pwr_sMenuButton *);
 typedef pwr_tStatus (* wb_tMethodAnteCreate) (ldh_tSesContext, pwr_tOid, pwr_tCid);

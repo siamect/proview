@@ -49,7 +49,7 @@
 #include "rt_cvol.h"
 #include "rt_cvolcm.h"
 
-
+
 /**
  * Adds a remote class volume.
  */
@@ -94,7 +94,7 @@ cvolcm_AddClassVolume(
 
 }
 
-
+
 /* .  */
 
 gdb_sVolume *
@@ -165,7 +165,7 @@ cvolcm_ConnectVolume (
   
   return vp;
 }
-
+
 /* .  */
 
 void
@@ -204,7 +204,7 @@ cvolcm_CreateObject (
       sop->g.sib.blink = cop->sib.newblink;
   } gdb_ScopeUnlock;
 }
-
+
 /* .  */
 
 void
@@ -250,7 +250,7 @@ cvolcm_DeleteObject (
       sop->g.sib.blink = dop->sib.newblink;
   } gdb_ScopeUnlock;
 }
-
+
 /* Flush all cached information about a node.  */
 
 void
@@ -295,7 +295,7 @@ cvolcm_FlushNode (
 
   }
 }
-
+
 /* Remove all objects in a cached volume.
    
    A volume flush is done only on order
@@ -346,7 +346,7 @@ cvolcm_FlushVolume (
   vp->l.flags.b.netCached = 0;
   vp->l.flags.b.remote = 0;
 }
-
+
 /* .  */
 
 void
@@ -418,7 +418,7 @@ cvolcm_MoveObject (
     }
   } gdb_ScopeUnlock;
 }
-
+
 /* .  */
 
 void
@@ -445,7 +445,7 @@ cvolcm_RenameObject (
     vol_LinkObject(&sts, vp, op, vol_mLink_rename);
   } gdb_ScopeUnlock;
 }
-
+
 /* Trim the cache to get more free headers.  */
 
 void

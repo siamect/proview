@@ -53,13 +53,13 @@ sigHandler();
 
 static qdb_sBuffer *	inPool (pwr_tStatus*, void*);
 
-
+
 static void
 exitHandler()
 {
   qcom_Exit(NULL);
 }
-
+
 #if defined OS_POSIX
 
 static void
@@ -69,7 +69,7 @@ sigHandler()
 }
 #endif
 
-
+
 static qdb_sBuffer *
 inPool (
   pwr_tStatus	*sts,
@@ -156,7 +156,7 @@ qcom_AttachQ (
 
   return ODD(*sts);
 }
-
+
 /**
  * @brief  Bind one queue to another.
  *
@@ -199,7 +199,7 @@ qcom_Bind (
 
   return bp != NULL;
 }
-
+
 /**
  * @brief Create a queue and make an implicit connect to it. 
  */
@@ -277,7 +277,7 @@ qcom_CreateQ (
 
   return qp != NULL;
 }
-
+
 pwr_tBoolean
 qcom_DeleteQ (
   pwr_tStatus		*status,
@@ -303,7 +303,7 @@ qcom_DeleteQ (
   
   return ODD(*sts);
 }
-
+
 pwr_tBoolean
 qcom_Exit (
   pwr_tStatus	*status
@@ -327,7 +327,7 @@ qcom_Exit (
 
   return YES;
 }
-
+
 pwr_tBoolean
 qcom_Free (
   pwr_tStatus	*status,
@@ -361,7 +361,7 @@ qcom_Free (
 
   return (br != pool_cNRef) && ODD(*sts);
 }
-
+
 /**
  *@brief  Get a new message.
  *
@@ -443,7 +443,7 @@ qcom_Get (
 
   return dp;
 }
-
+
 qcom_tBus
 qcom_MyBus (
   pwr_tStatus	*status
@@ -461,7 +461,7 @@ qcom_MyBus (
 
   return bus;
 }
-
+
 pwr_tBoolean
 qcom_MyNode (
   pwr_tStatus	*status,
@@ -499,7 +499,7 @@ char *qcom_NodeName(
   return name;
 }
 
-
+
 pwr_tBoolean
 qcom_Node (
   pwr_tStatus	*status,
@@ -526,7 +526,7 @@ qcom_Node (
 
   return (np != NULL);
 }
-
+
 pwr_tBoolean
 qcom_NextNode (
   pwr_tStatus	*status,
@@ -581,7 +581,7 @@ qcom_NextNode (
 
   return (np != NULL);
 }
-
+
 pwr_tBoolean
 qcom_Init (
   pwr_tStatus	*status,
@@ -665,7 +665,7 @@ qcom_Init (
 
   return YES;
 }
-
+
 pwr_tBoolean
 qcom_Put (
   pwr_tStatus		*status,
@@ -726,7 +726,7 @@ qcom_Put (
 
   return ODD(*sts);
 }
- 
+
 /**
  * @brief Disconnect a target queue from a bound source queue.
  *
@@ -771,7 +771,7 @@ qcom_Unbind (
 
   return ODD(*sts);
 }
-
+
 /**
  * @brief Compare two queue identities;
  *
@@ -802,7 +802,7 @@ qcom_QidCompare (
 
 }
 
-
+
 /** 
  * @brief Test if two queue identities are equal.
  *
@@ -819,7 +819,7 @@ qcom_QidIsEqual (
 
   return (q1->nid == q2->nid) && (q1->qix == q2->qix);
 }
-
+
 /** 
  * @brief Test if two queue identities are different.
  *
@@ -837,7 +837,7 @@ qcom_QidIsNotEqual (
   return (q1->nid != q2->nid) || (q1->qix != q2->qix);
 }
 
-
+
 /**
  * @brief Test if queue identity is null.
  *
@@ -854,7 +854,7 @@ qcom_QidIsNull (
   return (q->nid == qcom_cNQid.nid) && (q->qix == qcom_cNQid.qix);
 }
 
-
+
 /**
  * @brief Test if queue identity is not null.
  *
@@ -872,7 +872,7 @@ qcom_QidIsNotNull (
 }
 
 
-
+
 /**
  * @brief Compare two application identities;
  *
@@ -903,7 +903,7 @@ qcom_AidCompare (
 
 }
 
-
+
 /**
  *@brief Test if two application identities are equal.
  *
@@ -921,7 +921,7 @@ qcom_AidIsEqual (
 
   return (a1->nid == a2->nid) && (a1->aix == a2->aix);
 }
-
+
 /**
  * @brief Test if two application identities are different.
  *
@@ -940,7 +940,7 @@ qcom_AidIsNotEqual (
   return (a1->nid != a2->nid) || (a1->aix != a2->aix);
 }
 
-
+
 /** 
  * @brief Test if application identity is null.
  *
@@ -957,7 +957,7 @@ qcom_AidIsNull (
   return (a->nid == qcom_cNAid.nid) && (a->aix == qcom_cNAid.aix);
 }
 
-
+
 /**
  * @brief Test if application identity is not null.
  *
@@ -972,7 +972,7 @@ qcom_AidIsNotNull (
 {
   return (a->nid != qcom_cNAid.nid) || (a->aix != qcom_cNAid.aix);
 }
-
+
 /*
     pwr_tBoolean		qcom_Put (
       pwr_tStatus		*sts,
@@ -1086,7 +1086,7 @@ qcom_Request (
 
   return dp;
 }
-
+
 pwr_tBoolean
 qcom_Reply (
   pwr_tStatus		*status,
@@ -1142,7 +1142,7 @@ qcom_Reply (
 
   return ODD(*sts);
 }
-
+
 /**
  * @brief  Converts a queue identifier, 'qid' to a string.
  *   
@@ -1180,7 +1180,7 @@ qcom_QidToString (
     return ls;
   
 }
-
+
 pwr_tBoolean
 qcom_WaitOr (
   pwr_tStatus		*status,
@@ -1217,7 +1217,7 @@ qcom_WaitOr (
 
   return result != 0;
 }
-
+
 pwr_tBoolean
 qcom_WaitAnd (
   pwr_tStatus		*status,
@@ -1253,7 +1253,7 @@ qcom_WaitAnd (
 
   return result != 0;
 }
-
+
 pwr_tBoolean
 qcom_SignalAnd (
   pwr_tStatus		*status,
@@ -1279,7 +1279,7 @@ qcom_SignalAnd (
 
   return ODD(*sts);
 }
-
+
 pwr_tBoolean
 qcom_SignalOr (
   pwr_tStatus		*status,
@@ -1305,7 +1305,7 @@ qcom_SignalOr (
 
   return ODD(*sts);
 }
-
+
 pwr_tBitMask
 qcom_EventMask (
   pwr_tStatus		*status,

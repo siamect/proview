@@ -719,7 +719,7 @@ void RtTrace::activate_helpplclist()
     (help_cb)(this, "index", filename);
 }
 
-
+
 /*************************************************************************
 *
 * Name:		int	trace_flow_cb()

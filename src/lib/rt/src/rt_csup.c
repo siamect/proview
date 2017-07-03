@@ -51,7 +51,7 @@
 #include "rt_lst.h"
 #include "rt_errh.h"
 
-
+
 /*_*
   @aref cyclesup CycleSup
   */
@@ -108,7 +108,7 @@ error:
   csup_Exit(NULL, lh);
   return NULL;
 }
-
+
 int
 csup_Exec (
   pwr_tStatus		*status,
@@ -179,7 +179,7 @@ csup_Exec (
     
   return action;
 }
-
+
 void
 csup_Exit (
   pwr_tStatus *status,

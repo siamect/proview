@@ -4254,7 +4254,7 @@ int WFoe::redraw_and_save()
 
   return FOE__SUCCESS;
 }
-
+
 
 //
 //  	Create flowfiles.
@@ -4757,7 +4757,7 @@ foe_tContext foe_Open(
   return Foe;
 
 } /* foe_Open */
-
+
 /************************************************************************
 *
 * Name: foe_Close 

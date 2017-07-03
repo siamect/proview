@@ -811,7 +811,7 @@ void HistGtk::insert_eventname( const char *name)
 			    strlen(name), &pos);
 }
 
-
+
 /************************************************************************
 *
 * Name:		SetListTime

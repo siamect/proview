@@ -345,7 +345,7 @@ int dcli_get_files( char *dir, char *pattern, pwr_tString40 *filelist[], int *fi
   return DCLI__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		dcli_parse_filename

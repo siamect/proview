@@ -271,7 +271,7 @@ typedef union {
 
 /* Function prototypes.  */
 
-
+
 gdb_sAliasServer *
 vol_AddAliasClient (
   pwr_tStatus		*sts,

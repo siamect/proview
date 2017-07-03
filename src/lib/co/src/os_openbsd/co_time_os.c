@@ -179,7 +179,7 @@ time_Uptime (
   else
     return tp;
 }
-
+
 /* Return number of clock ticks since system start.
    Add number of tics corresponding to delta time 'add'.  */
 
@@ -205,7 +205,7 @@ time_Clock (
 
   return tics;
 }
-
+
 time_tOs *
 time_Os (
   pwr_tStatus *status,
@@ -222,7 +222,7 @@ time_Os (
 
   return tp;
 }
-
+
 /* Set system time */
 pwr_tStatus
 time_SetTime(
@@ -234,7 +234,7 @@ time_SetTime(
   return sts;
 }
 
-
+
 time_tOs *
 time_AtoOs (
   pwr_tStatus *status,
@@ -252,7 +252,7 @@ time_AtoOs (
 
   return tp;
 }
-
+
 /* Convert from Proview delta time format
    to native time format. */
 

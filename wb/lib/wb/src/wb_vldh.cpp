@@ -93,7 +93,7 @@ static void cnv_from_neted( vldh_t_node n);
 
 /*_Local procedues_______________________________________________________*/
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_check_document( )
@@ -135,7 +135,7 @@ unsigned long vldh_check_document (
 
   return 0;
 }
-
+
 /*************************************************************************
 *
 * Name:		vldh_check_plcpgm( )
@@ -175,7 +175,7 @@ unsigned long vldh_check_plcpgm (
   free((char *) plcbuffer);
   return 1;
 }
-
+
 /*************************************************************************
 *
 * Name:		vldh_eclass( )
@@ -363,7 +363,7 @@ static int vldh_get_object_defname (
 }
 
 
-
+
 /*_Methods defined for this module_______________________________________*/
 
 /*************************************************************************
@@ -417,7 +417,7 @@ int vldh_node_con_insert (
   return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_node_con_delete()
@@ -459,7 +459,7 @@ int vldh_node_con_delete (
 }
 
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_node_subwind_created()
@@ -490,7 +490,7 @@ int vldh_node_subwindow_created (
 
   return VLDH__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		vldh_node_create()
@@ -578,7 +578,7 @@ int vldh_node_create (
   return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_node_load()
@@ -646,7 +646,7 @@ static int vldh_node_load (
   return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_node_delete()
@@ -669,7 +669,7 @@ int vldh_node_delete (
   return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_node_undelete()
@@ -694,7 +694,7 @@ int vldh_node_undelete (
   return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_con_create()
@@ -789,7 +789,7 @@ int vldh_con_create (
   return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_con_load()
@@ -849,7 +849,7 @@ int vldh_con_load (
   return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_con_delete()
@@ -877,7 +877,7 @@ int vldh_con_delete (
   return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_con_undelete()
@@ -909,7 +909,7 @@ int vldh_con_undelete (
   return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_get_con_nodes()
@@ -938,7 +938,7 @@ int vldh_get_con_nodes (
   return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_con_getrefnr()
@@ -968,7 +968,7 @@ int vldh_con_getrefnr (
   return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_wind_quit()
@@ -1055,7 +1055,7 @@ int vldh_wind_quit (
   return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_wind_quit_all()
@@ -1091,7 +1091,7 @@ int vldh_wind_quit_all (
   return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_wind_save()
@@ -1318,7 +1318,7 @@ int vldh_wind_save (
   return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_wind_delete_all()
@@ -1417,7 +1417,7 @@ int vldh_wind_delete_all (
   return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_wind_load_all()
@@ -1551,7 +1551,7 @@ int vldh_wind_load_all (
   return rsts;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_wind_create()
@@ -1644,7 +1644,7 @@ int vldh_wind_create (
   return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_wind_load()
@@ -1722,7 +1722,7 @@ int vldh_wind_load (
   return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_wind_delete()
@@ -1746,7 +1746,7 @@ int vldh_wind_delete (
   return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_plc_create()
@@ -1809,7 +1809,7 @@ int vldh_plc_create (
   return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_plc_load()
@@ -1871,7 +1871,7 @@ int vldh_plc_load (
   return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_plc_delete()
@@ -1896,7 +1896,7 @@ int vldh_plc_delete (
 }
 
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_get_subwindows_all()
@@ -1961,7 +1961,7 @@ int vldh_get_wind_subwindows (
   if( *wind_count == 0) return VLDH__NOWINDS;
   else return VLDH__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		vldh_get_subwindows_all()
@@ -2023,7 +2023,7 @@ int vldh_get_subwindows_all (
   if( *wind_count == 0) return VLDH__NOWINDS;
   else return VLDH__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		vldh_get_wind_windows()
@@ -2073,7 +2073,7 @@ int vldh_get_wind_windows (
   else return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_get_plc_windows()
@@ -2104,7 +2104,7 @@ int vldh_get_plc_windows (
   return sts;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_get_nodes()
@@ -2172,7 +2172,7 @@ int vldh_get_nodes (
   else return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_get_nodes_del()
@@ -2245,7 +2245,7 @@ int vldh_get_nodes_del (
   else return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_get_nodes_class()
@@ -2321,7 +2321,7 @@ int vldh_get_nodes_class (
   else return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_get_cons()
@@ -2392,7 +2392,7 @@ int vldh_get_cons (
   else return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_get_cons_del()
@@ -2468,7 +2468,7 @@ int vldh_get_cons_del (
 }
 
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_get_conpoints_next()
@@ -2552,7 +2552,7 @@ int vldh_get_conpoints_next (
   return VLDH__SUCCESS;
 }	
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_get_conpoint_nodes()
@@ -2598,7 +2598,7 @@ int vldh_get_conpoint_nodes (
   return VLDH__SUCCESS;
 }	
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_get_close_conpoint_nodes()
@@ -2688,7 +2688,7 @@ int vldh_get_conpoint_nodes_close (
   return VLDH__SUCCESS;
 }	
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_get_conpoint_cons()
@@ -2742,7 +2742,7 @@ int vldh_get_conpoint_cons (
   else return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_get_nodes_direction()
@@ -2847,7 +2847,7 @@ int vldh_get_nodes_direction (
   return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_get_cons_node()
@@ -2913,7 +2913,7 @@ int vldh_get_cons_node (
   else return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_get_nodes_node()
@@ -2994,7 +2994,7 @@ int vldh_get_nodes_node (
   return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_get_plc_objdid()
@@ -3031,7 +3031,7 @@ int vldh_get_plc_objdid (
   /* If this is reached, objdid not found */
   return VLDH__OBJNOTFOUND;
 }
-
+
 /*************************************************************************
 *
 * Name:		vldh_get_plcs()
@@ -3075,7 +3075,7 @@ int vldh_get_plcs (
 
   return VLDH__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		vldh_get_node_objdid()
@@ -3124,7 +3124,7 @@ int vldh_get_node_objdid (
   return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_get_wind_objdid()
@@ -3212,7 +3212,7 @@ void			*paste_ctx;
 static	int		paste_mode = 0;
 
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_paste_setmode()
@@ -3239,7 +3239,7 @@ int vldh_paste_getmode (
 {
   return paste_mode;
 }
-
+
 /*************************************************************************
 *
 * Name:		vldh_paste_selrectinfo()
@@ -3275,7 +3275,7 @@ int vldh_paste_setrectinfo (
 
   return VLDH__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		vldh_paste_getrectinfo()
@@ -3313,7 +3313,7 @@ int vldh_paste_getrectinfo (
   return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_paste_singlenode_insert()
@@ -3351,7 +3351,7 @@ int vldh_paste_singlenode_insert (
   return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_paste_node_insert()
@@ -3395,7 +3395,7 @@ int vldh_paste_node_insert (
   return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_paste_con_insert()
@@ -3464,7 +3464,7 @@ int vldh_paste_con_insert (
 }
 
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_paste_init()
@@ -3522,7 +3522,7 @@ int vldh_paste_init( )
 }
 
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_paste_signlenode_copy()
@@ -3617,7 +3617,7 @@ int vldh_paste_singlenode_copy (
   return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_paste_copy()
@@ -3824,7 +3824,7 @@ int vldh_paste_copy (
 }
 
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_node_update_spec()
@@ -3946,7 +3946,7 @@ int vldh_node_update_spec (
   return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_node_update_spec()
@@ -4140,7 +4140,7 @@ int vldh_object_update_spec (
   return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_node_create_spec()
@@ -4362,7 +4362,7 @@ int vldh_node_create_spec (
   return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_node_ldhdel_spec()
@@ -4440,7 +4440,7 @@ int vldh_node_ldhdel_spec (
   return VLDH__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_get_node_coordinates()
@@ -4495,7 +4495,7 @@ int vldh_get_node_coordinates (
   if( !found) return VLDH__NONODES;
   else return VLDH__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		vldh_get_modification()
@@ -4558,7 +4558,7 @@ int vldh_get_wind_modification (
 }
 
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_IdToStr()
@@ -4605,7 +4605,7 @@ char	*vldh_IdToStr(
   return str;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_AttrRefToStr()
@@ -4653,7 +4653,7 @@ char	*vldh_AttrRefToStr(
   return str;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		vldh_StrToId()
@@ -4719,7 +4719,7 @@ pwr_tStatus vldh_StrToId(
 
   return cdh_StringToObjid( outstr, objid);
 }
-
+
 /*************************************************************************
 *
 * Name:		vldh_VolumeIdToStr()

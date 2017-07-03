@@ -51,7 +51,7 @@
 #include "rt_proc_msg.h"
 #include "rt_errh.h"
 
-
+
 pwr_tStatus
 proc_Load (
   proc_sProcess *p
@@ -61,7 +61,7 @@ proc_Load (
 
   return sts;
 }
-
+
 pwr_tStatus
 proc_Start (
   proc_sProcess *p
@@ -88,7 +88,7 @@ proc_Start (
 
   return sts;
 }
-
+
 pwr_tStatus
 proc_SetPriority (
   int prio
@@ -114,7 +114,7 @@ proc_SetPriority (
 //  system(set);
   return sts;  
 }
-
+
 pwr_tStatus
 proc_UnloadProgram (
   proc_sProcess *p

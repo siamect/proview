@@ -62,7 +62,7 @@
 #define FUTEX_FD (2)
 #define FUTEX_REQUEUE (3)
 
-
+
 int 
 futex_wait (
       int *futex, 
@@ -78,7 +78,7 @@ futex_wait (
     return ok;
   }
 }
-
+
 int 
 futex_timed_wait (
       int *futex, 
@@ -95,7 +95,7 @@ futex_timed_wait (
     return ok;
   }
 }
-
+
 int 
 futex_wake (
       int *futex,

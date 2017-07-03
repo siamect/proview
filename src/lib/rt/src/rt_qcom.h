@@ -316,7 +316,7 @@ pwr_tBoolean		qcom_DeleteQ (
   const qcom_sQid	*myQ
 );
 
-
+
 pwr_tBoolean		qcom_SignalAnd (
   pwr_tStatus		*status,
   const qcom_sQid	*eid,

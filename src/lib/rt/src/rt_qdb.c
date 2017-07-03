@@ -76,7 +76,7 @@ copyBufferData (
   int		size
 );
 
-
+
 /* Copy the contents of a buffer.
    Return number of bytes not copied. */
 
@@ -130,7 +130,7 @@ copyBufferData (
 
   return size;
 }
-
+
 static qdb_sInit *
 evaluateInit (
   qdb_sInit		*ip
@@ -185,7 +185,7 @@ evaluateInit (
 
   return ip;
 }
-
+
 static qdb_sLocal *
 mapLocalDb (
   pwr_tStatus		*sts
@@ -219,7 +219,7 @@ mapLocalDb (
 
   return qdb;  
 }
-
+
 qdb_sAppl *
 qdb_AddAppl (
   pwr_tStatus	*status,
@@ -261,7 +261,7 @@ qdb_AddAppl (
 
   return ap;
 }
-
+
 qdb_sNode *
 qdb_AddNode (
   pwr_tStatus		*status,
@@ -301,7 +301,7 @@ qdb_AddNode (
 
   return np;
 }
-
+
 /* Bind a forwarding (source) queue to a
    receiving (target) queue */
 
@@ -330,7 +330,7 @@ qdb_AddBond (
 
   return bp;
 }
-
+
 void
 qdb_ApplEvent (
   pwr_tStatus		*status,
@@ -362,7 +362,7 @@ qdb_ApplEvent (
   qdb_Put(sts, bp, qp);
 
 }
-
+
 /* Dump information of pool. */
 
 void
@@ -374,7 +374,7 @@ qdb_DumpPool ()
 
   pool_Dump(&sts, &qdb->pool);
 }
-
+
 /* Check that a queue is bound to a forwarding queue.  */
 
 qdb_sQbond *
@@ -401,7 +401,7 @@ qdb_GetBond (
 
   return NULL;
 }
-
+
 /* Allocate a buffer from the pool.  */
 
 qdb_sBuffer *
@@ -448,7 +448,7 @@ qdb_Alloc (
 
   return bp;
 }
-
+
 /* Copy the contents of a buffer.
    Return number of bytes not copied. */
 
@@ -471,7 +471,7 @@ qdb_CopyBufferData (
 
   return gp->data;
 }
-
+
 qdb_sBuffer *
 qdb_Deque (
   pwr_tStatus	*status,
@@ -518,7 +518,7 @@ qdb_Deque (
 
   return pool_Qitem(bl, qdb_sBuffer, c.ll);
 }
-
+
 pwr_tBoolean
 qdb_Enque (
   pwr_tStatus	*status,
@@ -552,7 +552,7 @@ qdb_Enque (
 
   return ODD(*sts);
 }
-
+
 /* Free a buffer allocated from the pool.
 
    If the buffer is a forwarding buffer then the
@@ -617,7 +617,7 @@ qdb_Free (
   }
   
 }
-
+
 /* .  */
 
 void
@@ -639,7 +639,7 @@ qdb_GetInfo (
   gp->rid	= ip->rid;
   gp->size	= ip->size;
 }
-
+
 /* This routine maps the QCOM database.
    It should only be called by the init program.  */
 
@@ -776,7 +776,7 @@ qdb_CreateDb (
 
   return qdb;
 }
-
+
 #if defined OS_POSIX
 /*
  * A fix which unlinks all segments for the given name.
@@ -846,7 +846,7 @@ unlinkPool(
 }
 
 #endif
-
+
 /* This routine unlinks QCOM database and  
    removes database lock.
    It should only be called by the init program.  */
@@ -886,7 +886,7 @@ qdb_UnlinkDb ()
 
 #endif
 }
-
+
 qdb_sLocal *
 qdb_MapDb (
   pwr_tStatus		*status
@@ -938,7 +938,7 @@ qdb_MapDb (
 
   return qdb;
 }
-
+
 qdb_sBuffer *
 qdb_Get (
   pwr_tStatus	*status,
@@ -1027,7 +1027,7 @@ qdb_Get (
   return bp;
 
 }
-
+
 /* Copy the contents of a buffer to another buffer.  */
 
 qdb_sBuffer *
@@ -1058,7 +1058,7 @@ qdb_CopyBuffer (
 
   return nbp;
 }
-
+
 /* Detach buffer from its application in queue.  */
 
 qdb_sBuffer *
@@ -1075,7 +1075,7 @@ qdb_DetachBuffer (
 
   return bp;
 }
-
+
 void
 qdb_Put (
   pwr_tStatus	*status,
@@ -1129,7 +1129,7 @@ qdb_Put (
     errh_Bugcheck(QCOM__WEIRD, "unknown queue type");
   }
 }
-
+
 
 void
 qdb_RemoveAppl (
@@ -1172,7 +1172,7 @@ qdb_RemoveAppl (
 
   pool_Free(sts, &qdb->pool, ap);
 }
-
+
 void *
 qdb_Request (
   pwr_tStatus	*status,
@@ -1224,7 +1224,7 @@ qdb_Request (
 
   return gbp;
 }
-
+
 /* Create a queue and make an implicit connect to it.  */
 
 qdb_sQue *
@@ -1281,7 +1281,7 @@ qdb_AddQue (
     
   return qp;
 }
-
+
 /*   */
 
 qdb_sQue *
@@ -1301,7 +1301,7 @@ qdb_AttachQue (
 
   return qp;
 }
-
+
 void
 qdb_Eput (
   pwr_tStatus	*status,
@@ -1335,7 +1335,7 @@ qdb_Eput (
 
   qdb_Put(sts, bp, ep);
 }
-
+
 /* .  */
 
 void
@@ -1356,7 +1356,7 @@ qdb_PutInfo (
   ip->rid	= rid;
   ip->size	= pp->size;
 }
-
+
 pwr_tBoolean
 qdb_RemoveQue (
   pwr_tStatus	*status,
@@ -1423,7 +1423,7 @@ qdb_RemoveQue (
 
   return TRUE;
 }
-
+
 void
 qdb_NetEvent (
   pwr_tStatus	*status,
@@ -1454,7 +1454,7 @@ qdb_NetEvent (
   qdb_Put(sts, bp, qp);
 
 }
-
+
 void
 qdb_NodeInfo (
   pwr_tStatus	*status,
@@ -1476,7 +1476,7 @@ qdb_NodeInfo (
   node->ft = np->ft;
   node->connection = np->link[np->clx].connection;
 }
-
+
 void
 qdb_Platform (
   qdb_sNode	*np
@@ -1491,7 +1491,7 @@ qdb_Platform (
   np->ft = platform.ft;
 }
 
-
+
 qdb_sQue *
 qdb_Que (
   pwr_tStatus		*status,
@@ -1533,7 +1533,7 @@ qdb_Que (
 
   return qp;
 }
-
+
 pwr_tBoolean
 qdb_Signal (
   pwr_tStatus	*status,
@@ -1568,7 +1568,7 @@ qdb_Signal (
 
   return ODD(*sts);
 }
-
+
 int
 qdb_Wait (
   pwr_tStatus	*status,

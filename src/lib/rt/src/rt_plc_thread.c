@@ -309,7 +309,7 @@ static pwr_tStatus plc_redu_send( plc_sThread *tp)
   return sts;
 }
 
-
+
 void
 plc_thread (
   plc_sThread *tp
@@ -530,7 +530,7 @@ static int sim_scan( plc_sThread *tp)
   return tp->sim_halted;
 }
 
-
+
 static void
 scan (
   plc_sThread	*tp

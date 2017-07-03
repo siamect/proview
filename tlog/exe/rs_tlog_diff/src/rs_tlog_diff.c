@@ -59,7 +59,7 @@ int cli$dispatch();
 
 int *tlog_cld () ;    /* module name in tlog_cld.cld file */
 
-
+
 /*************************************************************************
 *
 * Name:		info_msg()

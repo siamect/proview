@@ -79,7 +79,7 @@ static char *xDLp = NULL;
 #else
 #define GUARD_DL( _PTR, _SIZE ) /* Do nothing */
 #endif
-
+
 /* Setup Direct links or subscriptions
 
       local_object I	TRUE if object is local
@@ -127,7 +127,7 @@ plc_RefObjidAttr (
 
   return PLC__SUCCESS;
 }
-
+
 /* Get the value of an attribute in an object
    The objid must be a local object
 
@@ -161,7 +161,7 @@ plc_GetObjectAttrValue (
 
   return PLC__SUCCESS;
 }
-
+
 /* Return a pointer to an object or parameter in
    rtdb. This pointer is used to help the PLC code speed
    up it's access of objects and parameters in rtdb
@@ -361,7 +361,7 @@ plc_rtdbref (
 
   return PLC__SUCCESS;
 }
-
+
 /* Get a pointer to an object in rtdb. I the object doesn't exist,
    then we create the object in order to be able to get the pointer.
    A direct link is made to the object.  */

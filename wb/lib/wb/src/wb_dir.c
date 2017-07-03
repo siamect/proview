@@ -56,7 +56,7 @@
 #define ODD(a)	(((int)(a) & 1) != 0)
 #define EVEN(a)	(((int)(a) & 1) == 0)
 
-
+
 /*************************************************************************
 *
 * Name:		dir_parse_filename
@@ -158,7 +158,7 @@ pwr_tStatus dir_parse_filename( char	*filename,
 	return 1;
 }  
 
-
+
 /****************************************************************************
 * Name:		dir_get_fileinfo ()
 *
@@ -199,7 +199,7 @@ pwr_tStatus dir_get_fileinfo( 	char 	*file_name,
   return 1;
 }  
 
-
+
 /*************************************************************************
 *
 * Name:		dir_TimeString
@@ -225,7 +225,7 @@ char	*dir_TimeString( 		pwr_tTime	*time,
 	return timstr;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		dir_CopyFile
@@ -253,7 +253,7 @@ pwr_tStatus dir_CopyFile(
 	return sts;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		dir_PurgeFile
@@ -274,7 +274,7 @@ pwr_tStatus dir_PurgeFile(
 	return 1;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		dir_DeleteFile
@@ -302,7 +302,7 @@ pwr_tStatus dir_DeleteFile(
 }
 
 
-
+
 /*************************************************************************
 *
 * Name:		dir_DefineLogical

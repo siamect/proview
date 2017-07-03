@@ -322,7 +322,7 @@ static int	nmpstrans_req_reset_detected( trans_ctx	transctx,
 				nmpstrans_t_req_list	*req_ptr);
 static int	ssabutil_lopnr_check( pwr_tInt32	lopnr);
 
-
+
 int nmpstrans_check_checksum( int key)
 {
   return ssabutil_lopnr_check( key);
@@ -427,7 +427,7 @@ static int	nmpstrans_alarm_send(
 	return NMPS__SUCCESS;
 } 
 
-
+
 /****************************************************************************
 * Name:		translist_delete()
 *
@@ -457,7 +457,7 @@ static pwr_tStatus	translist_delete(
 	return NMPS__SUCCESS;
 }
 
-
+
 /****************************************************************************
 * Name:		nmpsmir_translist_insert()
 *
@@ -497,7 +497,7 @@ static pwr_tStatus translist_insert(
 	return NMPS__SUCCESS;
 }
 
-
+
 /****************************************************************************
 * Name:		translist_find()
 *
@@ -537,7 +537,7 @@ static pwr_tStatus	translist_find(
 	return NMPS__SUCCESS;
 }
 
-
+
 /****************************************************************************
 * Name:		translist_timeout()
 *
@@ -571,7 +571,7 @@ static int	translist_timeout( 	pwr_tTime 	*insert_time,
 	  return 0;
 }
 
-
+
 /****************************************************************************
 * Name:		translist_timeout_check()
 *
@@ -620,7 +620,7 @@ static pwr_tStatus	translist_timeout_check(
 	return NMPS__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		nmpstrans_request_timeout
@@ -660,7 +660,7 @@ static void	nmpstrans_request_timeout(
 	req_ptr->req->ErrorDetected = 1;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		nmpstrans_datasend_timeout
@@ -700,7 +700,7 @@ static void	nmpstrans_datasend_timeout(
 	snd_ptr->snd->ErrorDetected = 1;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		nmpstrans_request_data
@@ -757,7 +757,7 @@ static int	nmpstrans_request_data( trans_ctx	transctx,
 	return NMPS__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		nmpstrans_rcv_send_ack
@@ -805,7 +805,7 @@ static int	nmpstrans_rcv_send_ack( trans_ctx	transctx,
 	return NMPS__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		nmpstrans_send_datasend
@@ -1572,7 +1572,7 @@ static int	nmpstrans_rcv_reset_detected( trans_ctx	transctx,
 
 
 
-
+
 /****************************************************************************
 * Name:		nmpstrans_reqlist_close()
 *
@@ -1609,7 +1609,7 @@ static void	nmpstrans_reqlist_close( trans_ctx transctx)
 	transctx->reqlist = 0;
 	transctx->req_count = 0;
 }
-
+
 /****************************************************************************
 * Name:		nmpstrans_reqlist_add()
 *
@@ -1799,7 +1799,7 @@ static pwr_tStatus	nmpstrans_reqlist_add(
 	return NMPS__SUCCESS;
 }
 
-
+
 /****************************************************************************
 * Name:		nmpstrans_rcvlist_close()
 *
@@ -1839,7 +1839,7 @@ static void	nmpstrans_rcvlist_close( trans_ctx transctx)
 	transctx->rcvlist = 0;
 	transctx->rcv_count = 0;
 }
-
+
 /****************************************************************************
 * Name:		nmpstrans_rcvlist_add()
 *
@@ -2027,7 +2027,7 @@ static pwr_tStatus	nmpstrans_rcvlist_add(
 	return NMPS__SUCCESS;
 }
 
-
+
 /****************************************************************************
 * Name:		nmpstrans_sndlist_close()
 *
@@ -2063,7 +2063,7 @@ static void	nmpstrans_sndlist_close( trans_ctx		transctx)
 	transctx->snd_count = 0;
 }
 
-
+
 /****************************************************************************
 * Name:		nmpstrans_sndlist_add()
 *
@@ -2218,7 +2218,7 @@ static pwr_tStatus	nmpstrans_sndlist_add(
 	return NMPS__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		nmps_get_transconfig
@@ -2252,7 +2252,7 @@ static pwr_tStatus	nmps_get_transconfig( trans_ctx	transctx)
 	return NMPS__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		nmpstrans_datareq_init
@@ -2288,7 +2288,7 @@ static pwr_tStatus	nmpstrans_datareq_init( trans_ctx	transctx)
 	return NMPS__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		nmps_datarcv_init
@@ -2325,7 +2325,7 @@ static pwr_tStatus	nmpstrans_datarcv_init( trans_ctx	transctx)
 }
 
 
-
+
 /*************************************************************************
 *
 * Name:		nmpstrans_datasend_init
@@ -2362,7 +2362,7 @@ static pwr_tStatus	nmpstrans_datasend_init( trans_ctx	transctx)
 	return NMPS__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		nmpstrans_trans_handler

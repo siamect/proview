@@ -1738,7 +1738,7 @@ void WttMotif::boot_ok_cb(Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
     wtt->message( 'I', msg);
 	  
 }
-
+
 /************************************************************************
 *
 * Name: update_options_form
@@ -1770,7 +1770,7 @@ void WttMotif::update_options_form()
   XmToggleButtonSetState( build_manual_w, (Boolean) build_manual, False);
 } 
 
-
+
 /************************************************************************
 *
 * Name: set_options

@@ -91,7 +91,7 @@ static int pndevice_add_channels( device_sCtx *ctx, gsdml_VirtualSubmoduleItem *
 				  vector<ChanItem>& input_vect, vector<ChanItem>& output_vect);
 static int pndevice_check_io( device_sCtx *ctx, gsdml_VirtualSubmoduleList *vsl, 
 			      vector<ChanItem>& input_vect, vector<ChanItem>& output_vect);
-
+
 /*----------------------------------------------------------------------------*\
   Configure the slave from gsd file.
 \*----------------------------------------------------------------------------*/

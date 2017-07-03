@@ -108,7 +108,7 @@ int main (int argc, char **argv)
 
   exit(sts);
 }
-
+
 static pwr_tStatus
 start (
   ini_sContext *cp
@@ -254,7 +254,7 @@ start (
 
   return sts;
 }
-
+
 static pwr_tStatus
 interactive (
   int		argc,
@@ -324,7 +324,7 @@ interactive (
 
   return sts;
 }
-
+
 static pwr_tStatus
 stop (
   int		argc,
@@ -395,7 +395,7 @@ stop (
 
   return 0;
 }
-
+
 static pwr_tStatus
 restart (
   ini_sContext	*cp
@@ -479,7 +479,7 @@ restart (
 
   return sts;
 }
-
+
 static pwr_tStatus
 terminate (
   ini_sContext	*cp
@@ -526,7 +526,7 @@ terminate (
 
   exit(1);
 }
-
+
 static int
 ask_yes_no (
   ini_sContext	*cp,
@@ -539,7 +539,7 @@ ask_yes_no (
 
   return 0;
 }
-
+
 static int
 checkErrors (
   ini_sContext	*cp
@@ -578,7 +578,7 @@ checkErrors (
   }
   return 1;
 }
-
+
 static ini_sContext *
 createContext (int argc, char **argv)
 {
@@ -770,7 +770,7 @@ usage (
   fprintf(stderr, "  -N arg: use 'arg' as nodename\n");
   exit(1);
 }
-
+
 static void
 logChanges (
   ini_sContext *cp
@@ -815,7 +815,7 @@ logChanges (
     errh_LogInfo(&cp->log, "Volume: %s, id: %d, cre: %d, upd_io: %d, upd: %d\n", vp->volume.name, vp->vid, cre, upd_io, upd);
   }
 }
-
+
 static void
 logCardinality (
   ini_sContext *cp
@@ -829,7 +829,7 @@ logCardinality (
     errh_LogInfo(&cp->log, "Volume: %s, id: %d, cardinality: %d, bodysize: %d\n", vp->volume.name, vp->vid,
       vp->volume.cardinality, vp->volume.rbodySize);
 }
-
+
 static pwr_tStatus
 events (
   ini_sContext	*cp

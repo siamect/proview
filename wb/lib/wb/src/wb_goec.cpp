@@ -169,7 +169,7 @@ int	goec_con_draw(
   return GRE__SUCCESS;
 }
 
-
+
 /*************************************************************************
  *
  * Name:		goec_con_delete()
@@ -195,7 +195,7 @@ int	goec_con_delete(
   return GRE__SUCCESS;
 }
 
-
+
 /*************************************************************************
  *
  * Name:		goec_con_delete()
@@ -221,7 +221,7 @@ int	goec_con_delete_noredraw(
   return GRE__SUCCESS;
 }
 
-
+
 /*************************************************************************
  *
  * Name:		goec_con_sethighlight()
@@ -246,7 +246,7 @@ int	goec_con_sethighlight(
   flow_SetHighlight( con_object->hc.con_id, highlight_flag);
   return GRE__SUCCESS;
 }
-
+
 /*************************************************************************
  *
  * Name:		goec_con_gethighlight()

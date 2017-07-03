@@ -76,7 +76,7 @@
 #include "rt_gdh_msg.h"
 #include "wb_tra.h"
 
-
+
 
 /*_procedure declarations ____________________________________*/
 
@@ -203,7 +203,7 @@ int trace_get_attributes( 	WGre		*gre,
   return sts;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		trace_getm1()
@@ -263,7 +263,7 @@ static pwr_tStatus trace_get_attr_m1( 	WGre		*gre,
   return TRA__SUCCESS ;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		trace_getm2()
@@ -321,7 +321,7 @@ static pwr_tStatus trace_get_attr_m2( 	WGre		*gre,
   return TRA__SUCCESS ;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		trace_getm3 ()
@@ -408,7 +408,7 @@ static pwr_tStatus trace_get_attr_m3( 	WGre		*gre,
   return TRA__SUCCESS ; 
 }
 
-
+
 /*************************************************************************
 *
 * Name:		trace_getm4()
@@ -509,7 +509,7 @@ static pwr_tStatus trace_get_attr_m4( 	WGre		*gre,
   free((char *) tdef);
   return TRA__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		trace_getm5()
@@ -673,7 +673,7 @@ static pwr_tStatus trace_get_attr_m6( 	WGre		*gre,
   return TRA__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		trace_getm7 ()
@@ -783,7 +783,7 @@ static pwr_tStatus trace_get_attr_m7( 	WGre		*gre,
   return TRA__SUCCESS; 
 }
 
-
+
 /*************************************************************************
 *
 * Name:		trace_getm8()
@@ -868,7 +868,7 @@ pwr_tStatus trace_get_attr_con( 	WGre		*gre,
   return TRA__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		trace_getm9 ()
@@ -1162,7 +1162,7 @@ int trace_create_analyse( 	WGre *gre,
 }
 
 
-
+
 /*************************************************************************
 *
 * Name:		int	trace_flow_cb()

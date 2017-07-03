@@ -513,7 +513,7 @@ void ini_ProcTable (
     fclose(f);
   }
 }
-
+
 void
 ini_ProcWait (
   pwr_tStatus	*status,

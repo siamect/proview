@@ -88,7 +88,7 @@ static pwr_tStatus IoCardInit (
   return IO__SUCCESS;
 }
 
-
+
 /*----------------------------------------------------------------------------*\
    Read method for the Modbus TCP module
 \*----------------------------------------------------------------------------*/
@@ -123,7 +123,7 @@ static pwr_tStatus IoCardRead (
   return IO__SUCCESS;
 }
 
-
+
 /*----------------------------------------------------------------------------*\
    Write method for the Pb module
 \*----------------------------------------------------------------------------*/
@@ -158,7 +158,7 @@ static pwr_tStatus IoCardWrite (
   return IO__SUCCESS;
 }
 
-
+
 /*----------------------------------------------------------------------------*\
   Every method to be exported to the workbench should be registred here.
 \*----------------------------------------------------------------------------*/

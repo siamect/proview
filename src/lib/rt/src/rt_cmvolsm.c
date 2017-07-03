@@ -50,7 +50,7 @@
 #include "rt_net.h"
 #include "rt_cmvolsm.h"
 
-
+
 /** Handle GetCclass message */
 void
 cmvolsm_GetCclass (
@@ -157,7 +157,7 @@ cmvolsm_GetCclass (
 }
 
 
-
+
 /** Handle GetGclass message */
 void
 cmvolsm_GetGclass (

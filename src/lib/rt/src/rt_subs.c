@@ -55,7 +55,7 @@
 #include "rt_vol.h"
 #include "rt_subs.h"
 
-
+
 /* Delete a server entry. Database must be locked by caller.  */
 
 void
@@ -98,7 +98,7 @@ subs_DeleteServer (
 
   pool_Free(NULL, gdbroot->pool, sp);
 }
-
+
 /* Updates all server buffers that are connected to this object.  */
 
 void

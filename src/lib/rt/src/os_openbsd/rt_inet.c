@@ -39,7 +39,7 @@
 #include "rt_inet.h"
 #include <net/if_arp.h>
 
-
+
 pwr_tBoolean
 inet_SetArpEntry (
   pwr_tStatus	*sts,
@@ -55,7 +55,7 @@ inet_SetArpEntry (
 #endif
 }
 
-
+
 pwr_tBoolean
 inet_DeleteArpEntry (
   pwr_tStatus	*sts,
@@ -71,7 +71,7 @@ inet_DeleteArpEntry (
 #endif
 }
 
-
+
 pwr_tBoolean
 inet_GetArpEntry (
   pwr_tStatus	*sts,

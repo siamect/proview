@@ -110,7 +110,7 @@ void CoWowMotif::question_help_cb( Widget dialog,XtPointer data,
     (cbdata->questionbox_help)( cbdata->ctx, cbdata->data);
 }
 
-
+
 /************************************************************************
 *
 * Name: DisplayQuestion		
@@ -180,7 +180,7 @@ void CoWowMotif::DisplayQuestion( void *ctx, const char *title, const char *text
 
 }
 
-
+
 /************************************************************************
 *
 * Name: DisplayError(Text)		

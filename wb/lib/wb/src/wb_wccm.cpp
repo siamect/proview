@@ -2171,7 +2171,7 @@ void	wccm_set_status( pwr_tStatus	sts)
 }
 
 
-
+
 /*************************************************************************
 *
 * Name:		wccm_attribute_func()
@@ -2378,7 +2378,7 @@ static int wccm_attribute_func (
 
 	return FOE__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		wccm_cut_segments()

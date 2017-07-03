@@ -44,7 +44,7 @@
 ! 
 ! All Object in this file are Base objects
 !
-!
+!
 !
 ! DATACNV	-	
 !
@@ -167,7 +167,7 @@ SObject NMps:Class
     EndObject
   EndObject
 EndSObject
-!
+!
 !
 ! CONVDEF
 !
@@ -193,7 +193,7 @@ SObject NMps:Class
     EndObject
   EndObject
 EndSObject
-!
+!
 !
 ! DataRequest
 !
@@ -469,7 +469,7 @@ SObject NMps:Class
     EndObject
   EndObject
 EndSObject
-!
+!
 !
 ! DataRequest
 !
@@ -692,7 +692,7 @@ SObject NMps:Class
   EndObject
 EndSObject
 !
-!
+!
 !
 ! DataSend
 !
@@ -970,7 +970,7 @@ SObject SSAB:Class
     EndObject
   EndObject ! $ClassDef
 EndSObject  ! SObject
-!
+!
 !
 SObject wb:layout-PlcEditor-w1-NMps
   Object DataCnv $Group

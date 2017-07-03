@@ -249,7 +249,7 @@ static void	u_print(
 
 
 
-
+
 
 /* 
  * Prototypes
@@ -509,7 +509,7 @@ static int utl_get_listconfig_object(
   int		  *portrait_rows
 );
 
-
+
 /*************************************************************************
 *
 * Cross reference list functions.
@@ -619,7 +619,7 @@ static bool is_focodeobject( ldh_tSesContext ldhses,
   return false;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		print_plc()
@@ -665,7 +665,7 @@ int wb_utl::print_plc(
   sts = print_document( plc, ldhses, ldhwb, document, overview, pdf, 0);
   return sts;
 }
-
+
 /*************************************************************************
 *
 * Name:		print_plc_hier()
@@ -802,7 +802,7 @@ a:hover {font-family: sans-serif; font-size: 11pt; font-weight: bold; color: #35
   return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_print_document()
@@ -1022,7 +1022,7 @@ int wb_utl::print_document (
 
 
 #if 0
-
+
 /*************************************************************************
 *
 * Name:		redraw_plc()
@@ -1090,7 +1090,7 @@ int wb_utl::redraw_plc(
   return FOE__SUCCESS;
 
 }
-
+
 /*************************************************************************
 *
 * Name:		utl_redraw_plc_hier()
@@ -1218,7 +1218,7 @@ error_return:
   return sts;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		redraw_windows()
@@ -1344,7 +1344,7 @@ int wb_utl::redraw_windows (
 }
 #endif
 
-
+
 /*************************************************************************
 *
 * Description: 	Find all plcpgm and open all windows and call the callback
@@ -1488,7 +1488,7 @@ error_return:
   return sts;
 }
 
-
+
 /*************************************************************************
 *
 * Description: 	Find all windows in a plcpgm and call the backcall function.
@@ -2215,7 +2215,7 @@ static int utl_list_classsort (
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_ctx_new()
@@ -2256,7 +2256,7 @@ static void utl_ctx_new (
 	  (*utlctx)->rows = portrait_rows;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_ctx_delete()
@@ -2293,7 +2293,7 @@ static int utl_ctx_delete (
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_ctx_free_sublist()
@@ -2324,7 +2324,7 @@ static int utl_ctx_free_sublist (
   return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_list_insert()
@@ -2392,7 +2392,7 @@ static int utl_list_insert (
 
 	return FOE__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		utl_objidlist_free()
@@ -2419,7 +2419,7 @@ void utl_objidlist_free( utl_t_objidlist *list)
 	  list_ptr = next_ptr;
 	}
 }
-
+
 /*************************************************************************
 *
 * Name:		utl_objidlist_insert()
@@ -2478,7 +2478,7 @@ int	utl_list_count( pwr_tObjid  Objdid, int *count,
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_tableofcont_insert()
@@ -2582,7 +2582,7 @@ static int utl_tableofcont_print (
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_ctxlist_insert()
@@ -2608,7 +2608,7 @@ static int utl_ctxlist_insert (
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		u_pagebreak()
@@ -2658,7 +2658,7 @@ static void	u_pagebreak(
 	}
 }
 
-
+
 /*************************************************************************
 *
 * Name:		u_row()
@@ -2680,7 +2680,7 @@ static void	u_row(
 	utlctx->row++;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		u_pageend()
@@ -2717,7 +2717,7 @@ static void	u_pageend(
 	utlctx->row = 0;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		u_force_pagebreak()
@@ -2744,7 +2744,7 @@ static void	u_force_pagebreak(
 	u_pagebreak( utlctx);
 }
 
-
+
 /*************************************************************************
 *
 * Name:		u_header()
@@ -2793,7 +2793,7 @@ static void	u_header(
 	u_row( utlctx);
 
 }
-
+
 /*************************************************************************
 *
 * Name:		u_subheader()
@@ -2864,7 +2864,7 @@ static void	u_subheader(
 }
 
 
-
+
 /*************************************************************************
 *
 * Name:		u_posit()
@@ -2897,7 +2897,7 @@ static void	u_posit(
 	for ( j = 0; j < nr_of_tabs + 1; j++ )
 	  u_print( utlctx, "	");
 }
-
+
 /*************************************************************************
 *
 * Name:		u_open()
@@ -2939,7 +2939,7 @@ static int	u_open(
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		u_close()
@@ -2959,7 +2959,7 @@ static void	u_close(
 	IF_OUT fclose( utlctx->output_file);
 }
 
-
+
 /*************************************************************************
 *
 * Name:		u_print()
@@ -2985,7 +2985,7 @@ static void	u_print(
 	IF_TER vprintf( format, ap);
 	va_end (ap);
 }
-
+
 /*************************************************************************
 *
 * Name:		utl_show_node()
@@ -3057,7 +3057,7 @@ int utl_show_node (
 	  return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_show_plcpgm()
@@ -3140,7 +3140,7 @@ int utl_show_plcpgm (
 }
 
 
-
+
 /*************************************************************************
 *
 * Name:		utl_show_window()
@@ -3226,7 +3226,7 @@ int utl_show_window (
 	  return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_show_modules()
@@ -3448,7 +3448,7 @@ int utl_show_modules (
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_show_object()
@@ -3571,7 +3571,7 @@ int utl_show_object (
   return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_set_object_parameter()
@@ -3611,7 +3611,7 @@ int utl_revert (
 	return sts;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_set_object_parameter()
@@ -3799,7 +3799,7 @@ int utl_set_object_parameter (
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_show_objects_hier_class_name()
@@ -4085,7 +4085,7 @@ int utl_show_obj_hier_class_name (
 }
 
 #if 0
-
+
 /*************************************************************************
 *
 * Name:		utl_create_volume()
@@ -4158,7 +4158,7 @@ pwr_tStatus utl_create_volume(
 	return FOE__SUCCESS;
 }
 #endif
-
+
 /*************************************************************************
 *
 * Name:		utl_show_volumes()
@@ -4267,7 +4267,7 @@ pwr_tStatus	utl_show_volumes(
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_show_object_objdid()
@@ -4331,7 +4331,7 @@ int utl_show_object_objdid (
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_show_hierarchy()
@@ -4385,7 +4385,7 @@ int utl_show_hierarchy (
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_show_class_classhier()
@@ -4527,7 +4527,7 @@ pwr_tStatus utl_show_class_classhier (
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_print_object()
@@ -4670,7 +4670,7 @@ static int utl_print_aref (
 	}
 	return FOE__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		utl_object_changed()
@@ -4851,7 +4851,7 @@ static int utl_object_changed (
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_print_object_full()
@@ -5301,7 +5301,7 @@ static int utl_print_object_full (
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_print_object_par()
@@ -5739,7 +5739,7 @@ static int utl_print_object_par (
 
 	return FOE__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		utl_print_class()
@@ -5787,7 +5787,7 @@ static int utl_print_class (
 
 	return FOE__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		utl_print_class_full()
@@ -6009,7 +6009,7 @@ static int utl_print_class_full (
 
 	return FOE__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		utl_set_parameter()
@@ -6404,7 +6404,7 @@ static int utl_set_parameter (
 
 	return FOE__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		utl_show_connection()
@@ -6491,7 +6491,7 @@ int utl_show_connection (
 	  return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_link()
@@ -6527,7 +6527,7 @@ int utl_link (
 	return FOE__SUCCESS;
 }	
 
-
+
 /*************************************************************************
 *
 * Name:		utl_compile()
@@ -6899,7 +6899,7 @@ error_return:
 	
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_crossref_object()
@@ -6953,7 +6953,7 @@ int utl_crossref_object (
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_crossref(_hier_class()
@@ -7137,7 +7137,7 @@ int utl_crossref_hier_class_name (
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_crossref()
@@ -7179,7 +7179,7 @@ static int utl_crossref (
 
 	return FOE__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		utl_externref()
@@ -7269,7 +7269,7 @@ static int utl_externref (
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_signalref()
@@ -7373,7 +7373,7 @@ static int utl_signalref (
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_childref()
@@ -7405,7 +7405,7 @@ static int utl_childref (
 
 
 #if 0
-
+
 /*************************************************************************
 *
 * Name:		utl_create_mainwindow()
@@ -7457,7 +7457,7 @@ int utl_create_mainwindow (
   return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_destroy_mainwindow()
@@ -7478,7 +7478,7 @@ Widget widget
 	return FOE__SUCCESS;
 }
 #endif
-
+
 /*************************************************************************
 *
 * Name:		utl_print_repage()
@@ -7533,7 +7533,7 @@ int utl_print_repage (
 
 	return FOE__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		utl_print_content()
@@ -7594,7 +7594,7 @@ int utl_print_content (
 
 	return FOE__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		utl_repage()
@@ -7638,7 +7638,7 @@ int utl_repage (
 }
 
 
-
+
 /*************************************************************************
 *
 * Name:		utl_content()
@@ -7695,7 +7695,7 @@ static int utl_content (
 
 	return FOE__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		utl_list()
@@ -8272,7 +8272,7 @@ int utl_list (
 }	
 
 
-
+
 /*************************************************************************
 *
 * Name:		utl_list_sublist()
@@ -8472,7 +8472,7 @@ static int utl_list_sublist (
 
 	return FOE__SUCCESS;
 }	
-
+
 /*************************************************************************
 *
 * Name:		utl_list_sublist_print()
@@ -8778,7 +8778,7 @@ static int utl_list_sublist_print (
 }	
 
 
-
+
 /*************************************************************************
 *
 * Name:		utl_list_print_par()
@@ -9082,7 +9082,7 @@ static int utl_list_print_par (
 }
 
 
-
+
 /*************************************************************************
 *
 * Name:		utl_list_get_parvalue()
@@ -9390,7 +9390,7 @@ static int utl_list_get_parvalue (
 	  return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_list_print_columnheader()
@@ -9493,7 +9493,7 @@ static int utl_list_print_columnheader (
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_cut_segments()
@@ -9540,7 +9540,7 @@ int utl_cut_segments (
 }
 
 
-
+
 /*************************************************************************
 *
 * Name:		utl_configure_card()
@@ -9751,7 +9751,7 @@ static int	  utl_config_replace(
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_get_filename()
@@ -10028,7 +10028,7 @@ pwr_tStatus utl_get_module_time (
 }
 
 
-
+
 /*************************************************************************
 *
 * Name:		utl_sortchildren()
@@ -10102,7 +10102,7 @@ int utl_sortchildren (
 }
 
 
-
+
 /*************************************************************************
 *
 * Name:		utl_create_object()
@@ -10179,7 +10179,7 @@ int utl_create_object (
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_move_object()
@@ -10257,7 +10257,7 @@ int utl_move_object (
 
 	return FOE__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		utl_copy_objects()
@@ -10293,7 +10293,7 @@ int utl_copy_objects (
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_move_window()
@@ -10443,7 +10443,7 @@ int utl_move_window (
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_connect()
@@ -10470,7 +10470,7 @@ int utl_connect (
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_disconnect()
@@ -10493,7 +10493,7 @@ int utl_disconnect (
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_object_delete()
@@ -10555,7 +10555,7 @@ static int utl_object_delete (
 
 	return FOE__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		utl_tree_delete()
@@ -10611,7 +10611,7 @@ static int utl_tree_delete (
 
 	return FOE__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		utl_delete_objects()
@@ -10747,7 +10747,7 @@ int utl_delete_objects (
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_delete_objects()
@@ -10802,7 +10802,7 @@ int utl_delete_tree (
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_delete_volume()
@@ -10859,7 +10859,7 @@ int utl_delete_volume (
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_export_object()
@@ -11059,7 +11059,7 @@ int utl_export_object (
 
 	return FOE__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		utl_realloc_s()
@@ -11100,7 +11100,7 @@ int utl_realloc_s( 	char	**list_ptr,
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_realloc()
@@ -11142,7 +11142,7 @@ int utl_realloc (
 }
 
 
-
+
 /*************************************************************************
 *
 * Name:		utl_create_loadfiles()
@@ -11288,7 +11288,7 @@ error_return:
 	return status;
 }
 
-
+
 /*************************************************************************
 *
 * Cross document list functions.
@@ -11302,7 +11302,7 @@ static	int		cross_doclist_loaded = 0;
 static	crossdoc_t_list	*cross_doclist = 0;
 static	int		cross_doclist_count = 0;
 
-
+
 /*************************************************************************
 *
 * Name:		cross_doclist_add()
@@ -11356,7 +11356,7 @@ static int	cross_doclist_add( 	crossdoc_t_list	**doclist,
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		cross_doclist_object_insert()
@@ -11424,7 +11424,7 @@ static int cross_doclist_object_insert(
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		cross_doclist_load()
@@ -11452,7 +11452,7 @@ static int	cross_doclist_load( ldh_tSesContext ldhses)
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		cross_doclist_unload()
@@ -11484,7 +11484,7 @@ static int	cross_doclist_unload()
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		cross_get_object_page()
@@ -11561,7 +11561,7 @@ static int	cross_get_object_page(
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Cross reference list functions.
@@ -11658,7 +11658,7 @@ pwr_tStatus wb_utl::utl_replace_symbol( ldh_tSesContext ldhses,
   return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		cross_crosslist_add()
@@ -11705,7 +11705,7 @@ static int	cross_crosslist_add( 	cross_t_list	**crosslist,
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		cross_crosslist_object_insert()
@@ -11852,7 +11852,7 @@ static int	cross_crosslist_object_insert(
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		cross_crosslist_load()
@@ -11920,7 +11920,7 @@ static int cross_crosslist_load( ldh_tSesContext ldhses)
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		cross_crosslist_unload()
@@ -11955,7 +11955,7 @@ static int	cross_crosslist_unload()
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		crr_refobject()
@@ -12019,7 +12019,7 @@ static int crr_refobject (
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		crr_crossref_children()
@@ -12084,7 +12084,7 @@ static int	crr_crossref_children(
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		crr_crossref()
@@ -12165,7 +12165,7 @@ static int	crr_crossref(
 	return FOE__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		utl_set_template()

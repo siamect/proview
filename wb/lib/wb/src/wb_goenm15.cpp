@@ -75,7 +75,7 @@ static	float	f_width;
 static	float   f_namelength;
 static	float   f_node_width;
 
-
+
 /*_Methods defined for this module_______________________________________*/
 
 /*************************************************************************
@@ -381,7 +381,7 @@ int goen_create_nodetype_m15(
 }
 
 
-
+
 /*************************************************************************
 *
 * Name:		goen_get_point_info_m15()
@@ -462,7 +462,7 @@ int goen_get_point_info_m15( WGre *grectx, pwr_sGraphPlcNode *graphbody,
 }
 
 
-
+
 /*************************************************************************
 *
 * Name:		goen_get_parameter_m15()
@@ -555,7 +555,7 @@ int	goen_get_parameter_m15( pwr_sGraphPlcNode *graphbody, pwr_tClassId cid,
 	else return GOEN__NOPOINT;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		goen_get_location_point_m15()

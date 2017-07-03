@@ -100,7 +100,7 @@ testClient (
   sub_sClient		*cp
 );
 
-
+
 /* This routine posts a subscription client entry for timeout watching. The
    tmo field of the entry must be filled in. The routine
    detects zero = infinite timeouts, and takes approprate action.  */
@@ -121,7 +121,7 @@ activateTimeoutWatch (
     gdbroot->db->subt_lc++;
   }
 }
-
+
 /* Remove a subscription client entry from timeout watching.  */
 
 static void
@@ -138,7 +138,7 @@ cancelTimeoutWatch (
     gdbroot->db->subt_lc--;
   }
 }
-
+
 /* Delete a subcli entry, and its associated data.
    It does not terminate any outstanding subscritions, though.
    The database must be locked.  */
@@ -182,7 +182,7 @@ deleteClient (
   pool_Free(NULL, gdbroot->pool, cp);
 
 }
-
+
 /* Test the existence of the object requested, and return node id.
    The sts field is filled in and for a subscription by name,
    the attrref field is filled in.
@@ -430,7 +430,7 @@ testClient (
 
   return np;
 }
-
+
 /* This routine is applied to a list of non-activated
    clients. Each client is tested for object existence. If
    the object is reachable, the client is made active by
@@ -648,7 +648,7 @@ subc_ActivateList (
   tree_DeleteTable(remove);
 #endif
 }
-
+
 /* Cancels a list of clients.
    The client entry is released, and a message is sent to the node
    holding the server entry corresponding to the client.
@@ -744,7 +744,7 @@ subc_CancelList (
   tree_DeleteTable(remove);
 #endif
 }
-
+
 /* Cancel all subscriptions for a particular user.
    The database should be locked on entry.  */
 
@@ -794,7 +794,7 @@ subc_CancelUser (
   pool_Free(NULL, gdbroot->pool, lh);
 
 }
-
+
 /* Allocate and fill in one client entry.
    Either name or attrref must be supplied.
    The subcli is linked into a list
@@ -845,7 +845,7 @@ subc_Create (
 
   return cp;
 }
-
+
 /* Decrease the charging of a 'message'.
    If the 'message' is charged with 0 clients then it is disposed.
 
@@ -875,7 +875,7 @@ subc_RemoveFromMessage (
   cp->submsg  = pool_cNRef;
   cp->subdata = pool_cNRef;
 }
-
+
 /* Changes the defaults for dt and tmo.  */
 
 void
@@ -897,7 +897,7 @@ subc_SetDefaults (
       default_tmo = 10000;
   }
 }
-
+
 /* Set the data in a client as timed out.
 
    If the data of the subscription is to be blank when 

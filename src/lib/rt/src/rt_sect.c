@@ -94,7 +94,7 @@ segName (
 #endif
 }
 
-
+
 /* Map (and optionally create) a shared memory section.
    Name must not be more than 15 characters because of $ASCEFC.
    Returns the virtual address of the newly mapped (created) section.  */
@@ -283,7 +283,7 @@ sect_Alloc (
   if (lshp != NULL) free(lshp);
   pwr_Return(NULL, sts, lsts);
 }
-
+
 /* Unmap a shared memory section.  */
 
 pwr_tBoolean
@@ -306,7 +306,7 @@ sect_Free (
 
   pwr_Return(ODD(lsts), sts, lsts);
 }
-
+
 /* Initialize a shared memory lock.  */
 
 pwr_tBoolean
@@ -332,7 +332,7 @@ sect_InitLock (
 
   errh_ReturnOrBugcheck(ODD(lsts), sts, lsts, "");
 }
-
+
 /* Lock a shared memory section.  */
 
 pwr_tBoolean
@@ -364,7 +364,7 @@ sect_Lock (
 
   errh_ReturnOrBugcheck(ODD(lsts), sts, lsts, "");
 }
-
+
 /* Unlock a shared memory section.  */
 
 pwr_tBoolean

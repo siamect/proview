@@ -67,7 +67,7 @@ static gdb_sNode *node(net_sMessage *mp);
 static void nodeUp(net_sNodeUp *mp);
 static void *receive(qcom_sQid *qid, qcom_sGet *get);
 
-
+
 int
 main (
   int			argc,
@@ -132,7 +132,7 @@ main (
     qcom_Free(&sts, mp);
   }
 }
-
+
 /* Initiate qcom, gdh and subscriptions.  */
 
 static void
@@ -185,7 +185,7 @@ init (
 
   } gdb_ScopeUnlock;
 }
-
+
 /* Receive a message.  */
 
 static void *
@@ -222,7 +222,7 @@ receive (
     return mp;
   }
 }
-
+
 static void
 event (
   qcom_sGet	*get
@@ -239,7 +239,7 @@ event (
     exit(0);
   }
 }
-
+
 /* Check message node identity and return pointer to node.  */
 
 static gdb_sNode *
@@ -267,7 +267,7 @@ node (
   
   return np;
 }
-
+
 /* A node is up.
    
    Get object headers for all mount servers
@@ -299,7 +299,7 @@ nodeUp (
     sanc_SubscribeMountServers(&sts, np);
   } gdb_ScopeUnlock;
 }
-
+
 /* Get the object header of all mount servers and lock them in cache.  */
 
 static void

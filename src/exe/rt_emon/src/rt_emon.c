@@ -521,7 +521,7 @@ static pwr_tStatus 	emon_redu_send();
 static pwr_tStatus 	emon_redu_receive();
 
 
-
+
 int main ()
 {
   pwr_tStatus sts;
@@ -646,7 +646,7 @@ int main ()
     receive(myQid);
   }
 }
-
+
 static sActive *
 activeListGet (
   pwr_tUInt32 idx
@@ -661,7 +661,7 @@ activeListGet (
       
   return NULL;
 }
-
+
 /* Puts an active link block at the end of the active list and at the end
    of the event index list pointed to by ep.  */
 
@@ -718,7 +718,7 @@ activeListInsert (
   }
 
 }
-
+
 /* Removes a active link block from the active list and event index list. */
 
 static void
@@ -802,7 +802,7 @@ activeListRemove (
       handlerListFree((sApplActive*)ap);
   }
 }
-
+
 static void
 applConnect (
   mh_sHead *hp,
@@ -830,7 +830,7 @@ applConnect (
   applLogState(ap);
   reply->Connect.NoOfActMessages = ap->activeMessages;
 }
-
+
 static void
 applDisconnect (
   mh_sHead *hp,
@@ -851,7 +851,7 @@ applDisconnect (
   free(ap);       /* Free control block */
   Reply->Sts = MH__SUCCESS;
 }
-
+
 static void
 applLogState (
   sAppl *ap
@@ -881,7 +881,7 @@ applLogState (
 
   ap->oldState = ap->state;
 }
-
+
 static void
 applGetMsgInfo (
   mh_sHead *hp,
@@ -919,7 +919,7 @@ applGetMsgInfo (
   } else
     Reply->Info.Sts = MH__NOMOREMSG;
 }
-
+
 static void
 applMessage (
   mh_sHead *hp,
@@ -1012,7 +1012,7 @@ applMessage (
   reply->Message.Idx = ep->idx;
   eventToOutunits(ep);
 }
-
+
 static pwr_tStatus
 applReply (
   qcom_sGet	*get,
@@ -1050,7 +1050,7 @@ applReply (
 
   return sts;
 }
-
+
 static void
 applReturn (
   mh_sHead *hp,
@@ -1128,7 +1128,7 @@ applReturn (
   reply->Sts = MH__SUCCESS;
   eventToOutunits(ep);
 }
-
+
 static sBlock *
 blockListAlloc ()
 {
@@ -1156,7 +1156,7 @@ blockListAlloc ()
   --l.emon->FreeCount;
   return LstObj(bl);
 }
-
+
 static void
 blockListFree (
  sBlock *bp
@@ -1168,7 +1168,7 @@ blockListFree (
   ++l.emon->FreeCount;
   return;
 }
-
+
 /* Detect an ASup object.
 
    !!! NOTE: This should be the same as the macro used by PLC,
@@ -1224,7 +1224,7 @@ aSup_exec (
     }
   }
 }
-
+
 /* Cancel an alarm.  */
 
 static void
@@ -1377,7 +1377,7 @@ sendAlarmStatus( sOutunit *op)
   free( (char *)msg);
 }
 
-
+
 static void
 checkOutunits ()
 {
@@ -1410,7 +1410,7 @@ checkOutunits ()
     }
   }
 }
-
+
 static void
 cSup_exec (
   sSupActive *sp
@@ -1474,7 +1474,7 @@ cSup_exec (
     }
   }
 }
-
+
 static void
 dSup_exec (
   sSupActive *sp
@@ -1524,7 +1524,7 @@ dSup_exec (
     }
   }
 }
-
+
 static void
 enableQcomEvents (
   qcom_sQid myQ
@@ -1552,7 +1552,7 @@ enableQcomEvents (
   }
 
 }
-
+
 static void
 enableQcomAllHandlers (
   qcom_sQid myQ
@@ -1566,7 +1566,7 @@ enableQcomAllHandlers (
     exit(-1);
   }
 }
-
+
 static void
 eventListInit ()
 {
@@ -1582,7 +1582,7 @@ eventListInit ()
   l.event_l->size = l.emon->EventListSize;
 
 }
-
+
 static sEvent *
 eventListInsert (
   mh_eEvent	event,
@@ -1682,7 +1682,7 @@ eventListInsert (
 
   return ep;
 }
-
+
 static void
 eventToOutunits (
   sEvent *ep
@@ -1697,7 +1697,7 @@ eventToOutunits (
       sendEventListToOutunit(op);
   }
 }
-
+
 static void
 formatApplEvent (
   mh_eEvent event,
@@ -1829,7 +1829,7 @@ formatApplEvent (
     break;
   }
 }
-
+
 static void
 formatSupEvent (
   mh_eEvent event,
@@ -1981,7 +1981,7 @@ formatSupEvent (
 
   msgToV3( event, up);
 }
-
+
 static void
 formatOutunitEvent (
   mh_eEvent event,
@@ -2042,7 +2042,7 @@ formatOutunitEvent (
   }
   msgToV3( event, up);
 }
-
+
 static void
 fromApplication (
   qcom_sGet	*get
@@ -2090,7 +2090,7 @@ fromApplication (
   applLogState(ap);
   applReply(get, &reply, sizeof(reply));
 }
-
+
 static void
 fromHandler (
   qcom_sGet	*get
@@ -2115,7 +2115,7 @@ fromHandler (
     break;
   }
 }
-
+
 static void
 fromMessageUnit (
   qcom_sGet	*get
@@ -2138,7 +2138,7 @@ fromMessageUnit (
     break;
   }
 }
-
+
 static void
 fromOutunit (
   qcom_sGet	*get
@@ -2184,7 +2184,7 @@ fromOutunit (
   }
 
 }
-
+
 static void
 fromQcom (
   qcom_sGet *gp
@@ -2220,7 +2220,7 @@ fromQcom (
     break;
   }
 }
-
+
 static void
 fromEvent (
   qcom_sGet	*get
@@ -2315,7 +2315,7 @@ fromEvent (
 
   sav_event = ep->mask;
 }
-
+
 static void
 getHandlerObject ()
 {
@@ -2430,7 +2430,7 @@ getHandlerObject ()
     exit(sts);
   }
 }
-
+
 static mh_eAgent
 getAgent (
   sSupActive *sap
@@ -2474,7 +2474,7 @@ getAgent (
     }
   }
 }
-
+
 static void
 handleAlarm (
   sSupActive *sp
@@ -2488,7 +2488,7 @@ handleAlarm (
 
   eventToOutunits(ep);
 }
-
+
 static void
 handleInfo (
   sSupActive *sp
@@ -2509,7 +2509,7 @@ handleInfo (
 
   eventToOutunits(ep);
 }
-
+
 static void
 handleMessage (
   qcom_sGet *get
@@ -2546,7 +2546,7 @@ handleMessage (
     break;
   }
 }
-
+
 static void
 handleReturn (
   sSupActive *sp
@@ -2584,7 +2584,7 @@ handleReturn (
 
   eventToOutunits(ep);
 }
-
+
 static void
 handlerEvent (
   pwr_eSystemEventTypeEnum event,
@@ -2745,7 +2745,7 @@ handlerEvent_cb (
 }
 
 
-
+
 static sApplActive *
 handlerListAlloc (
   pwr_eSystemEventTypeEnum event	  
@@ -2786,7 +2786,7 @@ handlerListAlloc (
 
   return LstObj(hl);
 }
-
+
 static void
 handlerListFree (
  sApplActive *hp
@@ -2800,7 +2800,7 @@ handlerListFree (
   l.handlerListCount--;
   return;
 }
-
+
 static void
 initBlockList ()
 {
@@ -2876,7 +2876,7 @@ initBlockList ()
     activeListInsert((sActive *) bp, ep, mh_eSource_Outunit);
   } 
 }
-
+
 /* Initialize the node database.  */
 
 static void
@@ -2903,7 +2903,7 @@ initNodeDb ()
     LstIni(&l.nodeDb[i].appl.active_l);
   }
 }
-
+
 /* Initialize a SupActiveCB record.  */
 
 static pwr_tStatus
@@ -3133,7 +3133,7 @@ initSupActiveCB (
   *spp = sp;
   return sts;
 }
-
+
 /* Initialize the Supervisor list.  */
 
 static pwr_tStatus
@@ -3173,7 +3173,7 @@ initSupList ()
 
   return(sts);
 }
-
+
 static pwr_tStatus
 initSupListClass(
   pwr_tClassId cid
@@ -3213,7 +3213,7 @@ initSupListClass(
 
   return(sts);
 }
-
+
 static pwr_tBoolean
 isForOutunit (
   sOutunit *op,
@@ -3257,7 +3257,7 @@ isForOutunit (
   }
   return FALSE;
 }
-
+
 static pwr_tBoolean
 isValidApplication (
   mh_sHead *hp,
@@ -3323,7 +3323,7 @@ isValidApplication (
   Reply->Sts = MH__SUCCESS;
   return TRUE;
 }
-
+
 static pwr_tBoolean
 isValidOutunit (
   mh_sHead *hp,
@@ -3400,7 +3400,7 @@ isValidOutunit (
   *outunit = op;
   return TRUE;
 }
-
+
 static void
 linkActive (
   qcom_sGet *msg
@@ -3415,7 +3415,7 @@ linkActive (
     node->name, cdh_NodeIdToString(NULL, node->nid, 0, 0));
 
 }
-
+
 static void
 linkConnect (
   qcom_sGet *msg
@@ -3446,7 +3446,7 @@ linkConnect (
 
   sts = sendMessage(mh_eMsg_HandlerHello, NULL, NULL, NULL, 0); /* Left to do !!! Send to specific node */
 }
-
+
 static void
 linkDisconnect (
   qcom_sGet *msg
@@ -3475,7 +3475,7 @@ linkDisconnect (
       LstObj(ol)->linkUp = FALSE;
     }
 }
-
+
 static void
 linkStalled (
   qcom_sGet *msg
@@ -3490,7 +3490,7 @@ linkStalled (
     qnode->name, cdh_NodeIdToString(NULL, qnode->nid, 0, 0));
 
 }
-
+
 static void
 outunitAborted (
   sOutunit *op
@@ -3505,7 +3505,7 @@ outunitAborted (
   LstNul(&op->link.proc_l);
   free(op);       /* Free control block */
 }
-
+
 static void
 outunitAck (
   mh_sHead *hp,
@@ -3573,7 +3573,7 @@ outunitAck (
   eventToOutunits(ep);
 
 }
-
+
 static void
 outunitBlock (
   mh_sHead *hp,
@@ -3690,7 +3690,7 @@ outunitBlock (
   eventToOutunits(ep);
   saveBlockList();
 }
-
+
 static void
 outunitInfo (
   mh_sHead *hp,
@@ -3722,7 +3722,7 @@ outunitInfo (
   sendEventListToOutunit(op);
 
 }
-
+
 static void
 outunitDisconnect (
   mh_sHead *hp,
@@ -3738,7 +3738,7 @@ outunitDisconnect (
   LstNul(&op->link.proc_l);
   free(op);       /* Free control block */
 }
-
+
 static void
 outunitLog (
   sOutunit *op,
@@ -3750,7 +3750,7 @@ outunitLog (
 	    cdh_ObjidToString(NULL, op->outunit, 1)
   );
 }
-
+
 static void
 outunitSync (
   mh_sHead *hp,
@@ -3783,7 +3783,7 @@ outunitSync (
   sendEventListToOutunit(op);
 }
 
-
+
 static void
 outunitAlarmReq (
   mh_sHead *hp,
@@ -3835,7 +3835,7 @@ outunitAlarmReq (
   op->syncedIdx = op->eventIdx;
 }
 
-
+
 static void
 procDown ( 
   qcom_sAid *aid
@@ -3861,7 +3861,7 @@ procDown (
       return;
     }
 }
-
+
 #define SET_TIMEOUT              \
   if (l.timerActive) {               \
     tmo = l.timerTime * 1000.; /* Milli seconds */ \
@@ -3947,7 +3947,7 @@ receive (
     aproc_TimeStamp( ((float)tmo)/1000, 2);
   }    
 }
-
+
 static void
 reInitSupList ()
 {
@@ -4002,7 +4002,7 @@ reInitSupList ()
     }
   }
 }
-
+
 static pwr_tStatus
 reInitSupListClass(
   pwr_tClassId cid
@@ -4048,7 +4048,7 @@ reInitSupListClass(
   return(sts);
 
 }
-
+
 static pwr_tBoolean
 reSendEventToOutunit (
   sOutunit *op,
@@ -4116,7 +4116,7 @@ reSendEventToOutunit (
 
   return ODD(sts);
 }
-
+
 static void
 saveBlockList ()
 {
@@ -4151,7 +4151,7 @@ saveBlockList ()
   l.blockDb = mh_BlockDbPut(l.blockDb, size, (char *)l.blockSave);  
 
 }
-
+
 static void
 scanDetectList ()
 {
@@ -4163,7 +4163,7 @@ scanDetectList ()
       sp->detect_exec(sp);
   }
 }
-
+
 static void
 scanSupList ()
 {
@@ -4218,7 +4218,7 @@ scanSupList ()
   }
   l.newBlock = FALSE;
 }
-
+
 static void
 scanTimerList ()
 {
@@ -4239,7 +4239,7 @@ scanTimerList ()
     }
   }
 }
-
+
 static void
 sendEventListToOutunit (
   sOutunit		*op
@@ -4330,7 +4330,7 @@ sendEventListToOutunit (
     time_GetTime(&op->lastSentTime);
   }
 }
-
+
 static pwr_tBoolean
 sendEventToOutunit (
   sOutunit	*op,
@@ -4349,7 +4349,7 @@ sendEventToOutunit (
 
   return YES;
 }
-
+
 static pwr_tStatus
 sendMessage (
   mh_eMsg	type,
@@ -4397,7 +4397,7 @@ sendMessage (
 
   return sts;
 }
-
+
 static pwr_tStatus
 sendToOutunit (
   sOutunit	*op,
@@ -4445,7 +4445,7 @@ sendToOutunit (
 
   return sts;
 }
-
+
 static void
 setTimerActive(
   int timerIdx,
@@ -4461,7 +4461,7 @@ setTimerActive(
     l.timerActive |= l.timers[i].active;
 
 }
-
+
 /* This routine search suplist for a sup object.  */
 
 static sSupActive *
@@ -4480,7 +4480,7 @@ supListGet (
 
   return NULL;
 }
-
+
 static void
 timeOut()
 {
@@ -4546,7 +4546,7 @@ timeOut()
   pwrb_IOHandler_Exec( handlerEvent_cb, 0);
 
 }
-
+
 static void
 timerIn (
   sSupActive *s,
@@ -4563,7 +4563,7 @@ timerIn (
     t->TimerFlag = TRUE;
   }
 }
-
+
 static void
 updateAlarm (
   sActive *ap,
@@ -4659,7 +4659,7 @@ updateAlarm (
     updateAlarmInfo(ap);
   }
 }
-
+
 static void
 updateAlarmInfo (
   sActive *iap
@@ -4689,7 +4689,7 @@ updateAlarmInfo (
 
   gdh_SetAlarmLevel(iap->object.Objid, maxAlarm.All);
 }
-
+
 static void
 updateSupActive (
   sSupActive	*sp

@@ -181,7 +181,7 @@ gdh_AttrrefToName (
   return sts;
 }
 
-
+
 /** 
  * @brief Get the attribute reference for an attribute in an object attribute
  * reference, where the attribute is specified by an string.
@@ -240,7 +240,7 @@ gdh_ArefANameToAref (
   return sts;
 }
 
-
+
 /** 
  * @brief Get the attribute reference to an object or attribute object, from the 
  * attribute reference to an attribute in the object.
@@ -298,7 +298,7 @@ gdh_AttrArefToObjectAref (
   return sts;
 }
 
-
+
 /** 
  * @brief Converts a class and attribute string to attrref format.
  *
@@ -346,7 +346,7 @@ gdh_ClassAttrToAttrref (
 
   return sts;
 }
-
+
 /** 
  * @brief Get the attribute name from a class and attrref.
  *
@@ -392,7 +392,7 @@ gdh_ClassAttrrefToAttr (
   return sts;
 }
 
-
+
 /** 
  * @brief Get the class identity corresponding to a class
  * specified by name.
@@ -419,7 +419,7 @@ gdh_ClassNameToId (
 
   return sts;
 }
-
+
 /**
  * @brief Create an object in a dynamic volume.
  *
@@ -477,7 +477,7 @@ gdh_CreateObject (
 
   return sts;
 }
-
+
 /**
  * @brief Remove a local object.
  *
@@ -513,7 +513,7 @@ gdh_DeleteObject (
 
   return sts;
 }
-
+
 /** 
  * @brief Request a direct link to the data denoted by an attribute reference.
  * 
@@ -565,7 +565,7 @@ gdh_DLRefObjectInfoAttrref (
     
   return sts;
 }
-
+
 /** 
  * @brief Terminate direct linking of an object or an object attribute.
  * 
@@ -593,7 +593,7 @@ gdh_DLUnrefObjectInfo (
   return sts;
 
 }
-
+
 /** 
  * @brief Removes all direct links set up by this process.  
  */
@@ -609,7 +609,7 @@ gdh_DLUnrefObjectInfoAll ()
   } gdh_ScopeUnlock;
 
 }
-
+
 /**  
  * @brief Get the alarm status for a certain object.  
  * @return pwr_tStatus
@@ -678,7 +678,7 @@ gdh_GetAlarmInfo (
 
   return sts;
 }
-
+
 /** 
  * @brief Get the node identity of the local node.  
  * @return pwr_tStatus
@@ -699,7 +699,7 @@ gdh_GetNodeIndex (
 
   return GDH__SUCCESS;
 }
-
+
 /**
  * @brief Get the node identity of the owner node of an object.  
  * @return pwr_tStatus
@@ -731,7 +731,7 @@ gdh_GetObjectNodeIndex (
 
   return sts;;
 }
-
+
 /** 
  * @brief Fetch data from an object or an attribute.
  *
@@ -856,7 +856,7 @@ gdh_GetObjectInfo (
 
   return sts;
 }
-
+
 /** 
  * @brief Fetch the data of an attribute or a whole object body.
  *   
@@ -966,7 +966,7 @@ gdh_GetObjectInfoAttrref (
 
   return sts;
 }
-
+
 /**
  * @brief Get the size of the body of an object. 
  *
@@ -1050,7 +1050,7 @@ gdh_GetDynamicAttrSize(
   return sts;
 }
 
-
+
 /** 
  * @brief Get the class identifier of an object. 
  *
@@ -1092,7 +1092,7 @@ gdh_GetObjectClass (
 
   return sts;
 }
-
+
 /** 
  * @brief Get the type or class identifier of an attribute reference. 
  * @return pwr_tStatus
@@ -1162,7 +1162,7 @@ gdh_GetAttrRefTid (
   }
   return sts;
 }
-
+
 /** 
  * @brief Return the location of an object.
  *
@@ -1197,7 +1197,7 @@ gdh_GetObjectLocation (
 
   return sts;
 }
-
+
 
 /** 
  * @brief Gets the direct link count of an object.
@@ -1227,7 +1227,7 @@ gdh_GetObjectDLCount (
 
   return sts;
 }
-
+
 /** 
  * @brief Get the object identity of the parent of an object.  
  * @see gdh_GetLocalParent
@@ -1263,7 +1263,7 @@ gdh_GetParent (
   return sts;
 }
 
-
+
 /** 
  * @brief Get the object identity of the local parent of an object.  
  *
@@ -1302,7 +1302,7 @@ gdh_GetLocalParent (
   return sts;
 }
 
-
+
 /** 
  * @brief Checks the oldness of a certain subscription.
  *
@@ -1352,7 +1352,7 @@ gdh_GetSubscriptionOldness (
 
   return sts;
 }
-
+
 /** 
  * @brief Get the object identity of the first child of an object.
  *
@@ -1403,7 +1403,7 @@ gdh_GetChild (
 
   return sts;
 }
-
+
 /**
  * @brief Get the object identity of the next sibling (i.e.
  * the next object with the same parent). 
@@ -1446,7 +1446,7 @@ gdh_GetNextSibling (
 
   return sts;
 }
-
+
 /** 
  * @brief Get the object identity of the previous sibling (i.e.
  * the previous object with the same parent).  
@@ -1490,7 +1490,7 @@ gdh_GetPreviousSibling (
   return sts;
 
 }
-
+
 /** 
  * @brief Get the first root object in the object tree.
  *
@@ -1542,7 +1542,7 @@ gdh_GetRootList (
 
   return sts;
 }
-
+
 /** 
  * @brief Get the object identity of the first object
  * in the list of objects of a specified class.
@@ -1589,7 +1589,7 @@ gdh_GetClassList (
 
   return sts;
 }
-
+
 /**
  * @brief Get the object identity of the next object
  * in the list of objects of a certain class.
@@ -1626,7 +1626,7 @@ gdh_GetNextObject (
 
   return sts;
 }
-
+
 /** 
  * @brief Get the attribute reference of the first object
  * in the list of objects of a specified class.
@@ -1671,7 +1671,7 @@ gdh_GetClassListAttrRef (
 
   return sts;
 }
-
+
 /**
  * @brief Get the attrref of the next object
  * in the list of objects of a certain class.
@@ -1706,7 +1706,7 @@ gdh_GetNextAttrRef (
 
   return sts;
 }
-
+
 /** 
  * @brief Get the attribute reference of the first attribute object
  * of a specified class in the specified object.
@@ -1732,7 +1732,7 @@ gdh_GetObjectClassList (
 
   return sts;
 }
-
+
 /**
  * @brief Get the attrref of the next attribute object
  * of a specified class in a specified object.
@@ -1759,7 +1759,7 @@ gdh_GetNextObjectAttrRef (
 
   return sts;
 }
-
+
 /** 
  * @brief Return the objid of the node object for a node identified by a
  * node identifier (of type pwr_tNodeId).
@@ -1796,7 +1796,7 @@ gdh_GetNodeObject (
   return sts;
 }
 
-
+
 /** 
  * @brief Get the characteristics of an attribute, given
  * its name and the class it belongs to. 
@@ -1849,7 +1849,7 @@ gdh_GetAttributeCharacteristics (
   return sts;
 
 }
-
+
 /** 
  * @brief Get the characteristics of an attribute.
  *  
@@ -1891,7 +1891,7 @@ gdh_GetAttributeCharAttrref (
   return sts;
 }
 
-
+
 /** 
  * @brief Get the flags of an attribute.
  *  
@@ -1923,7 +1923,7 @@ gdh_GetAttributeFlags (
   return sts;
 }
 
-
+
 /** 
  * @brief Get the object identity of the previous object
  * in the list of objects of a certain class.
@@ -1957,7 +1957,7 @@ gdh_GetPreviousObject (
 
   return sts;
 }
-
+
 /** 
  * @brief Initialize the process to the Proview runtime environment.
  *
@@ -1983,7 +1983,7 @@ gdh_Init (
 
   return sts;
 }
-
+
 /*
  * Fetch the meta data of an attribute, given its attrref or its name.
  *
@@ -2052,7 +2052,7 @@ gdh_MDAttribute (
 
   return sts;
 }
-
+
 /**
  * @brief  Move a local object.
  *
@@ -2085,7 +2085,7 @@ gdh_MoveObject (
 
   return sts;
 }
-
+
 /** 
  * @brief Get the object identity of an object with name 'name'.  
  *
@@ -2128,7 +2128,7 @@ gdh_NameToObjid (
 
   return sts;
 }
-
+
 /** 
  * @brief Get the address of the data of an object,
  * given its name.
@@ -2163,7 +2163,7 @@ gdh_NameToPointer (
 
   return sts;
 }
-
+
 /** 
  *@brief Check if the Nethandler has started.  
  *
@@ -2196,7 +2196,7 @@ gdh_NethandlerRunning (
 
   return sts;
 }
-
+
 /** 
  * @brief Converts from name string to attribute reference. 
  *
@@ -2248,7 +2248,7 @@ gdh_NameToAttrref (
 
   return sts;
 }
-
+
 /** 
  * @brief Get the name of an object identified by its object identity.
  * 
@@ -2314,7 +2314,7 @@ gdh_ObjidToName (
 
   return sts;
 }
-
+
 /** 
  * @brief Gets the address of the data of an object, given its
  * object identity.
@@ -2377,7 +2377,7 @@ gdh_MountObjidToPointer (
 
   return sts;
 }
-
+
 /** 
  * @brief Gets the address of the data of an attribute reference.
  *  
@@ -2413,7 +2413,7 @@ gdh_AttrRefToPointer (
 
   return sts;
 }
-
+
 /** 
  * @brief Rename a local object.
  *
@@ -2449,7 +2449,7 @@ gdh_RenameObject (
 
   return sts;
 }
-
+
 /** 
  * @brief Change the value of an attribute or the whole body of an object.
  * 
@@ -2590,7 +2590,7 @@ gdh_SetObjectInfo (
 
   return sts;
 }
-
+
 /**
  * @brief Change the data of an object or an attribute.
  * 
@@ -2720,7 +2720,7 @@ gdh_SetObjectInfoAttrref (
 
   return sts;
 }
-
+
 /**
  * @brief Sets up a list of subscriptions to an object/attribute.
  *
@@ -2792,7 +2792,7 @@ gdh_SubRefObjectInfoList (
 
   return sts;
 }
-
+
 /** 
  * @brief This routine returns a subid to the information that is
  * denoted by 'aref'. The name can be either an object or an 
@@ -2820,7 +2820,7 @@ gdh_SubRefObjectInfoAttrref (
 
   return sts;
 }
-
+
 /**
  * @brief Get the address of the data that is denoted by 'name'.
  *
@@ -2846,7 +2846,7 @@ gdh_SubRefObjectInfoName (
 
   return sts;
 }
-
+
 /**
  * @brief Terminates a list of subscriptions. 
  *
@@ -2912,7 +2912,7 @@ gdh_SubUnrefObjectInfoList (
 
   return retsts;
 }
-
+
 /**
  *@brief Terminates subscription of an object or an attribute.  
  * 
@@ -2933,7 +2933,7 @@ gdh_SubUnrefObjectInfo (
 
   return sts;
 }
-
+
 /** 
  * @brief Terminates all subscriptions set up by this user (job/process).  
  *
@@ -2950,7 +2950,7 @@ gdh_SubUnrefObjectInfoAll ()
   } gdh_ScopeUnlock;
 
 }
-
+
 /** 
  * @brief Fetch the data associated with a subscription.  
  */
@@ -3031,7 +3031,7 @@ gdh_SubData (
 
   return sts;
 }
-
+
 /** 
  * @brief Fetch the data size associated with a subscription.  
  */
@@ -3061,7 +3061,7 @@ gdh_SubSize (
 
   return sts;
 }
-
+
 /**
  *@brief Associate a buffer with the subscription.
  * 
@@ -3108,7 +3108,7 @@ gdh_SubAssociateBuffer (
   return sts;
 
 }
-
+
 /** 
  * @brief Sets default subscription timers for future subscription
  * requests. 
@@ -3129,7 +3129,7 @@ gdh_SetSubscriptionDefaults (
   subc_SetDefaults(dt, tmo);
   return GDH__SUCCESS;
 }
-
+
 /**
  * @brief  This routine returns addresses to the information that is
  * denoted by "objref[].fullname". 
@@ -3258,7 +3258,7 @@ gdh_RefObjectInfoList (
 
   return rsts;
 }
-
+
 /**
  * @brief The routine returns an address to the data that is denoted by Name. 
  * The name can be either an object or an object attribute. 
@@ -3319,7 +3319,7 @@ gdh_RefObjectInfo (
 
   return sts;
 }
-
+
 /**
  *@brief Terminates the subscription defined by the 
  * subscription identity.
@@ -3354,7 +3354,7 @@ gdh_UnrefObjectInfo (
 
   return sts;
 }
-
+
 /**
  *@brief Terminates all subscriptions set up by this process.
  * 
@@ -3372,7 +3372,7 @@ gdh_UnrefObjectInfoAll ()
 
   return GDH__SUCCESS;
 }
-
+
 /**  
  * @brief This routine sets the alarm level for a certain object.
  *
@@ -3403,7 +3403,7 @@ gdh_SetAlarmLevel (
 
   return sts;
 }
-
+
 /**
  *@brief  Sets the alarm block level for a certain object.
  *
@@ -3433,7 +3433,7 @@ gdh_SetAlarmBlockLevel (
 
   return sts;
 }
-
+
 /**
  * @brief  Convert pointer to rtdb relative pointer.
  * @return pwr_tStatus
@@ -3456,7 +3456,7 @@ gdh_StoreRtdbPointer (
   }
   *rp = r;
 }
-
+
 /**
  * @brief  Convert rtdb relative pointer to absolute pointer.
  * @return pwr_tStatus
@@ -3469,7 +3469,7 @@ gdh_TranslateRtdbPointer (
 
   return pool_Address(NULL, gdbroot->rtdb, r);
 }
-
+
 pwr_tStatus
 gdh_IsAlias (
   pwr_tObjid		oid,
@@ -3494,7 +3494,7 @@ gdh_IsAlias (
   return sts;
 
 }
-
+
 pwr_tStatus
 gdh_IsMountClean (
   pwr_tObjid		oid,
@@ -3524,7 +3524,7 @@ gdh_IsMountClean (
   return sts;
 
 }
-
+
 pwr_tStatus
 gdh_SetCache (
   pwr_tUInt32		activation_level,	/*  Level when trimming starts.  */

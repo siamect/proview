@@ -104,7 +104,7 @@ static void		scan_nodes ();
 static void		scan_timers ();
 static void		update_node (sNode*);
 
-
+
 int main (int argc, char ** argv)
 {
   pwr_tStatus	sts;
@@ -174,7 +174,7 @@ int main (int argc, char ** argv)
     aproc_TimeStamp(((float)cTimerTimeScan)/1000, 5);
   }
 }
-
+
 /* Detect a NodeLink object.
    NOTE: This should be the same as the macro DSup_exec
    for DSup used by PLC, in rt_plc_macro_sup.h  */
@@ -224,7 +224,7 @@ static void detect (
     }
   }
 }
-
+
 static void
 event (
   qcom_sGet	*get
@@ -261,7 +261,7 @@ event (
 
   sav_event = ep->mask;
 }
-
+
 /* Initiates a sNode.  */
 
 static sNode *
@@ -336,7 +336,7 @@ init_node (
 
   return np;
 }
-
+
 /* This routine initiates the NodeLink list.  */
 
 static pwr_tStatus
@@ -365,7 +365,7 @@ init_nodes ()
 
   return(sts);
 }
-
+
 /* This routine search nodelink list for a nodelink object.  */
 
 static sNode *
@@ -382,7 +382,7 @@ get_nodes (
 
   return NULL;
 }
-
+
 static void
 reinit_nodes ()
 {
@@ -423,7 +423,7 @@ reinit_nodes ()
     }
   }	    
 }
-
+
 static void
 scan_nodes ()
 {
@@ -464,7 +464,7 @@ scan_nodes ()
     detect(o, 1, np);
   }
 }
-
+
 static void
 scan_timers ()
 {
@@ -484,7 +484,7 @@ scan_timers ()
     }
   }
 }
-
+
 static void
 update_node (
   sNode *np

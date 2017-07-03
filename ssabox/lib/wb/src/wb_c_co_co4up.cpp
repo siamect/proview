@@ -47,7 +47,7 @@
 #include "wb_ldh.h"
 #include "wb_wsx.h"
 
-
+
 /*  Check if it's ok to adopt a new object.  */
 
 static pwr_tStatus

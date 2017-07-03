@@ -123,7 +123,7 @@ typedef struct {
   lst_sEntry		seg_ll;
 } ivol_sSegment;
 
-
+
 /* Function prototypes.  */
 
 void		ivol_BuildNode (pwr_tStatus*, ivol_sNode*, const co_mFormat*);

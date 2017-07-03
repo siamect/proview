@@ -90,7 +90,7 @@ static int ini_set_nodeattribute (
 
 static int ini_set_plcscan (char *value_str);
 
-
+
 pwr_tStatus
 ini_GetAlias (
   char *filename,
@@ -115,7 +115,7 @@ ini_GetAlias (
 
   return INI__SUCCESS;
 }
-
+
 pwr_tStatus
 ini_SetAttributeAfterPlc (
   char *filename,
@@ -178,7 +178,7 @@ ini_SetAttributeAfterPlc (
 
   return INI__SUCCESS;
 }
-
+
 pwr_tStatus
 ini_SetAttribute (
   char *filename,
@@ -279,7 +279,7 @@ ini_SetAttribute (
 
 	return INI__SUCCESS;
 }
-
+
 /****************************************************************************
 * Name:		ini_datafile_init()
 *
@@ -300,7 +300,7 @@ static int ini_datafile_init ( char *filename)
   
   return INI__SUCCESS;
 }
-
+
 /****************************************************************************
 * Name:		ini_datafile_close()
 *
@@ -320,7 +320,7 @@ static int ini_datafile_close()
 	return INI__SUCCESS;
 }
 
-
+
 /****************************************************************************
 * Name:		ini_datafile_get_next()
 *
@@ -377,7 +377,7 @@ static int	ini_datafile_get_next( char *parameter, char **data,
 	return INI__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		ini_parse()

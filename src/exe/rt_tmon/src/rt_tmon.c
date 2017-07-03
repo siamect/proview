@@ -238,7 +238,7 @@ _time_Clock (
 }
 #endif
 
-
+
 int
 main (
   int			argc,
@@ -303,7 +303,7 @@ main (
     
   }
 }
-
+
 static void
 event (
   qcom_sGet	*get
@@ -320,7 +320,7 @@ event (
     exit(0);
   }
 }
-
+
 /* .  */
 
 static void
@@ -365,7 +365,7 @@ sancAdd (
 
   insertTimer(tp);
 }
-
+
 /* .  */
 
 static void
@@ -411,7 +411,7 @@ sancExpired (
 
   insertTimer(tp);
 }
-
+
 /* .  */
 
 static void
@@ -459,7 +459,7 @@ sansCheck (
 
   insertTimer(tp);
 }
-
+
 /* .  */
 
 static void
@@ -484,7 +484,7 @@ subcCheck (
 
   insertTimer(tp);
 }
-
+
 /* Send a subscription buffer and reschedule it.  */
 
 static void
@@ -514,7 +514,7 @@ subbCheck (
     freeTimer(tp);
   }
 }
-
+
 /* .  */
 
 static void
@@ -545,7 +545,7 @@ cacheTrim (
 
   insertTimer(tp);
 }
-
+
 /* .  */
 
 static void
@@ -575,7 +575,7 @@ insertTimer (
   tl = LstNex(tl);
   (void)LstIns(tl, tp, ll);
 }
-
+
 /* .  */
 
 static sTimer *
@@ -600,7 +600,7 @@ newTimer (
 
   return tp;
 }
-
+
 /* .  */
 
 static void
@@ -612,7 +612,7 @@ freeTimer (
   memset(tp, 0, sizeof(*tp));
   LstIns(&LstEnd(free_lh), tp, ll);  
 }
-
+
 /* .  */
 
 static sTimer *
@@ -635,7 +635,7 @@ allocTimer (
   LstRem(ftl);
   return LstObj(ftl);
 }
-
+
 static void
 setTimer (
   sTimer		*tp,
@@ -647,7 +647,7 @@ setTimer (
   tp->wrapped = (tp->clock < now_clock);
    
 }
-
+
 /* Convert mille seconds to clock format.  */
 
 static time_tClock
@@ -669,7 +669,7 @@ msToClock (
 
   return c;
 }
-
+
 /* Wait for a while.  */
 
 static void
@@ -694,7 +694,7 @@ waitClock (
 #endif
 }
 
-
+
 /* .  */
 
 static void
@@ -716,7 +716,7 @@ setInterval (
 }
 
 
-
+
 static void
 executeExpired (
   LstHead(sTimer)	*lh,
@@ -744,7 +744,7 @@ executeExpired (
   } gdb_ScopeUnlock;
 }
 
-
+
 static void
 getNewTimers (
 )
@@ -787,7 +787,7 @@ getNewTimers (
 
 }
 
-
+
 static void
 getWaitClock(
   time_tClock		*wait_clock,
@@ -820,7 +820,7 @@ getWaitClock(
   }
 
 }
-
+
 static void
 init(
 )
@@ -864,7 +864,7 @@ init(
 
   errh_SetStatus( PWR__SRUN);
 }
-
+
 static void
 toggleWrapped (
 )

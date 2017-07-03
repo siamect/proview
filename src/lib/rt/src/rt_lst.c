@@ -40,7 +40,7 @@
 #include "rt_lst.h"
 #include "rt_sync.h"
 
-
+
 static pwr_tBoolean
 check	(
   lst_sEntry		*link
@@ -52,7 +52,7 @@ check	(
 
   return YES;
 }
-
+
 static pwr_tBoolean
 checkInit (
   lst_sEntry		*link
@@ -67,7 +67,7 @@ checkInit (
 
   return YES;
 }
-
+
 /* Check if a queue has one and only one member.  */
 
 pwr_tBoolean
@@ -86,7 +86,7 @@ lst_HasOne (
 
   return has_one;
 }
-
+
 /* Initialize a queue link.  */
 
 lst_sEntry *
@@ -107,7 +107,7 @@ lst_Init (
 
   return link;
 }
-
+
 /* Insert 'link' as predecessor to 'succ'.  */
 
 lst_sEntry *
@@ -140,7 +140,7 @@ lst_InsertPred (
 
   return pred;  
 }
-
+
 /* Insert 'link' as successor to 'pred'.  */
 
 lst_sEntry *
@@ -173,7 +173,7 @@ lst_InsertSucc (
 
   return succ;  
 }
-
+
 /* Check if a queue header is empty.  */
 
 pwr_tBoolean
@@ -192,7 +192,7 @@ lst_IsEmpty (
 
   return is_empty;
 }
-
+
 /* Check if a d-link is linked.  */
 
 pwr_tBoolean
@@ -223,7 +223,7 @@ lst_IsLinked (
 
   return is_linked;
 }
-
+
 /* Check if a queue link is initiated.  */
 
 pwr_tBoolean
@@ -245,7 +245,7 @@ lst_IsNull (
 
   return is_null;
 }
-
+
 /* Return successor to 'link'. */
 
 pwr_tBoolean
@@ -278,7 +278,7 @@ lst_IsSucc (
 
   return is_succ;  
 }
-
+
 /* Move the elements in 'old' list to 'new' list.
    Return ?  */
 
@@ -311,7 +311,7 @@ lst_Move (
 
   return new;  
 }
-
+
 /* Return predecessor to 'link'.  */
 
 void *
@@ -344,7 +344,7 @@ lst_Pred (
 
   return item;
 }
-
+
 /* Remove a link from a queue.  */
 
 void *
@@ -388,7 +388,7 @@ lst_Remove (
   return item;
 
 }
-
+
 /* Remove predecessor of an link, from a queue.
    If link is queue header this call will
    remove the first link in the queue.
@@ -444,7 +444,7 @@ lst_RemovePred (
 
   return item;
 }
-
+
 /* Remove successor of an link, from a list.
    If link is queue header this call will
    remove the first link in the queue.
@@ -499,7 +499,7 @@ lst_RemoveSucc (
 
   return item;
 }
-
+
 /* Return successor to 'link'. */
 
 void *

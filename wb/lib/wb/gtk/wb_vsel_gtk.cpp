@@ -79,7 +79,7 @@ static void vsel_exit_qb_yes( void *ctx, void *cbdata)
   delete vsel;
 }
 
-
+
 /*************************************************************************
 * Name:		void	vsel_activate_ok()
 *
@@ -132,7 +132,7 @@ void WVselGtk::activate_ok( GtkWidget *w, gpointer data)
 			     "Volume is already open");
   }
 }
-
+
 /*************************************************************************
 * Name:		void	vsel_activate_cancel()
 *
@@ -149,7 +149,7 @@ void WVselGtk::activate_cancel( GtkWidget *w, gpointer data)
   delete vsel;
 }
 
-
+
 /*************************************************************************
 * Name:		void	vsel_activate_close()
 *
@@ -172,7 +172,7 @@ void WVselGtk::activate_close( GtkWidget *w, gpointer data)
     delete vsel;
   }
 }
-
+
 /*************************************************************************
 * Name:		void	vsel_activate_showall()
 *
@@ -192,7 +192,7 @@ void WVselGtk::activate_showall( GtkWidget *w, gpointer data)
   WFoe::error_msg(sts);
 }
 
-
+
 /*************************************************************************
 *
 * Name:		int	vsel_new()
@@ -404,7 +404,7 @@ WVselGtk::WVselGtk (
   *status = LOGIN__SUCCESS;
 }
 
-
+
 
 WVselGtk::~WVselGtk()
 {

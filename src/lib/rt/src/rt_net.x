@@ -124,7 +124,7 @@ enum net_eMsg {
 
   net_eMsg_end
 };
-
+
 
 /* Link events, used by the link state machine.  */
 

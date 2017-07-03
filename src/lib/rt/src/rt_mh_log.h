@@ -59,7 +59,7 @@
 
 #define mhLog 0
 
-
+
 FILE *mh_LogFileOpen (
   qcom_sQid *Address
 );

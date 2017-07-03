@@ -169,7 +169,7 @@ union i3e_s_be {
 
 
 
-
+
 void 
 co_vaxf2ieee(co_eBO sbo,
              co_eBO tbo,
@@ -214,7 +214,7 @@ co_vaxf2ieee(co_eBO sbo,
 
 }
 
-
+
 void 
 co_ieee2vaxf(co_eBO sbo,
              co_eBO tbo,

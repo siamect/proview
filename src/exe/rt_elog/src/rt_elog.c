@@ -166,7 +166,7 @@ main ()
     aproc_TimeStamp( lHelCB.ScanTime/1000, 5.0);
   }
 }
-
+
 void
 Init ()
 {

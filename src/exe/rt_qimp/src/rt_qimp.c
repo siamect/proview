@@ -68,7 +68,7 @@ static void	stateUp		(qdb_sPort *pp, qdb_sNode *np, qdb_sBuffer *bp);
 static void	unhandledEvent	(qdb_sNode *np);
 static void	up		(qdb_sNode *np, qdb_sBuffer *bp, char *s);
 
-
+
 int
 main (int argc, char *argv[])
 {
@@ -101,7 +101,7 @@ main (int argc, char *argv[])
 
   exit(QCOM__SUCCESS);
 }
-
+
 static void
 down (
   qdb_sNode   *np,
@@ -122,7 +122,7 @@ down (
 
   errh_Info("Down, link to node %s (%s): %s", np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0), s);
 }
-
+
 static void
 freeBuffer (
   qdb_sBuffer	*bp
@@ -139,7 +139,7 @@ freeBuffer (
   }
 
 }
-
+
 static void
 idError (
   qdb_sPort   *pp,
@@ -155,7 +155,7 @@ idError (
   errh_Info("Id error, node %s (%s): %s", np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0), s);
   nullId(np);
 }
-
+
 static void
 impossibleEvent (
   qdb_sNode   *np,
@@ -166,7 +166,7 @@ impossibleEvent (
   errh_Info("Impossible event <%s>, node %s (%s): %s", qnet_EventString(np->event), 
     np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0), s);
 }
-
+
 /* This is the link state machine
    The database must be locked by the caller.  */
 
@@ -233,7 +233,7 @@ linkEvent (
       qnet_StateString(np->old_state), qnet_StateString(np->state));
 
 }
-
+
 static void
 linkNotification (
   qdb_sNode	*np
@@ -257,7 +257,7 @@ linkNotification (
   np->qmon_state = np->state;
 
 }
-
+
 static void
 nullId (
   qdb_sNode *np
@@ -266,7 +266,7 @@ nullId (
 
   np->old_birth = 0;
 }
-
+
 static void
 putUser (
   qdb_sPort	*pp,
@@ -342,7 +342,7 @@ putUser (
     } qdb_ScopeUnlock;
   }
 }
-
+
 static void
 removeBcast (
   qdb_sNode	*np
@@ -370,7 +370,7 @@ removeBcast (
   np->bc_rcv_id = 0;
 
 }
-
+
 static void
 serviceEvent (
   qdb_sPort	*pp,
@@ -405,7 +405,7 @@ serviceEvent (
 
   } qdb_ScopeUnlock;
 }
-
+
 static void
 setId (
   qdb_sNode *np
@@ -414,7 +414,7 @@ setId (
 
   np->old_birth = np->birth;
 }
-
+
 static void
 setLinkInfo (
   qdb_sNode   *np,
@@ -430,7 +430,7 @@ setLinkInfo (
   np->bo      = lp->bo;
   np->ft      = lp->ft;
 }
-
+
 /* State: connecting
 
    I know that node 'np' is up and knows about me.  */
@@ -471,7 +471,7 @@ stateConnecting (
 
   freeBuffer(bp);
 }
-
+
 /* State: down
   
    I know about node 'np' but communications where
@@ -512,7 +512,7 @@ stateDown (
   freeBuffer(bp);
 
 }
-
+
 /* State: starting
 
    I know that node 'np' exists, but I don't know
@@ -558,7 +558,7 @@ stateStarting (
   freeBuffer(bp);
 
 }
-
+
 /* State: up
   
    I am talking to node 'np'.  */
@@ -600,7 +600,7 @@ stateUp (
 
   freeBuffer(bp);
 }
-
+
 static void
 unhandledEvent (
   qdb_sNode   *np
@@ -610,7 +610,7 @@ unhandledEvent (
   errh_Info("Unhandled event, node %s (%s): %s", np->name,
     cdh_NodeIdToString(NULL, np->nid, 0, 0), qnet_EventString(np->event));
 }
-
+
 static void
 up (
   qdb_sNode   *np,

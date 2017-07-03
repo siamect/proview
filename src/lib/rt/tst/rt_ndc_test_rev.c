@@ -97,7 +97,7 @@ print_bin (
 
   return buff;
 }
-
+
 /* .  */
 
 static int
@@ -136,7 +136,7 @@ encode_sfloat (
 
   return 1;
 }    
-
+
 /* .  */
 
 static int

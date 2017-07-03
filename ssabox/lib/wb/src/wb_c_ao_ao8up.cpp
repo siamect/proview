@@ -47,7 +47,7 @@
 #include "wb_ldh.h"
 #include "wb_wsx.h"
 
-
+
 /* AnteAdopt -- check if it's ok to adopt a new object  */
 
 static pwr_tStatus AnteAdopt (
@@ -82,7 +82,7 @@ static pwr_tStatus AnteAdopt (
   else
     return LDH__ADOPTRENAME;
 }
-
+
 /*----------------------------------------------------------------------------*\
   Adopt a new channel.
 \*----------------------------------------------------------------------------*/
@@ -176,7 +176,7 @@ static pwr_tStatus PostAdopt (
 
   return PWRB__SUCCESS;
 }
-
+
 /*----------------------------------------------------------------------------*\
   Unadopt a channel.
 \*----------------------------------------------------------------------------*/
@@ -258,7 +258,7 @@ static pwr_tStatus SyntaxCheck (
 
   return PWRB__SUCCESS;
 }
-
+
 /*----------------------------------------------------------------------------*\
   Every method to be exported to the workbench should be registred here.
 \*----------------------------------------------------------------------------*/

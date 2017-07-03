@@ -60,7 +60,7 @@
 #include "rt_subcm.h"
 #include "rt_qcom.h"
 
-
+
 /* Check if any client timeouts have occurred.
    The database should be locked on entry.  */
 
@@ -111,7 +111,7 @@ subcm_CheckTimeout ()
     pool_QinsertPred(NULL, gdbroot->pool, cl, &gdbroot->db->subt_lh);
   }
 }
-
+
 /* Handles the reception of a subdata message.
    Database must NOT be locked.  */
 
@@ -290,7 +290,7 @@ subcm_Data (
     pool_Free(NULL, gdbroot->pool, rp);
   }
 }
-
+
 /* Move all clients from the indicated node to the unknown node.  */
 
 void

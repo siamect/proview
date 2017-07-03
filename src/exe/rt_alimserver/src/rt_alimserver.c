@@ -94,7 +94,7 @@ static void init();
 static void event (qcom_sGet	*get);
 static sAttribute *findAttribute(sObject*, pwr_sAttrRef*, pwr_tClassId);
 
-
+
 static alimsrv_sSupDataBuf *
 buildBuffer (
   alimsrv_sRequest  *rqp,
@@ -163,7 +163,7 @@ buildBuffer (
 
   return bp;
 }
-
+
 static sAttribute *
 findAttribute (
   sObject	*op,
@@ -194,7 +194,7 @@ findAttribute (
   }
   return ap;
 }
-
+
 static void
 init (
 )
@@ -253,7 +253,7 @@ init (
   }
 
 }
-
+
 int main (int argc, char **argv)
 {
   pwr_tStatus      sts;
@@ -350,7 +350,7 @@ int main (int argc, char **argv)
     }
   }    
 }
-
+
 static void
 event (
   qcom_sGet	*get

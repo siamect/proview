@@ -45,7 +45,7 @@
 #include "pwr_class.h"
 #include "rt_conv.h"
 
-
+
 #define CONV_ARGS \
   int		tcount,	\
   int		tasize, \
@@ -118,7 +118,7 @@
 
 
 
-
+
 static pwr_tBoolean convIllegal(CONV_ARGS);
 static pwr_tBoolean convCopy(CONV_ARGS);
 static pwr_tBoolean convZero(CONV_ARGS);
@@ -275,7 +275,7 @@ const convFunction conv_Fctn[] = {
 };
 
 
-
+
 /**
  * Returns the index to the conversion routine, which will convert the
  * source type to the target type.
@@ -538,7 +538,7 @@ conv_GetIdx(pwr_eType src, pwr_eType trg)
 
 
 
-
+
 static pwr_tBoolean 
 convIllegal(CONV_ARGS)
 {
@@ -579,7 +579,7 @@ convZero(CONV_ARGS)
 
 
 
-
+
 /*
  * bool
  */
@@ -619,7 +619,7 @@ boolToInt32(CONV_ARGS)
 }
 
 
-
+
 /*
  * float32
  */
@@ -658,7 +658,7 @@ float32ToInt32(CONV_ARGS)
   return TRUE;
 }
 
-
+
 /*
  * float64
  */
@@ -697,7 +697,7 @@ float64ToInt32(CONV_ARGS)
   return TRUE;
 }
 
-
+
 /*
  * int8
  */
@@ -751,7 +751,7 @@ int8ToUInt32(CONV_ARGS)
   return TRUE;
 }
 
-
+
 /*
  * int16
  */
@@ -806,7 +806,7 @@ int16ToUInt32(CONV_ARGS)
 }
 
 
-
+
 /*
  * int32
  */
@@ -863,7 +863,7 @@ int32ToUInt16(CONV_ARGS)
 
 
 
-
+
 /*
  * uint8
  */
@@ -917,7 +917,7 @@ uint8ToUInt32(CONV_ARGS)
   return TRUE;
 }
 
-
+
 /*
  * uint16
  */
@@ -972,7 +972,7 @@ uint16ToUInt32(CONV_ARGS)
 }
 
 
-
+
 /*
  * uint32
  */
@@ -1026,7 +1026,7 @@ uint32ToUInt16(CONV_ARGS)
   return TRUE;
 }
 
-
+
 static pwr_tBoolean
 stringToString(CONV_ARGS)
 {

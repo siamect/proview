@@ -136,7 +136,7 @@ static char *StripActualValue(
 static pwr_tStatus Timer (
   pwr_tInt32 TimerId
 );
-
+
 /*------------------------------------------------------------------------------
 */
 static char *StripActualValue(
@@ -155,7 +155,7 @@ static char *StripActualValue(
 
   return Text;
 }
-
+
 static void FormatEventMsg(
   mh_sMsgInfo *ip,
   char *EventMsg,
@@ -248,7 +248,7 @@ static void FormatEventMsg(
   strcat(EventMsg, "\n");
 
 }
-
+
 /*------------------------------------------------------------------------------
 */
 static void FormatMsgInfo(
@@ -268,7 +268,7 @@ static void FormatMsgInfo(
     strcat(EventStr, StripActualValue(ip->EventName));
     strcat(EventStr, "  ");
 }
-
+
 /*------------------------------------------------------------------------------
 */
 static char *FormatHighLow(
@@ -288,7 +288,7 @@ static char *FormatHighLow(
 
   return Text;
 }
-
+
 /*------------------------------------------------------------------------------
 */
 static char *FormatSupInfo(
@@ -311,7 +311,7 @@ static char *FormatSupInfo(
 
   return Text;
 }
-
+
 /*------------------------------------------------------------------------------
 */
 static char *FormatPrio(
@@ -339,7 +339,7 @@ static char *FormatPrio(
   }
   return Text;
 }
-
+
 /*------------------------------------------------------------------------------
 */
 static char *FormatOperator(
@@ -370,7 +370,7 @@ static char *FormatOperator(
 
   return Text;
 }
-
+
 /*------------------------------------------------------------------------------
 * Prints value to a string with number of decimals depending on the size
 * of the value.
@@ -406,7 +406,7 @@ static void FormatValue(
   sprintf(ValString,"%.*f",Dec, Value);
 
 }
-
+
 static void PrintEvent(
   mh_sMsgInfo  *ip
 )
@@ -416,7 +416,7 @@ static void PrintEvent(
   FormatEventMsg(ip, EventMsg, EventPrinterObj.RowSize);
   fprintf(Printer, EventMsg);
 }
-
+
 #if 0
 static pwr_tStatus Timer (
   pwr_tInt32 TimerId
@@ -473,7 +473,7 @@ static pwr_tStatus Timer (
   return 1;
 }
 #endif
-
+
 int main(int argc, char *argv[])
 {
   pwr_tStatus	   sts;

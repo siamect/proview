@@ -122,7 +122,7 @@
 
 
 
-
+
 /*
  * The procedure pdrmem_create initializes a stream descriptor for a
  * memory buffer.  
@@ -143,7 +143,7 @@ pdrmem_create(PDR *pdrs,
     pdrs->trg = trg;
 }
 
-
+
 pwr_tBoolean
 pdr_char(PDR *pdrs, char *objp)
 {
@@ -158,7 +158,7 @@ pdr_enum(PDR *pdrs, pdr_tEnum *ep)
   return TRUE;
 }
 
-
+
 pwr_tBoolean
 pdr_float(PDR *pdrs,
           float *fp)
@@ -206,7 +206,7 @@ pdr_float(PDR *pdrs,
     return TRUE;    
 }
 
-
+
 /**
  *
  * PDR a fixed length array. Unlike variable-length arrays,

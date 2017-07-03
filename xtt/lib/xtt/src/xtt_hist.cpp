@@ -1010,7 +1010,7 @@ int  Hist::GoBackMonth( pwr_tTime TimeIn, pwr_tTime *FromTime,
     return(1);
 }   /* END GoBackMonth */
 
-
+
 /************************************************************************
 *
 * Name:	GoBackWeek( TimeIn, FromTime, ToTime)
@@ -1054,7 +1054,7 @@ int Hist::GoBackWeek( pwr_tTime TimeIn, pwr_tTime *FromTime,
     return(1);
 }   /* END GoBackWeek */
 
-
+
 /************************************************************************
 *
 * Name: AdjustForDayBreak

@@ -101,7 +101,7 @@ static pwr_tStatus HandlePamsMsg (
 );
 
  
-
+
 /*
 * Name:    
 *   ph_Connect
@@ -161,7 +161,7 @@ pwr_tStatus ph_Connect
 } /* END ph_Connect */
 
 
-
+
 /*
 * Name:    
 *   ph_Disconnect
@@ -212,7 +212,7 @@ pwr_tStatus ph_Disconnect
 }/* END ph_Disconnect */
 
 
-
+
 /*
 * Name:    
 *   ph_FreeClassData
@@ -236,7 +236,7 @@ pwr_tStatus ph_FreeClassData
 }/* END ph_FreeClassData  */
 
 
-
+
 /*
 * Name:    
 *   ph_GetPacket
@@ -275,7 +275,7 @@ static char     Msg[8192];
 
 
 }/* END ph_GetPacket  */
-
+
 /*
 * Name:    
 *   ph_GetWaitPacket
@@ -317,7 +317,7 @@ static char     Msg[8192];
 
 
 }/* END ph_GetWaitPacket  */
-
+
 /*
 * Name:    
 *   ph_SendPacket
@@ -376,7 +376,7 @@ pwr_tStatus ph_SendPacket
 
 
 } /* END ph_SendPacket  */
-
+
 /*
 * Name:    HandlePamsMsg
 *   

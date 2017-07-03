@@ -47,7 +47,7 @@
 #include "co_cdh.h"
 #include "co_msg.h"
 
-
+
 /*----------------------------------------------------------------------------*\
   Is it OK to connect an object ?
 \*----------------------------------------------------------------------------*/
@@ -90,7 +90,7 @@ static int IsOkConnect (
 
   return 1;
 }
-
+
 /*----------------------------------------------------------------------------*\
   To connect an object to Objid
 \*----------------------------------------------------------------------------*/
@@ -184,7 +184,7 @@ static pwr_tStatus Connect (
   return PWRS__SUCCESS;
 }
 
-
+
 static int IsOkDisconnect (
   ldh_sMenuCall *ip,
   pwr_sMenuButton *mbp

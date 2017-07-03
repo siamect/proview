@@ -144,7 +144,7 @@ static pwr_tStatus	logg_get_message( 	logg_ctx	loggctx,
 						char		**msg);
 static pwr_tStatus	logg_init( logg_ctx	loggctx);
 
-
+
 /****************************************************************************
 * Name:		exit_hdlr()
 *
@@ -164,7 +164,7 @@ void			exit_hdlr()
 	return;
 }
 
-
+
 /****************************************************************************
 * Name:		interrupt_hdlr()
 *
@@ -182,7 +182,7 @@ void			interrupt_hdlr()
 	return;
 }
 
-
+
 /****************************************************************************
 * Name:		logg_loggconflist_add()
 *
@@ -257,7 +257,7 @@ static pwr_tStatus	logg_loggconflist_add(
 	return REM__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		logg_get_filename
@@ -325,7 +325,7 @@ static int	logg_get_filename(
 	return REM__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		logg_open_file
@@ -389,7 +389,7 @@ static pwr_tStatus	logg_open_file( logg_t_loggconf_list	*conflist_ptr,
 	return REM__LOGGFILE;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		logg_print
@@ -477,7 +477,7 @@ static pwr_tStatus	logg_print(	logg_ctx	loggctx,
 	return REM__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		logg_get_message
@@ -527,7 +527,7 @@ static pwr_tStatus	logg_get_message( 	logg_ctx	loggctx,
 	}
 	return REM__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		logg_free_message
@@ -552,7 +552,7 @@ static pwr_tStatus	logg_free_message( 	void)
 	return REM__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		logg_init

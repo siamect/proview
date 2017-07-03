@@ -88,7 +88,7 @@ int wb_utl_motif::utl_foe_new_local( WFoe *foe, const char *name, pwr_tOid plcpg
   return sts;
 }
  
-
+
 /*************************************************************************
 *
 * Name:		utl_create_mainwindow()

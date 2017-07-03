@@ -1664,7 +1664,7 @@ static pwr_tStatus dataa_create_ctx (
 	return GSX__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		dataa_delete_ctx()

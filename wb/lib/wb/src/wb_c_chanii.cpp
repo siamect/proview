@@ -46,7 +46,7 @@
 #include "wb_wsx.h"
 #include "wb_session.h"
 
-
+
 /*----------------------------------------------------------------------------*\
   Syntax check.
 \*----------------------------------------------------------------------------*/
@@ -124,7 +124,7 @@ static pwr_tStatus PostCreate( ldh_tSesContext Session,
   return PWRB__SUCCESS;
 }
 
-
+
 /*----------------------------------------------------------------------------*\
   Every method to be exported to the workbench should be registred here.
 \*----------------------------------------------------------------------------*/

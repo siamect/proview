@@ -49,7 +49,7 @@
 #include "rt_inet.h"
 #include "rt_net.h"
 
-
+
 static qdb_sNode *
 addNode (
   qini_sNode  *nep
@@ -100,7 +100,7 @@ addNode (
 
   return np;
 }
-
+
 static qdb_sQue *
 addQueue (
   qdb_sAppl	*ap,
@@ -133,7 +133,7 @@ addQueue (
 
   return qp;
 }
-
+
 int
 qini_ParseFile (
   FILE		*f,
@@ -283,7 +283,7 @@ qini_ParseFile (
 
   return error;
 }
-
+
 pwr_tBoolean
 qini_BuildDb (
   pwr_tStatus		*sts,

@@ -62,7 +62,7 @@
 #define mh_cPageAlign 511L
 #define mh_cPageSize 512L
 
-
+
 mh_sBlockDb *
 mh_BlockDbOpen (
   char *FileName,
@@ -132,7 +132,7 @@ mh_BlockDbOpen (
   return(NULL);
 }
 
-
+
 mh_sBlockDb *
 mh_BlockDbClose (
   mh_sBlockDb *dp
@@ -146,7 +146,7 @@ mh_BlockDbClose (
   }
   return NULL;
 }
-
+
 mh_sBlockDb *
 mh_BlockDbGet (
   mh_sBlockDb *dp,
@@ -171,7 +171,7 @@ error:
   Log(msg);
   return mh_BlockDbClose(dp);
 }
-
+
 mh_sBlockDb *
 mh_BlockDbPut ( 
   mh_sBlockDb *dp,

@@ -46,7 +46,7 @@
 #include "rt_san_msg.h"
 #include "rt_sanc.h"
 
-
+
 pwr_tBoolean
 sanc_Subscribe (
   pwr_tStatus		*sts,
@@ -94,7 +94,7 @@ sanc_Subscribe (
   return YES;
 }
 
-
+
 void
 sanc_SubscribeMountServers (
   pwr_tStatus		*status,

@@ -51,7 +51,7 @@
 #include "rt_errh.h"
 
 
-
+
 /* Allocate space for an object header, fill it with data,
    link it into the 'cacheNew' touch list, and fill
    in all the other local linkage.
@@ -110,7 +110,7 @@ cvol_AllocObject (
 
   pwr_Return(op, sts, GDH__SUCCESS);
 }
-
+
 /* .  */
 
 void
@@ -135,7 +135,7 @@ cvol_FlushObject (
   vol_UnlinkObject(NULL, vp, op, vol_mLink_cacheFlush);
 
 }
-
+
 /* .  */
 
 void
@@ -180,7 +180,7 @@ cvol_FreeObject (
     cvol_FreeObject(NULL, vp, pop, link);
   }
 }
-
+
 /* .  */
 
 gdb_sObject *
@@ -209,7 +209,7 @@ cvol_LinkObject	(
 
   return op;
 }
-
+
 /* Allocate space for an object header, fill it with data,
    link it into the 'cacheNew' touch list, and fill
    in all the other local linkage.
@@ -254,7 +254,7 @@ cvol_LoadObject (
 
   pwr_Return(op, sts, GDH__SUCCESS);
 }
-
+
 /* Force trim of one object header.
    If a cache touch queue has reached its maximum
    remove from tail and insert at head in next queue.
@@ -299,7 +299,7 @@ cvol_QforcedTrim (
   if (gdbroot->db->log.b.cacheTrim)
     printf("Stop forced trim %d, %d < %d < %d\n", fqp->flags.m, fqp->lc_min, fqp->lc, fqp->lc_max);
 }
-
+
 /* Return pointer to the cache queue an object is in.  */
 
 gdb_sTouchQ *
@@ -336,7 +336,7 @@ cvol_Qget (
     errh_Bugcheck(2, "Object cache queue inconsistency");
   }
 }
-
+
 /* Move a cached object from one touch queue to tail of another.
    If object is not in a que, it will be inserted only.  */
 
@@ -367,7 +367,7 @@ cvol_QmovePred (
   op->u.c.flags.m |= tqp->flags.m;    /* Set bit for new que.  */
 
 }
-
+
 /* Move a cached object from one touch queue to head of another.
    If object is not in a que, it will be inserted only.  */
 
@@ -397,7 +397,7 @@ cvol_QmoveSucc (
   tqp->lc++;
   op->u.c.flags.m |= tqp->flags.m;    /* Set bit for new que.  */
 }
-
+
 /* .  */
 
 void
@@ -418,7 +418,7 @@ cvol_Qremove (
   fqp->lc--;
   op->u.c.flags.m &= ~fqp->flags.m;   /* Remove bit for que.  */
 }
-
+
 /* Trim the cache touch queues.
    If a cache touch queue has reached its maximum
    remove from tail and insert at head in next queue.
@@ -464,7 +464,7 @@ cvol_Qtrim (
   if (gdbroot->db->log.b.cacheTrim)
     printf("Stop trim %d, %d < %d < %d\n", fqp->flags.m, fqp->lc_min, fqp->lc, fqp->lc_max);
 }
-
+
 #if 0
 /* .  */
 
@@ -505,7 +505,7 @@ cvol_RemoveObject (
   }
 }
 #endif
-
+
 /* .  */
 
 void

@@ -51,7 +51,7 @@
 #include "rt_io_supervise.h"
 
 
-
+
 /* Local function definitions */
 
 static void ASup_exec_io (
@@ -83,7 +83,7 @@ static pwr_tStatus io_ConnectToDigSupLst (
     pwr_tAddress	ObjP	/* Pointer to the object */
 );
 
-
+
 /*------------------------------------------------------------------------------
 * Detect an ASup object.
 * NOTE:
@@ -160,7 +160,7 @@ static void ASup_exec_io (
   }
 }
 
-
+
 /*------------------------------------------------------------------------------
 * Detect an DSup object.
 * NOTE:
@@ -234,7 +234,7 @@ static void DSup_exec_io (
 }
 
 
-
+
 /*
 * Name:    
 *   io_ConnectToSupLst
@@ -271,7 +271,7 @@ pwr_tStatus io_ConnectToSupLst (
   return sts;
 }
 
-
+
 /*
 * Name:    
 *   io_ConnectToAnaSupLst
@@ -357,7 +357,7 @@ static pwr_tStatus io_ConnectToAnaSupLst (
     return IO__SUCCESS;
 } /* END io_ConnectToAnaSupLst */
 
-
+
 /*
 * Name:    
 *   io_ConnectToDigSupLst
@@ -449,7 +449,7 @@ static pwr_tStatus io_ConnectToDigSupLst (
 } /* END io_ConnectToDigSupLst */
 
 
-
+
 /*
 * Name:    
 *   io_InitSupLst
@@ -476,7 +476,7 @@ pwr_tStatus io_InitSupLst (
     return IO__SUCCESS;
 } /* END io_InitTimer */
 
-
+
 /*
 * Name:    
 *   io_ScanAnaSupLst
@@ -514,7 +514,7 @@ pwr_tStatus io_ScanSupLst (
     return IO__SUCCESS;
 } /* END io_ScanSupLst */
 
-
+
 /*
 * Name:    
 *   io_ScanSupTimerLst
@@ -557,7 +557,7 @@ pwr_tStatus io_ScanSupTimerLst (
     } 
     return IO__SUCCESS;
 }
-
+
 /*
 * Name:    
 *   io_ClearSupLst
@@ -635,7 +635,7 @@ static void DSup_exec_io_serial (
   pwr_tBoolean In,
   pwr_tBoolean con
 );
-
+
 /*------------------------------------------------------------------------------
 * Detect an ASup object.
 * NOTE:
@@ -710,7 +710,7 @@ static void ASup_exec_io_serial (
   }
 }
 
-
+
 /*------------------------------------------------------------------------------
 * Detect an DSup object.
 * NOTE:
@@ -779,7 +779,7 @@ static void DSup_exec_io_serial (
     }
   }
 }
-
+
 /*
 * Name:    
 *   io_ConnectToAnaSupLstSerial
@@ -862,7 +862,7 @@ pwr_tStatus io_ConnectToAnaSupLstSerial (
     return IO__SUCCESS;
 } /* END io_ConnectToAnaSupLstSerial */
 
-
+
 /*
 * Name:    
 *   io_ConnectToDigSupLstSerial
@@ -952,7 +952,7 @@ pwr_tStatus io_ConnectToDigSupLstSerial (
     return IO__SUCCESS;
 } /* END io_ConnectToDigSupLstSerial */
 
-
+
 /*
 * Name:    
 *   io_InitTimerSerial
@@ -973,7 +973,7 @@ pwr_tStatus io_InitTimerSerial (
     return IO__SUCCESS;
 } /* END io_InitTimerSerial */
 
-
+
 /*
 * Name:    
 *   io_ScanSupLstSerial
@@ -1007,7 +1007,7 @@ pwr_tStatus io_ScanSupLstSerial ()
     return IO__SUCCESS;
 } /* END io_ScanSupLstSerial */
 
-
+
 /*
 * Name:    
 *   io_ScanTimerLstSerial

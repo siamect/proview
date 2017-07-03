@@ -71,7 +71,7 @@
 /* Structures */
 typedef struct s_FilterData sFilterData;
 
-
+
 /*
 * Name:    
 *   _eState
@@ -88,7 +88,7 @@ enum e_State
 
 /* Enumerations */
 typedef enum e_State _eState;
-
+
 /*
 * Name:    
 *   sFilterData
@@ -105,7 +105,7 @@ struct s_FilterData
     };
 
 
-
+
 /*
 * Name:    
 *   io_FilterPo
@@ -244,7 +244,7 @@ pwr_tStatus io_PoFilter
     return IO__SUCCESS;
 } /* END io_FilterPo */
 
-
+
 /*
 * Name:    
 *   io_InitFilterPo
@@ -286,7 +286,7 @@ pwr_tStatus io_InitPoFilter
     return IO__SUCCESS;
 } /* END io_InitFilterPo */
 
-
+
 /*
 * Name:    
 *   io_CloseFilterPo

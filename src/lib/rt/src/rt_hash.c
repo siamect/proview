@@ -61,7 +61,7 @@ nextPrime (
   int		n
 );
 
-
+
 /*  Return a slot pointer in the hash table.
     THIS ROUTINE IS INTERNAL TO THIS PACKAGE! The hash table has to be
     locked/unlocked by the caller.  */
@@ -230,7 +230,7 @@ findEntry (
   ghtp->finds++;
   pwr_Return(il, sts, HASH__SUCCESS);
 }
-
+
 static int
 nextPrime (
   int		n
@@ -250,7 +250,7 @@ nextPrime (
 
   return p;
 }
-
+
 /* Find a matching table entry to a given key.  */
 
 void *
@@ -269,7 +269,7 @@ hash_Search (
 
   pwr_Return((char *)il - htp->ghtp->link_offset, sts, HASH__SUCCESS);
 }
-
+
 /*  Insert an item with key into a hash table.  */
 
 void *
@@ -308,7 +308,7 @@ hash_Insert (
   pwr_Return(ip, sts, HASH__SUCCESS);
 }
 
-
+
 /*  Remove an entry from a hash table.  */
 
 void *
@@ -339,7 +339,7 @@ hash_Remove (
 
   pwr_Return(ip, sts, HASH__SUCCESS);
 }
-
+
 /* Create a hash table.
    Map the hash data structures, and initialize then
    if the structures are created.
@@ -389,7 +389,7 @@ hash_Create (
 
   pwr_Return(htp, sts, HASH__SUCCESS);
 }
-
+
 /* Initiate a hash table structure.  */
 
 void
@@ -411,7 +411,7 @@ hash_Init (
   p->link_offset  = link_offset;
   p->key_type	  = key_type;
 }
-
+
 /*  Print information about a hash table.  */
 
 void

@@ -44,7 +44,7 @@
 #include "wb_pwrs_msg.h"
 #include "co_cdh.h"
 
-
+
 /*----------------------------------------------------------------------------*\
   Is it OK to connect two attributes via an ObjXRef
 \*----------------------------------------------------------------------------*/
@@ -84,7 +84,7 @@ static int IsOkConnect (
 
   return 1;
 }
-
+
 /*----------------------------------------------------------------------------*\
   To connect two attributes via an ObjXRef
 \*----------------------------------------------------------------------------*/
@@ -159,7 +159,7 @@ static pwr_tStatus Connect (
     sizeof(pwr_tObjid));
   return PWRS__SUCCESS;
 }
-
+
 /*----------------------------------------------------------------------------*\
   Is it OK to disconnect two attributes via an ObjXRef
 \*----------------------------------------------------------------------------*/
@@ -171,7 +171,7 @@ static int IsOkDisconnect (
 
   return IsOkConnect(ip, mbp);
 }
-
+
 /*----------------------------------------------------------------------------*\
   To disconnect two attributes via an ObjXRef
 \*----------------------------------------------------------------------------*/
@@ -259,7 +259,7 @@ static pwr_tStatus Disconnect (
 
   return PWRS__SUCCESS;
 }
-
+
 /*----------------------------------------------------------------------------*\
   Is it OK to disconnect two attributes via an ObjXRef
 \*----------------------------------------------------------------------------*/
@@ -276,7 +276,7 @@ static int IsOkDisconnectSingle (
 
   return sts != LDH__UNCONN;
 }
-
+
 /*----------------------------------------------------------------------------*\
   To disconnect two attributes via an ObjXRef
 \*----------------------------------------------------------------------------*/

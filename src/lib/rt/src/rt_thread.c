@@ -79,7 +79,7 @@ thread_MutexInit (
 # error Not defined for this platform !
 #endif
 }
-
+
 pwr_tStatus
 thread_MutexLock (
   thread_sMutex		*mp
@@ -93,7 +93,7 @@ thread_MutexLock (
 # error Not defined for this platform !
 #endif
 }
-
+
 pwr_tStatus
 thread_MutexUnlock (
   thread_sMutex		*mp
@@ -107,7 +107,7 @@ thread_MutexUnlock (
 # error Not defined for this platform !
 #endif
 }
-
+
 pwr_tStatus
 thread_Cancel (
   thread_s	*tp
@@ -121,7 +121,7 @@ thread_Cancel (
 # error Not defined for this platform !
 #endif
 }
-
+
 pwr_tStatus
 thread_Create (
   thread_s	*tp,
@@ -143,7 +143,7 @@ thread_Create (
 # error Not defined for this platform !
 #endif
 }
-
+
 pwr_tStatus
 thread_CondWait (
   thread_sCond		*cp,
@@ -216,7 +216,7 @@ thread_CondTimedWait (
 # error Not defined for this platform !
 #endif
 }
-
+
 pwr_tStatus
 thread_CondSignal (
   thread_sCond	*cp
@@ -234,7 +234,7 @@ thread_CondSignal (
 # error Not defined for this platform !
 #endif
 }
-
+
 pwr_tStatus
 thread_Wait (
   pwr_tDeltaTime *tp
@@ -270,7 +270,7 @@ thread_Wait (
   return sts;
 }
 
-
+
 pwr_tStatus
 thread_SetPrio (
   thread_s	*tp,

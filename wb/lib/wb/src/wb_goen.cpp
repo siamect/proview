@@ -164,10 +164,10 @@ goen_tGetLocationPointFunc goen_get_location_point_m[20] = {
 	goen_get_location_point_m0,
 	};
 
-
+
 /*_Methods defined for this module_______________________________________*/
 
-
+
 /*************************************************************************
  *
  * Name:		goen_create_contype()

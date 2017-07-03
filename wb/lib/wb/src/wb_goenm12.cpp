@@ -50,7 +50,7 @@
 static	float	f_strlength  = GOEN_F_OBJNAME_STRWIDTH;
 static	float	f_strheight  = GOEN_F_OBJNAME_STRHEIGHT;
 
-
+
 /*_Methods defined for this module_______________________________________*/
 
 /*************************************************************************
@@ -173,7 +173,7 @@ int goen_create_nodetype_m12( pwr_sGraphPlcNode	*graphbody,
 }
 
 
-
+
 /*************************************************************************
 *
 * Name:		goen_get_point_info()
@@ -203,7 +203,7 @@ int goen_get_point_info_m12( WGre *grectx, pwr_sGraphPlcNode *graphbody,
 }
 
 
-
+
 /*************************************************************************
 *
 * Name:		goen_get_parameter_m12()
@@ -274,7 +274,7 @@ int	goen_get_parameter_m12( pwr_sGraphPlcNode *graphbody, pwr_tClassId cid,
 }
 
 
-
+
 /*************************************************************************
 *
 * Name:		goen_get_location_point_m12()

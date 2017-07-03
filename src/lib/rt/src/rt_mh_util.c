@@ -97,7 +97,7 @@ SemName ()
   }
   return str;
 }
-
+
 static pwr_tUInt32
 map ()
 {
@@ -119,7 +119,7 @@ map ()
   }
   return 1;
 }
-
+
 static pwr_tUInt32
 unmap ()
 {
@@ -140,7 +140,7 @@ unmap ()
   return 1;
 }
 #endif
-
+
 static pwr_tStatus
 sendMessage (
   qcom_sQid *target,
@@ -164,7 +164,7 @@ sendMessage (
   return sts;
 }
 
-
+
 /* Create the event semaphore.  */ 
 
 pwr_tStatus
@@ -205,7 +205,7 @@ mh_UtilCreateEvent ()
 
   return 1;
 }
-
+
 /*  Destroy the event semaphore.  */ 
 
 pwr_tStatus
@@ -274,7 +274,7 @@ mh_UtilIsStartedMh ()
 #endif
 }
 
-
+
 /* Inform Handler on local node that the list with supevise objects should be
    rebuilt and the scanning of supervise object restarted.
 
@@ -306,7 +306,7 @@ mh_UtilStartScanSup (
 
   return sts;      
 }
-
+
 /* Inform Handler on local node that scanning of
    supervise object should be stopped.
 
@@ -338,7 +338,7 @@ mh_UtilStopScanSup (
 
   return sts;
 }
-
+
 /*  Wait for the Plc to start. */ 
 
 pwr_tStatus
@@ -363,7 +363,7 @@ mh_UtilWaitForMh ()
 
   return 1;
 }
-
+
 /* Wake all waiting for the event monitor to start. */ 
 
 pwr_tStatus

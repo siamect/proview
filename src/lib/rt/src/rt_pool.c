@@ -116,7 +116,7 @@ checkInitQ (
   pool_sQlink		*item
 );
 
-
+
 static void *
 allocLookaside (
   pwr_tStatus		*sts,
@@ -142,7 +142,7 @@ allocLookaside (
   memset( entryPAdd( ep, sizeof(pool_sEntry)), 0, ep->size*pool_cDataSize - sizeof(pool_sEntry));
   return (void *)entryPAdd( ep, sizeof(pool_sEntry));
 }
-
+
 static pwr_tBoolean
 checkQ	(
   pool_sHead		*php,
@@ -172,7 +172,7 @@ checkQ	(
   return item == pool_Address(NULL, php, item->self);
 #endif
 }
-
+
 static pwr_tBoolean
 checkInitQ (
   pool_sHead		*php,
@@ -189,7 +189,7 @@ checkInitQ (
 	    (item->self == item->blink);
   }
 }
-
+
 static pool_sSegment *
 ensureMapped (
   pwr_tStatus		*sts,
@@ -205,7 +205,7 @@ ensureMapped (
 
   return mapSegment(sts, php, psp);
 }
-
+
 /* Free a piece of memory in a given pool.
    Raise an exception if anything goes wrong.  */
 
@@ -310,7 +310,7 @@ freeItem (
 
   return YES;
 }
-
+
 /* Map a previously created segment.
 
    The routine returns status.
@@ -344,7 +344,7 @@ mapSegment (
 
   return psp;
 }
-
+
 /* Create and map a nonexisting segment.
 
    The routine returns status.
@@ -403,7 +403,7 @@ newSegment (
 
   return psp;
 }
-
+
 /* Construct the name of a section.
    It does not access the database!
 
@@ -419,7 +419,7 @@ segName (
   sprintf(workstr, "%.11s%4.4x", name, generation);
   return workstr;
 }
-
+
 /* Return the virtual address corresponding to a pool
    offset.
    Signals errors.
@@ -459,7 +459,7 @@ pool_Address (
 
   errh_ReturnOrBugcheck(NULL, sts, POOL__BADOFFS, "");
 }
-
+
 /* Allocate a piece of memory in a given pool.
 
    The pool is extended if needed and possible.
@@ -616,7 +616,7 @@ pool_Alloc (
 
   return (void *)(entryPAdd(ep, sizeof(pool_sEntry)));
 }
-
+
 pwr_tBoolean
 pool_AllocLookasideSegment (
   pwr_tStatus		*sts,
@@ -683,7 +683,7 @@ pool_AllocLookasideSegment (
 
   return YES;
 }
-
+
 void *
 pool_AllocNamedSegment (
   pwr_tStatus		*sts,
@@ -729,7 +729,7 @@ pool_AllocNamedSegment (
 
   return psp->base;
 }
-
+
 pool_sHead *
 pool_Create (
   pwr_tStatus		*sts,
@@ -817,7 +817,7 @@ pool_Create (
 
   pwr_Return(NULL, sts, lsts);
 }
-
+
 /* Dump information of pool. */
 
 void
@@ -856,7 +856,7 @@ pool_Dump (
   }
 
 }
-
+
 /* Free a piece of memory in a given pool.
    Raise an exception if anything goes wrong.  */
 
@@ -884,7 +884,7 @@ pool_Free (
 
   return freeItem(sts, php, ep);
 }
-
+
 /* Free a piece of memory in a given pool.
    Raise an exception if anything goes wrong.  */
 
@@ -912,7 +912,7 @@ pool_FreeReference (
 
   return freeItem(sts, php, ep);
 }
-
+
 /* Check that a virtual address range is within a pool.  */
 
 pool_tRef
@@ -964,7 +964,7 @@ pool_InPool (
   return pool_cNRef;
 
 }
-
+
 /* Translate a virtual address to a pool reference.
    Use this function only if adrs was returned 
    from a pool_Alloc, i.e. only if it points to
@@ -986,7 +986,7 @@ pool_ItemReference (
 
   return pool_Reference(sts, php, p);
 }
-
+
 /* Allocate and initialize a queue head.
    Returns pool_tRef of allocated queue.  */
 
@@ -1004,7 +1004,7 @@ pool_Qalloc (
 
   return head;
 }
-
+
 /* Check if a queue has one and only one member.  */
 
 pwr_tBoolean
@@ -1031,7 +1031,7 @@ pool_QhasOne (
 
   return item->flink == item->blink;
 }
-
+
 /* Initialize a queue item.  */
 
 pool_tRef
@@ -1048,7 +1048,7 @@ pool_Qinit (
     item->self = item->flink = item->blink = r;
   return r;
 }
-
+
 /* Insert 'item' as predecessor to 'succ'. The linkage is
    poolrefs.  */
 
@@ -1079,7 +1079,7 @@ pool_QinsertPred (
 
   return pred;  
 }
-
+
 /* Insert 'item' as successor to 'pred'. The linkage is
    poolrefs.  */
 
@@ -1110,7 +1110,7 @@ pool_QinsertSucc (
 
   return succ;  
 }
-
+
 /* Check if a queue header is empty.  */
 
 pwr_tBoolean
@@ -1137,7 +1137,7 @@ pool_QisEmpty (
 
   return item->flink == item->self;
 }
-
+
 /* Check if a queue link is linked.  */
 
 pwr_tBoolean
@@ -1164,7 +1164,7 @@ pool_QisLinked (
 
   return item->flink != item->self;
 }
-
+
 /* Check if a queue link is initiated.  */
 
 pwr_tBoolean
@@ -1186,7 +1186,7 @@ pool_QisNull (
 
   return nullQ;
 }
-
+
 /* Move the elements in queue 'old' to queue 'new'. The linkage is
    poolrefs.  */
 
@@ -1224,7 +1224,7 @@ pool_Qmove (
 
   return new;  
 }
-
+
 /* Return predecessor to 'item'. The linkage is
    poolrefs.  */
 
@@ -1249,7 +1249,7 @@ pool_Qpred (
 
   return pred;  
 }
-
+
 /* Remove an item from a queue. The linkage is
    poolrefs.  */
 
@@ -1283,7 +1283,7 @@ pool_Qremove (
 
   return item;
 }
-
+
 /* Remove predecessor of an item, from a queue.
    The linkage is poolrefs.
    If item is queue header this call will
@@ -1324,7 +1324,7 @@ pool_QremovePred (
 
   return pred;
 }
-
+
 /* Remove successor of an item, from a queue.
    The linkage is poolrefs.
    If item is queue header this call will
@@ -1365,7 +1365,7 @@ pool_QremoveSucc (
 
   return succ;
 }
-
+
 /* Return successor to 'item'. The linkage is
    poolrefs.  */
 
@@ -1390,7 +1390,7 @@ pool_Qsucc (
 
   return succ;  
 }
-
+
 /* Allocate a piece of memory in a given pool.
 
    The pool is extended if needed and possible.
@@ -1413,7 +1413,7 @@ pool_RefAlloc (
 
   return entryPAdd(ep, -sizeof(pool_sEntry))->next;
 }
-
+
 /* Translate a virtual address to a pool reference.
    Return a pool_tRef, and signals errors.  */
 

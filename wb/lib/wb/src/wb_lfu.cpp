@@ -76,7 +76,7 @@
 #include "wb_vrepdb.h"
 #include "wb_revision.h"
 
-
+
 #define LFU_MAX_NODE_VOLUMES  	100
 #define LFU_MAX_BUS  		50
 #define LFU_MAX_VOLREF 		40
@@ -400,7 +400,7 @@ pwr_tStatus lfu_create_bootfile(
   return LFU__SUCCESS;	  
 }
 
-
+
 /*************************************************************************
 *
 * Name:		lfu_GetPlcFileVersion
@@ -430,7 +430,7 @@ pwr_tStatus lfu_GetPlcFileVersion(
 	return sts;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		lfu_GetFileVersion
@@ -556,7 +556,7 @@ pwr_tStatus lfu_IncrementAndGetVersion(
 	return 1;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		lfu_ReadSysObjectFile
@@ -3306,7 +3306,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
     return LFU__SUCCESS;
 }
 
-
+
 /************************************************************************
 *
 * Name: lfu_creatdb_qb_yes
@@ -3337,7 +3337,7 @@ static void lfu_creadb_qb_yes( void *ctx, void *d)
   free( (char *) data);
 }
 
-
+
 /*************************************************************************
 *
 * Name:		lfu_create_bootfiles()
@@ -3435,7 +3435,7 @@ int lfu_create_bootfiles (
 	return LFU__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		lfu_ReadBootFile
@@ -3541,7 +3541,7 @@ pwr_tStatus lfu_ReadBootFile(
   return LFU__SUCCESS;
 }
 
-
+
 /****************************************************************************
 * Name:		lfu_GetVolRef()
 **************************************************************************/
@@ -3581,7 +3581,7 @@ pwr_tStatus lfu_GetVolRef(     	char *filename,
   return 	LFU__SUCCESS;
 }
 
-
+
 /****************************************************************************
 * Name:		lfu_GetVolume()
 **************************************************************************/

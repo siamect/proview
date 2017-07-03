@@ -249,7 +249,7 @@ int main (int argc, char **argv)
     }
   }
 }
-
+
 static pwr_sClass_IOHandler *
 init (qcom_sQid *qid, lst_sEntry **csup_lh, pwr_sNode **nodep, io_mProcess process, errh_eAnix errh_anix,
       char *oname, float *cycletime)

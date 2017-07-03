@@ -61,7 +61,7 @@
 #include "rt_hash.h"
 //#include "rt_futex.h"
 
-
+
 #if 0
 pwr_tBoolean
 qos_WaitQueOld (
@@ -128,7 +128,7 @@ qos_WaitQueOld (
   return signal;
 }
 #endif
-
+
 
 #if 0
 pwr_tBoolean
@@ -245,7 +245,7 @@ qos_WaitQue (
   return 0;
 }
 
-
+
 #if 0
 pwr_tStatus
 qos_SignalQueOld (
@@ -274,7 +274,7 @@ qos_SignalQueOld (
   return TRUE;
 }
 #endif
-
+
 
 pwr_tStatus
 qos_SignalQue (
@@ -311,7 +311,7 @@ qos_SignalQue (
 }
 #endif
 
-
+
 qdb_sQlock *
 qos_CreateQlock (
   pwr_tStatus	*sts,
@@ -323,7 +323,7 @@ qos_CreateQlock (
 
   return &qp->lock;
 }
-
+
 void
 qos_DeleteQlock (
   pwr_tStatus	*sts,

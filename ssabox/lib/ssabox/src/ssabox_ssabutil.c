@@ -95,7 +95,7 @@ int	ssabutil_lopnr_check( pwr_tInt32	lopnr)
 	  return 1;
 }
 
-
+
 /************************************************************************
 *
 * Namn:         ssabutil_chksum_lop
@@ -123,7 +123,7 @@ pwr_tInt32 ssabutil_chksum_lop(	pwr_tInt32 lopnummer)
 }
 /* END_OF ssabutil_chksum_lop */
 
-
+
 /************************************************************************
 *
 * Namn:         ssabutil_chksum_kupong
@@ -151,7 +151,7 @@ pwr_tInt32 ssabutil_chksum_kupong(	pwr_tInt32 kupong_nummer)
 }
 /* END_OF ssabutil_chksum_kupong */
 
-
+
 /************************************************************************
 *
 * Namn:         ssabutil_chksum_calculate

@@ -120,7 +120,7 @@ static pwr_sClass_Backup_Conf
 			*backup_confp;	/* Backup_Conf object pointer */
 
 
-
+
 #ifdef seekbug
 
 # include $dap
@@ -365,7 +365,7 @@ static pwr_sClass_Backup_Conf
 
 #endif /* seekbug */
 
-
+
 /************************************************************************
 *
 * Name: bck_wrtblk_insert
@@ -419,7 +419,7 @@ bck_wrtblk_insert (
   sts4a = pthread_mutex_unlock(&wrtblkmtx);
   check4a(sts4a,"pthread_mutex_unlock(&wrtblkmtx)");
 }
-
+
 /************************************************************************
 *
 * Name: bck_wrtblk_wait
@@ -473,7 +473,7 @@ bck_wrtblk_wait ()
   return wrtblk;
 } /* bck_wrtblk_wait */
 
-
+
 /**************************/
 /* File handling routines */
 /**************************/
@@ -537,7 +537,7 @@ bck_file_alloc (
     return (allblock[i-1] + allsize [i-1]) << 9;
   
 }
-
+
 /************************************************************************
 *
 * Name: bck_file_process
@@ -784,7 +784,7 @@ bck_file_process (
 
   return NULL;
 } /* bck_file_process */
-
+
 /*******************/
 /* Data collection */
 /*******************/
@@ -802,7 +802,7 @@ typedef struct {
 } BCK_LISTHEAD;
 
 
-
+
 void
 bck_insert_listentry (
   pwr_tAName	       	objectname,	/* Name of data to be backed up */
@@ -999,7 +999,7 @@ bck_list_insert (
   
   return sts;
 }
-
+
 /************************************************************************
 *
 * Name: bck_list_build
@@ -1071,7 +1071,7 @@ void bck_list_build (
   } /* Loop thru the list */
 
 } /* bck_list_build */
-
+
 /************************************************************************
 *
 * Name: bck_list_free
@@ -1102,7 +1102,7 @@ void bck_list_free (
   free(list);
 } /* bck_list_free */
 
-
+
 /************************************************************************
 *
 * Name: bck_coll_process
@@ -1262,7 +1262,7 @@ void *bck_coll_process (
   return NULL;
 
 } /* bck_coll_process */
-
+
 /************************************************************************
 *
 * Name: bck_init
@@ -1361,7 +1361,7 @@ pwr_tUInt32 bck_init ()
 
   return sts;
 } /* bck_init */
-
+
 /* This is the main program of backup. It initializes backup
    and then waits for forced activation... */
 

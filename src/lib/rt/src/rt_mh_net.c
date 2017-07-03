@@ -49,7 +49,7 @@ xdrEvent (
   mh_sMsgInfo *mp
 );              
 
-
+
 pwr_tStatus                  
 mh_NetSendMessage(           
   qcom_sQid *qid,            
@@ -94,7 +94,7 @@ mh_NetSendMessage(
 
   return sts;
 }                           
-
+
 pwr_tStatus                  
 mh_NetXdrMessage(  
   XDR *xdrs,                  
@@ -150,7 +150,7 @@ mh_NetXdrMessage(
 
   return MH__SUCCESS;   
 }                           
-
+
 static pwr_tStatus
 xdrEvent (
   XDR *xdrs,

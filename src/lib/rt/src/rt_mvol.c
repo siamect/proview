@@ -74,7 +74,7 @@ static pwr_tBoolean
   );
 
 
-
+
   /* Decode an Attribute object.  */
 
 static pwr_tBoolean
@@ -133,7 +133,7 @@ static pwr_tBoolean
 
     return YES;
   }
-  
+
   /* Decode a ClassDef object.  */
 
   static pwr_tBoolean
@@ -160,7 +160,7 @@ static pwr_tBoolean
 
     return YES;
   }
-
+
   /* Decode an ObjBodyDef object.  */
 
   static pwr_tBoolean
@@ -187,7 +187,7 @@ static pwr_tBoolean
     return YES;
   }
 
-
+
 /* Get the definition of an attribute denoted by
    class identity and attribute name.
 
@@ -370,7 +370,7 @@ mvol_AnameToAttribute (
 
   pwr_Return(ap, sts, GDH__SUCCESS);
 }
-
+
 /* Translate an attribute reference to the internal
    attribute format.  */
 
@@ -555,7 +555,7 @@ mvol_ArefToAttribute (
 
   pwr_Return(ap, sts, GDH__SUCCESS);
 }
-
+
 pwr_sAttrRef *
 mvol_AttributeToAref (
   pwr_tStatus		*sts,
@@ -578,7 +578,7 @@ mvol_AttributeToAref (
 
   pwr_Return(arp, sts, GDH__SUCCESS);
 }
-
+
 gdb_sObject *
 mvol_ClassList (
   pwr_tStatus		*sts,
@@ -625,7 +625,7 @@ mvol_ClassList (
 
   return pool_Qitem(ol, gdb_sObject, u.n.cid_ll);
 }
-
+
 gdb_sClass *
 mvol_LinkClass (
   pwr_tStatus		*sts,
@@ -750,7 +750,7 @@ mvol_LinkClass (
   pwr_Assert(count == cp->acount);
   return cp;
 }
-
+
 gdb_sClass *
 mvol_LinkSubClassToAttribute (
   pwr_tStatus		*sts,
@@ -776,7 +776,7 @@ mvol_LinkSubClassToAttribute (
 
   pwr_Return(cp, sts, MVOL__SUCCESS);
 }
-
+
 gdb_sClass *
 mvol_LinkObject (
   pwr_tStatus		*sts,
@@ -857,7 +857,7 @@ mvol_LinkObject (
 
   return cp;
 }
-
+
 gdb_sClass *
 mvol_LinkScObject (
   pwr_tStatus		*sts,
@@ -880,7 +880,7 @@ mvol_LinkScObject (
 
   return cp;
 }
-
+
 gdb_sClass *
 mvol_NameToClass (
   pwr_tStatus		*sts,
@@ -1031,7 +1031,7 @@ void mvol_BuildCatt( pwr_tStatus *sts)
 }
 
 
-
+
 void
 mvol_ClassListAttrRef (
   pwr_tStatus		*sts,

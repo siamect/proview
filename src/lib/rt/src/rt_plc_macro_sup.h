@@ -128,7 +128,7 @@
     o->TimerCount = 0;					\
     o->DetectCheck = TRUE;				\
   }
-
+
 /*
 * Name:
 *   DSup_init(object, In, con)				

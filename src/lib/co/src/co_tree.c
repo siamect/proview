@@ -108,7 +108,7 @@ treeCheck(tree_sTable *tp, tree_sNode *np, int *count, int *maxlevel, int *hight
           int level, char *(*printKey)(tree_sNode *));
 
 
-
+
 static tree_sNode *
 allocNode(tree_sTable *tp, void *key)
 {
@@ -318,7 +318,7 @@ findNearNode(tree_sTable *tp, void *key)
     return np;
 }
 
-
+
 static tree_sNode *
 findNode(tree_sTable *tp, void *key)
 {
@@ -346,7 +346,7 @@ findNode(tree_sTable *tp, void *key)
     return np;
 }
 
-
+
 static tree_sNode *
 minimumNode(tree_sTable *tp, tree_sNode *np)
 {
@@ -356,7 +356,7 @@ minimumNode(tree_sTable *tp, tree_sNode *np)
     return np;
 }
 
-
+
 static tree_sNode *
 maximumNode(tree_sTable *tp, tree_sNode *np)
 {
@@ -366,7 +366,7 @@ maximumNode(tree_sTable *tp, tree_sNode *np)
     return np;
 }
 
-
+
 static tree_sNode *
 successorNode(tree_sTable *tp, tree_sNode *np)
 {
@@ -380,7 +380,7 @@ successorNode(tree_sTable *tp, tree_sNode *np)
     return p;
 }
 
-
+
 static tree_sNode*
 predecessorNode(tree_sTable *tp, tree_sNode *np)
 {
@@ -394,7 +394,7 @@ predecessorNode(tree_sTable *tp, tree_sNode *np)
     return p;
 }
 
-
+
 static tree_sNode*
 deleteNode(tree_sTable *tp, tree_sNode *z)
 {
@@ -594,7 +594,7 @@ deleteNode(tree_sTable *tp, tree_sNode *z)
     return z;
 }
 
-
+
 static tree_sNode *
 insertNode(tree_sTable *tp, tree_sNode *z)
 {
@@ -756,7 +756,7 @@ insertNode(tree_sTable *tp, tree_sNode *z)
 
 
 #if 0
-
+
 static void
 treePrint(
     tree_sTable *tp,
@@ -794,7 +794,7 @@ treePrint(
 }  
 #endif
 
-
+
 static void
 treeCheck(tree_sTable *tp, tree_sNode *np, int *count, int *maxlevel,
           int *hight, int level, char *(*printKey)(tree_sNode *))
@@ -903,7 +903,7 @@ tree_DeleteTable(pwr_tStatus *sts, tree_sTable *tp)
     deleteTree(sts, tp);
 }
 
-
+
 void
 tree_EmptyTable(pwr_tStatus *sts, tree_sTable *tp)
 {

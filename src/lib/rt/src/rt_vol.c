@@ -50,7 +50,7 @@
 #include "rt_pool.h"
 #include "rt_sub.h"
 
-
+
 gdb_sAliasServer *
 vol_AddAliasClient (
   pwr_tStatus		*sts,
@@ -69,7 +69,7 @@ vol_AddAliasClient (
 
   return asp;
 }    
-
+
 gdb_sMountServer *
 vol_AddMountClient (
   pwr_tStatus           *sts,
@@ -92,7 +92,7 @@ vol_AddMountClient (
 
   return msp;
 }
-
+
 gdb_sMountedOn *
 vol_AddMountedOn (
   pwr_tStatus           *sts,
@@ -117,7 +117,7 @@ vol_AddMountedOn (
 
   return mop;
 }
-
+
 gdb_sMountServer *
 vol_AddMountServer (
   pwr_tStatus           *sts,
@@ -153,7 +153,7 @@ vol_AddMountServer (
 
   return msp;
 }
-
+
 /* Translate an attribute reference to the internal
    attribute format.  */
 
@@ -172,7 +172,7 @@ vol_ArefToAttribute (
 
   return mvol_ArefToAttribute(sts, ap, arp, ap->op->g.cid);
 }
-
+
 void *
 vol_AttributeToAddress (
   pwr_tStatus		*sts,
@@ -208,7 +208,7 @@ vol_AttributeToAddress (
   else
     pwr_Return(p, sts, GDH__SUCCESS);
 }
-
+
 char *
 vol_AttributeToName (
   pwr_tStatus		*sts,
@@ -238,7 +238,7 @@ vol_AttributeToName (
 
   return s;
 }
-
+
 /* Insert an object in the list of siblings.  */
 
 void
@@ -277,7 +277,7 @@ vol_InsertSiblist (
   op->g.flags.b.inSibList = 1;
   pop->g.flags.b.isParent = 1;
 }
-
+
 pool_tRef
 vol_AttributeToReference (
   pwr_tStatus		*sts,
@@ -313,7 +313,7 @@ vol_AttributeToReference (
   else
     pwr_Return(r, sts, GDH__SUCCESS);
 }
-
+
 /* Link an object.  */
 
 gdb_sObject *
@@ -434,7 +434,7 @@ vol_LinkObject (
   }
   return op;
 }
-
+
 /* Link a Sub Class object.  */
 
 gdb_sScObject *
@@ -552,7 +552,7 @@ vol_LinkScObject (
 
   return scp;
 }
-
+
 /* Mount a volume  */
 
 gdb_sVolume *
@@ -572,7 +572,7 @@ vol_MountVolume (
 
   return vp;
 }
-
+
 #if 0
 /* The routine calculates the offset, size and indirection
    flag for a certain object or parameter name reference.
@@ -618,7 +618,7 @@ vol_NameToAref (
 
 }
 #endif
-
+
 /* Get the definition of an attribute denoted by
    a full object + attribute name.
 
@@ -649,7 +649,7 @@ vol_NameToAttribute (
 
   return ap;
 }
-
+
 /* Get the object corresponding to a given name.  */
 
 gdb_sObject *
@@ -686,7 +686,7 @@ vol_NameToParentObject (
     pwr_Return(NULL, sts, GDH__NOSUCHOBJ);
   return op;
 }
-
+
 /* Get the object corresponding to a given name.  */
 
 gdb_sObject *
@@ -739,7 +739,7 @@ vol_NameToObject (
 
   return vol_TranslateObject(sts, op, lo_flags, trans);
 }
-
+
 /* Get the address of an object body.  */
 
 char *
@@ -754,7 +754,7 @@ vol_ObjectToAddress (
 
   return pool_Address(sts, gdbroot->rtdb, op->u.n.body);
 }
-
+
 /* Get the full name of an object.
 
    NOTA BENE !!!
@@ -800,7 +800,7 @@ vol_ObjectToName (
   }
   return buff;
 }
-
+
 /* Get an object identifier.  */
 
 pwr_tObjid
@@ -814,7 +814,7 @@ vol_Oid (
   vp->u.n.next_oid.oix++;
   return vp->u.n.next_oid;
 }
-
+
 /* Get the object header pointer of an object identified by an
    objid. Mount client-server translation is done only if server object
    is in root volume or in system volumes.  */
@@ -894,7 +894,7 @@ vol_OidToObject (
 
   return op;
 }
-
+
 /* Get the object header pointer of an object identified by an
    object index (oix). Mount client-server translation is done
    only if server object is in root volume or in system volumes.  */
@@ -916,7 +916,7 @@ vol_OixToObject (
 
   return vol_OidToObject(sts, oid, lo_flags, trans, hint);
 }
-
+
 /* Propagate an alarmlevel upwards.  */
 
 void
@@ -1039,7 +1039,7 @@ vol_PropagateAlarmLevel (
   if (pold_maxa != pnew_maxa)
     vol_PropagateAlarmLevel(sts, pop, l_maxa, pold_maxa, pnew_maxa, propagate_alias);
 }
-
+
 void
 vol_PropagateBlockLevel (
   pwr_tStatus		*status,
@@ -1163,7 +1163,7 @@ vol_PropagateBlockLevel (
   if (pold_maxb != pnew_maxb)
     vol_PropagateBlockLevel(sts, pop, l_maxb, pold_maxb, pnew_maxb, propagate_alias);
 }
-
+
 void
 vol_RemoveMountClient (
   pwr_tStatus           *sts,
@@ -1175,7 +1175,7 @@ vol_RemoveMountClient (
   pool_QueRemove(sts, mcep->msclst, msp->msclst);
 #endif
 }
-
+
 void
 vol_RemoveMountedOn (
   pwr_tStatus           *sts,
@@ -1188,7 +1188,7 @@ vol_RemoveMountedOn (
   pool_Free(sts, gdbroot->pool, mop);
 
 }
-
+
 gdb_sMountServer *
 vol_RemoveMountServer (
   pwr_tStatus           *status,
@@ -1217,7 +1217,7 @@ vol_RemoveMountServer (
 #endif
   return msp;
 }
-
+
 /* Remove an object from the list of siblings.  */
 
 void
@@ -1255,7 +1255,7 @@ vol_RemoveSiblist (
   op->g.flags.b.inSibList = 0;
   if (cdh_ObjidIsNull(pop->g.soid)) pop->g.flags.b.isParent = 0;
 }
-
+
 void
 vol_SetAlarmLevel (
   pwr_tStatus		*sts,
@@ -1334,7 +1334,7 @@ vol_SetAlarmLevel (
   if (old_rmaxa != new_rmaxa)
     vol_PropagateAlarmLevel(sts, op, NO, old_rmaxa, new_rmaxa, YES);
 }
-
+
 void
 vol_SetBlockLevel (
   pwr_tStatus		*sts,
@@ -1412,7 +1412,7 @@ vol_SetBlockLevel (
   if (old_rmaxb != new_rmaxb)
     vol_PropagateBlockLevel(sts, op, NO, old_rmaxb, new_rmaxb, YES);
 }
-
+
 /* Find a sibling identified by its name.  */
 
 gdb_sObject *
@@ -1426,7 +1426,7 @@ vol_FamilyToObject (
 
   return (gdb_sObject *) hash_Search(sts, gdbroot->family_ht, cdh_Family(&f, name, poid));
 }
-
+
 gdb_sObject *
 vol_TranslateObject (
   pwr_tStatus		*sts,
@@ -1453,7 +1453,7 @@ vol_TranslateObject (
 
   return op;
 }
-
+
 /* Unlink an object.  */
 
 void
@@ -1576,7 +1576,7 @@ vol_UnlinkObject (
   }
 
 }
-
+
 void
 vol_UpdateAlarm (
   pwr_tStatus		*status,
@@ -1677,7 +1677,7 @@ vol_ArefDisabled (
 }
 
 #if 0
-
+
 gdb_sVolume *
 vol_VolumeList (
   pwr_tStatus		*sts,

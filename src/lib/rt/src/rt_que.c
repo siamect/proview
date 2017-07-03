@@ -47,7 +47,7 @@
 #include "rt_thread_msg.h"
 #include "rt_lst.h"
 
-
+
 que_sQue *
 que_Create (
   pwr_tStatus *status,
@@ -69,7 +69,7 @@ que_Create (
 
   return qp;
 }
-
+
 void *
 que_Get (
   pwr_tStatus *status,
@@ -90,7 +90,7 @@ que_Get (
 
   return p == NULL ? tmo_item : p;
 }
-
+
 void
 que_Put (
   pwr_tStatus *status,

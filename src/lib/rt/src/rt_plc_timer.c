@@ -53,7 +53,7 @@
   pthread_mutex_t timer_mutex;
 #endif
 
-
+
 void plc_inittimer (
   plc_sThread *tp
 )
@@ -73,7 +73,7 @@ void plc_inittimer (
 #endif
 #endif
 }
-
+
 void
 plc_timerhandler (
   plc_sThread	*tp

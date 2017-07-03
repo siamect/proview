@@ -136,7 +136,7 @@ boards known_boards[] = {
 };
 #endif /* FLASH_WRITE_ENABLE  */
 
-
+
 
 /* Initializes Profibus DP interface on the CIF board referred to by local.
 DRV_NO_ERROR is returned upon success.  */
@@ -1192,7 +1192,7 @@ dpm_init_master_check_sycon_db(io_sAgentLocalHilscher *local,
 }
 
 
-
+
 /*----------------------------------------------------------------------------*\
    Init method for the Pb_Hilscher agent  
 \*----------------------------------------------------------------------------*/
@@ -1333,7 +1333,7 @@ IoAgentInit(io_tCtx ctx, io_sAgent *ap)
 	return IO__SUCCESS;
 }
 
-
+
 /*----------------------------------------------------------------------------*\
    Read method for the Pb_Hilscher agent  
 \*----------------------------------------------------------------------------*/
@@ -1465,7 +1465,7 @@ IoAgentRead(io_tCtx ctx, io_sAgent *ap)
 	return IO__SUCCESS;
 }
 
-
+
 /*----------------------------------------------------------------------------*\
    Write method for the Pb_Hilscher agent  
 \*----------------------------------------------------------------------------*/
@@ -1512,7 +1512,7 @@ IoAgentWrite(io_tCtx ctx, io_sAgent *ap)
 	return IO__SUCCESS;
 }
 
-
+
 /*----------------------------------------------------------------------------*\
   
 \*----------------------------------------------------------------------------*/
@@ -1529,7 +1529,7 @@ IoAgentClose(io_tCtx ctx, io_sAgent *ap)
 	return IO__SUCCESS;
 }
 
-
+
 /*----------------------------------------------------------------------------*\
   Every method to be exported to the workbench should be registred here.
 \*----------------------------------------------------------------------------*/

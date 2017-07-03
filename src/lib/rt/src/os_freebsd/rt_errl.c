@@ -72,7 +72,7 @@ static void *errl_log_userdata = 0;
 static void CheckTimeStamp(int force);
 static void *log_thread(void *arg);
 
-
+
 void
 errl_Init (
   const char	*termName,
@@ -192,7 +192,7 @@ errl_SetFile (
   }
   pthread_mutex_unlock(&fileMutex);
 }
-
+
 void
 errl_SetTerm (
   const char	*termName
@@ -214,7 +214,7 @@ errl_SetTerm (
   pthread_mutex_unlock(&termMutex);
 
 }
-
+
 static void
 CheckTimeStamp (
   int		force
@@ -245,7 +245,7 @@ CheckTimeStamp (
     yday = tmpTm.tm_yday;
   }
 }
-
+
 static void *
 log_thread (void *arg)
 {

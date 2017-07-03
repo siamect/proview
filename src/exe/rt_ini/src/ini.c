@@ -132,7 +132,7 @@ static char		*strsav (char*);
 static void		create_active_io ();
 static void		delete_old_io ();
 static void		rename_active_io (ini_sContext*);
-
+
 static char *
 strsav (
   char *s
@@ -152,7 +152,7 @@ strsav (
 
   return t;
 }
-
+
 static pwr_tBoolean
 checkSect (
   pwr_tStatus	*status,
@@ -175,7 +175,7 @@ checkSect (
 
   return ODD(*sts);
 }
-
+
 static gdb_sObject*
 reloadObject (
   pwr_tStatus		*status,
@@ -255,7 +255,7 @@ reloadObject (
   return op;
 
 }
-
+
 static gdb_sObject*
 oidToObject (
   pwr_tObjid	oid
@@ -269,7 +269,7 @@ oidToObject (
 
   return op;
 }
-
+
 
 static pwr_tBoolean
 readSectFile (
@@ -319,7 +319,7 @@ readSectFile (
   return ODD(*sts);
 }
 
-
+
 static pwr_tBoolean
 readSectVolRef (
   pwr_tStatus		*status,
@@ -413,7 +413,7 @@ readSectVolRef (
 #endif
   return ODD(*sts);
 }
-
+
 static pwr_tBoolean
 readSectVolume (
   pwr_tStatus		*status,
@@ -443,7 +443,7 @@ readSectVolume (
 
   return ODD(*sts);
 }
-
+
 static pwr_tBoolean
 loadSectRbody (
   pwr_tStatus		*sts,
@@ -498,7 +498,7 @@ loadSectRbody (
 
   return INI__SUCCESS;
 }
-
+
 static pwr_tBoolean
 reloadSectRbody (
   pwr_tStatus		*sts,
@@ -584,7 +584,7 @@ reloadSectRbody (
 
 #endif
 }
-
+
 static pwr_tBoolean
 loadSectObject (
   pwr_tStatus		*status,
@@ -636,7 +636,7 @@ loadSectObject (
 
   return YES;
 }
-
+
 static pwr_tBoolean
 reloadSectObject (
   pwr_tStatus		*status,
@@ -689,7 +689,7 @@ reloadSectObject (
   return ODD(*sts);
 
 }
-
+
 static pwr_tBoolean
 loadSectScObject (
   pwr_tStatus		*status,
@@ -732,7 +732,7 @@ loadSectScObject (
 
   return YES;
 }
-
+
 static pwr_tBoolean
 loadSectVolume (
   pwr_tStatus		*status,
@@ -767,7 +767,7 @@ loadSectVolume (
 
   return ODD(*sts);
 }
-
+
 static pwr_tBoolean
 reloadSectVolume (
   pwr_tStatus		*status,
@@ -806,7 +806,7 @@ reloadSectVolume (
 
   return ODD(*sts);
 }
-
+
 ini_sContext *
 ini_CheckContext (
   pwr_tStatus	*status,
@@ -847,7 +847,7 @@ ini_CheckContext (
 
   return cp;  
 }
-
+
 ini_sContext *
 ini_CreateContext (
   pwr_tStatus	*status
@@ -891,7 +891,7 @@ ini_CreateContext (
 
   return cp;  
 }
-
+
 FILE *
 ini_OpenFile (
   pwr_tStatus	*status,
@@ -917,7 +917,7 @@ ini_OpenFile (
 
   return f;
 }
-
+
 char *
 ini_LoadDirectory (
   pwr_tStatus	*status,
@@ -979,7 +979,7 @@ void ini_SetSystemStatus( ini_sContext *cp, pwr_tStatus sts)
     cp->np->SystemStatus = sts;
 }
 
-
+
 void ini_UpdateSystemInfo ( ini_sContext *cp, int boot)
 {
   if ( boot) {
@@ -996,7 +996,7 @@ void ini_UpdateSystemInfo ( ini_sContext *cp, int boot)
   }
 }
 
-
+
 void
 ini_ReadBootFile (
   pwr_tStatus	*status,
@@ -1194,7 +1194,7 @@ ini_ReadBootFile (
   lst_Init(NULL, &vp->cre_lh, NULL);
 
 }
-
+
 pwr_tBoolean
 ini_IterVolumes (
   pwr_tStatus *sts,
@@ -1237,7 +1237,7 @@ ini_IterVolumes (
   return ODD(*sts);
 }
 
-
+
 /* read all load file headers to get sizes */
 pwr_tBoolean
 ini_CheckVolumeFile (
@@ -1321,7 +1321,7 @@ ini_CheckVolumeFile (
   
   return ODD(*sts);
 }
-
+
 pwr_tBoolean
 ini_LoadVolume (
   pwr_tStatus		*status,
@@ -1415,7 +1415,7 @@ ini_LoadVolume (
 
   return ODD(*sts);
 }
-
+
 pwr_tBoolean
 ini_ReloadVolume (
   pwr_tStatus		*status,
@@ -1503,7 +1503,7 @@ ini_ReloadVolume (
 
   return ODD(*sts);
 }
-
+
 pwr_tBoolean
 ini_CheckNode (
   pwr_tStatus		*status,
@@ -1516,7 +1516,7 @@ ini_CheckNode (
 
   return ini_IterVolumes(sts, cp, ini_CheckVolumeFile);
 }
-
+
 pwr_tBoolean
 ini_LoadNode (
   pwr_tStatus		*status,
@@ -1532,7 +1532,7 @@ ini_LoadNode (
 
   return result;
 }
-
+
 pwr_tBoolean
 ini_ReloadNode (
   pwr_tStatus		*status,
@@ -1543,7 +1543,7 @@ ini_ReloadNode (
 
   return ini_IterVolumes(sts, cp, ini_ReloadVolume);
 }
-
+
 pwr_tBoolean
 ini_UpdateBodies (
   pwr_tStatus	*status,
@@ -1574,7 +1574,7 @@ ini_UpdateBodies (
 
   return TRUE;
 }
-
+
 pwr_tBoolean
 ini_FreeBodies (
   pwr_tStatus	*status,
@@ -1605,7 +1605,7 @@ ini_FreeBodies (
 
   return YES;
 }
-
+
 pwr_tBoolean
 ini_DecodeBodies (
   pwr_tStatus	*status,
@@ -1636,7 +1636,7 @@ ini_DecodeBodies (
 
   return TRUE;
 }
-
+
 pwr_tBoolean
 ini_UpdateDatabase (
   pwr_tStatus	*status,
@@ -1653,7 +1653,7 @@ ini_UpdateDatabase (
 
   return YES;
 }
-
+
 pwr_tBoolean
 ini_BuildNode (
   pwr_tStatus	*status,
@@ -1708,7 +1708,7 @@ ini_BuildNode (
 
   return ODD(*sts);
 }
-
+
 pwr_tBoolean
 ini_RebuildNode (
   pwr_tStatus	*status,
@@ -1754,7 +1754,7 @@ ini_RebuildNode (
 
   return YES;
 }
-
+
 pwr_tBoolean
 ini_CreateDb (
   pwr_tStatus	*status,
@@ -1778,7 +1778,7 @@ ini_CreateDb (
 
   return lgdb != NULL;
 }
-
+
 pwr_tBoolean
 ini_ReadNodeFile (
   pwr_tStatus	*status,
@@ -1801,7 +1801,7 @@ ini_ReadNodeFile (
 
   return YES;
 }
-
+
 ini_sProc *
 ini_ProcInsert (
   pwr_tStatus	*status,
@@ -1870,7 +1870,7 @@ ini_ProcInsert (
 
   return pp;
 }
-
+
 void 
 ini_ProcLoad (
   pwr_tStatus	*status,
@@ -1883,7 +1883,7 @@ ini_ProcLoad (
 
   return;
 }
-
+
 void 
 ini_ProcStart (
   pwr_tStatus	*status,
@@ -1908,7 +1908,7 @@ ini_ProcStart (
   if (EVEN(*sts))
     errh_LogError(&cp->log, "Error starting %s, %m", pp->id, *sts);
 }
-
+
 void 
 ini_ProcPrio (
   pwr_tStatus	*status,
@@ -1933,7 +1933,7 @@ ini_ProcPrio (
 #endif 
   }
 }
-
+
 void
 ini_ProcIter (
   pwr_tStatus	*status,
@@ -1955,7 +1955,7 @@ ini_ProcIter (
     }
   }
 }
-
+
 void
 ini_ProcTable (
   pwr_tStatus	*status,
@@ -2221,7 +2221,7 @@ ini_ProcTable (
     fclose(f);
   }
 }
-
+
 void
 ini_ProcWait (
   pwr_tStatus	*status,
@@ -2268,7 +2268,7 @@ ini_ProcWait (
 #endif
   errh_Info("Ich sterbe!!");
 }
-
+
 static void
 create_active_io ()
 {
@@ -2474,7 +2474,7 @@ create_active_io ()
     bo_cnt * sizeof(((pwr_sClass_InitArea*)0)->Value[0]),
     &oid, pwr_cNObjid, 0, pwr_cNObjid);
 }
-
+
 static void
 rename_active_io (
   ini_sContext *cp
@@ -2497,7 +2497,7 @@ rename_active_io (
     return;
   }
 }
-
+
 static void
 delete_old_io ()
 {

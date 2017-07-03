@@ -99,7 +99,7 @@ typedef struct {
 
 /* Function prototypes.  */
 
-
+
 mvol_sAttribute *
 mvol_AnameToAttribute (
   pwr_tStatus		*sts,

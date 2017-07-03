@@ -243,7 +243,7 @@ static pwr_tUInt32 tlog_getconfigobject( pwr_sClass_TLogConfigure **TLogConf,
 static pwr_tUInt32 tlog_loglist_add();
 static pwr_tUInt32 tlog_timestring();
 
-
+
 /****************************************************************************
 * Name:		tlog_sleep()
 *
@@ -266,7 +266,7 @@ static pwr_tUInt32 tlog_sleep( float time)
     nanosleep( &p_time_ts, NULL);
 	return TLOG__SUCCESS;
 }
-
+
 /****************************************************************************
 * Name:		tlog_exec_off_all()
 *
@@ -336,7 +336,7 @@ static pwr_tUInt32 tlog_exec_off_all( pwr_tObjid objid)
 
 	return TLOG__SUCCESS;
 }
-
+
 /****************************************************************************
 * Name:		tlog_exec_on_all()
 *
@@ -383,7 +383,7 @@ static pwr_tUInt32 tlog_exec_on_all( pwr_tObjid objid)
 
 	return TLOG__SUCCESS;
 }
-
+
 /****************************************************************************
 * Name:		tlog_file_close()
 *
@@ -404,7 +404,7 @@ static pwr_tUInt32 tlog_file_close( tlog_t_filectx *filectx)
 
 	return TLOG__SUCCESS;
 }
-
+
 /****************************************************************************
 * Name:		tlog_extselectlist_reset()
 *
@@ -433,7 +433,7 @@ static pwr_tUInt32 tlog_extselectlist_reset( tlog_t_filectx *filectx)
 
 	return TLOG__SUCCESS;
 }
-
+
 /****************************************************************************
 * Name:		tlog_selectlist_modify()
 *
@@ -469,7 +469,7 @@ static pwr_tUInt32 tlog_selectlist_modify( tlog_t_filectx *filectx,
 
 	return TLOG__SUCCESS;
 }
-
+
 /****************************************************************************
 * Name:		tlog_extselectlist_unmodify()
 *
@@ -516,7 +516,7 @@ static pwr_tUInt32 tlog_extselectlist_unmodify( tlog_t_filectx *filectx,
 
 	return TLOG__SUCCESS;
 }
-
+
 /****************************************************************************
 * Name:		tlog_selectlist_check()
 *
@@ -547,7 +547,7 @@ static pwr_tUInt32 tlog_selectlist_check( tlog_t_filectx *filectx,
 	}
 	return TLOG__NOTSEL;
 }
-
+
 /****************************************************************************
 * Name:		tlog_extselectlist_check()
 *
@@ -583,7 +583,7 @@ static pwr_tUInt32 tlog_extselectlist_check( tlog_t_filectx *filectx,
 	}
 	return TLOG__NOTSEL;
 }
-
+
 /****************************************************************************
 * Name:		tlog_extselectlist_modify()
 *
@@ -662,7 +662,7 @@ static pwr_tUInt32 tlog_extselectlist_modify( tlog_t_filectx *filectx,
 	return TLOG__SUCCESS;
 }
 
-
+
 /****************************************************************************
 * Name:		tlog_selectlist_unmodify()
 *
@@ -732,7 +732,7 @@ static pwr_tUInt32 tlog_selectlist_unmodify( tlog_t_filectx *filectx,
 	return TLOG__SUCCESS;
 }
 
-
+
 /****************************************************************************
 * Name:		tlog_mh_info_bc()
 *
@@ -772,7 +772,7 @@ static pwr_tStatus tlog_mh_info_bc( mh_sMessage *MsgP)
 	}
 	return TLOG__SUCCESS;
 }
-
+
 /****************************************************************************
 * Name:		tlog_mh_alarm_bc()
 *
@@ -822,7 +822,7 @@ static pwr_tStatus tlog_mh_alarm_bc( mh_sMessage *MsgP)
 	return TLOG__SUCCESS;
 }
 
-
+
 /****************************************************************************
 * Name:		tlog_alarm_update()
 *

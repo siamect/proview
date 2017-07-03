@@ -58,7 +58,7 @@
 #include "rt_io_profiboard.h"
 #include "rt_pb_msg.h"
 
-
+
 /*----------------------------------------------------------------------------*\
    Read method for the Pb DP slave 
 \*----------------------------------------------------------------------------*/
@@ -151,7 +151,7 @@ static pwr_tStatus IoRackRead (
   return IO__SUCCESS;
 }
 
-
+
 /*----------------------------------------------------------------------------*\
   Every method to be exported to the workbench should be registred here.
 \*----------------------------------------------------------------------------*/

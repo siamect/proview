@@ -69,7 +69,7 @@ static pwr_tStatus Build (
   return build.sts();
 }
 
-
+
 /*----------------------------------------------------------------------------*\
   Every method to be exported to the workbench should be registred here.
 \*----------------------------------------------------------------------------*/

@@ -190,7 +190,7 @@ pvd_SubRemove (
 static pwr_tBoolean
 pvd_SubSendBuffer ();
 
-
+
 /* Dispatcher for 'net_cMsgClass' messages.  */
 
 static const char *cMsg[net_eMsg_end] = {
@@ -282,7 +282,7 @@ main (
 }
 #endif
 
-
+
 /* Add my own node.  */
 
 static void
@@ -308,7 +308,7 @@ addMyNode (void)
   } gdb_ScopeUnlock;
 
 }
-
+
 /* Add my own node.  */
 
 static gdb_sNode *
@@ -371,7 +371,7 @@ flushAllNodes (void)
     }
   }
 }
-
+
 /* Handle messages that should not reach net handler.  */
 
 static void
@@ -403,7 +403,7 @@ flushNode (
 
   } gdb_ScopeUnlock;
 }
-
+
 static void
 fromEvent (
   qcom_sGet	*get
@@ -431,7 +431,7 @@ fromEvent (
 
   sav_event = ep->mask;
 }
-
+
 /* Dispatcher for MSG_CLAS_PAMS messages.  */
 
 static void
@@ -465,7 +465,7 @@ fromNet (
     break;
   }
 }
-
+
 /* Flush a node.  */
 
 static void
@@ -493,7 +493,7 @@ flush (
   }
 
 }
-
+
 /* Received Id or IdAck.  */
 
 static void
@@ -567,7 +567,7 @@ id (
 
   sendVolumes(np, pool_cNRef); 
 }
-
+
 /* Handle neti response. Add node to nodedb.  */
 
 static void
@@ -580,7 +580,7 @@ idAck2 (
       cdh_NodeIdToString(NULL, get->sender.nid, 0, 0));
 
 }
-
+
 /* Initialize the nethandler data and communications.  */
 
 void rt_procom::init()
@@ -630,7 +630,7 @@ void rt_procom::init()
 
   sendServerConnectAll();
 }
-
+
 
 static void
 linkActive (
@@ -677,7 +677,7 @@ static void linkStalled ( qcom_sGet *get)
 {
 }
 
-
+
 /* Receive messages.  */
 
 void rt_procom::mainLoop()
@@ -785,7 +785,7 @@ sendId (
       np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0), sts);
 
 }
-
+
 /* Send a list of all volumes owned by this node to the
    remote node.  */
 
@@ -861,7 +861,7 @@ sendVolumes (
   free(mp);
 }
 
-
+
 /* Receive a list of all volumes owned by the sending node.  */
 
 static void
@@ -870,7 +870,7 @@ volumes (
 )
 {
 }
-
+
 /* Receive a list of all volumes owned by the sending node.  
  * Neth version 7 of net_sVolumes
  */
@@ -882,7 +882,7 @@ volumes7 (
 {
 }
 
-
+
 /* Receive a list of all volumes the remote node have mounted.  */
 
 static void

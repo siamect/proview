@@ -94,7 +94,7 @@ static void ptreeCheck( ptree_sTable *tp,
 			char *(*printKey)(ptree_sNode *));
 
 
-
+
 static pool_tRef allocNode( ptree_sTable *tp,
 			    void *key)
 {
@@ -287,7 +287,7 @@ static pool_tRef findNearNode( ptree_sTable *tp,
 }
 
 
-
+
 static pool_tRef findNode( ptree_sTable *tp, 
 			   void *key)
 {
@@ -318,7 +318,7 @@ static pool_tRef findNode( ptree_sTable *tp,
   return nr;
 }
 
-
+
 static pool_tRef minimumNode( ptree_sTable *tp, 
 			      pool_tRef nr)
 {
@@ -331,7 +331,7 @@ static pool_tRef minimumNode( ptree_sTable *tp,
   return nr;
 }
 
-
+
 static pool_tRef maximumNode( ptree_sTable *tp, 
 			      pool_tRef nr)
 {
@@ -344,7 +344,7 @@ static pool_tRef maximumNode( ptree_sTable *tp,
   return nr;
 }
 
-
+
 
 static pool_tRef successorNode( ptree_sTable *tp, 
 				 pool_tRef nr)
@@ -364,7 +364,7 @@ static pool_tRef successorNode( ptree_sTable *tp,
   return pr;
 }
 
-
+
 static pool_tRef predecessorNode( ptree_sTable *tp,
 				  pool_tRef nr)
 {
@@ -383,7 +383,7 @@ static pool_tRef predecessorNode( ptree_sTable *tp,
   return pr;
 }
 
-
+
 
 static pool_tRef deleteNode( ptree_sTable *tp, 
 			     pool_tRef zr)
@@ -627,7 +627,7 @@ static pool_tRef deleteNode( ptree_sTable *tp,
   return zr;
 }
 
-
+
 
 static pool_tRef insertNode( ptree_sTable *tp, 
 			     pool_tRef zr)
@@ -821,7 +821,7 @@ static pool_tRef insertNode( ptree_sTable *tp,
   return zr;
 }
 
-
+
 #if 0
 static void ptreePrint( ptree_sTable *tp,
 			pool_tRef    nr,
@@ -860,7 +860,7 @@ static void ptreePrint( ptree_sTable *tp,
 } 
 #endif
 
-
+
 static void ptreeCheck( ptree_sTable *tp, 
 		        pool_tRef nr, int *count, int *maxlevel,
 			int *hight, int level, 
@@ -922,7 +922,7 @@ void ptree_DeleteTable(pwr_tStatus *sts, ptree_sTable *tp)
   deleteTree( sts, tp);
 }
 
-
+
 void ptree_EmptyTable(pwr_tStatus *sts, ptree_sTable *tp)
 {
   emptyTree( sts, tp);

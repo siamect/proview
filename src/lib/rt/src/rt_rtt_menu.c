@@ -10261,7 +10261,7 @@ static int	rtt_parse_mainmenu( char *mainmenu_title)
 	return RTT__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		rtt_cut_segments()
@@ -10307,7 +10307,7 @@ int rtt_cut_segments (
 	return RTT__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		rtt_menu_get_parent_text()

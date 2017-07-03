@@ -55,7 +55,7 @@
 
 #define cNanoSec 1.0e-9
 
-
+
 /*_*
   @aref plcthread PlcThread
 */
@@ -79,7 +79,7 @@ pwrb_PlcThread_Init (
 
   return o;
 }
-
+
 void
 pwrb_PlcThread_Exec (
   plc_sThread *tp
@@ -152,7 +152,7 @@ pwrb_PlcThread_Exec (
 
 
 }
-
+
 void
 pwrb_PlcThread_Zero (
   plc_sThread	*tp

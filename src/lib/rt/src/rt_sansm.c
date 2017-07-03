@@ -67,7 +67,7 @@ removeServer (
   san_sServer		*sp
 );
 
-
+
 static san_sServer *
 addServer (
   pwr_tStatus		*sts,
@@ -105,7 +105,7 @@ addServer (
   return checkServer(np, sp);
 }
 
-
+
 /* This routine is called both from neth and tmon.
    Do NOT use sp->op */   
 
@@ -148,7 +148,7 @@ checkServer (
 
   return sp;
 }
-
+
 static void
 removeServer (
   gdb_sNode		*np,
@@ -174,7 +174,7 @@ removeServer (
 
   pool_Free(NULL, gdbroot->pool, sp);
 }
-
+
 void
 sansm_Add (
   qcom_sGet		*get
@@ -207,7 +207,7 @@ sansm_Add (
     ap->count, np->name, np->sansAct_lc);
 #endif
 }
-
+
 void
 sansm_Check (
 )
@@ -244,7 +244,7 @@ sansm_Check (
 
   idx = gdbroot->db->al_idx;
 }
-
+
 void
 sansm_FlushNode (
   pwr_tStatus		*sts,
@@ -270,7 +270,7 @@ sansm_FlushNode (
 
   return;
 }
-
+
 void
 sansm_Remove (
   qcom_sGet		*get
@@ -305,7 +305,7 @@ sansm_Remove (
 #endif
 
 }
-
+
 /* Send alarm notification for server in update list.
    Send at most net_cSanMaxUpdate 'net_sSanData' in update message.  */
 

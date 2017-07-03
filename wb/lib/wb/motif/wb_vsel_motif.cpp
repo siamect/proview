@@ -88,7 +88,7 @@ static void vsel_exit_qb_yes( void *ctx, void *cbdata)
   delete vsel;
 }
 
-
+
 /*************************************************************************
 * Name:		void	vsel_activate_ok()
 *
@@ -126,7 +126,7 @@ void WVselMotif::activate_ok( Widget w, WVselMotif *vsel, XmAnyCallbackStruct *d
 			     "         Volume is already open        ");
   }
 }
-
+
 /*************************************************************************
 * Name:		void	vsel_activate_cancel()
 *
@@ -142,7 +142,7 @@ void WVselMotif::activate_cancel( Widget w, WVselMotif *vsel, XmAnyCallbackStruc
   delete vsel;
 }
 
-
+
 /*************************************************************************
 * Name:		void	vsel_activate_close()
 *
@@ -163,7 +163,7 @@ void WVselMotif::activate_close( Widget w, WVselMotif *vsel, XmAnyCallbackStruct
     delete vsel;
   }
 }
-
+
 /*************************************************************************
 * Name:		void	vsel_activate_showall()
 *
@@ -182,7 +182,7 @@ void WVselMotif::activate_showall( Widget w, WVselMotif *vsel, XmToggleButtonCal
   WFoe::error_msg(sts);
 }
 
-
+
 void WVselMotif::create_label( Widget w, WVselMotif *vsel, XmAnyCallbackStruct *data)
 {
 
@@ -238,7 +238,7 @@ void WVselMotif::create_volumelist( Widget w, WVselMotif *vsel, XmAnyCallbackStr
 
 }
 
-
+
 /*************************************************************************
 *
 * Name:		int	vsel_new()
@@ -442,7 +442,7 @@ WVselMotif::WVselMotif (
   *status = LOGIN__SUCCESS;
 }
 
-
+
 
 WVselMotif::~WVselMotif()
 {
@@ -452,7 +452,7 @@ WVselMotif::~WVselMotif()
 
 }
 
-
+
 /*************************************************************************
 *
 * Name:		message()

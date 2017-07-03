@@ -66,7 +66,7 @@
 
   gdb_sLocal *gdbroot = NULL;
 
-
+
 /** Compare two keys in class attribute binary tree 
 */
 
@@ -96,7 +96,7 @@ compCatt( ptree_sTable *tp, ptree_sNode *x, ptree_sNode *y)
     return 1;
 }
 
-
+
 static void
 evaluateInit (
   gdb_sInit		*ip
@@ -184,7 +184,7 @@ evaluateInit (
   errh_Info("Rtdb isize   : %d, esize: %d", ip->rtdb_isize, ip->rtdb_esize);
 
 }
-
+
 static gdb_sLocal *
 mapLocalDb (
   pwr_tStatus		*sts
@@ -281,7 +281,7 @@ mapLocalDb (
 
   return gdbroot;  
 }
-
+
 #if defined OS_POSIX
 /*
  * A fix which unlinks all segments for the given name.
@@ -355,7 +355,7 @@ unlinkPool(
 }
 
 #endif
-
+
 gdb_sAliasServer *
 gdb_AddAliasServer (
   pwr_tStatus		*sts,
@@ -399,7 +399,7 @@ gdb_AddAliasServer (
 
   return asp;
 }
-
+
 gdb_sClass *
 gdb_AddClass (
   pwr_tStatus		*sts,
@@ -439,7 +439,7 @@ gdb_AddClass (
 
   return cp;
 }
-
+
 gdb_sMountServer *
 gdb_AddMountServer (
   pwr_tStatus		*sts,
@@ -480,7 +480,7 @@ gdb_AddMountServer (
 
   return msp;
 }
-
+
 gdb_sNode *
 gdb_AddNode (
   pwr_tStatus		*sts,
@@ -535,7 +535,7 @@ gdb_AddNode (
 
   return np;
 }
-
+
 /* Add a volume */
 
 gdb_sVolume *
@@ -578,7 +578,7 @@ gdb_AddVolume (
   
   return vp;
 }
-
+
 /* Rebuild tables out of the database contents.
    This should be done after initialization of the DB, before
    starting the nethandler.  */
@@ -605,7 +605,7 @@ gdb_BuildGlobalDatabase (
   } gdhi_ScopeUnlock;
 #endif
 }
-
+
 /* This routine maps the object and node database.
    It should only be called by the init program.  */
 
@@ -847,7 +847,7 @@ gdb_CreateDb (
 
   return gdbroot;
 }
-
+
 /* This routine unlinks the object and node database and 
    removes database lock.
    It should only be called by the init program.  */
@@ -888,7 +888,7 @@ gdb_UnlinkDb ()
 
 #endif
 }
-
+
 /* Allocate an object header and initiate
    the global part of the header.  */
 
@@ -923,7 +923,7 @@ gdb_AddObject (
     
   return op;
 }
-
+
 /* Allocate an sub class object header and 
    initiate it.  */
 
@@ -955,7 +955,7 @@ gdb_AddScObject (
     
   return scp;
 }
-
+
 /* Load a volume */
 
 gdb_sVolume *
@@ -1055,7 +1055,7 @@ gdb_LoadVolume (
 
   return vp;
 }
-
+
 /* Lock an object for direct linking.  */
 
 gdb_sObject *
@@ -1073,7 +1073,7 @@ gdb_LockObject (
 
   return op;
 }
-
+
 gdb_sLocal *
 gdb_MapDb (
   pwr_tStatus		*sts,
@@ -1142,7 +1142,7 @@ gdb_MapDb (
 
   return gdbroot;
 }
-
+
 gdb_sClass *
 gdb_ReAddClass (
   pwr_tStatus		*sts,
@@ -1175,7 +1175,7 @@ gdb_ReAddClass (
 
   return new_cp;
 }
-
+
 /* Remove an object.
    If object is direct liked postpone the
    remove and set the pending delete flag.  */
@@ -1208,7 +1208,7 @@ gdb_RemoveObject (
     op->u.n.flags.b.pendingDelete = 1;
   }
 }
-
+
 /* Unlock an object for direct linking.
    The OH becomes non-directlinked. If dlcount becomes zero,
    then the object is `unlocked'. If the DELPEND flag is set,

@@ -57,7 +57,7 @@ int cli$present();
 
 static unsigned long 	userlist = 0; 
 
-
+
 int  sutil_get_qualval ( qual , qual_val , sendlen )
 char *qual ;
 char *qual_val ;
@@ -122,7 +122,7 @@ int	sendlen ;
 }
 
 
-
+
 int  sutil_get_qual ( qual , condval_ptr ) 
 char *qual ;
 long *condval_ptr;

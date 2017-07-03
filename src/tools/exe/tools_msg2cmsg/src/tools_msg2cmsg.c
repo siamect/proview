@@ -107,7 +107,7 @@ static void WriteFiles(char *fname, FILE *cfp, FILE *hfp);
 static void TranslateFormatSpec(const char *msgstr, char **transstr);
 
 
-
+
 /*
 * Main
 */
@@ -172,7 +172,7 @@ int main(int argc, char **argv)
   exit(EXIT_SUCCESS);
 #endif
 }
-
+
 /*
  * Routines which are called by lexyy.c
  */
@@ -240,7 +240,7 @@ void lex_LexError(int Lineno, char *Str)
 }
 
 
-
+
 /*
  * Local routines
  */

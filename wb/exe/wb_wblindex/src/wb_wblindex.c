@@ -752,7 +752,7 @@ static pwr_tStatus convwbl_create_ctx (
 	return GSX__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		convwbl_delete_ctx()

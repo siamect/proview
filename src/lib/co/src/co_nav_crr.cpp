@@ -862,7 +862,7 @@ int	NavCrr::get_signals( char	*filename,
 
 }
 
-
+
 /*************************************************************************
 *
 * Name:		nav_VolumeIdToStr()

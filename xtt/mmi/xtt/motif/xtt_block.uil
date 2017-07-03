@@ -62,7 +62,7 @@ value
     menu_font : font ('-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1');
 
 
-
+
 object blk_window : XmMainWindow {
   arguments {
   };

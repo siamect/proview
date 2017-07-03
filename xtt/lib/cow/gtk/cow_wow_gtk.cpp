@@ -106,7 +106,7 @@ static gint question_delete_event( GtkWidget *w, GdkEvent *event, gpointer data)
   return TRUE;
 }
 
-
+
 /************************************************************************
 *
 * Name: DisplayQuestion		

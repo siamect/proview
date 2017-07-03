@@ -65,7 +65,7 @@ respondObject (
   pwr_tInt32		rcount
 );
 
-
+
 /* Common cache error responder.  */
 
 static void
@@ -89,7 +89,7 @@ respondError (
   if (!net_Reply(&sts, get, &put, 0))
     errh_Bugcheck(sts, "net_Reply");
 }
- 
+
 /* Send parent path and sibling environment of an object.  */
 
 static void
@@ -182,7 +182,7 @@ respondObject (
   if (!net_Reply(&sts, get, &put, 0))
     errh_Bugcheck(sts, "net_Reply");
 }
-
+
 /* .  */
 
 gdb_sMountedOn *
@@ -212,7 +212,7 @@ cvolsm_AddMountedOn (
 
   return mop;
 }
-
+
 /* Flush all server information for a node.
 
    All mounted on information
@@ -238,7 +238,7 @@ cvolsm_FlushNode (
     cvolsm_RemoveMountedOn(NULL, mop);
   }
 }
-
+
 /* Handle GetObjectInfo message.  */
 
 void
@@ -292,7 +292,7 @@ cvolsm_GetObjectInfo (
 
   net_Reply(&sts, get, &put, 0);
 }
-
+
 /* Handle a NameToObject message.  */
 
 void
@@ -327,7 +327,7 @@ cvolsm_NameToObject (
 
   } gdb_ScopeUnlock;
 }
-
+
 /* Handle OidToObject message.  */
 
 void
@@ -352,7 +352,7 @@ cvolsm_OidToObject (
 
   } gdb_ScopeUnlock;
 }
-
+
 /* .  */
 
 void
@@ -369,7 +369,7 @@ cvolsm_RemoveMountedOn (
 
   pool_Free(NULL, gdbroot->pool, mop);
 }
-
+
 /* Handle SetObjectInfo message.  */
 
 void

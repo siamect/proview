@@ -181,7 +181,7 @@ static struct {
 
 #define cMaxErrno ((int) (sizeof(errno_status) / sizeof(errno_status[0])))
 
-
+
 int
 errno_ExitStatus (
   pwr_tStatus sts
@@ -192,7 +192,7 @@ errno_ExitStatus (
   else
     return (int)sts;
 }
-
+
 int
 errno_ExitErrno (
   int err_no
@@ -200,7 +200,7 @@ errno_ExitErrno (
 {
   return err_no;
 }
-
+
 /* Check a POSIX return code and return
    status on PWR format, using errno. */
 
@@ -224,7 +224,7 @@ errno_Pstatus (
 
   return ERRNO_BADCODE(errno);
 }
-
+
 pwr_tStatus
 errno_Status (
   int err_no
@@ -239,7 +239,7 @@ errno_Status (
 
   return ERRNO_BADCODE(err_no);
 }
-
+
 pwr_tStatus
 errno_GetStatus ()
 {

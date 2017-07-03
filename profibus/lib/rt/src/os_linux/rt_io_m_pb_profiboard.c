@@ -101,7 +101,7 @@ static pwr_tStatus IoAgentSwap (
   io_eEvent     event
 );
 
-
+
 
 /*----------------------------------------------------------------------------*\
   Sends request to Profiboard for setting FMB parameters
@@ -203,7 +203,7 @@ static short fmb_set_configuration(T_PROFI_DEVICE_HANDLE *hDevice,
 
 }
 
-
+
 /*----------------------------------------------------------------------------*\
   Sends request to Profiboard for setting DP master parameters
 \*----------------------------------------------------------------------------*/
@@ -245,7 +245,7 @@ static short dp_init_master(T_PROFI_DEVICE_HANDLE *hDevice)
   return (PB_FALSE);
 }
 
-
+
 /*----------------------------------------------------------------------------*\
   Sends request to Profiboard for setting DP bus parameters
 \*----------------------------------------------------------------------------*/
@@ -609,7 +609,7 @@ possible return values:
 
 }
 
-
+
 /*----------------------------------------------------------------------------*\
   Sends request for selecting operation mode to the Profiboard
 \*----------------------------------------------------------------------------*/
@@ -1181,7 +1181,7 @@ static pwr_tStatus dp_io_offsets (
   
   return (PB_FALSE);
 }
-
+
 /* Supervision thread */
 
 void *handle_events(void *ptr) {
@@ -1732,7 +1732,7 @@ static pwr_tStatus IoAgentInit (
   
   return IO__SUCCESS;
 }
-
+
 /*----------------------------------------------------------------------------*\
    Swap method for the Pb_profiboard agent  
 \*----------------------------------------------------------------------------*/
@@ -1784,7 +1784,7 @@ static pwr_tStatus IoAgentSwap (
   return IO__SUCCESS;
 }
 
-
+
 /*----------------------------------------------------------------------------*\
    Read method for the Pb_Profiboard agent  
 \*----------------------------------------------------------------------------*/
@@ -1850,7 +1850,7 @@ static pwr_tStatus IoAgentRead (
   return IO__SUCCESS;
 }
 
-
+
 /*----------------------------------------------------------------------------*\
    Write method for the Pb_Profiboard agent  
 \*----------------------------------------------------------------------------*/
@@ -1900,7 +1900,7 @@ static pwr_tStatus IoAgentWrite (
   return IO__SUCCESS;
 }
 
-
+
 /*----------------------------------------------------------------------------*\
   
 \*----------------------------------------------------------------------------*/
@@ -1959,7 +1959,7 @@ static pwr_tStatus IoAgentClose (
   return sts;
 }
 
-
+
 /*----------------------------------------------------------------------------*\
   Every method to be exported to the workbench should be registred here.
 \*----------------------------------------------------------------------------*/

@@ -8,7 +8,7 @@ define verb help , routine scli_help
 define verb exit , routine scli_exit
 define verb quit , routine scli_quit
 
-
+
 !  tlog commands
 define verb tlog, 
   parameter p1 , label =p1tlog , value ( required , type = p1tlogtype )

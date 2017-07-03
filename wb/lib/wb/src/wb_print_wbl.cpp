@@ -93,7 +93,7 @@ void wb_print_wbl::printHierarchy(wb_volume& v, wb_object& o)
   indent(-1) << "EndSObject" << endl;
 }
 
-
+
 //
 // printObject
 //
@@ -245,7 +245,7 @@ void wb_print_wbl::printVolume(wb_volume& v, bool recursive)
   indent(-1) << "EndVolume" << endl;
 }
 
-
+
 //
 // indent
 //

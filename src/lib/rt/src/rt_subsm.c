@@ -57,7 +57,7 @@
 #include "rt_subs.h"
 #include "rt_subsm.h"
 
-
+
 /* Find/allocate a 'buffer' entry.
    Database must be locked by caller.  */
 
@@ -143,7 +143,7 @@ associateBuffer (
   bp->totsize += sp->aref.Size;
   bp->bufsubs_lc++;
 }
-
+
 /* Add this buffer to the timer monitor queue.
    Caller must lock database.
    The timer is set to 0.2 seconds for this first transmission.
@@ -169,7 +169,7 @@ subsm_ActivateBuffer (
     bp->sts = GDH__SUCCESS;
   }
 }
-
+
 /* Handle a subadd message.
    The database must NOT be locked upon entry.  */
 
@@ -238,7 +238,7 @@ subsm_Add (
   errh_Info("subsm_Add %d", i);
 #endif
 }
-
+
 /* Delete buffers and servers associated with a certain node.  */
 
 void
@@ -260,7 +260,7 @@ subsm_FlushNode (
   }
   
 }
-
+
 /* Handle a subrem message.
    The database must NOT be locked upon entry.  */
 
@@ -291,7 +291,7 @@ subsm_Remove (
   errh_Info("subsm_Remove %d", i);
 #endif
 }
-
+
 /* Build & send data for a subbuf.
    YES is returned if the buffer should be queued
    for retransmission, NO else.

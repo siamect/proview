@@ -52,7 +52,7 @@
 #include "rt_dl.h"
 #include "rt_mvol.h"
 
-
+
 void
 dl_Cancel (
   pwr_tStatus		*sts,
@@ -92,7 +92,7 @@ dl_Cancel (
 
   return;
 }
-
+
 /* Cancel all direct links for this user.
    Database must be locked by caller.  */
 
@@ -117,7 +117,7 @@ dl_CancelUser (
       dl_Cancel(NULL, dp->dlid);
   }
 }
-
+
 /* Create a direct link.
    Database must be locked by caller.  */
 

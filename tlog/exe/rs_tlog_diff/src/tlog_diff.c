@@ -259,7 +259,7 @@ static int	tlog_get_modulename( 		char *inname,
 	return TLOG__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		tlog_checktime
@@ -320,7 +320,7 @@ static int	tlog_checktime( pwr_tDeltaTime	*time_new,
 ************/
 }
 
-
+
 /*************************************************************************
 *
 * Name:		tlog_print_line
@@ -744,7 +744,7 @@ static int	tlog_lists_cmp_printboth( diff_ctx ctx, int newindex, int oldindex,
 	return TLOG__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		tlog_lists_cmp
@@ -1279,7 +1279,7 @@ pwr_tStatus	tlog_diff( 	char *filestr,
 	    sts = dir_search_file( &search_ctx, wild_filename, filename);
 	    if (EVEN(sts)) break;
 
-/*	    fprintf( outfile, ""); */
+/*	    fprintf( outfile, ""); */
 	  }
 
 	  sts = dir_get_fileinfo( filename, (pwr_tTime *) &file_time, &file_size,
@@ -1390,7 +1390,7 @@ pwr_tStatus	tlog_diff( 	char *filestr,
 }
 
 
-
+
 /*************************************************************************
 *
 * Name:		tlog_save

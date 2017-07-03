@@ -60,7 +60,7 @@ typedef struct {
   FILE *File;
   mh_sBlockDbHead Head;
 } mh_sBlockDb;
-
+
 /*------------------------------------------------------------------------------
 */
 mh_sBlockDb *mh_BlockDbOpen (

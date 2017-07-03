@@ -90,7 +90,7 @@ static pwr_tStatus SyntaxCheck (
 }
 #endif
 
-
+
 /*----------------------------------------------------------------------------*\
   Every method to be exported to the workbench should be registred here.
 \*----------------------------------------------------------------------------*/

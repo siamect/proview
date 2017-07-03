@@ -42,7 +42,7 @@
 #include "rt_qcom.h"
 #include "rt_plc_utl.h"
 
-
+
 /* Wait for the Plc to start.  */
 
 pwr_tStatus
@@ -60,7 +60,7 @@ plc_UtlWaitForPlc ()
 
   return sts;
 }
-
+
 pwr_tBoolean
 plc_UtlIsStartedPlc ()
 {

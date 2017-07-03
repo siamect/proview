@@ -213,7 +213,7 @@ struct re_registers
   };
 
 
-
+
 #ifdef __STDC__
 
 extern int re_compile_pattern (char *, int, struct re_pattern_buffer *);

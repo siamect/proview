@@ -122,7 +122,7 @@ union i3e_s_be {
 # define CONVERT_BOOL(t, s) (*(int *)t = (0 != *(int *)s))
 
 
-
+
 static char*
 print_bin (
   int *i
@@ -140,7 +140,7 @@ print_bin (
 
   return buff;
 }
-
+
 /* .  */
 
 static int
@@ -179,7 +179,7 @@ encode_sfloat (
 
   return 1;
 }    
-
+
 /* .  */
 
 static int
@@ -218,7 +218,7 @@ decode_vaxfloat (
 
   return 1;
 }    
-
+
 /* .  */
 
 static int

@@ -102,7 +102,7 @@ int qio_assign( char *s, int *chn)
 
 
 
-
+
 /************************************************************************
 *
 * Name:	qio_set_attr(int *chn)
@@ -138,7 +138,7 @@ int qio_set_attr( int *chn)
 	return 1;
 }
 #endif
-
+
 /************************************************************************
 *
 * Name:	qio_reset(char *s, int *chn)
@@ -174,7 +174,7 @@ int qio_reset( int *chn)
 	return 1;
 }
 #endif
-
+
 /************************************************************************
 *
 * Name:	qio_readw(int chn, char *buf, int len)
@@ -198,7 +198,7 @@ int qio_readw( int *chn, char *buf, int len)
 	return 1;
 }
 #endif
-
+
 /************************************************************************
 *
 * Name:	qio_read(int chn, int tmo, char *buf, int len)
@@ -249,7 +249,7 @@ int qio_writew( int *chn, char *buf, int len)
 	return 1;
 }
 #endif
-
+
 /************************************************************************
 *
 * Name:	qio_write(int chn, int tmo, char *buf, int len)

@@ -82,7 +82,7 @@ static int wsx_object_count (
 
 /*_Backcalls for the controlled gredit module______________________________*/
 
-
+
 /*_Methods defined for this module_______________________________________*/
 
 /*************************************************************************

@@ -170,7 +170,7 @@ static int	rtt_alarm_beep();
 static int	rtt_alarm_last_message();
 static int	rtt_alarmlog_log( char *type, rtt_t_menu_alarm	*menu_ptr);
 
-
+
 /****************************************************************************
 * Name:		rtt_appl_alarm_connect()
 *
@@ -271,7 +271,7 @@ int	rtt_alarm_send(
 
 /****   OUTUNIT ARE IMPLEMENTED FOR VMS ONLY !!! ************/
 
-
+
 /****************************************************************************
 * Name:		rtt_mh_info_bc()
 *
@@ -338,7 +338,7 @@ static pwr_tStatus rtt_mh_info_bc( mh_sMessage *MsgP)
 
 	return RTT__SUCCESS;
 }
-
+
 /****************************************************************************
 * Name:		rtt_mh_alarm_bc()
 *
@@ -405,7 +405,7 @@ static pwr_tStatus rtt_mh_alarm_bc( mh_sMessage *MsgP)
 
 	return RTT__SUCCESS;
 }
-
+
 /****************************************************************************
 * Name:		rtt_mh_ack_bc()
 *
@@ -471,7 +471,7 @@ static pwr_tStatus rtt_mh_ack_bc( mh_sAck *MsgP)
 
 	return RTT__SUCCESS;
 }
-
+
 /****************************************************************************
 * Name:		rtt_mh_return_bc()
 *
@@ -539,7 +539,7 @@ static pwr_tStatus rtt_mh_return_bc( mh_sReturn *MsgP)
 	return RTT__SUCCESS;
 }
 
-
+
 /****************************************************************************
 * Name:		rtt_mh_cancel_bc()
 *
@@ -593,7 +593,7 @@ static pwr_tStatus rtt_mh_clear_blocklist_bc( pwr_tNodeIndex nix)
          return 1;
 }
 
-
+
 /****************************************************************************
 * Name:		rtt_alarm_connect()
 *
@@ -615,7 +615,7 @@ int	rtt_alarm_disconnect ()
 	sts = mh_OutunitDisconnect();
 	return sts;
 }
-
+
 /****************************************************************************
 * Name:		rtt_alarm_connect()
 *
@@ -723,7 +723,7 @@ int	rtt_alarm_connect (
 
 	return RTT__SUCCESS;
 }
-
+
 /****************************************************************************
 * Name:		rtt_alarm_update()
 *

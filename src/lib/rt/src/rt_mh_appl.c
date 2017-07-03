@@ -62,7 +62,7 @@ static sApplContext lAppl;
 /* Local function prototypes */
 
 static pwr_tStatus sendAndReceive(mh_eMsg, pwr_tUInt32, void*, mh_uApplReply*);
-
+
 /** 
  *@brief Cancel a message previously created by this application.  
  *
@@ -94,7 +94,7 @@ mh_ApplCancel (
 
   return sts;
 }
-
+
 
 
  /*
@@ -215,7 +215,7 @@ mh_ApplConnect (
   lAppl.state = mh_eApplState_Connected;
   return sts;
 }
-
+
 /** 
  * @brief  Informs the local Handler to remove this Application
  * from its list of known applications.  
@@ -235,7 +235,7 @@ mh_ApplDisconnect ()
 
   return MH__SUCCESS;
 }
-
+
 /** 
  * @brief  This routine is called by an application to create 
  * and send a message. 
@@ -270,7 +270,7 @@ mh_ApplMessage (
     *id = reply.Message.Idx;
   return sts;
 }
-
+
 /** 
  * @brief Set return status on a message previously
  * created by this application. 
@@ -301,7 +301,7 @@ mh_ApplReturn (
 
   return sts;
   }
-
+
 /**
  * @brief Fetches the properties of an earlier sent message. 
  *
@@ -333,7 +333,7 @@ mh_ApplGetMsgInfo (
 
   return MH__SUCCESS;
 }
-
+
 
 static pwr_tStatus
 sendAndReceive (

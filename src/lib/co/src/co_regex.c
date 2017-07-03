@@ -293,7 +293,7 @@ re_set_syntax (syntax)
 
 
 
-
+
 /* Macros for re_compile_pattern, which is found below these definitions.  */
 
 #define CHAR_CLASS_MAX_LENGTH  6
@@ -1319,7 +1319,7 @@ insert_op_2 (op, there, current_end, num_1, num_2)
 }
 
 
-
+
 /* Given a pattern, compute a fastmap from it.  The fastmap records
    which of the (1 << BYTEWIDTH) possible characters can start a string
    that matches the pattern.  This fastmap is used by re_search to skip
@@ -1535,7 +1535,7 @@ re_compile_fastmap (bufp)
 }
 
 
-
+
 /* Like re_search_2, below, but only one string is specified, and
    doesn't let you say where to stop matching. */
 
@@ -1684,7 +1684,7 @@ re_search_2 (pbufp, string1, size1, string2, size2, startpos, range,
 }
 
 
-
+
 #ifndef emacs   /* emacs never uses this.  */
   int
   re_match (pbufp, string, size, pos, regs)
@@ -2601,7 +2601,7 @@ bcmp_translate (s1, s2, len, translate)
 }
 
 
-
+
 /* Entry points compatible with 4.2 BSD regex library.  */
 
 #if 0
@@ -2643,7 +2643,7 @@ re_exec (s)
 #endif
 
 
-
+
 #ifdef pwr_regex_posix
 int regcomp(
   regex_t * preg,

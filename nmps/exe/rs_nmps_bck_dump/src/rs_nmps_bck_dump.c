@@ -273,7 +273,7 @@ int	nmpsbck_get_filename(
 	}
 	return NMPS__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		nmpsbck_check_file
@@ -504,7 +504,7 @@ static pwr_tStatus nmpsbck_check_file( 	bck_ctx		bckctx,
 	return NMPS__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		nmpsbck_read

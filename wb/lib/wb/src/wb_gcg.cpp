@@ -577,7 +577,7 @@ static int gcg_in_libhier( gcg_ctx gcgctx, pwr_tOid oid);
 
 
 
-
+
 /*_Methods defined for this module_______________________________________*/
 
 /*************************************************************************

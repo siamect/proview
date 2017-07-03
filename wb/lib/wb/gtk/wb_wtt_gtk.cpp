@@ -1941,7 +1941,7 @@ void WttGtk::boot_ok_cb(GtkWidget *w, gpointer data)
   sprintf( msg, "Node%s built", (bootfile_count == 1) ? "":"s");
   wtt->message( 'I', msg);
 }
-
+
 /************************************************************************
 *
 * Name: update_options_form
@@ -1972,7 +1972,7 @@ void WttGtk::update_options_form()
   gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(build_nocopy_w), build_nocopy ? TRUE : FALSE);
 } 
 
-
+
 /************************************************************************
 *
 * Name: set_options

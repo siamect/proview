@@ -261,7 +261,7 @@ static int trv_wildcard (
 
   return 0;
 }
-
+
 /*************************************************************************
 *
 * Name:		trv_get_child_rtnode()
@@ -318,7 +318,7 @@ static int trv_get_child_rtnode (
   }
   return GSX__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		trv_get_rtnodes()
@@ -382,7 +382,7 @@ int trv_get_rtnodes (
   }
   return GSX__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		trv_get_child_plc()
@@ -443,7 +443,7 @@ static int trv_get_child_plc (
   return GSX__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		trv_get_plcpgms()
@@ -494,7 +494,7 @@ int trv_get_plcpgms (
   return GSX__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		trv_get_plc_window()
@@ -544,7 +544,7 @@ int trv_get_plc_window (
   *window = objdid;
   return GSX__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		trv_get_window_subwindows()
@@ -614,7 +614,7 @@ static int trv_get_window_subwindows (
 
   return GSX__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		trv_get_window_windows()
@@ -656,7 +656,7 @@ int trv_get_window_windows (
 
   return GSX__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		trv_get_window_objects()
@@ -717,7 +717,7 @@ int trv_get_window_objects (
  
   return GSX__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		trv_get_window_connections()
@@ -777,7 +777,7 @@ int trv_get_window_connections (
  
   return GSX__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		trv_get_parentlist()
@@ -845,7 +845,7 @@ int trv_get_parentlist (
 
   return GSX__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		trv_get_child_object()
@@ -900,7 +900,7 @@ static int trv_get_child_object (
  
   return GSX__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		trv_get_child_object_class()
@@ -964,7 +964,7 @@ static int trv_get_child_object_class (
  
   return GSX__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		trv_get_objects_class()
@@ -1032,7 +1032,7 @@ int trv_get_objects_class (
   }
   return GSX__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		trv_get_child_object_hier_class_name()
@@ -1134,7 +1134,7 @@ static int trv_get_child_object_hi_cl_na (
   }
   return GSX__SUCCESS;
 }
-
+
 
 /*
    cpp call to trv_get_objects_hier_class_name
@@ -1384,7 +1384,7 @@ int trv_get_objects_hier_class_name (
   }
   return GSX__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		trv_get_children_class_name()
@@ -1493,7 +1493,7 @@ int trv_get_children_class_name (
   }
   return GSX__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		trv_get_child_object_name()
@@ -1559,7 +1559,7 @@ static int trv_get_child_object_name (
  
   return GSX__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		trv_get_child_object_hier_name()
@@ -1648,7 +1648,7 @@ static int trv_get_child_object_hier_name (
 
   return GSX__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		trv_get_child_object_hier_class()
@@ -1735,7 +1735,7 @@ static int trv_get_child_object_hier_class (
 
   return GSX__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		trv_get_class_hier()
@@ -1816,7 +1816,7 @@ int trv_get_class_hier (
   
   return GSX__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		trv_get_child_objectdoc()
@@ -1880,7 +1880,7 @@ static int trv_get_child_docobject (
  
   return GSX__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		trv_get_docobjects()
@@ -1954,7 +1954,7 @@ int trv_get_docobjects (
   return GSX__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		trv_create_ctx()
@@ -1986,7 +1986,7 @@ int	trv_create_ctx(
 
   return FOE__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		trv_delete_ctx()
@@ -2005,7 +2005,7 @@ int	trv_delete_ctx(
 	free( (char *) trvctx);
 	return FOE__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		trv_get_child_object_hier_class_name()
@@ -2104,7 +2104,7 @@ static int trv_get_child_object_search (
   }
   return GSX__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		trv_object_search()

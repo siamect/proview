@@ -102,7 +102,7 @@ mountVolume (
 );
 
 static pwr_tBoolean	updateObject (ivol_sVolume*, ivol_sObject*);
-
+
 /* Build ScObjects in a native volume.  */
 
 static pwr_tBoolean
@@ -131,7 +131,7 @@ buildScObjects (
   }
   return YES;
 }
-
+
 /* Decode the body of an object.  */
 
 
@@ -157,7 +157,7 @@ decodeObject (
   return TRUE;
 }
 
-
+
 /* Decode all object bodies.  */
 
 static void
@@ -190,7 +190,7 @@ decodeObjects (
     }
   }
 }
-
+
 /* .  */
 
 static gdb_sObject *
@@ -215,7 +215,7 @@ loadObject (
   op->u.n.flags.b.systemCreated = 1;
   return vol_LinkObject(sts, vp, op, vol_mLink_load);
 } 
-
+
 /* Mount clients.  */
 
 static pwr_tBoolean
@@ -248,7 +248,7 @@ mountClients (
   }
   return YES;
 }
-
+
 /* Mount a volume.
    This should maybe be moved to vol_LinkObject.  */
 
@@ -316,7 +316,7 @@ mountVolume (
 
   return vp;
 }
-
+
 static pwr_tBoolean
 updateObject (
   ivol_sVolume	*lv,
@@ -350,7 +350,7 @@ updateObject (
 
   return YES;
 }
-
+
 /* This routine builds all linkage between objects after
    the initial load is done.
    The database has to be locked by the caller.  */
@@ -485,7 +485,7 @@ ivol_BuildNode (
 
   mountClients(sts, gdbroot->my_volume);
 }
-
+
 /* Build a volume.  */
 
 pwr_tBoolean
@@ -517,7 +517,7 @@ ivol_BuildVolume (
   }
   return YES;
 }
-
+
 /* Delete a whole volume with all its objects,
    from the global database.  */
 
@@ -551,7 +551,7 @@ ivol_DeleteVolume (
   return YES;
 }
 #endif
-
+
 /* .  */
 
 ivol_sBody *
@@ -575,7 +575,7 @@ ivol_GetBody (
 
   return lb;
 }
-
+
 /* Prepare all objects in a volume for a hot swap update.  */
 
 pwr_tBoolean
@@ -607,7 +607,7 @@ ivol_InitiateVolumeUpdate (
 
   return YES;
 }
-
+
 #if 0
 /* .  */
 
@@ -623,7 +623,7 @@ ivol_LoadBodySegment (
   return NO;
 }
 #endif
-
+
 /* Loads an object into the object database.
    Used when initially populating the database, before
    the nethandler is actually running. No checks are done except for
@@ -663,7 +663,7 @@ ivol_LoadObject (
   op->u.n.lflags.m = o->flags.m;
   return op;
 }
-
+
 /* Loads an object into the object database.
    Used when initially populating the database, before
    the nethandler is actually running. No checks are done except for
@@ -699,7 +699,7 @@ ivol_LoadScObject (
 
   return scp;
 }
-
+
 /* Loads  */
 
 gdb_sVolume *
@@ -714,7 +714,7 @@ ivol_LoadVolume (
 
   return gdb_LoadVolume(sts, v->vid, v->name, v->cid, gdbroot->db->nid, v->time, gdb_mLoad_build, format);
 }
-
+
 /* Rebuild a volume after a hotswap update.  */
 
 pwr_tBoolean
@@ -802,7 +802,7 @@ ivol_RebuildVolume (
 
   return YES;
 }
-
+
 pwr_tBoolean
 ivol_DecodeBody (
   pwr_tStatus		*status,
@@ -812,7 +812,7 @@ ivol_DecodeBody (
 {
   return TRUE;
 }
-
+
 void
 ivol_CopyBody (
   pwr_tStatus		*status,

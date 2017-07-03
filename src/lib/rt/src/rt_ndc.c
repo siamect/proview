@@ -179,7 +179,7 @@ union i3e_s_be {
 
 #define touchObject(op)  if (op != NULL && op->l.flags.b.isCached) cvolc_TouchObject(op)
 
-
+
 #ifndef __powerpc__
 /* .  */
 
@@ -222,7 +222,7 @@ decode_aref (
 
   return TRUE;
 }    
-
+
 /* .  */
 
 static pwr_tBoolean
@@ -246,7 +246,7 @@ decode_bool (
 }    
 #endif
 
-
+
 /* .  */
 
 static pwr_tBoolean
@@ -265,7 +265,7 @@ decode_copy (
   
   return TRUE;
 }    
-
+
 /* .  */
 
 static pwr_tBoolean
@@ -280,7 +280,7 @@ decode_null (
 
   return FALSE;
 }    
-
+
 #if (defined OS_POSIX) && (defined(HW_X86) || defined(HW_X86_64) || defined(HW_ARM))
 static pwr_tBoolean
 encode_sfloat (
@@ -302,7 +302,7 @@ encode_sfloat (
   return TRUE;
 }
 #endif
-
+
 #if (defined OS_POSIX) && (defined(HW_X86) || defined(HW_X86_64) || defined(HW_ARM))
 static pwr_tBoolean
 decode_sfloat(
@@ -323,7 +323,7 @@ decode_sfloat(
   return TRUE;
 }
 #endif
-
+
 #ifndef __powerpc__
 /* .  */
 
@@ -347,7 +347,7 @@ decode_int (
   return TRUE;
 }    
 #endif
-
+
 #ifndef __powerpc__
 /* .  */
 
@@ -371,7 +371,7 @@ decode_2_int (
   return TRUE;
 }    
 #endif
-
+
 #ifndef __powerpc__
 /* Convert a short integer.
 
@@ -398,7 +398,7 @@ decode_short (
   return TRUE;
 }    
 #endif
-
+
 #ifndef __powerpc__
 /* Convert a tiny integer (8 bits).
 
@@ -423,7 +423,7 @@ decode_tiny (
   return TRUE;
 }    
 #endif
-
+
 #ifndef __powerpc__
 static pwr_tBoolean (*decode[pwr_eTix_])() = {
   decode_null,		/* pwr_eTix__		*/
@@ -551,7 +551,7 @@ static pwr_tBoolean (*encode[pwr_eTix_])() = {
   decode_copy,		/* pwr_eTix_DeltaTime	*/
 };
 #endif
-
+
 /**
  * @note There is no support for double. 
  *       if we want to implement it we have too look at the OS to decide what 
@@ -662,7 +662,7 @@ ndc_ConvertData (
 
   pwr_Return(YES, sts, NDC__SUCCESS);
 }
-
+
 /**
  * Converts native data that has a different class version.
  * 
@@ -853,7 +853,7 @@ ndc_ConvertNativeToRemoteData (
 
 }
 
-
+
 /**
  * Encodes/decodes remote data by means of the cached class.
  */
@@ -974,7 +974,7 @@ ndc_ConvertRemoteData (
 
   pwr_Return(YES, sts, NDC__SUCCESS);
 }
-
+
 /**
  * Converts remote data that has a different class version.
  * The data has already been converted to native data format
@@ -1166,7 +1166,7 @@ ndc_ConvertRemoteToNativeData (
 
   pwr_Return(YES, sts, NDC__SUCCESS);
 }
-
+
 /**
  * Converts remote data that has a different class version.
  * The data has already been converted to native data format
@@ -1407,7 +1407,7 @@ ndc_ConvertRemoteToNativeTable (
 
   pwr_Return(YES, sts, NDC__SUCCESS);
 }
-
+
 /**
  * Converts remote data that has a different class version.
  * The data has already been converted to native data format
@@ -1521,7 +1521,7 @@ ndc_ConvertRemoteToNativeTableOld (
 
   pwr_Return(YES, sts, NDC__SUCCESS);
 }
-
+
 /**
  * Converts a native attribute reference to a remote attribute reference.
  * 
@@ -1765,7 +1765,7 @@ ndc_NarefToRaref(
   return rarp;
 
 }
-
+
 ndc_sRemoteToNative *
 ndc_UpdateRemoteToNativeTable(
   pwr_tStatus		*sts, 

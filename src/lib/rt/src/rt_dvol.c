@@ -50,7 +50,7 @@
 #include "rt_net.h"
 #include "rt_sub.h"
 
-
+
 /* Adopt an object.  */
 
 static gdb_sObject *
@@ -125,7 +125,7 @@ adoptObject (
 
   return op;
 }
-
+
 /* Unadopt an object.  */
 
 static gdb_sObject *
@@ -219,7 +219,7 @@ unadoptObject (
 
   return op;
 }
-
+
 /* Create an initialize a new local object. Space
    is allocated for the object which must not
    exist. All reachable nodes are notified about this new object.  */
@@ -323,7 +323,7 @@ dvol_CreateObject (
   vol_UnlinkObject(sts, vp, op, vol_mLink_delete);
   return NULL;  
 }
-
+
 /* Delete a local object.
 
    Object header and the associated body are removed.
@@ -372,7 +372,7 @@ dvol_DeleteObject (
 
   pwr_Return(TRUE, sts, GDH__SUCCESS);
 }
-
+
 /* Move a local object.
 
    This call is possible only if the object is
@@ -453,7 +453,7 @@ dvol_MoveObject (
 
   pwr_Return(op, sts, GDH__SUCCESS);
 }
-
+
 /* Rename a local object.
 
    This call is possible only if the object is

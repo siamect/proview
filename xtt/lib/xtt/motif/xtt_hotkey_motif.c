@@ -367,7 +367,7 @@ hotkeySTATUS hotkey_Process (
 	return TkNOOP;
     }
 
-
+
 /*---------------------------------------------------------------------*\
 * @Module:	tkhk_add_grab
 * @Abstract:	add grab for one key

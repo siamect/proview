@@ -122,7 +122,7 @@ int goen_create_nodetype_m9(
 }
 
 
-
+
 /*************************************************************************
 *
 * Name:		goen_get_point_info_m9()
@@ -175,7 +175,7 @@ int goen_get_point_info_m9( WGre *grectx, pwr_sGraphPlcNode *graphbody,
 }
 
 
-
+
 /*************************************************************************
 *
 * Name:		goen_get_parameter_m9()
@@ -212,7 +212,7 @@ int	goen_get_parameter_m9( pwr_sGraphPlcNode *graphbody, pwr_tClassId cid,
 	return sts;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		goen_get_location_point_m9()

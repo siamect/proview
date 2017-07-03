@@ -87,7 +87,7 @@ trimQ(
   );
 
 
-
+
 /** Fetches a cached class.
  *  If the class is not in the cache then it's fetched from the remote node 
  *
@@ -332,7 +332,7 @@ netError:
   
   return NULL;
 }
-
+
 /** 
  * @brief Fetches a non existing class from the remote node.
  *  
@@ -524,7 +524,7 @@ netError:
   return;
 }
 
-
+
 void
 cmvolc_LockClass (
   pwr_tStatus		*sts,
@@ -555,7 +555,7 @@ cmvolc_LockClass (
 
 
 
-
+
 /** Move a cached class to the head of the touched list.  */
 
 /** @todo Check if this function should be static */
@@ -575,7 +575,7 @@ cmvolc_TouchClass (
 
 }
 
-
+
 
 void
 cmvolc_UnlockClass (
@@ -600,7 +600,7 @@ cmvolc_UnlockClass (
   }  
 }
 
-
+
 static gdb_sObject *
 createObject (
   pwr_tStatus		*status,
@@ -650,7 +650,7 @@ createObject (
 
   return op;
 }
-
+
 static gdb_sVolume *
 createVolume(
   pwr_tStatus* 		sts,
@@ -711,7 +711,7 @@ createVolume(
   return vp;
   
 }
-
+
 static void
 deleteCclass(gdb_sCclass *ccp)
 {
@@ -734,7 +734,7 @@ deleteCclass(gdb_sCclass *ccp)
   
 }
 
-
+
 /**
  * Insert and links the cached class. If the class is already inserted into 
  * the hash table, then is the passed class freed and the other instance is 
@@ -789,7 +789,7 @@ linkCclass	(
   return ccp;
 }
 
-
+
 static void
 trimQ(gdb_sTouchQ *tqp)
 {

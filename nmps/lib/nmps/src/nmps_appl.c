@@ -126,7 +126,7 @@ static pwr_tStatus	nmpsappl_data_db_delete(
 			nmpsappl_t_data_list	*data_ptr);
 
 
-
+
 /****************************************************************************
 * Name:		nmpsappl_data_db_create()
 *
@@ -182,7 +182,7 @@ static pwr_tStatus	nmpsappl_data_db_create(
 	return NMPS__SUCCESS;
 }
 
-
+
 /****************************************************************************
 * Name:		nmpsappl_data_db_delete()
 *
@@ -221,7 +221,7 @@ static pwr_tStatus	nmpsappl_data_db_delete(
 }
 
 
-
+
 /****************************************************************************
 * Name:		nmpsappl_cell_init()
 *

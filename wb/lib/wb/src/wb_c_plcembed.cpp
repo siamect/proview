@@ -95,7 +95,7 @@ static pwr_tStatus PostCreate (
   return PWRB__SUCCESS;
 }
 
-
+
 /*----------------------------------------------------------------------------*\
   Every method to be exported to the workbench should be registred here.
 \*----------------------------------------------------------------------------*/

@@ -312,7 +312,7 @@ static void		purge (void);
 static void*		action_thread();
 static sEseg*		send_action( sLink*, qmon_eMsgTypeAction);
 
-
+
 int
 main (int argc, char *argv[])
 {
@@ -456,7 +456,7 @@ static void export_alloc_sub( sEseg *sp)
     set_status(PWR__SRUN);
 }
 
-
+
 static void
 cancel_links ()
 {
@@ -467,7 +467,7 @@ cancel_links ()
     thread_Cancel(&lp->thread);
 
 }
-
+
 /* Free unsent segments from que that has not been
    sent which will be replaced by new segment  */
 
@@ -584,7 +584,7 @@ clean_insert (
   return ret_pend;
 
 }
-
+
 static sEseg *
 create_connect (
   sLink *lp
@@ -607,7 +607,7 @@ create_connect (
 
   return sp;
 }
-
+
 static void
 create_links ()
 {
@@ -637,7 +637,7 @@ create_links ()
     new_link(lp->nid, NULL);
 
 }
-
+
 static void
 decode_head (
   sHead *tp,
@@ -653,7 +653,7 @@ decode_head (
   tp->rack.seq	= ntohl(sp->rack.seq);
   tp->rack.ts	= ntohl(sp->rack.ts);
 }
-
+
 static void
 decode_info (
   qdb_sInfo	*ip
@@ -675,7 +675,7 @@ decode_info (
   ip->flags.m	   = ntohl(ip->flags.m);
   ip->status	   = ntohl(ip->status);
 }
-
+
 static void
 encode_head (
   sHead *tp,
@@ -691,7 +691,7 @@ encode_head (
   tp->rack.seq	= htonl(sp->rack.seq);
   tp->rack.ts	= htonl(sp->rack.ts);
 }
-
+
 static void
 encode_info (
   qdb_sInfo	*tp,
@@ -714,7 +714,7 @@ encode_info (
   tp->flags.m	   = htonl(sp->flags.m);
   tp->status	   = htonl(sp->status);
 }
-
+
 static sEseg *
 eseg_alloc (
   thread_sMutex *mp
@@ -733,7 +733,7 @@ eseg_alloc (
 
   return sp;
 }
-
+
 /* Build segments for a buffer.
    If buffer is to be broadcasted then allocate
    for all active links.  */
@@ -844,7 +844,7 @@ eseg_build (
 
   return msp;
 }
-
+
 static void
 eseg_free (
   sEseg *sp
@@ -877,7 +877,7 @@ eseg_free (
   lst_Init(NULL, &sp->c.le, sp);
   lst_InsertPred(&l.eseg.mutex, &l.eseg.lh, &sp->c.le, sp);
 }
-
+
 static char *
 event_string (
   eEvent  event
@@ -900,7 +900,7 @@ event_string (
     return es[event];
 
 }
-
+
 static pwr_tBoolean
 expired (
   pwr_tTime* clock
@@ -911,7 +911,7 @@ expired (
   time_GetTimeMonotonic( &now);
   return (time_Acomp( clock, &now) == -1);
 }
-
+
 static void *
 export_thread ()
 {
@@ -967,7 +967,7 @@ export_thread ()
   return NULL;
 
 }
-
+
 static sLink *
 get_link (
   pwr_tNodeId	nid,
@@ -994,7 +994,7 @@ get_link (
 
   return lp;
 }
-
+
 static void
 get_tmo (
   sLink *lp,
@@ -1068,7 +1068,7 @@ import_thread ()
 
   return NULL;
 }
-
+
 static void
 ini_link_info (
   qdb_sLinkInfo	*lp
@@ -1087,7 +1087,7 @@ ini_link_info (
   lp->bo      = ntohl(my_np->bo);
   lp->ft      = ntohl(my_np->ft);
 }
-
+
 static sIseg *
 iseg_alloc ()
 {
@@ -1102,7 +1102,7 @@ iseg_alloc ()
 
   return sp;
 }
-
+
 static void
 iseg_free (
   sIseg *sp
@@ -1116,7 +1116,7 @@ iseg_free (
   lst_InsertPred(&l.iseg.mutex, &l.iseg.lh, &sp->c.le, sp);
 
 }
-
+
 static void
 iseg_import (
   sLink		*lp,
@@ -1183,7 +1183,7 @@ iseg_import (
     lp->bp = NULL;
   }
 }
-
+
 /* An ack message has arrived from a remote node.
    Free the segments in window that have been
    succesfully received at remote node.  */
@@ -1224,7 +1224,7 @@ lack (
     }
   }
 }
-
+
 static void
 link_active (
   sLink *lp
@@ -1250,7 +1250,7 @@ link_active (
   } qdb_ScopeUnlock;
   check_link_status();
 }
-
+
 static void
 link_connect (
   sLink *lp,
@@ -1290,7 +1290,7 @@ link_connect (
 
   check_link_status();
 }
-
+
 static void
 link_disconnect (
   sLink *lp
@@ -1417,7 +1417,7 @@ link_redcom_passive (
 
   check_link_status();
 }
-
+
 static void
 link_purge (
   sLink *lp
@@ -1458,7 +1458,7 @@ link_purge (
   lp->np->link[lp->lix].export_purge_cnt++;
 }
 
-
+
 static void
 link_import (
   sLink *lp,
@@ -1527,7 +1527,7 @@ link_import (
 
   iseg_free(sp);
 }
-
+
 static void
 link_redisconnect (
   sLink *lp
@@ -1552,7 +1552,7 @@ link_redisconnect (
   sp->tmo = pwr_cNTime;
 
 }
-
+
 static void
 link_send (
   sLink *lp
@@ -1569,7 +1569,7 @@ link_send (
     send_ack(lp);
   }
 }
-
+
 static void
 link_stalled (
   sLink *lp
@@ -1590,7 +1590,7 @@ link_stalled (
   } qdb_ScopeUnlock;
   check_link_status();
 }
-
+
 static void *
 link_thread (
   sLink *lp
@@ -1624,7 +1624,7 @@ link_thread (
 
   return NULL;
 }
-
+
 static pwr_tDeltaTime *
 link_tmo (
   sLink *lp
@@ -1672,7 +1672,7 @@ link_tmo (
   lp->np->link[lp->lix].timer = tmo;
   return &lp->np->link[lp->lix].timer;
 }
-
+
 static sLink *
 new_link (
   pwr_tNodeId	nid,
@@ -1737,7 +1737,7 @@ new_link (
 
   return lp;
 }
-
+
 static void
 open_socket ()
 {
@@ -1756,7 +1756,7 @@ open_socket ()
     exit(errno_ExitErrno(errno));
   }
 }
-
+
 static sEseg *
 pending_send (
   sLink *lp
@@ -1772,7 +1772,7 @@ pending_send (
   thread_MutexUnlock(&lp->eseg_mutex);
   return sp;
 }
-
+
 static void 
 send_ack (
   sLink *lp
@@ -1808,7 +1808,7 @@ send_ack (
 
   sched_yield();
 }
-
+
 static void
 set_link_info (
   sLink		*lp,  
@@ -1828,7 +1828,7 @@ set_link_info (
   np->bo      = ntohl(ip->bo);
   np->ft      = ntohl(ip->ft);
 }
-
+
 static void
 set_rack (
   sLink *lp,
@@ -1882,7 +1882,7 @@ set_rack (
   }
 
 }
-
+
 static void
 set_recvmsg (
   sIseg *sp,
@@ -1902,7 +1902,7 @@ set_recvmsg (
   mp->msg.msg_name = (void *) &mp->sa;
   mp->msg.msg_namelen = sizeof(mp->sa);
 }
-
+
 static void 
 seg_send (
   sLink *lp,
@@ -1951,7 +1951,7 @@ seg_send (
 
   sched_yield();
 }
-
+
 static void
 set_sendmsg (
   sLink *lp,
@@ -1995,7 +1995,7 @@ set_sendmsg (
   mp->msg.msg_name = (void *) &lp->np->link[lp->lix].sa;
   mp->msg.msg_namelen = sizeof(lp->np->link[0].sa);
 }
-
+
 static void
 start_rto (
   sLink *lp
@@ -2039,7 +2039,7 @@ update_rtt (
   lp->np->link[lp->lix].rtt_var += (delta - lp->np->link[lp->lix].rtt_var) / 4;
   
 }
-
+
 static void
 window_insert (
   sLink *lp,
@@ -2051,7 +2051,7 @@ window_insert (
   lp->np->link[lp->lix].win_count++;
   sp->head.lack.seq = ++lp->np->link[lp->lix].seq;
 }
-
+
 static void
 window_remove (
   sLink *lp,
@@ -2063,7 +2063,7 @@ window_remove (
   lst_Remove(NULL, &sp->c.le);
   lp->np->link[lp->lix].win_count--;
 }
-
+
 static sEseg *
 window_tmo (
   sLink *lp
@@ -2113,7 +2113,7 @@ pwr_tStatus sts
   }
 }
 
-
+
 static void
 purge (void)
 {

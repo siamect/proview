@@ -52,7 +52,7 @@
 #include "rt_cvol.h"
 #include "rt_errh.h"
 
-
+
 void
 sancm_Add (
   pwr_tStatus		*status,
@@ -120,7 +120,7 @@ sancm_Add (
 
   free(ap);
 }
-
+
 void
 sancm_FlushNode (
   pwr_tStatus		*status,
@@ -184,7 +184,7 @@ sancm_FlushNode (
 
   return;
 }
-
+
 void
 sancm_MoveExpired (
   pwr_tStatus		*status,
@@ -224,7 +224,7 @@ sancm_MoveExpired (
       op->u.c.sanexp = 1;
   }
 }
-
+
 void
 sancm_Remove (
   pwr_tStatus		*status,
@@ -291,7 +291,7 @@ sancm_Remove (
 
   free(rp);
 }
-
+
 void
 sancm_Update (
   qcom_sGet		*get

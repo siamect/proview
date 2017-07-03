@@ -64,7 +64,7 @@
 #define ODD(a)	(((int)(a) & 1) != 0)
 #define EVEN(a)	(((int)(a) & 1) == 0)
 
-
+
 /*************************************************************************
 *
 * Name:		rtt_search_file
@@ -179,7 +179,7 @@ int rtt_search_file( 		char 	*name ,
 	return RTT__SUCCESS;
 }  
 
-
+
 /*************************************************************************
 *
 * Name:		rtt_parse_filename

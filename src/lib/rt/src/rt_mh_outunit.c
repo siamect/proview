@@ -150,7 +150,7 @@ static void linkUp(qcom_sNode*);
 static void procDown(qcom_sAid*);
 static void sendInfo(sHandler*);
 static pwr_tStatus sendToHandler(sHandler*, mh_eMsg, unsigned int, void*);
-
+
 /** 
  *@brief Informs all Handlers known to this Outunit that the
  * message with identity TargetId is acknowleged.  
@@ -181,7 +181,7 @@ mh_OutunitAck (
 
   return sts;
 }
-
+
 /**
  * @brief Send a block request. Prio == 0 -> unblock. 
  */
@@ -225,7 +225,7 @@ mh_OutunitBlock (
 
   return MH__SUCCESS;
 }
-
+
 /** 
  *@brief Connects this Outunit to the local Handler.  
  *@return pwr_tStatus
@@ -378,7 +378,7 @@ mh_OutunitConnect (
 
   return MH__SUCCESS;
 }
-
+
 /** 
  *@brief Inform all Handlers known to this Outunit, to remove
  * this Outunit from their list of known out units.
@@ -409,7 +409,7 @@ mh_OutunitDisconnect ()
   l.isConnected = FALSE;
   return MH__SUCCESS;
 }
-
+
 /**
  *@brief Receive next messages in Queue. 
  *@return pwr_tStatus
@@ -483,7 +483,7 @@ mh_OutunitSetTimeout (
   l.timeout = timeout;
   return MH__SUCCESS;
 }
-
+
 /** 
  *@brief Inform all event monitors known to this outunit,
  * that the select list is changed. 
@@ -503,7 +503,7 @@ mh_OutunitUpdate ()
   return MH__SUCCESS;
 }
 
-
+
 /**
  *@brief Request info about missing alarms.
  *@return pwr_tStatus
@@ -548,7 +548,7 @@ ackListDelete (
 
   checkSyncListDelete(hp);
 }
-
+
 static void
 ackListDestroy (
   sHandler *hp
@@ -567,7 +567,7 @@ ackListDestroy (
   hp->ackGen = 0;
   checkSyncListDelete(hp);
 }
-
+
 static void
 ackListInsert (
   sHandler *hp,
@@ -596,7 +596,7 @@ ackListInsert (
     sendToHandler(hp, mh_eMsg_OutunitAck, sizeof(ap->ack), (void *) &ap->ack);
   }    
 }
-
+
 static void
 blockListDelete (
   sHandler *hp,
@@ -611,7 +611,7 @@ blockListDelete (
 
   checkSyncListDelete(hp);
 }
-
+
 static void
 blockListDestroy (
   sHandler *hp
@@ -630,7 +630,7 @@ blockListDestroy (
   hp->blockGen = 0;
   checkSyncListDelete(hp);
 }
-
+
 static void
 blockListInsert (
   sHandler *hp,
@@ -660,7 +660,7 @@ blockListInsert (
     sendToHandler(hp, mh_eMsg_OutunitBlock, sizeof(bp->block), (void *) &bp->block);
   }    
 }
-
+
 static void
 checkSync ()
 {
@@ -679,7 +679,7 @@ checkSync ()
     sendToHandler(hp, mh_eMsg_OutunitSync, 0, NULL);
   }
 }
-
+
 static void
 checkSyncListDelete (
   sHandler *hp
@@ -694,7 +694,7 @@ checkSyncListDelete (
   LstRem(&hp->sync_l);
   LstNul(&hp->sync_l);
 }
-
+
 static void
 checkSyncReply (
   sHandler		*hp
@@ -720,7 +720,7 @@ checkSyncReply (
     LstIns(LstEnd(&l.sync_l), hp, sync_l);
   }
 }
-
+
 static pwr_tStatus
 enableQcomAllOutunits ()
 {
@@ -734,7 +734,7 @@ enableQcomAllOutunits ()
 
   return MH__SUCCESS;
 }
-
+
 static pwr_tStatus
 enableQcomEvents ()
 {
@@ -755,7 +755,7 @@ enableQcomEvents ()
 
   return MH__SUCCESS;
 }
-
+
 static void
 fromHandler (
   mh_sHead *p,
@@ -801,7 +801,7 @@ fromHandler (
     break;
   }
 }
-
+
 static void
 fromQcom (
   qcom_sGet *mp
@@ -822,7 +822,7 @@ fromQcom (
     break;
   }
 }
-
+
 static void
 getSelectList ()
 {
@@ -857,7 +857,7 @@ getSelectList ()
   if ( l.pSelEventType)
     l.selEventType = *l.pSelEventType;
 }
-
+
 static void
 handlerEvent (
   sHandler *hp,
@@ -950,7 +950,7 @@ handlerEvent (
   }
 
 }
-
+
 static void
 handlerLog (
   sHandler *hp,
@@ -960,7 +960,7 @@ handlerLog (
 
   errh_Info("%s, %s (%s)", s, qcom_NodeName( hp->qid.nid), qcom_QidToString(NULL, &hp->qid, 1));
 }
-
+
 static void
 handlerSync (
   sHandler *hp,
@@ -990,7 +990,7 @@ handlerSync (
   }
 }
 
-
+
 static void
 handlerAlarmStatus (
   sHandler *hp,
@@ -1008,7 +1008,7 @@ handlerAlarmStatus (
     sts = l.cbAlarmStatus( mp);  
 }
 
-
+
 static pwr_tBoolean
 isValidHandler (
   mh_sHead *p,
@@ -1069,7 +1069,7 @@ isValidHandler (
   *h = hp;
   return TRUE;
 }
-
+
 static void
 linkDown (
   qcom_sNode  *nodep
@@ -1086,7 +1086,7 @@ linkDown (
       return;
     }
 }
-
+
 static void
 linkUp (
   qcom_sNode  *nodep
@@ -1103,7 +1103,7 @@ linkUp (
       return;
     }
 }
-
+
 static void
 procDown (
   qcom_sAid *aid
@@ -1125,7 +1125,7 @@ procDown (
       return;
     }
 }
-
+
 static void
 sendInfo (
   sHandler	  *hp
@@ -1159,7 +1159,7 @@ sendInfo (
     LstIns(LstEnd(&l.sync_l), hp, sync_l);
   }
 }
-
+
 static pwr_tStatus
 sendToHandler (
   sHandler	*hp,

@@ -106,7 +106,7 @@ static void		classList	(qcom_sGet*);
   static void		sendIdAck2	(gdb_sNode*);
 #endif
 
-
+
 /* Dispatcher for 'net_cMsgClass' messages.  */
 
 static char *cMsg[net_eMsg_end] = {
@@ -195,7 +195,7 @@ static void (*fromApplication[net_eMsg_end])(qcom_sGet *) = {
   bugError,                     /* net_eMsg_ */
   volumes7
 };
-
+
 int
 main (
   int		argc,
@@ -211,7 +211,7 @@ main (
 
   exit(1);
 }
-
+
 /* Add my own node.  */
 
 static void
@@ -236,7 +236,7 @@ addMyNode (void)
   } gdb_ScopeUnlock;
 
 }
-
+
 /* Add my own node.  */
 
 static gdb_sNode *
@@ -264,7 +264,7 @@ addNode (
 
   return np;
 }
-
+
 /* This comment is not valid anymore. Update when we now how
    qcom works.
 
@@ -295,7 +295,7 @@ addNodes (void)
   }
 
 }
-
+
 /* Send flush to all connected node. */
 
 static void
@@ -327,7 +327,7 @@ flushNodes (void)
     }
   }
 }
-
+
 /* Handle messages that should not reach net handler.  */
 
 static void
@@ -340,7 +340,7 @@ bugError (
     get->type.b, get->type.s, get->pid,
     cdh_NodeIdToString(NULL, get->sender.nid, 0, 0));
 }
-
+
 
 static void
 connectNode (
@@ -361,7 +361,7 @@ connectNode (
   }
 
 }
-
+
 /* Flush all information on remote node.  */
 
 static void
@@ -381,7 +381,7 @@ flushNode (
 
   } gdb_ScopeUnlock;
 }
-
+
 static void
 fromEvent (
   qcom_sGet	*get
@@ -409,7 +409,7 @@ fromEvent (
 
   sav_event = ep->mask;
 }
-
+
 /* Dispatcher for MSG_CLAS_PAMS messages.  */
 
 static void
@@ -444,7 +444,7 @@ fromNet (
     break;
   }
 }
-
+
 /* Flush a node.  */
 
 static void
@@ -472,7 +472,7 @@ flush (
   }
 
 }
-
+
 /* Received Id or IdAck.  */
 
 static void
@@ -560,7 +560,7 @@ id (
 
   sendVolumes(np, pool_cNRef); 
 }
-
+
 /* Handle neti response. Add node to nodedb.  */
 
 static void
@@ -573,7 +573,7 @@ idAck2 (
       cdh_NodeIdToString(NULL, get->sender.nid, 0, 0));
 
 }
-
+
 /* Initialize the nethandler data and communications.  */
 
 static void
@@ -624,7 +624,7 @@ init (
   addMyNode();
   addNodes();
 }
-
+
 
 static void
 linkActive (
@@ -654,7 +654,7 @@ linkActive (
   }
 
 }
-
+
 /* Handle Qcom link connect event.  */
 
 static void
@@ -673,7 +673,7 @@ linkConnect (
   connectNode(np);
 
 }
-
+
 /* This routine takes down a node when the link to it is lost.  */
 
 static void
@@ -724,7 +724,7 @@ linkDisconnect (
   }
 
 }
-
+
 
 static void
 linkStalled (
@@ -753,7 +753,7 @@ linkStalled (
   }
 
 }
-
+
 /* Receive messages.  */
 
 static void
@@ -812,7 +812,7 @@ mainLoop (void)
     qcom_Free(&sts, mp);
   }
 }
-
+
 /* Handle 'net_eMsh_Error' message.  */
 
 static void
@@ -834,7 +834,7 @@ netError (
   }
 #endif
 }
-
+
 static void
 nodeUp (
   gdb_sNode	  *np
@@ -865,7 +865,7 @@ nodeUp (
 
   qcom_Put(&sts, &qcom_cQnacp, &put);
 }
-
+
 /* This routine handles process rundown situations.
    Currently, all subscriptions are cancelled.  */
 
@@ -888,7 +888,7 @@ processExit (
   } gdb_ScopeUnlock;
 
 }
-
+
 /* Send a flush to a remote node.  */
 
 static void
@@ -922,7 +922,7 @@ sendFlush (
       np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0), sts);
 
 }
-
+
 /* This routine sends an id to a remote node.  */
 
 static void
@@ -962,7 +962,7 @@ sendId (
       np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0), sts);
 
 }
-
+
 /* Send a list of all volumes owned by this node to the
    remote node.  */
 
@@ -1072,7 +1072,7 @@ sendVolumes (
 
   free(mp);
 }
-
+
 /* Send a list of the volumes we want to mount at the
    remote node.  */
 
@@ -1119,7 +1119,7 @@ sendVolumesR (
   }
   free(mp);
 }
-
+
 /* Receive a list of all volumes owned by the sending node.  */
 
 static void
@@ -1189,7 +1189,7 @@ volumes (
   if (vmp->ctx == pool_cNRef)
     nodeUp(np);
 }
-
+
 /* Receive a list of all volumes owned by the sending node.  
  * Neth version 7 of net_sVolumes
  */
@@ -1244,7 +1244,7 @@ volumes7 (
   free(vmp);
 }
 
-
+
 /* Receive a list of all volumes the remote node have mounted.  */
 
 static void
@@ -1279,7 +1279,7 @@ volumesR (
 
 }
 
-
+
 #if 0
 /* This is the link state machine
    The database must be locked by the caller.  */
@@ -1417,7 +1417,7 @@ linkEvent (
 }
 #endif		
 #if 0
-
+
 /* This routine sends an idAck to a remote node.  */
 
 static void
@@ -1451,7 +1451,7 @@ sendIdAck (
       np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0), sts);
 
 }
-
+
 /* This routine sends an idAck2 to a remote node.  */
 
 static void

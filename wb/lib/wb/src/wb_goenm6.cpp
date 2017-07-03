@@ -75,7 +75,7 @@ static float 	format[10][2] 	=	{
 			{ 0.53, 0.78 },		/* A8  width height */
 			};
 
-
+
 /*_Methods defined for this module_______________________________________*/
 
 /*************************************************************************
@@ -307,7 +307,7 @@ int goen_create_nodetype_m6(
 }
 
 
-
+
 /*************************************************************************
 *
 * Name:		goen_get_point_info_m6()
@@ -337,7 +337,7 @@ int goen_get_point_info_m6( WGre *grectx, pwr_sGraphPlcNode *graphbody,
 }
 
 
-
+
 /*************************************************************************
 *
 * Name:		goen_get_parameter_m6()
@@ -363,7 +363,7 @@ int	goen_get_parameter_m6( pwr_sGraphPlcNode *graphbody, pwr_tClassId cid,
 	return GOEN__NOPOINT;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		goen_get_location_point_m6()

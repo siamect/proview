@@ -132,14 +132,14 @@ static unsigned int do_div (int*, unsigned int);
 static int skip_atoi (const char**);
 static char * number (char*, int, int, int, int, int);
 
-
+
 void
 errh_Interactive ()
 {
 
   interactive = 1;
 }
-
+
 
 /**
  * @brief Initialize errh.
@@ -216,7 +216,7 @@ errh_SetName(
   set_name(name);
 }
 
-
+
 /* Check if a given messagenumber exists,
    return string representation if valid.  */
 
@@ -230,7 +230,7 @@ errh_GetMsg (
 
   return get_message(sts, 0xf, buf, bufSize);
 }
-
+
 /* Checks if a given messagenumber exists,
   return string representation if valid.  */
 
@@ -244,7 +244,7 @@ errh_GetText (
 
   return get_message(sts, 1, buf, bufSize);
 }
-
+
 /* Log a message.  */
 char *
 errh_Log (
@@ -377,7 +377,7 @@ errh_Fatal(const char *msg, ...)
   log_message(NULL, 'F', msg, args);
   va_end(args);
 }
-
+
 /* Log a fatal message.  */
 void
 errh_LogFatal (
@@ -392,7 +392,7 @@ errh_LogFatal (
   log_message(lp, 'F', msg, args);
   va_end(args);
 }
-
+
 /* Log a warning message.  */
 void
 errh_LogWarning (
@@ -407,7 +407,7 @@ errh_LogWarning (
   log_message(lp, 'W', msg, args);
   va_end(args);
 }
-
+
 /* Log a error message.  */
 void
 errh_LogError (
@@ -422,7 +422,7 @@ errh_LogError (
   log_message(lp, 'E', msg, args);
   va_end(args);
 }
-
+
 /* Log a info message.  */
 void
 errh_LogInfo (
@@ -437,7 +437,7 @@ errh_LogInfo (
   log_message(lp, 'I', msg, args);
   va_end(args);
 }
-
+
 /* Log a success message.  */
 void
 errh_LogSuccess (
@@ -452,7 +452,7 @@ errh_LogSuccess (
   log_message(lp, 'S', msg, args);
   va_end(args);
 }
-
+
 /* Insert a status message in a message.  */
  
 void *
@@ -468,7 +468,7 @@ errh_ErrArgMsg (
 
   return eap;
 }
-
+
 /* Insert a string argument in a message.  */
 
 void *
@@ -485,7 +485,7 @@ errh_ErrArgAF (
 
   return eap;
 }
-
+
 /* Insert a integer value in a message.  */
 
 void *
@@ -502,7 +502,7 @@ errh_ErrArgL (
 
   return eap;
 }
-
+
 void
 errh_CErrLog (
   pwr_tStatus sts,
@@ -545,7 +545,7 @@ errh_CErrLog (
   msg_vsprintf(s, msg, args, tmp);
   errh_send(string, get_severity(sts), sts, errh_eMsgType_Log);
 }
-
+
 /* Format a string.  */
 
 char *
@@ -566,7 +566,7 @@ errh_Message (
 
   return string;
 }
-
+
 /* Get a message string, VMS style.
 
    %FACILITYNAME-S-MESSAGENAME, message string
@@ -591,7 +591,7 @@ get_message (
   return msg_GetMessage( sts, flags, buf, bufSize);
 }
 
-
+
 static void
 set_name (const char *name)
 {
@@ -599,7 +599,7 @@ set_name (const char *name)
   strncpy(programName, name, sizeof(programName) - 1);
   programName[sizeof(programName)-1] = '\0';
 }
-
+
 static void
 openLog ()
 {
@@ -648,7 +648,7 @@ openLog ()
   }
 #endif
 }
-
+
 #if defined OS_POSIX
 static char *
 get_name (char *name, int size)
@@ -671,7 +671,7 @@ get_pid (sPid *pid)
 }
 #endif
 
-
+
 static char *
 get_header (char severity, char *s)
 {
@@ -710,7 +710,7 @@ get_header (char severity, char *s)
 
   return s;
 }
-
+
 /* Format a string and write it to log devices.  */
 
 static void
@@ -733,7 +733,7 @@ log_message (errh_sLog *lp, char severity, const char *msg, va_list ap)
     qcom_Put(NULL, &lp->logQ, &lp->put);
   }
 }
-
+
 /* Print a message on error log.  */
 
 static char
@@ -751,7 +751,7 @@ get_severity (
   default: return '?';
   }
 }
-
+
 /****** internals ************************************************************/
 
 /* PWR-version of vsprintf. replaces %m represents
@@ -770,7 +770,7 @@ get_severity (
 #define is_digit(c) ((c) >= '0' && (c) <= '9')
 
 
-
+
 static int
 msg_vsprintf (
   char		*buf,
@@ -957,7 +957,7 @@ repeat:
 }
 
 
-
+
 #if defined OS_POSIX
 /* Different strlen function, returns len OR count,
    whatever comes true first.  */
@@ -975,7 +975,7 @@ errh_strnlen (
   return sc - s;
 }
 #endif
-
+
 
 static int
 skip_atoi (
@@ -988,7 +988,7 @@ skip_atoi (
     i = i*10 + *((*s)++) - '0';
   return i;
 }
-
+
 
 static unsigned int
 do_div (
@@ -1002,7 +1002,7 @@ do_div (
   *n = ((unsigned int) *n) / base;
   return res; 
 }
-
+
 /* Handle numerics.  */
 
 static char *
@@ -1080,7 +1080,7 @@ number (
     *str++ = ' ';
   return str;
 }
-
+
 static void
 errh_send (char *s, char severity, pwr_tStatus sts, errh_eMsgType message_type)
 {
@@ -1182,7 +1182,7 @@ errh_eSeverity errh_Severity( pwr_tStatus sts)
   }
 }
 
-
+
 #if 0
 int main(int argc, char **argv)
 {

@@ -250,7 +250,7 @@ static pwr_tStatus	nmpsmir_convconfiglist_add(
 static pwr_tStatus	nmps_cellmir_init( mir_ctx	mirctx);
 static pwr_tStatus	nmpsmir_cellmir_handler( mir_ctx	mirctx);
 
-
+
 /****************************************************************************
 * Name:		nmpsmir_bckremoved_store()
 *
@@ -278,7 +278,7 @@ static pwr_tStatus	nmpsmir_bckremoved_store(
 	return NMPS__SUCCESS;
 }
 
-
+
 #if 0
 /****************************************************************************
 * Name:		nmpsmir_bckremoved_find()
@@ -309,7 +309,7 @@ static pwr_tStatus	nmpsmir_bckremoved_find(
 }
 #endif
 #if 0
-
+
 /****************************************************************************
 * Name:		nmpsmir_bckremoved_free()
 *
@@ -335,7 +335,7 @@ static pwr_tStatus	nmpsmir_bckremoved_free(
 	return NMPS__SUCCESS;
 }
 #endif
-
+
 /****************************************************************************
 * Name:		nmpsmir_bckremoved_delete()
 *
@@ -374,7 +374,7 @@ pwr_tStatus	nmpsmir_bckremoved_delete(
 	return NMPS__SUCCESS;
 }
 
-
+
 /****************************************************************************
 * Name:		nmpsmir_find_collect_cell()
 *
@@ -413,7 +413,7 @@ static pwr_tStatus	nmpsmir_find_collect_cell(
 	return NMPS__SUCCESS;
 }
 
-
+
 /****************************************************************************
 * Name:		nmpsmir_time_to_release()
 *
@@ -447,7 +447,7 @@ static int	nmnps_time_to_release( 	pwr_tTime 	*remove_time,
 	else
 	  return 0;
 }
-
+
 /****************************************************************************
 * Name:		nmpsmir_data_copy()
 *
@@ -499,7 +499,7 @@ static pwr_tStatus	nmpsmir_data_copy(  nmpsmir_t_data_list	*datalist_ptr)
 	return NMPS__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		nmpsmir_data_handler
@@ -705,7 +705,7 @@ static pwr_tStatus	nmpsmir_data_handler( mir_ctx	mirctx)
 	return NMPS__SUCCESS;
 }
 
-
+
 /****************************************************************************
 * Name:		nmpsmir_data_db_delete()
 *
@@ -739,7 +739,7 @@ pwr_tStatus	nmpsmir_data_db_delete(
 	return NMPS__SUCCESS;
 }
 
-
+
 /****************************************************************************
 * Name:		nmpsmir_data_db_create()
 *
@@ -917,7 +917,7 @@ static pwr_tStatus	nmpsmir_data_db_create(
 	return return_sts;
 }
 
-
+
 /****************************************************************************
 * Name:		nmpsmir_data_db_find_orig()
 *
@@ -960,7 +960,7 @@ static pwr_tStatus	nmpsmir_data_db_find_orig(
 	return NMPS__SUCCESS;
 }
 
-
+
 /****************************************************************************
 * Name:		nmpsmir_data_db_find_orig()
 *
@@ -1009,7 +1009,7 @@ static pwr_tStatus	nmpsmir_data_db_find_orig_name(
 	return NMPS__SUCCESS;
 }
 
-
+
 /****************************************************************************
 * Name:		nmpsmir_data_db_find()
 *
@@ -1051,7 +1051,7 @@ static pwr_tStatus	nmpsmir_data_db_find(
 	return NMPS__SUCCESS;
 }
 
-
+
 /****************************************************************************
 * Name:		nmpsmir_origcell_init()
 *
@@ -1151,7 +1151,7 @@ static pwr_tStatus	nmpsmir_origcell_init(
 	return NMPS__SUCCESS;
 }
 
-
+
 /****************************************************************************
 * Name:		nmpsmir_cellmirlist_add()
 *
@@ -1295,7 +1295,7 @@ static pwr_tStatus	nmpsmir_cellmirlist_add(
 	return NMPS__SUCCESS;
 }
 
-
+
 /****************************************************************************
 * Name:		nmpsmir_convconfig_add()
 *
@@ -1380,7 +1380,7 @@ static pwr_tStatus	nmpsmir_convconfiglist_add(
 	return NMPS__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		nmps_cellmir_init
@@ -1454,7 +1454,7 @@ static pwr_tStatus	nmps_cellmir_init( mir_ctx	mirctx)
 	return NMPS__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		nmps_cellmir_reinit
@@ -1523,7 +1523,7 @@ static pwr_tStatus	nmps_cellmir_reinit( mir_ctx	mirctx)
 	return NMPS__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		nmpsmir_cellmir_handler
@@ -1986,7 +1986,7 @@ static pwr_tStatus	nmpsmir_cellmir_handler( mir_ctx	mirctx)
 	return NMPS__SUCCESS;
 }
 
-
+
 /****************************************************************************
 * Name:		nmpsmir_free()
 *

@@ -87,7 +87,7 @@
   );
 #endif
 
-
+
 /* Check if a given messagenumber exists,
    return string representation if valid.  */
 
@@ -103,7 +103,7 @@ msg_GetMsg (
   return msg_GetMessage(sts, 0xf, buf, bufSize);
 }
 
-
+
 /* Checks if a given messagenumber exists,
   return string representation if valid.  */
 
@@ -137,7 +137,7 @@ facility(int facNum, int idx)
   } 
   return f;
 }
-
+
 /* Returns the address to the Facility which contains the
    FacNum and MsgIdx.
    

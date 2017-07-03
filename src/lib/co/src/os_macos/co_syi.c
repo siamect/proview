@@ -50,7 +50,7 @@
 #include "co_syi.h"
 #include "co_syi_msg.h"
 
-
+
 char *
 syi_HostName (
   pwr_tStatus *status,
@@ -61,7 +61,7 @@ syi_HostName (
 
   return syi_NodeName(status, ibuffer, isize);
 }
-
+
 char *
 syi_NodeName (
   pwr_tStatus *status,
@@ -87,7 +87,7 @@ syi_NodeName (
 
   return ibuffer;
 }
-
+
 char *
 syi_Ethernet (
   pwr_tStatus *status,
@@ -99,7 +99,7 @@ syi_Ethernet (
 
   return NULL;
 }
-
+
 char *
 syi_NodeSpec (
   pwr_tStatus *status,
@@ -111,7 +111,7 @@ syi_NodeSpec (
 
   return NULL;
 }
-
+
 char *
 syi_HostSpec (
   pwr_tStatus *status,
@@ -122,7 +122,7 @@ syi_HostSpec (
 
   return syi_NodeSpec(status, ibuffer, size);
 }
-
+
 /* Return true if node is booted locally or
    false if booted from remote node via network.  */
 
@@ -134,7 +134,7 @@ syi_LocalBoot (
 
   return YES;
 }
-
+
 /* .  */
 
 char*

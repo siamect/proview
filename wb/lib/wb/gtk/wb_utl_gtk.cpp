@@ -88,7 +88,7 @@ int wb_utl_gtk::utl_foe_new_local( WFoe *foe, const char *name, pwr_tOid plcpgm,
   return sts;
 }
  
-
+
 /*************************************************************************
 *
 * Name:		utl_create_mainwindow()

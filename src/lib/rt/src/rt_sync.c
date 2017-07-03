@@ -44,7 +44,7 @@
 #include "rt_sync.h"
 #include "rt_sync_msg.h"
 
-
+
 pwr_tStatus
 sync_CondInit (
   thread_sCond	*cp
@@ -58,7 +58,7 @@ sync_CondInit (
 # error Not defined for this platform !
 #endif
 }
-
+
 pwr_tStatus
 sync_CondSignal (
   thread_sCond	*cp
@@ -74,7 +74,7 @@ sync_CondSignal (
 # error Not defined for this platform !
 #endif
 }
-
+
 pwr_tStatus
 sync_MutexInit (
   thread_sMutex		*mp
@@ -88,7 +88,7 @@ sync_MutexInit (
 # error Not defined for this platform !
 #endif
 }
-
+
 pwr_tStatus
 sync_MutexLock (
   thread_sMutex		*mp
@@ -103,7 +103,7 @@ sync_MutexLock (
 #endif
 
 }
-
+
 pwr_tStatus
 sync_MutexUnlock (
   thread_sMutex		*mp

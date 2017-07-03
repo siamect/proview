@@ -48,7 +48,7 @@
 #include "wb_wnav.h"
 #include "pwr_baseclasses.h"
 
-
+
 /*----------------------------------------------------------------------------*\
   Open a workbench from a RootVolumeConfig object.
 \*----------------------------------------------------------------------------*/
@@ -108,7 +108,7 @@ static pwr_tStatus EditClassVolume (
   return 1;
 }
 
-
+
 /*----------------------------------------------------------------------------*\
   Every method to be exported to the workbench should be registred here.
 \*----------------------------------------------------------------------------*/

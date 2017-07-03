@@ -89,7 +89,7 @@ static const char *monStr[] =
 
 static pwr_tStatus  validateTm    (struct tm *tms);
 
-
+
 /* Validate data in struct tm.  */
 
 static pwr_tStatus
@@ -848,7 +848,7 @@ time_Dsub_NE (
 
   return r;
 }
-
+
 //! Convert a delta time to ascii string.
 
 pwr_tStatus
@@ -897,7 +897,7 @@ time_DtoAscii (
   return TIME__SUCCESS;
 }
 
-
+
 //! Convert timespec to ascii
 /*!
    NOTE: Not thread safe.  */
@@ -957,7 +957,7 @@ char *time_GetTimeAscii( time_eFormat format)
   return buf;
 }
 
-
+
 //! Convert ascii to timespec.
 pwr_tStatus
 time_AsciiToD (
@@ -1020,7 +1020,7 @@ time_AsciiToD (
   return TIME__SUCCESS;
 }
 
-
+
 //! Convert ascii time to timespec.
 
 pwr_tStatus
@@ -1065,7 +1065,7 @@ time_AsciiToA (
   ts->tv_nsec = tmphs * 10000000;
   return TIME__SUCCESS;
 }
-
+
 //! Convert time struct to string.
 
 pwr_tStatus
@@ -1104,7 +1104,7 @@ time_TmToAscii (
 
   return TIME__SUCCESS;
 }
-
+
 //! Convert timestring to struct.
 
 pwr_tStatus
@@ -1152,7 +1152,7 @@ time_AsciiToTm (
 
   return TIME__SUCCESS;
 }
-
+
 /* Compatibility-function that substitutes co_TimeToAsc.  */
 
 pwr_tStatus
@@ -1248,7 +1248,7 @@ time_FormAsciiToA (
   ts->tv_nsec = tmphs * 10000000;
   return TIME__SUCCESS;
 }
-
+
 /* .  */
 
 void
@@ -1300,7 +1300,7 @@ time_AtoFormAscii (
   }
   }
 }
-
+
 //! Convert millisec to timespec.
 /*!
    Not thread safe if dt is NULL.  */
@@ -1321,7 +1321,7 @@ time_MsToD (
 
   return t;
 }
-
+
 //! Convert float to time.
 /*!
    Not thread safe if dt is NULL.  */
@@ -1374,7 +1374,7 @@ time_Float64ToD (
   return t;
 }
 
-
+
 //! Convert time to Float32.
 /*!
    Not thread safe if f is NULL.  
@@ -1423,7 +1423,7 @@ time_DToFloat64 (
 
   return *fp;
 }
-
+
 time_tClock
 time_DtoClock (
   pwr_tStatus *status,
@@ -1434,7 +1434,7 @@ time_DtoClock (
 
   return tp->tv_sec * 100 + tp->tv_nsec / 10000000;
 }
-
+
 pwr_tDeltaTime *
 time_ClockToD (
   pwr_tStatus *status,
@@ -1453,7 +1453,7 @@ time_ClockToD (
 
   return tp;
 }
-
+
 pwr_tDeltaTime *
 time_ZeroD (
   pwr_tDeltaTime *tp

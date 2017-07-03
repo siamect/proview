@@ -246,7 +246,7 @@ static char	*nmps_fgetname( FILE *fp, char *name, char *def_name)
 	strcpy( name, def_name);
 	return name;
 }
-
+
 /*************************************************************************
 *
 * Name:		nmpsbck_get_filename
@@ -292,7 +292,7 @@ int	nmpsbck_get_filename(
 	dcli_translate_filename( outname, outname);
 	return NMPS__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		nmpsbck_data_handler
@@ -425,7 +425,7 @@ static pwr_tStatus	nmpsbck_data_handler( bck_ctx	bckctx)
 	return NMPS__SUCCESS;
 }
 
-
+
 /****************************************************************************
 * Name:		nmpsbck_data_db_delete()
 *
@@ -459,7 +459,7 @@ static pwr_tStatus	nmpsbck_data_db_delete(
 	return NMPS__SUCCESS;
 }
 
-
+
 /****************************************************************************
 * Name:		nmpsbck_data_db_create()
 *
@@ -521,7 +521,7 @@ static pwr_tStatus	nmpsbck_data_db_create(
 	return NMPS__SUCCESS;
 }
 
-
+
 /****************************************************************************
 * Name:		nmpsbck_data_db_find()
 *
@@ -561,7 +561,7 @@ static pwr_tStatus	nmpsbck_data_db_find(
 	return NMPS__SUCCESS;
 }
 
-
+
 /****************************************************************************
 * Name:		nmpsbck_data_db_find_old()
 *
@@ -601,7 +601,7 @@ static pwr_tStatus	nmpsbck_data_db_find_old(
 	return NMPS__SUCCESS;
 }
 
-
+
 /****************************************************************************
 * Name:		nmpsbck_data_db_create()
 *
@@ -629,7 +629,7 @@ static pwr_tStatus	nmpsbck_clist_store(
 	return NMPS__SUCCESS;
 }
 
-
+
 /****************************************************************************
 * Name:		nmpsbck_clist_find()
 *
@@ -658,7 +658,7 @@ static pwr_tStatus	nmpsbck_clist_find(
 	return NMPS__DATANOTFOUND;
 }
 
-
+
 /****************************************************************************
 * Name:		nmpsbck_clist_free()
 *
@@ -686,7 +686,7 @@ static pwr_tStatus	nmpsbck_clist_free(
 	return NMPS__SUCCESS;
 }
 
-
+
 /****************************************************************************
 * Name:		nmpsbck_cellist_add()
 *
@@ -783,7 +783,7 @@ static pwr_tStatus	nmpsbck_cellist_add(
 	return NMPS__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		nmps_get_bckconfig
@@ -817,7 +817,7 @@ static pwr_tStatus	nmps_get_bckconfig( bck_ctx	bckctx)
 	return NMPS__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		nmps_cell_init
@@ -923,7 +923,7 @@ static pwr_tStatus	nmps_cell_init( bck_ctx	bckctx)
 	return NMPS__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		nmpsbck_cell_handler
@@ -969,7 +969,7 @@ static pwr_tStatus	nmpsbck_get_cellbuffer( bck_ctx	bckctx)
 	return NMPS__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		nmpsbck_fill_buffer
@@ -1020,7 +1020,7 @@ static pwr_tStatus	nmpsbck_fill_buffer( 	bck_ctx	bckctx)
 	return NMPS__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		nmpsbck_write_cells
@@ -1086,7 +1086,7 @@ static pwr_tStatus	nmpsbck_write_cells( 	bck_ctx	bckctx,
 	return NMPS__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		nmpsbck_write_data
@@ -1136,7 +1136,7 @@ static pwr_tStatus	nmpsbck_write_data(
 
 	return NMPS__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		nmpsbck_open_file
@@ -1266,7 +1266,7 @@ static pwr_tStatus	nmpsbck_open_file( 	bck_ctx	bckctx)
 	  }
 	}
 }
-
+
 /*************************************************************************
 *
 * Name:		nmpsbck_write
@@ -1372,7 +1372,7 @@ bck_write_error:
 	return sts;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		nmpsbck_cells
@@ -1411,7 +1411,7 @@ static int		nmpsbck_timecmp( pwr_tTime 	*time_old,
 	else
 	  return 0;	
 }
-
+
 /*************************************************************************
 *
 * Name:		nmpsbck_check_file
@@ -1570,7 +1570,7 @@ static pwr_tStatus nmpsbck_check_file( 	bck_ctx		bckctx,
 	return NMPS__SUCCESS;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		nmpsbck_read
@@ -2353,7 +2353,7 @@ nmpsbck_read_abort:
 	return return_sts;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		nmpsbck_set_cell_backup_done
@@ -2472,7 +2472,7 @@ static pwr_tStatus	nmpsbck_set_cell_backup_done()
 	}
 	return NMPS__SUCCESS;
 }
-
+
 /*************************************************************************
 *
 * Name:		nmpsbck_cell_handler
@@ -2538,7 +2538,7 @@ static pwr_tStatus	nmpsbck_cell_handler( bck_ctx	bckctx)
 	return NMPS__SUCCESS;
 }
 
-
+
 /****************************************************************************
 * Name:		nmpsbck_free()
 *

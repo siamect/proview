@@ -119,7 +119,7 @@ static void usage()
 
 
 
-
+
 int main(int argc, char **argv) 
 {
   extern FILE *yyin;
@@ -180,7 +180,7 @@ int main(int argc, char **argv)
 #endif
 }
 
-
+
 /*
  * Routines called by lex
  */
@@ -221,7 +221,7 @@ void lex_FacNum(int facnum)
 /*
  * Local routines
  */
-
+
 static void CopyFile(FILE *ifp, FILE *ofp)
 {
   int c;

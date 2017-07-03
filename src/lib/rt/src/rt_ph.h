@@ -80,7 +80,7 @@ typedef union phu_Pack ph_uPack;
 
 
 
-/*
+/*
 * Name:
 *   ph_ePack
 * Description:
@@ -96,7 +96,7 @@ enum phe_Pack
     };
 typedef enum phe_Pack ph_ePack;
 
-/*
+/*
 * Name:
 *   ph_sFromOp   
 * Description:
@@ -113,7 +113,7 @@ struct phs_FromOp
     pwr_tInt32	    StateId;
     };
 
-/*
+/*
 * Name:
 *   ph_sStandard   
 * Description:
@@ -127,7 +127,7 @@ struct phs_Standard
     pwr_tObjid	    SendQue;
     };
 
-/*
+/*
 * Name:
 *   ph_sToOp   
 * Description:
@@ -143,7 +143,7 @@ struct phs_ToOp
     };
 
 
-/*
+/*
 * Name:
 *   ph_uPack  
 * Description:
@@ -160,7 +160,7 @@ union phu_Pack
 
 
 
-
+
 /*
 * Name:    
 *   ph_Connect
@@ -179,7 +179,7 @@ pwr_tStatus ph_Connect
     mq_uAddress     Address,
     ph_tCtx	    *Ctx
     );
-
+
 /*
 * Name:    
 *   ph_Disconnect
@@ -195,7 +195,7 @@ pwr_tStatus ph_Disconnect
     (
     ph_tCtx	    Ctx
     );
-
+
 /*
 * Name:    
 *   ph_FreeClassData
@@ -210,7 +210,7 @@ pwr_tStatus ph_FreeClassData
     (
     void	    *ClassData
     );
-
+
 /*
 * Name:    
 *   ph_GetPacket
@@ -229,7 +229,7 @@ pwr_tStatus ph_GetPacket
     pwr_tClassId    *PackClass,
     void	    **ClassData
     );
-
+
 /*
 * Name:    
 *   ph_GetWaitPacket
@@ -249,7 +249,7 @@ pwr_tStatus ph_GetWaitPacket
     void	    **ClassData,
     pwr_tUInt32	    Timeout
     );
-
+
 /*
 * Name:    
 *   ph_SendPacket

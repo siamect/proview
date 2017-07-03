@@ -70,7 +70,7 @@ static	float	f_yoffs      = GOEN_F_GRID/2 - GOEN_F_GRID*0.06;
 static	float	f_height;
 static	float	f_width;
 
-
+
 /*_Methods defined for this module_______________________________________*/
 
 /*************************************************************************
@@ -313,7 +313,7 @@ int goen_create_nodetype_m3(
 }
 
 
-
+
 /*************************************************************************
 *
 * Name:		goen_get_point_info_m3()
@@ -343,7 +343,7 @@ int goen_get_point_info_m3( WGre *grectx, pwr_sGraphPlcNode *graphbody,
 }
 
 
-
+
 /*************************************************************************
 *
 * Name:		goen_get_parameter_m3()
@@ -369,7 +369,7 @@ int	goen_get_parameter_m3( pwr_sGraphPlcNode *graphbody, pwr_tClassId cid,
 	return GOEN__NOPOINT;
 }
 
-
+
 /*************************************************************************
 *
 * Name:		goen_get_location_point_m3()

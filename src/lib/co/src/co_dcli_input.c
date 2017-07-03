@@ -619,7 +619,7 @@ int	dcli_get_input_string( 	dcli_sChannel	*chn,
 }
 
 
-
+
 /************************************************************************
 *
 * Name:	dcli_qio_assign(char *s, dcli_sChannel *chn)
@@ -657,7 +657,7 @@ int dcli_qio_assign( char *s, dcli_sChannel *chn)
 
 
 
-
+
 /************************************************************************
 *
 * Name:	dcli_qio_set_attr( dcli_sChannel *chn, int tmo)
@@ -693,7 +693,7 @@ int dcli_qio_set_attr( dcli_sChannel *chn, int tmo)
   return 1;
 }
 #endif
-
+
 /************************************************************************
 *
 * Name:	dcli_qio_reset(char *s, dcli_sChannel *chn)
@@ -729,7 +729,7 @@ int dcli_qio_reset( dcli_sChannel *chn)
   return 1;
 }
 #endif
-
+
 /************************************************************************
 *
 * Name:	dcli_qio_readw( dcli_sChannel chn, char *buf, int len)
@@ -753,7 +753,7 @@ int dcli_qio_readw( dcli_sChannel *chn, char *buf, int len)
   return 1;
 }
 #endif
-
+
 /************************************************************************
 *
 * Name:	dcli_qio_read( dcli_sChannel chn, int tmo, char *buf, int len)
@@ -780,7 +780,7 @@ int dcli_qio_read( dcli_sChannel *chn, int tmo, char *buf, int len)
   return 1;
 }
 #endif
-
+
 /************************************************************************
 *
 * Name:	dcli_qio_writew(dcli_sChannel *chn, char *buf, int len)
@@ -804,7 +804,7 @@ int dcli_qio_writew( dcli_sChannel *chn, char *buf, int len)
   return 1;
 }
 #endif
-
+
 /************************************************************************
 *
 * Name:	dcli_qio_write(dcli_sChannel *chn, int tmo, char *buf, int len)

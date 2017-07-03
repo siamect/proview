@@ -64,7 +64,7 @@ pwr_tUInt32 bck_WaitBackup (
 #include "rt_gdh_msg.h"
 #include "rt_bckdef.h"
 
-
+
 /************************************************************************
 *
 * Name: bck_ForceBackup
@@ -108,7 +108,7 @@ void bck_ForceBackup (
   if (EVEN (sts)) lib$signal (sts);
 
 } /* bck_ForceBackup */
-
+
 /************************************************************************
 *
 * Name: bck_WaitBackup

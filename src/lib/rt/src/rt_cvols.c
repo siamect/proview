@@ -46,7 +46,7 @@
 #include "rt_cvols.h"
 #include "rt_net.h"
 
-
+
 cvol_sNotify *
 cvols_InitNotify (
   gdb_sObject		*op,
@@ -83,7 +83,7 @@ cvols_InitNotify (
 
   return nmp;
 }
-
+
 /* Notify nodes that have cache mounted this object.  */
 
 void

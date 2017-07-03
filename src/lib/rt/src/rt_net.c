@@ -199,7 +199,7 @@ static tFuncXdr func_xdr[net_eMsg_] = {
   (tFuncXdr)xdr_net_sId			/* Sever connect */
 
 };
-
+
 void
 Count (
   pwr_tBoolean		receive,
@@ -228,7 +228,7 @@ Count (
   else 
     np->txmsg[msgtype]++;
 }
-
+
 static pwr_tBoolean
 ConvertPut (
   pwr_tStatus		*sts,
@@ -276,7 +276,7 @@ ConvertPut (
 
   pwr_Return(TRUE, sts, NET__SUCCESS);
 }
-
+
 static pwr_tBoolean
 ConvertGet (
   pwr_tStatus		*sts,
@@ -359,7 +359,7 @@ ConvertGet (
 
   pwr_Return(TRUE, sts, NET__SUCCESS);
 }
-
+
 #if 0
 static void
 Error (
@@ -404,7 +404,7 @@ Error (
 
 }
 #endif
-
+
 static pwr_tBoolean
 Reply (
   pwr_tStatus		*sts,
@@ -429,7 +429,7 @@ Reply (
 
   return TRUE;
 }
-
+
 static pwr_tBoolean
 Send (
   pwr_tStatus		*sts,
@@ -454,7 +454,7 @@ Send (
 
   return TRUE;
 }
-
+
 static pwr_tBoolean
 Put (
   pwr_tStatus		*sts,
@@ -493,7 +493,7 @@ Put (
 
   return TRUE;
 }
-
+
 static void *
 Receive (
   pwr_tStatus		*sts,
@@ -519,7 +519,7 @@ Receive (
 
   return p;
 }
-
+
 static void *
 Request (
   pwr_tStatus		*sts,
@@ -569,7 +569,7 @@ Request (
 
   return gmp;
 }
-
+
 void *
 net_Alloc (
   pwr_tStatus		*status,
@@ -598,7 +598,7 @@ net_Alloc (
 
   return mp;
 }
-
+
 pwr_tBoolean
 net_Free (
   pwr_tStatus		*status,
@@ -614,7 +614,7 @@ net_Free (
 
   return ok;
 }
-
+
 pwr_tBoolean
 net_Send (
   pwr_tStatus		*status,
@@ -635,7 +635,7 @@ net_Send (
 
   return ok;
 }
-
+
 /* Same as net_Send, but used when replying to a request.
    Gives possibility to control msn.  */
 
@@ -659,7 +659,7 @@ net_Reply (
 
   return ok;
 }
-
+
 pwr_tBoolean
 net_Put (
   pwr_tStatus		*status,
@@ -683,7 +683,7 @@ net_Put (
 
   return ok;
 }
-
+
 void *
 net_Receive (
   pwr_tStatus		*status,
@@ -702,7 +702,7 @@ net_Receive (
 
   return p;
 }
-
+
 void *
 net_Request (
   pwr_tStatus		*status,
@@ -728,7 +728,7 @@ net_Request (
 
   return p;
 }
-
+
 pwr_tBoolean
 net_Connect (
   pwr_tStatus		*status,

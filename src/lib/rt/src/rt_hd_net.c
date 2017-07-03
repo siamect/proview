@@ -42,7 +42,7 @@
 #include "rt_qcom.h"
 #include "rt_errh.h"
 
-
+
 pwr_tStatus                  
 hd_NetSendMessage(           
   qcom_sQid *qid,            
@@ -86,7 +86,7 @@ hd_NetSendMessage(
 
   return sts;
 }                           
-
+
 pwr_tStatus                  
 hd_NetXdrMessage (  
   XDR *xdrs,                  

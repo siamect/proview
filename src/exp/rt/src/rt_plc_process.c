@@ -147,7 +147,7 @@ static int create_timer(plc_sProcess* pp)
 
 
 
-
+
 int main (
   int	argc,
   char	*argv[]
@@ -250,7 +250,7 @@ int main (
 
   exit(0);
 }
-
+
 static plc_sProcess *
 init_process ( char *name)
 {
@@ -373,7 +373,7 @@ init_process ( char *name)
 
   return pp;
 }
-
+
 static pwr_tStatus 
 init_plc (
 	  plc_sProcess	*pp,
@@ -458,7 +458,7 @@ init_plc (
 
   return sts;
 }
-
+
 static void
 init_threads (
   plc_sProcess	*pp
@@ -476,7 +476,7 @@ init_threads (
     pwr_Assert(phase == 2);
   }
 }
-
+
 static void
 start_threads (
   plc_sProcess	*pp
@@ -498,7 +498,7 @@ start_threads (
     pwr_Assert(phase == 3);
   }
 }
-
+
 static void
 run_threads (
   plc_sProcess	*pp
@@ -520,7 +520,7 @@ run_threads (
     pwr_Assert(phase == 4);
   }
 }
-
+
 /* Wait for ALL of the threads to finish. If a thread'
    CycleTime <> 0, then we assume that there in fact is an active
    thread at that index, and therefore we wait until the
@@ -557,7 +557,7 @@ stop_threads (
 #endif
   }
 }
-
+
 static void
 clean_all (
   plc_sProcess	*pp
@@ -569,7 +569,7 @@ clean_all (
   if (EVEN(sts))
     errh_Error("gdh_UnrefObjectInfoAll, %m", sts);
 }
-
+
 /* Link to I/O base areas.
    Create area if it doesn't exist.
    All threads write to base area.  */
@@ -607,7 +607,7 @@ link_io_base_areas (
   dlink_area((plc_sDlink *)&pp->base.bo_i, "pwrNode-active-io-bo_init", pp->IOHandler->BoCount * sizeof(pwr_tUInt64));
   dlink_area((plc_sDlink *)&pp->base.bo_isize, "pwrNode-active-io-bo_initsize", pp->IOHandler->BoCount * sizeof(pwr_tUInt64));
 }
-
+
 /* Link to I/O copy areas.
    Create area if it doesn't exist.
    All threads read from owned copy area.  */
@@ -660,7 +660,7 @@ link_io_copy_areas (
   tp->copy.bo_a.p = calloc(1, tp->copy.bo_a.size);
 
 }
-
+
 static void
 dlink_area (
   plc_sDlink *dp,
@@ -678,7 +678,7 @@ dlink_area (
     exit(sts);
   }
 }
-
+
 static void
 create_threads (
   plc_sProcess	*pp
@@ -697,7 +697,7 @@ create_threads (
   for (ptp = plc_proctbllist; ptp != NULL && *ptp != NULL; ptp++, tp++)
     create_thread(tp, *ptp, pp);
 }
-
+
 static void
 create_thread (
   plc_sThread	*tp,
@@ -767,7 +767,7 @@ create_thread (
   phase = (long int)que_Get(&sts, &tp->q_out, NULL, NULL);
   pwr_Assert(phase == 1);
 }
-
+
 /* Initializes all init steps on own node. */
 
 static void
@@ -792,7 +792,7 @@ init_grafcet ()
     sts = gdh_GetNextObject(oid, &oid);
   }
 }
-
+
 static void
 save_values (
   plc_sProcess	*pp
@@ -860,7 +860,7 @@ save_values (
       memcpy( p, &pp->base.bo_a.p->Value[idx], size); 
   }
 }
-
+
 static void
 set_values (
   plc_sProcess	*pp

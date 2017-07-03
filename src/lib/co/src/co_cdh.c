@@ -90,7 +90,7 @@ cdh_ObjidCompare (
 
 }
 
-
+
 //! Test if two object identities are equal.
 /*!
 -   return  1 if Object_1 == Object_2
@@ -106,7 +106,7 @@ cdh_ObjidIsEqual (
 
   return (Objid_1.vid == Objid_2.vid) && (Objid_1.oix == Objid_2.oix);
 }
-
+
 //! Test if two object identities are different.
 /*!
 -   return  1 if Object_1 != Object_2
@@ -123,7 +123,7 @@ cdh_ObjidIsNotEqual (
   return (Objid_1.vid != Objid_2.vid) || (Objid_1.oix != Objid_2.oix);
 }
 
-
+
 //! Test if object identity is null.
 /*!
 -   return  1 if Object_1 == pwr_cNObjid
@@ -138,7 +138,7 @@ cdh_ObjidIsNull (
   return (Objid.vid == pwr_cNObjid.vid) && (Objid.oix == pwr_cNObjid.oix);
 }
 
-
+
 //! Test if object identity is not null.
 /*!
 -   return  1 if Object_1 != pwr_cNObjid
@@ -153,7 +153,7 @@ cdh_ObjidIsNotNull (
   return (Objid.vid != pwr_cNObjid.vid) || (Objid.oix != pwr_cNObjid.oix);
 }
 
-
+
 int
 cdh_RefIdCompare (
   pwr_tRefId		Reference_1,
@@ -163,7 +163,7 @@ cdh_RefIdCompare (
   return cdh_ObjidCompare(*(pwr_tObjid*) &Reference_1, *(pwr_tObjid*) &Reference_2);
 }
 
-
+
 int
 cdh_RefIdIsEqual (
   pwr_tRefId		Reference_1,
@@ -173,7 +173,7 @@ cdh_RefIdIsEqual (
   return cdh_ObjidIsEqual(*(pwr_tObjid*) &Reference_1, *(pwr_tObjid*) &Reference_2);
 }
 
-
+
 int
 cdh_RefIdIsNotEqual (
   pwr_tRefId		Reference_1,
@@ -183,7 +183,7 @@ cdh_RefIdIsNotEqual (
   return cdh_ObjidIsNotEqual(*(pwr_tObjid*) &Reference_1, *(pwr_tObjid*) &Reference_2);
 }
 
-
+
 int
 cdh_RefIdIsNull (
   pwr_tRefId		Reference
@@ -192,7 +192,7 @@ cdh_RefIdIsNull (
   return cdh_ObjidIsNull(*(pwr_tObjid*) &Reference);
 }
 
-
+
 int
 cdh_RefIdIsNotNull (
   pwr_tRefId		Reference
@@ -201,7 +201,7 @@ cdh_RefIdIsNotNull (
   return cdh_ObjidIsNotNull(*(pwr_tObjid*) &Reference);
 }
 
-
+
 int
 cdh_SubidCompare (
   pwr_tSubid		Subscription_1,
@@ -211,7 +211,7 @@ cdh_SubidCompare (
   return cdh_ObjidCompare(*(pwr_tObjid*) &Subscription_1, *(pwr_tObjid*) &Subscription_2);
 }
 
-
+
 int
 cdh_SubidIsEqual (
   pwr_tSubid		Subscription_1,
@@ -221,7 +221,7 @@ cdh_SubidIsEqual (
   return cdh_ObjidIsEqual(*(pwr_tObjid*) &Subscription_1, *(pwr_tObjid*) &Subscription_2);
 }
 
-
+
 int
 cdh_SubidIsNotEqual (
   pwr_tSubid		Subscription_1,
@@ -231,7 +231,7 @@ cdh_SubidIsNotEqual (
   return cdh_ObjidIsNotEqual(*(pwr_tObjid*) &Subscription_1, *(pwr_tObjid*) &Subscription_2);
 }
 
-
+
 int
 cdh_SubidIsNull (
   pwr_tSubid		Subscription
@@ -240,7 +240,7 @@ cdh_SubidIsNull (
   return cdh_ObjidIsNull(*(pwr_tObjid*) &Subscription);
 }
 
-
+
 int
 cdh_SubidIsNotNull (
   pwr_tSubid		Subscription
@@ -249,7 +249,7 @@ cdh_SubidIsNotNull (
   return cdh_ObjidIsNotNull(*(pwr_tObjid*) &Subscription);
 }
 
-
+
 int
 cdh_DlidCompare (
   pwr_tDlid		DirectLink_1,
@@ -259,7 +259,7 @@ cdh_DlidCompare (
   return cdh_ObjidCompare(*(pwr_tObjid*) &DirectLink_1, *(pwr_tObjid*) &DirectLink_2);
 }
 
-
+
 int
 cdh_DlidIsEqual (
   pwr_tDlid		DirectLink_1,
@@ -269,7 +269,7 @@ cdh_DlidIsEqual (
   return cdh_ObjidIsEqual(*(pwr_tObjid*) &DirectLink_1, *(pwr_tObjid*) &DirectLink_2);
 }
 
-
+
 int
 cdh_DlidIsNotEqual (
   pwr_tDlid		DirectLink_1,
@@ -279,7 +279,7 @@ cdh_DlidIsNotEqual (
   return cdh_ObjidIsNotEqual(*(pwr_tObjid*) &DirectLink_1, *(pwr_tObjid*) &DirectLink_2);
 }
 
-
+
 int
 cdh_DlidIsNull (
   pwr_tDlid		DirectLink
@@ -288,7 +288,7 @@ cdh_DlidIsNull (
   return cdh_ObjidIsNull(*(pwr_tObjid*) &DirectLink);
 }
 
-
+
 int
 cdh_DlidIsNotNull (
   pwr_tDlid		DirectLink
@@ -313,7 +313,7 @@ cdh_ArefIsEqual (
 	     (arp1->Size == 0 || arp2->Size == 0 || arp1->Size == arp2->Size));
 }
 
-
+
 //! Convert Objid to ClassId.
 /*!
   \param Objid 	Objid of $ClassDef object for class.
@@ -339,7 +339,7 @@ cdh_ClassObjidToId (
   return (pwr_tClassId) cid.pwr;
 }
 
-
+
 //! Convert ClassId to Objid.
 /*!
   \param Class	ClassId
@@ -368,7 +368,7 @@ cdh_ClassIdToObjid (
 
   return oid.pwr;
 }
-
+
 //! Convert Objid to TypeId.  
 /*!
   \param Objid	Objid for $TypeDef object of type.
@@ -411,7 +411,7 @@ cdh_TypeObjidToId (
   return tid.pwr;
 }
 
-
+
 //! Convert TypeId to index.
 
 int
@@ -425,7 +425,7 @@ cdh_TypeIdToIndex (
 
   return tid.t.tix;
 }
-
+
 //! Convert TypeId to Objid.
 
 pwr_tObjid
@@ -476,7 +476,7 @@ cdh_ObjidToAref (
   return a;
 }
 
-
+
 //! Converts an attribute given in internal binary format to a text string.
 
 pwr_tStatus
@@ -577,7 +577,7 @@ cdh_AttrValueToString (
   return sts;
 }
 
-
+
 //! Converts an attribute value given as a text string, to internal binary format.
 
 pwr_tStatus
@@ -874,7 +874,7 @@ char *cdh_MaskToBinaryString(
   return str;
 }
 
-
+
 //! Convert ClassId string to id.
 /*! 
   Convert a string of format "_C1.2:34" to id ('_C' is optional),
@@ -916,7 +916,7 @@ cdh_StringToClassId (
 
   return CDH__SUCCESS;
 }
-
+
 //! Convert Objid string to id.
 /*!
   Convert a string of format "_O1.2.3.4:34" ('_O' is optional), where
@@ -1064,7 +1064,7 @@ cdh_StringToAref (
 }
 
 
-
+
 //! Convert TypeId string to id.
 /*! 
   Convert a string of format "_T1.2:bit.tyg.tix" to id ("_T" is optional).
@@ -1124,7 +1124,7 @@ cdh_StringToTypeId (
   *tid = ltid.pwr;
   return CDH__SUCCESS;
 }
-
+
 //! Convert VolumeId string to id.
 /*! 
   Convert a string of format "_V1.2.3.4" to id ("_V" is optional).
@@ -1171,7 +1171,7 @@ cdh_StringToVolumeId (
 
   return CDH__SUCCESS;
 }
-
+
 //! Converts ObjectIx string to index.
 /*!
   Converts string of format "_Xoix" to index ("_X" is optional)
@@ -1203,7 +1203,7 @@ cdh_StringToObjectIx (
 
   return CDH__SUCCESS;
 }
-
+
 pwr_tStatus
 cdh_StringToSubid (
   const char		*s,
@@ -1244,7 +1244,7 @@ cdh_StringToSubid (
 
   return CDH__SUCCESS;
 }
-
+
 pwr_tStatus
 cdh_StringToDlid (
   const char		*s,
@@ -1285,7 +1285,7 @@ cdh_StringToDlid (
 
   return CDH__SUCCESS;
 }
-
+
 //!  Converts a class identifier, 'cid' to a string.
 /*!  
     The output string will be in the format:
@@ -1329,7 +1329,7 @@ cdh_ClassIdToString (
     return ls;
   
 }
-
+
 //!  Converts a type identifier, 'tid' to a string.
 /*!
     The output string will be in the format:
@@ -1381,7 +1381,7 @@ cdh_TypeIdToString (
     return ls;
   
 }
-
+
 //!  Converts a object index, 'oix' to a string.
 /*!
     The output string will be in the format:
@@ -1411,7 +1411,7 @@ cdh_ObjectIxToString (
   else
     return ls;
 }
-
+
 //!  Converts an attribute reference , 'aref' to a string.
 /*!
     The output string will be in the format:
@@ -1454,7 +1454,7 @@ cdh_ArefToString (
   else
     return ls;
 }
-
+
 //! Converts a volume identifier, 'vid' to a string.
 /*!
     The output string will be in the format:
@@ -1493,7 +1493,7 @@ cdh_NodeIdToString (
     return ls;
   
 }
-
+
 //!  Converts a object identifier, 'oid' to a string.
 /*!
     The output string will be in the format:
@@ -1561,7 +1561,7 @@ cdh_ObjidToFnString (
     return str;  
 }
 
-
+
 //!  Converts a volume identifier, 'vid' to a string.
 /*!
     The output string will be in the format:
@@ -1633,7 +1633,7 @@ cdh_VolumeIdToFnString (
   else
     return str;  
 }
-
+
 //! Converts a subscription identifier, 'sid' to a string.
 /*!
     The output string will be in the format:
@@ -1668,7 +1668,7 @@ cdh_SubidToString (
     return ls;
   
 }
-
+
 //! Converts a direct link identifier, 'did' to a string.
 /*!
     The output string will be in the format:
@@ -1703,7 +1703,7 @@ cdh_DlidToString (
     return ls;
   
 }
-
+
 cdh_sFamily *
 cdh_Family (
   cdh_sFamily		*f,
@@ -1717,7 +1717,7 @@ cdh_Family (
 
   return f;
 }
-
+
 cdh_sObjName *
 cdh_ObjName (
   cdh_sObjName		*on,
@@ -1732,7 +1732,7 @@ cdh_ObjName (
 
   return on;
 }
-
+
 cdh_sParseName *
 cdh_ParseName (
   pwr_tStatus		*sts,
@@ -2542,7 +2542,7 @@ error:
   *sts = lsts;
   return NULL;
 }
-
+
 pwr_tUInt32
 cdh_PackName (
   const char		*name
@@ -2563,7 +2563,7 @@ cdh_PackName (
   
   return pack.key;  
 }
-
+
 //! Convert string to lower case.
 /*!
   Returns a pointer to a static string.
@@ -2618,7 +2618,7 @@ cdh_ToLower (
 
   return rs;
 }
-
+
 //! Convert string to upper case.
 /*!
   If s is NULL, t is used also as input string.
@@ -2658,7 +2658,7 @@ cdh_ToUpper (
   return rs;
 }
 
-
+
 //! Compare two strings not regarding their casing.
 /*!
    This routine works only on alphabetic characters.

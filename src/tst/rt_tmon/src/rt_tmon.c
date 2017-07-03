@@ -96,7 +96,7 @@ main (
     nsec %= 1000000000;
   }
 }
-
+
 /* Add time2 to time1.  */
 
 static pwr_tTime *
@@ -113,7 +113,7 @@ addTime (
 
   return t1;
 }
-
+
 /* Convert mille seconds to time format.  */
 
 static pwr_tTime *
@@ -132,7 +132,7 @@ msToTime (
 
   return t;
 }
-
+
 /* Subtract time2 from time1.  */
 
 static pwr_tTime *
@@ -172,7 +172,7 @@ nowTime (
  
   return tp;
 }
-
+
 /* Wait for a while.  */
 
 static void

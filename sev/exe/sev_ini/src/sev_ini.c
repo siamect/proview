@@ -221,7 +221,7 @@ terminate (
   exit(1);
 }
 
-
+
 static int
 ask_yes_no (
   ini_sContext	*cp,
@@ -234,7 +234,7 @@ ask_yes_no (
 
   return 0;
 }
-
+
 static int
 checkErrors (
   ini_sContext	*cp
@@ -273,7 +273,7 @@ checkErrors (
   }
   return 1;
 }
-
+
 static ini_sContext *
 createContext (int argc, char **argv)
 {
