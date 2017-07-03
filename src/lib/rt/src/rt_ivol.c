@@ -63,19 +63,6 @@ buildScObjects (
   gdb_sVolume		*vp
 );
 
-static pwr_tBoolean
-decodeObject (
-  pwr_tStatus		*sts,
-  gdb_sObject		*op,
-  gdb_sClass		*cp,
-  co_eBO 		bo
-);
-
-static void
-decodeObjects (
-  co_eBO 		bo
-);
-
 static gdb_sObject *
 loadObject (
   pwr_tStatus		*sts,
@@ -130,65 +117,6 @@ buildScObjects (
 
   }
   return YES;
-}
-
-/* Decode the body of an object.  */
-
-
-static pwr_tBoolean
-decodeObject (
-  pwr_tStatus		*sts,
-  gdb_sObject		*op,
-  gdb_sClass		*cp,
-  co_eBO 		bo
-)
-{
-  char			*p;
-  int			i;
-  gdb_sAttribute	*ap;
-
-  if (op->u.n.flags.b.bodyDecoded) return TRUE;
-
-  p = pool_Address(sts, gdbroot->rtdb, op->u.n.body);
-  if (p == NULL) return NO;
-
-  op->u.n.flags.b.bodyDecoded = 1;
-
-  return TRUE;
-}
-
-
-/* Decode all object bodies.  */
-
-static void
-decodeObjects (
-  co_eBO 		bo
-)
-{
-  pwr_tStatus		lsts;
-  gdb_sClass		*cp;
-  pool_sQlink		*cl;
-  gdb_sObject		*op;
-  pool_sQlink		*ol;
-
-
-  for (
-    cl = pool_Qsucc(&lsts, gdbroot->pool, &gdbroot->db->class_lh);
-    cl != &gdbroot->db->class_lh;
-    cl = pool_Qsucc(&lsts, gdbroot->pool, cl)
-  ) {
-    cp = pool_Qitem(cl, gdb_sClass, class_ll);
-
-    for (
-      ol = pool_Qsucc(&lsts, gdbroot->pool, &cp->cid_lh);
-      ol != &cp->cid_lh;
-      ol = pool_Qsucc(&lsts, gdbroot->pool, ol)
-    ) {
-      op = pool_Qitem(ol, gdb_sObject, u.n.cid_ll);
-      if (op->u.n.flags.b.bodyDecoded) continue;
-      decodeObject(&lsts, op, cp, bo);
-    }
-  }
 }
 
 /* .  */
