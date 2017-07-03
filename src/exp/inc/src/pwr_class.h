@@ -656,12 +656,9 @@ typedef enum {
 */
 typedef pwr_tMask pwr_tOpSys;
 
-#if 1
 typedef enum {
   pwr_mOpSys__ = 0,
   pwr_mOpSys_CustomBuild =  1 << 0,
-  pwr_mOpSys_VAX_VMS =  1 << 1,
-  pwr_mOpSys_AXP_VMS =  1 << 2,
   pwr_mOpSys_PPC_LYNX = 1 << 3,
   pwr_mOpSys_X86_LYNX = 1 << 4,
   pwr_mOpSys_PPC_LINUX = 1 << 5,
@@ -675,31 +672,7 @@ typedef enum {
   pwr_mOpSys_X86_64_CYGWIN = 1 << 13,
   pwr_mOpSys_ARM64_LINUX = 1 << 14,
   pwr_mOpSys_ = 1 << 15,
-  pwr_mOpSys_VAX_ELN =  1 << 30    /* TODO Remove! */
 } pwr_mOpSys;
-
-#else
-typedef union {
-  pwr_tBitMask m;
-  struct {
-    pwr_tBit  VAX_ELN	: 1;
-    pwr_tBit  VAX_VMS	: 1;
-    pwr_tBit  AXP_VMS	: 1;
-    pwr_tBit  PPC_LYNX	: 1;
-    pwr_tBit  X86_LYNX	: 1;
-
-    pwr_tBit  fill	: 27;
-  } b;
-
-#define pwr_mOpSys__	      0
-#define pwr_mOpSys_VAX_ELN    pwr_Bit(0)
-#define pwr_mOpSys_VAX_VMS    pwr_Bit(1)
-#define pwr_mOpSys_AXP_VMS    pwr_Bit(2)
-#define pwr_mOpSys_PPC_LYNX   pwr_Bit(3)
-#define pwr_mOpSys_X86_LYNX   pwr_Bit(4)
-#define pwr_mOpSys_	      (~pwr_mOpSys__)
-} pwr_mOpSys;
-#endif
 
 /* Bitmask for body flags  */
 /*_*

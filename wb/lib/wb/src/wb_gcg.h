@@ -73,10 +73,8 @@ extern "C" {
 
 #define	GCG_MAX_NO_TIMEBASE 150     /* Max no of timebases that the module can 
                                     * handle */
-#define	GCG_MAX_NO_TIMEBASE_ELN 150 /* Max no of allowed ELN timebases. */ 
-#define	GCG_MAX_NO_TIMEBASE_LYNX 150 /* Max no of allowed ELN timebases. */ 
+#define	GCG_MAX_NO_TIMEBASE_LYNX 150 /* Max no of allowed LYNX timebases. */
 #define	GCG_MAX_NO_TIMEBASE_LINUX 150 /* Max no of allowed LINUX timebases. */ 
-#define	GCG_MAX_NO_TIMEBASE_VMS 150  /* Max no of allowed VMS timebases. */
 
 
 #define	GCGM0_MAXFILES 1

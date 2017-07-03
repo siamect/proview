@@ -204,27 +204,6 @@ int RTTSYS_SHOW_SYS
 			char		*objectname,
 			char		**picture)
 	{return RTT__SUCCESS;}
-int RTTSYS_VMSPROC
-		( 	menu_ctx	ctx,
-			int		event,
-			char		*parameter_ptr,
-			char		*objectname,
-			char		**picture)
-	{return RTT__SUCCESS;}
-int RTTSYS_SHOW_SYS_ELN
-		( 	menu_ctx	ctx,
-			int		event,
-			char		*parameter_ptr,
-			char		*objectname,
-			char		**picture)
-	{return RTT__SUCCESS;}
-int RTTSYS_ELNPROC
-		( 	menu_ctx	ctx,
-			int		event,
-			char		*parameter_ptr,
-			char		*objectname,
-			char		**picture)
-	{return RTT__SUCCESS;}
 int RTTSYS_NMPSCELL
 		( 	menu_ctx	ctx,
 			int		event,

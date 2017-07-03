@@ -1345,7 +1345,7 @@ Type: pwr_tUInt32
 Flags:
 Default value: 
 
-Statuskod på VMS-format. Anger om fel uppstått i samband med objektets 
+Anger om fel uppstått i samband med objektets
 uppbackning. Så länge Status = 0 har ingen upp backning gjorts. 
 
 <b>Tips 
@@ -4611,10 +4611,7 @@ Ds_Fast jobb laddas till nod som saknar DsFastConf objekt kommer det att
 exekvera med 10 Hz. 
 
 Ska mätdata för snabbkurvor lagras i noden måste ett Ds_Fast-jobb laddas och 
-startas i noden. Gäller det en OpenVMS-nod görs detta med hjälp av $Appl 
-objekt och för VAXELN-noder används antingen $Appl objekt eller också 
-inkluderas Ds_Fast-jobbet i processnodens EBUILD-fil. 
-
+startas i noden.
  
 <h1>Se även 
 
@@ -5013,16 +5010,7 @@ Default value: 1
 Anger, i sekunder, DsTrend-jobbets cykeltid. 1 = ScanTime = 3600. 
 
 ScanTime attributen i de DsTrend objekt som tillhör samma nod som 
-DsTrendConf tilldelas värdet av detta attribut! 
-
-<h1>Tips 
-
-Eftersom DsTrend-jobb default finns på OpenVMS-noder är det lämpligt att 
-konfigurera DsTrendConf på dess noder. DsTrendConf konfigureras i 
-utvecklingsmiljön under $Node objekt. 
-
-Om ett Ds_Trend jobb laddas till nod som saknar DsTrendConf objekt kommer 
-det att exekvera med 1 Hz. 
+DsTrendConf tilldelas värdet av detta attribut!
 
 <h1>Se även 
 
@@ -9011,53 +8999,14 @@ Svara N på frågorna: Re-create this customised subdirectory [Y/N] (N):
 Edit the PAMSBOOT.COM startup file [Y/N] (N): 
 Svara Y på frågan: Edit the PAMSINIT.TXT file [Y/N] (N): 
 I 'PAMS Initialisation File' finns svaren. Lämna filen med quit och svara N på 
-resten av frågorna. 
-
-<b>OperatingSystem 
-Type: pwr_tUInt32
-Flags:
-Default value: 1 
-
-Anger vilket operativsystem som ska köras i den aktuella målnoden. Attributet 
-används då PLC program ska kompileras. Följande värden är möjliga: 
-
-1 -- VAXELN
-2 -- OpenVMS 
+resten av frågorna.
 
 <b>ErrLogTerm[132] 
 Type: pwr_tString132
 Flags:
 Default value: 
 
-För VAXELN nod gäller att systemfelloggen, som innehåller 
-systemfelmeddelanden, default skickas till konsolen. Ska felloggen skickas till 
-annan terminal anges dess namn här. Funktionen ej implementerad. 
-
-Attributet ej aktuellt för OpenVMS nod. 
-
-<b>ErrLogFile[132] 
-Type: pwr_tString132
-Flags:
-Default value: 
-
-För VAXELN nod gäller att systemfelloggen, oberoende av om den skickas till 
-terminal eller ej, också kan skickas till här angiven fil. 
-
-Syntax:
-<area number>.<node number>::<device>[<directory>] <file 
-name>.<extension> 
-
-Exempel: 1.30::pwrp_lis:sys_RTPVAX.log
-1.30::sys$login:pwr_VAXELN_RTPVAX.log 
-
-För att särskilja loggar från olika VAXELN noder kan nodnamnet ingå i filens 
-namn. I exemplet ovan anger RTPVAX den aktuella noden. Om <area 
-number>.<node number>:: utelämnas hamnar filen på bootnoden. Därigenom 
-behöver attributet inte ändras även om noden skulle bootas från skilda 
-bootnoder.
-För OpenVMS nod gäller att systemfelloggen alltid får namnet 
-pwr_VMS_'xxx'.log och placeras på den egna nodens sys$login. 'xxx ' 
-betecknar nodnamnet. 
+Funktionen ej implementerad.
 
 <b>BootDnoVersion 
 Type: pwr_tUInt32
@@ -9115,8 +9064,7 @@ Saknas I/O betyder det att Av och Dv är de enda signalobjekt som kan
 användas på vanligt sätt. Men för testning kan alla typer av signalobjekt 
 användas. 
 det vid omstart gällde att IOSimulFlag = TRUE, kan IOReadWriteFlag 
-'togglas'. 
-Attributet beaktas inte i fallet OperatingSystem = 2, dvs. av OpenVMS-noder. 
+'togglas'.
 
 <b>IOSimulFlag 
 Type: pwr_tBoolean
@@ -9125,9 +9073,7 @@ Default value: FALSE
 
 Anger om den fysiska I/O-hårdvaran ska initieras i samband med omstart eller 
 ej. FALSE betyder att I/O:et initieras för läsning / skrivning och TRUE att det 
-inte initieras. 
-
-Attributet beaktas inte i fallet OperatingSystem = 2, dvs. av OpenVMS-noder. 
+inte initieras.
 
 <b>NumberOfDI, NumberOfDO 
 Type: pwr_tUInt16
@@ -9189,29 +9135,9 @@ fryses där.
 -- 3 Stoppa I/O. Reset av alla utsignaler. Se också ErrorHardLimit i
 kortobjekt.
 
-<b>StartPlcWithDebug 
-Type: pwr_tBoolean
-Flags: FixParam
-Default value: FALSE 
-
-För VAXELN nod anger attributet om PLC-jobbet ska laddas med eller utan 
-debugger. FALSE innebär att debuggern inte får kontroll över jobbet, dvs det 
-kommer att exekvera fullt ut; TRUE betyder att debuggern får kontroll över 
-jobbet sedan det startats förutsatt att det är kompilerat och länkat med 
-debugger. 
-
-Attributet används ej i fallet OpenVMS nod 
-
 <b>*TimerStart 
 Type: pwr_tBoolean
-Flags: Intern 
-
-<h1>Tips 
-
-En OpenVMS-nod ( OperatingSystem = 2) har ingen I/O-hårdvara vilket 
-innebär att Av och Dv -objekt är de enda signalobjekt som kan användas på 
-vanligt sätt. För teständamål kan dock alla typer av signalobjekt användas om 
-IOReadWriteFlag sätts FALSE. 
+Flags: Intern
 
 <h1>Mer info om flaggor och datatyper:
 
@@ -10879,19 +10805,12 @@ PlcPgm -objekten namn fungerar som etiketter på olika PLC program.
 PlcPgm -objekt representera både kod och data. 
 
 Olika PlcPgm -objekt med samma värde på ScanTime kommer att exekvera i 
-en och samma PLC- subprocess. VAXELN-noder kan innehålla upp till 15 
-PLC-subprocesser i ett PLC-jobb och OpenVMS-noder 1 PLC-subprocess i sitt 
-PLC-jobb. 
+en och samma PLC- subprocess.
 
 NB! PLC-subprocessen med kortaste cykeltiden, dvs. med högsta frekvensen, 
 kallas basefrekvenssubprocessen. Den hanterar också inläsning/utställning av 
 Di-, Do-, Dv- och Co-signaler anslutna till nodens lokala I/O-system. De 
-övriga subprocesserna benämns gemensamt som delfrekvenssubprocesserna. 
-
-Det betyder att en VAXELN-nod där Di-, Do-, Dv- eller Co-signaler ska 
-hanteras men där behov av egentligt PLC program saknas -- ändå behöver ett 
-dummy PlcPgm för att klara inläsning/utställning. 
-
+övriga subprocesserna benämns gemensamt som delfrekvenssubprocesserna.
  
 <h1>Internal Attributes 
 
@@ -17536,8 +17455,6 @@ Följande saker krävs för att få backup på NMps:
 <t>-Ett NMpsBackupConfig objekt ska finnas på noden.
 
 <t>-Programmet ssab_exe:rs_nmps_bck.exe läggs in iett 
-<t>$Appl objekt (VMS) eller  ssabb_root:<vax_eln.exe>
-<t>rs_nmps_bck.exe_eln läggs in i systemet mha EBUILD (ELN).
 
 <t>-Backup biten sätts i Function-attributet i de cellobjekt som ska backas upp.
 

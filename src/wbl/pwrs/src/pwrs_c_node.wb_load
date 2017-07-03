@@ -72,11 +72,7 @@ SObject pwrs:Class
         EndBody
       EndObject
       !/**
-      !  Applied to VAXELN node the system error log, which
-      !  contains system error messages, normally is sent to the
-      !  console. If the error log will be sent to another
-      !  terminal, the ErrLogTerm specifies the name of the
-      !  terminal. This function is not implemented.
+      !  This function is not implemented.
       !*/
       Object ErrLogTerm $Attribute 5
         Body SysBody

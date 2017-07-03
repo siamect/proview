@@ -86,17 +86,6 @@
 #define	UTL_FULLPRINT_NOSYSBODY 32
 #define	UTL_FULLPRINT_SIGNAL	64
 
-/* Library for the plcmodules */
-/* Libraries for the plcmodules */
-#define PLCLIB_VAX_ELN "pwrp_root:[vax_eln.lib]plc"
-#define PLCLIB_VAX_VMS "pwrp_root:[vax_vms.lib]plc"
-#define PLCLIB_AXP_VMS "pwrp_root:[axp_vms.lib]plc"
-
-/* Frozen libraries for the plcmodules */
-#define PLCLIB_FROZEN_VAX_ELN "pwrp_root:[vax_eln.lib]plcf"
-#define PLCLIB_FROZEN_VAX_VMS "pwrp_root:[vax_vms.lib]plcf"
-#define PLCLIB_FROZEN_AXP_VMS "pwrp_root:[axp_vms.lib]plcf"
-
 typedef struct {
   pwr_tString40                       Parameter;
   pwr_tString40                       ColumnHeader;

@@ -66,11 +66,7 @@
 # define pwrv_cOpSys              "Unknown Operating System"
 #endif
 
-#if defined VAX || defined __VAX 
-#define pwrv_cHardware           "VAX"
-#elif defined __Alpha_AXP
-#define pwrv_cHardware           "Alpha AXP"
-#elif defined __powerpc__ 
+#if defined __powerpc__
 #define pwrv_cHardware           "PowerPC"
 #elif defined __x86__ 
 #define pwrv_cHardware           "x86"

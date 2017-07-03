@@ -67,13 +67,6 @@ SObject pwrb:Type
         Attr Value = 2
       EndBody
     EndObject
-    Object FloatVAX $Value
-      Body SysBody
-        Attr Text = "Floating Point VAX"
-        Attr PgmName = "FloatVAX"
-        Attr Value = 3
-      EndBody
-    EndObject
     Object FloatIntel $Value
       Body SysBody
         Attr Text = "Floating Point Intel"

@@ -96,35 +96,6 @@ Fri text för att beskriva objektets användning.
 Anger nodens namn.
 </attr>
 
-<attr>ErrLogTerm
-För VAXELN nod gäller att systemfelloggen, som innehåller 
-systemfelmeddelanden, default skickas till konsolen. Ska felloggen skickas till 
-annan terminal anges dess namn här. Funktionen ej implementerad. 
-
-Attributet ej aktuellt för OpenVMS nod. 
-</attr>
-
-<attr>ErrLogFile
-För VAXELN nod gäller att systemfelloggen, oberoende av om den skickas till 
-terminal eller ej, också kan skickas till här angiven fil. 
-
-Syntax:
-<area number>.<node number>::<device>[<directory>] <file 
-name>.<extension> 
-
-Exempel: 1.30::pwrp_lis:sys_RTPVAX.log
-1.30::sys$login:pwr_VAXELN_RTPVAX.log 
-
-För att särskilja loggar från olika VAXELN noder kan nodnamnet ingå i filens 
-namn. I exemplet ovan anger RTPVAX den aktuella noden. Om <area 
-number>.<node number>:: utelämnas hamnar filen på bootnoden. Därigenom 
-behöver attributet inte ändras även om noden skulle bootas från skilda 
-bootnoder.
-För OpenVMS nod gäller att systemfelloggen alltid får namnet 
-pwr_VMS_'xxx'.log och placeras på den egna nodens sys$login. 'xxx ' 
-betecknar nodnamnet. 
-</attr>
-
 <attr>EmergBreakTrue 
 Nödbromsflagga. Flaggan sätts vid 
 
@@ -149,15 +120,6 @@ fryses där.
 kortobjekt.
 </attr>
 
-<attr>StartPlcWithDebug 
-För VAXELN nod anger attributet om PLC-jobbet ska laddas med eller utan 
-debugger. FALSE innebär att debuggern inte får kontroll över jobbet, dvs det 
-kommer att exekvera fullt ut; TRUE betyder att debuggern får kontroll över 
-jobbet sedan det startats förutsatt att det är kompilerat och länkat med 
-debugger. 
-
-Attributet används ej i fallet OpenVMS nod 
-</attr>
 </class>
 
 #

@@ -2800,8 +2800,6 @@ char *cdh_OpSysToStr( pwr_mOpSys opsys)
   static char str[32];
 
   switch( opsys) {
-  case pwr_mOpSys_VAX_VMS: strcpy( str, "vax_vms"); break;
-  case pwr_mOpSys_AXP_VMS: strcpy( str, "axp_vms"); break;
   case pwr_mOpSys_PPC_LYNX: strcpy( str, "ppc_lynx"); break;
   case pwr_mOpSys_X86_LYNX: strcpy( str, "x86_lynx"); break;
   case pwr_mOpSys_PPC_LINUX: strcpy( str, "ppc_linux"); break;
@@ -2831,8 +2829,6 @@ char *cdh_OpSysToDirStr( pwr_mOpSys opsys)
   static char str[80];
 
   switch( opsys) {
-  case pwr_mOpSys_VAX_VMS: strcpy( str, "os_vms/hw_vax"); break;
-  case pwr_mOpSys_AXP_VMS: strcpy( str, "os_vms/hw_axp"); break;
   case pwr_mOpSys_PPC_LYNX: strcpy( str, "os_lynx/hw_ppc"); break;
   case pwr_mOpSys_X86_LYNX: strcpy( str, "os_lynx/hw_x86"); break;
   case pwr_mOpSys_PPC_LINUX: strcpy( str, "os_linux/hw_ppc"); break;

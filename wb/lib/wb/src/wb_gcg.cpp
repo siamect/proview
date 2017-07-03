@@ -78,17 +78,11 @@ extern "C" {
 /*_Local procedues_______________________________________________________*/
 
 /* Libraries for the plcmodules */
-#define PLCLIB_VAX_ELN "pwrp_root:[vax_eln.lib]plc"
-#define PLCLIB_VAX_VMS "pwrp_root:[vax_vms.lib]plc"
-#define PLCLIB_AXP_VMS "pwrp_root:[axp_vms.lib]plc"
 #define PLCLIB_UNIX    "libplc"
 
 
 
 /* Frozen libraries for the plcmodules */
-#define PLCLIB_FROZEN_VAX_ELN "pwrp_root:[vax_eln.lib]plcf"
-#define PLCLIB_FROZEN_VAX_VMS "pwrp_root:[vax_vms.lib]plcf"
-#define PLCLIB_FROZEN_AXP_VMS "pwrp_root:[axp_vms.lib]plcf"
 #define PLCLIB_FROZEN_UNIX    "libplcf"
 
 #define PLCLIB_FROZEN_LINK_UNIX "-lplcf"
@@ -140,14 +134,7 @@ extern "C" {
 
 #define IS_NOT_UNIX(os) (!IS_UNIX(os))
 
-#define IS_VMS_OR_ELN(os) ((os & pwr_mOpSys_VAX_ELN) \
-			    || (os & pwr_mOpSys_VAX_VMS) \
-			    || (os & pwr_mOpSys_AXP_VMS))
-
-#define IS_NOT_VMS_OR_ELN(os) (!(IS_VMS_OR_ELN(os))
-
-
-#define IS_VALID_OS(os) (IS_VMS_OR_ELN(os) || IS_UNIX(os))
+#define IS_VALID_OS(os) (IS_UNIX(os))
 	       	      
 #define IS_NOT_VALID_OS(os) (!IS_VALID_OS(os))
 
@@ -4939,8 +4926,7 @@ static int	gcg_get_child_plcthread(
 	    	 (IS_FREEBSD(os) && *scantime_ptr < 0.0000001)  ||
 	    	 (IS_OPENBSD(os) && *scantime_ptr < 0.0000001)  ||
 	    	 (IS_CYGWIN(os) && *scantime_ptr < 0.0000001)  ||
-		 (IS_LYNX(os) && ((timebase <= 0) || ((timebase / 10) * 10) != timebase)) || 
-		 (IS_VMS_OR_ELN(os) && ((timebase <= 0) || ((timebase / 10) * 10) != timebase)) ) {
+		 (IS_LYNX(os) && ((timebase <= 0) || ((timebase / 10) * 10) != timebase)) ) {
 		gcg_plc_msg( gcgctx, GSX__BADSCANTIME, objdid);
 	    }
 	    else { 
@@ -5469,21 +5455,6 @@ int	gcg_comp_rtnode(
   strncpy( nodename_low, cdh_Low(nodename), sizeof(nodename_low));
 
   switch ( os) {
-  case pwr_mOpSys_VAX_ELN:
-    strcpy( objdir, "pwrp_root:[vax_eln.obj]");
-    strcpy( os_str, "VAX_ELN");
-    max_no_timebase = GCG_MAX_NO_TIMEBASE_ELN;
-    break;
-  case pwr_mOpSys_VAX_VMS:
-    strcpy( objdir, "pwrp_root:[vax_vms.obj]");
-    strcpy( os_str, "VAX_VMS");
-    max_no_timebase = GCG_MAX_NO_TIMEBASE_VMS;
-    break;
-  case pwr_mOpSys_AXP_VMS:
-    strcpy( objdir, "pwrp_root:[axp_vms.obj]");
-    strcpy( os_str, "AXP_VMS");
-    max_no_timebase = GCG_MAX_NO_TIMEBASE_VMS;
-    break;
   case pwr_mOpSys_PPC_LYNX:
     strcpy( objdir, "xxx"); /* Not used */
     strcpy( os_str, "PPC_LYNX");
@@ -5656,17 +5627,6 @@ int	gcg_comp_rtnode(
       }
       fprintf( files[0],"#include \"%s\"\n\n", PLCINC);
       fprintf( files[0],"#include \"%s\"\n\n", PROCINC);
-
-      if (IS_VMS_OR_ELN(os)) {
-	sprintf( fullfilename,"%splc_%s_%4.4d_%s.opt", "pwrp_tmp:", nodename_low, bus, 
-		 cdh_Low(plcproclist[j].name));
-	dcli_translate_filename( fullfilename, fullfilename);
-	if ((files[1] = fopen( fullfilename,"w")) == NULL) {
-	  printf("Cannot open file: %s\n", fullfilename);
-	  fclose(files[0]);
-	  return GSX__OPENFILE;
-	}
-      }
     
       for ( i = 0; i < timebase_count; i++ ) {
 
@@ -5745,11 +5705,6 @@ int	gcg_comp_rtnode(
 	(*errorcount)++;
 	return sts;
       }
-
-      /* print module in option file */
-      if (IS_VMS_OR_ELN(os))
-	fprintf( files[1],"%s%s%s_%4.4d_%s\n", objdir, gcgmn_filenames[0], 
-		 nodename_low, bus, cdh_Low(plcproclist[j].name));
 	
       /* Print plc libraries in option file */
       volumelist_ptr = volumelist;
@@ -5757,18 +5712,6 @@ int	gcg_comp_rtnode(
       for (i = l = 0; i < volume_count; i++, volumelist_ptr++) {
 	if ( *volumelist_ptr ) {
 	  switch ( os) {
-	  case pwr_mOpSys_VAX_ELN:
-	    sprintf( plclib_frozen, "%s%s.olb", PLCLIB_FROZEN_VAX_ELN,
-		     vldh_VolumeIdToStr( *volumelist_ptr));
-	    break;
-	  case pwr_mOpSys_VAX_VMS:
-	    sprintf( plclib_frozen, "%s%s.olb", PLCLIB_FROZEN_VAX_VMS,
-		     vldh_VolumeIdToStr( *volumelist_ptr));
-	    break;
-	  case pwr_mOpSys_AXP_VMS:
-	    sprintf( plclib_frozen, "%s%s.olb", PLCLIB_FROZEN_AXP_VMS,
-		     vldh_VolumeIdToStr( *volumelist_ptr));
-	    break;
 	  case pwr_mOpSys_PPC_LINUX:
 	  case pwr_mOpSys_X86_LINUX:
 	  case pwr_mOpSys_X86_64_LINUX:
@@ -5787,26 +5730,10 @@ int	gcg_comp_rtnode(
 	  default:
 	    return GSX__UNKNOPSYS;
 	  }
-	  if (IS_VMS_OR_ELN(os)) 
-	    fprintf(files[1],"%s/lib\n", plclib_frozen);
 	}
       }
 
-      if (IS_VMS_OR_ELN(os)) { 
-	fclose(files[1]);
-	files[1] = NULL;	   
-      }
-
       /* Link */
-      if (IS_VMS_OR_ELN(os)) {
-	sprintf( plcfilename, "pwrp_exe:plc_%s_%4.4d_%s.exe",
-		 nodename_low, bus, cdh_Low(plcproclist[j].name));
-	sprintf( fullfilename,"%s%s_%4.4d_%s", gcgmn_filenames[0], nodename_low, bus, 
-		 cdh_Low(plcproclist[j].name));
-	gcg_cc( GCG_RTNODE, fullfilename, plcfilename, NULL, os,
-		GCG_NOSPAWN);
-      } 
-      else {
 	sprintf( plcfilename, "plc_%s_%4.4d_%s",
 		 nodename_low, bus, cdh_Low(plcproclist[j].name));
 	sprintf( fullfilename,"%s%s_%4.4d_%s", gcgmn_filenames[0], nodename_low, bus,
@@ -5820,7 +5747,6 @@ int	gcg_comp_rtnode(
 	  (*errorcount)++;
 	  return sts;
 	}
-      }      
     }
   }
 
@@ -5985,44 +5911,12 @@ int	gcg_comp_volume(
 	  {
 	    if ( operating_system & opsys)
 	    {
-	      if ( opsys & pwr_mOpSys_VAX_ELN)
-	      {
-	        sprintf( plclibrary, "%s%s.olb", PLCLIB_VAX_ELN,
-			vldh_VolumeIdToStr( volid));
-	        sprintf( plclib_frozen, "%s%s.olb", PLCLIB_FROZEN_VAX_ELN,
-			vldh_VolumeIdToStr( volid));
-	      }
-	      else if ( opsys & pwr_mOpSys_VAX_VMS)
-	      {
-	        sprintf( plclibrary, "%s%s.olb", PLCLIB_VAX_VMS,
-			vldh_VolumeIdToStr( volid));
-	        sprintf( plclib_frozen, "%s%s.olb", PLCLIB_FROZEN_VAX_VMS,
-			vldh_VolumeIdToStr( volid));
-	      }
-	      else if ( opsys & pwr_mOpSys_AXP_VMS)
-	      {
-	        sprintf( plclibrary, "%s%s.olb", PLCLIB_AXP_VMS,
-			vldh_VolumeIdToStr( volid));
-	        sprintf( plclib_frozen, "%s%s.olb", PLCLIB_FROZEN_AXP_VMS,
-			vldh_VolumeIdToStr( volid));
-	      }
-	      else if ( IS_UNIX(opsys))
+	      if ( IS_UNIX(opsys))
 	      {
 	        sprintf( plclibrary, "NotUsed");
 	        sprintf( plclib_frozen, "%s%s.a", PLCLIB_FROZEN_UNIX,
 			vldh_VolumeIdToStr( volid));
 	      }
-
-#if 0
-	      if (IS_VMS_OR_ELN(opsys))
-	      {
-	        sts = dir_CopyFile( plclibrary, plclib_frozen);
-	        if (EVEN(sts)) return sts;
-	        sts = dir_PurgeFile( plclib_frozen, 1);
-	        if (EVEN(sts)) return sts;
-	      }
-	      else if (IS_UNIX(opsys))
-#endif
 	      {
 		/* Insert all objects into the archive */
 	        sts = gcg_cc( GCG_LIBRARY, vldh_VolumeIdToStr( volid), plclib_frozen, 
@@ -6190,16 +6084,7 @@ int	gcg_comp_m0( vldh_t_plc	plc,
 	    {
 	      if ( operating_system & opsys)
 	      {
-	        if ( opsys & pwr_mOpSys_VAX_ELN)
-	          sprintf( plclibrary, "%s%s.olb", PLCLIB_VAX_ELN,
-			vldh_VolumeIdToStr( plc->lp.oid.vid));
-	        else if ( opsys & pwr_mOpSys_VAX_VMS)
-	          sprintf( plclibrary, "%s%s.olb", PLCLIB_VAX_VMS,
-			vldh_VolumeIdToStr( plc->lp.oid.vid));
-	        else if ( opsys & pwr_mOpSys_AXP_VMS)
-	          sprintf( plclibrary, "%s%s.olb", PLCLIB_AXP_VMS,
-			vldh_VolumeIdToStr( plc->lp.oid.vid));
-	        else if ( IS_UNIX(opsys))
+	        if ( IS_UNIX(opsys))
 	          sprintf( plclibrary, "%s%s.a", PLCLIB_UNIX,
 			vldh_VolumeIdToStr( plc->lp.oid.vid));
 
@@ -6511,16 +6396,7 @@ int	gcg_comp_m1( vldh_t_wind wind,
 	  {
 	    if ( operating_system & opsys)
 	    {
-	      if ( opsys & pwr_mOpSys_VAX_ELN)
-	        sprintf( plclibrary, "%s%s.olb", PLCLIB_VAX_ELN,
-			vldh_VolumeIdToStr( wind->lw.oid.vid));
-	      else if ( opsys & pwr_mOpSys_VAX_VMS)
-	        sprintf( plclibrary, "%s%s.olb", PLCLIB_VAX_VMS,
-			vldh_VolumeIdToStr( wind->lw.oid.vid));
-	      else if ( opsys & pwr_mOpSys_AXP_VMS)
-	        sprintf( plclibrary, "%s%s.olb", PLCLIB_AXP_VMS,
-			vldh_VolumeIdToStr( wind->lw.oid.vid));
-	      else if ( IS_UNIX(opsys))
+	      if ( IS_UNIX(opsys))
 	        sprintf( plclibrary, "%s%s.a", PLCLIB_UNIX,
 			vldh_VolumeIdToStr( wind->lw.oid.vid));
 

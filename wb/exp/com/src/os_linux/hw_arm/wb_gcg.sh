@@ -264,8 +264,6 @@ OsMaskToOpSys $OsMask # Convert Bitmask to index
 
 let OpSys__Low=0
 let OpSys_CustomBuild=1
-let OpSys_VAX_VMS=2
-let OpSys_AXP_VMS=3
 let OpSys_PPC_LYNX=4
 let OpSys_X86_LYNX=5
 let OpSys_PPC_LINUX=6
@@ -275,7 +273,7 @@ let OpSys_X86_64_MACOS=9
 let OpSys_ARM_LINUX=10
 let OpSys__High=11
 
-vOpSys="custombuild,vax_vms,axp_vms,ppc_lynx,x86_lynx,ppc_linux,x86_linux,x86_64_linux,x86_64_macos,arm_linux"
+vOpSys="custombuild,ppc_lynx,x86_lynx,ppc_linux,x86_linux,x86_64_linux,x86_64_macos,arm_linux"
 
 let FileType__Low=-1
 let FileType_Process=0
@@ -406,16 +404,6 @@ elif [ $OpSys -eq $OpSys_ARM_LINUX ]; then
 # Execute build command
   Compile$FileTypeStr
   exit $gcg_status
-
-elif [ $OpSys -eq $OpSys_AXP_VMS ]; then
-
-  rsh $pwr_build_host_axp_vms @pwr_exe:wb_gcg \"$1\" \"$2\" \"$3\" \"$4\" \"$5\" \"$6\" \"$7\" \"$pwrp_root\"
-  exit $?
-
-elif [ $OpSys -eq $OpSys_VAX_VMS ]; then
-
-  rsh $pwr_build_host_vax_vms @pwr_exe:wb_gcg \"$1\" \"$2\" \"$3\" \"$4\" \"$5\" \"$6\" \"$7\" \"$pwrp_root\"
-  exit $?
 
 elif [ $OpSys -eq $OpSys_X86_LYNX ]; then
 

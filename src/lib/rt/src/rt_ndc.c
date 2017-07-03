@@ -161,12 +161,6 @@ union i3e_s_be {
   } v;
 };
 
-#define VAX_F_BIAS    0x81
-#define I3E_S_BIAS    0x7f
-#define VAX_D_BIAS    0x81
-#define VAX_G_BIAS    0x401
-#define I3E_D_BIAS    0x3ff
-
 #define IBYTE0(i) ((i >> 0x18) & 0x000000ff) 
 #define IBYTE1(i) ((i >> 0x08) & 0x0000ff00) 
 #define IBYTE2(i) ((i << 0x08) & 0x00ff0000) 
@@ -181,11 +175,7 @@ union i3e_s_be {
 #define ENDIAN_SWAP_SHORT(t, s)\
   {short int i = *(short *)s; *(short *)t = (SBYTE0(i) | SBYTE1(i));}
 
-#if 0
-# define ENDIAN_SWAP_BOOL(t, s) (*(int *)t = (0 != *(int *)s))
-#else
-# define ENDIAN_SWAP_BOOL(t, s) ENDIAN_SWAP_INT(t, s)
-#endif
+#define ENDIAN_SWAP_BOOL(t, s) ENDIAN_SWAP_INT(t, s)
 
 #define touchObject(op)  if (op != NULL && op->l.flags.b.isCached) cvolc_TouchObject(op)
 

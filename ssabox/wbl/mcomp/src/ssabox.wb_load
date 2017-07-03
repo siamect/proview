@@ -236,17 +236,6 @@ Volume SsabOx $ClassVolume 0.0.250.5
           EndBody
         EndObject
         !/**
-        ! Device name. Used only in VAX_ELN nodes.
-        ! The device name is the identification of the device in the ELN ebuild file.
-        !*/
-        Object DevName $Attribute 2 06-OCT-2005 14:45:53.00
-          Body SysBody 01-JAN-1970 01:00:00.00
-            Attr PgmName = "DevName"
-            Attr Size = 40
-            Attr TypeRef = "pwrs:Type-$String40"
-          EndBody
-        EndObject
-        !/**
         ! Error counter, incremented for every failed read operation of the card.
         ! When the error counter reaches ErrorSoftLimit, a message is sent to the console log.
         ! When it reaches ErrorHardLimit, all IO handling is aborted.
@@ -521,17 +510,6 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr PgmName = "Description"
             Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
-          EndBody
-        EndObject
-        !/**
-        ! Device name. Used only in VAX_ELN nodes.
-        ! The device name is the identification of the device in the ELN ebuild file.
-        !*/
-        Object DevName $Attribute 2 06-OCT-2005 14:45:53.00
-          Body SysBody 01-JAN-1970 01:00:00.00
-            Attr PgmName = "DevName"
-            Attr Size = 40
-            Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
         !/**
@@ -861,17 +839,6 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr PgmName = "Description"
             Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
-          EndBody
-        EndObject
-        !/**
-        ! Device name. Used only in VAX_ELN nodes.
-        ! The device name is the identification of the device in the ELN ebuild file.
-        !*/
-        Object DevName $Attribute 2 06-OCT-2005 14:45:53.00
-          Body SysBody 01-JAN-1970 01:00:00.00
-            Attr PgmName = "DevName"
-            Attr Size = 40
-            Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
         !/**
@@ -4606,17 +4573,6 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr PgmName = "Description"
             Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
-          EndBody
-        EndObject
-        !/**
-        ! Device name. Used only in VAX_ELN nodes.
-        ! The device name is the identification of the device in the ELN ebuild file.
-        !*/
-        Object DevName $Attribute 3 06-OCT-2005 14:45:53.00
-          Body SysBody 01-JAN-1970 01:00:00.00
-            Attr PgmName = "DevName"
-            Attr Size = 40
-            Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
         !/**

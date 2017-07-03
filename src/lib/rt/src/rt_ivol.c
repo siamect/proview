@@ -55,12 +55,7 @@
 #include "rt_pool.h"
 #include "rt_net.h"
 #include "rt_sub.h"
-#include "rt_dvms.h"
 #include "co_time.h"
-
-
-static dvmsFctn *convFctn = NULL;
-
 
 static pwr_tBoolean
 buildScObjects (
@@ -156,15 +151,6 @@ decodeObject (
 
   p = pool_Address(sts, gdbroot->rtdb, op->u.n.body);
   if (p == NULL) return NO;
-
-  for (i = 0, ap = cp->attr; i < cp->acount; i++, ap++) {
-    if (ap->flags.b.state) 
-      continue;
-    if (convFctn[pwr_Tix(ap->type)] == NULL) 
-      continue;
-    if (!convFctn[pwr_Tix(ap->type)](p, ap, bo)) 
-      return NO;
-  }
 
   op->u.n.flags.b.bodyDecoded = 1;
 
@@ -497,12 +483,6 @@ ivol_BuildNode (
   /* Build class attribute tree */
   mvol_BuildCatt(sts);
 
-
-  convFctn = dvms_GetFctns(formatp);
-  if (convFctn != NULL)
-    decodeObjects(formatp->b.bo);
-  convFctn = NULL;
-
   mountClients(sts, gdbroot->my_volume);
 }
 
@@ -811,16 +791,10 @@ ivol_RebuildVolume (
     vol_LinkObject(sts, vp, iop->op, iop->link.m);
   }
 
-  convFctn = dvms_GetFctns(format);
-
   for (iop = lst_Succ(NULL, &lv->cre_lh, &iol); iop != NULL; iop = lst_Succ(NULL, iol, &iol)) {
     vol_LinkObject(sts, vp, iop->op, vol_mLink_swapBuild);
-    if (convFctn != NULL)
-      decodeObject(NULL, iop->op, iop->cp, format->b.bo);
   }
 
-  convFctn = NULL;
-  
 
 #if 0
   san_DeleteVolumeServers(sts, vp);
@@ -836,26 +810,7 @@ ivol_DecodeBody (
   gdb_sClass		*cp
 )
 {
-
-#if 1
   return TRUE;
-#else
-  int			i;
-  gdb_sAttribute	*ap;
-
-  pwr_dStatus(sts, status, GDH__SUCCESS);
-
-  for (i = 0, ap = cp->attr; i < cp->acount; i++, ap++) {
-    if (ap->flags.b.state)
-      continue;
-    if (dvms[pwr_Tix(ap->type)] == NULL)
-      continue;
-    if (!dvms[pwr_Tix(ap->type)]((char *)bp, ap))
-      return NO;
-  }
-
-  return TRUE;
-#endif
 }
 
 void

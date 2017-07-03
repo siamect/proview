@@ -440,13 +440,6 @@ the channel, or the connected signal.\n\n\
 pwr_rtt> show invert [/name=]\n\n\
 /name		Name of a channel object, or the connected signal object.\n\
 "},
-{1,	"SHOW CLOCK","",
-"\
-Show the current time of the hardware clock.\n\
-Implemented in VAXELN only.\n\n\
-pwr_rtt> show clock\n\n\n\
-Related subjects: set clock, get clock.\n\
-"},
 {1,	"SHOW FILE","",
 "\
 Show files.\n\
@@ -892,13 +885,6 @@ The action will only affect new hierarchy-pictures, not the already created.\n\n
 pwr_rtt> set description               display description.\n\
 pwr_rtt> set nodescription             hide description.\n\
 "},
-{1,	"SET CLOCK","",
-"\
-Set the hardware clock to the same time as the VAXELN system time.\n\
-Implemented in VAXELN only.\n\n\
-pwr_rtt> set clock\n\n\
-Related subjects: show clock, get clock.\n\
-"},
 {1,	"SET TIME","",
 "\
 Set the system time.\n\
@@ -939,13 +925,6 @@ the redrawing of the picture when at termination of the script.\n\
 set draw\n\
 set nodraw\n\
 "},
-{1,	"GET CLOCK","",
-"\
-Set the VAXeln system time to the same as the hardware clock.\n\
-Implemented in VAXELN only.\n\n\
-pwr_rtt>get clock\n\n\
-Related subjects: show clock, set clock.\n\
-"},
 {1,	"ALARM","",
 "\
 Send an alarm, show the alamlist, show or print the eventlist.\n\n\
@@ -976,16 +955,6 @@ in the 'learn start'-command, and execute the file with @'filename'.\n\n\
 pwr_rtt> learn start/file='filename'\n\
 pwr_rtt> learn stop\n\
 pwr_rtt> @'filename'\n\
-"},
-{1,	"CLOCK","",
-"\
-Handle the hardware clock in a VAXELN node.\n\
-Implemented in VAXELN only.\n\n\
-pwr_rtt> show clock	show the current time of the hardware clock\n\n\
-pwr_rtt> set clock	set the hardware clock to the same time as the VAXeln\n\
-			system time\n\n\
-pwr_rtt> get clock	set the VAXeln system time to the same as the\n\
-			hardware clock\n\
 "},
 {1,	"DEFINE","",
 "\

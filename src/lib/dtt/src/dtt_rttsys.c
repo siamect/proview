@@ -53,7 +53,6 @@
 #include "rt_pool.h"
 #include "rt_net.h"
 #include "rt_sub.h"
-#include "rt_dvms.h"
 #include "co_cdh.h"
 #include "co_time.h"
 #include "rt_io_base.h"
@@ -1141,8 +1140,6 @@ int RTTSYS_SHOW_NODES( 	menu_ctx	ctx,
 	      case co_eHW_x86: strcpy( menu_ptr->value_ptr, "x86"); break;
 	      case co_eHW_x86_64: strcpy( menu_ptr->value_ptr, "x86_64"); break;
 	      case co_eHW_68k: strcpy( menu_ptr->value_ptr, "68k"); break;
-	      case co_eHW_VAX: strcpy( menu_ptr->value_ptr, "VAX"); break;
-	      case co_eHW_Alpha: strcpy( menu_ptr->value_ptr, "AXP"); break;
 	      case co_eHW_PPC: strcpy( menu_ptr->value_ptr, "PPC"); break;
 	      case co_eHW_ARM: strcpy( menu_ptr->value_ptr, "ARM"); break;
 	      default: strcpy( menu_ptr->value_ptr, "Unknwn");
@@ -1309,8 +1306,6 @@ int RTTSYS_SHOW_NODES( 	menu_ctx	ctx,
 	      case co_eHW_x86: strcpy( menu_ptr->value_ptr, "x86"); break;
 	      case co_eHW_x86_64: strcpy( menu_ptr->value_ptr, "x86_64"); break;
 	      case co_eHW_68k: strcpy( menu_ptr->value_ptr, "68k"); break;
-	      case co_eHW_VAX: strcpy( menu_ptr->value_ptr, "VAX"); break;
-	      case co_eHW_Alpha: strcpy( menu_ptr->value_ptr, "AXP"); break;
 	      case co_eHW_PPC: strcpy( menu_ptr->value_ptr, "PPC"); break;
 	      case co_eHW_ARM: strcpy( menu_ptr->value_ptr, "ARM"); break;
 	      default: strcpy( menu_ptr->value_ptr, "Unknwn");
@@ -4523,35 +4518,6 @@ int RTTSYS_SHOW_SYS( 	menu_ctx	ctx,
 }
 #endif
 
-/*************************************************************************
-*
-* Name:		RTTSYS_VMSPROC()
-*
-* Type		int
-*
-* Type		Parameter	IOGF	Description
-* menu_ctx	ctx		I	context of the picture.
-* int		event		I 	type of event.
-* char		*parameter_ptr	I	pointer to the parameter which value
-*					has been changed.
-*
-* Description:
-*	Show a VMS process.
-*
-**************************************************************************/
-
-int RTTSYS_VMSPROC( 	menu_ctx	ctx,
-			int		event,
-			char		*parameter_ptr,
-			char		*objectname,
-			char		**picture)
-{ 
-#ifdef OS_POSIX
-    rtt_message('E', "Picture is not implemented for this platform");
-    return RTT__NOPICTURE;
-#endif
-  return RTT__SUCCESS;
-}
 
 /*************************************************************************
 *
@@ -11012,8 +10978,6 @@ int RTTSYS_QCOM_NODES( 	menu_ctx	ctx,
 	      case co_eHW_x86: strcpy( menu_ptr->value_ptr, "x86"); break;
 	      case co_eHW_x86_64: strcpy( menu_ptr->value_ptr, "x86_64"); break;
 	      case co_eHW_68k: strcpy( menu_ptr->value_ptr, "68k"); break;
-	      case co_eHW_VAX: strcpy( menu_ptr->value_ptr, "VAX"); break;
-	      case co_eHW_Alpha: strcpy( menu_ptr->value_ptr, "AXP"); break;
 	      case co_eHW_PPC: strcpy( menu_ptr->value_ptr, "PPC"); break;
 	      case co_eHW_ARM: strcpy( menu_ptr->value_ptr, "ARM"); break;
 	      default: strcpy( menu_ptr->value_ptr, "Unknwn");
@@ -11179,8 +11143,6 @@ int RTTSYS_QCOM_NODES( 	menu_ctx	ctx,
 	      case co_eHW_x86: strcpy( menu_ptr->value_ptr, "x86"); break;
 	      case co_eHW_x86_64: strcpy( menu_ptr->value_ptr, "x86_64"); break;
 	      case co_eHW_68k: strcpy( menu_ptr->value_ptr, "68k"); break;
-	      case co_eHW_VAX: strcpy( menu_ptr->value_ptr, "VAX"); break;
-	      case co_eHW_Alpha: strcpy( menu_ptr->value_ptr, "AXP"); break;
 	      case co_eHW_PPC: strcpy( menu_ptr->value_ptr, "PPC"); break;
 	      case co_eHW_ARM: strcpy( menu_ptr->value_ptr, "ARM"); break;
 	      default: strcpy( menu_ptr->value_ptr, "Unknwn");

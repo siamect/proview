@@ -29,12 +29,6 @@
 #define _P_MSG_H 1
 #include <p_entry.h>
  
- 
-#ifdef __DECC
-#pragma member_alignment __save
-#pragma nomember_alignment
-#endif
- 
 #if defined(_WIN32) || defined(__osf__)
 #pragma pack(1)
 #endif
@@ -574,16 +568,10 @@ typedef struct _SBS_BS_SEQGAP {
     uint16 mot;
     uint16 channel;
     } SBS_BS_SEQGAP;
- 
- 
+
 #if defined(_WIN32) || defined(__osf__)
 #pragma pack(8)     /* restore alignment back to the defaults */
 #endif
-/*                                                                          */
-/*                                                                          */
-/*                                                                          */
-#ifdef __DECC
-#pragma member_alignment __restore
-#endif
+
 #endif  /* end P_MSG */
 /* End of P_MSG                                                             */

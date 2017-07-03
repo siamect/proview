@@ -61,13 +61,8 @@
 extern "C" {
 #endif
 
-#ifdef VAXC
-# define pwr_dExport globaldef  
-# define pwr_dImport globalref
-#else
-# define pwr_dExport  
-# define pwr_dImport extern
-#endif
+#define pwr_dExport
+#define pwr_dImport extern
 
 /* Environment variable which MUST be defined.
  * eg. export PWR_BUS_ID="300"    

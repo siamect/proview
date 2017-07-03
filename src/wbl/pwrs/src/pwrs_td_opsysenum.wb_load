@@ -48,36 +48,6 @@ SObject pwrs:Type
       Attr PgmName = "OpSysEnum"
     EndBody
     !/**
-    !  Operating system is VAXELN on VAX
-    !*/
-    Object VAX_ELN $Value
-     Body SysBody
-       Attr PgmName = "CustomBuild"
-       Attr Text = "CustomBuild"
-       Attr Value = 1
-     EndBody
-    EndObject
-    !/**
-    !  Operating system is OpenVMS on VAX
-    !*/
-    Object VAX_VMS $Value
-     Body SysBody
-       Attr PgmName = "VAX_VMS"
-       Attr Text = "OpenVMS on VAX"
-       Attr Value = 2
-     EndBody
-    EndObject
-    !/**
-    !  Operating system is OpenVMS on Alpha
-    !*/
-    Object AXP_VMS $Value
-     Body SysBody
-       Attr PgmName = "AXP_VMS"
-       Attr Text = "OpenVMS on Alpha"
-       Attr Value = 4
-     EndBody
-    EndObject
-    !/**
     !  Operating system is LynxOS on PowerPC
     !*/
     Object PPC_LYNX $Value

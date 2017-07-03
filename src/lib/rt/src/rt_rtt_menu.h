@@ -262,18 +262,6 @@ priv | RTT_MENU_NOINPUT, 0, 0, 0, 0, 0.0, 0.0},
 #define	RTT_MENUITEM_FILECOMMAND( title, filespec, command)	\
 { title, &rtt_menu_filecommand, 0, 0, NULLOI, (void *) filespec, (void *)command, 0, 0},
 
-#define	RTT_MENUITEM_VMSCOMMAND( title, command)	\
-{ title, &rtt_menu_vmscommand, 0, 0, NULLOI, (void *) command, 0, 0, 0},
-
-#define	RTT_MENUITEM_VMSCOMMAND_NOWAIT( title, command)	\
-{ title, &rtt_menu_vmscommand_nowait, 0, 0, NULLOI, (void *) command, 0, 0, 0},
-
-#define	RTT_MENUITEM_VMSCOMMANDCONF( title, command)	\
-{ title, &rtt_menu_vmscommandconf, 0, 0, NULLOI, (void *) command, 0, 0, 0},
-
-#define	RTT_MENUITEM_VMSCOMMANDHOLD( title, command)	\
-{ title, &rtt_menu_vmscommandhold, 0, 0, NULLOI, (void *) command, 0, 0, 0},
-
 #define	RTT_MENU_NO( title)	\
 { title, 0, 0, 0, NULLOI, 0, 0, 0, 0},
 

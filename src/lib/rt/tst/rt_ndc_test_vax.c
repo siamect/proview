@@ -105,8 +105,7 @@ union i3e_s_be {
 #define VAX_G_BIAS    0x401
 #define I3E_D_BIAS    0x3ff
 
-#if !defined(__vms)
-# define IBYTE0(s) (((*(int *)s) >> 0x18) & 0x000000ff) 
+# define IBYTE0(s) (((*(int *)s) >> 0x18) & 0x000000ff)
 # define IBYTE1(s) (((*(int *)s) >> 0x08) & 0x0000ff00) 
 # define IBYTE2(s) (((*(int *)s) << 0x08) & 0x00ff0000) 
 # define IBYTE3(s) (((*(int *)s) << 0x18) & 0xff000000) 
@@ -121,11 +120,6 @@ union i3e_s_be {
   (*(short *)t = (SBYTE0(s) | SBYTE1(s)))
 
 # define CONVERT_BOOL(t, s) (*(int *)t = (0 != *(int *)s))
-#else
-# define CONVERT_INT(t, s) (*(int *)t = *(int *)s)
-# define CONVERT_SHORT(t, s) (*(short *)t = *(short *)s)
-# define CONVERT_BOOL(t, s) (*(int *)t = (0 != *(int *)s))
-#endif
 
 
 
@@ -139,17 +133,10 @@ print_bin (
 
   buff[0] = '\0';
 
-#if defined (__vms)
-  for (b = 0; b < 32; b++) {
-    strcat(buff, ((*i & (1<<(31-b))) ? "1" : "0"));
-    if ((b + 1) % 8 == 0) strcat(buff, " ");
-  }
-#else
   for (b = 0; b < 32; b++) {
     strcat(buff, ((*i & (1<<b)) ? "1" : "0"));
     if ((b + 1) % 8 == 0) strcat(buff, " ");
   }
-#endif
 
   return buff;
 }
@@ -315,51 +302,6 @@ main ()
   printf("a8 ..............:% 22.10f %12e %s\n", av[7], av[7], print_bin((int *)&av[7]));
   printf("a9 ..............:% 22.10f %12e %s\n", av[8], av[8], print_bin((int *)&av[8]));
 
-#if defined(__vms)
-
-  for (i = 0; i < 10; i++) {
-    src.b_int_v[i] = i*i * 2300000;
-    printf("a_int_v[%3.3d] ..:% 12.12d %s\n", i, src.b_int_v[i], print_bin((int *)&src.b_int_v[i]));
-  }
-
-  for (i = 0; i < 100; i++) {
-    a /= b;
-    src.a_float_v[i] = a;
-    printf("a_float_v[%3.3d] :% 22.10f %12e %s\n", i, a, a, print_bin((int *)&a));
-  }        
-
-  src.a_int = 1507153392;
-  printf("a_int .........:% 12.12d %s\n", src.a_int, print_bin((int *)&src.a_int));
-
-  for (i = 0; i < 5; i++) {
-    src.a_short_v[i] = i*i * 32000;
-    printf("a_short_v[%3.3d] :% 12.12d\n", i, src.a_short_v[i]);
-  }
-
-  for (i = 0; i < 5; i++) {
-    src.a_int_v[i] = i*i * 23000000;
-    printf("a_int_v[%3.3d] ..:% 12.12d %s\n", i, src.a_int_v[i], print_bin((int *)&src.a_int_v[i]));
-  }
-
-  src.a_char = 'L';
-  printf("a_char ........: %c\n", src.a_char);
-
-  src.a_float = 550715.3392;
-  printf("a_float .......:% 22.10f %18e %s\n", src.a_float, src.a_float, print_bin((int *)&src.a_float));
-
-
-  fp = fopen("/pwr_root/src/lib/rt/tst/test_vax.dat", "wb");
-  if (fp == NULL) exit(0);
-
-  size = fwrite(av, sizeof(av), 1, fp);
-  printf("Wrote %d objects\n", size);
-  size = fwrite(&src, sizeof(src), 1, fp);
-  printf("Wrote %d objects\n", size);
-
-  fclose(fp);
-
-  exit(1);  
-#else
   fp = fopen("/view/pwr_x2_3_1/vobs/pwr_src/src/lib/rt/tst/test_vax.dat", "rb");
   if (fp == NULL) exit(0);
 
@@ -436,7 +378,5 @@ main ()
 
   fclose(fp);
 
-  exit(1);  
-
-#endif
+  exit(1);
 }

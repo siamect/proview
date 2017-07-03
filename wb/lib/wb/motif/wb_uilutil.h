@@ -87,11 +87,7 @@ extern "C" {
 If_Error_Then { vms_perror( str, status ); return( status ); }
 
 /* DECwindows macros */
-#ifdef VAXC
-#define REGARG( NAME ) { "NAME", (XtPointer) NAME }
-#else
 #define REGARG( NAME ) { #NAME, (XtPointer) NAME }
-#endif
 
 /* General procedure type definition */
 typedef void (*voidp)();

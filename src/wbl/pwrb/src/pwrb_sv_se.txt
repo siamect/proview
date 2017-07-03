@@ -4617,9 +4617,7 @@ Ds_Fast jobb laddas till nod som saknar DsFastConf objekt kommer det att
 exekvera med 10 Hz. 
 
 Ska mätdata för snabbkurvor lagras i noden måste ett Ds_Fast-jobb laddas och 
-startas i noden. Gäller det en OpenVMS-nod görs detta med hjälp av $Appl 
-objekt och för VAXELN-noder används antingen $Appl objekt eller också 
-inkluderas Ds_Fast-jobbet i processnodens EBUILD-fil. 
+startas i noden.
 @image orm_en1-68.gif
   
 @b Object graph
@@ -11255,18 +11253,12 @@ PlcPgm-objekten namn fungerar som etiketter på olika PLC program.
 PlcPgm-objekt representera både kod och data. 
 
 Olika PlcPgm-objekt med samma värde på ScanTime kommer att exekvera i 
-en och samma PLC- subprocess. VAXELN-noder kan innehålla upp till 15 
-PLC-subprocesser i ett PLC-jobb och OpenVMS-noder 1 PLC-subprocess i sitt 
-PLC-jobb. 
+en och samma PLC- subprocess.
 
 NB! PLC-subprocessen med kortaste cykeltiden, dvs. med högsta frekvensen, 
 kallas basefrekvenssubprocessen. Den hanterar också inläsning/utställning av 
 Di-, Do-, Dv- och Co-signaler anslutna till nodens lokala I/O-system. De 
-övriga subprocesserna benämns gemensamt som delfrekvenssubprocesserna. 
-
-Det betyder att en VAXELN-nod där Di-, Do-, Dv- eller Co-signaler ska 
-hanteras men där behov av egentligt PLC program saknas -- ändå behöver ett 
-dummy PlcPgm för att klara inläsning/utställning. 
+övriga subprocesserna benämns gemensamt som delfrekvenssubprocesserna.
 
 <attr>ScanTime 
 Anger, i sekunder, den nominella tiden mellan två successiva exekveringar av 

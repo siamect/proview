@@ -49,11 +49,6 @@
 #include "rt_mh_msg.h"
 #endif
 
-#ifdef __DECC
-#pragma member_alignment save
-#pragma nomember_alignment
-#endif
-
 typedef union {
   pwr_tUInt32	All;
   struct { pwr_Endian_4 (
@@ -61,9 +56,5 @@ typedef union {
     pwr_Field(pwr_tUInt16,  Prio),,
   ) } Event;
 } mh_uEventInfo;
-
-#ifdef __DECC
-#pragma member_alignment restore
-#endif
 
 #endif

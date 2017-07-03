@@ -202,8 +202,6 @@
 /*                                                                          */
 /* Define platform IDs                                                      */
 /*                                                                          */
-#define PSYM_PLATFORM_VMS_VAX 0
-#define PSYM_PLATFORM_ULTRIX_VAX 1
 #define PSYM_PLATFORM_ULTRIX_MIPS 2
 #define PSYM_PLATFORM_HPUX_HPPA 3
 #define PSYM_PLATFORM_SYSV_M88K 4
@@ -216,7 +214,6 @@
 #define PSYM_PLATFORM_MACINTOSH_M68K 11
 #define PSYM_PLATFORM_SCO_X86 12
 #define PSYM_PLATFORM_SYSV_M68K 13
-#define PSYM_PLATFORM_VMS_AXP 14
 #define PSYM_PLATFORM_UNIX 15
 #define PSYM_PLATFORM_NT_X86 16
 #define PSYM_PLATFORM_OSF1_AXP 17
@@ -289,7 +286,6 @@
 /************************************************************************** */
 /*                                                                          */
 #define PSYM_OS_TYPE_AIX 'I'
-#define PSYM_OS_TYPE_VAXELN 'E'
 #define PSYM_OS_TYPE_MACINTOSH 'A'
 #define PSYM_OS_TYPE_HPUX 'H'
 #define PSYM_OS_TYPE_IRIX 'G'
@@ -303,10 +299,8 @@
 #define PSYM_OS_TYPE_SOLARIS 'L'
 #define PSYM_OS_TYPE_SUNOS 'S'
 #define PSYM_OS_TYPE_SYSV '5'
-#define PSYM_OS_TYPE_ULTRIX_VAX 'X'
 #define PSYM_OS_TYPE_ULTRIX_MIPS 'Y'
 #define PSYM_OS_TYPE_UNIX 'U'
-#define PSYM_OS_TYPE_VMS 'V'
 #define PSYM_OS_TYPE_UNKNOWN '*'
 /*                                                                          */
 /************************************************************************** */
@@ -431,8 +425,6 @@
 /* OBSOLETE platform IDs                                                    */
 /************************************************************************** */
 /*                                                                          */
-#define PSYM_PLATFORM_VAX_VMS 0
-#define PSYM_PLATFORM_VAX_ULTRIX 1
 #define PSYM_PLATFORM_RISC_ULTRIX 2
 #define PSYM_PLATFORM_HP9000_HPUX 3
 #define PSYM_PLATFORM_MOTOROLA_VR32 4
@@ -442,7 +434,6 @@
 #define PSYM_PLATFORM_MSDOS 8
 #define PSYM_PLATFORM_RSX_PDP11 9
 #define PSYM_PLATFORM_PDP11_RSX 9
-#define PSYM_PLATFORM_VAXELN 10
 #define PSYM_PLATFORM_MACINTOSH 11
 #define PSYM_PLATFORM_SCO_UNIX 12
 #define PSYM_PLATFORM_M68K 13

@@ -31,13 +31,6 @@ Volume Profibus $ClassVolume 0.0.250.7
           Attr Value = 2
         EndBody
       EndObject
-      Object FloatVAX $Value 59 16-JAN-2006 10:08:18.34
-        Body SysBody 16-JAN-2006 10:08:18.34
-          Attr Text = "Floating Point VAX"
-          Attr PgmName = "FloatVAX"
-          Attr Value = 3
-        EndBody
-      EndObject
       Object FloatIntel $Value 60 16-JAN-2006 10:08:18.34
         Body SysBody 16-JAN-2006 10:08:18.34
           Attr Text = "Floating Point Intel"

@@ -115,11 +115,6 @@ int RTTSYS_SHOW_SYS( 	menu_ctx	ctx,
 			char		*parameter_ptr,
 			char		*objectname,
 			char		**picture);
-int RTTSYS_VMSPROC( 	menu_ctx	ctx,
-			int		event,
-			char		*parameter_ptr,
-			char		*objectname,
-			char		**picture);
 int RTTSYS_OBJECT_CELL( menu_ctx	ctx,
 			int		event,
 			char		*parameter_ptr,

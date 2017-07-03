@@ -53,19 +53,7 @@ typedef struct {
 
 
 typedef struct {
-#if defined(__vms)
-  unsigned int	aix		: 12;
-  unsigned int	reserved	: 3;
-  unsigned int	tix		: 11;
-  unsigned int	tyg		: 4;
-  unsigned int	must_be_three	: 2;
-
-  unsigned int	vid_0		: 8;
-  unsigned int	vid_1		: 8;
-  unsigned int	vid_2		: 8;
-  unsigned int	vid_3		: 8;
-
-#elif defined (__powerpc__)
+#if defined (__powerpc__)
 
   unsigned int	must_be_three	: 2;
   unsigned int	tyg		: 4;
@@ -83,12 +71,7 @@ typedef struct {
 typedef struct {
   unsigned int	oix		: 32;
 
-#if defined(__vms)
-  unsigned int	vid_0		: 8;
-  unsigned int	vid_1		: 8;
-  unsigned int	vid_2		: 8;
-  unsigned int	vid_3		: 8;
-#elif defined (__powerpc__)
+#if defined (__powerpc__)
   unsigned int	vid_3		: 8;
   unsigned int	vid_2		: 8;
   unsigned int	vid_1		: 8;
@@ -97,18 +80,7 @@ typedef struct {
 } cdh_mObjid;
 
 typedef struct {
-#if defined(__vms)
-  unsigned int	aix		: 12;
-  unsigned int	reserved	: 3;
-  unsigned int	bix		: 3;
-  unsigned int	cix		: 12;
-  unsigned int  must_be_two	: 2;
-
-  unsigned int	vid_0		: 8;
-  unsigned int	vid_1		: 8;
-  unsigned int	vid_2		: 8;
-  unsigned int	vid_3		: 8;
-#elif defined (__powerpc__)
+#if defined (__powerpc__)
   unsigned int  must_be_two	: 2;
   unsigned int	cix		: 12;
   unsigned int	bix		: 3;
@@ -128,27 +100,6 @@ typedef union {
   cdh_mClassObjid	c;
   cdh_mTypeObjid	t;
 } cdh_uObjid;
-
-
-#if 0
-static char*
-print_bin (
-  int *i
-)
-{
-  static char buff[80];
-  int b;
-
-  buff[0] = '\0';
-
-  for (b = 0; b < 32; b++) {
-    strcat(buff, ((*i & (1<<(31-b))) ? "1" : "0"));
-    if ((b + 1) % 8 == 0) strcat(buff, " ");
-  }
-
-  return buff;
-}
-#endif
 
 main ()
 {

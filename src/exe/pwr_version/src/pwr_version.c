@@ -109,8 +109,6 @@ int main (
   fprintf(fp, "\n");
   fprintf(fp, "#if defined VAX || defined __VAX\n");
   fprintf(fp, "#define pwrv_cHardware           \"VAX\"\n");
-  fprintf(fp, "#elif defined __Alpha_AXP\n");
-  fprintf(fp, "#define pwrv_cHardware           \"Alpha AXP\"\n");
   fprintf(fp, "#else\n");
   fprintf(fp, "#define pwrv_cHardware           \"Unknown Hardware\"\n");
   fprintf(fp, "#endif\n");

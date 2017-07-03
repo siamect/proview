@@ -40,39 +40,18 @@
 /* pwr_lst.h -- list macros
 */
 
-#ifndef VAXC
 #define LstType(a) \
     typedef struct s_LstLink_##a sLstLink_##a;\
     struct s_LstLink_##a { \
 	sLstLink_##a *nex;\
 	sLstLink_##a *pre;\
 	a *obj;}
-#else
-#define LstType(a) \
-    typedef struct s_LstLink_/**/a sLstLink_/**/a;\
-    struct s_LstLink_/**/a { \
-	sLstLink_/**/a *nex;\
-	sLstLink_/**/a *pre;\
-	a *obj;}
-#endif
 
-
-#ifndef VAXC
 #define LstLink(a)\
 	  sLstLink_##a
-#else
-#define LstLink(a)\
-	  sLstLink_/**/a
-#endif
 
-
-#ifndef VAXC
 #define LstHead(a)\
 	  sLstLink_##a
-#else
-#define LstHead(a)\
-	  sLstLink_/**/a
-#endif
 
 #define LstNex(p) ((p)->nex)
 #define LstPre(p) ((p)->pre)

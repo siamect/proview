@@ -131,8 +131,6 @@ typedef enum {
   co_eHW__ = 0,
   co_eHW_x86,
   co_eHW_68k,
-  co_eHW_VAX,
-  co_eHW_Alpha,
   co_eHW_PPC,
   co_eHW_x86_64,
   co_eHW_ARM,
@@ -145,11 +143,7 @@ typedef enum {
 #   define co_dHostHW co_eHW_x86_64
 #elif defined(HW_ARM) 
 #   define co_dHostHW co_eHW_ARM
-#elif defined(HW_VAX) 
-#   define co_dHostHW co_eHW_VAX
-#elif defined(HW_AXP) 
-#   define co_dHostHW co_eHW_Alpha
-#elif defined(HW_PPC) 
+#elif defined(HW_PPC)
 #   define co_dHostHW co_eHW_PPC
 #else 
 #   define co_dHostHW co_eHW__
@@ -205,10 +199,6 @@ typedef enum {
     co_eFT_ieeeS,
     co_eFT_ieeeT, /**< Not used */
     co_eFT_ieeeK, /**< Not used */
-    co_eFT_vaxF,  /**< Both for Alpha and VAX (float) */
-    co_eFT_vaxD,  /**< Never set, there are no support for double */
-    co_eFT_vaxG,  /**< Never set, there are no support for double */
-    co_eFT_vaxH,  /**< Not used */
     co_eFT_
 } co_eFT;
 

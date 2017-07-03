@@ -46,7 +46,6 @@
 * Modified              950307	Hans Werner	ELN
 *			950309  C Jurstrand	VMS
 *			950309  C Jurstrand	VMS
-*			950915  CS 		Converted to DECC compiler
 *			960215  C Jurstrand	3964R and TCP/IP
 *			960927  C Jurstrand	3964R_VNET and name for 1:st process
 *			970602	C Jurstrand	MODBUS and ADLP10

@@ -53,11 +53,7 @@ SObject pwrb:Class
 !  DsFastConf object, it will execute with 10 Hz.
 !  
 !  A Ds_Fast job has to be loaded and started in each
-!  node, where data for fast graphs should be stored. If
-!  the node is a OpenVMS node this is done by means of an
-!  Appl object and for a VAXELN node either by an Appl
-!  object or is the dsFast module included in the
-!  EBUILD-file.
+!  node, where data for fast graphs should be stored.
 !  @image orm_en1-68.gif
 !  
 ! @b Object graph

@@ -437,36 +437,4 @@ typedef struct {
 #include "rt_rtt_functions.h"
 #endif
 
-/*
-int	rtt_menu_new();
-int	rtt_menu_keys_new();
-int	rtt_menu_new_update();
-int	rtt_menu_upd_update();
-int	rtt_menu_new_upedit();
-int	rtt_menu_new_upeditperm();
-int	rtt_menu_new_sysedit();
-int	rtt_scan();
-int	rtt_menu_command();
-int	rtt_menu_commandhold();
-int	rtt_menu_vmscommand();
-int	rtt_menu_vmscommand_nowait();
-int	rtt_menu_vmscommandconf();
-int	rtt_menu_vmscommandhold();
-int	rtt_hierarchy();
-int	rtt_exit();
-int	dummy();
-int	rtt_hierarchy_child();
-int	rtt_debug_child();
-int	rtt_object_parameters();
-int	rtt_menu_parameter_set();
-int	rtt_menu_parameter_reset();
-int	rtt_menu_parameter_toggle();
-int	rtt_menu_parameter_dual_set();
-int	rtt_menu_parameter_dual_reset();
-int	rtt_menu_parameter_dual_toggle();
-int	rtt_alarm_update();
-int	rtt_edit_debug_signals();
-int	rtt_crossref_signal();
-*/
-
 #endif

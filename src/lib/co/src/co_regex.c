@@ -1760,12 +1760,6 @@ struct register_info
 	if (len > re_max_failures * MAX_NUM_FAILURE_ITEMS)		\
 	  return -2;							\
 									\
-        /* Roughly double the size of the stack.  */			\
-/* original code							\
-        stackx = (unsigned char **) alloca (2 * len			\
-                                            * sizeof (unsigned char *));\
-*/									\
-/* changed for VAXC, which doesn't have alloca */			\
         stackx = (unsigned char **) malloc (2 * len			\
                                             * sizeof (unsigned char *));\
 	if (stack_last_malloced != NULL)				\
@@ -1929,9 +1923,7 @@ re_match_2 (pbufp, string1_arg, size1, string2_arg, size2, pos, regs, mstop)
   unsigned char **stackp = stackb;
   unsigned char **stacke = &stackb[MAX_NUM_FAILURE_ITEMS * NFAILURES];
 
-#if 1	/* changed for VAXC, which doesn't have alloca */
   unsigned char **stack_last_malloced = NULL;
-#endif
 
   /* Information on the contents of registers. These are pointers into
      the input strings; they record just what was matched (on this
@@ -2095,11 +2087,9 @@ re_match_2 (pbufp, string1_arg, size1, string2_arg, size2, pos, regs, mstop)
 		    regs->end[mcnt] = regend[mcnt] - string2 + size1;
 		}
 	    }
-#if 1	/* changed for VAXC, which doesn't have alloca */
 	  if (stack_last_malloced != NULL)
 	    free(stack_last_malloced);
-#endif
-	  return d - pos - (MATCHING_IN_FIRST_STRING 
+	  return d - pos - (MATCHING_IN_FIRST_STRING
 			    ? string1 
 			    : string2 - size1);
         }
@@ -2589,10 +2579,8 @@ re_match_2 (pbufp, string1_arg, size1, string2_arg, size2, pos, regs, mstop)
 
   if (best_regs_set)
     goto restore_best_regs;
-#if 1	/* changed for VAXC, which doesn't have alloca */
   if (stack_last_malloced != NULL)
     free(stack_last_malloced);
-#endif
   return -1;         			/* Failure to match.  */
 }
 

@@ -34,14 +34,7 @@
 #include <sys/types.h>
 
 #ifndef __INTS_LOADED
- 
-#if defined(__DECC) && defined(__VMS)
-#include <ints.h>
-#ifndef __ALPHA
-typedef struct { long l[2]; } int64;
-typedef struct { unsigned long l[2]; } uint64;
-#endif
-#else
+
 #if defined(__BORLANDC__)
 #include <systypes.h>
 #else
@@ -72,7 +65,6 @@ typedef struct { unsigned long l[2]; } uint64;
 #endif /* __alpha && __osf__ */
  
 #endif /* __BORLANDC__       */
-#endif /* __DECC             */
 #endif /* __INTS_LOADED      */
  
  
@@ -115,11 +107,6 @@ typedef struct { unsigned long l[2]; } uint64;
 #endif
  
 #define	PSB		psb
- 
-#ifdef __DECC
-#pragma member_alignment __save
-#pragma member_alignment
-#endif
  
 /*                                                                          */
 #ifndef PAMS_ADDRESS_DEFINED
@@ -659,10 +646,7 @@ PAMSIMPORT int32 PAMSAPI pams_set_msg_position (
     int32      *,          /* field tag                           */
     int32      *           /* flags                               */
 );
-    
-#ifdef __DECC
-#pragma member_alignment __restore
-#endif
+
 #ifdef __cplusplus
 }
 #endif

@@ -50,9 +50,6 @@
 **************************************************************************/
 
 /*_Include filer_________________________________________________________*/
-#ifdef __DECC
-#pragma message disable GLOBALEXT
-#endif
 
 #if defined OS_POSIX
 #include <signal.h>

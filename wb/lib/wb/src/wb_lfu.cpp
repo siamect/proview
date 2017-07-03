@@ -1359,8 +1359,6 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
 	  os = *os_ptr;
 	  if ( !(os == pwr_mOpSys_CustomBuild ||
-		 os == pwr_mOpSys_VAX_VMS ||
-		 os == pwr_mOpSys_AXP_VMS ||
 		 os == pwr_mOpSys_PPC_LYNX ||
 		 os == pwr_mOpSys_X86_LYNX ||
 		 os == pwr_mOpSys_PPC_LINUX ||

@@ -840,13 +840,7 @@ static int	save_func(	edit_ctx	ctx,
 	  }
 	  else
 	  {
-            if ( cdh_NoCaseStrncmp( arg1_str, "VAX_VMS", strlen( arg1_str)) == 0)
-	      opsys = pwr_mOpSys_VAX_VMS;
-	    else if ( cdh_NoCaseStrncmp( arg1_str, "VAX_ELN", strlen( arg1_str)) == 0)
-	      opsys = pwr_mOpSys_VAX_ELN;
-	    else if ( cdh_NoCaseStrncmp( arg1_str, "AXP_VMS", strlen( arg1_str)) == 0)
-	      opsys = pwr_mOpSys_AXP_VMS;
-	    else if ( cdh_NoCaseStrncmp( arg1_str, "PPC_LYNX", strlen( arg1_str)) == 0)
+        if ( cdh_NoCaseStrncmp( arg1_str, "PPC_LYNX", strlen( arg1_str)) == 0)
 	      opsys = pwr_mOpSys_PPC_LYNX;
 	    else if ( cdh_NoCaseStrncmp( arg1_str, "X86_LYNX", strlen( arg1_str)) == 0)
 	      opsys = pwr_mOpSys_X86_LYNX;
@@ -904,13 +898,7 @@ static int	save_func(	edit_ctx	ctx,
 	    }
 	    else
 	    {
-              if ( cdh_NoCaseStrncmp( arg1_str, "VAX_VMS", strlen( arg1_str)) == 0)
-	        opsys = pwr_mOpSys_VAX_VMS;
-	      else if ( cdh_NoCaseStrncmp( arg1_str, "VAX_ELN", strlen( arg1_str)) == 0)
-	        opsys = pwr_mOpSys_VAX_ELN;
-	      else if ( cdh_NoCaseStrncmp( arg1_str, "AXP_VMS", strlen( arg1_str)) == 0)
-	        opsys = pwr_mOpSys_AXP_VMS;
-	      else if ( cdh_NoCaseStrncmp( arg1_str, "PPC_LYNX", strlen( arg1_str)) == 0)
+          if ( cdh_NoCaseStrncmp( arg1_str, "PPC_LYNX", strlen( arg1_str)) == 0)
 	        opsys = pwr_mOpSys_PPC_LYNX;
 	      else if ( cdh_NoCaseStrncmp( arg1_str, "X86_LYNX", strlen( arg1_str)) == 0)
 	        opsys = pwr_mOpSys_X86_LYNX;
@@ -1013,13 +1001,7 @@ static int	generate_func(	edit_ctx	ctx,
 	}
 	else
 	{
-          if ( cdh_NoCaseStrncmp( arg1_str, "VAX_VMS", strlen( arg1_str)) == 0)
-	    opsys = pwr_mOpSys_VAX_VMS;
-	  else if ( cdh_NoCaseStrncmp( arg1_str, "VAX_ELN", strlen( arg1_str)) == 0)
-	    opsys = pwr_mOpSys_VAX_ELN;
-	  else if ( cdh_NoCaseStrncmp( arg1_str, "AXP_VMS", strlen( arg1_str)) == 0)
-	    opsys = pwr_mOpSys_AXP_VMS;
-	  else if ( cdh_NoCaseStrncmp( arg1_str, "PPC_LYNX", strlen( arg1_str)) == 0)
+      if ( cdh_NoCaseStrncmp( arg1_str, "PPC_LYNX", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_PPC_LYNX;
 	  else if ( cdh_NoCaseStrncmp( arg1_str, "X86_LYNX", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_X86_LYNX;
@@ -1760,13 +1742,7 @@ static int	dtt_link_func(	edit_ctx	ctx,
 	}
 	else 
 	{
-          if ( cdh_NoCaseStrncmp( arg1_str, "VAX_VMS", strlen( arg1_str)) == 0)
-	    opsys = pwr_mOpSys_VAX_VMS;
-	  else if ( cdh_NoCaseStrncmp( arg1_str, "VAX_ELN", strlen( arg1_str)) == 0)
-	    opsys = pwr_mOpSys_VAX_ELN;
-	  else if ( cdh_NoCaseStrncmp( arg1_str, "AXP_VMS", strlen( arg1_str)) == 0)
-	    opsys = pwr_mOpSys_AXP_VMS;
-	  else if ( cdh_NoCaseStrncmp( arg1_str, "PPC_LYNX", strlen( arg1_str)) == 0)
+      if ( cdh_NoCaseStrncmp( arg1_str, "PPC_LYNX", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_PPC_LYNX;
 	  else if ( cdh_NoCaseStrncmp( arg1_str, "X86_LYNX", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_X86_LYNX;
@@ -1872,13 +1848,7 @@ static int	dtt_compile_func(	edit_ctx	ctx,
 	}
 	else 
 	{
-          if ( cdh_NoCaseStrncmp( arg1_str, "VAX_VMS", strlen( arg1_str)) == 0)
-	    opsys = pwr_mOpSys_VAX_VMS;
-	  else if ( cdh_NoCaseStrncmp( arg1_str, "VAX_ELN", strlen( arg1_str)) == 0)
-	    opsys = pwr_mOpSys_VAX_ELN;
-	  else if ( cdh_NoCaseStrncmp( arg1_str, "AXP_VMS", strlen( arg1_str)) == 0)
-	    opsys = pwr_mOpSys_AXP_VMS;
-	  else if ( cdh_NoCaseStrncmp( arg1_str, "PPC_LYNX", strlen( arg1_str)) == 0)
+      if ( cdh_NoCaseStrncmp( arg1_str, "PPC_LYNX", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_PPC_LYNX;
 	  else if ( cdh_NoCaseStrncmp( arg1_str, "X86_LYNX", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_X86_LYNX;
@@ -2667,58 +2637,6 @@ static int	create_func(	edit_ctx	ctx,
 	      strcpy( command, arg1_str);
 	      menu_ptr->arg1 = command;
 	    }
-	    else if ( ODD( rtt_get_qualifier( "/VMSCOMMAND", arg1_str)))
-	    {
-	      if ( arg1_str[0] == 0)
-	      {
-	        rtt_message('E',"Enter vms command");
-	        return RTT__HOLDCOMMAND;
-	      }
-	      menu_ptr->type = DTT_MENUITEM_VMSCOMMAND;
-	      /* save the command string somewhere */
-	      command = calloc(  80, sizeof( char));
-	      strcpy( command, arg1_str);
-	      menu_ptr->arg1 = command;
-	    }
-	    else if ( ODD( rtt_get_qualifier( "/VMSNOWAIT", arg1_str)))
-	    {
-	      if ( arg1_str[0] == 0)
-	      {
-	        rtt_message('E',"Enter vms command");
-	        return RTT__HOLDCOMMAND;
-	      }
-	      menu_ptr->type = DTT_MENUITEM_VMSCOMMANDNOWAIT;
-	      /* save the command string somewhere */
-	      command = calloc(  80, sizeof( char));
-	      strcpy( command, arg1_str);
-	      menu_ptr->arg1 = command;
-	    }
-	    else if ( ODD( rtt_get_qualifier( "/VMSCONFIRM", arg1_str)))
-	    {
-	      if ( arg1_str[0] == 0)
-	      {
-	        rtt_message('E',"Enter vms command");
-	        return RTT__HOLDCOMMAND;
-	      }
-	      menu_ptr->type = DTT_MENUITEM_VMSCOMMANDCONF;
-	      /* save the command string somewhere */
-	      command = calloc(  80, sizeof( char));
-	      strcpy( command, arg1_str);
-	      menu_ptr->arg1 = command;
-	    }
-	    else if ( ODD( rtt_get_qualifier( "/VMSHOLD", arg1_str)))
-	    {
-	      if ( arg1_str[0] == 0)
-	      {
-	        rtt_message('E',"Enter vms command");
-	        return RTT__HOLDCOMMAND;
-	      }
-	      menu_ptr->type = DTT_MENUITEM_VMSCOMMANDHOLD;
-	      /* save the command string somewhere */
-	      command = calloc(  80, sizeof( char));
-	      strcpy( command, arg1_str);
-	      menu_ptr->arg1 = command;
-	    }
 	    else if ( ODD( rtt_get_qualifier( "/SYSPICTURE", arg1_str)))
 	    {
 	      if ( arg1_str[0] == 0)
@@ -2914,58 +2832,6 @@ static int	create_func(	edit_ctx	ctx,
 	          return RTT__HOLDCOMMAND;
 	        }
 	        menu_ptr->type = DTT_MENUITEM_COMMANDHOLD;
-	        /* save the command string somewhere */
-	        command = calloc(  80, sizeof( char));
-	        strcpy( command, arg1_str);
-	        menu_ptr->arg1 = command;
-	      }
-	      else if ( ODD( rtt_get_qualifier( "/VMSCOMMAND", arg1_str)))
-	      {
-	        if ( arg1_str[0] == 0)
-	        {
-	          rtt_message('E',"Enter vms command");
-	          return RTT__HOLDCOMMAND;
-	        }
-	        menu_ptr->type = DTT_MENUITEM_VMSCOMMAND;
-	        /* save the command string somewhere */
-	        command = calloc(  80, sizeof( char));
-	        strcpy( command, arg1_str);
-	        menu_ptr->arg1 = command;
-	      }
-	      else if ( ODD( rtt_get_qualifier( "/VMSNOWAIT", arg1_str)))
-	      {
-	        if ( arg1_str[0] == 0)
-	        {
-	          rtt_message('E',"Enter vms command");
-	          return RTT__HOLDCOMMAND;
-	        }
-	        menu_ptr->type = DTT_MENUITEM_VMSCOMMANDNOWAIT;
-	        /* save the command string somewhere */
-	        command = calloc(  80, sizeof( char));
-	        strcpy( command, arg1_str);
-	        menu_ptr->arg1 = command;
-	      }
-	      else if ( ODD( rtt_get_qualifier( "/VMSCONFIRM", arg1_str)))
-	      {
-	        if ( arg1_str[0] == 0)
-	        {
-	          rtt_message('E',"Enter vms command");
-	          return RTT__HOLDCOMMAND;
-	        }
-	        menu_ptr->type = DTT_MENUITEM_VMSCOMMANDCONF;
-	        /* save the command string somewhere */
-	        command = calloc(  80, sizeof( char));
-	        strcpy( command, arg1_str);
-	        menu_ptr->arg1 = command;
-	      }
-	      else if ( ODD( rtt_get_qualifier( "/VMSHOLD", arg1_str)))
-	      {
-	        if ( arg1_str[0] == 0)
-	        {
-	          rtt_message('E',"Enter vms command");
-	          return RTT__HOLDCOMMAND;
-	        }
-	        menu_ptr->type = DTT_MENUITEM_VMSCOMMANDHOLD;
 	        /* save the command string somewhere */
 	        command = calloc(  80, sizeof( char));
 	        strcpy( command, arg1_str);
@@ -3755,10 +3621,6 @@ static int	modify_func(	edit_ctx	ctx,
 	      {
 	        case DTT_MENUITEM_COMMAND:
 	        case DTT_MENUITEM_COMMANDHOLD:
-	        case DTT_MENUITEM_VMSCOMMAND:
-	        case DTT_MENUITEM_VMSCOMMANDHOLD:
-	        case DTT_MENUITEM_VMSCOMMANDCONF:
-	        case DTT_MENUITEM_VMSCOMMANDNOWAIT:
 	          /* Change the command */
 	          if ( EVEN( rtt_get_qualifier( "rtt_arg1", arg1_str)))
 	          {
@@ -4036,32 +3898,6 @@ static int	dtt_show_func(	menu_ctx	ctx,
 	  return RTT__NOPICTURE;	
 	}
 
-	else if ( cdh_NoCaseStrncmp( arg1_str, "VMS", strlen( arg1_str)) == 0)
-	{
-	  /* Show the command string in arg1 */
-	  /* Check that this is a command menu item */
-	  ctx_e = (edit_ctx) ctx;
-	  if ( ctx_e->ctx_type == DTT_CTX_EDIT)
-	  {
-	    /* Edit context */
-	    rtt_message('E', "This is not a command menu item");
-	    return RTT__NOPICTURE;
-	  }
-	  menu_ptr = ctx->menu;
-	  menu_ptr += ctx->current_item;
-	  if ( !(menu_ptr->type == DTT_MENUITEM_VMSCOMMAND ||
-	  	 menu_ptr->type == DTT_MENUITEM_VMSCOMMANDNOWAIT ||
-	  	 menu_ptr->type == DTT_MENUITEM_VMSCOMMANDCONF ||
-	  	 menu_ptr->type == DTT_MENUITEM_VMSCOMMANDHOLD ))
-	  {
-	    rtt_message('E', "This is not a vms command menu item");
-	    return RTT__NOPICTURE;
-	  }
-	  sprintf( message, "VMS command: %s", (char *)menu_ptr->arg1);
-	  rtt_message('I', message);
-	  return RTT__NOPICTURE;	
-	}
-
 	else if ( cdh_NoCaseStrncmp( arg1_str, "SYSPICTURE", strlen( arg1_str)) == 0)
 	{
 	  /* Show the command string in arg1 */
@@ -4263,9 +4099,8 @@ static rtt_t_comtbl	dtt_command_table[] = {
 			{ "rtt_arg1","/TEXT", "/MENU", "/PICTURE", 
 			"/CHILD", "/EXIT", "/OBJECTHIERARCHY",
 			"/COMMAND", "/COMMANDHOLD", "/FUNCTION", "/TIME", "/FULLTIME", 
-			"/SYSPICTURE", "/OBJPICTURE", "/VMSCOMMAND",
-			"/VMSCONFIRM", "/VMSHOLD", "/VMSNOWAIT",
-			"/NAME", "/PERMPICTURE", "/KEYS", "/FILESPEC", ""}
+			"/SYSPICTURE", "/OBJPICTURE", "/NAME",
+			"/PERMPICTURE", "/KEYS", "/FILESPEC", ""}
 		},
 		{
 			"MODIFY",
@@ -5959,9 +5794,6 @@ static int	dtt_menu_item_show( 	menu_ctx	ctx,
 	  case DTT_MENUITEM_OBJPICTURE:
 	    sprintf( text, "Type:    Object picture");
 	    break;
-	  case DTT_MENUITEM_VMSCOMMAND:
-	    sprintf( text, "Type:    VMS command");
-	    break;
 	  case DTT_MENUITEM_KEYS:
 	    sprintf( text, "Type:    Function keys");
 	    break;
@@ -5970,15 +5802,6 @@ static int	dtt_menu_item_show( 	menu_ctx	ctx,
 	    break;
 	  case DTT_MENUITEM_COMMANDHOLD:
 	    sprintf( text, "Type:    Command hold");
-	    break;
-	  case DTT_MENUITEM_VMSCOMMANDHOLD:
-	    sprintf( text, "Type:    VMS command hold");
-	    break;
-	  case DTT_MENUITEM_VMSCOMMANDCONF:
-	    sprintf( text, "Type:    VMS command confirm");
-	    break;
-	  case DTT_MENUITEM_VMSCOMMANDNOWAIT:
-	    sprintf( text, "Type:    VMS command wait");
 	    break;
 	  case DTT_MENUITEM_FILESPEC:
 	    sprintf( text, "Type:    File specification");
@@ -6016,10 +5839,6 @@ static int	dtt_menu_item_show( 	menu_ctx	ctx,
 
 	  case DTT_MENUITEM_COMMAND:
 	  case DTT_MENUITEM_COMMANDHOLD:
-	  case DTT_MENUITEM_VMSCOMMAND:
-	  case DTT_MENUITEM_VMSCOMMANDHOLD:
-	  case DTT_MENUITEM_VMSCOMMANDCONF:
-	  case DTT_MENUITEM_VMSCOMMANDNOWAIT:
 	    /* Create a menu item for the command */
 	    strcpy( text, "Command: ");
 	    strncat( text, (char *)menu_ptr->arg1, sizeof(text)-strlen(text)-1);
@@ -7107,10 +6926,6 @@ static int	dtt_edit_save_one_menu(	FILE		*fout,
 	    /* Print command if this is a command item */
 	    if (( menu_ptr->type == DTT_MENUITEM_COMMAND) ||
 	        ( menu_ptr->type == DTT_MENUITEM_COMMANDHOLD) ||
-	        ( menu_ptr->type == DTT_MENUITEM_VMSCOMMAND) ||
-	        ( menu_ptr->type == DTT_MENUITEM_VMSCOMMANDNOWAIT) ||
-	        ( menu_ptr->type == DTT_MENUITEM_VMSCOMMANDCONF) ||
-	        ( menu_ptr->type == DTT_MENUITEM_VMSCOMMANDHOLD) ||
 	        ( menu_ptr->type == DTT_MENUITEM_SYSPICTURE) ||
 	        ( menu_ptr->type == DTT_MENUITEM_PIFUNCPERM) ||
 	        ( menu_ptr->type == DTT_MENUITEM_PIFUNC))
@@ -7373,26 +7188,6 @@ char		*parameter_ptr;\n\
 	    fprintf( fout_c, "RTT_MENUITEM_COMMANDHOLD(\"%s\", \"%s\")\n", 
 		menu_ptr->text, (char *) menu_ptr->arg1);	
 	  }
-	  else if ( menu_ptr->type == DTT_MENUITEM_VMSCOMMAND)
-	  {
-	    fprintf( fout_c, "RTT_MENUITEM_VMSCOMMAND(\"%s\", \"%s\")\n", 
-		menu_ptr->text, (char *) menu_ptr->arg1);	
-	  }
-	  else if ( menu_ptr->type == DTT_MENUITEM_VMSCOMMANDNOWAIT)
-	  {
-	    fprintf( fout_c, "RTT_MENUITEM_VMSCOMMAND_NOWAIT(\"%s\", \"%s\")\n", 
-		menu_ptr->text, (char *) menu_ptr->arg1);	
-	  }
-	  else if ( menu_ptr->type == DTT_MENUITEM_VMSCOMMANDCONF)
-	  {
-	    fprintf( fout_c, "RTT_MENUITEM_VMSCOMMANDCONF(\"%s\", \"%s\")\n", 
-		menu_ptr->text, (char *) menu_ptr->arg1);	
-	  }
-	  else if ( menu_ptr->type == DTT_MENUITEM_VMSCOMMANDHOLD)
-	  {
-	    fprintf( fout_c, "RTT_MENUITEM_VMSCOMMANDHOLD(\"%s\", \"%s\")\n", 
-		menu_ptr->text , (char *) menu_ptr->arg1);	
-	  }
 	  menu_ptr++;
 	}
 	if ( ctx == dtt_root_ctx)
@@ -7518,10 +7313,6 @@ static int	dtt_edit_read_one_menu(	FILE		*fin,
 	  /* If command type read the command */
 	  if (( type == DTT_MENUITEM_COMMAND) ||
 	      ( type == DTT_MENUITEM_COMMANDHOLD) ||
-	      ( type == DTT_MENUITEM_VMSCOMMAND) ||
-	      ( type == DTT_MENUITEM_VMSCOMMANDNOWAIT) ||
-	      ( type == DTT_MENUITEM_VMSCOMMANDCONF) ||
-	      ( type == DTT_MENUITEM_VMSCOMMANDHOLD) ||
 	      ( type == DTT_MENUITEM_SYSPICTURE) ||
 	      ( type == DTT_MENUITEM_PIFUNCPERM) ||
 	      ( type == DTT_MENUITEM_PIFUNC))
@@ -7562,10 +7353,6 @@ static int	dtt_edit_read_one_menu(	FILE		*fin,
 	    }
 	    else if (( type == DTT_MENUITEM_COMMAND) ||
 	    	     ( type == DTT_MENUITEM_COMMANDHOLD) ||
-	    	     ( type == DTT_MENUITEM_VMSCOMMAND) ||
-	    	     ( type == DTT_MENUITEM_VMSCOMMANDCONF) ||
-	    	     ( type == DTT_MENUITEM_VMSCOMMANDNOWAIT) ||
-	    	     ( type == DTT_MENUITEM_VMSCOMMANDHOLD) ||
 	    	     ( type == DTT_MENUITEM_SYSPICTURE))
 	    {
 	      /* Put a pointer to the command in arg1 */
@@ -7636,10 +7423,6 @@ static int	dtt_edit_read_one_menu(	FILE		*fin,
 	    }
 	    else if (( type == DTT_MENUITEM_COMMAND) ||
 	             ( type == DTT_MENUITEM_COMMANDHOLD) ||
-	             ( type == DTT_MENUITEM_VMSCOMMAND) ||
-	             ( type == DTT_MENUITEM_VMSCOMMANDCONF) ||
-	             ( type == DTT_MENUITEM_VMSCOMMANDNOWAIT) ||
-	             ( type == DTT_MENUITEM_VMSCOMMANDHOLD) ||
 	             ( type == DTT_MENUITEM_SYSPICTURE))
 	    {
 	      /* Put a pointer to the command in arg1 */
@@ -8133,14 +7916,6 @@ static int	dtt_menu_draw_item( 	menu_ctx	ctx,
 	  r_print(" c");
 	else if ( menu_ptr->type == DTT_MENUITEM_COMMANDHOLD)
 	  r_print(" ch");
-	else if ( menu_ptr->type == DTT_MENUITEM_VMSCOMMAND)
-	  r_print(" v");
-	else if ( menu_ptr->type == DTT_MENUITEM_VMSCOMMANDCONF)
-	  r_print(" vc");
-	else if ( menu_ptr->type == DTT_MENUITEM_VMSCOMMANDNOWAIT)
-	  r_print(" vn");
-	else if ( menu_ptr->type == DTT_MENUITEM_VMSCOMMANDHOLD)
-	  r_print(" vh");
 	else if ( menu_ptr->type == DTT_MENUITEM_PIFUNC)
 	  r_print(" f");
 	else if ( menu_ptr->type == DTT_MENUITEM_PIFUNCPERM)
@@ -9420,10 +9195,6 @@ static int	dtt_edit_write_menue( 	menu_ctx	ctx,
 	    /* Print command if this is a command item */
 	    if (( menu_ptr->type == DTT_MENUITEM_COMMAND) ||
 	      ( menu_ptr->type == DTT_MENUITEM_COMMANDHOLD) ||
-	      ( menu_ptr->type == DTT_MENUITEM_VMSCOMMAND) ||
-	      ( menu_ptr->type == DTT_MENUITEM_VMSCOMMANDNOWAIT) ||
-	      ( menu_ptr->type == DTT_MENUITEM_VMSCOMMANDCONF) ||
-	      ( menu_ptr->type == DTT_MENUITEM_VMSCOMMANDHOLD) ||
 	      ( menu_ptr->type == DTT_MENUITEM_SYSPICTURE) ||
 	      ( menu_ptr->type == DTT_MENUITEM_PIFUNCPERM) ||
 	      ( menu_ptr->type == DTT_MENUITEM_PIFUNC))
@@ -9462,10 +9233,6 @@ static int	dtt_edit_write_menue( 	menu_ctx	ctx,
 	  /* Print command if this is a command item */
 	  if (( menu_ptr->type == DTT_MENUITEM_COMMAND) ||
 	      ( menu_ptr->type == DTT_MENUITEM_COMMANDHOLD) ||
-	      ( menu_ptr->type == DTT_MENUITEM_VMSCOMMAND) ||
-	      ( menu_ptr->type == DTT_MENUITEM_VMSCOMMANDNOWAIT) ||
-	      ( menu_ptr->type == DTT_MENUITEM_VMSCOMMANDCONF) ||
-	      ( menu_ptr->type == DTT_MENUITEM_VMSCOMMANDHOLD) ||
 	      ( menu_ptr->type == DTT_MENUITEM_SYSPICTURE) ||
 	      ( menu_ptr->type == DTT_MENUITEM_PIFUNCPERM) ||
 	      ( menu_ptr->type == DTT_MENUITEM_PIFUNC))
@@ -9531,10 +9298,6 @@ static int	dtt_edit_write_one_menu(	FILE		*fout,
 	  /* Print command if this is a command item */
 	  if (( menu_ptr->type == DTT_MENUITEM_COMMAND) ||
 	      ( menu_ptr->type == DTT_MENUITEM_COMMANDHOLD) ||
-	      ( menu_ptr->type == DTT_MENUITEM_VMSCOMMAND) ||
-	      ( menu_ptr->type == DTT_MENUITEM_VMSCOMMANDNOWAIT) ||
-	      ( menu_ptr->type == DTT_MENUITEM_VMSCOMMANDCONF) ||
-	      ( menu_ptr->type == DTT_MENUITEM_VMSCOMMANDHOLD) ||
 	      ( menu_ptr->type == DTT_MENUITEM_SYSPICTURE) ||
 	      ( menu_ptr->type == DTT_MENUITEM_PIFUNCPERM) ||
 	      ( menu_ptr->type == DTT_MENUITEM_PIFUNC))
@@ -9627,10 +9390,6 @@ static int	dtt_edit_include_menue(	menu_ctx	ctx,
 	  /* If command type read the command */
 	  if (( type == DTT_MENUITEM_COMMAND) ||
 	      ( type == DTT_MENUITEM_COMMANDHOLD) ||
-	      ( type == DTT_MENUITEM_VMSCOMMAND) ||
-	      ( type == DTT_MENUITEM_VMSCOMMANDNOWAIT) ||
-	      ( type == DTT_MENUITEM_VMSCOMMANDCONF) ||
-	      ( type == DTT_MENUITEM_VMSCOMMANDHOLD) ||
 	      ( type == DTT_MENUITEM_SYSPICTURE) ||
 	      ( type == DTT_MENUITEM_PIFUNCPERM) ||
 	      ( type == DTT_MENUITEM_PIFUNC))
@@ -9667,10 +9426,6 @@ static int	dtt_edit_include_menue(	menu_ctx	ctx,
 	    }
 	    else if (( type == DTT_MENUITEM_COMMAND) ||
 	             ( type == DTT_MENUITEM_COMMANDHOLD) ||
-	             ( type == DTT_MENUITEM_VMSCOMMAND) ||
-	             ( type == DTT_MENUITEM_VMSCOMMANDCONF) ||
-	             ( type == DTT_MENUITEM_VMSCOMMANDNOWAIT) ||
-	             ( type == DTT_MENUITEM_VMSCOMMANDHOLD) ||
 	             ( type == DTT_MENUITEM_SYSPICTURE))
 	    {
 	      /* Put a pointer to the command in arg1 */
@@ -9781,10 +9536,6 @@ static int	dtt_edit_include_one_menu( 	FILE		*fin,
 	  /* If command type read the command */
 	  if (( type == DTT_MENUITEM_COMMAND) ||
 	      ( type == DTT_MENUITEM_COMMANDHOLD) ||
-	      ( type == DTT_MENUITEM_VMSCOMMAND) ||
-	      ( type == DTT_MENUITEM_VMSCOMMANDNOWAIT) ||
-	      ( type == DTT_MENUITEM_VMSCOMMANDCONF) ||
-	      ( type == DTT_MENUITEM_VMSCOMMANDHOLD) ||
 	      ( type == DTT_MENUITEM_SYSPICTURE) ||
 	      ( type == DTT_MENUITEM_PIFUNCPERM) ||
 	      ( type == DTT_MENUITEM_PIFUNC))
@@ -9822,10 +9573,6 @@ static int	dtt_edit_include_one_menu( 	FILE		*fin,
 	    }
 	    else if (( type == DTT_MENUITEM_COMMAND) ||
 	    	     ( type == DTT_MENUITEM_COMMANDHOLD) ||
-	    	     ( type == DTT_MENUITEM_VMSCOMMAND) ||
-	    	     ( type == DTT_MENUITEM_VMSCOMMANDCONF) ||
-	    	     ( type == DTT_MENUITEM_VMSCOMMANDNOWAIT) ||
-	    	     ( type == DTT_MENUITEM_VMSCOMMANDHOLD) ||
 	    	     ( type == DTT_MENUITEM_SYSPICTURE))
 	    {
 	      /* Put a pointer to the command in arg1 */
@@ -9898,10 +9645,6 @@ static int	dtt_edit_include_one_menu( 	FILE		*fin,
 	    }
 	    else if (( type == DTT_MENUITEM_COMMAND) ||
 	             ( type == DTT_MENUITEM_COMMANDHOLD) ||
-	             ( type == DTT_MENUITEM_VMSCOMMAND) ||
-	             ( type == DTT_MENUITEM_VMSCOMMANDCONF) ||
-	             ( type == DTT_MENUITEM_VMSCOMMANDNOWAIT) ||
-	             ( type == DTT_MENUITEM_VMSCOMMANDHOLD) ||
 	             ( type == DTT_MENUITEM_SYSPICTURE))
 	    {
 	      /* Put a pointer to the command in arg1 */
@@ -10568,9 +10311,6 @@ static char *dtt_opsys_to_name( int opsys)
 	static char name[20];
 	switch (opsys)
 	{
-	  case pwr_mOpSys_VAX_ELN: strcpy( name, "VAX_ELN"); break;
-	  case pwr_mOpSys_VAX_VMS: strcpy( name, "VAX_VMS"); break;
-	  case pwr_mOpSys_AXP_VMS: strcpy( name, "AXP_VMS"); break;
 	  case pwr_mOpSys_PPC_LYNX: strcpy( name, "PPC_LYNX"); break;
 	  case pwr_mOpSys_X86_LYNX: strcpy( name, "X86_LYNX"); break;
 	  case pwr_mOpSys_PPC_LINUX: strcpy( name, "PPC_LINUX"); break;

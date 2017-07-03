@@ -314,8 +314,6 @@ int XNav::show_nethandler()
         case co_eHW_x86: strcpy( t.elem[t.elem_cnt].fix_str, "x86"); break;
         case co_eHW_x86_64: strcpy( t.elem[t.elem_cnt].fix_str, "x86_64"); break;
         case co_eHW_68k: strcpy( t.elem[t.elem_cnt].fix_str, "68k"); break;
-        case co_eHW_VAX: strcpy( t.elem[t.elem_cnt].fix_str, "VAX"); break;
-        case co_eHW_Alpha: strcpy( t.elem[t.elem_cnt].fix_str, "AXP"); break;
         case co_eHW_PPC: strcpy( t.elem[t.elem_cnt].fix_str, "PPC"); break;
         case co_eHW_ARM: strcpy( t.elem[t.elem_cnt].fix_str, "ARM"); break;
         default: strcpy( t.elem[t.elem_cnt].fix_str, "-");
