@@ -1044,6 +1044,7 @@ void EvList::event_block( mh_sBlock *msg)
     char name[80];
     flow_eDest	dest_code;
     brow_tNode	dest_node;
+    ItemAlarm	*dest;
 
     sts = gdh_ObjidToName( msg->Outunit, name, sizeof(name), 
 			     cdh_mName_path | cdh_mName_object);
@@ -1068,8 +1069,15 @@ void EvList::event_block( mh_sBlock *msg)
     }
     strcat( text, name);
 
-    dest_code = flow_eDest_IntoLast;
-    dest_node = NULL;
+    sts = get_destination( net_NetTimeToTime( &event->Info.EventTime), (void **)&dest);
+    if ( EVEN(sts)) {
+      dest_code = flow_eDest_IntoLast;
+      dest_node = NULL;
+    }
+    else {
+      dest_code = flow_eDest_Before;
+      dest_node = dest->node;
+    }
 
     ItemAlarm *item = new ItemAlarm( this, "Alarm",
 				     net_NetTimeToTime( &event->Info.EventTime), text, 
