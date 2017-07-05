@@ -55,6 +55,7 @@
 #include "pwr_privilege.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_math.h"
 #include "co_time.h"
 #include "co_syi.h"
 #include "co_msg.h"
@@ -73,16 +74,6 @@
 #include "rt_ini_event.h"
 #include "rt_qcom.h"
 #include "rt_qcom_msg.h"
-
-
-/* Nice functions */
-#define ODD(a)	(((int)(a) & 1) != 0)
-#define EVEN(a)	(((int)(a) & 1) == 0)
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#ifndef __ALPHA
-#define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
-#endif
 
 #define RTT_HIDE_ELEMENTS	2
 
@@ -1791,7 +1782,7 @@ int	rtt_menu_configure( menu_ctx	ctx)
 	  menu_ptr++;
 	}
 
-	item_maxsize = min( item_maxsize, RTT_MENU_MAXCOLS);
+	item_maxsize = MIN( item_maxsize, RTT_MENU_MAXCOLS);
 	ctx->max_item_size = item_maxsize;
 
 	/* Calculate rows and columns and pages */
@@ -1818,13 +1809,13 @@ int	rtt_menu_configure( menu_ctx	ctx)
 	  ctx->rows = ctx->no_items / ctx->cols + 1;
 	  ctx->col_size = (RTT_MENU_MAXCOLS / ctx->cols + item_maxsize + 2)/2;
 	  ctx->left_margin = (RTT_MENU_MAXCOLS - ctx->col_size * ctx->cols)/2;
-	  ctx->left_margin = max( ctx->left_margin, 2);
+	  ctx->left_margin = MAX( ctx->left_margin, 2);
 	  ctx->up_margin = (RTT_MENU_MAXROWS - ctx->rows ) / 2;
 	}	  
 	else
 	{
 	  /* Just one page */
-	  ctx->page_len = max( RTT_MENU_MAXCOLS / (item_maxsize + 2), 1)
+	  ctx->page_len = MAX( RTT_MENU_MAXCOLS / (item_maxsize + 2), 1)
 		* RTT_MENU_MAXROWS;
 	  ctx->no_pages = (ctx->no_items - 1) / ctx->page_len + 1;
 	  ctx->cols = ctx->page_len / RTT_MENU_MAXROWS;
@@ -1832,7 +1823,7 @@ int	rtt_menu_configure( menu_ctx	ctx)
 	  ctx->rows = (ctx->page_len - 1)/ ctx->cols + 1;
 	  ctx->col_size = (RTT_MENU_MAXCOLS / ctx->cols + item_maxsize + 2)/2;
 	  ctx->left_margin = (RTT_MENU_MAXCOLS - ctx->col_size * ctx->cols)/2;
-	  ctx->left_margin = max( ctx->left_margin, 2);
+	  ctx->left_margin = MAX( ctx->left_margin, 2);
 	  ctx->up_margin = (RTT_MENU_MAXROWS - ctx->rows ) / 2;
 	}	  
 
@@ -5334,7 +5325,7 @@ static int	rtt_print_value(
 	    }
 	  }
 	}
-	memcpy( old_value, value_ptr, min(size, 80));
+	memcpy( old_value, value_ptr, MIN(size, 80));
 
 	return RTT__SUCCESS;
 }
@@ -5973,7 +5964,7 @@ static int	rtt_edit_print_value(
 	    rtt_char_inverse_end();
 	}
 	memcpy( menu_ptr->old_value, menu_ptr->value_ptr,
-			min(menu_ptr->size, 80));
+			MIN(menu_ptr->size, 80));
 
 	return RTT__SUCCESS;
 }
@@ -7580,7 +7571,7 @@ static int	rtt_set_value(
 	    if ( strlen( value_str) >= menu_ptr->size)
 	      return RTT__STRINGTOLONG;
 	    strncpy( buffer_ptr, value_str, 
-			min(menu_ptr->size, sizeof(buffer)));
+			MIN(menu_ptr->size, sizeof(buffer)));
 	    break;
 	  }
 	  case pwr_eType_ObjDId:

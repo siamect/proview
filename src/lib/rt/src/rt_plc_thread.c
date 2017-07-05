@@ -56,6 +56,7 @@
 #include "pwr.h"
 #include "pwr_class.h"
 #include "pwr_baseclasses.h"
+#include "co_math.h"
 #include "co_time.h"
 #include "co_time_msg.h"
 #include "co_cdh.h"
@@ -77,8 +78,6 @@
 #include "rt_c_plcthread.h"
 #include "rt_c_node.h"
 
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
 #define MIN_SCANTIME 1e-9
 
 /* When you use pthread_cond_timedwait is the shortest timeout always > 1 CLK_TCK
@@ -766,7 +765,7 @@ scan (
   if (++tp->loops == 2)
     tp->log = TRUE;
 
-  if ( tp->loops % max( 1, (int)(1.0 / tp->PlcThread->ScanTime)) == 0)
+  if ( tp->loops % MAX( 1, (int)(1.0 / tp->PlcThread->ScanTime)) == 0)
     pwrs_Node_SupEmon();
 }
 

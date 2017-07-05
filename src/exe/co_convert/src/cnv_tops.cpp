@@ -53,6 +53,7 @@ extern "C" {
 
 #include "cnv_tops.h"
 #include "co_lng.h"
+#include "co_math.h"
 #include "cnv_image.h"
 
 using namespace std;
@@ -133,15 +134,6 @@ end\n\
 /Courier-ISOLatin1 exch definefont pop\n\
 1.000000 1.000000 scale\n\
 save\n"
-
-/* Nice functions */
-#define ODD(a)	(((int)(a) & 1) != 0)
-#define EVEN(a)	(((int)(a) & 1) == 0)
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#ifndef __ALPHA
-#define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
-#endif
 
 void CnvToPs::cnv_text( char *to, const char *from)
 {

@@ -321,14 +321,14 @@ void GrowTable::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
 
   idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
-  idx = glmax( 0, idx);
-  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
 
   int text_idx = int( w->zoom_factor_y / w->base_zoom_factor * (text_size +4) - 4);
   double tsize = w->zoom_factor_y / w->base_zoom_factor * (8+2*text_size);
-  text_idx = glmin( text_idx, DRAW_TYPE_SIZE-1);
+  text_idx = MIN( text_idx, DRAW_TYPE_SIZE-1);
   int header_text_idx = int( w->zoom_factor_y / w->base_zoom_factor * (header_text_size +4) - 4);
-  header_text_idx = glmin( header_text_idx, DRAW_TYPE_SIZE-1);
+  header_text_idx = MIN( header_text_idx, DRAW_TYPE_SIZE-1);
   double header_tsize = w->zoom_factor_y / w->base_zoom_factor * (8+2*header_text_size);
 
   int ll_x, ll_y, ur_x, ur_y;
@@ -346,10 +346,10 @@ void GrowTable::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
     dx2 = trf.x( t, ur.x, ur.y);
     dy2 = trf.y( t, ur.x, ur.y);
   }
-  dx1 = glmin( dx1, dx2);
-  dx2 = glmax( dx1, dx2);
-  dy1 = glmin( dy1, dy2);
-  dy2 = glmax( dy1, dy2);
+  dx1 = MIN( dx1, dx2);
+  dx2 = MAX( dx1, dx2);
+  dy1 = MIN( dy1, dy2);
+  dy2 = MAX( dy1, dy2);
 
   if ( v_scrollbar) {
     if ( !h_scrollbar)
@@ -708,8 +708,8 @@ void GrowTable::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
   idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
 
-  idx = glmax( 0, idx);
-  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
   if (!t)
@@ -726,10 +726,10 @@ void GrowTable::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
     x2 = int( trf.x( t, ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
     y2 = int( trf.y( t, ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
   }
-  ll_x = glmin( x1, x2);
-  ur_x = glmax( x1, x2);
-  ll_y = glmin( y1, y2);
-  ur_y = glmax( y1, y2);
+  ll_x = MIN( x1, x2);
+  ur_x = MAX( x1, x2);
+  ll_y = MIN( y1, y2);
+  ur_y = MAX( y1, y2);
 
   w->set_draw_buffer_only();
   ctx->gdraw->rect_erase( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, idx);
@@ -745,8 +745,8 @@ void GrowTable::draw_brief( GlowWind *w, GlowTransform *t, int highlight, int ho
   int idx;
   idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
 
-  idx = glmax( 0, idx);
-  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
   if (!t) {
@@ -761,10 +761,10 @@ void GrowTable::draw_brief( GlowWind *w, GlowTransform *t, int highlight, int ho
     x2 = int( trf.x( t, ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
     y2 = int( trf.y( t, ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
   }
-  ll_x = glmin( x1, x2);
-  ur_x = glmax( x1, x2);
-  ll_y = glmin( y1, y2);
-  ur_y = glmax( y1, y2);
+  ll_x = MIN( x1, x2);
+  ur_x = MAX( x1, x2);
+  ll_y = MIN( y1, y2);
+  ur_y = MAX( y1, y2);
 
   if ( fill)
     ctx->gdraw->fill_rect( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, fill_drawtype);
@@ -876,10 +876,10 @@ void GrowTable::export_javabean( GlowTransform *t, void *node,
     y2 = trf.y( t, ur.x, ur.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
   }
 
-  ll_x = glmin( x1, x2);
-  ur_x = glmax( x1, x2);
-  ll_y = glmin( y1, y2);
-  ur_y = glmax( y1, y2);
+  ll_x = MIN( x1, x2);
+  ur_x = MAX( x1, x2);
+  ll_y = MIN( y1, y2);
+  ur_y = MAX( y1, y2);
 
   for ( int i = 0; i < columns; i++)
     cwidth[i] = column_width[i] * ctx->mw.zoom_factor_x;
@@ -1295,10 +1295,10 @@ int GrowTable::make_cell_visible( int column, int row)
   int table_size = int((o_ur_y - o_ll_y) / row_height);
   if ( cell_y_low < o_ll_y - row_height/20)
     // scroll_y = cell_y_low - o_ll_y;
-    scroll_y = glmin( cell_y_low - o_ll_y, - int( table_size/3) * row_height);
+    scroll_y = MIN( cell_y_low - o_ll_y, - int( table_size/3) * row_height);
   else if ( cell_y_high > o_ur_y + row_height/20)
     // scroll_y = cell_y_high - o_ur_y;
-    scroll_y = glmax( cell_y_high - o_ur_y, int( table_size/3) * row_height); 
+    scroll_y = MAX( cell_y_high - o_ur_y, int( table_size/3) * row_height);
   
   if ( scroll_x != 0 && horizontal_scrollbar) {
     h_value += scroll_x;

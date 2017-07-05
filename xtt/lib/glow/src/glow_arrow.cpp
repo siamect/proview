@@ -41,13 +41,11 @@
 #include <float.h>
 #include <math.h>
 
+#include "co_math.h"
+
 #include "glow.h"
 #include "glow_arrow.h"
 #include "glow_draw.h"
-
-#define glmax(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define glmin(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-
 
 GlowArrow::GlowArrow( GrowCtx *glow_ctx, double x1, double y1, double x2, 
 	double y2, double w, double l, glow_eDrawType d_type) : 
@@ -185,8 +183,8 @@ void GlowArrow::draw( GlowWind *w, void *pos, int highlight, int hot, void *node
   }
   int idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
-  idx = glmax( 0, idx);
-  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   ctx->gdraw->arrow( w,
 	p_dest_x + ((GlowPoint *)pos)->z_x - w->offset_x, 
 	p_dest_y + ((GlowPoint *)pos)->z_y - w->offset_y, 
@@ -221,8 +219,8 @@ void GlowArrow::erase( GlowWind *w, void *pos, int hot, void *node)
   }
   int idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
-  idx = glmax( 0, idx);
-  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   ctx->gdraw->arrow_erase( w,
 	p_dest_x + ((GlowPoint *)pos)->z_x - w->offset_x, 
 	p_dest_y + ((GlowPoint *)pos)->z_y - w->offset_y, 

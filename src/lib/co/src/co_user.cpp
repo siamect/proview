@@ -34,8 +34,6 @@
  * General Public License plus this exception.
  **/
 
-#define EVEN(sts) ((sts % 2) == 0)
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <float.h>

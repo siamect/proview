@@ -224,7 +224,7 @@ rndc_ConvertData (
           np->os == gdbroot->my_node->os && np->fm.b.bo == gdbroot->my_node->fm.b.bo)) {
       if (tp != sp)
         memcpy(tp, sp, *size);
-      return TRUE;
+      return 1;
   }
   
   /* Find attribute.  */

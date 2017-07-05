@@ -54,19 +54,11 @@ extern "C" {
 #include "co_lng.h"
 #include "co_nav_help.h"
 #include "cnv_ctx.h"
+#include "co_math.h"
 #include "cnv_readxtthelp.h"
 #include "cnv_xtthelptohtml.h"
 
 #define CNV_TAB 18
-
-/* Nice functions */
-#define ODD(a)	(((int)(a) & 1) != 0)
-#define EVEN(a)	(((int)(a) & 1) == 0)
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#ifndef __ALPHA
-#define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
-#endif
 
 static int replace_url_symbols( const pwr_tURL in, pwr_tURL out);
 static int find_symbol( char *name, char *value);

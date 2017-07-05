@@ -1073,37 +1073,37 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
 
         {
           int delta_x, delta_y;
-          delta_y = delta_x = glmax( abs(x - select_rect_start_x),
-		       abs(y - select_rect_start_y));
+          delta_y = delta_x = MAX( ABS(x - select_rect_start_x),
+		       ABS(y - select_rect_start_y));
           if ( x < select_rect_start_x)
             delta_x = - delta_x;
           if ( y < select_rect_start_y)
             delta_y = - delta_y;
 
-          draw_ll_x = glmin( select_rect_ll_x, min( select_rect_start_x, select_rect_start_x + delta_x));
-          draw_ll_y = glmin( select_rect_ll_y, min( select_rect_start_y, select_rect_start_y + delta_y));
-          draw_ur_x = glmax( select_rect_ur_x, max( select_rect_start_x, select_rect_start_x + delta_x));
-          draw_ur_y = glmax( select_rect_ur_y, max( select_rect_start_y, select_rect_start_y + delta_y));
+          draw_ll_x = MIN( select_rect_ll_x, MIN( select_rect_start_x, select_rect_start_x + delta_x));
+          draw_ll_y = MIN( select_rect_ll_y, MIN( select_rect_start_y, select_rect_start_y + delta_y));
+          draw_ur_x = MAX( select_rect_ur_x, MAX( select_rect_start_x, select_rect_start_x + delta_x));
+          draw_ur_y = MAX( select_rect_ur_y, MAX( select_rect_start_y, select_rect_start_y + delta_y));
 
-          select_rect_ll_x = glmin( select_rect_start_x,
+          select_rect_ll_x = MIN( select_rect_start_x,
 				  select_rect_start_x + delta_x);
-          select_rect_ll_y = glmin( select_rect_start_y, 
+          select_rect_ll_y = MIN( select_rect_start_y,
 				  select_rect_start_y + delta_y);
-          select_rect_ur_x = glmax( select_rect_start_x, 
+          select_rect_ur_x = MAX( select_rect_start_x,
 				  select_rect_start_x + delta_x);
-          select_rect_ur_y = glmax( select_rect_start_y, 
+          select_rect_ur_y = MAX( select_rect_start_y,
 				  select_rect_start_y + delta_y);
         }
         else {
-          draw_ll_x = glmin( min( x, select_rect_start_x), select_rect_ll_x);
-          draw_ll_y = glmin( min( y, select_rect_start_y), select_rect_ll_y);
-          draw_ur_x = glmax( max( x, select_rect_start_x), select_rect_ur_x);
-          draw_ur_y = glmax( max( y, select_rect_start_y), select_rect_ur_y);
+          draw_ll_x = MIN( MIN( x, select_rect_start_x), select_rect_ll_x);
+          draw_ll_y = MIN( MIN( y, select_rect_start_y), select_rect_ll_y);
+          draw_ur_x = MAX( MAX( x, select_rect_start_x), select_rect_ur_x);
+          draw_ur_y = MAX( MAX( y, select_rect_start_y), select_rect_ur_y);
 
-          select_rect_ll_x = glmin( x, select_rect_start_x);
-          select_rect_ll_y = glmin( y, select_rect_start_y); 
-          select_rect_ur_x = glmax( x, select_rect_start_x);
-          select_rect_ur_y = glmax( y, select_rect_start_y); 
+          select_rect_ll_x = MIN( x, select_rect_start_x);
+          select_rect_ll_y = MIN( y, select_rect_start_y);
+          select_rect_ur_x = MAX( x, select_rect_start_x);
+          select_rect_ur_y = MAX( y, select_rect_start_y);
         }
         draw( &mw, draw_ll_x - 1, draw_ll_y - 1, draw_ur_x + 1, draw_ur_y + 1);
 
@@ -1132,7 +1132,7 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
 	    scale_y = double(y - select_rect_stored_ll_y) /
 		(select_rect_start_y - select_rect_stored_ll_y);
             if ( scale_equal) {
-              scale = glmax( fabs(scale_x), fabs(scale_y));
+              scale = MAX( fabs(scale_x), fabs(scale_y));
               if ( scale_x >= 0)
                 scale_x = scale;
               else
@@ -1192,7 +1192,7 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
 	    scale_y = double(select_rect_stored_ur_y - y) /
 		(select_rect_stored_ur_y - select_rect_start_y);
             if ( scale_equal) {
-              scale = glmax( fabs(scale_x), fabs(scale_y));
+              scale = MAX( fabs(scale_x), fabs(scale_y));
               if ( scale_x >= 0)
                 scale_x = scale;
               else
@@ -1274,7 +1274,7 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
 	    scale_y = double(y - select_rect_stored_ll_y) /
 		( select_rect_start_y - select_rect_stored_ll_y);
             if ( scale_equal) {
-              scale = glmax( fabs(scale_x), fabs(scale_y));
+              scale = MAX( fabs(scale_x), fabs(scale_y));
               if ( scale_x >= 0)
                 scale_x = scale;
               else
@@ -1334,7 +1334,7 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
 	    scale_y = double(select_rect_stored_ur_y - y) /
 		(select_rect_stored_ur_y - select_rect_start_y);
             if ( scale_equal) {
-              scale = glmax( fabs(scale_x), fabs(scale_y));
+              scale = MAX( fabs(scale_x), fabs(scale_y));
               if ( scale_x >= 0)
                 scale_x = scale;
               else
@@ -1372,10 +1372,10 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
 
         modified = 1;
 
-        select_rect_ll_x = int( glmin( x2, x1));
-        select_rect_ll_y = int( glmin( y2, y1)); 
-        select_rect_ur_x = int( glmax( x2, x1));
-        select_rect_ur_y = int( glmax( y2, y1)); 
+        select_rect_ll_x = int( MIN( x2, x1));
+        select_rect_ll_y = int( MIN( y2, y1));
+        select_rect_ur_x = int( MAX( x2, x1));
+        select_rect_ur_y = int( MAX( y2, y1));
 
         draw( &mw, select_rect_ll_x, select_rect_ll_y,
 	  select_rect_ur_x, select_rect_ur_y);
@@ -1682,27 +1682,27 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
               edit_mode == grow_eMode_Circle))
         {
           int delta_x, delta_y;
-          delta_y = delta_x = glmax( abs(x - select_rect_start_x),
-		       abs(y - select_rect_start_y));
+          delta_y = delta_x = MAX( ABS(x - select_rect_start_x),
+		       ABS(y - select_rect_start_y));
           if ( x < select_rect_start_x)
             delta_x = - delta_x;
           if ( y < select_rect_start_y)
             delta_y = - delta_y;
 
           select_rect_ll_x = 
-	    glmin( select_rect_start_x, select_rect_start_x + delta_x);
+	    MIN( select_rect_start_x, select_rect_start_x + delta_x);
           select_rect_ll_y = 
-	    glmin( select_rect_start_y, select_rect_start_y + delta_y);
+	    MIN( select_rect_start_y, select_rect_start_y + delta_y);
           select_rect_ur_x = 
-	    glmax( select_rect_start_x, select_rect_start_x + delta_x);
+	    MAX( select_rect_start_x, select_rect_start_x + delta_x);
           select_rect_ur_y = 
-	    glmax( select_rect_start_y, select_rect_start_y + delta_y);
+	    MAX( select_rect_start_y, select_rect_start_y + delta_y);
         }
         else {
-          select_rect_ll_x = glmin( x, select_rect_start_x);
-          select_rect_ll_y = glmin( y, select_rect_start_y); 
-          select_rect_ur_x = glmax( x, select_rect_start_x);
-          select_rect_ur_y = glmax( y, select_rect_start_y);
+          select_rect_ll_x = MIN( x, select_rect_start_x);
+          select_rect_ll_y = MIN( y, select_rect_start_y);
+          select_rect_ur_x = MAX( x, select_rect_start_x);
+          select_rect_ur_y = MAX( y, select_rect_start_y);
         }
 
         draw( &mw, select_rect_ll_x, select_rect_ll_y,
@@ -2935,7 +2935,7 @@ void GrowCtx::set_background( glow_eDrawType color)
         gdraw->set_background( &mw, color, 0);
         return;
       }
-      scale = glmin( double(mw.window_width) / width, double(mw.window_height)/height);
+      scale = MIN( double(mw.window_width) / width, double(mw.window_height)/height);
       i1->set_scale( scale, scale, 0, 0, glow_eScaleType_LowerLeft);     
     }
     gdraw->set_background( &mw, color, i1->pixmap);
@@ -3033,7 +3033,7 @@ void GrowCtx::set_default_layout()
     return;
 
   gdraw->get_window_size( &mw, &mw.window_width, &mw.window_height);
-  mw.zoom_factor_x = glmin( mw.window_width / (x1 - x0),
+  mw.zoom_factor_x = MIN( mw.window_width / (x1 - x0),
 	mw.window_height / (y1 - y0));
   mw.zoom_factor_y = mw.zoom_factor_x;
   mw.offset_x = int( x0 * mw.zoom_factor_x);

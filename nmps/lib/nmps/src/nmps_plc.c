@@ -44,19 +44,12 @@
 #include "pwr_baseclasses.h"
 #include "pwr_nmpsclasses.h"
 #include "co_cdh.h"
+#include "co_math.h"
 #include "rt_gdh.h"
 #include "rt_plc.h"
 #include "rt_nmps_lock.h"
 #include "nmps.h"
 #include "rs_nmps_msg.h"
-
-#define ODD(a)	(((int)(a) & 1) != 0)
-#define EVEN(a)	(((int)(a) & 1) == 0)
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#ifndef __ALPHA
-#define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
-#endif
 
 #define	NMPS_OPTYPE_FRONT	0
 #define	NMPS_OPTYPE_BACK	1

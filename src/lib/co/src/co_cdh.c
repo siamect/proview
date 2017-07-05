@@ -53,6 +53,7 @@
 #include "pwr_class.h"
 #include "co_cdh_msg.h"
 #include "co_cdh.h"
+#include "co_math.h"
 #include "co_time.h"
 
 /*! \file co_cdh.c

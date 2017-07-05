@@ -236,19 +236,19 @@ int goen_create_nodetype_m16(
   points_at_right = (outputpoints != 0);
 
   f_height  = 3 * f_repeat +
-	       (co_max(inputpoints,outputpoints)-1)*f_repeat;
+	       (MAX(inputpoints,outputpoints)-1)*f_repeat;
 
   classname_width = strlen( graphbody->graphname) * f_strlength;
-  f_width = co_max( f_strlength * 4 + co_max( classname_width, annot_width[0]),
+  f_width = MAX( f_strlength * 4 + MAX( classname_width, annot_width[0]),
 			 f_defwidth + f_strlength * 2);
   if ( annot_count >= 2)
-    f_width = co_max( f_width, f_strlength * 4 + annot_width[1]);
+    f_width = MAX( f_width, f_strlength * 4 + annot_width[1]);
 
   if ( annot_count >= 3)
-    f_width = co_max( f_width, f_strlength * 4 + annot_width[2]);
+    f_width = MAX( f_width, f_strlength * 4 + annot_width[2]);
 
   f_namepos = f_width/2.0 - classname_width/2;
-  //f_width = co_max( f_strlength * (2 + node_width), f_defwidth);
+  //f_width = MAX( f_strlength * (2 + node_width), f_defwidth);
   //f_namepos = f_width/2.0 - strlen( graphbody->graphname)*
   //			      f_strlength/2.0;
 
@@ -564,8 +564,8 @@ int goen_get_point_info_m16( WGre *grectx, pwr_sGraphPlcNode *graphbody,
 	points_at_left = (inputpoints != 0);
 	points_at_right = (outputpoints != 0);
 
-	f_height  = (co_max(inputpoints,outputpoints) + 2)*f_repeat;
-	f_width = co_max( f_strlength * (2 + node_width), f_defwidth);
+	f_height  = (MAX(inputpoints,outputpoints) + 2)*f_repeat;
+	f_width = MAX( f_strlength * (2 + node_width), f_defwidth);
 
 	points_top = 0;
 	points_bottom = 0;

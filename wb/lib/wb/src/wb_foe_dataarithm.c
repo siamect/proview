@@ -43,21 +43,10 @@
 #include <ctype.h>
 
 #include "pwr.h"
+#include "co_math.h"
 
 #include "wb_foe_dataarithm.h"
 #include "wb_foe_msg.h"
-
-#ifndef max
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#endif
-
-#ifndef min
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#endif
-
-#ifndef abs
-#define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
-#endif
 
 typedef struct dataa_s_ctx	*dataa_ctx;
 

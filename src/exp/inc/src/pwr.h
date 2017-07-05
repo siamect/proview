@@ -609,16 +609,6 @@ static const pwr_tDeltaTime pwr_cDtMin      = PWR_DTTIME_MIN;
 
 /* Gereral macro definitions  */
 
-#ifndef MIN
-//! Return the smallest of two values
-#define MIN(a,b) (((a)<(b))?(a):(b))
-#endif
-
-#ifndef MAX
-//! Return the largest of two values
-#define MAX(a,b) (((a)>(b))?(a):(b))
-#endif
-
 #ifndef ODD
 //! Check if value is odd
 #define ODD(a)	(((int)(a) & 1) != 0)

@@ -258,7 +258,7 @@ void GrowAxisArc::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, v
   glow_eDrawType drawtype;
   int text_idx = int( w->zoom_factor_y / w->base_zoom_factor * (text_size +4) - 4);
   double tsize = w->zoom_factor_y / w->base_zoom_factor * (8+2*text_size);
-  text_idx = glmin( text_idx, DRAW_TYPE_SIZE-1);
+  text_idx = MIN( text_idx, DRAW_TYPE_SIZE-1);
 
   if ( node && ((GrowNode *)node)->line_width)
     idx = int( w->zoom_factor_y / w->base_zoom_factor * 
@@ -267,8 +267,8 @@ void GrowAxisArc::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, v
     idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
 
-  idx = glmax( 0, idx);
-  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y, xt, yt;
 
   if (!t) {
@@ -286,10 +286,10 @@ void GrowAxisArc::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, v
     rotation = (trf.rot( t) / 360 - floor( trf.rot( t) / 360)) * 360;
   }
 
-  ll_x = glmin( x1, x2);
-  ur_x = glmax( x1, x2);
-  ll_y = glmin( y1, y2);
-  ur_y = glmax( y1, y2);
+  ll_x = MIN( x1, x2);
+  ur_x = MAX( x1, x2);
+  ll_y = MIN( y1, y2);
+  ur_y = MAX( y1, y2);
   drawtype = ctx->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
 				highlight, (GrowNode *)colornode, 0);
 
@@ -306,7 +306,7 @@ void GrowAxisArc::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, v
     else 
       format_text( text, format, min_value + increment);
     ctx->gdraw->get_text_extent( text, strlen(text), text_drawtype,
-				 glmax( 0, text_idx), glow_eFont_Helvetica, 
+				 MAX( 0, text_idx), glow_eFont_Helvetica,
 				 &z_width, &z_height, &z_descent, tsize, 0);
 
     // z_descent=0;
@@ -337,7 +337,7 @@ void GrowAxisArc::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, v
 	       ((increment > 0 && i == lines - 1) || (increment < 0 && i == 0)))) {
 	  format_text( text, format, min_value + i * increment);
 	  ctx->gdraw->get_text_extent( text, strlen(text), text_drawtype,
-				       glmax( 0, text_idx), glow_eFont_Helvetica, 
+				       MAX( 0, text_idx), glow_eFont_Helvetica,
 				       &z_width, &z_height, &z_descent, tsize, 0);
 	  
 	  if ( i == lines - 1 && angle1 == 0 && angle2 == 180) {
@@ -383,8 +383,8 @@ void GrowAxisArc::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
   else
     idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
-  idx = glmax( 0, idx);
-  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
 
   if (!t) {
     x1 = int( trf.x( ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
@@ -401,10 +401,10 @@ void GrowAxisArc::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
     rotation = int( trf.rot( t));
   }
 
-  ll_x = glmin( x1, x2);
-  ur_x = glmax( x1, x2);
-  ll_y = glmin( y1, y2);
-  ur_y = glmax( y1, y2);
+  ll_x = MIN( x1, x2);
+  ur_x = MAX( x1, x2);
+  ll_y = MIN( y1, y2);
+  ur_y = MAX( y1, y2);
 
   w->set_draw_buffer_only();
   ctx->gdraw->arc_erase( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
@@ -572,9 +572,9 @@ void GrowAxisArc::set_range( double minval, double maxval, int keep_settings)
     int di;
     int horizontal = ( rotation < 45 || (rotation > 135 && rotation < 225) || rotation > 315) ? 0 : 1;
     if ( horizontal)
-      len = abs( x2 - x1);
+      len = ABS( x2 - x1);
     else
-      len = abs( y2 - y1);
+      len = ABS( y2 - y1);
 
     if ( len < 150)
       lix = 0;
@@ -598,7 +598,7 @@ void GrowAxisArc::set_range( double minval, double maxval, int keep_settings)
 	valuequotient = rdata[lix][di-1].vvalq;
     }
 
-    double m = glmax(fabs(maxval),fabs(minval)); 
+    double m = MAX(fabs(maxval),fabs(minval));
     switch ( lix) {
     case 0: {
       if ( m < 0.01)
@@ -657,7 +657,7 @@ void GrowAxisArc::export_javabean( GlowTransform *t, void *node,
   double rotation;
   int bold;
   int idx = int( ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (text_size +4) - 4);
-  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
 
   bold = (text_drawtype == glow_eDrawType_TextHelveticaBold);
 
@@ -676,10 +676,10 @@ void GrowAxisArc::export_javabean( GlowTransform *t, void *node,
     y2 = trf.y( t, ur.x, ur.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
   }
 
-  ll_x = glmin( x1, x2);
-  ur_x = glmax( x1, x2);
-  ll_y = glmin( y1, y2);
-  ur_y = glmax( y1, y2);
+  ll_x = MIN( x1, x2);
+  ur_x = MAX( x1, x2);
+  ll_y = MIN( y1, y2);
+  ur_y = MAX( y1, y2);
 
   if ( t)
     rotation = (trf.rot( t) / 360 - floor( trf.rot( t) / 360)) * 360;

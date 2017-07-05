@@ -60,15 +60,6 @@
 #include "co_dcli.h"
 #include "co_dcli_msg.h"
 
-/*_Globala variabler______________________________________________________*/
-
-/*_Local proceduer________________________________________________________*/
-
-/* Globala procedurer_____________________________________________________*/
-
-#define ODD(a)	(((int)(a) & 1) != 0)
-#define EVEN(a)	(((int)(a) & 1) == 0)
-
 /* Search for one or several files.
 *  The file name can contain wildcard, *.
 *  Should be called for the first time with new = DCLI_DIR_SEARCH_INIT.

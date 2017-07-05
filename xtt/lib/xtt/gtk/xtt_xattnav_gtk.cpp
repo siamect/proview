@@ -40,6 +40,7 @@
 #include <stdlib.h>
 
 #include "co_cdh.h"
+#include "co_math.h"
 #include "co_time.h"
 #include "pwr_baseclasses.h"
 #include "rt_xatt_msg.h"
@@ -57,9 +58,6 @@
 #include "xtt_item.h"
 #include "pwr_privilege.h"
 #include "cow_wow_gtk.h"
-
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
 
 //
 // Create the navigator widget

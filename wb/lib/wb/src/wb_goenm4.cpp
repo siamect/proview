@@ -746,14 +746,14 @@ int goen_get_location_point_m4( WGre *grectx, pwr_sGraphPlcNode *graphbody,
 		(goe_point_info.direction == CON_LEFT) ||
 		(goe_point_info.direction == CON_RIGHT) )
 	  {
-	    y_max = max( y_max, goe_point_info.loc.y );
+	    y_max = MAX( y_max, goe_point_info.loc.y );
 	    y_found = 1;
 	  }
 	  if ( (goe_point_info.direction == CON_CENTER) ||
 		(goe_point_info.direction == CON_UP) ||
 		(goe_point_info.direction == CON_DOWN) )
 	  {
-	    x_min = min( x_min, goe_point_info.loc.x );
+	    x_min = MIN( x_min, goe_point_info.loc.x );
 	    x_found = 1;
 	  }
 	  i++;

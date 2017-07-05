@@ -122,11 +122,11 @@ void GrowTrend::configure_curves()
     curve_cnt = 2;
 #endif
 
-  no_of_points = glmax( 2, no_of_points);
+  no_of_points = MAX( 2, no_of_points);
   points = no_of_points;
   if ( fill_curve)
     points += 2;
-  curve_width = glmin( DRAW_TYPE_SIZE, glmax( 1, curve_width));
+  curve_width = MIN( DRAW_TYPE_SIZE, MAX( 1, curve_width));
 
   pointarray = (glow_sPoint *) calloc( points, sizeof(glow_sPoint));
   point_p = pointarray;
@@ -470,8 +470,8 @@ void GrowTrend::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
       idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
     idx += hot;
   }
-  idx = glmax( 0, idx);
-  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
   if (!t) {
@@ -487,10 +487,10 @@ void GrowTrend::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
     y2 = int( trf.y( t, ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
   }
 
-  ll_x = glmin( x1, x2);
-  ur_x = glmax( x1, x2);
-  ll_y = glmin( y1, y2);
-  ur_y = glmax( y1, y2);
+  ll_x = MIN( x1, x2);
+  ur_x = MAX( x1, x2);
+  ll_y = MIN( y1, y2);
+  ur_y = MAX( y1, y2);
   if ( fill)
   {
     glow_eGradient grad = gradient;
@@ -693,8 +693,8 @@ void GrowTrend::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
       idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
     idx += hot;
   }
-  idx = glmax( 0, idx);
-  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
   if (!t) {
@@ -709,10 +709,10 @@ void GrowTrend::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
     x2 = int( trf.x( t, ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
     y2 = int( trf.y( t, ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
   }
-  ll_x = glmin( x1, x2);
-  ur_x = glmax( x1, x2);
-  ll_y = glmin( y1, y2);
-  ur_y = glmax( y1, y2);
+  ll_x = MIN( x1, x2);
+  ur_x = MAX( x1, x2);
+  ll_y = MIN( y1, y2);
+  ur_y = MAX( y1, y2);
 
   w->set_draw_buffer_only();
   if ( border)
@@ -785,7 +785,7 @@ void GrowTrend::add_value( double value, int idx)
     curve_value = ur.y - (value - y_min_value[idx]) / 
 	(y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
 
-  curve_value = glmax( ll.y, glmin( curve_value, ur.y));
+  curve_value = MAX( ll.y, MIN( curve_value, ur.y));
   if ( !fill)
     erase( &ctx->mw);
   if ( !fill_curve)
@@ -941,10 +941,10 @@ void GrowTrend::export_javabean( GlowTransform *t, void *node,
     y2 = trf.y( t, ur.x, ur.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
   }
 
-  ll_x = glmin( x1, x2);
-  ur_x = glmax( x1, x2);
-  ll_y = glmin( y1, y2);
-  ur_y = glmax( y1, y2);
+  ll_x = MIN( x1, x2);
+  ur_x = MAX( x1, x2);
+  ll_y = MIN( y1, y2);
+  ur_y = MAX( y1, y2);
 
   if ( t)
     rotation = (trf.rot( t) / 360 - floor( trf.rot( t) / 360)) * 360;
@@ -1015,11 +1015,11 @@ void GrowTrend::set_data( double *data[3], int data_curves, int data_points)
   int	i, j, idx;
 
   curve_cnt = data_curves - 1;
-  no_of_points = glmax( 2, no_of_points);
-  points = cpoints = glmin( no_of_points, data_points);
+  no_of_points = MAX( 2, no_of_points);
+  points = cpoints = MIN( no_of_points, data_points);
   if ( fill_curve)
     cpoints += 2;
-  curve_width = glmin( DRAW_TYPE_SIZE, glmax( 1, curve_width));
+  curve_width = MIN( DRAW_TYPE_SIZE, MAX( 1, curve_width));
 
   if ( fabs( data[0][points - 1] - data[0][0]) < DBL_EPSILON)
     return;
@@ -1035,7 +1035,7 @@ void GrowTrend::set_data( double *data[3], int data_curves, int data_points)
 	  point_p->y = ur.y - (data[j+1][idx] - y_min_value[j]) / 
 	      (y_max_value[j] - y_min_value[j]) * (ur.y - ll.y);
 
-	point_p->y = glmax( ll.y, glmin( point_p->y, ur.y));	
+	point_p->y = MAX( ll.y, MIN( point_p->y, ur.y));
 	point_p->x = ll.x + (data[0][idx] - data[0][0]) / (data[0][points - 1] - data[0][0]) *
 	  (ur.x - ll.x);
       }
@@ -1055,7 +1055,7 @@ void GrowTrend::set_data( double *data[3], int data_curves, int data_points)
 	    point_p->y = ur.y - (data[j+1][idx] - y_min_value[j]) / 
 	      (y_max_value[j] - y_min_value[j]) * (ur.y - ll.y);
 
-	  point_p->y = glmax( ll.y, glmin( point_p->y, ur.y));	
+	  point_p->y = MAX( ll.y, MIN( point_p->y, ur.y));
 	  point_p->x = ll.x + (data[0][idx] - data[0][0]) / (data[0][points - 1] - data[0][0]) *
 	    (ur.x - ll.x);
 	}

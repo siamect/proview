@@ -43,6 +43,7 @@
 
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_math.h"
 #include "co_time.h"
 #include "co_msg.h"
 #include "flow.h"
@@ -75,9 +76,6 @@
 #include "xnav_bitmap_weblink18.h"
 #include "xnav_bitmap_weblink20.h"
 #include "xnav_bitmap_weblink24.h"
-
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
 
 static int help_cmp_items( const void *node1, const void *node2);
 

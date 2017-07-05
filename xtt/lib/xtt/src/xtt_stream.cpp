@@ -483,7 +483,7 @@ void XttCameraControlVapix::area_zoom( int x, int y, int width, int height, int 
   if ( width == 0 || height == 0)
     return;
 
-  fzoom = glmin( (float)window_width/width, (float)window_height/height);
+  fzoom = MIN( (float)window_width/width, (float)window_height/height);
   zoom = 100 * fzoom;
   if ( zoom > 9999)
     zoom = 9999;

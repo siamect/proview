@@ -2357,7 +2357,7 @@ void FlowCtx::scroll( int delta_x, int delta_y)
 
   move_widgets( delta_x, delta_y);
 
-  if ( window_width <= abs( delta_x) || window_height <= abs( delta_y) )
+  if ( window_width <= ABS( delta_x) || window_height <= ABS( delta_y) )
   {
     // Entirely new area
     clear();

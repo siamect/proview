@@ -95,7 +95,7 @@
   @aref iabs IAbs
 */
 #define IAbs_exec(object, in)\
-    object->ActVal = abs( in);
+    object->ActVal = ABS( in);
 
 /*_*
   @aref sin Sin

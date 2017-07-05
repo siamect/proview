@@ -86,6 +86,7 @@ extern "C" {
 #include "flow_x.h"
 #include "xtt_trace_motif.h"
 #include "cow_mrm_util.h"
+#include "co_math.h"
 #include "co_lng.h"
 #include "co_error.h"
 #include "cow_xhelp.h"
@@ -106,9 +107,6 @@ extern "C" {
 #include "xtt_op_motif.h"
 #include "xtt_hist_motif.h"
 #include "ge_curve_motif.h"
-
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
 
 //
 // Create the navigator widget

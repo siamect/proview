@@ -183,7 +183,7 @@ static unsigned int Receive()
   int sts;
   int nbr_of_bytes_read = 0;
   unsigned char telegram[512];
-  char search_remtrans = FALSE;
+  char search_remtrans = false;
   remtrans_item *remtrans;
  
   fd_set read_fd;
@@ -251,7 +251,7 @@ static unsigned int Receive()
       if ( EVEN(sts) )
       {
         remtrans->objp->ErrCount++;
-        return (FALSE);
+        return false;
       }
     }
 
@@ -259,7 +259,7 @@ static unsigned int Receive()
     {
       /* No corresponding RemTrans object found */
       rn_serial->ErrCount++;
-      return (FALSE);
+      return false;
     }
   }
 

@@ -54,6 +54,7 @@
 #include "rt_net.h"
 #include "rt_sub.h"
 #include "co_cdh.h"
+#include "co_math.h"
 #include "co_time.h"
 #include "rt_io_base.h"
 #include "rt_io_util.h"
@@ -75,15 +76,6 @@ RTT_RTTSYSDB_START
 RTT_RTTSYSDB_CONTINUE
 #include "dtt_appl_rttsys_m.rdb2"
 RTT_RTTSYSDB_END
-
-/* Nice functions */
-#define ODD(a)	(((int)(a) & 1) != 0)
-#define EVEN(a)	(((int)(a) & 1) == 0)
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#ifndef __ALPHA
-#define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
-#endif
 
 #define IF_NOGDH_RETURN \
 if ( !rtt_gdh_started)\
@@ -660,7 +652,7 @@ int RTTSYS_SHOW_SUBSRV( menu_ctx	ctx,
         menu_ptr->value_ptr = (char *) RTT_ERASE;
         menu_ptr++;
       }
-      SHOW_SUBSRV_MAXPAGE = max( 1, (k - 1)/ SHOW_SUBSRV_PAGESIZE + 1);
+      SHOW_SUBSRV_MAXPAGE = MAX( 1, (k - 1)/ SHOW_SUBSRV_PAGESIZE + 1);
 
       SHOW_SUBSRV_COUNTER = k;
 
@@ -701,12 +693,12 @@ int RTTSYS_SHOW_SUBSRV( menu_ctx	ctx,
       if ( event == RTT_APPL_PREVPAGE)
       {
         page--;
-        page = max( page, 0);
+        page = MAX( page, 0);
       }
       else if ( event == RTT_APPL_NEXTPAGE)
       {
         page++;
-        page = min( page, SHOW_SUBSRV_MAXPAGE - 1);
+        page = MIN( page, SHOW_SUBSRV_MAXPAGE - 1);
       }
       else if ( event == RTT_APPL_INIT)
         page = 0;
@@ -772,7 +764,7 @@ int RTTSYS_SHOW_SUBSRV( menu_ctx	ctx,
         menu_ptr->value_ptr = (char *) RTT_ERASE;
         menu_ptr++;
       }
-      SHOW_SUBSRV_MAXPAGE = max( 1, (k - 1)/ SHOW_SUBSRV_PAGESIZE + 1);
+      SHOW_SUBSRV_MAXPAGE = MAX( 1, (k - 1)/ SHOW_SUBSRV_PAGESIZE + 1);
 
       SHOW_SUBSRV_COUNTER = k;
 
@@ -916,7 +908,7 @@ int RTTSYS_SHOW_SUBCLI( menu_ctx	ctx,
         strcpy( menu_ptr->value_ptr, "");
         menu_ptr++;
       }
-      SHOW_SUBCLI_MAXPAGE = max( 1, (k - 1)/ SHOW_SUBCLI_PAGESIZE + 1);
+      SHOW_SUBCLI_MAXPAGE = MAX( 1, (k - 1)/ SHOW_SUBCLI_PAGESIZE + 1);
 
       SHOW_SUBCLI_LOCAL = 
 	gdbroot->my_node->subc_lc;
@@ -956,12 +948,12 @@ int RTTSYS_SHOW_SUBCLI( menu_ctx	ctx,
       if ( event == RTT_APPL_PREVPAGE)
       {
         page--;
-        page = max( page, 0);
+        page = MAX( page, 0);
       }
       else if ( event == RTT_APPL_NEXTPAGE)
       {
         page++;
-        page = min( page, SHOW_SUBCLI_MAXPAGE - 1);
+        page = MIN( page, SHOW_SUBCLI_MAXPAGE - 1);
       }
       else if ( event == RTT_APPL_INIT)
         page = 0;
@@ -1043,7 +1035,7 @@ int RTTSYS_SHOW_SUBCLI( menu_ctx	ctx,
         strcpy( menu_ptr->value_ptr, "");
         menu_ptr++;
       }
-      SHOW_SUBCLI_MAXPAGE = max( 1, (k - 1)/ SHOW_SUBCLI_PAGESIZE + 1);
+      SHOW_SUBCLI_MAXPAGE = MAX( 1, (k - 1)/ SHOW_SUBCLI_PAGESIZE + 1);
 
       break;
 
@@ -1221,7 +1213,7 @@ int RTTSYS_SHOW_NODES( 	menu_ctx	ctx,
         * (pwr_tInt32 *) (menu_ptr->value_ptr) = 0;
         menu_ptr++;
       }
-      SHOW_NODES_MAXPAGE = max( 1, (k - 1)/ SHOW_NODES_PAGESIZE + 1);
+      SHOW_NODES_MAXPAGE = MAX( 1, (k - 1)/ SHOW_NODES_PAGESIZE + 1);
 
       return RTT__SUCCESS;
 
@@ -1255,12 +1247,12 @@ int RTTSYS_SHOW_NODES( 	menu_ctx	ctx,
       if ( event == RTT_APPL_PREVPAGE)
       {
         page--;
-        page = max( page, 0);
+        page = MAX( page, 0);
       }
       else if ( event == RTT_APPL_NEXTPAGE)
       {
         page++;
-        page = min( page, SHOW_NODES_MAXPAGE - 1);
+        page = MIN( page, SHOW_NODES_MAXPAGE - 1);
       }
       else if ( event == RTT_APPL_INIT)
         page = 0;
@@ -1387,7 +1379,7 @@ int RTTSYS_SHOW_NODES( 	menu_ctx	ctx,
         * (pwr_tInt32 *) (menu_ptr->value_ptr) = 0;
         menu_ptr++;
       }
-      SHOW_NODES_MAXPAGE = max( 1, (k - 1)/ SHOW_NODES_PAGESIZE + 1);
+      SHOW_NODES_MAXPAGE = MAX( 1, (k - 1)/ SHOW_NODES_PAGESIZE + 1);
 
       /* Executor info */
 
@@ -2552,7 +2544,7 @@ int RTTSYS_GRAFCET( 	menu_ctx	ctx,
   if ( event == RTT_APPL_PREVPAGE)
   {
     grafcet_page--;
-    grafcet_page = max( grafcet_page, 0);
+    grafcet_page = MAX( grafcet_page, 0);
     GRAFCET_PAGE = grafcet_page + 1;
     menulist = (rtt_t_menu_upd *) ctx->menu;
     menu_ptr = menulist;
@@ -2590,7 +2582,7 @@ int RTTSYS_GRAFCET( 	menu_ctx	ctx,
   if ( event == RTT_APPL_NEXTPAGE)
   {
     grafcet_page++;
-    grafcet_page = min( grafcet_page, GRAFCET_MAXPAGE - 1);
+    grafcet_page = MIN( grafcet_page, GRAFCET_MAXPAGE - 1);
     GRAFCET_PAGE = grafcet_page + 1;
     menulist = (rtt_t_menu_upd *) ctx->menu;
     menu_ptr = menulist;
@@ -2687,7 +2679,7 @@ int RTTSYS_GRAFCET( 	menu_ctx	ctx,
     menulist = (rtt_t_menu_upd *) ctx->menu;
     menu_ptr = menulist;
     for ( i = grafcet_page * GRAFCET_PAGESIZE; 
-	  i < min( plclist_count, (grafcet_page + 1) * GRAFCET_PAGESIZE) ; i++)
+	  i < MIN( plclist_count, (grafcet_page + 1) * GRAFCET_PAGESIZE) ; i++)
     {
       /* Start RTTSYS_GRAFCET_PLC with PF2 */
       plclist_ptr = plclist + i;
@@ -2701,7 +2693,7 @@ int RTTSYS_GRAFCET( 	menu_ctx	ctx,
       menu_ptr->arg4 = (void *) &RTTSYS_GRAFCET_PLC;
       menu_ptr++;
     }
-    GRAFCET_MAXPAGE = max( 1, (plclist_count - 1)/ GRAFCET_PAGESIZE + 1);
+    GRAFCET_MAXPAGE = MAX( 1, (plclist_count - 1)/ GRAFCET_PAGESIZE + 1);
   }
   /**********************************************************
   *	Exit of the picture
@@ -2736,7 +2728,7 @@ int RTTSYS_GRAFCET( 	menu_ctx	ctx,
     menu_ptr = menulist;
     plclist_ptr = plclist + grafcet_page * GRAFCET_PAGESIZE;
     for ( i = grafcet_page * GRAFCET_PAGESIZE; 
-	  i < min( plclist_count, (grafcet_page + 1) * GRAFCET_PAGESIZE) ; i++)
+	  i < MIN( plclist_count, (grafcet_page + 1) * GRAFCET_PAGESIZE) ; i++)
     {
       initsteplist_ptr = plclist_ptr->initsteps;
       active = 1;
@@ -2965,7 +2957,7 @@ int RTTSYS_GRAFCET_PLC( 	menu_ctx	ctx,
   if ( event == RTT_APPL_PREVPAGE)
   {
     page--;
-    page = max( page, 0);
+    page = MAX( page, 0);
     GRAFCET_PLC_PAGE = page + 1;
     return RTT__SUCCESS;
   }
@@ -2975,7 +2967,7 @@ int RTTSYS_GRAFCET_PLC( 	menu_ctx	ctx,
   if ( event == RTT_APPL_NEXTPAGE)
   {
     page++;
-    page = min( page, GRAFCET_PLC_MAXPAGE -1);
+    page = MIN( page, GRAFCET_PLC_MAXPAGE -1);
     GRAFCET_PLC_PAGE = page + 1;
     return RTT__SUCCESS;
   }
@@ -3246,7 +3238,7 @@ int RTTSYS_GRAFCET_PLC( 	menu_ctx	ctx,
       }
       plclist_ptr++;
       GRAFCET_PLC_MAXPAGE = 
-	max( GRAFCET_PLC_MAXPAGE, max( 1, i / (GRAFCET_PLC_PAGESIZE - 1) + 1));
+	MAX( GRAFCET_PLC_MAXPAGE, MAX( 1, i / (GRAFCET_PLC_PAGESIZE - 1) + 1));
     }
   }
 
@@ -3314,7 +3306,7 @@ int RTTSYS_PLCPGM( 	menu_ctx	ctx,
   if ( event == RTT_APPL_PREVPAGE)
   {
     page--;
-    page = max( page, 0);
+    page = MAX( page, 0);
     PLCPGM_PAGE = page + 1;
     return RTT__SUCCESS;
   }
@@ -3324,7 +3316,7 @@ int RTTSYS_PLCPGM( 	menu_ctx	ctx,
   if ( event == RTT_APPL_NEXTPAGE)
   {
     page++;
-    page = min( page, PLCPGM_MAXPAGE - 1);
+    page = MIN( page, PLCPGM_MAXPAGE - 1);
     PLCPGM_PAGE = page + 1;
     return RTT__SUCCESS;
   }
@@ -3346,7 +3338,7 @@ int RTTSYS_PLCPGM( 	menu_ctx	ctx,
     menu_ptr = menulist;
     plclist_ptr = plclist;
     for ( i = page * PLCPGM_PAGESIZE; 
-	  i < min( plclist_count, (page + 1) * PLCPGM_PAGESIZE) ; i++)
+	  i < MIN( plclist_count, (page + 1) * PLCPGM_PAGESIZE) ; i++)
     {
       /* Define PF buttons and Return */
       menu_ptr->func = &rtt_hierarchy_child;
@@ -3361,7 +3353,7 @@ int RTTSYS_PLCPGM( 	menu_ctx	ctx,
       menu_ptr++;
       plclist_ptr++;
     }
-    PLCPGM_MAXPAGE = max( 1, (plclist_count - 1)/ PLCPGM_PAGESIZE + 1);
+    PLCPGM_MAXPAGE = MAX( 1, (plclist_count - 1)/ PLCPGM_PAGESIZE + 1);
   }
   /**********************************************************
   *	Exit of the picture
@@ -3380,7 +3372,7 @@ int RTTSYS_PLCPGM( 	menu_ctx	ctx,
     menu_ptr = menulist;
     plclist_ptr = plclist + page * PLCPGM_PAGESIZE;
     for ( i = page * PLCPGM_PAGESIZE;
-	  i < min( plclist_count, (page + 1) * PLCPGM_PAGESIZE) ; i++)
+	  i < MIN( plclist_count, (page + 1) * PLCPGM_PAGESIZE) ; i++)
     {
       menu_ptr->func = &rtt_hierarchy_child;
       menu_ptr->func2 = &rtt_edit_debug_signals;
@@ -3592,7 +3584,7 @@ static int rttsys_thread_update( menu_ctx		ctx,
     menu_ptr = menulist;
     objectlist_ptr = objectlist + page * THREAD_PAGESIZE;
     for ( i = page * THREAD_PAGESIZE; 
-	  i < min( objectlist_count, (page + 1) * THREAD_PAGESIZE) ; i++)
+	  i < MIN( objectlist_count, (page + 1) * THREAD_PAGESIZE) ; i++)
     {
       strncpy( menu_ptr->value_ptr, objectlist_ptr->name, sizeof(Thread_Line1));
 
@@ -3709,7 +3701,7 @@ int RTTSYS_PLCTHREAD(	menu_ctx	ctx,
   if ( event == RTT_APPL_PREVPAGE)
   {
     page--;
-    page = max( page, 0);
+    page = MAX( page, 0);
     THREAD_PAGE = page + 1;
     rttsys_thread_update( ctx, objectlist, objectlist_count, page);
     return RTT__SUCCESS;
@@ -3720,7 +3712,7 @@ int RTTSYS_PLCTHREAD(	menu_ctx	ctx,
   if ( event == RTT_APPL_NEXTPAGE)
   {
     page++;
-    page = min( page, THREAD_MAXPAGE - 1);
+    page = MIN( page, THREAD_MAXPAGE - 1);
     THREAD_PAGE = page + 1;
     rttsys_thread_update( ctx, objectlist, objectlist_count, page);
     return RTT__SUCCESS;
@@ -3743,7 +3735,7 @@ int RTTSYS_PLCTHREAD(	menu_ctx	ctx,
     rttsys_steplist_bubblesort( objectlist, objectlist_count);
 
     rttsys_thread_update( ctx, objectlist, objectlist_count, page);
-    THREAD_MAXPAGE = max( 1, (objectlist_count - 1)/ THREAD_PAGESIZE + 1);
+    THREAD_MAXPAGE = MAX( 1, (objectlist_count - 1)/ THREAD_PAGESIZE + 1);
   }
   /**********************************************************
   *	Exit of the picture
@@ -3820,7 +3812,7 @@ static int rttsys_pid_update( 	menu_ctx		ctx,
     menu_ptr = menulist;
     objectlist_ptr = objectlist + page * PID_PAGESIZE * 2;
     for ( i = page * PID_PAGESIZE; 
-	  i < min( objectlist_count, (page + 1) * PID_PAGESIZE) ; i++)
+	  i < MIN( objectlist_count, (page + 1) * PID_PAGESIZE) ; i++)
     {
       strncpy( menu_ptr->value_ptr, objectlist_ptr->name,
 		sizeof( PID_LINE1));
@@ -4000,7 +3992,7 @@ int RTTSYS_PID( 	menu_ctx	ctx,
   if ( event == RTT_APPL_PREVPAGE)
   {
     page--;
-    page = max( page, 0);
+    page = MAX( page, 0);
     PID_PAGE = page + 1;
     rttsys_pid_update( ctx, objectlist, objectlist_count, page);
     return RTT__SUCCESS;
@@ -4011,7 +4003,7 @@ int RTTSYS_PID( 	menu_ctx	ctx,
   if ( event == RTT_APPL_NEXTPAGE)
   {
     page++;
-    page = min( page, PID_MAXPAGE - 1);
+    page = MIN( page, PID_MAXPAGE - 1);
     PID_PAGE = page + 1;
     rttsys_pid_update( ctx, objectlist, objectlist_count, page);
     return RTT__SUCCESS;
@@ -4035,7 +4027,7 @@ int RTTSYS_PID( 	menu_ctx	ctx,
 /*    rttsys_steplist_bubblesort( objectlist, objectlist_count);
 */
     rttsys_pid_update( ctx, objectlist, objectlist_count, page);
-    PID_MAXPAGE = max( 1, (objectlist_count - 1)/ PID_PAGESIZE + 1);
+    PID_MAXPAGE = MAX( 1, (objectlist_count - 1)/ PID_PAGESIZE + 1);
   }
   /**********************************************************
   *	Exit of the picture
@@ -4124,7 +4116,7 @@ int RTTSYS_LOGGING( 	menu_ctx	ctx,
   if ( event == RTT_APPL_PREVPAGE)
   {
     logging_page--;
-    logging_page = max( logging_page, 0);
+    logging_page = MAX( logging_page, 0);
   }
   /**********************************************************
   *	Next page
@@ -4132,7 +4124,7 @@ int RTTSYS_LOGGING( 	menu_ctx	ctx,
   if ( event == RTT_APPL_NEXTPAGE)
   {
     logging_page++;
-    logging_page = min( logging_page, 9);
+    logging_page = MIN( logging_page, 9);
   }
   /**********************************************************
   *	Initialization of the picture
@@ -4842,7 +4834,7 @@ int RTTSYS_OBJECT_CELL( menu_ctx	ctx,
   if ( event == RTT_APPL_PREVPAGE)
   {
     page--;
-    page = max( page, 0);
+    page = MAX( page, 0);
     CELLOBJ_PAGE = page + 1;
     return RTT__SUCCESS;
   }
@@ -4852,7 +4844,7 @@ int RTTSYS_OBJECT_CELL( menu_ctx	ctx,
   if ( event == RTT_APPL_NEXTPAGE)
   {
     page++;
-    page = min( page, CELLOBJ_MAXPAGE - 1);
+    page = MIN( page, CELLOBJ_MAXPAGE - 1);
     CELLOBJ_PAGE = page + 1;
     return RTT__SUCCESS;
   }
@@ -5117,7 +5109,7 @@ int RTTSYS_OBJECT_CELL( menu_ctx	ctx,
       *(pwr_tBoolean *)menu_ptr->value_ptr = 0;
       menu_ptr++;
     }
-    CELLOBJ_MAXPAGE = max( 1, (k - 1)/ CELLOBJ_PAGESIZE + 1);
+    CELLOBJ_MAXPAGE = MAX( 1, (k - 1)/ CELLOBJ_PAGESIZE + 1);
 
   }
   return RTT__SUCCESS;
@@ -5326,7 +5318,7 @@ int RTTSYS_NMPSCELL( 	menu_ctx	ctx,
   if ( event == RTT_APPL_PREVPAGE)
   {
     page--;
-    page = max( page, 0);
+    page = MAX( page, 0);
     NMPSCELL_PAGE = page + 1;
     return RTT__SUCCESS;
   }
@@ -5336,7 +5328,7 @@ int RTTSYS_NMPSCELL( 	menu_ctx	ctx,
   if ( event == RTT_APPL_NEXTPAGE)
   {
     page++;
-    page = min( page, NMPSCELL_MAXPAGE - 1);
+    page = MIN( page, NMPSCELL_MAXPAGE - 1);
     NMPSCELL_PAGE = page + 1;
     return RTT__SUCCESS;
   }
@@ -5600,7 +5592,7 @@ int RTTSYS_NMPSCELL( 	menu_ctx	ctx,
       *(pwr_tBoolean *)(menu_ptr->value_ptr) = 0;
       menu_ptr++;
     }
-    NMPSCELL_MAXPAGE = max( 1, (k - 1)/ NMPSCELL_PAGESIZE + 1);
+    NMPSCELL_MAXPAGE = MAX( 1, (k - 1)/ NMPSCELL_PAGESIZE + 1);
 
   }
   return RTT__SUCCESS;
@@ -5933,12 +5925,12 @@ int RTTSYS_CHANDI( 	menu_ctx	ctx,
     if ( event == RTT_APPL_PREVPAGE)
     {
       page--;
-      page = max( page, 0);
+      page = MAX( page, 0);
     }
     else
     {
       page++;
-      page = min( page, CHANDI_MAXPAGE - 1);
+      page = MIN( page, CHANDI_MAXPAGE - 1);
     }
     CHANDI_PAGE = page + 1;
 
@@ -6141,7 +6133,7 @@ int RTTSYS_CHANDI( 	menu_ctx	ctx,
       strcpy( menu_ptr->value_ptr, "");
       menu_ptr++;
     }
-    CHANDI_MAXPAGE = max( 1, (chanlist_count - 1)/ CHANDI_PAGESIZE + 1);
+    CHANDI_MAXPAGE = MAX( 1, (chanlist_count - 1)/ CHANDI_PAGESIZE + 1);
 
     rtt_cut_segments( menu_ptr->value_ptr, card_name, 2);
     menu_ptr++;
@@ -6519,12 +6511,12 @@ int RTTSYS_CHANDO( 	menu_ctx	ctx,
     if ( event == RTT_APPL_PREVPAGE)
     {
       page--;
-      page = max( page, 0);
+      page = MAX( page, 0);
     }
     else
     {
       page++;
-      page = min( page, CHANDO_MAXPAGE - 1);
+      page = MIN( page, CHANDO_MAXPAGE - 1);
     }
     CHANDO_PAGE = page + 1;
 
@@ -6739,7 +6731,7 @@ int RTTSYS_CHANDO( 	menu_ctx	ctx,
       strcpy( menu_ptr->value_ptr, "");
       menu_ptr++;
     }
-    CHANDO_MAXPAGE = max( 1, (chanlist_count - 1)/ CHANDO_PAGESIZE + 1);
+    CHANDO_MAXPAGE = MAX( 1, (chanlist_count - 1)/ CHANDO_PAGESIZE + 1);
 
     rtt_cut_segments( menu_ptr->value_ptr, card_name, 2);
     menu_ptr++;
@@ -7085,12 +7077,12 @@ int RTTSYS_CHANAI( 	menu_ctx	ctx,
     if ( event == RTT_APPL_PREVPAGE)
     {
       page--;
-      page = max( page, 0);
+      page = MAX( page, 0);
     }
     else
     {
       page++;
-      page = min( page, CHANAI_MAXPAGE - 1);
+      page = MIN( page, CHANAI_MAXPAGE - 1);
     }
     CHANAI_PAGE = page + 1;
 
@@ -7270,7 +7262,7 @@ int RTTSYS_CHANAI( 	menu_ctx	ctx,
       strcpy( menu_ptr->value_ptr, "");
       menu_ptr++;
     }
-    CHANAI_MAXPAGE = max( 1, (chanlist_count - 1)/ CHANAI_PAGESIZE + 1);
+    CHANAI_MAXPAGE = MAX( 1, (chanlist_count - 1)/ CHANAI_PAGESIZE + 1);
 
     rtt_cut_segments( menu_ptr->value_ptr, card_name, 2);
     menu_ptr++;
@@ -7653,12 +7645,12 @@ int RTTSYS_CHANAO( 	menu_ctx	ctx,
     if ( event == RTT_APPL_PREVPAGE)
     {
       page--;
-      page = max( page, 0);
+      page = MAX( page, 0);
     }
     else
     {
       page++;
-      page = min( page, CHANAO_MAXPAGE - 1);
+      page = MIN( page, CHANAO_MAXPAGE - 1);
     }
     CHANAO_PAGE = page + 1;
 
@@ -7860,7 +7852,7 @@ int RTTSYS_CHANAO( 	menu_ctx	ctx,
       strcpy( menu_ptr->value_ptr, "");
       menu_ptr++;
     }
-    CHANAO_MAXPAGE = max( 1, (chanlist_count - 1)/ CHANAO_PAGESIZE + 1);
+    CHANAO_MAXPAGE = MAX( 1, (chanlist_count - 1)/ CHANAO_PAGESIZE + 1);
 
     rtt_cut_segments( menu_ptr->value_ptr, card_name, 2);
     menu_ptr++;
@@ -8241,12 +8233,12 @@ int RTTSYS_CHANCO( 	menu_ctx	ctx,
     if ( event == RTT_APPL_PREVPAGE)
     {
       page--;
-      page = max( page, 0);
+      page = MAX( page, 0);
     }
     else
     {
       page++;
-      page = min( page, CHANCO_MAXPAGE - 1);
+      page = MIN( page, CHANCO_MAXPAGE - 1);
     }
     CHANCO_PAGE = page + 1;
 
@@ -8420,7 +8412,7 @@ int RTTSYS_CHANCO( 	menu_ctx	ctx,
       strcpy( menu_ptr->value_ptr, "");
       menu_ptr++;
     }
-    CHANCO_MAXPAGE = max( 1, (chanlist_count - 1)/ CHANCO_PAGESIZE + 1);
+    CHANCO_MAXPAGE = MAX( 1, (chanlist_count - 1)/ CHANCO_PAGESIZE + 1);
 
     rtt_cut_segments( menu_ptr->value_ptr, card_name, 2);
     menu_ptr++;
@@ -8711,12 +8703,12 @@ int RTTSYS_DEVICE( 	menu_ctx	ctx,
     if ( event == RTT_APPL_PREVPAGE)
     {
       page--;
-      page = max( page, 0);
+      page = MAX( page, 0);
     }
     else
     {
       page++;
-      page = min( page, DEVICE_MAXPAGE - 1);
+      page = MIN( page, DEVICE_MAXPAGE - 1);
     }
     DEVICE_PAGE = page + 1;
 
@@ -8853,7 +8845,7 @@ int RTTSYS_DEVICE( 	menu_ctx	ctx,
       menu_ptr->value_ptr = (char *) RTT_ERASE;
       menu_ptr++;
     }
-    DEVICE_MAXPAGE = max( 1, (devicelist_count - 1)/ DEVICE_PAGESIZE + 1);
+    DEVICE_MAXPAGE = MAX( 1, (devicelist_count - 1)/ DEVICE_PAGESIZE + 1);
   }
   /**********************************************************
   *	Exit of the picture
@@ -9023,12 +9015,12 @@ int RTTSYS_REMNODE( 	menu_ctx	ctx,
     if ( event == RTT_APPL_PREVPAGE)
     {
       page--;
-      page = max( page, 0);
+      page = MAX( page, 0);
     }
     else
     {
       page++;
-      page = min( page, REMNODE_MAXPAGE - 1);
+      page = MIN( page, REMNODE_MAXPAGE - 1);
     }
     REMNODE_PAGE = page + 1;
 
@@ -9349,7 +9341,7 @@ int RTTSYS_REMNODE( 	menu_ctx	ctx,
       strcpy( menu_ptr->value_ptr, "");
       menu_ptr++;
     }
-    REMNODE_MAXPAGE = max( 1, (remnodelist_count - 1)/ REMNODE_PAGESIZE + 1);
+    REMNODE_MAXPAGE = MAX( 1, (remnodelist_count - 1)/ REMNODE_PAGESIZE + 1);
   }
   /**********************************************************
   *	Exit of the picture
@@ -9706,12 +9698,12 @@ int RTTSYS_REMTRANS( 	menu_ctx	ctx,
     if ( event == RTT_APPL_PREVPAGE)
     {
       page--;
-      page = max( page, 0);
+      page = MAX( page, 0);
     }
     else
     {
       page++;
-      page = min( page, REMTRANS_MAXPAGE - 1);
+      page = MIN( page, REMTRANS_MAXPAGE - 1);
     }
     REMTRANS_PAGE = page + 1;
 
@@ -9899,7 +9891,7 @@ int RTTSYS_REMTRANS( 	menu_ctx	ctx,
       menu_ptr->value_ptr = (char *) RTT_ERASE;
       menu_ptr++;
     }
-    REMTRANS_MAXPAGE = max( 1, (remtranslist_count - 1)/ REMTRANS_PAGESIZE + 1);
+    REMTRANS_MAXPAGE = MAX( 1, (remtranslist_count - 1)/ REMTRANS_PAGESIZE + 1);
   }
   /**********************************************************
   *	Exit of the picture
@@ -10065,12 +10057,12 @@ int RTTSYS_RUNNINGTIME( 	menu_ctx	ctx,
     if ( event == RTT_APPL_PREVPAGE)
     {
       page--;
-      page = max( page, 0);
+      page = MAX( page, 0);
     }
     else
     {
       page++;
-      page = min( page, RUNNINGTIME_MAXPAGE - 1);
+      page = MIN( page, RUNNINGTIME_MAXPAGE - 1);
     }
     RUNNINGTIME_PAGE = page + 1;
 
@@ -10224,7 +10216,7 @@ int RTTSYS_RUNNINGTIME( 	menu_ctx	ctx,
       menu_ptr->value_ptr = (char *) RTT_ERASE;
       menu_ptr++;
     }
-    RUNNINGTIME_MAXPAGE = max( 1, (runningtimelist_count - 1)/ RUNNINGTIME_PAGESIZE + 1);
+    RUNNINGTIME_MAXPAGE = MAX( 1, (runningtimelist_count - 1)/ RUNNINGTIME_PAGESIZE + 1);
   }
   /**********************************************************
   *	Exit of the picture
@@ -10369,7 +10361,7 @@ int RTTSYS_QCOM_APPL( 	menu_ctx	ctx,
         menu_ptr->value_ptr = (char *) RTT_ERASE;
         menu_ptr++;
       }
-      QCOM_APPL_MAXPAGE = max( 1, (k - 1)/ QCOM_APPL_PAGESIZE + 1);
+      QCOM_APPL_MAXPAGE = MAX( 1, (k - 1)/ QCOM_APPL_PAGESIZE + 1);
 
       return RTT__SUCCESS;
 
@@ -10403,12 +10395,12 @@ int RTTSYS_QCOM_APPL( 	menu_ctx	ctx,
       if ( event == RTT_APPL_PREVPAGE)
       {
         page--;
-        page = max( page, 0);
+        page = MAX( page, 0);
       }
       else if ( event == RTT_APPL_NEXTPAGE)
       {
         page++;
-        page = min( page, QCOM_APPL_MAXPAGE - 1);
+        page = MIN( page, QCOM_APPL_MAXPAGE - 1);
       }
       else if ( event == RTT_APPL_INIT)
         page = 0;
@@ -10486,7 +10478,7 @@ int RTTSYS_QCOM_APPL( 	menu_ctx	ctx,
         menu_ptr->value_ptr = (char *) RTT_ERASE;
         menu_ptr++;
       }
-      QCOM_APPL_MAXPAGE = max( 1, (k - 1)/ QCOM_APPL_PAGESIZE + 1);
+      QCOM_APPL_MAXPAGE = MAX( 1, (k - 1)/ QCOM_APPL_PAGESIZE + 1);
 
       break;
 
@@ -10695,7 +10687,7 @@ int RTTSYS_QCOM_QUEUE( 	menu_ctx	ctx,
       } qdb_ScopeUnlock;
 
 
-      QCOM_QUE_MAXPAGE = max( 1, (k - 1)/ QCOM_QUE_PAGESIZE + 1);
+      QCOM_QUE_MAXPAGE = MAX( 1, (k - 1)/ QCOM_QUE_PAGESIZE + 1);
 
       return RTT__SUCCESS;
 
@@ -10729,12 +10721,12 @@ int RTTSYS_QCOM_QUEUE( 	menu_ctx	ctx,
       if ( event == RTT_APPL_PREVPAGE)
       {
         page--;
-        page = max( page, 0);
+        page = MAX( page, 0);
       }
       else if ( event == RTT_APPL_NEXTPAGE)
       {
         page++;
-        page = min( page, QCOM_QUE_MAXPAGE - 1);
+        page = MIN( page, QCOM_QUE_MAXPAGE - 1);
       }
       else if ( event == RTT_APPL_INIT)
         page = 0;
@@ -10876,7 +10868,7 @@ int RTTSYS_QCOM_QUEUE( 	menu_ctx	ctx,
       menu_ptr++;
 
 
-      QCOM_QUE_MAXPAGE = max( 1, (k - 1)/ QCOM_QUE_PAGESIZE + 1);
+      QCOM_QUE_MAXPAGE = MAX( 1, (k - 1)/ QCOM_QUE_PAGESIZE + 1);
 
       break;
 
@@ -11054,7 +11046,7 @@ int RTTSYS_QCOM_NODES( 	menu_ctx	ctx,
         menu_ptr->value_ptr = (char *) RTT_ERASE;
         menu_ptr++;
       }
-      QCOM_NODES_MAXPAGE = max( 1, (k - 1)/ QCOM_NODES_PAGESIZE + 1);
+      QCOM_NODES_MAXPAGE = MAX( 1, (k - 1)/ QCOM_NODES_PAGESIZE + 1);
 
       return RTT__SUCCESS;
 
@@ -11088,12 +11080,12 @@ int RTTSYS_QCOM_NODES( 	menu_ctx	ctx,
       if ( event == RTT_APPL_PREVPAGE)
       {
         page--;
-        page = max( page, 0);
+        page = MAX( page, 0);
       }
       else if ( event == RTT_APPL_NEXTPAGE)
       {
         page++;
-        page = min( page, QCOM_NODES_MAXPAGE - 1);
+        page = MIN( page, QCOM_NODES_MAXPAGE - 1);
       }
       else if ( event == RTT_APPL_INIT)
         page = 0;
@@ -11215,7 +11207,7 @@ int RTTSYS_QCOM_NODES( 	menu_ctx	ctx,
         menu_ptr->value_ptr = (char *) RTT_ERASE;
         menu_ptr++;
       }
-      QCOM_NODES_MAXPAGE = max( 1, (k - 1)/ QCOM_NODES_PAGESIZE + 1);
+      QCOM_NODES_MAXPAGE = MAX( 1, (k - 1)/ QCOM_NODES_PAGESIZE + 1);
 
       break;
 
@@ -11536,7 +11528,7 @@ int RTTSYS_POOL_SEGS( 	menu_ctx	ctx,
         strcpy( menu_ptr->value_ptr, "");
         menu_ptr++;
       }
-      POOLSEGS_MAXPAGE = max( 1, (k - 1)/ POOLSEGS_PAGESIZE + 1);
+      POOLSEGS_MAXPAGE = MAX( 1, (k - 1)/ POOLSEGS_PAGESIZE + 1);
 
       return RTT__SUCCESS;
 
@@ -11570,12 +11562,12 @@ int RTTSYS_POOL_SEGS( 	menu_ctx	ctx,
       if ( event == RTT_APPL_PREVPAGE)
       {
         page--;
-        page = max( page, 0);
+        page = MAX( page, 0);
       }
       else if ( event == RTT_APPL_NEXTPAGE)
       {
         page++;
-        page = min( page, POOLSEGS_MAXPAGE - 1);
+        page = MIN( page, POOLSEGS_MAXPAGE - 1);
       }
       else if ( event == RTT_APPL_INIT)
         page = 0;
@@ -11663,7 +11655,7 @@ int RTTSYS_POOL_SEGS( 	menu_ctx	ctx,
         strcpy( menu_ptr->value_ptr, "");
         menu_ptr++;
       }
-      POOLSEGS_MAXPAGE = max( 1, (k - 1)/ POOLSEGS_PAGESIZE + 1);
+      POOLSEGS_MAXPAGE = MAX( 1, (k - 1)/ POOLSEGS_PAGESIZE + 1);
 
       break;
 

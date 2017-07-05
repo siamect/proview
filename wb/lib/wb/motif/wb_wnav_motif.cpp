@@ -44,6 +44,7 @@
 #include "pwr_privilege.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_math.h"
 #include "co_msg.h"
 #include "co_time.h"
 #include "pwr_baseclasses.h"
@@ -81,9 +82,6 @@
 #include "wb_utl_motif.h"
 #include "wb_wda_motif.h"
 #include "wb_foe_motif.h"
-
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
 
 static void wnav_reset_avoid_deadlock( WNavMotif *wnav);
 static void wnav_set_avoid_deadlock( WNavMotif *wnav, int time);

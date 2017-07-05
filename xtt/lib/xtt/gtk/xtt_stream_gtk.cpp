@@ -626,20 +626,20 @@ gboolean XttStreamGtk::mousebutton_cb( GtkWidget *widget, GdkEvent *event, void 
       time_Adiff( &dt, &now, &strm->mb_press_time);
       dft =  time_DToFloat( &dft, &dt);
       if ( dft < 0.5 && 
-	   abs( event->button.x - strm->mb_press_x) < 10 &&
-	   abs( event->button.y - strm->mb_press_y) < 10) {
+	   ABS( event->button.x - strm->mb_press_x) < 10 &&
+	   ABS( event->button.y - strm->mb_press_y) < 10) {
 	strm->action_click( event->button.x - offset_x, event->button.y - offset_y);
 	if ( strm->ptz_box_displayed) {
 	  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
 	  strm->ptz_box_displayed = 0;
 	}
       }
-      else if ( abs( event->button.x - strm->mb_press_x) > 20 &&
+      else if ( ABS( event->button.x - strm->mb_press_x) > 20 &&
 		abs( event->button.y - strm->mb_press_y) > 20) {
-	int x = glmin( event->button.x, strm->mb_press_x) - offset_x;
-	int y = glmin( event->button.y, strm->mb_press_y) - offset_y;
-	int w = abs( event->button.x - strm->mb_press_x);
-	int h = abs( event->button.y - strm->mb_press_y);
+	int x = MIN( event->button.x, strm->mb_press_x) - offset_x;
+	int y = MIN( event->button.y, strm->mb_press_y) - offset_y;
+	int w = ABS( event->button.x - strm->mb_press_x);
+	int h = ABS( event->button.y - strm->mb_press_y);
 	printf( "Mb zoom (%d,%d) rect %d,%d\n", x, y, w, h);
 	strm->action_areaselect( x, y, w, h);
 	if ( strm->ptz_box_displayed) {
@@ -650,8 +650,8 @@ gboolean XttStreamGtk::mousebutton_cb( GtkWidget *widget, GdkEvent *event, void 
       break;
     }
     case 2: {
-      int x = glmin( event->button.x, strm->mb_press_x) - offset_x;
-      int y = glmin( event->button.y, strm->mb_press_y) - offset_y;
+      int x = MIN( event->button.x, strm->mb_press_x) - offset_x;
+      int y = MIN( event->button.y, strm->mb_press_y) - offset_y;
       strm->action_mb2click( x, y);
       break;
     }

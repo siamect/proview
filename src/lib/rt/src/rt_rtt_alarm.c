@@ -47,6 +47,7 @@
 #include "pwr_class.h"
 #include "pwr_baseclasses.h"
 #include "co_cdh.h"
+#include "co_math.h"
 #include "co_time.h"
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
@@ -66,15 +67,6 @@
 
 #if defined OS_POSIX
 # include <time.h>
-#endif
-
-/* Nice functions */
-#define ODD(a)	(((int)(a) & 1) != 0)
-#define EVEN(a)	(((int)(a) & 1) == 0)
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#ifndef __ALPHA
-#define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
 #endif
 
 #define RTT_ALARMTYPE_INFO	0

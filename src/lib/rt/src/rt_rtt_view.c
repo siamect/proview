@@ -44,6 +44,7 @@
 # include <string.h>
 # include <ctype.h>
 
+#include "co_math.h"
 #include "pwr.h"
 #include "pwr_class.h"
 #include "rt_gdh.h"
@@ -51,15 +52,6 @@
 #include "rt_rtt_global.h"
 #include "rt_rtt_functions.h"
 #include "rt_rtt_msg.h"
-
-/* Nice functions */
-#define ODD(a)	(((int)(a) & 1) != 0)
-#define EVEN(a)	(((int)(a) & 1) == 0)
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#ifndef __ALPHA
-#define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
-#endif
 
 #define RTTVIEW_ARROW_INC 5
 #define RTTVIEW_PAGE_INC 20
@@ -554,7 +546,7 @@ int	rtt_view(	menu_ctx	parent_ctx,
 		RTTVIEW_BUFFROW_SIZE, &ctx->buffrow_count,
 		0, page_size, &ctx->start_row);
 	    else
-	      ctx->start_row = max( 0, ctx->buffrow_count - page_size);
+	      ctx->start_row = MAX( 0, ctx->buffrow_count - page_size);
 /*
 	      rtt_read_buff( ctx, ctx->buff, RTTVIEW_BUFF_SIZE, ctx->buffrow,
 		RTTVIEW_BUFFROW_SIZE, &ctx->buffrow_count,
@@ -582,7 +574,7 @@ int	rtt_view(	menu_ctx	parent_ctx,
 	    redraw = 0;
 	    rtt_display_erase();
 	    start_i = ctx->start_row;
-	    end_i = min(ctx->start_row+page_size, ctx->buffrow_count);
+	    end_i = MIN(ctx->start_row+page_size, ctx->buffrow_count);
 	    rtt_cursor_abs( 1, 22-page_size);
 	    for ( i = ctx->start_row; i < end_i; i++)
 	    {
@@ -590,7 +582,7 @@ int	rtt_view(	menu_ctx	parent_ctx,
 	      {
 	        offset = ctx->buffrow[i] + left_marg;
 		rtt_view_get_row_size( &ctx->buff[offset], 80, &size, &last_char);
-	        size = min( size, 80);
+	        size = MIN( size, 80);
 	        if ( last_char != 10)
 	          r_print("%.*s\n\r", size,  &ctx->buff[offset]);
 	        else
@@ -602,10 +594,10 @@ int	rtt_view(	menu_ctx	parent_ctx,
 	      }
 	      else
 	      {
-	        offset = min( ctx->buffrow[i+1] - 1, ctx->buffrow[i] + left_marg);
-	        size = min( ctx->buffrow[i+1] - offset, 80);
+	        offset = MIN( ctx->buffrow[i+1] - 1, ctx->buffrow[i] + left_marg);
+	        size = MIN( ctx->buffrow[i+1] - offset, 80);
 		rtt_view_get_row_size( &ctx->buff[offset], 80, &size, &last_char);
-	        size = min( size, 80);
+	        size = MIN( size, 80);
 	        if ( last_char != 10)
 	          r_print("%.*s\n\r", size,  &ctx->buff[offset]);
 	        else
@@ -620,7 +612,7 @@ int	rtt_view(	menu_ctx	parent_ctx,
 	      sprintf( pagestr, "%d-%d(%d)", start_i+1, end_i, ctx->buffrow_count);
 	    sprintf( str, 
 "                                                 |%12s | Ctrl/R back", pagestr);
-	    strncpy( &str[1], title, min( strlen( title), 49));
+	    strncpy( &str[1], title, MIN( strlen( title), 49));
 	    r_print( "%80s", str);
 	    rtt_char_inverse_end();
 	    
@@ -704,7 +696,7 @@ int	rtt_view(	menu_ctx	parent_ctx,
 	      break;
 	    case RTT_K_PF2:
 	      /* Bottom */
-	      ctx->start_row = max( 0, ctx->buffrow_count - page_size);
+	      ctx->start_row = MAX( 0, ctx->buffrow_count - page_size);
 	      if ( type == RTT_VIEWTYPE_FILE)
 	      {
 	        while( ctx->read_sts != NULL)

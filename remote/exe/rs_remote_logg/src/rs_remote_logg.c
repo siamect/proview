@@ -62,6 +62,7 @@
 #include "pwr.h"
 #include "pwr_baseclasses.h"
 #include "pwr_remoteclasses.h"
+#include "co_math.h"
 #include "co_time.h"
 #include "co_dcli.h"
 #include "rt_gdh.h"
@@ -82,13 +83,6 @@ qcom_sGet	remlogg_get;
 
 /* Global functions________________________________________________________*/
 
-#define ODD(a)	(((int)(a) & 1) != 0)
-#define EVEN(a)	(((int)(a) & 1) == 0)
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#ifndef __ALPHA
-#define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
-#endif
 #define	LogAndExit( status) \
 {\
   errh_CErrLog(REM__LOGGEXIT, errh_ErrArgMsg(status), NULL);\
@@ -450,7 +444,7 @@ static pwr_tStatus	logg_print(	logg_ctx	loggctx,
 	    return REM__SUCCESS;
 	  }
 	}
-/*	csts = fwrite( msg, min( strlen(msg),LOGG_MAX_SIZE), 1, 
+/*	csts = fwrite( msg, MIN( strlen(msg),LOGG_MAX_SIZE), 1,
 		conflist_ptr->outfile);
 	if (csts == 0)
 */

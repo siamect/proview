@@ -51,7 +51,6 @@
 
 #define RTT_QIO_RETRY 10
 
-
 #include "pwr.h"
 #include "pwr_class.h"
 #include "pwr_baseclasses.h"
@@ -60,10 +59,6 @@
 #include "rt_rtt_global.h"
 #include "rt_rtt_msg.h"
 #include "rt_rtt_functions.h"
-
-/***********************  D E F I N E ' S *******************************/
-#define ODD(a)	(((int)(a) & 1) != 0)
-#define EVEN(a)	(((int)(a) & 1) == 0)
 
 /************************************************************************
 *

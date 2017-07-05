@@ -40,6 +40,7 @@
 #include <stdlib.h>
 
 #include "co_cdh.h"
+#include "co_math.h"
 #include "co_time.h"
 #include "pwr_baseclasses.h"
 #include "rt_xatt_msg.h"
@@ -57,9 +58,6 @@
 #include "pwr_privilege.h"
 #include "cow_wow.h"
 #include "co_error.h"
-
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
 
 void XAttNav::message( char sev, const char *text)
 {
@@ -618,7 +616,7 @@ int XAttNav::trace_scan_bc( brow_tObject object, void *p)
       XNav::attrvalue_to_string( item->type_id, item->tid, p, buf, sizeof(buf), &len, NULL,
 				 item->conversion);
       brow_SetAnnotation( object, 1, buf, len);
-      memcpy( item->old_value, p, min(item->size, (int) sizeof(item->old_value)));
+      memcpy( item->old_value, p, MIN(item->size, (int) sizeof(item->old_value)));
       break;
     }
     case xnav_eItemType_Enum: {

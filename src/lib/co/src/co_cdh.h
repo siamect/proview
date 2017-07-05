@@ -52,6 +52,7 @@
 #include "pwr_class.h"
 #endif
 
+#include "co_math.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -69,14 +70,6 @@ extern "C" {
 
 /*! \addtogroup Cdh_DS */
 /*@{*/
-
-#ifndef co_max
-#define co_max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#endif
-
-#ifndef co_min
-#define co_min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#endif
 
 #define cdh_cMaxVidGroup	 255
 #define cdh_cMaxCix		4095

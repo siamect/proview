@@ -73,7 +73,7 @@ static pwr_tStatus AnteAdopt (
   sts = ldh_ReadObjectBody(Session, Card, "DevBody", &DCard, sizeof(DCard));
   if (EVEN(sts)) return sts;
 
-  MaxChan = co_min(32, RCard.MaxNoOfChannels);
+  MaxChan = MIN(32, RCard.MaxNoOfChannels);
   for (i = 0, Chan = 1; i < (int)MaxChan; i++, Chan <<= 1) {
     if ((DCard.ChannelAllocation & Chan) == 0)
       break;
@@ -119,7 +119,7 @@ static pwr_tStatus PostAdopt (
   sts = ldh_ReadObjectBody(Session, Card, "DevBody", &DCard, sizeof(DCard));
   if (EVEN(sts)) return sts;
 
-  MaxChan = co_min(32, RCard.MaxNoOfChannels);
+  MaxChan = MIN(32, RCard.MaxNoOfChannels);
   for (i = 0, Chan = 1; i < (int)MaxChan; i++, Chan <<= 1) {
     if ((DCard.ChannelAllocation & Chan) == 0)
       break;
@@ -229,7 +229,7 @@ static pwr_tStatus PostUnadopt (
   sts = ldh_ReadObjectBody(Session, Card, "DevBody", &DCard, sizeof(DCard));
   if (EVEN(sts)) return PWRB__SUCCESS;
 
-  MaxChan = co_min(32, RCard.MaxNoOfChannels);
+  MaxChan = MIN(32, RCard.MaxNoOfChannels);
 
   /*
     get attributes of channel

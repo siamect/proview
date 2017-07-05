@@ -54,6 +54,7 @@
 #include "pwr_baseclasses.h"
 #include "pwr_nmpsclasses.h"
 #include "co_cdh.h"
+#include "co_math.h"
 #include "rt_gdh.h"
 #include "rt_errh.h"
 #include "rt_nmps_lock.h"
@@ -63,16 +64,7 @@
 #include "nmps.h"
 #include "nmps_appl.h"
 
-
 /* Global functions________________________________________________________*/
-
-#define ODD(a)	(((int)(a) & 1) != 0)
-#define EVEN(a)	(((int)(a) & 1) == 0)
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#ifndef __ALPHA
-#define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
-#endif
 
 #define	LogAndReturn( status1, status2) \
 {\

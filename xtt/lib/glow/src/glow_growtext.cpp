@@ -677,7 +677,7 @@ void GrowText::draw( GlowWind *w,  GlowTransform *t, int highlight, int hot, voi
   double trf_scale = trf.vertical_scale( t);
   int idx = int( trf_scale * w->zoom_factor_y / w->base_zoom_factor * (text_size +4) - 4);
   double tsize = trf_scale * w->zoom_factor_y / w->base_zoom_factor * (8+2*text_size);
-  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   int highl = highlight;
   if ( node)
     highl = ((GrowNode *)node)->highlight; 
@@ -717,7 +717,7 @@ void GrowText::draw( GlowWind *w,  GlowTransform *t, int highlight, int hot, voi
 
   if ( strcmp( text, "")) {
     if ( highl || (hot && !node) || adjustment != glow_eAdjustment_Left) {
-       ctx->gdraw->get_text_extent( text, strlen(text), ldraw_type, glmax( 0, idx), lfont,
+       ctx->gdraw->get_text_extent( text, strlen(text), ldraw_type, MAX( 0, idx), lfont,
 				   &z_width, &z_height, &z_descent, tsize, rot);
       switch ( adjustment) {
       case glow_eAdjustment_Left:
@@ -756,11 +756,11 @@ void GrowText::draw( GlowWind *w,  GlowTransform *t, int highlight, int hot, voi
 
     if ( highl) {
       ctx->gdraw->rect( w, rx1, ry1, z_width, z_height, 
-	glow_eDrawType_FillHighlight, glmax( 1, glmin( idx + hot, 2)), 0);
+	glow_eDrawType_FillHighlight, MAX( 1, MIN( idx + hot, 2)), 0);
     }
     else if ( hot && !node) {
       ctx->gdraw->rect( w, rx1, ry1, z_width, z_height,
-	glow_eDrawType_LineGray, glmax( glmin(idx,2), 1), 0);
+	glow_eDrawType_LineGray, MAX( MIN(idx,2), 1), 0);
     }
     if ( idx >= 0) {
       glow_eDrawType color = ctx->get_drawtype( color_drawtype, glow_eDrawType_LineHighlight,
@@ -770,7 +770,7 @@ void GrowText::draw( GlowWind *w,  GlowTransform *t, int highlight, int hot, voi
     }
   }
   else if ( idx >= 0) {
-    ctx->gdraw->get_text_extent( "A", 1, draw_type, glmax( 0, idx), font, &z_width, &z_height,
+    ctx->gdraw->get_text_extent( "A", 1, draw_type, MAX( 0, idx), font, &z_width, &z_height,
 				 &z_descent, tsize, rot);
     ctx->gdraw->rect( w, x1, y1 - (z_height-z_descent), z_width, z_height, 
 	glow_eDrawType_LineGray, idx, 0);
@@ -791,7 +791,7 @@ void GrowText::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
   double trf_scale = trf.vertical_scale( t);
   int idx = int( trf_scale * w->zoom_factor_y / w->base_zoom_factor * (text_size +4) - 4);
   double tsize = trf_scale * w->zoom_factor_y / w->base_zoom_factor * (8+2*text_size);
-  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   int z_width, z_height, z_descent;
   int highl = highlight;
   if ( node)
@@ -829,7 +829,7 @@ void GrowText::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
   // w->set_draw_buffer_only();
   if ( strcmp( text, "")) {
     if ( highl || (hot && !node) || adjustment != glow_eAdjustment_Left) {
-      ctx->gdraw->get_text_extent( text, strlen(text), ldraw_type, glmax( 0, idx), lfont,
+      ctx->gdraw->get_text_extent( text, strlen(text), ldraw_type, MAX( 0, idx), lfont,
 				   &z_width, &z_height, &z_descent, tsize, rot);
       switch ( adjustment) {
       case glow_eAdjustment_Left:
@@ -868,11 +868,11 @@ void GrowText::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
 
     if ( highl) {
       ctx->gdraw->rect_erase( w, rx1, ry1, z_width, z_height, 
-		glmax( 1, glmin( idx + hot, 2)));
+		MAX( 1, MIN( idx + hot, 2)));
     }
     else if ( hot && !node) {
       ctx->gdraw->rect_erase( w, rx1, ry1, z_width, z_height, 
-		max (1, glmin(idx,2)));
+		max (1, MIN(idx,2)));
     }
     if ( idx >= 0)
       ctx->gdraw->text_erase( w, x1, y1, text, strlen(text), ldraw_type, idx, 0, lfont, tsize, rot);
@@ -928,7 +928,7 @@ void GrowText::get_borders( GlowTransform *t, double *x_right,
     double trf_scale = trf.vertical_scale( t);
     int idx = int( trf_scale * ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (text_size +4) - 4);
     double tsize = trf_scale * ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (8+2*text_size);
-    idx = glmax( 0, glmin( idx, DRAW_TYPE_SIZE-1));
+    idx = MAX( 0, MIN( idx, DRAW_TYPE_SIZE-1));
     
     ctx->gdraw->get_text_extent( text, strlen(text), draw_type, idx, font,
 				 &z_width, &z_height, &z_descent, tsize, rot);
@@ -987,10 +987,10 @@ void GrowText::set_text( char *new_text)
   get_node_borders();
   // draw();
 
-  y_low_old = glmin( y_low, y_low_old);
-  y_high_old = glmax( y_high, y_high_old);
-  x_left_old = glmin( x_left, x_left_old);
-  x_right_old = glmax( x_right, x_right_old);
+  y_low_old = MIN( y_low, y_low_old);
+  y_high_old = MAX( y_high, y_high_old);
+  x_left_old = MIN( x_left, x_left_old);
+  x_right_old = MAX( x_right, x_right_old);
   ctx->draw( &ctx->mw, x_left_old * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
 	     y_low_old * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
   	     x_right_old * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
@@ -1045,7 +1045,7 @@ void GrowText::export_javabean( GlowTransform *t, void *node,
   int bold;
   double trf_scale = trf.vertical_scale( t);
   int idx = int( trf_scale * ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (text_size +4) - 4);
-  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   double tsize = trf_scale * ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (8+2*text_size);
 
   glow_eFont lfont;
@@ -1075,7 +1075,7 @@ void GrowText::export_javabean( GlowTransform *t, void *node,
   else
     rot = 0;
 
-  ctx->gdraw->get_text_extent( text, strlen(text), ldraw_type, glmax( 0, idx), lfont,
+  ctx->gdraw->get_text_extent( text, strlen(text), ldraw_type, MAX( 0, idx), lfont,
 			       &z_width, &z_height, &z_descent, tsize, rot);
   switch ( adjustment) {
   case glow_eAdjustment_Left:

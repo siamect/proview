@@ -300,9 +300,9 @@ unsigned int ReceiveComplete()
   unsigned int sts;
   int32 dmq_sts;
 
-  char search_remnode = TRUE;
-  char search_remtrans = TRUE;
-  char send_response = FALSE;
+  char search_remnode = true;
+  char search_remtrans = true;
+  char send_response = false;
   remnode_item *remnode;
   remtrans_item *remtrans;
 
@@ -312,13 +312,13 @@ unsigned int ReceiveComplete()
   int response_size = 4;			/* Size of response  = 4 bytes */
 
 
-  search_remnode = TRUE;
+  search_remnode = true;
 
   remnode = remnode_list;
   while (remnode && search_remnode)
   {
     if (receive_src.au.group == remnode->objp->Address[0])
-      search_remnode = FALSE;
+      search_remnode = false;
     else
       remnode = (remnode_item *) remnode->next;
   }

@@ -10325,14 +10325,14 @@ soap_dateTime2s(struct soap *soap, time_t n)
   { struct timeval tv;
     gettimeofday(&tv, &tz);
     strftime(soap->tmpbuf, sizeof(soap->tmpbuf), "%Y-%m-%dT%H:%M:%S", pT);
-    sprintf(soap->tmpbuf + strlen(soap->tmpbuf), "%+03d:%02d", -tz.tz_minuteswest/60+(pT->tm_isdst!=0), abs(tz.tz_minuteswest)%60);
+    sprintf(soap->tmpbuf + strlen(soap->tmpbuf), "%+03d:%02d", -tz.tz_minuteswest/60+(pT->tm_isdst!=0), ABS(tz.tz_minuteswest)%60);
   }
 # else
   if ((pT = localtime(&n)))
   { struct timeval tv;
     gettimeofday(&tv, &tz);
     strftime(soap->tmpbuf, sizeof(soap->tmpbuf), "%Y-%m-%dT%H:%M:%S", pT);
-    sprintf(soap->tmpbuf + strlen(soap->tmpbuf), "%+03d:%02d", -tz.tz_minuteswest/60+(pT->tm_isdst!=0), abs(tz.tz_minuteswest)%60);
+    sprintf(soap->tmpbuf + strlen(soap->tmpbuf), "%+03d:%02d", -tz.tz_minuteswest/60+(pT->tm_isdst!=0), ABS(tz.tz_minuteswest)%60);
   }
 #endif
 #elif defined(HAVE_FTIME)
@@ -10347,13 +10347,13 @@ soap_dateTime2s(struct soap *soap, time_t n)
     ftime(&t);
 #endif
     strftime(soap->tmpbuf, sizeof(soap->tmpbuf), "%Y-%m-%dT%H:%M:%S", pT);
-    sprintf(soap->tmpbuf + strlen(soap->tmpbuf), "%+03d:%02d", -t.timezone/60+(pT->tm_isdst!=0), abs(t.timezone)%60);
+    sprintf(soap->tmpbuf + strlen(soap->tmpbuf), "%+03d:%02d", -t.timezone/60+(pT->tm_isdst!=0), ABS(t.timezone)%60);
   }
   /* The following defines were added for VxWorks*/
 # elif defined(HAVE_PLOCALTIME_R)
   if (localtime_r(&n, pT))
   { strftime(soap->tmpbuf, sizeof(soap->tmpbuf), "%Y-%m-%dT%H:%M:%S", pT);
-    sprintf(soap->tmpbuf+strlen(soap->tmpbuf), "%+03d:%02d", t.timezone/60, abs(t.timezone)%60);
+    sprintf(soap->tmpbuf+strlen(soap->tmpbuf), "%+03d:%02d", t.timezone/60, ABS(t.timezone)%60);
   }
 # else
   if ((pT = localtime(&n)))
@@ -10364,7 +10364,7 @@ soap_dateTime2s(struct soap *soap, time_t n)
     ftime(&t);
 #endif
     strftime(soap->tmpbuf, sizeof(soap->tmpbuf), "%Y-%m-%dT%H:%M:%S", pT);
-    sprintf(soap->tmpbuf + strlen(soap->tmpbuf), "%+03d:%02d", -t.timezone/60+(pT->tm_isdst!=0), abs(t.timezone)%60);
+    sprintf(soap->tmpbuf + strlen(soap->tmpbuf), "%+03d:%02d", -t.timezone/60+(pT->tm_isdst!=0), ABS(t.timezone)%60);
   }
 # endif
 #elif defined(HAVE_LOCALTIME_R)

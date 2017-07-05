@@ -702,8 +702,8 @@ void GrowLine::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
   else
     idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
-  idx = glmax( 0, idx);
-  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   int x1, y1, x2, y2;
 
   if (!t)
@@ -761,8 +761,8 @@ void GrowLine::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
   else
     idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
-  idx = glmax( 0, idx);
-  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   int x1, y1, x2, y2;
 
   if (!t) {
@@ -850,8 +850,8 @@ void GrowLine::export_javabean( GlowTransform *t, void *node,
   else
     idx = int( ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * line_width - 1);
   idx += hot;
-  idx = glmax( 0, idx);
-  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   double x1, y1, x2, y2;
 
   if (!t)

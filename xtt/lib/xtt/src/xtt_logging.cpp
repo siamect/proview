@@ -56,6 +56,7 @@
 #include "pwr_class.h"
 #include "pwr_baseclasses.h"
 #include "co_cdh.h"
+#include "co_math.h"
 #include "co_time.h"
 #include "co_ccm_msg.h"
 #include "rt_gdh.h"
@@ -67,15 +68,6 @@
 #include "xtt_xnav.h"
 #include "xtt_logging.h"
 #include "rt_xnav_msg.h"
-
-/* Nice functions */
-#define ODD(a)	(((int)(a) & 1) != 0)
-#define EVEN(a)	(((int)(a) & 1) == 0)
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#ifndef __ALPHA
-#define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
-#endif
 
 static void	*xtt_logproc( void *arg);
 static int 	log_ccm_registred = 0;

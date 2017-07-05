@@ -516,7 +516,7 @@ int main()
   
   hotswap = 0;
 
-  while (true) 
+  while (true)
   {
     /* Get RemoteConfig object */
     sts = gdh_GetClassList(pwr_cClass_RemoteConfig, &remcfg_objid);

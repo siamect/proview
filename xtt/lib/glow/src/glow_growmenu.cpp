@@ -162,14 +162,14 @@ void GrowMenu::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
   int idx;
   int text_idx = int( trf.vertical_scale(t) * w->zoom_factor_y / w->base_zoom_factor * (text_size +4) - 4);
   double tsize =  trf.vertical_scale(t) * w->zoom_factor_y / w->base_zoom_factor * (8+2*text_size);
-  text_idx = glmin( text_idx, DRAW_TYPE_SIZE-1);
-  text_idx = glmax( 0, text_idx);
+  text_idx = MIN( text_idx, DRAW_TYPE_SIZE-1);
+  text_idx = MAX( 0, text_idx);
 
   idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
 
-  idx = glmax( 0, idx);
-  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   int ll_x, ll_y, ur_x, ur_y;
 
   int z_width, z_height, z_descent;
@@ -181,7 +181,7 @@ void GrowMenu::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
   for ( i = 0; i < (int) (sizeof(info.item)/sizeof(info.item[0])); i++) {
     if ( info.item[i].occupied) {
       ctx->gdraw->get_text_extent( info.item[i].text, strlen(info.item[i].text), text_drawtype, 
-				   glmax( 0, text_idx), font, &z_width, &z_height, 
+				   MAX( 0, text_idx), font, &z_width, &z_height,
 				   &z_descent, tsize, 0);
       if ( z_width > max_z_width)
 	max_z_width = z_width;
@@ -291,8 +291,8 @@ void GrowMenu::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
       idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
     idx += hot;
   }
-  idx = glmax( 0, idx);
-  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
   if (!t)
@@ -309,10 +309,10 @@ void GrowMenu::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
     x2 = int( trf.x( t, ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
     y2 = int( trf.y( t, ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
   }
-  ll_x = glmin( x1, x2);
-  ur_x = glmax( x1, x2);
-  ll_y = glmin( y1, y2);
-  ur_y = glmax( y1, y2);
+  ll_x = MIN( x1, x2);
+  ur_x = MAX( x1, x2);
+  ll_y = MIN( y1, y2);
+  ur_y = MAX( y1, y2);
 
   w->set_draw_buffer_only();
   if ( border)
@@ -337,10 +337,10 @@ int GrowMenu::local_event_handler( GlowWind *w, glow_eEvent event, double x, dou
 {
   double ll_x, ur_x, ll_y, ur_y;
 
-  ll_x = glmin( ll.x, ur.x);
-  ur_x = glmax( ll.x, ur.x);
-  ll_y = glmin( ll.y, ur.y);
-  ur_y = glmax( ll.y, ur.y);
+  ll_x = MIN( ll.x, ur.x);
+  ur_x = MAX( ll.x, ur.x);
+  ll_y = MIN( ll.y, ur.y);
+  ur_y = MAX( ll.y, ur.y);
 
   if ( ll_x <= x && x <= ur_x &&
        ll_y <= y && y <= ur_y) {

@@ -45,6 +45,10 @@
 #include <Mrm/MrmPublic.h>
 #endif
 
+#include "pwr.h"
+
+#include "co_math.h"
+
 #undef Status
 
 #if defined __cplusplus
@@ -56,23 +60,6 @@ extern "C" {
 #define And &&
 #define Or ||
 #define Not !
-
-/* Nice functions */
-#ifndef ODD
-#define ODD(a)	(((int)(a) & 1) != 0)
-#endif
-
-#ifndef EVEN
-#define EVEN(a)	(((int)(a) & 1) == 0)
-#endif
-
-#ifndef co_max
-#define co_max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#endif
-
-#ifndef co_min
-#define co_min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#endif
 
 #define SwapInts(Dragon,Eagle)\
  {int ShakingCrane;ShakingCrane = Dragon;Dragon = Eagle;Eagle = ShakingCrane;}

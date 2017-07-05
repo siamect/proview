@@ -44,6 +44,7 @@
 # include <string.h>
 # include <stdlib.h>
 
+#include "co_math.h"
 #include "pwr.h"
 #include "pwr_class.h"
 #include "pwr_baseclasses.h"
@@ -53,15 +54,6 @@
 #include "rt_rtt_global.h"
 #include "rt_rtt_functions.h"
 #include "rt_gdh_msg.h"
-
-/* Nice functions */
-#define ODD(a)	(((int)(a) & 1) != 0)
-#define EVEN(a)	(((int)(a) & 1) == 0)
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#ifndef __ALPHA
-#define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
-#endif
 
 #define CRR_BUFF_SIZE 10000
 

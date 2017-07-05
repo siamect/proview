@@ -39,6 +39,7 @@
 #include <math.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <signal.h>
 #include <stdarg.h>
 #include <unistd.h>
@@ -57,8 +58,6 @@
 #endif
 #include <sys/ioctl.h>
 #include "remote_utils.h"
-
-#define TRUE 1
 
 /************************************************************************
 **************************************************************************
@@ -286,7 +285,7 @@ int RemUtils_R50ToAscii(unsigned short R50[], char asc[])
     asc[ascindex++] = RemUtils_ConvertR50ToAscii(k);
   }
   
-  return TRUE;
+  return true;
 }
 
 /************************************************************************
@@ -342,5 +341,5 @@ int RemUtils_AsciiToR50(char asc[], short R50[])
   }
   R50[0] = ((dig_vec[0]*40 + dig_vec[1])*40 + dig_vec[2]);
   R50[1] = ((dig_vec[3]*40 + dig_vec[4])*40 + dig_vec[5]);
-  return TRUE;
+  return true;
 }

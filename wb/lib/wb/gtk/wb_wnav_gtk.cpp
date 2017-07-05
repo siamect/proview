@@ -55,6 +55,8 @@ extern "C" {
 #include "wb_wccm.h"
 }
 
+#include "co_math.h"
+
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
@@ -75,9 +77,6 @@ extern "C" {
 #include "wb_expw_gtk.h"
 #include "wb_watttext_gtk.h"
 #include "wb_wrev_gtk.h"
-
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
 
 //
 //  Pop wnav window

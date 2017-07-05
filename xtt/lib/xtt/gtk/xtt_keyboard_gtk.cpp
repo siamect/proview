@@ -48,6 +48,7 @@ typedef void *Widget;
 #include <gtk/gtk.h>
 
 #include "pwr.h"
+#include "co_math.h"
 #include "rt_xnav_msg.h"
 
 #include "glow.h"
@@ -56,10 +57,6 @@ typedef void *Widget;
 #include "glow_keyboardapi.h"
 #include "cow_wow_gtk.h"
 #include "xtt_keyboard_gtk.h"
-
-
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
 
 static gint delete_event( GtkWidget *w, GdkEvent *event, gpointer data)
 {

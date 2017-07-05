@@ -37,30 +37,12 @@
 #ifndef flow_h
 #define flow_h
 
+#include "pwr.h"
+#include "co_math.h"
+
 #if defined __cplusplus
 extern "C" {
 #endif
-
-
-#ifndef ODD
-#define ODD(a)	(((int)(a) & 1) != 0)
-#endif
-
-#ifndef EVEN
-#define EVEN(a)	(((int)(a) & 1) == 0)
-#endif
-
-#ifndef MAX
-#define MAX(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#endif
-
-#ifndef MIN
-#define MIN(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#endif
-
-  //#ifndef __ALPHA
-  //#define ABS(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
-  //#endif
 
 #define DRAW_TYPE_SIZE 9
 #define DRAW_FONT_SIZE 9

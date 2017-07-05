@@ -272,9 +272,9 @@ unsigned int ReceiveComplete()
 {
   unsigned int sts;
 
-  char search_remnode = TRUE;
-  char search_remtrans = TRUE;
-  char send_response = FALSE;
+  char search_remnode = true;
+  char search_remtrans = true;
+  char send_response = false;
   remnode_item *remnode;
   remtrans_item *remtrans;
 
@@ -284,13 +284,13 @@ unsigned int ReceiveComplete()
   int response_size = 4;			/* Size of response  = 4 bytes */
 
 
-  search_remnode = TRUE;
+  search_remnode = true;
 
   remnode = remnode_list;
   while (remnode && search_remnode)
   {
     if (receive_src.au.Group == remnode->objp->Address[0])
-      search_remnode = FALSE;
+      search_remnode = false;
     else
       remnode = (remnode_item *) remnode->next;
   }
@@ -346,7 +346,7 @@ unsigned int ReceiveComplete()
 	{
 	  search_remtrans = false;
 	  sts = RemTrans_Receive(remtrans, receive_buffer, receive_size);
-	  if (ODD(sts) && receive_class == CLASS_APL_RESP) send_response = TRUE;
+	  if (ODD(sts) && receive_class == CLASS_APL_RESP) send_response = true;
 	  break;
 	}
 	remtrans = (remtrans_item *) remtrans->next;

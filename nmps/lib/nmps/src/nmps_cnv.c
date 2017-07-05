@@ -48,11 +48,7 @@
 #include "nmps_cnv.h"
 #include "rs_cnv_msg.h"
 #include "co_dcli.h"
-
-#define ODD(a)	(((int)(a) & 1) != 0)
-#define EVEN(a)	(((int)(a) & 1) == 0)
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
+#include "co_math.h"
 
 #define CNV_CONVDEFTYPE_OBJ 	0
 #define CNV_CONVDEFTYPE_FILE 	1

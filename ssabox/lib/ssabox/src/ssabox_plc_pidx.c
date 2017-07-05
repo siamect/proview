@@ -35,22 +35,13 @@
  */
 
 /* PLC-code for PidX */
+#include "co_math.h"
 #include "pwr.h"
 #include "pwr_baseclasses.h"
 #include "pwr_basecomponentclasses.h"
 #include "pwr_ssaboxclasses.h"
 #include "rt_plc.h"
 #include "ssabox.h"
-
-#define ODD(a)	(((int)(a) & 1) != 0)
-#define EVEN(a)	(((int)(a) & 1) == 0)
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#ifndef __ALPHA
-#define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
-#endif
-
-
 
 /*      PIDX
 */

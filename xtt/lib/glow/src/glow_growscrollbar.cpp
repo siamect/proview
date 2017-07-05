@@ -95,8 +95,8 @@ void GrowScrollBar::draw( GlowWind *w, GlowTransform *t, int highlight, int hot,
   idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
 
-  idx = glmax( 0, idx);
-  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
   int x0, y0, width, height;
 
@@ -113,10 +113,10 @@ void GrowScrollBar::draw( GlowWind *w, GlowTransform *t, int highlight, int hot,
     y2 = int( trf.y( t, ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
   }
 
-  ll_x = glmin( x1, x2);
-  ur_x = glmax( x1, x2);
-  ll_y = glmin( y1, y2);
-  ur_y = glmax( y1, y2);
+  ll_x = MIN( x1, x2);
+  ur_x = MAX( x1, x2);
+  ll_y = MIN( y1, y2);
+  ur_y = MAX( y1, y2);
 
   glow_eDrawType fdrawtype = ((GrowCtx *)ctx)->get_drawtype( fill_drawtype, glow_eDrawType_FillHighlight,
 							     highlight, (GrowNode *)colornode, 1);
@@ -140,7 +140,7 @@ void GrowScrollBar::draw( GlowWind *w, GlowTransform *t, int highlight, int hot,
     case glow_eDir_Vertical:
       height = int( bar_length / (max_value - min_value) 
 		* (ur_y - ll_y));
-      height = glmax( 0, glmin( height, ur_y - ll_y));
+      height = MAX( 0, MIN( height, ur_y - ll_y));
       width = ur_x - ll_x;
       x0 = ll_x;
       y0 = ll_y + int( (bar_value - min_value) / (max_value - min_value) * (ur_y - ll_y));
@@ -148,7 +148,7 @@ void GrowScrollBar::draw( GlowWind *w, GlowTransform *t, int highlight, int hot,
     case glow_eDir_Horizontal:
       width = int( bar_length / (max_value - min_value) * 
 		(ur_x - ll_x));
-      width = glmax( 0, glmin( width, ur_x - ll_x));
+      width = MAX( 0, MIN( width, ur_x - ll_x));
       height = ur_y - ll_y;
       x0 = ll_x + int( (bar_value - min_value) / (max_value - min_value) * (ur_x - ll_x));
       y0 = ll_y;
@@ -184,8 +184,8 @@ void GrowScrollBar::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
   idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
 
-  idx = glmax( 0, idx);
-  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
   if (!t)
@@ -202,10 +202,10 @@ void GrowScrollBar::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
     x2 = int( trf.x( t, ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
     y2 = int( trf.y( t, ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
   }
-  ll_x = glmin( x1, x2);
-  ur_x = glmax( x1, x2);
-  ll_y = glmin( y1, y2);
-  ur_y = glmax( y1, y2);
+  ll_x = MIN( x1, x2);
+  ur_x = MAX( x1, x2);
+  ll_y = MIN( y1, y2);
+  ur_y = MAX( y1, y2);
 
   w->set_draw_buffer_only();
   ctx->gdraw->rect_erase( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, idx);
@@ -257,10 +257,10 @@ int GrowScrollBar::event_handler( GlowWind *w, glow_eEvent event, int x, int y, 
 {
   double ll_x, ur_x, ll_y, ur_y;
 
-  ll_x = glmin( ll.x, ur.x);
-  ur_x = glmax( ll.x, ur.x);
-  ll_y = glmin( ll.y, ur.y);
-  ur_y = glmax( ll.y, ur.y);
+  ll_x = MIN( ll.x, ur.x);
+  ur_x = MAX( ll.x, ur.x);
+  ll_y = MIN( ll.y, ur.y);
+  ur_y = MAX( ll.y, ur.y);
 
   if ( !movement_active &&
        !( ll_x <= fx && fx <= ur_x &&

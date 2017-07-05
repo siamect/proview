@@ -43,6 +43,7 @@
 #include "pwr.h"
 #include "pwr_class.h"
 #include "pwr_baseclasses.h"
+#include "co_math.h"
 #include "wb_vext.h"
 #include "remote_pvd_pwrcli.h"
 #include "remote_pvd_udp.h"
@@ -59,8 +60,6 @@ extern "C" {
 #include "co_dcli.h"
 #include "co_time.h"
 }
-
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 
 class subitem {
  public:
@@ -398,7 +397,7 @@ void remote_pvd_pwrcli::readAttribute( co_procom *pcom, pwr_tOix oix,
     memset( &n, 0, sizeof(n));
     n.os = (co_eOS) rpvd_opsys;
 
-    p = malloc( max(rmsg->Size, (int)aref.Size));
+    p = malloc( MAX(rmsg->Size, (int)aref.Size));
     size = aref.Size;
     cp = (gdb_sClass *) hash_Search(&sts, gdbroot->cid_ht, &cid);
     if (cp != NULL) {

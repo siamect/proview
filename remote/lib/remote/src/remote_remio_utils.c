@@ -189,8 +189,8 @@ pwr_tStatus RemIO_Init_ALCM(remnode_item *remnode)
   remnode->maxremao = objp->NumberOfAO = 0;
   remnode->maxremco = objp->NumberOfCo = 0;
   objp->IOPollDiff = 0;
-  objp->IOStallFlag = FALSE;
-  remnode->remio_err = FALSE;
+  objp->IOStallFlag = false;
+  remnode->remio_err = false;
 
   /* Get I/O dataarea for RemIO */
   chanobjid = objp->IODataArea;
@@ -454,26 +454,26 @@ pwr_tStatus RemIO_Stall_ALCM(remnode_item *remnode)
   
   /* Set StallFlag */
   if ( !objp->IOStallFlag) {
-    objp->IOStallFlag = TRUE;
+    objp->IOStallFlag = true;
 
     /* Clear Remote signals according to IOStallAction */
     if (objp->IOStallAction >= 2) {
 
       remdi = remnode->remdi;
       while (remdi != 0) {
-        *remdi->actval = FALSE;
+        *remdi->actval = false;
         remdi = (remdi_item *) remdi->next;
       }		/* END while */
 
       remdo = remnode->remdo;
       while (remdo != 0) {
-        if (!remdo->objp->PwrIsMaster) *remdo->actval = FALSE;
+        if (!remdo->objp->PwrIsMaster) *remdo->actval = false;
       remdo = (remdo_item *) remdo->next;
       }		/* END while */
 
       remdv = remnode->remdv;
       while (remdv != 0) {
-        if (!remdv->objp->PwrIsMaster) *remdv->actval = FALSE;
+        if (!remdv->objp->PwrIsMaster) *remdv->actval = false;
         remdv = (remdv_item *) remdv->next;
       }		/* END while */
 
@@ -553,7 +553,7 @@ pwr_tStatus RemIO_Receive_ALCM(	remnode_item	*remnode,
 
   /* Update IOPollDiff */
   objp->IOPollDiff--;
-  objp->IOStallFlag = FALSE;
+  objp->IOStallFlag = false;
   err = false;
 
   /* Store data in data-object */
@@ -568,11 +568,11 @@ pwr_tStatus RemIO_Receive_ALCM(	remnode_item	*remnode,
   remdi = remnode->remdi;
   while (remdi != 0) {
     if (remdi->objp->BuffOff < nochan) *remdi->actval =
-	(remdi->objp->ConvMask & *(bytep+remdi->objp->BuffOff)) ? TRUE : FALSE;
+	(remdi->objp->ConvMask & *(bytep+remdi->objp->BuffOff)) ? true : false;
     else  {
-      err = TRUE;
+      err = true;
       if (!remnode->remio_err) {
-        remnode->remio_err = TRUE;
+        remnode->remio_err = true;
         printf(" REMIO fel Di offset %d\n",remdi->objp->ConvOff);
       }
     }
@@ -589,13 +589,13 @@ pwr_tStatus RemIO_Receive_ALCM(	remnode_item	*remnode,
   while (remdo != 0) {
     if (remdo->objp->BuffOff < nochan) {
       remdo->objp->OldValue =
-	(remdo->objp->ConvMask & *(bytep+remdo->objp->BuffOff)) ? TRUE : FALSE;
+	(remdo->objp->ConvMask & *(bytep+remdo->objp->BuffOff)) ? true : false;
       if (!remdo->objp->PwrIsMaster) *remdo->actval = remdo->objp->OldValue;
     }
     else {
-      err = TRUE;
+      err = true;
       if (!remnode->remio_err) {
-        remnode->remio_err = TRUE;
+        remnode->remio_err = true;
         printf(" REMIO fel Do offset %d\n",remdo->objp->ConvOff);
       }
     }
@@ -612,13 +612,13 @@ pwr_tStatus RemIO_Receive_ALCM(	remnode_item	*remnode,
   while (remdv != 0) {
     if (remdv->objp->BuffOff < nochan) {
       remdv->objp->OldValue =
-	(remdv->objp->ConvMask & *(bytep+remdv->objp->BuffOff)) ? TRUE : FALSE;
+	(remdv->objp->ConvMask & *(bytep+remdv->objp->BuffOff)) ? true : false;
       if (!remdv->objp->PwrIsMaster) *remdv->actval = remdv->objp->OldValue;
     }
     else  {
-      err = TRUE;
+      err = true;
       if (!remnode->remio_err) {
-        remnode->remio_err = TRUE;
+        remnode->remio_err = true;
         printf(" REMIO fel Dv offset %d\n",remdv->objp->ConvOff);
       }
     }
@@ -638,9 +638,9 @@ pwr_tStatus RemIO_Receive_ALCM(	remnode_item	*remnode,
       *remai->actval = ConvAItoAct(*remai->rawval, remai->objp);
     }
     else  {
-      err = TRUE;
+      err = true;
       if (!remnode->remio_err) {
-        remnode->remio_err = TRUE;
+        remnode->remio_err = true;
         printf(" REMIO fel Ai offset %d\n",remai->objp->ConvOff);
       }
     }
@@ -663,9 +663,9 @@ pwr_tStatus RemIO_Receive_ALCM(	remnode_item	*remnode,
       }
     }
     else  {
-      err = TRUE;
+      err = true;
       if (!remnode->remio_err) {
-        remnode->remio_err = TRUE;
+        remnode->remio_err = true;
         printf(" REMIO fel Ao offset %d\n",remao->objp->ConvOff);
       }
     }
@@ -699,9 +699,9 @@ pwr_tStatus RemIO_Receive_ALCM(	remnode_item	*remnode,
       *remco->actval  = longval;
     }
     else  {
-      err = TRUE;
+      err = true;
       if (!remnode->remio_err) {
-        err = remnode->remio_err = TRUE;
+        err = remnode->remio_err = true;
         printf(" REMIO fel Co offset %d\n",remco->objp->ConvOff);
       }
     }
@@ -922,7 +922,7 @@ pwr_tStatus RemIO_Init_3964R(remnode_item *remnode)
   remnode->maxremai = 0;
   remnode->maxremao = 0;
   remnode->maxremco = 0;
-  remnode->remio_err = FALSE;
+  remnode->remio_err = false;
   remnode->remio_size = 0;
 
   objp->LinkUp = 1;
@@ -1201,19 +1201,19 @@ pwr_tStatus RemIO_Stall_3964R(remnode_item *remnode, int stall_action)
 
       remdi = remnode->remdi;
       while (remdi != 0) {
-        *remdi->actval = FALSE;
+        *remdi->actval = false;
         remdi = (remdi_item *) remdi->next;
       }		/* END while */
 
       remdo = remnode->remdo;
       while (remdo != 0) {
-        if (!remdo->objp->PwrIsMaster) *remdo->actval = FALSE;
+        if (!remdo->objp->PwrIsMaster) *remdo->actval = false;
       remdo = (remdo_item *) remdo->next;
       }		/* END while */
 
       remdv = remnode->remdv;
       while (remdv != 0) {
-        if (!remdv->objp->PwrIsMaster) *remdv->actval = FALSE;
+        if (!remdv->objp->PwrIsMaster) *remdv->actval = false;
         remdv = (remdv_item *) remdv->next;
       }		/* END while */
 
@@ -1303,11 +1303,11 @@ pwr_tStatus RemIO_Receive_3964R(remnode_item	 *remnode,
   remdi = remnode->remdi;
   while (remdi != 0) {
     if (remdi->objp->BuffOff < nochan) *remdi->actval =
-	(remdi->objp->ConvMask & *(bytep+remdi->objp->BuffOff)) ? TRUE : FALSE;
+	(remdi->objp->ConvMask & *(bytep+remdi->objp->BuffOff)) ? true : false;
     else  {
-      err = TRUE;
+      err = true;
       if (!remnode->remio_err) {
-        remnode->remio_err = TRUE;
+        remnode->remio_err = true;
         printf(" REMIO fel Di offset %d\n",remdi->objp->ConvOff);
       }
     }
@@ -1324,13 +1324,13 @@ pwr_tStatus RemIO_Receive_3964R(remnode_item	 *remnode,
   while (remdo != 0) {
     if (remdo->objp->BuffOff < nochan) {
       remdo->objp->OldValue =
-	(remdo->objp->ConvMask & *(bytep+remdo->objp->BuffOff)) ? TRUE : FALSE;
+	(remdo->objp->ConvMask & *(bytep+remdo->objp->BuffOff)) ? true : false;
       if (!remdo->objp->PwrIsMaster) *remdo->actval = remdo->objp->OldValue;
     }
     else {
-      err = TRUE;
+      err = true;
       if (!remnode->remio_err) {
-        remnode->remio_err = TRUE;
+        remnode->remio_err = true;
         printf(" REMIO fel Do offset %d\n",remdo->objp->ConvOff);
       }
     }
@@ -1347,13 +1347,13 @@ pwr_tStatus RemIO_Receive_3964R(remnode_item	 *remnode,
   while (remdv != 0) {
     if (remdv->objp->BuffOff < nochan) {
       remdv->objp->OldValue =
-	(remdv->objp->ConvMask & *(bytep+remdv->objp->BuffOff)) ? TRUE : FALSE;
+	(remdv->objp->ConvMask & *(bytep+remdv->objp->BuffOff)) ? true : false;
       if (!remdv->objp->PwrIsMaster) *remdv->actval = remdv->objp->OldValue;
     }
     else  {
-      err = TRUE;
+      err = true;
       if (!remnode->remio_err) {
-        remnode->remio_err = TRUE;
+        remnode->remio_err = true;
         printf(" REMIO fel Dv offset %d\n",remdv->objp->ConvOff);
       }
     }
@@ -1373,9 +1373,9 @@ pwr_tStatus RemIO_Receive_3964R(remnode_item	 *remnode,
       *remai->actval = ConvAItoAct(*remai->rawval, remai->objp);
     }
     else  {
-      err = TRUE;
+      err = true;
       if (!remnode->remio_err) {
-        remnode->remio_err = TRUE;
+        remnode->remio_err = true;
         printf(" REMIO fel Ai offset %d\n",remai->objp->ConvOff);
       }
     }
@@ -1399,9 +1399,9 @@ pwr_tStatus RemIO_Receive_3964R(remnode_item	 *remnode,
       }
     }
     else  {
-      err = TRUE;
+      err = true;
       if (!remnode->remio_err) {
-        remnode->remio_err = TRUE;
+        remnode->remio_err = true;
         printf(" REMIO fel Ao offset %d\n",remao->objp->ConvOff);
       }
     }
@@ -1434,9 +1434,9 @@ pwr_tStatus RemIO_Receive_3964R(remnode_item	 *remnode,
       *remco->actval  = longval;
     }
     else  {
-      err = TRUE;
+      err = true;
       if (!remnode->remio_err) {
-        err = remnode->remio_err = TRUE;
+        err = remnode->remio_err = true;
         printf(" REMIO fel Co offset %d\n",remco->objp->ConvOff);
       }
     }

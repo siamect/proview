@@ -189,10 +189,10 @@ int GrowArc::local_event_handler( glow_eEvent event, double x, double y)
 {
   double ll_x, ur_x, ll_y, ur_y;
 
-  ll_x = glmin( ll.x, ur.x);
-  ur_x = glmax( ll.x, ur.x);
-  ll_y = glmin( ll.y, ur.y);
-  ur_y = glmax( ll.y, ur.y);
+  ll_x = MIN( ll.x, ur.x);
+  ur_x = MAX( ll.x, ur.x);
+  ll_y = MIN( ll.y, ur.y);
+  ur_y = MAX( ll.y, ur.y);
 
   if ( ll_x <= x && x <= ur_x &&
        ll_y <= y && y <= ur_y)
@@ -718,8 +718,8 @@ void GrowArc::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void 
   else
     idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
-  idx = glmax( 0, idx);
-  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y, rot;
 
   if (!t) {
@@ -763,10 +763,10 @@ void GrowArc::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void 
     y2 = int(scale * (double(ur.y - ll.y)/2 * w->zoom_factor_y) + y_c + 0.5);
   }
 
-  ll_x = glmin( x1, x2);
-  ur_x = glmax( x1, x2);
-  ll_y = glmin( y1, y2);
-  ur_y = glmax( y1, y2);
+  ll_x = MIN( x1, x2);
+  ur_x = MAX( x1, x2);
+  ll_y = MIN( y1, y2);
+  ur_y = MAX( y1, y2);
 
   if ( fill)
   {
@@ -809,7 +809,7 @@ void GrowArc::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void 
       }
     }
     else {
-      int ish = int( shadow_width / 100 * glmin(ur_x - ll_x, ur_y - ll_y) + 0.5);
+      int ish = int( shadow_width / 100 * MIN(ur_x - ll_x, ur_y - ll_y) + 0.5);
       int drawtype_incr = shadow_contrast;
       if ( relief == glow_eRelief_Down)
 	drawtype_incr = -shadow_contrast;
@@ -894,8 +894,8 @@ void GrowArc::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
   else
     idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
-  idx = glmax( 0, idx);
-  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y, rot;
 
   if (!t)
@@ -940,10 +940,10 @@ void GrowArc::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
     x2 = int(scale * (double(ur.x - ll.x)/2 * w->zoom_factor_x) + x_c + 0.5);
     y2 = int(scale * (double(ur.y - ll.y)/2 * w->zoom_factor_y) + y_c + 0.5);
   }
-  ll_x = glmin( x1, x2);
-  ur_x = glmax( x1, x2);
-  ll_y = glmin( y1, y2);
-  ur_y = glmax( y1, y2);
+  ll_x = MIN( x1, x2);
+  ur_x = MAX( x1, x2);
+  ll_y = MIN( y1, y2);
+  ur_y = MAX( y1, y2);
 
 
   w->set_draw_buffer_only();
@@ -988,10 +988,10 @@ void GrowArc::get_borders( GlowTransform *t, double *x_right,
     y2 = trf.y( ur.x, ur.y);
   }
 
-  ll_x = glmin( x1, x2);
-  ur_x = glmax( x1, x2);
-  ll_y = glmin( y1, y2);
-  ur_y = glmax( y1, y2);
+  ll_x = MIN( x1, x2);
+  ur_x = MAX( x1, x2);
+  ll_y = MIN( y1, y2);
+  ur_y = MAX( y1, y2);
 
   if ( ll_x < *x_left)
     *x_left = ll_x;
@@ -1097,8 +1097,8 @@ void GrowArc::export_javabean( GlowTransform *t, void *node,
   else
     idx = int( ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * line_width - 1);
   idx += hot;
-  idx = glmax( 0, idx);
-  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   double x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y, rot;
 
   if (!t)
@@ -1118,14 +1118,14 @@ void GrowArc::export_javabean( GlowTransform *t, void *node,
     rot = trf.rot( t);
   }
 
-  ll_x = glmin( x1, x2);
-  ur_x = glmax( x1, x2);
-  ll_y = glmin( y1, y2);
-  ur_y = glmax( y1, y2);
+  ll_x = MIN( x1, x2);
+  ur_x = MAX( x1, x2);
+  ll_y = MIN( y1, y2);
+  ur_y = MAX( y1, y2);
 
   double ish;
   if ( !disable_shadow) 
-    ish = shadow_width / 100 * glmin(ur_x - ll_x, ur_y - ll_y);
+    ish = shadow_width / 100 * MIN(ur_x - ll_x, ur_y - ll_y);
   else
     ish = 0;
 

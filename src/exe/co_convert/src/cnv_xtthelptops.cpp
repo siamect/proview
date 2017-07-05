@@ -54,19 +54,12 @@ extern "C" {
 #include "co_nav_help.h"
 #include "co_lng.h"
 #include "cnv_ctx.h"
+#include "co_math.h"
 #include "cnv_readxtthelp.h"
 #include "cnv_xtthelptops.h"
 #include "cnv_image.h"
 
 #define ps_cCellSize 110
-/* Nice functions */
-#define ODD(a)	(((int)(a) & 1) != 0)
-#define EVEN(a)	(((int)(a) & 1) == 0)
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#ifndef __ALPHA
-#define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
-#endif
 
 void CnvXtthelpToPs::subject_to_fname( char *fname, const char *subject, int path)
 {

@@ -188,19 +188,19 @@ int FlowLine::event_handler( void *pos, flow_eEvent event, int x, int y,
   int y2 = p2.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y;
 
   if ((x1 == x2 && y1 < y2 && 		// Vertical
-       abs( x1 - x) < 3 && 
+       ABS( x1 - x) < 3 &&
        y1 < y && y < y2)
 	||
       (x1 == x2 && y1 > y2 && 		// Vertical
-       abs( x1 - x) < 3 && 
+       ABS( x1 - x) < 3 &&
        y2 < y && y < y1)
 	||
       (y1 == y2 && x1 < x2 &&		// Horizontal
-       abs( y1 - y) < 3 && 
+       ABS( y1 - y) < 3 &&
        x1 < x && x < x2)
         ||
       (y1 == y2 && x1 > x2 &&		// Horizontal
-       abs( y1 - y) < 3 && 
+       ABS( y1 - y) < 3 &&
        x2 < x && x < x1))
   {
 //    cout << "Event handler: Hit in line" << endl;

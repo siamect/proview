@@ -336,7 +336,7 @@ bool wb_vrepext::writeAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, size
   qmsg.WriteAttr.Oix = o->oid().oix;
   qmsg.WriteAttr.Offset = offset;
   qmsg.WriteAttr.Size = size;
-  memcpy( qmsg.WriteAttr.Buffer, p, min(sizeof(qmsg.WriteAttr.Buffer),size));
+  memcpy( qmsg.WriteAttr.Buffer, p, MIN(sizeof(qmsg.WriteAttr.Buffer),size));
 
   put( &qmsg, sizeof(qmsg), sts);
   if ( EVEN(*sts)) return 0;

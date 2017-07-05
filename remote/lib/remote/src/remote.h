@@ -34,16 +34,10 @@
  * General Public License plus this exception.
  */
 
-#define even(x) (((int)(x) & 1) == 0)
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#ifndef __ALPHA
-#define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
-#endif
-#define true 		1
-#define false 		0
-#define TRUE 		1
-#define FALSE 		0
+#include <stdbool.h>
+
+#include "co_math.h"
+
 #define doomsday false
 
 #define REMTRANS_UNDEF 		0

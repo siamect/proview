@@ -47,16 +47,9 @@
 #include "rt_errh.h"
 #include "rt_plc.h"
 #include "co_cdh.h"
+#include "co_math.h"
 #include "nmps.h"
 #include "rs_nmps_msg.h"
-
-#define ODD(a)	(((int)(a) & 1) != 0)
-#define EVEN(a)	(((int)(a) & 1) == 0)
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#ifndef __ALPHA
-#define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
-#endif
 
 #define	NMPS_OPTYPE_FRONT	0
 #define	NMPS_OPTYPE_BACK	1
@@ -227,7 +220,7 @@ void CellDisp_exec(
 	int	max_size;
 	char	*dataptr[NMPS_DISP_SIZE];
 
-	max_size = min( object->MaxSize, NMPS_DISP_SIZE);
+	max_size = MIN( object->MaxSize, NMPS_DISP_SIZE);
 	link = (pwr_sClass_DispLink *) object->LinkP;
 	if ( object->LinkP == &object->Link)
 	  link = 0;
@@ -860,7 +853,7 @@ void CellDispMir_exec(
 	int	max_size;
 	char	*dataptr[NMPS_DISP_SIZE];
 
-	max_size = min( object->MaxSize, NMPS_DISP_SIZE);
+	max_size = MIN( object->MaxSize, NMPS_DISP_SIZE);
 	link = (pwr_sClass_DispLink *) object->LinkP;
 	if ( object->LinkP == &object->Link)
 	  link = 0;
@@ -1413,7 +1406,7 @@ void CellUpdate_exec(
 	int	max_size;
 	char	*dataptr[NMPS_DISP_SIZE];
 
-	max_size = min( object->MaxSize, NMPS_DISP_SIZE);
+	max_size = MIN( object->MaxSize, NMPS_DISP_SIZE);
 	link = (pwr_sClass_DispLink *) object->LinkP;
 	if ( object->LinkP == &object->Link)
 	  link = 0;

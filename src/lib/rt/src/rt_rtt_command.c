@@ -52,6 +52,7 @@
 #include "pwr_class.h"
 #include "pwr_privilege.h"
 #include "pwr_baseclasses.h"
+#include "co_math.h"
 #include "co_time.h"
 #include "co_cdh.h"
 #include "co_ccm.h"
@@ -70,15 +71,6 @@
 
 #define r_toupper(c) (((c) >= 'a' && (c) <= 'z') ? (c) & 0xDF : (c))
 #define r_tolower(c) (((c) >= 'A' && (c) <= 'Z') ? (c) | 0x20 : (c))
-
-/* Nice functions */
-#define ODD(a)	(((int)(a) & 1) != 0)
-#define EVEN(a)	(((int)(a) & 1) == 0)
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#ifndef __ALPHA
-#define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
-#endif
 
 #define IF_NOGDH_RETURN \
 if ( !rtt_gdh_started)\
@@ -9153,7 +9145,7 @@ static int	rtt_set_parameter(
 	      return RTT__HOLDCOMMAND;
 	    }
 	    strncpy( buffer_ptr, value_str, 
-			min( parameter_size, sizeof(buffer)));
+			MIN( parameter_size, sizeof(buffer)));
 	    break;
 	  }
 	  case pwr_eType_Objid:

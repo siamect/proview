@@ -1337,7 +1337,7 @@ int  attrnav_attr_string_to_value( int type_id, char *value_str,
     {
       if ( (int) strlen( value_str) >= attr_size)
         return ATTRNAV__STRINGTOLONG;
-      strncpy( (char *)buffer_ptr, value_str, min(attr_size, buff_size));
+      strncpy( (char *)buffer_ptr, value_str, MIN(attr_size, buff_size));
       break;
     }
   }
@@ -2526,7 +2526,7 @@ static int attrnav_trace_scan_bc( brow_tObject object, void *p)
 	}
       }
       brow_SetAnnotation( object, 1, buf, len);
-      memcpy( item->old_value, p, min(item->size, (int) sizeof(item->old_value)));
+      memcpy( item->old_value, p, MIN(item->size, (int) sizeof(item->old_value)));
       break;
     }
     case attrnav_eItemType_Enum:

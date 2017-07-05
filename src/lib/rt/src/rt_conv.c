@@ -43,6 +43,7 @@
 
 #include <string.h>
 #include "pwr_class.h"
+#include "co_math.h"
 #include "rt_conv.h"
 
 

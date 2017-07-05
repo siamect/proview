@@ -202,18 +202,18 @@ int goen_create_nodetype_m10(
   }
 	
   f_height  = f_header/2 + f_header/2 +
-	       co_max((co_max(i_innr,i_outnr)-1), 1) * f_repeat;
+	       MAX((MAX(i_innr,i_outnr)-1), 1) * f_repeat;
 
   classname_width = strlen( graphbody->graphname) * f_strlength;
   if ( annot_count <= 1)
   {
-    f_width = co_max( f_strlength * 2 + co_max( classname_width, annot_width[0]),
+    f_width = MAX( f_strlength * 2 + MAX( classname_width, annot_width[0]),
 			f_defwidth + f_strlength * 2);
     f_width_left = 0;
   }
   else
   {
-    f_width = co_max( f_strlength * 4 + co_max( classname_width, annot_width[0])
+    f_width = MAX( f_strlength * 4 + MAX( classname_width, annot_width[0])
 			 + annot_width[1], f_defwidth + f_strlength * 2);
     f_width_left = f_strlength * 2 + annot_width[1];
   }

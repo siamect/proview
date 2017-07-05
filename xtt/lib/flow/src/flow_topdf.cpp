@@ -56,20 +56,12 @@ extern "C" {
 
 #include "flow_topdf.h"
 #include "co_lng.h"
+#include "co_math.h"
 //#include "cnv_image.h"
 
 #define CNV_TAB 18
 
 #define pdf_cHead "%PDF-1.4"
-
-/* Nice functions */
-#define ODD(a)	(((int)(a) & 1) != 0)
-#define EVEN(a)	(((int)(a) & 1) == 0)
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#ifndef __ALPHA
-#define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
-#endif
 
 int CnvContent::find_link( char *subject, char *text, int *page)
 {

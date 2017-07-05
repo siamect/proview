@@ -57,6 +57,7 @@
 #include "pwr_baseclasses.h"
 #include "pwr_nmpsclasses.h"
 #include "co_cdh.h"
+#include "co_math.h"
 #include "co_time.h"
 #include "rt_gdh.h"
 #include "rt_errh.h"
@@ -66,13 +67,6 @@
 #include "rs_nmps_msg.h"
 //#include "rs_sutl.h"
 
-#define ODD(a)	(((int)(a) & 1) != 0)
-#define EVEN(a)	(((int)(a) & 1) == 0)
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#ifndef __ALPHA
-#define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
-#endif
 #define	LogAndExit( status) \
 {\
   errh_CErrLog(NMPS__EXIT, errh_ErrArgMsg(status));\

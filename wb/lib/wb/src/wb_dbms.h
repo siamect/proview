@@ -1325,7 +1325,7 @@ public:
   virtual ~wb_dbms_succ_class() {;}
 
   virtual int bind(wb_dbms_txn *txn, wb_dbms_qe *key, wb_dbms_qe *data) {
-    prepare("select min(cidoix) from class where cidoix > ?", 1, 1);
+    prepare("select MIN(cidoix) from class where cidoix > ?", 1, 1);
 
     bindResult(0, MYSQL_TYPE_LONGLONG, (char *)key->data(), key->size());
     bindParam(0,  MYSQL_TYPE_LONGLONG, (char *)key->data(), key->size());
@@ -1342,7 +1342,7 @@ public:
   virtual ~wb_dbms_pred_class() {;}
 
   virtual int bind(wb_dbms_txn *txn, wb_dbms_qe *key, wb_dbms_qe *data) {
-    prepare("select max(cidoix) from class where cidoix < ?", 1, 1);
+    prepare("select MAX(cidoix) from class where cidoix < ?", 1, 1);
 
     bindResult(0, MYSQL_TYPE_LONGLONG, (char *)key->data(), key->size());
     bindParam(0,  MYSQL_TYPE_LONGLONG, (char *)key->data(), key->size());

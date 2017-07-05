@@ -812,8 +812,8 @@ int FlowDrawXLib::event_handler( FlowCtx *ctx, XEvent event)
       }
 
       if ( button_pressed && 
-	   (abs( event.xbutton.x - last_press_x) > DRAW_PRESS_PIX ||
-	    abs( event.xbutton.y - last_press_y) > DRAW_PRESS_PIX)) {
+	   (ABS( event.xbutton.x - last_press_x) > DRAW_PRESS_PIX ||
+	    ABS( event.xbutton.y - last_press_y) > DRAW_PRESS_PIX)) {
 
 	event.xbutton.x = last_press_x;
 	event.xbutton.y = last_press_y;

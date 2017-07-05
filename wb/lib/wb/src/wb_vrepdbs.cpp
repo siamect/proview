@@ -34,6 +34,7 @@
  * General Public License plus this exception.
  **/
 
+#include "co_math.h"
 #include "wb_vrepdbs.h"
 #include "wb_orepdbs.h"
 #include "wb_merep.h"

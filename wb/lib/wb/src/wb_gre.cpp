@@ -655,8 +655,8 @@ int WGre::node_annot_message( vldh_t_node node, char *message, int msg_size,
       case pwr_eType_String:
       case pwr_eType_Text: {
 	strncpy( annot_str, parvalue, 
-		 co_min( (int)sizeof(annot_str), annot_max_size));
-	annot_str[co_min( (int)sizeof(annot_str), annot_max_size)-1] = 0;
+		 MIN( (int)sizeof(annot_str), annot_max_size));
+	annot_str[MIN( (int)sizeof(annot_str), annot_max_size)-1] = 0;
 	break;
       }
       case pwr_eType_Char: {

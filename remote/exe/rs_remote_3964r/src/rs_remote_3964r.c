@@ -296,7 +296,7 @@ static unsigned int send_it(char *buf, int buffer_size)
   FD_ZERO(&read_fd);
   FD_SET(ser_fd, &read_fd);
 
-  sts=TRUE;
+  sts=true;
   
   write(ser_fd, sstx, 1); 	/*send stx and wait for answer*/
     
@@ -335,7 +335,7 @@ static unsigned int send_it(char *buf, int buffer_size)
       errh_Error("Remtrans 3964R sändning misslyckades, inget initierande DLE-tecken från mottagaren");
     else if(buff!=DLE)
       errh_Error("Remtrans 3964R sändning misslyckades, inget avslutande DLE-tecken från mottagaren");
-    sts=FALSE;
+    sts=false;
   }
   return sts;				/*and return status*/
 }
@@ -429,8 +429,8 @@ static unsigned int ReceiveHandler(int fd)
   unsigned int          data_size = 0;
   unsigned int		io_size = 0;
   unsigned int		common_offset = 0;
-  char                  cont = TRUE;
-  char			search_remtrans = FALSE;
+  char                  cont = true;
+  char			search_remtrans = false;
   char                  name[7];
   unsigned char         BCC = '\0';
   unsigned char         receive_buffer[MAX_SIZE_TELEGRAM];
@@ -456,7 +456,7 @@ static unsigned int ReceiveHandler(int fd)
 /**    Read telegram	                                                **/
 /*************************************************************************/
 
-  cont = TRUE;
+  cont = true;
   data_size = 0;
   
   while (cont)
@@ -473,13 +473,13 @@ static unsigned int ReceiveHandler(int fd)
       select(fd+1, &read_fd, NULL, NULL, &tv);
       if (read(fd, &received_char, 1) > 0) { //om det inte var timeout
         // Prevent writing oob
-        if (data_size > MAX_SIZE_TELEGRAM - 10) return (FALSE);
+        if (data_size > MAX_SIZE_TELEGRAM - 10) return false;
         receive_buffer[data_size++]=received_char;
       }
       else				//timeout gå tillbaka
       {
         errh_Error("3964R mottagning, character timeout");
-        return(FALSE);  
+        return false;
       }
     }  
 
@@ -490,7 +490,7 @@ static unsigned int ReceiveHandler(int fd)
     select(fd+1, &read_fd, NULL, NULL, &tv);
     if (read(fd, &receive_buffer[data_size], 1) < 1) {
       errh_Error("3964R mottagning, character timeout");
-      return(FALSE);  
+      return false;
     }
  
     if (receive_buffer[data_size] == ETX)
@@ -504,11 +504,11 @@ static unsigned int ReceiveHandler(int fd)
       select(fd+1, &read_fd, NULL, NULL, &tv);
       if (read(fd, &receive_buffer[data_size], 1) < 1) {
         errh_Error("3964R mottagning, character timeout");
-        return(FALSE);  
+        return false;
       }
   
       data_size++;
-      cont = FALSE;
+      cont = false;
     }
     else
       if (receive_buffer[data_size] != DLE ) data_size++;
@@ -526,7 +526,7 @@ static unsigned int ReceiveHandler(int fd)
 
 
   if ( BCC == receive_buffer[data_size-1] ) {
-    if(!write(fd,&sdle, 1)) return(FALSE);
+    if(!write(fd,&sdle, 1)) return false;
   }
   else
   {
@@ -537,10 +537,10 @@ static unsigned int ReceiveHandler(int fd)
     if (debug) printf("  Checksum error\n");
        
     if (use_remote_io) {
-      if(!write(fd,&sdle, 1)) return(FALSE);
+      if(!write(fd,&sdle, 1)) return false;
     }
     else
-      return(FALSE);
+      return false;
   }
 
 
@@ -599,17 +599,17 @@ static unsigned int ReceiveHandler(int fd)
       if (io_size > remtrans->objp->MaxLength ){
         remtrans->objp->ErrCount++;
         remtrans->objp->LastSts = STATUS_LENGTH;
-        return(FALSE);
+        return false;
       }
       else { 
         memcpy(&remtrans->datap[common_offset], c_buf, io_size);
 	time_GetTime(&remtrans->objp->TransTime);
         remtrans->objp->TransCount++;
-        remtrans->objp->DataValid = TRUE;
+        remtrans->objp->DataValid = true;
         remtrans->objp->LastSts = STATUS_OK;
         remtrans->objp->DataLength = data_size;
       }
-      return(TRUE);
+      return true;
     }
   }
   
@@ -646,7 +646,7 @@ static unsigned int ReceiveHandler(int fd)
     if ( EVEN(sts) )
     {
       remtrans->objp->ErrCount++;
-      return (FALSE);
+      return false;
     }
   }
   else
@@ -654,9 +654,9 @@ static unsigned int ReceiveHandler(int fd)
     /* No remtrans */
     errh_Error("Remtrans 3964R no remtrans for this message");
     rn_3964R->ErrCount++;
-    return (FALSE);
+    return false;
   }
-  return (TRUE);
+  return true;
 }
 
 
@@ -788,7 +788,7 @@ int main(int argc, char *argv[]) /*argv[2]=remnode name*/
     exit(0);
   }    
 
-  first = TRUE;
+  first = true;
   rn_3964R->LinkUp = 1;
   
   /* Loop forever */
@@ -850,6 +850,6 @@ int main(int argc, char *argv[]) /*argv[2]=remnode name*/
       }
     }
 
-    first = FALSE;    
+    first = false;
   }
 }

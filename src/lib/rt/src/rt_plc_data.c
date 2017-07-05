@@ -38,15 +38,10 @@
 #  include <string.h>
 
 #include "pwr.h"
+#include "co_math.h"
 #include "rt_plc.h"
 #include "pwr_baseclasses.h"
 #include "rt_plc_data.h"
-
-/* Nice functions */
-#define ODD(a)  (((int)(a) & 1) != 0)
-#define EVEN(a) (((int)(a) & 1) == 0)
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
 
 /* 		PLC RUTINER			*/
 
@@ -113,7 +108,7 @@ void DpDistribute_exec(
 {
 	if ( *object->DataInP)
 	  memcpy(  &object->DpOut1, *object->DataInP,
-		min( object->MaxIndex, 24) * sizeof(pwr_tBoolean));
+		MIN( object->MaxIndex, 24) * sizeof(pwr_tBoolean));
 }
 
 /*_*
@@ -125,7 +120,7 @@ void ApDistribute_exec(
 {
 	if ( *object->DataInP)
 	  memcpy(  &object->ApOut1, *object->DataInP, 
-		min( object->MaxIndex, 24) * sizeof(pwr_tFloat32));
+		MIN( object->MaxIndex, 24) * sizeof(pwr_tFloat32));
 }
 
 /*_*
@@ -137,7 +132,7 @@ void IpDistribute_exec(
 {
 	if ( *object->DataInP)
 	  memcpy(  &object->IpOut1, *object->DataInP, 
-		min( object->MaxIndex, 24) * sizeof(pwr_tInt32));
+		MIN( object->MaxIndex, 24) * sizeof(pwr_tInt32));
 }
 
 /*_*

@@ -48,6 +48,7 @@
 
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_math.h"
 #include "pwr_names.h"
 #include "flow.h"
 #include "flow_browctx.h"
@@ -60,15 +61,6 @@
 #include "co_nav_help.h"
 #include "co_dcli_msg.h"
 #include "rt_xnav_msg.h"
-
-/* Nice functions */
-#define ODD(a)	(((int)(a) & 1) != 0)
-#define EVEN(a)	(((int)(a) & 1) == 0)
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#ifndef __ALPHA
-#define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
-#endif
 
 static int help_cmp_items( const void *node1, const void *node2);
 

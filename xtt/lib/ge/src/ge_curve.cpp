@@ -1333,7 +1333,7 @@ int GeCurve::configure_axes()
       x += cd->y_axis_width[i];
     }
   }
-  axis_window_width = glmax( x, 1);
+  axis_window_width = MAX( x, 1);
 
   double zoom_x, zoom_y;
   int width;
@@ -2292,7 +2292,7 @@ void GeCurveData::scale( int axis_type, int value_type,
   }
   *max_value_axis = maxval;
   *min_value_axis = minval;
-  *trend_lines = abs(max_lines - min_lines) + 1;
+  *trend_lines = ABS(max_lines - min_lines) + 1;
   *axis_lines = (*trend_lines - 1) * trendlinequot + 1;
   *axis_linelongq = axlinequot;
   *axis_valueq = axvaluequot;
@@ -2300,11 +2300,11 @@ void GeCurveData::scale( int axis_type, int value_type,
   switch ( time_format) {
   case curve_eTimeFormat_Float:
     // Float format
-    format_int = abs(n) + 1;
+    format_int = ABS(n) + 1;
     if ( n > 0)
       format_dec = 0;
     else {
-      format_dec = abs(n);
+      format_dec = ABS(n);
       format_int++;
     }
     if ( minval < 0)
@@ -2315,13 +2315,13 @@ void GeCurveData::scale( int axis_type, int value_type,
     break;
   case curve_eTimeFormat_HourMinute:
     // Hour and minute format
-    format_int = abs(n) + 1;
+    format_int = ABS(n) + 1;
     strcpy( format, "%2t");
     *axis_width = 0.65 * format_int + 0.4;
     break;
   case curve_eTimeFormat_DayHour:
     // Days and hour format
-    format_int = abs(n) + 1;
+    format_int = ABS(n) + 1;
     strcpy( format, "%3t");
     *axis_width = 0.65 * format_int + 0.4;
     break;

@@ -46,11 +46,9 @@
 #include <fstream>
 
 #include "pwr.h"
+#include "co_math.h"
 #include "xtt_keyboard.h"
 #include "glow_growapi.h"
-
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
 
 //
 // Create the keyboard widget

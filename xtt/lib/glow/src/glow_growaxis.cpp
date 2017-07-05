@@ -262,7 +262,7 @@ void GrowAxis::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
   glow_eDrawType drawtype;
   int text_idx = int( w->zoom_factor_y / w->base_zoom_factor * (text_size +4) - 4);
   double tsize = w->zoom_factor_y / w->base_zoom_factor * (8+2*text_size);
-  text_idx = glmin( text_idx, DRAW_TYPE_SIZE-1);
+  text_idx = MIN( text_idx, DRAW_TYPE_SIZE-1);
 
   if ( fix_line_width) {
     idx = line_width;
@@ -283,8 +283,8 @@ void GrowAxis::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
   if ( (node && ((GrowNode *)node)->invisible) || invisible)
     return;
 
-  idx = glmax( 0, idx);
-  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
   if (!t) {
@@ -302,10 +302,10 @@ void GrowAxis::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
     rotation = (trf.rot( t) / 360 - floor( trf.rot( t) / 360)) * 360;
   }
 
-  ll_x = glmin( x1, x2);
-  ur_x = glmax( x1, x2);
-  ll_y = glmin( y1, y2);
-  ur_y = glmax( y1, y2);
+  ll_x = MIN( x1, x2);
+  ur_x = MAX( x1, x2);
+  ll_y = MIN( y1, y2);
+  ur_y = MAX( y1, y2);
   drawtype = ctx->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
 				highlight, (GrowNode *)colornode, 0);
 
@@ -320,7 +320,7 @@ void GrowAxis::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
 	if ( i % valuequotient == 0) {
 	  format_text( text, format, max_value - i * increment);
 	  ctx->gdraw->get_text_extent( text, strlen(text), text_drawtype,
-				       glmax( 0, text_idx), glow_eFont_Helvetica, 
+				       MAX( 0, text_idx), glow_eFont_Helvetica,
 				       &z_width, &z_height, &z_descent, tsize, 0);
 	  if ( max_z_width < z_width)
 	    max_z_width = z_width;
@@ -370,7 +370,7 @@ void GrowAxis::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
     // Calculate max value text height
     if ( draw_text) {
       ctx->gdraw->get_text_extent( "0", 1, text_drawtype, 
-				   glmax( 0, text_idx), glow_eFont_Helvetica, 
+				   MAX( 0, text_idx), glow_eFont_Helvetica,
 				   &z_width, &z_height, &z_descent, tsize, 0);
 
       line_length = ur_y - ll_y - z_height;
@@ -393,7 +393,7 @@ void GrowAxis::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
       if ( draw_text && i % valuequotient == 0) {
         format_text( text, format, max_value - i * increment);
         ctx->gdraw->get_text_extent( text, strlen(text), text_drawtype, 
-				     glmax( 0, text_idx), glow_eFont_Helvetica, 
+				     MAX( 0, text_idx), glow_eFont_Helvetica,
 				     &z_width, &z_height, &z_descent, tsize, 0);
 
         if ( text_idx >= 0 && z_height < ur_y - ll_y ) {
@@ -421,7 +421,7 @@ void GrowAxis::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
 	if ( i % valuequotient == 0) {
 	  format_text( text, format, max_value - i * increment);
 	  ctx->gdraw->get_text_extent( text, strlen(text), text_drawtype, 
-				       glmax( 0, text_idx), glow_eFont_Helvetica, 
+				       MAX( 0, text_idx), glow_eFont_Helvetica,
 				       &z_width, &z_height, &z_descent, tsize, 0);
 	  if ( max_z_width < z_width)
 	    max_z_width = z_width;
@@ -470,7 +470,7 @@ void GrowAxis::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
     // Calculate max value text height
     if ( draw_text) {
       ctx->gdraw->get_text_extent( "0", 1, text_drawtype, 
-				   glmax( 0, text_idx), glow_eFont_Helvetica, 
+				   MAX( 0, text_idx), glow_eFont_Helvetica,
 				   &z_width, &z_height, &z_descent, tsize, 0);
 
       line_length = ur_y - ll_y - (z_height - z_descent);
@@ -492,7 +492,7 @@ void GrowAxis::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
       if ( draw_text && i % valuequotient == 0) {
         format_text( text, format, max_value - i * increment);
         ctx->gdraw->get_text_extent( text, strlen(text), text_drawtype, 
-				     glmax( 0, text_idx), glow_eFont_Helvetica, 
+				     MAX( 0, text_idx), glow_eFont_Helvetica,
 				     &z_width, &z_height, &z_descent, tsize, 0);
 
         if ( text_idx >= 0 && z_height - z_descent < ur_y - ll_y) {
@@ -537,10 +537,10 @@ void GrowAxis::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
     y2 = int( trf.y( t, ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
   }
 
-  ll_x = glmin( x1, x2) - hotw;
-  ur_x = glmax( x1, x2) + hotw;
-  ll_y = glmin( y1, y2) - hotw;
-  ur_y = glmax( y1, y2) + hotw;
+  ll_x = MIN( x1, x2) - hotw;
+  ur_x = MAX( x1, x2) + hotw;
+  ll_y = MIN( y1, y2) - hotw;
+  ur_y = MAX( y1, y2) + hotw;
 
   w->set_draw_buffer_only();
   ctx->gdraw->fill_rect( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineErase);
@@ -705,9 +705,9 @@ void GrowAxis::set_range( double minval, double maxval, int keep_settings)
     int di;
     int horizontal = ( rotation < 45 || (rotation > 135 && rotation < 225) || rotation > 315) ? 0 : 1;
     if ( horizontal)
-      len = abs( x2 - x1);
+      len = ABS( x2 - x1);
     else
-      len = abs( y2 - y1);
+      len = ABS( y2 - y1);
     
     if ( len < 150)
       lix = 0;
@@ -731,7 +731,7 @@ void GrowAxis::set_range( double minval, double maxval, int keep_settings)
 	valuequotient = rdata[lix][di-1].vvalq;
     }
 
-    double m = glmax(fabs(maxval),fabs(minval)); 
+    double m = MAX(fabs(maxval),fabs(minval));
     switch ( lix) {
     case 0: {
       if ( m < 0.01)
@@ -796,7 +796,7 @@ void GrowAxis::export_javabean( GlowTransform *t, void *node,
   int max_z_width = 0;
   int idx = int( ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (text_size +4) - 4);
   double tsize = ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (8+2*text_size);
-  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
 
   bold = (text_drawtype == glow_eDrawType_TextHelveticaBold);
 
@@ -815,10 +815,10 @@ void GrowAxis::export_javabean( GlowTransform *t, void *node,
     y2 = trf.y( t, ur.x, ur.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
   }
 
-  ll_x = glmin( x1, x2);
-  ur_x = glmax( x1, x2);
-  ll_y = glmin( y1, y2);
-  ur_y = glmax( y1, y2);
+  ll_x = MIN( x1, x2);
+  ur_x = MAX( x1, x2);
+  ll_y = MIN( y1, y2);
+  ur_y = MAX( y1, y2);
 
   if ( t)
     rotation = (trf.rot( t) / 360 - floor( trf.rot( t) / 360)) * 360;
@@ -833,7 +833,7 @@ void GrowAxis::export_javabean( GlowTransform *t, void *node,
 	if ( i % valuequotient == 0) {
 	  format_text( text, format, max_value - i * increment);
 	  ctx->gdraw->get_text_extent( text, strlen(text), text_drawtype, 
-				       glmax( 0, idx), glow_eFont_Helvetica, 
+				       MAX( 0, idx), glow_eFont_Helvetica,
 				       &z_width, &z_height, &z_descent, tsize, 0);
 	  if ( max_z_width < z_width)
 	    max_z_width = z_width;
@@ -848,7 +848,7 @@ void GrowAxis::export_javabean( GlowTransform *t, void *node,
   {
     if ( draw_text) {
       ctx->gdraw->get_text_extent( "0", 1, text_drawtype, 
-				   glmax( 0, idx), glow_eFont_Helvetica, 
+				   MAX( 0, idx), glow_eFont_Helvetica,
 				   &z_width, &z_height, &z_descent, tsize, 0);
 
       line_length = int(ur_y - ll_y) - (z_height - z_descent);
@@ -863,7 +863,7 @@ void GrowAxis::export_javabean( GlowTransform *t, void *node,
 	if ( i % valuequotient == 0) {
 	  format_text( text, format, max_value - i * increment);
 	  ctx->gdraw->get_text_extent( text, strlen(text), text_drawtype, 
-				       glmax( 0, idx), glow_eFont_Helvetica, 
+				       MAX( 0, idx), glow_eFont_Helvetica,
 				       &z_width, &z_height, &z_descent, tsize, 0);
 	  if ( max_z_width < z_width)
 	    max_z_width = z_width;
@@ -878,7 +878,7 @@ void GrowAxis::export_javabean( GlowTransform *t, void *node,
   {
     if ( draw_text) {
       ctx->gdraw->get_text_extent( "0", 1, text_drawtype, 
-				   glmax( 0, idx), glow_eFont_Helvetica, 
+				   MAX( 0, idx), glow_eFont_Helvetica,
 				   &z_width, &z_height, &z_descent, tsize, 0);
 
       line_length = int(ur_y - ll_y) - (z_height - z_descent);

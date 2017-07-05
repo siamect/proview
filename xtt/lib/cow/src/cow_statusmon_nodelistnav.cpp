@@ -702,7 +702,7 @@ int NodelistNav::trace_scan_bc( brow_tObject object, void *p)
 
     attrvalue_to_string( item->type_id, p, buf, sizeof(buf), &len, NULL);
     brow_SetAnnotation( object, 1, buf, len);
-    memcpy( item->old_value, p, min(item->size, (int) sizeof(item->old_value)));
+    memcpy( item->old_value, p, MIN(item->size, (int) sizeof(item->old_value)));
     break;
   }
   case nodelistnav_eItemType_AttrSysSts: {
@@ -727,7 +727,7 @@ int NodelistNav::trace_scan_bc( brow_tObject object, void *p)
 
     attrvalue_to_string( item->type_id, p, buf, sizeof(buf), &len, NULL);
     brow_SetAnnotation( object, 1, buf, len);
-    memcpy( item->old_value, p, min(item->size, (int) sizeof(item->old_value)));
+    memcpy( item->old_value, p, MIN(item->size, (int) sizeof(item->old_value)));
 
     flow_eDrawType color;
     pwr_tStatus sts = *(pwr_tStatus *)item->status_p;

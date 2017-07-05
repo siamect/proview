@@ -51,12 +51,6 @@
 #include "co_dcli.h"
 #include "wb_dir.h"
 
-/* Global functions_____________________________________________________*/
-
-#define ODD(a)	(((int)(a) & 1) != 0)
-#define EVEN(a)	(((int)(a) & 1) == 0)
-
-
 /*************************************************************************
 *
 * Name:		dir_parse_filename

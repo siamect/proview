@@ -47,6 +47,7 @@
  #include <stdlib.h>
 #endif
 
+#include "co_math.h"
 #include "pwr.h"
 #include "pwr_class.h"
 #include "rt_gdh.h"
@@ -57,15 +58,6 @@
 #include "rt_rtt_edit.h"
 #include "rt_rtt_msg.h"
 #include "rt_rtt_edit_helptext.h"
-
-/* Nice functions */
-#define ODD(a)	(((int)(a) & 1) != 0)
-#define EVEN(a)	(((int)(a) & 1) == 0)
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#ifndef __ALPHA
-#define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
-#endif
 
 #define CHARSET_ASCII(a) \
 	if ( a & RTT_CHARSET_LINE) a -= RTT_CHARSET_LINE;

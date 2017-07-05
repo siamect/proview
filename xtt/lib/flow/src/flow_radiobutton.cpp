@@ -195,8 +195,8 @@ void FlowRadiobutton::nav_draw( void *pos, int highlight, void *node)
   {
     idx = ctx->nav_zoom_factor / ctx->base_zoom_factor * line_width - 1;
   }
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   ctx->fdraw->nav_rect( ctx, ll.nav_z_x + ((FlowPoint *)pos)->nav_z_x - 
 	ctx->nav_offset_x, ll.nav_z_y + 
 	((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
@@ -218,8 +218,8 @@ void FlowRadiobutton::nav_erase( void *pos, void *node)
   {
     idx = ctx->nav_zoom_factor / ctx->base_zoom_factor * line_width - 1;
   }
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   ctx->fdraw->nav_rect_erase( ctx, ll.nav_z_x + ((FlowPoint *)pos)->nav_z_x - 
 	ctx->nav_offset_x, ll.nav_z_y + 
 	((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 

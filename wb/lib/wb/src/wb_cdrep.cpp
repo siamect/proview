@@ -35,6 +35,7 @@
  **/
 
 #include "co_cdh.h"
+#include "co_math.h"
 #include "co_time.h"
 #include "wb_cdrep.h"
 #include "wb_erep.h"
@@ -662,7 +663,7 @@ void wb_cdrep::convertSubClass( pwr_tCid cid, wb_merep *merep,
 	if ( adrep_source->type() == adrep_target->type()) {
 	  memcpy( (char *)body_target + adrep_target->offset(), 
 		  (char *)body_source + adrep_source->offset(),
-		  min( adrep_target->size(), adrep_source->size()));
+		  MIN( adrep_target->size(), adrep_source->size()));
 	}
 	else {
 	  int cidx = conv_GetIdx(adrep_source->type(), adrep_target->type());
@@ -887,7 +888,7 @@ void wb_cdrep::convertObject( wb_merep *merep, void *rbody, void *dbody,
 	      if ( adrep_source->type() == adrep_target->type()) {
 		memcpy( (char *)body_target + adrep_target->offset(), 
 			(char *)body_source + adrep_source->offset(),
-			min( adrep_target->size(), adrep_source->size()));
+			MIN( adrep_target->size(), adrep_source->size()));
 	      }
 	      else {
 		int cidx = conv_GetIdx(adrep_source->type(), adrep_target->type());

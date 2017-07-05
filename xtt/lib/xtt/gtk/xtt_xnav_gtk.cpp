@@ -51,6 +51,7 @@ typedef void *Widget;
 #include "rt_gdh.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_math.h"
 #include "co_time.h"
 #include "co_msg.h"
 #include "rt_xnav_msg.h"
@@ -92,9 +93,6 @@ typedef void *Widget;
 #include "xtt_fileview_gtk.h"
 #include "xtt_keyboard_gtk.h"
 #include "xtt_otree_gtk.h"
-
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
 
 //
 // Create the navigator widget

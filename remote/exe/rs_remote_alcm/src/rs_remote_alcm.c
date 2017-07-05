@@ -402,10 +402,10 @@ unsigned int SendAppl(remnode_item *remnode,
 unsigned short int Receive()
 {
   remnode_item *remnode;
-  unsigned char search_remnode = TRUE;
+  unsigned char search_remnode = true;
   remtrans_item *remtrans;
-  unsigned char search_remtrans = TRUE;
-  unsigned char send_response = FALSE;
+  unsigned char search_remtrans = true;
+  unsigned char send_response = false;
   int msg_size;
   unsigned int sts;
   char name[7];
@@ -445,13 +445,13 @@ unsigned short int Receive()
   }    
 
   remnode = rnl;
-  search_remnode = TRUE;
+  search_remnode = true;
 
   while (remnode && search_remnode)
   {
     local = (remnode_alcm *) remnode->local;
     if (memcmp(rcv.eh.src, local->address, 6) == 0)
-      search_remnode = FALSE;
+      search_remnode = false;
     else
       remnode = (remnode_item *) remnode->next;
   }
@@ -481,7 +481,7 @@ unsigned short int Receive()
  	RemUtils_R50ToAscii( (unsigned short *) &rcv.apl.receive_task, name);
 	name[6] = '\0';
 	
- 	search_remtrans = TRUE;
+ 	search_remtrans = true;
 
         remtrans = remnode->remtrans;
 	while(remtrans && search_remtrans)
@@ -489,10 +489,10 @@ unsigned short int Receive()
 	  if ((strncmp(name, remtrans->objp->TransName, 6) == 0) &&
 		remtrans->objp->Direction == REMTRANS_IN)
 	  {
-	    search_remtrans = FALSE;
+	    search_remtrans = false;
 	    sts = RemTrans_Receive(remtrans, (char *) &rcv.apl, apl_size);
 	    if ((rcv.apl.trans_code == ALCM_TRACO_APLACK) && ODD(sts))
-	      send_response = TRUE;
+	      send_response = true;
 	    break;
 	  }
 	  remtrans = (remtrans_item *) remtrans->next;
@@ -505,7 +505,7 @@ unsigned short int Receive()
 	else {
 	  // Skicka alltid kvittens på DUMMY0 (om APLACK)	
 	  if (strncmp(name, "DUMMY0", 6) == 0 && rcv.apl.trans_code == ALCM_TRACO_APLACK) 
-	    send_response = TRUE;
+	    send_response = true;
 	}
       }
 
@@ -549,12 +549,12 @@ unsigned short int Receive()
 	      	msg_size-sizeof(eth_header)-sizeof(alcm_header));
 	      time_GetTime(&remtrans->objp->TransTime);
 	      remtrans->objp->TransCount++;
-	      remtrans->objp->DataValid = TRUE;
+	      remtrans->objp->DataValid = true;
 	      remtrans->objp->LastSts = STATUS_OK;
 	      if (common_length > remtrans->objp->DataLength) 
 		remtrans->objp->DataLength = common_length;
 	      if (csp->trans_code == ALCM_TRACO_CSPACK ||
-		  csp->trans_code == ALCM_TRACO_COFACK) send_response = TRUE;
+		  csp->trans_code == ALCM_TRACO_COFACK) send_response = true;
 	    }
 	  }
 	  remtrans = (remtrans_item *) remtrans->next;
@@ -573,7 +573,7 @@ unsigned short int Receive()
         sts = RemIO_Receive_ALCM(remnode, (bsp_buffer *) &rcv.apl, apl_size);
 	local->time_since_io = 0;
       
-        if (rcv.apl.trans_code == ALCM_TRACO_BSPACK) send_response = TRUE;
+        if (rcv.apl.trans_code == ALCM_TRACO_BSPACK) send_response = true;
       }
 
     }
@@ -594,12 +594,12 @@ unsigned short int Receive()
 	transp->objp->Buffers--;
 	free(transbuff);
       }
-      send_response = FALSE;		// Skicka ingen kvittens
+      send_response = false;		// Skicka ingen kvittens
     }
 
     else if (rcv.ah.type == ALCM_MTYP_INIT && !local->ref->Disable)
     {
-      send_response = TRUE;		// Svara alltid init-meddelande med kvittens
+      send_response = true;		// Svara alltid init-meddelande med kvittens
     }
 
     if (send_response) {
@@ -773,17 +773,17 @@ int main(int argc, char *argv[]) {
       rn_local->time_since_rcv += TIME_INCR;
       rn_local->time_since_poll += TIME_INCR;
       rn_local->time_since_io += TIME_INCR;
-      rn_local->time_since_scan = min(rn_local->time_since_scan, rn_local->ref->ScanTime + 1.0);
-      rn_local->time_since_rcv = min(rn_local->time_since_rcv, rn_local->ref->LinkTimeout + 1.0);
-      rn_local->time_since_poll = min(rn_local->time_since_poll, rn_local->ref->IOPollTimeSlow + 1.0);
-      rn_local->time_since_io = min(rn_local->time_since_io, rn_local->ref->IOStallTime + 1.0);
+      rn_local->time_since_scan = MIN(rn_local->time_since_scan, rn_local->ref->ScanTime + 1.0);
+      rn_local->time_since_rcv = MIN(rn_local->time_since_rcv, rn_local->ref->LinkTimeout + 1.0);
+      rn_local->time_since_poll = MIN(rn_local->time_since_poll, rn_local->ref->IOPollTimeSlow + 1.0);
+      rn_local->time_since_io = MIN(rn_local->time_since_io, rn_local->ref->IOStallTime + 1.0);
 
       /* Increase send timer for every remtrans */
       remtrans = rn->remtrans;
       while(remtrans) {
         remtrans->time_since_send += TIME_INCR;
         /* Prevent big counter */
-        remtrans->time_since_send = min(remtrans->time_since_send, rn->retransmit_time + 1.0);
+        remtrans->time_since_send = MIN(remtrans->time_since_send, rn->retransmit_time + 1.0);
         remtrans = (remtrans_item *) remtrans->next;
       }
 

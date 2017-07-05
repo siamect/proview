@@ -53,6 +53,7 @@
 #endif
 
 #include "pwr.h"
+#include "co_math.h"
 #include "co_time.h"
 #include "co_tree.h"
 #include "co_errno.h"
@@ -87,8 +88,6 @@
 #define SECONDARY_NID(nid) ((nid) | 0x80000000)
 #define NID_LIX(nid)    (((nid) & 0x80000000) ? 1 : 0)
 #define NID(nid)	((nid) & 0x7fffffff)
-
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 
 typedef enum {
   eAction__ = 0,
@@ -1704,15 +1703,15 @@ new_link (
 
   pwr_Assert(lp->np != NULL);
 
-  rtt_rxmin = (float)(max(lp->np->link[lp->lix].min_resend_time,qdb->my_node->link[0].min_resend_time))/1000;
+  rtt_rxmin = (float)(MAX(lp->np->link[lp->lix].min_resend_time,qdb->my_node->link[0].min_resend_time))/1000;
   if ( rtt_rxmin == 0)
     rtt_rxmin = RTT_RXMIN;
-  rtt_rxmax = (float)(max(lp->np->link[lp->lix].max_resend_time,qdb->my_node->link[0].max_resend_time))/1000;
+  rtt_rxmax = (float)(MAX(lp->np->link[lp->lix].max_resend_time,qdb->my_node->link[0].max_resend_time))/1000;
   if ( rtt_rxmax == 0)
     rtt_rxmax = RTT_RXMAX;
-  ack_delay = max(lp->np->link[lp->lix].ack_delay,qdb->my_node->link[0].ack_delay);
+  ack_delay = MAX(lp->np->link[lp->lix].ack_delay,qdb->my_node->link[0].ack_delay);
   time_FloatToD( &lp->ack_delay, qdb->my_node->link[0].ack_delay);
-  lp->exp_buf_quota = max(lp->np->link[lp->lix].export_buf_quota,qdb->my_node->link[0].export_buf_quota);
+  lp->exp_buf_quota = MAX(lp->np->link[lp->lix].export_buf_quota,qdb->my_node->link[0].export_buf_quota);
   if ( lp->exp_buf_quota == 0)
     lp->exp_buf_quota = EXPORT_BUF_QUOTA;    
   lp->np->link[lp->lix].export_quota = lp->exp_buf_quota;

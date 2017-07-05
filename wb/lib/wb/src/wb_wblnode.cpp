@@ -38,6 +38,7 @@
 #include <limits.h>
 #include "pwr_class.h"
 #include "co_cdh.h"
+#include "co_math.h"
 #include "co_time.h"
 #include "co_dcli.h"
 #include "wb_wblnode.h"
@@ -2241,7 +2242,7 @@ int wb_wblnode::attrStringToValue( int type_id, char *value_str,
     {
       if ( strlen( value_str) >= attr_size)
         return 0;
-      strncpy( (char *)buffer_ptr, value_str, min(attr_size, buff_size));
+      strncpy( (char *)buffer_ptr, value_str, MIN(attr_size, buff_size));
       break;
     }
     case pwr_eType_Objid:

@@ -42,21 +42,7 @@
 #include <string.h>
 #include <ctype.h>
 
-
-#ifndef max
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#endif
-
-#ifndef min
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#endif
-
-#ifndef abs
-#define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
-#endif
-
-#define ODD(a)   (((int)(a) & 1) != 0)
-#define EVEN(a)  (((int)(a) & 1) == 0)
+#include "co_math.h"
 
 #define GSX__SUCCESS 1
 #define GSX__CONVWBLSYNTAX 22

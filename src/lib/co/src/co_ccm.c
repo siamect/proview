@@ -51,19 +51,10 @@
 #include "co_cnf.h"
 #include "co_syi.h"
 #include "co_api.h"
+#include "co_math.h"
 
 #define r_toupper(c) (((c) >= 'a' && (c) <= 'z') ? (c) & 0xDF : (c))
 #define r_tolower(c) (((c) >= 'A' && (c) <= 'Z') ? (c) | 0x20 : (c))
-
-
-/* Nice functions */
-#define ODD(a)	(((int)(a) & 1) != 0)
-#define EVEN(a)	(((int)(a) & 1) == 0)
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#ifndef __ALPHA
-#define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
-#endif
 
 #define CCM_FLT_EPSILON 5.0e-6
 
@@ -492,7 +483,7 @@ static int ccm_element( char *element, int num, char *str, char delim)
     }
     else
     {
-      max_size = min( s1 - str, K_STRING_SIZE-1);
+      max_size = MIN( s1 - str, K_STRING_SIZE-1);
       strncpy( element, str, max_size);
       element[max_size] = 0;
       return 1;
@@ -523,7 +514,7 @@ static int ccm_element( char *element, int num, char *str, char delim)
     }  
     else if ( i == num)
     {
-      max_size = min( s2 - s1, K_STRING_SIZE-1);
+      max_size = MIN( s2 - s1, K_STRING_SIZE-1);
       strncpy( element, s1, max_size);
       element[max_size] = 0;
       return 1;

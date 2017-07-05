@@ -3600,10 +3600,10 @@ int WFoe::print_overview()
 			      (*node_ptr)->ln.oid)) {
       /* Calculate coordinates for an overview */
       gre->measure_object( *node_ptr, &ll_x, &ll_y, &width, &height);
-      ll_x_min = co_min( ll_x_min, ll_x);
-      ll_y_min = co_min( ll_y_min, ll_y);
-      ur_x_max = co_max( ur_x_max, ll_x + width);
-      ur_y_max = co_max( ur_y_max, ll_y + height);
+      ll_x_min = MIN( ll_x_min, ll_x);
+      ll_y_min = MIN( ll_y_min, ll_y);
+      ur_x_max = MAX( ur_x_max, ll_x + width);
+      ur_y_max = MAX( ur_y_max, ll_y + height);
       
       doc_count++;	  
     }
@@ -3666,10 +3666,10 @@ int WFoe::print_pdf_overview()
 			      (*node_ptr)->ln.oid)) {
       /* Calculate coordinates for an overview */
       gre->measure_object( *node_ptr, &ll_x, &ll_y, &width, &height);
-      ll_x_min = co_min( ll_x_min, ll_x);
-      ll_y_min = co_min( ll_y_min, ll_y);
-      ur_x_max = co_max( ur_x_max, ll_x + width);
-      ur_y_max = co_max( ur_y_max, ll_y + height);
+      ll_x_min = MIN( ll_x_min, ll_x);
+      ll_y_min = MIN( ll_y_min, ll_y);
+      ur_x_max = MAX( ur_x_max, ll_x + width);
+      ur_y_max = MAX( ur_y_max, ll_y + height);
       
       doc_count++;	  
     }

@@ -251,7 +251,7 @@ static unsigned int Receive()
   unsigned char crc[2];
 //  DDA$_EXTENDED_STATUS_INFO stsblk;
 //  int error_logged = 0;
-  char search_remtrans = FALSE;
+  char search_remtrans = false;
   remtrans_item *remtrans;
 
   fd_set read_fd;
@@ -295,7 +295,7 @@ static unsigned int Receive()
     {
         rn_modbus->ErrCount++;
         errh_Info("Modbus remote CRC error, calc CRC:%02x%02x telegram CRC:%02x%02x",crc[0], crc[1],telegram[data_size-1],telegram[data_size]);
-        return (FALSE);
+        return false;
     }
     else
     {
@@ -317,7 +317,7 @@ static unsigned int Receive()
         if ( EVEN(sts) )
         {
           remtrans->objp->ErrCount++;
-          return (FALSE);
+          return false;
         }
       }
 
@@ -326,7 +326,7 @@ static unsigned int Receive()
         /* No corresponding RemTrans object found */
         rn_modbus->ErrCount++;
         errh_Info("Modbus remote error, no corresponding RemTrans address object found");
-        return (FALSE);
+        return false;
       }
     }
 

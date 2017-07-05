@@ -42,17 +42,9 @@
 #include "pwr_basecomponentclasses.h"
 #include "rt_plc.h"
 #include "rt_gdh.h"
+#include "co_math.h"
 #include "co_time.h"
 #include "rt_plc_bcomp.h"
-
-#define ODD(a)	(((int)(a) & 1) != 0)
-#define EVEN(a)	(((int)(a) & 1) == 0)
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#ifndef __ALPHA
-#define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
-#endif
-
 
 /*_*
   RunTimeCounterFo

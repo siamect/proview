@@ -60,8 +60,6 @@
 #include "co_dcli_msg.h"
 
 /***********************  D E F I N E ' S *******************************/
-#define ODD(a)	(((int)(a) & 1) != 0)
-#define EVEN(a)	(((int)(a) & 1) == 0)
 
 #define	DCLI_K_MAXLEN		0
 

@@ -856,8 +856,8 @@ int FlowDrawGtk::event_handler( FlowCtx *ctx, GdkEvent event)
       }
 
       if ( button_pressed && 
-	   (abs( (int)event.button.x - last_press_x) > DRAW_PRESS_PIX ||
-	    abs( (int)event.button.y - last_press_y) > DRAW_PRESS_PIX)) {
+	   (ABS( (int)event.button.x - last_press_x) > DRAW_PRESS_PIX ||
+	    ABS( (int)event.button.y - last_press_y) > DRAW_PRESS_PIX)) {
 
 	event.button.x = last_press_x;
 	event.button.y = last_press_y;

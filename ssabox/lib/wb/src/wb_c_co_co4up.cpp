@@ -72,7 +72,7 @@ AnteAdopt (
   sts = ldh_ReadObjectBody(Session, Card, "DevBody", &DCard, sizeof(DCard));
   if (EVEN(sts)) return sts;
 
-  MaxCounter = co_min(32, RCard.MaxNoOfCounters);
+  MaxCounter = MIN(32, RCard.MaxNoOfCounters);
   for (i = 0, Chan = 1; i < (int)MaxCounter; i++, Chan <<= 1) {
     if ((DCard.ChannelAllocation & Chan) == 0)
       break;
@@ -116,7 +116,7 @@ PostAdopt (
   sts = ldh_ReadObjectBody(Session, Card, "DevBody", &DCard, sizeof(DCard));
   if (EVEN(sts)) return sts;
 
-  MaxCounter = co_min(32, RCard.MaxNoOfCounters);
+  MaxCounter = MIN(32, RCard.MaxNoOfCounters);
   for (i = 0, Chan = 1; i < (int)MaxCounter; i++, Chan <<= 1) {
     if ((DCard.ChannelAllocation & Chan) == 0)
       break;
@@ -202,7 +202,7 @@ PostUnadopt (
   sts = ldh_ReadObjectBody(Session, Card, "DevBody", &DCard, sizeof(DCard));
   if (EVEN(sts)) return PWRB__SUCCESS;
 
-  MaxCounter = co_min(32, RCard.MaxNoOfCounters);
+  MaxCounter = MIN(32, RCard.MaxNoOfCounters);
 
   /* Get attributes of channel
 

@@ -53,6 +53,7 @@
 #include "pwr.h"
 #include "pwr_names.h"
 #include "pwr_class.h"
+#include "co_math.h"
 #include "co_time.h"
 #include "co_tree.h"
 #include "co_errno.h"
@@ -92,8 +93,6 @@
 #define EXPORT_BUF_WARN_LEVEL 300000
 #define EXPORT_BUF_QUOTA 600000
 #define K_FILTER 0.99
-
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 
 typedef enum {
   eAction__ = 0,

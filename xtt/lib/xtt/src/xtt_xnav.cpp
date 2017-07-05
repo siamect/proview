@@ -51,6 +51,7 @@
 #include "rt_gdh_msg.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_math.h"
 #include "co_time.h"
 #include "co_api_user.h"
 #include "co_msg.h"
@@ -77,9 +78,6 @@
 #include "xtt_audio.h"
 #include "xtt_trace.h"
 #include "xtt_log.h"
-
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
 
 static char null_str[] = "";
 
@@ -368,7 +366,7 @@ int XNav::attr_string_to_value( int type_id, char *value_str,
   case pwr_eType_Text: {
     if ( (int) strlen( value_str) >= attr_size)
       return XNAV__STRINGTOLONG;
-    strncpy( (char *)buffer_ptr, value_str, min(attr_size, buff_size));
+    strncpy( (char *)buffer_ptr, value_str, MIN(attr_size, buff_size));
     break;
   }
   case pwr_eType_Objid: {
@@ -2584,7 +2582,7 @@ int XNav::trace_scan_bc( brow_tObject object, void *p)
 			   item->conversion);
 	
       brow_SetAnnotation( object, 1, buf, len);
-      memcpy( item->old_value, p, min(item->size, (int) sizeof(item->old_value)));
+      memcpy( item->old_value, p, MIN(item->size, (int) sizeof(item->old_value)));
 
       break;
     }
@@ -2648,7 +2646,7 @@ int XNav::trace_scan_bc( brow_tObject object, void *p)
 
       attrvalue_to_string( item->type_id, 0, p, buf, sizeof(buf), &len, NULL, 0);
       brow_SetAnnotation( object, 1, buf, len);
-      memcpy( item->old_value, p, min(item->size, (int) sizeof(item->old_value)));
+      memcpy( item->old_value, p, MIN(item->size, (int) sizeof(item->old_value)));
       break;
     }
     case xnav_eItemType_ObjectStruct:
@@ -2673,7 +2671,7 @@ int XNav::trace_scan_bc( brow_tObject object, void *p)
 
       attrvalue_to_string( item->type_id, 0, p, buf, sizeof(buf), &len, NULL, 0);
       brow_SetAnnotation( object, 1, buf, len);
-      memcpy( item->old_value, p, min(item->size, (int) sizeof(item->old_value)));
+      memcpy( item->old_value, p, MIN(item->size, (int) sizeof(item->old_value)));
       break;
     }
     case xnav_eItemType_TableHeader:

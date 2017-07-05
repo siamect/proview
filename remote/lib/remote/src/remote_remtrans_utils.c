@@ -134,7 +134,7 @@ void RemTrans_Logg(remtrans_item *remtrans)
     else if (RemTransP->LoggLevel == 3) AntByt =
 	(RemTransP->DataLength > 48) ? 48 : RemTransP->DataLength;
     else AntByt = 0;
-    AntByt = min(AntByt, 10000);
+    AntByt = MIN(AntByt, 10000);
     AntRad = (AntByt + 23) / 24;
     size = sizrad1 + sizrad2 + 9 + 3 * AntByt + AntRad;
 
@@ -371,7 +371,7 @@ pwr_tInt32 RemTrans_Cyclic(	remnode_item	*remnode,
       RemTransP->DataLength = buffp->size;
       RemTransP->LastSts = STATUS_BUFF;
       RemTrans_Logg(remtrans);		/* Logg */
-      RemTransP->DataValid = TRUE;
+      RemTransP->DataValid = true;
 
       free(buffp);			/* Dispose of buffer */
     }	/* END buffered receive */
@@ -433,7 +433,7 @@ pwr_tInt32 RemTrans_Cyclic(	remnode_item	*remnode,
           }		/* END trans is not sent */
         }		/* END Send request for valid trans */
         RemTrans_Logg(remtrans);		/* Logg */
-        RemTransP->DataValid = FALSE;		/* Trans is treated */
+        RemTransP->DataValid = false;		/* Trans is treated */
       }			/* END Data valid was set */
     }			/* END Send direction */
     remtrans = (remtrans_item *) remtrans->next;
@@ -485,7 +485,7 @@ pwr_tInt32 RemTrans_Receive(	remtrans_item	*remtrans,
       RemTransP->Buffers--;
       RemTransP->DataLength = buffp->size;
       RemTransP->LastSts = STATUS_BUFF;
-      RemTransP->DataValid = TRUE;
+      RemTransP->DataValid = true;
 
       free(buffp);			/* Dispose of buffer */
     }	/* END buffered receive */
@@ -494,7 +494,7 @@ pwr_tInt32 RemTrans_Receive(	remtrans_item	*remtrans,
       RemTransP->DataLength = size;
       RemTransP->LastSts = STATUS_OK;
       RemTrans_Logg(remtrans);		/* Logg */
-      RemTransP->DataValid = TRUE;
+      RemTransP->DataValid = true;
       return STATUS_OK;
     }		/* END Store trans directly */
     else if ((RemTransP->MaxBuffers > 0) &&

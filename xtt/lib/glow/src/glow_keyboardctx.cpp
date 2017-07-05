@@ -648,8 +648,8 @@ void KeyboardCtx::zoom( double factor)
   if ( mw.offset_y != 0)
     mw.offset_y = int( (mw.offset_y  - mw.window_height / 2.0 * ( 1.0/factor - 1)) 
 		* factor);
-  mw.offset_x = glmax( mw.offset_x, 0);
-  mw.offset_y = glmax( mw.offset_y, 0);
+  mw.offset_x = MAX( mw.offset_x, 0);
+  mw.offset_y = MAX( mw.offset_y, 0);
   if ( (x_right - x_left) * mw.zoom_factor_x <= mw.window_width)
     mw.offset_x = 0;
   if ( (y_high - y_low) * mw.zoom_factor_y <= mw.window_height)

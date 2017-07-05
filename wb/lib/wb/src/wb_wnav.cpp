@@ -45,6 +45,7 @@
 #include "pwr_privilege.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_math.h"
 #include "co_msg.h"
 #include "co_time.h"
 #include "pwr_baseclasses.h"
@@ -60,9 +61,6 @@
 
 #include "wb_wnav.h"
 #include "wb_wnav_item.h"
-
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
 
 static char null_str[] = "";
 
@@ -184,7 +182,7 @@ int  wnav_attr_string_to_value( ldh_tSesContext ldhses, int type_id, char *value
   case pwr_eType_String: {
     if ( (int) strlen( value_str) >= attr_size)
       return WNAV__STRINGTOLONG;
-    strncpy( (char *)buffer_ptr, value_str, min(attr_size, buff_size));
+    strncpy( (char *)buffer_ptr, value_str, MIN(attr_size, buff_size));
     break;
   }
   case pwr_eType_ProString: {
@@ -192,7 +190,7 @@ int  wnav_attr_string_to_value( ldh_tSesContext ldhses, int type_id, char *value
       return WNAV__INPUT_SYNTAX;
     if ( (int) strlen( value_str) >= attr_size)
       return WNAV__STRINGTOLONG;
-    strncpy( (char *)buffer_ptr, value_str, min(attr_size, buff_size));
+    strncpy( (char *)buffer_ptr, value_str, MIN(attr_size, buff_size));
     break;
   }
   case pwr_eType_Objid: {
@@ -2074,7 +2072,7 @@ int WNav::trace_scan_bc( brow_tObject object, void *p)
 
       wnav_attrvalue_to_string( wnav->ldhses, item->type_id, p, &buf, &len);
       brow_SetAnnotation( object, 1, buf, len);
-      memcpy( item->old_value, p, min(item->size, (int) sizeof(item->old_value)));
+      memcpy( item->old_value, p, MIN(item->size, (int) sizeof(item->old_value)));
       break;
     }
     default:

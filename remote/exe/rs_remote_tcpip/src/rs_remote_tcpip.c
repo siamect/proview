@@ -807,9 +807,9 @@ int main(int argc, char *argv[])
     time_since_scan += TIME_INCR;
     time_since_keepalive += TIME_INCR;
     time_since_rcv += TIME_INCR;
-    time_since_scan = min(time_since_scan, rn_tcp->ScanTime + 1.0);
-    time_since_keepalive = min(time_since_keepalive, rn_tcp->KeepaliveTime + 1.0);
-    time_since_rcv = min(time_since_rcv, rn_tcp->LinkTimeout + 1.0);
+    time_since_scan = MIN(time_since_scan, rn_tcp->ScanTime + 1.0);
+    time_since_keepalive = MIN(time_since_keepalive, rn_tcp->KeepaliveTime + 1.0);
+    time_since_rcv = MIN(time_since_rcv, rn_tcp->LinkTimeout + 1.0);
 
     /* Update retransmit time, could have been changed */
     
@@ -819,7 +819,7 @@ int main(int argc, char *argv[])
     while(remtrans) {
       remtrans->time_since_send += TIME_INCR;
       /* Prevent big counter */
-      remtrans->time_since_send = min(remtrans->time_since_send, rn.retransmit_time + 1.0);
+      remtrans->time_since_send = MIN(remtrans->time_since_send, rn.retransmit_time + 1.0);
       remtrans = (remtrans_item *) remtrans->next;
     }
 

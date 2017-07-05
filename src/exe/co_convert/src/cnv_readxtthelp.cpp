@@ -52,6 +52,7 @@ extern "C" {
 }
 
 #include "pwr_names.h"
+#include "co_math.h"
 #include "co_nav_help.h"
 #include "cnv_readxtthelp.h"
 #include "cnv_xtthelpto.h"
@@ -59,15 +60,6 @@ extern "C" {
 using namespace std;
 
 #define CNV_TAB 18
-
-/* Nice functions */
-#define ODD(a)	(((int)(a) & 1) != 0)
-#define EVEN(a)	(((int)(a) & 1) == 0)
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#ifndef __ALPHA
-#define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
-#endif
 
 CnvReadXtthelp::CnvReadXtthelp( char *x_name, char *x_directory,
 				CnvXtthelpTo *to) :

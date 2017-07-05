@@ -377,7 +377,7 @@ static unsigned int send_it(char *buf, int buf_size)
                    NULL, NULL, NULL, NULL);
     }
     if ( EVEN(sts) || (received_char != DLE) || (sts == ELN$_TIMEOUT) )
-      sts = FALSE;
+      sts = false;
   }
   
   if ( ODD(sts) ){
@@ -392,7 +392,7 @@ static unsigned int send_it(char *buf, int buf_size)
                    NULL, NULL, NULL, NULL);
     }
     if ( EVEN(sts) || (received_char != DLE) || (sts == ELN$_TIMEOUT) )
-      sts = FALSE;
+      sts = false;
   }
 
 /*************************************************************************/
@@ -492,8 +492,8 @@ static unsigned int ReceiveHandler()
   unsigned int          data_size = 0;
   unsigned int          common_offset = 0;
   unsigned int          length = 0;
-  char                  search_remtrans = FALSE;
-  char                  terminate = FALSE;
+  char                  search_remtrans = false;
+  char                  terminate = false;
   char                  name[7];
   unsigned char         BCC = '\0';
   unsigned char         char_buffer, BCC_checksum;
@@ -512,7 +512,7 @@ static unsigned int ReceiveHandler()
   eln$tty_write(&sts, &virtual_serial_line_port, 1, &sdle,
                 &nbr_of_bytes_written, NULL, NULL);
   if ( EVEN(sts) )
-    return(FALSE);
+    return false;
 
 /*************************************************************************/
 /**    Store the received telegram temporary                            **/
@@ -521,18 +521,18 @@ static unsigned int ReceiveHandler()
                &nbr_of_bytes_read, 2, NULL, &timeout_char,
                NULL, NULL, NULL, NULL);
   if ( EVEN(sts) || (sts == ELN$_TIMEOUT) )
-    return(FALSE);
+    return false;
 
   ReceiveBuffer[0] = char_buffer = received_char;
   BCC ^= received_char;
 
-  for ( i=1 ; (terminate==FALSE)&&(i<MAX_SIZE_TELEGRAM) ; i++ )
+  for ( i=1 ; (terminate==false)&&(i<MAX_SIZE_TELEGRAM) ; i++ )
   {
     eln$tty_read(&sts, &virtual_serial_line_port, 1, &received_char,
                  &nbr_of_bytes_read, 2, NULL, &timeout_char,
                  NULL, NULL, NULL, NULL);
     if ( EVEN(sts) || (sts == ELN$_TIMEOUT) )
-      return(FALSE);
+      return false;
 
     if ( (char_buffer == DLE) && (received_char == ETX) ){
       /* End of message. Read checksum and terminate. */
@@ -542,10 +542,10 @@ static unsigned int ReceiveHandler()
                    &nbr_of_bytes_read, 2, NULL, &timeout_char,
                    NULL, NULL, NULL, NULL);
       if ( EVEN(sts) || (sts == ELN$_TIMEOUT) )
-        return(FALSE);
+        return false;
 
       BCC_checksum = received_char;
-      terminate = TRUE;
+      terminate = true;
     }
     else{
       /* Store one more received character in the buffer */
@@ -569,11 +569,11 @@ static unsigned int ReceiveHandler()
     eln$tty_write(&sts, &virtual_serial_line_port, 1, &sdle,
                   &nbr_of_bytes_written, NULL, NULL);
     if ( EVEN(sts) )
-      return(FALSE);
+      return false;
   }
   else{
     /* Checksum in this telegram is wrong */
-    return(FALSE);
+    return false;
   }
 
 /*************************************************************************/
@@ -628,17 +628,17 @@ static unsigned int ReceiveHandler()
         if ( data_size > remtrans->objp->MaxLength ){
           remtrans->objp->ErrCount++;
           remtrans->objp->LastSts = STATUS_LENGTH;
-          return(FALSE);
+          return false;
         }
         else{
           memcpy(&remtrans->datap[common_offset], c_buf, data_size);
 	  time_GetTime(&remtrans->objp->TransTime);
           remtrans->objp->TransCount++;
-          remtrans->objp->DataValid = TRUE;
+          remtrans->objp->DataValid = true;
           remtrans->objp->LastSts = STATUS_OK;
           remtrans->objp->DataLength = data_size;
         }
-        return(TRUE);
+        return true;
       }
     }
     else{
@@ -668,7 +668,7 @@ static unsigned int ReceiveHandler()
                                data_size);
         if ( EVEN(sts) ){
           remtrans->objp->ErrCount++;
-          return (FALSE);
+          return false;
         }
       }
     }
@@ -676,10 +676,10 @@ static unsigned int ReceiveHandler()
     if (search_remtrans){
       /* No corresponding RemTrans object found */
       remnode->objp->ErrTransCount++;
-      return (FALSE);
+      return false;
     }
   }
-  return (TRUE);
+  return true;
 }
 
 
@@ -752,7 +752,7 @@ main(int argc, char *argv[])
 
   /* Loop forever */
 
-  first = TRUE;
+  first = true;
   while (!doomsday)
   {
     sts = Receive();
@@ -795,6 +795,6 @@ main(int argc, char *argv[])
         (remnode->objp->IOStallTime > 0))
       sts = RemIO_Stall(remnode);
 
-    first = FALSE;
+    first = false;
   }
 }

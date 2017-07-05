@@ -37,6 +37,10 @@
 #ifndef glow_h
 #define glow_h
 
+#include "pwr.h"
+
+#include "co_math.h"
+
 #if defined __cplusplus
 extern "C" {
 #endif
@@ -46,16 +50,6 @@ extern "C" {
 
   glow.h contains common declarations of enum an structs
 */
-
-
-#define ODD(a)	(((int)(a) & 1) != 0)
-#define EVEN(a)	(((int)(a) & 1) == 0)
-#define glmax(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define glmin(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#ifndef __ALPHA
-#define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
-#endif
-
 
 #define GLOW_VERSION 4510
 #define DRAW_MP 6

@@ -51,6 +51,8 @@ using namespace std;
 # include <rsvg.h>
 #endif
 
+#include "co_math.h"
+
 #include "glow.h"
 #include "glow_ctx.h"
 #include "glow_browctx.h"
@@ -62,9 +64,6 @@ using namespace std;
 #include "glow_customcolors_gtk.h"
 
 #include "glow_msg.h"
-
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
 
 #define DRAW_PRESS_PIX 9
 
@@ -1143,8 +1142,8 @@ int GlowDrawGtk::event_handler( GdkEvent event)
 	button_clicked_and_pressed = 0;
       }
       if ( button_pressed && 
-	   (abs( event.button.x - last_press_x) > DRAW_PRESS_PIX ||
-	    abs( event.button.y - last_press_y) > DRAW_PRESS_PIX)) {
+	   (ABS( event.button.x - last_press_x) > DRAW_PRESS_PIX ||
+	    ABS( event.button.y - last_press_y) > DRAW_PRESS_PIX)) {
 //          printf( "Press: x %d last_x %d\n", event.button.x, last_press_x);
 //          printf( "       y %d last_y %d\n", event.button.y, last_press_y);
 
@@ -1523,10 +1522,10 @@ int GlowDrawGtk::line( GlowWind *wind, int x1, int y1, int x2, int y2,
   DrawWindGtk *w = (DrawWindGtk *) wind->window;
 
   if ( w->clip_on && 
-       !(w->clip_rectangle[w->clip_cnt-1].x <= max(x1,x2) &&
-	 w->clip_rectangle[w->clip_cnt-1].x + w->clip_rectangle[w->clip_cnt-1].width >= min(x1,x2) &&
-	 w->clip_rectangle[w->clip_cnt-1].y  <= max(y1,y2) &&
-	 w->clip_rectangle[w->clip_cnt-1].y + w->clip_rectangle[w->clip_cnt-1].height >= min(y1,y2)))
+       !(w->clip_rectangle[w->clip_cnt-1].x <= MAX(x1,x2) &&
+	 w->clip_rectangle[w->clip_cnt-1].x + w->clip_rectangle[w->clip_cnt-1].width >= MIN(x1,x2) &&
+	 w->clip_rectangle[w->clip_cnt-1].y  <= MAX(y1,y2) &&
+	 w->clip_rectangle[w->clip_cnt-1].y + w->clip_rectangle[w->clip_cnt-1].height >= MIN(y1,y2)))
     return 1;
 
   // Fix for highlight for connections in grow
@@ -1560,10 +1559,10 @@ int GlowDrawGtk::line_dashed( GlowWind *wind, int x1, int y1, int x2, int y2,
   DrawWindGtk *w = (DrawWindGtk *) wind->window;
 
   if ( w->clip_on && 
-       !(w->clip_rectangle[w->clip_cnt-1].x <= max(x1,x2) &&
-	 w->clip_rectangle[w->clip_cnt-1].x + w->clip_rectangle[w->clip_cnt-1].width >= min(x1,x2) &&
-	 w->clip_rectangle[w->clip_cnt-1].y  <= max(y1,y2) &&
-	 w->clip_rectangle[w->clip_cnt-1].y + w->clip_rectangle[w->clip_cnt-1].height >= min(y1,y2)))
+       !(w->clip_rectangle[w->clip_cnt-1].x <= MAX(x1,x2) &&
+	 w->clip_rectangle[w->clip_cnt-1].x + w->clip_rectangle[w->clip_cnt-1].width >= MIN(x1,x2) &&
+	 w->clip_rectangle[w->clip_cnt-1].y  <= MAX(y1,y2) &&
+	 w->clip_rectangle[w->clip_cnt-1].y + w->clip_rectangle[w->clip_cnt-1].height >= MIN(y1,y2)))
     return 1;
 
   // Fix for highlight for connections in grow
@@ -1642,10 +1641,10 @@ int GlowDrawGtk::line_erase( GlowWind *wind, int x1, int y1, int x2, int y2,
   DrawWindGtk *w = (DrawWindGtk *) wind->window;
 
   if ( w->clip_on && 
-       !(w->clip_rectangle[w->clip_cnt-1].x <= max(x1,x2) &&
-	 w->clip_rectangle[w->clip_cnt-1].x + w->clip_rectangle[w->clip_cnt-1].width >= min(x1,x2) &&
-	 w->clip_rectangle[w->clip_cnt-1].y  <= max(y1,y2) &&
-	 w->clip_rectangle[w->clip_cnt-1].y + w->clip_rectangle[w->clip_cnt-1].height >= min(y1,y2)))
+       !(w->clip_rectangle[w->clip_cnt-1].x <= MAX(x1,x2) &&
+	 w->clip_rectangle[w->clip_cnt-1].x + w->clip_rectangle[w->clip_cnt-1].width >= MIN(x1,x2) &&
+	 w->clip_rectangle[w->clip_cnt-1].y  <= MAX(y1,y2) &&
+	 w->clip_rectangle[w->clip_cnt-1].y + w->clip_rectangle[w->clip_cnt-1].height >= MIN(y1,y2)))
     return 1;
 
   if ( w->clip_on)
@@ -2038,17 +2037,17 @@ void GlowDrawGtk::copy_buffer( GlowWind *wind,
   if ( ctx->nodraw) return;
   DrawWindGtk *w = (DrawWindGtk *) wind->window;
 
-  int x0 = min( ll_x, ur_x);
-  int x1 = max( ll_x, ur_x);
-  int y0 = min( ll_y, ur_y);
-  int y1 = max( ll_y, ur_y);
+  int x0 = MIN( ll_x, ur_x);
+  int x1 = MAX( ll_x, ur_x);
+  int y0 = MIN( ll_y, ur_y);
+  int y1 = MAX( ll_y, ur_y);
 
   if ( w->clip_cnt) {
-    x0 = max(x0, w->clip_rectangle[w->clip_cnt-1].x);
-    y0 = max(y0, w->clip_rectangle[w->clip_cnt-1].y);
-    x1 = min(x1, w->clip_rectangle[w->clip_cnt-1].x + 
+    x0 = MAX(x0, w->clip_rectangle[w->clip_cnt-1].x);
+    y0 = MAX(y0, w->clip_rectangle[w->clip_cnt-1].y);
+    x1 = MIN(x1, w->clip_rectangle[w->clip_cnt-1].x +
 	     w->clip_rectangle[w->clip_cnt-1].width);
-    y1 = min(y1, w->clip_rectangle[w->clip_cnt-1].y + 
+    y1 = MIN(y1, w->clip_rectangle[w->clip_cnt-1].y +
 	     w->clip_rectangle[w->clip_cnt-1].height);
   }
 
@@ -2487,22 +2486,22 @@ int GlowDrawGtk::set_clip_rectangle( GlowWind *wind,
   }
   int x0, x1, y0, y1;
   if ( w->clip_cnt == 0) {
-    x0 = min( ll_x, ur_x);
-    x1 = max( ll_x, ur_x);
-    y0 = min( ll_y, ur_y);
-    y1 = max( ll_y, ur_y);
+    x0 = MIN( ll_x, ur_x);
+    x1 = MAX( ll_x, ur_x);
+    y0 = MIN( ll_y, ur_y);
+    y1 = MAX( ll_y, ur_y);
   }
   else {
-    x0 = min( ll_x, ur_x);
-    x1 = max( ll_x, ur_x);
-    y0 = min( ll_y, ur_y);
-    y1 = max( ll_y, ur_y);
+    x0 = MIN( ll_x, ur_x);
+    x1 = MAX( ll_x, ur_x);
+    y0 = MIN( ll_y, ur_y);
+    y1 = MAX( ll_y, ur_y);
 
-    x0 = max( x0, w->clip_rectangle[w->clip_cnt-1].x);
-    x1 = min( x1, w->clip_rectangle[w->clip_cnt-1].x +
+    x0 = MAX( x0, w->clip_rectangle[w->clip_cnt-1].x);
+    x1 = MIN( x1, w->clip_rectangle[w->clip_cnt-1].x +
 	      w->clip_rectangle[w->clip_cnt-1].width);
-    y0 = max( y0, w->clip_rectangle[w->clip_cnt-1].y);
-    y1 = min( y1, w->clip_rectangle[w->clip_cnt-1].y +
+    y0 = MAX( y0, w->clip_rectangle[w->clip_cnt-1].y);
+    y1 = MIN( y1, w->clip_rectangle[w->clip_cnt-1].y +
 	      w->clip_rectangle[w->clip_cnt-1].height);
     if ( x0 > x1)
       x0 = x1;

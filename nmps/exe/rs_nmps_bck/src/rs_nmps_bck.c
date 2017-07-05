@@ -58,6 +58,7 @@
 #include "pwr_baseclasses.h"
 #include "pwr_nmpsclasses.h"
 #include "co_cdh.h"
+#include "co_math.h"
 #include "co_time.h"
 #include "co_dcli.h"
 #include "rt_gdh.h"
@@ -70,9 +71,6 @@
 #include "rt_qcom_msg.h"
 #include "rt_ini_event.h"
 
-/*_Globala variabler______________________________________________________*/
-
-/*_Local functions________________________________________________________*/
 /* Global functions________________________________________________________*/
 
 #define	NMPS_BCK_FILEVERSION		1
@@ -81,13 +79,6 @@
 #define NMPSBCK_FILE_EXT1	".bck1"
 #define NMPSBCK_FILE_EXT2	".bck2"
 
-#define ODD(a)	(((int)(a) & 1) != 0)
-#define EVEN(a)	(((int)(a) & 1) == 0)
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#ifndef __ALPHA
-#define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
-#endif
 #define	LogAndExit( status) \
 {\
   errh_CErrLog(NMPS__BCKEXIT, errh_ErrArgMsg(status), NULL);\
@@ -1872,7 +1863,7 @@ static pwr_tStatus	nmpsbck_read( bck_ctx	bckctx, char *backupfile)
 	    data_ptr->new = 1;
 	    data_ptr->created = created;
 
-	    memcpy( data_ptr->data_ptr, databuff, min( dataheader.size,
+	    memcpy( data_ptr->data_ptr, databuff, MIN( dataheader.size,
 		data_ptr->size));
 	  }
 	  if ( !data_read_success)
@@ -2133,7 +2124,7 @@ static pwr_tStatus	nmpsbck_read( bck_ctx	bckctx, char *backupfile)
 	      ((pwr_sClass_NMpsCell *) clist_ptr->buffer)->Function = 
 	        ((pwr_sClass_NMpsCell *) clist_ptr->objectp)->Function;
 	      memcpy( clist_ptr->objectp, clist_ptr->buffer,
-			min( (int)clist_ptr->object_size, clist_ptr->buffer_size));
+			MIN( (int)clist_ptr->object_size, clist_ptr->buffer_size));
 	      break;
 	    case pwr_cClass_NMpsMirrorCell:
 	      /* Copy to temporary area for the mirror job to read */

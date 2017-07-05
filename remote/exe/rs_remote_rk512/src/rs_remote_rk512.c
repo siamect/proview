@@ -251,8 +251,8 @@ static unsigned int remnode_send(remnode_item *remnode,
   unsigned int          number_of_DLE = 0;
   unsigned int          delta_pos = 0;
   unsigned int          pos_counter = 0;
-  unsigned int          follow_on = FALSE;
-  unsigned int          A_telegram = FALSE;
+  unsigned int          follow_on = false;
+  unsigned int          A_telegram = false;
   unsigned char         ch, cpu_number, CPU;
   unsigned char         BCC = DLE ^ ETX;
   unsigned char         datasize_low_byte, datasize_high_byte;
@@ -283,7 +283,7 @@ static unsigned int remnode_send(remnode_item *remnode,
   {
     if ( !follow_on )
     {
-      A_telegram = TRUE;
+      A_telegram = true;
 /*************************************************************************/
 /**    Send A-telegram.                                                 **/
 /*************************************************************************/
@@ -292,7 +292,7 @@ static unsigned int remnode_send(remnode_item *remnode,
       if ( buf_size - pos_counter > MAX_SIZE_DATA_BLOCK )
       {
         delta_pos = MAX_SIZE_DATA_BLOCK;
-        follow_on = TRUE;
+        follow_on = true;
       }
       else
       {
@@ -378,12 +378,12 @@ static unsigned int remnode_send(remnode_item *remnode,
       if ( buf_size - pos_counter > MAX_SIZE_DATA_BLOCK )
       {
         delta_pos = MAX_SIZE_DATA_BLOCK;
-        follow_on = TRUE;
+        follow_on = true;
       }
       else
       {
         delta_pos = buf_size - pos_counter;
-        follow_on = FALSE;
+        follow_on = false;
       }
 
 /*************************************************************************/
@@ -463,7 +463,7 @@ static unsigned int remnode_send(remnode_item *remnode,
 	/* Both nodes is in sending mode. */
 	/* Cancel this send operation and wait for next timeout or receive */
 	write(ser_fd, snak, 1);
-	return(FALSE);
+	return false;
       }
       if ( received_char == DLE ) {
 	/* Contact is established. Send telegram */
@@ -471,7 +471,7 @@ static unsigned int remnode_send(remnode_item *remnode,
 	if ( A_telegram ) {
 	  sts = write(ser_fd, &sendbuffer, size_of_telegram);
 	  rlog("snd message sent", size_of_telegram);
-	  A_telegram = FALSE;
+	  A_telegram = false;
 	}
 	else {
 	  sts = write(ser_fd, &follow_on_sendbuffer, size_of_telegram);
@@ -536,13 +536,13 @@ static unsigned int remnode_send(remnode_item *remnode,
                   }
                   else {
                     /* Wrong checksum. */
-                    sts = FALSE;
+                    sts = false;
                   }
                 }
                 else {
                   /* This is not a response message as expected */
 		  sts = write(ser_fd, snak, 1);
-                  sts = FALSE;
+                  sts = false;
                 }
               } /* ENDIF. DLE acknowledge failed */
             }
@@ -550,7 +550,7 @@ static unsigned int remnode_send(remnode_item *remnode,
             {
               /* STX character in response message was expected. */
               /* Ensure that error status is returned */
-              sts = FALSE;
+              sts = false;
             }
           }
           else
@@ -558,7 +558,7 @@ static unsigned int remnode_send(remnode_item *remnode,
             /* DLE ack. after sending telegram was expected. */
             /* Ensure that error status is returned */
 	    rlog("snd DLE missing", 0);
-            sts = FALSE;
+            sts = false;
           }
         } /* ENDIF. Contact established but tty_write failed */
       }
@@ -566,7 +566,7 @@ static unsigned int remnode_send(remnode_item *remnode,
       {
         /* Failed in making contact. Wrong response character. */
         /* Ensure that error status is returned */
-        sts = FALSE;
+        sts = false;
       }
     }  /* ENDIF. tty_write or tty_read failed */
 
@@ -579,10 +579,10 @@ static unsigned int remnode_send(remnode_item *remnode,
       sts = write(ser_fd, snak, 1);
       rlog("snd failed, NAK sent", 0);
 
-      follow_on = FALSE;
+      follow_on = false;
 
       /* Ensure that error status is returned */
-      sts = FALSE;
+      sts = false;
     }
 
   }while( follow_on );
@@ -662,7 +662,7 @@ static unsigned int send_it(char *buf, int buffer_size, int double_dle)
   FD_ZERO(&read_fd);
   FD_SET(ser_fd, &read_fd);
 
-  sts=TRUE;
+  sts=true;
   
   write(ser_fd, sstx, 1); 	/*send stx and wait for answer*/
     
@@ -701,7 +701,7 @@ static unsigned int send_it(char *buf, int buffer_size, int double_dle)
       errh_Error("Remtrans RK512 sändning misslyckades, inget initierande DLE-tecken från mottagaren");
     else if(buff!=DLE)
       errh_Error("Remtrans RK512 sändning misslyckades, inget avslutande DLE-tecken från mottagaren");
-    sts=FALSE;
+    sts=false;
   }
   return sts;				/*and return status*/
 }
@@ -812,8 +812,8 @@ static unsigned int ReceiveHandler(int fd)
   //unsigned int          nbr_of_bytes_written = 0;
   //unsigned int          nbr_of_bytes_read = 0;
   unsigned int          data_size = 0;
-  char                  cont = TRUE;
-  char			search_remtrans = FALSE;
+  char                  cont = true;
+  char			search_remtrans = false;
   unsigned char         BCC = '\0';
   unsigned char         receive_buffer[MAX_SIZE_TELEGRAM];
   unsigned char         sdle = DLE;
@@ -842,7 +842,7 @@ static unsigned int ReceiveHandler(int fd)
 /**    Read telegram	                                                **/
 /*************************************************************************/
 
-  cont = TRUE;
+  cont = true;
   data_size = 0;
   
   rlog("rcv STX", 0);
@@ -863,7 +863,7 @@ static unsigned int ReceiveHandler(int fd)
         // Prevent writing oob
         if (data_size > MAX_SIZE_TELEGRAM - 10) {
 	  rlog("rcv Maxsize", data_size);
-	  return (FALSE);
+	  return false;
 	}
         receive_buffer[data_size++]=received_char;
       }
@@ -871,7 +871,7 @@ static unsigned int ReceiveHandler(int fd)
       {
 	rlog("rcv Timeout", data_size);
         errh_Error("RK512 mottagning, character timeout");
-        return(FALSE);  
+        return false;
       }
     }  
     rlog("rcv DLE", data_size);
@@ -884,7 +884,7 @@ static unsigned int ReceiveHandler(int fd)
     if (read(fd, &receive_buffer[data_size], 1) < 1) {
       rlog("rcv Timeout extra char", data_size);
       errh_Error("RK512 mottagning, character timeout");
-      return(FALSE);  
+      return false;
     }
  
     if (receive_buffer[data_size] == ETX)
@@ -900,11 +900,11 @@ static unsigned int ReceiveHandler(int fd)
       if (read(fd, &receive_buffer[data_size], 1) < 1) {
         errh_Error("RK512 mottagning, character timeout");
 	rlog("rcv Timeout Checksum", data_size);
-        return(FALSE);  
+        return false;
       }
   
       data_size++;
-      cont = FALSE;
+      cont = false;
       rlog("rcv Checksum", data_size);
     }
     else
@@ -925,7 +925,7 @@ static unsigned int ReceiveHandler(int fd)
 
 
   if ( BCC == receive_buffer[data_size-1] ) {
-    if(!write(fd,&sdle, 1)) return(FALSE);
+    if(!write(fd,&sdle, 1)) return false;
   }
   else
   {
@@ -936,10 +936,10 @@ static unsigned int ReceiveHandler(int fd)
     if (debug) printf("  Checksum error\n");
        
     if (use_remote_io) {
-      if(!write(fd,&sdle, 1)) return(FALSE);
+      if(!write(fd,&sdle, 1)) return false;
     }
     else
-      return(FALSE);
+      return false;
   }
 
   if ( !telegram_counter && (receive_buffer[0] == 0X00) )
@@ -1118,11 +1118,11 @@ static unsigned int ReceiveHandler(int fd)
   if ( EVEN(sts))
   {
     /* A fail has occured when sending response telegram */
-    return(FALSE);
+    return false;
   }
   else
   {
-    return(TRUE);
+    return true;
   }
 
 
@@ -1190,17 +1190,17 @@ static unsigned int ReceiveHandler(int fd)
       if (io_size > remtrans->objp->MaxLength ){
         remtrans->objp->ErrCount++;
         remtrans->objp->LastSts = STATUS_LENGTH;
-        return(FALSE);
+        return false;
       }
       else { 
         memcpy(&remtrans->datap[common_offset], c_buf, io_size);
 	time_GetTime(&remtrans->objp->TransTime);
         remtrans->objp->TransCount++;
-        remtrans->objp->DataValid = TRUE;
+        remtrans->objp->DataValid = true;
         remtrans->objp->LastSts = STATUS_OK;
         remtrans->objp->DataLength = data_size;
       }
-      return(TRUE);
+      return true;
     }
   }
   
@@ -1237,7 +1237,7 @@ static unsigned int ReceiveHandler(int fd)
     if ( EVEN(sts) )
     {
       remtrans->objp->ErrCount++;
-      return (FALSE);
+      return false;
     }
   }
   else
@@ -1245,9 +1245,9 @@ static unsigned int ReceiveHandler(int fd)
     /* No remtrans */
     errh_Error("Remtrans RK512 no remtrans for this message");
     rn_RK512->ErrCount++;
-    return (FALSE);
+    return false;
   }
-  return (TRUE);
+  return true;
 #endif
 }
 
@@ -1402,7 +1402,7 @@ int main(int argc, char *argv[]) /*argv[2]=remnode name*/
     exit(0);
   }    
 
-  first = TRUE;
+  first = true;
   rn_RK512->LinkUp = 1;
   
   /* Loop forever */
@@ -1464,6 +1464,6 @@ int main(int argc, char *argv[]) /*argv[2]=remnode name*/
       }
     }
 
-    first = FALSE;    
+    first = false;
   }
 }

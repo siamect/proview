@@ -133,8 +133,8 @@ void GlowLine::draw( GlowWind *w, void *pos, int hightlight, int hot, void *node
     return;
   int idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
-  idx = glmax( 0, idx);
-  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   w->set_draw_buffer_only();
   ctx->gdraw->line( w, p1_x + ((GlowPoint *)pos)->z_x - w->offset_x, 
 	p1_y + ((GlowPoint *)pos)->z_y - w->offset_y, 
@@ -167,8 +167,8 @@ void GlowLine::draw_shadow( GlowWind *w, int border, int shadow, int hightlight,
     return;
   int idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
-  idx = glmax( 0, idx);
-  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   int ish = 1;
   int offs = border;
 
@@ -256,8 +256,8 @@ void GlowLine::erase( GlowWind *w, void *pos, int hot, void *node)
     return;
   int idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
-  idx = glmax( 0, idx);
-  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   ctx->gdraw->line_erase( w, p1_x + ((GlowPoint *)pos)->z_x - w->offset_x, 
 	p1_y + ((GlowPoint *)pos)->z_y - w->offset_y, 
 	p2_x + ((GlowPoint *)pos)->z_x - w->offset_x, 
@@ -276,29 +276,29 @@ int GlowLine::event_handler( GlowWind *w, void *pos, glow_eEvent event, int x, i
   int y2 = p2.z_y + ((GlowPoint *)pos)->z_y - w->offset_y;
 
   if ((x1 == x2 && y1 < y2 && 		// Vertical
-       abs( x1 - x) < 3 && 
+       ABS( x1 - x) < 3 &&
        y1 < y && y < y2)
 	||
       (x1 == x2 && y1 > y2 && 		// Vertical
-       abs( x1 - x) < 3 && 
+       ABS( x1 - x) < 3 &&
        y2 < y && y < y1)
 	||
       (y1 == y2 && x1 < x2 &&		// Horizontal
-       abs( y1 - y) < 3 && 
+       ABS( y1 - y) < 3 &&
        x1 < x && x < x2)
         ||
       (y1 == y2 && x1 > x2 &&		// Horizontal
-       abs( y1 - y) < 3 && 
+       ABS( y1 - y) < 3 &&
        x2 < x && x < x1))
   {
 //    cout << "Event handler: Hit in line" << endl;
     return 1;
   }  
   else if (( !(x1 == x2 || y1 == y2) && x1 < x2 && x1 <= x && x <= x2 &&
-             abs(y - 1.0 * (y2-y1)/(x2-x1) * x - y1 + 1.0 * (y2-y1)/(x2-x1) * x1) < 3)
+             ABS(y - 1.0 * (y2-y1)/(x2-x1) * x - y1 + 1.0 * (y2-y1)/(x2-x1) * x1) < 3)
            ||
            ( !(x1 == x2 || y1 == y2) && x1 > x2 && x2 <= x && x <= x1 &&
-             abs(y - 1.0 * (y2-y1)/(x2-x1) * x - y1 + 1.0 * (y2-y1)/(x2-x1) * x1) < 3))
+             ABS(y - 1.0 * (y2-y1)/(x2-x1) * x - y1 + 1.0 * (y2-y1)/(x2-x1) * x1) < 3))
   {
 //    cout << "Event handler: Hit in line" << endl;
     return 1;
@@ -380,8 +380,8 @@ void GlowLine::export_javabean( GlowTransform *t, void *node,
   if ( p1.z_x == p2.z_x && p1.z_y == p2.z_y)
     return;
   int idx = int( ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * line_width - 1);
-  idx = glmax( 0, idx);
-  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   ctx->export_jbean->line( 
 	p1.z_x - ctx->mw.offset_x, 
 	p1.z_y - ctx->mw.offset_y, 
@@ -397,8 +397,8 @@ void GlowLine::export_javabean_shadow( GlowTransform *t, void *node,
   if ( p1.z_x == p2.z_x && p1.z_y == p2.z_y)
     return;
   int idx = int( ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * line_width - 1);
-  idx = glmax( 0, idx);
-  idx = glmin( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
 
   int ish = 1;
   int offs = border;

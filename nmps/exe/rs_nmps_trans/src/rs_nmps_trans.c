@@ -61,6 +61,7 @@
 #include "pwr_nmpsclasses.h"
 #include "pwr_remoteclasses.h"
 #include "co_cdh.h"
+#include "co_math.h"
 #include "co_time.h"
 #include "rt_gdh.h"
 #include "rt_errh.h"
@@ -76,9 +77,6 @@
 #include "nmps_cnv.h"
 #include "rs_nmps_msg.h"
 
-/*_Globala variabler______________________________________________________*/
-
-/*_Local functions________________________________________________________*/
 /* Global functions________________________________________________________*/
 
 #define	NMPS_REQUESTFUNC_DISPLAYOBJECT	1
@@ -106,13 +104,6 @@
 #define	NMPS_TRANSTYPE_LOC		0
 #define	NMPS_TRANSTYPE_REM		1
 
-#define ODD(a)	(((int)(a) & 1) != 0)
-#define EVEN(a)	(((int)(a) & 1) == 0)
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#ifndef __ALPHA
-#define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
-#endif
 #define	LogAndExit( status) \
 {\
   errh_CErrLog(NMPS__BCKEXIT, errh_ErrArgMsg(status), NULL);\

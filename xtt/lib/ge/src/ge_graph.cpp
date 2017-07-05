@@ -41,6 +41,7 @@
 #include <float.h>
 
 #include "co_cdh.h"
+#include "co_math.h"
 #include "co_time.h"
 #include "rt_gdh.h"
 #include "co_dcli.h"
@@ -60,9 +61,6 @@
 #include "co_msg.h"
 #include "co_ccm.h"
 #include "co_lng.h"
-
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
 
 typedef	struct {
 	char		TypeStr[20];
@@ -6006,7 +6004,7 @@ int  graph_attr_string_to_value( int type_id, const char *value_str,
     {
       if ( (int) strlen( value_str) >= attr_size)
         return GE__STRINGTOLONG;
-      strncpy( (char *)buffer_ptr, value_str, min(attr_size, buff_size));
+      strncpy( (char *)buffer_ptr, value_str, MIN(attr_size, buff_size));
       break;
     }
     case pwr_eType_ObjDId:
