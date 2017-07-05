@@ -370,6 +370,7 @@ int XttLogging::logging_set(
 	        case pwr_eType_UInt32:
 	        case pwr_eType_Int64:
 	        case pwr_eType_UInt64:
+	        case pwr_eType_String:
 	        case pwr_eType_Objid:
 	        case pwr_eType_AttrRef:
 	        case pwr_eType_Time:
@@ -1105,6 +1106,9 @@ static void	*xtt_logproc( void *arg)
 	            case pwr_eType_UInt64:
 	              char_cnt += logg->log_print( "	%llu", *(pwr_tUInt64 *)value_ptr);
 	              break;
+	            case pwr_eType_String:
+	              char_cnt += logg->log_print( "	%s", value_ptr);
+	              break;
 	            case pwr_eType_Objid:
 	              objid = *(pwr_tObjid *)value_ptr;
 	              if ( !objid.oix)
@@ -1320,9 +1324,9 @@ static void	*xtt_logproc( void *arg)
 				*(pwr_tUInt64 *)value_ptr;
 	              }
 	              break;
-	            case pwr_eType_Int64:
-	              if ( (*(pwr_tInt64 *)value_ptr != 
-				*(pwr_tInt64 *)old_value_ptr) || first_scan)
+	            case pwr_eType_String:
+	              if ( strncmp( value_ptr, old_value_ptr, sizeof(logg->old_value[0])) != 0 || 
+			   first_scan)
 	              {
 	                /* Value is changed, print */
 	                time_AtoAscii( &time, time_eFormat_DateAndTime, 
@@ -1330,9 +1334,8 @@ static void	*xtt_logproc( void *arg)
 	                logg->log_print( "%s", &time_str);
 	                logg->log_print( "	%s",  
 				&(logg->parameterstr[i]));
-	                logg->log_print( "	%lld\n", *(pwr_tInt64 *)value_ptr);
-	                *(pwr_tInt64 *)old_value_ptr = 
-				*(pwr_tInt64 *)value_ptr;
+	                logg->log_print( "	%s\n", value_ptr);
+	                strncpy( old_value_ptr, value_ptr, sizeof(logg->old_value[0]));
 	              }
 	              break;
 	            case pwr_eType_Objid:

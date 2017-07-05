@@ -81,7 +81,7 @@ class XttLogging {
     float      	logg_time;
     pwr_tFileName logg_filename;
     FILE	*logg_file;	
-    char	old_value[RTT_LOGG_MAXPAR][8];
+    char	old_value[RTT_LOGG_MAXPAR][80];
     pwr_tTime	starttime;
 #if defined OS_POSIX
     pthread_t 	thread;
