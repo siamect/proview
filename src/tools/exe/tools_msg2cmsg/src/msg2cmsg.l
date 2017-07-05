@@ -16,6 +16,9 @@ ws	[ \t]+
 nl	\n
 comment !.*
 
+%option nounput
+%option noinput
+
 %x facnam faccom facnum prefix prefixstr prefixstr_nl msgnam msgtxt msgsev
 
 %%

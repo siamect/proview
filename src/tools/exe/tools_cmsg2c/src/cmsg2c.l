@@ -17,6 +17,9 @@ ws	[ \t]+
 nl	\n
 comment !.*
 
+%option nounput
+%option noinput
+
 %x facnam facnum
 
 %%
