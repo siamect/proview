@@ -324,13 +324,6 @@ int wb_dbms::createDb()
                         "  primary key (id)"
                         ") engine = innodb;");
 
-#if 0
-  try {
-    rc = m_env->txn_begin(0, &txn, 0);
-  } catch (wb_dbms_error &e) {
-    printf("m_env->txn_begin, %s\n", e.what().c_str());
- }
-#endif
   return 0;
 }
 
@@ -384,35 +377,7 @@ pwr_tOid wb_dbms::new_oid(wb_dbms_txn *txn, pwr_tOid oid)
 
 int wb_dbms::del_family(wb_dbms_txn *txn, wb_dbms_cursor *cp, pwr_tOid poid)
 {
-  int ret = 0;
-#if 0
-  dbName name;
-  name.poid = poid;
-  name.normname = "";
-  pwr_tOid oid = 0;
-
-  FamilyKey  nk(po, );
-  FamiltData nd(&oid, sizeof(oid));
-  wb_dbms_cursor *ncp;
-  cp->dup(*ncp, 0);
-
-  while ((ret = cp->get(&nk, &nd, DB_NEXT)) != DB_NOTFOUND) {
-    del_family(txn, ncp, oid);
-    cp->del();
-    oh_k ok(nd);
-    oh_d od();
-    m_dbms_ohead->get(txn, &ok, &od, 0);
-    wb_DbClistK ck(od);
-    m_db_class->del(txn, &ck, 0);
-    wb_DbBodyK bk(od);
-    m_db_obody->del(txn, &bk, 0);
-    m_db_ohead->del(txn, &ok, 0);
-  }
-  ncp->close();
-
-  ret = m_db_name->del(txn, &key, 0);
-#endif
-  return ret;
+  return 0;
 }
 
 
@@ -486,32 +451,6 @@ bool wb_dbms::deleteFamily(pwr_tStatus *sts, wb_dbms_ohead *o)
 
   return true;
 }
-
-#if 0
-bool wb_dbms::deleteOset(pwr_tStatus *sts, wb_oset *o)
-{
-  wb_dbms_txn *txn = 0;
-
-  m_env->txn_begin(m_txn, &txn, 0);
-
-  try {
-    //del_family(txn, o);
-    //unadopt(txn, wb_Position(o));
-    //del_ohead(txn, o);
-    //del_clist(txn, o);
-    //del_name(txn, o);
-    //del_body(txn, o);
-
-    txn->commit(0);
-  }
-  catch (wb_dbms_error &e) {
-    txn->abort();
-  }
-
-  return true;
-}
-#endif
-
 
 bool wb_dbms::importVolume(wb_export &e)
 {

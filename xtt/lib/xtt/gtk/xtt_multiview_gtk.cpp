@@ -132,30 +132,6 @@ void XttMultiViewGtk::activate_exit( GtkWidget *w, gpointer data)
 
 void XttMultiViewGtk::action_resize( GtkWidget *w, GtkAllocation *allocation, gpointer data)
 {
-#if 0
-  XttMultiViewGtk *mv = (XttMultiViewGtk *)data;
-  GtkRequisition req;
-  static int skip = 0;
-  int window_width, window_height;
-
-  if ( !mv->toplevel->window)
-    return;
-  if ( skip) {
-    skip--;
-    return;
-  }
-
-  //gtk_widget_get_preferred_size( GTK_WIDGET(mv->toplevel), &req);
-  // gtk_widget_size_request( GTK_WIDGET(mv->toplevel), &req);
-  gdk_window_get_size( mv->toplevel->window, &window_width, &window_height);
-  double factor = float(window_width) / mv->orig_width;
-
-  for ( int i = 0; i < mv->cols * mv->rows; i++) {
-    gtk_fixed_move( GTK_FIXED(mv->col_widget), mv->comp_widget[i], factor * mv->comp_x[i], factor * mv->comp_y[i]);
-    gtk_widget_set_size_request( GTK_WIDGET(mv->comp_widget[i]), factor * mv->comp_width[i], factor * mv->comp_height[i]);
-  }
-  skip = mv->cols * mv->rows;
-#endif
 }
 
 XttMultiViewGtk::~XttMultiViewGtk()

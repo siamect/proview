@@ -61,129 +61,6 @@
 #include "rt_hash.h"
 //#include "rt_futex.h"
 
-
-#if 0
-pwr_tBoolean
-qos_WaitQueOld (
-  pwr_tStatus		*status,
-  qdb_sQue		*qp,
-  int			tmo
-)
-{
-  pwr_tDeltaTime	dtime;
-  struct timespec	dtime_ts;
-  sigset_t		newset;
-  siginfo_t		info;
-  int			ok;
-  pwr_tBoolean		signal = FALSE;
-  pwr_dStatus		(sts, status, QCOM__SUCCESS);
-
-  qdb_AssumeLocked;
-
-  if (tmo == qcom_cTmoNone)
-    return FALSE;
-
-  qp->lock.waiting = TRUE;
-
-  sigemptyset(&newset);
-  sigaddset(&newset, qdb_cSigMsg);
-
-//  qp->lock.pid = BUILDPID(getpid(), pthread_self());
-// I think that each thread has it's own pid in Linux. ML
-  qp->lock.pid = getpid();
-
-  qdb_Unlock;
-
-    if (tmo != qcom_cTmoEternal) {
-      time_MsToD(&dtime, tmo);
-      dtime_ts.tv_sec = dtime.tv_sec;
-      dtime_ts.tv_nsec = dtime.tv_nsec;
-     
-      ok = sigtimedwait(&newset, &info, &dtime_ts);  
-    } else {
-      for (;;) {
-        ok = sigwaitinfo(&newset, &info);
-        if ( ok == -1 && errno == EINTR)
-          continue;
-        break;
-      }
-    }
-    
-    if (ok == -1 && errno != EAGAIN) {
-      errh_Error("waitQue (%d) %s", errno, strerror(errno));
-    }
-    else if (!(ok == -1 || ok == qdb_cSigMsg)) {
-      errh_Error("qos waitQue signr %d", ok);
-    }
-
-  qdb_Lock;
-
-  if (qp->lock.waiting) {
-    *sts = QCOM__TMO;
-    qp->lock.waiting = FALSE;
-  } else {
-    signal = TRUE;
-  }
-
-  return signal;
-}
-#endif
-
-
-#if 0
-pwr_tBoolean
-qos_WaitQue (
-  pwr_tStatus		*status,
-  qdb_sQue		*qp,
-  int			tmo
-)
-{
-  pwr_tDeltaTime	dtime;
-  pwr_tTime             atime;
-  struct timespec       atime_ts;
-  int			ok;
-  pwr_tBoolean		signal = FALSE;
-  pwr_dStatus		(sts, status, QCOM__SUCCESS);
-
-  qdb_AssumeLocked;
-
-  if (tmo == qcom_cTmoNone)
-    return FALSE;
-
-  pthread_mutex_lock(&qp->lock.mutex);
-
-  qp->lock.waiting = TRUE;
-  qp->lock.pid     = 0;
-
-  qdb_Unlock;
-
-  if (tmo != qcom_cTmoEternal) {
-    time_GetTime(&atime);
-    time_MsToD(&dtime, tmo);
-    time_Aadd(&atime, &atime, &dtime);
-    atime_ts.tv_sec = atime.tv_sec;
-    atime_ts.tv_nsec = atime.tv_nsec;
-
-    ok = pthread_cond_timedwait(&qp->lock.cond, &qp->lock.mutex, &atime_ts);
-  } else {
-    ok = pthread_cond_wait(&qp->lock.cond, &qp->lock.mutex);
-  }
-      
-  pthread_mutex_unlock(&qp->lock.mutex);
-  
-  qdb_Lock;
-
-  if ((qp->lock.waiting) || (ok == ETIMEDOUT)) {
-    *sts = QCOM__TMO;
-    qp->lock.waiting = FALSE;
-  } else {
-    signal = TRUE;
-  }
-
-  return signal;
-}
-#endif
-
 pwr_tBoolean
 qos_WaitQue (
   pwr_tStatus		*status,
@@ -245,37 +122,6 @@ qos_WaitQue (
   return 0;
 }
 
-
-#if 0
-pwr_tStatus
-qos_SignalQueOld (
-  pwr_tStatus	*status,
-  qdb_sQue	*qp
-)
-{
-  union sigval	value;
-  int		ok;
-  pwr_dStatus	(sts, status, QCOM__SUCCESS);
-
-  qdb_AssumeLocked;
-
-  if (qp->lock.waiting) {
-//    value.sival_int = BUILDPID(getpid(), pthread_self());
-    value.sival_int = getpid();
-    qp->lock.waiting = FALSE;
-
-    ok = sigqueue(qp->lock.pid, qdb_cSigMsg, value);
-
-    if (ok == -1) {
-      *sts = errno_Status(errno);
-    }
-  }
-
-  return TRUE;
-}
-#endif
-
-
 pwr_tStatus
 qos_SignalQue (
   pwr_tStatus	*status,
@@ -287,30 +133,6 @@ qos_SignalQue (
   qp->lock.waiting = FALSE;
   return TRUE;
 }
-
-#if 0
-pwr_tStatus
-qos_SignalQue (
-  pwr_tStatus	*status,
-  qdb_sQue	*qp
-)
-{
-  pwr_dStatus	(sts, status, QCOM__SUCCESS);
-
-  qdb_AssumeLocked;
-
-  pthread_mutex_lock(&qp->lock.mutex);
-
-  qp->lock.waiting = FALSE;
-
-  pthread_cond_signal(&qp->lock.cond);
-  
-  pthread_mutex_unlock(&qp->lock.mutex);
-
-  return TRUE;
-}
-#endif
-
 
 qdb_sQlock *
 qos_CreateQlock (

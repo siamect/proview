@@ -49,12 +49,7 @@
 */
 #define Sup_init(o)					\
     ;
-#if 0
-  o->AlarmCheck = TRUE;					\
-  o->DetectCheck = TRUE;				\
-  o->ReturnCheck = FALSE;				\
-  o->Acked = TRUE;
-#endif
+
 /*
 * Name:
 *   ASup_init(object, In, con)				
@@ -65,12 +60,6 @@
 */
 #define ASup_init(o, In, con)				\
   ;
-#if 0
-  o->CheckAlarm = TRUE;					\
-  o->CheckDetect = TRUE;				\
-  o->CheckReturn = FALSE;				\
-  o->Acked = TRUE;
-#endif
 
 /*_*
   Name:
@@ -139,12 +128,6 @@
 */
 #define DSup_init(o, In, con)				\
   ;
-#if 0
-  o->CheckAlarm = TRUE;					\
-  o->CheckDetect = TRUE;				\
-  o->CheckReturn = FALSE;				\
-  o->Acked = TRUE;
-#endif
 /*_*
   Name:
     DSup_exec(object, In, con)				

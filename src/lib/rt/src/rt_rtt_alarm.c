@@ -1507,28 +1507,7 @@ static int	rtt_event_item_text(
 		sizeof(menu_ptr->text) - strlen( menu_ptr->text));
 	
 	menu_ptr->text[ 79 ] = 0;
-#if 0
-	char			eventname[80];
-	char			*s;
-	int			i;
 
-	for ( i = strlen( menu_ptr->text); i < 71; i++)
-	  menu_ptr->text[i] = ' ';
-	menu_ptr->text[i] = 0;
-	strcpy( eventname, menu_ptr->eventname);
-	s = strchr( eventname, '.');
-	if ( s != 0)
-	  *s = 0;
-	s = strchr( eventname, '-');
-	while ( s != 0)
-	{
-	  strcpy( eventname, s + 1);			
-	  s = strchr( eventname, '-');
-	}
-	strncat( menu_ptr->text, eventname, 
-		sizeof(menu_ptr->text) - strlen( menu_ptr->text));
-	menu_ptr->text[ sizeof(menu_ptr->text) -1 ] = 0;
-#endif	
 	/* If rtt alarm log is activ, log event on file */
 	rtt_alarmlog_log( "Event", menu_ptr);
 
@@ -1600,29 +1579,7 @@ int	rtt_alarm_item_text(
 		sizeof(menu_ptr->text) - strlen( menu_ptr->text));
 	
 	menu_ptr->text[ 79 ] = 0;
-#if 0
-	char			eventname[80];
-	char			*s;
-	int			i;
 
-	/*  Skip event name ... */
-	for ( i = strlen( menu_ptr->text); i < 71; i++)
-	  menu_ptr->text[i] = ' ';
-	menu_ptr->text[i] = 0;
-	strcpy( eventname, menu_ptr->eventname);
-	s = strchr( eventname, '.');
-	if ( s != 0)
-	  *s = 0;
-	s = strchr( eventname, '-');
-	while ( s != 0)
-	{
-	  strcpy( eventname, s + 1);			
-	  s = strchr( eventname, '-');
-	}
-	strncat( menu_ptr->text, eventname, 
-		sizeof(menu_ptr->text) - strlen( menu_ptr->text));
-	menu_ptr->text[ sizeof(menu_ptr->text) -1 ] = 0;
-#endif	
 	return RTT__SUCCESS;
 }
 

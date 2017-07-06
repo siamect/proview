@@ -576,13 +576,6 @@ int GrowFolder::event_handler( GlowWind *w, glow_eEvent event, int x, int y, dou
     }
   }
   sts = GrowWindow::event_handler( w, event, x, y, fx, fy);
-#if 0
-  if ( ctx->trace_started && ctx->callback_object == this) {
-    // Disable event callback for this object, let the window ctx handle it
-    ctx->callback_object = 0;
-    ctx->callback_object_type = glow_eObjectType_NoObject;
-  }
-#endif
   return sts;
 }
 

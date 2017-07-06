@@ -446,10 +446,6 @@ subc_ActivateList (
 {
   pwr_tStatus		sts;
   tree_sTable		*add;
-#if 0
-  tree_sTable		*remove;
-  sRemove		*rep;
-#endif
   net_sSubSpec		*specp;
   qcom_sQid		tgt;
   pool_sQlink		*my_lh;
@@ -471,10 +467,6 @@ subc_ActivateList (
 
   add = tree_CreateTable(&sts, sizeof(pwr_tNodeId), offsetof(sAdd, nid),
     sizeof(sAdd), 10, tree_Comp_nid);
-#if 0
-  remove = tree_CreateTable(&sts, sizeof(pwr_tNodeId), offsetof(sRemove, nid),
-    sizeof(sRemove), 10, tree_eComp_nid);
-#endif
 
   /* Move all objects to a new, temporary root */
 
@@ -562,48 +554,6 @@ subc_ActivateList (
 
         cancelTimeoutWatch(cp);
 	subc_SetOld(cp);	/* Data gets old immediately */
-
-#if 0
-        /** @todo Maybe we should unlock the cached class? */
-        if (cp->cclass != pwr_cNRefId) {
-          ccp = pool_Address(NULL, gdbroot->pool, cp->cclass);
-          if (ccp == NULL) errh_Bugcheck(GDH__WEIRD, "Cached class address");
-          cmvolc_UnlockClass(NULL, ccp);
-          cp->cclass = pwr_cNRefId;
-        }
-#endif        
-          
-#if 0
-	if (old_np->nid != pwr_cNNodeId) {
-	  rep = tree_Insert(&sts, remove, &old_np->nid);
-	  if (rep == NULL) errh_Bugcheck(GDH__WEIRD, "");
-
-	  if (rep->msg == NULL) {
-	    rep->nid = old_np->nid;
-	    rep->cnt = MIN(my_subc_lc, net_cSubMaxRemove);
-	    rep->msg = malloc(sizeof(net_sSubRemove) + sizeof(rep->msg->sid[0]) * rep->cnt);
-	    rep->msg->count = 0;
-	  }
-
-	  rep->msg->sid[rep->msg->count++] = cp->sid;
-
-	  if (rep->msg->count >= net_cSubMaxRemove) {
-	    np = hash_Search(&sts, gdbroot->nid_ht, &old_np->nid);
-	    if (np == NULL) errh_Bugcheck(sts, "");
-	    tgt.nid = rep->nid;
-	    pwr_Assert(tgt.nid != pwr_cNNodeId);
-
-	    gdb_Unlock;
-
-	      net_Put(NULL, &tgt, rep->msg, net_eMsg_subRemove, 0, pwr_Offset(rep->msg, sid[rep->msg->count]), 0);
-
-	    gdb_Lock;
-
-	    rep->msg->count = 0;
-
-	  }
-	}
-#endif
       }
     }
   }
@@ -614,18 +564,6 @@ subc_ActivateList (
 
   gdb_Unlock;
 
-#if 0
-    for (rep = tree_Minimum(remove); rep != NULL; rep = tree_Successor(remove, rep)) { 
-      if (rep->msg != NULL) {
-	if (rep->msg->count > 0) {
-	  tgt.nid = rep->nid;
-	  pwr_Assert(tgt.nid != pwr_cNNodeId);
-	  net_Put(NULL, &tgt, rep->msg, net_eMsg_subRemove, 0, pwr_Offset(rep->msg, sid[rep->msg->count]), 0);
-	}
-	free(rep->msg);
-      }
-    }
-#endif
     for (aep = tree_Minimum(&sts, add); aep != NULL; aep = tree_Successor(&sts, add, aep)) { 
       if (aep->msg != NULL) {
 	if (aep->msg->count > 0) {
@@ -644,9 +582,6 @@ subc_ActivateList (
   gdb_Lock;
 
   tree_DeleteTable(&sts, add);
-#if 0
-  tree_DeleteTable(remove);
-#endif
 }
 
 /* Cancels a list of clients.
@@ -660,11 +595,6 @@ subc_CancelList (
 )
 {
   qcom_sQid		tgt;
-#if 0
-  tree_sTable		*remove;
-  sRemove		*rep;
-  gdb_sNode		*np;
-#endif
   pwr_tNodeId		nid;
   pwr_tSubid		sid;
   sub_sClient		*cp;
@@ -673,11 +603,6 @@ subc_CancelList (
   gdb_AssumeLocked;
 
   tgt.qix = net_cProcHandler;
-
-#if 0
-  remove = tree_CreateTable(sizeof(pwr_tNodeId), offsetof(sRemove, nid),
-    sizeof(sRemove), 10, tree_eComp_nid, NULL);
-#endif
 
   for (cl = pool_Qsucc(NULL, gdbroot->pool, lh); cl != lh;) {
     cp = pool_Qitem(cl, sub_sClient, subc_ll);
@@ -692,57 +617,7 @@ subc_CancelList (
     nid = cp->nid;
     sid = cp->sid;
     deleteClient(cp);
-
-#if 0
-    if (nid != pwr_cNNodeId) {
-      rep = tree_Insert(remove, &nid);
-      if (rep == NULL) errh_Bugcheck(GDH__WEIRD, "");
-
-      if (rep->msg == NULL) {
-	np = hash_Search(NULL, gdbroot->nid_ht, &nid);
-	if (np == NULL) errh_Bugcheck(GDH__WEIRD, "");
-	rep->cnt = net_cSubMaxRemove;
-	rep->msg = malloc(sizeof(net_sSubRemove) + sizeof(rep->msg->sid[0]) * rep->cnt);
-	rep->msg->count = 0;
-      }
-
-      rep->msg->sid[rep->msg->count++] = sid;
-
-      if (rep->msg->count >= net_cSubMaxRemove) {
-	tgt.nid = rep->nid;
-
-	gdb_Unlock;
-
-	  net_Put(NULL, &tgt, rep->msg, net_eMsg_subRemove, 0, pwr_Offset(rep->msg, sid[rep->msg->count]), 0);
-
-	gdb_Lock;
-
-	rep->msg->count = 0;
-
-      }
-    } /* Remote */
-#endif
   } /* For all clients in list */
-
-#if 0
-  /* Now send all unsent messages.  */
-
-  gdb_Unlock;
-
-    for (rep = tree_Minimum(remove); rep != NULL; rep = tree_Successor(remove, rep)) { 
-      if (rep->msg != NULL) {
-	if (rep->msg->count > 0) {
-	  tgt.nid = rep->nid;
-	  net_Put(NULL, &tgt, rep->msg, net_eMsg_subRemove, 0, pwr_Offset(rep->msg, sid[rep->msg->count]), 0);
-	}
-	free(rep->msg);
-      }
-    }
-
-  gdb_Lock;
-
-  tree_DeleteTable(remove);
-#endif
 }
 
 /* Cancel all subscriptions for a particular user.

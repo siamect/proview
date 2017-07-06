@@ -107,46 +107,10 @@ void FlowAnnotPixmap::print( void *pos, void *node, int highlight)
 
 void FlowAnnotPixmap::save( ofstream& fp, flow_eSaveMode mode)
 {
-#if 0
-  fp << int(flow_eSave_Pixmap) << endl;
-  fp << int(flow_eSave_Pixmap_pixmap_size) << FSPACE << pixmap _size << endl;
-  fp << int(flow_eSave_Pixmap_draw_type) << FSPACE << draw_type << endl;
-  fp << int(flow_eSave_Pixmap_text) << FSPACE << text << endl;
-  fp << int(flow_eSave_Pixmap_p) << endl;
-  p.save( fp, mode);
-  fp << int(flow_eSave_End) << endl;
-#endif
 }
 
 void FlowAnnotPixmap::open( ifstream& fp)
 {
-#if 0
-  int		type;
-  int 		end_found = 0;
-  char		dummy[40];
-  int		tmp;
-
-  for (;;)
-  {
-    fp >> type;
-    switch( type) {
-      case flow_eSave_Pixmap: break;
-      case flow_eSave_Pixmap_pixmap_size: fp >> pixmap_size; break;
-      case flow_eSave_Pixmap_draw_type: fp >> tmp; draw_type = (flow_eDrawType)tmp; break;
-      case flow_eSave_Pixmap_text: 
-        fp.get();
-        fp.getline( text, sizeof(text));
-        break;
-      case flow_eSave_Pixmap_p: p.open( fp); break;
-      case flow_eSave_End: end_found = 1; break;
-      default:
-        cout << "FlowAnnotPixmap:open syntax error" << endl;
-        fp.getline( dummy, sizeof(dummy));
-    }
-    if ( end_found)
-      break;
-  }
-#endif
 }
 
 void FlowAnnotPixmap::draw( void *pos, int highlight, int dimmed, int hot, void *node)
@@ -260,27 +224,6 @@ void FlowAnnotPixmap::nav_erase( void *pos, void *node)
 int FlowAnnotPixmap::event_handler( void *pos, flow_eEvent event, int x, int y,
 	void *node)
 {
-#if 0
-  if ( !((FlowNode *) node)->annotpixmapv[number])
-    return 0;
-
-  int idx = int( ctx->zoom_factor / ctx->base_zoom_factor * (pixmap_size + 4) -
-	 4);
-  if ( idx < 0)
-    return 0;
-  idx = MIN( idx, DRAW_TYPE_SIZE-1);
-
-  if ( p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x < x && 
-       x < p.z_x  + ((FlowPoint *)pos)->z_x - ctx->offset_x + ((FlowNode *) node)->annotpixmapv[number]->pixmap_data[idx].width &&
-       p.z_y  + ((FlowPoint *)pos)->z_y - ctx->offset_y < y && 
-       y < p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y + ((FlowNode *) node)->annotpixmapv[number]->pixmap_data[idx].height)
-  {
-    cout << "Event handler: Hit in pixmap" << endl;
-    return 1;
-  }  
-  else
-    return 0;
-#endif
   return 0;
 }
 

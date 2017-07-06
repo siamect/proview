@@ -174,11 +174,7 @@ union i3e_s_be {
 #define ENDIAN_SWAP_SHORT(t, s)\
   {short int i = *(short *)s; *(short *)t = (SBYTE0(i) | SBYTE1(i));}
 
-#if 0
-# define ENDIAN_SWAP_BOOL(t, s) (*(int *)t = (0 != *(int *)s))
-#else
-# define ENDIAN_SWAP_BOOL(t, s) ENDIAN_SWAP_INT(t, s)
-#endif
+#define ENDIAN_SWAP_BOOL(t, s) ENDIAN_SWAP_INT(t, s)
 
 #if (defined(OS_LINUX)) && (pwr_dHost_byteOrder == pwr_dBigEndian)
 

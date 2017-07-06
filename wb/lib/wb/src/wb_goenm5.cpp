@@ -472,55 +472,5 @@ int goen_get_location_point_m5( WGre *grectx, pwr_sGraphPlcNode *graphbody,
 				unsigned int *mask, unsigned long node_width, 
 				goen_point_type *info_pointer, vldh_t_node node)
 {
-#if 0
-    int  i;
-    int	ipoints;
-    int	inputpoints, outputpoints;
-	unsigned long    pointmask;
-	unsigned int     *inmask_pointer;
-	unsigned int     *outmask_pointer;
-	int 		inputs;
-	int 		interns;
-	int			ouputs;
-	float		ll_x,ll_y,mid_x,mid_y;
-	int		sts;
-
-	/* Get number of parameters */
-	inputs = graphbody->parameters[PAR_INPUT];
-	interns = graphbody->parameters[PAR_INTERN];
-	ouputs = graphbody->parameters[PAR_OUTPUT];
-
-	inmask_pointer = mask++;
-	outmask_pointer = mask;
-
-	/* Check if condition input in mask (second bit) */
-	pointmask = 2;
-	inputpoints = 1;
-	inputpoints += ((*inmask_pointer & pointmask) != 0);
-
-	/* Check if output in mask (first bit) */
-	pointmask = 1;
-	outputpoints = 0;
-	outputpoints += ((*outmask_pointer & pointmask) != 0);
-	
-	sts = NetedMeasureNode( grectx->neted_window,
-			  node->hn.node_id,
-			  &ll_x,&ll_y,&mid_x,&mid_y,&f_width,&f_height);
-	tst_neted( sts, "NetedMeasureNode", 204 );
-
-	f_width -= 2* GOEN_F_LINEWIDTH;
-	f_height -= 2* GOEN_F_LINEWIDTH;
-	if ( inputpoints == 2)
-	  f_height -= f_pinlength;
-	f_width -= f_pinlength;
-	if ( outputpoints > 0)
-	  f_width -= f_pinlength;
-
-	info_pointer->x = f_width/2 + f_pinlength / 2 * 
-		(( inputpoints == 0 ) - ( outputpoints == 0 ));
-	info_pointer->y = f_pinlength/2 * ( inputpoints == 2 );
-
-
-#endif
 	return GOEN__SUCCESS;
 }

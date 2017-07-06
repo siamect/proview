@@ -183,58 +183,6 @@ int sev_dbsqlite::open_db()
 
 int sev_dbsqlite::checkAndUpdateVersion(unsigned int version)
 {
-#if 0
-  unsigned int old_version=1; //Proview 4.6.0.0 was first release with sev
-  int rc = sqlite_exec( m_con, "select * from sev_version");
-  if (rc != SQLITE_OK) {
-    printf( "table sev_version do no exist\n");
-  }
-  else {
-  
-    MYSQL_ROW row;
-    MYSQL_RES *result = mysql_store_result( m_con);
-  
-    if ( !result) {
-      printf("In %s row %d:\n", __FILE__, __LINE__);
-      printf( "selecting sev_version Error\n");
-      return 0;
-    }
-  
-    row = mysql_fetch_row( result);
-    if (!row) {
-      printf("In %s row %d:\n", __FILE__, __LINE__);
-      printf( "selecting sev_version Error\n");
-      return 0;
-    }
-  
-    old_version= strtoul( row[0], 0, 10);
-    mysql_free_result( result);
-  }
-
-  printf("old sev_version: %d, new sev_version: %d\n", old_version, version);
-
-  //add code for new versions here
-  if(old_version < 2 ) {
-    printf("Updating database tables to sev version 2\n");
-    updateDBToSevVersion2();
-  }
-  if (old_version < 3) {
-    printf("Updating database tables to sev version 3\n");
-    createSevVersion3Tables();
-  }
-
-  if(old_version != version) {
-    char query[100];
-    char *errmsg;
-    sprintf( query, "update sev_version set version = %d", version);
-    rc = mysql_query( m_con, 0, 0, &errmsg);
-    if (rc != SQLITE_OK) {
-      printf("In %s row %d:\n", __FILE__, __LINE__);
-      printf( "Update sev_version: %s\n", errmsg);
-      sqlite3_free(errmsg);
-    }
-  }
-#endif
   return 1;
 }
 
@@ -1009,10 +957,6 @@ int sev_dbsqlite::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
       sqlite3_free(errmsg);
       return 0;
     }
-#if 0 // TODO
-    if ( m_items[item_idx].options & pwr_mSevOptionsMask_ReadOptimized)
-      m_items[item_idx].last_id = mysql_insert_id( m_con);
-#endif
   }
   else {
     if ( m_items[item_idx].options & pwr_mSevOptionsMask_PosixTime) {
@@ -2394,12 +2338,6 @@ int sev_dbsqlite::store_objectvalue( pwr_tStatus *sts, int item_idx, int attr_id
     sqlite3_free(errmsg);
     return 0;
   }
-
-#if 0 // TODO
-  if ( (m_items[item_idx].options & pwr_mSevOptionsMask_ReadOptimized) &&
-       !updateOnlyTime)
-    m_items[item_idx].last_id = mysql_insert_id( m_con);
-#endif
 
   m_items[item_idx].first_storage = 0;
 

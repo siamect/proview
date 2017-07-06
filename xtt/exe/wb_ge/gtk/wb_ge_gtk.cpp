@@ -70,14 +70,6 @@ static void usage()
   printf("\nUsage: wb_ge [-l language] [graphname]\n");
 }
 
-#if 0
-static void ge_close_cb( void *gectx)
-{
-  delete (Ge *)gectx;
-  exit(0);
-}
-#endif
-
 int main( int argc, char *argv[])
 {
   int i;

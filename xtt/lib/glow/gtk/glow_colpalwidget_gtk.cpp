@@ -450,20 +450,3 @@ GtkWidget *colpalnavwidgetgtk_new( GtkWidget *main_colpal)
   w->scroll_configure = 0;
   return (GtkWidget *) w;  
 }
-
-#if 0
-GType colpalwidgetgtk_get_type(void)
-{
-  static GType colpalwidgetgtk_type = 0;
-
-  if ( !colpalwidgetgtk_type) {
-    static const GTypeInfo colpalwidgetgtk_info = {
-      sizeof(ColPalWidgetGtkClass), NULL, NULL, (GClassInitFunc)colpalwidgetgtk_class_init,
-      NULL, NULL, sizeof(ColPalWidgetGtk), 1, NULL, NULL};
-    
-    colpalwidgetgtk_type = g_type_register_static( G_TYPE_OBJECT, "ColPalWidgetGtk", &colpalwidgetgtk_info, 
-					   (GTypeFlags)0);  
-  }
-  return colpalwidgetgtk_type;
-}
-#endif

@@ -864,18 +864,6 @@ int GlowDrawXLib::event_handler( XEvent event)
 	  break;
 	case Button3:
 	  button3_pressed = 1;
-#if 0
-	  if (       (event.xbutton.state & ShiftMask) && 
-		     !(event.xbutton.state & ControlMask))
-	    ctx->event_handler( glow_eEvent_MB3PressShift, event.xbutton.x, event.xbutton.y, 0, 0);
-	  else if ( !(event.xbutton.state & ShiftMask) && 
-		    (event.xbutton.state & ControlMask))
-	    ctx->event_handler( glow_eEvent_MB3PressShift, event.xbutton.x, event.xbutton.y, 0, 0);
-	  else if (  (event.xbutton.state & ShiftMask) && 
-		     (event.xbutton.state & ControlMask))
-	    ctx->event_handler( glow_eEvent_MB3PressShiftCtrl, event.xbutton.x, event.xbutton.y, 0, 0);
-	  else
-#endif
 	    ctx->event_handler( glow_eEvent_MB3Press, event.xbutton.x, event.xbutton.y, 0, 0);
 	  click_sensitivity = 0;
 	  break;
@@ -945,18 +933,6 @@ int GlowDrawXLib::event_handler( XEvent event)
 	    }
 	    break;
 	  case Button3:
-#if 0
-	    if (       (event.xbutton.state & ShiftMask) && 
-		       !(event.xbutton.state & ControlMask))
-	      ctx->event_handler( glow_eEvent_MB3ClickShift, event.xbutton.x, event.xbutton.y, 0, 0);
-	    else if ( !(event.xbutton.state & ShiftMask) && 
-		      (event.xbutton.state & ControlMask))
-	      ctx->event_handler( glow_eEvent_MB3ClickCtrl, event.xbutton.x, event.xbutton.y, 0, 0);
-	    else if (  (event.xbutton.state & ShiftMask) && 
-		       (event.xbutton.state & ControlMask))
-	      ctx->event_handler( glow_eEvent_MB3ClickShiftCtrl, event.xbutton.x, event.xbutton.y, 0, 0);
-	    else
-#endif
 	      ctx->event_handler( glow_eEvent_MB3Click, event.xbutton.x, event.xbutton.y, 0, 0);
 	    click_sensitivity = 0;
 	    break;
@@ -1031,19 +1007,6 @@ int GlowDrawXLib::event_handler( XEvent event)
 	    }
 	    break;
 	  case Button3:
-#if 0
-	    if ( (event.xbutton.state & ShiftMask) && 
-		 !(event.xbutton.state & ControlMask))
-	      ctx->event_handler( glow_eEvent_MB3DoubleClickShift, event.xbutton.x, event.xbutton.y, 0, 0);
-	    else if ( !(event.xbutton.state & ShiftMask) && 
-		      (event.xbutton.state & ControlMask))
-	      ctx->event_handler( glow_eEvent_MB3DoubleClickCtrl, event.xbutton.x, event.xbutton.y, 0, 0);
-	    else if (  (event.xbutton.state & ShiftMask) && 
-		       (event.xbutton.state & ControlMask))
-	      ctx->event_handler( glow_eEvent_MB3DoubleClickShiftCtrl, event.xbutton.x, event.xbutton.y, 0, 0);
-	    else
-	      ctx->event_handler( glow_eEvent_MB3DoubleClick, event.xbutton.x, event.xbutton.y, 0, 0);
-#endif
 	    break;
 	  }
 	}
@@ -2243,25 +2206,6 @@ static int glow_read_color_file( const char *filename, draw_sColor **color_array
   if ( !check_file( filename))
   {
     return 0;
-#if 0
-    // No color-file exist, use default values
-    double r, g, b;
-
-    printf( "** Using default color palette\n");
-    *color_array = (draw_sColor *) calloc( 300, sizeof( draw_sColor));
-    *size = 0;
-    color_p = *color_array;
-    for ( int i = 3; i < 300; i++)
-    {
-      GlowColor::rgb_color( i, &r, &g, &b, 0);
-      color_p->red = int( r * 65535);
-      color_p->green = int( g * 65535);
-      color_p->blue = int( b * 65535);
-
-      color_p++;
-      (*size)++;
-    }
-#endif
   }
   else
   {
@@ -2898,19 +2842,6 @@ int GlowDrawXLib::image_scale( int width, int height, glow_tImImage orig_im, glo
 			       glow_tImData *im_data,
 			       glow_tPixmap *im_pixmap, glow_tPixmap *im_mask)
 {
-#if 0
-#if defined IMLIB
-  if ( width == ((ImlibImage *)*im)->rgb_width && height == ((ImlibImage *)*im)->rgb_height)
-    return;
-
-  Imlib_render( (ImlibData *)imlib, (ImlibImage *)*im, width, height);
-
-  if ( *im_pixmap)
-    Imlib_free_pixmap( (ImlibData *)imlib, (Pixmap)*im_pixmap);
-  *im_pixmap = (glow_tPixmap) Imlib_move_image( (ImlibData *)imlib, (ImlibImage *)*im);
-  *im_mask = (glow_tPixmap) Imlib_move_mask( (ImlibData *)imlib, (ImlibImage *)*im);
-#endif
-#endif
   return 0;
 }
 

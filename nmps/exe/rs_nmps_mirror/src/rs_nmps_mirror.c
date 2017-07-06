@@ -229,12 +229,6 @@ static pwr_tStatus	nmpsmir_cellmirlist_add(
 			pwr_tObjid 		objid, 
 			nmpsmir_t_cellmir_list 	**cellmirlist,
 			int			*cellmirlist_count);
-#if 0
-static pwr_tStatus	nmpsmir_get_convconfig( 
-			mir_ctx				mirctx,
-			pwr_tObjid 			objid,
-			char				**object_ptr);
-#endif
 static pwr_tStatus	nmpsmir_convconfiglist_add( 
 			pwr_tObjid 			objid, 
 			nmpsmir_t_convconfig_list 	**convconfiglist,
@@ -269,64 +263,6 @@ static pwr_tStatus	nmpsmir_bckremoved_store(
 	(*bckremlist_ptr)->data_objid = objid;
 	return NMPS__SUCCESS;
 }
-
-
-#if 0
-/****************************************************************************
-* Name:		nmpsmir_bckremoved_find()
-*
-* Type		pwr_tStatus
-*
-* Type		Parameter	IOGF	Description
-*
-* Description:
-*		Find an entry in bckremlist.
-*
-**************************************************************************/
-static pwr_tStatus	nmpsmir_bckremoved_find(  
-				nmpsmir_t_bckremoved		*bckremlist,
-				pwr_tObjid		objid,
-				nmpsmir_t_bckremoved		**bckremlist_ptr)
-{
-	while ( bckremlist != NULL)
-	{
-	  if ( cdh_ObjidIsEqual(bckremlist->data_objid, objid))
-	  {
-	    *bckremlist_ptr = bckremlist;
-	    return NMPS__SUCCESS;
-	  }
-	  bckremlist = bckremlist->next_ptr;
-	}
-	return NMPS__DATANOTFOUND;
-}
-#endif
-#if 0
-
-/****************************************************************************
-* Name:		nmpsmir_bckremoved_free()
-*
-* Type		pwr_tStatus
-*
-* Type		Parameter	IOGF	Description
-*
-* Description:
-*		Free the bckremlist.
-*
-**************************************************************************/
-static pwr_tStatus	nmpsmir_bckremoved_free( 	
-				nmpsmir_t_bckremoved		*bckremlist)
-{
-	nmpsmir_t_bckremoved		*bckremlist_ptr;
-
-	while ( bckremlist != NULL)
-	{
-	  bckremlist_ptr = bckremlist;
-	  bckremlist = bckremlist->next_ptr;
-	  free( bckremlist_ptr);
-	}
-	return NMPS__SUCCESS;
-}
-#endif
 
 /****************************************************************************
 * Name:		nmpsmir_bckremoved_delete()

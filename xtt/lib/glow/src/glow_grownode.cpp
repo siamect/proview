@@ -750,41 +750,6 @@ void GrowNode::set_scale_pos( double x, double y,
   erase( &ctx->mw);
   erase( &ctx->navw);
 
-#if 0
-  if ( trf.s_a11 && trf.s_a22 &&
-       fabs( scale_x - trf.a11 / trf.s_a11) < FLT_EPSILON &&
-       fabs( scale_y - trf.a22 / trf.s_a22) < FLT_EPSILON)
-    return;
-
-  switch( type)
-  {
-    case glow_eScaleType_LowerLeft:
-      x0 = x_left;
-      y0 = y_low;
-      break;
-    case glow_eScaleType_LowerRight:
-      x0 = x_right;
-      y0 = y_low;
-      break;
-    case glow_eScaleType_UpperRight:
-      x0 = x_right;
-      y0 = y_high;
-      break;
-    case glow_eScaleType_UpperLeft:
-      x0 = x_left;
-      y0 = y_high;
-      break;
-    case glow_eScaleType_FixPoint:
-      break;
-    case glow_eScaleType_Center:
-      x0 = (x_left + x_right) / 2;
-      y0 = (y_low + y_high) /2;
-      break;
-    default:
-      ;
-  }
-  trf.scale_from_stored( scale_x, scale_y, x0, y0);
-#endif
   ctx->set_nodraw();
   set_scale( scale_x, scale_y, x0, y0, type);
   ctx->reset_nodraw();
@@ -1691,22 +1656,10 @@ int GrowNode::is_sensitive()
   if ( disable_cb)
     return 0;
   return ctx->send_hot_request( this);
-#if 0
-  return (is_refobject_sensitive() || is_click_sensitive());
-#endif
 }
 
 int GrowNode::is_click_sensitive()
 {
-#if 0
-  int trace_type = (int) trace.attr_type;
-  if ( trace_type == 0) {			// Inherit tracetype from nc
-    GlowNodeClass *base_nc = nc->get_base_nc();
-    trace_type = base_nc->trace_attr_type;
-  }
-  if ( trace_type >= 1000)
-    return 1;
-#endif
   return 0;
 }
 

@@ -297,15 +297,6 @@ static void destroy_event( GtkWidget *w, gpointer data)
 {
 }
 
-#if 0
-static gint nav_delete_event( GtkWidget *w, GdkEvent *event, gpointer tra)
-{
-  gtk_widget_destroy( ((RtTraceGtk *)tra)->nav_shell);
-  ((RtTraceGtk *)tra)->nav_shell = 0;
-  return TRUE;
-}
-#endif
-
 RtTraceGtk::RtTraceGtk( void *tr_parent_ctx, GtkWidget *tr_parent_wid, pwr_tObjid tr_objid,
 			pwr_tStatus *status) :
   RtTrace( tr_parent_ctx, tr_objid, status), parent_wid(tr_parent_wid), toplevel(0), nav_shell(0)
@@ -677,20 +668,6 @@ RtTraceGtk::RtTraceGtk( void *tr_parent_ctx, GtkWidget *tr_parent_wid, pwr_tObji
   gtk_widget_show_all( toplevel);
 
   gtk_paned_set_position( GTK_PANED(paned), window_width - nav_width);
-
-#if 0
-  // Navigator window
-  nav_shell = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
-					  "default-height", 200,
-					  "default-width", 200,
-					  "title", "Navigator",
-					  NULL);
-  g_signal_connect( nav_shell, "delete_event", G_CALLBACK(nav_delete_event), this);
-
-  nav_widget = flownavwidgetgtk_new( flow_widget);
-  gtk_container_add( GTK_CONTAINER(nav_shell), nav_widget);
-  gtk_widget_show_all( nav_shell);
-#endif
 
   wow = new CoWowGtk( toplevel);
   trace_timerid = wow->timer_new();

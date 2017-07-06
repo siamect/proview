@@ -67,10 +67,6 @@ public:
 };
 #endif
 
-#if 0 /* volatile type: do not redeclare */
-
-#endif
-
 #ifndef SOAP_TYPE_xsd__string
 #define SOAP_TYPE_xsd__string (11)
 /* Primitive xsd:string schema type: */

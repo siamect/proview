@@ -1692,13 +1692,6 @@ int Nav::init_brow_cb( FlowCtx *fctx, void *client_data)
 
   nav->create_nodeclasses();
 
-#if 0
-  // Create the root item
-  sts = nav_create_object_item( nav, nav->root_objid, NULL, flow_eDest_After,
-				(Item **)&nav->root_item, 1);
-  if (EVEN(sts)) return sts;
-#endif
-
   if ( !nav->menu) {
     nav->menu = PalFile::config_tree_build( nav->ldhses, pal_cPaletteFile,
 					    pal_eNameType_TopObjects, nav->root_name, NULL); 

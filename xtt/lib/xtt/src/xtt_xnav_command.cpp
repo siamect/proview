@@ -1991,140 +1991,16 @@ static int	xnav_show_func(	void		*client_data,
     return sts; 
   } 
   else if ( cdh_NoCaseStrncmp( arg1_str, "CONVERSION", strlen( arg1_str)) == 0) 
-  { 
-#if 0
-    int	on = 0;
-    pwr_tObjid	objid; 
-    pwr_tAName 	name_str;
-
-    IF_NOGDH_RETURN;
-
-    if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
-    {
-      sts = gdh_NameToObjid ( name_str, &objid);
-      if ( EVEN(sts))
-      {
-        xnav->message('E', "Object not found");
-        return XNAV__SUCCESS;
-      }
-    }
-    else
-    {
-      /* Get the selected object */
-      sts = xnav->get_current_object( &objid, 
-  		name_str, sizeof( name_str), cdh_mName_volumeStrict);
-      if ( EVEN(sts))
-      {
-        xnav->message('E', "Enter name or select an object");
-        return XNAV__HOLDCOMMAND;
-      }
-    }
-//    sts = rtt_set_conversion( objid, on, 1);
-    sts = 0;
-    return sts;
-#endif
+  {
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "INVERT", strlen( arg1_str)) == 0)
   {
-#if 0
-    int	on = 0;
-    pwr_tObjid	objid;
-    pwr_tAName		name_str;
-
-    IF_NOGDH_RETURN;
-
-    if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
-    {
-      sts = gdh_NameToObjid ( name_str, &objid);
-      if ( EVEN(sts))
-      {
-        xnav->message('E', "Object not found");
-        return XNAV__SUCCESS;
-      }
-    }
-    else
-    {
-      /* Get the selected object */
-      sts = xnav->get_current_object( &objid, 
-			name_str, sizeof( name_str), cdh_mName_volumeStrict);
-      if ( EVEN(sts))
-      {
-        xnav->message('E', "Enter name or select an object");
-        return XNAV__HOLDCOMMAND;
-      }
-    }
-//    sts = rtt_set_invert( objid, on, 1);
-    sts = 0;
-    return sts;
-#endif
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "DOTEST", strlen( arg1_str)) == 0)
   {
-#if 0
-    int	on = 0;
-    pwr_tObjid	objid;
-    pwr_tAName		name_str;
-
-    IF_NOGDH_RETURN;
-
-    if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
-    {
-      sts = gdh_NameToObjid ( name_str, &objid);
-      if ( EVEN(sts))
-      {
-        xnav->message('E', "Object not found");
-        return XNAV__SUCCESS;
-      }
-    }
-    else
-    {
-      /* Get the selected object */
-      sts = xnav->get_current_object( &objid, 
-			name_str, sizeof( name_str), cdh_mName_volumeStrict);
-      if ( EVEN(sts))
-      {
-        xnav->message('E', "Enter name or select an object");
-        return XNAV__HOLDCOMMAND;
-      }
-    }
-//    sts = rtt_set_do_test( objid, on, 1);
-    sts = 0;
-    return sts;
-#endif
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "TESTVALUE", strlen( arg1_str)) == 0)
   {
-#if 0
-    int	on = 0;
-    pwr_tObjid	objid;
-    pwr_tAName		name_str;
-
-    IF_NOGDH_RETURN;
-
-    if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
-    {
-      sts = gdh_NameToObjid ( name_str, &objid);
-      if ( EVEN(sts))
-      {
-        xnav->message('E', "Object not found");
-        return XNAV__SUCCESS;
-      }
-    }
-    else
-    {
-      /* Get the selected object */
-      sts = xnav->get_current_object( &objid, 
-			name_str, sizeof( name_str), cdh_mName_volumeStrict);
-      if ( EVEN(sts))
-      {
-        xnav->message('E', "Enter name or select an object");
-        return XNAV__HOLDCOMMAND;
-      }
-    }
-//    sts = rtt_set_do_testvalue( objid, on, 1);
-    sts = 0;
-    return sts;
-#endif
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "EVENTLIST", strlen( arg1_str)) == 0)
   {
@@ -3462,12 +3338,6 @@ static int	xnav_open_func(	void		*client_data,
         return XNAV__SUCCESS;
       }
       if ( ODD( dcli_get_qualifier( "dcli_arg2", file_str, sizeof(file_str)))) {
-#if 0
-        if ( file_str[0] == '/') {
-          xnav->message('E', "Syntax error");
-          return XNAV__HOLDCOMMAND;
-        }
-#endif
 
 	// Get base class graphs on $pwr_exe
 	cdh_ToLower( fname, file_str);
@@ -5382,12 +5252,6 @@ static int	xnav_close_func(	void		*client_data,
 
       // Command is "CLOSE GRAPH"
       if ( ODD( dcli_get_qualifier( "dcli_arg2", file_str, sizeof(file_str)))) {
-#if 0
-        if ( file_str[0] == '/') {
-	  char *t = strrchr( file_str, '/');
-	  cdh_Strcpy( file_str, t+1);
-	}
-#endif
       }
       else if ( classgraph) {
 	// Get file from class of instance object

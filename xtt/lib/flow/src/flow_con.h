@@ -69,10 +69,6 @@ typedef struct {
 
 class FlowCon : public FlowArrayElem {
   public:
-#if 0
-    FlowCon( FlowCtx *flow_ctx, char *name, FlowConClass *con_class,
-	FlowNode *source, FlowNode *dest, int source_cp, int dest_cp);
-#endif
     FlowCon( FlowCtx *flow_ctx, const char *name, FlowConClass *con_class,
 	     FlowNode *source, FlowNode *dest, int source_cp, int dest_cp, 
 	     int *rsts, int nodraw = 0, int point_num = 0, 

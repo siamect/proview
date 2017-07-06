@@ -82,61 +82,6 @@ wb_adrep *wb_bdrep::adrep( pwr_tStatus *sts)
 
 wb_adrep *wb_bdrep::adrep( pwr_tStatus *sts, const char *aname)
 {
-#if 0
-  wb_attrname n(aname);
-  if ( n.evenSts()) {
-    *sts = n.sts();
-    return 0;
-  }
-
-  char fullname[120];
-  wb_bdrep *bd = this;
-  wb_adrep *adrep = 0;
-  int offset;
-
-  for ( int i = 0; i < n.attributes(); i++) {
-    wb_name an(n.attribute(i));
-    wb_orep *orep = bd->m_orep->vrep()->child( sts, bd->m_orep, an);
-    if ( EVEN(*sts)) return 0;
-
-    if ( adrep)
-      delete adrep;
-    adrep = new wb_adrep( *orep);
-    if ( i == 0) {
-      offset = adrep->offset();
-      strcpy( fullname, adrep->name());
-    }
-    else {
-      offset += adrep->offset();
-      strcat( fullname, ".");
-      strcat( fullname, adrep->name());
-    }
-    if ( n.hasAttrIndex(i)) {
-      sprintf( &fullname[strlen(fullname)], "[%d]", n.attrIndex(i));
-      if ( n.attrIndex(i) >= adrep->nElement() || n.attrIndex(i) < 0) {
-	*sts = LDH__ATTRINDEX;
-	return 0;
-      }
-
-      offset += n.attrIndex(i) * (adrep->size() / adrep->nElement());
-    }
-
-    if ( (i != n.attributes() - 1) && adrep->isClass()) {
-      wb_cdrep *cd = m_orep->vrep()->merep()->cdrep( sts, adrep->subClass());
-      if ( EVEN(*sts)) return 0;
-
-      if ( bd != this)
-	delete bd;
-      bd = cd->bdrep( sts, pwr_eBix_rt);
-      if ( EVEN(*sts)) { delete cd; return 0;}
-
-      delete cd;
-    }
-
-  }
-  adrep->setSubattr( offset, fullname);
-#endif
-
   wb_attrname n(aname);
   if ( n.evenSts()) {
     *sts = n.sts();

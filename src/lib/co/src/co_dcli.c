@@ -74,11 +74,6 @@ static int		dcli_symboltable_count;
 
 static int	dcli_symbol_to_int( int	*int_value, char *value);
 static int	dcli_symbol_to_float( float *int_value, char *value);
-#if 0
-static int	dcli_get_attr_value(
-			char		*attrname,
-			char		*value);
-#endif
 static void dcli_message( char s, char *text);
 
 /*************************************************************************
@@ -522,43 +517,6 @@ int	dcli_store_symbols( char	*filename)
 	return DCLI__SUCCESS;	
 }
 
-/*************************************************************************
-*
-* Name:		dcli_show_symbols()
-*
-* Type		int
-*
-* Type		Parameter	IOGF	Description
-*
-* Description:
-*	Show all symbols in a view-window.
-*
-**************************************************************************/
-#if 0
-int	dcli_show_symbols( menu_ctx	ctx)
-{
-	char 	*buff;
-	int	i;
-	int	sts;
-
-	if ( dcli_symboltable_count == 0)
-	{
-	  dcli_message('I',"No symbol is defined");
-	  return DCLI__NOSYMDEFINED;
-	}
-	buff = calloc( 1, CMD_BUFF_SIZE);
-	sprintf( buff, " %-20.20s  %s\n\n", "Symbol", "Value");
-	for ( i = 0; i < dcli_symboltable_count; i++)
-	{
-	  sprintf( buff+strlen(buff), " %-20.20s  %s\n", 
-		dcli_symboltable[i].key, dcli_symboltable[i].value);
-	}
-	sts = dcli_view( ctx, 0, buff, "Rtt Symbols", 
-			DCLI_VIEWTYPE_BUF);
-	free( buff);
-	return sts;
-}
-#endif
 /*************************************************************************
 *
 * Name:		dcli_replace_symbol()

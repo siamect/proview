@@ -150,10 +150,6 @@ mh_ApplConnect (
   qcom_sQattr		qAttr;
 
   mh_UtilWaitForMh();
-#if 0
-  if (lAppl.State == mh_eApplState_Connected)
-    return MH__ALLRCON;
-#endif          
 
   sprintf(name, "MhAppl_%X", applObject.oix);
 

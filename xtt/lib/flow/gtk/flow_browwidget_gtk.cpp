@@ -470,31 +470,3 @@ void browwidgetgtk_modify_ctx( GtkWidget *w, void *ctx)
 {
   ((BrowWidgetGtk *)w)->brow_ctx = ctx;
 }
-
-#if 0
-GType browwidgetgtk_get_type(void)
-{
-  static GType browwidgetgtk_type = 0;
-
-  if ( !browwidgetgtk_type) {
-    static const GTypeInfo browwidgetgtk_info = {
-      sizeof(BrowWidgetGtkClass), NULL, NULL, (GClassInitFunc)browwidgetgtk_class_init,
-      NULL, NULL, sizeof(BrowWidgetGtk), 1, NULL, NULL};
-    
-    browwidgetgtk_type = g_type_register_static( G_TYPE_OBJECT, "BrowWidgetGtk", &browwidgetgtk_info, 
-					   (GTypeFlags)0);  
-  }
-  return browwidgetgtk_type;
-}
-
-void browwidgetgtk_get_ctx( GtkWidget *w, void **ctx)
-{
-  *ctx = ((BrowWidgetGtk *)w)->brow_ctx;
-}
-
-void browwidgetgtk_modify_ctx( GtkWidget *w, void *ctx)
-{
-  ((BrowWidgetGtk *)w)->brow_ctx = ctx;
-}
-
-#endif

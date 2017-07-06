@@ -50,9 +50,6 @@
 /* Semaphore implementation                                         *        */
 /*------------------------------------------------------------------*--------*/
 
-
-
-
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
@@ -64,17 +61,6 @@
 #include <sys/sem.h>
 
 #include "rt_semaphore.h"
-
-
-#if 0
-union semun {
-   int val;
-   struct semid_ds *buf;
-   u_short *array;
-};
-#endif
-
-
 
 sem_t *posix_sem_open(const char *name, int oflag, ...)
 {

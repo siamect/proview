@@ -251,20 +251,6 @@ void WNavGtk::set_selection_owner()
 
 void WNavGtk::create_popup_menu( pwr_tAttrRef aref, int x, int y)
 {
-#if 0
-  short x1, y1;
-  Arg arg[2];
-
-  if ( avoid_deadlock)
-    return;
-
-  XtSetArg( arg[0], XmNx, &x1);
-  XtSetArg( arg[1], XmNy, &y1);
-  XtGetValues( XtParent(brow_widget), arg, 2);
-
-  (create_popup_menu_cb)( parent_ctx, aref, x + x1, y + y1);
-  wnav_set_avoid_deadlock( this, 2000);
-#endif
   (create_popup_menu_cb)( parent_ctx, aref, x, y);
 }
 

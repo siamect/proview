@@ -487,13 +487,6 @@ void curve_exec(
 	}
 }
 
-#if 0
-
-	TABLE
-	Funktion:	Table for interpollation
-#define table_exec(tableobject)  /* Table. No code for execution */
-#endif
-
 /*_*
 	ADELAY
 

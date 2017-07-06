@@ -848,9 +848,6 @@ io_init_av_signals (
     if (sts != GDH__REMOTE) {
       gdh_StoreRtdbPointer( (unsigned long *)&o->ActualValue, p);
       o->ValueIndex = av_count;
-#if 0
-      *p = o->InitialValue;
-#endif
       gdh_StoreRtdbPointer( (unsigned long *)&iarea_op->Value[av_count], &o->InitialValue);
       av_count++;
       p++;
@@ -915,9 +912,6 @@ io_init_dv_signals (
     if (sts != GDH__REMOTE)  {
       gdh_StoreRtdbPointer( (unsigned long *)&o->ActualValue, p);
       o->ValueIndex = dv_count;
-#if 0
-      *p = o->InitialValue;
-#endif
       gdh_StoreRtdbPointer( (unsigned long *)&iarea_op->Value[dv_count], &o->InitialValue);
       dv_count++;
       p++;
@@ -1174,9 +1168,6 @@ io_init_iv_signals (
     if (sts != GDH__REMOTE)  {
       gdh_StoreRtdbPointer( (unsigned long *)&o->ActualValue, p);
       o->ValueIndex = iv_count;
-#if 0
-      *p = o->InitialValue;
-#endif
       gdh_StoreRtdbPointer( (unsigned long *)&iarea_op->Value[iv_count], &o->InitialValue);
       iv_count++;
       p++;

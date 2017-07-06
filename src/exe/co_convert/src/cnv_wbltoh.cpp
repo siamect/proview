@@ -674,66 +674,6 @@ int CnvWblToH::attribute_exec()
       cstruc->f << pgmname << alignstr << ";" << endl;
   }
 
-#if 0
-  int fill;
-  int size;
-  int elements;
-  char alignstr_filler[40];
-
-  if ( ctx->rw->attr_pointer)
-    size = 4;
-  else if ( strcmp( CnvCtx::low(ctx->rw->attr_typeref), "uint8") == 0 ||
-       strcmp( CnvCtx::low(ctx->rw->attr_typeref), "int8") == 0 ||
-       strcmp( CnvCtx::low(ctx->rw->attr_typeref), "char") == 0)
-    size = 1;
-  else if ( strcmp( CnvCtx::low(ctx->rw->attr_typeref), "uint16") == 0 ||
-            strcmp( CnvCtx::low(ctx->rw->attr_typeref), "int16") == 0)
-    size = 2;
-  else
-    size = 4;
-
-  if ( ctx->rw->attr_elem == 0)
-    elements = 1;
-  else
-    elements = ctx->rw->attr_elem;
-
-  if ( size < 4)
-  {
-    fill = 4 - ((elements * size) % 4);
-    if ( fill == 4)
-      fill = 0;
-  }
-  else
-    fill = 0;
-
-  if ( fill)
-  {
-    fp_struct <<
-"  " << "char";
-    if ( !ctx->common_structfile_only)
-      cstruc->f <<
-"  " << "char";
-    for ( i = 0; i < int(36 - strlen("char")); i++)
-    {
-      fp_struct << ' ';
-      if ( !ctx->common_structfile_only)
-        cstruc->f << ' ';
-    }
-    if ( fill == 1)
-    {
-      fp_struct << "filler_" << struct_filler_cnt << alignstr_filler << ";" << endl;
-      if ( !ctx->common_structfile_only)
-        cstruc->f << "filler_" << struct_filler_cnt << alignstr_filler << ";" << endl;
-    }
-    else  
-    {
-      fp_struct << "filler_" << struct_filler_cnt << "[" << fill << "]" << alignstr_filler <<";" << endl;
-      if ( !ctx->common_structfile_only)
-        cstruc->f << "filler_" << struct_filler_cnt << "[" << fill << "]" << alignstr_filler << ";" << endl;
-    }
-    struct_filler_cnt++;
-  }
-#endif
   attr_count++;
   return 1;
 }

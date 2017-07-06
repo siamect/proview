@@ -771,19 +771,6 @@ int XttAudio::Init_OSS(char *device, int samplerate)
 double XttAudio::envelope( double time, double endtime, double attack, double decay, double sustain, 
 			   double release)
 {
-#if 0
-  // Version with linear decay, replaced by exponential decay
-  if ( time < endtime) {
-    if ( time >= attack + decay)
-      return sustain;
-    else if ( time >= attack)
-      return 1.0 - (1.0 - sustain) * (time - attack) / decay;
-    return time / attack;
-  }
-  if ( time >= endtime + release)
-    return 0;
-  return (1.0 - (time - endtime) / release) * sustain;
-#endif
   if ( time < endtime) {
     if ( time <= attack)
       return time / attack;

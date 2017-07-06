@@ -154,13 +154,6 @@ static int	rtt_show_parameter_add(
 			int		*index,
 			int		*element,
 			void		*dum4);
-#if 0
-static int	rtt_show_class_hier_class_name(
-			menu_ctx	parent_ctx,
-			char		*hiername,
-			char		*classname,
-			char		*name);
-#endif
 static int	rtt_show_par_hier_class_name(
 			menu_ctx	parent_ctx,
 			char		*parametername,
@@ -191,20 +184,6 @@ static int	rtt_get_child_object_hi_cl_na(
 			void		*arg3,
 			void		*arg4,
 			void		*arg5);
-#if 0
-static int	rtt_get_class_hier_class_name(
-			menu_ctx	ctx,
-			pwr_tObjid	hierobjid,
-			pwr_tClassId	class,
-			char		*name,
-			int		max_count,
-			int		(*backcall)(),
-			void		*arg1,
-			void		*arg2,
-			void		*arg3,
-			void		*arg4,
-			void		*arg5);
-#endif
 static int	rtt_find_name(
 			menu_ctx	ctx,
 			char		*name,
@@ -212,10 +191,6 @@ static int	rtt_find_name(
 static int	rtt_find_hierarchy(
 			menu_ctx	ctx,
 			pwr_tObjid	*objid);
-#if 0
-static int rtt_menu_sort_compare( const void *p1, const void *p2);
-static int rtt_menu_upd_sort_compare( const void *p1, const void *p2);
-#endif
 static int	rtt_menulist_search(
 			menu_ctx	ctx,
 			char		*searchstr,
@@ -1125,23 +1100,6 @@ static int	show_func(	menu_ctx	ctx,
 	  				RTT_MENUTYPE_DYN);
 	    return sts;
 	  }
-
-#if 0  /* NYDB */
-	  if ( ODD( rtt_get_qualifier( "/NAME", name_str)))
-	    name_ptr = name_str;
-	  else
-	    name_ptr = NULL;
-	  class_ptr = class_str;
-	  if ( EVEN( rtt_get_qualifier( "/CLASS", class_str)))
-	    strcpy( class_str, "$CLASSDEF");
-	  hierarchy_ptr = hierarchy_str;
-	  if ( EVEN( rtt_get_qualifier( "/HIERARCHY", hierarchy_str)))
-	    strcpy( hierarchy_str, "pwrb:Class");
-
-	  sts = rtt_show_class_hier_class_name( ctx, hierarchy_ptr, 
-			class_ptr, name_ptr);
-	  return sts;
-#endif
 	}
 
 	else if ( cdh_NoCaseStrncmp( arg1_str, "PARAMETER", strlen( arg1_str)) == 0)
@@ -6277,138 +6235,6 @@ int	rtt_show_obj_hier_class_name(
 
 /*************************************************************************
 *
-* Name:		rtt_show_class_hier_class_name()
-*
-* Type		int
-*
-* Type		Parameter	IOGF	Description
-* menu_ctx	parent_ctx	I	rtt context.
-* char		*hiername	I	class hierarchy object name.
-* char		*classname	I	system class name.
-* char		*name		I	description of class name.
-*
-* Description:
-*	This function is called when a 'show class' command is recieved.
-*	All objects under the class hierarchy object, with the specified class
-*	that fits in the name description is inserted in a menulist
-*	and displayed on the screen.
-*
-**************************************************************************/
-
-#if 0
-static int	rtt_show_class_hier_class_name(
-			menu_ctx	parent_ctx,
-			char		*hiername,
-			char		*classname,
-			char		*name)
-{
-	int		sts;
-	int		index = 0;
-	pwr_tObjid	objid;
-	pwr_tClassId	class;
-	pwr_tObjid	class_objid;
-	pwr_tObjid	hierobjid;
-	rtt_t_menu	*menulist = 0;
-	char		title[80] = "SEARCH LIST";
-	int		max_objects = 300;
-	char		full_classname[100];
-	char		*s;
-
-	
-	if ( name != NULL)
-	{
-	  /* Check if name does not include a wildcard */
-	  s = strchr( name, '*');
-	  if ( s == 0)
-	  {
-	    /* Get objid for the object */
-	    sts = rtt_find_name( parent_ctx, name, &objid);
-/*	    sts = gdh_NameToObjid ( name, &objid);  */
-	    if ( EVEN(sts))
-	    {
-     	      rtt_message('E',"Object does not exist");
-	      return RTT__HOLDCOMMAND;
-	    }
-	    sts = rtt_object_parameters( parent_ctx, objid, 0,0,0,0);
-	    return sts;
-	  }
-	  else
-	    /* Convert name to upper case */
-	    rtt_toupper( name, name);
-	}
-
-	/* Check if class */
-	if ( classname != NULL )
-	{
-	  /* Get objid for the class */
-	  strcpy( full_classname, "pwrs:Class-");
-	  strcat( full_classname, classname);
-	  sts = gdh_NameToObjid ( full_classname, &class_objid);
-	  if (EVEN(sts))
-	  {
-	    rtt_message('E',"Unknown class");
-	    return RTT__HOLDCOMMAND;
-	  }
-	  class = cdh_ClassObjidToId ( class_objid);
-	}	
-	else
-	  class = 0;
-
-	/* Check if hierarchy */
-	if ( hiername != NULL )
-	{
-	  if ( *hiername == '\0')
-	  {
-	    /* No value is given, take the title as default */
-	    sts = rtt_find_hierarchy( parent_ctx, &hierobjid);
-	    if (EVEN(sts)) 
-	    {
-	      rtt_message('E', "No hierarchy found");
-	      return RTT__HOLDCOMMAND;
-	    }
-	  }
-	  else
-	  {
-	    /* Get objid for the hierarchy object */
-	    sts = gdh_NameToObjid ( hiername, &hierobjid);
-	    if (EVEN(sts))
-	    {
-	      rtt_message('E',"Hierarchy object not found");
-	      return RTT__HOLDCOMMAND;
-	    }
-	  }
-	}
-	else
-	  hierobjid = pwr_cNObjid;
-
-	sts = rtt_get_class_hier_class_name( parent_ctx, hierobjid, 
-		class, name, max_objects, 
-		&rtt_show_object_add, &menulist, 
-		&index, 0, 0, 0);
-	if ( sts == RTT__MAXCOUNT)
-	  rtt_message('E',"To many object, all objects could not be shown");
-	else if ( EVEN (sts)) return sts;
-
-	if ( menulist != 0)
-	{
-	  sts = rtt_menu_bubblesort( menulist);
-	  sts = rtt_menu_new( parent_ctx, pwr_cNObjid, &menulist, title, 0, 
-			RTT_MENUTYPE_DYN);
-	  if ( sts == RTT__FASTBACK) return sts;
-	  else if ( sts == RTT__BACKTOCOLLECT) return sts;
-	  else if (EVEN(sts)) return sts;
-	}
-	else
-	{
-	  rtt_message('E', "No objects found");
-	  return RTT__HOLDCOMMAND;
-	}
-	return RTT__SUCCESS;
-}
-#endif
-
-/*************************************************************************
-*
 * Name:		rtt_show_par_hier_class_name()
 *
 * Type		int
@@ -7099,109 +6925,6 @@ int	rtt_get_objects_hier_class_name(
 	return RTT__SUCCESS;
 }
 
-
-
-/*************************************************************************
-*
-* Name:		trv_get_class_hier_class_name()
-*
-* Type		int
-*
-* Type		Parameter	IOGF	Description
-* menu_ctx	ctx		I	rtt context.
-* pwr_tObjid	hierobjid	I	ancestor of wanted objects.
-* pwr_tClassId	class		I	class of the wanded objects.
-* char		*name		I	wildcard name of wanted objects.
-* int		(*backcall)()	I 	backcallroutine called for every object.
-* void		*arg1		I	argument passed to the backcall routine.
-* void		*arg2		I	argument passed to the backcall routine.
-* void		*arg3		I	argument passed to the backcall routine.
-* void		*arg4		I	argument passed to the backcall routine.
-* void		*arg5		I	argument passed to the backcall routine.
-*
-* Description:
-*	Traverses the objects in the class hierarchy.
-*	Calls a backcallroutine with the given arguments for every found 
-*	object of the specified class that is found below the hierobjid in
-*	the hierarchy and that  fits in a wildcard description. 
-*	If hierobjid is eq 0 the hierarchy is not tested.
-*	If class is eq 0 the class is not tested.
-*	If name is eq NULL the name is not tested.
-*	The objid of the found object and arguments will be 
-*	passed to the backcallroutine. The backcallroutine should be
-*	declared as:
-*
-*	int	'backcallroutine name'( objid, arg1, arg2, arg3, arg4, arg5)
-*	pwr_tObjid	objid;
-*	void		*arg1;
-*	void		*arg2;
-*	void		*arg3;
-*	void		*arg4;
-*	void		*arg5;
-*	...
-*	Calls a backcall routine for every object in the plathierarchy
-*	of a specified class under a specific object in the hierarchy.
-*
-**************************************************************************/
-
-#if 0
-static int	rtt_get_class_hier_class_name(
-			menu_ctx	ctx,
-			pwr_tObjid	hierobjid,
-			pwr_tClassId	class,
-			char		*name,
-			int		max_count,
-			int		(*backcall)(),
-			void		*arg1,
-			void		*arg2,
-			void		*arg3,
-			void		*arg4,
-			void		*arg5)
-{
-	int			sts;
-	pwr_tObjid		objid;
-	pwr_tClassId		obj_class;
-	int			obj_counter;
-	pwr_tOName     		hiername;
-
-	obj_counter = 0;
-	if ( cdh_ObjidIsNotNull( hierobjid))
-	{
-	  /* Check if the children */
-	  sts = rtt_get_child_object_hi_cl_na( ctx, 
-		class, name, hierobjid, &obj_counter, max_count, 0,
-		backcall, arg1, arg2, arg3, arg4, arg5);
-	  if ( EVEN(sts)) return sts;
-	}
-	else
-	{
-	  /* Get all objects */
-	  sts = gdh_GetRootList( &objid);
-	  while ( ODD(sts) )
-	  {
-	    sts = gdh_GetObjectClass ( objid, &obj_class);
-	    if ( EVEN(sts)) return sts;
-
-	    sts = gdh_ObjidToName ( cdh_ClassIdToObjid(class), hiername, 
-			sizeof(hiername), cdh_mName_volumeStrict);
-	    if ( EVEN(sts)) return sts;
-
-	    /* Check that the class of the node object is correct */
-	    if ( strcmp( hiername, "pwrs:Class-$ClassHier") == 0)
-	    {
-	      /* Check if the children */
-	      sts = rtt_get_child_object_hi_cl_na( ctx, 
-		class, name, objid, &obj_counter, max_count, 0,
-		backcall, arg1, arg2, arg3, arg4, arg5);
-	      if ( EVEN(sts)) return sts;
-	    }
-	    sts = gdh_GetNextSibling ( objid, &objid);
-	  }
-	}
-	return RTT__SUCCESS;
-}
-#endif
-
 /*************************************************************************
 *
 * Name:		rtt_find_name()
@@ -7376,23 +7099,6 @@ int	rtt_menu_classort(
 *
 **************************************************************************/
 
-#if 0  /* qsort bug in ELN and VMS */
-static int rtt_menu_sort_compare( const void *p1, const void *p2)
-{
-	char	*s1;
-	char	*s2;
-
-	for ( s1 = ( ((rtt_t_menu *) p1)->text), 
-	      s2 = ( ((rtt_t_menu *) p2)->text); 
-	      *s1 != 0; s1++)
-	{
-	   if  ( r_toupper(*s1) != r_toupper(*s2)) break;
-	   s2++;
-	}
-	return r_toupper(*s1) - r_toupper(*s2);
-}
-#endif
-
 int	rtt_menu_bubblesort(
 			rtt_t_menu	*menulist)
 {
@@ -7409,9 +7115,6 @@ int	rtt_menu_bubblesort(
 	  menu_ptr++;
 	  size++;
 	}
-#if 0
-	qsort( menulist, size, sizeof( rtt_t_menu), rtt_menu_sort_compare);
-#endif
 	for ( i = size - 1; i > 0; i--)
 	{
 	  menu_ptr = menulist;
@@ -7450,22 +7153,6 @@ int	rtt_menu_bubblesort(
 *
 **************************************************************************/
 
-#if 0  /* qsort bug in ELN and VMS */
-static int rtt_menu_upd_sort_compare( const void *p1, const void *p2)
-{
-	char	*s1;
-	char	*s2;
-
-	for ( s1 = ((rtt_t_menu_upd *) p1)->text, 
-	      s2 = ((rtt_t_menu_upd *) p2)->text; 
-	      *s1 != 0; s1++)
-	{
-	   if  ( r_toupper(*s1) != r_toupper(*s2)) break;
-	   s2++;
-	}
-	return r_toupper(*s1) - r_toupper(*s2);
-}
-#endif
 int	rtt_menu_upd_bubblesort(
 			rtt_t_menu_upd	*menulist)
 {
@@ -7482,9 +7169,6 @@ int	rtt_menu_upd_bubblesort(
 	  menu_ptr++;
 	  size++;
 	}
-#if 0
-	qsort( menulist, size, sizeof( rtt_t_menu_upd), rtt_menu_upd_sort_compare);
-#endif
 	for ( i = size - 1; i > 0; i--)
 	{
 	  menu_ptr = menulist;

@@ -224,14 +224,6 @@ pwr_tStatus io_PoFilter
              else 
                *Data |= Mask;	      /* Set bit */
            }
-#if 0	/** 950208/IL **/
-	   if ( SignalObj[Idx]->ResetActualValue == TRUE ) {
-	     if ( SignalObj[Idx]->PosPulse == TRUE )	  /* Pos. pulse out */
-	       *Data_1->ActualValue = FALSE;
-             else
-	       *Data_1->ActualValue = TRUE;
-           } 
-#endif
            break;
    
        default:

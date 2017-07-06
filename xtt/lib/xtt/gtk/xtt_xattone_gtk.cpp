@@ -169,9 +169,6 @@ int XAttOneGtk::change_value( int set_focus)
 	gtk_widget_grab_focus( cmd_scrolledtextview);
       input_multiline = 1;
 
-#if 0
-      gtk_entry_set_max_length( text_w, input_size-1);
-#endif
       if ( value) {
 	GtkTextIter start_iter, end_iter;
 	gtk_text_buffer_get_start_iter( cmd_scrolled_buffer, &start_iter);
@@ -247,31 +244,6 @@ gboolean XAttOneGtk::action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer 
   }
   return FALSE;
 }
-
-#if 0
-void XAttOneGtk::valchanged_cmd_input( Widget w, XEvent *event)
-{
-  XAttOne 	*xattone;
-  int 	sts;
-  Arg 	args[2];
-
-  XtSetArg(args[0], XmNuserData, &xattone);
-  XtGetValues(w, args, 1);
-
-  sts = mrm_TextInput( w, event, (char *)XAttOne::value_recall, sizeof(XAttOne::value_recall[0]),
-	sizeof( XAttOne::value_recall)/sizeof(XAttOne::value_recall[0]),
-	&xattone->value_current_recall);
-  if ( sts) {
-    sts = xattone->set_value();
-    if ( ODD(sts)) {
-      if ( xattone->close_cb)
-	(xattone->close_cb)( xattone->parent_ctx, xattone);
-      else
-	delete xattone;
-    }
-  }
-}
-#endif
 
 void XAttOneGtk::change_value_close()
 {

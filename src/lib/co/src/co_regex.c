@@ -2600,49 +2600,7 @@ bcmp_translate (s1, s2, len, translate)
   return 0;
 }
 
-
-
 /* Entry points compatible with 4.2 BSD regex library.  */
-
-#if 0
-#ifndef emacs
-
-static struct re_pattern_buffer re_comp_buf;
-
-char *
-re_comp (s)
-     char *s;
-{
-  if (!s)
-    {
-      if (!re_comp_buf.buffer)
-	return "No previous regular expression";
-      return 0;
-    }
-
-  if (!re_comp_buf.buffer)
-    {
-      if (!(re_comp_buf.buffer = (char *) malloc (200)))
-	return "Memory exhausted";
-      re_comp_buf.allocated = 200;
-      if (!(re_comp_buf.fastmap = (char *) malloc (1 << BYTEWIDTH)))
-	return "Memory exhausted";
-    }
-  return re_compile_pattern (s, strlen (s), &re_comp_buf);
-}
-
-int
-re_exec (s)
-     char *s;
-{
-  int len = strlen (s);
-  return 0 <= re_search (&re_comp_buf, s, len, 0, len,
-			 (struct re_registers *) 0);
-}
-#endif /* not emacs */
-#endif
-
-
 
 #ifdef pwr_regex_posix
 int regcomp(

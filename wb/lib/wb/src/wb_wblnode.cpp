@@ -391,21 +391,6 @@ static wbl_sSym attr_flags[] =
 
 static int check_conversion_error( const char *attr);
 
-#if 0
-void wb_wblnode::initialize()
-{
-  line_number = t->getLine();
-  
-  // Test 
-  static int last = 0;
-  if ( /*(line_number % 1000) == 0 &&*/ line_number != last) {
-    printf( "-- Processing line: %d\r", line_number); 
-    fflush(stdout);
-    last = line_number;
-  }
-}
-#endif
-
 int wb_wblnode::classNameToCid( char *class_name, pwr_tCid *cid)
 {
   pwr_tStatus sts;
@@ -1405,22 +1390,6 @@ void wb_wblnode::buildBuff( ref_wblnode object, pwr_eBix bix, pwr_tCid buffer_ci
     offset += aname.attrIndex(0) * size;
   }
   first_child = getFirstChild();
-#if 0
-  if ( first_child && first_child->getType() == wbl_eToken_Index) {
-    int index;
-    int nr = sscanf( first_child->name(), "%d", &index);
-    if ( nr != 1) {
-      m_vrep->error( "Buffer index syntax error", getFileName(), line_number);
-      return;
-    }
-    if ( index >= elements) {
-      m_vrep->error( "Buffer index exceeded", getFileName(), line_number);
-      return;
-    }
-    size = size / elements;
-    offset += index * size;
-  }
-#endif
 
   if ( buffer_cid != 0)
     offset += buffer_offset;
@@ -1977,51 +1946,6 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
   }
 
 }
-
-#if 0
-void wb_wblnode::iterObject( wb_dbs *dbs)
-{
-  ref_wblnode o_lch = get_o_lch();
-  pwr_tOid fthoid = o->fth ? o->fth->o->m_oid : pwr_cNOid;
-  pwr_tOid fwsoid = o->fws ? o->fws->o->m_oid : pwr_cNOid;
-  pwr_tOid bwsoid = o->bws ? o->bws->o->m_oid : pwr_cNOid;
-  pwr_tOid fchoid = o->fch ? o->fch->o->m_oid : pwr_cNOid;
-  pwr_tOid lchoid = o_lch ? o_lch->o->m_oid : pwr_cNOid;
-  wb_name n = wb_name(name());
-
-  dbs->installObject( o->m_oid, o->m_cid, fthoid, fwsoid, bwsoid, fchoid, lchoid, 
-                      (char *)name(), n.normName(cdh_mName_object),
-                      getFileTime(), getFileTime(), getFileTime(), o->rbody_size, o->dbody_size);
-  
-  if ( o->fch)
-    o->fch->iterObject( dbs);
-
-  if ( o->fws)
-    o->fws->iterObject( dbs);
-}
-
-void wb_wblnode::iterO->Dbody( wb_dbs *dbs)
-{
-  dbs->installO->Dbody( o->m_oid, o->dbody);
-  
-  if ( o->fch)
-    o->fch->iterO->Dbody( dbs);
-
-  if ( o->fws)
-    o->fws->iterO->Dbody( dbs);
-}
-
-void wb_wblnode::iterO->Rbody( wb_dbs *dbs)
-{
-  dbs->installO->Rbody( o->m_oid, o->rbody);
-  
-  if ( o->fch)
-    o->fch->iterO->Rbody( dbs);
-
-  if ( o->fws)
-    o->fws->iterO->Rbody( dbs);
-}
-#endif
 
 bool wb_wblnode::exportHead(wb_import &i)
 {

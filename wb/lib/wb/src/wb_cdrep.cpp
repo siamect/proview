@@ -231,26 +231,6 @@ wb_adrep *wb_cdrep::adrep( pwr_tStatus *sts, const char *aname)
       return adrep;
   }
 
-#if 0
-  wb_orep *orep_attr;
-  wb_orep *old;
-  wb_orep *orep = m_orep->first( sts);
-  while ( ODD(*sts)) {
-    orep->ref();
-    if ( orep->cid() == pwr_eClass_ObjBodyDef) {
-      wb_name objectname = wb_name( n.attribute());
-      orep_attr = orep->vrep()->child( sts, orep, objectname);
-      if ( ODD(*sts) /* && aname.attributeIsEqual( orep_attr->name()) */ ) {
-        wb_adrep *adrep = new wb_adrep( *orep_attr);
-        orep->unref();
-        return adrep;
-      }
-    }
-    old = orep;
-    orep = orep->after( sts);
-    old->unref();
-  }
-#endif
   *sts = LDH__NOSUCHATTR;
   return 0;
 }

@@ -45,40 +45,12 @@ wb_orepdbs::operator new(size_t size, wb_vrepdbs *v)
   return (void *)v->new_wb_orepdbs(size);
 }
 
-#if 0
-void
-wb_orepdbs::operator delete(void *p, wb_vrepdbs *v)
-{
-  v->delete_wb_orepdbs(p);
-}
-#endif
-
 wb_orepdbs::wb_orepdbs(dbs_sObject *o)
 {
   m_o = o;
   // m_v = ?; is fixed by operato new hopefully!!!
   m_refCount = 0;
 }
-
-#if 0
-wb_orepdbs::~wb_orepdbs()
-{
-}
-#endif
-
-/*
-  wb_orepdbs *wb_orepdbs::ref()
-  {
-  m_refCount++;
-  return this;
-  }
-
-  void wb_orepdbs::unref()
-  {
-  if (--m_refCount == 0)
-  delete this;
-  }
-*/
 
 pwr_tOid wb_orepdbs::oid() const
 {

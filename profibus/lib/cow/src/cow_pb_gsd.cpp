@@ -307,28 +307,6 @@ gsd_sKeyword pb_gsd::keywordlist[] = {
   {"","",0,gsd_End,0}
 };
 
-
-#if 0
-// malloc check
-static void t_free( void *a1) { printf("free:   %d\n", a1); free(a1);}
-
-static void *t_calloc( int a1, int a2) { 
-  void *p = calloc(a1,a2);
-  printf("calloc: %d   %d   %d\n", p, (char *)p + a2*a1, a2*a1); 
-  return p;
-}
-static void *t_malloc( int a1) { 
-  void *p = malloc(a1);
-  printf("malloc: %d   %d   %d\n", p, (char *)p + a1, a1); 
-  return p;
-}
-
-#define calloc( a1, a2) t_calloc(a1,a2)
-#define malloc( a1) t_malloc(a1)
-#define free(a1) t_free(a1)
-#endif
-
-
 pb_gsd::pb_gsd() :
   dptype(0), modular_station(0), max_module(0),
   user_prm_data_len(0), max_user_prm_data_len(0), items_user_prm_data_len(0),
@@ -2312,15 +2290,3 @@ int pb_gsd::syntax_check( int *idx)
   }
   return PB__SUCCESS;
 }
-
-#if 0
-int main()
-{
-  pb_gsd gsd;
-
-  gsd.read("test.gsd");
-  gsd.print();
-}
-#endif
-
-

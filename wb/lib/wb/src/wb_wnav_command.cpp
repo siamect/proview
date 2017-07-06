@@ -3460,39 +3460,6 @@ static int	wnav_copy_func(	void		*client_data,
       wnav->message(' ', wnav_get_message(sts));
       return sts;
     }
-
-#if 0
-    first = ODD( dcli_get_qualifier( "/FIRST", 0, 0));
-    last = ODD( dcli_get_qualifier( "/LAST", 0, 0));
-    after = ODD( dcli_get_qualifier( "/AFTER", 0, 0));
-    before = ODD( dcli_get_qualifier( "/BEFORE", 0, 0));
-    hier = ODD( dcli_get_qualifier( "/HIERARCHY", 0, 0));
-
-    sts = 1;
-    if ( EVEN( dcli_get_qualifier( "/SOURCE", sourcestr, sizeof(sourcestr))))
-      sts = 0;
-    if ( EVEN( dcli_get_qualifier( "/DESTINATION", destinationstr, sizeof(destinationstr))))
-      sts = 0;
-    if ( EVEN( dcli_get_qualifier( "/NAME", namestr, sizeof(namestr))))
-      sts = 0;
-
-    if ( EVEN(sts))
-    {
-      wnav->message('E', "Qualifer required");
-      return WNAV__QUAL;
-    }
-
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
-    if ( EVEN(sts)) return sts;
-
-    sts = utl_copy_objects( wnav->ldhses, sourcestr, destinationstr, namestr, 
-	hier, first, last, after, before);
-    if ( EVEN(sts))
-    {
-      wnav->message(' ', wnav_get_message(sts));
-      return sts;
-    }
-#endif
   }
   else
   {

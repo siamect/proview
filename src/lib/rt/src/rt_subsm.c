@@ -233,10 +233,6 @@ subsm_Add (
     }
 
   } gdb_ScopeUnlock;
-
-#if 0
-  errh_Info("subsm_Add %d", i);
-#endif
 }
 
 /* Delete buffers and servers associated with a certain node.  */
@@ -286,10 +282,6 @@ subsm_Remove (
     }
 
   } gdb_ScopeUnlock;
-
-#if 0
-  errh_Info("subsm_Remove %d", i);
-#endif
 }
 
 /* Build & send data for a subbuf.

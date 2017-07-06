@@ -216,19 +216,6 @@
 #include "xnav_bitmap_uncastattr20.h"
 #include "xnav_bitmap_uncastattr24.h"
 
-
-
-#if 0
-WNavBrow::~WNavBrow()
-{
-  if ( this != ((WNav *)wnav)->brow_stack[0] && this != ((WNav *)wnav)->brow)
-  {
-    brow_DeleteSecondaryCtx( ctx);
-    free_pixmaps();
-  }
-}
-#endif
-
 void WNavBrow::brow_setup()
 {
   brow_sAttributes brow_attr;

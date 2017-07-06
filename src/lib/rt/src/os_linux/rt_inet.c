@@ -39,7 +39,6 @@
 #include "rt_inet.h"
 #include <net/if_arp.h>
 
-
 pwr_tBoolean
 inet_SetArpEntry (
   pwr_tStatus	*sts,
@@ -47,14 +46,8 @@ inet_SetArpEntry (
   struct arpreq	*rp  
 )
 {
-
-#if 0
-  return (ioctl(s, SIOCSARP, (caddr_t)rp) == 0);
-#else
   return 1;
-#endif
 }
-
 
 pwr_tBoolean
 inet_DeleteArpEntry (
@@ -63,14 +56,8 @@ inet_DeleteArpEntry (
   struct arpreq	*rp  
 )
 {
-
-#if 0
-  return (ioctl(s, SIOCDARP, (caddr_t)rp) == 0);
-#else
   return 1;
-#endif
 }
-
 
 pwr_tBoolean
 inet_GetArpEntry (
@@ -79,11 +66,5 @@ inet_GetArpEntry (
   struct arpreq	*rp  
 )
 {
-
-#if 0
-  return (ioctl(s, SIOCGARP, (caddr_t)rp) == 0);
-#else
   return 1;
-#endif
 }
-

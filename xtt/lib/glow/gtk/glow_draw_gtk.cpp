@@ -886,18 +886,6 @@ int GlowDrawGtk::event_handler( GdkEvent event)
 	  break;
 	case 3: // Button3
 	  button3_pressed = 1;
-#if 0
-	  if (       (event.button.state & GDK_SHIFT_MASK) && 
-		     !(event.button.state & GDK_CONTROL_MASK))
-	    sts = ctx->event_handler( glow_eEvent_MB3PressShift, (int)event.button.x, (int)event.button.y, 0, 0);
-	  else if ( !(event.button.state & GDK_SHIFT_MASK) && 
-		    (event.button.state & GDK_CONTROL_MASK))
-	    sts = ctx->event_handler( glow_eEvent_MB3PressShift, (int)event.button.x, (int)event.button.y, 0, 0);
-	  else if (  (event.button.state & GDK_SHIFT_MASK) && 
-		     (event.button.state & GDK_CONTROL_MASK))
-	    sts = ctx->event_handler( glow_eEvent_MB3PressShiftCtrl, (int)event.button.x, (int)event.button.y, 0, 0);
-	  else
-#endif
 	    sts = ctx->event_handler( glow_eEvent_MB3Press, (int)event.button.x, (int)event.button.y, 0, 0);
 	  click_sensitivity = 0;
 	  break;
@@ -983,18 +971,6 @@ int GlowDrawGtk::event_handler( GdkEvent event)
 	    }
 	    break;
 	  case 3: // Button3
-#if 0
-	    if (       (event.button.state & GDK_SHIFT_MASK) && 
-		       !(event.button.state & GDK_CONTROL_MASK))
-	      sts = ctx->event_handler( glow_eEvent_MB3ClickShift, (int)event.button.x, (int)event.button.y, 0, 0);
-	    else if ( !(event.button.state & GDK_SHIFT_MASK) && 
-		      (event.button.state & GDK_CONTROL_MASK))
-	      sts = ctx->event_handler( glow_eEvent_MB3ClickCtrl, (int)event.button.x, (int)event.button.y, 0, 0);
-	    else if (  (event.button.state & GDK_SHIFT_MASK) && 
-		       (event.button.state & GDK_CONTROL_MASK))
-	      sts = ctx->event_handler( glow_eEvent_MB3ClickShiftCtrl, (int)event.button.x, (int)event.button.y, 0, 0);
-	    else
-#endif
 	      sts = ctx->event_handler( glow_eEvent_MB3Click, (int)event.button.x, (int)event.button.y, 0, 0);
 	    if ( sts == GLOW__TERMINATED || sts == GLOW__DESTROYED)
     	      return 1;
@@ -1089,19 +1065,6 @@ int GlowDrawGtk::event_handler( GdkEvent event)
 	    }
 	    break;
 	  case 3: // Button3
-#if 0
-	    if ( (event.button.state & GDK_SHIFT_MASK) && 
-		 !(event.button.state & GDK_CONTROL_MASK))
-	      sts = ctx->event_handler( glow_eEvent_MB3DoubleClickShift, (int)event.button.x, (int)event.button.y, 0, 0);
-	    else if ( !(event.button.state & GDK_SHIFT_MASK) && 
-		      (event.button.state & GDK_CONTROL_MASK))
-	      sts = ctx->event_handler( glow_eEvent_MB3DoubleClickCtrl, (int)event.button.x, (int)event.button.y, 0, 0);
-	    else if (  (event.button.state & GDK_SHIFT_MASK) && 
-		       (event.button.state & GDK_CONTROL_MASK))
-	      sts = ctx->event_handler( glow_eEvent_MB3DoubleClickShiftCtrl, (int)event.button.x, (int)event.button.y, 0, 0);
-	    else
-	      sts = ctx->event_handler( glow_eEvent_MB3DoubleClick, (int)event.button.x, (int)event.button.y, 0, 0);
-#endif
 	    break;
 	  }
 	}
@@ -1936,22 +1899,10 @@ int GlowDrawGtk::image( GlowWind *wind, int x, int y, int width, int height,
     gdk_draw_pixbuf( w->window, get_gc( this, glow_eDrawType_Line, 0), 
 		     (GdkPixbuf *)image, 0, 0, x, y, width, height,
 		     GDK_RGB_DITHER_NONE, 0, 0);
-#if 0
-    gdk_draw_drawable( w->window,
-		       get_gc( this, glow_eDrawType_Line, 0), 
-		       (GdkDrawable *) pixmap,
-		       0, 0, x, y, width, height);
-#endif
   if ( w->double_buffer_on)
     gdk_draw_pixbuf( w->buffer, get_gc( this, glow_eDrawType_Line, 0), 
 		     (GdkPixbuf *)image, 0, 0, x, y, width, height,
 		     GDK_RGB_DITHER_NONE, 0, 0);
-#if 0
-    gdk_draw_drawable( w->buffer,
-		       get_gc( this, glow_eDrawType_Line, 0), 
-		       (GdkDrawable *) pixmap,
-		       0, 0, x, y, width, height);
-#endif
   if ( clip_mask)
     reset_image_clip_mask();
   else if ( w->clip_on)
@@ -2320,25 +2271,6 @@ static int glow_read_color_file( const char *filename, draw_sColor **color_array
   if ( !check_file( filename))
   {
     return 0;
-#if 0
-    // No color-file exist, use default values
-    double r, g, b;
-
-    printf( "** Using default color palette\n");
-    *color_array = (draw_sColor *) calloc( 300, sizeof( draw_sColor));
-    *size = 0;
-    color_p = *color_array;
-    for ( int i = 3; i < 300; i++)
-    {
-      GlowColor::rgb_color( i, &r, &g, &b, ctx->customcolors);
-      color_p->red = int( r * 65535);
-      color_p->green = int( g * 65535);
-      color_p->blue = int( b * 65535);
-
-      color_p++;
-      (*size)++;
-    }
-#endif
   }
   else
   {
@@ -3131,13 +3063,6 @@ int GlowDrawGtk::image_render( int width, int height,
 			       glow_tImImage orig_im, glow_tImImage *im, 
 			       glow_tPixmap *im_pixmap, glow_tPixmap *im_mask)
 {
-#if 0
-  if ( width == gdk_pixbuf_get_width((GdkPixbuf *)*im) &&
-       height == gdk_pixbuf_get_height((GdkPixbuf *)*im))
-    return 1;
-
-  image_scale( width, height, orig_im, im, 0, 0);
-#endif
   return 1;
 }
 

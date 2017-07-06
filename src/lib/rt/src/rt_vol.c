@@ -573,52 +573,6 @@ vol_MountVolume (
   return vp;
 }
 
-#if 0
-/* The routine calculates the offset, size and indirection
-   flag for a certain object or parameter name reference.
-   The database lock must be held by the caller
-   If alias then the referenced object will be used .  */
-
-gdb_sObject *
-vol_NameToAref (
-  pwr_tStatus		*sts,
-  pool_tRef		*oh,
-  gdb_sVolume		**vhp,
-  pwr_sAttrRef		*arp,
-  pwr_sParam		**Param,
-  cdh_sNormName		*nn,
-  gdb_mLO		lo_flags,
-  vol_mTrans		trans,
-)
-{
-  gdb_sObject		*ohp;
-  gdb_sVolume		*avhp;
-  pwr_sParam		*lParam;
-
-  ohp = vol_NameToOhp(sts, oh, vhp, nn, lo_flags, trans);
-  if (ohp == NULL) return NULL;
-
-  arp->Objid = ohp->g.oid;
-
-  if (nn->flags.b.Attr) {	/* Attribute string present.  */
-    aohp = vol_AnameToOhp(sts, NULL, &avhp, ohp->g.cid, nn->attribute, &Param);
-    if (aohp != NULL) {
-      vol_AttributeToAref(sts, arp, aohp, Param, nn->index);
-    }
-  } else {			/* No attribute.  */
-    arp->Offset = 0;
-    arp->Size = ohp->g.size;
-    arp->Flags.b.Indirect = FALSE;
-  }
-
-  if (EVEN(*sts)) return NULL;
-
-  if (parp != NULL) *parp = lparp;
-  return ohp;
-
-}
-#endif
-
 /* Get the definition of an attribute denoted by
    a full object + attribute name.
 
@@ -1170,10 +1124,6 @@ vol_RemoveMountClient (
   gdb_sObject		*op
 )
 {
-
-#if 0
-  pool_QueRemove(sts, mcep->msclst, msp->msclst);
-#endif
 }
 
 void
@@ -1198,23 +1148,7 @@ vol_RemoveMountServer (
   gdb_sMountServer	*msp = NULL;
 
   pwr_dStatus(sts, status, GDH__SUCCESS);
-#if 0
-  msp = hash_Search(sts, ms, vhp->mstab, &oid);
-  if (msp == NULL) 
-  msp = hash_Remove(sts, ms, vhp->mstab, &oid);
-  if (msp == NULL) 
-  }
-  pool_QueRemove(sts, msp->mslst, vhp->gvhp->msclst);
-  if (vhp->gvhp->flags.b.IsMounted) {
-    ohp = vol_OixToOhp(sts, &oh, vhp, oid);
-    if (ohp != NULL) {
-      msp->oh = oh;
-      ohp->l.flags.b.isMountServer = 0;
-    }
-  }
-  pool_Free(sts, gdbroot->dbpool, );
 
-#endif
   return msp;
 }
 
@@ -1536,30 +1470,18 @@ vol_UnlinkObject (
     }
 
     if(link.b.noCidList && op->u.n.flags.b.inCidList) {
-#if 1
       pool_Qremove(NULL, gdbroot->pool, &op->u.n.cid_ll);
       op->u.n.flags.b.inCidList = 0;
-#else
-      mvol_UnlinkObject(NULL, vp, op, link.m);    
-#endif
     }
 
     if(link.b.noAliasClientList && op->g.flags.b.isAliasClient && op->u.n.flags.b.inAliasClientList) {
-#if 1
       pool_Qremove(NULL, gdbroot->pool, &op->u.n.cli_ll);
       op->u.n.flags.b.inAliasClientList = 0;
-#else
-      vol_RemoveAliasClient(NULL, op);    
-#endif
     }
 
     if (link.b.noMountClientList && op->g.flags.b.isMountClient && op->u.n.flags.b.inMountClientList) {
-#if 1
       pool_Qremove(NULL, gdbroot->pool, &op->u.n.cli_ll);
       op->u.n.flags.b.inMountClientList = 0;
-#else
-      vol_RemoveMountClient(NULL, op);    
-#endif
     }
 
     if (link.b.noSub && op->u.n.subcount != 0) {
@@ -1675,62 +1597,3 @@ vol_ArefDisabled (
     return *(pwr_tDisableAttr *)p;
   return pwr_cNDisableAttr;
 }
-
-#if 0
-
-gdb_sVolume *
-vol_VolumeList (
-  pwr_tStatus		*sts,
-  gdb_sVolume		*vp,
-  vol_mClass		volclass,
-  vol_mType		voltype,
-  pwr_tNodeId		owner,
-  vol_eList		list
-)
-{
-  pool_sQlink		*vl;
-
-  do {
-    switch (list) {
-    case vol_eList_first:
-      vl = pool_Qsucc(NULL, gdbroot->pool, &gdbroot->db->vol_lh);
-      list = vol_eList_Next;
-      break;
-    case vol_eList_last:
-      vl = pool_Qpred(NULL, gdbroot->pool, &gdbroot->db->vol_lh);
-      list = vol_eList_Prev;
-      break;
-    case vol_eList_next:
-      vl = pool_Qsucc(NULL, gdbroot->pool, &vp->vol_ll);
-      break;
-    case vol_eList_prev:
-      vl = pool_Qpred(NULL, gdbroot->pool, &vp->vol_ll);
-      break;
-    default:
-      *sts = GDH__WEIRD;
-      return NULL;
-    }
-
-    if (vl == NULL || vl == &gdbroot->db->vol_lh) {
-      vp = NULL;
-      break;
-    }
-
-    vp = pool_Qitem(vl, gdb_sVolume, vol_ll);
-    if (
-      vp != NULL &&
-      vp->class & volclass &&
-      vp->type & voltype &&
-      vp->flags.b.IsMounted &&
-      (owner == pwr_cNNodeId || vp->nid == owner)
-    ) {
-      break;
-    }
-  } while (vp != NULL);
-
-  if (vp == NULL)
-    *sts = GDH__NOSUCHVOL;
-
-  return vp;
-}
-#endif

@@ -965,24 +965,6 @@ int KeyboardCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
     ;
   }
 
-#if 0
-  if ( event_callback[event] &&
-	sts != GLOW__NO_PROPAGATE && callback)
-  {
-    static glow_sEvent e;
-
-    e.event = event;
-    e.any.type = glow_eEventType_Object;
-    e.any.x_pixel = x;
-    e.any.y_pixel = y;
-    e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
-    e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
-    e.object.object_type = callback_object_type;
-    if ( callback_object_type != glow_eObjectType_NoObject)
-      e.object.object = callback_object;
-    event_callback[event]( this, &e);
-  }
-#endif
   return 1;
 }
 

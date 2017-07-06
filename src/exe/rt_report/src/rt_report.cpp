@@ -140,18 +140,6 @@ int rt_report::periodic_check( pwr_sClass_Report *o)
   switch ( o->Periodicity) {
   case pwr_ePeriodicEnum_No:
     return 0;
-#if 0
-    if ( now_sec < old_sec)
-      o->Sent = 0;
-    if ( !o->Sent) {	
-      if ( now_sec >= offset) {
-	o->Sent = 1;
-	if ( now_sec < offset + 10)
-	  return 1;
-      }
-    }
-    break;
-#endif
   case pwr_ePeriodicEnum_Hourly:
     if ( now_min < old_min)
       o->Sent = 0;

@@ -824,14 +824,6 @@ int GsdmlAttrNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 	break;
       }
 
-#if 0	 
-      sts = attrnav->gsdml->move_module_conf( item_src->mconf, item_dest->mconf);
-      if ( ODD(sts)) {
-	brow_SelectClear( attrnav->brow->ctx);
-	brow_SetInverse( event->object.object, 1);
-	brow_SelectInsert( attrnav->brow->ctx, event->object.object);
-      }
-#endif
       free( node_list);
 
       break;
@@ -4426,18 +4418,6 @@ int ItemPnIOData::open_children( GsdmlAttrNav *attrnav, double x, double y)
   else {
     brow_SetNodraw( attrnav->brow->ctx);
 
-#if 0
-    // These are always 1 in this release
-    void *p = (void *) &iodata->Body.IOPS_Length;
-    new ItemPnBase( attrnav, "IOPS_Length", "LocalGsdmlAttr", 
-		    pwr_eType_UInt8, sizeof(iodata->Body.IOPS_Length), 0, 0,
-		    p, 1, node, flow_eDest_IntoLast);
-
-    p = (void *) &iodata->Body.IOCS_Length;
-    new ItemPnBase( attrnav, "IOCS_Length", "LocalGsdmlAttr", 
-		    pwr_eType_UInt8, sizeof(iodata->Body.IOCS_Length), 0, 0,
-		    p, 1, node, flow_eDest_IntoLast);
-#endif
     if ( iodata->Input) {
       new ItemPnInput( attrnav, "Input", iodata->Input,
 		       node, flow_eDest_IntoLast);

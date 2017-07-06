@@ -235,12 +235,6 @@ void XAttOneMotif::create_cmd_input( Widget w, XAttOne *xattone, XmAnyCallbackSt
   XtSetValues (w, args, 1);
 
   ((XAttOneMotif *)xattone)->cmd_input = w;
-#if 0
-  if ( !(xattone->is_authorized_cb) ||
-       (!(xattone->is_authorized_cb) && 
-	!(xattone->is_authorized_cb( xattone->parent_ctx, 
-				     pwr_mAccess_RtWrite | pwr_mAccess_System))))
-#endif
   mrm_TextInit( w, (XtActionProc) valchanged_cmd_input, mrm_eUtility_XAttOne);
 }
 void XAttOneMotif::create_cmd_scrolledinput( Widget w, XAttOne *xattone, XmAnyCallbackStruct *data)

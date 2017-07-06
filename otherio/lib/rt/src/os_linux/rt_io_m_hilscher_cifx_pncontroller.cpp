@@ -272,28 +272,6 @@ static pwr_tStatus IoAgentInit( io_tCtx ctx,
 	      channelinfo.bFWMonth, channelinfo.bFWDay);
   }
 
-#if 0
-  // Register application
-  RCX_REGISTER_APP_REQ_T regapp = {{0}};
-  RCX_REGISTER_APP_CNF_T regapp_cnf = {{0}};
-
-  regapp.tHead.ulDest   = HOST_TO_LE32(PNM_APPLICATION);
-  regapp.tHead.ulLen    = 0;
-  regapp.tHead.ulCmd    = HOST_TO_LE32(RCX_REGISTER_APP_REQ);
-  regapp.tHead.ulSrc    = HOST_TO_LE32(PN_SRC);
-  regapp.tHead.ulSrcId  = HOST_TO_LE32(PN_SRCID);
-
-  sts = xChannelPutPacket( local->chan, (CIFX_PACKET*)&regapp, 10);
-  if ( !status_check( op, ap, sts, "xChannelPutPacket"))
-    return IO__INITFAIL;
-    
-  sts = xChannelGetPacket( local->chan, sizeof(regapp_cnf), (CIFX_PACKET *)&regapp_cnf, 1000);
-  if ( !status_check( op, ap, sts, "xChannelGetPacket") ||
-       !cmd_check( op, ap, regapp_cnf.tHead.ulCmd, RCX_REGISTER_APP_CNF) ||
-       !status_check( op, ap, regapp_cnf.tHead.ulSta, "Register Application"))
-    return IO__INITFAIL;
-#endif
-
   RCX_LOCK_UNLOCK_CONFIG_REQ_T unlock = {{0}};
   RCX_LOCK_UNLOCK_CONFIG_CNF_T unlock_cnf = {{0}};
 
@@ -314,36 +292,6 @@ static pwr_tStatus IoAgentInit( io_tCtx ctx,
        !status_check( op, ap, unlock_cnf.tHead.ulSta, "Unlock channel"))
     return IO__INITFAIL;
 
-  // Delete configuration, This doesn't work....
-#if 0
-  RCX_DELETE_CONFIG_REQ_T delete_msg;
-  RCX_DELETE_CONFIG_CNF_T delete_cnf = {{0}};
-
-  memset( &delete_msg, 0, sizeof(delete_msg));
-
-  delete_msg.tHead.ulDest   = HOST_TO_LE32(PNM_APPLICATION);
-  delete_msg.tHead.ulLen    = 0;
-  delete_msg.tHead.ulId     = HOST_TO_LE32(msg_id++);
-  delete_msg.tHead.ulCmd    = HOST_TO_LE32(RCX_DELETE_CONFIG_REQ);
-  delete_msg.tHead.ulSrc    = HOST_TO_LE32(PN_SRC);
-  delete_msg.tHead.ulSrcId  = HOST_TO_LE32(PN_SRCID);
-
-  sts = xChannelPutPacket( local->chan, (CIFX_PACKET*)&delete_msg, 10);
-  if ( !status_check( op, ap, sts, "xChannelPutPacket"))
-    return IO__INITFAIL;
-
-  sts = xChannelGetPacket( local->chan, sizeof(delete_cnf), (CIFX_PACKET *)&delete_cnf, 20);
-  if ( !status_check( op, ap, sts, "xChannelGetPacket") ||
-       !cmd_check( op, ap, delete_cnf.tHead.ulCmd, RCX_DELETE_CONFIG_CNF) ||
-       !status_check( op, ap, delete_cnf.tHead.ulSta, "Delete Config"))
-    return IO__INITFAIL;
-
-#endif
-
-  // char op_ip_address[20] = "10.0.0.1";
-  // char op_subnet_mask[20] = "255.255.255.0";
-  // char op_device_name[40] = "controller";
-  // char op_device_type[40] = "cifX RE/PNM";
   t_addr ipaddress;
   t_addr subnetmask;
   int num;
@@ -1061,42 +1009,6 @@ static pwr_tStatus IoAgentInit( io_tCtx ctx,
   // It takes ~20 s to get COM-flag
   local->dev_init = 1;
   local->dev_init_limit = (unsigned int) (30.0 / ctx->ScanTime + 0.5);
-
-
-#if 0
-  // Get device handle
-  RCX_PACKET_GET_SLAVE_HANDLE_REQ_T gethandle = {{0}};
-  // RCX_GET_SLAVE_HANDLE_CNF_T gethandle_cnf = {{0}};
-  RCX_PACKET_GET_SLAVE_HANDLE_CNF_T *gethandle_cnf;
-  int get_handle_cnf_size = sizeof(*gethandle_cnf) + (dev_cnt-1) * sizeof( TLR_UINT32);
-  gethandle_cnf = (RCX_PACKET_GET_SLAVE_HANDLE_CNF_T *) calloc( 1, get_handle_cnf_size);
-
-  gethandle.tHead.ulDest   = HOST_TO_LE32(PNM_APPLICATION);
-  gethandle.tHead.ulLen    = 4; // HOST_TO_LE32(sizeof(gethandle.tData));
-  gethandle.tHead.ulCmd    = HOST_TO_LE32(RCX_REGISTER_APP_REQ);
-  gethandle.tHead.ulSrc    = HOST_TO_LE32(PN_SRC);
-  gethandle.tHead.ulSrcId  = HOST_TO_LE32(PN_SRCID);
-  gethandle.tData.ulParam = RCX_LIST_CONF_SLAVES;
-
-  sts = xChannelPutPacket( local->chan, (CIFX_PACKET*)&gethandle, 1000);
-  if ( !status_check( op, ap, sts, "xChannelPutPacket"))
-    return IO__INITFAIL;
-    
-  sts = xChannelGetPacket( local->chan, get_handle_cnf_size, (CIFX_PACKET *)gethandle_cnf, 10000);
-  if ( !status_check( op, ap, sts, "xChannelGetPacket") ||
-       !cmd_check( op, ap, gethandle_cnf->tHead.ulCmd, RCX_GET_SLAVE_HANDLE_CNF) ||
-       !status_check( op, ap, gethandle_cnf->tHead.ulSta, "Get slave handle"))
-    return IO__INITFAIL;
-
-  int hcnt = 0;
-  for ( rp = ap->racklist; rp; rp = rp->next) {
-    io_sPnRackLocal *rp_local = (io_sPnRackLocal *)rp->Local;
-
-    ((cifx_sDeviceUserData *)rp_local->userdata)->handle = gethandle_cnf->tData.aulHandle[hcnt];
-    hcnt++;
-  }
-  free( gethandle_cnf);
-#endif
 
   errh_Info( "Init of Hilscher cifX Profinet Controller '%s'", ap->Name);
   return IO__SUCCESS;

@@ -144,11 +144,6 @@ static void		sendVolumes	(gdb_sNode*, pool_tRef);
 static void		volumes		(qcom_sGet*);
 static void		volumesR	(qcom_sGet*);
 static void		volumes7	(qcom_sGet*);
-#if 0
-  static void		linkEvent	(pwr_tUInt32, net_eEvent);
-  static void		sendIdAck	(gdb_sNode*);
-  static void		sendIdAck2	(gdb_sNode*);
-#endif
 
 static void
 respondError (
@@ -264,25 +259,6 @@ static void (*fromApplication[net_eMsg_end])(qcom_sGet *) = {
   bugError                      /* net_eMsg_serverConnect */
 };
 
-#if 0
-int
-main (
-  int		argc,
-  char		**argv
-)
-{
-
-  init();
-
-  /* Start receive loop which never exits (hopefully).  */
-
-  mainLoop();
-
-  exit(1);
-}
-#endif
-
-
 /* Add my own node.  */
 
 static void
@@ -365,9 +341,6 @@ flushAllNodes (void)
 
     if (node.flags.b.connected) {
       sendFlush(np);
-#if 0
-      sendVolumes(np, pool_cNRef); 
-#endif
     }
   }
 }

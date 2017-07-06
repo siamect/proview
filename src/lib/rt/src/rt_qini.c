@@ -196,36 +196,6 @@ qini_ParseFile (
       continue;
     }
 
-#if 0
-    naddr.s_addr = inet_network(s_naddr);
-    if (naddr.s_addr == (unsigned int)-1) {
-      /* Try name instead */
-      struct addrinfo hints;
-      struct addrinfo *res;
-      int err;
-
-      memset((void*)&hints, 0, sizeof(hints));
-      hints.ai_socktype = SOCK_STREAM;
-
-      err = getaddrinfo(s_naddr, 0, &hints, &res);
-      if ( err < 0) {
-	errh_Error("error in line, <network address>, skip to next line.\n>> %s", s);
-	(*errors)++;
-	continue;
-      }
-      switch ( res->ai_family) {
-      case AF_INET:
-	// memcpy( &naddr.s_addr, (char *)&res->ai_addr->sa_data + 2, 4);
-	memcpy( &naddr.s_addr, &((struct sock_addr_in *)res->ai_addr)->sin_addr, 4);
-	naddr.s_addr = ntohl( naddr.s_addr);
-	break;
-      case AF_INET6:
-	break;
-      }
-      freeaddrinfo( res);
-    }
-#endif
-
     nep = tree_Find(&sts, ntp, &nid);
     if (nep != NULL) {
       errh_Warning("node is already defined: %s, skip to next line", s);
@@ -289,11 +259,7 @@ qini_BuildDb (
   pwr_tStatus		*sts,
   tree_sTable		*nodes,
   qini_sNode		*me,
-#if 0 /* change when new class NetConfig is deined */
-  pwr_sNetConfig	*cp,
-#else
   void			*cp,
-#endif
   qcom_tBus		bus
 )
 {
@@ -308,16 +274,6 @@ qini_BuildDb (
   init.nid	      = me->nid;
   init.bus	      = bus;
   init.nodes	      = nodes->nNode;
-#if 0	/* change when new class NetConfig is deined */
-  init.queues	      = cp->Queues;
-  init.applications   = cp->Applications;
-  init.sbufs	      = cp->SmallCount;
-  init.mbufs	      = cp->MediumCount;
-  init.lbufs	      = cp->LargeCount;
-  init.size_sbuf      = cp->SmallSize;
-  init.size_mbuf      = cp->MediumSize;
-  init.size_lbuf      = cp->LargeSize;
-#endif
 
   p = qdb_CreateDb(sts, &init);
   if (p == NULL) return NO;

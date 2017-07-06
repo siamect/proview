@@ -61,30 +61,6 @@ static GstBusSyncReply bus_sync_handler (GstBus * bus, GstMessage * message,
 					 gpointer data)
 {
   return GST_BUS_PASS;
-#if 0
-  XttStreamGtk *strm = (XttStreamGtk *)data;
-
-  printf( "Bus sync handler\n");
-
-  if (GST_MESSAGE_TYPE (message) != GST_MESSAGE_ELEMENT)
-
-  if (!gst_structure_has_name (message->structure, "prepare-xwindow-id"))
-    return GST_BUS_PASS;
-
-  strm->overlay = GST_X_OVERLAY (GST_MESSAGE_SRC (message));
-  printf( "Overlay: %u\n", strm->overlay);
-
-  GdkWindow *window = gtk_widget_get_window( strm->video_form);
-  guintptr window_handle;
-  
-  if (!gdk_window_ensure_native (window))
-    g_error ("Couldn't create native window needed for GstXOverlay!");
-  
-  window_handle = GDK_WINDOW_XID( window);
-  gst_x_overlay_set_xwindow_id( GST_X_OVERLAY (strm->playbin2), window_handle);
-
-  return GST_BUS_DROP;
-#endif
 }
 
 /* This function is called when the GUI toolkit creates the physical window that will hold the video.
@@ -352,46 +328,6 @@ void XttStreamGtk::error_cb( GstBus *bus, GstMessage *msg, void *data)
     if ( strm->is_live)
       break;
 
-#if 0
-    gint percent = 0;
-
-    gst_message_parse_buffering( msg, &percent);   
-    // printf( "Buffering %d %%\n", percent);
-    // Wait until buffering is complete before start/resume playing
-    if ( percent < 100) {
-      if ( percent < 50) {
-	pwr_tTime current_time;
-
-	time_GetTime( &current_time);
-	if ( strm->buftime.tv_sec == 0 && strm->buftime.tv_nsec == 0)
-	  strm->buftime = current_time;
-	else {
-	  pwr_tDeltaTime dt;
-	  pwr_tFloat32 fdt;
-	  time_Adiff( &dt, &current_time, &strm->buftime);
-	  time_DToFloat( &fdt, &dt);
-	  printf( "Buffering %d %%  %f\n", percent, fdt);
-	  if ( fdt > 5) {	  
-	    strm->buftime = pwr_cNTime;
-	    gst_element_set_state( strm->playbin2, GST_STATE_PAUSED);	  
-	  }
-	}
-      }
-      else
-	strm->buftime = pwr_cNTime;
-    }
-    else {
-      strm->buftime = pwr_cNTime;
-      gst_element_set_state( strm->playbin2, GST_STATE_PLAYING);
-    }
-#endif
-
-#if 0
-    if ( percent < 100)
-      gst_element_set_state( strm->playbin2, GST_STATE_PAUSED);
-    else
-      gst_element_set_state( strm->playbin2, GST_STATE_PLAYING);
-#endif
     break;
   }
   case GST_MESSAGE_CLOCK_LOST: {
@@ -402,11 +338,6 @@ void XttStreamGtk::error_cb( GstBus *bus, GstMessage *msg, void *data)
     break;
   }
   case GST_MESSAGE_STATE_CHANGED:
-#if 0
-    GstState old_state, new_state, pending_state;
-    gst_message_parse_state_changed( msg, &old_state, &new_state, &pending_state);
-    printf( "State changed %s\n", gst_element_state_get_name( new_state));
-#endif
     break;
   default: ;
   }
@@ -443,89 +374,6 @@ void XttStreamGtk::state_changed_cb( GstBus *bus, GstMessage *msg, void *data)
 /* Extract metadata from all the streams and write it to the text widget in the GUI */
 static void analyze_streams( void *data) {
   printf( "Analyze stream\n");
-#if 0
-  XttStreamGtk *strm = (XttStreamGtk *)data;
-  gint i;
-  GstTagList *tags;
-  gchar *str, *total_str;
-  guint rate;
-  gint n_video, n_audio, n_text;
-  GtkTextBuffer *text;
-  
-  /* Clean current contents of the widget */
-  text = gtk_text_view_get_buffer( GTK_TEXT_VIEW( strm->streams_list));
-  gtk_text_buffer_set_text( text, "", -1);
-  
-  /* Read some properties */
-  g_object_get( strm->playbin2, "n-video", &n_video, NULL);
-  g_object_get( strm->playbin2, "n-audio", &n_audio, NULL);
-  g_object_get( strm->playbin2, "n-text", &n_text, NULL);
-  
-  for (i = 0; i < n_video; i++) {
-    tags = NULL;
-    /* Retrieve the stream's video tags */
-    g_signal_emit_by_name( strm->playbin2, "get-video-tags", i, &tags);
-    if (tags) {
-      total_str = g_strdup_printf( "video stream %d:\n", i);
-      gtk_text_buffer_insert_at_cursor( text, total_str, -1);
-      g_free( total_str);
-      gst_tag_list_get_string( tags, GST_TAG_VIDEO_CODEC, &str);
-      str = 0;
-      total_str = g_strdup_printf( "  codec: %s\n", str ? str : "unknown");
-      gtk_text_buffer_insert_at_cursor( text, total_str, -1);
-      g_free( total_str);
-      g_free( str);
-      gst_tag_list_free( tags);
-    }
-  }
-  
-  for (i = 0; i < n_audio; i++) {
-    tags = NULL;
-    /* Retrieve the stream's audio tags */
-    g_signal_emit_by_name( strm->playbin2, "get-audio-tags", i, &tags);
-    if (tags) {
-      total_str = g_strdup_printf( "\naudio stream %d:\n", i);
-      gtk_text_buffer_insert_at_cursor( text, total_str, -1);
-      g_free( total_str);
-      if (gst_tag_list_get_string( tags, GST_TAG_AUDIO_CODEC, &str)) {
-        total_str = g_strdup_printf( "  codec: %s\n", str);
-        gtk_text_buffer_insert_at_cursor( text, total_str, -1);
-        g_free( total_str);
-        g_free( str);
-      }
-      if (gst_tag_list_get_string( tags, GST_TAG_LANGUAGE_CODE, &str)) {
-        total_str = g_strdup_printf( "  language: %s\n", str);
-        gtk_text_buffer_insert_at_cursor( text, total_str, -1);
-        g_free( total_str);
-        g_free( str);
-      }
-      if (gst_tag_list_get_uint( tags, GST_TAG_BITRATE, &rate)) {
-        total_str = g_strdup_printf( "  bitrate: %d\n", rate);
-        gtk_text_buffer_insert_at_cursor( text, total_str, -1);
-        g_free( total_str);
-      }
-      gst_tag_list_free( tags);
-    }
-  }
-  
-  for (i = 0; i < n_text; i++) {
-    tags = NULL;
-    /* Retrieve the stream's subtitle tags */
-    g_signal_emit_by_name( strm->playbin2, "get-text-tags", i, &tags);
-    if (tags) {
-      total_str = g_strdup_printf( "\nsubtitle stream %d:\n", i);
-      gtk_text_buffer_insert_at_cursor( text, total_str, -1);
-      g_free( total_str);
-      if (gst_tag_list_get_string( tags, GST_TAG_LANGUAGE_CODE, &str)) {
-        total_str = g_strdup_printf( "  language: %s\n", str);
-        gtk_text_buffer_insert_at_cursor( text, total_str, -1);
-        g_free( total_str);
-        g_free( str);
-      }
-      gst_tag_list_free( tags);
-    }
-  }
-#endif
 }
   
 /* This function is called when an "application" message is posted on the bus.
@@ -559,22 +407,6 @@ gboolean XttStreamGtk::mousebutton_cb( GtkWidget *widget, GdkEvent *event, void 
 {
   XttStreamGtk *strm = (XttStreamGtk *)data;
   GtkAllocation alloc;
-
-#if 0
-  GstElement *sink;
-  g_object_get( strm->playbin2, "video-sink", &sink, NULL);
-
-  int num = gst_child_proxy_get_children_count( GST_CHILD_PROXY(sink));
-  printf( "children %d\n", num);
-
-  GstElement *child = (GstElement *)gst_child_proxy_get_child_by_index( GST_CHILD_PROXY(sink), 0);
-
-  gst_x_overlay_set_render_rectangle(GST_X_OVERLAY(child), 0, 0, 100, 100);
-  guint64 w, h;
-  g_object_get( child, "window-height", &h, NULL);
-  g_object_get( child, "window-width", &w, NULL);
-  printf( "Top w %d h %d\n", w, h);
-#endif
 
   // Calculate offset for video image
   gtk_widget_get_allocation(strm->video_form, &alloc);
@@ -1693,28 +1525,6 @@ void XttStreamGtk::activate_get_position( GtkWidget *w, gpointer data)
     strm->ptz_box_displayed = 1;
   }
 }
-  
-#if 0
-int main(int argc, char *argv[]) {
-  pwr_tStatus sts;
-
-  /* Initialize GTK */
-  gtk_init( &argc, &argv);
-  
-  /* Initialize GStreamer */
-  gst_init( &argc, &argv);
-  
-  XttStreamGtk *strm = new XttStreamGtk( 0, 0, "Some video", "http://192.168.67.248/mjpg/video.mjpg", 1, 0, 0, 0, 0, 1, 0, &sts);
- 
-  /* Start the GTK main loop. We will not regain control until gtk_main_quit is called. */
-  gtk_main();
-  
-  delete strm;
-
-  /* Free resources */
-  return 0;
-}
-#endif
 
 #else
 // gstreamer not installed

@@ -163,48 +163,10 @@ static upg_sSigChanCon upg_sigchancon[] = {
   }
 };
 
-
-
 static void usage()
 {
   printf( "\nUsage: wb_upgrade -v 'volumename'\n\n");
 }
-
-
-#if 0
-static void process( wb_session& session, wb_object& o)
-{
-  pwr_sPlcNode plcnode;
-
-  if ( o.cid() == pwr_cClass_csub) {
-    printf ( "Object: %s\n", o.longName().c_str());
-
-    wb_attribute a = session.attribute( o.oid(), "DevBody", "PlcNode");
-    if ( !a) exit(0);
-
-    a.value( &plcnode);
-
-    printf( "subwindow:  %d, woid: %u,%u\n", plcnode.subwindow, 
-	    plcnode.subwind_oid[0].vid, plcnode.subwind_oid[0].oix);
-
-    wb_object c = o.first();
-    if ( c && c.cid() == pwr_cClass_windowplc) {
-      plcnode.subwind_oid[0].vid = c.oid().vid;
-      plcnode.subwind_oid[0].oix = c.oid().oix;
-
-      printf( "subwindow:  %d, woid: %u,%u\n", plcnode.subwindow, 
-	      plcnode.subwind_oid[0].vid, plcnode.subwind_oid[0].oix);
-
-      session.writeAttribute( a, &plcnode, sizeof(plcnode)); 
-      if ( !a) cout << "** Write error" << endl;
-    }
-  }
-
-  for ( wb_object c = o.first(); c.oddSts(); c = c.after()) {
-    process( session, c);
-  }
-}
-#endif
 
 int main( int argc, char *argv[])
 {
@@ -250,14 +212,6 @@ int main( int argc, char *argv[])
     cout << "** No write access" << endl;
     exit(0);
   }
-
-#if 0
-  wb_object o;
-  for ( o = session.object(); o.oddSts(); o = o.after()) {
-    process( session, o);
-  }
-#endif
-
 
   // Replace Pb modules $IoConnect references with Io modules references
   pwr_tAttrRef aref;

@@ -155,22 +155,6 @@ decode_sfloat (
   for (i = count; i > 0; i--) {
     vp = ((union vax_f *)tp);
     CONVERT_INT(&i3e.i, sp);
-    
-#if 0
-    if (i3e.b.f0_22 == 0x0 && i3e.b.exp == 0xff) {  /* High value.  */
-      vp->b.f16_22  = 0x7f;
-      vp->b.exp	    = 0xff;
-      vp->b.f0_15   = 0xffff;
-    } else if (i3e.b.f0_22 == 0x0 && i3e.b.exp == 0x00) {  /* Low value.  */
-      vp->i = 0;
-    } else {
-      vp->b.exp	    = i3e.b.exp - I3E_S_BIAS + VAX_F_BIAS;
-      vp->b.f16_22  = i3e.b.f0_22 >> 16;
-      vp->b.f0_15   = i3e.b.f0_22;
-    }
-
-    vp->b.sign = i3e.b.sign;
-#endif
 
     tp += sizeof(float);
     sp += sizeof(float);

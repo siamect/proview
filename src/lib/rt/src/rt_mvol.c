@@ -392,14 +392,6 @@ mvol_ArefToAttribute (
   pwr_tBoolean          noDot = TRUE;
   int			parsize;
 
-
-#if 0
-  /* This must wait until next version.  */
-  pwr_Assert(cid == arp->Body);
-  pwr_tDlid		dlid;		/* pwr_tDlid, must be at same offset as
-					   pwr_tSubid in subscription clients and servers */
-#endif
-
   cp = hash_Search(sts, gdbroot->cid_ht, &cid);
   if (cp == NULL) {
     pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
@@ -639,55 +631,19 @@ mvol_LinkClass (
   gdb_sObject		*aop;
   gdb_sObject		*cop;
   gdb_sObject		*bop;
-#if 0
-  gdb_sObject		*op;
-#endif
   pool_sQlink		*ol;
   int			count;
   int			i;
 
   
   if (cp->cor == pool_cNRef) {
-#if 0
-    printf("*** Class has no definition, cid: %s\n", cdh_ClassIdToString(NULL, cp->cid, 1));
-    for (
-      ol = pool_Qsucc(sts, gdbroot->pool, &cp->cid_lh);
-      ol != &cp->cid_lh;
-      ol = pool_Qsucc(sts, gdbroot->pool, ol)
-    ) {
-      op = pool_Qitem(ol, gdb_sObject, u.n.cid_ll);
-      printf("---   %s\n", op->g.f.name.orig);
-    }
-#endif
-#if 0
-    pwr_Return(NULL, sts, MVOL__NOCLASSDEF);
-#else
     pwr_Return(NULL, sts, MVOL__SUCCESS);
-#endif
   }
 
   cop = pool_Address(NULL, gdbroot->pool, cp->cor);
 
   if (cp->bor == pool_cNRef) {
-#if 0
-    printf("*** Class has no body definition, cid: %s, %s\n",
-      cdh_ClassIdToString(NULL, cp->cid, 1), cop->g.f.name.orig);
-
-    for (
-      ol = pool_Qsucc(sts, gdbroot->pool, &cp->cid_lh);
-      ol != &cp->cid_lh;
-      ol = pool_Qsucc(sts, gdbroot->pool, ol)
-    ) {
-      op = pool_Qitem(ol, gdb_sObject, u.n.cid_ll);
-      if (op->g.size != cp->size)
-	printf("---   %s: cp: %d, op: %d\n", op->g.f.name.orig, cp->size, op->g.size);
-    }
-#endif
-#if 0
-    pwr_Return(NULL, sts, MVOL__NOBODYDEF);
-#else
     pwr_Return(NULL, sts, MVOL__SUCCESS);
-#endif
   }
 
   bp = (pwr_sObjBodyDef *) pool_Address(NULL, gdbroot->rtdb, cp->bbr);
@@ -695,19 +651,6 @@ mvol_LinkClass (
     
   cp->size = bp->Size;
   cp->acount = bp->NumOfParams;
-
-#if 0
-  printf("--- Class: %s\n", cop->g.f.name.orig);
-  for (
-    count = 0, ol = pool_Qsucc(sts, gdbroot->pool, &cp->cid_lh);
-    ol != &cp->cid_lh;
-    ol = pool_Qsucc(sts, gdbroot->pool, ol)
-  ) {
-    op = pool_Qitem(ol, gdb_sObject, u.n.cid_ll);
-    count++;
-  }
-  printf("---   %d\n", count);
-#endif
 
   bop = pool_Address(NULL, gdbroot->pool, cp->bor);
 
@@ -736,9 +679,6 @@ mvol_LinkClass (
     cp->attr[i].tid     = abp->TypeRef;
     coid.pwr = aop->g.oid;
     cp->attr[i].aix     = coid.t.aix;
-#if 0
-    printf("---   %s, idx: %d, mof: %d\n", aop->g.f.name.orig, i, cp->attr[i].moffset);
-#endif
     pwr_Assert(i == count);
     if (count > 0) {
       if ( !(cp->attr[i-1].moffset < cp->attr[i].moffset))
@@ -790,13 +730,6 @@ mvol_LinkObject (
   pwr_tClassId		cid;
 
   pwr_Assert(vp->l.flags.b.isNative);
-
-#if 0
-  if (op->g.cid == pwr_cNClassId) {
-    printf("*** Object is of not known class: %s\n", cdh_ClassIdToString(NULL, op->g.cid, 1));
-    printf("     %s, poid: %s\n", op->g.f.name.orig, cdh_ObjidToString(NULL, op->g.f.poid, 1));
-  }
-#endif
 
   /* Alias clients should be inserted in Alias class list.  */
   if (op->g.flags.b.isAliasClient) {

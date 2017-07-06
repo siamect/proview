@@ -74,16 +74,6 @@ struct s_Timer {
   void			(*exec)();
 };
 
-#if 0
-typedef struct s_TimerEntry sTimerEntry;
-struct s_TimerEntry {
-  tree_sNode		node;
-  time_tClock		clock;
-  LstHead(sTimer)	lh;
-};
-static tree_sTable	*teq;
-#endif
-
 static LstHead(sTimer)	timer_lh;
 static LstHead(sTimer)	wrap_lh;
 static LstHead(sTimer)	free_lh;
@@ -196,48 +186,6 @@ init(
 static void
 toggleWrapped (
 );
-
-#if 0
-static void
-memCheck (
-  enum mcheck_status sts
-);
-
-static void
-memCheck (
-  enum mcheck_status sts
-)
-{
-  static int i_sts = 0;
-  if (i_sts != sts) {
-    printf("rt_tmon: malloc inconsistency detected %d \n", sts );
-    i_sts = sts;
-  }
-}
-#endif
-
-#if 0
-time_tClock
-_time_Clock (
-  pwr_tStatus *status,
-  pwr_tDeltaTime *ap
-)
-{
-  time_tClock	c;
-  static int 	first = 1;
-  static time_tClock 	offs;
-
-  c = time_Clock(status, ap);
-
-  if (first) {
-    offs = 0xFFFFFFFF - c - 12036;
-    first = 0;
-  }
-  
-  return c + offs;
-}
-#endif
-
 
 int
 main (
@@ -496,16 +444,6 @@ subbCheck (
 
   if (gdbroot->db->log.b.tmon)
     errh_Info("subbCheck: %u", tp->clock);
-
-#if 0
-  if (EXCL_ON) {
-    /* Exclusive mode is on, requeue the
-       buffer for later transmission */
-
-    addTime(nowTime(&tp->time), msToTime(NULL, bp->dt)); 
-    insertTimer(tp);
-  }
-#endif
 
   if (subsm_SendBuffer(bp)) {
     setTimer(tp, msToClock(NULL, bp->dt));

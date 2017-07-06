@@ -454,30 +454,7 @@ GtkWidget *flownavwidgetgtk_new( GtkWidget *main_flow)
   return (GtkWidget *) w;  
 }
 
-#if 0
-GType flowwidgetgtk_get_type(void)
-{
-  static GType flowwidgetgtk_type = 0;
-
-  if ( !flowwidgetgtk_type) {
-    static const GTypeInfo flowwidgetgtk_info = {
-      sizeof(FlowWidgetGtkClass), NULL, NULL, (GClassInitFunc)flowwidgetgtk_class_init,
-      NULL, NULL, sizeof(FlowWidgetGtk), 1, NULL, NULL};
-    
-    flowwidgetgtk_type = g_type_register_static( G_TYPE_OBJECT, "FlowWidgetGtk", &flowwidgetgtk_info, 
-					   (GTypeFlags)0);  
-  }
-  return flowwidgetgtk_type;
-}
-
-void flowwidgetgtk_get_ctx( GtkWidget *w, void **ctx)
-{
-  *ctx = ((FlowWidgetGtk *)w)->flow_ctx;
-}
-#endif
-
 void flowwidgetgtk_modify_ctx( GtkWidget *w, void *ctx)
 {
   ((FlowWidgetGtk *)w)->flow_ctx = ctx;
 }
-

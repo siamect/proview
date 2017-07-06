@@ -182,11 +182,6 @@ class CoWowGtk : public CoWow {
   static char *translate_utf8( const char *str);
   static char *convert_utf8( const char *str);
 
-#if 0
-  static void error_ok_cb(Widget w);
-  static void question_help_cb( Widget dialog,XtPointer data, 
-				XmAnyCallbackStruct *cbs);
-#endif
   static void list_row_activated_cb( GtkTreeView *tree_view, 
 				     GtkTreePath *path,
 				     GtkTreeViewColumn *column,

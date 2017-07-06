@@ -494,12 +494,6 @@ bool wb_print_wbl::printValue ( wb_volume& v,
 	}
       }
     }
-#if 0      
-    else {
-      ConvertObjectName( root, sp, conv_name);
-      sprintf(sval, "\"%s\"", conv_name);
-    }
-#endif
     break;
   case pwr_eType_DataRef:
     if (cdh_ObjidIsNull(((pwr_tDataRef*)val)->Aref.Objid))
@@ -741,28 +735,6 @@ void wb_print_wbl::printBuffer( wb_volume& vol,
     m_errCnt++;
     return;
   }
-#if 0
-  int size;
-  pwr_tOid toid;
-
-  sts = ldh_GetObjectBodyDef( (ldh_tSession)&vol, par_bd->Par->Buffer.Class, "SysBody", 1, &bd, &rows);
-  if ( EVEN(sts)) {
-    m_os << "! %WBDUMP-E-Error Unknown sub class: " << par_bd->Par->Buffer.Class << endl;
-    m_errCnt++;
-    return;
-  }
-
-  // Get template body
-  toid.vid = cdh_CidToVid( par_bd->ParClass);
-  toid.oix = cdh_cixToOix( cdh_cidToCix(par_bd->Par->Buffer.Class), pwr_eBix_template, 0);
-
-  sts = ldh_GetObjectBody( (ldh_tSession)&vol, toid, "SysBody", (void **)&tbody, &size);
-  if (EVEN(sts)) {
-    m_os << "! %WBDUMP-E-Error Template not found for class " << par_bd->ParClass << endl;
-    m_errCnt++;
-    return;
-  }
-#endif
 
   for ( unsigned int k = 0; k < par_bd->Par->Param.Info.Elements; k++) {
     if ( par_bd->Par->Param.Info.Flags & PWR_MASK_ARRAY)
@@ -816,10 +788,6 @@ void wb_print_wbl::printBuffer( wb_volume& vol,
 
     body += par_bd->Par->Param.Info.Size/par_bd->Par->Param.Info.Elements;
   }
-#if 0
-  free( tbody);
-  free( (char *)bd);
-#endif
 }
 
 //

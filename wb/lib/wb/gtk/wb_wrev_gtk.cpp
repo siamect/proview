@@ -372,13 +372,6 @@ WRevGtk::WRevGtk(
   gtk_widget_show_all( toplevel);
 
   wow = new CoWowGtk( toplevel);
-
-#if 0
-  if ( utility == wb_eUtility_Wtt) {
-    ((Wtt *)parent_ctx)->register_utility( (void *) this,
-	wb_eUtility_Distributor);
-  }
-#endif
 }
 
 
@@ -431,13 +424,6 @@ void WRevGtk::open_input_dialog( const char *text1, const char *text2, const cha
 {
   create_input_dialog();
 
-#if 0
-  g_object_set( india_widget, 
-		"visible", TRUE, 
-		"title", title,
-		NULL);
-#endif
-
   gtk_label_set_text( GTK_LABEL(india_label1), text1);
   gtk_label_set_text( GTK_LABEL(india_label2), text2);
 
@@ -456,13 +442,6 @@ void WRevGtk::open_input_dialog( const char *text1, const char *text2, const cha
 
 void WRevGtk::create_input_dialog()
 {
-#if 0
-  if ( india_widget) {
-    g_object_set( india_widget, "visible", TRUE, NULL);
-    return;
-  }
-#endif
-
   // Create an input dialog
   india_widget = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
 					     "default-height", 150,
@@ -473,20 +452,8 @@ void WRevGtk::create_input_dialog()
   g_signal_connect( india_widget, "delete_event", G_CALLBACK(india_delete_event), this);
   india_text1 = gtk_entry_new();
   india_text2 = gtk_entry_new();
-#if 0
-  g_signal_connect( india_text, "activate", 
-  		    G_CALLBACK(WRevGtk::activate_india_ok), this);
-#endif
   india_label1 = gtk_label_new("");
   india_label2 = gtk_label_new("");
-#if 0
-  GtkWidget *india_image = (GtkWidget *)g_object_new( GTK_TYPE_IMAGE, 
-				"stock", GTK_STOCK_DIALOG_QUESTION,
-				"icon-size", GTK_ICON_SIZE_DIALOG,
-				"xalign", 0.5,
-				"yalign", 1.0,
-				NULL);
-#endif
 
   GtkWidget *india_ok = gtk_button_new_with_label( "Ok");
   gtk_widget_set_size_request( india_ok, 70, 25);

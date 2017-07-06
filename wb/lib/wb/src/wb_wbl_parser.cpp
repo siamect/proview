@@ -22,23 +22,6 @@ typedef enum {
   eState_EndDelimFound
 } eState;
 
-
-#if 0
-int main()
-{
-  wb_wbl_parser p;
-
-  try {
-    // p.parse( "/home/claes/test/pwrb_c_and.wb_load");
-    p.parse( "/home/claes/test/directory.wb_load");
-  }
-  catch ( wb_error_str e) {
-    p.print_error( e);
-  }
-  p.print();
-}
-#endif
-
 wb_wbl_parser::wb_wbl_parser() :
   m_line_cnt(0), m_state(0), m_tree(0), m_current(0), m_object_level(0), m_buffer_level(0)
 {

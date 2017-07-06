@@ -1474,23 +1474,3 @@ void	dcli_readstruct_free(	dcli_sStructElement *e_list)
 	  free( element_p);
         }
 }
-
-#if 0
-main()
-{
-	char	filename[120] = "read_struct.h";
-	char	struct_name[40] = "MyStruct";
-	int	sts;
-	dcli_sStructElement	*e_list, *element_p;
-
-	sts = dcli_readstruct_find( filename, struct_name, &e_list);
-
-	for ( element_p = e_list; element_p; element_p = element_p->next)
-	{
-	  printf( "%s	type: %d	size: %d	struct: %d	undef: %d\n", 
-		element_p->name, element_p->type, element_p->size, element_p->struct_begin,
-		element_p->undefined);
-	}
-
-}
-#endif

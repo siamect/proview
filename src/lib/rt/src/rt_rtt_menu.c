@@ -2900,18 +2900,6 @@ int	rtt_menu_new(
 	      rtt_get_next_item_down( ctx);
 	      rtt_menu_select( ctx);
 	      break;
-#if 0
-	    case RTT_K_ARROW_LEFT:
-	      rtt_menu_unselect( ctx);
-	      rtt_get_next_item_left( ctx);
-	      rtt_menu_select( ctx);
-	      break;
-	    case RTT_K_ARROW_RIGHT:
-	      rtt_menu_unselect( ctx);
-	      rtt_get_next_item_right( ctx);
-	      rtt_menu_select( ctx);
-	      break;
-#endif
 	    case RTT_K_NEXTPAGE:
 	      /* Next page */
 	      sts = rtt_get_next_page( ctx);	
@@ -3313,18 +3301,6 @@ int	rtt_menu_upd_new(
 	      rtt_get_next_item_down( ctx);
 	      rtt_menu_select( ctx);
 	      break;
-#if 0
-	    case RTT_K_ARROW_LEFT:
-	      rtt_menu_unselect( ctx);
-	      rtt_get_next_item_left( ctx);
-	      rtt_menu_select( ctx);
-	      break;
-	    case RTT_K_ARROW_RIGHT:
-	      rtt_menu_unselect( ctx);
-	      rtt_get_next_item_right( ctx);
-	      rtt_menu_select( ctx);
-	      break;
-#endif
 	    case RTT_K_NEXTPAGE:
 	      /* Next page */
 	      sts = rtt_get_next_page( ctx);	
@@ -6194,28 +6170,6 @@ static int	rtt_attribute_elements(
 	    strcat( parnameindex, nr);
 	    strcat( parameter_name, nr);
 	  }
-
-#if 0
-	  if ( parameter_class == pwr_eClass_Input && rtt_mode_address) {
-	    /* Add the content of the pointer */
-	    sprintf( parnameindex,"%8u    ", 
-			(unsigned int)(parameter_ptr - 4 + rtt_rtdb_offset));
-	    strcat( parnameindex, parname);
-	    strcat( parnameindex, "P");
-
-	    sts = rtt_menu_upd_list_add( &menulist, i, parameter_count,
-		parnameindex,
-		0,
-		&rtt_objdid_parameter,
-		0, objid, 0, 0, 0, 0, 
-		parameter_name, RTT_PRIV_NOOP, parameter_ptr - 4, 
-		pwr_eType_Int32, 
-		aflags, 4, pwr_cNDlid, 0, 0, 0, 0,
-		0.0, 0.0, RTT_DATABASE_GDH, 0);
-	      if ( EVEN(sts)) return sts;
-	    i++;
-	  }
-#endif
 
 	  /* store subid only for the first element */
 	  if ( (j > 0) || (parameter_ptr == 0))

@@ -4341,46 +4341,6 @@ static int gccm_func_fprintf(
       arg_p = arg_p->next;
     }
   }
-
-#if 0
-  if ( arg_count == 2)
-    fprintf( file, format);
-  else if ( arg_count == 3)
-  {
-    arg_p3 = arg_p2->next;
-    if ( arg_p3->value_decl == K_DECL_FLOAT)
-      sts = fprintf( file, format, arg_p3->value_float);
-    else if ( arg_p3->value_decl == K_DECL_INT)
-      sts = fprintf( file, format, arg_p3->value_int);
-    else if ( arg_p3->value_decl == K_DECL_STRING)
-      sts = fprintf( file, format, arg_p3->value_string);
-  }
-  else if ( arg_count == 4)
-  {
-    arg_p3 = arg_p2->next;
-    arg_p4 = arg_p3->next;
-    if ( arg_p3->value_decl == K_DECL_FLOAT && arg_p4->value_decl == K_DECL_FLOAT)
-      sts = fprintf( file, format, arg_p3->value_float, arg_p4->value_float);
-    else if ( arg_p3->value_decl == K_DECL_FLOAT && arg_p4->value_decl == K_DECL_INT)
-      sts = fprintf( file, format, arg_p3->value_float, arg_p4->value_int);
-    else if ( arg_p3->value_decl == K_DECL_FLOAT && arg_p4->value_decl == K_DECL_STRING)
-      sts = fprintf( file, format, arg_p3->value_float, arg_p4->value_string);
-    else if ( arg_p3->value_decl == K_DECL_INT && arg_p4->value_decl == K_DECL_FLOAT)
-      sts = fprintf( file, format, arg_p3->value_int, arg_p4->value_float);
-    else if ( arg_p3->value_decl == K_DECL_INT && arg_p4->value_decl == K_DECL_INT)
-      sts = fprintf( file, format, arg_p3->value_int, arg_p4->value_int);
-    else if ( arg_p3->value_decl == K_DECL_INT && arg_p4->value_decl == K_DECL_STRING)
-      sts = fprintf( file, format, arg_p3->value_int, arg_p4->value_string);
-    else if ( arg_p3->value_decl == K_DECL_STRING && arg_p4->value_decl == K_DECL_FLOAT)
-      sts = fprintf( file, format, arg_p3->value_string, arg_p4->value_float);
-    else if ( arg_p3->value_decl == K_DECL_STRING && arg_p4->value_decl == K_DECL_INT)
-      sts = fprintf( file, format, arg_p3->value_string, arg_p4->value_int);
-    else if ( arg_p3->value_decl == K_DECL_STRING && arg_p4->value_decl == K_DECL_STRING)
-      sts = fprintf( file, format, arg_p3->value_string, arg_p4->value_string);
-  }
-  else
-    return CCM__ARGMISM;
-#endif
   *return_decl = K_DECL_INT;
   *return_int = sts;
   return 1;
@@ -4478,45 +4438,6 @@ static int gccm_func_sprintf(
       arg_p = arg_p->next;
     }
   }
-#if 0
-  if ( arg_count == 2)
-    sprintf( arg_p1->value_string, format);
-  else if ( arg_count == 3)
-  {
-    arg_p3 = arg_p2->next;
-    if ( arg_p3->value_decl == K_DECL_FLOAT)
-      sts = sprintf( arg_p1->value_string, format, arg_p3->value_float);
-    else if ( arg_p3->value_decl == K_DECL_INT)
-      sts = sprintf( arg_p1->value_string, format, arg_p3->value_int);
-    else if ( arg_p3->value_decl == K_DECL_STRING)
-      sts = sprintf( arg_p1->value_string, format, arg_p3->value_string);
-  }
-  else if ( arg_count == 4)
-  {
-    arg_p3 = arg_p2->next;
-    arg_p4 = arg_p3->next;
-    if ( arg_p3->value_decl == K_DECL_FLOAT && arg_p4->value_decl == K_DECL_FLOAT)
-      sts = sprintf( arg_p1->value_string, format, arg_p3->value_float, arg_p4->value_float);
-    else if ( arg_p3->value_decl == K_DECL_FLOAT && arg_p4->value_decl == K_DECL_INT)
-      sts = sprintf( arg_p1->value_string, format, arg_p3->value_float, arg_p4->value_int);
-    else if ( arg_p3->value_decl == K_DECL_FLOAT && arg_p4->value_decl == K_DECL_STRING)
-      sts = sprintf( arg_p1->value_string, format, arg_p3->value_float, arg_p4->value_string);
-    else if ( arg_p3->value_decl == K_DECL_INT && arg_p4->value_decl == K_DECL_FLOAT)
-      sts = sprintf( arg_p1->value_string, format, arg_p3->value_int, arg_p4->value_float);
-    else if ( arg_p3->value_decl == K_DECL_INT && arg_p4->value_decl == K_DECL_INT)
-      sts = sprintf( arg_p1->value_string, format, arg_p3->value_int, arg_p4->value_int);
-    else if ( arg_p3->value_decl == K_DECL_INT && arg_p4->value_decl == K_DECL_STRING)
-      sts = sprintf( arg_p1->value_string, format, arg_p3->value_int, arg_p4->value_string);
-    else if ( arg_p3->value_decl == K_DECL_STRING && arg_p4->value_decl == K_DECL_FLOAT)
-      sts = sprintf( arg_p1->value_string, format, arg_p3->value_string, arg_p4->value_float);
-    else if ( arg_p3->value_decl == K_DECL_STRING && arg_p4->value_decl == K_DECL_INT)
-      sts = sprintf( arg_p1->value_string, format, arg_p3->value_string, arg_p4->value_int);
-    else if ( arg_p3->value_decl == K_DECL_STRING && arg_p4->value_decl == K_DECL_STRING)
-      sts = sprintf( arg_p1->value_string, format, arg_p3->value_string, arg_p4->value_string);
-  }
-  else
-    return CCM__ARGMISM;
-#endif
   arg_p1->value_returned = 1;
   *return_decl = K_DECL_INT;
   *return_int = sts;
@@ -5875,58 +5796,3 @@ static char *gccm_gets( char *str, int size, char  *inbuff,
 	}
 	return (char *) 1;
 }
-
-
-
-#if 0
-/************************* TEST ***********************************/
-static int test_deffilename_func( char *outfile, char *infile, void *client_data)
-{
-  strcpy( outfile, infile);
-  printf( "Default filename: %s\n", outfile);
-  return 1;
-}
-
-static int test_externcmd_func( char *cmd, void *client_data)
-{
-  printf( "Extern cmd: %s\n", cmd);
-  return 1;
-}
-
-main()
-{
-  char		str[K_LINE_SIZE];
-  int		sts;
-  int		appl_sts;
-  void		*gccm_ctx;
-  char		cmd[256];
-  int		resume;
-
-  strcpy( str, "gccm.txt argument1  argument2 argument3");
-/****
-  sts = gccm_file_exec( str, test_externcmd_func, 
-		test_deffilename_func, NULL, &appl_sts, 1, NULL, 0, 0, NULL);
-
-  printf( "Appl sts : %d\n", appl_sts);
-***/
-  resume = 0;
-  for (;;)
-  {
-    sts = gccm_file_exec( str, test_externcmd_func, 
-		test_deffilename_func, NULL, &appl_sts, 1, &gccm_ctx, 1, 
-		resume, cmd, NULL);
-    if ( sts == CCM__EXTERNFUNC)
-    {
-      printf( "Extern cmd returnmode: %s\n", cmd);
-      resume = 1;
-    }
-    else
-    {
-      printf( "Appl sts : %d\n", appl_sts);
-      break;
-    }
-  }
-  exit(1);
-}
-#endif
-

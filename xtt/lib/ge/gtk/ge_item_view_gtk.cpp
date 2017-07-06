@@ -498,18 +498,4 @@ void select_tree_item_pos( GtkWidget *tree_widget, gint x, gint y)
 
 void autosave_toggled( GtkToggleButton *autosave_button, gpointer read)
 {
-#if 0
-  GSettings *s;
-  gboolean autosave;
-
-  s = g_settings_new( "org.gtk.proview");
-  if ( (bool) read) {
-    autosave = g_settings_get_boolean( s, "autosave");
-    gtk_toggle_button_set_active( autosave_button, autosave);
-  }
-  else {
-    autosave = gtk_toggle_button_get_active( autosave_button);
-    g_settings_set_boolean( s, "autosave", autosave);
-  }
-#endif
 }

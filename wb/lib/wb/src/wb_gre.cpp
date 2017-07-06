@@ -764,18 +764,6 @@ void WGre::search_rectangle_create( vldh_t_node node)
   searchrect_node_id = node->hn.node_id;
 }
 
-#if 0
-//
-//	Load colors, font and cursor for the neted widget.
-//	Inits the goe graph_table.
-//
-void WGre::create_cursors()
-{
-  /* Create colors and fonts for this widget */
-  goen_create_cursors( flow_widget, &cursors);
-}
-#endif
-
 //
 //	Undeletes all nodes and connections in delete list.
 // 	Informs the user by gre_message if there is nothing to undelete
@@ -1654,36 +1642,6 @@ int WGre::flow_cb( FlowCtx *ctx, flow_tEvent event)
 			  gre->popupmenu_mode, current_node, unselect);
     break;
   }
-#if 0
-  case flow_eEvent_MB1ClickCtrl: {
-    char			help_title[32];
-    vldh_t_node		node;
-    vldh_t_con		con;
-    int			size, sts;
-      
-    if ( event->object.object_type == flow_eObjectType_Node) {
-      flow_GetUserData( event->object.object, (void **)&node);
-      sts = ldh_ObjidToName( (node->hn.wind)->hw.ldhses,
-			     cdh_ClassIdToObjid( node->ln.cid), ldh_eName_Object,
-			     help_title, sizeof( help_title), &size);
-      if ( EVEN(sts)) return 1;
-      (gre->gre_help) ( gre, help_title);
-    }
-    if ( event->object.object_type == flow_eObjectType_Con) {
-      flow_GetUserData( event->object.object, (void **)&con);
-      sts = ldh_ObjidToName( (gre->wind)->hw.ldhses, 
-			     cdh_ClassIdToObjid( con->lc.cid), ldh_eName_Object,
-			     help_title, sizeof( help_title), &size);
-      if ( EVEN(sts)) return 1;
-      (gre->gre_help) ( gre, help_title);
-    }
-    else {
-      gre->message( "No hit in object");
-      BEEP;
-    }	
-    break;
-  }
-#endif
   case flow_eEvent_MB1DoubleClickShiftCtrl: {
     /* Copy */
     if ( event->object.object_type == flow_eObjectType_Node) {
@@ -1748,42 +1706,6 @@ WGre::WGre( void *wg_parent_ctx,
 
 int WGre::init()
 {
-#if 0
-  FlowWidget	flow_widget;
-  flow_sAttributes flow_attr;
-  unsigned long	mask;
-
-  flow_widget = (FlowWidget) this->flow_widget;
-  flow_ctx = (flow_tCtx)flow_widget->flow.flow_ctx;
-
-  mask = 0;
-  flow_attr.base_zoom_factor = 450;
-  mask |= flow_eAttr_base_zoom_factor;
-  flow_attr.grid_size_x = 0.05;
-  mask |= flow_eAttr_grid_size_x;
-  flow_attr.grid_size_y = 0.05;
-  mask |= flow_eAttr_grid_size_y;
-  flow_attr.grid_on = 1;
-  mask |= flow_eAttr_grid_on;
-  flow_attr.user_highlight = 0;
-  mask |= flow_eAttr_user_highlight;
-  flow_attr.draw_delta = 0.015;
-  mask |= flow_eAttr_draw_delta;
-  flow_attr.grafcet_con_delta = 0.05;
-  mask |= flow_eAttr_grafcet_con_delta;
-  flow_attr.refcon_width = 0.065;
-  mask |= flow_eAttr_refcon_width;
-  flow_attr.refcon_height = 0.035;
-  mask |= flow_eAttr_refcon_height;
-  flow_attr.refcon_linewidth = 2;
-  mask |= flow_eAttr_refcon_textsize;
-  flow_attr.refcon_textsize = GOEN_F_TEXTSIZE;
-  mask |= flow_eAttr_refcon_linewidth;
-  flow_attr.application_paste = 1;
-  mask |= flow_eAttr_application_paste;
-  flow_SetAttributes( flow_ctx, &flow_attr, mask);
-  flow_SetCtxUserData( flow_ctx, this);
-#endif
   return GRE__SUCCESS;
 }
 
@@ -3118,38 +3040,6 @@ int WGre::redraw()
 {
   flow_Reconfigure( flow_ctx );
 
-#if 0
-  /* This is a fix to update width and height which has to be done
-     after upgrade from V2.7. This fix can be removed in later versions */
-
-  {
-    int			i;
-    double		ur_x, ur_y, ll_x, ll_y;
-    vldh_t_node		*nodelist;
-    vldh_t_node		*node_ptr;
-    int			sts;
-    vldh_t_wind		wind;
-    unsigned long		node_count;
-
-    wind = gre->wind;
-    sts = vldh_get_nodes( wind, &node_count, &nodelist);
-    if ( EVEN(sts)) return sts;
-
-    node_ptr = nodelist;
-    for ( i = 0; i < node_count; i++) {
-      flow_MeasureNode( (*node_ptr)->hn.node_id,
-			&ll_x, &ll_y, &ur_x, &ur_y);
-      (*node_ptr)->ln.width = ur_x - ll_x;
-      (*node_ptr)->ln.height = ur_y - ll_y;
-      flow_GetNodePosition( (*node_ptr)->hn.node_id, &ll_x, &ll_y);
-      (*node_ptr)->ln.x = ll_x;
-      (*node_ptr)->ln.y = ll_y;
-      vldh_nodemodified( *node_ptr);
-      node_ptr++;
-    }
-    if ( node_count > 0) free((char *) nodelist);
-  }
-#endif
   return GRE__SUCCESS;
 }
 

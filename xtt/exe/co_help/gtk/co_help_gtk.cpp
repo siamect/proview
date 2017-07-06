@@ -85,18 +85,6 @@ CoHelpGtk::CoHelpGtk( int argc, char *argv[], int *return_sts) :
   CoHelpMain( argc, argv, return_sts)
 {
   pwr_tStatus   sts;
-#if 0
-  const int	window_width = 400;
-  const int    	window_height = 700;
-  char		title[120] = "Xtt ";
-
-  // Gtk
-  toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
-					 "default-height", window_height,
-					 "default-width", window_width,
-					 "title", title,
-					 NULL);
-#endif
   // Create help window
   CoXHelp *xhelp = new CoXHelpGtk( 0 /*toplevel*/, this, xhelp_eUtility_Xtt, &sts);
   // xhelp->open_URL_cb = open_URL_cb;

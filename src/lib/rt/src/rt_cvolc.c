@@ -121,8 +121,6 @@ fetch (
   return rop;
 }
 
-
-#if 1
 void *
 cvolc_GetObjectInfo (
   pwr_tStatus		*sts,
@@ -234,44 +232,6 @@ cvolc_GetObjectInfo (
     return p;
   }
 }
-#else
-void *
-cvolc_GetObjectInfo (
-  pwr_tStatus		*sts,
-  gdb_sNode		*np,
-  pwr_sAttrRef		*arp,
-  void			*p,
-  int			size
-)
-{
-  qcom_sQid		tgt;
-  qcom_sPut		put;
-  net_sGetObjectInfo	*smp;	/* Send message.  */
-  net_sGetObjectInfoR	*rmp;	/* Receive message.  */
-
-  gdb_AssumeUnlocked;
-
-  smp = net_Alloc(sts, &put, sizeof(*smp), net_eMsg_getObjectInfo);
-  if (smp == NULL) return sts;
-
-  tgt = np->handler;
-  smp->aref = *arp;
-
-  rmp = net_Request(sts, &tgt, &put, NULL, net_eMsg_getObjectInfoR, 0, 0);
-
-  if (rmp == NULL) {
-    return NULL;
-  } else {
-    if (ODD(rmp->sts)) {
-      size = MIN(arp->Size, size);
-      ndc_ConvertData(sts, np, arp, p, rmp->info, size, ndc_eOp_decode);
-    }
-    if (sts != NULL) *sts = rmp->sts;
-    net_Free(NULL, rmp);
-    return p;
-  }
-}
-#endif
 
 /* Lock a cached object, i.e. exclude it
    from cache trim.  */

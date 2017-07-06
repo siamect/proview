@@ -402,30 +402,6 @@ static pwr_tStatus DeleteObjects (
   return sts;
 }
 
-#if 0
-static void HelpClassErrorCb ()
-{
-  printf ("HelpClass error\n");
-}
-static pwr_tStatus HelpClass (
-  ldh_sMenuCall *ip
-) {
-  pwr_tStatus sts;
-  ldh_sSessInfo Info;
-  int size;
-  pwr_tFullName Name;
-
-  sts = ldh_ObjidToName(ip->PointedSession, ip->Pointed.Objid, 
-    ldh_eName_Object, Name, sizeof(Name), &size); 
-  if (EVEN(sts))
-    return sts;
-  DXmHelpSystemDisplay (help_ctx, HELP_FILE, "topic", Name, 
-    HelpClassErrorCb, NULL); 
-
-  return sts;
-}
-#endif
-
 static pwr_tStatus MoveObject (
   ldh_sMenuCall *ip
 ) {
@@ -804,16 +780,6 @@ static pwr_tStatus configure_object( ldh_sMenuCall *ip, pwr_sAttrRef *aref,
 				sizeof(disable));
       if ( EVEN(sts)) return sts;
     }
-#if 0
-    if ( bodydef[i].Par->Param.Info.Flags & PWR_MASK_CLASS) {
-      // Examine object attribute
-      sts = ldh_ArefANameToAref( ip->PointedSession, aref, bodydef[i].ParName, &aaref);
-      if ( EVEN(sts)) return sts;
-
-      sts = configure_object( ip, &aaref, disable_mask, disableattr_cnt);
-      if ( EVEN(sts)) return sts;
-    }
-#endif
   }
   free( (char *)bodydef);
 

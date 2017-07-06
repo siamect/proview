@@ -143,16 +143,14 @@ typedef struct {
 } xtt_sClassBinding;
 
 /* Base methods */
-#if 1 //defined (OS_LYNX)  || defined (OS_LINUX)
-# define pwr_BindXttMethods(Class) xtt_sMethodBinding pwr_g ## Class ## _XttMethods[]
-# define pwr_BindXttClasses(Type) xtt_sClassBinding pwr_g ## Type ## _XttClassMethods[]
-# if __GNUC__ < 3 || (__GNUC__ == 3 && __GNUC_MINOR__ < 4)
+#define pwr_BindXttMethods(Class) xtt_sMethodBinding pwr_g ## Class ## _XttMethods[]
+#define pwr_BindXttClasses(Type) xtt_sClassBinding pwr_g ## Type ## _XttClassMethods[]
+#if __GNUC__ < 3 || (__GNUC__ == 3 && __GNUC_MINOR__ < 4)
 # define pwr_BindXttClass(Class) {#Class, (xtt_sMethodBinding (*)[0])pwr_g ## Class ## _XttMethods}
-# else
+#else
 # define pwr_BindXttClass(Class) {#Class, (xtt_sMethodBinding (*)[])pwr_g ## Class ## _XttMethods}
-# endif
-# define pwr_BindXttMethod(Method) {#Method, (pwr_tStatus (*)( xmenu_sMenuCall *))Method}
 #endif
+#define pwr_BindXttMethod(Method) {#Method, (pwr_tStatus (*)( xmenu_sMenuCall *))Method}
 
 #define pwr_NullMethod {"", NULL}
 

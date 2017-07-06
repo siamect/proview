@@ -272,35 +272,4 @@ public:
     wbl_object *o;
 };
 
-#if 0
-// Factory is needed in Antrl 2.7.3, not used in 2.7.1
-class wb_wblfactory : public ASTFactory {
- public:
-  typedef RefAST (*factory_type)();
-  wb_wblfactory() : nodeFactory(&wb_wblnode::factory) {}
-  ref_wblnode create( ref_wblnode tr) {
-    if ( !tr)
-      return (ref_wblnode) nullAST;
-    
-    ref_wblnode t = (ref_wblnode)(nodeFactory)();
-    t->initialize(tr);
-    return t;
-  }
-  ref_wblnode dup( ref_wblnode t) {
-    return create(t);
-  }
- private:
-  factory_type nodeFactory;
-};
 #endif
-
-
-#endif
-
-
-
-
-
-
-
-

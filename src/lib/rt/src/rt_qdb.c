@@ -159,24 +159,10 @@ evaluateInit (
      (a minimal system that need to extend the pool heavily) is
      600k + 255*300k = 146.5Mb.  */
 
-#if 0
-  errh_Info("Nodes      : %d : %d bytes", ip->nodes, ip->nodes * sizeof(qdb_sNode));
-  errh_Info("Queues     : %d : %d bytes", ip->queues, ip->queues * sizeof(qdb_sQue));
-  errh_Info("Appls      : %d : %d bytes", ip->appls, ip->appls * sizeof(qdb_sAppl));
-  errh_Info("Small buff : %d : %d bytes", ip->sbufs, ip->sbufs * ip->size_sbuf);
-  errh_Info("Medium buff: %d : %d bytes", ip->mbufs, ip->mbufs * ip->size_mbuf);
-  errh_Info("Large buff : %d : %d bytes", ip->lbufs, ip->lbufs * ip->size_lbuf);
-#endif
-
   ip->pool_isize =
     ip->nodes	* sizeof(qdb_sNode) +
     ip->queues	* sizeof(qdb_sQue) +
     ip->appls	* sizeof(qdb_sAppl);
-#if 0
-    ip->sbufs	* ip->size_sbuf +
-    ip->mbufs	* ip->size_mbuf +
-    ip->lbufs	* ip->size_lbuf;
-#endif
 
   ip->pool_isize = MAX(ip->pool_isize, qdb_cMin_pool_isize);
   ip->pool_esize = ip->pool_isize / 2;
@@ -700,10 +686,6 @@ qdb_CreateDb (
   *sts = sync_CondInit(&qdb->thread_lock.cond);
   if (EVEN(*sts)) return NULL;
 
-#if 0
-  pool_AllocLookasideSegment(sts, &qdb->pool, ip->objects, sizeof(qdb_sObject));
-#endif
-
   qdb_ScopeLock {
 
     /* Initiate all list headers.  */
@@ -749,10 +731,6 @@ qdb_CreateDb (
     np = qdb->my_node = qdb_AddNode(sts, qdb->my_nid, qdb_mAdd_failIfAdded);
     if (qdb->my_node == NULL) errh_Bugcheck(*sts, "creating local node");
     qdb_Platform(np);
-
-#if 0
-    gethostname(np->name, sizeof(np->name));
-#endif
 
     np->sa.sin_family = AF_INET;  
     np->sa.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -1204,9 +1182,6 @@ qdb_Request (
 
   gqp->rid = rid = ++qdb->g->rid;
   pbp->b.info.rid = rid;
-#if 0
-  pool_Qremove(sts, &qdb->pool, &pbp->c.ll);
-#endif
 
   gqp->flags.b.reply = 1;
   if (!qdb_Enque(sts, pbp, pqp))

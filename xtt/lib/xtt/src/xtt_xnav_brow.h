@@ -47,9 +47,6 @@ class XNavBrow {
     XNavBrow( BrowCtx *brow_ctx, void *brow_userdata, brow_eUserType brow_usertype) : 
       ctx(brow_ctx), userdata(brow_userdata), usertype(brow_usertype)
       { strcpy( push_command, "");};
-#if 0
-    ~XNavBrow();
-#endif
 
     BrowCtx		*ctx;
     void		*userdata;

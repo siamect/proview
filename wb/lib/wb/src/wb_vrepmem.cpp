@@ -147,18 +147,6 @@ wb_vrepmem::wb_vrepmem( wb_erep *erep, pwr_tVid vid) :
 {
   strcpy( m_filename, "");
 
-#if 0
-  pwr_tStatus sts;
-
-  // Create the volume object
-  wb_cdrep *cdrep = m_merep->cdrep( &sts, pwr_eClass_VolatileVolume);
-  wb_cdef cdef = wb_cdef( cdrep);
-  wb_destination d = wb_destination( pwr_cNObjid, ldh_eDest_IntoFirst);
-  wb_name n = wb_name("Tmp");
-  
-  wb_orep *o = createObject( &sts, cdef, d, n);
-  delete o;
-#endif
   m_vid = vid;
   m_cid = pwr_eClass_VolatileVolume;
 }
@@ -1737,15 +1725,6 @@ bool wb_vrepmem::importPasteObject(pwr_tOid destination, ldh_eDest destcode,
 	if ( strcmp( name, "Template") == 0 && 
 	     pmemo->m_cid == pwr_eClass_ClassDef &&
 	     !cdh_ObjidIsNull( boid)) {
-#if 0
-	  // Unable to paste a template object correctly, remove it
-	  delete memo;
-
-	  // Link any forward sibling to backward sibling
-	  pwr_tOix boix = importTranslate( boid.oix);
-	  importTranslationTableInsert( oid.oix, boix);
-	  return true;
-#endif
 	}
       }
       memo->fth = pmemo;
@@ -1964,15 +1943,6 @@ bool wb_vrepmem::importVolume( wb_export &e)
   switch( cid()) {
   case pwr_eClass_ClassVolume:
   case pwr_eClass_DetachedClassVolume: {
-    // If classvolume, insert itself into its merep
-#if 0
-    m_merep = new wb_merep( *m_erep->merep(), this);
-    wb_mvrep *mvrep = m_merep->volume( &sts, vid());
-    if ( ODD(sts))
-      m_merep->removeDbs( &sts, mvrep);
-    m_merep->addDbs( &sts, (wb_mvrep *)this);
-    m_nRef--;
-#endif
     m_nextOix = ((pwr_sClassVolume *)volume_object->rbody)->NextOix;
     break;
   }

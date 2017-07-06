@@ -651,18 +651,6 @@ int FlowDrawXLib::event_handler( FlowCtx *ctx, XEvent event)
 	  break;
 	case Button3:
 	  button3_pressed = 1;
-#if 0
-	  if ( (event.xbutton.state & ShiftMask) && 
-	       !(event.xbutton.state & ControlMask))
-	    sts = ctx->event_handler( flow_eEvent_MB3PressShift, event.xbutton.x, event.xbutton.y, 0, 0);
-	  else if ( !(event.xbutton.state & ShiftMask) && 
-		    (event.xbutton.state & ControlMask))
-	    sts = ctx->event_handler( flow_eEvent_MB3PressShift, event.xbutton.x, event.xbutton.y, 0, 0);
-	  else if (  (event.xbutton.state & ShiftMask) && 
-		     (event.xbutton.state & ControlMask))
-	    sts = ctx->event_handler( flow_eEvent_MB3PressShiftCtrl, event.xbutton.x, event.xbutton.y, 0, 0);
-	  else
-#endif
 	    sts = ctx->event_handler( flow_eEvent_MB3Press, event.xbutton.x, event.xbutton.y, 0, 0);
 	  break;
 	}
@@ -706,18 +694,6 @@ int FlowDrawXLib::event_handler( FlowCtx *ctx, XEvent event)
 	      sts = ctx->event_handler( flow_eEvent_MB2Click, event.xbutton.x, event.xbutton.y, 0, 0);
 	    break;
 	  case Button3:
-#if 0
-	    if ( (event.xbutton.state & ShiftMask) && 
-		 !(event.xbutton.state & ControlMask))
-	      sts = ctx->event_handler( flow_eEvent_MB3ClickShift, event.xbutton.x, event.xbutton.y, 0, 0);
-	    else if ( !(event.xbutton.state & ShiftMask) && 
-		      (event.xbutton.state & ControlMask))
-	      sts = ctx->event_handler( flow_eEvent_MB3ClickCtrl, event.xbutton.x, event.xbutton.y, 0, 0);
-	    else if (  (event.xbutton.state & ShiftMask) && 
-		       (event.xbutton.state & ControlMask))
-	      sts = ctx->event_handler( flow_eEvent_MB3ClickShiftCtrl, event.xbutton.x, event.xbutton.y, 0, 0);
-	    else
-#endif
 	      sts = ctx->event_handler( flow_eEvent_MB3Click, event.xbutton.x, event.xbutton.y, 0, 0);
 	    break;
 	  }
@@ -772,19 +748,6 @@ int FlowDrawXLib::event_handler( FlowCtx *ctx, XEvent event)
 	      sts = ctx->event_handler( flow_eEvent_MB2DoubleClick, event.xbutton.x, event.xbutton.y, 0, 0);
 	    break;
 	  case Button3:
-#if 0
-	    if ( (event.xbutton.state & ShiftMask) && 
-		 !(event.xbutton.state & ControlMask))
-	      sts = ctx->event_handler( flow_eEvent_MB3DoubleClickShift, event.xbutton.x, event.xbutton.y, 0, 0);
-	    else if ( !(event.xbutton.state & ShiftMask) && 
-		      (event.xbutton.state & ControlMask))
-	      sts = ctx->event_handler( flow_eEvent_MB3DoubleClickCtrl, event.xbutton.x, event.xbutton.y, 0, 0);
-	    else if ( (event.xbutton.state & ShiftMask) && 
-		      (event.xbutton.state & ControlMask))
-	      sts = ctx->event_handler( flow_eEvent_MB3DoubleClickShiftCtrl, event.xbutton.x, event.xbutton.y, 0, 0);
-	    else
-	      sts = ctx->event_handler( flow_eEvent_MB3DoubleClick, event.xbutton.x, event.xbutton.y, 0, 0);
-#endif
 	    break;
 	  }
 	}
@@ -1655,11 +1618,6 @@ void FlowDrawXLib::move_input( FlowCtx *ctx, void *data, int x, int y,
     annot_data->y = y;
   }
   XtMoveWidget( annot_data->w, annot_data->x, annot_data->y - annot_data->height);
-#if 0
-  XtSetArg(args[i],XmNx, text_x + x); i++;
-  XtSetArg(args[i],XmNy, text_y + y); i++;
-  XtSetValues( annot_data->w, args, i);
-#endif
 }
 
 void FlowDrawXLib::set_inputfocus( FlowCtx *ctx)
@@ -1810,13 +1768,3 @@ int FlowDrawXLib::image_load( const char *imagefile, float scale, float nav_scal
 #endif
   return 1;
 }
-
-
-#if 0
-void draw_set_widget_inputfocus( Widget w)
-{
-  XSetInputFocus( XtDisplay(w), XtWindow(w), 
-		RevertToParent, CurrentTime);
-}
-#endif
-

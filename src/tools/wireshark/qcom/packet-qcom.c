@@ -1733,19 +1733,6 @@ dissect_qcom(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree)
   // which ports the packet came from and went to. Also, we indicate the type 
   // of packet.
 
-#if 0  
-  // This is not a good way of dissecting packets. The tvb length should
-  // be sanity checked so we aren't going past the actual size.
-
-  type = tvb_get_guint8( tvb, 4 ); // Get the type byte
-
-  if (check_col(pinfo->cinfo, COL_INFO)) {
-    col_add_fstr(pinfo->cinfo, COL_INFO, "%d > %d Info Type:[%s]",
-		 pinfo->srcporct, pinfo->destport, 
-		 val_to_str(type, packettypenames, "Unknown Type:0x%02x"));
-  }
-#endif
-
   if (tree) { /* we are being asked for details */
     guint32 offset = 0;
 
@@ -2370,45 +2357,7 @@ dissect_qcom(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree)
 	}
       }
     }
-#if 0
-    guint32 offset = 0;
-    guint32 nodeid = 0;
-
-    qcom_item = proto_tree_add_item(tree, proto_qcom, tvb, 0, -1, FALSE);
-    qcom_tree = proto_item_add_subtree(qcom_item, ett_qcom);
-    qcom_header_tree = proto_item_add_subtree(qcom_item, ett_qcom);
-
-    qcom_sub_item = proto_tree_add_item( qcom_tree, hf_qcom_header, 
-					 tvb, offset, -1, FALSE );
-
-    qcom_header_tree = proto_item_add_subtree(qcom_sub_item, ett_qcom);
-
-    // We use tvb_memcpy to get our length value out (Host order)
-
-    tvb_memcpy(tvb, (guint32 *)&nodeid, offset, 4);
-    proto_tree_add_uint(qcom_header_tree, hf_qcom_nodeid, tvb, offset, 4, nodeid);
-
-    // We increment the offset to get past the 4 bytes indicating length
-    offset+=4;
-
-    // Here we submit the type parameter to the tree. 
-    proto_tree_add_item(qcom_header_tree, hf_qcom_type, tvb, offset, 1, FALSE);
-    type = tvb_get_guint8( tvb, offset ); // Get our type byte
-
-    offset+=1;
-    //If the type is TEXT, we add the text to the tree. 
-
-    if( type == 0 ) {
-      proto_tree_add_item( qcom_tree, hf_qcom_text, tvb, offset, length-1, FALSE );
-    }
-#endif
   }
-  
-#if 0
-  col_set_str(pinfo->cinfo, COL_PROTOCOL, "QCom");
-  /* Clear out stuff in the info column */
-  col_clear(pinfo->cinfo, COL_INFO);
-#endif
 }
 
 

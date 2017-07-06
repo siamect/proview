@@ -90,18 +90,6 @@ typedef struct {
 
 static udp_tCtx udp_ctx = 0;
 
-#if 0
-static void RemoteSleep(float time)
-{
-  struct timespec rqtp, rmtp;
-
-  rqtp.tv_sec = 0;
-  rqtp.tv_nsec = (long int) (time * 1000000000);
-  nanosleep(&rqtp, &rmtp);
-  return;
-}
-#endif
-
 void udp_Disable()
 {
   udp_ctx->Disable = 1;
@@ -413,56 +401,3 @@ pwr_tStatus udp_Init( char *remote_address, char *remote_host_name, int port)
   udp_ctx = ctx;
   return 1;
 }
-
-#if 0
-int main(int argc, char *argv[])
-{
-  struct timeval tv;
-  int sts;
-
-  udp_tCtx ctx = calloc( 1, sizeof(*ctx));
-  ctx->LocalPort = 3051;
-  ctx->RemotePort = 3051;
-  ctx->DisableHeader = 1;
-
-  /* Read arguments */
-  if (argc >= 2)
-    strcpy(ctx->RemoteAddress, argv[1]);
-  else {
-    printf( "Invalid arguments\n");
-    exit(0);
-  }
-
-  if (argc >= 3)
-    strcpy(ctx->RemoteHostName, argv[2]);
-
-  if ( argc >= 4)
-    ctx->Receive = 1;
-
-  CreateSocket( ctx);
-
-  for (;;) {
-
-    RemoteSleep(TIME_INCR);
-
-    if ( ctx->Receive) {
-      tv.tv_sec = 0;
-      tv.tv_usec = 0;
-
-      FD_ZERO(&fds);
-      FD_SET(my_socket, &fds);
-      sts = select(32, &fds, NULL, NULL, &tv);
-
-      if (sts > 0) UdpReceive( ctx);
-
-      if (sts < 0) {
-	errh_Error("Select, %d", sts);
-	exit(0);
-      }
-    }
-    else {
-      UdpSend( ctx, "Hej hopp", 8);
-    }
-  }
-}
-#endif

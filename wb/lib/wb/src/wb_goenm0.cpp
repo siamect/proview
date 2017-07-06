@@ -170,11 +170,6 @@ int goen_create_nodetype_m0(
 	     	flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, flow_eAnnotType_OneLine,
 		&annot_width, &annot_height, &annot_rows);
   }
-#if 0
-  sts = gre_get_annot_width( nc_pid, annot_width, 
-		(char *)annot_str, annot_count, sizeof( annot_str[0]));
-  if ( EVEN(sts)) return sts;
-#endif
 
   /* Get how many parameters there are */
   i_innr = graphbody->parameters[PAR_INPUT];
@@ -538,58 +533,6 @@ int goen_get_location_point_m0( WGre *grectx, pwr_sGraphPlcNode *graphbody,
 {
    info_pointer->y = 0;
    info_pointer->x = 0;
-#if 0
-    int  i;
-    int	ipoints;
-    int	inputpoints, outputpoints;
-    unsigned long    pointmask;
-    unsigned long    *mask_pointer;
-    int 		i_innr;
-    int 		i_internnr;
-    int			i_outnr;
-    float		ll_x,ll_y,mid_x,mid_y;
-    int			sts;
-
-	/* Get number of parameters */
-	i_innr = graphbody->parameters[PAR_INPUT];
-	i_internnr = graphbody->parameters[PAR_INTERN];
-	i_outnr = graphbody->parameters[PAR_OUTPUT];
-
-	/* Count number of inputpoints in mask  */
-	mask_pointer = mask;
-	pointmask = 1;
-	inputpoints = 0;
-	for ( i = 0; i < i_innr; i++)  
-	{
-	  inputpoints += ((*mask_pointer & pointmask) != 0);
-	  pointmask <<= 1;
-	}
-	/* Count number of outputpoints in mask  */
-	pointmask = 1;
-	outputpoints = 0;
-	mask_pointer++;
-	for ( i = 0; i < i_outnr; i++)  
-	{
-	  outputpoints += ((*mask_pointer & pointmask) != 0);
-	  pointmask <<= 1;
-	}
-	
-	sts = NetedMeasureNode( grectx->neted_window,
-			  node->hn.node_id,
-			  &ll_x,&ll_y,&mid_x,&mid_y,&f_width,&f_height);
-	tst_neted( sts, "NetedMeasureNode", 204 );
-
-	f_width -= 2* GOEN_F_LINEWIDTH;
-	f_height -= 2* GOEN_F_LINEWIDTH;
-	if ( inputpoints > 0)
-	  f_width -= f_pinlength;
-	if ( outputpoints > 0)
-	  f_width -= f_pinlength;
-
-	info_pointer->y = - f_height / 2 + f_repeat * 1.5;
-	info_pointer->x = f_width/2 - f_pinlength / 2 * ( outputpoints == 0 );
-
-#endif
 	return GOEN__SUCCESS;
 }
 

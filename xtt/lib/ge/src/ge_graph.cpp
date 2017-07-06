@@ -3534,19 +3534,6 @@ int graph_init_grow_base_cb( GlowCtx *fctx, void *client_data)
   return 1;
 }
 
-#if 0
-static int graph_init_grow_cb( GrowCtx *ctx, void *client_data)
-{
-  Graph *graph = (Graph *) client_data;
-
-  graph->grow_stack[graph->grow_cnt] = new GraphGrow( ctx, (void *)graph);
-
-  graph->grow_stack[graph->grow_cnt]->grow_setup();
-
-  return 1;
-}
-#endif
-
 void Graph::graph_attr_redraw_cb( void *gctx, void *attrctx, grow_tObject object, void *info)
 {
   Graph *graph = (Graph *)gctx;
@@ -3771,11 +3758,6 @@ static int graph_trace_connect_bc( grow_tObject object,
       old_dyn = dyn;
       dyn = new GeDyn( *nodeclass_dyn);
       old_dyn->get_hostobject( hostobject);
-#if 0
-      dyn->dyn_type1 = dyn->total_dyn_type1 = (ge_mDynType1) (dyn->dyn_type1 | dyn_type1);
-      dyn->update_elements();
-      dyn->set_hostobject( hostobject);
-#endif
       dyn->merge( *old_dyn);
       if ( old_dyn->cycle != glow_eCycle_Inherit)
 	dyn->cycle = old_dyn->cycle;
@@ -4660,13 +4642,6 @@ void Graph::get_command( char *in, char *out, GeDyn *dyn)
       default:
 	return;
       }
-#if 0
-      sts = gdh_GetObjectInfo( str, &aref, sizeof(aref));
-      if ( EVEN(sts)) return;
-      
-      sts = gdh_AttrrefToName( &aref, str, sizeof(str), cdh_mName_volumeStrict);
-      if ( EVEN(sts)) return;
-#endif
       strcat( str, end);
       strcpy( start, str);
     }
@@ -6110,12 +6085,6 @@ void GraphRecallBuff::insert( GeDyn *data, const char *data_key, grow_tObject ob
     strcpy( new_key, "");
   else
     strcpy( new_key, data_key);
-
-#if 0
-  if ( strcmp( key[0], new_key) == 0 && memcmp( data, &buff[0], sizeof(buff[0])) == 0)
-    // Identical with last one
-  return;
-#endif
 
   if ( cnt == size)
     delete buff[size-1];

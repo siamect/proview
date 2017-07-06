@@ -2561,9 +2561,6 @@ void wb_vrepced::printStructFile( bool hpp)
 	      pwr_tObjName pgmname;
 	      pwr_eBix bix = cdh_oixToBix( o_bdef->oid().oix);
 	      char structstype[3];
-#if 0
-	      int struct_filler_cnt = 0;
-#endif
 
 	      m_vrep->readBody( &sts, o_bdef, pwr_eBix_sys, &bdef_body);
 	      if ( EVEN(sts)) throw wb_error(sts);
@@ -2710,29 +2707,6 @@ void wb_vrepced::printStructFile( bool hpp)
 		      fp << "[" << adef_body.Info.Elements << "]" << alignstr << ";" << endl;
 		    else
 		      fp << alignstr << ";" << endl;
-
-#if 0
-		    int filler;
-		    if ( adef_body.Info.Size < 4) {
-		      filler = 4 - ((adef_body.Info.Elements * adef_body.Info.Size) % 4);
-		      if ( filler == 4)
-			filler = 0;
-		    }
-		    else
-		      filler = 0;
-		    
-		    if ( filler) {
-		      fp <<
-			"  " << "char" << fill( fp, 36 - strlen("char"));
-		      if ( filler == 1) {
-			fp << "filler_" << struct_filler_cnt << ";" << endl;
-		      }
-		      else {
-			fp << "filler_" << struct_filler_cnt << "[" << filler << "];" << endl;
-		      }
-		      struct_filler_cnt++;
-		    }
-#endif
 		  }
 
 		  break;

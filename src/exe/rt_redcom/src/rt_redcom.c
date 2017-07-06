@@ -82,11 +82,7 @@
 
 #define redu_qix_import ((1<<31) | 5)
 
-#if 1
-# define MAX_SEGSIZE	(8192 - sizeof(sHead))
-#else
-# define MAX_SEGSIZE	(1472 - sizeof(sHead))
-#endif
+#define MAX_SEGSIZE	(8192 - sizeof(sHead))
 #define RTT_RXMIN	0.0500 /* seconds */
 #define RTT_RXMAX	10.000 /* seconds */
 #define RACK_TMO	1
@@ -681,27 +677,6 @@ clean_insert (
   pwr_tBoolean ret_pend = FALSE;
   pwr_tBoolean first = FALSE;
 
-#if 0
-  // Print number of buffers in queue
-  static int cnt = 0;
-  int seg_cnt = 0;
-  if ( cnt >= 50  && esp->head.flags.b.first) {
-    for (sp = lst_Succ(NULL, le, &se); se != le; sp = lst_Succ(NULL, se, &se))
-      seg_cnt++;
-
-    cnt = 0;
-    printf( "0x%x %d\n", (unsigned int)le, seg_cnt);
-    if ( seg_cnt > 10) {
-      for (sp = lst_Succ(NULL, le, &se); se != le; sp = lst_Succ(NULL, se, &se)) {
-	if ( sp->bp)
-	  printf( "  %d %d 0x%x\n", sp->head.flags.b.first, sp->bp->b.msg_id, (unsigned int)sp->bp);	
-      }
-      printf( "New  %d %d 0x%x\n", esp->head.flags.b.first, esp->bp->b.msg_id, (unsigned int)esp->bp);
-    }
-  }
-  cnt++;  
-#endif
-
   li = le;
   if (esp->bp != NULL) {
     if (esp->bp->b.msg_id > 0) {
@@ -783,18 +758,6 @@ clean_insert (
     lst_InsertPred(NULL, li, &esp->c.le, esp);
     thread_MutexUnlock(&esp->lp->eseg_mutex);
   }
-  
-#if 0
-  // Test
-  static int cnt = 0;
-  if ( 0 == 0) {
-    cnt++;
-    printf("************************ %d\n", cnt);
-    for (sp = lst_Succ(NULL, le, &se); se != le; sp = lst_Succ(NULL, se, &se))
-      printf( "%x %d %s%s%s\n", (unsigned int)sp->bp, sp->head.prio, sp->head.flags.b.first ? "F" : " ",
-	      sp->head.flags.b.last ? "L" : " ", sp->head.flags.b.middle ? "M" : " ");    
-  }
-#endif
 
   return ret_pend;
 
@@ -1227,11 +1190,6 @@ get_link (
   thread_MutexLock(&l.links.mutex);
 
   lp = tree_Find(&sts, l.links.table, &nid);
-#if 0
-  // Allow unconfigured links...
-  if (lp == NULL)
-    lp = new_link(nid, mp);    
-#endif
 
   thread_MutexUnlock(&l.links.mutex);  
 
@@ -2081,23 +2039,19 @@ set_rack (
     lp->np->link.rack = sp->head.lack;
     l.config->Link[lp->idx].RackSequenceNumber = sp->head.lack.seq;
   } else if (diff > 1) {
-#if 1
     if ((++lp->np->link.err_seq % 20) == 1) {
       errh_Info("%s, %d sequence error %d segments %s : (%d)[%d]\n",
 	lp->np->name, lp->np->link.err_seq, diff - 1,
 	event_string(sp->head.flags.b.event),
 	sp->head.lack.seq, sp->head.rack.seq);
     }
-#endif
     return;
   } else {
-#if 1
     if ((++lp->np->link.err_red % 20) == 1) {
       errh_Info("%s, %d redundant segment %s : (%d)[%d]\n",
 	lp->np->name, lp->np->link.err_red, event_string(sp->head.flags.b.event),
 	sp->head.lack.seq, sp->head.rack.seq);
     }
-#endif
     return;
   }
 

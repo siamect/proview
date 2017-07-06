@@ -101,12 +101,8 @@ typedef struct {
   vol_mLink		link;
   gdb_mChange		flags;
   lst_sEntry		obj_ll;
-#if 0
-  lst_sEntry		seg_lh;
-#else
   gdb_sClass		*cp;
   void			*upd_body;
-#endif
   pwr_tUInt32		size;
   void			*body;
 } ivol_sObject;

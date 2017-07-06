@@ -56,10 +56,6 @@
 # include "co_platform.h"
 #endif
 
-#if 0
-#pragma builtins
-#endif
-
 #if defined OS_POSIX
 # include <pthread.h>
 #endif
@@ -68,12 +64,6 @@
 
 #ifndef rt_gdb_msg_h
 # include "rt_gdb_msg.h"
-#endif
-
-#if 0
-#ifndef co_cdh_h
-#include "co_cdh.h"
-#endif
 #endif
 
 #ifdef __cplusplus

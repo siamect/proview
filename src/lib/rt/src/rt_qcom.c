@@ -104,12 +104,6 @@ qcom_Alloc (
 
   qdb_ScopeLock {
 
-#if 0
-    if (qdb->ap->alloc_count >= qdb->ap->alloc_quota) {
-      *sts = QCOM__ALLOCQUOTA;
-      break;
-    }
-#endif
     bp = qdb_Alloc(sts, qdb_eBuffer_base, size);
     if (bp == NULL) break;
 

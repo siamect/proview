@@ -184,48 +184,10 @@ void FlowRadiobutton::erase( void *pos, int hot, void *node)
 
 void FlowRadiobutton::nav_draw( void *pos, int highlight, void *node)
 {
-#if 0
-  int idx;
-  if ( fix_line_width)
-  {
-    idx = line_width;
-    if ( idx < 0) return;
-  }
-  else
-  {
-    idx = ctx->nav_zoom_factor / ctx->base_zoom_factor * line_width - 1;
-  }
-  idx = MAX( 0, idx);
-  idx = MIN( idx, DRAW_TYPE_SIZE-1);
-  ctx->fdraw->nav_rect( ctx, ll.nav_z_x + ((FlowPoint *)pos)->nav_z_x - 
-	ctx->nav_offset_x, ll.nav_z_y + 
-	((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
-	ur.nav_z_x - ll.nav_z_x, ur.nav_z_y - ll.nav_z_y,
-	draw_type, idx, highlight);
-#endif
 }
 
 void FlowRadiobutton::nav_erase( void *pos, void *node)
 {
-#if 0
-  int idx;
-  if ( fix_line_width)
-  {
-    idx = line_width;
-    if ( idx < 0) return;
-  }
-  else
-  {
-    idx = ctx->nav_zoom_factor / ctx->base_zoom_factor * line_width - 1;
-  }
-  idx = MAX( 0, idx);
-  idx = MIN( idx, DRAW_TYPE_SIZE-1);
-  ctx->fdraw->nav_rect_erase( ctx, ll.nav_z_x + ((FlowPoint *)pos)->nav_z_x - 
-	ctx->nav_offset_x, ll.nav_z_y + 
-	((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
-	ur.nav_z_x - ll.nav_z_x, ur.nav_z_y - ll.nav_z_y,
-	idx);
-#endif
 }
 
 int FlowRadiobutton::event_handler( void *pos, flow_eEvent event, int x, int y,

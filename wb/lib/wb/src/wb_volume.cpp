@@ -312,16 +312,6 @@ wb_attribute wb_volume::attribute(wb_name aname)
     a.setShadowed(shadowed);
     return a;
   }
-#if 0
-  // This only work on one level attributes... TODO
-  wb_adrep *adrep = ((wb_cdrep *)cd)->adrep(&sts, aname.attributesAllTrue());
-  if (ODD(sts)) {
-    if (aname.hasAttrIndex())
-      return wb_attribute(sts, (wb_orep *)o, adrep, aname.attrIndex());
-    else
-      return wb_attribute(sts, (wb_orep *)o, adrep);
-  }
-#endif
   return wb_attribute();
 }
 
@@ -1007,62 +997,6 @@ ldh_sRefInfo *wb_volume::refinfo(wb_object o, ldh_sRefInfo *rp)
     }
   }    
 
-#if 0
-  wb_cdef cd = cdef(o);
-  wb_bdef bd = cd.bdef(pwr_eBix_rt);
-  if (!bd) return rp;
-
-  wb_attribute body = wb_attribute(bd.sts(), (wb_orep *)o, bd.name());
-  char *bp = (char *)body.value(0);
-  pwr_tOid oid;
-  pwr_sAttrRef attrref;
-
-  wb_adef ad = bd.adef();
-  while (ad) {
-    switch (ad.cid()) {
-    case pwr_eClass_Input:
-    case pwr_eClass_Output:
-    case pwr_eClass_Intern:
-    case pwr_eClass_Param:
-      switch (ad.type()) {
-      case pwr_eType_Objid:
-	for (int i = 0; i < ad.nElement(); i++) {
-	  rp->ObjRef.Total++;
-	  oid = *(pwr_tOid *)(bp + ad.offset() + i * ad.size() / ad.nElement());
-	  if (cdh_ObjidIsNotNull(oid)) {
-	    rp->ObjRef.Used++;
-	    wb_object otst = object(oid);
-	    if (!otst)
-	      rp->ObjRef.Errors++;
-	  }
-	}
-	break;
-      case pwr_eType_AttrRef:
-	for (int i = 0; i < ad.nElement(); i++) {
-	  rp->ObjRef.Total++;
-	  attrref = *(pwr_sAttrRef *)(bp + ad.offset() + i * ad.size() / ad.nElement());
-	  if (cdh_ObjidIsNotNull(attrref.Objid)) {
-	    rp->ObjRef.Used++;
-	    wb_object otst = object(attrref.Objid);
-	    if (!otst)
-	      rp->ObjRef.Errors++;
-	  }
-	}
-	break;
-      default: ;
-      }
-      break;
-    case pwr_eClass_AttrXRef:
-      // TODO
-      break;
-    case pwr_eClass_ObjXRef:
-      // TODO
-      break;
-    default: ;
-    }
-    ad = ad.next();
-  }
-#endif
   return rp;
 }
 

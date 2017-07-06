@@ -152,13 +152,6 @@ static void xtttbl_store_xtttbl( XttTbl *xtttbl)
   current_xtttbl = xtttbl;  
 }
 
-#if 0
-static void xtttbl_get_stored_xtttbl( XttTbl **xtttbl)
-{
-  *xtttbl = current_xtttbl;  
-}
-#endif
-
 static int	xtttbl_help_func(		void		*client_data,
 						void		*client_flag)
 {

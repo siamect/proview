@@ -204,7 +204,6 @@ GtkWidget *keyboardwidgetgtk_new(
   return (GtkWidget *) w;  
 }
 
-
 GtkWidget *keyboardnavwidgetgtk_new( GtkWidget *main_keyboard)
 {
   KeyboardWidgetGtk *w;
@@ -216,20 +215,3 @@ GtkWidget *keyboardnavwidgetgtk_new( GtkWidget *main_keyboard)
   w->client_data = 0;
   return (GtkWidget *) w;  
 }
-
-#if 0
-GType keyboardwidgetgtk_get_type(void)
-{
-  static GType keyboardwidgetgtk_type = 0;
-
-  if ( !keyboardwidgetgtk_type) {
-    static const GTypeInfo keyboardwidgetgtk_info = {
-      sizeof(KeyboardWidgetGtkClass), NULL, NULL, (GClassInitFunc)keyboardwidgetgtk_class_init,
-      NULL, NULL, sizeof(KeyboardWidgetGtk), 1, NULL, NULL};
-    
-    keyboardwidgetgtk_type = g_type_register_static( G_TYPE_OBJECT, "KeyboardWidgetGtk", &keyboardwidgetgtk_info, 
-					   (GTypeFlags)0);  
-  }
-  return keyboardwidgetgtk_type;
-}
-#endif

@@ -893,12 +893,6 @@ int Json::get_attribute_value( ifstream& fp, const char *attribute, char *value,
 	state[state_level] = json_eState_ExpectAttr;
 	strcpy( current_attr[attr_level], "");
       }
-#if 0
-      else if ( c == ',' && prevc == '}') {
-	if ( current_attr_invect[attr_level])
-	  current_attr_idx[attr_level]++;
-      }
-#endif
       else if ( c == '"') {
 	state[state_level] = json_eState_Attr;
 	strcpy( current_attr[attr_level], "");
@@ -907,15 +901,6 @@ int Json::get_attribute_value( ifstream& fp, const char *attribute, char *value,
     case json_eState_Attr:
       if ( c == '"') {
 	state[state_level] = json_eState_ExpectValue;
-	// printf( "Attr found \"%s\" level %d\n", current_attr[attr_level], attr_level);
-#if 0
-	for ( int j = 0; j <= attr_level; j++) {
-	  printf( "/%s", current_attr[j]);
-	  if ( current_attr_idx[j] != -1)
-	    printf( "[%d]", current_attr_idx[j]);
-	}
-	printf( "\n");
-#endif
       }
       else {
 	len = strlen( current_attr[attr_level]);

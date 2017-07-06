@@ -256,12 +256,6 @@ int CnvPdfObj::print_image()
   pwr_tFileName fname;
   int sts;
   int width, height;
-#if 0
-  unsigned char *rgb;
-  unsigned char transp[3] = {255,0,255};
-  int i, j;
-  int grey;
-#endif
   char c;
 	
   if ( strchr( text, '/') != 0)
@@ -675,41 +669,6 @@ void CnvToPdf::print_content()
       }
     }
   }
-    
-#if 0
-  ci = pdf_eId_Content;
-  x = pdf_cLeftMargin;
-  y = pdf_cPageHeight - pdf_cTopMargin;
-
-  print_pagebreak( 0);
-  print_text( Lng::translate("Contents"), style[ci].h1);
-
-  for ( int i = 0; i < (int)content.tab.size(); i++) {
-    char page_str[20];
-    CnvStyle *cstyle = &style[ci].boldtext;
-
-    fp[cf] <<
-"gsave" << endl <<
-"[1 3] 0 setdash" << endl;
-
-    sprintf( page_str, "%d", content.tab[i].page_number);
-    print_text( content.tab[i].header_number, *cstyle);
-    x = pdf_cLeftMargin + 30 + content.tab[i].header_level * 5;
-    y += cstyle->top_offset + cstyle->bottom_offset;
-    print_text( content.tab[i].text, *cstyle, pdf_mPrintMode_Start | pdf_mPrintMode_FixX);
-    x = pdf_cLeftMargin + 340;
-
-    fp[cf] <<
-x << " " << y + cstyle->bottom_offset << " lineto" << endl <<
-x << " " << y + cstyle->bottom_offset << " moveto" << endl <<
-"closepath" << endl <<
-"stroke" << endl <<
-"grestore" << endl;
-
-    print_text( page_str, *cstyle, pdf_mPrintMode_KeepY | pdf_mPrintMode_FixX);
-  }
-  print_pagebreak(0);
-#endif
 }
 
 CnvToPdf::~CnvToPdf()
@@ -874,10 +833,7 @@ scalex * width << " 0 0 " << scaley * height << " " << x << " " << y - scaley * 
 "    /W " << width  << endl <<
 "    /H " << height << endl <<
 "    /CS /G" << endl <<
-"    /BPC 8" << endl << 
-#if 0
-"    /F /AHx" << endl <<
-#endif
+"    /BPC 8" << endl <<
 "  ID" << endl;
 
   cnv_image_pixel_iter( image, image_pixel, 0, fp[cf]);

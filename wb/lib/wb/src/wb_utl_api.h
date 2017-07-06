@@ -217,19 +217,6 @@ int utl_crossref_hier_class_name (
   char		*filename
 );
 
-
-#if 0
-int utl_create_mainwindow (
-  int argc,
-  char **argv,
-  Widget *widget
-);
-
-int utl_destroy_mainwindow (
-Widget widget
-);
-#endif
-
 int utl_print_repage (
   ldh_tSesContext ldhses
 );

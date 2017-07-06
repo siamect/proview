@@ -73,12 +73,6 @@
 #include "rt_mh_outunit.h"
 #endif
 
-#if 0
-#ifndef rt_plc_timer_h
-#include "rt_plc_timer.h"
-#endif
-#endif
-
 #include "rt_gdh.h"
 #include "rt_mh_msg.h"
 #include "rt_gdh_msg.h"

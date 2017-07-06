@@ -77,10 +77,6 @@ public:
 };
 #endif
 
-#if 0 /* volatile type: do not redeclare */
-
-#endif
-
 #ifndef SOAP_TYPE_xsd__QName_
 #define SOAP_TYPE_xsd__QName_ (12)
 /* Primitive xsd:QName schema type: */

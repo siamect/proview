@@ -329,9 +329,6 @@ putUser (
   } qdb_ScopeUnlock;
 
   if (flags.b.broadcast) {
-#if 0
-    if (1) errh_Info("Sending broadcast ack: %d", info.rid);
-#endif
     qnet_SendBcastAck(&lsts, pp, np, &info);
   }
 
@@ -386,9 +383,6 @@ serviceEvent (
   if (np == qdb->my_node || np == qdb->no_node)
     return;
 
-#if 0
-  errh_Info("ServiceEvent, idx: %d, nid: %d", bp->b.info.rid, bp->b.info.sender.nid);
-#endif
   qdb_ScopeLock {
 
     bcbl = pool_Qsucc(NULL, &qdb->pool, &np->bcb_lh);

@@ -1127,13 +1127,6 @@ static int	graph_set_func(	void		*client_data,
         graph->message('E', "No current object");
         return GE__NOCURRENT;
       }
-#if 0
-      if ( grow_GetObjectType( graph->current_cmd_object) !=
-		glow_eObjectType_GrowNode) {
-        graph->message('E', "Current object type doesn't support this operation"); 
-        return GE__CURRENT_TYPE;
-      }
-#endif
       if ( EVEN( dcli_get_qualifier( "dcli_arg3", arg3_str, sizeof(arg3_str)))) {
         graph->message('E', "Syntax error");
         return GE__SYNTAX;
@@ -1503,46 +1496,6 @@ static int	graph_set_func(	void		*client_data,
       ;
     }
 
-#if 0
-      case glow_eType_Int:
-      case glow_eType_TraceColor:
-      case glow_eType_DynType1:
-      case glow_eType_Access:
-      case glow_eType_Boolean:
-      case glow_eType_Direction:
-      case glow_eType_Color:
-      case glow_eType_ToneOrColor:
-        sts = sscanf( arg3_str, "%d", &i_value);
-        if ( sts != 1)
-        {
-          graph->message('E', "Syntax error");
-          grow_FreeSubGraphAttrInfo( grow_info_sub);
-          if ( grow_info)
-            grow_FreeGraphAttrInfo( grow_info);
-          return GE__SYNTAX;
-        }
-        memcpy( grow_info_p->value_p, (char *)&i_value, sizeof(i_value));
-        break;
-      case glow_eType_Double:
-        sts = sscanf( arg3_str, "%f", &f_value);
-        if ( sts != 1)
-        {
-          graph->message('E', "Syntax error");
-          grow_FreeSubGraphAttrInfo( grow_info_sub);
-          if ( grow_info)
-            grow_FreeGraphAttrInfo( grow_info);
-          return GE__SYNTAX;
-        } 
-        d_value = double(f_value);
-        memcpy( grow_info_p->value_p, (char *)&d_value, sizeof(d_value));
-        break;
-      case glow_eType_String:
-        strncpy( (char *) grow_info_p->value_p, arg3_str, grow_info_p->size);
-        break;
-      default:
-        ;
-    }
-#endif
     grow_FreeSubGraphAttrInfo( grow_info_sub);
     if ( grow_info)
       grow_FreeGraphAttrInfo( grow_info);
