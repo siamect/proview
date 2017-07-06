@@ -494,6 +494,3 @@ void GlowArc::convert( glow_eConvert version)
   }
   }  
 }
-
-
-

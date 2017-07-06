@@ -304,4 +304,3 @@ int GlowArrow::event_handler( GlowWind *w, void *pos, glow_eEvent event, int x, 
 {
     return 0;
 }
-

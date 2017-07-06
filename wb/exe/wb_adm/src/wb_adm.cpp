@@ -133,4 +133,3 @@ int main( int argc, char *argv[])
   XtAppMainLoop(app_ctx);
   return (0);
 }
-

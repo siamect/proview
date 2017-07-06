@@ -109,6 +109,3 @@ class CnvChangeLog {
 }
 #endif
 #endif
-
-
-

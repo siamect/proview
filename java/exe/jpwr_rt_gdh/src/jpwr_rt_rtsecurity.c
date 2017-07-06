@@ -95,4 +95,3 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_RtSecurity_checkUser
   	cdhrInt_cid, jpriv, jsts);
   return return_obj; 
 }
-

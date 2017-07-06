@@ -1353,5 +1353,3 @@ xdr_qcom_sQid(XDR *xdrs, qcom_sQid *objp)
 
   return TRUE;
 }
-
-

@@ -1084,4 +1084,3 @@ attrRefToObjid(CONV_ARGS)
   }
   return TRUE;
 }    
-

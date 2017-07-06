@@ -434,10 +434,3 @@ class GlowNodeClass : public GlowArrayElem {
 
 /*@}*/
 #endif
-
-
-
-
-
-
-

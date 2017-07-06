@@ -536,5 +536,3 @@ bool rt_pvd_file::find( pwr_tOix fthoix, const char *name, pwr_tOix *oix)
   }
   return false;
 }
-
-

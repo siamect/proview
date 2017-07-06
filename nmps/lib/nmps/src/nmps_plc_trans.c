@@ -232,4 +232,3 @@ void DataSend_exec(
 	}
 	object->TriggOld = *object->TriggP;
 }
-

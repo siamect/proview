@@ -144,7 +144,3 @@ int	XCrr::crossref()
 
   return XATT__SUCCESS;
 }
-
-
-
-

@@ -219,4 +219,3 @@
     object->SetOff = 1;\
   }\
   object->InOld = in;
-

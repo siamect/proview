@@ -65,8 +65,3 @@ class CnvReadXtthelp {
 }
 #endif
 #endif
-
-
-
-
-

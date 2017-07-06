@@ -4971,4 +4971,3 @@ int ItemPnEnumSendClock::scan( GsdmlAttrNav *attrnav, void *p)
 
   return 1;
 }
-

@@ -634,10 +634,3 @@ int GrowFolder::set_folder( int idx)
 
   return 1;
 }
-
-
-
-
-
-
-

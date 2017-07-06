@@ -457,4 +457,3 @@ GsdAttrGtk::GsdAttrGtk( GtkWidget *a_parent_wid,
   wow = new CoWowGtk( toplevel);
 
 }
-

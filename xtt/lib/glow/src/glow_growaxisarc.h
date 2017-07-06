@@ -271,18 +271,3 @@ class GrowAxisArc : public GrowArc {
 
 /*@}*/
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -90,10 +90,3 @@ class CoXHelpMotif : public CoXHelp {
 };
 
 #endif
-
-
-
-
-
-
-

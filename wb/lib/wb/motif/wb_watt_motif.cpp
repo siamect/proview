@@ -546,14 +546,3 @@ WAttMotif::WAttMotif(
 					   wb_eUtility_AttributeEditor);
   }
 }
-
-
-
-
-
-
-
-
-
-
-

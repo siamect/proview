@@ -236,4 +236,3 @@ ostream& operator<< ( ostream& o, const FlowConPoint cp)
   o << '(' << cp.p.x << ',' << cp.p.y << ')'; 
   return o;
 }
-

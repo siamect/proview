@@ -69,5 +69,3 @@ class WdaNavGtk : public WdaNav {
 
 
 #endif
-
-

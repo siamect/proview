@@ -1354,4 +1354,3 @@ void VideoMgmServer::scan()
   for ( unsigned int i = 0; i < m_mgmvect.size(); i++)
     m_mgmvect[i]->cscan();
 }
-

@@ -1214,9 +1214,3 @@ void XttTrend::curve_add( pwr_tAttrRef *arp, pwr_tAttrRef *trend_arp, pwr_tStatu
     curve->configure_axes();
   }
 }
-
-
-
-
-
-

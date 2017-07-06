@@ -7826,5 +7826,3 @@ int WNav::check_new_volumename( char *vname)
   else
     return WNAV__SUCCESS;
 }
-
-

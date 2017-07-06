@@ -495,5 +495,3 @@ void Ssab_AntiSway_exec(plc_sThread *tp, pwr_sClass_Ssab_AntiSway *object)
 } /* End of AntiSway_exec */
 
 /* -------------------------------------------------------------------------------------------------------------- */
-
-

@@ -336,4 +336,3 @@ XttFileviewGtk::XttFileviewGtk( void *xn_parent_ctx, GtkWidget *xn_parent_wid, p
   // Set input focus to the scrolled list widget
   gtk_widget_grab_focus( list);
 }
-

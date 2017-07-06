@@ -221,12 +221,3 @@
   obj->WDay = tm.tm_wday; \
   obj->YDay = tm.tm_yday; \
 }
-
-
-
-
-
-
-
-
-

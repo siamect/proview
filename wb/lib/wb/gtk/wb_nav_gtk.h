@@ -68,8 +68,3 @@ class NavGtk : public Nav {
 };
 
 #endif
-
-
-
-
-

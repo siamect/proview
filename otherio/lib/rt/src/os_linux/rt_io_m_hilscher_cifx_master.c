@@ -409,4 +409,3 @@ pwr_dExport pwr_BindIoMethods(Hilscher_cifX_Master) = {
   pwr_BindIoMethod(IoAgentWrite),
   pwr_NullMethod
 };
-

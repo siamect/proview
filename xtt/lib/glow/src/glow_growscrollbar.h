@@ -220,12 +220,3 @@ class GrowScrollBar : public GrowRect {
 
 /*@}*/
 #endif
-
-
-
-
-
-
-
-
-

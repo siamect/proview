@@ -98,4 +98,3 @@ typedef enum {
   redu_ePrio_10 = 10,
   redu_ePrio__ = 11,
 } redu_ePrio;
-

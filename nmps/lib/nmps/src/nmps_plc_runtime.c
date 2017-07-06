@@ -127,16 +127,3 @@ void RunningTime_exec(
 		object->TripRunSeconds) /
 		(object->TripHours * 3600.0 + object->TripSeconds) * 100.0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

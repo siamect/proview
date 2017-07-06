@@ -572,4 +572,3 @@ static int TwpIsId (Ctrl p)
     }
 
 			/* --- End of ps_utl_hotkey.c --- */
-

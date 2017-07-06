@@ -873,4 +873,3 @@ void OpMotif::create_appl_form( Widget w, Op *op, XmAnyCallbackStruct *data)
 {
  ((OpMotif *)op)->appl_form = w;
 }
-

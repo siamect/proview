@@ -2854,4 +2854,3 @@ void wb_vrepced::printStructFile( bool hpp)
   fp << "#endif" << endl;
   fp.close();
 }
-

@@ -53,4 +53,3 @@ class CoLogGtk : public CoLog {
 };
 
 #endif
-

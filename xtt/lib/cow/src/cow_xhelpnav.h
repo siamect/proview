@@ -258,6 +258,3 @@ class HItemHelpHeader : public HItem {
 
 
 #endif
-
-
-

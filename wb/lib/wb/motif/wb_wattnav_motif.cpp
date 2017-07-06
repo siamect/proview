@@ -142,10 +142,3 @@ static void wattnav_trace_scan( WAttNavMotif *wattnav)
 	(XtTimerCallbackProc)wattnav_trace_scan, wattnav);
   }
 }
-
-
-
-
-
-
-

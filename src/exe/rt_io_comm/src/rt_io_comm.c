@@ -341,12 +341,3 @@ init (qcom_sQid *qid, lst_sEntry **csup_lh, pwr_sNode **nodep, io_mProcess proce
 
   return ihp;
 }
-
-
-
-
-
-
-
-
-

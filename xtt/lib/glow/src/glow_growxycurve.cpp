@@ -309,8 +309,3 @@ void GrowXYCurve::export_javabean( GlowTransform *t, void *node,
 					   horizontal_lines, vertical_lines, line_width, 
 					   rotation, pass, shape_cnt, node_cnt, fp);
 }
-
-
-
-
-

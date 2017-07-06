@@ -227,18 +227,3 @@ class GrowBarChart : public GrowRect {
 
 /*@}*/
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

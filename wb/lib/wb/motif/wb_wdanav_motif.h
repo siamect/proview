@@ -70,5 +70,3 @@ class WdaNavMotif : public WdaNav {
 
 
 #endif
-
-

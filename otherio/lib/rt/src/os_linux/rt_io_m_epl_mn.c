@@ -944,4 +944,3 @@ pwr_dExport pwr_BindIoMethods(Epl_MN) = {
   pwr_BindIoMethod(IoAgentWrite),
   pwr_NullMethod
 };
-

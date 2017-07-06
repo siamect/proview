@@ -867,4 +867,3 @@ void brow_ChangeObjectNodeClass( brow_tObject object, brow_tNodeClass new_nc)
 {
   ((FlowNode *)object)->change_nodeclass( (FlowNodeClass *)new_nc);
 }
-

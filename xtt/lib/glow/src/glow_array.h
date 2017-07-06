@@ -261,7 +261,3 @@ class GlowArray {
 
 /*@}*/
 #endif
-
-
-
-

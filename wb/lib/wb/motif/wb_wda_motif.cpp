@@ -671,4 +671,3 @@ WdaMotif::WdaMotif(
 	wb_eUtility_SpreadsheetEditor);
   }
 }
-

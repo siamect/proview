@@ -78,15 +78,3 @@ class XttSevHistGtk : public XttSevHist {
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-

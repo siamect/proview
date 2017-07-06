@@ -1026,4 +1026,3 @@ int CnvWblToH::check_typename( char *type_volume, char *type_name)
   else
     return 1;
 }
-

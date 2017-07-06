@@ -214,6 +214,3 @@ void WbBckW::activate_diff_wb()
 
   set_title( (char *)"Database Difference");
 }
-
-
-

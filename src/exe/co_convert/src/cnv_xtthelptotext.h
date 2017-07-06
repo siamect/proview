@@ -72,12 +72,3 @@ class CnvXtthelpToText : public CnvXtthelpTo {
 };
 
 #endif
-
-
-
-
-
-
-
-
-

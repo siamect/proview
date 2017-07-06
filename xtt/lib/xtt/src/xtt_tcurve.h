@@ -158,15 +158,3 @@ class XttTCurve {
 
 /*@}*/
 #endif
-
-
-
-
-
-
-
-
-
-
-
-

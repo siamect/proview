@@ -648,7 +648,3 @@ int grow_image_to_pixmap( GrowCtx *ctx, char *imagefile,
 
 /*@}*/
 #endif
-
-
-
-

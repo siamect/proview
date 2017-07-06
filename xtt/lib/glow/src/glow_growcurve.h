@@ -102,4 +102,3 @@ class GrowCurve : public GrowTrend {
 
 /*@}*/
 #endif
-

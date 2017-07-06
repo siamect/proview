@@ -62,15 +62,3 @@ class XttTCurveGtk : public XttTCurve {
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-

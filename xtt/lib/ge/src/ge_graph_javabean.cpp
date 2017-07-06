@@ -2474,10 +2474,3 @@ int Graph::export_TableTraceAttr( ofstream& fp, grow_tObject object, int cnt) { 
 int Graph::export_SliderTraceAttr( ofstream& fp, grow_tObject object, int cnt) { return 1;}
 
 #endif
-
-
-
-
-
-
-

@@ -123,5 +123,3 @@ class XNavMotif : public XNav {
 };
 
 #endif
-
-

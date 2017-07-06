@@ -70,5 +70,3 @@ class XttKeyboardGtk : public XttKeyboard {
 };
 
 #endif
-
-

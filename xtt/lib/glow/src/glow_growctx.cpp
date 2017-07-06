@@ -4838,4 +4838,3 @@ int GrowCtx::find_by_name( const char *name, GlowArrayElem **element)
     return ((GrowWindow *)wind)->window_ctx->find_by_name( &name[len+1], element);
   }
 }
-

@@ -2641,4 +2641,3 @@ int WttApplList::find( wb_eUtility type, const char *name, void **ctx)
   }
   return 0;
 }
-

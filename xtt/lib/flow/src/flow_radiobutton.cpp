@@ -278,4 +278,3 @@ ostream& operator<< ( ostream& o, const FlowRadiobutton r)
   '[' << r.ur.z_x << ',' << r.ur.z_y << ']' ;
   return o;
 }
-

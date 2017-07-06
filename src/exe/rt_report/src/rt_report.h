@@ -106,7 +106,3 @@ class rt_report {
 
 /*@}*/
 #endif
-
-
-
-

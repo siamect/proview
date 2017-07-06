@@ -14,4 +14,3 @@ typedef struct {
 typedef struct {
         unsigned int    PhysBadla;
 } qbus_io_ioctl;
-

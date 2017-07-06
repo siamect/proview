@@ -239,5 +239,3 @@ XCrrMotif::XCrrMotif(
 
   *xa_sts = XATT__SUCCESS;
 }
-
-

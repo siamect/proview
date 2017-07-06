@@ -51,9 +51,3 @@ CoLogGtk::CoLogGtk( GtkWidget *parent, const char *filename) :
   if ( parent)
     m_wow = new CoWowGtk( parent);
 }
-
-
-
-
-
-

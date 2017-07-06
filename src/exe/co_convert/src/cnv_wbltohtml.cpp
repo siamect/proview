@@ -1358,6 +1358,3 @@ void CnvWblToHtml::print_all_menu()
       "[\"" << all_classes[i].name << "\",\"" << all_classes[i].file << "\"]" << endl;
   }
 }
-
-
-

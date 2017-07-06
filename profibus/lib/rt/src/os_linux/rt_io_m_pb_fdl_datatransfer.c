@@ -327,4 +327,3 @@ pwr_dExport pwr_BindIoMethods(Pb_FDL_DataTransfer) = {
   pwr_BindIoMethod(IoCardClose),
   pwr_NullMethod
 };
-

@@ -171,9 +171,3 @@ void colpal_scroll_vertical( ColPalCtx *ctx, int value, int bottom);
 
 /*@}*/
 #endif
-
-
-
-
-
-

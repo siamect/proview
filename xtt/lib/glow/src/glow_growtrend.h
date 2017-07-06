@@ -193,5 +193,3 @@ class GrowTrend : public GrowRect {
 
 /*@}*/
 #endif
-
-

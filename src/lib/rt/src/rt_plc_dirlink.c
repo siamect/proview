@@ -387,8 +387,3 @@ plc_GetPointerToObject (
       errh_Error("Direct link to object (%s), %m", Name, sts);
   }
 }
-
-
-
-
-

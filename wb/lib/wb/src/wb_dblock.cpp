@@ -155,4 +155,3 @@ void wb_dblock::dbunlock_all()
   }
   m_lockfiles.clear();
 }
-

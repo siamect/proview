@@ -264,8 +264,3 @@ void rt_pvd_udb::writeAttribute( co_procom *pcom, pwr_tOix oix, unsigned int off
 
   pcom->provideStatus( 1);
 }
-
-
-
-
-

@@ -1246,11 +1246,3 @@ int WAttNav::select_by_name( const char *name)
   brow_SelectInsert( brow->ctx, object);
   return WATT__SUCCESS;
 }
-
-
-
-
-
-
-
-

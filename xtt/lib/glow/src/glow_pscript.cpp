@@ -378,4 +378,3 @@ void GlowPscript::setlinewidth( int idx)
 {
   fprintf( file,"%d setlinewidth\n", 1 + idx);
 }
-

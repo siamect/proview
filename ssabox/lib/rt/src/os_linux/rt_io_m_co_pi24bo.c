@@ -471,4 +471,3 @@ pwr_dExport pwr_BindIoMethods(Co_CO4uP) = {
   pwr_BindIoMethod(IoCardRead),
   pwr_NullMethod
 };
-

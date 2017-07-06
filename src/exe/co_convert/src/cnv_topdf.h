@@ -265,12 +265,3 @@ class CnvToPdf  {
 };
 
 #endif
-
-
-
-
-
-
-
-
-

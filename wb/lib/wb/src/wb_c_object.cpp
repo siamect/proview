@@ -1330,7 +1330,3 @@ pwr_dExport pwr_BindMethods($Object) = {
   pwr_BindMethod(ConnectAttributeFilter),
   pwr_NullMethod
 };
-
-
-
-

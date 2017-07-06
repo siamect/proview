@@ -242,5 +242,3 @@ void elimhead(headtyp **hpp)
    free(*hpp);
    *hpp = NULL;
 }
-
-

@@ -49,4 +49,3 @@
   if ( obj->InTriggFlag && !obj->InTriggOld )				\
     obj->TriggFlag = TRUE;						\
   obj->InTriggOld = obj->InTriggFlag
-

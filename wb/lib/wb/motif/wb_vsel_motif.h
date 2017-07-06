@@ -97,7 +97,3 @@ class WVselMotif : public WVsel {
 };
 
 #endif
-
-
-
-

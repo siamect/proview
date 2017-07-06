@@ -97,4 +97,3 @@ void handle_alarm_indication (io_sAgentLocal *local, io_sAgent *ap);
 void *handle_events(void *ptr);
 
 #endif
-

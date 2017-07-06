@@ -97,14 +97,3 @@ pwr_dExport pwr_BindMethods(AppGraph) = {
   pwr_BindMethod(Build),
   pwr_NullMethod
 };
-
-
-
-
-
-
-
-
-
-
-

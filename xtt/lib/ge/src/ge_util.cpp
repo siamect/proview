@@ -64,4 +64,3 @@ int ge_get_systemname(
   if ( nr != 1) return 0;
   return 1;
 }
-

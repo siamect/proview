@@ -81,10 +81,3 @@ class WPkgMotif : public WPkg {
 
 
 #endif
-
-
-
-
-
-
-

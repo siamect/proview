@@ -135,7 +135,3 @@ pwr_dExport pwr_BindMethods(Pb_DP_Slave) = {
   pwr_BindMethod(SyntaxCheck),
   pwr_NullMethod
 };
-
-
-
-

@@ -2517,12 +2517,3 @@ delete_old_io ()
   sts = gdh_NameToObjid("pwrNode-old", &oid);
   if(ODD(sts)) gdh_DeleteObject(oid);
 }
-
-
-
-
-
-
-
-
-

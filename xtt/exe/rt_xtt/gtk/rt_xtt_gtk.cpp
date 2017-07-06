@@ -1215,9 +1215,3 @@ void XttGtk::create_input_dialog()
   gtk_widget_show_all( india_widget);
   g_object_set( india_widget, "visible", FALSE, NULL);
 }
-
-
-
-
-
-

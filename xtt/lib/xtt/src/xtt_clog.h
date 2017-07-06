@@ -78,7 +78,3 @@ class CLog {
 };
 
 #endif
-
-
-
-

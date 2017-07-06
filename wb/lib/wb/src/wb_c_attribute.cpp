@@ -246,8 +246,3 @@ pwr_dExport pwr_BindMethods($Attribute) = {
   pwr_BindMethod(ChangeValueFilter),
   pwr_NullMethod
 };
-
-
-
-
-

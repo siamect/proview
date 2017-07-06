@@ -633,4 +633,3 @@ void EvAlaGtk::ala_activate_helpevent( GtkWidget *w, gpointer data)
 
   ev->ala_activate_helpevent();
 }
-

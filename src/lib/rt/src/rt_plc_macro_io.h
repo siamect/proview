@@ -961,4 +961,3 @@
 */
 #define CStoRefA_exec(out,in,cond) \
   if ( cond) out = in;
-

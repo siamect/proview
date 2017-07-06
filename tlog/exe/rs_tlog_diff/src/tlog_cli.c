@@ -258,4 +258,3 @@ int scli_tlog_save()
     sts = tlog_save( filestr);
     return sts;
 }
-

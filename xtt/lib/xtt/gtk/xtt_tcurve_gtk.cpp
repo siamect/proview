@@ -117,11 +117,3 @@ XttTCurveGtk::~XttTCurveGtk()
     delete gcd;
   delete wow;
 }
-
-
-
-
-
-
-
-

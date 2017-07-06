@@ -72,4 +72,3 @@ pwr_dExport pwr_BindMethods(Ai) = {
   pwr_BindMethod(SyntaxCheck),
   pwr_NullMethod
 };
-

@@ -153,5 +153,3 @@ class XNavGtk : public XNav {
 };
 
 #endif
-
-

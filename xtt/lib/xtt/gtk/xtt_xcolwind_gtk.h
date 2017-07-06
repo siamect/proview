@@ -123,10 +123,3 @@ class XColWindGtk : public XColWind {
 };
 
 #endif
-
-
-
-
-
-
-

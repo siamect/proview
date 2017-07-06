@@ -236,6 +236,3 @@ bool CnvClassDep::find( char *name, int *idx)
   }
   return false;
 }
-
-
-

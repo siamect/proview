@@ -125,8 +125,3 @@ pwr_dExport pwr_BindMethods(XttGraph) = {
   pwr_BindMethod(PostRename),
   pwr_NullMethod
 };
-
-
-
-
-

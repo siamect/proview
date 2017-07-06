@@ -105,9 +105,3 @@ class XttGeGtk : public XttGe {
 };
 
 #endif
-
-
-
-
-
-

@@ -84,4 +84,3 @@ typedef struct {
 #define pwr_NullClass {"", NULL}
 
 #endif
-

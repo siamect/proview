@@ -880,5 +880,3 @@ static char	*nav_VolumeIdToStr( pwr_tVolumeId volumeid)
 		volid[3], volid[2], volid[1], volid[0]);
 	return str;
 }
-
-

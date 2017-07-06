@@ -78,4 +78,3 @@ pwr_dExport pwr_BindMethods($NodeHier) = {
   pwr_BindMethod(Build),
   pwr_NullMethod
 };
-

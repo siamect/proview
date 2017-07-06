@@ -75,12 +75,3 @@ class MsgWindowMotif : public MsgWindow {
 };
 
 #endif
-
-
-
-
-
-
-
-
-

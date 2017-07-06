@@ -1727,7 +1727,3 @@ ItemAttrSts::ItemAttrSts( NodelistNav *item_nodelistnav, const char *item_name, 
   brow_SetAnnotation( node, 0, item_name, strlen(item_name));
   brow_SetTraceAttr( node, attr, "", flow_eTraceType_User);
 }
-
-
-
-

@@ -529,4 +529,3 @@ void Wb::login_cancel( void *ctx)
   /* Not successful login, exit */
   exit(LOGIN__AUTHFAIL);
 }
-

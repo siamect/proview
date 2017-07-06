@@ -1237,11 +1237,3 @@ mvol_ClassListAttrRef (
     pwr_ReturnVoid( sts, GDH__NYI);
   }
 }
-
-
-
-
-
-
-
-

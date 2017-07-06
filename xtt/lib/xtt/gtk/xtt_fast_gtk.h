@@ -70,15 +70,3 @@ class XttFastGtk : public XttFast {
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-

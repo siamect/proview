@@ -284,9 +284,3 @@ class GlowCon : public GlowArrayElem {
 
 /*@}*/
 #endif
-
-
-
-
-
-

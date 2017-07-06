@@ -61,7 +61,3 @@ class WPkgNavGtk : public WPkgNav {
 };
 
 #endif
-
-
-
-

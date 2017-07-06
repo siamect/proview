@@ -221,5 +221,3 @@ void	 	ini_UpdateSystemInfo 	(ini_sContext*, int);
 void		ini_SetSystemStatus	(ini_sContext*, pwr_tStatus);
 
 #endif
-
-

@@ -110,7 +110,3 @@ void WbExpW::export_ok( void *ctx, void *data)
 
   expw->expwnav->exp();
 }
-
-
-
-

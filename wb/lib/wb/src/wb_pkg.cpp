@@ -878,9 +878,3 @@ pkg_file::pkg_file( char *source, char *target)
   strcpy( m_source, source);
   strcpy( m_target, target);
 }
-
-
-
-
-
-

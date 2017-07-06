@@ -104,12 +104,3 @@ class CnvXtthelpToPdf : public CnvXtthelpTo {
 };
 
 #endif
-
-
-
-
-
-
-
-
-

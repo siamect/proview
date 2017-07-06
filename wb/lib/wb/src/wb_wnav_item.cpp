@@ -4244,4 +4244,3 @@ int WItemDocBlock::get_value( char **value)
 
   return ldh_GetDocBlock( ldhses, objid, value, &size);
 }
-

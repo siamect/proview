@@ -130,23 +130,3 @@ class XttMotif : public Xtt {
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

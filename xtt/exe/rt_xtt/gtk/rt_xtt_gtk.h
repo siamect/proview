@@ -141,23 +141,3 @@ class XttGtk : public Xtt {
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

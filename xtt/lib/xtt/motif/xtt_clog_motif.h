@@ -96,7 +96,3 @@ class CLogMotif : public CLog {
 };
 
 #endif
-
-
-
-

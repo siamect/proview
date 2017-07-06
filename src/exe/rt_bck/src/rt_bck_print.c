@@ -506,10 +506,3 @@ pwr_tStatus bck_print( char *filename)
 
   return 1;
 }
-
-
-
-
-
-
-

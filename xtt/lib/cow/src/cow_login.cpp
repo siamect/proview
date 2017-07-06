@@ -151,4 +151,3 @@ pwr_tStatus CoLogin::get_login_info( char *groupname, char *password, char *user
 
   return LOGIN__SUCCESS;
 }
-

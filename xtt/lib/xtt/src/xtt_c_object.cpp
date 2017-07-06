@@ -2408,10 +2408,3 @@ pwr_dExport pwr_BindXttMethods($Object) = {
   pwr_BindXttMethod(CrrOpenGraphFilter),
   pwr_NullMethod
 };
-
-
-
-
-
-
-

@@ -250,4 +250,3 @@ ostream& operator<< ( ostream& o, const GlowConPoint cp)
   o << '(' << cp.p.x << ',' << cp.p.y << ')'; 
   return o;
 }
-

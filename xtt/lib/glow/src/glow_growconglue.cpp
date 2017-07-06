@@ -1753,6 +1753,3 @@ glow_eDirection GrowConGlue::conpoint_to_direction( int point)
   }
   return glow_eDirection_Center;
 }
-
-
-

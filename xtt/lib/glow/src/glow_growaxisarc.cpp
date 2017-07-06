@@ -800,15 +800,3 @@ void GrowAxisArc::format_text( char *text, char *fmt, double value)
 void GrowAxisArc::convert( glow_eConvert version) 
 {
 }
-
-
-
-
-
-
-
-
-
-
-
-

@@ -84,4 +84,3 @@ co_mFormat* co_SetFormat(co_mFormat *format, co_eBO bo, co_eFT ft)
 
   return format;
 }
-

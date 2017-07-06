@@ -133,14 +133,3 @@ WAttText::WAttText(
     return;
   }
 }
-
-
-
-
-
-
-
-
-
-
-

@@ -174,4 +174,3 @@ void NavGtk::set_inputfocus( int focus)
     gtk_widget_modify_bg( form_widget, GTK_STATE_NORMAL, &color);
   }
 }
-

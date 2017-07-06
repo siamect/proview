@@ -477,4 +477,3 @@ void XNavMotif::popup_button_cb( Widget w, XNav *xnav, XmAnyCallbackStruct *data
   // xnav->reset_cursor();
 
 }
-

@@ -19439,11 +19439,3 @@ int GeEmitSignal::export_java( grow_tObject object, ofstream& fp, bool first, ch
 {
   return 1;
 }
-
-
-
-
-
-
-
-

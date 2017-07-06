@@ -1541,4 +1541,3 @@ pwr_dExport pwr_BindIoMethods(Pb_Hilscher) = {
 	pwr_BindIoMethod(IoAgentClose),
 	pwr_NullMethod
 };
-

@@ -274,12 +274,3 @@ BlockMotif::BlockMotif( void *b_parent_ctx,
   flow_AddCloseVMProtocolCb( parent_wid, 
 	(XtCallbackProc)activate_cancel, this);
 }
-
-
-
-
-
-
-
-
-

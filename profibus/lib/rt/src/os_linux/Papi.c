@@ -2517,4 +2517,3 @@ Possible return values:
 #if defined (WIN32) || defined (_WIN32) || defined (WIN16) || defined (_WIN16)
 #pragma check_stack
 #endif
-

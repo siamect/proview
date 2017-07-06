@@ -515,4 +515,3 @@ void BrowCtxFromWidget( Widget w, void **ctx)
 {
   *ctx = ((BrowWidget) w)->brow.brow_ctx;
 }
-

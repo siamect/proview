@@ -1404,4 +1404,3 @@ void XttMultiViewGtk::signal_send( char *signalname)
     }
   }
 }
-

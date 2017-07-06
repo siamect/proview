@@ -535,4 +535,3 @@ int goen_get_location_point_m0( WGre *grectx, pwr_sGraphPlcNode *graphbody,
    info_pointer->x = 0;
 	return GOEN__SUCCESS;
 }
-

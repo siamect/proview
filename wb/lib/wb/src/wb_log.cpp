@@ -312,4 +312,3 @@ void wb_log::gen_cb( void *ctx, pwr_tTime time, char *s1, char *s2, char *s3, ch
     s.has_comment = true;
   cbctx->v.push_back(s);
 }
-

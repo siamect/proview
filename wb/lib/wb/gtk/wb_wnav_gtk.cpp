@@ -692,4 +692,3 @@ int WNavGtk::prompt_dialog( char *title, char *text, char **value)
   }
   return 0;
 }
-

@@ -243,7 +243,3 @@ pwr_tBoolean wnav_format_selection( ldh_tSesContext ldhses, pwr_sAttrRef attrref
 
   return TRUE;
 }
-
-
-
-

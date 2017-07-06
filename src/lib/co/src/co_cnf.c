@@ -112,7 +112,3 @@ char *cnf_get_value( const char *name, char *value, int size)
   }
   return NULL;
 }
-
-
-
-

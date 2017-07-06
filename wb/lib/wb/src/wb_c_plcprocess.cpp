@@ -84,10 +84,3 @@ pwr_dExport pwr_BindMethods(PlcProcess) = {
   pwr_BindMethod(Build),
   pwr_NullMethod
 };
-
-
-
-
-
-
-

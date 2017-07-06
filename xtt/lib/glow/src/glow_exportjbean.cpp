@@ -4358,6 +4358,3 @@ static char *str_cnv( char *instr)
   *out = *in;
   return outstr;
 }
-
-
-

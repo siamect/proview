@@ -145,11 +145,3 @@ XttFastGtk::~XttFastGtk()
     delete gcd;
   delete wow;
 }
-
-
-
-
-
-
-
-

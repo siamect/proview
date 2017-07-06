@@ -156,9 +156,3 @@ class RtTrace {
 };
 
 #endif
-
-
-
-
-
-

@@ -96,19 +96,3 @@ void WRevNavGtk::set_inputfocus()
 
   gtk_widget_grab_focus( brow_widget);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

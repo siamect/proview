@@ -757,6 +757,3 @@ void wb_vrepext::receive( vext_sAMsg *msg, int size, pwr_tStatus *sts)
   }
   *sts = LDH__SUCCESS;
 }
-
-
-

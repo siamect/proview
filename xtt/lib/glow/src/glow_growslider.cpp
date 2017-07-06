@@ -269,8 +269,3 @@ void GrowSlider::export_javabean( GlowTransform *t, void *node,
 	color_intensity, color_shift, line_width, rot, shadow, gradient,
     	pass, shape_cnt, node_cnt, in_nc, fp);
 }
-
-
-
-
-

@@ -324,4 +324,3 @@ GsdAttr::GsdAttr(  void *a_parent_ctx,
   value_current_recall(0)
 {
 }
-

@@ -486,4 +486,3 @@ XttGeMotif::XttGeMotif( Widget xg_parent_wid, void *xg_parent_ctx, const char *x
   flow_AddCloseVMProtocolCb( toplevel, 
 	(XtCallbackProc)activate_exit, this);
 }
-

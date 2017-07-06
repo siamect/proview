@@ -1886,4 +1886,3 @@ int Nav::open_top()
   }
   return 1;
 }
-

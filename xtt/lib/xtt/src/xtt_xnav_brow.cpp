@@ -1356,5 +1356,3 @@ void XNavBrow::brow_setup()
   brow_SetAttributes( ctx, &brow_attr, mask); 
   brow_SetCtxUserData( ctx, userdata);
 }
-
-

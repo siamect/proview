@@ -489,11 +489,3 @@ void WVselMotif::list_add_item( char *str)
   XmListAddItemUnselected( widgets.volumelist, cstr, 0);
   XmStringFree(cstr);	  
 }
-
-
-
-
-
-
-
-

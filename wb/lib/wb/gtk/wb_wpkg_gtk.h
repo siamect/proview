@@ -86,10 +86,3 @@ class WPkgGtk : public WPkg {
 
 
 #endif
-
-
-
-
-
-
-

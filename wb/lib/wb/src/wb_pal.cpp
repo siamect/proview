@@ -1776,12 +1776,3 @@ int Pal::get_select( pwr_tClassId *classid)
   }
   return 1;
 }
-
-
-
-
-
-
-
-
-

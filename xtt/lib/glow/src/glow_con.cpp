@@ -3990,7 +3990,3 @@ int GlowCon::find_cc( GlowArrayElem *conclass)
 {
   return ( cc == conclass);
 }
-
-
-
-

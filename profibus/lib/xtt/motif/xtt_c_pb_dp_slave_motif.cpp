@@ -87,8 +87,3 @@ pwr_dExport pwr_BindXttMethods(Pb_DP_Slave) = {
   pwr_BindXttMethod(ShowConfiguration),
   pwr_NullMethod
 };
-
-
-
-
-

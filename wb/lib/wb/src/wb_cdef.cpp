@@ -204,7 +204,3 @@ wb_cdef wb_cdef::super()
   check();
   return wb_cdef( m_cdrep->super( &sts));
 }
-
-
-
-

@@ -98,7 +98,3 @@ class RtMonGtk : public RtMon {
 };
 
 #endif
-
-
-
-

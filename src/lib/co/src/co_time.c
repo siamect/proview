@@ -2283,4 +2283,3 @@ int time_PrintA( const char *format, pwr_tTime *ts)
   time_AtoAscii( ts, time_eFormat_DateAndTime, timstr, sizeof(timstr));
   return printf( format, timstr);
 }
-

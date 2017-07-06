@@ -864,7 +864,3 @@ void NodelistGtk::create_mod_input_dialog()
   gtk_widget_show_all( mod_india_widget);
   g_object_set( mod_india_widget, "visible", FALSE, NULL);
 }
-
-
-
-

@@ -301,4 +301,3 @@ void io_ClosePoFilter
         free( FilterData[i]);
     }
 }
-

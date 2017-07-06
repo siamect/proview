@@ -1873,9 +1873,3 @@ void CoWowGtk::update_title( GtkWidget *w, int editmode)
     }
   }
 }
-
-
-
-
-
-

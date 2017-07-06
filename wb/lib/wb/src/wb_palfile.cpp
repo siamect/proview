@@ -380,4 +380,3 @@ void PalFile::config_tree_print_item( PalFileMenu *item, ofstream& fp, int level
   default: ;
   }
 }
-

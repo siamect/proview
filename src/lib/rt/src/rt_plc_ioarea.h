@@ -133,4 +133,3 @@ typedef struct {
 typedef struct {
   char	ActualValue[1];
 } plc_sClass_BString;
-

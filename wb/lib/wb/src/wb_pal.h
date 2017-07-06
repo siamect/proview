@@ -230,7 +230,3 @@ class PalItemMenu : public PalItem {
 };
 
 #endif
-
-
-
-

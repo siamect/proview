@@ -129,7 +129,3 @@ JNIEXPORT void JNICALL Java_jpwr_rt_Errh_success
   errh_Success( cstr);
   (*env)->ReleaseStringUTFChars( env, jmsg, cstr);
 }
-
-
-
-

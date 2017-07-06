@@ -851,20 +851,3 @@ void HistGtk::SetListTime( pwr_tTime StartTime, pwr_tTime StopTime,
 }/* SetListTime */
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

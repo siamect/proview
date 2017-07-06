@@ -259,22 +259,3 @@ int goen_get_location_point_m8( WGre *grectx, pwr_sGraphPlcNode *graphbody,
 	}
 	return sts;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

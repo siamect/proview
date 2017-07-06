@@ -1029,4 +1029,3 @@ bool wb_cdrep::renameClass( pwr_tStatus *sts, wb_name &name)
 {
   return m_orep->vrep()->renameObject( sts, m_orep, name);
 }
-

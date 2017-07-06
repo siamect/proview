@@ -950,6 +950,3 @@ pwr_tStatus pndevice_init( device_sCtx *ctx)
   }
   return 1;
 }
-
-
-

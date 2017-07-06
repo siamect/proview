@@ -101,4 +101,3 @@ int xhelp_help( char *key, char *help_bookmark, navh_eHelpFile file_type,
 {
   return CoXHelp::dhelp( key, help_bookmark, file_type, file_name, strict != 0);
 }
-

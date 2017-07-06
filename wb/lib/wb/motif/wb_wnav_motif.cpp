@@ -838,4 +838,3 @@ int WNavMotif::prompt_dialog( char *title, char *text, char **value)
     }
   }
 }
-

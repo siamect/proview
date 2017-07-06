@@ -149,4 +149,3 @@ class wb_revision : public wb_status
 };
 
 #endif
-

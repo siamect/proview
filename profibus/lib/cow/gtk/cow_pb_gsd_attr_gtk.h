@@ -95,11 +95,3 @@ class GsdAttrGtk : public GsdAttr {
 };
 
 #endif
-
-
-
-
-
-
-
-

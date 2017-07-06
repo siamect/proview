@@ -576,6 +576,3 @@ int XttCameraControlVapix::get_position( double *pan, double *tilt, double *zoom
 
   return 1;
 }
-
-
-

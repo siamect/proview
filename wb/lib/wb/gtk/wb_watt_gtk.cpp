@@ -656,14 +656,3 @@ WAttGtk::WAttGtk(
 
   update_title();
 }
-
-
-
-
-
-
-
-
-
-
-

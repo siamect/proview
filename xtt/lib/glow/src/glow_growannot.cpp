@@ -692,4 +692,3 @@ void GrowAnnot::get_text_extent( GlowTransform *t, void *node, double *width, do
   *width = (double)z_width / ctx->mw.zoom_factor_x;
   *height = (double)z_height / ctx->mw.zoom_factor_y;
 }
-

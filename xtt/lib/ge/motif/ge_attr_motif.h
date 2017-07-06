@@ -81,4 +81,3 @@ class AttrMotif : public Attr {
 
 /*@}*/
 #endif
-

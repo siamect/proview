@@ -96,10 +96,3 @@ class WRevGtk : public WRev {
 
 
 #endif
-
-
-
-
-
-
-

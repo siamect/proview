@@ -285,5 +285,3 @@ void PnViewer::activate_help()
 }
 
 #endif
-
-

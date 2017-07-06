@@ -148,8 +148,3 @@ typedef enum {
 } pwr_mAccess;
 
 #endif
-
-
-
-
-

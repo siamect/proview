@@ -80,10 +80,3 @@ class WCrrGtk : public WCrr {
 };
 
 #endif
-
-
-
-
-
-
-

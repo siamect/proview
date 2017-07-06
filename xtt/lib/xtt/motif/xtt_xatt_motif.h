@@ -103,10 +103,3 @@ class XAttMotif : public XAtt {
 };
 
 #endif
-
-
-
-
-
-
-

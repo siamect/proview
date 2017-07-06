@@ -133,12 +133,3 @@ static void wdanav_trace_scan( WdaNavMotif *wdanav)
 	(XtTimerCallbackProc)wdanav_trace_scan, wdanav);
   }
 }
-
-
-
-
-
-
-
-
-

@@ -102,19 +102,3 @@ void WPkgNavMotif::set_inputfocus()
 
   XtCallAcceptFocus( brow_widget, CurrentTime);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

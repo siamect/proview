@@ -94,19 +94,3 @@ class GeCurveMotif : public GeCurve {
 
 /*@}*/
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

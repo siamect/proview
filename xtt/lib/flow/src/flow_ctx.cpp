@@ -2510,4 +2510,3 @@ int FlowCtx::con_create_stop()
   con_create_active = 0;
   return 1;
 }
-

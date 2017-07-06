@@ -160,4 +160,3 @@ WGe::WGe( void *wge_parent_ctx, char *wge_name, char *wge_filename,
   strcpy( filename, wge_filename);
   strcpy( name, wge_name);
 }
-

@@ -790,4 +790,3 @@ pwr_tStatus wsx_CheckVolume(
 	}
 	return WSX__SUCCESS;
 }
-

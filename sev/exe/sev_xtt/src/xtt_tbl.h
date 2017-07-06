@@ -110,11 +110,3 @@ class XttTbl {
 
 
 #endif
-
-
-
-
-
-
-
-

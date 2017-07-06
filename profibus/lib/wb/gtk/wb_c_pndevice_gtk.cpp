@@ -286,7 +286,3 @@ pwr_dExport pwr_BindMethods(PnDevice) = {
   pwr_BindMethod(SetIoDeviceData),
   pwr_NullMethod
 };
-
-
-
-

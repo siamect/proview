@@ -111,10 +111,3 @@ XttTrendMotif::~XttTrendMotif()
   }
   delete curve;
 }
-
-
-
-
-
-
-

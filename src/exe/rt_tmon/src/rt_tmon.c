@@ -823,4 +823,3 @@ toggleWrapped (
       tp->wrapped = 0;
   }
 }
-

@@ -290,4 +290,3 @@ rndc_ConvertData (
 
   pwr_Return(YES, sts, NDC__SUCCESS);
 }
-

@@ -51,4 +51,3 @@ int RemUtils_AsciiToR50(char asc[], short R50[]);
 #if defined __cplusplus
 }
 #endif
-

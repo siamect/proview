@@ -2953,4 +2953,3 @@ void wb_vrepmem::printPaletteFile()
 
   PalFile::config_tree_print( pal_cLocalPaletteFile, menu, &psts);
 }
-

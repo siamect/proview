@@ -941,6 +941,3 @@ XColWindGtk::XColWindGtk( GtkWidget 	*xa_parent_wid,
 
   *xa_sts = XATT__SUCCESS;
 }
-
-
-

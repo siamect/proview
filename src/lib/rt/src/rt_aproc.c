@@ -111,9 +111,3 @@ pwr_tStatus aproc_TimeStamp( float cycletime, float maxdelay)
   proc_np->ProcTimeStamp[anix-1] = tmo_time;
   return PROC__SUCCESS;
 }
-
-
-
-
-
-

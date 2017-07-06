@@ -1136,4 +1136,3 @@ void GrowTrend::set_mark_color( glow_eDrawType m1color, glow_eDrawType m2color)
   mark1_color = m1color;
   mark2_color = m2color;
 }
-

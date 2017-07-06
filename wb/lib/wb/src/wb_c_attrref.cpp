@@ -334,10 +334,3 @@ pwr_dExport pwr_BindMethods($AttrRef) = {
   pwr_BindMethod(IoConnectFilter),
   pwr_NullMethod
 };
-
-
-
-
-
-
-

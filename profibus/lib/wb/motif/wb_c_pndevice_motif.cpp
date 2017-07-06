@@ -56,7 +56,3 @@ using namespace std;
 pwr_dExport pwr_BindMethods(PnDevice) = {
   pwr_NullMethod
 };
-
-
-
-

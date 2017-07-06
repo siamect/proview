@@ -172,5 +172,3 @@ class XttStreamGtk : public XttStream {
 #endif
 
 #endif
-
-

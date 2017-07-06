@@ -582,4 +582,3 @@ void XttGeGtk::create_confirm_dialog()
   gtk_container_add( GTK_CONTAINER(confirm_widget), confirm_vbox);
   gtk_widget_show_all( confirm_widget);
 }
-

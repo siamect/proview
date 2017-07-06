@@ -834,5 +834,3 @@ static int subgraphs_trace_disconnect_bc( brow_tObject object)
   }
   return 1;
 }
-
-

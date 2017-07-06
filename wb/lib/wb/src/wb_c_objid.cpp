@@ -238,10 +238,3 @@ pwr_dExport pwr_BindMethods($Objid) = {
   pwr_BindMethod(IsOkDisconnect),
   pwr_NullMethod
 };
-
-
-
-
-
-
-

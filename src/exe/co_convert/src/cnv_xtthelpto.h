@@ -78,5 +78,3 @@ class CnvXtthelpTo {
 }
 #endif
 #endif
-
-

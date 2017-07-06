@@ -94,10 +94,3 @@ class XAttOneGtk : public XAttOne {
 };
 
 #endif
-
-
-
-
-
-
-

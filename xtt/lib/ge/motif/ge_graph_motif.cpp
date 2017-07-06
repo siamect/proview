@@ -185,4 +185,3 @@ void GraphMotif::popup_position( int event_x, int event_y, int *x, int *y)
 {
   CoWowMotif::PopupPosition( grow_widget, event_x, event_y, x, y);
 }
-

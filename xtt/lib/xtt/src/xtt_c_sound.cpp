@@ -67,8 +67,3 @@ pwr_dExport pwr_BindXttMethods(Sound) = {
   pwr_BindXttMethod(PlayFilter),
   pwr_NullMethod
 };
-
-
-
-
-

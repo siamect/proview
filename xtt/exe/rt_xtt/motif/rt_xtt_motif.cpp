@@ -721,11 +721,3 @@ XttMotif::XttMotif( int argc, char *argv[], int *return_sts) :
 
   xtt_mainloop( app_ctx);  
 }
-
-
-
-
-
-
-
-

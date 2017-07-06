@@ -97,11 +97,3 @@ class GsdAttrMotif : public GsdAttr {
 };
 
 #endif
-
-
-
-
-
-
-
-

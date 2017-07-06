@@ -2009,7 +2009,3 @@ char *GraphJournal::tag_to_str( int tag)
   }
   return str;
 }
-
-
-
-

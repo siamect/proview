@@ -164,5 +164,3 @@ void CoLog::get( char categories[][20], char *item,
       item_cb( ctx, time, line_array[4], line_array[5], line_array[6], 0);
   }
 }
-
-

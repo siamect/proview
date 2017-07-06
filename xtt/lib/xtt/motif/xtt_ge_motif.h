@@ -94,9 +94,3 @@ class XttGeMotif : public XttGe {
 };
 
 #endif
-
-
-
-
-
-

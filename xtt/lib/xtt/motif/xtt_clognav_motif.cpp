@@ -98,10 +98,3 @@ void CLogNavMotif::set_input_focus()
   if ( flow_IsViewable( brow_widget))
     XtCallAcceptFocus( brow_widget, CurrentTime);
 }
-
-
-
-
-
-
-

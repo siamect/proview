@@ -92,12 +92,3 @@ class WbExpWGtk : public WbExpW {
 };
 
 #endif
-
-
-
-
-
-
-
-
-

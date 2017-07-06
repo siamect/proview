@@ -404,12 +404,3 @@ pwr_tStatus WVsel::check_volumelist(
   }
   return 1;
 }
-
-
-
-
-
-
-
-
-

@@ -241,4 +241,3 @@ int	rtt_parse_filename( 	char	*filename,
 	return 0;
 #endif
 }  
-

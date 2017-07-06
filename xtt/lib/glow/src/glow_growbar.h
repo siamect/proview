@@ -262,12 +262,3 @@ class GrowBar : public GrowRect {
 
 /*@}*/
 #endif
-
-
-
-
-
-
-
-
-

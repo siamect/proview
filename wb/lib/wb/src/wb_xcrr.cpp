@@ -94,7 +94,3 @@ void WCrr::xcrr_close_cb( void *ctx)
   if ( ((WCrr *)ctx)->close_cb)
     ((WCrr *)ctx)->close_cb( ((WCrr *)ctx)->parent_ctx, ctx);
 }
-
-
-
-

@@ -893,4 +893,3 @@ int flow_ConIsReference( flow_tCon con)
 {
   return ((FlowCon *)con)->is_reference();
 }
-

@@ -157,4 +157,3 @@ void glow_measure_annot_text( GrowCtx *ctx, char *text, glow_eDrawType draw_type
   *width = 1.0 * z_width / ctx->mw.base_zoom_factor;
   *height = 1.0 * z_height / ctx->mw.base_zoom_factor;
 }
-

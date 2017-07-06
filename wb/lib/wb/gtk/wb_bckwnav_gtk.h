@@ -63,6 +63,3 @@ class WbBckWNavGtk : public WbBckWNav {
 };
 
 #endif
-
-
-

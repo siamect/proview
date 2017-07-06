@@ -281,5 +281,3 @@ class GlowLine : public GlowArrayElem {
 
 /*@}*/
 #endif
-
-

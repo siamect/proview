@@ -494,7 +494,3 @@ void RtMonGtk::activate_help( GtkWidget *w, gpointer data)
 
   rtmon->activate_help();
 }
-
-
-
-

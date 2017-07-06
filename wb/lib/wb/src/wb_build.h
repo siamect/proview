@@ -93,4 +93,3 @@ class wb_build : public wb_status
 };
 
 #endif
-

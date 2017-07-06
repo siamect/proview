@@ -410,4 +410,3 @@ void CnvChangeLog::from_git()
   strcat( cmd, tmpfile);
   system( cmd);
 }
-

@@ -759,4 +759,3 @@ void *co_xml_interpreter::get_object_stack( int p, unsigned int id)
   }
   return 0;
 }
-

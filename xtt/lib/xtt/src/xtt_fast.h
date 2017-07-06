@@ -132,15 +132,3 @@ class XttFast {
 
 /*@}*/
 #endif
-
-
-
-
-
-
-
-
-
-
-
-

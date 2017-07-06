@@ -1075,10 +1075,3 @@ bool wb_nrep::checkObjectName( const char *name)
   }
   return true;
 }
-
-
-
-
-
-
-

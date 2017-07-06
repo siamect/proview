@@ -1069,4 +1069,3 @@ pwr_tStatus	nmpsappl_RemoveAndKeepData(
 
 	return NMPS__SUCCESS;
 }
-

@@ -113,8 +113,3 @@ void XAttNavGtk::popup_position( int x_event, int y_event, int *x, int *y)
 {
   CoWowGtk::PopupPosition( brow_widget, x_event, y_event, x, y);
 }
-
-
-
-
-

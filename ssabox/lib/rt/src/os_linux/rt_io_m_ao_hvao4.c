@@ -334,4 +334,3 @@ pwr_dExport pwr_BindIoMethods(Ao_AO8uP) = {
   pwr_BindIoMethod(IoCardWrite),
   pwr_NullMethod
 };
-

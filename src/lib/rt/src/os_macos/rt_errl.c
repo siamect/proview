@@ -284,7 +284,3 @@ log_thread (void *arg)
   }
   return 0;
 }
-
-
-
-

@@ -598,7 +598,3 @@ static int graph_get_applet_size( char *graphname, int *width, int *height)
   return GE__NOSIZE;
 }
 #endif
-
-
-
-

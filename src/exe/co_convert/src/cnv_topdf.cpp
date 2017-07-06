@@ -1142,5 +1142,3 @@ char *CnvToPdf::fontname( CnvStyle& style)
 
   return str;
 }
-
-

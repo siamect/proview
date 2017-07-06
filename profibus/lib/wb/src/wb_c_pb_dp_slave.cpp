@@ -553,6 +553,3 @@ pwr_tStatus pb_dp_slave_create_ctx( ldh_tSession ldhses, pwr_tAttrRef aref,
   *ctxp = ctx;
   return 1;
 }
-
-
-

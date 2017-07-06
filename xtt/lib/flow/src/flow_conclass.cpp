@@ -116,4 +116,3 @@ ostream& operator<< ( ostream& o, const FlowConClass cc)
   o << "ConClass: " << cc.cc_name;
   return o;
 }
-

@@ -447,6 +447,3 @@ void GlowNode::trace_close()
   if ( nc->recursive_trace)
     nc->a.trace_close();
 }
-
-
-

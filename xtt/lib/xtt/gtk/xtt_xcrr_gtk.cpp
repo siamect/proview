@@ -232,5 +232,3 @@ XCrrGtk::XCrrGtk(
 
   *xa_sts = XATT__SUCCESS;
 }
-
-

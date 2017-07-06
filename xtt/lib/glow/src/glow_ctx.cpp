@@ -2311,4 +2311,3 @@ int check_file( const char *filename)
   fclose( fp);
   return 1;
 }
-

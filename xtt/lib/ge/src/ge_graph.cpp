@@ -6118,5 +6118,3 @@ int GraphRecallBuff::get( GeDyn **data, char *k)
   }
   return 0;
 }
-
-

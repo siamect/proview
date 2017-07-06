@@ -101,4 +101,3 @@ pwr_dExport pwr_BindMethods($PlantHier) = {
   pwr_BindMethod(SyntaxCheck),
   pwr_NullMethod
 };
-

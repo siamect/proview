@@ -765,5 +765,3 @@ scan (
   if ( tp->loops % MAX( 1, (int)(1.0 / tp->PlcThread->ScanTime)) == 0)
     pwrs_Node_SupEmon();
 }
-
-

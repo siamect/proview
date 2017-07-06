@@ -267,5 +267,3 @@ void GlowRect::shift( void *pos, double delta_x, double delta_y,
   draw( &ctx->mw, pos, highlight, hot, NULL);
   draw( &ctx->navw, pos, highlight, 0, NULL);
 }
-
-

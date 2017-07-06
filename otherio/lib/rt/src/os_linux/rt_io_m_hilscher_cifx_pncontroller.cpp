@@ -1211,5 +1211,3 @@ pwr_dExport pwr_BindIoMethods(Hilscher_cifX_PnController) = {
   pwr_BindIoMethod(IoAgentWrite),
   pwr_NullMethod
 };
-
-

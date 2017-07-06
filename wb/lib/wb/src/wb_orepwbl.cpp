@@ -206,4 +206,3 @@ bool wb_orepwbl::docBlock( char **block, int *size) const
 {
   return m_wblnode->docBlock( block, size);
 }
-

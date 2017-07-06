@@ -112,11 +112,3 @@ XttFastMotif::~XttFastMotif()
   }
   delete curve;
 }
-
-
-
-
-
-
-
-

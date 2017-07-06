@@ -87,4 +87,3 @@ pwr_tStatus dir_DeassignLogical(
 #ifdef __cplusplus
 }
 #endif
-

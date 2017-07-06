@@ -307,4 +307,3 @@ GsdmlAttr::GsdmlAttr(  void *a_parent_ctx,
 {
   dcli_translate_filename( data_filename, a_data_filename);
 }
-

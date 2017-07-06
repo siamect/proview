@@ -86,6 +86,3 @@ void WbBckWNavGtk::set_input_focus()
 {
   gtk_widget_grab_focus( brow_widget);
 }
-
-
-

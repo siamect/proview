@@ -494,4 +494,3 @@ AttrMotif::AttrMotif( Widget a_parent_wid,
   flow_AddCloseVMProtocolCb( parent_wid, 
 	(XtCallbackProc)attr_activate_exit, this);
 }
-

@@ -384,4 +384,3 @@ pwr_dExport pwr_BindIoMethods(Ssab_AouP) = {
   pwr_BindIoMethod(IoCardWrite),
   pwr_NullMethod
 };
-

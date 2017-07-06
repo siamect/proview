@@ -430,10 +430,3 @@ tags[xml_eTag_topic].end << endl;
       return 0;
   }
 }
-
-
-
-
-
-
-

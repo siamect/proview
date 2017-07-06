@@ -195,10 +195,3 @@ int	WNav::crr_code( WNavBrow *brow,
   delete ctx;
   return sts;
 }
-
-
-
-
-
-
-

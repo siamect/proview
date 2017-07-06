@@ -352,4 +352,3 @@ XttMultiView::XttMultiView( void *mv_parent_ctx, const char *mv_name,
   strcpy( name, mv_name);
   aref = *mv_aref;
 }
-

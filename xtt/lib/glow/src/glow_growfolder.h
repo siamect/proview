@@ -232,12 +232,3 @@ class GrowFolder : public GrowWindow {
 
 /*@}*/
 #endif
-
-
-
-
-
-
-
-
-

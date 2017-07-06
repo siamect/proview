@@ -173,10 +173,3 @@ void *CnvXtthelpToText::insert( navh_eItemType item_type, const char *text1,
 
   return 0;
 }
-
-
-
-
-
-
-

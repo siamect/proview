@@ -209,11 +209,3 @@ bool wb_orepmem::docBlock( char *block)
 {
   return m_memobject->docBlock( block);
 }
-
-
-
-
-
-
-
-

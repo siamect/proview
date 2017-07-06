@@ -565,10 +565,3 @@ class GrowRectRounded : public GlowRect {
 
 /*@}*/
 #endif
-
-
-
-
-
-
-

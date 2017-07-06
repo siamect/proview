@@ -361,7 +361,3 @@ typedef struct {
     object->CurrentIndex = object->Idx;					\
     subwindow;								\
   }
-
-
-
-

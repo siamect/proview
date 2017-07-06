@@ -539,5 +539,3 @@ void CLogGtk::print()
   if ( sts == WOW__PRINTDIALOGDISABLED)
     wow->DisplayError( "Disabled", "Print Dialog is disabled");
 }
-
-

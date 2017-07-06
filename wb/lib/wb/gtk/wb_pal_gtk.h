@@ -67,7 +67,3 @@ class PalGtk : public Pal {
 };
 
 #endif
-
-
-
-

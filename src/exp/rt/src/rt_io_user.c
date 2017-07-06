@@ -56,5 +56,3 @@
 pwr_dExport pwr_BindIoUserClasses(User) = {
   pwr_NullClass
 };
-
-

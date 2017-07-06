@@ -2240,4 +2240,3 @@ int ItemPbEnumByteOrder::open_children( GsdAttrNav *attrnav, double x, double y)
   }
   return 1;
 }
-

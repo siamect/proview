@@ -60,6 +60,3 @@ class MsgListGtk : public MsgList {
 };
 
 #endif
-
-
-

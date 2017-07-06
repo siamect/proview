@@ -2455,4 +2455,3 @@ void GeCurve::update_color_theme( int ct)
 
   color_theme = ct;
 }
-

@@ -195,4 +195,3 @@ class CoWowGtk : public CoWow {
 };
 
 #endif
-

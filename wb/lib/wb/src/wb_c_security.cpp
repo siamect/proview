@@ -102,8 +102,3 @@ pwr_dExport pwr_BindMethods($Security) = {
   pwr_BindMethod(PostCreate),
   pwr_NullMethod
 };
-
-
-
-
-

@@ -55,4 +55,3 @@ class wb_log_gtk : public wb_log
 };
 
 #endif
-

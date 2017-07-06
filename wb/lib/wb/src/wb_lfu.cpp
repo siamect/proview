@@ -4029,6 +4029,3 @@ pwr_tStatus lfu_check_opt_file( ldh_tSesContext ldhses, char *nodename, int bus_
   }
   return LFU__SUCCESS;
 }
-
-
-

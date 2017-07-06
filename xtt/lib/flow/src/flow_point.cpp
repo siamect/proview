@@ -158,4 +158,3 @@ ostream& operator<< ( ostream& o, const FlowPoint p)
   o << '(' << p.x << ',' << p.y << ')' << '[' << p.z_x << ',' << p.z_y << ']' ;
   return o;
 }
-

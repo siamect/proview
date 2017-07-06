@@ -940,5 +940,3 @@ static void gdh_ConvertUTFstring( char *out, char *in)
   *t = 0;
 }
 #endif
-
-

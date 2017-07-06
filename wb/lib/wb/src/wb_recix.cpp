@@ -110,8 +110,3 @@ bool wb_recix::get( char *str, pwr_tOix *ix) {
 void wb_recix::clear() {
   m_ix.clear();
 }
-
-
-
-
-

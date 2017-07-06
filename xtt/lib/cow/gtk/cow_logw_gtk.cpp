@@ -218,13 +218,3 @@ void CoLogWGtk::activate_help( GtkWidget *w, gpointer data)
   CoXHelp::dhelp( "messagewindow_refman", 0, navh_eHelpFile_Other, "$pwr_lang/man_dg.dat", 
 		  true);
 }
-
-
-
-
-
-
-
-
-
-

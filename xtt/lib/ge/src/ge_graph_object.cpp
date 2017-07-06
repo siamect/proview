@@ -1047,4 +1047,3 @@ static int graph_object_PlcThread( Graph *graph, pwr_sAttrRef *arp)
 
   return 1;
 }
-

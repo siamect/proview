@@ -220,18 +220,3 @@ class GrowPie : public GrowArc {
 
 /*@}*/
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

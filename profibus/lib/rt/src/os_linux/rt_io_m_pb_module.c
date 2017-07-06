@@ -173,4 +173,3 @@ pwr_dExport pwr_BindIoMethods(Pb_Module) = {
   pwr_BindIoMethod(IoCardClose),
   pwr_NullMethod
 };
-

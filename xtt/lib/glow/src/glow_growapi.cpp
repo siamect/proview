@@ -5905,6 +5905,3 @@ void grow_DrawObject( grow_tObject object)
 }
 
 /*@}*/
-
-
-

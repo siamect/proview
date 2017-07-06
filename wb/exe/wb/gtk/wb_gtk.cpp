@@ -358,4 +358,3 @@ WbGtk::WbGtk( int argc, char *argv[]) : mainwindow(0)
 
   gtk_main();
 }
-

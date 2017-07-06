@@ -183,4 +183,3 @@ pwr_dExport pwr_BindIoMethods(Modbus_RTU_Module) = {
   pwr_BindIoMethod(IoCardWrite),
   pwr_NullMethod
 };
-

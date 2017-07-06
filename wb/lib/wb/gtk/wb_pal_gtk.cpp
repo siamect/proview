@@ -189,10 +189,3 @@ static void pal_sel_lose_cb( GtkWidget *w, GdkEventSelection *event,
   brow_SetInverseColor( pal->brow_ctx, flow_eDrawType_LineGray);
   pal->selection_owner = 0;
 }
-
-
-
-
-
-
-

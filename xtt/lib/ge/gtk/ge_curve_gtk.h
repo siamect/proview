@@ -151,19 +151,3 @@ class GeCurveGtk : public GeCurve {
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -93,4 +93,3 @@ pwr_dExport pwr_BindMethods(PlcThread) = {
   pwr_BindMethod(PostCreate),
   pwr_NullMethod
 };
-

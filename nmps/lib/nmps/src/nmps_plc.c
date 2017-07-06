@@ -3108,4 +3108,3 @@ void NMpsStoreCell120_exec( plc_sThread		*tp,
 {
   NMpsStoreCell_exec( tp, (pwr_sClass_NMpsStoreCell *)object);
 }
-

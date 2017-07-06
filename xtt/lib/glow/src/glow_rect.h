@@ -219,8 +219,3 @@ class GlowRect : public GlowArrayElem {
 
 /*@}*/
 #endif
-
-
-
-
-

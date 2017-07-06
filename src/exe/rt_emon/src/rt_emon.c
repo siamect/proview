@@ -5431,5 +5431,3 @@ static pwr_tStatus emon_redu_receive()
   qcom_Free( &sts, msg);
   return MH__SUCCESS;
 }
-
-

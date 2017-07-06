@@ -1151,5 +1151,3 @@ main()
 	sts = rtt_show_signals( filename, windowname);
 }
 */
-
-

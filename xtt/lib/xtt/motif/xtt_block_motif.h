@@ -79,6 +79,3 @@ class BlockMotif : public Block {
 };
 
 #endif
-
-
-

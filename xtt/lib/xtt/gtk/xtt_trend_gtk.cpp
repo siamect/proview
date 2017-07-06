@@ -121,10 +121,3 @@ XttOTree *XttTrendGtk::tree_new( const char *title, pwr_tAttrRef *itemlist, int 
 {
   return new XttOTreeGtk( parent_widget, this, title, itemlist, itemcnt, layout, action_cb);
 }
-
-
-
-
-
-
-

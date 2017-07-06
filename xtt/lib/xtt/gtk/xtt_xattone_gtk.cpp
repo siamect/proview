@@ -447,6 +447,3 @@ XAttOneGtk::XAttOneGtk( GtkWidget *xa_parent_wid,
 
   *xa_sts = XATT__SUCCESS;
 }
-
-
-

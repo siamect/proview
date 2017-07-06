@@ -65,15 +65,3 @@ class XttTrendGtk : public XttTrend {
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1380,4 +1380,3 @@ void rt_procom::flushNodes()
   // subc_ActivateList(&gdbroot->my_node->subc_lh, pwr_cNObjid);
   // subc_ActivateList(&gdbroot->no_node->subc_lh, pwr_cNObjid);
 }
-

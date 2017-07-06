@@ -603,5 +603,3 @@ int Graph::exec_dynamic( grow_tObject object, char *code,
   }
   return 1;
 }
-
-

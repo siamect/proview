@@ -59,6 +59,3 @@ class WCastGtk : public WCast {
 };
 
 #endif
-
-
-

@@ -800,11 +800,3 @@ void GlowNodeClass::get_annotation_text_extent( GlowTransform *t, void *node, in
     }
   }
 }
-
-
-
-
-
-
-
-

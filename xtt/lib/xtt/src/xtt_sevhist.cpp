@@ -1270,10 +1270,3 @@ void XttSevHist::sevhist_scan( void *data)
   if ( sevhist->timerid)
     sevhist->timerid->add( 1000, sevhist_scan, sevhist);
 }
-
-
-
-
-
-
-

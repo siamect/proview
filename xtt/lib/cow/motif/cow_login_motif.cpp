@@ -314,4 +314,3 @@ void CoLoginMotif::message( const char *new_label)
 	  XmStringCreateLtoR( (char *)new_label , (char *)"ISO8859-1"));
   XtSetValues( widgets.label, args, 1);
 }
-

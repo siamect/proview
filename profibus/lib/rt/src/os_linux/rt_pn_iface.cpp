@@ -2023,4 +2023,3 @@ void *handle_events(void *ptr) {
   }
   return 0;
 }
-

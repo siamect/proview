@@ -347,13 +347,3 @@ void wb_srep::recix_set_destination( const char *d)
 { 
   m_recix->set_destination( d);
 }
-
-
-
-
-
-
-
-
-
-

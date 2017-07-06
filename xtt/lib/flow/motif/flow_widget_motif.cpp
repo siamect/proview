@@ -481,4 +481,3 @@ Widget FlowCreateNav( Widget parent, char *name, ArgList args, int argCount,
   w->flow.main_flow_widget = main_flow;
   return (Widget) w;
 }
-

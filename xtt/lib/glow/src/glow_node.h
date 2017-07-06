@@ -299,11 +299,3 @@ class GlowNode : public GlowArrayElem {
 
 /*@}*/
 #endif
-
-
-
-
-
-
-
-

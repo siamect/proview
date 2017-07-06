@@ -2423,4 +2423,3 @@ static int wccm_cut_segments (
 
 	return FOE__SUCCESS;
 }
-

@@ -5216,4 +5216,3 @@ int Graph::readcmdfile( 	char		*incommand)
 
   return 1;
 }
-

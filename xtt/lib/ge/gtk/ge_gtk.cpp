@@ -3478,4 +3478,3 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM(cons_round_amount_2), TRUE );
   gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM(cons_corners_rounded), TRUE );
 }
-

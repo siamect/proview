@@ -96,9 +96,3 @@ CoHelpGtk::CoHelpGtk( int argc, char *argv[], int *return_sts) :
   cohelp_mainloop();  
 
 }
-
-
-
-
-
-

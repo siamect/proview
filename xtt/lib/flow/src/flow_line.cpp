@@ -282,4 +282,3 @@ ostream& operator<< ( ostream& o, const FlowLine l)
   '[' << l.p2.z_x << ',' << l.p2.z_y << ']' ;
   return o;
 }
-

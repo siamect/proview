@@ -981,7 +981,3 @@ class GrowNode : public GlowNode {
 
 /*@}*/
 #endif
-
-
-
-

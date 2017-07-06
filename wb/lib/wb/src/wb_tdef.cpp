@@ -126,4 +126,3 @@ wb_name wb_tdef::longName()
   check();
   return m_tdrep->longName();
 }
-

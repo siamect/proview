@@ -1261,4 +1261,3 @@ bool GeUser::get_system_name_child( SystemList *s, SystemList *system, char *nam
   }
   return false;
 }
-

@@ -546,4 +546,3 @@ GsdmlAttrGtk::GsdmlAttrGtk( GtkWidget *a_parent_wid,
 
   *a_sts = attrnav->open( data_filename);
 }
-

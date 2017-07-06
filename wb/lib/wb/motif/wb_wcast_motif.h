@@ -59,6 +59,3 @@ class WCastMotif : public WCast {
 };
 
 #endif
-
-
-

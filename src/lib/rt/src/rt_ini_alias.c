@@ -773,4 +773,3 @@ static int ini_set_plcscan (char *value_str)
 	
 	return INI__SUCCESS;
 }
-

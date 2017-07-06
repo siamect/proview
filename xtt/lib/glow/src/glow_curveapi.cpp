@@ -69,13 +69,3 @@ void curve_Scroll( CurveCtx *ctx, double value)
 {
   ctx->scroll( value);
 }
-
-
-
-
-
-
-
-
-
-

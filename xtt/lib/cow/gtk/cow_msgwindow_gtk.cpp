@@ -282,13 +282,3 @@ void MsgWindowGtk::activate_help_message( GtkWidget *w, gpointer data)
 {
   CoXHelp::dhelp( "message window", 0, navh_eHelpFile_Base, 0, true);
 }
-
-
-
-
-
-
-
-
-
-

@@ -342,9 +342,3 @@ CoXHelpMotif::CoXHelpMotif(
 
   *xa_sts = 1;
 }
-
-
-
-
-
-

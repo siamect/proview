@@ -351,5 +351,3 @@ class GrowConPoint : public GlowConPoint {
 
 /*@}*/
 #endif
-
-

@@ -1509,4 +1509,3 @@ int WFoeMotif::get_selection( char *str, int len)
 
   return sts;
 }
-

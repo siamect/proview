@@ -264,5 +264,3 @@ return value:
   return (inp32);
 
 }
-
-

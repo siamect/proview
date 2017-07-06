@@ -568,4 +568,3 @@ pwr_tStatus bck_dump( ldh_tSession ldhses, char *filename, char *out)
 
   return LDH__SUCCESS;
 }
-

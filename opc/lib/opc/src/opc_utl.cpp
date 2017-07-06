@@ -1991,4 +1991,3 @@ bool opc_cmp_pwr( void *p1, void *p2, int size, int type, float deadband)
   }
   return false;
 }
-

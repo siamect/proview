@@ -80,4 +80,3 @@ int FlowAnnotPixmapButton::event_handler( void *pos, flow_eEvent event, int x, i
   else
     return 0;
 }
-

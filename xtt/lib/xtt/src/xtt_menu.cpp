@@ -712,6 +712,3 @@ void XNav::get_popup_menu_items( pwr_sAttrRef attrref,
     return;
   }
 }
-
-
-

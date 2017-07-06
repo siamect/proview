@@ -116,14 +116,3 @@ WAtt::WAtt(
 	close_cb(0), redraw_cb(0), client_data(0), pending_close(0)
 {
 }
-
-
-
-
-
-
-
-
-
-
-
