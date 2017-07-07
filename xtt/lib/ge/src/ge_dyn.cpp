@@ -9231,6 +9231,7 @@ int GeXY_Curve::scan( grow_tObject object)
     int		attr_type_x;
     int		attr_type_y;
     int		attr_size;
+    int		attr_elem;
     pwr_tAName  parsed_name;
     int		sts;
     int		inverted;
@@ -9253,15 +9254,15 @@ int GeXY_Curve::scan( grow_tObject object)
       // Attribute starting with '&' indicates reference
       pwr_tAName refname;
       dyn->parse_attr_name( x_attr, refname, &inverted,
-			    &attr_type_x, &attr_size);
+			    &attr_type_x, &attr_size, &attr_elem);
       sts = dyn->graph->get_reference_name( refname, parsed_name);
       if ( EVEN(sts)) return 1;
     }
     else {
       dyn->parse_attr_name( x_attr, parsed_name,
-			    &inverted, &attr_type_x, &attr_size);
+			    &inverted, &attr_type_x, &attr_size, &attr_elem);
     }
-    x_value = calloc( no_of_points, attr_size);
+    x_value = calloc( max(attr_elem,no_of_points), attr_size/attr_elem);
 
     sts = gdh_GetObjectInfo( parsed_name, x_value, attr_size);
     if ( EVEN(sts)) return 1;
@@ -9272,15 +9273,15 @@ int GeXY_Curve::scan( grow_tObject object)
 	// Attribute starting with '&' indicates reference
 	pwr_tAName refname;
 	dyn->parse_attr_name( y_attr, refname, &inverted,
-			      &attr_type_y, &attr_size);
+			      &attr_type_y, &attr_size, &attr_elem);
 	sts = dyn->graph->get_reference_name( refname, parsed_name);
 	if ( EVEN(sts)) return 1;
       }
       else {
 	dyn->parse_attr_name( y_attr, parsed_name,
-			      &inverted, &attr_type_y, &attr_size);
+			      &inverted, &attr_type_y, &attr_size, &attr_elem);
       }
-      y_value = calloc( no_of_points, attr_size);
+      y_value = calloc( max(attr_elem,no_of_points), attr_size/attr_elem);
       sts = gdh_GetObjectInfo( parsed_name, y_value, attr_size);
       if ( EVEN(sts)) return 1;
       break;
