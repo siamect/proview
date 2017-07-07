@@ -151,12 +151,3 @@ inline bool wb_session::abort()
 
 
 #endif
-
-
-
-
-
-
-
-
-

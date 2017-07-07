@@ -113,16 +113,6 @@ adoptObject (
     }
   }
 
-#if 0 /* !!! To do!!!*/
-  malvl = MAX(op->g.alvl, op->g.malvl);
-  mblvl = MAX(op->g.blvl, op->g.mblvl);
-  if (malvl > pop->g.malvl || mblvl > op->g.mblvl) {
-    op->o.ablvl_idx = ++gdbroot->db->ablvl_idx;
-    vol_PropagateAlarmLevel(sts, op, 0, malvl, NO);
-    vol_PropagateBlockLevel(sts, op, 0, mblvl, NO);
-  }
-#endif
-
   return op;
 }
 
@@ -198,24 +188,9 @@ unadoptObject (
     }
   }
 
-#if 0
-  op->g.f.poid = pwr_cNObjid;
-  op->l.por = pool_cNRef;
-#endif
-
   pwr_Assert(op->l.flags.b.inFamilyTab);
   hash_Remove(sts, gdbroot->family_ht, op);
   op->l.flags.b.inFamilyTab = 0;
-
-#if 0 /* !!! To do!! */
-  malvl = MAX(op->g.alvl, op->g.malvl);
-  mblvl = MAX(op->g.blvl, op->g.mblvl);
-  if (malvl == pop->g.malvl || mblvl == pop->g.mblvl) {
-    op->o.ablvl_idx = ++ghdi->db->ablvl_idx;
-    vol_PropagateAlarmLevel(sts, op, malvl, 0, NO);
-    vol_PropagateBlockLevel(sts, op, mblvl, 0, NO);
-  }
-#endif
 
   return op;
 }

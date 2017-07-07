@@ -386,4 +386,3 @@ void Op::sup_scan( void *data)
   }
   op->sup_timerid->add( time, sup_scan, op);
 }
-

@@ -163,13 +163,9 @@ dbs_Open(pwr_tStatus *sts, dbs_sEnv *ep, const char *filename)
     }
 
     ep->nSect = sect.size / dbs_dAlign(sizeof(sect));
-    
 
-#if 0
-    srcFormat.m = ntohl(ep->file.format.m);    
-#else
-    srcFormat.m = ep->file.format.m;    
-#endif
+    srcFormat.m = ep->file.format.m;
+
     co_GetOwnFormat(&ownFormat);
 
     if (srcFormat.m != ownFormat.m) {

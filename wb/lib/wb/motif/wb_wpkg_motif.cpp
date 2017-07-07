@@ -315,5 +315,3 @@ WPkgMotif::WPkgMotif(
 	wb_eUtility_Distributor);
   }
 }
-
-

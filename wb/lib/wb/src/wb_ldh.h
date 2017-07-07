@@ -69,18 +69,6 @@ extern "C" {
 
 #define ldh_isSymbolicVid(vid) ((vid) == ldh_cPlcMainVolume || (vid) == ldh_cPlcFoVolume || (vid) == ldh_cIoConnectVolume)
 
-#if 0
-#ifndef 0
-typedef void		   	*ldh_tSession;
-typedef void		      	*ldh_tWorkbench;
-typedef void		     	*ldh_tVolContext;
-#else
-typedef struct ldhi_s_Session  	  *ldh_tSession;
-typedef struct ldhi_s_Workbench	  *ldh_tWorkbench;
-typedef struct ldhi_s_VolContext  *ldh_tVolContext;
-#endif
-#endif
-
 typedef void *ldh_tSession;
 typedef ldh_tSession ldh_tSesContext;    
 typedef void *ldh_tWorkbench;
@@ -240,58 +228,6 @@ typedef enum {
   ldh_eName_ArefExport  = cdh_mName_form_id | cdh_mName_volume | cdh_mName_object | cdh_mName_attribute,
   ldh_eName_Ref  	= cdh_mName_ref | cdh_mName_attribute
 } ldh_eName;
-#if 0
-typedef enum {		/* Object and attribute name types. */
-  ldh_eName__ = 0,
-  ldh_eName_Object,	/*		   Cobj		*/
-
-  ldh_eName_Hierarchy,	/*	 Aobj-Bobj-Cobj
-			    _O0.123.34.63:1234567890	*/
-
-  ldh_eName_Path,	/*	 Aobj-Bobj		*/
-
-  ldh_eName_VolPath,	/*  Avol:Aobj-Bobj-Cobj
-			    _O0.123.34.63:1234567890	*/
-
-  ldh_eName_Volume,	/*  Avol
-			    _V0.123.34.63		*/
-
-  ldh_eName_Objid,	/*  _O0.123.34.63:1234567890	*/
-
-  ldh_eName_VolumeId,	/*  _V0.123.34.63		*/
-
-  ldh_eName_VidString,	/*  0.123.34.63			*/
-
-  ldh_eName_ObjectIx,	/*  _X1234567890		*/
-
-  ldh_eName_OixString,	/*  1234567890			*/
-
-  ldh_eName_ClassId,	/*  _C0.1:34			*/
-
-  ldh_eName_TypeId,	/*  _T0.1:0.34.1    Classbody
-			    _T0.1:1.0.34    Type
-			    _T0.1:1.1.12    Typedef
-			    _T0.1:1.2.123   Struct
-			    _T0.1:1.3.56    Union
-			    _T0.1:1.4.53    Enum
-			    _T0.1:1.5.36    Bitmask	*/
-
-  ldh_eName_Aref,	/*       Aobj-Bobj-Cobj.FilterAttribute[2]
-			    _A0.123.34.63:1234567890(pwrb:Class-Ai-RtBody)FilterAttribute[2]
-			    _A0.123.34.63:1234567890(_T0.1:0.34.1)[60.4]  */
-
-  ldh_eName_ArefVol,	/*  Avol:Aobj-Bobj-Cobj.FilterAttribute[2]
-			    _A0.123.34.63:1234567890(pwrb:Class-Ai-RtBody)FilterAttribute[2]
-			    _A0.123.34.63:1234567890(_T0.1:0.34.1)[60.4]  */
-
-  ldh_eName_ArefExport, /*  _A0.123.34.63:1234567890(pwrb:Class-Ai-RtBody)FilterAttribute[2] */
-
-  ldh_eName_ArefId,	/*  _A0.123.34.63:1234567890(_T0.1:0.34.1)[60.4]  */
-
-  ldh_eName_Default,	/*  Tries to give the most intuitive name.  */
-  ldh_eName_
-} ldh_eName;
-#endif
 
 typedef enum {
   ldh_eUtility__ = 0,
@@ -744,11 +680,7 @@ pwr_tStatus ldh_GetObjectBodyDef (
   pwr_tClassId Class,
   const char *bodyname,
   int maxlev,
-#if 0 // def __cplusplus
-  ldh_sParDef (**bodydef)[1],
-#else
   ldh_sParDef **bodydef,
-#endif
   int *rows
 );
 pwr_tStatus ldh_GetTrueObjectBodyDef (
@@ -756,11 +688,7 @@ pwr_tStatus ldh_GetTrueObjectBodyDef (
   pwr_tClassId Class,
   char *bodyname,
   int maxlev,
-#if 0 // def __cplusplus
-  ldh_sParDef (**bodydef)[1],
-#else
   ldh_sParDef **bodydef,
-#endif
   int *rows
 );
 pwr_tStatus ldh_GetObjectBuffer (

@@ -516,4 +516,3 @@ void GrowCtxFromWidget( Widget w, void **ctx)
 {
   *ctx = ((GrowWidget) w)->grow.grow_ctx;
 }
-

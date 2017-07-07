@@ -54,31 +54,7 @@
 #include "rt_plc.h"
 #include "rt_plc_ioarea.h"
 
-#if 0
-/*
- * The dummy array is used as direct link pointer when the direct call
- * fails by some reason. If the size of the direct linked object is greater
- * than the fixed object, then a xDLp object will be allocated to that size.
- */
-
-static char xDLbuf[512];
-static char xDLsize = 0;
-static char *xDLp = NULL;
-
-#define GUARD_DL( _PTR, _SIZE )\
-  if (_SIZE < sizeof( xDLbuf ))\
-    *_PTR = &xDL;\
-  else if ((xDLp != NULL) && (_SIZE < xDLsize)))\
-    *_PTR = xDLp;\
-  else\
-  {\
-    xDLsize = _SIZE;\
-    xDlp = calloc(1, xDLsize);\
-    *_PTR = xDLp;\
-  }
-#else
 #define GUARD_DL( _PTR, _SIZE ) /* Do nothing */
-#endif
 
 /* Setup Direct links or subscriptions
 
@@ -411,8 +387,3 @@ plc_GetPointerToObject (
       errh_Error("Direct link to object (%s), %m", Name, sts);
   }
 }
-
-
-
-
-

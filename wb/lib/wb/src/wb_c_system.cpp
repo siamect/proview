@@ -102,4 +102,3 @@ pwr_dExport pwr_BindMethods($System) = {
   pwr_BindMethod(SyntaxCheck),
   pwr_NullMethod
 };
-

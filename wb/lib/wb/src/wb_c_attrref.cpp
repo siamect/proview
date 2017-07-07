@@ -245,47 +245,6 @@ static int IoConnectFilter (
   To connect an object to AttrRef
 \*----------------------------------------------------------------------------*/
 
-#if 0
-static pwr_tStatus replaceAttr( wb_session *sp, wb_attribute& a,
-				pwr_sAttrRef *target)
-{
-  printf( "%s\n", a.attrName());
-
-  switch( a.type()) {
-  case pwr_eType_AttrRef: {
-    pwr_sAttrRef *value = (pwr_sAttrRef *)a.value();
-    pwr_sAttrRef aref = *value;
-
-    if ( aref.Objid.vid == ldh_cIoConnectVolume) {
-      aref.Objid = target->Objid;
-
-      wb_attribute va = sp->attribute( &aref);
-      printf( "Replacing %s\n", va.attrName());
-
-      sp->writeAttribute( a, &aref, sizeof(aref));
-    }
-    break;
-  }
-  default: ;
-  }
-  return LDH__SUCCESS;
-}
-
-static pwr_tStatus replaceClass( wb_session *sp, wb_attribute& oa, 
-				 pwr_sAttrRef *target)
-{
-  for ( int i = 0; i < oa.nElement(); i++) {
-    for ( wb_attribute a = oa.first(i); a; a = a.after()) {
-      if ( a.isClass())
-	replaceClass( sp, a, target);
-      else
-	replaceAttr( sp, a, target);
-    }
-  }
-  return LDH__SUCCESS;
-}
-#endif
-
 static pwr_tStatus IoConnect (
   ldh_sMenuCall *ip
 ) {
@@ -332,20 +291,6 @@ static pwr_tStatus IoConnect (
       return 0;
   }
 
-#if 0
-  printf( "Here in IoConnect\n");
-
-  wb_session *sp = (wb_session *)ip->PointedSession;
-
-  wb_object o = sp->object( ip->Pointed.Objid);
-  if ( !o) return o.sts();
-
-  wb_attribute oa = sp->attribute( &ip->Pointed);
-  if ( !oa) return oa.sts();
-
-  replaceClass( sp, oa, &ip->Selected[0]);
-#endif
-
   sts = ldh_AttrRefToName(ip->PointedSession, &ip->Pointed, ldh_eName_VolPath,
 			  &name_p, &size);
   if ( ODD(sts)) {
@@ -389,10 +334,3 @@ pwr_dExport pwr_BindMethods($AttrRef) = {
   pwr_BindMethod(IoConnectFilter),
   pwr_NullMethod
 };
-
-
-
-
-
-
-

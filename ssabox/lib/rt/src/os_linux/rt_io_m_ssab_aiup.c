@@ -275,16 +275,6 @@ static pwr_tStatus IoCardRead (
         if ( sts == -1)
 	/* Error handling for local Qbus-I/O */
         {
-#if 0
-          /* Exceptionhandler was called */
-          if ( io_fatal_error)
-          {
-            /* Activate emergency break */
-            errh_Error( "Fatal read error, card '%s', IO is stopped", cp->Name);
-            ctx->Node->EmergBreakTrue = 1;
-            return IO__ERRDEVICE;
-          }
-#endif
           /* Increase error count and check error limits */
 	  op->ErrorCount++;
 

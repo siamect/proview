@@ -66,11 +66,3 @@ void CoLogW::show( char categories[][20], char *item)
 {
   logwnav->show( categories, item);
 }
-
-
-
-
-
-
-
-

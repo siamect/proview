@@ -335,4 +335,3 @@ ostream& operator<< ( ostream& o, const FlowRect r)
   '[' << r.ur.z_x << ',' << r.ur.z_y << ']' ;
   return o;
 }
-

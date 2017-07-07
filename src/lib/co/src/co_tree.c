@@ -97,12 +97,6 @@ deleteNode(tree_sTable *tp, tree_sNode *z);
 static tree_sNode *
 insertNode(tree_sTable *tp, tree_sNode *z);
 
-#if 0
-static void
-treePrint(tree_sTable *tp, tree_sNode *np, tree_sNode *op, tree_sNode *oop,
-          int level, void (*printNode)(tree_sNode *, int));
-#endif
-
 static void
 treeCheck(tree_sTable *tp, tree_sNode *np, int *count, int *maxlevel, int *hight,
           int level, char *(*printKey)(tree_sNode *));
@@ -754,47 +748,6 @@ insertNode(tree_sTable *tp, tree_sNode *z)
     return z;
 }
 
-
-#if 0
-
-static void
-treePrint(
-    tree_sTable *tp,
-    tree_sNode  *np,
-    tree_sNode  *op,
-    tree_sNode  *oop,
-    int         level,
-    void        (*printNode)(tree_sNode *, int)
-    )
-{
-
-    if (np == tp->null)
-        return;
-
-    if (level > tp->maxDepth)
-        tp->maxDepth = level;
-
-    treePrint(tp, np->left, np, np->parent, level+1, printNode);  
-
-    printNode(np, level);
-
-    switch (np->bal) {
-    case 1:
-        tp->nHP++;
-        break;
-    case 0:
-        tp->nHZ++;
-        break;
-    case -1:
-        tp->nHN++;
-        break;
-    }
-
-    treePrint(tp, np->right, np, np->parent, level+1, printNode);
-}  
-#endif
-
-
 static void
 treeCheck(tree_sTable *tp, tree_sNode *np, int *count, int *maxlevel,
           int *hight, int level, char *(*printKey)(tree_sNode *))
@@ -844,31 +797,6 @@ treeCheck(tree_sTable *tp, tree_sNode *np, int *count, int *maxlevel,
     }
     *hight = (hright > hleft ? hright : hleft) + 1;
 }
-
-
-#if 0
-static tree_sTable *
-buildTree(tree_sTable *tp, tree_sNode *fp, int count, int *hight, int *key)
-{
-    int        hleft;
-    int        hright;
-    tree_sNode *np;
-
-    if (count == 0) {
-        return tp->null;
-    }
-
-    np = allocNode(tp, 0);
-    np->parent = fp;
-    np->left = buildTree(tp, np, count/2, &hleft, key);
-    np->Key = (*key)++;
-    np->right = buildTree(tp, np, count - count/2 - 1, &hright, key);
-    np->bal = hright - hleft;
-
-    return np;
-}
-#endif
-
 
 int
 tree_Cardinality(pwr_tStatus *sts, tree_sTable *tp)
@@ -1053,9 +981,7 @@ tree_PrintTable(pwr_tStatus *sts,
     int maxlevel = 0;
     int hight = 0;
 
-#if 1
     treePrintInorder(tp, tp->root, printNode);
-#endif
     treeCheck(tp, tp->root, &count, &maxlevel, &hight, 0, printKey);
     printf("count: %d, maxlevel: %d, hight: %d\n", count, maxlevel, hight);
     printf("nNode.......: %d\n", tp->nNode);

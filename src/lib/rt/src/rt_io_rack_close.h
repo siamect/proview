@@ -45,4 +45,3 @@ static pwr_tStatus IoRackClose (
   io_sAgent	*ap,
   io_sRack	*rp
 );
-

@@ -82,9 +82,6 @@ errl_Init (
 {
   pthread_mutexattr_t mutexattr;
   pthread_attr_t pthreadattr;
-#if 0
-  struct mq_attr mqattr;
-#endif
   char name[64];
   char *busid = getenv(pwr_dEnvBusId);
   static int initDone = 0;
@@ -118,14 +115,6 @@ errl_Init (
     return;
   }
   pthread_mutexattr_destroy(&mutexattr);
-
-#if 0
-  mqattr.mq_msgsize = LOG_MAX_MSG_SIZE;  /* max mess size */
-  mqattr.mq_maxmsg = MAX_NO_MSG;     /* max no of msg in this queue */
-  mqattr.mq_flags = 0; // O_NONBLOCK;
-  oflags = O_CREAT | O_RDWR;
-  mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
-#endif
 
   sprintf(name, "%s_%s", LOG_QUEUE_NAME, busid ? busid : "");  
   fd = open(name, flags, mode); 
@@ -296,7 +285,3 @@ log_thread (void *arg)
   }
   return 0;
 }
-
-
-
-

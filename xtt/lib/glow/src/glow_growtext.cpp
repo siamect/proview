@@ -1190,4 +1190,3 @@ void GrowText::export_flow( GlowExportFlow *ef)
 {
   ef->text( this);
 }
-

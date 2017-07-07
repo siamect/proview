@@ -156,9 +156,3 @@ class XttMultiView : XttUtility {
 };
 
 #endif
-
-
-
-
-
-

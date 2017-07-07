@@ -474,7 +474,3 @@ int	goen_get_location_point(
     ( grectx, graphbody, mask, node_width, location_point, node);
   return sts;
 }
-
-
-
-

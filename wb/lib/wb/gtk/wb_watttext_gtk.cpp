@@ -440,14 +440,3 @@ WAttTextGtk::WAttTextGtk(
   wow = new CoWowGtk( toplevel);
   init = 0;
 }
-
-
-
-
-
-
-
-
-
-
-

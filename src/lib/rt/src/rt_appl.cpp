@@ -162,9 +162,3 @@ void rt_appl::mainloop()
     first_scan = false;
   }
 }
-
-
-
-
-
-

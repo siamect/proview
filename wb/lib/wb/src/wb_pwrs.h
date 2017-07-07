@@ -67,19 +67,10 @@ typedef struct {
   pwr_sMethodBinding (*Methods)[];
 } pwr_sClassBinding;
 
-#if 1 //defined OS_LINUX
 #define pwr_BindMethods(Class) pwr_sMethodBinding pwr_g ## Class ## _Methods[]
 #define pwr_BindClasses(Type) pwr_sClassBinding pwr_g ## Type ## _ClassMethods[]
 #define pwr_BindClass(Class) {#Class, (pwr_sMethodBinding(*)[]) pwr_g ## Class ## _Methods}
 #define pwr_BindMethod(Method) {#Method, (pwr_tStatus (*)())Method}
-#else
-#error "Wrong OS"
-#define pwr_BindMethods(Class) pwr_sMethodBinding pwr_g/**/Class/**/_Methods[]
-#define pwr_BindClasses(Type) pwr_sClassBinding pwr_g/**/Type/**/_ClassMethods[]
-#define pwr_BindClass(Class) {"Class", pwr_g/**/Class/**/_Methods}
-#define pwr_BindMethod(Method) {"Method", (pwr_tStatus (*)())Method}
-#endif
-
 
 #define pwr_NullMethod {"", NULL}
 

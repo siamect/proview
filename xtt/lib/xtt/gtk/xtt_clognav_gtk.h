@@ -62,5 +62,3 @@ class CLogNavGtk : public CLogNav {
 };
 
 #endif
-
-

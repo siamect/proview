@@ -72,9 +72,6 @@
 #include "rt_que.h"
 #include "rt_io_base.h"
 #include "rt_csup.h"
-#if 0
-#include "rt_io_supervise.h"
-#endif
 #include "rt_c_plcthread.h"
 #include "rt_c_node.h"
 
@@ -768,5 +765,3 @@ scan (
   if ( tp->loops % MAX( 1, (int)(1.0 / tp->PlcThread->ScanTime)) == 0)
     pwrs_Node_SupEmon();
 }
-
-

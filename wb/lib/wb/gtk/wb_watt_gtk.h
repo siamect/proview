@@ -101,10 +101,3 @@ class WAttGtk : public WAtt {
 };
 
 #endif
-
-
-
-
-
-
-

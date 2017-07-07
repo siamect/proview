@@ -114,10 +114,3 @@ class WdaGtk : public Wda {
 
 
 #endif
-
-
-
-
-
-
-

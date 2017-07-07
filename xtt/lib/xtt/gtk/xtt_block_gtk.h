@@ -72,6 +72,3 @@ class BlockGtk : public Block {
 };
 
 #endif
-
-
-

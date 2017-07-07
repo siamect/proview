@@ -167,5 +167,3 @@ class WItemRevAttr : public WItemRev {
 
 
 #endif
-
-

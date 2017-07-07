@@ -61,6 +61,3 @@ class PnViewerNavGtk : public PnViewerNav {
 };
 
 #endif
-
-
-

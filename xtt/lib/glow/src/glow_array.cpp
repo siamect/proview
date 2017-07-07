@@ -2000,5 +2000,3 @@ void GlowArray::export_flow( GlowExportFlow *ef)
 {
   ef->array( this);
 }
-
-

@@ -113,4 +113,3 @@ pwr_dExport pwr_BindMethods(FriendNodeConfig) = {
   pwr_BindMethod(SyntaxCheck),
   pwr_NullMethod
 };
-

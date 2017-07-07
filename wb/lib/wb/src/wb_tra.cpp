@@ -1556,4 +1556,3 @@ static pwr_tStatus	trace_aanalyse_set_value(
   }
   return 1;
 }
-

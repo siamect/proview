@@ -328,15 +328,6 @@ gcg_tMethod gcg_comp_m[80] = {
 	gcg_comp_m71
 	};
 
-
-#if 0
-static int gcg_get_converted_hiername( 
-    ldh_tSesContext ldhses,
-    pwr_tObjid	objdid,
-    char	*converted_name
-);
-#endif
-
 static pwr_tStatus gcg_get_build_host(
     pwr_mOpSys os,
     char *buf,
@@ -773,56 +764,6 @@ static int gcg_timer_print(
 	}
 	return GSX__SUCCESS;
 }
-
-/*************************************************************************
-*
-* Name:		gcg_get_converted_hiername()
-*
-* Type		void
-*
-* Type		Parameter	IOGF	Description
-* ldh_tSesContext ldhses		I	ldh session.
-* pwr_tObjid	objdid		I	objdid of object.
-* char		*converted_name	O	the converted hierachy name of the 
-*					object.
-*
-* Description:
-*	Returns the hierachy name of the object with all "-" substituted
-*	with "_" so the name can be used in c-code.
-*
-**************************************************************************/
-#if 0
-static int gcg_get_converted_hiername( 
-    ldh_tSesContext ldhses,
-    pwr_tObjid	objdid,
-    char	*converted_name
-)
-{
-	pwr_tOName	name;
-	int		sts, size;
-	char		*b,*s;
-	int		i;	
-
-	/* Get the hierarchy name */
-	sts = ldh_ObjidToName( ldhses, objdid, ldh_eName_Hierarchy,
-		name, sizeof( name), &size);
-	if ( EVEN(sts)) return sts;
-
-	/* Convert */
-	b = name;
-	s = converted_name;
-	for ( i = 0; *b != '\0'; b++ )
-	{
-	  *s = *b;
-	  if ( *b == '-' ) 
-	    *s = '_';
-	  s++;
-	}	
-	*s = '\0';
-
-	return GSX__SUCCESS;
-}
-#endif
 
 /*************************************************************************
 *
@@ -1387,53 +1328,6 @@ int	gcg_print_inputs(
 	free((char *) bodydef);	
 	return GSX__SUCCESS;
 }
-
-
-
-
-#if 0
-/*************************************************************************
-*
-* Name:		gcg_print_exec()
-*
-* Type		void
-*
-* Type		Parameter	IOGF	Description
-* gcg_ctx	gcgctx		I	gcg context.
-* vldh_t_node	node		I	vldh node.
-* pwr_tObjid	objdid		I  	objdid.
-* char		prefix		I	rtdb pointer prefix.
-*
-* Description:
-*	Prints the beginning of an exec command for a function.
-*		'structname'_exec( tp, 'pointername',
-*
-**************************************************************************/
-
-static int	gcg_print_exec(
-    gcg_ctx		gcgctx,
-    vldh_t_node		node,
-    pwr_tObjid		objdid,
-    char		prefix
-)
-{
-	int			sts;
-	char			*name;
-
-	/* Get name for the exec command for this class */
-	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
-	if ( EVEN(sts)) return sts;	
-
-	/* Print the execute command */
-	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
-		"%s_exec( tp, %c%s, ",
-		name,
-		prefix,
-		vldh_IdToStr(0, objdid));
-	return GSX__SUCCESS;
-
-}
-#endif
 
 /*************************************************************************
 *
@@ -2304,12 +2198,7 @@ int	gcg_wind_comp_all(
 	  }
   	  /* Load the last window */
 	  /* Check if this window is loaded */
-#if 0
-	  sts = vldh_get_wind_objdid( *windlist_ptr, &wind); 
-	  if ( sts == VLDH__OBJNOTFOUND )
-#else
 	  if (!IsWindowLoaded(loaded_windlist, loaded_windcount, *windlist_ptr,  &wind))
-#endif
 	  {
 	    if ( parent_count == 1) {
 	      /* This is the child to the plc */
@@ -10698,247 +10587,6 @@ int	gcg_comp_m32( gcg_ctx gcgctx, vldh_t_node node)
 
 int	gcg_comp_m33( gcg_ctx gcgctx, vldh_t_node node)
 {
-#if 0
-	ldh_tSesContext ldhses;
-	pwr_tClassId		cid;
-	unsigned long		point;
-	unsigned long		par_inverted;
-	int 			sts;
-	int			size;
-	int			k;
-	pwr_sAttrRef		output_attrref;
-	int			output_type;
-	char			output_prefix;
-	char			output_par[80];
-	vldh_t_node		output_node;
-	unsigned long		output_count;
-	unsigned long		output_point;
-	ldh_sParDef 		output_bodydef;
-	int			pincond_found, wind_found;
-	char			*windbuffer;
-	pwr_tObjid		windowobjdid;
-	pwr_tClassId		windclass;
-	char			*name;
-	unsigned long		point_count;
-	vldh_t_conpoint		*pointlist;
-	vldh_t_node		next_node;
-	unsigned long		next_point;
-	unsigned long		cellcount;
-	pwr_tOName     		hier_name;
-
-	ldhses = (node->hn.wind)->hw.ldhses; 
-
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
-
-	/* Get name for the exec command for this class */
-	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
-	if ( EVEN(sts)) return sts;	
-
-	/* Check if there is any step connected to the inputpin */
-	sts = gcg_get_point( node, 0, &point, &par_inverted);
-	if ( EVEN( sts)) return sts;
-
-	cellcount = 0;
-	gcg_get_conpoint_nodes( node, point, &point_count, &pointlist, 
-			GOEN_CON_SIGNAL | GOEN_CON_OUTPUTTOINPUT);
-	if ( point_count > 1 )
-	{
-	  for ( k = 1; k < point_count; k++)
-	  {
-	    next_node = (pointlist + k)->node;
-	    next_point = (pointlist + k)->conpoint;
-	    /* Check class of connected nodes */	
-	    sts = ldh_GetObjectClass( ldhses, next_node->ln.oid, &cid);
-	    if (EVEN(sts)) return sts;
-
-	    if ( 
-		(cid == vldh_uclass( ldhses, "MpsIn")) || 
-		(cid == vldh_uclass( ldhses, "MpsOut")) || 
-		(cid == vldh_uclass( ldhses, "MpsTube")) || 
-		(cid == vldh_uclass( ldhses, "MpsStack")) || 
-		(cid == vldh_uclass( ldhses, "MpsWare")) || 
-		(cid == vldh_uclass( ldhses, "MpsQueue")) ) 
-	    {
-	      cellcount++;
-	      /* Print in the input list */
-	      /* Get the name of the connected object */
-	      sts = ldh_ObjidToName( 
-			gcgctx->ldhses,
-			next_node->ln.oid, ldh_eName_Hierarchy,
-			hier_name, sizeof( hier_name), &size);
-	      if( EVEN(sts)) return sts;
-
-	      IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
-			"strcpy( &%c%s->NameOfSendCell, \"%s\");\n", 
-			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.oid),
-			hier_name);
-
-	    }
-	    else if (cid != vldh_uclass( ldhses, "MpsTrp") )
-	    {
-	      /* Bad class */
-	      gcg_error_msg( gcgctx, GSX__NOSTEP, node);
-	    }
-	  }
-	}
-	else
-	{
-	  /* Not connected */
-	  gcg_error_msg( gcgctx, GSX__NOTCON, node);
-	}
-	if ( point_count > 0) free((char *) pointlist);
-	if ( cellcount > 1 )
-	{
-	  /* More than one cell connected */
-	  gcg_error_msg( gcgctx, GSX__CONOUTPUT, node);
-	}
-
-	/* Check if there is any step connected to the outputpin */
-	sts = gcg_get_point( node, 2, &point, &par_inverted);
-	if ( EVEN( sts)) return sts;
-
-	cellcount = 0;
-	gcg_get_conpoint_nodes( node, point, &point_count, &pointlist, 
-		GOEN_CON_SIGNAL | GOEN_CON_OUTPUTTOINPUT);
-	if ( point_count > 1 )
-	{
-	  for ( k = 1; k < point_count; k++)
-	  {
-	    next_node = (pointlist + k)->node;
-	    next_point = (pointlist + k)->conpoint;
-	    /* Check class of connected nodes */	
-	    sts = ldh_GetObjectClass( ldhses, next_node->ln.oid, &cid);
-	    if (EVEN(sts)) return sts;
-
-	    if ( 
-		(cid == vldh_uclass( ldhses, "MpsIn")) || 
-		(cid == vldh_uclass( ldhses, "MpsOut")) || 
-		(cid == vldh_uclass( ldhses, "MpsTube")) || 
-		(cid == vldh_uclass( ldhses, "MpsStack")) || 
-		(cid == vldh_uclass( ldhses, "MpsWare")) || 
-		(cid == vldh_uclass( ldhses, "MpsQueue")) ) 
-	    {
-	      cellcount++;
-	      /* Print in the input list */
-	      /* Get the name of the connected object */
-	      sts = ldh_ObjidToName( 
-			gcgctx->ldhses,
-			next_node->ln.oid, ldh_eName_Hierarchy,
-			hier_name, sizeof( hier_name), &size);
-	      if( EVEN(sts)) return sts;
-
-	      IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
-			"strcpy( &%c%s->NameOfReceivCell, \"%s\");\n", 
-			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.oid),
-			hier_name);
-
-	    }
-	    else if (cid != vldh_uclass( ldhses, "MpsTrp") )
-	    {
-	      /* Bad class */
-	      gcg_error_msg( gcgctx, GSX__NOSTEP, node);
-	    }
-	  }
-	}
-	else
-	{
-	  /* Not connected */
-	  gcg_error_msg( gcgctx, GSX__NOTCON, node);
-	}
-	if ( point_count > 0) free((char *) pointlist);
-	if ( cellcount > 1 )
-	{
-	  /* More than one cell connected */
-	  gcg_error_msg( gcgctx, GSX__CONOUTPUT, node);
-	}
-
-	/* Check if the condition pin is visible */
-	sts = gcg_get_inputpoint( node, 1, &point, &par_inverted);
-	if ( ODD( sts))
-	{
-	  /* Look for an output connected to this point */
-	  sts = gcg_get_output( node, point, &output_count, &output_node,
-			&output_point, &output_bodydef, 
-			GOEN_CON_SIGNAL | GOEN_CON_OUTPUTTOINPUT);
-	  if ( EVEN(sts)) return sts;
-
-	  pincond_found = 0;
-	  if ( output_count > 0 )
-	  {
-	    pincond_found = 1;
-	    if ( output_count > 1) 
-	      gcg_error_msg( gcgctx, GSX__CONOUTPUT, node);
-
-	    sts = gcg_get_outputstring( gcgctx, output_node, &output_bodydef, 
-			&output_attrref, &output_type, &output_prefix, output_par);
-	    if ( sts == GSX__NEXTPAR ) return sts;
-	    if ( EVEN(sts)) return sts;
-	    
-	    /* Print the execute for a triggtrp command */
-	    IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
-		"mpsTriggtrp_exec( %c%s, ",
-		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.oid));
-/*	    if ( par_inverted)
-	      IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
-		"!");
-*/
-	    IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
-			   "%c%s->%s);\n",
-			   output_prefix,
-			   output_type == GCG_OTYPE_OID ? 
-			     vldh_IdToStr(0, output_attrref.Objid) : 
-			     vldh_AttrRefToStr(0, output_attrref),
-			   output_par);
-	  }
-	}
-
-	/* Print the function call to execute the subwindow */
-	/* Check first that there is a subwindow */
-	sts = ldh_GetChild( ldhses, node->ln.oid, &windowobjdid);
-	wind_found = 0;
-	while ( ODD(sts) )
-	{
-	  /* Check if window */
-	  sts = ldh_GetObjectBuffer( ldhses,
-			windowobjdid, "DevBody", "PlcWindow", 
-			(pwr_eClass *) &windclass, &windbuffer, &size);
-	  if ( ODD(sts)) 
-	  {
-	    free((char *) windbuffer);
-	    wind_found = 1;	
-	    break;
-	  }
-	  sts = ldh_GetNextSibling( ldhses, windowobjdid, &windowobjdid);
-	}
-
-	if ( wind_found )
-	{
-	  /* Print the window execute command */
-	  IF_PR fprintf( gcgctx->files[GCGM1_DECL_FILE],
-		"void %c%s_exec(plc_sThread *tp);",
-		GCG_PREFIX_MOD,
-		vldh_IdToStr(0, windowobjdid));
-	  IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE],
-		"%c%s_exec( tp);\n",
-		GCG_PREFIX_MOD,
-		vldh_IdToStr(0, windowobjdid));
-	}
-	if ( wind_found && pincond_found )
-	{
-	  /* The pin is connected and there is a sub window */
-	  gcg_error_msg( gcgctx, GSX__PINWIND, node);
-	}
-
-	/* Print the execute command */
-	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
-		"%s_exec( %c%s);\n",
-		name,
-		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.oid));
-#endif
 	return GSX__SUCCESS;
 }
 
@@ -11547,23 +11195,6 @@ int	gcg_comp_m37( gcg_ctx gcgctx, vldh_t_node node)
 		"RtBody", "DataName", (char *)&pararef, sizeof( pararef)); 
 	  if ( EVEN(sts)) return sts;
 	}
-#if 0
-	char			*name;
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
-
-	/* Get name for this class */
-	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
-	if( EVEN(sts)) return sts;
-
-	/* Print the init command */
-	IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
-		"%s_init( %c%s,\"%s\");\n",
-		name,
-		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.oid),
-		parname);
-
-#endif
 	return GSX__SUCCESS;
 }
 
@@ -13169,18 +12800,7 @@ int	gcg_comp_m47( gcg_ctx gcgctx, vldh_t_node node)
 			&output_attrref, &output_type, &output_prefix, output_par);
 	    if ( sts == GSX__NEXTPAR ) return sts;
 	    if ( EVEN(sts)) return sts;
-	    
-#if 0
-	    /* Get the name of the connected object */
-	    sts = ldh_ObjidToName( 
-		gcgctx->ldhses,
-		output_objdid, ldh_eName_Hierarchy,
-		hier_name, sizeof( hier_name), &size);
-	    if( EVEN(sts)) return sts;
 
-	    sts = ldh_NameToAttrRef( gcgctx->ldhses, hier_name, &attrref);
-	    if ( EVEN(sts)) return sts;
-#endif
 	    /* Put the attribut reference in the sup object */
 	    IF_PR
 	    {
@@ -13687,197 +13307,7 @@ int	gcg_comp_m52( gcg_ctx gcgctx, vldh_t_node node)
 {
   gcg_error_msg( gcgctx, GSX__OBSOLETE, node);  
 
-#if 0
-	ldh_sParDef 		*bodydef;
-	int 			rows, sts;
-	int			size;
-	pwr_tObjid		refobjdid;
-	pwr_tObjid		*refobjdid_ptr;
-	char			*par;
-	unsigned long		info_type;
-	int			found, i;
-	ldh_tSesContext ldhses;
-	pwr_tClassId		cid;
-	int			info_pointer_flag;
-	pwr_tString80		parameter;
-	char			*s;
-	int			pfound;
-	int			idx;
-
-	ldhses = (node->hn.wind)->hw.ldhses;  
-
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
-
-	/* Get the objdid of the referenced io object stored in the
-	  first parameter in defbody */
-
-	/* Get the devbody parameters for this class */
-	sts = ldh_GetObjectBodyDef( ldhses,
-			node->ln.cid, "DevBody", 1, 
-			&bodydef, &rows);
-	if ( EVEN(sts) ) return sts;
-
-	sts = ldh_GetObjectPar( ldhses,
-			node->ln.oid, 
-			"DevBody",
-			bodydef[0].ParName,
-			(char **)&refobjdid_ptr, &size); 
-	if ( EVEN(sts)) return sts;
-
-	refobjdid = *refobjdid_ptr;
-	free((char *) refobjdid_ptr);
-
-	pwr_tAttrRef refattrref = cdh_ObjidToAref( refobjdid);
-	sts = gcg_replace_ref( gcgctx, &refattrref, node);
-	if ( EVEN(sts)) return sts;
-
-	refobjdid = refattrref.Objid;
-
-	/* Check that this is objdid of an existing object */
-	sts = ldh_GetObjectClass(
-			(node->hn.wind)->hw.ldhses, 
-			refobjdid,
-			&cid);
-	if ( EVEN(sts)) 
-	{
-	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
-	  free((char *) bodydef);	
-	  return GSX__NEXTNODE;
-	}
-
-	/* Get the parameter of the referenced object
-	  in the second devbody-parameter */
-	sts = ldh_GetObjectPar( ldhses,
-			node->ln.oid, 
-			"DevBody",
-			bodydef[1].ParName,
-			(char **)&par, &size); 
-	if ( EVEN(sts)) return sts;
-	strncpy( parameter, par, sizeof(parameter));
-	free((char *) par);
-	free((char *) bodydef);	
-
-	/* Check that the parameter exists in the referenced object */
-	pfound = 0;
-	if ( strncmp( parameter, "Data[", 5) == 0 && sscanf( &parameter[5], "%d", &idx) == 1) {
-	  s = strrchr( parameter, ']');
-	  if ( s && strcmp( s, "].DataP") == 0) {
-	    pfound = 1;
-	    info_pointer_flag = 1;
-	    info_type = 0;
-	  }
-	  else if ( s && strcmp( s, "].Data_Objid") == 0) {
-	    pfound = 1;
-	    info_pointer_flag = 0;
-	    info_type = pwr_eType_Objid;
-	  }
-
-	  if ( pfound) {
-	    switch( cid) {
-	    case pwr_cClass_NMpsCell60:
-	    case pwr_cClass_NMpsStoreCell60:
-	      if ( idx >= 60) {
-		gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);
-		return GSX__NEXTNODE;
-	      }
-	      break;
-	    case pwr_cClass_NMpsCell120:
-	    case pwr_cClass_NMpsStoreCell120:
-	      if ( idx >= 120) {
-		gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);
-		return GSX__NEXTNODE;
-	      }
-	      break;
-	    default:
-	      gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);
-	      return GSX__NEXTNODE;
-	    }	   
-	  }
-	}
-
-	if ( !pfound) {
-	  sts = ldh_GetObjectBodyDef( ldhses, cid, "RtBody", 1, 
-				      &bodydef, &rows);
-	  if ( EVEN(sts) ) {
-	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
-	    return GSX__NEXTNODE;
-	  }
-
-	  for ( i = 0, found = 0; i < rows; i++) {
-	    /* ML 961009. Use ParName instead of PgmName */
-	    if ( strcmp( bodydef[i].ParName, parameter) == 0) {
-	      found = 1;
-	      break;
-	    }
-	  }
-	  if ( !found ) {
-	    gcg_error_msg( gcgctx, GSX__REFPAR, node);  
-	    free((char *) bodydef);	
-	    return GSX__NEXTNODE;
-	  }
-	
-	  /* Check type of parameter */
-	  switch (bodydef[i].ParClass )  {
-	  case pwr_eClass_Input:
-	    info_type = bodydef[i].Par->Input.Info.Type ;
-	    if ( bodydef[i].Par->Input.Info.Flags & PWR_MASK_RTVIRTUAL	) {
-	      /* Parameter is not defined in runtime */
-	      gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
-	      free((char *) bodydef);	
-	      return GSX__NEXTNODE;
-	    } 
-	    break;
-	  case pwr_eClass_Output:
-	    info_type = bodydef[i].Par->Output.Info.Type ;
-	    info_pointer_flag = 
-	      PWR_MASK_POINTER & bodydef[i].Par->Output.Info.Flags;
-	    break;
-	  case pwr_eClass_Intern:
-	    info_type = bodydef[i].Par->Intern.Info.Type ;
-	    info_pointer_flag = 
-	      PWR_MASK_POINTER & bodydef[i].Par->Intern.Info.Flags;
-	    break;
-	  case pwr_eClass_Param:
-	    info_type = bodydef[i].Par->Param.Info.Type ;
-	    info_pointer_flag = 
-	      PWR_MASK_POINTER & bodydef[i].Par->Param.Info.Flags;
-	    break;
-	  default:
-	    /* Not allowed parameter type */		  
-	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
-	    free((char *) bodydef);	
-	    return GSX__NEXTNODE;
-	  }
-	  free((char *) bodydef );
-	}	  
-
-	if (node->ln.cid == pwr_cClass_GetDap) {
-	  if ( !info_pointer_flag) {
-	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
-	    return GSX__NEXTNODE;
-	  }
-	}
-	else if (node->ln.cid == pwr_cClass_GetObjidp) {
-	  if (info_type != pwr_eType_Objid) {
-	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);
-	    return GSX__NEXTNODE;
-	  }
-	}
-
-	sts = gcg_print_exec_macro( gcgctx, node, node->ln.oid, GCG_PREFIX_REF);
-	if (EVEN(sts)) return sts; 
-
-	/* Print the referenced attribute */
-	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE],
-		"%c%s->%s);\n",
-		GCG_PREFIX_REF,
-		vldh_IdToStr(0, refobjdid), 
-		parameter);
-
-	/* Insert object in ref list */
-	gcg_ref_insert( gcgctx, refobjdid, GCG_PREFIX_REF, node);
-#endif
-	return GSX__SUCCESS;
+  return GSX__SUCCESS;
 }
 
 /*************************************************************************
@@ -17624,25 +17054,6 @@ static pwr_tStatus gcg_replace_ref( gcg_ctx gcgctx, pwr_sAttrRef *attrref,
   }
   return GSX__SUCCESS;
 }
-
-#if 0 // Not used any more
-static int gcg_is_window( gcg_ctx gcgctx, pwr_tOid oid)
-{
-  pwr_sPlcWindow *windbuffer;
-  pwr_tClassId windclass;
-  int size;
-  pwr_tStatus sts;
-
-  sts = ldh_GetObjectBuffer( gcgctx->ldhses, oid, "DevBody", "PlcWindow", 
-			     (pwr_eClass *) &windclass, 
-			     (char **)&windbuffer, &size);
-  if ( ODD(sts)) {
-    free((char *) windbuffer);
-    return 1;
-  }
-  return 0;
-}
-#endif
 
 /*************************************************************************
 *

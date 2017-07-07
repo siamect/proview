@@ -63,6 +63,3 @@ class WbExpWNavGtk : public WbExpWNav {
 };
 
 #endif
-
-
-

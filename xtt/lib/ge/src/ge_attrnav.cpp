@@ -1467,9 +1467,6 @@ void  attrnav_attrvalue_to_string( int type_id, void *value_ptr,
       strncpy( str, attrnav_mask_to_string( type_id, *(int *)value_ptr), size);
       str[size-1] = 0;
       *len = strlen( str);
-#if 0
-      *len = snprintf( str, size, "%u", *(unsigned int *)value_ptr);
-#endif
       break;
     }
   }

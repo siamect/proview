@@ -614,9 +614,3 @@ void ItemMsgObjectPlc::find()
   if ( msglist->find_plc_cb)
     (msglist->find_plc_cb)( msglist->parent_ctx, oid);
 }
-
-
-
-
-
-

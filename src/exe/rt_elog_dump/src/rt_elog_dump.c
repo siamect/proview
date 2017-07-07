@@ -646,4 +646,3 @@ void convertEventPrio(int prio, char *ret)
     break;
   }
 }  
-

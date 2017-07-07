@@ -257,12 +257,3 @@ void MsgWindowMotif::create_form( Widget w, MsgWindow *msgw, XmAnyCallbackStruct
 {
   ((MsgWindowMotif *)msgw)->form = w;
 }
-
-
-
-
-
-
-
-
-

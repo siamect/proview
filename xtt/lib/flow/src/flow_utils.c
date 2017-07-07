@@ -79,4 +79,3 @@ static void qsort_swp(int w, char *a, char *b)
     *b++ = tmp;
   }
 }
-

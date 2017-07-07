@@ -475,4 +475,3 @@ WGeMotif::WGeMotif( Widget wge_parent_wid, void *wge_parent_ctx, char *wge_name,
 	(XtCallbackProc)activate_exit, this);
 
 }
-

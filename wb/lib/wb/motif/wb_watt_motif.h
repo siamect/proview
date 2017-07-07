@@ -97,10 +97,3 @@ class WAttMotif : public WAtt {
 };
 
 #endif
-
-
-
-
-
-
-

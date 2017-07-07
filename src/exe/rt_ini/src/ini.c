@@ -311,11 +311,6 @@ readSectFile (
   }
   vp->time = cp->dbs.file.time;
 
-#if 0
-  if (strlen (cp->dbs.file.comment) > 0) {
-    errh_LogInfo(&cp->log, "%s", cp->dbs.file.comment);
-  }
-#endif
   return ODD(*sts);
 }
 
@@ -333,8 +328,6 @@ readSectVolRef (
   PDR			pdrs;
 
   pwr_dStatus(sts, status, INI__SUCCESS);
-
-#if 1
 
   if (fseek(cp->dbs.f, cp->sect.offset, SEEK_SET) != 0)
     pwr_Return(NO, sts, errno_GetStatus());
@@ -374,14 +367,6 @@ readSectVolRef (
       lst_Init(NULL, &vp->upd_lh, NULL);
       lst_Init(NULL, &vp->upd_io_lh, NULL);
       lst_Init(NULL, &vp->cre_lh, NULL);
-#if 0
-//      lst_Init(NULL, &vp->del_lh, NULL);
-#endif
-
-#if 0
-
-      np->cacheSize += VolRef.CacheMaxCount;
-#endif
     } else if ( vp->time.tv_sec != 0) {
       /* Do some checks.  */
       if ( dvp->volume.cid == pwr_eClass_DetachedClassVolume) {
@@ -410,7 +395,6 @@ readSectVolRef (
       }
     }
   }
-#endif
   return ODD(*sts);
 }
 
@@ -506,12 +490,6 @@ reloadSectRbody (
   ivol_sVolume		*vp
 )
 {
-#if 0
-  *sts = INI__ERROR;
-  return NO;
-  
-#else
-  
   pwr_tInt32		i;
   dbs_sBody		ob;
   void			*body;
@@ -581,8 +559,6 @@ reloadSectRbody (
   }
 
   return ODD(*sts);
-
-#endif
 }
 
 static pwr_tBoolean
@@ -865,15 +841,9 @@ ini_CreateContext (
     offsetof(qini_sNode, nid), sizeof(qini_sNode), 10,
     tree_Comp_nid);
 
-#if 0
-  cp->vname_t = tree_CreateTable(sizeof(pwr_tObjName),
-    offsetof(ivol_sVolume, name), sizeof(ivol_sVolume), 10,
-    tree_eComp_strncmp, NULL);
-#else
   cp->vid_t = tree_CreateTable(sts, sizeof(pwr_tVolumeId),
     offsetof(ivol_sVolume, vid), sizeof(ivol_sVolume), 10,
     tree_Comp_vid);
-#endif
 
   cp->proc_t = tree_CreateTable(sts, sizeof(((ini_sProc *)0)->id),
     offsetof(ini_sProc, id), sizeof(ini_sProc), 10,
@@ -1109,7 +1079,6 @@ ini_ReadBootFile (
 	cp->errors++;
 	continue;
       } else {
-#if 1
 	*sts = cdh_StringToVolumeId(vids, &vid);
 	if (EVEN(*sts)) {
 	  errh_LogError(&cp->log, "Found no root volume");
@@ -1118,7 +1087,6 @@ ini_ReadBootFile (
 	}
 	errh_LogInfo(&cp->log, "This node has node identity %s (%d)", cdh_NodeIdToString(NULL, vid, 0, 0), vid);
 	cp->node.nid = vid;
-#endif
       }
       vp = tree_Insert(sts, cp->vid_t, &vid);
       strcpy(vp->name, vname);
@@ -1130,30 +1098,21 @@ ini_ReadBootFile (
       lst_Init(NULL, &vp->upd_lh, NULL);
       lst_Init(NULL, &vp->upd_io_lh, NULL);
       lst_Init(NULL, &vp->cre_lh, NULL);
-#if 0
-//      lst_Init(NULL, &vp->del_lh, NULL);
-#endif
 
       break;
     case 5:	/* Find other volume.  */
-#if 1
       n = sscanf(s, "%s %s", vname, vids);
-#else
-      n = sscanf(s, "%s", vids);
-#endif
       if (n < 2) {
 	errh_LogError(&cp->log, "Error in line, skip to next line\n%s", s);
 	cp->errors++;
 	continue;
       } else {
-#if 1
 	*sts = cdh_StringToVolumeId(vids, &vid);
 	if (EVEN(*sts)) {
 	  errh_LogError(&cp->log, "Error in line, skip to next line\n%s\n%m", s, *sts);
 	  cp->errors++;
 	  continue;
 	}
-#endif
       }
       /* Do we have this volume?  */
       vp = tree_Find(sts, cp->vid_t, &vid);
@@ -1171,9 +1130,6 @@ ini_ReadBootFile (
 	lst_Init(NULL, &vp->upd_lh, NULL);
 	lst_Init(NULL, &vp->upd_io_lh, NULL);
 	lst_Init(NULL, &vp->cre_lh, NULL);
-#if 0
-//	lst_Init(NULL, &vp->del_lh, NULL);
-#endif
       }
       break;
     }
@@ -2561,12 +2517,3 @@ delete_old_io ()
   sts = gdh_NameToObjid("pwrNode-old", &oid);
   if(ODD(sts)) gdh_DeleteObject(oid);
 }
-
-
-
-
-
-
-
-
-

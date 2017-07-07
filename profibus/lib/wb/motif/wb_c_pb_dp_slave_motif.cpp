@@ -108,20 +108,6 @@ static pwr_tStatus ConfigureFilter (
   ldh_sMenuCall *ip
 )
 {
-#if 0
-  char *gsd;
-  int size;
-  int sts;
-
-  sts = ldh_GetObjectPar( ip->PointedSession, ip->Pointed.Objid, "RtBody",
-			  "GSDfile", &gsd, &size);
-  if ( EVEN(sts)) return sts;
-  if ( strcmp( gsd, "") == 0) {
-    free( gsd);  
-    return 0;
-  }
-  free( gsd);  
-#endif
   return 1;
 }
 
@@ -149,7 +135,3 @@ pwr_dExport pwr_BindMethods(Pb_DP_Slave) = {
   pwr_BindMethod(SyntaxCheck),
   pwr_NullMethod
 };
-
-
-
-

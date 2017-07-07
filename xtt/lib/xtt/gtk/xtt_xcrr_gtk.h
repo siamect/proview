@@ -75,10 +75,3 @@ class XCrrGtk : public XCrr {
 };
 
 #endif
-
-
-
-
-
-
-

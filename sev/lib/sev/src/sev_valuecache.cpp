@@ -294,4 +294,3 @@ void sev_valuecache_bool::write( int index)
   if ( m_write_cb)
     (m_write_cb)( m_userdata, m_useridx, &m_wval.val, &m_wval.time);
 }
-

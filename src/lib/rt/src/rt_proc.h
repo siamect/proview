@@ -97,12 +97,3 @@ pwr_tStatus	proc_TimeStamp();
 pwr_tStatus 	proc_SchedWait();
 
 #endif
-
-
-
-
-
-
-
-
-

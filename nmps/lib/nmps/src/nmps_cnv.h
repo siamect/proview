@@ -101,4 +101,3 @@ int cvn_ConvInit(
 	pwr_tInt32	*ConvTableSize,
 	pwr_tInt32	AllocConvTable,
 	char		**ConvTable);
-

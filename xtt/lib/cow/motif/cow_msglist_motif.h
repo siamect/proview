@@ -60,6 +60,3 @@ class MsgListMotif : public MsgList {
 };
 
 #endif
-
-
-

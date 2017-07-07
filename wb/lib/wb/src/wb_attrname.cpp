@@ -56,4 +56,3 @@ wb_attrname::wb_attrname( const char *name)
     m_nrep = 0;
   }
 }
-

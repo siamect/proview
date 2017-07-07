@@ -121,40 +121,6 @@ static GlowNode *sort_dest;
 
 void draw_line( GrowCtx *ctx, double x1, double y1, double x2, double y2);
 
-#if 0
-GlowCon::GlowCon( GrowCtx *glow_ctx, const char *name, GlowConClass *con_class,
-	GlowNode *source, GlowNode *dest, int source_cp, int dest_cp) :
-	ctx(glow_ctx), cc(con_class),
-	source_node(source), dest_node(dest), source_conpoint(source_cp),
-	dest_conpoint(dest_cp), p_num(0), l_num(0), a_num(0), line_a(10,10), 
-        arc_a(10,10), hot(0), highlight(0), arrow_num(0), arrow_a(1,1),
-	ref_num(0), ref_a(4,4), temporary_ref(0), trace_p(NULL), border(0), shadow(0)
-{
-  double x1, y1, x2, y2;
-  GlowLine *l1;  
-
-  if ( !cc)
-    return;
-  strcpy( trace_object, "");
-  sts = source->get_conpoint( source_cp, &x1, &y1, &source_direction);
-  if ( EVEN(sts)) {
-    cout << "GlowCon:no such conpoint" << endl;
-    return;
-  }
-  sts = dest->get_conpoint( dest_cp, &x2, &y2, &dest_direction);
-  if ( EVEN(sts)) {
-    cout << "GlowCon:no such conpoint" << endl;
-    return;
-  }
-  l1 = new GlowLine( ctx, x1, y1, x2, y2, cc->draw_type, cc->line_width);
-  line_a.insert( l1);
-  strcpy( c_name, name);
-  get_con_borders();
-  line_a.draw( &ctx->mw, &cc->zero, highlight, hot, NULL);
-  line_a.draw( &ctx->navw, &cc->zero, highlight, 0, NULL);
-}
-#endif
-
 GlowCon::GlowCon( GrowCtx *glow_ctx, const char *name, GlowConClass *con_class,
 	GlowNode *source, GlowNode *dest, int source_cp, int dest_cp, 
 	int nodraw, int point_num, double *x_vect, double *y_vect, int cborder, int cshadow) :
@@ -1603,13 +1569,6 @@ int GlowCon::con_route_area( double wind_ll_x, double wind_ll_y,
   {  
     if ( ctx->a[i]->in_area(wind_ll_x, wind_ll_y, wind_ur_x, wind_ur_y))
     {
-#if 0
-      if ( ctx->a[i]->type() == glow_eObjectType_Node ||
-           ctx->a[i]->type() == glow_eObjectType_GrowNode ||
-           ctx->a[i]->type() == glow_eObjectType_GrowConGlue ||
-           ctx->a[i]->type() == glow_eObjectType_GrowGroup) 
-        ctx->a[i]->link_insert( (void **)&nodelist);
-#endif
       if ( ctx->a[i]->type() == glow_eObjectType_Con &&
            ctx->a[i] != (GlowArrayElem *) this) 
         ctx->a[i]->link_insert( (void **)&conlist);
@@ -1918,60 +1877,6 @@ int GlowCon::con_route_area( double wind_ll_x, double wind_ll_y,
       break;
   }
 
-#if 0
-  for ( i = 0; i < vert_line_cnt; i++)
-  {
-//    printf( "vert %d  x: %7.3f  l_y: %7.3f  u_y: %7.3f\n", 
-//	&vert_line[i], vert_line[i].x,
-//	vert_line[i].l_y, vert_line[i].u_y);
-    draw_line( ctx, vert_line[i].x, vert_line[i].l_y, vert_line[i].x, 
-		vert_line[i].u_y);
-  }
-  for ( i = 0; i < horiz_line_cnt; i++)
-  {
-//    printf( "hori %d  y: %7.3f  l_x: %7.3f  u_x: %7.3f\n", 
-//	&horiz_line[i], horiz_line[i].y,
-//	horiz_line[i].l_x, horiz_line[i].u_x);
-    draw_line( ctx, horiz_line[i].l_x, horiz_line[i].y, horiz_line[i].u_x, 
-		horiz_line[i].y);
-  }
-  for ( i = 0; i < line_table_cnt; i++)
-  {
-    if ( line_table[i].complete)
-    {
-      if ( line_table[i].start_type == eLineType_Horiz)
-      {
-        for ( j = 0; j < line_table[i].horiz_cnt; j++)
-        {
-          printf( "p_horiz: %d  %7.3f  %7.3f\n", 
-		line_table[i].horiz[j],
-		line_table[i].horiz_x[j],
-		line_table[i].horiz_y[j]);
-          if ( j < line_table[i].vert_cnt )
-            printf( "p_vert : %d  %7.3f  %7.3f\n",
-		line_table[i].vert[j],
-		line_table[i].vert_x[j],
-		line_table[i].vert_y[j]);
-        }
-      }
-      else
-      {
-        for ( j = 0; j < line_table[i].vert_cnt; j++)
-        {
-          printf( "p_vert : %d  %7.3f  %7.3f\n", 
-		line_table[i].vert[j],
-		line_table[i].vert_x[j],
-		line_table[i].vert_y[j]);
-          if ( j < line_table[i].horiz_cnt )
-            printf( "p_horiz: %d  %7.3f  %7.3f\n",
-		line_table[i].horiz[j],
-		line_table[i].horiz_x[j],
-		line_table[i].horiz_y[j]);
-        }
-      }
-    }
-  }
-#endif
   /* Select the shortest */
   int min_idx;
   int min_cnt = 10000;
@@ -3370,13 +3275,6 @@ int GlowCon::event_handler( GlowWind *w, glow_eEvent event, int x, int y)
         else
         { 
 	  draw();
-#if 0
-          for ( i = 0; i < l_num; i++)
-            ((GlowLine *)line_a[i])->draw( w, &cc->zero, highlight, hot, NULL);
-          for ( i = 0; i < a_num; i++)
-            ((GlowArc *)arc_a[i])->draw( w, &cc->zero, highlight, hot, NULL);
-          arrow_a.draw( w, &cc->zero, highlight, hot, NULL);
-#endif
         }
       }
       if ( !sts && hot)
@@ -4092,7 +3990,3 @@ int GlowCon::find_cc( GlowArrayElem *conclass)
 {
   return ( cc == conclass);
 }
-
-
-
-

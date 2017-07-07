@@ -101,4 +101,3 @@ void keyboard_SetShift( keyboard_tCtx ctx, int shift)
 {
   ctx->set_shift( shift);
 }
-

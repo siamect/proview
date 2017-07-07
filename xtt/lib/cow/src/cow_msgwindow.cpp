@@ -186,12 +186,3 @@ void MsgWindow::insert( int severity, const char *text, pwr_tOid oid, bool is_pl
   else
     size++;
 }
-
-
-
-
-
-
-
-
-

@@ -308,4 +308,3 @@ XttGe::XttGe( void *xg_parent_ctx, const char *xg_name, const char *xg_filename,
   strcpy( filename, xg_filename);
   strcpy( name, xg_name);
 }
-

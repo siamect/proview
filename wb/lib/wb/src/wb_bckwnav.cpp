@@ -644,6 +644,3 @@ void ItemBck::set( int value)
 {
   brow_SetRadiobutton( node, 0, value);  
 }
-
-
-

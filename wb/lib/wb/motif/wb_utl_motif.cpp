@@ -141,4 +141,3 @@ int wb_utl_motif::destroy_mainwindow()
   XtDestroyWidget(XtParent(widget));
   return FOE__SUCCESS;
 }
-

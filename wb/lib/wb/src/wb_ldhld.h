@@ -63,6 +63,3 @@ pwr_tStatus ldhld_Diff (
   char *DECnetNodeName
 );
 #endif
-
-
-

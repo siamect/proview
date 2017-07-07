@@ -339,8 +339,3 @@ pwr_dExport pwr_BindMethods($ClassDef) = {
   pwr_BindMethod(ConfigFc),
   pwr_NullMethod
 };
-
-
-
-
-

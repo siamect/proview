@@ -65,8 +65,3 @@ pwr_dExport pwr_BindMethods($ClassHier) = {
   pwr_BindMethod(AnteCreate),
   pwr_NullMethod
 };
-
-
-
-
-

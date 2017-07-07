@@ -65,7 +65,6 @@ wb_orepdbms::operator new(size_t size, wb_vrepdbms *v)
   return (void *)v->new_wb_orepdbms(size);
 }
 
-#if 1
 void
 wb_orepdbms::operator delete(void *p)
 {
@@ -73,7 +72,6 @@ wb_orepdbms::operator delete(void *p)
   
   ((wb_vrepdbms *)o->m_vrep)->delete_wb_orepdbms(p);
 }
-#endif
 
 //
 //  Operations declared in wb_orep

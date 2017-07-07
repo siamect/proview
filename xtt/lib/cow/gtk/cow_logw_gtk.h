@@ -79,12 +79,3 @@ class CoLogWGtk : public CoLogW {
 };
 
 #endif
-
-
-
-
-
-
-
-
-

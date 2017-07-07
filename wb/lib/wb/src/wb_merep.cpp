@@ -769,27 +769,6 @@ tree_sTable *wb_merep::buildCatt( pwr_tStatus *sts)
     }
   }
 
-#if 0
-  merep_sClassAttrKey key;
-  key.subCid = 0;
-  key.hostCid = 0;
-  key.idx = 0;
-  merep_sClassAttr *item;
-  for ( item = (merep_sClassAttr*) tree_FindSuccessor( sts, m_catt_tt, &key);
-        item != 0;
-        item = (merep_sClassAttr*) tree_FindSuccessor( sts, m_catt_tt, &item->key)) {
-    wb_cdrep *cd1 = cdrep( sts, item->key.subCid);
-    wb_cdrep *cd2 = cdrep( sts, item->key.hostCid);
-    printf( "%-20s %-20s %2d offs ", cd1->name(), cd2->name(),
-            item->key.idx);
-    for ( int i = 0; i < item->numOffset; i++)
-      printf( "%d ", item->offset[i]);
-    printf( "\n");
-    delete cd1;
-    delete cd2;
-  }
-#endif
-
   *sts = LDH__SUCCESS;
   return m_catt_tt;
 }

@@ -137,15 +137,3 @@ wb_volume wb_env::snapshot(pwr_tVid) // Fix
   wb_volume v;
   return v;
 }
-
-
-
-
-
-
-
-
-
-
-
-

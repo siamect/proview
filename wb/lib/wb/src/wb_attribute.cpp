@@ -335,19 +335,6 @@ wb_attribute::wb_attribute(const wb_attribute& pa, int pidx, const char *aname, 
       m_tid = castid;
   }
 
-#if 0
-  if ( pa.isClass()) {
-    m_flags |= PWR_MASK_SUBCLASS;
-
-    if (pa.m_flags & PWR_MASK_SUBCLASS)
-      m_bix = pa.m_bix;
-    else
-      m_bix = pa.m_adrep->bix();
-  }
-  else
-    m_bix = pa.m_bix;
-#endif
-
   delete bd;
   delete cd;
 }
@@ -684,18 +671,7 @@ wb_attribute wb_attribute::after() const
   
   wb_attribute a(LDH__SUCCESS, m_orep, adrep);
   a.m_bix = m_bix;
-  
-#if 0
-  // Fix for sub classes
-  if (m_flags & PWR_MASK_SUBCLASS) {
-    a.m_flags |= PWR_MASK_SUBCLASS;
-    a.m_bix = m_bix;
-    if ((m_flags & PWR_MASK_ARRAY) && m_idx != -1) // array element
-      a.m_offset = (m_offset - m_size * m_idx) + m_adrep->size();
-    else
-      a.m_offset = m_offset + m_size;
-  }
-#endif
+
   return a;
 }
 
@@ -713,18 +689,6 @@ wb_attribute wb_attribute::before() const
   
   wb_attribute a(LDH__SUCCESS, m_orep, adrep);
   a.m_bix = m_bix;
-  
-#if 0
-  // Fix for sub classes
-  if (m_flags & PWR_MASK_SUBCLASS) {
-    a.m_flags |= PWR_MASK_SUBCLASS;
-    a.m_bix = m_bix;
-    if ((m_flags & PWR_MASK_ARRAY) && m_idx != -1) // array element
-      a.m_offset = (m_offset - m_size * m_idx) - adrep->size();
-    else
-      a.m_offset = m_offset - adrep->size();
-  }
-#endif
 
   return a;
 }   

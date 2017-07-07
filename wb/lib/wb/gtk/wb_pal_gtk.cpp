@@ -111,24 +111,6 @@ PalGtk::~PalGtk()
 
 void PalGtk::create_popup_menu( pwr_tCid cid, int x, int y)
 {
-#if 0
-  TODO
-
-  int x1, y1;
-  Arg arg[2];
-
-  if ( avoid_deadlock)
-    return;
-
-
-  XtSetArg( arg[0], XmNx, &x1);
-  XtSetArg( arg[1], XmNy, &y1);
-  XtGetValues( XtParent(brow_widget), arg, 2);
-
-  (create_popup_menu_cb)( parent_ctx, cid, x + x1, y + y1);
-  pal_set_avoid_deadlock( this, 2000);
-
-#endif
   (create_popup_menu_cb)( parent_ctx, cid, x, y);
 }
 
@@ -207,10 +189,3 @@ static void pal_sel_lose_cb( GtkWidget *w, GdkEventSelection *event,
   brow_SetInverseColor( pal->brow_ctx, flow_eDrawType_LineGray);
   pal->selection_owner = 0;
 }
-
-
-
-
-
-
-

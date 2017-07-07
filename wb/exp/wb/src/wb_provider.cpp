@@ -242,5 +242,3 @@ void wb_procom::mainloop()
     dispatch( &qmsg);
   }
 }
-
-

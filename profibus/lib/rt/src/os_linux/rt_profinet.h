@@ -5843,4 +5843,3 @@ typedef struct _T_PN_SERVICE_LOCAL_AND_PEER_CHECK_IND
 
 /*****************************************************************************/
 /* vim: set nu ts=2 et nowrap: */
-

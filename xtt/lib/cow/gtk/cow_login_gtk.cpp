@@ -237,4 +237,3 @@ void CoLoginGtk::message( const char *new_label)
 {
   gtk_label_set_text( GTK_LABEL(widgets.label), new_label);
 }
-

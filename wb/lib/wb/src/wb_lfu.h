@@ -195,24 +195,3 @@ pwr_tStatus lfu_GetBootList( vector<lfu_boot_info>& vect, int *nodes);
 #endif
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -61,7 +61,3 @@ class WPkgNavMotif : public WPkgNav {
 };
 
 #endif
-
-
-
-

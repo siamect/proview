@@ -478,6 +478,3 @@ class GrowLine : public GlowLine {
 
 /*@}*/
 #endif
-
-
-

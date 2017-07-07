@@ -343,4 +343,3 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Qcom_putString
   	pwrtStatus_cid, jsts);
   return return_obj;
 }
-

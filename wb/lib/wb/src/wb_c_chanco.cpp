@@ -56,12 +56,6 @@ static pwr_tStatus SyntaxCheck (
   int *ErrorCount,	      /* accumulated error count */
   int *WarningCount	      /* accumulated waring count */
 ) {
-#if 0
-  pwr_tStatus sts;
-
-  sts = wsx_CheckSigChanCon( Session, Object, ErrorCount, WarningCount);
-  if (EVEN(sts)) return sts;
-#endif
   return PWRB__SUCCESS;
 }
 

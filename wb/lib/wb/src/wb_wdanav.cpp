@@ -1335,10 +1335,3 @@ int WdaNav::import_textfile( char *filename)
 
   return status;
 }
-
-
-
-
-
-
-

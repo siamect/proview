@@ -2575,9 +2575,3 @@ static void xnav_set_sigchan_flags( XNavBrow *brow, pwr_tAttrRef *arp, pwr_tCid 
   else
     brow_RemoveAnnotPixmap( node, annot);
 }
-
-
-
-
-
-

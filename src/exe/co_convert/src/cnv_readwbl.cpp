@@ -492,12 +492,6 @@ int CnvReadWbl::read_wbl( char *filename)
           }
 	  else if ( state & cread_mState_Type) {
             state &= ~cread_mState_Type;
-#if 0
-            if ( generate_html && html_class_open)
-              html_class_close();
-	    if ( generate_struct && struct_class_open)
-              struct_class_close();
-#endif
           }
 	  else if ( state & cread_mState_Object) {
             object_level--;

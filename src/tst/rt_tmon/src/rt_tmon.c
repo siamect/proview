@@ -85,10 +85,6 @@ main (
 
   for (sec=0,nsec=10000000;;) {
     nowTime(&now);
-#if 0    
-    now.tv_sec = sec;
-    now.tv_nsec = nsec;
-#endif
     printf("%d:%d\n", now.tv_sec, now.tv_nsec);
     waitTime(&now);
     nsec += 10000000;
@@ -187,10 +183,6 @@ waitTime (
   short len;
   struct dsc$descriptor_s tims_desc = {
     sizeof(tims)-1, DSC$K_DTYPE_T, DSC$K_CLASS_S,};
-
-#if 0
-  subTime(&then, nowTime(&now));
-#endif
 
   if ((int)then.tv_sec > 0 || ((int)then.tv_sec == 0 && then.tv_nsec > 0)) {
 #if defined OS_LYNX

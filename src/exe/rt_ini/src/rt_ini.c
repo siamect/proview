@@ -1357,9 +1357,3 @@ static void ini_errl_cb( void *userdata, char *str, char severity, pwr_tStatus s
     break;
   }
 }
-
-
-
-
-
-

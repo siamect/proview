@@ -385,10 +385,3 @@ void PnViewerGtk::activate_help( GtkWidget *w, gpointer data)
 
 
 #endif
-
-
-
-
-
-
-

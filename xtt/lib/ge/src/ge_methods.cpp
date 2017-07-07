@@ -232,14 +232,6 @@ int GeMethods::get_xm_mask( pwr_tAttrRef *arp, char *name, pwr_sClass_XttMethods
     for ( int i = 0; i < opmeth_size; i++) {
       if ( strcmp( op_name[i], "") == 0)
 	continue;
-
-#if 0
-      if ( strcmp( op_name[i], "Parent Object Graph") == 0) {
-	if ( strchr( aname, '.') != 0)
-	  xm_mask->OpMethods |= 1 << i;
-      }
-      else 
-#endif
 	{
 	sprintf( command, "check method/filter=\"%s\"/object=%s", 
 		 op_filter[i], aname);

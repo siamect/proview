@@ -139,9 +139,3 @@ void CoXHelpNavMotif::set_inputfocus()
     XtCallAcceptFocus( brow_widget, CurrentTime);
   }
 }
-
-
-
-
-
-

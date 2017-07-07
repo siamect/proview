@@ -307,20 +307,6 @@ void *CnvXtthelpToPs::insert( navh_eItemType item_type, const char *text1,
 	      tops.print_text( str, tops.style[tops.ci].link, 
 			       ps_mPrintMode_End | ps_mPrintMode_FixX);	  
 	    else {
-#if 0
-	      if ( !(text3 && strcmp(text3, "") != 0)) {
-		tops.x = ps_cLeftMargin + 2 * ps_cCellSize;
-		if ( ps_cLeftMargin + ps_cCellSize + strlen(text2) * hstyle->font_size * 0.5 > tops.x)
-		  tops.x = ps_cLeftMargin + ps_cCellSize + strlen(text2) * hstyle->font_size * 0.5;
-	      }
-	      else {
-		tops.x = ps_cLeftMargin + 3 * ps_cCellSize;
-		if ( ps_cLeftMargin + ps_cCellSize + strlen(text3) * hstyle->font_size * 0.5 > tops.x)
-		  tops.x = ps_cLeftMargin + 2 * ps_cCellSize + strlen(text3) * hstyle->font_size * 0.5;
-	      }
-	      tops.print_text( str, tops.style[tops.ci].link, 
-			       ps_mPrintMode_KeepY | ps_mPrintMode_FixX);
-#endif
 	    }
 	  }
         }
@@ -377,10 +363,3 @@ void *CnvXtthelpToPs::insert( navh_eItemType item_type, const char *text1,
   }
   return 0;
 }
-
-
-
-
-
-
-

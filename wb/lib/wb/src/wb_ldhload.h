@@ -46,7 +46,3 @@ pwr_tStatus ldh_wbload (
   int	announce_arg,
   int 	noidx_flag) 
 { return 0;}
-
-
-
-

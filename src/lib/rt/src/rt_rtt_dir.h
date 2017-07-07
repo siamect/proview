@@ -49,4 +49,3 @@ int rtt_parse_filename( 	char	*filename,
 				char	*file,
 				char	*type,
 				int	*version);
-

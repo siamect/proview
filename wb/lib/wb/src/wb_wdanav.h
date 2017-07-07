@@ -131,5 +131,3 @@ class WdaNav {
 }
 #endif
 #endif
-
-

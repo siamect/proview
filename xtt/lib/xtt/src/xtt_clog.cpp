@@ -94,6 +94,3 @@ void CLog::activate_help()
   if ( help_cb)
     (help_cb)( parent_ctx, "opg_nav_systemmsg");
 }
-
-
-

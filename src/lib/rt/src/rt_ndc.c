@@ -1847,4 +1847,3 @@ ndc_UpdateRemoteToNativeTable(
   return tbl;
   
 }
-

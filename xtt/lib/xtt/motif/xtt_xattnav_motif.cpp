@@ -124,8 +124,3 @@ void XAttNavMotif::popup_position( int x_event, int y_event, int *x, int *y)
 {
   CoWowMotif::PopupPosition( brow_widget, x_event, y_event, x, y);
 }
-
-
-
-
-

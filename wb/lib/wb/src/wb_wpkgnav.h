@@ -182,5 +182,3 @@ class WItemPkgFile : public WItemPkg {
 };
 
 #endif
-
-

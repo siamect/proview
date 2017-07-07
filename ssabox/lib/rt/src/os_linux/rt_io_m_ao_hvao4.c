@@ -277,16 +277,6 @@ static pwr_tStatus IoCardWrite (
       
       if ( sts == -1)
       {
-        /* Exceptionhandler was called */
-#if 0
-        if ( io_fatal_error)
-        {
-          /* Activate emergency break */
-          errh_Error( "Fatal write error, card '%s', IO is stopped", cp->Name);
-          ctx->Node->EmergBreakTrue = 1;
-          return IO__ERRDEVICE;
-        }
-#endif
         /* Increase error count and check error limits */
 	op->ErrorCount++;
 
@@ -344,4 +334,3 @@ pwr_dExport pwr_BindIoMethods(Ao_AO8uP) = {
   pwr_BindIoMethod(IoCardWrite),
   pwr_NullMethod
 };
-

@@ -187,24 +187,6 @@ int main (
   create_threads(pp);
   init_threads(pp);
 
-  /* Once threads has set their priority don't run as root */
-  
-#if 0
-  uid_t         ruid;
-  struct passwd *pwd;
-
-  ruid = getuid();
-  
-  if (ruid == 0) {
-    pwd = getpwnam("pwrp");
-    if (pwd != NULL) {
-      setreuid(pwd->pw_uid, pwd->pw_uid);
-    }
-  }
-  else 
-    setreuid(ruid, ruid);
-#endif
-
   qcom_SignalOr(&sts, &qcom_cQini, ini_mEvent_newPlcInitDone | pp->sigmask);
   qcom_WaitAnd(&sts, &pp->eventQ, &qcom_cQini, ini_mEvent_newPlcStart, qcom_cTmoEternal);
 
@@ -215,12 +197,6 @@ int main (
   time_Uptime(&sts, &pp->PlcProcess->StartTime, NULL);
 
   qcom_SignalOr(&sts, &qcom_cQini, ini_mEvent_newPlcStartDone | pp->sigmask);
-
-#if 0
-  /* Force the backup to take care initialized backup objects. */
-
-  bck_ForceBackup(NULL);
-#endif
 
   errh_SetStatus( PWR__SRUN);
 
@@ -265,10 +241,6 @@ init_process ( char *name)
   int		busid;
   char 		*s;
   int		idx;
-
-#if 0
-  thread_SetPrio(NULL, 15);
-#endif
 
   errh_Init("pwr_plc", errh_eAnix_plc);
   errh_SetStatus( PWR__SRVSTARTUP);
@@ -546,14 +518,6 @@ stop_threads (
     sem_post(&tp->ScanSem);   
 #else
     que_Put(&sts, &tp->q_in, &tp->event, (void *)4);
-#endif
-
-
-#if 0
-  pwr_tStatus	t_sts;
-    sts = thread_Join(&tp->tid, &t_sts);
-    if (EVEN(sts))
-      errh_Error("thread_Join, thread %n, %m", tp->name, sts);
 #endif
   }
 }

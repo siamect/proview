@@ -286,18 +286,6 @@ void CnvChangeLog::print_docbook()
     "<article>" << endl <<
     "<title>Proview Changelog</title>" << endl <<
     "<section><title>Changelog entries</title>" << endl;
-#if 0
-    "  <info>" << endl <<
-    "    <subtitle>" << endl <<
-    "    <mediaobject>" << endl <<
-    "    <imageobject>" << endl <<
-    "    <imagedata fileref=\"pwr_logga.gif\" width=\"5in\" depth=\"6in\"/>" << endl <<
-    "    </imageobject>" << endl <<
-    "    </mediaobject>" << endl <<
-    "    </subtitle>" << endl <<
-    "    <subtitle>Changelog</subtitle>" << endl <<
-    "  </info>" << endl;
-#endif
 
   sort_time();
 
@@ -422,4 +410,3 @@ void CnvChangeLog::from_git()
   strcat( cmd, tmpfile);
   system( cmd);
 }
-

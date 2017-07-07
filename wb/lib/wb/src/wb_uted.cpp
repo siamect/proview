@@ -452,4 +452,3 @@ void WUted::get_message_error( pwr_tStatus sts, char *str)
   msg_GetMsg( sts, msg, sizeof(msg));
   strncpy(str, msg, 80);
 }
-

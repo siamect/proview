@@ -3461,4 +3461,3 @@ static int	gobj_expand_m2(	WFoe		*foe,
 
   return FOE__SUCCESS;
 }
-

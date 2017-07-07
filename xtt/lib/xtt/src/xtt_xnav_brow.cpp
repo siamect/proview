@@ -259,18 +259,6 @@
 #include "xnav_bitmap_offline_20.h"
 #include "xnav_bitmap_offline_24.h"
 
-
-#if 0
-XNavBrow::~XNavBrow()
-{
-  if ( this != ((XNav *)xnav)->brow_stack[0] && this != ((XNav *)xnav)->brow)
-  {
-    brow_DeleteSecondaryCtx( ctx);
-    free_pixmaps();
-  }
-}
-#endif
-
 //
 //  Free pixmaps
 //
@@ -1368,5 +1356,3 @@ void XNavBrow::brow_setup()
   brow_SetAttributes( ctx, &brow_attr, mask); 
   brow_SetCtxUserData( ctx, userdata);
 }
-
-

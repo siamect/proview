@@ -913,15 +913,3 @@ CoWowFocusTimerMotif::~CoWowFocusTimerMotif()
   if ( set_focus_disabled)
     XtRemoveTimeOut( focus_timerid);
 }
-
-
-
-
-
-
-
-
-
-
-
-

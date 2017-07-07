@@ -454,4 +454,3 @@ bool wb_object::docBlock( char *block)
     
   return m_orep->docBlock( block);
 }
-

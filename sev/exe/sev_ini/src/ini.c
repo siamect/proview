@@ -560,10 +560,3 @@ ini_ProcWait (
 #endif
   errh_Info("Ich sterbe!!");
 }
-
-
-
-
-
-
-

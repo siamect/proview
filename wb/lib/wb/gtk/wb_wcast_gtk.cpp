@@ -75,5 +75,3 @@ WCastGtk::~WCastGtk()
 {
   delete wow;
 }
-
-

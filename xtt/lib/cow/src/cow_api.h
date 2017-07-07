@@ -62,11 +62,3 @@ int xhelp_help( char *key, char *help_bookmark, navh_eHelpFile file_type,
 }
 #endif
 #endif
-
-
-
-
-
-
-
-

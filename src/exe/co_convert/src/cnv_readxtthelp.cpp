@@ -120,7 +120,3 @@ int CnvReadXtthelp::read_xtthelp()
 
   return 1;
 }
-
-
-
-

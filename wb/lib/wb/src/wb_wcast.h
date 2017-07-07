@@ -82,6 +82,3 @@ class WCast {
 };
 
 #endif
-
-
-

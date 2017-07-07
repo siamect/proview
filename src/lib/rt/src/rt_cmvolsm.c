@@ -298,4 +298,3 @@ cmvolsm_GetGclass (
 
   net_Reply(&lsts, get, &put, 0);  
 }
-

@@ -96,7 +96,3 @@ class CLogGtk : public CLog {
 };
 
 #endif
-
-
-
-

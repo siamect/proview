@@ -72,4 +72,3 @@ pwr_dExport pwr_BindMethods(Application) = {
   pwr_BindMethod(Build),
   pwr_NullMethod
 };
-

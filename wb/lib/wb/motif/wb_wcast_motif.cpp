@@ -89,5 +89,3 @@ WCastMotif::~WCastMotif()
 {
   delete wow;
 }
-
-

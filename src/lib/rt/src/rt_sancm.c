@@ -266,9 +266,6 @@ sancm_Remove (
     pwr_Assert((op->u.c.flags.m & gdb_mCo_inSancList) == 0);
     pwr_Assert(np->sancRem_lc != 0);
     np->sancRem_lc--;
-#if 0
-    cvolc_TrimObject(op);
-#endif
     if (i >= count) {
       rp->count = count;
       gdb_Unlock;

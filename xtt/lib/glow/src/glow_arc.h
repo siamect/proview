@@ -291,6 +291,3 @@ class GlowArc : public GlowArrayElem {
 
 /*@}*/
 #endif
-
-
-

@@ -426,11 +426,3 @@ void WVselGtk::list_add_item( char *str)
   gtk_list_store_append( store, &iter);
   gtk_list_store_set( store, &iter, 0, str, -1);
 }
-
-
-
-
-
-
-
-

@@ -109,7 +109,3 @@ class rt_sysmon {
 
 /*@}*/
 #endif
-
-
-
-

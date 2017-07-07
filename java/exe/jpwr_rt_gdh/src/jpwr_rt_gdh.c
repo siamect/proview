@@ -3158,4 +3158,3 @@ static int gdh_JidRemove( pwr_tRefId r)
   return 1;
 #endif
 }
-

@@ -64,6 +64,3 @@ class Block {
 };
 
 #endif
-
-
-

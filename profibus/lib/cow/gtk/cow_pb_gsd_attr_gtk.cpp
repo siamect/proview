@@ -258,35 +258,6 @@ gboolean GsdAttrGtk::action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer 
   return FALSE;
 }
 
-#if 0
-void GsdAttrGtk::valchanged_cmd_input( Widget w, XEvent *event)
-{
-  GsdAttr *attr;
-  int 	sts;
-  char 	*text;
-  Arg 	args[2];
-
-  XtSetArg(args[0], XmNuserData, &attr);
-  XtGetValues(w, args, 1);
-
-  sts = mrm_TextInput( w, event, (char *)attr->value_recall, sizeof(attr->value_recall[0]),
-	sizeof( attr->value_recall)/sizeof(attr->value_recall[0]),
-	&attr->value_current_recall);
-  if ( sts) {
-    text = XmTextGetString( w);
-    if ( attr->input_open)
-    {
-      sts = ((GsdAttrNav *)attr->attrnav)->set_attr_value( text);
-      XtUnmanageChild( w);
-      attr->set_prompt( "");
-      attr->input_open = 0;
-
-      ((GsdAttrNav *)attr->attrnav)->set_inputfocus();
-    }
-  }
-}
-#endif
-
 GsdAttrGtk::~GsdAttrGtk()
 {
   delete (GsdAttrNav *)attrnav;
@@ -486,4 +457,3 @@ GsdAttrGtk::GsdAttrGtk( GtkWidget *a_parent_wid,
   wow = new CoWowGtk( toplevel);
 
 }
-

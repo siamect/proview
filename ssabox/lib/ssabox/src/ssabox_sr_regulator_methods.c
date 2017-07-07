@@ -94,4 +94,3 @@ static void remove_tail(SR_RefList *tail) //recursive function to remove tail of
     
   free(tail);
 }
-

@@ -294,79 +294,6 @@ void CnvPdfObj::print_end()
 
 int CnvPdfObj::print_image()
 {
-#if 0
-  cnv_tImImage image;
-  cnv_tPixmap pixmap;
-  pwr_tFileName fname;
-  int sts;
-  int width, height;
-#if 0
-  unsigned char *rgb;
-  unsigned char transp[3] = {255,0,255};
-  int i, j;
-  int grey;
-#endif
-  char c;
-	
-  // Try $pwr_doc/help/
-  strcpy( fname, "$pwr_doc/help/");
-  strcat( fname, text);
-  dcli_translate_filename( fname, fname);
-
-  sts = cnv_get_image( fname, &image, &pixmap);
-  if ( EVEN(sts)) {
-    // Try $pwr_exe
-    strcpy( fname, "$pwr_exe/");
-    strcat( fname, text);
-    dcli_translate_filename( fname, fname);
-
-    sts = cnv_get_image( fname, &image, &pixmap);
-    if ( EVEN(sts)) {
-      // Try $pwrp_exe
-      strcpy( fname, "$pwrp_exe/");
-      strcat( fname, text);
-      dcli_translate_filename( fname, fname);
-
-      sts = cnv_get_image( fname, &image, &pixmap);
-      if ( EVEN(sts)) return 0;
-    }
-  }
-
-  width = cnv_image_width( image);
-  height = cnv_image_height( image);
-
-  topdf->fp[topdf->cf] <<
-number + topdf->v_outline.size() + topdf->v_pages.size() + topdf->v_content.size() + 
-    topdf->v_font.size() + topdf->v_resource.size() << " 0 obj" << endl <<
-"  << /Type /XObject" << endl <<
-"     /Subtype /Image" << endl <<
-"     /Width " << width  << endl <<
-"     /Height " << height << endl <<
-"     /ColorSpace /DeviceRGB" << endl <<
-"     /BitsPerComponent 8" << endl << 
-"     /Filter /DCTDecode" << endl << 
-"     /Length " << length << endl <<
-"  >>" << endl <<
-"stream" << endl;
-
-  start = (int) topdf->fp[topdf->cf].tellp();
-
-  strcpy( fname, "/tmp/pwr_cnv.jpg");
-  cnv_print_image( image, fname);
-
-  ifstream fimg( fname);
-  while ( fimg.get(c))
-    topdf->fp[topdf->cf].put(c);
-
-  topdf->fp[topdf->cf] << endl;
-  length = (int) topdf->fp[topdf->cf].tellp() - start;
-  topdf->fp[topdf->cf] <<
-"endstream" << endl << 
-"endobj" << endl;
-
-
-  cnv_free_image( image, pixmap);
-#endif
   return 1;
 }
 
@@ -761,41 +688,6 @@ void CnvToPdf::print_content()
       }
     }
   }
-    
-#if 0
-  ci = pdf_eId_Content;
-  x = pdf_cLeftMargin;
-  y = pdf_cPageHeight - pdf_cTopMargin;
-
-  print_pagebreak( 0);
-  print_text( Lng::translate("Contents"), style[ci].h1);
-
-  for ( int i = 0; i < (int)content.tab.size(); i++) {
-    char page_str[20];
-    CnvStyle *cstyle = &style[ci].boldtext;
-
-    fp[cf] <<
-"gsave" << endl <<
-"[1 3] 0 setdash" << endl;
-
-    sprintf( page_str, "%d", content.tab[i].page_number);
-    print_text( content.tab[i].header_number, *cstyle);
-    x = pdf_cLeftMargin + 30 + content.tab[i].header_level * 5;
-    y += cstyle->top_offset + cstyle->bottom_offset;
-    print_text( content.tab[i].text, *cstyle, pdf_mPrintMode_Start | pdf_mPrintMode_FixX);
-    x = pdf_cLeftMargin + 340;
-
-    fp[cf] <<
-x << " " << y + cstyle->bottom_offset << " lineto" << endl <<
-x << " " << y + cstyle->bottom_offset << " moveto" << endl <<
-"closepath" << endl <<
-"stroke" << endl <<
-"grestore" << endl;
-
-    print_text( page_str, *cstyle, pdf_mPrintMode_KeepY | pdf_mPrintMode_FixX);
-  }
-  print_pagebreak(0);
-#endif
 }
 
 CnvToPdf::~CnvToPdf()
@@ -874,22 +766,6 @@ xref_offset - start_offset<< endl <<
   fp[pdf_eFile_Body].close();
 }
 
-#if 0
-static void image_pixel( void *userdata, ofstream& fp, unsigned char *rgb)
-{
-  unsigned char transp[3] = {255,0,255};
-  int grey;
-
-  if ( *rgb == transp[0] && *(rgb+1) == transp[1] && *(rgb+2) == transp[2])
-    grey = 255;
-  else
-    grey = (int) ((0.0 + *rgb + *(rgb+1) + *(rgb+2)) / 3 + 0.5);
-
-  fp << (unsigned char)grey;
-
-}
-#endif
-
 void CnvToPdf::print_horizontal_line()
 {
   y -= 3;
@@ -904,167 +780,11 @@ void CnvToPdf::print_horizontal_line()
 
 int CnvToPdf::print_image_inline( char *filename)
 {
-#if 0
-  cnv_tImImage image;
-  cnv_tPixmap pixmap;
-  pwr_tFileName fname;
-  int sts;
-  int width, height;
-  double scalex = 0.71;
-  double scaley = 0.78;
-	
-  x = pdf_cLeftMargin;
-
-  // Try $pwr_doc/help/
-  strcpy( fname, "$pwr_doc/help/");
-  strcat( fname, filename);
-  dcli_translate_filename( fname, fname);
-
-  sts = cnv_get_image( fname, &image, &pixmap);
-  if ( EVEN(sts)) {
-    // Try $pwr_exe
-    strcpy( fname, "$pwr_exe/");
-    strcat( fname, filename);
-    dcli_translate_filename( fname, fname);
-
-    sts = cnv_get_image( fname, &image, &pixmap);
-    if ( EVEN(sts)) {
-      // Try $pwrp_exe
-      strcpy( fname, "$pwrp_exe/");
-      strcat( fname, filename);
-      dcli_translate_filename( fname, fname);
-
-      sts = cnv_get_image( fname, &image, &pixmap);
-      if ( EVEN(sts)) return 0;
-    }
-  }
-
-  width = cnv_image_width( image);
-  height = cnv_image_height( image);
-
-  if ( width * scalex  > pdf_cPageWidth - pdf_cLeftMargin) {
-    x = pdf_cPageWidth - width * scalex;
-    if ( x < 50) {
-      double scale_factor = (pdf_cPageWidth - 50) / (width * scalex);
-      x = 50;
-      scalex = scalex * scale_factor;
-      scaley = scaley * scale_factor;
-    }
-  }
-
-  if ( y - height * scaley + 20 < pdf_cBottomMargin)
-    print_pagebreak( 0);
-
-
-  fp[cf] <<
-"  q" << endl <<
-scalex * width << " 0 0 " << scaley * height << " " << x << " " << y - scaley * height << " cm" << endl <<
-"  BI" << endl <<
-"    /W " << width  << endl <<
-"    /H " << height << endl <<
-"    /CS /G" << endl <<
-"    /BPC 8" << endl << 
-#if 0
-"    /F /AHx" << endl <<
-#endif
-"  ID" << endl;
-
-  cnv_image_pixel_iter( image, image_pixel, 0, fp[cf]);
-
-
-  fp[cf] << endl <<
-"EI" << endl << 
-"  Q" << endl;
-  fp[cf].flags( ((fp[cf].flags() & ~ios_base::hex) & ~ios_base::uppercase) | ios_base::dec);
-
-  cnv_free_image( image, pixmap);
-  y -= height * scaley;
-
-#endif
   return 1;
 }
 
 int CnvToPdf::print_image( char *filename)
 {
-#if 0
-  cnv_tImImage image;
-  cnv_tPixmap pixmap;
-  pwr_tFileName fname;
-  int sts;
-  int width, height;
-  double scalex = 0.71;
-  double scaley = 0.78;
-	
-  im_cnt++;
-  x = pdf_cLeftMargin;
-
-  // Try $pwr_doc/help/
-  strcpy( fname, "$pwr_doc/help/");
-  strcat( fname, filename);
-  dcli_translate_filename( fname, fname);
-
-  sts = cnv_get_image( fname, &image, &pixmap);
-  if ( EVEN(sts)) {
-    // Try $pwr_exe
-    strcpy( fname, "$pwr_exe/");
-    strcat( fname, filename);
-    dcli_translate_filename( fname, fname);
-
-    sts = cnv_get_image( fname, &image, &pixmap);
-    if ( EVEN(sts)) {
-      // Try $pwrp_exe
-      strcpy( fname, "$pwrp_exe/");
-      strcat( fname, filename);
-      dcli_translate_filename( fname, fname);
-
-      sts = cnv_get_image( fname, &image, &pixmap);
-      if ( EVEN(sts)) return 0;
-    }
-  }
-
-  width = cnv_image_width( image);
-  height = cnv_image_height( image);
-
-  if ( width * scalex  > pdf_cPageWidth - pdf_cLeftMargin) {
-    x = pdf_cPageWidth - width * scalex;
-    if ( x < 50) {
-      double scale_factor = (pdf_cPageWidth - 50) / (width * scalex);
-      x = 50;
-      scalex = scalex * scale_factor;
-      scaley = scaley * scale_factor;
-    }
-  }
-
-  if ( y - height * scaley + 20 < pdf_cBottomMargin)
-    print_pagebreak( 0);
-
-
-  fp[cf] <<
-"  q" << endl <<
-"  " << scalex * width << " 0 0 " << scaley * height << " " << x << " " << y - scaley * height << " cm" << endl <<
-"  /Im" << im_cnt << " Do" << endl <<
-"  Q" << endl;
-
-  if ( conf_pass) {
-    if ( v_pages[v_pages.size()-1].resource == -1) {
-      v_pages[v_pages.size()-1].resource = v_resource.size();
-
-      CnvPdfObj o1 = CnvPdfObj( this, pdf_eObjType_Resource, v_resource.size()+1);
-      v_resource.push_back( o1);
-    }
-    v_resource[v_resource.size()-1].xobject[v_resource[v_resource.size()-1].xobject_cnt] = 
-      v_image.size();
-    v_resource[v_resource.size()-1].xobject_cnt++;
-
-    CnvPdfObj o2 = CnvPdfObj( this, pdf_eObjType_Image, v_image.size()+1);
-    strcpy( o2.text, filename);
-    v_image.push_back( o2);
-  }
-
-  cnv_free_image( image, pixmap);
-  y -= height * scaley;
-
-#endif
   return 1;
 }
 

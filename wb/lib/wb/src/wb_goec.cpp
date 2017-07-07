@@ -273,5 +273,3 @@ int	goec_con_gethighlight(
   flow_GetHighlight( con_object->hc.con_id, (int *)highlight_flag);
   return GRE__SUCCESS;
 }
-
-

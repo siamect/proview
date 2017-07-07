@@ -59,4 +59,3 @@ pwr_tStatus	tlog_diff( 	char *filename,
 				char *before_str);
 
 int	tlog_save( char *filename);
-

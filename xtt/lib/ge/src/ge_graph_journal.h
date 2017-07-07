@@ -158,19 +158,3 @@ class GraphJournal {
 
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

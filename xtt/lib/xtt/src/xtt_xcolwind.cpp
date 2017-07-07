@@ -611,4 +611,3 @@ void XColWind::signal_insert_cb( void *ctx, void *parent_node,
   item = new ItemCollect( brow, aref.Objid, attr, NULL, 
 			  flow_eDest_IntoLast, a_type_id, a_tid, a_size, a_flags, 0);
 }
-

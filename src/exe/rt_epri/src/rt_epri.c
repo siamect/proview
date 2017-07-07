@@ -417,63 +417,6 @@ static void PrintEvent(
   fprintf(Printer, EventMsg);
 }
 
-#if 0
-static pwr_tStatus Timer (
-  pwr_tInt32 TimerId
-)
-{
-  char string[200];
-  mh_eEventPrio Prio;
-  pwr_tObjid Object;
-  pwr_tStatus sts;
-  pwr_tInt32  TenthsOfSeconds = 10;
-  pwr_tInt32  TimerIdentity = 10;
-
-  for (;;) {
-    printf("Outunit> ");
-    if (gets(string) == NULL)
-      exit(1);
-    printf("\n");
-    
-    if (string[0] == 'r')
-      break;
-
-    switch (string[0]) {
-    case 'b':
-      printf("Block an object\n");
-      printf("  Object name: ");
-      gets(string);
-      printf("\n");
-      if (string == NULL)
-	break;
-      sts = gdh_NameToObjid(string, &Object);
-      if (EVEN(sts)) {
-	printf("Cannot find object, sts = %d\n", sts);
-	break;
-      }
-      printf("  Priority: ");
-      gets(string);
-      printf("\n");
-      if (string == NULL)
-	break;
-      Prio = atoi(string);
-      printf("mh_OutunitBlock(Object, Prio = %d)\n", Prio);
-      sts = mh_OutunitBlock(Object, Prio); 
-      if (EVEN(sts)) {
-	printf("Cannot block object, sts = %d\n", sts);
-	break;
-      }
-      break;
-    default:
-      break;
-    }
-  }
-
-  sts = mh_OutunitSetTimer(&TenthsOfSeconds, &TimerIdentity);
-  return 1;
-}
-#endif
-
 int main(int argc, char *argv[])
 {
   pwr_tStatus	   sts;
@@ -552,9 +495,6 @@ int main(int argc, char *argv[])
       EventPrinterObj.RowSize = 80;
 
   } else {
-#if 0
-    sts = mh_OutunitSetTimer(&TenthsOfSeconds, &TimerId);
-#endif
     Printer = stdout;
     EventPrinterObj.RowSize = 80;
   }

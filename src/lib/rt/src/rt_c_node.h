@@ -48,4 +48,3 @@ pwrs_Node_Exec (
 void
 pwrs_Node_SupEmon (
 );
-

@@ -3896,15 +3896,6 @@ int sev_dbhdf5::store_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oi
   hsts = H5Dclose(dataset_id);
   
   for ( size_t i = 0; i < attrnum; i++) {
-#if 0
-    sev_attr a;
-    strncpy( a.aname, attr[i].aname, sizeof(a.aname));
-    a.type = attr[i].type;
-    a.size = attr[i].size;
-    strncpy( a.unit, attr[i].unit, sizeof(a.unit));
-
-    item.attr.push_back(a);    
-#endif
     sev_sObjectAttributes adata;
 
     strncpy( adata.tablename, tablename, sizeof(adata.tablename));
@@ -4807,65 +4798,6 @@ int sev_dbhdf5::time_to_idx( hid_t dataset_id, hid_t memspace_id, hid_t dataspac
 
 int sev_dbhdf5::handle_itemchange(pwr_tStatus *sts, char *tablename, unsigned int item_idx)
 {
-#if 0
-  char timestr[40];
-  pwr_tTime uptime;
-
-  time_GetTime( &uptime);
-  time_AtoAscii( &uptime, time_eFormat_NumDateAndTime, timestr, sizeof(timestr));
-  timestr[19] = 0;
-
-  // Replace ':' '-' and ' ' in timestr with '_'
-  for ( char *s = timestr; *s; s++) {
-    if ( *s == ':')
-      *s = '_';
-    if ( *s == ' ')
-      *s = '_';
-    if ( *s == '-')
-      *s = '_';
-  }
-
-  char newTableName[64];
-  snprintf(newTableName, sizeof(newTableName), "%s_%s", tablename, timestr);
-
-  printf("Recreating table %s due to attribute definition changes, old table saved to %s \n", tablename, newTableName);
-  errh_Warning("Recreating table %s due to attribute definition changes, old table saved to %s", tablename, newTableName);
-
-  char query[600];
-  char *errmsg;
-  sprintf(query, "RENAME TABLE %s to %s", tablename, newTableName);
-  int rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
-  if (rc != SQLITE_OK) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s: %s\n", __FUNCTION__, errmsg);
-    sqlite3_free(errmsg);
-    *sts = SEV__DBERROR;
-    return 0;
-  }
-
-  sev_item *item = &m_items[item_idx];
-
-  create_table( sts, item->tablename, item->attr[0].type, item->attr[0].size, item->options, item->deadband, item->storagetime, item->deadband);
-  if ( EVEN(*sts)) return 0;
-
-  if(item->options & pwr_mSevOptionsMask_ReadOptimized ) {
-    //If we set increment to same value as in the old table we can easily move the data from the old table to the new one
-    pwr_tUInt64 autoIncrValue = get_maxFromIntegerColumn(newTableName, (char*)"id");
-    if(autoIncrValue) 
-      autoIncrValue++;
-    sprintf(query, "ALTER TABLE %s AUTO_INCREMENT = " pwr_dFormatUInt64, tablename, autoIncrValue);
-    rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
-    if (rc != SQLITE_OK) {
-      printf("In %s row %d:\n", __FILE__, __LINE__);
-      printf( "%s: %s\n", __FUNCTION__, errmsg);
-      sqlite3_free(errmsg);
-      *sts = SEV__DBERROR;
-      return 0;
-    }
-  }
-
-  *sts = SEV__SUCCESS;
-#endif
   return 1;
 }
 
@@ -4873,105 +4805,6 @@ int sev_dbhdf5::handle_itemchange(pwr_tStatus *sts, char *tablename, unsigned in
 
 int sev_dbhdf5::handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned int item_idx, bool newObject)
 {
-#if 0
-  char newTableName[64];
-  char query[600];
-  char *errmsg;
-  int rc;
-
-  sev_item *item = &m_items[item_idx];
-
-  if (!newObject) {
-    char timestr[40];
-    pwr_tTime uptime;
-
-    time_GetTime( &uptime);
-    time_AtoAscii( &uptime, time_eFormat_NumDateAndTime, timestr, sizeof(timestr));
-    timestr[19] = 0;
-
-    // Replace ':' '-' and ' ' in timestr with '_'
-    for ( char *s = timestr; *s; s++) {
-      if ( *s == ':')
-        *s = '_';
-      if ( *s == ' ')
-        *s = '_';
-      if ( *s == '-')
-        *s = '_';
-    }
-
-    snprintf(newTableName, sizeof(newTableName), "%s_%s", tablename, timestr);
-
-    printf("Recreating table %s due to attribute definition changes, old table saved to %s \n", tablename, newTableName);
-    errh_Warning("Recreating table %s due to attribute definition changes, old table saved to %s", tablename, newTableName);
-
-    sprintf(query, "RENAME TABLE %s to %s", tablename, newTableName);
-    rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
-    if (rc != SQLITE_OK) {
-      printf("In %s row %d:\n", __FILE__, __LINE__);
-      printf( "%s: %s\n", __FUNCTION__, errmsg);
-      sqlite3_free(errmsg);
-      *sts = SEV__DBERROR;
-      return 0;
-    }
-
-
-    create_objecttable( sts, tablename, item->options, item->deadband);
-    if ( EVEN(*sts)) return 0;
-
-    if (item->options & pwr_mSevOptionsMask_ReadOptimized ) {
-      //If we set increment to same value as in the old table we can easily move the data from the old table to the new one
-      pwr_tUInt64 autoIncrValue = get_maxFromIntegerColumn(newTableName, (char*)"sev__id");
-      if (autoIncrValue)
-        autoIncrValue++;
-      sprintf(query, "ALTER TABLE %s AUTO_INCREMENT = " pwr_dFormatUInt64, tablename, autoIncrValue);
-      rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
-      if (rc != SQLITE_OK) {
-        printf("In %s row %d:\n", __FILE__, __LINE__);
-        printf( "%s: %s\n", __FUNCTION__, errmsg);
-	sqlite3_free(errmsg);
-        *sts = SEV__DBERROR;
-        return 0;
-      }
-    }
-
-    sprintf(query, "delete from objectitemattributes where tablename = '%s'", tablename);
-    rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
-    if (rc != SQLITE_OK) {
-      printf("In %s row %d:\n", __FILE__, __LINE__);
-      printf( "%s: %s\n", __FUNCTION__, errmsg);
-      sqlite3_free(errmsg);
-      *sts = SEV__DBERROR;
-      return 0;
-    }
-  }
-
-  for (size_t i = 0; i < item->attr.size(); i++) {
-    char colName[64];
-    strncpy(colName, create_colName(i, item->attr[i].aname), sizeof(colName));
-    //sprintf(colName, "col_%d", i);
-    sprintf( query, "alter table %s add `%s` %s;", tablename, colName, pwrtype_to_type( item->attr[i].type, item->attr[i].size));
-    rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
-    if (rc != SQLITE_OK) {
-      printf("In %s row %d:\n", __FILE__, __LINE__);
-      printf( "%s: %s\n", __FUNCTION__,errmsg);
-      sqlite3_free(errmsg);
-      *sts = SEV__DBERROR;
-      return 0;
-    }
-    int aidx = i;
-    sprintf( query, "insert into objectitemattributes (tablename, attributename, attributeidx, attributetype, attributesize) "
-             "values('%s', '%s', %d, %d, %d)", tablename, item->attr[i].aname, aidx, item->attr[i].type, item->attr[i].size);
-    rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
-    if (rc != SQLITE_OK) {
-      printf("In %s row %d:\n", __FILE__, __LINE__);
-      printf( "%s: %s\n", __FUNCTION__,errmsg);
-      sqlite3_free(errmsg);
-      *sts = SEV__DBERROR;
-      return 0;
-    }
-  }
-  *sts = SEV__SUCCESS;
-#endif
   return 1;
 }
 

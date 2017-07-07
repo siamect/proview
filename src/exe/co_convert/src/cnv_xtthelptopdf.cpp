@@ -310,20 +310,6 @@ void *CnvXtthelpToPdf::insert( navh_eItemType item_type, const char *text1,
 	      topdf.print_text( str, topdf.style[topdf.ci].link, 
 			       pdf_mPrintMode_End | pdf_mPrintMode_FixX);	  
 	    else {
-#if 0
-	      if ( !(text3 && strcmp(text3, "") != 0)) {
-		topdf.x = pdf_cLeftMargin + 2 * pdf_cCellSize;
-		if ( pdf_cLeftMargin + pdf_cCellSize + strlen(text2) * hstyle->font_size * 0.5 > topdf.x)
-		  topdf.x = pdf_cLeftMargin + pdf_cCellSize + strlen(text2) * hstyle->font_size * 0.5;
-	      }
-	      else {
-		topdf.x = pdf_cLeftMargin + 3 * pdf_cCellSize;
-		if ( pdf_cLeftMargin + pdf_cCellSize + strlen(text3) * hstyle->font_size * 0.5 > topdf.x)
-		  topdf.x = pdf_cLeftMargin + 2 * pdf_cCellSize + strlen(text3) * hstyle->font_size * 0.5;
-	      }
-	      topdf.print_text( str, topdf.style[topdf.ci].link, 
-			       pdf_mPrintMode_KeepY | pdf_mPrintMode_FixX);
-#endif
 	    }
 	  }
 	  else
@@ -384,10 +370,3 @@ void *CnvXtthelpToPdf::insert( navh_eItemType item_type, const char *text1,
   }
   return 0;
 }
-
-
-
-
-
-
-

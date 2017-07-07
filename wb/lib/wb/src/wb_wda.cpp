@@ -384,4 +384,3 @@ Wda::Wda(
 {
   strcpy( attribute, wa_attribute);
 }
-

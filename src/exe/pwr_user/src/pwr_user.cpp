@@ -901,4 +901,3 @@ int main()
       cout << "%USER-E-MSG, Syntax error" << endl;
   }
 }
-

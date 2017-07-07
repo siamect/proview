@@ -385,30 +385,6 @@ int CnvWblToHtml::close()
     fp_js_group[i].close();
   }
 
-#if 0
-  {
-    char fname[200];
-
-    strcpy( fname, ctx->dir);
-    strcat( fname, "index.jsm");
-    ofstream fp( fname);
- 
-   fp <<
-"  aux = insFld(foldersTree, gFld(\"<b>pwrs</b>\",\"pwrs_index.html\"))" << endl <<
-"  pwrs_index(aux)" << endl <<
-"  aux = insFld(foldersTree, gFld(\"<b>pwrb</b>\",\"pwrb_index.html\"))" << endl <<
-"  pwrb_index(aux)" << endl <<
-"  aux = insFld(foldersTree, gFld(\"<b>nmps</b>\",\"nmps_index.html\"))" << endl <<
-"  nmps_index(aux)" << endl <<
-"  aux = insFld(foldersTree, gFld(\"<b>ssab</b>\",\"ssab_index.html\"))" << endl <<
-"  ssab_index(aux)" << endl <<
-"  aux = insFld(foldersTree, gFld(\"<b>tlog/b>\",\"tlog_index.html\"))" << endl <<
-"  tlog_index(aux)" << endl;
-
-   fp.close();
-  }
-#endif
-
   char cmd[600];
   snprintf( cmd, sizeof(cmd), "if [ -e %s/../../orm_menu.js ]; then cat %s/*.jsf %s/../../orm_menu.js > %s/menu.js; fi", 
 	   ctx->dir, ctx->dir, ctx->dir, ctx->dir);
@@ -1382,6 +1358,3 @@ void CnvWblToHtml::print_all_menu()
       "[\"" << all_classes[i].name << "\",\"" << all_classes[i].file << "\"]" << endl;
   }
 }
-
-
-

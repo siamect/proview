@@ -67,7 +67,3 @@ class PalMotif : public Pal {
 };
 
 #endif
-
-
-
-

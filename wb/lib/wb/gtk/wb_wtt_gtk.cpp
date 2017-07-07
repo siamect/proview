@@ -3451,32 +3451,11 @@ void WttGtk::menu_position_func( GtkMenu *menu, gint *x, gint *y, gboolean *push
   *push_in = FALSE;
 }
 
-#if 0
-void WttMotif::popup_unmap_cb(Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
-{
-  XtDestroyWidget(w);
-}
-#endif 
-
 void WttGtk::popup_button_cb( GtkWidget *w, gpointer data)
 {
   Wtt *wtt = (Wtt *)data;
   int idx;
   pwr_tStatus sts;
-
-#if 0
-  Widget menu;
-  // Find the menu widget
-  menu = XtParent(w);
-  while (1) {
-    if (strcmp(XtName(menu), "_popup") == 0 || 
-	  strcmp(XtName(menu), "_pulldown") == 0)
-      break;
-    menu = XtParent(menu);
-  }
-
-  XtVaGetValues (w, XmNuserData, &idx, NULL);
-#endif
 
   idx = (int) (unsigned long)g_object_get_data( (GObject *)w, "userdata");
 

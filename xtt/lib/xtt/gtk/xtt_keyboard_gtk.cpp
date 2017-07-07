@@ -176,4 +176,3 @@ void XttKeyboardGtk::set_transient( void *basewidget)
 {
   gtk_window_set_transient_for(GTK_WINDOW(toplevel), GTK_WINDOW(basewidget));
 }
-

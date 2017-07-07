@@ -239,4 +239,3 @@ ostream& operator<< ( ostream& o, const FlowArc a)
   '[' << a.ur.z_x << ',' << a.ur.z_y << ']' ;
   return o;
 }
-

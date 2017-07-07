@@ -62,7 +62,3 @@ class WRevNavGtk : public WRevNav {
 };
 
 #endif
-
-
-
-

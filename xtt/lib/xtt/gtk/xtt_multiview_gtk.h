@@ -119,9 +119,3 @@ class XttMultiViewGtk : public XttMultiView {
 };
 
 #endif
-
-
-
-
-
-

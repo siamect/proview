@@ -274,12 +274,3 @@ static void pal_set_avoid_deadlock( PalMotif *pal, int time)
 	XtWidgetToApplicationContext( pal->brow_widget), time,
 	(XtTimerCallbackProc)pal_reset_avoid_deadlock, pal);
 }
-
-
-
-
-
-
-
-
-

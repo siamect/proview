@@ -1359,15 +1359,6 @@ sendAlarmStatus( sOutunit *op)
 	msg->Sts[count].Idx = ap->idx;
 	msg->Sts[count].Status = ap->status.Event.Status;
 	count++;
-
-#if 0
-	// Test
-	int sts = ap->status.Event.Status;
-	int idx = ap->idx;
-
-	printf( "idx: %d sts: %d\n", idx, sts);	
-	// End test
-#endif
       }
       break;
     default: ;
@@ -1396,12 +1387,6 @@ checkOutunits ()
       /* Send sync */
       if (op->linkUp && op->syncedIdx != op->eventIdx) {
 	if (op->check) {
-#if 0
-	  errh_Info("Sending sync request to outunit qid: %s, oid: %s\n %d =! %d",
-		    qcom_QidToString(NULL, &op->link.qid, 1),
-		    cdh_ObjidToString(NULL, op->outunit, 1),
-		    op->syncedIdx, op->eventIdx);
-#endif
 	  sendToOutunit(op, mh_eMsg_HandlerSync, 0, 0, NULL, 0);
 	} else {
 	  op->check = 1;
@@ -1874,12 +1859,10 @@ formatSupEvent (
 	sp->link.event == mh_eEvent_UserAlarm4)
       ip->EventPrio = sup->EventPriority;
     mp->SupInfo.SupType = sp->supType;
-#if 1
     if (sp->supInfoSize > sizeof(mp->SupInfo.mh_uSupInfo_u)) {
       errh_Error("formatSupEvent, program error, size: %d", sp->supInfoSize);
       sp->supInfoSize = sizeof(mp->SupInfo.mh_uSupInfo_u);
     }
-#endif
     mp->EventSound = sp->link.eventSound;
     strncpy(mp->EventMoreText, sup->MoreText, sizeof(mp->EventMoreText));
     mp->Object = sp->link.object;
@@ -1931,12 +1914,10 @@ formatSupEvent (
     rp->TargetId.BirthTime = l.head.birthTime;
     rp->DetectTime = net_TimeToNetTime( &sup->DetectTime);
     rp->SupInfo.SupType = sp->supType;
-#if 1
     if (sp->supInfoSize > sizeof(rp->SupInfo.mh_uSupInfo_u)) {
       errh_Error("formatSupEvent, program error, size: %d", sp->supInfoSize);
       sp->supInfoSize = sizeof(rp->SupInfo.mh_uSupInfo_u);
     }
-#endif
     rp->Object = sp->link.object;
     rp->SupObject = sp->link.supObject;
     strncpy(rp->EventName, sp->link.eventName, sizeof(rp->EventName));
@@ -1965,12 +1946,10 @@ formatSupEvent (
     rp->Object = sp->link.object;
     rp->SupObject = sp->link.supObject;
     strncpy(rp->EventName, sp->link.eventName, sizeof(rp->EventName));
-#if 1
     if (sp->supInfoSize > sizeof(rp->SupInfo.mh_uSupInfo_u)) {
       errh_Error("formatSupEvent, program error, size: %d", sp->supInfoSize);
       sp->supInfoSize = sizeof(rp->SupInfo.mh_uSupInfo_u);
     }
-#endif
     memcpy(&rp->SupInfo.mh_uSupInfo_u, sp->supInfoP, sp->supInfoSize);
     *size = sizeof(mh_sReturn);
     break;
@@ -3708,12 +3687,6 @@ outunitInfo (
       memcpy(&op->sel_l[0], ip + 1, op->selSize * sizeof(mh_sSelL));
     op->selGen = ip->selGen;
     op->eventGen++;
-#if 0
-    errh_Info("outunitInfo op->eventGen++ <%d>\n(qid: %s, oid: %s)",
-      op->eventGen, qcom_QidToString(NULL, &op->link.qid, 1),
-      cdh_ObjidToString(NULL, op->outunit, 1)
-    );
-#endif
     op->maxIdx = op->syncedIdx = op->eventIdx = 0;
     op->check = 0;
   }
@@ -3768,14 +3741,6 @@ outunitSync (
 
   if (op->eventIdx == hp->eventIdx) {
     if (op->check) {
-#if 0
-  char s1[256] = "";
-  char s2[256] = "";
-      errh_Info("Now synced: op->eventIdx: %d != hp->eventIdx: %d, op->syncedIdx: %d\nOutunit %s, %s", 
-	op->eventIdx, hp->eventIdx, op->syncedIdx,
-	qcom_QidToString(s1, &op->link.qid, 1),
-	cdh_ObjidToString(s2, op->outunit, 1));
-#endif
       op->check = 0;
     }
     op->syncedIdx = hp->eventIdx;
@@ -3796,13 +3761,6 @@ outunitAlarmReq (
   sActive	*ap;
   int		ok;
 
-#if 0
-  printf( "outunitAlarmReq: ");
-  for ( i = 0; i < msg->Count; i++)
-    printf( " %d,", msg->Idx[i]);
-  printf("\n");
-#endif
-
   /* Find events in active list */
   for ( i = 0; i < msg->Count; i++) {
     for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l); al = LstNex(al)) {
@@ -3814,13 +3772,6 @@ outunitAlarmReq (
 	  break;
 
 	ok = reSendEventToOutunit( op, ap->detect_etp);
-#if 0
-	if (ap->detect_etp->ep != NULL)
-	  ok = sendEventToOutunit( op, ap->detect_etp);
-        else
-	  ok = reSendEventToOutunit(op, ap->detect_etp);
-	printf( "Resend %d\n", ap->idx);
-#endif
 	if (ok) {
 	  if ( ap->idx > op->eventIdx)
 	    op->eventIdx = ap->idx;	/* Message was sent, update last sent index */
@@ -3850,9 +3801,6 @@ procDown (
         outunitAborted((sOutunit *) LstObj(pl));
         break;
       case mh_eSource_Application:
-#if 0
-        ApplAborted((sAppl *) LstObj(pl));
-#endif
         break;
       default:
 	errh_Error("procDown, programming error, source: %d", LstObj(pl)->source);
@@ -4253,12 +4201,6 @@ sendEventListToOutunit (
 
   if (op->maxIdx < l.event_l->oldIdx) {
     op->eventGen++;
-#if 0
-    errh_Info("sendEventListToOutunit op->eventGen++ <%d>\n(qid: %s, oid: %s)",
-      op->eventGen, qcom_QidToString(NULL, &op->link.qid, 1),
-      cdh_ObjidToString(NULL, op->outunit, 1)
-    );
-#endif
     op->maxIdx = l.event_l->idx;
     op->syncedIdx = op->eventIdx = 0;
     op->check = 0;
@@ -4297,9 +4239,7 @@ sendEventListToOutunit (
 
   if (etp == NULL)
     return;
-    
-  //#if 0
-  // Test
+
   if ( op->lastSentIdx == etp->idx) {
     /* Wait before resending it */
     pwr_tTime current;
@@ -4318,9 +4258,6 @@ sendEventListToOutunit (
   } else {
     ok = reSendEventToOutunit(op, etp);
   }
-  // printf( "eventListToOutunit: %d idx: %d ok: %d opidx %d opsynced %d\n", etp->ap ? etp->ap->idx : -1, etp->idx, ok, op->eventIdx, op->syncedIdx);
-  //#endif
-  //ok = 0; // Test
 
   if (ok) {
     op->eventIdx = etp->idx;	/* Message was sent, update last sent index */
@@ -4849,20 +4786,6 @@ static sNodeInfo *node_insert( pwr_tNid nid)
   }
   return 0;
 }
-
-#if 0
-static void node_remove( pwr_tNid nid)
-{
-  int i;
-
-  for (i = 1; i < cNodes; i++) {
-    if ( l.nodeDb[i].occupied && l.nodeDb[i].nid == nid) {
-      l.nodeDb[i].occupied = 0;
-      break;
-    }
-  }    
-}
-#endif
 
 static pwr_tStatus emon_redu_init()
 {
@@ -5399,31 +5322,6 @@ static pwr_tStatus emon_redu_receive()
       activep++;
     }
 
-#if 0
-    /* Test */
-    printf( "---------------------\n");
-    for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l) ; al = LstNex(al)) {
-      ap = LstObj(al);
-      printf( "   %s %s %s\n", ap->objName, ap->status.All & mh_mEventStatus_NotAck ? "NA" : "  ",ap->status.All & mh_mEventStatus_NotRet ? "NR" : "  " );
-    }
-    printf( "---------------------\n");
-#endif
-
-#if 0
-    /* Check that there are no etp without ap */
-    for (etp = tree_Minimum(&sts, l.eventTab); etp != NULL; etp = tree_Successor(&sts, l.eventTab, etp)) {
-      if ( !etp->ap) {
-	printf( "** etp without ap removed\n");
-	sEventTab *pred = tree_Predecessor(&sts, l.eventTab, etp);
-	tree_Remove(&sts, l.eventTab, &etp->idx);
-	if ( pred != NULL)
-	  etp = pred;
-	else
-	  etp = tree_Minimum(&sts, l.eventTab);
-      }
-    }
-#endif
-
     /* Outunits */
     outunit_start = (redu_sEvOutunit *)activep;
 
@@ -5533,5 +5431,3 @@ static pwr_tStatus emon_redu_receive()
   qcom_Free( &sts, msg);
   return MH__SUCCESS;
 }
-
-

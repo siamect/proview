@@ -90,10 +90,3 @@ class WAttTextGtk : public WAttText {
 };
 
 #endif
-
-
-
-
-
-
-

@@ -76,4 +76,3 @@ pwr_dExport pwr_BindIoMethods(Hilscher_cifX_Module) = {
   pwr_BindIoMethod(IoCardClose),
   pwr_NullMethod
 };
-

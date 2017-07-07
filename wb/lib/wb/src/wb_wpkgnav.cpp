@@ -927,20 +927,3 @@ WItemPkgFile::WItemPkgFile( WNavBrow *brow, const char *item_name,
   }
   brow_SetAnnotation( node, 3, timestr, strlen(timestr));
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

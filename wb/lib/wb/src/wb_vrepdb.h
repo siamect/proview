@@ -248,9 +248,6 @@ public:
                                  pwr_tOid woid, pwr_tOid *roid);
   virtual void importIgnoreErrors() {}
 
-#if 0
-  int del_family(DbTxn *txn, Dbc *cp, pwr_tOid poid);
-#endif
   void unadopt(wb_db_txn *txn, wb_db_ohead &o);
   void adopt(wb_db_txn *txn, wb_db_ohead &o, wb_destination &dest);
 

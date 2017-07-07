@@ -46,4 +46,3 @@ pwr_dExport pwr_BindXttClasses(Base) = {
   pwr_BindXttClass(Sound),
   pwr_NullClass
 };
-

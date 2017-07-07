@@ -68,4 +68,3 @@
 #include "pwr_basecomponentclasses.h"
 #include "rt_plc_bcomp.h"
 #include "ra_plc_user.h"
-

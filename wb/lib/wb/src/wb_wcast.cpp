@@ -148,6 +148,3 @@ void WCast::selected_cb( void *ctx, char *text, int ok_pressed)
     wcast->wow->DisplayError( "Cast Error", msg);
   }
 }
-
-
-

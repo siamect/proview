@@ -148,9 +148,3 @@ CoXHelp::CoXHelp(
 {
   *xa_sts = 1;
 }
-
-
-
-
-
-

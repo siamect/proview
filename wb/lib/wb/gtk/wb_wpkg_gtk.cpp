@@ -412,5 +412,3 @@ WPkgGtk::WPkgGtk(
 	wb_eUtility_Distributor);
   }
 }
-
-

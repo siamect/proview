@@ -116,9 +116,6 @@ int rtt_search_file( 		char 	*name ,
 
 	  strcpy( pattern, file);
 	  strcat( pattern, type);
-#if 0
-	  rtt_toupper( pattern, pattern);
-#endif
 	}
 
 	if ( new == RTT_DIR_SEARCH_INIT || new == RTT_DIR_SEARCH_NEXT)
@@ -244,4 +241,3 @@ int	rtt_parse_filename( 	char	*filename,
 	return 0;
 #endif
 }  
-

@@ -254,4 +254,3 @@ ostream& operator<< ( ostream& o, const FlowText t)
   '(' << t.p.x << ',' << t.p.y << ')' << t.text;
   return o;
 }
-

@@ -213,14 +213,6 @@ int GrowImage::insert_image( const char *imagefile)
   original_width = ctx->gdraw->image_get_width( original_image);
   original_height = ctx->gdraw->image_get_height( original_image);
 
-#if 0
-  set_image_color( image, NULL);
-
-  ctx->gdraw->image_scale( current_width, current_height,
-			   original_image, &image, &image_data, &pixmap, &clip_mask);
-  ctx->gdraw->image_render( current_width, current_height,
-			    original_image, &image, &pixmap, &clip_mask);
-#endif
   ur.posit( ll.x + double( current_width) / ctx->mw.zoom_factor_x,
 	    ll.y + double( current_height) / ctx->mw.zoom_factor_y);
   get_node_borders();

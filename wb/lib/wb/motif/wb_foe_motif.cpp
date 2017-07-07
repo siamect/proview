@@ -241,17 +241,6 @@ void WFoeMotif::activate_gridsize5( Widget w, WFoe *foe, XmAnyCallbackStruct *da
 //
 void WFoeMotif::activate_showgrid( Widget w, WFoe *foe, XmToggleButtonCallbackStruct *data)
 {
-#if 0
-  if ( data->set > 1) return;
-  if ( foe->msg_label_id != 0 ) foe->message( ""); 
-
-  if(data->set == 1) {
-    foe->gre->drawgrid();
-  }
-  else  /* data->set == 0 */ {
-    foe->gre->undrawgrid();
-  }
-#endif
 }
 
 //	Callback from the menu.
@@ -1520,4 +1509,3 @@ int WFoeMotif::get_selection( char *str, int len)
 
   return sts;
 }
-

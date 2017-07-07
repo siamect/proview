@@ -135,4 +135,3 @@ ostream& operator<< ( ostream& o, const GlowConClass cc)
   o << "ConClass: " << cc.cc_name;
   return o;
 }
-

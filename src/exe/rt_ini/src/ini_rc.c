@@ -126,8 +126,3 @@ ini_RcReadAndSet(
 
   return 1;
 }
-
-
-
-
-

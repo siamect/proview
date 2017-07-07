@@ -285,8 +285,3 @@ void GrowGroup::set_rootnode( void *node)
 {
   nc->a.set_rootnode( node);
 }
-
-
-
-
-

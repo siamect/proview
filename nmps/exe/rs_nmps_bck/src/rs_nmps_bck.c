@@ -1380,20 +1380,6 @@ bck_write_error:
 static int		nmpsbck_timecmp( pwr_tTime 	*time_old,
 					pwr_tTime	*time_new)
 {
-#if 0
-/********************
-	pwr_tTime	testtime;
-	int		sts;
-
-	if ( time_new->high == time_old->high &&
-	     time_new->low == time_old->low)
-	  return 1;
-	sts = lib$sub_times( time_new, time_old, &testtime);
-	if ( sts == LIB$_NEGTIM)
-	  return 0;
-	return 1;
-***************/
-#endif
 	int	sts;
 
 	sts = time_Acomp( time_new, time_old);
@@ -2702,13 +2688,6 @@ int main( int argc, char *argv[])
 	      if ( ODD(sts))
 		bckctx->bckconfig->LoopCount++;
 
-#if 0
-	      else if (EVEN(sts)) LogAndExit( sts);
-#endif
-
-
-	      // time_Sleep( scantime);
-
 	      first_scan = 0;
 	    }
 	    else {
@@ -2737,7 +2716,3 @@ int main( int argc, char *argv[])
 	  }
 	}
 }
-
-
-
-

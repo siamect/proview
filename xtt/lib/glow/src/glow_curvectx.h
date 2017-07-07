@@ -65,4 +65,3 @@ void curve_scroll_horizontal( CurveCtx *ctx, int value, int bottom);
 void curve_scroll_vertical( CurveCtx *ctx, int value, int bottom);
 
 #endif
-

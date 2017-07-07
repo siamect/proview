@@ -185,11 +185,3 @@ wb_adrep *wb_orepext::attribute(pwr_tStatus*)
 {
   return 0;
 }
-
-
-
-
-
-
-
-

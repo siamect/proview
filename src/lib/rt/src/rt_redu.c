@@ -72,15 +72,6 @@ pwr_tStatus redu_create_table( redu_tCtx ctx)
     sts = add_table_object( ctx, &aref);
     if ( EVEN(sts)) return sts;
   }
-#if 0
-  /* Loop trough all objects and pick out attributes that should be transfered */
-  for ( sts = gdh_GetRootList( &oid); ODD(sts); sts = gdh_GetNextSibling( oid, &oid)) {
-    aref = cdh_ObjidToAref( oid);
-    
-    sts = add_table_object( ctx, &aref);
-    if ( EVEN(sts)) return sts;
-  }
-#endif
 
   ctx->table_version = ctx->nodep->CurrentVersion;
 

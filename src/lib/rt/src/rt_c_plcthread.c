@@ -195,5 +195,3 @@ pwrb_PlcThread_Zero (
   o->CountHigh = 0;
   o->SlipCount = 0;
 }
-
-

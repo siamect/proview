@@ -170,15 +170,3 @@ void FlowTipText::remove()
   if ( active)
     remove_text( text_object);
 }
-
-
-
-
-
-
-
-
-
-
-
-

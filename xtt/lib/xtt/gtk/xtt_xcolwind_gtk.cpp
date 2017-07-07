@@ -376,39 +376,6 @@ gboolean XColWindGtk::action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer
   return FALSE;
 }
 
-#if 0
-void XColWindGtk::valchanged_cmd_input( Widget w, XEvent *event)
-{
-  XColWind 	*xcolwind;
-  int 	sts;
-  char 	*text;
-  Arg 	args[2];
-
-  XtSetArg(args[0], XmNuserData, &xcolwind);
-  XtGetValues(w, args, 1);
-
-  sts = mrm_TextInput( w, event, (char *)XColWind::value_recall, sizeof(XColWind::value_recall[0]),
-	sizeof( XColWind::value_recall)/sizeof(XColWind::value_recall[0]),
-	&xcolwind->value_current_recall);
-  if ( sts)
-  {
-    text = XmTextGetString( w);
-    if ( xcolwind->input_open)
-    {
-      sts = xcolwind->xattnav->set_attr_value( xcolwind->input_node, 
-		xcolwind->input_name, text);
-      XtUnmanageChild( w);
-      xcolwind->set_prompt( "");
-      xcolwind->input_open = 0;
-      if ( xcolwind->redraw_cb)
-        (xcolwind->redraw_cb)( xcolwind);
-
-      xcolwind->xattnav->set_inputfocus();
-    }
-  }
-}
-#endif
-
 void XColWindGtk::change_value_close()
 {
   int sts;
@@ -974,6 +941,3 @@ XColWindGtk::XColWindGtk( GtkWidget 	*xa_parent_wid,
 
   *xa_sts = XATT__SUCCESS;
 }
-
-
-

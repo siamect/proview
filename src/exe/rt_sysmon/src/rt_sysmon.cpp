@@ -393,6 +393,3 @@ int rt_sysmon::alarm_send( pwr_tOid  oid,
   
   return SMON__SUCCESS;
 } 
-
-
-

@@ -90,4 +90,3 @@ void wb_vrepref::objectName(const wb_orep *o, char *str)
     *s = '-';
   strcat( str, n);
 }
-

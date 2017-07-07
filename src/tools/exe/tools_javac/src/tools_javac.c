@@ -152,4 +152,3 @@ int main( int argc, char *argv[])
   sts = system( cmd);
   exit(sts);
 }
-

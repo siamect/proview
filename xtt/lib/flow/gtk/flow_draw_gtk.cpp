@@ -110,9 +110,6 @@ static GdkColor flow_allocate_color( FlowDrawGtk *draw_ctx, const char *named_co
 static void event_timer( FlowCtx *ctx, int time_ms);
 static void cancel_event_timer(FlowCtx *ctx);
 static gboolean event_timer_cb( void *ctx);
-#if 0
-static void draw_input_cb( GtkWidget *w, XtPointer client_data, XtPointer call_data);
-#endif
 
 static int flow_create_cursor( FlowDrawGtk *draw_ctx)
 {
@@ -680,18 +677,6 @@ int FlowDrawGtk::event_handler( FlowCtx *ctx, GdkEvent event)
 	  break;
 	case 3: // Button3
 	  button3_pressed = 1;
-#if 0
-	  if ( (event.button.state & GDK_SHIFT_MASK) && 
-	       !(event.button.state & GDK_CONTROL_MASK))
-	    sts = ctx->event_handler( flow_eEvent_MB3PressShift, (int)event.button.x, (int)event.button.y, 0, 0);
-	  else if ( !(event.button.state & GDK_SHIFT_MASK) && 
-		    (event.button.state & GDK_CONTROL_MASK))
-	    sts = ctx->event_handler( flow_eEvent_MB3PressShift, (int)event.button.x, (int)event.button.y, 0, 0);
-	  else if (  (event.button.state & GDK_SHIFT_MASK) && 
-		     (event.button.state & GDK_CONTROL_MASK))
-	    sts = ctx->event_handler( flow_eEvent_MB3PressShiftCtrl, (int)event.button.x, (int)event.button.y, 0, 0);
-	  else
-#endif
 	    sts = ctx->event_handler( flow_eEvent_MB3Press, (int)event.button.x, (int)event.button.y, 0, 0);
 	  click_sensitivity = 0;
 	  break;
@@ -738,18 +723,6 @@ int FlowDrawGtk::event_handler( FlowCtx *ctx, GdkEvent event)
 	    click_sensitivity = 0;
 	    break;
 	  case 3: // Button3
-#if 0
-	    if ( (event.button.state & GDK_SHIFT_MASK) && 
-		 !(event.button.state & GDK_CONTROL_MASK))
-	      sts = ctx->event_handler( flow_eEvent_MB3ClickShift, (int)event.button.x, (int)event.button.y, 0, 0);
-	    else if ( !(event.button.state & GDK_SHIFT_MASK) && 
-		      (event.button.state & GDK_CONTROL_MASK))
-	      sts = ctx->event_handler( flow_eEvent_MB3ClickCtrl, (int)event.button.x, (int)event.button.y, 0, 0);
-	    else if (  (event.button.state & GDK_SHIFT_MASK) && 
-		       (event.button.state & GDK_CONTROL_MASK))
-	      sts = ctx->event_handler( flow_eEvent_MB3ClickShiftCtrl, (int)event.button.x, (int)event.button.y, 0, 0);
-	    else
-#endif
 	      sts = ctx->event_handler( flow_eEvent_MB3Click, (int)event.button.x, (int)event.button.y, 0, 0);
 	    click_sensitivity = 0;
 	    break;
@@ -807,19 +780,6 @@ int FlowDrawGtk::event_handler( FlowCtx *ctx, GdkEvent event)
 	    click_sensitivity = 0;
 	    break;
 	  case 3: // Button3
-#if 0
-	    if ( (event.button.state & GDK_SHIFT_MASK) && 
-		 !(event.button.state & GDK_CONTROL_MASK))
-	      sts = ctx->event_handler( flow_eEvent_MB3DoubleClickShift, (int)event.button.x, (int)event.button.y, 0, 0);
-	    else if ( !(event.button.state & GDK_SHIFT_MASK) && 
-		      (event.button.state & GDK_CONTROL_MASK))
-	      sts = ctx->event_handler( flow_eEvent_MB3DoubleClickCtrl, (int)event.button.x, (int)event.button.y, 0, 0);
-	    else if ( (event.button.state & GDK_SHIFT_MASK) && 
-		      (event.button.state & GDK_CONTROL_MASK))
-	      sts = ctx->event_handler( flow_eEvent_MB3DoubleClickShiftCtrl, (int)event.button.x, (int)event.button.y, 0, 0);
-	    else
-	      sts = ctx->event_handler( flow_eEvent_MB3DoubleClick, (int)event.button.x, (int)event.button.y, 0, 0);
-#endif
 	    click_sensitivity = 0;
 	    break;
 	  }
@@ -1694,11 +1654,7 @@ int FlowDrawGtk::image( FlowCtx *ctx, int x, int y, int width, int height,
 
   gdk_draw_pixbuf( window, gcs[flow_eDrawType_Line][0], (GdkPixbuf *)image, 0, 0, x, y, width, height,
 		   GDK_RGB_DITHER_NONE, 0, 0);
-#if 0
-  gdk_draw_drawable( window,
-	gcs[flow_eDrawType_Line][0], (GdkPixmap *)pixmap,
-	0, 0, x, y, width, height);
-#endif
+
   if ( clip_mask)
     reset_image_clip_mask( ctx);
 
@@ -1922,95 +1878,6 @@ void FlowDrawGtk::clear_area( FlowCtx *ctx, int ll_x, int ur_x, int ll_y, int ur
 		ur_y - ll_y);
 }
 
-#if 0
-int FlowDrawGtk::create_input( FlowCtx *ctx, int x, int y, char *text, int len,
-	int idx, int width, int height, void *node, int number, void **data)
-{
-  XmFontList fontlist;
-  XmFontListEntry entry;
-  draw_sAnnotData *annot_data; 
-  if ( ctx->nodraw) return 1;
-
-  annot_data = (draw_sAnnotData *) calloc(1, sizeof( draw_sAnnotData));
-  entry = XmFontListEntryCreate("tag", XmFONT_IS_FONT, 
-		font_struct[0][idx]);
-  fontlist = XmFontListAppendEntry( NULL, entry);
-
-  annot_data->w = XtVaCreateGtkWidget( "input", xmTextGtkWidgetClass, toplevel,
-	XmNvalue, text, XmNx, x, XmNy, y - height, XmNfontList, fontlist,
-	XmNwidth, width + 20, XmNheight, height + 20, NULL);
-  XtAddCallback( annot_data->w, XmNactivateCallback, draw_input_cb, annot_data);
-  XtManageChild( annot_data->w);
-  annot_data->node = (FlowArrayElem *)node;
-  annot_data->number = number;
-  annot_data->x = x;
-  annot_data->y = y;
-  annot_data->width = width;
-  annot_data->height = height;
-  annot_data->ctx = ctx;
-  *data = (void *) annot_data;
-  XtFree( (char *)entry);
-  XmFontListFree( fontlist);
-  return 1;
-}
-
-int FlowDrawGtk::close_input( FlowCtx *ctx, void *data)
-{
-  draw_sAnnotData *annot_data = (draw_sAnnotData *)data;
-  XtDestroyGtkWidget( annot_data->w);
-  free( (char *) annot_data);
-  return 1;
-}
-
-int FlowDrawGtk::get_input( FlowCtx *ctx, void *data, char **text)
-{
-  draw_sAnnotData *annot_data = (draw_sAnnotData *)data;
-  char *t;
-
-  t = XmTextGetString( annot_data->w);
-
-  *text = (char *) malloc( strlen(t) + 1);
-  strcpy( *text, t);
-  XtFree( t);
-  return 1;
-}
-
-static void draw_input_cb( GtkWidget *w, XtPointer client_data, XtPointer call_data)
-{
-  draw_sAnnotData *data = (draw_sAnnotData *)client_data;
-  char *text;
-
-  /* Get input value */
-  text = XmTextGetString( w);
-
-  /* Call backcall function */
-  data->ctx->annotation_input_cb( data->node, data->number, text);
-  XtFree( text);
-}
-
-void FlowDrawGtk::move_input( FlowCtx *ctx, void *data, int x, int y,
-	flow_ePosition pos_type)
-{
-  draw_sAnnotData *annot_data = (draw_sAnnotData *)data;
-
-  if ( pos_type == flow_ePosition_Relative) {
-    if ( !x && !y)
-      return;
-
-    annot_data->x += x;
-    annot_data->y += y;
-  }
-  else {
-    if ( x == annot_data->x && y == annot_data->y)
-      return;
-
-    annot_data->x = x;
-    annot_data->y = y;
-  }
-  XtMoveWidget( annot_data->w, annot_data->x, annot_data->y - annot_data->height);
-}
-#endif
-
 void FlowDrawGtk::set_inputfocus( FlowCtx *ctx)
 {
   gdk_window_focus( ((FlowDrawGtk *)ctx->fdraw)->window, GDK_CURRENT_TIME);
@@ -2058,14 +1925,6 @@ void FlowDrawGtk::set_white_background( FlowCtx *ctx)
   }
   gtk_widget_modify_bg( toplevel, GTK_STATE_NORMAL, &background);
 }
-
-#if 0
-void draw_set_widget_inputfocus( GtkWidget *w)
-{
-  XSetInputFocus( XtDisplay(w), XtWindow(w), 
-		RevertToParent, CurrentTime);
-}
-#endif
 
 int FlowDrawGtk::get_font_idx( int gc_type)
 {

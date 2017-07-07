@@ -2085,5 +2085,3 @@ int XNav::show_plcpgm()
   force_trace_scan();
   return XNAV__SUCCESS;
 }
-
-

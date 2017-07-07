@@ -74,6 +74,3 @@ private:
 };
 
 #endif
-
-
-

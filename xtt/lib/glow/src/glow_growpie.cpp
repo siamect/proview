@@ -597,15 +597,3 @@ void GrowPie::set_values( double *values)
 void GrowPie::convert( glow_eConvert version) 
 {
 }
-
-
-
-
-
-
-
-
-
-
-
-

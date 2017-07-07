@@ -103,4 +103,3 @@ pwr_dExport pwr_BindIoMethods(USB_Agent) = {
   pwr_BindIoMethod(IoAgentClose),
   pwr_NullMethod
 };
-

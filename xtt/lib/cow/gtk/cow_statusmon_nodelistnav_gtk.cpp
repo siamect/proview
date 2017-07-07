@@ -121,11 +121,3 @@ void NodelistNavGtk::trace_scan( NodelistNav *nodelistnav)
 	nodelistnavgtk_trace_scan, nodelistnav);
   }
 }
-
-
-
-
-
-
-
-

@@ -523,8 +523,3 @@ static int find_symbol( char *name, char *value)
 
   return 1;
 }
-
-
-
-
-

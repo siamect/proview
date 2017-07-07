@@ -60,15 +60,3 @@ class XttFastMotif : public XttFast {
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-

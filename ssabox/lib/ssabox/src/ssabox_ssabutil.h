@@ -75,9 +75,3 @@ int ssab_curve_2d( 	float x,
 		sizeof(table)/sizeof(table[0]))
 
 pwr_tStatus sutl_sleep( float time);
-
-
-
-
-
-

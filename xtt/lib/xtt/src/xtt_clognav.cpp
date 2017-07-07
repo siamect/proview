@@ -849,11 +849,3 @@ ItemMsgRestart::ItemMsgRestart( CLogNav *item_clognav, const char *item_name,
   brow_SetAnnotation( node, 0, time_str, strlen(time_str));
   brow_SetAnnotation( node, 1, "Proview startup", strlen("Proview startup"));
 }
-
-
-
-
-
-
-
-

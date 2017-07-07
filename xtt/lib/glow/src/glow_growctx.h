@@ -993,8 +993,3 @@ void grow_auto_scrolling( GrowCtx *ctx);
 
 /*@}*/
 #endif
-
-
-
-
-

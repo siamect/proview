@@ -173,9 +173,3 @@ class GrowSlider : public GrowNode {
 
 /*@}*/
 #endif
-
-
-
-
-
-

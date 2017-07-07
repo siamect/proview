@@ -101,10 +101,3 @@ class XAttOneMotif : public XAttOne {
 };
 
 #endif
-
-
-
-
-
-
-

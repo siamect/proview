@@ -71,6 +71,3 @@ class CoXHelpNavGtk : public CoXHelpNav {
 
 
 #endif
-
-
-

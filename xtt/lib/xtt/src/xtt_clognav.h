@@ -209,5 +209,3 @@ class ItemMsg : public ItemMsgBase {
 };
 
 #endif
-
-

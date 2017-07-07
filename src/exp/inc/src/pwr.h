@@ -779,5 +779,3 @@ static const pwr_tDeltaTime pwr_cDtMin      = PWR_DTTIME_MIN;
 }
 #endif
 #endif
-
-

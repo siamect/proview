@@ -168,9 +168,6 @@ checkQ	(
   }
 
   return YES;
-#if 0
-  return item == pool_Address(NULL, php, item->self);
-#endif
 }
 
 static pwr_tBoolean
@@ -487,10 +484,6 @@ pool_Alloc (
   pwr_tBoolean		found;
   pool_uRefBits		pr;
   pwr_tUInt32		i = 0;
-
-#if 0
-  pwr_SetStatus(sts, 1);
-#endif
 
   gphp = php->gphp;
 

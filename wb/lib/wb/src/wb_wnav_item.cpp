@@ -3911,15 +3911,6 @@ WItemEnumObject::WItemEnumObject(
   // brow_SetAnnotPixmap( node, 0, brow->pixmap_attr);
   brow_SetAnnotation( node, 0, enum_name, strlen(enum_name));
 
-  // Examine access
-#if 0
-  ldh_sSessInfo info;
-  ldh_GetSessionInfo( ldhses, &info);
-  if ( info.Access == ldh_eAccess_ReadWrite &&
-       !(flags & PWR_MASK_NOEDIT || flags & PWR_MASK_STATE))
-    brow_SetAnnotPixmap( node, 1, brow->pixmap_morehelp);
-#endif
-
   update();
 }
 
@@ -4253,4 +4244,3 @@ int WItemDocBlock::get_value( char **value)
 
   return ldh_GetDocBlock( ldhses, objid, value, &size);
 }
-

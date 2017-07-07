@@ -61,6 +61,3 @@ class CoLogWNavGtk : public CoLogWNav {
 };
 
 #endif
-
-
-

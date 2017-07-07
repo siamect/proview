@@ -69,12 +69,3 @@ class CnvContent {
 };
 
 #endif
-
-
-
-
-
-
-
-
-

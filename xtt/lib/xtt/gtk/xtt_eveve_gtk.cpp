@@ -596,4 +596,3 @@ void EvEveGtk::eve_activate_helpevent( GtkWidget *w, gpointer data)
 
   ev->eve_activate_helpevent();
 }
-

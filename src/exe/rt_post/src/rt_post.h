@@ -105,7 +105,3 @@ class rt_post {
 
 /*@}*/
 #endif
-
-
-
-

@@ -12693,13 +12693,6 @@ int GeDigCommand::scan( grow_tObject object)
 
 int GeDigCommand::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
 {
-#if 0
-  if ( first)
-    fp << "      ";
-  else
-    fp << "      ,";
-  fp << "new GeDynDigCommand(" << var_name << ".dd, \"" << attribute << "\",\"" << command << "\")" << endl;
-#endif
   return 1;
 }
 
@@ -16756,17 +16749,7 @@ int GePulldownMenu::get_transtab( char **tt)
 
 void GePulldownMenu::save( ofstream& fp)
 {
-
   int b_mask = ge_mInstance_1;
-#if 0
-  for ( int j = 0; j < 32; j++) {
-    if ( b_mask & button_mask) {
-      if ( !items_dyn[j])
-	dyn->update_elements();
-    }
-    b_mask = b_mask << 1;
-  }
-#endif
 
   fp << int(ge_eSave_PulldownMenu) << endl;  
   fp << int(ge_eSave_PulldownMenu_button_mask) << FSPACE << int(button_mask) << endl;
@@ -19457,11 +19440,3 @@ int GeEmitSignal::export_java( grow_tObject object, ofstream& fp, bool first, ch
 {
   return 1;
 }
-
-
-
-
-
-
-
-

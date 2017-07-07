@@ -163,13 +163,3 @@
 */
 #define CStoRefS_exec(out,in,cond,size) \
   if ( cond) strncpy( out, in, size);
-
-
-
-
-
-
-
-
-
-

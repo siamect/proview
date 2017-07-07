@@ -646,9 +646,6 @@ blockListInsert (
   bp->block.object   = *op;
   bp->block.outunit  = l.head.outunit;
   bp->block.prio     = prio;
-#if 0
-  bp->block.time
-#endif
   bl = LstEnd(&hp->block_l);
   LstIns(bl, bp, block_l);
 

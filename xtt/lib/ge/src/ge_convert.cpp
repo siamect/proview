@@ -116,7 +116,3 @@ int Graph::convert()
   return 1;
 }
 #endif
-
-
-
-

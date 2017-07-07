@@ -197,4 +197,3 @@ pwr_tStatus ssab_SetAddress( wb_session *sp, pwr_tOid oid)
 
   return 1;
 }
-

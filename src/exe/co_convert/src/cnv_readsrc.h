@@ -80,6 +80,3 @@ class CnvReadSrc {
 }
 #endif
 #endif
-
-
-

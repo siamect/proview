@@ -75,5 +75,3 @@ pwr_dExport pwr_BindMethods(Pb_Module) = {
   pwr_BindMethod(SyntaxCheck),
   pwr_NullMethod
 };
-
-

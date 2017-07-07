@@ -80,9 +80,6 @@ class WNavBrow {
     WNavBrow( BrowCtx *brow_ctx, void *brow_userdata) : 
 	type(wnav_eBrowType_Other), ldh_cb_used(1),
 	ctx(brow_ctx), userdata(brow_userdata) {};
-#if 0
-    ~WNavBrow();
-#endif
 
     wnav_eBrowType	type;
     int			ldh_cb_used;

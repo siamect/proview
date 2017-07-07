@@ -135,6 +135,3 @@ class EvMotif : public Ev {
 };
 
 #endif
-
-
-

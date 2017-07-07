@@ -2124,12 +2124,6 @@ void *pn_gsdml::object_factory( gsdml_eTag id)
     void *p;
     if ( (p = get_object_stack( gsdml_eTag_DeviceAccessPointItem)))
       ((gsdml_DeviceAccessPointItem *)p)->CertificationInfo = o;
-#if 0
-    else if ( (p = get_object_stack( gsdml_eTag_VirtualSubmoduleItem)))
-      ((gsdml_VirtualSubmoduleItem *)p)->CertificationInfo = o;
-    else if ( (p = get_object_stack( gsdml_eTag_ModuleItem)))
-      ((gsdml_ModuleItem *)p)->CertificationInfo = o;
-#endif
     else {
       error_message_line( "Misplaced CertificationInfo");
       return 0;
@@ -5692,17 +5686,3 @@ bool gsdml_FValuelist::in_list( double val)
   }
   return false;
 }
-
-
-#if 0
-int main()
-{
-  pn_gsdml *gsdml = new pn_gsdml();
-
-  // gsdml.read( "/home/claes/gsdml/GSDML-V1.0-OMRON-GRT1-PNT-20080327.xml");
-  gsdml->read( "/home/claes/gsdml/t.xml");
-  gsdml->build();
-
-  delete gsdml;
-}
-#endif

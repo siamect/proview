@@ -114,15 +114,3 @@ class XttTrend {
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-

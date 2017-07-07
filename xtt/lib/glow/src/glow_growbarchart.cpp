@@ -656,15 +656,3 @@ void GrowBarChart::set_values( float *values1, float *values2, float *values3, f
 void GrowBarChart::convert( glow_eConvert version) 
 {
 }
-
-
-
-
-
-
-
-
-
-
-
-

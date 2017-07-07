@@ -75,8 +75,5 @@ pwr_tStatus	thread_SetPrio		(thread_s*, int);
 pwr_tStatus	thread_Join		(thread_s*, pwr_tStatus*);
 pwr_tStatus	thread_Signal		(thread_s*, int);
 pwr_tBoolean	thread_SigTimedWait	(thread_s*, int, pwr_tDeltaTime*);
-#if 0
-  thread_s	thread_Self		();
-#endif
 
 #endif

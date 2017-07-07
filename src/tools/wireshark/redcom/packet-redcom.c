@@ -440,19 +440,6 @@ dissect_redcom(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree)
   // which ports the packet came from and went to. Also, we indicate the type 
   // of packet.
 
-#if 0  
-  // This is not a good way of dissecting packets. The tvb length should
-  // be sanity checked so we aren't going past the actual size.
-
-  type = tvb_get_guint8( tvb, 4 ); // Get the type byte
-
-  if (check_col(pinfo->cinfo, COL_INFO)) {
-    col_add_fstr(pinfo->cinfo, COL_INFO, "%d > %d Info Type:[%s]",
-		 pinfo->srcporct, pinfo->destport, 
-		 val_to_str(type, packettypenames, "Unknown Type:0x%02x"));
-  }
-#endif
-
   if (tree) { /* we are being asked for details */
     guint32 offset = 0;
 
@@ -617,45 +604,7 @@ dissect_redcom(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree)
 	offset += 4;
       }
     }
-#if 0
-    guint32 offset = 0;
-    guint32 nodeid = 0;
-
-    redcom_item = proto_tree_add_item(tree, proto_redcom, tvb, 0, -1, FALSE);
-    redcom_tree = proto_item_add_subtree(redcom_item, ett_redcom);
-    redcom_header_tree = proto_item_add_subtree(redcom_item, ett_redcom);
-
-    redcom_sub_item = proto_tree_add_item( redcom_tree, hf_redcom_header, 
-					 tvb, offset, -1, FALSE );
-
-    redcom_header_tree = proto_item_add_subtree(redcom_sub_item, ett_redcom);
-
-    // We use tvb_memcpy to get our length value out (Host order)
-
-    tvb_memcpy(tvb, (guint32 *)&nodeid, offset, 4);
-    proto_tree_add_uint(redcom_header_tree, hf_redcom_nodeid, tvb, offset, 4, nodeid);
-
-    // We increment the offset to get past the 4 bytes indicating length
-    offset+=4;
-
-    // Here we submit the type parameter to the tree. 
-    proto_tree_add_item(redcom_header_tree, hf_redcom_type, tvb, offset, 1, FALSE);
-    type = tvb_get_guint8( tvb, offset ); // Get our type byte
-
-    offset+=1;
-    //If the type is TEXT, we add the text to the tree. 
-
-    if( type == 0 ) {
-      proto_tree_add_item( redcom_tree, hf_redcom_text, tvb, offset, length-1, FALSE );
-    }
-#endif
   }
-  
-#if 0
-  col_set_str(pinfo->cinfo, COL_PROTOCOL, "Redcom");
-  /* Clear out stuff in the info column */
-  col_clear(pinfo->cinfo, COL_INFO);
-#endif
 }
 
 

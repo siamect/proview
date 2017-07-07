@@ -513,4 +513,3 @@ void CurveCtxFromWidget( Widget w, void **ctx)
 {
   *ctx = ((CurveWidget) w)->curve.curve_ctx;
 }
-

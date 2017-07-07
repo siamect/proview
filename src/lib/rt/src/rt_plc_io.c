@@ -523,4 +523,3 @@ void StrToEnum_exec( plc_sThread	*tp,
   if ( !found)
     o->ActVal = 0;
 }
-

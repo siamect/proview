@@ -205,18 +205,3 @@ class GrowConGlue : public GrowNode {
 
 /*@}*/
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

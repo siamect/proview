@@ -90,9 +90,3 @@ class WGeMotif : public WGe{
 };
 
 #endif
-
-
-
-
-
-

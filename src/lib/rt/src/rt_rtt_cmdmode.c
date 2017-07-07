@@ -940,4 +940,3 @@ static int	rtt_get_attr_value(
 	}
 	return RTT__SUCCESS;
 }
-

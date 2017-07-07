@@ -293,12 +293,3 @@ class GrowWindow : public GrowRect {
 
 /*@}*/
 #endif
-
-
-
-
-
-
-
-
-

@@ -514,38 +514,6 @@ static pwr_tStatus nmpsbck_check_file( 	bck_ctx		bckctx,
 
 static pwr_tStatus	nmpsbck_read( bck_ctx	bckctx)
 {
-#if 0
-	pwr_tStatus		sts;
-	nmpsbck_t_fileheader	fileheader;
-	nmpsbck_t_recordheader	recordheader;
-	nmpsbck_t_recordheader	recordheaderend;
-	nmpsbck_t_cellheader	cellheader;
-	nmpsbck_t_dataheader	dataheader;
-	FILE			*bckfile;
-	FILE			*bckfile2;
-	pwr_tUInt32		csts;
-	pwr_tUInt32		actpos;
-	int			k;
-	char			*databuff = 0;
-	int			databuff_size = 0;
-	nmpsbck_t_data_list	*data_ptr;
-	nmpsbck_t_data_list	*next_ptr;
-	char			*objectp;
-	int			size;
-	char			filename[80];
-	char			file_ext[8];
-	int			file_num = 1;
-	char			*s;
-	int			cell_read_success;
-	int			data_read_success;
-	int			i;
-	pwr_tObjid		objid;
-	int			data_count;
-	int			created;
-	pwr_tTime		first_record_time;
-	pwr_tTime		bckfile2_time;
-	pwr_tStatus		bckfile2_sts;
-#endif
 	FILE			*bckfile1;
 	pwr_tUInt32		cellarea_start[NMPSBCK_MAX_RECORDS];
 	pwr_tUInt32		dataarea_start[NMPSBCK_MAX_RECORDS];

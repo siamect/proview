@@ -327,7 +327,3 @@ void Sim_SlewRateLimiter_exec(plc_sThread *tp,
 	Clamp (Out, plc_obj->LL, plc_obj->HL);
 	plc_obj->Out = Out;
 }
-
-
-
-

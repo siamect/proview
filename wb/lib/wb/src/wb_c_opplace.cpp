@@ -115,4 +115,3 @@ pwr_dExport pwr_BindMethods(OpPlace) = {
   pwr_BindMethod(SyntaxCheck),
   pwr_NullMethod
 };
-

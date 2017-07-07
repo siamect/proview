@@ -71,9 +71,3 @@ class SubPaletteGtk : public SubPalette {
 
 /*@}*/
 #endif
-
-
-
-
-
-

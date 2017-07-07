@@ -859,20 +859,6 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
     case glow_eEvent_ButtonMotion:
       tiptext->remove();
 
-#if 0
-      for ( i = 0; i < a.a_size; i++) {
-	if ( a[i]->type() == glow_eObjectType_GrowWindow ||
-	     a[i]->type() == glow_eObjectType_GrowTable ||
-	     a[i]->type() == glow_eObjectType_GrowFolder) {
-	  sts = a[i]->event_handler( &mw, glow_eEvent_ButtonMotion, x, y, fx, fy);
-	  if ( sts) {
-	    select_rect_active = 0;
-	    node_movement_active = 0;
-	    break;
-	  }
-	}
-      }
-#endif
       if ( node_movement_active && edit_mode != grow_eMode_EditPolyLine)
       {
         int move_x, move_y;
@@ -2664,45 +2650,6 @@ void GrowCtx::draw( GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y)
 void GrowCtx::nav_draw( GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   draw( w, ll_x, ll_y, ur_x, ur_y);
-#if 0
-  if ( no_nav)
-    return;
-
-  int		i;
-  int		loc_ll_x = ll_x;
-  int		loc_ll_y = ll_y;
-  int		loc_ur_x = ur_x;
-  int		loc_ur_y = ur_y;
-
-  if ( defered_redraw_active) {
-    if ( ll_x < w->defered_x_low)
-      w->defered_x_low = ll_x;
-    if ( ll_y < w->defered_y_low)
-      w->defered_y_low = ll_y;
-    if ( ur_x > w->defered_x_high)
-      w->defered_x_high = ur_x;
-    if ( ur_y > w->defered_y_high)
-      w->defered_y_high = ur_y;
-    return;
-  }
-  for ( i = 0; i < a.a_size; i++)
-  {
-    a.a[i]->draw( w, &loc_ll_x, &loc_ll_y, &loc_ur_x, &loc_ur_y);
-  }
-
-  nav_rect_ll_x = int( navw.zoom_factor_x * mw.offset_x / mw.zoom_factor_x - navw.offset_x);
-  nav_rect_ur_x = int( navw.zoom_factor_x * (mw.offset_x + mw.window_width) / 
-		mw.zoom_factor_x - navw.offset_x);
-  nav_rect_ll_y = int( navw.zoom_factor_y * mw.offset_y / mw.zoom_factor_y - navw.offset_y);
-  nav_rect_ur_y = int( navw.zoom_factor_y * (mw.offset_y + mw.window_height) / 
-		mw.zoom_factor_y - navw.offset_y);
-
-//  cout << "Nav rect: ll : " << nav_rect_ll_x << "," << nav_rect_ll_y << 
-//	" ur: " << nav_rect_ur_x << "," << nav_rect_ur_y << endl;
-  gdraw->rect( w, nav_rect_ll_x, nav_rect_ll_y, 
-	nav_rect_ur_x - nav_rect_ll_x, nav_rect_ur_y - nav_rect_ll_y,
-	glow_eDrawType_Line, 0, 0);
-#endif
 }
 
 void GrowCtx::dynamic_cb( GlowArrayElem *object, char *code,
@@ -2909,38 +2856,6 @@ void GrowCtx::set_background( glow_eDrawType color)
     }
     else
       gdraw->set_background( &mw, color, 0, 0, 0, 0);
-
-#if 0
-    // Create a pixmap
-    GrowImage *i1 = new GrowImage( this, "", 0, 0);
-    i1->insert_image( background_image);
-    if ( i1->pixmap) {
-      gdraw->set_background( &mw, color, 0, 0, 0);
-      return;
-    }
-
-    if ( !background_tiled && !(mw.window_width == 0 || mw.window_height == 0)) {
-
-      double ur_x = -1e10;
-      double ll_x = 1e10;
-      double ur_y = -1e10;
-      double ll_y = 1e10;
-      double width, height, scale;
-
-      i1->get_borders( &ur_x, &ll_x, &ur_y, &ll_y);
-
-      width = (ur_x - ll_x) * mw.zoom_factor_x;
-      height = (ur_y - ll_y) * mw.zoom_factor_y;
-      if ( width == 0 || height == 0) {
-        gdraw->set_background( &mw, color, 0);
-        return;
-      }
-      scale = MIN( double(mw.window_width) / width, double(mw.window_height)/height);
-      i1->set_scale( scale, scale, 0, 0, glow_eScaleType_LowerLeft);     
-    }
-    gdraw->set_background( &mw, color, i1->pixmap);
-    delete i1;
-#endif
   }
   else {
     gdraw->set_background( &mw, color, 0, 0, 0, 0);
@@ -4923,4 +4838,3 @@ int GrowCtx::find_by_name( const char *name, GlowArrayElem **element)
     return ((GrowWindow *)wind)->window_ctx->find_by_name( &name[len+1], element);
   }
 }
-

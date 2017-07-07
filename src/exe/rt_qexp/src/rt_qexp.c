@@ -108,10 +108,6 @@ main (int argc, char *argv[])
 	      sbp = qdb_CopyBuffer(&sts, nbp);
 
 	      qdb_Unlock;
-#if 0
-		errh_Info("Sending bcast to que %s on %s",
-		  qcom_QidToString(NULL, &sbp->b.info.receiver, 1), cdh_NodeIdToString(NULL, np->nid, 0, 0));
-#endif
 		qnet_Put(&sts, pp, sbp);
 	      qdb_Lock;
 
@@ -138,19 +134,10 @@ main (int argc, char *argv[])
 	    pool_QinsertPred(&sts, &qdb->pool, &nbp->c.ll, &rp->b_lh);
 	  }
 	} qdb_ScopeUnlock;
-#if 0
-	if (0)
-	  errh_Info("reply: %d, nbp: %d, status\n%m", bp->b.info.rid, nbp, bp->b.info.status);
-#endif
 	if (rp == NULL || rp->rid == bp->b.info.rid)	
 	  qnet_Put(&sts, pp, bp);
 
       } else {
-#if 0
-	if (0 && bp->c.flags.b.request) {
-	  errh_Info("request: %d, tmo: %d", bp->b.info.rid, bp->b.info.tmo);
-	}
-#endif
 	qnet_Put(&sts, pp, bp);
       }
     }

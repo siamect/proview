@@ -102,4 +102,3 @@ class wb_utl {
 };
 
 #endif
-

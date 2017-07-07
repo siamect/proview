@@ -640,38 +640,21 @@ gdh_GetAlarmInfo (
     if (a != NULL) *a = op->l.al.a;
 
     if (maxa != NULL) {
-#if 0
-      *maxa = 0;
-#else
       *maxa = op->l.al.maxa;
       if (op->l.flags.b.isNative) 
 	*maxa = MAX(*maxa, op->u.n.ral.maxa);
-#endif
     }
 
-
-#if 0
-    if (b != NULL) *b = 0;
-#else
     if (b != NULL) *b = op->l.al.b;
-#endif
 
     if (maxb != NULL) {
-#if 0
-      *maxb = 0;
-#else
       *maxb = op->l.al.maxb;
       if (op->l.flags.b.isNative) 
 	*maxb = MAX(*maxb, op->u.n.ral.maxb);
-#endif
     }
 
     if (alarmvisibility != NULL) {
-#if 0
-       *alarmvisibility = 0;
-#else
       getAlarmVisibility(&sts, op, alarmvisibility);
-#endif
     }
 
   } gdh_ScopeUnlock;
@@ -3531,27 +3514,7 @@ gdh_SetCache (
   pwr_tUInt32		trimmed_level		/*  Trimmed cache level.  */
 )
 {
-/*
-  pwr_tUInt32 actlvl;
-*/
   return GDH__OBSOLETE;
-
-#if 0
-  gdh_ScopeLock {
-
-    actlvl = MAX (activation_level, 100);      
-    gdbroot->nodedb->gdhpar.cache_activationlevel = actlvl;
-
-    if (trimmed_level >= actlvl - 50)
-      gdbroot->nodedb->gdhpar.cache_trimmedlevel = actlvl - 50;
-    else
-      gdbroot->nodedb->gdhpar.cache_trimmedlevel = trimmed_level;
-
-  } gdh_ScopeUnlock;
-
-  return GDH__SUCCESS;
-#endif
-  
 }
 
 /**
@@ -4550,34 +4513,6 @@ pwr_tStatus gdh_AttrValueToString(
     else
       *len = sprintf( str, format, *(unsigned int *)value_ptr);
     break;
-#if 0
-    gdh_sValueDef *valuedef;
-    int 		rows;
-    int		converted = 0;
-    int 	i;
-
-    sts = gdh_GetEnumValueDef( tid, &valuedef, &rows);
-    if ( ODD(sts)) {
-
-      for ( i = 0; i < rows; i++) {
-	if ( valuedef[i].Value->Value == *(pwr_tInt32 *)value_ptr) {
-	  strcpy( str, valuedef[i].Value->Text);
-	  *len = strlen(str);
-	  converted = 1;
-	  break;
-	}
-      }
-      free( (char *)valuedef);
-    }
-    if ( !converted) {
-      if ( !format)
-	*len = sprintf( str, "%d", *(unsigned int *)value_ptr);
-      else
-	*len = sprintf( str, format, *(unsigned int *)value_ptr);
-      break;
-    }
-    break;
-#endif
   }
   case pwr_eType_String: {
     strncpy( str, (char *)value_ptr, size);

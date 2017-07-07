@@ -704,4 +704,3 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__RtMonStart(struct soap *soap,
   }
   return SOAP_OK;
 }
-

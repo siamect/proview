@@ -349,13 +349,3 @@ void curve_scroll_vertical( CurveCtx *ctx, int value, int bottom)
 		ctx->y_high * ctx->mw.zoom_factor_y);
   ((GlowCtx *)ctx)->scroll( 0, y_pix);
 }
-
-
-
-
-
-
-
-
-
-

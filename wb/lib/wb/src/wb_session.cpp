@@ -1157,8 +1157,3 @@ bool wb_session::commit()
 
   return m_srep->commit(&m_sts);
 }
-
-
-
-
-

@@ -346,9 +346,3 @@ void GrowCurve::add_points( glow_sCurveData *data, unsigned int no_of_points)
     // nav_draw( (GlowTransform *) NULL, highlight, NULL, NULL);
   }
 }
-
-
-
-
-
-

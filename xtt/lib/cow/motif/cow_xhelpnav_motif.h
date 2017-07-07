@@ -69,6 +69,3 @@ class CoXHelpNavMotif : public CoXHelpNav {
 
 
 #endif
-
-
-

@@ -205,4 +205,3 @@ pwr_tCid wb_adef::subClass()
   check();
   return m_adrep->subClass();
 }
-

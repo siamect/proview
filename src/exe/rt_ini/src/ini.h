@@ -170,15 +170,8 @@ typedef struct {
   int		fatals;
   ivol_sNode	node;
   qini_sNode	*me;
-#if 0
-//  ivol_sVolume	*vp;		/* current volume */
-#endif
   tree_sTable	*nid_t;
-#if 0
-  tree_sTable	*vname_t;
-#else
   tree_sTable	*vid_t;
-#endif
   lst_sEntry	vol_lh;
   co_mFormat    format;
   dbs_sEnv      dbs;
@@ -228,5 +221,3 @@ void	 	ini_UpdateSystemInfo 	(ini_sContext*, int);
 void		ini_SetSystemStatus	(ini_sContext*, pwr_tStatus);
 
 #endif
-
-

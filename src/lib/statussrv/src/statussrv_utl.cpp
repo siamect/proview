@@ -521,4 +521,3 @@ pwr_tStatus statussrv_RtMonStart( const char *nodename, const char *lang, const 
 
   return sts;
 }
-

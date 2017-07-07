@@ -118,4 +118,3 @@ void SubPaletteMotif::set_inputfocus( int focus)
     XtSetValues( form_widget, args, 1);
   }
 }
-

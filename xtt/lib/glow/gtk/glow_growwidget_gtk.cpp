@@ -472,20 +472,3 @@ GtkWidget *grownavwidgetgtk_new( GtkWidget *main_grow)
   w->scroll_configure = 0;
   return (GtkWidget *) w;  
 }
-
-#if 0
-GType growwidgetgtk_get_type(void)
-{
-  static GType growwidgetgtk_type = 0;
-
-  if ( !growwidgetgtk_type) {
-    static const GTypeInfo growwidgetgtk_info = {
-      sizeof(GrowWidgetGtkClass), NULL, NULL, (GClassInitFunc)growwidgetgtk_class_init,
-      NULL, NULL, sizeof(GrowWidgetGtk), 1, NULL, NULL};
-    
-    growwidgetgtk_type = g_type_register_static( G_TYPE_OBJECT, "GrowWidgetGtk", &growwidgetgtk_info, 
-					   (GTypeFlags)0);  
-  }
-  return growwidgetgtk_type;
-}
-#endif

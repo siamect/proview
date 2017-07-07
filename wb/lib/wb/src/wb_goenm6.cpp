@@ -258,7 +258,6 @@ int goen_create_nodetype_m6(
 		flow_eDrawType_TextHelvetica, 9);
   else
   {
-
     flow_AddText( nc_pid, "SSAB",
 		f_width - f_header_width + f_header_sep1 + f_repeat, 
 		f_height - f_repeat * 3/4 - f_yoffs,
@@ -267,39 +266,6 @@ int goen_create_nodetype_m6(
 		f_width - f_header_width + f_header_sep1 + f_repeat * 1.1, 
 		f_height - f_repeat /4 - f_yoffs,
 		flow_eDrawType_TextHelvetica, 1);
-
-#if 0
-    int 	i;
-    flow_tObject pix;    
-    flow_sPixmapData pixmap_data;
-    for ( i = 0; i < DRAW_PIXMAP_SIZE; i++)
-    {
-      if ( i < 2)
-      {
-        pixmap_data[i].width = xnav_bitmap_pro8_width;
-        pixmap_data[i].height = xnav_bitmap_pro8_height;
-        pixmap_data[i].bits = xnav_bitmap_pro8_bits;
-      }
-      else if ( i < 4)
-      {
-        pixmap_data[i].width = xnav_bitmap_pro12_width;
-        pixmap_data[i].height = xnav_bitmap_pro12_height;
-        pixmap_data[i].bits = xnav_bitmap_pro12_bits;
-      }
-      else
-      {
-        pixmap_data[i].width = xnav_bitmap_pro16_width;
-        pixmap_data[i].height = xnav_bitmap_pro16_height;
-        pixmap_data[i].bits = xnav_bitmap_pro16_bits;
-      }
-    }
-    flow_CreatePixmap( ctx, &pixmap_data, 
-		f_width - f_header_width + f_header_sep1 + f_repeat * 5.75, 
-		f_height - f_repeat * 2 - f_yoffs,
-		flow_eDrawType_Line, 4,
-                &pix);
-    flow_NodeClassAdd( nc_pid, pix);
-#endif
   }
 
   *node_class = nc_pid;

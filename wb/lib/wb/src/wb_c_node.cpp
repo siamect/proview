@@ -230,12 +230,3 @@ pwr_dExport pwr_BindMethods($Node) = {
   pwr_BindMethod(SyntaxCheck),
   pwr_NullMethod
 };
-
-
-
-
-
-
-
-
-

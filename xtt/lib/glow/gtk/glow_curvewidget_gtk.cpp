@@ -178,29 +178,6 @@ static gboolean scroll_callback_cb( void *d)
   }
   ((CurveWidgetGtk *)scroll_data->curve)->scroll_configure = 0;
   return FALSE;
-#if 0
-  if ( scroll_data->scroll_h_managed) {
-    ((CurveWidgetGtk *)scroll_data->curve)->scroll_h_ignore = 1;
-    g_object_set( ((GtkScrollbar *)scroll_data->scroll_h)->range.adjustment,
-		 "upper", (gdouble)data->total_width,
-		 "page-size", (gdouble)data->window_width,
-		 "value", (gdouble)data->offset_x,
-		 NULL);
-    gtk_adjustment_changed( 
-        ((GtkScrollbar *)scroll_data->scroll_h)->range.adjustment);
-  }
-
-  if ( scroll_data->scroll_v_managed) {
-    ((CurveWidgetGtk *)scroll_data->curve)->scroll_v_ignore = 1;
-    g_object_set( ((GtkScrollbar *)scroll_data->scroll_v)->range.adjustment,
-		 "upper", (gdouble)data->total_height,
-		 "page-size", (gdouble)data->window_height,
-		 "value", (gdouble)data->offset_y,
-		 NULL);
-    gtk_adjustment_changed( 
-        ((GtkScrollbar *)scroll_data->scroll_v)->range.adjustment);
-  }
-#endif
 }
 
 static void scroll_h_action( 	GtkWidget      	*w,
@@ -482,20 +459,3 @@ GtkWidget *curvenavwidgetgtk_new( GtkWidget *main_curve)
   w->scroll_configure = 0;
   return (GtkWidget *) w;  
 }
-
-#if 0
-GType curvewidgetgtk_get_type(void)
-{
-  static GType curvewidgetgtk_type = 0;
-
-  if ( !curvewidgetgtk_type) {
-    static const GTypeInfo curvewidgetgtk_info = {
-      sizeof(CurveWidgetGtkClass), NULL, NULL, (GClassInitFunc)curvewidgetgtk_class_init,
-      NULL, NULL, sizeof(CurveWidgetGtk), 1, NULL, NULL};
-    
-    curvewidgetgtk_type = g_type_register_static( G_TYPE_OBJECT, "CurveWidgetGtk", &curvewidgetgtk_info, 
-					   (GTypeFlags)0);  
-  }
-  return curvewidgetgtk_type;
-}
-#endif

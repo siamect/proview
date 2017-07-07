@@ -1638,12 +1638,3 @@ void GrowPolyLine::convert( glow_eConvert version)
   }
   }  
 }
-
-
-
-
-
-
-
-
-

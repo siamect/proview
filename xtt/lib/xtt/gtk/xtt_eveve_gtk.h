@@ -116,6 +116,3 @@ class EvEveGtk : public EvEve {
 };
 
 #endif
-
-
-

@@ -2520,4 +2520,3 @@ void WttMotif::popup_button_cb( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
   wtt->reset_cursor();
 
 }
-

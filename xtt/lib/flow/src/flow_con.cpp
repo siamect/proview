@@ -119,32 +119,6 @@ static FlowNode *sort_dest;
 
 void draw_line( FlowCtx *ctx, double x1, double y1, double x2, double y2);
 
-#if 0
-FlowCon::FlowCon( FlowCtx *flow_ctx, const char *name, FlowConClass *con_class,
-	FlowNode *source, FlowNode *dest, int source_cp, int dest_cp) :
-	ctx(flow_ctx), cc(con_class),
-	source_node(source), dest_node(dest), source_conpoint(source_cp),
-	dest_conpoint(dest_cp), p_num(0), l_num(0), a_num(0), line_a(10,10), 
-        arc_a(10,10), hot(0), highlight(0), dimmed(0), arrow_num(0), arrow_a(1,1),
-	ref_num(0), ref_a(4,4), temporary_ref(0), trace_p(NULL)
-{
-  double x1, y1, x2, y2;
-  FlowLine *l1;  
-
-  if ( !cc)
-    return;
-  strcpy( trace_object, "");
-  source->get_conpoint( source_cp, &x1, &y1, &source_direction);
-  dest->get_conpoint( dest_cp, &x2, &y2, &dest_direction);
-  l1 = new FlowLine( ctx, x1, y1, x2, y2, cc->draw_type, cc->line_width);
-  line_a.insert( l1);
-  strcpy( c_name, name);
-  get_con_borders();
-  line_a.draw( &cc->zero, highlight, hot, NULL);
-  line_a.nav_draw( &cc->zero, highlight, NULL);
-}
-#endif
-
 FlowCon::FlowCon( FlowCtx *flow_ctx, const char *name, FlowConClass *con_class,
 	FlowNode *source, FlowNode *dest, int source_cp, int dest_cp, 
 	int *rsts, int nodraw, int point_num, double *x_vect, double *y_vect) :
@@ -1907,60 +1881,6 @@ int FlowCon::con_route_area( double wind_ll_x, double wind_ll_y,
       break;
   }
 
-#if 0
-  for ( i = 0; i < vert_line_cnt; i++)
-  {
-//    printf( "vert %d  x: %7.3f  l_y: %7.3f  u_y: %7.3f\n", 
-//	&vert_line[i], vert_line[i].x,
-//	vert_line[i].l_y, vert_line[i].u_y);
-    draw_line( ctx, vert_line[i].x, vert_line[i].l_y, vert_line[i].x, 
-		vert_line[i].u_y);
-  }
-  for ( i = 0; i < horiz_line_cnt; i++)
-  {
-//    printf( "hori %d  y: %7.3f  l_x: %7.3f  u_x: %7.3f\n", 
-//	&horiz_line[i], horiz_line[i].y,
-//	horiz_line[i].l_x, horiz_line[i].u_x);
-    draw_line( ctx, horiz_line[i].l_x, horiz_line[i].y, horiz_line[i].u_x, 
-		horiz_line[i].y);
-  }
-  for ( i = 0; i < line_table_cnt; i++)
-  {
-    if ( line_table[i].complete)
-    {
-      if ( line_table[i].start_type == eLineType_Horiz)
-      {
-        for ( j = 0; j < line_table[i].horiz_cnt; j++)
-        {
-          printf( "p_horiz: %d  %7.3f  %7.3f\n", 
-		line_table[i].horiz[j],
-		line_table[i].horiz_x[j],
-		line_table[i].horiz_y[j]);
-          if ( j < line_table[i].vert_cnt )
-            printf( "p_vert : %d  %7.3f  %7.3f\n",
-		line_table[i].vert[j],
-		line_table[i].vert_x[j],
-		line_table[i].vert_y[j]);
-        }
-      }
-      else
-      {
-        for ( j = 0; j < line_table[i].vert_cnt; j++)
-        {
-          printf( "p_vert : %d  %7.3f  %7.3f\n", 
-		line_table[i].vert[j],
-		line_table[i].vert_x[j],
-		line_table[i].vert_y[j]);
-          if ( j < line_table[i].horiz_cnt )
-            printf( "p_horiz: %d  %7.3f  %7.3f\n",
-		line_table[i].horiz[j],
-		line_table[i].horiz_x[j],
-		line_table[i].horiz_y[j]);
-        }
-      }
-    }
-  }
-#endif
   /* Select the shortest */
   int min_idx;
   int min_cnt = 10000;
@@ -3968,4 +3888,3 @@ void FlowCon::get_object_name( char *name)
 {
   strcpy( name, c_name);
 }
-

@@ -164,6 +164,3 @@ class EvGtk : public Ev {
 };
 
 #endif
-
-
-

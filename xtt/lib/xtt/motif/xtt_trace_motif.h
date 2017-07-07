@@ -86,24 +86,6 @@ class RtTraceMotif : public RtTrace {
   static void activate_scantime5( Widget w, RtTrace *tractx, XmAnyCallbackStruct *data);
   static void activate_help( Widget w, RtTrace *tractx, XmAnyCallbackStruct *data);
   static void activate_helpplc( Widget w, RtTrace *tractx, XmAnyCallbackStruct *data);
-
-
-
 };
 
-#if 0
-			void 		(*close_cb)(tra_tCtx),
-			void 		(*help_cb)(tra_tCtx, char *),
-			void 		(*subwindow_cb)(void *, pwr_tObjid),
-			void 		(*display_object_cb)(void *, pwr_tObjid),
-			void 		(*collect_insert_cb)(void *, pwr_tObjid),
-			int             (*is_authorized_cb)(void *, unsigned int) 
 #endif
-
-#endif
-
-
-
-
-
-

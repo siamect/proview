@@ -98,9 +98,3 @@ void CnvContent::add( CnvContentElem& elem)
 {
   tab.push_back( elem);
 }
-
-
-
-
-
-

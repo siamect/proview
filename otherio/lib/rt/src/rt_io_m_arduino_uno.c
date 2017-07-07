@@ -110,22 +110,6 @@ typedef struct {
   io_sChannel *AoChanList[AO_MAX_SIZE * 8];
 } io_sLocal;
 
-// static FILE *fp;
-
-#if 0
-static void logg( const char *str)
-{
-  pwr_tTime t;
-  char timstr[40];
-
-  time_GetTime( &t);
-  time_AtoAscii( 0, time_eFormat_Time, timstr, sizeof(timstr));
-  timstr[9] = 0;
-
-  fprintf( fp, "%s%04lld %s\n", timstr, t.tv_nsec/100000, str);
-}
-#endif
-
 #define ARD__SUCCESS 1
 #define ARD__DICONFIG 2
 #define ARD__DOCONFIG 4
@@ -633,19 +617,6 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
     return IO__SUCCESS;
 
   if ( local->ReceiveWriteRespons) {
-#if 0
-    // Receive response status from last write
-    ard_sMsg rmsg;
-
-    sts = receive( local->fd, local->WriteId, &rmsg, 1, op->Timeout, op);
-    if ( EVEN(sts))
-      op->ErrorCount++;
-    else {
-      op->Status = rmsg.data[0];
-      if ( EVEN(op->Status))
-	op->ErrorCount++;
-    }    
-#endif
     local->ReceiveWriteRespons = 0;
   }
 

@@ -82,12 +82,3 @@ class MsgWindowGtk : public MsgWindow {
 };
 
 #endif
-
-
-
-
-
-
-
-
-

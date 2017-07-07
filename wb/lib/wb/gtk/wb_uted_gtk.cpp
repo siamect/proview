@@ -678,51 +678,6 @@ void WUtedGtk::questionbox( char *question_title,
 			 void	  (* cancel_procedure) (WUted *), 
 			 pwr_tBoolean cancel) 
 {
-#if 0
-  Arg		args[5];
-  int 		i;
-  XmString	cstr;
-  XmString	cstr2;
-  XmString	help_label;
-  GtkWidget		help_button;
-  GtkWidget		yes_button;
-
-  cstr = XmStringCreateLtoR( question_text, "ISO8859-1");
-  cstr2 = XmStringCreateLtoR( question_title, "ISO8859-1");
-  help_button = XmMessageBoxGetChild(widgets.questionbox, 
-				     XmDIALOG_HELP_BUTTON);
-  yes_button = XmMessageBoxGetChild( widgets.questionbox, 
-				     XmDIALOG_OK_BUTTON);
-  
-  if (cancel)
-    help_label = XmStringCreateLtoR("Cancel", "ISO8859-1");
-  else
-    help_label = XmStringCreateLtoR("Help", "ISO8859-1");
-
-  i=0;
-  XtSetArg(args[i], XmNhelpLabelString, help_label); i++;
-  XtSetArg(args[i], XmNmessageString, cstr); i++;
-  XtSetArg (args[i], XmNdialogTitle, cstr2); i++;
-  XtSetValues( widgets.questionbox, args,i);                    
-  
-  if (cancel)
-    XtVaSetValues(help_button, XmNsensitive, 1, NULL);
-  else
-    XtVaSetValues(help_button, XmNsensitive, 0, NULL);
-
-  XtManageChild( widgets.questionbox);
-
-  XmStringFree( cstr);
-  XmStringFree( cstr2);
-  XmStringFree(help_label);
-
-  /* Store the yes and no functions in the context */
-  questionbox_yes = yes_procedure;        
-  questionbox_no = no_procedure;
-  questionbox_cancel = cancel_procedure;
-
-  XmProcessTraversal(yes_button, XmTRAVERSE_CURRENT);
-#endif
 }
 
 //

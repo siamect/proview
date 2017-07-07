@@ -224,4 +224,3 @@ void FlowTriangle::print( void *pos, void *node, int highlight)
 	ur.print_z_x - ll.print_z_x, ur.print_z_y - ll.print_z_y, 
 	draw_type, idx);
 }
-

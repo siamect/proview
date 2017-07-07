@@ -547,6 +547,3 @@ XAttMotif::XAttMotif( Widget 		xa_parent_wid,
 
   *xa_sts = XATT__SUCCESS;
 }
-
-
-

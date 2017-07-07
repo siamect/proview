@@ -1142,45 +1142,6 @@ public:
   }
 };
 
-#if 0
-class wb_dbms_pupd_dbody : public wb_dbms_upd_query
-{
-public:
-
-  wb_dbms_pupd_dbody(wb_dbms *db) { m_db = db;}
-  ~wb_dbms_pupd_dbody() {;}
-
-  virtual int bind(wb_dbms_txn *txn, wb_dbms_qe *key, wb_dbms_qe *data) {
-    //prepare("update dbody set body = concat(substring(body, 1, ?), ?, substring(body, ?, 500000)) where oid = ?", 0, 4);
-
-/*
-   update rbody set body = concat(substring(body, 1, 50), repeat('x', 10), substring(body, 61, 68)) where oid = 853238203023360;
-
- */
-    int size_1 = 10;//data->offset();
-    int size_2 = 20;//data->offset() + data->size() + 1;
-    pwr_tOid oid;
-    oid.vid = 198660;
-    oid.oix = 76202;
-    //char a[] = "9";
-    //char b[] = "344";
-    
-    
-    //bindParam(0, MYSQL_TYPE_LONG,      (char *)         &size_1);
-    //bindParam(0, MYSQL_TYPE_STRING,      a, strlen(a));
-    bindParam(0, MYSQL_TYPE_LONG_BLOB, (char *)data->data(), data->size());
-//    bindParam(2, MYSQL_TYPE_LONG,      (char *)         &size_2, sizeof(size_2));
-    //bindParam(2, MYSQL_TYPE_LONG,      (char *)         &size_2);
-    //bindParam(2, MYSQL_TYPE_STRING,      b, strlen(b));
-    bindParam(1, MYSQL_TYPE_LONGLONG,  (char *)            &oid);
-    //bindParam(3, MYSQL_TYPE_LONGLONG,  (char *) key->data(), key->size());
-    bindQuery();
-
-    return 0;
-  }
-};
-#endif
-
 class wb_dbms_del_dbody : public wb_dbms_del_query
 {
 public:

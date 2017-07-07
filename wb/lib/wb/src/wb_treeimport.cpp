@@ -291,10 +291,3 @@ bool wb_treeimport::importUpdateObject( wb_orep *o, wb_vrep *vrep)
   delete cdrep;
   return true;
 }
-
-
-
-
-
-
-

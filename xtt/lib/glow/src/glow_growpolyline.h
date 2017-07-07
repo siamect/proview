@@ -623,4 +623,3 @@ class GrowPolyLine : public GlowPolyLine {
 
 /*@}*/
 #endif
-

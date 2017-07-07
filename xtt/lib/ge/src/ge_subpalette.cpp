@@ -1583,4 +1583,3 @@ int ItemMenu::close( SubPalette *subpalette, double x, double y)
   }
   return 1;
 }
-

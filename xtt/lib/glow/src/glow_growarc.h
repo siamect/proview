@@ -554,4 +554,3 @@ class GrowArc : public GlowArc {
 
 /*@}*/
 #endif
-

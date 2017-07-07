@@ -151,15 +151,3 @@ class XttSevHist {
 
 /*@}*/
 #endif
-
-
-
-
-
-
-
-
-
-
-
-

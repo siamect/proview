@@ -503,4 +503,3 @@ void ColPalCtxFromWidget( Widget w, void **ctx)
 {
   *ctx = ((ColPalWidget) w)->colpal.colpal_ctx;
 }
-

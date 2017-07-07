@@ -219,10 +219,3 @@
  o->P5ms = (tp->before_scan.tv_nsec / 2500000) & 1 ? 1 : 0;\
  o->P2ms = (tp->before_scan.tv_nsec / 1000000) & 1 ? 1 : 0;\
  o->P1ms = (tp->before_scan.tv_nsec / 500000) & 1 ? 1 : 0;
-
-
-
-
-
-
-

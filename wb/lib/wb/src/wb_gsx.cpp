@@ -864,7 +864,3 @@ int gsx_auto_create(
   }
   return GSX__SUCCESS;
 }
-
-
-
-

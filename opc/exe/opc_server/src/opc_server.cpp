@@ -2044,4 +2044,3 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__GetProperties(struct soap *soap,
 
   return SOAP_OK;
 }
-

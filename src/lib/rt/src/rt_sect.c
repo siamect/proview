@@ -391,4 +391,3 @@ sect_Unlock (
   errh_ReturnOrBugcheck(ODD(lsts), sts, lsts, "");
 
 }
-

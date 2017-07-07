@@ -509,7 +509,3 @@ class GrowText : public GlowText {
 
 /*@}*/
 #endif
-
-
-
-

@@ -541,9 +541,3 @@ CoXHelpGtk::CoXHelpGtk(
 
   *xa_sts = 1;
 }
-
-
-
-
-
-

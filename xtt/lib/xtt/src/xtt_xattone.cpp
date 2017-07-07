@@ -76,6 +76,3 @@ XAttOne::XAttOne( void *xa_parent_ctx,
 {
   *xa_sts = XATT__SUCCESS;
 }
-
-
-

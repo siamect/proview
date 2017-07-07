@@ -260,8 +260,3 @@ pwr_tStatus xtt_pb_dp_slave_create_ctx( pwr_tAttrRef aref, void *editor_ctx,
   *ctxp = ctx;
   return 1;
 }
-
-
-
-
-

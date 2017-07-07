@@ -55,23 +55,3 @@ class CoHelpGtk : public CoHelpMain {
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

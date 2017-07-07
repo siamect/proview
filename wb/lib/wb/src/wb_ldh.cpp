@@ -34,7 +34,6 @@
  * General Public License plus this exception.
  **/
 
-#if 1
 /* wb_ldh.c -- local data handler
   This module contains the API-routines to the Local Data Handler, LDH.  */
 
@@ -168,15 +167,6 @@ ldh_GetPreviousVolume(ldh_tWorkbench workbench, pwr_tVid vid, pwr_tVid *new_vid)
 pwr_tStatus
 ldh_LoadVolume(ldh_tWorkbench	workbench, char *name, ldh_tVolume *volume)
 {
-#if 0
-  //wb_env *wb = (wb_env *)workbench;
-
-  wb_vrepwbl lv(name);
-    
-  wb_volume *v = new wb_volume(lv);
-    
-  *volume = (ldh_tVolume) v;
-#endif
   return LDH__SUCCESS;
 }
 
@@ -2280,12 +2270,3 @@ ldh_AttrArefToObjectAref(ldh_tSession session, pwr_tAttrRef *arp, pwr_tAttrRef *
 
   return oa.sts();
 }
-
-#endif
-
-
-
-
-
-
-

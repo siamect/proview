@@ -58,4 +58,3 @@ wb_tdrep *wb_mvrep::tdrep( const wb_adrep& a)
 {
   return new wb_tdrep( this, a);
 }
-

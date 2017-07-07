@@ -269,39 +269,6 @@ gboolean XAttGtk::action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer dat
   return FALSE;
 }
 
-#if 0
-void XAttGtk::valchanged_cmd_input( Widget w, XEvent *event)
-{
-  XAtt 	*xatt;
-  int 	sts;
-  char 	*text;
-  Arg 	args[2];
-
-  XtSetArg(args[0], XmNuserData, &xatt);
-  XtGetValues(w, args, 1);
-
-  sts = mrm_TextInput( w, event, (char *)XAtt::value_recall, sizeof(XAtt::value_recall[0]),
-	sizeof( XAtt::value_recall)/sizeof(XAtt::value_recall[0]),
-	&xatt->value_current_recall);
-  if ( sts)
-  {
-    text = XmTextGetString( w);
-    if ( xatt->input_open)
-    {
-      sts = xatt->xattnav->set_attr_value( xatt->input_node, 
-		xatt->input_name, text);
-      XtUnmanageChild( w);
-      xatt->set_prompt( "");
-      xatt->input_open = 0;
-      if ( xatt->redraw_cb)
-        (xatt->redraw_cb)( xatt);
-
-      xatt->xattnav->set_inputfocus();
-    }
-  }
-}
-#endif
-
 void XAttGtk::change_value_close()
 {
   int sts;
@@ -691,6 +658,3 @@ XAttGtk::XAttGtk( GtkWidget 		*xa_parent_wid,
 
   *xa_sts = XATT__SUCCESS;
 }
-
-
-

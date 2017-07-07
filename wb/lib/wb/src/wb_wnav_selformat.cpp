@@ -150,29 +150,6 @@ pwr_tBoolean wnav_format_selection( ldh_tSesContext ldhses, pwr_sAttrRef attrref
   strcpy(dot, ".");
   strcpy(colon, ":");
 
-#if 0
-  if (select_syntax == wnav_eSelectionMode_GMS) {
-    strcpy(hyphen, "\\-");
-    strcpy(dot, "\\.");
-    strcpy(colon, "\\:");
-  }
-
-  for (i = 0, j = 0; i < ret_len + 1; i++) {
-    if (name[i] == '-') {
-      strcpy( &buff[j], hyphen);
-      j += strlen(hyphen);
-    }
-    else if (name[i] == ':') {
-      strcpy( &buff[j], colon);
-      j += strlen(colon);
-    }
-    else {
-      buff[j] = name[i];
-      j++;
-    }
-  }
-#endif
-
   // Fetch and add attribute name if necessary
 
   aref = attrref;
@@ -266,7 +243,3 @@ pwr_tBoolean wnav_format_selection( ldh_tSesContext ldhses, pwr_sAttrRef attrref
 
   return TRUE;
 }
-
-
-
-

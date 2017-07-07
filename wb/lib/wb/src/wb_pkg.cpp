@@ -569,18 +569,6 @@ void pkg_node::fetchFiles( bool distribute)
     "tar -czf $pwrp_load/" << pkg_name << " pwr_pkg.dat pkg_unpack.sh pkg_build" << endl <<
     "rm -r " << m_tmpdir << endl;
 
-#if 0
-  if ( distribute)
-    of <<
-      "cd $pwrp_load" << endl <<
-      "ftp -vin " << m_name << " << EOF &>$pwrp_tmp/ftp_" << m_name << ".log" << endl <<
-      "user " << m_user << " pwrp" << endl <<
-      "binary" << endl <<
-      "put " << pkg_name << endl <<
-      "quit" << endl <<
-      "EOF" << endl <<
-      "rsh -l pwrp " << m_name << " \\$pwr_exe/pwr_pkg.sh -i " << pkg_name << endl;
-#endif  
   of.close();
 
   // Create a script that unpackes the archive and moves files to the target directories
@@ -890,9 +878,3 @@ pkg_file::pkg_file( char *source, char *target)
   strcpy( m_source, source);
   strcpy( m_target, target);
 }
-
-
-
-
-
-

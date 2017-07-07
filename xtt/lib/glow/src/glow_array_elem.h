@@ -232,12 +232,3 @@ class GlowArrayElem {
 
 /*@}*/
 #endif
-
-
-
-
-
-
-
-
-

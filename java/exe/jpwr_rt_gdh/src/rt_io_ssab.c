@@ -144,4 +144,3 @@ void ssabco_write(
 		int	channel)
 {
 }
-

@@ -94,10 +94,6 @@ class CoXHelpNavBrow {
       ctx(brow_ctx), userdata(brow_userdata)
       {}
 
-#if 0
-    ~CoXHelpNavBrow();
-#endif
-
     BrowCtx		*ctx;
     void                *userdata;
     brow_tNodeClass 	nc_object;
@@ -262,6 +258,3 @@ class HItemHelpHeader : public HItem {
 
 
 #endif
-
-
-

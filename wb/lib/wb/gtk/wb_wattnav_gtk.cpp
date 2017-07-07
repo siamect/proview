@@ -116,25 +116,3 @@ void WAttNavGtk::set_inputfocus()
 
   gtk_widget_grab_focus( brow_widget);
 }
-
-#if 0
-static void wattnav_trace_scan( WAttNavGtk *wattnav)
-{
-  int time = 200;
-
-  if ( wattnav->trace_started)
-  {
-    brow_TraceScan( wattnav->brow->ctx);
-
-    wattnav->trace_timerid = XtAppAddTimeOut(
-	XtWidgetToApplicationContext(wattnav->brow_widget) , time,
-	(XtTimerCallbackProc)wattnav_trace_scan, wattnav);
-  }
-}
-#endif
-
-
-
-
-
-

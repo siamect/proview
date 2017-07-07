@@ -74,11 +74,7 @@
 #include "rt_qmon.h"
 #include "co_timelog.h"
 
-#if 1
-# define MAX_SEGSIZE	(8192 - sizeof(sHead))
-#else
-# define MAX_SEGSIZE	(1472 - sizeof(sHead))
-#endif
+#define MAX_SEGSIZE	(8192 - sizeof(sHead))
 #define RTT_RXMIN	0.0500 /* seconds */
 #define RTT_RXMAX	10.000 /* seconds */
 #define RACK_TMO	1
@@ -482,27 +478,6 @@ clean_insert (
   pwr_tBoolean ret_pend = FALSE;
   pwr_tBoolean first = FALSE;
 
-#if 0
-  // Print number of buffers in queue
-  static int cnt = 0;
-  int seg_cnt = 0;
-  if ( cnt >= 50  && esp->head.flags.b.first) {
-    for (sp = lst_Succ(NULL, le, &se); se != le; sp = lst_Succ(NULL, se, &se))
-      seg_cnt++;
-
-    cnt = 0;
-    printf( "0x%x %d\n", (unsigned int)le, seg_cnt);
-    if ( seg_cnt > 10) {
-      for (sp = lst_Succ(NULL, le, &se); se != le; sp = lst_Succ(NULL, se, &se)) {
-	if ( sp->bp)
-	  printf( "  %d %d 0x%x\n", sp->head.flags.b.first, sp->bp->b.msg_id, (unsigned int)sp->bp);	
-      }
-      printf( "New  %d %d 0x%x\n", esp->head.flags.b.first, esp->bp->b.msg_id, (unsigned int)esp->bp);
-    }
-  }
-  cnt++;  
-#endif
-
   li = le;
   if (esp->bp != NULL) {
     if (esp->bp->b.msg_id > 0) {
@@ -564,18 +539,6 @@ clean_insert (
   }
 
   /* Insert new item */
-  
-#if 0
-  // Segment sequence test
-  static int no = 0;
-  if ( esp->head.flags.b.last) {
-    no++;
-    if ( no == 100) {
-      no = 0;
-      return ret_pend;      
-    }
-  }
-#endif
   thread_MutexLock(&esp->lp->eseg_mutex);
   lst_InsertPred(NULL, li, &esp->c.le, esp);
   thread_MutexUnlock(&esp->lp->eseg_mutex);
@@ -982,12 +945,6 @@ get_link (
   thread_MutexLock(&l.links.mutex);
 
   lp = tree_Find(&sts, l.links.table, &nid);
-
-#if 0
-  // Allow unconfigured links...
-  if (lp == NULL)
-    lp = new_link(nid, mp);    
-#endif
 
   thread_MutexUnlock(&l.links.mutex);  
 
@@ -1464,15 +1421,6 @@ link_import (
   sIseg *sp
 )
 {
-
-#if 0
-  if ( IS_SECONDARY_NID(lp->nid)) {
-    char msg[80];
-    sprintf( msg, "From secondary %s %d", cdh_NodeIdToString(NULL, lp->np->nid, 0, 0), sp->head.flags.b.event);
-    timelog( 1, msg);
-  }
-#endif
-
   if (!lp->np->link[lp->lix].flags.b.active && lp->np->link[lp->lix].birth == sp->head.birth)
     link_active(lp);
   else if (lp->np->link[lp->lix].birth != sp->head.birth && lp->np->link[lp->lix].flags.b.connected)
@@ -1846,23 +1794,19 @@ set_rack (
   if (diff == 0 || diff == 1) {
     lp->np->link[lp->lix].rack = sp->head.lack;
   } else if (diff > 1) {
-#if 1
     if ((++lp->np->link[lp->lix].err_seq % 20) == 1) {
       errh_Info("%s, %d sequence error %d segments %s : (%d)[%d]\n",
 	lp->np->link[lp->lix].name, lp->np->link[lp->lix].err_seq, diff - 1,
 	event_string(sp->head.flags.b.event),
 	sp->head.lack.seq, sp->head.rack.seq);
     }
-#endif
     return;
   } else {
-#if 1
     if ((++lp->np->link[lp->lix].err_red % 20) == 1) {
       errh_Info("%s, %d redundant segment %s : (%d)[%d]\n",
 	lp->np->link[lp->lix].name, lp->np->link[lp->lix].err_red, event_string(sp->head.flags.b.event),
 	sp->head.lack.seq, sp->head.rack.seq);
     }
-#endif
     return;
   }
 

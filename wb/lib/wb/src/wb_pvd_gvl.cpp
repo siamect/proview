@@ -273,5 +273,3 @@ void wb_pvd_gvl::load( pwr_tStatus *rsts)
 
   }
 }
-
-

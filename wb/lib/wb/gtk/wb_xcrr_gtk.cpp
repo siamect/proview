@@ -241,5 +241,3 @@ WCrrGtk::WCrrGtk(
 
   *xa_sts = XATT__SUCCESS;
 }
-
-

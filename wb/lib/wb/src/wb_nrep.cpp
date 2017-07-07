@@ -195,79 +195,6 @@ void wb_nrep::parse () throw (wb_error)
   int state = 0;
   char *s, *snn;
 
-#if 0
-  // Fast return for single segment or single attribute names
-  int simple = 1;
-  for ( s = oname; *s; s++) {
-    switch ( *s) {
-    case '.':
-    case '-':
-    case '[':
-    case ']':
-    case ':':
-      simple = 0;
-      break;
-    case '_':
-      if ( s == oname)
-	simple = 0;	
-      break;
-    }
-    if ( simple == 0)
-      break;
-  }
-
-  if ( simple) {
-    num_seg = 1;
-    seg[0].len = strlen(oname);
-
-    snn = norm_name;
-    for ( s = oname; *s; s++, snn++) {
-      switch (normname_tab[*(unsigned char *)s]) {
-      case '!':
-        throw wb_error(LDH__BADNAME);
-      case '^':
-        *snn = *s - 32;
-	break;
-      default:
-        *snn = normname_tab[*(unsigned char *)s];
-      }
-    }
-    return;
-  }
-  if ( oname[0] == '.') {
-    int simple = 1;
-    for ( s = &oname[1]; *s; s++) {
-      switch ( *s) {
-      case '.':
-      case '-':
-      case '[':
-      case ']':
-      case ':':
-	simple = 0;
-	break;
-      }
-    }
-    if ( simple) {
-      num_attr = 1;
-      attr[0].offs = 1;
-      attr[0].len = strlen(oname)-1;
-      snn = norm_name;
-      for ( s = oname; *s; s++, snn++) {
-	switch (normname_tab[*(unsigned char *)s]) {
-	case '!':
-	  throw wb_error(LDH__BADNAME);
-	case '^':
-	  *snn = *s - 32;
-	  break;
-	default:
-	  *snn = normname_tab[*(unsigned char *)s];
-	}
-      }
-      return;
-    }
-  }
-#endif
-
   snn = norm_name;
 
   if (oname[0] == '_') { 
@@ -991,11 +918,6 @@ char *wb_nrep::nameName(const char *n, int ntype, char *res)
   strcpy( res, "");
 
   if ( ntype & cdh_mName_idString) {
-#if 0
-    if ( ntype & cdh_mName_volume) printf( "wname: volume\n");
-    if ( ntype & cdh_mName_object) printf( "wname: object\n");
-    if ( ntype & cdh_mName_attribute) printf( "wname: attribute\n");
-#endif
     if ( !(ntype & cdh_mName_attribute)) {
       if ( ntype & cdh_mName_volume && !(ntype & cdh_mName_object))
         strcat( res, "_V");
@@ -1153,10 +1075,3 @@ bool wb_nrep::checkObjectName( const char *name)
   }
   return true;
 }
-
-
-
-
-
-
-

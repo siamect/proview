@@ -53,5 +53,3 @@ int xnav_open_URL( pwr_tURL url);
 }
 #endif
 #endif
-
-

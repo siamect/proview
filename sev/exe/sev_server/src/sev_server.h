@@ -53,17 +53,6 @@ class sev_node {
 };
 
 typedef struct {
-#if 0
- public:
-  sev_refid( pwr_tRefId rid) : id(rid) {}
-  bool operator<(const sev_refid& x) const {
-    if ( id.nid < x.id.nid)
-      return true;
-    if ( id.rix < x.id.rix)
-      return true;
-    return false;
-  }
-#endif
   tree_sNode  node;
   pwr_tRefId id;
   int idx;

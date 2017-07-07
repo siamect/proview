@@ -956,4 +956,3 @@ int check_file( const char *filename);
 
 /*@}*/
 #endif
-

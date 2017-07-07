@@ -204,4 +204,3 @@ void NavMotif::set_inputfocus( int focus)
   }
 //  brow_SetInputFocus( brow->ctx);
 }
-

@@ -215,4 +215,3 @@ void GlowExportFlow::point( GlowPoint *o, GlowTransform *trf)
   fp << int(flow_eSave_Point_y) << FSPACE << y << endl;
   fp << int(flow_eSave_End) << endl;
 }
-

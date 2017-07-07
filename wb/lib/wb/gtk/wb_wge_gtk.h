@@ -97,9 +97,3 @@ class WGeGtk : public WGe{
 };
 
 #endif
-
-
-
-
-
-

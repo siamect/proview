@@ -121,7 +121,3 @@ class rt_fast {
 
 /*@}*/
 #endif
-
-
-
-

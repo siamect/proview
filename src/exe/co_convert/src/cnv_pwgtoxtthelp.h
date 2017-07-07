@@ -82,4 +82,3 @@ class CnvPwgToXtthelp {
 };
 
 #endif
-

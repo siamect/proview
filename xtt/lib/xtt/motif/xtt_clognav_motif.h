@@ -69,5 +69,3 @@ class CLogNavMotif : public CLogNav {
 };
 
 #endif
-
-

@@ -91,12 +91,3 @@ class PnViewerGtk : public PnViewer {
 };
 
 #endif
-
-
-
-
-
-
-
-
-

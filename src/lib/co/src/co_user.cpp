@@ -957,18 +957,7 @@ char *UserList::pwcrypt( const char *str)
   static char cstr[200];
 
   strcpy( cstr, crypt( str, "aa"));
-#if 0
-  char *s, *t;
 
-  for ( s = (char *)str, t = cstr; *s; s++, t++)
-  {
-    if ( *s >= 48 && *s <= 122)
-      *t = 122 - ( *s - 48);
-    else
-      *t = *s;
-  }
-  *t = *s;
-#endif
   return cstr;
 }
 
@@ -1272,4 +1261,3 @@ bool GeUser::get_system_name_child( SystemList *s, SystemList *system, char *nam
   }
   return false;
 }
-

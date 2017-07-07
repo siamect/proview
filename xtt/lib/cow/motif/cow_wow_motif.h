@@ -149,4 +149,3 @@ class CoWowMotif : public CoWow {
 };
 
 #endif
-

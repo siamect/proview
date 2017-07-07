@@ -54,143 +54,7 @@
 #include "co_dbs.h"
 #include "co_time.h"
 
-#if 1
-#include <stdio.h>
-int main(int argc, char *argv[])
-{
-  printf("Hello world\n");
-}
-#elif 0
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-
-int main(int argc, char *argv[])
-{
-  struct stat sb;
-  int ret;
-  pwr_tStatus sts;
-  dbs_sMenv *mep;
-  
-
-  if (argc < 2)
-    exit(0);
-  
-  if ((ret = stat(argv[1], &sb)) != 0) {
-    perror("stat");
-    exit(ret);
-  }
-
-  printf("stat %s\n", argv[1]);
-  printf("st_atime...: %ld\n", sb.st_atime);
-  printf("st_mtime...: %ld\n", sb.st_mtime);
-  printf("st_ctime...: %ld\n", sb.st_ctime);
- 
-  mep = dbs_Map(&sts, argv[1]);
-  dbs_Split(&sts, mep);
-  
-  return 0;
-}
-#elif 0
-int main( int argc, char *argv[])
-{
-  //pwr_tStatus sts;
-  //dbs_sEnv env;
-  //dbs_sEnv *ep;
-  wb_erep *erep = new wb_erep();
-
-  //if (argc <= 2) exit(0);
-  wb_vrepwbl *vwbl = new wb_vrepwbl(erep);
-  vwbl->info();
-  vwbl->load("cvolvhxnu4.wb_load");
-  vwbl->createSnapshot("cvolvhxnu4.dbs");
-  
-  
-}
-#elif 0
-int main( int argc, char *argv[])
-{
-  //pwr_tStatus sts;
-  //dbs_sEnv env;
-  //dbs_sEnv *ep;
-  wb_erep *erep = new wb_erep();
-
-  if (argc <= 2) exit(0);
-  //  ep = dbs_Map(&sts, &env, argv[1]);
-  wb_vrepdbs *vdbs = new wb_vrepdbs(erep, argv[1]);
-  vdbs->load();
-
-  // wb_dbs dbs(vdbs);
-  // dbs.setFileName("lasse.dbs");
-  // dbs.importVolume(*vdbs);
-  
-  //wb_orepdbs *op = (wb_orepdbs *)vdbs->object(&sts);
-
-  wb_db db(pwr_cNVid);
-  
-  db.copy(*vdbs, argv[2]);
-  //db.importVolume(*vdbs);
-  db.close();
-
-  wb_vrepdb vdb(erep, 1000, pwr_eClass_RootVolume, "Kalle", "/home/lw/kalle");
-  //wb_vrepdb vdb(erep, argv[2]);
-  //wb_name n("VHX-NU4-KOM-EVELINA-Transar-W-cn254");
-  //wb_orepdb *op = (wb_orepdb *)vdb.object(&sts, n);
-  
-  //wb_dbs adbs(vdbs);
-  //adbs.setFileName("alasse.dbs");
-  //adbs.importVolume(vdb);
-}
-
-#elif 0
-int main( int argc, char *argv[])
-{
-  //pwr_tStatus sts;
-  //dbs_sEnv env;
-  //dbs_sEnv *ep;
-  wb_erep *erep = new wb_erep();
-
-  if (argc <= 2) exit(0);
-
-  //wb_vrepdb vdb(erep, argv[2]);
-  wb_vrepdb vdb(erep, 1000, pwr_eClass_RootVolume, "Lasse", argv[2]);
-  
-}
-
-#elif 0
-int main( int argc, char *argv[])
-{
-  pwr_tStatus sts;
-  //dbs_sEnv env;
-  //dbs_sEnv *ep;
-  wb_erep *erep = new wb_erep();
-
-  if (argc <= 2) exit(0);
-  //  ep = dbs_Map(&sts, &env, argv[1]);
-  wb_vrepdbs *vdbs = new wb_vrepdbs(erep, argv[1]);
-  vdbs->load();
-
-  wb_dbs dbs(vdbs);
-  dbs.setFileName("lasse.dbs");
-  dbs.importVolume(*vdbs);
-  
-  //wb_orepdbs *op = (wb_orepdbs *)vdbs->object(&sts);
-
-  wb_db db(vdbs->vid());
-  db.create(vdbs->vid(), vdbs->cid(), vdbs->name(), argv[2]);
-  db.importVolume(*vdbs);
-  db.close();
-
-  wb_vrepdb vdb(erep, argv[2]);
-  
-  wb_dbs adbs(vdbs);
-  adbs.setFileName("alasse.dbs");
-  adbs.importVolume(vdb);
-  
-}
-
-#else
-static pwr_tStatus iterFunc( void *udata, 
+static pwr_tStatus iterFunc( void *udata,
 			     pwr_tOid oid, pwr_tCid cid, pwr_tOid poid, pwr_tOid fwsoid,
 			     pwr_tOid bswoid, pwr_tOid fchoid, pwr_tOid lchoid, char *name,
 			     pwr_tTime time, int rsize, int dsize);
@@ -275,7 +139,7 @@ int main( int argc, char *argv[])
   }
 }
 
-static pwr_tStatus iterFunc( void *udata, 
+static pwr_tStatus iterFunc( void *udata,
 			     pwr_tOid oid, pwr_tCid cid, pwr_tOid poid, pwr_tOid fwsoid,
 			     pwr_tOid bswoid, pwr_tOid fchoid, pwr_tOid lchoid, char *name,
 			     pwr_tTime time, int rsize, int dsize)
@@ -287,7 +151,3 @@ static pwr_tStatus iterFunc( void *udata,
   }
   return 1;
 }
-
-
-
-#endif

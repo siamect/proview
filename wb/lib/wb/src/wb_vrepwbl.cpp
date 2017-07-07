@@ -168,25 +168,6 @@ wb_vrepwbl::createSnapshot(const char *fileName, const pwr_tTime *time, const in
   }
 }
 
-#if 0 
-void wb_vrepwbl::iterObject( wb_dbs *dbs)
-{
-  if ( root_object)
-    root_object->iterObject( dbs);
-}
-
-void wb_vrepwbl::iterDbody( wb_dbs *dbs)
-{
-  if ( root_object)
-    root_object->iterDbody( dbs);
-}
-
-void wb_vrepwbl::iterRbody( wb_dbs *dbs)
-{
-  if ( root_object)
-    root_object->iterRbody( dbs);
-}
-#endif
 bool
 wb_vrepwbl::exportVolume(wb_import &i)
 {
@@ -478,19 +459,6 @@ int wb_vrepwbl::getTypeInfo( const char *name, pwr_tTid *tid, pwr_eType *type, s
     else if ( strcmp( tname, "DeltaTime") == 0)
       return getTypeInfo( *tid = (pwr_tTid)pwr_eType_DeltaTime, type, size, elements);
     else {
-#if 0
-      if ( wname.segmentIsEqual( "Class", 0)) {
-	ref_wblnode n = findClass( tname);
-	if ( n) {
-	  size_t dsize;
-
-	  *elements = 1;
-	  *tid = n->o->c.cid;
-	  return getClassInfo( *tid, size, &dsize);
-	}
-      }
-      else 
-#endif
       {
 	ref_wblnode n = findType( tname);
 	if ( n) {
@@ -1415,17 +1383,6 @@ int wb_vrepwbl::load_files( const char *file_spec)
 
 bool wb_vrepwbl::registerObject( pwr_tOix oix, ref_wblnode node)
 {
-
-#if 0
-  cout << "RegObj: " << oix << "  " << node->name() << endl;
-
-  ref_wblnode n = findObject( oix);
-  if ( n)
-    // Already registred
-    return 0;
-
-  m_oix_list[oix] = node;
-#endif
   pair<pwr_tOix, ref_wblnode>p(oix,node);
   pair<map<pwr_tOix,ref_wblnode>::iterator,bool>result = m_oix_list.insert(p);
 

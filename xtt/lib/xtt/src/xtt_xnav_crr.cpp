@@ -194,17 +194,3 @@ int	xnav_crr_code(
   delete navcrr;
   return sts;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

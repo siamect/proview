@@ -398,5 +398,3 @@ pwr_dExport pwr_BindIoMethods(Ssab_RemoteRack) = {
   pwr_BindIoMethod(IoRackWrite),
   pwr_NullMethod
 };
-
-

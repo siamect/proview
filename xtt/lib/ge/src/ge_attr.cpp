@@ -245,4 +245,3 @@ int Attr::set_attr_value( char *value_str)
   client_data = 0;
   return sts;
 }
-

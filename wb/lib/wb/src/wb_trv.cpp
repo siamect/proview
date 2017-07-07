@@ -2296,12 +2296,3 @@ int trv_aobject_search(
   }
   return GSX__SUCCESS;
 }
-
-
-
-
-
-
-
-
-

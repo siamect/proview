@@ -60,10 +60,6 @@
 
 /*__Local function prototypes___________________________________________*/
 
-#if 0
-static void	rtt_scroll_up( int nr);
-static void	rtt_scroll_down( int nr);
-#endif
 static int	rtt_view_get_row_size( 
 				char *row, 
 				int size, 
@@ -89,24 +85,6 @@ static int	rtt_read_file( 	view_ctx ctx,
 			int	*start_row);
 
 static char *rttview_gets( char *str, int size, char  *inbuff, int *str_offset);
-
-
-#if 0
-static void	rtt_scroll_up( int nr)
-{
-	char	scroll[]={27, 91, 0, 0, 'S', 0};
-	scroll[2] = nr / 10 + 48;
-	scroll[3] = nr - (nr / 10) * 10 + 48;
-	r_print("%s", scroll);
-}
-static void	rtt_scroll_down( int nr)
-{
-	char	scroll[]={27, 91, 0, 0, 'T', 0};
-	scroll[2] = nr / 10 + 48;
-	scroll[3] = nr - (nr / 10) * 10 + 48;
-	r_print("%s", scroll);
-}
-#endif
 
 static int	rtt_view_get_row_size( 
 				char *row, 

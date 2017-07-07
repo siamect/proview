@@ -89,12 +89,7 @@ addServer (
   sp = hash_Insert(sts, gdbroot->sans_ht, sp);
   if (sp == NULL) return NULL;
   /* To do !!!! This is a pool leak !!!!!! */
-#if 0
-  {
-    pool_Free(NULL, gdbroot->pool, sp);
-    return NULL;
-  }
-#endif
+
   if (gdbroot->is_tmon)
     sp->op = op;
   pool_QinsertPred(NULL, gdbroot->pool, &sp->sansAct_ll, &np->sansAct_lh);
@@ -155,14 +150,7 @@ removeServer (
   san_sServer		*sp
 )
 {
-
   hash_Remove(NULL, gdbroot->sans_ht, sp);
-
-#if 0 /* In next version we will maintain an sancount in the object header
-	 ala dlcount.  */
-  if (--sp->op.u.n.sansCount == 0 && sp->op->u.n.flags.pendingDelete)
-    gdb_UnlockObject();
-#endif
 
   if (sp->flags.b.sansAct) {
     pool_Qremove(NULL, gdbroot->pool, &sp->sansAct_ll);
@@ -202,10 +190,6 @@ sansm_Add (
     }
 
   } gdb_ScopeUnlock;
-#if 0
-  errh_Info("sansm_Add, received %d add from %s, sansAct_lc = %d",
-    ap->count, np->name, np->sansAct_lc);
-#endif
 }
 
 void
@@ -299,11 +283,6 @@ sansm_Remove (
     }
 
   } gdb_ScopeUnlock;
-#if 0
-  errh_Info("sansm_Remove, %d remove from %s. %d -> %d", 
-    rp->count, np->name, old_cnt, np->sansAct_lc);
-#endif
-
 }
 
 /* Send alarm notification for server in update list.
@@ -343,11 +322,6 @@ sansm_Update (
 
     pwr_Assert(sp->flags.b.sansUpd);
 
-#if 0
-    pool_Qremove(NULL, gdbroot->pool, &sp->sansUpd_ll);
-    sp->flags.b.sansUpd = 0;
-#endif
-
     up->data[i].al = sp->al;
     up->data[i].sane = sp->sane;
     spl[i] = sp;
@@ -361,9 +335,6 @@ sansm_Update (
   gen = np->sans_gen;
 
   gdb_Unlock;
-#if 0
-    errh_Info("sansm_Update, put %d to %s", up->count, np->name);
-#endif
     net_Put(&sts, &tgt, up, net_eMsg_sanUpdate, 0, pwr_Offset(up, data[i]), 0);
   gdb_Lock;
 

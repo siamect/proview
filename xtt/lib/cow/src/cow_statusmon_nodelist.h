@@ -102,7 +102,3 @@ class Nodelist {
 };
 
 #endif
-
-
-
-

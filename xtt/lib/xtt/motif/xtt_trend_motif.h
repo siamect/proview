@@ -61,15 +61,3 @@ class XttTrendMotif : public XttTrend {
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-

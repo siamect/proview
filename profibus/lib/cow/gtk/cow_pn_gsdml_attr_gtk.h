@@ -106,11 +106,3 @@ class GsdmlAttrGtk : public GsdmlAttr {
 };
 
 #endif
-
-
-
-
-
-
-
-

@@ -367,12 +367,3 @@ class GrowTable : public GrowRect {
 
 /*@}*/
 #endif
-
-
-
-
-
-
-
-
-

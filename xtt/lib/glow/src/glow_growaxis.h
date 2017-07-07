@@ -274,18 +274,3 @@ class GrowAxis : public GrowRect {
 
 /*@}*/
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

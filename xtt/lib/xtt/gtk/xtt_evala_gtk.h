@@ -118,6 +118,3 @@ class EvAlaGtk : public EvAla {
 };
 
 #endif
-
-
-

@@ -565,4 +565,3 @@ int goen_get_location_point_m14( WGre *grectx, pwr_sGraphPlcNode *graphbody,
 
    return GOEN__SUCCESS;
 }
-

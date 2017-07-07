@@ -93,7 +93,3 @@ class WVselGtk : public WVsel {
 };
 
 #endif
-
-
-
-

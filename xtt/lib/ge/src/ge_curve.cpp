@@ -881,14 +881,6 @@ int GeCurve::grownames_cb( GlowCtx *ctx, glow_tEvent event)
       return 0;
     case glow_eEvent_Resized:
     {
-#if 0
-      Arg args[2];
-      short width;
-
-      width = 200;
-      XtSetArg(args[0],XmNwidth,width+4);
-      XtSetValues( curve->axisform_widget, args, 1);
-#endif
       break;
     }
     default:
@@ -2017,18 +2009,6 @@ void GeCurveData::select_color( bool dark_bg)
 	fillcolor[i] = glow_eDrawType_Color254;
       break;
     }
-#if 0
-    if ( j < 4)
-      color[i] = (glow_eDrawType) (j * 20 + 27);
-    else if ( j >= 4 && j < 8)
-      color[i] = (glow_eDrawType) ((j - 4) * 20 + 37);
-    else if ( j >= 8 && j < 12)
-      color[i] = (glow_eDrawType) ((j - 8) * 20 + 22);
-    else
-      color[i] = (glow_eDrawType) ((j - 12) * 20 + 32);
-
-    fillcolor[i] = (glow_eDrawType)(color[i] + 1);
-#endif
   }
 }
 
@@ -2475,4 +2455,3 @@ void GeCurve::update_color_theme( int ct)
 
   color_theme = ct;
 }
-

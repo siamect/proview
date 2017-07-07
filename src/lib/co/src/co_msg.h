@@ -71,11 +71,3 @@ msg_GetMessage (
 }
 #endif
 #endif
-
-
-
-
-
-
-
-

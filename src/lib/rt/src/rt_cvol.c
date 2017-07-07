@@ -465,47 +465,6 @@ cvol_Qtrim (
     printf("Stop trim %d, %d < %d < %d\n", fqp->flags.m, fqp->lc_min, fqp->lc, fqp->lc_max);
 }
 
-#if 0
-/* .  */
-
-void
-cvol_RemoveObject (
-  gdb_sObject		*op,
-  pwr_tBoolean		flush
-)
-{
-  gdb_sObject		*pop = NULL;
-  gdb_sVolume		*vp = NULL;
-
-  /* Make sure it is linked.  */
-
-  pwr_Assert(op->u.c.flags.m & gdb_mCo_inTouchList);
-  pwr_Assert(pool_QisLinked(NULL, gdbroot->pool, &op->u.c.cache_ll));
-
-  if (!flush && op->u.c.nChild > 0) {	/* We have children, move to cachePend.  */
-    cvol_QmoveSucc(op, cvol_Qget(op), &gdbroot->db->cachePend);
-    return;
-  }
-
-  if (!flush && op->l.por != pool_cNRef) {
-    pop = pool_Address(NULL, gdbroot->pool, op->l.por);
-    pop->u.c.nChild--;
-  }
-  vp = pool_Address(NULL, gdbroot->pool, op->l.vr);
-
-  cvol_UnlinkObject(NULL, vp, op, 0);
-  vol_UnlinkObject(NULL, vp, op, 0);
-
-  cvol_Qremove(op);
-  memset(op, 0, sizeof(*op));
-  cvol_QmoveSucc(op, NULL, &gdbroot->db->cacheFree);
-
-  if (!flush && pop->u.c.flags.b.cachePend && pop->u.c.nChild == 0) {
-    cvol_UnlinkObject(NULL, vp, pop, vol_mLink_cacheFlush);
-  }
-}
-#endif
-
 /* .  */
 
 void
@@ -516,7 +475,6 @@ cvol_UnlinkObject (
   pwr_tBitMask		link
 )
 {
-
-/* TODO */
+  /* TODO */
   return;
 }

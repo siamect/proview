@@ -1044,14 +1044,3 @@ void GrowAxis::set_visibility( glow_eVis visibility)
   }
   draw();
 }
-
-
-
-
-
-
-
-
-
-
-

@@ -1339,4 +1339,3 @@ void EvGtk::blk_activate_help( GtkWidget *w, gpointer data)
 
   ev->blk_activate_help();
 }
-

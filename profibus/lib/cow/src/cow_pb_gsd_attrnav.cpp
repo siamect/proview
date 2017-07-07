@@ -1787,15 +1787,6 @@ int ItemPbModule::open_children( GsdAttrNav *attrnav, double x, double y)
   else {
     brow_SetNodraw( attrnav->brow->ctx);
 
-#if 0
-      new ItemPbBase( this, gsd->prm_dataitems[i].ref->prm_data->Ext_User_Prm_Data_Name, 
-		      "LocalGsdAttr", 
-		      type, size, 
-		      gsd->prm_dataitems[i].ref->prm_data->Min_Value,
-		      gsd->prm_dataitems[i].ref->prm_data->Max_Value,
-		      p, 0, 0,
-		      NULL, flow_eDest_IntoLast);
-#endif 
     new ItemPbBase( attrnav, "ObjectName", "LocalGsdAttr", 
 		    pwr_eType_String, 32, 0, 0,
 		    mconf->name, 0, 0,
@@ -2249,4 +2240,3 @@ int ItemPbEnumByteOrder::open_children( GsdAttrNav *attrnav, double x, double y)
   }
   return 1;
 }
-

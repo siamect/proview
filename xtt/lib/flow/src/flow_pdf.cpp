@@ -77,33 +77,6 @@ int FlowPdf::print_page( double ll_x, double ll_y, double ur_x, double ur_y)
   offset_x = ll_x * cx->print_zoom_factor;
   offset_y = ur_y * cx->print_zoom_factor;
 
-#if 0
-  if ( ur_x - ll_x > ur_y - ll_y)
-  {
-    /* Landscape orientation */
-    fprintf( file, "%f %f translate\n", (ur_y - ll_y) *
-	cx->print_zoom_factor + 40, 20.0);
-    fprintf( file, "90 rotate\n");
-  }
-  else
-    fprintf( file, "%f %f translate\n", 40.0, 20.0);
-
-  /* Clip the region */
-  fprintf( file, "newpath\n");
-  fprintf( file, "%f %f moveto\n", ll_x * cx->print_zoom_factor - offset_x, 
-		offset_y - ll_y * cx->print_zoom_factor);
-  fprintf( file, "%f %f lineto\n", ll_x * cx->print_zoom_factor - offset_x, 
-		offset_y - ur_y * cx->print_zoom_factor);
-  fprintf( file, "%f %f lineto\n", ur_x * cx->print_zoom_factor - offset_x, 
-		offset_y - ur_y * cx->print_zoom_factor);
-  fprintf( file, "%f %f lineto\n", ur_x * cx->print_zoom_factor - offset_x, 
-		offset_y - ll_y * cx->print_zoom_factor);
-  fprintf( file, "%f %f lineto\n", ll_x * cx->print_zoom_factor - offset_x, 
-		offset_y - ll_y * cx->print_zoom_factor);
-  fprintf( file, "closepath\n");
-  fprintf( file, "clip\n");
-#endif
-
   ((FlowCtx *)ctx)->current_print = this;
 
   topdf->set_confpass( true);
@@ -201,27 +174,6 @@ int FlowPdf::arrow( double x1, double y1, double x2, double y2,
 {
   topdf->draw_arrow( x1 - offset_x, offset_y - y1, x2 - offset_x, offset_y - y2, 
 		     x3 - offset_x, offset_y - y3, type == flow_eDrawType_LineGray);
-  
-#if 0
-  if ( type == flow_eDrawType_LineGray)
-  {
-    fprintf( file, "gsave\n");
-    fprintf( file, "0.5 setgray\n");    
-  }
-
-  setlinewidth( idx);
-  fprintf( file, "newpath\n");
-  fprintf( file, "%f %f moveto\n", x1-offset_x, offset_y-y1);
-  fprintf( file, "%f %f lineto\n", x2-offset_x, offset_y-y2);
-  fprintf( file, "%f %f lineto\n", x3-offset_x, offset_y-y3);
-  fprintf( file, "%f %f lineto\n", x1-offset_x, offset_y-y1);
-  fprintf( file, "closepath\n");
-  fprintf( file, "fill\n");
-
-  if ( type == flow_eDrawType_LineGray)
-    fprintf( file, "grestore\n");
-
-#endif
   return 1;
 }
 
@@ -235,4 +187,3 @@ void FlowPdf::setlinewidth( double idx)
 {
   fprintf( file,"%f setlinewidth\n", idx);
 }
-

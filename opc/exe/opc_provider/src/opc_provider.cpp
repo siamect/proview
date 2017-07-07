@@ -645,13 +645,6 @@ void opc_provider::objectOid( co_procom *pcom, pwr_tOix oix)
     return;
   }
 
-#if 0
-  for ( int i = 0; i < (int)m_list.size(); i++) {
-    printf( "oix %2d bws %2d fws %2d fth %2d fch %2d lch %2d flags %lu %s\n", 
-	    m_list[i]->po.oix, m_list[i]->po.bwsoix, m_list[i]->po.fwsoix, m_list[i]->po.fthoix, 
-	    m_list[i]->po.fchoix, m_list[i]->po.lchoix, m_list[i]->po.flags, m_list[i]->po.name);
-  }
-#endif
   vector<procom_obj>olist;
 
   if ( oix == 0)
@@ -683,12 +676,6 @@ void opc_provider::objectOid( co_procom *pcom, pwr_tOix oix)
 	break;
     }
   }
-#if 0
-  for ( int i = 0; i < (int) m_list.size(); i++) {
-    if  ( m_list[i]->po.flags & procom_obj_mFlags_Loaded)
-      olist.push_back( m_list[i]->po);
-  }
-#endif
   printf( "*********************************************\n");
   for ( int i = 0; i < (int)olist.size(); i++) {
     printf( "oix %2d bws %2d fws %2d fth %2d fch %2d lch %2d flags %lu %s\n", 
@@ -1396,4 +1383,3 @@ int main(int argc, char *argv[])
 
   procom.mainLoop();
 }
-

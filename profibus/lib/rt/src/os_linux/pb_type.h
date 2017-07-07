@@ -127,4 +127,3 @@ typedef     char                 CSTRING;
 #define     GLOBAL
 
 #endif
-

@@ -148,15 +148,11 @@ int main( int argc, char *argv[])
     //if (oep->flags.b.inRbody && oep->o.body[0].size == 0) printf("[%d] in rbody\n", oep->o.oid.oix);
     //if (oep->flags.b.inDbody && oep->o.body[1].size == 0) printf("[%d] in dbody\n", oep->o.oid.oix);
     if (!oep->flags.b.pOk) {
-#if 1
       if (oep->poep != NULL && oep->poep->flags.b.inOhead) {
         oep->flags.b.pOk = 1;
       } else {
         printf("[%d] pNok %s\n", oep->o.oid.oix, oep->o.name);
       }
-#else
-      printf("[%d] pNok %s\n", oep->o.oid.oix, oep->o.name);
-#endif
     }
     if (!oep->flags.b.bOk) printf("[%d] bNok\n", oep->o.oid.oix);
     if (!oep->flags.b.aOk) printf("[%d] aNok\n", oep->o.oid.oix);
@@ -217,11 +213,6 @@ printname(pwr_tOid poid, pwr_tObjName name, pwr_tOid oid)
     if (strcmp(name, oep->o.normname) != 0) {
       printf("name: \"%s\" [%d] not same as: \"%s\"\n", oep->o.name, oep->o.oid.oix, name);
     }
-#if 0
-    if (memcmp(name, oep->o.normname, sizeof(name)) != 0) {
-      printf("name memcmp: \"%s\" [%d] not same as: \"%s\"\n", oep->o.name, oep->o.oid.oix, name);
-    }
-#endif
     if (cdh_ObjidIsNotEqual(poid, oep->o.poid)) {
       printf("name: \"%s\" [%d] poid: [%d] is not same as: [%d]n", oep->o.name, oep->o.oid.oix, oep->o.poid.oix, poid.oix);
     }    

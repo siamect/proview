@@ -106,28 +106,6 @@ void XttGtk::xtt_mainloop()
   gtk_main();
 }
 
-#if 0
-int XttGtk::init_hotkey( XtAppContext AppCtx, Widget Top)
-{
-  hotkeySTATUS    HotkeySts;
-
-  XtAppAddActions( AppCtx, HotkeyActions, XtNumber(HotkeyActions));
-
-  HotkeySts = hotkey_Initialize (Top, &HotkeyHandle);
-  switch ( HotkeySts ) {
-  case TkERROR : 
-    puts ("Xtt: Failed to bind hotkey(s)");
-    break;
-  case TkNO_BINDINGS :
-    puts ("OpWin: No hotkey resource found in resource db");
-    break;
-  case TkPARSE_ERROR :
-    puts ("OpWin: Syntax error in hotkey bindings");
-  }
-  return 1;
-}
-#endif
-
 void XttGtk::open_input_dialog( const char *text, const char *title,
 				const char *init_text,
 				void (*ok_cb)( Xtt *, char *))
@@ -1237,9 +1215,3 @@ void XttGtk::create_input_dialog()
   gtk_widget_show_all( india_widget);
   g_object_set( india_widget, "visible", FALSE, NULL);
 }
-
-
-
-
-
-

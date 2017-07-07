@@ -133,4 +133,3 @@ void write_dac(int chan, // chan must be 0 or 1, this is not checked
   dummy = SPI0_FIFO;
   dummy = SPI0_FIFO;
 } // write_dac
-

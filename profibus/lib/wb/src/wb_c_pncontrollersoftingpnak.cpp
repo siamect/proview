@@ -75,5 +75,3 @@ pwr_dExport pwr_BindMethods(PnControllerSoftingPNAK) = {
   pwr_BindMethod(SyntaxCheck),
   pwr_NullMethod
 };
-
-

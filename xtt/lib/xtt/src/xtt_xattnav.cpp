@@ -954,10 +954,3 @@ void XAttNav::unzoom()
 {
   brow_UnZoom( brow->ctx);
 }
-
-
-
-
-
-
-

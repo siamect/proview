@@ -446,40 +446,6 @@ ivol_BuildVolume (
   return YES;
 }
 
-/* Delete a whole volume with all its objects,
-   from the global database.  */
-
-#if 0
-pwr_tBoolean
-ivol_DeleteVolume (
-  pwr_tStatus           *status,
-  gdb_sVolume		*vp
-)
-{
-  pool_sQlink		*ol;
-  gdb_sObject		*op;
-
-  pwr_dStatus(sts, status, GDH__SUCCESS);
-
-#if 0
-  sub_DeleteVolumeServers(sts, vp);
-  san_DeleteVolumeServers(sts, vp);
-#endif
-
-  for (
-    ol = pool_Qsucc(sts, gdbroot->pool, &vp->l.obj_lh);
-    ol != &vp->l.obj_lh;
-    ol = pool_Qsucc(sts, gdbroot->pool, ol)
-  ) {
-    op = pool_Qitem(ol, gdb_sObject, l.obj_ll);
-
-    vol_UnlinkObject(sts, vp, op, vol_mLink_flush);
-    vol_UnlockObject(sts, op);
-  }
-  return YES;
-}
-#endif
-
 /* .  */
 
 ivol_sBody *
@@ -528,29 +494,10 @@ ivol_InitiateVolumeUpdate (
     op = pool_Qitem(ol, gdb_sObject, l.obj_ll);
 
     op->u.n.flags.m |= gdb_mNo_swap;
-#if 0
-    op->u.n.flags.b.swapDelete = 1;
-#endif
   }
 
   return YES;
 }
-
-#if 0
-/* .  */
-
-pwr_tBoolean
-ivol_LoadBodySegment (
-  pwr_tStatus		*status,
-  ivol_sBody		*b_bp,
-  load_sBodySegment	*i_sp
-)
-{
-
-  pwr_dStatus(sts, status, GDH__SUCCESS);
-  return NO;
-}
-#endif
 
 /* Loads an object into the object database.
    Used when initially populating the database, before
@@ -663,10 +610,6 @@ ivol_RebuildVolume (
   gdb_AssumeExcled;
   gdb_AssumeLocked;
 
-#if 0
-  // if (!vp->modified) continue;
-#endif
-
   for (
     ol = pool_Qsucc(sts, gdbroot->pool, &vp->l.obj_lh);
     ol != &vp->l.obj_lh;
@@ -722,11 +665,6 @@ ivol_RebuildVolume (
   for (iop = lst_Succ(NULL, &lv->cre_lh, &iol); iop != NULL; iop = lst_Succ(NULL, iol, &iol)) {
     vol_LinkObject(sts, vp, iop->op, vol_mLink_swapBuild);
   }
-
-
-#if 0
-  san_DeleteVolumeServers(sts, vp);
-#endif
 
   return YES;
 }

@@ -215,7 +215,3 @@ void cnv_image_pixel_iter( cnv_tImImage image,
   }
 #endif
 }
-
-
-
-

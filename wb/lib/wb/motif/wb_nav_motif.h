@@ -66,8 +66,3 @@ class NavMotif : public Nav {
 };
 
 #endif
-
-
-
-
-

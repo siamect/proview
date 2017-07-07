@@ -100,12 +100,6 @@ static void		volumes7	(qcom_sGet*);
 static void		serverConnect	(qcom_sGet*);
 static void		fileList	(qcom_sGet*);
 static void		classList	(qcom_sGet*);
-#if 0
-  static void		linkEvent	(pwr_tUInt32, net_eEvent);
-  static void		sendIdAck	(gdb_sNode*);
-  static void		sendIdAck2	(gdb_sNode*);
-#endif
-
 
 /* Dispatcher for 'net_cMsgClass' messages.  */
 
@@ -321,9 +315,6 @@ flushNodes (void)
 
     if (node.flags.b.connected) {
       sendFlush(np);
-#if 0
-      sendVolumes(np, pool_cNRef); 
-#endif
     }
   }
 }
@@ -827,12 +818,6 @@ netError (
   errh_Error("Error reported by process %x @ %s when talking to process %d @ %s\n%m",
     get->pid, cdh_NodeIdToString(NULL, get->sender.nid, 0, 0),
     mp->remqid.qix, cdh_NodeIdToString(NULL, mp->remqid.nid, 0, 0), mp->sts);
-
-#if 0 /* TODO !!!! */
-  if (mp->remqid.qix == net_cProcHandler) {
-    linkEvent(mp->remqid.nid, net_eEvent_error);
-  }
-#endif
 }
 
 static void
@@ -1279,204 +1264,6 @@ volumesR (
 
 }
 
-
-#if 0
-/* This is the link state machine
-   The database must be locked by the caller.  */
-
-void
-linkEvent (
-  pwr_tNodeId		nid,
-  net_eEvent		le
-)
-{
-  pwr_tStatus		sts;
-  gdb_sNode		*np;
-
-  gdb_AssumeUnlocked;
-
-  /* Never to ourselves... */
-  if (nid == gdbroot->db->nid) return;
-
-  gdb_ScopeLock {
-    np = gdb_AddNode(&sts, nid, gdb_mAdd__);
-  } gdb_ScopeUnlock;
-
-  if (gdbroot->db->log.b.linkStates)
-    errh_Info("Link event %d, nid %d, current link state %d", le, nid, np->linkstate);
-
-  switch (np->linkstate) {
-  case net_eState_down:
-    switch (le) {
-    case net_eEvent_nodeDown:
-      break;
-    case net_eEvent_nodeUp:
-    default:
-      sendId(np);
-      np->linkstate = net_eState_istrt;
-      break;
-    }
-    break;
-  case net_eState_istrt:
-    switch (le) {
-    case net_eEvent_id:
-      sendIdAck(np);
-      np->linkstate = net_eState_astrt;
-      break;
-    case net_eEvent_idAck:
-      sendIdAck2(np);
-      np->linkstate = net_eState_up;
-      np->upcnt++;
-      time_GetTime(&np->timeup);
-      errh_Info("Established contact with %s (%s)",
-	np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0));
-      sendVolumes(np, pool_cNRef); 
-      break;
-    case net_eEvent_nodeDown:
-      np->linkstate = net_eState_down;
-      break;
-    case net_eEvent_nodeUp:
-    case net_eEvent_error:
-      break;
-    default:
-      sendId(np);
-      np->linkstate = net_eState_istrt;
-      break;
-    }
-    break;
-  case net_eState_astrt:
-    switch (le) {
-    case net_eEvent_id:
-      sendIdAck(np);
-      np->linkstate = net_eState_astrt;
-      break;
-    case net_eEvent_idAck:
-      sendIdAck2(np);
-      np->linkstate = net_eState_up;
-      np->upcnt++;
-      time_GetTime(&np->timeup);
-      errh_Info("Established contact with %s (%s)",
-	np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0));
-      sendVolumes(np, pool_cNRef);
-      break;
-    case net_eEvent_idAck2:
-      np->linkstate = net_eState_up;
-      np->upcnt++;
-      time_GetTime(&np->timeup);
-      errh_Info("Established contact with %s (%s)",
-	np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0));
-      sendVolumes(np, pool_cNRef);
-      break;
-    case net_eEvent_nodeDown:
-      np->linkstate = net_eState_down;
-      break;
-    case net_eEvent_nodeUp:
-      break;
-    case net_eEvent_error:
-      break;
-    default:
-      sendId(np);
-      np->linkstate = net_eState_istrt;
-      break;
-    }
-    break;
-  case net_eState_up:
-    switch (le) {
-    case net_eEvent_id:
-      flushNode(np);
-      sendIdAck(np);
-      np->linkstate = net_eState_astrt;
-      errh_Info("New contact with %s (%s), remotely initiated...",
-	np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0));
-      break;
-    case net_eEvent_nodeDown:
-      flushNode(np);
-      np->linkstate = net_eState_down;
-      errh_Info("Down, link to %s (%s)",
-	np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0));
-      break;
-    case net_eEvent_error:
-      flushNode(np);
-      sendId(np);
-      np->linkstate = net_eState_istrt;
-      errh_Info("New contact with %s (%s), locally initiated...",
-	np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0));
-      break;
-    case net_eEvent_idAck:
-      sendIdAck2(np);
-      break;
-    case net_eEvent_idAck2:
-    case net_eEvent_nodeUp:
-    default:
-      break;
-    }
-    break;
-  default:
-    break;
-  }
-}
-#endif		
-#if 0
-
-/* This routine sends an idAck to a remote node.  */
-
-static void
-sendIdAck (
-  gdb_sNode		*np
-)
-{
-  pwr_tStatus		sts;
-  net_sId		msg;
-  qcom_sQid		tgt;
-
-  if (gdbroot->db->log.b.messages) {
-    errh_Info("Sending 'idAck' to %s (%s)",
-      np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0));
-  }
-
-  tgt np->handler;
-
-  gdb_ScopeLock {
-
-    msg.node.handler  = gdbroot->db->nethandler;
-    msg.node.netver   = net_cVersion;
-    msg.hdr.nid	    = gdbroot->my_node->nid;
-    msg.node.nod_oid  = gdbroot->my_node->nod_oid;
-    msg.node.vol_oid  = gdbroot->my_node->vol_oid;
-
-  } gdb_ScopeUnlock;
-
-  if (!net_Put(&sts, &tgt, &msg, net_eMsg_idAck, 0, sizeof(msg), 0))
-    errh_Error("Sending 'idAck' to %s (%s)\n%m",
-      np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0), sts);
-
-}
-
-/* This routine sends an idAck2 to a remote node.  */
-
-static void
-sendIdAck2 (
-  gdb_sNode		*np
-)
-{
-  pwr_tStatus		sts;
-  net_sIdAck2		msg;
-  qcom_sQid		tgt;
-
-  if (gdbroot->db->log.b.messages) {
-    errh_Info("Sending 'idAck2' to %s (%s)",
-      np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0));
-  }
-
-  tgt = np->handler;
-
-  if (!net_Put(&sts, &tgt, &msg, net_eMsg_idAck2, 0, sizeof(msg), 0))
-    errh_Error("Sending 'idAck2' to %s (%s)\n%m",
-      np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0), sts);
-
-}
-#endif
-
 static void
 serverConnect (
   qcom_sGet	*get
@@ -1663,4 +1450,3 @@ classList (
 
   net_Reply(&sts, get, &put, 0);
 }
-

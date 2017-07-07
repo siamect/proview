@@ -474,25 +474,6 @@ static int	rttsys_get_nodename( pwr_tNodeId nid, char *nodename)
 	else
 	  strcpy( nodename, "Undef");
 	return sts;
-
-#if 0
-	NODE_STRUCT 		*nodep;
-	int			i,found;
-
-	found = 0;
-	for ( i = 0; i < 256; i++)
-	{
-          nodep = &gdhroot->nodedb->node [i];
-          if ( nodidx == nodep->nid )
-	  {
-             strcpy( nodename, nodep->nodename);
-	     found = 1;	
-	     break;
-	  }
-	}
-	if ( !found)
-	  strcpy( nodename, "Undef");
-#endif
 }
 
 typedef struct {

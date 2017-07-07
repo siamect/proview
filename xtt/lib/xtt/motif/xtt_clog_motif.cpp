@@ -427,6 +427,3 @@ void CLogMotif::filesel_cancel_cb( Widget w, CLog *clog, XmAnyCallbackStruct *da
 {
   XtUnmanageChild( ((CLogMotif *)clog)->filesel_form);
 }
-
-
-

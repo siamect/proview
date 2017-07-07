@@ -409,10 +409,6 @@ gdb_AddClass (
 {
   gdb_sClass		*cp;
 
-#if 0
-  pwr_Assert(cid != pwr_cNClassId);
-#endif
-
   gdb_AssumeLocked;
 
   cp = hash_Search(sts, gdbroot->cid_ht, &cid);
@@ -589,21 +585,6 @@ gdb_BuildGlobalDatabase (
   pwr_tObjid		nodeobject
 )
 {
-
-#if 0
-  gdhi_ScopeLock {
-
-    /* Make sure the nethandler is not running.  */
-
-    if (gdbroot->db->nethandler.all != 0) lib$signal(GDH__NODERUNNING);
-    else {
-      gdbroot->this_node->oid = nodeobject;
-
-      gdh_load_fixup ();
-    }
-
-  } gdhi_ScopeUnlock;
-#endif
 }
 
 /* This routine maps the object and node database.
@@ -663,10 +644,6 @@ gdb_CreateDb (
   gdbroot->db->eval_init = *ip;
 
   sect_InitLock(sts, gdbroot->lock, &gdbroot->db->lock);
-
-#if 0
-  pool_AllocLookasideSegment(sts, gdbroot->pool, ip->objects, sizeof(gdb_sObject));
-#endif
 
   gdb_ScopeLock {
 
@@ -762,19 +739,6 @@ gdb_CreateDb (
 
     lp = mapLocalDb(sts);
     if (lp == NULL) break;
-
-#if 0
-    /* Start communications.  */
-
-    gdbroot->my_qid = qcom_cNQid;
-    net_Connect(sts, &gdbroot->my_aid, &gdbroot->my_qid, NULL);
-    if (EVEN(*sts)) break;
-
-    if ((gdbroot->my_qid.nid == 0) || (gdbroot->my_qid.qix == 0)) {
-      *sts = GDH__QCOM;
-      break;
-    }
-#endif
 
     gdbroot->my_volume = gdb_AddVolume(sts, gdbroot->db->vid, gdb_mAdd_failIfAdded);
     if (gdbroot->my_volume == NULL) errh_Bugcheck(*sts, "creating root volume");
@@ -998,10 +962,7 @@ gdb_LoadVolume (
   
 
   /* Local flags.  */
-  
-#if 0
-  vp->l.flags.b.isMounted	= 0;
-#endif
+
   vp->l.flags.b.isConnected	= 0;
   vp->l.flags.b.transAlias	= 1;
   vp->l.flags.b.transMount	= vid == gdbroot->db->vid;

@@ -506,6 +506,3 @@ int writeInfo(int nrOfEvents, int firstTimeEver, pwr_tTime *oldestEventTime)
   fclose(info_file);
   return 1;
 }
-
-
-

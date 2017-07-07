@@ -284,9 +284,6 @@ subcm_Data (
   if (rp != NULL) { 
     tgt = np->handler;
     net_Put(NULL, &tgt, rp, net_eMsg_subRemove, 0, pwr_Offset(rp, sid[rp->count]), 0);
-#if 0
-    errh_Info("Removed %d subscriptions", rp->count - 1);
-#endif
     pool_Free(NULL, gdbroot->pool, rp);
   }
 }

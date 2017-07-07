@@ -70,23 +70,3 @@ class CoHelpMain {
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

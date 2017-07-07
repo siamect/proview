@@ -1026,19 +1026,3 @@ WItemRevAttr::WItemRevAttr( WRevNavBrow *brow, const char *item_name,
   brow_SetAnnotation( node, 0, name, strlen(name));
   brow_SetAnnotation( node, 1, value, strlen(value));
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

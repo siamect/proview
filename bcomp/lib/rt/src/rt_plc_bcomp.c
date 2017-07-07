@@ -1004,12 +1004,3 @@ void CompCurvePolValueFo_exec( plc_sThread		*tp,
   co->ActVal = o->ActVal;
   co->In = *o->InP;
 }
-
-
-
-
-
-
-
-
-

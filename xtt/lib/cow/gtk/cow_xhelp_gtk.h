@@ -101,10 +101,3 @@ class CoXHelpGtk : public CoXHelp {
 
 
 #endif
-
-
-
-
-
-
-

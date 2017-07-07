@@ -67,10 +67,3 @@ class co_status
 };
 
 #endif
-
-
-
-
-
-
-

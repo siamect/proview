@@ -117,4 +117,3 @@ pwr_dExport pwr_BindMethods(OpPlaceWeb) = {
   pwr_BindMethod(PostCreate),
   pwr_NullMethod
 };
-

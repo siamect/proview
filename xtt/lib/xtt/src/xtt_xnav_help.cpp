@@ -221,22 +221,3 @@ static int help_cmp_items( const void *node1, const void *node2)
 
   return ( strcmp( text1, text2));
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

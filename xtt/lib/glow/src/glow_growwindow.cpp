@@ -749,17 +749,6 @@ int GrowWindow::update_attributes()
 
   if ( strcmp( input_file_name, file_name) != 0 ||
        (window_ctx && strcmp( window_ctx->owner, owner) != 0)) {
-    // New graph, create new context
-#if 0
-    int ur_x = int( (x_right - vertical_scrollbar * scrollbar_width) * ctx->mw.zoom_factor_x) - ctx->mw.offset_x;
-    int	ll_x = int( x_left * ctx->mw.zoom_factor_x) - ctx->mw.offset_x;
-    int	ur_y = int( (y_high - horizontal_scrollbar * scrollbar_width) * ctx->mw.zoom_factor_y) - ctx->mw.offset_y;
-    int ll_y = int( (y_low + y_low_offs) * ctx->mw.zoom_factor_y) - ctx->mw.offset_y;
-
-    if ( window_ctx)
-      window_ctx->draw_buffer_only = ctx->draw_buffer_only;
-    glow_draw_set_clip_rectangle( ctx, ll_x, ll_y, ur_x, ur_y);
-#endif
     int ur_x = int( x_right * ctx->mw.zoom_factor_x) - ctx->mw.offset_x;
     int	ll_x = int( x_left * ctx->mw.zoom_factor_x) - ctx->mw.offset_x;
     int	ur_y = int( y_high * ctx->mw.zoom_factor_y) - ctx->mw.offset_y;
@@ -777,9 +766,7 @@ int GrowWindow::update_attributes()
     new_ctx();
     sts = 1;
 
-    //#if 0
     ctx->gdraw->reset_clip_rectangle( &ctx->mw);
-    //#endif
   }
   if ( window_ctx) {
     window_ctx->mw.subwindow_scale = window_scale;
@@ -980,12 +967,6 @@ void GrowWindow::new_ctx()
     ctx->mw.zoom_factor_x * window_ctx->mw.subwindow_scale;
   window_ctx->move_restriction = glow_eMoveRestriction_Disable;
   window_ctx->a.zoom();
-
-#if 0
-  window_ctx->gdraw->push_customcolors( window_ctx->customcolors);
-  window_ctx->draw( &window_ctx->mw, 0, 0, window_ctx->mw.window_width, window_ctx->mw.window_height);
-  window_ctx->gdraw->pop_customcolors();
-#endif
 
   if ( ctx->trace_started) {
     trace_init();

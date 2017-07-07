@@ -192,5 +192,3 @@ void		ini_ReadBootFile	(pwr_tStatus*, ini_sContext*);
 pwr_tBoolean	ini_ReadNodeFile	(pwr_tStatus*, ini_sContext*);
 
 #endif
-
-

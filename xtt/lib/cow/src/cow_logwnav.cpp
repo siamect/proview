@@ -477,6 +477,3 @@ void CoLogWNav::show( char categories[][20], char *item)
   if ( ODD(sts))
     brow_CenterObject( brow->ctx, last, 0.9);
 }
-
-
-

@@ -171,10 +171,6 @@ static int	dtt_edit_normal_settings();
 static int	dtt_store_ctx( 	edit_ctx	ctx,
 				char		*key,
 				int		idx);
-#if 0
-static int dtt_remove_stored_ctx( char		*key,
-				  int		idx);
-#endif
 static int dtt_get_stored_ctx( 	edit_ctx	*ctx,
 				char		*key,
 				int		idx);
@@ -262,10 +258,6 @@ static int	dtt_edit_read_menues(	char		*filename);
 static int	dtt_edit_read_one_menu(	FILE		*fin,
 					menu_ctx	parent_ctx,
 					int		parent_item);
-#if 0
-static int	dtt_get_menu_name(	int		index,
-					char		*name);
-#endif
 static int	dtt_get_picturefilename(	int		index,
 						char		*filename);
 static int	dtt_get_menufilename( char		*filename);
@@ -4437,55 +4429,7 @@ static int	dtt_store_ctx( 	edit_ctx	ctx,
 
 	return RTT__SUCCESS;
 }
-/*************************************************************************
-*
-* Name:		dtt_remove_stored_ctx()
-*
-* Type		int
-*
-* Type		Parameter	IOGF	Description
-* ctx		ctx		I	
-* char		*key		I	
-*
-* Description:
-*	Removes a stored ctx.
-*
-**************************************************************************/
-#if 0
-static int dtt_remove_stored_ctx( char		*key,
-				int		idx)
-{
-	dtt_t_store_ctx	*store_ptr;
-	int		found;
 
-	if (dtt_ctx_store == 0)
-	  return 0;
-
-	found = 0;
-	store_ptr = dtt_ctx_store;
-	while ( store_ptr->ctx != 0)
-	{
-	  if ( !found )
-	  {
-	    if ( store_ptr->idx == idx)
-	    {
-	      found = 1;
-	      strcpy( store_ptr->key, (store_ptr + 1)->key);
-	      store_ptr->ctx = (store_ptr + 1)->ctx;
-	    }
-	  }
-	  else
-	  {
-	    strcpy( store_ptr->key, (store_ptr + 1)->key);
-	    store_ptr->ctx = (store_ptr + 1)->ctx;
-	  }
-	  store_ptr++;	
-	}
-	if (!found)
-	  return 0;
-	return RTT__SUCCESS;
-}
-#endif
 /*************************************************************************
 *
 * Name:		dtt_get_stored_ctx()
@@ -4500,7 +4444,6 @@ static int dtt_remove_stored_ctx( char		*key,
 *	Returns a stored ctx.
 *
 **************************************************************************/
-
 static int dtt_get_stored_ctx( 	edit_ctx	*ctx,
 				char		*key,
 				int		idx)
@@ -5030,9 +4973,6 @@ static int	dtt_edit_write( edit_ctx	ctx,
 	  if ( fout == 0)
 	    return 0;
 
-#if 0
-	  fwrite( &(ctx->chartable), sizeof( ctx->chartable), 1, fout);
-#endif
 	  for ( i = 0; 
 	    i < (int)(sizeof(ctx->chartable) / sizeof(ctx->chartable[0]));
 	    i++)
@@ -5051,19 +4991,6 @@ static int	dtt_edit_write( edit_ctx	ctx,
 	    }
 	  }
 
-	  /* Write update items */
-#if 0
-	  item_ptr = ctx->upd_items;
-	  if ( item_ptr != 0)
-	  {
-	    while ( item_ptr->number != 0)
-	    {
-	      char_ptr = (char *) item_ptr;
-	      fwrite( item_ptr, sizeof( dtt_t_upd_item), 1, fout);
-	      item_ptr++;
-	    }
-	  }
-#endif
 	  sts = dtt_edit_list_items( ctx, fout);
 	  fclose(fout);
 	  if ( EVEN(sts)) return sts;
@@ -5321,10 +5248,6 @@ static int	dtt_edit_read( 	edit_ctx	ctx,
 	if ( fin == 0)
 	  return 0;
 
-#if 0
-	if (fread( &(ctx->chartable), sizeof( ctx->chartable), 1, fin) == 0)
-	  return 0;
-#endif
 	for ( i = 0; 
 	    i < (int)(sizeof(ctx->chartable) / sizeof(ctx->chartable[0]));
 	    i++)
@@ -5366,21 +5289,6 @@ static int	dtt_edit_read( 	edit_ctx	ctx,
 	sts = dtt_edit_read_picture_items( ctx, fin);
 	fclose(fin);
 	if ( EVEN(sts)) return sts;
-#if 0
-	while ( 1)
-	{
-	  if ( fread( &item_buffer, sizeof( dtt_t_upd_item), 1, fin) == 0)
-	    break;
-
-	  /* Insert the buffer in the upd item list */
-	  sts = dtt_upd_item_add( &(ctx->upd_items), 0, 0, "");
-	  item_ptr = ctx->upd_items;
-	  while ( item_ptr->number != 0)
-	    item_ptr++;
-	  item_ptr--;
-	  memcpy( item_ptr, &item_buffer, sizeof(item_buffer));
-	}
-#endif
 
 	return	RTT__SUCCESS;
 }
@@ -7481,26 +7389,7 @@ static int	dtt_edit_read_one_menu(	FILE		*fin,
 	}
 	return RTT__SUCCESS;
 }
-/*************************************************************************
-*
-* Name:		dtt_get_menu_name()
-*
-* Type		int
-*
-* Type		Parameter	IOGF	Description
-*
-* Description:
-*	Write the menues.
-*
-**************************************************************************/
-#if 0
-static int	dtt_get_menu_name(	int		index,
-					char		*name)
-{
-	sprintf( name, "dttappl__u%d", index);
-	return RTT__SUCCESS;
-}
-#endif
+
 /*************************************************************************
 *
 * Name:		dtt_start()
@@ -7513,7 +7402,6 @@ static int	dtt_get_menu_name(	int		index,
 *	Write the menues.
 *
 **************************************************************************/
-
 int	dtt_start( char		*programname)
 {
 	int		sts;
@@ -7569,15 +7457,6 @@ int	dtt_start( char		*programname)
 	    dtt_exit_now(0);
 	  }
 	  sprintf( dtt_source_dir, "%s/lib/dtt/src/", s);
-#if 0
-	  if ( (s = getenv( "pwre_broot")) == NULL)
-	  {
-	    printf( "** Rtt build directory pwrp_rttbld is not defined\n");
-	    dtt_exit_now(0);
-	  }
-	  sprintf( dtt_build_dir, "%s/os_%s/hw_%s/bld/lib/dtt/", s, rtt_os,
-		rtt_hw);
-#endif
 	  if ( (s = getenv( "pwr_exe")) == NULL)
 	  {
 	    printf( "** Rtt execute directory pwr_exe is not defined\n");

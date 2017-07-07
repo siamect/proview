@@ -82,10 +82,6 @@ typedef struct {
 */
 class GlowCon : public GlowArrayElem {
  public:
-#if 0
-  GlowCon( GrowCtx *glow_ctx, const char *name, GlowConClass *con_class,
-	GlowNode *source, GlowNode *dest, int source_cp, int dest_cp);
-#endif
   //! Constructor.
   /*!
     \param glow_ctx	Glow context.
@@ -288,9 +284,3 @@ class GlowCon : public GlowArrayElem {
 
 /*@}*/
 #endif
-
-
-
-
-
-

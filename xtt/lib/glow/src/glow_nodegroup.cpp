@@ -120,4 +120,3 @@ void GlowNodeGroup::open( ifstream& fp)
       break;
   }
 }
-

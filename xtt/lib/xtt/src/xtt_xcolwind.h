@@ -141,10 +141,3 @@ class XColWind {
 };
 
 #endif
-
-
-
-
-
-
-

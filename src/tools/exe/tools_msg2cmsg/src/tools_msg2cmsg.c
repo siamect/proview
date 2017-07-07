@@ -355,4 +355,3 @@ static void TranslateFormatSpec(const char *msgstr, char **transstr)
   }
   *(l - 1) = '\0'; /* Skip '>' */
 }
-

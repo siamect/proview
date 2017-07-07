@@ -419,4 +419,3 @@ GsdAttrMotif::GsdAttrMotif( Widget a_parent_wid,
   flow_AddCloseVMProtocolCb( parent_wid, 
 	(XtCallbackProc)activate_exit, this);
 }
-

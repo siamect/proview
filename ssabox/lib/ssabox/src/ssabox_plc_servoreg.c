@@ -172,5 +172,3 @@ void Ssab_ServoReg_exec(plc_sThread *tp, pwr_sClass_Ssab_ServoReg *object)
   
 } 
 /* End of ServoReg */
-
-

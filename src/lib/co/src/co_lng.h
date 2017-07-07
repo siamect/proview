@@ -305,5 +305,3 @@ class Lng {
 }
 #endif
 #endif
-
-

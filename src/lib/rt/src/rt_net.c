@@ -103,14 +103,6 @@ ConvertGet (
   void			*data
 );
 
-#if 0
-static void
-Error (
-  qcom_sQid		*remqid,
-  pwr_tStatus		status
-);
-#endif
-
 static pwr_tBoolean
 Send (
   pwr_tStatus		*sts,
@@ -359,51 +351,6 @@ ConvertGet (
 
   pwr_Return(TRUE, sts, NET__SUCCESS);
 }
-
-#if 0
-static void
-Error (
-  qcom_sQid		*remqid,
-  pwr_tStatus		status
-)
-{
-  net_sError		err;
-  pwr_tStatus		sts;
-  qcom_sQid		tgt;
-  qcom_sPut		put;
-
-  if (gdbroot->my_qid.qix == net_cProcHandler) {
-    errh_Error("error\n%m", status);
-    return;
-  }
-
-  if (gdbroot->db->nethandler.qix == 0 && gdbroot->db->nethandler.nid == qcom_cNNid) {
-    errh_Error("Neterror detected, but nethandler is not running\n%m", status);
-    return;
-  }
-
-  tgt.qix	= net_cProcHandler;
-  tgt.nid	= qcom_cNNid;
-
-  err.sts	= status;
-  err.remqid    = *remqid;
-
-  put.type.b	= net_cMsgClass;
-  put.type.s	= net_eMsg_error;
-  put.reply	= qcom_cNQid;
-  put.data  	= (char *)&err;
-  put.size	= sizeof(err);
-  put.allocate  = 1;
-
-  qcom_Put(&sts, &tgt, &put);
-
-  if (EVEN(sts))
-    errh_Error("Error: reporting qcom neterror:\n%m", sts);
-  else
-    Count(0, remqid->nid, &put.type);
-
-}
-#endif
 
 static pwr_tBoolean
 Reply (

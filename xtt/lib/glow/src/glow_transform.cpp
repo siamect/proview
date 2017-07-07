@@ -257,4 +257,3 @@ void GlowTransform::open( ifstream& fp)
   store();
   stored = false;
 }
-

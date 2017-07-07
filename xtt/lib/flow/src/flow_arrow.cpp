@@ -328,4 +328,3 @@ int FlowArrow::event_handler( void *pos, flow_eEvent event, int x, int y,
 {
     return 0;
 }
-

@@ -298,6 +298,3 @@ int XAtt::object_attr()
   brow_Redraw( xattnav->brow->ctx, 0);
   return XATT__SUCCESS;
 }
-
-
-

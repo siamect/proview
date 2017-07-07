@@ -3724,5 +3724,3 @@ char *wnav_get_message( int sts)
 
   return msg_GetMsg( sts, msg, sizeof(msg));
 }
-
-

@@ -82,11 +82,6 @@ void wb_log::log( wb_session *session, wlog_eCategory category, pwr_tOid oid, un
 
 void wb_log::log( wb_session *session, wlog_eCategory category, pwr_tAttrRef aref, unsigned int opt)
 {
-#if 0
-  wb_object o = session->object( oid);
-
-  log( category, o.longName().c_str(), 0, opt);
-#endif
 }
 
 void wb_log::category_to_string( wlog_eCategory category, char *str)
@@ -300,21 +295,6 @@ RevisionRestored A revision is restored. Revision displayed in item.\n\
 
 void wb_log::filter( vector<VItem> &v)
 {
-#if 0
-  int last_volumebuild = 0;
-
-  for ( int i = 0; i < (int)v.size(); i++) {    
-    if ( strncmp( v[0].text.c_str(), "VolumeBuild", 9) == 0) {
-      for ( int j = i - 1; j > last_config_save; j--) {
-	
-      }
-      last_volumebuild = i;
-    }
-     
-    if ( !v[i].has_comment)
-      v[i].disable = true;
-  }
-#endif
 }
 
 void wb_log::gen_cb( void *ctx, pwr_tTime time, char *s1, char *s2, char *s3, char *s4)
@@ -332,4 +312,3 @@ void wb_log::gen_cb( void *ctx, pwr_tTime time, char *s1, char *s2, char *s3, ch
     s.has_comment = true;
   cbctx->v.push_back(s);
 }
-

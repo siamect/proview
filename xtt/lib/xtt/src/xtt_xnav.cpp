@@ -1267,23 +1267,6 @@ void XNav::start_trace( pwr_tObjid objid, char *object_str)
 
 }
 
-#if 0
-int XNav::open_help()
-{
-  int sts;
-
-  if ( !xhelp) {
-    xhelp = new XHelp( parent_wid, (void *)this, &sts);
-    if ( EVEN(sts)) return sts;
-  }
-  else {
-    xhelp->clear();
-    xhelp->pop();
-  }
-  return XNAV__SUCCESS;
-}
-#endif
-
 int XNav::open_object( pwr_sAttrRef *arp)
 {
   XAtt *xatt;
@@ -1849,51 +1832,6 @@ void XNav::set_select_conversion( xnav_eConv conv)
   }
   free( node_list);
 }
-
-#if 0 // Currently not used, avoid compiler warnings
-//
-// Convert type_id to name
-//
-static void  xnav_type_id_to_name( int type_id, char *type_id_name)
-{
-  switch( type_id)
-  {
-    case pwr_eType_Boolean: strcpy( type_id_name, "Boolean"); break;
-    case pwr_eType_Float32: strcpy( type_id_name, "Float32"); break;
-    case pwr_eType_Float64: strcpy( type_id_name, "Float64"); break;
-    case pwr_eType_Char: strcpy( type_id_name, "Char"); break;
-    case pwr_eType_Int8: strcpy( type_id_name, "Int8"); break;
-    case pwr_eType_Int16: strcpy( type_id_name, "Int16"); break;
-    case pwr_eType_Int32: strcpy( type_id_name, "Int32"); break;
-    case pwr_eType_Int64: strcpy( type_id_name, "Int64"); break;
-    case pwr_eType_UInt8: strcpy( type_id_name, "UInt8"); break;
-    case pwr_eType_UInt16: strcpy( type_id_name, "UInt16"); break;
-    case pwr_eType_UInt32: strcpy( type_id_name, "UInt32"); break;
-    case pwr_eType_UInt64: strcpy( type_id_name, "UInt64"); break;
-    case pwr_eType_Objid: strcpy( type_id_name, "Objid"); break;
-    case pwr_eType_Buffer: strcpy( type_id_name, "Buffer"); break;
-    case pwr_eType_String: strcpy( type_id_name, "String"); break;
-    case pwr_eType_Enum: strcpy( type_id_name, "Enum"); break;
-    case pwr_eType_Struct: strcpy( type_id_name, "Struct"); break;
-    case pwr_eType_Mask: strcpy( type_id_name, "Mask"); break;
-    case pwr_eType_Array: strcpy( type_id_name, "Array"); break;
-    case pwr_eType_Time: strcpy( type_id_name, "Time"); break;
-    case pwr_eType_Text: strcpy( type_id_name, "Text"); break;
-    case pwr_eType_AttrRef: strcpy( type_id_name, "AttrRef"); break;
-    case pwr_eType_UInt64: strcpy( type_id_name, "UInt64"); break;
-    case pwr_eType_Int64: strcpy( type_id_name, "Int64"); break;
-    case pwr_eType_ClassId: strcpy( type_id_name, "ClassId"); break;
-    case pwr_eType_TypeId: strcpy( type_id_name, "TypeId"); break;
-    case pwr_eType_VolumeId: strcpy( type_id_name, "VolumeId"); break;
-    case pwr_eType_ObjectIx: strcpy( type_id_name, "ObjectIx"); break;
-    case pwr_eType_RefId: strcpy( type_id_name, "RefId"); break;
-    case pwr_eType_DeltaTime: strcpy( type_id_name, "DeltaTime"); break;
-    case pwr_eType_Status: strcpy( type_id_name, "Status"); break;
-    case pwr_eType_NetStatus: strcpy( type_id_name, "NetStatus"); break;
-    default: strcpy( type_id_name, "");
-  }
-}
-#endif
 
 void XNav::trace_subwindow_cb( void *ctx, pwr_tObjid objid)
 {
@@ -2952,15 +2890,6 @@ int XNav::display_object( pwr_sAttrRef *arp, int open)
   while( ODD(sts)) {
     if ( mount_cnt == MOUNTLIST_SIZE)
       break;
-
-#if 0   
-    pwr_tOName n;
-    sts = gdh_ObjidToName ( objid, n, sizeof(n), cdh_mNName);
-    if ( ODD(sts))
-      sts = gdh_NameToObjid( n, &mounted_list[mount_cnt]);
-    if ( ODD(sts))
-      mount_cnt++;
-#endif
 
       sts = gdh_MountObjidToPointer( mountobject_list[mount_cnt], (void **)&mount_p);
       if ( ODD(sts)) {

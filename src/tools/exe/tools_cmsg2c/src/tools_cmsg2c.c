@@ -75,50 +75,22 @@ struct s_FacilityCB {
   int	facnum;
 };
 
-
-
-
 extern int lineno;
-
 
 static int SyntaxError;
 
 static LstHead(sFacilityCB)   lFacH;
 static sFacilityCB	    *CurrFac = NULL;
 
-
 static void CopyFile(FILE *ifp, FILE *ofp);
 static void WriteFacility(FILE *cfp, char *branch);
 static void WriteIncludes(FILE *cfp);
-
-
-
-
-#if 0
-static void dump()
-{
-  static int cnt = 1;
-  LstLink(sFacilityCB) *fl;
-  
-  printf("dump: %d\n", cnt++);
-  for (fl = LstFir(&lFacH); fl != LstEnd(&lFacH); fl = LstNex(fl))
-    printf("%s\n", LstObj(fl)->facnam);
-
-  
-  printf("dump finished\n\n");
-
-}
-#endif
-
 
 static void usage()
 {
   printf("Usage: tools_cmsg2c [-b branch] input_file output_file\n");
   exit(1);
 }
-
-
-
 
 int main(int argc, char **argv) 
 {

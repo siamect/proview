@@ -104,10 +104,6 @@ void FlowImage::print( void *pos, void *node, int highlight)
 {
   if ( !(display_level & ctx->display_level))
     return;
-#if 0
-  if ( fix_line_width && line_width < 0)
-    return;
-#endif
   if ( draw_type == flow_eDrawType_LineErase)
     return;
   int idx = int( ctx->print_zoom_factor / ctx->base_zoom_factor * line_width - 1);
@@ -117,18 +113,6 @@ void FlowImage::print( void *pos, void *node, int highlight)
 			     ll.print_z_y + ((FlowPoint *)pos)->print_z_y,
 			     ur.print_z_x - ll.print_z_x, ur.print_z_y - ll.print_z_y, 
 			     image, draw_type);
-#if 0
-  if ( !fill)
-    ctx->current_print->rect( ll.print_z_x + ((FlowPoint *)pos)->print_z_x, 
-	ll.print_z_y + ((FlowPoint *)pos)->print_z_y,
-	ur.print_z_x - ll.print_z_x, ur.print_z_y - ll.print_z_y, 
-	draw_type, idx, 0);
-  else
-    ctx->current_print->filled_rect( ll.print_z_x + ((FlowPoint *)pos)->print_z_x, 
-	ll.print_z_y + ((FlowPoint *)pos)->print_z_y,
-	ur.print_z_x - ll.print_z_x, ur.print_z_y - ll.print_z_y, 
-	draw_type, idx);
-#endif
 }
 
 void FlowImage::save( ofstream& fp, flow_eSaveMode mode)
@@ -292,5 +276,3 @@ ostream& operator<< ( ostream& o, const FlowImage r)
   '[' << r.ur.z_x << ',' << r.ur.z_y << ']' ;
   return o;
 }
-
-

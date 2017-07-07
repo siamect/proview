@@ -827,5 +827,3 @@ trimQ(gdb_sTouchQ *tqp)
   }
     
 }
-
-

@@ -282,5 +282,3 @@ pwr_tStatus mb_send_data(io_sRackLocal *local,
                              io_sRack      *rp,
 			     pwr_sClass_Modbus_TCP_Slave *sp, 
 			     mb_tSendMask   mask);
-
-

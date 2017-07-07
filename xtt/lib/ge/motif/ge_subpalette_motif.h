@@ -64,9 +64,3 @@ class SubPaletteMotif : public SubPalette {
 
 /*@}*/
 #endif
-
-
-
-
-
-

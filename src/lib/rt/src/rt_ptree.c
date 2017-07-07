@@ -79,15 +79,6 @@ static pool_tRef deleteNode( ptree_sTable *tp,
 static pool_tRef insertNode( ptree_sTable *tp, 
 			     pool_tRef zr);
 
-#if 0
-static void ptreePrint( ptree_sTable *tp,
-			pool_tRef    nr,
-			pool_tRef    or,
-			pool_tRef    oor,
-			int          level,
-			void         (*printNode)(ptree_sNode *, int));
-#endif
-
 static void ptreeCheck( ptree_sTable *tp, 
 		        pool_tRef nr, int *count, int *maxlevel,
 			int *hight, int level, 
@@ -821,46 +812,6 @@ static pool_tRef insertNode( ptree_sTable *tp,
   return zr;
 }
 
-
-#if 0
-static void ptreePrint( ptree_sTable *tp,
-			pool_tRef    nr,
-			pool_tRef    or,
-			pool_tRef    oor,
-			int          level,
-			void         (*printNode)(ptree_sNode *, int))
-{
-  pwr_tStatus sts;
-  ptree_sNode *np;
-
-  if ( nr == tp->g->null)
-    return;
-
-  if (level > tp->g->maxDepth)
-    tp->g->maxDepth = level;
-
-  np = pool_Address( &sts, tp->php, nr);
-  ptreePrint( tp, np->left, nr, np->parent, level+1, printNode);  
-
-  printNode(np, level);
-
-  switch (np->bal) {
-  case 1:
-    tp->g->nHP++;
-    break;
-  case 0:
-    tp->g->nHZ++;
-    break;
-  case -1:
-    tp->g->nHN++;
-    break;
-  }
-
-  ptreePrint(tp, np->right, nr, np->parent, level+1, printNode);
-} 
-#endif
-
-
 static void ptreeCheck( ptree_sTable *tp, 
 		        pool_tRef nr, int *count, int *maxlevel,
 			int *hight, int level, 
@@ -1068,9 +1019,7 @@ ptree_PrintTable(pwr_tStatus *sts,
     int maxlevel = 0;
     int hight = 0;
 
-#if 1
     ptreePrintInorder(tp, tp->g->root, printNode);
-#endif
 
     ptreeCheck(tp, tp->g->root, &count, &maxlevel, &hight, 0, printKey);
 

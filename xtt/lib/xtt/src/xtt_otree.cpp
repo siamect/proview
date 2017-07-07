@@ -115,4 +115,3 @@ void XttOTree::close( void *ctx)
 
 XttOTree::~XttOTree() {
 }
-

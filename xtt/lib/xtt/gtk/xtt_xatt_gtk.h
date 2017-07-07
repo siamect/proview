@@ -103,10 +103,3 @@ class XAttGtk : public XAtt {
 };
 
 #endif
-
-
-
-
-
-
-

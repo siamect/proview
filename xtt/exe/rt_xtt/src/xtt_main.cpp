@@ -931,6 +931,3 @@ int Xtt::xnav_get_select( void *ctx, pwr_tAttrRef *attrref, int *is_attr)
 {
   return ((XNav *)ctx)->get_select( attrref, is_attr);
 }
-
-
-

@@ -57,5 +57,3 @@ pwr_tStatus	aproc_TimeStamp( float scantime, float maxdelay);
 #endif
 
 #endif
-
-

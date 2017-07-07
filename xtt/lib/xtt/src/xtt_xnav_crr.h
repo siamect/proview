@@ -51,4 +51,3 @@ int	xnav_crr_code(
 			int	brief,
 			int	func,
 			int	case_sensitive);
-

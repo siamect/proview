@@ -92,12 +92,3 @@ class WbBckWGtk : public WbBckW {
 };
 
 #endif
-
-
-
-
-
-
-
-
-

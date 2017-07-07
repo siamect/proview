@@ -388,20 +388,5 @@ int goen_get_location_point_m3( WGre *grectx, pwr_sGraphPlcNode *graphbody,
 				unsigned int *mask, unsigned long node_width, 
 				goen_point_type *info_pointer, vldh_t_node node)
 {
-#if 0
-	int		sts, size;
-	float		ll_x,ll_y,mid_x,mid_y;
-
-	sts = NetedMeasureNode( grectx->neted_window,
-			  node->hn.node_id,
-			  &ll_x,&ll_y,&mid_x,&mid_y,&f_width,&f_height);
-	tst_neted( sts, "NetedMeasureNode", 204 );
-
-	f_width -= 2* GOEN_F_LINEWIDTH;
-	f_height -= 2* GOEN_F_LINEWIDTH;
-
-	info_pointer->x = f_width / 2;
-	info_pointer->y = - f_height / 2 + GOEN_F_GRID / 2.;
-#endif
 	return GOEN__SUCCESS;
 }

@@ -59,7 +59,3 @@ ver_WriteVersionInfo (
    GNU General Public License for more details.\n\n");
   printf("   %s\n\n", program);
 }
-
-
-
-

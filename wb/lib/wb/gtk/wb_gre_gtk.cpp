@@ -95,32 +95,6 @@ int WGreGtk::new_navigator( GtkWidget *parent)
 
 int WGreGtk::new_navigator_popup()
 {
-#if 0
-  Arg 		args[20];
-  int		i;
-
-  /* Create navigator popup */
-  i = 0;
-  XtSetArg(args[i],XmNallowShellResize, TRUE); i++;
-  XtSetArg(args[i],XmNallowResize, TRUE); i++;
-  XtSetArg(args[i],XmNwidth,200);i++;
-  XtSetArg(args[i],XmNheight,200);i++;
-  XtSetArg(args[i],XmNx,500);i++;
-  XtSetArg(args[i],XmNy,500);i++;
-
-  nav_shell = XmCreateDialogShell( flow_widget, "Navigator",
-				   args, i);
-  XtManageChild( nav_shell);
-
-  i = 0;
-  XtSetArg(args[i],XmNwidth,200);i++;
-  XtSetArg(args[i],XmNheight,200);i++;
-  nav_widget = FlowCreateNav( nav_shell, "navigator",
-			      args, i, flow_widget);
-  XtManageChild( nav_widget);
-  XtRealizeWidget( nav_shell);
-
-#endif
   return 1;
 }
 

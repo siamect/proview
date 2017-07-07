@@ -338,35 +338,6 @@ gboolean WdaGtk::action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data
   return FALSE;
 }
 
-#if 0
-void WdaGtk::valchanged_cmd_input( GtkWidget *w, gpointer data)
-{
-  WdaGtk *wda = (Gtk *)data;
-  int 	sts;
-  char 	*text;
-
-  sts = mrm_TextInput( w, event, (char *)Wda::value_recall, sizeof(Wda::value_recall[0]),
-	sizeof( Wda::value_recall)/sizeof(Wda::value_recall[0]),
-	&wda->value_current_recall);
-  if ( sts)
-  {
-    text = XmTextGetString( w);
-    if ( wda->input_open)
-    {
-      sts = ((WdaNav *)wda->wdanav)->set_attr_value( wda->input_node, 
-		wda->input_name, text);
-      XtUnmanageChild( w);
-      wda->set_prompt( "");
-      wda->input_open = 0;
-      if ( wda->redraw_cb)
-        (wda->redraw_cb)( wda);
-
-      ((WdaNav *)wda->wdanav)->set_inputfocus();
-    }
-  }
-}
-#endif
-
 void WdaGtk::change_value_close()
 {
   unsigned char *s;

@@ -2406,11 +2406,3 @@ Ge::Ge( 	void 	*x_parent_ctx,
   }
 #endif
 }
-
-
-
-
-
-
-
-

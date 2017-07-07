@@ -48,4 +48,3 @@ wb_destination::wb_destination(wb_object &o, ldh_eDest code) :
   m_oid(o.oid()), m_code(code)
 {    
 }
-

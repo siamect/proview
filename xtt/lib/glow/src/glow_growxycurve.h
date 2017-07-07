@@ -104,4 +104,3 @@ class GrowXYCurve : public GrowTrend {
 
 /*@}*/
 #endif
-

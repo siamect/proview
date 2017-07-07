@@ -117,11 +117,6 @@ void GrowTrend::configure_curves()
   glow_sPoint *point_p;
   int	i;
 
-#if 0
-  if ( !curve_cnt)
-    curve_cnt = 2;
-#endif
-
   no_of_points = MAX( 2, no_of_points);
   points = no_of_points;
   if ( fill_curve)
@@ -1141,4 +1136,3 @@ void GrowTrend::set_mark_color( glow_eDrawType m1color, glow_eDrawType m2color)
   mark1_color = m1color;
   mark2_color = m2color;
 }
-

@@ -210,17 +210,3 @@ class DrawWind {
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-

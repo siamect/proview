@@ -210,8 +210,3 @@ pwr_dExport pwr_BindXttMethods(PlcPgm) = {
   pwr_BindXttMethod(SimulateOn),
   pwr_NullMethod
 };
-
-
-
-
-

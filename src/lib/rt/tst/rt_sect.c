@@ -115,9 +115,6 @@ mapit (
        return NULL;
     }
   }
-#if 0
-  sts = munmap(myData,myData->totalSize);
-#endif
 
   sts = close(shm_fd);
 

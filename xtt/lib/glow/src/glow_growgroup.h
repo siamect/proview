@@ -187,12 +187,3 @@ class GrowGroup : public GrowNode {
 
 /*@}*/
 #endif
-
-
-
-
-
-
-
-
-

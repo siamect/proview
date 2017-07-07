@@ -87,27 +87,3 @@ wb_name& wb_name::operator=(const wb_name& n)
   m_sts = n.sts();
   return *this;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -161,12 +161,3 @@ class GrowToolbar : public GrowNode {
 
 /*@}*/
 #endif
-
-
-
-
-
-
-
-
-

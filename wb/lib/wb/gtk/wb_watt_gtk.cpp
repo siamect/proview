@@ -260,39 +260,6 @@ void WAttGtk::print( const char *title)
 				      (void *)toplevel, &sts);
 }
 
-#if 0
-void WAttGtk::valchanged_cmd_input( Widget w, XEvent *event)
-{
-  WAtt 	*watt;
-  int 	sts;
-  char 	*text;
-  Arg 	args[2];
-
-  XtSetArg(args[0], XmNuserData, &watt);
-  XtGetValues(w, args, 1);
-
-  sts = mrm_TextInput( w, event, (char *)WAtt::value_recall, sizeof(WAtt::value_recall[0]),
-	sizeof( WAtt::value_recall)/sizeof(WAtt::value_recall[0]),
-	&watt->value_current_recall);
-  if ( sts)
-  {
-    text = XmTextGetString( w);
-    if ( watt->input_open)
-    {
-      sts = ((WAttNav *)watt->wattnav)->set_attr_value( watt->input_node, 
-		watt->input_name, text);
-      XtUnmanageChild( w);
-      watt->set_prompt( "");
-      watt->input_open = 0;
-      if ( watt->redraw_cb)
-        (watt->redraw_cb)( watt);
-
-      ((WAttNav *)watt->wattnav)->set_inputfocus();
-    }
-  }
-}
-#endif
-
 void WAttGtk::change_value_close()
 {
   unsigned char *s;
@@ -689,14 +656,3 @@ WAttGtk::WAttGtk(
 
   update_title();
 }
-
-
-
-
-
-
-
-
-
-
-

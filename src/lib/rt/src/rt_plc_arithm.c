@@ -487,13 +487,6 @@ void curve_exec(
 	}
 }
 
-#if 0
-
-	TABLE
-	Funktion:	Table for interpollation
-#define table_exec(tableobject)  /* Table. No code for execution */
-#endif
-
 /*_*
 	ADELAY
 
@@ -1625,5 +1618,3 @@ void StrParse_exec(
   for ( i = tokens; i < STRPARSE_SIZE; i++)
     *(char *)((char *)o->Token1 + i * sizeof(o->Token1)) = 0;
 }
-
-

@@ -123,7 +123,3 @@ class NodelistGtk : public Nodelist {
 };
 
 #endif
-
-
-
-

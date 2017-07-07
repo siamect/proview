@@ -103,9 +103,3 @@ int CnvSetup::setup( char *filename)
 
   return 1;
 }
-
-
-
-
-
-

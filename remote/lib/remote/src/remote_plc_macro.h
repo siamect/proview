@@ -85,4 +85,3 @@
   } \
   else \
     object->Received = 0;
-

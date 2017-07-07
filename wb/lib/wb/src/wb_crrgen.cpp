@@ -721,4 +721,3 @@ void wb_crrgen::write_code( pwr_tStatus *rsts)
 
   *rsts = 1;
 }
-

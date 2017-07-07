@@ -99,4 +99,3 @@ class rt_sim {
 
 /*@}*/
 #endif
-

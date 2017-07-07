@@ -678,5 +678,3 @@ void xnav_start_trace_cb( void *xnav, pwr_tObjid objid, char *name);
 int xnav_get_trace_attr( pwr_sAttrRef *arp, char *attr);
 
 #endif
-
-

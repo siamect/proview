@@ -89,9 +89,3 @@ class RtTraceGtk : public RtTrace {
 
 };
 #endif
-
-
-
-
-
-
