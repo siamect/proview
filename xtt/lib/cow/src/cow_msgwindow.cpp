@@ -67,13 +67,20 @@ void MsgWindow::msgw_find_plc_cb( void *ctx, pwr_tOid oid)
     (msgw->find_plc_cb)( msgw->parent_ctx, oid);
 }
 
-void MsgWindow::message( int severity, const char *text, msgw_ePop pop, pwr_tOid oid, bool is_plc)
+void MsgWindow::msgw_find_ge_cb( void *ctx, char *object, void *utility)
+{
+  MsgWindow *msgw = (MsgWindow *)ctx;
+  if ( msgw->find_ge_cb)
+    (msgw->find_ge_cb)( msgw->parent_ctx, object, utility);
+}
+
+void MsgWindow::message( int severity, const char *text, msgw_ePop pop, pwr_tOid oid, msgw_eRow row)
 {
 
   if ( default_window) {
     if ( severity == 'O')
       severity = 'I';
-    default_window->insert( severity, text, oid, is_plc);
+    default_window->insert( severity, text, oid, row);
   }
   else {
     if ( (hide_info && severity == 'I') || severity == 'O')
@@ -89,18 +96,40 @@ void MsgWindow::message( int severity, const char *text, msgw_ePop pop, pwr_tOid
     default_window->map();
 }
 
-void MsgWindow::msg( int severity, const char *text, msgw_ePop pop, pwr_tOid oid, bool is_plc)
+void MsgWindow::message( int severity, const char *text, msgw_ePop pop, char *object, void *utility, msgw_eRow row)
+{
+
+  if ( default_window) {
+    if ( severity == 'O')
+      severity = 'I';
+    default_window->insert( severity, text, object, utility, row);
+  }
+  else {
+    if ( (hide_info && severity == 'I') || severity == 'O')
+      return;
+    if ( severity == 'E' || severity == 'W' || severity == 'F' || severity == 'I' || severity == 'S')
+      printf( "%c %s\n", severity, text);
+    else
+      printf( "%s\n", text);
+  }
+  if ( default_window &&
+       (pop == msgw_ePop_Yes || 
+	(pop == msgw_ePop_Default && ( severity == 'E' || severity == 'F' || severity == 'W'))))
+    default_window->map();
+}
+
+void MsgWindow::msg( int severity, const char *text, msgw_ePop pop, pwr_tOid oid, msgw_eRow row)
 {
 
   if ( severity == 'O')
     severity = 'I';
-  insert( severity, text, oid, is_plc);
+  insert( severity, text, oid, row);
   if ( (pop == msgw_ePop_Yes || 
 	(pop == msgw_ePop_Default && ( severity == 'E' || severity == 'F' || severity == 'W'))))
     map();
 }
 
-void MsgWindow::message( const co_error& e, const char *text1, const char *text2, pwr_tOid oid, bool is_plc)
+void MsgWindow::message( const co_error& e, const char *text1, const char *text2, pwr_tOid oid, msgw_eRow row)
 {
   pwr_tStatus sts = e.sts();
   int severity;
@@ -123,11 +152,11 @@ void MsgWindow::message( const co_error& e, const char *text1, const char *text2
   default:
     severity = ' ';
   }
-  message( severity, e.what().c_str(), text1, text2, oid, is_plc);
+  message( severity, e.what().c_str(), text1, text2, oid, row);
 }
 
 void MsgWindow::message( int severity, const char *text1, const char *text2, const char *text3, 
-			 pwr_tOid oid, bool is_plc)
+			 pwr_tOid oid, msgw_eRow row)
 {
   char text[400];
   strncpy( text, text1, sizeof(text));
@@ -142,8 +171,28 @@ void MsgWindow::message( int severity, const char *text1, const char *text2, con
     strncat( text, text3, sizeof(text) - strlen(text));
     text[sizeof(text)-1] = 0;
   }
-  MsgWindow::message( severity, text, msgw_ePop_Default, oid, is_plc);
+  MsgWindow::message( severity, text, msgw_ePop_Default, oid, row);
 }
+
+void MsgWindow::message( int severity, const char *text1, const char *text2, const char *text3,
+			 char *object, void *utility, msgw_eRow row)
+{
+  char text[400];
+  strncpy( text, text1, sizeof(text));
+  text[sizeof(text)-1] = 0;
+  if ( text2) {
+    strncat( text, " ", sizeof(text) - strlen(text));
+    strncat( text, text2, sizeof(text) - strlen(text));
+    text[sizeof(text)-1] = 0;
+  }
+  if ( text3) {
+    strncat( text, " ", sizeof(text) - strlen(text));
+    strncat( text, text3, sizeof(text) - strlen(text));
+    text[sizeof(text)-1] = 0;
+  }
+  MsgWindow::message( severity, text, msgw_ePop_Default, object, utility, row);
+}
+
 
 MsgWindow::MsgWindow(
 	void *msg_parent_ctx,
@@ -151,7 +200,7 @@ MsgWindow::MsgWindow(
 	pwr_tStatus *status) :
   parent_ctx(msg_parent_ctx), msgnav(NULL), displayed(0),
   deferred_map(0), nodraw(0), size(0), max_size(500), find_wnav_cb(0), find_plc_cb(0),
-  wow(0)
+  find_ge_cb(0), wow(0)
 {
   *status = 1;
   strcpy( name, msg_name);
@@ -166,14 +215,14 @@ void MsgWindow::reset_nodraw()
     map();
 }
 
-void MsgWindow::insert( int severity, const char *text, pwr_tOid oid, bool is_plc)
+void MsgWindow::insert( int severity, const char *text, pwr_tOid oid, msgw_eRow row)
 {
   if (  size > max_size - 1)
     msgnav->set_nodraw();
 
   if ( cdh_ObjidIsNull( oid))
     new ItemMsg( msgnav, "", (char *)text, severity, NULL, flow_eDest_Before);
-  else if ( is_plc)
+  else if ( row == msgw_eRow_Plc)
     new ItemMsgObjectPlc( msgnav, "", (char *)text, severity, oid, NULL, flow_eDest_Before);
   else
     new ItemMsgObject( msgnav, "", (char *)text, severity, oid, NULL, flow_eDest_Before);
@@ -186,3 +235,25 @@ void MsgWindow::insert( int severity, const char *text, pwr_tOid oid, bool is_pl
   else
     size++;
 }
+
+void MsgWindow::insert( int severity, const char *text, char *object, void *utility, msgw_eRow row)
+{
+  if (  size > max_size - 1)
+    msgnav->set_nodraw();
+
+  if ( !object)
+    new ItemMsg( msgnav, "", (char *)text, severity, NULL, flow_eDest_Before);
+  else if ( row == msgw_eRow_Ge)
+    new ItemMsgObjectGe( msgnav, "", (char *)text, severity, object, utility, NULL, flow_eDest_Before);
+  else
+    new ItemMsg( msgnav, "", (char *)text, severity, NULL, flow_eDest_Before);
+
+
+  if ( size > max_size - 1) {
+    msgnav->remove_oldest();
+    msgnav->reset_nodraw();
+  }
+  else
+    size++;
+}
+

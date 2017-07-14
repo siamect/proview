@@ -48,6 +48,7 @@
 #include "glow_growctx.h"
 #include "glow_tracedata.h"
 #include "glow_grownode.h"
+#include "glow_growgroup.h"
 #include "glow_msg.h"
 
 GlowNode::GlowNode( GrowCtx *glow_ctx, const char *name, GlowNodeClass *node_class,
@@ -143,7 +144,7 @@ void GlowNode::save( ofstream& fp, glow_eSaveMode mode)
     return;
 
   fp << int(glow_eSave_Node) << endl;
-  fp << int(glow_eSave_Node_nc) << FSPACE << nc->nc_name << endl;
+  fp << int(glow_eSave_Node_nc) << FSPACE << nc->n_name << endl;
   fp << int(glow_eSave_Node_n_name) << FSPACE << n_name << endl;
   fp << int(glow_eSave_Node_refcon_cnt) << endl;
   for ( i = 0; i < MAX_CONPOINTS; i++)

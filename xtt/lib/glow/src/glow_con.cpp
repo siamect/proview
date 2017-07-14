@@ -51,7 +51,9 @@
 #include "glow_text.h"
 #include "glow_utils.h"
 #include "glow_growctx.h"
+#include "glow_growgroup.h"
 #include "glow_growconglue.h"
+#include "glow_msg.h"
 
 #define LINE_TABLE_SIZE 500
 #define HV_LINE_ARRAY_SIZE 500
@@ -121,10 +123,44 @@ static GlowNode *sort_dest;
 
 void draw_line( GrowCtx *ctx, double x1, double y1, double x2, double y2);
 
+#if 0
+GlowCon::GlowCon( GrowCtx *glow_ctx, const char *name, GlowConClass *con_class,
+	GlowNode *source, GlowNode *dest, int source_cp, int dest_cp) :
+	ctx(glow_ctx), cc(con_class),
+	source_node(source), dest_node(dest), source_conpoint(source_cp),
+	dest_conpoint(dest_cp), p_num(0), l_num(0), a_num(0), line_a(10,10), 
+        arc_a(10,10), hot(0), highlight(0), arrow_num(0), arrow_a(1,1),
+	ref_num(0), ref_a(4,4), temporary_ref(0), trace_p(NULL), border(0), shadow(0)
+{
+  double x1, y1, x2, y2;
+  GlowLine *l1;  
+
+  if ( !cc)
+    return;
+  strcpy( trace_object, "");
+  sts = source->get_conpoint( source_cp, &x1, &y1, &source_direction);
+  if ( EVEN(sts)) {
+    cout << "GlowCon:no such conpoint" << endl;
+    return;
+  }
+  sts = dest->get_conpoint( dest_cp, &x2, &y2, &dest_direction);
+  if ( EVEN(sts)) {
+    cout << "GlowCon:no such conpoint" << endl;
+    return;
+  }
+  l1 = new GlowLine( ctx, x1, y1, x2, y2, cc->draw_type, cc->line_width);
+  line_a.insert( l1);
+  strcpy( n_name, name);
+  get_con_borders();
+  line_a.draw( &ctx->mw, &cc->zero, highlight, hot, NULL);
+  line_a.draw( &ctx->navw, &cc->zero, highlight, 0, NULL);
+}
+#endif
+
 GlowCon::GlowCon( GrowCtx *glow_ctx, const char *name, GlowConClass *con_class,
 	GlowNode *source, GlowNode *dest, int source_cp, int dest_cp, 
 	int nodraw, int point_num, double *x_vect, double *y_vect, int cborder, int cshadow) :
-	ctx(glow_ctx), cc(con_class),
+  	ctx(glow_ctx), cc(con_class),
 	dest_node(dest), source_node(source), dest_conpoint(dest_cp), source_conpoint(source_cp),
 	p_num(point_num), l_num(0), a_num(0), arrow_num(0), ref_num(0),
 	line_a(10,10), arc_a(10,10), arrow_a(1,1), ref_a(4,4), temporary_ref(0), 
@@ -373,7 +409,7 @@ GlowCon::GlowCon( GrowCtx *glow_ctx, const char *name, GlowConClass *con_class,
     ref_a.draw( &ctx->navw, &cc->zero, highlight, 0, NULL);
   }
 
-  strcpy( c_name, name);
+  strcpy( n_name, name);
   get_con_borders();
   if ( created)
     draw();
@@ -766,7 +802,7 @@ void GlowCon::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_Con_x_left) << FSPACE << x_left << endl;
   fp << int(glow_eSave_Con_y_high) << FSPACE << y_high << endl;
   fp << int(glow_eSave_Con_y_low) << FSPACE << y_low << endl;
-  fp << int(glow_eSave_Con_cc) << FSPACE << cc->cc_name << endl;
+  fp << int(glow_eSave_Con_cc) << FSPACE << cc->n_name << endl;
   fp << int(glow_eSave_Con_dest_node) << FSPACE << dest_node->n_name << endl;
   fp << int(glow_eSave_Con_source_node) << FSPACE << source_node->n_name << endl;
   fp << int(glow_eSave_Con_dest_conpoint) << FSPACE << dest_conpoint << endl;
@@ -794,7 +830,7 @@ void GlowCon::save( ofstream& fp, glow_eSaveMode mode)
     fp << point_y[i] << endl;
   fp << int(glow_eSave_Con_source_ref_cnt) << FSPACE << source_ref_cnt << endl;
   fp << int(glow_eSave_Con_dest_ref_cnt) << FSPACE << dest_ref_cnt << endl;
-  fp << int(glow_eSave_Con_c_name) << FSPACE << c_name << endl;
+  fp << int(glow_eSave_Con_c_name) << FSPACE << n_name << endl;
   fp << int(glow_eSave_Con_trace_object) << FSPACE << trace_object << endl;
   fp << int(glow_eSave_Con_trace_attribute) << FSPACE << trace_attribute << endl;
   fp << int(glow_eSave_Con_trace_attr_type) << FSPACE << int(trace_attr_type) << endl;
@@ -833,7 +869,7 @@ void GlowCon::open( ifstream& fp)
         break;
       case glow_eSave_Con_c_name:
         fp.get();
-        fp.getline( c_name, sizeof(c_name));
+        fp.getline( n_name, sizeof(n_name));
         break;
       case glow_eSave_Con_x_right: fp >> x_right; break;
       case glow_eSave_Con_x_left: fp >> x_left; break;
@@ -3315,7 +3351,7 @@ int GlowCon::event_handler( GlowWind *w, glow_eEvent event, int x, int y)
 
 ostream& operator<< ( ostream& o, const GlowCon c)
 {
-  o << "Con: " << c.c_name << " Class: " << c.cc->cc_name;
+  o << "Con: " << c.n_name << " Class: " << c.cc->n_name;
   return o;
 }
 
@@ -3990,3 +4026,4 @@ int GlowCon::find_cc( GlowArrayElem *conclass)
 {
   return ( cc == conclass);
 }
+

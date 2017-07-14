@@ -692,7 +692,7 @@ int KeyboardCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
     
     if ( callback_object_type != glow_eObjectType_NoObject) {
       int idx_found = 0;
-      callback_object->get_object_name( name);
+      callback_object->get_object_name( name, sizeof(name), glow_eName_Object);
 
       if ( callback_object->type() == glow_eObjectType_GrowText) {
 	if ( strncmp( name, "KeyText", 7) == 0) {
@@ -738,7 +738,7 @@ int KeyboardCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
 
     if ( callback_object_type != glow_eObjectType_NoObject) {
       int idx_found = 0;
-      callback_object->get_object_name( name);
+      callback_object->get_object_name( name, sizeof(name), glow_eName_Object);
 
       if ( callback_object->type() == glow_eObjectType_GrowText) {
 	if ( strncmp( name, "KeyText", 7) == 0) {
@@ -784,7 +784,7 @@ int KeyboardCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
     
     if ( callback_object_type != glow_eObjectType_NoObject) {
       int idx_found = 0;
-      callback_object->get_object_name( name);
+      callback_object->get_object_name( name, sizeof(name), glow_eName_Object);
       if ( callback_object->type() == glow_eObjectType_GrowText) {
 	if ( strncmp( name, "KeyText", 7) == 0) {	  
 	  sscanf( &name[7], "%d", &idx);

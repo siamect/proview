@@ -146,7 +146,6 @@ class GlowNode : public GlowArrayElem {
   GlowNodeClass 	*nc_root;	//!< Root nodeclass, i.e. the nodeclass of the first page.
   GlowPoint		pos;
   GlowPoint		stored_pos;
-  char			n_name[80];	//!< Name of the object.
   int			highlight;	//!< The object is drawn with highlight color.
   int			inverse;
   char			*annotv[10];	//!< Array with pointers to annotation texts.
@@ -263,18 +262,6 @@ class GlowNode : public GlowArrayElem {
 
   void get_node_position( double *x, double *y) {*x = pos.x; *y = pos.y;};
   glow_eNodeGroup get_group() {return nc->group;};
-
-  //! Get object name
-  /*!
-    \param name		Object name.
-  */
-  void get_object_name( char *name) { strcpy( name, n_name);};
-
-  //! Set object name
-  /*!
-    \param name		Object name.
-  */
-  void set_object_name( char *name) { strcpy( n_name, name);};
 
 //  brow stuff
     void set_level( int lev) { level = lev;};

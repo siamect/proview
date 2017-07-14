@@ -106,6 +106,8 @@ class Attr {
     void set_inputfocus( int focus) { if ( focus) attrnav->set_inputfocus();}
     int set_attr_value( char *value_str);
     void filter( int type, char *pattern) { attrnav->filter( type, pattern);}
+    void find_object( char *object) { attrnav->find_object( object);}
+    void clear() { attrnav->clear();}
     static int get_plant_select_c( void *attr_ctx, char *value, int size);
     static int get_current_colors_c( void *attr_ctx, glow_eDrawType *fill_color, 
 				      glow_eDrawType *border_color, 

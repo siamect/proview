@@ -851,14 +851,14 @@ glow_eNodeGroup grow_GetNodeGroup( grow_tNode node)
   return ((GlowNode *)node)->get_group();
 }
 
-void grow_GetObjectName( grow_tObject object, char *name)
+int grow_GetObjectName( grow_tObject object, char *name, int size, glow_eName ntype)
 {
-  ((GlowNode *)object)->get_object_name( name);
+  return ((GlowNode *)object)->get_object_name( name, size, ntype);
 }
 
-void grow_GetNodeClassName( grow_tNodeClass nodeclass, char *name)
+void grow_GetNodeClassName( grow_tNodeClass nodeclass, char *name, int size)
 {
-  ((GlowNodeClass *)nodeclass)->get_object_name( name);
+  ((GlowNodeClass *)nodeclass)->get_object_name( name, size, glow_eName_Object);
 }
 
 void grow_Reconfigure( grow_tCtx ctx)
@@ -3045,10 +3045,10 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
           strcpy( attrinfo[i].name, "Group");
         else
           strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->nc->nc_name;
+        attrinfo[i].value_p = &op->nc->n_name;
         attrinfo[i].type = glow_eType_String;
         attrinfo[i].no_edit = 1;
-        attrinfo[i++].size = sizeof( op->nc->nc_name);
+        attrinfo[i++].size = sizeof( op->nc->n_name);
       }
       
       for ( j = 0; j < 10; j++)
@@ -3129,10 +3129,10 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       if ( (name = growapi_translate( transtab, "SubGraph")))
       {
         strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->nc->nc_name;
+        attrinfo[i].value_p = &op->nc->n_name;
         attrinfo[i].type = glow_eType_String;
         attrinfo[i].no_edit = 1;
-        attrinfo[i++].size = sizeof( op->nc->nc_name);
+        attrinfo[i++].size = sizeof( op->nc->n_name);
       }
       
       if ( (name = growapi_translate( transtab, "Direction")))
@@ -3227,9 +3227,9 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       GlowNodeClass *op = (GlowNodeClass *)object;
 
       strcpy( attrinfo[i].name, "Name");
-      attrinfo[i].value_p = &op->nc_name;
+      attrinfo[i].value_p = &op->n_name;
       attrinfo[i].type = glow_eType_String;
-      attrinfo[i++].size = sizeof( op->nc_name);
+      attrinfo[i++].size = sizeof( op->n_name);
 
       strcpy( attrinfo[i].name, "Extern");
       attrinfo[i].value_p = &op->nc_extern;
@@ -4208,6 +4208,11 @@ void grow_UpdateGraph(  grow_tCtx ctx, grow_sAttrInfo *info)
 int grow_CheckAnnotation( grow_tNodeClass nodeclass, int num)
 {
   return ((GlowNodeClass *)nodeclass)->check_annotation( num);
+}
+
+int grow_CheckObjectAnnotation( grow_tObject object, int num)
+{
+  return ((GrowNode *)object)->nc->check_annotation( num);
 }
 
 void grow_New( grow_tCtx ctx)

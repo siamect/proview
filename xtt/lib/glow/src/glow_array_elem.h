@@ -51,12 +51,22 @@
 class GlowWind;
 class GlowExportFlow;
 
-//! Virtual base class for all drawing objects and components.
+//! Base class for all drawing objects and components.
 /*! A GlowArrayElem object can be inserted in a GlowArray vector, which contains all the
   object in a window, in a group, or in a subgraph component.
 */
 class GlowArrayElem {
   public:
+    char n_name[80];
+    GlowArrayElem *parent;
+
+    GlowArrayElem() : parent(0) 
+      { strcpy(n_name, "");}
+    GlowArrayElem *get_parent() { return parent;}
+    void set_parent( GlowArrayElem *p) { parent = p;}
+    virtual int get_object_name( char *name, int size, glow_eName ntype);
+    virtual void set_object_name( char *name) { strcpy( n_name, name);};      
+
     virtual void zoom() {};
     virtual void nav_zoom() {};
     virtual void print_zoom() {};
@@ -139,8 +149,6 @@ class GlowArrayElem {
     virtual void *get_ctx() { return NULL;};
     virtual void configure( void *previous) {};
     virtual void move_widgets( int x, int y) {};
-    virtual void get_object_name( char *name) {};
-    virtual void set_object_name( char *name) {};
     virtual void set_fill( int fill) {};
     virtual void set_border( int border) {};
     virtual void set_shadow( int shadow) {};

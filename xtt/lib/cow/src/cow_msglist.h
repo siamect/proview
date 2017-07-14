@@ -103,6 +103,7 @@ class MsgList {
     MsgListBrow		*brow;
     void 		(*find_wnav_cb)( void *, pwr_tObjid);
     void 		(*find_plc_cb)( void *, pwr_tObjid);
+    void 		(*find_ge_cb)( void *, char *, void *);
 
     virtual void set_input_focus() {}
 
@@ -152,6 +153,18 @@ class ItemMsgObjectPlc : public ItemMsg {
 		 brow_tNode dest, flow_eDest dest_code);
 
   pwr_tOid		oid;
+
+  void find();
+};
+
+class ItemMsgObjectGe : public ItemMsg {
+ public:
+  ItemMsgObjectGe( MsgList *msglist, const char *item_name,
+		   char *item_text, int item_severity, char *item_object, void *item_utility,
+		   brow_tNode dest, flow_eDest dest_code);
+
+  char		object[200];
+  void		*utility;
 
   void find();
 };

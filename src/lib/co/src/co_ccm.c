@@ -269,7 +269,7 @@ static int ccm_func_odd( void *filectx, ccm_sArg *arg_list, int arg_count, int *
 static int ccm_func_even( void *filectx, ccm_sArg *arg_list, int arg_count, int *return_decl, 
 	ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
 
-#define CCM_SYSFUNC_MAX	100
+#define CCM_SYSFUNC_MAX	200
 
 static ccm_sSysFunc	ccm_sysfunc[CCM_SYSFUNC_MAX] = {
 		{"printf", 	&ccm_func_printf},

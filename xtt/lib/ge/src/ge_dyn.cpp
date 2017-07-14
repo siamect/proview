@@ -2080,6 +2080,156 @@ void GeDyn::export_java_object( grow_tObject object, ofstream& fp, char *var_nam
   fp << "      })," << endl;
 }
 
+int GeDyn::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int sts;
+
+  for ( GeDynElem *elem = elements; elem; elem = elem->next) {
+    sts = elem->syntax_check( object, error_cnt, warning_cnt);
+    if ( EVEN(sts)) return sts;
+  }
+  return 1;
+}
+
+void GeDyn::syntax_check_attribute( grow_tObject object, const char *text, char *attribute, int optional, 
+				    int *types, graph_eDatabase *databases, int *error_cnt, int *warning_cnt)
+{
+  int		attr_type, attr_size;
+  pwr_tAName   	parsed_name;
+  int 		sts;
+  pwr_eType	a_type;
+  graph_eDatabase db;
+  int 		inverted;
+  unsigned int	bitmask;
+  static pwr_eType equiv_int_types[] = { pwr_eType_Boolean, pwr_eType_Int32, pwr_eType_UInt32, pwr_eType_Enum, 
+					 pwr_eType_Mask, pwr_eType_DisableAttr, pwr_eType_Status,
+					 (pwr_eType)graph_eType_Bit};
+
+
+  if ( strstr( attribute, "$node") || strstr( attribute, "$NODE") ||
+       strstr( attribute, "$header") || strstr( attribute, "$HEADER"))
+    return;
+
+
+  db = parse_attr_name( attribute, parsed_name,
+			     &inverted, &attr_type, &attr_size);
+  if ( strcmp( parsed_name, "") == 0) {
+    if ( !optional) {
+      char msg[200];
+      sprintf( msg, "%s is missing", text);
+      graph->syntax_msg( 'E', object, msg);
+      (*error_cnt)++;    
+    }
+    return;
+  }
+
+  if ( parsed_name[0] == '&' && parsed_name[1] == '(') {
+    // Can't check references
+    pwr_tAName refname;
+    char *s;
+
+    strcpy( refname, &parsed_name[2]);
+    s = strchr( refname, ')');
+    if ( !s) {
+      graph->syntax_msg( 'E', object, "Syntax error in reference");
+      (*error_cnt)++;    
+      return;
+    }
+    *s = 0;
+
+    sts = graph->check_ldh_object( refname, &a_type);
+    if ( EVEN(sts)) {
+      char msg[300];
+      sprintf( msg, "%s \"%s\" not found", text, refname);
+      graph->syntax_msg( 'W', object, msg);
+      (*warning_cnt)++;
+    }
+
+    if ( !(a_type == pwr_eType_Objid || a_type == pwr_eType_AttrRef)) {
+      char msg[300];
+      sprintf( msg, "%s reference type should be Objid or AttrRef", text);
+      graph->syntax_msg( 'E', object, msg);
+      (*error_cnt)++;      
+    }
+    return;
+  }
+
+  if ( attr_type == graph_eType_Bit) {
+    sts = get_bit( parsed_name, attr_type, &bitmask);
+    if ( EVEN(sts)) {
+      graph->syntax_msg( 'E', object, "Bit number out of range");
+      (*error_cnt)++;    
+    }
+  }
+
+  // Check type
+  int found = 0;
+  for ( int i = 0; types[i] != 0; i++) {
+    if ( types[i] == attr_type) {
+      found = 1;
+      break;
+    }
+  }
+  if ( !found) {
+    char msg[200];
+    sprintf( msg, "%s type not supported", text);
+    graph->syntax_msg( 'E', object, msg);
+    (*error_cnt)++;    
+  }
+		    
+  // Check database
+  found = 0;
+  for ( int i = 0; databases[i] != graph_eDatabase__; i++) {
+    if ( databases[i] == db) {
+      found = 1;
+      break;
+    }
+  }
+  if ( !found) {
+    char msg[200];
+    sprintf( msg, "%s database not supported", text);
+    graph->syntax_msg( 'E', object, msg);
+    (*error_cnt)++;    
+  }
+
+  switch ( db) {
+  case graph_eDatabase_Local:
+    break;
+  case graph_eDatabase_Gdh:    
+    if ( strcmp( parsed_name, "") != 0) {
+      sts = graph->check_ldh_object( parsed_name, &a_type);
+      if ( EVEN(sts)) {
+	char msg[300];
+	sprintf( msg, "%s \"%s\" not found", text, parsed_name);
+	graph->syntax_msg( 'W', object, msg);
+	(*warning_cnt)++;
+      }
+      else {
+	if ( a_type != (pwr_eType) attr_type) {
+	  // Allow some equivalent types
+	  int eq1 = 0;
+	  int eq2 = 0;
+	  for ( unsigned int i = 0; i < sizeof(equiv_int_types)/sizeof(equiv_int_types[0]); i++) {
+	    if ( a_type == equiv_int_types[i])
+	      eq1 = 1;
+	    if ( (pwr_eType) attr_type == equiv_int_types[i])
+	      eq2 = 1;
+	  }
+	  if ( !(eq1 && eq2)) {	 
+	    char msg[300];
+	    sprintf( msg, "%s type is not correct \"%s\"", text, parsed_name);
+	    graph->syntax_msg( 'E', object, msg);
+	    (*error_cnt)++;      
+	  }
+	}
+      }
+    }
+    break;
+  default: ;
+  }
+  return;
+}
+
 int GeDynElem::disconnect( grow_tObject object)
 {
   return 1;
@@ -2304,6 +2454,22 @@ int GeDigLowColor::export_java( grow_tObject object, ofstream& fp, bool first, c
   else
     fp << "      ,";
   fp << "new GeDynDigLowColor(" << var_name << ".dd, \"" << attribute << "\"," << jcolor << ")" << endl;
+  return 1;
+}
+
+int GeDigLowColor::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  glow_eDrawType tcolor = dyn->get_color1( object, color);
+  if ( tcolor < 0 || tcolor >= glow_eDrawType__) {
+    dyn->graph->syntax_msg( 'E', object, "Color out or range");
+    (*error_cnt)++;
+  }
+
+  int types[] = {pwr_eType_Boolean, pwr_eType_Int32, pwr_eType_UInt32, pwr_eType_Int64, pwr_eType_UInt64,
+		       graph_eType_Bit, pwr_eType_Float32, pwr_eType_Float64, pwr_eType_String, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Local, graph_eDatabase_Gdh, graph_eDatabase__};
+  dyn->syntax_check_attribute( object, "DigLowColor.Attribute", attribute, 0, types, databases, error_cnt, warning_cnt);
+
   return 1;
 }
 
@@ -2598,6 +2764,29 @@ int GeDigColor::export_java( grow_tObject object, ofstream& fp, bool first, char
   return 1;
 }
 
+int GeDigColor::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  char name[40];
+
+  if ( instance == 1)
+    strcpy( name, "DigColor.Attribute");
+  else
+    sprintf( name, "DigColor%d.Attribute", GeDyn::instance_to_number( instance));
+
+  glow_eDrawType tcolor = dyn->get_color1( object, color);
+  if ( tcolor < 0 || tcolor >= glow_eDrawType__) {
+    dyn->graph->syntax_msg( 'E', object, "Color out or range");
+    (*error_cnt)++;
+  }
+
+  int types[] = {pwr_eType_Boolean, pwr_eType_Int32, pwr_eType_UInt32, pwr_eType_Int64, pwr_eType_UInt64,
+		       graph_eType_Bit, pwr_eType_Float32, pwr_eType_Float64, pwr_eType_String, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Local, graph_eDatabase_Gdh, graph_eDatabase__};
+  dyn->syntax_check_attribute( object, name, attribute, 0, types, databases, error_cnt, warning_cnt);
+
+  return 1;
+}
+
 void GeDigWarning::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -2765,6 +2954,17 @@ int GeDigWarning::export_java( grow_tObject object, ofstream& fp, bool first, ch
   return 1;
 }
 
+int GeDigWarning::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int types[] = {pwr_eType_Boolean, pwr_eType_Int32, pwr_eType_UInt32, pwr_eType_Int64, pwr_eType_UInt64,
+		       graph_eType_Bit, pwr_eType_Float32, pwr_eType_Float64, pwr_eType_String, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Local, graph_eDatabase_Gdh, graph_eDatabase__};
+
+  dyn->syntax_check_attribute( object, "DigWarning.Attribute", attribute, 0, types, databases, error_cnt, warning_cnt);
+
+  return 1;
+}
+
 void GeDigError::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -2929,6 +3129,18 @@ int GeDigError::export_java( grow_tObject object, ofstream& fp, bool first, char
   else
     fp << "      ,";
   fp << "new GeDynDigError(" << var_name << ".dd, \"" << attribute << "\")" << endl;
+  return 1;
+}
+
+int GeDigError::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int types[] = {pwr_eType_Boolean, pwr_eType_Int32, pwr_eType_UInt32, pwr_eType_Int64, pwr_eType_UInt64,
+		       graph_eType_Bit, pwr_eType_Float32, pwr_eType_Float64, pwr_eType_String, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Local, graph_eDatabase_Gdh, graph_eDatabase__};
+
+  dyn->syntax_check_attribute( object, "DigError.Attribute", attribute, 0, types, databases, 
+			       error_cnt, warning_cnt);
+
   return 1;
 }
 
@@ -3187,6 +3399,24 @@ int GeDigFlash::export_java( grow_tObject object, ofstream& fp, bool first, char
   return 1;
 }
 
+int GeDigFlash::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  glow_eDrawType tcolor = dyn->get_color1( object, color);
+  if ( tcolor < 0 || tcolor >= glow_eDrawType__) {
+    dyn->graph->syntax_msg( 'E', object, "Color out or range");
+    (*error_cnt)++;
+  }
+
+  int types[] = {pwr_eType_Boolean, pwr_eType_Int32, pwr_eType_UInt32, pwr_eType_Int64, pwr_eType_UInt64,
+		       graph_eType_Bit, pwr_eType_Float32, pwr_eType_Float64, pwr_eType_String, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Local, graph_eDatabase_Gdh, graph_eDatabase__};
+
+  dyn->syntax_check_attribute( object, "DigFlash.Attribute", attribute, 0, types, databases, 
+			       error_cnt, warning_cnt);
+
+  return 1;
+}
+
 void GeInvisible::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -3423,6 +3653,18 @@ int GeInvisible::export_java( grow_tObject object, ofstream& fp, bool first, cha
   return 1;
 }
 
+int GeInvisible::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int types[] = {pwr_eType_Boolean, pwr_eType_Int32, pwr_eType_UInt32, pwr_eType_Int64, pwr_eType_UInt64,
+		       graph_eType_Bit, pwr_eType_Float32, pwr_eType_Float64, pwr_eType_String, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Local, graph_eDatabase_Gdh, graph_eDatabase__};
+
+  dyn->syntax_check_attribute( object, "Invisible.Attribute", attribute, 0, types, databases, 
+			       error_cnt, warning_cnt);
+
+  return 1;
+}
+
 void GeDigTextColor::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -3573,6 +3815,24 @@ int GeDigTextColor::scan( grow_tObject object)
 
 int GeDigTextColor::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
 {
+  return 1;
+}
+
+int GeDigTextColor::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  glow_eDrawType tcolor = dyn->get_color1( object, color);
+  if ( tcolor < 0 || tcolor >= glow_eDrawType__) {
+    dyn->graph->syntax_msg( 'E', object, "Color out or range");
+    (*error_cnt)++;
+  }
+
+  int types[] = {pwr_eType_Boolean, pwr_eType_Int32, pwr_eType_UInt32, pwr_eType_Int64, pwr_eType_UInt64,
+		       graph_eType_Bit, pwr_eType_Float32, pwr_eType_Float64, pwr_eType_String, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Local, graph_eDatabase_Gdh, graph_eDatabase__};
+
+  dyn->syntax_check_attribute( object, "DigTextColor.Attribute", attribute, 0, types, databases, 
+			       error_cnt, warning_cnt);
+
   return 1;
 }
 
@@ -3733,6 +3993,24 @@ int GeDigBorder::export_java( grow_tObject object, ofstream& fp, bool first, cha
   else
     fp << "      ,";
   fp << "new GeDynDigBorder(" << var_name << ".dd, \"" << attribute << "\"," << jcolor << ")" << endl;
+  return 1;
+}
+
+int GeDigBorder::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  glow_eDrawType tcolor = dyn->get_color1( object, color);
+  if ( tcolor < 0 || tcolor >= glow_eDrawType__) {
+    dyn->graph->syntax_msg( 'E', object, "Color out or range");
+    (*error_cnt)++;
+  }
+
+  int types[] = {pwr_eType_Boolean, pwr_eType_Int32, pwr_eType_UInt32, pwr_eType_Int64, pwr_eType_UInt64,
+		       graph_eType_Bit, pwr_eType_Float32, pwr_eType_Float64, pwr_eType_String, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Local, graph_eDatabase_Gdh, graph_eDatabase__};
+
+  dyn->syntax_check_attribute( object, "DigBorder.Attribute", attribute, 0, types, databases, 
+			       error_cnt, warning_cnt);
+
   return 1;
 }
 
@@ -3961,6 +4239,33 @@ int GeDigText::export_java( grow_tObject object, ofstream& fp, bool first, char 
   else
     fp << "      ,";
   fp << "new GeDynDigText(" << var_name << ".dd, \"" << attribute << "\",\"" << low_text << "\")" << endl;
+  return 1;
+}
+
+int GeDigText::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int sts;
+
+  sts = grow_CheckObjectAnnotation( object, 1);
+  if ( EVEN(sts)) {
+    dyn->graph->syntax_msg( 'E', object, "DigText, no annotation number 1 for this object");
+    (*error_cnt)++;
+  }
+  else if ( instance_mask == ge_mInstance_1) {
+    grow_GetAnnotation( object, 1, high_text, sizeof(high_text));
+    if ( strcmp( high_text, "") == 0 && strcmp( low_text, "") == 0) {
+      dyn->graph->syntax_msg( 'E', object, "DigText, low and high text is missing");
+      (*error_cnt)++;
+    }
+  }
+
+  int types[] = {pwr_eType_Boolean, pwr_eType_Int32, pwr_eType_UInt32, pwr_eType_Int64, pwr_eType_UInt64,
+		       graph_eType_Bit, pwr_eType_Float32, pwr_eType_Float64, pwr_eType_String, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Local, graph_eDatabase_Gdh, graph_eDatabase__};
+
+  dyn->syntax_check_attribute( object, "DigText.Attribute", attribute, 0, types, databases, 
+			       error_cnt, warning_cnt);
+
   return 1;
 }
 
@@ -4220,7 +4525,7 @@ int GeValue::connect( grow_tObject object, glow_sTraceData *trace_data)
     if ( !check_format( format, annot_typeid)) {
       char name[80];
 
-      grow_GetObjectName( object, name);
+      grow_GetObjectName( object, name, sizeof(name), glow_eName_Object);
       printf( "** GeValue: Suspicious format \"%s\" (%s, %s)\n", format, name, attribute);
     }
     break;
@@ -4713,6 +5018,64 @@ int GeValue::export_java( grow_tObject object, ofstream& fp, bool first, char *v
   return 1;
 }
 
+int GeValue::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int sts;
+  int		attr_type, attr_size;
+  pwr_tAName   	parsed_name;
+  int		inverted;
+  char		name[20];
+  char		atext[40];
+  int		annot_num;
+  
+  annot_num = GeDyn::instance_to_number( instance);
+  if ( annot_num == 1)
+    strcpy( name, "Value");
+  else
+    sprintf( name, "Value[%d]", annot_num);
+  
+  sts = grow_CheckObjectAnnotation( object, annot_num);
+  if ( EVEN(sts)) {
+    char msg[200];
+
+    sprintf( msg, "%s, no annotation number %d", name, annot_num);
+    dyn->graph->syntax_msg( 'E', object, msg);
+    (*error_cnt)++;
+  }
+
+  int types[] = {pwr_eType_Boolean, pwr_eType_Int32, pwr_eType_UInt32, pwr_eType_Int64, pwr_eType_UInt64,
+		 graph_eType_Bit, pwr_eType_Float32, pwr_eType_Float64, pwr_eType_String, pwr_eType_NetStatus,
+		 pwr_eType_Status, pwr_eType_Text, pwr_eType_Objid, pwr_eType_AttrRef, pwr_eType_DataRef,
+		 pwr_eType_Time, pwr_eType_DeltaTime, pwr_eType_Enum, pwr_eType_Mask, pwr_eType_Char,
+		 pwr_eType_Int8, pwr_eType_Int16, pwr_eType_UInt8, pwr_eType_UInt16, pwr_eType_ProString, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Local, graph_eDatabase_Gdh, graph_eDatabase_User,
+				 graph_eDatabase_Ccm, graph_eDatabase__};
+
+  sprintf( atext, "%s.Attribute", name);
+  dyn->syntax_check_attribute( object, atext, attribute, 0, types, databases, 
+			       error_cnt, warning_cnt);
+
+  dyn->parse_attr_name( attribute, parsed_name,
+			&inverted, &attr_type, &attr_size);
+
+  if ( strcmp( format, "") == 0) {
+    char msg[200];
+
+    sprintf( msg, "%s.Format, format is missing", name);
+    dyn->graph->syntax_msg( 'E', object, msg);
+    (*error_cnt)++;
+  }
+  else if ( !check_format( format, attr_type)) {
+    char msg[200];
+
+    sprintf( msg, "%s.Format, erroneous format \"%s\"", name, format);
+    dyn->graph->syntax_msg( 'E', object, msg);
+    (*warning_cnt)++;
+  }
+
+  return 1;
+}
+
 void GeValueInput::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -5152,6 +5515,21 @@ int GeValueInput::export_java( grow_tObject object, ofstream& fp, bool first, ch
     fp << "null)" << endl;
   else
     fp << "\"" << maxvalue_attr << "\")" << endl;
+  return 1;
+}
+
+int GeValueInput::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+
+  int types[] = {pwr_eType_Int8, pwr_eType_Int16, pwr_eType_Int32, pwr_eType_Int64, 
+		 pwr_eType_UInt8, pwr_eType_UInt16, pwr_eType_UInt32, pwr_eType_UInt64, 
+		 pwr_eType_Float32, pwr_eType_Float64, pwr_eType_DeltaTime, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Gdh, graph_eDatabase__};
+
+  dyn->syntax_check_attribute( object, "ValueInput.MinValueAttr", minvalue_attr, 1, types, databases,
+			       error_cnt, warning_cnt);
+  dyn->syntax_check_attribute( object, "ValueInput.MaxValueAttr", maxvalue_attr, 1, types, databases,
+			       error_cnt, warning_cnt);
   return 1;
 }
 
@@ -5625,6 +6003,22 @@ int GeAnalogColor::export_java( grow_tObject object, ofstream& fp, bool first, c
   return 1;
 }
 
+int GeAnalogColor::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  glow_eDrawType tcolor = dyn->get_color1( object, color);
+  if ( tcolor < 0 || tcolor >= glow_eDrawType__) {
+    dyn->graph->syntax_msg( 'E', object, "AnalogColor, Color out or range");
+    (*error_cnt)++;
+  }
+
+  if ( instance == ge_mInstance_1) {
+    int types[] = {pwr_eType_Int32, pwr_eType_UInt32, pwr_eType_Float32, 0};
+    graph_eDatabase databases[] = {graph_eDatabase_Gdh, graph_eDatabase__};
+    dyn->syntax_check_attribute( object, "AnalogColor.Attribute", attribute, 0, types, databases, error_cnt, warning_cnt);
+  }
+  return 1;
+}
+
 void GeRotate::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -5813,6 +6207,15 @@ int GeRotate::export_java( grow_tObject object, ofstream& fp, bool first, char *
     fp << "      ,";
   fp << "new GeDynRotate(" << var_name << ".dd, \"" << attribute << "\"," << rotation_x 
      << "," << rotation_y << "," << factor << ")" << endl;
+  return 1;
+}
+
+int GeRotate::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int types[] = {pwr_eType_Float32, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Gdh, graph_eDatabase__};
+  dyn->syntax_check_attribute( object, "Rotate.Attribute", attribute, 0, types, databases, error_cnt, warning_cnt);
+
   return 1;
 }
 
@@ -6237,6 +6640,24 @@ int GeMove::export_java( grow_tObject object, ofstream& fp, bool first, char *va
   return 1;
 }
 
+int GeMove::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int types[] = {pwr_eType_Int32, pwr_eType_UInt32, pwr_eType_Float32, pwr_eType_Float64, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Gdh, graph_eDatabase__};
+  dyn->syntax_check_attribute( object, "Move.XAttribute", move_x_attribute, 1, types, databases, error_cnt, warning_cnt);
+  dyn->syntax_check_attribute( object, "Move.YAttribute", move_y_attribute, 1, types, databases, error_cnt, warning_cnt);
+  dyn->syntax_check_attribute( object, "Move.ScaleXAttribute", scale_x_attribute, 1, types, databases, error_cnt, warning_cnt);
+  dyn->syntax_check_attribute( object, "Move.ScaleYAttribute", scale_y_attribute, 1, types, databases, error_cnt, warning_cnt);
+
+  if ( strcmp( move_x_attribute, "") == 0 && strcmp( move_y_attribute, "") == 0 &&
+       strcmp( scale_x_attribute, "") == 0 && strcmp( scale_y_attribute, "") == 0) {
+    dyn->graph->syntax_msg( 'E', object, "Move, no attribute");
+    (*error_cnt)++;
+  }
+
+  return 1;
+}
+
 void GeAnalogShift::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -6409,6 +6830,15 @@ int GeAnalogShift::export_java( grow_tObject object, ofstream& fp, bool first, c
   return 1;
 }
 
+int GeAnalogShift::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int types[] = {pwr_eType_Int32, pwr_eType_UInt32, pwr_eType_Float32, pwr_eType_Enum, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Gdh, graph_eDatabase__};
+  dyn->syntax_check_attribute( object, "AnalogShift.Attribute", attribute, 0, types, databases, error_cnt, warning_cnt);
+
+  return 1;
+}
+
 void GeDigShift::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -6559,6 +6989,16 @@ int GeDigShift::export_java( grow_tObject object, ofstream& fp, bool first, char
   else
     fp << "      ,";
   fp << "new GeDynDigShift(" << var_name << ".dd, \"" << attribute << "\")" << endl;
+  return 1;
+}
+
+int GeDigShift::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int types[] = {pwr_eType_Boolean, pwr_eType_Int32, pwr_eType_UInt32, pwr_eType_Int64, pwr_eType_UInt64,
+		       graph_eType_Bit, pwr_eType_Float32, pwr_eType_Float64, pwr_eType_String, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Ccm, graph_eDatabase_Gdh, graph_eDatabase__};
+  dyn->syntax_check_attribute( object, "DigShift.Attribute", attribute, 0, types, databases, error_cnt, warning_cnt);
+
   return 1;
 }
 
@@ -6809,6 +7249,25 @@ int GeDigFourShift::export_java( grow_tObject object, ofstream& fp, bool first, 
   return 1;
 }
 
+int GeDigFourShift::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int types[] = {pwr_eType_Boolean, pwr_eType_Int32, pwr_eType_UInt32, pwr_eType_Int64, pwr_eType_UInt64,
+		       graph_eType_Bit, pwr_eType_Float32, pwr_eType_Float64, pwr_eType_String, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Ccm, graph_eDatabase_Gdh, graph_eDatabase__};
+  dyn->syntax_check_attribute( object, "DigFourShift.Attribute1", attribute1, 1, types, databases, error_cnt, warning_cnt);
+  dyn->syntax_check_attribute( object, "DigFourShift.Attribute2", attribute2, 1, types, databases, error_cnt, warning_cnt);
+  dyn->syntax_check_attribute( object, "DigFourShift.Attribute3", attribute3, 1, types, databases, error_cnt, warning_cnt);
+
+  if ( strcmp( attribute1, "") == 0 && strcmp( attribute2, "") == 0 &&
+       strcmp( attribute3, "") == 0) {
+    dyn->graph->syntax_msg( 'E', object, "DigFourShift, no attribute");
+    (*error_cnt)++;
+  }
+
+  return 1;
+}
+
+
 void GeScrollingText::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -7051,6 +7510,15 @@ int GeScrollingText::scan( grow_tObject object)
 
 int GeScrollingText::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
 {
+  return 1;
+}
+
+int GeScrollingText::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int types[] = {pwr_eType_String, pwr_eType_Text, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Ccm, graph_eDatabase_Gdh, graph_eDatabase__};
+  dyn->syntax_check_attribute( object, "ScrollingText.Attribute", attribute, 0, types, databases, error_cnt, warning_cnt);
+
   return 1;
 }
 
@@ -7332,6 +7800,29 @@ int GeDigBackgroundColor::export_java( grow_tObject object, ofstream& fp, bool f
   return 1;
 }
 
+int GeDigBackgroundColor::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  char name[40];
+
+  if ( instance == 1)
+    strcpy( name, "DigBackgroundColor.Attribute");
+  else
+    sprintf( name, "DigBackgroundColor%d.Attribute", GeDyn::instance_to_number( instance));
+
+  glow_eDrawType tcolor = dyn->get_color1( object, color);
+  if ( tcolor < 0 || tcolor >= glow_eDrawType__) {
+    dyn->graph->syntax_msg( 'E', object, "Color out or range");
+    (*error_cnt)++;
+  }
+
+  int types[] = {pwr_eType_Boolean, pwr_eType_Int32, pwr_eType_UInt32, pwr_eType_Int64, pwr_eType_UInt64,
+		       graph_eType_Bit, pwr_eType_Float32, pwr_eType_Float64, pwr_eType_String, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Gdh, graph_eDatabase__};
+  dyn->syntax_check_attribute( object, name, attribute, 0, types, databases, error_cnt, warning_cnt);
+
+  return 1;
+}
+
 void GeDigSwap::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -7498,6 +7989,16 @@ int GeDigSwap::scan( grow_tObject object)
 
 int GeDigSwap::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
 {
+  return 1;
+}
+
+int GeDigSwap::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int types[] = {pwr_eType_Boolean, pwr_eType_Int32, pwr_eType_UInt32, pwr_eType_Int64, pwr_eType_UInt64,
+		       graph_eType_Bit, pwr_eType_Float32, pwr_eType_Float64, pwr_eType_String, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Gdh, graph_eDatabase__};
+  dyn->syntax_check_attribute( object, "DigSwap.Attribute", attribute, 0, types, databases, error_cnt, warning_cnt);
+
   return 1;
 }
 
@@ -7757,6 +8258,16 @@ int GeAnimation::export_java( grow_tObject object, ofstream& fp, bool first, cha
   return 1;
 }
 
+int GeAnimation::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int types[] = {pwr_eType_Boolean, pwr_eType_Int32, pwr_eType_UInt32, pwr_eType_Int64, pwr_eType_UInt64,
+		       graph_eType_Bit, pwr_eType_Float32, pwr_eType_Float64, pwr_eType_String, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Gdh, graph_eDatabase__};
+  dyn->syntax_check_attribute( object, "Animation.Attribute", attribute, 0, types, databases, error_cnt, warning_cnt);
+
+  return 1;
+}
+
 void GeVideo::save( ofstream& fp)
 {
   fp << int(ge_eSave_Video) << endl;
@@ -7817,6 +8328,35 @@ int GeVideo::scan( grow_tObject object)
   }
   return 1;
 }
+
+int GeVideo::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  grow_tObject 	*objectlist;
+  int 		object_cnt;
+
+  if ( grow_GetObjectType( object) != glow_eObjectType_GrowGroup) {
+    dyn->graph->syntax_msg( 'E', object, "Video, object isn't a group");
+    (*error_cnt)++;
+    return 1;
+  }
+
+  // Find image
+  grow_GetGroupObjectList( object, &objectlist, &object_cnt);
+
+  int found = 0;
+  for ( int i = 0; i < object_cnt; i++) {
+    if ( grow_GetObjectType( objectlist[i]) == glow_eObjectType_GrowImage) {
+      found = 1;
+      break;
+    }	
+  }
+  if ( !found) {
+    dyn->graph->syntax_msg( 'E', object, "Video, no image found in group");
+    (*error_cnt)++;
+  }
+  return 1;
+}
+
 
 void GeBar::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
@@ -8045,6 +8585,15 @@ int GeBar::scan( grow_tObject object)
   }
   default: ;
   }
+  return 1;
+}
+
+int GeBar::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int types[] = {pwr_eType_Int32, pwr_eType_UInt32, pwr_eType_Float32, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Gdh, graph_eDatabase_Local, graph_eDatabase_User, graph_eDatabase__};
+  dyn->syntax_check_attribute( object, "Bar.Attribute", attribute, 0, types, databases, error_cnt, warning_cnt);
+
   return 1;
 }
 
@@ -8608,6 +9157,44 @@ int GeTrend::scan( grow_tObject object)
     }
     acc_time = 0;
   }
+  return 1;
+}
+
+int GeTrend::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int types[] = {pwr_eType_Boolean, pwr_eType_Int32, pwr_eType_UInt32, pwr_eType_Float32, 0};
+  int types2[] = {pwr_eType_Float32, 0};
+  int types3[] = {pwr_eType_Boolean, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Gdh, graph_eDatabase_Local, graph_eDatabase_User, 
+				 graph_eDatabase__};
+  graph_eDatabase databases2[] = {graph_eDatabase_Gdh, graph_eDatabase_Local, graph_eDatabase__};
+  graph_eDatabase databases3[] = {graph_eDatabase_Gdh, graph_eDatabase__};
+  dyn->syntax_check_attribute( object, "Trend.Attribute1", attribute1, 1, types, databases, error_cnt, 
+			       warning_cnt);
+  dyn->syntax_check_attribute( object, "Trend.Attribute2", attribute2, 1, types, databases, error_cnt, 
+			       warning_cnt);
+
+  dyn->syntax_check_attribute( object, "Trend.MinValueAttr1", minvalue_attr1, 1, types2, databases2, error_cnt, 
+			       warning_cnt);
+  dyn->syntax_check_attribute( object, "Trend.MaxValueAttr1", maxvalue_attr1, 1, types2, databases2, error_cnt, 
+			       warning_cnt);
+  dyn->syntax_check_attribute( object, "Trend.MinValueAttr2", minvalue_attr2, 1, types2, databases2, error_cnt, 
+			       warning_cnt);
+  dyn->syntax_check_attribute( object, "Trend.MaxValueAttr2", maxvalue_attr2, 1, types2, databases2, error_cnt, 
+			       warning_cnt);
+  dyn->syntax_check_attribute( object, "Trend.HoldAttr", hold_attr, 1, types3, databases2, error_cnt, warning_cnt);
+  dyn->syntax_check_attribute( object, "Trend.TimeRangeAttr", timerange_attr, 1, types2, databases2, error_cnt, 
+			       warning_cnt);
+  dyn->syntax_check_attribute( object, "Trend.Mark1Attr", mark1_attr, 1, types2, databases3, error_cnt, 
+			       warning_cnt);
+  dyn->syntax_check_attribute( object, "Trend.Mark2Attr", mark2_attr, 1, types2, databases3, error_cnt, 
+			       warning_cnt);
+
+  if ( strcmp( attribute1, "") == 0 && strcmp( attribute2, "") == 0) {
+    dyn->graph->syntax_msg( 'E', object, "Trend, no attribute");
+    (*error_cnt)++;
+  }
+
   return 1;
 }
 
@@ -9491,6 +10078,56 @@ int GeXY_Curve::export_java( grow_tObject object, ofstream& fp, bool first, char
   return 1;
 }
 
+
+int GeXY_Curve::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  char name[40];
+  char atext[40];
+
+  if ( instance == 1)
+    strcpy( name, "XY_Curve");
+  else
+    sprintf( name, "XY_Curve%d", GeDyn::instance_to_number( instance));
+
+  int types[] = {pwr_eType_Int8, pwr_eType_Int16, pwr_eType_Int32, pwr_eType_UInt8, pwr_eType_UInt16, 
+		 pwr_eType_UInt32, pwr_eType_Float32, 0};
+  int types1[] = {pwr_eType_Boolean, pwr_eType_Int32, pwr_eType_UInt32, 0};
+  int types2[] = {pwr_eType_Int32, pwr_eType_UInt32, 0};
+  int types3[] = {pwr_eType_Float32, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Gdh, graph_eDatabase__};
+
+  sprintf( atext, "%s.UpdateAttr", name);
+  dyn->syntax_check_attribute( object, atext, update_attr, 1, types1, databases, error_cnt, warning_cnt);
+  sprintf( atext, "%s.NoOfPointsAttr", name);
+  dyn->syntax_check_attribute( object, atext, noofpoints_attr, 1, types2, databases, error_cnt, warning_cnt);
+  sprintf( atext, "%s.XMinValueAttr", name);
+  dyn->syntax_check_attribute( object, atext, x_minvalue_attr, 1, types3, databases, error_cnt, warning_cnt);
+  sprintf( atext, "%s.XMaxValueAttr", name);
+  dyn->syntax_check_attribute( object, atext, x_maxvalue_attr, 1, types3, databases, error_cnt, warning_cnt);
+  sprintf( atext, "%s.YMinValueAttr", name);
+  dyn->syntax_check_attribute( object, atext, y_minvalue_attr, 1, types3, databases, error_cnt, warning_cnt);
+  sprintf( atext, "%s.YMaxValueAttr", name);
+  dyn->syntax_check_attribute( object, atext, y_maxvalue_attr, 1, types3, databases, error_cnt, warning_cnt);
+  sprintf( atext, "%s.XMark1Attr", name);
+  dyn->syntax_check_attribute( object, atext, x_mark1_attr, 1, types3, databases, error_cnt, warning_cnt);
+  sprintf( atext, "%s.XMark2Attr", name);
+  dyn->syntax_check_attribute( object, atext, x_mark2_attr, 1, types3, databases, error_cnt, warning_cnt);
+  sprintf( atext, "%s.YMark1Attr", name);
+  dyn->syntax_check_attribute( object, atext, y_mark1_attr, 1, types3, databases, error_cnt, warning_cnt);
+  sprintf( atext, "%s.YMark2Attr", name);
+  dyn->syntax_check_attribute( object, atext, y_mark2_attr, 1, types3, databases, error_cnt, warning_cnt);
+  sprintf( atext, "%s.XAttr", name);
+  dyn->syntax_check_attribute( object, atext, x_attr, 0, types, databases, error_cnt, warning_cnt);
+  if ( datatype == ge_eCurveDataType_XYArrays) {
+    sprintf( atext, "%s.YAttr", name);
+    dyn->syntax_check_attribute( object, atext, y_attr, 0, types, databases, error_cnt, warning_cnt);
+  }
+  else if ( strcmp( y_attr, "") != 0) {
+    dyn->graph->syntax_msg( 'W', object, "XY_Curve.YAttr not used for this DataType");
+    (*warning_cnt)++;
+  }
+  return 1;
+}
 
 void GeTable::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
@@ -10553,6 +11190,55 @@ int GeTable::export_java( grow_tObject object, ofstream& fp, bool first, char *v
   return 1;
 }
 
+int GeTable::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int		attr_type, attr_size;
+  pwr_tAName   	parsed_name;
+  int		inverted;
+  char		atext[40];
+  
+  int types[] = {pwr_eType_Boolean, pwr_eType_Int32, pwr_eType_UInt32, pwr_eType_Int64, pwr_eType_UInt64,
+		 graph_eType_Bit, pwr_eType_Float32, pwr_eType_Float64, pwr_eType_String, pwr_eType_NetStatus,
+		 pwr_eType_Status, pwr_eType_Text, pwr_eType_Objid, pwr_eType_AttrRef, pwr_eType_DataRef,
+		 pwr_eType_Time, pwr_eType_DeltaTime, pwr_eType_Enum, pwr_eType_Mask, 0};
+  int types1[] = {pwr_eType_Boolean, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Gdh, graph_eDatabase__};
+
+  for ( int i = 0; i < TABLE_MAX_COL; i++) {
+    sprintf( atext, "Column%d.Attribute", i+1);
+    dyn->syntax_check_attribute( object, atext, attribute[i], i == 0 ? 0 : 1, types, databases, 
+				 error_cnt, warning_cnt);
+
+    sprintf( atext, "Column%d.SelectAttribute", i+1);
+    dyn->syntax_check_attribute( object, atext, sel_attribute[i], 1, types1, databases, 
+				 error_cnt, warning_cnt);
+
+    // Check format
+
+    if ( strcmp( attribute[i], "") != 0) {
+      dyn->parse_attr_name( attribute[i], parsed_name,
+			    &inverted, &attr_type, &attr_size);
+
+      if ( strcmp( format[i], "") == 0) {
+	char msg[200];
+
+	sprintf( msg, "Column%d.Format, format is missing", i+1);
+	dyn->graph->syntax_msg( 'E', object, msg);
+	(*error_cnt)++;
+      }
+
+      else if ( !check_format( format[i], attr_type)) {
+	char msg[200];
+
+	sprintf( msg, "Column%d.Format, erroneous format \"%s\"", i+1, format[i]);
+	dyn->graph->syntax_msg( 'E', object, msg);
+	(*warning_cnt)++;
+      }
+    }
+  }
+  return 1;
+}
+
 void GeStatusColor::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -10830,6 +11516,21 @@ int GeStatusColor::export_java( grow_tObject object, ofstream& fp, bool first, c
   return 1;
 }
 
+int GeStatusColor::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  glow_eDrawType tcolor = dyn->get_color1( object, nostatus_color);
+  if ( tcolor < 0 || tcolor >= glow_eDrawType__) {
+    dyn->graph->syntax_msg( 'E', object, "Color out or range");
+    (*error_cnt)++;
+  }
+
+  int types[] = {pwr_eType_Status, pwr_eType_NetStatus, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Gdh, graph_eDatabase__};
+  dyn->syntax_check_attribute( object, "StatusColor.Attribute", attribute, 0, types, databases, error_cnt, warning_cnt);
+
+  return 1;
+}
+
 void GePie::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -11067,6 +11768,21 @@ int GePie::export_java( grow_tObject object, ofstream& fp, bool first, char *var
   return 1;
 }
 
+int GePie::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  char		atext[40];
+  
+  int types[] = {pwr_eType_Int32, pwr_eType_Float32, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Gdh, graph_eDatabase__};
+
+  for ( int i = 0; i < PIE_MAX_SECTORS; i++) {
+    sprintf( atext, "Pie.Attribute%d", i);
+    dyn->syntax_check_attribute( object, atext, attribute[i], i == 0 ? 0 : 1, types, databases,
+				 error_cnt, warning_cnt);
+  }
+  return 1;
+}
+
 void GeBarChart::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -11293,6 +12009,21 @@ int GeBarChart::scan( grow_tObject object)
 
 int GeBarChart::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
 {
+  return 1;
+}
+
+int GeBarChart::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  char		atext[40];
+  
+  int types[] = {pwr_eType_Int32, pwr_eType_Float32, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Gdh, graph_eDatabase__};
+
+  for ( int i = 0; i < BARCHART_MAX_BARSEGMENTS; i++) {
+    sprintf( atext, "BarChart.Attribute%d", i);
+    dyn->syntax_check_attribute( object, atext, attribute[i], i == 0 ? 0 : 1, types, databases,
+				 error_cnt, warning_cnt);
+  }
   return 1;
 }
 
@@ -11567,6 +12298,19 @@ int GeAxis::export_java( grow_tObject object, ofstream& fp, bool first, char *va
   return 1;
 }
 
+int GeAxis::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+
+  int types[] = {pwr_eType_Int32, pwr_eType_Float32, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Gdh, graph_eDatabase_Local, graph_eDatabase__};
+
+  dyn->syntax_check_attribute( object, "Axis.MinValueAttr", minvalue_attr, 1, types, databases,
+			       error_cnt, warning_cnt);
+  dyn->syntax_check_attribute( object, "Axis.MaxValueAttr", maxvalue_attr, 1, types, databases,
+			       error_cnt, warning_cnt);
+  return 1;
+}
+
 void GeTimeoutColor::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -11788,10 +12532,21 @@ int GeTimeoutColor::scan( grow_tObject object)
       case ge_mDynType2_DigTextColor:
 	subid = ((GeDigTextColor *)elem)->subid;
 	break;
+      case ge_mDynType2_DigFourShift:
+	if ( ((GeDigFourShift *)elem)->p1)
+	  subid = ((GeDigFourShift *)elem)->subid1;
+	else if ( ((GeDigFourShift *)elem)->p2)
+	  subid = ((GeDigFourShift *)elem)->subid2;
+	else if ( ((GeDigFourShift *)elem)->p3)
+	  subid = ((GeDigFourShift *)elem)->subid3;
+	break;
       case ge_mDynType2_TimeoutColor:
 	break;
       case ge_mDynType2_DigBackgroundColor:
 	subid = ((GeDigBackgroundColor *)elem)->subid;
+	break;
+      case ge_mDynType2_DigSwap:
+	subid = ((GeDigSwap *)elem)->subid;
 	break;
       default: ;
       }
@@ -11859,6 +12614,78 @@ int GeTimeoutColor::scan( grow_tObject object)
   old_value = val;
   return 1;
 }
+
+int GeTimeoutColor::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  // Check of there is any other element that can be checked for timeout
+  int found = 0;
+  for ( GeDynElem *elem = dyn->elements; elem; elem = elem->next) {
+    if ( elem == this)
+      continue;
+
+    switch( elem->dyn_type1) {
+    case ge_mDynType1_DigLowColor:
+    case ge_mDynType1_DigColor:
+    case ge_mDynType1_DigError:
+    case ge_mDynType1_DigWarning:
+    case ge_mDynType1_DigFlash:
+    case ge_mDynType1_Invisible:
+    case ge_mDynType1_DigBorder:
+    case ge_mDynType1_DigText:
+    case ge_mDynType1_Value:
+    case ge_mDynType1_AnalogColor:
+    case ge_mDynType1_Rotate:
+    case ge_mDynType1_Move:
+    case ge_mDynType1_DigShift:
+    case ge_mDynType1_AnalogShift:
+    case ge_mDynType1_Animation:
+    case ge_mDynType1_Bar:
+    case ge_mDynType1_Trend:
+    case ge_mDynType1_FillLevel:
+    case ge_mDynType1_FastCurve:
+    case ge_mDynType1_AnalogText:
+    case ge_mDynType1_StatusColor:
+    case ge_mDynType1_DigSound:
+    case ge_mDynType1_XY_Curve:
+    case ge_mDynType1_DigCommand:
+    case ge_mDynType1_Pie:
+    case ge_mDynType1_BarChart:
+      found = 1;
+      break;
+    default: ;
+    }
+    switch( elem->dyn_type2) {
+    case ge_mDynType2_Axis:
+    case ge_mDynType2_DigTextColor:
+    case ge_mDynType2_DigFourShift:
+    case ge_mDynType2_DigBackgroundColor:
+    case ge_mDynType2_DigSwap:
+      found = 1;
+      break;
+    default: ;
+    }
+    if ( found)
+      break;
+  }
+  if ( !found) {
+    dyn->graph->syntax_msg( 'E', object, "TimeoutColor, no attribute to supervise found");
+    (*error_cnt)++;
+  }
+
+  glow_eDrawType tcolor = dyn->get_color1( object, color);
+  if ( tcolor < 0 || tcolor >= glow_eDrawType__) {
+    dyn->graph->syntax_msg( 'E', object, "Color out or range");
+    (*error_cnt)++;
+  }
+
+  if ( fabs(time) < FLT_EPSILON) {
+    dyn->graph->syntax_msg( 'E', object, "TimeoutColor.Time is zero");
+    (*error_cnt)++;
+  }
+
+  return 1;
+}
+
 
 void GeHostObject::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
@@ -11973,6 +12800,49 @@ int GeHostObject::export_java( grow_tObject object, ofstream& fp, bool first, ch
   return 1;
 }
 
+int GeHostObject::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int sts;
+  pwr_eType a_type;
+  static GeDyn *current_dyn = 0;
+
+  if ( current_dyn == dyn)
+    return 1;
+
+  if ( strcmp( hostobject, "") == 0) {
+    dyn->graph->syntax_msg( 'W', object, "HostObject.Object is missing");
+    (*warning_cnt)++;
+    return 1;
+  }
+  sts = dyn->graph->check_ldh_object( hostobject, &a_type);
+  if ( EVEN(sts)) {
+    char msg[300];
+    sprintf( msg, "HostObject.Object \"%s\" not found", hostobject);
+    dyn->graph->syntax_msg( 'W', object, msg);
+    (*warning_cnt)++;
+  }
+
+
+  // Check host object dynamics
+  GeDyn *nodeclass_dyn, *hostobject_dyn;
+
+  grow_GetObjectClassUserData( object, (void **) &nodeclass_dyn);
+  if ( nodeclass_dyn) {
+    hostobject_dyn = new GeDyn( *nodeclass_dyn);
+    hostobject_dyn->merge( *dyn);
+
+    hostobject_dyn->set_hostobject( hostobject);
+    if ( !(hostobject_dyn->total_dyn_type1 & ge_mDynType1_HostObject))
+      hostobject_dyn->total_dyn_type1 = (ge_mDynType1) (hostobject_dyn->total_dyn_type1 | ge_mDynType1_HostObject);
+
+    current_dyn = hostobject_dyn; // Avoid recursion
+    hostobject_dyn->syntax_check( object, error_cnt, warning_cnt);
+
+    delete hostobject_dyn;
+  }
+
+  return 1;
+}
 
 void GeDigSound::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
@@ -12194,6 +13064,42 @@ int GeDigSound::scan( grow_tObject object)
   }
   old_value = val;
 
+  return 1;
+}
+
+int GeDigSound::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int sts;
+  pwr_eType a_type;
+
+  int types[] = {pwr_eType_Boolean, pwr_eType_Int32, pwr_eType_UInt32, pwr_eType_Int64, pwr_eType_UInt64,
+		       graph_eType_Bit, pwr_eType_Float32, pwr_eType_Float64, pwr_eType_String, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Gdh, graph_eDatabase__};
+
+  dyn->syntax_check_attribute( object, "DigSound.Attribute", attribute, 0, types, databases,
+			       error_cnt, warning_cnt);
+
+
+  if ( strcmp( soundobject, "") == 0) {
+    dyn->graph->syntax_msg( 'W', object, "DigSound.SoundObject is missing");
+    (*warning_cnt)++;
+  }
+  else {
+    sts = dyn->graph->check_ldh_object( soundobject, &a_type);
+    if ( EVEN(sts)) {
+      char msg[300];
+      sprintf( msg, "DigSound.SoundObject \"%s\" not found", soundobject);
+      dyn->graph->syntax_msg( 'W', object, msg);
+      (*warning_cnt)++;
+    }
+    else {
+      if ( !(a_type == pwr_cClass_Sound ||
+	     a_type == pwr_cClass_SoundSequence)) {
+	dyn->graph->syntax_msg( 'E', object, "DigSound.SoundObject is of wrong class");
+	(*error_cnt)++;
+      }
+    }
+  }
   return 1;
 }
 
@@ -12495,6 +13401,26 @@ int GeFillLevel::export_java( grow_tObject object, ofstream& fp, bool first, cha
   return 1;
 }
 
+int GeFillLevel::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  glow_eDrawType tcolor = dyn->get_color2( object, color);
+  if ( tcolor < 0 || tcolor >= glow_eDrawType__) {
+    dyn->graph->syntax_msg( 'E', object, "Color out or range");
+    (*error_cnt)++;
+  }
+
+  int types[] = {pwr_eType_Float32, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Gdh, graph_eDatabase__};
+
+  dyn->syntax_check_attribute( object, "FillLevel.Attribute", attribute, 0, types, databases,
+			       error_cnt, warning_cnt);
+  dyn->syntax_check_attribute( object, "FillLevel.MinValueAttr", minvalue_attr, 1, types, databases,
+			       error_cnt, warning_cnt);
+  dyn->syntax_check_attribute( object, "FillLevel.MaxValueAttr", maxvalue_attr, 1, types, databases,
+			       error_cnt, warning_cnt);
+  return 1;
+}
+
 void GeDigCommand::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -12696,6 +13622,23 @@ int GeDigCommand::export_java( grow_tObject object, ofstream& fp, bool first, ch
   return 1;
 }
 
+int GeDigCommand::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int types[] = {pwr_eType_Boolean, pwr_eType_Int32, pwr_eType_UInt32, pwr_eType_Int64, pwr_eType_UInt64,
+		       graph_eType_Bit, pwr_eType_Float32, pwr_eType_Float64, pwr_eType_String, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Gdh, graph_eDatabase__};
+
+  dyn->syntax_check_attribute( object, "DigCommand.Attribute", attribute, 0, types, databases,
+			       error_cnt, warning_cnt);
+
+
+  if ( strcmp( command, "") == 0) {
+    dyn->graph->syntax_msg( 'E', object, "DigCommand.Command is missing");
+    (*error_cnt)++;
+  }
+  return 1;
+}
+
 void GeDigScript::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -12876,6 +13819,23 @@ int GeDigScript::scan( grow_tObject object)
 
 int GeDigScript::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
 {
+  return 1;
+}
+
+int GeDigScript::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int types[] = {pwr_eType_Boolean, pwr_eType_Int32, pwr_eType_UInt32, pwr_eType_Int64, pwr_eType_UInt64,
+		       graph_eType_Bit, pwr_eType_Float32, pwr_eType_Float64, pwr_eType_String, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Gdh, graph_eDatabase__};
+
+  dyn->syntax_check_attribute( object, "DigScript.Attribute", attribute, 0, types, databases,
+			       error_cnt, warning_cnt);
+
+
+  if ( strcmp( script, "") == 0) {
+    dyn->graph->syntax_msg( 'E', object, "DigScript.Script is missing");
+    (*error_cnt)++;
+  }
   return 1;
 }
 
@@ -13129,6 +14089,55 @@ int GePopupMenu::export_java( grow_tObject object, ofstream& fp, bool first, cha
   return 1;
 }
 
+int GePopupMenu::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int 		sts;
+  pwr_tAName    parsed_name;
+  int	       	inverted;
+  int	       	attr_type, attr_size;
+  pwr_eType    	a_type;
+
+  if ( strcmp( ref_object, "") == 0) {
+    dyn->graph->syntax_msg( 'W', object, "PopupMenu.ReferenceObject is missing");
+    (*warning_cnt)++;
+  }
+  else {
+    if ( ref_object[0] == '&') {
+      // Refobject starting with '&' indicates reference
+
+      sts = dyn->graph->check_ldh_object( &ref_object[1], &a_type);
+      if ( EVEN(sts)) {
+	char msg[300];
+	sprintf( msg, "PopupMenu.ReferenceObject \"%s\" not found", ref_object);
+	dyn->graph->syntax_msg( 'W', object, msg);
+	(*warning_cnt)++;
+      }
+      else if ( !(a_type == pwr_eType_Objid || a_type == pwr_eType_AttrRef || a_type == pwr_eType_DataRef)) {
+	char msg[300];
+	sprintf( msg, "PopupMenu.ReferenceObject \"%s\" type error", ref_object);
+	dyn->graph->syntax_msg( 'W', object, msg);
+	(*warning_cnt)++;
+      }
+      return 1;
+    }
+    else {
+      dyn->parse_attr_name( ref_object, parsed_name, &inverted,
+			    &attr_type, &attr_size);
+      if ( inverted)
+	return 1;
+
+      sts = dyn->graph->check_ldh_object( parsed_name, &a_type);
+      if ( EVEN(sts)) {
+	char msg[300];
+	sprintf( msg, "PopupMenu.ReferenceObject \"%s\" not found", ref_object);
+	dyn->graph->syntax_msg( 'W', object, msg);
+	(*warning_cnt)++;
+      }
+    }
+  }
+  return 1;
+}
+
 
 void GeSetDig::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
@@ -13350,6 +14359,16 @@ int GeSetDig::export_java( grow_tObject object, ofstream& fp, bool first, char *
   return 1;
 }
 
+int GeSetDig::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int types[] = {pwr_eType_Boolean, pwr_eType_Int32, pwr_eType_UInt32, graph_eType_Bit, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Local, graph_eDatabase_Gdh, graph_eDatabase_Ccm, graph_eDatabase__};
+  dyn->syntax_check_attribute( object, "SetDig.Attribute", attribute, 0, types, databases, error_cnt, warning_cnt);
+
+  return 1;
+}
+
+
 void GeResetDig::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -13546,6 +14565,15 @@ int GeResetDig::export_java( grow_tObject object, ofstream& fp, bool first, char
   else
     fp << "      ,";
   fp << "new GeDynResetDig(" << var_name << ".dd, \"" << attribute << "\")" << endl;
+  return 1;
+}
+
+int GeResetDig::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int types[] = {pwr_eType_Boolean, pwr_eType_Int32, pwr_eType_UInt32, graph_eType_Bit, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Local, graph_eDatabase_Gdh, graph_eDatabase_Ccm, graph_eDatabase__};
+  dyn->syntax_check_attribute( object, "ResetDig.Attribute", attribute, 0, types, databases, error_cnt, warning_cnt);
+
   return 1;
 }
 
@@ -13756,6 +14784,15 @@ int GeToggleDig::export_java( grow_tObject object, ofstream& fp, bool first, cha
   return 1;
 }
 
+int GeToggleDig::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int types[] = {pwr_eType_Boolean, pwr_eType_Int32, pwr_eType_UInt32, graph_eType_Bit, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Local, graph_eDatabase_Gdh, graph_eDatabase_Ccm, graph_eDatabase__};
+  dyn->syntax_check_attribute( object, "SetToggle.Attribute", attribute, 0, types, databases, error_cnt, warning_cnt);
+
+  return 1;
+}
+
 void GeStoDig::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -13887,6 +14924,15 @@ int GeStoDig::export_java( grow_tObject object, ofstream& fp, bool first, char *
   return 1;
 }
 
+int GeStoDig::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int types[] = {pwr_eType_Boolean, pwr_eType_Int32, pwr_eType_UInt32, graph_eType_Bit, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Local, graph_eDatabase_Gdh, graph_eDatabase_Ccm, graph_eDatabase__};
+  dyn->syntax_check_attribute( object, "StoDig.Attribute", attribute, 0, types, databases, error_cnt, warning_cnt);
+
+  return 1;
+}
+
 void GeCommand::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -13997,6 +15043,16 @@ int GeCommand::export_java( grow_tObject object, ofstream& fp, bool first, char 
   return 1;
 }
 
+int GeCommand::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  if ( strcmp( command, "") == 0) {
+    dyn->graph->syntax_msg( 'E', object, "Command.Command is missing");
+    (*error_cnt)++;
+  }
+  return 1;
+}
+
+
 void GeCommandDoubleClick::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -14088,6 +15144,15 @@ int GeCommandDoubleClick::action( grow_tObject object, glow_tEvent event)
     }
     break;
   default: ;    
+  }
+  return 1;
+}
+
+int GeCommandDoubleClick::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  if ( strcmp( command, "") == 0) {
+    dyn->graph->syntax_msg( 'E', object, "CommandDoubleClick.Command is missing");
+    (*error_cnt)++;
   }
   return 1;
 }
@@ -14214,6 +15279,15 @@ int GeScript::action( grow_tObject object, glow_tEvent event)
     }
     break;
   default: ;    
+  }
+  return 1;
+}
+
+int GeScript::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  if ( strcmp( script, "") == 0) {
+    dyn->graph->syntax_msg( 'E', object, "Script.Script is missing");
+    (*error_cnt)++;
   }
   return 1;
 }
@@ -14357,6 +15431,15 @@ int GeConfirm::export_java( grow_tObject object, ofstream& fp, bool first, char 
   else
     fp << "      ,";
   fp << "new GeDynConfirm(" << var_name << ".dd, \"" << text << "\")" << endl;
+  return 1;
+}
+
+int GeConfirm::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  if ( strcmp( text, "") == 0) {
+    dyn->graph->syntax_msg( 'E', object, "Confirm.Text is missing");
+    (*error_cnt)++;
+  }
   return 1;
 }
 
@@ -14525,6 +15608,14 @@ int GeIncrAnalog::export_java( grow_tObject object, ofstream& fp, bool first, ch
     fp << "      ,";
   fp << "new GeDynIncrAnalog(" << var_name << ".dd, \"" << attribute << "\"," 
      << increment << "," << min_value << "," << max_value << ")" << endl;
+  return 1;
+}
+
+int GeIncrAnalog::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int types[] = {pwr_eType_Int32, pwr_eType_UInt32, pwr_eType_Float32, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Gdh, graph_eDatabase__};
+  dyn->syntax_check_attribute( object, "IncrAnalog.Attribute", attribute, 0, types, databases, error_cnt, warning_cnt);
   return 1;
 }
 
@@ -14754,6 +15845,24 @@ int GeRadioButton::export_java( grow_tObject object, ofstream& fp, bool first, c
   return 1;
 }
 
+int GeRadioButton::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  grow_tObject group;
+  int sts;
+
+  int types[] = {pwr_eType_Boolean, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Local, graph_eDatabase_Gdh, graph_eDatabase__};
+  dyn->syntax_check_attribute( object, "RadioButton.Attribute", attribute, 0, types, databases, error_cnt, warning_cnt);
+
+  sts = grow_GetObjectGroup( dyn->graph->grow->ctx, object, &group);
+  if ( EVEN(sts)) {
+    dyn->graph->syntax_msg( 'E', object, "RadioButton is not member of a group");
+    (*error_cnt)++;
+  }
+
+  return 1;
+}
+
 void GeTipText::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -14890,6 +15999,15 @@ int GeTipText::export_java( grow_tObject object, ofstream& fp, bool first, char 
   return 1;
 }
 
+int GeTipText::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  if ( strcmp( text, "") == 0) {
+    dyn->graph->syntax_msg( 'E', object, "ToolTip.Text is missing");
+    (*error_cnt)++;
+  }
+  return 1;
+}
+
 void GeHelp::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -15012,6 +16130,15 @@ int GeHelp::export_java( grow_tObject object, ofstream& fp, bool first, char *va
   else
     fp << "      ,";
   fp << "new GeDynCommand(" << var_name << ".dd, \"" << GeDyn::cmd_cnv( command) << "\")" << endl;
+  return 1;
+}
+
+int GeHelp::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  if ( strcmp( topic, "") == 0) {
+    dyn->graph->syntax_msg( 'E', object, "Help.Topic is missing");
+    (*error_cnt)++;
+  }
   return 1;
 }
 
@@ -15167,6 +16294,44 @@ int GeOpenGraph::export_java( grow_tObject object, ofstream& fp, bool first, cha
   return 1;
 }
 
+int GeOpenGraph::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int sts;
+  pwr_eType a_type;
+
+  if ( strcmp( graph_object, "") != 0) {
+    sts = dyn->graph->check_ldh_object( graph_object, &a_type);
+    if ( EVEN(sts)) {
+      char msg[300];
+      sprintf( msg, "OpenGraph.GraphObject \"%s\" not found", graph_object);
+      dyn->graph->syntax_msg( 'W', object, msg);
+      (*warning_cnt)++;
+    }
+    else {
+      if ( a_type != pwr_cClass_XttGraph) {
+	dyn->graph->syntax_msg( 'E', object, "OpenGraph.GraphObject is of wrong class");
+	(*error_cnt)++;
+      }
+    }
+  }
+  else {
+    int found = 0;
+    // For HostObject and PopupMenu object is fetched from these dynamics
+    for ( GeDynElem *elem = dyn->elements; elem; elem = elem->next) {
+      if ( elem->dyn_type1 == ge_mDynType1_HostObject ||
+	   elem->action_type1 == ge_mActionType1_PopupMenu) {
+	found = 1;
+	break;
+      }
+    }
+    if ( !found) {
+      dyn->graph->syntax_msg( 'W', object, "OpenGraph.GraphObject is missing");
+      (*warning_cnt)++;
+    }
+  }
+  return 1;
+}
+
 void GeOpenURL::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -15273,6 +16438,15 @@ int GeOpenURL::export_java( grow_tObject object, ofstream& fp, bool first, char 
   else
     fp << "      ,";
   fp << "new GeDynCommand(" << var_name << ".dd, \"" << GeDyn::cmd_cnv( command) << "\")" << endl;
+  return 1;
+}
+
+int GeOpenURL::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  if ( strcmp( url, "") == 0) {
+    dyn->graph->syntax_msg( 'W', object, "OpenURL.URL is missing");
+    (*warning_cnt)++;
+  }
   return 1;
 }
 
@@ -15453,7 +16627,7 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
       GeDyn 	*gm_dyn;
       grow_tObject prev;
 
-      grow_GetObjectName( object, name);
+      grow_GetObjectName( object, name, sizeof(name), glow_eName_Object);
     
       // Find object that has this object as next_horizontal
       grow_GetObjectList( dyn->graph->grow->ctx, &objectlist, &object_cnt);
@@ -15543,7 +16717,7 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
       grow_tObject prev;
       int found;
       
-      grow_GetObjectName( object, name);
+      grow_GetObjectName( object, name, sizeof(name), glow_eName_Object);
       
       // Find object that has this object as next_vertical
       grow_GetObjectList( dyn->graph->grow->ctx, &objectlist, &object_cnt);
@@ -15655,6 +16829,39 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
   return 1;
 }
 
+int GeInputFocus::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  grow_tObject next;
+  int sts;
+
+  if ( strcmp( next_horizontal, "") != 0) {
+    sts = grow_FindObjectByName( dyn->graph->grow->ctx, next_horizontal, &next);
+    if ( EVEN(sts)) {
+      dyn->graph->syntax_msg( 'E', object, "InputFocus.NextHorizontal, object not found");
+      (*error_cnt)++;
+    }
+  }
+  if ( strcmp( next_vertical, "") != 0) {
+    sts = grow_FindObjectByName( dyn->graph->grow->ctx, next_vertical, &next);
+    if ( EVEN(sts)) {
+      dyn->graph->syntax_msg( 'E', object, "InputFocus.NextVertical, object not found");
+      (*error_cnt)++;
+    }
+  }
+  if ( strcmp( next_tab, "") != 0) {
+    sts = grow_FindObjectByName( dyn->graph->grow->ctx, next_tab, &next);
+    if ( EVEN(sts)) {
+      dyn->graph->syntax_msg( 'E', object, "InputFocus.NextTab, object not found");
+      (*error_cnt)++;
+    }
+  }
+  if ( initial_focus == 0 && 
+       strcmp( next_horizontal, "") == 0 && strcmp( next_vertical, "") == 0 && strcmp( next_tab, "") == 0) {
+    dyn->graph->syntax_msg( 'E', object, "InputFocus, no action found");
+    (*error_cnt)++;
+  }
+  return 1;
+}
 void GeCloseGraph::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -16302,6 +17509,29 @@ int GeSlider::export_java( grow_tObject object, ofstream& fp, bool first, char *
   return 1;
 }
 
+int GeSlider::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+
+  int types[] = {pwr_eType_Boolean, pwr_eType_Int32, pwr_eType_Float32, 0};
+  int types2[] = {pwr_eType_Float32, 0};
+  int types3[] = {pwr_eType_Boolean, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Gdh, graph_eDatabase__};
+  graph_eDatabase databases2[] = {graph_eDatabase_Local, graph_eDatabase_Gdh, graph_eDatabase__};
+
+  dyn->syntax_check_attribute( object, "Slider.Attribute", attribute, 0, types, databases,
+			       error_cnt, warning_cnt);
+  dyn->syntax_check_attribute( object, "Slider.MinValueAttr", minvalue_attr, 1, types2, databases2,
+			       error_cnt, warning_cnt);
+  dyn->syntax_check_attribute( object, "Slider.MaxValueAttr", maxvalue_attr, 1, types2, databases2,
+			       error_cnt, warning_cnt);
+  dyn->syntax_check_attribute( object, "Slider.InsensitiveAttr", insensitive_attr, 1, types3, databases2,
+			       error_cnt, warning_cnt);
+  dyn->syntax_check_attribute( object, "Slider.ReleaseAttr", release_attr, 1, types3, databases,
+			       error_cnt, warning_cnt);
+  return 1;
+}
+
+
 void GeFastCurve::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -16697,6 +17927,33 @@ int GeFastCurve::scan( grow_tObject object)
   }
   old_new = *new_p;
 
+  return 1;
+}
+
+int GeFastCurve::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int sts;
+  pwr_eType a_type;
+
+  if ( strcmp( fast_object, "") == 0) {
+    dyn->graph->syntax_msg( 'W', object, "FastCurve.FastObject is missing");
+    (*warning_cnt)++;
+  }
+  else {
+    sts = dyn->graph->check_ldh_object( fast_object, &a_type);
+    if ( EVEN(sts)) {
+      char msg[300];
+      sprintf( msg, "FastCurve.FastObject \"%s\" not found", fast_object);
+      dyn->graph->syntax_msg( 'W', object, msg);
+      (*warning_cnt)++;
+    }
+    else {
+      if ( a_type != pwr_cClass_DsFastCurve) {
+	dyn->graph->syntax_msg( 'E', object, "FastCurve.FastObject is of wrong class");
+	(*error_cnt)++;
+      }
+    }
+  }
   return 1;
 }
 
@@ -18382,6 +19639,33 @@ int GeOptionMenu::export_java( grow_tObject object, ofstream& fp, bool first, ch
   return 1;
 }
 
+int GeOptionMenu::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int types[] = {pwr_eType_Int8, pwr_eType_UInt8, pwr_eType_Int16, pwr_eType_UInt16, 
+		 pwr_eType_Int32, pwr_eType_UInt32, pwr_eType_Int64, pwr_eType_UInt64,
+		 pwr_eType_Float32, pwr_eType_Float64, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Gdh, graph_eDatabase_Local, graph_eDatabase_User,
+				 graph_eDatabase_Ccm, graph_eDatabase__};
+
+  dyn->syntax_check_attribute( object, "OptionMenu.Attribute", attribute, 0, types, databases,
+			       error_cnt, warning_cnt);
+
+  if ( optionmenu_type == ge_eOptionMenuType_Dynamic) {
+    int types2[] = {pwr_eType_String, 0};
+    int types3[] = {pwr_eType_Int32, pwr_eType_UInt32, 0};
+    int types4[] = {pwr_eType_Boolean, 0};
+    graph_eDatabase databases2[] = {graph_eDatabase_Gdh, graph_eDatabase__};
+
+    dyn->syntax_check_attribute( object, "OptionMenu.TextAttribute", text_attribute, 0, types2, databases2,
+			       error_cnt, warning_cnt);
+    dyn->syntax_check_attribute( object, "OptionMenu.SizeAttribute", size_attribute, 0, types3, databases2,
+			       error_cnt, warning_cnt);
+    dyn->syntax_check_attribute( object, "OptionMenu.UpdateAttribute", update_attribute, 0, types4, databases2,
+			       error_cnt, warning_cnt);
+  }
+  return 1;
+}
+
 void GeAnalogText::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -18695,6 +19979,21 @@ int GeSetValue::export_java( grow_tObject object, ofstream& fp, bool first, char
 }
 
 
+int GeSetValue::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int types[] = {pwr_eType_Boolean, pwr_eType_Float32, pwr_eType_Float64, pwr_eType_Char,
+		 pwr_eType_Int8, pwr_eType_Int16, pwr_eType_Int32, pwr_eType_Int64, 
+		 pwr_eType_UInt8,pwr_eType_UInt16,pwr_eType_UInt32, pwr_eType_UInt64,
+		 pwr_eType_String, pwr_eType_Objid, pwr_eType_ClassId, pwr_eType_TypeId,
+		 pwr_eType_ObjectIx, pwr_eType_VolumeId, pwr_eType_RefId, pwr_eType_AttrRef,
+		 pwr_eType_Time, pwr_eType_DeltaTime, pwr_eType_Enum, pwr_eType_Mask, 0};
+  graph_eDatabase databases[] = {graph_eDatabase_Local, graph_eDatabase_Gdh, graph_eDatabase_Ccm, 
+				 graph_eDatabase__};
+  dyn->syntax_check_attribute( object, "SetValue.Attribute", attribute, 0, types, databases, error_cnt, warning_cnt);
+
+  return 1;
+}
+
 void GeMethodToolbar::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -18889,6 +20188,27 @@ int GeMethodToolbar::action( grow_tObject object, glow_tEvent event)
 
 int GeMethodToolbar::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
 {
+  return 1;
+}
+
+int GeMethodToolbar::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int sts;
+  pwr_eType a_type;
+
+  if ( strcmp( method_object, "") == 0) {
+    dyn->graph->syntax_msg( 'E', object, "MethodToolbar.Object is missing");
+    (*warning_cnt)++;
+  }
+  else {
+    sts = dyn->graph->check_ldh_object( method_object, &a_type);
+    if ( EVEN(sts)) {
+      char msg[300];
+      sprintf( msg, "MethodToolbar.Object \"%s\" not found", method_object);
+      dyn->graph->syntax_msg( 'W', object, msg);
+      (*warning_cnt)++;
+    }
+  }
   return 1;
 }
 
@@ -19260,6 +20580,27 @@ int GeMethodPulldownMenu::export_java( grow_tObject object, ofstream& fp, bool f
   return 1;
 }
 
+int GeMethodPulldownMenu::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  int sts;
+  pwr_eType a_type;
+
+  if ( strcmp( method_object, "") == 0) {
+    dyn->graph->syntax_msg( 'E', object, "MethodPulldownMenu.Object is missing");
+    (*warning_cnt)++;
+  }
+  else {
+    sts = dyn->graph->check_ldh_object( method_object, &a_type);
+    if ( EVEN(sts)) {
+      char msg[300];
+      sprintf( msg, "MethodPulldownMenu.Object \"%s\" not found", method_object);
+      dyn->graph->syntax_msg( 'W', object, msg);
+      (*warning_cnt)++;
+    }
+  }
+  return 1;
+}
+
 void GeCatchSignal::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -19341,6 +20682,15 @@ int GeCatchSignal::action( grow_tObject object, glow_tEvent event)
 
 int GeCatchSignal::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
 {
+  return 1;
+}
+
+int GeCatchSignal::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  if ( strcmp( signal_name, "") == 0) {
+    dyn->graph->syntax_msg( 'E', object, "CatchSignal.SignalName is missing");
+    (*warning_cnt)++;
+  }
   return 1;
 }
 
@@ -19440,3 +20790,13 @@ int GeEmitSignal::export_java( grow_tObject object, ofstream& fp, bool first, ch
 {
   return 1;
 }
+
+int GeEmitSignal::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  if ( strcmp( signal_name, "") == 0) {
+    dyn->graph->syntax_msg( 'E', object, "EmitSignal.SignalName is missing");
+    (*warning_cnt)++;
+  }
+  return 1;
+}
+

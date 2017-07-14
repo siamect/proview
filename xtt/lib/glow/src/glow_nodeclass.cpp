@@ -59,7 +59,7 @@ GlowNodeClass::GlowNodeClass( GrowCtx *glow_ctx, const char *name,
 {
   memset( dyn_color, 0, sizeof( dyn_color));
   memset( dyn_attr, 0, sizeof( dyn_attr));
-  strcpy( nc_name, name);
+  strcpy( n_name, name);
   strcpy( java_name, "");
   strcpy( next_nodeclass, "");
   memset( argname, 0, sizeof(argname));
@@ -128,7 +128,7 @@ void GlowNodeClass::save( ofstream& fp, glow_eSaveMode mode)
        (mode == glow_eSaveMode_Edit && group == glow_eNodeGroup_Trace) )
     return;
   fp <<	int(glow_eSave_NodeClass) << endl;
-  fp <<	int(glow_eSave_NodeClass_nc_name) << FSPACE << nc_name << endl;
+  fp <<	int(glow_eSave_NodeClass_nc_name) << FSPACE << n_name << endl;
   fp <<	int(glow_eSave_NodeClass_a) << endl;
   a.save( fp, mode);
   fp <<	int(glow_eSave_NodeClass_group) << FSPACE << int(group) << endl;
@@ -206,7 +206,7 @@ void GlowNodeClass::open( ifstream& fp)
       case glow_eSave_NodeClass: break;
       case glow_eSave_NodeClass_nc_name:
         fp.get();
-        fp.getline( nc_name, sizeof(nc_name));
+        fp.getline( n_name, sizeof(n_name));
         break;
       case glow_eSave_NodeClass_a: a.open( ctx, fp); break;
       case glow_eSave_NodeClass_group: fp >> tmp; group = (glow_eNodeGroup)tmp; break;
@@ -322,12 +322,12 @@ void GlowNodeClass::open( ifstream& fp)
       }
     }
     if ( !next_nc) 
-      cout << "GlowNode:next_nodeclass not found: " << nc_name << " " <<
+      cout << "GlowNode:next_nodeclass not found: " << n_name << " " <<
 		next_nodeclass << endl;
     else if ( ((GlowNodeClass *)next_nc)->prev_nc)
     {
       next_nc = 0;
-      cout << "GlowNode:next_nodeclass already chained: " << nc_name << " " <<
+      cout << "GlowNode:next_nodeclass already chained: " << n_name << " " <<
 		next_nodeclass << endl;
     }
     else
@@ -503,11 +503,6 @@ void GlowNodeClass::get_obstacle_borders( double pos_x, double pos_y, double *x_
   }
 }
 
-void GlowNodeClass::get_object_name( char *name)
-{
-  strcpy( name, nc_name);
-}
-
 void GlowNodeClass::set_fill_color( glow_eDrawType drawtype)
 {
   for ( int i = 0; i < a.a_size; i++)
@@ -634,7 +629,7 @@ int GlowNodeClass::get_java_name( char *jname)
     strcpy( jname, java_name);
     return 1;
   }
-  strcpy( jname, nc_name);
+  strcpy( jname, n_name);
   return 0;
 }
 

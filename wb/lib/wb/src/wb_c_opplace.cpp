@@ -86,11 +86,12 @@ static pwr_tStatus SyntaxCheck (
 ) {
   wb_session *sp = (wb_session *)Session;
   pwr_tString80 selectlist[40];
+  pwr_tString32 username;
 
   wb_attribute a = sp->attribute( &Object);
   if ( !a) return a.sts();
 
-  // Check Attribute
+  // Check EventSelectList
   wb_attribute selectlist_a( a, 0, "EventSelectList");
   if (!selectlist_a) return selectlist_a.sts();
     
@@ -106,6 +107,16 @@ static pwr_tStatus SyntaxCheck (
   }
   if ( empty)
     wsx_error_msg_str( Session, "EventSelectList is empty", Object, 'W', ErrorCount, WarningCount);
+
+  // Check UserName
+  wb_attribute username_a( a, 0, "UserName");
+  if (!username_a) return username_a.sts();
+    
+  username_a.value( username);
+  if ( !username_a) return username_a.sts();
+
+  if ( strcmp( username, "") == 0)
+    wsx_error_msg_str( Session, "UserName is empty", Object, 'W', ErrorCount, WarningCount);
 
   return PWRB__SUCCESS;
 }

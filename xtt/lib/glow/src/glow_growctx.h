@@ -295,7 +295,7 @@ class GrowCtx : public GlowCtx {
 
   //! Set context name.
   /*! \param grow_name	Context name. */
-  void set_name( char *grow_name) { strcpy( name, grow_name);};
+  void set_name( char *grow_name) { strncpy( name, grow_name, sizeof(name)); name[sizeof(name)-1] = 0;}
 
   //! Get context name.
   /*! \param grow_name	Context name. */

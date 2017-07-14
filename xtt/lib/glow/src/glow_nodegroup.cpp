@@ -61,7 +61,7 @@ GlowNodeGroup::GlowNodeGroup( const GlowNodeGroup& nc)
   : GlowNodeClass( (GlowNodeClass &)nc)
 {
   // Get unique name
-  sprintf( nc_name, "Grp%d_", ((GrowCtx *)ctx)->objectname_cnt++); 
+  sprintf( n_name, "Grp%d_", ((GrowCtx *)ctx)->objectname_cnt++); 
 }
 
 GlowNodeGroup::~GlowNodeGroup()
@@ -74,6 +74,7 @@ void GlowNodeGroup::ungroup( GlowTransform *t)
 
   for ( int i = 0; i < a.size(); i++)
   {
+    a[i]->set_parent(0);
     ctx->insert( a[i]);
     if ( a[i]->type() == glow_eObjectType_GrowNode ||
          a[i]->type() == glow_eObjectType_GrowGroup)

@@ -963,7 +963,7 @@ void GlowArray::open( GrowCtx *ctx, ifstream& fp)
 	n->open( fp);
 
         //  Check if this NodeClass already is loaded
-	n->get_object_name( name);
+	n->get_object_name( name, sizeof(name), glow_eName_Object);
 	if ( find_by_name( name, &element))
           delete n;
         else
@@ -981,7 +981,7 @@ void GlowArray::open( GrowCtx *ctx, ifstream& fp)
 	n->open( fp);
 
         //  Check if this ConClass already is loaded
-	n->get_object_name( name);
+	n->get_object_name( name, sizeof(name), glow_eName_Object);
 	if ( find_by_name( name, &element))
           delete n;
         else
@@ -1337,14 +1337,40 @@ int GlowArray::find_by_name( const char *name, GlowArrayElem **element)
 {
   int i;
   char object_name[80];
+  char *s;
 
-  for ( i = 0; i < a_size; i++)
-  {
-    a[i]->get_object_name( object_name);
-    if ( cdh_NoCaseStrcmp( name, object_name) == 0)
-    {
-      *element = a[i];
-      return 1;
+  if ( (s = strchr( (char *)name, '-')) != 0) {
+    // Find in a group
+    GlowArrayElem *group;
+    int len;
+    char gname[80];
+    int found;
+
+    len = s - name;
+    strncpy( gname, name, len);
+    gname[len] = 0;
+
+    found = 0;
+    for ( i = 0; i < a_size; i++) {
+      a[i]->get_object_name( object_name, sizeof(object_name), glow_eName_Object);
+      if ( cdh_NoCaseStrcmp( gname, object_name) == 0) {
+	group = a[i];
+	found = 1;
+	break;
+      }
+    }
+    if ( !found)
+      return 0;
+
+    return ((GrowGroup *)group)->find_by_name( &name[len+1], element);
+  }
+  else {
+    for ( i = 0; i < a_size; i++) {
+      a[i]->get_object_name( object_name, sizeof(object_name), glow_eName_Object);
+      if ( cdh_NoCaseStrcmp( name, object_name) == 0) {
+	*element = a[i];
+	return 1;
+      }
     }
   }
   return 0;
@@ -1954,6 +1980,12 @@ char *GlowArray::get_last_group()
     return groups[max_idx];
 
   return nullstr;
+}
+
+void GlowArray::set_parent( GlowArrayElem *parent)
+{
+  for ( int i = 0; i < a_size; i++)
+    a[i]->set_parent( parent);
 }
 
 int GlowArray::get_background_object_limits( GlowTransform *t, 

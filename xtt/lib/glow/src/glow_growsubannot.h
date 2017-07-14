@@ -80,8 +80,6 @@ class GrowSubAnnot : public GlowAnnot {
     glow_eObjectType type() { return glow_eObjectType_GrowSubAnnot;};
     void	measure( double *ll_x, double *ll_y, double *ur_x, double *ur_y)
 	{ *ll_x = x_left; *ll_y = y_low; *ur_x = x_right; *ur_y = y_high;};
-    void get_object_name( char *name) { strcpy( name, n_name);};
-    void set_object_name( char *name) { strcpy( n_name, name);};
     double	x_right;
     double	x_left;
     double	y_high;
@@ -89,7 +87,6 @@ class GrowSubAnnot : public GlowAnnot {
     int		hot;
     GlowPoint	pzero;
     GlowPoint	stored_pos;
-    char	n_name[32];
     int		highlight;
     int		inverse;
     GlowText	text;

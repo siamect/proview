@@ -127,6 +127,11 @@ typedef enum {
 } glow_eMB3Action;
 
 typedef enum {
+  glow_eName_Object,
+  glow_eName_Path
+} glow_eName;
+
+typedef enum {
   glow_eTextSize_8	= 0,
   glow_eTextSize_10	= 1,
   glow_eTextSize_12	= 2,

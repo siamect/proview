@@ -149,6 +149,7 @@ MsgWindowGtk::MsgWindowGtk (
   msgnav = new MsgListGtk( this, form, &nav_widget);
   msgnav->find_wnav_cb = MsgWindow::msgw_find_wnav_cb;
   msgnav->find_plc_cb = MsgWindow::msgw_find_plc_cb;
+  msgnav->find_ge_cb = MsgWindow::msgw_find_ge_cb;
 
   gtk_box_pack_start( GTK_BOX(form), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(form), GTK_WIDGET(nav_widget), TRUE, TRUE, 0);

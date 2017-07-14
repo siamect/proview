@@ -74,7 +74,7 @@ void msgw_message_object( pwr_tStatus sts, const char *text1, const char *text2,
 
 void msgw_message_plcobject( pwr_tStatus sts, const char *text1, const char *text2, pwr_tOid oid)
 {
-  MsgWindow::message( co_error(sts), text1, text2, oid, true);
+  MsgWindow::message( co_error(sts), text1, text2, oid, msgw_eRow_Plc);
 }
 
 void msgw_set_nodraw()

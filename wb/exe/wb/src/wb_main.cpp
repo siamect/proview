@@ -75,6 +75,7 @@
 #include "wb_vrepext.h"
 #include "wb_dblock.h"
 #include "wb_main.h"
+#include "ge.h"
 
 using namespace std;
 
@@ -202,6 +203,23 @@ void Wb::find_plc_cb( void *ctx, pwr_tOid oid)
       wtt->time_to_exit_cb = Wb::time_to_exit;
       wb->wttlist_add( &sts, wtt, oid.vid);
       sts = wtt->find_plc( oid);
+    }
+  }
+}
+
+void Wb::find_ge_cb( void *ctx, char *object, void *utility)
+{
+  Wb *wb = main_wb;
+  pwr_tStatus sts;
+  Wtt *wtt;
+
+  for ( wttlist_iterator it = wb->wttlist.begin(); it != wb->wttlist.end(); it++) {
+    wtt = it->second;
+    sts = wtt->appl.find( wb_eUtility_Ge, utility);
+    if ( ODD(sts)) {
+      ((Ge *)utility)->select_object( object);
+      ((Ge *)utility)->pop();
+      break;
     }
   }
 }

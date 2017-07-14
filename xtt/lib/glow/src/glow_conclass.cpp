@@ -35,6 +35,7 @@
  **/
 
 #include "glow_std.h"
+#include "glow_msg.h"
 
 #include <iostream>
 #include <fstream>
@@ -48,7 +49,7 @@ GlowConClass::GlowConClass( GrowCtx *glow_ctx, const char *name,
     draw_type(d_type), line_width(line_w), arrow_width(arrow_w),
     arrow_length(arrow_l), round_corner_amount(round_corner_amnt), group(grp)
 {
-  strcpy( cc_name, name);
+  strcpy( n_name, name);
   zero.nav_zoom();
   zero.print_zoom();
 }
@@ -60,7 +61,7 @@ void GlowConClass::save( ofstream& fp, glow_eSaveMode mode)
        (mode == glow_eSaveMode_Edit && group == glow_eConGroup_Trace) )
     return;
   fp <<	int(glow_eSave_ConClass) << endl;
-  fp <<	int(glow_eSave_ConClass_cc_name) << FSPACE << cc_name << endl;
+  fp <<	int(glow_eSave_ConClass_cc_name) << FSPACE << n_name << endl;
   fp <<	int(glow_eSave_ConClass_con_type) << FSPACE << int(con_type) << endl;
   fp <<	int(glow_eSave_ConClass_corner) << FSPACE << int(corner) << endl;
   fp <<	int(glow_eSave_ConClass_draw_type) << FSPACE << int(draw_type) << endl;
@@ -92,7 +93,7 @@ void GlowConClass::open( ifstream& fp)
       case glow_eSave_ConClass: break;
       case glow_eSave_ConClass_cc_name: 
         fp.get();
-        fp.getline( cc_name, sizeof(cc_name));
+        fp.getline( n_name, sizeof(n_name));
         break;
       case glow_eSave_ConClass_con_type: fp >> tmp; con_type = (glow_eConType)tmp; break;
       case glow_eSave_ConClass_corner: fp >> tmp; corner = (glow_eCorner)tmp; break;
@@ -112,11 +113,6 @@ void GlowConClass::open( ifstream& fp)
   }
 }
 
-void GlowConClass::get_object_name( char *name)
-{
-  strcpy( name, cc_name);
-}
-
 void GlowConClass::convert( glow_eConvert version) 
 {
   switch ( version) {
@@ -132,6 +128,6 @@ void GlowConClass::convert( glow_eConvert version)
 
 ostream& operator<< ( ostream& o, const GlowConClass cc)
 {
-  o << "ConClass: " << cc.cc_name;
+  o << "ConClass: " << cc.n_name;
   return o;
 }

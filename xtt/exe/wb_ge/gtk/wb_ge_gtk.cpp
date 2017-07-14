@@ -56,6 +56,7 @@ typedef void *ldh_tSesContext;
 #include "ge_gtk.h"
 #include "co_lng.h"
 #include "cow_xhelp_gtk.h"
+#include "cow_msgwindow_gtk.h"
 #include "wb_log_gtk.h"
 
 #define wnav_cInitFile "$pwrp_login/wtt_init"
@@ -140,6 +141,12 @@ int main( int argc, char *argv[])
   g_object_set( toplevel, "visible", FALSE, NULL);
 
   new wb_log_gtk( toplevel);
+
+  // Create message window
+  MsgWindowGtk *msg_window = new MsgWindowGtk( gectx, mainwindow, "Ge messages", &sts);
+  msg_window->find_ge_cb = Ge::find_ge_cb;
+  MsgWindow::set_default( msg_window);
+
 
   gtk_main();
   return (0);

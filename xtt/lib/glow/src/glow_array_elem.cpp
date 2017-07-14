@@ -34,28 +34,45 @@
  * General Public License plus this exception.
  **/
 
-#ifndef wb_utility_h
-#define wb_utility_h
+#include "glow_std.h"
 
-/* wb_utility.h -- Baseclass for a workbench utility */
 
-typedef enum {
-	wb_eUtility_Wtt 		= 999,
-	wb_eUtility_PlcEditor 		= 1000,
-	wb_eUtility_AttributeEditor	= 1001,
-	wb_eUtility_Distributor		= 1002,
-	wb_eUtility_SpreadsheetEditor  	= 1003,
-	wb_eUtility_Cmd  		= 1004,
-	wb_eUtility_WNav  		= 1005,
-	wb_eUtility_AttrTextEditor	= 1006,
-	wb_eUtility_Ge			= 1007
-} wb_eUtility;
+#include <iostream>
+#include <float.h>
+#include <math.h>
+#include <stdlib.h>
+#include "glow_growgroup.h"
+#include "glow_msg.h"
 
-class WUtility {
- public:
-  WUtility( wb_eUtility type) : utype(type) {}
-  virtual ~WUtility() {}
-  wb_eUtility	utype;
-};
+int GlowArrayElem::get_object_name( char *name, int size, glow_eName ntype)
+{
+  int sts;
 
-#endif
+  switch ( ntype) {
+  case glow_eName_Object:
+    if ( (int)strlen(n_name) + 1 > size)
+      return GLOW__BUFF_SMALL;
+    strcpy( name, n_name);
+    break;
+  case glow_eName_Path:
+    if ( parent) {
+      sts = ((GrowGroup *)parent)->get_path( name, size);
+      if ( EVEN(sts)) return sts;
+
+      if ( (int)strlen(name) + (int)strlen(n_name) + 2 > size)
+	return GLOW__BUFF_SMALL;
+      strcat( name, "-");
+      strcat( name, n_name);
+    }
+    else {
+      if ( (int)strlen(n_name) + 1 > size)
+	return GLOW__BUFF_SMALL;
+      strcpy( name, n_name);
+    }
+    break;
+  }
+  return GLOW__SUCCESS;
+} 
+
+
+

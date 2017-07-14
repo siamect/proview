@@ -57,6 +57,12 @@ typedef enum {
   msgw_ePop_Default
 } msgw_ePop;
 
+typedef enum {
+  msgw_eRow_,
+  msgw_eRow_Plc,
+  msgw_eRow_Ge
+} msgw_eRow;
+
 class CoWow;
 class CoWowFocusTimer;
 
@@ -78,6 +84,7 @@ class MsgWindow {
     int			max_size;
     void 		(*find_wnav_cb)( void *, pwr_tObjid);
     void 		(*find_plc_cb)( void *, pwr_tObjid);
+    void 		(*find_ge_cb)( void *, char *, void *);
     CoWow		*wow;
 
     static MsgWindow 	*default_window;
@@ -88,20 +95,25 @@ class MsgWindow {
     virtual void	print() {}
 
     int         is_mapped() { return displayed;};
-    void 	insert( int severity, const char *text, pwr_tOid oid = pwr_cNOid, bool is_plc = false);
+    void 	insert( int severity, const char *text, pwr_tOid oid = pwr_cNOid, msgw_eRow row = msgw_eRow_);
+    void 	insert( int severity, const char *text, char *object, void *utility, msgw_eRow row = msgw_eRow_);
     void	set_nodraw() { msgnav->set_nodraw(); nodraw++;}
     void	reset_nodraw();
     void 	msg( int severity, const char *text, msgw_ePop pop = msgw_ePop_Default, 
-			 pwr_tOid oid = pwr_cNOid, bool is_plc = false);
+			 pwr_tOid oid = pwr_cNOid, msgw_eRow row = msgw_eRow_);
     void 	activate_print() { print();}
     static void	set_default( MsgWindow *msgw) { default_window = msgw;}
     static int has_default() { return default_window ? 1 : 0;}
     static void message( int severity, const char *text, msgw_ePop pop = msgw_ePop_Default, 
-			 pwr_tOid oid = pwr_cNOid, bool is_plc = false);
+			 pwr_tOid oid = pwr_cNOid, msgw_eRow row = msgw_eRow_);
+    static void message( int severity, const char *text, msgw_ePop pop, 
+			 char *object, void *utility,  msgw_eRow row = msgw_eRow_);
     static void message( const co_error& e, const char *text1 = 0, const char *text2 = 0,
-			 pwr_tOid oid = pwr_cNOid, bool is_plc = false);
+			 pwr_tOid oid = pwr_cNOid, msgw_eRow row = msgw_eRow_);
     static void message( int severity, const char *text1, const char *text2, const char *text3 = 0,
-			 pwr_tOid oid = pwr_cNOid, bool is_plc = false);
+			 pwr_tOid oid = pwr_cNOid, msgw_eRow row = msgw_eRow_);
+    static void message( int severity, const char *text1, const char *text2, const char *text3,
+			 char *object, void *utility, msgw_eRow row = msgw_eRow_);
     static bool	has_window() { return default_window != 0;}
     static CoWow *get_wow() { return default_window ? default_window->wow : 0;}
     static void map_default() { if ( default_window) default_window->map();}
@@ -110,6 +122,7 @@ class MsgWindow {
     static void hide_info_messages( int hide) { hide_info = hide;}
     static void msgw_find_wnav_cb( void *ctx, pwr_tOid oid);
     static void msgw_find_plc_cb( void *ctx, pwr_tOid oid);
+    static void msgw_find_ge_cb( void *ctx, char *object, void *utility);
 };
 
 #endif

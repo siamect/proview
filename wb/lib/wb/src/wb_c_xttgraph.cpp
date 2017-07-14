@@ -65,7 +65,8 @@ static pwr_tStatus OpenGraph (
   cdh_ToLower( graph_name, action);
   free( (char *)action);
   if ( strstr( graph_name, ".pwg")) {
-    ip->wtt->ge_new( graph_name);
+    Ge *gectx = ip->wtt->ge_new( graph_name);
+    ip->wtt->register_utility( gectx, wb_eUtility_Ge);
     return 1;
   }
   return PWRB__GRAPHACTION;

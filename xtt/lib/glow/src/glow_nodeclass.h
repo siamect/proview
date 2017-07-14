@@ -220,10 +220,6 @@ class GlowNodeClass : public GlowArrayElem {
   /*! \param num	Annotation number. */
   int check_annotation( int num);
 
-  //! Get nodeclass name
-  /*! \param name	Returned name. */
-  void get_object_name( char *name);
-
   //! Set fill color for all nodeclass elements.
   /*! \param drawtype	Color. */
   void set_fill_color( glow_eDrawType drawtype);
@@ -393,7 +389,6 @@ class GlowNodeClass : public GlowArrayElem {
 
   GrowCtx	*ctx;		//!< Glow context.
   GlowArray 	a;		//!< Array of nodeclass elements.
-  char		nc_name[80];	//!< Name of nodeclass.
   glow_eNodeGroup group;	//!< Group the nodeclass belongs to.
   char 		*dynamic;	//!< Dynamic code.
   int 		dynamicsize;	//!< Size of dynamic code.
