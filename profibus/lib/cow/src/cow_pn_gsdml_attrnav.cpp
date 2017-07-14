@@ -3458,8 +3458,11 @@ int ItemPnModuleType::open_children( GsdmlAttrNav *attrnav, double x, double y)
 			 node, flow_eDest_IntoLast);
     
     gsdml_UseableModules *um = attrnav->gsdml->ApplicationProcess->DeviceAccessPointList->DeviceAccessPointItem[attrnav->device_num-1]->UseableModules;
-    if ( !um)
+    if ( !um) {
+      brow_ResetNodraw( attrnav->brow->ctx);
+      brow_Redraw( attrnav->brow->ctx, node_y);
       return 1;
+    }
     for ( unsigned int i = 0; i < um->ModuleItemRef.size(); i++) {
       if ( um->ModuleItemRef[i]->Body.AllowedInSlots.list &&
 	   um->ModuleItemRef[i]->Body.AllowedInSlots.list->in_list(slot_number)) {
