@@ -154,7 +154,7 @@ qos_WaitQue (
   qdb_Unlock;
 
   if (tmo != qcom_cTmoEternal) {
-    time_GetTime(&atime);
+    time_GetTimeMonotonic(&atime);
     time_MsToD(&dtime, tmo);
     time_Aadd(&atime, &atime, &dtime);
     atime_ts.tv_sec = atime.tv_sec;

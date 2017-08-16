@@ -1104,6 +1104,7 @@ qdb_Put (
     }
     break;
   default:
+    qdb_Unlock;
     errh_Bugcheck(QCOM__WEIRD, "unknown queue type");
   }
 }
@@ -1240,6 +1241,7 @@ qdb_AddQue (
   qp->qix = qix;
   
   pthread_condattr_init(&condattr);
+  pthread_condattr_setclock(&condattr, CLOCK_MONOTONIC);
 #if !defined OS_OPENBSD
   pthread_condattr_setpshared(&condattr, PTHREAD_PROCESS_SHARED);
 #endif
