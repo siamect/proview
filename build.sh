@@ -72,9 +72,9 @@ fi
 btype="dbg"
 ename=$ver$hw
 desc=$verl
+gui="qt"
 
-
-pwre add $ename $root/src \"\" $root/rls $btype $os $hw "$desc"
+pwre add $ename $root/src \"\" $root/rls $btype $os $hw $gui "$desc"
 pwre init $ename
 
 # Build

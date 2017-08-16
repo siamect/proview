@@ -169,6 +169,13 @@ endif
 (%.o) : %.o
 	@ echo "Error, rule shall not be used: (%.o) : %.o"
 
+$(inc_dir)/%_qt.h : %_qt.h
+#	@ (>&2 echo "moc $(csetos) $(cinc) -o $<.moc.cpp $<")
+	@ moc -nw $(csetos) $(cinc) -o $<.moc.cpp $<
+#	if [ ! -s $<.moc.cpp ]; then rm $<.moc.cpp; fi;
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+	@ chmod u+w $(target)
 
 $(inc_dir)/%.h : %.h
 	@ $(log_h_h)

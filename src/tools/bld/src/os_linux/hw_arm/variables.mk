@@ -112,11 +112,19 @@ pre_so =
 #  linkgtk     :=
 #endif
 
+#ifeq ($(pwre_conf_qt),1)
+#  cqt        := -DPWRE_CONF_QT=1
+#  linkqt     := `pkg-config --libs QtCore QtGui`
+#else
+#  cqt        :=
+#  linkqt     :=
+#endif
+
 log_done	=
 #csetos		:= -DOS_LINUX=1 -DOS=linux -D_LINUX -DHW_ARM=1 -DHW=ARM
 #cinc		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) -I$(jdk)/include -I$(jdk)/include/linux
 csetos 		:= $(pwre_conf_cc_define)
-cinc 		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) $(pwre_conf_incdir) $(pwre_conf_incdirgtk) $(pwre_conf_incdirgst)
+cinc 		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) $(pwre_conf_incdir) $(pwre_conf_incdirgtk) $(pwre_conf_incdirgst) $(pwre_conf_incdirgtk)
 rm		:= rm
 cp		:= cp
 cpflags		:= 

@@ -45,6 +45,7 @@ $vmsinc = "";
 $broot  = "/usr/users/$user/$user" . "_dbg";
 $btype  = "dbg";
 $os	= "linux";
+$gui = "qt";
 if ($ENV{"pwre_hosttype"} eq "rs6000") {
   $hw	= "ppc";
 } else {
@@ -352,12 +353,6 @@ sub ebuild # args: pass flavour
  
   my $pass = $_[0];
   my $flavour = $_[1];
-  if ( $_[1] eq "motif") {
-    $flavour = "motif";
-  }
-  else {
-    $flavour = "gtk";
-  }
 
   if ( $pass eq "rt" ) {
     _module("rt");
@@ -617,12 +612,6 @@ sub ebuild # args: pass flavour
 sub import ()
 {
   my $flavour = $_[1];
-  if ( $_[1] eq "motif") {
-    $flavour = "motif";
-  }
-  else {
-    $flavour = "gtk";
-  }
 
   my($vmsinc) = $ENV{"pwre_vmsinc"};
   if ( $vmsinc ne "" ) {
@@ -840,7 +829,7 @@ sub method_build ()
 
   my $flavour;
   my $program;
-  if ( $_[0] eq "motif" || $_[0] eq "gtk") {
+  if ( $_[0] eq "motif" || $_[0] eq "gtk" || $_[0] eq "qt" ) {
     $flavour = $_[0];
   }
   else {
@@ -865,7 +854,7 @@ sub method_build ()
     merge();
   }
   if ( $flavour eq "") {
-    $flavour = "gtk";
+    $flavour = "qt";
   }
   if ( $_[0] eq "wb" ) {
     printf("-- Method build %s %s\n", $program, $flavour);
@@ -966,9 +955,10 @@ sub build_module ()
   }
   if ( $_[0] eq "motif" || $_[1] eq "motif" || $_[2] eq "motif" || $_[3] eq "motif") {
     $flavour = "motif";
-  }
-  else {
+  } elsif ( $_[0] eq "gtk" || $_[1] eq "gtk" || $_[2] eq "gtk" || $_[3] eq "gtk") {
     $flavour = "gtk";
+  } else {
+    $flavour = "qt";
   }
 
   if (!defined($ENV{"pwre_env"})) {
@@ -1186,12 +1176,6 @@ sub copy ()
     system("$cmd");
 
     my $flavour = $_[1];
-    if ( $_[1] eq "motif") {
-      $flavour = "motif";
-    }
-    else {
-      $flavour = "gtk";
-    }
 
     my($cmd) = "make -f $bindir/import_files.mk" . " " . $_[0] . "_" . $flavour; 
     system("$cmd");
@@ -1325,8 +1309,8 @@ sub list ()
   print("-- Defined environments:\n");
   foreach $env (sort keys (%envdb)) {
       $varstr = $envdb{$env};
-      ($sroot, $vmsinc, $broot, $btype, $os, $hw, $desc)  =  split(/:/, $varstr);
-      @vars = ($sroot, $vmsinc, $broot, $btype, $os, $hw, $desc);
+      ($sroot, $vmsinc, $broot, $btype, $os, $hw, $flavour, $desc)  =  split(/:/, $varstr);
+      @vars = ($sroot, $vmsinc, $broot, $btype, $os, $hw, $flavour, $desc);
     printf("   %s			%s\n", $env, $desc);
   }
   print("--\n");
@@ -1675,12 +1659,17 @@ sub get_vars ()
     $hw = $_[6];
   }
   if ($_[7] eq "") {
+    $gui =    	get_var(" Graphical User Interface    [%s]? ", $gui);
+  } else {
+    $gui = $_[7];
+  }
+  if ($_[8] eq "") {
     $desc =  	get_var(" Description [%s]? ", $desc);
   } else {
-    $desc = $_[7];
+    $desc = $_[8];
   }
 
-  $varstr = join(";", ($sroot, $vmsinc, $broot, $btype, $os, $hw, $desc));
+  $varstr = join(";", ($sroot, $vmsinc, $broot, $btype, $os, $hw, $gui, $desc));
 
 }
 
@@ -1701,8 +1690,8 @@ sub get_var()
 sub read_vars ()
 {
   $varstr = $envdb{$label};
-  ($sroot, $vmsinc, $broot, $btype, $os, $hw, $desc)  =  split(/;/, $varstr);
-  @vars = ($sroot, $vmsinc, $broot, $btype, $os, $hw, $desc);
+  ($sroot, $vmsinc, $broot, $btype, $os, $hw, $gui, $desc)  =  split(/;/, $varstr);
+  @vars = ($sroot, $vmsinc, $broot, $btype, $os, $hw, $gui, $desc);
 }
 
 
@@ -1720,6 +1709,7 @@ sub show_vars ()
   printf("-- Build type.....: %s\n", $btype);
   printf("-- OS.............: %s\n", $os);
   printf("-- Hardware.......: %s\n", $hw);
+  printf("-- Graphical user interface.......: %s\n", $gui);
   printf("-- Description....: %s\n", $desc);
 }
 

@@ -11,6 +11,7 @@
 # $pwre_bmodule	Module name in build tree, eg. 'ssabox'
 # $pwre_os	Operating system, eg. 'os_linux'
 # $pwre_hw	Hardware, eg. 'hw_x86'
+# $pwre_gui	Graphical User Interface, eg. 'qt', 'gtk' or 'motif'
 # $pwr_exe	Exe directory for module build root, eg. ssabox/exe
 # $pwr_load	Load directory for module build root
 # $pwr_inc	Inc directory for module build root
@@ -68,6 +69,7 @@ set_env()
 	export pwre_btype="$4"
 	export pwre_os="os_$5"
 	export pwre_hw="hw_$6"
+	export pwre_gui="$7"
 	export pwre_target="$pwre_os/$pwre_hw"
 
 	export pwre_bin="$pwre_kroot/tools/pwre/src/$pwre_os"
@@ -160,6 +162,12 @@ set_env()
           export pwre_conf_gtk=1
 	else
 	  export pwre_conf_gtk=0
+        fi
+# Qt
+	if [ -e /usr/lib/x86_64-linux-gnu/libQtGui.so ]; then
+          export pwre_conf_qt=1
+	else
+	  export pwre_conf_qt=0
         fi
 
 # libusb
