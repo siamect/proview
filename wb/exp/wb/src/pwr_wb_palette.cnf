@@ -392,6 +392,7 @@ palette NavigatorPalette
         {
           class PnDevice
           class ABB_ACS_PnDevice
+          class ABB_ACS880_PnDevice
 	  class Eurotherm_EPower_PnDevice
           class Siemens_ET200S_PnDevice
           class Siemens_ET200M_PnDevice
