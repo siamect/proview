@@ -45,7 +45,6 @@ $vmsinc = "";
 $broot  = "/usr/users/$user/$user" . "_dbg";
 $btype  = "dbg";
 $os	= "linux";
-$gui = "qt";
 if ($ENV{"pwre_hosttype"} eq "rs6000") {
   $hw	= "ppc";
 } else {
@@ -1659,17 +1658,12 @@ sub get_vars ()
     $hw = $_[6];
   }
   if ($_[7] eq "") {
-    $gui =    	get_var(" Graphical User Interface    [%s]? ", $gui);
-  } else {
-    $gui = $_[7];
-  }
-  if ($_[8] eq "") {
     $desc =  	get_var(" Description [%s]? ", $desc);
   } else {
-    $desc = $_[8];
+    $desc = $_[7];
   }
 
-  $varstr = join(";", ($sroot, $vmsinc, $broot, $btype, $os, $hw, $gui, $desc));
+  $varstr = join(";", ($sroot, $vmsinc, $broot, $btype, $os, $hw, $desc));
 
 }
 
@@ -1690,8 +1684,8 @@ sub get_var()
 sub read_vars ()
 {
   $varstr = $envdb{$label};
-  ($sroot, $vmsinc, $broot, $btype, $os, $hw, $gui, $desc)  =  split(/;/, $varstr);
-  @vars = ($sroot, $vmsinc, $broot, $btype, $os, $hw, $gui, $desc);
+  ($sroot, $vmsinc, $broot, $btype, $os, $hw, $desc)  =  split(/;/, $varstr);
+  @vars = ($sroot, $vmsinc, $broot, $btype, $os, $hw, $desc);
 }
 
 
@@ -1709,7 +1703,6 @@ sub show_vars ()
   printf("-- Build type.....: %s\n", $btype);
   printf("-- OS.............: %s\n", $os);
   printf("-- Hardware.......: %s\n", $hw);
-  printf("-- Graphical user interface.......: %s\n", $gui);
   printf("-- Description....: %s\n", $desc);
 }
 

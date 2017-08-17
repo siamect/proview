@@ -102,6 +102,21 @@ endif
 	@ $(log_c_obj)
 	@ $(cxx) $(cxxflags) $(csetos) $(cinc) $(cobj) $(source)
 
+$(bld_dir)/%.o : %.cqt
+ifeq ($(nodep),)
+	@ $(log_c_d)
+	@ $(SHELL) -ec '$(cxx) -x c++ -MM $(csetos) $(mmflags) $(cinc) $(source) \
+	  | sed '\''s|$*\.o[ ]*|$(bld_dir)/&|g'\'' > $(bld_dir)/$(sname).d'
+endif
+	@ echo "Generating ../../$(sname)_moc.cpp from ../../$(sname).h using moc"
+	@ moc $(csetos) $(cinc) ../../$(sname).h \
+	  -o $(bld_dir)/$(sname)_moc.cpp
+	@ echo "Compiling ../../$(sname)_moc.cpp"
+	@ $(cxx) $(cxxflags) $(csetos) $(cinc) -o $(bld_dir)/$(sname)_moc.o  $(bld_dir)/$(sname)_moc.cpp
+	@ $(cp) $(source) $(bld_dir)/$(sname).cpp
+	@ $(log_c_obj)
+	@ $(cxx) $(cxxflags) $(csetos) $(cinc) $(cobj) $(bld_dir)/$(sname).cpp
+
 
 $(bld_dir)/%.o : $(tmp_dir)/%.cpp
 ifeq ($(nodep),)
@@ -121,6 +136,21 @@ ifeq ($(nodep),)
 endif
 	@ $(log_c_obj)
 	@ $(cxx) $(cxxflags) $(csetos) $(cinc) $(cobj) $(source)
+
+$(obj_dir)/%.o : %.cqt
+ifeq ($(nodep),)
+	@ $(log_c_d)
+	@ $(SHELL) -ec '$(cxx) -x c++ -MM $(cinc) $(csetos) $(mmflags) $(source) \
+	  | sed '\''s|$*\.o[ ]*|$(obj_dir)/&|g'\'' > $(obj_dir)/$(sname).d'
+endif
+	@ echo "Generating ../../$(sname)_moc.cpp from ../../$(sname).h using moc"
+	@ moc $(csetos) $(cinc) ../../$(sname).h \
+	  -o $(bld_dir)/$(sname)_moc.cpp
+	@ echo "Compiling ../../$(sname)_moc.cpp"
+	@ $(cxx) $(cxxflags) $(csetos) $(cinc) -o $(bld_dir)/$(sname)_moc.o $(bld_dir)/$(sname)_moc.cpp
+	@ $(cp) $(source) $(bld_dir)/$(sname).cpp
+	@ $(log_c_obj)
+	@ $(cxx) $(cxxflags) $(csetos) $(cinc) $(cobj) $(bld_dir)/$(sname).cpp
 
 
 $(inc_dir)/%.h : %.x
@@ -168,14 +198,6 @@ endif
 
 (%.o) : %.o
 	@ echo "Error, rule shall not be used: (%.o) : %.o"
-
-$(inc_dir)/%_qt.h : %_qt.h
-#	@ (>&2 echo "moc $(csetos) $(cinc) -o $<.moc.cpp $<")
-	@ moc -nw $(csetos) $(cinc) -o $<.moc.cpp $<
-#	if [ ! -s $<.moc.cpp ]; then rm $<.moc.cpp; fi;
-	@ $(log_h_h)
-	@ $(cp) $(cpflags) $(source) $(target)
-	@ chmod u+w $(target)
 
 $(inc_dir)/%.h : %.h
 	@ $(log_h_h)

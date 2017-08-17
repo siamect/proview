@@ -111,14 +111,6 @@ linkcp = :
 #  linkgtk     :=
 #endif
 
-#ifeq ($(pwre_conf_qt),1)
-#  cqt        := -DPWRE_CONF_QT=1
-#  linkqt     := `pkg-config --libs QtCore QtGui`
-#else
-#  cqt        :=
-#  linkqt     :=
-#endif
-
 #ifeq ($(pwre_conf_libusb),1)
 #  clibusb        := -DPWRE_CONF_LIBUSB=1
 #  linklibusb     := -lusb-1.0
@@ -132,7 +124,11 @@ log_done	=
 #cinc		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) -I/usr/X11R6/include -I$(jdk)/include -I$(jdk)/include/linux \
 `pkg-config --cflags gtk+-2.0` -DPREFIX=\"/usr/local\" -DSYSCONFDIR=\"/etc\" -DDATADIR=\"/usr/share\" -DLIBDIR=\"/usr/lib\" $(cmysql) $(cgtk) $(clibusb)
 csetos 		:= $(pwre_conf_cc_define)
-cinc 		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) $(pwre_conf_incdir) $(pwre_conf_incdirgtk) $(pwre_conf_incdirgst) $(pwre_conf_incdirqt)
+ifeq ($(flavour),gtk)
+  cinc          := -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) $(pwre_conf_incdir) $(pwre_conf_incdirgtk) $(pwre_conf_incdirgst)
+else
+  cinc          := -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) $(pwre_conf_incdir) $(pwre_conf_incdirqt)
+endif
 rm		:= rm
 cp		:= cp
 cpflags		:= 

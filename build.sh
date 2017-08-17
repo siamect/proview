@@ -74,14 +74,14 @@ ename=$ver$hw
 desc=$verl
 gui="qt"
 
-pwre add $ename $root/src \"\" $root/rls $btype $os $hw $gui "$desc"
+pwre add $ename $root/src \"\" $root/rls $btype $os $hw "$desc"
 pwre init $ename
 
 # Build
 mkdir -p $pwre_broot
 pwre configure
 pwre create_all_modules
-pwre build_all_modules
+pwre build_all_modules $gui
 
 # Create a package version html file
 $root/src/tools/pkg/deb/pwrrt/build.sh -v 
