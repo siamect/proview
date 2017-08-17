@@ -194,7 +194,7 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Specifies a present integer value.
+      !  Specifies a preset integer value.
       !*/
       Object Preset $Intern 10 
         Body SysBody
