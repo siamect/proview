@@ -2257,12 +2257,13 @@ Kommando   close graph
 
 Stäng en Ge graf. Grafen kan anges som en pwg-fil eller med ett XttGraph objekt.
 
-<B>xtt> close graph 'filename' /instance=
+<B>xtt> close graph 'filename' [/instance=] [/iconify]
 <B>xtt> close graph /object=
 
 /object	<t>Ett XttGraph-objekt. Om namnsträngen börjar med '*', ersätts * med
         <t>nodeobjektet.
 /instance <t>Stänger objektsbilden för angiven instans.
+/iconify  <t>Grafen blir ikoniserad istället för stängd.
 </TOPIC>
 
 <TOPIC> close alarmlist <style> function

@@ -286,6 +286,11 @@ void XttGeGtk::pop()
   gtk_window_present( GTK_WINDOW(toplevel));
 }
 
+void XttGeGtk::iconify()
+{
+  gtk_window_iconify( GTK_WINDOW(toplevel));
+}
+
 static gint delete_event( GtkWidget *w, GdkEvent *event, gpointer ge)
 {
   XttGeGtk::activate_exit(w, ge);

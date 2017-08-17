@@ -557,7 +557,7 @@ class XNav {
 		     const char *focus, int inputempty, int use_default_access, 
 		     unsigned int access, unsigned int options, void *basewidget, 
 		     double *borders);
-    void close_graph( char *filename, char *object_name);
+    void close_graph( char *filename, char *object_name, int iconify);
     int exec_xttgraph( pwr_tObjid xttgraph, char *instance,
 		       char *focus, int inputempty, int use_default_access, 
 		       unsigned int access, unsigned int options, void *basewidget);
