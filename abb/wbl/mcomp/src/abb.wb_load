@@ -85586,7 +85586,7 @@ this parameter settings menu."
         Body RtBody 09-JAN-2014 14:06:56.63
           Attr Super.Specification = "ABB ACS880 Profinet slave (FENA-11)"
           Attr Super.DataSheet = "$pwr_lang/dsh/abb_acs880.html"
-          Attr Super.GSDMLfile = "$pwr_exe/GSDML-V2.25-ABB-FENA-20130603.xml"
+          Attr Super.GSDMLfile = "$pwr_exe/GSDML-V2.31-ABB-FENA-20140901.xml"
           Attr Super.Process = 1
           Attr Super.ErrorSoftLimit = 100
           Attr Super.ErrorHardLimit = 1000
