@@ -328,7 +328,7 @@ unlinkPool(
 #endif
 
     for (i = 1; TRUE; i++) {
-      sprintf(segname, "%.11s%04d_%.3s", name, i, busid);
+      sprintf(segname, "%.11s%4.4x_%.3s", name, i, busid);
 #if defined OS_LYNX
       fd = shm_open(segname, flags, mode); 
 #else
