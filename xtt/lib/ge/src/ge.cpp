@@ -607,7 +607,8 @@ void Ge::open_graph( char *name)
   update();
   set_title();
 
-  colpal_UpdateCustomColors( colorpalette_ctx, graph->get_custom_colors());
+  if ( colorpalette_ctx)
+    colpal_UpdateCustomColors( colorpalette_ctx, graph->get_custom_colors());
 
   if ( graph->journal)
     graph->journal->open( graphname);
