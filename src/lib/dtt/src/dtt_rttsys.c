@@ -11231,6 +11231,8 @@ int RTTSYS_POOLS( 	menu_ctx	ctx,
   int			i, j;
   pool_sGhead		*pool;
   int			num;
+  int			total_size;
+  int			free_size;
 
   IF_NOQCOM_RETURN;
 
@@ -11268,23 +11270,37 @@ int RTTSYS_POOLS( 	menu_ctx	ctx,
         menu_ptr++;
 
         /* Extend size */
-        *(int *)menu_ptr->value_ptr = pool->extendsize * POOL_SSIZE;
+        *(int *)menu_ptr->value_ptr =  pool->extendsize * POOL_SSIZE;
         menu_ptr++;
 
         /* Total size */
-        *(int *)menu_ptr->value_ptr = 0;
-        for ( i = 0; i < pool_cSegs; i++)
-        {
+        total_size = pool->initsize * POOL_SSIZE;
+        for ( i = 1; i < pool_cSegs; i++) {
           if ( pool->seg[i].generation == 0)
            break;
-          *(int *)menu_ptr->value_ptr += pool->seg[i].fragsize * POOL_SSIZE;
+          total_size +=  pool->extendsize * POOL_SSIZE;
         }  
+        *(int *)menu_ptr->value_ptr = total_size;
         menu_ptr++;
 
         /* Generation */
         menu_ptr++;
 
         /* Lookaside index */
+        menu_ptr++;
+
+        /* Free size */
+        free_size = 0;
+        for ( i = 0; i < pool_cSegs; i++) {
+          if ( pool->seg[i].generation == 0)
+           break;
+          free_size += pool->seg[i].fragsize * POOL_SSIZE;
+        }  
+	*(int *)menu_ptr->value_ptr = free_size;
+        menu_ptr++;
+
+        /* Free percentage */
+        *(float *) menu_ptr->value_ptr = (float) free_size / total_size * 100;
         menu_ptr++;
       }
       return RTT__SUCCESS;
@@ -11349,13 +11365,13 @@ int RTTSYS_POOLS( 	menu_ctx	ctx,
         menu_ptr++;
 
         /* Total size */
-        *(int *)menu_ptr->value_ptr = 0;
-        for ( i = 0; i < pool_cSegs; i++)
-        {
+        total_size = pool->initsize * POOL_SSIZE;
+        for ( i = 1; i < pool_cSegs; i++) {
           if ( pool->seg[i].generation == 0)
            break;
-          *(int *)menu_ptr->value_ptr += pool->seg[i].fragsize * POOL_SSIZE;
+          total_size +=  pool->extendsize * POOL_SSIZE;
         }  
+        *(int *)menu_ptr->value_ptr = total_size;
         menu_ptr++;
 
         /* Generation */
@@ -11364,6 +11380,20 @@ int RTTSYS_POOLS( 	menu_ctx	ctx,
 
         /* Lookaside index */
         menu_ptr->value_ptr = (char *) &pool->la_idx;
+        menu_ptr++;
+
+        /* Free size */
+        free_size = 0;
+        for ( i = 0; i < pool_cSegs; i++) {
+          if ( pool->seg[i].generation == 0)
+           break;
+          free_size += pool->seg[i].fragsize * POOL_SSIZE;
+        }  
+	*(int *)menu_ptr->value_ptr = free_size;
+        menu_ptr++;
+
+        /* Free percentage */
+        *(float *)menu_ptr->value_ptr = (float) free_size / total_size * 100;
         menu_ptr++;
       }
       break;
