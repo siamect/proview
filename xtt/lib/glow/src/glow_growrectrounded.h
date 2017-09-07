@@ -256,18 +256,6 @@ class GrowRectRounded : public GlowRect {
   void	measure( double *ll_x, double *ll_y, double *ur_x, double *ur_y)
 	{ *ll_x = x_left; *ll_y = y_low; *ur_x = x_right; *ur_y = y_high;};
 
-  //! Get the object name
-  /*!
-    \param name		The name of the object.
-  */
-  void get_object_name( char *name) { strcpy( name, n_name);};
-
-  //! Set the object name
-  /*!
-    \param name		The name of the object. Max 31 char.
-  */
-  void set_object_name( char *name) { strcpy( n_name, name);};
-
   //! Moves object to alignment line or point.
   /*!
     \param x	x coordinate of alignment point.
@@ -283,7 +271,6 @@ class GrowRectRounded : public GlowRect {
   int		hot;		//!< Object is hot, i.e. the cursor is currently on the object.
   GlowPoint 	pzero;		//!< Not used.
   GlowPoint	stored_pos;	//!< Not used.
-  char		n_name[32];	//!< Object name.	
   int		highlight;	//!< Object is highlighted, i.e. painted with red color.
   int		inverse;	//!< Not implemented.
   void 		*user_data;    	//!< User data.

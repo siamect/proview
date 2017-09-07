@@ -174,7 +174,7 @@ class WttGtk : public Wtt {
     virtual void open_change_name();
     virtual void watt_new( pwr_tAttrRef aref);
     virtual void wda_new( pwr_tOid oid);
-    virtual void ge_new( char *graphname);
+    virtual Ge *ge_new( char *graphname);
     virtual void wcast_new( pwr_tAttrRef aref, pwr_tStatus *sts);
     virtual wb_build *build_new();
     virtual void wpkg_new();

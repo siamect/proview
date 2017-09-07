@@ -87,6 +87,7 @@ class XttGe : XttUtility {
   virtual ~XttGe();
 
   virtual void pop() {}
+  virtual void iconify() {}
   virtual void set_size( int width, int height) {}
   virtual void confirm_reply( int ok) {}
   virtual void *get_widget() { return 0;}

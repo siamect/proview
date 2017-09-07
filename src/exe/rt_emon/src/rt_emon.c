@@ -1435,9 +1435,12 @@ cSup_exec (
 	o->AlarmCheck = FALSE;
 	o->DelayNoted = TRUE;
 	if (o->DelayAction == 2) {
+	  int prev_rwflag = l.iohp->IOReadWriteFlag;
 	  l.iohp->IOReadWriteFlag = FALSE;
 	  l.nodep->EmergBreakTrue = TRUE;
 	  errh_SetStatus( MH__IOSTALLED);
+	  if ( prev_rwflag)
+	    errh_Fatal("CycleSup delayed with action Stop I/O");
 	}
       }
     }

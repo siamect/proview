@@ -166,12 +166,12 @@ class GlowCon : public GlowArrayElem {
   void select_region_insert( double ll_x, double ll_y, double ur_x, 
 			double ur_y);
   glow_eObjectType type() { return glow_eObjectType_Con;};
-  double	x_right;
-  double	x_left;
-  double	y_high;
-  double	y_low;
+  double		x_right;
+  double		x_left;
+  double		y_high;
+  double		y_low;
   GrowCtx 		*ctx;
-  GlowConClass 	*cc;
+  GlowConClass 		*cc;
   GlowNode		*destination() { return dest_node;};
   GlowNode		*source() { return source_node;};
   GlowNode		*dest_node;
@@ -194,7 +194,6 @@ class GlowCon : public GlowArrayElem {
   int			temporary_ref;
   int			source_ref_cnt;
   int			dest_ref_cnt;
-  char		c_name[32];
   int			hot;
   int			highlight;
   glow_eMoveType 	movement_type;
@@ -265,8 +264,6 @@ class GlowCon : public GlowArrayElem {
   void get_con_position( double *x_arr[], double *y_arr[], int *num)
 	{ *x_arr = point_x; *y_arr = point_y; *num = p_num;};
   glow_eConGroup get_group() { return cc->group;};
-  void get_object_name( char *name) { strcpy( name, c_name);};
-  void set_object_name( char *name) { strcpy( c_name, name);};
   void set_movement_type( GlowArrayElem **a, int a_size);
   void set_movement_type( glow_eMoveType move_type) 
 	{ movement_type = move_type; };

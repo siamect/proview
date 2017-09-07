@@ -999,7 +999,7 @@ void wb_build::plcpgm( pwr_tOid oid)
     msg_GetMsg( m_sts, msg, sizeof(msg));
     sprintf( msg2, ", PlcPgm %s", o.longName().name(cdh_mName_path | cdh_mName_object));
     strcat( msg, msg2);
-    MsgWindow::message('E', msg, msgw_ePop_Yes, oid, true);
+    MsgWindow::message('E', msg, msgw_ePop_Yes, oid, msgw_eRow_Plc);
   }
 }
 

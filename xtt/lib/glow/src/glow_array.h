@@ -240,6 +240,7 @@ class GlowArray {
   void get_nodegroups( void *a);
   void set_last_group( char *name);
   char *get_last_group();
+  void set_parent( GlowArrayElem *parent);
   int get_background_object_limits( GlowTransform *t, glow_eTraceType type,
 		    double x, double y, GlowArrayElem **background,
 		    double *min, double *max, glow_eDirection *direction);

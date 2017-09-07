@@ -116,7 +116,11 @@ log_done	=
 #csetos		:= -DOS_LINUX=1 -DOS=linux -D_LINUX -DHW_ARM=1 -DHW=ARM
 #cinc		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) -I$(jdk)/include -I$(jdk)/include/linux
 csetos 		:= $(pwre_conf_cc_define)
-cinc 		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) $(pwre_conf_incdir) $(pwre_conf_incdirgtk) $(pwre_conf_incdirgst)
+ifeq ($(flavour),gtk)
+  cinc          := -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) $(pwre_conf_incdir) $(pwre_conf_incdirgtk) $(pwre_conf_incdirgst)
+else
+  cinc          := -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) $(pwre_conf_incdir) $(pwre_conf_incdirqt)
+endif
 rm		:= rm
 cp		:= cp
 cpflags		:= 

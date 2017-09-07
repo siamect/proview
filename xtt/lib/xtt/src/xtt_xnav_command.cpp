@@ -296,7 +296,8 @@ dcli_tCmdTable	xnav_command_table[] = {
 			"CLOSE",
 			&xnav_close_func,
 			{ "dcli_arg1", "dcli_arg2", "/NAME", "/OBJECT",
-			  "/INSTANCE", "/CLASSGRAPH", "/ALL", "/EXCEPT", "/MVEXCEPT" ""}
+			  "/INSTANCE", "/CLASSGRAPH", "/ALL", "/EXCEPT", "/MVEXCEPT",
+			  "/ICONIFY", ""}
 		},
 		{
 			"CREATE",
@@ -5200,6 +5201,9 @@ static int	xnav_close_func(	void		*client_data,
     pwr_tAName	instance_str;
     char	*instance_p;
     int		classgraph;
+    int 	iconify;
+
+    iconify = ODD( dcli_get_qualifier( "/ICONIFY", 0, 0));
 
     if ( ODD( dcli_get_qualifier( "/INSTANCE", instance_str, sizeof(instance_str))))
       instance_p = instance_str;
@@ -5242,7 +5246,7 @@ static int	xnav_close_func(	void		*client_data,
       cdh_ToLower( action, xttgraph_p->Action);
       if ( (s = strstr( action, ".pwg"))) {
         *s = 0;
-        xnav->close_graph( action, 0);
+        xnav->close_graph( action, 0, iconify);
       }
     }
     else
@@ -5285,9 +5289,13 @@ static int	xnav_close_func(	void		*client_data,
 
       if ( cdh_NoCaseStrcmp(file_str, "$current") == 0) {
 	if ( xnav->current_cmd_ctx) {
-	  xnav->appl.remove( (void *)xnav->current_cmd_ctx);
-	  delete (XttGe *)xnav->current_cmd_ctx;
-	  return GLOW__TERMINATED;
+	  if ( iconify)
+	    ((XttGe *)xnav->current_cmd_ctx)->iconify();
+	  else {
+	    xnav->appl.remove( (void *)xnav->current_cmd_ctx);
+	    delete (XttGe *)xnav->current_cmd_ctx;
+	    return GLOW__TERMINATED;
+	  }
 	}
 	else {
 	  xnav->message('E', "No current graph");
@@ -5296,7 +5304,7 @@ static int	xnav_close_func(	void		*client_data,
       }
 
 
-      xnav->close_graph( file_str, instance_p);
+      xnav->close_graph( file_str, instance_p, iconify);
       return XNAV__SUCCESS;	
     }
   }
@@ -5535,7 +5543,7 @@ static int	xnav_close_func(	void		*client_data,
           continue;
         }
         next_elem = elem->next;
-        xnav->close_graph( elem->name, elem->instance);
+        xnav->close_graph( elem->name, elem->instance, 0);
         elem = next_elem;
         continue;
       }
@@ -9900,13 +9908,16 @@ void XNav::open_graph( const char *name, const char *filename, int scrollbar, in
   }
 }
 
-void XNav::close_graph( char *filename, char *object_name)
+void XNav::close_graph( char *filename, char *object_name, int iconify)
 {
   XttGe *gectx;
 
   if ( appl.find( applist_eType_Graph, filename, object_name,
 		  (void **) &gectx)) {
-    delete gectx;
+    if ( iconify)
+      gectx->iconify();
+    else
+      delete gectx;
   }
 }
 

@@ -60,6 +60,7 @@ thread_CondInit (
 #elif defined OS_POSIX
   pthread_condattr_t attr;
   pthread_condattr_init(&attr);
+  pthread_condattr_setclock(&attr, CLOCK_MONOTONIC);
   return errno_Status(pthread_cond_init(&cp->c, &attr));
 #else
 # error Not defined for this platform !
@@ -204,7 +205,7 @@ thread_CondTimedWait (
     if (time == NULL || time->tv_sec > 100000000)
       return thread_CondWait(cp, mp);
 
-    time_GetTime(&now);
+    time_GetTimeMonotonic(&now);
     time_Aadd(&then, &now, time);
     then_ts.tv_sec = then.tv_sec;
     then_ts.tv_nsec = then.tv_nsec;

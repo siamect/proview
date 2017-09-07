@@ -170,6 +170,11 @@ void GeGtk::message( char severity, const char *message)
   g_free( messageutf8);
 }
 
+void GeGtk::pop()
+{
+  gtk_window_present( GTK_WINDOW(toplevel));
+}
+
 void GeGtk::status_msg( char *pos_str)
 {
   gtk_label_set_text( GTK_LABEL(cursor_position), pos_str);
@@ -732,6 +737,11 @@ void GeGtk::activate_exit(GtkWidget *w, gpointer gectx)
 void GeGtk::activate_print(GtkWidget *w, gpointer gectx)
 {
   ((Ge *)gectx)->activate_print();
+}
+
+void GeGtk::activate_syntax_check(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_syntax_check();
 }
 
 void GeGtk::activate_history( GtkWidget *w, gpointer data)
@@ -1883,6 +1893,10 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
 			      'n', GdkModifierType(GDK_CONTROL_MASK | GDK_SHIFT_MASK), 
 			      GTK_ACCEL_VISIBLE);
 
+  GtkWidget *file_syntax_check = gtk_menu_item_new_with_mnemonic( "S_yntax Check");
+  g_signal_connect( file_syntax_check, "activate", 
+		    G_CALLBACK(activate_syntax_check), this);
+
   GtkWidget *file_history = gtk_menu_item_new_with_mnemonic( "_History");
   g_signal_connect( file_history, "activate", 
 		    G_CALLBACK(activate_history), this);
@@ -1910,6 +1924,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_prevpage);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_creanextpage);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_history);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_syntax_check);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_print);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_close);
 
@@ -1967,6 +1982,8 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   GtkWidget *edit_search_object = gtk_menu_item_new_with_mnemonic( "_Search Object");
   g_signal_connect( edit_search_object, "activate", 
 		    G_CALLBACK(activate_search_object), this);
+  gtk_widget_add_accelerator( edit_search_object, "activate", accel_g,
+			      'f', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
   GtkWidget *edit_objattr_store = gtk_menu_item_new_with_mnemonic( "_Object Attributes Store");
   g_signal_connect( edit_objattr_store, "activate", 
@@ -3202,6 +3219,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   graph->set_focus_cb = &Ge::set_focus_cb;
   graph->traverse_focus_cb = &Ge::traverse_focus;
   graph->get_ldhses_cb = &Ge::get_ldhses_cb;
+  graph->check_ldh_object_cb = &Ge::check_ldh_object_cb;
   graph->create_modal_dialog_cb = &Ge::create_modal_dialog_cb;
   graph->update_colorpalette_cb = &Ge::update_colorpalette;
   graph->refresh_objects_cb = &Ge::refresh_objects_cb;

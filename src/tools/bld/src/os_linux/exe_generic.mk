@@ -41,6 +41,7 @@ endif
 
 vpath %.c $(hw_source):$(os_source):$(co_source)
 vpath %.cpp $(hw_source):$(os_source):$(co_source)
+vpath %.cqt $(hw_source):$(os_source):$(co_source)
 vpath %.l $(hw_source):$(os_source):$(co_source)
 vpath %.h $(hw_source):$(os_source):$(co_source)
 vpath %.hpp $(hw_source):$(os_source):$(co_source)
@@ -51,7 +52,16 @@ c_sources := $(sort \
              $(foreach file, \
                $(foreach dir, \
                  $(source_dirs), \
-                 $(wildcard $(dir)/*.c $(dir)/*.cpp) \
+                 $(wildcard $(dir)/*.c $(dir)/*.cpp $(dir)/*.cqt) \
+               ), $(notdir $(file)) \
+             ) \
+           )
+
+cqt_sources := $(sort \
+             $(foreach file, \
+               $(foreach dir, \
+                 $(source_dirs), \
+                 $(wildcard $(dir)/*.cqt) \
                ), $(notdir $(file)) \
              ) \
            )
@@ -104,7 +114,11 @@ export_includes := $(addprefix $(inc_dir)/,$(h_includes) $(hpp_includes))
 l_targets := $(addprefix $(bld_dir)/,$(basename $(l_sources)))
 l_targets := $(addsuffix $(c_ext),$(l_targets))
 
+cqt_objects := $(patsubst %.cqt, %_moc.o, $(cqt_sources))
+cqt_objects := $(addprefix $(bld_dir)/,$(basename $(cqt_objects)))
+
 objects := $(addprefix $(bld_dir)/,$(basename $(c_sources)))
+objects += $(cqt_objects)
 objects += $(addprefix $(bld_dir)/,$(basename $(l_sources)))
 objects := $(strip $(addsuffix $(obj_ext),$(objects)))
 

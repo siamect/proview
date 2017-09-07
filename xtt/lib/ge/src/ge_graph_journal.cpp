@@ -336,7 +336,7 @@ int GraphJournal::store( journal_eAction action, grow_tObject o)
       status = journal_eStatus_AntePaste;
       break;
     case journal_eAction_AnteRename: {
-      grow_GetObjectName( o, rename_name);
+      grow_GetObjectName( o, rename_name, sizeof(rename_name), glow_eName_Object);
       break;
     }
     default: ;
@@ -707,7 +707,7 @@ int GraphJournal::store_undo_delete_select()
 
     sts = grow_GetPreviousObject( graph->grow->ctx, sel_list[i], &prev);
     if ( ODD(sts)) {
-      grow_GetObjectName( prev, name);
+      grow_GetObjectName( prev, name, sizeof(name), glow_eName_Object);
       fp << name << endl;
     }
     else
@@ -730,7 +730,7 @@ int GraphJournal::store_redo_delete_select()
 
   grow_GetSelectList( graph->grow->ctx, &sel_list, &sel_count);
   for ( int i = 0; i < sel_count; i++) {
-    grow_GetObjectName( sel_list[i], name);
+    grow_GetObjectName( sel_list[i], name, sizeof(name), glow_eName_Object);
     
     fp << journal_cTag_Object << endl;
     fp << name << endl;
@@ -803,7 +803,7 @@ int GraphJournal::store_redo_delete_object( grow_tObject o)
   if ( debug >= 2)
     printf("store_redo_delete_object\n");
 
-  grow_GetObjectName( o, name);
+  grow_GetObjectName( o, name, sizeof(name), glow_eName_Object);
 
   fp << name << endl;
   return GE__SUCCESS;
@@ -852,7 +852,7 @@ int GraphJournal::store_undo_create_object( grow_tObject o)
   if ( debug >= 2)
     printf("store_undo_create_object\n");
 
-  grow_GetObjectName( o, name);
+  grow_GetObjectName( o, name, sizeof(name), glow_eName_Object);
 
   fp << name << endl;
   return GE__SUCCESS;
@@ -926,7 +926,7 @@ int GraphJournal::store_properties_select()
 
   grow_GetSelectList( graph->grow->ctx, &sel_list, &sel_count);
   for ( int i = 0; i < sel_count; i++) {
-    grow_GetObjectName( sel_list[i], name);
+    grow_GetObjectName( sel_list[i], name, sizeof(name), glow_eName_Object);
 
     fp << journal_cTag_Object << endl;
     fp << name << endl;
@@ -979,7 +979,7 @@ int GraphJournal::store_properties_object( grow_tObject o)
   if ( debug >= 2)
     printf("store_properties_object\n");
 
-  grow_GetObjectName( o, name);
+  grow_GetObjectName( o, name, sizeof(name), glow_eName_Object);
 
   fp << journal_cTag_Object << endl;
   fp << name << endl;
@@ -1026,7 +1026,7 @@ int GraphJournal::store_undo_group_select( grow_tObject o)
   if ( debug >= 2)
     printf("store_undo_group_select\n");
 
-  grow_GetObjectName( o, name);
+  grow_GetObjectName( o, name, sizeof(name), glow_eName_Object);
 
   fp << journal_cTag_Object << endl;
   fp << name << endl;
@@ -1045,7 +1045,7 @@ int GraphJournal::store_redo_group_select()
 
   grow_GetSelectList( graph->grow->ctx, &sel_list, &sel_count);
   for ( int i = 0; i < sel_count; i++) {
-    grow_GetObjectName( sel_list[i], name);
+    grow_GetObjectName( sel_list[i], name, sizeof(name), glow_eName_Object);
     
     fp << journal_cTag_Object << endl;
     fp << name << endl;
@@ -1201,14 +1201,14 @@ int GraphJournal::store_undo_ungroup_select()
   grow_GetSelectList( graph->grow->ctx, &sel_list, &sel_count);
   for ( int i = 0; i < sel_count; i++) {
     if ( grow_GetObjectType( sel_list[i]) == glow_eObjectType_GrowGroup) {
-      grow_GetObjectName( sel_list[i], name);
+      grow_GetObjectName( sel_list[i], name, sizeof(name), glow_eName_Object);
     
       fp << journal_cTag_Object << endl;
       fp << name << endl;
 
       grow_GetGroupObjectList( sel_list[i], &member_list, &member_count);
       for ( int j = 0; j < member_count; j++) {
-	grow_GetObjectName( member_list[j], name);
+	grow_GetObjectName( member_list[j], name, sizeof(name), glow_eName_Object);
 	
 	fp << journal_cTag_Object << endl;
 	fp << name << endl;
@@ -1233,7 +1233,7 @@ int GraphJournal::store_redo_ungroup_select()
   grow_GetSelectList( graph->grow->ctx, &sel_list, &sel_count);
   for ( int i = 0; i < sel_count; i++) {
     if ( grow_GetObjectType( sel_list[i]) == glow_eObjectType_GrowGroup) {
-      grow_GetObjectName( sel_list[i], name);
+      grow_GetObjectName( sel_list[i], name, sizeof(name), glow_eName_Object);
     
       fp << journal_cTag_Object << endl;
       fp << name << endl;
@@ -1320,7 +1320,7 @@ int GraphJournal::store_undo_paste()
   grow_GetMoveList( graph->grow->ctx, &move_list, &move_count);
   for ( int i = 0; i < move_count; i++) {
     pastelist.push_back(move_list[i]);
-    grow_GetObjectName( move_list[i], name);
+    grow_GetObjectName( move_list[i], name, sizeof(name), glow_eName_Object);
     
     fp << journal_cTag_Object << endl;
     fp << name << endl;
@@ -1435,13 +1435,13 @@ int GraphJournal::store_undo_pop_select()
   grow_GetSelectList( graph->grow->ctx, &sel_list, &sel_count);
   for ( int i = sel_count - 1; i >= 0; i--) {
     fp << journal_cTag_Object << endl;
-    grow_GetObjectName( sel_list[i], name);
+    grow_GetObjectName( sel_list[i], name, sizeof(name), glow_eName_Object);
 
     fp << name << endl;
 
     sts = grow_GetNextObject( graph->grow->ctx, sel_list[i], &next);
     if ( ODD(sts)) {
-      grow_GetObjectName( next, name);
+      grow_GetObjectName( next, name, sizeof(name), glow_eName_Object);
       fp << name << endl;
     }
     else
@@ -1462,7 +1462,7 @@ int GraphJournal::store_redo_pop_select()
 
   grow_GetSelectList( graph->grow->ctx, &sel_list, &sel_count);
   for ( int i = 0; i < sel_count; i++) {
-    grow_GetObjectName( sel_list[i], name);
+    grow_GetObjectName( sel_list[i], name, sizeof(name), glow_eName_Object);
     
     fp << journal_cTag_Object << endl;
     fp << name << endl;
@@ -1568,13 +1568,13 @@ int GraphJournal::store_undo_push_select()
   grow_GetSelectList( graph->grow->ctx, &sel_list, &sel_count);
   for ( int i = sel_count - 1; i >= 0; i--) {
     fp << journal_cTag_Object << endl;
-    grow_GetObjectName( sel_list[i], name);
+    grow_GetObjectName( sel_list[i], name, sizeof(name), glow_eName_Object);
 
     fp << name << endl;
 
     sts = grow_GetNextObject( graph->grow->ctx, sel_list[i], &next);
     if ( ODD(sts)) {
-      grow_GetObjectName( next, name);
+      grow_GetObjectName( next, name, sizeof(name), glow_eName_Object);
       fp << name << endl;
     }
     else
@@ -1595,7 +1595,7 @@ int GraphJournal::store_redo_push_select()
 
   grow_GetSelectList( graph->grow->ctx, &sel_list, &sel_count);
   for ( int i = 0; i < sel_count; i++) {
-    grow_GetObjectName( sel_list[i], name);
+    grow_GetObjectName( sel_list[i], name, sizeof(name), glow_eName_Object);
     
     fp << journal_cTag_Object << endl;
     fp << name << endl;
@@ -1677,7 +1677,7 @@ int GraphJournal::store_undo_rename( grow_tObject o)
   if ( debug >= 2)
     printf("store_undo_rename\n");
 
-  grow_GetObjectName( o, name);
+  grow_GetObjectName( o, name, sizeof(name), glow_eName_Object);
   
   fp << name << endl;
   fp << rename_name << endl;
@@ -1693,7 +1693,7 @@ int GraphJournal::store_redo_rename( grow_tObject o)
   if ( debug >= 2)
     printf("store_redo_rename\n");
 
-  grow_GetObjectName( o, name);
+  grow_GetObjectName( o, name, sizeof(name), glow_eName_Object);
   
   fp << name << endl;
   fp << rename_name << endl;
@@ -1737,7 +1737,7 @@ void GraphJournal::check_object_number( grow_tObject o)
   int num;
   int nr;
 
-  grow_GetObjectName( o, name);
+  grow_GetObjectName( o, name, sizeof(name), glow_eName_Object);
   nr = sscanf( name, "%c%d", &c, &num);
   if ( nr == 2 &&
        (c == 'C' || c == 'O')) {

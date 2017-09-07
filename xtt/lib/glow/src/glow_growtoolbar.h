@@ -147,7 +147,7 @@ class GrowToolbar : public GrowNode {
   void set_rootnode( void *node);
 
   void set_object_name( char *name) { strcpy( n_name, name);
-    strcpy( nc->nc_name, name);}
+    strcpy( nc->n_name, name);}
 
   int event_handler( GlowWind *w, glow_eEvent event, double fx, double fy);
   int event_handler( GlowWind *w, glow_eEvent event, int x, int y, double fx, double fy);

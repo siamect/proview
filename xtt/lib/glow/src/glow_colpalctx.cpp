@@ -364,7 +364,7 @@ int ColPalCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
           char name[32];
 
           rect = (GrowRect *)callback_object;
-          rect->get_object_name( name);
+          rect->get_object_name( name, sizeof(name), glow_eName_Object);
           if ( strcmp( name, "ColorEntry") == 0) {
 	    if ( rect->fill_drawtype >= glow_eDrawType_CustomColor1 && rect->fill_drawtype < glow_eDrawType_CustomColor__) {
 	      enable_doubleclick = 1;
@@ -392,7 +392,7 @@ int ColPalCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
 	  char name[32];
 
           text = (GrowText *)callback_object;
-          text->get_object_name( name);
+          text->get_object_name( name, sizeof(name), glow_eName_Object);
           if ( strncmp( name, "FillText", 8) == 0 &&
 	       event == glow_eEvent_MB1Click) {
 	    set_active( colpal_eActive_FillColor);
@@ -448,7 +448,7 @@ int ColPalCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
           char name[32];
 
           rect = (GrowRect *)callback_object;
-          rect->get_object_name( name);
+          rect->get_object_name( name, sizeof(name), glow_eName_Object);
           if ( strncmp( name, "FillRect", 8) == 0 &&
 	       event == glow_eEvent_MB1Click) {
 	    set_active( colpal_eActive_FillColor);
@@ -547,7 +547,7 @@ int ColPalCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
           char name[32];
 
           rect = (GrowRect *)callback_object;
-          rect->get_object_name( name);
+          rect->get_object_name( name, sizeof(name), glow_eName_Object);
           if ( strcmp( name, "ColorEntry") == 0) {
 	    if ( event_callback[event]) {
 	      static glow_sEvent e;
@@ -582,7 +582,7 @@ int ColPalCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
           char name[32];
 
           text = (GrowText *)callback_object;
-          text->get_object_name( name);
+          text->get_object_name( name, sizeof(name), glow_eName_Object);
           if ( strcmp( name, "ColorEntryBg") == 0) {
 	    if ( event_callback[event]) {
 	      static glow_sEvent e;
@@ -616,7 +616,7 @@ int ColPalCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
 	  int sts;
 
           rect = (GrowRect *)callback_object;
-          rect->get_object_name( name);
+          rect->get_object_name( name, sizeof(name), glow_eName_Object);
           if ( strcmp( name, "ColorEntry") == 0) {
 	    current_fill = rect->fill_drawtype;
 	    if ( rect->fill_drawtype >= glow_eDrawType_CustomColor1 && rect->fill_drawtype < glow_eDrawType_CustomColor__) {
@@ -677,7 +677,7 @@ int ColPalCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
           char name[32];
 
           rect = (GrowRect *)callback_object;
-          rect->get_object_name( name);
+          rect->get_object_name( name, sizeof(name), glow_eName_Object);
           if ( strcmp( name, "ColorEntry") == 0) {
 	    idx = rect->fill_drawtype;
 	  }

@@ -118,10 +118,12 @@ static int	graph_two_func( void		*client_data,
 static int	graph_build_func( void		*client_data,
 				  void		*client_flag);
 static int	graph_customcolor_func( void   	*client_data,
-				  void		*client_flag);
+					void		*client_flag);
 static int	graph_search_func( void   	*client_data,
-				  void		*client_flag);
+				   void		*client_flag);
 static int	graph_filter_func( void   	*client_data,
+				   void		*client_flag);
+static int	graph_check_func( void   	*client_data,
 				  void		*client_flag);
 
 dcli_tCmdTable	graph_command_table[] = {
@@ -259,6 +261,11 @@ dcli_tCmdTable	graph_command_table[] = {
 			"FILTER",
 			&graph_filter_func,
 			{"dcli_arg", "/RESET", "/TYPE", "/PATTERN", ""}
+		},
+		{
+			"CHECK",
+			&graph_check_func,
+			{"dcli_arg", "/INSTANCE", ""}
 		},
 		{"",}};
 
@@ -538,6 +545,36 @@ static int	graph_filter_func(void		*client_data,
   return GE__SUCCESS;
 }
 
+static int	graph_check_func(void		*client_data,
+				 void		*client_flag)
+{
+  Graph *graph = (Graph *)client_data;
+  char	arg1_str[80];
+  int	arg1_sts;
+
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
+
+  if ( cdh_NoCaseStrncmp( arg1_str, "SYNTAX", strlen( arg1_str)) == 0) {
+    // Command is "CHECK SYNTAX"
+    pwr_tAName instance_str;
+    char *instance_p;
+    int sts;
+
+    sts = dcli_get_qualifier( "/INSTANCE", instance_str, sizeof(instance_str));
+    if ( ODD(sts))
+      instance_p = instance_str;
+    else
+      instance_p = 0;
+
+    graph->syntax_check( instance_p);
+  }
+  else {
+    graph->message('E', "Syntax error");
+    return GE__SYNTAX;
+  }
+  return GE__SUCCESS;
+}
+
 static int	graph_exit_func(void		*client_data,
 				void		*client_flag)
 {
@@ -562,25 +599,15 @@ static int	graph_open_func(void		*client_data,
 {
   Graph *graph = (Graph *)client_data;
 
-  char file_str[80];
-  char name[80];
+  pwr_tFileName file_str;
+  pwr_tFileName name;
 
   if ( ODD( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str))))
   {
-    if ( strlen( file_str) > 39)
-    {
-      graph->message('E', "Filename to long");
-      return GE__FILENAME;
-    }
     strcpy( name, file_str);    
   }
   else if ( ODD( dcli_get_qualifier( "dcli_arg1", file_str, sizeof(file_str))))
   {
-    if ( strlen( file_str) > 39)
-    {
-      graph->message('E', "Filename to long");
-      return GE__FILENAME;
-    }
     strcpy( name, file_str);
   }
   else
@@ -1846,6 +1873,9 @@ static int	graph_select_func(	void		*client_data,
     if ( cdh_NoCaseStrncmp( arg1_str, "CURRENTOBJECT", strlen( arg1_str)) == 0) {
       grow_SetHighlight( graph->current_cmd_object, 1);
       grow_SelectInsert( graph->grow->ctx, graph->current_cmd_object);
+    }
+    else if ( cdh_NoCaseStrncmp( arg1_str, "ALL", strlen( arg1_str)) == 0) {
+      graph->select_all_objects();
     }
     else if ( cdh_NoCaseStrncmp( arg1_str, "CLEAR", strlen( arg1_str)) == 0) {
       grow_SelectClear( graph->grow->ctx);
@@ -3549,7 +3579,7 @@ static int graph_getobjectclass_func(
   *return_decl = CCM_DECL_STRING;
 
   grow_GetObjectClass( (grow_tObject)arg_list->value_int, &classid);
-  grow_GetNodeClassName( classid, name);
+  grow_GetNodeClassName( classid, name, sizeof(name));
 
   strcpy( return_string, name);
   return 1;
@@ -4003,7 +4033,8 @@ static int graph_getobjectname_func(
        type == glow_eObjectType_GrowSlider ||
        type == glow_eObjectType_GrowGroup ||
        type == glow_eObjectType_GrowToolbar) {
-    grow_GetObjectName( (grow_tObject)arg_list->value_int, name);
+    grow_GetObjectName( (grow_tObject)arg_list->value_int, name, sizeof(name),
+			glow_eName_Object);
     strcpy( return_string, name);
   }
   else
@@ -4890,6 +4921,27 @@ static int graph_moveabsobject_func(
   return 1;
 }
 
+static int graph_getgraphname_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+
+  if ( arg_count != 0)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+  graph->get_name( return_string);
+  *return_decl = CCM_DECL_STRING;
+
+  return 1;
+}
+
 
 static int graph_ccm_deffilename_func( char *outfile, char *infile, void *client_data)
 {
@@ -5081,6 +5133,8 @@ int Graph::readcmdfile( 	char		*incommand)
     sts = ccm_register_function( "MoveObject", graph_moveobject_func);
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "MoveAbsObject", graph_moveabsobject_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "GetGraphName", graph_getgraphname_func);
     if ( EVEN(sts)) return sts;
     ccm_func_registred = 1;
 

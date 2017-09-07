@@ -1733,7 +1733,7 @@ int gcg_get_debug (
 	if ( EVEN(sts)) return sts;
 
 	pos = strcspn ( output_par , "[") ;
-	output_par[pos] = '\0';
+	//output_par[pos] = '\0';
 	  
 	/* Get the name of the node */
 	sts = ldh_AttrRefToName( 
@@ -2018,8 +2018,8 @@ static int	gcg_pgmname_to_parname(
 
 	free((char *) bodydef);
 
-	/* Copy the index string ????? */
-/*	strcpy( parname, indexstr);	*/
+	/* Copy the index string */
+	strcat( parname, indexstr);
 
 	return GSX__SUCCESS;
 }

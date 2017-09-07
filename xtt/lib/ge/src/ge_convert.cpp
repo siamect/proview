@@ -82,7 +82,7 @@ int Graph::convert()
   // Convert all objects
   grow_GetObjectList( grow->ctx, &objectlist, &object_cnt);
   for ( int i = 0; i < object_cnt; i++) {
-    grow_GetObjectName( objectlist[i], name);
+    grow_GetObjectName( objectlist[i], name, sizeof(name), glow_eName_Object);
     if ( strcmp( name, "") == 0) {
       sprintf( name, "O%d", grow_IncrNextObjectNameNumber( grow->ctx));
       grow_SetObjectName( objectlist[i], name);
@@ -94,7 +94,7 @@ int Graph::convert()
 
       grow_GetGroupObjectList( objectlist[i], &grouplist, &group_cnt);
       for ( int j = 0; j < group_cnt; j++) {
-	grow_GetObjectName( grouplist[j], name);
+	grow_GetObjectName( grouplist[j], name, sizeof(name), glow_eName_Object);
 	if ( strcmp( name, "") == 0) {
 	  sprintf( name, "O%d", grow_IncrNextObjectNameNumber( grow->ctx));
 	  grow_SetObjectName( grouplist[j], name);

@@ -102,6 +102,7 @@ class GeGtk : public Ge {
 				  const char *init_text,
 				  void (*india_ok_cb)( Ge *, char *));
   virtual void message( char severity, const char *message);
+  virtual void pop();
   virtual void status_msg( char *pos_str);
   virtual void open_yesnodia( const char *text, const char *title, 
 			      void (*yes_cb)( Ge *), void (*no_cb)( Ge *));
@@ -184,6 +185,7 @@ class GeGtk : public Ge {
   static void activate_command( GtkWidget *w, gpointer gectx);
   static void activate_exit( GtkWidget *w, gpointer gectx);
   static void activate_print( GtkWidget *w, gpointer gectx);
+  static void activate_syntax_check( GtkWidget *w, gpointer gectx);
   static void activate_history( GtkWidget *w, gpointer gectx);
   static void activate_new( GtkWidget *w, gpointer gectx);
   static void activate_save( GtkWidget *w, gpointer gectx);

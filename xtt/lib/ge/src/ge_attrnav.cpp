@@ -1643,7 +1643,10 @@ int AttrNav::set_attr_value( char *value_str, grow_tObject *id, void **client_da
 
       if ( cdh_NoCaseStrcmp( item->name, "Subgraph") == 0 &&
 	   reconfigure_attr_cb) {
-	(reconfigure_attr_cb)(parent_ctx);
+	if ( type == attr_eType_Attributes)
+	  (reconfigure_attr_cb)(parent_ctx);
+	else
+	  refresh_objects( attr_mRefresh_Objects);
 	return FLOW__DESTROYED;
       }
 
@@ -1660,7 +1663,8 @@ int AttrNav::set_attr_value( char *value_str, grow_tObject *id, void **client_da
 	      *id = oitem->id;
 
 	    // Check if name is changed
-	    grow_GetObjectName( oitem->id, name);
+	    grow_GetObjectName
+( oitem->id, name, sizeof(name), glow_eName_Object);
 	    if ( strcmp( oitem->name, name) != 0) {
 	      strcpy( oitem->name, name);
 	      brow_SetAnnotation( oitem->node, 0, name, strlen(name));
@@ -2259,7 +2263,10 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
           }
 	  if ( (((AItemEnum *)item)->type_id == ge_eAttrType_OptionMenuType) &&
 	       attrnav->reconfigure_attr_cb) {
-	    (attrnav->reconfigure_attr_cb)(attrnav->parent_ctx);
+	    if ( attrnav->type == attr_eType_Attributes)
+	      (attrnav->reconfigure_attr_cb)(attrnav->parent_ctx);
+	    else
+	      attrnav->refresh_objects( attr_mRefresh_Objects);
 	    return FLOW__DESTROYED;
 	  }
           break;
@@ -2933,14 +2940,14 @@ void AttrNav::refresh_objects( unsigned int type)
     (get_object_list_cb)( parent_ctx, attr_eList_Objects, &list, &list_cnt, 0, 0);
 
     for ( int i = list_cnt - 1; i >= 0; i--) {
-      grow_GetObjectName( list[i], oname);
+      grow_GetObjectName( list[i], oname, sizeof(oname), glow_eName_Object);
       otype = grow_GetObjectType( list[i]);
 
       switch ( otype) {
       case glow_eObjectType_GrowNode:
       case glow_eObjectType_GrowSlider: {
 	grow_GetObjectClass( list[i], &nc);
-	grow_GetNodeClassName( nc, ncname);
+	grow_GetNodeClassName( nc, ncname, sizeof(ncname));
 	break;
       }
       case glow_eObjectType_Con:
@@ -3074,6 +3081,62 @@ void AttrNav::filter( int type, char *pattern)
   else
     strncpy( filter_pattern, pattern, sizeof(filter_pattern));
   refresh_objects( attr_mRefresh_Objects);
+}
+
+void AttrNav::find_object( char *object)
+{
+  int sts;
+  grow_tObject gnode;
+  brow_tObject bnode;
+
+  sts = grow_FindObjectByName( graph->grow->ctx, object, &gnode);
+  if ( EVEN(sts)) return;
+
+  bnode = gobject_to_bobject( gnode);
+  if ( !bnode) {
+    // Open group objects    
+    AItemObject *item;
+    brow_tObject bgroup;
+    grow_tObject group[10];
+    int group_cnt = 0;
+    sts = grow_GetObjectGroup( graph->grow->ctx, gnode, &group[0]);
+    while ( ODD(sts)) {
+      group_cnt++;
+      if ( group_cnt == 9)
+	break;
+
+      sts = grow_GetObjectGroup( graph->grow->ctx, group[group_cnt-1], &group[group_cnt]);
+    }
+
+    for ( int i = group_cnt - 1; i >= 0; i--) {
+      bgroup = gobject_to_bobject( group[i]);
+      if ( !bgroup)
+	return;
+      brow_GetUserData( bgroup, (void **)&item);
+      
+      if (!( brow_IsOpen( bgroup) & attrnav_mOpen_Children)) {
+	if ( brow_IsOpen( bgroup) & attrnav_mOpen_Attributes)
+	  item->close( this, 0, 0);
+	item->open_children( this, 0, 0);
+      }
+    }
+    bnode = gobject_to_bobject( gnode);
+    if ( !bnode)
+      return;
+  }
+
+  brow_SelectClear( brow->ctx);
+  brow_SetInverse( bnode, 1);
+  brow_SelectInsert( brow->ctx, bnode);
+  if ( !brow_IsVisible( brow->ctx, bnode, flow_eVisible_Partial))
+    brow_CenterObject( brow->ctx, bnode, 0.25);
+
+  graph->select_object( gnode);
+}
+
+void AttrNav::clear()
+{
+  brow_DeleteAll( brow->ctx);
 }
 
 brow_tObject AttrNav::gobject_to_bobject( grow_tObject gobject)
@@ -3633,14 +3696,14 @@ int AItemObject::open_children( AttrNav *attrnav, double x, double y)
     (attrnav->get_object_list_cb)( attrnav->parent_ctx, attr_eList_Group, &list, &list_cnt, &id, 1);
 
     for ( int i = list_cnt - 1; i >= 0; i--) {
-      grow_GetObjectName( list[i], oname);
+      grow_GetObjectName( list[i], oname, sizeof(oname), glow_eName_Object);
       otype = grow_GetObjectType( list[i]);
 
       switch ( otype) {
       case glow_eObjectType_GrowNode:
       case glow_eObjectType_GrowSlider: {
 	grow_GetObjectClass( list[i], &nc);
-	grow_GetNodeClassName( nc, ncname);
+	grow_GetNodeClassName( nc, ncname, sizeof(ncname));
 	break;
       }
       default:

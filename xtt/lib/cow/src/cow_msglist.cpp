@@ -251,7 +251,7 @@ int MsgList::init_brow_cb( FlowCtx *fctx, void *client_data)
 
 MsgList::MsgList(
 	void *ev_parent_ctx) :
-  parent_ctx(ev_parent_ctx), find_wnav_cb(0), find_plc_cb(0)
+  parent_ctx(ev_parent_ctx), find_wnav_cb(0), find_plc_cb(0), find_ge_cb(0)
 {
 }
 
@@ -614,3 +614,19 @@ void ItemMsgObjectPlc::find()
   if ( msglist->find_plc_cb)
     (msglist->find_plc_cb)( msglist->parent_ctx, oid);
 }
+
+ItemMsgObjectGe::ItemMsgObjectGe( MsgList *item_msglist, const char *item_name,
+				  char *item_text, int item_severity, char *item_object, void *item_utility,
+				  brow_tNode dest, flow_eDest dest_code):
+  ItemMsg( item_msglist, item_name, item_text, item_severity, dest, dest_code), utility(item_utility)
+{
+  strncpy( object, item_object, sizeof(object));
+  brow_SetAnnotPixmap( node, 0, msglist->brow->pixmap_morehelp);
+}
+
+void ItemMsgObjectGe::find()
+{
+  if ( msglist->find_ge_cb)
+    (msglist->find_ge_cb)( msglist->parent_ctx, object, utility);
+}
+

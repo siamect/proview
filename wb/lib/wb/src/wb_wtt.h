@@ -131,6 +131,7 @@ class WttApplList {
     void remove( void *ctx);
     int find( wb_eUtility type, const char *name, void **ctx);
     int find( wb_eUtility type, pwr_tObjid objid, void **ctx);
+    int find( wb_eUtility type, void *ctx);
     void set_editmode( int editmode, ldh_tSesContext ldhses);
 };
 
@@ -293,7 +294,7 @@ class Wtt : public WUtility {
     virtual void open_change_name() {}
     virtual void watt_new( pwr_tAttrRef aref) {}
     virtual void wda_new( pwr_tOid oid) {}
-    virtual void ge_new( char *graphname) {}
+    virtual Ge *ge_new( char *graphname) {return 0;}
     virtual void wcast_new( pwr_tAttrRef aref, pwr_tStatus *sts) {}
     virtual wb_build *build_new() { return NULL;}
     virtual void wpkg_new() {}

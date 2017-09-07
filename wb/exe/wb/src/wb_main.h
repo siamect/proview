@@ -84,6 +84,7 @@ class Wb {
 
   static void find_wnav_cb( void *ctx, pwr_tOid oid);
   static void find_plc_cb( void *ctx, pwr_tOid oid);
+  static void find_ge_cb( void *ctx, char *object, void *utility);
   static void login_success( void *ctx);
   static void login_cancel( void *ctx);
   static void wtt_close( void *wttctx);

@@ -61,6 +61,7 @@
 #include "co_msg.h"
 #include "co_ccm.h"
 #include "co_lng.h"
+#include "cow_msgwindow.h"
 
 typedef	struct {
 	char		TypeStr[20];
@@ -158,7 +159,7 @@ Graph::Graph(
 	change_value_cb(NULL), confirm_cb(NULL), load_graph_cb(NULL),
 	get_plant_select_cb(NULL), display_in_xnav_cb(NULL), 
 	message_dialog_cb(NULL), is_authorized_cb(NULL), 
-	traverse_focus_cb(NULL), set_focus_cb(NULL), get_ldhses_cb(NULL),
+	traverse_focus_cb(NULL), set_focus_cb(NULL), get_ldhses_cb(NULL), check_ldh_object_cb(0),
 	get_current_objects_cb(NULL), popup_menu_cb(NULL), call_method_cb(NULL),
 	sound_cb(0), create_modal_dialog_cb(0), eventlog_cb(0), update_colorpalette_cb(0),
 	keyboard_cb(xn_keyboard_cb), refresh_objects_cb(0),
@@ -180,7 +181,7 @@ Graph::Graph(
 	use_default_access(xn_use_default_access), 
 	default_access(xn_default_access), keep_mode(false),
         subgraph_dyn(0), was_subgraph(0), disable_log(1), pending_borders(0),
-	color_theme(xn_color_theme)
+	color_theme(xn_color_theme), syntax_instance(0)
 {
   cdh_StrncpyCutOff( name, xn_name, sizeof(name), 1);
   strcpy( default_path, xn_default_path);
@@ -783,7 +784,7 @@ int Graph::ungroup_select( int force)
     grow_GetSelectList( grow->ctx, &sel_list, &sel_count);
     for ( i = 0; i < sel_count; i++) {
       if ( grow_GetObjectType( sel_list[i]) == glow_eObjectType_GrowGroup) {
-        grow_GetObjectName( sel_list[i], name);	
+        grow_GetObjectName( sel_list[i], name, sizeof(name), glow_eName_Object);
 	grow_GetUserData( sel_list[i], (void **)&dyn);
 	if ( dyn->get_dyntype1( sel_list[i]) || dyn->get_actiontype1( sel_list[i]) ||
  	     dyn->get_dyntype2( sel_list[i]) || dyn->get_actiontype2( sel_list[i]))
@@ -923,7 +924,7 @@ void Graph::change_select_name()
   {
     if ( change_name_cb)
     {
-      grow_GetObjectName( *sel_list, name);
+      grow_GetObjectName( *sel_list, name, sizeof(name), glow_eName_Object);
       (change_name_cb)( parent_ctx, *sel_list, name);
     }
   }
@@ -3745,7 +3746,7 @@ static int graph_trace_connect_bc( grow_tObject object,
     return 1;
   }
 
-  // Get Dyn from nodeclass i dyn_type1 is HostObject
+  // Get Dyn from nodeclass if dyn_type1 is HostObject
   grow_GetObjectClassDynType( object, &dyn_type1, &dyn_type2, &dyn_action_type1, &dyn_action_type2);
   if ( dyn_type1 & ge_mDynType1_HostObject && 
        (dyn->dyn_type1 & ge_mDynType1_Inherit || dyn->dyn_type1 & ge_mDynType1_HostObject)) {
@@ -4858,7 +4859,8 @@ graph_eDatabase Graph::parse_attr_name( char *name, char *parsed_name,
     strcat( str, str1);
   }
 
-  if ( (s = strstr( str, "$node")) || (s = strstr( str, "$NODE"))) {
+  if ( ((s = strstr( str, "$node")) || (s = strstr( str, "$NODE"))) &&
+       mode != graph_eMode_Development) {
     char nodename[80];
     pwr_tOid oid;
     pwr_tStatus sts;
@@ -5228,7 +5230,7 @@ int Graph::ref_object_info_all()
 	if ( EVEN(sts) && cdh_RefIdIsNull( refid[refcnt])) {
 	  char oname[80] = "";
 	  if ( reflist[i].m_object != 0)
-	    grow_GetObjectName( reflist[i].m_object, oname);
+	    grow_GetObjectName( reflist[i].m_object, oname, sizeof(oname), glow_eName_Path);
 	  printf( "** %s, %s\n", oname, reflist[i].m_name);
 	     
 	}
@@ -5796,6 +5798,106 @@ void Graph::refresh_objects( unsigned int type)
 {
   if ( refresh_objects_cb)
     (refresh_objects_cb)( parent_ctx, type);
+}
+
+void Graph::syntax_check( char *instance)
+{
+  int error_cnt = 0;
+  int warning_cnt = 0;
+  int sts;
+  grow_tObject *objectlist;
+  int object_cnt;
+  int severity;
+  char name[80];
+
+  syntax_instance = instance;  
+  if ( instance)
+    strncpy( object_name[0], instance, sizeof(object_name[0]));
+
+  grow_GetObjectList( grow->ctx, &objectlist, &object_cnt);
+  sts = syntax_check_list( objectlist, object_cnt, &error_cnt, &warning_cnt);
+
+  get_name( name);
+
+  if ( error_cnt || warning_cnt) {
+    char msg[200];
+
+    severity = 'E';
+    if ( error_cnt == 0)
+      severity = 'W';
+
+    sprintf( msg, "Ge syntax check %s, %d errors and %d warnings", name, error_cnt, warning_cnt);
+    
+    MsgWindow::message( severity, msg);    
+  }
+  else {
+    char msg[200];
+    
+    sprintf( msg, "Successful syntax control %s", name);
+    message( 'I', msg);
+  }
+  syntax_instance = 0;
+  if ( instance)
+    strcpy( object_name[0], "");
+}
+
+int Graph::syntax_check_list( grow_tObject *list, int list_cnt, int *error_cnt, int *warning_cnt)
+{
+  GeDyn *dyn;
+  grow_tObject *grouplist;
+  int group_cnt;
+  int sts;
+
+  for ( int i = 0; i < list_cnt; i++) {
+    switch ( grow_GetObjectType( list[i])) {
+    case glow_eObjectType_GrowNode:
+    case glow_eObjectType_GrowSlider:
+    case glow_eObjectType_GrowToolbar:
+    case glow_eObjectType_GrowTrend:
+    case glow_eObjectType_GrowXYCurve:
+    case glow_eObjectType_GrowTable:
+    case glow_eObjectType_GrowBar:
+    case glow_eObjectType_GrowPie:
+    case glow_eObjectType_GrowBarChart:
+    case glow_eObjectType_GrowAxis:
+    case glow_eObjectType_GrowAxisArc:
+
+      grow_GetUserData( list[i], (void **)&dyn);
+      if ( !dyn)
+	break;
+
+      sts = dyn->syntax_check( list[i], error_cnt, warning_cnt);
+
+      break;
+    case glow_eObjectType_GrowGroup:
+      grow_GetUserData( list[i], (void **)&dyn);
+      sts = dyn->syntax_check( list[i], error_cnt, warning_cnt);
+
+      grow_GetGroupObjectList( list[i], &grouplist, &group_cnt);
+      sts = syntax_check_list( grouplist, group_cnt, error_cnt, warning_cnt);
+      break;
+    default: ;
+    }
+  }
+  return 1;
+}
+
+void Graph::syntax_msg( int severity, grow_tObject object, const char *msg)
+{
+  char name[80];
+
+  grow_GetObjectName( object, name, sizeof(name), glow_eName_Path);
+
+
+  printf( "%c %-20s %s\n", severity, name, msg);
+  MsgWindow::message( severity, msg, "   in object ", name, name, parent_ctx, msgw_eRow_Ge);
+}
+
+int Graph::check_ldh_object( char *name, pwr_eType *type) 
+{
+  if ( check_ldh_object_cb)
+    return (check_ldh_object_cb)( parent_ctx, name, type);
+  return 1;
 }
 
 void GraphApplList::insert( void *key, void *ctx)

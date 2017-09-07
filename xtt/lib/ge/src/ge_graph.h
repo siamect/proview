@@ -126,7 +126,8 @@ typedef enum {
   graph_eDatabase_Gdh,		//!< Database rtdb.
   graph_eDatabase_User,		//!< User defined database.
   graph_eDatabase_Local,	//!< Graph local database.
-  graph_eDatabase_Ccm		//!< Scrip external variable database.
+  graph_eDatabase_Ccm,		//!< Scrip external variable database.
+  graph_eDatabase__
 } graph_eDatabase;
 
 //! Keyboards
@@ -498,6 +499,7 @@ class Graph {
   int 		(*traverse_focus_cb)( void *, void *);
   int 		(*set_focus_cb)( void *, void *);
   int	       	(*get_ldhses_cb)( void *, ldh_tSesContext *, int);
+  int		(*check_ldh_object_cb)( void *, char *, pwr_eType *);
   int	       	(*get_current_objects_cb)( void *, pwr_sAttrRef **, int **);
   void     	(*popup_menu_cb)(void *, pwr_sAttrRef, unsigned long,
 				 unsigned long, char *, int x, int y); 
@@ -565,6 +567,7 @@ class Graph {
   int			disable_log;		//!< Disable wb log window
   double		*pending_borders;       //!< Stored initial borders
   int			color_theme;		//!< Color theme
+  char			*syntax_instance;	//!< Instance for syntax check of object graphs
 
   //! Print to postscript file.
   /*! \param filename	Name of postscript file. */
@@ -1420,6 +1423,11 @@ class Graph {
   int get_object_name( unsigned int idx, int size, char *name);
   void signal_send( char *signalname);
   void refresh_objects( unsigned int type);
+  void syntax_check( char *instance);
+  int syntax_check_list( grow_tObject *list, int list_cnt, int *error_cnt, int *warning_cnt);
+  void syntax_msg( int severity, grow_tObject object, const char *msg);
+  int check_ldh_object( char *name, pwr_eType *type);
+
 
   static int get_colortheme_colors( char *file, double **colors, int *size);
 

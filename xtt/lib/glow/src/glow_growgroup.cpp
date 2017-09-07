@@ -53,6 +53,7 @@ GrowGroup::GrowGroup( GrowCtx *glow_ctx, const char *name, GlowArray& array,
 {
   object_type = glow_eObjectType_GrowGroup;
   nc = new GlowNodeGroup( glow_ctx, name, array);
+  nc->a.set_parent(this);
   get_node_borders();
 }
 
@@ -96,6 +97,7 @@ void GrowGroup::copy_from( const GrowGroup& n)
   sprintf( n_name, "Grp%d_", ((GrowCtx *)ctx)->objectname_cnt++); 
 
   nc = new GlowNodeGroup( (GlowNodeGroup &)*n.nc);
+  nc->a.set_parent( this);
 
   if ( ctx->userdata_copy_callback)
     (ctx->userdata_copy_callback)( this, user_data, &user_data, glow_eUserdataCbType_Node);
@@ -141,6 +143,7 @@ void GrowGroup::open( ifstream& fp)
       case glow_eSave_GrowGroup_nc: 
         nc = new GlowNodeGroup( ctx, n_name);
         nc->open( fp);
+	nc->a.set_parent( this);
         break;
       case glow_eSave_End: end_found = 1; break;
       default:
@@ -197,14 +200,14 @@ int GrowGroup::get_object_group( GlowArrayElem *object, GlowArrayElem **group)
   int sts;
 
   for ( int i = 0; i < nc->a.size(); i++) {
-    if ( nc->a[i]->type() == glow_eObjectType_GrowGroup) {
+    if ( nc->a[i] == object) {
+      *group = this;
+      return 1;
+    }
+    else if ( nc->a[i]->type() == glow_eObjectType_GrowGroup) {
       sts = ((GrowGroup *)nc->a[i])->get_object_group( object, group);
       if (ODD(sts))
         return sts;
-    }
-    else if ( nc->a[i] == object) {
-      *group = this;
-      return 1;
     }
   }
   return 0;
@@ -285,3 +288,22 @@ void GrowGroup::set_rootnode( void *node)
 {
   nc->a.set_rootnode( node);
 }
+
+
+int GrowGroup::get_path( char *name, int size)
+{
+  if ( parent) {
+    ((GrowGroup *)parent)->get_path( name, size);
+    if ( (int)strlen(name) + (int)strlen(n_name) + 2 > size)
+      return GLOW__BUFF_SMALL;
+    strcat( name, "-");
+    strcat( name, n_name);
+  }
+  else {
+    if ( (int)strlen(n_name) + 1 > size)
+      return GLOW__BUFF_SMALL;
+    strncpy( name, n_name, size);
+  }
+  return GLOW__SUCCESS;
+}
+

@@ -309,7 +309,8 @@ void Ge::clear_all()
   colpal_UpdateCustomColors( colorpalette_ctx, graph->get_custom_colors());
   update();
   set_title();
-
+  if ( objectnav)
+    objectnav->clear();
 }
 
 void Ge::clear()
@@ -375,6 +376,13 @@ void Ge::save_graph_and_close( Ge *gectx, char *name)
   }
 
   delete gectx;
+}
+
+int Ge::select_object( char *name)
+{
+  if ( objectnav)
+    objectnav->find_object(name);
+  return 1;
 }
 
 void Ge::export_javabean( Ge *gectx, char *name)
@@ -572,8 +580,8 @@ void Ge::export_gejava( Ge *gectx, char *name)
 
 void Ge::open_graph( char *name)
 {
-  char filename[80];
-  char graphname[80];
+  pwr_tFileName filename;
+  char 		graphname[80];
   int		path_cnt;
   char		*path;
   char		*s;
@@ -582,7 +590,10 @@ void Ge::open_graph( char *name)
   graph->set_show_grid( 0);
 
   cdh_ToLower( filename, name);
-  strcpy( graphname, filename);
+  if ( (s = strrchr( filename, '/')))
+    strncpy( graphname, s+1, sizeof(graphname));
+  else
+    strncpy( graphname, filename, sizeof(graphname));
   if ( (s = strrchr( graphname, '.')))
     *s = 0;
   graph->set_name( graphname);
@@ -596,7 +607,8 @@ void Ge::open_graph( char *name)
   update();
   set_title();
 
-  colpal_UpdateCustomColors( colorpalette_ctx, graph->get_custom_colors());
+  if ( colorpalette_ctx)
+    colpal_UpdateCustomColors( colorpalette_ctx, graph->get_custom_colors());
 
   if ( graph->journal)
     graph->journal->open( graphname);
@@ -770,6 +782,8 @@ void Ge::search_object_cb( void *ge_ctx, void *data, char *name)
   sts = gectx->graph->search_object( name);
   if ( EVEN(sts))
     gectx->message( 'E', "No such object");    
+  if ( gectx->objectnav)
+    gectx->objectnav->find_object( name);;
 }
 
 void Ge::activate_search_object()
@@ -1131,7 +1145,7 @@ void Ge::refresh_objects_cb( void *ge_ctx, unsigned int type)
     ((Ge *)ge_ctx)->objectnav->refresh_objects( type);;
 }
 
-void Ge::activate_exit()
+void Ge::close()
 {
   if ( graph->is_modified())
   {
@@ -1141,6 +1155,14 @@ void Ge::activate_exit()
   }
 
   delete this;
+}
+
+void Ge::activate_exit()
+{
+  if ( close_cb)
+    (close_cb)( this);
+  else
+    close();
 }
 
 void Ge::activate_print()
@@ -1226,6 +1248,13 @@ void Ge::activate_build()
   wb_revision::check_add_file( fname);
 
   message( 'I', "Graph built");
+}
+
+void Ge::activate_syntax_check()
+{
+  pwr_tCmd cmd = "check syntax";
+
+  command( cmd);
 }
 
 void Ge::activate_export_javabean()
@@ -2194,6 +2223,50 @@ int Ge::get_ldhses_cb( void *ctx, ldh_tSesContext *ldhses, int load)
 #endif
 }
 
+int Ge::check_ldh_object_cb( void *ctx, char *name, pwr_eType *type) 
+{
+#if LDH
+  Ge *gectx = (Ge *)ctx;
+  pwr_tAttrRef aref;
+  int sts;
+  pwr_tAName n;
+
+  if ( !gectx->graph->ldhses) {
+    sts = get_ldhses_cb( gectx, &gectx->graph->ldhses, 1);
+    if ( EVEN(sts)) return sts;
+  }
+
+  if ( gectx->graph->syntax_instance) {
+    char *t0, *s0, *s;
+
+    t0 = n;
+    s0 = name;
+    while ( (s = strstr( s0, "$object"))) {
+      strncpy( t0, s0, s-s0);
+      t0 += s - s0;
+      strcpy( t0, gectx->graph->syntax_instance); 
+      t0 += strlen(gectx->graph->syntax_instance);
+      s0 = s + strlen("$object");
+    }
+    cdh_Strcpy( t0, s0);
+  }
+  else
+    strcpy( n, name);
+
+  sts = ldh_NameToAttrRef( gectx->graph->ldhses, n, &aref);
+  if ( ODD(sts)) {
+    if ( aref.Flags.b.Object)
+      sts = ldh_GetAttrRefTid( gectx->graph->ldhses, &aref, (pwr_tTid *)type);
+    else
+      sts = ldh_GetAttrRefType( gectx->graph->ldhses, &aref, type);
+  }
+  return sts;
+#else
+  return 1;
+#endif
+}
+
+
 int Ge::traverse_focus( void *ctx, void *component)
 {
   Ge *gectx = (Ge *) ctx;
@@ -2347,7 +2420,7 @@ int Ge::graph_get_current_color_tone_cb( void *g, glow_eDrawType *color_tone)
 int Ge::graph_reconfigure_attr_cb( void *g, grow_tObject object,
 				   attr_sItem **itemlist, int *itemlist_cnt, void **client_data)
 {
-  return graph_reconfigure_attr_cb( ((Ge *)g)->graph, object, itemlist, itemlist_cnt, client_data);
+  return Graph::graph_reconfigure_attr_cb( ((Ge *)g)->graph, object, itemlist, itemlist_cnt, client_data);
 }
 int Ge::graph_attr_set_data_cb( void *g, grow_tObject object,
 				GeDyn *data)
@@ -2373,6 +2446,15 @@ void Ge::graph_attr_redraw_cb( void *g, void *attrctx, grow_tObject o, void *inf
   Graph::graph_attr_redraw_cb( ((Ge *)g)->graph, attrctx, o, info);
 }
 
+void Ge::find_ge_cb( void *g, char *object, void *utility)
+{
+  Ge *gectx = (Ge *)g;
+
+  if ( gectx->objectnav)
+    gectx->objectnav->find_object( object);
+}
+
+
 Ge::~Ge()
 {
 
@@ -2393,7 +2475,7 @@ Ge::Ge( 	void 	*x_parent_ctx,
   current_value_object(0), current_confirm_object(0), ldhses(0), plantctx(0),
   exit_when_close(x_exit_when_close), prev_count(0), focused_component(0), 
   prev_focused_component(0), recover_object(0), plant_mapped(0), subpalette_mapped(0), 
-  objectnav_mapped(0), options(x_options), open_dialog(0), objectnav(0)
+  objectnav_mapped(0), options(x_options), open_dialog(0), objectnav(0), close_cb(0)
 {
   strcpy( name, "PwR Ge");
 

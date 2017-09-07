@@ -112,12 +112,6 @@ class GlowConClass : public GlowArrayElem {
   */
   glow_eObjectType type() { return glow_eObjectType_ConClass;};
 
-  //! Get object name
-  /*!
-    \param name		Object name.
-  */
-  void get_object_name( char *name);
-
   //! Conversion between different versions of Glow
   /*!
     \param version	Version to convert to.
@@ -126,7 +120,6 @@ class GlowConClass : public GlowArrayElem {
 
   GrowCtx	*ctx;		//!< Glow ctx.
   GlowPoint	zero;
-  char	cc_name[32];		//!< Con class name.
   glow_eConType con_type;	//!< Connection type.
   glow_eCorner corner;		//!< Type of corners, rounded or straight.
   glow_eDrawType draw_type;	//!< Connection color.

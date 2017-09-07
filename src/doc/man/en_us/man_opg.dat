@@ -2435,12 +2435,13 @@ Close a ge graph. The graph can be supplied as a pwg-file or as
 a XttGraph object. To close a graph from a button inside the graph
 $current can be used, 'close graph $current'.
 
-<B>xtt> close graph 'filename' /instance=
+<B>xtt> close graph 'filename' [/instance=] [/iconify]
 <B>xtt> close graph /object=
 
 /object	<t>A XttGraph-object. If the namestring begins with '*', * is
 	<t>replaced by the node object.
-/instance <t>Open the class graph for this instance.
+/instance <t>Close the class graph for this instance.
+/iconify  <t>The graph is iconified instead of closed.
 </TOPIC>
 
 <TOPIC> close multiview <style> function

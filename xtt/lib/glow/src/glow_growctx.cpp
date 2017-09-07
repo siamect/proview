@@ -4810,7 +4810,7 @@ int GrowCtx::signal_send( char *signalname)
 int GrowCtx::find_by_name( const char *name, GlowArrayElem **element)
 { 
   const char *s;
-  char wname[32];
+  char wname[80];
 
   if ( (s = strchr( name, '.')) == 0)
     return a.find_by_name( name, element);

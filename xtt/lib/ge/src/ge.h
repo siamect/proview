@@ -128,6 +128,7 @@ class Ge {
   CoWow		*wow;
   void		*open_dialog;
   Attr		*objectnav;
+  void		(*close_cb)( void *);
 
   Ge( void *parent_ctx,
       ldh_tSesContext ldhses, int exit_when_close, unsigned int x_options);
@@ -143,6 +144,7 @@ class Ge {
 				  const char *init_text,
 				  void (*india_ok_cb)( Ge *, char *)) {}
   virtual void message( char severity, const char *message) {}
+  virtual void pop() {}
   virtual void status_msg( char *pos_str) {}
   virtual void open_yesnodia( const char *text, const char *title, 
 			      void (*yes_cb)( Ge *), void (*no_cb)( Ge *)) {}
@@ -168,6 +170,8 @@ class Ge {
   void clear_all();
   void open_graph( char *name);
   int set_focus( void *component);
+  void close();
+  int select_object( char *name);
 
   void activate_change_text();
   void activate_change_name();
@@ -219,6 +223,7 @@ class Ge {
   void activate_save();
   void activate_save_as();
   void activate_build();
+  void activate_syntax_check();
   void activate_export_javabean();
   void activate_export_javabean_as();
   void activate_export_gejava();
@@ -339,6 +344,7 @@ class Ge {
   static int colorpalette_cb( GlowCtx *ctx, glow_tEvent event);
   static int init_colorpalette_cb( GlowCtx *fctx, void *client_data);
   static int get_ldhses_cb( void *ctx, ldh_tSesContext *ldhses, int load);
+  static int check_ldh_object_cb( void *ctx, char *name, pwr_eType *type);
   static int traverse_focus( void *ctx, void *component);
   static int set_focus_cb( void *ctx, void *component);
   static void message_cb( void *ctx, char severity, const char *message);
@@ -366,6 +372,7 @@ class Ge {
 					 attr_sItem **itemlist, int *itemlist_cnt);
   static void graph_attr_close_cb( void *g, void *attrctx, grow_tObject o, void *info, int keep);
   static void graph_attr_redraw_cb( void *g, void *attrctx, grow_tObject o, void *info);
+  static void find_ge_cb( void *g, char *object, void *utility);
 };
 
 #endif

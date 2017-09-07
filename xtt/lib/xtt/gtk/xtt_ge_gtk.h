@@ -75,6 +75,7 @@ class XttGeGtk : public XttGe {
   ~XttGeGtk();
 
   void pop();
+  void iconify();
   void set_size( int width, int height);
   void create_confirm_dialog();
   void confirm_reply( int ok);

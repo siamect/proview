@@ -213,6 +213,8 @@ class AttrNav {
     void object_open_check( AItemObject *item, grow_tObject *open_list, int *open_type, int open_cnt);
     brow_tObject gobject_to_bobject( grow_tObject gobject);
     void filter( int type, char *pattern);
+    void find_object( char *object);
+    void clear();
     virtual void set_inputfocus() {}
     virtual void trace_start() {}
     static int init_brow_cb( FlowCtx *fctx, void *client_data);

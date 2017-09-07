@@ -240,6 +240,7 @@ WbGtk::WbGtk( int argc, char *argv[]) : mainwindow(0)
   MsgWindowGtk *msg_window = new MsgWindowGtk( 0, mainwindow, "Workbench messages", &sts);
   msg_window->find_wnav_cb = Wb::find_wnav_cb;
   msg_window->find_plc_cb = Wb::find_plc_cb;
+  msg_window->find_ge_cb = Wb::find_ge_cb;
   MsgWindow::set_default( msg_window);
   MsgWindow::message( 'I', "Development environment started");
 

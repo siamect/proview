@@ -77,7 +77,7 @@ else
   for lib in $libraries; do
 
     arname=${lib##/*/}
-    if [ $arname = "libpwr_rt.a" ] || [ $arname = "libpwr_cow.a" ] || [ $arname = "libpwr_cow_motif.a" ] || [ $arname = "libpwr_cow_gtk.a" ] || [ $arname = "libpwr_wb.a" ] || [ $arname = "libpwr_wb_motif.a" ] || [ $arname = "libpwr_wb_gtk.a" ] || [ $arname = "libpwr_xtt.a" ] || [ $arname = "libpwr_xtt_motif.a" ] || [ $arname = "libpwr_xtt_gtk.a" ]; then
+    if [ $arname = "libpwr_rt.a" ] || [ $arname = "libpwr_cow.a" ] || [ $arname = "libpwr_cow_motif.a" ] || [ $arname = "libpwr_cow_gtk.a" ] || [ $arname = "libpwr_cow_qt.a" ] || [ $arname = "libpwr_wb.a" ] || [ $arname = "libpwr_wb_motif.a" ] || [ $arname = "libpwr_wb_gtk.a" ] || [ $arname = "libpwr_wb_qt.a" ] || [ $arname = "libpwr_xtt.a" ] || [ $arname = "libpwr_xtt_motif.a" ] || [ $arname = "libpwr_xtt_gtk.a" ] || [ $arname = "libpwr_xtt_qt.a" ]; then
       if [ $ver -eq 1 ]; then
 	  echo "Merge $lib"
       fi

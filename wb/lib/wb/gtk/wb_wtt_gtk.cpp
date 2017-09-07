@@ -787,10 +787,13 @@ void WttGtk::wda_new( pwr_tOid oid)
 	      oid, 0, "", editmode, wnav->gbl.advanced_user, 1);
 }
 
-void WttGtk::ge_new( char *graph_name)
+Ge *WttGtk::ge_new( char *graph_name)
 {
+  Ge *gectx;
+
   unsigned int opt = wnavnode->gbl.enable_comment ? ge_mOption_EnableComment : 0;
-  new GeGtk( NULL, toplevel, ldhses, 0, opt, graph_name);
+  gectx = new GeGtk( this, toplevel, ldhses, 0, opt, graph_name);
+  return gectx;
 }
 
 void WttGtk::wcast_new( pwr_tAttrRef aref, pwr_tStatus *sts) 

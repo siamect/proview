@@ -563,7 +563,7 @@ int	SubGraphs::object_attr()
     }
     grow_FreeObjectAttrInfo( grow_info);
 
-    grow_GetNodeClassName( *list_p, name);
+    grow_GetNodeClassName( *list_p, name, sizeof(name));
 
     new ItemSubGraph( this, name, extern_p, *list_p,
 		      grow_ctx, NULL, flow_eDest_IntoLast);

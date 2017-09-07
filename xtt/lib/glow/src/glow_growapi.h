@@ -800,14 +800,14 @@ extern "C" {
     \param object	Object.
     \param name		The name of the object.
   */
-  void grow_GetObjectName( grow_tObject object, char *name);
+  int grow_GetObjectName( grow_tObject object, char *name, int size, glow_eName ntype);
 
   //! Get the name of a nodeclass.
   /*!
     \param nodeclass	Nodeclass.
     \param name		The name of the nodeclass.
   */ 
-  void grow_GetNodeClassName( grow_tNodeClass nodeclass, char *name);
+  void grow_GetNodeClassName( grow_tNodeClass nodeclass, char *name, int size);
 
   void grow_Reconfigure( grow_tCtx ctx);
 
@@ -1472,6 +1472,9 @@ extern "C" {
     \param num		Annotation number.
   */
   int grow_CheckAnnotation( grow_tNodeClass nodeclass, int num);
+
+  //! Check for an object if an annotation with this number exists.
+  int grow_CheckObjectAnnotation( grow_tObject object, int num);
 
   //! Clear the context.
   /*! \param ctx	Grow context. */

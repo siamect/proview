@@ -35,6 +35,7 @@ vpath %.h $(hw_source):$(os_source):$(co_source)
 vpath %.hpp $(hw_source):$(os_source):$(co_source)
 vpath %.c $(hw_source):$(os_source):$(co_source)
 vpath %.cpp $(hw_source):$(os_source):$(co_source)
+vpath %.cqt $(hw_source):$(os_source):$(co_source)
 vpath %.x $(hw_source):$(os_source):$(co_source)
 vpath %.pdr $(hw_source):$(os_source):$(co_source)
 vpath %.java $(hw_source):$(os_source):$(co_source)
@@ -47,7 +48,16 @@ sources := $(sort \
              $(foreach file, \
                $(foreach dir, \
                  $(source_dirs), \
-                 $(wildcard $(dir)/$(comp_name)*.c $(dir)/$(comp_name)*.cpp) \
+                 $(wildcard $(dir)/$(comp_name)*.c $(dir)/$(comp_name)*.cpp $(dir)/$(comp_name)*.cqt) \
+               ), $(notdir $(file)) \
+             ) \
+           )
+
+cqt_sources := $(sort \
+             $(foreach file, \
+               $(foreach dir, \
+                 $(source_dirs), \
+                 $(wildcard $(dir)/*.cqt) \
                ), $(notdir $(file)) \
              ) \
            )
@@ -115,6 +125,8 @@ meth_sources := $(sort \
              ) \
            )
 
+cqt_objects := $(patsubst %.cqt, %_moc.o, $(cqt_sources))
+
 xdr_includes := $(addprefix $(inc_dir)/,$(patsubst %.x, %.h, $(xdr_sources)))
 xdr_objects := $(patsubst %.x, %_xdr.o, $(xdr_sources))
 
@@ -141,6 +153,7 @@ export_lib := $(lib_dir)/$(lib_name)$(lib_ext)
 java_classes := $(addsuffix .class, $(basename $(java_sources)))
 objects := $(addsuffix $(obj_ext), $(basename $(sources)))
 objects += $(xdr_objects) $(pdr_objects)
+objects += $(cqt_objects)
 objects += $(java_classes)
 objects	:= $(addprefix $(bld_dir)/, $(objects))
 

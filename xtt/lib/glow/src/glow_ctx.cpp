@@ -1646,7 +1646,7 @@ GlowArrayElem *GlowCtx::get_nodeclass_from_name( const char *name)
         
   for ( i = 0; i < a_nc.a_size; i++)
   {
-    if ( strcmp( ((GlowNodeClass *) a_nc.a[i])->nc_name, name) == 0)
+    if ( strcmp( ((GlowNodeClass *) a_nc.a[i])->n_name, name) == 0)
       return a_nc.a[i];
   }
   return 0;
@@ -1658,7 +1658,7 @@ GlowArrayElem *GlowCtx::get_conclass_from_name( char *name)
         
   for ( i = 0; i < a_cc.a_size; i++)
   {
-    if ( strcmp( ((GlowConClass *) a_cc.a[i])->cc_name, name) == 0)
+    if ( strcmp( ((GlowConClass *) a_cc.a[i])->n_name, name) == 0)
       return a_cc.a[i];
   }
   return 0;

@@ -173,7 +173,7 @@ class GrowGroup : public GrowNode {
   void set_rootnode( void *node);
 
   void set_object_name( char *name) { strcpy( n_name, name);
-    strcpy( nc->nc_name, name);}
+    strcpy( nc->n_name, name);}
 
   //! Get next object. */
   int get_next_object( GlowArrayElem *object, GlowArrayElem **next) { return nc->a.get_next( object, next);}
@@ -183,6 +183,9 @@ class GrowGroup : public GrowNode {
 
   int order_object( GlowArrayElem *o, GlowArrayElem *dest, glow_eDest code) { return nc->a.move( o, dest, code);}
 
+  int get_path( char *name, int size);
+
+  int find_by_name( const char *name, GlowArrayElem **element) { return nc->a.find_by_name( name, element);}
 };
 
 /*@}*/

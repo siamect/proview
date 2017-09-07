@@ -1846,6 +1846,7 @@ void Wtt::activate_openge()
   int		size;
   int		graph_found = 0;
   char		graph_name[80];
+  Ge		*gectx;
 
   if ( !ldhses) {
     message( 'E', "No volume is attached");
@@ -1890,9 +1891,11 @@ void Wtt::activate_openge()
   }
   set_clock_cursor();
   if ( graph_found)
-    ge_new( graph_name);
+    gectx = ge_new( graph_name);
   else
-    ge_new( NULL);
+    gectx = ge_new( NULL);
+  register_utility( gectx, wb_eUtility_Ge);
+
   reset_cursor();
 }
 
@@ -2300,6 +2303,14 @@ void wtt_wda_close_cb( void *wda)
   wtt->appl.remove( wda);
 }
 
+void wtt_ge_close_cb( void *ge)
+{
+  Wtt *wtt = (Wtt *) ((Ge *)ge)->parent_ctx;
+
+  ((Ge *)ge)->close();
+  wtt->appl.remove( ge);
+}
+
 void Wtt::register_utility( void *ctx, wb_eUtility utility)
 {
 
@@ -2316,6 +2327,10 @@ void Wtt::register_utility( void *ctx, wb_eUtility utility)
     case wb_eUtility_SpreadsheetEditor:
       appl.insert( utility, ctx, pwr_cNObjid, "");
       ((Wda *)ctx)->close_cb = wtt_wda_close_cb;
+      break;
+    case wb_eUtility_Ge:
+      appl.insert( utility, ctx, pwr_cNObjid, "");
+      ((Ge *)ctx)->close_cb = wtt_ge_close_cb;
       break;
     default:
      ;
@@ -2589,6 +2604,17 @@ int WttApplList::find( wb_eUtility type, pwr_tObjid objid, void **ctx)
       *ctx = elem->ctx;
       return 1;
     }
+  }
+  return 0;
+}
+
+int WttApplList::find( wb_eUtility type, void *ctx)
+{
+  WttApplListElem *elem;
+
+  for ( elem = root; elem; elem = elem->next) {
+    if ( elem->type == type && elem->ctx == ctx)
+      return 1;
   }
   return 0;
 }
