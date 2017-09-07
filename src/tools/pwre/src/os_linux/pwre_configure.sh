@@ -159,6 +159,8 @@ pwre_config_check_lib()
 	    conf_libgtk=$conf_libgtk" -l${lib%.*}"
           elif test $4 == "motif"; then
 	    conf_libmotif=$conf_libmotif" -l${lib%.*}"
+	      elif test $4 == "qt"; then
+	    conf_libqt=$conf_libqt" -l${lib%.*}"
           elif test $4 == "wb"; then
 	    conf_libwb=$conf_libwb" -l${lib%.*}"
           elif test $4 == "mq"; then
@@ -184,6 +186,9 @@ pwre_config_check_lib()
 	elif test $3 == "gtk"; then
 	  conf_libgtk=$conf_libgtk" \\\`pkg-config --libs gtk+-2.0\\\`"
 	  conf_incdirgtk=$conf_incdirgtk" \\\`pkg-config --cflags gtk+-2.0\\\`"
+	elif test $3 == "qt"; then
+	  conf_libqt=$conf_libqt" \\\`pkg-config --libs QtCore QtGui QtNetwork phonon\\\`"
+	  conf_incdirqt=$conf_incdirqt" \\\`pkg-config --cflags QtCore QtGui QtNetwork phonon\\\`"
 	elif test $3 == "gst"; then
 	  conf_libgst=$conf_libgst" \\\`pkg-config --libs gstreamer-interfaces-0.10 gstreamer-0.10\\\`"
 	  conf_incdirgst=$conf_incdirgst" \\\`pkg-config --cflags gstreamer-interfaces-0.10 gstreamer-0.10\\\`"
@@ -274,11 +279,13 @@ conf_libwb=""
 conf_libmq=""
 conf_libwmq=""
 conf_libpnak=""
-conf_libgtk="" 
+conf_libgtk=""
+conf_libqt=""
 conf_libmotif="" 
 conf_libgst="" 
 conf_libdir=""
 conf_incdirgtk=""
+conf_incdirqt=""
 conf_incdirgst=""
 let inc_cnt=0
 let lib_cnt=0
@@ -383,8 +390,15 @@ echo "export PWRE_CONF_LOCKDBS=$lockdbs" >> $cfile
 
 if [ $pwre_hw == "hw_arm" ] && [ $ebuild -eq 1 ]; then
   echo "Arm ebuild"
-  pwre_config_check_lib gtk    	  GTK      gtk gtk 0 "/usr/lib/libgtk-x11-2.0.so:/usr/lib/$hwpl-linux-$gnu/libgtk-x11-2.0.so"
-  pwre_config_check_include gtk   GTK   1 "/usr/local/include/gtk-2.0/gtk.h:/usr/local/include/gtk-2.0/gtk/gtk.h:/usr/include/gtk-2.0/gtk/gtk.h"
+
+  if [ $pwre_conf_qt -eq 1 ]; then
+    pwre_config_check_lib qt        QT      qt qt 0 "/usr/lib/libQtGui.so:/usr/lib/$hwpl-linux-$gnu/libQtGui.so"
+    pwre_config_check_include qt    QT   1 "/usr/include/qt4/QtGui/QtGui"
+  else
+    pwre_config_check_lib gtk       GTK      gtk gtk 0 "/usr/lib/libgtk-x11-2.0.so:/usr/lib/$hwpl-linux-$gnu/libgtk-x11-2.0.so"
+    pwre_config_check_include gtk   GTK   1 "/usr/local/include/gtk-2.0/gtk.h:/usr/local/include/gtk-2.0/gtk/gtk.h:/usr/include/gtk-2.0/gtk/gtk.h"
+  fi
+
   pwre_config_check_include jni   JNI   1 $jdk/include/jni.h
   pwre_config_check_include jni   JNI   0 $jdk/include/linux/jni_md.h
 
@@ -412,9 +426,11 @@ if [ $pwre_hw == "hw_arm" ] && [ $ebuild -eq 1 ]; then
   echo "export pwre_conf_libpwrprofibus=\"-lpwr_pnak_dummy\"" >> $cfile
   echo "export pwre_conf_libpwrxtt=\"-lpwr_xtt -lpwr_ge -lpwr_cow -lpwr_flow -lpwr_glow\"" >> $cfile
   echo "export pwre_conf_libpwrxttgtk=\" -lpwr_xtt_gtk -lpwr_ge_gtk -lpwr_cow_gtk -lpwr_flow_gtk -lpwr_glow_gtk\"" >> $cfile
+  echo "export pwre_conf_libpwrxttqt=\" -lpwr_xtt_qt -lpwr_ge_qt -lpwr_cow_qt -lpwr_flow_qt -lpwr_glow_qt\"" >> $cfile
   echo "export pwre_conf_libpwrxttmotif=\" -lpwr_xtt_motif -lpwr_ge_motif -lpwr_cow_motif -lpwr_flow_motif -lpwr_glow_motif\"" >> $cfile
   echo "export pwre_conf_libpwrwb=\"-lpwr_wb\"" >> $cfile
   echo "export pwre_conf_libpwrwbgtk=\"-lpwr_wb_gtk\"" >> $cfile
+  echo "export pwre_conf_libpwrwbqt=\"-lpwr_wb_qt\"" >> $cfile
   echo "export pwre_conf_libpwrwbmotif=\"-lpwr_wb_motif\"" >> $cfile
   echo "export pwre_conf_libpwropc=\"-lpwr_opc\"" >> $cfile
   echo "export pwre_conf_libpwrremote=\"-lpwr_remote\"" >> $cfile
@@ -427,11 +443,13 @@ if [ $pwre_hw == "hw_arm" ] && [ $ebuild -eq 1 ]; then
   echo "export pwre_conf_libwmq=\"$conf_libwmq\"" >> $cfile
   echo "export pwre_conf_libpnak=\"$conf_libpnak\"" >> $cfile
   echo "export pwre_conf_libgtk=\"$conf_libgtk\"" >> $cfile
+  echo "export pwre_conf_libqt=\"$conf_libqt\"" >> $cfile
   echo "export pwre_conf_libmotif=\"$conf_libmotif\"" >> $cfile
   echo "export pwre_conf_libgst=\"$conf_libgtk\"" >> $cfile
   echo "export pwre_conf_libdir=\"$conf_libdir\"" >> $cfile
   echo "export pwre_conf_incdir=\"$conf_incdir\"" >> $cfile
   echo "export pwre_conf_incdirgtk=\"$conf_incdirgtk\"" >> $cfile
+  echo "export pwre_conf_incdirqt=\"$conf_incdirqt\"" >> $cfile
   echo "export pwre_conf_dtt_platform=\"arm_linux\"" >> $cfile
 else
 
@@ -443,7 +461,11 @@ else
 
   #Gtk
   echo "Mandatory :"
-  pwre_config_check_lib gtk    	  GTK      gtk gtk 0 "/usr/lib/libgtk-x11-2.0.so:/usr/lib/$hwpl-linux-$gnu/libgtk-x11-2.0.so"
+  if [ $pwre_conf_qt -eq 1 ]; then
+    pwre_config_check_lib qt        QT      qt qt 0 "/usr/lib/libQtGui.so:/usr/lib/$hwpl-linux-$gnu/libQtGui.so"
+  else
+    pwre_config_check_lib gtk       GTK      gtk gtk 0 "/usr/lib/libgtk-x11-2.0.so:/usr/lib/$hwpl-linux-$gnu/libgtk-x11-2.0.so"
+  fi
 
   pwre_config_check_lib librpcsvc LIBRPCSVC lib lib 0 "/usr/lib/librpcsvc.so:/usr/lib/librpcsvc.a:/usr/lib/$hwpl-linux-$gnu/librpcsvc.a"
   pwre_config_check_lib libasound LIBASOUND lib lib 0 "/usr/lib/libasound.so:/usr/lib/libasound.a:/usr/lib/$hwpl-linux-$gnu/libasound.so"
@@ -457,7 +479,11 @@ else
   pwre_config_check_lib libfl     LIBFL    lib lib 0 "/usr/lib/libfl.so:/usr/lib/libfl.a:/usr/lib/$hwpl-linux-$gnu/libfl.so"
   pwre_config_check_lib libX11    LIBX11   lib lib 0 "/usr/lib/libX11.so:/usr/lib/$hwpl-linux-$gnu/libX11.so"
 
-  pwre_config_check_include gtk   GTK   1 "/usr/local/include/gtk-2.0/gtk.h:/usr/local/include/gtk-2.0/gtk/gtk.h:/usr/include/gtk-2.0/gtk/gtk.h"
+  if [ $pwre_conf_qt -eq 1 ]; then
+    pwre_config_check_include qt    QT   1 "/usr/include/qt4/QtGui/QtGui"
+  else
+    pwre_config_check_include gtk   GTK   1 "/usr/local/include/gtk-2.0/gtk.h:/usr/local/include/gtk-2.0/gtk/gtk.h:/usr/include/gtk-2.0/gtk/gtk.h"
+  fi
   pwre_config_check_include alsa  ALSA  1 "/usr/include/alsa/asoundlib.h"
 
   echo ""
@@ -521,9 +547,11 @@ else
   echo "export pwre_conf_libpwrpowerlinkcn=\"$conf_libpowerlinkcn\"" >> $cfile
   echo "export pwre_conf_libpwrxtt=\"-lpwr_xtt -lpwr_ge -lpwr_cow -lpwr_flow -lpwr_glow\"" >> $cfile
   echo "export pwre_conf_libpwrxttgtk=\" -lpwr_xtt_gtk -lpwr_ge_gtk -lpwr_cow_gtk -lpwr_flow_gtk -lpwr_glow_gtk\"" >> $cfile
+  echo "export pwre_conf_libpwrxttqt=\" -lpwr_xtt_qt -lpwr_ge_qt -lpwr_cow_qt -lpwr_flow_qt -lpwr_glow_qt\"" >> $cfile
   echo "export pwre_conf_libpwrxttmotif=\" -lpwr_xtt_motif -lpwr_ge_motif -lpwr_cow_motif -lpwr_flow_motif -lpwr_glow_motif\"" >> $cfile
   echo "export pwre_conf_libpwrwb=\"-lpwr_wb\"" >> $cfile
   echo "export pwre_conf_libpwrwbgtk=\"-lpwr_wb_gtk\"" >> $cfile
+  echo "export pwre_conf_libpwrwbqt=\"-lpwr_wb_qt\"" >> $cfile
   echo "export pwre_conf_libpwrwbmotif=\"-lpwr_wb_motif\"" >> $cfile
   echo "export pwre_conf_libpwropc=\"-lpwr_opc\"" >> $cfile
   echo "export pwre_conf_libpwrremote=\"-lpwr_remote\"" >> $cfile
@@ -536,11 +564,13 @@ else
   echo "export pwre_conf_libwmq=\"$conf_libwmq\"" >> $cfile
   echo "export pwre_conf_libpnak=\"$conf_libpnak\"" >> $cfile
   echo "export pwre_conf_libgtk=\"$conf_libgtk\"" >> $cfile
+  echo "export pwre_conf_libqt=\"$conf_libqt\"" >> $cfile
   echo "export pwre_conf_libgst=\"$conf_libgst\"" >> $cfile
   echo "export pwre_conf_libmotif=\"$conf_libmotif\"" >> $cfile
   echo "export pwre_conf_libdir=\"$conf_libdir\"" >> $cfile
   echo "export pwre_conf_incdir=\"$conf_incdir\"" >> $cfile
   echo "export pwre_conf_incdirgtk=\"$conf_incdirgtk\"" >> $cfile
+  echo "export pwre_conf_incdirqt=\"$conf_incdirqt\"" >> $cfile
   echo "export pwre_conf_incdirgst=\"$conf_incdirgst\"" >> $cfile
 
 fi
