@@ -10477,6 +10477,9 @@ pwr_tStatus XNav::get_instance_classgraph( char *instance_str, pwr_tFileName fil
   pwr_tFileName found_file, fname, file_str;
   pwr_tAName aname;
   pwr_tEnum graph_conf;
+  int i;
+  int is_baseclass = 0;
+  int found = 0;
 	  
   sts = gdh_NameToAttrref( pwr_cNObjid, instance_str, &aref);
   if ( EVEN(sts)) return sts;
@@ -10492,6 +10495,7 @@ pwr_tStatus XNav::get_instance_classgraph( char *instance_str, pwr_tFileName fil
     if ( cdh_CidToVid(cid) < cdh_cUserClassVolMin ||
 	 (cdh_CidToVid(cid) >= cdh_cManufactClassVolMin &&
 	  cdh_CidToVid(cid) <= cdh_cManufactClassVolMax)) {
+      is_baseclass = 1;
       if ( cname[0] == '$')
 	sprintf( file_str, "pwr_c_%s", &cname[1]);
       else
@@ -10500,37 +10504,42 @@ pwr_tStatus XNav::get_instance_classgraph( char *instance_str, pwr_tFileName fil
     else
       strcpy( file_str, cname);
 
-    // Get base class graphs on $pwr_exe
-    cdh_ToLower( fname, file_str);
-    if ( (cdh_NoCaseStrncmp( fname, "pwr_c_", 6) == 0 || 
-	  cdh_NoCaseStrncmp( fname, "pwr_c_", 6) == 0)) {
-      strcpy( fname, "$pwr_exe/");
-      strcat( fname, file_str);
-      strcpy( file_str, fname);
-    }
-    else {
-      strcpy( fname, "$pwrp_exe/");
-      strcat( fname, file_str);
-      strcpy( file_str, fname);
-    }
-    
-    // Add any GraphConfiguration to filename
-    strcpy( aname, instance_str);
-    strcat( aname, ".GraphConfiguration");
-    sts = gdh_GetObjectInfo( aname, &graph_conf, sizeof(graph_conf));
-    if ( ODD(sts)) {
-      if ( graph_conf != 0) {
-	char gc[12];
-	sprintf( gc, "%d", graph_conf);
-	strcat( fname, gc);
+    // Get base class graphs on $pwrp_exe or $pwr_exe
+    for ( i = 0; i < 2; i++) {      
+      cdh_ToLower( fname, file_str);
+      if ( is_baseclass && i == 1) {
+	strcpy( fname, "$pwr_exe/");
+	strcat( fname, file_str);
       }
-      strcpy( file_str, fname);
-    }
+      else {
+	strcpy( fname, "$pwrp_exe/");
+	strcat( fname, file_str);
+      }
     
-    strcat( fname, ".pwg");
-    sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
-    dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
-    if ( ODD(sts)) break;
+      // Add any GraphConfiguration to filename
+      strcpy( aname, instance_str);
+      strcat( aname, ".GraphConfiguration");
+      sts = gdh_GetObjectInfo( aname, &graph_conf, sizeof(graph_conf));
+      if ( ODD(sts)) {
+	if ( graph_conf != 0) {
+	  char gc[12];
+	  sprintf( gc, "%d", graph_conf);
+	  strcat( fname, gc);
+	}
+      }
+    
+      strcat( fname, ".pwg");
+      sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
+      dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
+      if ( ODD(sts)) {
+	found = 1;
+	break;
+      }
+      if ( !is_baseclass)
+	break;
+    }
+    if ( found)
+      break;
     
     sts = gdh_GetSuperClass( cid, &cid, aref.Objid);
   }
