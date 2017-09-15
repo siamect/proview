@@ -78,7 +78,7 @@ void GsdmlAttr::gsdmlattr_change_value_cb( void *attr_ctx)
 void GsdmlAttr::activate_exit()
 {
   if ( close_cb) {
-    if ( attrnav->is_modified()) {
+    if ( edit_mode && attrnav->is_modified()) {
       wow->DisplayQuestion( (void *)this, "Apply",
 			    "Do you want to apply changes",
 			    cmd_close_apply_cb, cmd_close_no_cb, 0);
