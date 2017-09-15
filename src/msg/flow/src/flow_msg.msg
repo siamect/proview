@@ -47,3 +47,4 @@ nonextsibling	<There is no next sibling>			/error
 destroyed       <Flow ctx is destroyed>                         /info
 no_propagate    <Don't propagate event handling>                /info
 fileopen        <Unable to open file>                           /error
+terminated      <Ctx is terminated>				/info

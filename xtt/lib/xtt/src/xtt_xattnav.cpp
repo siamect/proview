@@ -49,6 +49,7 @@
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
+#include "flow_msg.h"
 
 #include "xtt_xatt.h"
 #include "xtt_xattnav.h"
@@ -473,7 +474,7 @@ int XAttNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 				     ((ItemCrossref *)item)->ref_name);
 	  if ( xattnav->close_cb) {
 	    (xattnav->close_cb)( xattnav->parent_ctx);
-	    return 1;
+	    return FLOW__TERMINATED;
 	  }
 	}
 	break;

@@ -763,7 +763,10 @@ int FlowDrawGtk::event_handler( FlowCtx *ctx, GdkEvent event)
 	      sts = ctx->event_handler( flow_eEvent_MB1DoubleClickShiftCtrl, (int)event.button.x, (int)event.button.y, 0, 0);
 	    else
 	      sts = ctx->event_handler( flow_eEvent_MB1DoubleClick, (int)event.button.x, (int)event.button.y, 0, 0);
+	    if ( sts == FLOW__TERMINATED)
+	      return sts;
 	    click_sensitivity = 0;
+
 	    break;
 	  case 2: // Button2
 	    if ( (event.button.state & GDK_SHIFT_MASK) && 
