@@ -141,6 +141,7 @@ class WNavBrow {
     flow_sAnnotPixmap 	*pixmap_castattr;
     flow_sAnnotPixmap 	*pixmap_uncastattr;
     flow_sAnnotPixmap 	*pixmap_docblock;
+    flow_sAnnotPixmap 	*pixmap_confcomp;
 
     void free_pixmaps();
     void allocate_pixmaps();
