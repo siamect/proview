@@ -77,6 +77,7 @@ class WAttTextGtk : public WAttText {
 
   static void activate_exit( GtkWidget *w, gpointer data);
   static void activate_save( GtkWidget *w, gpointer data);
+  static void activate_saveandclose( GtkWidget *w, gpointer data);
   static void activate_copy( GtkWidget *w, gpointer data);
   static void activate_cut( GtkWidget *w, gpointer data);
   static void activate_paste( GtkWidget *w, gpointer data);

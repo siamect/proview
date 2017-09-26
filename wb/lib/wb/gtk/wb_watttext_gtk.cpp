@@ -107,6 +107,15 @@ void WAttTextGtk::activate_save( GtkWidget *w, gpointer data)
   watttext->modified = 0;
 }
 
+void WAttTextGtk::activate_saveandclose( GtkWidget *w, gpointer data)
+{
+  WAttText *watttext = (WAttText *)data;
+
+  watttext->set_attr_value();
+  watttext->modified = 0;
+  watttext->activate_exit();
+}
+
 void WAttTextGtk::activate_copy( GtkWidget *w, gpointer data)
 {
   WAttTextGtk *watttext = (WAttTextGtk *)data;
@@ -306,8 +315,16 @@ WAttTextGtk::WAttTextGtk(
   GtkWidget *file_save = gtk_image_menu_item_new_from_stock(GTK_STOCK_SAVE, accel_g);
   g_signal_connect(file_save, "activate", G_CALLBACK(activate_save), this);
 
+  GtkWidget *file_saveandclose = gtk_menu_item_new_with_mnemonic( "S_ave and close");
+  g_signal_connect( file_saveandclose, "activate", 
+		    G_CALLBACK(activate_saveandclose), this);
+  gtk_widget_add_accelerator( file_saveandclose, "activate", accel_g,
+			      't', GdkModifierType(GDK_CONTROL_MASK), 
+			      GTK_ACCEL_VISIBLE);
+
   GtkMenu *file_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_save);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_saveandclose);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_close);
 
   GtkWidget *file = gtk_menu_item_new_with_mnemonic("_File");
