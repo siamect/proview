@@ -145,7 +145,9 @@ void GeGtk::subgraphs_new()
 
 void GeGtk::set_title( char *title)
 {
-  gtk_window_set_title( GTK_WINDOW(toplevel), title);
+  char *titleutf8 = g_convert( title, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+  gtk_window_set_title( GTK_WINDOW(toplevel), titleutf8);
+  g_free( titleutf8);
 }
 
 void GeGtk::open_input_dialog( const char *text, const char *title,
@@ -1748,11 +1750,15 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
     strcat( title, tmp_name);
   }
 
+  char *titleutf8 = g_convert( title, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+
   toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
 					 "default-height", window_height,
 					 "default-width", window_width,
-					 "title", title,
+					 "title", titleutf8,
 					 NULL);
+
+  g_free( titleutf8);
 
   g_signal_connect( toplevel, "delete_event", G_CALLBACK(delete_event), this);
   g_signal_connect( toplevel, "destroy", G_CALLBACK(destroy_event), this);

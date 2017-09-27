@@ -1559,6 +1559,7 @@ void Ge::activate_graph_attr()
 void Ge::open_list_cb( void *ctx, char *text, int ok_pressed)
 {
   ((Ge *)ctx)->open_graph( text);
+  ((Ge *)ctx)->set_title();
   if ( ok_pressed)
     ((Ge *)ctx)->open_dialog = 0;    
 }
