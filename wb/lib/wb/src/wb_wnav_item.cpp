@@ -464,7 +464,7 @@ WItemObject::WItemObject( WNav *wnav, pwr_tObjid item_objid,
       }
     }
   }
-  if ( item_check_configure_method( wnav->ldhses, objid))
+  if ( wnav->editmode && item_check_configure_method( wnav->ldhses, objid))
     brow_SetAnnotPixmap( node, 1, wnav->brow->pixmap_confcomp);
 }
 
@@ -492,7 +492,7 @@ int WItemBaseObject::open_children( WNav *wnav, double x, double y)
       brow_RemoveAnnotPixmap( node, 1);
     if ( brow_IsOpen( node) & wnav_mOpen_Children)
       brow_SetAnnotPixmap( node, 0, wnav->brow->pixmap_map);
-    if ( item_check_configure_method( wnav->ldhses, objid))
+    if ( wnav->editmode && item_check_configure_method( wnav->ldhses, objid))
       brow_SetAnnotPixmap( node, 1, wnav->brow->pixmap_confcomp);
     brow_ResetOpen( node, wnav_mOpen_All);
     brow_ResetNodraw( wnav->brow->ctx);
@@ -542,7 +542,7 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
     brow_CloseNode( wnav->brow->ctx, node);
     brow_ResetOpen( node, wnav_mOpen_Attributes);
     brow_RemoveAnnotPixmap( node, 1);
-    if ( item_check_configure_method( wnav->ldhses, objid))
+    if ( wnav->editmode && item_check_configure_method( wnav->ldhses, objid))
       brow_SetAnnotPixmap( node, 1, wnav->brow->pixmap_confcomp);
     brow_ResetNodraw( wnav->brow->ctx);
     brow_Redraw( wnav->brow->ctx, node_y);
@@ -829,12 +829,12 @@ int WItemBaseObject::open_crossref( WNav *wnav, double x, double y)
     brow_CloseNode( wnav->brow->ctx, node);
     if ( brow_IsOpen( node) & wnav_mOpen_Attributes) {
       brow_RemoveAnnotPixmap( node, 1);
-      if ( item_check_configure_method( wnav->ldhses, objid))
+      if ( wnav->editmode && item_check_configure_method( wnav->ldhses, objid))
 	brow_SetAnnotPixmap( node, 1, wnav->brow->pixmap_confcomp);
     }
     if ( brow_IsOpen( node) & wnav_mOpen_Children) {
       brow_SetAnnotPixmap( node, 0, wnav->brow->pixmap_map);
-      if ( item_check_configure_method( wnav->ldhses, objid))
+      if ( wnav->editmode && item_check_configure_method( wnav->ldhses, objid))
 	brow_SetAnnotPixmap( node, 1, wnav->brow->pixmap_confcomp);
     }
     brow_ResetOpen( node, wnav_mOpen_All);
@@ -904,7 +904,7 @@ int WItemBaseObject::close( WNav *wnav, double x, double y)
       brow_RemoveAnnotPixmap( node, 1);
     if ( brow_IsOpen( node) & wnav_mOpen_Children)
       brow_SetAnnotPixmap( node, 0, wnav->brow->pixmap_map);
-    if ( item_check_configure_method( wnav->ldhses, objid))
+    if ( wnav->editmode && item_check_configure_method( wnav->ldhses, objid))
       brow_SetAnnotPixmap( node, 1, wnav->brow->pixmap_confcomp);
     brow_ResetOpen( node, wnav_mOpen_All);
     brow_ResetNodraw( wnav->brow->ctx);
