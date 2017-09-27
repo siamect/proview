@@ -470,6 +470,29 @@ void RtTrace::activate_cleartrace()
   flow_RemoveTraceObjects( flow_ctx);
 }
 
+void RtTrace::activate_parent_window()
+{
+  int		sts;
+  pwr_tAttrRef	attrref;
+  pwr_tOid	parent;
+  xmenu_eItemType itemtype;
+
+  sts = gdh_GetParent( objid, &parent);
+  if ( EVEN(sts)) return;
+
+  itemtype = xmenu_eItemType_Object;
+  attrref = cdh_ObjidToAref( parent);
+
+  if ( call_method_cb) {
+    (call_method_cb)( parent_ctx,
+		      "$Object-OpenTrace",
+		      "$Object-OpenTraceFilter",
+		      attrref, 
+		      itemtype,
+		      xmenu_mUtility_XNav, NULL);
+  }
+}
+
 void RtTrace::activate_display_object()
 {
   flow_tObject 	node;

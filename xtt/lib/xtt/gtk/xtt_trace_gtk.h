@@ -66,6 +66,7 @@ class RtTraceGtk : public RtTrace {
   static void activate_savetrace(GtkWidget *w, gpointer data);
   static void activate_restoretrace(GtkWidget *w, gpointer data);
   static void activate_cleartrace(GtkWidget *w, gpointer data);
+  static void activate_parent_window(GtkWidget *w, gpointer data);
   static void activate_display_object(GtkWidget *w, gpointer data);
   static void activate_collect_insert(GtkWidget *w, gpointer data);
   static void activate_open_object(GtkWidget *w, gpointer data);

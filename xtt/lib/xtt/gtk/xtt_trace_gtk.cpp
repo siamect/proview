@@ -112,6 +112,13 @@ void RtTraceGtk::activate_display_object(GtkWidget *w, gpointer data)
   tractx->activate_display_object();
 }
 
+void RtTraceGtk::activate_parent_window(GtkWidget *w, gpointer data)
+{
+  RtTrace *tractx = (RtTrace *)data;
+
+  tractx->activate_parent_window();
+}
+
 void RtTraceGtk::activate_collect_insert(GtkWidget *w, gpointer data)
 {
   RtTrace *tractx = (RtTrace *)data;
@@ -312,6 +319,8 @@ RtTraceGtk::RtTraceGtk( void *tr_parent_ctx, GtkWidget *tr_parent_wid, pwr_tObji
   pwr_tAName   	hostname;
   pwr_tOName   	plcconnect;
   pwr_tFileName fname;
+  pwr_tObjid parent;
+  pwr_tCid parent_cid;
 
   sts = gdh_ObjidToName( tr_objid, name, sizeof(name), cdh_mNName); 
   if (EVEN(sts)) {
@@ -612,6 +621,20 @@ RtTraceGtk::RtTraceGtk( void *tr_parent_ctx, GtkWidget *tr_parent_wid, pwr_tObji
 
   // Toolbar
   GtkToolbar *tools = (GtkToolbar *) g_object_new(GTK_TYPE_TOOLBAR, NULL);
+
+  // Open parent window for subwindows
+  sts = gdh_GetParent( objid, &parent);
+  if ( ODD(sts)) {
+    sts = gdh_GetObjectClass( parent, &parent_cid);
+    if ( ODD(sts) && parent_cid != pwr_cClass_plc) {
+      GtkWidget *tools_parent_window = gtk_button_new();
+      dcli_translate_filename( fname, "$pwr_exe/xtt_up.png");
+      gtk_container_add( GTK_CONTAINER(tools_parent_window), 
+			 gtk_image_new_from_file( fname));
+      g_signal_connect(tools_parent_window, "clicked", G_CALLBACK(activate_parent_window), this);
+      gtk_toolbar_append_widget( tools, tools_parent_window, "Open parent window", "");
+    }
+  }
 
   GtkWidget *tools_display_object = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/xtt_navigator.png");

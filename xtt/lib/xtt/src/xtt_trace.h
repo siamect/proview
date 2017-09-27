@@ -113,6 +113,7 @@ class RtTrace {
   void activate_savetrace();
   void activate_restoretrace();
   void activate_cleartrace();
+  void activate_parent_window();
   void activate_display_object();
   void activate_collect_insert();
   void activate_open_object();
