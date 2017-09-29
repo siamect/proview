@@ -899,6 +899,8 @@ void GrowWindow::new_ctx()
 {
   char fname[200];
   int sts;
+  char *s;
+  bool copied;
   int no_file = strcmp( file_name, "_no_") == 0 ? 1 : 0;   // No initial graph
 
   if ( strchr( file_name, '/') == 0) {
@@ -927,9 +929,23 @@ void GrowWindow::new_ctx()
   memcpy( window_ctx->event_callback, ctx->event_callback, sizeof( ctx->event_callback));
   window_ctx->event_move_node = ctx->event_move_node;
   window_ctx->background_disabled = 1;
-  if ( strcmp( owner, "$object") == 0 && ctx->is_subwindow)
-    strcpy( window_ctx->owner, ctx->owner);
-  else
+
+  copied = false;
+  for ( int i = 0; i < 4; i++) {
+    if ( (s = strstr( owner, "$object"))) {
+      if ( strcmp( ctx->owner, "") != 0) {
+	int len = s - owner;
+	strncpy( window_ctx->owner, owner, len);
+	window_ctx->owner[len] = 0;
+	strcat( window_ctx->owner, ctx->owner);
+	strcat( window_ctx->owner, s + 7);
+	copied = true;
+      }
+    }
+    else
+      break;
+  }
+  if ( !copied)
     strcpy( window_ctx->owner, owner);
   window_ctx->customcolors = ctx->gdraw->create_customcolors();
 

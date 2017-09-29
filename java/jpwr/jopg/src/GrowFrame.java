@@ -585,7 +585,7 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 	return instance;
     }
 
-    public Object loadGrowCtx( String fname) {
+    public Object loadGrowCtx( String fname, String owner) {
 	String filename;
 	BufferedReader reader = null;
 
@@ -637,7 +637,7 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 		return null;
 	    }
 	}
-	return graph.loadGrowCtx( reader);
+	return graph.loadGrowCtx( reader, owner);
     }
 
     public int loadSubgraph( String fname) {

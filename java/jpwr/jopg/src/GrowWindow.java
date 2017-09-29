@@ -242,15 +242,26 @@ public class GrowWindow extends GrowRect implements GrowScrollBarIfc {
 	if ( file_name.indexOf('.') == -1)
 	    file_name = file_name + ".pwg";
 
+	String windOwner = owner;
+	for ( int i = 0; i < 4; i++) {
+	    int idx;
+	    if ( (idx = windOwner.indexOf("$object")) != -1) {
+		String oname = cmn.getOwner();
+		windOwner = windOwner.substring(0, idx) + oname + 
+		    windOwner.substring(idx+7);
+	    }
+	    else
+		break;
+	}
+ 
 	System.out.println("GrowWindow loading " + file_name);
-	GrowCtxIfc ctx = (GrowCtxIfc)cmn.appl.loadCtx( file_name);
+	GrowCtxIfc ctx = (GrowCtxIfc)cmn.appl.loadCtx( file_name, windOwner);
 	if ( ctx == null) 
 	    return;
 
 	windowCmn = (GrowCmn)ctx.getCmn();
 	windowCmn.appl = cmn.appl;
 
-	windowCmn.owner = owner;
 	windowCmn.mw.subwindow_scale = window_scale;
 	windowCmn.mw.zoom_factor_x = windowCmn.mw.zoom_factor_y = 
   	    windowCmn.mw.subwindow_scale * cmn.mw.zoom_factor_x;

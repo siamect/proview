@@ -86,7 +86,7 @@ public class GrowFrame implements GraphApplIfc {
     public String getObject() {
 	return instance;
     }
-    public Object loadGrowCtx( String fname) {
+    public Object loadGrowCtx( String fname, String owner) {
 	return null;
     }
     public int loadSubgraph( String fname) {

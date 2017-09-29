@@ -45,7 +45,7 @@ public interface GrowApplIfc {
     public void eventHandler(GlowEvent e);
     public int getWidth();
     public int getHeight();
-    public Object loadCtx( String file);
+    public Object loadCtx( String file, String owner);
     public int loadSubgraph( String file);
     public void signalSend( String signalName);
 }

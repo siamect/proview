@@ -2074,13 +2074,14 @@ class GeDigSwap : public GeDynElem {
   pwr_tBoolean old_value;
   int a_typeid;
   unsigned int bitmask;
+  unsigned int since_reset;
 
   GeDigSwap( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
     GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_DigSwap, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_DigSwap), 
-    reset_value(0), bitmask(0)
+    reset_value(0), bitmask(0), since_reset(0)
     { strcpy( attribute, "");}
   GeDigSwap( const GeDigSwap& x) : 
-    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), reset_value(x.reset_value)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), reset_value(x.reset_value), since_reset(x.since_reset)
     { strcpy( attribute, x.attribute); }
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);

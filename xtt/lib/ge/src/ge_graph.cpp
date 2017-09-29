@@ -573,6 +573,9 @@ void Graph::open( char *filename)
     grow_EnableEvent( grow->ctx, glow_eEvent_Translate, 
 		      glow_eEventType_CallBack, graph_grow_cb);
 
+  if ( strcmp( object_name[0], "") != 0)
+    grow_SetOwner( grow->ctx, object_name[0]);
+
   if ( strcmp( filename, "_none_.pwg") != 0) {
     get_filename( filename, fname);
     sts = grow_Open( grow->ctx, fname);
@@ -4821,42 +4824,92 @@ graph_eDatabase Graph::parse_attr_name( char *name, char *parsed_name,
     return graph_eDatabase_Ccm;
   }
 
-  if ( (s = strstr( str, "$object"))) {
-    pwr_tAName oname[4];
-    for ( int i = 1; i < 4; i++)
-      strcpy( oname[i], object_name[i]);
-    if ( grow->stack_cnt == 0)
-      strcpy( oname[0], object_name[0]);
-    else {
-      grow_GetOwner( grow->ctx, oname[0]);
+  for ( int i = 0; i < 4; i++) {
+    if ( (s = strstr( str, "$object"))) {
+      pwr_tAName oname[4];
+      for ( int i = 1; i < 4; i++)
+	strcpy( oname[i], object_name[i]);
+      if ( grow->stack_cnt == 0)
+	strcpy( oname[0], object_name[0]);
+      else {
+	grow_GetOwner( grow->ctx, oname[0]);
     
-      // Replace $object in oname (one level only)
-      char *s1;
-      if ( (s1 = strstr( oname[0], "$object"))) {
-	strcpy( str1, s1 + strlen("$object"));
-	strcpy( s1, object_name[0]);
-	strcat( oname[0], str1);
+	// Replace $object in oname (one level only)
+	char *s1;
+	if ( (s1 = strstr( oname[0], "$object"))) {
+	  strcpy( str1, s1 + strlen("$object"));
+	  strcpy( s1, object_name[0]);
+	  strcat( oname[0], str1);
+	}
+      }
+
+      int idx;
+      char *sidx = s + strlen("$object");
+      switch ( *sidx) {
+      case '2':
+	idx = 1;
+	break;
+      case '3':
+	idx = 2;
+	break;
+      case '4':
+	idx = 3;
+	break;
+      default:
+	idx = 0;
+      }
+      strcpy( str1, s + strlen("$object") + (idx > 0 ? 1 : 0));
+      strcpy( s, oname[idx]);
+      strcat( str, str1);
+    }
+    else
+      break;
+  }
+
+  // Translate index variable
+  for ( int i = 0; i < 2; i++) {
+    if ( (s = strstr( str, "[&("))) {
+      int idx;
+      pwr_tAName iname, rest;
+      pwr_tStatus sts;
+      int len;
+      
+      s++;
+      strcpy( iname, s+2);
+      s1 = strchr( iname, ')');
+      strncpy( rest, s1+1, sizeof(rest));
+      if ( s1) {
+	*s1 = 0;
+	sts = gdh_GetObjectInfo( iname, &idx, sizeof(idx));
+	if ( ODD(sts) && idx >= 0 && idx <= 100) {
+	  len = sprintf( s, "%d", idx);
+	strcpy( s + len, rest);
+	}
+      }
+      else
+	break;
+    }
+    else
+      break;
+  }
+
+  for ( int i = 0; i < 4; i++) {
+    // Remove attribute before
+    if ( (s = strstr( str, ".<"))) {
+      pwr_tAName rest;
+      
+      strcpy( rest, s + 2);
+      for ( s--; s >= str; s--) {
+	if ( *s == '.') {
+	  strcpy( s, rest);
+	  break;
+	}
       }
     }
-
-    int idx;
-    char *sidx = s + strlen("$object");
-    switch ( *sidx) {
-    case '2':
-      idx = 1;
+    else
       break;
-    case '3':
-      idx = 2;
+    if ( s == str)
       break;
-    case '4':
-      idx = 3;
-      break;
-    default:
-      idx = 0;
-    }
-    strcpy( str1, s + strlen("$object") + (idx > 0 ? 1 : 0));
-    strcpy( s, oname[idx]);
-    strcat( str, str1);
   }
 
   if ( ((s = strstr( str, "$node")) || (s = strstr( str, "$NODE"))) &&

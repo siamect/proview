@@ -314,12 +314,51 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	}
 
 
-	if ( (idx = str.indexOf("$object")) != -1) {
-	    if ( appl != null) {
-		String oname = cmn.getOwner();
-		str = str.substring(0, idx) + oname + str.substring(idx+7);
+	for ( int i = 0; i < 4; i++) {
+	    if ( (idx = str.indexOf("$object")) != -1) {
+		if ( appl != null) {
+		    String oname = cmn.getOwner();
+		    str = str.substring(0, idx) + oname + str.substring(idx+7);
+		}
 	    }
+	    else
+		break;
 	}
+	// Translate index variable
+	for ( int i = 0; i < 4; i++) {
+	    if ( (idx = str.indexOf("[&(")) != -1) {
+		String iname = str.substring(idx+3);
+		int idx2 = iname.indexOf(')');
+		if ( idx2 != -1) {
+		    String rest = iname.substring( idx2 + 1);
+		    iname = iname.substring( 0, idx2);
+
+		    CdhrInt ret = getGdh().getObjectInfoInt( iname);
+		    if ( ret.evenSts()) break;
+
+		    str = str.substring( 0, idx + 1) + ret.value + rest;
+		}
+		else
+		    break;
+	    }
+	    else
+		break;
+	}
+
+	for ( int i = 0; i < 4; i++) {
+	    // Remove attribute before
+	    if ( (idx = str.indexOf(".<")) != -1) {
+		String rest = str.substring( idx + 2);
+		int idx2 = str.lastIndexOf( '.', idx - 2);
+		if ( idx2 != -1)
+		    str = str.substring( 0, idx2) + rest;
+		else
+		    break;
+	    }
+	    else
+		break;
+	}
+	
 
 	pname.tname = new String(str);
 	
@@ -505,13 +544,14 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	    cmnPush();
     }
 
-    public Object loadCtx( String file) {
-	return appl.loadGrowCtx( file);
+    public Object loadCtx( String file, String owner) {
+	return appl.loadGrowCtx( file, owner);
     }
 
-    public Object loadGrowCtx( BufferedReader reader) {
+    public Object loadGrowCtx( BufferedReader reader, String owner) {
 	GrowCtx ctx = new GrowCtx(this);
 	GrowCmn cmn = ctx.getCmn();
+	cmn.setOwner(owner);
 	cmn.setGdraw(gdraw);
 	ctx.open( reader);
 	ctx.traceConnect();

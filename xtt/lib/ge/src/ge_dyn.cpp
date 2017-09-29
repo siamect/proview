@@ -7920,7 +7920,17 @@ int GeDigSwap::connect( grow_tObject object, glow_sTraceData *trace_data)
 
   get_bit( parsed_name, attr_type, &bitmask);
 
-  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object);
+  switch ( db) {
+  case graph_eDatabase_Gdh:
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object);
+    if ( EVEN(sts)) return sts;
+    break;
+  case graph_eDatabase_Local:
+    p = (pwr_tBoolean *)dyn->graph->localdb_ref_or_create( parsed_name, attr_type);
+    sts = 1;
+    break;
+  default: ;
+  }
   a_typeid = attr_type;
 
   if ( EVEN(sts)) return sts;
@@ -7954,9 +7964,16 @@ int GeDigSwap::scan( grow_tObject object)
   if ( inverted)
     val = !val;
 
-  if ( old_value == val) {
-    // No change since last time
-    return 1;
+  if ( reset_value) {
+    if ( since_reset < 100)
+      since_reset++;
+    if ( since_reset < 3)
+      return 1;
+  }
+  else {
+    if ( old_value == val)
+      // No change since last time
+      return 1;
   }
 
   if ( val) {
@@ -7965,11 +7982,22 @@ int GeDigSwap::scan( grow_tObject object)
       pwr_tAName   	parsed_name;
       pwr_tStatus	sts;
 
+      since_reset = 0;
       dyn->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, &attr_size);
       switch ( attr_type) {
       case pwr_eType_Boolean: {
 	pwr_tBoolean ivalue = 0;
-	sts = gdh_SetObjectInfo( parsed_name, &ivalue, sizeof(ivalue));
+	switch ( db) {
+	case graph_eDatabase_Local: {
+	  sts = dyn->graph->localdb_set_value( parsed_name, &ivalue, sizeof(ivalue));
+	  if ( EVEN(sts)) printf("DigSwap error: %s\n", attribute);
+	  break;
+	}
+	case graph_eDatabase_Gdh:
+	  sts = gdh_SetObjectInfo( parsed_name, &ivalue, sizeof(ivalue));
+	  break;
+	default: ;
+	}
 	break;
       }
       default: ;
@@ -7996,7 +8024,7 @@ int GeDigSwap::syntax_check( grow_tObject object, int *error_cnt, int *warning_c
 {
   int types[] = {pwr_eType_Boolean, pwr_eType_Int32, pwr_eType_UInt32, pwr_eType_Int64, pwr_eType_UInt64,
 		       graph_eType_Bit, pwr_eType_Float32, pwr_eType_Float64, pwr_eType_String, 0};
-  graph_eDatabase databases[] = {graph_eDatabase_Gdh, graph_eDatabase__};
+  graph_eDatabase databases[] = {graph_eDatabase_Gdh, graph_eDatabase_Local, graph_eDatabase__};
   dyn->syntax_check_attribute( object, "DigSwap.Attribute", attribute, 0, types, databases, error_cnt, warning_cnt);
 
   return 1;
