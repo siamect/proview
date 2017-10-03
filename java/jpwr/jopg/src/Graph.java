@@ -358,6 +358,20 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	    else
 		break;
 	}
+
+	for ( int i = 0; i < 4; i++) {
+	    // Remove segment name before
+	    if ( (idx = str.indexOf("-<")) != -1) {
+		String rest = str.substring( idx + 2);
+		int idx2 = str.lastIndexOf( '-', idx - 2);
+		if ( idx2 != -1)
+		    str = str.substring( 0, idx2) + rest;
+		else
+		    break;
+	    }
+	    else
+		break;
+	}
 	
 
 	pname.tname = new String(str);

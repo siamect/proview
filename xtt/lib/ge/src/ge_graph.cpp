@@ -4499,6 +4499,7 @@ void Graph::get_command( char *in, char *out, GeDyn *dyn)
   char *s, *t0;
   char *s0 = in;
   char str[500];
+  bool object_found = false;
 
   pwr_tAName oname[4];
   if ( grow->stack_cnt == 0) {
@@ -4556,6 +4557,7 @@ void Graph::get_command( char *in, char *out, GeDyn *dyn)
     t0 = out;
     while ( (s = strstr( s0, "$object"))) {
       int idx;
+      object_found = true;
       char *sidx = s + strlen("$object");
       switch ( *sidx) {
       case '2':
@@ -4700,6 +4702,74 @@ void Graph::get_command( char *in, char *out, GeDyn *dyn)
 
       strcat( str, end);
       strcpy( start, str);
+    }
+  }
+
+  // Translate index variable
+  for ( int i = 0; i < 2; i++) {
+    if ( (s = strstr( out, "[&("))) {
+      int idx;
+      pwr_tAName iname, rest;
+      pwr_tStatus sts;
+      int len;
+      char *s1;
+      
+      s++;
+      strcpy( iname, s+2);
+      s1 = strchr( iname, ')');
+      strncpy( rest, s1+1, sizeof(rest));
+      if ( s1) {
+	*s1 = 0;
+	sts = gdh_GetObjectInfo( iname, &idx, sizeof(idx));
+	if ( ODD(sts) && idx >= 0 && idx <= 100) {
+	  len = sprintf( s, "%d", idx);
+	strcpy( s + len, rest);
+	}
+      }
+      else
+	break;
+    }
+    else
+      break;
+  }
+
+  if ( object_found) {
+    for ( int i = 0; i < 4; i++) {
+      // Remove attribute before
+      if ( (s = strstr( out, ".<"))) {
+	pwr_tAName rest;
+	
+	strcpy( rest, s + 2);
+	for ( s--; s >= out; s--) {
+	  if ( *s == '.') {
+	    strcpy( s, rest);
+	    break;
+	  }
+	}
+      }
+      else
+	break;
+      if ( s == out)
+      break;
+    }
+    
+    for ( int i = 0; i < 4; i++) {
+      // Remove segment name before
+      if ( (s = strstr( out, "-<"))) {
+	pwr_tAName rest;
+	
+	strcpy( rest, s + 2);
+	for ( s--; s >= out; s--) {
+	  if ( *s == '-') {
+	    strcpy( s, rest);
+	    break;
+	  }
+	}
+      }
+      else
+	break;
+    if ( s == out)
+      break;
     }
   }
 }
@@ -4901,6 +4971,25 @@ graph_eDatabase Graph::parse_attr_name( char *name, char *parsed_name,
       strcpy( rest, s + 2);
       for ( s--; s >= str; s--) {
 	if ( *s == '.') {
+	  strcpy( s, rest);
+	  break;
+	}
+      }
+    }
+    else
+      break;
+    if ( s == str)
+      break;
+  }
+
+  for ( int i = 0; i < 4; i++) {
+    // Remove segment name before
+    if ( (s = strstr( str, "-<"))) {
+      pwr_tAName rest;
+      
+      strcpy( rest, s + 2);
+      for ( s--; s >= str; s--) {
+	if ( *s == '-') {
 	  strcpy( s, rest);
 	  break;
 	}

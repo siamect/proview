@@ -2952,8 +2952,7 @@ Window displays a separate graph in a specified area in another graph. The graph
 with or without scrollbars.
 
 <h2>Limitations
-Connections within the window object are scaled properly.
-In object graphs, $object only works in two levels of window objects.
+Connections within the window object are not scaled properly.
 
 <h2>Attributes
 <b>Attribute    <t><t>Description
@@ -2976,7 +2975,6 @@ and when that folder is activated, the stated graph is displayed in the window.
 <h2>Limitations
 Sliders within the window object are disabled.
 You can not state an hierarchy or class object.
-In object graphs, $object only works in two levels of window objects.
 
 <h2>Attributes
 <b>Attribute    <t><t>Description
@@ -3209,6 +3207,167 @@ If Sequence is Dig the animation is run only when the signal value is changed. W
 is changed to 1, the animation is run from the first to the last page, and stays on the last
 page, when the value is changed to 0, the animation is run back to the first page, and rests
 there.
+</topic>
+
+<topic>geref_databaseconnection
+Database connection
+Subgraphs are connected to attributes in the database which makes it possible to change
+color or shape of an object when an attribute value is changed. For example the dynamic
+DigColor has the property Attribute, where the database attribute that affects the color 
+is specified.
+
+The attribute specification consists of the attribute name type, for example
+
+<c>H1-H2-Start.ActualValue##Boolean
+
+Usually the attribute is inserted by selecting the attribute in the database navigator, and 
+clicking on the attribute property in the object editor with Ctrl+Double click. If only 
+one attribute is present you can click directly on the subgraph with Ctrl+Double click.
+
+<b>Invert signal
+A signal is inverted by placing an exclamation mark in front of the attribute name.
+Only attributes of type Boolean can be inverted. Inverted signal can only be used
+in dynamics, not in actions.
+
+<c>!H1-H2-Start.ActualValue##Boolean
+
+The exclamation mark will invert the signal before it is used in the dynamics.
+
+<b>Object and hierarchy graphs
+When drawing object graphs, the instance object or hierarchy object is denoted by the 
+string $object. For example if the attribute
+
+<c>$object.ActualValue##Float32
+
+occurs in an object graph, and the object graph is opened for the object H1-H2-Temperature,
+$object is replace by the instance object name and the connection will be made to
+
+<c>H1-H2-Temperature.ActualValue##Float32
+
+$object is also used in hierarchy graphs in a similar way.
+
+<c>$object-Temperature.ActualValue##Float32
+
+with the hierarchy object H1-H2 will give
+
+<c>H1-H2-Temperatyre.ActualValue##Float32
+
+
+<b>Parent object
+The parent object to the $object can be referenced with '.<' or '-<'. These operators will
+remove the last attribute or the last object to the closest preceding '.' or '-'.
+H1-H2-<.Description will be H1.Description.  If you have an hierarchy graph for H1-H2, the 
+description in the parent object H1 can be displayed with 
+
+<c>$object-<.Description##String80
+
+For attribute objects, where attribute names is removed instead, '.<' is used. 
+H1-Plates.Data.<.Temperature will be H1-Plates.Temperature. Thus in the object graph for 
+Data the Temperature attribute in parent object Plates can be displayed by
+
+<c>$object.<.Temperature##Float32
+
+<b>Attribute references
+If an object contains attributes of type AttrRef of Objid, values in the objects that
+these attribute points at, can be displayed with the &() syntax. 
+
+<c>&(H1-H2-Motor.Object).ActualValue##Float32
+
+means that H1-H2-Motor.Object contains a pointer to an object, and it is to the 
+ActualValue attribute of this object the connection is made.
+
+The connection is made when the graph is opened, and if the pointer in H1-H2-Motor.Object
+is changed, the connection will not be automatically changed. The dynamic DigSwap though 
+can be used to reconnect all connections in a graph.
+
+<b>Variable array index
+Array indexes can be specified with attributes of type Int32 or UInt32. In
+
+<c>H1-H2-Array[&(H1-H2-CurrentIndex.ActualValue)].Value##Float32
+
+H1-H2-CurrentIndex.ActualValue is an Int32 attribute, and the value of this attribute
+will be fetched and inserted as array index. 
+
+The index is evaluated when the graph is opened and if the index value is changed, the 
+connection will not be automatically changed. The dynamic DigSwap though can be used to 
+reconnect all connections in a graph.
+
+<b>Node object
+$node will be replaced by the node object. This can for example be used to reference
+XttGraph objects where the same graph are used on different nodes. For example
+
+<c>$node-Graphs-Overview
+
+will work for any node that has an XttGraph object named Overview under a Graph
+hierarchy under the node object.
+
+<b>Local database
+Local variables in a graph can be used to communicate between objects in a graph. They
+are specified with the prefix $local. followed by a varable name and variable type, eg 
+
+<c>$local.HoldTrend##Boolean
+
+A local variable can for example be used to hold a trend by beeing used in Trend.HoldAttr. 
+With a toggle button that uses the same local variable in  ToggleDig.Attribute, trend hold 
+can be turned on and off by pressing the button.
+
+Local variables though are not implemented for all types of dynamics and actions.
+
+<b>Arrays
+In some dynamic types as Table and XYCurve whole arrays are connected. The syntax to
+connect an array is 'attributename'##'type'#'length', for example
+
+<c>H1-H2-A1.Value##Float32#100
+
+where 100 is the number of elements in the array.
+
+<b>Array elements
+To connect an element in an array, the syntax is 'attributename'##'type'#'length'['index'], eg
+
+<c>H1-H2-A1.Value##Float32#100[2]
+
+<b>Attribute types
+The type of the attribute is specified after the attribute name. The following types are
+supported
+
+##Boolean
+##Float32
+##Float64
+##Char
+##Int8
+##Int16
+##Int32
+##Int64
+##UInt8
+##UInt16
+##UInt32
+##UInt64
+##Objid
+##Time
+##DeltaTime
+##Status
+##NetStatus
+##Enum
+##Mask
+##DataRef
+##String
+##Bit
+
+<b>String type
+The String type should be followed by the size of the string, eg ##String80.
+
+<b>Bit type
+The bit type makes it possible to connect to an individual bit in a mask or integer attribute.
+
+The syntax is ##Bit#'size'['bitnumber'] or ##Bit['bitnumber'].
+
+Size is the number of bits in the mask, and bitnumber the number where the first bit has
+number 0.
+
+Example
+
+<c>H1-H2-Mode.ActualValue##Bit[2]
+
 </topic>
 
 <topic>geref_dynamic
@@ -3982,6 +4141,32 @@ With the command
 the object graph is opened for the object in the first element. It is also
 possible to state double steps of attribute references with the syntax
 '&(&(attribute-reference))'.
+
+<b>Array index replacement
+An Int32 or UInt32 attribute can be used as array index with the 
+syntax [&(integer-attribute)]. With the command
+
+<c>> open graph /class /instance=H1-Plates[&(H1-CurrentIndex.ActualValue)]
+
+the index array of H1-Plates will be fetched from the current value of
+H1-CurrentIndex.ActualValue.
+
+<b>Parent object references
+The .< syntax will remove the preceding attribute in an attribute name. 
+H1-Plates.Data.<.CurrentIndex will result in H1-Plates.CurrentIndex.
+This can be used in object graphs in combination with $object. For example
+
+<c>> open graph /class /instance=$object.<
+
+will open the object graph for the object the contains the current object. 
+
+The -< syntax is similar but works for object hierarchies. H1-Pumps-P1<- 
+will result in H1-Pumps. This makes it possible to address parent objects 
+in hierarchy graphs. For example
+
+<c>> open graph /class /instance=$object-<
+
+will open the object graph for the parent object.
 </topic>
 
 <topic>GeDynCommandDoubleClick <style>function
@@ -4662,27 +4847,8 @@ the select the desired attribute.
 You can also select the object in the configurator.
 
 <h2>Suffix
-To the signal name, a suffix should be added, that tells the type of the attribute.
-For some types of dynamics, where the type is obvious, it might work without suffix.
-The following types of suffix can be stated:
-
-##BOOLEAN
-##FLOAT32
-##FLOAT64
-##CHAR
-##INT8
-##INT16
-##INT32
-##UINT8
-##UINT16
-##UINT32
-##OBJID
-##STRING
-##TIME
-##DELTATIME
-##ATTRREF
-
-If the attribute is a string or an array, the size should also be stated.
+To the signal name, a suffix should be added, that tells the type of the attribute. Some
+common types are ##Boolean, ##Float32, ##Int32, ##UInt32 and ##String80.
 
 <h1>Graph attributes
 Under File in the menu you find 'Graph attributes' and here you can enter attributes for the

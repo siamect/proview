@@ -2932,7 +2932,6 @@ med eller utan skroll-lister.
 
 <h2>Begränsningar
 Kopplingar i fönstret skalas inte på rätt sätt.
-I objektsbilder fungerar $object endast i två nivåer av windowobjekt.
 
 <h2>Attribut
 <b>Attribut    <t><t>Beskrivning
@@ -2954,7 +2953,6 @@ och när fliken aktiveras visas en angivna grafen i fönstret.
 
 <h2>Begränsningar
 Kopplingar i fönstret skalas inte på rätt sätt.
-I objektsbilder fungerar $object endast i två nivåer av windowobjekt.
 
 <h2>Attribut
 <b>Attribut    <t><t>Beskrivning
@@ -3185,6 +3183,166 @@ första och sista sidan, så länge signalvärdet är 1.
 Om Sequence är Dig genomlöps animationen endast vid omslag av det digitala värdet. Vid omslag 
 till 1 animeras från första till sista sidan, och  vid omslag till 0 animeras tillbaka till 
 första sidan.
+</topic>
+
+<topic>geref_databaseconnection
+Koppling till databas
+Subgrafer kopplas till attribut i databasen vilket gör det möjligt att ändra färg och 
+på objekt när attributvärden ändras. Till exempel har dynamiken DigColor egenskapen 
+Attribute där det attribut i databasen som ska påverka färgen specificeras.
+
+Specifikationen av ett attribut består av attributets namn och typ, till exempel
+
+<c>H1-H2-Start.ActualValue##Boolean
+
+Vanligtvis läggs attributet in genom att välja ut attributet i navigatorn för databasen, och
+klicka på attribut-fältet i objektseditorn med Ctrl+dubbelklick. Om det endast finns
+ett attribut i subgrafen kan man klicka direkt på subgrafen med Ctrl+dubbelklick.
+
+<b>Invertera en signal
+En signal inverteras genom att ett utropstecken placeras framför attributnamnet.
+Endast attribut av typen Boolean kan inverteras. Invertering kan användas i dynamik
+men inte i aktioner.
+
+<c>!H1-H2-Start.ActualValue##Boolean
+
+Utropstecknet i exemplet ovan anger att signalvärdet kommer att inverteras innan det används 
+i dynamiken.
+
+<b>Objekt- och hierarkigrafer
+När man ritar objektgrafer anges instans-objektet med strängen $object. 
+Om till exempel attributet
+
+<c>$object.ActualValue##Float32
+
+förekommer i en objektsgraf, och objektgrafen öppnas för objektet H1-H2-Temperature, kommer
+$object att ersättas av instansobjektet och kopplingen kommer att göras till
+
+<c>H1-H2-Temperature.ActualValue##Float32
+
+$object används även i hierarkigrafer på motsvarande sätt.
+
+<c>$object-Temperature.ActualValue##Float32
+
+med hierarki-objektet H1-H2 kommer att ge
+
+<c>H1-H2-Temperatyre.ActualValue##Float32
+
+<b>Förälderobjekt
+Förälderobjektet till $object kan refereras med '.<' eller '-<'. Dessa operatorer kommer
+att ta bort sista attributet eller sista objektet till närmast föregående '.' eller '-'.
+H1-H2-<.Description kommer att bli H1.Description. Om man har en hierarkigraf för H1-H2 kan
+beskrivningen för förälderobjektet H1 visas med
+
+<c>$object-<.Description##String80
+
+För attributobjekt, där attributnamn tas bort istället, används '.<'.
+H1-Plates.Data.<.Temperature kommer att bli H1-Plates.Temperature. I objektgrafen för Data kan
+Temperatur-attributet i förälderobjektet Plates visas med
+
+<c>$object.<.Temperature##Float32
+
+<b>Attributreferenser
+Om ett objekt innehåller attribut av typen AttrRef eller Objid kan värden in de objekt
+som dessa attribute pekar på visas med &() syntax.
+
+<c>&(H1-H2-Motor.Object).ActualValue##Float32
+
+betyder att H1-H2-Motor.Object innehåller en pekare till ett objekt, och det är till 
+ActualValue attributet i detta objekt kopplingen kommer att göras.
+
+Kopplingen görs när grafen öppnas, och om pekaren in H1-H2-Motor.Object ändras, kommer
+kopplingen inte automatiskt att ändras. Dynamiken DigSwap kan dock användas för att
+koppla om alla kopplingar i en graf.
+
+<b>Variabelt vektorindex
+Vektorindex kan specificeras med attribut av typen Int32 eller UInt32. I
+
+<c>H1-H2-Array[&(H1-H2-CurrentIndex.ActualValue)].Value##Float32
+
+är H1-H2-CurrnetIndex.ActualValue ett integer-attribut, och värdet av detta attribut kommer
+att hämtas och läggas in som vektorindex. 
+
+Indexet evalueras när grafen öppnas och om indexvärdet ändras kommer inte kopplingen 
+automatiskt att ändras. Dynamiken DigSwap kan dock användas för att koppla om alla 
+kopplingar i en graf.
+
+<b>Nodobjekt
+$node kommer att bytas ut mot nodobjektet. Detta kan till exempel användas för att
+referera XttGraph-objekt där samma graf änvänds i olika noder. Till exempel
+
+<c>$node-Graphs-Overview
+
+kommer att fungera för alla noder som har ett XttGraph objekt med namnet Overview under
+en Graph hierarki under nodobjektet.
+
+<b>Lokal databas
+Lokala variabler i en graf kan användas för att kommunicera mellan objekt i en graf. 
+De specificeras med prefixet $local. följt av variabelnamn och variabeltyp, t ex
+
+<c>$local.HoldTrend##Boolean
+
+En lokal variabel kan till exempel användas för att frysa en trendkurva genom att denna
+anges i Trend.HoldAttr. Med en toggle-knapp som har samma lokala variabel i 
+ToggleDig.Attribute, kan frysningen slås på och av genom att trycka på knappen.
+
+Lokala variabler är dock inte implementerat för alla typer av dynamik och aktioner.
+
+<b>Vektorer
+En del dynamiktyper som Table och XYCurve kopplas till hela vektorer i databasen. Syntaxen 
+för att koppla en hel vektor är 'attributename'##'type'#'length', till exempel
+
+<c>H1-H2-A1.Value##Float32#100
+
+där 100 är antalet element i vektorn.
+
+<b>Vektorelement
+För att koppla ett element i en vektor, är syntaxen 'attributename'##'type'#'length'['index'],
+t ex
+
+<c>H1-H2-A1.Value##Float32#100[2]
+
+<b>Attribut typ
+Typen för att attribut specificeras efter attributnamnet. Följande typer supportas
+
+##Boolean
+##Float32
+##Float64
+##Char
+##Int8
+##Int16
+##Int32
+##Int64
+##UInt8
+##UInt16
+##UInt32
+##UInt64
+##Objid
+##Time
+##DeltaTime
+##Status
+##NetStatus
+##Enum
+##Mask
+##DataRef
+##String
+##Bit
+
+<b>String
+String ska föjas av storleken på strängen, t ex ##String80
+
+<b>Bit
+Bit-typen gör det möjligt att koppla en individuell bit i en mask eller ett heltalsattribut.
+
+Syntaxen är ##Bit#'size'['bitnumber'] eller ##Bit['bitnumber'].
+
+size är antalet bitar i masken, och bitnumber är bitnumret som räknas från 0 för första 
+biten.
+
+Exempel
+
+<c>H1-H2-Mode.ActualValue##Bit[2]
+
 </topic>
 
 <topic>geref_dynamic
@@ -3930,6 +4088,31 @@ Med kommandot
 öppnas objektgrafen för objektet i första elementet. Man kan även ange dubbla led av
 attributreferenser med syntaxen &(&(attribut-referens)).
 
+<b>Array index replacement
+Ett Int32 eller UInt32 attribut can användas för vektor index med syntaxen
+[&(integer-attribute)]. Med kommandot
+
+<c>> open graph /class /instance=H1-Plates[&(H1-CurrentIndex.ActualValue)]
+
+kommer element indexet för H1-Plates att hämtas från det aktuella värdet
+av H1-CurrentIndex.ActualValue.
+
+<b>Parent object references
+Med .< tas det föregående attributet bort i ett attributnamn.
+H1-Plates.Data.<.CurrentIndex kommer att resultera i H1-Plates.CurrentIndex.
+Detta kan användas i objektsbilder i kombination med $object. Till exempel
+
+<c>> open graph /class /instance=$object.<
+
+kommer att öppna objektsbilden för objektet som innehåller det aktuella objektet.
+
+-< syntaxen är likartad och används för objektshierarkier. 
+H1-Pumps-P1<- kommer att resultera i H1-Pumps. Det gör det möjligt att adressera
+förälderobjekt i hierarkibilder. Till exempel
+
+<c>> open graph /class /instance=$object-<
+
+kommer att öppna objektsbilden för förälderobjektet.
 </topic>
 
 <topic>GeDynCommandDoubleClick <style>function
