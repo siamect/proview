@@ -3505,6 +3505,9 @@ AnalogColor.Attribute <t><t>Signal i rtdb av typen Float32 eller Int32. Värdet
                       <t><t>över/underskrids ändras färgen på komponenten.
 AnalogColor.Color     <t><t>Fyllnadsfärg på komponenten om signalens värde 
                       <t><t>har passeras gränsvärdet.
+AnalogColor.Border    <t><t>Sätt kantfärg istället för fyllnadsfärg.
+AnalogColor.CommonAttribute <t><t>Samma attribut används av alla instanser.
+                      <t><t>Annars har varje instans sitt eget attribut.
 AnalogColor.Limit     <t><t>Gränsvärde.
 AnalogColor.LimitType <t><t>Typ av gränsvärde. Kan vara GreaterThan, 
                       <t><t>GreaterEqual, LessThan, LessEqual eller Equal.

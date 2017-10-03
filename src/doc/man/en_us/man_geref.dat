@@ -3522,6 +3522,9 @@ are GreaterEqual, LessEqual and Equal.
 AnalogColor can exist in several instances, which makes it possible to set several limit
 values and to shift between several colors (up to 32 colors).
 
+Either all instances work with the same signal, or each signal has it's own attribute. This
+is configured with AnalogColor.CommonAttribute.
+
 Note! If there are several instances with equal LimitType, a higher instance has to have a
 higher limit, when LimitType is GreaterThan or GreaterEqual. If LimitType is LessThan or
 LessEqual, a higher instance has to have a lower limit.
@@ -3533,6 +3536,9 @@ AnalogColor.Attribute <t><t>Signal in the database of type Float32 or Int32. The
                       <t><t>changed.
 AnalogColor.Color     <t><t>Fill color of the component value when the signal has 
                       <t><t>passed the limit.
+AnalogColor.Border    <t><t>Set border color instead of fill color.
+AnalogColor.CommonAttribute <t><t>The same attribute is used for all instances.
+                      <t><t>Otherwise each instance will have it's own attribute.
 AnalogColor.Limit     <t><t>Limit value.
 AnalogColor.LimitType <t><t>Type of limit. Can be GreaterThan, GreaterEqual, 
                       <t><t>LessThan, LessEqual or Equal.

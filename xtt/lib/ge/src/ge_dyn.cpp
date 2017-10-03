@@ -5536,6 +5536,26 @@ int GeValueInput::syntax_check( grow_tObject object, int *error_cnt, int *warnin
 void GeAnalogColor::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
+  GeDynElem *elem;
+  GeAnalogColor *e;
+  bool found = false;
+
+  // Get attribute for instance 1
+  if ( instance == ge_mInstance_1)
+    e = this;
+  else {
+    for ( elem = dyn->elements; elem; elem = elem->next) {
+      if ( elem->dyn_type1 == ge_mDynType1_AnalogColor &&
+	   elem->instance == ge_mInstance_1) {
+	found = true;
+	break;
+      }
+    }
+    if ( !found)
+      return;
+
+    e =  (GeAnalogColor *)elem;
+  }
 
   if ( dyn->total_dyn_type1 & ge_mDynType1_Tone) {
     if ( instance == ge_mInstance_1) {
@@ -5559,6 +5579,16 @@ void GeAnalogColor::get_attributes( attr_sItem *attrinfo, int *item_count)
       attrinfo[i].type = glow_eType_String;
       attrinfo[i++].size = sizeof( attribute);
 
+      strcpy( attrinfo[i].name, "AnalogTone.Border");
+      attrinfo[i].value = &border;
+      attrinfo[i].type = glow_eType_Boolean;
+      attrinfo[i++].size = sizeof( border);
+
+      strcpy( attrinfo[i].name, "AnalogTone.CommonAttribute");
+      attrinfo[i].value = &common_attr;
+      attrinfo[i].type = glow_eType_Boolean;
+      attrinfo[i++].size = sizeof( common_attr);
+
       strcpy( attrinfo[i].name, "AnalogTone.Instances");
       attrinfo[i].value = &instance_mask;
       attrinfo[i].type = ge_eAttrType_InstanceMask;
@@ -5571,6 +5601,13 @@ void GeAnalogColor::get_attributes( attr_sItem *attrinfo, int *item_count)
       while( m > 1) {
 	m = m >> 1;
 	inst++;
+      }
+
+      if ( !e->common_attr) {
+	strcpy( attrinfo[i].name, "AnalogTone.Attribute");
+	attrinfo[i].value = attribute;
+	attrinfo[i].type = glow_eType_String;
+	attrinfo[i++].size = sizeof( attribute);
       }
 
       sprintf( attrinfo[i].name, "AnalogTone%d.Limit", inst);
@@ -5616,6 +5653,11 @@ void GeAnalogColor::get_attributes( attr_sItem *attrinfo, int *item_count)
       attrinfo[i].type = glow_eType_Boolean;
       attrinfo[i++].size = sizeof( border);
 
+      strcpy( attrinfo[i].name, "AnalogColor.CommonAttribute");
+      attrinfo[i].value = &common_attr;
+      attrinfo[i].type = glow_eType_Boolean;
+      attrinfo[i++].size = sizeof( common_attr);
+
       strcpy( attrinfo[i].name, "AnalogColor.Instances");
       attrinfo[i].value = &instance_mask;
       attrinfo[i].type = ge_eAttrType_InstanceMask;
@@ -5630,6 +5672,12 @@ void GeAnalogColor::get_attributes( attr_sItem *attrinfo, int *item_count)
 	inst++;
       }
 
+      if ( !e->common_attr) {
+	strcpy( attrinfo[i].name, "AnalogColor.Attribute");
+	attrinfo[i].value = attribute;
+	attrinfo[i].type = glow_eType_String;
+	attrinfo[i++].size = sizeof( attribute);
+      }
       sprintf( attrinfo[i].name, "AnalogColor%d.Limit", inst);
       attrinfo[i].value = &limit;
       attrinfo[i].type = glow_eType_Double;
@@ -5692,7 +5740,32 @@ void GeAnalogColor::set_attribute( grow_tObject object, const char *attr_name, i
 
 void GeAnalogColor::replace_attribute( char *from, char *to, int *cnt, int strict)
 {
-  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
+  GeDynElem	*elem;
+  GeAnalogColor *e;
+  bool found = false;
+
+  // Get instance 1
+  if ( instance == ge_mInstance_1)
+    e = this;
+  else {
+    for ( elem = dyn->elements; elem; elem = elem->next) {
+      if ( elem->dyn_type1 == ge_mDynType1_AnalogColor &&
+	   elem->instance == ge_mInstance_1) {
+	found = true;
+	break;
+      }
+    }
+    if ( !found)
+      return;
+    e =  (GeAnalogColor *)elem;
+  }
+
+  if ( e->common_attr) {
+    if ( instance == ge_mInstance_1)
+      GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
+  }
+  else
+    GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
 }
 
 int GeAnalogColor::set_color( grow_tObject object, glow_eDrawType color)
@@ -5732,6 +5805,7 @@ void GeAnalogColor::save( ofstream& fp)
   fp << int(ge_eSave_AnalogColor_instance) << FSPACE << int(instance) << endl;
   fp << int(ge_eSave_AnalogColor_instance_mask) << FSPACE << int(instance_mask) << endl;
   fp << int(ge_eSave_AnalogColor_border) << FSPACE << border << endl;
+  fp << int(ge_eSave_AnalogColor_common_attr) << FSPACE << common_attr << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -5764,6 +5838,7 @@ void GeAnalogColor::open( ifstream& fp)
       case ge_eSave_AnalogColor_instance: fp >> tmp; instance = (ge_mInstance)tmp; break;
       case ge_eSave_AnalogColor_instance_mask: fp >> tmp; instance_mask = (ge_mInstance)tmp; break;
       case ge_eSave_AnalogColor_border: fp >> tmp; border = (int)tmp; break;
+      case ge_eSave_AnalogColor_common_attr: fp >> common_attr; break;
       case ge_eSave_End: end_found = 1; break;
       default:
         cout << "GeAnalogColor:open syntax error" << endl;
@@ -5788,7 +5863,7 @@ int GeAnalogColor::connect( grow_tObject object, glow_sTraceData *trace_data)
     return 0;
   }
 
-  // Get attribute for instance 1
+  // Get instance 1
   if ( instance == ge_mInstance_1)
     e = this;
   else {
@@ -5804,14 +5879,14 @@ int GeAnalogColor::connect( grow_tObject object, glow_sTraceData *trace_data)
     e =  (GeAnalogColor *)elem;
   }
 
-  if ( instance == ge_mInstance_1) {
-    e->size = 4;
-    e->db = dyn->parse_attr_name( e->attribute, parsed_name,
-				    &inverted, &e->type, &e->size);
+  if ( !e->common_attr || instance == ge_mInstance_1) {
+    size = 4;
+    db = dyn->parse_attr_name( attribute, parsed_name,
+				    &inverted, &type, &size);
     if ( strcmp( parsed_name,"") == 0)
       return 1;
 
-    switch ( e->type) {
+    switch ( type) {
     case pwr_eType_Float32:
     case pwr_eType_Int32:
     case pwr_eType_UInt32:
@@ -5820,23 +5895,24 @@ int GeAnalogColor::connect( grow_tObject object, glow_sTraceData *trace_data)
       return 1;
     }
 
-    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&e->p,
-				       &e->subid, e->size, object);
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p,
+				       &subid, size, object);
     if ( EVEN(sts)) return sts;
 
     trace_data->p = &pdummy;
   }
-  type = e->type;
-  size = e->size;
-  p = e->p;
-
+  else {
+    type = e->type;
+    size = e->size;
+    p = e->p;
+  }
   first_scan = true;
   return 1;
 }
 
 int GeAnalogColor::disconnect( grow_tObject object)
 {
-  if ( instance == ge_mInstance_1 && p && db == graph_eDatabase_Gdh)
+  if ( (!e->common_attr || instance == ge_mInstance_1) && p && db == graph_eDatabase_Gdh)
     gdh_UnrefObjectInfo( subid);
   p = 0;
   return 1;

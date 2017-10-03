@@ -1641,7 +1641,8 @@ int AttrNav::set_attr_value( char *value_str, grow_tObject *id, void **client_da
       }
       memcpy( item->value_p, buffer, item->size);
 
-      if ( cdh_NoCaseStrcmp( item->name, "Subgraph") == 0 &&
+      if ( (cdh_NoCaseStrcmp( item->name, "Subgraph") == 0 ||
+	    cdh_NoCaseStrcmp( item->name, "AnalogColor.CommonAttribute") == 0) &&
 	   reconfigure_attr_cb) {
 	if ( type == attr_eType_Attributes)
 	  (reconfigure_attr_cb)(parent_ctx);

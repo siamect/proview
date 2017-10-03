@@ -546,6 +546,7 @@ public class Dyn {
     public static final int eSave_AnalogColor_instance      	= 6104;
     public static final int eSave_AnalogColor_instance_mask 	= 6105;
     public static final int eSave_AnalogColor_border	 	= 6106;
+    public static final int eSave_AnalogColor_common_attr     	= 6107;
     public static final int eSave_TipText_text              	= 6200;
     public static final int eSave_Help_topic        		= 6300;
     public static final int eSave_Help_bookmark             	= 6400;
@@ -728,7 +729,7 @@ public class Dyn {
     public static final int eMethodToolbarType_Object	= 0;
     public static final int eMethodToolbarType_Simulate	= 1;
 
-    public static final boolean debug = true;
+    public static final boolean debug = false;
 
     Vector<DynElem> elements = new Vector<DynElem>();
     GraphIfc graph;
@@ -3721,6 +3722,7 @@ public class Dyn {
 	int limit_type;
 	int color;
 	int border;
+	int common_attr = 1;
 	PwrtRefId subid;
 	int p;
 	int database;
@@ -3746,6 +3748,7 @@ public class Dyn {
 	    limit_type = x.limit_type;
 	    color = x.color;
 	    border = x.border;
+	    common_attr = x.common_attr;
 	}
 
 	public int connect(GlowArrayElem o) {
@@ -3760,8 +3763,44 @@ public class Dyn {
 	    }
 
 	    if ( mainInstance != null) {
-		if ( !mainInstance.attrFound) {
-		    DynParsedAttrName pname = dyn.parseAttrName(mainInstance.attribute);
+		common_attr = mainInstance.common_attr;
+		if ( common_attr != 0) {
+		    if ( !mainInstance.attrFound) {
+			DynParsedAttrName pname = dyn.parseAttrName(mainInstance.attribute);
+			if ( pname == null || pname.name.equals("")) 
+			    return 1;
+
+			GdhrRefObjectInfo ret = null;
+
+			switch( pname.database) {
+			case GraphIfc.eDatabase_Gdh:
+			    ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+			    break;
+			default:
+			    ret = null;
+			}
+
+			if ( ret == null || ret.evenSts()) {
+			    System.out.println("AnalogColor: " + mainInstance.attribute);
+			    return 1;
+			}
+
+			mainInstance.attrFound = true;
+			mainInstance.p = ret.id;
+			mainInstance.subid = ret.refid;
+			mainInstance.a_typeid = pname.type;
+			mainInstance.isMainInstance = true;
+			mainInstance.database = pname.database;
+		    }
+		    if ( !isMainInstance) {
+			p = mainInstance.p;
+			attrFound = mainInstance.attrFound;
+			a_typeid = mainInstance.a_typeid;
+			database = mainInstance.database;
+		    }
+		}
+		else {
+		    DynParsedAttrName pname = dyn.parseAttrName(attribute);
 		    if ( pname == null || pname.name.equals("")) 
 			return 1;
 
@@ -3776,22 +3815,16 @@ public class Dyn {
 		    }
 
 		    if ( ret == null || ret.evenSts()) {
-			System.out.println("AnalogColor: " + mainInstance.attribute);
+			System.out.println("AnalogColor: " + attribute);
 			return 1;
 		    }
 
-		    mainInstance.attrFound = true;
-		    mainInstance.p = ret.id;
-		    mainInstance.subid = ret.refid;
-		    mainInstance.a_typeid = pname.type;
-		    mainInstance.isMainInstance = true;
-		    mainInstance.database = pname.database;
-		}
-		if ( !isMainInstance) {
-		    p = mainInstance.p;
-		    attrFound = mainInstance.attrFound;
-		    a_typeid = mainInstance.a_typeid;
-		    database = mainInstance.database;
+		    attrFound = true;
+		    p = ret.id;
+		    subid = ret.refid;
+		    a_typeid = pname.type;
+		    isMainInstance = true;
+		    database = pname.database;
 		}
 	    }
 	    return 1;
@@ -3799,7 +3832,11 @@ public class Dyn {
 
 
 	public void disconnect() {
-	    if ( isMainInstance && attrFound && database != GraphIfc.eDatabase_Local)
+	    if ( common_attr != 0) {
+		if ( attrFound && database != GraphIfc.eDatabase_Local)
+		    dyn.graph.getGdh().unrefObjectInfo(subid);
+	    }
+	    else if ( isMainInstance && attrFound && database != GraphIfc.eDatabase_Local)
 		dyn.graph.getGdh().unrefObjectInfo(subid);
 	}
 	
@@ -3974,6 +4011,9 @@ public class Dyn {
 			break;
 		    case Dyn.eSave_AnalogColor_border: 
 			border = Integer.valueOf(token.nextToken());
+			break;
+		    case Dyn.eSave_AnalogColor_common_attr: 
+			common_attr = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_End:
 			end_found = true;
