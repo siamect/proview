@@ -4004,6 +4004,16 @@ int GrowCtx::ungroup_select()
   int i;
   GrowGroup *group;
 
+  // Groups in group can't be ungrouped
+  for ( i = 0; i < a_sel.size(); i++) {
+    if ( a_sel[i]->type() == glow_eObjectType_GrowGroup) {
+      group = (GrowGroup *)a_sel[i];
+      if ( group->parent)
+	return 0;
+    }
+  }
+
+
   a_sel.set_highlight(0);
   for ( i = 0; i < a_sel.size(); i++) {
     if ( a_sel[i]->type() == glow_eObjectType_GrowGroup) {
@@ -4022,6 +4032,9 @@ int GrowCtx::ungroup_select()
 
 void GrowCtx::ungroup_group( GrowGroup *group)
 {
+  if ( group->parent)
+    return;
+
   group->set_rootnode( 0);
   group->ungroup();
   a.remove( group);
