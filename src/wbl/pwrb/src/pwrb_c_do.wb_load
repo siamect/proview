@@ -287,6 +287,68 @@ SObject pwrb:Class
       EndObject
     EndObject
     Object RtXtt $RtMenu
+      Object Set $MenuCascade
+	Body SysBody
+	  Attr ButtonName = "Set"
+	EndBody
+        Object Invert $MenuCascade
+	  Body SysBody
+	    Attr ButtonName = "Invert"
+	  EndBody
+          Object On $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "On"
+	      Attr MethodName = "Do-InvertOn"
+              Attr FilterName = "Do-SetFilter"
+	    EndBody
+          EndObject
+          Object Off $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "Off"
+	      Attr MethodName = "Do-InvertOff"
+              Attr FilterName = "Do-SetFilter"
+	    EndBody
+          EndObject
+        EndObject
+        Object Test $MenuCascade
+	  Body SysBody
+	    Attr ButtonName = "Test"
+	  EndBody
+          Object On $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "On"
+	      Attr MethodName = "Do-TestOn"
+              Attr FilterName = "Do-SetFilter"
+	    EndBody
+          EndObject
+          Object Off $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "Off"
+	      Attr MethodName = "Do-TestOff"
+              Attr FilterName = "Do-SetFilter"
+	    EndBody
+          EndObject
+        EndObject
+        Object TestValue $MenuCascade
+	  Body SysBody
+	    Attr ButtonName = "TestValue"
+	  EndBody
+          Object True $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "True"
+	      Attr MethodName = "Do-TestValueTrue"
+              Attr FilterName = "Do-SetFilter"
+	    EndBody
+          EndObject
+          Object False $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "False"
+	      Attr MethodName = "Do-TestValueFalse"
+              Attr FilterName = "Do-SetFilter"
+	    EndBody
+          EndObject
+        EndObject
+      EndObject
       Object Channel $MenuRef
 	Body SysBody
 	  Attr ButtonName = "Channel"

@@ -4403,3 +4403,183 @@ void XNav::autoack_scan( void *data)
 
   xnav->autoack_timerid->add( time, autoack_scan, xnav);
 }
+
+void XNav::refresh()
+{
+  pwr_tObjid 	open_objid[100];
+  int		open_cnt;
+  brow_tObject 	*object_list;
+  int		object_cnt;
+  Item	 	*object_item;
+  int		i, j;
+  int		open_type[100];
+  char		open_attr[100][80];
+  int		open;
+  int		found;
+  brow_tNode	*node_list;
+  int		sel_node_count;
+  Item		*item_sel;
+  pwr_tObjid	*sel_objid;
+  int		*sel_type;
+  char		*sel_attr;
+
+  // Store all open objects
+
+  open_cnt = 0;
+  brow_GetObjectList( brow->ctx, &object_list, &object_cnt);
+  for ( i = 0; i < object_cnt; i++) {
+    if ( (open = brow_IsOpen( object_list[i]))) {
+      brow_GetUserData( object_list[i], (void **)&object_item);
+      open_objid[open_cnt] = object_item->objid;
+      open_type[open_cnt] = open;
+      switch( object_item->type) {
+      case xnav_eItemType_AttrArray:
+	strcpy( open_attr[open_cnt], object_item->name);
+	break;
+      case xnav_eItemType_Attr:
+	strcpy( open_attr[open_cnt], object_item->name);
+	break;
+      case xnav_eItemType_AttrArrayElem:
+	strcpy( open_attr[open_cnt], object_item->name);
+	break;
+      case xnav_eItemType_AttrObject:
+	strcpy( open_attr[open_cnt], object_item->name);
+	break;
+      default:
+	;
+      }
+      open_type[open_cnt] = open;
+      open_cnt++;
+      if ( open_cnt == 100)
+        break;
+    }
+  }
+
+  // Store selected object
+
+  brow_GetSelectedNodes( brow->ctx, &node_list, &sel_node_count);
+  if ( sel_node_count > 0) {
+    sel_objid = (pwr_tObjid *)calloc( sel_node_count, sizeof( pwr_tObjid));
+    sel_type = (int *)calloc( sel_node_count, sizeof( int));
+    sel_attr = (char *)calloc( sel_node_count, 80);
+
+    for ( i = 0; i < sel_node_count; i++) {
+      brow_GetUserData( node_list[i], (void **)&item_sel);
+      sel_objid[i] = item_sel->objid;
+      sel_type[i] = item_sel->type;
+      switch( item_sel->type) {
+        case xnav_eItemType_Attr:
+        case xnav_eItemType_AttrArray:
+        case xnav_eItemType_AttrObject:
+        case xnav_eItemType_AttrArrayElem:
+        case xnav_eItemType_Enum:
+        case xnav_eItemType_Mask:
+          strcpy( &sel_attr[i * 80], item_sel->name);
+          break;
+        default:
+          ;
+      }
+    }
+    free( node_list);
+  }
+
+  brow_SetNodraw( brow->ctx);
+  brow_DeleteAll( brow->ctx);
+ 
+  show_database( 1);
+
+  // Open all previously open objects
+  for ( i = 0; i < open_cnt; i++) {
+    brow_GetObjectList( brow->ctx, &object_list, &object_cnt);
+    found = 0;
+    for ( j = object_cnt - 1; j >= 0; j--) {
+      brow_GetUserData( object_list[j], (void **)&object_item);
+      switch( object_item->type) {
+      case xnav_eItemType_Object:
+	if ( cdh_ObjidIsEqual( open_objid[i], object_item->objid)) {
+	  if ( open_type[i] & xnav_mOpen_Children)
+	    ((ItemObject *)object_item)->open_children( brow, 0, 0);
+	  else if ( open_type[i] & xnav_mOpen_Attributes)
+	    ((ItemObject *)object_item)->open_attributes( brow, 0, 0);
+	  found = 1;
+	}
+	break;
+      case xnav_eItemType_AttrArray:
+	if ( cdh_ObjidIsEqual( open_objid[i], object_item->objid) &&
+	     strcmp( object_item->name, open_attr[i]) == 0) {
+	  if ( open_type[i] & xnav_mOpen_Attributes)
+	    ((ItemAttrArray *)object_item)->open_attributes( brow, 0, 0);
+	  found = 1;
+	}
+	break;
+      case xnav_eItemType_Attr:
+	if ( cdh_ObjidIsEqual( open_objid[i], object_item->objid) &&
+	     strcmp( object_item->name, open_attr[i]) == 0) {
+	  if ( open_type[i] & xnav_mOpen_Children)
+	    ((ItemAttr *)object_item)->open_children( brow, 0, 0);
+	  found = 1;
+	}
+	break;
+      case xnav_eItemType_AttrArrayElem:
+	if ( cdh_ObjidIsEqual( open_objid[i], object_item->objid) &&
+	     strcmp( object_item->name, open_attr[i]) == 0) {
+	  if ( open_type[i] & xnav_mOpen_Children)
+	    ((ItemAttrArrayElem *)object_item)->open_children( brow, 0, 0);
+	  found = 1;
+	}
+	break;
+      case xnav_eItemType_AttrObject:
+	if ( cdh_ObjidIsEqual( open_objid[i], object_item->objid) &&
+	     strcmp( object_item->name, open_attr[i]) == 0) {
+	  if ( open_type[i] & xnav_mOpen_Attributes)
+	    ((ItemAttrObject *)object_item)->open_attributes( brow, 0, 0);
+	  found = 1;
+	}
+	break;
+      default:
+	;
+      }
+      if ( found)
+        break;
+    }
+  }
+
+  // Select previously selected
+  if ( sel_node_count > 0) {
+    brow_GetObjectList( brow->ctx, &object_list, &object_cnt);
+    for ( i = 0; i < sel_node_count; i++) {
+      for ( j = object_cnt - 1; j >= 0; j--) {
+        brow_GetUserData( object_list[j], (void **)&object_item);
+        found = 0;
+        if ( cdh_ObjidIsEqual( sel_objid[i], object_item->objid) &&
+	     sel_type[i] == object_item->type) {
+          switch( object_item->type) {
+	  case xnav_eItemType_Attr:
+	  case xnav_eItemType_AttrArray:
+	  case xnav_eItemType_AttrObject:
+	  case xnav_eItemType_AttrArrayElem:
+	  case xnav_eItemType_Enum:
+	  case xnav_eItemType_Mask:
+	    if ( strcmp( &sel_attr[i*80], object_item->name) == 0)
+	      found = 1;
+	    break;
+	  default:
+	    found = 1;
+          }
+        }
+        if ( found) {
+          brow_SetInverse( object_item->node, 1);
+          brow_SelectInsert( brow->ctx, object_item->node);
+          break;
+        }
+      }
+    }
+    free( (char *)sel_objid);
+    free( (char *)sel_type);
+    free( (char *)sel_attr);
+  }
+
+  brow_ResetNodraw( brow->ctx);
+  brow_Redraw( brow->ctx, 0);
+}
+

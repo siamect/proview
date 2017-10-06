@@ -22,13 +22,12 @@
 
 typedef struct {
   pwr_tString80                       Description pwr_dAlignLW;
-  pwr_tString40                       DevName pwr_dAlignW;
   pwr_tUInt32                         ErrorCount pwr_dAlignW;
   pwr_tUInt32                         ErrorSoftLimit pwr_dAlignW;
   pwr_tUInt32                         ErrorHardLimit pwr_dAlignW;
   pwr_tUInt16                         MaxNoOfChannels pwr_dAlignW;
   pwr_tUInt32                         RegAddress pwr_dAlignW;
-  pwr_tUInt32                         VectAddress pwr_dAlignW;
+  pwr_tUInt32                         SwitchSettings pwr_dAlignW;
   pwr_tIoProcessMask                  Process pwr_dAlignW;
   pwr_tObjid                          ThreadObject pwr_dAlignW;
   pwr_tURL                            DataSheet pwr_dAlignW;
@@ -46,13 +45,12 @@ typedef struct {
 
 typedef struct {
   pwr_tString80                       Description pwr_dAlignLW;
-  pwr_tString40                       DevName pwr_dAlignW;
   pwr_tUInt32                         ErrorCount pwr_dAlignW;
   pwr_tUInt32                         ErrorSoftLimit pwr_dAlignW;
   pwr_tUInt32                         ErrorHardLimit pwr_dAlignW;
   pwr_tUInt16                         MaxNoOfChannels pwr_dAlignW;
   pwr_tUInt32                         RegAddress pwr_dAlignW;
-  pwr_tUInt32                         VectAddress pwr_dAlignW;
+  pwr_tUInt32                         SwitchSettings pwr_dAlignW;
   pwr_tIoProcessMask                  Process pwr_dAlignW;
   pwr_tObjid                          ThreadObject pwr_dAlignW;
   pwr_tURL                            DataSheet pwr_dAlignW;
@@ -73,7 +71,6 @@ typedef struct {
 
 typedef struct {
   pwr_tString80                       Description pwr_dAlignLW;
-  pwr_tString40                       DevName pwr_dAlignW;
   pwr_tUInt32                         ErrorCount pwr_dAlignW;
   pwr_tUInt32                         ErrorSoftLimit pwr_dAlignW;
   pwr_tUInt32                         ErrorHardLimit pwr_dAlignW;
@@ -91,7 +88,7 @@ typedef struct {
   pwr_tBoolean                        SpeedMeasurement[4] pwr_dAlignW;
   pwr_tUInt32                         SyncRawValue[4] pwr_dAlignW;
   pwr_tUInt32                         RegAddress pwr_dAlignW;
-  pwr_tUInt32                         VectAddress pwr_dAlignW;
+  pwr_tUInt32                         SwitchSettings pwr_dAlignW;
   pwr_tIoProcessMask                  Process pwr_dAlignW;
   pwr_tObjid                          ThreadObject pwr_dAlignW;
   pwr_tURL                            DataSheet pwr_dAlignW;

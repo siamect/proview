@@ -331,6 +331,49 @@ SObject pwrb:Class
       EndObject
     EndObject
     Object RtXtt $RtMenu
+      Object Set $MenuCascade
+	Body SysBody
+	  Attr ButtonName = "Set"
+	EndBody
+        Object Invert $MenuCascade
+	  Body SysBody
+	    Attr ButtonName = "Invert"
+	  EndBody
+          Object On $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "On"
+	      Attr MethodName = "Di-InvertOn"
+              Attr FilterName = "Di-SetFilter"
+	    EndBody
+          EndObject
+          Object Off $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "Off"
+	      Attr MethodName = "Di-InvertOff"
+              Attr FilterName = "Di-SetFilter"
+	    EndBody
+          EndObject
+        EndObject
+        Object Conversion $MenuCascade
+	  Body SysBody
+	    Attr ButtonName = "Conversion"
+	  EndBody
+          Object On $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "On"
+	      Attr MethodName = "Di-ConversionOn"
+              Attr FilterName = "Di-SetFilter"
+	    EndBody
+          EndObject
+          Object Off $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "Off"
+	      Attr MethodName = "Di-ConversionOff"
+              Attr FilterName = "Di-SetFilter"
+	    EndBody
+          EndObject
+        EndObject
+      EndObject
       Object Channel $MenuRef
 	Body SysBody
 	  Attr ButtonName = "Channel"

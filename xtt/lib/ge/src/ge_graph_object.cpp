@@ -325,6 +325,7 @@ static int graph_object_dx( Graph *graph, pwr_sAttrRef *arp)
   switch ( card_cid) {
   case pwr_cClass_Ssab_DI32D: {
     pwr_tAName card_name;
+
     unsigned int chan_idx = (chanaref.Offset - pwr_AlignLW(sizeof(pwr_sClass_Ssab_BaseDiCard))) / pwr_AlignLW(sizeof(pwr_sClass_ChanDi));
 
     sts = gdh_ObjidToName( chanaref.Objid, card_name, sizeof(card_name), cdh_mNName);

@@ -232,6 +232,13 @@ typedef enum {
         ge_mOptions_Dialog 	 = 1 << 9
 } ge_mOptions;
 
+typedef enum {
+  xnav_eSetSignal_Conversion,
+  xnav_eSetSignal_Invert,
+  xnav_eSetSignal_Test,
+  xnav_eSetSignal_TestValue
+} xnav_eSetSignal;
+
 class XNav;
 
 class XNavGbl {
@@ -491,7 +498,7 @@ class XNav {
     int sound_attached();
     int eventlog_enabled();
     void appl_startup();
- 
+    void refresh();
     
     static int init_brow_base_cb( FlowCtx *fctx, void *client_data);
     static int get_trace_attr( pwr_sAttrRef *arp, char *attr);
@@ -522,7 +529,7 @@ class XNav {
     int script( char* buffer);
     pwr_tStatus get_command_sts();
     int readcmdfile( char *incommand, char *buffer);
-    int show_database();
+    int show_database( int nopop = 0);
     int get_current_object(
 			pwr_tObjid	*objid,
 			char		*objectname,
@@ -573,6 +580,7 @@ class XNav {
     int delete_object( char *name);
     void open_keyboard( void *owner, keyboard_eKeymap keymap, int type);
     void close_keyboard( int action);
+    int set_signal( pwr_tAttrRef *arp, xnav_eSetSignal type, int on);
     static void print_methods();
     static pwr_tStatus get_instance_classgraph( char *instance_str, pwr_tFileName filename);
 

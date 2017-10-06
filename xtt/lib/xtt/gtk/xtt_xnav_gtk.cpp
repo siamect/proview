@@ -458,43 +458,76 @@ GtkWidget *XNavGtk::build_menu( GtkWidget *Parent,
   Level = Items[*idx].Level;
 
   for (; Items[*idx].Level != 0 && Items[*idx].Level >= Level; (*idx)++) {
-    if (Items[*idx].Item == xmenu_eMenuItem_Cascade ||
-      Items[*idx].Item == xmenu_eMenuItem_Ref) {
+    switch ( Items[*idx].Item) {
+    case xmenu_eMenuItem_Ref: {
       if (MenuType == MENU_OPTION) {
         printf("You can't have submenus from option menu items.");
         return NULL;
       } 
-      else {
-        i = *idx;
+
+      i = *idx;
+      GtkWidget *sub = gtk_menu_item_new_with_label( CoWowGtk::translate_utf8(Items[*idx].Name));
+      (*idx)++;	
+      W = build_menu(Menu, MENU_PULLDOWN, 
+		     Lng::translate( Items[i].Name), MenuUserData, 
+		     Callback, CallbackData, Items, idx);
+      (*idx)--;
+      gtk_menu_item_set_submenu(GTK_MENU_ITEM(sub), GTK_WIDGET(W));
+      gtk_menu_shell_append(GTK_MENU_SHELL(Menu), sub);
+      gtk_widget_show(sub);
+      break;
+    }
+    case xmenu_eMenuItem_Cascade: {
+      if (MenuType == MENU_OPTION) {
+        printf("You can't have submenus from option menu items.");
+        return NULL;
+      } 
+
+      // Check that the Cascade contains any pushbuttons
+      int found = 0;
+      unsigned int cascade_level = Items[*idx].Level;
+      int cidx;
+      for ( cidx = *idx + 1; Items[cidx].Level != 0 && Items[cidx].Level > cascade_level; cidx++) {
+	if ( Items[cidx].Item == xmenu_eMenuItem_Ref || Items[cidx].Item == xmenu_eMenuItem_Button) {
+	  found = 1;
+	  break;
+	}
+      }
+      if ( found) {
+	i = *idx;
 	GtkWidget *sub = gtk_menu_item_new_with_label( CoWowGtk::translate_utf8(Items[*idx].Name));
-        (*idx)++;	
-        W = build_menu(Menu, MENU_PULLDOWN, 
+	(*idx)++;	
+	W = build_menu(Menu, MENU_PULLDOWN, 
 		       Lng::translate( Items[i].Name), MenuUserData, 
 		       Callback, CallbackData, Items, idx);
-        (*idx)--;
+	(*idx)--;
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(sub), GTK_WIDGET(W));
 	gtk_menu_shell_append(GTK_MENU_SHELL(Menu), sub);
 	gtk_widget_show(sub);
       }
-    }
-    else {
-      if (Items[*idx].Item == xmenu_eMenuItem_Separator) {
-	// Separator
-	W = gtk_separator_menu_item_new();
-	gtk_menu_shell_append(GTK_MENU_SHELL(Menu), W);
-	gtk_widget_show(W);
-      }
       else {
-	// Pushbutton
-	W = gtk_menu_item_new_with_label( CoWowGtk::translate_utf8(Items[*idx].Name));
-	gtk_widget_set_sensitive( W, Items[*idx].Flags.f.Sensitive ? TRUE : FALSE);
-	g_object_set_data( (GObject *)W, "userdata", (gpointer)((long int)*idx));
-	if ( Callback)
-	  g_signal_connect( W, "activate", 
-			    G_CALLBACK(Callback), CallbackData);
-	gtk_menu_shell_append(GTK_MENU_SHELL(Menu), W);
-	gtk_widget_show(W);
-      } 
+	*idx = cidx - 1;
+      }
+      break;
+    }
+    case xmenu_eMenuItem_Separator:
+      // Separator
+      W = gtk_separator_menu_item_new();
+      gtk_menu_shell_append(GTK_MENU_SHELL(Menu), W);
+      gtk_widget_show(W);
+      break;
+    case xmenu_eMenuItem_Button:
+      // Pushbutton
+      W = gtk_menu_item_new_with_label( CoWowGtk::translate_utf8(Items[*idx].Name));
+      gtk_widget_set_sensitive( W, Items[*idx].Flags.f.Sensitive ? TRUE : FALSE);
+      g_object_set_data( (GObject *)W, "userdata", (gpointer)((long int)*idx));
+      if ( Callback)
+	g_signal_connect( W, "activate", 
+			  G_CALLBACK(Callback), CallbackData);
+      gtk_menu_shell_append(GTK_MENU_SHELL(Menu), W);
+      gtk_widget_show(W);
+      break;
+    default: ;
     }
   }
 

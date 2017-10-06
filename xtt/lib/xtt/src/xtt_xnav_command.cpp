@@ -101,6 +101,7 @@
 #include "xtt_log.h"
 #include "xtt_stream.h"
 #include "xtt_otree.h"
+#include "xtt_ssaboxclasses.h"
 
 class xnav_file {
 public:
@@ -375,7 +376,7 @@ dcli_tCmdTable	xnav_command_table[] = {
 			{ "dcli_arg1", "dcli_arg2", "/NAME", "/VALUE",
 			  "/BYPASS", "/PUBLICWRITE", "/INDEX", "/SOURCE", "/OBJECT", "/CONTINUE", 
 			  "/X0", "/Y0", "/X1", "/Y1", "/INSTANCE", "/ESCAPESTORE", "/FOCUS", "/INPUTEMPTY", 
-			  "/ICONIFY", "/BELOW",
+			  "/ICONIFY", "/BELOW", "/ON", "/OFF",
 			  ""}
 		},
 		{
@@ -1286,6 +1287,202 @@ static int	xnav_set_func(	void		*client_data,
       xnav->message('E', "Syntax error");
       return XNAV__SUCCESS;      
     }
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "SIGNAL", strlen( arg1_str)) == 0) {
+    char arg2_str[80];
+
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str)))) {
+      xnav->message('E', "Syntax error");
+      return XNAV__SUCCESS;      
+    }
+
+    if ( cdh_NoCaseStrncmp( arg2_str, "INVERT", strlen( arg2_str)) == 0) {
+      // Check authorization
+      if ( !(xnav->priv & pwr_mPrv_System)) {
+	xnav->message('E', "Not authorized for this operation");
+	return XNAV__SUCCESS;
+      }
+
+      pwr_tAName name_str;
+      pwr_tAttrRef aref;
+      pwr_tStatus sts;
+      int is_attr;
+      int selected = 0;
+      int on = ODD( dcli_get_qualifier( "/ON", 0, 0));
+      int off = ODD( dcli_get_qualifier( "/OFF", 0, 0));
+
+
+      if ( (on && off) || (!on && !off)) {
+	xnav->message('E', "Syntax error");
+	return XNAV__HOLDCOMMAND;
+      }
+
+      if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str)))) {
+	sts = gdh_NameToAttrref( pwr_cNObjid, name_str, &aref);
+	if ( EVEN(sts)) {
+	  xnav->message('E', "No such object");
+	  return XNAV__SUCCESS;
+	}
+      }
+      else {
+	/* Get the selected object */
+	sts = xnav->get_select( &aref, &is_attr);
+	if ( EVEN(sts)) {
+	  xnav->message('E', "Enter name or select an object");
+	  return XNAV__SUCCESS;
+	}
+	selected = 1;
+      }
+      
+      sts = xnav->set_signal( &aref, xnav_eSetSignal_Invert, on);
+      if ( EVEN(sts)) {
+	xnav->message(' ', XNav::get_message(sts));
+	return XNAV__SUCCESS;
+      }
+
+      if ( selected)
+	xnav->refresh();
+    }
+    else if ( cdh_NoCaseStrncmp( arg2_str, "CONVERSION", strlen( arg2_str)) == 0) {
+      // Check authorization
+      if ( !(xnav->priv & pwr_mPrv_System)) {
+	xnav->message('E', "Not authorized for this operation");
+      return XNAV__SUCCESS;
+      }
+
+      pwr_tAName name_str;
+      pwr_tAttrRef aref;
+      pwr_tStatus sts;
+      int is_attr;
+      int selected = 0;
+      int on = ODD( dcli_get_qualifier( "/ON", 0, 0));
+      int off = ODD( dcli_get_qualifier( "/OFF", 0, 0));
+
+
+      if ( (on && off) || (!on && !off)) {
+	xnav->message('E', "Syntax error");
+	return XNAV__HOLDCOMMAND;
+      }
+
+      if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str)))) {
+	sts = gdh_NameToAttrref( pwr_cNObjid, name_str, &aref);
+	if ( EVEN(sts)) {
+	  xnav->message('E', "No such object");
+	  return XNAV__SUCCESS;
+	}
+      }
+      else {
+	/* Get the selected object */
+	sts = xnav->get_select( &aref, &is_attr);
+	if ( EVEN(sts)) {
+	  xnav->message('E', "Enter name or select an object");
+	  return XNAV__SUCCESS;
+	}
+	selected = 1;
+      }
+      
+      sts = xnav->set_signal( &aref, xnav_eSetSignal_Conversion, on);
+      if ( EVEN(sts)) {
+	xnav->message(' ', XNav::get_message(sts));
+	return XNAV__SUCCESS;
+      }
+      if ( selected)
+	xnav->refresh();
+    }
+    else if ( cdh_NoCaseStrncmp( arg2_str, "TEST", strlen( arg2_str)) == 0) {
+      // Check authorization
+      if ( !(xnav->priv & pwr_mPrv_System)) {
+	xnav->message('E', "Not authorized for this operation");
+	return XNAV__SUCCESS;
+      }
+      
+      pwr_tAName name_str;
+      pwr_tAttrRef aref;
+      pwr_tStatus sts;
+      int is_attr;
+      int selected = 0;
+      int on = ODD( dcli_get_qualifier( "/ON", 0, 0));
+      int off = ODD( dcli_get_qualifier( "/OFF", 0, 0));
+
+
+      if ( (on && off) || (!on && !off)) {
+	xnav->message('E', "Syntax error");
+	return XNAV__HOLDCOMMAND;
+      }
+
+      if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str)))) {
+	sts = gdh_NameToAttrref( pwr_cNObjid, name_str, &aref);
+	if ( EVEN(sts)) {
+	  xnav->message('E', "No such object");
+	  return XNAV__SUCCESS;
+	}
+      }
+      else {
+	/* Get the selected object */
+	sts = xnav->get_select( &aref, &is_attr);
+	if ( EVEN(sts)) {
+	  xnav->message('E', "Enter name or select an object");
+	  return XNAV__SUCCESS;
+	}
+	selected = 1;
+      }
+
+      sts = xnav->set_signal( &aref, xnav_eSetSignal_Test, on);
+      if ( EVEN(sts)) {
+	xnav->message(' ', XNav::get_message(sts));
+	return XNAV__SUCCESS;
+      }
+      if ( selected)
+	xnav->refresh();
+    }
+    else if ( cdh_NoCaseStrncmp( arg2_str, "TESTVALUE", strlen( arg2_str)) == 0) {
+      // Check authorization
+      if ( !(xnav->priv & pwr_mPrv_System)) {
+	xnav->message('E', "Not authorized for this operation");
+	return XNAV__SUCCESS;
+      }
+
+      pwr_tAName name_str;
+      pwr_tAttrRef aref;
+      pwr_tStatus sts;
+      int is_attr;
+      int selected = 0;
+      int on = ODD( dcli_get_qualifier( "/ON", 0, 0));
+      int off = ODD( dcli_get_qualifier( "/OFF", 0, 0));
+
+
+      if ( (on && off) || (!on && !off)) {
+	xnav->message('E', "Syntax error");
+	return XNAV__HOLDCOMMAND;
+      }
+
+      if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str)))) {
+	sts = gdh_NameToAttrref( pwr_cNObjid, name_str, &aref);
+	if ( EVEN(sts)) {
+	  xnav->message('E', "No such object");
+	  return XNAV__SUCCESS;
+	}
+      }
+      else {
+	/* Get the selected object */
+	sts = xnav->get_select( &aref, &is_attr);
+	if ( EVEN(sts)) {
+	  xnav->message('E', "Enter name or select an object");
+	  return XNAV__SUCCESS;
+	}
+	selected = 1;
+      }
+
+      sts = xnav->set_signal( &aref, xnav_eSetSignal_TestValue, on);
+      if ( EVEN(sts)) {
+	xnav->message(' ', XNav::get_message(sts));
+	return XNAV__SUCCESS;
+      }
+      if ( selected)
+	xnav->refresh();
+    }
+    else
+      xnav->message('E',"Syntax error");
   }
   else
     xnav->message('E',"Syntax error");
@@ -7886,7 +8083,7 @@ static int	xnav_emit_func( void		*client_data,
   return XNAV__SUCCESS;	
 }
 
-int XNav::show_database()
+int XNav::show_database( int nopop)
 {
   int		sts;
   pwr_tObjid 	root;
@@ -7910,7 +8107,8 @@ int XNav::show_database()
     {
       if ( !toplevel_cnt)
       {
-        brow_pop();
+	if ( !nopop)
+	  brow_pop();
         brow_SetNodraw( brow->ctx);
       }
       sts = create_object_item( root, NULL, 
@@ -10731,4 +10929,145 @@ static int xnav_replace_node_str( char *out, char *object_str)
   if ( out != object_str)
     strcpy( out, object_str);
   return 0;
+}
+
+int XNav::set_signal( pwr_tAttrRef *arp, xnav_eSetSignal type, int on)
+{
+  int		sts;
+  pwr_tCid	sig_cid, chan_cid, card_cid, cid;
+  pwr_tAttrRef  aref, chan_aref, card_aref, value_aref;
+  pwr_tOid	card_oid;
+  pwr_tMask	valuemask;
+  pwr_tBoolean	value_on;
+  
+  static char card_mask1[][32] = {"ConvMask1", "InvMask1", "TestMask1", "TestValue1"};
+  static char card_mask2[][32] = {"ConvMask2", "InvMask2", "TestMask2", "TestValue2"};
+  static char chan_attr[][32] = {"ConversionOn", "InvertOn", "TestOn", "TestValue"};
+
+  sts = gdh_GetAttrRefTid( arp, &sig_cid);
+  if ( EVEN(sts)) return sts;
+  
+  switch ( sig_cid) {
+  case pwr_cClass_Di:
+  case pwr_cClass_Do:
+  case pwr_cClass_Po:
+  case pwr_cClass_Ai:
+  case pwr_cClass_Ao:
+    sts = gdh_ArefANameToAref( arp, "SigChanCon", &aref);
+    if ( EVEN(sts)) return sts;
+
+    sts = gdh_GetObjectInfoAttrref( &aref, &chan_aref, sizeof(chan_aref));
+    if ( EVEN(sts)) return sts;
+
+    sts = gdh_GetAttrRefTid( &chan_aref, &chan_cid);
+    if ( EVEN(sts)) return sts;
+    break;
+  case pwr_cClass_ChanDi:
+  case pwr_cClass_ChanDo:
+  case pwr_cClass_ChanAi:
+  case pwr_cClass_ChanAo:
+  case pwr_cClass_ChanIi:
+  case pwr_cClass_ChanIo:
+    chan_aref = *arp;
+    chan_cid = sig_cid;
+    break;
+  default:
+    return XNAV__INVALIDOBJECT;
+  }
+
+  switch ( chan_cid) {
+  case pwr_cClass_ChanDi:
+    if ( !( type == xnav_eSetSignal_Conversion ||
+	    type == xnav_eSetSignal_Invert))
+      return XNAV__INVALIDOBJECT;
+    break;
+  case pwr_cClass_ChanDo:
+    if ( !( type == xnav_eSetSignal_Invert ||
+	    type == xnav_eSetSignal_Test ||
+	    type == xnav_eSetSignal_TestValue))
+      return XNAV__INVALIDOBJECT;
+    break;
+  case pwr_cClass_ChanAi:
+  case pwr_cClass_ChanIi:
+   if ( !( type == xnav_eSetSignal_Conversion))
+      return XNAV__INVALIDOBJECT;
+    break;
+  case pwr_cClass_ChanAo:
+  case pwr_cClass_ChanIo:
+    if ( !( type == xnav_eSetSignal_Test))
+      return XNAV__INVALIDOBJECT;
+    break;
+  default:
+    return XNAV__INVALIDOBJECT;
+  }
+
+  // Get the card object
+  if ( chan_aref.Flags.b.Object) {
+    sts = gdh_GetParent ( chan_aref.Objid, &card_oid);
+    if ( EVEN(sts)) return sts;
+  }
+  else
+    card_oid = chan_aref.Objid;
+
+  sts = gdh_GetObjectClass( card_oid, &card_cid);
+  if ( EVEN(sts)) return sts;
+
+  sts = gdh_GetSuperClass( card_cid, &cid, card_oid);
+  while ( ODD(sts)) {
+    card_cid = cid;
+    sts = gdh_GetSuperClass( card_cid, &cid, card_oid);
+  }
+
+  switch ( card_cid) {
+  case pwr_cClass_Ssab_BaseDiCard:
+  case pwr_cClass_Ssab_BaseDoCard: {
+    pwr_tUInt32 number;
+
+    card_aref = cdh_ObjidToAref( card_oid);
+
+    sts = gdh_ArefANameToAref( &chan_aref, "Number", &aref);
+    if ( EVEN(sts)) return sts;
+
+    sts = gdh_GetObjectInfoAttrref( &aref, &number, sizeof(number));
+    if ( EVEN(sts)) return sts;
+
+    if ( number < 16) {
+      sts = gdh_ArefANameToAref( &card_aref, card_mask1[type], &value_aref);
+      if ( EVEN(sts)) return sts;
+    }	
+    else if ( number >= 16  && number < 32) {
+      sts = gdh_ArefANameToAref( &card_aref, card_mask2[type], &value_aref);
+      if ( EVEN(sts)) return sts;
+      
+      number -= 16;
+    }      
+    else
+      return XNAV__INVALIDOBJECT;
+
+    sts = gdh_GetObjectInfoAttrref( &value_aref, &valuemask, sizeof(valuemask));
+    if ( EVEN(sts)) return sts;
+
+    if ( on)
+      valuemask |= 1 << number;
+    else
+      valuemask &= ~(1 << number);
+
+    sts = gdh_SetObjectInfoAttrref( &value_aref, &valuemask, sizeof(valuemask));
+    if ( EVEN(sts)) return sts;
+    
+    break;
+  }
+  default: ;
+  }
+
+  // Set the flag in the channelobject
+  sts = gdh_ArefANameToAref( &chan_aref, chan_attr[type], &value_aref);
+  if ( EVEN(sts)) return sts;
+
+  value_on = on;
+
+  sts = gdh_SetObjectInfoAttrref( &value_aref, &value_on, sizeof(value_on));
+  if ( EVEN(sts)) return sts;
+  
+  return XNAV__SUCCESS;
 }
