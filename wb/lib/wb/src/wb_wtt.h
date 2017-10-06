@@ -270,6 +270,7 @@ class Wtt : public WUtility {
     void activate_messages();
     void activate_scriptproj();
     void activate_scriptbase();
+    void activate_set_alltoplevel( int view);
     void activate_help();
     void activate_help_project();
     void activate_help_proview();

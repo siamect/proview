@@ -2227,6 +2227,19 @@ void Wtt::activate_scriptbase()
   focused_wnav->command( cmd);
 }
 
+void Wtt::activate_set_alltoplevel( int view)
+{
+  char cmd[80];
+
+  if ( view)
+    strcpy( cmd, "set alltoplevel");
+  else
+    strcpy( cmd, "set noalltoplevel");
+
+  wnav->command( cmd);
+  wnavnode->command( cmd);
+}
+
 void Wtt::activate_help()
 {
   char cmd[80] = "help overview /base";

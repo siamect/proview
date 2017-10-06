@@ -1437,6 +1437,19 @@ void WttGtk::activate_twowindows( GtkWidget *w, gpointer data)
   wtt->activate_twowindows();
 }
 
+void WttGtk::activate_set_alltoplevel(GtkWidget *w, gpointer data)
+{
+  Wtt *wtt = (Wtt *)data;
+
+  int set = (int) gtk_check_menu_item_get_active( GTK_CHECK_MENU_ITEM( ((WttGtk *)wtt)->view_alltoplevel_w));
+  if ( w != ((WttGtk *)wtt)->view_alltoplevel_w) {
+    set = !set;
+    gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM( ((WttGtk *)wtt)->view_alltoplevel_w), set ? TRUE : FALSE);
+  }
+
+  wtt->activate_set_alltoplevel( set);
+}
+
 void WttGtk::activate_messages( GtkWidget *w, gpointer data)
 {
   Wtt *wtt = (Wtt *)data;
@@ -2716,6 +2729,10 @@ WttGtk::WttGtk(
 			      't', GdkModifierType(GDK_CONTROL_MASK), 
 			      GTK_ACCEL_VISIBLE);
 
+  view_alltoplevel_w = gtk_check_menu_item_new_with_mnemonic( "V_iew all toplevel");
+  g_signal_connect( view_alltoplevel_w, "activate", 
+		    G_CALLBACK(activate_set_alltoplevel), this);
+
   GtkWidget *view_messages = gtk_menu_item_new_with_mnemonic( "_Messages");
   g_signal_connect( view_messages, "activate", 
 		    G_CALLBACK(WttGtk::activate_messages), this);
@@ -2726,6 +2743,7 @@ WttGtk::WttGtk(
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_zoom_out);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_zoom_reset);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_twowindows);
+  gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_alltoplevel_w);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_messages);
 
   GtkWidget *view = gtk_menu_item_new_with_mnemonic("_View");

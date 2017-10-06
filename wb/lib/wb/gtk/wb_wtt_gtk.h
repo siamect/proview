@@ -132,6 +132,7 @@ class WttGtk : public Wtt {
     GtkWidget	*tools_edit_w;
     GtkWidget	*tools_buildnode_w;
     GtkWidget	*tools_save_w;
+    GtkWidget	*view_alltoplevel_w;
     GtkAccelGroup *accel_g;
     int		set_focus_disabled;
     gint 	disfocus_timerid;
@@ -255,6 +256,7 @@ class WttGtk : public Wtt {
     static void activate_zoom_out( GtkWidget *w, gpointer data);
     static void activate_zoom_reset( GtkWidget *w, gpointer data);
     static void activate_twowindows( GtkWidget *w, gpointer data);
+    static void activate_set_alltoplevel(GtkWidget *w, gpointer data);
     static void activate_messages( GtkWidget *w, gpointer data);
     static void activate_view( GtkWidget *w, gpointer data);
     static void activate_savesettings( GtkWidget *w, gpointer data);
