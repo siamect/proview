@@ -98,6 +98,8 @@ class WttGtk : public Wtt {
     GtkWidget	*build_force_w;
     GtkWidget	*build_debug_w;
     GtkWidget	*build_crossref_w;
+    GtkWidget	*build_crossrefsim_w;
+    GtkWidget	*build_crossrefgraph_w;
     GtkWidget	*build_manual_w;
     GtkWidget	*build_nocopy_w;
     GtkWidget	*menu_save_w;

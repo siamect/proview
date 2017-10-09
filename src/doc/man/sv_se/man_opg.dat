@@ -1621,6 +1621,7 @@ set advanceduser<t>Sätt avancerad användare	<LINK> set advanceduser
 set display<t>Sätt format for visning av utvalt attribut <LINK> set display
 set folder	<t>Aktivera en flik i ett flikfönster.  <LINK> set folder
 set parameter<t>Sätt värdet på ett attribut  	<LINK> set parameter
+set signal  <t>Sätt invert, conversion och test på signaler.  <LINK> set signal
 set subwindow<t>Visa in graf i ett Ge window objekt.  <LINK> set subwindow
 set graph   <t>Hantering av graf.		<LINK> set graph
 setup       <t>Xtt konfigurering		<LINK> setup
@@ -1750,6 +1751,31 @@ Aktivera en flik i ett flikfönster objekt.
 
 /name=		<t>Namn på filkfönster objektet.
 /index=		<t>Index på filken som ska aktiveras. Indexeringen startar från 0.
+</TOPIC>
+
+<TOPIC> set signal <style> function
+Command   set signal
+
+Sätt invert, conversion, test och testvalue för en signal.
+
+Conversion kan sättas på Di, Ii och Ai,
+Invert kan sättas på Di och Do.
+Test kan sättas på Do, Ao och Io.
+Testvalue kan sättas på Do.
+
+<B>xtt> set signal conversion /on [/name=]
+<B>xtt> set signal conversion /off [/name=]
+<B>xtt> set signal invert /on [/name=]
+<B>xtt> set signal invert /off [/name=]
+<B>xtt> set signal test /on [/name=]
+<B>xtt> set signal test /off [/name=]
+<B>xtt> set signal testvalue /on [/name=]
+<B>xtt> set signal testvalue /off [/name=]
+
+/name	<t>Signalnamn. Om signalnamnet ej är angivet används den 
+        <t>utvalda signalen.
+/on	<t>Sätt entitet till.
+/off	<t>Set entitet från.
 </TOPIC>
 
 <TOPIC> set subwindow <style> function

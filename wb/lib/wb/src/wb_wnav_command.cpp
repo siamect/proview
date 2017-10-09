@@ -314,7 +314,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 			"/NAME", "/IDENTITY", "/FILES", "/OUT", "/IGNORE",
 			"/DIRECTORY", "/DATABASE", "/SERVER", 
 			"/PLCPGM", "/HIERARCHY", "/FROM_PLCPGM", "/TEMPLATE", 
-			"/SIMULATION", "/RTONLY", "/DEPENDENCY", "/DESCRIPTION", ""}
+			"/SIMULATION", "/GRAPH", "/RTONLY", "/DEPENDENCY", "/DESCRIPTION", ""}
 		},
 		{
 			"NEW",
@@ -1327,6 +1327,34 @@ static int	wnav_set_func(	void		*client_data,
       (wnav->gbl_command_cb)( wnav->parent_ctx, "SET NOBUILDCROSSREF");
     else
       wnav->gbl.build.crossref = 0;
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "BUILDCROSSREFSIM", strlen( arg1_str)) == 0)
+  {
+    if ( EVEN( dcli_get_qualifier( "/LOCAL", 0, 0)))
+      (wnav->gbl_command_cb)( wnav->parent_ctx, "SET BUILDCROSSREFSIM");
+    else
+      wnav->gbl.build.crossref_sim = 1;
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "NOBUILDCROSSREFSIM", strlen( arg1_str)) == 0)
+  {
+    if ( EVEN( dcli_get_qualifier( "/LOCAL", 0, 0)))
+      (wnav->gbl_command_cb)( wnav->parent_ctx, "SET NOBUILDCROSSREFSIM");
+    else
+      wnav->gbl.build.crossref_sim = 0;
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "BUILDCROSSREFGRAPH", strlen( arg1_str)) == 0)
+  {
+    if ( EVEN( dcli_get_qualifier( "/LOCAL", 0, 0)))
+      (wnav->gbl_command_cb)( wnav->parent_ctx, "SET BUILDCROSSREFGRAPH");
+    else
+      wnav->gbl.build.crossref_graph = 1;
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "NOBUILDCROSSREFGRAPH", strlen( arg1_str)) == 0)
+  {
+    if ( EVEN( dcli_get_qualifier( "/LOCAL", 0, 0)))
+      (wnav->gbl_command_cb)( wnav->parent_ctx, "SET NOBUILDCROSSREFGRAPH");
+    else
+      wnav->gbl.build.crossref_graph = 0;
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "BUILDMANUAL", strlen( arg1_str)) == 0)
   {
@@ -4259,10 +4287,11 @@ static int	wnav_create_func( void		*client_data,
     if ( EVEN(sts)) return sts;
 
     int simulate = ODD( dcli_get_qualifier( "/SIMULATION", 0, 0));
+    int graph = ODD( dcli_get_qualifier( "/GRAPH", 0, 0));
 
     wb_crrgen crrgen( (wb_session *)wnav->ldhses);
 
-    crrgen.load( &sts, simulate);
+    crrgen.load( &sts, simulate, graph);
     crrgen.write( &sts);
     crrgen.write_code( &sts);
   }

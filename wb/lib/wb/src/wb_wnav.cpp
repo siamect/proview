@@ -2314,6 +2314,12 @@ int	WNav::setup()
   new WItemLocal( this, "Build.CrossReferences", "setup_build_cross", 
 	pwr_eType_Int32, sizeof( gbl.build.crossref), 0, 1,
 	(void *) &gbl.build.crossref, NULL, flow_eDest_IntoLast);
+  new WItemLocal( this, "Build.CrossReferences.Graph", "setup_build_cross_graph", 
+	pwr_eType_Int32, sizeof( gbl.build.crossref_graph), 0, 1,
+	(void *) &gbl.build.crossref_graph, NULL, flow_eDest_IntoLast);
+  new WItemLocal( this, "Build.CrossReferences.Sim", "setup_build_cross_sim", 
+	pwr_eType_Int32, sizeof( gbl.build.crossref_sim), 0, 1,
+	(void *) &gbl.build.crossref_sim, NULL, flow_eDest_IntoLast);
   new WItemLocal( this, "Build.Manual", "setup_build_manual", 
 	pwr_eType_Int32, sizeof( gbl.build.manual), 0, 1,
 	(void *) &gbl.build.manual, NULL, flow_eDest_IntoLast);
@@ -2348,7 +2354,8 @@ int	WNavGbl::symbolfile_exec( void *wnav)
 
 void WNav::set_options( int ena_comment, int sh_class, int sh_alias, int sh_descrip, 
 			int sh_objref, int sh_objxref, int sh_attrref, int sh_attrxref,
-			int bu_force, int bu_debug, int bu_crossref, int bu_manual, int bu_nocopy)
+			int bu_force, int bu_debug, int bu_crossref, int bu_crossrefsim,
+			int bu_crossrefgraph, int bu_manual, int bu_nocopy)
 {
   gbl.enable_comment = ena_comment;
   gbl.show_class = sh_class;
@@ -2361,6 +2368,8 @@ void WNav::set_options( int ena_comment, int sh_class, int sh_alias, int sh_desc
   gbl.build.force = bu_force;
   gbl.build.debug = bu_debug;
   gbl.build.crossref = bu_crossref;
+  gbl.build.crossref_sim = bu_crossrefsim;
+  gbl.build.crossref_graph = bu_crossrefgraph;
   gbl.build.manual = bu_manual;
   gbl.build.nocopy = bu_nocopy;
   ldh_refresh( pwr_cNObjid);
@@ -2368,7 +2377,8 @@ void WNav::set_options( int ena_comment, int sh_class, int sh_alias, int sh_desc
 
 void WNav::get_options( int *ena_comment, int *sh_class, int *sh_alias, int *sh_descrip, 
 			int *sh_objref, int *sh_objxref, int *sh_attrref, int *sh_attrxref,
-			int *bu_force, int *bu_debug, int *bu_crossref, int *bu_manual, int *bu_nocopy)
+			int *bu_force, int *bu_debug, int *bu_crossref, int *bu_crossrefsim,
+			int *bu_crossrefgraph, int *bu_manual, int *bu_nocopy)
 {
   *ena_comment = gbl.enable_comment;
   *sh_class =  gbl.show_class;
@@ -2381,6 +2391,8 @@ void WNav::get_options( int *ena_comment, int *sh_class, int *sh_alias, int *sh_
   *bu_force = gbl.build.force;
   *bu_debug = gbl.build.debug;
   *bu_crossref = gbl.build.crossref;
+  *bu_crossrefsim = gbl.build.crossref_sim;
+  *bu_crossrefgraph = gbl.build.crossref_graph;
   *bu_manual = gbl.build.manual;
   *bu_nocopy = gbl.build.nocopy;
 }
@@ -2449,6 +2461,16 @@ int WNav::save_settnings( ofstream& fp)
     fp << "  set buildcrossref /local" << endl;
   else
     fp << "  set nobuildcrossref /local" << endl;
+
+  if ( gbl.build.crossref_sim)
+    fp << "  set buildcrossrefsim /local" << endl;
+  else
+    fp << "  set nobuildcrossrefsim /local" << endl;
+
+  if ( gbl.build.crossref_graph)
+    fp << "  set buildcrossrefgraph /local" << endl;
+  else
+    fp << "  set nobuildcrossrefgraph /local" << endl;
 
   if ( gbl.build.manual)
     fp << "  set buildmanual /local" << endl;

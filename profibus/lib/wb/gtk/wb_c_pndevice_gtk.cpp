@@ -104,9 +104,9 @@ static pwr_tStatus Configure (
     delete ctx->attr;
     return 1;
   }
-  ctx->attr->close_cb = xtt_pndevice_close_cb;
-  ctx->attr->save_cb = xtt_pndevice_save_cb;
-  ctx->attr->help_cb = xtt_pndevice_help_cb;
+  ctx->attr->close_cb = pndevice_close_cb;
+  ctx->attr->save_cb = pndevice_save_cb;
+  ctx->attr->help_cb = pndevice_help_cb;
 
   if ( ODD(sts))
     sts = pndevice_init( ctx);

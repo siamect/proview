@@ -1606,6 +1606,7 @@ set advanceduser<t>Set advanced user		<LINK> set advanceduser
 set display<t>Set format of display for selected attribute <LINK> set display
 set folder  <t>Set a folder in a tabbed window. <LINK> set folder
 set parameter<t>Set the value of an attribute  	<LINK> set parameter
+set signal  <t>Set invert, conversion and test for signals.  <LINK> set signal
 set subwindow<t>View a graph in a Ge window object.  <LINK> set subwindow
 set graph   <t>Handling of a graph		<LINK> set graph
 setup       <t>Xtt setup			<LINK> setup
@@ -1735,6 +1736,30 @@ Set a folder in a tabbed window object.
 
 /name=		<t>the name of the tabbedwindow object.
 /index=		<t>index of tab to set. Starting from 0.
+</TOPIC>
+
+<TOPIC> set signal <style> function
+Command   set signal
+
+Set invert, conversion, test and testvalue for a signal.
+
+Conversion can be set on Di, Ii and Ai,
+Invert can be set on Di and Do.
+Test can be set on Do, Ao and Io.
+Testvalue can be set on Do.
+
+<B>xtt> set signal conversion /on [/name=]
+<B>xtt> set signal conversion /off [/name=]
+<B>xtt> set signal invert /on [/name=]
+<B>xtt> set signal invert /off [/name=]
+<B>xtt> set signal test /on [/name=]
+<B>xtt> set signal test /off [/name=]
+<B>xtt> set signal testvalue /on [/name=]
+<B>xtt> set signal testvalue /off [/name=]
+
+/name	<t>Signal name. If not supplied the currently selected signal is used.
+/on	<t>Set signal entity on.
+/off	<t>Set signal entity off.
 </TOPIC>
 
 <TOPIC> set subwindow <style> function

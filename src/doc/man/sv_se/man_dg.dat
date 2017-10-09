@@ -9091,7 +9091,10 @@ Kommando   create crossreferencefiles
 
 Skapa filer för att visa korsreferenser i xtt och rtt för aktuell volym.
 
-<B>wtt> create crossreferencefiles
+<B>wtt> create crossreferencefiles [/graph] [/simulation]
+
+/graph		<t>Leta efter korsreferenser i Ge grafer.
+/simulation	<t>Addera referenser i simuleringsobjekt.
 </TOPIC>
 
 <TOPIC> create flowfiles <style> function

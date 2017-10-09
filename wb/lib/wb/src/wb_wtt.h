@@ -186,6 +186,8 @@ class Wtt : public WUtility {
     int		build_force;
     int		build_debug;
     int		build_crossref;
+    int		build_crossref_sim;
+    int		build_crossref_graph;
     int		build_manual;
     int		build_nocopy;
     int		wnav_mapped;

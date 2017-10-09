@@ -53,7 +53,7 @@ class wb_crrgen {
  public:
   wb_crrgen( wb_session *sp);
   ~wb_crrgen();
-  void load( pwr_tStatus *sts, int sim = 0);
+  void load( pwr_tStatus *sts, int sim = 0, int graph = 0);
   void write( pwr_tStatus *sts);
   void write_code( pwr_tStatus *rsts);
 };

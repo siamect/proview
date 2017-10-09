@@ -9205,7 +9205,10 @@ Command   create crossreferencefiles
 Create files for displaying crossreferences in xtt and rtt for
 the current volume.
 
-<B>wtt> create crossreferencefiles
+<B>wtt> create crossreferencefiles [/graph] [/simulation]
+
+/graph		<t>Search Ge graphs for cross references.
+/simulation	<t>Add cross references in simulation objects.
 </TOPIC>
 
 <TOPIC> create flowfiles <style> function

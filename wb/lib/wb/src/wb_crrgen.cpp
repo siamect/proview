@@ -266,7 +266,7 @@ wb_crrgen::~wb_crrgen()
   tree_DeleteTable(&sts, m_signal_th);
 }
 
-void wb_crrgen::load( pwr_tStatus *rsts, int sim)
+void wb_crrgen::load( pwr_tStatus *rsts, int sim, int graph)
 {
   pwr_tStatus sts;
 
@@ -323,205 +323,247 @@ void wb_crrgen::load( pwr_tStatus *rsts, int sim)
     }
   }
 
-  // Ge references
-  for ( wb_object o = m_sp->object( pwr_cClass_XttGraph); o; o = o.next()) {
-    pwr_tString80 action;
-    pwr_tFileName fname;
-    char line[512];
-    char linep[2][512];
-    int tag;
-    int nr;
-    char *s;
+  if ( graph) {
+    // Ge references
+    for ( wb_object o = m_sp->object( pwr_cClass_XttGraph); o; o = o.next()) {
+      pwr_tString80 action;
+      pwr_tFileName fname;
+      char line[512];
+      char linep[2][512];
+      int tag;
+      int nr;
+      char *s;
 
-    wb_attribute a = m_sp->attribute( o.oid(), "RtBody", "Action");
+      wb_attribute a = m_sp->attribute( o.oid(), "RtBody", "Action");
 
-    a.value( action);
-    if ( strstr( action, ".pwg")) {
-      sprintf( fname, "$pwrp_exe/%s", cdh_Low(action));
-
-      dcli_translate_filename( fname, fname);
-
-      ifstream fpg( fname);
-      if ( !fpg)
-	continue;
-
-      while ( fpg.getline( line, sizeof(line))) {
-	nr = dcli_parse( line , " ", "", (char *)linep, 
-			 sizeof( linep) / sizeof( linep[0]), sizeof( linep[0]), 0);
-	if ( nr != 2)
+      a.value( action);
+      if ( strstr( action, ".pwg")) {
+	sprintf( fname, "$pwrp_exe/%s", cdh_Low(action));
+	
+	dcli_translate_filename( fname, fname);
+	
+	ifstream fpg( fname);
+	if ( !fpg)
 	  continue;
 
-	nr = sscanf( linep[0], "%d", &tag);
-	if ( nr != 1)
-	  continue;
+	while ( fpg.getline( line, sizeof(line))) {
+	  nr = dcli_parse( line , " ", "", (char *)linep, 
+			   sizeof( linep) / sizeof( linep[0]), sizeof( linep[0]), 0);
+	  if ( nr != 2)
+	    continue;
 
-	switch ( tag) {
-	case ge_eSave_DigLowColor_attribute:
-	case ge_eSave_DigColor_attribute:
-	case ge_eSave_DigError_attribute:
-	case ge_eSave_DigWarning_attribute:
-	case ge_eSave_Invisible_attribute:
-	case ge_eSave_DigBorder_attribute:
-	case ge_eSave_DigText_attribute:
-	case ge_eSave_ValueInput_minvalue_attr:
-	case ge_eSave_ValueInput_maxvalue_attr:
-	case ge_eSave_Rotate_attribute:
-	case ge_eSave_Move_move_x_attribute:
-	case ge_eSave_Move_move_y_attribute:
-	case ge_eSave_Move_scale_x_attribute:
-	case ge_eSave_Move_scale_y_attribute:
-	case ge_eSave_AnalogShift_attribute:
-	case ge_eSave_DigShift_attribute:
-	case ge_eSave_Animation_attribute:
-	case ge_eSave_Bar_attribute:
-	case ge_eSave_Bar_minvalue_attr:
-	case ge_eSave_Bar_maxvalue_attr:
-	case ge_eSave_Trend_attribute1:
-	case ge_eSave_Trend_attribute2:
-	case ge_eSave_Trend_minvalue_attr1:
-	case ge_eSave_Trend_maxvalue_attr1:
-	case ge_eSave_Trend_minvalue_attr2:
-	case ge_eSave_Trend_maxvalue_attr2:
-	case ge_eSave_DigFlash_attribute:
-	case ge_eSave_FillLevel_attribute:
-	case ge_eSave_FillLevel_minvalue_attr:
-	case ge_eSave_FillLevel_maxvalue_attr:
-	case ge_eSave_Table_attribute1:
-	case ge_eSave_Table_sel_attribute1:
-	case ge_eSave_StatusColor_attribute:
-	case ge_eSave_DigSound_attribute:
-	case ge_eSave_XY_Curve_x_attr:
-	case ge_eSave_XY_Curve_y_attr:
-	case ge_eSave_XY_Curve_y_minvalue_attr:
-	case ge_eSave_XY_Curve_y_maxvalue_attr:
-	case ge_eSave_XY_Curve_x_minvalue_attr:
-	case ge_eSave_XY_Curve_x_maxvalue_attr:
-	case ge_eSave_DigCommand_attribute:
-	case ge_eSave_Slider_minvalue_attr:
-	case ge_eSave_Slider_maxvalue_attr:
-	case ge_eSave_Slider_insensitive_attr:
-	case ge_eSave_AnalogColor_attribute:
-	case ge_eSave_DigSound_soundobject:
-	case ge_eSave_PopupMenu_ref_object: {
-	  if ( ( s = strchr( linep[1], '#')))
-	    *s = 0;
+	  nr = sscanf( linep[0], "%d", &tag);
+	  if ( nr != 1)
+	    continue;
 
-	  if ( linep[1][0] == '!')
-	    strcpy( &linep[1][0], &linep[1][1]);
-
-	  wb_attribute al = m_sp->attribute(linep[1]);
-	  if (!al)
-	    break;
-
-	  int len = strlen(linep[1]);
-	  if ( len > 12 &&
-	       cdh_NoCaseStrcmp( &linep[1][len - 12], ".ActualValue") == 0) {
-	    linep[1][len - 12] = 0;
-	    al = m_sp->attribute(linep[1]);
-	    if ( !al)
+	  switch ( tag) {
+	  case ge_eSave_DigLowColor_attribute:
+	  case ge_eSave_DigColor_attribute:
+	  case ge_eSave_DigError_attribute:
+	  case ge_eSave_DigWarning_attribute:
+	  case ge_eSave_Invisible_attribute:
+	  case ge_eSave_DigBorder_attribute:
+	  case ge_eSave_DigText_attribute:
+	  case ge_eSave_Value_decimals_attr:
+	  case ge_eSave_ValueInput_minvalue_attr:
+	  case ge_eSave_ValueInput_maxvalue_attr:
+	  case ge_eSave_Rotate_attribute:
+	  case ge_eSave_Move_move_x_attribute:
+	  case ge_eSave_Move_move_y_attribute:
+	  case ge_eSave_Move_scale_x_attribute:
+	  case ge_eSave_Move_scale_y_attribute:
+	  case ge_eSave_AnalogShift_attribute:
+	  case ge_eSave_DigShift_attribute:
+	  case ge_eSave_Animation_attribute:
+	  case ge_eSave_Bar_attribute:
+	  case ge_eSave_Bar_minvalue_attr:
+	  case ge_eSave_Bar_maxvalue_attr:
+	  case ge_eSave_Trend_attribute1:
+	  case ge_eSave_Trend_attribute2:
+	  case ge_eSave_Trend_minvalue_attr1:
+	  case ge_eSave_Trend_maxvalue_attr1:
+	  case ge_eSave_Trend_minvalue_attr2:
+	  case ge_eSave_Trend_maxvalue_attr2:
+	  case ge_eSave_Trend_mark1_attr:
+	  case ge_eSave_Trend_mark2_attr:
+	  case ge_eSave_DigFlash_attribute:
+	  case ge_eSave_FillLevel_attribute:
+	  case ge_eSave_FillLevel_minvalue_attr:
+	  case ge_eSave_FillLevel_maxvalue_attr:
+	  case ge_eSave_Table_attribute1:
+	  case ge_eSave_Table_sel_attribute1:
+	  case ge_eSave_StatusColor_attribute:
+	  case ge_eSave_DigSound_attribute:
+	  case ge_eSave_XY_Curve_x_attr:
+	  case ge_eSave_XY_Curve_y_attr:
+	  case ge_eSave_XY_Curve_y_minvalue_attr:
+	  case ge_eSave_XY_Curve_y_maxvalue_attr:
+	  case ge_eSave_XY_Curve_x_minvalue_attr:
+	  case ge_eSave_XY_Curve_x_maxvalue_attr:
+	  case ge_eSave_XY_Curve_x_mark1_attr:
+	  case ge_eSave_XY_Curve_x_mark2_attr:
+	  case ge_eSave_XY_Curve_y_mark1_attr:
+	  case ge_eSave_XY_Curve_y_mark2_attr:
+	  case ge_eSave_Pie_attribute1:
+	  case ge_eSave_Pie_attribute2:
+	  case ge_eSave_Pie_attribute3:
+	  case ge_eSave_Pie_attribute4:
+	  case ge_eSave_Pie_attribute5:
+	  case ge_eSave_Pie_attribute6:
+	  case ge_eSave_Pie_attribute7:
+	  case ge_eSave_Pie_attribute8:
+	  case ge_eSave_Pie_attribute9:
+	  case ge_eSave_Pie_attribute10:
+	  case ge_eSave_Pie_attribute11:
+	  case ge_eSave_Pie_attribute12:
+	  case ge_eSave_BarChart_attribute1:
+	  case ge_eSave_BarChart_attribute2:
+	  case ge_eSave_BarChart_attribute3:
+	  case ge_eSave_BarChart_attribute4:
+	  case ge_eSave_BarChart_attribute5:
+	  case ge_eSave_BarChart_attribute6:
+	  case ge_eSave_BarChart_attribute7:
+	  case ge_eSave_BarChart_attribute8:
+	  case ge_eSave_BarChart_attribute9:
+	  case ge_eSave_BarChart_attribute10:
+	  case ge_eSave_BarChart_attribute11:
+	  case ge_eSave_BarChart_attribute12:
+	  case ge_eSave_Axis_minvalue_attr:
+	  case ge_eSave_Axis_maxvalue_attr:
+	  case ge_eSave_DigFourShift_attribute1:
+	  case ge_eSave_DigFourShift_attribute2:
+	  case ge_eSave_DigFourShift_attribute3:
+	  case ge_eSave_ScrollingText_attribute:
+	  case ge_eSave_DigBackgroundColor_attribute:
+	  case ge_eSave_DigSwap_attribute:
+	  case ge_eSave_DigScript_attribute:
+	  case ge_eSave_DigCommand_attribute:
+	  case ge_eSave_Slider_minvalue_attr:
+	  case ge_eSave_Slider_maxvalue_attr:
+	  case ge_eSave_Slider_insensitive_attr:
+	  case ge_eSave_AnalogColor_attribute:
+	  case ge_eSave_DigSound_soundobject:
+	  case ge_eSave_PopupMenu_ref_object: {
+	    if ( ( s = strchr( linep[1], '#')))
+	      *s = 0;
+	    
+	    if ( linep[1][0] == '!')
+	      strcpy( &linep[1][0], &linep[1][1]);
+	    
+	    wb_attribute al = m_sp->attribute(linep[1]);
+	    if (!al)
 	      break;
-	  }
-	  switch ( al.tid()) {
-	  case pwr_cClass_Di:
-	  case pwr_cClass_Do:
-	  case pwr_cClass_Dv:
-	  case pwr_cClass_Ai:
-	  case pwr_cClass_Ao:
-	  case pwr_cClass_Av:
-	  case pwr_cClass_Co:
-	  case pwr_cClass_Ii:
-	  case pwr_cClass_Io:
-	  case pwr_cClass_Iv:
-	  case pwr_cClass_Sv:
-	  case pwr_cClass_ATv:
-	  case pwr_cClass_DTv: {
-	    sCrrKey key;
 
-	    key.target = al.aref();
-	    key.reference = cdh_ObjidToAref( o.oid());
-	    key.type = crrgen_eType_Read;
-	    tree_Insert(&sts, m_signal_th, &key);
-	    break;
-	  }
-	  default: {
-	    sCrrKey key;
+	    int len = strlen(linep[1]);
+	    if ( len > 12 &&
+		 cdh_NoCaseStrcmp( &linep[1][len - 12], ".ActualValue") == 0) {
+	      linep[1][len - 12] = 0;
+	      al = m_sp->attribute(linep[1]);
+	      if ( !al)
+		break;
+	    }
+	    switch ( al.tid()) {
+	    case pwr_cClass_Di:
+	    case pwr_cClass_Do:
+	    case pwr_cClass_Dv:
+	    case pwr_cClass_Ai:
+	    case pwr_cClass_Ao:
+	    case pwr_cClass_Av:
+	    case pwr_cClass_Co:
+	    case pwr_cClass_Ii:
+	    case pwr_cClass_Io:
+	    case pwr_cClass_Iv:
+	    case pwr_cClass_Sv:
+	    case pwr_cClass_ATv:
+	    case pwr_cClass_DTv: {
+	      sCrrKey key;
 
-	    key.target = al.aref();
-	    key.reference = cdh_ObjidToAref( o.oid());
-	    key.type = crrgen_eType_Read;
-	    tree_Insert(&sts, m_object_th, &key);
-	  }
-	  }
-	  break;
-	}
-	case ge_eSave_Value_attribute:
-	case ge_eSave_SetDig_attribute:
-	case ge_eSave_ResetDig_attribute:
-	case ge_eSave_ToggleDig_attribute:
-	case ge_eSave_StoDig_attribute:
-	case ge_eSave_IncrAnalog_attribute:
-	case ge_eSave_RadioButton_attribute:
-	case ge_eSave_Slider_attribute:
-	case ge_eSave_OptionMenu_attribute: {
-	  if ( ( s = strchr( linep[1], '#')))
-	    *s = 0;
-
-	  if ( linep[1][0] == '!')
-	    strcpy( &linep[1][0], &linep[1][1]);
-
-	  wb_attribute al = m_sp->attribute(linep[1]);
-	  if (!al)
-	    break;
-
-	  int len = strlen(linep[1]);
-	  if ( len > 12 &&
-	       cdh_NoCaseStrcmp( &linep[1][len - 12], ".ActualValue") == 0) {
-	    linep[1][len - 12] = 0;
-	    al = m_sp->attribute(linep[1]);
-	    if ( !al)
+	      key.target = al.aref();
+	      key.reference = cdh_ObjidToAref( o.oid());
+	      key.type = crrgen_eType_Read;
+	      tree_Insert(&sts, m_signal_th, &key);
 	      break;
-	  }
-	  switch ( al.tid()) {
-	  case pwr_cClass_Di:
-	  case pwr_cClass_Do:
-	  case pwr_cClass_Dv:
-	  case pwr_cClass_Ai:
-	  case pwr_cClass_Ao:
-	  case pwr_cClass_Av:
-	  case pwr_cClass_Co:
-	  case pwr_cClass_Ii:
-	  case pwr_cClass_Io:
-	  case pwr_cClass_Iv:
-	  case pwr_cClass_Sv:
-	  case pwr_cClass_ATv:
-	  case pwr_cClass_DTv: {
-	    sCrrKey key;
+	    }
+	    default: {
+	      sCrrKey key;
 
-	    key.target = al.aref();
-	    key.reference = cdh_ObjidToAref( o.oid());
-	    key.type = crrgen_eType_Write;
-	    tree_Insert(&sts, m_signal_th, &key);
+	      key.target = al.aref();
+	      key.reference = cdh_ObjidToAref( o.oid());
+	      key.type = crrgen_eType_Read;
+	      tree_Insert(&sts, m_object_th, &key);
+	    }
+	    }
 	    break;
 	  }
-	  default: {
-	    sCrrKey key;
+	  case ge_eSave_Value_attribute:
+	  case ge_eSave_SetDig_attribute:
+	  case ge_eSave_ResetDig_attribute:
+	  case ge_eSave_ToggleDig_attribute:
+	  case ge_eSave_StoDig_attribute:
+	  case ge_eSave_IncrAnalog_attribute:
+	  case ge_eSave_RadioButton_attribute:
+	  case ge_eSave_Slider_attribute:
+	  case ge_eSave_OptionMenu_attribute: 
+	  case ge_eSave_SetValue_attribute: {
+	    if ( ( s = strchr( linep[1], '#')))
+	      *s = 0;
 
-	    key.target = al.aref();
-	    key.reference = cdh_ObjidToAref( o.oid());
-	    key.type = crrgen_eType_Write;
-	    tree_Insert(&sts, m_object_th, &key);
+	    if ( linep[1][0] == '!')
+	      strcpy( &linep[1][0], &linep[1][1]);
+
+	    wb_attribute al = m_sp->attribute(linep[1]);
+	    if (!al)
+	      break;
+
+	    int len = strlen(linep[1]);
+	    if ( len > 12 &&
+		 cdh_NoCaseStrcmp( &linep[1][len - 12], ".ActualValue") == 0) {
+	      linep[1][len - 12] = 0;
+	      al = m_sp->attribute(linep[1]);
+	      if ( !al)
+		break;
+	    }
+	    switch ( al.tid()) {
+	    case pwr_cClass_Di:
+	    case pwr_cClass_Do:
+	    case pwr_cClass_Dv:
+	    case pwr_cClass_Ai:
+	    case pwr_cClass_Ao:
+	    case pwr_cClass_Av:
+	    case pwr_cClass_Co:
+	    case pwr_cClass_Ii:
+	    case pwr_cClass_Io:
+	    case pwr_cClass_Iv:
+	    case pwr_cClass_Sv:
+	    case pwr_cClass_ATv:
+	    case pwr_cClass_DTv: {
+	      sCrrKey key;
+
+	      key.target = al.aref();
+	      key.reference = cdh_ObjidToAref( o.oid());
+	      key.type = crrgen_eType_Write;
+	      tree_Insert(&sts, m_signal_th, &key);
+	      break;
+	    }
+	    default: {
+	      sCrrKey key;
+
+	      key.target = al.aref();
+	      key.reference = cdh_ObjidToAref( o.oid());
+	      key.type = crrgen_eType_Write;
+	      tree_Insert(&sts, m_object_th, &key);
+	    }
+	    }
+	    
+	    break;
 	  }
+	  default: ;
 	  }
-	  
-	  break;
 	}
-	default: ;
-	}
+	fpg.close();
       }
-      fpg.close();
     }
   }
-
 
   *rsts = 1;
 }
