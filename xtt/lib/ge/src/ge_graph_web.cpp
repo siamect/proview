@@ -112,6 +112,8 @@ int Graph::generate_web( ldh_tSesContext ldhses, pwr_tOid opplaceweb_oid)
   char          sname[80];
   char		arlist[400];
   pwr_tOName	opplaceweb_name;
+  pwr_tOid	nodeobject_oid;
+  pwr_tAName	nodeobject_name;
 
   ge_get_systemname( sname);
 
@@ -237,6 +239,21 @@ int Graph::generate_web( ldh_tSesContext ldhses, pwr_tOid opplaceweb_oid)
   // Generate html-file for login applet
   strcpy( fname, "$pwrp_web/pwr_login.html");
   dcli_translate_filename( fname, fname);
+
+  // If OpPlaceWeb is positioned under the node object, use $node syntax
+  sts = ldh_GetClassList( ldhses, pwr_eClass_Node, &nodeobject_oid);
+  if ( EVEN(sts)) return sts;
+
+  sts = ldh_ObjidToName( ldhses, nodeobject_oid, ldh_eName_Hierarchy, nodeobject_name, 
+			 sizeof(nodeobject_name), &size);
+  if ( EVEN(sts)) return sts;
+
+  if ( strncmp( nodeobject_name, opplaceweb_name, strlen(nodeobject_name)) == 0) {
+    pwr_tAName tmp;
+    strcpy( tmp, &opplaceweb_name[strlen(nodeobject_name)]);
+    strcpy( opplaceweb_name, "$node");
+    strcat( opplaceweb_name, tmp);
+  }
 
   fp_login.open( fname);
 

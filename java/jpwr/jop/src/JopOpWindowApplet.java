@@ -96,6 +96,19 @@ public class JopOpWindowApplet extends JopApplet
     setSize(new Dimension(370, 570));
     String pwrPlace = this.getParameter("pwrplace");
 
+    System.out.println( "pwrPlace " + pwrPlace);
+    if ( pwrPlace == null) {
+	System.out.println( "No pwrPlace specified in applet");
+	return;
+    }
+
+    if ( pwrPlace.startsWith("$node")) {
+	// Replace with node object
+	CdhrObjid roid = engine.gdh.getNodeObject(0);
+	String name = engine.gdh.objidToName( roid.objid, Cdh.mName_pathStrict).str;
+	pwrPlace = name + pwrPlace.substring(5);
+    }
+
     localPanel = new JopOpWindow( session, (Object)this, pwrPlace);
     contentPane = (JPanel) this.getContentPane();
     contentPane.setLayout(borderLayout1);
