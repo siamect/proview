@@ -871,9 +871,9 @@ static int gcg_cc(
 	if ( 1 /* os & pwr_mOpSys_X86_LINUX */ )
 	{
 	  if (p2 == NULL)
-	    p2 = "Dummy";
+	    p2 = "-";
 	  if (p3 == NULL)
-	    p3 = "Dummy";
+	    p3 = "-";
 
 	  utl_get_projectname( systemname);
 

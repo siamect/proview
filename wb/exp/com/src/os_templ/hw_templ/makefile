@@ -46,7 +46,7 @@ clean_pwr_com := $(patsubst %.pwr_com, clean_%.pwr_com, $(pwr_com_sources))
 .PHONY : all init copy lib exe clean realclean\
          $(clean_sh)
 
-all : init copy | slient
+all : init copy | silent
 
 init : silent
 

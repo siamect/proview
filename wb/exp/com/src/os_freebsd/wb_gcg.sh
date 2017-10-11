@@ -275,7 +275,7 @@ let OpSys_X86_64_OPENBSD=12
 let OpSys_X86_CYGWIN=13
 let OpSys__High=14
 
-vOpSys="custombuild,ppc_lynx,x86_lynx,ppc_linux,x86_linux,x86_64_linux,arm_linux,x86_64_macos,x86_64_freebsd,x86_64_openbsd,x86_cygwin"
+vOpSys="custombuild,undefined,undefined,ppc_lynx,x86_lynx,ppc_linux,x86_linux,x86_64_linux,arm_linux,x86_64_macos,x86_64_freebsd,x86_64_openbsd,x86_cygwin"
 
 let FileType__Low=-1
 let FileType_Process=0

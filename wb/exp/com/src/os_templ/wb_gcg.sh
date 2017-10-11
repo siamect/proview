@@ -272,7 +272,7 @@ let OpSys_X86_64_LINUX=8
 let OpSys_ARM_LINUX=9
 let OpSys__High=10
 
-vOpSys="custombuild,ppc_lynx,x86_lynx,ppc_linux,x86_linux,x86_64_linux,arm_linux"
+vOpSys="custombuild,undefined,undefined,ppc_lynx,x86_lynx,ppc_linux,x86_linux,x86_64_linux,arm_linux"
 
 let FileType__Low=-1
 let FileType_Process=0
