@@ -136,6 +136,7 @@ palette NavigatorPalette
         class CompModePID
         class CompOnOffBurner
         class CompOnOffZone
+	class CompPosit
         class CompPID
         class RunTimeCounter
       }
@@ -1255,6 +1256,7 @@ palette PlcEditorPalette
       class CompImc_Fo
       class CompOnOffBurnerFo
       class CompOnOffZoneFo
+      class CompPositFo
       class BaseMotorAggrFo
       class BaseMotorIncrDecrAggrFo
       class RunTimeCounterFo
