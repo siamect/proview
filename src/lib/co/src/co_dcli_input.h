@@ -56,7 +56,7 @@ extern "C" {
 typedef struct {
 	int	first_command;
 	int	last_command;
-	char	command[DCLI_RECALL_MAX][200];
+	char	command[DCLI_RECALL_MAX][400];
 	} dcli_sRecall;
 
 typedef int dcli_sChannel;

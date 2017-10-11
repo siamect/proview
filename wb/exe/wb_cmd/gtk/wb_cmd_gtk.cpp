@@ -171,7 +171,7 @@ GNU General Public License for more details.\n\n";
 
   if ( str[0] != 0) {
     int nr;
-    char cmd_array[10][200];
+    char cmd_array[10][400];
 
     dcli_remove_blank( str, str);
     nr = dcli_parse( str, ";", "", (char *)cmd_array,

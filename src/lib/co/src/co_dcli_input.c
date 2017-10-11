@@ -88,7 +88,7 @@ static unsigned short state_table[3][256];
 
 static int	r_print( dcli_sChannel *chn, char *format, ...)
 {
-	char	buff[200];
+	char	buff[400];
 	int	sts;
 	va_list ap;
 	int	len;
@@ -346,7 +346,7 @@ static int	dcli_recall_insert( 	dcli_sRecall 	*recall,
 	recall->last_command++;
 	if ( recall->last_command >= DCLI_RECALL_MAX)
 	  recall->last_command = 0;
-	strncpy( &(recall->command[recall->last_command][0]), command, 200);
+	strncpy( &(recall->command[recall->last_command][0]), command, 400);
 	if ( recall->first_command == recall->last_command)
 	  recall->first_command++;
 	if ( recall->first_command > DCLI_RECALL_MAX)
@@ -462,10 +462,10 @@ int	dcli_get_input_string( 	dcli_sChannel	*chn,
 				void		*timeout_arg,
 				const char     	*prompt)
 {
-	char		input_str[200];
-	char		out_str[200];
-	char		dum_str[200];
-	int		maxlen = 199;
+	char		input_str[400];
+	char		out_str[400];
+	char		dum_str[400];
+	int		maxlen = 399;
 	unsigned long	terminator;
 	int		index;
 	int		recall_index = 0;
