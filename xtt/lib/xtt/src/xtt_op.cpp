@@ -279,7 +279,7 @@ void Op::activate_help_opwin()
 
 void Op::activate_help_proview()
 {
-  CoXHelp::dhelp( "version", "", navh_eHelpFile_Other, "$pwr_exe/xtt_version_help.dat", 0);
+  CoXHelp::dhelp( "version", "", navh_eHelpFile_Other, "$pwr_load/xtt_version_help.dat", 0);
 }
 
 void Op::jop_command_cb( void *op, char *command)
