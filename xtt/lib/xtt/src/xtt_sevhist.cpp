@@ -95,11 +95,16 @@ XttSevHist::XttSevHist( void *parent_ctx,
   memcpy( onamev, xn_onamev, oid_cnt * sizeof(onamev[0]));
   memcpy( sevhistobjectv, xn_sevhistobjectv, oid_cnt * sizeof(sevhistobjectv[0]));
 
-  time_Period( time_ePeriod_OneHour, &from, &to, 0, 0);
+  time_GetTime( &to);
+  from.tv_sec = to.tv_sec - 3600;
+  from.tv_nsec = to.tv_nsec;
+  // time_Period( time_ePeriod_OneHour, &from, &to, 0, 0);
   if ( oid_cnt == 1) {
     get_data( sts, from, to);
     if ( *sts == SEV__NOPOINTS) {
       // Try month
+      from.tv_sec = to.tv_sec - 31 * 24 * 3600;
+      from.tv_nsec = to.tv_nsec;
       time_Period( time_ePeriod_OneMonth, &from, &to, 0, 0);
       get_data( sts, from, to);
       if ( EVEN(*sts)) return;
