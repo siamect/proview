@@ -40,6 +40,7 @@
 #include "co_ver.h"
 #include "co_time.h"
 #include "co_dcli.h"
+#include "rt_ini_load.h"
 #include "ini.h"
 #include "rt_errl.h"
 #include "rt_errh.h"
@@ -126,6 +127,13 @@ static pwr_tStatus start( ini_sContext *cp)
   if (!checkErrors(cp))
     exit(0);
 
+  if ( cp->flags.b.rootvolume) {
+    ini_CreateDb(&sts, cp);
+    ini_LoadNode(&sts, cp);
+    ini_BuildNode(&sts, cp);
+    ini_LoadSev(&sts, cp);
+  }
+
   /* Logfile is always $pwrp_log/pwr.log from V4.0.0 and handled by Linux log rotation */ 
 
   char fname[256];
@@ -141,11 +149,11 @@ static pwr_tStatus start( ini_sContext *cp)
 
 
   ini_ProcTable(&sts, cp);
-  ini_ProcIter(&sts, cp, proc_mProcess_system, ini_ProcStart);
-  ini_ProcIter(&sts, cp, proc_mProcess_system, ini_ProcPrio);
+  ini_ProcIter(&sts, cp, proc_mProcess_system, 0, ini_ProcStart);
+  ini_ProcIter(&sts, cp, proc_mProcess_system, 0, ini_ProcPrio);
 
-  ini_ProcIter(&sts, cp, proc_mProcess_user, ini_ProcStart);
-  ini_ProcIter(&sts, cp, proc_mProcess_user, ini_ProcPrio);
+  ini_ProcIter(&sts, cp, proc_mProcess_user, 0, ini_ProcStart);
+  ini_ProcIter(&sts, cp, proc_mProcess_user, 0, ini_ProcPrio);
 
   qcom_Init(&sts, &aid, "pwr_sev_init");
   if (EVEN(sts)) {
@@ -159,7 +167,8 @@ static pwr_tStatus start( ini_sContext *cp)
     exit(sts);
   }
          
-  // ini_SetSystemStatus( cp, PWR__RUNNING);
+  if ( cp->flags.b.rootvolume)
+    ini_SetSystemStatus( cp, PWR__RUNNING);
   errh_SetStatus( PWR__SRUN);
 
   return sts;

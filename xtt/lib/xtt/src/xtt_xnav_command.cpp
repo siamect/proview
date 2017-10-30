@@ -4630,6 +4630,7 @@ static int	xnav_open_func(	void		*client_data,
     pwr_tAName name_array[10];
     int i, names;
     int plotgroup_found = 0;
+    int sevitem_found = 0;
     pwr_sAttrRef plotgroup = pwr_cNAttrRef;
     pwr_tClassId classid;
     pwr_tObjid node_objid;
@@ -4761,12 +4762,44 @@ static int	xnav_open_func(	void		*client_data,
 	plotgroup = sevhist_aref;
 	plotgroup_found = 1;
 	break;
+      case pwr_cClass_SevItemInt:
+      case pwr_cClass_SevItemFloat:
+      case pwr_cClass_SevItemBoolean:
+	sevitem_found = 1;
+	break;
       default:
 	xnav->message('E', "Error in object class");
 	return XNAV__HOLDCOMMAND;
       }
 
-      if ( plotgroup_found) {
+      if ( sevitem_found) {
+	pwr_sClass_SevItem item;
+	sts = gdh_GetObjectInfoAttrref( &sevhist_aref, &item, sizeof(item));
+	if ( EVEN(sts)) return sts;
+
+	oidv[0] = item.Oid;
+	oid_cnt = 1;
+	sevhistobjectv[0] = item.NoOfAttr > 1;
+	sevhistobjectv[1] = false;
+	if( !sevhistobjectv[0] ) {
+	  strcpy( anamev[0], item.Attr);
+	  strcpy( onamev[0], item.ObjectName);
+	}
+	else {
+	  char *s;
+	  pwr_tAName aname;
+	  s = strchr( item.ObjectName, '.');
+	  if ( !s) {
+	    //It is a complete object
+	    aname[0] = '\0';
+	  }
+	  else {  
+	    strcpy( aname, s+1);
+	  }
+	  strcpy( anamev[0], aname);
+	}
+      }
+      else if ( plotgroup_found) {
 	pwr_sClass_PlotGroup plot;
 	pwr_tCid cid;
 	int j;
@@ -4901,21 +4934,27 @@ static int	xnav_open_func(	void		*client_data,
       }
 
       // Get server and connect to server
-      sts = gdh_ArefANameToAref( &sevhist_aref, "ThreadObject", &attr_aref);
-      if ( EVEN(sts)) return sts;
-
-      sts = gdh_GetObjectInfoAttrref( &attr_aref, &histthread_oid, sizeof(histthread_oid));
-      if ( EVEN(sts)) return sts;
-
-      histthread_aref = cdh_ObjidToAref( histthread_oid);
-      sts = gdh_ArefANameToAref( &histthread_aref, "ServerNode", &attr_aref);
-      if ( EVEN(sts)) {
-        xnav->message('E', "Error in SevHist configuration");
-        return XNAV__HOLDCOMMAND;
+      if ( sevitem_found) {
+	// Connect to local node
+	syi_NodeName( &sts, server_node, sizeof(server_node));
       }
+      else {
+	sts = gdh_ArefANameToAref( &sevhist_aref, "ThreadObject", &attr_aref);
+	if ( EVEN(sts)) return sts;
 
-      sts = gdh_GetObjectInfoAttrref( &attr_aref, server_node, sizeof(server_node));
-      if ( EVEN(sts)) return sts;
+	sts = gdh_GetObjectInfoAttrref( &attr_aref, &histthread_oid, sizeof(histthread_oid));
+	if ( EVEN(sts)) return sts;
+
+	histthread_aref = cdh_ObjidToAref( histthread_oid);
+	sts = gdh_ArefANameToAref( &histthread_aref, "ServerNode", &attr_aref);
+	if ( EVEN(sts)) {
+	  xnav->message('E', "Error in SevHist configuration");
+	  return XNAV__HOLDCOMMAND;
+	}
+
+	sts = gdh_GetObjectInfoAttrref( &attr_aref, server_node, sizeof(server_node));
+	if ( EVEN(sts)) return sts;
+      }
 
       if ( !xnav->scctx) {
         sevcli_init( &sts, &xnav->scctx);
@@ -4941,14 +4980,15 @@ static int	xnav_open_func(	void		*client_data,
     }
 
     xnav->set_clock_cursor();
-    if ( plotgroup_found) {
+    if ( plotgroup_found || sevitem_found) {
       hist = xnav->xttsevhist_new( title_str, oidv, anamev, onamev, sevhistobjectv, 
 				   xnav->scctx, 0, width, height, options, xnav->gbl.color_theme, 
 				   basewidget, &sts);
       if ( ODD(sts)) {
         hist->help_cb = xnav_sevhist_help_cb;
         hist->close_cb = xnav_sevhist_close_cb;
-	//hist->get_select_cb = xnav_sevhist_get_select_cb;
+	if ( sevitem_found)
+	  hist->get_select_cb = xnav_sevhist_get_select_cb;
 	xnav->appl.insert( applist_eType_SevHist, (void *)hist, oidv[0], "",
 			   NULL);
       }
@@ -6067,6 +6107,7 @@ static int xnav_sevhist_get_select_cb( void *ctx, pwr_tOid *oid, char *aname, ch
   pwr_tAName name;
   pwr_tCid cid;
   pwr_tAName arefname;
+  pwr_tOName attrname;
   char *s;
   pwr_tOid ch;
 
@@ -6079,6 +6120,9 @@ static int xnav_sevhist_get_select_cb( void *ctx, pwr_tOid *oid, char *aname, ch
   sts = gdh_GetObjectClass( sel_aref.Objid, &cid);
   switch ( cid) {
   case pwr_cClass_SevHist:
+  case pwr_cClass_SevItemFloat:
+  case pwr_cClass_SevItemInt:
+  case pwr_cClass_SevItemBoolean:
     break;
   case pwr_cClass_SevHistObject:
     return 0; // NYI
@@ -6092,6 +6136,9 @@ static int xnav_sevhist_get_select_cb( void *ctx, pwr_tOid *oid, char *aname, ch
 
       switch ( cid) {
       case pwr_cClass_SevHist:
+      case pwr_cClass_SevItemFloat:
+      case pwr_cClass_SevItemInt:
+      case pwr_cClass_SevItemBoolean:
 	sel_aref = cdh_ObjidToAref( ch);
 	break;
       default:
@@ -6100,22 +6147,51 @@ static int xnav_sevhist_get_select_cb( void *ctx, pwr_tOid *oid, char *aname, ch
     }
   }
 
-  sts = gdh_ArefANameToAref( &sel_aref, "Attribute", &attr_aref);
-  if ( EVEN(sts)) return sts;
+  switch ( cid) {
+  case pwr_cClass_SevHist:
+    sts = gdh_ArefANameToAref( &sel_aref, "Attribute", &attr_aref);
+    if ( EVEN(sts)) return sts;
   
-  sts = gdh_GetObjectInfoAttrref( &attr_aref, &aref, sizeof(aref));
-  if ( EVEN(sts)) return sts;
+    sts = gdh_GetObjectInfoAttrref( &attr_aref, &aref, sizeof(aref));
+    if ( EVEN(sts)) return sts;
   
-  sts = gdh_AttrrefToName( &aref, arefname, sizeof(arefname), cdh_mNName);
-  if ( EVEN(sts)) return sts;
+    sts = gdh_AttrrefToName( &aref, arefname, sizeof(arefname), cdh_mNName);
+    if ( EVEN(sts)) return sts;
 
-  s = strchr( arefname, '.');
-  if ( !s) return 0;
+    s = strchr( arefname, '.');
+    if ( !s) return 0;
   
-  *s = 0;
-  strcpy( oname, arefname);
-  strcpy( aname, s+1);
-  *oid = aref.Objid;
+    *s = 0;
+
+    strcpy( oname, arefname);
+    strcpy( aname, s+1);
+    *oid = aref.Objid;
+    break;
+  case pwr_cClass_SevItemFloat:
+  case pwr_cClass_SevItemInt:
+  case pwr_cClass_SevItemBoolean:
+    sts = gdh_ArefANameToAref( &sel_aref, "ObjectName", &attr_aref);
+    if ( EVEN(sts)) return sts;
+  
+    sts = gdh_GetObjectInfoAttrref( &attr_aref, &arefname, sizeof(arefname));
+    if ( EVEN(sts)) return sts;
+  
+    sts = gdh_ArefANameToAref( &sel_aref, "Attr", &attr_aref);
+    if ( EVEN(sts)) return sts;
+  
+    sts = gdh_GetObjectInfoAttrref( &attr_aref, &attrname, sizeof(attrname));
+    if ( EVEN(sts)) return sts;
+  
+    sts = gdh_ArefANameToAref( &sel_aref, "Oid", &attr_aref);
+    if ( EVEN(sts)) return sts;
+  
+    sts = gdh_GetObjectInfoAttrref( &attr_aref, oid, sizeof(*oid));
+    if ( EVEN(sts)) return sts;
+  
+    strcpy( oname, arefname);
+    strcpy( aname, attrname);
+    break;
+  }
 
   return XNAV__SUCCESS;
 }
@@ -10350,7 +10426,8 @@ void XNav::open_rttlog( char *name, char *filename)
       basewidget = multiview_main->get_widget();
   }
 
-  gecurve_new( name, filename, NULL, 0, 0, gbl.color_theme, basewidget);
+  GeCurve *c = gecurve_new( name, filename, NULL, 0, 0, gbl.color_theme, basewidget);
+  c->setup( curve_mEnable_CurveType | curve_mEnable_CurveTypeSquare | curve_mEnable_FillCurve);
 }
 
 

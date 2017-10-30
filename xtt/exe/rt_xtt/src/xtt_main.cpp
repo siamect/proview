@@ -391,6 +391,9 @@ void Xtt::activate_opengraph()
       return;
     case pwr_cClass_SevHist:
     case pwr_cClass_SevHistObject:
+    case pwr_cClass_SevItemInt:
+    case pwr_cClass_SevItemFloat:
+    case pwr_cClass_SevItemBoolean:
       // Open history
       sprintf( cmd, "open history /name=%s /title=\"%s\"", vname, name);
       xnav->command( cmd);

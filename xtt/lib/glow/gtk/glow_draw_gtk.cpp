@@ -2489,13 +2489,27 @@ int GlowDrawGtk::draw_point( GlowWind *wind, int x1, int y1, glow_eDrawType gc_t
 }
 
 int GlowDrawGtk::draw_points( GlowWind *wind, glow_sPointX *points, int point_num, 
-	glow_eDrawType gc_type)
+			      glow_eDrawType gc_type, int idx)
 {
   if ( ctx->nodraw) return 1;
   DrawWindGtk *w = (DrawWindGtk *) wind->window;
 
   if ( w->clip_on)
     set_clip( w, get_gc( this, gc_type, 0));
+
+  if ( idx > 0) {
+    for ( int i = 0; i < point_num; i++) {
+      if ( !w->draw_buffer_only)
+	gdk_draw_rectangle( w->window,
+			    get_gc( this, gc_type, 0), 1, points[i].x - idx/2, points[i].y, idx, idx);
+      if ( w->double_buffer_on)
+	gdk_draw_rectangle( w->buffer,
+			    get_gc( this, gc_type, 0), 1, points[i].x - idx/2, points[i].y, idx, idx);
+    }
+    if ( w->clip_on)
+      reset_clip( w, get_gc( this, gc_type, 0));
+    return 1;
+  }
 
   GdkPoint* gpoints = points_to_gdk_points( points, point_num);
   if ( !w->draw_buffer_only)

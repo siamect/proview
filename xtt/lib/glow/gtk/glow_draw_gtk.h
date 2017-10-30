@@ -186,7 +186,7 @@ class GlowDrawGtk : public GlowDraw {
   virtual int clip_level( GlowWind *w);
   virtual int draw_point( GlowWind *w, int x1, int y1, glow_eDrawType gc_type);
   virtual int draw_points( GlowWind *w, glow_sPointX *points, int point_num, 
-	      glow_eDrawType gc_type);
+			   glow_eDrawType gc_type, int idx = 0);
   virtual void set_click_sensitivity( GlowWind *w, int value);
   virtual void draw_background( GlowWind *wind, int x, int y, int w, int h);
   virtual int create_buffer( GlowWind *w);

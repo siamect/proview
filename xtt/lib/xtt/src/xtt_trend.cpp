@@ -507,9 +507,9 @@ void XttTrend::setup()
        return;
 
   if ( trend_tid == pwr_cClass_DsTrendCurve)
-    curve->setup( curve_mEnable_Snapshot | curve_mEnable_Add);
+    curve->setup( curve_mEnable_Snapshot | curve_mEnable_Add | curve_mEnable_CurveType | curve_mEnable_FillCurve);
   else
-    curve->setup( curve_mEnable_Add);
+    curve->setup( curve_mEnable_Add | curve_mEnable_CurveType | curve_mEnable_FillCurve);
 }
 
 void XttTrend::trend_close_cb( void *ctx)

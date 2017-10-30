@@ -47,13 +47,13 @@
 #include "glow_growctx.h"
 
 GrowCurve::GrowCurve( GrowCtx *glow_ctx, const char *name, glow_sCurveData *data,
-                double x, double y,
-		double w, double h, glow_eDrawType border_d_type, int line_w,
-		glow_mDisplayLevel display_lev,
-		int fill_rect, int display_border, 
-		glow_eDrawType fill_d_type, int nodraw) : 
-                GrowTrend(glow_ctx,name,x,y,w,h,border_d_type,line_w,
-		display_lev, fill_rect, display_border, fill_d_type, 1)
+		      double x, double y,
+		      double w, double h, glow_eDrawType border_d_type, int line_w,
+		      glow_mDisplayLevel display_lev,
+		      int fill_rect, int display_border, 
+		      glow_eDrawType fill_d_type, int nodraw) : 
+  GrowTrend(glow_ctx,name,x,y,w,h,border_d_type,line_w,
+	    display_lev, fill_rect, display_border, fill_d_type, 1), type(glow_eCurveType_Line) 
 {
   if ( data)
     configure_curves( data);
@@ -62,14 +62,21 @@ GrowCurve::GrowCurve( GrowCtx *glow_ctx, const char *name, glow_sCurveData *data
 
 }
 
+void GrowCurve::set_type( glow_eCurveType t)
+{
+  type = t;
+}
+
 void GrowCurve::configure_curves( glow_sCurveData *data)
 {
   glow_eDrawType dt, dt_fill;
   int points;
   glow_sPoint *pointarray;
   glow_sPoint *point_p;
-  int	i, idx;
-  double y_value, x_value;
+  int	i, idx = 0;
+  double y_value, x_value, prev_y_value;
+  glow_eCurveType curve_type;
+  int pix = 0;
 
   // Remove old curves
   ctx->nodraw++;
@@ -91,93 +98,335 @@ void GrowCurve::configure_curves( glow_sCurveData *data)
       curve_fill_drawtype[i] = data->fillcolor[i];
     }
 
-    points = no_of_points;
-    if ( fill_curve)
-      points += 2;
     curve_width = MIN( DRAW_TYPE_SIZE, MAX( 1, curve_width));
 
-    pointarray = (glow_sPoint *) calloc( points, sizeof(glow_sPoint));
     for ( idx = 0; idx < curve_cnt; idx++) {
-      point_p = pointarray;
-      for ( i = 0; i < points; i++) {
-	if ( !fill_curve) {
-	  if ( data->x_reverse)
-	    x_value = ur.x - (data->x_data[0][i] - data->x_min_value[0]) / 
-	      (data->x_max_value[0] - data->x_min_value[0]) * (ur.x - ll.x);
-	  else
-	    x_value = ll.x + (data->x_data[0][i] - data->x_min_value[0]) / 
-	      (data->x_max_value[0] - data->x_min_value[0]) * (ur.x - ll.x);
 
-	  x_value = MAX( ll.x, MIN( x_value, ur.x));
+      if ( data->curve_type[idx] == glow_eCurveType_Inherit)
+	curve_type = type;
+      else
+	curve_type = data->curve_type[idx];
 
-	  y_value = ur.y - (data->y_data[idx][i] - y_min_value[idx]) / 
-	    (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
-
-	  y_value = MAX( ll.y, MIN( y_value, ur.y));
-
-	  point_p->y = y_value;
-	  point_p->x = x_value;
-	}
-	else {
-	  if ( i == 0) {
-	    point_p->y = ur.y;
-	    // point_p->x = ur.x;
+      switch ( curve_type) {
+      case glow_eCurveType_Inherit:
+      case glow_eCurveType_Line:
+      case glow_eCurveType_Points:
+      case glow_eCurveType_LinePoints:
+	points = no_of_points;
+	if ( fill_curve)
+	  points += 2;
+	pointarray = (glow_sPoint *) calloc( points, sizeof(glow_sPoint));
+	point_p = pointarray;
+	for ( i = 0; i < points; i++) {
+	  if ( !fill_curve) {
 	    if ( data->x_reverse)
-	      point_p->x = ur.x - (data->x_data[0][i] - data->x_min_value[0]) / 
-	        (data->x_max_value[0] - data->x_min_value[0]) * (ur.x - ll.x);
+	      x_value = ur.x - (data->x_data[0][i] - data->x_min_value[0]) / 
+		(data->x_max_value[0] - data->x_min_value[0]) * (ur.x - ll.x);
 	    else
-	      point_p->x = ll.x + (data->x_data[0][i] - data->x_min_value[0]) / 
-	        (data->x_max_value[0] - data->x_min_value[0]) * (ur.x - ll.x);
-	  }
-	  else if ( i == points - 1) {
-	    point_p->y = ur.y;
-	    if ( data->x_reverse)
-	      point_p->x = ur.x - (data->x_data[0][i-2] - data->x_min_value[0]) / 
-	        (data->x_max_value[0] - data->x_min_value[0]) * (ur.x - ll.x);
-	    else
-	      point_p->x = ll.x + (data->x_data[0][i-2] - data->x_min_value[0]) / 
-	        (data->x_max_value[0] - data->x_min_value[0]) * (ur.x - ll.x);
-	    // point_p->x = ll.x;
-	  }
-	  else {
-	    if ( data->x_reverse)
-	      x_value = ur.x - (data->x_data[0][i-1] - data->x_min_value[0]) / 
-	        (data->x_max_value[0] - data->x_min_value[0]) * (ur.x - ll.x);
-	    else
-	      x_value = ll.x + (data->x_data[0][i-1] - data->x_min_value[0]) / 
-	        (data->x_max_value[0] - data->x_min_value[0]) * (ur.x - ll.x);
-
+	      x_value = ll.x + (data->x_data[0][i] - data->x_min_value[0]) / 
+		(data->x_max_value[0] - data->x_min_value[0]) * (ur.x - ll.x);
+	    
 	    x_value = MAX( ll.x, MIN( x_value, ur.x));
-
-	    y_value = ur.y - (data->y_data[idx][i-1] - y_min_value[idx]) / 
+	    
+	    y_value = ur.y - (data->y_data[idx][i] - y_min_value[idx]) / 
 	      (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
-
+	    
 	    y_value = MAX( ll.y, MIN( y_value, ur.y));
-
+	    
 	    point_p->y = y_value;
 	    point_p->x = x_value;
 	  }
+	  else {
+	    if ( i == 0) {
+	      point_p->y = ur.y;
+	      // point_p->x = ur.x;
+	      if ( data->x_reverse)
+		point_p->x = ur.x - (data->x_data[0][i] - data->x_min_value[0]) / 
+		  (data->x_max_value[0] - data->x_min_value[0]) * (ur.x - ll.x);
+	      else
+		point_p->x = ll.x + (data->x_data[0][i] - data->x_min_value[0]) / 
+		  (data->x_max_value[0] - data->x_min_value[0]) * (ur.x - ll.x);
+	    }
+	    else if ( i == points - 1) {
+	      point_p->y = ur.y;
+	      if ( data->x_reverse)
+		point_p->x = ur.x - (data->x_data[0][i-2] - data->x_min_value[0]) / 
+		  (data->x_max_value[0] - data->x_min_value[0]) * (ur.x - ll.x);
+	      else
+		point_p->x = ll.x + (data->x_data[0][i-2] - data->x_min_value[0]) / 
+		  (data->x_max_value[0] - data->x_min_value[0]) * (ur.x - ll.x);
+	      // point_p->x = ll.x;
+	    }
+	    else {
+	      if ( data->x_reverse)
+		x_value = ur.x - (data->x_data[0][i-1] - data->x_min_value[0]) / 
+		  (data->x_max_value[0] - data->x_min_value[0]) * (ur.x - ll.x);
+	      else
+		x_value = ll.x + (data->x_data[0][i-1] - data->x_min_value[0]) / 
+		  (data->x_max_value[0] - data->x_min_value[0]) * (ur.x - ll.x);
+	      
+	      x_value = MAX( ll.x, MIN( x_value, ur.x));
+	      
+	      y_value = ur.y - (data->y_data[idx][i-1] - y_min_value[idx]) / 
+		(y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
+	      
+	      y_value = MAX( ll.y, MIN( y_value, ur.y));
+
+	      point_p->y = y_value;
+	      point_p->x = x_value;
+	    }
+	  }
+	  point_p++;
 	}
-	point_p++;
-      }
-
-      if ( curve_drawtype[idx] != glow_eDrawType_Inherit)
-	dt = curve_drawtype[idx];
-      else
-	dt = draw_type;
+	if ( curve_drawtype[idx] != glow_eDrawType_Inherit)
+	  dt = curve_drawtype[idx];
+	else
+	  dt = draw_type;
       
-      if ( curve_fill_drawtype[idx] != glow_eDrawType_Inherit)
-	dt_fill = curve_fill_drawtype[idx];
-      else
-	dt_fill = draw_type;
+	if ( curve_fill_drawtype[idx] != glow_eDrawType_Inherit)
+	  dt_fill = curve_fill_drawtype[idx];
+	else
+	  dt_fill = draw_type;
+      
+	ctx->nodraw++;
+	curve[idx] = new GrowPolyLine( ctx, "", pointarray, points, dt, 
+				       curve_width,
+				       0, fill_curve, 1, 0, dt_fill, 0, 0, 0, type);
+	ctx->nodraw--;
+	free( (char *) pointarray);
+	break;
 
-      ctx->nodraw++;
-      curve[idx] = new GrowPolyLine( ctx, "", pointarray, points, dt, 
-				     curve_width,
-				     0, fill_curve, 1, 0, dt_fill);
-      ctx->nodraw--;
+      case glow_eCurveType_Square:
+	points = no_of_points * 2;
+	if ( fill_curve)
+	  points += 3;
+	else
+	  points += 1;
+	pointarray = (glow_sPoint *) calloc( points, sizeof(glow_sPoint));
+
+	if ( !fill_curve) {
+	  for ( i = 0; i < data->rows[0]; i++) {
+	    if ( data->x_reverse)
+	      x_value = ur.x - (data->x_data[0][i] - data->x_min_value[0]) / 
+		(data->x_max_value[0] - data->x_min_value[0]) * (ur.x - ll.x);
+	    else
+	      x_value = ll.x + (data->x_data[0][i] - data->x_min_value[0]) / 
+		(data->x_max_value[0] - data->x_min_value[0]) * (ur.x - ll.x);
+	    
+	    x_value = MAX( ll.x, MIN( x_value, ur.x));
+	    
+	    y_value = ur.y - (data->y_data[idx][i] - y_min_value[idx]) / 
+	      (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
+	    
+	    y_value = MAX( ll.y, MIN( y_value, ur.y));
+	    
+	    if ( i == 0) {
+	      pointarray[i*2].y = y_value;
+	      pointarray[i*2].x = ll.x;
+	    }
+	    else {
+	      pointarray[i*2].y = prev_y_value;
+	      pointarray[i*2].x = x_value;
+	    }
+	    pointarray[i*2+1].y = y_value;
+	    pointarray[i*2+1].x = x_value;
+	    prev_y_value = y_value;
+	  }
+	  pointarray[points-1].y = pointarray[points-2].y;
+	  pointarray[points-1].x = ur.x;
+	}
+	else {
+	  // First point
+	  pointarray[0].y = ur.y;
+	  if ( data->x_reverse)
+	    pointarray[0].x = ur.x - (data->x_data[0][0] - data->x_min_value[0]) / 
+	      (data->x_max_value[0] - data->x_min_value[0]) * (ur.x - ll.x);
+	  else
+	    pointarray[0].x = ll.x + (data->x_data[0][0] - data->x_min_value[0]) / 
+	      (data->x_max_value[0] - data->x_min_value[0]) * (ur.x - ll.x);
+
+	  for ( i = 0; i < data->rows[0]; i++) {
+	    if ( data->x_reverse)
+	      x_value = ur.x - (data->x_data[0][i] - data->x_min_value[0]) / 
+		(data->x_max_value[0] - data->x_min_value[0]) * (ur.x - ll.x);
+	    else
+	      x_value = ll.x + (data->x_data[0][i] - data->x_min_value[0]) / 
+		(data->x_max_value[0] - data->x_min_value[0]) * (ur.x - ll.x);
+	    
+	    x_value = MAX( ll.x, MIN( x_value, ur.x));
+	    
+	    y_value = ur.y - (data->y_data[idx][i] - y_min_value[idx]) / 
+	      (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
+	    
+	    y_value = MAX( ll.y, MIN( y_value, ur.y));
+
+	    if ( i == 0) {
+	      pointarray[0].y = ur.y;
+	      pointarray[0].x = ll.x;
+	      pointarray[1].y = y_value;
+	      pointarray[1].x = ll.x;
+	    }
+	    else {
+	      pointarray[i*2+1].y = prev_y_value;
+	      pointarray[i*2+1].x = x_value;
+	    }
+	    pointarray[i*2+2].y = y_value;
+	    pointarray[i*2+2].x = x_value;
+	    prev_y_value = y_value;
+	  }
+
+	  // Last point
+	  pointarray[points-2].y = pointarray[points-3].y;
+	  pointarray[points-2].x = ur.x;
+	  pointarray[points-1].y = ur.y;
+	  pointarray[points-1].x = ur.x;
+	}
+	if ( curve_drawtype[idx] != glow_eDrawType_Inherit)
+	  dt = curve_drawtype[idx];
+	else
+	  dt = draw_type;
+	  
+	if ( curve_fill_drawtype[idx] != glow_eDrawType_Inherit)
+	  dt_fill = curve_fill_drawtype[idx];
+	else
+	  dt_fill = draw_type;
+	  
+	ctx->nodraw++;
+	curve[idx] = new GrowPolyLine( ctx, "", pointarray, points, dt, 
+					 curve_width,
+					 0, fill_curve, 1, 0, dt_fill);
+	ctx->nodraw--;
+	free( (char *) pointarray);
+	break;
+      case glow_eCurveType_DigSquare: {
+	points = no_of_points * 2;
+	if ( fill_curve)
+	  points += 5;
+	else
+	  points += 3;
+	pointarray = (glow_sPoint *) calloc( points, sizeof(glow_sPoint));
+
+	double y1 = ur.y - (1 - y_min_value[idx]) / 
+	  (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);	
+	y1 = MAX( ll.y, MIN( y1, ur.y));
+
+	if ( !fill_curve) {
+	  pix = 0;
+	  for ( i = 0; i < data->rows[0]; i++) {
+	    if ( data->x_reverse)
+	      x_value = ur.x - (data->x_data[0][i] - data->x_min_value[0]) / 
+		(data->x_max_value[0] - data->x_min_value[0]) * (ur.x - ll.x);
+	    else
+	      x_value = ll.x + (data->x_data[0][i] - data->x_min_value[0]) / 
+		(data->x_max_value[0] - data->x_min_value[0]) * (ur.x - ll.x);
+	    
+	    x_value = MAX( ll.x, MIN( x_value, ur.x));
+	    
+	    y_value = ur.y - (data->y_data[idx][i] - y_min_value[idx]) / 
+	      (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
+	    
+	    y_value = MAX( ll.y, MIN( y_value, ur.y));
+
+	    if ( i == 0) {
+	      if ( data->y_data[idx][0] == 1) {
+		pointarray[pix].y = ur.y;
+		pointarray[pix++].x = ll.x;
+		pointarray[pix].y = ur.y;
+		pointarray[pix++].x = x_value;
+	      }
+	      else {
+		pointarray[pix].y = y1;
+		pointarray[pix++].x = ll.x;
+		pointarray[pix].y = y1;
+		pointarray[pix++].x = x_value;
+	      }
+	    }
+	    else {
+	      pointarray[pix].y = prev_y_value;
+	      pointarray[pix++].x = x_value;
+	    }
+	    pointarray[pix].y = y_value;
+	    pointarray[pix++].x = x_value;
+	    prev_y_value = y_value;
+	  }
+	  pointarray[pix].y = prev_y_value;
+	  pointarray[pix++].x = ur.x;
+	  points = pix;
+	}
+	else {
+
+	  for ( i = 0; i < (points-5)/2; i++) {
+	    if ( data->x_reverse)
+	      x_value = ur.x - (data->x_data[0][i] - data->x_min_value[0]) / 
+		(data->x_max_value[0] - data->x_min_value[0]) * (ur.x - ll.x);
+	    else
+	      x_value = ll.x + (data->x_data[0][i] - data->x_min_value[0]) / 
+		(data->x_max_value[0] - data->x_min_value[0]) * (ur.x - ll.x);
+	    
+	    x_value = MAX( ll.x, MIN( x_value, ur.x));
+	    
+	    y_value = ur.y - (data->y_data[idx][i] - y_min_value[idx]) / 
+	      (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
+	    
+	    y_value = MAX( ll.y, MIN( y_value, ur.y));
+
+	    if ( i == 0) {
+	      if ( data->y_data[idx][0] == 1) {
+		pointarray[pix].y = ur.y;
+		pointarray[pix++].x = x_value;
+		pointarray[pix].y = ur.y;
+		pointarray[pix++].x = x_value;
+		pointarray[pix].y = ur.y;
+		pointarray[pix++].x = x_value;
+	      }
+	      else {
+		pointarray[pix].y = ur.y;
+		pointarray[pix++].x = ll.x;
+		pointarray[pix].y = y1;
+		pointarray[pix++].x = ll.x;
+		pointarray[pix].y = y1;
+		pointarray[pix++].x = x_value;
+	      }
+	    }
+	    else {
+	      pointarray[pix].y = prev_y_value;
+	      pointarray[pix++].x = x_value;
+	    }
+	    pointarray[pix].y = y_value;
+	    pointarray[pix++].x = x_value;
+	    prev_y_value = y_value;
+	  }
+
+	  // Last point
+	  if ( data->y_data[idx][data->rows[0]-1] != 0) {
+	    pointarray[pix].y = y1;
+	    pointarray[pix++].x = ur.x;
+	    pointarray[pix].y = ur.y;
+	    pointarray[pix++].x = ur.x;
+	  }
+	  points = pix;
+	}
+	if ( curve_drawtype[idx] != glow_eDrawType_Inherit)
+	  dt = curve_drawtype[idx];
+	else
+	  dt = draw_type;
+	  
+	if ( curve_fill_drawtype[idx] != glow_eDrawType_Inherit)
+	  dt_fill = curve_fill_drawtype[idx];
+	else
+	  dt_fill = draw_type;
+	  
+	ctx->nodraw++;
+	curve[idx] = new GrowPolyLine( ctx, "", pointarray, points, dt, 
+					 curve_width,
+					 0, fill_curve, 1, 0, dt_fill);
+	ctx->nodraw--;
+	free( (char *) pointarray);
+	break;
+      }
+      default: ;
+      }
     }
-    free( (char *) pointarray);
 
     draw();
   }
@@ -196,73 +445,266 @@ void GrowCurve::configure_curves( glow_sCurveData *data)
     curve_width = MIN( DRAW_TYPE_SIZE, MAX( 1, curve_width));
 
     for ( idx = 0; idx < curve_cnt; idx++) {
-      points = data->rows[idx];
-      if ( fill_curve)
-	points += 2;
+      if ( data->curve_type[idx] == glow_eCurveType_Inherit)
+	curve_type = type;
+      else
+	curve_type = data->curve_type[idx];
+
+      switch ( curve_type) {
+      case glow_eCurveType_Inherit:
+      case glow_eCurveType_Line:
+      case glow_eCurveType_Points:
+      case glow_eCurveType_LinePoints:
+	points = data->rows[idx];
+	if ( fill_curve)
+	  points += 2;
       
-      pointarray = (glow_sPoint *) calloc( points, sizeof(glow_sPoint));
+	pointarray = (glow_sPoint *) calloc( points, sizeof(glow_sPoint));
 
-      point_p = pointarray;
-      for ( i = 0; i < points; i++) {
 	if ( !fill_curve) {
-	  if ( data->x_reverse)
-	    x_value = ur.x - (data->x_data[idx][i] - data->x_min_value[idx]) / 
-	      (data->x_max_value[idx] - data->x_min_value[idx]) * (ur.x - ll.x);
-	  else
-	    x_value = ll.x + (data->x_data[idx][i] - data->x_min_value[idx]) / 
-	      (data->x_max_value[idx] - data->x_min_value[idx]) * (ur.x - ll.x);
+	  for ( i = 0; i < points; i++) {
+	    if ( data->x_reverse)
+	      x_value = ur.x - (data->x_data[idx][i] - data->x_min_value[idx]) / 
+		(data->x_max_value[idx] - data->x_min_value[idx]) * (ur.x - ll.x);
+	    else
+	      x_value = ll.x + (data->x_data[idx][i] - data->x_min_value[idx]) / 
+		(data->x_max_value[idx] - data->x_min_value[idx]) * (ur.x - ll.x);
+	    
+	    x_value = max( ll.x, min( x_value, ur.x));
 
-	  x_value = MAX( ll.x, MIN( x_value, ur.x));
+	    y_value = ur.y - (data->y_data[idx][i] - y_min_value[idx]) / 
+	      (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
 
-	  y_value = ur.y - (data->y_data[idx][i] - y_min_value[idx]) / 
-	    (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
+	    y_value = max( ll.y, min( y_value, ur.y));
 
-	  y_value = MAX( ll.y, MIN( y_value, ur.y));
-
-	  point_p->y = y_value;
-	  point_p->x = x_value;
+	    pointarray[i].y = y_value;
+	    pointarray[i].x = x_value;
+	  }
 	}
 	else {
-	  if ( i == 0) {
-	    point_p->y = ur.y;
-	    // point_p->x = ur.x;
+	  for ( i = 0; i < points-2; i++) {
 	    if ( data->x_reverse)
-	      point_p->x = ur.x - (data->x_data[idx][i] - data->x_min_value[idx]) / 
-	        (data->x_max_value[idx] - data->x_min_value[idx]) * (ur.x - ll.x);
+	      x_value = ur.x - (data->x_data[idx][i] - data->x_min_value[idx]) / 
+		(data->x_max_value[idx] - data->x_min_value[idx]) * (ur.x - ll.x);
 	    else
-	      point_p->x = ll.x + (data->x_data[0][i] - data->x_min_value[0]) / 
-	        (data->x_max_value[idx] - data->x_min_value[idx]) * (ur.x - ll.x);
+	      x_value = ll.x + (data->x_data[idx][i] - data->x_min_value[idx]) / 
+		(data->x_max_value[idx] - data->x_min_value[idx]) * (ur.x - ll.x);
+	    
+	    x_value = max( ll.x, min( x_value, ur.x));
+
+	    y_value = ur.y - (data->y_data[idx][i] - y_min_value[idx]) / 
+	      (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
+
+	    y_value = max( ll.y, min( y_value, ur.y));
+
+	    if ( i == 0) {
+	      pointarray[0].y = ur.y;
+	      pointarray[0].x = x_value;
+	    }
+	    pointarray[i+1].y = y_value;
+	    pointarray[i+1].x = x_value;
 	  }
-	  else if ( i == points - 1) {
-	    point_p->y = ur.y;
+	  pointarray[points - 1].y = ur.y;
+	  pointarray[points - 1].x = pointarray[points - 2].x;
+	}
+	break;
+      case glow_eCurveType_Square:
+	points = data->rows[idx] * 2;
+	if ( fill_curve)
+	  points += 3;
+	else
+	  points += 1;
+      
+	pointarray = (glow_sPoint *) calloc( points, sizeof(glow_sPoint));
+	
+	if ( !fill_curve) {
+	  pix = 0;
+	  for ( i = 0; i < data->rows[idx]; i++) {
 	    if ( data->x_reverse)
-	      point_p->x = ur.x - (data->x_data[0][i-2] - data->x_min_value[0]) / 
-	        (data->x_max_value[idx] - data->x_min_value[idx]) * (ur.x - ll.x);
+	      x_value = ur.x - (data->x_data[idx][i] - data->x_min_value[idx]) / 
+		(data->x_max_value[idx] - data->x_min_value[idx]) * (ur.x - ll.x);
 	    else
-	      point_p->x = ll.x + (data->x_data[0][i-2] - data->x_min_value[0]) / 
-	        (data->x_max_value[idx] - data->x_min_value[idx]) * (ur.x - ll.x);
-	    // point_p->x = ll.x;
-	  }
-	  else {
-	    if ( data->x_reverse)
-	      x_value = ur.x - (data->x_data[idx][i-1] - data->x_min_value[idx]) / 
-	        (data->x_max_value[idx] - data->x_min_value[idx]) * (ur.x - ll.x);
-	    else
-	      x_value = ll.x + (data->x_data[idx][i-1] - data->x_min_value[idx]) / 
-	        (data->x_max_value[idx] - data->x_min_value[idx]) * (ur.x - ll.x);
+	      x_value = ll.x + (data->x_data[idx][i] - data->x_min_value[idx]) / 
+		(data->x_max_value[idx] - data->x_min_value[idx]) * (ur.x - ll.x);
 
 	    x_value = MAX( ll.x, MIN( x_value, ur.x));
 
-	    y_value = ur.y - (data->y_data[idx][i-1] - y_min_value[idx]) / 
+	    y_value = ur.y - (data->y_data[idx][i] - y_min_value[idx]) / 
 	      (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
-
+	    
+	    y_value = MAX( ll.y, MIN( y_value, ur.y));
+	  
+	    if ( i == 0) {
+	      pointarray[pix].y = y_value;
+	      pointarray[pix++].x = ll.x;
+	    }
+	    else {
+	      pointarray[pix].y = prev_y_value;
+	      pointarray[pix++].x = x_value;
+	    }
+	    pointarray[pix].y = y_value;
+	    pointarray[pix++].x = x_value;
+	    prev_y_value = y_value;
+	  }
+	  pointarray[pix].y = pointarray[pix-1].y;
+	  pointarray[pix++].x = ur.x;
+	  points = pix;
+	}
+	else {
+	  pix = 0;
+	  for ( i = 0; i < data->rows[idx]; i++) {
+	    if ( data->x_reverse)
+	      x_value = ur.x - (data->x_data[idx][i] - data->x_min_value[idx]) / 
+		(data->x_max_value[idx] - data->x_min_value[idx]) * (ur.x - ll.x);
+	    else
+	      x_value = ll.x + (data->x_data[idx][i] - data->x_min_value[idx]) / 
+		(data->x_max_value[idx] - data->x_min_value[idx]) * (ur.x - ll.x);
+	    
+	    x_value = MAX( ll.x, MIN( x_value, ur.x));
+	    
+	    y_value = ur.y - (data->y_data[idx][i] - y_min_value[idx]) / 
+	      (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
+	    
 	    y_value = MAX( ll.y, MIN( y_value, ur.y));
 
-	    point_p->y = y_value;
-	    point_p->x = x_value;
+	    if ( i == 0) {
+	      pointarray[pix].y = ur.y;
+	      pointarray[pix++].x = ll.x;
+	      pointarray[pix].y = y_value;
+	      pointarray[pix++].x = ll.x;
+	    }
+	    else {
+	      pointarray[pix].y = prev_y_value;
+	      pointarray[pix++].x = x_value;
+	    }
+	    pointarray[pix].y = y_value;
+	    pointarray[pix++].x = x_value;
+	    prev_y_value = y_value;
 	  }
+
+	  // Last point
+	  pointarray[pix].y = pointarray[pix-1].y;
+	  pointarray[pix++].x = ur.x;
+	  pointarray[pix].y = ur.y;
+	  pointarray[pix++].x = ur.x;
+	  points = pix;
 	}
-	point_p++;
+	break;
+      case glow_eCurveType_DigSquare: {
+	points = data->rows[idx] * 2;
+	if ( fill_curve)
+	  points += 5;
+	else
+	  points += 3;
+      
+	pointarray = (glow_sPoint *) calloc( points, sizeof(glow_sPoint));
+	
+	double y1 = ur.y - (1 - y_min_value[idx]) / 
+	  (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
+	
+	y1 = MAX( ll.y, MIN( y1, ur.y));
+
+	if ( !fill_curve) {
+	  pix = 0;
+	  for ( i = 0; i < data->rows[idx]; i++) {
+	    if ( data->x_reverse)
+	      x_value = ur.x - (data->x_data[idx][i] - data->x_min_value[idx]) / 
+		(data->x_max_value[idx] - data->x_min_value[idx]) * (ur.x - ll.x);
+	    else
+	      x_value = ll.x + (data->x_data[idx][i] - data->x_min_value[idx]) / 
+		(data->x_max_value[idx] - data->x_min_value[idx]) * (ur.x - ll.x);
+
+	    x_value = MAX( ll.x, MIN( x_value, ur.x));
+
+	    y_value = ur.y - (data->y_data[idx][i] - y_min_value[idx]) / 
+	      (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
+	    
+	    y_value = MAX( ll.y, MIN( y_value, ur.y));
+	  
+	    if ( i == 0) {
+	      if ( data->y_data[idx][0] == 1) {
+		pointarray[pix].y = ur.y;
+		pointarray[pix++].x = ll.x;
+		pointarray[pix].y = ur.y;
+		pointarray[pix++].x = x_value;
+	      }
+	      else {
+		pointarray[pix].y = y1;
+		pointarray[pix++].x = ll.x;
+		pointarray[pix].y = y1;
+		pointarray[pix++].x = x_value;
+	      }
+	    }
+	    else {
+	      pointarray[pix].y = prev_y_value;
+	      pointarray[pix++].x = x_value;
+	    }
+	    pointarray[pix].y = y_value;
+	    pointarray[pix++].x = x_value;
+	    prev_y_value = y_value;
+	  }
+	  // Last point
+	  pointarray[pix].y = pointarray[pix-1].y;
+	  pointarray[pix++].x = ur.x;
+	  points = pix;
+	}
+	else {
+	  pix = 0;
+	  for ( i = 0; i < data->rows[idx]; i++) {
+	    if ( data->x_reverse)
+	      x_value = ur.x - (data->x_data[idx][i] - data->x_min_value[idx]) / 
+		(data->x_max_value[idx] - data->x_min_value[idx]) * (ur.x - ll.x);
+	    else
+	      x_value = ll.x + (data->x_data[idx][i] - data->x_min_value[idx]) / 
+		(data->x_max_value[idx] - data->x_min_value[idx]) * (ur.x - ll.x);
+	    
+	    x_value = MAX( ll.x, MIN( x_value, ur.x));
+	    
+	    y_value = ur.y - (data->y_data[idx][i] - y_min_value[idx]) / 
+	      (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
+	    
+	    y_value = MAX( ll.y, MIN( y_value, ur.y));
+
+	    if ( i == 0) {
+	      if ( data->y_data[idx][0] == 1) {
+		pointarray[pix].y = ur.y;
+		pointarray[pix++].x = x_value;
+		pointarray[pix].y = ur.y;
+		pointarray[pix++].x = x_value;
+		pointarray[pix].y = ur.y;
+		pointarray[pix++].x = x_value;
+	      }
+	      else {
+ 		pointarray[pix].y = ur.y;
+		pointarray[pix++].x = ll.x;
+ 		pointarray[pix].y = y1;
+		pointarray[pix++].x = ll.x;
+		pointarray[pix].y = y1;
+		pointarray[pix++].x = x_value;
+	      }
+	    }
+	    else {
+	      pointarray[pix].y = prev_y_value;
+	      pointarray[pix++].x = x_value;
+	    }
+	    pointarray[pix].y = y_value;
+	    pointarray[pix++].x = x_value;
+	    prev_y_value = y_value;
+	  }
+
+	  // Last point
+	  if ( data->y_data[idx][data->rows[idx]-1] != 0) {
+	    pointarray[pix].y = y1;
+	    pointarray[pix++].x = ur.x;
+	    pointarray[pix].y = ur.y;
+	    pointarray[pix++].x = ur.x;
+	  }
+	  printf( "Points %d pix %d\n", points, pix);
+	  points = pix;
+	}
+	break;
+      }
+      default: ;
       }
 
       if ( curve_drawtype[idx] != glow_eDrawType_Inherit)
@@ -278,7 +720,7 @@ void GrowCurve::configure_curves( glow_sCurveData *data)
       ctx->nodraw++;
       curve[idx] = new GrowPolyLine( ctx, "", pointarray, points, dt, 
 				     curve_width,
-				     0, fill_curve, 1, 0, dt_fill);
+				     0, fill_curve, 1, 0, dt_fill, 0, 0, 0, type);
       ctx->nodraw--;
 
       free( (char *) pointarray);

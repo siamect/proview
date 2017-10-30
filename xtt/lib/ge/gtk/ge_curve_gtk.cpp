@@ -311,9 +311,42 @@ void GeCurveGtk::activate_showname( GtkWidget *w, gpointer data)
 void GeCurveGtk::activate_filledcurves( GtkWidget *w, gpointer data)
 {
   GeCurve *curve = (GeCurve *)data;
-  int set = (int) gtk_check_menu_item_get_active( GTK_CHECK_MENU_ITEM(w));
+  int set;
+
+  if ( w == ((GeCurveGtk *)curve)->tools_curve_fill)
+    set = curve->fill_curves = !curve->fill_curves;
+  else
+    set = (int) gtk_check_menu_item_get_active( GTK_CHECK_MENU_ITEM(w));
 
   curve->activate_filledcurves( set);
+}
+
+void GeCurveGtk::activate_curvetype_line( GtkWidget *w, gpointer data)
+{
+  GeCurve *curve = (GeCurve *)data;
+
+  curve->activate_curvetype( glow_eCurveType_Line);
+}
+
+void GeCurveGtk::activate_curvetype_linepoints( GtkWidget *w, gpointer data)
+{
+  GeCurve *curve = (GeCurve *)data;
+
+  curve->activate_curvetype( glow_eCurveType_LinePoints);
+}
+
+void GeCurveGtk::activate_curvetype_points( GtkWidget *w, gpointer data)
+{
+  GeCurve *curve = (GeCurve *)data;
+
+  curve->activate_curvetype( glow_eCurveType_Points);
+}
+
+void GeCurveGtk::activate_curvetype_square( GtkWidget *w, gpointer data)
+{
+  GeCurve *curve = (GeCurve *)data;
+
+  curve->activate_curvetype( glow_eCurveType_Square);
 }
 
 void GeCurveGtk::activate_xlimits( GtkWidget *w, gpointer data)
@@ -529,6 +562,15 @@ void GeCurveGtk::enable( unsigned int mask)
     g_object_set( sea_timebox, "visible", TRUE, NULL);
   if ( mask & curve_mEnable_Add)
     g_object_set( tools_add, "visible", TRUE, NULL);
+  if ( mask & curve_mEnable_CurveType) {
+    g_object_set( tools_curvetype_line, "visible", TRUE, NULL);
+    g_object_set( tools_curvetype_points, "visible", TRUE, NULL);
+    g_object_set( tools_curvetype_linepoints, "visible", TRUE, NULL);
+  }
+  if ( mask & curve_mEnable_CurveTypeSquare)
+    g_object_set( tools_curvetype_square, "visible", TRUE, NULL);
+  if ( mask & curve_mEnable_FillCurve)
+    g_object_set( tools_curve_fill, "visible", TRUE, NULL);
   layout_mask = mask;
 }
 
@@ -542,6 +584,11 @@ void GeCurveGtk::setup( unsigned int mask)
   g_object_set( menu_export, "visible", mask & curve_mEnable_Export ? TRUE : FALSE, NULL);
   g_object_set( sea_timebox, "visible", mask & curve_mEnable_Timebox ? TRUE : FALSE, NULL);
   g_object_set( tools_add, "visible", mask & curve_mEnable_Add ? TRUE : FALSE, NULL);
+  g_object_set( tools_curvetype_line, "visible", mask & curve_mEnable_CurveType ? TRUE : FALSE, NULL);
+  g_object_set( tools_curvetype_points, "visible", mask & curve_mEnable_CurveType ? TRUE : FALSE, NULL);
+  g_object_set( tools_curvetype_linepoints, "visible", mask & curve_mEnable_CurveType ? TRUE : FALSE, NULL);
+  g_object_set( tools_curvetype_square, "visible", mask & curve_mEnable_CurveType ? TRUE : FALSE, NULL);
+  g_object_set( tools_curve_fill, "visible", mask & curve_mEnable_CurveType ? TRUE : FALSE, NULL);
   layout_mask = mask;
 }
 
@@ -984,14 +1031,6 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
   g_object_set( tools_page_right, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_page_right, CoWowGtk::translate_utf8("Page right"), "");
 
-  tools_snapshot = gtk_button_new();
-  dcli_translate_filename( fname, "$pwr_exe/xtt_snapshot.png");
-  gtk_container_add( GTK_CONTAINER(tools_snapshot), 
-		     gtk_image_new_from_file( fname));
-  g_signal_connect(tools_snapshot, "clicked", G_CALLBACK(activate_snapshot), this);
-  g_object_set( tools_snapshot, "can-focus", FALSE, NULL);
-  gtk_toolbar_append_widget( tools, tools_snapshot, CoWowGtk::translate_utf8("Snapshot"), "");
-
   tools_add = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/xtt_add.png");
   gtk_container_add( GTK_CONTAINER(tools_add), 
@@ -999,6 +1038,54 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
   g_signal_connect(tools_add, "clicked", G_CALLBACK(activate_add), this);
   g_object_set( tools_add, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_add, CoWowGtk::translate_utf8("Add"), "");
+
+  tools_curvetype_line = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_curve_line.png");
+  gtk_container_add( GTK_CONTAINER(tools_curvetype_line), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_curvetype_line, "clicked", G_CALLBACK(activate_curvetype_line), this);
+  g_object_set( tools_curvetype_line, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_curvetype_line, CoWowGtk::translate_utf8("Curve line"), "");
+
+  tools_curvetype_points = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_curve_points.png");
+  gtk_container_add( GTK_CONTAINER(tools_curvetype_points), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_curvetype_points, "clicked", G_CALLBACK(activate_curvetype_points), this);
+  g_object_set( tools_curvetype_points, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_curvetype_points, CoWowGtk::translate_utf8("Curve points"), "");
+
+  tools_curvetype_linepoints = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_curve_linepoints.png");
+  gtk_container_add( GTK_CONTAINER(tools_curvetype_linepoints), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_curvetype_linepoints, "clicked", G_CALLBACK(activate_curvetype_linepoints), this);
+  g_object_set( tools_curvetype_linepoints, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_curvetype_linepoints, CoWowGtk::translate_utf8("Curve line and points"), "");
+
+  tools_curvetype_square = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_curve_square.png");
+  gtk_container_add( GTK_CONTAINER(tools_curvetype_square), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_curvetype_square, "clicked", G_CALLBACK(activate_curvetype_square), this);
+  g_object_set( tools_curvetype_square, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_curvetype_square, CoWowGtk::translate_utf8("Curve square"), "");
+
+  tools_curve_fill = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_curve_fill.png");
+  gtk_container_add( GTK_CONTAINER(tools_curve_fill), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_curve_fill, "clicked", G_CALLBACK(activate_filledcurves), this);
+  g_object_set( tools_curve_fill, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_curve_fill, CoWowGtk::translate_utf8("Filled curves"), "");
+
+  tools_snapshot = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_snapshot.png");
+  gtk_container_add( GTK_CONTAINER(tools_snapshot), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_snapshot, "clicked", G_CALLBACK(activate_snapshot), this);
+  g_object_set( tools_snapshot, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_snapshot, CoWowGtk::translate_utf8("Snapshot"), "");
 
   // Time box
   GtkToolbar *timetools = (GtkToolbar *) g_object_new(GTK_TYPE_TOOLBAR, NULL);
@@ -1160,7 +1247,11 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
   g_object_set( menu_snapshot, "visible", FALSE, NULL);
   g_object_set( menu_export, "visible", FALSE, NULL);
   g_object_set( tools_snapshot, "visible", FALSE, NULL);
-  g_object_set( tools_add, "visible", FALSE, NULL);
+  g_object_set( tools_curvetype_line, "visible", FALSE, NULL);
+  g_object_set( tools_curvetype_points, "visible", FALSE, NULL);
+  g_object_set( tools_curvetype_linepoints, "visible", FALSE, NULL);
+  g_object_set( tools_curvetype_square, "visible", FALSE, NULL);
+  g_object_set( tools_curve_fill, "visible", FALSE, NULL);
 
   wow = new CoWowGtk( toplevel);
 

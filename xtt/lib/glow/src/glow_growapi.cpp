@@ -4966,6 +4966,11 @@ void grow_SetTrendLines( grow_tObject object, int vert_lines,
   ((GrowTrend *)object)->set_lines( vert_lines, horiz_lines);
 }
 
+void grow_SetCurveType( grow_tObject object, glow_eCurveType type)
+{
+  ((GrowCurve *)object)->set_type( type);
+}
+
 void grow_SetAxisConf( grow_tObject object, double max_val, double min_val, 
      int no_of_lines, int long_quot, int value_quot, double rot, const char *format)
 {

@@ -418,6 +418,15 @@ typedef enum {
   glow_eAppMotion_Both   	//!< Both slider and scrolling  
 } glow_eAppMotion;
 
+//! Trend curve type.
+typedef enum {
+  glow_eCurveType_Inherit,
+  glow_eCurveType_Line,
+  glow_eCurveType_Points,
+  glow_eCurveType_LinePoints,
+  glow_eCurveType_Square,
+  glow_eCurveType_DigSquare
+} glow_eCurveType;
 
 //! Color index for a color
 /*! The drawtype is index in an array that contains the gc for colors in the color palette. 
@@ -2350,6 +2359,7 @@ typedef struct {
   double  *x_data[TREND_MAX_CURVES];			//!< x data for every curve
   glow_eDrawType color[TREND_MAX_CURVES];		//!< Color of every curve
   glow_eDrawType fillcolor[TREND_MAX_CURVES];		//!< Fill color for every curve
+  glow_eCurveType curve_type[TREND_MAX_CURVES];		//!< Type of curve
 } glow_sCurveData;
 
 //! Data for a GrowTrend object

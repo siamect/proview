@@ -125,8 +125,11 @@ class sev_dbms : public sev_db {
   static const unsigned int constMaxColNameLength = 64;
 
   sev_dbms_env *m_env;
+  double 	m_linearregr_maxtime;
+  int		m_linearregr_all; 
+  int		m_meanvalue1_all;
 
-  sev_dbms( sev_dbms_env *env) : m_env(env) {}
+  sev_dbms( sev_dbms_env *env);
   ~sev_dbms();
 
   int check_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *aname, 

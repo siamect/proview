@@ -115,7 +115,7 @@ class sev_event {
 class sev_item {
  public:
   sev_item() : deadband_active(0), last_id(0), value_size(0), old_value(0), first_storage(1), status(0), logged_status(0), 
-    cache(0), idx(0), deleted(0) { 
+    cache(0), idx(0), deleted(0), ip(0), mean_value(0), mean_acc_time(0), variance_acc(0), variance_cnt(0) { 
     /*memset( old_value, 0, sizeof(old_value));*/
   }
   sev_item( const sev_item& x) : id(x.id), oid(x.oid), creatime(x.creatime), modtime(x.modtime), 
@@ -168,16 +168,28 @@ class sev_item {
   pwr_tStatus   logged_status;
   sev_valuecache *cache;
   unsigned int	idx;
-  int deleted;
+  int 		deleted;
+  pwr_sClass_SevItem *ip;
+  pwr_tDlid	refid;
+  pwr_tFloat32  mean_value;
+  pwr_tFloat32	mean_acc_time;
+  pwr_tFloat32  variance_acc;
+  int  		variance_cnt;
 };
 
 
 class sev_db {
  public:
   vector<sev_item> m_items;
+  float		m_meanvalue_interval1;
+  float		m_meanvalue_interval2; 
 
-  sev_db() {}
+  sev_db() : m_meanvalue_interval1(0), m_meanvalue_interval2(0) {}
   virtual ~sev_db() {}
+
+  pwr_tStatus tree_update();
+  pwr_tStatus tree_update_value( int item_idx, pwr_tTime time, void *buf);
+
   virtual int check_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *aname, 
 			  pwr_tDeltaTime storatetime, pwr_eType type, unsigned int size, 
 			  char *description, char *unit, pwr_tFloat32 scantime, 

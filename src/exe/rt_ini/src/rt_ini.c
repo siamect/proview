@@ -47,6 +47,7 @@
 #include "co_ver.h"
 #include "co_time.h"
 #include "co_dcli.h"
+#include "rt_ini_load.h"
 #include "ini.h"
 #include "ini_rc.h"
 #include "rt_ini_alias.h"

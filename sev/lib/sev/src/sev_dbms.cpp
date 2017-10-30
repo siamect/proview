@@ -668,6 +668,37 @@ int sev_dbms_env::get_systemname()
   return 1;
 }
 
+sev_dbms::sev_dbms( sev_dbms_env *env) :  m_env(env), m_linearregr_maxtime(0),
+					  m_linearregr_all(0), m_meanvalue1_all(0)
+{
+  char valuestr[20];
+  int nr;
+  float ftime;
+
+  if ( cnf_get_value( "sevLinearRegrMaxTime", valuestr, sizeof(valuestr))) {
+    nr = sscanf( valuestr, "%f", &ftime);
+    if ( nr == 1)
+      m_linearregr_maxtime = ftime;
+  }
+  if ( cnf_get_value( "sevLinearRegrAll", valuestr, sizeof(valuestr))) {
+    if ( cdh_NoCaseStrcmp( valuestr, "1") == 0)
+      m_linearregr_all = 1;
+  }
+  if ( cnf_get_value( "sevMeanValue1All", valuestr, sizeof(valuestr))) {
+    if ( cdh_NoCaseStrcmp( valuestr, "1") == 0)
+      m_meanvalue1_all = 1;
+  }
+  if ( cnf_get_value( "sevMeanValueInterval1", valuestr, sizeof(valuestr))) {
+    nr = sscanf( valuestr, "%f", &ftime);
+    if ( nr == 1)
+      m_meanvalue_interval1 = ftime;
+  }
+  if ( cnf_get_value( "sevMeanValueInterval2", valuestr, sizeof(valuestr))) {
+    nr = sscanf( valuestr, "%f", &ftime);
+    if ( nr == 1)
+      m_meanvalue_interval2 = ftime;
+  }
+}
 
 sev_db *sev_dbms::open_database()
 {
@@ -997,6 +1028,11 @@ int sev_dbms::get_items( pwr_tStatus *sts)
     item.options = strtoul(row[15], 0, 10);
     item.attrnum = 1;
 
+    if ( m_linearregr_all && item.options & pwr_mSevOptionsMask_UseDeadBand)
+      item.options |= pwr_mSevOptionsMask_DeadBandLinearRegr;
+    if ( m_meanvalue1_all)
+      item.options |= pwr_mSevOptionsMask_MeanValue1;
+
     m_items.push_back( item);
 
     if ( item.options & pwr_mSevOptionsMask_DeadBandLinearRegr)
@@ -1014,6 +1050,8 @@ int sev_dbms::get_items( pwr_tStatus *sts)
 int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
                            pwr_tTime time, void *buf, unsigned int size)
 {
+  tree_update_value( item_idx, time, buf);
+
   if ( m_items[item_idx].options & pwr_mSevOptionsMask_DeadBandLinearRegr) {
     void *value;
     double dval;
@@ -1039,11 +1077,12 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
       return 0;
     }
     m_items[item_idx].cache->add( value, &time);
-    m_items[item_idx].cache->evaluate();
+    m_items[item_idx].cache->evaluate( m_linearregr_maxtime);
     return 1;
   }
   else
     return write_value( sts, item_idx, attr_idx, time, buf, size);
+
 }
 
 int sev_dbms::write_value( pwr_tStatus *sts, int item_idx, int attr_idx,
@@ -1066,7 +1105,8 @@ int sev_dbms::write_value( pwr_tStatus *sts, int item_idx, int attr_idx,
   int set_jump = 0;
 
   if ( !m_items[item_idx].first_storage) {
-    if ( m_items[item_idx].options & pwr_mSevOptionsMask_UseDeadBand) {
+    if ( m_items[item_idx].options & pwr_mSevOptionsMask_UseDeadBand &&
+	!(m_items[item_idx].options & pwr_mSevOptionsMask_DeadBandLinearRegr)) {
       if ( m_items[item_idx].deadband_active) {
         // Compare current value to old value
         switch ( m_items[item_idx].attr[attr_idx].type) {
@@ -1453,6 +1493,9 @@ int sev_dbms::write_value( pwr_tStatus *sts, int item_idx, int attr_idx,
   }
 
   *sts = SEV__SUCCESS;
+
+  if ( m_items[item_idx].ip)
+    m_items[item_idx].ip->WriteCount++;
   m_items[item_idx].status = *sts;
   m_items[item_idx].logged_status = 1;
   return 1;
@@ -2470,8 +2513,15 @@ int sev_dbms::add_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *aname
   m_items.push_back( item);
   *idx = m_items.size() - 1;
 
+  if ( item.options & pwr_mSevOptionsMask_UseDeadBand &&
+       m_linearregr_all)
+    item.options |= pwr_mSevOptionsMask_DeadBandLinearRegr;
+
   if ( item.options & pwr_mSevOptionsMask_DeadBandLinearRegr)
     add_cache( *idx);
+
+  if ( m_meanvalue1_all)
+    item.options |= pwr_mSevOptionsMask_MeanValue1;
 
   *sts = SEV__SUCCESS;
   return 1;

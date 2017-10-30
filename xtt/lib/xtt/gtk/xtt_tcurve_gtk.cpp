@@ -100,7 +100,8 @@ XttTCurveGtk::XttTCurveGtk( void *parent_ctx,
   curve->remove_cb = tcurve_remove_cb;
   curve->export_cb = tcurve_export_cb;
   curve->enable( curve_mEnable_Timebox | curve_mEnable_Export | curve_mEnable_New |
-		 curve_mEnable_Open | curve_mEnable_Save);
+		 curve_mEnable_Open | curve_mEnable_Save | curve_mEnable_CurveType | 
+		 curve_mEnable_CurveTypeSquare | curve_mEnable_FillCurve);
 
   wow = new CoWowGtk( parent_widget);
   timerid = wow->timer_new();

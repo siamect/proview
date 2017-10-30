@@ -146,5 +146,25 @@ SObject pwrb:Type
        Attr Value = 32
      EndBody
     EndObject
+    !/**
+    !  Calculate mean value with interval 1.
+    !*/
+    Object MeanValue1 $Bit
+     Body SysBody
+       Attr PgmName = "MeanValue1"
+       Attr Text = "MeanValue1"
+       Attr Value = 256
+     EndBody
+    EndObject
+    !/**
+    !  Calculate mean value with interval 2.
+    !*/
+    Object MeanValue2 $Bit
+     Body SysBody
+       Attr PgmName = "MeanValue2"
+       Attr Text = "MeanValue2"
+       Attr Value = 512
+     EndBody
+    EndObject
   EndObject
 EndSObject

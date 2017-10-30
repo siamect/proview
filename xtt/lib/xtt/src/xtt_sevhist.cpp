@@ -751,7 +751,8 @@ void XttSevHist::setup()
 {
   if ( !curve)
     return;
-  curve->setup( curve_mEnable_Timebox | curve_mEnable_Export | curve_mEnable_ExportTime);
+  curve->setup( curve_mEnable_Timebox | curve_mEnable_Export | curve_mEnable_ExportTime | 
+		curve_mEnable_CurveType | curve_mEnable_CurveTypeSquare | curve_mEnable_FillCurve);
 }
 
 void XttSevHist::sevhist_close_cb( void *ctx)

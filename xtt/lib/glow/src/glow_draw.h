@@ -135,7 +135,7 @@ class GlowDraw {
   virtual int clip_level( GlowWind *w) {return 1;}
   virtual int draw_point( GlowWind *w, int x1, int y1, glow_eDrawType gc_type) {return 1;}
   virtual int draw_points( GlowWind *w, glow_sPointX *points, int point_num, 
-	      glow_eDrawType gc_type) {return 1;}
+			   glow_eDrawType gc_type, int idx = 0) {return 1;}
   virtual void set_click_sensitivity( GlowWind *w, int value) {}
   virtual void draw_background( GlowWind *wind, int x, int y, int w, int h) {}
   virtual int create_buffer( GlowWind *w) {return 1;}

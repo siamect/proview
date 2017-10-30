@@ -110,12 +110,13 @@ void sev_valuecache_double::add( void *value, pwr_tTime *t)
     calculate_epsilon(0);
 }
 
-void sev_valuecache_double::evaluate() 
+void sev_valuecache_double::evaluate( double maxtime) 
 {
   int value_added = 1;
 
   while( 1) {
-    if ( !check_deadband()) {
+    if ( (maxtime != 0 && (m_val[m_last].time - m_wval.time) > maxtime) ||
+	 !check_deadband()) {
       // Store optimal value
       write( m_last_opt_write  + value_added);
     }
@@ -140,6 +141,11 @@ void sev_valuecache_double::calculate_k()
     x2sum += (m_val[ii].val - m_wval.val) * (m_val[ii].val - m_wval.val); 
   }
   if ( x2sum < DBL_EPSILON) {
+    m_k = 0;
+    m_m = m_wval.val;
+    m_deadband = m_deadband_value; 
+  }
+  else if ( fabs(xysum) < DBL_EPSILON) { 
     m_k = 1E32;
     m_m = m_wval.time;
     m_deadband = m_deadband_time;
@@ -273,14 +279,14 @@ void sev_valuecache_bool::add( void *value, pwr_tTime *t)
   m_val.val = *(pwr_tBoolean *)value;
   m_val.time = *t;
 
-  if ( m_inited) {
+  if ( !m_inited) {
     // Store valeu
     write( 0);
     m_inited = true;
   }
 }
 
-void sev_valuecache_bool::evaluate() 
+void sev_valuecache_bool::evaluate( double maxtime) 
 {
   if ( m_val.val != m_wval.val) {
     write(0);

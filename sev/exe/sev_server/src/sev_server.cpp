@@ -191,6 +191,9 @@ int sev_server::init( int noneth)
     m_nodes.push_back( n);
   }
 
+  if ( !m_noneth)
+    m_sts = m_db->tree_update();
+
   return 1;
 }
 
@@ -744,6 +747,13 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
       }
     }
   }
+
+  if ( !m_noneth) {
+    m_sts = m_db->tree_update();
+    if ( EVEN(m_sts)) 
+      printf( "Tree error %d\n", m_sts);
+  }
+
   return 1;
 }
 

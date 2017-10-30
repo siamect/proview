@@ -70,7 +70,7 @@ class sev_valuecache {
     m_write_cb(x.m_write_cb) {}
   virtual ~sev_valuecache() {};
   virtual void add( void *value, pwr_tTime *time) {};
-  virtual void evaluate() {};
+  virtual void evaluate( double maxtime) {};
   virtual void write( int index) {};
   virtual void set_write_cb( void (*write_cb)( void *, int, void *, pwr_tTime *), void *userdata, int idx) {
     m_write_cb = write_cb;
@@ -118,7 +118,7 @@ class sev_valuecache_double : public sev_valuecache  {
   sev_sCacheValueDouble& operator[]( const int index);
   sev_sCacheValueDouble& wval() { return m_wval;}
   void add( void *value, pwr_tTime *time);
-  void evaluate();
+  void evaluate( double maxtime);
   void calculate_k();
   void write( int index);
   void calculate_epsilon();
@@ -147,7 +147,7 @@ class sev_valuecache_bool : public sev_valuecache  {
   ~sev_valuecache_bool() {}
   sev_sCacheValueBool& wval() { return m_wval;}
   void add( void *value, pwr_tTime *time);
-  void evaluate();
+  void evaluate( double maxtime);
   void write( int index);
 };
 

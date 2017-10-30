@@ -52,7 +52,7 @@ GrowPolyLine::GrowPolyLine( GrowCtx *glow_ctx, const char *name,
 		glow_sPoint *pointarray, int point_cnt,
 		glow_eDrawType border_d_type, int line_w, 
 		int fix_line_w, int fill, int display_border, int display_shadow,
-		glow_eDrawType fill_d_type, int closed, int nodraw, int noround) :
+	        glow_eDrawType fill_d_type, int closed, int nodraw, int noround, glow_eCurveType ctype) :
 		GlowPolyLine(glow_ctx,pointarray,point_cnt,border_d_type,line_w,
 	        fix_line_w,fill,closed), x_right(0), x_left(0), y_high(0), y_low(0),
     		hot(0), pzero(ctx), highlight(0), inverse(0), user_data(NULL),
@@ -66,7 +66,7 @@ GrowPolyLine::GrowPolyLine( GrowCtx *glow_ctx, const char *name,
 		fill_eq_shadow(0), fill_eq_bglight(0), fill_eq_bgshadow(0), fill_eq_background(0),
 		fixcolor(0), fixposition(0),
 		gradient(glow_eGradient_No), gradient_contrast(4), disable_gradient(0),
-		round(0.5)
+		round(0.5), curvetype(ctype)
 { 
   strcpy( n_name, name);
   pzero.nav_zoom();
@@ -502,7 +502,21 @@ void GrowPolyLine::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, 
   if ( border || !(fill || (display_shadow && shadow_width != 0))) {
     drawtype = ctx->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
 		 highlight, (GrowNode *)colornode, 0);
-    ctx->gdraw->polyline( w, points, a_points.a_size, drawtype, idx, 0);
+    switch( curvetype) {
+    case glow_eCurveType_Line:
+    case glow_eCurveType_Square:
+    case glow_eCurveType_DigSquare:
+    case glow_eCurveType_Inherit:
+      ctx->gdraw->polyline( w, points, a_points.a_size, drawtype, idx, 0);
+      break;
+    case glow_eCurveType_Points:
+      ctx->gdraw->draw_points( w, points, a_points.a_size, drawtype, 3);
+      break;
+    case glow_eCurveType_LinePoints:
+      ctx->gdraw->polyline( w, points, a_points.a_size, drawtype, idx, 0);
+      ctx->gdraw->draw_points( w, points, a_points.a_size, drawtype, 3);
+      break;
+    }
   }
 }
 

@@ -74,7 +74,7 @@ class GrowPolyLine : public GlowPolyLine {
 		int line_w = 1, int fix_line_w = 0, 
 		int fill = 0, int display_border = 1, int display_shadow = 0,
 		glow_eDrawType fill_d_type = glow_eDrawType_Line,
-		int closed = 0, int nodraw = 0, int noround = 0);
+		int closed = 0, int nodraw = 0, int noround = 0, glow_eCurveType ctype = glow_eCurveType_Line);
 
   //! Destructor
   ~GrowPolyLine();
@@ -372,10 +372,11 @@ class GrowPolyLine : public GlowPolyLine {
   int		fill_eq_background; //!< Fill is drawn with background color.
   int		fixcolor;	//!< Color independent of node color.
   int		fixposition;	//!< Can't be moved.
-  glow_eGradient gradient;  //!< Type of gradient.
+  glow_eGradient gradient;  	//!< Type of gradient.
   int		gradient_contrast; //!< Gradient contrast.
   int		disable_gradient; //!< Disable gradient, even if parent node has gradient.
-  float		round;      //!< Value to round or floor points.
+  float		round;      	//!< Value to round or floor points.
+  glow_eCurveType curvetype; 	//!< Curve type.
 
   //! Set user data.
   /*!

@@ -70,7 +70,10 @@ typedef enum {
   curve_mEnable_Export	= 1 << 4,
   curve_mEnable_Timebox = 1 << 5,
   curve_mEnable_Add     = 1 << 6,
-  curve_mEnable_ExportTime = 1 << 7
+  curve_mEnable_ExportTime = 1 << 7,
+  curve_mEnable_CurveType = 1 << 8,
+  curve_mEnable_CurveTypeSquare = 1 << 9,
+  curve_mEnable_FillCurve = 1 << 10
 } curve_mEnable;
 
 typedef enum {
@@ -219,6 +222,7 @@ class GeCurve {
     int 	 color_theme;
     int		 selected_mark;
     time_ePeriod current_period;
+    int	    	 fill_curves;
 
     GeCurve( void *gc_parent_ctx, char *curve_name,
 	     char *filename, GeCurveData *curve_data, int pos_right, 
@@ -262,6 +266,7 @@ class GeCurve {
     void activate_print();
     void activate_background();
     void activate_filledcurves( int set);
+    void activate_curvetype( int type);
     void activate_help();
     void activate_period( time_ePeriod);
     void activate_period_markers();

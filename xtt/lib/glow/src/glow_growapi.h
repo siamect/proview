@@ -2427,6 +2427,8 @@ extern "C" {
   void grow_SetTrendLines( grow_tObject object, int vert_lines, 
 			   int horiz_lines);
 
+  void grow_SetCurveType( grow_tObject object, glow_eCurveType type);
+  
   //! Set configuration values for an axis object.
   /*!
     \param object	Axis object.

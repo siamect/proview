@@ -184,6 +184,12 @@ void GeCurve::activate_filledcurves( int set)
   }
 }
 
+void GeCurve::activate_curvetype( int type)
+{
+  grow_SetCurveType( curve_object, (glow_eCurveType)type);
+  configure_curves();
+}
+
 void GeCurve::activate_help()
 {
   if ( help_cb)
@@ -1388,6 +1394,12 @@ int GeCurve::configure_curves()
 	gcd.y_data[idx] = &cd->y_data[i][min_index];
 	gcd.color[idx] = cd->color[i];
 	gcd.fillcolor[idx] = cd->fillcolor[i];
+	gcd.curve_type[idx] = glow_eCurveType_Inherit;
+	if ( cd->y_value_type[i] == pwr_eType_Boolean)
+	  gcd.curve_type[idx] = glow_eCurveType_DigSquare;
+	else
+	  gcd.curve_type[idx] = glow_eCurveType_Inherit;
+	  
 	idx++;
 	if ( idx == TREND_MAX_CURVES - 1)
 	  break;
@@ -1465,6 +1477,10 @@ int GeCurve::configure_curves()
 	gcd.y_data[idx] = &cd->y_data[i][min_index];
 	gcd.color[idx] = cd->color[i];
 	gcd.fillcolor[idx] = cd->fillcolor[i];
+	if ( cd->y_value_type[i] == pwr_eType_Boolean)
+	  gcd.curve_type[idx] = glow_eCurveType_DigSquare;
+	else
+	  gcd.curve_type[idx] = glow_eCurveType_Inherit;
 
 	gcd.x_data[idx] = &cd->x_data[i][min_index];
 	gcd.x_max_value[idx] = cd->x_max_value_axis[i];
@@ -1731,7 +1747,7 @@ GeCurve::GeCurve( void 	*gc_parent_ctx,
   initial_right_position(pos_right), last_cursor_x(0), last_mark1_x(0), last_mark2_x(0),
   last_mark1_time(pwr_cNTime), last_mark2_time(pwr_cNTime),
   deferred_configure_axes(0), center_from_window(0), options(gc_options), layout_mask(0), 
-  color_theme(gc_color_theme), current_period(time_ePeriod_OneHour)
+  color_theme(gc_color_theme), current_period(time_ePeriod_OneHour), fill_curves(0)
 {
   pwr_tStatus sts;
 

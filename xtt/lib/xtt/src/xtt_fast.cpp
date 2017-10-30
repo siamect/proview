@@ -236,7 +236,7 @@ void XttFast::pop()
 
 void XttFast::setup()
 {
-  curve->setup( curve_mEnable_Export);
+  curve->setup( curve_mEnable_Export | curve_mEnable_CurveType | curve_mEnable_FillCurve);
 }
 
 void XttFast::fast_close_cb( void *ctx)

@@ -82,6 +82,10 @@ class GrowCurve : public GrowTrend {
 	        glow_eDrawType fill_d_type = glow_eDrawType_Line, 
 	        int nodraw = 0);
 
+  glow_eCurveType	type;				//!< Type of curve.
+  
+  void set_type( glow_eCurveType t);
+
   //! Configure the curves
   /*!
     \param data		Configuration data for the curves.

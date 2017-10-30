@@ -1834,9 +1834,9 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	if ( !found) {
 	  char msg[200];
 	  if ( nodeo.cid() == pwr_cClass_FriendNodeConfig)
-	    sprintf( msg, "Error in FriendNodeConfig object '%s', Unknown volume", nodeconfig_name);
+	    sprintf( msg, "Error in FriendNodeConfig object '%s', Unknown volume", nodeo.longName().c_str());
 	  else
-	    sprintf( msg, "Error in SevNodeConfig object '%s', Unknown volume", nodeconfig_name);
+	    sprintf( msg, "Error in SevNodeConfig object '%s', Unknown volume", nodeo.longName().c_str());
 	  MsgWindow::message( 'E', msg, msgw_ePop_Default);
 	  syntax_error = 1;
 	}
@@ -2075,6 +2075,8 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	if ( nodeo.cid() == pwr_cClass_SevNodeConfig) {
 	  // Print a bootfile also
 	  char	timstr[40];
+	  pwr_tObjName volstr;
+	  pwr_tVolumeId vid;
 
 	  sprintf( filename, pwr_cNameBoot, 
 		   load_cDirectory, cdh_Low(nodevect[idx].nodename), 
@@ -2099,6 +2101,38 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	    fprintf( file, "%s\n", systemname);
 	    fprintf( file, "%s\n", systemgroup);
 	  }
+
+	  /* Check that there is a rootvolume for this node */
+	  found = 0;
+	  for ( wb_object volo = nodeo.first(); volo; volo = volo.after()) {
+	    if ( volo.cid() == pwr_cClass_RootVolumeLoad) {
+	      strcpy( volstr, volo.name());
+
+	      /* Check that the name is in the global volume list */
+	      found = 0;
+	      volumelist_ptr = volumelist;
+	      for ( int j = 0; j < volumecount; j++) {
+		if ( cdh_NoCaseStrcmp( volstr, volumelist_ptr->volume_name) == 0) {
+		  found = 1;
+		  vid = volumelist_ptr->volume_id;
+		  break;
+		}
+		volumelist_ptr++;
+	      }
+	      if ( !found) {
+		char msg[200];
+		sprintf( msg, "Error, Volume not configured in global volume list, %s\n", volstr);
+		MsgWindow::message( 'E', msg, msgw_ePop_Default);
+	      }
+	    }
+	  }
+	  if ( found) {
+	    fprintf( file, "-\n");
+	    fprintf( file, "%s %s\n", volstr, cdh_VolumeIdToString( NULL, vid, 0, 0));
+	    fprintf( file, "pwrs 0.0.0.1\n");
+	    fprintf( file, "pwrb 0.0.0.2\n");	    
+	  }
+
 	  fclose( file);
 	}
 

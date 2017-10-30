@@ -91,9 +91,9 @@ XttTrendGtk::XttTrendGtk( void *parent_ctx,
     *w = (GtkWidget *)curve->get_widget();
 
   if ( trend_tid == pwr_cClass_DsTrendCurve)
-    curve->enable( curve_mEnable_Snapshot | curve_mEnable_Add);
+    curve->enable( curve_mEnable_Snapshot | curve_mEnable_Add | curve_mEnable_CurveType | curve_mEnable_FillCurve);
   else
-    curve->enable( curve_mEnable_Add);
+    curve->enable( curve_mEnable_Add | curve_mEnable_CurveType | curve_mEnable_FillCurve);
 
   wow = new CoWowGtk( parent_widget);
   timerid = wow->timer_new();
