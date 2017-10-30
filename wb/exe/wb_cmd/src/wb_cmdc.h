@@ -60,6 +60,8 @@
 class Cmd {
   public:
     Cmd();
+    void parse( int argc, char *argv[]);
+    int utilities( char *str);
     
     wb_eUtility		ctx_type;
     ldh_tSesContext 	ldhses;

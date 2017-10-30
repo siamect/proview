@@ -43,7 +43,7 @@
 
 class CmdMotif : public Cmd {
   public:
-    CmdMotif();
+    CmdMotif( int argc, char *argv[]);
 };
 
 #endif

@@ -43,7 +43,7 @@
 
 class CmdGtk : public Cmd {
   public:
-    CmdGtk();
+  CmdGtk( int argc, char *argv[]);
 };
 
 #endif

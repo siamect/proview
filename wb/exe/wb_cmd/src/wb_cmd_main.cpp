@@ -299,8 +299,203 @@ void Cmd::close_cb( void *ctx)
   exit(0);
 }
 
+int Cmd::utilities( char *str)
+{
+  pwr_tCmd cmd;
+
+  if ( cdh_NoCaseStrcmp( str, "ge") == 0 ||
+    cdh_NoCaseStrncmp( str, "ge ", 3) == 0) {
+    strcpy( cmd, "wb_ge");
+    strcat( cmd, &str[2]);
+    system( cmd);
+    return 1;
+  }
+  else if ( cdh_NoCaseStrcmp( str, "s") == 0 ||
+    cdh_NoCaseStrncmp( str, "s ", 2) == 0) {
+    strcpy( cmd, "pwrs");
+    strcat( cmd, &str[1]);
+    system( cmd);
+    return 1;
+  }
+  else if ( cdh_NoCaseStrcmp( str, "a") == 0) {
+    strcpy( cmd, "pwra");
+    system( cmd);
+    return 1;
+  }
+  else if ( cdh_NoCaseStrcmp( str, "xhelp") == 0 ||
+	    cdh_NoCaseStrncmp( str, "xhelp ", 6) == 0) {
+    char cmd_array[3][40];
+    int nr;
+
+    nr = dcli_parse( str, " ", "", (char *)cmd_array,
+		     sizeof(cmd_array)/sizeof(cmd_array[0]),
+		     sizeof(cmd_array[0]), 1);
+
+    if ( nr == 1)
+      strcpy( cmd, "co_help");
+    else if ( nr > 1) {
+      if ( cdh_NoCaseStrncmp( cmd_array[1], "configurator", strlen(cmd_array[1])) == 0)
+	strcpy( cmd, "co_help -c");
+      else if ( cdh_NoCaseStrncmp( cmd_array[1], "designer's", strlen(cmd_array[1])) == 0)
+	strcpy( cmd, "co_help -d");
+      else if ( cdh_NoCaseStrncmp( cmd_array[1], "ge", strlen(cmd_array[1])) == 0)
+	strcpy( cmd, "co_help -g");
+      else if ( cdh_NoCaseStrncmp( cmd_array[1], "operator", strlen(cmd_array[1])) == 0)
+	strcpy( cmd, "co_help -o");
+      else if ( cdh_NoCaseStrncmp( cmd_array[1], "project", strlen(cmd_array[1])) == 0)
+	strcpy( cmd, "co_help");
+      else {
+	printf( "Syntax error\n");
+	exit(0);
+      }
+    }
+    system( cmd);
+    return 1;
+  }
+  else if ( cdh_NoCaseStrcmp( str, "rtmon") == 0) {
+    strcpy( cmd, "pwr_rtmon");
+    system( cmd);
+    return 1;
+  }
+  return 0;
+}
+
 Cmd::Cmd() :
   ctx_type(wb_eUtility_Cmd), ldhses(0), wbctx(0), volctx(0), volid(0), wnav(0), 
   wb_type(0)
 {
+}
+
+void Cmd::parse( int argc, char *argv[])
+{
+  pwr_tStatus	sts;
+  int		i;
+  pwr_tCmd     	str;
+  int 		quiet = 0;
+  
+  /* If arguments, treat them as a command and then exit */
+  // Open directory volume as default
+  strcpy( Cmd::cmd_volume, "directory");
+  Cmd::cmd_volume_p = Cmd::cmd_volume;
+
+  str[0] = 0;
+  for ( i = 1; i < argc; i++) {
+    if ( argv[i][0] == '-') {
+      switch ( argv[i][1]) {
+      case 'h':
+	Cmd::usage();
+	exit(0);
+      case 'a':
+	// Load all volumes
+	Cmd::cmd_volume_p = 0;
+	break;
+      case 'v':
+	// Load specified volume
+	if ( argc >= i) {
+	  strcpy( Cmd::cmd_volume, argv[i+1]);
+	  Cmd::cmd_volume_p = Cmd::cmd_volume;
+	  i++;
+	  continue;
+	}
+	else
+	  cout << "Syntax error, volume is missing" << endl;
+	break;
+      case 'c':
+	// Load specified class volume
+	if ( argc >= i) {
+	  strcpy( Cmd::cmd_classvolume, argv[i+1]);
+	  i++;
+	  continue;
+	}
+	else
+	  cout << "Syntax error, volume is missing" << endl;
+	break;
+      case 'q':
+	// Quiet
+	quiet = 1;
+	break;
+      case 'i':
+	// Ignore errors for dbs files not yet created
+	Cmd::cmd_options = ldh_mWbOption_IgnoreDLoadError;
+	MsgWindow::hide_info_messages( 1);
+	break;
+      default:
+	cout << "Unknown argument: " << argv[i] << endl;
+      }
+    }
+    else {
+      if ( str[0] != 0)
+	strcat( str, " ");
+      if ( strlen(str) + strlen(argv[i]) >= sizeof(str)) {
+	cout << "Command string too long" << endl;
+	exit(0);
+      }
+      strcat( str, argv[i]);
+    }
+  }
+
+  if ( !quiet)
+    cout << "\n\
+Proview is free software; covered by the GNU General Public License.\n\
+You can redistribute it and/or modify it under the terms of this license.\n\
+\n\
+Proview is distributed in the hope that it will be useful \n\
+but WITHOUT ANY WARRANTY; without even the implied warranty of \n\
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the \n\
+GNU General Public License for more details.\n\n";
+
+  if ( str[0] != 0) {
+    int nr;
+    char cmd_array[10][400];
+
+    dcli_remove_blank( str, str);
+    nr = dcli_parse( str, ";", "", (char *)cmd_array,
+		     sizeof(cmd_array)/sizeof(cmd_array[0]),
+		     sizeof(cmd_array[0]), 1);
+
+    if ( nr == 1) {
+      sts = utilities( cmd_array[0]);
+      if ( ODD(sts)) exit(0);
+    }
+
+    for ( int i = 0; i < nr; i++) {
+      dcli_remove_blank( cmd_array[i], cmd_array[i]);
+      printf( "-- Executing \"%s\"\n", cmd_array[i]);
+
+
+      sts = wnav->command(cmd_array[i]);
+      if ( ODD(sts)) {
+	sts = wnav->get_command_sts();
+	if ( EVEN(sts)) exit(sts);
+      }
+      else
+	exit(sts);
+    }
+    exit(0);
+  }
+  sts = dcli_input_init( &chn, &recall_buf);
+  if ( EVEN(sts)) exit(sts);
+
+  // Init input
+
+  while ( 1 )
+  {
+    /* get and parse the command */
+
+    /* get input */
+    dcli_qio_set_attr( &chn, 10);
+    sts = dcli_get_input_command( &chn, "pwr> ", str, 
+		sizeof(str), recall_buf);
+    dcli_qio_reset( &chn);
+
+//    sts = scanf( "%s", str);
+      
+    if ( strcmp( str, "") == 0)
+      continue;
+
+    dcli_remove_blank( str, str);
+    sts = wnav->command(str);
+
+  }
+  dcli_input_end( &chn, recall_buf);
 }
