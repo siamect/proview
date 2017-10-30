@@ -2311,6 +2311,8 @@ int	gcg_wind_comp_all(
 	  else {
 	    ldh_sSessInfo		info;
 
+	    wind = loaded_windlist[loaded_windcount - i - 1];
+
 	    sts = ldh_GetSessionInfo( wind->hw.ldhses, &info);
 	    if ( EVEN(sts)) return sts;
 
