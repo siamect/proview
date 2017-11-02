@@ -853,7 +853,7 @@ sub method_build ()
     merge();
   }
   if ( $flavour eq "") {
-    $flavour = "qt";
+    $flavour = "gtk";
   }
   if ( $_[0] eq "wb" ) {
     printf("-- Method build %s %s\n", $program, $flavour);
@@ -954,10 +954,10 @@ sub build_module ()
   }
   if ( $_[0] eq "motif" || $_[1] eq "motif" || $_[2] eq "motif" || $_[3] eq "motif") {
     $flavour = "motif";
-  } elsif ( $_[0] eq "gtk" || $_[1] eq "gtk" || $_[2] eq "gtk" || $_[3] eq "gtk") {
-    $flavour = "gtk";
-  } else {
+  } elsif ( $_[0] eq "qt" || $_[1] eq "qt" || $_[2] eq "qt" || $_[3] eq "qt") {
     $flavour = "qt";
+  } else {
+    $flavour = "gtk";
   }
 
   if (!defined($ENV{"pwre_env"})) {
