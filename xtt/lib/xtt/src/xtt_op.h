@@ -104,7 +104,7 @@ class Op {
   int	       	button_cnt;
   int	       	start_jop;
   Jop	       	*jop;
-  void 		(*command_cb)( void *, char *);
+  int 		(*command_cb)( void *, char *);
   void 		(*map_cb)( void *);
   void 		(*help_cb)( void *, const char *);
   void 		(*close_cb)( void *);

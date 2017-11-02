@@ -5906,12 +5906,17 @@ int grow_KeyPressed( grow_tCtx ctx, int key)
 
 void grow_SignalSend( grow_tCtx ctx, char *signalname)
 {
-  ((GrowCtx *)ctx)->signal_send( signalname);
+ ((GrowCtx *)ctx)->signal_send( signalname);
 }
 
 void grow_DrawObject( grow_tObject object)
 {
   ((GlowArrayElem *)object)->draw();
+}
+
+void grow_NavRedraw( grow_tCtx ctx)
+{
+  ((GrowCtx *)ctx)->nav_zoom();
 }
 
 /*@}*/

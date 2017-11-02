@@ -182,12 +182,14 @@ void GeCurve::activate_filledcurves( int set)
     grow_SetTrendFillCurve( curve_object, 0);
     configure_curves();
   }
+  grow_NavRedraw( growcurve_ctx);
 }
 
 void GeCurve::activate_curvetype( int type)
 {
   grow_SetCurveType( curve_object, (glow_eCurveType)type);
   configure_curves();
+  grow_NavRedraw( growcurve_ctx);
 }
 
 void GeCurve::activate_help()

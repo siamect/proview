@@ -3225,6 +3225,7 @@ extern "C" {
   int grow_KeyPressed( grow_tCtx ctx, int key);
   void grow_SignalSend( grow_tCtx ctx, char *signalname);
   void grow_DrawObject( grow_tObject object);
+  void grow_NavRedraw( grow_tCtx ctx);
 
   
 /*@}*/

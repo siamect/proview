@@ -46,6 +46,8 @@
 #include "rt_sev_net.h"
 #include "sev_db.h"
 
+class sev_server;
+
 class sev_node {
  public:
   pwr_tNodeId 	nid;
@@ -58,11 +60,19 @@ typedef struct {
   int idx;
 } sev_sRefid;
 
+typedef struct {
+  sev_server *sev;
+  qcom_sQid tgt;
+  sev_sMsgHistDataGetRequest *rmsg;
+  unsigned int size;
+  unsigned int item_idx;
+} sev_sHistDataThread;
+
 class sev_server {
  public:
 
   sev_server() : m_server_status(0), m_refid(0), m_msg_id(0), m_storage_cnt(0),
-    m_db_type(sev_eDbType_Sqlite), m_config(0) {memset(&m_stat,0,sizeof(m_stat));}
+    m_db_type(sev_eDbType_Sqlite), m_config(0), m_read_threads(0) {memset(&m_stat,0,sizeof(m_stat));}
 
   pwr_tStatus m_sts;
   pwr_tStatus m_server_status;
@@ -76,6 +86,7 @@ class sev_server {
   sev_eDbType m_db_type;
   pwr_sClass_SevServer *m_config;
   pwr_tDlid m_config_dlid;
+  int m_read_threads;
 
   int init( int noneth);
   int connect();
@@ -92,5 +103,7 @@ class sev_server {
   void garbage_collector();
   void garbage_item( int idx);
   void set_dbtype( sev_eDbType type) { m_db_type = type;}
+
+  static void *send_histdata_thread( void *arg);
 };
 #endif

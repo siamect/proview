@@ -35,6 +35,7 @@
  **/
 
 #include <math.h>
+#include <pthread.h>
 
 #include "pwr.h"
 #include "co_cdh.h"
@@ -464,10 +465,6 @@ int sev_server::mainloop()
 	m_config->Stat.MediumLoad = m_stat.medium_load;
 	m_config->Stat.StorageRate = m_stat.storage_rate;
 	m_config->Stat.MediumStorageRate = m_stat.medium_storage_rate;
-	m_config->Stat.DataStoreMsgCnt = m_stat.datastore_msg_cnt;
-	m_config->Stat.DataGetMsgCnt = m_stat.dataget_msg_cnt;
-	m_config->Stat.ItemsMsgCnt = m_stat.items_msg_cnt;
-	m_config->Stat.EventStoreMsgCnt = m_stat.eventstore_msg_cnt;	
       }
       time_Aadd( &next_stat, &next_stat, &stat_interval);
       busy = pwr_cNDeltaTime;
@@ -499,7 +496,8 @@ int sev_server::mainloop()
           case sev_eMsgType_HistDataGetRequest:
             send_histdata( get.reply, (sev_sMsgHistDataGetRequest *) mp, get.size);
 	    m_stat.dataget_msg_cnt++;
-            break;
+	    // Don't free the message now
+            continue;
           case sev_eMsgType_HistItemsRequest:
             send_itemlist( get.reply);
             break;
@@ -535,6 +533,13 @@ int sev_server::mainloop()
     }
 
     qcom_Free( &sts, mp);
+
+    if ( m_config) {
+      m_config->Stat.DataStoreMsgCnt = m_stat.datastore_msg_cnt;
+      m_config->Stat.DataGetMsgCnt = m_stat.dataget_msg_cnt;
+      m_config->Stat.ItemsMsgCnt = m_stat.items_msg_cnt;
+      m_config->Stat.EventStoreMsgCnt = m_stat.eventstore_msg_cnt;	
+    }
   }
 }
 
@@ -790,6 +795,28 @@ int sev_server::receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size)
 
 int sev_server::send_histdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *rmsg, unsigned int size)
 {
+  pthread_t 	thread;
+  int sts;
+
+  sev_sHistDataThread *arg = (sev_sHistDataThread *) malloc( sizeof(*arg));
+  arg->sev = this;
+  arg->tgt = tgt;
+  arg->rmsg = rmsg;
+  arg->size = size;
+
+  if ( m_read_threads) {
+    sts = pthread_create( &thread, NULL, send_histdata_thread, arg);
+    if ( sts != 0)
+      printf( "pthread_create error %d\n", sts);
+  }
+  else {
+    send_histdata_thread( arg);
+  }
+  return 1;
+}
+
+void *sev_server::send_histdata_thread( void *arg)
+{
   pwr_tTime *tbuf;
   void *vbuf;
   unsigned int rows = 0;
@@ -798,28 +825,37 @@ int sev_server::send_histdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *rmsg, 
   qcom_sPut	put;
   pwr_tStatus	sts, lsts;
   pwr_tTime	starttime, endtime;
+  unsigned int	item_idx;
+
+  sev_server *sev = ((sev_sHistDataThread *)arg)->sev;
+  qcom_sQid tgt = ((sev_sHistDataThread *)arg)->tgt;
+  sev_sMsgHistDataGetRequest *rmsg = ((sev_sHistDataThread *)arg)->rmsg;
+
+  free( arg);
 
   starttime = net_NetTimeToTime( &rmsg->StartTime);
   endtime = net_NetTimeToTime( &rmsg->EndTime);
-  sev_item item;
 
-  m_db->get_item(&m_sts, &item, rmsg->Oid, rmsg->AName);
-  if(ODD(m_sts)) {
-    m_db->get_values( &m_sts, rmsg->Oid, item.options, item.deadband, 
-            rmsg->AName, item.attr[0].type, item.attr[0].size, 
-            item.scantime, &item.creatime,
-            &starttime, &endtime, rmsg->NumPoints, &tbuf,  &vbuf, &rows);
-  }
-  if ( ODD(m_sts) && rows != 0)
-    msize = rows * ( sizeof(pwr_tTime) + item.attr[0].size) + sizeof(*msg) - sizeof(msg->Data);
+  sev->m_db->get_item_idx(&sts, &item_idx, rmsg->Oid, rmsg->AName);
+  if ( EVEN(sts)) return (void *) 1;
+
+  sev->m_db->get_values( &sts, rmsg->Oid, sev->m_db->m_items[item_idx].options, 
+			 sev->m_db->m_items[item_idx].deadband, 
+			 rmsg->AName, sev->m_db->m_items[item_idx].attr[0].type, 
+			 sev->m_db->m_items[item_idx].attr[0].size, 
+			 sev->m_db->m_items[item_idx].scantime, &sev->m_db->m_items[item_idx].creatime,
+			 &starttime, &endtime, rmsg->NumPoints, &tbuf,  &vbuf, &rows);
+  if ( ODD(sts) && rows != 0)
+    msize = rows * ( sizeof(pwr_tTime) + sev->m_db->m_items[item_idx].attr[0].size) + 
+      sizeof(*msg) - sizeof(msg->Data);
   else
     msize = sizeof(*msg);
 
-  put.reply.nid = m_nodes[0].nid;
+  put.reply.nid = sev->m_nodes[0].nid;
   put.reply.qix = sev_eProcSevServer;
   put.type.b = (qcom_eBtype) sev_cMsgClass;
   put.type.s = (qcom_eStype) sev_eMsgType_HistDataGet;
-  put.msg_id = m_msg_id++;
+  put.msg_id = sev->m_msg_id++;
   put.size = msize;
   msg  = (sev_sMsgHistDataGet *) qcom_Alloc(&lsts, put.size);
 
@@ -829,22 +865,24 @@ int sev_server::send_histdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *rmsg, 
   msg->Type = sev_eMsgType_HistDataGet;
   msg->Oid = rmsg->Oid;
   strncpy( msg->AName, rmsg->AName, sizeof(msg->AName));
-  if ( ODD(m_sts)) {
+  if ( ODD(sts)) {
     msg->NumPoints = rows;
-    msg->VType = item.attr[0].type;
-    msg->VSize = item.attr[0].size;
+    msg->VType = sev->m_db->m_items[item_idx].attr[0].type;
+    msg->VSize = sev->m_db->m_items[item_idx].attr[0].size;
   }
-  msg->Status = m_sts;
+  qcom_Free( &lsts, rmsg);
 
-  if ( ODD(m_sts) && rows) {
+  msg->Status = sts;
+
+  if ( ODD(sts) && rows) {
     memcpy( &msg->Data, tbuf, sizeof(pwr_tTime) * rows);
-    memcpy( (char *)&msg->Data + sizeof(pwr_tTime) * rows, vbuf, item.attr[0].size * rows);
+    memcpy( (char *)&msg->Data + sizeof(pwr_tTime) * rows, vbuf, sev->m_db->m_items[item_idx].attr[0].size * rows);
   }
   if ( !qcom_Put( &sts, &tgt, &put)) {
     qcom_Free( &sts, put.data);
   }    
-
-  return 1;
+  // pthread_exit( (void *) 1);
+  return (void *) 1;
 }
 
 int sev_server::send_objecthistdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *rmsg, unsigned int size)
@@ -1019,6 +1057,7 @@ int main (int argc, char *argv[])
   sev_server srv;
   int noneth = 0;
   sev_eDbType dbtype = sev_eDbType_;
+  char str[80];
 
   if ( argc > 1 && strcmp( argv[1], "-n") == 0)
     noneth = 1;
@@ -1039,6 +1078,10 @@ int main (int argc, char *argv[])
       else if ( cdh_NoCaseStrcmp( type, "hdf5") == 0)
 	dbtype = sev_eDbType_HDF5;	
     }
+  }
+  if ( cnf_get_value( "sevReadThreads", str, sizeof(str))) {
+    if ( cdh_NoCaseStrcmp( str, "yes") == 0)
+      srv.m_read_threads = 1;
   }
 
   if ( dbtype == sev_eDbType_)

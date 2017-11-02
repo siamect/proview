@@ -82,7 +82,7 @@ class XColWind {
     int         (*call_method_cb)(void *, const char *, const char *, pwr_sAttrRef,
 				  unsigned long, unsigned long, char *);
     int		(*is_authorized_cb)(void *, unsigned int);
-    void 	(*command_cb)( void *, char *);
+    int 	(*command_cb)( void *, char *);
     int 	(*get_select_cb)( void *, pwr_tAttrRef *, int *);
     void	*client_data;
     brow_tObject input_node;

@@ -197,9 +197,15 @@ void Op::activate_fast()
 
 void Op::activate_history()
 {
+  int sts;
   char cmd[200] = "show objecttree/class=sevhist,sevhistobject/title=\"Process History List\"/alpha/global";
-  if ( command_cb)
-    command_cb( parent_ctx, cmd);
+  if ( command_cb) {
+    sts = command_cb( parent_ctx, cmd);
+    if ( sts == XNAV__EMPTYLIST) {
+      strcpy( cmd, "show objecttree/class=sevitemfloat,sevitemint,sevitemboolean/title=\"Process History List\"/alpha");
+      sts = command_cb( parent_ctx, cmd);
+    }
+  }
 }
 
 void Op::activate_graph()

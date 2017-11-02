@@ -76,3 +76,4 @@ notauthorized   <Not authorized for this operation>		/error
 novalidcurve    <No valid curve found>				/error
 nosuchvolume    <No such volume>				/error
 invalidobject   <Invalid object for this operation>		/error
+emptylist   	<List is empty>					/info

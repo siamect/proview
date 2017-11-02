@@ -189,6 +189,7 @@ class sev_db {
 
   pwr_tStatus tree_update();
   pwr_tStatus tree_update_value( int item_idx, pwr_tTime time, void *buf);
+  void get_item_idx( pwr_tStatus *sts, unsigned int *item_idx, pwr_tOid oid, char *attributename);
 
   virtual int check_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *aname, 
 			  pwr_tDeltaTime storatetime, pwr_eType type, unsigned int size, 

@@ -175,7 +175,7 @@ static void xnav_stream_close_cb( void *xnav, XttStream *strmctx);
 //new code by Jonas Nylund 030131
 static void xnav_hist_close_cb( void *ctx);
 //end new code by Jonas Nylund 030131
-static void xnav_op_command_cb( void *xnav, char *command);
+static int xnav_op_command_cb( void *xnav, char *command);
 static void xnav_op_close_cb( void *ctx);
 static void xnav_op_help_cb( void *ctx, const char *key);
 static void xnav_op_map_cb( void *ctx);
@@ -2820,12 +2820,16 @@ static int	xnav_show_func(	void		*client_data,
       int listcnt;
       unsigned int options = 0;
       char layout_str[40];
+      char title_str[80];
       int i;
       int global;
       int alphaorder;
       
       global =  ODD( dcli_get_qualifier( "/GLOBAL", 0, 0));
       alphaorder =  ODD( dcli_get_qualifier( "/ALPHAORDER", 0, 0));
+
+      if ( EVEN(dcli_get_qualifier( "/TITLE", title_str, sizeof(title_str))))
+	strcpy( title_str, "Objects");
 
       // The class string can contain several classes separated by ','
       class_num = dcli_parse( class_str, ",", "",
@@ -2850,7 +2854,7 @@ static int	xnav_show_func(	void		*client_data,
       }
       if ( listcnt == 0) {
         xnav->message('E', "No objects found");
-        return XNAV__HOLDCOMMAND; 	
+        return XNAV__EMPTYLIST; 	
       }
 
       if ( ODD( dcli_get_qualifier( "/LAYOUT", layout_str, sizeof(layout_str)))) {
@@ -2878,7 +2882,7 @@ static int	xnav_show_func(	void		*client_data,
       if ( alphaorder)
 	options |= tree_mOptions_AlphaOrder;
 
-      xnav->tree_new( "Objects", list, listcnt, options, xnav_otree_action_cb);
+      xnav->tree_new( title_str, list, listcnt, options, xnav_otree_action_cb);
 
       free( (char *)list);
       return XNAV__SUCCESS;
@@ -10127,6 +10131,9 @@ static pwr_tStatus xnav_otree_action_cb( void *ctx, pwr_tAttrRef *aref)
     break;
   case pwr_cClass_SevHist:
   case pwr_cClass_SevHistObject:
+  case pwr_cClass_SevItemFloat:
+  case pwr_cClass_SevItemInt:
+  case pwr_cClass_SevItemBoolean:
     sprintf( cmd, "open history/name=%s/title=\"%s\"", aname, aname);
     break;
   case pwr_cClass_XttGraph:
@@ -10324,9 +10331,10 @@ static void xnav_op_ack_last_cb( void *xnav, unsigned long type,
    ((XNav *)xnav)->ev->ack_last_prio( type, prio);
 }
 
-static void xnav_op_command_cb( void *xnav, char *command)
+static int xnav_op_command_cb( void *xnav, char *command)
 {
   ((XNav *)xnav)->command( command);
+  return ((XNav *)xnav)->get_command_sts();
 }
 
 static void xnav_op_map_cb( void *ctx)

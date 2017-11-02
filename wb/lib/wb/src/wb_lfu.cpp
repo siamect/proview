@@ -2644,7 +2644,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		     !(distr_options & lfu_mDistrOpt_NoRootVolume)) {
 		  fprintf( file, "load %s\n", nodename_ptr);
 		}
-		if ( cid == pwr_cClass_SevNodeConfig)
+		else if ( cid == pwr_cClass_SevNodeConfig)
 		  fprintf( file, "boot %s\n", nodename_ptr);
 
 		if ( *components_ptr & pwr_mDistrComponentMask_UserDatabase)

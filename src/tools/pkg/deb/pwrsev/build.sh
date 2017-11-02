@@ -1,5 +1,8 @@
 #!/bin/bash
 
+hw=deb
+op=deb
+
 # Get version
 if [ -e $pwr_inc/pwr_version.h ]; then
   ver=`eval cat $pwr_inc/pwr_version.h | grep "\bpwrv_cWbdbVersionShortStr\b" | awk '{print $3}'`
@@ -13,11 +16,11 @@ fi
 
 # Generate version help file
 {
-  if [ ! -e $pwre_sroot/tools/pkg/deb/pwrsev/control ]; then
+  if [ ! -e $pwre_sroot/tools/pkg/$hw/pwrsev/control ]; then
     echo "Controlfile not found"
     exit 1
   fi
-  datfile=$pwre_sroot/tools/pkg/deb/pwrsev/control
+  datfile=$pwre_sroot/tools/pkg/$hw/pwrsev/control
 
   echo "<topic> version"
   d=`eval date +\"%F %X\"`
@@ -92,7 +95,7 @@ if [ "$1" == "-v" ]; then
 fi
 
 pkgroot=$pwre_broot/$pwre_target/bld/pkg/pwrsev
-pkgsrc=$pwre_sroot/tools/pkg/deb/pwrsev
+pkgsrc=$pwre_sroot/tools/pkg/$hw/pwrsev
 
 
 # Create directories
@@ -143,7 +146,9 @@ currentdir="`eval pwd`"
 tarfile=$pwre_broot/$pwre_target/bld/pkg/pwrtmp.tar
 cd $pwre_broot/$pwre_target/exp
 echo "-- Copy release to package tree"
-tar -cf $tarfile exe/rt_qmon exe/rt_prio exe/sev_ini exe/sev_xtt exe/sev_xtt_gtk exe/sev_server exe/sev_repair exe/*.gif exe/*.png load/sev_xtt_version_help.dat exe/pwr_pkg.sh exe/en_us/*.txt doc/*
+tar -cf $tarfile exe/rt_qmon exe/rt_prio exe/sev_ini exe/sev_xtt exe/sev_xtt_gtk exe/sev_server \
+exe/sev_repair exe/*.gif exe/*.png load/pwrs.dbs load/pwrb.dbs load/sev_xtt_version_help.dat \
+exe/pwr_pkg.sh exe/rt_xtt exe/rt_xtt_gtk exe/rt_rtt exe/*.pwgc exe/en_us/*.txt doc/*
 cd $pkgroot/usr/pwrsev
 mkdir cnf
 tar -xf $tarfile
@@ -158,21 +163,21 @@ cp $pkgsrc/proview.cnf $pkgroot/usr/pwrsev/cnf
 
 # Copy op to cnf
 mkdir $pkgroot/usr/pwrsev/cnf/op
-cp $pwre_sroot/tools/pkg/deb/op/.bashrc $pkgroot/usr/pwrsev/cnf/op
-cp $pwre_sroot/tools/pkg/deb/op/.bash_profile $pkgroot/usr/pwrsev/cnf/op
-#cp $pwre_sroot/tools/pkg/deb/op/.mwmrc $pkgroot/usr/pwrsev/cnf/op
-cp $pwre_sroot/tools/pkg/deb/op/.rtt_start $pkgroot/usr/pwrsev/cnf/op
-cp $pwre_sroot/tools/pkg/deb/op/.xtt_start $pkgroot/usr/pwrsev/cnf/op
-#cp $pwre_sroot/tools/pkg/deb/op/.xsession $pkgroot/usr/pwrsev/cnf/op
+cp $pwre_sroot/tools/pkg/$op/op/.bashrc $pkgroot/usr/pwrsev/cnf/op
+cp $pwre_sroot/tools/pkg/$op/op/.bash_profile $pkgroot/usr/pwrsev/cnf/op
+#cp $pwre_sroot/tools/pkg/$op/op/.mwmrc $pkgroot/usr/pwrsev/cnf/op
+cp $pwre_sroot/tools/pkg/$op/op/.rtt_start $pkgroot/usr/pwrsev/cnf/op
+cp $pwre_sroot/tools/pkg/$op/op/.xtt_start $pkgroot/usr/pwrsev/cnf/op
+#cp $pwre_sroot/tools/pkg/$op/op/.xsession $pkgroot/usr/pwrsev/cnf/op
 
 # Copy user to cnf
 mkdir $pkgroot/usr/pwrsev/cnf/user
-cp $pwre_sroot/tools/pkg/deb/user/.bashrc $pkgroot/usr/pwrsev/cnf/user
-cp $pwre_sroot/tools/pkg/deb/user/.bash_profile $pkgroot/usr/pwrsev/cnf/user
-#cp $pwre_sroot/tools/pkg/deb/user/.mwmrc $pkgroot/usr/pwrsev/cnf/user
-cp $pwre_sroot/tools/pkg/deb/user/.rtt_start $pkgroot/usr/pwrsev/cnf/user
-cp $pwre_sroot/tools/pkg/deb/user/.xtt_start $pkgroot/usr/pwrsev/cnf/user
-#cp $pwre_sroot/tools/pkg/deb/user/.xsession $pkgroot/usr/pwrsev/cnf/user
+cp $pwre_sroot/tools/pkg/$op/user/.bashrc $pkgroot/usr/pwrsev/cnf/user
+cp $pwre_sroot/tools/pkg/$op/user/.bash_profile $pkgroot/usr/pwrsev/cnf/user
+#cp $pwre_sroot/tools/pkg/$op/user/.mwmrc $pkgroot/usr/pwrsev/cnf/user
+cp $pwre_sroot/tools/pkg/$op/user/.rtt_start $pkgroot/usr/pwrsev/cnf/user
+cp $pwre_sroot/tools/pkg/$op/user/.xtt_start $pkgroot/usr/pwrsev/cnf/user
+#cp $pwre_sroot/tools/pkg/$op/user/.xsession $pkgroot/usr/pwrsev/cnf/user
 
 # Create package
 echo "-- Building package"
