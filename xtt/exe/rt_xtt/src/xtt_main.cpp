@@ -110,6 +110,7 @@ xnav_sStartMenu Xtt::system_menu[] = {
 	{ "System Status", 	xnav_eItemType_Command,	menu_ePixmap_Map,	(void *) "show nodeinfo"},
 	{ "Nodes", 	xnav_eItemType_Command,	menu_ePixmap_Map,	(void *) "show nodeobjects"},
 	{ "Volumes", 	xnav_eItemType_Command,	menu_ePixmap_Map,	(void *) "show volumes"},
+	{ "History", 	xnav_eItemType_Command,	menu_ePixmap_Map,	(void *) "show history"},
 	{ "", 0, 0, NULL}};
 xnav_sStartMenu Xtt::root_menu[] = {
 	{ "Database", 	xnav_eItemType_Command,	menu_ePixmap_Map, 	(void *) "show database"},

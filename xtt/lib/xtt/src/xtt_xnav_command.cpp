@@ -2892,6 +2892,44 @@ static int	xnav_show_func(	void		*client_data,
       return XNAV__HOLDCOMMAND;
     }
   }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "HISTORY", strlen( arg1_str)) == 0)
+  {
+    int		sts;
+    pwr_tOid 	root;
+    pwr_tOid	child;
+    Item 	*item;
+    int		cnt;
+    
+
+    // Get the toplevel objects
+    sts = gdh_NameToObjid( "pwrNode-sev", &root);
+    if ( EVEN(sts)) {
+      xnav->message( 'E', "No storage server on this node");
+      return XNAV__SUCCESS;
+    }
+
+    //  Loop through all root objects and see if they are valid at toplevel
+    cnt = 0;
+    for ( sts = gdh_GetChild( root, &child);
+	  ODD(sts);
+	  sts = gdh_GetNextSibling( child, &child)) {
+      if ( cnt == 0) {
+	xnav->brow_pop();
+	brow_SetNodraw( xnav->brow->ctx);
+      }
+      sts = xnav->create_object_item( child, NULL, flow_eDest_IntoLast, 
+				      (void **)&item, 0);
+
+      cnt++;
+    }
+
+    if ( !cnt) {
+      xnav->message('E', "No history objects found");
+      return XNAV__SUCCESS;
+    }
+    brow_ResetNodraw( xnav->brow->ctx);
+    brow_Redraw( xnav->brow->ctx, 0);
+  }
   else
   {
     /* This might be a system picture */
