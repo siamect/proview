@@ -325,11 +325,11 @@ static gboolean displayerror_remove_cb( void *data)
 
 void CoWowGtk::DisplayError( const char *title, const char *text, lng_eCoding coding)
 {
-  GtkWidget *parent = m_parent;
-  if ( parent) {
-    while( !GTK_IS_WINDOW(parent))
-      parent = gtk_widget_get_parent( parent);
-  }
+  GtkWindow *parent;
+  if ( m_parent)
+    parent = GTK_WINDOW(gtk_widget_get_toplevel( m_parent));
+  else
+    parent = 0;
 
   char *ctext; 
   if ( coding != lng_eCoding_UTF_8) {
@@ -340,7 +340,7 @@ void CoWowGtk::DisplayError( const char *title, const char *text, lng_eCoding co
   else
     ctext = (char *)text;
 
-  GtkWidget *dialog = gtk_message_dialog_new( GTK_WINDOW(parent),
+  GtkWidget *dialog = gtk_message_dialog_new( parent,
 					      GTK_DIALOG_MODAL, 
 					      GTK_MESSAGE_ERROR,
 					      GTK_BUTTONS_OK, ctext);
