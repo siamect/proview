@@ -53,13 +53,26 @@
 #define ge_ePeriod_Markers ((time_ePeriod)1000)
 
 typedef enum {
-        curve_mOptions_FullScreen   = 1 << 0,
-        curve_mOptions_Maximize     = 1 << 1,
-        curve_mOptions_FullMaximize = 1 << 2,
-        curve_mOptions_Iconify      = 1 << 3,
-        curve_mOptions_Invisible    = 1 << 4,
-        curve_mOptions_Embedded     = 1 << 5,
-        curve_mOptions_ShowDescrFirst = 1 << 6
+        curve_mOptions_FullScreen   	= 1 << 0,
+        curve_mOptions_Maximize     	= 1 << 1,
+        curve_mOptions_FullMaximize 	= 1 << 2,
+        curve_mOptions_Iconify      	= 1 << 3,
+        curve_mOptions_Invisible    	= 1 << 4,
+        curve_mOptions_Embedded     	= 1 << 5,
+        curve_mOptions_ShowDescrFirst 	= 1 << 6,
+	curve_mOptions_CurveTypeLine   	= 1 << 7,
+	curve_mOptions_CurveTypePoints 	= 1 << 8,
+	curve_mOptions_CurveTypeLinePoints = 1 << 9,
+	curve_mOptions_CurveTypeSquare 	= 1 << 10,
+	curve_mOptions_FillCurve       	= 1 << 11,
+	curve_mOptions_SplitDigital    	= 1 << 12,
+	curve_mOptions_LightBackground 	= 1 << 13,
+	curve_mOptions_TimeRangeMinute 	= 1 << 14,
+	curve_mOptions_TimeRange10Minutes = 1 << 15,
+	curve_mOptions_TimeRangeHour   	= 1 << 16,
+	curve_mOptions_TimeRangeDay    	= 1 << 17,
+	curve_mOptions_TimeRangeWeek   	= 1 << 18,
+	curve_mOptions_TimeRangeMonth  	= 1 << 19
 } curve_mOptions;
 
 typedef enum {
@@ -73,7 +86,8 @@ typedef enum {
   curve_mEnable_ExportTime = 1 << 7,
   curve_mEnable_CurveType = 1 << 8,
   curve_mEnable_CurveTypeSquare = 1 << 9,
-  curve_mEnable_FillCurve = 1 << 10
+  curve_mEnable_FillCurve = 1 << 10,
+  curve_mEnable_DigitalSplit = 1 << 11
 } curve_mEnable;
 
 typedef enum {
@@ -135,6 +149,7 @@ class GeCurveData {
     double  y_axis_width[CURVE_MAX_COLS];
     char    y_format[CURVE_MAX_COLS][20];
     char    x_format[CURVE_MAX_COLS][20];
+    pwr_eType y_orig_type[CURVE_MAX_COLS];
     int     x_reverse;
     curve_eTimeFormat time_format;
 
@@ -250,7 +265,7 @@ class GeCurve {
     int configure_curves();
     int configure_axes();
     int config_names();
-    void points_added( unsigned int no_of_points);
+    void points_added( unsigned int *no_of_points);
     void set_title( char *str);
     void set_time( pwr_tTime time);
     void print( char *filename);
@@ -267,6 +282,7 @@ class GeCurve {
     void activate_background();
     void activate_filledcurves( int set);
     void activate_curvetype( int type);
+    void activate_digsplit();
     void activate_help();
     void activate_period( time_ePeriod);
     void activate_period_markers();

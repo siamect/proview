@@ -145,9 +145,19 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Storage time.
+      !*/
+      Object StorageTime $Attribute 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      !/**
       !  Objid.
       !*/
-      Object Oid $Attribute 10 
+      Object Oid $Attribute 11 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Objid"
 	  Attr Flags |= PWR_MASK_NOEDIT
@@ -156,9 +166,19 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Item identity.
+      !*/
+      Object Id $Attribute 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      !/**
       !  Receive counter.
       !*/
-      Object ReceiveCount $Attribute 11 
+      Object ReceiveCount $Attribute 13 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
 	  Attr Flags |= PWR_MASK_NOEDIT
@@ -168,7 +188,7 @@ SObject pwrb:Class
       !/**
       !  Write counter.
       !*/
-      Object WriteCount $Attribute 12 
+      Object WriteCount $Attribute 14 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
 	  Attr Flags |= PWR_MASK_NOEDIT
@@ -178,7 +198,7 @@ SObject pwrb:Class
       !/**
       !  Write quota in percentage.
       !*/
-      Object WriteQuota $Attribute 13 
+      Object WriteQuota $Attribute 15 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
 	  Attr Flags |= PWR_MASK_NOEDIT
@@ -188,7 +208,7 @@ SObject pwrb:Class
       !/**
       !  Time for mean value.
       !*/
-      Object MeanValueTime $Attribute 14 
+      Object MeanValueTime $Attribute 16 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Time"
 	  Attr Flags |= PWR_MASK_NOEDIT
@@ -198,7 +218,7 @@ SObject pwrb:Class
       !/**
       !  Mean value.
       !*/
-      Object MeanValue $Attribute 15 
+      Object MeanValue $Attribute 17 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
 	  Attr Flags |= PWR_MASK_NOEDIT
@@ -208,7 +228,7 @@ SObject pwrb:Class
       !/**
       !  Standard deviation in last mean value interval.
       !*/
-      Object StandardDeviation $Attribute 16 
+      Object StandardDeviation $Attribute 18 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
 	  Attr Flags |= PWR_MASK_NOEDIT
@@ -218,7 +238,7 @@ SObject pwrb:Class
       !/**
       !  Time for last write.
       !*/
-      Object LastTime $Attribute 17 
+      Object LastTime $Attribute 19 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Time"
 	  Attr Flags |= PWR_MASK_NOEDIT

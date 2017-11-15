@@ -80,6 +80,7 @@ class GeCurveGtk : public GeCurve {
     GtkWidget   *tools_curvetype_linepoints;
     GtkWidget   *tools_curvetype_square;
     GtkWidget   *tools_curve_fill;
+    GtkWidget   *tools_curve_digsplit;
     GtkWidget   *export_widget;
     GtkWidget   *export_attrcombo_widget;
     GtkWidget   *export_fromtime_widget;
@@ -147,6 +148,7 @@ class GeCurveGtk : public GeCurve {
     static void activate_curvetype_points( GtkWidget *w, gpointer data);
     static void activate_curvetype_linepoints( GtkWidget *w, gpointer data);
     static void activate_curvetype_square( GtkWidget *w, gpointer data);
+    static void activate_digsplit( GtkWidget *w, gpointer data);
     static void activate_xlimits( GtkWidget *w, gpointer data);
     static void activate_help( GtkWidget *w, gpointer data);
     static void activate_minmax_ok( GtkWidget *w, gpointer data);

@@ -55,6 +55,16 @@ pwr_tStatus sev_db::tree_update()
   pwr_sClass_SevItem ritem;
   char oname_array[20][pwr_cSizObjName + 1];
   pwr_tObjName itemname;
+  char root[] = "pwrNode-sev";
+
+  // Check root object
+  sts = gdh_NameToObjid( root, &oid);
+  if ( EVEN(sts)) {
+    sts = gdh_CreateObject( root, pwr_eClass_NodeHier, 0,
+			    &oid, pwr_cNObjid, 0, pwr_cNObjid);
+    if ( EVEN(sts)) return sts;
+  }
+
 
   for ( unsigned int i = 0; i < m_items.size(); i++) {
     if ( m_items[i].deleted)
@@ -89,7 +99,7 @@ pwr_tStatus sev_db::tree_update()
 	     (char *) oname_array, sizeof( oname_array)/sizeof( oname_array[0]), 
 	     sizeof( oname_array[0]), 0);
 
-    strcpy( hname, "pwrNode-sev");
+    strcpy( hname, root);
     for ( int j = 0; j < num; j++) {
       strcat( hname, "-");
       strcat( hname, oname_array[j]);
@@ -105,7 +115,7 @@ pwr_tStatus sev_db::tree_update()
 	new_item = 1;
       }
     }
-    sprintf( itemname, "%sItem%d", m_items[i].attrnum > 1 ? "O" : "", m_items[i].id); 
+    sprintf( itemname, "%sItem", m_items[i].attrnum > 1 ? "O" : ""); 
     strcat( hname, "-");
     strcat( hname, itemname);
     if ( !new_item)
@@ -142,9 +152,11 @@ pwr_tStatus sev_db::tree_update()
       ritem.AttrType = m_items[i].attr[0].type;
       ritem.NoOfAttr = m_items[i].attrnum;
       ritem.Oid = m_items[i].oid;
+      ritem.Id = m_items[i].id;
       ritem.Options = m_items[i].options;
       ritem.Deadband = m_items[i].deadband;
       ritem.ScanTime = m_items[i].scantime;
+      ritem.StorageTime = m_items[i].storagetime;
       strncpy( ritem.Description, m_items[i].description, sizeof(ritem.Description));
 
       sts = gdh_SetObjectInfo( hname, &ritem, sizeof(ritem));

@@ -83,8 +83,11 @@ class GrowCurve : public GrowTrend {
 	        int nodraw = 0);
 
   glow_eCurveType	type;				//!< Type of curve.
+  int			split_digsquare; 		//!< Split digtal curves on different lines
   
   void set_type( glow_eCurveType t);
+  void set_digital_split( int set) { split_digsquare = set;}
+  void get_digital_split( int *set) { *set = split_digsquare;}
 
   //! Configure the curves
   /*!
@@ -100,7 +103,7 @@ class GrowCurve : public GrowTrend {
 
     Add the new value first in all the curves, and shift the other values one step forward.
   */
-  void add_points( glow_sCurveData *data, unsigned int no_of_points);
+  void add_points( glow_sCurveData *data, unsigned int *no_of_points);
 };
 
 

@@ -61,6 +61,7 @@ class XttSevHistGtk : public XttSevHist {
 		 int height,
 		 unsigned int options,
 		 int xn_color_theme, 
+		 time_ePeriod xn_time_range,
 		 void *basewidget,
 		 int *sts);
   XttSevHistGtk( void *parent_ctx,

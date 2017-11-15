@@ -55,6 +55,10 @@ extern "C" {
 # include "co_regex.h"
 #endif
 
+#ifndef co_time_h
+# include "co_time.h"
+#endif
+
 #ifndef co_nav_help_h
 #include "co_nav_help.h"
 #endif
@@ -382,7 +386,7 @@ class XNav {
     virtual XttSevHist *xttsevhist_new( char *name, pwr_tOid *oidv, pwr_tOName *aname,
 					pwr_tOName *oname, bool *sevhistobjectv, sevcli_tCtx scctx, 
 					char *filename, int width, int height, unsigned int options, 
-					int color_theme, void *basewidget, pwr_tStatus *sts) {return 0;}
+					int color_theme, time_ePeriod time_range, void *basewidget, pwr_tStatus *sts) {return 0;}
     virtual XttTCurve *xtttcurve_new( char *name, pwr_tAttrRef *arefv, int width, int height, unsigned int options, 
 				      int color_theme, void *basewidget, pwr_tStatus *sts) {return 0;}
     virtual XttFast *xttfast_new( char *name, pwr_tAttrRef *objar, int width, int height, unsigned int options,

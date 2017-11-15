@@ -349,6 +349,13 @@ void GeCurveGtk::activate_curvetype_square( GtkWidget *w, gpointer data)
   curve->activate_curvetype( glow_eCurveType_Square);
 }
 
+void GeCurveGtk::activate_digsplit( GtkWidget *w, gpointer data)
+{
+  GeCurve *curve = (GeCurve *)data;
+
+  curve->activate_digsplit();
+}
+
 void GeCurveGtk::activate_xlimits( GtkWidget *w, gpointer data)
 {
   GeCurve *curve = (GeCurve *)data;
@@ -571,6 +578,8 @@ void GeCurveGtk::enable( unsigned int mask)
     g_object_set( tools_curvetype_square, "visible", TRUE, NULL);
   if ( mask & curve_mEnable_FillCurve)
     g_object_set( tools_curve_fill, "visible", TRUE, NULL);
+  if ( mask & curve_mEnable_DigitalSplit)
+    g_object_set( tools_curve_digsplit, "visible", TRUE, NULL);
   layout_mask = mask;
 }
 
@@ -589,6 +598,7 @@ void GeCurveGtk::setup( unsigned int mask)
   g_object_set( tools_curvetype_linepoints, "visible", mask & curve_mEnable_CurveType ? TRUE : FALSE, NULL);
   g_object_set( tools_curvetype_square, "visible", mask & curve_mEnable_CurveType ? TRUE : FALSE, NULL);
   g_object_set( tools_curve_fill, "visible", mask & curve_mEnable_CurveType ? TRUE : FALSE, NULL);
+  g_object_set( tools_curve_digsplit, "visible", mask & curve_mEnable_DigitalSplit ? TRUE : FALSE, NULL);
   layout_mask = mask;
 }
 
@@ -1079,6 +1089,14 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
   g_object_set( tools_curve_fill, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_curve_fill, CoWowGtk::translate_utf8("Filled curves"), "");
 
+  tools_curve_digsplit = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_curve_digsplit.png");
+  gtk_container_add( GTK_CONTAINER(tools_curve_digsplit), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_curve_digsplit, "clicked", G_CALLBACK(activate_digsplit), this);
+  g_object_set( tools_curve_digsplit, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_curve_digsplit, CoWowGtk::translate_utf8("Split digital curves"), "");
+
   tools_snapshot = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/xtt_snapshot.png");
   gtk_container_add( GTK_CONTAINER(tools_snapshot), 
@@ -1252,6 +1270,7 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
   g_object_set( tools_curvetype_linepoints, "visible", FALSE, NULL);
   g_object_set( tools_curvetype_square, "visible", FALSE, NULL);
   g_object_set( tools_curve_fill, "visible", FALSE, NULL);
+  g_object_set( tools_curve_digsplit, "visible", FALSE, NULL);
 
   wow = new CoWowGtk( toplevel);
 

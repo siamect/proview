@@ -180,6 +180,7 @@ XttFast::XttFast( void *parent_ctx,
         element_size[i] = 4;
     }
     gcd->rows[i] = max_points;
+    gcd->y_orig_type[i] = type[i];
   }
   gcd->cols = fast_cnt;
 

@@ -261,6 +261,7 @@ XttTrend::XttTrend( void *parent_ctx,
         element_size[i] = 4;
       }
       gcd->rows[i] = max_points;
+      gcd->y_orig_type[i] = (pwr_eType)trend_p[i]->DataType;
     }
     gcd->cols = trend_cnt;
     gcd->x_reverse = 1;
@@ -413,6 +414,7 @@ XttTrend::XttTrend( void *parent_ctx,
 
     for ( i = 0; i < trend_cnt; i++) {
       gcd->y_data[i] = (double *) calloc( 1, 8 * max_points);
+      gcd->y_orig_type[i] = element_type[i];
       
       switch ( element_type[i]) {
       case pwr_eType_Float32:
@@ -608,7 +610,8 @@ void XttTrend::trend_scan( void *data)
   if ( trend->trend_tid == pwr_cClass_DsTrend) {
     int write_buffer;
     int idx;
-    int values;
+    int values;    
+    unsigned int size = 1;
     int trend_buff_size = (int) sizeof( trend->trend_p[0]->DataBuffer) /
       sizeof( trend->trend_p[0]->DataBuffer[0]);
 
@@ -642,81 +645,81 @@ void XttTrend::trend_scan( void *data)
 	  
 	  trend->gcd->y_data[i][0] = trend->trend_p[i]->DataBuffer[idx];
 	}
-	trend->curve->points_added( 1);
+	trend->curve->points_added( &size);
       }
     }    
   }
   else if ( trend->trend_tid == pwr_cClass_DsTrendCurve) {
     pwr_tStatus sts;
-    unsigned int size;
+    unsigned int size[CURVE_MAX_COLS];
 
     sts = cbuf_UpdateCircBuffInfo( trend->cb_info, trend->trend_cnt);
     if ( EVEN(sts)) return;
 
     for ( i = 0; i < trend->trend_cnt; i++) {
 
-      size = trend->cb_info[i].size;
-      if ( size > 0) {
+      size[i] = trend->cb_info[i].size;
+      if ( size[i] > 0) {
 
 	// Shift data
 
-	for ( j = trend->cb_info[i].samples - 1; j >= (int)size; j--) {
+	for ( j = trend->cb_info[i].samples - 1; j >= (int)size[i]; j--) {
 	  if ( j < trend->gcd->rows[i])
-	    trend->gcd->y_data[i][j] = trend->gcd->y_data[i][j-size];
+	    trend->gcd->y_data[i][j] = trend->gcd->y_data[i][j-size[i]];
 	}
 
 	// Insert new value
+	size[i] = MIN((int)size[i], trend->max_points);
 	switch ( trend->element_type[i]) {
 	case pwr_eType_Float64:
-	  for ( j = 0; j < (int)size; j++)
-	    trend->gcd->y_data[i][j] = *(pwr_tFloat64 *)((char *)trend->cb_info[i].bufp + (size - j - 1) * sizeof(pwr_tFloat64));
+	  for ( j = 0; j < (int)size[i]; j++)
+	    trend->gcd->y_data[i][j] = *(pwr_tFloat64 *)((char *)trend->cb_info[i].bufp + (size[i] - j - 1) * sizeof(pwr_tFloat64));
 	  break;
 	case pwr_eType_Float32:
-	  for ( j = 0; j < (int)size; j++)
-	    trend->gcd->y_data[i][j] = *(pwr_tFloat32 *)((char *)trend->cb_info[i].bufp + (size - j - 1) * sizeof(pwr_tFloat32));
+	  for ( j = 0; j < (int)size[i]; j++)
+	    trend->gcd->y_data[i][j] = *(pwr_tFloat32 *)((char *)trend->cb_info[i].bufp + (size[i] - j - 1) * sizeof(pwr_tFloat32));
 	  break;
 	case pwr_eType_Boolean:
-	  for ( j = 0; j < (int)size; j++)
-	    trend->gcd->y_data[i][j] = *(pwr_tBoolean *)((char *)trend->cb_info[i].bufp + (size - j - 1) * sizeof(pwr_tBoolean));
+	  for ( j = 0; j < (int)size[i]; j++)
+	    trend->gcd->y_data[i][j] = *(pwr_tBoolean *)((char *)trend->cb_info[i].bufp + (size[i] - j - 1) * sizeof(pwr_tBoolean));
 	  break;
 	case pwr_eType_Int64:
-	  for ( j = 0; j < (int)size; j++)
-	    trend->gcd->y_data[i][j] = *(pwr_tInt64 *)((char *)trend->cb_info[i].bufp + (size - j - 1) * sizeof(pwr_tInt64));
+	  for ( j = 0; j < (int)size[i]; j++)
+	    trend->gcd->y_data[i][j] = *(pwr_tInt64 *)((char *)trend->cb_info[i].bufp + (size[i] - j - 1) * sizeof(pwr_tInt64));
 	  break;
 	case pwr_eType_UInt64:
-	  for ( j = 0; j < (int)size; j++)
-	    trend->gcd->y_data[i][j] = *(pwr_tUInt64 *)((char *)trend->cb_info[i].bufp + (size - j - 1) * sizeof(pwr_tUInt64));
+	  for ( j = 0; j < (int)size[i]; j++)
+	    trend->gcd->y_data[i][j] = *(pwr_tUInt64 *)((char *)trend->cb_info[i].bufp + (size[i] - j - 1) * sizeof(pwr_tUInt64));
 	  break;
 	case pwr_eType_Int32:
-	  for ( j = 0; j < (int)size; j++)
-	    trend->gcd->y_data[i][j] = *(pwr_tInt32 *)((char *)trend->cb_info[i].bufp + (size - j - 1) * sizeof(pwr_tInt32));
+	  for ( j = 0; j < (int)size[i]; j++)
+	    trend->gcd->y_data[i][j] = *(pwr_tInt32 *)((char *)trend->cb_info[i].bufp + (size[i] - j - 1) * sizeof(pwr_tInt32));
 	  break;
 	case pwr_eType_UInt32:
-	  for ( j = 0; j < (int)size; j++)
-	    trend->gcd->y_data[i][j] = *(pwr_tUInt32 *)((char *)trend->cb_info[i].bufp + (size - j - 1) * sizeof(pwr_tUInt32));
+	  for ( j = 0; j < (int)size[i]; j++)
+	    trend->gcd->y_data[i][j] = *(pwr_tUInt32 *)((char *)trend->cb_info[i].bufp + (size[i] - j - 1) * sizeof(pwr_tUInt32));
 	  break;
 	case pwr_eType_Int16:
-	  for ( j = 0; j < (int)size; j++)
-	    trend->gcd->y_data[i][j] = *(pwr_tInt16 *)((char *)trend->cb_info[i].bufp + (size - j - 1) * sizeof(pwr_tInt16));
+	  for ( j = 0; j < (int)size[i]; j++)
+	    trend->gcd->y_data[i][j] = *(pwr_tInt16 *)((char *)trend->cb_info[i].bufp + (size[i] - j - 1) * sizeof(pwr_tInt16));
 	  break;
 	case pwr_eType_UInt16:
-	  for ( j = 0; j < (int)size; j++)
-	    trend->gcd->y_data[i][j] = *(pwr_tUInt16 *)((char *)trend->cb_info[i].bufp + (size - j - 1) * sizeof(pwr_tUInt16));
+	  for ( j = 0; j < (int)size[i]; j++)
+	    trend->gcd->y_data[i][j] = *(pwr_tUInt16 *)((char *)trend->cb_info[i].bufp + (size[i] - j - 1) * sizeof(pwr_tUInt16));
 	  break;
 	case pwr_eType_Int8:
-	  for ( j = 0; j < (int)size; j++)
-	    trend->gcd->y_data[i][j] = *(pwr_tInt8 *)((char *)trend->cb_info[i].bufp + (size - j - 1) * sizeof(pwr_tInt8));
+	  for ( j = 0; j < (int)size[i]; j++)
+	    trend->gcd->y_data[i][j] = *(pwr_tInt8 *)((char *)trend->cb_info[i].bufp + (size[i] - j - 1) * sizeof(pwr_tInt8));
 	  break;
 	case pwr_eType_UInt8:
-	  for ( j = 0; j < (int)size; j++)
-	    trend->gcd->y_data[i][j] = *(pwr_tUInt8 *)((char *)trend->cb_info[i].bufp + (size - j - 1) * sizeof(pwr_tUInt8));
+	  for ( j = 0; j < (int)size[i]; j++)
+	    trend->gcd->y_data[i][j] = *(pwr_tUInt8 *)((char *)trend->cb_info[i].bufp + (size[i] - j - 1) * sizeof(pwr_tUInt8));
 	  break;
 	default: ;
 	}
       }
     }
-    if ( size > 0)
-      trend->curve->points_added( size);
+    trend->curve->points_added( size);
   }
   trend->timerid->add( trend->update_time, trend_scan, trend);
 }

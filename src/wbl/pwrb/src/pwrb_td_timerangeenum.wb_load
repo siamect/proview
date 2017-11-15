@@ -33,107 +33,117 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_curvelayoutmask.wb_load -- Defines the mask type CurveLayoutMask
+!  pwrb_timerangeenum.wb_load -- Defines the enum type TimeRangeEnum
 !
 SObject pwrb:Type
 !/**
 !  @Version 1.0
 !  @Group Types
-!  Bitmask for layout of curve window.
-!
-! @b See also
-!  @classlink OpPlace pwrb_dstrend.html
-!  @classlink OpPlace pwrb_dstrendcurve.html
-!  @classlink OpPlace pwrb_dsfastcurve.html
-!  @classlink OpPlace pwrb_sevhist.html
-!  @classlink OpPlace pwrb_sevhistobject.html
-!  @classlink OpPlace pwrb_plotgroup.html
+!  Time range for curve.
 !*/
-  Object CurveLayoutMask $TypeDef 72
+  Object TimeRangeEnum $TypeDef 88
     Body SysBody
-      Attr Type = pwr_eType_Mask
-      Attr Size = 4
-      Attr TypeRef = "pwrs:Type-$Mask"
-      Attr Elements = 1
+      Attr TypeRef = "pwrs:Type-$Enum"
+      Attr PgmName = "TimeRangeEnum"
     EndBody
     !/**
-    !  Position attribute description before attribute name.
+    !  Default range.
     !*/
-    Object AttrDescrFirst $Bit
+    Object Default $Value
      Body SysBody
-       Attr PgmName = "AttrDescrFirst"
-       Attr Text = "AttrDescrFirst"
+       Attr PgmName = "Default"
+       Attr Text = "Default"
+       Attr Value = 0
+     EndBody
+    EndObject
+    !/**
+    !  Time range second.
+    !*/
+    Object Second $Value
+     Body SysBody
+       Attr PgmName = "Second"
+       Attr Text = "Second"
        Attr Value = 1
      EndBody
     EndObject
     !/**
-    !  Curve type line.
+    !  Time range 10 seconds.
     !*/
-    Object CurveTypeLine $Bit
+    Object 10Seconds $Value
      Body SysBody
-       Attr PgmName = "CurveTypeLine"
-       Attr Text = "CurveTypeLine"
+       Attr PgmName = "10Seconds"
+       Attr Text = "10Seconds"
        Attr Value = 2
      EndBody
     EndObject
     !/**
-    !  Curve type points.
+    !  Time range minute.
     !*/
-    Object CurveTypePoints $Bit
+    Object Minute $Value
      Body SysBody
-       Attr PgmName = "CurveTypePoints"
-       Attr Text = "CurveTypePoints"
+       Attr PgmName = "Minute"
+       Attr Text = "Minute"
+       Attr Value = 3
+     EndBody
+    EndObject
+    !/**
+    !  Time range 10 minutes.
+    !*/
+    Object 10Minutes $Value
+     Body SysBody
+       Attr PgmName = "10Minutes"
+       Attr Text = "10Minutes"
        Attr Value = 4
      EndBody
     EndObject
     !/**
-    !  Curve type line and points.
+    !  Time range hour.
     !*/
-    Object CurveTypeLinePoints $Bit
+    Object Hour $Value
      Body SysBody
-       Attr PgmName = "CurveTypeLinePoints"
-       Attr Text = "CurveTypeLinePoints"
+       Attr PgmName = "Hour"
+       Attr Text = "Hour"
+       Attr Value = 5
+     EndBody
+    EndObject
+    !/**
+    !  Time range day.
+    !*/
+    Object Day $Value
+     Body SysBody
+       Attr PgmName = "Day"
+       Attr Text = "Day"
+       Attr Value = 6
+     EndBody
+    EndObject
+    !/**
+    !  Time range week.
+    !*/
+    Object Week $Value
+     Body SysBody
+       Attr PgmName = "Week"
+       Attr Text = "Week"
+       Attr Value = 7
+     EndBody
+    EndObject
+    !/**
+    !  Time range month.
+    !*/
+    Object Month $Value
+     Body SysBody
+       Attr PgmName = "Month"
+       Attr Text = "Month"
        Attr Value = 8
      EndBody
     EndObject
     !/**
-    !  Curve type square.
+    !  Time range Year.
     !*/
-    Object CurveTypeSquare $Bit
+    Object Year $Value
      Body SysBody
-       Attr PgmName = "CurveTypeSquare"
-       Attr Text = "CurveTypeSquare"
-       Attr Value = 16
-     EndBody
-    EndObject
-    !/**
-    !  Fill curve.
-    !*/
-    Object FillCurve $Bit
-     Body SysBody
-       Attr PgmName = "FillCurve"
-       Attr Text = "FillCurve"
-       Attr Value = 32
-     EndBody
-    EndObject
-    !/**
-    !  Split digital curves.
-    !*/
-    Object SplitDigital $Bit
-     Body SysBody
-       Attr PgmName = "SplitDigital"
-       Attr Text = "SplitDigital"
-       Attr Value = 64
-     EndBody
-    EndObject
-    !/**
-    !  Light digram background.
-    !*/
-    Object LightBackground $Bit
-     Body SysBody
-       Attr PgmName = "LightBackground"
-       Attr Text = "LightBackground"
-       Attr Value = 128
+       Attr PgmName = "Year"
+       Attr Text = "Year"
+       Attr Value = 9
      EndBody
     EndObject
   EndObject

@@ -121,6 +121,14 @@ int Op::appl_action( int idx)
       strcpy( cmd, "ope camera/obj=");
       strcat( cmd, name);
       break;
+    case pwr_cClass_SevPlotGroup:
+      strcpy( cmd, "ope hist ");
+      strcat( cmd, name);
+      break;
+    case pwr_cClass_PlotGroup:
+      strcpy( cmd, "ope plo ");
+      strcat( cmd, name);
+      break;
     default:
       return 0;
     }

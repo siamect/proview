@@ -2428,6 +2428,8 @@ extern "C" {
 			   int horiz_lines);
 
   void grow_SetCurveType( grow_tObject object, glow_eCurveType type);
+  void grow_SetCurveDigitalSplit( grow_tObject object, int set);
+  void grow_GetCurveDigitalSplit( grow_tObject object, int *set);
   
   //! Set configuration values for an axis object.
   /*!
@@ -2815,7 +2817,7 @@ extern "C" {
 
     Add the new value first in all the curves, and shift the other values one step forward.
   */
-  void grow_CurveAddPoints( grow_tObject object, glow_sCurveData *data, unsigned int no_of_points);
+  void grow_CurveAddPoints( grow_tObject object, glow_sCurveData *data, unsigned int *no_of_points);
 
   //! Get the group the specified object is a member of.
   /*!

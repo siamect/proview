@@ -287,12 +287,12 @@ XttTrend *XNavGtk::xtttrend_new( char *name, pwr_tAttrRef *objar, pwr_tAttrRef *
 XttSevHist *XNavGtk::xttsevhist_new( char *name, pwr_tOid *oidv, pwr_tOName *anamev, pwr_tOName *onamev,
 				     bool *sevhistobjectv, sevcli_tCtx scctx, char *filename, 
 				     int width, int height, unsigned int options, int color_theme, 
-				     void *basewidget, pwr_tStatus *sts)
+				     time_ePeriod time_range, void *basewidget, pwr_tStatus *sts)
 {
   GtkWidget *w;
 
   if ( !filename)
-    return new XttSevHistGtk( this, parent_wid, name, &w, oidv, anamev, onamev, sevhistobjectv, scctx, width, height, options, color_theme, basewidget, sts);
+    return new XttSevHistGtk( this, parent_wid, name, &w, oidv, anamev, onamev, sevhistobjectv, scctx, width, height, options, color_theme, time_range, basewidget, sts);
   else
     return new XttSevHistGtk( this, parent_wid, name, &w, filename, color_theme, basewidget, sts);
 }

@@ -1153,6 +1153,14 @@ int OpGtk::configure( char *opplace_str)
       sts = gdh_ClassAttrToAttrref( pwr_cClass_XttCamera, ".ButtonText", &attrref);
       if ( EVEN(sts)) return sts;
       break;
+    case pwr_cClass_SevPlotGroup:
+      sts = gdh_ClassAttrToAttrref( pwr_cClass_SevPlotGroup, ".ButtonText", &attrref);
+      if ( EVEN(sts)) return sts;
+      break;
+    case pwr_cClass_PlotGroup:
+      sts = gdh_ClassAttrToAttrref( pwr_cClass_PlotGroup, ".ButtonText", &attrref);
+      if ( EVEN(sts)) return sts;
+      break;
     default:
       continue;
     }

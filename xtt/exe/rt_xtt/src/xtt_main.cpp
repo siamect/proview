@@ -395,11 +395,13 @@ void Xtt::activate_opengraph()
     case pwr_cClass_SevItemInt:
     case pwr_cClass_SevItemFloat:
     case pwr_cClass_SevItemBoolean:
+    case pwr_cClass_SevPlotGroup:
       // Open history
       sprintf( cmd, "open history /name=%s /title=\"%s\"", vname, name);
       xnav->command( cmd);
       return;
     case pwr_cClass_PlotGroup: {
+#if 0
       pwr_tAName aname;
       pwr_tAttrRef yo;
 
@@ -433,6 +435,10 @@ void Xtt::activate_opengraph()
 	}	  
 	return;
       }
+      return;
+#endif
+      sprintf( cmd, "open plotgroup /name=%s /title=\"%s\"", name, name);
+      xnav->command( cmd);
       return;
     }
     default:

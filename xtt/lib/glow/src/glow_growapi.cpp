@@ -4971,6 +4971,16 @@ void grow_SetCurveType( grow_tObject object, glow_eCurveType type)
   ((GrowCurve *)object)->set_type( type);
 }
 
+void grow_SetCurveDigitalSplit( grow_tObject object, int set)
+{
+  ((GrowCurve *)object)->set_digital_split( set);
+}
+
+void grow_GetCurveDigitalSplit( grow_tObject object, int *set)
+{
+  ((GrowCurve *)object)->get_digital_split( set);
+}
+
 void grow_SetAxisConf( grow_tObject object, double max_val, double min_val, 
      int no_of_lines, int long_quot, int value_quot, double rot, const char *format)
 {
@@ -5245,7 +5255,7 @@ void grow_CurveConfigure( grow_tObject object, glow_sCurveData *data)
   ((GrowCurve *)object)->configure_curves( data);
 }
 
-void grow_CurveAddPoints( grow_tObject object, glow_sCurveData *data, unsigned int no_of_points)
+void grow_CurveAddPoints( grow_tObject object, glow_sCurveData *data, unsigned int *no_of_points)
 {
   ((GrowCurve *)object)->add_points( data, no_of_points);
 }

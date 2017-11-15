@@ -53,7 +53,8 @@ GrowCurve::GrowCurve( GrowCtx *glow_ctx, const char *name, glow_sCurveData *data
 		      int fill_rect, int display_border, 
 		      glow_eDrawType fill_d_type, int nodraw) : 
   GrowTrend(glow_ctx,name,x,y,w,h,border_d_type,line_w,
-	    display_lev, fill_rect, display_border, fill_d_type, 1), type(glow_eCurveType_Line) 
+	    display_lev, fill_rect, display_border, fill_d_type, 1), type(glow_eCurveType_Line),
+  split_digsquare(0)
 {
   if ( data)
     configure_curves( data);
@@ -77,6 +78,7 @@ void GrowCurve::configure_curves( glow_sCurveData *data)
   double y_value, x_value, prev_y_value;
   glow_eCurveType curve_type;
   int pix = 0;
+  int dix = 0;
 
   // Remove old curves
   ctx->nodraw++;
@@ -131,7 +133,7 @@ void GrowCurve::configure_curves( glow_sCurveData *data)
 	    y_value = ur.y - (data->y_data[idx][i] - y_min_value[idx]) / 
 	      (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
 	    
-	    y_value = MAX( ll.y, MIN( y_value, ur.y));
+	    // y_value = MAX( ll.y, MIN( y_value, ur.y));
 	    
 	    point_p->y = y_value;
 	    point_p->x = x_value;
@@ -170,7 +172,7 @@ void GrowCurve::configure_curves( glow_sCurveData *data)
 	      y_value = ur.y - (data->y_data[idx][i-1] - y_min_value[idx]) / 
 		(y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
 	      
-	      y_value = MAX( ll.y, MIN( y_value, ur.y));
+	      // y_value = MAX( ll.y, MIN( y_value, ur.y));
 
 	      point_p->y = y_value;
 	      point_p->x = x_value;
@@ -306,9 +308,14 @@ void GrowCurve::configure_curves( glow_sCurveData *data)
 	  points += 3;
 	pointarray = (glow_sPoint *) calloc( points, sizeof(glow_sPoint));
 
-	double y1 = ur.y - (1 - y_min_value[idx]) / 
-	  (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);	
-	y1 = MAX( ll.y, MIN( y1, ur.y));
+	double yoffs;
+	if ( split_digsquare)
+	  yoffs = (dix % 10) * ( ur.y - ll.y) / 10;
+	else
+	  yoffs = 0;
+	dix++;
+	double y0 = ur.y - yoffs;
+	double y1 = y0 - (ur.y - ll.y) * 0.08;
 
 	if ( !fill_curve) {
 	  pix = 0;
@@ -322,16 +329,16 @@ void GrowCurve::configure_curves( glow_sCurveData *data)
 	    
 	    x_value = MAX( ll.x, MIN( x_value, ur.x));
 	    
-	    y_value = ur.y - (data->y_data[idx][i] - y_min_value[idx]) / 
-	      (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
-	    
-	    y_value = MAX( ll.y, MIN( y_value, ur.y));
+	    if ( data->y_data[idx][i])
+	      y_value = y1;
+	    else
+	      y_value = y0;
 
 	    if ( i == 0) {
 	      if ( data->y_data[idx][0] == 1) {
-		pointarray[pix].y = ur.y;
+		pointarray[pix].y = y0;
 		pointarray[pix++].x = ll.x;
-		pointarray[pix].y = ur.y;
+		pointarray[pix].y = y0;
 		pointarray[pix++].x = x_value;
 	      }
 	      else {
@@ -365,22 +372,18 @@ void GrowCurve::configure_curves( glow_sCurveData *data)
 	    
 	    x_value = MAX( ll.x, MIN( x_value, ur.x));
 	    
-	    y_value = ur.y - (data->y_data[idx][i] - y_min_value[idx]) / 
-	      (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
-	    
-	    y_value = MAX( ll.y, MIN( y_value, ur.y));
+	    if ( data->y_data[idx][i])
+	      y_value = y1;
+	    else
+	      y_value = y0;
 
 	    if ( i == 0) {
 	      if ( data->y_data[idx][0] == 1) {
-		pointarray[pix].y = ur.y;
-		pointarray[pix++].x = x_value;
-		pointarray[pix].y = ur.y;
-		pointarray[pix++].x = x_value;
-		pointarray[pix].y = ur.y;
+		pointarray[pix].y = y0;
 		pointarray[pix++].x = x_value;
 	      }
 	      else {
-		pointarray[pix].y = ur.y;
+		pointarray[pix].y = y0;
 		pointarray[pix++].x = ll.x;
 		pointarray[pix].y = y1;
 		pointarray[pix++].x = ll.x;
@@ -401,7 +404,7 @@ void GrowCurve::configure_curves( glow_sCurveData *data)
 	  if ( data->y_data[idx][data->rows[0]-1] != 0) {
 	    pointarray[pix].y = y1;
 	    pointarray[pix++].x = ur.x;
-	    pointarray[pix].y = ur.y;
+	    pointarray[pix].y = y0;
 	    pointarray[pix++].x = ur.x;
 	  }
 	  points = pix;
@@ -475,7 +478,7 @@ void GrowCurve::configure_curves( glow_sCurveData *data)
 	    y_value = ur.y - (data->y_data[idx][i] - y_min_value[idx]) / 
 	      (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
 
-	    y_value = max( ll.y, min( y_value, ur.y));
+	    // y_value = max( ll.y, min( y_value, ur.y));
 
 	    pointarray[i].y = y_value;
 	    pointarray[i].x = x_value;
@@ -495,7 +498,7 @@ void GrowCurve::configure_curves( glow_sCurveData *data)
 	    y_value = ur.y - (data->y_data[idx][i] - y_min_value[idx]) / 
 	      (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
 
-	    y_value = max( ll.y, min( y_value, ur.y));
+	    // y_value = max( ll.y, min( y_value, ur.y));
 
 	    if ( i == 0) {
 	      pointarray[0].y = ur.y;
@@ -599,11 +602,15 @@ void GrowCurve::configure_curves( glow_sCurveData *data)
       
 	pointarray = (glow_sPoint *) calloc( points, sizeof(glow_sPoint));
 	
-	double y1 = ur.y - (1 - y_min_value[idx]) / 
-	  (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
+	double yoffs;
+	if ( split_digsquare)
+	  yoffs = (dix % 10) * ( ur.y - ll.y) / 10;
+	else
+	  yoffs = 0;
+	dix++;
+	double y0 = ur.y - yoffs;
+	double y1 = y0 - (ur.y - ll.y) * 0.08;
 	
-	y1 = MAX( ll.y, MIN( y1, ur.y));
-
 	if ( !fill_curve) {
 	  pix = 0;
 	  for ( i = 0; i < data->rows[idx]; i++) {
@@ -616,16 +623,16 @@ void GrowCurve::configure_curves( glow_sCurveData *data)
 
 	    x_value = MAX( ll.x, MIN( x_value, ur.x));
 
-	    y_value = ur.y - (data->y_data[idx][i] - y_min_value[idx]) / 
-	      (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
-	    
-	    y_value = MAX( ll.y, MIN( y_value, ur.y));
+	    if ( data->y_data[idx][i])
+	      y_value = y1;
+	    else
+	      y_value = y0;
 	  
 	    if ( i == 0) {
 	      if ( data->y_data[idx][0] == 1) {
-		pointarray[pix].y = ur.y;
+		pointarray[pix].y = y0;
 		pointarray[pix++].x = ll.x;
-		pointarray[pix].y = ur.y;
+		pointarray[pix].y = y0;
 		pointarray[pix++].x = x_value;
 	      }
 	      else {
@@ -660,22 +667,18 @@ void GrowCurve::configure_curves( glow_sCurveData *data)
 	    
 	    x_value = MAX( ll.x, MIN( x_value, ur.x));
 	    
-	    y_value = ur.y - (data->y_data[idx][i] - y_min_value[idx]) / 
-	      (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
-	    
-	    y_value = MAX( ll.y, MIN( y_value, ur.y));
+	    if ( data->y_data[idx][i])
+	      y_value = y1;
+	    else 
+	      y_value = y0;
 
 	    if ( i == 0) {
 	      if ( data->y_data[idx][0] == 1) {
-		pointarray[pix].y = ur.y;
-		pointarray[pix++].x = x_value;
-		pointarray[pix].y = ur.y;
-		pointarray[pix++].x = x_value;
-		pointarray[pix].y = ur.y;
+		pointarray[pix].y = y0;
 		pointarray[pix++].x = x_value;
 	      }
 	      else {
- 		pointarray[pix].y = ur.y;
+ 		pointarray[pix].y = y0;
 		pointarray[pix++].x = ll.x;
  		pointarray[pix].y = y1;
 		pointarray[pix++].x = ll.x;
@@ -696,7 +699,7 @@ void GrowCurve::configure_curves( glow_sCurveData *data)
 	  if ( data->y_data[idx][data->rows[idx]-1] != 0) {
 	    pointarray[pix].y = y1;
 	    pointarray[pix++].x = ur.x;
-	    pointarray[pix].y = ur.y;
+	    pointarray[pix].y = y0;
 	    pointarray[pix++].x = ur.x;
 	  }
 	  printf( "Points %d pix %d\n", points, pix);
@@ -731,22 +734,25 @@ void GrowCurve::configure_curves( glow_sCurveData *data)
 }
 
 
-void GrowCurve::add_points( glow_sCurveData *data, unsigned int no_of_points)
+void GrowCurve::add_points( glow_sCurveData *data, unsigned int *no_of_points)
 {
   if ( data->type == glow_eCurveDataType_CommonX) {
 
-    // Remove old curves
     ctx->nodraw++;
-    if ( no_of_points == 1) {
-      double y_value;
-      int	idx;
+    for ( int idx = 0; idx < curve_cnt; idx++) {
+      if ( no_of_points[0] == 1) {
+	double y_value;
 
-      for ( idx = 0; idx < curve_cnt; idx++) {
-	y_value = ur.y - (data->y_data[idx][0] - y_min_value[idx]) / 
-	  (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
+	if ( no_of_points[idx] ==  0) {
+	  // Add old value
+	  y_value = ((GlowPoint *)curve[idx]->a_points[0])->y;
+	}
+	else {
+	  y_value = ur.y - (data->y_data[idx][0] - y_min_value[idx]) / 
+	    (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
 
-	y_value = MAX( ll.y, MIN( y_value, ur.y));
-
+	  y_value = MAX( ll.y, MIN( y_value, ur.y));
+	}
 	if ( !fill)
 	  erase( &ctx->mw);
 
@@ -755,28 +761,40 @@ void GrowCurve::add_points( glow_sCurveData *data, unsigned int no_of_points)
 	else
 	  curve[idx]->add_and_shift_y_value_filled( y_value);
       }
-    }
-    else {
-      double *y_values;
-      int i, idx;
+      else {
+	double *y_values;
+	int i; 
+	unsigned int k;
 
-      for ( idx = 0; idx < curve_cnt; idx++) {
-	y_values = (double *)calloc( 1, no_of_points * sizeof(double));
+	y_values = (double *)calloc( 1, no_of_points[0] * sizeof(double));
 
-	for ( i = 0; i < (int)no_of_points; i++) {
-	  y_values[i] = ur.y - (data->y_data[idx][i] - y_min_value[idx]) / 
-	    (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
+	if ( no_of_points[idx] == no_of_points[0]) {
+	  for ( i = 0; i < (int)no_of_points[0]; i++) {
+	    y_values[i] = ur.y - (data->y_data[idx][i] - y_min_value[idx]) / 
+	      (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
 
-	  y_values[i] = MAX( ll.y, MIN( y_values[i], ur.y));
+	    y_values[i] = MAX( ll.y, MIN( y_values[i], ur.y));
+	  }
+	}
+	else {
+	  for ( i = 0; i < (int)no_of_points[0]; i++) {
+	    k = (float) i * no_of_points[idx]/no_of_points[0] + 0.49;
+	    if ( k > no_of_points[0])
+	      k = no_of_points[0];
+	    y_values[i] = ur.y - (data->y_data[idx][k] - y_min_value[idx]) / 
+	      (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
+
+	    y_values[i] = MAX( ll.y, MIN( y_values[i], ur.y));
+	  }
 	}
 	if ( !fill)
 	  erase( &ctx->mw);
-
+	
 	if ( !fill_curve)
-	  curve[idx]->add_and_shift_y_values( y_values, no_of_points);
+	  curve[idx]->add_and_shift_y_values( y_values, no_of_points[0]);
 	else
-	  curve[idx]->add_and_shift_y_values_filled( y_values, no_of_points);
-
+	  curve[idx]->add_and_shift_y_values_filled( y_values, no_of_points[0]);
+	
 	free( (char *)y_values);
       }
     }

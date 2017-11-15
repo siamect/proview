@@ -37,7 +37,7 @@
 !
 SObject pwrb:Class
 !/**
-!  @Version 2.0
+!  @Version 2.1
 !  @Group Operator,NodeConfiguration
 !  @Summary Configures a group of trend or fast graphs
 !  Configures a group of trend or fast graphs.
@@ -232,6 +232,22 @@ SObject pwrb:Class
       Object Layout $Attribute 16 
         Body SysBody
           Attr TypeRef = "pwrb:Type-CurveLayoutMask"
+        EndBody
+      EndObject
+      !/**
+      !  Curve window time range.
+      !*/
+      Object TimeRange $Attribute 17
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-TimeRangeEnum"
+        EndBody
+      EndObject
+      !/**
+      !  Button text in operator window.
+      !*/
+      Object ButtonText $Attribute 18 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
         EndBody
       EndObject
     EndObject

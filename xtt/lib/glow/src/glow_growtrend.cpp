@@ -530,6 +530,7 @@ void GrowTrend::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
 
   if ( fill_curve)
   {
+    ctx->gdraw->set_clip_rectangle( w, ll_x, ll_y, ur_x, ur_y);
     for ( i = 0; i < curve_cnt; i++) {
       if ( curve[i])
 	curve[i]->border = 0;
@@ -553,6 +554,7 @@ void GrowTrend::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
       if ( curve[i])
 	curve[i]->border = 1;
     }
+    ctx->gdraw->reset_clip_rectangle( w);
   }
 
   for ( i = 0; i < vertical_lines; i++) {
@@ -582,6 +584,7 @@ void GrowTrend::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
 	curve[i]->fill = 0;
     }
   }
+  ctx->gdraw->set_clip_rectangle( w, ll_x, ll_y, ur_x, ur_y);
   if ( t) {
     GlowTransform tmp = *t * trf;
     for ( i = 0; i < curve_cnt; i++) {
@@ -595,6 +598,7 @@ void GrowTrend::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
         curve[i]->draw( w, &trf, highlight, hot, node, colornode);
     }
   }
+  ctx->gdraw->reset_clip_rectangle( w);
 
   if ( fill_curve) {
     ctx->gdraw->line( w, ll_x, ll_y, ll_x, ur_y, drawtype, idx, 0);

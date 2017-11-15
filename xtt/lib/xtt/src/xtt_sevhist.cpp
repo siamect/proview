@@ -71,6 +71,7 @@ XttSevHist::XttSevHist( void *parent_ctx,
 			bool *xn_sevhistobjectv,
 			sevcli_tCtx xn_scctx,
 			int xn_color_theme,
+			time_ePeriod time_range,
 			int *sts) :
   xnav(parent_ctx), gcd(0), curve(0), rows(0), vsize(0), timerid(0), close_cb(0), help_cb(0), 
   get_select_cb(0), first_scan(1), scctx(xn_scctx), wow(0), time_low_old(0), time_high_old(0), 
@@ -95,34 +96,42 @@ XttSevHist::XttSevHist( void *parent_ctx,
   memcpy( onamev, xn_onamev, oid_cnt * sizeof(onamev[0]));
   memcpy( sevhistobjectv, xn_sevhistobjectv, oid_cnt * sizeof(sevhistobjectv[0]));
 
+  if ( time_range == time_ePeriod_)
+    time_range = time_ePeriod_LastHour;
+
+  time_Period( time_range, &from, &to, 0, 0);
+#if 0
   time_GetTime( &to);
   from.tv_sec = to.tv_sec - 3600;
   from.tv_nsec = to.tv_nsec;
-  // time_Period( time_ePeriod_OneHour, &from, &to, 0, 0);
+#endif
   if ( oid_cnt == 1) {
     get_data( sts, from, to);
     if ( *sts == SEV__NOPOINTS) {
       // Try month
+#if 0
       from.tv_sec = to.tv_sec - 31 * 24 * 3600;
       from.tv_nsec = to.tv_nsec;
-      time_Period( time_ePeriod_OneMonth, &from, &to, 0, 0);
+#endif
+      time_range = time_ePeriod_LastMonth;
+      time_Period( time_range, &from, &to, 0, 0);
       get_data( sts, from, to);
       if ( EVEN(*sts)) return;
-      initial_period = time_ePeriod_OneMonth;
     }
     else if ( EVEN(*sts)) return;
-    else
-      initial_period = time_ePeriod_OneHour;
+    initial_period = time_range;
   }
   else {
     get_multidata( sts, from, to);
     if ( *sts == SEV__NOPOINTS) {
       // Try month
-      time_Period( time_ePeriod_OneMonth, &from, &to, 0, 0);
+      time_range = time_ePeriod_LastMonth;
+      time_Period( time_range, &from, &to, 0, 0);
       get_multidata( sts, from, to);
       if ( EVEN(*sts)) return;
     }
     else if ( EVEN(*sts)) return;
+    initial_period = time_range;
   }
   cdh_StrncpyCutOff( title, name, sizeof(title), 1);
 }
@@ -231,6 +240,7 @@ int XttSevHist::get_data( pwr_tStatus *sts, pwr_tTime from, pwr_tTime to)
   free( vbuf);
 
   gcd->y_axis_type[0] = curve_eAxis_y;
+  gcd->y_orig_type[0] = vtype;
 
   gcd->cols = 1;
   gcd->rows[0] = rows;
@@ -719,6 +729,7 @@ void XttSevHist::curve_add( pwr_tOid oid, pwr_tOName aname, pwr_tOName oname,
   oidv[oid_cnt] = oid;
   strncpy( anamev[oid_cnt], aname, sizeof(anamev[0]));
   strncpy( onamev[oid_cnt], oname, sizeof(onamev[0]));
+  sevhistobjectv[oid_cnt] = false;
   oid_cnt++;
 
   int curve_cnt = gcd->cols;
@@ -752,7 +763,8 @@ void XttSevHist::setup()
   if ( !curve)
     return;
   curve->setup( curve_mEnable_Timebox | curve_mEnable_Export | curve_mEnable_ExportTime | 
-		curve_mEnable_CurveType | curve_mEnable_CurveTypeSquare | curve_mEnable_FillCurve);
+		curve_mEnable_CurveType | curve_mEnable_CurveTypeSquare | curve_mEnable_FillCurve |
+		curve_mEnable_DigitalSplit);
 }
 
 void XttSevHist::sevhist_close_cb( void *ctx)
@@ -988,7 +1000,7 @@ pwr_tStatus XttSevHist::sevhist_otree_action_cb( void *ctx, pwr_tAttrRef *aref)
   sts = gdh_AttrrefToName( &aaref, oname, sizeof(oname), cdh_mNName);
   if ( EVEN(sts)) return sts;
 
-  s = strrchr( oname, '.');
+  s = strchr( oname, '.');
   if ( s) {
     *s = 0;
     strncpy( aname, s+1, sizeof(aname));

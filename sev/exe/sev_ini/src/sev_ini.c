@@ -131,7 +131,6 @@ static pwr_tStatus start( ini_sContext *cp)
     ini_CreateDb(&sts, cp);
     ini_LoadNode(&sts, cp);
     ini_BuildNode(&sts, cp);
-    ini_LoadSev(&sts, cp);
   }
 
   /* Logfile is always $pwrp_log/pwr.log from V4.0.0 and handled by Linux log rotation */ 

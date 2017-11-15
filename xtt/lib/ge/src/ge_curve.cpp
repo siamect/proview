@@ -192,6 +192,15 @@ void GeCurve::activate_curvetype( int type)
   grow_NavRedraw( growcurve_ctx);
 }
 
+void GeCurve::activate_digsplit()
+{
+  int split;
+  grow_GetCurveDigitalSplit( curve_object, &split);
+  grow_SetCurveDigitalSplit( curve_object, !split);
+  configure_curves();
+  grow_NavRedraw( growcurve_ctx);
+}
+
 void GeCurve::activate_help()
 {
   if ( help_cb)
@@ -211,7 +220,7 @@ void GeCurve::activate_period( time_ePeriod period)
   double ll_x, ll_y, ur_x, ur_y;
   int low, high;
 
-  if ( center_from_window) {
+  if ( center_from_window  && !(cd->x_max_value_axis[0] == 0 && cd->x_max_value_axis[0] == 0)) {
     // Get the center time
     measure_window( &ll_x, &ll_y, &ur_x, &ur_y);
 
@@ -221,7 +230,7 @@ void GeCurve::activate_period( time_ePeriod period)
 		ur_x / 200 * (cd->x_max_value_axis[0] - cd->x_min_value_axis[0]));
 
     center_from_window = 0;
-  }
+ }
   else {
     // Get period from current time intervall
     pwr_tStatus sts;
@@ -328,6 +337,12 @@ void GeCurve::update_times_markers()
 void GeCurve::activate_minmax_ok( double min_value, double max_value)
 {
 
+  if ( min_value > max_value) {
+    double tmp = max_value;
+    max_value = min_value;
+    min_value = tmp;
+  }
+
   int i = minmax_idx;
   if ( minmax_idx < cd->cols)
     cd->scale( cd->y_axis_type[i], cd->y_value_type[i], 
@@ -365,6 +380,12 @@ void GeCurve::activate_minmax_save( double min_value, double max_value)
 {
   FILE *fp;
   int i = minmax_idx;
+
+  if ( min_value > max_value) {
+    double tmp = max_value;
+    max_value = min_value;
+    min_value = tmp;
+  }
 
   fp = fopen( minmax_filename(cd->y_name[i]), "w");
   if ( !fp)
@@ -745,6 +766,23 @@ int GeCurve::init_growcurve_cb( GlowCtx *fctx, void *client_data)
 	200, 0, 200, 0);
   // grow_SetMode( curve->growcurve_ctx, grow_eMode_Edit);
 
+  if ( curve->options & curve_mOptions_CurveTypeLinePoints)
+    grow_SetCurveType( curve->curve_object, glow_eCurveType_LinePoints);
+  else if ( curve->options & curve_mOptions_CurveTypePoints)
+    grow_SetCurveType( curve->curve_object, glow_eCurveType_Points);
+  else if ( curve->options & curve_mOptions_CurveTypeSquare)
+    grow_SetCurveType( curve->curve_object, glow_eCurveType_Square);
+  if ( curve->options & curve_mOptions_FillCurve)
+    grow_SetTrendFillCurve( curve->curve_object, 1);
+  if ( curve->options & curve_mOptions_SplitDigital)
+    grow_SetCurveDigitalSplit( curve->curve_object, 1);
+  if ( curve->options & curve_mOptions_LightBackground) {
+    curve->curve_color = curve->background_bright;
+    curve->curve_border = curve->border_bright;
+    grow_SetObjectFillColor( curve->curve_object, curve->curve_color);
+    grow_SetObjectBorderColor( curve->curve_object, curve->curve_border);
+    curve->cd->select_color( curve->curve_color == curve->background_dark);
+  }
   curve->configure_curves();
   if ( curve->deferred_configure_axes)
     curve->configure_axes();
@@ -1397,7 +1435,7 @@ int GeCurve::configure_curves()
 	gcd.color[idx] = cd->color[i];
 	gcd.fillcolor[idx] = cd->fillcolor[i];
 	gcd.curve_type[idx] = glow_eCurveType_Inherit;
-	if ( cd->y_value_type[i] == pwr_eType_Boolean)
+	if ( cd->y_orig_type[i] == pwr_eType_Boolean)
 	  gcd.curve_type[idx] = glow_eCurveType_DigSquare;
 	else
 	  gcd.curve_type[idx] = glow_eCurveType_Inherit;
@@ -1536,7 +1574,7 @@ void GeCurve::redraw()
   grow_Redraw( growcurve_ctx);
 }
 
-void GeCurve::points_added( unsigned int no_of_points)
+void GeCurve::points_added( unsigned int *no_of_points)
 {
   int i, idx;
   glow_sCurveData gcd;
@@ -2030,6 +2068,9 @@ void GeCurveData::select_color( bool dark_bg)
   }
 }
 
+#define T1 0.99999
+#define T0 0.00001
+
 void GeCurveData::scale( int axis_type, int value_type, 
      double min_value, double max_value, 
      double *min_value_axis, double *max_value_axis, 
@@ -2177,66 +2218,84 @@ void GeCurveData::scale( int axis_type, int value_type,
       min_zero = 0;
       max_zero = 0;
 
-      // Power for max_value
-      if ( (max_value < DBL_EPSILON && !not_zero) ||
-           fabs(max_value) < DBL_EPSILON) {
-        maxval = 0;
-        max_lines = 0;
-        max_n = 0;
-        max_zero = 1;
-      }
-      else {
-        value = fabs(max_value);
+      if ( fabs(max_value - min_value) < max(fabs(max_value), fabs(min_value)) / 2) {
+        value = fabs(max_value - min_value);
         n = 0;
         if ( value >= 1) {
           while ( value / 10 > 1) {
             value = value / 10;
             n++;
           }
-          max_n = n;
+          max_n = min_n = n;
         }
         else {
           while ( value * 10 < 10) {
             value = value * 10;
             n++;
           }
-          max_n = -n;
+          max_n = min_n = -n;
         }
       }
+      else {
+	// Power for max_value
+	if ( (max_value < DBL_EPSILON && !not_zero) ||
+	     fabs(max_value) < DBL_EPSILON) {
+	  maxval = 0;
+	  max_lines = 0;
+	  max_n = 0;
+	  max_zero = 1;
+	}
+	else {
+	  value = fabs(max_value);
+	  n = 0;
+	  if ( value >= 1) {
+	    while ( value / 10 > 1) {
+	      value = value / 10;
+	      n++;
+	    }
+	    max_n = n;
+	  }
+	  else {
+	    while ( value * 10 < 10) {
+	      value = value * 10;
+	      n++;
+	    }
+	    max_n = -n;
+	  }
+	}
 
-      // Power for min_value
-      if ( (min_value > -DBL_EPSILON && !not_zero) ||
-           fabs(min_value) < DBL_EPSILON) {
-        minval = 0;
-        min_lines = 0;
-        min_n = 0;
-        min_zero = 1;
-      }
-      else {
-        value = fabs(min_value);
-        n = 0;
-        if ( value >= 1) {
-          while ( value / 10 > 1) {
-            value = value / 10;
-            n++;
-          }
-          min_n = n;
-        }
-        else {
-          while ( value * 10 < 10) {
-            value = value * 10;
-            n++;
-          }
-	  min_n = -n;
-        }
+	// Power for min_value
+	if ( (min_value > -DBL_EPSILON && !not_zero) ||
+	     fabs(min_value) < DBL_EPSILON) {
+	  minval = 0;
+	  min_lines = 0;
+	  min_n = 0;
+	  min_zero = 1;
+	}
+	else {
+	  value = fabs(min_value);
+	  n = 0;
+	  if ( value >= 1) {
+	    while ( value / 10 > 1) {
+	      value = value / 10;
+	      n++;
+	    }
+	    min_n = n;
+	  }
+	  else {
+	    while ( value * 10 < 10) {
+	      value = value * 10;
+	      n++;
+	    }
+	    min_n = -n;
+	  }
+	}
       }
 
       if ( min_zero) {
         // Use power for max_value
 
-        i_value = int( max_value * pow(10, -max_n)) + 1;
-        if ( fabs(double(i_value-1) - max_value * pow(10, -n)) < 1e-10)
-          i_value--;
+        i_value = int( max_value * pow(10, -max_n) + (max_value > 0 ? T1 : -T0));
         if ( ODD(i_value) && i_value != 5 && !allow_odd) 
           i_value += 1;
         maxval = double(i_value) * pow( 10, max_n);
@@ -2246,9 +2305,7 @@ void GeCurveData::scale( int axis_type, int value_type,
       else if ( max_zero) {
         // Use power for min_value
 
-        i_value = int( min_value * pow(10, -min_n)) + ((min_value < 0) ? -1 : 1);
-        if ( fabs(double(i_value+1) - min_value * pow(10, -n)) < 1e-10)
-          i_value++;
+        i_value = int( min_value * pow(10, -min_n) + (min_value > 0 ? T0 : -T1));
         if ( ODD(i_value) && i_value != 5 && !allow_odd) 
           i_value += 1;
         minval = double(i_value) * pow( 10, min_n);
@@ -2262,25 +2319,13 @@ void GeCurveData::scale( int axis_type, int value_type,
 	else
 	  n = min_n;
 
-        if ( max_value > 0) {
-          i_value = int( max_value * pow(10, -n)) + 1;
-          if ( fabs(double(i_value-1) - max_value * pow(10, -n)) < 1e-10)
-            i_value--;
-        }
-        else
-          i_value = int( max_value * pow(10, -n));
+	i_value = int( max_value * pow(10, -n) + (max_value > 0 ? T1 : -T0));
         if ( ODD(i_value) && i_value != 5 && !allow_odd) 
           i_value += 1;
         maxval = double(i_value) * pow( 10, n);
         max_lines = i_value;
 
-        if ( min_value < 0) {
-          i_value = int( min_value * pow(10, -n)) - 1;
-          if ( fabs(double(i_value+1) - min_value * pow(10, -n)) < 1e-10)
-            i_value++;
-        }
-        else
-          i_value = int( min_value * pow(10, -n));
+	i_value = int( min_value * pow(10, -n) + (min_value > 0 ? T0 : -T1));
         if ( ODD(i_value) && i_value != 5 && !allow_odd) 
           i_value -= 1;
         minval = double(i_value) * pow( 10, n);

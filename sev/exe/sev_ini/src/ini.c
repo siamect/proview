@@ -162,13 +162,3 @@ void ini_ProcTable (
   }
 }
 
-void ini_LoadSev(
-  pwr_tStatus *sts,
-  ini_sContext *cp
-)
-{
-  pwr_tObjid oid;
-
-  *sts = gdh_CreateObject("pwrNode-sev", pwr_eClass_NodeHier, 0,
-			  &oid, pwr_cNObjid, 0, pwr_cNObjid);
-}

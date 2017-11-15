@@ -1792,7 +1792,9 @@ void time_Period( time_ePeriod period, pwr_tTime *from, pwr_tTime *to, pwr_tTime
     break;
   case time_ePeriod_OneDay:
     if ( !center) {
-      time_Period( time_ePeriod_LastHour, from, to, center, daybreak);
+      sts = time_GetTime( to);
+      *from = *to;
+      from->tv_sec -= ONEDAY;
       return;
     }
     time_PeriodSec( from, to, center, ONEDAY);

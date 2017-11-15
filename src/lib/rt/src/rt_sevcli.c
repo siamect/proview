@@ -529,7 +529,7 @@ int sevcli_get_objectitemdata( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid, 
   
   *sts = rmsg->Status;
   if ( EVEN(*sts)) {
-    qcom_Free( sts, rmsg);
+    qcom_Free( &lsts, rmsg);
     return 0;
   }
   if( rmsg->NumPoints == 0 ) {

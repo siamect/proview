@@ -691,7 +691,8 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 	  sevhist[i*rows + j] = new XttSevHistGtk( this, toplevel, (char *)"No title", &widget,
 						   oidv, anamev, onamev, sevhistobjectv, 
 						   xnav->scctx, w, h, 
-						   (unsigned int)curve_mOptions_Embedded, color_theme, 0, sts);
+						   (unsigned int)curve_mOptions_Embedded, color_theme, 
+						   time_ePeriod_, 0, sts);
 	  if ( EVEN(*sts)) {
 	    comp_widget[i*rows + j] = error_msg("Unable to load history data", *sts);
 	    break;
@@ -1260,7 +1261,8 @@ int XttMultiViewGtk::set_subwindow_source( const char *name, char *source, char 
 	    ctx = new XttSevHistGtk( this, toplevel, (char *)"No title", &comp_w,
 				     oidv, anamev, onamev, sevhistobjectv, 
 				     xnav->scctx, w, h, 
-				     (unsigned int)curve_mOptions_Embedded, color_theme, 0, &lsts);
+				     (unsigned int)curve_mOptions_Embedded, color_theme, 
+				     time_ePeriod_, 0, &lsts);
 	    if ( EVEN(lsts)) break;
 
 	    ctx->help_cb = multiview_trend_help_cb;

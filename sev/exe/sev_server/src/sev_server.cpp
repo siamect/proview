@@ -837,7 +837,10 @@ void *sev_server::send_histdata_thread( void *arg)
   endtime = net_NetTimeToTime( &rmsg->EndTime);
 
   sev->m_db->get_item_idx(&sts, &item_idx, rmsg->Oid, rmsg->AName);
-  if ( EVEN(sts)) return (void *) 1;
+  if ( EVEN(sts)) {
+    qcom_Free( &lsts, rmsg);
+    return (void *) 1;
+  }
 
   sev->m_db->get_values( &sts, rmsg->Oid, sev->m_db->m_items[item_idx].options, 
 			 sev->m_db->m_items[item_idx].deadband, 

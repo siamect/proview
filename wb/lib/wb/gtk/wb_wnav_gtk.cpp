@@ -531,7 +531,7 @@ static void wnav_message_dialog_read( GtkWidget *w, gpointer data)
 
 void WNavGtk::message_dialog( char *title, char *text)
 {
-  GtkWidget *dialog = gtk_message_dialog_new( GTK_WINDOW(toplevel),
+  GtkWidget *dialog = gtk_message_dialog_new( GTK_WINDOW(gtk_widget_get_toplevel(toplevel)),
 					      GTK_DIALOG_MODAL, 
 					      GTK_MESSAGE_ERROR,
 					      GTK_BUTTONS_OK, text);

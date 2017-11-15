@@ -74,9 +74,11 @@ XttSevHistGtk::XttSevHistGtk( void *parent_ctx,
 			      int xn_height,
 			      unsigned int xn_options,
 			      int xn_color_theme, 
+			      time_ePeriod xn_time_range,
 			      void *basewidget,
 			      int *sts) :
-  XttSevHist( parent_ctx, name, xn_oidv, xn_anamev, xn_onamev, sevhistobjectv, xn_scctx, xn_color_theme, sts), 
+  XttSevHist( parent_ctx, name, xn_oidv, xn_anamev, xn_onamev, sevhistobjectv, xn_scctx, xn_color_theme, 
+	      xn_time_range, sts), 
   parent_widget(parent_wid)
 {
   char title[250];
@@ -101,7 +103,8 @@ XttSevHistGtk::XttSevHistGtk( void *parent_ctx,
   curve->remove_cb = sevhist_remove_cb;
   curve->export_cb = sevhist_export_cb;
   curve->enable( curve_mEnable_Timebox | curve_mEnable_Export | curve_mEnable_ExportTime | 
-		 curve_mEnable_CurveType | curve_mEnable_CurveTypeSquare | curve_mEnable_FillCurve);
+		 curve_mEnable_CurveType | curve_mEnable_CurveTypeSquare | curve_mEnable_FillCurve |
+		 curve_mEnable_DigitalSplit);
   if ( initial_period != time_ePeriod_)
     curve->set_period( initial_period, 1);
 

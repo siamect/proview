@@ -4672,6 +4672,7 @@ static int	xnav_open_func(	void		*client_data,
     pwr_tAName name_array[10];
     int i, names;
     int plotgroup_found = 0;
+    int sevplotgroup_found = 0;
     int sevitem_found = 0;
     pwr_sAttrRef plotgroup = pwr_cNAttrRef;
     pwr_tClassId classid;
@@ -4686,6 +4687,7 @@ static int	xnav_open_func(	void		*client_data,
     unsigned int options = 0;
     int width, height, nr;
     char tmp_str[40];
+    time_ePeriod period = time_ePeriod_;
 
     // Command is "OPEN HISTORY"
 
@@ -4732,7 +4734,8 @@ static int	xnav_open_func(	void		*client_data,
       // Open exported history file
       
       hist = xnav->xttsevhist_new( file_str, 0, 0, 0, 0, 0, file_str, 
-				   width, height, options, xnav->gbl.color_theme, basewidget, &sts);
+				   width, height, options, xnav->gbl.color_theme, 
+				   time_ePeriod_, basewidget, &sts);
       if ( ODD(sts)) {
         hist->help_cb = xnav_sevhist_help_cb;
         hist->close_cb = xnav_sevhist_close_cb;
@@ -4804,6 +4807,10 @@ static int	xnav_open_func(	void		*client_data,
 	plotgroup = sevhist_aref;
 	plotgroup_found = 1;
 	break;
+      case pwr_cClass_SevPlotGroup:
+	plotgroup = sevhist_aref;
+	sevplotgroup_found = 1;
+	break;
       case pwr_cClass_SevItemInt:
       case pwr_cClass_SevItemFloat:
       case pwr_cClass_SevItemBoolean:
@@ -4841,22 +4848,74 @@ static int	xnav_open_func(	void		*client_data,
 	  strcpy( anamev[0], aname);
 	}
       }
-      else if ( plotgroup_found) {
-	pwr_sClass_PlotGroup plot;
+      else if ( plotgroup_found || sevplotgroup_found) {
+	pwr_tAttrRef  plot_objects[20];
+	unsigned int plot_layout;
+	int plot_timerange;
 	pwr_tCid cid;
 	int j;
 
-	sts = gdh_GetObjectInfo( hist_name, &plot, sizeof(plot));
-	if ( EVEN(sts)) return sts;
-	
-	if ( plot.Layout & pwr_mCurveLayoutMask_AttrDescrFirst)
+	if ( plotgroup_found) {
+	  pwr_sClass_PlotGroup plot;
+
+	  sts = gdh_GetObjectInfo( hist_name, &plot, sizeof(plot));
+	  if ( EVEN(sts)) return sts;
+	  
+	  memcpy( plot_objects, plot.YObjectName, sizeof(plot_objects));
+	  plot_layout = plot.Layout;
+	  plot_timerange = plot.TimeRange;
+	}
+	else {
+	  pwr_sClass_SevPlotGroup plot;
+
+	  sts = gdh_GetObjectInfo( hist_name, &plot, sizeof(plot));
+	  if ( EVEN(sts)) return sts;
+
+	  memset( plot_objects, 0, sizeof(plot_objects));
+	  for ( j = 0; j < 20; j++) {
+	    if ( strcmp( plot.ObjectName[j], "") != 0) {
+	      sts = gdh_NameToAttrref( pwr_cNObjid, plot.ObjectName[j], &plot_objects[j]);
+	      if ( EVEN(sts)) continue;
+	    }
+	  }
+	  plot_layout = plot.Layout;
+	  plot_timerange = plot.TimeRange;
+	}
+
+	if ( plot_layout & pwr_mCurveLayoutMask_AttrDescrFirst)
 	  options |= curve_mOptions_ShowDescrFirst;
+	if ( plot_layout & pwr_mCurveLayoutMask_CurveTypeLine)
+	  options |= curve_mOptions_CurveTypeLine;
+	if ( plot_layout & pwr_mCurveLayoutMask_CurveTypePoints)
+	  options |= curve_mOptions_CurveTypePoints;
+	if ( plot_layout & pwr_mCurveLayoutMask_CurveTypeLinePoints)
+	  options |= curve_mOptions_CurveTypeLinePoints;
+	if ( plot_layout & pwr_mCurveLayoutMask_CurveTypeSquare)
+	  options |= curve_mOptions_CurveTypeSquare;
+	if ( plot_layout & pwr_mCurveLayoutMask_FillCurve)
+	  options |= curve_mOptions_FillCurve;
+	if ( plot_layout & pwr_mCurveLayoutMask_SplitDigital)
+	  options |= curve_mOptions_SplitDigital;
+	if ( plot_layout & pwr_mCurveLayoutMask_LightBackground)
+	  options |= curve_mOptions_LightBackground;
+	switch ( plot_timerange) {
+	case pwr_eTimeRangeEnum_Second: period = time_ePeriod_OneSecond; break;
+	case pwr_eTimeRangeEnum_10Seconds: period = time_ePeriod_10Seconds; break;
+	case pwr_eTimeRangeEnum_Minute: period = time_ePeriod_OneMinute; break;
+	case pwr_eTimeRangeEnum_10Minutes: period = time_ePeriod_10Minutes; break;
+	case pwr_eTimeRangeEnum_Hour: period = time_ePeriod_OneHour; break;
+	case pwr_eTimeRangeEnum_Day: period = time_ePeriod_OneDay; break;
+	case pwr_eTimeRangeEnum_Week: period = time_ePeriod_OneWeek; break;
+	case pwr_eTimeRangeEnum_Month: period = time_ePeriod_OneMonth; break;
+	case pwr_eTimeRangeEnum_Year: period = time_ePeriod_OneYear; break;
+	default: ;
+	}
 
 	for ( j = 0; j < 20; j++) {
-	  if ( cdh_ObjidIsNull( plot.YObjectName[j].Objid))
+	  if ( cdh_ObjidIsNull( plot_objects[j].Objid))
 	    break;
 	  
-	  sevhist_aref = plot.YObjectName[j];
+	  sevhist_aref = plot_objects[j];
 	  sts = gdh_GetAttrRefTid( &sevhist_aref, &cid);
 	  if ( EVEN(sts)) return sts;
 
@@ -4913,6 +4972,38 @@ static int	xnav_open_func(	void		*client_data,
 	    oidv[oid_cnt] = aref.Objid;
 	    sevhistobjectv[oid_cnt] = true;
 	    oid_cnt++;
+	    break;
+	  }
+	  case pwr_cClass_SevItemBoolean:
+	  case pwr_cClass_SevItemFloat: 
+	  case pwr_cClass_SevItemInt: {
+	    pwr_tOName oname;
+	    pwr_tOid oid;
+
+	    sts = gdh_ArefANameToAref( &sevhist_aref, "ObjectName", &attr_aref);
+	    if ( EVEN(sts)) return sts;
+  
+	    sts = gdh_GetObjectInfoAttrref( &attr_aref, oname, sizeof(oname));
+	    if ( EVEN(sts)) return sts;
+  
+	    sts = gdh_ArefANameToAref( &sevhist_aref, "Attr", &attr_aref);
+	    if ( EVEN(sts)) return sts;
+  
+	    sts = gdh_GetObjectInfoAttrref( &attr_aref, aname, sizeof(aname));
+	    if ( EVEN(sts)) return sts;
+  
+	    sts = gdh_ArefANameToAref( &sevhist_aref, "Oid", &attr_aref);
+	    if ( EVEN(sts)) return sts;
+  
+	    sts = gdh_GetObjectInfoAttrref( &attr_aref, &oid, sizeof(oid));
+	    if ( EVEN(sts)) return sts;
+  
+	    strncpy( onamev[oid_cnt], oname, sizeof(onamev[0]));
+	    strncpy( anamev[oid_cnt], aname, sizeof(anamev[0]));
+	    oidv[oid_cnt] = oid;
+	    sevhistobjectv[oid_cnt] = false;
+	    oid_cnt++;
+	    
 	    break;
 	  }
 	  default: ;
@@ -4976,7 +5067,7 @@ static int	xnav_open_func(	void		*client_data,
       }
 
       // Get server and connect to server
-      if ( sevitem_found) {
+      if ( sevitem_found || sevplotgroup_found) {
 	// Connect to local node
 	syi_NodeName( &sts, server_node, sizeof(server_node));
       }
@@ -5008,7 +5099,7 @@ static int	xnav_open_func(	void		*client_data,
     oidv[oid_cnt] = pwr_cNOid;
 
     if ( EVEN( dcli_get_qualifier( "/TITLE", title_str, sizeof(title_str)))) {
-      if ( plotgroup_found) {
+      if ( plotgroup_found || sevplotgroup_found) {
         pwr_tAName attr;
 
         // Get title from plotgroup object
@@ -5022,10 +5113,10 @@ static int	xnav_open_func(	void		*client_data,
     }
 
     xnav->set_clock_cursor();
-    if ( plotgroup_found || sevitem_found) {
+    if ( plotgroup_found || sevplotgroup_found || sevitem_found) {
       hist = xnav->xttsevhist_new( title_str, oidv, anamev, onamev, sevhistobjectv, 
 				   xnav->scctx, 0, width, height, options, xnav->gbl.color_theme, 
-				   basewidget, &sts);
+				   period, basewidget, &sts);
       if ( ODD(sts)) {
         hist->help_cb = xnav_sevhist_help_cb;
         hist->close_cb = xnav_sevhist_close_cb;
@@ -5038,7 +5129,7 @@ static int	xnav_open_func(	void		*client_data,
     else if( sevHistObjectFound ) {
       hist = xnav->xttsevhist_new( title_str, oidv, anamev, onamev, sevhistobjectv, 
 				   xnav->scctx, 0, width, height, options, xnav->gbl.color_theme, 
-				   basewidget, &sts);
+				   time_ePeriod_, basewidget, &sts);
       if ( ODD(sts)) {
         hist->help_cb = xnav_sevhist_help_cb;
         hist->close_cb = xnav_sevhist_close_cb;
@@ -5050,7 +5141,7 @@ static int	xnav_open_func(	void		*client_data,
     else {
       hist = xnav->xttsevhist_new( title_str, oidv, anamev, onamev, sevhistobjectv, 
 				   xnav->scctx, 0, width, height, options, xnav->gbl.color_theme, 
-				   basewidget, &sts);
+				   time_ePeriod_, basewidget, &sts);
       if ( ODD(sts)) {
         hist->help_cb = xnav_sevhist_help_cb;
         hist->close_cb = xnav_sevhist_close_cb;
@@ -5194,6 +5285,141 @@ static int	xnav_open_func(	void		*client_data,
 			   NULL);
       }
     }
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "PLOTGROUP", strlen( arg1_str)) == 0)
+  {
+    pwr_tCmd cmd;
+    pwr_tAName name_str;
+    char *name_ptr;
+    pwr_tAName title_str;
+    pwr_sAttrRef aref;
+    int sts;
+    pwr_tClassId classid;
+    int width, height, nr;
+    char tmp_str[40];
+    int fullscreen;
+    int maximize;
+    int fullmaximize;
+    int iconify;
+    int hide;
+    pwr_tAName aname;
+    pwr_tAttrRef yo;
+    char type[20];
+    int width_found;
+    int height_found;
+    int title_found;
+    
+    // Command is "OPEN PLOTGROUP"
+
+    fullscreen = ODD( dcli_get_qualifier( "/FULLSCREEN", 0, 0));
+    maximize = ODD( dcli_get_qualifier( "/MAXIMIZE", 0, 0));
+    fullmaximize = ODD( dcli_get_qualifier( "/FULLMAXIMIZE", 0, 0));
+    iconify = ODD( dcli_get_qualifier( "/ICONIFY", 0, 0));
+    hide = ODD( dcli_get_qualifier( "/HIDE", 0, 0));
+
+    if ( ODD( dcli_get_qualifier( "/WIDTH", tmp_str, sizeof(tmp_str)))) {
+      nr = sscanf( tmp_str, "%d", &width);
+      if ( nr != 1) {
+	xnav->message('E', "Syntax error in width");
+	return XNAV__HOLDCOMMAND;
+      }
+      width_found = 1;
+    }
+    else
+      width_found = 0;
+
+    if ( ODD( dcli_get_qualifier( "/HEIGHT", tmp_str, sizeof(tmp_str)))) {
+      nr = sscanf( tmp_str, "%d", &height);
+      if ( nr != 1) {
+	xnav->message('E', "Syntax error in height");
+	return XNAV__HOLDCOMMAND;
+      }
+      height_found = 1;
+    }
+    else
+      height_found = 0;
+
+    /* Get the name qualifier */
+    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str)))) {
+      if ( name_str[0] != '/')
+        /* Assume that this is the namestring */
+        name_ptr = name_str;
+      else {
+        xnav->message('E', "Syntax error");
+        return XNAV__HOLDCOMMAND; 	
+      } 
+    }
+    else {
+      if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
+        name_ptr = name_str;
+      else {
+        /* Get the selected object */
+        sts = xnav->get_current_aref( &aref, name_str, 
+	  sizeof( name_str), cdh_mName_path | cdh_mName_object | cdh_mName_attribute);
+        if ( EVEN(sts)) {
+          xnav->message('E', "Enter name or select an object");
+          return XNAV__SUCCESS;
+        }
+        name_ptr = name_str;
+      }
+    }
+
+    if ( ODD( dcli_get_qualifier( "/TITLE", title_str, sizeof(title_str))))
+      title_found = 1;
+    else
+      title_found = 0;
+
+    strcpy( aname, name_str);
+    strcat( aname, ".YObjectName[0]");
+
+    sts = gdh_GetObjectInfo( aname, (void *)&yo, sizeof(yo));
+    if ( EVEN(sts)) return sts;
+
+    if ( cdh_ObjidIsNull( yo.Objid)) {
+      xnav->message('E',"Error in plotgroup configuration");
+      return  XNAV__SUCCESS;
+    }
+
+    sts = gdh_GetAttrRefTid( &yo, &classid);
+    if ( EVEN(sts)) return sts;
+
+    switch ( classid) {
+    case pwr_cClass_DsTrend:
+    case pwr_cClass_DsTrendCurve:
+      strcpy( type, "trend");
+      break;
+    case pwr_cClass_DsFast:
+    case pwr_cClass_DsFastCurve:
+      strcpy( type, "fast");
+      break;
+    case pwr_cClass_SevHist:
+    case pwr_cClass_SevHistObject:
+      strcpy( type, "history");
+      break;;
+    default:
+      xnav->message('E',"Error in plotgroup configuration");
+      return  XNAV__SUCCESS;      
+    }
+
+    sprintf( cmd, "open %s/name=%s", type, name_str);
+    if ( title_found)
+      sprintf( &cmd[strlen(cmd)], "/title=\"%s\"", title_str);
+    if ( width_found)
+      sprintf( &cmd[strlen(cmd)], "/width=%d", width);
+    if ( height_found)
+      sprintf( &cmd[strlen(cmd)], "/height=%d", height);
+    if ( fullscreen)
+      strcat( cmd, "/fullscr");
+    if ( maximize)
+      strcat( cmd, "/maximiz");
+    if ( fullmaximize)
+      strcat( cmd, "/fullmax");
+    if ( iconify)
+      strcat( cmd, "/iconify");
+    if ( hide)
+      strcat( cmd, "/hide");
+
+    xnav->command( cmd);
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "ATTRIBUTE", strlen( arg1_str)) == 0)
   {
@@ -10172,6 +10398,7 @@ static pwr_tStatus xnav_otree_action_cb( void *ctx, pwr_tAttrRef *aref)
   case pwr_cClass_SevItemFloat:
   case pwr_cClass_SevItemInt:
   case pwr_cClass_SevItemBoolean:
+  case pwr_cClass_SevPlotGroup:
     sprintf( cmd, "open history/name=%s/title=\"%s\"", aname, aname);
     break;
   case pwr_cClass_XttGraph:

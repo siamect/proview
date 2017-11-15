@@ -82,7 +82,7 @@ class XNavGtk : public XNav {
     XttSevHist *xttsevhist_new( char *name, pwr_tOid *oidv, pwr_tOName *anamev,
 				pwr_tOName *onamev, bool *sevhistobjectv, sevcli_tCtx scctx, 
 				char *filename, int width, int height, unsigned int options, int color_theme, 
-				void *basewidget, pwr_tStatus *sts);
+				time_ePeriod time_range, void *basewidget, pwr_tStatus *sts);
     XttTCurve *xtttcurve_new( char *name, pwr_tAttrRef *arefv, int width, int height, unsigned int options, 
 			      int color_theme, void *basewidget, pwr_tStatus *sts);
     XttFast *xttfast_new( char *name, pwr_tAttrRef *objar, int width, int height, unsigned int options, 

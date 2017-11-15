@@ -41,6 +41,5 @@
 #include "rt_ini_load.h"
 
 void ini_ProcTable(pwr_tStatus*, ini_sContext*);
-void ini_LoadSev(pwr_tStatus*, ini_sContext *cp);
 
 #endif

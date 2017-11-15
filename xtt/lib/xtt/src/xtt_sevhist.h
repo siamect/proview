@@ -108,6 +108,7 @@ class XttSevHist {
 	      bool *sevhistobjectv,
 	      sevcli_tCtx xn_scctx,
 	      int xn_color_theme,
+	      time_ePeriod xn_time_range,
 	      int *sts);
   XttSevHist( void *parent_ctx,
 	      const char *name,
