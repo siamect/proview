@@ -328,7 +328,7 @@ pwr_tStatus cbuf_UpdateCircBuffInfo( cbuf_sCircBuffInfo *info,
   mvol_sAttribute	*ap;
   pwr_sClass_CircBuffHeader  	*hp;
   char			*datap;
-  int			split = 0;
+  int			split;
   int			start_idx;
   int			first_index, last_index;
   int			finish = 0;
@@ -338,6 +338,7 @@ pwr_tStatus cbuf_UpdateCircBuffInfo( cbuf_sCircBuffInfo *info,
 
 
   for ( j = 0; j < infosize; j++) {
+    split = 0;
     gdh_Lock;
   
     while ( 1) {
