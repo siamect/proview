@@ -123,7 +123,8 @@ class sev_item {
     deadband_active(x.deadband_active), last_id(x.last_id), value_size(x.value_size), old_value(x.old_value),
     first_storage(x.first_storage),
     attrnum(x.attrnum), attr(x.attr), status(x.status), logged_status(x.logged_status), cache(0),
-    idx(x.idx), deleted(x.deleted) {
+    idx(x.idx), deleted(x.deleted), ip(x.ip), mean_value(x.mean_value), mean_acc_time(x.mean_acc_time),
+    variance_cnt(x.variance_cnt) {
     strncpy( tablename, x.tablename, sizeof(tablename)); 
     strncpy( oname, x.oname, sizeof(oname)); 
     strncpy( description, x.description, sizeof(description));

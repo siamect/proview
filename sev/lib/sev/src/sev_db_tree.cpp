@@ -108,7 +108,7 @@ pwr_tStatus sev_db::tree_update()
 	sts = gdh_NameToObjid( hname, &oid);
       if ( new_item || EVEN(sts)) {
 	// Create object
-	sts = gdh_CreateObject( hname, pwr_eClass_PlantHier, 0,
+	sts = gdh_CreateObject( hname, pwr_eClass_NodeHier, 0,
 				&oid, pwr_cNObjid, 0, pwr_cNObjid);
 	if ( EVEN(sts)) return sts;
 	
