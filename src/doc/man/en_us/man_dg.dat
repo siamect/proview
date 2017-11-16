@@ -8475,7 +8475,7 @@ Revisions
 A revision is a state in the development environment that is stored in a version control 
 system. The revision should include all source files to make it possible to restore a revision.
 A revision can be used to review the state when the revision was created, and also to build 
-runable systems from the restored source to test or run aa restore revision in production.
+runable systems from the restored source to test or run a restored revision in production.
 
 The currently supported version control system is Git. A new repository will be created on 
 $pwrp_root/src when the first revision is created.
@@ -8486,7 +8486,7 @@ configurator.
 
 <h1>Create a revision
 A new revision is created from Functions/New Revison in the menu. New revisions can only be
-created if the currently checkedout revision is the end point of a branch.
+created if the currently checked out revision is the end point of a branch.
 
 <image>dg_fig124.png
 <b>Fig Create a new revision
@@ -8505,7 +8505,7 @@ Also in the configurator title bar, the current revision is written.
 <b>Fig An old revision is restored
 
 <h1>Create a branch
-If on old revision in the main line is restored, a branch can be created by creating a new
+If an old revision in the main line is restored, a branch can be created by creating a new
 revision from this point. In the figure above, a branch has be created from revision V2.0.1.
 New revisions can also be created from the end point of the branch. In the figure above, a 
 new revision can be created from V2.0.1-2 that is an end point, but not from V2.0.1-1.
