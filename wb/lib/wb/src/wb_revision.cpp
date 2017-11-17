@@ -907,10 +907,10 @@ int wb_version_manager_git::get_current( char *name)
   dcli_translate_filename( fname, fname);
 
   // Get current tag
-  snprintf( cmd, sizeof(cmd), "git describe --tags --abbrev=0 > %s", fname);
+  snprintf( cmd, sizeof(cmd), "git describe --tags --abbrev=0 > %s 2>/dev/null", fname);
   sts = system( cmd);
   if ( sts != 0) {
-    printf( "** Error from git describe %d\n", sts >> 8);
+    // printf( "** Error from git describe %d\n", sts >> 8);
     return REV__GITERROR;
   }
 
