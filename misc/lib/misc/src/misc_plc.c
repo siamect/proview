@@ -176,17 +176,19 @@ void Misc_PingPongFo_exec( plc_sThread *tp, pwr_sClass_Misc_PingPongFo *o)
 	co->Speed = BASE_SPEED * co->LeftLevel * co->LevelFactor;
       }
       if ( co->XCoordinate + co->BallRadius > co->Width) {
-	if ( co->YCoordinate >= co->RightPos - co->RacketWidth/2 &&
-	     co->YCoordinate <= co->RightPos + co->RacketWidth/2) {
+	if ( co->YCoordinate >= co->RightPos - co->RacketWidth/2 - co->BallRadius &&
+	     co->YCoordinate <= co->RightPos + co->RacketWidth/2 + co->BallRadius) {
 	  // Hit on racket
-	  co->XCoordinate = co->Width - co->BallRadius - 
-	    (co->XCoordinate + co->BallRadius - co->Width);
-	  if ( co->Direction > 0)
+	  if ( co->Direction > 0) {
 	    co->Direction = -co->Direction + 180 + my_random() * 10;
-	  else
+	  }
+	  else {
 	    co->Direction = -co->Direction - 180 + my_random() * 10;
+	  }
 	  if ( fabs(co->Direction) < 135)
 	    co->Direction = my_random() * 10;
+	  co->XCoordinate = co->Width - co->BallRadius - 
+	    (co->XCoordinate + co->BallRadius - co->Width);
 	  co->Speed = BASE_SPEED * co->RightLevel * co->LevelFactor;
 	  co->BallCount++;
 	}
@@ -252,8 +254,8 @@ void Misc_PingPongFo_exec( plc_sThread *tp, pwr_sClass_Misc_PingPongFo *o)
       co->LevelFactor = 1.0 + time_DToFloat( 0, &diff) * co->LevelIncrement / 20;
 
       if ( co->XCoordinate - co->BallRadius < 0) {
-	if ( co->YCoordinate >= co->LeftPos - co->RacketWidth/2 &&
-	     co->YCoordinate <= co->LeftPos + co->RacketWidth/2) {
+	if ( co->YCoordinate >= co->LeftPos - co->RacketWidth/2 - co->BallRadius &&
+	     co->YCoordinate <= co->LeftPos + co->RacketWidth/2 + co->BallRadius) {
 	  // Hit on racket
 	  co->XCoordinate = co->BallRadius - (co->XCoordinate - co->BallRadius);
 	  if ( co->Direction > 0)
@@ -272,8 +274,8 @@ void Misc_PingPongFo_exec( plc_sThread *tp, pwr_sClass_Misc_PingPongFo *o)
 	}	
       }
       if ( co->XCoordinate + co->BallRadius > co->Width) {
-	if ( co->YCoordinate >= co->RightPos - co->RacketWidth/2 &&
-	     co->YCoordinate <= co->RightPos + co->RacketWidth/2) {
+	if ( co->YCoordinate >= co->RightPos - co->RacketWidth/2 - co->BallRadius &&
+	     co->YCoordinate <= co->RightPos + co->RacketWidth/2 + co->BallRadius) {
 	  // Hit on racket
 	  co->XCoordinate = co->Width - co->BallRadius - 
 	    (co->XCoordinate + co->BallRadius - co->Width);
