@@ -213,9 +213,13 @@ int rmq_connect()
   }
 
   if ( ctx->is_producer && strcmp( ctx->op->Exchange, "") != 0)
+#if AMQP_VERSION_MAJOR == 0 && AMQP_VERSION_MINOR < 6
     amqp_exchange_declare( ctx->conn, ctx->channel, amqp_cstring_bytes(ctx->op->Exchange), 
 			   amqp_cstring_bytes("fanout"), 0, ctx->op->Durable, amqp_empty_table);
-  
+#else
+    amqp_exchange_declare( ctx->conn, ctx->channel, amqp_cstring_bytes(ctx->op->Exchange), 
+			   amqp_cstring_bytes("fanout"), 0, ctx->op->Durable, 0, 0, amqp_empty_table);
+#endif  
   
   if ( ctx->is_producer && strcmp( ctx->op->Exchange, "") != 0)
     amqp_queue_bind(ctx->conn, ctx->channel, amqp_cstring_bytes(ctx->op->SendQueue), 

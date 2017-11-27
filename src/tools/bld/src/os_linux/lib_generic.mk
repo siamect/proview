@@ -225,7 +225,7 @@ $(clean_pwsg) : clean_%.pwsg : %.pwsg
 
 $(export_lib) : $(objects)
 	@ echo "Building archive $(notdir $(export_lib))"
-	@ $(ar) -cr $(export_lib) $(objects)
+	@ $(ar) -cUr $(export_lib) $(objects)
 
 #	@ if [ -e $(export_lib) ]; then \
 #		$(rm) $(export_lib); \

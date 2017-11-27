@@ -167,7 +167,7 @@ $(clean_hpp_includes) : clean_%.hpp : %.hpp
 $(export_lib) : $(objects)
 	@ echo "Building archive $(notdir $(export_lib))"
 	@ $(rm) $(export_lib)
-	@ $(ar) -cr $(export_lib) $(objects)
+	$(ar) -cUr $(export_lib) $(objects)
 
 $(obj_dir)/%.o : %.c
 ifeq ($(nodep),)

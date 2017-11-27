@@ -2651,7 +2651,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		  fprintf( file, "appl %s W $pwrp_cnf/%s/pwr_user2.dat:$pwra_db/pwr_user2.dat $pwra_db/pwr_user2.dat\n",
 			   nodename_ptr, nodename_ptr);
 		if ( *components_ptr & pwr_mDistrComponentMask_ApplFile)
-		  fprintf( file, "appl %s W "pwr_cNameAppl" $pwrp_load/\n",
+		  fprintf( file, "appl %s W " pwr_cNameAppl " $pwrp_load/\n",
 			   nodename_ptr, "$pwrp_load/", nodename_ptr, *bus_number_ptr);
 		if ( *components_ptr & pwr_mDistrComponentMask_PwrpAliasFile)
 		  fprintf( file, "appl %s W $pwrp_load/pwrp_alias.dat $pwrp_load/pwrp_alias.dat\n", 

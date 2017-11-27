@@ -646,25 +646,25 @@ void pn_gsdml::set_language( const char *lang)
   strncpy( current_lang, lang, sizeof(current_lang));
 }
 
-void *pn_gsdml::next_token()
+bool pn_gsdml::next_token()
 {
   char t;
-  void *sts;
+  bool sts;
 
   if ( first_token) {
     first_token = false;
 
-    c_sts = fp.get(c);
+    c_sts = (bool) fp.get(c);
     if ( !c_sts) return c_sts;
     
-    c_f_sts = fp.get(c_f);
+    c_f_sts = (bool) fp.get(c_f);
     if ( c_f_sts)
-      c_ff_sts = fp.get(c_ff);
+      c_ff_sts = (bool) fp.get(c_ff);
   }
   else {
         
     if ( c_ff_sts)
-      sts = fp.get(t);
+      sts = (bool) fp.get(t);
 
     c = c_f;
     c_sts = c_f_sts;

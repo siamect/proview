@@ -331,122 +331,122 @@ int XNav::GetObjectMenu( xmenu_sMenuCall	*ip,
   if ( cdh_ObjidIsNotNull( CurrentObject->Objid))
     currentar = *CurrentObject;
 
-    if ( ip->ItemType == xmenu_eItemType_Object) {
-      // Popup-menu for an object
-      if ( !cdh_tidIsCid( classid))
-	return XNAV__SUCCESS;
+  if ( ip->ItemType == xmenu_eItemType_Object) {
+    // Popup-menu for an object
+    if ( !cdh_tidIsCid( classid))
+      return XNAV__SUCCESS;
 
 
-      // Get the RtXtt common menu-objects
-      strcpy( menu, "pwrs:Class-$Object-RtXtt");
-      sts = gdh_NameToObjid( menu, &menu_objid);
-      if ( ODD(sts)) {
-        sts = gdh_GetChild( menu_objid, &child);
-        while( ODD(sts)) {
-          sts = getAllMenuItems( ip, Item, child, Level, nItems, 0, &currentar);
-          if ( EVEN(sts)) return sts;
-          sts = gdh_GetNextSibling( child, &child);
-        }
-      }
-
-      // Get the RtXtt menu-objects for superclasses
-      // TODO shadow overlayed methods...
-      sts = gdh_GetSuperClass( classid, &supercid, CurrentObject->Objid);
-      while ( ODD(sts)) {
-	sts = gdh_ObjidToName( cdh_ClassIdToObjid( supercid), classname, 
-			       sizeof(classname), cdh_mName_volumeStrict);
+    // Get the RtXtt common menu-objects
+    strcpy( menu, "pwrs:Class-$Object-RtXtt");
+    sts = gdh_NameToObjid( menu, &menu_objid);
+    if ( ODD(sts)) {
+      sts = gdh_GetChild( menu_objid, &child);
+      while( ODD(sts)) {
+	sts = getAllMenuItems( ip, Item, child, Level, nItems, 0, &currentar);
 	if ( EVEN(sts)) return sts;
-
-	sprintf( menu, "%s-RtXtt", classname);
-	sts = gdh_NameToObjid( menu, &menu_objid);
-	if ( ODD(sts)) {
-	  sts = gdh_GetChild( menu_objid, &child);
-	  while( ODD(sts)) {
-	    sts = getAllMenuItems( ip, Item, child, 0, nItems, 0, &currentar);
-	    if ( EVEN(sts)) return sts;
-	    sts = gdh_GetNextSibling( child, &child);
-	  }
+	sts = gdh_GetNextSibling( child, &child);
+      }
+    }
+    
+    // Get the RtXtt menu-objects for superclasses
+    // TODO shadow overlayed methods...
+    sts = gdh_GetSuperClass( classid, &supercid, CurrentObject->Objid);
+    while ( ODD(sts)) {
+      sts = gdh_ObjidToName( cdh_ClassIdToObjid( supercid), classname, 
+			     sizeof(classname), cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return sts;
+      
+      sprintf( menu, "%s-RtXtt", classname);
+      sts = gdh_NameToObjid( menu, &menu_objid);
+      if ( ODD(sts)) {
+	sts = gdh_GetChild( menu_objid, &child);
+	while( ODD(sts)) {
+	  sts = getAllMenuItems( ip, Item, child, 0, nItems, 0, &currentar);
+	  if ( EVEN(sts)) return sts;
+	  sts = gdh_GetNextSibling( child, &child);
 	}
-	sts = gdh_GetSuperClass( supercid, &supercid, CurrentObject->Objid);
       }
+      sts = gdh_GetSuperClass( supercid, &supercid, CurrentObject->Objid);
+    }
 
-      // Get the RtXtt menu-objects for this class, or for superclasses
-      sts = gdh_ObjidToName( cdh_ClassIdToObjid( classid), classname, 
-		     sizeof(classname), cdh_mName_volumeStrict);
-      if ( EVEN(sts)) return sts;
-
-      sprintf( menu, "%s-RtXtt", classname);
-      sts = gdh_NameToObjid( menu, &menu_objid);
-      if ( ODD(sts)) {
-        sts = gdh_GetChild( menu_objid, &child);
-        while( ODD(sts)) {
-          sts = getAllMenuItems( ip, Item, child, 0, nItems, 0, &currentar);
-          if ( EVEN(sts)) return sts;
-          sts = gdh_GetNextSibling( child, &child);
-        }
+    // Get the RtXtt menu-objects for this class, or for superclasses
+    sts = gdh_ObjidToName( cdh_ClassIdToObjid( classid), classname, 
+			   sizeof(classname), cdh_mName_volumeStrict);
+    if ( EVEN(sts)) return sts;
+    
+    sprintf( menu, "%s-RtXtt", classname);
+    sts = gdh_NameToObjid( menu, &menu_objid);
+    if ( ODD(sts)) {
+      sts = gdh_GetChild( menu_objid, &child);
+      while( ODD(sts)) {
+	sts = getAllMenuItems( ip, Item, child, 0, nItems, 0, &currentar);
+	if ( EVEN(sts)) return sts;
+	sts = gdh_GetNextSibling( child, &child);
       }
     }
-    else if ( ip->ItemType == xmenu_eItemType_AttrObject) {   
-      // Find attribute object methods...
-      if ( !cdh_tidIsCid( classid))
-	return XNAV__SUCCESS;
-
-      // Get the RtXtt common menu-objects
-      strcpy( menu, "pwrs:Class-$Object-RtXttAttrObject");
-      sts = gdh_NameToObjid( menu, &menu_objid);
-      if ( ODD(sts)) {
-        sts = gdh_GetChild( menu_objid, &child);
-        while( ODD(sts)) {
-          sts = getAllMenuItems( ip, Item, child, 0, nItems, 0, &currentar);
-          if ( EVEN(sts)) return sts;
-          sts = gdh_GetNextSibling( child, &child);
-        }
-      }
-
-      // Get the RtXtt menu-objects for this class
-      sts = gdh_ObjidToName( cdh_ClassIdToObjid( classid), classname, 
-		     sizeof(classname), cdh_mName_volumeStrict);
-      if ( EVEN(sts)) return sts;
-
-      sprintf( menu, "%s-RtXtt", classname);
-      sts = gdh_NameToObjid( menu, &menu_objid);
-      if ( ODD(sts)) {
-        sts = gdh_GetChild( menu_objid, &child);
-        while( ODD(sts)) {
-          sts = getAllMenuItems( ip, Item, child, 0, nItems, 0, &currentar);
-          if ( EVEN(sts)) return sts;
-          sts = gdh_GetNextSibling( child, &child);
-        }
+  }
+  else if ( ip->ItemType == xmenu_eItemType_AttrObject) {   
+    // Find attribute object methods...
+    if ( !cdh_tidIsCid( classid))
+      return XNAV__SUCCESS;
+    
+    // Get the RtXtt common menu-objects
+    strcpy( menu, "pwrs:Class-$Object-RtXttAttrObject");
+    sts = gdh_NameToObjid( menu, &menu_objid);
+    if ( ODD(sts)) {
+      sts = gdh_GetChild( menu_objid, &child);
+      while( ODD(sts)) {
+	sts = getAllMenuItems( ip, Item, child, 0, nItems, 0, &currentar);
+	if ( EVEN(sts)) return sts;
+	sts = gdh_GetNextSibling( child, &child);
       }
     }
-    else if ( ip->ItemType == xmenu_eItemType_Attribute) {   
-      // Find attribute methods...
-      // Get the RtXttAttribute common menu-objects
-      strcpy( menu, "pwrs:Class-$Object-RtXttAttribute");
-      sts = gdh_NameToObjid( menu, &menu_objid);
-      if ( ODD(sts)) {
-        sts = gdh_GetChild( menu_objid, &child);
-        while( ODD(sts)) {
-          sts = getAllMenuItems( ip, Item, child, 0, nItems, 0, &currentar);
-          if ( EVEN(sts)) return sts;
-          sts = gdh_GetNextSibling( child, &child);
-        }
+
+    // Get the RtXtt menu-objects for this class
+    sts = gdh_ObjidToName( cdh_ClassIdToObjid( classid), classname, 
+			   sizeof(classname), cdh_mName_volumeStrict);
+    if ( EVEN(sts)) return sts;
+
+    sprintf( menu, "%s-RtXtt", classname);
+    sts = gdh_NameToObjid( menu, &menu_objid);
+    if ( ODD(sts)) {
+      sts = gdh_GetChild( menu_objid, &child);
+      while( ODD(sts)) {
+	sts = getAllMenuItems( ip, Item, child, 0, nItems, 0, &currentar);
+	if ( EVEN(sts)) return sts;
+	sts = gdh_GetNextSibling( child, &child);
       }
     }
-    else if ( ip->ItemType == xmenu_eItemType_Crossref) {   
-      // Find attribute methods...
-      // Get the RtXttCrossref common menu-objects
-      strcpy( menu, "pwrs:Class-$Object-RtXttCrossref");
-      sts = gdh_NameToObjid( menu, &menu_objid);
-      if ( ODD(sts)) {
-        sts = gdh_GetChild( menu_objid, &child);
-        while( ODD(sts)) {
-          sts = getAllMenuItems( ip, Item, child, 0, nItems, 0, &currentar);
-          if ( EVEN(sts)) return sts;
-          sts = gdh_GetNextSibling( child, &child);
-        }
+  }
+  else if ( ip->ItemType == xmenu_eItemType_Attribute) {   
+    // Find attribute methods...
+    // Get the RtXttAttribute common menu-objects
+    strcpy( menu, "pwrs:Class-$Object-RtXttAttribute");
+    sts = gdh_NameToObjid( menu, &menu_objid);
+    if ( ODD(sts)) {
+      sts = gdh_GetChild( menu_objid, &child);
+      while( ODD(sts)) {
+	sts = getAllMenuItems( ip, Item, child, 0, nItems, 0, &currentar);
+	if ( EVEN(sts)) return sts;
+	sts = gdh_GetNextSibling( child, &child);
       }
     }
+  }
+  else if ( ip->ItemType == xmenu_eItemType_Crossref) {   
+    // Find attribute methods...
+    // Get the RtXttCrossref common menu-objects
+    strcpy( menu, "pwrs:Class-$Object-RtXttCrossref");
+    sts = gdh_NameToObjid( menu, &menu_objid);
+    if ( ODD(sts)) {
+      sts = gdh_GetChild( menu_objid, &child);
+      while( ODD(sts)) {
+	sts = getAllMenuItems( ip, Item, child, 0, nItems, 0, &currentar);
+	if ( EVEN(sts)) return sts;
+	sts = gdh_GetNextSibling( child, &child);
+      }
+    }
+  }
 
   return XNAV__SUCCESS;
 }
@@ -468,19 +468,20 @@ int XNav::GetMethod( const char *name,
     strcpy( mname, "");
 
   for ( i = 0;; i++) {
-    if (pwr_gBase_XttClassMethods[i].ClassName[0] == '\0') break; {
-      if ( strcmp(pwr_gBase_XttClassMethods[i].ClassName, cname) == 0) {
-        for (j = 0;; j++) {
-          if ((*pwr_gBase_XttClassMethods[i].Methods)[j].MethodName[0] == '\0')
-	    break;
-          if ( strcmp( (*pwr_gBase_XttClassMethods[i].Methods)[j].MethodName,
-		       mname) == 0) {
-	    *method = (*pwr_gBase_XttClassMethods[i].Methods)[j].Method;
-	    return XNAV__SUCCESS;
-          }
+    if (pwr_gBase_XttClassMethods[i].ClassName[0] == '\0') 
+      break; 
+
+    if ( strcmp(pwr_gBase_XttClassMethods[i].ClassName, cname) == 0) {
+      for (j = 0;; j++) {
+	if ((*pwr_gBase_XttClassMethods[i].Methods)[j].MethodName[0] == '\0')
+	  break;
+	if ( strcmp( (*pwr_gBase_XttClassMethods[i].Methods)[j].MethodName,
+		     mname) == 0) {
+	  *method = (*pwr_gBase_XttClassMethods[i].Methods)[j].Method;
+	  return XNAV__SUCCESS;
         }
-	break;
       }
+      break;
     }
   }
   return XNAV__NOMETHOD;

@@ -83,7 +83,7 @@ else
       fi
       modules=`eval ar -tf $lib`
       ar -xof $lib
-      ar -roc $toroot/lib/$arname $modules
+      ar -roUc $toroot/lib/$arname $modules
       rm $modules
     else
       if [ $ver -eq 1 ]; then 

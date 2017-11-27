@@ -460,7 +460,7 @@ GNU General Public License for more details.\n\n";
 
     for ( int i = 0; i < nr; i++) {
       dcli_remove_blank( cmd_array[i], cmd_array[i]);
-      printf( "-- Executing \"%s\"\n", cmd_array[i]);
+      // printf( "-- Executing \"%s\"\n", cmd_array[i]);
 
 
       sts = wnav->command(cmd_array[i]);

@@ -43,7 +43,11 @@
   
 #include <gtk/gtk.h>
 #include <gst/gst.h>
-#include <gst/interfaces/xoverlay.h>
+#if GST_CHECK_VERSION(1,0,0)
+# include <gst/video/videooverlay.h>
+#else
+# include <gst/interfaces/xoverlay.h>
+#endif
   
 #include <gdk/gdk.h>
 #include <gdk/gdkx.h>
@@ -81,8 +85,11 @@ void XttStreamGtk::realize_cb( GtkWidget *widget, void *data)
   //   g_error ("Couldn't create native window needed for GstXOverlay!");
 
   window_handle = GDK_WINDOW_XID( window);
+#if GST_CHECK_VERSION(1,0,0)
+  gst_video_overlay_set_window_handle( GST_VIDEO_OVERLAY (videosink), window_handle);
+#else
   gst_x_overlay_set_xwindow_id( GST_X_OVERLAY (videosink), window_handle);
-
+#endif
 }
 
 void XttStreamGtk::source_setup_cb( GstElement *playbin2, GstElement *src, gpointer data)
@@ -104,7 +111,11 @@ void XttStreamGtk::source_setup_cb( GstElement *playbin2, GstElement *src, gpoin
     GdkWindow *window = gtk_widget_get_window( strm->video_form);  
 
     window_handle = GDK_WINDOW_XID( window);
+#if GST_CHECK_VERSION(1,0,0)
+    gst_video_overlay_set_window_handle( GST_VIDEO_OVERLAY (videosink), window_handle);
+#else
     gst_x_overlay_set_xwindow_id( GST_X_OVERLAY (videosink), window_handle);
+#endif
   }
 }
   
@@ -185,7 +196,11 @@ void XttStreamGtk::refresh_ui( XttStreamGtk *strm)
   
   /* If we didn't know it yet, query the stream duration */
   if (!GST_CLOCK_TIME_IS_VALID( strm->duration)) {
+#if GST_CHECK_VERSION(1,0,0)
+    if (!gst_element_query_duration( strm->playbin2, fmt, &strm->duration)) {
+#else
     if (!gst_element_query_duration( strm->playbin2, &fmt, &strm->duration)) {
+#endif
       g_printerr( "Could not query current duration.\n");
     } else {
       /* Set the range of the slider to the clip duration, in SECONDS */
@@ -194,7 +209,11 @@ void XttStreamGtk::refresh_ui( XttStreamGtk *strm)
     }
   }
   
+#if GST_CHECK_VERSION(1,0,0)
+  if (gst_element_query_position( strm->playbin2, fmt, &current)) {
+#else
   if (gst_element_query_position( strm->playbin2, &fmt, &current)) {
+#endif
     /* Block the "value-changed" signal, so the slider_cb function is not called
      * (which would trigger a seek the user has not requested) */
     g_signal_handler_block( strm->slider, strm->slider_update_signal_id);
@@ -285,7 +304,11 @@ void XttStreamGtk::tags_cb( GstElement *playbin2, gint stream, void *data)
    * thread of this event through a message in the bus */
   gst_element_post_message( playbin2,
     gst_message_new_application( GST_OBJECT( playbin2),
+#if GST_CHECK_VERSION(1,0,0)
+      gst_structure_new_empty( "tags-changed")));
+#else
       gst_structure_new( "tags-changed", NULL)));
+#endif
 }
   
 /* This function is called when an error message is posted on the bus */
@@ -380,7 +403,11 @@ static void analyze_streams( void *data) {
  * Here we retrieve the message posted by the tags_cb callback */
 void XttStreamGtk::application_cb( GstBus *bus, GstMessage *msg, void *data) 
 {
+#if GST_CHECK_VERSION(1,0,0)
+  if (g_strcmp0( gst_structure_get_name( gst_message_get_structure(msg)), "tags-changed") == 0) {
+#else
   if (g_strcmp0( gst_structure_get_name( msg->structure), "tags-changed") == 0) {
+#endif    
     /* If the message is the "tags-changed" (only one we are currently issuing), update
      * the stream info GUI */
     analyze_streams( data);
@@ -543,7 +570,11 @@ XttStreamGtk::XttStreamGtk( GtkWidget *st_parent_wid, void *st_parent_ctx, const
   duration = GST_CLOCK_TIME_NONE;
   
   /* Create the elements */
+#if GST_CHECK_VERSION(1,0,0)
+  playbin2 = gst_element_factory_make( "playbin", "playbin");
+#else
   playbin2 = gst_element_factory_make( "playbin2", "playbin2");
+#endif
    
   if (!playbin2) {
     g_printerr( "Not all elements could be created.\n");
@@ -962,7 +993,11 @@ XttStreamGtk::XttStreamGtk( GtkWidget *st_parent_wid, void *st_parent_ctx, const
   g_signal_connect( G_OBJECT( bus), "message::state-changed", (GCallback)state_changed_cb, this);
   g_signal_connect( G_OBJECT( bus), "message::application", (GCallback)application_cb, this);
 
+#if GST_CHECK_VERSION(1,0,0)
+  gst_bus_set_sync_handler (bus, (GstBusSyncHandler) bus_sync_handler, this, 0);
+#else
   gst_bus_set_sync_handler (bus, (GstBusSyncHandler) bus_sync_handler, this);
+#endif
   gst_object_unref( bus);
   
   /* Start playing */

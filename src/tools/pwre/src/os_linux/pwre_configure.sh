@@ -190,8 +190,8 @@ pwre_config_check_lib()
 	  conf_libqt=$conf_libqt" \\\`pkg-config --libs QtCore QtGui QtNetwork phonon\\\`"
 	  conf_incdirqt=$conf_incdirqt" \\\`pkg-config --cflags QtCore QtGui QtNetwork phonon\\\`"
 	elif test $3 == "gst"; then
-	  conf_libgst=$conf_libgst" \\\`pkg-config --libs gstreamer-interfaces-0.10 gstreamer-0.10\\\`"
-	  conf_incdirgst=$conf_incdirgst" \\\`pkg-config --cflags gstreamer-interfaces-0.10 gstreamer-0.10\\\`"
+	  conf_libgst=$conf_libgst" \\\`pkg-config --libs gstreamer-video-1.0 gstreamer-1.0\\\`"
+	  conf_incdirgst=$conf_incdirgst" \\\`pkg-config --cflags gstreamer-video-1.0 gstreamer-1.0\\\`"
 	elif test $3 == "motif"; then
 	  conf_libmotif=$conf_libmotif" -lImlib -lMrm -lXm -lXpm -lXt -lX11 -lXext -lXp -lSM -lICE"
 	else
@@ -269,6 +269,7 @@ pwre_create_makedir()
 #pwre_os="os_linux"
 #pwre_hw="hw_x86"
 
+let pwr_conf_qt=0
 let ebuild=0
 cfile="$pwre_broot/pwre_${pwre_hw:3}_${pwre_os:3}.cnf"
 dos=`eval echo ${pwre_os} | tr '[:lower:]' '[:upper:]'`
@@ -505,8 +506,8 @@ else
   pwre_config_check_lib powerlinkcn POWERLINKCN lib powerlinkcn 1 "$epl/buildcn/Examples/X86/Generic/powerlink_user_lib/libpowerlink.a"
   pwre_config_check_lib libpcap   LIBPCAP  lib libpcap 1 "/usr/lib/libpcap.so:/usr/lib/$hwpl-linux-$gnu/libpcap.so"
   pwre_config_check_lib librsvg   LIBRSVG  lib librsvg 1 "/usr/lib/librsvg-2.so:/usr/lib/$hwpl-linux-$gnu/librsvg-2.so"
-  pwre_config_check_include gst   GST   1 "/usr/include/gstreamer-0.10/gst/gst.h:/opt/gstreamer-sdk/include/gstreamer-0.10/gst/gst.h"
-  pwre_config_check_lib gst    	  GST      gst gst 0 "/usr/lib/$hwpl-linux-$gnu/libgstreamer-0.10.so:/opt/gstreamer-sdk/lib/libgstreamer-0.10.so:/usr/lib/libgstreamer-0.10.so"
+  pwre_config_check_include gst   GST   1 "/usr/include/gstreamer-1.0/gst/gst.h:/opt/gstreamer-sdk/include/gstreamer-1.0/gst/gst.h"
+  pwre_config_check_lib gst    	  GST      gst gst 0 "/usr/lib/$hwpl-linux-$gnu/libgstreamer-1.0.so:/opt/gstreamer-sdk/lib/libgstreamer-1.0.so:/usr/lib/libgstreamer-1.0.so:/usr/lib/$hwpl-linux-$gnu/libgstreamer-1.0.so:/opt/gstreamer-sdk/lib/libgstreamer-0.10.so:/usr/lib/libgstreamer-0.10.so"
   if [ $pwre_hw == "hw_arm" ]; then
     pwre_config_check_lib libpiface LIBPIFACE lib libpiface 1 "/usr/local/lib/libpiface-1.0.a"
     pwre_config_check_include piface  PIFACE  1 "/usr/local/include/libpiface-1.0/pfio.h"

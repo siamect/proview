@@ -232,14 +232,13 @@ int GeMethods::get_xm_mask( pwr_tAttrRef *arp, char *name, pwr_sClass_XttMethods
     for ( int i = 0; i < opmeth_size; i++) {
       if ( strcmp( op_name[i], "") == 0)
 	continue;
-	{
-	sprintf( command, "check method/filter=\"%s\"/object=%s", 
-		 op_filter[i], aname);
+
+      sprintf( command, "check method/filter=\"%s\"/object=%s", 
+	       op_filter[i], aname);
 	
-	sts = (command_cb)(command, udata);
-	if ( ODD(sts))
-	  xm_mask->OpMethods |= 1 << i;
-      }
+      sts = (command_cb)(command, udata);
+      if ( ODD(sts))
+	xm_mask->OpMethods |= 1 << i;
     }
     xm_mask->MntMethods = 0;
 

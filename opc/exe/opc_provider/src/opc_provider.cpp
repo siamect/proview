@@ -1257,7 +1257,7 @@ bool opc_provider::find( pwr_tOix fthoix, char *name, pwr_tOix *oix)
 {
 
   for ( int i = 0; i < (int) m_list.size(); i++) {
-    if  ( !m_list[i]->po.flags & procom_obj_mFlags_Deleted) {
+    if  ( !(m_list[i]->po.flags & procom_obj_mFlags_Deleted)) {
       if ( m_list[i]->po.fthoix == fthoix && 
 	   cdh_NoCaseStrcmp( name, m_list[i]->po.name) == 0) {
 	*oix = m_list[i]->po.oix;

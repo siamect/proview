@@ -89,9 +89,9 @@ class co_xml_parser {
   char c;
   char c_f;
   char c_ff;
-  void *c_sts;
-  void *c_f_sts;
-  void *c_ff_sts;
+  bool c_sts;
+  bool c_f_sts;
+  bool c_ff_sts;
   char current_tag[256];
   char current_attribute_name[256];
   char current_attribute_value[4096];
@@ -106,7 +106,7 @@ class co_xml_parser {
   static int ostring_to_data( unsigned char **data, const char *str, int size, int *rsize);
   static int data_to_ostring( unsigned char *data, int size, char *str, int strsize);
 
-  void *next_token();
+  bool next_token();
   bool is_space( const char c);
   void error_message_line( const char *msg);
   static void error_message( const char *format, const char *value);

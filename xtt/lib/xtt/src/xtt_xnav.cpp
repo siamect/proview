@@ -550,10 +550,10 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
     if ( !format) {
       switch ( conv) {
       case xnav_eConv_Hex:
-	*len = snprintf( str, size, "0x"pwr_dFormatHexInt64, *(pwr_tUInt64 *)value_ptr);	
+	*len = snprintf( str, size, "0x" pwr_dFormatHexInt64, *(pwr_tUInt64 *)value_ptr);	
 	break;
       case xnav_eConv_Octal:
-	*len = snprintf( str, size, "0"pwr_dFormatOctInt64, *(pwr_tUInt64 *)value_ptr);	
+	*len = snprintf( str, size, "0" pwr_dFormatOctInt64, *(pwr_tUInt64 *)value_ptr);	
 	break;
       case xnav_eConv_Binary:
 	strcpy( str, cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 64));
@@ -658,10 +658,10 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
     if ( !format) {
       switch ( conv) {
       case xnav_eConv_Hex:
-	*len = snprintf( str, size, "0x"pwr_dFormatHexInt64, *(pwr_tInt64 *)value_ptr);	
+	*len = snprintf( str, size, "0x" pwr_dFormatHexInt64, *(pwr_tInt64 *)value_ptr);	
 	break;
       case xnav_eConv_Octal:
-	*len = snprintf( str, size, "0"pwr_dFormatOctInt64, *(pwr_tInt64 *)value_ptr);	
+	*len = snprintf( str, size, "0" pwr_dFormatOctInt64, *(pwr_tInt64 *)value_ptr);	
 	break;
       case xnav_eConv_Binary:
 	strcpy( str, cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 64));
@@ -750,10 +750,10 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
     if ( !format) {
       switch ( conv) {
       case xnav_eConv_Hex:
-	*len = snprintf( str, size, "0x"pwr_dFormatHexInt64, *(pwr_tUInt64 *)value_ptr);	
+	*len = snprintf( str, size, "0x" pwr_dFormatHexInt64, *(pwr_tUInt64 *)value_ptr);	
 	break;
       case xnav_eConv_Octal:
-	*len = snprintf( str, size, "0"pwr_dFormatOctInt64, *(pwr_tUInt64 *)value_ptr);	
+	*len = snprintf( str, size, "0" pwr_dFormatOctInt64, *(pwr_tUInt64 *)value_ptr);	
 	break;
       case xnav_eConv_Binary:
 	strcpy( str, cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 64));
@@ -894,7 +894,7 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
   case pwr_eType_Time: {
     switch ( conv) {
     case xnav_eConv_Integer:
-      *len = snprintf( str, size, "("pwr_dFormatInt64","pwr_dFormatInt64")", 
+      *len = snprintf( str, size, "(" pwr_dFormatInt64 "," pwr_dFormatInt64 ")", 
 		       ((pwr_tTime *)value_ptr)->tv_sec, ((pwr_tTime *)value_ptr)->tv_nsec);
       break;
     default:
@@ -915,7 +915,7 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
   case pwr_eType_DeltaTime: {
     switch ( conv) {
     case xnav_eConv_Integer:
-      *len = snprintf( str, size, "("pwr_dFormatInt64","pwr_dFormatInt64")", 
+      *len = snprintf( str, size, "(" pwr_dFormatInt64 "," pwr_dFormatInt64 ")", 
 		       ((pwr_tTime *)value_ptr)->tv_sec, ((pwr_tDeltaTime *)value_ptr)->tv_nsec);
       break;
     default:
@@ -2891,11 +2891,11 @@ int XNav::display_object( pwr_sAttrRef *arp, int open)
     if ( mount_cnt == MOUNTLIST_SIZE)
       break;
 
-      sts = gdh_MountObjidToPointer( mountobject_list[mount_cnt], (void **)&mount_p);
-      if ( ODD(sts)) {
-	mounted_list[mount_cnt] = mount_p->Object;
-	mount_cnt++;
-      }
+    sts = gdh_MountObjidToPointer( mountobject_list[mount_cnt], (void **)&mount_p);
+    if ( ODD(sts)) {
+      mounted_list[mount_cnt] = mount_p->Object;
+      mount_cnt++;
+    }
 
     sts = gdh_GetNextObject( mountobject_list[mount_cnt-1],
                 &mountobject_list[mount_cnt]);

@@ -59,13 +59,13 @@ then
     if [ ! -e $pwrp_lib/${arname} ]
     then
 #     echo "Creating archive $arname"
-      ar rc $pwrp_lib/${arname}
+      ar rcU $pwrp_lib/${arname}
     fi
 
     if [ ! -e $pwrp_lib/${arname_pict} ]
     then
 #     echo "Creating archive $arname_pict"
-      ar rc $pwrp_lib/${arname_pict}
+      ar rcU $pwrp_lib/${arname_pict}
     fi
 
 #link option file exists and is not empty
@@ -107,7 +107,7 @@ then
     ${cc} -c -o $pwrp_obj/${applname}.o \
         $pwrp_rtt/${applname}.c \
         ${cinc} ${cflags}
-    ar rc $pwrp_lib/${arname} $pwrp_obj/${applname}.o 
+    ar rcU $pwrp_lib/${arname} $pwrp_obj/${applname}.o 
 
   fi
 fi

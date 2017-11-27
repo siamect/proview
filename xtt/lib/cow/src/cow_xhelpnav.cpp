@@ -1014,8 +1014,8 @@ bool HItemHelpBold::search( char *str, bool strict)
 
   for ( int i = 0; i < 3; i++) {
     brow_GetAnnotation( node, i, text, sizeof(text));
-  if ( text[0] == 0)
-    continue;
+    if ( text[0] == 0)
+      continue;
     if ( !strict)
       cdh_ToUpper( text, text);
     if ( strstr( text, str) != 0)

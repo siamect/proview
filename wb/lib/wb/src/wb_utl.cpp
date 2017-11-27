@@ -8861,9 +8861,9 @@ static int utl_list_get_parvalue (
                   strcat( text, "-");
                 else
 	        {
-	        if ( list_desc->Segments != 0)
-	          utl_cut_segments( hier_name, hier_name, 
-				list_desc->Segments);
+		  if ( list_desc->Segments != 0)
+		    utl_cut_segments( hier_name, hier_name, 
+				      list_desc->Segments);
 
                   strcat( text, hier_name);
 	        }

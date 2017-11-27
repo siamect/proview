@@ -3579,9 +3579,12 @@ static int graph_getobjectclass_func(
   *return_decl = CCM_DECL_STRING;
 
   grow_GetObjectClass( (grow_tObject)arg_list->value_int, &classid);
-  grow_GetNodeClassName( classid, name, sizeof(name));
-
-  strcpy( return_string, name);
+  if ( classid != 0) {
+    grow_GetNodeClassName( classid, name, sizeof(name));
+    strcpy( return_string, name);
+  }
+  else
+    strcpy( return_string, "");
   return 1;
 }
 

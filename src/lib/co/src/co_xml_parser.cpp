@@ -69,25 +69,25 @@ co_xml_parser::co_xml_parser( co_xml_interpreter *i) :
   interpreter->parser = this;
 }
 
-void *co_xml_parser::next_token()
+bool co_xml_parser::next_token()
 {
   char t;
-  void *sts;
+  bool sts;
 
   if ( first_token) {
     first_token = false;
 
-    c_sts = fp.get(c);
+    c_sts = (bool)fp.get(c);
     if ( !c_sts) return c_sts;
     
-    c_f_sts = fp.get(c_f);
+    c_f_sts = (bool)fp.get(c_f);
     if ( c_f_sts)
-      c_ff_sts = fp.get(c_ff);
+      c_ff_sts = (bool)fp.get(c_ff);
   }
   else {
         
     if ( c_ff_sts)
-      sts = fp.get(t);
+      sts = (bool)fp.get(t);
 
     c = c_f;
     c_sts = c_f_sts;

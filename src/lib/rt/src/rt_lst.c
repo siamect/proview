@@ -416,7 +416,7 @@ lst_RemovePred (
       pwr_Assert(link->flink == link->blink);
       if (lp != NULL)
 	*lp = NULL;
-	break;
+      break;
     }
 
     pred = link->blink;

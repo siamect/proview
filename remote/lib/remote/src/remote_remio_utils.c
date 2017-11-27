@@ -230,8 +230,8 @@ pwr_tStatus RemIO_Init_ALCM(remnode_item *remnode)
                 remdi->objp = chandip;
                 remdi->actval = (pwr_tBoolean *) gdh_TranslateRtdbPointer(
 			(unsigned long) dip->ActualValue);
-              if (class == pwr_cClass_Di)  
-                chandip->ActualValue = dip->ActualValue;
+		if (class == pwr_cClass_Di)  
+		  chandip->ActualValue = dip->ActualValue;
                 remdi->objp->BuffOff = remdi->objp->ConvOff / 8;
                 remdi->objp->ConvMask = 1 << (remdi->objp->ConvOff % 8);
               }	/* END ClassDi */
@@ -265,8 +265,8 @@ pwr_tStatus RemIO_Init_ALCM(remnode_item *remnode)
                 remdo->objp = chandop;
                 remdo->actval = gdh_TranslateRtdbPointer(
 			(unsigned long) dop->ActualValue);
-              if (class == pwr_cClass_Do)   
-                chandop->ActualValue = dop->ActualValue;
+		if (class == pwr_cClass_Do)   
+		  chandop->ActualValue = dop->ActualValue;
                 remdo->objp->BuffOff = remdo->objp->ConvOff / 8;
                 remdo->objp->ConvMask = 1 << (remdo->objp->ConvOff % 8);
                 remdo->objp->OldValue = *remdo->actval;
@@ -970,8 +970,8 @@ pwr_tStatus RemIO_Init_3964R(remnode_item *remnode)
                 remdi->objp = chandip;
                 remdi->actval = (pwr_tBoolean *) gdh_TranslateRtdbPointer(
 			(unsigned long) dip->ActualValue);
-              if (class == pwr_cClass_Di)  
-                chandip->ActualValue = dip->ActualValue;
+		if (class == pwr_cClass_Di)  
+		  chandip->ActualValue = dip->ActualValue;
                 remdi->objp->BuffOff = remdi->objp->ConvOff / 8;
                 remdi->objp->ConvMask = 1 << (remdi->objp->ConvOff % 8);
               }	/* END ClassDi */
@@ -1005,8 +1005,8 @@ pwr_tStatus RemIO_Init_3964R(remnode_item *remnode)
                 remdo->objp = chandop;
                 remdo->actval = gdh_TranslateRtdbPointer(
 			(unsigned long) dop->ActualValue);
-              if (class == pwr_cClass_Do)   
-                chandop->ActualValue = dop->ActualValue;
+		if (class == pwr_cClass_Do)   
+		  chandop->ActualValue = dop->ActualValue;
                 remdo->objp->BuffOff = remdo->objp->ConvOff / 8;
                 remdo->objp->ConvMask = 1 << (remdo->objp->ConvOff % 8);
                 remdo->objp->OldValue = *remdo->actval;

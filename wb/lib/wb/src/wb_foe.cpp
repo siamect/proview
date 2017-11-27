@@ -2528,9 +2528,6 @@ int WFoe::child_quit( vldh_t_node node, unsigned long windowindex)
 {
   int	sts;
 
-  /* If the parent is not active there is nothing to do */
-  if ( this == 0) return FOE__SUCCESS;
-
   /* Check if the window is created and not saved, 
      if it is saved don't do anything */
 
@@ -2574,16 +2571,14 @@ int WFoe::child_delete( vldh_t_node node, vldh_t_wind subwind)
 
   windowindex = subwind->lw.subwindowindex;
 	
-  if ( this != 0 ) {
-    /* Parent is alive, take away in vldh and on the screen */
-    node->hn.subwindowobject[ windowindex ] = 0;
-    if ( (node->ln.subwindow & (1 << windowindex)) != 0 )
-      node->ln.subwindow -= ( 1 << windowindex );
-    node->ln.subwind_oid[ windowindex ] = pwr_cNObjid;
-    
-    /* Redraw without subwindowmark */
-    gre->subwindow_mark( node);
-  }
+  /* Parent is alive, take away in vldh and on the screen */
+  node->hn.subwindowobject[ windowindex ] = 0;
+  if ( (node->ln.subwindow & (1 << windowindex)) != 0 )
+    node->ln.subwindow -= ( 1 << windowindex );
+  node->ln.subwind_oid[ windowindex ] = pwr_cNObjid;
+  
+  /* Redraw without subwindowmark */
+  gre->subwindow_mark( node);
 
   if ( ( subwind->hw.status & VLDH_CREATE) != 0 ) {
     /* The subwindow is not saved so we don't have to worry

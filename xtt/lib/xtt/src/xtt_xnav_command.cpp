@@ -936,6 +936,8 @@ static int	xnav_set_func(	void		*client_data,
 	sprintf( focus, "%s.%s", name_str, focus_p);
 	gectx->set_object_focus( focus, inputempty);
       }
+      if ( cont && sts == GLOW__SUBTERMINATED)
+	return XNAV__SUCCESS;
       return sts;
     }
     else if ( xnav->appl.find_graph( graph_str, 0, (void **) &gectx)) {
@@ -2534,14 +2536,14 @@ static int	xnav_show_func(	void		*client_data,
     else
       xnav->ev->map_blk( options);
 
-      if ( xnav->opplace_p->Options & pwr_mOpPlaceOptionsMask_AllMainTransient) {
-	if ( xnav->ge_main)
-	  basewidget = xnav->ge_main->get_widget();
-	else if ( xnav->multiview_main)
-	  basewidget = xnav->multiview_main->get_widget();
-	if ( basewidget)
-	  xnav->ev->set_transient_blk( basewidget);
-      }
+    if ( xnav->opplace_p->Options & pwr_mOpPlaceOptionsMask_AllMainTransient) {
+      if ( xnav->ge_main)
+	basewidget = xnav->ge_main->get_widget();
+      else if ( xnav->multiview_main)
+	basewidget = xnav->multiview_main->get_widget();
+      if ( basewidget)
+	xnav->ev->set_transient_blk( basewidget);
+    }
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "USER", strlen( arg1_str)) == 0)
   {

@@ -1297,9 +1297,10 @@ int	gcg_print_inputs(
 	}
 	if ( (input_count == 0) || (inputscon_count == 0))
 	{
-	  /* No inputs in the graphics or no inputs connected */
+	  /* No inputs in the graphics or no inputs connected
 	  if ( inputscon_count > inputscon_count)
 	    gcg_error_msg( gcgctx, GSX__NOINPUTS, node);
+	  */
 
 	  if ( printtype == GCG_PRINT_CONPAR )
 	  {

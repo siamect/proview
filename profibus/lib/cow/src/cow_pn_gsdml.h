@@ -1467,9 +1467,9 @@ class pn_gsdml {
   char c;
   char c_f;
   char c_ff;
-  void *c_sts;
-  void *c_f_sts;
-  void *c_ff_sts;
+  bool c_sts;
+  bool c_f_sts;
+  bool c_ff_sts;
   char current_tag[256];
   char current_attribute_name[256];
   char current_attribute_value[4096];
@@ -1520,7 +1520,7 @@ class pn_gsdml {
   int set_par_record_default( unsigned char *data, int size, 
 			      gsdml_ParameterRecordDataItem *par_record);
 
-  void *next_token();
+  bool next_token();
   bool is_space( const char c);
   int find_tag( const char *name, int *idx);
   int find_tag( gsdml_eTag id, int *idx);
