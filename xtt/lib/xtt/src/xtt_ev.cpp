@@ -631,6 +631,15 @@ pwr_tStatus Ev::mh_ack_bc( mh_sAck *MsgP)
 
 pwr_tStatus Ev::mh_return_bc( mh_sReturn *MsgP)
 {
+  // Test
+  static int test = 0;
+  if ( test == 11) {
+    test = 0;
+    return 1;
+  }
+  test++;
+  // End test
+
   if ( ev->eve_display_return)
   {
     // Insert in eve
@@ -651,6 +660,15 @@ pwr_tStatus Ev::mh_return_bc( mh_sReturn *MsgP)
 
 pwr_tStatus Ev::mh_alarm_bc( mh_sMessage *MsgP)
 {
+  // Test
+  static int test = 0;
+  if ( test == 9) {
+    test = 0;
+    return 1;
+  }
+  test++;
+  // End test
+
   ev->eve->event_alarm( MsgP);
   for ( int i = 0; i < ev->seve_cnt; i++)
     ev->seve[i]->mh_alarm( MsgP);
@@ -839,9 +857,12 @@ pwr_tStatus Ev::mh_alarmstatus_bc( mh_sAlarmStatus *MsgP)
     switch( item->type) {
       case evlist_eItemType_Alarm:
 	if ( MsgP->Nix == item->eventid.Nix && !item->check) {
+	  mh_sEventId eventid = item->eventid;
 	  ev->ala->event_delete( &item->eventid);
+	  // Note, item is now deleted
+
 	  for ( int k = 0; k < ev->sala_cnt; k++)
-	    ev->sala[k]->event_delete( &item->eventid);
+	    ev->sala[k]->event_delete( &eventid);
 	  i--;
 	  object_cnt--;
 	  modified = 1;

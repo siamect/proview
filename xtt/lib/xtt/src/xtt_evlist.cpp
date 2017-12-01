@@ -1314,21 +1314,18 @@ int EvList::event_delete( mh_sEventId *id)
   if ( type == ev_eType_AlarmList) {
     // Alarmlist
     ItemAlarm 	*item;
-    brow_tObject item_tree_node;
 
     if ( !id_to_item( id, (void **)&item))
       return 0;
 
-    item_tree_node = item->tree_node;
+    if ( browtree) {
+      if ( item->tree_node)
+	brow_DeleteNode( browtree->ctx, item->tree_node);
+      view_configure();
+    }
 
     brow_DeleteNode( browbase->ctx, item->node);
 
-    // Note, item is deleted now
-    if ( browtree) {
-      if ( item_tree_node)
-	brow_DeleteNode( browtree->ctx, item_tree_node);
-      view_configure();
-    }
     size--;
   }
   return 1;
@@ -1558,10 +1555,10 @@ int EvList::brow_cb( FlowCtx *ctx, flow_tEvent event)
   EvList		*evlist;
   ItemAlarm 		*item;
 
-  if ( event->event == flow_eEvent_ObjectDeleted)
-  {
-    brow_GetUserData( event->object.object, (void **)&item);
-    delete item;
+  if ( event->event == flow_eEvent_ObjectDeleted) {
+    ItemEvBase 		*ditem;
+    brow_GetUserData( event->object.object, (void **)&ditem);
+    delete ditem;
     return 1;
   }
 
