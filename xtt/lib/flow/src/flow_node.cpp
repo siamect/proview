@@ -98,7 +98,15 @@ FlowNode::~FlowNode()
     trace_close();
 
   ctx->object_deleted( this);
-  if ( ctx->nodraw) return;
+  if ( ctx->nodraw) {
+    for ( int i = 0; i < 10; i++) {
+      if ( annotv_inputmode[i])
+	close_annotation_input( i);
+      if ( annotsize[i] > 0)
+	free( annotv[i]);
+    }
+    return;
+  }
 
   erase();
   nav_erase();
