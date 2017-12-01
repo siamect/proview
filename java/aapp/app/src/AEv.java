@@ -23,6 +23,8 @@ public class AEv {
 	public PlowNodeClass alaNcBAlarm;
 	public PlowNodeClass alaNcCAlarm;
 	public PlowNodeClass alaNcDAlarm;
+	public PlowNodeClass alaNcInfoSuccess;
+	public PlowNodeClass alaNcInfo;
 	public PlowNodeClass eveNcAlarm;
 	public PlowNodeClass eveNcAAlarm;
 	public PlowNodeClass eveNcBAlarm;
@@ -257,6 +259,40 @@ public class AEv {
 		alaNcDAlarm.insert(p1);
 		alaNcDAlarm.insert(p2);
 		cmnAla.insert_nc(alaNcDAlarm);		
+
+ 		r1 = new PlowRect(cmnAla, 0D, 0D, 50D, 1.5D, Plow.COLOR_WHITE, Plow.COLOR_BLACK,true,false,false);
+		r2 = new PlowRect(cmnAla, 0.4D, 0.3D, 0.9D, 0.9D, Plow.COLOR_GREEN, Plow.COLOR_BLACK,true,true,true);
+		a1 = new PlowAnnot(cmnAla, 4D, 1.1D, 12, Plow.COLOR_BLACK, 0, PlowAnnot.NEXT_RELATIVE_POSITION, 0);
+		a2 = new PlowAnnot(cmnAla, 10D, 1.1D, 12, Plow.COLOR_BLACK, 0, PlowAnnot.RELATIVE_POSITION, 1);
+		a3 = new PlowAnnot(cmnAla, 26D, 1.1D, 12, Plow.COLOR_BLACK, 0, PlowAnnot.RELATIVE_POSITION, 2);
+		p1 = new PlowAnnotPixmap(cmnAla, 2D, 0.28D, 0);
+		p2 = new PlowAnnotPixmap(cmnAla, 3D, 0.28D, 1);
+		alaNcInfoSuccess = new PlowNodeClass(cmnAla);
+		alaNcInfoSuccess.insert(r1);
+		alaNcInfoSuccess.insert(r2);
+		alaNcInfoSuccess.insert(a1);
+		alaNcInfoSuccess.insert(a2);
+		alaNcInfoSuccess.insert(a3);
+		alaNcInfoSuccess.insert(p1);
+		alaNcInfoSuccess.insert(p2);
+		cmnAla.insert_nc(alaNcInfoSuccess);		
+
+ 		r1 = new PlowRect(cmnAla, 0D, 0D, 50D, 1.5D, Plow.COLOR_WHITE, Plow.COLOR_BLACK,true,false,false);
+		r2 = new PlowRect(cmnAla, 0.4D, 0.3D, 0.9D, 0.9D, Plow.COLOR_WHITE, Plow.COLOR_BLACK,true,true,true);
+		a1 = new PlowAnnot(cmnAla, 4D, 1.1D, 12, Plow.COLOR_BLACK, 0, PlowAnnot.NEXT_RELATIVE_POSITION, 0);
+		a2 = new PlowAnnot(cmnAla, 10D, 1.1D, 12, Plow.COLOR_BLACK, 0, PlowAnnot.RELATIVE_POSITION, 1);
+		a3 = new PlowAnnot(cmnAla, 26D, 1.1D, 12, Plow.COLOR_BLACK, 0, PlowAnnot.RELATIVE_POSITION, 2);
+		p1 = new PlowAnnotPixmap(cmnAla, 2D, 0.28D, 0);
+		p2 = new PlowAnnotPixmap(cmnAla, 3D, 0.28D, 1);
+		alaNcInfo = new PlowNodeClass(cmnAla);
+		alaNcInfo.insert(r1);
+		alaNcInfo.insert(r2);
+		alaNcInfo.insert(a1);
+		alaNcInfo.insert(a2);
+		alaNcInfo.insert(a3);
+		alaNcInfo.insert(p1);
+		alaNcInfo.insert(p2);
+		cmnAla.insert_nc(alaNcInfo);		
 
 		r1 = new PlowRect(cmnAla, 0D, 0D, 50D, 1.5D, Plow.COLOR_WHITE, Plow.COLOR_BLACK,true,false,false);
 		a1 = new PlowAnnot(cmnAla, 5D, 1.1D, 12, Plow.COLOR_BLACK, 0, PlowAnnot.NEXT_RELATIVE_POSITION, 0);
