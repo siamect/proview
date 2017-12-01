@@ -631,14 +631,6 @@ pwr_tStatus Ev::mh_ack_bc( mh_sAck *MsgP)
 
 pwr_tStatus Ev::mh_return_bc( mh_sReturn *MsgP)
 {
-  // Test
-  static int test = 0;
-  if ( test == 11) {
-    test = 0;
-    return 1;
-  }
-  test++;
-  // End test
 
   if ( ev->eve_display_return)
   {
@@ -660,14 +652,6 @@ pwr_tStatus Ev::mh_return_bc( mh_sReturn *MsgP)
 
 pwr_tStatus Ev::mh_alarm_bc( mh_sMessage *MsgP)
 {
-  // Test
-  static int test = 0;
-  if ( test == 9) {
-    test = 0;
-    return 1;
-  }
-  test++;
-  // End test
 
   ev->eve->event_alarm( MsgP);
   for ( int i = 0; i < ev->seve_cnt; i++)
