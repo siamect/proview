@@ -1,117 +1,85 @@
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 32 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 78 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 97 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 109 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 120 116 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 32 
+32 84 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 121 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 112 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 101 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 120 110 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 32 
+32 83 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 111 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 117 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 114 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 99 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
 32 101 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
 32 32 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 120 110 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 32 
-32 79 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 115 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 120 110 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 32 
-32 72 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 119 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 120 110 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 32 
-81 76 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-67 105 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-79 110 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 82 
-77 107 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 69 
-32 32 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 84 
-78 32 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 85 
-79 120 110 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 82 
-68 85 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 78 
-69 112 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-83 99 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 83 
-32 120 110 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 104 
-32 84 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 111 
-32 105 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 119 
-32 109 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 101 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 108 
-32 32 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 105 
-32 117 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 110 
-32 112 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 107 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 120 110 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 67 
-32 83 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 116 
-32 101 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 114 
-32 110 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 108 
-32 116 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 47 
-32 32 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 82 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 66 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 97 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 99 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 107 
-112 120 110 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 32 
-97 82 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-103 99 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-101 118 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 32 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 78 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 105 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
 32 100 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 32 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 32 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 32 119 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 32 
+32 65 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 105 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 120 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 32 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 32 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 32 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 120 110 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 32 
+32 84 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 97 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+81 114 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+67 103 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+79 101 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+77 116 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 32 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+77 32 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+69 78 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+83 105 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+83 100 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+65 32 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+71 32 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+69 32 119 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 32 
+83 81 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 105 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 120 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 32 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 32 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 120 110 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 32 
+32 83 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 105 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 122 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 101 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 32 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 32 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 32 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 32 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 32 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 67 
+32 120 110 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 116 
+32 83 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 114 
+32 84 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 108 
+32 121 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 47 
+32 112 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 82 
+32 101 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 32 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 66 
+32 32 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 97 
+32 120 110 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 99 
+32 66 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 107 
+32 84 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+112 121 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+97 112 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+103 101 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+101 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
 32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
 32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
 58 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
 32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
 32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-32 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
-2 0 113 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+32 120 117 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 32 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 
 2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 
 2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
 2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
 2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
@@ -129,6 +97,45 @@
 2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
 2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
 2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 
 2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
 2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
 2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
@@ -147,55 +154,48 @@
 2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
 2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
 2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
-2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
 
 *******************************************************************
-QCOM NODES
+QCOM MESSAGES
 *******************************************************************
 Number		1
-Text		" "
-Type		UPDATE
-Parameter	QCOM_NODES_NAME1
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	11
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	STRING
-x,y		0	3
--------------------------------------------------------------------
-Number		2
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_OS1
+Parameter	QCOM_QMESS_TYPE1
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
-Characters	5
+Characters	4
 Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
 Declaration	STRING10
-x,y		14	3
+x,y		1	3
+-------------------------------------------------------------------
+Number		2
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCNODE1
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	13
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		6	3
 -------------------------------------------------------------------
 Number		3
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_HW1
+Parameter	QCOM_QMESS_SRCAIX1
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
@@ -204,118 +204,28 @@ Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
-Declaration	STRING10
+Declaration	INT
 x,y		20	3
 -------------------------------------------------------------------
 Number		4
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_LINK1
+Parameter	QCOM_QMESS_TGTNODE1
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
-Characters	6
+Characters	13
 Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
-Declaration	STRING10
+Declaration	STRING
 x,y		27	3
 -------------------------------------------------------------------
 Number		5
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_UPCNT1
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	3
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		34	3
--------------------------------------------------------------------
-Number		6
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_TIMEUP1
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	20
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING40
-x,y		38	3
--------------------------------------------------------------------
-Number		7
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_SENT1
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		59	3
--------------------------------------------------------------------
-Number		8
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_RCVD1
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		70	3
--------------------------------------------------------------------
-Number		11
-Text		" "
-Type		UPDATE
-Parameter	QCOM_NODES_NAME2
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	11
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	STRING
-x,y		0	4
--------------------------------------------------------------------
-Number		12
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_OS2
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	5
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING10
-x,y		14	4
--------------------------------------------------------------------
-Number		13
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_HW2
+Parameter	QCOM_QMESS_TGTAIX1
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
@@ -324,118 +234,118 @@ Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
+Declaration	INT
+x,y		41	3
+-------------------------------------------------------------------
+Number		6
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SIZE1
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	9
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	3
+-------------------------------------------------------------------
+Number		7
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_STYPE1
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		58	3
+-------------------------------------------------------------------
+Number		8
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_BTYPE1
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		66	3
+-------------------------------------------------------------------
+Number		11
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_TYPE2
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	4
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
 Declaration	STRING10
+x,y		1	4
+-------------------------------------------------------------------
+Number		12
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCNODE2
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	13
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		6	4
+-------------------------------------------------------------------
+Number		13
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCAIX2
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	6
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
 x,y		20	4
 -------------------------------------------------------------------
 Number		14
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_LINK2
+Parameter	QCOM_QMESS_TGTNODE2
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
-Characters	6
+Characters	13
 Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
-Declaration	STRING10
+Declaration	STRING
 x,y		27	4
 -------------------------------------------------------------------
 Number		15
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_UPCNT2
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	3
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		34	4
--------------------------------------------------------------------
-Number		16
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_TIMEUP2
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	20
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING40
-x,y		38	4
--------------------------------------------------------------------
-Number		17
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_SENT2
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		59	4
--------------------------------------------------------------------
-Number		18
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_RCVD2
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		70	4
--------------------------------------------------------------------
-Number		21
-Text		" "
-Type		UPDATE
-Parameter	QCOM_NODES_NAME3
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	11
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	STRING
-x,y		0	5
--------------------------------------------------------------------
-Number		22
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_OS3
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	5
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING10
-x,y		14	5
--------------------------------------------------------------------
-Number		23
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_HW3
+Parameter	QCOM_QMESS_TGTAIX2
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
@@ -444,118 +354,118 @@ Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
+Declaration	INT
+x,y		41	4
+-------------------------------------------------------------------
+Number		16
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SIZE2
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	9
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	4
+-------------------------------------------------------------------
+Number		17
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_STYPE2
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		58	4
+-------------------------------------------------------------------
+Number		18
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_BTYPE2
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		66	4
+-------------------------------------------------------------------
+Number		21
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_TYPE3
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	4
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
 Declaration	STRING10
+x,y		1	5
+-------------------------------------------------------------------
+Number		22
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCNODE3
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	13
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		6	5
+-------------------------------------------------------------------
+Number		23
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCAIX3
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	6
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
 x,y		20	5
 -------------------------------------------------------------------
 Number		24
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_LINK3
+Parameter	QCOM_QMESS_TGTNODE3
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
-Characters	6
+Characters	13
 Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
-Declaration	STRING10
+Declaration	STRING
 x,y		27	5
 -------------------------------------------------------------------
 Number		25
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_UPCNT3
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	3
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		34	5
--------------------------------------------------------------------
-Number		26
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_TIMEUP3
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	20
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING40
-x,y		38	5
--------------------------------------------------------------------
-Number		27
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_SENT3
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		59	5
--------------------------------------------------------------------
-Number		28
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_RCVD3
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		70	5
--------------------------------------------------------------------
-Number		31
-Text		" "
-Type		UPDATE
-Parameter	QCOM_NODES_NAME4
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	11
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	STRING
-x,y		0	6
--------------------------------------------------------------------
-Number		32
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_OS4
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	5
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING10
-x,y		14	6
--------------------------------------------------------------------
-Number		33
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_HW4
+Parameter	QCOM_QMESS_TGTAIX3
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
@@ -564,118 +474,118 @@ Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
+Declaration	INT
+x,y		41	5
+-------------------------------------------------------------------
+Number		26
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SIZE3
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	9
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	5
+-------------------------------------------------------------------
+Number		27
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_STYPE3
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		58	5
+-------------------------------------------------------------------
+Number		28
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_BTYPE3
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		66	5
+-------------------------------------------------------------------
+Number		31
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_TYPE4
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	4
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
 Declaration	STRING10
+x,y		1	6
+-------------------------------------------------------------------
+Number		32
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCNODE4
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	13
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		6	6
+-------------------------------------------------------------------
+Number		33
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCAIX4
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	6
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
 x,y		20	6
 -------------------------------------------------------------------
 Number		34
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_LINK4
+Parameter	QCOM_QMESS_TGTNODE4
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
-Characters	6
+Characters	13
 Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
-Declaration	STRING10
+Declaration	STRING
 x,y		27	6
 -------------------------------------------------------------------
 Number		35
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_UPCNT4
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	3
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		34	6
--------------------------------------------------------------------
-Number		36
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_TIMEUP4
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	20
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING40
-x,y		38	6
--------------------------------------------------------------------
-Number		37
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_SENT4
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		59	6
--------------------------------------------------------------------
-Number		38
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_RCVD4
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		70	6
--------------------------------------------------------------------
-Number		41
-Text		" "
-Type		UPDATE
-Parameter	QCOM_NODES_NAME5
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	11
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	STRING
-x,y		0	7
--------------------------------------------------------------------
-Number		42
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_OS5
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	5
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING10
-x,y		14	7
--------------------------------------------------------------------
-Number		43
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_HW5
+Parameter	QCOM_QMESS_TGTAIX4
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
@@ -684,118 +594,118 @@ Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
+Declaration	INT
+x,y		41	6
+-------------------------------------------------------------------
+Number		36
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SIZE4
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	9
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	6
+-------------------------------------------------------------------
+Number		37
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_STYPE4
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		58	6
+-------------------------------------------------------------------
+Number		38
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_BTYPE4
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		66	6
+-------------------------------------------------------------------
+Number		41
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_TYPE5
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	4
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
 Declaration	STRING10
+x,y		1	7
+-------------------------------------------------------------------
+Number		42
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCNODE5
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	13
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		6	7
+-------------------------------------------------------------------
+Number		43
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCAIX5
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	6
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
 x,y		20	7
 -------------------------------------------------------------------
 Number		44
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_LINK5
+Parameter	QCOM_QMESS_TGTNODE5
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
-Characters	6
+Characters	13
 Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
-Declaration	STRING10
+Declaration	STRING
 x,y		27	7
 -------------------------------------------------------------------
 Number		45
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_UPCNT5
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	3
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		34	7
--------------------------------------------------------------------
-Number		46
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_TIMEUP5
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	20
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING40
-x,y		38	7
--------------------------------------------------------------------
-Number		47
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_SENT5
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		59	7
--------------------------------------------------------------------
-Number		48
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_RCVD5
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		70	7
--------------------------------------------------------------------
-Number		51
-Text		" "
-Type		UPDATE
-Parameter	QCOM_NODES_NAME6
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	11
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	STRING
-x,y		0	8
--------------------------------------------------------------------
-Number		52
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_OS6
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	5
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING10
-x,y		14	8
--------------------------------------------------------------------
-Number		53
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_HW6
+Parameter	QCOM_QMESS_TGTAIX5
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
@@ -804,118 +714,118 @@ Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
+Declaration	INT
+x,y		41	7
+-------------------------------------------------------------------
+Number		46
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SIZE5
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	9
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	7
+-------------------------------------------------------------------
+Number		47
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_STYPE5
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		58	7
+-------------------------------------------------------------------
+Number		48
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_BTYPE5
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		66	7
+-------------------------------------------------------------------
+Number		51
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_TYPE6
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	4
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
 Declaration	STRING10
+x,y		1	8
+-------------------------------------------------------------------
+Number		52
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCNODE6
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	13
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		6	8
+-------------------------------------------------------------------
+Number		53
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCAIX6
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	6
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
 x,y		20	8
 -------------------------------------------------------------------
 Number		54
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_LINK6
+Parameter	QCOM_QMESS_TGTNODE6
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
-Characters	6
+Characters	13
 Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
-Declaration	STRING10
+Declaration	STRING
 x,y		27	8
 -------------------------------------------------------------------
 Number		55
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_UPCNT6
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	3
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		34	8
--------------------------------------------------------------------
-Number		56
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_TIMEUP6
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	20
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING40
-x,y		38	8
--------------------------------------------------------------------
-Number		57
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_SENT6
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		59	8
--------------------------------------------------------------------
-Number		58
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_RCVD6
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		70	8
--------------------------------------------------------------------
-Number		61
-Text		" "
-Type		UPDATE
-Parameter	QCOM_NODES_NAME7
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	11
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	STRING
-x,y		0	9
--------------------------------------------------------------------
-Number		62
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_OS7
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	5
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING10
-x,y		14	9
--------------------------------------------------------------------
-Number		63
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_HW7
+Parameter	QCOM_QMESS_TGTAIX6
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
@@ -924,118 +834,118 @@ Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
+Declaration	INT
+x,y		41	8
+-------------------------------------------------------------------
+Number		56
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SIZE6
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	9
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	8
+-------------------------------------------------------------------
+Number		57
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_STYPE6
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		58	8
+-------------------------------------------------------------------
+Number		58
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_BTYPE6
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		66	8
+-------------------------------------------------------------------
+Number		61
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_TYPE7
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	4
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
 Declaration	STRING10
+x,y		1	9
+-------------------------------------------------------------------
+Number		62
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCNODE7
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	13
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		6	9
+-------------------------------------------------------------------
+Number		63
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCAIX7
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	6
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
 x,y		20	9
 -------------------------------------------------------------------
 Number		64
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_LINK7
+Parameter	QCOM_QMESS_TGTNODE7
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
-Characters	6
+Characters	13
 Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
-Declaration	STRING10
+Declaration	STRING
 x,y		27	9
 -------------------------------------------------------------------
 Number		65
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_UPCNT7
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	3
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		34	9
--------------------------------------------------------------------
-Number		66
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_TIMEUP7
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	20
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING40
-x,y		38	9
--------------------------------------------------------------------
-Number		67
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_SENT7
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		59	9
--------------------------------------------------------------------
-Number		68
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_RCVD7
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		70	9
--------------------------------------------------------------------
-Number		71
-Text		" "
-Type		UPDATE
-Parameter	QCOM_NODES_NAME8
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	11
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	STRING
-x,y		0	10
--------------------------------------------------------------------
-Number		72
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_OS8
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	5
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING10
-x,y		14	10
--------------------------------------------------------------------
-Number		73
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_HW8
+Parameter	QCOM_QMESS_TGTAIX7
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
@@ -1044,118 +954,118 @@ Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
+Declaration	INT
+x,y		41	9
+-------------------------------------------------------------------
+Number		66
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SIZE7
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	9
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	9
+-------------------------------------------------------------------
+Number		67
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_STYPE7
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		58	9
+-------------------------------------------------------------------
+Number		68
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_BTYPE7
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		66	9
+-------------------------------------------------------------------
+Number		71
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_TYPE8
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	4
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
 Declaration	STRING10
+x,y		1	10
+-------------------------------------------------------------------
+Number		72
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCNODE8
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	13
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		6	10
+-------------------------------------------------------------------
+Number		73
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCAIX8
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	6
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
 x,y		20	10
 -------------------------------------------------------------------
 Number		74
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_LINK8
+Parameter	QCOM_QMESS_TGTNODE8
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
-Characters	6
+Characters	13
 Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
-Declaration	STRING10
+Declaration	STRING
 x,y		27	10
 -------------------------------------------------------------------
 Number		75
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_UPCNT8
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	3
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		34	10
--------------------------------------------------------------------
-Number		76
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_TIMEUP8
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	20
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING40
-x,y		38	10
--------------------------------------------------------------------
-Number		77
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_SENT8
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		59	10
--------------------------------------------------------------------
-Number		78
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_RCVD8
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		70	10
--------------------------------------------------------------------
-Number		81
-Text		" "
-Type		UPDATE
-Parameter	QCOM_NODES_NAME9
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	11
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	STRING
-x,y		0	11
--------------------------------------------------------------------
-Number		82
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_OS9
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	5
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING10
-x,y		14	11
--------------------------------------------------------------------
-Number		83
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_HW9
+Parameter	QCOM_QMESS_TGTAIX8
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
@@ -1164,118 +1074,118 @@ Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
+Declaration	INT
+x,y		41	10
+-------------------------------------------------------------------
+Number		76
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SIZE8
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	9
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	10
+-------------------------------------------------------------------
+Number		77
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_STYPE8
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		58	10
+-------------------------------------------------------------------
+Number		78
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_BTYPE8
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		66	10
+-------------------------------------------------------------------
+Number		81
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_TYPE9
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	4
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
 Declaration	STRING10
+x,y		1	11
+-------------------------------------------------------------------
+Number		82
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCNODE9
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	13
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		6	11
+-------------------------------------------------------------------
+Number		83
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCAIX9
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	6
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
 x,y		20	11
 -------------------------------------------------------------------
 Number		84
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_LINK9
+Parameter	QCOM_QMESS_TGTNODE9
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
-Characters	6
+Characters	13
 Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
-Declaration	STRING10
+Declaration	STRING
 x,y		27	11
 -------------------------------------------------------------------
 Number		85
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_UPCNT9
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	3
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		34	11
--------------------------------------------------------------------
-Number		86
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_TIMEUP9
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	20
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING40
-x,y		38	11
--------------------------------------------------------------------
-Number		87
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_SENT9
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		59	11
--------------------------------------------------------------------
-Number		88
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_RCVD9
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		70	11
--------------------------------------------------------------------
-Number		91
-Text		" "
-Type		UPDATE
-Parameter	QCOM_NODES_NAME10
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	11
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	STRING
-x,y		0	12
--------------------------------------------------------------------
-Number		92
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_OS10
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	5
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING10
-x,y		14	12
--------------------------------------------------------------------
-Number		93
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_HW10
+Parameter	QCOM_QMESS_TGTAIX9
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
@@ -1284,118 +1194,118 @@ Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
+Declaration	INT
+x,y		41	11
+-------------------------------------------------------------------
+Number		86
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SIZE9
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	9
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	11
+-------------------------------------------------------------------
+Number		87
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_STYPE9
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		58	11
+-------------------------------------------------------------------
+Number		88
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_BTYPE9
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		66	11
+-------------------------------------------------------------------
+Number		91
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_TYPE10
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	4
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
 Declaration	STRING10
+x,y		1	12
+-------------------------------------------------------------------
+Number		92
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCNODE10
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	13
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		6	12
+-------------------------------------------------------------------
+Number		93
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCAIX10
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	6
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
 x,y		20	12
 -------------------------------------------------------------------
 Number		94
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_LINK10
+Parameter	QCOM_QMESS_TGTNODE10
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
-Characters	6
+Characters	13
 Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
-Declaration	STRING10
+Declaration	STRING
 x,y		27	12
 -------------------------------------------------------------------
 Number		95
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_UPCNT10
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	3
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		34	12
--------------------------------------------------------------------
-Number		96
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_TIMEUP10
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	20
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING40
-x,y		38	12
--------------------------------------------------------------------
-Number		97
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_SENT10
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		59	12
--------------------------------------------------------------------
-Number		98
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_RCVD10
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		70	12
--------------------------------------------------------------------
-Number		101
-Text		" "
-Type		UPDATE
-Parameter	QCOM_NODES_NAME11
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	11
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	STRING
-x,y		0	13
--------------------------------------------------------------------
-Number		102
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_OS11
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	5
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING10
-x,y		14	13
--------------------------------------------------------------------
-Number		103
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_HW11
+Parameter	QCOM_QMESS_TGTAIX10
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
@@ -1404,118 +1314,118 @@ Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
+Declaration	INT
+x,y		41	12
+-------------------------------------------------------------------
+Number		96
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SIZE10
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	9
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	12
+-------------------------------------------------------------------
+Number		97
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_STYPE10
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		58	12
+-------------------------------------------------------------------
+Number		98
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_BTYPE10
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		66	12
+-------------------------------------------------------------------
+Number		101
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_TYPE11
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	4
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
 Declaration	STRING10
+x,y		1	13
+-------------------------------------------------------------------
+Number		102
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCNODE11
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	13
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		6	13
+-------------------------------------------------------------------
+Number		103
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCAIX11
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	6
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
 x,y		20	13
 -------------------------------------------------------------------
 Number		104
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_LINK11
+Parameter	QCOM_QMESS_TGTNODE11
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
-Characters	6
+Characters	13
 Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
-Declaration	STRING10
+Declaration	STRING
 x,y		27	13
 -------------------------------------------------------------------
 Number		105
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_UPCNT11
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	3
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		34	13
--------------------------------------------------------------------
-Number		106
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_TIMEUP11
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	20
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING40
-x,y		38	13
--------------------------------------------------------------------
-Number		107
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_SENT11
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		59	13
--------------------------------------------------------------------
-Number		108
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_RCVD11
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		70	13
--------------------------------------------------------------------
-Number		111
-Text		" "
-Type		UPDATE
-Parameter	QCOM_NODES_NAME12
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	11
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	STRING
-x,y		0	14
--------------------------------------------------------------------
-Number		112
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_OS12
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	5
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING10
-x,y		14	14
--------------------------------------------------------------------
-Number		113
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_HW12
+Parameter	QCOM_QMESS_TGTAIX11
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
@@ -1524,118 +1434,118 @@ Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
+Declaration	INT
+x,y		41	13
+-------------------------------------------------------------------
+Number		106
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SIZE11
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	9
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	13
+-------------------------------------------------------------------
+Number		107
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_STYPE11
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		58	13
+-------------------------------------------------------------------
+Number		108
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_BTYPE11
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		66	13
+-------------------------------------------------------------------
+Number		111
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_TYPE12
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	4
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
 Declaration	STRING10
+x,y		1	14
+-------------------------------------------------------------------
+Number		112
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCNODE12
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	13
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		6	14
+-------------------------------------------------------------------
+Number		113
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCAIX12
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	6
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
 x,y		20	14
 -------------------------------------------------------------------
 Number		114
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_LINK12
+Parameter	QCOM_QMESS_TGTNODE12
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
-Characters	6
+Characters	13
 Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
-Declaration	STRING10
+Declaration	STRING
 x,y		27	14
 -------------------------------------------------------------------
 Number		115
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_UPCNT12
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	3
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		34	14
--------------------------------------------------------------------
-Number		116
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_TIMEUP12
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	20
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING40
-x,y		38	14
--------------------------------------------------------------------
-Number		117
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_SENT12
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		59	14
--------------------------------------------------------------------
-Number		118
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_RCVD12
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		70	14
--------------------------------------------------------------------
-Number		121
-Text		" "
-Type		UPDATE
-Parameter	QCOM_NODES_NAME13
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	11
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	STRING
-x,y		0	15
--------------------------------------------------------------------
-Number		122
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_OS13
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	5
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING10
-x,y		14	15
--------------------------------------------------------------------
-Number		123
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_HW13
+Parameter	QCOM_QMESS_TGTAIX12
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
@@ -1644,118 +1554,118 @@ Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
+Declaration	INT
+x,y		41	14
+-------------------------------------------------------------------
+Number		116
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SIZE12
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	9
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	14
+-------------------------------------------------------------------
+Number		117
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_STYPE12
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		58	14
+-------------------------------------------------------------------
+Number		118
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_BTYPE12
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		66	14
+-------------------------------------------------------------------
+Number		121
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_TYPE13
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	4
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
 Declaration	STRING10
+x,y		1	15
+-------------------------------------------------------------------
+Number		122
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCNODE13
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	13
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		6	15
+-------------------------------------------------------------------
+Number		123
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCAIX13
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	6
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
 x,y		20	15
 -------------------------------------------------------------------
 Number		124
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_LINK13
+Parameter	QCOM_QMESS_TGTNODE13
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
-Characters	6
+Characters	13
 Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
-Declaration	STRING10
+Declaration	STRING
 x,y		27	15
 -------------------------------------------------------------------
 Number		125
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_UPCNT13
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	3
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		34	15
--------------------------------------------------------------------
-Number		126
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_TIMEUP13
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	20
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING40
-x,y		38	15
--------------------------------------------------------------------
-Number		127
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_SENT13
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		59	15
--------------------------------------------------------------------
-Number		128
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_RCVD13
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		70	15
--------------------------------------------------------------------
-Number		131
-Text		" "
-Type		UPDATE
-Parameter	QCOM_NODES_NAME14
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	11
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	STRING
-x,y		0	16
--------------------------------------------------------------------
-Number		132
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_OS14
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	5
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING10
-x,y		14	16
--------------------------------------------------------------------
-Number		133
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_HW14
+Parameter	QCOM_QMESS_TGTAIX13
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
@@ -1764,118 +1674,118 @@ Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
+Declaration	INT
+x,y		41	15
+-------------------------------------------------------------------
+Number		126
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SIZE13
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	9
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	15
+-------------------------------------------------------------------
+Number		127
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_STYPE13
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		58	15
+-------------------------------------------------------------------
+Number		128
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_BTYPE13
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		66	15
+-------------------------------------------------------------------
+Number		131
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_TYPE14
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	4
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
 Declaration	STRING10
+x,y		1	16
+-------------------------------------------------------------------
+Number		132
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCNODE14
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	13
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		6	16
+-------------------------------------------------------------------
+Number		133
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCAIX14
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	6
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
 x,y		20	16
 -------------------------------------------------------------------
 Number		134
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_LINK14
+Parameter	QCOM_QMESS_TGTNODE14
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
-Characters	6
+Characters	13
 Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
-Declaration	STRING10
+Declaration	STRING
 x,y		27	16
 -------------------------------------------------------------------
 Number		135
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_UPCNT14
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	3
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		34	16
--------------------------------------------------------------------
-Number		136
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_TIMEUP14
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	20
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING40
-x,y		38	16
--------------------------------------------------------------------
-Number		137
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_SENT14
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		59	16
--------------------------------------------------------------------
-Number		138
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_RCVD14
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		70	16
--------------------------------------------------------------------
-Number		141
-Text		" "
-Type		UPDATE
-Parameter	QCOM_NODES_NAME15
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	11
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	STRING
-x,y		0	17
--------------------------------------------------------------------
-Number		142
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_OS15
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	5
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING10
-x,y		14	17
--------------------------------------------------------------------
-Number		143
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_HW15
+Parameter	QCOM_QMESS_TGTAIX14
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
@@ -1884,118 +1794,118 @@ Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
+Declaration	INT
+x,y		41	16
+-------------------------------------------------------------------
+Number		136
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SIZE14
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	9
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	16
+-------------------------------------------------------------------
+Number		137
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_STYPE14
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		58	16
+-------------------------------------------------------------------
+Number		138
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_BTYPE14
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		66	16
+-------------------------------------------------------------------
+Number		141
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_TYPE15
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	4
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
 Declaration	STRING10
+x,y		1	17
+-------------------------------------------------------------------
+Number		142
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCNODE15
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	13
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		6	17
+-------------------------------------------------------------------
+Number		143
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCAIX15
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	6
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
 x,y		20	17
 -------------------------------------------------------------------
 Number		144
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_LINK15
+Parameter	QCOM_QMESS_TGTNODE15
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
-Characters	6
+Characters	13
 Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
-Declaration	STRING10
+Declaration	STRING
 x,y		27	17
 -------------------------------------------------------------------
 Number		145
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_UPCNT15
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	3
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		34	17
--------------------------------------------------------------------
-Number		146
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_TIMEUP15
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	20
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING40
-x,y		38	17
--------------------------------------------------------------------
-Number		147
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_SENT15
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		59	17
--------------------------------------------------------------------
-Number		148
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_RCVD15
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		70	17
--------------------------------------------------------------------
-Number		151
-Text		" "
-Type		UPDATE
-Parameter	QCOM_NODES_NAME16
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	11
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	STRING
-x,y		0	18
--------------------------------------------------------------------
-Number		152
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_OS16
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	5
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING10
-x,y		14	18
--------------------------------------------------------------------
-Number		153
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_HW16
+Parameter	QCOM_QMESS_TGTAIX15
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
@@ -2004,118 +1914,118 @@ Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
+Declaration	INT
+x,y		41	17
+-------------------------------------------------------------------
+Number		146
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SIZE15
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	9
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	17
+-------------------------------------------------------------------
+Number		147
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_STYPE15
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		58	17
+-------------------------------------------------------------------
+Number		148
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_BTYPE15
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		66	17
+-------------------------------------------------------------------
+Number		151
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_TYPE16
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	4
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
 Declaration	STRING10
+x,y		1	18
+-------------------------------------------------------------------
+Number		152
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCNODE16
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	13
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		6	18
+-------------------------------------------------------------------
+Number		153
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCAIX16
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	6
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
 x,y		20	18
 -------------------------------------------------------------------
 Number		154
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_LINK16
+Parameter	QCOM_QMESS_TGTNODE16
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
-Characters	6
+Characters	13
 Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
-Declaration	STRING10
+Declaration	STRING
 x,y		27	18
 -------------------------------------------------------------------
 Number		155
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_UPCNT16
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	3
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		34	18
--------------------------------------------------------------------
-Number		156
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_TIMEUP16
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	20
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING40
-x,y		38	18
--------------------------------------------------------------------
-Number		157
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_SENT16
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		59	18
--------------------------------------------------------------------
-Number		158
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_RCVD16
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		70	18
--------------------------------------------------------------------
-Number		161
-Text		" "
-Type		UPDATE
-Parameter	QCOM_NODES_NAME17
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	11
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	STRING
-x,y		0	19
--------------------------------------------------------------------
-Number		162
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_OS17
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	5
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING10
-x,y		14	19
--------------------------------------------------------------------
-Number		163
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_HW17
+Parameter	QCOM_QMESS_TGTAIX16
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
@@ -2124,118 +2034,118 @@ Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
+Declaration	INT
+x,y		41	18
+-------------------------------------------------------------------
+Number		156
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SIZE16
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	9
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	18
+-------------------------------------------------------------------
+Number		157
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_STYPE16
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		58	18
+-------------------------------------------------------------------
+Number		158
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_BTYPE16
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		66	18
+-------------------------------------------------------------------
+Number		161
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_TYPE17
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	4
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
 Declaration	STRING10
+x,y		1	19
+-------------------------------------------------------------------
+Number		162
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCNODE17
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	13
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		6	19
+-------------------------------------------------------------------
+Number		163
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCAIX17
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	6
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
 x,y		20	19
 -------------------------------------------------------------------
 Number		164
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_LINK17
+Parameter	QCOM_QMESS_TGTNODE17
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
-Characters	6
+Characters	13
 Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
-Declaration	STRING10
+Declaration	STRING
 x,y		27	19
 -------------------------------------------------------------------
 Number		165
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_UPCNT17
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	3
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		34	19
--------------------------------------------------------------------
-Number		166
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_TIMEUP17
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	20
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING40
-x,y		38	19
--------------------------------------------------------------------
-Number		167
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_SENT17
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		59	19
--------------------------------------------------------------------
-Number		168
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_RCVD17
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	10
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	INT
-x,y		70	19
--------------------------------------------------------------------
-Number		171
-Text		" "
-Type		UPDATE
-Parameter	QCOM_NODES_NAME18
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	11
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
-Declaration	STRING
-x,y		0	20
--------------------------------------------------------------------
-Number		172
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_OS18
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	5
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	RTTSYS
-Declaration	STRING10
-x,y		14	20
--------------------------------------------------------------------
-Number		173
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_HW18
+Parameter	QCOM_QMESS_TGTAIX17
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
@@ -2244,13 +2154,118 @@ Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
+Declaration	INT
+x,y		41	19
+-------------------------------------------------------------------
+Number		166
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SIZE17
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	9
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	19
+-------------------------------------------------------------------
+Number		167
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_STYPE17
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		58	19
+-------------------------------------------------------------------
+Number		168
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_BTYPE17
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	7
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		66	19
+-------------------------------------------------------------------
+Number		171
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_TYPE18
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	4
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
 Declaration	STRING10
+x,y		1	20
+-------------------------------------------------------------------
+Number		172
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCNODE18
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	13
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		6	20
+-------------------------------------------------------------------
+Number		173
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_SRCAIX18
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	6
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
 x,y		20	20
 -------------------------------------------------------------------
 Number		174
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_LINK18
+Parameter	QCOM_QMESS_TGTNODE18
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	13
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		27	20
+-------------------------------------------------------------------
+Number		175
+Text		"%"
+Type		UPDATE
+Parameter	QCOM_QMESS_TGTAIX18
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
@@ -2259,73 +2274,58 @@ Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
-Declaration	STRING10
-x,y		27	20
--------------------------------------------------------------------
-Number		175
-Text		"%"
-Type		UPDATE
-Parameter	QCOM_NODES_UPCNT18
-Text/Dualpar	""
-Privileges	NO
-Outputflags	
-Characters	3
-Decimals	0
-MaxLimit	0.000000
-MinLimit	0.000000
-Database	USER
 Declaration	INT
-x,y		34	20
+x,y		41	20
 -------------------------------------------------------------------
 Number		176
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_TIMEUP18
+Parameter	QCOM_QMESS_SIZE18
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
-Characters	20
+Characters	9
 Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
-Declaration	STRING40
-x,y		38	20
+Declaration	INT
+x,y		48	20
 -------------------------------------------------------------------
 Number		177
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_SENT18
+Parameter	QCOM_QMESS_STYPE18
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
-Characters	10
+Characters	7
 Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
-Database	USER
+Database	RTTSYS
 Declaration	INT
-x,y		59	20
+x,y		58	20
 -------------------------------------------------------------------
 Number		178
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_RCVD18
+Parameter	QCOM_QMESS_BTYPE18
 Text/Dualpar	""
 Privileges	NO
 Outputflags	
-Characters	10
+Characters	7
 Decimals	0
 MaxLimit	0.000000
 MinLimit	0.000000
-Database	USER
+Database	RTTSYS
 Declaration	INT
-x,y		70	20
+x,y		66	20
 -------------------------------------------------------------------
-Number		202
+Number		300
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_PAGE
+Parameter	QCOM_QMESS_PAGE
 Text/Dualpar	"!"
 Privileges	NO
 Outputflags	
@@ -2335,12 +2335,12 @@ MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
 Declaration	INT
-x,y		74	0
+x,y		73	0
 -------------------------------------------------------------------
-Number		203
+Number		301
 Text		"%"
 Type		UPDATE
-Parameter	QCOM_NODES_MAXPAGE
+Parameter	QCOM_QMESS_MAXPAGE
 Text/Dualpar	"!"
 Privileges	NO
 Outputflags	
@@ -2350,5 +2350,5 @@ MaxLimit	0.000000
 MinLimit	0.000000
 Database	RTTSYS
 Declaration	INT
-x,y		77	0
+x,y		76	0
 -------------------------------------------------------------------

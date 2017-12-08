@@ -401,6 +401,22 @@ static int rttsys_qcom_queue_start( 	menu_ctx	ctx,
 					void		*arg2,
 					void		*arg3,
 					void		*arg4);
+int RTTSYS_QCOM_ALLQUEUES( 	menu_ctx	ctx,
+				int		event,
+				char		*parameter_ptr,
+				char		*objectname,
+				char		**picture);
+static int rttsys_qcom_messages_start( 	menu_ctx	ctx, 
+					pwr_tObjid	objid,
+					void		*arg1,
+					void		*arg2,
+					void		*arg3,
+					void		*arg4);
+int RTTSYS_QCOM_MESSAGES( 	menu_ctx	ctx,
+				int		event,
+				char		*parameter_ptr,
+				char		*objectname,
+				char		**picture);
 int RTTSYS_QCOM_NODES( 	menu_ctx	ctx,
 			int		event,
 			char		*parameter_ptr,
@@ -4703,10 +4719,22 @@ int rttsys_start_system_picture(
 		"QCOM APPLICATIONS", 0, &RTTSYS_QCOM_APPL);
     return sts;
   }
+  else if ( cdh_NoCaseStrncmp( picture_name, "QQUEUES", strlen( picture_name)) == 0)
+  {
+    sts = rtt_menu_new_sysedit( ctx, pwr_cNObjid, "QCOM QUEUES", 
+		"QCOM QUEUES", 0, &RTTSYS_QCOM_ALLQUEUES);
+    return sts;
+  }
   else if ( cdh_NoCaseStrncmp( picture_name, "QNODES", strlen( picture_name)) == 0)
   {
     sts = rtt_menu_new_sysedit( ctx, pwr_cNObjid, "QCOM NODES", 
 		"QCOM NODES", 0, &RTTSYS_QCOM_NODES);
+    return sts;
+  }
+  else if ( cdh_NoCaseStrncmp( picture_name, "QLINKS", strlen( picture_name)) == 0)
+  {
+    sts = rtt_menu_new_sysedit( ctx, pwr_cNObjid, "QCOM LINKS", 
+		"QCOM LINKS", 0, &RTTSYS_QCOM_LINKS);
     return sts;
   }
   else if ( cdh_NoCaseStrncmp( picture_name, "POOLS", strlen( picture_name)) == 0)
@@ -10561,6 +10589,8 @@ int RTTSYS_QCOM_QUEUE( 	menu_ctx	ctx,
 
                 /* Name */
                 menu_ptr->value_ptr =  qp->name;
+		menu_ptr->func = &rttsys_qcom_messages_start;
+		menu_ptr->arg1 = (void *) (unsigned int)qp->qix;
                 menu_ptr++;
                 /* Qix */
                 *(int *)menu_ptr->value_ptr = qp->qix & ~ (1 << 31);
@@ -10606,6 +10636,7 @@ int RTTSYS_QCOM_QUEUE( 	menu_ctx	ctx,
         {
           /* Name */
           menu_ptr->value_ptr =  (char *) RTT_ERASE;
+	  menu_ptr->func = 0;
           menu_ptr++;
           /* Qix */
           *(int *)menu_ptr->value_ptr = 0;
@@ -10651,11 +10682,11 @@ int RTTSYS_QCOM_QUEUE( 	menu_ctx	ctx,
 
           /* Application put_count */
           menu_ptr->value_ptr = (char *) RTT_ERASE;
-         menu_ptr++;
+	  menu_ptr++;
 
           /* Application  request_count */
           menu_ptr->value_ptr = (char *) RTT_ERASE;
-         menu_ptr++;
+	  menu_ptr++;
 
           /* Application  reply_count */
           menu_ptr->value_ptr = (char *) RTT_ERASE;
@@ -10744,6 +10775,8 @@ int RTTSYS_QCOM_QUEUE( 	menu_ctx	ctx,
 
                 /* Name */
                 menu_ptr->value_ptr =  qp->name;
+		menu_ptr->func = &rttsys_qcom_messages_start;
+		menu_ptr->arg1 = (void *) (unsigned int)qp->qix;
                 menu_ptr++;
                 /* Qix */
                 *(int *)menu_ptr->value_ptr = qp->qix & ~ (1 << 31);
@@ -10791,6 +10824,7 @@ int RTTSYS_QCOM_QUEUE( 	menu_ctx	ctx,
       {
         /* Name */
         menu_ptr->value_ptr =  (char *) RTT_ERASE;
+	menu_ptr->func = 0;
         menu_ptr++;
         /* Qix */
         *(int *)menu_ptr->value_ptr = 0;
@@ -10863,6 +10897,949 @@ int RTTSYS_QCOM_QUEUE( 	menu_ctx	ctx,
   return RTT__SUCCESS;
 }
 
+/*************************************************************************
+*
+* Name:		RTTSYS_QCOM_ALLQUEUES()
+*
+* Type		int
+*
+* Type		Parameter	IOGF	Description
+* menu_ctx	ctx		I	context of the picture.
+* int		event		I 	type of event.
+* char		*parameter_ptr	I	pointer to the parameter which value
+*					has been changed.
+*
+* Description:
+*	Show QCOM queues.
+*
+**************************************************************************/
+
+int RTTSYS_QCOM_ALLQUEUES( 	menu_ctx	ctx,
+				int		event,
+				char		*parameter_ptr,
+				char		*objectname,
+				char		**picture)
+{ 
+#define QCOM_AQUE_PAGESIZE 18
+  int			sts;
+  rtt_t_menu_upd	*menu_ptr;
+  rtt_t_menu_upd	*menulist;
+  static int		page;	
+  int			i, k, l;
+  pool_sQlink		*al, *ql;
+  qdb_sAppl		*ap;
+  qdb_sQue		*qp;
+  int			found;
+  static int		aix;
+
+  IF_NOGDH_RETURN;
+
+  /**********************************************************
+  *	The value of a parameter is changed.
+  ***********************************************************/
+  switch ( event)
+  {
+    case RTT_APPL_UPDATE:
+
+      menulist = (rtt_t_menu_upd *) ctx->menu;
+      menu_ptr = menulist;
+
+      found = 0;
+      k = 0;
+      l = 0;
+
+      qdb_ScopeLock {
+        for ( al = pool_Qsucc(&sts, &qdb->pool, &qdb->g->appl_lh);
+	      al != &qdb->g->appl_lh;
+	      al = pool_Qsucc(&sts, &qdb->pool, al) ) {
+	  ap = pool_Qitem(al, qdb_sAppl, appl_ll);
+
+	  for ( ql = pool_Qsucc(&sts, &qdb->pool, &ap->que_lh);
+		ql != &ap->que_lh;
+		ql = pool_Qsucc(&sts, &qdb->pool, ql)) {
+	    if ( (k >= page * QCOM_AQUE_PAGESIZE) && (k < (page + 1) * QCOM_AQUE_PAGESIZE)) {
+	      qp = pool_Qitem(ql, qdb_sQue, que_ll);
+
+	      /* Aix */
+	      menu_ptr->value_ptr = (char *)&ap->aid.aix;
+ 	      menu_ptr->func = &rttsys_qcom_messages_start;
+	      menu_ptr->arg1 = (void *) (unsigned int)qp->qix;
+	      menu_ptr++;
+	      /* Application name */
+	      menu_ptr->value_ptr =  ap->name;
+	      menu_ptr++;
+	      /* Queue name */
+	      menu_ptr->value_ptr =  qp->name;
+	      menu_ptr++;
+	      /* Qix */
+	      *(int *)menu_ptr->value_ptr = qp->qix & ~ (1 << 31);
+	      menu_ptr++;
+	      
+	      /* Inbuff cnt */
+	      menu_ptr->value_ptr = (char *) &qp->in_lc;
+	      menu_ptr++;
+	      /* Inbuff quota */
+	      menu_ptr->value_ptr = (char *) &qp->in_quota;
+	      menu_ptr++;
+	      /* Type */
+	      if ( qp->type == qdb_eQue_forward)
+		strcpy( menu_ptr->value_ptr, "Forw");
+	      else if ( qp->type == qdb_eQue_private)
+		strcpy( menu_ptr->value_ptr, "Priv");
+	      else
+		strcpy( menu_ptr->value_ptr, "Unkn");
+	      menu_ptr++;
+	      /* Flags */
+	      strcpy( menu_ptr->value_ptr, "");
+	      if ( qp->flags.m & qdb_mQue_broadcast)
+		strcat( menu_ptr->value_ptr, "Br");
+	      if ( qp->flags.m & qdb_mQue_system)
+		strcat( menu_ptr->value_ptr, "Sy");
+	      if ( qp->flags.m & qdb_mQue_event)
+		strcat( menu_ptr->value_ptr, "Ev");
+	      if ( qp->flags.m & qdb_mQue_reply)
+		strcat( menu_ptr->value_ptr, "Re");
+	      menu_ptr++;
+	      l++;
+	    }
+	    k++;
+	  }
+        }
+
+        for ( i = l; i < QCOM_AQUE_PAGESIZE; i++) {
+          /* Aix */
+          menu_ptr->value_ptr = (char *) RTT_ERASE;
+	  menu_ptr->func = 0;
+          menu_ptr++;
+          /* Application name */
+          menu_ptr->value_ptr =  (char *) RTT_ERASE;
+          menu_ptr++;
+          /* Queue name */
+          menu_ptr->value_ptr =  (char *) RTT_ERASE;
+          menu_ptr++;
+          /* Qix */
+          *(int *)menu_ptr->value_ptr = 0;
+          menu_ptr++;
+          /* Inbuff Count */
+          menu_ptr->value_ptr = (char *) RTT_ERASE;
+          menu_ptr++;
+          /* Inbuff quota */
+          menu_ptr->value_ptr = (char *) RTT_ERASE;
+          menu_ptr++;
+          /* Type */
+	  strcpy( menu_ptr->value_ptr, "");
+          menu_ptr++;
+          /* Flags */
+	  strcpy( menu_ptr->value_ptr, "");
+          menu_ptr++;
+        }
+
+      } qdb_ScopeUnlock;
+
+
+      QCOM_AQUE_MAXPAGE = MAX( 1, (k - 1)/ QCOM_AQUE_PAGESIZE + 1);
+
+      return RTT__SUCCESS;
+
+    /**********************************************************
+    *	Return address of menu
+    ***********************************************************/
+    case RTT_APPL_PICTURE:
+      *picture = (char *) &dtt_systempicture_p51_bg;
+      return RTT__SUCCESS;
+
+  /**********************************************************
+  *	Previous page
+  ***********************************************************/
+    case RTT_APPL_MENU:
+      *picture = (char *) &dtt_systempicture_p51_eu;
+      return RTT__SUCCESS;
+
+
+    /**********************************************************
+    *	Initialization of the picture
+    ***********************************************************/
+    /**********************************************************
+    *	Next page
+    ***********************************************************/
+    /**********************************************************
+    *	Previous page
+    ***********************************************************/
+    case RTT_APPL_INIT:
+    case RTT_APPL_NEXTPAGE:
+    case RTT_APPL_PREVPAGE:
+      if ( event == RTT_APPL_PREVPAGE) {
+        page--;
+        page = MAX( page, 0);
+      }
+      else if ( event == RTT_APPL_NEXTPAGE) {
+        page++;
+        page = MIN( page, QCOM_AQUE_MAXPAGE - 1);
+      }
+      else if ( event == RTT_APPL_INIT)
+        page = 0;
+
+      QCOM_AQUE_PAGE = page + 1;
+
+      aix = (int)(unsigned long)objectname;
+
+      menulist = (rtt_t_menu_upd *) ctx->menu;
+      menu_ptr = menulist;
+
+      k = 0;
+      l = 0;
+
+      qdb_ScopeLock {
+        for ( al = pool_Qsucc(&sts, &qdb->pool, &qdb->g->appl_lh);
+	      al != &qdb->g->appl_lh;
+	      al = pool_Qsucc(&sts, &qdb->pool, al))  {
+	  ap = pool_Qitem(al, qdb_sAppl, appl_ll);
+	  for ( ql = pool_Qsucc(&sts, &qdb->pool, &ap->que_lh);
+		ql != &ap->que_lh;
+		ql = pool_Qsucc(&sts, &qdb->pool, ql)) {
+	    if ( (k >= page * QCOM_AQUE_PAGESIZE) && (k < (page + 1) * QCOM_AQUE_PAGESIZE)) {
+	      qp = pool_Qitem(ql, qdb_sQue, que_ll);
+
+	      
+	      /* Aix */
+	      menu_ptr->value_ptr = (char *)&ap->aid.aix;
+ 	      menu_ptr->func = &rttsys_qcom_messages_start;
+	      menu_ptr->arg1 = (void *) (unsigned int)qp->qix;
+	      menu_ptr++;
+	      /* Application name */
+	      menu_ptr->value_ptr =  ap->name;
+	      menu_ptr++;
+	      /* Queue name */
+	      menu_ptr->value_ptr =  qp->name;
+	      menu_ptr++;
+	      /* Qix */
+	      *(int *)menu_ptr->value_ptr = qp->qix & ~ (1 << 31);
+	      menu_ptr++;
+	      
+	      /* Inbuff cnt */
+	      menu_ptr->value_ptr = (char *) &qp->in_lc;
+	      menu_ptr++;
+	      /* Inbuff quota */
+	      menu_ptr->value_ptr = (char *) &qp->in_quota;
+	      menu_ptr++;
+	      /* Type */
+	      if ( qp->type == qdb_eQue_forward)
+		strcpy( menu_ptr->value_ptr, "Forw");
+	      else if ( qp->type == qdb_eQue_private)
+		strcpy( menu_ptr->value_ptr, "Priv");
+	      else
+		strcpy( menu_ptr->value_ptr, "Unkn");
+	      menu_ptr++;
+	      /* Flags */
+	      strcpy( menu_ptr->value_ptr, "");
+	      if ( qp->flags.m & qdb_mQue_broadcast)
+		strcat( menu_ptr->value_ptr, "Br");
+	      if ( qp->flags.m & qdb_mQue_system)
+		strcat( menu_ptr->value_ptr, "Sy");
+	      if ( qp->flags.m & qdb_mQue_event)
+		strcat( menu_ptr->value_ptr, "Ev");
+	      if ( qp->flags.m & qdb_mQue_reply)
+		strcat( menu_ptr->value_ptr, "Re");
+	      menu_ptr++;
+	      
+	      l++;
+	    }
+	    k++;
+	  }
+        }
+      } qdb_ScopeUnlock;
+
+      for ( i = l; i < QCOM_AQUE_PAGESIZE; i++) {
+	/* Aix */
+	menu_ptr->value_ptr = (char *) RTT_ERASE;
+	menu_ptr->func = 0;
+	menu_ptr++;
+	/* Application name */
+	menu_ptr->value_ptr =  (char *) RTT_ERASE;
+	menu_ptr++;
+	/* Queue name */
+	menu_ptr->value_ptr =  (char *) RTT_ERASE;
+	menu_ptr++;
+	/* Qix */
+	*(int *)menu_ptr->value_ptr = 0;
+	menu_ptr++;
+	/* Inbuff Count */
+	menu_ptr->value_ptr = (char *) RTT_ERASE;
+	menu_ptr++;
+	/* Inbuff quota */
+	menu_ptr->value_ptr = (char *) RTT_ERASE;
+	menu_ptr++;
+	/* Type */
+	strcpy( menu_ptr->value_ptr, "");
+	menu_ptr++;
+	/* Flags */
+	strcpy( menu_ptr->value_ptr, "");
+	menu_ptr++;
+      }
+
+      QCOM_AQUE_MAXPAGE = MAX( 1, (k - 1)/ QCOM_AQUE_PAGESIZE + 1);
+
+      break;
+
+    /**********************************************************
+    *	Exit of the picture
+    ***********************************************************/
+    case RTT_APPL_EXIT:
+      break;
+  }
+
+  return RTT__SUCCESS;
+}
+
+/*************************************************************************
+*
+* Name:		RTTSYS_QCOM_MESSAGES()
+*
+* Type		int
+*
+* Type		Parameter	IOGF	Description
+* menu_ctx	ctx		I	context of the picture.
+* int		event		I 	type of event.
+* char		*parameter_ptr	I	pointer to the parameter which value
+*					has been changed.
+*
+* Description:
+*	Show QCOM messages.
+*
+**************************************************************************/
+
+static int rttsys_qcom_messages_start( 	menu_ctx	ctx, 
+					pwr_tObjid	objid,
+					void		*arg1,
+					void		*arg2,
+					void		*arg3,
+					void		*arg4)
+{
+	int	sts;
+	
+	sts = rtt_menu_new_sysedit( ctx, pwr_cNObjid, (char *)arg1, "", 
+		0, &RTTSYS_QCOM_MESSAGES);
+	return sts;
+}
+
+int RTTSYS_QCOM_MESSAGES( 	menu_ctx	ctx,
+				int		event,
+				char		*parameter_ptr,
+				char		*objectname,
+				char		**picture)
+{ 
+#define QCOM_QMESS_PAGESIZE 18
+  int			sts;
+  rtt_t_menu_upd	*menu_ptr;
+  rtt_t_menu_upd	*menulist;
+  static int		page;	
+  int			i, k, l;
+  qdb_sQue		*qp;
+  pool_sQlink		*bl;
+  qdb_sBuffer		*bp;
+  static qcom_sQid     	qid;
+  int			found;
+
+  IF_NOGDH_RETURN;
+
+  /**********************************************************
+  *	The value of a parameter is changed.
+  ***********************************************************/
+  switch ( event)
+  {
+    case RTT_APPL_UPDATE:
+
+      menulist = (rtt_t_menu_upd *) ctx->menu;
+      menu_ptr = menulist;
+
+      found = 0;
+      k = 0;
+      l = 0;
+
+      qdb_ScopeLock {
+
+	qp = qdb_Que( &sts, &qid, NULL);
+	if ( qp == NULL) return sts;
+
+	for ( bl = pool_Qsucc(NULL, &qdb->pool, &qp->in_lh);
+	      bl != &qp->in_lh; ) {
+	  bp = pool_Qitem(bl, qdb_sBuffer, c.ll);
+	  bl = pool_Qsucc(NULL, &qdb->pool, bl);
+
+	  if ( (k >= page * QCOM_QMESS_PAGESIZE) && (k < (page + 1) * QCOM_QMESS_PAGESIZE)) {
+	    switch( bp->c.type) {
+	    case qdb_eBuffer_base:
+	      /* Type */
+	      strcpy( menu_ptr->value_ptr, "Base");
+	      menu_ptr++;
+	      /* Source nid */
+	      strcpy( menu_ptr->value_ptr, cdh_NodeIdToString( 0, bp->b.info.sender.nid, 0, 0));
+	      menu_ptr++;
+	      /* Source aix */
+	      *(int *)menu_ptr->value_ptr = bp->b.info.sender.aix;
+	      menu_ptr++;
+	      /* Target nid */
+	      strcpy( menu_ptr->value_ptr, cdh_NodeIdToString( 0, bp->b.info.receiver.nid, 0, 0));
+	      menu_ptr++;
+	      /* Target qix */
+	      *(int *)menu_ptr->value_ptr = bp->b.info.receiver.qix;
+	      menu_ptr++;
+	      /* Size */
+	      *(int *)menu_ptr->value_ptr = bp->b.info.size;
+	      menu_ptr++;
+	      /* stype */
+	      *(int *)menu_ptr->value_ptr = bp->b.info.type.s;
+	      menu_ptr++;
+	      /* btype */
+	      *(int *)menu_ptr->value_ptr = bp->b.info.type.b;
+	      menu_ptr++;
+	      break;
+	    case qdb_eBuffer_segment:
+	    case qdb_eBuffer_reference:
+	      /* Type */
+	      strcpy( menu_ptr->value_ptr, bp->c.type == qdb_eBuffer_segment ? "Segm" : "Ref");
+	      menu_ptr++;
+	      /* Source nid */
+	      strcpy( menu_ptr->value_ptr, "");
+	      menu_ptr++;
+	      /* Source aix */
+	      *(int *)menu_ptr->value_ptr = 0;
+	      menu_ptr++;
+	      /* Target nid */
+	      strcpy( menu_ptr->value_ptr, "");
+	      menu_ptr++;
+	      /* Target qix */
+	      *(int *)menu_ptr->value_ptr = 0;
+	      menu_ptr++;
+	      /* Size */
+	      *(int *)menu_ptr->value_ptr = 0;
+	      menu_ptr++;
+	      /* stype */
+	      *(int *)menu_ptr->value_ptr = 0;
+	      menu_ptr++;
+	      /* btype */
+	      *(int *)menu_ptr->value_ptr = 0;
+	      menu_ptr++;
+	      break;
+	    default: ;
+	    }
+	    l++;
+	  }
+	  k++;
+	  if ( k >= (page + 1) * QCOM_QMESS_PAGESIZE)
+	    break;
+	}
+
+        for ( i = l; i < QCOM_QMESS_PAGESIZE; i++) {
+	  /* Type */
+	  strcpy( menu_ptr->value_ptr, "");
+	  menu_ptr++;
+	  /* Source nid */
+	  strcpy( menu_ptr->value_ptr, "");
+	  menu_ptr++;
+	  /* Source aix */
+	  *(int *)menu_ptr->value_ptr = 0;
+	  menu_ptr++;
+	  /* Target nid */
+	  strcpy( menu_ptr->value_ptr, "");
+	  menu_ptr++;
+	  /* Target qix */
+	  *(int *)menu_ptr->value_ptr = 0;
+	  menu_ptr++;
+	  /* Size */
+	  *(int *)menu_ptr->value_ptr = 0;
+	  menu_ptr++;
+	  /* stype */
+	  *(int *)menu_ptr->value_ptr = 0;
+	  menu_ptr++;
+	  /* btype */
+	  *(int *)menu_ptr->value_ptr = 0;
+	  menu_ptr++;
+        }
+      } qdb_ScopeUnlock;
+
+
+      QCOM_QMESS_MAXPAGE = MAX( 1, (qp->in_lc - 1)/ QCOM_QMESS_PAGESIZE + 1);
+
+      return RTT__SUCCESS;
+
+    /**********************************************************
+    *	Return address of menu
+    ***********************************************************/
+    case RTT_APPL_PICTURE:
+      *picture = (char *) &dtt_systempicture_p52_bg;
+      return RTT__SUCCESS;
+
+  /**********************************************************
+  *	Previous page
+  ***********************************************************/
+    case RTT_APPL_MENU:
+      *picture = (char *) &dtt_systempicture_p52_eu;
+      return RTT__SUCCESS;
+
+
+    /**********************************************************
+    *	Initialization of the picture
+    ***********************************************************/
+    /**********************************************************
+    *	Next page
+    ***********************************************************/
+    /**********************************************************
+    *	Previous page
+    ***********************************************************/
+    case RTT_APPL_INIT:
+    case RTT_APPL_NEXTPAGE:
+    case RTT_APPL_PREVPAGE:
+      if ( event == RTT_APPL_PREVPAGE) {
+        page--;
+        page = MAX( page, 0);
+      }
+      else if ( event == RTT_APPL_NEXTPAGE) {
+        page++;
+        page = MIN( page, QCOM_QMESS_MAXPAGE - 1);
+      }
+      else if ( event == RTT_APPL_INIT)
+        page = 0;
+
+      QCOM_QMESS_PAGE = page + 1;
+
+      qid.nid = 0;
+      qid.qix = (qcom_tQix)objectname;
+
+      menulist = (rtt_t_menu_upd *) ctx->menu;
+      menu_ptr = menulist;
+
+      k = 0;
+      l = 0;
+
+      qdb_ScopeLock {
+
+	qp = qdb_Que( &sts, &qid, NULL);
+	if ( qp == NULL) return sts;
+
+	for ( bl = pool_Qsucc(NULL, &qdb->pool, &qp->in_lh);
+	      bl != &qp->in_lh; ) {
+	  bp = pool_Qitem(bl, qdb_sBuffer, c.ll);
+	  bl = pool_Qsucc(NULL, &qdb->pool, bl);
+
+	  if ( (k >= page * QCOM_QMESS_PAGESIZE) && (k < (page + 1) * QCOM_QMESS_PAGESIZE)) {
+	    switch( bp->c.type) {
+	    case qdb_eBuffer_base:
+	      /* Type */
+	      strcpy( menu_ptr->value_ptr, "Base");
+	      menu_ptr++;
+	      /* Source nid */
+	      strcpy( menu_ptr->value_ptr, cdh_NodeIdToString( 0, bp->b.info.sender.nid, 0, 0));
+	      menu_ptr++;
+	      /* Source aix */
+	      *(int *)menu_ptr->value_ptr = bp->b.info.sender.aix;
+	      menu_ptr++;
+	      /* Target nid */
+	      strcpy( menu_ptr->value_ptr, cdh_NodeIdToString( 0, bp->b.info.receiver.nid, 0, 0));
+	      menu_ptr++;
+	      /* Target qix */
+	      *(int *)menu_ptr->value_ptr = bp->b.info.receiver.qix;
+	      menu_ptr++;
+	      /* Size */
+	      *(int *)menu_ptr->value_ptr = bp->b.info.size;
+	      menu_ptr++;
+	      /* stype */
+	      *(int *)menu_ptr->value_ptr = bp->b.info.type.s;
+	      menu_ptr++;
+	      /* btype */
+	      *(int *)menu_ptr->value_ptr = bp->b.info.type.b;
+	      menu_ptr++;
+	      break;
+	    case qdb_eBuffer_segment:
+	    case qdb_eBuffer_reference:
+	      /* Type */
+	      strcpy( menu_ptr->value_ptr, bp->c.type == qdb_eBuffer_segment ? "Segm" : "Ref");
+	      menu_ptr++;
+	      /* Source nid */
+	      strcpy( menu_ptr->value_ptr, "");
+	      menu_ptr++;
+	      /* Source aix */
+	      *(int *)menu_ptr->value_ptr = 0;
+	      menu_ptr++;
+	      /* Target nid */
+	      strcpy( menu_ptr->value_ptr, "");
+	      menu_ptr++;
+	      /* Target qix */
+	      *(int *)menu_ptr->value_ptr = 0;
+	      menu_ptr++;
+	      /* Size */
+	      *(int *)menu_ptr->value_ptr = 0;
+	      menu_ptr++;
+	      /* stype */
+	      *(int *)menu_ptr->value_ptr = 0;
+	      menu_ptr++;
+	      /* btype */
+	      *(int *)menu_ptr->value_ptr = 0;
+	      menu_ptr++;
+	      break;
+	    default: ;
+	    }
+	    l++;
+	  }
+	  k++;
+	  if ( k >= (page + 1) * QCOM_QMESS_PAGESIZE)
+	    break;
+	}
+
+        for ( i = l; i < QCOM_QMESS_PAGESIZE; i++) {
+	  /* Type */
+	  strcpy( menu_ptr->value_ptr, "");
+	  menu_ptr++;
+	  /* Source nid */
+	  strcpy( menu_ptr->value_ptr, "");
+	  menu_ptr++;
+	  /* Source aix */
+	  *(int *)menu_ptr->value_ptr = 0;
+	  menu_ptr++;
+	  /* Target nid */
+	  strcpy( menu_ptr->value_ptr, "");
+	  menu_ptr++;
+	  /* Target qix */
+	  *(int *)menu_ptr->value_ptr = 0;
+	  menu_ptr++;
+	  /* Size */
+	  *(int *)menu_ptr->value_ptr = 0;
+	  menu_ptr++;
+	  /* stype */
+	  *(int *)menu_ptr->value_ptr = 0;
+	  menu_ptr++;
+	  /* btype */
+	  *(int *)menu_ptr->value_ptr = 0;
+	  menu_ptr++;
+        }
+      } qdb_ScopeUnlock;
+
+      QCOM_QMESS_MAXPAGE = MAX( 1, (qp->in_lc - 1)/ QCOM_QMESS_PAGESIZE + 1);
+
+      break;
+
+    /**********************************************************
+    *	Exit of the picture
+    ***********************************************************/
+    case RTT_APPL_EXIT:
+      break;
+  }
+
+  return RTT__SUCCESS;
+}
+
+/*************************************************************************
+*
+* Name:		RTTSYS_SHOW_LINKS()
+* Type		int
+*
+* Type		Parameter	IOGF	Description
+* menu_ctx	ctx		I	context of the picture.
+* int		event		I 	type of event.
+* char		*parameter_ptr	I	pointer to the parameter which value
+*					has been changed.
+*
+* Description:
+*	Show nethandler info.
+*
+**************************************************************************/
+
+int RTTSYS_QCOM_LINKS( 	menu_ctx	ctx,
+			int		event,
+			char		*parameter_ptr,
+			char		*objectname,
+			char		**picture)
+{ 
+#define QCOM_LINKS_PAGESIZE 18
+  int			sts;
+  rtt_t_menu_upd	*menu_ptr;
+  rtt_t_menu_upd	*menulist;
+  static int		page;	
+  int			i, k, l, m;
+  pool_sQlink		*nl;
+  qdb_sNode		*np;
+
+  IF_NOQCOM_RETURN;
+
+  /**********************************************************
+  *	The value of a parameter is changed.
+  ***********************************************************/
+  switch ( event)
+  {
+    case RTT_APPL_UPDATE:
+
+      menulist = (rtt_t_menu_upd *) ctx->menu;
+      menu_ptr = menulist;
+
+      k = 0;
+      l = 0;
+
+      qdb_ScopeLock {
+        for ( nl = pool_Qsucc(&sts, &qdb->pool, &qdb->g->node_lh);
+	      nl != &qdb->g->node_lh;
+	      nl = pool_Qsucc(&sts, &qdb->pool, nl)) {
+	  for ( m = 0; m < 2; m++) {
+	    if ( (k >= page * QCOM_LINKS_PAGESIZE) && (k < (page + 1) * QCOM_LINKS_PAGESIZE)) {
+	      np = pool_Qitem(nl, qdb_sNode, node_ll);
+
+	      if ( strncmp( np->link[m].name, "***", 3) == 0) {
+		m++;
+		continue;
+	      }
+	      if ( m == 1 && np->link_cnt <= 1)
+		continue;
+
+	      /* Name */
+	      menu_ptr->value_ptr = (char *) np->link[m].name;
+	      menu_ptr->func = &rttsys_qcom_node_start;
+	      if ( m == 0)
+		menu_ptr->arg1 = (void *) (unsigned int)np->nid;
+	      else
+		menu_ptr->arg1 = (void *) (unsigned int)(np->nid | 0x80000000);
+	      menu_ptr++;
+
+	      /* QFlags */
+	      if (np == qdb->my_node)
+		/* Local node */
+		strcpy( menu_ptr->value_ptr, "Local");
+	      else {
+		if ( np->link[m].qflags.b.initiated)
+		  strcpy( menu_ptr->value_ptr, "Initiated");
+		else if ( np->link[m].qflags.b.active) {
+		  if ( m == np->clx)
+		    strcpy( menu_ptr->value_ptr, "Active");
+		  else
+		    strcpy( menu_ptr->value_ptr, "Passive");
+		}
+		else if ( np->link[m].qflags.b.connected)
+		  strcpy( menu_ptr->value_ptr, "Connected");
+		else
+		  strcpy( menu_ptr->value_ptr, "Down");
+	      }
+	      menu_ptr++;
+
+	      /* rtt rtt */
+	      menu_ptr->value_ptr = (char *) &np->link[m].rtt_rtt;
+	      menu_ptr++;
+
+	      /* rtt rto */
+	      menu_ptr->value_ptr = (char *) &np->link[m].rtt_rto;
+	      menu_ptr++;
+
+	      /* export_purge_cnt */
+	      menu_ptr->value_ptr = (char *) &np->link[m].export_purge_cnt;
+	      menu_ptr++;
+
+	      /* export_alloc_cnt */
+	      menu_ptr->value_ptr = (char *) &np->link[m].export_alloc_cnt;
+	      menu_ptr++;
+
+ 	      /* Sent */
+	      menu_ptr->value_ptr = (char *) &np->put.segs;
+	      menu_ptr++;
+
+	      /* Rcvd */
+	      menu_ptr->value_ptr = (char *) &np->get.segs;
+	      menu_ptr++;
+
+	      l++;
+	    }
+	    k++;
+	  }
+	}
+      } qdb_ScopeUnlock;
+
+      for ( i = l; i < QCOM_LINKS_PAGESIZE; i++) {
+        /* Name */
+        menu_ptr->value_ptr = (char *) RTT_ERASE;
+        menu_ptr++;
+        /* QFlags */
+        strcpy( menu_ptr->value_ptr, "");
+        menu_ptr++;
+        /* Rtt */
+        menu_ptr->value_ptr = (char *) RTT_ERASE;
+        menu_ptr++;
+        /* Tmo */
+        menu_ptr->value_ptr = (char *) RTT_ERASE;
+        menu_ptr++;
+        /* Export purge count */
+        menu_ptr->value_ptr = (char *) RTT_ERASE;
+        menu_ptr++;
+        /* Export alloc count */
+        menu_ptr->value_ptr = (char *) RTT_ERASE;
+        menu_ptr++;
+        /* Sent */
+        menu_ptr->value_ptr = (char *) RTT_ERASE;
+        menu_ptr++;
+        /* Rcvd */
+        menu_ptr->value_ptr = (char *) RTT_ERASE;
+        menu_ptr++;
+      }
+      QCOM_LINKS_MAXPAGE = MAX( 1, (k - 1)/ QCOM_LINKS_PAGESIZE + 1);
+
+      return RTT__SUCCESS;
+
+    /**********************************************************
+    *	Return address of menu
+    ***********************************************************/
+    case RTT_APPL_PICTURE:
+      *picture = (char *) &dtt_systempicture_p53_bg;
+      return RTT__SUCCESS;
+
+  /**********************************************************
+  *	Previous page
+  ***********************************************************/
+    case RTT_APPL_MENU:
+      *picture = (char *) &dtt_systempicture_p53_eu;
+      return RTT__SUCCESS;
+
+
+    /**********************************************************
+    *	Initialization of the picture
+    ***********************************************************/
+    /**********************************************************
+    *	Next page
+    ***********************************************************/
+    /**********************************************************
+    *	Previous page
+    ***********************************************************/
+    case RTT_APPL_INIT:
+    case RTT_APPL_NEXTPAGE:
+    case RTT_APPL_PREVPAGE:
+      if ( event == RTT_APPL_PREVPAGE)
+      {
+        page--;
+        page = MAX( page, 0);
+      }
+      else if ( event == RTT_APPL_NEXTPAGE)
+      {
+        page++;
+        page = MIN( page, QCOM_LINKS_MAXPAGE - 1);
+      }
+      else if ( event == RTT_APPL_INIT)
+        page = 0;
+
+      QCOM_LINKS_PAGE = page + 1;
+
+      menulist = (rtt_t_menu_upd *) ctx->menu;
+      menu_ptr = menulist;
+
+      k = 0;
+      l = 0;
+
+      qdb_ScopeLock {
+        for ( nl = pool_Qsucc(&sts, &qdb->pool, &qdb->g->node_lh);
+	      nl != &qdb->g->node_lh;
+	      nl = pool_Qsucc(&sts, &qdb->pool, nl)) {
+	  for ( m = 0; m < 2; m++) {
+	    if ( (k >= page * QCOM_LINKS_PAGESIZE) && (k < (page + 1) * QCOM_LINKS_PAGESIZE)) {
+	      np = pool_Qitem(nl, qdb_sNode, node_ll);
+
+	      if ( strncmp( np->link[m].name, "***", 3) == 0) {
+		m++;
+		continue;
+	      }
+	      if ( m > np->link_cnt - 1)
+		continue;
+
+	      /* Name */
+	      menu_ptr->value_ptr = (char *) np->link[m].name;
+	      menu_ptr->func = &rttsys_qcom_node_start;
+	      if ( m == 0)
+		menu_ptr->arg1 = (void *) (unsigned int)np->nid;
+	      else
+		menu_ptr->arg1 = (void *) (unsigned int)(np->nid | 0x80000000);
+	      menu_ptr++;
+
+	      /* QFlags */
+	      if (np == qdb->my_node)
+		/* Local node */
+		strcpy( menu_ptr->value_ptr, "Local");
+	      else {
+		if ( np->link[m].qflags.b.initiated)
+		  strcpy( menu_ptr->value_ptr, "Initiated");
+		else if ( np->link[m].qflags.b.active) {
+		  if ( m == np->clx)
+		    strcpy( menu_ptr->value_ptr, "Active");
+		  else
+		    strcpy( menu_ptr->value_ptr, "Passive");
+		}
+		else if ( np->link[m].qflags.b.connected)
+		  strcpy( menu_ptr->value_ptr, "Connected");
+		else
+		  strcpy( menu_ptr->value_ptr, "Down");
+	      }
+	      menu_ptr++;
+
+	      /* rtt rtt */
+	      menu_ptr->value_ptr = (char *) &np->link[m].rtt_rtt;
+	      menu_ptr++;
+
+	      /* rtt rto */
+	      menu_ptr->value_ptr = (char *) &np->link[m].rtt_rto;
+	      menu_ptr++;
+
+	      /* export_purge_cnt */
+	      menu_ptr->value_ptr = (char *) &np->link[m].export_purge_cnt;
+	      menu_ptr++;
+
+	      /* export_alloc_cnt */
+	      menu_ptr->value_ptr = (char *) &np->link[m].export_alloc_cnt;
+	      menu_ptr++;
+
+ 	      /* Sent */
+	      menu_ptr->value_ptr = (char *) &np->put.segs;
+	      menu_ptr++;
+
+	      /* Rcvd */
+	      menu_ptr->value_ptr = (char *) &np->get.segs;
+	      menu_ptr++;
+	      l++;
+	    }
+	    k++;
+	  }
+	}
+      } qdb_ScopeUnlock;
+
+      for ( i = l; i < QCOM_LINKS_PAGESIZE; i++) {
+        /* Name */
+        menu_ptr->value_ptr = (char *) RTT_ERASE;
+        menu_ptr++;
+        /* QFlags */
+        strcpy( menu_ptr->value_ptr, "");
+        menu_ptr++;
+        /* Rtt */
+        menu_ptr->value_ptr = (char *) RTT_ERASE;
+        menu_ptr++;
+        /* Tmo */
+        menu_ptr->value_ptr = (char *) RTT_ERASE;
+        menu_ptr++;
+        /* Export purge count */
+        menu_ptr->value_ptr = (char *) RTT_ERASE;
+        menu_ptr++;
+        /* Export alloc count */
+        menu_ptr->value_ptr = (char *) RTT_ERASE;
+        menu_ptr++;
+        /* Sent */
+        menu_ptr->value_ptr = (char *) RTT_ERASE;
+        menu_ptr++;
+        /* Rcvd */
+        menu_ptr->value_ptr = (char *) RTT_ERASE;
+        menu_ptr++;
+      }
+      QCOM_LINKS_MAXPAGE = MAX( 1, (k - 1)/ QCOM_LINKS_PAGESIZE + 1);
+
+      break;
+
+    /**********************************************************
+    *	Exit of the picture
+    ***********************************************************/
+    case RTT_APPL_EXIT:
+      break;
+  }
+
+  return RTT__SUCCESS;
+}
 
 /*************************************************************************
 *
