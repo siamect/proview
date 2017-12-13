@@ -4142,7 +4142,7 @@ ItemPnParEnum::ItemPnParEnum( GsdmlAttrNav *attrnav, const char *item_name,
 
   // Get the values and corresponding texts
   gsdml_ValueItem *vi = (gsdml_ValueItem *)value_ref->Body.ValueItemTarget.p;
-    
+
   gsdml_Valuelist *allowed_values = 0; 
   if ( strcmp( value_ref->Body.AllowedValues, "") != 0)
     allowed_values = new gsdml_Valuelist( value_ref->Body.AllowedValues);
@@ -4151,9 +4151,12 @@ ItemPnParEnum::ItemPnParEnum( GsdmlAttrNav *attrnav, const char *item_name,
     for ( unsigned int i = 0; i < vi->Assignments->Assign.size(); i++) {
       ParEnumValue eval;
       int num;
+
       num = sscanf( vi->Assignments->Assign[i]->Body.Content, "%u", &eval.value);
+
       if ( num != 1)
 	continue;
+
       if ( allowed_values && !allowed_values->in_list( eval.value))
 	continue;
 
@@ -4163,6 +4166,20 @@ ItemPnParEnum::ItemPnParEnum( GsdmlAttrNav *attrnav, const char *item_name,
       values.push_back( eval);
     }
   }
+  else if (datatype == gsdml_eValueDataType_Bit)
+  {
+    ParEnumValue eval;
+
+    eval.value = 1;
+    strncpy( eval.text, "On", sizeof(eval.text));
+    eval.value <<= bit_offset;
+    values.push_back( eval);
+
+    eval.value = 0;
+    strncpy( eval.text, "Off", sizeof(eval.text));
+    values.push_back( eval);
+  }
+
   if ( allowed_values)
     delete allowed_values;
 
@@ -4218,15 +4235,12 @@ int ItemPnParEnum::open_children( GsdmlAttrNav *attrnav, double x, double y)
   else {
     brow_SetNodraw( attrnav->brow->ctx);
 
-    gsdml_ValueItem *vi = (gsdml_ValueItem *)value_ref->Body.ValueItemTarget.p;
-    
-    if ( vi && vi->Assignments) {
-      for ( unsigned int i = 0; i < values.size(); i++) {
-	new ItemPnParEnumBit( attrnav, values[i].text, datatype, data, 
-			      byte_offset, values[i].value, mask, noedit,
-			      node, flow_eDest_IntoLast);
-      }
+    for ( unsigned int i = 0; i < values.size(); i++) {
+      new ItemPnParEnumBit( attrnav, values[i].text, datatype, data,
+                            byte_offset, values[i].value, mask, noedit,
+                            node, flow_eDest_IntoLast);
     }
+
     brow_SetOpen( node, attrnav_mOpen_Children);
     brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_openmap);
     brow_ResetNodraw( attrnav->brow->ctx);
