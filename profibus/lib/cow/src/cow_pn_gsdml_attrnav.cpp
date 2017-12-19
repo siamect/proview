@@ -2095,8 +2095,7 @@ int ItemPnEnumValue::scan( GsdmlAttrNav *attrnav, void *p)
 ItemPnEnumValueMType::ItemPnEnumValueMType( GsdmlAttrNav *attrnav, const char *item_name, 
 					    const char *item_number, int item_num, 
 					    int item_type_id, void *attr_value_p, 
-					    brow_tNode dest, flow_eDest dest_code) :
-  num(item_num), type_id(item_type_id), value_p(attr_value_p), first_scan(1)
+					    brow_tNode dest, flow_eDest dest_code, const char *info_text) : ItemPn(info_text), num(item_num), type_id(item_type_id), value_p(attr_value_p), first_scan(1)
 {
 
   type = attrnav_eItemType_PnEnumValueMType;
@@ -2238,9 +2237,8 @@ int ItemPnDevice::scan( GsdmlAttrNav *attrnav, void *p)
     if ( attrnav->device_num == 0)
       strcpy( buf, "No");
     else {
-      strncpy( buf, (char *)attrnav->gsdml->ApplicationProcess->DeviceAccessPointList->
-	       DeviceAccessPointItem[attrnav->device_num-1]->ModuleInfo->Body.Name.p, 
-	       sizeof(buf));
+      gsdml_DeviceAccessPointItem *item = attrnav->gsdml->ApplicationProcess->DeviceAccessPointList->DeviceAccessPointItem[attrnav->device_num-1];
+      snprintf(buf, sizeof(buf), "%s (%s)", (char*)item->ModuleInfo->Body.Name.p, item->ModuleInfo->Body.OrderNumber);
     }
   }
   brow_SetAnnotation( node, 1, buf, strlen(buf));
@@ -2540,7 +2538,8 @@ int ItemPnSlot::scan( GsdmlAttrNav *attrnav, void *p)
       ModuleItemRef[slotdata->module_enum_number-1]->Body.ModuleItemTarget.p;
     if ( !mi || !mi->ModuleInfo->Body.Name.p)
       return 1;
-    strncpy( buf, (char *) mi->ModuleInfo->Body.Name.p, sizeof(buf));
+
+    snprintf(buf, sizeof(buf), "%s (%s)", (char *)mi->ModuleInfo->Body.Name.p, mi->ModuleInfo->Body.OrderNumber);
   }
   brow_SetAnnotation( node, 1, buf, strlen(buf));
   old_value = *(int *)p;
@@ -3480,7 +3479,7 @@ int ItemPnModuleType::open_children( GsdmlAttrNav *attrnav, double x, double y)
 	new ItemPnEnumValueMType( attrnav, mname, mi->ModuleInfo->Body.OrderNumber, idx, 
 				  pwr_eType_UInt32, 
 				  &attrnav->dev_data.slot_data[slot_idx]->module_enum_number, 
-				  node, flow_eDest_IntoLast);
+				  node, flow_eDest_IntoLast, (char *)mi->ModuleInfo->Body.InfoText.p);
       }
       else if ( um->ModuleItemRef[i]->Body.FixedInSlots.list &&
 		um->ModuleItemRef[i]->Body.FixedInSlots.list->in_list(slot_number)) {

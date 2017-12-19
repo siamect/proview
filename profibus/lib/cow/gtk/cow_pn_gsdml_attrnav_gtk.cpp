@@ -116,8 +116,8 @@ void GsdmlAttrNavGtk::display_attr_help_text()
 
   switch( base_item->type) {
     /*
-     * The following two item types could make use if the same info_text in the base class as PnEnumValue does
-     * but since they already contained references to they were used instead...
+     * The following two item types could make use of the same info_text that the the base class does,
+     * but since they already contained references they were used instead...
      */
     case attrnav_eItemType_PnParValue:
     case attrnav_eItemType_PnParEnum: {
@@ -130,18 +130,17 @@ void GsdmlAttrNavGtk::display_attr_help_text()
       //If we do have help available show it
       if (vi && vi->Body.Help.p)
         ((GsdmlAttrGtk*)parent_ctx)->attr_help_text((char*)vi->Body.Help.p);
+      else
+        ((GsdmlAttrGtk*)parent_ctx)->attr_help_text("");
 
       break;
     }
-    case attrnav_eItemType_PnEnumValue: {
-
+    default: {
       // Do we have an associated info text string to show the user some more info?
       if (base_item->info_text)
         ((GsdmlAttrGtk*)parent_ctx)->attr_help_text(base_item->info_text);
-
-      break;
+      else
+        ((GsdmlAttrGtk*)parent_ctx)->attr_help_text("");
     }
-    default:
-      ((GsdmlAttrGtk*)parent_ctx)->attr_help_text("");
   }
 }

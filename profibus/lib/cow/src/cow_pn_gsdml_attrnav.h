@@ -286,9 +286,7 @@ class ItemPnEnumValue : public ItemPn {
 class ItemPnEnumValueMType : public ItemPn {
    public:
     ItemPnEnumValueMType( GsdmlAttrNav *attrnav, const char *item_name, const char *item_number, 
-			  int item_num, 
-			  int item_type_id,
-			  void *attr_value_p, brow_tNode dest, flow_eDest dest_code);
+                          int item_num, int item_type_id, void *attr_value_p, brow_tNode dest, flow_eDest dest_code, const char *info_text = 0);
     int			num;
     int			type_id;
     void		*value_p;
