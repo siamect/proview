@@ -706,9 +706,11 @@ int GsdmlAttrNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 	}
       }
     }
+
     brow_SelectClear( attrnav->brow->ctx);
     brow_SetInverse( object, 1);
     brow_SelectInsert( attrnav->brow->ctx, object);
+    attrnav->display_attr_help_text();
     if ( !brow_IsVisible( attrnav->brow->ctx, object, flow_eVisible_Full))
       brow_CenterObject( attrnav->brow->ctx, object, 0.25);
     if ( node_count)
@@ -743,6 +745,7 @@ int GsdmlAttrNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
     brow_SelectClear( attrnav->brow->ctx);
     brow_SetInverse( object, 1);
     brow_SelectInsert( attrnav->brow->ctx, object);
+    attrnav->display_attr_help_text();
     if ( !brow_IsVisible( attrnav->brow->ctx, object, flow_eVisible_Full))
       brow_CenterObject( attrnav->brow->ctx, object, 0.75);
     if ( node_count)
@@ -780,6 +783,7 @@ int GsdmlAttrNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 	brow_SelectClear( attrnav->brow->ctx);
 	brow_SetInverse( event->object.object, 1);
 	brow_SelectInsert( attrnav->brow->ctx, event->object.object);
+	attrnav->display_attr_help_text();
       }
       break;
     default:
@@ -859,6 +863,7 @@ int GsdmlAttrNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
     brow_SelectClear( attrnav->brow->ctx);
     brow_SetInverse( object, 1);
     brow_SelectInsert( attrnav->brow->ctx, object);
+    attrnav->display_attr_help_text();
     if ( !brow_IsVisible( attrnav->brow->ctx, object, flow_eVisible_Full))
       brow_CenterObject( attrnav->brow->ctx, object, 0.25);
     free( node_list);
@@ -2047,8 +2052,8 @@ int ItemPn::close( GsdmlAttrNav *attrnav, double x, double y)
 }
 
 ItemPnEnumValue::ItemPnEnumValue( GsdmlAttrNav *attrnav, const char *item_name, int item_num, 
-	int item_type_id, void *attr_value_p, 
-	brow_tNode dest, flow_eDest dest_code) :
+	int item_type_id, void *attr_value_p,
+	brow_tNode dest, flow_eDest dest_code, const char *info_text) : ItemPn(info_text),
 	num(item_num), type_id(item_type_id), value_p(attr_value_p), first_scan(1)
 {
 
@@ -2175,10 +2180,11 @@ int ItemPnDevice::open_children( GsdmlAttrNav *attrnav, double x, double y)
 			 &attrnav->device_num, node, flow_eDest_IntoLast);
     
     for ( unsigned int i = 0; i < attrnav->gsdml->ApplicationProcess->DeviceAccessPointList->DeviceAccessPointItem.size(); i++) {
+      gsdml_DeviceAccessPointItem *item = attrnav->gsdml->ApplicationProcess->DeviceAccessPointList->DeviceAccessPointItem[i];
       char name[80];
-      strncpy( name, (char *)attrnav->gsdml->ApplicationProcess->DeviceAccessPointList->DeviceAccessPointItem[i]->ModuleInfo->Body.Name.p, sizeof(name));
-      new ItemPnEnumValue( attrnav, name, idx++, pwr_eType_UInt32, 
-			   &attrnav->device_num, node, flow_eDest_IntoLast);
+      snprintf(name, sizeof(name), "%s (%s)", (char*)item->ModuleInfo->Body.Name.p, item->ModuleInfo->Body.OrderNumber);
+      new ItemPnEnumValue( attrnav, name, idx++, pwr_eType_UInt32,
+                           &attrnav->device_num, node, flow_eDest_IntoLast, (char *)item->ModuleInfo->Body.InfoText.p);
     }
 
     brow_SetOpen( node, attrnav_mOpen_Children);

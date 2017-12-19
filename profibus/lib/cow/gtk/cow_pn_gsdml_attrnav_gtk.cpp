@@ -100,3 +100,48 @@ void GsdmlAttrNavGtk::set_inputfocus()
 {
   gtk_widget_grab_focus( brow_widget);
 }
+
+void GsdmlAttrNavGtk::display_attr_help_text()
+{
+  brow_tNode	*node_list;
+  int		node_count;
+  ItemPn	*base_item;
+
+  brow_GetSelectedNodes( brow->ctx, &node_list, &node_count);
+  if ( !node_count)
+    return;
+
+  brow_GetUserData( node_list[0], (void **)&base_item);
+  free( node_list);
+
+  switch( base_item->type) {
+    /*
+     * The following two item types could make use if the same info_text in the base class as PnEnumValue does
+     * but since they already contained references to they were used instead...
+     */
+    case attrnav_eItemType_PnParValue:
+    case attrnav_eItemType_PnParEnum: {
+      ItemPnParEnum *item = (ItemPnParEnum *)base_item;
+      gsdml_ValueItem *vi = 0;
+
+      if (item->value_ref)
+         vi = (gsdml_ValueItem *)item->value_ref->Body.ValueItemTarget.p;
+
+      //If we do have help available show it
+      if (vi && vi->Body.Help.p)
+        ((GsdmlAttrGtk*)parent_ctx)->attr_help_text((char*)vi->Body.Help.p);
+
+      break;
+    }
+    case attrnav_eItemType_PnEnumValue: {
+
+      // Do we have an associated info text string to show the user some more info?
+      if (base_item->info_text)
+        ((GsdmlAttrGtk*)parent_ctx)->attr_help_text(base_item->info_text);
+
+      break;
+    }
+    default:
+      ((GsdmlAttrGtk*)parent_ctx)->attr_help_text("");
+  }
+}

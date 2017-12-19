@@ -66,6 +66,14 @@ void GsdmlAttrGtk::message( char severity, const char *message)
   gtk_label_set_text( GTK_LABEL(msg_label), message);
 }
 
+void GsdmlAttrGtk::attr_help_text(const char *help_text)
+{
+  GtkTextBuffer *buffer;
+
+  buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(this->help_text));
+  gtk_text_buffer_set_text(buffer, help_text, -1);
+}
+
 void GsdmlAttrGtk::set_prompt( const char *prompt)
 {
   if ( strcmp(prompt, "") == 0) {
@@ -486,6 +494,24 @@ GsdmlAttrGtk::GsdmlAttrGtk( GtkWidget *a_parent_wid,
   attrnav->message_cb = &GsdmlAttr::gsdmlattr_message;
   attrnav->change_value_cb = &GsdmlAttr::gsdmlattr_change_value_cb;
 
+  // Attribute Help Text
+  GtkWidget *help_area = gtk_hbox_new( FALSE, 0);
+
+  //We want scrollbars to the right in case the help text is very long
+  GtkWidget *scroll_window = gtk_scrolled_window_new(NULL, NULL);
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scroll_window), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+
+  // Set up the text view
+  help_text = gtk_text_view_new();
+  gtk_text_view_set_editable(GTK_TEXT_VIEW(help_text), FALSE);
+  gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(help_text), GTK_WRAP_WORD);
+  gtk_widget_set_can_focus(help_text, FALSE);
+  gtk_widget_set_size_request(help_text, -1, 100);
+
+  //Add the text view to the container and pack it in the layout
+  gtk_container_add(GTK_CONTAINER(scroll_window), help_text);
+  gtk_box_pack_start( GTK_BOX(help_area), scroll_window, TRUE, TRUE, 0);
+
   // Status bar and value input
   GtkWidget *statusbar = gtk_hbox_new( FALSE, 0);
   msg_label = gtk_label_new( "");
@@ -523,6 +549,7 @@ GsdmlAttrGtk::GsdmlAttrGtk( GtkWidget *a_parent_wid,
 
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(vbox), brow_widget, TRUE, TRUE, 0);
+  gtk_box_pack_start( GTK_BOX(vbox), help_area, FALSE, FALSE, 3);
   gtk_box_pack_start( GTK_BOX(vbox), statusbar, FALSE, FALSE, 3);
   gtk_box_pack_start( GTK_BOX(vbox), gtk_hseparator_new(), FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(vbox), hboxbuttons, FALSE, FALSE, 5);

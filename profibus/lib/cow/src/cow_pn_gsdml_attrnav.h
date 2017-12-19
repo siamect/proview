@@ -120,7 +120,7 @@ class ItemPn;
 //! Class for handling of brow.
 class GsdmlAttrNavBrow {
   public:
-    GsdmlAttrNavBrow( BrowCtx *brow_ctx, void *xn) : ctx(brow_ctx), attrnav(xn) {};
+    GsdmlAttrNavBrow( BrowCtx *brow_ctx, void *xn) : ctx(brow_ctx), attrnav(xn) {}
     ~GsdmlAttrNavBrow();
 
     BrowCtx		*ctx;
@@ -184,6 +184,7 @@ class GsdmlAttrNav {
 	pwr_tStatus *status);
     virtual ~GsdmlAttrNav();
 
+    virtual void display_attr_help_text() {}
     virtual void set_inputfocus() {}
     
     void start_trace( pwr_tObjid Objid, char *object_str);
@@ -229,11 +230,13 @@ class GsdmlAttrNav {
 
 class ItemPn {
  public:
-  ItemPn() : parent(0) {}
+  ItemPn() : parent(0), info_text(0) {}
+  ItemPn(const char *info_text) : parent(0), info_text(info_text) {}
   attrnav_eItemType	type;
   brow_tNode		node;
   char	 		name[120];
   int			parent;
+  const char            *info_text;
 
   virtual ~ItemPn() {}
   
@@ -269,8 +272,7 @@ class ItemPnBase : public ItemPn {
 class ItemPnEnumValue : public ItemPn {
   public:
     ItemPnEnumValue( GsdmlAttrNav *attrnav, const char *item_name, int item_num, 
-	int item_type_id,
-	void *attr_value_p, brow_tNode dest, flow_eDest dest_code);
+        int item_type_id, void *attr_value_p, brow_tNode dest, flow_eDest dest_code, const char *info_text = 0);
     int			num;
     int			type_id;
     void		*value_p;

@@ -3456,7 +3456,7 @@ void gsdml_ModuleInfo::build()
     Body.SubCategory1Ref.p = gsdml->find_category_ref( Body.SubCategory1Ref.ref);
     if ( !Body.SubCategory1Ref.p)
       gsdml->error_message("SubCategory1Ref not found: \"%s\"", Body.SubCategory1Ref.ref);
-  }  
+  }
 }
 
 void gsdml_ModuleInfo::print( int ind)
@@ -5067,6 +5067,11 @@ void gsdml_ValueItem::build()
   if ( Assignments) {
     for ( unsigned int i = 0; i < Assignments->Assign.size(); i++)
       Assignments->Assign[i]->build();
+  }
+  if ( strcmp( Body.Help.ref, "") != 0) {
+    Body.Help.p = gsdml->find_text_ref( Body.Help.ref);
+    if ( Body.Help.p == noref)
+      gsdml->error_message("Help not found: \"%s\"", Body.Help.ref);
   }
 }
 
