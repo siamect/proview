@@ -246,6 +246,12 @@ void GlowArray::copy_from( const GlowArray& array)
         insert( n);
         break;
       }
+      case glow_eObjectType_GrowAnnot: 
+      {
+        GrowAnnot *n = new GrowAnnot( *(GrowAnnot *)array.a[i]);
+        insert( n);
+        break;
+      }
       case glow_eObjectType_GrowAxisArc:
       {
         GrowAxisArc *n = new GrowAxisArc(*(GrowAxisArc *)array.a[i]);
