@@ -469,6 +469,8 @@ GeDyn::GeDyn( const GeDyn& x) :
       e = new GeDigSwap((const GeDigSwap&) *elem); break;
     case ge_mDynType2_DigScript:
       e = new GeDigScript((const GeDigScript&) *elem); break;
+    case ge_mDynType2_RefUpdate:
+      e = new GeRefUpdate((const GeRefUpdate&) *elem); break;
     default: ;
     }
     switch( elem->action_type1) {
@@ -611,6 +613,7 @@ void GeDyn::open( ifstream& fp)
       case ge_eSave_DigBackgroundColor: e = (GeDynElem *) new GeDigBackgroundColor(this); break;
       case ge_eSave_DigSwap: e = (GeDynElem *) new GeDigSwap(this); break;
       case ge_eSave_DigScript: e = (GeDynElem *) new GeDigScript(this); break;
+      case ge_eSave_RefUpdate: e = (GeDynElem *) new GeRefUpdate(this); break;
       case ge_eSave_Animation: e = (GeDynElem *) new GeAnimation(this); break;
       case ge_eSave_Video: e = (GeDynElem *) new GeVideo(this); break;
       case ge_eSave_Bar: e = (GeDynElem *) new GeBar(this); break;
@@ -992,7 +995,8 @@ char *GeDyn::printstr( char *str)
 }
 
 graph_eDatabase GeDyn::parse_attr_name( char *name, char *parsed_name, 
-					int *inverted, int *type, int *size, int *elem) 
+					int *inverted, int *type, int *size, int *elem,
+					graph_mParseOpt options) 
 {
   char *s;
 
@@ -1007,9 +1011,9 @@ graph_eDatabase GeDyn::parse_attr_name( char *name, char *parsed_name,
     strcpy( &n[s-name], hostobject);
     strcat( n, s+strlen("$hostobject"));
 
-    return graph->parse_attr_name( n, parsed_name, inverted, type, size, elem);
+    return graph->parse_attr_name( n, parsed_name, inverted, type, size, elem, options);
   }
-  return graph->parse_attr_name( name, parsed_name, inverted, type, size, elem);
+  return graph->parse_attr_name( name, parsed_name, inverted, type, size, elem, options);
 }
 void GeDyn::set_value_input( const char *format, double min_value, double max_value)
 {
@@ -1592,6 +1596,9 @@ GeDynElem *GeDyn::create_dyn2_element( int mask, int instance)
   case ge_mDynType2_DigScript:
     e = (GeDynElem *) new GeDigScript(this, (ge_mInstance)instance);
     break;
+  case ge_mDynType2_RefUpdate:
+    e = (GeDynElem *) new GeRefUpdate(this, (ge_mInstance)instance);
+    break;
   default: ;
   }
   return e;
@@ -1810,6 +1817,9 @@ GeDynElem *GeDyn::copy_element( GeDynElem& x)
     case ge_mDynType2_DigScript:
       e = (GeDynElem *) new GeDigScript((GeDigScript&) x);
       break;
+    case ge_mDynType2_RefUpdate:
+      e = (GeDynElem *) new GeRefUpdate((GeRefUpdate&) x);
+      break;
     default: ;
     }
   }
@@ -1889,7 +1899,7 @@ int GeDyn::disconnect( grow_tObject object)
   return 1;
 }
 
-int GeDyn::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeDyn::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int inherit_dyn_type1;
   int inherit_dyn_type2;
@@ -1940,7 +1950,7 @@ int GeDyn::connect( grow_tObject object, glow_sTraceData *trace_data)
     grow_GetObjectClassCycle( object, &cycle);
 
   for ( GeDynElem *elem = elements; elem; elem = elem->next)
-    elem->connect( object, trace_data);
+    elem->connect( object, trace_data, now);
   return 1;
 }
 
@@ -1953,6 +1963,7 @@ int GeDyn::scan( grow_tObject object)
   reset_bgcolor = false;
   ignore_bgcolor = false;
   reset_invisible = false;
+
   ignore_invisible = false;
   reset_text_a1 = false;
   ignore_text_a1 = false;
@@ -2354,7 +2365,7 @@ void GeDigLowColor::open( ifstream& fp)
   }  
 }
 
-int GeDigLowColor::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeDigLowColor::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int		attr_type, attr_size;
   pwr_tAName   	parsed_name;
@@ -2382,7 +2393,7 @@ int GeDigLowColor::connect( grow_tObject object, glow_sTraceData *trace_data)
     p = (pwr_tBoolean *) dyn->graph->localdb_ref_or_create( parsed_name, attr_type);
     break;
   case graph_eDatabase_Gdh:
-    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object);
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object, now);
     if ( EVEN(sts)) return sts;
     break;
   default: ;
@@ -2444,6 +2455,20 @@ int GeDigLowColor::scan( grow_tObject object)
   old_value = val;
 
   return 1;
+}
+
+void GeDigLowColor::reset( grow_tObject object)
+{
+  if ( dyn->total_dyn_type1 & ge_mDynType1_Tone) {
+    if ( color >= (glow_eDrawType) glow_eDrawTone__)
+      grow_SetObjectFillColor( object, color);
+    else
+      grow_SetObjectColorTone( object, (glow_eDrawTone) color);
+  }
+  else
+    grow_SetObjectFillColor( object, color);
+
+  old_value = 0;
 }
 
 int GeDigLowColor::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
@@ -2656,7 +2681,7 @@ void GeDigColor::open( ifstream& fp)
   }  
 }
 
-int GeDigColor::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeDigColor::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int		attr_type, attr_size;
   pwr_tAName   	parsed_name;
@@ -2678,7 +2703,7 @@ int GeDigColor::connect( grow_tObject object, glow_sTraceData *trace_data)
 
   get_bit( parsed_name, attr_type, &bitmask);
 
-  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object);
+  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object, now);
   a_typeid = attr_type;
 
   if ( EVEN(sts)) return sts;
@@ -2751,6 +2776,19 @@ int GeDigColor::scan( grow_tObject object)
   old_value = val;
 
   return 1;
+}
+
+void GeDigColor::reset( grow_tObject object)
+{
+  if ( dyn->total_dyn_type1 & ge_mDynType1_Tone) {
+    if ( color >= (glow_eDrawType) glow_eDrawTone__)
+      grow_ResetObjectFillColor( object);
+    grow_ResetObjectColorTone( object);
+  }
+  else
+    grow_ResetObjectFillColor( object);
+  
+  old_value = 0;
 }
 
 int GeDigColor::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
@@ -2863,7 +2901,7 @@ void GeDigWarning::open( ifstream& fp)
   }  
 }
 
-int GeDigWarning::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeDigWarning::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int		attr_type, attr_size;
   pwr_tAName   	parsed_name;
@@ -2879,7 +2917,7 @@ int GeDigWarning::connect( grow_tObject object, glow_sTraceData *trace_data)
   a_typeid = attr_type;
   get_bit( parsed_name, attr_type, &bitmask);
 
-  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object);
+  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object, now);
   if ( EVEN(sts)) return sts;
 
   trace_data->p = &pdummy;
@@ -3041,7 +3079,7 @@ void GeDigError::open( ifstream& fp)
   }  
 }
 
-int GeDigError::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeDigError::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int		attr_type, attr_size;
   pwr_tAName   	parsed_name;
@@ -3057,7 +3095,7 @@ int GeDigError::connect( grow_tObject object, glow_sTraceData *trace_data)
   a_typeid = attr_type;
   get_bit( parsed_name, attr_type, &bitmask);
 
-  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object);
+  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object, now);
   if ( EVEN(sts)) return sts;
 
   trace_data->p = &pdummy;
@@ -3262,7 +3300,7 @@ void GeDigFlash::open( ifstream& fp)
   }
 }
 
-int GeDigFlash::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeDigFlash::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int		attr_type, attr_size;
   pwr_tAName   	parsed_name;
@@ -3286,7 +3324,7 @@ int GeDigFlash::connect( grow_tObject object, glow_sTraceData *trace_data)
 
   a_typeid = attr_type;
 
-  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object);
+  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object, now);
   if ( EVEN(sts)) return sts;
 
   trace_data->p = &pdummy;
@@ -3529,7 +3567,7 @@ void GeInvisible::open( ifstream& fp)
   }  
 }
 
-int GeInvisible::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeInvisible::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int		attr_type, attr_size;
   pwr_tAName   	parsed_name;
@@ -3569,7 +3607,7 @@ int GeInvisible::connect( grow_tObject object, glow_sTraceData *trace_data)
   else {
     switch ( db) {
     case graph_eDatabase_Gdh:
-      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object);
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object, now);
       if ( EVEN(sts)) return sts;
       break;
     case graph_eDatabase_Local:
@@ -3742,7 +3780,7 @@ void GeDigTextColor::open( ifstream& fp)
   }  
 }
 
-int GeDigTextColor::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeDigTextColor::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int		attr_type, attr_size;
   pwr_tAName   	parsed_name;
@@ -3765,7 +3803,7 @@ int GeDigTextColor::connect( grow_tObject object, glow_sTraceData *trace_data)
   get_bit( parsed_name, attr_type, &bitmask);
   a_typeid = attr_type;
 
-  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object);
+  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object, now);
   if ( EVEN(sts)) return sts;
 
   trace_data->p = &pdummy;
@@ -3913,7 +3951,7 @@ void GeDigBorder::open( ifstream& fp)
   }  
 }
 
-int GeDigBorder::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeDigBorder::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int		attr_type, attr_size;
   pwr_tAName   	parsed_name;
@@ -3936,7 +3974,7 @@ int GeDigBorder::connect( grow_tObject object, glow_sTraceData *trace_data)
   get_bit( parsed_name, attr_type, &bitmask);
   a_typeid = attr_type;
 
-  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object);
+  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object, now);
   if ( EVEN(sts)) return sts;
 
   trace_data->p = &pdummy;
@@ -4141,7 +4179,7 @@ void GeDigText::open( ifstream& fp)
   }  
 }
 
-int GeDigText::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeDigText::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int		attr_type, attr_size;
   pwr_tAName   	parsed_name;
@@ -4157,7 +4195,7 @@ int GeDigText::connect( grow_tObject object, glow_sTraceData *trace_data)
   get_bit( parsed_name, attr_type, &bitmask);
   a_typeid = attr_type;
 
-  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object);
+  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object, now);
   if ( EVEN(sts)) return sts;
 
   trace_data->p = &pdummy;
@@ -4474,7 +4512,7 @@ static int read_decimals( GeDyn *dyn, char *attr, int decr, char *format)
   return 1;
 }
 
-int GeValue::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeValue::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int		attr_type, attr_size;
   pwr_tAName   	parsed_name;
@@ -4515,7 +4553,7 @@ int GeValue::connect( grow_tObject object, glow_sTraceData *trace_data)
     default: ;
     }
 
-    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, &p, &subid, attr_size, object);
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, &p, &subid, attr_size, object, now);
     if ( EVEN(sts)) return sts;
     if ( attr_type != 0)
       annot_typeid = attr_type;
@@ -4564,6 +4602,13 @@ int GeValue::connect( grow_tObject object, glow_sTraceData *trace_data)
 
 int GeValue::disconnect( grow_tObject object)
 {
+  int annot_num = GeDyn::instance_to_number( instance);
+
+  if ( grow_AnnotationInputIsOpen( object, annot_num)) {
+    grow_CloseAnnotationInput( object, annot_num);
+    grow_SetObjectInputFocus( object, 0, glow_eEvent_Null);
+  }
+
   if ( p && db == graph_eDatabase_Gdh)
     gdh_UnrefObjectInfo( subid);
   p = 0;
@@ -5008,6 +5053,14 @@ int GeValue::scan( grow_tObject object)
   return 1;
 }
 
+void GeValue::reset( grow_tObject object)
+{
+  int annot_num = GeDyn::instance_to_number( instance);
+
+  grow_SetAnnotation( object, annot_num, "", 0);
+  memset( &old_value, 0, sizeof(old_value));
+}
+
 int GeValue::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
 {
   if ( first)
@@ -5201,7 +5254,7 @@ void GeValueInput::open( ifstream& fp)
   }
 }
 
-int GeValueInput::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeValueInput::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
 
   // Get the Value element
@@ -5849,7 +5902,7 @@ void GeAnalogColor::open( ifstream& fp)
   }
 }
 
-int GeAnalogColor::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeAnalogColor::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   pwr_tAName   	parsed_name;
   int		inverted;
@@ -5896,7 +5949,7 @@ int GeAnalogColor::connect( grow_tObject object, glow_sTraceData *trace_data)
     }
 
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p,
-				       &subid, size, object);
+				       &subid, size, object, now);
     if ( EVEN(sts)) return sts;
 
     trace_data->p = &pdummy;
@@ -6185,7 +6238,7 @@ void GeRotate::open( ifstream& fp)
   }
 }
 
-int GeRotate::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeRotate::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int		attr_type, attr_size;
   pwr_tAName   	parsed_name;
@@ -6199,7 +6252,7 @@ int GeRotate::connect( grow_tObject object, glow_sTraceData *trace_data)
   if ( strcmp( parsed_name,"") == 0)
     return 1;
 
-  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object);
+  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object, now);
   if ( EVEN(sts)) return sts;
 
   trace_data->p = &pdummy;
@@ -6460,7 +6513,7 @@ void GeMove::open( ifstream& fp)
     scale_y_factor = scale_x_factor;
 }
 
-int GeMove::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeMove::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   pwr_tAName   	parsed_name;
   int		inverted;
@@ -6478,7 +6531,7 @@ int GeMove::connect( grow_tObject object, glow_sTraceData *trace_data)
 				    &inverted, &move_x_type, &move_x_size);
   if ( strcmp( parsed_name,"") != 0) {
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&move_x_p, 
-				       &move_x_subid, move_x_size, object);
+				       &move_x_subid, move_x_size, object, now);
     if ( EVEN(sts)) return sts;
   }
   move_y_size = 4;
@@ -6487,7 +6540,7 @@ int GeMove::connect( grow_tObject object, glow_sTraceData *trace_data)
 				    &inverted, &move_y_type, &move_y_size);
   if ( strcmp( parsed_name,"") != 0) {
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&move_y_p, 
-				       &move_y_subid, move_y_size, object);
+				       &move_y_subid, move_y_size, object, now);
     if ( EVEN(sts)) return sts;
   }
   scale_x_size = 4;
@@ -6496,7 +6549,7 @@ int GeMove::connect( grow_tObject object, glow_sTraceData *trace_data)
 				    &inverted, &scale_x_type, &scale_x_size);
   if ( strcmp( parsed_name,"") != 0) {
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&scale_x_p, 
-				       &scale_x_subid, scale_x_size, object);
+				       &scale_x_subid, scale_x_size, object, now);
     if ( EVEN(sts)) return sts;
   }
   scale_y_size = 4;
@@ -6505,7 +6558,7 @@ int GeMove::connect( grow_tObject object, glow_sTraceData *trace_data)
 				    &inverted, &scale_y_type, &scale_y_size);
   if ( strcmp( parsed_name,"") != 0) {
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&scale_y_p, 
-				       &scale_y_subid, scale_y_size, object);
+				       &scale_y_subid, scale_y_size, object, now);
     if ( EVEN(sts)) return sts;
   }
   trace_data->p = &pdummy;
@@ -6803,7 +6856,7 @@ void GeAnalogShift::open( ifstream& fp)
   }  
 }
 
-int GeAnalogShift::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeAnalogShift::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   pwr_tAName   	parsed_name;
   int		inverted;
@@ -6826,7 +6879,7 @@ int GeAnalogShift::connect( grow_tObject object, glow_sTraceData *trace_data)
     return 1;
   }
 
-  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object);
+  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object, now);
   if ( EVEN(sts)) return sts;
 
   trace_data->p = &pdummy;
@@ -6984,7 +7037,7 @@ void GeDigShift::open( ifstream& fp)
   }  
 }
 
-int GeDigShift::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeDigShift::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int		attr_type, attr_size;
   pwr_tAName   	parsed_name;
@@ -7002,7 +7055,7 @@ int GeDigShift::connect( grow_tObject object, glow_sTraceData *trace_data)
 
   switch ( db) {
   case graph_eDatabase_Gdh:
-    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object);
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object, now);
     if ( EVEN(sts)) return sts;
     break;
   case graph_eDatabase_Ccm:
@@ -7169,7 +7222,7 @@ void GeDigFourShift::open( ifstream& fp)
   }  
 }
 
-int GeDigFourShift::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeDigFourShift::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int		attr_type, attr_size;
   pwr_tAName   	parsed_name;
@@ -7185,7 +7238,7 @@ int GeDigFourShift::connect( grow_tObject object, glow_sTraceData *trace_data)
 
     switch ( db1) {
     case graph_eDatabase_Gdh:
-      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p1, &subid1, size1, object);
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p1, &subid1, size1, object, now);
       if ( EVEN(sts)) return sts;
       break;
     case graph_eDatabase_Ccm:
@@ -7206,7 +7259,7 @@ int GeDigFourShift::connect( grow_tObject object, glow_sTraceData *trace_data)
 
     switch ( db2) {
     case graph_eDatabase_Gdh:
-      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p2, &subid2, size2, object);
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p2, &subid2, size2, object, now);
       if ( EVEN(sts)) return sts;
       break;
     case graph_eDatabase_Ccm:
@@ -7228,7 +7281,7 @@ int GeDigFourShift::connect( grow_tObject object, glow_sTraceData *trace_data)
 
     switch ( db3) {
     case graph_eDatabase_Gdh:
-      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p3, &subid3, size3, object);
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p3, &subid3, size3, object, now);
       if ( EVEN(sts)) return sts;
       break;
     case graph_eDatabase_Ccm:
@@ -7435,7 +7488,7 @@ void GeScrollingText::open( ifstream& fp)
   }  
 }
 
-int GeScrollingText::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeScrollingText::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int		attr_type, attr_size, inverted;
   pwr_tAName   	parsed_name;
@@ -7450,7 +7503,7 @@ int GeScrollingText::connect( grow_tObject object, glow_sTraceData *trace_data)
 
     switch ( db) {
     case graph_eDatabase_Gdh:
-      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object);
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object, now);
       if ( EVEN(sts)) return sts;
       break;
     case graph_eDatabase_Ccm:
@@ -7644,7 +7697,7 @@ void GeColorThemeLightness::open( ifstream& fp)
   }  
 }
 
-int GeColorThemeLightness::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeColorThemeLightness::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   trace_data->p = &pdummy;
   return 1;
@@ -7794,7 +7847,7 @@ void GeDigBackgroundColor::open( ifstream& fp)
   }  
 }
 
-int GeDigBackgroundColor::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeDigBackgroundColor::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int		attr_type, attr_size;
   pwr_tAName   	parsed_name;
@@ -7816,7 +7869,7 @@ int GeDigBackgroundColor::connect( grow_tObject object, glow_sTraceData *trace_d
 
   get_bit( parsed_name, attr_type, &bitmask);
 
-  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object);
+  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object, now);
   a_typeid = attr_type;
 
   if ( EVEN(sts)) return sts;
@@ -7981,7 +8034,7 @@ void GeDigSwap::open( ifstream& fp)
   }  
 }
 
-int GeDigSwap::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeDigSwap::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int		attr_type, attr_size;
   pwr_tAName   	parsed_name;
@@ -7998,7 +8051,7 @@ int GeDigSwap::connect( grow_tObject object, glow_sTraceData *trace_data)
 
   switch ( db) {
   case graph_eDatabase_Gdh:
-    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object);
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object, now);
     if ( EVEN(sts)) return sts;
     break;
   case graph_eDatabase_Local:
@@ -8183,7 +8236,7 @@ void GeAnimation::open( ifstream& fp)
   }  
 }
 
-int GeAnimation::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeAnimation::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int		attr_type, attr_size;
   pwr_tAName   	parsed_name;
@@ -8200,7 +8253,7 @@ int GeAnimation::connect( grow_tObject object, glow_sTraceData *trace_data)
   get_bit( parsed_name, attr_type, &bitmask);
   a_typeid = attr_type;
 
-  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object);
+  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object, now);
   if ( EVEN(sts)) return sts;
 
   trace_data->p = &pdummy;
@@ -8406,7 +8459,7 @@ void GeVideo::open( ifstream& fp)
   }  
 }
 
-int GeVideo::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeVideo::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   trace_data->p = (void *) 1;
   return 1;
@@ -8551,7 +8604,7 @@ void GeBar::open( ifstream& fp)
   }
 }
 
-int GeBar::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeBar::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int		attr_type, attr_size;
   pwr_tAName   	parsed_name;
@@ -8568,7 +8621,7 @@ int GeBar::connect( grow_tObject object, glow_sTraceData *trace_data)
   switch ( db) {
   case graph_eDatabase_Gdh:
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, 
-				       &subid, attr_size, object);
+				       &subid, attr_size, object, now);
     if ( EVEN(sts)) return sts;
     bar_typeid = attr_type;
     break;
@@ -8590,7 +8643,7 @@ int GeBar::connect( grow_tObject object, glow_sTraceData *trace_data)
     switch ( min_value_db) {
     case graph_eDatabase_Gdh:
       sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&min_value_p, 
-				       &min_value_subid, attr_size, object);
+				       &min_value_subid, attr_size, object, now);
       break;
     case graph_eDatabase_Local:
       min_value_p = (pwr_tFloat32 *) dyn->graph->localdb_ref_or_create( parsed_name, attr_type);
@@ -8608,7 +8661,7 @@ int GeBar::connect( grow_tObject object, glow_sTraceData *trace_data)
     switch ( min_value_db) {
     case graph_eDatabase_Gdh:
       sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value_p, 
-					 &max_value_subid, attr_size, object);
+					 &max_value_subid, attr_size, object, now);
       break;
     case graph_eDatabase_Local:
       max_value_p = (pwr_tFloat32 *) dyn->graph->localdb_ref_or_create( parsed_name, attr_type);
@@ -8893,7 +8946,7 @@ void GeTrend::open( ifstream& fp)
   }
 }
 
-int GeTrend::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeTrend::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int		attr_type, attr_size;
   pwr_tAName   	parsed_name;
@@ -8910,7 +8963,7 @@ int GeTrend::connect( grow_tObject object, glow_sTraceData *trace_data)
     switch ( db1) {
     case graph_eDatabase_Gdh:
       sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p1, 
-				       &subid1, attr_size, object);
+				       &subid1, attr_size, object, now);
       if ( EVEN(sts)) return sts;
       trend_typeid1 = attr_type;
       break;
@@ -8933,7 +8986,7 @@ int GeTrend::connect( grow_tObject object, glow_sTraceData *trace_data)
     switch ( db2) {
     case graph_eDatabase_Gdh:
       sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p2, 
-					 &subid2, attr_size, object);
+					 &subid2, attr_size, object, now);
       if ( EVEN(sts)) return sts;
       trend_typeid2 = attr_type;
       break;
@@ -8961,7 +9014,7 @@ int GeTrend::connect( grow_tObject object, glow_sTraceData *trace_data)
     switch ( min_value1_db) {
     case graph_eDatabase_Gdh:
       sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&min_value1_p, 
-				       &min_value_subid1, attr_size, object);
+				       &min_value_subid1, attr_size, object, now);
       break;
     case graph_eDatabase_Local:
       min_value1_p = (pwr_tFloat32 *) dyn->graph->localdb_ref_or_create( parsed_name, attr_type);
@@ -8978,7 +9031,7 @@ int GeTrend::connect( grow_tObject object, glow_sTraceData *trace_data)
     switch ( max_value1_db) {
     case graph_eDatabase_Gdh:
       sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value1_p, 
-					 &max_value_subid1, attr_size, object);
+					 &max_value_subid1, attr_size, object, now);
       break;
     case graph_eDatabase_Local:
       max_value1_p = (pwr_tFloat32 *) dyn->graph->localdb_ref_or_create( parsed_name, attr_type);
@@ -8993,7 +9046,7 @@ int GeTrend::connect( grow_tObject object, glow_sTraceData *trace_data)
   if ( strcmp(parsed_name, "") != 0 && 
        attr_type == pwr_eType_Float32) {
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&min_value2_p, 
-				       &min_value_subid2, attr_size, object);
+				       &min_value_subid2, attr_size, object, now);
   }
   max_value2_p = 0;
   dyn->parse_attr_name( maxvalue_attr2, parsed_name,
@@ -9001,7 +9054,7 @@ int GeTrend::connect( grow_tObject object, glow_sTraceData *trace_data)
   if ( strcmp(parsed_name, "") != 0 && 
        attr_type == pwr_eType_Float32) {
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value2_p, 
-				       &max_value_subid2, attr_size, object);
+				       &max_value_subid2, attr_size, object, now);
   }
 
   hold_p = 0;
@@ -9011,7 +9064,7 @@ int GeTrend::connect( grow_tObject object, glow_sTraceData *trace_data)
     switch ( hold_db) {
     case graph_eDatabase_Gdh:
       sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&hold_p, 
-					 &hold_subid, attr_size, object);
+					 &hold_subid, attr_size, object, now);
       if ( EVEN(sts)) return sts;
       break;
     case graph_eDatabase_Local:
@@ -9029,7 +9082,7 @@ int GeTrend::connect( grow_tObject object, glow_sTraceData *trace_data)
     switch ( timerange_db) {
     case graph_eDatabase_Gdh:
       sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&timerange_p, 
-					 &timerange_subid, attr_size, object);
+					 &timerange_subid, attr_size, object, now);
       if ( EVEN(sts)) return sts;
       break;
     case graph_eDatabase_Local:
@@ -9051,7 +9104,7 @@ int GeTrend::connect( grow_tObject object, glow_sTraceData *trace_data)
   if ( strcmp(parsed_name, "") != 0 && 
        attr_type == pwr_eType_Float32) {
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&mark1_p, 
-				       &mark1_subid, attr_size, object);
+				       &mark1_subid, attr_size, object, now);
   }
 
   mark2_p = 0;
@@ -9060,7 +9113,7 @@ int GeTrend::connect( grow_tObject object, glow_sTraceData *trace_data)
   if ( strcmp(parsed_name, "") != 0 && 
        attr_type == pwr_eType_Float32) {
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&mark2_p, 
-				       &mark2_subid, attr_size, object);
+				       &mark2_subid, attr_size, object, now);
   }
 
   grow_SetTrendNoOfCurves( object, attr_cnt);
@@ -9674,7 +9727,7 @@ void GeXY_Curve::open( ifstream& fp)
   }
 }
 
-int GeXY_Curve::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeXY_Curve::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int		attr_type, attr_size;
   pwr_tAName   	parsed_name;
@@ -9687,7 +9740,7 @@ int GeXY_Curve::connect( grow_tObject object, glow_sTraceData *trace_data)
   if ( strcmp( parsed_name,"") != 0) {
 
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&update_p, 
-				       &update_subid, attr_size, object);
+				       &update_subid, attr_size, object, now);
     if ( EVEN(sts)) return sts;
   }
 
@@ -9697,7 +9750,7 @@ int GeXY_Curve::connect( grow_tObject object, glow_sTraceData *trace_data)
   if ( strcmp(parsed_name, "") != 0 && 
        (attr_type == pwr_eType_Int32 || attr_type == pwr_eType_UInt32)) {
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&noofpoints_p, 
-				       &noofpoints_subid, attr_size, object);
+				       &noofpoints_subid, attr_size, object, now);
   }
 
   x_min_value_p = 0;
@@ -9706,7 +9759,7 @@ int GeXY_Curve::connect( grow_tObject object, glow_sTraceData *trace_data)
   if ( strcmp(parsed_name, "") != 0 && 
        attr_type == pwr_eType_Float32) {
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&x_min_value_p, 
-				       &x_min_value_subid, attr_size, object);
+				       &x_min_value_subid, attr_size, object, now);
   }
   x_max_value_p = 0;
   dyn->parse_attr_name( x_maxvalue_attr, parsed_name,
@@ -9714,7 +9767,7 @@ int GeXY_Curve::connect( grow_tObject object, glow_sTraceData *trace_data)
   if ( strcmp(parsed_name, "") != 0 && 
        attr_type == pwr_eType_Float32) {
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&x_max_value_p, 
-				       &x_max_value_subid, attr_size, object);
+				       &x_max_value_subid, attr_size, object, now);
   }
 
   y_min_value_p = 0;
@@ -9723,7 +9776,7 @@ int GeXY_Curve::connect( grow_tObject object, glow_sTraceData *trace_data)
   if ( strcmp(parsed_name, "") != 0 && 
        attr_type == pwr_eType_Float32) {
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&y_min_value_p, 
-				       &y_min_value_subid, attr_size, object);
+				       &y_min_value_subid, attr_size, object, now);
   }
   y_max_value_p = 0;
   dyn->parse_attr_name( y_maxvalue_attr, parsed_name,
@@ -9731,7 +9784,7 @@ int GeXY_Curve::connect( grow_tObject object, glow_sTraceData *trace_data)
   if ( strcmp(parsed_name, "") != 0 && 
        attr_type == pwr_eType_Float32) {
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&y_max_value_p, 
-				       &y_max_value_subid, attr_size, object);
+				       &y_max_value_subid, attr_size, object, now);
   }
 
   x_mark1_p = 0;
@@ -9740,7 +9793,7 @@ int GeXY_Curve::connect( grow_tObject object, glow_sTraceData *trace_data)
   if ( strcmp(parsed_name, "") != 0 && 
        attr_type == pwr_eType_Float32) {
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&x_mark1_p, 
-				       &x_mark1_subid, attr_size, object);
+				       &x_mark1_subid, attr_size, object, now);
   }
 
   x_mark2_p = 0;
@@ -9749,7 +9802,7 @@ int GeXY_Curve::connect( grow_tObject object, glow_sTraceData *trace_data)
   if ( strcmp(parsed_name, "") != 0 && 
        attr_type == pwr_eType_Float32) {
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&x_mark2_p, 
-				       &x_mark2_subid, attr_size, object);
+				       &x_mark2_subid, attr_size, object, now);
   }
 
   y_mark1_p = 0;
@@ -9758,7 +9811,7 @@ int GeXY_Curve::connect( grow_tObject object, glow_sTraceData *trace_data)
   if ( strcmp(parsed_name, "") != 0 && 
        attr_type == pwr_eType_Float32) {
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&y_mark1_p, 
-				       &y_mark1_subid, attr_size, object);
+				       &y_mark1_subid, attr_size, object, now);
   }
 
   y_mark2_p = 0;
@@ -9767,7 +9820,7 @@ int GeXY_Curve::connect( grow_tObject object, glow_sTraceData *trace_data)
   if ( strcmp(parsed_name, "") != 0 && 
        attr_type == pwr_eType_Float32) {
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&y_mark2_p, 
-				       &y_mark2_subid, attr_size, object);
+				       &y_mark2_subid, attr_size, object, now);
   }
 
   trace_data->p = &pdummy;
@@ -10550,7 +10603,7 @@ void GeTable::open( ifstream& fp)
   }
 }
 
-int GeTable::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeTable::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int		attr_type;
   int		attr_size;
@@ -10585,7 +10638,7 @@ int GeTable::connect( grow_tObject object, glow_sTraceData *trace_data)
       switch ( db[i]) {
       case graph_eDatabase_Gdh:
 	sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p[i], 
-					   &subid[i], col_size, object);
+					   &subid[i], col_size, object, now);
 	if ( EVEN(sts)) return sts;
 	type_id[i] = attr_type;
 	break;
@@ -10625,7 +10678,7 @@ int GeTable::connect( grow_tObject object, glow_sTraceData *trace_data)
 	  strcat( name, &parsed_name[7]);
 	  type_id[i] = attr_type;
 	  sts = dyn->graph->ref_object_info( dyn->cycle, name, (void **)&headerref_p[i][j],
-					   &headerref_subid[i][j], size[i], object);
+					   &headerref_subid[i][j], size[i], object, now);
 	  if ( EVEN(sts)) return sts;
 	}
       }
@@ -10686,7 +10739,7 @@ int GeTable::connect( grow_tObject object, glow_sTraceData *trace_data)
     switch ( sel_db[i]) {
     case graph_eDatabase_Gdh:
       sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&sel_p[i], 
-				       &sel_subid[i], sel_elements[i] * sizeof(pwr_tBoolean), object);
+				       &sel_subid[i], sel_elements[i] * sizeof(pwr_tBoolean), object, now);
       if ( EVEN(sts)) return sts;
       break;
     default:
@@ -11460,7 +11513,7 @@ void GeStatusColor::open( ifstream& fp)
   }  
 }
 
-int GeStatusColor::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeStatusColor::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int		attr_size;
   pwr_tAName   	parsed_name;
@@ -11481,7 +11534,7 @@ int GeStatusColor::connect( grow_tObject object, glow_sTraceData *trace_data)
   if ( strcmp( parsed_name,"") == 0)
     return 1;
 
-  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object);
+  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object, now);
   if ( EVEN(sts)) return sts;
 
   trace_data->p = &pdummy;
@@ -11756,7 +11809,7 @@ void GePie::open( ifstream& fp)
   }
 }
 
-int GePie::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GePie::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   pwr_tAName   	parsed_name;
   int		inverted;
@@ -11793,7 +11846,7 @@ int GePie::connect( grow_tObject object, glow_sTraceData *trace_data)
 
 
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p[i],
-				       &subid[i], asize, object);
+				       &subid[i], asize, object, now);
     if ( EVEN(sts)) return sts;
 
     trace_data->p = &pdummy;
@@ -12008,7 +12061,7 @@ void GeBarChart::open( ifstream& fp)
   }
 }
 
-int GeBarChart::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeBarChart::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   pwr_tAName   	parsed_name;
   int		inverted;
@@ -12051,7 +12104,7 @@ int GeBarChart::connect( grow_tObject object, glow_sTraceData *trace_data)
 
 
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p[i],
-				       &subid[i], bars * asize, object);
+				       &subid[i], bars * asize, object, now);
     if ( EVEN(sts)) return sts;
 
     trace_data->p = &pdummy;
@@ -12209,7 +12262,7 @@ void GeAxis::open( ifstream& fp)
   }  
 }
 
-int GeAxis::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeAxis::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   pwr_tAName   	parsed_name;
   int		attr_size;
@@ -12233,7 +12286,7 @@ int GeAxis::connect( grow_tObject object, glow_sTraceData *trace_data)
       switch ( db) {
       case graph_eDatabase_Gdh:
 	sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&min_value_p, 
-					 &min_value_subid, attr_size, object);
+					 &min_value_subid, attr_size, object, now);
 	break;
       case graph_eDatabase_Local:
 	min_value_p = (pwr_tFloat32 *) dyn->graph->localdb_ref_or_create( parsed_name, attr_type_min);
@@ -12244,13 +12297,13 @@ int GeAxis::connect( grow_tObject object, glow_sTraceData *trace_data)
       break;
     case pwr_eType_Int32:
       sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&imin_value_p, 
-					 &min_value_subid, attr_size, object);
+					 &min_value_subid, attr_size, object, now);
       min_found = 1;
       break;
     case pwr_eType_Time:
     case pwr_eType_DeltaTime:
       sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&tmin_value_p, 
-					 &min_value_subid, attr_size, object);
+					 &min_value_subid, attr_size, object, now);
       min_found = 1;
       break;
     default: ;
@@ -12267,7 +12320,7 @@ int GeAxis::connect( grow_tObject object, glow_sTraceData *trace_data)
       switch ( db) {
       case graph_eDatabase_Gdh:
 	sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value_p, 
-					   &max_value_subid, attr_size, object);
+					   &max_value_subid, attr_size, object, now);
       case graph_eDatabase_Local:
 	max_value_p = (pwr_tFloat32 *) dyn->graph->localdb_ref_or_create( parsed_name, attr_type_max);
       default:
@@ -12277,13 +12330,13 @@ int GeAxis::connect( grow_tObject object, glow_sTraceData *trace_data)
       break;
     case pwr_eType_Int32:
       sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&imax_value_p, 
-					 &max_value_subid, attr_size, object);
+					 &max_value_subid, attr_size, object, now);
       max_found = 1;
       break;
     case pwr_eType_Time:
     case pwr_eType_DeltaTime:
       sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&tmax_value_p, 
-					 &max_value_subid, attr_size, object);
+					 &max_value_subid, attr_size, object, now);
       max_found = 1;
       break;
     default: ;
@@ -12471,7 +12524,7 @@ void GeTimeoutColor::open( ifstream& fp)
   }  
 }
 
-int GeTimeoutColor::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeTimeoutColor::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
 
   color = dyn->get_color1( object, color);
@@ -12863,7 +12916,7 @@ void GeHostObject::open( ifstream& fp)
   }  
 }
 
-int GeHostObject::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeHostObject::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   if ( grow_GetObjectRecursiveTrace(object)) {
     grow_tObject 	*objectlist, *object_p;
@@ -13088,7 +13141,7 @@ void GeDigSound::open( ifstream& fp)
   }  
 }
 
-int GeDigSound::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeDigSound::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int		attr_type, attr_size;
   pwr_tAName   	parsed_name;
@@ -13109,7 +13162,7 @@ int GeDigSound::connect( grow_tObject object, glow_sTraceData *trace_data)
   get_bit( parsed_name, attr_type, &bitmask);
   a_typeid = attr_type;
 
-  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object);
+  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object, now);
   if ( EVEN(sts)) return sts;
 
   trace_data->p = &pdummy;
@@ -13332,7 +13385,7 @@ void GeFillLevel::open( ifstream& fp)
   }  
 }
 
-int GeFillLevel::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeFillLevel::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int		attr_type, attr_size;
   pwr_tAName   	parsed_name;
@@ -13354,7 +13407,7 @@ int GeFillLevel::connect( grow_tObject object, glow_sTraceData *trace_data)
   if ( strcmp( parsed_name,"") == 0)
     return 1;
 
-  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object);
+  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object, now);
   if ( EVEN(sts)) return sts;
 
   trace_data->p = &pdummy;
@@ -13382,7 +13435,7 @@ int GeFillLevel::connect( grow_tObject object, glow_sTraceData *trace_data)
   if ( strcmp(parsed_name, "") != 0 && 
        attr_type == pwr_eType_Float32) {
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&min_value_p, 
-				       &min_value_subid, attr_size, object);
+				       &min_value_subid, attr_size, object, now);
   }
 
   max_value_p = 0;
@@ -13391,7 +13444,7 @@ int GeFillLevel::connect( grow_tObject object, glow_sTraceData *trace_data)
   if ( strcmp(parsed_name, "") != 0 && 
        attr_type == pwr_eType_Float32) {
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value_p, 
-				       &max_value_subid, attr_size, object);
+				       &max_value_subid, attr_size, object, now);
   }
   return 1;
 }
@@ -13652,7 +13705,7 @@ void GeDigCommand::open( ifstream& fp)
   }  
 }
 
-int GeDigCommand::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeDigCommand::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int		attr_type, attr_size;
   pwr_tAName   	parsed_name;
@@ -13668,7 +13721,7 @@ int GeDigCommand::connect( grow_tObject object, glow_sTraceData *trace_data)
   get_bit( parsed_name, attr_type, &bitmask);
   a_typeid = attr_type;
 
-  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object);
+  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object, now);
 
   if ( EVEN(sts)) return sts;
 
@@ -13856,7 +13909,7 @@ void GeDigScript::open( ifstream& fp)
   }  
 }
 
-int GeDigScript::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeDigScript::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int		attr_type, attr_size;
   pwr_tAName   	parsed_name;
@@ -13872,7 +13925,7 @@ int GeDigScript::connect( grow_tObject object, glow_sTraceData *trace_data)
   get_bit( parsed_name, attr_type, &bitmask);
   a_typeid = attr_type;
 
-  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object);
+  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object, now);
 
   if ( EVEN(sts)) return sts;
 
@@ -13939,6 +13992,315 @@ int GeDigScript::syntax_check( grow_tObject object, int *error_cnt, int *warning
   if ( strcmp( script, "") == 0) {
     dyn->graph->syntax_msg( 'E', object, "DigScript.Script is missing");
     (*error_cnt)++;
+  }
+  return 1;
+}
+
+void GeRefUpdate::get_attributes( attr_sItem *attrinfo, int *item_count)
+{
+  int i = *item_count;
+
+  strcpy( attrinfo[i].name, "RefUpdate.Attribute");
+  attrinfo[i].value = attribute;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( attribute);
+
+  strcpy( attrinfo[i].name, "RefUpdate.WholeGraph");
+  attrinfo[i].value = &whole_graph;
+  attrinfo[i].type = glow_eType_Boolean;
+  attrinfo[i++].size = sizeof( whole_graph);
+  
+  *item_count = i;
+}
+
+void GeRefUpdate::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
+{
+  (*cnt)--;
+  if ( *cnt == 0) {
+    char msg[200];
+
+    strncpy( attribute, attr_name, sizeof( attribute));
+    snprintf( msg, sizeof(msg), "RefUpdate.Attribute = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
+    dyn->graph->message( 'I', msg);
+  }
+}
+
+void GeRefUpdate::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
+}
+
+void GeRefUpdate::save( ofstream& fp)
+{
+  fp << int(ge_eSave_RefUpdate) << endl;
+  fp << int(ge_eSave_RefUpdate_attribute) << FSPACE << attribute << endl;
+  fp << int(ge_eSave_RefUpdate_whole_graph) << FSPACE << whole_graph << endl;
+  fp << int(ge_eSave_End) << endl;
+}
+
+void GeRefUpdate::open( ifstream& fp)
+{
+  int		type;
+  int 		end_found = 0;
+  char		dummy[200];
+
+  for (;;)
+  {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeRefUpdate: \"%d %s\"\n", type, dummy);
+    }
+
+    fp >> type;
+
+    switch( type) {
+      case ge_eSave_RefUpdate: break;
+      case ge_eSave_RefUpdate_attribute:
+        fp.get();
+        fp.getline( attribute, sizeof(attribute));
+        break;
+      case ge_eSave_RefUpdate_whole_graph: fp >> whole_graph; break;
+      case ge_eSave_End: end_found = 1; break;
+      default:
+        cout << "GeRefUpdate:open syntax error" << endl;
+        fp.getline( dummy, sizeof(dummy));
+    }
+    if ( end_found)
+      break;
+  }  
+}
+
+int GeRefUpdate::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
+{
+  int		sts;
+  pwr_tAName	attr;
+
+  for ( int i = 0; i < 2; i++)
+    p[i] = 0;
+  for ( int i = 0; i < 2; i++)
+    idx_p[i] = 0;
+  status = GE__SUCCESS;
+
+  if ( strcmp( attribute, "") == 0) {
+    // Find a reference attribute
+    for ( GeDynElem *elem = dyn->elements; elem; elem = elem->next) {
+      if ( elem == this)
+	continue;
+      if ( elem->dyn_type1 == ge_mDynType1_DigColor) {
+	strcpy( attr, ((GeDigColor *)elem)->attribute);
+	if ( attr[0] == '&' && attr[1] == '(') {
+	  strcpy( attribute, attr);
+	  break;
+	}
+      }
+    }
+  }
+  if ( strcmp( attribute, "") != 0) {
+    int		attr_type, attr_size;
+    pwr_tAName  parsed_name;
+    int		inverted;
+    int		db;
+    pwr_tAName	ref_name[2];
+    pwr_tAName	idx_ref_name[2];
+
+    db = dyn->parse_attr_name( attribute, parsed_name,
+			       &inverted, &attr_type, &attr_size, 0, graph_mParseOpt_KeepIndex);
+    if ( strcmp( parsed_name,"") == 0)
+      return 1;
+
+    sts = dyn->graph->get_refupdate( parsed_name, ref_name, ref_tid, ref_size, &ref_cnt, 
+				     idx_ref_name, idx_ref_tid, idx_ref_size, &idx_ref_cnt, dyn);
+    if ( EVEN(sts))
+      status = sts; 
+
+    for ( int i = 0; i < ref_cnt; i++) {
+      sts = dyn->graph->ref_object_info( dyn->cycle, ref_name[i], (void **)&p[i], &subid[i], ref_size[i], 
+					 object, now);
+      if ( EVEN(sts))
+	status = sts;
+    }
+    for ( int i = 0; i < idx_ref_cnt; i++) {
+      sts = dyn->graph->ref_object_info( dyn->cycle, idx_ref_name[i], (void **)&idx_p[i], &idx_subid[i], 
+					 idx_ref_size[i], object, now);
+      if ( EVEN(sts))
+	status = sts;
+    }
+  }
+
+  trace_data->p = &pdummy;
+  first_scan = true;
+  return 1;
+}
+
+int GeRefUpdate::connect( grow_tObject object, int level)
+{
+
+  if ( strcmp( attribute, "") != 0) {
+    int		attr_type, attr_size;
+    pwr_tAName  parsed_name;
+    int		inverted;
+    int		db;
+    pwr_tAName	ref_name[2];
+    pwr_tAName	idx_ref_name[2];
+    pwr_tStatus sts;
+
+    status = GE__SUCCESS;
+    db = dyn->parse_attr_name( attribute, parsed_name,
+			       &inverted, &attr_type, &attr_size, 0, graph_mParseOpt_KeepIndex);
+    if ( strcmp( parsed_name,"") == 0)
+      return 1;
+
+    dyn->graph->get_refupdate( parsed_name, ref_name, ref_tid, ref_size, &ref_cnt, 
+			       idx_ref_name, idx_ref_tid, idx_ref_size, &idx_ref_cnt, dyn);
+
+    for ( int i = level; i < ref_cnt; i++) {
+      p[i] = 0;
+      sts = dyn->graph->ref_object_info( dyn->cycle, ref_name[i], (void **)&p[i], &subid[i], ref_size[i], 
+					 object, true);
+      if ( EVEN(sts))
+	status = sts;
+    }
+    for ( int i = 0; i < idx_ref_cnt; i++) {
+      idx_p[i] = 0;
+      sts = dyn->graph->ref_object_info( dyn->cycle, idx_ref_name[i], (void **)&idx_p[i], &idx_subid[i], 
+					 idx_ref_size[i], object, true);
+      if ( EVEN(sts))
+	status = sts;
+    }
+  }
+  // first_scan = true;
+  return 1;
+}
+
+int GeRefUpdate::disconnect( grow_tObject object)
+{
+  for ( int i = 0; i < ref_cnt; i++) {
+    if ( p[i])
+      gdh_UnrefObjectInfo( subid[i]);
+    p[i] = 0;
+  }
+  for ( int i = 0; i < idx_ref_cnt; i++) {
+    if ( idx_p[i])
+      gdh_UnrefObjectInfo( idx_subid[i]);
+    idx_p[i] = 0;
+  }
+  return 1;
+}
+
+int GeRefUpdate::disconnect( int level)
+{
+  for ( int i = level; i < ref_cnt; i++) {
+    if ( p[i])
+      gdh_UnrefObjectInfo( subid[i]);
+    p[i] = 0;
+  }
+  for ( int i = 0; i < idx_ref_cnt; i++) {
+    if ( idx_p[i])
+      gdh_UnrefObjectInfo( idx_subid[i]);
+    idx_p[i] = 0;
+  }
+  return 1;
+}
+
+int GeRefUpdate::scan( grow_tObject object)
+{
+  pwr_tStatus sts;
+  bool update = false;
+  int level = 0;
+
+  for ( int i = 0; i < idx_ref_cnt; i++) {
+    if ( !idx_p[i]) {
+      if ( first_scan  && i == idx_ref_cnt - 1 && ref_cnt == 0) 
+	first_scan = false;
+      continue;
+    }
+
+    if ( first_scan) {
+      idx_old_value[i] = *idx_p[i];
+      if ( i == idx_ref_cnt - 1 && ref_cnt == 0)
+	first_scan = false;
+      continue;
+    }
+    
+    if ( memcmp( idx_p[i], &idx_old_value[i], sizeof(pwr_tAttrRef)) != 0) {
+      update = true;
+      break;
+    }
+  }
+  for ( int i = 0; i < ref_cnt; i++) {
+    if ( !p[i]) {
+      if ( first_scan  && i == ref_cnt - 1) 
+	first_scan = false;
+      continue;
+    }
+
+    if ( first_scan) {
+      old_value[i] = *p[i];
+      if ( i == ref_cnt - 1)
+	first_scan = false;
+      continue;
+    }
+    
+    if ( memcmp( p[i], &old_value[i], sizeof(pwr_tAttrRef)) != 0) {
+      update = true;
+      level = i;
+      break;
+    }
+  }
+
+  if ( update) {
+    glow_sTraceData td;
+
+    for ( int i = 0; i < ref_cnt; i++)
+      old_value[i] = *p[i];
+    for ( int i = 0; i < idx_ref_cnt; i++)
+      idx_old_value[i] = *idx_p[i];
+
+    if ( whole_graph) {
+      dyn->graph->swap(0);
+      dyn->graph->swap(1);
+      grow_Redraw( dyn->graph->grow->ctx);
+      // old_value[i] = *p[i];
+	return GLOW__SWAPTERMINATED;
+    }
+
+    for ( GeDynElem *elem = dyn->elements; elem; elem = elem->next) {
+      if ( elem == this)
+	continue;
+      elem->disconnect(object);
+      sts = elem->connect(object, &td, true);      
+      if ( EVEN(sts))
+	elem->reset( object);
+      
+    }
+    if ( idx_ref_cnt > 0 || level < ref_cnt - 1) {
+      disconnect( level + 1);
+      connect( object, level + 1);
+      
+      for ( int i = 0; i < ref_cnt; i++)
+	old_value[i] = *p[i];
+      for ( int i = 0; i < idx_ref_cnt; i++)
+	idx_old_value[i] = *idx_p[i];
+    }
+  }
+  return 1;
+}
+
+int GeRefUpdate::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
+{
+  return 1;
+}
+
+int GeRefUpdate::syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt)
+{
+  if ( strcmp( attribute, "") != 0) {
+    int types[] = {pwr_eType_Objid, pwr_eType_AttrRef, 0};
+    graph_eDatabase databases[] = {graph_eDatabase_Gdh, graph_eDatabase__};
+
+    dyn->syntax_check_attribute( object, "RefUpdate.Attribute", attribute, 0, types, databases,
+				 error_cnt, warning_cnt);
   }
   return 1;
 }
@@ -15793,7 +16155,7 @@ void GeRadioButton::open( ifstream& fp)
   }  
 }
 
-int GeRadioButton::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeRadioButton::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int		attr_type, attr_size;
   pwr_tAName 	parsed_name;
@@ -15808,7 +16170,7 @@ int GeRadioButton::connect( grow_tObject object, glow_sTraceData *trace_data)
 
   switch ( db) {
   case graph_eDatabase_Gdh:
-    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object);
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object, now);
     if ( EVEN(sts)) return sts;
     break;
   case graph_eDatabase_Ccm:
@@ -17160,7 +17522,7 @@ void GeSlider::open( ifstream& fp)
   }  
 }
 
-int GeSlider::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeSlider::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int		inverted;
   pwr_tAName   	parsed_name;
@@ -17182,7 +17544,7 @@ int GeSlider::connect( grow_tObject object, glow_sTraceData *trace_data)
   default:
     return 1;
   }
-  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object);
+  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object, now);
   if ( EVEN(sts)) return sts;
 
   trace_data->p = &pdummy;
@@ -17248,7 +17610,7 @@ int GeSlider::connect( grow_tObject object, glow_sTraceData *trace_data)
     switch ( min_value_db) {
     case graph_eDatabase_Gdh:
       sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&min_value_p, 
-					 &min_value_subid, a_size, object);
+					 &min_value_subid, a_size, object, now);
       break;
     case graph_eDatabase_Local:
       min_value_p = (pwr_tFloat32 *) dyn->graph->localdb_ref_or_create( parsed_name, a_type);
@@ -17266,7 +17628,7 @@ int GeSlider::connect( grow_tObject object, glow_sTraceData *trace_data)
     switch ( max_value_db) {
     case graph_eDatabase_Gdh:
       sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value_p, 
-					 &max_value_subid, a_size, object);
+					 &max_value_subid, a_size, object, now);
       break;
     case graph_eDatabase_Local:
       max_value_p = (pwr_tFloat32 *) dyn->graph->localdb_ref_or_create( parsed_name, a_type);
@@ -17284,7 +17646,7 @@ int GeSlider::connect( grow_tObject object, glow_sTraceData *trace_data)
     switch ( insensitive_db) {
     case graph_eDatabase_Gdh:
       sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&insensitive_p, 
-					 &insensitive_subid, a_size, object);
+					 &insensitive_subid, a_size, object, now);
       break;
     case graph_eDatabase_Local:
       insensitive_p = (pwr_tBoolean *) dyn->graph->localdb_ref_or_create( parsed_name, a_type);
@@ -17722,7 +18084,7 @@ void GeFastCurve::open( ifstream& fp)
   }
 }
 
-int GeFastCurve::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeFastCurve::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int		attr_type, attr_size;
   pwr_tAName   	parsed_name;
@@ -17758,7 +18120,7 @@ int GeFastCurve::connect( grow_tObject object, glow_sTraceData *trace_data)
   // Subscribe to object
   strcpy( attr_name, parsed_name);
   strcat( attr_name, ".New");
-  sts = dyn->graph->ref_object_info( dyn->cycle, attr_name, (void **)&new_p, &subid, sizeof(pwr_tBoolean), object);
+  sts = dyn->graph->ref_object_info( dyn->cycle, attr_name, (void **)&new_p, &subid, sizeof(pwr_tBoolean), object, now);
   if ( EVEN(sts)) return sts;
 
   memcpy( &time_buff, &fp.TimeBuffer, sizeof(time_buff));
@@ -19297,7 +19659,7 @@ void GeOptionMenu::open( ifstream& fp)
   }  
 }
 
-int GeOptionMenu::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeOptionMenu::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int		attr_type, attr_size;
   pwr_tAName   	parsed_name;
@@ -19313,7 +19675,7 @@ int GeOptionMenu::connect( grow_tObject object, glow_sTraceData *trace_data)
   size = attr_size;
   switch ( db) {
   case graph_eDatabase_Gdh:
-    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, &p, &subid, attr_size, object);
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, &p, &subid, attr_size, object, now);
     if ( EVEN(sts)) return sts;
     if ( attr_type != 0)
       type_id = attr_type;
@@ -19354,7 +19716,7 @@ int GeOptionMenu::connect( grow_tObject object, glow_sTraceData *trace_data)
       db = dyn->parse_attr_name( update_attribute, parsed_name,
 			       &inverted, &attr_type, &attr_size);
       if ( strcmp( parsed_name,"") != 0) {
-	sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&update_p, &update_subid, attr_size, object);
+	sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&update_p, &update_subid, attr_size, object, now);
 	if ( EVEN(sts)) return sts;
       }
     }
@@ -20185,7 +20547,7 @@ static int methods_command_cb( char *command, void *udata)
   return (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd, 0);
 }
 
-int GeMethodToolbar::connect( grow_tObject object, glow_sTraceData *trace_data)
+int GeMethodToolbar::connect( grow_tObject object, glow_sTraceData *trace_data, bool now)
 {
   int 			sts;
   pwr_tAName         	parsed_name;

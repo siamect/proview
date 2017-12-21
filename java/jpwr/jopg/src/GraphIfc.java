@@ -46,7 +46,11 @@ public interface GraphIfc {
 
     public static final int eType_Bit 		= (1 << 15) + 1;
 
+    public static final int mParseOpt_KeepIndex	= 1 << 0;
+
+
     public DynParsedAttrName parseAttrName( String name);    
+    public DynParsedAttrName parseAttrName( String name, int options);    
     public Gdh getGdh();
     public GraphLocalDb getLdb();
     public GrowCtx getCtx();
@@ -70,6 +74,10 @@ public interface GraphIfc {
     public double getFastScanTime();
     public double getAnimationScanTime();
     public String getCommand(String cmd);
+    public GdhrRefObjectInfo refObjectInfo( String attributeName);
+    public int getRefUpdate( String in, String ref_name[], int ref_tid[], int ref_size[],
+			     String idx_ref_name[], int idx_ref_tid[], int idx_ref_size[],
+			     int ref_cnt[], Object dyn);
     public void setClickActive(int active);
     public void signalSend(String signalName);
 }

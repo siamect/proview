@@ -137,6 +137,7 @@
 
   //! Priority order for dyntypes and actiontypes. Lower value gives higher priority.
   typedef enum {
+    ge_eDynPrio_RefUpdate,
     ge_eDynPrio_DigSound,
     ge_eDynPrio_HostObject,
     ge_eDynPrio_Invisible,
@@ -253,7 +254,8 @@
     ge_mDynType2_ColorThemeLightness = 1 << 5,
     ge_mDynType2_DigBackgroundColor = 1 << 6,
     ge_mDynType2_DigSwap       	= 1 << 7,
-    ge_mDynType2_DigScript     	= 1 << 8
+    ge_mDynType2_DigScript     	= 1 << 8,
+    ge_mDynType2_RefUpdate     	= 1 << 9
   } ge_mDynType2;
 
   //! Action types.
@@ -373,6 +375,7 @@
     ge_eSave_DigBackgroundColor       	= 44,
     ge_eSave_DigSwap		       	= 45,
     ge_eSave_DigScript		       	= 46,
+    ge_eSave_RefUpdate		       	= 47,
     ge_eSave_PopupMenu			= 50,
     ge_eSave_SetDig			= 51,
     ge_eSave_ResetDig			= 52,
@@ -620,6 +623,8 @@
     ge_eSave_DigScript_script      	= 4601,
     ge_eSave_DigScript_script_len      	= 4602,
     ge_eSave_DigScript_level      	= 4603,
+    ge_eSave_RefUpdate_attribute      	= 4700,
+    ge_eSave_RefUpdate_whole_graph    	= 4701,
     ge_eSave_PopupMenu_ref_object      	= 5000,
     ge_eSave_SetDig_attribute		= 5100,
     ge_eSave_SetDig_instance		= 5101,
@@ -894,7 +899,7 @@ class GeDyn {
   int disconnect( grow_tObject object);
 
   //! Connect dynamics.
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
 
   //! Scan dynamics.
   int scan( grow_tObject object);
@@ -944,7 +949,8 @@ class GeDyn {
   GeDynElem *copy_element( GeDynElem& x);
   void replace_attribute( char *from, char *to, int *cnt, int strict);
   graph_eDatabase parse_attr_name( char *name, char *parsed_name, 
-				   int *inverted, int *type, int *size, int *elem = 0);
+				   int *inverted, int *type, int *size, int *elem = 0, 
+				   graph_mParseOpt options = graph_mParseOpt_None);
   void merge( GeDyn& x);
   int syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt);
   void syntax_check_attribute( grow_tObject object, const char *text, char *attribute, int optional, int *types, 
@@ -999,11 +1005,15 @@ class GeDynElem {
     \param object 	Owner object. 
     \param trace_data	Trace info stored in grow for the object.
   */
-  virtual int connect( grow_tObject object, glow_sTraceData *trace_data) { return 1;}
+  virtual int connect( grow_tObject object, glow_sTraceData *trace_data, bool now) { return 1;}
 
   //! Scan the element.
   /*! \param object 	Owner object. */
   virtual int scan( grow_tObject object) { return 1;}
+
+  //! Reset the element.
+  /*! \param object 	Owner object. */
+  virtual void reset( grow_tObject object) {}
 
   //! Get list of attributes.
   /*!
@@ -1110,9 +1120,10 @@ class GeDigLowColor : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
+  void reset( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
   void replace_attribute( char *from, char *to, int *cnt, int strict);
   int set_color( grow_tObject object, glow_eDrawType color);
@@ -1147,9 +1158,10 @@ class GeDigColor : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
+  void reset( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
   void replace_attribute( char *from, char *to, int *cnt, int strict);
   int set_color( grow_tObject object, glow_eDrawType color);
@@ -1184,7 +1196,7 @@ class GeDigBackgroundColor : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
@@ -1219,7 +1231,7 @@ class GeDigWarning : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
@@ -1253,7 +1265,7 @@ class GeDigError : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
@@ -1291,7 +1303,7 @@ class GeDigFlash : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
@@ -1328,7 +1340,7 @@ class GeInvisible : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
@@ -1363,7 +1375,7 @@ class GeDigBorder : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
@@ -1398,7 +1410,7 @@ class GeDigTextColor : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
@@ -1435,7 +1447,7 @@ class GeDigText : public GeDynElem {
   int get_transtab( char **tt);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
@@ -1479,9 +1491,10 @@ class GeValue : public GeDynElem {
   int get_transtab( char **tt);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
+  void reset( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
   void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
@@ -1520,7 +1533,7 @@ class GeValueInput : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int action( grow_tObject object, glow_tEvent event);
   int change_value( grow_tObject object, char *text);
@@ -1564,7 +1577,7 @@ class GeAnalogColor : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
@@ -1600,7 +1613,7 @@ class GeRotate : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
@@ -1678,7 +1691,7 @@ class GeMove : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
@@ -1710,7 +1723,7 @@ class GeAnalogShift : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
@@ -1743,7 +1756,7 @@ class GeDigShift : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
@@ -1794,7 +1807,7 @@ class GeDigFourShift : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
@@ -1832,7 +1845,7 @@ class GeScrollingText : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
@@ -1869,7 +1882,7 @@ class GeAnimation : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
@@ -1889,7 +1902,7 @@ class GeVideo : public GeDynElem {
     {}
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   int syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt);
@@ -1923,7 +1936,7 @@ class GeStatusColor : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
@@ -1973,7 +1986,7 @@ class GeFillLevel : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
@@ -1996,7 +2009,7 @@ class GeHostObject : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
   void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
@@ -2033,7 +2046,7 @@ class GeDigSound : public GeDynElem {
     { strcpy( attribute, x.attribute); strcpy(soundobject, x.soundobject);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void open( ifstream& fp);
@@ -2053,7 +2066,7 @@ class GeColorThemeLightness : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
@@ -2089,7 +2102,7 @@ class GeDigSwap : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
@@ -2344,7 +2357,7 @@ class GeRadioButton : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   int action( grow_tObject object, glow_tEvent event);
@@ -2525,7 +2538,7 @@ class GeSlider : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   int action( grow_tObject object, glow_tEvent event);
@@ -2571,7 +2584,7 @@ class GeBar : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
@@ -2664,7 +2677,7 @@ class GeTrend : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
@@ -2766,7 +2779,7 @@ class GeXY_Curve : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
@@ -2802,7 +2815,7 @@ class GeDigCommand : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
@@ -2840,13 +2853,57 @@ class GeDigScript : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
   void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
   int syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt);
+};
+
+//! Execute the supplied command when the value gets high.
+class GeRefUpdate : public GeDynElem {
+ public:
+  pwr_tAName attribute;		//!< Database reference for reference attribute.
+  int whole_graph;		//!< Reconnect whole graph.
+
+  pwr_tAttrRef *p[2];
+  pwr_tSubid subid[2];
+  pwr_tAttrRef *idx_p[2];
+  pwr_tSubid idx_subid[2];
+  int ref_size[2];
+  pwr_tTid ref_tid[2];
+  int ref_cnt;
+  int idx_ref_size[2];
+  pwr_tTid idx_ref_tid[2];
+  int idx_ref_cnt;
+  bool first_scan;
+  pwr_tAttrRef old_value[2];
+  pwr_tAttrRef idx_old_value[2];
+  pwr_tStatus status;
+
+  GeRefUpdate( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_RefUpdate, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_RefUpdate), whole_graph(0), ref_cnt(0), idx_ref_cnt(0)
+    { instance = e_instance; strcpy( attribute, "");}
+  GeRefUpdate( const GeRefUpdate& x) : 
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), whole_graph(x.whole_graph),
+    ref_cnt(x.ref_cnt), idx_ref_cnt(x.idx_ref_cnt)
+    { instance = x.instance; instance_mask = x.instance_mask; strcpy(attribute, x.attribute);}
+  void get_attributes( attr_sItem *attrinfo, int *item_count);
+  void save( ofstream& fp);
+  void open( ifstream& fp);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
+  int disconnect( grow_tObject object);
+  int scan( grow_tObject object);
+  void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
+  int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
+  int syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt);
+
+  int connect(   grow_tObject object, int level);
+  int disconnect( int level);
+
 };
 
 //! Dynamics for a trend object.
@@ -2884,7 +2941,7 @@ class GeFastCurve : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
@@ -2936,7 +2993,7 @@ class GeTable : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   int action( grow_tObject object, glow_tEvent event);
@@ -2979,7 +3036,7 @@ class GePie : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
@@ -3028,7 +3085,7 @@ class GeBarChart : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
@@ -3131,7 +3188,7 @@ class GeOptionMenu : public GeDynElem {
   void save( ofstream& fp);
   void open( ifstream& fp);
   int action( grow_tObject object, glow_tEvent event);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
@@ -3202,7 +3259,7 @@ class GeMethodToolbar : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int action( grow_tObject object, glow_tEvent event);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
   void replace_attribute( char *from, char *to, int *cnt, int strict);
@@ -3274,7 +3331,7 @@ class GeAxis : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
@@ -3308,7 +3365,7 @@ class GeTimeoutColor : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
-  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int connect( grow_tObject object, glow_sTraceData *trace_data, bool now);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   int syntax_check( grow_tObject object, int *error_cnt, int *warning_cnt);

@@ -115,6 +115,7 @@ static attrnav_sEnumElement elem_dyn_type2[] = {
 	{ (unsigned int) ge_mDynType2_DigBackgroundColor , "DigBackgroundColor"},
 	{ (unsigned int) ge_mDynType2_DigSwap		 , "DigSwap"},
 	{ (unsigned int) ge_mDynType2_DigScript		 , "DigScript"},
+	{ (unsigned int) ge_mDynType2_RefUpdate		 , "RefUpdate"},
 	{ 0, ""}};
 
 static attrnav_sEnumElement elem_dyn_type1_tone[] = {

@@ -139,6 +139,11 @@ typedef enum {
   graph_eKeyboard_AlphabeticShifted, //!< Keyboard alphabetic opened in shifted mode.
 } graph_eKeyboard;
 
+//! Parse options
+typedef enum {
+  graph_mParseOpt_None		= 0,
+  graph_mParseOpt_KeepIndex 	= 1 << 0
+} graph_mParseOpt;
 
 //! Extension of proview type pwr_eType. Should not collide with any pwr_eType.
 typedef enum {
@@ -1072,7 +1077,8 @@ class Graph {
     is inverted (!), of type pwr_eType_String with size 80.
   */
   graph_eDatabase parse_attr_name( char *name, char *parsed_name,
-		int *inverted, int *type, int *size, int *elem = 0);
+				   int *inverted, int *type, int *size, int *elem = 0,
+				   graph_mParseOpt options = graph_mParseOpt_None);
 
   //! Get the default window size
   /*!
@@ -1259,6 +1265,11 @@ class Graph {
     \param empty	Input field should be empty.
   */
   int set_object_focus( const char *name, int empty);
+
+  //! Replace the string $object and get references in attribute connection string.
+  int get_refupdate( char *in, pwr_tAName ref[], pwr_tTid ref_tid[], int ref_size[], int *ref_cnt, 
+		     pwr_tAName idx_ref[], pwr_tTid idx_ref_tid[], int idx_ref_size[], int *idx_ref_cnt, 
+		     GeDyn *dyn);
 
   //! Replace the string $object with the object name for the graph.
   /*!

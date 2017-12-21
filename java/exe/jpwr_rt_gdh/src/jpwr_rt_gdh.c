@@ -2159,6 +2159,21 @@ static void gdh_AttrToString( int type_id, void *value_ptr,
       *len = sprintf( str, "%s", hiername);
       break;
     }
+    case pwr_eType_DataRef:
+    {
+      pwr_tAName hiername;
+      pwr_tDataRef *dataref;
+
+      dataref = (pwr_tDataRef *) value_ptr;
+      sts = gdh_AttrrefToName( &dataref->Aref, hiername, sizeof(hiername), cdh_mNName);
+      if (EVEN(sts)) {
+	strcpy( str, "");
+	*len = 0;
+	break;
+      }
+      *len = sprintf( str, "%s", hiername);
+      break;
+    }
     case pwr_eType_Time:
     {
       sts = time_AtoAscii( (pwr_tTime *) value_ptr, time_eFormat_DateAndTime,

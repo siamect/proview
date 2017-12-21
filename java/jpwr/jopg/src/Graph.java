@@ -42,7 +42,6 @@ import java.util.*;
 
 public class Graph implements GraphIfc, GrowApplIfc {
 
-
     public GrowCmn cmn;
     public GrowCtx ctx;
     public GlowDraw gdraw;
@@ -238,7 +237,7 @@ public class Graph implements GraphIfc, GrowApplIfc {
 		index = new Integer(str.substring(idx1+1, idx2)).intValue();
 	    }
 	    catch( NumberFormatException e) {
-		System.out.println("Element syntax error, " + str);
+		System.out.println("stringToIndex: Element syntax error, " + str);
 		return 1;
 	    }
 	    return index;
@@ -247,6 +246,10 @@ public class Graph implements GraphIfc, GrowApplIfc {
     }
 
     public DynParsedAttrName parseAttrName( String name) {
+	return parseAttrName( name, 0);
+    }
+
+    public DynParsedAttrName parseAttrName( String name, int options) {
 	if ( name == null)
 	    return null;
 
@@ -324,25 +327,28 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	    else
 		break;
 	}
-	// Translate index variable
-	for ( int i = 0; i < 4; i++) {
-	    if ( (idx = str.indexOf("[&(")) != -1) {
-		String iname = str.substring(idx+3);
-		int idx2 = iname.indexOf(')');
-		if ( idx2 != -1) {
-		    String rest = iname.substring( idx2 + 1);
-		    iname = iname.substring( 0, idx2);
 
-		    CdhrInt ret = getGdh().getObjectInfoInt( iname);
-		    if ( ret.evenSts()) break;
-
-		    str = str.substring( 0, idx + 1) + ret.value + rest;
+	if ( (options & GraphIfc.mParseOpt_KeepIndex) == 0) {
+	    // Translate index variable
+	    for ( int i = 0; i < 4; i++) {
+		if ( (idx = str.indexOf("[&(")) != -1) {
+		    String iname = str.substring(idx+3);
+		    int idx2 = iname.indexOf(')');
+		    if ( idx2 != -1) {
+			String rest = iname.substring( idx2 + 1);
+			iname = iname.substring( 0, idx2);
+			
+			CdhrInt ret = getGdh().getObjectInfoInt( iname);
+			if ( ret.evenSts()) break;
+			
+			str = str.substring( 0, idx + 1) + ret.value + rest;
+		    }
+		    else
+			break;
 		}
 		else
 		    break;
 	    }
-	    else
-		break;
 	}
 
 	for ( int i = 0; i < 4; i++) {
@@ -383,7 +389,7 @@ public class Graph implements GraphIfc, GrowApplIfc {
 		    pname.elements = new Integer(str.substring(eidx+1)).intValue();
 		}
 		catch( NumberFormatException e) {
-		    System.out.println("Element syntax error, " + str);
+		    System.out.println("parseAttrName: Element syntax error, " + str);
 		    pname.elements = 1;
 		}
 		str = str.substring(0, eidx);
@@ -392,7 +398,8 @@ public class Graph implements GraphIfc, GrowApplIfc {
 		pname.elements = 1;
 	}	    
 	else {
-	    pname.index = stringToIndex(str);
+	    if ( (options & GraphIfc.mParseOpt_KeepIndex) == 0 || str.indexOf("[&(") == -1)
+		pname.index = stringToIndex(str);
 	    pname.elements = 1;
 	    // if ((eidx = str.lastIndexOf('#')) != -1 &&
 	    //	str.charAt(eidx-1) != '#')
@@ -449,6 +456,146 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	return str;
     }
 
+    public GdhrRefObjectInfo refObjectInfo( String attributeName) {
+	String str = new String(attributeName);
+	int idx;
+
+	// Replace references
+	if ( (idx = str.indexOf("&(")) != -1) {	
+	    String ref_name;
+	    String end;
+	    CdhrString ret;
+	    int idx2;
+
+	    if ( str.substring(idx+2).startsWith("&(")) {
+		idx2 = str.indexOf(")");
+		if ( idx2 == -1)
+		    return null;
+		ref_name = str.substring( idx + 4, idx2);
+		
+		end = str.substring( idx2 + 1);
+		ret = getGdh().getObjectInfoString( ref_name);
+		if ( ret.evenSts()) return null;
+
+		str = str.substring(0, idx+2) + ret.str + end;
+	    }	    
+	    
+	    idx2 = str.lastIndexOf(")");
+	    if ( idx2 == -1)
+		return null;
+    
+	    ref_name = str.substring( idx + 2, idx2);
+
+	    end = str.substring( idx2 + 1);
+	    ret = getGdh().getObjectInfoString( ref_name);	    
+	    if ( ret.evenSts()) return null;
+	    
+	    str = str.substring(0, idx) + ret.str + end;
+
+	}
+	return getGdh().refObjectInfo(str);
+    }
+
+    public int getRefUpdate( String in, String ref_name[], int ref_tid[], int ref_size[],
+			     String idx_ref_name[], int idx_ref_tid[], int idx_ref_size[],
+			     int ref_cnt[], Object dyn) {
+	int idx, lidx;
+	ref_cnt[0] = 0;
+	ref_cnt[1] = 0;
+	
+	String str = new String( in);
+
+	// Get index variable and replace 
+	for ( int i = 0; i < 2; i++) {
+	    if ( (idx = str.indexOf("[&(")) != -1) {
+		String iname = str.substring(idx+3);
+		int idx2 = iname.indexOf(')');
+		if ( idx2 != -1) {
+		    String rest = iname.substring( idx2 + 1);
+		    iname = iname.substring( 0, idx2);
+		    idx_ref_name[ref_cnt[1]] = iname;
+		    ref_cnt[1]++;
+		    
+		    CdhrInt ret = getGdh().getObjectInfoInt( iname);
+		    if ( ret.evenSts()) return 0;
+		    
+		    str = str.substring( 0, idx + 1) + ret.value + rest;
+		}
+		else
+		    break;
+	    }
+	    else
+		break;
+	}
+	
+	// Get reference
+	if ( (idx = str.indexOf("&(")) != -1) {	
+	    if ( str.substring(idx+2).startsWith("&(")) {
+		int idx2 = str.indexOf(")");
+		if ( idx2 == -1)
+		    return 0;
+		ref_name[ref_cnt[0]] = str.substring( idx + 4, idx2);
+
+		CdhrAttrRef attrRef = getGdh().nameToAttrRef(ref_name[ref_cnt[0]]);
+		if ( attrRef.oddSts()) {
+		    CdhrTypeId cdhrTypeId = getGdh().getAttrRefTid( attrRef.aref );
+		    ref_tid[ref_cnt[0]] = cdhrTypeId.getTypeId();
+		}
+		ref_cnt[0]++;
+		
+		String end = str.substring( idx2 + 1);
+		CdhrString ret = getGdh().getObjectInfoString( ref_name[ref_cnt[0]-1]);
+		if ( ret.evenSts()) return 0;
+
+		str = str.substring(0, idx+2) + ret.str + end;
+	    }	    
+	    
+	    int idx2 = str.lastIndexOf(")");
+	    if ( idx2 == -1)
+		return 0;
+    
+	    ref_name[ref_cnt[0]] = str.substring( idx + 2, idx2);
+
+	    CdhrAttrRef attrRef = getGdh().nameToAttrRef(ref_name[ref_cnt[0]]);
+	    if ( attrRef.oddSts()) {
+		CdhrTypeId cdhrTypeId = getGdh().getAttrRefTid( attrRef.aref );
+		ref_tid[ref_cnt[0]] = cdhrTypeId.getTypeId();
+	    }
+	    ref_cnt[0]++;
+	}
+
+	for ( int i = 0; i < 4; i++) {
+	    // Remove attribute before
+	    if ( (idx = str.indexOf(".<")) != -1) {
+		String rest = str.substring( idx + 2);
+		int idx2 = str.lastIndexOf( '.', idx - 2);
+		if ( idx2 != -1)
+		    str = str.substring( 0, idx2) + rest;
+		else
+		    break;
+	    }
+	    else
+		break;
+	}
+    
+	for ( int i = 0; i < 4; i++) {
+	    // Remove segment name before
+	    if ( (idx = str.indexOf("-<")) != -1) {
+		String rest = str.substring( idx + 2);
+		int idx2 = str.lastIndexOf( '-', idx - 2);
+		if ( idx2 != -1)
+		    str = str.substring( 0, idx2) + rest;
+		else
+		    break;
+	    }
+	    else
+		break;
+	}
+	
+	return 1;
+    }
+
+
     public Object growUserdataOpen( BufferedReader reader, Object object, int type) {
 	switch ( type) {
 	case Glow.eUserdataCbType_Ctx:
@@ -467,6 +614,7 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	return null;
     }
 
+    @SuppressWarnings("fallthrough")
     public void eventHandler(GlowEvent e) {
 	boolean cmn_popped = false;
 

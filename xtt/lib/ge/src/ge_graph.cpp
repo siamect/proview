@@ -3773,7 +3773,7 @@ static int graph_trace_connect_bc( grow_tObject object,
     }
   }
 
-  dyn->connect( object, trace_data);
+  dyn->connect( object, trace_data, false);
 
   if ( ctx_popped)
     graph->grow->push();
@@ -4723,7 +4723,7 @@ void Graph::get_command( char *in, char *out, GeDyn *dyn)
 	sts = gdh_GetObjectInfo( iname, &idx, sizeof(idx));
 	if ( ODD(sts) && idx >= 0 && idx <= 100) {
 	  len = sprintf( s, "%d", idx);
-	strcpy( s + len, rest);
+	  strcpy( s + len, rest);
 	}
       }
       else
@@ -4774,8 +4774,242 @@ void Graph::get_command( char *in, char *out, GeDyn *dyn)
   }
 }
 
+int Graph::get_refupdate( char *in, pwr_tAName ref[], pwr_tTid ref_tid[], int ref_size[], int *ref_cnt, 
+			  pwr_tAName idx_ref[], pwr_tTid idx_ref_tid[], int idx_ref_size[], int *idx_ref_cnt, 
+			  GeDyn *dyn)
+{
+  char *s, *t0;
+  char *s0 = in;
+  char str[500];
+  bool object_found = false;
+  char out[512];
+
+  *ref_cnt = 0;
+  *idx_ref_cnt = 0;
+
+  pwr_tAName oname[4];
+  if ( grow->stack_cnt == 0) {
+    for ( int i = 0; i < 4; i++)
+      strcpy( oname[i], object_name[i]);
+  }
+  else {
+    grow_GetOwner( grow->ctx, oname[0]);
+
+    if ( strcmp( object_name[0], "") != 0) {
+      pwr_tOName n;
+      t0 = n;
+      s0 = oname[0];
+      while ( (s = strstr( s0, "$object"))) {
+	strncpy( t0, s0, s-s0);
+	t0 += s - s0;
+	strcpy( t0, object_name[0]); 
+	t0 += strlen(object_name[0]);
+	s0 = s + strlen("$object");
+      }
+      cdh_Strcpy( t0, s0);
+      strcpy( oname[0], n);
+    }
+    for ( int i = 1; i < 4; i++)
+      strcpy( oname[i], object_name[i]);
+  }
+  s0 = in;
+  if ( dyn && (dyn->total_dyn_type1 & ge_mDynType1_HostObject || 
+	       strcmp( dyn->recursive_hostobject, "") != 0)) {
+    pwr_tAName hostobject;
+
+    dyn->get_hostobject( hostobject);
+
+    t0 = str;
+    s0 = in;
+    while ( (s = strstr( s0, "$hostobject"))) {
+      cdh_Strncpy( t0, s0, s-s0);
+      t0 += s - s0;
+      strcpy( t0, hostobject); 
+      t0 += strlen(hostobject);
+      s0 = s + strlen("$hostobject");
+    }
+    cdh_Strcpy( t0, s0);
+
+    if ( strcmp( oname[0], "") == 0) {
+      strcpy( out, str);
+    }
+    s0 = str;
+  }
+  else if ( strcmp( oname[0], "") == 0) {
+    cdh_Strcpy( out, in);
+  }
+
+  if ( strcmp( oname[0], "") != 0) {
+    t0 = out;
+    while ( (s = strstr( s0, "$object"))) {
+      int idx;
+      object_found = true;
+      char *sidx = s + strlen("$object");
+      switch ( *sidx) {
+      case '2':
+	idx = 1;
+	break;
+      case '3':
+	idx = 2;
+	break;
+      case '4':
+	idx = 3;
+	break;
+      default:
+	idx = 0;
+      }
+
+      cdh_Strncpy( t0, s0, s-s0);
+      t0 += s - s0;
+      strcpy( t0, oname[idx]); 
+      t0 += strlen(oname[idx]);
+      s0 = s + strlen("$object") + (idx > 0 ? 1 : 0);
+    }
+    cdh_Strcpy( t0, s0);
+
+    t0 = out;
+  }
+
+  // Get index variables and replace
+  for ( int i = 0; i < 2; i++) {
+    if ( (s = strstr( out, "[&("))) {
+      int idx;
+      pwr_tAName iname, rest;
+      pwr_tStatus sts;
+      int len;
+      char *s1;
+      
+      s++;
+      strcpy( iname, s+2);
+      s1 = strchr( iname, ')');
+      strncpy( rest, s1+1, sizeof(rest));
+      if ( !s1)
+	return GE__SYNTAX;
+      *s1 = 0;
+      
+      sts = gdh_GetObjectInfo( iname, &idx, sizeof(idx));
+      if ( ODD(sts) && idx >= 0 && idx <= 100) {
+	len = sprintf( s, "%d", idx);
+	strcpy( s + len, rest);
+      }
+      strcpy( idx_ref[*idx_ref_cnt], iname);
+      idx_ref_size[*ref_cnt] = sizeof(pwr_tInt32);
+      idx_ref_tid[*ref_cnt] = pwr_eType_Int32;
+      (*idx_ref_cnt)++;
+    }
+    else
+      break;
+  }
+
+  // Get references
+  if ( (s = strchr( out, '&')) && *(s+1) == '(') {
+    // Replace attribute in parenthesis with its value
+    if ( *(s+2) == '&' && *(s+3) == '(') {
+      pwr_tAName refname;
+      pwr_tStatus sts;
+      char *start, *end, *start2;
+      pwr_tTid atid;
+      pwr_tUInt32 asize;
+ 
+      start = s;
+      strcpy( refname, s+4);
+      if ( (s = strchr( refname, ')')) == 0)
+	return GE__SYNTAX;
+
+      *s = 0;
+      
+      sts = gdh_GetAttributeCharacteristics( refname, &atid, &asize, 0, 0); 
+      if ( EVEN(sts)) return sts;
+
+      strcpy( ref[*ref_cnt], refname);
+      ref_tid[*ref_cnt] = atid;
+      ref_size[*ref_cnt] = asize;
+      (*ref_cnt)++;
+
+      end = start + strlen(refname) + 5;
+      start2 = s + 1;
+      switch( atid) {
+      case pwr_eType_AttrRef: {
+	pwr_tAttrRef aref;
+
+	sts = gdh_GetObjectInfo( refname, &aref, sizeof(aref));
+	if ( EVEN(sts)) return sts;
+      
+	sts = gdh_AttrrefToName( &aref, str, sizeof(str), cdh_mName_volumeStrict);
+	if ( EVEN(sts)) return sts;
+	break;
+      }
+      case pwr_eType_DataRef: {
+	pwr_tDataRef dref;
+
+	sts = gdh_GetObjectInfo( refname, &dref, sizeof(dref));
+	if ( EVEN(sts)) return sts;
+      
+	sts = gdh_AttrrefToName( &dref.Aref, str, sizeof(str), cdh_mName_volumeStrict);
+	if ( EVEN(sts)) return sts;
+	break;
+      }
+      case pwr_eType_Objid: {
+	pwr_tOid oid;
+
+	sts = gdh_GetObjectInfo( refname, &oid, sizeof(oid));
+	if ( EVEN(sts)) return sts;
+      
+	sts = gdh_ObjidToName( oid, str, sizeof(str), cdh_mName_volumeStrict);
+	if ( EVEN(sts)) return sts;
+	break;
+      }
+      default:
+	return GE__NOREF;
+      }
+
+      if ( (s = strchr( start2, ')')) == 0)
+	return GE__SYNTAX;
+      
+      *s = 0;
+      end = start2 + strlen(start2) + 1;
+      strncat( str, start2, sizeof(str));
+      strcpy( refname, str);
+      
+      sts = gdh_GetAttributeCharacteristics( refname, &atid, &asize, 0, 0); 
+      if ( EVEN(sts)) return sts;
+      
+      strcpy( ref[*ref_cnt], refname);
+      ref_tid[*ref_cnt] = atid;
+      ref_size[*ref_cnt] = asize;
+      (*ref_cnt)++;
+
+    }
+    else {
+      pwr_tAName refname;
+      pwr_tStatus sts;
+      char *start, *end;
+      pwr_tTid atid;
+      pwr_tUInt32 asize;
+ 
+      start = s;
+      strcpy( refname, s+2);
+      if ( (s = strchr( refname, ')')) == 0)
+	return GE__SYNTAX;
+
+      *s = 0;
+      end = start + strlen(refname) + 3;
+
+      sts = gdh_GetAttributeCharacteristics( refname, &atid, &asize, 0, 0); 
+      if ( EVEN(sts)) return sts;
+
+      strcpy( ref[*ref_cnt], refname);
+      ref_size[*ref_cnt] = asize;
+      ref_tid[*ref_cnt] = atid;
+      (*ref_cnt)++;
+    }
+  }
+
+  return GE__SUCCESS;
+}
+
 graph_eDatabase Graph::parse_attr_name( char *name, char *parsed_name, 
-	int *inverted, int *type, int *size, int *elem)
+					int *inverted, int *type, int *size, int *elem, graph_mParseOpt options)
 {
   pwr_tAName str;
   pwr_tAName str1;
@@ -4936,31 +5170,33 @@ graph_eDatabase Graph::parse_attr_name( char *name, char *parsed_name,
       break;
   }
 
-  // Translate index variable
-  for ( int i = 0; i < 2; i++) {
-    if ( (s = strstr( str, "[&("))) {
-      int idx;
-      pwr_tAName iname, rest;
-      pwr_tStatus sts;
-      int len;
+  if ( !(options & graph_mParseOpt_KeepIndex)) {
+    // Translate index variable
+    for ( int i = 0; i < 2; i++) {
+      if ( (s = strstr( str, "[&("))) {
+	int idx;
+	pwr_tAName iname, rest;
+	pwr_tStatus sts;
+	int len;
       
-      s++;
-      strcpy( iname, s+2);
-      s1 = strchr( iname, ')');
-      strncpy( rest, s1+1, sizeof(rest));
-      if ( s1) {
-	*s1 = 0;
-	sts = gdh_GetObjectInfo( iname, &idx, sizeof(idx));
-	if ( ODD(sts) && idx >= 0 && idx <= 100) {
-	  len = sprintf( s, "%d", idx);
-	strcpy( s + len, rest);
+	s++;
+	strcpy( iname, s+2);
+	s1 = strchr( iname, ')');
+	strncpy( rest, s1+1, sizeof(rest));
+	if ( s1) {
+	  *s1 = 0;
+	  sts = gdh_GetObjectInfo( iname, &idx, sizeof(idx));
+	  if ( ODD(sts) && idx >= 0 && idx <= 100) {
+	    len = sprintf( s, "%d", idx);
+	    strcpy( s + len, rest);
+	  }
 	}
+	else
+	  break;
       }
       else
 	break;
     }
-    else
-      break;
   }
 
   for ( int i = 0; i < 4; i++) {
