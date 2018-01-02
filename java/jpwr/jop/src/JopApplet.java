@@ -49,6 +49,7 @@ import jpwr.rt.*;
 */
 public class JopApplet extends JApplet implements GdhApplIfc
 {
+  static final long serialVersionUID = -6996702709757726425L;
   public JopSession session;
   public JopEngine engine;
   String pwrHost;

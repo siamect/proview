@@ -49,6 +49,7 @@ import java.io.Serializable;
  */
 public class PwrtObjid implements Serializable
 {
+  static final long serialVersionUID = 20287020341736125L;
   public int oix;
   public int vid;
   

@@ -48,9 +48,11 @@ import javax.swing.event.*;
 /**
    Ge table component.
 */
+@SuppressWarnings("serial")
 public class GeTable extends JScrollPane implements GeComponentIfc, 
 		  JopDynamic, ActionListener, ListSelectionListener
 {
+  static final long serialVersionUID = -2403613544605359183L;
   Dimension size;
   Object root;
   Timer timer = new Timer(500, this);

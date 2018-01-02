@@ -56,7 +56,7 @@ import jpwr.rt.*;
  */
  
 public class HistTable extends JScrollPane {
-    
+     static final long serialVersionUID = 8840562919946236178L;   
     JopSession session;
     boolean DEBUG=false;
     public EventTableModel atModel;

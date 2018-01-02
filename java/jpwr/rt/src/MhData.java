@@ -47,16 +47,16 @@ public class MhData
 
   public int maxNrOfAlarms;
   public int maxNrOfEvents;
-  public Vector alarmVec;
-  public Vector eventVec;
+  public Vector<MhrEvent> alarmVec;
+  public Vector<MhrEvent> eventVec;
 
 
   public MhData(int maxNrOfAlarms, int maxNrOfEvents)
   {
     this.maxNrOfAlarms = maxNrOfAlarms;
     this.maxNrOfEvents = maxNrOfEvents;
-    this.alarmVec = new Vector(maxNrOfAlarms);
-    this.eventVec = new Vector(maxNrOfEvents);
+    this.alarmVec = new Vector<MhrEvent>(maxNrOfAlarms);
+    this.eventVec = new Vector<MhrEvent>(maxNrOfEvents);
   }
   public int getNrOfAlarms()
   {
@@ -68,19 +68,19 @@ public class MhData
   }
   public MhrEvent getAlarm(int i)
   {
-    return (MhrEvent)alarmVec.get(i);
+    return alarmVec.get(i);
   }
   public MhrEvent getEvent(int i)
   {
-    return (MhrEvent)eventVec.get(i);
+    return eventVec.get(i);
   }
-  public void addMessToVectorInSortedOrder(Vector v, MhrEvent ev)
+  public void addMessToVectorInSortedOrder(Vector<MhrEvent> v, MhrEvent ev)
   {
-    ListIterator iter = v.listIterator();
+    ListIterator<MhrEvent> iter = v.listIterator();
     MhrEvent vEv;
     while(iter.hasNext())
     {
-      vEv = (MhrEvent)iter.next();
+      vEv = iter.next();
       if(ev.eventTime.compareTo(vEv.eventTime) >= 0)
       {
         iter.previous();
@@ -127,7 +127,7 @@ public class MhData
         // Find the object in the alarm list
         for(int i = 0; i < alarmVec.size(); i++)
         {
-          MhrEvent alEv = (MhrEvent)alarmVec.get(i);
+          MhrEvent alEv = alarmVec.get(i);
           if((ev.targetId.nix == alEv.eventId.nix) && (ev.targetId.idx == alEv.eventId.idx))
           {
             // The alarm is acknowledged and can be removed
@@ -152,7 +152,7 @@ public class MhData
       case Mh.mh_eEvent_Ack:
         for(int i = 0; i < alarmVec.size(); i++)
         {
-          MhrEvent alEv = (MhrEvent)alarmVec.get(i);
+          MhrEvent alEv = alarmVec.get(i);
           if((ev.targetId.nix == alEv.eventId.nix) && (ev.targetId.idx == alEv.eventId.idx))
           {
             if((alEv.eventStatus & Mh.mh_mEventStatus_NotRet) == 0)

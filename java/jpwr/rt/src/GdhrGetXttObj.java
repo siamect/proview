@@ -42,6 +42,7 @@ import java.io.Serializable;
 */
 public class GdhrGetXttObj implements Serializable
 {
+  static final long serialVersionUID = 8443258886788440868L;
   public String name;
   public String fullName;
   public String className;

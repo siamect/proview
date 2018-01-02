@@ -60,12 +60,12 @@ public class FlowCmn {
   double y_high;
   double y_low;
 
-  //Vector<Object> a = new Vector<Object>();
-  Vector a = new Vector();
-  //Vector<Object> a_nc = new Vector<Object>();
-  Vector a_nc = new Vector();
-  //Vector<Object> a_cc = new Vector<Object>();
-  Vector a_cc = new Vector();
+  Vector<Object> a = new Vector<Object>();
+  //Vector a = new Vector();
+  Vector<Object> a_nc = new Vector<Object>();
+  //Vector a_nc = new Vector();
+  Vector<Object> a_cc = new Vector<Object>();
+  //Vector a_cc = new Vector();
 
   public FlowCmn( Object ctx, Gdh gdh, JopSession session) {
     this.ctx = ctx;

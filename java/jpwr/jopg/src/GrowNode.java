@@ -1164,7 +1164,7 @@ public class GrowNode extends GlowArrayElem implements GlowColorNode {
 		b.min = x1;
 		b.max = x2;
 	    }
-	    ((GlowBackgroundObject)b).background = this;
+	    b.background = this;
 	    System.out.println("Background limits (" + g.ll_x + "," + g.ll_y + ") (" + g.ur_x + "," + g.ur_y + ") rot " + rotation);
 	    return 1;
 	}

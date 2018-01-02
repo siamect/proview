@@ -53,6 +53,7 @@ import java.util.*;
    Loads and displays cross references for an object.
 */
 public class CrrFrame extends JFrame {
+  static final long serialVersionUID = 7498183574125119633L;
   JScrollPane scrollPane;
   JPanel contentPane;
   JMenuBar menuBar;
@@ -105,6 +106,7 @@ public class CrrFrame extends JFrame {
   }
 
   class MenuAction extends AbstractAction {
+    static final long serialVersionUID = 7036241583934938611L;
     public MenuAction( String text) {
       super(text);
     }
@@ -207,6 +209,7 @@ public class CrrFrame extends JFrame {
   }
 
   class CrrCellRenderer extends JLabel implements ListCellRenderer {
+      static final long serialVersionUID = 632947868180408101L;
       Color highlightColor = new Color( 230, 230, 255);
 
       CrrCellRenderer() {

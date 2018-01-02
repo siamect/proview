@@ -63,11 +63,11 @@ public class CcmFileCtx {
 
     public void updateLines() {
 	for ( int i = 0; i < line_list.size(); i++)
-	    ((CcmLine)line_list.get(i)).idx =  i;
+	    line_list.get(i).idx =  i;
     }
     public CcmLine lineNext( CcmLine l) {
 	if ( l.idx + 1 < line_list.size())
-	    return (CcmLine)line_list.get(l.idx+1);
+	    return line_list.get(l.idx+1);
 	return null;
     }
 }

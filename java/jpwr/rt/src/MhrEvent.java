@@ -42,6 +42,7 @@ import java.io.Serializable;
  */
 public class MhrEvent implements Serializable
 {
+  static final long serialVersionUID = -4601859409348816451L;
   public String eventTime;
   public String eventText;
   public String eventName;

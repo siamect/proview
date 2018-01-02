@@ -47,6 +47,7 @@ import jpwr.rt.*;
    Axis configuration and drawing for the curve window.
 */
 public class JopCurveAxis extends JComponent {
+  static final long serialVersionUID = 6775302227707301473L;
   Dimension size;
   public JopCurveAxis()
   {

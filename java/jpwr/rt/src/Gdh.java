@@ -199,8 +199,8 @@ public class Gdh {
 	return false;
     }
 
-    public Vector getAllClassAttributes( int classid, PwrtObjid objid_obj )
-    //public Vector<CdhrObjAttr> getAllClassAttributes( int classid, PwrtObjid objid_obj )
+    //public Vector getAllClassAttributes( int classid, PwrtObjid objid_obj )
+    public Vector<CdhrObjAttr> getAllClassAttributes( int classid, PwrtObjid objid_obj )
     {
 	//System.out.println("getAllClassAttributes" + classid + " " + objid_obj.oix + " " + objid_obj.vid);
 
@@ -210,8 +210,8 @@ public class Gdh {
 
 	GdhrsAttrDef[] gdhrsAttrDefArr = this.getObjectBodyDef(classid, new PwrtAttrRef(objid_obj));
 
-	//Vector<CdhrObjAttr> v = new Vector<CdhrObjAttr>();
-	Vector v = new Vector();
+	Vector<CdhrObjAttr> v = new Vector<CdhrObjAttr>();
+	//Vector v = new Vector();
 	for(int i = 0;i<gdhrsAttrDefArr.length;i++)
 	    {
 		if(gdhrsAttrDefArr[i] == null)
@@ -245,8 +245,8 @@ public class Gdh {
 	return v;
     }
 
-    //public Vector<CdhrObjAttr> getAllClassAttributes( String name )
-    public Vector getAllClassAttributes( String name )
+    public Vector<CdhrObjAttr> getAllClassAttributes( String name )
+    //public Vector getAllClassAttributes( String name )
     {
 
 	CdhrAttrRef attrRef = this.nameToAttrRef(name);
@@ -260,8 +260,8 @@ public class Gdh {
 		return this.getAllClassAttributes(this.getObjectClass(this.nameToObjid(name).objid).classId, this.nameToObjid(name).objid );
 
 	    }
-	//Vector<CdhrObjAttr> v = new Vector<CdhrObjAttr>();
-	Vector v = new Vector();
+	Vector<CdhrObjAttr> v = new Vector<CdhrObjAttr>();
+	//Vector v = new Vector();
 	for(int i = 0;i<gdhrsAttrDefArr.length;i++)
 	    {
 		if(gdhrsAttrDefArr[i] == null)
@@ -299,12 +299,12 @@ public class Gdh {
 
 
 
-    //public Vector<CdhrObjid> getAllSiblings( PwrtObjid objid )
-    public Vector getAllSiblings( PwrtObjid objid )
+    public Vector<CdhrObjid> getAllSiblings( PwrtObjid objid )
+    //public Vector getAllSiblings( PwrtObjid objid )
     {
-	CdhrObjid sibling = (CdhrObjid)this.getNextSibling(objid);
-	//Vector<CdhrObjid> v = new Vector<CdhrObjid>();
-	Vector v = new Vector();
+	CdhrObjid sibling = this.getNextSibling(objid);
+	Vector<CdhrObjid> v = new Vector<CdhrObjid>();
+	//Vector v = new Vector();
 	while(sibling.oddSts())
 	    {
 		v.add(sibling);
@@ -313,8 +313,8 @@ public class Gdh {
 	return v;
     }
   
-    //public Vector<GdhrGetXttObj> getAllXttSiblings( PwrtObjid objid )
-    public Vector getAllXttSiblings( PwrtObjid objid )
+    public Vector<GdhrGetXttObj> getAllXttSiblings( PwrtObjid objid )
+    //public Vector getAllXttSiblings( PwrtObjid objid )
     {
 	String name = null;
 	String fullName = null;
@@ -324,12 +324,12 @@ public class Gdh {
 	CdhrClassId cdhrClassId;
 	int sts = 2;
 	boolean hasChildren = false;
-	//Vector<GdhrGetXttObj> v = new Vector<GdhrGetXttObj>();
-	Vector v = new Vector();
+	Vector<GdhrGetXttObj> v = new Vector<GdhrGetXttObj>();
+	//Vector v = new Vector();
     
 	CdhrObjid classObj;
     
-	cdhrObjId = (CdhrObjid)this.getNextSibling(objid);
+	cdhrObjId = this.getNextSibling(objid);
 	while(cdhrObjId.oddSts())
 	    {
 		cdhrClassId = this.getObjectClass(cdhrObjId.objid);
@@ -368,8 +368,8 @@ public class Gdh {
 	    }
 	return v;
     }
-    //public Vector<GdhrGetXttObj> getAllXttChildren( PwrtObjid objid )
-    public Vector getAllXttChildren( PwrtObjid objid )
+    public Vector<GdhrGetXttObj> getAllXttChildren( PwrtObjid objid )
+    //public Vector getAllXttChildren( PwrtObjid objid )
     {
 	String name = null;
 	String fullName = null;
@@ -379,12 +379,12 @@ public class Gdh {
 	CdhrClassId cdhrClassId;
 	int sts = 2;
 	boolean hasChildren = false;
-	//Vector<GdhrGetXttObj> v = new Vector<GdhrGetXttObj>();
-	Vector v = new Vector();
+	Vector<GdhrGetXttObj> v = new Vector<GdhrGetXttObj>();
+	//Vector v = new Vector();
     
 	CdhrObjid classObj;
     
-	cdhrObjId = (CdhrObjid)this.getChild(objid);
+	cdhrObjId = this.getChild(objid);
 	while(cdhrObjId.oddSts())
 	    {
 		//System.out.println("whilegetAllXttChildren");
@@ -425,11 +425,11 @@ public class Gdh {
 	return v;
     }
 
-    //public Vector<GdhrRefObjectInfo> refObjectInfo_Vector( Vector vec )
-    public Vector refObjectInfo_Vector( Vector vec )
+    public Vector<GdhrRefObjectInfo> refObjectInfo_Vector( Vector vec )
+    //public Vector refObjectInfo_Vector( Vector vec )
     {
-	//Vector<GdhrRefObjectInfo> retVec = new Vector<GdhrRefObjectInfo>();
-	Vector retVec = new Vector();
+	Vector<GdhrRefObjectInfo> retVec = new Vector<GdhrRefObjectInfo>();
+	//Vector retVec = new Vector();
 	for(int i = 0;i < vec.size();i++)
 	    {
 		GdhrRefObjectInfo ret = this.refObjectInfo( (String)vec.get(i) );

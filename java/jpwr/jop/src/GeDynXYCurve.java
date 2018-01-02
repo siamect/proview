@@ -356,7 +356,7 @@ public class GeDynXYCurve extends GeDynElem {
 	  dyn.repaintNow = true;
 	  break;
 	case GeDyn.eCurveDataType_TableObject:
-	  noOfPoints = (int)rxi.value[0];
+	  noOfPoints = rxi.value[0];
 	  if ( noOfPoints > noofpoints)
 	    noOfPoints = noofpoints;
 	  if ( attrSize < noOfPoints)

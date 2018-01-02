@@ -48,7 +48,8 @@ import jpwr.rt.*;
    Ge trend component.
 */
 public class JopTrend extends JComponent implements GeComponentIfc, 
-	  JopDynamic, JopConfirm, ActionListener{
+	  JopDynamic, JopConfirm, ActionListener {
+  static final long serialVersionUID = -6824384044291798084L;
   Dimension size;
   Timer timer = new Timer(500, this);
   Object root;

@@ -48,7 +48,8 @@ import jpwr.rt.*;
    Jop bar component.
  */
 public class JopBar extends JComponent implements GeComponentIfc, 
-            JopDynamic, JopConfirm, ActionListener{
+            JopDynamic, JopConfirm, ActionListener {
+  static final long serialVersionUID = -8562081511724511015L;
   Dimension size;
   Timer timer = new Timer(500, this);
   Object root;

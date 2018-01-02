@@ -48,9 +48,10 @@ import jpwr.rt.*;
 */
 
 public class HistStatModel2 extends AbstractTableModel{
+    static final long serialVersionUID = 2790668478023223144L;
     // The List holding the statistics
-    //List<MhrEvent> result;  
-    List result;  
+    List<MhrEvent> result;  
+    //List result;  
     private String[] names={JopLang.transl("Object"), 
 			    JopLang.transl("Duration time")};
     
@@ -62,8 +63,8 @@ public class HistStatModel2 extends AbstractTableModel{
     }
     
     public void clearData(){
-	//result = new ArrayList<MhrEvent>();
-	result = new ArrayList();
+	result = new ArrayList<MhrEvent>();
+	//result = new ArrayList();
     }
 
     public void setData(MhData m){
@@ -78,16 +79,16 @@ public class HistStatModel2 extends AbstractTableModel{
     for(int i=m.eventVec.size()-1; i>0;i--){
             boolean found=false;
             int timeDiff=0;
-            if (((MhrEvent)m.eventVec.get(i)).eventType==Mh.mh_eEvent_Alarm){
+            if (m.eventVec.get(i).eventType==Mh.mh_eEvent_Alarm){
                 for(int j=i-1; j>=0;j--){ 
-                    if (((MhrEvent) m.eventVec.get(j)).targetId.birthTime.equals(((MhrEvent) m.eventVec.get(i)).eventId.birthTime))
-                        if (((MhrEvent)m.eventVec.get(j)).eventType==Mh.mh_eEvent_Return){
+                    if (m.eventVec.get(j).targetId.birthTime.equals(m.eventVec.get(i).eventId.birthTime))
+                        if (m.eventVec.get(j).eventType==Mh.mh_eEvent_Return){
                 found=true;
                 // The duration is calculated in seconds. The 
                 //duration is limited to at most two months. 
                 Pattern p = Pattern.compile("[\\s-:.]");
                 
-                String[] stop=p.split(((MhrEvent) m.eventVec.get(j)).eventTime);
+                String[] stop=p.split(m.eventVec.get(j).eventTime);
                 int month = new Integer(stop[1]).intValue();
                     int day = new Integer(stop[2]).intValue();
                 int hour  = new Integer(stop[3]).intValue();
@@ -95,7 +96,7 @@ public class HistStatModel2 extends AbstractTableModel{
                 int second  = new Integer(stop[5]).intValue();
                 int millis = new Integer(stop[6]).intValue();
                 
-                String[] start=p.split(((MhrEvent) m.eventVec.get(i)).eventTime);
+                String[] start=p.split(m.eventVec.get(i).eventTime);
                 
                 
                 month -= new Integer(start[1]).intValue();
@@ -138,8 +139,8 @@ public class HistStatModel2 extends AbstractTableModel{
         }
         }                      
             if (found){
-                result.add(((MhrEvent)m.eventVec.get(i)).getCopy());
-        ((MhrEvent)result.get(result.size()-1)).eventFlags=timeDiff;
+                result.add(m.eventVec.get(i).getCopy());
+		result.get(result.size()-1).eventFlags=timeDiff;
                 
         }
     }
@@ -147,9 +148,9 @@ public class HistStatModel2 extends AbstractTableModel{
     
         
     public Object getValueAt(int r,int c){
-        if (c==0) return ((MhrEvent)result.get(r)).eventName;
+        if (c==0) return result.get(r).eventName;
         else {
-        int temp = ((MhrEvent)result.get(r)).eventFlags;        
+        int temp = result.get(r).eventFlags;        
         //Format a String showing the duration in days, hours, minutes
         // and seconds.
         String retString= "" + (temp/(3600*24)) + "D ";
@@ -179,14 +180,14 @@ public class HistStatModel2 extends AbstractTableModel{
     //eventFlags).Longest duration on top.)    
     public void sortData(){
     
-    //Collections.sort(result, new Comparator<MhrEvent>(){
-    //      public int compare(MhrEvent o1, MhrEvent o2){
-    //         if (o1.eventFlags < o2.eventFlags) return 1;
-    //         else if (o1.eventFlags > o2.eventFlags) return -1;
-    Collections.sort(result, new Comparator(){
-         public int compare(Object o1, Object o2){
-            if (((MhrEvent)o1).eventFlags < ((MhrEvent)o2).eventFlags) return 1;
-            else if (((MhrEvent)o1).eventFlags > ((MhrEvent)o2).eventFlags) return -1;
+    Collections.sort(result, new Comparator<MhrEvent>(){
+          public int compare(MhrEvent o1, MhrEvent o2){
+             if (o1.eventFlags < o2.eventFlags) return 1;
+             else if (o1.eventFlags > o2.eventFlags) return -1;
+    //Collections.sort(result, new Comparator(){
+    //     public int compare(Object o1, Object o2){
+    //        if (((MhrEvent)o1).eventFlags < ((MhrEvent)o2).eventFlags) return 1;
+    //        else if (((MhrEvent)o1).eventFlags > ((MhrEvent)o2).eventFlags) return -1;
             else return 0;
         }
     }); 

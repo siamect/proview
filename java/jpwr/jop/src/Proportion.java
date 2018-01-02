@@ -52,10 +52,10 @@ public class Proportion {
     // constructor. area= the size and place of an object. framesize
     //is the size of the frame in which it is placed.
     public Proportion(Rectangle area, Dimension framesize){
-	rx= (double) (1.0*area.x/framesize.width);
-	ry= (double) (1.0*area.y/framesize.height);
-	rw= (double) (1.0*area.width/framesize.width);
-	rh= (double) (1.0*area.height/framesize.height);
+	rx= (1.0*area.x/framesize.width);
+	ry= (1.0*area.y/framesize.height);
+	rw= (1.0*area.width/framesize.width);
+	rh= (1.0*area.height/framesize.height);
 	previous= new Dimension(1,1);
     }
 

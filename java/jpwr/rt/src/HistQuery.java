@@ -45,6 +45,7 @@ import java.io.Serializable;
  */
 
 public class HistQuery implements Serializable{
+  static final long serialVersionUID = 8161116221604322578L;
   public String startTime;
   public String stopTime;
   public boolean[] type;

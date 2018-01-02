@@ -7342,7 +7342,7 @@ public class Dyn {
 			dyn.repaintNow = true;
 			break;
 		    case eCurveDataType_TableObject:
-			noOfPoints = (int)rxi.value[0];
+			noOfPoints = rxi.value[0];
 			if ( noOfPoints > noofpoints)
 			    noOfPoints = noofpoints;
 			if ( attrSize < noOfPoints)
@@ -11578,38 +11578,38 @@ public class Dyn {
 		object.storeTransform();
 		GlowGeometry g = object.measure();
 		System.out.println("Slider measure: (" + g.ll_x + "," + g.ll_y + ") (" +  g.ur_x + "," + g.ur_y + ")");
-		GlowSliderInfo info = ((GrowSlider)object).get_info();
+		GlowSliderInfo info = object.get_info();
 		GlowBackgroundObject b = dyn.graph.getCtx().getBackgroundObjectLimits(Dyn.mDynType1_SliderBackground,
 								 (g.ll_x + g.ur_x) / 2, (g.ll_y + g.ur_y) / 2);
 		System.out.println("Slider background sts: " + b.sts + " direction " + b.direction);
 		if ( (b.sts & 1) != 0) {
 		    direction = b.direction;
-		    origo = ((GrowSlider)object).get_origo(info.direction);
+		    origo = object.get_origo(info.direction);
 
 		    switch( direction) {
 		    case Glow.eDirection_Down:
 			info.max_position = b.max - origo;
 			info.min_position = b.min - origo;
-			((GrowSlider)object).set_info(info);
+			object.set_info(info);
 
 			object.move_to(g.ll_x, info.min_position);
 			break;
 		    case Glow.eDirection_Up:
 			info.max_position = b.max - (g.ur_y - g.ll_y - origo);
 			info.min_position = b.min - (g.ur_y - g.ll_y - origo);
-			((GrowSlider)object).set_info(info);
+			object.set_info(info);
 			object.move_to(g.ll_x, info.min_position);
 			break;
 		    case Glow.eDirection_Left:
 			info.max_position = b.max - (g.ur_x - g.ll_x - origo);
 			info.min_position = b.min - (g.ur_x - g.ll_x - origo);
-			((GrowSlider)object).set_info(info);
+			object.set_info(info);
 			object.move_to(info.min_position, g.ll_y);
 			break;
 		    case Glow.eDirection_Right:
 			info.max_position = b.max - origo;
 			info.min_position = b.min - origo;
-			((GrowSlider)object).set_info(info);
+			object.set_info(info);
 			object.move_to(info.min_position, g.ll_y);
 			break;
 		    default:

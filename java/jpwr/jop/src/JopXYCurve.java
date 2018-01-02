@@ -48,6 +48,7 @@ import jpwr.rt.*;
    Ge XYCurve component.
 */
 public class JopXYCurve extends JopTrend {
+  static final long serialVersionUID = 2279743861470745036L;
 
   public JopXYCurve( JopSession session)
   {
@@ -142,9 +143,9 @@ public class JopXYCurve extends JopTrend {
 	      intY[i] = (int)(r.height - elem.curveY[i] * r.height);
 	      intX[i] = (int)(elem.curveX[i] * r.width);
 	    }
-	    intY[elem.noOfPoints] = (int)(r.height);
+	    intY[elem.noOfPoints] = (r.height);
 	    intX[elem.noOfPoints] = intX[elem.noOfPoints-1];
-	    intY[elem.noOfPoints+1] = (int)(r.height);
+	    intY[elem.noOfPoints+1] = (r.height);
 	    intX[elem.noOfPoints+1] = intX[0];
 	    intY[elem.noOfPoints+2] = intY[0];
 	    intX[elem.noOfPoints+2] = intX[0];

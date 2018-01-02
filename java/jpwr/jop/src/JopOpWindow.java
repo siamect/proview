@@ -47,7 +47,7 @@ import java.awt.event.*;
    buttons for actions defined with WebGraph and WebLink objects.
 */
 public class JopOpWindow extends JPanel {
-
+  static final long serialVersionUID = -3523475180412406293L;
   JopSession session;
   JopEngine en;
   Object root;
@@ -304,6 +304,7 @@ public class JopOpWindow extends JPanel {
 }
 
   class OpWindButton extends JButton {
+    static final long serialVersionUID = -2996983070110702956L;
     public static final int WEBGRAPH = 1;
     public static final int WEBLINK = 2;
     public static final int LOGIN = 3;

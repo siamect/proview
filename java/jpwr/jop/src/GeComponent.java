@@ -50,6 +50,7 @@ import jpwr.rt.*;
 */
 public class GeComponent extends JComponent implements GeComponentIfc, 
 	JopDynamic, JopConfirm, ActionListener {
+  static final long serialVersionUID = -817317996853292878L;
   public Dimension size;
   public Object root;
   public JopEngine en;

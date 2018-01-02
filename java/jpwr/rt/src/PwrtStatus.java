@@ -59,6 +59,7 @@ import java.io.Serializable;
  */
 public class PwrtStatus implements Serializable
 {
+  static final long serialVersionUID = 3091498754004220412L;
   int sts;
   
   public PwrtStatus( int sts) {

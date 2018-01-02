@@ -48,6 +48,7 @@ import java.awt.event.*;
    Frame for login.
 */
 public class JopLoginFrame extends JFrame {
+  static final long serialVersionUID = -6429957052856309022L;
   JPanel contentPane;
   BorderLayout borderLayout1 = new BorderLayout();
   BorderLayout borderLayout3 = new BorderLayout();

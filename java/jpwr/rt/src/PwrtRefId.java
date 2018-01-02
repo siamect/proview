@@ -45,6 +45,7 @@ import java.io.Serializable;
  */
 public class PwrtRefId implements Serializable
 {
+  static final long serialVersionUID = -408643244705044226L;
   public int rix;
   public int nid;
   

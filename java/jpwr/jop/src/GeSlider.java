@@ -47,6 +47,7 @@ import jpwr.rt.*;
    Ge slider component.
 */
 public class GeSlider extends JComponent implements JopDynamic, ActionListener{
+  static final long serialVersionUID = 5465576942100733631L;
   Timer timer = new Timer(500, this);
   public Object root;
   public JopEngine en;

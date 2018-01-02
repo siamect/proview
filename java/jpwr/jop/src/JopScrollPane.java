@@ -44,6 +44,7 @@ import javax.swing.JScrollBar;
 */
 public class JopScrollPane extends JScrollPane
 {
+  static final long serialVersionUID = 2248746586433993726L;
   public JopScrollPane()
   {
     super();

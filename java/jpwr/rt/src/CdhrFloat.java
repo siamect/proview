@@ -43,6 +43,7 @@ import java.io.Serializable;
 */
 public class CdhrFloat implements Serializable
 {
+  static final long serialVersionUID = -3558503297504669422L;
   public float value;
   public int sts;
   

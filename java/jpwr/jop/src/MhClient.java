@@ -60,6 +60,7 @@ import java.awt.event.*;
  */
 public class MhClient extends JApplet
 {
+  static final long serialVersionUID = 3652214215365767081L;
   BorderLayout borderLayout1 = new BorderLayout();
 
   BorderLayout borderLayout5 = new BorderLayout();

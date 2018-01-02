@@ -143,14 +143,14 @@ public class GlowColor {
 	    shift = - shift;
 
 	if ( is_shiftable(dt)) {
-	    base_drawtype = (int)(dt / 10 * 10);
+	    base_drawtype = (dt / 10 * 10);
 	    incr = shift + dt - base_drawtype;
 	    if ( incr < 0)
 		drawtype = Glow.eDrawType_Color4; // White
 	    else if ( incr >= 10)
 		drawtype = Glow.eDrawType_Color30; // DarkGrey
 	    else
-		drawtype = (int)(base_drawtype + incr);
+		drawtype = (base_drawtype + incr);
 	}
 	else if ( is_custom(dt)) {
 	    if ( shift == -1)

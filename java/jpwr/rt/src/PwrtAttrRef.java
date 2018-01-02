@@ -59,6 +59,8 @@ import java.io.Serializable;
 
 public class PwrtAttrRef implements Serializable
 {
+  static final long serialVersionUID = -7487543277705441066L;
+
   public static final int INDIRECT    	= 1 << 0;
   public static final int OBJECT   	= 1 << 1;
   public static final int OBJECTATTR   	= 1 << 2;

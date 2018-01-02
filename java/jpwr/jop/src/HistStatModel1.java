@@ -46,9 +46,10 @@ import jpwr.rt.*;
 */
 
 public class HistStatModel1 extends AbstractTableModel{
+    static final long serialVersionUID = -3275322604785285866L;
     // The List storing the resulting statistics.
-    //public List<MhrEvent> result;
-    public List result;
+    public List<MhrEvent> result;
+    //public List result;
     private String[][] freqNames={{"Object", "Nr. of alarms" },{"Objekt","Antal larm"}};
     int lang;
     
@@ -60,8 +61,8 @@ public class HistStatModel1 extends AbstractTableModel{
     }
 
     public void clearData(){
-	//result = new ArrayList<MhrEvent>(); 
-	result = new ArrayList(); 
+	result = new ArrayList<MhrEvent>(); 
+	//result = new ArrayList(); 
     }
     
     public void setData(MhData m){
@@ -75,30 +76,30 @@ public class HistStatModel1 extends AbstractTableModel{
     for(int i=0; i<m.eventVec.size();i++){
             boolean found=false;
             for ( int j = 0; j<result.size();j++){
-                if ( ((MhrEvent) m.eventVec.get(i)).eventName.equals(((MhrEvent)(result.get(j))).eventName)){
-                    if ( ((MhrEvent) m.eventVec.get(i)).eventType == Mh.mh_eEvent_Alarm ||
-			 ((MhrEvent) m.eventVec.get(i)).eventType == Mh.mh_eEvent_MaintenanceAlarm ||
-			 ((MhrEvent) m.eventVec.get(i)).eventType == Mh.mh_eEvent_SystemAlarm ||
-			 ((MhrEvent) m.eventVec.get(i)).eventType == Mh.mh_eEvent_UserAlarm1 ||
-			 ((MhrEvent) m.eventVec.get(i)).eventType == Mh.mh_eEvent_UserAlarm2 ||
-			 ((MhrEvent) m.eventVec.get(i)).eventType == Mh.mh_eEvent_UserAlarm3 ||
-			 ((MhrEvent) m.eventVec.get(i)).eventType == Mh.mh_eEvent_UserAlarm4){
-                        ((MhrEvent)(result.get(j))).eventFlags++;
+                if ( m.eventVec.get(i).eventName.equals(result.get(j).eventName)){
+                    if ( m.eventVec.get(i).eventType == Mh.mh_eEvent_Alarm ||
+			 m.eventVec.get(i).eventType == Mh.mh_eEvent_MaintenanceAlarm ||
+			 m.eventVec.get(i).eventType == Mh.mh_eEvent_SystemAlarm ||
+			 m.eventVec.get(i).eventType == Mh.mh_eEvent_UserAlarm1 ||
+			 m.eventVec.get(i).eventType == Mh.mh_eEvent_UserAlarm2 ||
+			 m.eventVec.get(i).eventType == Mh.mh_eEvent_UserAlarm3 ||
+			 m.eventVec.get(i).eventType == Mh.mh_eEvent_UserAlarm4){
+                        result.get(j).eventFlags++;
                         found=true;
                     }
                 }
                 if (found) break;
             }
             if (! found){
-		if ( ((MhrEvent) m.eventVec.get(i)).eventType == Mh.mh_eEvent_Alarm ||
-		     ((MhrEvent) m.eventVec.get(i)).eventType == Mh.mh_eEvent_MaintenanceAlarm ||
-		     ((MhrEvent) m.eventVec.get(i)).eventType == Mh.mh_eEvent_SystemAlarm ||
-		     ((MhrEvent) m.eventVec.get(i)).eventType == Mh.mh_eEvent_UserAlarm1 ||
-		     ((MhrEvent) m.eventVec.get(i)).eventType == Mh.mh_eEvent_UserAlarm2 ||
-		     ((MhrEvent) m.eventVec.get(i)).eventType == Mh.mh_eEvent_UserAlarm3 ||
-		     ((MhrEvent) m.eventVec.get(i)).eventType == Mh.mh_eEvent_UserAlarm4){
-		    result.add(((MhrEvent)(m.eventVec.get(i))).getCopy());
-		    ((MhrEvent)result.get(result.size()-1)).eventFlags=1;
+		if ( m.eventVec.get(i).eventType == Mh.mh_eEvent_Alarm ||
+		     m.eventVec.get(i).eventType == Mh.mh_eEvent_MaintenanceAlarm ||
+		     m.eventVec.get(i).eventType == Mh.mh_eEvent_SystemAlarm ||
+		     m.eventVec.get(i).eventType == Mh.mh_eEvent_UserAlarm1 ||
+		     m.eventVec.get(i).eventType == Mh.mh_eEvent_UserAlarm2 ||
+		     m.eventVec.get(i).eventType == Mh.mh_eEvent_UserAlarm3 ||
+		     m.eventVec.get(i).eventType == Mh.mh_eEvent_UserAlarm4){
+		    result.add(m.eventVec.get(i).getCopy());
+		    result.get(result.size()-1).eventFlags=1;
 		}
 	    }      
 	    
@@ -107,8 +108,8 @@ public class HistStatModel1 extends AbstractTableModel{
     
     
     public Object getValueAt(int r,int c){
-        if (c==0) return ((MhrEvent)result.get(r)).eventName;
-        else return new Integer(((MhrEvent)result.get(r)).eventFlags);
+        if (c==0) return result.get(r).eventName;
+        else return new Integer(result.get(r).eventFlags);
     } 
     
     public int getRowCount(){
@@ -126,16 +127,16 @@ public class HistStatModel1 extends AbstractTableModel{
     public void sortData(){
     //sortData sorts the result List. Largest number of times found first.
     
-    //Collections.sort(result, new Comparator<MhrEvent>(){
-    //      public int compare(MhrEvent o1, MhrEvent o2){
-    //    if (o1.eventFlags < o2.eventFlags) 
-    //    return 1;
-    //    else if (o1.eventFlags > o2.eventFlags) 
-    Collections.sort(result, new Comparator(){
-          public int compare(Object o1, Object o2){
-        if (((MhrEvent)o1).eventFlags < ((MhrEvent)o2).eventFlags) 
+    Collections.sort(result, new Comparator<MhrEvent>(){
+          public int compare(MhrEvent o1, MhrEvent o2){
+        if (o1.eventFlags < o2.eventFlags) 
         return 1;
-        else if (((MhrEvent)o1).eventFlags > ((MhrEvent)o2).eventFlags) 
+        else if (o1.eventFlags > o2.eventFlags) 
+    //Collections.sort(result, new Comparator(){
+    //      public int compare(Object o1, Object o2){
+    //    if (((MhrEvent)o1).eventFlags < ((MhrEvent)o2).eventFlags) 
+    //    return 1;
+    //    else if (((MhrEvent)o1).eventFlags > ((MhrEvent)o2).eventFlags) 
         return -1;
         else return 0;
         }

@@ -53,6 +53,7 @@ import java.applet.*;
    Grow frame containing a Ge graph.
  */
 public class JopGrowFrame extends GrowFrame implements JopUtilityIfc {
+    static final long serialVersionUID = -883615667069046207L;
     String utilityName;
     PwrtAttrRef utilityAref;
 

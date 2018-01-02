@@ -62,7 +62,7 @@ public interface GrowCtxIfc {
     public void zoom( double factor);
     public void zoom( double factor, double x, double y);
     public void scroll( int delta_x, int delta_y);
-    public void openVector( BufferedReader reader, Object cmn, Vector a);
+    public void openVector( BufferedReader reader, Object cmn, Vector<GlowArrayElem> a);
     public int eventHandler(GlowEvent e, double fx, double fy);
     public Object getCmn();
     public void traceConnect();

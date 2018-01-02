@@ -52,6 +52,7 @@ import java.applet.*;
    Frame loading and displaying plc code.
 */
 public class FlowFrame extends JFrame implements JopUtilityIfc, GdhApplIfc {
+  static final long serialVersionUID = -2933191461080343963L;
   JScrollPane scrollPane;
   JPanel contentPane;
   JMenuBar menuBar;
@@ -196,6 +197,7 @@ public class FlowFrame extends JFrame implements JopUtilityIfc, GdhApplIfc {
   }
 
   class LocalPanel extends JPanel {
+    static final long serialVersionUID = -5425113234276338852L;
     public LocalPanel() {}
     public Dimension getPreferredSize() { return size;}
     public Dimension getMinimumSize() { return size;}
@@ -245,6 +247,7 @@ public class FlowFrame extends JFrame implements JopUtilityIfc, GdhApplIfc {
   }
 
   class MenuAction extends AbstractAction {
+    static final long serialVersionUID = -4684647546264535297L;
     public MenuAction( String text) {
       super(text);
     }

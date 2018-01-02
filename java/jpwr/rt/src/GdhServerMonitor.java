@@ -47,6 +47,7 @@ import java.awt.event.*;
 import javax.swing.Timer;
 public class GdhServerMonitor extends JFrame implements ActionListener
 {
+  static final long serialVersionUID = -4779611319218317223L;
   public final static int GET_SUBSCRIPTIONS = 41;
     /**  Description of the Field */
   JLabel labelMessage = new JLabel("MhClient version 1.0");
@@ -267,6 +268,7 @@ public class GdhServerMonitor extends JFrame implements ActionListener
   
   class MyTableModel extends AbstractTableModel 
   {
+    static final long serialVersionUID = -1143129733031746821L;
     public MyTableModel()
     {
       getData();

@@ -992,7 +992,7 @@ public class Ccm {
 	}
     }
 
-    public int readFile( CcmFileCtx filectx, String filename, Vector line_list) {
+    public int readFile( CcmFileCtx filectx, String filename, Vector<CcmLine> line_list) {
 	String line;
 	int row = 0;
 
@@ -1071,7 +1071,7 @@ public class Ccm {
 	return 1;
     }
 
-    public int readBuffer( CcmFileCtx filectx, String buffer, Vector line_list) {
+    public int readBuffer( CcmFileCtx filectx, String buffer, Vector<CcmLine> line_list) {
 	String line;
 	int row = 0;
 	int last_line = -1;
@@ -1247,7 +1247,7 @@ public class Ccm {
 	boolean main_end_found = false;
 
 	for ( int i = 0; i < filectx.line_list.size(); i++) {
-	    CcmLine line_p = (CcmLine)filectx.line_list.get(i);
+	    CcmLine line_p = filectx.line_list.get(i);
 
 	    if ( line_p.line.startsWith("function") && line_p.line.length() > 8 &&
 		 (line_p.line.charAt(8) == ' ' || line_p.line.charAt(8) == '	')) {
@@ -1289,7 +1289,7 @@ public class Ccm {
 		    return CCM__FUNCMISM;
 		}
 
-		CcmFunc func_p = (CcmFunc) filectx.func_list.get(filectx.func_list.size()-1);
+		CcmFunc func_p = filectx.func_list.get(filectx.func_list.size()-1);
 		func_p.end_line = line_p;
 		in_function = false;
 		line_p.type = K_LINE_ENDFUNCTION;

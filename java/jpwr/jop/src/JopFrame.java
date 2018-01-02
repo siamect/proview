@@ -47,6 +47,7 @@ import jpwr.rt.*;
 */
 public class JopFrame extends JFrame implements GdhApplIfc
 {
+  static final long serialVersionUID = -2247185822413510035L;
   public JopSession session;
   public JopEngine engine;
   public PwrtAttrRef utilityAref = null;

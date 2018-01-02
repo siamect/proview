@@ -56,6 +56,8 @@ import javax.swing.table.TableColumn;
  *
  *  @author     JN
  */
+@SuppressWarnings("serial")
+
 public class MhTable extends JPanel
 {
   //public final static int GET_SUBSCRIPTIONS = 41;
@@ -387,7 +389,7 @@ public class MhTable extends JPanel
      */
     public String getColumnName(int col)
     {
-      return (String)columnNamesAlarmTable[col];
+      return columnNamesAlarmTable[col];
     }
 
 
@@ -629,7 +631,7 @@ public class MhTable extends JPanel
      */
     public String getColumnName(int col)
     {
-      return (String)columnNamesEventTable[col];
+      return columnNamesEventTable[col];
     }
 
 
@@ -868,6 +870,8 @@ public class MhTable extends JPanel
     /**
      *  Main processing method for the MhClientReceiveThread object
      */
+    @SuppressWarnings("unchecked")
+
     public void run()
     {
       try
@@ -884,13 +888,13 @@ public class MhTable extends JPanel
 	  int nrOfAlarms = in.readInt();
 	  if(nrOfAlarms > 0)
 	  {
-	    mhData.alarmVec = (Vector)in.readObject();
+	    mhData.alarmVec = (Vector<MhrEvent>)in.readObject();
             ((AlarmTableModel)alarmTable.getModel()).updateTable();
 	  }
 	  int nrOfEvents = in.readInt();
 	  if(nrOfEvents > 0)
 	  {
-	    mhData.eventVec = (Vector)in.readObject();
+	    mhData.eventVec = (Vector<MhrEvent>)in.readObject();
 	    ((EventTableModel)eventTable.getModel()).updateTable();
 	  }
 	}

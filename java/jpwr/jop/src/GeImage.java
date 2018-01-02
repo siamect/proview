@@ -48,6 +48,7 @@ import java.awt.event.*;
    Ge image component.
 */
 public class GeImage extends JComponent implements ActionListener {
+  static final long serialVersionUID = -915432887777748208L;
   Dimension size;
   Object root;
   JopSession session;
@@ -417,7 +418,7 @@ public class GeImage extends JComponent implements ActionListener {
       case GeColor.COLOR_TONE_ORANGE:
         tmp = (int)(1.2 * a1);
         if  (tmp <= 255)
-          p[0] = (int)tmp;
+          p[0] = tmp;
         else
           p[0] = 255;
         p[1] = (int)(0.6 * a1);

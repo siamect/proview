@@ -59,6 +59,7 @@ import java.awt.event.*;
  *  @author     JN
  */
 public class MhFrame extends JFrame implements GdhApplIfc {
+  static final long serialVersionUID = -3127228694517933355L;
   JopSession session;
   JopEngine engine;
   XttTree xttTree;

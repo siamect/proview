@@ -120,8 +120,8 @@ public class GdhServer
   public final static int __IO_EXCEPTION = 2000;
   public final static int __UNREFED = 0;
 
-  //static ArrayList<SubElement> subscriptions = new ArrayList<SubElement>();
-  static ArrayList subscriptions = new ArrayList();
+  static ArrayList<SubElement> subscriptions = new ArrayList<SubElement>();
+  //static ArrayList subscriptions = new ArrayList();
 
   static int subscriptionCount = 0;
 
@@ -346,8 +346,8 @@ public class GdhServer
   private class GdhThread extends Thread
   {
     Socket clientSocket;
-    //public Vector<Sub> thSub = new Vector<Sub>();
-    public Vector thSub = new Vector();
+    public Vector<Sub> thSub = new Vector<Sub>();
+    //public Vector thSub = new Vector();
     int maxConnections;
     int threadNumber;
 
@@ -682,8 +682,8 @@ public class GdhServer
                   break;
                 }
 		String attrName;
-		//Vector<Sub> gdhRet = new Vector<Sub>(vec.size());
-		Vector gdhRet = new Vector(vec.size());
+		Vector<Sub> gdhRet = new Vector<Sub>(vec.size());
+		//Vector gdhRet = new Vector(vec.size());
 		for(int j = 0; j < vec.size(); j++)
                 {
                   attrName = (String)vec.get(j);
@@ -737,7 +737,7 @@ public class GdhServer
 	      
               for(i = 0; i < thSub.size(); i++)
               {
-                subElement = ((Sub)thSub.elementAt(i));
+                subElement = thSub.elementAt(i);
                 int index = subElement.getIndex();
                 
 		int id = subElement.id;
@@ -828,7 +828,7 @@ public class GdhServer
               try
               {
                 int id = in.readInt();
-                int index = ((Sub)thSub.elementAt(id)).getIndex();
+                int index = thSub.elementAt(id).getIndex();
                 out.writeFloat(gdh.getObjectRefInfoFloat(index));
                 out.flush();
               }
@@ -841,7 +841,7 @@ public class GdhServer
               try
               {
                 int id = in.readInt();
-                int index = ((Sub)thSub.elementAt(id)).getIndex();
+                int index = thSub.elementAt(id).getIndex();
                 out.writeBoolean(gdh.getObjectRefInfoBoolean(index));
                 out.flush();
               }
@@ -854,7 +854,7 @@ public class GdhServer
               try
               {
                 int id = in.readInt();
-                int index = ((Sub)thSub.elementAt(id)).getIndex();
+                int index = thSub.elementAt(id).getIndex();
                 out.writeInt(gdh.getObjectRefInfoInt(index));
                 out.flush();
               }
@@ -868,7 +868,7 @@ public class GdhServer
               {
                 int id = in.readInt();
                 int typeid = in.readInt();
-                int index = ((Sub)thSub.elementAt(id)).getIndex();
+                int index = thSub.elementAt(id).getIndex();
                 out.writeUTF(gdh.getObjectRefInfoString(index, typeid));
                 out.flush();
               }
@@ -887,8 +887,8 @@ public class GdhServer
               try
               {
                 int id = in.readInt();
-                int index = ((Sub)thSub.elementAt(id)).getIndex();
-		int elements = ((Sub)thSub.elementAt(id)).getElements();
+                int index = thSub.elementAt(id).getIndex();
+		int elements = thSub.elementAt(id).getElements();
                 out.writeObject(gdh.getObjectRefInfoFloatArray(index, elements));
                 out.flush();
               }
@@ -901,8 +901,8 @@ public class GdhServer
               try
               {
                 int id = in.readInt();
-                int index = ((Sub)thSub.elementAt(id)).getIndex();
-		int elements = ((Sub)thSub.elementAt(id)).getElements();
+                int index = thSub.elementAt(id).getIndex();
+		int elements = thSub.elementAt(id).getElements();
                 out.writeObject(gdh.getObjectRefInfoBooleanArray(index, elements));
                 out.flush();
               }
@@ -915,8 +915,8 @@ public class GdhServer
               try
               {
                 int id = in.readInt();
-                int index = ((Sub)thSub.elementAt(id)).getIndex();
-		int elements = ((Sub)thSub.elementAt(id)).getElements();
+                int index = thSub.elementAt(id).getIndex();
+		int elements = thSub.elementAt(id).getElements();
                 out.writeObject(gdh.getObjectRefInfoIntArray(index, elements));
                 out.flush();
               }
@@ -930,9 +930,9 @@ public class GdhServer
               {
                 int id = in.readInt();
                 int typeid = in.readInt();
-                int index = ((Sub)thSub.elementAt(id)).getIndex();
-		int elements = ((Sub)thSub.elementAt(id)).getElements();
-		int size = ((Sub)thSub.elementAt(id)).getSize();
+                int index = thSub.elementAt(id).getIndex();
+		int elements = thSub.elementAt(id).getElements();
+		int size = thSub.elementAt(id).getSize();
                 out.writeObject(gdh.getObjectRefInfoStringArray(index, typeid, size, elements));
                 out.flush();
               }
@@ -960,7 +960,7 @@ public class GdhServer
               {
                 int rix = in.readInt();
                 int nid = in.readInt();
-                int index = ((Sub)thSub.elementAt(rix)).getIndex();
+                int index = thSub.elementAt(rix).getIndex();
                 PwrtStatus sts = this.unrefObjectInfo(new PwrtRefId(index, nid),
                   threadNumber);
                 out.writeInt(sts.getSts());
@@ -975,8 +975,8 @@ public class GdhServer
               //subCopy = getSubscriptions();
               for(i = 0; i < thSub.size(); i++)
               {
-                sub = ((Sub)thSub.elementAt(i));
-                int index = ((Sub)thSub.elementAt(i)).getIndex();
+                sub = thSub.elementAt(i);
+                int index = thSub.elementAt(i).getIndex();
 		PwrtStatus sts = this.unrefObjectInfo(new PwrtRefId(index, sub.refid.nid),
                   threadNumber);
                 //System.out.println("unrefall :" + index + refid.nid);
@@ -1545,7 +1545,7 @@ public class GdhServer
                 int oix = in.readInt();
                 int vid = in.readInt();
                 PwrtObjid objid = new PwrtObjid(oix, vid);
-                CdhrObjAttr ret_obj = (CdhrObjAttr)gdh.getClassAttribute(classid, objid);
+                CdhrObjAttr ret_obj = gdh.getClassAttribute(classid, objid);
                 out.writeObject(ret_obj);
                 out.flush();
               }
@@ -1581,8 +1581,8 @@ public class GdhServer
               try
               {
                 String name = in.readUTF();
-                //Vector<CdhrObjAttr> v = gdh.getAllClassAttributes(name);
-                Vector v = gdh.getAllClassAttributes(name);
+                Vector<CdhrObjAttr> v = gdh.getAllClassAttributes(name);
+                //Vector v = gdh.getAllClassAttributes(name);
                 out.writeObject(v);
                 out.flush();
               }
@@ -1595,9 +1595,9 @@ public class GdhServer
               try
               {
                 PwrtObjid objid = (PwrtObjid)in.readObject();
-                CdhrObjid sibling = (CdhrObjid)gdh.getNextSibling(objid);
-                //Vector<CdhrObjid> v = new Vector<CdhrObjid>();
-                Vector v = new Vector();
+                CdhrObjid sibling = gdh.getNextSibling(objid);
+                Vector<CdhrObjid> v = new Vector<CdhrObjid>();
+                //Vector v = new Vector();
                 while(sibling.oddSts())
                 {
                   v.add(sibling);
@@ -1628,11 +1628,11 @@ public class GdhServer
                 CdhrClassId cdhrClassId;
                 int sts = 2;
                 boolean hasChildren = false;
-                //Vector<GdhrGetXttObj> v = new Vector<GdhrGetXttObj>();
-                Vector v = new Vector();
+                Vector<GdhrGetXttObj> v = new Vector<GdhrGetXttObj>();
+                //Vector v = new Vector();
                 CdhrObjid classObj;
 
-                cdhrObjId = (CdhrObjid)gdh.getNextSibling(objid);
+                cdhrObjId = gdh.getNextSibling(objid);
                 while(cdhrObjId.oddSts())
                 {
                   cdhrClassId = gdh.getObjectClass(cdhrObjId.objid);
@@ -1697,12 +1697,12 @@ public class GdhServer
                 CdhrClassId cdhrClassId;
                 int sts = 2;
                 boolean hasChildren = false;
-                //Vector<GdhrGetXttObj> v = new Vector<GdhrGetXttObj>();
-                Vector v = new Vector();
+                Vector<GdhrGetXttObj> v = new Vector<GdhrGetXttObj>();
+                //Vector v = new Vector();
 
                 CdhrObjid classObj;
 
-                cdhrObjId = (CdhrObjid)gdh.getChild(objid);
+                cdhrObjId = gdh.getChild(objid);
                 while(cdhrObjId.oddSts())
                 {
                   cdhrClassId = gdh.getObjectClass(cdhrObjId.objid);
@@ -1964,8 +1964,8 @@ public class GdhServer
         {
           try
           {
-            sub = ((Sub)thSub.elementAt(i));
-            int index = ((Sub)thSub.elementAt(i)).getIndex();
+            sub = thSub.elementAt(i);
+            int index = thSub.elementAt(i).getIndex();
 
             PwrtStatus sts = this.unrefObjectInfo(new PwrtRefId(index, sub.refid.nid),
               threadNumber);
@@ -1999,7 +1999,7 @@ public class GdhServer
       int index = subscriptions.indexOf(new SubElement(attrName));
       if(index >= 0)
       {
-        sub = (SubElement)subscriptions.get(index);
+        sub = subscriptions.get(index);
 	sub.reffedByThreadBitSet.set(threadNumber);
         sub.reffedByThread[threadNumber]++;
 	return sub.sub;
@@ -2060,7 +2060,7 @@ public class GdhServer
       try
       {
         //System.out.println("unrefObjectInfo: " + refid.rix);
-        sub = (SubElement)subscriptions.get(refid.rix);
+        sub = subscriptions.get(refid.rix);
 
         if(sub.reffedByThread[threadNumber] > 0)
         {
@@ -2112,7 +2112,7 @@ public class GdhServer
       while(i > 0)
       {
         i--;
-        sub = (SubElement)subscriptions.get(i);
+        sub = subscriptions.get(i);
         if(sub.sub.sts == __UNREFED)
         {
           subscriptions.remove(i);

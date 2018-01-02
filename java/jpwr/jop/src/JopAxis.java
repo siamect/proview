@@ -47,6 +47,7 @@ import jpwr.rt.*;
    Jop axis component.
 */
 public class JopAxis extends JComponent {
+  static final long serialVersionUID = 6687783247261983297L;
   Dimension size;
   public JopAxis()
   {

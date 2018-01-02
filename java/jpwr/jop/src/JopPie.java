@@ -48,7 +48,8 @@ import jpwr.rt.*;
    Ge pie component.
 */
 public class JopPie extends JComponent implements GeComponentIfc, 
-            JopDynamic, JopConfirm, ActionListener{
+            JopDynamic, JopConfirm, ActionListener {
+  static final long serialVersionUID = -6900897035341843727L;
   Dimension size;
   Timer timer = new Timer(500, this);
   Object root;

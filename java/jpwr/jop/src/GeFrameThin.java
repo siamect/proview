@@ -42,6 +42,7 @@ import java.awt.image.*;
 import java.awt.font.*;
 import javax.swing.*;
 public class GeFrameThin extends GeComponent {
+  static final long serialVersionUID = -4528053126578004752L;
   Dimension dsize;
   public GeFrameThin( JopSession session)
   {

@@ -44,6 +44,7 @@ import jpwr.rt.PwrsParInfo;
  */
 public class GdhrsAttrDef implements Serializable
 {
+  static final long serialVersionUID = 1389290116684738472L;
   public String attrName;
   public int attrLevel;
   public int attrClass;

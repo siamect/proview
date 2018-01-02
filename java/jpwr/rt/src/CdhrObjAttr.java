@@ -51,6 +51,7 @@ import java.io.Serializable;
 */
 public class CdhrObjAttr implements Serializable
 {
+  static final long serialVersionUID = -5132511649812387127L;
   public PwrtObjid objid;
   public GdhrRefObjectInfo refObj;
   public String name;

@@ -48,6 +48,7 @@ import javax.swing.*;
    A connection between to nodes.
 */
 public class FlowCon extends JComponent implements FlowComponent, JopDynamic {
+  static final long serialVersionUID = 5545013528812548028L;
   double x_right;
   double x_left;
   double y_high;

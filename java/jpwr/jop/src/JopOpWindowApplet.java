@@ -51,6 +51,7 @@ import jpwr.rt.*;
 */
 public class JopOpWindowApplet extends JopApplet
 {
+  static final long serialVersionUID = -5617832787168154292L;
   JScrollPane scrollPane;
   JPanel contentPane;
   BorderLayout borderLayout1 = new BorderLayout();

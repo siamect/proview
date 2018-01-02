@@ -54,6 +54,7 @@ import jpwr.rt.*;
  */
 public class JopXttFrame extends JFrame implements GdhApplIfc
 {
+  static final long serialVersionUID = 6043904049631399512L;
   JopSession session;
   JopEngine engine;
   XttTree xttTree;

@@ -379,13 +379,13 @@ public class GrowCtx implements GrowCtxIfc {
 	// draw.fillRect(0, 0, cmn.mw.window_width, cmn.mw.window_height, background_color);
 	// Draw connections
 	for ( int i = 0; i < cmn.a.size(); i++) {
-	    if ( ((GlowArrayElem)cmn.a.get(i)).type() == Glow.eObjectType_Con)
-		((GlowArrayElem)cmn.a.get(i)).draw();
+	    if ( cmn.a.get(i).type() == Glow.eObjectType_Con)
+		cmn.a.get(i).draw();
 	}
 	// Draw nodes
 	for ( int i = 0; i < cmn.a.size(); i++) {
-	    if ( ((GlowArrayElem)cmn.a.get(i)).type() != Glow.eObjectType_Con)
-		((GlowArrayElem)cmn.a.get(i)).draw();
+	    if ( cmn.a.get(i).type() != Glow.eObjectType_Con)
+		cmn.a.get(i).draw();
 	}
 	drawing = false;
     }
@@ -396,12 +396,12 @@ public class GrowCtx implements GrowCtxIfc {
 	    return;
 
 	for ( int i = 0; i < cmn.a.size(); i++) {
-	    if ( ((GlowArrayElem)cmn.a.get(i)).type() == Glow.eObjectType_Con)
-		((GlowArrayElem)cmn.a.get(i)).draw();
+	    if ( cmn.a.get(i).type() == Glow.eObjectType_Con)
+		cmn.a.get(i).draw();
 	}
 	for ( int i = 0; i < cmn.a.size(); i++) {
-	    if ( ((GlowArrayElem)cmn.a.get(i)).type() != Glow.eObjectType_Con)
-		((GlowArrayElem)cmn.a.get(i)).draw();
+	    if ( cmn.a.get(i).type() != Glow.eObjectType_Con)
+		cmn.a.get(i).draw();
 	}
     }
 
@@ -477,7 +477,7 @@ public class GrowCtx implements GrowCtxIfc {
 	cmn.callback_object = null;
 	cmn.callback_object_type = Glow.eObjectType_NoObject;
 	for ( int i = cmn.a.size() - 1; i >= 0; i--) {
-	    sts = ((GlowArrayElem)cmn.a.get(i)).eventHandler(e, e.x, e.y);
+	    sts = cmn.a.get(i).eventHandler(e, e.x, e.y);
 	    if ( sts == 1) {
 		break;
 	    }
@@ -876,14 +876,14 @@ public class GrowCtx implements GrowCtxIfc {
 	draw();
     }
 
-    public void openVector( BufferedReader reader, Object cmn, Vector a) {
+    public void openVector( BufferedReader reader, Object cmn, Vector<GlowArrayElem> a) {
 	GlowVector.open(reader, (GrowCmn)cmn, a);
     }
 
     public GlowArrayElem findByName( String name) {
 	for ( int i = 0; i < cmn.a.size(); i++) {
-	    if ( ((GlowArrayElem)cmn.a.get(i)).getName().equalsIgnoreCase(name))
-		return (GlowArrayElem)cmn.a.get(i);
+	    if ( cmn.a.get(i).getName().equalsIgnoreCase(name))
+		return cmn.a.get(i);
 	}
 	return null;
     }

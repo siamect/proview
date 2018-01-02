@@ -262,7 +262,7 @@ public class JopXttTrend implements ActionListener, JopCurveIfc, GdhApplIfc {
 		if ( time > max_time)
 		    max_time = time;
 		
-		if ( (int) (tp[i].Multiple * tp[i].ScanTime) < min_interval) {
+		if ( (tp[i].Multiple * tp[i].ScanTime) < min_interval) {
 		    min_interval = tp[i].Multiple * tp[i].ScanTime;
 		    min_interval_idx = i;
 		}
@@ -293,7 +293,7 @@ public class JopXttTrend implements ActionListener, JopCurveIfc, GdhApplIfc {
 		
 		int write_buffer = tp[i].WriteBuffer;
 		start_idx = write_buffer * trend_buff_size / 2
-		    + (int)( tp[i].NextWriteIndex[write_buffer]);
+		    + ( tp[i].NextWriteIndex[write_buffer]);
 		if ( start_idx == 0) {
 		    start_idx = tp[i].NoOfSample - 1 + trend_buff_size / 2;
 		    write_buffer = 1;
@@ -319,7 +319,7 @@ public class JopXttTrend implements ActionListener, JopCurveIfc, GdhApplIfc {
 			idx++;
 		    }
 		}
-		if ( start_idx != (int) tp[i].NoOfSample - 1 + 
+		if ( start_idx != tp[i].NoOfSample - 1 + 
 		     write_buffer * trend_buff_size/2) {
 		    for ( j = tp[i].NoOfSample - 1 + write_buffer * trend_buff_size/2; 
 			  j > start_idx; j--) {
@@ -488,7 +488,7 @@ public class JopXttTrend implements ActionListener, JopCurveIfc, GdhApplIfc {
 	    gcd.x_data[0] = new double[max_points];
 	    gcd.x_name = new String("Time");
 	    for ( j = 0; j < max_points; j++) {
-		gcd.x_data[0][j] = (double)( fmin_interval * j * tcp[0].DisplayResolution);
+		gcd.x_data[0][j] = ( fmin_interval * j * tcp[0].DisplayResolution);
 	    }
 	    gcd.x_axis_type[0] = JopCurveData.eAxis_x;
 	    
@@ -615,7 +615,7 @@ public class JopXttTrend implements ActionListener, JopCurveIfc, GdhApplIfc {
 			// Insert new value
 			write_buffer = tp[i].WriteBuffer;
 			idx = write_buffer * trend_buff_size / 2
-			    + (int)( tp[i].NextWriteIndex[write_buffer]) - (values - 1 - k);
+			    + ( tp[i].NextWriteIndex[write_buffer]) - (values - 1 - k);
 			if ( idx == 0 || idx == trend_buff_size/2)
 			    idx = tp[i].NoOfSample - 1 + (write_buffer == 0 ? 1:  0) *
 				trend_buff_size/2;

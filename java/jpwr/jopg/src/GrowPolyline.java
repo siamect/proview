@@ -70,7 +70,7 @@ public class GrowPolyline extends GlowArrayElem {
     int dynamicsize;
     GlowTransform trf;
 
-    Vector<GlowPoint> a_points = new Vector<GlowPoint>();
+    Vector<GlowArrayElem> a_points = new Vector<GlowArrayElem>();
     GlowPointX[] points;
     int draw_type;
     int line_width;
@@ -366,12 +366,12 @@ public class GrowPolyline extends GlowArrayElem {
 
 	for ( i = 0; i < a_points.size(); i++) {
 	    if (t == null) {
-		x1 = trf.x( a_points.get(i).x, a_points.get(i).y);
-		y1 = trf.y( a_points.get(i).x, a_points.get(i).y);
+		x1 = trf.x( ((GlowPoint)a_points.get(i)).x, ((GlowPoint)a_points.get(i)).y);
+		y1 = trf.y( ((GlowPoint)a_points.get(i)).x, ((GlowPoint)a_points.get(i)).y);
 	    }
 	    else {
-		x1 = trf.x( t, a_points.get(i).x, a_points.get(i).y);
-		y1 = trf.y( t, a_points.get(i).x, a_points.get(i).y);
+		x1 = trf.x( t, ((GlowPoint)a_points.get(i)).x, ((GlowPoint)a_points.get(i)).y);
+		y1 = trf.y( t, ((GlowPoint)a_points.get(i)).x, ((GlowPoint)a_points.get(i)).y);
 	    }
 	    points[i].x = (int)( x1 * cmn.mw.zoom_factor_x + 0.5) - cmn.mw.offset_x;
 	    points[i].y = (int)( y1 * cmn.mw.zoom_factor_y + 0.5) - cmn.mw.offset_y;
@@ -719,16 +719,16 @@ public class GrowPolyline extends GlowArrayElem {
 
     public void add_and_shift_y_value( double value) {
 	for ( int i = a_points.size() - 1; i > 0; i--) {
-	    a_points.get(i).y = a_points.get(i-1).y;
+	    ((GlowPoint)a_points.get(i)).y = ((GlowPoint)a_points.get(i-1)).y;
 	}
-	a_points.get(0).y = value;
+	((GlowPoint)a_points.get(0)).y = value;
     }
 
     public void add_and_shift_y_value_filled( double value) {
 	for ( int i = a_points.size() - 2; i > 1; i--) {
-	    a_points.get(i).y = a_points.get(i-1).y;
+	    ((GlowPoint)a_points.get(i)).y = ((GlowPoint)a_points.get(i-1)).y;
 	}
-	a_points.get(1).y = value;
+	((GlowPoint)a_points.get(1)).y = value;
     }
 
     public void get_borders( GlowTransform t, GlowGeometry g) {
@@ -738,27 +738,27 @@ public class GrowPolyline extends GlowArrayElem {
 	for ( i = 0; i < a_points.size() - 1; i++) {
 	    if  ( t != null) {
 		if ( i == 0) {
-		    x1 = trf.x( t, a_points.get(i).x, a_points.get(i).y);
-		    y1 = trf.y( t, a_points.get(i).x, a_points.get(i).y);
+		    x1 = trf.x( t, ((GlowPoint)a_points.get(i)).x, ((GlowPoint)a_points.get(i)).y);
+		    y1 = trf.y( t, ((GlowPoint)a_points.get(i)).x, ((GlowPoint)a_points.get(i)).y);
 		}
 		else {
 		    x1 = x2;
 		    y1 = y2;
 		}
-		x2 = trf.x( t, a_points.get(i).x, a_points.get(i).y);
-		y2 = trf.y( t, a_points.get(i).x, a_points.get(i).y);
+		x2 = trf.x( t, ((GlowPoint)a_points.get(i)).x, ((GlowPoint)a_points.get(i)).y);
+		y2 = trf.y( t, ((GlowPoint)a_points.get(i)).x, ((GlowPoint)a_points.get(i)).y);
 	    }
 	    else {
 		if ( i == 0) {
-		    x1 = trf.x( a_points.get(i).x, a_points.get(i).y);
-		    y1 = trf.y( a_points.get(i).x, a_points.get(i).y);
+		    x1 = trf.x( ((GlowPoint)a_points.get(i)).x, ((GlowPoint)a_points.get(i)).y);
+		    y1 = trf.y( ((GlowPoint)a_points.get(i)).x, ((GlowPoint)a_points.get(i)).y);
 		}
 		else {
 		    x1 = x2;
 		    y1 = y2;
 		}
-		x2 = trf.x( a_points.get(i+1).x, a_points.get(i+1).y);
-		y2 = trf.y( a_points.get(i+1).x, a_points.get(i+1).y);
+		x2 = trf.x( ((GlowPoint)a_points.get(i+1)).x, ((GlowPoint)a_points.get(i+1)).y);
+		y2 = trf.y( ((GlowPoint)a_points.get(i+1)).x, ((GlowPoint)a_points.get(i+1)).y);
 	    }
 
 	    if ( x1 < g.ll_x)

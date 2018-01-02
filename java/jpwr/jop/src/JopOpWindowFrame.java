@@ -52,6 +52,7 @@ import java.applet.*;
    Frame for the Jop operator window.
 */
 public class JopOpWindowFrame extends JFrame implements GdhApplIfc {
+  static final long serialVersionUID = 4779081059941695829L;
   JScrollPane scrollPane;
   JPanel contentPane;
   BorderLayout borderLayout1 = new BorderLayout();

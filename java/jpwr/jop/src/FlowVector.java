@@ -47,8 +47,8 @@ public class FlowVector {
   public FlowVector() {
   }
 
-  //public static void open( BufferedReader reader, FlowCmn cmn, Vector<Object> a) {
-  public static void open( BufferedReader reader, FlowCmn cmn, Vector a) {
+  public static void open( BufferedReader reader, FlowCmn cmn, Vector<Object> a) {
+  //public static void open( BufferedReader reader, FlowCmn cmn, Vector a) {
     String line;
     StringTokenizer token;
     boolean end = false;

@@ -45,6 +45,7 @@
    */
   public class Sub  extends GdhrRefObjectInfo implements Serializable
   {
+    static final long serialVersionUID = -6061093243216060198L;
     public String attrName = "hej";
     public int subscriptionsIndex;
     public int valueInt;

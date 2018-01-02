@@ -47,12 +47,12 @@ import java.beans.Beans;
 public class JopCurveChartLayout implements LayoutManager2 {
     
     // track the ratios for each object of form "xratio,yratio;wratio,hratio"
-    //Vector<Proportion> ratios = new Vector<Proportion>(1);
-    Vector ratios = new Vector(1);
+    Vector<Proportion> ratios = new Vector<Proportion>(1);
+    //Vector ratios = new Vector(1);
     // track the components also so we can remove associated modifier
     // if necessary.
-    //Vector<Component> components = new Vector<Component>(1);
-    Vector components = new Vector(1);
+    Vector<Component> components = new Vector<Component>(1);
+    //Vector components = new Vector(1);
     
     public static final int AXIS_HEIGHT = 28;
 
@@ -125,7 +125,7 @@ public class JopCurveChartLayout implements LayoutManager2 {
             Component comp = target.getComponent(i);
             Proportion compProp;
 	    try {
-		compProp = (Proportion)ratios.elementAt(i);
+		compProp = ratios.elementAt(i);
 	    } 
 	    catch (ArrayIndexOutOfBoundsException e){
 		break;
@@ -147,7 +147,7 @@ public class JopCurveChartLayout implements LayoutManager2 {
 	    // set x & y to the ratio specified when the component was added.
 	    //These values will be changed if the comonent is a slider or
 	    //a moving GeComponent.
-	    int x = (int) comp.getX();
+	    int x = comp.getX();
 	    // int y = (int) (comp.getY() * (double)d.height / origHeight);
 	    //System.out.println( "CompChart: w " + w + " h " + h + " x " + x + " y " + y);
 

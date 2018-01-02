@@ -44,6 +44,7 @@ import java.io.Serializable;
 */
 public class CdhrBoolean implements Serializable
 {
+  static final long serialVersionUID = -5082742940494635104L;
   public boolean value;
   public int sts;
   

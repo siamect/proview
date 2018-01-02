@@ -52,6 +52,8 @@ import jpwr.rt.*;
 /**
    Jop curve window for trends and fast curves.
 */
+@SuppressWarnings("serial")
+
 public class JopCurve extends JFrame implements GdhApplIfc
 {
 

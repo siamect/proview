@@ -49,6 +49,7 @@ import java.net.*;
 import java.applet.*;
 
 public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
+    static final long serialVersionUID = 5542805623122782462L;
     static final int BORDER_WIDTH = 5;
     static final int BORDER_HEIGHT = 40; 
     JScrollPane scrollPane;
@@ -364,6 +365,7 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
     }
 
     class LocalPanel extends JPanel {
+	static final long serialVersionUID = 4836507228045982216L;
 	public LocalPanel() {}
 	public Dimension getPreferredSize() { return size;}
 	public Dimension getMinimumSize() { return size;}

@@ -48,6 +48,7 @@ import java.awt.event.*;
    Applet for login.
 */
 public class JopLoginApplet extends JApplet implements GdhApplIfc {
+  static final long serialVersionUID = 3687445396601904502L;
   JPanel contentPane;
   BorderLayout borderLayout1 = new BorderLayout();
   BorderLayout borderLayout3 = new BorderLayout();

@@ -342,10 +342,10 @@ public class GrowArc extends GlowArrayElem {
 		       (trf.y( t, ur.x, ur.y) * cmn.mw.zoom_factor_y - cmn.mw.offset_y)) / 2;
 	    }
     
-	    x1 = (int)(-scale * ((double)(ur.x - ll.x)/2 * cmn.mw.zoom_factor_x) + x_c + 0.5);
-	    y1 = (int)(-scale * ((double)(ur.y - ll.y)/2 * cmn.mw.zoom_factor_y) + y_c + 0.5);
-	    x2 = (int)(scale * ((double)(ur.x - ll.x)/2 * cmn.mw.zoom_factor_x) + x_c + 0.5);
-	    y2 = (int)(scale * ((double)(ur.y - ll.y)/2 * cmn.mw.zoom_factor_y) + y_c + 0.5);
+	    x1 = (int)(-scale * ((ur.x - ll.x)/2 * cmn.mw.zoom_factor_x) + x_c + 0.5);
+	    y1 = (int)(-scale * ((ur.y - ll.y)/2 * cmn.mw.zoom_factor_y) + y_c + 0.5);
+	    x2 = (int)(scale * ((ur.x - ll.x)/2 * cmn.mw.zoom_factor_x) + x_c + 0.5);
+	    y2 = (int)(scale * ((ur.y - ll.y)/2 * cmn.mw.zoom_factor_y) + y_c + 0.5);
 	}
 
 	ll_x = Math.min( x1, x2);

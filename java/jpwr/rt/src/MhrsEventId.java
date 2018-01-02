@@ -41,6 +41,7 @@ import java.io.Serializable;
  */
 public class MhrsEventId implements Serializable
 {
+  static final long serialVersionUID = 6216367383578957051L;
   public int nix;
   public String birthTime;
   public int idx;

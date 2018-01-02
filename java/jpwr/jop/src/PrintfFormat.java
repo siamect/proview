@@ -3085,7 +3085,7 @@ public class PrintfFormat {
     private String fmt;
   }
   /** Vector of control strings and format literals. */
-  private Vector vFmt = new Vector();
+  private Vector<ConversionSpecification> vFmt = new Vector<ConversionSpecification>();
   /** Character position.  Used by the constructor. */
   private int cPos=0;
   /** Character position.  Used by the constructor. */

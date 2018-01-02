@@ -58,12 +58,12 @@ import java.beans.Beans;
 public class RatioLayout implements LayoutManager2 {
     
     // track the ratios for each object of form "xratio,yratio;wratio,hratio"
-    //Vector<Proportion> ratios = new Vector<Proportion>(1);
-    Vector ratios = new Vector(1);
+    Vector<Proportion> ratios = new Vector<Proportion>(1);
+    //Vector ratios = new Vector(1);
     // track the components also so we can remove associated modifier
     // if necessary.
-    //Vector<Component> components = new Vector<Component>(1);
-    Vector components = new Vector(1);
+    Vector<Component> components = new Vector<Component>(1);
+    //Vector components = new Vector(1);
     
     public void addLayoutComponent(String r, Component comp) {
     }
@@ -128,7 +128,7 @@ public class RatioLayout implements LayoutManager2 {
             Component comp = target.getComponent(i);
             Proportion compProp;
 	    try {
-		compProp = (Proportion)ratios.elementAt(i);
+		compProp = ratios.elementAt(i);
 	    } 
 	    catch (ArrayIndexOutOfBoundsException e){
 		break;

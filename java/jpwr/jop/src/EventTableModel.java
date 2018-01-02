@@ -48,7 +48,7 @@ import jpwr.rt.MhrEvent;
  *to present is contained in the MhData mhdata.*/
 
   class EventTableModel extends AbstractTableModel {     
-  
+      static final long serialVersionUID = 1285413726937839395L;
       MhData mhData = new MhData(0,100);  
       String[] columnNamesEventTable = {"Prio","Type","Time","Event Text","Object"};
 
@@ -90,7 +90,7 @@ import jpwr.rt.MhrEvent;
        *@return      The columnName value
        */
       public String getColumnName(int col) {
-	  return JopLang.transl((String)columnNamesEventTable[col]);
+	  return JopLang.transl(columnNamesEventTable[col]);
       }
 
 

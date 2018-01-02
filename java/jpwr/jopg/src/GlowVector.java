@@ -44,8 +44,8 @@ public class GlowVector {
   public GlowVector() {
   }
 
-  //public static void open( BufferedReader reader, GrowCmn cmn, Vector<Object> a) {
-  public static void open( BufferedReader reader, GrowCmn cmn, Vector a) {
+  public static void open( BufferedReader reader, GrowCmn cmn, Vector<GlowArrayElem> a) {
+      //public static void open( BufferedReader reader, GrowCmn cmn, Vector a) {
     String line;
     StringTokenizer token;
     boolean end = false;
@@ -62,25 +62,25 @@ public class GlowVector {
 	case Glow.eSave_NodeClass: {
 	  GlowNodeClass nc = new GlowNodeClass( cmn);
 	  nc.open( reader);
-	  a.add( (Object) nc);
+	  a.add( nc);
 	  break;
 	}
 	case Glow.eSave_NodeGroup: {
 	  System.out.println("GlowVector: GlowNodeGroup");
 	  GlowNodeGroup nc = new GlowNodeGroup( cmn);
 	  nc.open( reader);
-	  a.add( (Object) nc);
+	  a.add( nc);
 	  break;
 	}
 	case Glow.eSave_ConClass:
 	  GlowConClass cc = new GlowConClass( cmn);
 	  cc.open( reader);
-	  a.add( (Object) cc);
+	  a.add( cc);
 	  break;
 	case Glow.eSave_Con: {
 	  GlowCon c = new GlowCon( cmn);
 	  c.open( reader);
-	  a.add( (Object) c);
+	  a.add( c);
 	  break;
 	}
 	case Glow.eSave_GrowNode: {

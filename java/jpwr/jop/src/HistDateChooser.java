@@ -45,7 +45,7 @@ import javax.swing.event.*;
    Event log date chooser in serach dialog.
 */
 public class HistDateChooser extends JPanel implements ActionListener{
-        
+    static final long serialVersionUID = 8759362387095354771L;      
     private Calendar date;
     SpinnerDateModel yearModel;
     private JComboBox month;

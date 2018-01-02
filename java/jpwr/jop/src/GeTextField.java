@@ -50,6 +50,7 @@ import javax.swing.border.*;
 public class GeTextField extends JTextField implements GeComponentIfc, 
 			       JopDynamic, JopConfirm, ActionListener
 {
+  static final long serialVersionUID = -1775772234451961919L;
   public boolean isFocusable() { return root != null;}
 
   Dimension size;

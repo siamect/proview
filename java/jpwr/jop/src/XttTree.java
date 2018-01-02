@@ -56,6 +56,8 @@ import jpwr.rt.*;
  *  @author     Jonas Nylund
  */
 
+@SuppressWarnings("serial")
+
 public class XttTree extends JPanel
 {
   boolean findFieldEnable = false;
@@ -335,11 +337,11 @@ public class XttTree extends JPanel
       return;
     }
     // Used if the user has specified debug
-    //Vector<String> ref_vec = new Vector<String>();
-    Vector ref_vec = new Vector();
+    Vector<String> ref_vec = new Vector<String>();
+    //Vector ref_vec = new Vector();
     // Used if the user has specified debug
-    //Vector<XttRefObj> o_vec = new Vector<XttRefObj>();
-    Vector o_vec = new Vector();
+    Vector<XttRefObj> o_vec = new Vector<XttRefObj>();
+    //Vector o_vec = new Vector();
 
     //loopa igenom resultat-vektorn
     for(int i = 0; i < v.size(); i++)
@@ -356,7 +358,7 @@ public class XttTree extends JPanel
       o.init(obj.debug);
       if(obj.debug && o.refObj != null)
       {
-        ref_vec.add(((XttObjAttr)(o.refObj.getXttObjAttr())).fullName);
+        ref_vec.add(o.refObj.getXttObjAttr().fullName);
         o_vec.add(o.refObj);
       }
       tN.add(childNode);
@@ -376,7 +378,7 @@ public class XttTree extends JPanel
       }
       for(int i = 0; i < o_vec.size() && i < ret_vec.size(); i++)
       {
-        ((XttRefObj)(o_vec.get(i))).objAttr.refObj = (GdhrRefObjectInfo)ret_vec.get(i);
+        o_vec.get(i).objAttr.refObj = (GdhrRefObjectInfo)ret_vec.get(i);
       }
       if(!engine.isReady())
       {
@@ -463,14 +465,14 @@ public class XttTree extends JPanel
       Logg.logg("XttTree: Less getObjectAttributes", 6);
       PwrtObjid pwrobjid = new PwrtObjid(0, 0);
 
-      Vector v = (Vector)gdh.getAllClassAttributes(obj.fullName);
+      Vector v = gdh.getAllClassAttributes(obj.fullName);
       Logg.logg("XttTree: Efter getAllClassAttributes", 6);
       if(v == null)
       {
         Logg.logg("XttTree: Vector == null efter getAllClassAttributes", 4);
         return;
       }
-      Vector xttObjAttrVec = new Vector();
+      Vector<XttObjAttr> xttObjAttrVec = new Vector<XttObjAttr>();
       for(int i = 0; i < v.size(); i++)
       {
 	
@@ -765,14 +767,14 @@ public class XttTree extends JPanel
     //what we are looking for
     TreePath selectedPath = this.tree.getSelectionPath();
     
-    //Vector<String> pathVec = createPathVec(objectName);
-    Vector pathVec = createPathVec(objectName);
+    Vector<String> pathVec = createPathVec(objectName);
+    //Vector pathVec = createPathVec(objectName);
     int ret = 1;
     DefaultMutableTreeNode tn = this.rootNode;
     TreePath tp;
     for(int i = 0;i < pathVec.size();i++)
     {
-      tp = expandPath(tn,(String)pathVec.get(i));
+      tp = expandPath(tn,pathVec.get(i));
       if(tp == null)
         break;
       tn = (DefaultMutableTreeNode)tp.getLastPathComponent();
@@ -783,11 +785,11 @@ public class XttTree extends JPanel
     }      
   }
 
-  //public Vector<String> createPathVec(String name)
-  public Vector createPathVec(String name)
+  public Vector<String> createPathVec(String name)
+  //public Vector createPathVec(String name)
   {
-    //Vector<String> pathVec = new Vector<String>();
-    Vector pathVec = new Vector();
+    Vector<String> pathVec = new Vector<String>();
+    //Vector pathVec = new Vector();
     int strIndex;
     int i = 0;
     strIndex = name.indexOf('-');
@@ -900,8 +902,8 @@ public class XttTree extends JPanel
         XttObj obj = ((XttObj)tn.getUserObject());
         if(obj.debug)
         {
-	  //Vector<PwrtRefId> unref_vec = new Vector<PwrtRefId>();
-          Vector unref_vec = new Vector();
+	  Vector<PwrtRefId> unref_vec = new Vector<PwrtRefId>();
+          //Vector unref_vec = new Vector();
           obj.debug = false;
           Enumeration enm = tn.children();
           while(enm.hasMoreElements())
@@ -998,7 +1000,7 @@ public class XttTree extends JPanel
                                 {
                                   public void actionPerformed(ActionEvent evt)
                                   {
-				    if(Logg.loggPrio > 0);
+				    if(Logg.loggPrio > 0)
                                       Logg.loggPrio--;
                                     Logg.logg("LoggPrio changed to: " + Logg.loggPrio, 0);
                                   }
@@ -1609,11 +1611,11 @@ public class XttTree extends JPanel
         tn.remove(tc);
         GdhrRefObjectInfo ret;
         XttObjAttr obj = (XttObjAttr)tn.getUserObject();
-        //Vector<String> ref_vec = new Vector<String>();
-        Vector ref_vec = new Vector();
+        Vector<String> ref_vec = new Vector<String>();
+        //Vector ref_vec = new Vector();
         Vector ret_vec;
-        //Vector<XttArrayAttr> attr_vec = new Vector<XttArrayAttr>();
-        Vector attr_vec = new Vector();
+        Vector<XttArrayAttr> attr_vec = new Vector<XttArrayAttr>();
+        //Vector attr_vec = new Vector();
         // should be in a separate tree??
         for(int j = 0; j < obj.elements; j++)
         {
@@ -1644,7 +1646,7 @@ public class XttTree extends JPanel
           {
             Logg.logg("XttObj:  ObjectInfoError ", 4);
           }
-          ((XttArrayAttr)(attr_vec.get(i))).refObj = ret;
+          attr_vec.get(i).refObj = ret;
         }
       }
       setCursor(defCursor);

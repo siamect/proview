@@ -43,6 +43,7 @@ import java.io.Serializable;
 */
 public class GdhrCircBuffInfo implements Serializable
 {
+    static final long serialVersionUID = 1479018729879996965L;
     public CircBuffInfo info;
     public int sts;
   

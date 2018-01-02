@@ -58,7 +58,7 @@ import java.applet.Applet;
  */
 
 public class HistSearch extends JFrame implements ActionListener, GdhApplIfc {
-        
+    static final long serialVersionUID = -4944530903649904044L;   
     public JopEngine engine;
     public JopSession session;
     public Object root;
@@ -200,7 +200,7 @@ public class HistSearch extends JFrame implements ActionListener, GdhApplIfc {
         public void mouseReleased(MouseEvent e) {
             if ( e.isPopupTrigger()) {
             int row=result.alarmTable.rowAtPoint(e.getPoint());
-            MhrEvent event = (MhrEvent) result.atModel.mhData.eventVec.get(row);
+            MhrEvent event = result.atModel.mhData.eventVec.get(row);
             String trace_object= event.eventName;
             new JopMethodsMenu( session, 
                         trace_object, 
@@ -213,7 +213,7 @@ public class HistSearch extends JFrame implements ActionListener, GdhApplIfc {
 	    int row=result.alarmTable.rowAtPoint(e.getPoint());
 	    result.alarmTable.setRowSelectionInterval(row,row);
             if ( e.isPopupTrigger()) {
-		MhrEvent event = (MhrEvent) result.atModel.mhData.eventVec.get(row);
+		MhrEvent event = result.atModel.mhData.eventVec.get(row);
 		String trace_object= event.eventName;
 		new JopMethodsMenu(session, 
 				   trace_object, 

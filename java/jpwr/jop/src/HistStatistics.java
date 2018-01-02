@@ -50,6 +50,7 @@ import jpwr.rt.*;
 */
 
 public class HistStatistics extends JPanel{
+    static final long serialVersionUID = 8898513109624973032L;
     
     // The session is needed for the use of JopMethodsMenu
     private JopSession session;
@@ -79,7 +80,7 @@ public class HistStatistics extends JPanel{
         public void mouseReleased(MouseEvent e) {
             if ( e.isPopupTrigger()) {
             int row=fTable.rowAtPoint(e.getPoint());
-            MhrEvent event = (MhrEvent) fModel.result.get(row);
+            MhrEvent event = fModel.result.get(row);
             String trace_object= event.eventName;
             new JopMethodsMenu( session, 
                         trace_object, 
@@ -91,7 +92,7 @@ public class HistStatistics extends JPanel{
         public void mousePressed(MouseEvent e) {
            if ( e.isPopupTrigger()) {
             int row=fTable.rowAtPoint(e.getPoint());
-            MhrEvent event = (MhrEvent) fModel.result.get(row);
+            MhrEvent event = fModel.result.get(row);
             String trace_object= event.eventName;
             new JopMethodsMenu( session, 
                         trace_object, 
@@ -119,7 +120,7 @@ public class HistStatistics extends JPanel{
         public void mouseReleased(MouseEvent e) {
             if ( e.isPopupTrigger()) {
             int row=eTable.rowAtPoint(e.getPoint());
-            MhrEvent event = (MhrEvent) eModel.result.get(row);
+            MhrEvent event = eModel.result.get(row);
             String trace_object= event.eventName;
             new JopMethodsMenu( session, 
                         trace_object, 
@@ -131,7 +132,7 @@ public class HistStatistics extends JPanel{
         public void mousePressed(MouseEvent e) {
            if ( e.isPopupTrigger()) {
             int row=eTable.rowAtPoint(e.getPoint());
-            MhrEvent event = (MhrEvent) eModel.result.get(row);
+            MhrEvent event = eModel.result.get(row);
             String trace_object= event.eventName;
             new JopMethodsMenu( session, 
                         trace_object, 

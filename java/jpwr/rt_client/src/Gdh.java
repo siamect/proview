@@ -118,8 +118,7 @@ public class Gdh
   Socket gdhSocket;
   ObjectOutputStream out;
   ObjectInputStream in;
-  //Vector<Sub> subscriptions = new Vector<Sub>();
-  Vector subscriptions = new Vector();
+  Vector<Sub> subscriptions = new Vector<Sub>();
   int subscriptionCount = 0;
   boolean listSent = false;
   int subLate = 0;
@@ -561,14 +560,14 @@ public class Gdh
       //out.flush();
       for(i = 0; i < size; i++)
       {
-        sub = (Sub)subscriptions.elementAt(i);
+        sub = subscriptions.elementAt(i);
         out.writeUTF(sub.attrName);
 //      out.flush();
       }
       out.flush();
       for(i = 0; i < size; i++)
       {
-        sub = (Sub)subscriptions.elementAt(i);
+        sub = subscriptions.elementAt(i);
         sts = in.readInt();
         sub.sts = sts;
         if(sts % 2 == 0)
@@ -600,6 +599,7 @@ public class Gdh
     }
   }
 
+  @SuppressWarnings("unchecked")
 
   public synchronized Vector refObjectInfo_Vector(Vector vec)
   {
@@ -634,8 +634,7 @@ public class Gdh
       out.writeObject(vec);
       out.flush();
 
-      //Vector<GdhrRefObjectInfo> retVec = (Vector<GdhrRefObjectInfo>)in.readObject();
-      Vector retVec = (Vector)in.readObject();
+      Vector<GdhrRefObjectInfo> retVec = (Vector<GdhrRefObjectInfo>)in.readObject();
       if(retVec == null)
       {
         locked = false;
@@ -665,8 +664,7 @@ public class Gdh
       System.out.println("REF_OBJECT_INFO_VECTOR: IO_Exception");
       locked = false;
       notify();
-      //Vector<GdhrRefObjectInfo> retVec = new Vector<GdhrRefObjectInfo>();
-      Vector retVec = new Vector();
+      Vector<GdhrRefObjectInfo> retVec = new Vector<GdhrRefObjectInfo>();
       retVec.add(new GdhrRefObjectInfo(null, 0, __IO_EXCEPTION, 0));
       return retVec;
     }
@@ -691,7 +689,7 @@ public class Gdh
   public float getObjectRefInfoFloat(int id)
   {
   try{
-    Sub sub = (Sub)subscriptions.elementAt(id);
+    Sub sub = subscriptions.elementAt(id);
     if(sub.oddSts())
     {
       return sub.valueFloat;
@@ -708,7 +706,7 @@ public class Gdh
   public float[] getObjectRefInfoFloatArray(int id, int elements)
   {
     try{
-      Sub sub = (Sub)subscriptions.elementAt(id);
+      Sub sub = subscriptions.elementAt(id);
       if(sub.oddSts())
       {
         return sub.valueFloatArray;
@@ -726,7 +724,7 @@ public class Gdh
   {
   try
   {
-    Sub sub = (Sub)subscriptions.elementAt(id);
+    Sub sub = subscriptions.elementAt(id);
     if(sub.oddSts())
     {
       return sub.valueBoolean;
@@ -744,7 +742,7 @@ public class Gdh
   {
     try
     {
-      Sub sub = (Sub)subscriptions.elementAt(id);
+      Sub sub = subscriptions.elementAt(id);
       if(sub.oddSts())
       {
         return sub.valueBooleanArray;
@@ -762,7 +760,7 @@ public class Gdh
   {
     try
     {
-      Sub sub = (Sub)subscriptions.elementAt(id);
+      Sub sub = subscriptions.elementAt(id);
       if(sub.oddSts())
       {
         return sub.valueInt;
@@ -780,7 +778,7 @@ public class Gdh
   {
     try
     {
-      Sub sub = (Sub)subscriptions.elementAt(id);
+      Sub sub = subscriptions.elementAt(id);
       if(sub.oddSts())
       {
         return sub.valueIntArray;
@@ -798,7 +796,7 @@ public class Gdh
   {
     try
     {
-    Sub sub = (Sub)subscriptions.elementAt(id);
+    Sub sub = subscriptions.elementAt(id);
     if(sub.evenSts() || sub.valueString == null)
     {
       if(sub.evenSts())
@@ -818,7 +816,7 @@ public class Gdh
   {
     try
     {
-    Sub sub = (Sub)subscriptions.elementAt(id);
+    Sub sub = subscriptions.elementAt(id);
     if(sub.evenSts() || sub.valueStringArray == null)
     {
       if(sub.evenSts())
@@ -864,7 +862,7 @@ public class Gdh
       notify();
       return new PwrtStatus(__UNREFED);
     }
-    Sub sub = (Sub)subscriptions.elementAt(refid.rix);
+    Sub sub = subscriptions.elementAt(refid.rix);
     if(sub.sts == __UNREFED)
     {
       locked = false;
@@ -920,7 +918,7 @@ public class Gdh
       for(i = 0; i < unref_vec.size(); i++)
       {
         PwrtRefId refid = (PwrtRefId)unref_vec.get(i);
-        Sub sub = (Sub)subscriptions.elementAt(refid.rix);
+        Sub sub = subscriptions.elementAt(refid.rix);
         //if(sub.sts == __UNREFED)
         //{
         //  continue;
@@ -937,8 +935,7 @@ public class Gdh
         out.writeInt(refid.nid);
       }
       out.flush();
-      //Vector<PwrtStatus> ret_vec = new Vector<PwrtStatus>();
-      Vector ret_vec = new Vector();
+      Vector<PwrtStatus> ret_vec = new Vector<PwrtStatus>();
       //System.out.println("unrefObjectInfo_VEctor i: " + i);
       while(i > 0)
       {
@@ -984,7 +981,7 @@ public class Gdh
     //for(int i = 0; i < subscriptionCount; i++)
     //{
 
-    //sub = (Sub)subscriptions.elementAt(i);
+    //sub = subscriptions.elementAt(i);
     //sub.sts = __UNREFED;
     //}
     try
@@ -1543,13 +1540,13 @@ public class Gdh
 	  //System.out.println("getObjectRefInfoAll:" + ((jpwr.rt.Sub)(subscriptions.get(i))).elements);
 	try
 	{
-	  if(((jpwr.rt.Sub)(subscriptions.get(i))).elements > 1)
+	  if(subscriptions.get(i).elements > 1)
 	  {
-            ((jpwr.rt.Sub)(subscriptions.get(i))).setValue(in.readObject());
+            subscriptions.get(i).setValue(in.readObject());
 	  }
           else
 	  {
-            switch (((jpwr.rt.Sub)(subscriptions.get(i))).typeId)
+            switch (subscriptions.get(i).typeId)
             {
               case Pwr.eType_Int32:
               case Pwr.eType_UInt32:
@@ -1561,17 +1558,17 @@ public class Gdh
 	      case Pwr.eType_NetStatus:
 	      case Pwr.eType_Enum:
 	      case Pwr.eType_Mask:
-                ((jpwr.rt.Sub)(subscriptions.get(i))).setValue(in.readInt());
+                subscriptions.get(i).setValue(in.readInt());
 	      break;
               case Pwr.eType_Float32:
-                ((jpwr.rt.Sub)(subscriptions.get(i))).setValue(in.readFloat());
+                subscriptions.get(i).setValue(in.readFloat());
               break;
               case 0:
               case Pwr.eType_Boolean:
-                ((jpwr.rt.Sub)(subscriptions.get(i))).setValue(in.readBoolean());
+                subscriptions.get(i).setValue(in.readBoolean());
               break;
               default:
-                ((jpwr.rt.Sub)(subscriptions.get(i))).setValue(in.readObject());
+                subscriptions.get(i).setValue(in.readObject());
               break;
             }
 	  }

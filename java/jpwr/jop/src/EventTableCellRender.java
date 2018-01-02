@@ -48,7 +48,7 @@ import jpwr.rt.MhrEvent;
 */
 
 public class EventTableCellRender extends DefaultTableCellRenderer {
-        
+    static final long serialVersionUID = 6266674185194732842L;     
     Color ALarmColor = new Color(255,100,100); // red;
     Color BLarmColor = Color.yellow;
     Color CLarmColor = new Color(135,206,235); // blue;

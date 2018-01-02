@@ -48,8 +48,8 @@ import jpwr.rt.*;
 public class JopEngine implements ActionListener {
   int scanTime;
   int animationScanTime;
-  //Vector<Object> updateVector;
-  Vector updateVector;
+  Vector<Object> updateVector;
+  //Vector updateVector;
   Timer timer;
   public Gdh gdh;
   public LocalDb ldb = null;
@@ -66,8 +66,8 @@ public class JopEngine implements ActionListener {
   public JopEngine( int scantime, GdhApplIfc root) {
     scanTime = scantime;
     animationScanTime = scantime;
-    //updateVector = new Vector<Object>( 50, 50);
-    updateVector = new Vector( 50, 50);
+    updateVector = new Vector<Object>( 50, 50);
+    //updateVector = new Vector( 50, 50);
     timer = new Timer( scantime, this); 
     timer.start();
     gdh = new Gdh( root);

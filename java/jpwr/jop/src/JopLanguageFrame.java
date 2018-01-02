@@ -48,6 +48,7 @@ import java.awt.event.*;
    Jop language chooser.
 */
 public class JopLanguageFrame extends JFrame implements ActionListener {
+  static final long serialVersionUID = -1209502406427692022L;
   String[] languages = { "English",
 			 "Swedish",
 			 "German",

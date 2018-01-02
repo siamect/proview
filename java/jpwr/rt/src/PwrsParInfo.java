@@ -43,6 +43,7 @@ import java.io.Serializable;
  */
 public class PwrsParInfo implements Serializable
 {
+  static final long serialVersionUID = 6346958989687459363L;
   public String PgmName;
   public int   Type;
   public int    Offset;

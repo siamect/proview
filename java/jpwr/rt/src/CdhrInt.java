@@ -43,6 +43,7 @@ import java.io.Serializable;
 */
 public class CdhrInt implements Serializable
 {
+  static final long serialVersionUID = -114075325546902696L;
   public int value;
   public int sts;
   

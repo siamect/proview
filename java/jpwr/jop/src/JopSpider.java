@@ -1060,6 +1060,7 @@ System.out.println( "JopSpiderCmd start");
     }
   }
 
+  @SuppressWarnings("unchecked")
   public static Object loadFrame( JopSession session, String className, 
 				  String instance, boolean scrollbar) throws ClassNotFoundException, FileNotFoundException {
       System.out.println( "loadFrame " + className);

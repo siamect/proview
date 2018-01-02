@@ -129,7 +129,7 @@ public class GrowMenu extends GrowRect {
 	int arrow_size = z_height * 4 / 5;
 	ll_x = (int)( ll.x * cmn.mw.zoom_factor_x) - cmn.mw.offset_x;
 	ll_y = (int)( ll.y * cmn.mw.zoom_factor_y) - cmn.mw.offset_y;
-	ur_x = ll_x + max_z_width + 15 + (int)(pulldown_found * arrow_size);
+	ur_x = ll_x + max_z_width + 15 + (pulldown_found * arrow_size);
 	if ( ur_x - ll_x < (int)(min_width * cmn.mw.zoom_factor_x))
 	    ur_x = ll_x + (int)(min_width * cmn.mw.zoom_factor_x);
 	ur_y = ll_y + (int)(tot_z_height);
@@ -142,7 +142,7 @@ public class GrowMenu extends GrowRect {
 	    ur.posit( ur.x, (ur_y + cmn.mw.offset_y) / cmn.mw.zoom_factor_y); // Might not always be correct?
 	    ll_x = (int)( ll.x * cmn.mw.zoom_factor_x) - cmn.mw.offset_x;
 	    ll_y = (int)( ll.y * cmn.mw.zoom_factor_y) - cmn.mw.offset_y;
-	    ur_x = ll_x + max_z_width + 15 + (int)(pulldown_found * arrow_size);
+	    ur_x = ll_x + max_z_width + 15 + (pulldown_found * arrow_size);
 	    ur_y = ll_y + (int)(tot_z_height);
 	}
 	else
@@ -306,6 +306,7 @@ public class GrowMenu extends GrowRect {
 		    return Glow.GLOW__NO_PROPAGATE;
 		}
 	    }
+	    break;
 	}
 	default:
 	    sts = local_event_handler( event, rp.x, rp.y);

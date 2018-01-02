@@ -55,8 +55,8 @@ public class JopSessionRep implements JopSessionIfc {
   JopLoginFrame login;
   String lang = "en_us";
 
-  //Vector<Object> frames = new Vector<Object>();
-  Vector frames = new Vector();
+  Vector<Object> frames = new Vector<Object>();
+  //Vector frames = new Vector();
 
   public JopSessionRep() {
   }

@@ -43,6 +43,7 @@ import java.awt.Point;
 */
 public class JopViewport extends JViewport
 {
+  static final long serialVersionUID = 8689839717604565205L;
   public boolean user = false;
   public void setViewPosition(Point p)
   {

@@ -55,6 +55,7 @@ import jpwr.rt.*;
  */
 public class JopXttApplet extends JopApplet
 {
+  static final long serialVersionUID = 209363438142322630L;
   boolean sim = false;
   XttTree xttTree;
 

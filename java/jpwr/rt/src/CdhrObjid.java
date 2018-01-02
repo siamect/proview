@@ -43,6 +43,7 @@ import java.io.Serializable;
 */
 public class CdhrObjid implements Serializable
 {
+  static final long serialVersionUID = -8079597530301512185L;
   public PwrtObjid objid;
   public int sts;
   

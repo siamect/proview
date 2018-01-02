@@ -47,8 +47,8 @@ import javax.swing.*;
    Flow container for elements
 */
 public class FlowArray {
-  //Vector<Object> a = new Vector<Object>();
-  Vector a = new Vector();
+  Vector<Object> a = new Vector<Object>();
+  //Vector a = new Vector();
   FlowCmn cmn;
 
   public FlowArray( FlowCmn cmn) {

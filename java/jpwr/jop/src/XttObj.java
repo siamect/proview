@@ -160,8 +160,8 @@ public class XttObj extends DynamicObj implements JopDynamic
     XttObjAttr obj;
     String suffix;
     GdhrRefObjectInfo ret;
-    //Vector<String> refVec = new Vector<String>();
-    Vector refVec = new Vector();
+    Vector<String> refVec = new Vector<String>();
+    //Vector refVec = new Vector();
     for(int i = 0; i < attrVector.size(); i++)
     {
       obj = ((XttObjAttr)attrVector.get(i));
@@ -337,8 +337,8 @@ public class XttObj extends DynamicObj implements JopDynamic
   public void localDynamicClose()
   {
     Logg.logg("XttObj: localDynamic close_vector", 6);
-    //Vector<PwrtRefId> unref_vec = new Vector<PwrtRefId>();
-    Vector unref_vec = new Vector();
+    Vector<PwrtRefId> unref_vec = new Vector<PwrtRefId>();
+    //Vector unref_vec = new Vector();
     for(int i = 0; i < attrVector.size(); i++)
     {
       XttObjAttr obj = (XttObjAttr)attrVector.get(i);

@@ -72,8 +72,8 @@ public class GraphLocalDb {
     }
   }
 
-  //Vector<LocalSub> subscriptions = new Vector<LocalSub>();
-  Vector subscriptions = new Vector();
+  Vector<LocalSub> subscriptions = new Vector<LocalSub>();
+  //Vector subscriptions = new Vector();
   int subscriptionCount = 1;
 
   public GraphLocalDb() {
@@ -100,14 +100,14 @@ public class GraphLocalDb {
     }
     else {
       PwrtRefId refid = new PwrtRefId( p, 0);
-      LocalSub sub = (LocalSub) subscriptions.elementAt(p);
+      LocalSub sub = subscriptions.elementAt(p);
       sub.ref();
       return new GdhrRefObjectInfo( refid, p, 1, typeId); 
     }
   }
 
   public void unrefObjectInfo( int id) {
-    LocalSub sub = (LocalSub) subscriptions.elementAt(id);
+    LocalSub sub = subscriptions.elementAt(id);
     if ( sub == null)
       return;
     sub.unref();
@@ -117,7 +117,7 @@ public class GraphLocalDb {
 
   public float getObjectRefInfoFloat(int id) {
     try {
-      LocalSub sub = (LocalSub) subscriptions.elementAt(id);
+      LocalSub sub = subscriptions.elementAt(id);
       if ( sub == null)
 	return 0F;
       return sub.valueFloat;
@@ -129,7 +129,7 @@ public class GraphLocalDb {
 
   public int getObjectRefInfoInt(int id) {
     try {
-      LocalSub sub = (LocalSub) subscriptions.elementAt(id);
+      LocalSub sub = subscriptions.elementAt(id);
       if ( sub == null)
 	return 0;
       return sub.valueInt;
@@ -141,7 +141,7 @@ public class GraphLocalDb {
 
   public boolean getObjectRefInfoBoolean(int id) {
     try {
-      LocalSub sub = (LocalSub) subscriptions.elementAt(id);
+      LocalSub sub = subscriptions.elementAt(id);
       if ( sub == null)
 	return false;
       return sub.valueBoolean;
@@ -153,7 +153,7 @@ public class GraphLocalDb {
 
   public String getObjectRefInfoString(int id, int typeid) {
     try {
-      LocalSub sub = (LocalSub) subscriptions.elementAt(id);
+      LocalSub sub = subscriptions.elementAt(id);
       if ( sub != null && sub.valueString != null)
 	return sub.valueString;
       else
@@ -169,7 +169,7 @@ public class GraphLocalDb {
     int id = nameToId( owner, name);
     if ( id == -1)
       return new CdhrBoolean( false, 0);
-    return new CdhrBoolean( ((LocalSub)subscriptions.elementAt(id)).valueBoolean, 1);
+    return new CdhrBoolean( subscriptions.elementAt(id).valueBoolean, 1);
   }
 
   public CdhrInt getObjectInfoInt(Object owner, String attributeName) {
@@ -177,7 +177,7 @@ public class GraphLocalDb {
     int id = nameToId( owner, name);
     if ( id == -1)
       return new CdhrInt( 0, 2);
-    return new CdhrInt( ((LocalSub)subscriptions.elementAt(id)).valueInt, 1);
+    return new CdhrInt( subscriptions.elementAt(id).valueInt, 1);
   }
 
   public CdhrFloat getObjectInfoFloat(Object owner, String attributeName) {
@@ -185,7 +185,7 @@ public class GraphLocalDb {
     int id = nameToId( owner, name);
     if ( id == -1)
       return new CdhrFloat( 0F, 2);
-    return new CdhrFloat( ((LocalSub)subscriptions.elementAt(id)).valueFloat, 1);
+    return new CdhrFloat( subscriptions.elementAt(id).valueFloat, 1);
   }
 
   public CdhrString getObjectInfoString(Object owner, String attributeName) {
@@ -193,7 +193,7 @@ public class GraphLocalDb {
     int id = nameToId( owner, name);
     if ( id == -1)
       return new CdhrString( "", 2);
-    return new CdhrString( ((LocalSub)subscriptions.elementAt(id)).valueString, 1);
+    return new CdhrString( subscriptions.elementAt(id).valueString, 1);
   }
 
   public PwrtStatus setObjectInfo( Object owner, String attributeName, boolean value) {
@@ -201,7 +201,7 @@ public class GraphLocalDb {
     int id = nameToId( owner, name);
     if ( id == -1)
       return new PwrtStatus(2);
-    ((LocalSub)subscriptions.elementAt(id)).valueBoolean = value;
+    subscriptions.elementAt(id).valueBoolean = value;
     return new PwrtStatus(1);
   }
 
@@ -210,8 +210,8 @@ public class GraphLocalDb {
     int id = nameToId( owner, name);
     if ( id == -1)
       return new PwrtStatus(2);
-    ((LocalSub)subscriptions.elementAt(id)).valueBoolean = 
-	!((LocalSub)subscriptions.elementAt(id)).valueBoolean;
+    subscriptions.elementAt(id).valueBoolean = 
+	!subscriptions.elementAt(id).valueBoolean;
     return new PwrtStatus(1);
   }
 
@@ -220,7 +220,7 @@ public class GraphLocalDb {
     int id = nameToId( owner, name);
     if ( id == -1)
       return new PwrtStatus(2);
-    ((LocalSub)subscriptions.elementAt(id)).valueInt = value;
+    subscriptions.elementAt(id).valueInt = value;
     return new PwrtStatus(1);
   }
 
@@ -229,7 +229,7 @@ public class GraphLocalDb {
     int id = nameToId( owner, name);
     if ( id == -1)
       return new PwrtStatus(2);
-    ((LocalSub)subscriptions.elementAt(id)).valueFloat = value;
+    subscriptions.elementAt(id).valueFloat = value;
     return new PwrtStatus(1);
   }
 
@@ -238,13 +238,13 @@ public class GraphLocalDb {
     int id = nameToId( owner, name);
     if ( id == -1)
       return new PwrtStatus(2);
-    ((LocalSub)subscriptions.elementAt(id)).valueString = value;
+    subscriptions.elementAt(id).valueString = value;
     return new PwrtStatus(1);
   }
 
   private int nameToId( Object owner, String name) {
     for ( int i = 0; i < subscriptions.size(); i++) {
-      LocalSub sub = (LocalSub)subscriptions.elementAt(i);
+      LocalSub sub = subscriptions.elementAt(i);
       if ( sub != null && owner == sub.owner && name.equalsIgnoreCase( sub.name))
 	return i;
     }

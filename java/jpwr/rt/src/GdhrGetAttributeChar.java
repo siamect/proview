@@ -43,6 +43,7 @@ import java.io.Serializable;
 */
 public class GdhrGetAttributeChar implements Serializable
 {
+  static final long serialVersionUID = 6862798162818096096L;
   public int typeId;
   public int size;
   public int offset;

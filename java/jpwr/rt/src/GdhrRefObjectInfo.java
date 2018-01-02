@@ -42,6 +42,7 @@ import java.io.Serializable;
 */
 public class GdhrRefObjectInfo implements Serializable
 {
+  static final long serialVersionUID = 9197260236121317824L;
   public PwrtRefId refid;
   public int id;
   public int sts;

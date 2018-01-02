@@ -44,6 +44,7 @@ import java.io.Serializable;
 */
 public class CdhrAttrRef implements Serializable
 {
+  static final long serialVersionUID = 8788127296749946366L;
   public PwrtAttrRef aref;
   public int sts;
   

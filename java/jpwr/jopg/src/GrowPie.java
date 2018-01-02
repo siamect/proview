@@ -259,7 +259,7 @@ public class GrowPie extends GrowArc {
 		a2 = sector_size[i] / (max_value - min_value) * angle2;
 		if ( a1 + a2 > angle1 + angle2)
 		    a2 = angle1 + angle2 - a1;
-		ia2 = (int)((double)a2 + a1 - ia1 + 0.5);
+		ia2 = (int)(a2 + a1 - ia1 + 0.5);
 		
 		fillcolor = GlowColor.get_drawtype( sector_color[i], Glow.eDrawType_FillHighlight,
 						    highlight, colornode, 1, 0);
