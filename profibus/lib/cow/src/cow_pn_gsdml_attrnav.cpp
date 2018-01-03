@@ -3184,6 +3184,11 @@ int ItemPnInterfaceSubmodule::open_children( GsdmlAttrNav *attrnav, double x, do
 		    pwr_eType_Boolean, sizeof(pwr_tBoolean), 0, 0,
 		    p, 1, node, flow_eDest_IntoLast);
 
+    p = (char *) &ii->Body.DelayMeasurementSupported;
+    new ItemPnBase( attrnav, "DelayMeasurementSupported", "LocalGsdmlAttr",
+                    pwr_eType_Boolean, sizeof(pwr_tBoolean), 0, 0,
+                    p, 1, node, flow_eDest_IntoLast);
+
     gsdml_RecordDataList *rl = ii->RecordDataList;
     if ( rl) {
       unsigned int record_index = 0;
@@ -3298,6 +3303,16 @@ int ItemPnPortSubmodule::open_children( GsdmlAttrNav *attrnav, double x, double 
     new ItemPnBase( attrnav, "IsDefaultRingport", "LocalGsdmlAttr", 
 		    pwr_eType_Boolean, sizeof(pwr_tBoolean), 0, 0,
 		    p, 1, node, flow_eDest_IntoLast);
+
+    p = (char *) &pi->Body.CheckMAUTypeSupported;
+    new ItemPnBase( attrnav, "CheckMAUTypeSupported", "LocalGsdmlAttr",
+                    pwr_eType_Boolean, sizeof(pwr_tBoolean), 0, 0,
+                    p, 1, node, flow_eDest_IntoLast);
+
+    p = (char *) &pi->Body.CheckMAUTypeDifferenceSupported;
+    new ItemPnBase( attrnav, "CheckMAUTypeDifferenceSupported", "LocalGsdmlAttr",
+                    pwr_eType_Boolean, sizeof(pwr_tBoolean), 0, 0,
+                    p, 1, node, flow_eDest_IntoLast);
 
     gsdml_RecordDataList *rl = pi->RecordDataList;
     if ( rl) {
