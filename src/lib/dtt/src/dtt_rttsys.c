@@ -10590,7 +10590,7 @@ int RTTSYS_QCOM_QUEUE( 	menu_ctx	ctx,
                 /* Name */
                 menu_ptr->value_ptr =  qp->name;
 		menu_ptr->func = &rttsys_qcom_messages_start;
-		menu_ptr->arg1 = (void *) (unsigned int)qp->qix;
+		menu_ptr->arg1 = (void *) (uintptr_t)qp->qix;
                 menu_ptr++;
                 /* Qix */
                 *(int *)menu_ptr->value_ptr = qp->qix & ~ (1 << 31);
@@ -10776,7 +10776,7 @@ int RTTSYS_QCOM_QUEUE( 	menu_ctx	ctx,
                 /* Name */
                 menu_ptr->value_ptr =  qp->name;
 		menu_ptr->func = &rttsys_qcom_messages_start;
-		menu_ptr->arg1 = (void *) (unsigned int)qp->qix;
+		menu_ptr->arg1 = (void *) (uintptr_t)qp->qix;
                 menu_ptr++;
                 /* Qix */
                 *(int *)menu_ptr->value_ptr = qp->qix & ~ (1 << 31);
@@ -10963,7 +10963,7 @@ int RTTSYS_QCOM_ALLQUEUES( 	menu_ctx	ctx,
 	      /* Aix */
 	      menu_ptr->value_ptr = (char *)&ap->aid.aix;
  	      menu_ptr->func = &rttsys_qcom_messages_start;
-	      menu_ptr->arg1 = (void *) (unsigned int)qp->qix;
+	      menu_ptr->arg1 = (void *) (uintptr_t)qp->qix;
 	      menu_ptr++;
 	      /* Application name */
 	      menu_ptr->value_ptr =  ap->name;
@@ -11104,7 +11104,7 @@ int RTTSYS_QCOM_ALLQUEUES( 	menu_ctx	ctx,
 	      /* Aix */
 	      menu_ptr->value_ptr = (char *)&ap->aid.aix;
  	      menu_ptr->func = &rttsys_qcom_messages_start;
-	      menu_ptr->arg1 = (void *) (unsigned int)qp->qix;
+	      menu_ptr->arg1 = (void *) (uintptr_t)qp->qix;
 	      menu_ptr++;
 	      /* Application name */
 	      menu_ptr->value_ptr =  ap->name;
@@ -11404,7 +11404,7 @@ int RTTSYS_QCOM_MESSAGES( 	menu_ctx	ctx,
       QCOM_QMESS_PAGE = page + 1;
 
       qid.nid = 0;
-      qid.qix = (qcom_tQix)objectname;
+      qid.qix = (qcom_tQix)(uintptr_t)objectname;
 
       menulist = (rtt_t_menu_upd *) ctx->menu;
       menu_ptr = menulist;
@@ -11593,9 +11593,9 @@ int RTTSYS_QCOM_LINKS( 	menu_ctx	ctx,
 	      menu_ptr->value_ptr = (char *) np->link[m].name;
 	      menu_ptr->func = &rttsys_qcom_node_start;
 	      if ( m == 0)
-		menu_ptr->arg1 = (void *) (unsigned int)np->nid;
+		menu_ptr->arg1 = (void *) (uintptr_t)np->nid;
 	      else
-		menu_ptr->arg1 = (void *) (unsigned int)(np->nid | 0x80000000);
+		menu_ptr->arg1 = (void *) (uintptr_t)(np->nid | 0x80000000);
 	      menu_ptr++;
 
 	      /* QFlags */
@@ -11746,9 +11746,9 @@ int RTTSYS_QCOM_LINKS( 	menu_ctx	ctx,
 	      menu_ptr->value_ptr = (char *) np->link[m].name;
 	      menu_ptr->func = &rttsys_qcom_node_start;
 	      if ( m == 0)
-		menu_ptr->arg1 = (void *) (unsigned int)np->nid;
+		menu_ptr->arg1 = (void *) (uintptr_t)np->nid;
 	      else
-		menu_ptr->arg1 = (void *) (unsigned int)(np->nid | 0x80000000);
+		menu_ptr->arg1 = (void *) (uintptr_t)(np->nid | 0x80000000);
 	      menu_ptr++;
 
 	      /* QFlags */
@@ -11907,9 +11907,9 @@ int RTTSYS_QCOM_NODES( 	menu_ctx	ctx,
 	      menu_ptr->value_ptr = (char *) np->link[m].name;
 	      menu_ptr->func = &rttsys_qcom_node_start;
 	      if ( m == 0)
-		menu_ptr->arg1 = (void *) (unsigned int)np->nid;
+		menu_ptr->arg1 = (void *) (uintptr_t)np->nid;
 	      else
-		menu_ptr->arg1 = (void *) (unsigned int)(np->nid | 0x80000000);
+		menu_ptr->arg1 = (void *) (uintptr_t)(np->nid | 0x80000000);
 	      menu_ptr++;
 
 	      /* Os */
