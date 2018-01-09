@@ -525,7 +525,7 @@ MYSQL *sev_dbms_env::open_thread( unsigned int *sts)
 {
   MYSQL *con = mysql_init(NULL);
 
-  con = mysql_real_connect(m_con, host(), user(), passwd(), dbName(), port(), socket(), 0);
+  con = mysql_real_connect(con, host(), user(), passwd(), dbName(), port(), socket(), 0);
   if (con == 0) {
     *sts = mysql_errno(m_con);
     return 0;
@@ -760,11 +760,10 @@ int sev_dbms::create_table( pwr_tStatus *sts, char *tablename, pwr_eType type,
   char jumpstr[80];
   char idtypestr[20];
   char readoptstr[80];
-  char engine[80];
   char enginestr[100] = "";
 
   if ( strcmp( m_cnf.Engine, "") != 0)
-    snprintf( enginestr, sizeof(enginestr), " engine=%s", engine);
+    snprintf( enginestr, sizeof(enginestr), " engine=%s", m_cnf.Engine);
   if ( cdh_NoCaseStrcmp( m_cnf.Engine, "innodb") == 0)
     strcat( enginestr, " row_format=compressed");
 
@@ -840,11 +839,10 @@ int sev_dbms::create_event_table( pwr_tStatus *sts, char *tablename, pwr_tMask o
   char jumpstr[80];
   char idtypestr[20];
   char readoptstr[80];
-  char engine[80];
   char enginestr[100] = "";
 
   if ( strcmp( m_cnf.Engine, "") != 0)
-    snprintf( enginestr, sizeof(enginestr), " engine=%s", engine);
+    snprintf( enginestr, sizeof(enginestr), " engine=%s", m_cnf.Engine);
 
   if ( options & pwr_mSevOptionsMask_PosixTime) {
     if ( options & pwr_mSevOptionsMask_HighTimeResolution) {
@@ -2851,11 +2849,10 @@ int sev_dbms::create_objecttable( pwr_tStatus *sts, char *tablename, pwr_tMask o
   char jumpstr[80];
   char idtypestr[20];
   char readoptstr[80];
-  char engine[80];
   char enginestr[100] = "";
 
   if ( strcmp( m_cnf.Engine, "") != 0)
-    snprintf( enginestr, sizeof(enginestr), " engine=%s", engine);
+    snprintf( enginestr, sizeof(enginestr), " engine=%s", m_cnf.Engine);
 
   if ( options & pwr_mSevOptionsMask_PosixTime) {
     if ( options & pwr_mSevOptionsMask_HighTimeResolution) {
@@ -4354,7 +4351,6 @@ int sev_dbms::alter_engine( pwr_tStatus *sts, char *tablename)
 {  
   char query[200];
   int rc;
-  char engine[80];
 
   if ( strcmp( m_cnf.Engine, "") == 0) {
     printf( "** No engine specified in /etc/proview.cnf\n");
@@ -4362,9 +4358,9 @@ int sev_dbms::alter_engine( pwr_tStatus *sts, char *tablename)
   }
 
   // Check table
-  printf( "-- Altering engine to %s table %s...\n", engine, tablename);
+  printf( "-- Altering engine to %s table %s...\n", m_cnf.Engine, tablename);
 
-  sprintf( query, "alter table %s engine=%s", tablename, engine);
+  sprintf( query, "alter table %s engine=%s", tablename, m_cnf.Engine);
   rc = mysql_query( m_env->con(), query);
   if (rc) {
     printf("In %s row %d:\n", __FILE__, __LINE__);

@@ -886,8 +886,10 @@ int sev_server::receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size)
     qmsg->time = msg->Time;
 
     th->alloc += qmsg->size;
-    if ( th->conf_idx >= 0)
+    if ( th->conf_idx >= 0) {
       m_config->ServerThreads[th->conf_idx].QueueAlloc = th->alloc;
+      m_config->ServerThreads[th->conf_idx].DataStoreMsgCnt++;
+    }
     que_Put( &sts, &th->queue, &qmsg->e, qmsg);
   }
   return 1;
@@ -1173,13 +1175,60 @@ void *sev_server::receive_histdata_thread( void *arg)
   sev_sHistData *dp;
   pwr_tStatus sts;
   pwr_tTime time;
+  pwr_tTime currenttime;
+  pwr_tTime next_stat;
+  pwr_tDeltaTime stat_interval = {0,500000000};
+  pwr_tTime before_get;
+  pwr_tDeltaTime busy = pwr_cNDeltaTime;
+  pwr_tDeltaTime idle = pwr_cNDeltaTime;
+  pwr_tDeltaTime dt;
+  float a = exp(-((float)sev_cStatInterval)/300);
+  pwr_sClass_SevServerThread *thread_conf = 0;
+  float current_load;
+  int storage_cnt = 0;
+
+  if ( th->conf_idx >= 0)
+    thread_conf = &sev->m_config->ServerThreads[th->conf_idx];
 
   free( arg);
 
   printf( "New thread %d\n", th->key);
 
+  time_GetTime( &currenttime);
+  time_Aadd( &next_stat, &currenttime, &stat_interval);
+
   while ( 1) {
+
+    time_GetTime( &before_get);
+    time_Adiff( &dt, &before_get, &currenttime);
+    time_Dadd( &busy, &busy, &dt);
+
     msg = (sev_sReceiveHistDataMsg *)que_Get( NULL, &th->queue, &tmo, &tmo_item);
+
+    time_GetTime( &currenttime);
+    time_Adiff( &dt, &currenttime, &before_get);
+    time_Dadd( &idle, &idle, &dt);
+
+    if ( th->conf_idx >= 0 && time_Acomp( &currenttime, &next_stat) == 1) {
+
+      thread_conf->QueueAlloc = th->alloc;
+      current_load = 100.0 * time_DToFloat(0, &busy)/(time_DToFloat(0, &busy)+time_DToFloat(0, &idle));      
+      if ( thread_conf->MediumLoad == 0)
+        thread_conf->MediumLoad = current_load;
+      else
+	thread_conf->MediumLoad = a * thread_conf->MediumLoad + (1.0-a) * current_load;
+      thread_conf->StorageRate = (float)storage_cnt / (time_DToFloat(0, &busy)+time_DToFloat(0, &idle));
+      if ( thread_conf->MediumStorageRate == 0)
+	thread_conf->MediumStorageRate = thread_conf->StorageRate;
+      else
+	thread_conf->MediumStorageRate = a * thread_conf->MediumStorageRate + (1.0-a) * thread_conf->StorageRate;
+      storage_cnt = 0;
+ 
+      time_Aadd( &next_stat, &next_stat, &stat_interval);
+      busy = pwr_cNDeltaTime;
+      idle = pwr_cNDeltaTime;
+    }
+
     if ( (int *)msg == &tmo_item) {
       // printf( "Tmo %d\n", th->key);
     }
@@ -1203,6 +1252,7 @@ void *sev_server::receive_histdata_thread( void *arg)
 	time = net_NetTimeToTime( &msg->time);
 	sev->m_db->store_value( &sev->m_sts, th->db_ctx, idx, 0, time, &dp->data, dp->size);
 	sev->m_storage_cnt++;
+	storage_cnt++;
       
 	dp = (sev_sHistData *)((char *)dp + sizeof( *dp) - sizeof(dp->data) +  dp->size);
       }
@@ -1211,7 +1261,7 @@ void *sev_server::receive_histdata_thread( void *arg)
     
       th->alloc -= msg->size;
       if ( th->conf_idx >= 0)
-	sev->m_config->ServerThreads[th->conf_idx].QueueAlloc = th->alloc;
+	thread_conf->QueueAlloc = th->alloc;
 
       free( msg);   
     }
