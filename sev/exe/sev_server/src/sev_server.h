@@ -43,6 +43,7 @@
 #include "pwr.h"
 #include "pwr_class.h"
 #include "pwr_baseclasses.h"
+#include "rt_que.h"
 #include "rt_sev_net.h"
 #include "sev_db.h"
 
@@ -68,11 +69,35 @@ typedef struct {
   unsigned int item_idx;
 } sev_sHistDataThread;
 
+typedef struct {
+  int key;
+  pthread_t thread;
+  que_sQue queue;
+  int alloc;
+  void *db_ctx;
+  int conf_idx;
+} sev_sThread;
+
+typedef struct {
+  void *ctx;
+  sev_sThread *th;
+} sev_sReceiveHistDataThread;
+
+typedef struct {
+  lst_sEntry e;
+  net_sTime time;
+  int size;
+  char data[1];
+} sev_sReceiveHistDataMsg;
+
+typedef map<int, sev_sThread *>::iterator threadlist_iterator;
+
 class sev_server {
  public:
 
   sev_server() : m_server_status(0), m_refid(0), m_msg_id(0), m_storage_cnt(0),
-    m_db_type(sev_eDbType_Sqlite), m_config(0), m_read_threads(0) {memset(&m_stat,0,sizeof(m_stat));}
+    m_db_type(sev_eDbType_Sqlite), m_config(0), m_thread_cnt(0),  m_read_threads(0) 
+    { memset(&m_stat,0,sizeof(m_stat));}
 
   pwr_tStatus m_sts;
   pwr_tStatus m_server_status;
@@ -85,8 +110,10 @@ class sev_server {
   sev_sStat m_stat;
   sev_eDbType m_db_type;
   pwr_sClass_SevServer *m_config;
+  unsigned int m_thread_cnt;
   pwr_tDlid m_config_dlid;
   int m_read_threads;
+  map<int, sev_sThread *>m_thread_list;
 
   int init( int noneth);
   int connect();
@@ -103,6 +130,10 @@ class sev_server {
   void garbage_collector();
   void garbage_item( int idx);
   void set_dbtype( sev_eDbType type) { m_db_type = type;}
+  sev_sThread *find_thread( int key);
+  static void *receive_histdata_thread( void *arg);
+  sev_sThread *create_thread( int key);
+  void delete_thread( int key);
 
   static void *send_histdata_thread( void *arg);
 };

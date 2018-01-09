@@ -87,6 +87,7 @@ int sev_server::init( int noneth)
   pwr_tStatus		sts;
   qcom_sAid		aid;
   qcom_sQid 		qini;
+  sev_sDbConfig		db_config;
 
   m_server_status = PWR__SRVSTARTUP;
 
@@ -96,6 +97,7 @@ int sev_server::init( int noneth)
   errh_Init( "sev_server", (errh_eAnix)0);
 
   m_noneth = noneth;
+
   if (!m_noneth) {
     // Check server config object
     pwr_tOid conf_oid;
@@ -111,33 +113,85 @@ int sev_server::init( int noneth)
 
     pwr_sAttrRef aref = cdh_ObjidToAref( conf_oid);
     sts = gdh_DLRefObjectInfoAttrref( &aref, (void **)&m_config, &m_config_dlid);
-    if ( EVEN(sts))
-      m_config = 0;
-
-    // Get configured database
-    pwr_tAttrRef daref;
-    pwr_eSevDatabaseEnum db_enum;
-    sts = gdh_ArefANameToAref( &aref, "Database", &daref);
-    if ( ODD(sts)) {
-      sts = gdh_GetObjectInfoAttrref( &daref, (void *)&db_enum, sizeof(db_enum));
-      if ( ODD(sts)) {
-	switch ( db_enum) {
-	case pwr_eSevDatabaseEnum_MySQL:
-	  set_dbtype( sev_eDbType_Mysql);
-	  break;
-	case pwr_eSevDatabaseEnum_SQLite:
-	  set_dbtype( sev_eDbType_Sqlite);
-	  break;
-	case pwr_eSevDatabaseEnum_HDF5:
-	  set_dbtype( sev_eDbType_HDF5);
-	  break;
-	}
-      }
+    if ( EVEN(sts)) {
+      errh_CErrLog( PWR__SRVNOTCONF, 0);
+      exit(0);
     }
 
   }
+  else {
+    // Read config from proview.cnf
+    static pwr_sClass_SevServer config;
+    char str[80];
+    float fvalue;
 
-  m_db = sev_db::open_database( m_db_type);
+    memset( &config, 0, sizeof(config));
+    m_config = &config;
+    m_config_dlid = pwr_cNDlid;
+
+    if ( cnf_get_value( "sevDatabaseType", str, sizeof(str))) {
+      if ( cdh_NoCaseStrcmp( str, "sqlite") == 0)
+	m_config->Database = sev_eDbType_Sqlite;
+      else if ( cdh_NoCaseStrcmp( str, "mysql") == 0)
+	m_config->Database = sev_eDbType_Mysql;	
+      else if ( cdh_NoCaseStrcmp( str, "hdf5") == 0)
+	m_config->Database = sev_eDbType_HDF5;	
+      else
+	m_config->Database = sev_eDbType_Mysql;
+    }
+    else
+      m_config->Database = sev_eDbType_Mysql;
+
+    if ( cnf_get_value( "sevUseServerThreads", str, sizeof(str))) {
+      if ( cdh_NoCaseStrcmp( str, "1") == 0)
+	m_config->UseServerThreads = 1;
+    }
+    if ( cnf_get_value( "sevLinearRegrAll", str, sizeof(str))) {
+      if ( cdh_NoCaseStrcmp( str, "1") == 0)
+	m_config->LinearRegrAll = 1;
+    }
+    if ( cnf_get_value( "sevMeanValueAll", str, sizeof(str))) {
+      if ( cdh_NoCaseStrcmp( str, "1") == 0)
+	m_config->MeanValueAll = 1;
+    }
+    if ( cnf_get_value( "sevMeanValueInterval1", str, sizeof(str))) {
+      if ( sscanf( str, "%f", &fvalue) == 1)
+	m_config->MeanValueInterval1 = fvalue;
+    }
+    if ( cnf_get_value( "sevMeanValueInterval2", str, sizeof(str))) {
+      if ( sscanf( str, "%f", &fvalue) == 1)
+	m_config->MeanValueInterval2 = fvalue;
+    }
+    if ( cnf_get_value( "sevLinearRegrMaxTime", str, sizeof(str))) {
+      if ( sscanf( str, "%f", &fvalue) == 1)
+	m_config->LinearRegrMaxTime = fvalue;
+    }
+  }
+
+  switch ( m_config->Database) {
+  case pwr_eSevDatabaseEnum_MySQL:
+    set_dbtype( sev_eDbType_Mysql);
+    break;
+  case pwr_eSevDatabaseEnum_SQLite:
+    set_dbtype( sev_eDbType_Sqlite);
+    break;
+  case pwr_eSevDatabaseEnum_HDF5:
+    set_dbtype( sev_eDbType_HDF5);
+    break;
+  default:
+    set_dbtype( sev_eDbType_Mysql);
+  }
+
+  memset( &db_config, 0, sizeof(db_config));
+  db_config.LinearRegrMaxTime = m_config->LinearRegrMaxTime;
+  db_config.LinearRegrAll = m_config->LinearRegrAll;
+  db_config.MeanValueAll = m_config->MeanValueAll;
+  db_config.MeanValueInterval1 = m_config->MeanValueInterval1;
+  db_config.MeanValueInterval2 = m_config->MeanValueInterval2;
+  cnf_get_value( "sevMysqlEngine", db_config.Engine, sizeof(db_config.Engine));
+  cnf_get_value( "mysqlSocket", db_config.Socket, sizeof(db_config.Socket));
+  
+  m_db = sev_db::open_database( m_db_type, &db_config);
   if ( !m_db) {
     errh_Fatal( "Database open error");
     exit(0);
@@ -222,6 +276,7 @@ int sev_server::connect()
     msg  = (sev_sMsgAny *) qcom_Alloc(&lsts, put.size);
 
     msg->Type = sev_eMsgType_NodeUp;
+    msg->Version = sev_cNetVersion;
     put.data = msg;
     put.allocate = 0;
 
@@ -257,6 +312,7 @@ int sev_server::request_items( pwr_tNid nid)
   msg = (sev_sMsgAny *) qcom_Alloc(&lsts, put.size);
 
   msg->Type = sev_eMsgType_HistItemsRequest;
+  msg->Version = sev_cNetVersion;
   put.data = msg;
   put.allocate = 0;
   
@@ -295,6 +351,7 @@ int sev_server::send_itemlist( qcom_sQid tgt)
   put.allocate = 0;
 
   ((sev_sMsgHistItems *)put.data)->Type = sev_eMsgType_HistItems;
+  ((sev_sMsgHistItems *)put.data)->Version = sev_cNetVersion;
 
   ((sev_sMsgHistItems *)put.data)->NumItems = item_cnt;
   ((sev_sMsgHistItems *)put.data)->NumAttributes = itemattr_cnt;
@@ -351,6 +408,7 @@ int sev_server::send_server_status( qcom_sQid tgt)
   put.allocate = 0;
 
   ((sev_sMsgServerStatus *)put.data)->Type = sev_eMsgType_ServerStatus;
+  ((sev_sMsgServerStatus *)put.data)->Version = sev_cNetVersion;
 
 
   sts = m_server_status;
@@ -389,6 +447,7 @@ int sev_server::delete_item( qcom_sQid tgt, sev_sMsgHistItemDelete *rmsg)
   m_db->delete_item( &sts, rmsg->Oid, rmsg->AName);
 
   ((sev_sMsgHistItemStatus *)put.data)->Type = sev_eMsgType_HistItemStatus;
+  ((sev_sMsgHistItemStatus *)put.data)->Version = sev_cNetVersion;
 
   ((sev_sMsgHistItemStatus *)put.data)->Oid = rmsg->Oid;
   strcpy( ((sev_sMsgHistItemStatus *)put.data)->AName, rmsg->AName);
@@ -460,12 +519,12 @@ int sev_server::mainloop()
 	m_stat.medium_storage_rate = a * m_stat.medium_storage_rate + (1.0-a) * m_stat.storage_rate;
       m_storage_cnt = 0;
       m_db->store_stat( &m_stat); 
-      if ( m_config) {
-	m_config->Stat.CurrentLoad = m_stat.current_load;
-	m_config->Stat.MediumLoad = m_stat.medium_load;
-	m_config->Stat.StorageRate = m_stat.storage_rate;
-	m_config->Stat.MediumStorageRate = m_stat.medium_storage_rate;
-      }
+
+      m_config->Stat.CurrentLoad = m_stat.current_load;
+      m_config->Stat.MediumLoad = m_stat.medium_load;
+      m_config->Stat.StorageRate = m_stat.storage_rate;
+      m_config->Stat.MediumStorageRate = m_stat.medium_storage_rate;
+ 
       time_Aadd( &next_stat, &next_stat, &stat_interval);
       busy = pwr_cNDeltaTime;
       idle = pwr_cNDeltaTime;
@@ -534,12 +593,10 @@ int sev_server::mainloop()
 
     qcom_Free( &sts, mp);
 
-    if ( m_config) {
-      m_config->Stat.DataStoreMsgCnt = m_stat.datastore_msg_cnt;
-      m_config->Stat.DataGetMsgCnt = m_stat.dataget_msg_cnt;
-      m_config->Stat.ItemsMsgCnt = m_stat.items_msg_cnt;
-      m_config->Stat.EventStoreMsgCnt = m_stat.eventstore_msg_cnt;	
-    }
+    m_config->Stat.DataStoreMsgCnt = m_stat.datastore_msg_cnt;
+    m_config->Stat.DataGetMsgCnt = m_stat.dataget_msg_cnt;
+    m_config->Stat.ItemsMsgCnt = m_stat.items_msg_cnt;
+    m_config->Stat.EventStoreMsgCnt = m_stat.eventstore_msg_cnt;	
   }
 }
 
@@ -765,31 +822,74 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
 int sev_server::receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size)
 {
   pwr_tStatus sts;
-  sev_sHistData *dp = (sev_sHistData *)&msg->Data;
+  sev_sHistData *dp;
   pwr_tTime time;
+  pwr_tUInt32 server_thread;
 
-  m_db->begin_transaction();
-
-  while ( (char *)dp - (char *)msg < (int)size) {
-    sev_sRefid *rp;
-    pwr_tRefId rk = dp->sevid;
-
-    rp = (sev_sRefid *) tree_Find(&sts, m_refid, &rk);
-    if ( !rp) {
-      dp = (sev_sHistData *)((char *)dp + sizeof( *dp) - sizeof(dp->data) +  dp->size);
-      continue;
-    }
-    unsigned int idx = rp->idx;
-
-    time = net_NetTimeToTime( &msg->Time);
-    m_db->store_value( &m_sts, idx, 0, time, &dp->data, dp->size);
-    m_storage_cnt++;
-
-    dp = (sev_sHistData *)((char *)dp + sizeof( *dp) - sizeof(dp->data) +  dp->size);
+  if ( msg->Version == 0) { 
+    // Server thread was added in version 1
+    dp = (sev_sHistData *) &((sev_sMsgHistDataStoreV0 *)msg)->Data;
+    server_thread = 0;
+  }
+  else {
+    dp = (sev_sHistData *) &msg->Data;
+    server_thread = msg->ServerThread;
   }
 
-  m_db->commit_transaction();
-  
+  if ( !m_config->UseServerThreads) {
+    m_db->begin_transaction( 0);
+
+    while ( (char *)dp - (char *)msg < (int)size) {
+      sev_sRefid *rp;
+      pwr_tRefId rk = dp->sevid;
+
+      rp = (sev_sRefid *) tree_Find(&sts, m_refid, &rk);
+      if ( !rp) {
+	dp = (sev_sHistData *)((char *)dp + sizeof( *dp) - sizeof(dp->data) +  dp->size);
+	continue;
+      }
+      unsigned int idx = rp->idx;
+      
+      time = net_NetTimeToTime( &msg->Time);
+      m_db->store_value( &m_sts, 0, idx, 0, time, &dp->data, dp->size);
+      m_storage_cnt++;
+      
+      dp = (sev_sHistData *)((char *)dp + sizeof( *dp) - sizeof(dp->data) +  dp->size);
+    }
+
+    m_db->commit_transaction( 0);
+  }
+  else {
+    sev_sThread *th;
+    sev_sReceiveHistDataMsg *qmsg;
+    pwr_tUInt32 key;
+
+    // if ( key == nodeid)
+    key = server_thread;
+
+    th = find_thread( key);
+    if ( !th) {
+      th = create_thread( key);
+      printf( "sev_server, new thread %d\n", key);
+    }
+    
+    // Create a queue message
+    if ( th->alloc + sizeof(*qmsg) - sizeof(qmsg->data) + size > m_config->ThreadQueueLimit) {
+      // Queue maxlimit exceede, discard message
+      m_config->ServerThreads[th->conf_idx].LostCnt++;
+      return 1;
+    }
+
+    qmsg = (sev_sReceiveHistDataMsg *)malloc( sizeof(*qmsg) - sizeof(qmsg->data) + size);
+    memcpy( &qmsg->data, dp, size);
+    qmsg->size = size;
+    qmsg->time = msg->Time;
+
+    th->alloc += qmsg->size;
+    if ( th->conf_idx >= 0)
+      m_config->ServerThreads[th->conf_idx].QueueAlloc = th->alloc;
+    que_Put( &sts, &th->queue, &qmsg->e, qmsg);
+  }
   return 1;
 }
 
@@ -866,6 +966,7 @@ void *sev_server::send_histdata_thread( void *arg)
   put.allocate = 0;
 
   msg->Type = sev_eMsgType_HistDataGet;
+  msg->Version = sev_cNetVersion;
   msg->Oid = rmsg->Oid;
   strncpy( msg->AName, rmsg->AName, sizeof(msg->AName));
   if ( ODD(sts)) {
@@ -927,6 +1028,7 @@ int sev_server::send_objecthistdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *
   put.allocate = 0;
 
   msg->Type = sev_eMsgType_HistObjectDataGet;
+  msg->Version = sev_cNetVersion;
   msg->Oid = rmsg->Oid;
   strncpy( msg->AName, rmsg->AName, sizeof(msg->AName));
   msg->Status = m_sts;
@@ -1055,42 +1157,122 @@ void sev_server::garbage_item( int idx)
   }
 }
 
+
+sev_sThread *sev_server::find_thread( int key)
+{
+  return m_thread_list[key];
+}
+
+void *sev_server::receive_histdata_thread( void *arg)
+{
+  sev_server *sev = (sev_server *)((sev_sReceiveHistDataThread *)arg)->ctx;
+  int tmo_item;
+  pwr_tDeltaTime tmo = {1, 0};
+  sev_sReceiveHistDataMsg *msg;
+  sev_sThread *th = ((sev_sReceiveHistDataThread *)arg)->th;
+  sev_sHistData *dp;
+  pwr_tStatus sts;
+  pwr_tTime time;
+
+  free( arg);
+
+  printf( "New thread %d\n", th->key);
+
+  while ( 1) {
+    msg = (sev_sReceiveHistDataMsg *)que_Get( NULL, &th->queue, &tmo, &tmo_item);
+    if ( (int *)msg == &tmo_item) {
+      // printf( "Tmo %d\n", th->key);
+    }
+    else {
+
+      dp = (sev_sHistData *) &msg->data;
+
+      sev->m_db->begin_transaction( th->db_ctx);
+    
+      while ( (char *)dp - (char *)msg < (int)msg->size) {
+	sev_sRefid *rp;
+	pwr_tRefId rk = dp->sevid;
+
+	rp = (sev_sRefid *) tree_Find(&sts, sev->m_refid, &rk);
+	if ( !rp) {
+	  dp = (sev_sHistData *)((char *)dp + sizeof( *dp) - sizeof(dp->data) +  dp->size);
+	  continue;
+	}
+	unsigned int idx = rp->idx;
+      
+	time = net_NetTimeToTime( &msg->time);
+	sev->m_db->store_value( &sev->m_sts, th->db_ctx, idx, 0, time, &dp->data, dp->size);
+	sev->m_storage_cnt++;
+      
+	dp = (sev_sHistData *)((char *)dp + sizeof( *dp) - sizeof(dp->data) +  dp->size);
+      }
+    
+      sev->m_db->commit_transaction( th->db_ctx);
+    
+      th->alloc -= msg->size;
+      if ( th->conf_idx >= 0)
+	sev->m_config->ServerThreads[th->conf_idx].QueueAlloc = th->alloc;
+
+      free( msg);   
+    }
+  }
+    
+  return (void *)1;
+}
+
+sev_sThread *sev_server::create_thread( int key)
+{
+  int sts;
+
+  sev_sThread *th = (sev_sThread *)calloc( 1, sizeof(sev_sThread));
+  th->key = key;
+  que_Create( NULL, &th->queue);
+  th->db_ctx = m_db->new_thread();
+  if ( m_thread_cnt < sizeof(m_config->ServerThreads)/sizeof(m_config->ServerThreads[0]))
+    th->conf_idx = m_thread_cnt;
+  else
+    th->conf_idx = -1;
+  m_thread_cnt++;
+
+  m_thread_list[key] = th;
+
+  sev_sReceiveHistDataThread *arg = (sev_sReceiveHistDataThread *)malloc( sizeof(*arg));
+  arg->ctx = this;
+  arg->th = th;  
+
+  sts = pthread_create( &th->thread, NULL, receive_histdata_thread, arg);
+  if ( sts != 0)
+    printf( "sev_server: pthread_create error %d\n", sts);
+
+  if ( th->conf_idx >= 0) {
+    m_config->ServerThreads[th->conf_idx].Key = key;
+  }
+
+  return th;
+}
+
+void sev_server::delete_thread( int key)
+{
+  sev_sThread *th;
+
+  th = m_thread_list[key];
+  if ( !th)
+    return;
+
+  free( th);
+  m_thread_list.erase(key);
+}
+
+
+
+
 int main (int argc, char *argv[])
 {
   sev_server srv;
   int noneth = 0;
-  sev_eDbType dbtype = sev_eDbType_;
-  char str[80];
 
   if ( argc > 1 && strcmp( argv[1], "-n") == 0)
     noneth = 1;
-  if ( argc > 2 + noneth && strcmp( argv[1+noneth], "-d") == 0 && strcmp( argv[2+noneth], "sqlite") == 0)
-    dbtype = sev_eDbType_Sqlite;
-  else if ( argc > 2 + noneth && strcmp( argv[1+noneth], "-d") == 0 && strcmp( argv[2+noneth], "mysql") == 0)
-    dbtype = sev_eDbType_Mysql;
-  else if ( argc > 2 + noneth && strcmp( argv[1+noneth], "-d") == 0 && strcmp( argv[2+noneth], "hdf5") == 0)
-    dbtype = sev_eDbType_HDF5;
-
-  if ( dbtype == sev_eDbType_) {
-    char type[80];
-    if ( cnf_get_value( "sevDatabaseType", type, sizeof(type))) {
-      if ( cdh_NoCaseStrcmp( type, "sqlite") == 0)
-	dbtype = sev_eDbType_Sqlite;
-      else if ( cdh_NoCaseStrcmp( type, "mysql") == 0)
-	dbtype = sev_eDbType_Mysql;	
-      else if ( cdh_NoCaseStrcmp( type, "hdf5") == 0)
-	dbtype = sev_eDbType_HDF5;	
-    }
-  }
-  if ( cnf_get_value( "sevReadThreads", str, sizeof(str))) {
-    if ( cdh_NoCaseStrcmp( str, "yes") == 0)
-      srv.m_read_threads = 1;
-  }
-
-  if ( dbtype == sev_eDbType_)
-    dbtype = sev_eDbType_Mysql;	
-
-  srv.set_dbtype( dbtype);
 
   srv.init( noneth);
   srv.connect();

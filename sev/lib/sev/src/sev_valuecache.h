@@ -63,16 +63,16 @@ class sev_valuecache {
   sev_eCvType m_type;
   void *m_userdata;
   int m_useridx;
-  void (*m_write_cb)( void *, int , void *, pwr_tTime *);
+  void (*m_write_cb)( void *, int , void *, pwr_tTime *, void *);
 
   sev_valuecache( sev_eCvType type) : m_type(type), m_userdata(0), m_useridx(0), m_write_cb(0) {}
   sev_valuecache( const sev_valuecache& x) : m_type(x.m_type), m_userdata(x.m_userdata), m_useridx(x.m_useridx), 
     m_write_cb(x.m_write_cb) {}
   virtual ~sev_valuecache() {};
-  virtual void add( void *value, pwr_tTime *time) {};
-  virtual void evaluate( double maxtime) {};
-  virtual void write( int index) {};
-  virtual void set_write_cb( void (*write_cb)( void *, int, void *, pwr_tTime *), void *userdata, int idx) {
+  virtual void add( void *value, pwr_tTime *time, void *thread) {};
+  virtual void evaluate( double maxtime, void *thread) {};
+  virtual void write( int index, void *thread) {};
+  virtual void set_write_cb( void (*write_cb)( void *, int, void *, pwr_tTime *, void *), void *userdata, int idx) {
     m_write_cb = write_cb;
     m_userdata = userdata;
     m_useridx = idx;
@@ -117,10 +117,10 @@ class sev_valuecache_double : public sev_valuecache  {
   int idx( int index);
   sev_sCacheValueDouble& operator[]( const int index);
   sev_sCacheValueDouble& wval() { return m_wval;}
-  void add( void *value, pwr_tTime *time);
-  void evaluate( double maxtime);
+  void add( void *value, pwr_tTime *time, void *thread);
+  void evaluate( double maxtime, void *thread);
   void calculate_k();
-  void write( int index);
+  void write( int index, void *thread);
   void calculate_epsilon();
   void calculate_epsilon( int index);
   bool check_deadband( int index);
@@ -146,9 +146,9 @@ class sev_valuecache_bool : public sev_valuecache  {
   }
   ~sev_valuecache_bool() {}
   sev_sCacheValueBool& wval() { return m_wval;}
-  void add( void *value, pwr_tTime *time);
-  void evaluate( double maxtime);
-  void write( int index);
+  void add( void *value, pwr_tTime *time, void *thread);
+  void evaluate( double maxtime, void *thread);
+  void write( int index, void *thread);
 };
 
 

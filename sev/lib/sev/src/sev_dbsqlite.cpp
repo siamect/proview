@@ -595,7 +595,7 @@ int sev_dbsqlite::get_items( pwr_tStatus *sts)
   return 1;
 }
 
-int sev_dbsqlite::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
+int sev_dbsqlite::store_value( pwr_tStatus *sts, void *thread, int item_idx, int attr_idx,
                            pwr_tTime time, void *buf, unsigned int size)
 {
   if(size != m_items[item_idx].value_size) {
@@ -3361,7 +3361,7 @@ int sev_dbsqlite::store_stat( sev_sStat *stat)
   return 1;
 }
 
-int sev_dbsqlite::begin_transaction()
+int sev_dbsqlite::begin_transaction( void *thread)
 {
   char query[20];
   char *errmsg;
@@ -3378,7 +3378,7 @@ int sev_dbsqlite::begin_transaction()
   return 1;
 }
 
-int sev_dbsqlite::commit_transaction()
+int sev_dbsqlite::commit_transaction( void *thread)
 {
   char query[20];
   char *errmsg;

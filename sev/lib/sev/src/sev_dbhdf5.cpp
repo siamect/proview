@@ -2172,7 +2172,7 @@ int sev_dbhdf5::get_items( pwr_tStatus *sts)
   return 1;
 }
 
-int sev_dbhdf5::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
+int sev_dbhdf5::store_value( pwr_tStatus *sts, void *thread, int item_idx, int attr_idx,
 			     pwr_tTime time, void *buf, unsigned int size)
 {
   sev_uDataType data;

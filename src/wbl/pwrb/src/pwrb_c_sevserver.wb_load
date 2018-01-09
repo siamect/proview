@@ -82,14 +82,93 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  UseThreads.
+      !*/
+      Object UseServerThreads $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Calculate mean value on all items.
+      !*/
+      Object MeanValueAll $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Use linear regression on all items with deadband.
+      !*/
+      Object LinearRegrAll $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Max time without storage for items with deadband linear regression.
+      !  If zero, time is infinite.
+      !*/
+      Object LinearRegrMaxTime $Attribute 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Interval for calcuation of mean value for items
+      !  with the MeanValue1 bit set in options.
+      !*/
+      Object MeanValueInterval1 $Attribute 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Interval for calcuation of mean value for items
+      !  with the MeanValue2 bit set in options.
+      !*/
+      Object MeanValueInterval2 $Attribute 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Max limit for thread queue size.
+      !  If the queue limit is exceeded, messages are lost.
+      !*/
+      Object ThreadQueueLimit $Attribute 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
       !  Statistics.
       !*/
-      Object Stat $Attribute 3 
+      Object Stat $Attribute 10 
         Body SysBody
           Attr TypeRef = "pwrb:Class-SevStatistics"
 	  Attr Flags |= PWR_MASK_CLASS
         EndBody
       EndObject
+      !/**
+      !  Server threads.
+      !*/
+      Object ServerThreads $Attribute 11 
+        Body SysBody
+          Attr TypeRef = "pwrb:Class-SevServerThread"
+ 	  Attr Flags |= PWR_MASK_CLASS
+ 	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 20
+        EndBody
+      EndObject
+    EndObject
+    Object Template SevServer
+      Body RtBody
+	Attr UseServerThreads = 1
+        Attr MeanValueInterval1 = 10
+        Attr MeanValueInterval2 = 30
+        Attr ThreadQueueLimit = 600000
+      EndBody
     EndObject
   EndObject
 EndSObject

@@ -41,6 +41,10 @@
 #include "rt_sync.h"
 #include "rt_lst.h"
 
+#if defined __cplusplus
+extern "C" {
+#endif
+
 typedef struct {
   thread_sMutex	mutex;
   thread_sCond	cond;
@@ -51,4 +55,7 @@ que_sQue *		que_Create(pwr_tStatus*, que_sQue*);
 void *			que_Get(pwr_tStatus*, que_sQue*, pwr_tDeltaTime*, void*);
 void			que_Put(pwr_tStatus*, que_sQue*, lst_sEntry*, void*);
 
+#if defined __cplusplus
+}
+#endif
 #endif

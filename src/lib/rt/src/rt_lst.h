@@ -45,6 +45,10 @@
 # include "rt_sync.h"
 #endif
 
+#if defined __cplusplus
+extern "C" {
+#endif
+
 typedef struct lst_sEntry lst_sEntry;
 struct lst_sEntry {
   lst_sEntry *flink;
@@ -67,4 +71,7 @@ void *		lst_RemovePred	(thread_sMutex*, lst_sEntry*, lst_sEntry**);
 void *		lst_RemoveSucc	(thread_sMutex*, lst_sEntry*, lst_sEntry**);
 void *		lst_Succ	(thread_sMutex*, lst_sEntry*, lst_sEntry**);
 
+#if defined __cplusplus
+}
+#endif
 #endif

@@ -49,7 +49,6 @@ using namespace std;
 
 class sev_dbms_env;
 
-
 class sev_dbms_env
 {
  public:
@@ -81,8 +80,10 @@ class sev_dbms_env
   
   int open(void);
   int open(const char *fileName);
+#if 0
   int open(const char *host, const char *user, const char *passwd,
 	   const char *dbName, unsigned int port, const char *socket);
+#endif
 
   int checkAndUpdateVersion(unsigned int version);
   int updateDBToSevVersion2(void);
@@ -90,6 +91,7 @@ class sev_dbms_env
   int createSevVersion3Tables(void);
   MYSQL *createDb(void);
   MYSQL *openDb(unsigned int *sts);
+  MYSQL *open_thread( unsigned int *sts);
   bool exists() { return m_exists;}    
   int close(void);
   static int get_systemname();
@@ -125,9 +127,6 @@ class sev_dbms : public sev_db {
   static const unsigned int constMaxColNameLength = 64;
 
   sev_dbms_env *m_env;
-  double 	m_linearregr_maxtime;
-  int		m_linearregr_all; 
-  int		m_meanvalue1_all;
 
   sev_dbms( sev_dbms_env *env);
   ~sev_dbms();
@@ -140,10 +139,10 @@ class sev_dbms : public sev_db {
 		pwr_tDeltaTime storagetime, pwr_eType type, unsigned int size, 
 		char *description, char *unit, pwr_tFloat32 scantime, 
 		pwr_tFloat32 deadband, pwr_tMask options, unsigned int *idx);  
-  int store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
+  int store_value( pwr_tStatus *sts, void *thread, int item_idx, int attr_idx,
 		   pwr_tTime time, void *buf, unsigned int size);
   int write_value( pwr_tStatus *sts, int item_idx, int attr_idx,
-		   pwr_tTime time, void *buf, unsigned int size);
+		   pwr_tTime time, void *buf, unsigned int size, void *thread);
   int get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, float deadband, char *aname, 
 		  pwr_eType type, unsigned int size, pwr_tFloat32 scantime, pwr_tTime *creatime,
 		  pwr_tTime *starttime, 
@@ -166,9 +165,9 @@ class sev_dbms : public sev_db {
   char *dbName() { return sev_dbms_env::dbName();}
   char *pwrtype_to_type( pwr_eType type, unsigned int size);
   static int timestr_to_time( char *tstr, pwr_tTime *ts);
-  static void write_db_cb( void *data, int idx, void *value, pwr_tTime *time);
-  int check_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, char *aname, 
-                         pwr_tDeltaTime storagetime,
+  static void write_db_cb( void *data, int idx, void *value, pwr_tTime *time, void *thread);
+  int check_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, char *aname,
+                        pwr_tDeltaTime storagetime,
 			char *description, pwr_tFloat32 scantime, 
 			pwr_tFloat32 deadband, pwr_tMask options, unsigned int attrnum,
 			sev_sHistAttr *attr, unsigned int *idx);
@@ -181,8 +180,8 @@ class sev_dbms : public sev_db {
       pwr_tDeltaTime storagetime, char *description, pwr_tFloat32 scantime, 
       pwr_tFloat32 deadband, pwr_tMask options);
   int create_objecttable( pwr_tStatus *sts, char *tablename, pwr_tMask options, float deadband);
-  int store_objectvalue( pwr_tStatus *sts, int item_idx, int attr_idx,
-                             pwr_tTime time, void *buf,  void *oldbuf, unsigned int size);
+  int store_objectvalue( pwr_tStatus *sts, void *thread, int item_idx, int attr_idx,
+			 pwr_tTime time, void *buf,  void *oldbuf, unsigned int size);
   int get_item( pwr_tStatus *sts, sev_item *item, pwr_tOid oid, char *attributename);
   int get_objectitem( pwr_tStatus *sts, sev_item *item, pwr_tOid oid, char *attributename);
   int get_objectitems( pwr_tStatus *sts);
@@ -207,8 +206,9 @@ class sev_dbms : public sev_db {
   int optimize( pwr_tStatus *sts, char *tablename);
   int store_stat( sev_sStat *stat);
   void add_cache( int item_idx);
-  int begin_transaction();
-  int commit_transaction();
+  int begin_transaction( void *thread);
+  int commit_transaction( void *thread);
+  void *new_thread();
   int get_closest_time( char *tablename, unsigned int options, pwr_tTime *time, int before, 
 			unsigned int *id);
   void string_to_mysqlstring( char *in, char *out, int size);

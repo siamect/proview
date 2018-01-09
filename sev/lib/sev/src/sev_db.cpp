@@ -45,35 +45,35 @@
 #include "rt_sev_msg.h"
 
 
-sev_db *sev_db::open_database( sev_eDbType type)
+sev_db *sev_db::open_database( sev_eDbType type, sev_sDbConfig *cnf)
 {
+  sev_db *db = 0;
 
   if ( type == sev_eDbType_Mysql) {
 #if defined PWRE_CONF_MYSQL
-    return sev_dbms::open_database();
+    db = sev_dbms::open_database();
 #else
     printf( "** Release is not built with mysql\n");
-    return 0;
 #endif
   }
   else if ( type == sev_eDbType_Sqlite) {
 #if defined PWRE_CONF_SQLITE3
-    return sev_dbsqlite::open_database();
+    db = sev_dbsqlite::open_database();
 #else
     printf( "** Release is not built with sqlite3\n");
-    return 0;
 #endif
   }
   else if ( type == sev_eDbType_HDF5) {
 #if defined PWRE_CONF_HDF5
-    return sev_dbhdf5::open_database();
+    db = sev_dbhdf5::open_database();
 #else
     printf( "** Release is not built with HDF5\n");
-    return 0;
 #endif
   }
-  else
-    return 0;
+  if ( db)
+    db->m_cnf = *cnf;
+
+  return db;
 }
 
 int sev_db::get_systemname( char *name)

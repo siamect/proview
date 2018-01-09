@@ -175,6 +175,7 @@ int sevcli_get_itemlist( pwr_tStatus *sts, sevcli_tCtx ctx, sevcli_sHistItem **l
   put.data = msg;
 
   msg->Type = sev_eMsgType_HistItemsRequest;
+  msg->Version = sev_cNetVersion;
 
   if ( !qcom_Put( sts, &tgt, &put)) {
     qcom_Free( &lsts, put.data);
@@ -272,6 +273,7 @@ int sevcli_get_itemlist( pwr_tStatus *sts, sevcli_tCtx ctx, sevcli_sHistItem **l
   put.data = msg;
 
   msg->Type = sev_eMsgType_HistItemsRequest;
+  msg->Version = sev_cNetVersion;
 
   if ( !qcom_Put( sts, &tgt, &put)) {
     qcom_Free( &lsts, put.data);
@@ -381,6 +383,7 @@ int sevcli_get_itemdata( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid,
   put.data = msg;
 
   msg->Type = sev_eMsgType_HistDataGetRequest;
+  msg->Version = sev_cNetVersion;
   msg->Oid = oid;
   strncpy( msg->AName, aname, sizeof(msg->AName));
   msg->StartTime = net_TimeToNetTime( &starttime);
@@ -486,6 +489,7 @@ int sevcli_get_objectitemdata( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid, 
   put.data = msg;
 
   msg->Type = sev_eMsgType_HistObjectDataGetRequest;
+  msg->Version = sev_cNetVersion;
   msg->Oid = oid;
   strncpy( msg->AName, aname, sizeof(msg->AName));
   msg->StartTime = net_TimeToNetTime( &starttime);
@@ -600,6 +604,7 @@ int sevcli_delete_item( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid, char *a
   put.data = msg;
 
   msg->Type = sev_eMsgType_HistItemDelete;
+  msg->Version = sev_cNetVersion;
   msg->Oid = oid;
   strncpy( msg->AName, aname, sizeof(msg->AName));
 

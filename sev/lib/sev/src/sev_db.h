@@ -58,6 +58,16 @@ typedef enum {
 } sev_eDbType;
 
 typedef struct {
+  float LinearRegrMaxTime;
+  int LinearRegrAll;
+  int MeanValueAll;
+  float MeanValueInterval1;
+  float MeanValueInterval2;
+  pwr_tFileName Socket;
+  char Engine[80];
+} sev_sDbConfig;
+
+typedef struct {
   float current_load;
   float medium_load;
   float storage_rate;
@@ -184,6 +194,7 @@ class sev_db {
   vector<sev_item> m_items;
   float		m_meanvalue_interval1;
   float		m_meanvalue_interval2; 
+  sev_sDbConfig m_cnf;
 
   sev_db() : m_meanvalue_interval1(0), m_meanvalue_interval2(0) {}
   virtual ~sev_db() {}
@@ -203,7 +214,7 @@ class sev_db {
 			pwr_tFloat32 deadband, pwr_tMask options, unsigned int *idx) 
     { *sts = 0; return 0;}
   virtual int delete_item( pwr_tStatus *sts, pwr_tOid oid, char *aname) { *sts = 0; return 0;}
-  virtual int store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
+  virtual int store_value( pwr_tStatus *sts, void *thread, int item_idx, int attr_idx,
 			   pwr_tTime time, void *buf, unsigned int size) { *sts = 0; return 0;}
   virtual int get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, float deadband, 
 			  char *aname, pwr_eType type, 
@@ -243,11 +254,12 @@ class sev_db {
   virtual int alter_engine( pwr_tStatus *sts, char *tablename) { *sts = 0; return 0;}
   virtual int optimize( pwr_tStatus *sts, char *tablename) { *sts = 0; return 0;}
   virtual int store_stat( sev_sStat *stat) { return 0;}
-  virtual int begin_transaction() { return 0;}
-  virtual int commit_transaction() { return 0;}
+  virtual int begin_transaction( void *thread) { return 0;}
+  virtual int commit_transaction( void *thread) { return 0;}
   virtual char *dbName() { return 0;}
+  virtual void *new_thread() { return 0;}
   
-  static sev_db *open_database( sev_eDbType type);
+  static sev_db *open_database( sev_eDbType type, sev_sDbConfig *cnf);
   static int get_systemname( char *name);
 };
 #endif

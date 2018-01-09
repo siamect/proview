@@ -777,7 +777,7 @@ class sev_dbhdf5 : public sev_db {
 		pwr_tDeltaTime storagetime, pwr_eType type, unsigned int size, 
 		char *description, char *unit, pwr_tFloat32 scantime, 
 		pwr_tFloat32 deadband, pwr_tMask options, unsigned int *idx);  
-  int store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
+  int store_value( pwr_tStatus *sts, void *thread, int item_idx, int attr_idx,
 		   pwr_tTime time, void *buf, unsigned int size);
   int get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, float deadband, char *aname, 
 		  pwr_eType type, unsigned int size, pwr_tFloat32 scantime, pwr_tTime *creatime,

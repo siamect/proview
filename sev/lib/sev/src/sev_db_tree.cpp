@@ -226,9 +226,9 @@ pwr_tStatus sev_db::tree_update_value( int item_idx, pwr_tTime time, void *buf)
   }
 
   if ( m_items[item_idx].options & pwr_mSevOptionsMask_MeanValue1)
-    interval = m_meanvalue_interval1;
+    interval = m_cnf.MeanValueInterval1;
   else if ( m_items[item_idx].options & pwr_mSevOptionsMask_MeanValue2)
-    interval = m_meanvalue_interval2;
+    interval = m_cnf.MeanValueInterval2;
 
   if ( interval != 0) {
     pwr_tDeltaTime dtime;

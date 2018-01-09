@@ -64,7 +64,7 @@ sev_sCacheValueDouble& sev_valuecache_double::operator[]( const int index)
   return m_val[idx(index)];
 }
 
-void sev_valuecache_double::add( void *value, pwr_tTime *t)
+void sev_valuecache_double::add( void *value, pwr_tTime *t, void *thread)
 {
   double val = *(double *)value;
   double time;
@@ -96,7 +96,7 @@ void sev_valuecache_double::add( void *value, pwr_tTime *t)
     }
   }
   if ( !m_inited) {
-    write( 0);
+    write( 0, thread);
     m_inited = true;
     return;
   }
@@ -110,7 +110,7 @@ void sev_valuecache_double::add( void *value, pwr_tTime *t)
     calculate_epsilon(0);
 }
 
-void sev_valuecache_double::evaluate( double maxtime) 
+void sev_valuecache_double::evaluate( double maxtime, void *thread) 
 {
   int value_added = 1;
 
@@ -118,7 +118,7 @@ void sev_valuecache_double::evaluate( double maxtime)
     if ( (maxtime != 0 && (m_val[m_last].time - m_wval.time) > maxtime) ||
 	 !check_deadband()) {
       // Store optimal value
-      write( m_last_opt_write  + value_added);
+      write( m_last_opt_write  + value_added, thread);
     }
     else
       break;
@@ -158,7 +158,7 @@ void sev_valuecache_double::calculate_k()
   }
 }
 
-void sev_valuecache_double::write( int index) 
+void sev_valuecache_double::write( int index, void *thread) 
 {
   int ii = idx(index);
   double wval, wtime;
@@ -196,7 +196,7 @@ void sev_valuecache_double::write( int index)
   if ( m_write_cb) {
     pwr_tTime time;
     time_Aadd( &time, &m_start_time, time_Float64ToD( 0, wtime));
-    (m_write_cb)( m_userdata, m_useridx, &wval, &time);
+    (m_write_cb)( m_userdata, m_useridx, &wval, &time, thread);
   }
 }
 
@@ -274,29 +274,29 @@ int sev_valuecache_double::get_optimal_write()
   return min_idx;
 }
 
-void sev_valuecache_bool::add( void *value, pwr_tTime *t)
+void sev_valuecache_bool::add( void *value, pwr_tTime *t, void *thread)
 {
   m_val.val = *(pwr_tBoolean *)value;
   m_val.time = *t;
 
   if ( !m_inited) {
-    // Store valeu
-    write( 0);
+    // Store value
+    write( 0, thread);
     m_inited = true;
   }
 }
 
-void sev_valuecache_bool::evaluate( double maxtime) 
+void sev_valuecache_bool::evaluate( double maxtime, void *thread) 
 {
   if ( m_val.val != m_wval.val) {
-    write(0);
+    write(0, thread);
   }
 }
 
-void sev_valuecache_bool::write( int index) 
+void sev_valuecache_bool::write( int index, void *thread) 
 {
   m_wval.val = m_val.val;
   m_wval.time = m_val.time;
   if ( m_write_cb)
-    (m_write_cb)( m_userdata, m_useridx, &m_wval.val, &m_wval.time);
+    (m_write_cb)( m_userdata, m_useridx, &m_wval.val, &m_wval.time, thread);
 }

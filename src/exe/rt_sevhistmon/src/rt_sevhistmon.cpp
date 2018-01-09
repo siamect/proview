@@ -669,8 +669,10 @@ int rt_sevhistmon::send_data()
     put.allocate = 0;
 
     msg->Type = sev_eMsgType_HistDataStore;
+    msg->Version = sev_cNetVersion;
     time_GetTime( &current_time);
     msg->Time = net_TimeToNetTime( &current_time);
+    msg->ServerThread = m_hs[i].threadp->ServerThread;
 
     dp = (sev_sHistData *) &msg->Data;
     for ( unsigned int j = 0; j < m_hs[i].sevhistlist.size(); j++) {

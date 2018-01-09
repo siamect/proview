@@ -33,128 +33,106 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_c_sevhistthread.wb_load -- Defines the class SevHistThread.
+!  pwrb_c_a_sevserverthread.wb_load -- Defines the class SevServerThread.
 !
 SObject pwrb:Class
 !/**
 !  @Version 1.0
-!  @Group Servers,NodeConfiguration
-!  Configures a thread in the SevHist monitor process, with a 
-!  specific scantime and database server node.
-!  
-!  The SevHist monitor process keeps track of all SevHist objects
-!  in the current node. The process is divided into threads that 
-!  collect data with a specific scantime and sends to the specified
-!  database server. The threads are specified by SevHistThread objects
-!  that reside under the SevHistMonitor object in the node hierarchy.
+!  Displays sev server thread info.
 !
 ! @b See also
-!  @classlink SevHist pwrb_sevhist.html
-!  @classlink SevHistMonitor pwrb_sevhistmonitor.html
-!  @classlink SevHistServer pwrb_sevhistserver.html
+!  @classlink SevServer pwrb_sevserver.html
 !*/
-  Object SevHistThread $ClassDef 107 
+  Object SevServerThread $ClassDef 699 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_Standard
+      Attr Flags |= pwr_mClassDef_Internal
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-        Attr StructName = "SevHistThread"
+        Attr StructName = "SevServerThread"
       EndBody
       !/**
-      !  Optional description.
+      !  Thread key.
       !*/
-      Object Description $Attribute 1 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$String80"
-        EndBody
-      EndObject
-      !/**
-      !  The name of the node where the data is stored.
-      !  The SevHistServer has to be started on this node.
-      !*/
-      Object ServerNode $Attribute 2 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$String40"
-        EndBody
-      EndObject
-      !/**
-      !  Thread in server node to handle the storage.
-      !  An integer value. Threads with equal ServerThread will be
-      !  handled by the same server thread.
-      !*/
-      Object ServerThread $Attribute 9 
+      Object Key $Attribute 1 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       !/**
-      !  Specifies, in seconds, the time between two samples.
-      !  The minimum allowed value is 1 seconds.
+      !  Allocated size in thread queue.
       !*/
-      Object ScanTime $Attribute 3
+      Object QueueAlloc $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      !/**
+      !  Lost messages.
+      !*/
+      Object LostCnt $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      !/**
+      !  Medium load in percentage.
+      !*/
+      Object MediumLoad $Attribute 4 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
-        EndBody
-      EndObject
-      !/**
-      !  Status of sev server link.
-      !*/
-      Object Status $Attribute 4
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$Status"
-	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       !/**
-      !  Number of items handled by this thread.
+      !  Storage rate. Values per second.
       !*/
-      Object NoOfItems $Attribute 5
+      Object StorageRate $Attribute 5 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_STATE
-	  Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
       !/**
-      !  Scan counter.
+      !  Medium storage rate. Values per second.
       !*/
-      Object ScanCount $Attribute 6
+      Object MediumStorageRate $Attribute 6 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_STATE
-	  Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
       !/**
-      !  Send counter.
-      !  Counter of the number of messages sent to the server for this thread.
+      !  Data store message count.
       !*/
-      Object SendCount $Attribute 7
+      Object DataStoreMsgCnt $Attribute 7 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_STATE
-	  Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
       !/**
-      !  Error counter.
-      !  Counter for message errors.
+      !  Event store message count.
       !*/
-      Object ErrorCount $Attribute 8
+      Object EventStoreMsgCnt $Attribute 8 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_STATE
-	  Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
-    EndObject
-    Object Template SevHistThread
-      Body RtBody
-        Attr ScanTime = 10
-      EndBody
     EndObject
   EndObject
 EndSObject

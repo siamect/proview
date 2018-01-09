@@ -48,6 +48,7 @@ extern "C"
 #define sev_eProcSevClient 121
 #define sev_eProcSevServer 122
 #define sev_cMsgClass	   202
+#define sev_cNetVersion	   1
 
 typedef enum {
   sev_eMsgType_NodeUp,
@@ -118,11 +119,13 @@ typedef struct {
 // Message types
 
 typedef struct {
-  sev_eMsgType         Type;
+  pwr_tUInt16          Type;
+  pwr_tUInt16          Version;
 } sev_sMsgAny;
 
 typedef struct {
-  sev_eMsgType         Type;
+  pwr_tUInt16          Type;
+  pwr_tUInt16          Version;
   pwr_tStatus	       Status;
   unsigned int         NumItems;
   unsigned int         NumAttributes;
@@ -130,20 +133,31 @@ typedef struct {
 } sev_sMsgHistItems;
 
 typedef struct {
-  sev_eMsgType         Type;
-  net_sTime	       Time;
+  pwr_tUInt16          Type;
+  pwr_tUInt16          Version;
+  net_sTime	       Time;  
+  pwr_tUInt32	       ServerThread;
   int	       	       Data[1];	
 } sev_sMsgHistDataStore;
 
 typedef struct {
-  sev_eMsgType         Type;
+  pwr_tUInt16          Type;
+  pwr_tUInt16          Version;
+  net_sTime	       Time;  
+  int	       	       Data[1];	
+} sev_sMsgHistDataStoreV0;
+
+typedef struct {
+  pwr_tUInt16          Type;
+  pwr_tUInt16          Version;
   pwr_tOid	       Oid;
   unsigned int	       NumEvents;
   sev_sEvent           Events[1];	
 } sev_sMsgEventsStore;
 
 typedef struct {
-  sev_eMsgType         Type;
+  pwr_tUInt16          Type;
+  pwr_tUInt16          Version;
   pwr_tOid	       Oid;
   pwr_tOName	       AName;
   net_sTime	       StartTime;
@@ -152,7 +166,8 @@ typedef struct {
 } sev_sMsgHistDataGetRequest;
 
 typedef struct {
-  sev_eMsgType         Type;
+  pwr_tUInt16          Type;
+  pwr_tUInt16          Version;
   pwr_tOid	       Oid;
   pwr_tOName	       AName;
   pwr_tStatus	       Status;
@@ -163,32 +178,36 @@ typedef struct {
 } sev_sMsgHistDataGet;
 
 typedef struct {
-  sev_eMsgType  Type;
-  pwr_tOid	    Oid;
-  pwr_tOName	       AName;
-  pwr_tStatus	  Status;
-  int		        NumPoints;
-  int		        NumAttributes;
-  unsigned int  TotalDataSize;
-  sev_sHistAttr Attr[1];
-  int	       	  Data[1];	
+  pwr_tUInt16       	Type;
+  pwr_tUInt16       	Version;
+  pwr_tOid	       	Oid;
+  pwr_tOName	       	AName;
+  pwr_tStatus	       	Status;
+  int		       	NumPoints;
+  int		       	NumAttributes;
+  unsigned int         	TotalDataSize;
+  sev_sHistAttr 	Attr[1];
+  int	       	  	Data[1];	
 } sev_sMsgHistObjectDataGet;
 
 typedef struct {
-  sev_eMsgType         Type;
+  pwr_tUInt16          Type;
+  pwr_tUInt16          Version;
   pwr_tOid	       Oid;
   pwr_tOName	       AName;
 } sev_sMsgHistItemDelete;
 
 typedef struct {
-  sev_eMsgType         Type;
+  pwr_tUInt16          Type;
+  pwr_tUInt16          Version;
   pwr_tOid	       Oid;
   pwr_tOName	       AName;
   pwr_tStatus	       Status;
 } sev_sMsgHistItemStatus;
 
 typedef struct {
-  sev_eMsgType         Type;
+  pwr_tUInt16          Type;
+  pwr_tUInt16          Version;
   pwr_tStatus	       Status;
 } sev_sMsgServerStatus;
 

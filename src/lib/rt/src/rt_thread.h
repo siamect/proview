@@ -42,6 +42,10 @@
 #if defined OS_POSIX
 #include <pthread.h>
 
+#if defined __cplusplus
+extern "C" {
+#endif
+
 typedef pthread_t	thread_s;
 
 typedef struct {
@@ -76,4 +80,7 @@ pwr_tStatus	thread_Join		(thread_s*, pwr_tStatus*);
 pwr_tStatus	thread_Signal		(thread_s*, int);
 pwr_tBoolean	thread_SigTimedWait	(thread_s*, int, pwr_tDeltaTime*);
 
+#if defined __cplusplus
+}
+#endif
 #endif

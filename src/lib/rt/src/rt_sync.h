@@ -40,10 +40,17 @@
 #include "pwr.h"
 #include "rt_thread.h"
 
+#if defined __cplusplus
+extern "C" {
+#endif
+
 pwr_tStatus	sync_CondInit		(thread_sCond*);
 pwr_tStatus	sync_MutexInit		(thread_sMutex*);
 pwr_tStatus	sync_CondSignal		(thread_sCond*);
 pwr_tStatus	sync_MutexLock		(thread_sMutex*);
 pwr_tStatus	sync_MutexUnlock	(thread_sMutex*);
 
+#if defined __cplusplus
+}
+#endif
 #endif

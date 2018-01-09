@@ -185,6 +185,7 @@ int sev_dbms_env::close()
   return 0;
 }
 
+#if 0
 int sev_dbms_env::open(const char *v_host, const char *v_user, const char *v_passwd,
                         const char *v_dbName, unsigned int v_port, const char *v_socket)
 {
@@ -220,6 +221,7 @@ int sev_dbms_env::open(const char *v_host, const char *v_user, const char *v_pas
 
   return 0;
 }
+#endif
 
 int sev_dbms_env::create(const char *v_fileName, const char *v_host, const char *v_user,
 			 const char *v_passwd, const char *v_dbName, unsigned int v_port,
@@ -240,6 +242,12 @@ int sev_dbms_env::create(const char *v_fileName, const char *v_host, const char 
 
 MYSQL *sev_dbms_env::createDb(void)
 {
+
+  if ( mysql_library_init( 0, NULL, NULL)) {
+    printf( "** Cannot init mysql client library\n");
+    return 0;
+  }
+
   m_con = mysql_init(NULL);
 
   MYSQL *con = mysql_real_connect(m_con, host(), user(), passwd(), 0, port(), socket(), 0);
@@ -497,9 +505,27 @@ MYSQL *sev_dbms_env::openDb( unsigned int *sts)
 {
   *sts = 0;
 
+  if ( mysql_library_init( 0, NULL, NULL)) {
+    printf( "** Cannot init mysql client library\n");
+    return 0;
+  }
+
   m_con = mysql_init(NULL);
 
   MYSQL *con = mysql_real_connect(m_con, host(), user(), passwd(), dbName(), port(), socket(), 0);
+  if (con == 0) {
+    *sts = mysql_errno(m_con);
+    return 0;
+  }
+
+  return con;
+}
+
+MYSQL *sev_dbms_env::open_thread( unsigned int *sts)
+{
+  MYSQL *con = mysql_init(NULL);
+
+  con = mysql_real_connect(m_con, host(), user(), passwd(), dbName(), port(), socket(), 0);
   if (con == 0) {
     *sts = mysql_errno(m_con);
     return 0;
@@ -668,36 +694,8 @@ int sev_dbms_env::get_systemname()
   return 1;
 }
 
-sev_dbms::sev_dbms( sev_dbms_env *env) :  m_env(env), m_linearregr_maxtime(0),
-					  m_linearregr_all(0), m_meanvalue1_all(0)
+sev_dbms::sev_dbms( sev_dbms_env *env) :  m_env(env)
 {
-  char valuestr[20];
-  int nr;
-  float ftime;
-
-  if ( cnf_get_value( "sevLinearRegrMaxTime", valuestr, sizeof(valuestr))) {
-    nr = sscanf( valuestr, "%f", &ftime);
-    if ( nr == 1)
-      m_linearregr_maxtime = ftime;
-  }
-  if ( cnf_get_value( "sevLinearRegrAll", valuestr, sizeof(valuestr))) {
-    if ( cdh_NoCaseStrcmp( valuestr, "1") == 0)
-      m_linearregr_all = 1;
-  }
-  if ( cnf_get_value( "sevMeanValue1All", valuestr, sizeof(valuestr))) {
-    if ( cdh_NoCaseStrcmp( valuestr, "1") == 0)
-      m_meanvalue1_all = 1;
-  }
-  if ( cnf_get_value( "sevMeanValueInterval1", valuestr, sizeof(valuestr))) {
-    nr = sscanf( valuestr, "%f", &ftime);
-    if ( nr == 1)
-      m_meanvalue_interval1 = ftime;
-  }
-  if ( cnf_get_value( "sevMeanValueInterval2", valuestr, sizeof(valuestr))) {
-    nr = sscanf( valuestr, "%f", &ftime);
-    if ( nr == 1)
-      m_meanvalue_interval2 = ftime;
-  }
 }
 
 sev_db *sev_dbms::open_database()
@@ -765,9 +763,9 @@ int sev_dbms::create_table( pwr_tStatus *sts, char *tablename, pwr_eType type,
   char engine[80];
   char enginestr[100] = "";
 
-  if ( cnf_get_value( "sevMysqlEngine", engine, sizeof(engine)) != 0)
+  if ( strcmp( m_cnf.Engine, "") != 0)
     snprintf( enginestr, sizeof(enginestr), " engine=%s", engine);
-  if ( cdh_NoCaseStrcmp( engine, "innodb") == 0)
+  if ( cdh_NoCaseStrcmp( m_cnf.Engine, "innodb") == 0)
     strcat( enginestr, " row_format=compressed");
 
   if ( options & pwr_mSevOptionsMask_PosixTime) {
@@ -845,7 +843,7 @@ int sev_dbms::create_event_table( pwr_tStatus *sts, char *tablename, pwr_tMask o
   char engine[80];
   char enginestr[100] = "";
 
-  if ( cnf_get_value( "sevMysqlEngine", engine, sizeof(engine)) != 0)
+  if ( strcmp( m_cnf.Engine, "") != 0)
     snprintf( enginestr, sizeof(enginestr), " engine=%s", engine);
 
   if ( options & pwr_mSevOptionsMask_PosixTime) {
@@ -1028,9 +1026,9 @@ int sev_dbms::get_items( pwr_tStatus *sts)
     item.options = strtoul(row[15], 0, 10);
     item.attrnum = 1;
 
-    if ( m_linearregr_all && item.options & pwr_mSevOptionsMask_UseDeadBand)
+    if ( m_cnf.LinearRegrAll && item.options & pwr_mSevOptionsMask_UseDeadBand)
       item.options |= pwr_mSevOptionsMask_DeadBandLinearRegr;
-    if ( m_meanvalue1_all)
+    if ( m_cnf.MeanValueAll)
       item.options |= pwr_mSevOptionsMask_MeanValue1;
 
     m_items.push_back( item);
@@ -1047,9 +1045,16 @@ int sev_dbms::get_items( pwr_tStatus *sts)
   return 1;
 }
 
-int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
+int sev_dbms::store_value( pwr_tStatus *sts, void *thread, int item_idx, int attr_idx,
                            pwr_tTime time, void *buf, unsigned int size)
 {
+  MYSQL *con;
+
+  if ( thread)
+    con = (MYSQL *)thread;
+  else
+    con = m_env->con();
+
   tree_update_value( item_idx, time, buf);
 
   if ( m_items[item_idx].options & pwr_mSevOptionsMask_DeadBandLinearRegr) {
@@ -1076,17 +1081,17 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
     default:
       return 0;
     }
-    m_items[item_idx].cache->add( value, &time);
-    m_items[item_idx].cache->evaluate( m_linearregr_maxtime);
+    m_items[item_idx].cache->add( value, &time, thread);
+    m_items[item_idx].cache->evaluate( m_cnf.LinearRegrMaxTime, thread);
     return 1;
   }
   else
-    return write_value( sts, item_idx, attr_idx, time, buf, size);
+    return write_value( sts, item_idx, attr_idx, time, buf, size, thread);
 
 }
 
 int sev_dbms::write_value( pwr_tStatus *sts, int item_idx, int attr_idx,
-                           pwr_tTime time, void *buf, unsigned int size)
+                           pwr_tTime time, void *buf, unsigned int size, void *thread)
 {
   if(size != m_items[item_idx].value_size) {
     //Something is seriously wrong
@@ -1095,14 +1100,22 @@ int sev_dbms::write_value( pwr_tStatus *sts, int item_idx, int attr_idx,
     *sts = SEV__DBERROR;
     return 0;
   }
+
   if(m_items[item_idx].attrnum > 1) {
-    return store_objectvalue(sts, item_idx, attr_idx, time, buf, m_items[item_idx].old_value, size);
+    return store_objectvalue(sts, thread, item_idx, attr_idx, time, buf, 
+			     m_items[item_idx].old_value, size);
   }
   char query[400];
   char bufstr[512];
   char timstr[40];
   int update_time_only = 0;
   int set_jump = 0;
+  MYSQL *con;
+
+  if ( thread)
+    con = (MYSQL *)thread;
+  else
+    con = m_env->con();
 
   if ( !m_items[item_idx].first_storage) {
     if ( m_items[item_idx].options & pwr_mSevOptionsMask_UseDeadBand &&
@@ -1324,7 +1337,7 @@ int sev_dbms::write_value( pwr_tStatus *sts, int item_idx, int attr_idx,
       sprintf( query, "update %s set jump = 1 where id = %d",
                m_items[item_idx].tablename, 
                m_items[item_idx].last_id);
-      int rc = mysql_query( m_env->con(), query);
+      int rc = mysql_query( con, query);
       if (rc) {
         printf("In %s row %d:\n", __FILE__, __LINE__);
         printf( "Update jump: %s\n", mysql_error(m_env->con()));
@@ -1433,7 +1446,7 @@ int sev_dbms::write_value( pwr_tStatus *sts, int item_idx, int attr_idx,
         }
       }
     }
-    int rc = mysql_query( m_env->con(), query);
+    int rc = mysql_query( con, query);
     if (rc) {
       // printf( "Store value: %s \"%s\"\n", mysql_error(m_env->con()), query);
       *sts = SEV__DBERROR;
@@ -1478,7 +1491,7 @@ int sev_dbms::write_value( pwr_tStatus *sts, int item_idx, int attr_idx,
       }
     }
 
-    int rc = mysql_query( m_env->con(), query);
+    int rc = mysql_query( con, query);
     if (rc) {
       // printf( "Update value: %s\n", mysql_error(m_env->con()));
       *sts = SEV__DBERROR;
@@ -2514,13 +2527,13 @@ int sev_dbms::add_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *aname
   *idx = m_items.size() - 1;
 
   if ( item.options & pwr_mSevOptionsMask_UseDeadBand &&
-       m_linearregr_all)
+       m_cnf.LinearRegrAll)
     item.options |= pwr_mSevOptionsMask_DeadBandLinearRegr;
 
   if ( item.options & pwr_mSevOptionsMask_DeadBandLinearRegr)
     add_cache( *idx);
 
-  if ( m_meanvalue1_all)
+  if ( m_cnf.MeanValueAll)
     item.options |= pwr_mSevOptionsMask_MeanValue1;
 
   *sts = SEV__SUCCESS;
@@ -2841,7 +2854,7 @@ int sev_dbms::create_objecttable( pwr_tStatus *sts, char *tablename, pwr_tMask o
   char engine[80];
   char enginestr[100] = "";
 
-  if ( cnf_get_value( "sevMysqlEngine", engine, sizeof(engine)) != 0)
+  if ( strcmp( m_cnf.Engine, "") != 0)
     snprintf( enginestr, sizeof(enginestr), " engine=%s", engine);
 
   if ( options & pwr_mSevOptionsMask_PosixTime) {
@@ -3025,7 +3038,7 @@ pwr_tUInt64 sev_dbms::get_nextAutoIncrement( char *tablename )
 }
 
 
-int sev_dbms::store_objectvalue( pwr_tStatus *sts, int item_idx, int attr_idx,
+int sev_dbms::store_objectvalue( pwr_tStatus *sts, void *thread, int item_idx, int attr_idx,
                            pwr_tTime time, void *buf, void *oldbuf, unsigned int size)
 {
   void *data = buf;
@@ -3040,6 +3053,12 @@ int sev_dbms::store_objectvalue( pwr_tStatus *sts, int item_idx, int attr_idx,
   char bufstr[512];
   char bufInclEscCharstr[1025];
   char timstr[40];
+  MYSQL *con;
+
+  if ( thread)
+    con = (MYSQL *)thread;
+  else
+    con = m_env->con();
 
   *sts = time_AtoAscii( &time, time_eFormat_NumDateAndTime, timstr, sizeof(timstr));
   if ( EVEN(*sts)) return 0;
@@ -3091,7 +3110,7 @@ int sev_dbms::store_objectvalue( pwr_tStatus *sts, int item_idx, int attr_idx,
       if ( EVEN(*sts)) return 0;
       if(m_items[item_idx].attr[i].type == pwr_eType_String ||
          m_items[item_idx].attr[i].type == pwr_eType_Text) {
-        mysql_real_escape_string(m_env->con(), bufInclEscCharstr, bufstr, strlen(bufstr) );
+        mysql_real_escape_string(con, bufInclEscCharstr, bufstr, strlen(bufstr) );
         valuesStr.append("'");
         valuesStr.append(bufInclEscCharstr);
         valuesStr.append("',");
@@ -3180,19 +3199,19 @@ int sev_dbms::store_objectvalue( pwr_tStatus *sts, int item_idx, int attr_idx,
     sprintf( query, "update %s set sev__jump = 1 where sev__id = %d",
              m_items[item_idx].tablename, 
              m_items[item_idx].last_id);
-    int rc = mysql_query( m_env->con(), query);
+    int rc = mysql_query( con, query);
     if (rc) {
       printf("In %s row %d:\n", __FILE__, __LINE__);
-      printf( "Update jump: %s\n", mysql_error(m_env->con()));
+      printf( "Update jump: %s\n", mysql_error(con));
     }
   }
 
   //printf( "Store_objectvalue: %s\n", queryOStr.str().c_str());
 
-  int rc = mysql_query( m_env->con(), queryOStr.str().c_str());
+  int rc = mysql_query( con, queryOStr.str().c_str());
   if (rc) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
+    printf( "%s: %s\n", __FUNCTION__, mysql_error(con));
     printf( "Error in: %s\n", queryOStr.str().c_str());
 
     *sts = SEV__DBERROR;
@@ -3200,14 +3219,14 @@ int sev_dbms::store_objectvalue( pwr_tStatus *sts, int item_idx, int attr_idx,
     if ( m_items[item_idx].status != m_items[item_idx].logged_status) {
       m_items[item_idx].logged_status = m_items[item_idx].status;
       errh_Error( "Database update error: %s, table: %s object: %s", 
-                  mysql_error(m_env->con()), m_items[item_idx].tablename, m_items[item_idx].oname);
+                  mysql_error(con), m_items[item_idx].tablename, m_items[item_idx].oname);
     }
     return 0;
   }
 
   if ( (m_items[item_idx].options & pwr_mSevOptionsMask_ReadOptimized) &&
        !updateOnlyTime)
-    m_items[item_idx].last_id = mysql_insert_id( m_env->con());
+    m_items[item_idx].last_id = mysql_insert_id( con);
 
   m_items[item_idx].first_storage = 0;
 
@@ -4337,7 +4356,7 @@ int sev_dbms::alter_engine( pwr_tStatus *sts, char *tablename)
   int rc;
   char engine[80];
 
-  if ( cnf_get_value( "sevMysqlEngine", engine, sizeof(engine)) == 0) {
+  if ( strcmp( m_cnf.Engine, "") == 0) {
     printf( "** No engine specified in /etc/proview.cnf\n");
     return 0;
   }
@@ -4398,7 +4417,7 @@ int sev_dbms::store_stat( sev_sStat *stat)
   return 1;
 }
 
-void sev_dbms::write_db_cb( void *data, int idx, void *value, pwr_tTime *time)
+void sev_dbms::write_db_cb( void *data, int idx, void *value, pwr_tTime *time, void *thread)
 {
   pwr_tStatus sts;
   sev_dbms *dbms = (sev_dbms *)data;
@@ -4406,22 +4425,22 @@ void sev_dbms::write_db_cb( void *data, int idx, void *value, pwr_tTime *time)
   switch( dbms->m_items[idx].attr[0].type) {
   case pwr_eType_Float32: {
     pwr_tFloat32 v = *(double *)value;
-    dbms->write_value( &sts, idx, 0, *time, &v, sizeof(v));
+    dbms->write_value( &sts, idx, 0, *time, &v, sizeof(v), thread);
     break;
   }
   case pwr_eType_Float64: {
     pwr_tFloat64 v = *(double *)value;
-    dbms->write_value( &sts, idx, 0, *time, &v, sizeof(v));
+    dbms->write_value( &sts, idx, 0, *time, &v, sizeof(v), thread);
     break;
   }
   case pwr_eType_Int32: {
     pwr_tInt32 v = *(double *)value;
-    dbms->write_value( &sts, idx, 0, *time, &v, sizeof(v));
+    dbms->write_value( &sts, idx, 0, *time, &v, sizeof(v), thread);
     break;
   }
   case pwr_eType_Boolean: {
     pwr_tBoolean v = *(pwr_tBoolean *)value;
-    dbms->write_value( &sts, idx, 0, *time, &v, sizeof(v));
+    dbms->write_value( &sts, idx, 0, *time, &v, sizeof(v), thread);
     break;
   }
   default: ;
@@ -4450,31 +4469,43 @@ void sev_dbms::add_cache( int item_idx)
   }
 }
 
-int sev_dbms::begin_transaction()
+int sev_dbms::begin_transaction( void *thread)
 {
   char query[20];
   int rc;
+  MYSQL *con;
+
+  if ( thread)
+    con = (MYSQL *)thread;
+  else
+    con = m_env->con();
 
   strcpy( query, "start transaction");
-  rc = mysql_query( m_env->con(), query);
+  rc = mysql_query( con, query);
   if (rc) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "Begin transaction: %s\n", mysql_error(m_env->con()));
+    printf( "Begin transaction: %s\n", mysql_error(con));
     return 0;
   }
   return 1;
 }
 
-int sev_dbms::commit_transaction()
+int sev_dbms::commit_transaction( void *thread)
 {
   char query[20];
   int rc;
+  MYSQL *con;
+
+  if ( thread)
+    con = (MYSQL *)thread;
+  else
+    con = m_env->con();
 
   strcpy( query, "commit");
-  rc = mysql_query( m_env->con(), query);
+  rc = mysql_query( con, query);
   if (rc) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "Begin transaction: %s\n", mysql_error(m_env->con()));
+    printf( "Begin transaction: %s\n", mysql_error(con));
     return 0;
   }
   return 1;
@@ -4510,6 +4541,11 @@ void sev_dbms::mysqlstring_to_string( char *in, char *out, int size)
   *t = 0;  
 }
 
+void *sev_dbms::new_thread()
+{
+  unsigned int sts;
+  return  m_env->open_thread( &sts);
+}
 
 sev_dbms::~sev_dbms()
 {
@@ -4517,7 +4553,7 @@ sev_dbms::~sev_dbms()
   for(size_t idx = 0; idx < m_items.size(); idx++) {
     if ( m_items[idx].cache)
       // Write last value
-      m_items[idx].cache->write(0);
+      m_items[idx].cache->write(0, 0);
     if( m_items[idx].old_value != 0 ) {
       free(m_items[idx].old_value);
       m_items[idx].old_value = 0;
