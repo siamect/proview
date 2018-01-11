@@ -1009,11 +1009,11 @@ int sev_dbsqlite::store_value( pwr_tStatus *sts, void *thread, int item_idx, int
   return 1;
 }
 
-int sev_dbsqlite::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, float deadband, 
-			  char *aname, pwr_eType type, 
-			  unsigned int size, pwr_tFloat32 scantime, pwr_tTime *creatime, 
-			  pwr_tTime *starttime, pwr_tTime *endtime, 
-			  int maxsize, pwr_tTime **tbuf, void **vbuf, unsigned int *bsize)
+int sev_dbsqlite::get_values( pwr_tStatus *sts, void *thread, pwr_tOid oid, pwr_tMask options, 
+			      float deadband, char *aname, pwr_eType type, 
+			      unsigned int size, pwr_tFloat32 scantime, pwr_tTime *creatime, 
+			      pwr_tTime *starttime, pwr_tTime *endtime, 
+			      int maxsize, pwr_tTime **tbuf, void **vbuf, unsigned int *bsize)
 {
   sev_item item;
   get_item(sts, &item, oid, aname);
@@ -1685,7 +1685,7 @@ int sev_dbsqlite::delete_item( pwr_tStatus *sts, pwr_tOid oid, char *aname)
   return 1;
 }
 
-int sev_dbsqlite::delete_old_data( pwr_tStatus *sts, char *tablename, 
+int sev_dbsqlite::delete_old_data( pwr_tStatus *sts, void *thread, char *tablename, 
 			       pwr_tMask options, pwr_tTime limit, pwr_tFloat32 scantime, pwr_tFloat32 garbagecycle)
 {
   char query[300];
@@ -2585,7 +2585,7 @@ int sev_dbsqlite::get_objectitemattributes( pwr_tStatus *sts, sev_item *item, ch
   return 1;
 }
 
-int sev_dbsqlite::delete_old_objectdata( pwr_tStatus *sts, char *tablename, 
+int sev_dbsqlite::delete_old_objectdata( pwr_tStatus *sts, void *thread, char *tablename, 
 			                 pwr_tMask options, pwr_tTime limit, pwr_tFloat32 scantime, pwr_tFloat32 garbagecycle)
 {
   char query[300];
@@ -2702,7 +2702,7 @@ int sev_dbsqlite::check_deadband(pwr_eType type, unsigned int size, pwr_tFloat32
   return deadband_active;
 }
 
-int sev_dbsqlite::get_objectvalues( pwr_tStatus *sts, sev_item *item,
+int sev_dbsqlite::get_objectvalues( pwr_tStatus *sts, void *thread, sev_item *item,
 			  unsigned int size, pwr_tTime *starttime, pwr_tTime *endtime, 
 			  int maxsize, pwr_tTime **tbuf, void **vbuf, unsigned int *bsize)
 {

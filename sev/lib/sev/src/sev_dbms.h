@@ -92,6 +92,7 @@ class sev_dbms_env
   MYSQL *createDb(void);
   MYSQL *openDb(unsigned int *sts);
   MYSQL *open_thread( unsigned int *sts);
+  void close_thread( MYSQL *con);
   bool exists() { return m_exists;}    
   int close(void);
   static int get_systemname();
@@ -143,11 +144,11 @@ class sev_dbms : public sev_db {
 		   pwr_tTime time, void *buf, unsigned int size);
   int write_value( pwr_tStatus *sts, int item_idx, int attr_idx,
 		   pwr_tTime time, void *buf, unsigned int size, void *thread);
-  int get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, float deadband, char *aname, 
-		  pwr_eType type, unsigned int size, pwr_tFloat32 scantime, pwr_tTime *creatime,
-		  pwr_tTime *starttime, 
+  int get_values( pwr_tStatus *sts, void *thread, pwr_tOid oid, pwr_tMask options, float deadband, 
+		  char *aname, pwr_eType type, unsigned int size, pwr_tFloat32 scantime, 
+		  pwr_tTime *creatime, pwr_tTime *starttime, 
 		  pwr_tTime *endtime, int maxsize, pwr_tTime **tbuf, void **vbuf, unsigned int *bsize);
-  int delete_old_data( pwr_tStatus *sts, char *tablename, 
+  int delete_old_data( pwr_tStatus *sts, void *thread, char *tablename, 
 		       pwr_tMask options, pwr_tTime limit, pwr_tFloat32 scantime, pwr_tFloat32 garbagecycle);
   int delete_item( pwr_tStatus *sts, pwr_tOid oid, char *aname);
 
@@ -188,11 +189,12 @@ class sev_dbms : public sev_db {
   int get_objectitemattributes( pwr_tStatus *sts, sev_item *item, char *tablename);
   int check_objectitemattr( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *aname, char *oname, 
 			    pwr_eType type, unsigned int size, unsigned int *idx);
-  int delete_old_objectdata( pwr_tStatus *sts, char *tablename, 
+  int delete_old_objectdata( pwr_tStatus *sts, void *thread, char *tablename, 
                              pwr_tMask options, pwr_tTime limit, pwr_tFloat32 scantime, pwr_tFloat32 garbagecycle);
   int check_deadband(pwr_eType type, unsigned int size, pwr_tFloat32 deadband, void *value, void *oldvalue);
-  int get_objectvalues( pwr_tStatus *sts, sev_item *item, unsigned int size, pwr_tTime *starttime, pwr_tTime *endtime, 
-			                  int maxsize, pwr_tTime **tbuf, void **vbuf, unsigned int *bsize);
+  int get_objectvalues( pwr_tStatus *sts, void *thread, sev_item *item, unsigned int size, 
+			pwr_tTime *starttime, pwr_tTime *endtime, 
+			int maxsize, pwr_tTime **tbuf, void **vbuf, unsigned int *bsize);
   int delete_event_table( pwr_tStatus *sts, char *tablename);
   int create_event_table( pwr_tStatus *sts, char *tablename, pwr_tMask options);
   int store_event( pwr_tStatus *sts, int item_idx, sev_event *ep);
@@ -209,11 +211,12 @@ class sev_dbms : public sev_db {
   int begin_transaction( void *thread);
   int commit_transaction( void *thread);
   void *new_thread();
-  int get_closest_time( char *tablename, unsigned int options, pwr_tTime *time, int before, 
-			unsigned int *id);
+  void delete_thread( void *thread);
+  int get_closest_time( void *thread, char *tablename, unsigned int options, pwr_tTime *time, 
+			int before, unsigned int *id);
   void string_to_mysqlstring( char *in, char *out, int size);
   void mysqlstring_to_string( char *in, char *out, int size);
-  int get_id_range( pwr_tStatus *sts, sev_item *item, 
+  int get_id_range( pwr_tStatus *sts, void *thread, sev_item *item, 
 		    pwr_tMask options, unsigned int *first, unsigned int *last);
   int get_time_range( pwr_tStatus *sts, sev_item *item, 
 		      pwr_tMask options, pwr_tTime *first, pwr_tTime *last);

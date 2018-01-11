@@ -39,6 +39,7 @@
 
 #include "pwr.h"
 #include "co_time.h"
+#include "rt_sev_msg.h"
 
 typedef enum {
   sev_eCvType_Point,
@@ -69,9 +70,9 @@ class sev_valuecache {
   sev_valuecache( const sev_valuecache& x) : m_type(x.m_type), m_userdata(x.m_userdata), m_useridx(x.m_useridx), 
     m_write_cb(x.m_write_cb) {}
   virtual ~sev_valuecache() {};
-  virtual void add( void *value, pwr_tTime *time, void *thread) {};
-  virtual void evaluate( double maxtime, void *thread) {};
-  virtual void write( int index, void *thread) {};
+  virtual void add( void *value, pwr_tTime *time, void *thread) {}
+  virtual int evaluate( double maxtime, void *thread) { return SEV__NOWRITE;}
+  virtual void write( int index, void *thread) {}
   virtual void set_write_cb( void (*write_cb)( void *, int, void *, pwr_tTime *, void *), void *userdata, int idx) {
     m_write_cb = write_cb;
     m_userdata = userdata;
@@ -118,7 +119,7 @@ class sev_valuecache_double : public sev_valuecache  {
   sev_sCacheValueDouble& operator[]( const int index);
   sev_sCacheValueDouble& wval() { return m_wval;}
   void add( void *value, pwr_tTime *time, void *thread);
-  void evaluate( double maxtime, void *thread);
+  int evaluate( double maxtime, void *thread);
   void calculate_k();
   void write( int index, void *thread);
   void calculate_epsilon();
@@ -147,7 +148,7 @@ class sev_valuecache_bool : public sev_valuecache  {
   ~sev_valuecache_bool() {}
   sev_sCacheValueBool& wval() { return m_wval;}
   void add( void *value, pwr_tTime *time, void *thread);
-  void evaluate( double maxtime, void *thread);
+  int evaluate( double maxtime, void *thread);
   void write( int index, void *thread);
 };
 

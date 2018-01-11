@@ -36,6 +36,7 @@
 
 #include <math.h>
 #include <pthread.h>
+#include <float.h>
 
 #include "pwr.h"
 #include "co_cdh.h"
@@ -88,6 +89,7 @@ int sev_server::init( int noneth)
   qcom_sAid		aid;
   qcom_sQid 		qini;
   sev_sDbConfig		db_config;
+  char 			str[80];
 
   m_server_status = PWR__SRVSTARTUP;
 
@@ -118,11 +120,11 @@ int sev_server::init( int noneth)
       exit(0);
     }
 
+    memset( m_config->ServerThreads, 0, sizeof(m_config->ServerThreads));
   }
   else {
     // Read config from proview.cnf
     static pwr_sClass_SevServer config;
-    char str[80];
     float fvalue;
 
     memset( &config, 0, sizeof(config));
@@ -167,6 +169,14 @@ int sev_server::init( int noneth)
 	m_config->LinearRegrMaxTime = fvalue;
     }
   }
+
+  if ( cnf_get_value( "sevThreadKeyNode", str, sizeof(str))) {
+    if ( cdh_NoCaseStrcmp( str, "1") == 0)
+      m_thread_key_node = 1;
+  }
+  
+  if ( m_config->UseServerThreads)
+    m_read_threads = 1;
 
   switch ( m_config->Database) {
   case pwr_eSevDatabaseEnum_MySQL:
@@ -248,6 +258,9 @@ int sev_server::init( int noneth)
 
   if ( !m_noneth)
     m_sts = m_db->tree_update();
+
+  if ( m_read_threads)
+    create_garbage_collector_thread();
 
   return 1;
 }
@@ -513,24 +526,37 @@ int sev_server::mainloop()
       else
 	m_stat.medium_load = a * m_stat.medium_load + (1.0-a) * m_stat.current_load;
       m_stat.storage_rate = (float)m_storage_cnt / (time_DToFloat(0, &busy)+time_DToFloat(0, &idle));
+      m_stat.write_rate = (float)m_write_cnt / (time_DToFloat(0, &busy)+time_DToFloat(0, &idle));
       if ( m_stat.medium_storage_rate == 0)
 	m_stat.medium_storage_rate = m_stat.storage_rate;
       else
 	m_stat.medium_storage_rate = a * m_stat.medium_storage_rate + (1.0-a) * m_stat.storage_rate;
+      if ( m_stat.medium_write_rate == 0)
+	m_stat.medium_write_rate = m_stat.write_rate;
+      else
+	m_stat.medium_write_rate = a * m_stat.medium_write_rate + (1.0-a) * m_stat.write_rate;
+      if ( m_stat.medium_storage_rate < FLT_EPSILON)
+	m_stat.write_quota = 0;
+      else
+	m_stat.write_quota = m_stat.medium_write_rate / m_stat.medium_storage_rate * 100;
       m_storage_cnt = 0;
+      m_write_cnt = 0;
       m_db->store_stat( &m_stat); 
 
       m_config->Stat.CurrentLoad = m_stat.current_load;
       m_config->Stat.MediumLoad = m_stat.medium_load;
       m_config->Stat.StorageRate = m_stat.storage_rate;
       m_config->Stat.MediumStorageRate = m_stat.medium_storage_rate;
- 
+      m_config->Stat.WriteRate = m_stat.write_rate;
+      m_config->Stat.MediumWriteRate = m_stat.medium_write_rate;
+      m_config->Stat.WriteQuota = m_stat.write_quota;
+
       time_Aadd( &next_stat, &next_stat, &stat_interval);
       busy = pwr_cNDeltaTime;
       idle = pwr_cNDeltaTime;
     }
-    if ( time_Acomp( &currenttime, &next_garco) == 1) {
-      garbage_collector();
+    if ( m_read_threads && time_Acomp( &currenttime, &next_garco) == 1) {
+      garbage_collector( 0);
       time_Aadd( &next_garco, &next_garco, &garco_interval);
     }
     if ( sts == QCOM__TMO || !mp)
@@ -549,7 +575,7 @@ int sev_server::mainloop()
 	    m_stat.items_msg_cnt++;
             break;
           case sev_eMsgType_HistDataStore:
-            receive_histdata( (sev_sMsgHistDataStore *) mp, get.size);
+            receive_histdata( (sev_sMsgHistDataStore *) mp, get.size, get.sender.nid);
 	    m_stat.datastore_msg_cnt++;
             break;
           case sev_eMsgType_HistDataGetRequest:
@@ -819,7 +845,7 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
   return 1;
 }
 
-int sev_server::receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size)
+int sev_server::receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size, pwr_tNid nid)
 {
   pwr_tStatus sts;
   sev_sHistData *dp;
@@ -853,6 +879,7 @@ int sev_server::receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size)
       time = net_NetTimeToTime( &msg->Time);
       m_db->store_value( &m_sts, 0, idx, 0, time, &dp->data, dp->size);
       m_storage_cnt++;
+      m_write_cnt++;
       
       dp = (sev_sHistData *)((char *)dp + sizeof( *dp) - sizeof(dp->data) +  dp->size);
     }
@@ -864,8 +891,10 @@ int sev_server::receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size)
     sev_sReceiveHistDataMsg *qmsg;
     pwr_tUInt32 key;
 
-    // if ( key == nodeid)
-    key = server_thread;
+    if ( m_thread_key_node)
+      key = nid;
+    else
+      key = server_thread;
 
     th = find_thread( key);
     if ( !th) {
@@ -875,7 +904,7 @@ int sev_server::receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size)
     
     // Create a queue message
     if ( th->alloc + sizeof(*qmsg) - sizeof(qmsg->data) + size > m_config->ThreadQueueLimit) {
-      // Queue maxlimit exceede, discard message
+      // Queue maxlimit exceeded, discard message
       m_config->ServerThreads[th->conf_idx].LostCnt++;
       return 1;
     }
@@ -884,6 +913,7 @@ int sev_server::receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size)
     memcpy( &qmsg->data, dp, size);
     qmsg->size = size;
     qmsg->time = msg->Time;
+    lst_Init( NULL, &qmsg->e, qmsg);
 
     th->alloc += qmsg->size;
     if ( th->conf_idx >= 0) {
@@ -907,6 +937,7 @@ int sev_server::send_histdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *rmsg, 
   arg->size = size;
 
   if ( m_read_threads) {
+    printf( "New read thread\n");
     sts = pthread_create( &thread, NULL, send_histdata_thread, arg);
     if ( sts != 0)
       printf( "pthread_create error %d\n", sts);
@@ -928,6 +959,7 @@ void *sev_server::send_histdata_thread( void *arg)
   pwr_tStatus	sts, lsts;
   pwr_tTime	starttime, endtime;
   unsigned int	item_idx;
+  void		*thread = 0;
 
   sev_server *sev = ((sev_sHistDataThread *)arg)->sev;
   qcom_sQid tgt = ((sev_sHistDataThread *)arg)->tgt;
@@ -944,7 +976,10 @@ void *sev_server::send_histdata_thread( void *arg)
     return (void *) 1;
   }
 
-  sev->m_db->get_values( &sts, rmsg->Oid, sev->m_db->m_items[item_idx].options, 
+  if ( sev->m_read_threads)
+    thread = sev->m_db->new_thread();
+
+  sev->m_db->get_values( &sts, thread, rmsg->Oid, sev->m_db->m_items[item_idx].options, 
 			 sev->m_db->m_items[item_idx].deadband, 
 			 rmsg->AName, sev->m_db->m_items[item_idx].attr[0].type, 
 			 sev->m_db->m_items[item_idx].attr[0].size, 
@@ -987,6 +1022,10 @@ void *sev_server::send_histdata_thread( void *arg)
   if ( !qcom_Put( &sts, &tgt, &put)) {
     qcom_Free( &sts, put.data);
   }    
+  
+  if ( sev->m_read_threads)
+    sev->m_db->delete_thread( thread);
+
   // pthread_exit( (void *) 1);
   return (void *) 1;
 }
@@ -1008,7 +1047,7 @@ int sev_server::send_objecthistdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *
 
   m_db->get_objectitem(&m_sts, &item, rmsg->Oid, rmsg->AName);
   if(ODD(m_sts)) {
-    m_db->get_objectvalues(&m_sts, &item, item.value_size, &starttime, &endtime, rmsg->NumPoints, &tbuf,  &vbuf, &rows);
+    m_db->get_objectvalues(&m_sts, 0, &item, item.value_size, &starttime, &endtime, rmsg->NumPoints, &tbuf,  &vbuf, &rows);
   }
   if ( ODD(m_sts) && rows != 0 ) {
     msize = rows * ( sizeof(pwr_tTime) + item.value_size);
@@ -1099,7 +1138,45 @@ int sev_server::receive_events( sev_sMsgEventsStore *msg, unsigned int size)
   return 1;
 }
 
-void sev_server::garbage_collector()
+void sev_server::create_garbage_collector_thread()
+{
+  pthread_t pthread;
+  int sts;
+
+  sts = pthread_create( &pthread, NULL, garbage_collector_thread, this);
+  if ( sts != 0)
+    printf( "sev_server: pthread_create error %d\n", sts);
+}
+
+void *sev_server::garbage_collector_thread( void *arg)
+{
+  void		*thread = 0;
+  pwr_tTime next_garco, currenttime;
+  pwr_tDeltaTime garco_interval;
+
+  sev_server *sev = (sev_server *)arg;
+
+  thread = sev->m_db->new_thread();
+
+  time_FloatToD( &garco_interval, sev_cGarbageInterval);
+  time_GetTime( &currenttime);
+  time_Aadd( &next_garco, &currenttime, &garco_interval);
+
+  while ( 1) {
+    sleep(1);
+
+    if ( time_Acomp( &currenttime, &next_garco) == 1) {
+      sev->garbage_collector( thread);
+      time_Aadd( &next_garco, &next_garco, &garco_interval);
+    }
+  }
+
+  sev->m_db->delete_thread( thread);
+
+  return (void *) 1;
+}
+
+void sev_server::garbage_collector( void *thread)
 {
   int item_size = m_db->m_items.size();
   static int current = 0;
@@ -1115,7 +1192,7 @@ void sev_server::garbage_collector()
 
   if ( items_per_scan >= 1) {
     for ( i = 0; i < (int)items_per_scan; i++) {
-      garbage_item( current);
+      garbage_item( thread, current);
       current++;
       if ( current >= item_size)
         current = 0;
@@ -1127,7 +1204,7 @@ void sev_server::garbage_collector()
     if ( scan_cnt >= scan_per_items) {
       scan_cnt = 0;
 
-      garbage_item( current);
+      garbage_item( thread, current);
 
       current++;
       if ( current >= item_size)
@@ -1136,7 +1213,7 @@ void sev_server::garbage_collector()
   }
 }
 
-void sev_server::garbage_item( int idx)
+void sev_server::garbage_item( void *thread, int idx)
 {
   pwr_tTime currenttime, limit;
 
@@ -1150,11 +1227,11 @@ void sev_server::garbage_item( int idx)
   time_Asub( &limit, &currenttime, &m_db->m_items[idx].storagetime);
 
   if( m_db->m_items[idx].attrnum > 1 ) {
-    m_db->delete_old_objectdata( &m_sts, m_db->m_items[idx].tablename, 
+    m_db->delete_old_objectdata( &m_sts, thread, m_db->m_items[idx].tablename, 
                                  m_db->m_items[idx].options, limit, m_db->m_items[idx].scantime, (float)sev_cGarbageCycle);
   }
   else {
-    m_db->delete_old_data( &m_sts, m_db->m_items[idx].tablename, 
+    m_db->delete_old_data( &m_sts, thread, m_db->m_items[idx].tablename, 
          m_db->m_items[idx].options, limit, m_db->m_items[idx].scantime, (float)sev_cGarbageCycle);
   }
 }
@@ -1186,6 +1263,7 @@ void *sev_server::receive_histdata_thread( void *arg)
   pwr_sClass_SevServerThread *thread_conf = 0;
   float current_load;
   int storage_cnt = 0;
+  int write_cnt = 0;
 
   if ( th->conf_idx >= 0)
     thread_conf = &sev->m_config->ServerThreads[th->conf_idx];
@@ -1222,7 +1300,17 @@ void *sev_server::receive_histdata_thread( void *arg)
 	thread_conf->MediumStorageRate = thread_conf->StorageRate;
       else
 	thread_conf->MediumStorageRate = a * thread_conf->MediumStorageRate + (1.0-a) * thread_conf->StorageRate;
+      thread_conf->WriteRate = (float)write_cnt / (time_DToFloat(0, &busy)+time_DToFloat(0, &idle));
+      if ( thread_conf->MediumWriteRate == 0)
+	thread_conf->MediumWriteRate = thread_conf->WriteRate;
+      else
+	thread_conf->MediumWriteRate = a * thread_conf->MediumWriteRate + (1.0-a) * thread_conf->WriteRate;
+      if ( thread_conf->MediumStorageRate < FLT_EPSILON)
+	thread_conf->WriteQuota = 0;
+      else
+	thread_conf->WriteQuota = thread_conf->MediumWriteRate / thread_conf->MediumStorageRate * 100;
       storage_cnt = 0;
+      write_cnt = 0;
  
       time_Aadd( &next_stat, &next_stat, &stat_interval);
       busy = pwr_cNDeltaTime;
@@ -1253,6 +1341,10 @@ void *sev_server::receive_histdata_thread( void *arg)
 	sev->m_db->store_value( &sev->m_sts, th->db_ctx, idx, 0, time, &dp->data, dp->size);
 	sev->m_storage_cnt++;
 	storage_cnt++;
+	if ( ODD(sev->m_sts) && sev->m_sts != SEV__NOWRITE) {
+	  sev->m_write_cnt++;
+	  write_cnt++;
+	}
       
 	dp = (sev_sHistData *)((char *)dp + sizeof( *dp) - sizeof(dp->data) +  dp->size);
       }
@@ -1260,6 +1352,8 @@ void *sev_server::receive_histdata_thread( void *arg)
       sev->m_db->commit_transaction( th->db_ctx);
     
       th->alloc -= msg->size;
+      if ( th->alloc < 0)
+	th->alloc = 0;
       if ( th->conf_idx >= 0)
 	thread_conf->QueueAlloc = th->alloc;
 
@@ -1295,6 +1389,7 @@ sev_sThread *sev_server::create_thread( int key)
     printf( "sev_server: pthread_create error %d\n", sts);
 
   if ( th->conf_idx >= 0) {
+    m_config->ServerThreads[th->conf_idx].Occupied = 1;
     m_config->ServerThreads[th->conf_idx].Key = key;
   }
 
@@ -1314,7 +1409,15 @@ void sev_server::delete_thread( int key)
 }
 
 
-
+sev_server::~sev_server()
+{
+  for ( threadlist_iterator it = m_thread_list.begin(); it != m_thread_list.end();) {
+    sev_sThread *th = it->second;
+    m_thread_list.erase( it++);
+    m_db->delete_thread( th->db_ctx);
+    free( th);
+  }
+}
 
 int main (int argc, char *argv[])
 {

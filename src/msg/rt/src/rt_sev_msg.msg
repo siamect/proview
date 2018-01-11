@@ -55,6 +55,7 @@ range		<Unable to get range>					/error
 unknowntype	<Unknown data type>					/error
 nosuchtable	<Table doesn't exist>					/error
 norows		<No rows found>						/error
+nowrite		<Nothings written>					/info
 .end
 
 

@@ -44,6 +44,7 @@
 #include "rt_gdh.h"
 #include "pwr_baseclasses.h"
 #include "sev_valuecache.h"
+#include "rt_sev_msg.h"
 
 const int sev_valuecache_double::m_size = VALUECACHE_SIZE;
 
@@ -110,15 +111,17 @@ void sev_valuecache_double::add( void *value, pwr_tTime *t, void *thread)
     calculate_epsilon(0);
 }
 
-void sev_valuecache_double::evaluate( double maxtime, void *thread) 
+int sev_valuecache_double::evaluate( double maxtime, void *thread) 
 {
   int value_added = 1;
+  int sts = SEV__NOWRITE;
 
   while( 1) {
     if ( (maxtime != 0 && (m_val[m_last].time - m_wval.time) > maxtime) ||
 	 !check_deadband()) {
       // Store optimal value
       write( m_last_opt_write  + value_added, thread);
+      sts = SEV__SUCCESS;
     }
     else
       break;
@@ -128,6 +131,7 @@ void sev_valuecache_double::evaluate( double maxtime, void *thread)
     m_last_opt_write = get_optimal_write();
     value_added = 0;
   }
+  return sts;
 }
 
 void sev_valuecache_double::calculate_k()
@@ -286,11 +290,14 @@ void sev_valuecache_bool::add( void *value, pwr_tTime *t, void *thread)
   }
 }
 
-void sev_valuecache_bool::evaluate( double maxtime, void *thread) 
+int sev_valuecache_bool::evaluate( double maxtime, void *thread) 
 {
+
   if ( m_val.val != m_wval.val) {
     write(0, thread);
+    return SEV__SUCCESS;
   }
+  return SEV__NOWRITE;
 }
 
 void sev_valuecache_bool::write( int index, void *thread) 

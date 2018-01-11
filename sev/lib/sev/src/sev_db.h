@@ -72,6 +72,9 @@ typedef struct {
   float medium_load;
   float storage_rate;
   float medium_storage_rate;
+  float write_rate;
+  float medium_write_rate;
+  float write_quota;
   unsigned int datastore_msg_cnt;
   unsigned int dataget_msg_cnt;
   unsigned int items_msg_cnt;
@@ -216,13 +219,13 @@ class sev_db {
   virtual int delete_item( pwr_tStatus *sts, pwr_tOid oid, char *aname) { *sts = 0; return 0;}
   virtual int store_value( pwr_tStatus *sts, void *thread, int item_idx, int attr_idx,
 			   pwr_tTime time, void *buf, unsigned int size) { *sts = 0; return 0;}
-  virtual int get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, float deadband, 
-			  char *aname, pwr_eType type, 
+  virtual int get_values( pwr_tStatus *sts, void *thread, pwr_tOid oid, pwr_tMask options, 
+			  float deadband, char *aname, pwr_eType type, 
 			  unsigned int size, pwr_tFloat32 scantime, pwr_tTime *creatime, pwr_tTime *starttime, 
 			  pwr_tTime *endtime, int maxsize, pwr_tTime **tbuf, void **vbuf, 
 			  unsigned int *bsize) { *sts = 0; return 0;}
   virtual int get_items( pwr_tStatus *sts) { *sts = 0; return 0;}
-  virtual int delete_old_data( pwr_tStatus *sts, char *tablename, 
+  virtual int delete_old_data( pwr_tStatus *sts, void *thread, char *tablename, 
 			       pwr_tMask options, pwr_tTime limit, pwr_tFloat32 scantime, pwr_tFloat32 garbagecycle) 
   { *sts = 0; return 0;}
 
@@ -244,9 +247,9 @@ class sev_db {
   virtual int get_objectitems( pwr_tStatus *sts) { *sts = 0; return 0;}
   virtual int check_objectitemattr( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *aname, char *oname, 
 																	  pwr_eType type, unsigned int size, unsigned int *idx) { *sts = 0; return 0;}
-  virtual int delete_old_objectdata( pwr_tStatus *sts, char *tablename, 
+  virtual int delete_old_objectdata( pwr_tStatus *sts, void *thread, char *tablename, 
                                      pwr_tMask options, pwr_tTime limit, pwr_tFloat32 scantime, pwr_tFloat32 garbagecycle) { *sts = 0; return 0;}
-  virtual int get_objectvalues( pwr_tStatus *sts, sev_item *item,
+  virtual int get_objectvalues( pwr_tStatus *sts, void *thread, sev_item *item,
                                 unsigned int size, pwr_tTime *starttime, pwr_tTime *endtime, 
                                 int maxsize, pwr_tTime **tbuf, void **vbuf, unsigned int *bsize) { *sts = 0; return 0;}
   virtual int handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned int item_idx, bool newObject) { *sts = 0; return 0;}
@@ -258,6 +261,7 @@ class sev_db {
   virtual int commit_transaction( void *thread) { return 0;}
   virtual char *dbName() { return 0;}
   virtual void *new_thread() { return 0;}
+  virtual void delete_thread( void *thread) {}
   
   static sev_db *open_database( sev_eDbType type, sev_sDbConfig *cnf);
   static int get_systemname( char *name);

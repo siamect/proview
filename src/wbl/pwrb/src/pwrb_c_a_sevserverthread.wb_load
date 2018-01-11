@@ -54,9 +54,19 @@ SObject pwrb:Class
         Attr StructName = "SevServerThread"
       EndBody
       !/**
+      !  Occupied.
+      !*/
+      Object Occupied $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      !/**
       !  Thread key.
       !*/
-      Object Key $Attribute 1 
+      Object Key $Attribute 2 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
 	  Attr Flags |= PWR_MASK_NOEDIT
@@ -66,7 +76,7 @@ SObject pwrb:Class
       !/**
       !  Allocated size in thread queue.
       !*/
-      Object QueueAlloc $Attribute 2 
+      Object QueueAlloc $Attribute 3 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
 	  Attr Flags |= PWR_MASK_NOEDIT
@@ -76,7 +86,7 @@ SObject pwrb:Class
       !/**
       !  Lost messages.
       !*/
-      Object LostCnt $Attribute 3 
+      Object LostCnt $Attribute 4 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
 	  Attr Flags |= PWR_MASK_NOEDIT
@@ -86,7 +96,7 @@ SObject pwrb:Class
       !/**
       !  Medium load in percentage.
       !*/
-      Object MediumLoad $Attribute 4 
+      Object MediumLoad $Attribute 5 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
 	  Attr Flags |= PWR_MASK_NOEDIT
@@ -96,7 +106,7 @@ SObject pwrb:Class
       !/**
       !  Storage rate. Values per second.
       !*/
-      Object StorageRate $Attribute 5 
+      Object StorageRate $Attribute 6 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
 	  Attr Flags |= PWR_MASK_NOEDIT
@@ -106,7 +116,37 @@ SObject pwrb:Class
       !/**
       !  Medium storage rate. Values per second.
       !*/
-      Object MediumStorageRate $Attribute 6 
+      Object MediumStorageRate $Attribute 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      !/**
+      !  Write rate. Values per second.
+      !*/
+      Object WriteRate $Attribute 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      !/**
+      !  Medium write rate. Values per second.
+      !*/
+      Object MediumWriteRate $Attribute 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      !/**
+      !  Write quota in percentage.
+      !*/
+      Object WriteQuota $Attribute 10 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
 	  Attr Flags |= PWR_MASK_NOEDIT
@@ -116,7 +156,7 @@ SObject pwrb:Class
       !/**
       !  Data store message count.
       !*/
-      Object DataStoreMsgCnt $Attribute 7 
+      Object DataStoreMsgCnt $Attribute 11 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
 	  Attr Flags |= PWR_MASK_NOEDIT
@@ -126,7 +166,7 @@ SObject pwrb:Class
       !/**
       !  Event store message count.
       !*/
-      Object EventStoreMsgCnt $Attribute 8 
+      Object EventStoreMsgCnt $Attribute 12 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
 	  Attr Flags |= PWR_MASK_NOEDIT

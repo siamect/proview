@@ -95,10 +95,12 @@ typedef map<int, sev_sThread *>::iterator threadlist_iterator;
 class sev_server {
  public:
 
-  sev_server() : m_server_status(0), m_refid(0), m_msg_id(0), m_storage_cnt(0),
-    m_db_type(sev_eDbType_Sqlite), m_config(0), m_thread_cnt(0),  m_read_threads(0) 
+  sev_server() : m_server_status(0), m_refid(0), m_msg_id(0), m_storage_cnt(0), m_write_cnt(0),
+    m_db_type(sev_eDbType_Sqlite), m_config(0), m_thread_cnt(0),  m_read_threads(0),
+    m_thread_key_node(0)
     { memset(&m_stat,0,sizeof(m_stat));}
 
+  ~sev_server();
   pwr_tStatus m_sts;
   pwr_tStatus m_server_status;
   vector<sev_node> m_nodes;
@@ -107,12 +109,14 @@ class sev_server {
   sev_db *m_db;
   int m_noneth;
   unsigned int m_storage_cnt;
+  unsigned int m_write_cnt;
   sev_sStat m_stat;
   sev_eDbType m_db_type;
   pwr_sClass_SevServer *m_config;
   unsigned int m_thread_cnt;
   pwr_tDlid m_config_dlid;
   int m_read_threads;
+  int m_thread_key_node;
   map<int, sev_sThread *>m_thread_list;
 
   int init( int noneth);
@@ -120,15 +124,17 @@ class sev_server {
   int request_items( pwr_tNid nid);
   int mainloop();
   int check_histitems( sev_sMsgHistItems *msg, unsigned int size);
-  int receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size);
+  int receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size, pwr_tNid nid);
   int send_histdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *msg, unsigned int size);
   int send_objecthistdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *rmsg, unsigned int size);
   int send_itemlist( qcom_sQid tgt);
   int send_server_status( qcom_sQid tgt);
   int delete_item( qcom_sQid tgt, sev_sMsgHistItemDelete *rmsg);
   int receive_events( sev_sMsgEventsStore *msg, unsigned int size);
-  void garbage_collector();
-  void garbage_item( int idx);
+  void create_garbage_collector_thread();
+  static void *garbage_collector_thread( void *arg);
+  void garbage_collector( void *thread);
+  void garbage_item( void *thread, int idx);
   void set_dbtype( sev_eDbType type) { m_db_type = type;}
   sev_sThread *find_thread( int key);
   static void *receive_histdata_thread( void *arg);

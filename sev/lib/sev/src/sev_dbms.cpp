@@ -534,6 +534,11 @@ MYSQL *sev_dbms_env::open_thread( unsigned int *sts)
   return con;
 }
 
+void sev_dbms_env::close_thread( MYSQL *con)
+{
+  mysql_close(con);
+}
+
 int sev_dbms_env::create()
 {
   struct stat sb;
@@ -1080,7 +1085,7 @@ int sev_dbms::store_value( pwr_tStatus *sts, void *thread, int item_idx, int att
       return 0;
     }
     m_items[item_idx].cache->add( value, &time, thread);
-    m_items[item_idx].cache->evaluate( m_cnf.LinearRegrMaxTime, thread);
+    *sts = m_items[item_idx].cache->evaluate( m_cnf.LinearRegrMaxTime, thread);
     return 1;
   }
   else
@@ -1513,19 +1518,26 @@ int sev_dbms::write_value( pwr_tStatus *sts, int item_idx, int attr_idx,
 }
 
 
-int sev_dbms::get_id_range( pwr_tStatus *sts, sev_item *item, 
+int sev_dbms::get_id_range( pwr_tStatus *sts, void *thread, sev_item *item, 
 			    pwr_tMask options, unsigned int *first, unsigned int *last)
 {
   int rows;
   char query[100];
+  MYSQL *con;
+
+  if ( thread)
+    con = (MYSQL *)thread;
+  else
+    con = m_env->con();
 
   if ( first) {
     if ( options & pwr_mSevOptionsMask_HighTimeResolution)
-      sprintf( query, "select id from %s order by time,ntime asc limit 1;", item->tablename);
+      //sprintf( query, "select id from %s order by time,ntime asc limit 1;", item->tablename);
+      sprintf( query, "select id from %s order by time asc limit 1;", item->tablename);
     else
       sprintf( query, "select id from %s order by time asc limit 1;", item->tablename);
     
-    int rc = mysql_query( m_env->con(), query);
+    int rc = mysql_query( con, query);
     if (rc) {
       printf("In %s row %d:\n", __FILE__, __LINE__);
       printf( "Get time range query error\n");
@@ -1534,7 +1546,7 @@ int sev_dbms::get_id_range( pwr_tStatus *sts, sev_item *item,
     }
     
     MYSQL_ROW row;
-    MYSQL_RES *result = mysql_store_result( m_env->con());
+    MYSQL_RES *result = mysql_store_result( con);
     
     row = mysql_fetch_row( result);
     if (!row) {
@@ -1556,11 +1568,12 @@ int sev_dbms::get_id_range( pwr_tStatus *sts, sev_item *item,
   }
   if ( last) {
     if ( options & pwr_mSevOptionsMask_HighTimeResolution)
-      sprintf( query, "select id from %s order by time,ntime desc limit 1;", item->tablename);
+      //sprintf( query, "select id from %s order by time,ntime desc limit 1;", item->tablename);
+      sprintf( query, "select id from %s order by time desc limit 1;", item->tablename);
     else
       sprintf( query, "select id from %s order by time desc limit 1;", item->tablename);
     
-    int rc = mysql_query( m_env->con(), query);
+    int rc = mysql_query( con, query);
     if (rc) {
       printf("In %s row %d:\n", __FILE__, __LINE__);
       printf( "Get time range query error\n");
@@ -1569,7 +1582,7 @@ int sev_dbms::get_id_range( pwr_tStatus *sts, sev_item *item,
     }
     
     MYSQL_ROW row;
-    MYSQL_RES *result = mysql_store_result( m_env->con());
+    MYSQL_RES *result = mysql_store_result( con);
     
     row = mysql_fetch_row( result);
     if (!row) {
@@ -1722,8 +1735,8 @@ int sev_dbms::get_time_range( pwr_tStatus *sts, sev_item *item,
   return 1;
 }
 
-int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, float deadband, 
-			  char *aname, pwr_eType type, 
+int sev_dbms::get_values( pwr_tStatus *sts, void *thread, pwr_tOid oid, pwr_tMask options, 
+			  float deadband, char *aname, pwr_eType type, 
 			  unsigned int size, pwr_tFloat32 scantime, pwr_tTime *creatime, 
 			  pwr_tTime *starttime, pwr_tTime *endtime, 
 			  int maxsize, pwr_tTime **tbuf, void **vbuf, unsigned int *bsize)
@@ -1746,6 +1759,12 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
   char jumpstr[40];
   char where_part[200];
   int rows;
+  MYSQL *con;
+
+  if ( thread)
+    con = (MYSQL *)thread;
+  else
+    con = m_env->con();
 
   if ( starttime && starttime->tv_sec == 0 && starttime->tv_nsec == 0)
     starttime = 0;
@@ -1760,7 +1779,7 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
   // Get number of rows
   sprintf( query, "show table status where name = '%s';", item.tablename);
 
-  int rc = mysql_query( m_env->con(), query);
+  int rc = mysql_query( con, query);
   if (rc) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
     printf( "GetValues Query Error\n");
@@ -1769,7 +1788,7 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
   }
 
   MYSQL_ROW row;
-  MYSQL_RES *result = mysql_store_result( m_env->con());
+  MYSQL_RES *result = mysql_store_result( con);
 
   if ( !result) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
@@ -1796,19 +1815,19 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
 
     if ( starttime) {
       // Get id for starttime
-      *sts = get_closest_time( item.tablename, item.options, starttime, 1, &startid);      
+      *sts = get_closest_time( thread, item.tablename, item.options, starttime, 1, &startid);      
       if ( *sts == SEV__NOROWS)
-	get_id_range( sts, &item, item.options, &startid, 0);	
+	get_id_range( sts, thread, &item, item.options, &startid, 0);	
     }
     else {
-      get_id_range( sts, &item, item.options, &startid, 0);
+      get_id_range( sts, thread, &item, item.options, &startid, 0);
       // startid = 0;
     }
     if ( endtime) {
       // Get id for starttime
-      *sts = get_closest_time( item.tablename, item.options, endtime, 0, &endid);
+      *sts = get_closest_time( thread, item.tablename, item.options, endtime, 0, &endid);
       if ( *sts == SEV__NOROWS)
-	get_id_range( sts, &item, item.options, 0, &endid);
+	get_id_range( sts, thread, &item, item.options, 0, &endid);
       if ( endid == 0)
 	endid = strtoul(row[4], 0, 10);
     }
@@ -1823,13 +1842,13 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
       if ( options & pwr_mSevOptionsMask_ReadOptimized) {
 	unsigned int startid, endid;
 
-	*sts = get_closest_time( item.tablename, item.options, endtime, 1, &endid);
+	*sts = get_closest_time( thread, item.tablename, item.options, endtime, 1, &endid);
 	if ( *sts == SEV__NOROWS)
-	  get_id_range( sts, &item, item.options, 0, &endid);
+	  get_id_range( sts, thread, &item, item.options, 0, &endid);
 
-	*sts = get_closest_time( item.tablename, item.options, starttime, 0, &startid);
+	*sts = get_closest_time( thread, item.tablename, item.options, starttime, 0, &startid);
 	if ( *sts == SEV__NOROWS)
-	  get_id_range( sts, &item, item.options, &startid, 0);
+	  get_id_range( sts, thread, &item, item.options, &startid, 0);
 
 	total_rows = endid - startid;
       }
@@ -1869,11 +1888,11 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
       if ( options & pwr_mSevOptionsMask_ReadOptimized) {
 	unsigned int startid, endid;
 
-	*sts = get_closest_time( item.tablename, item.options, starttime, 0, &startid);
+	*sts = get_closest_time( thread, item.tablename, item.options, starttime, 0, &startid);
 	if ( *sts == SEV__NOROWS)
-	  get_id_range( sts, &item, item.options, &startid, 0);
+	  get_id_range( sts, thread, &item, item.options, &startid, 0);
 
-	get_id_range( sts, &item, item.options, 0, &endid);
+	get_id_range( sts, thread, &item, item.options, 0, &endid);
 	total_rows = endid - startid;
       }
       else {
@@ -1908,11 +1927,11 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
       if ( options & pwr_mSevOptionsMask_ReadOptimized) {
 	unsigned int startid, endid;
 
-	*sts = get_closest_time( item.tablename, item.options, endtime, 1, &endid);
+	*sts = get_closest_time( thread, item.tablename, item.options, endtime, 1, &endid);
 	if ( *sts == SEV__NOROWS)
-	  get_id_range( sts, &item, item.options, 0, &endid);
+	  get_id_range( sts, thread, &item, item.options, 0, &endid);
 
-	get_id_range( sts, &item, item.options, &startid, 0);
+	get_id_range( sts, thread, &item, item.options, &startid, 0);
 
 	total_rows = endid - startid;
       }
@@ -2066,20 +2085,20 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
       sprintf( query, "select %s from %s %s order by %s limit %d",
 	       column_part, item.tablename, where_part, orderby_part, maxsize*2);
     else {
-      rc = mysql_query( m_env->con(), "set @x:=0;");      
+      rc = mysql_query( con, "set @x:=0;");      
       sprintf( query, "select * from (select (@x:=@x+1) as x,%s from %s %s order by %s) t where x%%%d=0;",
 	       column_part, item.tablename, where_part, orderby_part, div);
     }
     
-    rc = mysql_query( m_env->con(), query);
+    rc = mysql_query( con, query);
     if (rc) {
       printf("In %s row %d:\n", __FILE__, __LINE__);
-      printf( "Get Values: %s\n", mysql_error(m_env->con()));
+      printf( "Get Values: %s\n", mysql_error(con));
       *sts = SEV__DBERROR;
       return 0;
     }
 
-    result = mysql_store_result( m_env->con());
+    result = mysql_store_result( con);
     if ( !result) {
       printf("In %s row %d:\n", __FILE__, __LINE__);
       printf( "GetValues Result Error\n");
@@ -2565,11 +2584,17 @@ int sev_dbms::delete_item( pwr_tStatus *sts, pwr_tOid oid, char *aname)
   return 1;
 }
 
-int sev_dbms::delete_old_data( pwr_tStatus *sts, char *tablename, 
+int sev_dbms::delete_old_data( pwr_tStatus *sts, void *thread, char *tablename, 
 			       pwr_tMask options, pwr_tTime limit, pwr_tFloat32 scantime, pwr_tFloat32 garbagecycle)
 {
   char query[300];
   char timstr[40];
+  MYSQL *con;
+
+  if ( thread)
+    con = (MYSQL *)thread;
+  else
+    con = m_env->con();
 
   *sts = time_AtoAscii( &limit, time_eFormat_NumDateAndTime, timstr, sizeof(timstr));
   if ( EVEN(*sts)) return 0;
@@ -2600,10 +2625,10 @@ int sev_dbms::delete_old_data( pwr_tStatus *sts, char *tablename,
       sprintf( query, "delete from %s where time < '%s';",
          tablename, timstr);
   }
-  int rc = mysql_query( m_env->con(), query);
+  int rc = mysql_query( con, query);
   if (rc) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "Delete old data: %s\n", mysql_error(m_env->con()));
+    printf( "Delete old data: %s\n", mysql_error(con));
     *sts = SEV__DBERROR;
     return 0;
   }
@@ -3477,11 +3502,17 @@ int sev_dbms::get_objectitemattributes( pwr_tStatus *sts, sev_item *item, char *
   return 1;
 }
 
-int sev_dbms::delete_old_objectdata( pwr_tStatus *sts, char *tablename, 
-			                               pwr_tMask options, pwr_tTime limit, pwr_tFloat32 scantime, pwr_tFloat32 garbagecycle)
+int sev_dbms::delete_old_objectdata( pwr_tStatus *sts, void *thread, char *tablename, 
+				     pwr_tMask options, pwr_tTime limit, pwr_tFloat32 scantime, pwr_tFloat32 garbagecycle)
 {
   char query[300];
   char timstr[40];
+  MYSQL *con;
+
+  if ( thread)
+    con = (MYSQL *)thread;
+  else
+    con = m_env->con();
 
   *sts = time_AtoAscii( &limit, time_eFormat_NumDateAndTime, timstr, sizeof(timstr));
   if ( EVEN(*sts)) return 0;
@@ -3512,10 +3543,10 @@ int sev_dbms::delete_old_objectdata( pwr_tStatus *sts, char *tablename,
          tablename, timstr);
   }
 
-  int rc = mysql_query( m_env->con(), query);
+  int rc = mysql_query( con, query);
   if (rc) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
+    printf( "%s: %s\n", __FUNCTION__, mysql_error(con));
     *sts = SEV__DBERROR;
     return 0;
   }
@@ -3592,11 +3623,18 @@ int sev_dbms::check_deadband(pwr_eType type, unsigned int size, pwr_tFloat32 dea
   return deadband_active;
 }
 
-int sev_dbms::get_closest_time( char *tablename, unsigned int options, pwr_tTime *time, int before, unsigned int *id)
+int sev_dbms::get_closest_time( void *thread, char *tablename, unsigned int options, 
+				pwr_tTime *time, int before, unsigned int *id)
 {
   char query[200];
   pwr_tStatus sts;
   char timstr[20];
+  MYSQL *con;
+
+  if ( thread)
+    con = (MYSQL *)thread;
+  else
+    con = m_env->con();
 
   sts = time_AtoAscii( time, time_eFormat_NumDateAndTime, timstr, sizeof(timstr));
   if ( EVEN(sts)) return sts;
@@ -3615,7 +3653,7 @@ int sev_dbms::get_closest_time( char *tablename, unsigned int options, pwr_tTime
       sprintf( query, "select id from %s where time >= '%s' order by time asc limit 1",  tablename, timstr);
   }
       
-  int rc = mysql_query( m_env->con(), query);
+  int rc = mysql_query( con, query);
   if (rc) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
     printf( "%s Query Error\n", __FUNCTION__);
@@ -3623,7 +3661,7 @@ int sev_dbms::get_closest_time( char *tablename, unsigned int options, pwr_tTime
   }
   
   MYSQL_ROW row;
-  MYSQL_RES *result = mysql_store_result( m_env->con());
+  MYSQL_RES *result = mysql_store_result( con);
   
   if ( !result) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
@@ -3646,7 +3684,7 @@ int sev_dbms::get_closest_time( char *tablename, unsigned int options, pwr_tTime
 }
 
 
-int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
+int sev_dbms::get_objectvalues( pwr_tStatus *sts, void *thread, sev_item *item,
 			  unsigned int size, pwr_tTime *starttime, pwr_tTime *endtime, 
 			  int maxsize, pwr_tTime **tbuf, void **vbuf, unsigned int *bsize)
 {
@@ -3662,6 +3700,12 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
   char orderby_part[80];
   char jumpstr[40];
   char where_part[200];
+  MYSQL *con;
+
+  if ( thread)
+    con = (MYSQL *)thread;
+  else
+    con = m_env->con();
 
   if ( starttime && starttime->tv_sec == 0 && starttime->tv_nsec == 0)
     starttime = 0;
@@ -3676,7 +3720,7 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
   // Get number of rows
   sprintf( query, "show table status where name = '%s';", item->tablename);
 
-  int rc = mysql_query( m_env->con(), query);
+  int rc = mysql_query( con, query);
   if (rc) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
     printf( "%s Query Error\n", __FUNCTION__);
@@ -3685,7 +3729,7 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
   }
 
   MYSQL_ROW row;
-  MYSQL_RES *result = mysql_store_result( m_env->con());
+  MYSQL_RES *result = mysql_store_result( con);
 
   if ( !result) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
@@ -3711,13 +3755,13 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
 
     if ( starttime) {
       // Get id for starttime
-      *sts = get_closest_time( item->tablename, item->options, starttime, 1, &startid);
+      *sts = get_closest_time( thread, item->tablename, item->options, starttime, 1, &startid);
     }
     else
       startid = 0;
     if ( endtime) {
       // Get id for starttime
-      *sts = get_closest_time( item->tablename, item->options, endtime, 0, &endid);
+      *sts = get_closest_time( thread, item->tablename, item->options, endtime, 0, &endid);
     }
     else 
       endid = strtoul(row[4], 0, 10);
@@ -3904,15 +3948,15 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
   queryStr.append(" order by ");
   queryStr.append(orderby_part);
 
-  rc = mysql_query( m_env->con(), queryStr.c_str());
+  rc = mysql_query( con, queryStr.c_str());
   if (rc) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
+    printf( "%s: %s\n", __FUNCTION__, mysql_error(con));
     *sts = SEV__DBERROR;
     return 0;
   }
 
-  result = mysql_store_result( m_env->con());
+  result = mysql_store_result( con);
   if ( !result) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
     printf( "%s Result Error\n", __FUNCTION__);
@@ -4541,6 +4585,11 @@ void *sev_dbms::new_thread()
 {
   unsigned int sts;
   return  m_env->open_thread( &sts);
+}
+
+void sev_dbms::delete_thread( void *thread)
+{
+  m_env->close_thread( (MYSQL *)thread);
 }
 
 sev_dbms::~sev_dbms()
