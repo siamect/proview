@@ -84,7 +84,26 @@ typedef struct {
   net_sTime 		time;
   char 			eventtext[80];
   char 			eventname[80];
+  unsigned int		sup_aref_vid;
+  unsigned int		sup_aref_oix;
+  unsigned int		sup_aref_offset;
+  unsigned int		sup_aref_size;
 } sev_sEvent;
+
+typedef struct {
+  sev_eEventType 	type;
+  unsigned int	 	eventprio;
+  unsigned int 		eventid_nix;
+  unsigned int 		eventid_birthtime;
+  unsigned int 		eventid_idx;
+  net_sTime 		time;
+  char 			eventtext[80];
+  char 			eventname[80];
+  unsigned int		sup_aref_vid;
+  unsigned int		sup_aref_oix;
+  unsigned int		sup_aref_offset;
+  unsigned int		sup_aref_size;
+} sev_sEventV0;
 
 typedef struct {
   pwr_tOName aname;
@@ -152,8 +171,17 @@ typedef struct {
   pwr_tUInt16          Version;
   pwr_tOid	       Oid;
   unsigned int	       NumEvents;
+  pwr_tUInt32	       ServerThread;
   sev_sEvent           Events[1];	
 } sev_sMsgEventsStore;
+
+typedef struct {
+  pwr_tUInt16          Type;
+  pwr_tUInt16          Version;
+  pwr_tOid	       Oid;
+  unsigned int	       NumEvents;
+  sev_sEvent           Events[1];	
+} sev_sMsgEventsStoreV0;
 
 typedef struct {
   pwr_tUInt16          Type;

@@ -147,7 +147,8 @@ typedef enum {
 
 //! Extension of proview type pwr_eType. Should not collide with any pwr_eType.
 typedef enum {
-  graph_eType_Bit = (1 << 15) + 1 //!< Type for a bit in a bitmask
+  graph_eType_Bit    = (1 << 15) + 1, //!< Type for a bit in a bitmask
+  graph_eType_NodeId = (1 << 15) + 2  //!< Type for node id
 } graph_eType;
 
 typedef enum {

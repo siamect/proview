@@ -510,11 +510,10 @@ qcom_Node (
   qdb_ScopeLock {
 
     np = hash_Search(sts, &qdb->nid_ht, &nid);
-    if (np == NULL) {
+    if (np == NULL)
       *sts = QCOM__NOSUCHNODE;
-    }
-    
-    qdb_NodeInfo(NULL, node, np);
+    else    
+      qdb_NodeInfo(NULL, node, np);
 
   } qdb_ScopeUnlock;
 

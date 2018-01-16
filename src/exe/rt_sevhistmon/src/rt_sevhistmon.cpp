@@ -1093,6 +1093,10 @@ pwr_tStatus rt_sevhistmon::mh_ack_bc( mh_sAck *msg)
   ed.eventid_idx = msg->Info.Id.Idx;
   ed.eventid_nix = msg->Info.Id.Nix;
   ed.eventid_birthtime = msg->Info.Id.BirthTime.tv_sec;
+  ed.sup_aref_vid = msg->SupObject.Objid.vid;
+  ed.sup_aref_oix = msg->SupObject.Objid.oix;
+  ed.sup_aref_offset = msg->SupObject.Offset;
+  ed.sup_aref_size = msg->SupObject.Size;
   
   if ( shm->m_sevhistevents)
     shm->m_sevhistevents->evbuf_insert( &ed);
@@ -1111,6 +1115,10 @@ pwr_tStatus rt_sevhistmon::mh_return_bc( mh_sReturn *msg)
   ed.eventid_idx = msg->Info.Id.Idx;
   ed.eventid_nix = msg->Info.Id.Nix;
   ed.eventid_birthtime = msg->Info.Id.BirthTime.tv_sec;
+  ed.sup_aref_vid = msg->SupObject.Objid.vid;
+  ed.sup_aref_oix = msg->SupObject.Objid.oix;
+  ed.sup_aref_offset = msg->SupObject.Offset;
+  ed.sup_aref_size = msg->SupObject.Size;
   
   if ( shm->m_sevhistevents)
     shm->m_sevhistevents->evbuf_insert( &ed);
@@ -1130,6 +1138,10 @@ pwr_tStatus rt_sevhistmon::mh_alarm_bc( mh_sMessage *msg)
   ed.eventid_idx = msg->Info.Id.Idx;
   ed.eventid_nix = msg->Info.Id.Nix;
   ed.eventid_birthtime = msg->Info.Id.BirthTime.tv_sec;
+  ed.sup_aref_vid = msg->SupObject.Objid.vid;
+  ed.sup_aref_oix = msg->SupObject.Objid.oix;
+  ed.sup_aref_offset = msg->SupObject.Offset;
+  ed.sup_aref_size = msg->SupObject.Size;
   
   if ( shm->m_sevhistevents)
     shm->m_sevhistevents->evbuf_insert( &ed);
@@ -1149,6 +1161,10 @@ pwr_tStatus rt_sevhistmon::mh_block_bc( mh_sBlock *msg)
   ed.eventid_idx = msg->Info.Id.Idx;
   ed.eventid_nix = msg->Info.Id.Nix;
   ed.eventid_birthtime = msg->Info.Id.BirthTime.tv_sec;
+  ed.sup_aref_vid = msg->SupObject.Objid.vid;
+  ed.sup_aref_oix = msg->SupObject.Objid.oix;
+  ed.sup_aref_offset = msg->SupObject.Offset;
+  ed.sup_aref_size = msg->SupObject.Size;
   
   if ( shm->m_sevhistevents)
     shm->m_sevhistevents->evbuf_insert( &ed);
@@ -1168,6 +1184,10 @@ pwr_tStatus rt_sevhistmon::mh_cancel_bc( mh_sReturn *msg)
   ed.eventid_idx = msg->Info.Id.Idx;
   ed.eventid_nix = msg->Info.Id.Nix;
   ed.eventid_birthtime = msg->Info.Id.BirthTime.tv_sec;
+  ed.sup_aref_vid = msg->SupObject.Objid.vid;
+  ed.sup_aref_oix = msg->SupObject.Objid.oix;
+  ed.sup_aref_offset = msg->SupObject.Offset;
+  ed.sup_aref_size = msg->SupObject.Size;
   
   if ( shm->m_sevhistevents)
     shm->m_sevhistevents->evbuf_insert( &ed);
@@ -1271,7 +1291,9 @@ void sev_sevhistevents::evbuf_send()
   put.allocate = 0;
 
   ((sev_sMsgEventsStore *)put.data)->Type = sev_eMsgType_EventsStore;
+  ((sev_sMsgEventsStore *)put.data)->Version = sev_cNetVersion;
   ((sev_sMsgEventsStore *)put.data)->Oid = monitor->m_sevhistevents->hs_oid;
+  ((sev_sMsgEventsStore *)put.data)->NumEvents = num;
   ((sev_sMsgEventsStore *)put.data)->NumEvents = num;
 
   unsigned int ev_cnt = 0;

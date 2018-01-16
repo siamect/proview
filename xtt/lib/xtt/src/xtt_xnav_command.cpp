@@ -4692,6 +4692,11 @@ static int	xnav_open_func(	void		*client_data,
     time_ePeriod period = time_ePeriod_;
 
     // Command is "OPEN HISTORY"
+    for ( i = 0; i < 11; i++) {
+      strcpy( onamev[i], "");
+      strcpy( anamev[i], "");
+    }
+
 
     if ( ODD( dcli_get_qualifier( "/FULLSCREEN", 0, 0)))
       options |= curve_mOptions_FullScreen;

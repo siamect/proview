@@ -2228,6 +2228,9 @@ void GeCurveData::scale( int axis_type, int value_type,
           }
           max_n = min_n = n;
         }
+	else if ( fabs(value) < DBL_EPSILON) {
+	  max_n = min_n = 0;
+	}
         else {
           while ( value * 10 < 10) {
             value = value * 10;

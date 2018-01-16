@@ -3487,7 +3487,7 @@ int sev_dbhdf5::get_values( pwr_tStatus *sts, void *thread, pwr_tOid oid, pwr_tM
   return 1;
 }
 
-int sev_dbhdf5::store_event( pwr_tStatus *sts, int item_idx, sev_event *ep)
+int sev_dbhdf5::store_event( pwr_tStatus *sts, void *thread, int item_idx, sev_event *ep)
 {
   hid_t mdatatype;
   herr_t hsts;
@@ -4294,7 +4294,7 @@ int sev_dbhdf5::store_objectvalue( pwr_tStatus *sts, int item_idx, int attr_idx,
   return 1;
 }
 
-int sev_dbhdf5::get_item( pwr_tStatus *sts, sev_item *item, pwr_tOid oid, char *attributename)
+int sev_dbhdf5::get_item( pwr_tStatus *sts, void *thread, sev_item *item, pwr_tOid oid, char *attributename)
 {
   unsigned int idx;
 
@@ -4324,7 +4324,7 @@ int sev_dbhdf5::get_item( pwr_tStatus *sts, unsigned int *idx, pwr_tOid oid, cha
   return 0;
 }
 
-int sev_dbhdf5::get_objectitem( pwr_tStatus *sts, sev_item *item, pwr_tOid oid, char *attributename)
+int sev_dbhdf5::get_objectitem( pwr_tStatus *sts, void *thread, sev_item *item, pwr_tOid oid, char *attributename)
 {
   sev_sObjectItem ritem;
   herr_t hsts;

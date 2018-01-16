@@ -91,6 +91,8 @@ static const    graph_sTypeStr	graph_type_table[] = {
     {"Enum", 	pwr_eType_Enum,     sizeof(pwr_tEnum)},
     {"Mask", 	pwr_eType_Mask,     sizeof(pwr_tMask)},
     {"DataRef", pwr_eType_DataRef,  sizeof(pwr_tDataRef)},
+    {"VolumeId", pwr_eType_VolumeId, sizeof(pwr_tVolumeId)},
+    {"NodeId", 	(pwr_eType)graph_eType_NodeId,   sizeof(pwr_tVolumeId)},
     {"Bit",  	(pwr_eType)graph_eType_Bit,    sizeof(pwr_tBit)}
     };
 

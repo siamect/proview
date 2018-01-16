@@ -83,12 +83,30 @@ typedef struct {
   sev_sThread *th;
 } sev_sReceiveHistDataThread;
 
+typedef enum {
+  sev_eQMsgType_HistData,
+  sev_eQMsgType_Event
+} sev_eQMsgType;
+
 typedef struct {
+  sev_eQMsgType type;
+  unsigned int version;
   lst_sEntry e;
+  int size;  
+} sev_sQMsgHeader;
+
+typedef struct {
+  sev_sQMsgHeader h;
   net_sTime time;
-  int size;
   char data[1];
-} sev_sReceiveHistDataMsg;
+} sev_sQMsgHistData;
+
+typedef struct {
+  sev_sQMsgHeader h;
+  int num_events;
+  int item_idx;
+  char data[1];
+} sev_sQMsgEvent;
 
 typedef map<int, sev_sThread *>::iterator threadlist_iterator;
 
@@ -96,8 +114,8 @@ class sev_server {
  public:
 
   sev_server() : m_server_status(0), m_refid(0), m_msg_id(0), m_storage_cnt(0), m_write_cnt(0),
-    m_db_type(sev_eDbType_Sqlite), m_config(0), m_thread_cnt(0),  m_read_threads(0),
-    m_thread_key_node(0)
+    m_total_queue_cnt(0), m_db_type(sev_eDbType_Sqlite), m_config(0), m_thread_cnt(0),  
+    m_read_threads(0), m_thread_key_node(0)
     { memset(&m_stat,0,sizeof(m_stat));}
 
   ~sev_server();
@@ -110,6 +128,7 @@ class sev_server {
   int m_noneth;
   unsigned int m_storage_cnt;
   unsigned int m_write_cnt;
+  int m_total_queue_cnt;
   sev_sStat m_stat;
   sev_eDbType m_db_type;
   pwr_sClass_SevServer *m_config;
@@ -127,10 +146,11 @@ class sev_server {
   int receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size, pwr_tNid nid);
   int send_histdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *msg, unsigned int size);
   int send_objecthistdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *rmsg, unsigned int size);
+  static void *send_objecthistdata_thread( void *arg);
   int send_itemlist( qcom_sQid tgt);
   int send_server_status( qcom_sQid tgt);
   int delete_item( qcom_sQid tgt, sev_sMsgHistItemDelete *rmsg);
-  int receive_events( sev_sMsgEventsStore *msg, unsigned int size);
+  int receive_events( sev_sMsgEventsStore *msg, unsigned int size, pwr_tNodeId nid);
   void create_garbage_collector_thread();
   static void *garbage_collector_thread( void *arg);
   void garbage_collector( void *thread);

@@ -142,9 +142,28 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Max limit for total queue size, ie the size of all thread queues.
+      !  If the limit is exceeded, messages are lost.
+      !*/
+      Object TotalQueueLimit $Attribute 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Currently allocated size in all thread queues.
+      !*/
+      Object TotalQueueCnt $Attribute 11 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      !/**
       !  Statistics.
       !*/
-      Object Stat $Attribute 10 
+      Object Stat $Attribute 12 
         Body SysBody
           Attr TypeRef = "pwrb:Class-SevStatistics"
 	  Attr Flags |= PWR_MASK_CLASS
@@ -153,7 +172,7 @@ SObject pwrb:Class
       !/**
       !  Server threads.
       !*/
-      Object ServerThreads $Attribute 11 
+      Object ServerThreads $Attribute 13 
         Body SysBody
           Attr TypeRef = "pwrb:Class-SevServerThread"
  	  Attr Flags |= PWR_MASK_CLASS
@@ -168,6 +187,7 @@ SObject pwrb:Class
         Attr MeanValueInterval1 = 10
         Attr MeanValueInterval2 = 30
         Attr ThreadQueueLimit = 600000
+        Attr TotalQueueLimit = 6000000
       EndBody
     EndObject
   EndObject

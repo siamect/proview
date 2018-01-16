@@ -815,9 +815,9 @@ class sev_dbhdf5 : public sev_db {
 			  unsigned int attrnum, sev_sHistAttr *attr);
   int store_objectvalue( pwr_tStatus *sts, int item_idx, int attr_idx,
                              pwr_tTime time, void *buf,  void *oldbuf, unsigned int size);
-  int get_item( pwr_tStatus *sts, sev_item *item, pwr_tOid oid, char *attributename);
+  int get_item( pwr_tStatus *sts, void *thread, sev_item *item, pwr_tOid oid, char *attributename);
   int get_item( pwr_tStatus *sts, unsigned int *idx, pwr_tOid oid, char *attributename);
-  int get_objectitem( pwr_tStatus *sts, sev_item *item, pwr_tOid oid, char *attributename);
+  int get_objectitem( pwr_tStatus *sts, void *thread, sev_item *item, pwr_tOid oid, char *attributename);
   int get_objectitems( pwr_tStatus *sts);
   int get_objectitemattributes( pwr_tStatus *sts, sev_item *item, char *tablename);
   int check_objectitemattr( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *aname, char *oname, 
@@ -832,7 +832,7 @@ class sev_dbhdf5 : public sev_db {
   int create_event_table( pwr_tStatus *sts, char *tablename, pwr_tMask options, 
 
 			  pwr_tDeltaTime storage_time, pwr_tFloat32 scantime);
-  int store_event( pwr_tStatus *sts, int item_idx, sev_event *ep);
+  int store_event( pwr_tStatus *sts, void *thread, int item_idx, sev_event *ep);
   int checkAndUpdateVersion(unsigned int version);
   int create_table( pwr_tStatus *sts, char *tablename, pwr_eType type, 
 		    unsigned int size, pwr_tMask options, float deadband,

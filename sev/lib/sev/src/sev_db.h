@@ -48,7 +48,7 @@
 
 using namespace std;
 
-#define sev_cVersion 3
+#define sev_cVersion 4
 
 typedef enum {
   sev_eDbType_,
@@ -123,6 +123,7 @@ class sev_event {
   pwr_tTime 		time;
   char 			eventtext[80];
   char 			eventname[80];
+  pwr_tAttrRef		supobject;
 };
 
 class sev_item {
@@ -241,9 +242,9 @@ class sev_db {
 			      sev_sHistAttr *attr, unsigned int *idx) { *sts = 0; return 0;} 
   virtual int store_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, char *aname, 
                                 pwr_tDeltaTime storagetime, char *description, pwr_tFloat32 scantime, pwr_tFloat32 deadband, pwr_tMask options) { return 0;}
-  virtual int store_event( pwr_tStatus *sts, int item_idx, sev_event *ep) { *sts = 0; return 0;}
-  virtual int get_item( pwr_tStatus *sts, sev_item *item, pwr_tOid oid, char *attributename) { *sts = 0; return 0;}
-  virtual int get_objectitem( pwr_tStatus *sts, sev_item *item, pwr_tOid oid, char *attributename) { *sts = 0; return 0;}
+  virtual int store_event( pwr_tStatus *sts, void *thread, int item_idx, sev_event *ep) { *sts = 0; return 0;}
+  virtual int get_item( pwr_tStatus *sts, void *thread, sev_item *item, pwr_tOid oid, char *attributename) { *sts = 0; return 0;}
+  virtual int get_objectitem( pwr_tStatus *sts, void *thread, sev_item *item, pwr_tOid oid, char *attributename) { *sts = 0; return 0;}
   virtual int get_objectitems( pwr_tStatus *sts) { *sts = 0; return 0;}
   virtual int check_objectitemattr( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *aname, char *oname, 
 																	  pwr_eType type, unsigned int size, unsigned int *idx) { *sts = 0; return 0;}

@@ -158,6 +158,8 @@ static int check_format( char *format, int type)
     break;
   case pwr_eType_String:
   case pwr_eType_Text:
+  case pwr_eType_VolumeId:
+  case graph_eType_NodeId:
     if ( *s == 's')
       return 1;
     break;
@@ -4847,6 +4849,43 @@ int GeValue::scan( grow_tObject object)
     }
     len = sprintf( buf, "%s", name);
     memcpy( &old_value, &dataref, MIN(size, (int) sizeof(old_value)));
+    break;
+  }
+  case pwr_eType_VolumeId: {
+    pwr_tVolumeId vid = *(pwr_tVolumeId *)p;
+
+    if ( !first_scan) {
+      if ( memcmp( &old_value, &vid, size) == 0 )
+	// No change since last time
+	return 1;
+    }
+    else
+      first_scan = false;
+
+    *buf = 0;
+    cdh_VolumeIdToString( buf, vid, 0, 0);
+    len = strlen(buf);
+    memcpy( &old_value, &vid, sizeof(vid));
+    break;
+  }
+  case graph_eType_NodeId: {
+    pwr_tNodeId nid = *(pwr_tNodeId *)p;
+
+    if ( !first_scan) {
+      if ( memcmp( &old_value, &nid, size) == 0 )
+	// No change since last time
+	return 1;
+    }
+    else
+      first_scan = false;
+
+    *buf = 0;
+    if ( nid != 0)
+      strcpy( buf, qcom_NodeName( nid));
+    if ( *buf == 0)
+      cdh_VolumeIdToString( buf, nid, 0, 0);
+    len = strlen(buf);
+    memcpy( &old_value, &nid, sizeof(nid));
     break;
   }
   case pwr_eType_Time: {
@@ -20451,7 +20490,7 @@ int GeSetValue::syntax_check( grow_tObject object, int *error_cnt, int *warning_
 		 pwr_eType_Int8, pwr_eType_Int16, pwr_eType_Int32, pwr_eType_Int64, 
 		 pwr_eType_UInt8,pwr_eType_UInt16,pwr_eType_UInt32, pwr_eType_UInt64,
 		 pwr_eType_String, pwr_eType_Objid, pwr_eType_ClassId, pwr_eType_TypeId,
-		 pwr_eType_ObjectIx, pwr_eType_VolumeId, pwr_eType_RefId, pwr_eType_AttrRef,
+		 pwr_eType_ObjectIx, pwr_eType_VolumeId, graph_eType_NodeId, pwr_eType_RefId, pwr_eType_AttrRef,
 		 pwr_eType_Time, pwr_eType_DeltaTime, pwr_eType_Enum, pwr_eType_Mask, 0};
   graph_eDatabase databases[] = {graph_eDatabase_Local, graph_eDatabase_Gdh, graph_eDatabase_Ccm, 
 				 graph_eDatabase__};
