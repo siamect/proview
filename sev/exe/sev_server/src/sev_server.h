@@ -123,6 +123,7 @@ class sev_server {
   pwr_tStatus m_server_status;
   vector<sev_node> m_nodes;
   tree_sTable *m_refid;
+  thread_sMutex	m_refid_mutex;
   unsigned int m_msg_id;
   sev_db *m_db;
   int m_noneth;

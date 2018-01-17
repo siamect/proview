@@ -216,6 +216,7 @@ int sev_server::init( int noneth)
   m_db->get_objectitems(&m_sts);
 
   m_refid = tree_CreateTable(&sts, sizeof(pwr_tRefId), offsetof(sev_sRefid, id), sizeof(sev_sRefid), 100, sev_comp_refid);
+  sts = thread_MutexInit(&m_refid_mutex);
 
   // Create a queue to server
   qcom_sQattr attr;
@@ -643,14 +644,16 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
   // Remove all refid's for this node
   pwr_tNid nid = msg->Items[0].sevid.nid;
   pwr_tStatus sts;
-  sev_sRefid *rp = (sev_sRefid *)tree_Minimum(&sts, m_refid);
   sev_sRefid *succ_rp;
+  thread_MutexLock(&m_refid_mutex);
+  sev_sRefid *rp = (sev_sRefid *)tree_Minimum(&sts, m_refid);
   while ( rp) {
     succ_rp = (sev_sRefid *)tree_Successor(&sts, m_refid, rp);
     if ( rp->id.nid == nid) 
       tree_Remove( &sts, m_refid, &rp->id);
     rp = succ_rp;
   }
+  thread_MutexUnlock(&m_refid_mutex);
 
   for ( int i = 0; i < item_cnt; i++) {
     if ( msg->Items[i].attrnum > 0) {
@@ -778,8 +781,10 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
 	    sev_sRefid *rp;
                   
 	    rk = buffP->sevid;
+	    thread_MutexLock(&m_refid_mutex);
 	    rp = (sev_sRefid *) tree_Insert(&sts, m_refid, &rk);
 	    rp->idx = idx;
+	    thread_MutexUnlock(&m_refid_mutex);
 	  }
 
 	  int numberOfAttributes = buffP->attrnum;
@@ -821,8 +826,10 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
 	sev_sRefid *rp;
                     
 	rk = msg->Items[i].sevid;
+	thread_MutexLock(&m_refid_mutex);
 	rp = (sev_sRefid *) tree_Insert(&sts, m_refid, &rk);
 	rp->idx = idx;
+	thread_MutexUnlock(&m_refid_mutex);
       }
     }
     else {
@@ -874,7 +881,10 @@ int sev_server::receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size,
       sev_sRefid *rp;
       pwr_tRefId rk = dp->sevid;
 
+      thread_MutexLock(&m_refid_mutex);
       rp = (sev_sRefid *) tree_Find(&sts, m_refid, &rk);
+      thread_MutexUnlock(&m_refid_mutex);
+
       if ( !rp) {
 	dp = (sev_sHistData *)((char *)dp + sizeof( *dp) - sizeof(dp->data) +  dp->size);
 	continue;
@@ -1449,7 +1459,9 @@ void *sev_server::receive_histdata_thread( void *arg)
 	  sev_sRefid *rp;
 	  pwr_tRefId rk = dp->sevid;
  
+	  thread_MutexLock(&sev->m_refid_mutex);
 	  rp = (sev_sRefid *) tree_Find(&sts, sev->m_refid, &rk);
+	  thread_MutexUnlock(&sev->m_refid_mutex);
 	  if ( !rp) {
 	    dp = (sev_sHistData *)((char *)dp + sizeof( *dp) - sizeof(dp->data) +  dp->size);
 	    continue;
