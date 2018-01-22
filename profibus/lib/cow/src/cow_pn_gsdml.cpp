@@ -154,6 +154,8 @@ static gsdml_sTag taglist[] = {
   { "RT_Class3TimingProperties", gsdml_eTag_RT_Class3TimingProperties, gsdml_eType_, 0, 0, 1},
   { "MediaRedundancy", gsdml_eTag_MediaRedundancy, gsdml_eType_, 0, 0, 1},
   { "PortSubmoduleItem", gsdml_eTag_PortSubmoduleItem, gsdml_eType_, 0, 0, 1},
+  { "MAUTypeList", gsdml_eTag_MAUTypeList, gsdml_eType_, 0, 0, 1},
+  { "MAUTypeItem", gsdml_eTag_MAUTypeItem, gsdml_eType_, 0, 0, 1},
   { "UseableSubmodules", gsdml_eTag_UseableSubmodules, gsdml_eType_, 0, 0, 1},
   { "SubmoduleItemRef", gsdml_eTag_SubmoduleItemRef, gsdml_eType_, 0, 0, 1},
   { "SlotList", gsdml_eTag_SlotList, gsdml_eType_, 0, 0, 1},
@@ -242,6 +244,7 @@ static gsdml_sAttribute attrlist[] = {
   { "LLDP_NoD_Supported", gsdml_eTag_DeviceAccessPointItem, gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean), offsetof(gsdml_sDeviceAccessPointItem,LLDP_NoD_Supported), 0, "false"},
   { "ResetToFactoryModes", gsdml_eTag_DeviceAccessPointItem, gsdml_eTag_, gsdml_eType_Unsigned32, sizeof(gsdml_tUnsigned32), offsetof(gsdml_sDeviceAccessPointItem,ResetToFactoryModes), 0, "0"},
   { "SharedInputSupported", gsdml_eTag_DeviceAccessPointItem, gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean), offsetof(gsdml_sDeviceAccessPointItem,SharedInputSupported), 0, "false"},
+  { "NumberOfDeviceAccessAR", gsdml_eTag_DeviceAccessPointItem, gsdml_eTag_, gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16), offsetof(gsdml_sDeviceAccessPointItem,ObjectUUID_LocalIndex), 0, "1"},
   //
   // ModuleInfo
   //
@@ -254,7 +257,7 @@ static gsdml_sAttribute attrlist[] = {
   { "Value", gsdml_eTag_HardwareRelease, gsdml_eTag_ModuleInfo, gsdml_eType_Token, sizeof(gsdml_tToken), offsetof(gsdml_sModuleInfo,HardwareRelease), 0, ""},
   { "Value", gsdml_eTag_SoftwareRelease, gsdml_eTag_ModuleInfo, gsdml_eType_Token, sizeof(gsdml_tToken), offsetof(gsdml_sModuleInfo,SoftwareRelease), 0, ""},
   { "MainFamily", gsdml_eTag_Family, gsdml_eTag_ModuleInfo, gsdml_eType_String, sizeof(gsdml_tString80), offsetof(gsdml_sModuleInfo,MainFamily), 0, ""},
-  { "ProductFamily", gsdml_eTag_Family, gsdml_eTag_ModuleInfo, gsdml_eType_String, sizeof(gsdml_tString80), offsetof(gsdml_sModuleInfo,ProductFamily), 0, ""},
+  { "ProductFamily", gsdml_eTag_Family, gsdml_eTag_ModuleInfo, gsdml_eType_String, sizeof(gsdml_tString80), offsetof(gsdml_sModuleInfo,ProductFamily), 0, ""},  
   //
   // CertificationInfo
   //
@@ -291,6 +294,8 @@ static gsdml_sAttribute attrlist[] = {
   { "Writeable_IM_Records", gsdml_eTag_VirtualSubmoduleItem, gsdml_eTag_, gsdml_eType_ValueList, sizeof(gsdml_tValueList), offsetof(gsdml_sVirtualSubmoduleItem,Writeable_IM_Records), 0, "0"},
   { "Max_iParameterSize", gsdml_eTag_VirtualSubmoduleItem, gsdml_eTag_, gsdml_eType_Unsigned32, sizeof(gsdml_tUnsigned32), offsetof(gsdml_sVirtualSubmoduleItem,Max_iParameterSize), 0, "0"},
   { "SubsysModuleDirIndex", gsdml_eTag_VirtualSubmoduleItem, gsdml_eTag_, gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16), offsetof(gsdml_sVirtualSubmoduleItem,SubsysModuleDirIndex), 0, ""},
+  //Added without doc, check type and default value
+  { "MayIssueProcessAlarm", gsdml_eTag_VirtualSubmoduleItem, gsdml_eTag_, gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16), offsetof(gsdml_sVirtualSubmoduleItem,MayIssueProcessAlarm), 0, "0"},
   //
   // IOData
   //
@@ -458,6 +463,7 @@ static gsdml_sAttribute attrlist[] = {
   { "DCP_HelloSupported", gsdml_eTag_InterfaceSubmoduleItem, gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean), offsetof(gsdml_sInterfaceSubmoduleItem,DCP_HelloSupported), 0, "false"},
   { "PTP_BoundarySupported", gsdml_eTag_InterfaceSubmoduleItem, gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean), offsetof(gsdml_sInterfaceSubmoduleItem,PTP_BoundarySupported), 0, "false"},
   { "DCP_BoundarySupported", gsdml_eTag_InterfaceSubmoduleItem, gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean), offsetof(gsdml_sInterfaceSubmoduleItem,DCP_BoundarySupported), 0, "false"},
+  { "DelayMeasurementSupported", gsdml_eTag_InterfaceSubmoduleItem, gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean), offsetof(gsdml_sInterfaceSubmoduleItem,DelayMeasurementSupported), 0, "false"},
   //
   // DCP_FlashOnceSignalUnit
   //
@@ -535,6 +541,14 @@ static gsdml_sAttribute attrlist[] = {
   { "IsDefaultRingport", gsdml_eTag_PortSubmoduleItem, gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean), offsetof(gsdml_sPortSubmoduleItem,IsDefaultRingport), 0, "false"},
   // Added without doc, TODO check type and default value
   { "CheckMAUTypeSupported", gsdml_eTag_PortSubmoduleItem, gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean), offsetof(gsdml_sPortSubmoduleItem,CheckMAUTypeSupported), 0, "false"},
+  { "CheckMAUTypeDifferenceSupported", gsdml_eTag_PortSubmoduleItem, gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean), offsetof(gsdml_sPortSubmoduleItem,CheckMAUTypeDifferenceSupported), 0, "false"},
+
+  //
+  // MAUTypeList
+  //
+  { "Value", gsdml_eTag_MAUTypeItem, gsdml_eTag_MAUTypeList, gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16), offsetof(gsdml_sMAUTypeItem,Value), 0, ""},
+  { "AdjustSupported", gsdml_eTag_MAUTypeItem, gsdml_eTag_MAUTypeList, gsdml_eType_Boolean, sizeof(gsdml_tBoolean), offsetof(gsdml_sMAUTypeItem,AdjustSupported), 0, "false"},
+
   //
   // DeviceAccessPointItem-ApplicationRelations
   //
@@ -3387,7 +3401,8 @@ void gsdml_DeviceAccessPointItem::print( int ind)
 	  "%s  MaxSupportedRecordSize=\"%u\"\n"
 	  "%s  PowerOnToCommReady=\"%u\"\n"
 	  "%s  ParameterizationSpeedSupported=\"%d\"\n"
-	  "%s  NameOfStationNotTransferable=\"%d\"/>\n",
+	  "%s  NameOfStationNotTransferable=\"%d\"\n"
+	  "%s  NumberOfDeviceAccessAR=\"%d\"/>\n",
 	  is, 
 	  is, Body.ID,
 	  is, Body.PhysicalSlots.str,
@@ -3408,7 +3423,8 @@ void gsdml_DeviceAccessPointItem::print( int ind)
 	  is, Body.MaxSupportedRecordSize,
 	  is, Body.PowerOnToCommReady,
 	  is, Body.ParameterizationSpeedSupported,
-	  is, Body.NameOfStationNotTransferable);
+	  is, Body.NameOfStationNotTransferable,
+	  is, Body.NumberOfDeviceAccessAR);
 
   if ( ModuleInfo)
     ModuleInfo->print( ind + 2);
@@ -3456,7 +3472,7 @@ void gsdml_ModuleInfo::build()
     Body.SubCategory1Ref.p = gsdml->find_category_ref( Body.SubCategory1Ref.ref);
     if ( !Body.SubCategory1Ref.p)
       gsdml->error_message("SubCategory1Ref not found: \"%s\"", Body.SubCategory1Ref.ref);
-  }  
+  }
 }
 
 void gsdml_ModuleInfo::print( int ind)
@@ -3906,7 +3922,8 @@ void gsdml_VirtualSubmoduleItem::print( int ind)
 	  "%s  PROFISafeSupported=\"%u\"\n"
 	  "%s  Writeable_IM_Records=\"%s\"\n"
 	  "%s  Max_iParameterSize=\"%u\"\n"
-	  "%s  SubsysModuleDirIndex=\"%hu\">\n",
+	  "%s  SubsysModuleDirIndex=\"%hu\"\n"
+	  "%s  MayIssueProcessAlarm=\"%hu\">\n",
 	  is,
 	  is, Body.ID,
 	  is, Body.SubmoduleIdentNumber,
@@ -3915,7 +3932,8 @@ void gsdml_VirtualSubmoduleItem::print( int ind)
 	  is, Body.PROFIsafeSupported,
 	  is, Body.Writeable_IM_Records.str,
 	  is, Body.Max_iParameterSize,
-	  is, Body.SubsysModuleDirIndex);
+	  is, Body.SubsysModuleDirIndex,
+	  is, Body.MayIssueProcessAlarm);
 
   if ( IOData)
     IOData->print( ind + 2);
@@ -4086,7 +4104,8 @@ void gsdml_InterfaceSubmoduleItem::print( int ind)
 	  "%s  NetworkComponentDiagnosisSupported=\"%u\"\n"
 	  "%s  DCP_HelloSupported=\"%u\"\n"
 	  "%s  PTP_BoundarySupported=\"%u\"\n"
-	  "%s  DCP_BoundarySupported=\"%u\">\n",
+	  "%s  DCP_BoundarySupported=\"%u\"\n"
+	  "%s  DelayMeasurementSupported=\"%u\">\n",
 	  is,
 	  is, Body.SubslotNumber,
 	  is, Body.TextId.ref,
@@ -4100,7 +4119,8 @@ void gsdml_InterfaceSubmoduleItem::print( int ind)
 	  is, Body.NetworkComponentDiagnosisSupported,
 	  is, Body.DCP_HelloSupported,
 	  is, Body.PTP_BoundarySupported,
-	  is, Body.DCP_BoundarySupported);
+	  is, Body.DCP_BoundarySupported,
+	  is, Body.DelayMeasurementSupported);
 
   if ( General)
     General->print( ind + 2);
@@ -4136,7 +4156,9 @@ void gsdml_PortSubmoduleItem::print( int ind)
 	  "%s  LinkStateDianosisCapability=\"%s\"\n"
 	  "%s  PowerBudgetControlSupported=\"%u\"\n"
 	  "%s  SupportsRingportConfig=\"%u\"\n"
-	  "%s  IsDefauleRingport=\"%u\">\n",
+	  "%s  IsDefauleRingport=\"%u\"\n"
+	  "%s  CheckMAUTTypeSupported=\"%u\"\n"
+	  "%s  CheckMAUTTypeDifferenceSupported=\"%u\">\n",
 	  is,
 	  is, Body.SubslotNumber,
 	  is, Body.TextId.ref,
@@ -4150,7 +4172,9 @@ void gsdml_PortSubmoduleItem::print( int ind)
 	  is, Body.LinkStateDiagnosisCapability,
 	  is, Body.PowerBudgetControlSupported,
 	  is, Body.SupportsRingportConfig,
-	  is, Body.IsDefaultRingport);
+	  is, Body.IsDefaultRingport,
+	  is, Body.CheckMAUTypeSupported,
+	  is, Body.CheckMAUTypeDifferenceSupported);
 
   if ( RecordDataList)
     RecordDataList->print( ind + 2);
@@ -5067,6 +5091,11 @@ void gsdml_ValueItem::build()
   if ( Assignments) {
     for ( unsigned int i = 0; i < Assignments->Assign.size(); i++)
       Assignments->Assign[i]->build();
+  }
+  if ( strcmp( Body.Help.ref, "") != 0) {
+    Body.Help.p = gsdml->find_text_ref( Body.Help.ref);
+    if ( Body.Help.p == noref)
+      gsdml->error_message("Help not found: \"%s\"", Body.Help.ref);
   }
 }
 

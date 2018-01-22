@@ -90,6 +90,7 @@ class GsdmlAttr {
   virtual ~GsdmlAttr();
 
   virtual void message( char severity, const char *message) {}
+  virtual void attr_help_text(const char *help_text) {}
   virtual void set_prompt( const char *prompt) {}
   virtual void change_value() {}
 
