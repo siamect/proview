@@ -1313,7 +1313,7 @@ int pn_gsdml::tag_stack_push( gsdml_eTag id)
 int pn_gsdml::tag_stack_pull( gsdml_eTag id)
 {
   if ( tag_stack_cnt < 1 || tag_stack[tag_stack_cnt - 1] != id) {
-    error_message_line( "Tag stack missmatch");
+    error_message_line( "Tag stack mismatch");
     return 0;
   }
   tag_stack_cnt--;

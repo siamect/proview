@@ -2665,7 +2665,7 @@ public class Ccm {
 	operand = rowctx.list.get(idx-1);
 	if ( operand.parlevel == 1) {
 	    rowctx.state = K_STATE_ERROR;
-	    rowctx.msg = "Parentheses missmatch";
+	    rowctx.msg = "Parenthesis mismatch";
 	}
 	else {
 	    curr_operand.parlevel = operand.parlevel - 1;

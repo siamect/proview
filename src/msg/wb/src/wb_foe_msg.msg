@@ -90,7 +90,7 @@ swindwarn	<syntax warnings>					/warn
 swindsucc	<successfull syntax control>				/info
 nodeclass	<node parameter in plcpgm has to be of class rtnode>	/error
 badscantime	<scantime has to be a multiple of 0.02 s>		/error
-ordermism	<missmatch in orderattributes>				/error
+ordermism	<mismatch in orderattributes>				/error
 orderattr	<unknown order attribute>				/error
 apinwind	<both object connected to activity pin and subwindow found> /error
 anopinorwind	<no object connected to activity pin and no subwindow found> /warn

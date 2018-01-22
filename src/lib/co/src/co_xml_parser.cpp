@@ -696,7 +696,7 @@ int co_xml_interpreter::tag_stack_push( unsigned int id)
 int co_xml_interpreter::tag_stack_pull( unsigned int id)
 {
   if ( tag_stack_cnt < 1 || tag_stack[tag_stack_cnt - 1] != id) {
-    parser->error_message_line( "Tag stack missmatch");
+    parser->error_message_line( "Tag stack mismatch");
     return 0;
   }
   tag_stack_cnt--;

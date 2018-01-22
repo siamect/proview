@@ -258,7 +258,7 @@ readSectFile (
       time_AtoAscii(&vp->time, time_eFormat_DateAndTime, timbuf1, sizeof(timbuf1));
       time_AtoAscii(&cp->dbs.file.time, time_eFormat_DateAndTime, timbuf2, sizeof(timbuf2));
 
-      errh_LogWarning(&cp->log, "Version missmatch for volume: %s, %s != %s",
+      errh_LogWarning(&cp->log, "Version mismatch for volume: %s, %s != %s",
 		      vp->name, timbuf1, timbuf2);
       cp->warnings++;
     }
@@ -326,7 +326,7 @@ readSectVolRef (
       if ( dvp->volume.cid == pwr_eClass_DetachedClassVolume) {
 	/* Check dvVersion */
 	if ( vp->volume.dvVersion != volRef.time.tv_sec) {
-	  errh_LogWarning(&cp->log, "Version missmatch for volume %s: %s, %u (present), %d (detached)",
+	  errh_LogWarning(&cp->log, "Version mismatch for volume %s: %s, %u (present), %d (detached)",
 			  dvp->name, vp->name, vp->volume.dvVersion, volRef.time.tv_sec);
 	  cp->warnings++;
 	}
@@ -342,7 +342,7 @@ readSectVolRef (
 	  time_AtoAscii(&vp->time, time_eFormat_DateAndTime, timbuf1, sizeof(timbuf1));
 	  time_AtoAscii(&volRef.time, time_eFormat_DateAndTime, timbuf2, sizeof(timbuf2));
 	  
-	  errh_LogWarning(&cp->log, "Version missmatch for volume: %s, %s != %s",
+	  errh_LogWarning(&cp->log, "Version mismatch for volume: %s, %s != %s",
 			  vp->name, timbuf1, timbuf2);
 	  cp->warnings++;
 	}

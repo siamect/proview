@@ -975,7 +975,7 @@ static void set_operand_parlevel_down( ccm_tRowCtx rowctx)
   if ( operand->parlevel == 1)
   {
     rowctx->state = K_STATE_ERROR;
-    strcpy( rowctx->msg, "Parentheses missmatch");
+    strcpy( rowctx->msg, "Parenthesis mismatch");
   }
   else
   {
