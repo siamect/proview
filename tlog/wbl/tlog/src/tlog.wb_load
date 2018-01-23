@@ -1,0 +1,1453 @@
+Volume TLog $ClassVolume 0.0.1.2 
+  Body SysBody 01-JAN-1970 01:00:00.00
+    Attr NextOix = "_X24"
+  EndBody
+  Object Class $ClassHier 1 23-JAN-2018 16:53:33.00
+    Object AtLog $ClassDef 1 23-JAN-2018 16:53:33.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 2
+        Attr Method = 6
+        Attr Flags = 144
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "AtLog"
+        EndBody
+        Object In $Input 1 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "In"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object InOld $Intern 2 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "InOld"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object Limit $Intern 3 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Limit"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object UpSignal $Intern 4 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "UpSignal"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object DownSignal $Intern 5 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "DownSignal"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object UpTime $Intern 6 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "UpTime"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+        Object DownTime $Intern 7 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "DownTime"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+        Object UpText $Intern 8 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "UpText"
+            Attr TypeRef = "pwrs:Type-$String40"
+            Attr NiNaAnnot = 2
+            Attr NiNaCond = 1
+          EndBody
+        EndObject
+        Object DownText $Intern 9 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "DownText"
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        Object Attribute $Intern 10 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Attribute"
+            Attr TypeRef = "pwrs:Type-$AttrRef"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Object ShowUpText $Intern 1 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ShowUpText"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object PlcNode $Buffer 2 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr Flags = 2048
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 2 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr object_type = 111
+          Attr parameters[0] = 1
+          Attr parameters[1] = 0
+          Attr parameters[2] = 0
+          Attr parameters[3] = 0
+          Attr graphmethod = 7
+          Attr graphindex = 1
+          Attr default_mask[0] = 1
+          Attr default_mask[1] = 0
+          Attr segname_annotation = 1
+          Attr rtbody_annotation = 1
+          Attr compmethod = 47
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 0
+          Attr executeordermethod = 0
+          Attr objname = "AtLog"
+          Attr graphname = "AtLog"
+        EndBody
+      EndObject
+      Object Template AtLog 2147975168 23-JAN-2018 16:53:33.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object CAtLog $ClassDef 3 23-JAN-2018 16:53:33.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 2
+        Attr Method = 6
+        Attr Flags = 144
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "CAtLog"
+        EndBody
+        Object In $Input 1 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "In"
+            Attr Flags = 2128
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object Cond $Input 2 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Cond"
+            Attr Flags = 2128
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "con"
+          EndBody
+        EndObject
+        Object CondOld $Intern 3 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "CondOld"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object LogSignal $Intern 4 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LogSignal"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object LogTime $Intern 5 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LogTime"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+        Object LogText $Intern 6 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LogText"
+            Attr TypeRef = "pwrs:Type-$String40"
+            Attr NiNaAnnot = 2
+            Attr NiNaCond = 1
+          EndBody
+        EndObject
+        Object Attribute $Intern 7 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Attribute"
+            Attr TypeRef = "pwrs:Type-$AttrRef"
+          EndBody
+        EndObject
+        Object LogValue $Intern 8 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LogValue"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Object ShowLogText $Intern 1 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ShowLogText"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object PlcNode $Buffer 2 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr Flags = 2048
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 4 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr object_type = 107
+          Attr parameters[0] = 2
+          Attr parameters[1] = 0
+          Attr parameters[2] = 0
+          Attr parameters[3] = 0
+          Attr graphmethod = 15
+          Attr graphindex = 1
+          Attr default_mask[0] = 3
+          Attr default_mask[1] = 0
+          Attr segname_annotation = 1
+          Attr rtbody_annotation = 1
+          Attr compmethod = 47
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 0
+          Attr executeordermethod = 0
+          Attr objname = "CAtLog"
+          Attr graphname = "CAtLog"
+        EndBody
+      EndObject
+      Object Template CAtLog 2148499456 23-JAN-2018 16:53:33.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object CDtLog $ClassDef 5 23-JAN-2018 16:53:33.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 2
+        Attr Method = 6
+        Attr Flags = 144
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "CDtLog"
+        EndBody
+        Object In $Input 1 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "In"
+            Attr Flags = 2128
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object Cond $Input 2 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Cond"
+            Attr Flags = 2128
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "con"
+          EndBody
+        EndObject
+        Object CondOld $Intern 3 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "CondOld"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object LogSignal $Intern 4 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LogSignal"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object LogTime $Intern 5 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LogTime"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+        Object LogText $Intern 6 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LogText"
+            Attr TypeRef = "pwrs:Type-$String40"
+            Attr NiNaAnnot = 2
+            Attr NiNaCond = 1
+          EndBody
+        EndObject
+        Object Attribute $Intern 7 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Attribute"
+            Attr TypeRef = "pwrs:Type-$AttrRef"
+          EndBody
+        EndObject
+        Object LogValue $Intern 8 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LogValue"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Object ShowLogText $Intern 1 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ShowLogText"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object PlcNode $Buffer 2 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr Flags = 2048
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 6 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr object_type = 108
+          Attr parameters[0] = 2
+          Attr parameters[1] = 0
+          Attr parameters[2] = 0
+          Attr parameters[3] = 0
+          Attr graphmethod = 15
+          Attr graphindex = 1
+          Attr default_mask[0] = 3
+          Attr default_mask[1] = 0
+          Attr segname_annotation = 1
+          Attr rtbody_annotation = 1
+          Attr compmethod = 47
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 0
+          Attr executeordermethod = 0
+          Attr objname = "CDtLog"
+          Attr graphname = "CDtLog"
+        EndBody
+      EndObject
+      Object Template CDtLog 2149023744 23-JAN-2018 16:53:33.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+          Attr ShowLogText = 1
+        EndBody
+      EndObject
+    EndObject
+    Object ChgAtLog $ClassDef 7 23-JAN-2018 16:53:33.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 2
+        Attr Method = 6
+        Attr Flags = 144
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "ChgAtLog"
+        EndBody
+        Object In $Input 1 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "In"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object InOld $Intern 2 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "InOld"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object LogSignal $Intern 3 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LogSignal"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object LogTime $Intern 4 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LogTime"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+        Object LogText $Intern 5 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LogText"
+            Attr TypeRef = "pwrs:Type-$String40"
+            Attr NiNaAnnot = 2
+            Attr NiNaCond = 1
+          EndBody
+        EndObject
+        Object LogValue $Intern 6 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LogValue"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object Attribute $Intern 7 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Attribute"
+            Attr TypeRef = "pwrs:Type-$AttrRef"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Object ShowLogText $Intern 1 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ShowLogText"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object PlcNode $Buffer 2 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr Flags = 2048
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 8 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr object_type = 11
+          Attr parameters[0] = 1
+          Attr parameters[1] = 0
+          Attr parameters[2] = 0
+          Attr parameters[3] = 0
+          Attr graphmethod = 7
+          Attr graphindex = 1
+          Attr default_mask[0] = 1
+          Attr default_mask[1] = 0
+          Attr segname_annotation = 1
+          Attr rtbody_annotation = 1
+          Attr compmethod = 47
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 0
+          Attr executeordermethod = 0
+          Attr objname = "ChgAtLog"
+          Attr graphname = "ChgAtLog"
+        EndBody
+      EndObject
+      Object Template ChgAtLog 2149548032 23-JAN-2018 16:53:33.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object ChgOtLog $ClassDef 9 23-JAN-2018 16:53:33.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 2
+        Attr Method = 6
+        Attr Flags = 208
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "ChgOtLog"
+        EndBody
+        Object In $Input 1 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "In"
+            Attr Flags = 2128
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object InOld $Intern 2 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "InOld"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object LogSignal $Intern 3 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LogSignal"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object LogTime $Intern 4 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LogTime"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+        Object LogText $Intern 5 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LogText"
+            Attr TypeRef = "pwrs:Type-$String40"
+            Attr NiNaAnnot = 2
+            Attr NiNaCond = 1
+          EndBody
+        EndObject
+        Object Attribute $Intern 6 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Attribute"
+            Attr TypeRef = "pwrs:Type-$AttrRef"
+          EndBody
+        EndObject
+        Object LogValue $Intern 7 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LogValue"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Object ShowLogText $Intern 1 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ShowLogText"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object PlcNode $Buffer 2 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr Flags = 2048
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 10 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr object_type = 11
+          Attr parameters[0] = 1
+          Attr parameters[1] = 0
+          Attr parameters[2] = 0
+          Attr parameters[3] = 0
+          Attr graphmethod = 7
+          Attr graphindex = 1
+          Attr default_mask[0] = 1
+          Attr default_mask[1] = 0
+          Attr segname_annotation = 1
+          Attr rtbody_annotation = 1
+          Attr compmethod = 47
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 0
+          Attr executeordermethod = 0
+          Attr objname = "ChgOtLog"
+          Attr graphname = "ChgOtLog"
+        EndBody
+      EndObject
+      Object Template ChgOtLog 2150072320 23-JAN-2018 16:53:33.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object COtLog $ClassDef 11 23-JAN-2018 16:53:33.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 2
+        Attr Method = 6
+        Attr Flags = 208
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "COtLog"
+        EndBody
+        Object In $Input 1 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "In"
+            Attr Flags = 2128
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object Cond $Input 2 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Cond"
+            Attr Flags = 2128
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "con"
+          EndBody
+        EndObject
+        Object CondOld $Intern 3 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "CondOld"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object LogSignal $Intern 4 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LogSignal"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object LogTime $Intern 5 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LogTime"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+        Object LogText $Intern 6 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LogText"
+            Attr TypeRef = "pwrs:Type-$String40"
+            Attr NiNaAnnot = 2
+            Attr NiNaCond = 1
+          EndBody
+        EndObject
+        Object Attribute $Intern 7 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Attribute"
+            Attr TypeRef = "pwrs:Type-$AttrRef"
+          EndBody
+        EndObject
+        Object LogValue $Intern 8 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LogValue"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Object ShowLogText $Intern 1 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ShowLogText"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object PlcNode $Buffer 2 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr Flags = 2048
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 12 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr object_type = 106
+          Attr parameters[0] = 2
+          Attr parameters[1] = 0
+          Attr parameters[2] = 0
+          Attr parameters[3] = 0
+          Attr graphmethod = 15
+          Attr graphindex = 1
+          Attr default_mask[0] = 3
+          Attr default_mask[1] = 0
+          Attr segname_annotation = 1
+          Attr rtbody_annotation = 1
+          Attr compmethod = 47
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 0
+          Attr executeordermethod = 0
+          Attr objname = "COtLog"
+          Attr graphname = "COtLog"
+        EndBody
+      EndObject
+      Object Template COtLog 2150596608 23-JAN-2018 16:53:33.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object DtLog $ClassDef 13 23-JAN-2018 16:53:33.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 2
+        Attr Method = 6
+        Attr Flags = 144
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "DtLog"
+        EndBody
+        Object In $Input 1 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "In"
+            Attr Flags = 2128
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object InOld $Intern 2 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "InOld"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object UpSignal $Intern 3 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "UpSignal"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object DownSignal $Intern 4 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "DownSignal"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object UpTime $Intern 5 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "UpTime"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+        Object DownTime $Intern 6 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "DownTime"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+        Object UpText $Intern 7 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "UpText"
+            Attr TypeRef = "pwrs:Type-$String40"
+            Attr NiNaAnnot = 2
+            Attr NiNaCond = 1
+          EndBody
+        EndObject
+        Object DownText $Intern 8 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "DownText"
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        Object Attribute $Intern 9 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Attribute"
+            Attr TypeRef = "pwrs:Type-$AttrRef"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Object ShowUpText $Intern 1 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ShowUpText"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object PlcNode $Buffer 2 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr Flags = 2048
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 14 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr object_type = 112
+          Attr parameters[0] = 1
+          Attr parameters[1] = 0
+          Attr parameters[2] = 0
+          Attr parameters[3] = 0
+          Attr graphmethod = 7
+          Attr graphindex = 1
+          Attr default_mask[0] = 1
+          Attr default_mask[1] = 0
+          Attr segname_annotation = 1
+          Attr rtbody_annotation = 1
+          Attr compmethod = 47
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 0
+          Attr executeordermethod = 0
+          Attr objname = "DtLog"
+          Attr graphname = "DtLog"
+        EndBody
+      EndObject
+      Object Template DtLog 2151120896 23-JAN-2018 16:53:33.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+          Attr ShowUpText = 1
+        EndBody
+      EndObject
+    EndObject
+    Object ExecPlcOff $ClassDef 15 23-JAN-2018 16:53:33.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 2
+        Attr Method = 6
+        Attr Flags = 80
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "ExecPlcOff"
+        EndBody
+        Object In $Input 1 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "In"
+            Attr Flags = 2128
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object SetOff $Output 2 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "SetOff"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object InOld $Intern 3 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "InOld"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Object PlcPgmObject $Intern 1 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "PlcPgmObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+            Attr NiNaAnnot = 1
+            Attr NiNaSegments = 1
+          EndBody
+        EndObject
+        Object PlcPgmObjectSegments $Intern 2 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "PlcPgmObjectSegments"
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object PlcNode $Buffer 3 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr Flags = 2048
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 16 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr object_type = 102
+          Attr parameters[0] = 1
+          Attr parameters[1] = 0
+          Attr parameters[2] = 1
+          Attr parameters[3] = 0
+          Attr graphmethod = 7
+          Attr graphindex = 1
+          Attr default_mask[0] = 1
+          Attr default_mask[1] = 0
+          Attr segname_annotation = 0
+          Attr devbody_annotation = 1
+          Attr compmethod = 48
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 0
+          Attr executeordermethod = 0
+          Attr objname = "EXPOFF"
+          Attr graphname = "EXPOFF"
+        EndBody
+      EndObject
+      Object Template ExecPlcOff 2151645184 23-JAN-2018 16:53:33.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+          Attr PlcPgmObjectSegments = 2
+        EndBody
+      EndObject
+    EndObject
+    Object ExecPlcOn $ClassDef 17 23-JAN-2018 16:53:33.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 2
+        Attr Method = 6
+        Attr Flags = 80
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "ExecPlcOn"
+        EndBody
+        Object In $Input 1 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "In"
+            Attr Flags = 2128
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object SetOn $Output 2 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "SetOn"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object InOld $Intern 3 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "InOld"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Object PlcPgmObject $Intern 1 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "PlcPgmObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+            Attr NiNaAnnot = 1
+            Attr NiNaSegments = 1
+          EndBody
+        EndObject
+        Object PlcPgmObjectSegments $Intern 2 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "PlcPgmObjectSegments"
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object PlcNode $Buffer 3 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr Flags = 2048
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 18 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr object_type = 103
+          Attr parameters[0] = 1
+          Attr parameters[1] = 0
+          Attr parameters[2] = 1
+          Attr parameters[3] = 0
+          Attr graphmethod = 7
+          Attr graphindex = 1
+          Attr default_mask[0] = 1
+          Attr default_mask[1] = 0
+          Attr segname_annotation = 0
+          Attr devbody_annotation = 1
+          Attr compmethod = 48
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 0
+          Attr executeordermethod = 0
+          Attr objname = "EXPON"
+          Attr graphname = "EXPON"
+        EndBody
+      EndObject
+      Object Template ExecPlcOn 2152169472 23-JAN-2018 16:53:33.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+          Attr PlcPgmObjectSegments = 2
+        EndBody
+      EndObject
+    EndObject
+    Object TLogConfigure $ClassDef 19 23-JAN-2018 16:53:33.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Method = 1
+        Attr Flags = 80
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "TLogConfigure"
+        EndBody
+        Object TLogDirectory $Attribute 1 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "TLogDirectory"
+            Attr Size = 40
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        Object UserObject $Attribute 2 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "UserObject"
+            Attr Size = 8
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object On $Attribute 3 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "On"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object CycleTime $Attribute 4 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "CycleTime"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object AutoAck $Attribute 5 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "AutoAck"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+      EndObject
+      Object Template TLogConfigure 2152693760 23-JAN-2018 16:53:33.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr TLogDirectory = "pwrp_tlog:"
+          Attr On = 1
+          Attr AutoAck = 1
+        EndBody
+      EndObject
+    EndObject
+    Object TLogExecAllOff $ClassDef 22 23-JAN-2018 16:53:33.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 2
+        Attr Method = 2
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "TLogExecAllOff"
+        EndBody
+        Object In $Input 1 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "In"
+            Attr Flags = 2128
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object ExecOff $Output 2 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ExecOff"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object InOld $Intern 3 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "InOld"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object ExecOffOld $Intern 4 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ExecOffOld"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object ExecOffSignal $Intern 5 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ExecOffSignal"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object LogTime $Intern 6 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LogTime"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Object PlcNode $Buffer 1 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr Flags = 2048
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 21 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr object_type = 104
+          Attr parameters[0] = 1
+          Attr parameters[1] = 0
+          Attr parameters[2] = 1
+          Attr parameters[3] = 0
+          Attr graphmethod = 7
+          Attr graphindex = 1
+          Attr default_mask[0] = 1
+          Attr default_mask[1] = 1
+          Attr segname_annotation = 1
+          Attr compmethod = 5
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 0
+          Attr executeordermethod = 0
+          Attr objname = "EXOFF"
+          Attr graphname = "EXOFF"
+        EndBody
+      EndObject
+      Object Template TLogExecAllOff 2153480192 23-JAN-2018 16:53:33.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object TLogExecAllOn $ClassDef 24 23-JAN-2018 16:53:33.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 2
+        Attr Method = 2
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "TLogExecAllOn"
+        EndBody
+        Object In $Input 1 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "In"
+            Attr Flags = 2128
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object ExecOn $Output 2 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ExecOn"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object InOld $Intern 3 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "InOld"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object ExecOnOld $Intern 4 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ExecOnOld"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object ExecOnSignal $Intern 5 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ExecOnSignal"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object LogTime $Intern 6 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LogTime"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Object PlcNode $Buffer 1 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr Flags = 2048
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 22 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr object_type = 105
+          Attr parameters[0] = 1
+          Attr parameters[1] = 0
+          Attr parameters[2] = 1
+          Attr parameters[3] = 0
+          Attr graphmethod = 7
+          Attr graphindex = 1
+          Attr default_mask[0] = 1
+          Attr default_mask[1] = 1
+          Attr segname_annotation = 1
+          Attr compmethod = 5
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 0
+          Attr executeordermethod = 0
+          Attr objname = "EXON"
+          Attr graphname = "EXON"
+        EndBody
+      EndObject
+      Object Template TLogExecAllOn 2154004480 23-JAN-2018 16:53:33.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object TLogModify $ClassDef 26 23-JAN-2018 16:53:33.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 2
+        Attr Method = 2
+        Attr Flags = 80
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "TLogModify"
+        EndBody
+        Object In $Input 1 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "In"
+            Attr Flags = 2128
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object InOld $Intern 2 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "InOld"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object ModifySignal $Intern 3 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ModifySignal"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object UnModifySignal $Intern 4 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "UnModifySignal"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object ModifyTime $Intern 5 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ModifyTime"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+        Object UnModifyTime $Intern 6 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "UnModifyTime"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+        Object TLogOpenObject $Intern 7 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "TLogOpenObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object TLogSelectList $Intern 8 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "TLogSelectList"
+            Attr Flags = 2
+            Attr Elements = 10
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object AlarmSelectList $Intern 9 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "AlarmSelectList"
+            Attr Flags = 2
+            Attr Elements = 10
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Object PlcNode $Buffer 1 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr Flags = 2048
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 23 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr object_type = 109
+          Attr parameters[0] = 1
+          Attr parameters[1] = 0
+          Attr parameters[2] = 0
+          Attr parameters[3] = 0
+          Attr graphmethod = 7
+          Attr graphindex = 1
+          Attr default_mask[0] = 1
+          Attr default_mask[1] = 0
+          Attr segname_annotation = 1
+          Attr compmethod = 5
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 0
+          Attr executeordermethod = 0
+          Attr objname = "TLMOD"
+          Attr graphname = "TLMOD"
+        EndBody
+      EndObject
+      Object Template TLogModify 2154528768 23-JAN-2018 16:53:33.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object TLogOpen $ClassDef 28 23-JAN-2018 16:53:33.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 2
+        Attr Method = 2
+        Attr Flags = 80
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "TLogOpen"
+        EndBody
+        Object In $Input 1 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "In"
+            Attr Flags = 2128
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object FileOpen $Output 2 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "FileOpen"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object FileOpenOld $Intern 3 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "FileOpenOld"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object InOld $Intern 4 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "InOld"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object OpenSignal $Intern 5 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "OpenSignal"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object CloseSignal $Intern 6 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "CloseSignal"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object OpenTime $Intern 7 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "OpenTime"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+        Object CloseTime $Intern 8 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "CloseTime"
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+        Object TLogSelectList $Intern 9 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "TLogSelectList"
+            Attr Flags = 2
+            Attr Elements = 10
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object AlarmSelectList $Intern 10 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "AlarmSelectList"
+            Attr Flags = 2
+            Attr Elements = 10
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Object PlcNode $Buffer 1 23-JAN-2018 16:53:33.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr Flags = 2048
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 24 23-JAN-2018 16:53:33.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr object_type = 110
+          Attr parameters[0] = 1
+          Attr parameters[1] = 0
+          Attr parameters[2] = 1
+          Attr parameters[3] = 0
+          Attr graphmethod = 7
+          Attr graphindex = 1
+          Attr default_mask[0] = 1
+          Attr default_mask[1] = 0
+          Attr segname_annotation = 1
+          Attr compmethod = 5
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 0
+          Attr executeordermethod = 0
+          Attr objname = "TLOPEN"
+          Attr graphname = "TLOPEN"
+        EndBody
+      EndObject
+      Object Template TLogOpen 2155053056 23-JAN-2018 16:53:33.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndVolume
