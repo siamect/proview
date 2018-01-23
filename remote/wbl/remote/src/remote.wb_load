@@ -1,0 +1,5186 @@
+Volume Remote $ClassVolume 0.0.1.4 
+  Body SysBody 01-JAN-1970 01:00:00.00
+    Attr NextOix = "_X163"
+  EndBody
+  Object Type $ClassHier 1 23-JAN-2018 17:01:41.00
+    Object TransDirectionEnum $TypeDef 1 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr TypeRef = "pwrs:Type-$Enum"
+        Attr Elements = 1
+        Attr PgmName = "TransDirectionEnum"
+      EndBody
+      Object Receive $Value 3 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr Text = "Receive"
+          Attr PgmName = "Receive"
+          Attr Value = 1
+        EndBody
+      EndObject
+      Object Send $Value 4 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr Text = "Send"
+          Attr PgmName = "Send"
+          Attr Value = 2
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+  Object Class $ClassHier 2 23-JAN-2018 17:01:41.00
+    Object Buff1440 $ClassDef 28 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "Buff1440"
+        EndBody
+        Object Data $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Data"
+            Attr Size = 1440
+            Attr Flags = 2
+            Attr Elements = 720
+            Attr TypeRef = "pwrs:Type-$Int16"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Buff1440 2155053056 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Buff256 $ClassDef 29 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "Buff256"
+        EndBody
+        Object Data $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Data"
+            Attr Size = 256
+            Attr Flags = 2
+            Attr Elements = 128
+            Attr TypeRef = "pwrs:Type-$Int16"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Buff256 2155315200 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Buff32k $ClassDef 30 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "Buff32k"
+        EndBody
+        Object Data $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Data"
+            Attr Size = 32768
+            Attr Flags = 2
+            Attr Elements = 16384
+            Attr TypeRef = "pwrs:Type-$Int16"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Buff32k 2155577344 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Buff4096 $ClassDef 31 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "Buff4096"
+        EndBody
+        Object Data $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Data"
+            Attr Size = 4096
+            Attr Flags = 2
+            Attr Elements = 2048
+            Attr TypeRef = "pwrs:Type-$Int16"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Buff4096 2155839488 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object BuffStr80 $ClassDef 32 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "BuffStr80"
+        EndBody
+        Object Data $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Data"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+      EndObject
+      Object Template BuffStr80 2156101632 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Servers,NodeConfiguration
+    !  @Summary Configures logging of remote messages and other logging.
+    !  Configures logging of remote messages and other logging.
+    ! 
+    !  @b Remote logging
+    !  Remote messages can be logged to file by setting LoggLevel in the
+    !  RemTrans object to a value between 1 and 4.
+    ! 
+    !  LoggLevel Description
+    ! 
+    !   0        No logging.
+    !   1        Logging of time, message lenght and status when an error
+    !            has occured.
+    !   2        Logging of time, message lenght and status for every message.
+    !   3        Logging of time, length, status and the first 48 bytes
+    !            in hexadecimal code.
+    !   4        Logging of time, length, status and the whole message
+    !            in hex code.
+    ! 
+    !  The Identity for a LoggConfig object handling the remote logging should 
+    !  be set to 90.
+    ! 
+    !  @ Other logging
+    !  Other loggings can be made by sending a QCom message to queue
+    !  rs_pwr_logg_qix. The first 32-bit word in the message should be the
+    !  Identity of the LoggConfig object, and the following data the string 
+    !  to be logged.
+    ! 
+    !  @b Example Logging to LoggConfig with Identity 100
+    ! 
+    !  qcom_sPut put;
+    !  qcom_sQid qid;
+    !  char *logmsg;
+    !  int logsize = 80;
+    !  int identity = 100;
+    !  pwr_tStatus sts;
+    !  
+    !  logmsg = malloc(logsize);
+    !  *(int *)logmsg = identity;
+    !  strcpy( &logmsg[4], "Some message");
+    !  put.data = logmsg;
+    !  put.size = logsize;
+    !  put.type.b = qcom_eBtype__;
+    !  put.type.s = qcom_eStype__;
+    !  put.reply.qix = 0;
+    !  put.reply.nid = 0;
+    !  qid = qcom_cNQid;
+    !  qid.qix = rs_pwr_logg_qix;
+    !  qcom_Put(&sts, &qid, &put);
+    ! 
+    !  free(logmsg);
+    ! 
+    !  @b See also
+    !   @classlink RemTrans remote_remtrans.html
+    !*/
+    Object LoggConfig $ClassDef 27 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "LoggConfig"
+        EndBody
+        !/**
+        !  Optional description.
+        !*/
+        Object Description $Attribute 6 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        !  Name of log file, eg $pwrp_log/remote.log
+        !*/
+        Object LoggFile $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LoggFile"
+            Attr Size = 40
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        !/**
+        !  Obsolete.
+        !*/
+        Object NewVersion $Attribute 2 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "NewVersion"
+            Attr Size = 4
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        !  Identity is used to direct the logging to a specific 
+        !  LoggConfig object. The first word in the log message should 
+        !  correspond to this value.
+        ! 
+        !  Identity 90 is used for remote logging.
+        !*/
+        Object Identity $Attribute 3 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Identity"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  Number of loggings written to file since startup.
+        !*/
+        Object LoggCount $Attribute 4 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LoggCount"
+            Attr Size = 4
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  Obsolete.
+        !*/
+        Object FileOpenCount $Attribute 5 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "FileOpenCount"
+            Attr Size = 4
+            Attr Flags = 2064
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+      EndObject
+      Object Template LoggConfig 2154790912 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object MultiCast $ClassDef 26 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "MultiCast"
+        EndBody
+        Object Address $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Address"
+            Attr Size = 32
+            Attr Flags = 2
+            Attr Elements = 16
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+      EndObject
+      Object Template MultiCast 2154528768 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object RemAi $ClassDef 12 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "RemAi"
+        EndBody
+        Object Description $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+      EndObject
+      Object Template RemAi 2150858752 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object RemAo $ClassDef 13 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "RemAo"
+        EndBody
+        Object Description $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+      EndObject
+      Object Template RemAo 2151120896 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object RemChan_Ai $ClassDef 15 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 24
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "RemChan_Ai"
+        EndBody
+        Object Description $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object SigChanCon $ObjXRef 2 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "SigChanCon"
+            Attr Identity = "Ai"
+            Attr Source = "ChanAi"
+            Attr Target = "Ai"
+            Attr SourceAttribute = "SigChanCon"
+            Attr TargetAttribute = "SigChanCon"
+          EndBody
+        EndObject
+        Object Identity $Attribute 3 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Identity"
+            Attr Size = 40
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        Object ActualValue $Attribute 4 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ActualValue"
+            Attr Size = 4
+            Attr Flags = 3073
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object SensorPolyType $Attribute 5 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "SensorPolyType"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object SensorPolyCoef0 $Attribute 6 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "SensorPolyCoef0"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object SensorPolyCoef1 $Attribute 7 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "SensorPolyCoef1"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object SensorPolyCoef2 $Attribute 8 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "SensorPolyCoef2"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object ConvOff $Attribute 9 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ConvOff"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+      EndObject
+      Object ConfiguratorPosnn $Menu 14 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 15 23-JAN-2018 17:01:41.00
+          Object Disconnect $MenuButton 16 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Disconnect Signal"
+              Attr MethodName = "$ObjXRef-DisconnectSingle"
+              Attr MethodArguments[0] = "SigChanCon"
+              Attr FilterName = "$ObjXRef-IsOkDisconnectSingle"
+              Attr FilterArguments[0] = "SigChanCon"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPoson $Menu 17 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 18 23-JAN-2018 17:01:41.00
+          Object Connect $MenuButton 19 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Connect Signal"
+              Attr MethodName = "$ObjXRef-Connect"
+              Attr MethodArguments[0] = "SigChanCon"
+              Attr MethodArguments[1] = "SigChanCon"
+              Attr FilterName = "$ObjXRef-IsOkConnect"
+              Attr FilterArguments[0] = "SigChanCon"
+              Attr FilterArguments[1] = "SigChanCon"
+            EndBody
+          EndObject
+          Object Disconnect $MenuButton 20 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Disconnect Signal"
+              Attr MethodName = "$ObjXRef-Disconnect"
+              Attr MethodArguments[0] = "SigChanCon"
+              Attr MethodArguments[1] = "SigChanCon"
+              Attr FilterName = "$ObjXRef-IsOkDisconnect"
+              Attr FilterArguments[0] = "SigChanCon"
+              Attr FilterArguments[1] = "SigChanCon"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosos $Menu 21 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 22 23-JAN-2018 17:01:41.00
+          Object Disconnect $MenuButton 23 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Disconnect Signal"
+              Attr MethodName = "$ObjXRef-DisconnectSingle"
+              Attr MethodArguments[0] = "SigChanCon"
+              Attr FilterName = "$ObjXRef-IsOkDisconnectSingle"
+              Attr FilterArguments[0] = "SigChanCon"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPcsnn $Menu 24 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 25 23-JAN-2018 17:01:41.00
+          Object SetDefaults $MenuButton 26 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Default Name..."
+              Attr MethodName = "$Object-SetDefaults"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPcscs $Menu 27 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 28 23-JAN-2018 17:01:41.00
+          Object SetDefaults $MenuButton 29 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Default Name..."
+              Attr MethodName = "$Object-SetDefaults"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPcscn $Menu 30 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 31 23-JAN-2018 17:01:41.00
+          Object SetDefaults $MenuButton 32 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Default Name..."
+              Attr MethodName = "$Object-SetDefaults"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPcson $Menu 33 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 34 23-JAN-2018 17:01:41.00
+          Object SetDefaults $MenuButton 35 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Default Name..."
+              Attr MethodName = "$Object-SetDefaults"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPcsmn $Menu 36 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 37 23-JAN-2018 17:01:41.00
+          Object SetDefaults $MenuButton 38 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Default Name..."
+              Attr MethodName = "$Object-SetDefaults"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object Template RemChan_Ai 2151645184 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr SensorPolyType = 1
+          Attr SensorPolyCoef1 = 1.000000e+00
+        EndBody
+      EndObject
+    EndObject
+    Object RemChan_Ao $ClassDef 16 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 24
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "RemChan_Ao"
+        EndBody
+        Object Description $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object SigChanCon $ObjXRef 2 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "SigChanCon"
+            Attr Identity = "Ao"
+            Attr Source = "ChanAo"
+            Attr Target = "Ao"
+            Attr SourceAttribute = "SigChanCon"
+            Attr TargetAttribute = "SigChanCon"
+          EndBody
+        EndObject
+        Object Identity $Attribute 3 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Identity"
+            Attr Size = 40
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        Object ActualValue $Attribute 4 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ActualValue"
+            Attr Size = 4
+            Attr Flags = 3073
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object OutPolyCoef0 $Attribute 5 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "OutPolyCoef0"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object OutPolyCoef1 $Attribute 6 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "OutPolyCoef1"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object OutMaxLimit $Attribute 7 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "OutMaxLimit"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object OutMinLimit $Attribute 8 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "OutMinLimit"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object ConvOff $Attribute 9 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ConvOff"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object OldValue $Attribute 10 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "OldValue"
+            Attr Size = 2
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$Int16"
+          EndBody
+        EndObject
+        Object PwrIsMaster $Attribute 11 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "PwrIsMaster"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+      EndObject
+      Object ConfiguratorPosnn $Menu 40 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 41 23-JAN-2018 17:01:41.00
+          Object Disconnect $MenuButton 42 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Disconnect Signal"
+              Attr MethodName = "$ObjXRef-DisconnectSingle"
+              Attr MethodArguments[0] = "SigChanCon"
+              Attr FilterName = "$ObjXRef-IsOkDisconnectSingle"
+              Attr FilterArguments[0] = "SigChanCon"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPoson $Menu 43 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 44 23-JAN-2018 17:01:41.00
+          Object Connect $MenuButton 45 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Connect Signal"
+              Attr MethodName = "$ObjXRef-Connect"
+              Attr MethodArguments[0] = "SigChanCon"
+              Attr MethodArguments[1] = "SigChanCon"
+              Attr FilterName = "$ObjXRef-IsOkConnect"
+              Attr FilterArguments[0] = "SigChanCon"
+              Attr FilterArguments[1] = "SigChanCon"
+            EndBody
+          EndObject
+          Object Disconnect $MenuButton 46 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Disconnect Signal"
+              Attr MethodName = "$ObjXRef-Disconnect"
+              Attr MethodArguments[0] = "SigChanCon"
+              Attr MethodArguments[1] = "SigChanCon"
+              Attr FilterName = "$ObjXRef-IsOkDisconnect"
+              Attr FilterArguments[0] = "SigChanCon"
+              Attr FilterArguments[1] = "SigChanCon"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosos $Menu 47 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 48 23-JAN-2018 17:01:41.00
+          Object Disconnect $MenuButton 49 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Disconnect Signal"
+              Attr MethodName = "$ObjXRef-DisconnectSingle"
+              Attr MethodArguments[0] = "SigChanCon"
+              Attr FilterName = "$ObjXRef-IsOkDisconnectSingle"
+              Attr FilterArguments[0] = "SigChanCon"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPcsnn $Menu 50 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 51 23-JAN-2018 17:01:41.00
+          Object SetDefaults $MenuButton 52 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Default Name..."
+              Attr MethodName = "$Object-SetDefaults"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPcscs $Menu 53 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 54 23-JAN-2018 17:01:41.00
+          Object SetDefaults $MenuButton 55 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Default Name..."
+              Attr MethodName = "$Object-SetDefaults"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPcscn $Menu 56 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 57 23-JAN-2018 17:01:41.00
+          Object SetDefaults $MenuButton 58 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Default Name..."
+              Attr MethodName = "$Object-SetDefaults"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPcson $Menu 59 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 60 23-JAN-2018 17:01:41.00
+          Object SetDefaults $MenuButton 61 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Default Name..."
+              Attr MethodName = "$Object-SetDefaults"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPcsmn $Menu 62 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 63 23-JAN-2018 17:01:41.00
+          Object SetDefaults $MenuButton 64 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Default Name..."
+              Attr MethodName = "$Object-SetDefaults"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object Template RemChan_Ao 2151907328 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr OutPolyCoef1 = 1.000000e+00
+          Attr OutMaxLimit = 1.000000e+02
+          Attr PwrIsMaster = 1
+        EndBody
+      EndObject
+    EndObject
+    Object RemChan_Co $ClassDef 17 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 24
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "RemChan_Co"
+        EndBody
+        Object Description $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object SigChanCon $ObjXRef 2 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "SigChanCon"
+            Attr Identity = "Co"
+            Attr Source = "ChanCo"
+            Attr Target = "Co"
+            Attr SourceAttribute = "SigChanCon"
+            Attr TargetAttribute = "SigChanCon"
+          EndBody
+        EndObject
+        Object Identity $Attribute 3 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Identity"
+            Attr Size = 40
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        Object ActualValue $Attribute 4 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ActualValue"
+            Attr Size = 4
+            Attr Flags = 3073
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object ExtendedValue $Attribute 5 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ExtendedValue"
+            Attr Size = 4
+            Attr Flags = 3073
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object NoOfBits $Attribute 6 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "NoOfBits"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ConvOff $Attribute 7 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ConvOff"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object SyncRawValue $Attribute 8 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "SyncRawValue"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object CounterZeroFlag $Attribute 9 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "CounterZeroFlag"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object CounterSyncFlag $Attribute 10 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "CounterSyncFlag"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+      EndObject
+      Object ConfiguratorPosnn $Menu 66 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 67 23-JAN-2018 17:01:41.00
+          Object Disconnect $MenuButton 68 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Disconnect Signal"
+              Attr MethodName = "$ObjXRef-DisconnectSingle"
+              Attr MethodArguments[0] = "SigChanCon"
+              Attr FilterName = "$ObjXRef-IsOkDisconnectSingle"
+              Attr FilterArguments[0] = "SigChanCon"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPoson $Menu 69 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 70 23-JAN-2018 17:01:41.00
+          Object Connect $MenuButton 71 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Connect Signal"
+              Attr MethodName = "$ObjXRef-Connect"
+              Attr MethodArguments[0] = "SigChanCon"
+              Attr MethodArguments[1] = "SigChanCon"
+              Attr FilterName = "$ObjXRef-IsOkConnect"
+              Attr FilterArguments[0] = "SigChanCon"
+              Attr FilterArguments[1] = "SigChanCon"
+            EndBody
+          EndObject
+          Object Disconnect $MenuButton 72 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Disconnect Signal"
+              Attr MethodName = "$ObjXRef-Disconnect"
+              Attr MethodArguments[0] = "SigChanCon"
+              Attr MethodArguments[1] = "SigChanCon"
+              Attr FilterName = "$ObjXRef-IsOkDisconnect"
+              Attr FilterArguments[0] = "SigChanCon"
+              Attr FilterArguments[1] = "SigChanCon"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosos $Menu 73 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 74 23-JAN-2018 17:01:41.00
+          Object Disconnect $MenuButton 75 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Disconnect Signal"
+              Attr MethodName = "$ObjXRef-DisconnectSingle"
+              Attr MethodArguments[0] = "SigChanCon"
+              Attr FilterName = "$ObjXRef-IsOkDisconnectSingle"
+              Attr FilterArguments[0] = "SigChanCon"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPcsnn $Menu 76 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 77 23-JAN-2018 17:01:41.00
+          Object SetDefaults $MenuButton 78 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Default Name..."
+              Attr MethodName = "$Object-SetDefaults"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPcscs $Menu 79 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 80 23-JAN-2018 17:01:41.00
+          Object SetDefaults $MenuButton 81 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Default Name..."
+              Attr MethodName = "$Object-SetDefaults"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPcscn $Menu 82 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 83 23-JAN-2018 17:01:41.00
+          Object SetDefaults $MenuButton 84 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Default Name..."
+              Attr MethodName = "$Object-SetDefaults"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPcson $Menu 85 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 86 23-JAN-2018 17:01:41.00
+          Object SetDefaults $MenuButton 87 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Default Name..."
+              Attr MethodName = "$Object-SetDefaults"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPcsmn $Menu 88 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 89 23-JAN-2018 17:01:41.00
+          Object SetDefaults $MenuButton 90 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Default Name..."
+              Attr MethodName = "$Object-SetDefaults"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object Template RemChan_Co 2152169472 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr NoOfBits = 16
+        EndBody
+      EndObject
+    EndObject
+    Object RemChan_Di $ClassDef 19 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 24
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "RemChan_Di"
+        EndBody
+        Object Description $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object SigChanCon $ObjXRef 2 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "SigChanCon"
+            Attr Identity = "Di"
+            Attr Source = "ChanDi"
+            Attr Target = "Di"
+            Attr SourceAttribute = "SigChanCon"
+            Attr TargetAttribute = "SigChanCon"
+          EndBody
+        EndObject
+        Object Identity $Attribute 3 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Identity"
+            Attr Size = 40
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        Object ActualValue $Attribute 4 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ActualValue"
+            Attr Size = 4
+            Attr Flags = 3073
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object ConvOff $Attribute 5 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ConvOff"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object BuffOff $Attribute 6 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "BuffOff"
+            Attr Size = 4
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ConvMask $Attribute 7 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ConvMask"
+            Attr Size = 1
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+      EndObject
+      Object ConfiguratorPosnn $Menu 92 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 93 23-JAN-2018 17:01:41.00
+          Object Disconnect $MenuButton 94 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Disconnect Signal"
+              Attr MethodName = "$ObjXRef-DisconnectSingle"
+              Attr MethodArguments[0] = "SigChanCon"
+              Attr FilterName = "$ObjXRef-IsOkDisconnectSingle"
+              Attr FilterArguments[0] = "SigChanCon"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPoson $Menu 95 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 96 23-JAN-2018 17:01:41.00
+          Object Connect $MenuButton 97 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Connect Signal"
+              Attr MethodName = "$ObjXRef-Connect"
+              Attr MethodArguments[0] = "SigChanCon"
+              Attr MethodArguments[1] = "SigChanCon"
+              Attr FilterName = "$ObjXRef-IsOkConnect"
+              Attr FilterArguments[0] = "SigChanCon"
+              Attr FilterArguments[1] = "SigChanCon"
+            EndBody
+          EndObject
+          Object Disconnect $MenuButton 98 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Disconnect Signal"
+              Attr MethodName = "$ObjXRef-Disconnect"
+              Attr MethodArguments[0] = "SigChanCon"
+              Attr MethodArguments[1] = "SigChanCon"
+              Attr FilterName = "$ObjXRef-IsOkDisconnect"
+              Attr FilterArguments[0] = "SigChanCon"
+              Attr FilterArguments[1] = "SigChanCon"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosos $Menu 99 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 100 23-JAN-2018 17:01:41.00
+          Object Disconnect $MenuButton 101 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Disconnect Signal"
+              Attr MethodName = "$ObjXRef-DisconnectSingle"
+              Attr MethodArguments[0] = "SigChanCon"
+              Attr FilterName = "$ObjXRef-IsOkDisconnectSingle"
+              Attr FilterArguments[0] = "SigChanCon"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPcsnn $Menu 102 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 103 23-JAN-2018 17:01:41.00
+          Object SetDefaults $MenuButton 104 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Default Name..."
+              Attr MethodName = "$Object-SetDefaults"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPcscs $Menu 105 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 106 23-JAN-2018 17:01:41.00
+          Object SetDefaults $MenuButton 107 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Default Name..."
+              Attr MethodName = "$Object-SetDefaults"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPcscn $Menu 108 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 109 23-JAN-2018 17:01:41.00
+          Object SetDefaults $MenuButton 110 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Default Name..."
+              Attr MethodName = "$Object-SetDefaults"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPcson $Menu 111 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 112 23-JAN-2018 17:01:41.00
+          Object SetDefaults $MenuButton 113 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Default Name..."
+              Attr MethodName = "$Object-SetDefaults"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPcsmn $Menu 114 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 115 23-JAN-2018 17:01:41.00
+          Object SetDefaults $MenuButton 116 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Default Name..."
+              Attr MethodName = "$Object-SetDefaults"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object Template RemChan_Di 2152693760 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object RemChan_Do $ClassDef 14 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 24
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "RemChan_Do"
+        EndBody
+        Object Description $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object SigChanCon $ObjXRef 2 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "SigChanCon"
+            Attr Identity = "Do"
+            Attr Source = "ChanDo"
+            Attr Target = "Do"
+            Attr SourceAttribute = "SigChanCon"
+            Attr TargetAttribute = "SigChanCon"
+          EndBody
+        EndObject
+        Object Identity $Attribute 3 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Identity"
+            Attr Size = 40
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        Object ActualValue $Attribute 4 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ActualValue"
+            Attr Size = 4
+            Attr Flags = 3073
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object ConvOff $Attribute 5 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ConvOff"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object BuffOff $Attribute 6 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "BuffOff"
+            Attr Size = 4
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ConvMask $Attribute 7 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ConvMask"
+            Attr Size = 1
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object PwrIsMaster $Attribute 8 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "PwrIsMaster"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object OldValue $Attribute 9 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "OldValue"
+            Attr Size = 4
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+      EndObject
+      Object ConfiguratorPosnn $Menu 118 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 119 23-JAN-2018 17:01:41.00
+          Object Disconnect $MenuButton 120 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Disconnect Signal"
+              Attr MethodName = "$ObjXRef-DisconnectSingle"
+              Attr MethodArguments[0] = "SigChanCon"
+              Attr FilterName = "$ObjXRef-IsOkDisconnectSingle"
+              Attr FilterArguments[0] = "SigChanCon"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPoson $Menu 121 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 122 23-JAN-2018 17:01:41.00
+          Object Connect $MenuButton 123 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Connect Signal"
+              Attr MethodName = "$ObjXRef-Connect"
+              Attr MethodArguments[0] = "SigChanCon"
+              Attr MethodArguments[1] = "SigChanCon"
+              Attr FilterName = "$ObjXRef-IsOkConnect"
+              Attr FilterArguments[0] = "SigChanCon"
+              Attr FilterArguments[1] = "SigChanCon"
+            EndBody
+          EndObject
+          Object Disconnect $MenuButton 124 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Disconnect Signal"
+              Attr MethodName = "$ObjXRef-Disconnect"
+              Attr MethodArguments[0] = "SigChanCon"
+              Attr MethodArguments[1] = "SigChanCon"
+              Attr FilterName = "$ObjXRef-IsOkDisconnect"
+              Attr FilterArguments[0] = "SigChanCon"
+              Attr FilterArguments[1] = "SigChanCon"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosos $Menu 125 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 126 23-JAN-2018 17:01:41.00
+          Object Disconnect $MenuButton 127 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Disconnect Signal"
+              Attr MethodName = "$ObjXRef-DisconnectSingle"
+              Attr MethodArguments[0] = "SigChanCon"
+              Attr FilterName = "$ObjXRef-IsOkDisconnectSingle"
+              Attr FilterArguments[0] = "SigChanCon"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPcsnn $Menu 128 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 129 23-JAN-2018 17:01:41.00
+          Object SetDefaults $MenuButton 130 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Default Name..."
+              Attr MethodName = "$Object-SetDefaults"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPcscs $Menu 131 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 132 23-JAN-2018 17:01:41.00
+          Object SetDefaults $MenuButton 133 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Default Name..."
+              Attr MethodName = "$Object-SetDefaults"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPcscn $Menu 134 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 135 23-JAN-2018 17:01:41.00
+          Object SetDefaults $MenuButton 136 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Default Name..."
+              Attr MethodName = "$Object-SetDefaults"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPcson $Menu 137 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 138 23-JAN-2018 17:01:41.00
+          Object SetDefaults $MenuButton 139 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Default Name..."
+              Attr MethodName = "$Object-SetDefaults"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPcsmn $Menu 140 23-JAN-2018 17:01:41.00
+        Object Pointed $Menu 141 23-JAN-2018 17:01:41.00
+          Object SetDefaults $MenuButton 142 23-JAN-2018 17:01:41.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Default Name..."
+              Attr MethodName = "$Object-SetDefaults"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object Template RemChan_Do 2151383040 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr PwrIsMaster = 1
+        EndBody
+      EndObject
+    EndObject
+    Object RemChan_Dv $ClassDef 18 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 80
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "RemChan_Dv"
+        EndBody
+        Object Description $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object SigChanCon $Attribute 2 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "SigChanCon"
+            Attr Size = 8
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object ActualValue $Attribute 3 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ActualValue"
+            Attr Size = 4
+            Attr Flags = 3073
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object ConvOff $Attribute 4 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ConvOff"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object BuffOff $Attribute 5 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "BuffOff"
+            Attr Size = 4
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ConvMask $Attribute 6 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ConvMask"
+            Attr Size = 1
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object PwrIsMaster $Attribute 7 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "PwrIsMaster"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object OldValue $Attribute 8 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "OldValue"
+            Attr Size = 4
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+      EndObject
+      Object Template RemChan_Dv 2152431616 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr PwrIsMaster = 1
+        EndBody
+      EndObject
+    EndObject
+    Object RemCo $ClassDef 20 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "RemCo"
+        EndBody
+        Object Description $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+      EndObject
+      Object Template RemCo 2152955904 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object RemDi $ClassDef 21 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "RemDi"
+        EndBody
+        Object Description $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+      EndObject
+      Object Template RemDi 2153218048 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object RemDo $ClassDef 22 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "RemDo"
+        EndBody
+        Object Description $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+      EndObject
+      Object Template RemDo 2153480192 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object RemDv $ClassDef 23 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "RemDv"
+        EndBody
+        Object Description $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+      EndObject
+      Object Template RemDv 2153742336 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Servers,NodeConfiguration
+    !  @Summary Configures communication to a remote system using Siemens 3964R on a serial line.
+    !  Configures communication to a remote system using Siemens 3964R on a serial line..
+    ! 
+    ! @b Object graph
+    !  @image orm_remnode3964r_og.gif
+    ! 
+    ! @b See also
+    !  @classlink RemoteConfig remote_remoteconfig.html
+    !  @classlink RemTrans remote_remtrans.html
+    !*/
+    Object Remnode3964R $ClassDef 1 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 80
+        Attr PopEditor = 2
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "Remnode3964R"
+        EndBody
+        !/**
+        ! Optional description.
+        !*/
+        Object Description $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        !  Process priority for the transport process. For future use.
+        !*/
+        Object Prio $Attribute 2 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Prio"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        !/**
+        !  Device name for the serial port, ex /dev/ttyS0.
+        !  Dynamic change is not possible.
+        !*/
+        Object DevName $Attribute 3 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "DevName"
+            Attr Size = 32
+            Attr TypeRef = "pwrs:Type-$String32"
+          EndBody
+        EndObject
+        !/**
+        !  Baud rate for the serial port, ex 9600.
+        !  Dynamic change is not possible.
+        !*/
+        Object Speed $Attribute 4 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Speed"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  Type of parity for the serial port.
+        !  Dynamic change is not possible.
+        !*/
+        Object Parity $Attribute 5 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Parity"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Enum"
+          EndBody
+        EndObject
+        !/**
+        !  Number of stop bits for the serial port.
+        !  Dynamic change is not possible.
+        !*/
+        Object StopBits $Attribute 6 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "StopBits"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Enum"
+          EndBody
+        EndObject
+        !/**
+        !  Number of data bits for the serial port.
+        !  Dynamic change is not possible.
+        !*/
+        Object DataBits $Attribute 7 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "DataBits"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Enum"
+          EndBody
+        EndObject
+        !/**
+        !  Timeout time in seconds between two characters used while reading data.
+        !  Dynamic change is possible.
+        !*/
+        Object CharTimeout $Attribute 8 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "CharTimeout"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
+        !  Timeout time in seconds used when waiting for DLE (acknowledge) in sending,
+        !  and when waiting for data after sending DLE in receiving.
+        !  Dynamic change is possible.
+        !*/
+        Object AckTimeout $Attribute 9 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "AckTimeout"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
+        !  Attribute that indicates connection with the remote node. 
+        !  The link is considered down when we reach the link supervision timeout
+        !  time without receiving any valid message.
+        !  The link is considered up again when receiving a valid message.
+        !*/
+        Object LinkUp $Attribute 10 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LinkUp"
+            Attr Size = 4
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        !  Time in seconds before the link is considered down.
+        !  Dynamic change is possible
+        !*/
+        Object LinkTimeout $Attribute 11 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LinkTimeout"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
+        !  When set, this attribute tells the remote handler not to start 
+        !  or restart the process that handles this remote node. If the transport process 
+        !  is running while the attribute is set it will terminate.
+        !  Dynamic change is possible.
+        !*/
+        Object Disable $Attribute 12 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Disable"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        !  This attribute shows how many times the remote handler has restarted the 
+        !  transport process that handles this remnode.
+        !  Dynamic change is possible and can be used in order to earn more restarts.
+        !*/
+        Object RestartCount $Attribute 13 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartCount"
+            Attr Size = 4
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  The restart limit tells the remote handler how many times the transport process
+        !  that handle this remnode can be restarted.
+        !  Dynamic change is possible and can be used in order to earn more restarts.
+        !*/
+        Object RestartLimit $Attribute 14 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartLimit"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  The restart time is set by the transport process at startup and therefore
+        !  shows the latest (re)starttime.
+        !*/
+        Object RestartTime $Attribute 15 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartTime"
+            Attr Size = 16
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+        !/**
+        !  Scantime in seconds for outgoing RemTrans objects.
+        !  Dynamic change is possible.
+        !*/
+        Object ScanTime $Attribute 16 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ScanTime"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
+        !  Error counter.
+        !*/
+        Object ErrCount $Attribute 17 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ErrCount"
+            Attr Size = 4
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  Type of remnode. Used in the RemoteConfig classgraph.
+        !*/
+        Object Id $Attribute 18 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Id"
+            Attr Size = 8
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$String8"
+          EndBody
+        EndObject
+        !/**
+        !  Contains the objid for the RemTrans objects for this remnode.
+        !  The objid's are inserted by the remote process.
+        !*/
+        Object RemTransObjects $Attribute 19 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RemTransObjects"
+            Attr Size = 200
+            Attr Flags = 2066
+            Attr Elements = 25
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Remnode3964R 2147975168 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Prio = 15
+          Attr DevName = "/dev/ttyS0"
+          Attr Speed = 9600
+          Attr Parity = 2
+          Attr StopBits = 1
+          Attr DataBits = 8
+          Attr CharTimeout = 2.200000e-01
+          Attr AckTimeout = 2.000000e+00
+          Attr LinkTimeout = 1.000000e+01
+          Attr RestartLimit = 100
+          Attr ScanTime = 1.000000e-01
+          Attr Id = "3964r"
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Servers,NodeConfiguration
+    !  @Summary Configures communication to a remote using the ALCM protocol.
+    !  Configures communication to a remote using the ALCM protocol.
+    !  ALCM is a simple message oriented protocol that uses low level ethernet
+    !  frames with protocol type 60-06 (DEC customer use). On DEC-based systems,
+    !  ELN and VMS, the usage is simple and supported by the operating system. The 
+    !  DECnet address is used for addressing.
+    !  On Linux systems, we have to use raw sockets to gain access to low level
+    !  ethernet frames and the device's MAC address for addressing.
+    ! 
+    ! @b Object graph
+    !  @image orm_remnodealcm_og.gif
+    ! 
+    ! @b See also
+    !  @classlink RemoteConfig remote_remoteconfig.html
+    !  @classlink RemTrans remote_remtrans.html
+    !*/
+    Object RemnodeALCM $ClassDef 2 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 80
+        Attr PopEditor = 2
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "RemnodeALCM"
+        EndBody
+        !/**
+        !  Optional description.
+        !*/
+        Object Description $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        !  Process priority for the transport process. For future use.
+        !*/
+        Object Prio $Attribute 2 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Prio"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        !/**
+        !  Device name for the ethernet device, Not yet implemented, defaults to "eth0".
+        !*/
+        Object DevName $Attribute 3 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "DevName"
+            Attr Size = 32
+            Attr TypeRef = "pwrs:Type-$String32"
+          EndBody
+        EndObject
+        !/**
+        !  Hostname for the remote node. Used when hostname is to be part of the
+        !  ALCM header in remote I/O or when mirroring common areas.
+        !  Dynamic change is possible.
+        !*/
+        Object RemoteHostname $Attribute 4 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RemoteHostname"
+            Attr Size = 32
+            Attr TypeRef = "pwrs:Type-$String32"
+          EndBody
+        EndObject
+        !/**
+        !  DEC-net or MAC-address for the remote node. These to address types have
+        !  the same format and is used directly in the address field of the low
+        !  level ethernet frame. Note that on Linux systems, we often override
+        !  the systems MAC-address in /etc/interfaces when using ALCM. This way we don't 
+        !  have to change address in remote when changing network device.
+        !  
+        !  The notation for DECnet address is node.area, eg 4.21 (decimal notation)
+        !  The notation for MAC address is for example AA:00:A4:00:01:54 (hex notation)
+        ! 
+        !  Dynamic change is not possible.
+        !*/
+        Object RemoteAddress $Attribute 5 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RemoteAddress"
+            Attr Size = 32
+            Attr TypeRef = "pwrs:Type-$String32"
+          EndBody
+        EndObject
+        !/**
+        !  Attribute that indicates connection with the remote node. 
+        !  The link is considered down when we reach the link supervision timeout
+        !  time without receiving any ALCM data or I/O messages. The link is 
+        !  considered up again when receiving any kind of message. Note that this 
+        !  supervision is separated from the remote I/O supervision which uses 
+        !  IOStallFlag and IOStallTime.
+        !*/
+        Object LinkUp $Attribute 6 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LinkUp"
+            Attr Size = 4
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        !  Time in seconds before the link is considered down. A value of 0 (zero) disables
+        !  the LinkUp supervision.
+        !  Dynamic change is possible
+        !*/
+        Object LinkTimeout $Attribute 7 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LinkTimeout"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
+        !  When set, this attribute tells the remote handler not to start 
+        !  or restart the process that handles this remote node. If the transport process 
+        !  is running while the attribute is set it will terminate. Note that in ALCM there
+        !  is only one process that handles all remote nodes.
+        !  Dynamic change is possible.
+        !*/
+        Object Disable $Attribute 8 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Disable"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        !  This attribute shows how many times the remote handler has restarted the 
+        !  transport process that handles this remnode.
+        !  Dynamic change is possible and can be used in order to earn more restarts.
+        !*/
+        Object RestartCount $Attribute 9 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartCount"
+            Attr Size = 4
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  The restart limit tells the remote handler how many times the transport process
+        !  that handle this remnode can be restarted.
+        !  Dynamic change is possible and can be used in order to earn more restarts.
+        !*/
+        Object RestartLimit $Attribute 10 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartLimit"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  The restart time is set by the transport process at startup and therefore
+        !  shows the latest (re)starttime.
+        !*/
+        Object RestartTime $Attribute 11 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartTime"
+            Attr Size = 16
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+        !/**
+        !  Scantime in seconds for outgoing RemTrans objects.
+        !  Dynamic change is possible.
+        !*/
+        Object ScanTime $Attribute 12 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ScanTime"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
+        !  Time in seconds to wait before retransmit when using acknowledge and buffering.
+        !  For more information about acknowledge handling and retransmitting, 
+        !  refer to the documentation of the RemTrans object.
+        !  Dynamic change is possible.
+        !*/
+        Object RetransmitTime $Attribute 13 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RetransmitTime"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
+        !  Error counter.
+        !*/
+        Object ErrCount $Attribute 14 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ErrCount"
+            Attr Size = 4
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object IOPoll $Attribute 15 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "IOPoll"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object IOPollTime $Attribute 16 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "IOPollTime"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object IOPollTimeSlow $Attribute 17 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "IOPollTimeSlow"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object IOPollDiff $Attribute 18 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "IOPollDiff"
+            Attr Size = 4
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object IOStallTime $Attribute 19 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "IOStallTime"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object IOStallAction $Attribute 20 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "IOStallAction"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object IOStallFlag $Attribute 21 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "IOStallFlag"
+            Attr Size = 4
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object IODataArea $Attribute 22 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "IODataArea"
+            Attr Size = 8
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object NumberOfDI $Attribute 23 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "NumberOfDI"
+            Attr Size = 4
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object NumberOfDO $Attribute 24 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "NumberOfDO"
+            Attr Size = 4
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object NumberOfAI $Attribute 25 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "NumberOfAI"
+            Attr Size = 4
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object NumberOfAO $Attribute 26 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "NumberOfAO"
+            Attr Size = 4
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object NumberOfDV $Attribute 27 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "NumberOfDV"
+            Attr Size = 4
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object NumberOfCo $Attribute 28 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "NumberOfCo"
+            Attr Size = 4
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  Type of remnode. Used in the RemoteConfig classgraph.
+        !*/
+        Object Id $Attribute 29 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Id"
+            Attr Size = 8
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$String8"
+          EndBody
+        EndObject
+        !/**
+        !  Contains the objid for the RemTrans objects for this remnode.
+        !  The objid's are inserted by the remote process.
+        !*/
+        Object RemTransObjects $Attribute 30 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RemTransObjects"
+            Attr Size = 200
+            Attr Flags = 2066
+            Attr Elements = 25
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+      EndObject
+      Object Template RemnodeALCM 2148237312 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Prio = 15
+          Attr DevName = "eth0"
+          Attr LinkTimeout = 3.000000e+00
+          Attr RestartLimit = 100
+          Attr ScanTime = 1.000000e-01
+          Attr RetransmitTime = 1.000000e+01
+          Attr IOPollTime = 1.000000e+00
+          Attr IOPollTimeSlow = 5.000000e+00
+          Attr IOStallTime = 3.000000e+00
+          Attr IOStallAction = 3
+          Attr Id = "Alcm"
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Servers,NodeConfiguration
+    !  @Summary Configures communication to a remote system using Modbus on a serial line.
+    !  Configures communication to a remote system using Modbus on a serial line.
+    ! 
+    ! @b Object graph
+    !  @image orm_remnodemodbus_og.gif
+    ! 
+    ! @b See also
+    !  @classlink RemoteConfig remote_remoteconfig.html
+    !  @classlink RemTrans remote_remtrans.html
+    !*/
+    Object RemnodeModbus $ClassDef 3 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 80
+        Attr PopEditor = 2
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "RemnodeModbus"
+        EndBody
+        !/**
+        ! Optional description.
+        !*/
+        Object Description $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        !  Process priority for the transport process. For future use.
+        !*/
+        Object Prio $Attribute 2 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Prio"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        !/**
+        !  Device name for the serial port, ex /dev/ttyS0.
+        !  Dynamic change is not possible.
+        !*/
+        Object DevName $Attribute 3 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "DevName"
+            Attr Size = 32
+            Attr TypeRef = "pwrs:Type-$String32"
+          EndBody
+        EndObject
+        !/**
+        !  Baud rate for the serial port, ex 9600.
+        !  Dynamic change is not possible.
+        !*/
+        Object Speed $Attribute 4 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Speed"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  Type of parity for the serial port.
+        !  Dynamic change is not possible.
+        !*/
+        Object Parity $Attribute 5 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Parity"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Enum"
+          EndBody
+        EndObject
+        !/**
+        !  Number of stop bits for the serial port.
+        !  Dynamic change is not possible.
+        !*/
+        Object StopBits $Attribute 6 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "StopBits"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Enum"
+          EndBody
+        EndObject
+        !/**
+        !  Number of data bits for the serial port.
+        !  Dynamic change is not possible.
+        !*/
+        Object DataBits $Attribute 7 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "DataBits"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Enum"
+          EndBody
+        EndObject
+        !/**
+        !  Timeout time in seconds used when reading a message from the serial port.
+        !  Dynamic change is possible.
+        !*/
+        Object ReadTimeout $Attribute 8 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ReadTimeout"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
+        !  Attribute that indicates connection with the remote node. 
+        !  The link is considered down when we reach the link supervision timeout
+        !  time without receiving any valid message.
+        !  The link is considered up again when receiving a valid message.
+        !*/
+        Object LinkUp $Attribute 9 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LinkUp"
+            Attr Size = 4
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        !  Time in seconds before the link is considered down.
+        !  Dynamic change is possible
+        !*/
+        Object LinkTimeout $Attribute 10 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LinkTimeout"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
+        !  When set, this attribute tells the remote handler not to start 
+        !  or restart the process that handles this remote node. If the transport process 
+        !  is running while the attribute is set it will terminate.
+        !  Dynamic change is possible.
+        !*/
+        Object Disable $Attribute 11 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Disable"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        !  This attribute shows how many times the remote handler has restarted the 
+        !  transport process that handles this remnode.
+        !  Dynamic change is possible and can be used in order to earn more restarts.
+        !*/
+        Object RestartCount $Attribute 12 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartCount"
+            Attr Size = 4
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  The restart limit tells the remote handler how many times the transport process
+        !  that handle this remnode can be restarted.
+        !  Dynamic change is possible and can be used in order to earn more restarts.
+        !*/
+        Object RestartLimit $Attribute 13 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartLimit"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  The restart time is set by the transport process at startup and therefore
+        !  shows the latest (re)starttime.
+        !*/
+        Object RestartTime $Attribute 14 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartTime"
+            Attr Size = 16
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+        !/**
+        !  Scantime in seconds for outgoing RemTrans objects.
+        !  Dynamic change is possible.
+        !*/
+        Object ScanTime $Attribute 15 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ScanTime"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
+        !  Error counter.
+        !*/
+        Object ErrCount $Attribute 16 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ErrCount"
+            Attr Size = 4
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  Type of remnode. Used in the RemoteConfig classgraph.
+        !*/
+        Object Id $Attribute 17 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Id"
+            Attr Size = 8
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$String8"
+          EndBody
+        EndObject
+        !/**
+        !  Contains the objid for the RemTrans objects for this remnode.
+        !  The objid's are inserted by the remote process.
+        !*/
+        Object RemTransObjects $Attribute 18 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RemTransObjects"
+            Attr Size = 200
+            Attr Flags = 2066
+            Attr Elements = 25
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+      EndObject
+      Object Template RemnodeModbus 2148499456 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Prio = 15
+          Attr DevName = "/dev/ttyS0"
+          Attr Speed = 9600
+          Attr StopBits = 1
+          Attr DataBits = 8
+          Attr ReadTimeout = 5.000000e-02
+          Attr LinkTimeout = 1.000000e+01
+          Attr RestartLimit = 100
+          Attr ScanTime = 1.000000e-01
+          Attr Id = "Modbus"
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Servers,NodeConfiguration
+    !  @Summary Configures communication through a message queue using BEA MessageQ.
+    !  Configures communication through a message queue using BEA MessageQ as a client.
+    ! 
+    ! @b Object graph
+    !  @image orm_remnodemq_og.gif
+    ! 
+    ! @b See also
+    !  @classlink RemoteConfig remote_remoteconfig.html
+    !  @classlink RemTrans remote_remtrans.html
+    !*/
+    Object RemnodeMQ $ClassDef 4 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 80
+        Attr PopEditor = 2
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "RemnodeMQ"
+        EndBody
+        !/**
+        ! Optional description.
+        !*/
+        Object Description $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        !  Process priority for the transport process. For future use.
+        !*/
+        Object Prio $Attribute 2 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Prio"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        !/**
+        !  My queue number that resides on the MQ server. If set to 0 (zero) the queue will
+        !  be allocated dynamically and we will not know in advance what queue number we have (can be
+        !  useful for one-way outgoing communication with no incoming messages). This attribute
+        !  will in this case be updated with the attached queue number.
+        !*/
+        Object MyQueue $Attribute 3 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "MyQueue"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        !/**
+        !  MQ group for every outgoing message.
+        !  Dynamic change is possible.
+        !*/
+        Object TargetGroup $Attribute 4 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "TargetGroup"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        !/**
+        !  MQ queue for every outgoing message.
+        !  Dynamic change is possible.
+        !*/
+        Object TargetQueue $Attribute 5 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "TargetQueue"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        !/**
+        !  Scantime in seconds for outgoing RemTrans messages.
+        !  Dynamic change is possible.
+        !*/
+        Object ScanTime $Attribute 6 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ScanTime"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
+        !  When set, this attribute tells the remote handler not to start 
+        !  or restart the process that handles this remote node. If the transport process 
+        !  is running while the attribute is set it will terminate. This can be used to force
+        !  a restart of the process.
+        !*/
+        Object Disable $Attribute 7 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Disable"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        !  This attribute shows how many times the remote handler has restarted the 
+        !  transport process that handles this remnode.
+        !  Dynamic change is possible and can be used in order to earn more restarts.
+        !*/
+        Object RestartCount $Attribute 8 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartCount"
+            Attr Size = 4
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  The restart limit tells the remote handler how many times the transport process
+        !  that handle this remnode can be restarted.
+        !  Dynamic change is possible and can be used in order to earn more restarts.
+        !*/
+        Object RestartLimit $Attribute 9 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartLimit"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  The restart time is set by the transport process at startup and therefore
+        !  shows the latest (re)starttime.
+        !*/
+        Object RestartTime $Attribute 10 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartTime"
+            Attr Size = 16
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+        !/**
+        !  Error counter.
+        !*/
+        Object ErrCount $Attribute 11 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ErrCount"
+            Attr Size = 4
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  Type of remnode. Used in the RemoteConfig classgraph.
+        !*/
+        Object Id $Attribute 12 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Id"
+            Attr Size = 8
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$String8"
+          EndBody
+        EndObject
+        !/**
+        !  Contains the objid for the RemTrans objects for this remnode.
+        !  The objid's are inserted by the remote process.
+        !*/
+        Object RemTransObjects $Attribute 13 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RemTransObjects"
+            Attr Size = 200
+            Attr Flags = 2066
+            Attr Elements = 25
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+      EndObject
+      Object Template RemnodeMQ 2148761600 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Prio = 15
+          Attr ScanTime = 1.000000e-01
+          Attr RestartLimit = 100
+          Attr Id = "MQ"
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Servers,NodeConfiguration
+    !  @Summary Configures communication through a message queue using QCom.
+    !  Configures communication through a message queue using QCom.
+    ! 
+    !  Only nodes that is know by QCom can be used by this remnode. Nodes kown
+    !  by QCom is nodes in the same project, or nodes configured with FriendNodeConfig
+    !  objects in the directory volume. 
+    ! 
+    !  To direct a message from a sending RemTrans to a recieving RemTrans set 
+    !  same value (0 - 255) in Address[0] in both sending and receiving RemTrans.
+    ! 
+    ! @b Object graph
+    !  @image orm_remnodeqcom_og.png
+    ! 
+    ! @b See also
+    !  @classlink RemoteConfig remote_remoteconfig.html
+    !  @classlink RemTrans remote_remtrans.html
+    !*/
+    Object RemnodeQCom $ClassDef 34 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 80
+        Attr PopEditor = 2
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "RemnodeQCom"
+        EndBody
+        !/**
+        ! Optional description.
+        !*/
+        Object Description $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        !  Process priority for the transport process. For future use.
+        !*/
+        Object Prio $Attribute 2 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Prio"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        !/**
+        !  Number for queue used to receive messages on the current node.
+        !  Can be set to 0 if no receive transactions exist.
+        !*/
+        Object ReceiveQueue $Attribute 3 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ReceiveQueue"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        !/**
+        !  Target node for outgoing messages.
+        !*/
+        Object TargetNode $Attribute 4 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "TargetNode"
+            Attr Size = 40
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        !/**
+        !  QCom queue on target node. Sent messages are directed to this queue.
+        !*/
+        Object TargetQueue $Attribute 5 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "TargetQueue"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        !/**
+        !  Scantime in seconds for outgoing RemTrans messages.
+        !  Dynamic change is possible.
+        !*/
+        Object ScanTime $Attribute 6 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ScanTime"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
+        !  When set, this attribute tells the remote handler not to start 
+        !  or restart the process that handles this remote node. If the transport process 
+        !  is running while the attribute is set it will terminate. This can be used to force
+        !  a restart of the process.
+        !*/
+        Object Disable $Attribute 7 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Disable"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        !  This attribute shows how many times the remote handler has restarted the 
+        !  transport process that handles this remnode.
+        !  Dynamic change is possible and can be used in order to earn more restarts.
+        !*/
+        Object RestartCount $Attribute 8 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartCount"
+            Attr Size = 4
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  The restart limit tells the remote handler how many times the transport process
+        !  that handle this remnode can be restarted.
+        !  Dynamic change is possible and can be used in order to earn more restarts.
+        !*/
+        Object RestartLimit $Attribute 9 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartLimit"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  The restart time is set by the transport process at startup and therefore
+        !  shows the latest (re)starttime.
+        !*/
+        Object RestartTime $Attribute 10 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartTime"
+            Attr Size = 16
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+        !/**
+        !  Error counter.
+        !*/
+        Object ErrCount $Attribute 11 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ErrCount"
+            Attr Size = 4
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  Type of remnode. Used in the RemoteConfig classgraph.
+        !*/
+        Object Id $Attribute 12 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Id"
+            Attr Size = 8
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$String8"
+          EndBody
+        EndObject
+        !/**
+        !  Contains the objid for the RemTrans objects for this remnode.
+        !  The objid's are inserted by the remote process.
+        !*/
+        Object RemTransObjects $Attribute 13 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RemTransObjects"
+            Attr Size = 200
+            Attr Flags = 2066
+            Attr Elements = 25
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+      EndObject
+      Object Template RemnodeQCom 2156625920 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Prio = 15
+          Attr ScanTime = 1.000000e-01
+          Attr RestartLimit = 100
+          Attr Id = "QCom"
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Servers,NodeConfiguration
+    !  @Summary Configures communication through a message queue using RabbitMQ.
+    !  Configures communication through a message queue using RabbitMQ.
+    ! 
+    !  To direct a message from a sending RemTrans to a recieving RemTrans set 
+    !  same value (0 - 255) in Address[0] in both sending and receiving RemTrans.
+    ! 
+    ! @b Object graph
+    !  @image orm_remnoderabbitmq_og.png
+    ! 
+    ! @b See also
+    !  @classlink RemoteConfig remote_remoteconfig.html
+    !  @classlink RemTrans remote_remtrans.html
+    !*/
+    Object RemnodeRabbitMQ $ClassDef 35 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 80
+        Attr PopEditor = 2
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "RemnodeRabbitMQ"
+        EndBody
+        !/**
+        ! Optional description.
+        !*/
+        Object Description $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        !  Process priority for the transport process. For future use.
+        !*/
+        Object Prio $Attribute 2 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Prio"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        !/**
+        !  Server node or broker.
+        !*/
+        Object Server $Attribute 3 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Server"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        !  RabbitMQ port. The default port for RabbitMQ is 5672.
+        !*/
+        Object Port $Attribute 4 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Port"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  RabbitMQ channel.
+        !*/
+        Object Channel $Attribute 5 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Channel"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  Name of exchange. If empty, the default exchange is used.
+        !*/
+        Object Exchange $Attribute 6 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Exchange"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        !  Name of send queue.
+        ! The queue is created if it doesn't exist.
+        !*/
+        Object SendQueue $Attribute 7 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "SendQueue"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        !  Name of receive queue.
+        !  The queue is created if it doesn't exist.
+        !*/
+        Object ReceiveQueue $Attribute 8 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ReceiveQueue"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        !  Username for broker connection.
+        !  The user has to be created in the broker.
+        !*/
+        Object User $Attribute 9 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "User"
+            Attr Size = 40
+            Attr Flags = 32
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        !/**
+        !  Password for the broker connection.
+        !*/
+        Object Password $Attribute 10 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Password"
+            Attr Size = 40
+            Attr Flags = 41943072
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        !/**
+        !  Acknowlege is required for all messages.
+        !  Send messages will not removed from the queue unless an aknowlege is received
+        !  from the receiver.
+        !  For received messages an acknowlege messages is send to the broker.
+        !  If Acknowlege is not sent, messages will be removed from the queue when they are sent.
+        !*/
+        Object Acknowledge $Attribute 11 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Acknowledge"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        !  Queued messages are stored on disk by the broker, and will be recovered after a
+        !  restart.
+        !*/
+        Object Durable $Attribute 12 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Durable"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        !  Scantime in seconds for outgoing RemTrans messages.
+        !  Dynamic change is possible.
+        !*/
+        Object ScanTime $Attribute 14 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ScanTime"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
+        !  When set, this attribute tells the remote handler not to start 
+        !  or restart the process that handles this remote node. If the transport process 
+        !  is running while the attribute is set it will terminate. This can be used to force
+        !  a restart of the process.
+        !*/
+        Object Disable $Attribute 15 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Disable"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        !  This attribute shows how many times the remote handler has restarted the 
+        !  transport process that handles this remnode.
+        !  Dynamic change is possible and can be used in order to earn more restarts.
+        !*/
+        Object RestartCount $Attribute 16 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartCount"
+            Attr Size = 4
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  The restart limit tells the remote handler how many times the transport process
+        !  that handle this remnode can be restarted.
+        !  Dynamic change is possible and can be used in order to earn more restarts.
+        !*/
+        Object RestartLimit $Attribute 17 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartLimit"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  The restart time is set by the transport process at startup and therefore
+        !  shows the latest (re)starttime.
+        !*/
+        Object RestartTime $Attribute 18 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartTime"
+            Attr Size = 16
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+        !/**
+        !  When set, this attribute disables use of the special Remote header
+        !  in each send message. Furthermore, when receiving a message, the whole part
+        !  of the message is treated as data which means that it is not possible to
+        !  tell which ingoing RemTrans object the message is meant for since this information
+        !  lies in the header. Therefore each incoming message is placed in the first found
+        !  RemTrans object.
+        !  Dynamic change is possible.
+        !*/
+        Object DisableHeader $Attribute 19 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "DisableHeader"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        !  Error counter.
+        !*/
+        Object ErrCount $Attribute 20 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ErrCount"
+            Attr Size = 4
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  Type of remnode. Used in the RemoteConfig classgraph.
+        !*/
+        Object Id $Attribute 21 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Id"
+            Attr Size = 8
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$String8"
+          EndBody
+        EndObject
+        !/**
+        !  Contains the objid for the RemTrans objects for this remnode.
+        !  The objid's are inserted by the remote process.
+        !*/
+        Object RemTransObjects $Attribute 22 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RemTransObjects"
+            Attr Size = 200
+            Attr Flags = 2066
+            Attr Elements = 25
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+      EndObject
+      Object Template RemnodeRabbitMQ 2156888064 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Prio = 15
+          Attr Server = "localhost"
+          Attr Port = 5672
+          Attr Channel = 1
+          Attr User = "guest"
+          Attr Password = "guest"
+          Attr ScanTime = 1.000000e-01
+          Attr RestartLimit = 100
+          Attr Id = "RabbitM"
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Servers,NodeConfiguration
+    !  @Summary Configures communication to a remote system using Siemens RK512 on a serial line.
+    !  Configures communication to a remote system using Siemens RK512 on a serial line..
+    ! 
+    ! @b Object graph
+    !  @image orm_remnoderk512_og.gif
+    ! 
+    ! @b See also
+    !  @classlink RemoteConfig remote_remoteconfig.html
+    !  @classlink RemTrans remote_remtrans.html
+    !*/
+    Object RemnodeRK512 $ClassDef 9 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 80
+        Attr PopEditor = 2
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "RemnodeRK512"
+        EndBody
+        !/**
+        ! Optional description.
+        !*/
+        Object Description $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        !  Process priority for the transport process. For future use.
+        !*/
+        Object Prio $Attribute 2 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Prio"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        !/**
+        !  Device name for the serial port, ex /dev/ttyS0.
+        !  Dynamic change is not possible.
+        !*/
+        Object DevName $Attribute 3 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "DevName"
+            Attr Size = 32
+            Attr TypeRef = "pwrs:Type-$String32"
+          EndBody
+        EndObject
+        !/**
+        !  Baud rate for the serial port, ex 9600.
+        !  Dynamic change is not possible.
+        !*/
+        Object Speed $Attribute 4 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Speed"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  Type of parity for the serial port.
+        !  Dynamic change is not possible.
+        !*/
+        Object Parity $Attribute 5 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Parity"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Enum"
+          EndBody
+        EndObject
+        !/**
+        !  Number of stop bits for the serial port.
+        !  Dynamic change is not possible.
+        !*/
+        Object StopBits $Attribute 6 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "StopBits"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Enum"
+          EndBody
+        EndObject
+        !/**
+        !  Number of data bits for the serial port.
+        !  Dynamic change is not possible.
+        !*/
+        Object DataBits $Attribute 7 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "DataBits"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Enum"
+          EndBody
+        EndObject
+        !/**
+        !  Timeout time in seconds between two characters used while reading data.
+        !  Dynamic change is possible.
+        !*/
+        Object CharTimeout $Attribute 8 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "CharTimeout"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
+        !  Timeout time in seconds used when waiting for DLE (acknowledge) in sending,
+        !  and when waiting for data after sending DLE in receiving.
+        !  Dynamic change is possible.
+        !*/
+        Object AckTimeout $Attribute 9 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "AckTimeout"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
+        !  Attribute that indicates connection with the remote node. 
+        !  The link is considered down when we reach the link supervision timeout
+        !  time without receiving any valid message.
+        !  The link is considered up again when receiving a valid message.
+        !*/
+        Object LinkUp $Attribute 10 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LinkUp"
+            Attr Size = 4
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        !  Time in seconds before the link is considered down.
+        !  Dynamic change is possible
+        !*/
+        Object LinkTimeout $Attribute 11 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LinkTimeout"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
+        !  When set, this attribute tells the remote handler not to start 
+        !  or restart the process that handles this remote node. If the transport process 
+        !  is running while the attribute is set it will terminate.
+        !  Dynamic change is possible.
+        !*/
+        Object Disable $Attribute 12 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Disable"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        !  This attribute shows how many times the remote handler has restarted the 
+        !  transport process that handles this remnode.
+        !  Dynamic change is possible and can be used in order to earn more restarts.
+        !*/
+        Object RestartCount $Attribute 13 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartCount"
+            Attr Size = 4
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  The restart limit tells the remote handler how many times the transport process
+        !  that handle this remnode can be restarted.
+        !  Dynamic change is possible and can be used in order to earn more restarts.
+        !*/
+        Object RestartLimit $Attribute 14 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartLimit"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  The restart time is set by the transport process at startup and therefore
+        !  shows the latest (re)starttime.
+        !*/
+        Object RestartTime $Attribute 15 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartTime"
+            Attr Size = 16
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+        !/**
+        !  Scantime in seconds for outgoing RemTrans objects.
+        !  Dynamic change is possible.
+        !*/
+        Object ScanTime $Attribute 16 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ScanTime"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
+        !  Error counter.
+        !*/
+        Object ErrCount $Attribute 17 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ErrCount"
+            Attr Size = 4
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  Type of remnode. Used in the RemoteConfig classgraph.
+        !*/
+        Object Id $Attribute 18 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Id"
+            Attr Size = 8
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$String8"
+          EndBody
+        EndObject
+        !/**
+        !  Contains the objid for the RemTrans objects for this remnode.
+        !  The objid's are inserted by the remote process.
+        !*/
+        Object RemTransObjects $Attribute 19 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RemTransObjects"
+            Attr Size = 200
+            Attr Flags = 2066
+            Attr Elements = 25
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+      EndObject
+      Object Template RemnodeRK512 2150072320 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Prio = 15
+          Attr DevName = "/dev/ttyS0"
+          Attr Speed = 9600
+          Attr Parity = 2
+          Attr StopBits = 1
+          Attr DataBits = 8
+          Attr CharTimeout = 2.200000e-01
+          Attr AckTimeout = 2.000000e+00
+          Attr LinkTimeout = 1.000000e+01
+          Attr RestartLimit = 100
+          Attr ScanTime = 1.000000e-01
+          Attr Id = "rk512"
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Servers,NodeConfiguration
+    !  @Summary Configures communication to a remote system using a serial line.
+    !  Configures communication to a remote system using a serial line.
+    ! 
+    ! @b Object graph
+    !  @image orm_remnodeserial_og.gif
+    ! 
+    ! @b See also
+    !  @classlink RemoteConfig remote_remoteconfig.html
+    !  @classlink RemTrans remote_remtrans.html
+    !*/
+    Object RemnodeSerial $ClassDef 6 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 80
+        Attr PopEditor = 2
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "RemnodeSerial"
+        EndBody
+        !/**
+        ! Optional description.
+        !*/
+        Object Description $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        !  Process priority for the transport process. For future use.
+        !*/
+        Object Prio $Attribute 2 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Prio"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        !/**
+        !  Device name for the serial port, ex /dev/ttyS0.
+        !  Dynamic change is not possible.
+        !*/
+        Object DevName $Attribute 3 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "DevName"
+            Attr Size = 32
+            Attr TypeRef = "pwrs:Type-$String32"
+          EndBody
+        EndObject
+        !/**
+        !  Baud rate for the serial port, ex 9600.
+        !  Dynamic change is not possible.
+        !*/
+        Object Speed $Attribute 4 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Speed"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  Type of parity for the serial port.
+        !  Dynamic change is not possible.
+        !*/
+        Object Parity $Attribute 5 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Parity"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Enum"
+          EndBody
+        EndObject
+        !/**
+        !  Number of stop bits for the serial port.
+        !  Dynamic change is not possible.
+        !*/
+        Object StopBits $Attribute 6 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "StopBits"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Enum"
+          EndBody
+        EndObject
+        !/**
+        !  Number of data bits for the serial port.
+        !  Dynamic change is not possible.
+        !*/
+        Object DataBits $Attribute 7 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "DataBits"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Enum"
+          EndBody
+        EndObject
+        !/**
+        !  List of termination characters for incoming data in ASCII value. A value of -1 indicates end of list.
+        !  If all entrys are set to -1, no termination character is used at all.
+        !  Dynamic change is possible.
+        !*/
+        Object TermChar $Attribute 8 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "TermChar"
+            Attr Size = 16
+            Attr Flags = 2
+            Attr Elements = 8
+            Attr TypeRef = "pwrs:Type-$Int16"
+          EndBody
+        EndObject
+        !/**
+        !  Timeout time in seconds used when reading a message from the serial port.
+        !  Dynamic change is possible.
+        !*/
+        Object ReadTimeout $Attribute 9 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ReadTimeout"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
+        !  Attribute that indicates connection with the remote node. 
+        !  The link is considered down when we reach the link supervision timeout
+        !  time without receiving any valid message.
+        !  The link is considered up again when receiving a valid message.
+        !*/
+        Object LinkUp $Attribute 10 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LinkUp"
+            Attr Size = 4
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        !  Time in seconds before the link is considered down.
+        !  Dynamic change is possible
+        !*/
+        Object LinkTimeout $Attribute 11 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LinkTimeout"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
+        !  When set, this attribute tells the remote handler not to start 
+        !  or restart the process that handles this remote node. If the transport process 
+        !  is running while the attribute is set it will terminate.
+        !  Dynamic change is possible.
+        !*/
+        Object Disable $Attribute 12 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Disable"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        !  This attribute shows how many times the remote handler has restarted the 
+        !  transport process that handles this remnode.
+        !  Dynamic change is possible and can be used in order to earn more restarts.
+        !*/
+        Object RestartCount $Attribute 13 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartCount"
+            Attr Size = 4
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  The restart limit tells the remote handler how many times the transport process
+        !  that handle this remnode can be restarted.
+        !  Dynamic change is possible and can be used in order to earn more restarts.
+        !*/
+        Object RestartLimit $Attribute 14 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartLimit"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  The restart time is set by the transport process at startup and therefore
+        !  shows the latest (re)starttime.
+        !*/
+        Object RestartTime $Attribute 15 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartTime"
+            Attr Size = 16
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+        !/**
+        !  Scantime in seconds for outgoing RemTrans objects.
+        !  Dynamic change is possible.
+        !*/
+        Object ScanTime $Attribute 16 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ScanTime"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
+        !  Error counter.
+        !*/
+        Object ErrCount $Attribute 17 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ErrCount"
+            Attr Size = 4
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  Type of remnode. Used in the RemoteConfig classgraph.
+        !*/
+        Object Id $Attribute 18 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Id"
+            Attr Size = 8
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$String8"
+          EndBody
+        EndObject
+        !/**
+        !  Contains the objid for the RemTrans objects for this remnode.
+        !  The objid's are inserted by the remote process.
+        !*/
+        Object RemTransObjects $Attribute 19 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RemTransObjects"
+            Attr Size = 200
+            Attr Flags = 2066
+            Attr Elements = 25
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+      EndObject
+      Object Template RemnodeSerial 2149285888 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Prio = 15
+          Attr DevName = "/dev/ttyS0"
+          Attr Speed = 9600
+          Attr StopBits = 1
+          Attr DataBits = 8
+          Attr TermChar[0] = -1
+          Attr TermChar[1] = -1
+          Attr TermChar[2] = -1
+          Attr TermChar[3] = -1
+          Attr TermChar[4] = -1
+          Attr TermChar[5] = -1
+          Attr TermChar[6] = -1
+          Attr TermChar[7] = -1
+          Attr ReadTimeout = 5.000000e-01
+          Attr LinkTimeout = 1.000000e+01
+          Attr RestartLimit = 100
+          Attr ScanTime = 1.000000e-01
+          Attr Id = "Serial"
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Servers,NodeConfiguration
+    !  @Summary Configures communication to a remote using the TCP/ip protocol.
+    !  Configures communication to a remote using the TCP/ip protocol.
+    ! 
+    ! @b Object graph
+    !  @image orm_remnodetcp_og.gif
+    ! 
+    ! @b See also
+    !  @classlink RemoteConfig remote_remoteconfig.html
+    !  @classlink RemTrans remote_remtrans.html
+    !*/
+    Object RemnodeTCP $ClassDef 8 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 80
+        Attr PopEditor = 2
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "RemnodeTCP"
+        EndBody
+        !/**
+        ! Optional description.
+        !*/
+        Object Description $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        !  Process priority for the transport process. For future use.
+        !*/
+        Object Prio $Attribute 2 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Prio"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        !/**
+        !  Device name for the ethernet device, Not yet implemented, defaults to "eth0".
+        !*/
+        Object DevName $Attribute 3 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "DevName"
+            Attr Size = 32
+            Attr TypeRef = "pwrs:Type-$String32"
+          EndBody
+        EndObject
+        !/**
+        !  Hostname for the remote node.
+        !  Dynamic change is not possible.
+        !*/
+        Object RemoteHostname $Attribute 4 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RemoteHostname"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        !  IP-address for the remote node. If address is omitted or invalid, RemoteHostname
+        !  is used to get the address either locally or through DNS lookup.
+        !  Dynamic change is not possible.
+        !*/
+        Object RemoteAddress $Attribute 5 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RemoteAddress"
+            Attr Size = 32
+            Attr TypeRef = "pwrs:Type-$String32"
+          EndBody
+        EndObject
+        !/**
+        !  Local portnumber.
+        !  Dynamic change is not possible.
+        !*/
+        Object LocalPort $Attribute 6 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LocalPort"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  Remote portnumber.
+        !  Dynamic change is not possible.
+        !*/
+        Object RemotePort $Attribute 7 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RemotePort"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  Connection mode determines if our side should act as client or as server.
+        !  Dynamic change is not possible.
+        !*/
+        Object ConnectionMode $Attribute 8 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ConnectionMode"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Enum"
+          EndBody
+        EndObject
+        !/**
+        !  Attribute that indicates connection with the remote node. 
+        !  The link is considered down when we reach the link supervision timeout
+        !  time without receiving any keepalive or other message.
+        !  The link is considered up again when receiving any kind of message.
+        !*/
+        Object LinkUp $Attribute 9 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LinkUp"
+            Attr Size = 4
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        !  Time in seconds before the link is considered down. A value of 0 (zero) disables
+        !  the LinkUp supervision.
+        !  Dynamic change is possible
+        !*/
+        Object LinkTimeout $Attribute 10 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LinkTimeout"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
+        !  When set, this attribute tells the remote handler not to start 
+        !  or restart the process that handles this remote node. If the transport process 
+        !  is running while the attribute is set it will terminate.
+        !  Dynamic change is possible.
+        !*/
+        Object Disable $Attribute 11 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Disable"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        !  This attribute shows how many times the remote handler has restarted the 
+        !  transport process that handles this remnode.
+        !  Dynamic change is possible and can be used in order to earn more restarts.
+        !*/
+        Object RestartCount $Attribute 12 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartCount"
+            Attr Size = 4
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  The restart limit tells the remote handler how many times the transport process
+        !  that handle this remnode can be restarted.
+        !  Dynamic change is possible and can be used in order to earn more restarts.
+        !*/
+        Object RestartLimit $Attribute 13 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartLimit"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  The restart time is set by the transport process at startup and therefore
+        !  shows the latest (re)starttime.
+        !*/
+        Object RestartTime $Attribute 14 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartTime"
+            Attr Size = 16
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+        !/**
+        !  Scantime in seconds for outgoing RemTrans objects.
+        !  Dynamic change is possible.
+        !*/
+        Object ScanTime $Attribute 15 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ScanTime"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
+        !  Time in seconds to wait before retransmit when using acknowledge and buffering.
+        !  For more information about acknowledge handling and retransmitting, 
+        !  refer to the documentation of the RemTrans object.
+        !  Dynamic change is possible.
+        !*/
+        Object RetransmitTime $Attribute 16 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RetransmitTime"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
+        !  When set, this attribute enables the sending of keepalive messages. 
+        !  Dynamic change is possible.
+        !*/
+        Object UseKeepalive $Attribute 17 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "UseKeepalive"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        !  Time in seconds between the sending of keepalive messages if keepalive 
+        !  messages is enabled with UseKeepalive.
+        !  Dynamic change is possible.
+        !*/
+        Object KeepaliveTime $Attribute 18 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "KeepaliveTime"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
+        !  Counter that keeps track of incoming and outgoing keepalive messanges.
+        !  The counter is incremented when a keppalive message is sent and decremented
+        !  when such a message is received.
+        !*/
+        Object KeepaliveDiff $Attribute 19 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "KeepaliveDiff"
+            Attr Size = 4
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        !/**
+        !  When set, this attribute disables use of the special Remote TCP header
+        !  in each send message. Furthermore, when receiving a message, the whole part
+        !  of the message is treated as data which means that it is not possible to
+        !  tell which ingoing RemTrans object the message is meant for since this information
+        !  lies in the header. Therefore each incoming message is placed in the first found
+        !  RemTrans object.
+        !  Dynamic change is possible.
+        !*/
+        Object DisableHeader $Attribute 20 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "DisableHeader"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        !  Error counter.
+        !*/
+        Object ErrCount $Attribute 21 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ErrCount"
+            Attr Size = 4
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  Type of remnode. Used in the RemoteConfig classgraph.
+        !*/
+        Object Id $Attribute 22 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Id"
+            Attr Size = 8
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$String8"
+          EndBody
+        EndObject
+        !/**
+        !  Contains the objid for the RemTrans objects for this remnode.
+        !  The objid's are inserted by the remote process.
+        !*/
+        Object RemTransObjects $Attribute 23 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RemTransObjects"
+            Attr Size = 200
+            Attr Flags = 2066
+            Attr Elements = 25
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+      EndObject
+      Object Template RemnodeTCP 2149810176 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Prio = 15
+          Attr DevName = "eth0"
+          Attr LinkTimeout = 3.000000e+00
+          Attr RestartLimit = 100
+          Attr ScanTime = 1.000000e-01
+          Attr RetransmitTime = 1.000000e+01
+          Attr UseKeepalive = 1
+          Attr KeepaliveTime = 1.000000e+00
+          Attr Id = "TCP"
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Servers,NodeConfiguration
+    !  @Summary Configures communication to a remote using the UDP/ip protocol.
+    !  Configures communication to a remote using the UDP/ip protocol.
+    ! 
+    ! @b Object graph
+    !  @image orm_remnodeudp_og.gif
+    ! 
+    ! @b See also
+    !  @classlink RemoteConfig remote_remoteconfig.html
+    !  @classlink RemTrans remote_remtrans.html
+    !*/
+    Object RemnodeUDP $ClassDef 5 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 80
+        Attr PopEditor = 2
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "RemnodeUDP"
+        EndBody
+        !/**
+        ! Optional description.
+        !*/
+        Object Description $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        !  Process priority for the transport process. For future use.
+        !*/
+        Object Prio $Attribute 2 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Prio"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        !/**
+        !  Device name for the ethernet device, Not yet implemented, defaults to "eth0".
+        !*/
+        Object DevName $Attribute 3 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "DevName"
+            Attr Size = 32
+            Attr TypeRef = "pwrs:Type-$String32"
+          EndBody
+        EndObject
+        !/**
+        !  Hostname for the remote node.
+        !  Dynamic change is not possible.
+        !*/
+        Object RemoteHostname $Attribute 4 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RemoteHostname"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        !  IP-address for the remote node. If address is omitted or invalid, RemoteHostname
+        !  is used to get the address either locally or through DNS lookup.
+        !  Dynamic change is not possible.
+        !*/
+        Object RemoteAddress $Attribute 5 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RemoteAddress"
+            Attr Size = 32
+            Attr TypeRef = "pwrs:Type-$String32"
+          EndBody
+        EndObject
+        !/**
+        !  Local portnumber.
+        !  Dynamic change is not possible.
+        !*/
+        Object LocalPort $Attribute 6 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LocalPort"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  Remote portnumber.
+        !  Dynamic change is not possible.
+        !*/
+        Object RemotePort $Attribute 7 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RemotePort"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  Attribute that indicates connection with the remote node. 
+        !  The link is considered down when we reach the link supervision timeout
+        !  time without receiving any keepalive or other message.
+        !  The link is considered up again when receiving any kind of message.
+        !*/
+        Object LinkUp $Attribute 8 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LinkUp"
+            Attr Size = 4
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        !  Time in seconds before the link is considered down. A value of 0 (zero) disables
+        !  the LinkUp supervision.
+        !  Dynamic change is possible
+        !*/
+        Object LinkTimeout $Attribute 9 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LinkTimeout"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
+        !  When set, this attribute tells the remote handler not to start 
+        !  or restart the process that handles this remote node. If the transport process 
+        !  is running while the attribute is set it will terminate.
+        !  Dynamic change is possible.
+        !*/
+        Object Disable $Attribute 10 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Disable"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        !  This attribute shows how many times the remote handler has restarted the 
+        !  transport process that handles this remnode.
+        !  Dynamic change is possible and can be used in order to earn more restarts.
+        !*/
+        Object RestartCount $Attribute 11 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartCount"
+            Attr Size = 4
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  The restart limit tells the remote handler how many times the transport process
+        !  that handle this remnode can be restarted.
+        !  Dynamic change is possible and can be used in order to earn more restarts.
+        !*/
+        Object RestartLimit $Attribute 12 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartLimit"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  The restart time is set by the transport process at startup and therefore
+        !  shows the latest (re)starttime.
+        !*/
+        Object RestartTime $Attribute 13 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartTime"
+            Attr Size = 16
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+        !/**
+        !  Scantime in seconds for outgoing RemTrans objects.
+        !  Dynamic change is possible.
+        !*/
+        Object ScanTime $Attribute 14 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ScanTime"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
+        !  Time in seconds to wait before retransmit when using acknowledge and buffering.
+        !  For more information about acknowledge handling and retransmitting, 
+        !  refer to the documentation of the RemTrans object.
+        !  Dynamic change is possible.
+        !*/
+        Object RetransmitTime $Attribute 15 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RetransmitTime"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
+        !  When set, this attribute enables the sending of keepalive messages. 
+        !  Dynamic change is possible.
+        !*/
+        Object UseKeepalive $Attribute 16 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "UseKeepalive"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        !  Time in seconds between the sending of keepalive messages if keepalive 
+        !  messages is enabled with UseKeepalive.
+        !  Dynamic change is possible.
+        !*/
+        Object KeepaliveTime $Attribute 17 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "KeepaliveTime"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
+        !  Counter that keeps track of incoming and outgoing keepalive messanges.
+        !  The counter is incremented when a keppalive message is sent and decremented
+        !  when such a message is received.
+        !*/
+        Object KeepaliveDiff $Attribute 18 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "KeepaliveDiff"
+            Attr Size = 4
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        !/**
+        !  When set, this attribute disables use of the special Remote UDP header
+        !  in each send message. Furthermore, when receiving a message, the whole part
+        !  of the message is treated as data which means that it is not possible to
+        !  tell which ingoing RemTrans object the message is meant for since this information
+        !  lies in the header. Therefore each incoming message is placed in the first found
+        !  RemTrans object.
+        !  Dynamic change is possible.
+        !*/
+        Object DisableHeader $Attribute 19 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "DisableHeader"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        !  Error counter.
+        !*/
+        Object ErrCount $Attribute 20 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ErrCount"
+            Attr Size = 4
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  Type of remnode. Used in the RemoteConfig classgraph.
+        !*/
+        Object Id $Attribute 21 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Id"
+            Attr Size = 8
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$String8"
+          EndBody
+        EndObject
+        !/**
+        !  Contains the objid for the RemTrans objects for this remnode.
+        !  The objid's are inserted by the remote process.
+        !*/
+        Object RemTransObjects $Attribute 22 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RemTransObjects"
+            Attr Size = 200
+            Attr Flags = 2066
+            Attr Elements = 25
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+      EndObject
+      Object Template RemnodeUDP 2149023744 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Prio = 15
+          Attr DevName = "eth0"
+          Attr LinkTimeout = 3.000000e+00
+          Attr RestartLimit = 100
+          Attr ScanTime = 1.000000e-01
+          Attr RetransmitTime = 1.000000e+01
+          Attr UseKeepalive = 1
+          Attr KeepaliveTime = 1.000000e+00
+          Attr Id = "UDP"
+        EndBody
+      EndObject
+    EndObject
+    Object RemNode $ClassDef 24 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 80
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "RemNode"
+        EndBody
+        Object Description $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object NodeName $Attribute 2 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "NodeName"
+            Attr Size = 40
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        Object Address $Attribute 3 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Address"
+            Attr Size = 8
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object TransportType $Attribute 4 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "TransportType"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object NumberOfRestarts $Attribute 5 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "NumberOfRestarts"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object CycleTime $Attribute 6 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "CycleTime"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object ErrTime $Attribute 7 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ErrTime"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object IOCycleTime $Attribute 8 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "IOCycleTime"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object IOStallTime $Attribute 9 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "IOStallTime"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object IOStallAction $Attribute 10 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "IOStallAction"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object IODataArea $Attribute 11 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "IODataArea"
+            Attr Size = 8
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object NumberOfTrans $Attribute 12 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "NumberOfTrans"
+            Attr Size = 4
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object NumberOfDI $Attribute 13 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "NumberOfDI"
+            Attr Size = 4
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object NumberOfDO $Attribute 14 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "NumberOfDO"
+            Attr Size = 4
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object NumberOfAI $Attribute 15 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "NumberOfAI"
+            Attr Size = 4
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object NumberOfAO $Attribute 16 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "NumberOfAO"
+            Attr Size = 4
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object NumberOfDV $Attribute 17 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "NumberOfDV"
+            Attr Size = 4
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object NumberOfCo $Attribute 18 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "NumberOfCo"
+            Attr Size = 4
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object PollDiff $Attribute 19 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "PollDiff"
+            Attr Size = 4
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object ErrTransCount $Attribute 20 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ErrTransCount"
+            Attr Size = 4
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object Poll $Attribute 21 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Poll"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object IOStallFlag $Attribute 22 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "IOStallFlag"
+            Attr Size = 4
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+      EndObject
+      Object Template RemNode 2154004480 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr CycleTime = 1.000000e-01
+          Attr IOCycleTime = 1.000000e+00
+          Attr IOStallTime = 2.000000e+00
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Servers,NodeConfiguration
+    !  @Summary Configures communication through a message queue using Webspere MQ.
+    !  Configures communication through a message queue using Websphere MQ as a client.
+    !  All regarding Server, channel, queue manager and queues to connect to is configured
+    !  in the RemonodeWMQ-object. 
+    !  Configurations for the different messages is configured in the RemtTrans-object that define
+    !  each in- and outgoing message. For each RemTrans-message the following can be configured:
+    ! 
+    !  TransName  - a string that defines the MsgId (message identity of the message).
+    !  Address[0] - defines whether the message should be sent as a persistent message or not.
+    !               1 means that the message will be sent as a persistent message. 0 not.
+    ! 
+    ! @b Object graph
+    !  @image orm_remnodewmq_og.gif
+    ! 
+    ! @b See also
+    !  @classlink RemoteConfig remote_remoteconfig.html
+    !  @classlink RemTrans remote_remtrans.html
+    !*/
+    Object RemnodeWMQ $ClassDef 33 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 80
+        Attr PopEditor = 2
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "RemnodeWMQ"
+        EndBody
+        !/**
+        ! Optional description.
+        !*/
+        Object Description $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        !  Process priority for the transport process. For future use.
+        !*/
+        Object Prio $Attribute 2 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Prio"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        !/**
+        !  Name of Queue Manager to connect to.
+        !  Server to connect to is defined by enviroment variable MQSERVER.
+        !  export MQSERVER=<ChannelName>/<TransportType>/<ConnectionName>[(port)]
+        !  For example:
+        !  export MQSERVER=CHANNEL1/TCP/192.168.40.20(2020)
+        !  The port is by default 1414 and will be used if no port is given.
+        !*/
+        Object QueueManager $Attribute 3 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "QueueManager"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        !  Name of WMQ queue for all incoming messages.
+        !*/
+        Object RcvQueue $Attribute 4 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RcvQueue"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        !  Name of WMQ queue for all outgoing messages.
+        !*/
+        Object SndQueue $Attribute 5 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "SndQueue"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        !  Scantime in seconds for outgoing RemTrans messages.
+        !  Dynamic change is possible.
+        !*/
+        Object ScanTime $Attribute 6 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ScanTime"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
+        !  When set, this attribute tells the remote handler not to start 
+        !  or restart the process that handles this remote node. If the transport process 
+        !  is running while the attribute is set it will terminate. This can be used to force
+        !  a restart of the process.
+        !*/
+        Object Disable $Attribute 7 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Disable"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        !  This attribute shows how many times the remote handler has restarted the 
+        !  transport process that handles this remnode.
+        !  Dynamic change is possible and can be used in order to earn more restarts.
+        !*/
+        Object RestartCount $Attribute 8 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartCount"
+            Attr Size = 4
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  The restart limit tells the remote handler how many times the transport process
+        !  that handle this remnode can be restarted.
+        !  Dynamic change is possible and can be used in order to earn more restarts.
+        !*/
+        Object RestartLimit $Attribute 9 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartLimit"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  The restart time is set by the transport process at startup and therefore
+        !  shows the latest (re)starttime.
+        !*/
+        Object RestartTime $Attribute 10 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RestartTime"
+            Attr Size = 16
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+        !/**
+        !  Error counter.
+        !*/
+        Object ErrCount $Attribute 11 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ErrCount"
+            Attr Size = 4
+            Attr Flags = 3088
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  Type of remnode. Used in the RemoteConfig classgraph.
+        !*/
+        Object Id $Attribute 12 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Id"
+            Attr Size = 8
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$String8"
+          EndBody
+        EndObject
+        !/**
+        !  Contains the objid for the RemTrans objects for this remnode.
+        !  The objid's are inserted by the remote process.
+        !*/
+        Object RemTransObjects $Attribute 13 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RemTransObjects"
+            Attr Size = 200
+            Attr Flags = 2066
+            Attr Elements = 25
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+      EndObject
+      Object Template RemnodeWMQ 2156363776 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Prio = 15
+          Attr ScanTime = 1.000000e-01
+          Attr RestartLimit = 100
+          Attr Id = "WMQ"
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Servers,NodeConfiguration
+    !  @Summary Configures the remotehandler.
+    !  Configures the remotehandler.
+    ! 
+    ! @b Object graph
+    !  @image orm_remoteconfig_og.gif
+    ! 
+    ! @b See also
+    !  @classlink RemNode ssab_remnode.html
+    !  @classlink RemTrans ssab_remtrans.html
+    !*/
+    Object RemoteConfig $ClassDef 7 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 80
+        Attr PopEditor = 2
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "RemoteConfig"
+        EndBody
+        !/**
+        ! Optional description.
+        !*/
+        Object Description $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        !  Disable all remote communication transports. If this attribute is set (value=1) on startup, no
+        !  remote transport will be started. If it is dynamically set during runtime, all remote
+        !  transports will be terminated and restarts will be blocked until the attribute is reset
+        !  (value=0) again.
+        !*/
+        Object Disable $Attribute 2 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Disable"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        !  Contains the objid for the RemNode objects.
+        !  The objid's are inserted by the remotehandler.
+        !*/
+        Object RemNodeObjects $Attribute 3 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RemNodeObjects"
+            Attr Size = 200
+            Attr Flags = 2066
+            Attr Elements = 25
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+      EndObject
+      Object Template RemoteConfig 2149548032 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.1
+    !  @Code remote_plc_macro.h
+    !  @Group Remote,Plc
+    !  @Summary Supervision of a receive RemTrans object and unpacks the receive buffer.
+    !  The object supervises a receive RemTrans object. 
+    !  @image orm_remtransrcv_fo.gif
+    !  In a subwindow, code for unpacking the receive buffer of the remtrans 
+    !  can be programmed. 
+    !  When a transaction is recived, the subwindow is executed and the output
+    !  Recieved is set to mark that new data is present.
+    ! 
+    ! @b See also
+    !  @classlink RemTrans remote_remtrans.html
+    !  @classlink RemTransSend remote_remtranssend.html
+    !*/
+    Object RemTransRcv $ClassDef 11 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 6
+        Attr Flags = 16
+        Attr PopEditor = 2
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "RemTransRcv"
+        EndBody
+        !/**
+        ! Data input connected to a GetData refering to the RemTrans object.
+        !*/
+        Object RemTrans $Input 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RemTrans"
+            Attr Flags = 82961
+            Attr TypeRef = "pwrs:Type-$Void"
+            Attr GraphName = "Trs"
+          EndBody
+        EndObject
+        !/**
+        ! Data is received. DataValid in the RemTrans object is detected, and
+        ! the subwindow is executed.
+        ! Received is true in one cycle.
+        !*/
+        Object Received $Output 2 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Received"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "rcv"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Object PlcNode $Buffer 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr Flags = 2048
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 161 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr object_type = 11
+          Attr parameters[0] = 1
+          Attr parameters[1] = 0
+          Attr parameters[2] = 1
+          Attr parameters[3] = 0
+          Attr subwindows = 1
+          Attr subwindow_class[0] = "pwrb:Class-WindowPlc"
+          Attr graphmethod = 16
+          Attr graphindex = 0
+          Attr default_mask[0] = 1
+          Attr default_mask[1] = 1
+          Attr segname_annotation = 1
+          Attr compmethod = 50
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 0
+          Attr executeordermethod = 2
+          Attr objname = "RemRcv"
+          Attr graphname = "RemRcv"
+        EndBody
+      EndObject
+      Object Template RemTransRcv 2150596608 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.1
+    !  @Code remote_plc_macro.h
+    !  @Group Remote,Plc
+    !  @Summary Fill and send a remtrans buffer.
+    !  Fill a remtrans buffer and mark the RemTrans object for send.
+    !  @image orm_remtranssend_fo.gif
+    ! 
+    !  The object has a subwindow where code for fill in data in 
+    !  a remtrans buffer can be programmed. The object excecutes the
+    !  subwindow and then sets the DataValid attribute in the RemTrans
+    !  object, to indicate that new data is present. Status from the
+    !  RemTrans object is stored in output attributes of the RemTransSend
+    !  object.
+    ! 
+    ! @b See also
+    !  @classlink RemTrans remote_remtrans.html
+    !  @classlink RemTransRcv remote_remtransrcv.html
+    !*/
+    Object RemTransSend $ClassDef 10 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 6
+        Attr Flags = 16
+        Attr PopEditor = 2
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "RemTransSend"
+        EndBody
+        !/**
+        ! Data input connected to a GetData which refers to the RemTrans object.
+        !*/
+        Object RemTrans $Input 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RemTrans"
+            Attr Flags = 82961
+            Attr TypeRef = "pwrs:Type-$Void"
+            Attr GraphName = "Trs"
+          EndBody
+        EndObject
+        !/**
+        ! Data will be sent on positiv edge. The subwindow is executed and
+        ! DataValid is set in the RemTrans object.
+        !*/
+        Object Send $Input 2 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Send"
+            Attr Flags = 25616
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "snd"
+          EndBody
+        EndObject
+        !/**
+        ! Indicates that the RemTrans object can't handle any new transactions
+        ! for the moment. The last transaction is not yet sent, or if buffering
+        ! is used, no more buffers are available.
+        !*/
+        Object Occupied $Output 3 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Occupied"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "occ"
+          EndBody
+        EndObject
+        !/**
+        ! Indicates that there are buffered transactions.
+        !*/
+        Object Buffer $Output 4 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Buffer"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "buf"
+          EndBody
+        EndObject
+        !/**
+        ! Error status was returned for the last transaction.
+        !*/
+        Object Error $Output 5 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Error"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "err"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Object PlcNode $Buffer 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr Flags = 2048
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 162 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr object_type = 11
+          Attr parameters[0] = 2
+          Attr parameters[1] = 0
+          Attr parameters[2] = 3
+          Attr parameters[3] = 0
+          Attr subwindows = 1
+          Attr subwindow_class[0] = "pwrb:Class-WindowPlc"
+          Attr graphmethod = 16
+          Attr graphindex = 0
+          Attr default_mask[0] = 3
+          Attr default_mask[1] = 5
+          Attr segname_annotation = 1
+          Attr compmethod = 50
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 0
+          Attr executeordermethod = 2
+          Attr objname = "RemSend"
+          Attr graphname = "RemSend"
+        EndBody
+      EndObject
+      Object Template RemTransSend 2150334464 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Servers,NodeConfiguration
+    !  @Summary Configures a remote message.
+    !  Configures a remote message.
+    ! 
+    !  The object describes a data message to or from another system. We can
+    !  communicate with other Proview systems or with foreign systems in
+    !  different ways, according to Transport type.
+    ! 
+    !  The RemTrans object must be hierarchically placed directly under the
+    !  RemNode object. The message data is fetched from, or stored into an object
+    !  that is the only child of the RemTrans object.
+    ! 
+    !  For certain messages, you can allow a limited number of buffered messages,
+    !  both for sending and receiving.Buffered sending is used when we don't have
+    !  connection to the remote node. Buffered receive is used if the final user of
+    !  data is not fast enough to treat several incoming messages.
+    ! 
+    !  For certain transports you can use built in acknowledgement for messages.
+    !  Generic class that defines a specific message to or from a specific 
+    !  remote node on a specific protocol. Should be placed below the 
+    !  RemNode-object. The size of a message to be sent is specified in the 
+    !  RemTrans-object. The data to be sent however resides in a buffer that 
+    !  is configured as a child to the remtrans-object. When a message is to 
+    !  be sent, data of the length specified in the remtrans-object is fetched 
+    !  from the buffer. Sometimes however a header of some length is added to 
+    !  the message.
+    ! 
+    ! @b See also
+    !  @classlink RemoteConfig remote_remoteconfig.html
+    !  @classlink RemnodeALCM remote_remnodealcm.html
+    !  @classlink RemnodeModbus remote_remnodemodbus.html
+    !  @classlink RemnodeMQ remote_remnodemq.html
+    !  @classlink RemnodeRK512 remote_remnoderk512.html
+    !  @classlink RemnodeSerial remote_remnodeserial.html
+    !  @classlink RemnodeTCP remote_remnodetcp.html
+    !  @classlink RemnodeUDB remote_remnodeudp.html
+    !  @classlink RemnodeWMQ remote_remnodewmq.html
+    !*/
+    Object RemTrans $ClassDef 25 23-JAN-2018 17:01:41.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-JAN-2018 17:01:41.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "RemTrans"
+        EndBody
+        !/**
+        ! Optional description.
+        !*/
+        Object Description $Attribute 1 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        !  For most transports this is only documentation.
+        !  For ALCM sending messages you must store receiving task
+        !  name (6 characters) here.
+        !  For ALCM receive you store message id (6 characters) here.
+        !*/
+        Object TransName $Attribute 2 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "TransName"
+            Attr Size = 40
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Message address. Used different for different transports.
+        ! Message address. Used different for different transports.
+        ! 
+        ! ALCM
+        ! Not used
+        ! 
+        ! PAMS
+        ! [0] - Class (0 - 255)
+        ! [1] - Type (0 - 255)
+        ! [2] - Processnumber for receiver (Only if we are sending)
+        ! 
+        ! DMQ
+        ! [0] - Class (0 - 255)
+        ! [1] - Type (0 - 255)
+        ! [2] - Processnumber for receiver (Only if we are sending)
+        ! [3] - Used in DMQ to control delivery mode for outgoing
+        !       messages:
+        ! 0 Use delivery modes WF_DQF and SAF
+        ! 1 Use delivery modes NN_MEM and DISC
+        ! 2 Use delivery modes WF_DQF and DISC
+        ! The WF_DQF delivery mode delivers the message to the remote
+        ! recovery journal and blocks for verification or timeout.
+        ! The NN_MEM delivery mode delivers the message to the
+        ! destination queue and doesn't wait for any verification at all.
+        ! The SAF function puts the message in the local recovery journal
+        ! if the link is down. When using SAF, DMQ handles the
+        ! retransmission meaning that we (Proview) can forget the
+        ! message and treat it as sent. This works on DMQ 3.2 but is not
+        ! supported in the earlier version 3.0.
+        ! The DISC function tells DMQ to discard the message if it isn't
+        ! deliverable. Can be used with WF_DQF along with the remote
+        ! buffering mechanism.
+        ! For a deeper description of delivery modes, consult the DMQ
+        ! documentation.
+        ! 3964R - VNET
+        ! [0] - First 3 letters of Trans name / Task name in RAD50
+        ! [1] - Next 3 letters of Trans name / Task name in RAD50
+        ! 
+        ! 3964R
+        ! Not used.
+        ! 
+        ! RK512
+        ! [0] - Address High byte (0 - 255)
+        ! [1] - Address Low byte (0 - 255)
+        ! 
+        ! TCP/ip and UDP/ip
+        ! [0] - Message address part 1 (0 - 65535)
+        ! [1] - Message address part 2 (0 - 65535)
+        ! 
+        ! QCom
+        ! [0] - Message address (0 - 255)
+        ! 
+        ! MODBUS
+        ! [0] - Slave address
+        ! [1] - Function code 
+        ! 
+        ! Serial
+        ! [0] - Ascii number (decimal) for termination character #1
+        ! [1] - Ascii number (decimal) for termination character #2
+        ! [2] - Ascii number (decimal) for termination character #3
+        ! [3] - Used to set the use of 7 or 8 bit character length. Set a value
+        !       of 1 to use 7 bits and a value of 0 to use 8 bits.
+        !*/
+        Object Address $Attribute 3 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Address"
+            Attr Size = 8
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Direction. Receive (1) or Send (2).
+        !*/
+        Object Direction $Attribute 4 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Direction"
+            Attr Size = 4
+            Attr TypeRef = "Remote:Type-TransDirectionEnum"
+          EndBody
+        EndObject
+        !/**
+        ! Number of Bytes in message data. For outgoing messages this
+        ! parameter must be set, either statically in the development
+        ! system or dynamically via an application, before sending the
+        ! message. For incoming messages this parameter is set by the
+        ! transport when each message is received and shows the received
+        ! length of this message.
+        !*/
+        Object DataLength $Attribute 5 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "DataLength"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Each message can be logged to file by specifying a LoggLevel.
+        ! 0: No logging.
+        ! 1: Logging of time, message lenght and status when an error
+        !    has occured.
+        ! 2: Logging of time, message lenght and status for every message.
+        ! 3: Logging of time, length, status and the first 48 bytes
+        !    in hexadecimal code.
+        ! 4: Logging of time, length, status and the whole message
+        !    in hex code.
+        ! 
+        ! The log-file is configured with a LoggConfig object with 
+        ! Identity set to 90.
+        !*/
+        Object LoggLevel $Attribute 6 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LoggLevel"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! If MaxBuffers is > 0, send messages will be stored if the connection
+        ! is down, and resent when the connection is up again.
+        ! 
+        ! MaxBuffers is the maximum number of stored messages.
+        ! 
+        ! In Remote UDP, when the message is outgoing, a value > 0 indicates 
+        ! that the message should be sent with wanted acknowledge.
+        !*/
+        Object MaxBuffers $Attribute 7 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "MaxBuffers"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        !  When set, old messages in the outgoing buffer are replace by new ones. 
+        !  This can be used for cyclic transactions and ensures that the outgoing buffer 
+        !  is not filled with obsolete messages in times of bad network.
+        !  Only implemented for QCom.
+        !*/
+        Object ReplacePrev $Attribute 19 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ReplacePrev"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        ! Current number or stored messages.
+        ! For incoming messages this indicates the number of messages waiting 
+        ! to be taken by the PLC-process. For outgoing messages it tells the 
+        ! number of buffered messages waiting to be acked.
+        !*/
+        Object Buffers $Attribute 8 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Buffers"
+            Attr Size = 4
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Size of data receiving object, or data sending object.
+        ! RemTrans can't handle messages bigger than this. Messages
+        ! exceeding this size will be discarded. 
+        ! The attribute is updated by the transport and should be left
+        ! blank in configuring.
+        !*/
+        Object MaxLength $Attribute 9 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "MaxLength"
+            Attr Size = 4
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Status of last transaction.
+        ! 
+        ! 1: Success.
+        ! 3: Receive data has been buffered.
+        ! 0: Send failure.
+        ! 2: Data length exceeds buffer object size.
+        ! 4: Receive data has been lost.
+        ! 6: Waiting for acknowledgement on message with auto ack.
+        !*/
+        Object LastSts $Attribute 10 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LastSts"
+            Attr Size = 4
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Transaction time for last received or sent/buffered message.
+        !*/
+        Object TransTime $Attribute 11 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "TransTime"
+            Attr Size = 16
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+        !/**
+        ! Number of successful transactions since start or restart.
+        !*/
+        Object TransCount $Attribute 12 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "TransCount"
+            Attr Size = 4
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Number of messages sent/received through buffering since start
+        ! or restart.
+        !*/
+        Object BuffCount $Attribute 13 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "BuffCount"
+            Attr Size = 4
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Number of received messages that were lost because they
+        ! couldn't be buffered.
+        !*/
+        Object LostCount $Attribute 14 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LostCount"
+            Attr Size = 4
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Number of send failures.
+        !*/
+        Object ErrCount $Attribute 15 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ErrCount"
+            Attr Size = 4
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Flag for new data in data-object.
+        ! 
+        ! When we receive a new message, it is stored into the data-object.
+        ! Then the DataValid is set. The next message can not be stored
+        ! before the final user has treated this message, and then reset the
+        ! DataValid signal. When using RemTransRcv in the PLCprogram,
+        ! this is handled automatically.
+        ! 
+        ! When the original sender want to send a new message, he fills in
+        ! the data, and then sets DataValid. The Remote transport will
+        ! search for DataValid set, and send the message and then Reset
+        ! the DataValid. Next message shouldn't be filled into the data
+        ! object before the DataValid is reset. When using RemTransSend
+        ! in the PLC-program, this is handled automatically.
+        !*/
+        Object DataValid $Attribute 16 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "DataValid"
+            Attr Size = 4
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        ! C struct name for the message.
+        ! When a StructName and StructFile is supplied, the content of
+        ! buffer object can be interpreted and displayed in accordance with
+        ! this struct from System/Communication/RemTrans in rt_xtt.
+        !*/
+        Object StructName $Attribute 17 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "StructName"
+            Attr Size = 40
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        !/**
+        ! C include file that contains the struct specified in StructName.
+        ! Default directory is $pwrp_inc.
+        !*/
+        Object StructFile $Attribute 18 23-JAN-2018 17:01:41.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "StructFile"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+      EndObject
+      Object Template RemTrans 2154266624 23-JAN-2018 17:01:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Direction = 1
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndVolume
