@@ -202,6 +202,8 @@ typedef enum {
   gsdml_eTag_RT_Class3TimingProperties,
   gsdml_eTag_MediaRedundancy,
   gsdml_eTag_PortSubmoduleItem,
+  gsdml_eTag_MAUTypeList,
+  gsdml_eTag_MAUTypeItem,
   gsdml_eTag_UseableSubmodules,
   gsdml_eTag_SubmoduleItemRef,
   gsdml_eTag_SlotList,
@@ -413,6 +415,11 @@ class gsdml_ModuleInfo {
   void build();
   void print( int ind);
 };
+
+typedef struct {
+  gsdml_tUnsigned16 Value;
+  gsdml_tBoolean AdjustSupported;
+} gsdml_sMAUTypeItem;
 
 typedef struct {
   gsdml_tString ConformanceClass;
@@ -746,6 +753,7 @@ typedef struct {
   gsdml_tValueList Writeable_IM_Records;
   gsdml_tUnsigned32 Max_iParameterSize;
   gsdml_tUnsigned16 SubsysModuleDirIndex;
+  gsdml_tUnsigned16 MayIssueProcessAlarm;
 } gsdml_sVirtualSubmoduleItem;
 
 class gsdml_VirtualSubmoduleItem {
@@ -914,6 +922,7 @@ typedef struct {
   gsdml_tBoolean DCP_HelloSupported;
   gsdml_tBoolean PTP_BoundarySupported;
   gsdml_tBoolean DCP_BoundarySupported;
+  gsdml_tBoolean DelayMeasurementSupported;
 } gsdml_sInterfaceSubmoduleItem;
 
 class gsdml_InterfaceSubmoduleItem {
@@ -950,6 +959,7 @@ typedef struct {
   gsdml_tBoolean SupportsRingportConfig;
   gsdml_tBoolean IsDefaultRingport;
   gsdml_tBoolean CheckMAUTypeSupported;
+  gsdml_tBoolean CheckMAUTypeDifferenceSupported;
 } gsdml_sPortSubmoduleItem;
 
 class gsdml_PortSubmoduleItem {
@@ -979,7 +989,7 @@ typedef struct {
   gsdml_tUnsigned16 AR_BlockVersion;
   gsdml_tUnsigned16 IOCR_BlockVersion;
   gsdml_tUnsigned16 AlarmCR_BlockVersion;
-  gsdml_tUnsigned16 SubmoduleDataBlockVersion;;
+  gsdml_tUnsigned16 SubmoduleDataBlockVersion;
 } gsdml_sDeviceAccessPointItem_ApplicationRelations;
 
 class gsdml_DeviceAccessPointItem_ApplicationRelations {
@@ -1096,6 +1106,7 @@ typedef struct {
   gsdml_tBoolean LLDP_NoD_Supported;
   gsdml_tUnsigned32 ResetToFactoryModes;
   gsdml_tBoolean SharedInputSupported;
+  gsdml_tUnsigned16 NumberOfDeviceAccessAR;
 } gsdml_sDeviceAccessPointItem;
 
 class gsdml_DeviceAccessPointItem {

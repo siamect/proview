@@ -56,6 +56,7 @@ class GsdmlAttrNavGtk : public GsdmlAttrNav {
 	pwr_tStatus *status);
     ~GsdmlAttrNavGtk();
     void set_inputfocus();
+    void display_attr_help_text();
 
     GtkWidget		*parent_wid;
     GtkWidget		*brow_widget;

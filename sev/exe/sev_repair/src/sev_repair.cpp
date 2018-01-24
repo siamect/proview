@@ -250,7 +250,7 @@ void sev_repair::clean_item( int idx, int print_idx)
       printf( "-- Processing %d (%u) %s\n", idx, (unsigned int)m_db->m_items.size(), m_db->m_items[idx].tablename);
     else
       printf( "-- Processing %s\n", m_db->m_items[idx].tablename);
-    m_db->delete_old_objectdata( &m_sts, m_db->m_items[idx].tablename, 
+    m_db->delete_old_objectdata( &m_sts, 0, m_db->m_items[idx].tablename, 
                                  m_db->m_items[idx].options, limit, m_db->m_items[idx].scantime, (float)0xEFFFFFFF);
   }
   else {
@@ -258,7 +258,7 @@ void sev_repair::clean_item( int idx, int print_idx)
       printf( "-- Processing %d (%u) %s\n", idx, (unsigned int)m_db->m_items.size(), m_db->m_items[idx].tablename);
     else
       printf( "-- Processing %s\n", m_db->m_items[idx].tablename);
-    m_db->delete_old_data( &m_sts, m_db->m_items[idx].tablename, 
+    m_db->delete_old_data( &m_sts, 0, m_db->m_items[idx].tablename, 
          m_db->m_items[idx].options, limit, m_db->m_items[idx].scantime, (float)0xEFFFFFFF);
   }
 }

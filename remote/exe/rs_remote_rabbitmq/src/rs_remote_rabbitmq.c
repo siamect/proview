@@ -140,7 +140,7 @@ int rmq_connect()
 
   if ( !ctx->conn) {
     ctx->conn = amqp_new_connection();
-    printf( "Connection : %u\n", (unsigned int)ctx->conn);    
+    // printf( "Connection : %u\n", (unsigned int)ctx->conn);    
   }
 
   if ( !ctx->socket) {
@@ -320,7 +320,7 @@ unsigned int rmq_receive()
     printf( "Unknown Reply type: %d\n", ret.reply_type);    
   }  
 
-  if (debug) printf("Received message %d\n", envelope.message.body.len);
+  if (debug) printf("Received message %d\n", (int) envelope.message.body.len);
   
   if ( envelope.message.body.len > 0 && rn_rmq->DisableHeader) {
  
