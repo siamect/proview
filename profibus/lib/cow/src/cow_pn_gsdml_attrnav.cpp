@@ -706,9 +706,11 @@ int GsdmlAttrNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 	}
       }
     }
+
     brow_SelectClear( attrnav->brow->ctx);
     brow_SetInverse( object, 1);
     brow_SelectInsert( attrnav->brow->ctx, object);
+    attrnav->display_attr_help_text();
     if ( !brow_IsVisible( attrnav->brow->ctx, object, flow_eVisible_Full))
       brow_CenterObject( attrnav->brow->ctx, object, 0.25);
     if ( node_count)
@@ -743,6 +745,7 @@ int GsdmlAttrNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
     brow_SelectClear( attrnav->brow->ctx);
     brow_SetInverse( object, 1);
     brow_SelectInsert( attrnav->brow->ctx, object);
+    attrnav->display_attr_help_text();
     if ( !brow_IsVisible( attrnav->brow->ctx, object, flow_eVisible_Full))
       brow_CenterObject( attrnav->brow->ctx, object, 0.75);
     if ( node_count)
@@ -780,6 +783,7 @@ int GsdmlAttrNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 	brow_SelectClear( attrnav->brow->ctx);
 	brow_SetInverse( event->object.object, 1);
 	brow_SelectInsert( attrnav->brow->ctx, event->object.object);
+	attrnav->display_attr_help_text();
       }
       break;
     default:
@@ -859,6 +863,7 @@ int GsdmlAttrNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
     brow_SelectClear( attrnav->brow->ctx);
     brow_SetInverse( object, 1);
     brow_SelectInsert( attrnav->brow->ctx, object);
+    attrnav->display_attr_help_text();
     if ( !brow_IsVisible( attrnav->brow->ctx, object, flow_eVisible_Full))
       brow_CenterObject( attrnav->brow->ctx, object, 0.25);
     free( node_list);
@@ -2047,8 +2052,8 @@ int ItemPn::close( GsdmlAttrNav *attrnav, double x, double y)
 }
 
 ItemPnEnumValue::ItemPnEnumValue( GsdmlAttrNav *attrnav, const char *item_name, int item_num, 
-	int item_type_id, void *attr_value_p, 
-	brow_tNode dest, flow_eDest dest_code) :
+	int item_type_id, void *attr_value_p,
+	brow_tNode dest, flow_eDest dest_code, const char *info_text) : ItemPn(info_text),
 	num(item_num), type_id(item_type_id), value_p(attr_value_p), first_scan(1)
 {
 
@@ -2090,8 +2095,7 @@ int ItemPnEnumValue::scan( GsdmlAttrNav *attrnav, void *p)
 ItemPnEnumValueMType::ItemPnEnumValueMType( GsdmlAttrNav *attrnav, const char *item_name, 
 					    const char *item_number, int item_num, 
 					    int item_type_id, void *attr_value_p, 
-					    brow_tNode dest, flow_eDest dest_code) :
-  num(item_num), type_id(item_type_id), value_p(attr_value_p), first_scan(1)
+					    brow_tNode dest, flow_eDest dest_code, const char *info_text) : ItemPn(info_text), num(item_num), type_id(item_type_id), value_p(attr_value_p), first_scan(1)
 {
 
   type = attrnav_eItemType_PnEnumValueMType;
@@ -2175,10 +2179,11 @@ int ItemPnDevice::open_children( GsdmlAttrNav *attrnav, double x, double y)
 			 &attrnav->device_num, node, flow_eDest_IntoLast);
     
     for ( unsigned int i = 0; i < attrnav->gsdml->ApplicationProcess->DeviceAccessPointList->DeviceAccessPointItem.size(); i++) {
+      gsdml_DeviceAccessPointItem *item = attrnav->gsdml->ApplicationProcess->DeviceAccessPointList->DeviceAccessPointItem[i];
       char name[80];
-      strncpy( name, (char *)attrnav->gsdml->ApplicationProcess->DeviceAccessPointList->DeviceAccessPointItem[i]->ModuleInfo->Body.Name.p, sizeof(name));
-      new ItemPnEnumValue( attrnav, name, idx++, pwr_eType_UInt32, 
-			   &attrnav->device_num, node, flow_eDest_IntoLast);
+      snprintf(name, sizeof(name), "%s (%s)", (char*)item->ModuleInfo->Body.Name.p, item->ModuleInfo->Body.OrderNumber);
+      new ItemPnEnumValue( attrnav, name, idx++, pwr_eType_UInt32,
+                           &attrnav->device_num, node, flow_eDest_IntoLast, (char *)item->ModuleInfo->Body.InfoText.p);
     }
 
     brow_SetOpen( node, attrnav_mOpen_Children);
@@ -2232,9 +2237,8 @@ int ItemPnDevice::scan( GsdmlAttrNav *attrnav, void *p)
     if ( attrnav->device_num == 0)
       strcpy( buf, "No");
     else {
-      strncpy( buf, (char *)attrnav->gsdml->ApplicationProcess->DeviceAccessPointList->
-	       DeviceAccessPointItem[attrnav->device_num-1]->ModuleInfo->Body.Name.p, 
-	       sizeof(buf));
+      gsdml_DeviceAccessPointItem *item = attrnav->gsdml->ApplicationProcess->DeviceAccessPointList->DeviceAccessPointItem[attrnav->device_num-1];
+      snprintf(buf, sizeof(buf), "%s (%s)", (char*)item->ModuleInfo->Body.Name.p, item->ModuleInfo->Body.OrderNumber);
     }
   }
   brow_SetAnnotation( node, 1, buf, strlen(buf));
@@ -2534,7 +2538,8 @@ int ItemPnSlot::scan( GsdmlAttrNav *attrnav, void *p)
       ModuleItemRef[slotdata->module_enum_number-1]->Body.ModuleItemTarget.p;
     if ( !mi || !mi->ModuleInfo->Body.Name.p)
       return 1;
-    strncpy( buf, (char *) mi->ModuleInfo->Body.Name.p, sizeof(buf));
+
+    snprintf(buf, sizeof(buf), "%s (%s)", (char *)mi->ModuleInfo->Body.Name.p, mi->ModuleInfo->Body.OrderNumber);
   }
   brow_SetAnnotation( node, 1, buf, strlen(buf));
   old_value = *(int *)p;
@@ -3179,6 +3184,11 @@ int ItemPnInterfaceSubmodule::open_children( GsdmlAttrNav *attrnav, double x, do
 		    pwr_eType_Boolean, sizeof(pwr_tBoolean), 0, 0,
 		    p, 1, node, flow_eDest_IntoLast);
 
+    p = (char *) &ii->Body.DelayMeasurementSupported;
+    new ItemPnBase( attrnav, "DelayMeasurementSupported", "LocalGsdmlAttr",
+                    pwr_eType_Boolean, sizeof(pwr_tBoolean), 0, 0,
+                    p, 1, node, flow_eDest_IntoLast);
+
     gsdml_RecordDataList *rl = ii->RecordDataList;
     if ( rl) {
       unsigned int record_index = 0;
@@ -3293,6 +3303,16 @@ int ItemPnPortSubmodule::open_children( GsdmlAttrNav *attrnav, double x, double 
     new ItemPnBase( attrnav, "IsDefaultRingport", "LocalGsdmlAttr", 
 		    pwr_eType_Boolean, sizeof(pwr_tBoolean), 0, 0,
 		    p, 1, node, flow_eDest_IntoLast);
+
+    p = (char *) &pi->Body.CheckMAUTypeSupported;
+    new ItemPnBase( attrnav, "CheckMAUTypeSupported", "LocalGsdmlAttr",
+                    pwr_eType_Boolean, sizeof(pwr_tBoolean), 0, 0,
+                    p, 1, node, flow_eDest_IntoLast);
+
+    p = (char *) &pi->Body.CheckMAUTypeDifferenceSupported;
+    new ItemPnBase( attrnav, "CheckMAUTypeDifferenceSupported", "LocalGsdmlAttr",
+                    pwr_eType_Boolean, sizeof(pwr_tBoolean), 0, 0,
+                    p, 1, node, flow_eDest_IntoLast);
 
     gsdml_RecordDataList *rl = pi->RecordDataList;
     if ( rl) {
@@ -3474,7 +3494,7 @@ int ItemPnModuleType::open_children( GsdmlAttrNav *attrnav, double x, double y)
 	new ItemPnEnumValueMType( attrnav, mname, mi->ModuleInfo->Body.OrderNumber, idx, 
 				  pwr_eType_UInt32, 
 				  &attrnav->dev_data.slot_data[slot_idx]->module_enum_number, 
-				  node, flow_eDest_IntoLast);
+				  node, flow_eDest_IntoLast, (char *)mi->ModuleInfo->Body.InfoText.p);
       }
       else if ( um->ModuleItemRef[i]->Body.FixedInSlots.list &&
 		um->ModuleItemRef[i]->Body.FixedInSlots.list->in_list(slot_number)) {
@@ -4142,7 +4162,7 @@ ItemPnParEnum::ItemPnParEnum( GsdmlAttrNav *attrnav, const char *item_name,
 
   // Get the values and corresponding texts
   gsdml_ValueItem *vi = (gsdml_ValueItem *)value_ref->Body.ValueItemTarget.p;
-    
+
   gsdml_Valuelist *allowed_values = 0; 
   if ( strcmp( value_ref->Body.AllowedValues, "") != 0)
     allowed_values = new gsdml_Valuelist( value_ref->Body.AllowedValues);
@@ -4151,9 +4171,12 @@ ItemPnParEnum::ItemPnParEnum( GsdmlAttrNav *attrnav, const char *item_name,
     for ( unsigned int i = 0; i < vi->Assignments->Assign.size(); i++) {
       ParEnumValue eval;
       int num;
+
       num = sscanf( vi->Assignments->Assign[i]->Body.Content, "%u", &eval.value);
+
       if ( num != 1)
 	continue;
+
       if ( allowed_values && !allowed_values->in_list( eval.value))
 	continue;
 
@@ -4163,6 +4186,20 @@ ItemPnParEnum::ItemPnParEnum( GsdmlAttrNav *attrnav, const char *item_name,
       values.push_back( eval);
     }
   }
+  else if (datatype == gsdml_eValueDataType_Bit)
+  {
+    ParEnumValue eval;
+
+    eval.value = 1;
+    strncpy( eval.text, "On", sizeof(eval.text));
+    eval.value <<= bit_offset;
+    values.push_back( eval);
+
+    eval.value = 0;
+    strncpy( eval.text, "Off", sizeof(eval.text));
+    values.push_back( eval);
+  }
+
   if ( allowed_values)
     delete allowed_values;
 
@@ -4218,15 +4255,12 @@ int ItemPnParEnum::open_children( GsdmlAttrNav *attrnav, double x, double y)
   else {
     brow_SetNodraw( attrnav->brow->ctx);
 
-    gsdml_ValueItem *vi = (gsdml_ValueItem *)value_ref->Body.ValueItemTarget.p;
-    
-    if ( vi && vi->Assignments) {
-      for ( unsigned int i = 0; i < values.size(); i++) {
-	new ItemPnParEnumBit( attrnav, values[i].text, datatype, data, 
-			      byte_offset, values[i].value, mask, noedit,
-			      node, flow_eDest_IntoLast);
-      }
+    for ( unsigned int i = 0; i < values.size(); i++) {
+      new ItemPnParEnumBit( attrnav, values[i].text, datatype, data,
+                            byte_offset, values[i].value, mask, noedit,
+                            node, flow_eDest_IntoLast);
     }
+
     brow_SetOpen( node, attrnav_mOpen_Children);
     brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_openmap);
     brow_ResetNodraw( attrnav->brow->ctx);

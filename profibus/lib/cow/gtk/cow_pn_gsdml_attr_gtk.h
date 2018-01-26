@@ -49,9 +49,9 @@ class GsdmlAttrGtk : public GsdmlAttr {
   GtkWidget	*form_widget;
   GtkWidget	*toplevel;
   GtkWidget	*msg_label;
+  GtkWidget	*help_text;
   GtkWidget	*cmd_prompt;
   GtkWidget	*cmd_input;
-  GtkWidget	*attrnav_form;
   GtkWidget	*cmd_ok;
   GtkWidget	*cmd_apply;
   GtkWidget	*cmd_cancel;
@@ -74,6 +74,12 @@ class GsdmlAttrGtk : public GsdmlAttr {
   ~GsdmlAttrGtk();
 
   void message( char severity, const char *message);
+
+  /**
+   * @brief attr_help_text Set the help text area to display a help text
+   * @param help_text Help text to display
+   */
+  void attr_help_text(const char *help_text);
   void set_prompt( const char *prompt);
   void change_value();
     
