@@ -550,7 +550,7 @@ cdh_AttrValueToString (
     if (ODD(time_DtoAscii(Value, 1, timbuf, sizeof(timbuf)))) {
       strncpy(String, timbuf, MaxSize);
     } else {
-      snprintf(String, MaxSize, "*** Bad delta time value ***");
+      strncpy(String, "*** Bad delta time value ***", MaxSize);
       sts = CDH__INVDELTATIME;
     }
     break;
@@ -571,6 +571,7 @@ cdh_AttrValueToString (
     break;
   }
 
+  String[MaxSize-1] = 0;
   return sts;
 }
 
