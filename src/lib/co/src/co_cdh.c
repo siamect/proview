@@ -490,83 +490,80 @@ cdh_AttrValueToString (
 {
   pwr_tStatus		sts = CDH__SUCCESS;
   char			timbuf[24];
-  static char		sval[512];
-
-  sval[0] = '\0';
 
   switch (Type) {
   case pwr_eType_Boolean:
     if (*(pwr_tBoolean *) Value)
-      strcpy(sval, "1");
+      strcpy(String, "1");
     else
-      strcpy(sval, "0");
+      strcpy(String, "0");
     break;
   case pwr_eType_Float32:
-    sprintf(sval, "%g", *(pwr_tFloat32 *) Value);
+    snprintf(String, MaxSize, "%g", *(pwr_tFloat32 *) Value);
     break;
   case pwr_eType_Float64:
-    sprintf(sval, "%g", *(pwr_tFloat64 *) Value);
+    snprintf(String, MaxSize, "%g", *(pwr_tFloat64 *) Value);
     break;
   case pwr_eType_Char:
     if (*(pwr_tChar *) Value == 0)
-      *sval = '\0';
+      *String = '\0';
     else
-      sprintf(sval, "%c", *(pwr_tChar *) Value);
+      sprintf(String, "%c", *(pwr_tChar *) Value);
     break;
   case pwr_eType_Int8:
-    sprintf(sval, "%d", *(pwr_tInt8 *) Value);
+    snprintf(String, MaxSize, "%d", *(pwr_tInt8 *) Value);
     break;
   case pwr_eType_Int16:
-    sprintf(sval, "%hd", *(pwr_tInt16 *) Value);
+    snprintf(String, MaxSize, "%hd", *(pwr_tInt16 *) Value);
     break;
   case pwr_eType_Int32:
   case pwr_eType_Status:
   case pwr_eType_NetStatus:
   case pwr_eType_Enum:
-    sprintf(sval, "%d", *(pwr_tInt32 *) Value);
+    snprintf(String, MaxSize, "%d", *(pwr_tInt32 *) Value);
     break;
   case pwr_eType_Int64:
-    sprintf(sval, pwr_dFormatInt64, *(pwr_tInt64 *) Value);
+    snprintf(String, MaxSize, pwr_dFormatInt64, *(pwr_tInt64 *) Value);
     break;
   case pwr_eType_UInt8:
-    sprintf(sval, "%u", *(pwr_tUInt8 *) Value);
+    snprintf(String, MaxSize, "%u", *(pwr_tUInt8 *) Value);
     break;
   case pwr_eType_UInt16:
-    sprintf(sval, "%hu", *(pwr_tUInt16 *) Value);
+    snprintf(String, MaxSize, "%hu", *(pwr_tUInt16 *) Value);
     break;
   case pwr_eType_UInt32:
   case pwr_eType_Mask:
-    sprintf(sval, "%u", *(pwr_tUInt32 *) Value);
+    snprintf(String, MaxSize, "%u", *(pwr_tUInt32 *) Value);
     break;
   case pwr_eType_UInt64:
-    sprintf(sval, pwr_dFormatUInt64, *(pwr_tUInt64 *) Value);
+    snprintf(String, MaxSize, pwr_dFormatUInt64, *(pwr_tUInt64 *) Value);
     break;
   case pwr_eType_Time:
     if (ODD(time_AtoAscii(Value, time_eFormat_DateAndTime, timbuf, sizeof(timbuf)))) {
-      strcpy(sval, timbuf);
+      strncpy(String, timbuf, MaxSize);
     } else {
-      sprintf(sval, "*** Bad time value ***");
+      strncpy(String, "*** Bad time value ***", MaxSize);
       sts = CDH__INVTIME;
     }
     break;
   case pwr_eType_DeltaTime:
     if (ODD(time_DtoAscii(Value, 1, timbuf, sizeof(timbuf)))) {
-      strcpy(sval, timbuf);
+      strncpy(String, timbuf, MaxSize);
     } else {
-      sprintf(sval, "*** Bad delta time value ***");
+      strncpy(String, "*** Bad delta time value ***", MaxSize);
       sts = CDH__INVDELTATIME;
     }
     break;
   case pwr_eType_String:
   case pwr_eType_Text:
-    sprintf(sval,"%s", (char *) Value);
+    snprintf(String, MaxSize, "%s", (char *) Value);
     break;
   case pwr_eType_ProString: {
-    int len = strlen( (char *)Value);
+    int len = MAX(strlen( (char *)Value), MaxSize);
     int i;
-    strcpy( sval, "");
+    strcpy( String, "");
     for ( i = 0; i < len; i++)
-      strcat( sval, "*");
+      strcat( String, "*");
     break;
   }
   default:
@@ -574,7 +571,7 @@ cdh_AttrValueToString (
     break;
   }
 
-  strncpy(String, sval, MaxSize);
+  String[MaxSize-1] = 0;
   return sts;
 }
 
