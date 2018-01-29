@@ -42,6 +42,7 @@
 #include "rt_errh.h"
 #include "rt_qcom.h"
 #include "rt_qdb.h"
+#include "rt_qmon.h"
 #include "rt_qcom_msg.h"
 #include "rt_qdb_msg.h"
 
@@ -1329,6 +1330,51 @@ qcom_SetRedundancyState (
   qdb->my_node->redundancy_state = state;
 }
 
+/**
+ * Send a connect action message to rt_qmon
+ */
+void
+qcom_LinkConnect( 
+  pwr_tNodeId nid
+) 
+{
+  pwr_tStatus sts;
+  qcom_sPut put;
+  qcom_sQid qmon_qid = {qcom_cImonAction, 0};
+
+  memset( &put, 0, sizeof(put));
+  put.type.b = (qcom_eBtype) qmon_cMsgClassAction;
+  put.type.s = (qcom_eStype) qmon_eMsgTypeAction_Connect;
+  put.size = sizeof(pwr_tNodeId);
+  put.data = qcom_Alloc( &sts, put.size);
+  *(pwr_tNodeId *)put.data = nid;
+  put.allocate = 0;
+  
+  qcom_Put( &sts, &qmon_qid, &put);
+}
+
+/**
+ * Send a disconnect action message to rt_qmon
+ */
+void
+qcom_LinkDisconnect( 
+  pwr_tNodeId nid
+) 
+{
+  pwr_tStatus sts;
+  qcom_sPut put;
+  qcom_sQid qmon_qid = {qcom_cImonAction, 0};
+
+  memset( &put, 0, sizeof(put));
+  put.type.b = (qcom_eBtype) qmon_cMsgClassAction;
+  put.type.s = (qcom_eStype) qmon_eMsgTypeAction_Disconnect;
+  put.size = sizeof(pwr_tNodeId);
+  put.data = qcom_Alloc( &sts, put.size);
+  *(pwr_tNodeId *)put.data = nid;
+  put.allocate = 0;
+  
+  qcom_Put( &sts, &qmon_qid, &put);
+}
 
 
 /*

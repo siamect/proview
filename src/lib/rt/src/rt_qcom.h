@@ -450,6 +450,15 @@ qcom_SetRedundancyState (
   pwr_eRedundancyState state
 );
 
+void
+qcom_LinkConnect( 
+  pwr_tNodeId nid
+);
+
+void
+qcom_LinkDisconnect( 
+  pwr_tNodeId nid
+);
 
 
 bool_t 

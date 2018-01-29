@@ -2091,6 +2091,32 @@ action_thread ()
 	    send_action( lp, get.type.s);
 
 	  break;
+	case qmon_eMsgTypeAction_Connect: {
+	  sLink *lp;
+	  sEseg *sp;
+	  pwr_tNodeId nid;
+
+	  nid = *(pwr_tNodeId *)msg;
+	  lp = get_link(nid, NULL);
+	  if ( !lp)
+	    break;
+	  lp->np->link[lp->lix].birth = time_Clock(NULL, NULL);
+	  sp = create_connect(lp);
+	  que_Put(NULL, &lp->q_in, &sp->c.le, sp);
+	  break;
+	}
+	case qmon_eMsgTypeAction_Disconnect: {
+	  sLink *lp;
+	  pwr_tNodeId nid;
+
+	  nid = *(pwr_tNodeId *)msg;
+
+	  lp = get_link(nid, NULL);
+	  if ( !lp)
+	    break;
+	  link_disconnect(lp);
+	  break;
+	}
 	default: ;
 	}
 	break;
@@ -2122,6 +2148,8 @@ send_action (
     timelog( 1, "qmon send NodePassive");
     sp->head.flags.b.event = eEvent_redcomPassive;
     break;
+  default: 
+    return 0;
   }
   sp->lp = lp;
   sp->c.action = eAction_export;

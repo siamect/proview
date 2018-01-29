@@ -43,7 +43,9 @@
 
 typedef enum {
   qmon_eMsgTypeAction_NodeActive,
-  qmon_eMsgTypeAction_NodePassive
+  qmon_eMsgTypeAction_NodePassive,
+  qmon_eMsgTypeAction_Connect,
+  qmon_eMsgTypeAction_Disconnect
 } qmon_eMsgTypeAction;  
 
 #endif

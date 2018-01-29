@@ -138,6 +138,8 @@ static int	exit_func(	menu_ctx	ctx,
 				int		*flag);
 static int	classhier_func(	menu_ctx	ctx,
 				int		*flag);
+static int	qcom_func(	menu_ctx	ctx,
+				int		*flag);
 static int	rtt_login_func(	menu_ctx	ctx,
 				int		*flag);
 static int	rtt_show_object_add(
@@ -4465,6 +4467,104 @@ static int	classhier_func(	menu_ctx	ctx,
 
 /*************************************************************************
 *
+* Name:		qcom_func()
+*
+* Type		int
+*
+* Type		Parameter	IOGF	Description
+* menu_ctx	ctx		I	rtt context.
+*
+* Description:
+*	Connect and disconnect qcom.
+*	
+**************************************************************************/
+
+static int	qcom_func(	menu_ctx	ctx,
+				int		*flag)
+{
+	int	sts;
+	char	arg1_str[80];
+	int	arg1_sts;
+
+	arg1_sts = rtt_get_qualifier( "rtt_arg1", arg1_str);
+
+	if ( cdh_NoCaseStrncmp( arg1_str, "CONNECT", strlen( arg1_str)) == 0) {
+	  /* Command is "QCOM CONNECT" */
+
+	  char	node_str[80];
+	  qcom_sNode node;
+	  pwr_tNid nid;
+	  int found;
+
+	  /* Check authorization */
+	  if ( !(rtt_priv & RTT_PRIV_SYS) ) {
+	    rtt_message('E',"Not authorized for this operation");
+	    return RTT__NOPICTURE;
+	  }
+
+	  if ( EVEN( rtt_get_qualifier( "/NODE", node_str))) {
+	    rtt_message('E',"Enter node");	
+	    return RTT__HOLDCOMMAND;
+	  }
+
+
+	  found = 0;
+	  for (nid = qcom_cNNid; qcom_NextNode(&sts, &node, nid); nid = node.nid) {
+	    if ( cdh_NoCaseStrcmp( node_str, node.name) == 0) {
+	      found = 1;
+	      break;
+	    }
+	  }
+	  if ( !found) {
+	    rtt_message('E',"Unknown node");
+	    return RTT__NOPICTURE;	    
+	  }
+
+	  qcom_LinkConnect( node.nid);
+        }
+	else if ( cdh_NoCaseStrncmp( arg1_str, "DISCONNECT", strlen( arg1_str)) == 0) {
+	  /* Command is "QCOM CONNECT" */
+
+	  char	node_str[80];
+	  qcom_sNode node;
+	  pwr_tNid nid;
+	  int found;
+
+	  /* Check authorization */
+	  if ( !(rtt_priv & RTT_PRIV_SYS) ) {
+	    rtt_message('E',"Not authorized for this operation");
+	    return RTT__NOPICTURE;
+	  }
+
+	  if ( EVEN( rtt_get_qualifier( "/NODE", node_str))) {
+	    rtt_message('E',"Enter node");	
+	    return RTT__HOLDCOMMAND;
+	  }
+
+
+	  found = 0;
+	  for (nid = qcom_cNNid; qcom_NextNode(&sts, &node, nid); nid = node.nid) {
+	    if ( cdh_NoCaseStrcmp( node_str, node.name) == 0) {
+	      found = 1;
+	      break;
+	    }
+	  }
+	  if ( !found) {
+	    rtt_message('E',"Unknown node");
+	    return RTT__NOPICTURE;	    
+	  }
+
+	  qcom_LinkDisconnect( node.nid);
+        }
+	else {
+	  rtt_message('E', "Syntax error");
+	  return RTT__HOLDCOMMAND;
+	}
+	return RTT__SUCCESS;	
+}
+
+/*************************************************************************
+*
 * Name:		rtt_login_func()
 *
 * Type		int
@@ -4688,6 +4788,11 @@ rtt_t_comtbl	rtt_command_table[] = {
 			"CLASSHIER",
 			&classhier_func,
 			{ ""}
+		},
+		{
+			"QCOM",
+			&qcom_func,
+			{ "rtt_arg1", "/NODE", ""}
 		},
 		{
 			"CREATE",
