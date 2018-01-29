@@ -60,7 +60,7 @@ static unsigned int pkg_random()
   return (unsigned int)((double) rand() / ((double) RAND_MAX + 1) * 999999);
 }
 
-wb_pkg::wb_pkg( char *nodelist, bool distribute, bool config_only)
+wb_pkg::wb_pkg( char *nodelist, bool distribute, bool config_only, bool check, int *new_files)
 {
   if ( nodelist) {
     char node_str[32][20];
@@ -86,6 +86,13 @@ wb_pkg::wb_pkg( char *nodelist, bool distribute, bool config_only)
 
   for ( unsigned int i = 0; i < m_nodelist.size(); i++)
     m_nodelist[i].checkNode();
+
+  if ( check && new_files) {
+    *new_files = 0;
+    for ( unsigned int i = 0; i < m_nodelist.size(); i++)
+      *new_files += m_nodelist[i].compareFiles();
+    return;
+  }
 
   fetchFiles( distribute);
 }
@@ -172,6 +179,18 @@ void wb_pkg::readConfig()
 	  pkg_pattern p( line_item[3], line_item[4], severity);
 	  n.push_back( p);
 	}
+      } catch ( wb_error &e) {
+	continue;
+      }
+    }
+    else if ( strcmp( cdh_Low(line_item[0]), "depnode") == 0) {
+      if ( num != 4)
+	throw wb_error_str("File corrupt " pwr_cNameDistribute);
+
+      try {
+	pkg_node& n = getNode( line_item[1]);
+	pkg_depnode dn( line_item[2], line_item[3]);
+	n.depnodeAdd( dn);
       } catch ( wb_error &e) {
 	continue;
       }
@@ -456,6 +475,161 @@ void pkg_node::checkVolume( char *filename)
   free( (char *)volref);
 }
 
+int pkg_node::compareFiles() 
+{
+  char	dev[80];
+  char	dir[80];
+  char	file[80];
+  char	type[80];
+  int 	version;
+  char  fname[200];
+  bool  artime_minute = true;
+  int	new_files = 0;
+
+  // Read package version
+  sprintf( fname, "$pwrp_load/pkg_v_%s.dat", m_name);
+  dcli_translate_filename( fname, fname);
+  ifstream ifv( fname);
+  if ( ifv) {
+    ifv >> version;
+    ifv.close();
+  }
+  else
+    // No previous package
+    return false;
+
+  // List the package and retrive the file date
+  pwr_tFileName pkg_name;
+  sprintf( pkg_name, pwr_cNamePkg, m_name, version);
+
+  pwr_tCmd cmd;
+  if ( artime_minute)
+    sprintf( cmd, "tar -tvf $pwrp_load/%s > %s", pkg_name, "$pwrp_tmp/fl.tmp");
+  else
+    sprintf( cmd, "tar --full-time -tvf $pwrp_load/%s > %s", pkg_name, "$pwrp_tmp/fl.tmp");
+  system( cmd);
+
+  dcli_translate_filename( fname, "$pwrp_tmp/fl.tmp");
+  ifstream is( fname);
+  char line[400];
+  char line_item[6][200];
+  int num;
+  char timstr[40];
+  pwr_tTime time;
+  pwr_tFileName source;
+  map<string, pwr_tTime> tarlist;
+
+  while ( is.getline( line, sizeof(line))) {
+
+    num = dcli_parse( line, " 	", "", (char *)line_item,
+		     sizeof(line_item)/sizeof(line_item[0]),
+		     sizeof(line_item[0]), 0);
+    if ( num != 6)
+      continue;
+
+    if ( strncmp( line_item[5], "pkg_build/", 10) != 0)
+      continue;
+
+    // Add file to list
+    strncpy( timstr, line_item[3], sizeof(timstr));
+    strncat( timstr, " ", sizeof(timstr) - strlen(timstr));
+    strncat( timstr, line_item[4], sizeof(timstr) - strlen(timstr));
+
+    strncpy( source, &line_item[5][10], sizeof(source));
+
+    if ( artime_minute)
+      time_FormAsciiToA( timstr, MINUTE, 0, &time);
+    else
+      time_FormAsciiToA( timstr, SECOND, 0, &time);
+
+    string s(source);
+    tarlist[s] = time;
+  }    
+
+  // Add volumes to pattern
+  for ( int i = 0; i < (int)m_volumelist.size(); i++) {
+    if ( !m_volumelist[i].m_isSystem) {
+      pkg_pattern vol( m_volumelist[i].m_filename, "$pwrp_load/", 'E');
+      push_back( vol);
+    }
+  }
+
+  for ( int i = 0; i < (int)m_pattern.size(); i++) 
+    m_pattern[i].fetchFiles();
+
+  // Put all files in a single list
+  m_filelist.clear();
+  for ( int i = 0; i < (int)m_pattern.size(); i++) {
+    for ( int j = 0; j < (int)m_pattern[i].m_filelist.size(); j++) {
+      try {
+	pkg_file f = m_pattern[i].m_filelist[j];
+
+	dcli_parse_filename( f.m_source, dev, dir, file, type, &version);
+	strcpy( f.m_arname, file);
+	strcat( f.m_arname, type);
+
+	// Check that this name is unique
+	for (;;) {
+	  bool new_name = false;
+	  for ( int k = 0; k < (int)m_filelist.size(); k++) {
+	    if ( strcmp( m_filelist[k].m_arname, f.m_arname) == 0) {
+	      strcat( f.m_arname, "x");
+	      new_name = true;
+	      break;
+	    }
+	  }
+	  if ( !new_name)
+	    break;
+	}
+
+	m_filelist.push_back( f);
+      } catch ( wb_error &e) {
+	MsgWindow::message( 'W', e.what().c_str(), msgw_ePop_No);
+	m_warnings++;
+      }
+    }
+  }
+
+  for ( int k = 0; k < (int)m_filelist.size(); k++) {
+    string s(m_filelist[k].m_arname);
+    pwr_tTime tar_time, src_time;
+    pwr_tStatus sts;
+
+    tar_time = tarlist[s];
+    if ( tar_time.tv_sec == 0) {
+      printf("No such file: %s\n", m_filelist[k].m_arname);
+      new_files++;
+      continue;
+    }
+
+    sts = dcli_file_time( m_filelist[k].m_source, &src_time);
+    // printf( "tar: %lld  src: %lld %s\n", tar_time.tv_sec, src_time.tv_sec, m_filelist[k].m_arname);
+
+    int diff = 0;
+    if ( artime_minute)
+      diff = 60;
+
+    if ( abs(tar_time.tv_sec - src_time.tv_sec) > diff) {
+      printf( "New file: %s\n", m_filelist[k].m_arname);
+      new_files++;
+    }	
+  }
+  
+  if ( m_errors) {
+    char msg[200];
+    sprintf( msg, "Distribute errors node %s: %d errors, %d warnings", m_name, m_errors, m_warnings);
+    MsgWindow::message( 'E', msg, msgw_ePop_Yes);
+    throw wb_error_str( msg);
+  }
+  else if ( m_warnings) {
+    char msg[200];
+    sprintf( msg, "Distribute warnings node %s: %d warnings", m_name, m_warnings);
+    MsgWindow::message( 'W', msg, msgw_ePop_Yes);
+  }
+
+  return new_files;
+}
+
 void pkg_node::fetchFiles( bool distribute) 
 {
   char	dev[80];
@@ -482,6 +656,7 @@ void pkg_node::fetchFiles( bool distribute)
     m_pattern[i].fetchFiles();
 
   // Put all files in a single list
+  m_filelist.clear();
   for ( int i = 0; i < (int)m_pattern.size(); i++) {
     for ( int j = 0; j < (int)m_pattern[i].m_filelist.size(); j++) {
       try {
@@ -491,7 +666,7 @@ void pkg_node::fetchFiles( bool distribute)
 	strcpy( f.m_arname, file);
 	strcat( f.m_arname, type);
 
-	// Check that this name is unic
+	// Check that this name is unique
 	for (;;) {
 	  bool new_name = false;
 	  for ( int k = 0; k < (int)m_filelist.size(); k++) {
@@ -560,13 +735,13 @@ void pkg_node::fetchFiles( bool distribute)
   
   for ( int i = 0; i < (int)m_filelist.size(); i++)
     of << 
-      "cp " <<  m_filelist[i].m_source << " " << m_blddir << "/" << m_filelist[i].m_arname << endl;
+      "cp --preserve=timestamps " <<  m_filelist[i].m_source << " " << m_blddir << "/" << m_filelist[i].m_arname << endl;
 
   of <<
     "cp $pwrp_tmp/pkg_unpack_" << m_name << ".sh " << m_tmpdir << "/pkg_unpack.sh" << endl <<
     "cp $pwrp_tmp/pwr_pkg_" << m_name << ".dat " << m_tmpdir << "/pwr_pkg.dat" << endl <<
     "cd " << m_tmpdir << endl <<
-    "tar -czf $pwrp_load/" << pkg_name << " pwr_pkg.dat pkg_unpack.sh pkg_build" << endl <<
+    "tar --atime-preserve -czf $pwrp_load/" << pkg_name << " pwr_pkg.dat pkg_unpack.sh pkg_build" << endl <<
     "rm -r " << m_tmpdir << endl;
 
   of.close();

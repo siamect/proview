@@ -647,6 +647,7 @@ palette ProjectNavigatorPalette
     class BusConfig
     class ClassVolumeLoad
     class CustomBuild
+    class DistrDependNode
     class Distribute
     class DetachedClassVolumeLoad
     class FriendNodeConfig

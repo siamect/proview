@@ -2597,7 +2597,8 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  /* Find the applications for this node */
 	  class_vect[0] = pwr_cClass_Distribute;
 	  class_vect[1] = pwr_cClass_ApplDistribute;
-	  class_vect[2] = 0;
+	  class_vect[2] = pwr_cClass_DistrDependNode;
+	  class_vect[3] = 0;
 	  
 	  objcount = 0;
 	  objlist = 0;
@@ -2741,6 +2742,46 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		  free( source_ptr);
 		free( target_ptr);
 		break;
+	      case pwr_cClass_DistrDependNode: {
+		char *depnodename_ptr;
+		char *project_ptr;
+
+		sts = ldh_ObjidToName( ldhses, applobjid, ldh_eName_Object,
+				       appl_name, sizeof(appl_name), &size);
+		if ( EVEN(sts)) return sts;
+		
+		/* Check Node attribute */
+		sts = ldh_GetObjectPar( ldhses, applobjid, "DevBody",
+					"NodeName", &depnodename_ptr, &size);
+		if (EVEN(sts)) return sts;
+		
+		if ( !strcmp( depnodename_ptr, "")) {
+		  char msg[200];
+		  free( depnodename_ptr);
+		  depnodename_ptr = null_nodename;
+		  sprintf( msg, "Error in DistrDependNode object '%s', NodeName is missing", 
+			   appl_name);
+		  MsgWindow::message( 'E', msg, msgw_ePop_Default);
+		  syntax_error = 1;
+		}         
+		/* Check Project attribute */
+		sts = ldh_GetObjectPar( ldhses, applobjid, "DevBody",
+					"Project", &project_ptr, &size);
+		if (EVEN(sts)) return sts;
+		
+		if ( !strcmp( project_ptr, ""))
+		  project_ptr = systemname;
+
+		fprintf( file, "depnode %s %s %s\n",
+			 nodename_ptr,
+			 depnodename_ptr,
+			 project_ptr);
+		if ( depnodename_ptr != null_nodename)
+		  free( depnodename_ptr);
+		if ( project_ptr != systemname)
+		  free( project_ptr);
+		break;
+	      }
 	      default: ;
 	      }
 	    }

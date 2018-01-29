@@ -455,7 +455,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 		{
 			"DISTRIBUTE",
 			&wnav_distribute_func,
-			{ "/NODE", "/PACKAGE", "/FILE", ""}
+			{ "/NODE", "/PACKAGE", "/FILE", "/CHECK", ""}
 		},
 		{
 			"RELEASE",
@@ -5145,6 +5145,33 @@ static int	wnav_distribute_func(	void		*client_data,
   else
     node_ptr = NULL;
 
+  if ( ODD( dcli_get_qualifier( "/CHECK", 0, 0))) {
+    int new_files;
+
+    try {
+      wb_pkg *pkg = new wb_pkg( node_ptr, false, false, true, &new_files);
+      delete pkg;
+    }
+    catch ( wb_error &e) {
+      wnav->message(' ', (char *)e.what().c_str());
+      sts = e.sts();
+      if ( EVEN(sts)) {
+	if ( sts == 0)
+	  return WNAV__DISTRERR;
+	return sts;    
+      }
+    }
+    if ( new_files) {
+      char msg[80];
+      sprintf( msg, "Modified files found (%d)", new_files);
+      wnav->message('I', msg);
+      return 2;
+    }
+    else 
+      wnav->message('I', "Package up to date");      
+    return WNAV__SUCCESS;
+  }
+
   package = ODD( dcli_get_qualifier( "/PACKAGE", 0, 0));
   distribute = package ? false : true;
 
@@ -5595,6 +5622,7 @@ static int	wnav_check_func(	void		*client_data,
       }
       else
 	wnav->message( 'I', "Successful syntax check, no errors or warnings found");
+      return WNAV__SUCCESS;
     }
     else {
       if ( EVEN( dcli_get_qualifier( "/NAME", namestr, sizeof(namestr)))) {

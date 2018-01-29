@@ -119,11 +119,26 @@ class pkg_volume {
   }
 };
 
+class pkg_depnode {
+  friend class pkg_node;
+
+ private:
+  char m_nodename[40];
+  char m_project[40];
+
+ public:
+  pkg_depnode( char *nodename, char *project) {
+    strncpy( m_nodename, nodename, sizeof(m_nodename));
+    strncpy( m_project, project, sizeof(m_project));
+  }
+};
+
 class pkg_node {
  private:
   vector<pkg_pattern> m_pattern;
   vector<pkg_file> m_filelist;
   vector<pkg_volume> m_volumelist;
+  vector<pkg_depnode> m_depnodelist;
   char m_name[80];
   char m_bootnode[80];
   pwr_mOpSys m_opsys;
@@ -194,9 +209,13 @@ class pkg_node {
     pattern.node( this);
     m_pattern.push_back( pattern);
   }
+  void depnodeAdd( pkg_depnode &depnode) {
+    m_depnodelist.push_back( depnode);
+  }
   void checkVolume( char *filename);
   void checkNode();
   void fetchFiles( bool distribute);
+  int compareFiles();
   void copyPackage( char *pkg_name);
   void incrWarnings() { m_warnings++;}
   void incrErrors() { m_errors++;}
@@ -210,7 +229,8 @@ class wb_pkg {
   void readConfig();
 
  public:
-  wb_pkg( char *nodelist, bool distribute = true, bool config_only = false);
+  wb_pkg( char *nodelist, bool distribute = true, bool config_only = false, bool check = false, 
+	  int *new_files = 0);
   pkg_node& getNode( char *name);
   void fetchFiles( bool distribute) {
     for ( int i = 0; i < (int)m_nodelist.size(); i++) m_nodelist[i].fetchFiles( distribute);
