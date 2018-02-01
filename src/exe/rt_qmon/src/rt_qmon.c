@@ -960,6 +960,7 @@ get_tmo (
 {
   float rto;
   pwr_tTime now;
+  pwr_tDeltaTime drto;
   
   rto = lp->np->link[lp->lix].rtt_rto;
 
@@ -974,7 +975,7 @@ get_tmo (
   }
 
   time_GetTimeMonotonic( &now);
-  time_Aadd( tmo, &now, time_FloatToD( 0, rto));
+  time_Aadd( tmo, &now, time_FloatToD( &drto, rto));
 }
 
 static void *
