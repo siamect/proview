@@ -108,7 +108,7 @@ pwr_tStatus rt_sim::print_object( FILE *fp, pwr_tOid oid)
       fprintf( fp, "<oname> %s\n", oname);
     }
     else {
-      fprintf( fp, "<oid> %s\n", cdh_ObjidToString( 0, oid, 1));
+      fprintf( fp, "<oid> %s\n", cdh_ObjidToString( oid, 1));
     }
 
     sts = gdh_GetObjectSize( oid, &aref.Size);

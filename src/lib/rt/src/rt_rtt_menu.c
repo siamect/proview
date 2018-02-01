@@ -5253,8 +5253,10 @@ static int	rtt_print_value(
 	    }
 	    case pwr_eType_ObjectIx:
 	    {
-	      r_print( "%s", cdh_ObjectIxToString( NULL, 
-			*(pwr_tObjectIx *) value_ptr, 1));
+	      char str[40];
+
+	      cdh_ObjectIxToString( str, sizeof(str), *(pwr_tObjectIx *) value_ptr, 1);
+	      r_print( "%s", str);
 	      break;
 	    }
 	    case pwr_eType_ClassId:
@@ -5281,14 +5283,15 @@ static int	rtt_print_value(
 	    }
 	    case pwr_eType_VolumeId:
 	    {
-	      r_print( "%s", cdh_VolumeIdToString( NULL, 
+	      r_print( "%s", cdh_VolumeIdToString( 0, 0, 
 					*(pwr_tVolumeId *) value_ptr, 1, 0));
 	      break;
 	    }
 	    case pwr_eType_RefId:
 	    {
-	      r_print( "%s", cdh_SubidToString( NULL, 
-					*(pwr_tSubid *) value_ptr, 1));
+	      char str[40];
+	      cdh_SubidToString( str, sizeof(str), *(pwr_tSubid *) value_ptr, 1);
+	      r_print( "%s", str);
 	      break;
 	    }
 	    case pwr_eType_NetStatus:
@@ -5452,8 +5455,9 @@ static int	rtt_edit_print_value(
 	int		sts;
 	char		*s;
 	char		text[120];
-	pwr_sAttrRef		*attrref;
-	char			timstr[64];
+	pwr_sAttrRef	*attrref;
+	char		timstr[64];
+	char		str[40];
 
 	if ( menu_ptr->priv & RTT_OUTPUT_NO )
 	  return RTT__SUCCESS;
@@ -5839,15 +5843,12 @@ static int	rtt_edit_print_value(
 	    }
 	    case pwr_eType_ObjectIx:
 	    {
+	      cdh_ObjectIxToString( str, sizeof(str), *((pwr_tObjectIx *) menu_ptr->value_ptr), 1);
 	      if ( menu_ptr->characters > 0)
-	        r_print( "%-*.*s", menu_ptr->characters, menu_ptr->characters, 
-			cdh_ObjectIxToString( NULL, 
-			*((pwr_tObjectIx *) menu_ptr->value_ptr), 1));
-	      else
-	      {
+		r_print( "%-*.*s", menu_ptr->characters, menu_ptr->characters, str);
+	      else {
 	        rtt_eofline_erase();
-	        r_print( "%s", cdh_ObjectIxToString( NULL, *((pwr_tObjectIx *) 
-			menu_ptr->value_ptr), 1));
+	        r_print( "%s", str);
 	      }
 	      break;
 	    }
@@ -5911,27 +5912,24 @@ static int	rtt_edit_print_value(
 	    {
 	      if ( menu_ptr->characters > 0)
 	        r_print( "%-*.*s", menu_ptr->characters, menu_ptr->characters,
-			cdh_VolumeIdToString( NULL,
+			 cdh_VolumeIdToString( 0, 0,
 			*((pwr_tVolumeId *) menu_ptr->value_ptr), 1, 0));
 	      else
 	      {
 	        rtt_eofline_erase();
-	        r_print( "%s", cdh_VolumeIdToString( NULL,
+	        r_print( "%s", cdh_VolumeIdToString( 0, 0,
 			*((pwr_tVolumeId *) menu_ptr->value_ptr), 1, 0));
 	      }
 	      break;
 	    }
 	    case pwr_eType_RefId:
 	    {
+	      cdh_SubidToString( str, sizeof(str), *((pwr_tSubid *) menu_ptr->value_ptr), 1);
 	      if ( menu_ptr->characters > 0)
-	        r_print( "%-*.*s", menu_ptr->characters, menu_ptr->characters,
-			cdh_SubidToString( NULL,
-			*((pwr_tSubid *) menu_ptr->value_ptr), 1));
-	      else
-	      {
+		r_print( "%-*.*s", menu_ptr->characters, menu_ptr->characters, str);
+	      else {
 	        rtt_eofline_erase();
-	        r_print( "%s", cdh_SubidToString( NULL, *((pwr_tSubid *)
-			menu_ptr->value_ptr), 1));
+	        r_print( "%s", str);
 	      }
 	      break;
 	    }

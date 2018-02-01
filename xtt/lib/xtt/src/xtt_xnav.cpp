@@ -530,7 +530,7 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
 	  *len = snprintf( str, size, "0%o", *(unsigned int *)value_ptr);	
 	  break;
 	case xnav_eConv_Binary:
-	  strcpy( str, cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 32));
+	  cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 32, str);
 	  *len = 32;
 	  break;
 	case xnav_eConv_Decimal:
@@ -556,7 +556,7 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
 	*len = snprintf( str, size, "0" pwr_dFormatOctInt64, *(pwr_tUInt64 *)value_ptr);	
 	break;
       case xnav_eConv_Binary:
-	strcpy( str, cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 64));
+	cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 64, str);
 	*len = 64;
 	break;
       case xnav_eConv_Decimal:
@@ -588,7 +588,7 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
 	*len = snprintf( str, size, "0%ho", *(unsigned char *)value_ptr);	
 	break;
       case xnav_eConv_Binary:
-	strcpy( str, cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 8));
+	cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 8, str);
 	*len = 8;
 	break;
       default:
@@ -609,7 +609,7 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
 	*len = snprintf( str, size, "0%ho", *(unsigned short *)value_ptr);	
 	break;
       case xnav_eConv_Binary:
-	strcpy( str, cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 16));
+	cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 16, str);
 	*len = 16;
 	break;
       default:
@@ -639,7 +639,7 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
 	  *len = snprintf( str, size, "0%o", *(unsigned int *)value_ptr);	
 	  break;
 	case xnav_eConv_Binary:
-	  strcpy( str, cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 32));
+	  cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 32, str);
 	  *len = 32;
 	  break;
 	case xnav_eConv_Float:
@@ -664,7 +664,7 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
 	*len = snprintf( str, size, "0" pwr_dFormatOctInt64, *(pwr_tInt64 *)value_ptr);	
 	break;
       case xnav_eConv_Binary:
-	strcpy( str, cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 64));
+	cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 64, str);
 	*len = 64;
 	break;
       case xnav_eConv_Float:
@@ -688,7 +688,7 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
 	*len = snprintf( str, size, "0%ho", *(unsigned char *)value_ptr);	
 	break;
       case xnav_eConv_Binary:
-	strcpy( str, cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 8));
+	cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 8, str);
 	*len = 8;
 	break;
       default:
@@ -709,7 +709,7 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
 	*len = snprintf( str, size, "0%ho", *(unsigned short *)value_ptr);	
 	break;
       case xnav_eConv_Binary:
-	strcpy( str, cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 16));
+	cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 16, str);
 	*len = 16;
 	break;
       default:
@@ -732,7 +732,7 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
 	*len = snprintf( str, size, "0%o", *(unsigned int *)value_ptr);	
 	break;
       case xnav_eConv_Binary:
-	strcpy( str, cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 32));
+	cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 32, str);
 	*len = 32;
 	break;
 	case xnav_eConv_Float:
@@ -756,7 +756,7 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
 	*len = snprintf( str, size, "0" pwr_dFormatOctInt64, *(pwr_tUInt64 *)value_ptr);	
 	break;
       case xnav_eConv_Binary:
-	strcpy( str, cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 64));
+	cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 64, str);
 	*len = 64;
 	break;
       case xnav_eConv_Float:
@@ -783,7 +783,7 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
       *len = snprintf( str, size, "0%o", *(unsigned int *)value_ptr);	
       break;
     case xnav_eConv_Binary:
-      strcpy( str, cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 32));
+      cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 32, str);
       *len = 32;
       break;
     case xnav_eConv_Decimal:
@@ -837,7 +837,7 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
     objid = *(pwr_tObjid *)value_ptr;
     switch ( conv) {
     case xnav_eConv_Identity:
-      strcpy( str, cdh_ObjidToString( 0, objid, 1));
+      cdh_OidToString( str, sizeof(str), objid, 1);
       *len = strlen(str);
       break;
     default:
@@ -863,7 +863,7 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
 
     switch ( conv) {
     case xnav_eConv_Identity:
-      strcpy( str, cdh_ArefToString( 0, attrref, 1));
+      cdh_ArefToString( str, sizeof(str), attrref, 1);
       *len = strlen(str);
       break;
     default:
@@ -934,8 +934,8 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
     break;
   }
   case pwr_eType_ObjectIx: {
-    *len = snprintf( str, size, "%s", cdh_ObjectIxToString( NULL, 
-				   *(pwr_tObjectIx *) value_ptr, 1));
+    cdh_ObjectIxToString( str, size, *(pwr_tObjectIx *) value_ptr, 1);
+    *len = strlen(str);
     break;
   }
   case pwr_eType_ClassId: {
@@ -966,13 +966,13 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
     break;
   }
   case pwr_eType_VolumeId: {
-    *len = snprintf( str, size, "%s", cdh_VolumeIdToString( NULL, 
-						     *(pwr_tVolumeId *) value_ptr, 1, 0));
+    cdh_VolumeIdToString( str, size, *(pwr_tVolumeId *) value_ptr, 1, 0);
+    *len = strlen(str); 
     break;
   }
   case pwr_eType_RefId: {
-    *len = snprintf( str, size, "%s", cdh_SubidToString( NULL, 
-						  *(pwr_tSubid *) value_ptr, 1));
+    cdh_SubidToString( str, size, *(pwr_tSubid *) value_ptr, 1);
+    *len = strlen(str); 
     break;
   }
   case pwr_eType_NetStatus:
@@ -1899,7 +1899,7 @@ void XNav::trace_help_cb( RtTrace *tractx, const char *key, const char *file)
       // Try to convert to objid and search for objid as topic
       sts = gdh_NameToObjid ( key, &objid);
       if ( ODD(sts)) {
-	cdh_ObjidToString( objid_str, objid, 1);
+	cdh_OidToString( objid_str, sizeof(objid_str), objid, 1);
 	sts = CoXHelp::dhelp( objid_str, "", navh_eHelpFile_Project, NULL, 0);
       }
     }

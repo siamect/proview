@@ -172,7 +172,7 @@ static pwr_tStatus Connect (
       sts = ldh_ObjidToName( ip->PointedSession, ip->Selected[0].Objid, ldh_eName_Hierarchy, 
 			     name, sizeof(name), &len);
       if ( EVEN(sts))
-	cdh_ObjidToString( name, ip->Selected[0].Objid, 1);
+	cdh_OidToString( name, sizeof(name), ip->Selected[0].Objid, 1);
       snprintf( msg, sizeof(msg), "%s connected to:   %s", mb.MethodArguments[0], name);
       ip->wtt->message( 'I', msg);
     }

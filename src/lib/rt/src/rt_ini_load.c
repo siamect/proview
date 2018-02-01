@@ -420,12 +420,12 @@ loadSectRbody (
     bp = ivol_GetBody(sts, ob.oid, NULL);
     if (bp == NULL) {
       *sts = INI__SUCCESS;
-      // errh_LogError(&cp->log, "Cannot find body of object %s\n%m", cdh_ObjidToString(NULL, ob.oid, 0), *sts);
+      // errh_LogError(&cp->log, "Cannot find body of object %s\n%m", cdh_ObjidToString(ob.oid,0), *sts);
     } else {
       if (dbs_dAlign(bp->size) < ob.size) {
-        errh_LogError(&cp->log, "Data beyond size of body, Objid %s", cdh_ObjidToString(NULL, ob.oid, 0));
+        errh_LogError(&cp->log, "Data beyond size of body, Objid %s", cdh_ObjidToString(ob.oid,0));
       } else if (bp->size > ob.size) {
-        errh_LogError(&cp->log, "Data is smaller than size of body, Objid %s", cdh_ObjidToString(NULL, ob.oid, 0));
+        errh_LogError(&cp->log, "Data is smaller than size of body, Objid %s", cdh_ObjidToString(ob.oid,0));
       } else {
 	body = bp->body;
 	if (fread(body, bp->size, 1, cp->dbs.f) == 0)
@@ -499,12 +499,12 @@ reloadSectRbody (
     }
 
     if (iop->body == NULL) {
-      // errh_LogError(&cp->log, "Cannot find body of object %s\n%m", cdh_ObjidToString(NULL, ob.oid, 0), sts);
+      // errh_LogError(&cp->log, "Cannot find body of object %s\n%m", cdh_ObjidToString(ob.oid,0), sts);
     } else {
       if (dbs_dAlign(iop->op->g.size) < ob.size) {
-	errh_LogError(&cp->log, "Data beyond size of body, Objid %s", cdh_ObjidToString(NULL, ob.oid, 0));
+	errh_LogError(&cp->log, "Data beyond size of body, Objid %s", cdh_ObjidToString(ob.oid,0));
       } else if (iop->op->g.size > ob.size) {
-        errh_LogError(&cp->log, "Data is smaller than size of body, Objid %s", cdh_ObjidToString(NULL, ob.oid, 0));
+        errh_LogError(&cp->log, "Data is smaller than size of body, Objid %s", cdh_ObjidToString(ob.oid,0));
       } else {
 	if (fread(body, iop->op->g.size, 1, cp->dbs.f) == 0)
 	  pwr_Return(NO, sts, errno_GetStatus());
@@ -559,7 +559,7 @@ loadSectObject (
     op = ivol_LoadObject(sts, vp, &oh, vol_mLink_load);
     if (op == NULL) {
       errh_LogError(&cp->log, "Loading object %s, %s, parent %s\n%m",
-	cdh_ObjidToString(NULL, oh.oid, 0), oh.name, cdh_ObjidToString(NULL, oh.poid, 0), *sts);
+		    cdh_ObjidToString(oh.oid,0), oh.name, cdh_ObjidToString(oh.poid,0), *sts);
       return NO;
     }
   }
@@ -611,7 +611,7 @@ reloadSectObject (
     op = reloadObject(sts, cp, vp, &oh);
     if (op == NULL) {
       errh_LogError(&cp->log, "Loading object %s, %s, parent %s\n%m",
-	cdh_ObjidToString(NULL, oh.oid, 0), oh.name, cdh_ObjidToString(NULL, oh.poid, 0), sts);
+		    cdh_ObjidToString(oh.oid,0), oh.name, cdh_ObjidToString(oh.poid,0), sts);
       return NO;
     }
   }
@@ -655,7 +655,7 @@ loadSectScObject (
     scp = ivol_LoadScObject(sts, vp, &sc, vol_mLinkSc_load);
     if (scp == NULL) {
       errh_LogError(&cp->log, "Loading object %s, parent %s\n%m",
-	cdh_ObjidToString(NULL, sc.oid, 0), cdh_ObjidToString(NULL, sc.poid, 0), *sts);
+		    cdh_ObjidToString(sc.oid,0), cdh_ObjidToString(sc.poid,0), *sts);
       return NO;
     }
   }

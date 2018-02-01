@@ -939,6 +939,7 @@ gdb_LoadVolume (
   gdb_mLoad		load;
   cdh_uVolumeId		lvid;
   char			string[256];
+  char			volstr[20];
 
   load.m = iload;
 
@@ -955,7 +956,8 @@ gdb_LoadVolume (
   }
   cdh_ObjName(&vp->g.name, name);
   vp = hash_Insert(sts, gdbroot->vn_ht, vp);
-  sprintf(string, "adding volume: %s (%s)", cdh_VolumeIdToString(NULL, vid, 0, 0), name);
+  sprintf(string, "adding volume: %s (%s)", 
+	  cdh_VolumeIdToString(volstr, sizeof(volstr), vid, 0, 0), name);
   if (vp == NULL) errh_Bugcheck(*sts, string);
 
   vp->g.time = net_TimeToNetTime(&time);

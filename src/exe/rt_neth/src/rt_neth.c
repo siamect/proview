@@ -1151,7 +1151,7 @@ volumes (
           cvolcm_FlushVolume(&sts, vp);
           /* !!! Todo !!! This volume is either owned by another node
              or was not flushed.  */
-          errh_Error("Volume %s (%s) is connected", vp->g.name.orig, cdh_VolumeIdToString(NULL, vp->g.vid, 1, 0));
+          errh_Error("Volume %s (%s) is connected", vp->g.name.orig, cdh_VolumeIdToString(0, 0, vp->g.vid, 1, 0));
         }
 
         

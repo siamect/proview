@@ -5765,17 +5765,17 @@ int	gcg_comp_volume(
 	for ( i = 0; i < (int)plcproc_count; i++ )
 	{
 	  fprintf( file, "%s %s %s\n", 
-		"PlcProcess", 
-		cdh_ObjidToString( NULL, (plcproclist+i)->oid, 0),
-		(plcproclist+i)->name);
+		   "PlcProcess", 
+		   cdh_ObjidToString( (plcproclist+i)->oid, 0),
+		   (plcproclist+i)->name);
 	}
 
 	for ( i = 0; i < (int)thread_count; i++ )
 	{
-	  strcpy( plcproc_oidstr, cdh_ObjidToString( NULL, (threadlist+i)->plcproc_oid, 0));
+	  cdh_OidToString( plcproc_oidstr, sizeof(plcproc_oidstr), (threadlist+i)->plcproc_oid, 0);
 	  fprintf( file, "%s %s %s %f %ld %s\n", 
 		   "PlcThread", 
-		   cdh_ObjidToString( NULL, (threadlist+i)->objdid, 0),
+		   cdh_ObjidToString( (threadlist+i)->objdid, 0),
 		   plcproc_oidstr,
 		   (threadlist+i)->scantime,
 		   (threadlist+i)->prio,
@@ -5784,14 +5784,13 @@ int	gcg_comp_volume(
 
 	for ( i = 0; i < (int)plc_count; i++ )
 	{
-	  strcpy( thread_objid_str, "");
-	  cdh_ObjidToString( thread_objid_str, (plclist + i)->thread, 0);
+	  cdh_OidToString( thread_objid_str, sizeof(thread_objid_str), (plclist + i)->thread, 0);
 	  fprintf( file, "%s %s %s %ld %s\n", 
-		"PlcPgm",
-		cdh_ObjidToString( NULL, (plclist + i)->objdid, 0),
-		thread_objid_str,
-		(plclist + i)->executeorder,
-		(plclist + i)->name);
+		   "PlcPgm",
+		   cdh_ObjidToString( (plclist + i)->objdid, 0),
+		   thread_objid_str,
+		   (plclist + i)->executeorder,
+		   (plclist + i)->name);
 	}
 	fclose( file);
 	

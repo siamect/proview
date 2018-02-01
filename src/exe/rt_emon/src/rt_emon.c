@@ -874,7 +874,7 @@ applLogState (
     mess,
     "Link to application qid: %s, oid: %s, state: %s",
     qcom_QidToString(NULL, &ap->link.qid, 1),
-    cdh_ObjidToString(NULL, ap->aid, 1),
+    cdh_ObjidToString(ap->aid, 0),
     (ap->state < mh_eApplState_ ? StateText[ap->state] : "Progerror")
   );
   errh_Info(mess);
@@ -2983,7 +2983,7 @@ initSupActiveCB (
   sts = gdh_AttrrefToName(&Object, sp->link.objName, sizeof(sp->link.objName), cdh_mNName);
   if (EVEN(sts))
     errh_Error("Couldn't get name for supervised object, %s\n%m", 
-	       cdh_ObjidToString(0, SupObject->Objid, 1), sts);
+	       cdh_ObjidToString(SupObject->Objid, 0), sts);
   strncpy(sp->link.eventName, sp->link.objName, sizeof(sp->link.eventName));
   cdh_ToUpper(sp->link.objName, NULL);
 
@@ -3080,7 +3080,7 @@ initSupActiveCB (
     sp->cid = cid;
     break;
   default:
-    errh_Error("initSupActiveCB, program error, cid: %s", cdh_ClassIdToString(NULL, cid, 0));
+    errh_Error("initSupActiveCB, program error, cid: %u", cid);
     break;
   }
 
@@ -3094,7 +3094,7 @@ initSupActiveCB (
     );
     if (EVEN(sts)) {
       errh_Error("%s, %s\n%m", "Couldn't link to supervised attribute",
-		 cdh_ObjidToString(0, SupObject->Objid, 1), sts);
+		 cdh_ObjidToString(SupObject->Objid, 0), sts);
       sp->agent = mh_eAgent_None;    
     }
   }
@@ -3723,7 +3723,7 @@ outunitLog (
 {
   errh_Info("%s (%s, qid: %s, oid: %s)",
 	    text, qcom_NodeName(op->link.qid.nid), qcom_QidToString(NULL, &op->link.qid, 1),
-	    cdh_ObjidToString(NULL, op->outunit, 1)
+	    cdh_ObjidToString(op->outunit, 0)
   );
 }
 

@@ -685,7 +685,7 @@ static int xnav_show_subcli_insert( XNav *xnav, gdb_sNode *np,
       strcpy( astr, "@");
     else
       strcpy( astr, "");
-    cdh_ArefToString( astr, &sclip->aref, 1);
+    cdh_ArefToString( &astr[strlen(astr)], sizeof(astr)-strlen(astr), &sclip->aref, 1);
     strcpy( t.elem[t.elem_cnt].fix_str, astr);
   }
   t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;

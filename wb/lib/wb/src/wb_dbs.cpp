@@ -858,7 +858,7 @@ wb_dbs::importDbody(pwr_tOid oid, size_t size, void *body)
   }
 
   if (oep->dbody.size == 0) {
-    if (size != 0) printf("error dbody size %zd %s\n", size, cdh_ObjidToString(0,oid,0));
+    if (size != 0) printf("error dbody size %zd %s\n", size, cdh_ObjidToString(oid,0));
     return true;
   }
 
@@ -916,7 +916,7 @@ wb_dbs::importRbody(pwr_tOid oid, size_t size, void *body)
     getAliasServer(oep, body);
   
   if (oep->rbody.size == 0) {
-    if (size != 0) printf("error rbody size %zd %s\n", size, cdh_ObjidToString(0,oid,0));
+    if (size != 0) printf("error rbody size %zd %s\n", size, cdh_ObjidToString(oid,0));
     return true;
   }
     
@@ -1125,7 +1125,7 @@ wb_dbs::cidInsert(pwr_tStatus *sts, pwr_tCid cid, pwr_sAttrRef *arp, sCentry **c
 	    if ( cd)
 	      cidInsert(&lsts, cast_cid, 0, &entry);
 	    else
-	      printf("** Invalid cast class %s\n", cdh_ObjidToString( 0, aref.Objid, 1));
+	      printf("** Invalid cast class %s\n", cdh_ObjidToString( aref.Objid, 1));
 	  }
 	}
       }
@@ -1160,7 +1160,7 @@ wb_dbs::cidInsert(pwr_tStatus *sts, pwr_tCid cid, pwr_sAttrRef *arp, sCentry **c
 	    if ( cd)
 	      cidInsert(&lsts, cast_cid, 0, &entry);
 	    else
-	      printf("** Invalid cast class %s\n", cdh_ObjidToString( 0, aref.Objid, 1));
+	      printf("** Invalid cast class %s\n", cdh_ObjidToString( aref.Objid, 1));
 	  }
 	}
       }
@@ -1218,7 +1218,7 @@ void wb_dbs::getAliasServer(sOentry *oep, void *p)
   if (alias->Object.vid != m_volume.vid) {
     printf("!! Alias refers to object outside own volume!\n");
     printf("   Alias:  %s\n", pathName(oep));
-    printf("   Object: %s\n", cdh_ObjidToString(NULL, alias->Object, 1));
+    printf("   Object: %s\n", cdh_ObjidToString(alias->Object, 1));
     printf("   Alias will not be loaded.\n");
     m_warnings++;
     return; 

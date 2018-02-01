@@ -2102,7 +2102,7 @@ static int	wnav_show_func(	void		*client_data,
       }
     }
 
-    sprintf( msg, "Objid %s, Name %s", cdh_ObjidToString( NULL, objid, 0),
+    sprintf( msg, "Objid %s, Name %s", cdh_ObjidToString( objid, 0),
 			name_str);
     wnav->message('I', msg);
     return WNAV__SUCCESS;
@@ -2226,7 +2226,7 @@ static int	wnav_show_func(	void		*client_data,
     else {
       char msg[200];
 
-      sprintf( msg, "%s is next free user volume identity\n", cdh_VolumeIdToString( 0, next_vid, 0, 0));
+      sprintf( msg, "%s is next free user volume identity\n", cdh_VolumeIdToString( 0, 0, next_vid, 0, 0));
       wnav->message( 'I', msg);
     }
   }
@@ -2242,7 +2242,7 @@ static int	wnav_show_func(	void		*client_data,
     else {
       char msg[200];
 
-      sprintf( msg, "%s is next free userclass volume identity\n", cdh_VolumeIdToString( 0, next_vid, 0, 0));
+      sprintf( msg, "%s is next free userclass volume identity\n", cdh_VolumeIdToString( 0, 0, next_vid, 0, 0));
       wnav->message( 'I', msg);
     }
   }

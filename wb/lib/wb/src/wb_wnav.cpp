@@ -462,8 +462,7 @@ void  wnav_attrvalue_to_string( ldh_tSesContext ldhses, int type_id, void *value
 	*len = 0;
       }
       else {
-	strcpy( str, "");
-	cdh_ArefToString( str, attrref, 1);
+	cdh_ArefToString( str, sizeof(str), attrref, 1);
 	*len = strlen(str);
       }
       *buff = str;
@@ -526,8 +525,8 @@ void  wnav_attrvalue_to_string( ldh_tSesContext ldhses, int type_id, void *value
     break;
   }
   case pwr_eType_ObjectIx: {
-    *len = sprintf( str, "%s", cdh_ObjectIxToString( NULL, 
-				   *(pwr_tObjectIx *) value_ptr, 1));
+    cdh_ObjectIxToString( str, sizeof(str), *(pwr_tObjectIx *) value_ptr, 1);
+    *len = strlen(str);
     *buff = str;
     break;
   }
@@ -555,14 +554,14 @@ void  wnav_attrvalue_to_string( ldh_tSesContext ldhses, int type_id, void *value
     break;
   }
   case pwr_eType_VolumeId: {
-    *len = sprintf( str, "%s", cdh_VolumeIdToString( NULL, 
-			       *(pwr_tVolumeId *) value_ptr, 1, 0));
+    cdh_VolumeIdToString( str, sizeof(str), *(pwr_tVolumeId *) value_ptr, 1, 0);
+    *len = strlen(str);
     *buff = str;
     break;
   }
   case pwr_eType_RefId: {
-    *len = sprintf( str, "%s", cdh_SubidToString( NULL, 
-			 *(pwr_tSubid *) value_ptr, 1));
+    cdh_SubidToString( str, sizeof(str), *(pwr_tSubid *) value_ptr, 1);
+    *len = strlen(str); 
     *buff = str;
     break;
   }

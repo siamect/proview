@@ -1277,7 +1277,7 @@ static pwr_tStatus ConnectAttribute (
       if ( ODD(sts))
 	strncpy( name, aname_p, sizeof(name));
       else
-	cdh_ObjidToString( name, ip->Selected[0].Objid, 1);
+	cdh_OidToString( name, sizeof(name), ip->Selected[0].Objid, 1);
       snprintf( msg, sizeof(msg), "%s connected to:   %s", mb.MethodArguments[0], name);
       ip->wtt->message( 'I', msg);
     }

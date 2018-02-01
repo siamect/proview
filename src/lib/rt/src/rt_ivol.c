@@ -341,7 +341,7 @@ ivol_BuildNode (
   if (op == NULL) errh_Bugcheck(*sts, "");
   op->u.n.flags.b.bodyDecoded = 1;
 
-  errh_Info("Created pwrNode, oid: %s", cdh_ObjidToString(NULL, oid, 1));
+  errh_Info("Created pwrNode, oid: %s", cdh_ObjidToString(oid,0));
   /* Create a mount object in the root volume, to mount the 'pwrNode' object.  */
 
   pwr_Assert(gdbroot->my_volume != NULL);

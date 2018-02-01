@@ -1253,7 +1253,9 @@ import_thread ()
     else
       sp->lp = last_link = get_link(sp->head.nid, &msg);
     if (sp->lp == NULL) {
-      errh_Warning("Request from unknown node %s", cdh_VolumeIdToString(0, sp->head.nid,0,0));
+      char volstr[20];
+      errh_Warning("Request from unknown node %s", 
+		   cdh_VolumeIdToString(volstr, sizeof(volstr), sp->head.nid,0,0));
       continue;   
     }
     sp->c.action = eAction_import;

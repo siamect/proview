@@ -189,7 +189,7 @@ static pwr_tStatus Connect (
     sts = ldh_AttrRefToName( ip->PointedSession, &aref, ldh_eName_Hierarchy, 
 			     &name_p, &len);
     if ( EVEN(sts))
-      cdh_ObjidToString( name, aref.Objid, 1);
+      cdh_OidToString( name, sizeof(name), aref.Objid, 1);
     else
       strncpy( name, name_p, sizeof(name));
     snprintf( msg, sizeof(msg), "%s connected to:   %s", mb.MethodArguments[0], name);
@@ -313,7 +313,7 @@ static pwr_tStatus IoConnect (
     sts = ldh_AttrRefToName( ip->PointedSession, &aref, ldh_eName_Hierarchy, 
 			     &name_p, &len);
     if ( EVEN(sts))
-      cdh_ObjidToString( name, aref.Objid, 1);
+      cdh_OidToString( name, sizeof(name), aref.Objid, 1);
     else
       strncpy( name, name_p, sizeof(name));
     snprintf( msg, sizeof(msg), "Io connected to:   %s", name);

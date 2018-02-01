@@ -1366,13 +1366,14 @@ static pwr_tStatus Help( xmenu_sMenuCall *ip)
   switch ( cid) {
   case pwr_cClass_plc: {
     pwr_tOid woid;
+    char volstr[20];
 
     sts = gdh_GetChild( objar->Objid, &woid);
     if ( EVEN(sts)) return XNAV__SUCCESS;
 
     sprintf( cmd, "help plcw_%s /helpfile=\"" pwr_cNamePlcXttHelp "\"", 
 	     cdh_ObjidToFnString(0, woid),
-	     cdh_VolumeIdToFnString(0, woid.vid));
+	     cdh_VolumeIdToFnString(volstr, sizeof(volstr), woid.vid));
 
     break;
   }

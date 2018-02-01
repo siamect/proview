@@ -230,8 +230,8 @@ static void  attrvalue_to_string( int type_id, void *value_ptr,
     }
     case pwr_eType_ObjectIx:
     {
-      *len = sprintf( str, "%s", cdh_ObjectIxToString( NULL, 
-		*(pwr_tObjectIx *) value_ptr, 1));
+      cdh_ObjectIxToString( str, size, *(pwr_tObjectIx *) value_ptr, 1);
+      *len = strlen(str);
       break;
     }
     case pwr_eType_ClassId:
@@ -266,14 +266,14 @@ static void  attrvalue_to_string( int type_id, void *value_ptr,
     }
     case pwr_eType_VolumeId:
     {
-      *len = sprintf( str, "%s", cdh_VolumeIdToString( NULL, 
-		*(pwr_tVolumeId *) value_ptr, 1, 0));
+      cdh_VolumeIdToString( str, size, *(pwr_tVolumeId *) value_ptr, 1, 0);
+      *len = strlen(str); 
       break;
     }
     case pwr_eType_RefId:
     {
-      *len = sprintf( str, "%s", cdh_SubidToString( NULL, 
-		*(pwr_tSubid *) value_ptr, 1));
+      cdh_SubidToString( str, size, *(pwr_tSubid *) value_ptr, 1);
+      *len = strlen(str);
       break;
     }
 

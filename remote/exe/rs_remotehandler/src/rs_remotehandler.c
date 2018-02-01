@@ -434,7 +434,7 @@ static int StartTransport(unsigned int idx)
 
   sprintf(arg1,"%s", tp[idx].path);
   sprintf(arg2,"%d", tp[idx].id);
-  sprintf(arg3,"%s", cdh_ObjidToString(NULL, tp[idx].objid, 0));
+  cdh_OidToString(arg3, sizeof(arg3), tp[idx].objid, 0);
 
   if (((tp[idx].cpid) = fork())) {
   }

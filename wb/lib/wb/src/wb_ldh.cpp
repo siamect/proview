@@ -1314,7 +1314,7 @@ ldh_ObjidToName(ldh_tSession session, pwr_tOid oid, int type, char *buf, int max
   wb_session *sp = (wb_session *)session;
 
   if (cdh_ObjidIsNull(oid)) {
-    strncpy( buf, cdh_ObjidToString( NULL, oid, 1), maxsize);
+    strncpy( buf, cdh_ObjidToString( oid, 1), maxsize);
     *size = strlen( buf);
     return LDH__SUCCESS;
   }
@@ -1324,7 +1324,7 @@ ldh_ObjidToName(ldh_tSession session, pwr_tOid oid, int type, char *buf, int max
   {
     wb_object o = sp->object(oid);
     if (!o) { /* return o.sts(); */
-      strncpy( buf, cdh_ObjidToString( NULL, oid, 1), maxsize);
+      strncpy( buf, cdh_ObjidToString( oid, 1), maxsize);
       *size = strlen( buf);
       return LDH__SUCCESS;
     }
@@ -1352,7 +1352,7 @@ ldh_ObjidToName(ldh_tSession session, pwr_tOid oid, int type, char *buf, int max
   {
     char str[80];
 
-    wb_name n = wb_name( cdh_ObjidToString( NULL, oid, 1));
+    wb_name n = wb_name( cdh_ObjidToString( oid, 1));
     strcpy( str, n.name( type));
     *size = strlen(str);
     if ( *size > maxsize - 1) {
@@ -1365,7 +1365,7 @@ ldh_ObjidToName(ldh_tSession session, pwr_tOid oid, int type, char *buf, int max
   {
     wb_object o = sp->object(oid);
     if (!o) { /* return o.sts(); */
-      strncpy( buf, cdh_ObjidToString( NULL, oid, 1), maxsize);
+      strncpy( buf, cdh_ObjidToString( oid, 1), maxsize);
       *size = strlen( buf);
       return LDH__SUCCESS;
     }
@@ -1439,7 +1439,7 @@ ldh_AttrRefToName(ldh_tSession session, pwr_sAttrRef *arp, int nametype, char **
   case ldh_eName_OixString:
   case ldh_eName_VolumeId:
   case ldh_eName_VidString: {
-    wb_name n = wb_name( cdh_ArefToString( NULL, arp, 1));
+    wb_name n = wb_name( cdh_AttrRefToString( arp, 1));
     strcpy( str, n.name( nametype));
     *aname = str;
     *size = strlen(str);

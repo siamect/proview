@@ -387,7 +387,7 @@ pwr_tStatus lfu_create_bootfile(
       while( !strcmp( nodeconfigname_upper, vollistname_upper)) {
 	fprintf( file, "%s %s\n",
 		 volumelist_ptr->volume_name,
-		 cdh_VolumeIdToString( NULL, volumelist_ptr->volume_id, 0, 0));
+		 cdh_VolumeIdToString( 0, 0, volumelist_ptr->volume_id, 0, 0));
 	volumelist_ptr++;
 	utl_toupper( vollistname_upper, volumelist_ptr->p1);
       }
@@ -826,7 +826,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
 		fprintf( file, "%s %s %s load\n",
 			 volume_name,
-			 cdh_VolumeIdToString( NULL, volumelist_ptr->volume_id, 0, 0),
+			 cdh_VolumeIdToString( 0, 0, volumelist_ptr->volume_id, 0, 0),
 			 classname);
 		break;
 	      }
@@ -919,7 +919,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	    if ( out_of_range) {
 	      char msg[200];
 	      sprintf( msg, "Error in Volume identity for volume '%s', %s is out of range", name,
-		       cdh_VolumeIdToString( 0, volumelist_ptr->volume_id, 1, 0));
+		       cdh_VolumeIdToString( 0, 0, volumelist_ptr->volume_id, 1, 0));
 	      MsgWindow::message( 'E', msg, msgw_ePop_Default);
 	      syntax_error = 1;
 	    }
@@ -948,7 +948,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 									 
 	      fprintf( file, "%s %s %s cnf %d",
 		       volume_name,
-		       cdh_VolumeIdToString( NULL, volumelist_ptr->volume_id, 0, 0),
+		       cdh_VolumeIdToString( 0, 0, volumelist_ptr->volume_id, 0, 0),
 		       classname, *dbenum);
 	      if ( server) {
 		fprintf( file, " %s\n", server);
@@ -972,7 +972,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
 	      fprintf( file, "%s %s %s cnf %s %s\n",
 		       volume_name,
-		       cdh_VolumeIdToString( NULL, volumelist_ptr->volume_id, 0, 0),
+		       cdh_VolumeIdToString( 0, 0, volumelist_ptr->volume_id, 0, 0),
 		       classname, devprovider, rtprovider);
 	      free( devprovider);
 	      free( rtprovider);
@@ -1003,7 +1003,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
 	      fprintf( file, "%s %s %s clone %s\n",
 		       volume_name,
-		       cdh_VolumeIdToString( NULL, volumelist_ptr->volume_id, 0, 0),
+		       cdh_VolumeIdToString( 0, 0, volumelist_ptr->volume_id, 0, 0),
 		       classname, parentvolume);
 	      free( parentvolume);
 	      break;
@@ -1255,10 +1255,10 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	      
 		if ( cid ==  pwr_cClass_DetachedClassVolumeConfig)
 		  fprintf( wblfile, "Volume %s pwr_eClass_DetachedClassVolume %s\nEndVolume\n", 
-			   volume_name, cdh_VolumeIdToString( 0, volumelist_ptr->volume_id, 0, 0));
+			   volume_name, cdh_VolumeIdToString( 0, 0, volumelist_ptr->volume_id, 0, 0));
 		else
 		  fprintf( wblfile, "Volume %s pwr_eClass_ClassVolume %s\nEndVolume\n", 
-			   volume_name, cdh_VolumeIdToString( 0, volumelist_ptr->volume_id, 0, 0));
+			   volume_name, cdh_VolumeIdToString( 0, 0, volumelist_ptr->volume_id, 0, 0));
 		fclose( wblfile);
 	      }
 	    }
@@ -1453,7 +1453,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		    if ( j == 0)
 		      fprintf( file, "%s %s %s %s %d %d %f\n",
 			       volume_name,
-			       cdh_VolumeIdToString( NULL, volumelist_ptr->volume_id, 0, 0),
+			       cdh_VolumeIdToString( 0, 0, volumelist_ptr->volume_id, 0, 0),
 			       nodeconfig_name,
 			       nodename_ptr,
 			       *bus_number_ptr,
@@ -1463,7 +1463,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		      // Secondary node
 		      fprintf( file, "%s %s %s(%s) %s %d %d %f\n",
 			       volume_name,
-			       cdh_VolumeIdToString( NULL, volumelist_ptr->volume_id, 0, 0),
+			       cdh_VolumeIdToString( 0, 0, volumelist_ptr->volume_id, 0, 0),
 			       secondary_nodename_ptr,
 			       nodeconfig_name,
 			       secondary_nodename_ptr,
@@ -1949,20 +1949,20 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	    if ( i == idx) {
 	      if ( !is_secondary)
 		fprintf( fp, "%s %s %s %d %d %d %d %d %f %d %d %s %s\n", nc.nodename, 
-			 cdh_VolumeIdToString( NULL, nc.vid, 0, 0), nc.address, nc.port, 
+			 cdh_VolumeIdToString( 0, 0, nc.vid, 0, 0), nc.address, nc.port, 
 			 nc.connection, int(nc.qcom_min_resend_time * 1000), 
 			 int(nc.qcom_max_resend_time * 1000), nc.qcom_export_buf_quota, nc.qcom_ack_delay,
 			 nc.qcom_segment_size, is_secondary, "-", "-");
 	      else
 		fprintf( fp, "%s %s %s %d %d %d %d %d %f %d %d %s %s\n", nc.secondary_nodename, 
-			 cdh_VolumeIdToString( NULL, nc.vid, 0, 0), nc.secondary_address, nc.port, 
+			 cdh_VolumeIdToString( 0, 0, nc.vid, 0, 0), nc.secondary_address, nc.port, 
 			 nc.connection, int(nc.qcom_min_resend_time * 1000), 
 			 int(nc.qcom_max_resend_time * 1000), nc.qcom_export_buf_quota, nc.qcom_ack_delay,
 			 nc.qcom_segment_size, is_secondary, "-", "-");
 	    }
 	    else 
 	      fprintf( fp, "%s %s %s %d %d %d %d %d %f %d %d %s %s\n", nc.nodename, 
-		       cdh_VolumeIdToString( NULL, nc.vid, 0, 0), nc.address, nc.port, 
+		       cdh_VolumeIdToString( 0, 0, nc.vid, 0, 0), nc.address, nc.port, 
 		       nc.connection, int(nc.qcom_min_resend_time * 1000), 
 		       int(nc.qcom_max_resend_time * 1000), nc.qcom_export_buf_quota, nc.qcom_ack_delay,
 		       nc.qcom_segment_size, 0, nc.secondary_nodename, nc.secondary_address);
@@ -2060,7 +2060,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	      }
 
 	      fprintf( fp, "%s %s %s %d %d %d %d %d %f %d %d %s %s\n", nc.nodename, 
-		       cdh_VolumeIdToString( NULL, nc.vid, 0, 0), nc.address, nc.port, 
+		       cdh_VolumeIdToString( 0, 0, nc.vid, 0, 0), nc.address, nc.port, 
 		       nc.connection, (int)(nc.qcom_min_resend_time * 1000), 
 		       (int)(nc.qcom_max_resend_time * 1000), nc.qcom_export_buf_quota, nc.qcom_ack_delay,
 		       nc.qcom_segment_size, 0, nc.secondary_nodename, nc.secondary_address);
@@ -2128,7 +2128,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  }
 	  if ( found) {
 	    fprintf( file, "-\n");
-	    fprintf( file, "%s %s\n", volstr, cdh_VolumeIdToString( NULL, vid, 0, 0));
+	    fprintf( file, "%s %s\n", volstr, cdh_VolumeIdToString( 0, 0, vid, 0, 0));
 	    fprintf( file, "pwrs 0.0.0.1\n");
 	    fprintf( file, "pwrb 0.0.0.2\n");	    
 	  }
@@ -2168,12 +2168,12 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  }
 
 	  fprintf( fp, "%s %s %s %d %d %d %d %d %f %d\n", nc.nodename, 
-		   cdh_VolumeIdToString( NULL, nc.vid, 0, 0), nc.address, nc.redcom_port, 
+		   cdh_VolumeIdToString( 0, 0, nc.vid, 0, 0), nc.address, nc.redcom_port, 
 		   2, int(nc.redcom_min_resend_time * 1000), 
 		   int(nc.redcom_max_resend_time * 1000), nc.redcom_export_buf_quota, nc.redcom_ack_delay,
 		   nc.redcom_segment_size);
 	  fprintf( fp, "%s %s %s %d %d %d %d %d %f %d\n", nc.secondary_nodename, 
-		   cdh_VolumeIdToString( NULL, nc.vid, 0, 0), nc.secondary_address, nc.redcom_port, 
+		   cdh_VolumeIdToString( 0, 0, nc.vid, 0, 0), nc.secondary_address, nc.redcom_port, 
 		   1, int(nc.redcom_min_resend_time * 1000), 
 		   int(nc.redcom_max_resend_time * 1000), nc.redcom_export_buf_quota, nc.redcom_ack_delay,
 		   nc.redcom_segment_size);
@@ -2855,7 +2855,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
 
 	    fprintf( file, "volumedistr %s %s %s %d\n",
-		     cdh_VolumeIdToString( NULL, volume_id, 0, 0),
+		     cdh_VolumeIdToString( 0, 0, volume_id, 0, 0),
 		     targetnode_ptr,
 		     targetproject_ptr,
 		     *os_ptr);

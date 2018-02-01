@@ -344,7 +344,7 @@ lockMountServers (
       if (op == NULL) {
         op = cvolc_OidToObject(&sts, vp, msp->oid, vol_mTrans_none, cvol_eHint_none);
         if (op == NULL) {
-          errh_Error("Can't fetch the mount server's object, %s", cdh_ObjidToString(NULL, msp->oid, 1));
+          errh_Error("Can't fetch the mount server's object, %s", cdh_ObjidToString(msp->oid, 0));
 	  /* !!! Todo !!! How do we make this error known ?  */
   	continue;
         }

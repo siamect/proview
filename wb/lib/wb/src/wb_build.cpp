@@ -1443,6 +1443,7 @@ void wb_build::opplaceweb( pwr_tOid oid)
   pwr_tStatus   fsts;
   pwr_tStatus 	sts;
   char 		line[200];
+  char		volstr[20];
   int check_hierarchy = cdh_ObjidIsNotNull( m_hierarchy);
   int hierarchy_found = 0;
 
@@ -1553,12 +1554,13 @@ void wb_build::opplaceweb( pwr_tOid oid)
 	return;
       }
 
-      sprintf( srcname, pwr_cNamePlcXttHelp, cdh_VolumeIdToFnString(0, vid));
+      sprintf( srcname, pwr_cNamePlcXttHelp, cdh_VolumeIdToFnString(volstr, sizeof(volstr), vid));
       dcli_translate_filename( fname, srcname);
       fsts = dcli_file_time( fname, &xtthelp_time);
       if ( ODD(fsts)) {
   
-	sprintf( fname, "$pwrp_web/xtthelp_%s_plc_index.html", cdh_VolumeIdToFnString(0, vid));
+	sprintf( fname, "$pwrp_web/xtthelp_%s_plc_index.html", 
+		 cdh_VolumeIdToFnString(volstr, sizeof(volstr), vid));
 	dcli_translate_filename( fname, fname);
 	fsts = dcli_file_time( fname, &html_time);
 	if ( opt.force || EVEN(fsts) || time_Acomp( &xtthelp_time, &html_time) == 1) {

@@ -326,8 +326,8 @@ cdh_ClassObjidToId (
   pwr_tObjid		Objid
 )
 {
-  static cdh_uTypeId	cid;
-  cdh_uObjid		oid;
+  cdh_uTypeId	cid;
+  cdh_uObjid   	oid;
 
   oid.pwr  = Objid;
 
@@ -352,8 +352,8 @@ cdh_ClassIdToObjid (
   pwr_tClassId		Class
 )
 {
-  static cdh_uObjid	oid;
-  cdh_uTypeId		cid;
+  cdh_uObjid	oid;
+  cdh_uTypeId	cid;
 
   cid.pwr = Class;
 
@@ -381,8 +381,8 @@ cdh_TypeObjidToId (
   pwr_tObjid		Objid
 )
 {
-  cdh_uObjid		oid;
-  static cdh_uTypeId	tid;
+  cdh_uObjid   	oid;
+  cdh_uTypeId	tid;
 
   oid.pwr = Objid;
 
@@ -434,8 +434,8 @@ cdh_TypeIdToObjid (
   pwr_tTypeId		Type
 )
 {
-  static cdh_uObjid	oid;
-  cdh_uTypeId		tid;
+  cdh_uObjid	oid;
+  cdh_uTypeId  	tid;
 
   tid.pwr = Type;
 
@@ -850,13 +850,14 @@ cdh_StringToAttrValue (
 }
 
 //! Converts a bitmask to a binary string.
+//! Sizes of str should be larger than noofbits.
 
-char *cdh_MaskToBinaryString( 
+void cdh_MaskToBinaryString( 
   unsigned int mask,
-  int noofbits
+  int noofbits,  
+  char *str
 )
 {
-  static char str[80];
   unsigned int m;
   int i;
 
@@ -869,7 +870,6 @@ char *cdh_MaskToBinaryString(
       strcat( str, "0");
     m >>= 1;
   }
-  return str;
 }
 
 
@@ -1222,7 +1222,7 @@ cdh_StringToSubid (
   if (*s == '_') s++;
   if (*s == 'S' || *s == 's') s++;
 
-  if (sscanf(s, "%d.%d.%d.%d:%d%*s", &vid_3, &vid_2, &vid_1, &vid_0, &six) != 5)
+  if (sscanf(s, "%d.%d.%d.%d:%u%*s", &vid_3, &vid_2, &vid_1, &vid_0, &six) != 5)
     return CDH__INVSID;
 
   if (
@@ -1263,7 +1263,7 @@ cdh_StringToDlid (
   if (*s == '_') s++;
   if (*s == 'D' || *s == 'd') s++;
 
-  if (sscanf(s, "%d.%d.%d.%d:%d%*s", &vid_3, &vid_2, &vid_1, &vid_0, &dix) != 5)
+  if (sscanf(s, "%d.%d.%d.%d:%u%*s", &vid_3, &vid_2, &vid_1, &vid_0, &dix) != 5)
     return CDH__INVDID;
 
   if (
@@ -1298,15 +1298,15 @@ cdh_StringToDlid (
     the resultant string.
 */
 
-char *
+void
 cdh_ClassIdToString (
   char			*s,
+  int 			size,
   pwr_tClassId		cid,
   int			prefix
 )
 {
-  cdh_uTypeId		lcid;
-  static char		ls[sizeof("_C255.255:4095??")];
+  cdh_uTypeId  	lcid;
 
   lcid.pwr = cid;
 
@@ -1314,18 +1314,12 @@ cdh_ClassIdToString (
     lcid.c.bix != 0 ||
     lcid.c.must_be_zero != 0
   ) {
-    sprintf(ls, "%s%u.%u:?%u?", (prefix ? "_C" : ""),
-      lcid.c.vid_1, lcid.c.vid_0, lcid.c.cix);
+    snprintf(s, size ,"%s%u.%u:?%u?", (prefix ? "_C" : ""),
+	     lcid.c.vid_1, lcid.c.vid_0, lcid.c.cix);
   } else {
-    sprintf(ls, "%s%u.%u:%u", (prefix ? "_C" : ""),
-      lcid.c.vid_1, lcid.c.vid_0, lcid.c.cix);
+    snprintf(s, size, "%s%u.%u:%u", (prefix ? "_C" : ""),
+	     lcid.c.vid_1, lcid.c.vid_0, lcid.c.cix);
   }
-
-  if (s != NULL)
-    return strcat(s, ls);
-  else
-    return ls;
-  
 }
 
 //!  Converts a type identifier, 'tid' to a string.
@@ -1349,35 +1343,25 @@ cdh_ClassIdToString (
     the resultant string.  
 */
 
-char *
+void
 cdh_TypeIdToString (
   char			*s,
+  int			size,
   pwr_tTypeId		tid,
   int			prefix
 )
 {
   cdh_uTypeId		ltid;
-  static char		lts[sizeof("_T255.255:1.15.2047")];
-  static char		lcs[sizeof("_T255.255:0.4095.7")];
-  char			*ls;
 
   ltid.pwr = tid;
 
   if (ltid.t.must_be_one == 0) {	/*  This is a class TypeId.  */
-    sprintf(lcs, "%s%u.%u:0.%u.%u", (prefix ? "_T" : ""),
-      ltid.c.vid_1, ltid.c.vid_0, ltid.c.cix, ltid.c.bix);
-    ls = lcs;
+    snprintf(s, size, "%s%u.%u:0.%u.%u", (prefix ? "_T" : ""),
+	     ltid.c.vid_1, ltid.c.vid_0, ltid.c.cix, ltid.c.bix);
   } else {  /*	This i s a type TypeId.  */
-    sprintf(lts, "%s%u.%u:1.%u.%u", (prefix ? "_T" : ""),
-      ltid.t.vid_1, ltid.t.vid_0, ltid.t.tyg, ltid.t.tix);
-    ls = lts;
+    snprintf(s, size, "%s%u.%u:1.%u.%u", (prefix ? "_T" : ""),
+	    ltid.t.vid_1, ltid.t.vid_0, ltid.t.tyg, ltid.t.tix);
   }
-
-  if (s != NULL)
-    return strcat(s, ls);
-  else
-    return ls;
-  
 }
 
 //!  Converts a object index, 'oix' to a string.
@@ -1393,21 +1377,15 @@ cdh_TypeIdToString (
     the resultant string.  
 */
 
-char *
+void
 cdh_ObjectIxToString (
   char			*s,
+  int			size,
   pwr_tObjectIx		oix,
   int			prefix
 )
 {
-  static char		ls[sizeof("_X4294967295")];
-
-  sprintf(ls, "%s%u", (prefix ? "_X" : ""), oix);
-
-  if (s != NULL)
-    return strcat(s, ls);
-  else
-    return ls;
+  snprintf(s, size, "%s%u", (prefix ? "_X" : ""), oix);
 }
 
 //!  Converts an attribute reference , 'aref' to a string.
@@ -1416,30 +1394,26 @@ cdh_ObjectIxToString (
 
     0.1.2.3:1234(_T0.34.1)[34.60]
 
-    If 's' is non null the resultant string will be catenated
-    to 's', otherwise the resultant string will be returned.
-
     If 'prefix' is not zero, a '_A' prefix will be included in
     the resultant string.  
 */
 
-char *
+void
 cdh_ArefToString (
   char			*s,
+  int			size,
   pwr_sAttrRef		*aref,
   int			prefix
 )
 {
-  static char		ls[200];
-  char			tmp[40];
+  char		ls[200];
+  char	       	tmp[40];
 
-  sprintf(ls, "%s", (prefix ? "_A" : ""));
-
-  cdh_ObjidToString(ls, aref->Objid, 0);
+  cdh_OidToString(ls, sizeof(ls), aref->Objid, 0);
 
   if (aref->Body != pwr_cNTypeId) {
     strcat(ls, "(");
-    cdh_TypeIdToString(ls, aref->Body, 1);
+    cdh_TypeIdToString(&ls[strlen(ls)], sizeof(ls), aref->Body, 1);
     strcat(ls, ")");
     if (aref->Offset > 0 || aref->Size > 0) {
       sprintf(tmp, "[%d.%d]", aref->Offset, aref->Size);
@@ -1447,10 +1421,34 @@ cdh_ArefToString (
     }
   }
 
-  if (s != NULL)
-    return strcat(s, ls);
-  else
-    return ls;
+  sprintf(s, "%s", (prefix ? "_A" : ""));
+  strncat(s, ls, size - strlen(s));
+}
+
+//!  Converts an attribute reference , 'aref' to a string.
+/*!
+    The output string will be in the format:
+
+    0.1.2.3:1234(_T0.34.1)[34.60]
+
+    If 'prefix' is not zero, a '_A' prefix will be included in
+    the resultant string.  
+
+    Returns the string,
+
+    Not threadsafe.
+*/
+
+char *
+cdh_AttrRefToString (
+  pwr_sAttrRef		*aref,
+  int			prefix
+)
+{
+  static char	ls[200];
+
+  cdh_ArefToString( ls, sizeof(ls), aref, prefix);
+  return ls;
 }
 
 //! Converts a volume identifier, 'vid' to a string.
@@ -1498,19 +1496,43 @@ cdh_NodeIdToString (
 
     0.1.2.3:1234
 
-    If 's' is non null the resultant string will be catenated
-    to 's', otherwise the resultant string will be returned.
-
     If 'prefix' is not zero, a '_O' prefix will be included in
     the resultant string.  
 */
 
-char *
-cdh_ObjidToString (
+void
+cdh_OidToString (
   char			*s,
+  int			size,
   pwr_tObjid		oid,
   int			prefix
 )
+{
+  cdh_uObjid		loid;
+
+  loid.pwr = oid;
+
+  snprintf(s, size, "%s%u.%u.%u.%u:%u", (prefix ? "_O" : ""), loid.o.vid_3,
+	   loid.o.vid_2, loid.o.vid_1, loid.o.vid_0, loid.o.oix);
+}
+
+//!  Converts a object identifier, 'oid' to a string.
+/*!
+    The output string will be in the format:
+
+    0.1.2.3:1234
+
+    If 'prefix' is not zero, a '_O' prefix will be included in
+    the resultant string.  
+
+    Returns the string.
+    
+    Not threadsafe.
+*/
+
+char *
+cdh_ObjidToString ( pwr_tObjid oid,
+		    int	prefix)
 {
   cdh_uObjid		loid;
   static char		ls[sizeof("_O255.255.255.255:4294967295")];
@@ -1519,13 +1541,10 @@ cdh_ObjidToString (
 
   sprintf(ls, "%s%u.%u.%u.%u:%u", (prefix ? "_O" : ""), loid.o.vid_3,
     loid.o.vid_2, loid.o.vid_1, loid.o.vid_0, loid.o.oix);
-
-  if (s != NULL)
-    return strcat(s, ls);
-  else
-    return ls;
+  return ls;
   
 }
+
 //!  Converts a object identifier, 'oid' to a filename string.
 /*!
     The output string will be in the format:
@@ -1537,6 +1556,8 @@ cdh_ObjidToString (
 
     If 's' is non null the resultant string will be catenated
     to 's', otherwise the resultant string will be returned.
+    
+    Not threadsafe.
 */
 
 char *
@@ -1574,11 +1595,14 @@ cdh_ObjidToFnString (
 
     If 'suffix' is not zero, a  ':' suffix will be included in
     the resultant string.  
+
+    Not threadsafe if 's' is null.
 */
 
 char *
 cdh_VolumeIdToString (
   char			*s,
+  int			size,
   pwr_tVolumeId		vid,
   int			prefix,
   int			suffix
@@ -1589,47 +1613,41 @@ cdh_VolumeIdToString (
 
   lvid.pwr = vid;
 
-  sprintf(ls, "%s%u.%u.%u.%u%s", (prefix ? "_V" : ""), lvid.v.vid_3,
-    lvid.v.vid_2, lvid.v.vid_1, lvid.v.vid_0, (suffix ? ":" : ""));
-
-  if (s != NULL)
-    return strcat(s, ls);
-  else
-    return ls;
-  
+  if ( s) {
+    snprintf(s, size, "%s%u.%u.%u.%u%s", (prefix ? "_V" : ""), lvid.v.vid_3,
+	     lvid.v.vid_2, lvid.v.vid_1, lvid.v.vid_0, (suffix ? ":" : ""));
+    return s;
+  }
+  else 
+    sprintf(ls, "%s%u.%u.%u.%u%s", (prefix ? "_V" : ""), lvid.v.vid_3,
+	     lvid.v.vid_2, lvid.v.vid_1, lvid.v.vid_0, (suffix ? ":" : ""));
+    return ls;  
 }
+
 //!  Converts a volume identifier, 'vid' to a filename string.
 /*!
-    The output string will be in the format:
-
     The output string will be in the format:
 
     xxx_xxx_xxx_xxx
 
     where xxx are the volume id in decimal form.
-
-    If 's' is non null the resultant string will be catenated
-    to 's', otherwise the resultant string will be returned.
 */
 
 char *
 cdh_VolumeIdToFnString (
   char			*s,
+  int			size,
   pwr_tVolumeId		vid
 )
 {
   cdh_uVolumeId	lvid;
-  static char		str[40];
 
   lvid.pwr = vid;
 
-  sprintf( str, "%3.3u_%3.3u_%3.3u_%3.3u", lvid.v.vid_3,
-	   lvid.v.vid_2, lvid.v.vid_1, lvid.v.vid_0);
+  snprintf( s, size, "%3.3u_%3.3u_%3.3u_%3.3u", lvid.v.vid_3,
+	    lvid.v.vid_2, lvid.v.vid_1, lvid.v.vid_0);
 
-  if (s != NULL)
-    return strcat(s, str);
-  else
-    return str;  
+  return s;  
 }
 
 //! Converts a subscription identifier, 'sid' to a string.
@@ -1638,33 +1656,24 @@ cdh_VolumeIdToFnString (
 
     0.1.2.3:1234
 
-    If 's' is non null the resultant string will be catenated
-    to 's', otherwise the resultant string will be returned.
-
     If 'prefix' is not zero, a '_S' prefix will be included in
     the resultant string.  
 */
 
-char *
+void
 cdh_SubidToString (
   char			*s,
+  int			size,
   pwr_tSubid		sid,
   int			prefix
 )
 {
   cdh_uRefId		lrid;
-  static char		ls[sizeof("_S255.255.255.255:4294967295")];
 
   lrid.pwr = sid;
 
-  sprintf(ls, "%s%u.%u.%u.%u:%u", (prefix ? "_S" : ""), lrid.r.vid_3,
-    lrid.r.vid_2, lrid.r.vid_1, lrid.r.vid_0, lrid.r.rix);
-
-  if (s != NULL)
-    return strcat(s, ls);
-  else
-    return ls;
-  
+  snprintf(s, size, "%s%u.%u.%u.%u:%u", (prefix ? "_S" : ""), lrid.r.vid_3,
+	   lrid.r.vid_2, lrid.r.vid_1, lrid.r.vid_0, lrid.r.rix);
 }
 
 //! Converts a direct link identifier, 'did' to a string.
@@ -1673,33 +1682,24 @@ cdh_SubidToString (
 
     0.1.2.3:1234
 
-    If 's' is non null the resultant string will be catenated
-    to 's', otherwise the resultant string will be returned.
-
     If 'prefix' is not zero, a '_D' prefix will be included in
     the resultant string.  
 */
 
-char *
+void
 cdh_DlidToString (
   char			*s,
+  int			size,
   pwr_tDlid		did,
   int			prefix
 )
 {
   cdh_uRefId		lrid;
-  static char		ls[sizeof("_D255.255.255.255:4294967295")];
 
   lrid.pwr = did;
 
-  sprintf(ls, "%s%u.%u.%u.%u:%u", (prefix ? "_D" : ""), lrid.r.vid_3,
-    lrid.r.vid_2, lrid.r.vid_1, lrid.r.vid_0, lrid.r.rix);
-
-  if (s != NULL)
-    return strcat(s, ls);
-  else
-    return ls;
-  
+  snprintf(s, size, "%s%u.%u.%u.%u:%u", (prefix ? "_D" : ""), lrid.r.vid_3,
+	   lrid.r.vid_2, lrid.r.vid_1, lrid.r.vid_0, lrid.r.rix);
 }
 
 cdh_sFamily *

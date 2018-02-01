@@ -550,7 +550,7 @@ void print_subsrv()
 
     sts = gdh_AttrrefToName( &data[i].aref, astr, sizeof(astr), cdh_mNName);
     if ( EVEN(sts))
-      cdh_ArefToString( astr, &data[i].aref, 1);
+      cdh_ArefToString( astr, sizeof(astr), &data[i].aref, 1);
 
 
     fprintf( fp, "%5d %5d %8s %4d %4d %s%s\n", 
@@ -622,7 +622,7 @@ int RTTSYS_SHOW_SUBSRV( menu_ctx	ctx,
 	      strcpy( astr, "@");
             else
 	      strcpy( astr, "");
-	    cdh_ArefToString( astr, &ssrvp->aref, 1);
+	    cdh_ArefToString( astr, sizeof(astr), &ssrvp->aref, 1);
 	    strcpy( menu_ptr->value_ptr, astr);
             menu_ptr++;
 **********/
@@ -734,7 +734,7 @@ int RTTSYS_SHOW_SUBSRV( menu_ctx	ctx,
 	      strcpy( astr, "@");
             else
 	      strcpy( astr, "");
-	    cdh_ArefToString( astr, &ssrvp->aref, 1);
+	    cdh_ArefToString( astr, sizeof(astr), &ssrvp->aref, 1);
 	    strcpy( menu_ptr->value_ptr, astr);
             menu_ptr++;
 *****/
@@ -872,11 +872,12 @@ int RTTSYS_SHOW_SUBCLI( menu_ctx	ctx,
 	        strcpy( menu_ptr->value_ptr, sclip->name);
               else 
 	      {
-	        if ( sclip->aref.Flags.b.Indirect)
+	        if ( sclip->aref.Flags.b.Indirect) {
 	          strcpy( astr, "@");
+		  cdh_ArefToString( &astr[1], sizeof(astr)-1, &sclip->aref, 1);
+		}
 	        else
-	          strcpy( astr, "");
-	        cdh_ArefToString( astr, &sclip->aref, 1);
+		  cdh_ArefToString( astr, sizeof(astr), &sclip->aref, 1);
 	        strcpy( menu_ptr->value_ptr, astr);
 	      }
               menu_ptr++;
@@ -1001,11 +1002,12 @@ int RTTSYS_SHOW_SUBCLI( menu_ctx	ctx,
 	        strcpy( menu_ptr->value_ptr, sclip->name);
               else 
 	      {
-	        if ( sclip->aref.Flags.b.Indirect)
+	        if ( sclip->aref.Flags.b.Indirect) {
 	          strcpy( astr, "@");
+		  cdh_ArefToString( &astr[1], sizeof(astr)-1, &sclip->aref, 1);
+		}
 	        else
-	          strcpy( astr, "");
-	        cdh_ArefToString( astr, &sclip->aref, 1);
+		  cdh_ArefToString( astr, sizeof(astr), &sclip->aref, 1);
 	        strcpy( menu_ptr->value_ptr, astr);
 	      }
               menu_ptr++;

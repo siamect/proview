@@ -201,8 +201,7 @@ static pwr_tUInt32 nmpsbck_print_cellheader(
 
 	printf("Cell header\n");
 	printf("	type:  %s\n", cellheader->type);
-	printf("	objid: %s\n", cdh_ObjidToString( NULL, 
-				cellheader->objid, 0));
+	printf("	objid: %s\n", cdh_ObjidToString( cellheader->objid,0));
 	if ( strcmp( cellheader->type, HEADERTYPE_CELLEND) != 0) {
 	  printf("	class: %x\n", cellheader->class);
 	  printf("	size:  %d\n", cellheader->size);
@@ -215,8 +214,7 @@ static pwr_tUInt32 nmpsbck_print_dataheader(
 {
 	printf("Data header\n");
 	printf("	type:  %s\n", dataheader->type);
-	printf("	objid: %s\n", cdh_ObjidToString( NULL, 
-				dataheader->objid, 0));
+	printf("	objid: %s\n", cdh_ObjidToString( dataheader->objid,0));
 	if ( strcmp( dataheader->type, HEADERTYPE_DATAEND) != 0) {
 	  printf("	class: %x\n", dataheader->class);
 	  printf("	name:  %s\n", dataheader->data_name);
@@ -400,8 +398,7 @@ static pwr_tStatus nmpsbck_check_file( 	bck_ctx		bckctx,
 	        {
 	          /* Check if the objid already is in the data_db */
 	          printf( "         Data%d: %s  %c %c %c\n", k, 
-			cdh_ObjidToString( NULL, 
-				data_block_ptr->DataP.Aref.Objid, 0),
+			  cdh_ObjidToString( data_block_ptr->DataP.Aref.Objid,0),
 			data_block_ptr->Data_Front ? 'F':' ',
 			data_block_ptr->Data_Back ? 'B':' ',
 			data_block_ptr->Data_Select ? 'S':' ');
@@ -409,8 +406,7 @@ static pwr_tStatus nmpsbck_check_file( 	bck_ctx		bckctx,
 	        }
 	        data_block_ptr = (plc_t_DataInfo *) &cell_ptr->DataLP.Ptr;
 	        printf( "         DataL:  %s  %c %c %c\n", 
-			cdh_ObjidToString( NULL, 
-				data_block_ptr->DataP.Aref.Objid, 0),
+			cdh_ObjidToString( data_block_ptr->DataP.Aref.Objid,0),
 			data_block_ptr->Data_Front ? 'F':' ',
 			data_block_ptr->Data_Back ? 'B':' ',
 			data_block_ptr->Data_Select ? 'S':' ');
@@ -426,8 +422,7 @@ static pwr_tStatus nmpsbck_check_file( 	bck_ctx		bckctx,
 	        for ( k = 0; k < cell_ptr->LastIndex; k++)
 	        {
 	          printf( "         Data%d: %s\n", k, 
-			cdh_ObjidToString( NULL, 
-				data_block_ptr->DataP.Aref.Objid, 0));
+			  cdh_ObjidToString( data_block_ptr->DataP.Aref.Objid,0));
 	          data_block_ptr++;
 	        }
 	        break;

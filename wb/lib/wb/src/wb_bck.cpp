@@ -422,7 +422,7 @@ pwr_tStatus wb_bck_list::read() {
 	sts = ldh_ObjidToName( m_ldhses, dh.objid, cdh_mName_volumeStrict, aname, sizeof(aname), &size);
 	if ( EVEN(sts)) {
 	  printf( "** Error, %s%s not found in this environment", 
-		  cdh_ObjidToString(0, dh.objid, 1), aname);
+		  cdh_ObjidToString(dh.objid, 1), aname);
 	}
 	else {
 	  strncat( aname, namep, sizeof(aname));
@@ -513,7 +513,7 @@ pwr_tStatus bck_dump( ldh_tSession ldhses, char *filename, char *out)
 	  
       if (dh.valid) {
 	if ( dump) {
-	  fprintf( fout, "%s%s", cdh_ObjidToString(0, dh.objid, 1), namep);
+	  fprintf( fout, "%s%s", cdh_ObjidToString(dh.objid, 1), namep);
 
 	  p = datap;
 	  for ( i = 0; i < (int)dh.size; i++, p++) {
@@ -525,7 +525,7 @@ pwr_tStatus bck_dump( ldh_tSession ldhses, char *filename, char *out)
 	else {
 	  sts = ldh_ObjidToName( ldhses, dh.objid, cdh_mName_volumeStrict, aname, sizeof(aname), &size);
 	  if ( EVEN(sts))
-	    strcpy( aname, cdh_ObjidToString(0, dh.objid, 1));
+	    strcpy( aname, cdh_ObjidToString(dh.objid, 1));
 	  strncat( aname, namep, sizeof(aname));
 
 	  fprintf( fout, "%s", aname);

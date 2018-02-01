@@ -860,9 +860,10 @@ cdh_StringToAttrValue (
   void			*Value
 );
 
-char *cdh_MaskToBinaryString( 
+void cdh_MaskToBinaryString( 
   unsigned int mask,
-  int noofbits
+  int noofbits,
+  char *str
 );
 
 pwr_tStatus
@@ -913,25 +914,34 @@ cdh_StringToDlid (
   pwr_tDlid		*did
 );
 
-char *
+void
 cdh_ClassIdToString (
   char			*s,
-  pwr_tCid  cid,
+  int			size,
+  pwr_tCid  		cid,
   int			prefix
 );
 
-char *
+void
 cdh_ObjectIxToString (
   char			*s,
+  int			size,
   pwr_tOix		oix,
+  int			prefix
+);
+
+void
+cdh_OidToString (
+  char			*s,
+  int			size,
+  pwr_tOid		oid,
   int			prefix
 );
 
 char *
 cdh_ObjidToString (
-  char			*s,
   pwr_tOid		oid,
-  int			prefix
+  int 			prefix
 );
 
 char *
@@ -940,10 +950,17 @@ cdh_ObjidToFnString (
   pwr_tOid		oid
 );
 
-char *
+void
 cdh_ArefToString (
   char			*s,
-  pwr_sAttrRef  *aref,
+  int			size,
+  pwr_sAttrRef  	*aref,
+  int			prefix
+);
+
+char *
+cdh_AttrRefToString (
+  pwr_sAttrRef  	*aref,
   int			prefix
 );
 
@@ -955,12 +972,13 @@ cdh_NodeIdToString (
   int      suffix
 );
 
-char *
-cdh_TypeIdToString(char *s, pwr_tTid tid, int prefix);
+void
+cdh_TypeIdToString(char *s, int size, pwr_tTid tid, int prefix);
 
 char *
 cdh_VolumeIdToString (
     char     *s,
+    int	     size,
     pwr_tVid vid,
     int      prefix,
     int      suffix
@@ -969,19 +987,22 @@ cdh_VolumeIdToString (
 char *
 cdh_VolumeIdToFnString (
   char			*s,
+  int			size,
   pwr_tVolumeId		vid
 );
 
-char *
+void
 cdh_SubidToString (
   char			*s,
-  pwr_tSubid    sid,
+  int			size,
+  pwr_tSubid    	sid,
   int			prefix
 );
 
-char *
+void
 cdh_DlidToString (
   char			*s,
+  int			size,
   pwr_tDlid		did,
   int			prefix
 );

@@ -215,7 +215,7 @@ void wb_print_wbl::printVolume(wb_volume& v, bool recursive)
     
     
   indent(1) << "Volume " << v.name() << " " <<  cname << " "
-            << cdh_VolumeIdToString(NULL, v.vid(), 0, 0) << " " << endl;
+            << cdh_VolumeIdToString(0, 0, v.vid(), 0, 0) << " " << endl;
 
 
   // Print volume body
@@ -340,6 +340,7 @@ bool wb_print_wbl::printValue ( wb_volume& v,
 {
   unsigned long sts;
   char timbuf[24];
+  char str[40];
   static char sval[512];
   bool retval = true;
   pwr_tOid oid;
@@ -420,27 +421,33 @@ bool wb_print_wbl::printValue ( wb_volume& v,
     else {
       o = v.object(*(pwr_tOid *)val);
       if (o) {
-	if ( o.oid().vid >= cdh_cUserVolMin && o.oid().vid != v.vid() && !m_keepName)
+	if ( o.oid().vid >= cdh_cUserVolMin && o.oid().vid != v.vid() && !m_keepName) {
 	  // Other user volume. Loadfile might not be created yet at load time.
-	  sprintf(sval, "\"%s\"", cdh_ObjidToString(NULL, *(pwr_tObjid *)val, 1));
+	  cdh_OidToString(str, sizeof(str), *(pwr_tObjid *)val, 1);
+	  sprintf(sval, "\"%s\"", str);
+	}
 	else
 	  sprintf(sval, "\"%s\"", o.longName().c_str());	  
       }
-      else 
-        sprintf(sval, "\"%s\"", cdh_ObjidToString(NULL, *(pwr_tObjid *)val, 1));
+      else {
+	cdh_OidToString(str, sizeof(str), *(pwr_tObjid *)val, 1);
+        sprintf(sval, "\"%s\"", str);
+      }
     }    
     break;
   case pwr_eType_ObjectIx:
     if ( *(pwr_tObjectIx *) val == 0)
       sprintf(sval, "0");
-    else
-      sprintf(sval, "\"%s\"", cdh_ObjectIxToString(NULL, *(pwr_tObjectIx *) val,1));
+    else {
+      cdh_ObjectIxToString(str, sizeof(str), *(pwr_tObjectIx *) val,1);
+      sprintf(sval, "\"%s\"", str);
+    }
     break;
   case pwr_eType_VolumeId:
     if ( *(pwr_tVolumeId *) val == 0)
       sprintf(sval, "0");
     else
-      sprintf(sval, "\"%s\"", cdh_VolumeIdToString(NULL, *(pwr_tVolumeId *) val,1,0));
+      sprintf(sval, "\"%s\"", cdh_VolumeIdToString(0, 0, *(pwr_tVolumeId *) val,1,0));
     break;
   case pwr_eType_ClassId:
     if (*(pwr_tClassId *) val == 0)
@@ -482,11 +489,11 @@ bool wb_print_wbl::printValue ( wb_volume& v,
 	if (a)
 	  sprintf(sval, "\"%s\"", a.longName().c_str());
 	else {
-	  sprintf(sval, "\"%s\"", cdh_ArefToString(NULL, (pwr_sAttrRef*)val, 1));
+	  sprintf(sval, "\"%s\"", cdh_AttrRefToString((pwr_sAttrRef*)val, 1));
 	}
       } catch ( wb_error &e) {
 	if ( ldh_isSymbolicVid( ((pwr_sAttrRef *)val)->Objid.vid))
-	  sprintf(sval, "\"%s\"", cdh_ArefToString(NULL, (pwr_sAttrRef*)val, 1));
+	  sprintf(sval, "\"%s\"", cdh_AttrRefToString((pwr_sAttrRef*)val, 1));
 	else {
 	  sprintf(sval, "Unknown attribute reference");
 	  m_errCnt++;
@@ -503,7 +510,7 @@ bool wb_print_wbl::printValue ( wb_volume& v,
       if (a)
         sprintf(sval, "\"%s\"", a.longName().c_str());
       else {
-        sprintf(sval, "\"%s\"", cdh_ArefToString(NULL, &((pwr_tDataRef*)val)->Aref, 1));
+        sprintf(sval, "\"%s\"", cdh_AttrRefToString(&((pwr_tDataRef*)val)->Aref, 1));
       }
     }
     

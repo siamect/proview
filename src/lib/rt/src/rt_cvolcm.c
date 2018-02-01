@@ -112,7 +112,7 @@ cvolcm_ConnectVolume (
 
   if (vp->g.nid != pwr_cNNodeId && vp->g.nid != np->nid) {
     errh_Error("Volume %s (%s) is loaded from another node.\nCurrent: %s, new: %s",
-      vp->g.name.orig, cdh_VolumeIdToString(NULL, vp->g.vid, 1, 0),
+	       vp->g.name.orig, cdh_VolumeIdToString(0, 0, vp->g.vid, 1, 0),
       cdh_NodeIdToString(NULL, vp->g.nid, 1, 0),
       cdh_NodeIdToString(NULL, np->nid, 1, 0));
     return NULL;

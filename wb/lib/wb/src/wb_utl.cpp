@@ -3857,7 +3857,7 @@ pwr_tStatus	utl_show_volumes(
 	  }
 	  u_print( utlctx, " %s", class_name);
 	  u_posit( utlctx, 2, strlen(class_name) + 2);
-	  u_print( utlctx, " %s", cdh_VolumeIdToString( NULL, vol_id, 0, 0));
+	  u_print( utlctx, " %s", cdh_VolumeIdToString( 0, 0, vol_id, 0, 0));
 	  u_row( utlctx);
 
 	  sts = ldh_GetNextVolume( ldh_SessionToWB( ldhses), vol_id, &vol_id);

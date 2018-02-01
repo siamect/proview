@@ -72,7 +72,7 @@ void ldlist_print( const char *text, pwr_tVid vid, pwr_tCid cid, const char *nam
   cout << timestr << "  ";
 
   char vid_str[40];
-  strcpy( vid_str, cdh_VolumeIdToString( 0, vid, 0, 0));
+  cdh_VolumeIdToString( vid_str, sizeof(vid_str), vid, 0, 0);
   cout << vid_str;
   for ( int i = 0; i < (int)(15 - strlen(vid_str)); i++)
     cout << " ";

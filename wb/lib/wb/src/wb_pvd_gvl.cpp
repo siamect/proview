@@ -90,7 +90,7 @@ void wb_pvd_gvl::save_item( pwr_tOix oix, ofstream& of)
     pwr_sClass_VolumeReg *body = (pwr_sClass_VolumeReg *)m_list[oix].body;
 
     of << "	" << m_list[oix].name << "	" << 
-      cdh_VolumeIdToString( 0, body->VolumeId, 0, 0) << "	" << body->Project << 
+      cdh_VolumeIdToString( 0, 0, body->VolumeId, 0, 0) << "	" << body->Project << 
       endl;
 
     for ( int ix = m_list[oix].fchoix; ix; ix = m_list[ix].fwsoix)

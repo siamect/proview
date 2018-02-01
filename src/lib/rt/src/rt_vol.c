@@ -354,7 +354,7 @@ vol_LinkObject (
 
   pop = hash_Search(&lsts, gdbroot->oid_ht, &op->g.f.poid);
   if (pop == NULL && cdh_ObjidIsNotNull(op->g.f.poid)) {
-    sprintf(string, "Orphan found. Objid %s, Name %s\n",  cdh_ObjidToString(NULL, op->g.oid, 0), op->g.f.name.orig);
+    sprintf(string, "Orphan found. Objid %s, Name %s\n",  cdh_ObjidToString(op->g.oid,0), op->g.f.name.orig);
     errh_Bugcheck(lsts, string);
   }
 
@@ -475,14 +475,14 @@ vol_LinkScObject (
     pscp = hash_Search(&lsts, gdbroot->sc_ht, &scp->poid);
     if (pscp == NULL) {
       sprintf(string, "Orphan found. Objid %s\n",  
-              cdh_ObjidToString(NULL, scp->oid, 0));
+              cdh_ObjidToString(scp->oid,0));
       errh_Bugcheck(lsts, string);
     }
   } else {
     pop = hash_Search(&lsts, gdbroot->oid_ht, &scp->poid);
     if (pop == NULL) {
       sprintf(string, "Orphan found. Objid %s\n",  
-              cdh_ObjidToString(NULL, scp->oid, 0));
+              cdh_ObjidToString(scp->oid,0));
       errh_Bugcheck(lsts, string);
     }
   }
@@ -515,7 +515,7 @@ vol_LinkScObject (
     cp = hash_Search(&lsts, gdbroot->cid_ht, &scp->cid);
     if (cp != NULL) {
       sprintf(string, "Class 0x%x not found for object, objid %s\n",  
-              scp->cid, cdh_ObjidToString(NULL, scp->oid, 0));
+              scp->cid, cdh_ObjidToString(scp->oid,0));
 
       errh_Bugcheck(lsts, string);
     }

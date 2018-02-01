@@ -289,7 +289,7 @@ bck_LoadBackup ()
 	        sts = gdh_SetObjectInfo(objectname, datap, dh.size);
 	      }
 	      else
-		strcpy(objectname, cdh_ObjidToString( 0, dh.objid, 1));
+		cdh_OidToString( objectname, sizeof(objectname), dh.objid, 1);
 	    }
 	  } /* valid segment */
 

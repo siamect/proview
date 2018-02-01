@@ -862,7 +862,7 @@ static int	show_func(	menu_ctx	ctx,
 	    }
 	  }
 
-	  sprintf( msg, "Objid %s, Name %s", cdh_ObjidToString( NULL, objid, 0),
+	  sprintf( msg, "Objid %s, Name %s", cdh_ObjidToString( objid,0),
 			name_str);
 	  rtt_message('I', msg);
 	  return RTT__NOPICTURE;

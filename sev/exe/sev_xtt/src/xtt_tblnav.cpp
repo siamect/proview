@@ -705,7 +705,7 @@ int ItemLocal::open_attributes( TblNav *tblnav, double x, double y)
     new ItemLocalAttr( tblnav, "Description", item.description, node, flow_eDest_IntoLast);
 
     strcpy( value, "");
-    cdh_ObjidToString( value, item.oid, 1);
+    cdh_OidToString( value, sizeof(value), item.oid, 1);
     new ItemLocalAttr( tblnav, "Oid", value, node, flow_eDest_IntoLast);
 
     new ItemLocalAttr( tblnav, "Object", item.oname, node, flow_eDest_IntoLast);

@@ -167,8 +167,8 @@ gdh_AttrrefToName (
 
   if (ap == NULL && lnametype.b.fallback != cdh_mName_eFallback_strict) {
     sts = GDH__SUCCESS;
-    strcpy( string, "");
-    s = cdh_ArefToString(string, arp, 1);
+    cdh_ArefToString(string, sizeof(string), arp, 1);
+    s = string;
   }
 
   if (s != NULL) {
@@ -2284,8 +2284,8 @@ gdh_ObjidToName (
 
   if (op == NULL && lnametype.b.fallback != cdh_mName_eFallback_strict) {
     sts = GDH__SUCCESS;
-    strcpy( name, "");
-    s = cdh_ObjidToString(name, oid, 1);
+    cdh_OidToString(name, sizeof(name), oid, 1);
+    s = name;
   }
 
   if (s != NULL) {
@@ -4658,8 +4658,8 @@ pwr_tStatus gdh_AttrValueToString(
     break;
   }
   case pwr_eType_ObjectIx: {
-    *len = sprintf( str, "%s", cdh_ObjectIxToString( NULL, 
-						     *(pwr_tObjectIx *) value_ptr, 1));
+    cdh_ObjectIxToString( str, size, *(pwr_tObjectIx *) value_ptr, 1);
+    *len = strlen(str);
     break;
   }
   case pwr_eType_ClassId: {
@@ -4692,13 +4692,13 @@ pwr_tStatus gdh_AttrValueToString(
     break;
   }
   case pwr_eType_VolumeId: {
-    *len = sprintf( str, "%s", cdh_VolumeIdToString( NULL, 
-						     *(pwr_tVolumeId *) value_ptr, 1, 0));
+    cdh_VolumeIdToString( str, size, *(pwr_tVolumeId *) value_ptr, 1, 0);
+    *len = strlen(str);
     break;
   }
   case pwr_eType_RefId: {
-    *len = sprintf( str, "%s", cdh_SubidToString( NULL, 
-						  *(pwr_tSubid *) value_ptr, 1));
+    cdh_SubidToString( str, size, *(pwr_tSubid *) value_ptr, 1);
+    *len = strlen(str);
     break;
   }
   case pwr_eType_NetStatus:

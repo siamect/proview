@@ -2018,7 +2018,7 @@ static int	xnav_show_func(	void		*client_data,
       }
     }
 
-    sprintf( msg, "Objid %s, Name %s", cdh_ObjidToString( NULL, objid, 0),
+    sprintf( msg, "Objid %s, Name %s", cdh_ObjidToString( objid, 0),
 			name_str);
     xnav->message('I', msg);
     return XNAV__SUCCESS;
@@ -10214,7 +10214,7 @@ static void xnav_ev_help_cb( void *ctx, const char *key)
     // Try to convert to objid and search for objid as topic
     sts = gdh_NameToObjid ( key, &objid);
     if ( ODD(sts)) {
-      cdh_ObjidToString( objid_str, objid, 1);
+      cdh_OidToString( objid_str, sizeof(objid_str), objid, 1);
       sts = CoXHelp::dhelp( objid_str, "", navh_eHelpFile_Project, NULL, 0);
     }
   }

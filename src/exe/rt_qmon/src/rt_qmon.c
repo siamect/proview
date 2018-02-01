@@ -1008,7 +1008,9 @@ import_thread ()
     else
       sp->lp = last_link = get_link(sp->head.nid, &msg);
     if (sp->lp == NULL) {
-      errh_Warning("Request from unknown node %s (%s)", cdh_VolumeIdToString(0, sp->head.nid,0,0), inet_ntoa(msg.sa.sin_addr));
+      char volstr[20];
+      errh_Warning("Request from unknown node %s (%s)", 
+		   cdh_VolumeIdToString(volstr, sizeof(volstr), sp->head.nid,0,0), inet_ntoa(msg.sa.sin_addr));
       continue;   
     }
     //printf( "Import from %d %s lix %d clx %d\n", sp->head.nid, sp->lp->np->link[sp->lp->lix].name, sp->lp->lix, sp->lp->np->clx);

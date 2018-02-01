@@ -1477,8 +1477,10 @@ void WFoe::activate_helpplc()
 {
   pwr_tFileName filename;
   char		key[80];
+  char		volstr[20];
 
-  sprintf( filename, pwr_cNamePlcXttHelp, cdh_VolumeIdToFnString(0, gre->wind->lw.oid.vid));
+  sprintf( filename, pwr_cNamePlcXttHelp, 
+	   cdh_VolumeIdToFnString(volstr, sizeof(volstr), gre->wind->lw.oid.vid));
   sprintf( key, "plcw_%s", cdh_ObjidToFnString(0, gre->wind->lw.oid));
 
   CoXHelp::dhelp( key, 0, navh_eHelpFile_Other, filename, 1);
@@ -1487,8 +1489,10 @@ void WFoe::activate_helpplc()
 void WFoe::activate_helpplclist()
 {
   pwr_tFileName filename;
+  char volstr[20];
 
-  sprintf( filename, pwr_cNamePlcXttHelp, cdh_VolumeIdToFnString(0, gre->wind->lw.oid.vid));
+  sprintf( filename, pwr_cNamePlcXttHelp, 
+	   cdh_VolumeIdToFnString(volstr, sizeof(volstr), gre->wind->lw.oid.vid));
   CoXHelp::dhelp( "index", 0, navh_eHelpFile_Other, filename, 1);
 }
 

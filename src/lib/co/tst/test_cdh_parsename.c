@@ -11,6 +11,7 @@ main ()
   pwr_tStatus		sts;
   pwr_tObjid		poid = pwr_cNObjid;
   int			i;
+  char			str[80];
 
   while (gets(string) != NULL) {
 
@@ -33,7 +34,7 @@ main ()
     if (pn->flags.b.escapeGMS) printf("EscapeGMS,");
     if (pn->flags.b.separator) printf("Separator,");
     printf("\n");
-    printf("Parent : %s\n", cdh_ObjidToString(NULL, pn->poid, 1));
+    printf("Parent : %s\n", cdh_ObjidToString(pn->poid, 1));
     printf("Index  : %d\n", pn->index);
     printf("Offset : %d\n", pn->offset);
     printf("Size   : %d\n", pn->size);
@@ -48,7 +49,7 @@ main ()
 	break;
       case cdh_eId_objid:
 	printf("eId  : Objid\n");
-	printf("Value: %s\n", cdh_ObjidToString(NULL, pn->uId.oid, 1));
+	printf("Value: %s\n", cdh_ObjidToString(pn->uId.oid, 1));
 	break;
       case cdh_eId_classId:
 	printf("eId  : ClassId\n");
@@ -56,7 +57,7 @@ main ()
 	break;
       case cdh_eId_volumeId:
 	printf("eId  : VolumId\n");
-	printf("Value: %s\n", cdh_VolumeIdToString(NULL, pn->uId.vid, 1, 1));
+	printf("Value: %s\n", cdh_VolumeIdToString(0, 0, pn->uId.vid, 1, 1));
 	break;
       case cdh_eId_typeId:
 	printf("eId  : TypeId\n");
@@ -67,12 +68,14 @@ main ()
 	printf("Value: %s\n", cdh_ArefToString(NULL, &pn->uId.aref, 1));
 	break;
       case cdh_eId_subid:
+	cdh_SubidToString(str, sizeof(str), pn->uId.sid, 1);
 	printf("eId  : Subid\n");
-	printf("Value: %s\n", cdh_SubidToString(NULL, pn->uId.sid, 1));
+	printf("Value: %s\n", str);
 	break;
       case cdh_eId_dlid:
+	cdh_DlidToString(str, sizeof(str), pn->uId.did, 1);
 	printf("eId  : DLid\n");
-	printf("Value: %s\n", cdh_DlidToString(NULL, pn->uId.did, 1));
+	printf("Value: %s\n", str);
 	break;
       default:
 	printf("eId: Error");

@@ -704,7 +704,7 @@ create_thread (
 
   sts = gdh_ObjidToName(ptp->thread, tp->name, sizeof(tp->name), cdh_mNName);
   if (EVEN(sts)) {
-    errh_Error("Get name of thread object %s, %m", cdh_ObjidToString(NULL, ptp->thread, 1), sts);
+    errh_Error("Get name of thread object %s, %m", cdh_ObjidToString(ptp->thread, 0), sts);
     return;
   }
 

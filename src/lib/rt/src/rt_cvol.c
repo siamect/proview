@@ -157,13 +157,13 @@ cvol_FreeObject (
 
   if (op->u.c.nChild > 0) {	/* We have children, move to cachePend.  */
     if (gdbroot->db->log.b.cacheTrim)
-      printf("Object: %s %s, moved to cache pending\n", op->g.f.name.orig, cdh_ObjidToString(NULL, op->g.oid, 0));
+      printf("Object: %s %s, moved to cache pending\n", op->g.f.name.orig, cdh_ObjidToString(op->g.oid,0));
     cvol_QmoveSucc(op, cvol_Qget(op), &gdbroot->db->cachePend);
     return;
   }
 
   if (gdbroot->db->log.b.cacheTrim)
-    printf("Object: %s %s, removed from cache\n", op->g.f.name.orig, cdh_ObjidToString(NULL, op->g.oid, 0));
+    printf("Object: %s %s, removed from cache\n", op->g.f.name.orig, cdh_ObjidToString(op->g.oid,0));
   if (op->l.por != pool_cNRef) {
     pop = pool_Address(NULL, gdbroot->pool, op->l.por);
     pop->u.c.nChild--;

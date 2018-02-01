@@ -724,8 +724,9 @@ void RtTrace::activate_helpplc()
 {
   pwr_tFileName filename;
   char		key[80];
+  char		volstr[20];
   
-  sprintf( filename, pwr_cNamePlcXttHelp, cdh_VolumeIdToFnString(0, objid.vid));
+  sprintf( filename, pwr_cNamePlcXttHelp, cdh_VolumeIdToFnString(volstr, sizeof(volstr), objid.vid));
   sprintf( key, "plcw_%s", cdh_ObjidToFnString(0, objid));
 
   if ( help_cb)
@@ -735,8 +736,9 @@ void RtTrace::activate_helpplc()
 void RtTrace::activate_helpplclist()
 {
   pwr_tFileName filename;
+  char		volstr[20];
   
-  sprintf( filename, pwr_cNamePlcXttHelp, cdh_VolumeIdToFnString(0, objid.vid));
+  sprintf( filename, pwr_cNamePlcXttHelp, cdh_VolumeIdToFnString(volstr, sizeof(volstr), objid.vid));
 
   if ( help_cb)
     (help_cb)(this, "index", filename);

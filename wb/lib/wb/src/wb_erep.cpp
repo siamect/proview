@@ -1337,7 +1337,7 @@ void wb_erep::checkVolume( pwr_tStatus *sts, pwr_tVid vid, vector<wb_volcheck> &
   
   wb_vrep *vol = volume( sts, vid);
   if ( EVEN(*sts)) {
-    MsgWindow::message( 'E', "Volume not loaded: ", cdh_VolumeIdToString( 0, vid, 0, 0));
+    MsgWindow::message( 'E', "Volume not loaded: ", cdh_VolumeIdToString( 0, 0, vid, 0, 0));
     (*err_cnt)++;
     return;
   }
@@ -1367,7 +1367,7 @@ void wb_erep::checkVolume( pwr_tStatus *sts, pwr_tVid vid, vector<wb_volcheck> &
 	   
     *sts = lfu_GetVolume( filestr, vol_name, &vol_vid, &vol_cid, &vol_time, &vol_dvversion);
     if ( EVEN(*sts)) {
-      MsgWindow::message( 'E', "Dbs file not found for volume ", cdh_VolumeIdToString( 0, vid, 0, 0));
+      MsgWindow::message( 'E', "Dbs file not found for volume ", cdh_VolumeIdToString( 0, 0, vid, 0, 0));
       (*err_cnt)++;
       return;
     }
@@ -1382,7 +1382,7 @@ void wb_erep::checkVolume( pwr_tStatus *sts, pwr_tVid vid, vector<wb_volcheck> &
     break;
   }
   default:
-    MsgWindow::message( 'E', "Strange volume type: ", cdh_VolumeIdToString( 0, vid, 0, 0));
+    MsgWindow::message( 'E', "Strange volume type: ", cdh_VolumeIdToString( 0, 0, vid, 0, 0));
     (*err_cnt)++;
   }
 

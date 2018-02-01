@@ -380,7 +380,7 @@ pwr_tStatus WVsel::check_volumelist(
 	if ( !quiet && errlen < (int)(sizeof(errstr)-100)) {
 	  errlen += sprintf( &errstr[errlen], 
 		  "** Error, Volume %s (%s) is not configured in the ProjectVolume\nCheck volume name and identity\n", 
-			     name, cdh_VolumeIdToString( 0, volume, 1, 0));
+			     name, cdh_VolumeIdToString( 0, 0, volume, 1, 0));
 	  MsgWindow::message( 'E', &errstr[errlen_old], msgw_ePop_No);
 	  errlen_old = errlen;
 	  BEEP;

@@ -4863,7 +4863,7 @@ int GeValue::scan( grow_tObject object)
       first_scan = false;
 
     *buf = 0;
-    cdh_VolumeIdToString( buf, vid, 0, 0);
+    cdh_VolumeIdToString( buf, sizeof(buf), vid, 0, 0);
     len = strlen(buf);
     memcpy( &old_value, &vid, sizeof(vid));
     break;
@@ -4883,7 +4883,7 @@ int GeValue::scan( grow_tObject object)
     if ( nid != 0)
       strcpy( buf, qcom_NodeName( nid));
     if ( *buf == 0)
-      cdh_VolumeIdToString( buf, nid, 0, 0);
+      cdh_VolumeIdToString( buf, sizeof(buf), nid, 0, 0);
     len = strlen(buf);
     memcpy( &old_value, &nid, sizeof(nid));
     break;
@@ -5045,9 +5045,9 @@ int GeValue::scan( grow_tObject object)
     switch ( format[strlen(format)-1]) {
     case 'b':
       if ( strncmp( &format[1], "16", 2) == 0)
-	strcpy( buf, cdh_MaskToBinaryString( val, 16));
+	cdh_MaskToBinaryString( val, 16, buf);
       else
-	strcpy( buf, cdh_MaskToBinaryString( val, 32));
+	cdh_MaskToBinaryString( val, 32, buf);
       len = strlen(buf);
       break;
     default: {

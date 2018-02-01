@@ -1213,7 +1213,7 @@ static int wccm_getnextfreeuservid_func(
   if ( EVEN(sts))
     strcpy( return_string, "");
   else
-    strcpy( return_string, cdh_VolumeIdToString( 0, next_vid, 0, 0));
+    strcpy( return_string, cdh_VolumeIdToString( 0, 0, next_vid, 0, 0));
 
   *return_decl = CCM_DECL_STRING;
   

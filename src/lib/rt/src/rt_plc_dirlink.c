@@ -178,7 +178,7 @@ plc_rtdbref (
 
       sts = plc_RefObjidAttr(local_object, la->ObjType, la->AttrRef, la, "");
       if (EVEN(sts)) {
-	errh_Error("plc_RefObjidAttr object %s, %m", cdh_ObjidToString(NULL, la->AttrRef.Objid, 0), sts);
+	errh_Error("plc_RefObjidAttr object %s, %m", cdh_ObjidToString(la->AttrRef.Objid,0), sts);
 	GUARD_DL( la->Pointer, la->Size );
  	continue;
       }
@@ -202,7 +202,7 @@ plc_rtdbref (
 	case pwr_cClass_Co:
 	  sts = plc_GetObjectAttrValue(la->ObjType, la->AttrRef, ".ValueIndex", &Index, sizeof(pwr_tInt32));
 	  if (EVEN(sts)) {
-	    errh_Error("plc_GetObjectAttrValue object %s.ValueIndex\n%m", cdh_ObjidToString(NULL, la->AttrRef.Objid, 0), sts);
+	    errh_Error("plc_GetObjectAttrValue object %s.ValueIndex\n%m", cdh_ObjidToString(la->AttrRef.Objid,0), sts);
 	    GUARD_DL( la->Pointer, la->Size );
 	    continue;
 	  }
@@ -293,7 +293,7 @@ plc_rtdbref (
 	if ( ODD(sts))
 	  sts = plc_GetObjectAttrValue(la->ObjType, oaref, ".ValueIndex", &Index, sizeof(pwr_tInt32));
 	if ( EVEN(sts)) {
-	  errh_Error("plc_GetObjectAttrValue object %s.ValueIndex\n%m", cdh_ObjidToString(NULL, la->AttrRef.Objid, 0), sts);
+	  errh_Error("plc_GetObjectAttrValue object %s.ValueIndex\n%m", cdh_ObjidToString(la->AttrRef.Objid,0), sts);
 	  GUARD_DL( la->Pointer, la->Size );
 	  continue;
 	}
@@ -328,7 +328,7 @@ plc_rtdbref (
 
 	sts1 = gdh_ArefDisabled( &la->AttrRef, &disabled);
 	if ( EVEN(sts1) || !disabled) 
-	  errh_Error("plc_RefObjidAttr(oid:%s,aname:%s) , %m", cdh_ArefToString(NULL, &la->AttrRef, 0), aname, sts);
+	  errh_Error("plc_RefObjidAttr(oid:%s,aname:%s) , %m", cdh_AttrRefToString(&la->AttrRef, 0), aname, sts);
 	GUARD_DL( la->Pointer, la->Size );
  	continue;
       }

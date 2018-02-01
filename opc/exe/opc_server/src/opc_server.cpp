@@ -844,9 +844,11 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Subscribe(struct soap* soap,
 
 	if ( !s0__SubscribeResponse->ServerSubHandle) {
 	  vector<opcsrv_sub> subv;
+	  char str[40];
 	
+	  cdh_SubidToString( str, sizeof(str), sub.subid, 0);
 	  s0__SubscribeResponse->ServerSubHandle = soap_new_std__string( soap, -1);
-	  s0__SubscribeResponse->ServerSubHandle->assign( cdh_SubidToString( 0, sub.subid, 0));
+	  s0__SubscribeResponse->ServerSubHandle->assign( str);
 	
 	  client->m_sublist[*s0__SubscribeResponse->ServerSubHandle] = subv;
 	}
@@ -1537,7 +1539,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *soap, _s0__Browse *s0__Brows
 	// Max elements reached, return current oid as continuation point
 
 	s0__BrowseResponse->ContinuationPoint = soap_new_std__string( soap, -1);
-	s0__BrowseResponse->ContinuationPoint->assign( cdh_ObjidToString( 0, child, 1));
+	s0__BrowseResponse->ContinuationPoint->assign( cdh_ObjidToString( child, 1));
 	*s0__BrowseResponse->MoreElements = true;
 	break;
       }
@@ -1590,7 +1592,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *soap, _s0__Browse *s0__Brows
 	// Max elements reached, return current oid as continuation point
 
 	s0__BrowseResponse->ContinuationPoint = soap_new_std__string( soap, -1);
-	s0__BrowseResponse->ContinuationPoint->assign( cdh_ObjidToString( 0, oid, 1));
+	s0__BrowseResponse->ContinuationPoint->assign( cdh_ObjidToString( oid, 1));
 	*s0__BrowseResponse->MoreElements = true;
 	break;
       }
@@ -1843,7 +1845,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *soap, _s0__Browse *s0__Brows
 	  // Max elements reached, return current oid as continuation point
 
 	  s0__BrowseResponse->ContinuationPoint = soap_new_std__string( soap, -1);
-	  s0__BrowseResponse->ContinuationPoint->assign( cdh_ObjidToString( 0, child, 1));
+	  s0__BrowseResponse->ContinuationPoint->assign( cdh_ObjidToString( child, 1));
 	  *s0__BrowseResponse->MoreElements = true;
 	  break;
 	}
