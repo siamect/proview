@@ -199,7 +199,9 @@ void sev_valuecache_double::write( int index, void *thread)
   }
   if ( m_write_cb) {
     pwr_tTime time;
-    time_Aadd( &time, &m_start_time, time_Float64ToD( 0, wtime));
+    pwr_tDeltaTime dt;
+    time_Float64ToD( &dt, wtime);
+    time_Aadd( &time, &m_start_time, &dt);
     (m_write_cb)( m_userdata, m_useridx, &wval, &time, thread);
   }
 }
