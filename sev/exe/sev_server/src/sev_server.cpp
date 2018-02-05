@@ -904,6 +904,7 @@ int sev_server::receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size,
   else {
     sev_sThread *th;
     sev_sQMsgHistData *qmsg;
+    int qmsg_size;
     pwr_tUInt32 key;
 
     if ( m_thread_key_node)
@@ -925,11 +926,12 @@ int sev_server::receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size,
       return 1;
     }
 
-    qmsg = (sev_sQMsgHistData *)malloc( sizeof(*qmsg) - sizeof(qmsg->data) + size);
-    memcpy( &qmsg->data, dp, size);
+    qmsg_size = size + (sizeof(*qmsg) - sizeof(qmsg->data)) - (sizeof(*msg) - sizeof(msg->Data));
+    qmsg = (sev_sQMsgHistData *)malloc( qmsg_size);
+    memcpy( &qmsg->data, dp, qmsg_size - (sizeof(*qmsg) - sizeof(qmsg->data)));
     qmsg->h.type = sev_eQMsgType_HistData;
     qmsg->h.version = msg->Version;
-    qmsg->h.size = size;
+    qmsg->h.size = qmsg_size;
     qmsg->time = msg->Time;
     lst_Init( NULL, &qmsg->h.e, qmsg);
 
@@ -1450,12 +1452,13 @@ void *sev_server::receive_histdata_thread( void *arg)
       case sev_eQMsgType_HistData: {
 	sev_sHistData *dp;
 	sev_sQMsgHistData *msg = (sev_sQMsgHistData *)qmsg;
+	int data_size = msg->h.size - (sizeof(*msg) - sizeof(msg->data));
 	
 	dp = (sev_sHistData *) &msg->data;
 
 	sev->m_db->begin_transaction( th->db_ctx);
     
-	while ( (char *)dp - (char *)msg < (int)msg->h.size) {
+	while ( (char *)dp - (char *)msg->data < data_size) {
 	  sev_sRefid *rp;
 	  pwr_tRefId rk = dp->sevid;
  
