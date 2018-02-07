@@ -863,14 +863,17 @@ int sev_server::receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size,
   sev_sHistData *dp;
   pwr_tTime time;
   pwr_tUInt32 server_thread;
+  int data_size;
 
   if ( msg->Version == 0) { 
     // Server thread was added in version 1
     dp = (sev_sHistData *) &((sev_sMsgHistDataStoreV0 *)msg)->Data;
+    data_size = size - (sizeof(sev_sMsgHistDataStoreV0) - sizeof(msg->Data));
     server_thread = 0;
   }
   else {
     dp = (sev_sHistData *) &msg->Data;
+    data_size = size - (sizeof(*msg) - sizeof(msg->Data));
     server_thread = msg->ServerThread;
   }
 
@@ -919,16 +922,17 @@ int sev_server::receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size,
     }
     
     // Create a queue message
-    if ( (int)(th->alloc + sizeof(*qmsg) - sizeof(qmsg->data) + size) > (int)m_config->ThreadQueueLimit ||
-	 (int)(m_total_queue_cnt + sizeof(*qmsg) - sizeof(qmsg->data) + size) > (int)m_config->TotalQueueLimit) {
+    qmsg_size = data_size + (sizeof(*qmsg) - sizeof(qmsg->data));
+
+    if ( (int)(th->alloc + qmsg_size) > (int)m_config->ThreadQueueLimit ||
+	 (int)(m_total_queue_cnt + qmsg_size) > (int)m_config->TotalQueueLimit) {
       // Queue maxlimit exceeded, discard message
       m_config->ServerThreads[th->conf_idx].LostCnt++;
       return 1;
     }
 
-    qmsg_size = size + (sizeof(*qmsg) - sizeof(qmsg->data)) - (sizeof(*msg) - sizeof(msg->Data));
     qmsg = (sev_sQMsgHistData *)malloc( qmsg_size);
-    memcpy( &qmsg->data, dp, qmsg_size - (sizeof(*qmsg) - sizeof(qmsg->data)));
+    memcpy( &qmsg->data, dp, data_size);
     qmsg->h.type = sev_eQMsgType_HistData;
     qmsg->h.version = msg->Version;
     qmsg->h.size = qmsg_size;
