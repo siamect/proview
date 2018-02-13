@@ -72,7 +72,7 @@ void sev_valuecache_double::add( void *value, pwr_tTime *t, void *thread)
   pwr_tDeltaTime dt;
 
   time_Adiff_NE( &dt, t, &m_start_time);
-  time = time_DToFloat64( 0, &dt);
+  time_DToFloat64( &time, &dt);
 
   // Store optimized write index before adding
   m_last_opt_write = get_optimal_write();

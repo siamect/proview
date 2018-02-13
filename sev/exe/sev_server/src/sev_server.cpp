@@ -121,6 +121,8 @@ int sev_server::init( int noneth)
     }
 
     memset( m_config->ServerThreads, 0, sizeof(m_config->ServerThreads));
+    if ( !m_config->GarbageInterval)
+      m_config->GarbageInterval = sev_cGarbageInterval;
   }
   else {
     // Read config from proview.cnf
@@ -130,6 +132,7 @@ int sev_server::init( int noneth)
     memset( &config, 0, sizeof(config));
     m_config = &config;
     m_config_dlid = pwr_cNDlid;
+    m_config->GarbageInterval = sev_cGarbageInterval;
 
     if ( cnf_get_value( "sevDatabaseType", str, sizeof(str))) {
       if ( cdh_NoCaseStrcmp( str, "sqlite") == 0)
@@ -505,7 +508,7 @@ int sev_server::mainloop()
   qid.nid = 0;
   qid.qix = sev_eProcSevServer;
 
-  time_FloatToD( &garco_interval, sev_cGarbageInterval);
+  time_FloatToD( &garco_interval, m_config->GarbageInterval);
   time_FloatToD( &stat_interval, sev_cStatInterval);
   time_GetTime( &currenttime);
   time_Aadd( &next_garco, &currenttime, &garco_interval);
@@ -563,7 +566,7 @@ int sev_server::mainloop()
       busy = pwr_cNDeltaTime;
       idle = pwr_cNDeltaTime;
     }
-    if ( m_read_threads && time_Acomp( &currenttime, &next_garco) == 1) {
+    if ( !m_read_threads && time_Acomp( &currenttime, &next_garco) == 1) {
       garbage_collector( 0);
       time_Aadd( &next_garco, &next_garco, &garco_interval);
     }
@@ -1286,15 +1289,18 @@ void *sev_server::garbage_collector_thread( void *arg)
 
   thread = sev->m_db->new_thread();
 
-  time_FloatToD( &garco_interval, sev_cGarbageInterval);
+  time_FloatToD( &garco_interval, sev->m_config->GarbageInterval);
   time_GetTime( &currenttime);
   time_Aadd( &next_garco, &currenttime, &garco_interval);
 
   while ( 1) {
     sleep(1);
 
+    time_GetTime( &currenttime);
     if ( time_Acomp( &currenttime, &next_garco) == 1) {
       sev->garbage_collector( thread);
+
+      time_FloatToD( &garco_interval, sev->m_config->GarbageInterval);
       time_Aadd( &next_garco, &next_garco, &garco_interval);
     }
   }
@@ -1316,7 +1322,7 @@ void sev_server::garbage_collector( void *thread)
   if ( item_size == 0)
     return;
 
-  items_per_scan = ((float)sev_cGarbageInterval) * item_size / sev_cGarbageCycle;
+  items_per_scan = ((float)m_config->GarbageInterval) * item_size / sev_cGarbageCycle;
 
   if ( items_per_scan >= 1) {
     for ( i = 0; i < (int)items_per_scan; i++) {

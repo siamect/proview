@@ -161,6 +161,14 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Scan interval for garbage collector.
+      !*/
+      Object GarbageInterval $Attribute 14 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      !/**
       !  Statistics.
       !*/
       Object Stat $Attribute 12 
@@ -177,7 +185,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrb:Class-SevServerThread"
  	  Attr Flags |= PWR_MASK_CLASS
  	  Attr Flags |= PWR_MASK_ARRAY
-	  Attr Elements = 40
+	  Attr Elements = 60
         EndBody
       EndObject
     EndObject
@@ -188,6 +196,7 @@ SObject pwrb:Class
         Attr MeanValueInterval2 = 30
         Attr ThreadQueueLimit = 600000
         Attr TotalQueueLimit = 6000000
+	Attr GarbageInterval = 120
       EndBody
     EndObject
   EndObject
