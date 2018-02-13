@@ -121,6 +121,8 @@ int sev_server::init( int noneth)
     }
 
     memset( m_config->ServerThreads, 0, sizeof(m_config->ServerThreads));
+    if ( !m_config->GarbageInterval)
+      m_config->GarbageInterval = sev_cGarbageInterval;
   }
   else {
     // Read config from proview.cnf
@@ -130,6 +132,7 @@ int sev_server::init( int noneth)
     memset( &config, 0, sizeof(config));
     m_config = &config;
     m_config_dlid = pwr_cNDlid;
+    m_config->GarbageInterval = sev_cGarbageInterval;
 
     if ( cnf_get_value( "sevDatabaseType", str, sizeof(str))) {
       if ( cdh_NoCaseStrcmp( str, "sqlite") == 0)
@@ -499,12 +502,13 @@ int sev_server::mainloop()
   pwr_tDeltaTime busy = pwr_cNDeltaTime;
   pwr_tDeltaTime idle = pwr_cNDeltaTime;
   pwr_tDeltaTime dt;
+  float fbusy, fidle;
   float a = exp(-((float)sev_cStatInterval)/300);
 
   qid.nid = 0;
   qid.qix = sev_eProcSevServer;
 
-  time_FloatToD( &garco_interval, sev_cGarbageInterval);
+  time_FloatToD( &garco_interval, m_config->GarbageInterval);
   time_FloatToD( &stat_interval, sev_cStatInterval);
   time_GetTime( &currenttime);
   time_Aadd( &next_garco, &currenttime, &garco_interval);
@@ -517,21 +521,23 @@ int sev_server::mainloop()
     time_GetTime( &before_get);
     time_Adiff( &dt, &before_get, &currenttime);
     time_Dadd( &busy, &busy, &dt);
-
+    time_DToFloat(&fbusy, &busy);
+  
     mp = qcom_Get(&sts, &qid, &get, tmo);
 
     time_GetTime( &currenttime);
     time_Adiff( &dt, &currenttime, &before_get);
     time_Dadd( &idle, &idle, &dt);
+    time_DToFloat(&fidle, &idle);
 
     if ( time_Acomp( &currenttime, &next_stat) == 1) {
-      m_stat.current_load = 100.0 * time_DToFloat(0, &busy)/(time_DToFloat(0, &busy)+time_DToFloat(0, &idle));      
+      m_stat.current_load = 100.0 * fbusy / (fbusy + fidle);      
       if ( m_stat.medium_load == 0)
 	m_stat.medium_load = m_stat.current_load;
       else
 	m_stat.medium_load = a * m_stat.medium_load + (1.0-a) * m_stat.current_load;
-      m_stat.storage_rate = (float)m_storage_cnt / (time_DToFloat(0, &busy)+time_DToFloat(0, &idle));
-      m_stat.write_rate = (float)m_write_cnt / (time_DToFloat(0, &busy)+time_DToFloat(0, &idle));
+      m_stat.storage_rate = (float)m_storage_cnt / (fbusy + fidle);
+      m_stat.write_rate = (float)m_write_cnt / (fbusy + fidle);
       if ( m_stat.medium_storage_rate == 0)
 	m_stat.medium_storage_rate = m_stat.storage_rate;
       else
@@ -560,7 +566,7 @@ int sev_server::mainloop()
       busy = pwr_cNDeltaTime;
       idle = pwr_cNDeltaTime;
     }
-    if ( m_read_threads && time_Acomp( &currenttime, &next_garco) == 1) {
+    if ( !m_read_threads && time_Acomp( &currenttime, &next_garco) == 1) {
       garbage_collector( 0);
       time_Aadd( &next_garco, &next_garco, &garco_interval);
     }
@@ -1283,15 +1289,18 @@ void *sev_server::garbage_collector_thread( void *arg)
 
   thread = sev->m_db->new_thread();
 
-  time_FloatToD( &garco_interval, sev_cGarbageInterval);
+  time_FloatToD( &garco_interval, sev->m_config->GarbageInterval);
   time_GetTime( &currenttime);
   time_Aadd( &next_garco, &currenttime, &garco_interval);
 
   while ( 1) {
     sleep(1);
 
+    time_GetTime( &currenttime);
     if ( time_Acomp( &currenttime, &next_garco) == 1) {
       sev->garbage_collector( thread);
+
+      time_FloatToD( &garco_interval, sev->m_config->GarbageInterval);
       time_Aadd( &next_garco, &next_garco, &garco_interval);
     }
   }
@@ -1313,7 +1322,7 @@ void sev_server::garbage_collector( void *thread)
   if ( item_size == 0)
     return;
 
-  items_per_scan = ((float)sev_cGarbageInterval) * item_size / sev_cGarbageCycle;
+  items_per_scan = ((float)m_config->GarbageInterval) * item_size / sev_cGarbageCycle;
 
   if ( items_per_scan >= 1) {
     for ( i = 0; i < (int)items_per_scan; i++) {
@@ -1383,6 +1392,7 @@ void *sev_server::receive_histdata_thread( void *arg)
   pwr_tDeltaTime busy = pwr_cNDeltaTime;
   pwr_tDeltaTime idle = pwr_cNDeltaTime;
   pwr_tDeltaTime dt;
+  float fbusy, fidle;
   float a = exp(-((float)sev_cStatInterval)/300);
   pwr_sClass_SevServerThread *thread_conf = 0;
   float current_load;
@@ -1404,6 +1414,7 @@ void *sev_server::receive_histdata_thread( void *arg)
     time_GetTime( &before_get);
     time_Adiff( &dt, &before_get, &currenttime);
     time_Dadd( &busy, &busy, &dt);
+    time_DToFloat(&fbusy, &busy);
 
     qmsg = (sev_sQMsgHeader *)que_Get( NULL, &th->queue, &tmo, &tmo_item);
 
@@ -1421,21 +1432,22 @@ void *sev_server::receive_histdata_thread( void *arg)
       time_GetTime( &currenttime);
       time_Adiff( &dt, &currenttime, &before_get);
       time_Dadd( &idle, &idle, &dt);
+      time_DToFloat(&fidle, &idle);
 
       if ( th->conf_idx >= 0 && time_Acomp( &currenttime, &next_stat) == 1) {
 
 	thread_conf->QueueAlloc = th->alloc;
-	current_load = 100.0 * time_DToFloat(0, &busy)/(time_DToFloat(0, &busy)+time_DToFloat(0, &idle));      
+	current_load = 100.0 * fbusy / (fbusy + fidle);      
 	if ( thread_conf->MediumLoad == 0)
 	  thread_conf->MediumLoad = current_load;
 	else
 	  thread_conf->MediumLoad = a * thread_conf->MediumLoad + (1.0-a) * current_load;
-	thread_conf->StorageRate = (float)storage_cnt / (time_DToFloat(0, &busy)+time_DToFloat(0, &idle));
+	thread_conf->StorageRate = (float)storage_cnt / (fbusy + fidle);
 	if ( thread_conf->MediumStorageRate == 0)
 	  thread_conf->MediumStorageRate = thread_conf->StorageRate;
 	else
 	  thread_conf->MediumStorageRate = a * thread_conf->MediumStorageRate + (1.0-a) * thread_conf->StorageRate;
-	thread_conf->WriteRate = (float)write_cnt / (time_DToFloat(0, &busy)+time_DToFloat(0, &idle));
+	thread_conf->WriteRate = (float)write_cnt / (fbusy + fidle);
 	if ( thread_conf->MediumWriteRate == 0)
 	  thread_conf->MediumWriteRate = thread_conf->WriteRate;
 	else
