@@ -2680,7 +2680,7 @@ int sev_dbms::delete_old_data( pwr_tStatus *sts, void *thread, char *tablename,
     if(scantime > 0.0)
       nbRowsToClean = (pwr_tUInt64)((garbagecycle/scantime) + 10000.0);
 
-    nbRowsToClean += get_minFromIntegerColumn(tablename, (char *)"id");
+    nbRowsToClean += get_minFromIntegerColumn( thread, tablename, (char *)"id");
     if ( options & pwr_mSevOptionsMask_PosixTime)
       sprintf( query, "delete from %s where id < " pwr_dFormatUInt64 " and time < %ld;",
          tablename, nbRowsToClean, (long int)limit.tv_sec);
@@ -3029,20 +3029,27 @@ int sev_dbms::check_objectitemattr( pwr_tStatus *sts, char *tablename, pwr_tOid 
   return 0;
 }
 
-pwr_tUInt64 sev_dbms::get_minFromIntegerColumn( char *tablename, char *colname )
+pwr_tUInt64 sev_dbms::get_minFromIntegerColumn( void *thread, char *tablename, char *colname )
 {
-	char query[2000];
+  char query[2000];
   pwr_tUInt64 retVal = 0;
+  MYSQL *con;
+
+  if ( thread)
+    con = (MYSQL *)thread;
+  else
+    con = m_env->con();
+
   sprintf( query, "select min(`%s`) from %s", colname, tablename);
 
   //printf( "%s: %s\n", __FUNCTION__ ,query);
-  int rc = mysql_query( m_env->con(), query);
+  int rc = mysql_query( con, query);
   if (rc) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
     printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
     return 0;
   }
-  MYSQL_RES *result = mysql_store_result( m_env->con());
+  MYSQL_RES *result = mysql_store_result( con);
   if ( !result) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
     printf( "%s Result Error\n", __FUNCTION__);
@@ -3063,20 +3070,27 @@ pwr_tUInt64 sev_dbms::get_minFromIntegerColumn( char *tablename, char *colname )
   return retVal;
 }
 
-pwr_tUInt64 sev_dbms::get_maxFromIntegerColumn( char *tablename, char *colname )
+pwr_tUInt64 sev_dbms::get_maxFromIntegerColumn( void *thread, char *tablename, char *colname )
 {
-	char query[2000];
+  char query[2000];
   pwr_tUInt64 retVal = 0;
+  MYSQL *con;
+
+  if ( thread)
+    con = (MYSQL *)thread;
+  else
+    con = m_env->con();
+
   sprintf( query, "select max(`%s`) from %s", colname, tablename);
 
   //printf( "%s: %s\n", __FUNCTION__ ,query);
-  int rc = mysql_query( m_env->con(), query);
+  int rc = mysql_query( con, query);
   if (rc) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
     printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
     return 0;
   }
-  MYSQL_RES *result = mysql_store_result( m_env->con());
+  MYSQL_RES *result = mysql_store_result( con);
   if ( !result) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
     printf( "%s Result Error\n", __FUNCTION__);
@@ -3611,7 +3625,7 @@ int sev_dbms::delete_old_objectdata( pwr_tStatus *sts, void *thread, char *table
     if(scantime > 0.0)
       nbRowsToClean = (pwr_tUInt64)((garbagecycle/scantime) + 10000.0);
 
-    nbRowsToClean += get_minFromIntegerColumn(tablename, (char *)"sev__id");
+    nbRowsToClean += get_minFromIntegerColumn( thread, tablename, (char *)"sev__id");
     if ( options & pwr_mSevOptionsMask_PosixTime)
       sprintf( query, "delete from %s where sev__id < " pwr_dFormatUInt64 " and sev__time < %ld;",
          tablename, nbRowsToClean, (long int)limit.tv_sec);
@@ -4262,7 +4276,7 @@ int sev_dbms::handle_itemchange(pwr_tStatus *sts, char *tablename, unsigned int 
 
   if(item->options & pwr_mSevOptionsMask_ReadOptimized ) {
     //If we set increment to same value as in the old table we can easily move the data from the old table to the new one
-    pwr_tUInt64 autoIncrValue = get_maxFromIntegerColumn(newTableName, (char*)"id");
+    pwr_tUInt64 autoIncrValue = get_maxFromIntegerColumn( 0, newTableName, (char*)"id");
     if(autoIncrValue) 
       autoIncrValue++;
     sprintf(query, "ALTER TABLE %s AUTO_INCREMENT = " pwr_dFormatUInt64, tablename, autoIncrValue);
@@ -4327,7 +4341,7 @@ int sev_dbms::handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned in
 
     if (item->options & pwr_mSevOptionsMask_ReadOptimized ) {
       //If we set increment to same value as in the old table we can easily move the data from the old table to the new one
-      pwr_tUInt64 autoIncrValue = get_maxFromIntegerColumn(newTableName, (char*)"sev__id");
+      pwr_tUInt64 autoIncrValue = get_maxFromIntegerColumn( 0, newTableName, (char*)"sev__id");
       if (autoIncrValue)
         autoIncrValue++;
       sprintf(query, "ALTER TABLE %s AUTO_INCREMENT = " pwr_dFormatUInt64, tablename, autoIncrValue);

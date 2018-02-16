@@ -199,8 +199,8 @@ class sev_dbms : public sev_db {
   int delete_event_table( pwr_tStatus *sts, char *tablename);
   int create_event_table( pwr_tStatus *sts, char *tablename, pwr_tMask options);
   int store_event( pwr_tStatus *sts, void *thread, int item_idx, sev_event *ep);
-  pwr_tUInt64 get_minFromIntegerColumn( char *tablename, char *colname );
-  pwr_tUInt64 get_maxFromIntegerColumn( char *tablename, char *colname );
+  pwr_tUInt64 get_minFromIntegerColumn( void *thread, char *tablename, char *colname );
+  pwr_tUInt64 get_maxFromIntegerColumn( void *thread, char *tablename, char *colname );
   pwr_tUInt64 get_nextAutoIncrement( char *tablename );
   int handle_itemchange(pwr_tStatus *sts, char *tablename, unsigned int item_idx);
   int handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned int item_idx, bool newObject);
