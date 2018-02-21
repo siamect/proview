@@ -200,6 +200,9 @@ plc_rtdbref (
 	case pwr_cClass_Av:
 	case pwr_cClass_Iv:
 	case pwr_cClass_Co:
+	case pwr_cClass_ATv:
+	case pwr_cClass_DTv:
+	case pwr_cClass_Sv:
 	  sts = plc_GetObjectAttrValue(la->ObjType, la->AttrRef, ".ValueIndex", &Index, sizeof(pwr_tInt32));
 	  if (EVEN(sts)) {
 	    errh_Error("plc_GetObjectAttrValue object %s.ValueIndex\n%m", cdh_ObjidToString(la->AttrRef.Objid,0), sts);
@@ -263,6 +266,21 @@ plc_rtdbref (
       case pwr_cClass_Iv:
 	if (la->UseCode == UC_READ && local_object)
 	  *la->Pointer = &tp->copy.iv_a.p->Value[Index];
+	break;
+
+      case pwr_cClass_ATv:
+	if (la->UseCode == UC_READ && local_object)
+	  *la->Pointer = &tp->copy.atv_a.p->Value[Index];
+	break;
+
+      case pwr_cClass_DTv:
+	if (la->UseCode == UC_READ && local_object)
+	  *la->Pointer = &tp->copy.dtv_a.p->Value[Index];
+	break;
+
+      case pwr_cClass_Sv:
+	if (la->UseCode == UC_READ && local_object)
+	  *la->Pointer = &tp->copy.sv_a.p->Value[Index];
 	break;
 
       /* Special: UC_READ => AbsValue, UC_READ2 => RawValue */

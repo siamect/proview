@@ -133,3 +133,16 @@ typedef struct {
 typedef struct {
   char	ActualValue[1];
 } plc_sClass_BString;
+
+typedef struct {
+   pwr_tTime	ActualValue;
+} plc_sClass_ATv;
+
+typedef struct {
+   pwr_tDeltaTime ActualValue;
+} plc_sClass_DTv;
+
+typedef struct {
+   pwr_tString80 ActualValue;
+} plc_sClass_Sv;
+

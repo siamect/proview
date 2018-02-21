@@ -263,6 +263,36 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Number of configured ATv objects in the node.
+      !*/
+      Object ATvCount $Attribute 23
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Number of configured DTv objects in the node.
+      !*/
+      Object DTvCount $Attribute 24
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Number of configured Sv objects in the node.
+      !*/
+      Object SvCount $Attribute 25
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
       !  Number of configured Bi objects in the node.
       !*/
       Object BiCount $Attribute 15

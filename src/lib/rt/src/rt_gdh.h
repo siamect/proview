@@ -861,6 +861,20 @@ gdh_GetLocalClassList(
   int *listcnt
 );
 
+/* Thread safe functions for times and strings */
+void gdh_GetTimeDL( pwr_tTime *atp, pwr_tTime *time);
+void gdh_SetTimeDL( pwr_tTime *atp, pwr_tTime *time);
+void gdh_GetDeltaTimeDL( pwr_tDeltaTime *dtp, pwr_tDeltaTime *time);
+void gdh_SetDeltaTimeDL( pwr_tDeltaTime *dtp, pwr_tDeltaTime *time);
+void gdh_GetStrDL( char *sp, char *str, int size);
+void gdh_SetStrDL( char *sp, char *str, int size);
+pwr_tStatus gdh_GetObjectInfoTime( char *name, pwr_tTime *time);
+pwr_tStatus gdh_SetObjectInfoTime( char *name, pwr_tTime *time);
+pwr_tStatus gdh_GetObjectInfoDeltaTime( char *name, pwr_tDeltaTime *time);
+pwr_tStatus gdh_SetObjectInfoDeltaTime( char *name, pwr_tDeltaTime *time);
+pwr_tStatus gdh_GetObjectInfoStr( char *name, char *str, int size);
+pwr_tStatus gdh_SetObjectInfoStr( char *name, char *str, int size);
+
 /** @} */
 
 #if defined __cplusplus

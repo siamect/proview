@@ -67,6 +67,7 @@
 #include "rt_subc.h"
 #include "rt_sanc.h"
 #include "rt_dl.h"
+#include "rt_lck.h"
 
 #if defined (OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS
 # define gdh_Lock	pthread_mutex_lock(&gdbroot->thread_lock); gdb_Lock
@@ -5158,4 +5159,262 @@ pwr_tStatus gdh_GetLocalClassList( int cidcnt, pwr_tCid *cid, int attrobjects, p
 
   array_Close( arr);
   return GDH__SUCCESS;
+}
+
+/** 
+ * @brief Thread save function to fetch a direct linked absolute time value.
+ * Sets the time lock to ensure that the time is not modified during 
+ * the operation.
+ * The application first has to attach the time lock with a call to 
+ * lck_Create(&sts, lck_eLock_Time).
+ *
+ * @return pwr_tStatus 
+ */
+void gdh_GetTimeDL( 
+		   pwr_tTime *atp, /**< Direct link to time attribute */
+		   pwr_tTime *time /**< Receives the requested time */
+		   )
+{
+  lck_Lock(lck_eLock_Time);
+  *time = *atp;
+  lck_Unlock(lck_eLock_Time);
+}
+
+/** 
+ * @brief Thread save function to store a direct linked absolute time value.
+ * Sets the time lock to ensure that the time is not modified during 
+ * the operation.
+ * The application first has to attach the time lock with a call to 
+ * lck_Create(&sts, lck_eLock_Time).
+ *
+ * @return pwr_tStatus 
+ */
+void gdh_SetTimeDL( 
+		   pwr_tTime *atp,  /**< Direct link to time attribute */
+		   pwr_tTime *time  /**< Time value to set */
+		   )
+{
+  if ( time) {
+    lck_Lock(lck_eLock_Time);
+    *atp = *time;
+    lck_Unlock(lck_eLock_Time);
+  }
+  else {
+    /* Set current time */
+    lck_Lock(lck_eLock_Time);
+    time_GetTime( atp);
+    lck_Unlock(lck_eLock_Time);
+  }
+}
+
+/** 
+ * @brief Thread save function to fetch a direct linked delta time value.
+ * Sets the time lock to ensure that the time is not modified during 
+ * the operation.
+ * The application first has to attach the time lock with a call to 
+ * lck_Create(&sts, lck_eLock_Time).
+ *
+ * @return pwr_tStatus 
+ */
+void gdh_GetDeltaTimeDL( 
+			pwr_tDeltaTime *dtp,   /**< Direct link to time attribute */
+			pwr_tDeltaTime *time   /**< Receives the requested time */
+			)
+{
+  lck_Lock(lck_eLock_Time);
+  *time = *dtp;
+  lck_Unlock(lck_eLock_Time);
+}
+
+/** 
+ * @brief Thread save function to store a direct linked delta time value.
+ * Sets the time lock to ensure that the time is not modified during 
+ * the operation.
+ * The application first has to attach the time lock with a call to 
+ * lck_Create(&sts, lck_eLock_Time).
+ *
+ * @return pwr_tStatus 
+ */
+void gdh_SetDeltaTimeDL( 
+			pwr_tDeltaTime *dtp,  /**< Direct link to time attribute */
+			pwr_tDeltaTime *time  /**< Time value to set */
+			)
+{
+  lck_Lock(lck_eLock_Time);
+  *dtp = *time;
+  lck_Unlock(lck_eLock_Time);
+}
+
+/** 
+ * @brief Thread save function to fetch a direct linked string value.
+ * Sets the string lock to ensure that the string is not modified during 
+ * the operation.
+ * The application first has to attach the string lock with a call to 
+ * lck_Create(&sts, lck_eLock_Str).
+ *
+ * @return pwr_tStatus 
+ */
+void gdh_GetStrDL( 
+		  char *sp,   /**< Direct link to string attribute */
+		  char *str,  /**< Receives the requested string */
+		  int size    /**< Size of string */
+		  )
+{
+  lck_Lock(lck_eLock_Str);
+  strncpy( str, sp, size);
+  lck_Unlock(lck_eLock_Str);
+}
+
+/** 
+ * @brief Thread save function to store a direct linked string value.
+ * Sets the string lock to ensure that the string is not modified during 
+ * the operation.
+ * The application first has to attach the string lock with a call to 
+ * lck_Create(&sts, lck_eLock_Str).
+ *
+ * @return pwr_tStatus 
+ */
+void gdh_SetStrDL( 
+		  char *sp,    /**< Direct link to string attribute */
+		  char *str,   /**< Time value to set */
+		  int size     /**< Size of string */
+		  )
+{
+  lck_Lock(lck_eLock_Str);
+  strncpy( sp, str, size);
+  lck_Unlock(lck_eLock_Str);
+}
+
+/** 
+ * @brief Fetch an absolute time value from an attribute.
+ * Sets the time lock to ensure that the time is not modified during 
+ * the operation.
+ * The application first has to attach the time lock with a call to 
+ * lck_Create(&sts, lck_eLock_Time).
+ *
+ * @return pwr_tStatus
+ */
+pwr_tStatus gdh_GetObjectInfoTime( 
+				  char *name,      /**< Attribute name */
+				  pwr_tTime *time  /**< Receives the requested time */
+				  )
+{
+  pwr_tStatus sts;
+
+  lck_Lock(lck_eLock_Time);
+  sts = gdh_GetObjectInfo( name, (pwr_tAddress)time, sizeof(pwr_tTime));
+  lck_Unlock(lck_eLock_Time);
+  return sts;
+}
+
+/** 
+ * @brief Store an absolute time value in an attribute.
+ * Sets the time lock to ensure that the time is not modified during 
+ * the operation.
+ * The application first has to attach the time lock with a call to 
+ * lck_Create(&sts, lck_eLock_Time).
+ *
+ * @return pwr_tStatus
+ */
+pwr_tStatus gdh_SetObjectInfoTime( 
+				  char *name,     /**< Attribute name */
+				  pwr_tTime *time /**< Time to set */
+				  )
+{
+  pwr_tStatus sts;
+
+  lck_Lock(lck_eLock_Time);
+  sts = gdh_SetObjectInfo( name, (void *)time, sizeof(pwr_tTime));
+  lck_Unlock(lck_eLock_Time);
+  return sts;
+}
+
+/** 
+ * @brief Fetch an delta time value from an attribute.
+ * Sets the time lock to ensure that the time is not modified during 
+ * the operation.
+ * The application first has to attach the time lock with a call to 
+ * lck_Create(&sts, lck_eLock_Time).
+ *
+ * @return pwr_tStatus
+ */
+pwr_tStatus gdh_GetObjectInfoDeltaTime( 
+				       char *name,           /**< Attribute name */
+				       pwr_tDeltaTime *time  /**< Receives the requested time */
+				       )
+{
+  pwr_tStatus sts;
+
+  lck_Lock(lck_eLock_Time);
+  sts = gdh_GetObjectInfo( name, (void *)time, sizeof(pwr_tDeltaTime));
+  lck_Unlock(lck_eLock_Time);
+  return sts;
+}
+
+/** 
+ * @brief Store a delta time value in an attribute.
+ * Sets the time lock to ensure that the time is not modified during 
+ * the operation.
+ * The application first has to attach the time lock with a call to 
+ * lck_Create(&sts, lck_eLock_Time).
+ *
+ * @return pwr_tStatus
+ */
+pwr_tStatus gdh_SetObjectInfoDeltaTime( 
+				       char *name,          /**< Attribute name */
+				       pwr_tDeltaTime *time /**< Time to set */
+				       )
+{
+  pwr_tStatus sts;
+
+  lck_Lock(lck_eLock_Time);
+  sts = gdh_SetObjectInfo( name, (void *)time, sizeof(pwr_tDeltaTime));
+  lck_Unlock(lck_eLock_Time);
+  return sts;
+}
+
+/** 
+ * @brief Fetch a string value from an attribute.
+ * Sets the string lock to ensure that the string is not modified during 
+ * the operation.
+ * The application first has to attach the string lock with a call to 
+ * lck_Create(&sts, lck_eLock_Str).
+ *
+ * @return pwr_tStatus
+ */
+pwr_tStatus gdh_GetObjectInfoStr( 
+				 char *name,   /**< Attribute name */
+				 char *str,    /**< Receives the requested string */
+				 int size      /**< String size */
+				 )
+{
+  pwr_tStatus sts;
+
+  lck_Lock(lck_eLock_Str);
+  sts = gdh_GetObjectInfo( name, (void *)str, size);
+  lck_Unlock(lck_eLock_Str);
+  return sts;
+}
+
+/** 
+ * @brief Store a string value in an attribute.
+ * Sets the string lock to ensure that the string is not modified during 
+ * the operation.
+ * The application first has to attach the string lock with a call to 
+ * lck_Create(&sts, lck_eLock_Str).
+ *
+ * @return pwr_tStatus
+ */
+pwr_tStatus gdh_SetObjectInfoStr( 
+				 char *name,   /**< Attribute name */
+				 char *str,    /**< String to set */
+				 int size      /**< String size */
+				 )
+{
+  pwr_tStatus sts;
+
+  lck_Lock(lck_eLock_Str);
+  sts = gdh_SetObjectInfo( name, (void *)str, size);
+  lck_Unlock(lck_eLock_Str);
+  return sts;
 }

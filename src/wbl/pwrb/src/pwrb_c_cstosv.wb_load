@@ -143,7 +143,7 @@ SObject pwrb:Class
         Attr subwindows = 0
         Attr graphmethod = 8
         Attr graphindex = 1
-        Attr default_mask[0] = 2
+        Attr default_mask[0] = 3
         Attr default_mask[1] = 0
         Attr segname_annotation = 0
         Attr devbody_annotation = 1

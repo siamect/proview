@@ -3619,20 +3619,14 @@ static int	gcg_get_outputstring_spec(
     free((char *) attrref);
     return GSX__SPECFOUND;
   }
-  case pwr_cClass_GetSp:
-  case pwr_cClass_GetATp:
-  case pwr_cClass_GetDTp:
   case pwr_cClass_GetDataRefp: {
     /**********************************************************
-     *  GetSp, GetATP, GetDTp, GetDataRefp
+     *  GetDataRefp
      ***********************************************************/	
 
     pwr_tAName aname;
 
     switch ( output_node->ln.cid) {
-    case pwr_cClass_GetSp: strcpy( aname, "SpObject"); break;
-    case pwr_cClass_GetATp: strcpy( aname, "ATpObject"); break;
-    case pwr_cClass_GetDTp: strcpy( aname, "DTpObject"); break;
     case pwr_cClass_GetDataRefp: strcpy( aname, "DataRefpObject"); break;
     default: ;
     }
@@ -6731,6 +6725,7 @@ int	gcg_comp_m8( gcg_ctx gcgctx, vldh_t_node node)
 	pwr_tClassId		cid;
 	pwr_tDisableAttr	disabled;
 	pwr_tCid		scid;
+	char			*name;
 
 	ldhses = (node->hn.wind)->hw.ldhses;  
 	
@@ -6888,29 +6883,19 @@ int	gcg_comp_m8( gcg_ctx gcgctx, vldh_t_node node)
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
-
-	  /* Insert io object in ioread list */
-	  gcg_aref_insert( gcgctx, attrref, GCG_PREFIX_REF, node);
-	  return GSX__SUCCESS;
 	  break;
 	case pwr_cClass_GetATv:
 	  if ( cid != pwr_cClass_ATv) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
-
-	  /* Insert io object in ioread list */
-	  gcg_aref_insert( gcgctx, attrref, GCG_PREFIX_REF, node);
-	  return GSX__SUCCESS;
+	  break;
 	case pwr_cClass_GetDTv:
 	  if ( cid != pwr_cClass_DTv) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
-
-	  /* Insert io object in ioread list */
-	  gcg_aref_insert( gcgctx, attrref, GCG_PREFIX_REF, node);
-	  return GSX__SUCCESS;
+	  break;
 	case pwr_cClass_GetConstAv:
 	  if ( cid != pwr_cClass_ConstAv) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
@@ -6947,6 +6932,18 @@ int	gcg_comp_m8( gcg_ctx gcgctx, vldh_t_node node)
 
 	/* Insert io object in ioread list */
 	gcg_ioread_insert( gcgctx, attrref, GCG_PREFIX_REF);
+
+	/* Print init call */
+	switch ( node->ln.cid) {
+	case pwr_cClass_GetATv:
+	case pwr_cClass_GetDTv:
+	case pwr_cClass_GetSv:
+	  sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
+	  IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
+			 "%s_init( tp);\n",
+			 name);
+	default: ;
+	}
 
 	return GSX__SUCCESS;
 }
@@ -7034,7 +7031,7 @@ int	gcg_comp_m9( gcg_ctx gcgctx, vldh_t_node node)
 * vldh_t_node	node		I	vldh node.
 *
 * Description:
-*	Compile method for GetDp, GetAp, GetSp, GetATp, GetDTp, GetDataRefp.
+*	Compile method for GetDp, GetAp, GetSp, GetDataRefp.
 *	Checks that the referenced object exists and that the referenced
 *	parameter exists in that object, and that the type of the parameter
 *	is correct.
@@ -8315,10 +8312,7 @@ int	gcg_comp_m11( gcg_ctx gcgctx, vldh_t_node node)
 	    gcg_error_msg( gcgctx, GSX__DISABLED, node);
 	}
 
-        if ( cid == pwr_cClass_Sv ||
-	     cid == pwr_cClass_ATv ||
-	     cid == pwr_cClass_DTv ||
-	     cid == pwr_cClass_DataRefv) {
+        if ( cid == pwr_cClass_DataRefv) {
 	  /* Insert io object in ref list */
 	  gcg_aref_insert( gcgctx, refattrref, GCG_PREFIX_REF, node);
 
@@ -11043,6 +11037,24 @@ int	gcg_comp_m36( gcg_ctx gcgctx, vldh_t_node node)
 	      return GSX__NEXTNODE;
 	    }
 	    break;
+	  case pwr_eType_Time:
+	    if ( node->ln.cid != pwr_cClass_GetATp) {
+	      gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	      return GSX__NEXTNODE;
+	    }
+	    break;
+	  case pwr_eType_DeltaTime:
+	    if ( node->ln.cid != pwr_cClass_GetDTp) {
+	      gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	      return GSX__NEXTNODE;
+	    }
+	    break;
+	  case pwr_eType_String:
+	    if ( node->ln.cid != pwr_cClass_GetSp) {
+	      gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	      return GSX__NEXTNODE;
+	    }
+	    break;
 	  default:
 	    /* Not allowed type */
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
@@ -11062,6 +11074,7 @@ int	gcg_comp_m36( gcg_ctx gcgctx, vldh_t_node node)
 
 	/* Insert object in ref list */
 	gcg_aref_insert( gcgctx, refattrref, GCG_PREFIX_REF, node);
+
 
 	return GSX__SUCCESS;
 }
@@ -13880,6 +13893,15 @@ int	gcg_comp_m55( gcg_ctx gcgctx, vldh_t_node node)
 	gcg_scantime_print( gcgctx, node->ln.oid);
 	gcg_timer_print( gcgctx, node->ln.oid);
 	
+	/* Print init call */
+	switch ( node->ln.cid) {
+	case pwr_cClass_CurrentTime:
+	  IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
+			 "%s_init( tp);\n",
+			 name);
+	default: ;
+	}
+
 	return GSX__SUCCESS;
 }
 /*************************************************************************

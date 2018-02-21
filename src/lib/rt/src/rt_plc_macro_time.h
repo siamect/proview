@@ -36,13 +36,21 @@
 
 /*		 Preprocessor routines for time operations	    */
 
+#define GetDTv_init(tp) \
+  tp->tim_copy_lock = 1;
+
+#define GetATv_init(tp) \
+  tp->tim_copy_lock = 1;
+
 /*_*
   STOATV
   store absolute time value			
   @aref stoatv StoATv
 */
 #define StoATv_exec(obj,in) \
-  obj->ActualValue = in;
+  lck_LockTime; \
+  obj->ActualValue = in; \
+  lck_UnlockTime;
 
 /*_*
   STODTV
@@ -50,7 +58,9 @@
   @aref stodtv StoDTv
 */
 #define StoDTv_exec(obj,in) \
-  obj->ActualValue = in;
+  lck_LockTime; \
+  obj->ActualValue = in; \
+  lck_UnlockTime;
 
 /*_*
   CSTOATV								
@@ -58,8 +68,11 @@
   @aref cstoatv CStoATv
 */
 #define CStoATv_exec(obj,in,cond) \
-  if ( cond ) \
-    obj->ActualValue = in;
+  if ( cond ) { \
+    lck_LockTime; \
+    obj->ActualValue = in; \
+    lck_UnlockTime; \
+  }
 
 /*_*
   CSTODTV								
@@ -67,8 +80,11 @@
   @aref cstodtv CStoDTv
 */
 #define CStoDTv_exec(obj,in,cond) \
-  if ( cond ) \
-    obj->ActualValue = in;
+  if ( cond ) { \
+    lck_LockTime; \
+    obj->ActualValue = in; \
+    lck_UnlockTime; \
+  }
 
 /*_*
   STOATP								
@@ -76,7 +92,9 @@
   @aref stoatp StoATp
 */
 #define StoATp_exec(ut,in) \
-  ut = in;
+  lck_LockTime; \
+  ut = in; \
+  lck_UnlockTime;
 
 /*_*
   STODTP								
@@ -84,7 +102,9 @@
   @aref stodtp StoDTp
 */
 #define StoDTp_exec(ut,in) \
-  ut = in;
+  lck_LockTime; \
+  ut = in; \
+  lck_UnlockTime;
 
 /*_*
   CSTOATP
@@ -92,8 +112,31 @@
   @aref cstoatp CStoATp
 */
 #define CStoATp_exec(ut,in,cond) \
-  if ( cond) \
-    ut = in;
+  if ( cond) { \
+    lck_LockTime; \
+    ut = in; \
+    lck_UnlockTime; \
+  }
+
+/*_*
+  GetATp
+  Get absolute time attribute
+  @aref getatp GetATp
+*/
+#define GetATp_exec(object,in) \
+  lck_LockTime;		       \
+  object->ActVal = in; \
+  lck_UnlockTime;
+
+/*_*
+  GetDTp
+  Get delta time attribute
+  @aref getatp GetDTp
+*/
+#define GetDTp_exec(object,in) \
+  lck_LockTime;		       \
+  object->ActVal = in; \
+  lck_UnlockTime;
 
 /*_*
   CSTODTP
@@ -101,8 +144,11 @@
   @aref cstodtp CStoDTp
 */
 #define CStoDTp_exec(ut,in,cond) \
-  if ( cond) \
-    ut = in;
+  if ( cond) { \
+    lck_LockTime; \
+    ut = in; \
+    lck_UnlockTime; \
+  }
 
 /*_*
   ATADD
@@ -157,8 +203,11 @@
   CURRENTTIME
   @aref currentime CurrentTime
 */
+#define CurrentTime_init(tp) \
+  tp->tim_copy_lock = 1;
+
 #define CurrentTime_exec(obj) \
-  obj->Time = tp->pp->Node->SystemTime;
+  obj->Time = *tp->pp->system_time;
 
 /*_*
   ATGREATERTHAN

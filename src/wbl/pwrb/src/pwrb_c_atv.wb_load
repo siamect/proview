@@ -37,7 +37,7 @@
 !
 SObject pwrb:Class
 !/**
-!  @Version 1.0
+!  @Version 2.0
 !  @Group PlantConfiguration,Signals
 !  @Summary Absolute time value
 !  Absolute time value.
@@ -69,8 +69,33 @@ SObject pwrb:Class
       !*/
       Object ActualValue $Attribute 2 
         Body SysBody
-          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Time"
+          Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_REDUTRANSFER
+	  Attr Size = 16
+        EndBody
+      EndObject
+      !/**
+      !  InitialValue specifies starting value of the signal at
+      !  Proview startup.
+      !*/
+      Object InitialValue $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Time"
+        EndBody
+      EndObject
+      !/**
+      !  Index in the ATvArea array of the Area objects
+      !  that are used for base frequency and partial frequency
+      !  samples. Initiated at boot time by rt_ini.
+      !*/
+      Object ValueIndex $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_PRIVATE
         EndBody
       EndObject
     EndObject

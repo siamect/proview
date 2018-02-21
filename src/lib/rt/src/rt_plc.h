@@ -116,6 +116,9 @@ typedef struct {
   IO_AREA(pwr_sClass_IiArea) ii_a;
   IO_AREA(pwr_sClass_IoArea) io_a;
   IO_AREA(pwr_sClass_IvArea) iv_a;
+  IO_AREA(pwr_sClass_ATvArea) atv_a;
+  IO_AREA(pwr_sClass_DTvArea) dtv_a;
+  IO_AREA(pwr_sClass_SvArea) sv_a;
   IO_AREA(pwr_sClass_BiArea) bi_a;
   IO_AREA(pwr_sClass_BoArea) bo_a;
   IO_AREA(pwr_sClass_InitArea) av_i;
@@ -127,6 +130,9 @@ typedef struct {
   IO_AREA(pwr_sClass_InitArea) ao_i;
   IO_AREA(pwr_sClass_InitArea) do_i;
   IO_AREA(pwr_sClass_InitArea) io_i;
+  IO_AREA(pwr_sClass_InitArea) atv_i;
+  IO_AREA(pwr_sClass_InitArea) dtv_i;
+  IO_AREA(pwr_sClass_InitArea) sv_i;
   IO_AREA(pwr_sClass_InitArea) bi_i;
   IO_AREA(pwr_sClass_InitArea) bi_isize;
   IO_AREA(pwr_sClass_InitArea) bo_i;
@@ -195,6 +201,8 @@ struct plc_sThread {
   pwr_tRedundancyStateEnum redu_state_old;
   int			redu_table_version_req_sent;
   redu_tCtx 		redu;
+  int			tim_copy_lock;
+  int			str_copy_lock;
 };
 
 struct plc_sProcess {
@@ -212,6 +220,7 @@ struct plc_sProcess {
   thread_sMutex		io_copy_mutex;
   plc_sArea		base;
   int 			is_core;
+  pwr_tTime		*system_time;
 };
 
 #if defined OS_LYNX || defined OS_LINUX

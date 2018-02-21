@@ -46,19 +46,16 @@ SObject pwrb:Class
 !  Fetches the value of an absolute time attribute.
 !  
 !  The complete name of quantity has to be supplied.
-!
-!  The GetATp object  
-!   - is a pure address reference,
-!   - contains no relevant information (=data) in rtdb,
-!   - is without executable code.
 !*/
   Object GetATp $ClassDef 445 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_RtAndDevBodies
-      Attr Flags = pwr_mClassDef_DevOnly
     EndBody
     Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "GetATp"
+      EndBody
       !/**
       !  Used by the PLC Editor.
       !*/
@@ -66,9 +63,8 @@ SObject pwrb:Class
         Body SysBody
           Attr PgmName = "ActVal"
           Attr Flags |= PWR_MASK_STATE
-          Attr Flags |= PWR_MASK_RTVIRTUAL
-          Attr Flags |= PWR_MASK_DEVBODYREF
-          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_REDUTRANSFER
           Attr TypeRef = "pwrs:Type-$Time"
           Attr GraphName = "VAL"
         EndBody
@@ -122,12 +118,12 @@ SObject pwrb:Class
         Attr default_mask[1] = 1
         Attr segname_annotation = 0
         Attr devbody_annotation = 1
-        Attr compmethod = 10
+        Attr compmethod = 36
         Attr compindex = 0
         Attr tracemethod = 0
         Attr traceindex = 0
         Attr connectmethod = 7
-        Attr executeordermethod = 0
+        Attr executeordermethod = 2
         Attr objname = "GetATp"
         Attr graphname = "ATp"
         Attr debugpar = ""

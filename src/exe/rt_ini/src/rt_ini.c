@@ -927,9 +927,15 @@ load_backup ()
   pwr_sClass_AvArea		*avp;
   pwr_sClass_DvArea		*dvp;
   pwr_sClass_IvArea		*ivp;
+  pwr_sClass_ATvArea		*atvp;
+  pwr_sClass_DTvArea		*dtvp;
+  pwr_sClass_SvArea		*svp;
   pwr_sClass_InitArea		*iavp;
   pwr_sClass_InitArea		*idvp;
   pwr_sClass_InitArea		*iivp;
+  pwr_sClass_InitArea		*iatvp;
+  pwr_sClass_InitArea		*idtvp;
+  pwr_sClass_InitArea		*isvp;
   pwr_tStatus			sts;
   int				i;
   pwr_sClass_IOHandler		*iop;
@@ -1001,6 +1007,42 @@ load_backup ()
     return;
   }
 
+  sts = gdh_NameToObjid("pwrNode-active-io-atv", &oid);
+  if (EVEN(sts)) {
+    errh_Error("gdh_NameToObjid(pwrNode-active-io-atv, &oid), %m", sts);
+    return;
+  }
+
+  sts = gdh_ObjidToPointer(oid, (void *) &atvp);
+  if (EVEN(sts)) {
+    errh_Error("gdh_ObjidToPointer(oid, (void *) &atvp), %m", sts);
+    return;
+  }
+
+  sts = gdh_NameToObjid("pwrNode-active-io-dtv", &oid);
+  if (EVEN(sts)) {
+    errh_Error("gdh_NameToObjid(pwrNode-active-io-dtv, &oid), %m", sts);
+    return;
+  }
+
+  sts = gdh_ObjidToPointer(oid, (void *) &dtvp);
+  if (EVEN(sts)) {
+    errh_Error("gdh_ObjidToPointer(oid, (void *) &dtvp), %m", sts);
+    return;
+  }
+
+  sts = gdh_NameToObjid("pwrNode-active-io-sv", &oid);
+  if (EVEN(sts)) {
+    errh_Error("gdh_NameToObjid(pwrNode-active-io-sv, &oid), %m", sts);
+    return;
+  }
+
+  sts = gdh_ObjidToPointer(oid, (void *) &svp);
+  if (EVEN(sts)) {
+    errh_Error("gdh_ObjidToPointer(oid, (void *) &svp), %m", sts);
+    return;
+  }
+
   sts = gdh_NameToObjid("pwrNode-active-io-iv_init", &oid);
   if (EVEN(sts)) {
     errh_Error("gdh_NameToObjid(pwrNode-active-io-iv_init, &oid), %m", sts);
@@ -1010,6 +1052,42 @@ load_backup ()
   sts = gdh_ObjidToPointer(oid, (void *) &iivp);
   if (EVEN(sts)) {
     errh_Error("gdh_ObjidToPointer(oid, (void *) &iivp), %m", sts);
+    return;
+  }
+
+  sts = gdh_NameToObjid("pwrNode-active-io-atv_init", &oid);
+  if (EVEN(sts)) {
+    errh_Error("gdh_NameToObjid(pwrNode-active-io-atv_init, &oid), %m", sts);
+    return;
+  }
+
+  sts = gdh_ObjidToPointer(oid, (void *) &iatvp);
+  if (EVEN(sts)) {
+    errh_Error("gdh_ObjidToPointer(oid, (void *) &iatvp), %m", sts);
+    return;
+  }
+
+  sts = gdh_NameToObjid("pwrNode-active-io-dtv_init", &oid);
+  if (EVEN(sts)) {
+    errh_Error("gdh_NameToObjid(pwrNode-active-io-dtv_init, &oid), %m", sts);
+    return;
+  }
+
+  sts = gdh_ObjidToPointer(oid, (void *) &idtvp);
+  if (EVEN(sts)) {
+    errh_Error("gdh_ObjidToPointer(oid, (void *) &idtvp), %m", sts);
+    return;
+  }
+
+  sts = gdh_NameToObjid("pwrNode-active-io-sv_init", &oid);
+  if (EVEN(sts)) {
+    errh_Error("gdh_NameToObjid(pwrNode-active-io-sv_init, &oid), %m", sts);
+    return;
+  }
+
+  sts = gdh_ObjidToPointer(oid, (void *) &isvp);
+  if (EVEN(sts)) {
+    errh_Error("gdh_ObjidToPointer(oid, (void *) &isvp), %m", sts);
     return;
   }
 
@@ -1028,11 +1106,29 @@ load_backup ()
     ivp->Value[i] = *iip;
   }
 
+  for (i = 1; i < iop->ATvCount; i++) {
+    pwr_tTime *iatp = gdh_TranslateRtdbPointer(iatvp->Value[i]);
+    atvp->Value[i] = *iatp;
+  }
+
+  for (i = 0; i < iop->DTvCount; i++) {
+    pwr_tDeltaTime *idtp = gdh_TranslateRtdbPointer(idtvp->Value[i]);
+    dtvp->Value[i] = *idtp;
+  }
+
+  for (i = 0; i < iop->SvCount; i++) {
+    char *istrp = gdh_TranslateRtdbPointer(isvp->Value[i]);
+    strncpy( svp->Value[i], istrp, sizeof(svp->Value[0]));
+  }
+
   typedef struct {
     union {
       pwr_tFloat32 *f;
       pwr_tInt32   *i;
       pwr_tBoolean *b;
+      pwr_tTime    *at;
+      pwr_tDeltaTime *dt;
+      pwr_tString80 *str;
     } actval_p;
     pwr_tUInt32  validx;
     union {
@@ -1046,6 +1142,9 @@ load_backup ()
       pwr_sClass_Di *di;
       pwr_sClass_Do *dox;
       pwr_sClass_Co *co;
+      pwr_sClass_ATv *atv;
+      pwr_sClass_DTv *dtv;
+      pwr_sClass_Sv *sv;
     } op;
   } ini_sRestoreSig;
 
@@ -1101,6 +1200,60 @@ load_backup ()
 
     rsiv[i].actval_p.i = rsiv[i].op.iv->ActualValue;
     rsiv[i].validx = rsiv[i].op.iv->ValueIndex;
+    i++;
+  }
+  
+  ini_sRestoreSig *rsatv = calloc( sizeof(ini_sRestoreSig), iop->ATvCount);
+  i = 1;
+  for ( sts = gdh_GetClassListAttrRef(pwr_cClass_ATv, &aref);
+	ODD(sts);
+	sts = gdh_GetNextAttrRef(pwr_cClass_ATv, &aref, &aref)) {
+    if ( i >= iop->ATvCount) break;
+
+    sts = gdh_AttrRefToPointer( &aref, (pwr_tAddress *)&rsatv[i].op.atv);
+    if ( EVEN(sts)) {
+      errh_Error("gdh_AttrRefToPointer ATv, %m", sts);
+      return;
+    }
+
+    rsatv[i].actval_p.at = rsatv[i].op.atv->ActualValue;
+    rsatv[i].validx = rsatv[i].op.atv->ValueIndex;
+    i++;
+  }
+  
+  ini_sRestoreSig *rsdtv = calloc( sizeof(ini_sRestoreSig), iop->DTvCount);
+  i = 0;
+  for ( sts = gdh_GetClassListAttrRef(pwr_cClass_DTv, &aref);
+	ODD(sts);
+	sts = gdh_GetNextAttrRef(pwr_cClass_DTv, &aref, &aref)) {
+    if ( i >= iop->DTvCount) break;
+
+    sts = gdh_AttrRefToPointer( &aref, (pwr_tAddress *)&rsdtv[i].op.dtv);
+    if ( EVEN(sts)) {
+      errh_Error("gdh_AttrRefToPointer DTv, %m", sts);
+      return;
+    }
+
+    rsdtv[i].actval_p.dt = rsdtv[i].op.dtv->ActualValue;
+    rsdtv[i].validx = rsdtv[i].op.dtv->ValueIndex;
+    i++;
+  }
+  
+  ini_sRestoreSig *rssv = calloc( sizeof(ini_sRestoreSig), iop->SvCount);
+  i = 0;
+  for ( sts = gdh_GetClassListAttrRef(pwr_cClass_Sv, &aref);
+	ODD(sts);
+	sts = gdh_GetNextAttrRef(pwr_cClass_Sv, &aref, &aref)) {
+    if ( i >= iop->SvCount) break;
+
+    sts = gdh_AttrRefToPointer( &aref, (pwr_tAddress *)&rssv[i].op.sv);
+    if ( EVEN(sts)) {
+      errh_Error("gdh_AttrRefToPointer Sv, %m", sts);
+      return;
+    }
+
+    rssv[i].actval_p.str = rssv[i].op.sv->ActualValue;
+    rssv[i].validx = rssv[i].op.sv->ValueIndex;
     i++;
   }
   
@@ -1258,6 +1411,24 @@ load_backup ()
   }
   free( rsiv);
 
+  for ( i = 1; i < iop->ATvCount; i++) {
+    rsatv[i].op.atv->ActualValue = rsatv[i].actval_p.at;
+    rsatv[i].op.atv->ValueIndex = rsatv[i].validx;
+  }
+  free( rsatv);
+
+  for ( i = 0; i < iop->DTvCount; i++) {
+    rsdtv[i].op.dtv->ActualValue = rsdtv[i].actval_p.dt;
+    rsdtv[i].op.dtv->ValueIndex = rsdtv[i].validx;
+  }
+  free( rsdtv);
+
+  for ( i = 0; i < iop->SvCount; i++) {
+    rssv[i].op.sv->ActualValue = rssv[i].actval_p.str;
+    rssv[i].op.sv->ValueIndex = rssv[i].validx;
+  }
+  free( rssv);
+
   for ( i = 0; i < iop->AiCount; i++) {
     rsai[i].op.ai->ActualValue = rsai[i].actval_p.f;
     rsai[i].op.ai->ValueIndex = rsai[i].validx;
@@ -1316,6 +1487,21 @@ load_backup ()
   for (i = 0; i < iop->IvCount; i++) {
     pwr_tInt32 *iip = gdh_TranslateRtdbPointer(iivp->Value[i]);
     *iip = ivp->Value[i];
+  }
+
+  for (i = 1; i < iop->ATvCount; i++) {
+    pwr_tTime *iatp = gdh_TranslateRtdbPointer(iatvp->Value[i]);
+    *iatp = atvp->Value[i];
+  }
+
+  for (i = 0; i < iop->DTvCount; i++) {
+    pwr_tDeltaTime *idtp = gdh_TranslateRtdbPointer(idtvp->Value[i]);
+    *idtp = dtvp->Value[i];
+  }
+
+  for (i = 0; i < iop->SvCount; i++) {
+    char *istrp = gdh_TranslateRtdbPointer(isvp->Value[i]);
+    strncpy( istrp, svp->Value[i], 80);
   }
 }
 

@@ -1186,6 +1186,199 @@ io_init_iv_signals (
 }
 
 /*----------------------------------------------------------------------------*\
+  Initialization of atv signals.
+\*----------------------------------------------------------------------------*/
+
+static pwr_tStatus
+io_init_atv_signals (
+  pwr_sClass_IOHandler	    *io_op)
+{
+  pwr_tObjid		    area_objid;
+  pwr_sAttrRef		    aref;
+  pwr_sClass_ATvArea	    *area_op;
+  pwr_sClass_ATv	    *o;
+  pwr_tStatus		    sts;
+  pwr_tTime		    *p;
+  pwr_tInt32		    atv_count=0;
+  pwr_sClass_InitArea	    *iarea_op;
+ 
+  /* Get pointer to area-object */
+  sts = gdh_NameToObjid( "pwrNode-active-io-atv", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &area_op);
+  if (EVEN(sts)) return sts;
+
+  /* Get pointer to area-object */
+  sts = gdh_NameToObjid( "pwrNode-active-io-atv_init", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &iarea_op);
+  if (EVEN(sts)) return sts;
+
+
+  /* First index is reserved for system time */
+  p = area_op->Value + 1; 
+  atv_count++;
+
+  /* Loop ATv-object */  
+  sts = gdh_GetClassListAttrRef( pwr_cClass_ATv, &aref);
+  if (EVEN(sts) && sts != GDH__NOSUCHOBJ && sts != GDH__BADOBJTYPE && sts != GDH__NO_TYPE) {
+    errh_Error("Get class list of ATv\n%m", sts);
+  }
+
+  while (ODD(sts)) {
+    sts = gdh_AttrRefToPointer( &aref, (void *)&o);
+    if (EVEN(sts) && sts != GDH__NO_TYPE) return sts;
+			    
+    if (sts != GDH__REMOTE)  {
+      gdh_StoreRtdbPointer( (unsigned long *)&o->ActualValue, p);
+      o->ValueIndex = atv_count;
+      gdh_StoreRtdbPointer( (unsigned long *)&iarea_op->Value[atv_count], &o->InitialValue);
+      atv_count++;
+      p++;
+    }
+
+    sts = gdh_GetNextAttrRef( pwr_cClass_ATv, &aref, &aref);
+    if (EVEN(sts) && sts != GDH__NO_TYPE) return sts;
+  }		
+
+  if (sts == GDH__NO_TYPE || sts == GDH__NOSUCHOBJ || sts == GDH__BADOBJTYPE) 
+    sts = IO__SUCCESS;
+
+  io_op->ATvCount = atv_count;
+
+  return sts;
+}
+
+/*----------------------------------------------------------------------------*\
+  Initialization of dtv signals.
+\*----------------------------------------------------------------------------*/
+
+static pwr_tStatus
+io_init_dtv_signals (
+  pwr_sClass_IOHandler	    *io_op)
+{
+  pwr_tObjid		    area_objid;
+  pwr_sAttrRef		    aref;
+  pwr_sClass_DTvArea	    *area_op;
+  pwr_sClass_DTv	    *o;
+  pwr_tStatus		    sts;
+  pwr_tDeltaTime	    *p;
+  pwr_tInt32		    dtv_count=0;
+  pwr_sClass_InitArea	    *iarea_op;
+ 
+  /* Get pointer to area-object */
+  sts = gdh_NameToObjid( "pwrNode-active-io-dtv", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &area_op);
+  if (EVEN(sts)) return sts;
+
+  /* Get pointer to area-object */
+  sts = gdh_NameToObjid( "pwrNode-active-io-dtv_init", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &iarea_op);
+  if (EVEN(sts)) return sts;
+
+  p = area_op->Value; 
+
+  /* Loop DTv-object */
+
+  sts = gdh_GetClassListAttrRef( pwr_cClass_DTv, &aref);
+  if (EVEN(sts) && sts != GDH__NOSUCHOBJ && sts != GDH__BADOBJTYPE && sts != GDH__NO_TYPE) {
+    errh_Error("Get class list of DTv\n%m", sts);
+  }
+
+  while (ODD(sts)) {
+    sts = gdh_AttrRefToPointer( &aref, (void *)&o);
+    if (EVEN(sts) && sts != GDH__NO_TYPE) return sts;
+			    
+    if (sts != GDH__REMOTE)  {
+      gdh_StoreRtdbPointer( (unsigned long *)&o->ActualValue, p);
+      o->ValueIndex = dtv_count;
+      gdh_StoreRtdbPointer( (unsigned long *)&iarea_op->Value[dtv_count], &o->InitialValue);
+      dtv_count++;
+      p++;
+    }
+
+    sts = gdh_GetNextAttrRef( pwr_cClass_DTv, &aref, &aref);
+    if (EVEN(sts) && sts != GDH__NO_TYPE) return sts;
+  }		
+
+  if (sts == GDH__NO_TYPE || sts == GDH__NOSUCHOBJ || sts == GDH__BADOBJTYPE) 
+    sts = IO__SUCCESS;
+
+  io_op->DTvCount = dtv_count;
+
+  return sts;
+}
+/*----------------------------------------------------------------------------*\
+  Initialization of sv signals.
+\*----------------------------------------------------------------------------*/
+
+static pwr_tStatus
+io_init_sv_signals (
+  pwr_sClass_IOHandler	    *io_op)
+{
+  pwr_tObjid		    area_objid;
+  pwr_sAttrRef		    aref;
+  pwr_sClass_SvArea	    *area_op;
+  pwr_sClass_Sv	    	    *o;
+  pwr_tStatus		    sts;
+  pwr_tString80		    *p;
+  pwr_tInt32		    sv_count=0;
+  pwr_sClass_InitArea	    *iarea_op;
+ 
+  /* Get pointer to area-object */
+  sts = gdh_NameToObjid( "pwrNode-active-io-sv", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &area_op);
+  if (EVEN(sts)) return sts;
+
+  /* Get pointer to area-object */
+  sts = gdh_NameToObjid( "pwrNode-active-io-sv_init", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &iarea_op);
+  if (EVEN(sts)) return sts;
+
+  p = area_op->Value; 
+
+  /* Loop Sv-object */
+
+  sts = gdh_GetClassListAttrRef( pwr_cClass_Sv, &aref);
+  if (EVEN(sts) && sts != GDH__NOSUCHOBJ && sts != GDH__BADOBJTYPE && sts != GDH__NO_TYPE) {
+    errh_Error("Get class list of Sv\n%m", sts);
+  }
+
+  while (ODD(sts)) {
+    sts = gdh_AttrRefToPointer( &aref, (void *)&o);
+    if (EVEN(sts) && sts != GDH__NO_TYPE) return sts;
+			    
+    if (sts != GDH__REMOTE)  {
+      gdh_StoreRtdbPointer( (unsigned long *)&o->ActualValue, p);
+      o->ValueIndex = sv_count;
+      gdh_StoreRtdbPointer( (unsigned long *)&iarea_op->Value[sv_count], &o->InitialValue);
+      sv_count++;
+      p++;
+    }
+
+    sts = gdh_GetNextAttrRef( pwr_cClass_Sv, &aref, &aref);
+    if (EVEN(sts) && sts != GDH__NO_TYPE) return sts;
+  }		
+
+  if (sts == GDH__NO_TYPE || sts == GDH__NOSUCHOBJ || sts == GDH__BADOBJTYPE) 
+    sts = IO__SUCCESS;
+
+  io_op->SvCount = sv_count;
+
+  return sts;
+}
+
+/*----------------------------------------------------------------------------*\
   Initialization of Bi signals and channels.
 \*----------------------------------------------------------------------------*/
 
@@ -1614,6 +1807,15 @@ pwr_tStatus io_init_signals( void)
   if ( EVEN(sts)) return sts;
 
   sts = io_init_iv_signals( io_op);
+  if ( EVEN(sts)) return sts;
+
+  sts = io_init_atv_signals( io_op);
+  if ( EVEN(sts)) return sts;
+
+  sts = io_init_dtv_signals( io_op);
+  if ( EVEN(sts)) return sts;
+
+  sts = io_init_sv_signals( io_op);
   if ( EVEN(sts)) return sts;
 
   sts = io_init_bi_signals( io_op);

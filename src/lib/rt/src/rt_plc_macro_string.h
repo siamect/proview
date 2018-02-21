@@ -37,13 +37,23 @@
 /*		 Preprocessor routines for string operations	    */
 
 /*_*
+  GETSV
+  get string value			
+  @aref getsv GetSv
+*/
+#define GetSv_init(tp) \
+  tp->str_copy_lock = 1;
+
+/*_*
   STOSV
   store string value			
   @aref stosv StoSv
 */
 #define stosv_exec(obj,in) \
+  lck_LockStr; \
   strncpy( obj->ActualValue, in, sizeof(obj->ActualValue)); \
-  obj->ActualValue[sizeof(obj->ActualValue)-1] = 0;
+  obj->ActualValue[sizeof(obj->ActualValue)-1] = 0; \
+  lck_UnlockStr;
 
 /*_*
   CSTOSV								
@@ -52,8 +62,10 @@
 */
 #define cstosv_exec(obj,in,cond) \
   if ( cond ) { \
+    lck_LockStr; \
     strncpy( obj->ActualValue, in, sizeof(obj->ActualValue)); \
     obj->ActualValue[sizeof(obj->ActualValue)-1] = 0; \
+    lck_UnlockStr; \
   }
 
 /*_*
@@ -93,8 +105,10 @@
   @aref stosp StoSp
 */
 #define stosp_exec(ut,in,size) \
+  lck_LockStr; \
   strncpy( ut, in, size); \
-  ut[size-1] = 0;
+  ut[size-1] = 0; \
+  lck_UnlockStr;
 
 /*_*
   CSTOSP
@@ -103,8 +117,10 @@
 */
 #define cstosp_exec(ut,in,cond,size) \
   if ( cond) { \
+    lck_LockStr; \
     strncpy( ut, in, size); \
     ut[size-1] = 0; \
+    lck_UnlockStr; \
   }
 
 /*_*
@@ -113,8 +129,10 @@
   @aref stonumsp StoNumSp
 */
 #define stonumsp_exec(ut,in,size,num) \
+  lck_LockStr; \
   strncpy( ut, in, num < size ? num : size); \
-  ut[size-1] = 0;
+  ut[size-1] = 0; \
+  lck_UnlockStr;
 
 /*_*
   CSTONUMSP
@@ -123,9 +141,21 @@
 */
 #define cstonumsp_exec(ut,in,cond,size, num) \
   if ( cond) { \
+    lck_LockStr; \
     strncpy( ut, in, num < size ? num : size); \
     ut[size-1] = 0; \
+    lck_UnlockStr; \
   }
+
+/*_*
+  GetSp
+  Get string attribute
+  @aref getsp GetSp
+*/
+#define GetSp_exec(object,in) \
+  lck_LockStr; \
+  strncpy( object->ActVal, in, sizeof(object->ActVal)); \
+  lck_UnlockStr;
 
 /*_*
   SUBSTR

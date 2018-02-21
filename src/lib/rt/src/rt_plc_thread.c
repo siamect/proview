@@ -74,6 +74,7 @@
 #include "rt_csup.h"
 #include "rt_c_plcthread.h"
 #include "rt_c_node.h"
+#include "rt_lck.h"
 
 #define MIN_SCANTIME 1e-9
 
@@ -391,7 +392,6 @@ plc_thread (
   }
 
   thread_MutexLock(&tp->pp->io_copy_mutex);
-
   memcpy(tp->copy.ai_a.p, tp->pp->base.ai_a.p, tp->copy.ai_a.size);
   memcpy(tp->copy.ao_a.p, tp->pp->base.ao_a.p, tp->copy.ao_a.size);
   memcpy(tp->copy.av_a.p, tp->pp->base.av_a.p, tp->copy.av_a.size);
@@ -405,8 +405,19 @@ plc_thread (
   memcpy(tp->copy.iv_a.p, tp->pp->base.iv_a.p, tp->copy.iv_a.size);
   memcpy(tp->copy.bi_a.p, tp->pp->base.bi_a.p, tp->copy.bi_a.size);
   memcpy(tp->copy.bo_a.p, tp->pp->base.bo_a.p, tp->copy.bo_a.size);
-
   thread_MutexUnlock(&tp->pp->io_copy_mutex);
+
+  if ( tp->tim_copy_lock) {
+    lck_LockTime;
+    memcpy(tp->copy.atv_a.p, tp->pp->base.atv_a.p, tp->copy.atv_a.size);
+    memcpy(tp->copy.dtv_a.p, tp->pp->base.dtv_a.p, tp->copy.dtv_a.size);
+    lck_UnlockTime;
+  }  
+  if ( tp->str_copy_lock) {
+    lck_LockStr;
+    memcpy(tp->copy.sv_a.p, tp->pp->base.sv_a.p, tp->copy.sv_a.size);
+    lck_UnlockStr;
+  }
   
   que_Put(&sts, &tp->q_out, &tp->event, (void *)3);
   phase = (long int)que_Get(&sts, &tp->q_in, NULL, NULL);
@@ -644,7 +655,6 @@ scan (
     tp->emergency_break_old = pp->Node->EmergBreakTrue;
 
     thread_MutexLock(&pp->io_copy_mutex);
-
     memcpy(tp->copy.ai_a.p, pp->base.ai_a.p, tp->copy.ai_a.size);
     memcpy(tp->copy.ao_a.p, pp->base.ao_a.p, tp->copy.ao_a.size);
     memcpy(tp->copy.av_a.p, pp->base.av_a.p, tp->copy.av_a.size);
@@ -657,9 +667,21 @@ scan (
     memcpy(tp->copy.io_a.p, pp->base.io_a.p, tp->copy.io_a.size);
     memcpy(tp->copy.iv_a.p, pp->base.iv_a.p, tp->copy.iv_a.size);
     memcpy(tp->copy.bi_a.p, pp->base.bi_a.p, tp->copy.bi_a.size);
-    memcpy(tp->copy.bo_a.p, pp->base.bo_a.p, tp->copy.bo_a.size);
-    
+    memcpy(tp->copy.bo_a.p, pp->base.bo_a.p, tp->copy.bo_a.size);    
     thread_MutexUnlock(&pp->io_copy_mutex);
+
+    if ( tp->tim_copy_lock) {
+      lck_LockTime;
+      *pp->system_time = tp->before_scan_abs;
+      memcpy(tp->copy.atv_a.p, pp->base.atv_a.p, tp->copy.atv_a.size);
+      memcpy(tp->copy.dtv_a.p, pp->base.dtv_a.p, tp->copy.dtv_a.size);
+      lck_UnlockTime;
+    }
+    if ( tp->str_copy_lock) {
+      lck_LockStr;
+      memcpy(tp->copy.sv_a.p, pp->base.sv_a.p, tp->copy.sv_a.size);
+      lck_UnlockStr;
+    }
 
     /* Execute all the PLC code */
     tp->exec(0, tp);

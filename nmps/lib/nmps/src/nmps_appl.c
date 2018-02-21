@@ -57,7 +57,7 @@
 #include "co_math.h"
 #include "rt_gdh.h"
 #include "rt_errh.h"
-#include "rt_nmps_lock.h"
+#include "rt_lck.h"
 #include "rt_gdh_msg.h"
 #include "rt_hash_msg.h"
 #include "rs_nmps_msg.h"
@@ -410,7 +410,7 @@ nmpsappl_MirrorInit(
 		(nmpsappl_t_datainfo *) calloc( applctx->total_cellsize, 
 		sizeof(nmpsappl_t_datainfo));
 
-	nmps_create_lock( &sts);
+	lck_Create( &sts, lck_eLock_NMps);
 	if ( EVEN(sts)) return sts;
 
 	applctx->options = options;
@@ -505,10 +505,10 @@ nmpsappl_Mirror(
 	for ( i = 0; i < applctx->cellist_count; i++)
 	{
 	  cellist_ptr = applctx->cellist[i];
-	  nmps_Lock;
+	  lck_LockNMps;
 	  memcpy( cellist_ptr->tmp_cell, cellist_ptr->object_ptr,
 			cellist_ptr->tmp_size);
-	  nmps_Unlock;
+	  lck_UnlockNMps;
 	}
 
 	applctx->data_count = 0;

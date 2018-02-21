@@ -60,6 +60,9 @@ SObject pwrb:Class
       Attr Flags = pwr_mClassDef_DevOnly
     EndBody
     Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "GetSv"
+      EndBody
       !/**
       !  Used by the PLC Editor.
       !*/

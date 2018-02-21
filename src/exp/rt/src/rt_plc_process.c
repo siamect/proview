@@ -68,7 +68,7 @@
 #include "rt_que.h"
 #include "rt_csup.h"
 #include "rt_ini_event.h"
-#include "rt_nmps_lock.h"
+#include "rt_lck.h"
 #include "rt_aproc.h"
 #include "rt_pwr_msg.h"
 
@@ -208,7 +208,9 @@ int main (
 
     stop_threads(pp);
     clean_all(pp);
-    nmps_delete_lock( &sts);
+    lck_Delete( &sts, lck_eLock_NMps);
+    lck_Delete( &sts, lck_eLock_Time);
+    lck_Delete( &sts, lck_eLock_Str);
     break;
   case ini_mEvent_oldPlcStop:
     errh_SetStatus( PWR__SRVTERM);
@@ -258,12 +260,15 @@ init_process ( char *name)
     exit(sts);
   }
 
-  // nmps_create_lock( &sts);
-  // if (EVEN(sts)) {
-  //   errh_Fatal("nmps_create_lock, %m", sts);
-  //  errh_SetStatus( PWR__SRVTERM);
-  //  exit(sts);
-  //}
+  lck_Create( &sts, lck_eLock_Time);
+  if (EVEN(sts))
+    errh_Fatal("lock create time, %m", sts);
+  lck_Create( &sts, lck_eLock_Str);
+  if (EVEN(sts))
+    errh_Fatal("lock create str, %m", sts);
+  lck_Create( &sts, lck_eLock_NMps);
+  if (EVEN(sts))
+    errh_Fatal("lock create NMps, %m", sts);
 
   if ( strstr( name, "rt_plc_core") != 0)
     pp->is_core = 1;
@@ -427,6 +432,7 @@ init_plc (
 
   init_grafcet(pp);
   link_io_base_areas(pp);
+  pp->system_time = (pwr_tTime *)pp->base.atv_a.p;
 
   return sts;
 }
@@ -555,6 +561,9 @@ link_io_base_areas (
   dlink_area((plc_sDlink *)&pp->base.ii_a, "pwrNode-active-io-ii", pp->IOHandler->IiCount * sizeof(pwr_tInt32));
   dlink_area((plc_sDlink *)&pp->base.io_a, "pwrNode-active-io-io", pp->IOHandler->IoCount * sizeof(pwr_tInt32));
   dlink_area((plc_sDlink *)&pp->base.iv_a, "pwrNode-active-io-iv", pp->IOHandler->IvCount * sizeof(pwr_tInt32));
+  dlink_area((plc_sDlink *)&pp->base.atv_a, "pwrNode-active-io-atv", pp->IOHandler->ATvCount * sizeof(pwr_tTime));
+  dlink_area((plc_sDlink *)&pp->base.dtv_a, "pwrNode-active-io-dtv", pp->IOHandler->DTvCount * sizeof(pwr_tDeltaTime));
+  dlink_area((plc_sDlink *)&pp->base.sv_a, "pwrNode-active-io-sv", pp->IOHandler->SvCount * sizeof(pwr_tString80));
   dlink_area((plc_sDlink *)&pp->base.bi_a, "pwrNode-active-io-bi", pp->IOHandler->BiSize);
   dlink_area((plc_sDlink *)&pp->base.bo_a, "pwrNode-active-io-bo", pp->IOHandler->BoSize);
   dlink_area((plc_sDlink *)&pp->base.av_i, "pwrNode-active-io-av_init", pp->IOHandler->AvCount * sizeof(pwr_tUInt64));
@@ -566,6 +575,9 @@ link_io_base_areas (
   dlink_area((plc_sDlink *)&pp->base.do_i, "pwrNode-active-io-do_init", pp->IOHandler->DoCount * sizeof(pwr_tUInt64));
   dlink_area((plc_sDlink *)&pp->base.ii_i, "pwrNode-active-io-ii_init", pp->IOHandler->IiCount * sizeof(pwr_tUInt64));
   dlink_area((plc_sDlink *)&pp->base.io_i, "pwrNode-active-io-io_init", pp->IOHandler->IoCount * sizeof(pwr_tUInt64));
+  dlink_area((plc_sDlink *)&pp->base.atv_i, "pwrNode-active-io-iatv_init", pp->IOHandler->ATvCount * sizeof(pwr_tTime));
+  dlink_area((plc_sDlink *)&pp->base.dtv_i, "pwrNode-active-io-idtv_init", pp->IOHandler->DTvCount * sizeof(pwr_tDeltaTime));
+  dlink_area((plc_sDlink *)&pp->base.sv_i, "pwrNode-active-io-isv_init", pp->IOHandler->SvCount * sizeof(pwr_tString80));
   dlink_area((plc_sDlink *)&pp->base.bi_i, "pwrNode-active-io-bi_init", pp->IOHandler->BiCount * sizeof(pwr_tUInt64));
   dlink_area((plc_sDlink *)&pp->base.bi_isize, "pwrNode-active-io-bi_initsize", pp->IOHandler->BiCount * sizeof(pwr_tUInt64));
   dlink_area((plc_sDlink *)&pp->base.bo_i, "pwrNode-active-io-bo_init", pp->IOHandler->BoCount * sizeof(pwr_tUInt64));
@@ -616,6 +628,15 @@ link_io_copy_areas (
 
   tp->copy.iv_a = pp->base.iv_a;
   tp->copy.iv_a.p = calloc(1, tp->copy.iv_a.size);
+
+  tp->copy.atv_a = pp->base.atv_a;
+  tp->copy.atv_a.p = calloc(1, tp->copy.atv_a.size);
+
+  tp->copy.dtv_a = pp->base.dtv_a;
+  tp->copy.dtv_a.p = calloc(1, tp->copy.dtv_a.size);
+
+  tp->copy.sv_a = pp->base.sv_a;
+  tp->copy.sv_a.p = calloc(1, tp->copy.sv_a.size);
 
   tp->copy.bi_a = pp->base.bi_a;
   tp->copy.bi_a.p = calloc(1, tp->copy.bi_a.size);
