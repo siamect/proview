@@ -139,7 +139,7 @@ static pwr_tStatus IoRackInit (
 	      if (chan_di->Representation == pwr_eDataRepEnum_Bit16 && op->ByteOrdering == pwr_eByteOrderingEnum_BigEndian) 
 	        chanp->mask = swap16(chanp->mask);
 	      if (chan_di->Representation == pwr_eDataRepEnum_Bit32 && op->ByteOrdering == pwr_eByteOrderingEnum_BigEndian)
-	        chanp->mask = swap32((unsigned short) chanp->mask);
+	        chanp->mask = swap32(chanp->mask);
 	      if (chan_di->Number == 0) latent_input_count = GetChanSize((pwr_eDataRepEnum) chan_di->Representation);
 //	      printf("Di channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_di->Number, chanp->offset);
 	      break;
@@ -187,7 +187,7 @@ static pwr_tStatus IoRackInit (
 	      if (chan_do->Representation == pwr_eDataRepEnum_Bit16 && op->ByteOrdering == pwr_eByteOrderingEnum_BigEndian) 
 	        chanp->mask = swap16(chanp->mask);
 	      if (chan_do->Representation == pwr_eDataRepEnum_Bit32 && op->ByteOrdering == pwr_eByteOrderingEnum_BigEndian)
-	        chanp->mask = swap32((unsigned short) chanp->mask);
+	        chanp->mask = swap32(chanp->mask);
 	      if (chan_do->Number == 0) latent_output_count = GetChanSize((pwr_eDataRepEnum) chan_do->Representation);
 //	      printf("Do channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_do->Number, chanp->offset);
 	      break;
