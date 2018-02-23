@@ -196,7 +196,8 @@ int rt_sevhistmon::init_objects()
         break;
       }
     }
-    m_confp->ThreadObjects[thread_cnt++] = hs_oid;
+    if ( thread_cnt < (int)(sizeof(m_confp->ThreadObjects)/sizeof(m_confp->ThreadObjects[0])))
+      m_confp->ThreadObjects[thread_cnt++] = hs_oid;
     if ( !found) {
       pwr_tOName oname;
 
@@ -720,6 +721,7 @@ int rt_sevhistmon::send_data()
     tgt.nid = m_hs[i].nid;
     tgt.qix = sev_eProcSevServer;
 
+    put.size = (char *)dp - (char *)msg;
     put.reply.nid = m_nodes[0].nid;
     put.reply.qix = sev_eProcSevClient;
     put.type.b = (qcom_eBtype) sev_cMsgClass;
