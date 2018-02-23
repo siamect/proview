@@ -4733,7 +4733,7 @@ int GeValue::scan( grow_tObject object)
 
     memcpy( &old_value, p, MIN(size, (int) sizeof(old_value)));
 
-    len = sprintf( buf, format, (char *)p);
+    len = snprintf( buf, sizeof(buf), format, (char *)p);
     break;
   case pwr_eType_Objid: {
     int sts;
@@ -4771,7 +4771,7 @@ int GeValue::scan( grow_tObject object)
       len = 0;
     }
     else
-      len = sprintf( buf, "%s", name);
+      len = snprintf( buf, sizeof(buf), "%s", name);
     memcpy( &old_value, &objid, MIN(size, (int) sizeof(old_value)));
     break;
   }
@@ -4809,7 +4809,7 @@ int GeValue::scan( grow_tObject object)
       if ( EVEN(sts))
 	strcpy( name, "");
     }
-    len = sprintf( buf, "%s", name);
+    len = snprintf( buf, sizeof(buf), "%s", name);
     memcpy( &old_value, &aref, MIN(size, (int) sizeof(old_value)));
     break;
   }
@@ -4847,7 +4847,7 @@ int GeValue::scan( grow_tObject object)
       if ( EVEN(sts))
 	strcpy( name, "");
     }
-    len = sprintf( buf, "%s", name);
+    len = snprintf( buf, sizeof(buf), "%s", name);
     memcpy( &old_value, &dataref, MIN(size, (int) sizeof(old_value)));
     break;
   }
