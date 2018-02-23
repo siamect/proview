@@ -628,13 +628,14 @@ usage()
 {
   cat << EOF
 
-  upgrade.sh  Upgrade from V5.4 to V5.5
+  upgrade.sh  Upgrade from V5.5 to V5.6
 
 
   Pass
 
     savedirectory  Save directory volume.
     classvolumes   Create loadfiles for classvolumes.
+    cnvdump	   Convert dumpfiles.
     renamedb	   Rename old databases.
     loaddb         Load databases.
     compile        Compile all plcprograms in the database
@@ -678,7 +679,7 @@ for db in $tmp; do
   fi
 done
 
-passes="savedirectory classvolumes renamedb loaddb compile createload buildnodes createpackage"
+passes="savedirectory classvolumes cnvdump renamedb loaddb compile createload buildnodes createpackage"
 #echo "Pass: $passes"
 echo ""
 echo -n "Enter start pass [savedirectory] > "

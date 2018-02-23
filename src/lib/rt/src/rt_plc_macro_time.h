@@ -119,6 +119,18 @@
   }
 
 /*_*
+  CSTODTP
+  Store conditionally into delta time attribute	
+  @aref cstodtp CStoDTp
+*/
+#define CStoDTp_exec(ut,in,cond) \
+  if ( cond) { \
+    lck_LockTime; \
+    ut = in; \
+    lck_UnlockTime; \
+  }
+
+/*_*
   GetATp
   Get absolute time attribute
   @aref getatp GetATp
@@ -137,18 +149,6 @@
   lck_LockTime;		       \
   object->ActVal = in; \
   lck_UnlockTime;
-
-/*_*
-  CSTODTP
-  Store conditionally into delta time attribute	
-  @aref cstodtp CStoDTp
-*/
-#define CStoDTp_exec(ut,in,cond) \
-  if ( cond) { \
-    lck_LockTime; \
-    ut = in; \
-    lck_UnlockTime; \
-  }
 
 /*_*
   ATADD
