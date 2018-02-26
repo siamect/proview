@@ -93,6 +93,8 @@ class wb_version_manager_git : public wb_version_manager
  public:
   wb_version_manager_git() : wb_version_manager(pwr_eVersionManagerEnum_None) { init();}
   ~wb_version_manager_git() {}
+  pwr_tFileName m_git_dir;
+  pwr_tFileName m_work_tree;
   void init();
   int store_revision( char *name, char *descr, bool new_branch);
   int restore_revision( char *name, char *branch, int checkout_master, int checkout_branch);

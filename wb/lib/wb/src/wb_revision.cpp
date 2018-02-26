@@ -38,6 +38,7 @@
 #include <vector>
 #include "pwr.h"
 #include "co_time.h"
+#include "co_dcli.h"
 #include "wb_revision.h"
 #include "wb_lfu.h"
 #include "wb_log.h"
@@ -151,6 +152,8 @@ pwr_tStatus wb_revision::create( int all, char *name, char *descr)
     pwr_tCmd cmd;
     bool in_main = false;
     int main_idx;
+    pwr_tFileName file_spec, found_file;
+    pwr_tStatus lsts;
     
     // Create is allowed only if revision is an end node
     if ( m_current_sub_idx == -1 && m_current_main_idx == -1) {
@@ -200,6 +203,13 @@ pwr_tStatus wb_revision::create( int all, char *name, char *descr)
 
     // Commit revision
     if ( m_manager) {
+      // Check that the wb_rev files are added to repo
+      strcpy( file_spec, "$pwrp_db/*.wb_rev");
+      for ( lsts = dcli_search_file( file_spec, found_file, DCLI_DIR_SEARCH_INIT);
+	    ODD(lsts);
+	    lsts = dcli_search_file( file_spec, found_file, DCLI_DIR_SEARCH_NEXT))
+	m_manager->check_add( found_file);
+
       m_sts = m_manager->store_revision( name, descr, in_main);
       if ( EVEN(m_sts)) return m_sts;
     }
@@ -774,8 +784,9 @@ void wb_version_manager_git::init()
   pwr_tTime t;
   bool new_git = false;
 
-  dcli_translate_filename( fname, "$pwrp_root/src/.git");
-  if ( EVEN(dcli_file_time( fname, &t))) {
+  dcli_translate_filename( m_git_dir, "$pwrp_root/src/.git");
+  dcli_translate_filename( m_work_tree, "$pwrp_root/src");
+  if ( EVEN(dcli_file_time( m_git_dir, &t))) {
     // No git repository found, init git
 
     strcpy( cmd, "git init $pwrp_root/src");
@@ -824,10 +835,10 @@ db/rt_eventlog_info.txt" << endl;
   }
 
   if ( new_git) {
-    strcpy( cmd, "cd $pwrp_root/src; git add .");
+    snprintf( cmd, sizeof(cmd), "git --git-dir=%s --work-tree=%s add .", m_git_dir, m_work_tree);
     system( cmd);
 
-    strcpy( cmd, "cd $pwrp_root/src; git commit -m \"Initial commit\" -a");
+    snprintf( cmd, sizeof(cmd), "git --git-dir=%s --work-tree=%s commit -m \"Initial commit\" -a", m_git_dir, m_work_tree);
     system( cmd);
   }
 
@@ -839,7 +850,7 @@ int wb_version_manager_git::store_revision( char *name, char *descr, bool new_br
   int sts;
 
   // Commit all changes
-  snprintf( cmd, sizeof(cmd), "git commit -m \"%s\" -a", descr);
+  snprintf( cmd, sizeof(cmd), "git --git-dir=%s --work-tree=%s commit -m \"%s\" -a", m_git_dir, m_work_tree, descr);
 
   sts = system( cmd);
   if ( sts != 0) {
@@ -848,7 +859,7 @@ int wb_version_manager_git::store_revision( char *name, char *descr, bool new_br
   }
 
   // Tag last commit
-  snprintf( cmd, sizeof(cmd), "git tag \"%s\"\n", name);
+  snprintf( cmd, sizeof(cmd), "git --git-dir=%s --work-tree=%s tag \"%s\"\n", m_git_dir, m_work_tree, name);
 
   sts = system( cmd);
   if ( sts != 0) {
@@ -858,7 +869,7 @@ int wb_version_manager_git::store_revision( char *name, char *descr, bool new_br
 
   if ( new_branch) {
     // Create branch on last commit
-    snprintf( cmd, sizeof(cmd), "git branch \"%s\"\n", wb_revision::branch_name( name));
+    snprintf( cmd, sizeof(cmd), "git --git-dir=%s --work-tree=%s branch \"%s\"\n", m_git_dir, m_work_tree, wb_revision::branch_name( name));
 
     sts = system( cmd);
     if ( sts != 0) {
@@ -878,15 +889,15 @@ int wb_version_manager_git::restore_revision( char *name, char *branch, int chec
 
   if ( checkout_master) {
     // Checkout master branch
-    strcpy( cmd, "git checkout master");
+    snprintf( cmd, sizeof(cmd), "git --git-dir=%s --work-tree=%s checkout master", m_git_dir, m_work_tree);
   }
   else if ( checkout_branch) {
     // Checkout supplied branch
-    snprintf( cmd, sizeof(cmd), "git checkout \"%s\"", branch); 
+    snprintf( cmd, sizeof(cmd), "git --git-dir=%s --work-tree=%s checkout \"%s\"", m_git_dir, m_work_tree, branch); 
   }
   else {
     // Checkout supplied tag
-    snprintf( cmd, sizeof(cmd), "git checkout \"%s\"", name);
+    snprintf( cmd, sizeof(cmd), "git --git-dir=%s --work-tree=%s checkout \"%s\"", m_git_dir, m_work_tree, name);
   }
 
   sts = system( cmd);
@@ -907,7 +918,7 @@ int wb_version_manager_git::get_current( char *name)
   dcli_translate_filename( fname, fname);
 
   // Get current tag
-  snprintf( cmd, sizeof(cmd), "git describe --tags --abbrev=0 > %s 2>/dev/null", fname);
+  snprintf( cmd, sizeof(cmd), "git --git-dir=%s --work-tree=%s describe --tags --abbrev=0 > %s 2>/dev/null", m_git_dir, m_work_tree, fname);
   sts = system( cmd);
   if ( sts != 0) {
     // printf( "** Error from git describe %d\n", sts >> 8);
@@ -940,10 +951,10 @@ int wb_version_manager_git::check( vector<wb_rev_item>& v)
   dcli_translate_filename( fname, fname);
 
   // Get current tag
-  snprintf( cmd, sizeof(cmd), "git tag > %s", fname);
+  snprintf( cmd, sizeof(cmd), "git --git-dir=%s --work-tree=%s tag > %s", m_git_dir, m_work_tree, fname);
   sts = system( cmd);
   if ( sts != 0) {
-    printf( "** Error from git describe %d\n", sts >> 8);
+    printf( "** Error from git tag %d\n", sts >> 8);
     return REV__GITERROR;
   }
 
@@ -983,55 +994,21 @@ int wb_version_manager_git::check( vector<wb_rev_item>& v)
 int wb_version_manager_git::check_add( char *filename)
 {
   pwr_tCmd cmd;
-  pwr_tFileName fname, f2name;
-  char *s, *s1 = 0;
-  pwr_tFileName rname = "$pwrp_tmp/gitresult.tmp";
-  char line[200];
+  pwr_tFileName fname;
   int sts;
 
-  dcli_translate_filename( rname, rname);
-  dcli_translate_filename( f2name, filename);
+  dcli_translate_filename( fname, filename);
 
-  int cnt = 0;
-  bool found = false;
-  for ( s = &f2name[strlen(f2name)-1]; s != f2name; s--) {
-    if ( *s == '/') {
-      cnt++;
-      if ( cnt == 2) {
-	strncpy( fname, s + 1, sizeof(fname));
-	found = true;
-	break;
-      }
-      else 
-	s1 = s;
-    }
-  }
-  if ( !found && s1)
-    strncpy( fname, s1 + 1, sizeof(fname));
-  else  if ( !found)
-    strncpy( fname, filename, sizeof(fname));
-  
-  sprintf( cmd, "cd $pwrp_root/src; git ls-files -o --exclude-standard | grep %s$ > %s", fname, rname);
+  sprintf( cmd, "git --git-dir=%s --work-tree=%s ls-files --error-unmatch %s >/dev/null 2>/dev/null", m_git_dir, m_work_tree, fname);
+  sts = system( cmd);
+  if ( sts == 0)
+    // File exist in repo
+    return 1;
+
+  sprintf( cmd, "git --git-dir=%s --work-tree=%s add %s", m_git_dir, m_work_tree, fname);
   sts = system( cmd);
   if ( sts != 0)
-    return 0;
-
-  ifstream fp( rname);
-  fp.getline( line, sizeof(line));
-  fp.close();
-  
-  dcli_trim( line, line);
-
-  if ( strcmp( line, "") == 0)
-    return 0;
-
-  sprintf( cmd, "cd $pwrp_root/src; git add %s", line);
-  sts = system( cmd);
-  if ( sts != 0)
-    printf( "** Git error %d\n", sts);
-  
-  sprintf( cmd, "rm -f %s", rname);
-  system( cmd);
+    printf( "** Git add error %d\n", sts);
   
   return 1;
 }
