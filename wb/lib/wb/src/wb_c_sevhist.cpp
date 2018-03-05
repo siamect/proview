@@ -40,6 +40,7 @@
 #include "wb_pwrs.h"
 #include "wb_ldh_msg.h"
 #include "wb_pwrb_msg.h"
+#include "pwr_class.h"
 #include "pwr_baseclasses.h"
 #include "pwr_basecomponentclasses.h"
 #include "wb_ldh.h"
@@ -141,9 +142,13 @@ static pwr_tStatus PostMove (
   pwr_sAttrRef Attribute;
   
   /*
-    If father of SevHist has an "ActualValue" attribute, then make this ASup
+    If father of SevHist has an "ActualValue" attribute, then make this SevHist
     refer to this attribute.
   */
+
+  if ( Class == pwr_eClass_PlantHier) 
+    // Keep the attribute
+    return PWRB__SUCCESS;
 
   sts = ldh_ObjidToName(Session, Father, ldh_eName_Hierarchy, Name,
     sizeof(Name), &size);
