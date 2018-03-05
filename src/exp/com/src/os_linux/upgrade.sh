@@ -288,10 +288,12 @@ reload_cnvobjects()
 
   reload_continue "Pass convert objects in loaded database"
 
-  for cdb in $databases; do
-     echo "-- Convert volume $cdb"
-     wb_cmd -q -v $cdb @$pwr_exe/upgrade_pb.pwr_com
-  done
+# Only directory volume
+#  for cdb in $databases; do
+#     echo "-- Convert volume $cdb"
+#     wb_cmd -q -v $cdb @$pwr_exe/upgrade_pb.pwr_com
+#  done
+  wb_cmd -q @$pwr_exe/upgrade_pb.pwr_com
 
   reload_status=$reload__success
 }
@@ -638,6 +640,7 @@ usage()
     cnvdump	   Convert dumpfiles.
     renamedb	   Rename old databases.
     loaddb         Load databases.
+    cnvobjects	   Convert objects.
     compile        Compile all plcprograms in the database
     createload     Create new loadfiles.
     buildnodes     Build all nodes in the project.
@@ -679,7 +682,7 @@ for db in $tmp; do
   fi
 done
 
-passes="savedirectory classvolumes cnvdump renamedb loaddb compile createload buildnodes createpackage"
+passes="savedirectory classvolumes cnvdump renamedb loaddb cnvobjects compile createload buildnodes createpackage"
 #echo "Pass: $passes"
 echo ""
 echo -n "Enter start pass [savedirectory] > "

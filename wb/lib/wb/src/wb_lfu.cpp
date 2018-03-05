@@ -65,6 +65,7 @@
 #include "wb_trv.h"
 #include "wb_lfu.h"
 #include "wb_log.h"
+#include "wb_build.h"
 #include "co_dbs.h"
 #include "cow_msgwindow.h"
 #include "co_cnf.h"
@@ -275,6 +276,7 @@ pwr_tStatus lfu_create_loadfile(
 *************************************************************************/
 pwr_tStatus lfu_create_bootfile(
 	char		*nodeconfigname,
+	int		nodetype,
 	lfu_t_volumelist *volumelist,
 	int		volumecount,
 	int		debug)
@@ -391,6 +393,12 @@ pwr_tStatus lfu_create_bootfile(
 	volumelist_ptr++;
 	utl_toupper( vollistname_upper, volumelist_ptr->p1);
       }
+
+      if ( nodetype == bld_eNodeType_Sev) {
+	fprintf( file, "pwrs 0.0.0.1\n");
+	fprintf( file, "pwrb 0.0.0.2\n");
+      }
+
       fclose( file);
       
       break;
@@ -660,7 +668,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
   int		found;
   pwr_tObjid	envobjid;
   pwr_tObjid	dbobjid;
-  pwr_tClassId	cid, ccid;
+  pwr_tClassId	cid, ccid, vcid;
   pwr_tObjid	volobjid;
   int		size;
   pwr_tString80	*path_ptr;
@@ -746,10 +754,10 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  ODD(sts);
 	  sts = ldh_GetNextSibling( ldhses, envobjid, &envobjid)) {
 
-      sts = ldh_GetObjectClass( ldhses, envobjid, &cid);
+      sts = ldh_GetObjectClass( ldhses, envobjid, &vcid);
       if ( EVEN(sts)) return sts;
 
-      if ( cid == pwr_cClass_WbEnvironment) {
+      if ( vcid == pwr_cClass_WbEnvironment) {
 	if ( k != 1)
 	  continue;
 
@@ -785,14 +793,14 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	// Get xxxVolumeLoad objects
 	sts = ldh_GetChild( ldhses, envobjid, &volobjid);
 	while ( ODD(sts)) {
-	  sts = ldh_GetObjectClass( ldhses, volobjid, &cid);
+	  sts = ldh_GetObjectClass( ldhses, volobjid, &vcid);
 	  if ( EVEN(sts)) return sts;
 
-	  if ( cid == pwr_cClass_RootVolumeLoad ||
-	       cid == pwr_cClass_SubVolumeLoad ||
-	       cid == pwr_cClass_ClassVolumeLoad ||
-	       cid == pwr_cClass_DetachedClassVolumeLoad ||
-	       cid == pwr_cClass_SharedVolumeLoad ) {
+	  if ( vcid == pwr_cClass_RootVolumeLoad ||
+	       vcid == pwr_cClass_SubVolumeLoad ||
+	       vcid == pwr_cClass_ClassVolumeLoad ||
+	       vcid == pwr_cClass_DetachedClassVolumeLoad ||
+	       vcid == pwr_cClass_SharedVolumeLoad ) {
 	    sts = ldh_ObjidToName( ldhses, volobjid, ldh_eName_Object,
 				   volume_name, sizeof(volume_name), &size);
 	    if ( EVEN(sts)) return sts;
@@ -806,7 +814,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	      if ( !strcmp( name, volname)) {
 		found = 1;
 	      
-		switch (cid) {
+		switch (vcid) {
 	        case pwr_cClass_RootVolumeLoad :
 	          strcpy( classname, "RootVolume");
 	          break;
@@ -843,17 +851,17 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  sts = ldh_GetNextSibling( ldhses, volobjid, &volobjid);
 	}
       }
-      else if ( cid == pwr_cClass_RootVolumeConfig ||
-		cid == pwr_cClass_SubVolumeConfig ||
-		cid == pwr_cClass_ClassVolumeConfig ||
-		cid == pwr_cClass_DetachedClassVolumeConfig ||
-		cid == pwr_cClass_SharedVolumeConfig ||
-		cid == pwr_cClass_CloneVolumeConfig ||
-		cid == pwr_cClass_ExternVolumeConfig ) {
-	if ( ! (cid == pwr_cClass_ClassVolumeConfig || cid == pwr_cClass_DetachedClassVolumeConfig) && 
+      else if ( vcid == pwr_cClass_RootVolumeConfig ||
+		vcid == pwr_cClass_SubVolumeConfig ||
+		vcid == pwr_cClass_ClassVolumeConfig ||
+		vcid == pwr_cClass_DetachedClassVolumeConfig ||
+		vcid == pwr_cClass_SharedVolumeConfig ||
+		vcid == pwr_cClass_CloneVolumeConfig ||
+		vcid == pwr_cClass_ExternVolumeConfig ) {
+	if ( ! (vcid == pwr_cClass_ClassVolumeConfig || vcid == pwr_cClass_DetachedClassVolumeConfig) && 
 	     k == 0)
 	  continue;
-	if ( (cid == pwr_cClass_ClassVolumeConfig || cid == pwr_cClass_DetachedClassVolumeConfig) && 
+	if ( (vcid == pwr_cClass_ClassVolumeConfig || vcid == pwr_cClass_DetachedClassVolumeConfig) && 
 	     k == 1)
 	  continue;
 
@@ -871,7 +879,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	    found = 1;
 	      
 	    bool out_of_range = false;
-	    switch (cid) {
+	    switch (vcid) {
   	    case pwr_cClass_RootVolumeConfig :
 	      strcpy( classname, "RootVolume");
 	      if ( volumelist_ptr->volume_id < cdh_cUserVolMin ||
@@ -924,7 +932,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	      syntax_error = 1;
 	    }
 
-	    switch (cid) {
+	    switch (vcid) {
 	    case pwr_cClass_RootVolumeConfig :
 	    case pwr_cClass_SubVolumeConfig :
 	    case pwr_cClass_ClassVolumeConfig :
@@ -937,10 +945,10 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 				"Database", (char **) &dbenum, &size);
 	      if ( EVEN(sts)) return sts;
 
-	      if (( (cid == pwr_cClass_ClassVolumeConfig || 
-		     cid == pwr_cClass_DetachedClassVolumeConfig) && *dbenum == 2) ||
-		  ( !(cid == pwr_cClass_ClassVolumeConfig || 
-		      cid == pwr_cClass_DetachedClassVolumeConfig) && *dbenum == 1)) {
+	      if (( (vcid == pwr_cClass_ClassVolumeConfig || 
+		     vcid == pwr_cClass_DetachedClassVolumeConfig) && *dbenum == 2) ||
+		  ( !(vcid == pwr_cClass_ClassVolumeConfig || 
+		      vcid == pwr_cClass_DetachedClassVolumeConfig) && *dbenum == 1)) {
 		sts = ldh_GetObjectPar( ldhses, envobjid, "RtBody",
 					"Server", (char **) &server, &size);
 		if ( EVEN(sts)) return sts;
@@ -1022,7 +1030,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  syntax_error = 1;
 	}
 	else {
-	  switch (cid) {
+	  switch (vcid) {
 	  case pwr_cClass_RootVolumeConfig :
 	  case pwr_cClass_SubVolumeConfig :
 	  case pwr_cClass_SharedVolumeConfig : {
@@ -1030,18 +1038,18 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	    int *dbenum_p = 0;
 	    char *server_p = 0;
 	    ldh_eVolRep volrep;
-	    pwr_tCid vcid;
+	    pwr_tCid volcid;
 	    pwr_tString40 server = "";
 	    
-	    switch ( cid) {
+	    switch ( vcid) {
 	    case pwr_cClass_RootVolumeConfig:
-	      vcid = pwr_eClass_RootVolume;
+	      volcid = pwr_eClass_RootVolume;
 	      break;
 	    case pwr_cClass_SubVolumeConfig:
-	      vcid = pwr_eClass_SubVolume;
+	      volcid = pwr_eClass_SubVolume;
 	      break;
 	    case pwr_cClass_SharedVolumeConfig:
-	      vcid = pwr_eClass_SharedVolume;
+	      volcid = pwr_eClass_SharedVolume;
 	      break;
 	    default: ;
 	    }
@@ -1073,7 +1081,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		  data = (lfu_sCreaDb *) calloc( 1, sizeof(*data));
 		  strcpy( data->name, volumelist_ptr->volume_name);
 		  data->vid = volumelist_ptr->volume_id;
-		  data->cid = vcid;
+		  data->cid = volcid;
 		  data->ldhses = ldhses;
 		  data->volrep = volrep;
 		  strcpy( data->server, "");
@@ -1115,7 +1123,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		  data = (lfu_sCreaDb *) calloc( 1, sizeof(*data));
 		  strcpy( data->name, volumelist_ptr->volume_name);
 		  data->vid = volumelist_ptr->volume_id;
-		  data->cid = vcid;
+		  data->cid = volcid;
 		  data->ldhses = ldhses;
 		  data->volrep = volrep;
 		  strcpy( data->server, server);
@@ -1176,7 +1184,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		  data = (lfu_sCreaDb *) calloc( 1, sizeof(*data));
 		  strcpy( data->name, volumelist_ptr->volume_name);
 		  data->vid = volumelist_ptr->volume_id;
-		  if ( cid ==  pwr_cClass_DetachedClassVolumeConfig)
+		  if ( vcid ==  pwr_cClass_DetachedClassVolumeConfig)
 		    data->cid = pwr_eClass_DetachedClassVolume;
 		  else
 		    data->cid = pwr_eClass_ClassVolume;
@@ -1216,7 +1224,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		  data = (lfu_sCreaDb *) calloc( 1, sizeof(*data));
 		  strcpy( data->name, volumelist_ptr->volume_name);
 		  data->vid = volumelist_ptr->volume_id;
-		  if ( cid ==  pwr_cClass_DetachedClassVolumeConfig)
+		  if ( vcid ==  pwr_cClass_DetachedClassVolumeConfig)
 		    data->cid = pwr_eClass_DetachedClassVolume;
 		  else
 		    data->cid = pwr_eClass_ClassVolume;
@@ -1253,7 +1261,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		  break;
 		}
 	      
-		if ( cid ==  pwr_cClass_DetachedClassVolumeConfig)
+		if ( vcid ==  pwr_cClass_DetachedClassVolumeConfig)
 		  fprintf( wblfile, "Volume %s pwr_eClass_DetachedClassVolume %s\nEndVolume\n", 
 			   volume_name, cdh_VolumeIdToString( 0, 0, volumelist_ptr->volume_id, 0, 0));
 		else
@@ -1328,7 +1336,9 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	sts = ldh_GetObjectClass( ldhses, nodeobjid, &cid);
 	if ( EVEN(sts)) return sts;
 
-	if ( cid == pwr_cClass_NodeConfig) {
+	if ( cid == pwr_cClass_NodeConfig ||
+	     cid == pwr_cClass_SevNodeConfig) {
+
 	  sts = ldh_ObjidToName( ldhses, nodeobjid, ldh_eName_Object, 
 				 nodeconfig_name, sizeof(nodeconfig_name), &size);
 	  if ( EVEN(sts)) return sts;
@@ -1348,9 +1358,13 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  }
 
 	  /* Check SecondaryNode.NodeName attribute */
-	  sts = ldh_GetObjectPar( ldhses, nodeobjid, "RtBody",
-				  "SecondaryNode.NodeName", &secondary_nodename_ptr, &size);
-	  if (EVEN(sts)) return sts;
+	  if ( cid == pwr_cClass_NodeConfig) {
+	    sts = ldh_GetObjectPar( ldhses, nodeobjid, "RtBody",
+				    "SecondaryNode.NodeName", &secondary_nodename_ptr, &size);
+	    if (EVEN(sts)) return sts;
+	  }
+	  else
+	    secondary_nodename_ptr = 0;
 
 	  /* Check OperatingSystem attribute */
 	  sts = ldh_GetObjectPar( ldhses, nodeobjid, "RtBody",
@@ -1377,30 +1391,32 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  }
 
 	  /* Check SimulateSingleProcess attribute */
-
-	  sts = ldh_GetObjectPar( ldhses, nodeobjid, "RtBody",
-				  "SimulateSingleProcess", (char **)&single_scan_ptr, &size);
-	  if (EVEN(sts)) return sts;
-
-	  if ( *single_scan_ptr != 0) {
+	  if ( cid == pwr_cClass_NodeConfig) {
+	    
 	    sts = ldh_GetObjectPar( ldhses, nodeobjid, "RtBody",
-				    "SimulateSingleScanTime", (char **)&scantime_ptr, &size);
-	    if ( EVEN(sts)) return sts;
+				    "SimulateSingleProcess", (char **)&single_scan_ptr, &size);
 	    if (EVEN(sts)) return sts;
+	    
+	    if ( *single_scan_ptr != 0) {
+	      sts = ldh_GetObjectPar( ldhses, nodeobjid, "RtBody",
+				    "SimulateSingleScanTime", (char **)&scantime_ptr, &size);
+	      if ( EVEN(sts)) return sts;
 
-	    if ( *scantime_ptr == 0) {
-	      char msg[200];
-	      sprintf( msg, "Error in NodeConfig object '%s', SimulateSingleScanTime is missing", nodeconfig_name);
-	      MsgWindow::message( 'E', msg, msgw_ePop_Default);
-	      syntax_error = 1;
+	      if ( *scantime_ptr == 0) {
+		char msg[200];
+		sprintf( msg, "Error in NodeConfig object '%s', SimulateSingleScanTime is missing", nodeconfig_name);
+		MsgWindow::message( 'E', msg, msgw_ePop_Default);
+		syntax_error = 1;
+	      }
+	      scantime = *scantime_ptr;
+	      free( (char *) scantime_ptr);
 	    }
-	    scantime = *scantime_ptr;
-	    free( (char *) scantime_ptr);
+	    else
+	      scantime = 0;
+	    free( (char *) single_scan_ptr);
 	  }
-	  else
+	  else 
 	    scantime = 0;
-	  free( (char *) single_scan_ptr);
-
 
 	  lfu_check_appl_file( ldhses, nodename_ptr, *bus_number_ptr);
 	  // lfu_check_opt_file( ldhses, nodename_ptr, *bus_number_ptr, (pwr_mOpSys) os);
@@ -1411,14 +1427,14 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	    /* Find the volumes in this node */
 	    sts = ldh_GetChild( ldhses, nodeobjid, &volobjid);
 	    while ( ODD(sts)) {
-	      sts = ldh_GetObjectClass( ldhses, volobjid, &cid);
+	      sts = ldh_GetObjectClass( ldhses, volobjid, &vcid);
 	      if ( EVEN(sts)) return sts;
 
-	      if ( cid == pwr_cClass_RootVolumeLoad ||
-		   cid == pwr_cClass_SubVolumeLoad ||
-		   cid == pwr_cClass_ClassVolumeLoad ||
-		   cid == pwr_cClass_DetachedClassVolumeLoad ||
-		   cid == pwr_cClass_SharedVolumeLoad ) {
+	      if ( vcid == pwr_cClass_RootVolumeLoad ||
+		   vcid == pwr_cClass_SubVolumeLoad ||
+		   vcid == pwr_cClass_ClassVolumeLoad ||
+		   vcid == pwr_cClass_DetachedClassVolumeLoad ||
+		   vcid == pwr_cClass_SharedVolumeLoad ) {
 		sts = ldh_ObjidToName( ldhses, volobjid, ldh_eName_Object,
 				       volume_name, sizeof(volume_name), &size);
 		if ( EVEN(sts)) return sts;
@@ -1451,17 +1467,18 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		    }
 
 		    if ( j == 0)
-		      fprintf( file, "%s %s %s %s %d %d %f\n",
+		      fprintf( file, "%s %s %s %s %d %d %f %d\n",
 			       volume_name,
 			       cdh_VolumeIdToString( 0, 0, volumelist_ptr->volume_id, 0, 0),
 			       nodeconfig_name,
 			       nodename_ptr,
 			       *bus_number_ptr,
 			       os,
-			       scantime);
+			       scantime,
+			       cid == pwr_cClass_SevNodeConfig ? bld_eNodeType_Sev : bld_eNodeType_Node);
 		    else if ( j == 1)
 		      // Secondary node
-		      fprintf( file, "%s %s %s(%s) %s %d %d %f\n",
+		      fprintf( file, "%s %s %s(%s) %s %d %d %f %d\n",
 			       volume_name,
 			       cdh_VolumeIdToString( 0, 0, volumelist_ptr->volume_id, 0, 0),
 			       secondary_nodename_ptr,
@@ -1469,7 +1486,8 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 			       secondary_nodename_ptr,
 			       *bus_number_ptr,
 			       os,
-			       scantime);
+			       scantime,
+			       bld_eNodeType_Node);
 		    break;
 		  }
 		  volumelist_ptr++;
@@ -1484,12 +1502,14 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	      }
 	      sts = ldh_GetNextSibling( ldhses, volobjid, &volobjid);
 	    }
-	    if ( strcmp( secondary_nodename_ptr, "") == 0)
+	    if ( secondary_nodename_ptr == 0 ||
+		 strcmp( secondary_nodename_ptr, "") == 0)
 	      break;
 	  }
 	  if ( nodename_ptr != null_nodename)
 	    free( nodename_ptr);
-	  free( secondary_nodename_ptr);
+	  if ( secondary_nodename_ptr)
+	    free( secondary_nodename_ptr);
 	  free( (char *) os_ptr);
 	}
 	sts = ldh_GetNextSibling( ldhses, nodeobjid, &nodeobjid);
@@ -2071,71 +2091,6 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  }
 	  fclose( fp);
 	}
-
-	if ( nodeo.cid() == pwr_cClass_SevNodeConfig) {
-	  // Print a bootfile also
-	  char	timstr[40];
-	  pwr_tObjName volstr;
-	  pwr_tVolumeId vid;
-
-	  sprintf( filename, pwr_cNameBoot, 
-		   load_cDirectory, cdh_Low(nodevect[idx].nodename), 
-		   bus_number);
-	  dcli_translate_filename( filename, filename);
-	  file = fopen( filename, "w");
-	  if ( !file) {
-	    printf( "** Error, Unable to open bootfile, %s", filename);
-	    return LFU__NOFILE;
-	  }
-
-	  time_AtoAscii(NULL, time_eFormat_DateAndTime, timstr,sizeof(timstr));
-	  fprintf( file, "%s\n", timstr);
-
-	  sts = utl_get_systemobject( ldhses, &systemobjid, systemname,
-				      systemgroup);
-	  if ( EVEN(sts)) {
-	    fprintf( file, "\n");
-	    fprintf( file, "\n");
-	  }
-	  else {
-	    fprintf( file, "%s\n", systemname);
-	    fprintf( file, "%s\n", systemgroup);
-	  }
-
-	  /* Check that there is a rootvolume for this node */
-	  found = 0;
-	  for ( wb_object volo = nodeo.first(); volo; volo = volo.after()) {
-	    if ( volo.cid() == pwr_cClass_RootVolumeLoad) {
-	      strcpy( volstr, volo.name());
-
-	      /* Check that the name is in the global volume list */
-	      found = 0;
-	      volumelist_ptr = volumelist;
-	      for ( int j = 0; j < volumecount; j++) {
-		if ( cdh_NoCaseStrcmp( volstr, volumelist_ptr->volume_name) == 0) {
-		  found = 1;
-		  vid = volumelist_ptr->volume_id;
-		  break;
-		}
-		volumelist_ptr++;
-	      }
-	      if ( !found) {
-		char msg[200];
-		sprintf( msg, "Error, Volume not configured in global volume list, %s\n", volstr);
-		MsgWindow::message( 'E', msg, msgw_ePop_Default);
-	      }
-	    }
-	  }
-	  if ( found) {
-	    fprintf( file, "-\n");
-	    fprintf( file, "%s %s\n", volstr, cdh_VolumeIdToString( 0, 0, vid, 0, 0));
-	    fprintf( file, "pwrs 0.0.0.1\n");
-	    fprintf( file, "pwrb 0.0.0.2\n");	    
-	  }
-
-	  fclose( file);
-	}
-
 	break;
       }
       default: ;
@@ -3433,12 +3388,14 @@ int lfu_create_bootfiles (
 {
 	int			sts;
 	char			node_array[30][80];
+	int			nodetype[30];
 	int			found;
 	int			nr, i, j;
 	lfu_t_volumelist	*volumelist;
 	lfu_t_volumelist	*volumelist_ptr;
 	int			volumecount;
-	pwr_tString40 nodeconfigname;
+	pwr_tString40 		nodeconfigname;
+	int			nodeconfigtype;
 
 	/* Load the bootlist */
 	sts = lfu_volumelist_load( pwr_cNameBootList, 
@@ -3470,6 +3427,7 @@ int lfu_create_bootfiles (
 	      utl_toupper( nodeconfigname, volumelist_ptr->p1);
 	      if ( !strcmp( nodeconfigname, node_array[i]))
 	      {
+		nodetype[i] = atoi(volumelist_ptr->p6);
 	        found = 1;
 	        break;
 	      }
@@ -3483,7 +3441,7 @@ int lfu_create_bootfiles (
 	  /* Create the bootfiles */
 	  for ( i = 0; i < nr; i++)
 	  {
-	    sts = lfu_create_bootfile( node_array[i], volumelist, volumecount, 
+	    sts = lfu_create_bootfile( node_array[i], nodetype[i], volumelist, volumecount, 
 		debug);
 	    if ( EVEN(sts)) return sts;
 
@@ -3500,7 +3458,8 @@ int lfu_create_bootfiles (
 	    if ( strcmp( nodeconfigname, volumelist_ptr->p1))
 	    {
 	      strcpy( nodeconfigname, volumelist_ptr->p1);
-	      sts = lfu_create_bootfile( nodeconfigname, 
+	      nodeconfigtype = atoi( volumelist_ptr->p6);
+	      sts = lfu_create_bootfile( nodeconfigname, nodeconfigtype,
 		volumelist, volumecount, debug);
 	      if ( EVEN(sts)) return sts;
 	    }

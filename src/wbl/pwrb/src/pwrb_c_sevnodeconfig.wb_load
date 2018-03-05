@@ -37,7 +37,7 @@
 !
 SObject pwrb:Class
 !/**
-!  @Version 1.0
+!  @Version 1.1
 !  @Group ProjectConfiguration
 !  @Summary Configures a proview storage environment node.
 !  The SevNodeConfig object configures a proview storage environment node.
@@ -49,8 +49,8 @@ SObject pwrb:Class
 !  The SevNodeConfig object is created in the project volume as a child to
 !  a BusConfig-object in the node-hierachy.
 !
-! A root volumes has to be registred for the node. The volume is only used to give 
-! the node a unique identity, and no database is created for the volume.
+!  A root volumes has to be registred and configured for the node. The volume
+!  should contain a SevServer object in the node hierarchy.
 !
 ! @b See also
 !  @classlink NodeConfig pwrb_nodeconfig.html
@@ -124,11 +124,12 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      ! Name of the rootvolume of the node.
+      ! Obsolete since V5.6.0.
       !*/
       Object Volume $Attribute 7 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String80"
+          Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
       !/**

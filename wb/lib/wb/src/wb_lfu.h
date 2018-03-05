@@ -128,6 +128,7 @@ pwr_tStatus lfu_volumelist_load( const char *filename,
 pwr_tStatus lfu_create_loadfile( ldh_tSesContext ldhses);
 
 pwr_tStatus lfu_create_bootfile( char *nodeconfigname,
+				 int nodetype,
 				 lfu_t_volumelist *volumelist,
 				 int volumecount,
 				 int debug);

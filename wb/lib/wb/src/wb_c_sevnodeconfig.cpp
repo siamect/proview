@@ -58,7 +58,7 @@ static pwr_tStatus PostCreate (
   pwr_tMask comp;
 
   comp = pwr_mDistrComponentMask_UserDatabase |
-    // pwr_mDistrComponentMask_LoadFiles |
+    pwr_mDistrComponentMask_LoadFiles |
     // pwr_mDistrComponentMask_ApplFile |
     // pwr_mDistrComponentMask_XttHelpFile |
     // pwr_mDistrComponentMask_RHostFiles |

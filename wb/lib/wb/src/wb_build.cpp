@@ -313,7 +313,7 @@ void wb_build::all( int no_export, int no_classvolumes, int no_flowfiles)
   m_sts = sumsts;
 }
 
-void wb_build::node( char *nodename, void *volumelist, int volumecnt)
+void wb_build::node( char *nodename, int nodetype, void *volumelist, int volumecnt)
 {
   lfu_t_volumelist *vlist = (lfu_t_volumelist *)volumelist;
   pwr_tTime vtime;
@@ -430,7 +430,7 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
 
   if ( opt.force || opt.manual || rebuild) {
 
-    m_sts = lfu_create_bootfile( nodename, (lfu_t_volumelist *)volumelist, volumecnt,
+    m_sts = lfu_create_bootfile( nodename, nodetype, (lfu_t_volumelist *)volumelist, volumecnt,
 				 opt.debug);
     if ( ODD(m_sts))
       wb_log::log( wlog_eCategory_NodeBuild, nodename, 0);      

@@ -33,104 +33,51 @@
 # the source code of Proview (the version used to produce the 
 # combined work), being distributed under the terms of the GNU 
 # General Public License plus this exception.
-!
-!
-! Script for upgrading Profinet modules during upgrading from V5.4 to V5.5,
-!
-! Sets the Slot attribute.
-!
+#
+#
+# Script for upgrading SevNodeConfig during upgrading from V5.5 to V5.6,
+#
 
-function int is_numeric( string s)
-  string s1;
-  int ret = 0;
-  int len;
+# Add a RootVolumeConfig and RootVolumeLoad object and
+# set the LoadFiles bit in Distribute.Components.
+#
 
-  s1 = extract( 1, 1, s);
-  
-  if ( s1 == "0" || s1 == "1" || s1 == "2" || s1 == "3" || s1 == "4" || s1 == "5" || s1 == "6" || s1 == "7" || s1 == "8" || s1 == "9")
-     ret = 1;
-  endif
-  len = strlen(s);
-  if ( len > 1)
-    s1 = extract( 2, 1, s);
-    if ( s1 == "0" || s1 == "1" || s1 == "2" || s1 == "3" || s1 == "4" || s1 == "5" || s1 == "6" || s1 == "7" || s1 == "8" || s1 == "9")
-       ret = 1;
-    endif
-  endif
-  return ret;
-endfunction
-
-function int set_slot( string mclass)
-  string name;
-  string sname;
-  string snum;
-  int num;
+main()
+  string sevnode;
+  string volume;
   string attr;
-  string parent;
   string child;
+  string class;
+  string sysobj;
+  int components;
 
   verify(0);
 
-  name = GetClassList( mclass);
-  while ( name != "") 
+  sevnode = GetClassList( "SevNodeConfig");
+  while ( sevnode != "")
+    attr = sevnode + ".Volume";
+    volume = GetAttribute( attr);
 
-    sname = CutObjectName( name, 1);
-    snum = extract( 2, 5, sname);
+    CreateObject( volume, "RootVolumeLoad", sevnode, 1);
 
-    num = is_numeric( snum);
-    if ( num == 1)
-    
-      num = snum;
+    sysobj = GetClassList( "$System");
+    CreateObject( volume, "RootVolumeConfig", sysobj, 3);
 
-      attr = name + ".Slot";
-      SetAttribute( attr, num);
-      printf( "%s %d\n", name, num);
-    else
-      # Count siblings
-      parent = GetParent( name);
-      child = GetChild( parent);       
-      num = 1;
-      while ( child != "")
-        if ( child == name)
-	  attr = name + ".Slot";
-	  SetAttribute( attr, num);
-	  printf( "%s %d\n", name, num);
-          break;
-        endif
+    child = GetChild( sevnode);
+    while ( child != "")
+      class = GetObjectClass( child);
+      if ( class == "Distribute") 
+        attr = child + ".Components";
+        components = GetAttribute( attr);
+        components = components | 2;
+        SetAttribute( attr, components);
+        break;
+      endif
+      child = GetNextSibling( child);
+    endwhile
 
-        child = GetNextSibling( child);
-        num++;
-      endwhile
-    endif
-
-    name = GetNextObject( name);
-   
+    sevnode = GetNextObject( sevnode);
   endwhile
-  return 1;
-endfunction
 
-
-main()
-
-  set_slot( "PnModule");
-  set_slot( "BaseFcPPO3PnModule");
-  set_slot( "ABB_ACS880_PnModule");
-  set_slot( "Siemens_Di4_PnModule");
-  set_slot( "Siemens_Di2_PnModule");
-  set_slot( "Siemens_Do4_PnModule");
-  set_slot( "Siemens_Do2_PnModule");
-  set_slot( "Siemens_Di32_PnModule");
-  set_slot( "Siemens_D16_PnModule");
-  set_slot( "Siemens_Dx16_PnModule");
-  set_slot( "Siemens_Di8_PnModule");
-  set_slot( "Siemens_Do32_PnModule");
-  set_slot( "Siemens_Do16_PnModule");
-  set_slot( "Siemens_Do8_PnModule");
-  set_slot( "Siemens_Ai8_PnModule");
-  set_slot( "Siemens_Ai4_PnModule");
-  set_slot( "Siemens_Ai2_PnModule");
-  set_slot( "Siemens_Ao8_PnModule");
-  set_slot( "Siemens_Ao4_PnModule");
-  set_slot( "Sinamics_Tgm1_PnModule");
-
+  save /quiet
 endmain

@@ -56,6 +56,10 @@ typedef enum {
   bld_ePass_AfterNode
 } bld_ePass;
 
+typedef enum {
+  bld_eNodeType_Node,
+  bld_eNodeType_Sev
+} bld_eNodeType;
 
 class wb_build : public wb_status
 {
@@ -65,7 +69,7 @@ class wb_build : public wb_status
 
   void classlist( pwr_tCid cid);
   void all( int no_export = 0, int no_classvolumes = 0, int no_flowfiles = 0);
-  void node( char *nodename, void *volumelist, int volumecnt);
+  void node( char *nodename, int nodetype, void *volumelist, int volumecnt);
   void volume();
   void rootvolume( pwr_tVid vid);
   void classvolume( pwr_tVid vid);
