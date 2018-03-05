@@ -54,7 +54,6 @@ pwrc_dblist_read()
   pwrc_status=$pwrc__success
 
   #set -o xtrace
-  echo "arg1: \"$1\" arg2: \"$2\" arg3: \"$3\""
 
   if [ -n "${db_array[*]}" ]; then
     unset db_array

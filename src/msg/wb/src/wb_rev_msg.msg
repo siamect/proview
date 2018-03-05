@@ -48,3 +48,5 @@ noselect	<No revision is selected>				/error
 createpos	<Unable to create a new revision from current>		/error
 nosuchrev	<No such revision>					/error
 nobranch	<No branch is checked out>				/info
+nochange	<No change since last revision>				/error
+nogit		<Git not found>						/error

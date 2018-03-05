@@ -1905,6 +1905,7 @@ void WttGtk::boot_ok_cb(GtkWidget *w, gpointer data)
   GtkTreeIter   iter;
   GtkTreeModel  *store;
   char *text;
+  int node_type;
 
   if ( !wtt->focused_wnav)
     wtt->set_focus_default();
@@ -1929,9 +1930,10 @@ void WttGtk::boot_ok_cb(GtkWidget *w, gpointer data)
 
 	strcpy( nodeconfigname, volumelist_ptr->p1);
 	if ( strcmp( nodeconfigname, text) == 0) {
+	  node_type = atoi( volumelist_ptr->p6);
 	  wb_build build( *(wb_session *)wtt->ldhses, wtt->focused_wnav);
 	  build.opt = wtt->focused_wnav->gbl.build;
-	  build.node( nodeconfigname, 
+	  build.node( nodeconfigname, node_type,
 		      wtt->boot_volumelist, wtt->boot_volumecount);
 	  if ( build.evenSts()) {
 	    gtk_widget_destroy( ((WttGtk *)wtt)->boot_dia);
@@ -1970,6 +1972,7 @@ void WttGtk::update_options_form()
 {
   // Hierarchies
   gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(enable_comment_w), enable_comment ? TRUE : FALSE);
+  gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(enable_revisions_w), enable_revisions ? TRUE : FALSE);
   gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(show_plant_w), wnav_mapped ? TRUE : FALSE);
   gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(show_node_w), wnavnode_mapped ? TRUE : FALSE);
 
@@ -2000,6 +2003,7 @@ void WttGtk::update_options_form()
 void WttGtk::set_options()
 {
   enable_comment = (int) gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(enable_comment_w));
+  enable_revisions = (int) gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(enable_revisions_w));
   show_class = (int) gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(show_class_w));
   show_alias = (int) gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(show_alias_w));
   show_descrip = (int) gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(show_descrip_w));
@@ -2013,14 +2017,13 @@ void WttGtk::set_options()
   build_crossref_sim = (int) gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(build_crossrefsim_w));
   build_crossref_graph = (int) gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(build_crossrefgraph_w));
   build_manual = (int) gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(build_manual_w));
-  build_nocopy = (int) gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(build_nocopy_w));
 
-  wnav->set_options( enable_comment, show_class, show_alias, 
+  wnav->set_options( enable_comment, enable_revisions, show_class, show_alias, 
 		     show_descrip, show_objref, show_objxref, 
 		     show_attrref, show_attrxref, build_force, build_debug,
 		     build_crossref, build_crossref_sim, build_crossref_graph, 
 		     build_manual, build_nocopy);
-  wnavnode->set_options( enable_comment, show_class, show_alias, 
+  wnavnode->set_options( enable_comment, enable_revisions, show_class, show_alias, 
 			 show_descrip, show_objref, show_objxref, 
 			 show_attrref, show_attrxref, build_force, build_debug,
 			 build_crossref, build_crossref_sim, build_crossref_graph, 
@@ -2115,10 +2118,11 @@ WttGtk::WttGtk(
   pwr_tFileName fname;
   wb_rev_info   rev_info;
   char		version[80];
+  pwr_tStatus	revsts;
 
 
-  wb_revision::info( &rev_info);
-  if ( !rev_info.in_master)
+  revsts = wb_revision::info( &rev_info);
+  if ( ODD(revsts) && !rev_info.in_master)
     strcpy( version, rev_info.name);
   else
     strcpy( version, "");
@@ -3087,7 +3091,7 @@ WttGtk::WttGtk(
   g_object_set( cmd_input, "visible", FALSE, NULL);
   gtk_paned_set_position( GTK_PANED(wnav_paned), window_width / 2);
 
-  wnav->get_options( &enable_comment, &show_class, &show_alias, 
+  wnav->get_options( &enable_comment, &enable_revisions, &show_class, &show_alias, 
 		     &show_descrip, &show_objref, &show_objxref, 
 		     &show_attrref, &show_attrxref, &build_force, &build_debug,
 		     &build_crossref, &build_crossref_sim, &build_crossref_graph, 
@@ -3122,7 +3126,7 @@ WttGtk::WttGtk(
   menu_setup();
   update_title();
 
-  if ( !rev_info.in_end_of_branch) {
+  if ( ODD(revsts) && !rev_info.in_end_of_branch) {
     wnav->wow->DisplayError( "Revision", "Revision is not at end o branch.\nNo changes can be made.");
     CoLogin::reduce_privilege( pwr_mPrv_DevConfig | pwr_mPrv_DevPlc | pwr_mPrv_DevClass);
   }
@@ -3192,12 +3196,14 @@ void WttGtk::create_options_dialog()
 
   GtkWidget *hier_label = gtk_label_new( "Hierarchy");
   enable_comment_w = gtk_check_button_new_with_label( "Enable Comment");
+  enable_revisions_w = gtk_check_button_new_with_label( "Enable Revisions");
   show_plant_w = gtk_check_button_new_with_label( "Plant Configuration");
   show_node_w = gtk_check_button_new_with_label( "Node Configuration");
 
   GtkWidget *hier_vbox = gtk_vbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(hier_vbox), hier_label, FALSE, FALSE, 15);
   gtk_box_pack_start( GTK_BOX(hier_vbox), enable_comment_w, FALSE, FALSE, 7);
+  gtk_box_pack_start( GTK_BOX(hier_vbox), enable_revisions_w, FALSE, FALSE, 7);
   gtk_box_pack_start( GTK_BOX(hier_vbox), show_plant_w, FALSE, FALSE, 7);
   gtk_box_pack_start( GTK_BOX(hier_vbox), show_node_w, FALSE, FALSE, 7);
 

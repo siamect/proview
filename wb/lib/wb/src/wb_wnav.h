@@ -202,7 +202,7 @@ class WNavGbl {
       priv(0), verify(0), advanced_user(1), all_toplevel(0), bypass(0),
       show_class(1), show_alias(0), show_descrip(1), show_attrref(0), 
       show_attrxref(0), show_objref(0), show_objxref(0), show_truedb(0),
-      enable_comment(0)
+      enable_comment(0), enable_revisions(0)
       {
 	strcpy( version, wnav_cVersion);
 	strcpy( platform, ""); strcpy( os, ""); strcpy( hw, "");
@@ -231,6 +231,7 @@ class WNavGbl {
     int			show_objxref;
     int			show_truedb;
     int			enable_comment;
+    int			enable_revisions;
     wb_build_opt 	build;
 
     int			load_config( void *wnav);
@@ -412,11 +413,11 @@ class WNav : public WUtility{
     void ldh_refresh( pwr_tObjid new_open);
     void refresh();
     void collapse();
-    void set_options( int ena_comment, int sh_class, int sh_alias, int sh_descrip, 
+    void set_options( int ena_comment, int ena_revisions, int sh_class, int sh_alias, int sh_descrip, 
 		      int sh_objref, int sh_objxref, int sh_attrref, int sh_attrxref,
 		      int bu_force, int bu_debug, int bu_crossref, int bu_crossrefsim, 
 		      int bu_crossrefgraph, int bu_manual, int bu_nocopy);
-    void get_options( int *ena_comment, int *sh_class, int *sh_alias, int *sh_descrip, 
+    void get_options( int *ena_comment, int *ena_revisions, int *sh_class, int *sh_alias, int *sh_descrip, 
 		      int *sh_objref, int *sh_objxref, int *sh_attrref, int *sh_attrxref,
 		      int *bu_force, int *bu_debug, int *bu_crossref, int *bu_crossrefsim, 
 		      int *bu_crossrefgraph, int *bu_manual, int *bu_nocopy);

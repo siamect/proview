@@ -55,6 +55,7 @@
 # define	pwr_cNameDistribute	"$pwrp_root/src/db/pwrp_cnf_distribute.dat"
 # define	pwr_cNameSysObject	"$pwrp_root/src/db/pwrp_cnf_sysobject.dat"
 # define	pwr_cNameFilePath	"$pwrp_root/src/db/pwrp_cnf_dirlist.dat"
+# define	pwr_cNameRevision	"$pwrp_root/src/db/pwrp_cnf_revision.dat"
 # define	pwr_cNameLocalWb	"$pwrp_root/src/db/wb.wb_load"
 # define	pwr_cNameGblVolumeList	"$pwra_db/pwr_volumelist.dat"
 # define	pwr_cNameCmnVolumeList	"pwr_volumelist.dat"

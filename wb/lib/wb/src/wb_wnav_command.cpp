@@ -1398,6 +1398,20 @@ static int	wnav_set_func(	void		*client_data,
     else
       wnav->gbl.enable_comment = 0;
   }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "ENABLEREVISIONS", strlen( arg1_str)) == 0)
+  {
+    if ( EVEN( dcli_get_qualifier( "/LOCAL", 0, 0)))
+      (wnav->gbl_command_cb)( wnav->parent_ctx, "SET ENABLEREVISIONS");
+    else
+      wnav->gbl.enable_revisions = 1;
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "NOENABLEREVISIONS", strlen( arg1_str)) == 0)
+  {
+    if ( EVEN( dcli_get_qualifier( "/LOCAL", 0, 0)))
+      (wnav->gbl_command_cb)( wnav->parent_ctx, "SET NOENABLEREVISIONS");
+    else
+      wnav->gbl.enable_revisions = 0;
+  }
   else if ( cdh_NoCaseStrncmp( arg1_str, "VERIFY", strlen( arg1_str)) == 0)
   {
     if ( wnav->window_type == wnav_eWindowType_No)
@@ -5272,6 +5286,9 @@ static int	wnav_build_func(	void		*client_data,
     char namestr[80];
     void *volumelist;
     int	volumecount;
+    lfu_t_volumelist *vp;
+    int found;
+    int node_type;
 
     if ( EVEN( dcli_get_qualifier( "/NAME", namestr, sizeof(namestr)))) {
       if ( EVEN( dcli_get_qualifier( "dcli_arg2", namestr, sizeof(namestr)))) {
@@ -5288,13 +5305,29 @@ static int	wnav_build_func(	void		*client_data,
       return sts;
     }
 
+    
+    found = 0;
+    vp = (lfu_t_volumelist *)volumelist;
+    for ( int i = 0; i < volumecount; i++) {
+      if ( cdh_NoCaseStrcmp( vp[i].p1, namestr) == 0) {
+	found = 1;
+	node_type = atoi( vp[i].p6);
+	break;
+      }
+    }
+
+    if ( !found) {
+      wnav->message( 'E', "No such node");
+      return WNAV__SYNTAX;
+    }
+
     wb_build build( *(wb_session *)wnav->ldhses, wnav);
     build.opt.force = ODD( dcli_get_qualifier( "/FORCE", 0, 0));
     build.opt.debug = ODD( dcli_get_qualifier( "/DEBUG", 0, 0));
     build.opt.crossref = ODD( dcli_get_qualifier( "/CROSSREFERENCE", 0, 0));
     build.opt.manual = ODD( dcli_get_qualifier( "/MANUAL", 0, 0));
 
-    build.node( namestr, volumelist, volumecount);
+    build.node( vp->p1, node_type, volumelist, volumecount);
     wnav->message(' ', wnav_get_message(build.sts()));
     command_sts = build.sts();
 

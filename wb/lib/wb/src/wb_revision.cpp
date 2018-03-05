@@ -37,6 +37,7 @@
 
 #include <vector>
 #include "pwr.h"
+#include "pwr_names.h"
 #include "co_time.h"
 #include "co_dcli.h"
 #include "wb_revision.h"
@@ -49,50 +50,37 @@
 
 
 wb_revision::wb_revision( void *parent_ctx, wb_session *ses): 
-  m_parent_ctx(parent_ctx), m_session(ses), m_manager(0), m_manager_enum(pwr_eVersionManagerEnum_None),
-  m_read(false), m_current_idx(-1), m_current_main_idx(-1), m_current_sub_idx(-1), m_command_cb(0) 
+  m_parent_ctx(parent_ctx), m_session(ses), m_manager(0), m_manager_enum(pwr_eVersionManagerEnum_Git),
+  m_read(false), m_current_idx(-1), m_current_main_idx(-1), m_current_sub_idx(-1), m_next_idx(0), 
+  m_command_cb(0) 
 {
-  char current[80];
 
   read_file();
 
   switch ( m_manager_enum) {
   case pwr_eVersionManagerEnum_Git:
     m_manager = new wb_version_manager_git();
+    if ( EVEN(m_manager->sts())) {
+      delete m_manager;
+      m_manager = 0;
+    }
     break;
   default: ;
   }
 
   if ( m_manager) {
+    char current_name[80];
+
     m_sts = m_manager->check( m_vect);
 
-    bool found = false;
-    m_sts = m_manager->get_current( current);
-    if ( ODD(m_sts)) {
-      for ( unsigned int i = 0; i < m_vect.size(); i++) {
-	if ( cdh_NoCaseStrcmp( current, m_vect[i].name) == 0) {
-	  m_current_idx = m_vect[i].idx;
-	  m_current_main_idx = i;
-	  m_current_sub_idx = -1;
-	  m_vect[i].current = true;
-	  found = true;
-	  break;
-	}
-	for ( unsigned int j = 0; j < m_vect[i].vect.size(); j++) {
-	  if ( cdh_NoCaseStrcmp( current, m_vect[i].vect[j].name) == 0) {
-	    m_current_idx = m_vect[i].vect[j].idx;
-	    m_current_main_idx = i;
-	    m_current_sub_idx = j;
-	    m_vect[i].vect[j].current = true;
-	    m_vect[i].current_branch = true;
-	    found = true;
-	    break;
-	  }
-	}
-	if ( found)
-	  break;
-      }
-    }
+    m_sts = m_manager->get_current( current_name);
+    if ( ODD(m_sts))
+      set_current( current_name);
+    else
+      set_current( m_current_idx);
+  }
+  else {
+    set_current( m_current_idx);
   }
 }
 
@@ -105,9 +93,73 @@ wb_revision::wb_revision():
   switch ( m_manager_enum) {
   case pwr_eVersionManagerEnum_Git:
     m_manager = new wb_version_manager_git();
+    if ( EVEN(m_manager->sts())) {
+      delete m_manager;
+      m_manager = 0;
+    }	 
     break;
   default: ;
   }
+}
+
+bool wb_revision::set_current( int idx)
+{
+  bool found = false;
+
+  for ( unsigned int i = 0; i < m_vect.size(); i++) {
+    if ( m_vect[i].idx == idx) {
+      m_current_main_idx = i;
+      m_current_sub_idx = -1;
+      m_vect[i].current = true;
+      m_current_idx = idx;
+      found = true;
+      break;
+    }
+    for ( unsigned int j = 0; j < m_vect[i].vect.size(); j++) {
+      if ( m_vect[i].vect[j].idx == idx) {
+	m_current_main_idx = i;
+	m_current_sub_idx = j;
+	m_vect[i].vect[j].current = true;
+	m_vect[i].current_branch = true;
+	m_current_idx = idx;
+	found = true;
+	break;
+      }
+    }
+    if ( found)
+      break;
+  }
+  return found;
+}
+
+bool wb_revision::set_current( char *name) 
+{
+  bool found = false;
+
+  for ( unsigned int i = 0; i < m_vect.size(); i++) {
+    if ( cdh_NoCaseStrcmp( name, m_vect[i].name) == 0) {
+      m_current_idx = m_vect[i].idx;
+      m_current_main_idx = i;
+      m_current_sub_idx = -1;
+      m_vect[i].current = true;
+      found = true;
+      break;
+    }
+    for ( unsigned int j = 0; j < m_vect[i].vect.size(); j++) {
+      if ( cdh_NoCaseStrcmp( name, m_vect[i].vect[j].name) == 0) {
+	m_current_idx = m_vect[i].vect[j].idx;
+	m_current_main_idx = i;
+	m_current_sub_idx = j;
+	m_vect[i].vect[j].current = true;
+	m_vect[i].current_branch = true;
+	found = true;
+	break;
+      }
+    }
+    if ( found)
+      break;
+  }
+  return found;
 }
 
 char *wb_revision::branch_name( char *name)
@@ -141,6 +193,8 @@ pwr_tStatus wb_revision::create_check()
 
 pwr_tStatus wb_revision::create( int all, char *name, char *descr)
 {
+  if ( m_manager && !m_manager->modified())
+    return REV__NOCHANGE;
 
   if ( all) {
     // Get current volume
@@ -216,7 +270,8 @@ pwr_tStatus wb_revision::create( int all, char *name, char *descr)
 
     // Add to revision file
     add( name, descr, (char *)pwrv_cPwrVersionStr, 0, in_main, main_idx);
-    write_file();    
+    set_current( m_next_idx - 1);
+    write_file();
 
     wb_log::log( wlog_eCategory_NewRevision, name, descr);
   }
@@ -513,11 +568,10 @@ void wb_revision::read_file()
 {
   pwr_tFileName fname;
   char line[200];
-  char item_array[6][80];
+  char item_array[7][80];
   int sts;
-  int idx = 0;
 
-  dcli_translate_filename( fname, "$pwrp_db/pwrp_cnf_revision.dat");
+  dcli_translate_filename( fname, pwr_cNameRevision);
   ifstream fp( fname, ios::in);
   if ( !fp) {
     m_read = true;
@@ -539,24 +593,40 @@ void wb_revision::read_file()
 	m_manager_enum = pwr_eVersionManagerEnum_None;
       continue;
     }
-    if ( nr != 5) {
+    if ( nr == 3 && strcmp( item_array[0], "#!") == 0 && strcmp( item_array[1], "Current") == 0) {
+      int current;
+      int num;
+
+      num = sscanf( item_array[2], "%d", &current);
+      if ( num == 1)
+	m_current_idx = current;
+      else
+	m_current_idx = -1;
+      continue;
+    }
+    if ( nr != 6) {
       m_sts = 0;
       return;
     }
     
-    sts = sscanf( item_array[0], "%d", &item.level);
+    sts = sscanf( item_array[0], "%d", &item.idx);
     if ( sts != 1) 
       printf( "** Syntax error in configuration file\n");
-    strncpy( item.name, item_array[1], sizeof(item.name));
-    strncpy( item.description, item_array[2], sizeof(item.description));
-    strncpy( item.version, item_array[3], sizeof(item.version));
-    time_AsciiToA( item_array[4], &item.date);
-    item.idx = idx++;
+    sts = sscanf( item_array[1], "%d", &item.level);
+    if ( sts != 1) 
+      printf( "** Syntax error in configuration file\n");
+    strncpy( item.name, item_array[2], sizeof(item.name));
+    strncpy( item.description, item_array[3], sizeof(item.description));
+    strncpy( item.version, item_array[4], sizeof(item.version));
+    time_AsciiToA( item_array[5], &item.date);
 
     if ( item.level == 0)
       m_vect.push_back( item);
     else if ( m_vect.size() > 0)
       m_vect[m_vect.size()-1].vect.push_back(item);
+
+    if ( m_next_idx < item.idx + 1)
+      m_next_idx = item.idx + 1;
   }
   fp.close();
 
@@ -569,7 +639,7 @@ void wb_revision::read_file_meta()
   char line[200];
   char item_array[6][80];
 
-  dcli_translate_filename( fname, "$pwrp_db/pwrp_cnf_revision.dat");
+  dcli_translate_filename( fname, pwr_cNameRevision);
   ifstream fp( fname, ios::in);
   if ( !fp) {
     m_read = true;
@@ -589,6 +659,17 @@ void wb_revision::read_file_meta()
 	m_manager_enum = pwr_eVersionManagerEnum_Git;
       else
 	m_manager_enum = pwr_eVersionManagerEnum_None;
+      continue;
+    }
+    if ( nr == 3 && strcmp( item_array[0], "#!") == 0 && strcmp( item_array[1], "Current") == 0) {
+      int current;
+      int num;
+
+      num = sscanf( item_array[2], "%d", &current);
+      if ( num == 1)
+	m_current_idx = current;
+      else
+	m_current_idx = -1;
       continue;
     }
     if ( strcmp( item_array[0], "#!") != 0)
@@ -605,7 +686,7 @@ void wb_revision::write_file()
   if ( !m_read)
     return;
 
-  dcli_translate_filename( fname, "$pwrp_db/pwrp_cnf_revision.dat");
+  dcli_translate_filename( fname, pwr_cNameRevision);
   ofstream fp( fname, ios::out);
   if ( !fp) {
     m_sts = 0;
@@ -613,14 +694,15 @@ void wb_revision::write_file()
   }
  
   fp << "#! RevisionManager " << m_manager_enum << endl;
+  fp << "#! Current " << m_current_idx << endl;
   for ( unsigned int i = 0; i < m_vect.size(); i++) {
     time_AtoAscii( &m_vect[i].date, time_eFormat_DateAndTime, timestr, sizeof(timestr));
 
-    fp << m_vect[i].level << " " << m_vect[i].name << " " << " \"" << m_vect[i].description << "\" " << m_vect[i].version << " \"" << timestr << "\"" << endl;
+    fp << m_vect[i].idx << " " << m_vect[i].level << " " << m_vect[i].name << " " << " \"" << m_vect[i].description << "\" " << m_vect[i].version << " \"" << timestr << "\"" << endl;
 
     for ( unsigned int j = 0; j < m_vect[i].vect.size(); j++) {
       time_AtoAscii( &m_vect[i].vect[j].date, time_eFormat_DateAndTime, timestr, sizeof(timestr));
-      fp << m_vect[i].vect[j].level << " " << m_vect[i].vect[j].name << " " << " \"" << m_vect[i].vect[j].description << "\" " << m_vect[i].vect[j].version << " \"" << timestr << "\"" << endl;
+      fp << m_vect[i].vect[j].idx << " " << m_vect[i].vect[j].level << " " << m_vect[i].vect[j].name << " " << " \"" << m_vect[i].vect[j].description << "\" " << m_vect[i].vect[j].version << " \"" << timestr << "\"" << endl;
     }
   }
   fp.close();
@@ -634,7 +716,7 @@ int wb_revision::add( char *name, char *description, char *version, pwr_tTime *d
   if ( !m_read)
     read_file();
 
-  // Check the name is unique
+  // Check that the name is unique
   for ( unsigned int i = 0; i < m_vect.size(); i++) {
     if ( cdh_NoCaseStrcmp( name, m_vect[i].name) == 0) {
       return 0;
@@ -648,6 +730,7 @@ int wb_revision::add( char *name, char *description, char *version, pwr_tTime *d
     item.date = *date;
   else
     time_GetTime( &item.date);
+  item.idx = m_next_idx++;
 
   if ( in_main) {
     item.level = 0;
@@ -719,11 +802,21 @@ void wb_revision::get_info( wb_rev_info *info)
   }
 }
 
-void wb_revision::info( wb_rev_info *info)
+pwr_tStatus wb_revision::info( wb_rev_info *info)
 {
+  pwr_tFileName fname;
+  pwr_tStatus sts;
+  pwr_tTime time;
+
+  dcli_translate_filename( fname, pwr_cNameRevision);
+  sts = dcli_file_time( fname, &time);
+  if ( EVEN(sts)) return sts;
+
   wb_revision *rev = new wb_revision( 0, 0);
   rev->get_info( info);
   delete rev;
+
+  return REV__SUCCESS;
 }
 
 //
@@ -777,6 +870,23 @@ int wb_revision::check_add_file( char *filename)
   return 0;
 }
 
+bool wb_version_manager_git::m_found = false;
+bool wb_version_manager_git::m_found_tested = false;
+
+bool wb_version_manager_git::git_found()
+{
+  if ( !m_found_tested) {
+    int sts;
+
+    sts = system( "git --version > /dev/null 2> /dev/null");
+    m_found = sts == 0 ? true : false;
+    m_found_tested = true;
+    if ( !m_found)
+      m_sts = REV__NOGIT;
+  }
+  return m_found;
+}
+
 void wb_version_manager_git::init()
 {
   pwr_tFileName fname;
@@ -784,6 +894,9 @@ void wb_version_manager_git::init()
   pwr_tTime t;
   bool new_git = false;
 
+  if ( !git_found())
+    return;
+  
   dcli_translate_filename( m_git_dir, "$pwrp_root/src/.git");
   dcli_translate_filename( m_work_tree, "$pwrp_root/src");
   if ( EVEN(dcli_file_time( m_git_dir, &t))) {
@@ -841,7 +954,7 @@ db/rt_eventlog_info.txt" << endl;
     snprintf( cmd, sizeof(cmd), "git --git-dir=%s --work-tree=%s commit -m \"Initial commit\" -a", m_git_dir, m_work_tree);
     system( cmd);
   }
-
+  m_sts = REV__SUCCESS;
 }
 
 int wb_version_manager_git::store_revision( char *name, char *descr, bool new_branch)
@@ -948,6 +1061,9 @@ int wb_version_manager_git::check( vector<wb_rev_item>& v)
   pwr_tFileName fname = "$pwrp_tmp/git_tags.dat";
   char line[80];
 
+  if ( !git_found())
+    return REV__NOGIT;
+
   dcli_translate_filename( fname, fname);
 
   // Get current tag
@@ -1011,4 +1127,12 @@ int wb_version_manager_git::check_add( char *filename)
     printf( "** Git add error %d\n", sts);
   
   return 1;
+}
+
+bool wb_version_manager_git::modified()
+{
+  int sts;
+
+  sts = system( "git diff --exit-code");
+  return sts != 0;
 }

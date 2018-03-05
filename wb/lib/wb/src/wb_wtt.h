@@ -190,6 +190,7 @@ class Wtt : public WUtility {
     int		build_crossref_graph;
     int		build_manual;
     int		build_nocopy;
+    int		enable_revisions;
     int		wnav_mapped;
     int		wnavnode_mapped;
     WUted	*utedctx;

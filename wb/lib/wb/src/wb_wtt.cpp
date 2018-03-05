@@ -1004,7 +1004,15 @@ void Wtt::activate_revert()
 
 void Wtt::activate_revisions()
 {
-  wnavnode->command( (char *)"open revisions");
+  if ( !focused_wnav)
+    set_focus_default();
+  if ( !focused_wnav->gbl.enable_revisions) {
+    focused_wnav->wow->DisplayError( "Revisions",
+				     "Revision is not enabled.\nEnable revisions in Tools/Settings.");
+    return;
+  }
+    
+  focused_wnav->command( (char *)"open revisions");
 }
 
 void Wtt::activate_syntax()
@@ -2012,6 +2020,7 @@ void Wtt::activate_buildnode()
 {
   pwr_tStatus sts;
   lfu_t_volumelist *vp, *volp;
+  int node_type;
 
   message(' ',"");
 
@@ -2052,9 +2061,10 @@ void Wtt::activate_buildnode()
     if ( !focused_wnav)
       set_focus_default();
     build->opt = focused_wnav->gbl.build;
+    node_type = atoi(vp->p6);
 
     set_clock_cursor();
-    build->node( volp->p1, boot_volumelist, boot_volumecount);
+    build->node( volp->p1, node_type, boot_volumelist, boot_volumecount);
     reset_cursor();
     if ( build->evenSts()) {
       char msg[80];

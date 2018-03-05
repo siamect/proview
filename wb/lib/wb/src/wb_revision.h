@@ -76,9 +76,12 @@ class wb_version_manager
 {
  private:
   pwr_eVersionManagerEnum m_manager;
+ protected:
+  pwr_tStatus m_sts;
 
  public:
-  wb_version_manager( pwr_eVersionManagerEnum manager) : m_manager(manager) {}
+  wb_version_manager( pwr_eVersionManagerEnum manager) : m_manager(manager), m_sts(0) {}
+  pwr_tStatus sts() { return m_sts;}
   virtual ~wb_version_manager() {}
   virtual void init() {}
   virtual int store_revision( char *name, char *descr, bool new_branch) { return 0;}
@@ -86,10 +89,16 @@ class wb_version_manager
   virtual int get_current( char *name) { return 0;}
   virtual int check( vector<wb_rev_item>& v) { return 0;}
   virtual int check_add( char *filename) { return 0;}
+  virtual bool modified() { return true;}
 };
 
 class wb_version_manager_git : public wb_version_manager
 {
+  static bool m_found;
+  static bool m_found_tested;
+
+  bool git_found();
+
  public:
   wb_version_manager_git() : wb_version_manager(pwr_eVersionManagerEnum_None) { init();}
   ~wb_version_manager_git() {}
@@ -101,6 +110,7 @@ class wb_version_manager_git : public wb_version_manager
   int get_current( char *name);
   int check( vector<wb_rev_item>& v);
   int check_add( char *filename);
+  bool modified();
 };
 
 class wb_revision : public wb_status
@@ -115,6 +125,7 @@ class wb_revision : public wb_status
   int m_current_idx;
   int m_current_main_idx;
   int m_current_sub_idx;
+  int m_next_idx;
   int (*m_command_cb)( void *ctx, char *cmd);
 
  public:
@@ -129,6 +140,8 @@ class wb_revision : public wb_status
   pwr_tStatus restore( char *name);
   pwr_tStatus build_all();
   pwr_tStatus remove( char *name);
+  bool set_current( char *name); 
+  bool set_current( int idx); 
   void read_file();
   void read_file_meta();
   void write_file();
@@ -146,7 +159,7 @@ class wb_revision : public wb_status
   void next_name( char *name);
 
   static char *branch_name( char *name);
-  static void info( wb_rev_info *info);
+  static pwr_tStatus info( wb_rev_info *info);
   static int check_add_file( char *filename);
 };
 

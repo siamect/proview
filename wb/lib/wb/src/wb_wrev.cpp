@@ -85,6 +85,16 @@ void WRev::store_ok_cb( WRev *wrev, char *text1, char *text2)
 {
   pwr_tStatus sts;
 
+  if ( strcmp( text1, "") == 0 ) {
+    wrev->wow->DisplayError( "Syntax Error", "Revision name is missing");
+    return;
+  }
+  if ( strcmp( text2, "") == 0 ) {
+    wrev->wow->DisplayError( "Syntax Error", "Description is missing");
+    return;
+  }
+
+
   wrev->set_clock_cursor();
 
   sts = wrev->wrevnav->rev->create( 1, text1, text2);
@@ -104,7 +114,7 @@ void WRev::activate_store()
   // Check if new revision is allowed
   sts = wrevnav->rev->create_check();
   if ( EVEN(sts)) {
-    wow->DisplayError( "New Revision Error", "New revksion can't be created\nCurrent revision is not at end of branch");
+    wow->DisplayError( "New Revision Error", "New revision can't be created\nCurrent revision is not at end of branch");
     return;
   }
 
