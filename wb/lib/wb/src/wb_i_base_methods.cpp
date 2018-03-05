@@ -42,6 +42,7 @@ pwr_dImport pwr_BindMethods(ASup);
 pwr_dImport pwr_BindMethods(DsFast);
 pwr_dImport pwr_BindMethods(SevHist);
 pwr_dImport pwr_BindMethods(DsTrend);
+pwr_dImport pwr_BindMethods(DsTrendCurve);
 pwr_dImport pwr_BindMethods(DSup);
 pwr_dImport pwr_BindMethods(PlcPgm);
 pwr_dImport pwr_BindMethods(PlcEmbed);

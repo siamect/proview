@@ -2,6 +2,7 @@ ASup
 DsFast
 SevHist
 DsTrend
+DsTrendCurve
 DSup
 PlcPgm
 PlcEmbed
