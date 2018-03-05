@@ -750,6 +750,10 @@ int CoWowGtk::DisplayWarranty()
   g_signal_connect( dialog, "response", G_CALLBACK(warranty_cb), cbdata);
 
   GtkWidget *dialog_label = gtk_label_new( text);
+  GtkWidget *scrolled_window = gtk_scrolled_window_new( NULL, NULL);
+  gtk_scrolled_window_add_with_viewport( GTK_SCROLLED_WINDOW( scrolled_window), dialog_label);
+  g_object_set( scrolled_window, "can-focus", FALSE, NULL);
+
   dcli_translate_filename( fname, "$pwr_exe/proview_icon2.png");
   GtkWidget *dialog_image = gtk_image_new_from_file( fname);
   g_object_set( dialog_image,
@@ -758,9 +762,10 @@ int CoWowGtk::DisplayWarranty()
 		NULL);
   GtkWidget *hbox = gtk_hbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(hbox), dialog_image, FALSE, FALSE, 15);
-  gtk_box_pack_start( GTK_BOX(hbox), dialog_label, TRUE, TRUE, 15);
+  gtk_box_pack_start( GTK_BOX(hbox), scrolled_window, TRUE, TRUE, 15);
   gtk_box_pack_start( GTK_BOX(dialog->vbox), hbox, TRUE, TRUE, 30);
 
+  gtk_window_resize( GTK_WINDOW(dialog), 850, 600);
   gtk_widget_show_all( GTK_WIDGET(dialog));
   return 1;
 }
