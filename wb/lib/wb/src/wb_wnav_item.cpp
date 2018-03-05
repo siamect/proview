@@ -1217,6 +1217,11 @@ int WItemObjectName::open_children( double x, double y)
 
       brow_SetNodraw( brow->ctx);
 
+      if ( listbody.Filter & pwr_mRefListFilterMask_Other)
+	new WItemEnumObject( brow, ldhses, objid, (char *)"Other", attr, 
+			     item_eType_Other, 0, 32, 0, (char *)"", oname, 0, 0,
+			     idx++, node, flow_eDest_IntoLast);
+
       for ( wb_object co = sp->object( listbody.ObjectClass[0]);
 	    co;
 	    co = co.next()) {
@@ -1240,7 +1245,7 @@ int WItemObjectName::open_children( double x, double y)
 	pwr_tOid oid = co.oid();
 	new WItemEnumObject( brow, ldhses, objid, oname, attr, 
 			     item_eType_ObjectName, 0, 32, 0, (char *)"", oname, 0, 0,
-			     idx++, node, flow_eDest_IntoLast);	    
+			     idx++, node, flow_eDest_IntoLast);	
       }
     }
     catch ( wb_error e) {
