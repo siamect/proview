@@ -11014,7 +11014,8 @@ int	gcg_comp_m36( gcg_ctx gcgctx, vldh_t_node node)
 	}
 
         if ( info.type == pwr_eType_DataRef || info.flags & PWR_MASK_POINTER) {
-	  if ( node->ln.cid != pwr_cClass_GetDatap) {
+	  if ( !(node->ln.cid == pwr_cClass_GetDatap ||
+		 node->ln.cid == pwr_cClass_GetDataRefp)) {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	    return GSX__NEXTNODE;
 	  }

@@ -196,6 +196,12 @@
     memcpy( &object->Out, &in, 12);
 
 /*_*
+  @aref getdatarefp GetDataRefp
+*/
+#define GetDataRefp_exec(object, in)\
+  memcpy( &object->ActVal, &in, sizeof(object->ActVal));
+
+/*_*
   @aref getdatainput GetDatainput
 */
 #define GetDataInput_exec(object, in)\
