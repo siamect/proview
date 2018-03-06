@@ -6216,6 +6216,7 @@ functions. Here follows a list of build in functions that also can be used in Ge
 DeleteObject <t><t>Delete an object.<link>DeleteObject()
 GetCurrentObject <t><t>Returns the identity of the last created object.<link>GetCurrentObject()
 GetFirstObject <t><t>Get the first object. <link>GetFirstObject()
+GetGraphName <t><t>Get name of current graph. <link>GetGraphName()
 GetNextObject <t><t>Get the next object. <link>GetNextObject()
 GetObjectAttribute <t><t>Get an attribute value of an object. <link>GetObjectAttribute()
 GetObjectBorder <t><t>Get object border. <link>GetObjectBorder()
@@ -6501,6 +6502,21 @@ Returns an integer with the object identity.
 <c>   ...
 <c>   oid = GetNextObject( oid)
 <c> endwhile
+</topic>
+
+<topic>GetGraphName() <style>function
+GetGraphName()
+string GetGraphName()
+
+<h2>Description
+Fetches the name for the current graph.
+
+Returns a string with the name.
+
+<b>Example
+<c> string name;
+ 
+<c> name = GetGraphName();
 </topic>
 
 <topic>GetNextObject() <style>function

@@ -6122,6 +6122,7 @@ funktioner. Här följer en lista på de inbyggda funktioner som även kan användas 
 DeleteObject <t><t>Ta bort ett objekt.<link>DeleteObject()
 GetCurrentObject <t><t>Returnerar identiteten för senast skapade objekt.<link>GetCurrentObject()
 GetFirstObject <t><t>Hämta första objekt. <link>GetFirstObject()
+GetGraphName <t><t>Hämta name på nuvarande graf. <link>GetGraphName()
 GetNextObject <t><t>Hämta nästa objekt. <link>GetNextObject()
 GetObjectAttribute <t><t>Hämta ett attributvärde för ett objekt. <link>GetObjectAttribute()
 GetObjectBorder <t><t>Hämta kant för ett objekt. <link>GetObjectBorder()
@@ -6380,6 +6381,19 @@ Returnerar en integer med objektsidentiteten.
 <c>   ...
 <c>   oid = GetNextObject( oid)
 <c> endwhile
+</topic>
+
+string GetGraphName()
+
+<h2>Description
+Hämta namn på nuvarande graf.
+
+Returnerar en sträng med namnet.
+
+<b>Exempel
+<c> string name;
+ 
+<c> name = GetGraphName();
 </topic>
 
 <topic>GetNextObject() <style>function

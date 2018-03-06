@@ -11228,7 +11228,7 @@ string		<t>name		<t>name of object.
 
 <c>  string parent;
 
-<c>  parent = GetChild("Roller-Motor");
+<c>  parent = GetParent("Roller-Motor");
 </TOPIC>
 
 <TOPIC> getnextsibling() <style> function
