@@ -848,7 +848,7 @@ wb_orep *wb_vrepmem::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination
       *sts = LDH__BADDEST;
       return 0;
     }
-    // Check that name is unic
+    // Check that name is unique
     if ( name && !nameCheck( dest, name.segment(), code)) {
       *sts = LDH__NAMALREXI;
       return 0;
@@ -1182,6 +1182,12 @@ bool wb_vrepmem::moveObject(pwr_tStatus *sts, wb_orep *orep, wb_destination &d)
   }
 
   mem_object *memo = ((wb_orepmem *)orep)->memobject();
+
+  // Check that name is unique
+  if ( !nameCheck( dest, memo->name(), code)) {
+    *sts = LDH__NAMALREXI;
+    return false;
+  }
 
   if ( m_classeditor && !classeditorCheckMove( memo, code, dest, sts))
     return false;
@@ -1878,7 +1884,7 @@ bool wb_vrepmem::exportPaste(wb_treeimport &i, pwr_tOid destination, ldh_eDest d
 }
 
 //
-// Check that the name of an object is unic within a sibling group
+// Check that the name of an object is unique within a sibling group
 //
 bool wb_vrepmem::nameCheck( mem_object *memo)
 {
