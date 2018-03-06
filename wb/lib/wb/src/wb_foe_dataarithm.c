@@ -578,42 +578,42 @@ static pwr_tStatus dataa_ODa4 (
 }
 static pwr_tStatus dataa_Da1front( dataa_ctx dataactx, char *line, char *pos, 
 	char *out, int *incr, char *var) {
-	sprintf( out, "( *(char *)((char *)(%s->DataIn1P) + pwr_cAlignLW+2*pwr_cAlignW))", var); 
+	sprintf( out, "( *(char *)((char *)(%s->DataIn1P) + sizeof(pwr_tDataRef)))", var); 
 	*incr = strlen(out);
 	return GSX__SUCCESS; }
 static pwr_tStatus dataa_Da2front( dataa_ctx dataactx, char *line, char *pos, 
 	char *out, int *incr, char *var) {
-	sprintf( out, "( *(char *)((char *)(%s->DataIn2P) + pwr_cAlignLW+2*pwr_cAlignW))", var); 
+	sprintf( out, "( *(char *)((char *)(%s->DataIn2P) + sizeof(pwr_tDataRef)))", var); 
 	*incr = strlen(out);
 	return GSX__SUCCESS; }
 static pwr_tStatus dataa_Da3front( dataa_ctx dataactx, char *line, char *pos, 
 	char *out, int *incr, char *var) {
-	sprintf( out, "( *(char *)((char *)(%s->DataIn3P) + pwr_cAlignLW+2*pwr_cAlignW))", var); 
+	sprintf( out, "( *(char *)((char *)(%s->DataIn3P) + sizeof(pwr_tDataRef)))", var); 
 	*incr = strlen(out);
 	return GSX__SUCCESS; }
 static pwr_tStatus dataa_Da4front( dataa_ctx dataactx, char *line, char *pos, 
 	char *out, int *incr, char *var) {
-	sprintf( out, "( *(char *)((char *)(%s->DataIn4P) + pwr_cAlignLW+2*pwr_cAlignW))", var); 
+	sprintf( out, "( *(char *)((char *)(%s->DataIn4P) + sizeof(pwr_tDataRef)))", var); 
 	*incr = strlen(out);
 	return GSX__SUCCESS; }
 static pwr_tStatus dataa_Da1back( dataa_ctx dataactx, char *line, char *pos, 
 	char *out, int *incr, char *var) {
-	sprintf( out, "( *(char *)((char *)(%s->DataIn1P) + pwr_cAlignLW+3*pwr_cAlignW))", var);
+	sprintf( out, "( *(char *)((char *)(%s->DataIn1P) + sizeof(pwr_tDataRef)+pwr_cAlignW))", var);
 	*incr = strlen(out);
 	 return GSX__SUCCESS; }
 static pwr_tStatus dataa_Da2back( dataa_ctx dataactx, char *line, char *pos,
 	char *out, int *incr, char *var) {
-	sprintf( out, "( *(char *)((char *)(%s->DataIn2P) + pwr_cAlignLW+3*pwr_cAlignW))", var);
+	sprintf( out, "( *(char *)((char *)(%s->DataIn2P) + sizeof(pwr_tDataRef)+pwr_cAlignW))", var);
 	*incr = strlen(out);
 	 return GSX__SUCCESS; }
 static pwr_tStatus dataa_Da3back( dataa_ctx dataactx, char *line, char *pos, 
 	char *out, int *incr, char *var) {
-	sprintf( out, "( *(char *)((char *)(%s->DataIn3P) + pwr_cAlignLW+3*pwr_cAlignW))", var); 
+	sprintf( out, "( *(char *)((char *)(%s->DataIn3P) + sizeof(pwr_tDataRef)+pwr_cAlignW))", var); 
 	*incr = strlen(out);
 	return GSX__SUCCESS; }
 static pwr_tStatus dataa_Da4back( dataa_ctx dataactx, char *line, char *pos, 
 	char *out, int *incr, char *var) {
-	sprintf( out, "( *(char *)((char *)(%s->DataIn4P) + pwr_cAlignLW+3*pwr_cAlignW))", var); 
+	sprintf( out, "( *(char *)((char *)(%s->DataIn4P) + sizeof(pwr_tDataRef)+pwr_cAlignW))", var); 
 	*incr = strlen(out);
 	return GSX__SUCCESS; }
 static pwr_tStatus dataa_Da1objid( dataa_ctx dataactx, char *line, char *pos, 
