@@ -54,7 +54,7 @@ void rt_appl::init()
   qcom_sQattr qAttr;
   pwr_tStatus sts;
 
-  // Init error and status logger with a unic application index per node.
+  // Init error and status logger with a unique application index per node.
   errh_Init( m_name, m_anix);
   errh_SetStatus( PWR__APPLSTARTUP);
 

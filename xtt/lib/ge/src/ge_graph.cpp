@@ -5087,7 +5087,7 @@ graph_eDatabase Graph::parse_attr_name( char *name, char *parsed_name,
       *inverted = 0;
 
     if ( grow->stack_cnt) {
-      // Add suffix to make name unic for subwindow context
+      // Add suffix to make name unique for subwindow context
       char owner[256];
 
       grow_GetOwner( grow->ctx, owner);

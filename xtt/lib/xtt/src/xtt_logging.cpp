@@ -910,7 +910,7 @@ static void	*xtt_logproc( void *arg)
 	  case xtt_LoggType_Cont:
 	    if ( logg->logg_file)
 	      fprintf( logg->logg_file, "\"%s\"", time_str);
-	    /* Find a unic shortname for each parameter */
+	    /* Find a unique shortname for each parameter */
 	    for ( i = 0; i < RTT_LOGG_MAXPAR; i++)
 	    {
 	      if ( logg->print_shortname)
@@ -925,7 +925,7 @@ static void	*xtt_logproc( void *arg)
 	            if ( strcmp( parname, "ACTUALVALUE") == 0)
                       *s = 0;
                   }
-	          /* Check that this name is unic */
+	          /* Check that this name is unique */
 	          for ( j = 0; j < RTT_LOGG_MAXPAR; j++)
 	          {
 	            if ( j != i &&

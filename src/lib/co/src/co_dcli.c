@@ -330,7 +330,7 @@ int	dcli_cli( 	dcli_tCmdTable	*command_table,
 
 	if ( hitnr > 1)
 	{
-	  /* Command not unic */
+	  /* Command not unique */
 	  return DCLI__COM_AMBIG;
 	}
 	else if ( hitnr < 1)
@@ -398,7 +398,7 @@ int	dcli_cli( 	dcli_tCmdTable	*command_table,
 	  }
 	  else if ( hitnr > 1)
 	  {
-	    /* qualifier not unic */
+	    /* qualifier not unique */
 	    return DCLI__QUAL_AMBIG;
 	  }
 	  /* Place back the / and = within quotes */

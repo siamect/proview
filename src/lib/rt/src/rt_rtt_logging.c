@@ -1275,7 +1275,7 @@ void	*rtt_logging_logproc( void *arg)
 	  case RTT_LOGG_CONT:
 	    if ( entry_ptr->logg_file)
 	      fprintf( entry_ptr->logg_file, "\"\"");
-	    /* Find a unic shortname for each parameter */
+	    /* Find a unique shortname for each parameter */
 	    for ( i = 0; i < RTT_LOGG_MAXPAR; i++)
 	    {
 	      if ( entry_ptr->print_shortname)
@@ -1290,7 +1290,7 @@ void	*rtt_logging_logproc( void *arg)
 	            if ( strcmp( parname, "ACTUALVALUE") == 0)
                       *s = 0;
                   }
-	          /* Check that this name is unic */
+	          /* Check that this name is unique */
 	          for ( j = 0; j < RTT_LOGG_MAXPAR; j++)
 	          {
 	            if ( j != i &&

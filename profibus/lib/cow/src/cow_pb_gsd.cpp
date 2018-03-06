@@ -2272,7 +2272,7 @@ int pb_gsd::syntax_check( int *idx)
 	*idx = i;
 	return PB__NOMODULENAME;
       }
-      // Check that name is unic
+      // Check that name is unique
       for ( int j = 0; j < module_conf_cnt; j++) {
 	if ( i != j && 
 	     cdh_NoCaseStrcmp( module_conf[i].name, module_conf[j].name) == 0) {
