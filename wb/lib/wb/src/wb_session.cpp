@@ -406,6 +406,11 @@ bool wb_session::copyOset( pwr_sAttrRef *arp, bool keepref, bool keepsym, bool i
   pwr_tVid vid;
   m_sts = LDH__SUCCESS;
 
+  if ( !m_vrep->exportTreeIsImplemented()) {
+    m_sts = LDH__NYI;
+    return false;
+  }
+
   // Avoid copying objects in plcprograms
   pwr_sAttrRef *ap = arp;
   while ( cdh_ObjidIsNotNull( ap->Objid)) {

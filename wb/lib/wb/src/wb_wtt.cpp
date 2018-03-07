@@ -1193,6 +1193,11 @@ void Wtt::activate_paste()
     sts = ldh_Paste( ldhses, sel_list2->Objid, ldh_eDest_After, 0, 0, 0);
   reset_cursor();
 
+  if ( EVEN(sts)) {
+    message( 'E', wnav_get_message( sts));
+    return;
+  }
+
   if ( (sel_cnt1 == 1 && sel_is_attr1[0] == 0) ||
        (sel_cnt2 == 1 && sel_is_attr2[0] == 0)) {
     pwr_tOid oid;

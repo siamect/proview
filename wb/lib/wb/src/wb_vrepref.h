@@ -159,6 +159,7 @@ public:
   virtual bool exportDocBlock(wb_import &i) {return false;}
   virtual bool exportMeta(wb_import &i) {return false;}
   virtual bool exportTree(wb_treeimport &i, pwr_tOid oid) {return false;}
+  virtual bool exportTreeIsImplemented() { return false;}
   bool exportPaste(wb_treeimport &i, pwr_tOid destination, ldh_eDest destcode, bool keepoid,
 		   pwr_tOid **rootlist) {return false;}
   virtual bool importTreeObject(wb_merep *merep, pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,

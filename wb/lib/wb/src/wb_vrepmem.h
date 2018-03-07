@@ -383,6 +383,7 @@ public:
   virtual bool exportDocBlock(wb_import &i);
   virtual bool exportMeta(wb_import &i);
   virtual bool exportTree(wb_treeimport &i, pwr_tOid oid);
+  virtual bool exportTreeIsImplemented() { return true;}
   bool exportPaste(wb_treeimport &i, pwr_tOid destination, ldh_eDest destcode, bool keepoid,
 		   wb_recix *recix, pwr_tOid **rootlist);
   virtual bool importTreeObject(wb_merep *merep, pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,

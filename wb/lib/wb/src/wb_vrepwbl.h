@@ -233,6 +233,7 @@ public:
   virtual bool exportDocBlock(wb_import &i);
   virtual bool exportMeta(wb_import &i);
   virtual bool exportTree(wb_treeimport &i, pwr_tOid oid);
+  virtual bool exportTreeIsImplemented() { return true;}
   virtual bool importTree(bool keepref, bool keepsym) { return false;}
   virtual bool importTreeObject(wb_merep *merep, pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
 				pwr_tOid boid, const char *name, pwr_mClassDef flags,

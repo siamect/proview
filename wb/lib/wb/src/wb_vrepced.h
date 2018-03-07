@@ -178,6 +178,7 @@ public:
   virtual bool exportDocBlock(wb_import &i) { return m_vrep->exportDocBlock( i);}
   virtual bool exportMeta(wb_import &i) { return m_vrep->exportMeta( i);}
   virtual bool exportTree(wb_treeimport &i, pwr_tOid oid) { return m_vrep->exportTree( i, oid);}
+  virtual bool exportTreeIsImplemented() { return m_vrep->exportTreeIsImplemented();}
   virtual bool importTreeObject(wb_merep *merep, pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
 				pwr_tOid boid, const char *name, pwr_mClassDef flags,
 				size_t rbSize, size_t dbSize, void *rbody, void *dbody) {
