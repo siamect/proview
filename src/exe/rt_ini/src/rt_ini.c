@@ -60,6 +60,7 @@
 #include "rt_qcom.h"
 #include "rt_io_base.h"
 #include "rt_redu.h"
+#include "rt_lck.h"
 #include "rt_ini_msg.h"
 #include "rt_errh_msg.h"
 #include "rt_pwr_msg.h"
@@ -69,6 +70,8 @@ static int		checkErrors (ini_sContext*);
 static pwr_tStatus	events (ini_sContext *cp);
 static pwr_tStatus	interactive (int argc, char **argv, ini_sContext *cp);
 static pwr_tStatus	stop (int argc, char **argv, ini_sContext *cp);
+static void 		create_locks();
+static void 		delete_locks();
 static void		load_backup ();
 static void		logChanges (ini_sContext*);
 static void		logCardinality (ini_sContext*);
@@ -215,6 +218,8 @@ start (
     cp->np->RedundancyState = state;
     qcom_SetRedundancyState( state); 
   }
+
+  create_locks();
 
   io_init_signals();
 
@@ -515,15 +520,16 @@ terminate (
   
   gdb_UnlinkDb();
   qdb_UnlinkDb();
+  delete_locks();
 
   /* Destroy message handler semaphore */
   
   mh_UtilDestroyEvent();
 
-#if defined OS_POISIX
-    /* Unlink errlog mwessage queue */
-    errl_Unlink();
-  #endif
+#if defined OS_POSIX
+  /* Unlink errlog message queue */
+  errl_Unlink();
+#endif
 
   exit(1);
 }
@@ -918,6 +924,36 @@ events (
 
   }
   return INI__SUCCESS;
+}
+
+static void create_locks()
+{
+  pwr_tStatus sts;
+
+  lck_Create( &sts, lck_eLock_Time);
+  if (EVEN(sts))
+    errh_Fatal("lock create time, %m", sts);
+  lck_Create( &sts, lck_eLock_Str);
+  if (EVEN(sts))
+    errh_Fatal("lock create str, %m", sts);
+  lck_Create( &sts, lck_eLock_NMps);
+  if (EVEN(sts))
+    errh_Fatal("lock create NMps, %m", sts);
+}
+
+static void delete_locks()
+{
+  pwr_tStatus sts;
+
+  lck_Delete( &sts, lck_eLock_Time);
+  if (EVEN(sts))
+    errh_Fatal("lock delete time, %m", sts);
+  lck_Delete( &sts, lck_eLock_Str);
+  if (EVEN(sts))
+    errh_Fatal("lock delete str, %m", sts);
+  lck_Delete( &sts, lck_eLock_NMps);
+  if (EVEN(sts))
+    errh_Fatal("lock delete NMps, %m", sts);
 }
 
 static void
