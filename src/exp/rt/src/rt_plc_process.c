@@ -208,9 +208,9 @@ int main (
 
     stop_threads(pp);
     clean_all(pp);
-    lck_Delete( &sts, lck_eLock_NMps);
-    lck_Delete( &sts, lck_eLock_Time);
-    lck_Delete( &sts, lck_eLock_Str);
+    lck_Unlink( &sts, lck_eLock_NMps);
+    lck_Unlink( &sts, lck_eLock_Time);
+    lck_Unlink( &sts, lck_eLock_Str);
     break;
   case ini_mEvent_oldPlcStop:
     errh_SetStatus( PWR__SRVTERM);
