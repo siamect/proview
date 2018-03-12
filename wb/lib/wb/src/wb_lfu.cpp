@@ -2439,8 +2439,12 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
 	      if ( bop->SystemModules & pwr_mBuildOptionsMask_RemoteArchive)
 		sprintf( &str[strlen(str)], "-lpwr_remote ");
+
 	      if ( bop->SystemModules & pwr_mBuildOptionsMask_SsaboxArchive)
 		sprintf( &str[strlen(str)], "-lpwr_ssabox ");
+
+	      if ( bop->SystemModules & pwr_mBuildOptionsMask_SimulArchive)
+		sprintf( &str[strlen(str)], "-lpwr_simul ");
 
 	      sprintf( &str[strlen(str)], "-lpwr_rt ");
 	      

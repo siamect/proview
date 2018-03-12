@@ -161,5 +161,15 @@ SObject pwrb:Type
        Attr Value = 1048576
      EndBody
     EndObject
+    !/**
+    !  Simul archive.
+    !*/
+    Object SimulArchive $Bit
+     Body SysBody
+       Attr PgmName = "SimulArchive"
+       Attr Text = "SimulArchive"
+       Attr Value = 2097152
+     EndBody
+    EndObject
   EndObject
 EndSObject
