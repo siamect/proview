@@ -256,12 +256,16 @@ void WdaGtk::class_activate_ok( GtkWidget *w, gpointer data)
   WdaGtk *wda = (WdaGtk *)data;
   char *hiername;
   char *classname;
+  char *searchname;
   char *utf8;
   int sts;
   pwr_tClassId new_classid;
 
   utf8 = gtk_editable_get_chars( GTK_EDITABLE(wda->wdaclass_hiervalue), 0, -1);
   hiername = g_convert( utf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+  g_free( utf8);
+  utf8 = gtk_editable_get_chars( GTK_EDITABLE(wda->wdaclass_namevalue), 0, -1);
+  searchname = g_convert( utf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
   g_free( utf8);
   utf8 = gtk_editable_get_chars( GTK_EDITABLE(wda->wdaclass_classvalue), 0, -1);
   classname = g_convert( utf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
@@ -279,10 +283,12 @@ void WdaGtk::class_activate_ok( GtkWidget *w, gpointer data)
       return;
     }
   }
+  strncpy( wda->search_name, searchname, sizeof(wda->search_name));
 
   sts = ldh_ClassNameToId( wda->ldhses, &new_classid, classname);
   g_free( classname);
   g_free( hiername);
+  g_free( searchname);
   if ( EVEN(sts)) {
     CoWowGtk ww(wda->wdaclass_dia);
     ww.DisplayError( "Class error", wnav_get_message( sts));
@@ -299,7 +305,7 @@ void WdaGtk::class_activate_ok( GtkWidget *w, gpointer data)
   else {
     // Find new attributes
     sts = ((WdaNav *)wda->wdanav)->update( wda->objid, wda->classid,
-		wda->attribute, wda->attrobjects);
+					   wda->attribute, wda->attrobjects, wda->search_name);
     if ( EVEN(sts)) {
       CoWowGtk ww(wda->wdaclass_dia);
       ww.DisplayError( "Spreadsheet error", wnav_get_message( sts));
@@ -496,7 +502,7 @@ void WdaGtk::pop()
   gtk_window_present( GTK_WINDOW(toplevel));
 }
 
-void WdaGtk::open_class_dialog( char *hierstr, char *classstr)
+void WdaGtk::open_class_dialog( char *hierstr, char *classstr, char *namestr)
 {
   gint pos = 0;
   gtk_editable_delete_text( GTK_EDITABLE(wdaclass_hiervalue), 0, -1);
@@ -504,6 +510,9 @@ void WdaGtk::open_class_dialog( char *hierstr, char *classstr)
   pos = 0;
   gtk_editable_delete_text( GTK_EDITABLE(wdaclass_classvalue), 0, -1);
   gtk_editable_insert_text( GTK_EDITABLE(wdaclass_classvalue), classstr, strlen(classstr), &pos);
+  pos = 0;
+  gtk_editable_delete_text( GTK_EDITABLE(wdaclass_namevalue), 0, -1);
+  gtk_editable_insert_text( GTK_EDITABLE(wdaclass_namevalue), namestr, strlen(namestr), &pos);
   gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(wdaclass_attrobjects), 
 				attrobjects ? TRUE : FALSE);
   g_object_set( wdaclass_dia, "visible", TRUE, NULL);
@@ -771,6 +780,10 @@ void WdaGtk::create_class_dialog()
   GtkWidget *hier_label = gtk_label_new("Hierarchy");
   gtk_widget_set_size_request( hier_label, 95, -1);
   gtk_misc_set_alignment( GTK_MISC(hier_label), 0, 0.5);
+  wdaclass_namevalue = gtk_entry_new();
+  GtkWidget *name_label = gtk_label_new("Name");
+  gtk_widget_set_size_request( name_label, 95, -1);
+  gtk_misc_set_alignment( GTK_MISC(name_label), 0, 0.5);
   wdaclass_attrobjects = gtk_check_button_new_with_label( "Attribute Objects");
  
   GtkWidget *india_hboxclass = gtk_hbox_new( FALSE, 0);
@@ -780,6 +793,10 @@ void WdaGtk::create_class_dialog()
   GtkWidget *india_hboxhier = gtk_hbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(india_hboxhier), hier_label, FALSE, FALSE, 15);
   gtk_box_pack_end( GTK_BOX(india_hboxhier), wdaclass_hiervalue, TRUE, TRUE, 30);
+
+  GtkWidget *india_hboxname = gtk_hbox_new( FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(india_hboxname), name_label, FALSE, FALSE, 15);
+  gtk_box_pack_end( GTK_BOX(india_hboxname), wdaclass_namevalue, TRUE, TRUE, 30);
 
   GtkWidget *india_hboxattrobj = gtk_hbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(india_hboxattrobj), wdaclass_attrobjects, FALSE, FALSE, 150);
@@ -800,6 +817,7 @@ void WdaGtk::create_class_dialog()
   GtkWidget *india_vbox = gtk_vbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(india_vbox), india_hboxclass, FALSE, FALSE, 15);
   gtk_box_pack_start( GTK_BOX(india_vbox), india_hboxhier, FALSE, FALSE, 15);
+  gtk_box_pack_start( GTK_BOX(india_vbox), india_hboxname, FALSE, FALSE, 15);
   gtk_box_pack_start( GTK_BOX(india_vbox), india_hboxattrobj, TRUE, TRUE, 15);
   gtk_box_pack_start( GTK_BOX(india_vbox), gtk_hseparator_new(), FALSE, FALSE, 0);
   gtk_box_pack_end( GTK_BOX(india_vbox), india_hboxbuttons, FALSE, FALSE, 15);

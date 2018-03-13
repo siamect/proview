@@ -186,7 +186,7 @@ void Wda::open_class_dialog()
   else
     strcpy( classstr, "");
 
-  open_class_dialog( hierstr, classstr);
+  open_class_dialog( hierstr, classstr, search_name);
 }
 
 void Wda::open_attr_dialog()
@@ -283,7 +283,7 @@ int Wda::next_attr()
         get_next = 1;
       else if ( get_next) {
         strcpy( attribute, bodydef[j].ParName);
-        sts = ((WdaNav *)wdanav)->update( objid, classid, attribute, attrobjects);
+        sts = ((WdaNav *)wdanav)->update( objid, classid, attribute, attrobjects, search_name);
         free((char *) bodydef);
         return WDA__SUCCESS;
       }
@@ -332,7 +332,7 @@ int Wda::prev_attr()
         }
         else {
           strcpy( attribute, prev_attr);
-          sts = ((WdaNav *)wdanav)->update( objid, classid, attribute, attrobjects);
+          sts = ((WdaNav *)wdanav)->update( objid, classid, attribute, attrobjects, search_name);
           free((char *) bodydef);
           return WDA__SUCCESS;
         }
@@ -344,7 +344,7 @@ int Wda::prev_attr()
 
   if ( get_last && strcmp( prev_attr, "") != 0) {
     strcpy( attribute, prev_attr);
-    sts = ((WdaNav *)wdanav)->update( objid, classid, attribute, attrobjects);
+    sts = ((WdaNav *)wdanav)->update( objid, classid, attribute, attrobjects, search_name);
     return WDA__SUCCESS;
   }
   return WDA__NOPREVATTR;
@@ -357,7 +357,7 @@ void Wda::set_attr_cb( void *ctx, char *text, int ok_pressed)
 
   strcpy( wda->attribute, text);
   sts = ((WdaNav *)wda->wdanav)->update( wda->objid, wda->classid,
-		wda->attribute, wda->attrobjects);
+					 wda->attribute, wda->attrobjects, wda->search_name);
   if ( EVEN(sts))
     wda->wow->DisplayError("Spreadsheet error", wnav_get_message( sts));
 }
@@ -381,6 +381,7 @@ Wda::Wda(
   input_open(0), input_multiline(0), 
   close_cb(0), redraw_cb(0), client_data(0),
   attrobjects(0)
-{
-  strcpy( attribute, wa_attribute);
+{ 
+ strcpy( attribute, wa_attribute);
+ strcpy( search_name, "");
 }

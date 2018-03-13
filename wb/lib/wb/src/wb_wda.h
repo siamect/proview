@@ -77,6 +77,7 @@ class Wda {
     char        attribute[80];
     int		editmode;
     char 	name[80];
+    char	search_name[80];
     WdaNav	*wdanav;
     void	*root_item;
     int		input_open;
@@ -94,7 +95,7 @@ class Wda {
 
     virtual void message( char severity, const char *message) {}
     virtual void set_prompt( const char *prompt) {}
-    virtual void open_class_dialog( char *hierstr, char *classstr) {}
+    virtual void open_class_dialog( char *hierstr, char *classstr, char *namestr) {}
     virtual void change_value( int set_focus) {}
     virtual void change_value_close() {}
     virtual void pop() {}

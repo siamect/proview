@@ -75,6 +75,7 @@ class WdaGtk : public Wda {
     GtkWidget	*pane;
     GtkWidget      *wdaclass_dia;
     GtkWidget      *wdaclass_hiervalue;
+    GtkWidget      *wdaclass_namevalue;
     GtkWidget      *wdaclass_classvalue;
     GtkWidget      *wdaclass_attrobjects;
     GtkWidget      *wdaattr_dia;
@@ -87,7 +88,7 @@ class WdaGtk : public Wda {
     void change_value( int set_focus);
     void change_value_close();
     void pop();
-    void open_class_dialog( char *hierstr, char *classstr);
+    void open_class_dialog( char *hierstr, char *classstr, char *namestr);
     void create_class_dialog();
     void print( const char *title);
     void update_title();

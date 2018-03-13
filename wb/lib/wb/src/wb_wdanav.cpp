@@ -655,6 +655,8 @@ int	WdaNav::get_attr()
   int elements;
   int found;
   pwr_tClassId classid_vect[2];
+  char name[80];
+  char *namep = name;
 
   if ( classid == 0)
     return WDA__SUCCESS;
@@ -709,15 +711,20 @@ int	WdaNav::get_attr()
 
   elements = bodydef[j].Par->Output.Info.Elements;
 
+  if ( strcmp( search_name, "") != 0)
+    cdh_ToUpper( name, search_name);
+  else
+    namep = 0;
+
   classid_vect[0] = classid;
   classid_vect[1] = 0;
   if ( !attrobjects) {
-    trv_get_objects_hcn( ldhses, objid, classid_vect, NULL, wdanav_attr_found_cb,
+    trv_get_objects_hcn( ldhses, objid, classid_vect, namep, wdanav_attr_found_cb,
 			 (void *)this, (void *) &bodydef[j], (void *) body,
 			 NULL, NULL);
   }
   else {
-    trv_get_attrobjects( ldhses, objid, classid_vect, NULL, trv_eDepth_Deep, 
+    trv_get_attrobjects( ldhses, objid, classid_vect, namep, trv_eDepth_Deep, 
 			 wdanav_attr_found_cb, (void *)this, (void *) &bodydef[j], 
 			 (void *) body, NULL, NULL);
   }
@@ -871,7 +878,7 @@ int WdaNav::find_by_objid( pwr_tObjid oi, brow_tObject *object)
 }
 
 int WdaNav::update( pwr_tObjid new_objid, pwr_tClassId new_classid,
-		    char *new_attribute, int new_attrobjects)
+		    char *new_attribute, int new_attrobjects, char *new_search_name)
 {
   int sts;
   int keep_select;
@@ -884,6 +891,7 @@ int WdaNav::update( pwr_tObjid new_objid, pwr_tClassId new_classid,
   if ( cdh_ObjidIsEqual( objid, new_objid) &&
        classid == new_classid &&
        strcmp( attribute, new_attribute) == 0 &&
+       strcmp( search_name, new_search_name) == 0 &&
        attrobjects == new_attrobjects)
     return WDA__SUCCESS;
 
@@ -909,6 +917,7 @@ int WdaNav::update( pwr_tObjid new_objid, pwr_tClassId new_classid,
   classid = new_classid;
   strcpy( attribute, new_attribute);
   attrobjects = new_attrobjects;
+  strcpy( search_name, new_search_name);
 
   brow_SetNodraw( brow->ctx);
   brow_DeleteAll( brow->ctx);

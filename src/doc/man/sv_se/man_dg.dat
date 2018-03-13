@@ -5672,25 +5672,26 @@ Spreadsheet editorn startas från konfiguratören: 'Functions/Spreadsheet' i menyn
 Om konfiguratören är i editeringsmod, startas även spreadsheet editorn in editeringsmod.
 
 När spreadsheet editorn är startad, måste man först ange vilka objekt som ska visas: vilken 
-klass de tillhör och under vilken hierarki de ska ligga. Det här görs genom att aktivera
-'File/Select Class' i menyn. Mata in klass, hieraki, samt ange om attributobjekt, dvs objekt
-som ligger som attribut i andra objekt, ska vara med.
+klass de tillhör och under vilken hierarki de ska ligga. Det här görs genom att aktivera 
+'File/Select Class' i menyn. Mata in klass, hierarki, samt ange om attributobjekt, dvs objekt 
+som ligger som attribut i andra objekt, ska vara med. Man kan även välja objekt efter namn med 
+en wildcard-sträng.
 
 <b>Välja klass och hierarki
-<image>dg_fig33.gif
+<image>dg_fig33.png
 
 Därefter väljer man vilket attribut som ska visas. Välj ut ett attribut i attributlistan
 och klicka på 'Ok', eller dubbelklicka på ett attribut.
 
 <b>Välja attribut
-<image>dg_fig34.gif
+<image>dg_fig34.png
 
 Resultatet visas i figuren nedan. Här valdes attributet 'Description'. Man kan enkelt se
 övriga attribut i objekten genom att aktivera 'File/Next Attribute' (Ctrl/N) och 
 'File/Previous Attribute' i menyn.
 
 <b>Spreadsheet editorn
-<image>dg_fig35.gif
+<image>dg_fig35.png
 
 <h2>Meny
 File/Select Class     <t><t>ange klass och hierarki för de objekt som ska visas.

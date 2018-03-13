@@ -5724,25 +5724,26 @@ The Spreadsheet Editor is opened from the configurator: 'Functions/Spreadsheet' 
 If the configurator is in edit mode, the Spreadsheet Editor is also opened in edit mode.
 
 When the spreadsheet editor is started, you first have to state which objects are to be 
-displayed, i.e. which class they belong to and under which hierarchy the are placed. This
-is done by activating 'File/Select Class' in the menu. Enter class, hierarchy and state if
-attribute objects, i.e. objects that reside as attributes in other objects, are to be displayed.
+displayed, i.e. which class they belong to and under which hierarchy the are placed.This 
+is done by activating 'File/Select Class' in the menu. Enter class, hierarchy and state 
+if attribute objects, i.e. objects that reside as attributes in other objects, are to be 
+displayed. It's also possible to select objects by name with a wildcard search pattern. 
 
 <b>Choose class and hierarchy
-<image>dg_fig33.gif
+<image>dg_fig33.png
 
 After this you choose which attribute is to be displayed. Select an attribute in the attribute
 list and click on 'Ok', or doubleclick on an attribute.
 
 <b>Choose attribute
-<image>dg_fig34.gif
+<image>dg_fig34.png
 
 The result is shown in the figure below. Here, the attribute 'Description' was chosen. You
 can easily view the other attributes in the object by activating 'File/Next Attribute'
 (Ctrl/N) and 'File/Previous Attribute' in the menu.
 
 <b>Spreadsheet Editor
-<image>dg_fig35.gif
+<image>dg_fig35.png
 
 <h2>Menu
 File/Select Class     <t><t>State class and hierarchy for the objects that are to be displayed.
