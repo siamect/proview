@@ -9415,6 +9415,19 @@ static int xnav_getgraphinstancenext_func(
   return 1;
 }
 
+static int xnav_quit_func( 
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  exit(0);
+  return 0;
+}
+
 static int xnav_ccm_deffilename_func( char *outfile, char *infile, void *client_data)
 {
   pwr_tFileName fname;
@@ -9502,6 +9515,8 @@ int XNav::readcmdfile( 	char *incommand, char *buffer)
 	  if ( EVEN(sts)) return sts;
 	  sts = ccm_register_function( "GetGraphInstanceNext", xnav_getgraphinstancenext_func);
 	  if ( EVEN(sts)) return sts;
+	  sts = ccm_register_function( "Quit", xnav_quit_func);
+          if ( EVEN(sts)) return sts;
 
 	  sts = ccm_create_external_var( "GLOW__SUBTERMINATED", CCM_DECL_INT, 0, GLOW__SUBTERMINATED, 0);
 

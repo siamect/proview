@@ -2865,6 +2865,7 @@ GetUser()		<LINK> getuser()
 GetPrivileges()		<LINK> getprivileges()
 GetGraphInstance()	<LINK> getgraphinstance()
 GetGraphInstanceNext()	<LINK> getgraphinstancenext()
+Quit()			<LINK> quit()
 
 <h2>xtt-commands
 xtt-commands		<LINK> xtt-commands
@@ -4089,6 +4090,7 @@ GetUser() 	<t>Get the current user. <LINK> getuser()
 GetPrivileges()	<t>Get the privileges for the current user. <LINK> getprivileges()
 GetGraphInstance() <t>Get the instance object for a graph. <LINK> getgraphinstance()
 GetGraphInstanceNext() <t>Get the instance object for next graph. <LINK> getgraphinstancenext()
+Quit() 		<t>Quit the operator environment. <LINK> quit()
 </TOPIC>
 
 <headerlevel>
@@ -4382,6 +4384,16 @@ string		<t>previous	<t>Previous instance.
 <c>    printf( "Instance %s\n", instance);
 <c>    instance = GetGraphInstanceNext( "$pwr_exe/pwr_c_dv.pwg", instance);
 <c>  endwile
+</TOPIC>
+
+<TOPIC> quit() <style> function
+Quit()
+
+Quit()
+
+<b>Description
+
+Quit the operator environment.
 </TOPIC>
 
 </headerlevel>

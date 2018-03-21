@@ -2638,6 +2638,9 @@ ODD()			<LINK> ODD()
 get_language()		<LINK> get_language()
 GetUser()		<LINK> getuser()
 GetPrivileges()		<LINK> getprivileges()
+GetGraphInstance()	<LINK> getgraphinstance()
+GetGraphInstanceNext()	<LINK> getgraphinstancenext()
+Quit()			<LINK> quit()
 
 <h2>xtt-commands
 xtt-commands		<LINK> xtt-commands
@@ -3850,6 +3853,9 @@ ODD()		<t>Testa om ett värde är udda.	<LINK> ODD()
 get_language()	<t>Hämta nuvarande språk <LINK> get_language()
 GetUser() 	<t>Hämta nuvarande användare. <LINK> getuser()
 GetPrivileges()	<t>Hämta privilegier för nuvarande användare. <LINK> getprivileges()
+GetGraphInstance() <t>Hämta instansobjekt för en objektgraf. <LINK> getgraphinstance()
+GetGraphInstanceNext() <t>Hämta instansobjekt för nästa graf. <LINK> getgraphinstancenext()
+Quit() 		<t>Avsluta operatörsmiljön. <LINK> quit()
 </TOPIC>
 
 <headerlevel>
@@ -4092,6 +4098,69 @@ Hämta privilegier för nuvarande användare.
 <c>    ...
 <c>  endif
 </TOPIC>
+
+<TOPIC> getgraphinstance() <style> function
+GetGraphInstance()
+
+string GetGraphInstance( string graph)
+
+<b>Beskrivning
+
+Hämta instansobjektet för en öppnad objektsbild.
+Returnerar instansobjektet, eller en tom sträng om 
+grafen inte är öppnad.
+
+<b>Argument
+
+string		<t>graph	<t>Filnamn för graf.
+
+<b>Exempel
+
+<c>  string instance;
+
+<c>  instance = GetGraphInstance( "$pwr_exe/pwr_c_dv.pwg");
+
+</TOPIC>
+
+<TOPIC> getgraphinstancenext() <style> function
+GetGraphInstanceNext()
+
+string GetGraphInstanceNext( string graph, string previous)
+
+<b>Beskrivning
+
+Hämta nästa instansobjekt för den angivna objektsbilden.
+Används när flera versioner av samma objektsbild är öppen
+för olika objekt.
+Returnerar instansobjektet, eller en tom sträng om det inte
+finns någon mer instans.
+
+<b>Argument
+
+string		<t>graph	<t>Filname för graf.
+string		<t>previous	<t>Föregående instans.
+
+<b>Exempel
+
+<c>  string instance;
+
+<c>  instance = GetGraphInstance( "$pwr_exe/pwr_c_dv.pwg");
+<c>  while ( instance != "")
+<c>    printf( "Instance %s\n", instance);
+<c>    instance = GetGraphInstanceNext( "$pwr_exe/pwr_c_dv.pwg", instance);
+<c>  endwile
+</TOPIC>
+
+<TOPIC> quit() <style> function
+Quit()
+
+Quit()
+
+<b>Beskrivning
+
+Avsluta operatörsmiljön.
+</TOPIC>
+
 </headerlevel>
 
 <TOPIC> xtt-commands <style> function
