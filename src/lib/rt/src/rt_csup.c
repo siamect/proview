@@ -167,8 +167,10 @@ csup_Exec (
     else {
       /* Not owner, check stall delay */
       if ( o->DelayAction == 2) {
-	if (time_Dcomp(&o->NextLimit, NULL) > 0 &&
-	    time_Dcomp(stop, &o->NextLimit) > 0) {
+	nextLimit.tv_nsec = o->NextLimit.tv_nsec;
+	nextLimit.tv_sec = o->NextLimit.tv_sec;
+	if (time_Dcomp(&nextLimit, NULL) > 0 &&
+	    time_Dcomp(stop, &nextLimit) > 0) {
 	  o->DelayCount++;
 	  o->LastDelay = *now;
 	  action = MAX(action, o->DelayAction);
