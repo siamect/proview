@@ -355,6 +355,9 @@ sect_Lock (
 #elif defined OS_POSIX
   while (posix_sem_wait(mp) != 0) {
     if (errno != EINTR) {
+      if ( errno == EINVAL) {
+	_exit(-1);
+      }
       perror("sect_Lock: sem_wait ");
       lsts = 2;
       break;
