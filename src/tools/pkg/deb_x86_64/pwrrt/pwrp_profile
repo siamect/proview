@@ -31,17 +31,32 @@ export pwrp_db=$pwrp_root/common/db
 export pwrp_web=$web_dir
 
 export pwra_db=/usr/pwrp/adm/db
-jdk=`eval ls -t /usr/lib/jvm | grep -m 1 -e ^java-[0-9]*-openjdk`
+
+# Check /usr/local first since it ought to have priority
+jdk=`eval ls -1 /usr/local | sort -r | grep ^jdk | head -1`
+# Check if any JRE is present in /usr/local
 if [ -z "$jdk" ]; then
-  jdk=`eval ls -t /usr/lib/jvm | grep -m 1 jre`
+  jdk=`eval ls -1 /usr/local | sort -r | grep ^jre | head -1`
+fi
+# If no local jdk/jres were found check for openjdk. Debian should have a default-java
+# symlink in /usr/lib/jvm which can be changed with update-java-alternatives if openjdk
+# is in use
+if [ -z "$jdk" ]; then
+    jdk=`eval realpath -qe /usr/lib/jvm/default-java`
+    if [ $? != 0 ]; then
+        jdk="";
+    else
+        export jdk=$jdk
+        export JAVA_HOME=$jdk
+        export jdk_home=$jdk/bin
+    fi
+else
+   export jdk=/usr/local/$jdk
+   export JAVA_HOME=$jdk
+   export jdk_home=$jdk/bin
 fi
 
-export jdk=/usr/lib/jvm/$jdk
-export jdk_home=$jdk/bin
 PATH=$PATH:$pwr_exe:$pwrp_exe:$jdk_home
-
-#Set display to remote computer
-export DISPLAY=$REMOTEHOST:0.0
 
 #symbols to define start/stop commands for PWR
 alias pwr_stop='/etc/init.d/pwr stop'
