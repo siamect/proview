@@ -35,17 +35,14 @@ else
 fi
 
 export pwra_db=/usr/pwrp/adm/db
-jdk=`eval ls -t /usr/local | grep ^jdk`
+jdk=`eval ls -1 /usr/local | sort -r | grep ^jdk | head -1`
 if [ "$jdk" == "" ]; then
-  jdk=`eval ls -t /usr/local | grep ^jre`
+  jdk=`eval ls -1 /usr/local | sort -r | grep ^jre | head -1`
 fi
 
 export jdk=/usr/local/$jdk
 export jdk_home=$jdk/bin
 PATH=$PATH:$pwr_exe:$pwrp_exe:$jdk_home
-
-#Set display to remote computer
-export DISPLAY=$REMOTEHOST:0.0
 
 #symbols to define start/stop commands for PWR
 alias pwr_stop='/etc/pwrrt/pwr stop'

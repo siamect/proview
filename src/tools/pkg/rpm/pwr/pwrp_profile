@@ -31,17 +31,21 @@ export pwrp_db=$pwrp_root/common/db
 export pwrp_web=$web_dir
 
 export pwra_db=/usr/pwrp/adm/db
-jdk=`eval ls -t /usr/local | grep -m 1 ^jdk`
+
+# Check /usr/local first since it ought to have priority
+jdk=`eval ls -1 /usr/local | sort -r | grep ^jdk | head -1`
+# Check if any JRE is present in /usr/local
 if [ -z "$jdk" ]; then
-  jdk=`eval ls -t /usr/local | grep -m 1 ^jre`
+  jdk=`eval ls -1 /usr/local | sort -r | grep ^jre | head -1`
 fi
 
-export jdk=/usr/local/$jdk
-export jdk_home=$jdk/bin
-PATH=$PATH:$pwr_exe:$pwrp_exe:$jdk_home
+if ! [ -z "$jdk" ]; then
+   export jdk=/usr/local/$jdk
+   export JAVA_HOME=$jdk
+   export jdk_home=$jdk/bin
+fi
 
-#Set display to remote computer
-export DISPLAY=$REMOTEHOST:0.0
+PATH=$PATH:$pwr_exe:$pwrp_exe:$jdk_home
 
 #symbols to define start/stop commands for PWR
 alias pwr_stop='/etc/init.d/pwr stop'
