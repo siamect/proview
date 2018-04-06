@@ -124,6 +124,7 @@ class sev_server {
   vector<sev_node> m_nodes;
   tree_sTable *m_refid;
   thread_sMutex	m_refid_mutex;
+  thread_sMutex	m_alloc_mutex;
   unsigned int m_msg_id;
   sev_db *m_db;
   int m_noneth;

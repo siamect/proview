@@ -221,6 +221,8 @@ int sev_server::init( int noneth)
   m_refid = tree_CreateTable(&sts, sizeof(pwr_tRefId), offsetof(sev_sRefid, id), sizeof(sev_sRefid), 100, sev_comp_refid);
   sts = thread_MutexInit(&m_refid_mutex);
 
+  sts = thread_MutexInit(&m_alloc_mutex);
+
   // Create a queue to server
   qcom_sQattr attr;
   qcom_sQid qid;
@@ -945,8 +947,11 @@ int sev_server::receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size,
     qmsg->time = msg->Time;
     lst_Init( NULL, &qmsg->h.e, qmsg);
 
+    thread_MutexLock(&m_alloc_mutex);
     th->alloc += qmsg->h.size;
     m_total_queue_cnt += qmsg->h.size;
+    thread_MutexUnlock(&m_alloc_mutex);
+
     m_config->TotalQueueCnt = m_total_queue_cnt;
     if ( th->conf_idx >= 0) {
       m_config->ServerThreads[th->conf_idx].QueueAlloc = th->alloc;
@@ -1257,8 +1262,11 @@ int sev_server::receive_events( sev_sMsgEventsStore *msg, unsigned int size, pwr
     qmsg->num_events = msg->NumEvents;
     qmsg->item_idx = idx;
 
+    thread_MutexLock(&m_alloc_mutex);
     th->alloc += qmsg->h.size;
     m_total_queue_cnt += qmsg->h.size;
+    thread_MutexUnlock(&m_alloc_mutex);
+
     m_config->TotalQueueCnt = m_total_queue_cnt;
     if ( th->conf_idx >= 0) {
       m_config->ServerThreads[th->conf_idx].QueueAlloc = th->alloc;
@@ -1423,10 +1431,12 @@ void *sev_server::receive_histdata_thread( void *arg)
     }
     else {
 
+      thread_MutexLock(&sev->m_alloc_mutex);
       th->alloc -= qmsg->size;
       //if ( th->alloc < 0)
       //  th->alloc = 0;
       sev->m_total_queue_cnt -= qmsg->size;
+      thread_MutexUnlock(&sev->m_alloc_mutex);
       sev->m_config->TotalQueueCnt = sev->m_total_queue_cnt;
 
       time_GetTime( &currenttime);
