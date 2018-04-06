@@ -150,7 +150,7 @@ class CnvToPdf  {
       strcpy( current_chapter, "");
 
       style[pdf_eId_TitlePage].h1 = 
-	CnvStyle( "Helvetica-Bold-ISOLatin1", 35, 0, 100, 20, cnv_eAlignment_Center, 0, 0, 0);
+	CnvStyle( "Helvetica-Bold-ISOLatin1", 35, 0, 0, 0, cnv_eAlignment_Center, 0, 0, 0);
       style[pdf_eId_TitlePage].h2 = 
 	CnvStyle( "Helvetica-Bold-ISOLatin1", 25, 0, 50, 20, cnv_eAlignment_Center, 0, 0, 0);
       style[pdf_eId_TitlePage].h3 = 
