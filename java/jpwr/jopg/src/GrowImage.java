@@ -239,7 +239,7 @@ public class GrowImage extends GlowArrayElem {
 	ll_y = Math.min( y1, y2);
 	ur_y = Math.max( y1, y2);
 
-	cmn.gdraw.rect( ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, Glow.eDrawType_Line, idx, 0);
+	cmn.gdraw.rect( ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, Glow.eDrawType_LineGray, idx, 0);
     }
 
     public void get_borders( GlowTransform t, GlowGeometry g) {
