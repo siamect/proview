@@ -754,7 +754,7 @@ int CoWowGtk::DisplayWarranty()
   gtk_scrolled_window_add_with_viewport( GTK_SCROLLED_WINDOW( scrolled_window), dialog_label);
   g_object_set( scrolled_window, "can-focus", FALSE, NULL);
 
-  dcli_translate_filename( fname, "$pwr_exe/proview_icon2.png");
+  dcli_translate_filename( fname, "$pwr_exe/pwr_logofull.png");
   GtkWidget *dialog_image = gtk_image_new_from_file( fname);
   g_object_set( dialog_image,
 		"xalign", 0.5,
@@ -1224,7 +1224,7 @@ void CoWowGtk::SetWindowIcon( GtkWidget *w)
   static GdkPixbuf *icon = 0;
 
   if ( !icon) {
-    dcli_translate_filename( fname, "$pwr_exe/proview_icon.png");
+    dcli_translate_filename( fname, "$pwr_exe/pwr_icon16.png");
     icon = gdk_pixbuf_new_from_file( fname, 0);
   }
   gtk_window_set_icon( GTK_WINDOW(w), icon);

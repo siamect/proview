@@ -227,14 +227,14 @@ RtMonGtk::RtMonGtk( void *rtmon_parent_ctx,
   gtk_toolbar_append_widget( tools, tools_op,CoWowGtk::translate_utf8("Start Operator Environment"), "");
 
   // Button box 
-  dcli_translate_filename( fname, "$pwr_exe/proview_icon2.png");
+  dcli_translate_filename( fname, "$pwr_exe/pwr_logofully.png");
   bbox_image = gtk_image_new_from_file( fname);
   g_object_set( bbox_image,
 		"xalign", 0.5,
 		"yalign", 0.3,
 		NULL);
 
-  dcli_translate_filename( fname, "$pwr_exe/proview_icon2_gray.png");
+  dcli_translate_filename( fname, "$pwr_exe/pwr_logofullg.png");
   bbox_image_gray = gtk_image_new_from_file( fname);
   g_object_set( bbox_image_gray,
 		"xalign", 0.5,

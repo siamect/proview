@@ -148,7 +148,7 @@ CoLoginGtk::CoLoginGtk( void		*wl_parent_ctx,
   gtk_entry_set_visibility( GTK_ENTRY(widgets.passwordvalue), FALSE);
 
   pwr_tFileName fname;
-  dcli_translate_filename( fname, "$pwr_exe/proview_icon2.png");
+  dcli_translate_filename( fname, "$pwr_exe/pwr_logofull.png");
   GtkWidget *india_image = gtk_image_new_from_file( fname);
 
   widgets.okbutton = gtk_button_new_with_label( "Ok");

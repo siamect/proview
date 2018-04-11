@@ -1082,7 +1082,7 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
   gtk_box_pack_start( GTK_BOX(vbox1), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(vbox1), GTK_WIDGET(tools), FALSE, FALSE, 0);
 
-  dcli_translate_filename( fname, "$pwr_exe/proview_icon2.png");
+  dcli_translate_filename( fname, "$pwr_exe/pwr_logohalf2y.png");
   GtkWidget *xtt_image = gtk_image_new_from_file( fname);
 
   GtkWidget *hbox1 = gtk_hbox_new( FALSE, 0);
