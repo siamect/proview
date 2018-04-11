@@ -656,11 +656,11 @@ int XttLogging::start()
 	    *s = 0;
 
 	    if ( !log_ccm_registred) {
-	      sts = ccm_register_function( "GetA", logccm_geta_func);
+	      sts = ccm_register_function( "Logging", "GetA", logccm_geta_func);
 	      if ( EVEN(sts)) return sts;
-	      sts = ccm_register_function( "GetD", logccm_getd_func);
+	      sts = ccm_register_function( "Logging", "GetD", logccm_getd_func);
 	      if ( EVEN(sts)) return sts;
-	      sts = ccm_register_function( "GetI", logccm_getd_func);
+	      sts = ccm_register_function( "Logging", "GetI", logccm_getd_func);
 	      if ( EVEN(sts)) return sts;
 	      log_ccm_registred = 1;
 	    }

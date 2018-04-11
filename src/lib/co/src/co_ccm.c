@@ -272,36 +272,36 @@ static int ccm_func_even( void *filectx, ccm_sArg *arg_list, int arg_count, int 
 #define CCM_SYSFUNC_MAX	200
 
 static ccm_sSysFunc	ccm_sysfunc[CCM_SYSFUNC_MAX] = {
-		{"printf", 	&ccm_func_printf},
-		{"scanf", 	&ccm_func_scanf},
-		{"ask", 	&ccm_func_ask},
-		{"say", 	&ccm_func_say},
-		{"fprintf", 	&ccm_func_fprintf},
-		{"sprintf", 	&ccm_func_sprintf},
-		{"fgets", 	&ccm_func_fgets},
-		{"fclose", 	&ccm_func_fclose},
-		{"fopen", 	&ccm_func_fopen},
-		{"exit", 	&ccm_func_exit},
-		{"element", 	&ccm_func_element},
-		{"felement", 	&ccm_func_felement},
-		{"extract", 	&ccm_func_extract},
-		{"edit", 	&ccm_func_edit},
-		{"verify", 	&ccm_func_verify},
-		{"time", 	&ccm_func_time},
-		{"system", 	&ccm_func_system},
-		{"strlen", 	&ccm_func_strlen},
-		{"strchr", 	&ccm_func_strchr},
-		{"strrchr", 	&ccm_func_strrchr},
-		{"strstr", 	&ccm_func_strstr},
-		{"toupper", 	&ccm_func_toupper},
-		{"tolower", 	&ccm_func_tolower},
-		{"translate_filename", 	&ccm_func_translate_filename},
-		{"get_pwr_config",  &ccm_func_get_pwr_config},
-		{"get_node_name",  &ccm_func_get_node_name},
-		{"get_language",  &ccm_func_get_language},
-		{"ODD",  	&ccm_func_odd},
-		{"EVEN",  	&ccm_func_even},
-		{"", 		0}};
+  {"std", "printf", 	&ccm_func_printf},
+  {"std", "scanf", 	&ccm_func_scanf},
+  {"std", "ask", 	&ccm_func_ask},
+  {"std", "say", 	&ccm_func_say},
+  {"std", "fprintf", 	&ccm_func_fprintf},
+  {"std", "sprintf", 	&ccm_func_sprintf},
+  {"std", "fgets", 	&ccm_func_fgets},
+  {"std", "fclose", 	&ccm_func_fclose},
+  {"std", "fopen", 	&ccm_func_fopen},
+  {"std", "exit", 	&ccm_func_exit},
+  {"std", "element", 	&ccm_func_element},
+  {"std", "felement", 	&ccm_func_felement},
+  {"std", "extract", 	&ccm_func_extract},
+  {"std", "edit", 	&ccm_func_edit},
+  {"std", "verify", 	&ccm_func_verify},
+  {"std", "time", 	&ccm_func_time},
+  {"std", "system", 	&ccm_func_system},
+  {"std", "strlen", 	&ccm_func_strlen},
+  {"std", "strchr", 	&ccm_func_strchr},
+  {"std", "strrchr", 	&ccm_func_strrchr},
+  {"std", "strstr", 	&ccm_func_strstr},
+  {"std", "toupper", 	&ccm_func_toupper},
+  {"std", "tolower", 	&ccm_func_tolower},
+  {"std", "translate_filename", 	&ccm_func_translate_filename},
+  {"std", "get_pwr_config",  &ccm_func_get_pwr_config},
+  {"std", "get_node_name",  &ccm_func_get_node_name},
+  {"std", "get_language",  &ccm_func_get_language},
+  {"std", "ODD",  	&ccm_func_odd},
+  {"std", "EVEN",  	&ccm_func_even},
+  {"", "", 		0}};
 
 /************* TEST *********************/
 
@@ -613,9 +613,10 @@ int ccm_varname_parse(
 }
 
 int ccm_register_function( 
-	const char 	*name,
-	int 	(* sysfunc) ( void *, ccm_sArg *, int, int *, ccm_tFloat *,
-			  ccm_tInt *, char *)
+			  const char      *classname,			  
+			  const char 	*name,
+			  int 	(* sysfunc) ( void *, ccm_sArg *, int, int *, 
+					      ccm_tFloat *, ccm_tInt *, char *)
 )
 {
   ccm_sSysFunc	*sysfunc_p;
@@ -623,7 +624,8 @@ int ccm_register_function(
 
   i = 0;
   for ( sysfunc_p = ccm_sysfunc; sysfunc_p->sysfunc; sysfunc_p++) {
-    if ( strcmp( sysfunc_p->name, name) == 0)
+    if ( strcmp( sysfunc_p->classname, classname) == 0 &&
+	 strcmp( sysfunc_p->name, name) == 0)
       return CCM__ALREADYREG;
     i++;    
   }
@@ -631,6 +633,7 @@ int ccm_register_function(
   if ( i >= CCM_SYSFUNC_MAX - 1)
     return CCM__SYSFUNCEXCEED;
 
+  strcpy( sysfunc_p->classname, classname);
   strcpy( sysfunc_p->name, name);
   sysfunc_p->sysfunc = sysfunc;
 
@@ -5229,17 +5232,40 @@ static int ccm_function_exec(
     }
     else
     {
+      int fclass_found = 0;
+      char fclass[20];
+      char fname[80];
+      char *s;
+      int len;
+
+      if ( (s = strstr( name, "::"))) {
+	len = (int)(s - name);
+	strncpy( fclass, name, len);
+	fclass[len] = 0;
+	strncpy( fname, s + 2, sizeof(fname));  
+	fclass_found = 1;
+      }	
+
       /* Search i system function list */
-      for ( sysfunc_p = ccm_sysfunc; sysfunc_p->sysfunc; sysfunc_p++)
-      {
-        if ( strcmp( name, sysfunc_p->name) == 0)
-        {
-	  if ( func)
-	    *func = sysfunc_p->sysfunc;
-          sts = (sysfunc_p->sysfunc)( (void *)filectx, arg_list, arg_count, 
-		return_decl, return_float, return_int, return_string);
-          return sts;
-       }
+      for ( sysfunc_p = ccm_sysfunc; sysfunc_p->sysfunc; sysfunc_p++) {
+	if ( !fclass_found) {
+	  if ( strcmp( name, sysfunc_p->name) == 0) {
+	    if ( func)
+	      *func = sysfunc_p->sysfunc;
+	    sts = (sysfunc_p->sysfunc)( (void *)filectx, arg_list, arg_count, 
+					return_decl, return_float, return_int, return_string);
+	    return sts;
+	  }
+	}
+	else {
+	  if ( strcmp( fclass, sysfunc_p->classname) == 0 && strcmp( fname, sysfunc_p->name) == 0) {
+	    if ( func)
+	      *func = sysfunc_p->sysfunc;
+	    sts = (sysfunc_p->sysfunc)( (void *)filectx, arg_list, arg_count, 
+					return_decl, return_float, return_int, return_string);
+	    return sts;
+	  }
+	}
       }
 
       /* Search for an application function */

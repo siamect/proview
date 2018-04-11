@@ -195,6 +195,7 @@ typedef struct ccm_sFuncCtx_ {
   
 
 typedef struct {
+  char		classname[32];
   char		name[32];
   int 		(* sysfunc) ( void *, ccm_sArg *, int, int *, ccm_tFloat *,
 			      ccm_tInt *, char *);
@@ -210,6 +211,7 @@ typedef struct ccm_sSingeLineCtx_ {
 } *ccm_tSingleLineCtx;
 
 int ccm_register_function( 
+  const char      *classname,			  
   const char 	*name,
   int 	(* sysfunc) ( void *, ccm_sArg *, int, int *, ccm_tFloat *,
 		      ccm_tInt *, char *)
