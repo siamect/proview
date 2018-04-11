@@ -73,7 +73,7 @@ Script och kommandon <link>gecmd
 Inledning
 
 Ge är en editor för att bygga bilder för underhåll och enklare operatörskommunikation i 
-Proview. Editorn är integrerad med Proview's utvecklingsmiljö och startas från navigatören.
+ProviewR. Editorn är integrerad med ProviewR's utvecklingsmiljö och startas från navigatören.
 Bilderna byggs upp av bas-objekt i form av rektanglar, cirklar, linjer och texter, och av 
 subgrafer, som är en slags sammansatta objekt. Ge innehåller en uppsättning subgrafer för 
 några vanliga komponenter: ventiler, motorer, pumpar mm. Andra symboler kan konstruktören 
@@ -114,7 +114,7 @@ vertikala och horisontala delar.
 <h2>Kopplingspunkt
 Punkt i en subgraf till vilken man kan fästa en koppling.
 <h2>Signal
-Signal används generellt som benämning på attribut i ett objekt i Proview's realtidsdatabas. 
+Signal används generellt som benämning på attribut i ett objekt i ProviewR's realtidsdatabas. 
 Ofta är det fråga om värdet för en Di, Do, Dv, Ai, Ao eller Av men det kan vara ett attribut i 
 vilket objekt som helst.
 <h2>MB1
@@ -125,7 +125,7 @@ samtidigt).
 <h2>MB3
 Höger musknapp.
 <h2>Rtdb
-Proviews realtids-databas.
+ProviewRs realtids-databas.
 </topic>
 </chapter>
 
@@ -792,7 +792,7 @@ objektet. Även objektsbilder kan visas window-objekt, genom att specificera namn
 graf-filen. Dessutom måste databas-objektet som bilden ska vara kopplad till anges
 i Window.Object.
 
-Om klassen för objektet ingår i Proview's bassystem, är filnamnet för objektsbilden
+Om klassen för objektet ingår i ProviewR's bassystem, är filnamnet för objektsbilden
 $pwr_exe/pwr_c_'klassnamn'.pwg. För ett Av-objekt blir det $pwr_exe/pwr_c_av.pwg. Man måste
 här ange även katalogen i filenamnet eftersom filen inte ligger på default katalogen 
 $pwrp_exe.
@@ -1329,7 +1329,7 @@ tidigare, mörkgrått, orange och blått, färgas indikatorn nu grön när signalen H1
 <b>Fig Indikatorns fyra olika färger
 
 <h1>Färger för varning och fel
-I Proview används genomgående färgerna gult och rött för varning resp fel. Det finns
+I ProviewR används genomgående färgerna gult och rött för varning resp fel. Det finns
 två typer av dynamik, DigWarning och DigError, som sätter gul resp röd färg. Fördelen
 jämfört med DigLowColor eller DigColor är att men inte behöver ange färgen, utan det räcker
 att koppla dynamiken till en digital signal i databasen.
@@ -2281,7 +2281,7 @@ arbetsarean.
 
 Subgraf-paletten består av ett antal mappar med subgrafer. Under Local/Subgraphs-mappen finns 
 subgrafer som har skapats inom projektet. Övriga mappar innehåller subgrafer som följer med 
-Proview.
+ProviewR.
 
 <h1>Färg-paletten
 
@@ -4844,10 +4844,10 @@ AppMotion   <t>Vad som ska ske vid drag i en Android app.
 <h1>Objekts och hierarki grafer
 Det här kapitlet beskriver hur man kan göra ge-bilder som visar innehållet objekt av en viss 
 klass, och som kan visa alla objekt av den klassen. Det beskriver också hur man kan göra 
-gemensamma bilder för likartade hierakier i Proview-databasen.
+gemensamma bilder för likartade hierakier i ProviewR-databasen.
 
 <h1>Objekts graf
-För en del klasser som tillhör Proview's basklasser finns det sk objekts-bilder, dvs bilder 
+För en del klasser som tillhör ProviewR's basklasser finns det sk objekts-bilder, dvs bilder 
 som kan öppnas för varje objekt som tillhör klassen. Objekts-bilder finns bl a för klasserna 
 PID, Mode, Av, Ai, Ao, Di, Do, Dv, och öppnas i xtt med kommandot 'open graph /instance=' där 
 man i /instance skickar med namnet på objektet. Man kan också öppna objektbilden genom att 
@@ -4855,9 +4855,9 @@ välja ut objektet och aktivera Functions/Open object graph i xtt menyn.
 
 Om man har gjort en egen klass, kan man göra en objektsbild även för denna klass. Man 
 editerar bilden som en normal ge-graph. Skillnaden kommer när man ska knyta de olika 
-dynamiska objekten till Proview-objektet i rtdb. Där man normalt skriver ett objekts-namn 
+dynamiska objekten till ProviewR-objektet i rtdb. Där man normalt skriver ett objekts-namn 
 skriver man istället $object. Data för en indikator som kopplas till attributet ActualValue 
-i Proview-objektet kan se ut så här
+i ProviewR-objektet kan se ut så här
 
 <b>Attribut <t><t>Värde
 SubGraph <t><t>pwr_indsquare
@@ -5110,7 +5110,7 @@ en sådan mha Generate web i menyn.
 Konfigureringen går till så här:
 Skapa ett WebHandler objekt under node-objektet i nod-hierarkin. Webhandler objektet gör att 
 en server-process om förser bilderna med dynamisk information från realtidsdatabasen startas.
-I objeketet anger man bl a också om man ska ha möjlighet att logga in som Proview-användare.
+I objeketet anger man bl a också om man ska ha möjlighet att logga in som ProviewR-användare.
 Under WebHandler-objektet lägger man ett WebGraph-objekt för varje bild som ska kunna öppnas 
 från menyn.
 Under WebHandler-objektet kan man även lägga WebLink-objekt. Varje WebLink-objekt ger upphov 
@@ -5159,7 +5159,7 @@ En ge-bild kan exporteras som en java-applikation. Denna kan tas upp i xtt med k
 För att lägga ut process-bilder på intranätet krävs att man installerar in webserver i någon 
 operatörsstation. Vi använder Tomcat från Apache på Linux.
 
-I Proview ska man skapa ett WebHandler-objekt i NodeHierarkin så att en server-process 
+I ProviewR ska man skapa ett WebHandler-objekt i NodeHierarkin så att en server-process 
 startas av näthanteraren som förser web-bilderna med data från rtdb.
 
 En web-sida ska skapas i html för inloggning och länkar till olika bilder. Web-sidan 
@@ -5504,7 +5504,7 @@ Skapar ett subgraf-objekt.
 
 /x1 <t>x-koordinat för övre vänstra hörnet.
 /y1 <t>y-koordinat för övre vänstra hörnet.
-/subgraph <t>Namnet på subgrafen. Om subgrafet tillhör Proview's bassystem har 
+/subgraph <t>Namnet på subgrafen. Om subgrafet tillhör ProviewR's bassystem har 
     <t>subgrafen alltid prefixet 'pwr_' och skrivs med gemener, dvs subgrafen 
     <t>'Valve' har  namnet pwr_valve.
 /x2 <t>Om punkten (x2, y2) anges skalas subgrafen så att den innesluts i 

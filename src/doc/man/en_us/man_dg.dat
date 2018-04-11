@@ -47,17 +47,17 @@ Texts.
 <topic> introduction
 Introduction
 
-Proview is a modern, powerful and general process control system. It contains all functions
+ProviewR is a modern, powerful and general process control system. It contains all functions
 normally required for successful sequential control, adjustment, data acquisition, 
 communication, supervision, etc. 
 
-The configuration of a Proview system is done graphically, making the application adaptation
-simple, reliable, and flexible. Proview is a distributed system, which means that the system
+The configuration of a ProviewR system is done graphically, making the application adaptation
+simple, reliable, and flexible. ProviewR is a distributed system, which means that the system
 consists of several computers, connected via a network . Via the network, computers exchange 
 data with each other. In this way, for instance, the measuring signals will be known on all 
-the process- and operator stations of a Proview system. 
+the process- and operator stations of a ProviewR system. 
 
-A Proview system is defined with objects. Each object represents a physical or abstract 
+A ProviewR system is defined with objects. Each object represents a physical or abstract 
 entity in the system. The objects are structured in hierarchical tree structures, making it 
 possible to describe the system in a structured way. The tree structure also imposes a 
 hierarchical naming of all objects. By carefully choosing names when configuring a system, 
@@ -68,13 +68,13 @@ the logical view of a system; and one called the Node Configuration, describing 
 view of the system. The configuration of these two parts can be done independently. Eventually
 the two parts are connected to each other. 
 
-To configure a system you use the Proview Workbench. The workbench comprises a permanent 
+To configure a system you use the ProviewR Workbench. The workbench comprises a permanent 
 database and a number of tools to help you configuring the objects needed to define the 
 system. From the workbench you create a runnable system as well as documentation about the 
 system. 
 
-The purpose of Proview is to help you with creating automated systems. Suppose you have a 
-process that you wish to control, Proview helps you creating the control system for this 
+The purpose of ProviewR is to help you with creating automated systems. Suppose you have a 
+process that you wish to control, ProviewR helps you creating the control system for this 
 process. When the system is created, you will find that you have also created the 
 documentation for the system. 
 </topic>
@@ -101,7 +101,7 @@ Data storage <link> dg_datastorage
 Application programming <link>dg_application
 Creating Process Graphics  <link> ge_man
 Java operator interface <link> dg_web_interface
-Running and Testing a Proview System <link> conf_test
+Running and Testing a ProviewR System <link> conf_test
 
 <b>Reference Manuals
 The Configurator <link> configurator_refman
@@ -137,7 +137,7 @@ system also has to influence the process in various ways, for example with valve
 This ends in a Signal list, that is a list of all input and output signals of the system.
 
 At this point the question of which control system is to be used is raised, and one alternative
-is of course Proview. You also have to decide which I/O-system to use and how to divide the
+is of course ProviewR. You also have to decide which I/O-system to use and how to divide the
 function among the different process stations.
 
 <h1>IO-systems
@@ -153,7 +153,7 @@ can be plenty of them in time.
 
 The configuration of a system is mainly done by creating objects in a database, the Workbench. 
 There are a large amount of objects to configure everything from IO-channels to PLC programs.
-The Proview Object Reference Manual contains over 800 different types of objects. The objects
+The ProviewR Object Reference Manual contains over 800 different types of objects. The objects
 are placed in a tree structure, and you use a tool called the Configurator to create objects and
 to navigate in the object tree.
 
@@ -167,7 +167,7 @@ a realtime database, rtdb. The transfer from the Workbench to rtdb is done with 
 loadfiles, files that are generated from the Workbench and contain all its objects.
 
 <h1>Control program
-Proview offers a graphical programming language in which logic, Grafcet sequences and control
+ProviewR offers a graphical programming language in which logic, Grafcet sequences and control
 loops are programmed. It is named the PLC program. Also the PLC program is a part of the object
 tree. It is configured by placing specific program objects, PlcPgm, in the Plant hierarchy. 
 When opening a PlcPgm you enter the Plc Editor, in which the graphical programming is preformed.
@@ -194,7 +194,7 @@ of a process control system implies.
 
 At the simulation and commissioning it is of great importance to have access to tools that
 makes it possible to monitor and examine the system, and quickly localize possible 
-malfunctions. In Proview this tool is called Xtt. Xtt contains a lot of functions to examine
+malfunctions. In ProviewR this tool is called Xtt. Xtt contains a lot of functions to examine
 the content of the realtime database, to flow the signal flow, to log fast or slow sequences,
 etc.
 
@@ -237,7 +237,7 @@ If a plant part is shut down, it is possible to block the alarms to avoid to dis
 operator. Blocked plant parts are displayed in the Block list.
 
 <h1>Data Storage
-You often want to follow the change of a signal over time, in the shape of a curve. In Proview
+You often want to follow the change of a signal over time, in the shape of a curve. In ProviewR
 there are three kinds of functions for this, DsTrend, DsFast and SevHist.
 
 DsTrend is a trend that is stored in the realtime database. The value of a signal is stored
@@ -257,10 +257,10 @@ continues a specified time. When the sequence is finished, it is displayed as a 
 <topic> database_structure
 Database structure
 
-As we have seen earlier, the main part of the configuration of a Proview system is taken place
+As we have seen earlier, the main part of the configuration of a ProviewR system is taken place
 in a database, the Workbench. In the Workbench you create objects in a tree structure, and
-every object arise a certain function in the control system. Proview is so called object
-oriented, so let us look a little closer at what a Proview object really is.
+every object arise a certain function in the control system. ProviewR is so called object
+oriented, so let us look a little closer at what a ProviewR object really is.
 
 <option> printdisable
 Objects <link> object
@@ -335,7 +335,7 @@ The definition of different classes reside in a special type of volume, called C
 Here the description of a class is built with objects that define the name of the class
 and the attributes of the class.
 
-There are two classvolumes that you always include in a Proview system, pwrs and pwrb. pwrs
+There are two classvolumes that you always include in a ProviewR system, pwrs and pwrb. pwrs
 contains the system classes, mainly classes used in class definitions. pwrb contains base
 classes, i.e standard classes that are needed to build a process or operator station.
 
@@ -410,7 +410,7 @@ in the PLCeditor or in the operator environment.
 Each class has a template object, i.e. an instance of the class that contains default values
 for the attributes of the class.
 
-Proview's basesystem contains about 1000 classes. See Object Reference Manual for detailed
+ProviewR's basesystem contains about 1000 classes. See Object Reference Manual for detailed
 description. The designer can also create his own classes within a project.
 </topic>
 
@@ -483,9 +483,9 @@ PLC program <link> plcprogram
 Plant Graphics <link> process_graphics
 
 <option> printenable
-In this chapter we will give you an idea of how a Proview system is created. The process to 
+In this chapter we will give you an idea of how a ProviewR system is created. The process to 
 control is very simple in this case study - an intersection with four traffic lights - but it
-will give you an idea of the steps you have to go through when creating a Proview system.
+will give you an idea of the steps you have to go through when creating a ProviewR system.
 
 The traffic lights should be able to operate in two different modes:
 
@@ -852,9 +852,9 @@ Create a project
 
 <h1>Installation of development environment
 
-Before you can begin to work with Proview you have to install the Proview development 
+Before you can begin to work with ProviewR you have to install the ProviewR development 
 environment. There are a number of packages for different Linux distributions available, and
-if there is no package for the desired distribution you can also download the Proview source
+if there is no package for the desired distribution you can also download the ProviewR source
 and build from sources.
 
 The installation package is named with the version number in the name, e.g. pwr47. This
@@ -865,14 +865,14 @@ You will find more information about the installation on the Download page on ww
 
 <h1>setup script
 At the installation the Linux user 'pwrp' with password 'pwrp' is created. By logging in as
-pwrp you can start Proview by clicking on the Proview icon on the screen.
+pwrp you can start ProviewR by clicking on the ProviewR icon on the screen.
 
-If you want to run Proview as another user, you have to initiate Proview at login. Insert
+If you want to run ProviewR as another user, you have to initiate ProviewR at login. Insert
 the following line into the file .bashrc in the home directory
 
 <c>source /src/pwrp/adm/db/pwr_setup.sh
 
-If you have several users with common Proview projects, you have to make sure that they have
+If you have several users with common ProviewR projects, you have to make sure that they have
 write access to files in the projects. One way to achieve this is to set umask to 002, and let
 all users have the same group, e.g. pwrp.
 
@@ -888,7 +888,7 @@ applications, and we will settle with them for the moment.
 <image> dg_fig23.gif
 <b>Users included in the installation
 
-Note that when building Proview from sources, you have to create users before creating a
+Note that when building ProviewR from sources, you have to create users before creating a
 project.
 
 <h1>Register volumes
@@ -901,7 +901,7 @@ recommend that you assign the volume identities manually and group them in a sui
 
 <h1>Create a project
 To create a project you enter the project list of the administrator, by clicking on the
-Proview icon, or by the command
+ProviewR icon, or by the command
 
 <c>> pwra
 
@@ -910,7 +910,7 @@ other users for development, you have to redefine 'pwra' or use the 'wb -p' comm
 wb takes user and password as arguments.
 
 In the project list you enter edit mode and create a ProjectReg object on the top level or
-under a hierarchy object. In the ProjectReg object you specify project name, Proview version
+under a hierarchy object. In the ProjectReg object you specify project name, ProviewR version
 and path for the project. When you save, the project directories are created.
 
 How to create a project is described in the Getting Started Guide. We recommend that you
@@ -1035,7 +1035,7 @@ DirectoryVolume it is split in two windows, but this time, the left window shows
 plant configuration and the right the node configuration.
 
 <h1>Plant Configuration
-The Plant Configuration describes the different plants that you can find in the Proview 
+The Plant Configuration describes the different plants that you can find in the ProviewR 
 system. A plant is a logical description of e.g. a production process, functions, equipment, 
 that is to be controlled, supervised, etc. 
 See an example of a plant configuration <link>plant_configuration, plant_example
@@ -1113,7 +1113,7 @@ When the node object is created, a number of server and operator objects are cre
 See $Node in the Object Reference Manual <classlink>node,"",$pwr_lang/pwrs_xtthelp.dat
 
 <h2>I/O Objects
-The configuration of the I/O system is dependent of which type of I/O system you use. Proview
+The configuration of the I/O system is dependent of which type of I/O system you use. ProviewR
 has a modular I/O that can handle different types of I/O systems: rack and card systems,
 distributed bus systems, or systems connected with some network.
 
@@ -1211,7 +1211,7 @@ To define an operator place you place an object of the OpPlace class under the $
 The following attributes must be given values: 
 	
 
-- UserName is a name of a Proview user, defined in the UserDatabase. The privileges of the 
+- UserName is a name of a ProviewR user, defined in the UserDatabase. The privileges of the 
    user determines the access to the system.
 - MaxNoOfEvents indicates the number of events that the operator's event list can hold at 
    the same time.
@@ -1305,7 +1305,7 @@ The figure below shows a project structure of the directory tree.
 
 <image> dg_psfig1.png
 
-This directory structure was modified in Proview V4.7. The reason for this was to make it more 
+This directory structure was modified in ProviewR V4.7. The reason for this was to make it more 
 clear what the sources and configuration files of the project are, and what is generated content.
 Earlier versions did not make this clear and the idea is that everything that resides in
 the build tree can be regenerated from the source tree.
@@ -1433,13 +1433,13 @@ Configuration of Global function keys.
 Configuration of menus and quick commands in rt_xtt.
 <c>xtt_setup.rtt_com
 
-Startup file for Proview.
+Startup file for ProviewR.
 <c>ld_appl_<nodename>_<bus_no>.txt
 
 File to decide which libraries to link with the plc-program.
 <c>plc_<nodename>_<bus_no>_<plc_name>.opt
 
-File to control setting of initial values when starting Proview.
+File to control setting of initial values when starting ProviewR.
 <c>pwrp_alias.dat
 
 All the above files are further described below.
@@ -1534,7 +1534,7 @@ Files for the cross reference function will also be produced here. They begin wi
 <topic> project_log
 $pwrp_log
 This directory contains log-files that are produced during simulation of your project.
-Proview's main log-file is named
+ProviewR's main log-file is named
 
 <c>pwr_<nodename>.log
 
@@ -1590,13 +1590,13 @@ Rt_xtt <link> file_rt_xtt
 Configuration of menus and quick commands in rt_xtt.
 xtt_setup.rtt_com <link> file_rt_xtt
 
-Startup file for Proview.
+Startup file for ProviewR.
 ld_appl_<nodename>_<bus_no>.txt <link> file_ld_appl
 
 File to decide which libraries to link with the plc-program.
 plc_<nodename>_<bus_no>_<plc_name>.opt <link> file_plc_opt
 
-File to control setting of initial values when starting Proview.
+File to control setting of initial values when starting ProviewR.
 pwrp_alias.dat <link> file_pwrp_alias
 <option> printenable
 </topic>
@@ -1686,8 +1686,8 @@ In the xtt_setup-file you create one command per line. Comment lines starts with
 
 <topic> file_ld_appl
 ld_appl_<node>_<bus_no>.txt
-This file controls which applications should start when you start Proview runtime. You can add your
-own applications as well as turn off one or more of the Proview kernel applications.
+This file controls which applications should start when you start ProviewR runtime. You can add your
+own applications as well as turn off one or more of the ProviewR kernel applications.
 
 A typical ld_appl-file can look like this:
 
@@ -1719,7 +1719,7 @@ A typical ld_appl-file can look like this:
 <c>#rs_nmps_bck, rs_nmps_bck, noload, run, rs_nmps_bck, 12, nodebug, ""
 <c>ra_utl_track, ra_utl_track, noload, run, ra_utl_track, 12, nodebug, ""
 
-The sharp sign means that those lines are commented away. Almost all of the Proview kernel applications
+The sharp sign means that those lines are commented away. Almost all of the ProviewR kernel applications
 are commented away since we want those to start. If I take away the hash sign then this kernel 
 application will not be started. For example in this case I have no web-interface so I don't 
 want the web-applications to start (pwr_webmon).
@@ -1736,19 +1736,19 @@ plc_<node>_<bus_no>_<plc_name>.opt
 Note! This file is deprecated since V4.8.2. A BuildOptions object should be used instead.
 
 This file (if it exists) will be used as the link options when I build the plc-program.
-Proview by default links against some libraries and object-files. If you have your own
+ProviewR by default links against some libraries and object-files. If you have your own
 opt-file you need to include these. A default opt-file would look like:
 
 <c>$pwr_obj/rt_io_user.o -lpwr_rt -lpwr_usbio_dummy -lpwr_usb_dummy -lpwr_pnak_dummy
 <c> -lpwr_cifx_dummy -lpwr_nodave_dummy -lpwr_epl_dummy
 
-Add your own libraries at will. The syntax to be used is the syntax for ld (The GNU linker). Proview 
+Add your own libraries at will. The syntax to be used is the syntax for ld (The GNU linker). ProviewR 
 will create a template option file .opt_template that can be renamed to .opt and used as a template.
 </topic>
 
 <topic> file_pwrp_alias
 pwrp_alias.dat
-File to control setting of initial values when starting Proview.
+File to control setting of initial values when starting ProviewR.
 
 There are some different ways of setting values through the pwrp_alias-file.
 The same file is used for all nodes in the project. Each row in the file should start
@@ -2006,7 +2006,7 @@ of attributes, with which you can influence the function of the output:
 - C Conditional 
 - S Stored 
 
-These functions are described in detail in Proview Objects Reference Manual. The principles are
+These functions are described in detail in ProviewR Objects Reference Manual. The principles are
 that you indicate the name of the attribute (capital letters) and possible time by means of the
 Object Editor. The figure below illustrates how to delay an order from being active for 10 
 seconds. 
@@ -2100,7 +2100,7 @@ The attributes of the And-gate are changed with the Object Editor.
 <image> dg_fig60.gif
 <b>Fig Attributes of the And-Gate
 
-The other objects in the 'Logic' folder have similar parameters, see Proview Objects Reference 
+The other objects in the 'Logic' folder have similar parameters, see ProviewR Objects Reference 
 Manual . 
 
 <h2>Calculation Blocks 
@@ -2125,12 +2125,12 @@ should be aware that indexing outside arrays, or erroneous pointers might cause 
 execution of the plc-program to terminate.
 
 <h1>Alarm Supervision 
-In Proview it is possible to supervise analog and digital signals. Supervision of analog
+In ProviewR it is possible to supervise analog and digital signals. Supervision of analog
 signals is made against a limit value. If  the supervised limit is exceeded, an alarm is sent 
 to the Message Handler, which in turn sends the alarm to the out unit, e.g. an operator 
 dialog. 
 
-See Proview Objects Reference Manual regarding the attributes of the objects. 
+See ProviewR Objects Reference Manual regarding the attributes of the objects. 
 
 <h2>Supervision of Digital Signals 
 For supervision of a digital signal or attribute, you use the DSup object (Digital 
@@ -2282,7 +2282,7 @@ $pwrp_exe that will be included by the linker when the node is built.
 <image> dg_fig116.png
 <b>Fig The object module inserted in BuildOptions
 
-We can now build the node and startup Proview runtime.
+We can now build the node and startup ProviewR runtime.
 
 <b>Debug
 One disadvantage when you leave the graphic programming and call c-functions is that you
@@ -2293,7 +2293,7 @@ and step forward in the code.
 First you have to build the plc program with debug, by opening Options/Setting from the
 configurator and activate Build/Debug, and then build the node.
 
-After that you start Proview runtime and attach the debugger, gdb, to the plc process by
+After that you start ProviewR runtime and attach the debugger, gdb, to the plc process by
 starting gdb with the pid for the process. pid is viewed by 'ps x'
 
 <c>> ps x
@@ -2335,7 +2335,7 @@ it is a great advantage if we can construct an object that contains all that is 
 control and supervise the component, and is so general that it can be used in most
 applications.
 
-A component in Proview can be divided into a number of objects:
+A component in ProviewR can be divided into a number of objects:
 - a main object containing configuration data and data needed to supervise and operate
   the component. It also contains the signal objects for the component.
 - a function object that is placed in the plc program and that contains the code to 
@@ -2352,7 +2352,7 @@ a component with main object, function object, simulate object, object graph, do
 etc.
 
 <b>Object orientation
-Proview is an object oriented system, and components and aggregates are a field where 
+ProviewR is an object oriented system, and components and aggregates are a field where 
 the benefits of object orientation are used. In the components, one can see how an object
 is built by other objects, and that an attribute, besides from being a simple type as a float
 or boolean, also can be an object, which in its turn is composed by other objects. An
@@ -2405,7 +2405,7 @@ where you under 'ConfigureComponent' can choose a configuration from the alterna
 <b>Fig The ConfigureComponent method for a BaseMValve. 
 
 <h2>Basecomponents
-Proview contains a number of component and aggregate objects for common plant components,
+ProviewR contains a number of component and aggregate objects for common plant components,
 e.g. temperature sensor, pressure sensor, pressure switch, solenoid valve, filter, 
 motor and fan drives. They are gathered in the classvolume BaseComponent. A basecomponent
 can be used directly, and this is probably the usual way to use them, but the idea is also 
@@ -2989,7 +2989,7 @@ External communication with Remote <link>com_remote
 <topic>com_intern
 Internal communication
 
-The internal communication in Proview sends information about volumes, objects,
+The internal communication in ProviewR sends information about volumes, objects,
 alarms, events, history data etc. between processes and nodes. There are three 
 different protocols for alarm handling, net handling and history data,  the all are 
 based on Qcom.
@@ -3043,7 +3043,7 @@ selection of points are fetched from the database and sent to the operator envir
 See chapter Data Storage <link> dg_sev
 
 <h1>Web and app communication
-The web interface and Andriod application fetches information from the Proview realtime
+The web interface and Andriod application fetches information from the ProviewR realtime
 database through the server processes rt_webmon, rt_webmonmh and rt_webmonelog. This
 communication is configured by the WebHandler object.
 
@@ -3057,8 +3057,8 @@ object.
 <topic>com_remote
 Remote
 
-The Remote concept in Proview is a way to standardize the methods of communication with other
-systems. It describes a number of transport programs and Proview objects used to implement
+The Remote concept in ProviewR is a way to standardize the methods of communication with other
+systems. It describes a number of transport programs and ProviewR objects used to implement
 a variety of different communication protocols and to handle incoming and outgoing messages.
 Remote is designed to use different transport protocols such as TCP/IP or BEA Message Queue,
 and different hardware media such as ethernet or serial lines.
@@ -3165,7 +3165,7 @@ the data will be unpacked. The header looks like:
 All of the integers in the header will be sent as big endian values, which means the most significant byte first
 in the datagram. The user data is the responsibility of the user to switch, if he wants integers to be sent
 with big endian. Intel (x86), VAX and Alpha all use little endian! To send messages without headers, the
-attribute DisableHeader should be set to TRUE. When communicating between two Proview-systems the header
+attribute DisableHeader should be set to TRUE. When communicating between two ProviewR-systems the header
 should be kept on. MessId1 and MessId2 are fetched from attributes RemTrans.Address[0] and RemTrans.Address[1].
 Through the header it is also possible to request an acknowledge of a sent message. If there is no
 acknowledge the message will be resent with a cyclicity specified by the RetransmitTime-attribute in the
@@ -3320,16 +3320,16 @@ if there are still free buffers for this message.
 Modbus Serial
 The format of MODBUS that is implemented is RTU. For identification of messages we use the fields 
 known as slave address and function code in the MODBUS header. The RemTrans.Address[0] and [1] 
-define these fields in the Proview environment. Se MODBUS specifications documents for more information.
+define these fields in the ProviewR environment. Se MODBUS specifications documents for more information.
 
-Modbus Serial is not yet implemented as an I/O-system in Proview. You have to configure the messages
+Modbus Serial is not yet implemented as an I/O-system in ProviewR. You have to configure the messages
 yourself by using RemnodeModbus and specifying RemTrans-object for the various operations you
 want to perform. Modbus works in a request/reply manner, so for each operation you want to perform
 you specify one RemTrans-object for sending and one for receiving. Except for the Modbus-header of the
 message and the checksum handling you have to specify the content of the message to send in the
 send-buffer. In the same way you must decode the content of a received message yourself.
 
-Modbus TCP is implemented as an I/O-system in Proview. See more information about this in the document
+Modbus TCP is implemented as an I/O-system in ProviewR. See more information about this in the document
 "Guide to I/O-systems". With Modbus TCP you don't have to care about the encoding of the messages.
 
 <h2>Receiving messages
@@ -3366,7 +3366,7 @@ An example
 To show how to work with the classes that are briefly described above we will start with a little
 example. The classes are described in more detail below.
 
-In our example we have one Proview-system communicating with an other node via UDP/IP. We will
+In our example we have one ProviewR-system communicating with an other node via UDP/IP. We will
 send a few messages in both directions. My node is named 'dumle' and the remote node is named
 'asterix'.
 
@@ -3473,7 +3473,7 @@ the parameters we just add more DataArithm's and continue in the same way.
 <topic> dg_datastorage
 Data Storage
 
-There are three different types of data storage in Proview, trends, fast curves and historical
+There are three different types of data storage in ProviewR, trends, fast curves and historical
 data storage. Trends are storing data cyclic during a shorter period of time in the realtime
 database. Fast curves are triggered by some event and stores data for a period of time after
 the trigg event, and in some cases also before. The historical storage is made on disk in a 
@@ -3581,7 +3581,7 @@ See also DsFastCurve in Object Reference Manual.
 <topic> dg_sev
 Historical data storage
 Sev is the storage environment, where historical data is stored in a database. It is a 
-complement to the other environments in Proview, the development, runtime and operator 
+complement to the other environments in ProviewR, the development, runtime and operator 
 environment. Sev contains server processes that handles fetching and storage of historical 
 data. Sev can be installed as a separate unit on a storage station, but it is also included 
 in the runtime package and can be started in the runtime environment.
@@ -3651,12 +3651,12 @@ The server process, sev_server, handles the database that stores the historica d
 communicates with the clients that supplies data, or request data to, for example, display in 
 a curve window. The server can be started in the runtime environment, and is the configured 
 by a SevServer object in the node hierarchy. In the storage environment, the server process 
-is started automatically at Proview startup.
+is started automatically at ProviewR startup.
 
 
 <h1>Database
 MySQL or SQLite can be chosen as database in the sev server. The choice is made in
-the SevServer object, if Proview runtime is started, or in the /etc/proview.cnf file with 
+the SevServer object, if ProviewR runtime is started, or in the /etc/proview.cnf file with 
 the parameter 'sevDatabaseType' which can have the value 'sqlite' or 'mysql'.
 
 <c>sevDatabaseType sqlite
@@ -3772,10 +3772,10 @@ The medium load should be well below 100 %.
 Application programming
 
 This chapter is about how to write application programs, i.e. programs in c, c++ or java,
-that attaches Proview. It is assumed that the reader has basic knowledge in the c
+that attaches ProviewR. It is assumed that the reader has basic knowledge in the c
 programming language.
 
-In many Proview applications, coding everything in the plc editor with function object
+In many ProviewR applications, coding everything in the plc editor with function object
 programming works excellent. However, there are applications that with graphic programming
 will be unnecessarily complex, for example advanced models, handling of databases and 
 material planning. In this case you write an application program in c, c++ or java, that
@@ -3814,13 +3814,13 @@ The cpp file should be created on the $pwrp_src directory, or subdirectory to th
 the directory $pwrp-src/myappl and edit the file ra_myappl.cpp.
 
 <h1>Datatypes
-In the includefile pwr.h the basic datatypes in Proview are defined. The most common is
+In the includefile pwr.h the basic datatypes in ProviewR are defined. The most common is
 pwr_tBoolean for digital signals and pwr_tFloat32 for analogous signals, but there are also
-c types for all the other Proview types, e.g. pwr_tInt32, pwr_tUInt32, pwr_tString80 etc.
+c types for all the other ProviewR types, e.g. pwr_tInt32, pwr_tUInt32, pwr_tString80 etc.
 
 <h1>Gdh initialization
 The database is attached with a call to gdh_Init() which takes an identifier string for the
-application as an argument. First we include pwr.h that contains the basic types in Proview
+application as an argument. First we include pwr.h that contains the basic types in ProviewR
 and rt_gdh.h that contains the API to the database.
 
 <c>#include "pwr.h"
@@ -4193,7 +4193,7 @@ object.
 <topic> dg_appl_file
 Start the application
 
-An application that is to be started at Proview runtime startup is inserted into the
+An application that is to be started at ProviewR runtime startup is inserted into the
 application file. This resides on $pwrp_load and is named ld_appl_'nodename'_'qbus'.txt,
 e.g.
 
@@ -4209,9 +4209,9 @@ In the file you insert one line for each application that is to be started
 <topic> dg_appl_inievents
 Receive system events
 
-Proview transmits messages at certain events, e.g. when a soft restart proceeds or when
+ProviewR transmits messages at certain events, e.g. when a soft restart proceeds or when
 the runtime environment is stopped. An application can listen to these messages, for 
-example to terminate when Proview is terminated. The messages are received from Qcom. You
+example to terminate when ProviewR is terminated. The messages are received from Qcom. You
 create a Qcom queue and bind this queue to the queue that submits the messages.
 
 <c>#include "rt_qcom.h"
@@ -4276,7 +4276,7 @@ to discover new objects of new configurations after a soft restart.
 <c>  }
 <c>}
 
-If you only are interested in stopping the process when Proview is taken down, there is
+If you only are interested in stopping the process when ProviewR is taken down, there is
 a more simple way to kill it. You can put a scripfile, pwrp_stop.sh, on $pwrp_exe where
 you kill the process.
 
@@ -4380,7 +4380,7 @@ We then can send alarms with mh_ApplMessage().
 <topic> dg_appl_qcom
 Communicate with other processes
 
-Proview's protocol for communication between processes can be used also by applications.
+ProviewR's protocol for communication between processes can be used also by applications.
 The communication can be
 
 - between processes in the same node
@@ -4395,7 +4395,7 @@ Read more about Qcom in Qcom Reference Guide.
 <topic> dg_appl_sev
 Fetch data from a storage station
 
-Data stored in a Proview storage station can be fetched by the client interface sevcli.
+Data stored in a ProviewR storage station can be fetched by the client interface sevcli.
 First you initiate sevcli with sevcli_init() and state which storage station you want to
 fetch the data from with sevcli_set_servernode().
 
@@ -4490,7 +4490,7 @@ to with the function io_write().
 <topic> dg_appl_build
 Build an application
 
-A c++ application has to be compiled and linked, and you can use make to do this. Proview
+A c++ application has to be compiled and linked, and you can use make to do this. ProviewR
 contains a rule file, $pwr_exe/pwrp_rules.mk, that contains rules for compilation.
 
 A makefile for the application ra_myappl on the directory $pwrp_src/myappl can look 
@@ -4682,7 +4682,7 @@ must be set to appropriate values:
 - ButtonText, text of the button in the operator window
 
 The XttGraph object contains other attributes which e.g. helps you to customize the position 
-and size of plant graphics. These attributes are described in detail in Proview Objects 
+and size of plant graphics. These attributes are described in detail in ProviewR Objects 
 Reference Manual.
 See XttGraph in Object Reference Manual <classlink>xttgraph,"",$pwr_lang/pwrb_xtthelp.dat
 </topic>
@@ -4692,7 +4692,7 @@ See XttGraph in Object Reference Manual <classlink>xttgraph,"",$pwr_lang/pwrb_xt
 <topic> dg_web_interface
 Java operator environment
 
-Besides the ordinary operator environment in X windows, Proview also contains an operator
+Besides the ordinary operator environment in X windows, ProviewR also contains an operator
 environment written in java. The advantage of java is that it is runnable in a web browser
 and on many platforms. The disadvantage is that it is slower, and has a limited functionality.
 
@@ -4728,7 +4728,7 @@ hierarchy is needed to start the server processes.
 <b>Fig Homepage for a project
 
 <h2>Local
-The java environment can also be started locally on the node where the Proview runtime
+The java environment can also be started locally on the node where the ProviewR runtime
 is started. The server processes for the web interface don't have to be started, the
 information is fetched directly from the realtime database.
 
@@ -4763,7 +4763,7 @@ by a new language selection.
 
 <b>EnableLogin
 Displays buttons for login and logout in the menu. The login button makes it possible to
-login as a Proview user with specified privileges that define the users access to the system.
+login as a ProviewR user with specified privileges that define the users access to the system.
 
 <b>EnableAlarmList
 Displays a button in the menu to open a window with alarm and event lists.
@@ -4840,7 +4840,7 @@ The password is decrypted by the client, i.e. no uncrypted passwords are sent ov
 network.
 
 <h1>Server processes
-Three server processes are started at Proview runtime startup, rt_webmon, rt_webmonmh 
+Three server processes are started at ProviewR runtime startup, rt_webmon, rt_webmonmh 
 and rt_webmonelog.
 
 <b>rt_webmon
@@ -4865,7 +4865,7 @@ the WebHandler object. It consists of a number of html and jar files that are cr
 the $pwrp_web directory.
 
 The start page, index.html, consists of two frames. The left frame opens the html-file for
-the menu that starts an applet that connects to the Proivew server and builds the menu. The
+the menu that starts an applet that connects to the ProviewR server and builds the menu. The
 right frame displays the URL stated in the StartURL attribute of the OpPlaceWeb object, or
 if this attribute is empty, the start page for the xtt help.
 
@@ -4999,7 +4999,7 @@ system Android. The application connects to a process or operator station and ca
 - cross references.
  
 
-To install the app, download PwrXtt.apk from the Proview download page on Source Forge and 
+To install the app, download PwrXtt.apk from the ProviewR download page on Source Forge and 
 install on your device.
 
 <h1>Configuration
@@ -5078,7 +5078,7 @@ Note the the pwrp_exe directory is platform dependent.
 <c>    Allow from all
 <c></Directory>
 
-To display Proview help texts there also has to be an alias for pwr_doc that points at 
+To display ProviewR help texts there also has to be an alias for pwr_doc that points at 
 $pwr_doc. Normally this is added at installation of the pwrrt package.
 
 <c>Alias /pwr_doc/ /usr/pwrrt/doc/
@@ -5098,7 +5098,7 @@ $pwr_doc. Normally this is added at installation of the pwrrt package.
 
 <chapter>
 <topic>conf_test
-Starting and testing a Proview system
+Starting and testing a ProviewR system
 
 In preceding chapters we have described how to configure a PROVIEW/R system, how to create 
 PLC programs and how to create plant graphics. Now it is time to run and test the system. 
@@ -5216,7 +5216,7 @@ you check the bus identity, and with the command
 
 you assign another value. This command you can for example insert in $pwrp_login/login.sh.
 
-Now you can start the Proview runtime with
+Now you can start the ProviewR runtime with
 
 <c>> rt_ini &
 
@@ -5224,7 +5224,7 @@ and stop with
 
 <c>> . pwr_stop.sh
 
-If Proview doesn't start you can add -i to the start command to see error messages.
+If ProviewR doesn't start you can add -i to the start command to see error messages.
 
 <c>> rt_ini -i
 
@@ -5285,7 +5285,7 @@ is started already.
 <topic> dg_process_station
 Process and operator stations
 
-In this section we go through the steps to start Proview on a process or operator station.
+In this section we go through the steps to start ProviewR on a process or operator station.
 
 - configuration of the node in the directory volume
 - build the node
@@ -5748,14 +5748,14 @@ Functions/Close change value <t><t>Close the input field.
 Help window
 
 The helpwindow is used to view and navigate in help texts. The help texts can be various
-manuals and guides that comes with Proview, or helptexts written by the constructor to
+manuals and guides that comes with ProviewR, or helptexts written by the constructor to
 describe the plant and to give assistance to the operators.
 </topic>
 
 <topic> messagewindow_refman
 Message window
 
-The message window displays messages from Proview that are transmitted at various
+The message window displays messages from ProviewR that are transmitted at various
 operations. The messages can have five levels of severity, that are marked with different
 colors: 
 
@@ -5787,9 +5787,9 @@ The backup utility analyses a runtime backup file. It makes it possible to
   development database.
 - Transfer selected values from the backup file to the development database.
 
-The backup function in the Proview runtime enviroment, stores the values of 
+The backup function in the ProviewR runtime enviroment, stores the values of 
 objects and attributes specified with Backup objects, in the backup file. The 
-is read at Proview startup and the previously stored values are inserted into
+is read at ProviewR startup and the previously stored values are inserted into
 the realtime database.
 
 <h2>Display the content of a backup file
@@ -5897,7 +5897,7 @@ If you have edit privileges you can enter the edit mode. Now it is possible to c
 modify objects.
 
 <b>Trace and Simulate
-If you want to trace the program you enter the trace mode. This requires that the Proview
+If you want to trace the program you enter the trace mode. This requires that the ProviewR
 runtime environment is started in the development station. Simulate works as trace, but
 you can also set values to signals.
 
@@ -6212,7 +6212,7 @@ so on. As you can see this is a fast way to build complex sequences.
 ScanTime feches the actual scantime, i.e. the time since the last lap.
 
 <b>FirstScan
-FirstScan is true the first lap of the plc execution after Proview startup. It is also true
+FirstScan is true the first lap of the plc execution after ProviewR startup. It is also true
 after a soft restart.
 
 <h1>Menu
@@ -6694,12 +6694,12 @@ Max current <t> 130 <t> 120
 <topic>users
 Users
 
-This chapter describes how to create a user in Proview, and how to grant privileges and 
+This chapter describes how to create a user in ProviewR, and how to grant privileges and 
 access for the user.
 
-The increasing availability of Proview system for different type of users, for example via the
+The increasing availability of ProviewR system for different type of users, for example via the
 intranet, has resulted in increasing demands of possibilities to limit the possibility for
-various users to influence the system. Proview contains a user database, where you define
+various users to influence the system. ProviewR contains a user database, where you define
 the users for different systems, and where you have the possibility to group systems with
 common users. The database is designed to face the demands of increasing access control, and
 at the same time to keep the administration on a low level.
@@ -6716,7 +6716,7 @@ pwr_user <link> pwr_user
 <topic>userdatabase
 User database
 
-The user database is populated by system groups and users. When a Proview utility is started,
+The user database is populated by system groups and users. When a ProviewR utility is started,
 for example the opeator or development environment, there is a check that the user exists in
 the database, and the privileges of the user are registred. The privileges determine what
 a user is allowed to do in the system.
@@ -6740,7 +6740,7 @@ A systemgroup is referred to by the 'path'-name in the hierarchy, where the name
 by periods, e.g. 'ssab.hql.se1', where ssab is the root group, and se1 the lowest level in the
 hierarchy.
 
-A Proview system is connected to a systemgroup by stating the systemgroup in the System 
+A ProviewR system is connected to a systemgroup by stating the systemgroup in the System 
 object. If the systemgroup is not present in the user database, though a parent or ancestor
 is, it is supposed that the systemgroup inherits users from the ancestor.
 
@@ -6753,8 +6753,8 @@ UserInherit <t>The systemgroup inherits users fro its parent systemgroup, also u
 A user is characterized by a username, a password and a set of privileges. A user is also
 connected to a systemgroup.
 
-The privileges define what a user is allowed to do in Proview. Some privileges influence
-the access to make changes from Proview utilities, e.g. the navigator or plc-editor, some
+The privileges define what a user is allowed to do in ProviewR. Some privileges influence
+the access to make changes from ProviewR utilities, e.g. the navigator or plc-editor, some
 regards the construction of operators graphics, to control which input fields and pushbuttons
 a user can influence.
 
@@ -6789,7 +6789,7 @@ DevClass  <t>Write access in class editor (not yet implemented)
 
 <topic> user example
 Example
-Proview user database V1.0.0
+ProviewR user database V1.0.0
 
 <c>ssab
 <c>. . . . . . sysansv    System DevRead DevPlc DevConfig (14680068)
@@ -6835,7 +6835,7 @@ attribute UserInherit.
 <topic> user login
 Login
 
-This sections describes how Login and access control works in different Proview environments.
+This sections describes how Login and access control works in different ProviewR environments.
 
 <h1>Development environment
 When starting the configurator, a login window is opened where you can state username and
@@ -6882,7 +6882,7 @@ Man kan även editera databasen med kommandon i pwr_user, see pwr_user in chapter
 <topic> classeditor
 Class Editor
 
-This section describes how to create new classes in Proview.
+This section describes how to create new classes in ProviewR.
 There are a number of different cases when you might consider creating a new class.
 
 <h2>Data objects
@@ -6913,7 +6913,7 @@ connected to the main object, and that simulates the component when the system i
 simulation mode.
 
 <h2>Subclasses of components
-Proview contains a number of basecomponent classes for valves, motors etc. These are designed
+ProviewR contains a number of basecomponent classes for valves, motors etc. These are designed
 in a general fashion to cover a large number of components. Often, you create a subclass that
 is adapted to a specific component, and that, for example, contains a link to a data sheet, 
 helptext etc. for this component. By creating a subclass of a basecomponent you inherit all
@@ -7084,7 +7084,7 @@ below the $ClassDef object.
 
 The menu object calls methods, i.e. c functions that are linked with the development or
 operator environment. There is for the moment no possibility to do this from a project. This
-has to be done from the Proview source code.
+has to be done from the ProviewR source code.
 
 <h2>$Menu
 $Menu objects describe popup menus in the development environment. The object name specifies
@@ -7505,8 +7505,8 @@ first).
 <topic>ced_ioclasses
 I/O classes
 
-I/O objects are the objects handled by the I/O-handling in Proview. They are divided in Agent,
-Rack, Card and Channel objects. When adapting new I/O systems to Proview, you have to create
+I/O objects are the objects handled by the I/O-handling in ProviewR. They are divided in Agent,
+Rack, Card and Channel objects. When adapting new I/O systems to ProviewR, you have to create
 new classes of types Agent, Rack and Card. I/O objects are defined by a $ClassDef object 
 where the IoAgent, IoRack or IoCard bit is set in Flags.
 
@@ -7910,7 +7910,7 @@ in runtime.
 <topic>ced_compog
 Object graph
 
-Object graph has the same name as the component, but with lower case. For classes in the Proview
+Object graph has the same name as the component, but with lower case. For classes in the ProviewR
 base system you add the prefix 'pwr_c_'. The graphs are edited as normal in Ge. In the dynamic
 you exchange the object name with '$object'. Object graph for objects in the base system are
 drawn with the following guidelines.
@@ -8323,7 +8323,7 @@ Create project <link> create_project
 <topic> adm_user
 Users
 
-To gain access to the Proview development and runtime environment you need to login with 
+To gain access to the ProviewR development and runtime environment you need to login with 
 username and password. Users are kept in the user database and are granted privileges which 
 state the users authority to make changes in the system.
 
@@ -8416,7 +8416,7 @@ node in its own project or all the nodes in the same project.
 
 - All the nodes in a project (on the same bus) have a nethandler link between each other.
 - All the volumes and nodes share the same directory tree.
-- All nodes have to be upgraded to new Proview versions at the same time.
+- All nodes have to be upgraded to new ProviewR versions at the same time.
 
 A common size is 1-10 nodes in a project. Too many nodes will increase the communication 
 overhead and make it harder to upgrade the project.
@@ -8444,9 +8444,9 @@ minor corrections. The copy is then created under a new project name, though it 
 system name.
 
 <h2>Base
-Proview is a multiversion system, i.e. different versions of Proview can be installed in 
-the same development environment and projects of different Proview versions can coexist in 
-the same development environment. A project points at a Proview base, e.g. V3.4, V4.0, and 
+ProviewR is a multiversion system, i.e. different versions of ProviewR can be installed in 
+the same development environment and projects of different ProviewR versions can coexist in 
+the same development environment. A project points at a ProviewR base, e.g. V3.4, V4.0, and 
 when creating a project you have to choose which base the project should point at.
 
 <h2>Path
@@ -8534,7 +8534,7 @@ pwrc
 
 Command interface to development database.
 
-<c>pwrc        Proview workbench commands
+<c>pwrc        ProviewR workbench commands
 
 <c>Arguments:
 <c>  -v 'volume'    Load volume 'volume'.
@@ -8557,7 +8557,7 @@ Command interface to development database.
 
 <topic> co_help
 co_help Help window
-Open a Proview help file. By default the project help file is opened.
+Open a ProviewR help file. By default the project help file is opened.
 
 <c>>co_help
 
@@ -8796,7 +8796,7 @@ Used to investigate version mismatch.
 <chapter>
 <topic>opc_intro
 OPC
-Proview has implemented the OPC XML/DA protocol for data exchange with other automation
+ProviewR has implemented the OPC XML/DA protocol for data exchange with other automation
 software. For more information about OPC see www.opcfoundation.org.
 
 <option> printdisable
@@ -8810,7 +8810,7 @@ OPC Client <link> opc_client
 OPC XML/DA Server
 
 An OPC XML/DA Server is a web service from which an OPC XML/DA Client can get information of a 
-Proview system. A opc client can, for example, browse the object hierachy, read and write 
+ProviewR system. A opc client can, for example, browse the object hierachy, read and write 
 attribute value, and subscribe to attributes. 
 
 The opc server implements the http protocol as well and is not connected to a web server. The 
@@ -8833,13 +8833,13 @@ as an item.
 <h1>Threads
 If the opc client uses the HoldTime and WaitTime attributes in the SubscriptionPolledRefresh 
 request, the opc server has to be multi threaded, that is, for every request, a new thread is 
-created. If the HoldTime and WaitTime is not used (as in the Proview opc client), all requests 
+created. If the HoldTime and WaitTime is not used (as in the ProviewR opc client), all requests 
 can be handled in a single thread, which is less time consuming. Multithreads or not are 
 configured in the configuration object for the opc server. The default value is 'IfNeeded' 
 which turns on the multithreading for a client if HoldTime or WaitTime are detected.
 
 <h1>Client access
-To gain access to a Proview opc server, the ip address of the client has to be configured in 
+To gain access to a ProviewR opc server, the ip address of the client has to be configured in 
 the configuration object for the opc server. Here you can also choose if the client has 
 ReadWrite or ReadOnly access, where ReadOnly allows the client to read and subscribe to 
 attribute values, while ReadWrite also is allowed to write attribute values.
@@ -8850,7 +8850,7 @@ The server does not support buffering of subscriptions.
 <h1>Configuration
 The opc server is configured with a Opc_ServerConfig object that is placed in the Node
 hierarchy. The configuration object will cause a server process (opc_server) to start at 
-Proview startup.
+ProviewR startup.
 </topic>
 </headerlevel>
 
@@ -8858,7 +8858,7 @@ Proview startup.
 <topic> opc_client
 OPC XML/DA Client
 
-The Proview opc client is implemented as an extern volume, which is mounted somewhere in the 
+The ProviewR opc client is implemented as an extern volume, which is mounted somewhere in the 
 object tree of the root volume. Under the mount object, the branches and items of the server 
 are displayed with special opc objects. An Opc_Hier object represents a branch and Opc_Int an 
 item with an integer value, Opc_Boolean an item with a boolean value etc. If an item object is 
@@ -11836,7 +11836,7 @@ CloseGraph()	<t>Close a Ge graph.	<LINK> closegraph()
 SetSubwindow()	<t>Open a graph in a window object. <LINK> setsubwindow()
 GetIoDeviceData() <t>Get data from IO configuration. <LINK> getiodevicedata()
 SetIoDeviceData() <t>Set data in IO configuration. <LINK> setiodevicedata()
-GetVersion() <t>Get Proview version. <LINK> getversion()
+GetVersion() <t>Get ProviewR version. <LINK> getversion()
 get_pwr_config() <t>Get configuration values. <LINK> get_pwr_config()
 get_node_name()	<t>Get node name. <LINK> get_node_name()
 EVEN()		<t>Check if value is even. <LINK> EVEN()
@@ -12280,7 +12280,7 @@ int GetVersion()
 
 <b>Description
 
-Get the Proview version for the current release.
+Get the ProviewR version for the current release.
 Returns an integer value that is 10000 * major + 100 * minor + release.
 For example V5.3.1 returns 50301.
 
