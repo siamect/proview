@@ -217,9 +217,10 @@ all : init copy lib exe | silent
 
 init :
 
-copy : $(export_pdf) $(export_pdf_en_us) $(export_pdf_sv_se) \
+copy : \
        $(export_gif_exe) $(export_gif_en_us) $(export_gif_sv_se) \
        $(export_png_exe) $(export_png_en_us) $(export_png_sv_se) \
+       $(export_pdf) $(export_pdf_en_us) $(export_pdf_sv_se) \
        $(exe_dir)/en_us/wtt_help.dat $(exe_dir)/sv_se/wtt_help.dat \
        $(exe_dir)/en_us/xtt_help.dat $(exe_dir)/sv_se/xtt_help.dat \
        $(exe_dir)/en_us/rtmon_help.dat \
