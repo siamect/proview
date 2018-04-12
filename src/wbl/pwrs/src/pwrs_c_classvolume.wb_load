@@ -50,7 +50,7 @@ SObject pwrs:Class
 !
 !  ClassVolumes are divided into the groups system classvolumes, 
 !  manufacturer classvolumes and user classvolumes. System and
-!  manufacturer classvolumes comes with the proview release, and
+!  manufacturer classvolumes comes with the ProviewR release, and
 !  the loadfiles reside on $pwr_load.
 !
 !  User classvolumes contains local classes for a project. 

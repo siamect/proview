@@ -4809,7 +4809,7 @@ Volume Remote $ClassVolume 0.0.1.4
     !  Configures a remote message.
     ! 
     !  The object describes a data message to or from another system. We can
-    !  communicate with other Proview systems or with foreign systems in
+    !  communicate with other ProviewR systems or with foreign systems in
     !  different ways, according to Transport type.
     ! 
     !  The RemTrans object must be hierarchically placed directly under the
@@ -4902,7 +4902,7 @@ Volume Remote $ClassVolume 0.0.1.4
         ! destination queue and doesn't wait for any verification at all.
         ! The SAF function puts the message in the local recovery journal
         ! if the link is down. When using SAF, DMQ handles the
-        ! retransmission meaning that we (Proview) can forget the
+        ! retransmission meaning that we (ProviewR) can forget the
         ! message and treat it as sent. This works on DMQ 3.2 but is not
         ! supported in the earlier version 3.0.
         ! The DISC function tells DMQ to discard the message if it isn't

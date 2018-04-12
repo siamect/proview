@@ -39,9 +39,9 @@ SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group ProjectConfiguration
-!  @Summary Configures a proview node in the current project.
+!  @Summary Configures a ProviewR node in the current project.
 !  The NodeConfig object configures a node in the current project
-!  on which the proview runtime environment should be started.
+!  on which the ProviewR runtime environment should be started.
 !
 !  The NodeConfig object is created in the project volume as a child to
 !  a BusConfig-object in the node-hierachy. Is is the root of an object 

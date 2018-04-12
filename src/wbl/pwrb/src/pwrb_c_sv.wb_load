@@ -78,7 +78,7 @@ SObject pwrb:Class
       EndObject
       !/**
       !  InitialValue specifies starting value of the signal at
-      !  Proview startup.
+      !  ProviewR startup.
       !*/
       Object InitialValue $Attribute 3 
         Body SysBody

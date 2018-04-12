@@ -39,8 +39,8 @@ SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group Servers,NodeConfiguration,Operator
-!  @Summary Defines a website on a proview node.
-!  The WebHandler object defines a website on a proview node.
+!  @Summary Defines a website on a ProviewR node.
+!  The WebHandler object defines a website on a ProviewR node.
 !
 !  The existence of a WebHandler object in a node will cause a 
 !  server process (GdhServer) to start, which provides the graph-applets 
@@ -283,7 +283,7 @@ SObject pwrb:Class
       !  A message created by an ASup or DSup object gets the
       !  same identity as the supervised object. Messages
       !  produced in an application by means of mh_ApplMessage
-      !  (see Proview Programmer's Reference Manual) get an
+      !  (see ProviewR Programmer's Reference Manual) get an
       !  identity according to the calling parameter EventName.
       !  
       !  SelectList specifies the hierarchies from which
@@ -335,7 +335,7 @@ SObject pwrb:Class
       !  User object's skyline of events should be selected as å
       !  MaxNoOfEvents, added up over MaxNoOfEvents in the
       !  MessageHandler objects in all nodes throughout the
-      !  PROVIEW/R system, or make it simple and assign the
+      !  ProviewR system, or make it simple and assign the
       !  attribute e.g. 200.
       !*/
       Object MaxNoOfEvents $Attribute 39

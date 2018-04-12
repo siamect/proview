@@ -39,9 +39,9 @@ SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group NodeConfiguration,Operator
-!  @Summary Configures the App interface on a proview node.
+!  @Summary Configures the App interface on a ProviewR node.
 !  The OpPlaceApp object defines a Android applications interface on 
-!  a proview node.
+!  a ProviewR node.
 !
 !  With the OpPlaceApp object a start page is defined with icons that
 !  opens Ge graphs or links to web pages.

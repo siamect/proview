@@ -115,7 +115,7 @@ SObject pwrb:Class
       !  
       !  If the input left open it can be set from anywhere when
       !  to trigger the calibration. In this case it is cleared
-      !  by the PROVIEW/R system when it has been noticed.
+      !  by the ProviewR system when it has been noticed.
       !*/
       Object CalOrder1 $Input 3 
         Body SysBody
@@ -156,7 +156,7 @@ SObject pwrb:Class
       !  A connected input signal is supposed to be a pulse.
       !  If the input is left open it can be set from anywhere
       !  when to trigger the calibration. In this case it is
-      !  cleared by the PROVIEW/R system when it has been
+      !  cleared by the ProviewR system when it has been
       !  noticed.
       !*/
       Object CalOrder2 $Input 5 

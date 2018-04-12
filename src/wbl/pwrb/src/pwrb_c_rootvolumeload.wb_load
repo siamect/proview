@@ -39,9 +39,9 @@ SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group ProjectConfiguration
-!  @Summary Configures root volume to load in a proview node.
+!  @Summary Configures root volume to load in a ProviewR node.
 !  The RootVolumeLoad object configures the root volume to
-!  load into a proview node when proview is started on this node.
+!  load into a ProviewR node when ProviewR is started on this node.
 !
 !  The object should be configured in the  project volume as a child 
 !  to a NodeConfig object.

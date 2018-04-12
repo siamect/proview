@@ -46,7 +46,7 @@ SObject pwrs:Class
 !  In runtime the system object is placed in the SystemVolume below
 !  the pwrNode hierarchy.
 !
-!  SystemName is used to identify one Proview system
+!  SystemName is used to identify one ProviewR system
 !  among others.
 !
 !*/
@@ -68,7 +68,7 @@ SObject pwrs:Class
         EndBody
       EndObject
       !/**
-      !  Specifies the name or notation of a Proview system.
+      !  Specifies the name or notation of a ProviewR system.
       !  The systemname is used to identify volumes registred for a system
       !  in the global volumelist.
       !  

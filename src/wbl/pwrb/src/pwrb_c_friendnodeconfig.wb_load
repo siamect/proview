@@ -39,8 +39,8 @@ SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group ProjectConfiguration
-!  @Summary Configures a proview node that belongs to another project.
-!  The FriendNodeConfig object configures a proview node that belong to
+!  @Summary Configures a ProviewR node that belongs to another project.
+!  The FriendNodeConfig object configures a ProviewR node that belong to
 !  another project, that is the owner of a volume mounted by some node in 
 !  the current project.
 !

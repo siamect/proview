@@ -53,7 +53,7 @@ SObject pwrb:Class
 !  Description of the bits in Compontents:
 !
 ! @b UserDatabase
-!  The Proview user database $pwra_db/pwr_user.dat is included.
+!  The ProviewR user database $pwra_db/pwr_user.dat is included.
 !  The source is fetched from
 !      1. $pwrp_cnf/'nodename'/pwr_user.dat
 !      2. $pwra_db/pwr_user.dat

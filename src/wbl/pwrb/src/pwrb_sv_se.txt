@@ -860,7 +860,7 @@ returmeddelande som för t.ex. A-larm.
 <attr>Attribute 
 Anger komplett namn på övervakat attribut. Om ingången IN lämnas öppen ska 
 vid konfigureringen Attribute fyllas i. Knyts ingången till annat objekt ifylls 
-attributet vid kompileringen av PROVIEW. 
+attributet vid kompileringen av ProviewR. 
 </attr>
 
 <attr>AlarmStatus 
@@ -1190,7 +1190,7 @@ defaultvärden. De instanser i backup-filen som,
 saknas i rtdb, t.ex. på grund av att de tagits bort eller fått nytt namn, kommer 
 att hoppas över 
 
-I samband med byte av PROVIEW distribution kan man inte förutsätta att upp 
+I samband med byte av ProviewR distribution kan man inte förutsätta att upp 
 backningen kan användas. 
 
 @b Se även 
@@ -2294,7 +2294,7 @@ Ingenjörsenhet för SigValue, t.ex. Volt.
 <class> ClassVolumeLoad
 @Summary Laddning av klassvolym
 ClassVolumeLoad objektet anger att en klass-volym ska laddas i en Proview
-nod när Proview startas på noden.
+nod när ProviewR startas på noden.
 Om en monterad volym innehåller klasser som normalt inte laddas i noden,
 kommer ClassVolumeLoad objektet att göra en laddning av klassvolymen utförs.
 
@@ -3450,7 +3450,7 @@ returmeddelande som för t.ex. A-larm.
 <attr>Attribute 
 Anger komplett namn på övervakat attribut. Om ingången IN lämnas öppen ska 
 vid konfigureringen Attribute fyllas i. Knyts ingången till annat objekt ifylls 
-attributet vid kompileringen av PROVIEW. 
+attributet vid kompileringen av ProviewR. 
 </attr>
 
 <attr>AlarmStatus 
@@ -4061,12 +4061,12 @@ filen på 'pwrp_obj'.
 @b Tips 
 
 Ända skillnaden mellan å ena sidan Document och å andra sidan DocUser1 och 
-DocUser2 är att de senare objekten saknar PROVIEW logon. 
+DocUser2 är att de senare objekten saknar ProviewR logon. 
 
 Med pwrc kommandona: 
 
 document /repage -- sidnumreras Document objekten på formen x.y. Första 
-siffran anger PlcPgm inom PROVIEW-systemet och andra siffran anger 
+siffran anger PlcPgm inom ProviewR-systemet och andra siffran anger 
 Document objekt i den ordning de skapats i PLC programmet. Ska sidorna 
 numreras i bestämd ordning måste objekten ordnas i önskad följd i 
 arbetsbänken. 
@@ -4074,7 +4074,7 @@ document /list -- skriver ut en lista över systemets alla Document objekt i
 alfabetisk ordning. Default sker utskriften till samma fönster varifrån 
 utvecklingsmiljön startats. 
  
-A List with Name on Document Objects in a PROVIEW system 
+A List with Name on Document Objects in a ProviewR system 
 
 Behövs lite större arbetsyta väljs ett Document objekt i A3 format. Objekten i 
 motsvarande A4-utskrift är visserligen något förminskade jämfört med om de 
@@ -4344,13 +4344,13 @@ texten i DetectText .
 
 <attr>ManSta 
 Anger START-begäran om driftläget är MANUAL. FALSE betyder ingen 
-begäran; TRUE innebär START-begäran. Begäran tas ned av PROVIEW-
+begäran; TRUE innebär START-begäran. Begäran tas ned av ProviewR-
 systemet då den noterats. 
 </attr>
 
 <attr>ManStp 
 Anger STOPP-begäran om driftläget är MANUAL. FALSE betyder ingen 
-begäran; TRUE innebär STOPP-begäran. Begäran tas ned av PROVIEW-
+begäran; TRUE innebär STOPP-begäran. Begäran tas ned av ProviewR-
 systemet då den noterats. 
 </attr>
 
@@ -4824,7 +4824,7 @@ Engelsk text<link> DsHist, "", $pwr_exe/pwrb_xtthelp.dat
 Konfigurerar historisk datalagring av skalär storhet eller element i 1- 
 dimensionell vektor. ( D ata s torage Hist ory). 
 
-Historisk datalagring är en option i PROVIEW/R. 
+Historisk datalagring är en option i ProviewR. 
 
 I en relationsdatabas finns data i två-dimensionella tabeller, s.k. datarelationer. 
 En relation besår av rader och kolumner.
@@ -4869,7 +4869,7 @@ Konfigurerar servern för historisk datalagring. ( D ata s torage Hist ory Server
 ).
 
 
-Historisk datalagring är en option i PROVIEW/R.
+Historisk datalagring är en option i ProviewR.
 Datalagringen görs i en relationsdatabas, Rdb. Datalagringsrelationer 
 förutsättes vara skapade och namngivna redan vid leverans av optionen. 
 Antalet relationer är som standard 4.
@@ -5280,7 +5280,7 @@ returmeddelande som för t ex. A-larm.
 <attr>Attribute 
 Anger komplett namn på övervakat attribut. Om ingången 'in' lämnas öppen 
 ska vid konfigureringen Attribute fyllas i. Knyts ingången till annat objekt 
-ifylls attributet vid kompileringen av PROVIEW. 
+ifylls attributet vid kompileringen av ProviewR. 
 </attr>
 
 <attr>AlarmStatus 
@@ -5946,7 +5946,7 @@ Anger radlängden.
 
 <attr>SelectList
 Meddelanden initierade av ASup - resp DSup-objekt får samma identitet som 
-övervakat objekt. För mh_ApplMessage-meddelanden ( se PROVIEW/R 
+övervakat objekt. För mh_ApplMessage-meddelanden ( se ProviewR 
 Programmer's Reference Manual ) bestäms identiteten av anropsparametern 
 EventName . 
 
@@ -6330,8 +6330,8 @@ ramen får den önskade storleken.
 # Class FriendNodeConfig
 #
 <class> FriendNodeConfig
-@Summary Konfiguerar extern Proview node.
-FriendNodeConfig objektet konfiguerar en Proview nod som tillhör ett annat
+@Summary Konfiguerar extern ProviewR node.
+FriendNodeConfig objektet konfiguerar en ProviewR nod som tillhör ett annat
 projekt, men som äger en volym som monteras av någon nod i det nuvarande 
 projektet.
 
@@ -6445,7 +6445,7 @@ Hämtar värdet på Ai-signal (GET Analog Input).
 @image orm_getai_fo.gif
 
 Hämtar angiven Ai-signals ingenjörsvärde från I/O-kopierad area. Se 
-PROVIEW/R Designer's Guide . 
+ProviewR Designer's Guide . 
 
 Ai-objektets fullständiga namn anges; dess sista namnled visas i GetAi - 
 symbolens högra del. 
@@ -6506,7 +6506,7 @@ Hämtar värdet på Ao-signal (GET Analog Output).
 @image orm_getao_fo.gif
 
 Hämtar angiven Ao-signals ingenjörsvärde från I/O-kopierad area. Se 
-PROVIEW/R Designer's Guide . 
+ProviewR Designer's Guide . 
 
 Ao-objektets fullständiga namn anges; dess sista namnled visas i GetAo - 
 symbolens högra del. 
@@ -6627,7 +6627,7 @@ Hämtar värdet på Av-signal (GET Analog Value).
 @image orm_getav_fo.gif
 
 Hämtar angiven Av-signals ingenjörsvärde från I/O-kopierad area. Se 
-PROVIEW/R Designer's Guide .
+ProviewR Designer's Guide .
 Av-objektets fullständiga namn anges; dess sista namnled visas i GetAv - 
 symbolens högra del. 
 
@@ -6664,7 +6664,7 @@ Hämtar värdet på Di-signal (GET Digital Input).
 @image orm_getdi_fo.gif
 
 Hämtar angiven Di-signals ingenjörsvärde från I/O-kopierad area. Se 
-PROVIEW/R Designer's Guide . 
+ProviewR Designer's Guide . 
 
 Di-objektets fullständiga namn anges; dess sista namnled visas i GetDi - 
 symbolens högra del. 
@@ -6726,7 +6726,7 @@ Hämtar värdet på Do-signal (GET Digital Output).
 @image orm_getdo_fo.gif
 
 Hämtar angiven Do-signals ingenjörsvärde från I/O-kopierad area. Se 
-PROVIEW/R Designer's Guide . 
+ProviewR Designer's Guide . 
 
 Do-objektets fullständiga namn anges; dess sista namnled visas i GetDo -
 symbolens högra del. 
@@ -6833,7 +6833,7 @@ Hämtar värdet på Dv-signal (GET Digital Value).
 @image orm_getdv_fo.gif
 
 Hämtar angiven Dv-signals ingenjörsvärde från I/O-kopierad area. Se 
-PROVIEW/R Designer's Guide .
+ProviewR Designer's Guide .
 Dv-objektets fullständiga namn anges; dess sista namnled visas i GetDv -
 symbolens högra del. 
 
@@ -6870,7 +6870,7 @@ Hämtar värdet på Ii-signal (GET Integer Input).
 @image orm_getii_fo.gif
 
 Hämtar angiven Ii-signals ingenjörsvärde från I/O-kopierad area. Se 
-PROVIEW/R Designer's Guide. 
+ProviewR Designer's Guide. 
 
 Ii-objektets fullständiga namn anges; dess sista namnled visas i GetIi- 
 symbolens högra del. 
@@ -6931,7 +6931,7 @@ Hämtar värdet på Io-signal (GET Integer Output).
 @image orm_getio_fo.gif
 
 Hämtar angiven Io-signals ingenjörsvärde från I/O-kopierad area. Se 
-PROVIEW/R Designer's Guide. 
+ProviewR Designer's Guide. 
 
 Io-objektets fullständiga namn anges; dess sista namnled visas i GetIo- 
 symbolens högra del. 
@@ -7035,7 +7035,7 @@ Hämtar värdet på Iv-signal (GET Integer Value).
 @image orm_getiv_fo.gif
 
 Hämtar angiven Iv-signals ingenjörsvärde från I/O-kopierad area. Se 
-PROVIEW/R Designer's Guide.
+ProviewR Designer's Guide.
 Iv-objektets fullständiga namn anges; dess sista namnled visas i GetIv - 
 symbolens högra del. 
 
@@ -7267,7 +7267,7 @@ Valfri text.
 
 <attr>CodeBehind 
 Anger om det finns applikationsskriven kod bakom GMS-grafiken eller inte. 
-FALSE betyder att det saknas applikationskod och att PROVIEW/ R:s paket 
+FALSE betyder att det saknas applikationskod och att ProviewR/ R:s paket 
 för kodlösa bilder används; se också UpdateInterval . 
 
 TRUE innebär att den GMS-grafik, som anges av GMS_Model , underhålls 
@@ -7829,7 +7829,7 @@ Objektet konfigureras i utvecklingsmiljön under $Node-objekt som
 representerar process nod. Detta ombesörjs normalt av utvecklingsmiljön i 
 samband med konfigurering av $Node objekt. 
 
-Har inget IOHandler objekt konfigurerats kommer PROVIEW vid initiering av 
+Har inget IOHandler objekt konfigurerats kommer ProviewR vid initiering av 
 nodens realtidsmiljö att skapa ett. Attributen kommer då att innehåller 
 defaultvärden. 
 
@@ -8141,7 +8141,7 @@ arbetsbänken, t.ex för att skapa listor. En given lista innehåller namnet på de
 objekt i arbetsbänken som uppfyller ett bestämt sökvillkor angivet i 
 ListDescriptor objekt. 
 
-Information om olika av typer standardlistor finns PROVIEW/R Designer's 
+Information om olika av typer standardlistor finns ProviewR Designer's 
 Guide . De flesta standardlistor är sammansatta av flera listor, var och en 
 bestämd av sitt ListDescriptor objekt. 
 
@@ -8152,7 +8152,7 @@ startas. Hjälpprogrammet pwrc kan också startas direkt från prompten:
 
 pwrc > 
 
-PROVIEW/R distributionen levereras med några för-konfigurerade 
+ProviewR distributionen levereras med några för-konfigurerade 
 ListDescriptor objekt (strukturer) för standardlistor. De återfinns i 
 Konfigurationseditorns 'Node Configuration' under hierarkin Layout-Lists. 
 Kommandon för att skapa listor, vare sig man kör pwrc direkt eller 
@@ -8164,7 +8164,7 @@ objektet 'Lists' och hela hierarkin därunder först flyttas så att $System objekt
 blir det nya förälder objektet istället för $Layout objektet. pwrc 
 programmet söker nämligen först efter objekt med namnet 'Lists', under 
 $System objektet och först om inget hittats fortsätter sökningen efter 'Lists' 
-under $Layout objektet. Dessutom, skulle vid nästa byte av PROVIEW/R 
+under $Layout objektet. Dessutom, skulle vid nästa byte av ProviewR 
 distribution, ett modifierat för-konfigurerat ListDescriptor objekt gå förlorat 
 om det inte flyttats enligt ovan. 
 
@@ -8178,7 +8178,7 @@ om det inte flyttats enligt ovan.
 
 För att öka kunskapen om ListDescriptor objektens användning kan det vara 
 konstruktivt att studera några av de för-konfigurerade ListDescriptor objektens 
-(strukturer) som levereras med PROVIEW/R distributionen. 
+(strukturer) som levereras med ProviewR distributionen. 
 
 För att skapa en lista med hjälp av ListDescriptor objekt är det alltid möjligt att 
 använda 'Utilities'-fönstret. Välj i kommando-boxens först 'List' och sedan 'List 
@@ -8628,7 +8628,7 @@ normalt att MessageHandler-objektet skapas.
 
 @b Tips 
 
-För information om meddelandehanteraren hänvisas till PROVIEW/R 
+För information om meddelandehanteraren hänvisas till ProviewR 
 Designer's Guide . 
 
 @b Objektsbild
@@ -9235,7 +9235,7 @@ FALSE betyder inget larm.
 
 TRUE innebär antingen att kontaktorsvaret vid OPEN-manöver, ConOpen , 
 inte kom inom föreskriven tid (= Ctime ) eller också att det därefter föll bort 
-under pågående OPEN-order. PROVIEW tar då spontant ned OPEN-ordern. 
+under pågående OPEN-order. ProviewR tar då spontant ned OPEN-ordern. 
 
 Larmet kvarstår tills ny OPEN- eller CLOSE-order ges.
 Koppla ett DSup objekt till utgången om meddelande ska skickas och ange t.ex 
@@ -9249,7 +9249,7 @@ FALSE betyder inget larm.
 
 TRUE innebär antingen att kontaktorsvaret vid CLOSE-manöver, ConClose , 
 inte kom inom föreskriven tid (= Ctime ) eller också att det därefter föll bort 
-under pågående CLOSE-order. PROVIEW tar då spontant ned CLOSE-ordern.
+under pågående CLOSE-order. ProviewR tar då spontant ned CLOSE-ordern.
 Larmet kvarstår tills ny OPEN- eller CLOSE-order ges.
 Koppla ett DSup objekt till utgången om meddelande ska skickas och ange t.ex 
 ' Förlorat kontaktorsvar vid CLOSE av xxx ' i övervakningsobjektets 
@@ -9269,19 +9269,19 @@ DetectText.
 <attr>ManOpen 
 Anger, i läge MANUAL, ett OPEN-direktiv. FALSE betyder ingen aktivitet; 
 TRUE innebär att OPEN-order ska ges. Sedan den satta flaggan noterats ser 
-PROVIEW till att den tas ned. 
+ProviewR till att den tas ned. 
 </attr>
 
 <attr>ManClose 
 Anger, i läge MANUAL, ett CLOSE-direktiv. FALSE betyder ingen aktivitet; 
 TRUE innebär att en CLOSE-order ska ges. Sedan den satta flaggan noterats 
-ser PROVIEW till att den tas ned. 
+ser ProviewR till att den tas ned. 
 </attr>
 
 <attr>ManStop 
 Anger, i läge MANUAL, ett STOP-direktiv. FALSE betyder ingen aktivitet; 
 TRUE innebär att en STOP-order ska ges. Sedan den satta flaggan noterats ser 
-PROVIEW till att den tas ned. 
+ProviewR till att den tas ned. 
 </attr>
 
 <attr>Ctime 
@@ -9580,7 +9580,7 @@ returmeddelande som för t ex. A-larm.
 <attr>Attribute 
 Anger komplett namn på övervakat attribut. Om ingången 'in' lämnas öppen 
 ska vid konfigureringen Attribute fyllas i. Knyts ingången till annat objekt 
-ifylls attributet vid kompileringen av PROVIEW. 
+ifylls attributet vid kompileringen av ProviewR. 
 </attr>
 
 <attr>AlarmStatus 
@@ -9750,7 +9750,7 @@ Valfri text för att beskriva användarkategorin etc.
 <attr>OpNumber 
 De logiska operatörsstationerna ges en unik numrering inom respektive nod. 
 Ibland väljer man att göra en numrering för de logiska operatörsstationerna 
-inom hela PROVIEW-systemet; t.ex 1, 2, .... 
+inom hela ProviewR-systemet; t.ex 1, 2, .... 
 
 OpNumber är också ett attribut i User-objekt. Ett OpPlace-objekt och ett User 
 -objekt knyts till varandra genom att OpNumber ges samma värde i de båda 
@@ -9803,7 +9803,7 @@ GMS-bilder.
 </attr>
 
 <attr>FilePath
-Anger (logiskt) namn på sökväg till PROVIEW-distributionens *.frm, *.m1 m. 
+Anger (logiskt) namn på sökväg till ProviewR-distributionens *.frm, *.m1 m. 
 fl. filer; t.ex pwr_lang: 
 
 Den effektivaste hanteringen erhålls genom följande förfarande: 
@@ -9902,7 +9902,7 @@ akustiska signaler . Se också ReactivateBellTime .
 
 <attr>MhScanInterval 
 Meddelanden skickas från meddelandehanterare till utenheter inom 
-PROVIEW/R systemet. Varje utenhet mottager meddelanden i en kö i enlighet 
+ProviewR systemet. Varje utenhet mottager meddelanden i en kö i enlighet 
 med dess Select -attribut. 
 
 Utenheten operatörsdialog representeras av User objekt. 
@@ -9965,7 +9965,7 @@ eller icke-existerande, D-larm.
 </attr>
 
 <attr>Address 
-Används av Package Handler för att hantera packet. Se vidare PROVIEW/R 
+Används av Package Handler för att hantera packet. Se vidare ProviewR 
 Programmer's Reference Manual . 
 </attr>
 </class>
@@ -11082,7 +11082,7 @@ PosCal1 .
 
 Lämnas ingången öppen kan attributet sättas t.ex via funktion i C-program. 
 
-Sedan flaggan noterats ser PROVIEW till att den tas ned. 
+Sedan flaggan noterats ser ProviewR till att den tas ned. 
 </attr>
 
 <attr>CalPos2 
@@ -11104,7 +11104,7 @@ initieras eller ej. FALSE betyder ingen kalibrering.
 
 Lämnas ingången öppen kan attributet sättas t.ex via funktion i C-program. 
 
-Sedan flaggan noterats ser PROVIEW till att den tas ned. 
+Sedan flaggan noterats ser ProviewR till att den tas ned. 
 </attr>
 
 <attr>ActVal 
@@ -11598,7 +11598,7 @@ anges av PosPulse .
 ActualValue kan manövreras t.ex från applikationsprogram med systemanropet 
 gdh_SetObjectInfo 
 
-Om ResetActualValue = TRUE återställer PROVIEW ActualValue efter trigg 
+Om ResetActualValue = TRUE återställer ProviewR ActualValue efter trigg 
 detektering. återställning sker oberoende av om utgången håller på med en puls 
 eller ej. Upprepad triggning under pågående puls påverkar inte den befintliga 
 pulsen. 
@@ -11697,7 +11697,7 @@ Anger om en positiv eller negativ puls ska skapas då objektet triggas.
 </attr>
 
 <attr>ResetActualValue 
-Anger om PROVIEW ska återställa ActualValue efter detektering eller ej. 
+Anger om ProviewR ska återställa ActualValue efter detektering eller ej. 
 
 - TRUE innebär att ActualValue sätts: 
 
@@ -11707,7 +11707,7 @@ TRUE efter triggning, om PosFlank = FALSE
 håller på med en puls eller ej. Upprepad triggning under pågående puls
 påverkar inte den befintliga pulsen. 
 
-- FALSE innbär att PROVIEW ej återställer ActualValue . 
+- FALSE innbär att ProviewR ej återställer ActualValue . 
 </attr>
 </class>
 
@@ -12156,7 +12156,7 @@ signalen.
 Konfigurerar kö för mottagning av Package Handler meddelanden. 
 
 
-Package Handler funktionen, se PROVIEW/R Programmer's Reference 
+Package Handler funktionen, se ProviewR Programmer's Reference 
 Manual , används för att skicka meddelanden från operatörsstation till 
 tillämpnings program eller mellan två tillämpnings program. 
 
@@ -12525,7 +12525,7 @@ Används av PLC Editorn. Anger Order-objektets fullständiga namn.
 <class> RootVolumeLoad
 @Summary Konfigurerar laddning av rot-volym.
 RootVolumeLoad objektet konfigurerar vilken rot-volym som ska laddas
-i en Proview nod vi uppstart av Proview på noden.
+i en ProviewR nod vi uppstart av ProviewR på noden.
 
 Objektet läggs i projekt volymen som barn till ett NodeConfig-objekt.
 
@@ -14538,7 +14538,7 @@ steg att bli inaktiva.
 Genom att sätta Man = 1 kan operatören manuellt styra med Trans-objektets 
 manuella övergångsvillkor Opcond . Därvid exekveras fortfarande 
 villkorsfönstret, men det är det manuella övergångsvillkoret som gäller. Sedan 
-en manuellt initierad övergång skett ser PROVIEW till att OpCond -flaggan tas 
+en manuellt initierad övergång skett ser ProviewR till att OpCond -flaggan tas 
 ned. På så sätt tvingas operatören sätta flaggan varje gång en övergång ska 
 triggas. Man -flaggan förblir satt tills operatören tar ned den. 
 
@@ -14584,7 +14584,7 @@ Cond beaktas och TRUE att det manuella övergångsvillkoret OpCond gäller.
 
 <attr>OpCond 
 Anger det manuella övergångsvillkorets tillstånd. övergång kan ske när 
-OpCond och Man båda är TRUE. OpCond -flaggan tas ned av PROVIEW efter 
+OpCond och Man båda är TRUE. OpCond -flaggan tas ned av ProviewR efter 
 en övergång. 
 </attr>
 
@@ -14620,7 +14620,7 @@ Sätts idag ovillkorligen till '*'.
 </attr>
 
 <attr>OpNumber 
-De logiska operatörsstationerna i ett PROVIEW-system numreras med hjälp av 
+De logiska operatörsstationerna i ett ProviewR-system numreras med hjälp av 
 OpPlace-objektets OpNumber.
 
 Genom att här ange OpNumber för aktuellt OpPlace-objekt knyts User - 
@@ -14635,14 +14635,14 @@ Till denna lista skickas händelser från respektive nods meddelandehanterare
 (=mh). I varje nod har meddelandehanteraren sin egen händelsehorisont (också 
 betecknad MaxNoOfEvents ) definierad i ett MessageHandler-objekt. I princip 
 bör User-objektets händelshorisont väljas som S MaxNoOfEvents , summerat 
-över MaxNoOfEvents -attributen i PROVIEW-systemets alla MessageHandler 
+över MaxNoOfEvents -attributen i ProviewR-systemets alla MessageHandler 
 -objekt eller gör det enkelt och sätt attributet till t.ex 200. 
 </attr>
 
 <attr>SelectList
 Meddelanden initierade av ASup - eller DSup-objekt får samma identitet som 
 övervakat objekt. För meddelanden genererade i tillämpningsprogram av 
-mh_ApplMessage ( se PROVIEW/R Programmer's Reference Manual ) 
+mh_ApplMessage ( se ProviewR Programmer's Reference Manual ) 
 bestämms identiteten av anropsparametern EventName .
 I SelectList anges från vilka anläggningshierarkier användarkategorin ska 
 erhålla meddelanden. Upp till 20 hierarkier kan anges.
@@ -14928,13 +14928,13 @@ DetectText.
 <attr>ManOpen 
 Anger, i läge MANUAL, ett OPEN-direktiv. FALSE betyder ingen aktivitet; 
 TRUE innebär att OPEN-order ska ges. Sedan den satta flaggan noterats ser 
-PROVIEW till att den tas ned. 
+ProviewR till att den tas ned. 
 </attr>
 
 <attr>ManClose 
 Anger, i läge MANUAL, ett CLOSE-direktiv. FALSE betyder ingen aktivitet; 
 TRUE innebär att CLOSE-order ska ges. Sedan den satta flaggan noterats 
-ombesörjer PROVIEW att den tas ned. 
+ombesörjer ProviewR att den tas ned. 
 </attr>
 
 <attr>TimerTime 
@@ -15230,7 +15230,7 @@ $project/my_datasheet.html
 # Class WebGraph
 #
 <class> WebGraph
-WebGraph objektet definierar en web graf på en Proview web site.
+WebGraph objektet definierar en web graf på en ProviewR web site.
 WebGraph objekt ska läggas som barn till ett WebHandler objekt.
 
 @b Se även
@@ -15256,7 +15256,7 @@ fönster.
 # Class WebHandler
 #
 <class> WebHandler
-WebHandler objektet definierar en hemsida för en Proview nod.
+WebHandler objektet definierar en hemsida för en ProviewR nod.
 
 Förekomsten av ett WebHandler objekt gör att en server process (GdhServer)
 startas, vilken förser graf-applets och frames med information från realtids-
@@ -15267,7 +15267,7 @@ för hemsidan, innehållande in meny-fram och en applet-frame. Länkarna in menyn
 bestämms av de WebGraph och WebLink objekt som är barn till WebHandler objektet.
 
 Om EnableLogin attributet är satt, kommer ett login fönster att kunna öppnas
-från menyn, vilket gör det möjligt att logga in som en Proview användare, och
+från menyn, vilket gör det möjligt att logga in som en ProviewR användare, och
 erhålla privilegier att ändra i databasen.
 
 <attr>MaxConnections
@@ -15287,7 +15287,7 @@ Text i meny ramen.
 </attr>
 <attr>EnableLogin
 Ett login entry placeras i menyn, från vilken man kan logga in som en
-Proview användare, och erhålla privilegier för att ändra i databasen.
+ProviewR användare, och erhålla privilegier för att ändra i databasen.
 </attr>
 <attr>EnableAlarmList
 Ett menyentry för larmlistan placeras i menyn.
@@ -15313,7 +15313,7 @@ URL som kommer att visas i huvud-ramen när websidan öppnas.
 # Class WebLink
 #
 <class> WebLink
-WebLink objektet definierar en web länk i hemsidan för en Proview nod, och
+WebLink objektet definierar en web länk i hemsidan för en ProviewR nod, och
 kommer att visas som ett entry i menyn.
 WebLink objekt ska placeras som barn till ett WebHandler objekt.
 

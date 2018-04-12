@@ -16,7 +16,7 @@ Objektet kan inte placeras på översta nivån.
 
 Det är lämpligt, men inte nödvändigt, att samla t.ex. ListDescriptor objekt 
 under ett $DocHier objekt. De ListDescriptor objekt som levereras med 
-PROVIEW/R distributionen finns under hierarkin Layout-Lists, där 'Lists' just 
+ProviewR distributionen finns under hierarkin Layout-Lists, där 'Lists' just 
 är ett $DocHier objekt. 
 
 Ska en ny typ av lista definieras eller en redan definierad lista modifieras görs 
@@ -43,12 +43,12 @@ ingå i realtidsdatabasen just nu.
 $LibHier objekt skapas i utvecklingsmiljön med hjälp av Configuration Editor. 
 De placeras alltid under 'Plant Configuration'. 
 
-Ett PROVIEW-system kan innehålla flera $LibHier ( Lib rary Hier archy ) 
+Ett ProviewR-system kan innehålla flera $LibHier ( Lib rary Hier archy ) 
 objekt placerade på den högsta nivån eller under andra $LibHier objekt. 
 
 Objekt placerade under $LibHier objekt ingår inte i det aktuella målsystemet. 
 Så kan vara fallet när en ny struktur är under utveckling i ett existerande 
-PROVIEW-system, när ett givet PLC program inte ska användas för tillfället 
+ProviewR-system, när ett givet PLC program inte ska användas för tillfället 
 men kanske senare etc. 
 
 Också hierarki strukturer från 'Node Configuration' kan placeras under 
@@ -132,7 +132,7 @@ Grupperingsobjekt i 'Node Configuration'.
 
 Konfigureras i utvecklingsmiljön för att bygga upp nod hierarkin ( 'the Node 
 Hier archy' ) till önskad struktur, dvs dess funktion motsvarar $ PlantHier - 
-objektets roll i 'Plant Configuration'. Ett PROVIEW-system innehåller vanligen 
+objektets roll i 'Plant Configuration'. Ett ProviewR-system innehåller vanligen 
 många $ NodeHier -objekt. 
 
 Objektet placeras vanligen i nod hierarkins topp eller direkt under annat $ 
@@ -149,14 +149,14 @@ applikationsprogram genom anrop till systemrutinen gdh_CrateObject(...).
 Skapade objekt måste alltid placeras under förälder objekt, dvs de kan inte 
 placeras på rotnivån. Om ett sådant förälder objekt tas bort i samband med 
 programbyte skulle de dynamiskt skapade objekten därunder inte längre vara 
-tillgängliga. Därför ser PROVIEW till att placera sådana objekt under 
+tillgängliga. Därför ser ProviewR till att placera sådana objekt under 
 $Orphange. 
 
 
 @b Tips 
 
 Objektets användbarhet för att förbättra nod strukturen kan kräva eftertanke. I 
-ett PROVIEW-system med många noder kan t.ex operatörs- resp process-noder 
+ett ProviewR-system med många noder kan t.ex operatörs- resp process-noder 
 samlas under separata $ NodeHier -objekt. 
 
 En nyckeln till att konfigurera överskådliga strukturer ligger i användningen av 
@@ -178,10 +178,10 @@ Grupperingsobjekt i 'Plant Configuration'.
 Konfigureras i utvecklingsmiljön för att på anläggningssidan bygga upp hela 
 hierarkier ( 'the Plant Hier archy' ) eller delar av hierarkier till en överskådlig 
 struktur; funktion motsvarar $ NodeHier -objektets roll i 'Node Configuration'. 
-Ett PROVIEW-system innehåller vanligen många $ PlantHier -objekt. 
+Ett ProviewR-system innehåller vanligen många $ PlantHier -objekt. 
 
 Objektet används dels i anläggningens topp för att representera en särskild 
-anläggning i PROVIEW-systemet, dels direkt under annat $ PlantHier -objekt 
+anläggning i ProviewR-systemet, dels direkt under annat $ PlantHier -objekt 
 för att representera en viss del av anläggningen etc. 
 
  
@@ -236,20 +236,20 @@ barn med tomt CircuitDiagram attribut.
 # Class $System
 #
 <class> $System
-@Summary PROVIEW-systemets projekt-gemensamma objekt.
-PROVIEW-systemets projekt-gemensamma objekt.
+@Summary ProviewR-systemets projekt-gemensamma objekt.
+ProviewR-systemets projekt-gemensamma objekt.
 
 Objektet placeras i utvecklingsmiljön på den högsta nivån i 'Node 
 Configuration' i projektvolymen.
-SystemName används för att identifiera ett givet PROVIEW-system bland 
-andra PROVIEW-system. 
+SystemName används för att identifiera ett givet ProviewR-system bland 
+andra ProviewR-system. 
 
 <attr>Description 
 Fri text för att beskriva objektets användning. 
 </attr>
 
 <attr>SystemName 
-Anger PROVIEW-systemets namn eller beteckning. Max. 7 ASCII-tecken.
+Anger ProviewR-systemets namn eller beteckning. Max. 7 ASCII-tecken.
 SystemName används i ladd-datafiler och i utvecklingsmiljön i samband med 
 behörigheter. 
 </attr>

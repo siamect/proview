@@ -52,7 +52,7 @@ SObject pwrs:Class
 !  
 !  It is suitable, but not necessary, to gather
 !  ListDescriptor objects e.g. below a $DocHier object.
-!  The PROVIEW/R distribution is delivered with
+!  The ProviewR distribution is delivered with
 !  pre-configured ListDescriptor objects (structures) to
 !  perform standard lists. They are found in the Node
 !  Configuration below the hierarchy Layout-Lists and

@@ -2357,7 +2357,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndObject
         !/**
         ! @Summary Reconnect count.
-        ! If slave is disconnected Proview will try to reconnect.
+        ! If slave is disconnected ProviewR will try to reconnect.
         ! Reconnect attempts are made with a exponential backoff starting at 1 s.
         ! The time is doubled every attempt up to 64 secs and then continues to
         ! try to reconnect at this cylicity.
@@ -2372,7 +2372,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndObject
         !/**
         ! @Summary Reconnect limit.
-        ! If slave is disconnected Proview will try to reconnect to the slave.
+        ! If slave is disconnected ProviewR will try to reconnect to the slave.
         ! Reconnect limit is no more in use, kept for possible future use.
         !*/
         Object ReconnectLimit $Attribute 10 08-FEB-2008 10:56:28.05
@@ -8342,7 +8342,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
         !/**
-        ! MPI address used by the Proview node. 
+        ! MPI address used by the ProviewR node. 
         !*/
         Object MPI_Local $Attribute 22 27-FEB-2012 16:05:07.48
           Body SysBody 27-FEB-2012 16:05:07.48
@@ -8897,7 +8897,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  @Summary Ethernet Powerlink Controlled node
     !  Ethernet Powerlink Controlled Node (CN).
     !  
-    !  This object configurates a CN in a Powerlink circuit where Proview acts as the
+    !  This object configurates a CN in a Powerlink circuit where ProviewR acts as the
     !  managing node (MN). The Epl_CN is placed as child to an Epl_MN object and the 
     !  modules of the CN are configured with Epl_Module objects placed as children to
     !  the Epl_CN.
@@ -8920,8 +8920,8 @@ Volume OtherIO $ClassVolume 0.0.250.10
     ! 
     !  @image orm_abb_acs880_epl_example1.gif
     ! 
-    !  The Epl_CN object is used when Proview act as a managing node. In circuits where
-    !  Proview acts as a controlled node the Epl_CNServer object is used instead.
+    !  The Epl_CN object is used when ProviewR act as a managing node. In circuits where
+    !  ProviewR acts as a controlled node the Epl_CNServer object is used instead.
     ! 
     !  @b See also
     !  @classlink EplHandler otherio_eplhandler.html
@@ -9100,7 +9100,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     ! 
     !  A Powerlink network consists of two device types, an MN (Managing Node)
     !  and one or several CN (Controlled Node). The Epl_MN object is used when
-    !  Proview acts as an MN in a Powerlink network.
+    !  ProviewR acts as an MN in a Powerlink network.
     ! 
     !  The Powerlink circuit is configured in the node hierarchy with Epl_MN, Epl_CN
     !  and Epl_Module objects. But a corresponding configuration also has to be done
@@ -9146,7 +9146,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     ! 
     !  @b Example 1
     ! 
-    !  A basic configuration with the Proview managing node configured with an
+    !  A basic configuration with the ProviewR managing node configured with an
     !  Epl_MN object. Below this two controlled node with one module each,
     !  configured with Epl_CN and Epl_Module objects. Below the module objects
     !  channel object are configured with input channels first and output 
@@ -9183,7 +9183,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  the open source POWERLINK protocol stack for master and slave.
     !  
     !  Every node in a Powerlink network must be configure through this tool.
-    !  In a Proview project all Powerlink CN nodes is a reflection of this memory
+    !  In a ProviewR project all Powerlink CN nodes is a reflection of this memory
     !  mapping.
     ! 
     !  @image orm_otherio_epl_example1.png
@@ -9275,7 +9275,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
         !/**
-        ! The Proview process the agent object is associated with
+        ! The ProviewR process the agent object is associated with
         !*/
         Object Process $Attribute 35 01-JUL-2013 17:26:15.35
           Body SysBody 01-JUL-2013 17:26:15.35
@@ -9517,7 +9517,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  @Author je
     !  @Summary Ethernet Powerlink CN Server
     !  
-    !  The Epl_CNServer object configures Powerlink when the Proview system acts
+    !  The Epl_CNServer object configures Powerlink when the ProviewR system acts
     !  as a controlled node (CN).
     ! 
     !  @h1 Configuration
@@ -9559,7 +9559,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     ! 
     !  @b openCONFIGURATOR
     !  Example 3 to 5 below shows screenshots from openConfigurator tool and the influence
-    !  the imported xdd file from Proview have on the IO mapping.
+    !  the imported xdd file from ProviewR have on the IO mapping.
     ! 
     !  The xdd file is generated with the same settings as in example 2 i.e. nine digital
     !  inputs divided in two bytes, two analog inputs, two digital outputs and three analog
@@ -9572,16 +9572,16 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  In the example below the CN node (Epl_CNServer) has id number 14.
     !  
     !  @b Example 3 
-    !  RPDO memory mapping in openCONFIGURATOR based on the xdd file generated from Proview.
-    !  The MN receives data from CN that are outputs in Proview CNServer (Do00, Do01, Ao00, 
+    !  RPDO memory mapping in openCONFIGURATOR based on the xdd file generated from ProviewR.
+    !  The MN receives data from CN that are outputs in ProviewR CNServer (Do00, Do01, Ao00, 
     !  Ao01 and Ao04 in that order, see example 2)
     ! 
     !  @image orm_otherio_epl_example11.png
     ! 
     ! 
     !  @b Example 4, TPDO memory mapping in openCONFIGURATOR
-    !  @b based on xdd file generated from Proview.
-    !  MN node transmit data to CN node, inputs in Proview CNServer
+    !  @b based on xdd file generated from ProviewR.
+    !  MN node transmit data to CN node, inputs in ProviewR CNServer
     !  (Di00 to Di09, Ai04 and Ai00 in that order, see example 2)
     ! 
     !  @image orm_otherio_epl_example12.png
@@ -9592,7 +9592,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  should match.
     ! 
     !  openCONFIGURATOR will align 16 bit words on 16 bit bounary, and 32 bit words
-    !  on 32 bit boundary. The Proview channels will automatically be aligned in 
+    !  on 32 bit boundary. The ProviewR channels will automatically be aligned in 
     !  this way and there is no need for padding.
     ! 
     !  The example 2 over is an example of a node hierarchy that matches the
@@ -9905,7 +9905,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  @Author je
     !  @Summary Ethernet Powerlink Server Module
     !  
-    !  The server module configures a CN module where Proview acts as a CN.
+    !  The server module configures a CN module where ProviewR acts as a CN.
     ! 
     !  The Epl_CnServerModule object is placed as a child to an Epl_CNServer 
     !  object and is the father of channel objects that defines the input and 
@@ -10047,14 +10047,14 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  The Ethernet Powerlink handler object configures the process rt_powerlink
     !  running the Powerlink stack and handling the Powerlink IO.
     ! 
-    !  Any Powerlink configuration, with Proview as managing node or controlled node,
+    !  Any Powerlink configuration, with ProviewR as managing node or controlled node,
     !  requires that the EplHandler object is created and configured.
     !   
-    !  @b Example Powerlink handler with Proview as managing node
+    !  @b Example Powerlink handler with ProviewR as managing node
     ! 
     !  @image orm_otherio_epl_example3.png
     ! 
-    !  @b  Example Powerlink handler with Proview as controlled node
+    !  @b  Example Powerlink handler with ProviewR as controlled node
     ! 
     !  @image orm_otherio_epl_example8.png
     ! 

@@ -89,7 +89,7 @@ SObject pwrb:Class
 !  - are missed in rtdb, because they are deleted, or
 !    have got a new name e.g., will be skipped
 !  
-!  One cannot presuppose at change of PROVIEW distribution
+!  One cannot presuppose at change of ProviewR distribution
 !  that the back-up file will works.
 !  
 ! @b See Also

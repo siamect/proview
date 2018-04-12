@@ -193,7 +193,7 @@ SObject pwrb:Class
     EndObject
     Object Template PostConfig
       Body RtBody
-        Attr EmailCmd = "mailto 'Proview' '$address' 'Proview alarm' '$text'"
+        Attr EmailCmd = "mailto 'ProviewR' '$address' 'ProviewR alarm' '$text'"
       EndBody
     EndObject
   EndObject

@@ -526,7 +526,7 @@ OpGtk::OpGtk( void *op_parent_ctx,
   g_signal_connect( functions_help_opwin, "activate", 
 		    G_CALLBACK(activate_help_opwin), this);
 
-  GtkWidget *functions_help_proview = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_About Proview"));
+  GtkWidget *functions_help_proview = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_About ProviewR"));
   g_signal_connect( functions_help_proview, "activate", 
 		    G_CALLBACK(activate_help_proview), this);
 

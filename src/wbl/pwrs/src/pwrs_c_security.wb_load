@@ -84,9 +84,9 @@ SObject pwrs:Class
         EndBody
       EndObject
       !/**
-      !  At rt_xtt and operator environment start, a Proview user with the same name as
+      !  At rt_xtt and operator environment start, a ProviewR user with the same name as
       !  the current operator system user is searched for.
-      !  If no corresponding proview user is found, login is required.
+      !  If no corresponding ProviewR user is found, login is required.
       !*/
       Object XttUseOpsysUser $Attribute 4
         Body SysBody

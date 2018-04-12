@@ -5085,7 +5085,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
     !  @h2 Function
     ! 
     !  The PIDuP-card is an autonomous PID-controller where the PID-algorithm runs
-    !  in the micro-processor of the card. Proview only send setpoint-values to the
+    !  in the micro-processor of the card. ProviewR only send setpoint-values to the
     !  card and the card itself calulates the control-value.
     ! 
     !  @h2 Console
@@ -8215,7 +8215,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         !/**
         !  Integer value. If verbose =0, the object will tell you about 
         !  its progress (or failure) by printouts to the terminal window 
-        ! (i.e. it only makes sense if proview is started from a terminal window..). 
+        ! (i.e. it only makes sense if ProviewR is started from a terminal window..). 
         !  There are three degrees of verbosity:
         ! 
         !  1 AS_VERB_DISABLED Object will print message if disabled

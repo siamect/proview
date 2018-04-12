@@ -39,9 +39,9 @@ SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group ProjectConfiguration
-!  @Summary Configures a class volume to load in a proview node.
+!  @Summary Configures a class volume to load in a ProviewR node.
 !  The ClassVolumeLoad object configures a class volume to
-!  load into a proview node when proview is started on this node.
+!  load into a ProviewR node when ProviewR is started on this node.
 !  If a mounted volume contains objects of classes that is not loaded
 !  by default into the node, a ClassVolumeLoad object will force a
 !  load of the classvolume.

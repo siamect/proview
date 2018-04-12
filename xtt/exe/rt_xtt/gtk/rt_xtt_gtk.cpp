@@ -982,7 +982,7 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
   g_signal_connect( help_project, "activate", 
 		    G_CALLBACK(XttGtk::activate_help_project), this);
 
-  GtkWidget *help_proview = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_About Proview"));
+  GtkWidget *help_proview = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_About ProviewR"));
   g_signal_connect( help_proview, "activate", 
 		    G_CALLBACK(XttGtk::activate_help_proview), this);
 

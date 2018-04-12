@@ -78,7 +78,7 @@ SObject pwrb:Class
 !  operator can override the transition condition by
 !  setting OpCond. As soon as a manually initiated
 !  transition has taken place the OpCond flag is cleared
-!  by the PROVIEW/R system which implies that the operator
+!  by the ProviewR system which implies that the operator
 !  has to set the OpCond flag to trigger each transition.
 !  The Man flag remains set until cleared by the operator.
 !  At reset of a sequential chain ( see the description of
@@ -183,7 +183,7 @@ SObject pwrb:Class
       !/**
       !  Specifies the status of the manual condition. The
       !  transition takes place when OpCond and Man both are
-      !  TRUE. The OpCond flag is cleared by the PROVIEW/R
+      !  TRUE. The OpCond flag is cleared by the ProviewR
       !  system after the transition.
       !*/
       Object OpCond $Intern 6 

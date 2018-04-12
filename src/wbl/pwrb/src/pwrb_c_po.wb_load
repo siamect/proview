@@ -56,7 +56,7 @@ SObject pwrb:Class
 !
 !  ActualValue is handled e.g. from application programs
 !  by the system call: gdh_SetObjectInfo(...)
-!  If ResetActualValue = TRUE, PROVIEW will restore
+!  If ResetActualValue = TRUE, ProviewR will restore
 !  ActualValue after trigger detection. The restoration is
 !  done independent of the current state of the output;
 !  i.e. independent of any eventual propagating pulse or
@@ -260,7 +260,7 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Specifies if PROVIEW will restore ActualValue after
+      !  Specifies if ProviewR will restore ActualValue after
       !  trigger detection or not.
       !  - TRUE means that ActualValue is set:
       !  a.
@@ -273,7 +273,7 @@ SObject pwrb:Class
       !  eventual progagating pulse or not. Repeated
       !  triggering during propagating pulse do not affect
       !  the existing pulse.
-      !  - FALSE means that PROVIEW do not restore ActualValue.
+      !  - FALSE means that ProviewR do not restore ActualValue.
       !*/
       Object ResetActualValue $Attribute 13 
         Body SysBody

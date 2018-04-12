@@ -90,7 +90,7 @@ SObject pwrs:Class
         EndBody
       EndObject
       !/**
-      !  Proview startup time.
+      !  ProviewR startup time.
       !*/
       Object BootTime $Attribute 7
         Body SysBody
@@ -100,7 +100,7 @@ SObject pwrs:Class
         EndBody
       EndObject
       !/**
-      !  Version of the root volume at proview startup.
+      !  Version of the root volume at ProviewR startup.
       !*/
       Object BootVersion $Attribute 8
         Body SysBody
@@ -110,7 +110,7 @@ SObject pwrs:Class
         EndBody
       EndObject
       !/**
-      !  Version of the plc program at proview startup.
+      !  Version of the plc program at ProviewR startup.
       !*/
       Object BootPlcVersion $Attribute 9
         Body SysBody
@@ -121,7 +121,7 @@ SObject pwrs:Class
       EndObject
       !/**
       !  Current version of the root volume.
-      !  This version is updated at proview soft restart.
+      !  This version is updated at ProviewR soft restart.
       !*/
       Object CurrentVersion $Attribute 10
         Body SysBody
@@ -132,7 +132,7 @@ SObject pwrs:Class
       EndObject
       !/**
       !  Current version of the plc program.
-      !  This version is updated at proview soft restart.
+      !  This version is updated at ProviewR soft restart.
       !*/
       Object CurrentPlcVersion $Attribute 11
         Body SysBody
@@ -142,7 +142,7 @@ SObject pwrs:Class
         EndBody
       EndObject
       !/**
-      !  Number of soft restarts since proview startup.
+      !  Number of soft restarts since ProviewR startup.
       !*/
       Object Restarts $Attribute 12
         Body SysBody

@@ -2180,7 +2180,7 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
         !/**
-        ! Defines the Proview process that will handle I/O for the bus.
+        ! Defines the ProviewR process that will handle I/O for the bus.
         ! 1 for the PLC process (default).
         !*/
         Object Process $Attribute 2 16-JAN-2006 09:46:40.51
@@ -2616,7 +2616,7 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
         !/**
-        ! Defines the Proview process that will handle I/O for the bus.
+        ! Defines the ProviewR process that will handle I/O for the bus.
         ! 1 for the PLC process (default).
         !*/
         Object Process $Attribute 28 09-DEC-2008 13:19:32.10
@@ -3273,11 +3273,11 @@ Volume Profibus $ClassVolume 0.0.250.7
     ! @Summary Configures a Softing Profinet controller stack.
     ! Configures a Sofing Profinet controller stack.
     ! 
-    ! Proview has support for a Profinet stack from Softing (www.softing.com). 
+    ! ProviewR has support for a Profinet stack from Softing (www.softing.com). 
     ! The Profinet stack is implemented as three Linux kernel modules. The stack 
     ! is configured by the current object and is placed below the $Node object.
     ! 
-    ! See Proview documentation 'Guide to I/O System' for more information. See also
+    ! See ProviewR documentation 'Guide to I/O System' for more information. See also
     ! a Case Study in class help class ABB_ACS880_PnDevice
     ! 
     ! Note due to Softing licens requirements the NIC must have a specific macadress.
@@ -3419,7 +3419,7 @@ Volume Profibus $ClassVolume 0.0.250.7
     ! Baseobject for a profinet device. Reside below a profinet agent object.
     ! In the attribute GSDMfile the gsdmlfile for the current device is stated.
     ! When the gsdml­file is supplied the device can be configured by the Profinet
-    ! configurator. See Proview documentation 'Guide to I/O System' for more
+    ! configurator. See ProviewR documentation 'Guide to I/O System' for more
     ! information. See also a Case Study class ABB_ACS880_PnDevice.
     ! 
     ! Note 'DeviceName' is the most important setting and defines the device on
@@ -3435,7 +3435,7 @@ Volume Profibus $ClassVolume 0.0.250.7
     ! connect to eth1.
     ! 
     ! @bNote. 
-    ! The Proview runtime environment should be stopped on the current node before the 
+    ! The ProviewR runtime environment should be stopped on the current node before the 
     ! the viewer is started.
     ! 
     ! @b See also
@@ -3866,7 +3866,7 @@ Volume Profibus $ClassVolume 0.0.250.7
     ! prepared subclasses of the PnModuleÂ­class for the specific module. This is for example
     ! the case for a Siemens ET200M device. For the prepared classes the IO channels will
     ! exist as a part of the module­object. The prepared classes should be used if they exist.
-    ! See Proview documentation 'Guide to I/O Systemfor more information.
+    ! See ProviewR documentation 'Guide to I/O Systemfor more information.
     ! 
     ! @bConfiguration (prepared subclasses)
     ! One device object (not this module object) are placed as children to the master. For
@@ -4052,7 +4052,7 @@ Volume Profibus $ClassVolume 0.0.250.7
     ! of the node that this SAP will exchange data with. It should be created as a child to a
     ! Pb_Profiboard. 
     ! 
-    ! See Proview documentation 'Guide to I/O Systems' for more information.
+    ! See ProviewR documentation 'Guide to I/O Systems' for more information.
     ! 
     ! @bConfiguration
     ! Instances of the class Pb_FDL_DataTransfer are created as children to the Pb_FDL_SAP object.
@@ -4348,7 +4348,7 @@ Volume Profibus $ClassVolume 0.0.250.7
     ! be directed to the first (top) Pb_FDL_DataTransfer-object found as a child to the 
     ! Pb_FDL_SAP-object. 
     ! 
-    ! See Proview documentation 'Guide to I/O Systems' for more information.
+    ! See ProviewR documentation 'Guide to I/O Systems' for more information.
     ! 
     ! @bConfiguration
     ! Instances of the class Pb_FDL_DataTransfer are created as children to the Pb_FDL_SAP object.

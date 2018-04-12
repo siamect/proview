@@ -43,7 +43,7 @@ SObject pwrb:Class
 !  The Bus object configures a Qcom bus that nodes in the project will
 !  communicate on.
 !
-!  Qcom is the communication protocoll for proview nodes and proview
+!  Qcom is the communication protocoll for ProviewR nodes and proview
 !  processes. Nodes that will communicate over Qcom has to use the same
 !  Qcom bus. Communication between nodes in different busses is not possible.
 !  
@@ -79,7 +79,7 @@ SObject pwrb:Class
       ! A number in the intervall 1-999.
       !
       ! Qcom is the communication protocoll used by the nethandler and
-      ! message handler to communicate between Proview nodes. The Qcom network 
+      ! message handler to communicate between ProviewR nodes. The Qcom network 
       ! is divided into busses, where two nodes has to be on the same bus to be
       ! able to communicate.
       ! 

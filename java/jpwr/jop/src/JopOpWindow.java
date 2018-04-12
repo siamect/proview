@@ -201,7 +201,7 @@ public class JopOpWindow extends JPanel {
     if ( iret.evenSts()) return;
 
     if ( iret.value != 0) {
-      button = new OpWindButton( session, "", "Proview",
+      button = new OpWindButton( session, "", "ProviewR",
 				 OpWindButton.PROVIEW);
       this.add( button);
     }

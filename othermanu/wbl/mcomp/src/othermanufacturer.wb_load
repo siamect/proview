@@ -85771,7 +85771,7 @@ Alarm HH, H, L, LL"
     ! 
     !  @h1B&R Case Study
     !  This study explain a lot of steps needed to configurate an X20 system with
-    !  Powerlink communication to a Proview system. The case (Fig 3) is based on the
+    !  Powerlink communication to a ProviewR system. The case (Fig 3) is based on the
     !  B&R hardware:
     !  
     !  - X20 Bus Controller POWERLINK (Slave id = 15).
@@ -85792,7 +85792,7 @@ Alarm HH, H, L, LL"
     !  - Use the Windows PC tool FieldbusDESIGNER from B&R to configure the hardware and 
     !    create the XDC file (XML Device Configuration).
     ! 
-    !  - In a Proview project create and configure the Proview Powerlink objects and the B&R module
+    !  - In a ProviewR project create and configure the ProviewR Powerlink objects and the B&R module
     !    objects corresponding to the X20 hardware configuration in FieldbusDESIGNER tool and
     !    openCONFIGURATOR tool. i.e. memory mapping and node id.
     ! 
@@ -85800,7 +85800,7 @@ Alarm HH, H, L, LL"
     !    to create and configure a new X20 Controlled node and create the mnobd.cdc
     !    binary file used by the Powerlink stack. Transfer the mnobd.cdc to $pwrp_load.
     ! 
-    !  - Build the Proview project and distribute.
+    !  - Build the ProviewR project and distribute.
     ! 
     !  @h1FieldbusDESIGNER Tool (WINDOWS PC)
     !  Example 1 below shows the hardware solution in this Case Study i.e. all IO modules,
@@ -85821,20 +85821,20 @@ Alarm HH, H, L, LL"
     ! 
     !  @image orm_br_field_designer_ai_settings.gif  
     ! 
-    !  @h1Proview  
-    !  The B&R Case Study contains a Proview project ACS880Pn and one MN and two CN nodes.
+    !  @h1ProviewR
+    !  The B&R Case Study contains a ProviewR project ACS880Pn and one MN and two CN nodes.
     !  The first CN node is an ABB frequency converter ACS880 and the second is B&R Bus
-    !  Controller node. The Examples 10-13 below shows the Proview settings.
+    !  Controller node. The Examples 10-13 below shows the ProviewR settings.
     ! 
-    !  @b Example 10 Settings in Proview Powerlink MN node 
-    !  Settings needed in Proview class Epl_MN node. Node id
+    !  @b Example 10 Settings in ProviewR Powerlink MN node 
+    !  Settings needed in ProviewR class Epl_MN node. Node id
     !  for MN node is always 240.
     ! 
     !  @image orm_br_proview_mn_node_settings.gif 
     ! 
     ! 
-    !  @b Example 11 Settings in Proview node CN
-    !  Settings needed in Proview for class Epl_CN. The 'NodeId'
+    !  @b Example 11 Settings in ProviewR node CN
+    !  Settings needed in ProviewR for class Epl_CN. The 'NodeId'
     !  shall be the same as in the openCONFIGURATOR, i.e. 15, see 
     !  also example 15 below.
     ! 
@@ -85842,7 +85842,7 @@ Alarm HH, H, L, LL"
     ! 
     ! 
     !  @b Example 12 Create 'IO mapping' modules 
-    !  Modules needed in Proview to match the I/O mapping, i.e. hardware
+    !  Modules needed in ProviewR to match the I/O mapping, i.e. hardware
     !  configuration in FieldbusDESIGNER tool, see also example 1.
     ! 
     !  @image orm_br_proview_cn_node_io_modules.gif
@@ -85863,7 +85863,7 @@ Alarm HH, H, L, LL"
     !  the open source POWERLINK protocol stack for master and slave nodes.
     !  
     !  Every node in a Powerlink network must be configured in this tool.
-    !  In a Proview project all Powerlink CN nodes memory mapping is a reflection
+    !  In a ProviewR project all Powerlink CN nodes memory mapping is a reflection
     !  of the memory mapping in a openCONFIGURATOR project.
     ! 
     !  From the openCONFIGURATOR tool a CDC file is generated. This file is used by
@@ -85874,7 +85874,7 @@ Alarm HH, H, L, LL"
     !  and one or several CN (Controlled Node). 
     ! 
     !  Note It is recommended to study the help in the openCONFIGURATOR tool and a detailed
-    !  Case Study in Proview class help for class object ABB_ACS880_Epl, see link below.
+    !  Case Study in ProviewR class help for class object ABB_ACS880_Epl, see link below.
     ! 
     !  @bShort description step by step:
     ! 
@@ -85883,15 +85883,15 @@ Alarm HH, H, L, LL"
     !    - Create a new CN node and import the 0100006C_X20BC0083_15.xdc file.
     !    - Build the project. This will generate the binary cdc-file.
     !    - Transfer cdc file to $pwrp_load folder.
-    !    - In Proview distribute function a copy command is needed for file mnobd.cdc
+    !    - In ProviewR distribute function a copy command is needed for file mnobd.cdc
     ! 
     !  @bConfiguration
     !  Create a new CN node and import the 0100006C_X20BC0083_15.xdc file generated
     !  from tool FieldbusDESIGNER. This file is prepared with all memory mapping
-    !  (TPDO, RPDO) needed for the Proview class object BR_Di4_EplModule,
+    !  (TPDO, RPDO) needed for the ProviewR class object BR_Di4_EplModule,
     !  BR_PowerSupply_EplModule, BR_Ai_EplModule and BR_Ao4_EplModule. Build the
     !  project with project settings "auto generate" set to YES, then transfer the
-    !  new mnobd.cdc file to Proview project $pwrp_load folder.
+    !  new mnobd.cdc file to ProviewR project $pwrp_load folder.
     ! 
     !  Example 14 to 17 below shows some screenshots from openCONFIGURATOR tool.
     ! 
@@ -85904,7 +85904,7 @@ Alarm HH, H, L, LL"
     ! 
     !  @bExample 15 
     !  openCONFIGURATOR settings for slave node 15, i.e. Bus Controller X20BC0083.
-    !  This Id must be the same as in the Proview object Epl_CN, see also example 11.  
+    !  This Id must be the same as in the ProviewR object Epl_CN, see also example 11.  
     !  @image orm_br_open_conf_node_id.gif
     ! 
     ! 

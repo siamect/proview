@@ -52,7 +52,7 @@ SObject pwrb:Class
 !  below any $Node object that represents a process node.
 !  This is normally done by the development environment in
 !  connection with configuring of a $Node object.
-!  If no IOHandler object is configured PROVIEW will
+!  If no IOHandler object is configured ProviewR will
 !  create one at initiating of the node's rtdb. The
 !  attributes will then be assigned the default values.
 !

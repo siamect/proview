@@ -39,8 +39,8 @@ SObject pwrb:Class
 !/**
 !  @Version 1.1
 !  @Group ProjectConfiguration
-!  @Summary Configures a proview storage environment node.
-!  The SevNodeConfig object configures a proview storage environment node.
+!  @Summary Configures a ProviewR storage environment node.
+!  The SevNodeConfig object configures a ProviewR storage environment node.
 !  
 !  The SevNodeConfig object is used when a node only contains the storage
 !  environment, not the runtime environment. If the node also contains the

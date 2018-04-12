@@ -38,8 +38,8 @@
 SObject pwrb:Class
 !/**
 !  @Version 1.0
-!  @Summary Defines a web graph in a proview website
-!  The WebGraph object defines a web graph in a proview website.
+!  @Summary Defines a web graph in a ProviewR website
+!  The WebGraph object defines a web graph in a ProviewR website.
 !  WebGraph objects should be positioned as children to a OpPlaceWeb object.
 !  
 !

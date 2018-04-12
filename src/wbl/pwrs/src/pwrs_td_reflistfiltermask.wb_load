@@ -40,7 +40,7 @@ SObject pwrs:Type
 !  @Version 1.0
 !  @Code pwr.h
 !  @Group DerivedTypes,Types
-!  Proview ReferenceList filter bitmask. Derived from Mask.
+!  ProviewR ReferenceList filter bitmask. Derived from Mask.
 !
 ! @b See also
 !  @classlink Mask pwrs_mask.html

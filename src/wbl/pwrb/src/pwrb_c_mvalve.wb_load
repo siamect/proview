@@ -564,7 +564,7 @@ SObject pwrb:Class
       !  still remains or not. FALSE means no alarm; TRUE means
       !  that the contactor response arrived within the time
       !  limit value Ctime but disappeared later; OrderOpen is
-      !  reset by the PROVIEW/R system.
+      !  reset by the ProviewR system.
       !  Connects a DSup object to the output if a message will
       !  be sent and specifies DetectText in the DSup object;
       !  e.g. 'The contactor response is lost at OPEN operation
@@ -589,7 +589,7 @@ SObject pwrb:Class
       !  still remains or not. FALSE means no alarm; TRUE means
       !  that the contactor response arrived within the time
       !  limit value Ctime but disappeared later; OrderClose is
-      !  reset by the PROVIEW/R system.
+      !  reset by the ProviewR system.
       !  Connects a DSup object to the output if a message will
       !  be sent and specifies DetectText in the DSup object;
       !  e.g. 'The contactor response is lost at CLOSE operation
@@ -775,7 +775,7 @@ SObject pwrb:Class
       !/**
       !  Specifies OPEN request in the operational mode MANUAL.
       !  FALSE means no request; TRUE means OPEN request. The
-      !  request is reset by the PROVIEW/R system when it has
+      !  request is reset by the ProviewR system when it has
       !  been noticed.
       !*/
       Object ManOpen $Intern 40 
@@ -790,7 +790,7 @@ SObject pwrb:Class
       !/**
       !  Specifies CLOSE request in the operational mode MANUAL.
       !  FALSE means no request; TRUE means CLOSE request. The
-      !  request is reset by the PROVIEW/R system when it has
+      !  request is reset by the ProviewR system when it has
       !  been noticed.
       !*/
       Object ManClose $Intern 41 
@@ -805,7 +805,7 @@ SObject pwrb:Class
       !/**
       !  Specifies STOP request in the operational mode MANUAL.
       !  FALSE means no request; TRUE means STOP request. The
-      !  request is reset by the PROVIEW/R system when it has
+      !  request is reset by the ProviewR system when it has
       !  been noticed.
       !*/
       Object ManStop $Intern 42 

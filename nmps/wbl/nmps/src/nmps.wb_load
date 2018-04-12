@@ -14773,7 +14773,7 @@ Volume NMps $ClassVolume 0.0.1.1
     !  Running time Measurement.
     !  @image orm_runningtime_fo.gif
     ! 
-    ! Running Time concept in Proview is a way to standardize the measurement of 
+    ! Running Time concept in ProviewR is a way to standardize the measurement of 
     ! running time for different machines.
     ! 
     ! The RunningTime object executes under the PLC. It uses a Boolean Input, and 

@@ -43,7 +43,7 @@ SObject pwrb:Class
 !  @Summary Fetches the value of IOHandler.IOSimulFlag.
 !  Fetches the value of IOHandler.IOSimulFlag.
 !
-!  IOSimulFlag is set when Proview is running in simulation 
+!  IOSimulFlag is set when ProviewR is running in simulation 
 !  mode without IO. This object makes it possible to fetch
 !  this flag from function object code.
 !
