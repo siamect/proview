@@ -267,4 +267,4 @@ typedef struct RCS_MESSAGETELEGRAM_10tag {
 }
 #endif
 
-/* === eof 'RCS_USER.H' === */
+/* === eof 'RCS_USER.H' === */
