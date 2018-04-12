@@ -80,13 +80,13 @@
 # define SET_VERSION(a, b, c, d)  ((pwr_tVersion)((a << 24) + (b << 16) + (c << 8) + d))		  
 #endif
 
-#define pwrv_cBuildTimeStr       "17-FEB-2017 12:00:00"
+#define pwrv_cBuildTimeStr       "12-APR-2018 12:00:00"
 
-#define pwrv_cPwrVersionStr      "V5.5.0"
-#define pwrv_cPwrVersion         SET_VERSION('V', 5, 5, 0)
+#define pwrv_cPwrVersionStr      "V5.6.0"
+#define pwrv_cPwrVersion         SET_VERSION('V', 5, 6, 0)
 
 #define pwrv_cWbdbVersionShortStr "V55"
-#define pwrv_cPwrCopyright	 "Copyright (C) 2005-2017 SSAB EMEA AB"
+#define pwrv_cPwrCopyright	 "Copyright (C) 2005-2018 SSAB EMEA AB"
 
 #if (pwr_dHost_byteOrder == pwr_dLittleEndian)
 # define PWRV_VERSION_MAJOR (0xFF & (pwrv_cPwrVersion >> 8))
