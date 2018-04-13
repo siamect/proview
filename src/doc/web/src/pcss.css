@@ -187,26 +187,26 @@ body#pwrhead
 {
   font-weight: bold;
   font-famlily:  arial;
-  background: #cde7ff;
+  background: #2f427d;
 }
 p#pwrversion
 {
   font-weight: bold;
-  font-size : 20px;
+  font-size : 12px;
   font-family:  sans-serif;
-  color: #5a759a;
+  color: #639ef6;
   position: absolute;
-  top : 40px;
-  right : 15px;
+  top : 102px;
+  right : 30px;
 }
 a#pwrlang:link
 {
   font-weight: bold;
   font-size : 12px;
   font-family:  sans-serif;
-  color: #5a759a;
+  color: #639ef6;
   position: absolute;
-  top : 5px;
+  top : 120px;
   right : 5px;
   border: 1px;
   border-style: solid;
@@ -216,9 +216,9 @@ a#pwrlang:visited
   font-weight: bold;
   font-size : 12px;
   font-family:  sans-serif;
-  color: #5a759a;
+  color: #639ef6;
   position: absolute;
-  top : 5px;
+  top : 120px;
   right : 5px;
   border: 1px; 
   border-style: solid;
@@ -228,96 +228,96 @@ a#pwrlang:active
   font-weight: bold;
   font-size : 12px;
   font-family:  sans-serif;
-  color: #5a759a;
+  color: #639ef6;
   position: absolute;
-  top : 5px;
+  top : 120px;
   right : 5px;
   border: 1px; 
   border-style: solid;
 }
 a#pwrlang:hover
 {
-  color: #5a759a;
-  background: #feffbe;
+  color: #f1eb8e;
+  background: #2a48ac;
 }
 a#pwrdoc:link
 {
   font-weight: bold;
-  font-size : 11px;
+  font-size : 14px;
   font-family:  sans-serif;
-  color: #5a759a;
+  color: #639ef6;
   position: absolute;
-  top : 53px;
-  left : 191px;
+  top : 120px;
+  left : 300px;
   border: 1px;
   border-style: ridge ridge groove ridge;
 }
 a#pwrdoc:visited
 {
   font-weight: bold;
-  font-size : 11px;
+  font-size : 14px;
   font-family: sans-serif;
-  color: #5a759a;
+  color: #639ef6;
   position: absolute;
-  top : 53px;
-  left : 191px;
+  top : 120px;
+  left : 300px;
   border: 1px;
   border-style: ridge ridge groove ridge;
 }
 a#pwrdoc:active
 {
   font-weight: bold;
-  font-size : 11px;
+  font-size : 14px;
   font-family: sans-serif;
-  color: #5a759a;
+  color: #639ef6;
   position: absolute;
-  top : 53px;
-  left : 191px;
+  top : 120px;
+  left : 300px;
   background: #ffffff;
   border: 1px;
   border-style: ridge ridge groove ridge;
 }
 a#pwrdoc:hover
 {
-  color: #5a759a;
-  background: #feffbe;
+  color: #f1eb8e;
+  background: #2a48ac;
 }
 a#pwrdochigh:link
 {
   font-weight: bold;
-  font-size : 11px;
+  font-size : 14px;
   font-family:  sans-serif;
   color: #5a759a;
+  background: #f4ffff;
   position: absolute;
-  top : 53px;
-  left : 191px;
-  background: #efffff;
+  top : 120px;
+  left : 300px;
   border: 1px;
   border-style: ridge ridge groove ridge;
 }
 a#pwrdochigh:visited
 {
   font-weight: bold;
-  font-size : 11px;
+  font-size : 14px;
   font-family:  sans-serif;
   color: #5a759a;
-  position: absolute;
-  top : 53px;
-  left : 191px;
   background: #f4ffff;
+  position: absolute;
+  top : 120px;
+  left : 300px;
   border: 1px;
   border-style: ridge ridge groove ridge;
 }
 a#pwrdochigh:active
 {
   font-weight: bold;
-  font-size : 11px;
+  font-size : 14px;
   font-family:  sans-serif;
   color: #5a759a;
-  position: absolute;
-  top : 53px;
-  left : 191px;
   background: #f4ffff;
+  position: absolute;
+  top : 120px;
+  left : 300px;
   border: 1px;
   border-style: ridge ridge groove ridge;
 }
@@ -329,55 +329,53 @@ a#pwrdochigh:hover
 a#pwrabout:link
 {
   font-weight: bold;
-  font-size : 11px;
+  font-size : 14px;
   font-family:  sans-serif;
-  color: #5a759a;
+  color: #639ef6;
   position: absolute;
-  top : 53px;
-  left : 300px;
+  top : 120px;
+  left : 455px;
   border: 1px;
   border-style: ridge ridge groove ridge;
 }
 a#pwrabout:visited
 {
   font-weight: bold;
-  font-size : 11px;
+  font-size : 14px;
   font-family:  sans-serif;
-  color: #5a759a;
+  color: #639ef6;
   position: absolute;
-  top : 53px;
-  left : 300px;
+  top : 120px;
+  left : 455px;
   border: 1px;
   border-style: ridge ridge groove ridge;
 }
 a#pwrabout:active
 {
   font-weight: bold;
-  font-size : 11px;
+  font-size : 14px;
   font-family:  sans-serif;
-  color: #5a759a;
+  color: #639ef6;
   position: absolute;
-  top : 53px;
-  left : 300px;
-  background: #ffffff;
+  top : 120px;
+  left : 455px;
   border: 1px;
   border-style: ridge ridge groove ridge;
 }
 a#pwrabout:hover
 {
-  color: #5a759a;
-  background: #feffbe;
+  color: #f1eb8e;
+  background: #2a48ac;
 }
 a#pwrabouthigh:link
 {
   font-weight: bold;
-  font-size : 11px;
+  font-size : 14px;
   font-family:  sans-serif;
   color: #5a759a;
   position: absolute;
-  width : 53px;
-  top : 53px;
-  left : 300px;
+  top : 120px;
+  left : 455px;
   background: #f4ffff;
   border: 1px;
   border-style: ridge ridge groove ridge;
@@ -385,12 +383,12 @@ a#pwrabouthigh:link
 a#pwrabouthigh:visited
 {
   font-weight: bold;
-  font-size : 11px;
+  font-size : 14px;
   font-family:  sans-serif;
   color: #5a759a;
   position: absolute;
-  top : 53px;
-  left : 300px;
+  top : 120px;
+  left : 455px;
   background: #f4ffff;
   border: 1px;
   border-style: ridge ridge groove ridge;
@@ -398,12 +396,12 @@ a#pwrabouthigh:visited
 a#pwrabouthigh:active
 {
   font-weight: bold;
-  font-size : 11px;
+  font-size : 14px;
   font-family:  sans-serif;
   color: #5a759a;
   position: absolute;
-  top : 53px;
-  left : 300px;
+  top : 120px;
+  left : 455px;
   background: #ffffff;
   border: 1px;
   border-style: ridge ridge groove ridge;
@@ -429,18 +427,30 @@ a#pwrhome:link
 p#pwrhead
 {
   font-weight: bold;
-  font-size : 30px;
+  font-size : 40px;
   font-family:  sans-serif;
-  color: #5a759a;
+  color: #639ef6;
   position: absolute;
-  top : 7px;
-  left : 191px;
+  top : 61px;
+  left : 300px;
 }
 img#uggla
 {
   position: relative;
   top: 0px;
   left: 0px;
+}
+img#proviewlogo
+{
+  position: absolute;
+  top: 10px;
+  right: 20px;
+}
+img#proviewlogolarge
+{
+  position: absolute;
+  top: 10px;
+  left: 280px;
 }
 img#logga
 {

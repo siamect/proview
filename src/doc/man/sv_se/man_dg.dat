@@ -1,23 +1,13 @@
 
 <topic> __DocumentTitlePage
 
-<image> pwr_logga.gif
+<image> pwr_logga_doc.png
 
 
 
 
 
-
-<h1> Handbok för
-<h1> konstruktörer
-
-
-
-
-
-
-
-
+<h1> Handbok för konstruktörer
 
 
 
@@ -31,8 +21,8 @@
 
 
 <hr>
-2010-07-16
-Version 5.0.0	
+2018-03-29
+Version 5.6.0	
 <hr>
 </topic>
 
@@ -57,17 +47,17 @@ Texts.
 <topic> introduction
 Inledning
 
-Proview är ett modernt, kraftfullt och generellt process styr system. Det innehåller alla
+ProviewR är ett modernt, kraftfullt och generellt process styr system. Det innehåller alla
 funktioner som normalt krävs för effektiv sekvensstyrning, reglering, datainsamling,
 kommunikation, övervakning mm.
 
-Konfigureringen av ett Proview system görs grafisk, vilket gör att anpassningen till en
-tillämning blir enkel, pålitlig och flexibel. Proview är ett distribuerat system, vilket
+Konfigureringen av ett ProviewR system görs grafisk, vilket gör att anpassningen till en
+tillämning blir enkel, pålitlig och flexibel. ProviewR är ett distribuerat system, vilket
 innebär att systemet består av flera datorer sammankopplade i ett nätverk. Via nätverket
 utbyter datorerna ata med varandra. På det här sättet blir, t ex uppmätta signalvärden,
-åtkomliga på alla process- och operatörsstationer i ett Proview system. 
+åtkomliga på alla process- och operatörsstationer i ett ProviewR system. 
 
-Ett Proview system är definierat med objekt. Varje objekt representerar en fysisk eller
+Ett ProviewR system är definierat med objekt. Varje objekt representerar en fysisk eller
 abstrakt enhet i systemet. Objekten ordnas i en hierarktisk trädstruktur, vilket gör
 det möjligt att ge en strukturerar beskrivning av systemet. Trädstrukturen influerar också
 en hierarktisk namngivning av alla objekt. Genom att noggrant välja namn vid konfigureringen
@@ -79,13 +69,13 @@ systemet ur ett logiskt perpektiv. Den andra kallas nodhierarkin, och beskriver 
 ett fysiskt perspektiv. Konfigureringen av dessa olika delar kan göras oberoende av varandra.
 Slutligen kopplas de två delaran ihop.
 
-För att konfigurera ett system använder man Proview's arbetsbänk. Arbetsbänken omfattar en
+För att konfigurera ett system använder man ProviewR's arbetsbänk. Arbetsbänken omfattar en
 permanent databas och ett antal verktyg för att konfigurera de objekt som behövs för att
 konfigurera ett system. Utifrån arbetsbänken skapar man ett körbart system, liksom 
 dokumentation om systemet.
 
-Avsikten med Proview är att hjälpa dig att skapa automatierarde system. Antag att du har en
-process som du vill styra, Proview hjälper dig att skapa styrsystemet för processen, och
+Avsikten med ProviewR är att hjälpa dig att skapa automatierarde system. Antag att du har en
+process som du vill styra, ProviewR hjälper dig att skapa styrsystemet för processen, och
 när systemet är skapat, finner du att du även har gjort dokumentationen för systemet.
 </topic>
 </chapter>
@@ -146,7 +136,7 @@ måste även kunna påverka processen genom på olika sätt, t ex mha ventiler och mo
 resulterar i en Signal lista, som är lista på alla in och utgående signaler till systemet.
 
 I det här läget dyker även frågan upp om vilket styrsystem man ska använda sig av, och ett
-alternativ är naturligtvis Proview. Man måste även bestämma sig för vilket I/O-system man ska 
+alternativ är naturligtvis ProviewR. Man måste även bestämma sig för vilket I/O-system man ska 
 använda, och hur man ska dela upp funktionen i olika processstationer.
 
 <h1>I/O-system
@@ -162,7 +152,7 @@ eftersom dessa kan bli ganska många med tiden.
 
 Konfigureringen av ett system sker till stor del genom att skapa objekt i en databas,
 arbetsbänken. Det finns en stor mängd olika objekt för att konfigurera allt från IO-kanaler 
-till processbilder. Proview's objektshandbok innehåller över 800 typer av objekt. Objekten 
+till processbilder. ProviewR's objektshandbok innehåller över 800 typer av objekt. Objekten 
 läggs upp  i en trädstruktur och  man använder ett verktyg som kallas för Konfiguratören
 för att skapa objekt och för att navigera i objektsträdet.
 
@@ -178,7 +168,7 @@ i denna.
 
 
 <h1>Styrprogram
-Proview innehåller ett grafisk programmeringsspråk med vilket man programmerar logik, 
+ProviewR innehåller ett grafisk programmeringsspråk med vilket man programmerar logik, 
 grafcet-sekvenser och reglerkretsar. Det går under benämningen PLC program. Även PLC 
 programmet ingår som en del av objektträdet. Det konfigureras genom att man placerar ut 
 speciella program objekt, PlcPgm, i anläggninghierarkin. När man öppnar ett PlcPgm kommer 
@@ -205,7 +195,7 @@ genomarbetade funktioner, eftersom återkopplingen blir större i den kreativa pro
 konstruktionen av ett styrsystem innebär.
 
 Vid simuleringen och igångkörning är det av yttersta vikt att ha tillgång till verktyg gör att
-man kan övervaka och undersöka systemet, och snabbt lokalisera eventuella fel. I Proview kallas
+man kan övervaka och undersöka systemet, och snabbt lokalisera eventuella fel. I ProviewR kallas
 det här verktyget Xtt. Xtt innehåller en mängd funktioner för undersöka innehållet i 
 realtidsdatabasen, för att följa signalflöden, logga snabba eller långsamma förlopp, etc. 
 
@@ -217,7 +207,7 @@ gränserna mellan olika yrkesgrupper vara flytande, operatörer som är både operat
 underhållare, och kanske även processtekniker. Detta ställer stora krav på funktionalitet och
 flexibilitet i operatörsgränssnitten.
 
-Proview innehåller en operatörsmiljö där processbilder, felsökningsverktyg, presentation av 
+ProviewR innehåller en operatörsmiljö där processbilder, felsökningsverktyg, presentation av 
 trendkurvor, datablad, hjälptexter, larmlistor mm är väl integrerade och länkade så att den 
 rätt konfigurerad, blir ett oerhört effektivt hjälpmedel för alla användare. Man kan snabbt 
 och enkelt genom s k metoder, som aktiveras från popupmenyer, hämta upp all information som 
@@ -254,7 +244,7 @@ Om en anläggningsdel ställs av kan man blockera larmen från den, så att operatör
 distraheras av larm utan betydelse. Blockerade anläggningsdelar visas in en Blockerings lista.
 
 <h1>Datalagring
-Ofta vill man kunna se hur en signal förändras över tiden, i form av en kurva. I Proview finns
+Ofta vill man kunna se hur en signal förändras över tiden, i form av en kurva. I ProviewR finns
 tre olika funktioner för detta, DsTrend, DsFast och SevHist.
 
 DsTrend är en trendkurva som lagras i realtidsdatabasen. Mätvärdet för en signal lagras
@@ -274,10 +264,10 @@ under en specificerad tid, för att sedan presenteras i kurvform.
 <topic> database_structure
 Databas struktur
 
-Som vi har sett tidigare så sker största delen av konfigureringen av ett Proview system i en 
+Som vi har sett tidigare så sker största delen av konfigureringen av ett ProviewR system i en 
 databas, Arbetsbänken. I Arbetsbänkan skapar man objekt i en träd-struktur, och varje objekt 
-ger upphov till en viss funktion i styrsystemet. Proview är vad man brukar kalla objekts 
-orienterat, och låt oss titta lite närmare på vad ett Proview-objekt egentligen är.
+ger upphov till en viss funktion i styrsystemet. ProviewR är vad man brukar kalla objekts 
+orienterat, och låt oss titta lite närmare på vad ett ProviewR-objekt egentligen är.
 
 <option> printdisable
 Objekt <link> object
@@ -350,7 +340,7 @@ Definitionen av olika klasser ligger speciella volymer som kallas klassvolymer. 
 beskrivningen av en klass upp med objekt som definierar klassens namn och vilka attribut
 som ingår i klassen.
 
-Det finns två stycken klassvolymer som man alltid måste ha med i ett Proview system, pwrs och
+Det finns två stycken klassvolymer som man alltid måste ha med i ett ProviewR system, pwrs och
 pwrb. pwrs innehåller systemklasser, framför allt klasser som används i 
 klassdefinitionerna. pwrb innehåller basklasser, dvs standard klasser som behövs för att
 bygga en process- eller operatörsstation.
@@ -425,7 +415,7 @@ PLCeditorn eller i operatörsmiljön.
 Varje klass har ett template objekt, en instans av klassen som innehåller defaultvärden
 för olika attribut i klassen.
 
-Proview's bassystem innehåller ca 1000 klasser. Se Objektshandboken för närmare beskrivning.
+ProviewR's bassystem innehåller ca 1000 klasser. Se Objektshandboken för närmare beskrivning.
 Konstruktören kan även skapa egna klasser inom ett projekt.
 </topic>
 
@@ -497,9 +487,9 @@ PLC program <link> plcprogram
 Processbilder <link> process_graphics
 
 <option> printenable
-I det här kapitlet ska vi ge en idé om hur ett Proview system skapas. Processen som ska
+I det här kapitlet ska vi ge en idé om hur ett ProviewR system skapas. Processen som ska
 styras i det här fallet är mycket enkel, en korsning mellan fyra trafikljus, men kommer att
-ge ett begrepp om de olika steg man ska genomgå för att skapa ett Proview system.
+ge ett begrepp om de olika steg man ska genomgå för att skapa ett ProviewR system.
 
 Trafikljuset ska kunna arbeta i två olika moder:
 
@@ -852,9 +842,9 @@ Skapa ett projekt
 
 <h1>Installation av utvecklingsmiljön
 
-Innan man kan börja arbeta med Proview måste Proview's utvecklingsmiljö installeras. Det 
+Innan man kan börja arbeta med ProviewR måste ProviewR's utvecklingsmiljö installeras. Det 
 finns ett antal olika paket för olika Linux distributioner, och finns det inte något paket
-för den önskade distributionen kan man även ladda hem Proview källkod och bygga från denna.
+för den önskade distributionen kan man även ladda hem ProviewR källkod och bygga från denna.
 
 Installationspaketet för utvecklingsmiljön har namngivits med versionsnummer i namnet, 
 t ex pwr47. Detta gör det möjligt att ha flera versioner installerade parallellt, vilket 
@@ -864,14 +854,14 @@ Mer information om installation finns på Download sidan på www.proview.se.
 
 <h1>setup script
 Installationen skapar Linux-användaren 'pwrp' med password 'pwrp'. Genom att logga in som 
-pwrp kan man starta Proview genom att klicka på Proview ikonen på skärmen. 
+pwrp kan man starta ProviewR genom att klicka på ProviewR ikonen på skärmen. 
 
-Vill man köra Proview som en annan användare måste man initiera Proview vid inloggningen.
+Vill man köra ProviewR som en annan användare måste man initiera ProviewR vid inloggningen.
 Lägg in följande rad i filen .bashrc på hemma katalogen
 
 <c>source /src/pwrp/adm/db/pwr_setup.sh
 
-Har man flera användare med gemensamma Proview projekt måste man se till att de har
+Har man flera användare med gemensamma ProviewR projekt måste man se till att de har
 skrivrättigheter på filer i projekten. Ett sätt att uppnå det är att sätta umask till 002,
 dvs skrivrättighet för grupp, och ange en gemensam grupp på alla användare, t ex pwrp. 
 
@@ -887,7 +877,7 @@ för många applikationer, och vi nöjer oss tills vidare med dessa.
 <image> dg_fig23.gif
 <b>Användare som följer med vid installationen
 
-Notera att om man bygger Proview från källkoden, måste man skapa användare innan man kan 
+Notera att om man bygger ProviewR från källkoden, måste man skapa användare innan man kan 
 gå vidare och skapa ett projekt.
 
 <h1>Registrera volymer
@@ -901,7 +891,7 @@ tilldelar volymsidentiteter manuellt och grupperar på lämpligt sätt.
 
 <h1>Skapa ett projekt
 För att skapa ett project går man in i administratörens projektlista, antingen genom klicka
-på Proview ikonen, eller med kommandot
+på ProviewR ikonen, eller med kommandot
 
 <c>> pwra
 
@@ -911,7 +901,7 @@ direkt. wb har användare och password som argument.
 
 I projektlistan går man in i editerings mod och skapar ett ProjectReg objekt, på topp-nivå
 eller under ett hierarki objekt. I ProjectReg objektet anger man projektnamn, 
-Proview-version och katalog för projektet. När man sparar, skapas projekt-katalogerna för 
+ProviewR-version och katalog för projektet. När man sparar, skapas projekt-katalogerna för 
 projektet.
 
 Hur man skapar ett projekt finns närmare beskrivet i Getting Started Guide. Vi 
@@ -1046,7 +1036,7 @@ konfiguerar nod hierarkin genom att skapa diverse objekt för server processer mm
 man kan även skapa dessa för hand, se nedan.
 
 <h1>Konfigurering av anläggningshierarkin
-I anläggningshierarkin beskrivs de olika anläggningarna som finns med i Proview systemet.
+I anläggningshierarkin beskrivs de olika anläggningarna som finns med i ProviewR systemet.
 En anläggning är en logisk beskrivning av t ex en produktions process, funkioner, utrustning
 som ska styras och övervakas. 
 Se exempel på anläggningshierarki <link>plant_configuration, plant_example
@@ -1105,7 +1095,7 @@ MountObject objektet monterar ett objekt i en annan volym. I attributet Object s
 man det objekt som ska monteras.
 
 <h1>Konfigurering av nodhierarkin
-I nodhierarkin definieras noderna i Proview systemet.
+I nodhierarkin definieras noderna i ProviewR systemet.
 
 <b>Nodhierakin
 <image> dg_fig44.gif
@@ -1121,7 +1111,7 @@ dessutom ett antal server- och operatörs-objekt.
 Se $Node i Objektshandboken <classlink>node,"",$pwr_lang/pwrs_xtthelp.dat
 
 <h2>I/O objekt
-Konfigureringen av I/O systemet är beroende på vilken typ av I/O man använder. Proview har
+Konfigureringen av I/O systemet är beroende på vilken typ av I/O man använder. ProviewR har
 ett modulariserat I/O för att kunna hantera många olika typer av I/O system: rack och kort
 system, distribuerade bussystem, eller system som är kopplade via olika typer av nätverk.
 
@@ -1218,8 +1208,8 @@ objektet.
 
 Föjande attribut måste ges ett värde:
 
-- UserName talar om vilken Proview användare som ska loggas in. När operatörsmiljön startas
-  hämtas information om användaren från Proview's användardatabas, bl a vilka rättigheter
+- UserName talar om vilken ProviewR användare som ska loggas in. När operatörsmiljön startas
+  hämtas information om användaren från ProviewR's användardatabas, bl a vilka rättigheter
   operatören har att påverka systemet från processbilder.
 - MaxNumberOfEvents anger antalet händelser som operatörens händelselista kan innehålla
   samtidigt.
@@ -1313,7 +1303,7 @@ Figuren nedan visar filkatalogstrukturen för ett projekt.
 
 <image> dg_psfig1.png
 
-Katalogstrukturen ändrades till Proview V4.7. Orsaken till detta var att mer särskilja källkods/
+Katalogstrukturen ändrades till ProviewR V4.7. Orsaken till detta var att mer särskilja källkods/
 konfigureringsfiler och gerenerade filer i projektet. Idén är att att allt som finns i
 byggträdet ska kunna återskapas från källkodsträdet.
 
@@ -1443,13 +1433,13 @@ Konfigurering av globala funktionstangenter.
 Konfigurering av menuer och kortkommandon i rt_xtt.
 <c>xtt_setup.rtt_com
 
-Startupfil för Proview.
+Startupfil för ProviewR.
 <c>ld_appl_<nodename>_<bus_no>.txt
 
 Fil för att ange bibliotek som länkas med plc-programmet.
 <c>plc_<nodename>_<bus_no>_<plc_name>.opt
 
-Fil för att sätta initialvärden vid Proview uppstart.
+Fil för att sätta initialvärden vid ProviewR uppstart.
 <c>pwrp_alias.dat
 
 Alla ovanstående filer beskrivs närmare längre fram.
@@ -1540,7 +1530,7 @@ sätta CrossReferences i Options/Settings/Build.
 
 <topic> project_log
 $pwrp_log
-Den här katalogen innehåller log-filer som skapas vid simulering av projektet. Proview's
+Den här katalogen innehåller log-filer som skapas vid simulering av projektet. ProviewR's
 systemlogg-fil heter
 
 <c>pwr_<nodename>.log
@@ -1596,13 +1586,13 @@ Rt_xtt <link> file_rt_xtt
 Konfigurering av menyer och snabbkommandon i rt_xtt.
 xtt_setup.rtt_com <link> file_rt_xtt
 
-Startupfil för Proview.
+Startupfil för ProviewR.
 ld_appl_<nodename>_<bus_no>.txt <link> file_ld_appl
 
 Fil för att ange vilka bibliotek som ska länkas med plc-programmet.
 plc_<nodename>_<bus_no>_<plc_name>.opt <link> file_plc_opt
 
-Fil för att ange initialvärden vid Proview startup.
+Fil för att ange initialvärden vid ProviewR startup.
 pwrp_alias.dat <link> file_pwrp_alias
 <option> printenable
 </topic>
@@ -1692,8 +1682,8 @@ I xtt_setup-filen lägger man in ett kommando per rad. Kommentars-rader inleds me
 <topic> file_ld_appl
 ld_appl_<node>_<bus_no>.txt
 
-I den här filen anges de applikationer som ska startas vid start av Proview runtime. Man kan addera
-egna appikationer, men även stänga av en eller flera av Proview's system-processer.
+I den här filen anges de applikationer som ska startas vid start av ProviewR runtime. Man kan addera
+egna appikationer, men även stänga av en eller flera av ProviewR's system-processer.
 
 En typisk ld_appl-fil kan se ut så här:
 
@@ -1725,14 +1715,14 @@ En typisk ld_appl-fil kan se ut så här:
 <c>#rs_nmps_bck, rs_nmps_bck, noload, run, rs_nmps_bck, 12, nodebug, ""
 <c>ra_utl_track, ra_utl_track, noload, run, ra_utl_track, 12, nodebug, ""
 
-'#' teckenet innebär att raden är bortkommenterad. Nästan alla Proview's systemprocesser är
+'#' teckenet innebär att raden är bortkommenterad. Nästan alla ProviewR's systemprocesser är
 bortkommenterade eftersom vi vill att de ska starta (de är markerade med 'norun'). Om vi tar 
 bort #-tecknet kommer denna systemprocess ej att startas. I ovanstående exempel har 
 vi inte något web-gränssnitt och startar därför inte de processer som hanterar detta 
 (pwr_webmon, pwr_webmonmh och pwr_webmonelog).
 
-På den sista raden finns en applikation som tillhör projektet och ska startas vid Proview start.
-Prioriteten är satt till 12 som är något under prioriteten för Proview's systemprocesser som
+På den sista raden finns en applikation som tillhör projektet och ska startas vid ProviewR start.
+Prioriteten är satt till 12 som är något under prioriteten för ProviewR's systemprocesser som
 har mellan 17 och 19.
 </topic>
 
@@ -1748,14 +1738,14 @@ en default option-fil ska se ut så här:
 <c> -lpwr_cifx_dummy -lpwr_nodave_dummy -lpwr_epl_dummy
 
 Till detta adderas de bibliotek och moduler som behövs. Syntaxen är den som gäller för ld 
-(The GNU linker). Proview genererar en template option-fil .opt_template som kan användas som
+(The GNU linker). ProviewR genererar en template option-fil .opt_template som kan användas som
 mall.
 
 </topic>
 
 <topic> file_pwrp_alias
 pwrp_alias.dat
-Fil för att sätta initialvärden vid Proview start.
+Fil för att sätta initialvärden vid ProviewR start.
 
 Det finns några olika sätt att sätta värden med pwrp_alias-filen.
 Samma fil används för alla noder i projktet. Varje rad ska inledas med följande uttryck:
@@ -2007,7 +1997,7 @@ attribut, som påverkar utgångens funktion:
 - C Villkorlig (conditional)
 - S Lagrad (stored)
 
-Dessa funktioner beskrivs i detalj i Proview Objekt handbok. Principen är att man anger
+Dessa funktioner beskrivs i detalj i ProviewR Objekt handbok. Principen är att man anger
 namnet på attributet (stor bokstav) och eventuell tid i objektseditorn. I figuren nedan
 visas hur man fördröjer orderns aktivitet i 10 sekunder.
 
@@ -2099,7 +2089,7 @@ Och-grindens attribut ändras från objektseditorn.
 <b>Och-grindens attribut
 <image> dg_fig60.gif
 
-De andra objekten under 'Logic' mappen har liknande attribut, se Proview Objekt handbok.
+De andra objekten under 'Logic' mappen har liknande attribut, se ProviewR Objekt handbok.
 
 <h2>Beräkningsblock
 
@@ -2123,11 +2113,11 @@ exekveringen av plcprogrammet stoppas.
 
 <h1>Larmövervakning
 
-I Proview är det möjligt att övervaka analoga och digitala signaler. Övervakningen av analoga
+I ProviewR är det möjligt att övervaka analoga och digitala signaler. Övervakningen av analoga
 signaler sker mot ett gränsvärde. Om gränsvärdet överskrids, skickas ett larm till 'event
 monitorn' som i sin tur skickar det vidare till en utenhet, t ex ett larmfönster.
 
-Se Proview Objekt handbok beträffande objektens attribut.
+Se ProviewR Objekt handbok beträffande objektens attribut.
 
 <h2>Övervakning av digitala signaler
 För att övervaka digitala signaler eller attribut, använder man DSup objekt (Digital 
@@ -2280,7 +2270,7 @@ när noden byggs.
 <image> dg_fig116.png
 <b>Fig Objektsmodulen inlagd i BuildOptions
 
-Vi kan nu bygga noden och starta Proview runtime.
+Vi kan nu bygga noden och starta ProviewR runtime.
 
 <h1>Debug
 En nackdel när man lämnar den grafiska programmeringen och anropar c-funktioner är att man 
@@ -2291,7 +2281,7 @@ stega sig fram i koden.
 Först bygger man plc-programmet med debug genom att från konfiguratören öppna Options/Setting 
 i menyn och aktivera Build/Debug, och sedan bygga noden.
 
-Därefter man startar Proview runtime och knyter upp debuggern, gdb, mot plcprocessen genom 
+Därefter man startar ProviewR runtime och knyter upp debuggern, gdb, mot plcprocessen genom 
 att skicka med pid för processen till gdb med -p. pid kan man se med 'ps x'
 
 <c>> ps x
@@ -2333,7 +2323,7 @@ Eftersom det här är komponenter som förekommer i många olika typer av anläggning
 att försöka göra ett objekt som innehåller allt som behövs för att styra och kontrollera 
 komponenten, och som är så generellt att det kan användas i de flesta anläggningar.
 
-En komponent i Proview kan vara uppdelat på ett antal objekt: 
+En komponent i ProviewR kan vara uppdelat på ett antal objekt: 
 - ett huvudobjekt som innehåller konfigureringsdata och data som behövs vid övervakning och 
   drift av komponenten. Det innehåller även signal-objekten för komponenten.
 - ett funktionsobjekt som läggs in i plcprogrammet och som innehåller koden för att styra 
@@ -2349,7 +2339,7 @@ och säkerhetsbrytare. I övrigt är aggregatet uppbyggt som en komponent med huvud
 funktionsobjekt, simuleringsobjekt, objektsbild, dokumentation mm.
 
 <b>Objektsorientering
-Proview är ett objektsorienterat system, och komponenter och aggregat är ett område där man
+ProviewR är ett objektsorienterat system, och komponenter och aggregat är ett område där man
 utnyttjar objektsorienteringens egenskaper fullt ut. I komponenter kan man 
 se hur man bygger upp objekt av andra objekt, att ett attribut förutom att vara en enkel typ 
 som  en float eller en integer, även kan vara ett objekt som i sin tur består av andra objekt.
@@ -2402,7 +2392,7 @@ välja en konfigurerring av de olika alternativ som finns.
 <b>Fig ConfigureComponent metoden för en BaseMValve. 
 
 <h2>Baskomponenter
-Proview innehåller ett antal komponent och aggregat objekt för vanliga element i en anläggning,
+ProviewR innehåller ett antal komponent och aggregat objekt för vanliga element i en anläggning,
 t ex temperaturgivare, tryckgivare, tryckvakt, magnetventil, filter, motorstyrningar och
 fläktstyrningar. De finns samlade i klassvolymen BaseComponent. En baskomponent kan användas
 rakt av, och det är nog det vanligaste sättet att använda dem, men tanken är också att man 
@@ -2971,7 +2961,7 @@ Extern kommunikation med Remote <link>com_remote
 <topic>com_intern
 Intern kommunikation 
 
-Den interna kommunikationen i Proview skickar information om volymer, objekt, larm,
+Den interna kommunikationen i ProviewR skickar information om volymer, objekt, larm,
 händelser, historisk data mm mellan olika processer och  noder. Det finns tre olika
 protokoll för larmhantering, näthantering och historisk lagring, som alla basera på
 Qcom. 
@@ -3024,7 +3014,7 @@ Se kapitel Datalagring <link> dg_sev
 
 <h1>Web och app kommunikation
 Web gränssnittet och Android applikationen hämtar information från realtidsdatabasen i
-Proview med hjälp av server-processerna rt_webmon, rt_webmonmh och rt_webmonelog. Den
+ProviewR med hjälp av server-processerna rt_webmon, rt_webmonmh och rt_webmonelog. Den
 här kommunikationen konfigureras med WebHandler objektet.
 
 <h1>Status server
@@ -3037,8 +3027,8 @@ objektet.
 <topic>com_remote
 Remote
 
-Remote-konceptet i Proview är ett sätt att standardisera kommunikationen med andra system.
-Det utgörs av ett antal transport program och Proview objekt som används för att 
+Remote-konceptet i ProviewR är ett sätt att standardisera kommunikationen med andra system.
+Det utgörs av ett antal transport program och ProviewR objekt som används för att 
 implementera ett antal olika kommunikations-protokoll och hantera inkommande och utgående
 meddedanden. Remote är designat för att använda olika transport protokoll som TCP/IP eller
 BEA Message Queue, och olika hårdvara som t ex ethernet eller seriella linjer.
@@ -3145,7 +3135,7 @@ adressera meddelandet till rätt buffer-objekt. Headern ser ut så här:
 Alla heltal i headern kommer skickas som big endian, dvs den mest signifikanta byten först. I
 användardelen av meddelandet är det konstruktörens ansvar att konverterar mellan big och 
 little endian när detta behövs. Det går även att sända meddelanden utan header genom att sätta
-attributet DisableHeader till TRUE. Vid kommunikation mellan två Proview system ska headern 
+attributet DisableHeader till TRUE. Vid kommunikation mellan två ProviewR system ska headern 
 finnas med. MessId1 och MessId2 hämtas från attributen RemTrans.Address[0] och 
 RemTrans.Address[1]. Mha headern kan man även ange att kvittens ska skickas på meddelandet. Om
 kvittensen uteblir, upprepas sändningen av meddelandet cykliskt med det tid som ligger i
@@ -3300,9 +3290,9 @@ finns fria buffrar för meddelandet.
 Modbus Serial
 MODBUS formatet som är implementerat är RTU. För att identifiera meddelanden används fälten för
 slav-adress och funktions-kod i MODBUS headern. I RemTrans[0] och [1] anges dessa värden i 
-Proview världen. Se MODBUS specifikationen för mer info.
+ProviewR världen. Se MODBUS specifikationen för mer info.
 
-Modbus Serial är ännu inte implementerat som ett I/O system i Proview. Man måste konfigurera
+Modbus Serial är ännu inte implementerat som ett I/O system i ProviewR. Man måste konfigurera
 meddelandena genom att använda RemnodeModbus och specifiera RemTrans-objekt för de olika
 operationerna man vill utföra. Modbus arbetar i en fråga/svara mod så att för varje operation
 som ska utföras, specifieras ett RemTrans-objekt för sändning och ett för mottagning.
@@ -3310,7 +3300,7 @@ Modbus-headern i meddelandet och checksummehanteringen görs automatisk, men man 
 innehållet i meddelandet för inläggning till sänd-bufferten. På samma sätt måste man avkoda
 innehållet i mottagna meddelanden.
 
-Modbus TCP är implementerat som ett I/O system i Proview, Se mer information om detta i
+Modbus TCP är implementerat som ett I/O system i ProviewR, Se mer information om detta i
 dokumentet "Guide to I/O Systems". Med Modbus TCP behöver man inte hantera avkodning av 
 meddeladen.
 
@@ -3346,7 +3336,7 @@ Ett exempel
 För att visa hur man arbetar med de klasser som översikligt beskrivits ovan, startar vi med 
 ett litet exempel. Klasserna beskrivs med detaljerat nedan.
 
-I vårt exempel har vi ett Proview system som kommunicerar med en annan nod via UDP/IP. Vi vill
+I vårt exempel har vi ett ProviewR system som kommunicerar med en annan nod via UDP/IP. Vi vill
 skicka ett antal meddelanden i båda riktningarna. Min nod heter 'dumle' och remote noden heter
 'asterix'.
 
@@ -3452,7 +3442,7 @@ räcker till adderar man flera DataArithm-objekt och fortsätter på samma sätt.
 <topic> dg_datastorage
 Datalagring
 
-Det finns tre typer av datalagring i Proview, trendkurvor, fastkurvor och historisk lagring.
+Det finns tre typer av datalagring i ProviewR, trendkurvor, fastkurvor och historisk lagring.
 Trendkurvurna lagrar cycliskt data under en kortare period i realtidsdatabasen.
 Fastkurvor triggas av någon händelse och lagrar data under en period efter triggningen, och i
 vissa fall även före. Historiska lagringen sker på disk i en relationsdatabas och kan cykliskt
@@ -3555,7 +3545,7 @@ Se även DsFastCurve i Object Reference Manual.
 <topic> dg_sev
 Historisk datalagring
 Sev är lagrings miljön, där historisk data lagras i en databas. Det är ett komplement 
-till de andra miljöerna i Proview, runtime och operatörsmiljön. Sev innehåller server
+till de andra miljöerna i ProviewR, runtime och operatörsmiljön. Sev innehåller server
 processer som hanterar hämtning och lagring av historisk data. Sev kan installeras separat
 i en lagringsstation, men är även inkluderad i runtime-paketet och kan startas i
 runtime miljön.
@@ -3622,12 +3612,12 @@ Server processen, sev_server, hanterar databasen som lagrar historisk data, och 
 med klienter som tillhandahåller data, eller efterfrågar data för att till exempel visa 
 upp i ett kurvfönster. Server processen kan startas i runtime miljön, och konfigureras
 med ett SevServer objekt i nod hierarkin. I storage miljön startas server processen
-automatiskt vid Proview start
+automatiskt vid ProviewR start
 
 
 <h1>Databas
 MySQL och SQLite kan väljas som databas i sev servern. Valet görs i SevServer objektet
-om Proview runtime är startat, eller i filen /etc/proview.cnf med parametern
+om ProviewR runtime är startat, eller i filen /etc/proview.cnf med parametern
 'sevDatabaseType', som kan vara 'sqlite' eller 'mysql'.
 
 <c>sevDatabaseType sqlite
@@ -3742,7 +3732,7 @@ Medelvärdet på belastningen bör ligga en bra bit under 100 %.
 Applikationsprogrammering
 
 Det här kapitlet handlar om hur man skriver applikations program, dvs program i c, c++ eller
-java som knyter upp sig mot Proview. Det förutsätts all läsaren har grundkunskaper i dessa
+java som knyter upp sig mot ProviewR. Det förutsätts all läsaren har grundkunskaper i dessa
 språk.
 
 För många tillämpningar går det utmärkt att koda all styrning grafisk med hjälp av plceditorn.
@@ -3783,14 +3773,14 @@ cpp-filen bör ligga på $pwrp_src katalogen, eller på på någon underkatalog till 
 katalogen $pwrp_src/myappl och editerar filen ra_myappl.cpp.
 
 <h1>Datatyper
-I include-filen pwr.h finns de grundläggande datatyperna i Proview definierade. De vanligaste
+I include-filen pwr.h finns de grundläggande datatyperna i ProviewR definierade. De vanligaste
 är pwr_tBoolean som används för digitala signaler och pwr_tFloat32 för analoga signaler, men 
-där finns även c-typer för alla andra Proview-typer, t ex pwr_tInt32, pwr_tUInt32, pwr_tString80 
+där finns även c-typer för alla andra ProviewR-typer, t ex pwr_tInt32, pwr_tUInt32, pwr_tString80 
 etc.
 
 <h1>Initiering av gdh
 Uppknytningen mot databasen görs med anropet gdh_Init() där man skickar med en sträng som 
-identifierar applikationen. Först inkluderar vi pwr.h som innehåller grundtyperna i Proview
+identifierar applikationen. Först inkluderar vi pwr.h som innehåller grundtyperna i ProviewR
 och rt_gdh.h som innehåller grånssnittet mot realtidsdatabasen.
 
 <c>#include "pwr.h"
@@ -4160,7 +4150,7 @@ applikationsobjektet.
 <topic> dg_appl_file
 Start av applikation
 
-En applikation som ska startas vid uppstart av Proview runtime läggs in i applikationsfilen.
+En applikation som ska startas vid uppstart av ProviewR runtime läggs in i applikationsfilen.
 Det ligger på $pwrp_load och har namnet ld_appl_'nodename'_'qbus'.txt, t ex
 
 <c>$pwrp_load/ld_appl_mynode_999.txt
@@ -4175,9 +4165,9 @@ I filen lägger man en rad för varje applikation som ska startas
 <topic> dg_appl_inievents
 Ta emot systemhändelser
 
-Proview skickar ut medelanden vi olika händelser, t ex, när en mjuk omstart pågår eller
+ProviewR skickar ut medelanden vi olika händelser, t ex, när en mjuk omstart pågår eller
 om runtimmiljön stoppas. En applikation kan avlyssna dessa händelser, för att t ex terminera
-när Proview stoppas. Avlyssningen sker via Qcom. Man skapar en Qcom kö, och knyter denna
+när ProviewR stoppas. Avlyssningen sker via Qcom. Man skapar en Qcom kö, och knyter denna
 kö till den kö som meddelandena sänds ut på.
 
 <c>#include "rt_qcom.h"
@@ -4242,7 +4232,7 @@ applikationen ska kunna upptäcka nya objekt eller konfigureringar vid en mjuk om
 <c>  }
 <c>}
 
-Om man endast är intresserad av att stoppa processen när Proview tas ner, finns det ett
+Om man endast är intresserad av att stoppa processen när ProviewR tas ner, finns det ett
 enklare sätt att ta död på den. Man kan lägga en scriptfile pwrp_stop.sh på $pwrp_exe där 
 man gör kill på processen. 
 
@@ -4346,7 +4336,7 @@ Därefter kan vi skicka larm med mh_ApplMessage().
 <topic> dg_appl_qcom
 Kommunicera med andra processer
 
-Proview's protokoll för kommunikation mellan processer kan med fördel användas även av
+ProviewR's protokoll för kommunikation mellan processer kan med fördel användas även av
 applikationer. Kommunikation kan ske 
 
 - mellan processer inom samma nod.
@@ -4361,7 +4351,7 @@ Läs mer om Qcom i Qcom Reference Guide.
 <topic> dg_appl_sev
 Hämta data från lagringsstation
 
-Data som finns lagrat på en Proview lagringsstation kan hämtas med klient gränssnittet sevcli.
+Data som finns lagrat på en ProviewR lagringsstation kan hämtas med klient gränssnittet sevcli.
 Först initierar man sevcli med sevcli_init() och anger vilken lagringsstation man ska hämta
 data ifrån med sevcli_set_servernode().
 
@@ -4455,7 +4445,7 @@ och även mot signalerna för utenheterna som skrivs med funktionen  io_write().
 <topic> dg_appl_build
 Bygga en applikation
 
-En c++ applikation måste kompileras och länkas, och man kan använda make för detta. Proview
+En c++ applikation måste kompileras och länkas, och man kan använda make för detta. ProviewR
 har en regelfil $pwr_exe/pwrp_rules.mk som bl a innehåller regler för kompilering.
 
 En make fil för applikationen ra_myappl på katalogen $pwrp_src/myappl kan se ut på så här
@@ -4652,7 +4642,7 @@ Se XttGraph i Objektshandboken <classlink>xttgraph,"",$pwr_lang/pwrb_xtthelp.dat
 <topic> dg_web_interface
 Java operatörsmiljö
 
-Proview innehåller förutom den ordinarie operatörsmiljön i X windows, även en operatörsmiljö 
+ProviewR innehåller förutom den ordinarie operatörsmiljön i X windows, även en operatörsmiljö 
 skriven i java. Fördelen med java är att det går att köra i en web-läsare och på många olika 
 plattformar. Nackdelen är att det är långsammare och har en begränsad funktionalitet.
 
@@ -4688,7 +4678,7 @@ rt_webmonelog. För att server-processerna ska starta krävs att ett WebHandler ob
 <b>Fig Hemsida för ett projekt
 
 <h2>Lokalt
-Java miljön kan även köras lokalt på en nod där Proview's runtime har startats.
+Java miljön kan även köras lokalt på en nod där ProviewR's runtime har startats.
 Server-processerna för web-gränssnittet behöver inte startas, informationen hämtas
 direkt ur realtidsdatabasen. 
 
@@ -4728,7 +4718,7 @@ fönster, eftersom språket inte ändras på de fönster som redan är skapade.
 
 <b>EnableLogin
 Visar kappar för inlogging och utloggning i menyn. Inlogging innebär att man loggar in
-som en Proview användare med specificerade privileger som avgör vilken access man har till
+som en ProviewR användare med specificerade privileger som avgör vilken access man har till
 systemet.
 
 <b>EnableAlarmList
@@ -4804,7 +4794,7 @@ användaren priviligier som avgör behörigheten.
 Lösenordet krypteras av klienten, dvs okrypterade lösenord skickas inte över nätverket.
 
 <h1>Server processer
-Tre server processer startas start av Proview runtime, rt_webmon, rt_webmonmh och
+Tre server processer startas start av ProviewR runtime, rt_webmon, rt_webmonmh och
 rt_webmonelog.
 
 <b>rt_webmon
@@ -4830,7 +4820,7 @@ bygg-metod. Den består av ett antal html-filer och jar-filer som läggs på katalo
 $pwrp_web.
 
 Startsidan, index.html, består av två ramar. Den vänstra ramen öppnar html-filen för menyn, 
-index_opwin_menu.html, som i sin tur öppnar en applet som knyter upp sig mot Proview 
+index_opwin_menu.html, som i sin tur öppnar en applet som knyter upp sig mot ProviewR 
 servern och bygger upp menyn. Den högra ramen visar den URL som angivits i OpPlaceWeb 
 objektets StartURL attribut, eller om detta attribut är tomt, startsidan för xtt-hälpen.
 
@@ -4964,7 +4954,7 @@ visa
 - Larm och händelselista.
 - Korsreferenser.
  
-För att installera applikationen, ladda ner PwrXtt.apk från Proview's nedladdings-sida på 
+För att installera applikationen, ladda ner PwrXtt.apk från ProviewR's nedladdings-sida på 
 Source Forge och installera på plattan eller mobilen.
 
 Applikationen använder samma server processer som web-gränssninttet, rt_webmon och 
@@ -5043,7 +5033,7 @@ Notera att pwrp_exe katalogen olika beroende på plattform.
 <c>    Allow from all
 <c></Directory>
 
-För att kunna visa Proview hjälp texter ska det även finnas ett alias för pwr_doc som pekar
+För att kunna visa ProviewR hjälp texter ska det även finnas ett alias för pwr_doc som pekar
 på $pwr_doc. Den adderas normalt vid installationen av pwrrt paketet.
 
 <c>Alias /pwr_doc/ /usr/pwrrt/doc/
@@ -5063,8 +5053,8 @@ på $pwr_doc. Den adderas normalt vid installationen av pwrrt paketet.
 </chapter>
 <chapter>
 <topic>conf_test
-Starta och testa ett Proview system
-I föregående kapitel har vi beskrivit hur man konfigurerar ett Proview system, hur man
+Starta och testa ett ProviewR system
+I föregående kapitel har vi beskrivit hur man konfigurerar ett ProviewR system, hur man
 skapar PLC program och processbilder. Nu är det dags att köra och testa systemet.
 
 I avsnitten visas hur man
@@ -5177,7 +5167,7 @@ kontrollerar man bussidentiteten, och med kommandot
 
 sätter man ett annat värdet. Det här kommandot kan t ex läggas in i $pwrp_login/login.sh.
 
-Nu kan man starta Proview runtime med
+Nu kan man starta ProviewR runtime med
 
 <c>> rt_ini &
 
@@ -5185,7 +5175,7 @@ och stoppa med
 
 <c>> . pwr_stop.sh
 
-Om Proview inte startar kan man addera -i till start-kommandot för att se eventuella 
+Om ProviewR inte startar kan man addera -i till start-kommandot för att se eventuella 
 felutskrifter
 
 <c>> rt_ini -i
@@ -5254,7 +5244,7 @@ attribut i objekt som redan finns sedan tidigare.
 <topic> dg_process_station
 Process och operatörsstationer
 
-I det här avsnittet går vi igenom det punkter som måste genomföras för att Proview ska kunna
+I det här avsnittet går vi igenom det punkter som måste genomföras för att ProviewR ska kunna
 startas på en process eller operatörsstation. 
 
 - konfigurering av noden i directoryvolymen.
@@ -5364,7 +5354,7 @@ eller
 Kommandot 'pwr stop' kräver att alla processer lever, medan 'pwr kill' är lite tuffare och 
 rensar i alla lägen.
 
-Om Proview runtime inte startar, kan man starta med kommandot
+Om ProviewR runtime inte startar, kan man starta med kommandot
 
 <c>> rt_ini -i
 
@@ -5710,14 +5700,14 @@ Functions/Close change value <t><t>stäng inmatningsfältet.
 Hjälp fönster
 
 Hjälpfönstret används för att visa och navigera i hjälptexter. Hjälptexterna kan vara olika
-typer av manualer och handböcker som följer med Proview, eller hjälptexter som skrivs av
+typer av manualer och handböcker som följer med ProviewR, eller hjälptexter som skrivs av
 konstruktören för att beskriva anläggningen och ge operatörerna assistans.
 </topic>
 
 <topic> messagewindow_refman
 Meddelande fönster
 
-Meddelandefönstret visar meddelanden från Proview som ges vid olika operationer. 
+Meddelandefönstret visar meddelanden från ProviewR som ges vid olika operationer. 
 Meddelandena kan ha fem olika nivåer av allvarlighet, som markeras med olika färger: 
 
 S <t>Framgång (Success) <t>grön
@@ -5747,9 +5737,9 @@ Backupverktyget analyserar en runtime backupfil. Den gör det möjligt att
 - se skillnaden mellan en backupfil och motsvarande värden i utvecklingsdatabasen.
 - överföra utvalda värden från backupfilen till utvecklingsdatabasen.
 
-Backupfunktionen i Proview runtime, lagrar värden på objekt och attribute
+Backupfunktionen i ProviewR runtime, lagrar värden på objekt och attribute
 specificerade med Backupobjekt, till backupfilen. Backupfilen läses vid
-Proview uppstart och de tidigare lagrade värdena läggs in i realtidsdatabasen. 
+ProviewR uppstart och de tidigare lagrade värdena läggs in i realtidsdatabasen. 
 
 <h2>Visa innehållet i en backupfil.
 Öppna backupfönstret från konfiguratorn för rotvolymen för den node från vilken
@@ -6168,7 +6158,7 @@ objekt osv. Som synes kan man mycket snabbt bygga upp avancerade sekvenser på de
 ScanTime hämtar upp den verkliga scantiden, dvs tiden sedan senaste scan.
 
 <b>FirstScan
-FirstScan är sann första varvet plc't exekverar efter uppstart av Proview. Den är även sann
+FirstScan är sann första varvet plc't exekverar efter uppstart av ProviewR. Den är även sann
 först varvet efter en mjuk omstart.
 
 <h1>Meny
@@ -6649,7 +6639,7 @@ behörighet för användaren.
 
 Den ökade tillgängligheten på proview-system för olika typer av användare, bl a via 
 intranätet, har gjort att kraven på att kunna begränsa olika användares möjligheter att 
-påverka systemet ökat. Proview innehåller en användardatabas, där man definierar användare
+påverka systemet ökat. ProviewR innehåller en användardatabas, där man definierar användare
 för olika system, och har möjlighet att gruppera system som delar användare. Databasen har 
 designats för att möta kraven på ökad behörighets-kontroll, samtidigt som administrationen 
 hålls på en rimlig nivå.
@@ -6739,7 +6729,7 @@ DevClass  <t>För skapa klasser (not yet implemented)
 
 <topic> user example
 Exempel
-Proview user database V1.0.0
+ProviewR user database V1.0.0
 
 <c>ssab
 <c>. . . . . . sysansv    System DevRead DevPlc DevConfig (14680068)
@@ -6825,7 +6815,7 @@ Man kan även editera databasen med kommandon i pwr_user, se pwr_user i kapitlet 
 <topic> classeditor
 Klasseditor
 
-Det här avsnittet beskriver hur man skapar nya klasser i Proview. 
+Det här avsnittet beskriver hur man skapar nya klasser i ProviewR. 
 Det finns ett antal olika fall när det kan vara idé att skapa en ny klass.
 
 <h2>Data objekt
@@ -6855,7 +6845,7 @@ kanaler och signaler. Simuleringsobjektet är ett funktionsobjekt som kopplas til
 huvudobjektet och som simulerar komponenten när systemet körs i simuleringsmod.
 
 <h2>Subklasser av komponenter
-Proview innehåller ett antal baskomponent-klasser för ventiler, motorer mm. Dessa är byggda
+ProviewR innehåller ett antal baskomponent-klasser för ventiler, motorer mm. Dessa är byggda
 mycket generalla för att täcka in ett stort antal komponenter. Ofta gör man en subklass som
 är anpassad till en specifik komponent, och som t ex innehåller länk till datablad, 
 hjälptext mm. för just denna komponent. Genom att göra en subklass av en baskomponent ärver
@@ -7409,8 +7399,8 @@ Om template-koden ändras kommer instansernas kod att uppdateras nästa gång de ko
 <topic>ced_ioclasses
 I/O klasser
 
-I/O objekt är de objekt som hanteras av I/O hanteringen i Proview. De kan indelas i Agent, 
-Rack, Card och Channel objekt. Vid knytning av nya I/O system till Proview måste man oftast 
+I/O objekt är de objekt som hanteras av I/O hanteringen i ProviewR. De kan indelas i Agent, 
+Rack, Card och Channel objekt. Vid knytning av nya I/O system till ProviewR måste man oftast 
 skapa  ny klasser av typerna Agent, Rack och Card. I/O objekt skapas med ett $ClassDef objekt
 där man i Flags sätter biten IoAgent, IoRack eller IoCard.
 
@@ -7806,7 +7796,7 @@ initieringen av I/O hanteringen i runtime.
 Objektsbild
 
 Objektsbilder har samma namn som komponenten, men med små bokstäver. För klasser som tillhör
-Proviews bassystemet adderar man prefixed 'pwr_c_'. Bilderna editeras på vanligt sätt i Ge. I 
+ProviewRs bassystemet adderar man prefixed 'pwr_c_'. Bilderna editeras på vanligt sätt i Ge. I 
 dynamiken ersätts objektsnamnet med '$object'. Objektsbilder för bassystemet ritas med följande 
 riktlinjer.
 
@@ -8220,7 +8210,7 @@ Skapa projekt <link> create_project
 
 <topic> adm_user
 Användare
-För att få tillgång till Proview's utvecklings och runtime miljöer måste man logga in med
+För att få tillgång till ProviewR's utvecklings och runtime miljöer måste man logga in med
 användarnamn och passerord. Användare konfigureras i en användardatabas och tilldelas
 privilegier som bestämmer användarens behörighet att göra ändringar i systemet.
 
@@ -8314,7 +8304,7 @@ i var sitt projekt, eller samtliga noder i ett projekt.
 - Alla noder i ett projekt (på samma kommunikationsbuss) har länk öppen mellan varandra
   genom näthanteraren.
 - Alla volymer och noder delar samma filkatalogsträd.
-- Alla noder måste uppgraderas till ny Proview version samtidigt.
+- Alla noder måste uppgraderas till ny ProviewR version samtidigt.
 
 En vanlig storlek är 1-10 noder i ett projekt. För många noder ökar nätverksbelastninge och
 försvårar uppgradering av projektet.
@@ -8341,7 +8331,7 @@ göra mindra ändringar. Kopian skapas under ett nytt projektnamn men den har samm
 systemnamn.
 
 <h2>Base
-Proview ett är flerversions system, dvs olika versioner av Proview kan installeras i samma
+ProviewR ett är flerversions system, dvs olika versioner av ProviewR kan installeras i samma
 utvecklingsmiljö, och projekt med olika version kan existera i samma utvecklingsmiljö.
 Ett projekt pekar på en bas, t ex V3.4 eller V4.0, när ett projekt skapas väljer man
 vilket bas projektet ska peka på.
@@ -8431,7 +8421,7 @@ pwrc
 
 Kommando gränssnitt till utvecklingsdatabasen.
 
-<c>pwrc        Proview workbench commands
+<c>pwrc        ProviewR workbench commands
 
 <c>Arguments:
 <c>  -v 'volume'    Load volume 'volume'.
@@ -8455,7 +8445,7 @@ Kommando gränssnitt till utvecklingsdatabasen.
 <topic> co_help
 co_help hjälp fönster
 
-Open a Proview help file. By default the project help file is opened.
+Open a ProviewR help file. By default the project help file is opened.
 
 <c>>co_help
 
@@ -8697,7 +8687,7 @@ Används för att reda ut version mismatch.
 <chapter>
 <topic>opc_intro
 OPC
-Proview har implementerat OPC XML/DA protokollet för datautbyte med andra typer av 
+ProviewR har implementerat OPC XML/DA protokollet för datautbyte med andra typer av 
 automationenheter. För mer information om OPC, se www.opcfoundation.org.
 
 <option> printdisable
@@ -8711,7 +8701,7 @@ OPC Client <link> opc_client
 OPC XML/DA Server
 
 En OPC XML/DA Server är en web service från vilken an OPC XML/DA Client kan hämta information
-om ett Proview-system. En opc klient kan t ex visa objektshierarkin, läsa och skriva 
+om ett ProviewR-system. En opc klient kan t ex visa objektshierarkin, läsa och skriva 
 attributvärden, och lägga upp prenumerationer på attribut.
 
 Opc servern implementerar även http protokollet och är inte kopplad till en webserver.
@@ -8727,20 +8717,20 @@ väljas för opc_server. Om man stället väljer 8080, blir URI'n
 <h1>Browsing
 Browsing funktionen i OPC XML/DA stödjer grenar (branches) och punkter (item). En punkt 
 innehåller ett värde, medan en gren är en hierarkikomponent utan värde. Det finns inte något
-stöd för objekt, så ett Proview objekt är implementerat som en gren, och varje attribut är
+stöd för objekt, så ett ProviewR objekt är implementerat som en gren, och varje attribut är
 en punkt under grenen. Även arrayer är implementerade som grenar, med varje element som en 
 punkt. Om ett element är ett attributobjekt är även detta en gren.
 
 <h1>Trådar
 Om opc klienten använder HoldTime och WaitTime attributen i SubscriptionPollledRefresh 
 förfrågan, måste opcservern vara multitrådad, dvs skapa en ny tråd för varje förfrågan. Om 
-HoldTime och Waittime inte används (som i Proview's opc klient), kan alla förfrågningar 
+HoldTime och Waittime inte används (som i ProviewR's opc klient), kan alla förfrågningar 
 hanteras i en enda tråd, vilket sparar cpu-tid. Multitrådning eller inte, konfigureras i
 konfigurationsobjektet för opc servern. Defaultvärdet är 'IfNeeded' som slår på multitrådning
 för en klient om HoldTime eller WaitTime upptäcks.
 
 <h1>Kient åtkomst
-För att få åtkomst till en Proview opc server, måste ip-adressen för klienten konfigureras i
+För att få åtkomst till en ProviewR opc server, måste ip-adressen för klienten konfigureras i
 konfigurationsobjektet för opc servern. Här kan man också välja om klienten ska a läs- eller
 skriv-rättigheter (ReadOnly resp ReadWrite). ReadOnly tillåter klienten att läsa och 
 prenumerera på värden, medan ReadWrite även tillåter skrivning av attributvärden. 
@@ -8750,7 +8740,7 @@ Servern stödjer inte buffring av prenumerationer.
 
 <h1>Konfigurering
 Opc servern konfigureras med ett Opc_ServerConfig objekt, som placeras i nodhierarkin. 
-Konfigurationsobjektet medför att en serverprocess (opc_server) startas vid Proview startup.
+Konfigurationsobjektet medför att en serverprocess (opc_server) startas vid ProviewR startup.
 
 </topic>
 </headerlevel>
@@ -12152,7 +12142,7 @@ int GetVersion()
 
 <b>Beskrivning
 
-Hämta Proview-versionen för aktuell utgåva.
+Hämta ProviewR-versionen för aktuell utgåva.
 Returnerar ett heltalsvärde som är 10000 * major + 100 * minor + release.
 T ex V5.3.1 returnerar 50301.
 
@@ -12171,7 +12161,7 @@ string get_pwr_config( string name)
 
 <b>Beskivning
 
-Hämta värdet för en Proview konfigureringsvariabel.
+Hämta värdet för en ProviewR konfigureringsvariabel.
 Konfigureringsvariabler sätts i /etc/proview.cnf.
 Returnerar värdet på konfigureringsvariablen.
 

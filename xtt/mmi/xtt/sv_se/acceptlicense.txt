@@ -1,6 +1,6 @@
-Proview är fri programvara, licensierad med GNU General Public License.
+ProviewR är fri programvara, licensierad med GNU General Public License.
 
-Det finns absolut ingen garanti för Proview, se villkor nedan.
+Det finns absolut ingen garanti för ProviewR, se villkor nedan.
 Tryck på knappen Visa Licens för att läsa licensvillkoren.
 
 INGEN GARANTI

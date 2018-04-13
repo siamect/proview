@@ -23740,7 +23740,7 @@ ABB ACC800"
     !  For simulation of the motor, use the plc object ABB_ACS800MotorAggrSim.
     !  
     !  @b News (version 2.0)
-    !  ACS800 have som changes in later Proview releases and the most importent is:
+    !  ACS800 have som changes in later ProviewR releases and the most importent is:
     ! 
     !   -ConvertError has new name ConvertInhibit and no alarmmessage will be generated.
     !   -Dsup Warning is delayed 3 second, before it was no delay at all.
@@ -36372,7 +36372,7 @@ ABB ACS800 Aggregate
     !  of class or subclass of ABB_ACS800_1 with the Connect IO method.
     ! 
     !  @b Profibus communication
-    !  The Profibus communication (data flow) between converter and Proview i specified
+    !  The Profibus communication (data flow) between converter and ProviewR i specified
     !  by telegram types named PPO.
     ! 
     !  @b Communication data flow 
@@ -37056,7 +37056,7 @@ ABB ACS800 Aggregate
     !  with ABB_ACS_Pb_Slave, ABB_ACC800_PPO5 and ABB_ACC800_PPO5_IoModule objects.
     ! 
     !  @b Profibus communication
-    !  The Profibus communication (data flow) between converter and Proview is specified
+    !  The Profibus communication (data flow) between converter and ProviewR is specified
     !  by telegram types named PPO.
     ! 
     !  @b Communication data flow 
@@ -51129,7 +51129,7 @@ if (I1 >= 0 && I1 <= 9) {
     !  ABB drives which enables the connection of the drive to an
     !  Profibus/dp fieldbus and in this case with ABB drives profile.
     ! 
-    !  This Proview configuration requires the Profibus adapter module is
+    !  This ProviewR configuration requires the Profibus adapter module is
     !  placed in the driver slot A also named 'FBA A' (Fieldbus Adapter Module slot A).
     ! 
     !  @image orm_abb_acs880_pb_fpba.gif  
@@ -51807,7 +51807,7 @@ if (I1 >= 0 && I1 <= 9) {
     ! 
     ! 
     !  @b Profibus communication
-    !  The Profibus communication (data flow) between converter and Proview is specified
+    !  The Profibus communication (data flow) between converter and ProviewR is specified
     !  by telegram types named PPO.
     ! 
     !  @b Communication data flow 
@@ -51877,7 +51877,7 @@ if (I1 >= 0 && I1 <= 9) {
     !  
     !  @b Settings 4
     !  Parameter group 52 data IN and 53 Data OUT in the converter specifies 
-    !  the data exchange. Data out is data from Proview (PLC writing). Note
+    !  the data exchange. Data out is data from ProviewR (PLC writing). Note
     !  that the parameter 52.3 value is a 32 bit word and therefore also 
     !  allocates FBA A data in4. The name of this word in class
     !  ABB_ACS880_PPO7_IoModule is I_PZD3_4.  
@@ -52917,7 +52917,7 @@ if (I1 >= 0 && I1 <= 9) {
         !/**
         !   Converter active warning message 1.
         !   The warning message is displayed in the object graph.
-        !   Note, Proview displays the decimal value while the 
+        !   Note, ProviewR displays the decimal value while the 
         !   the hexadecimal value is used in ABB references.
         !*/
         Object ConvertWarnMess1 $Attribute 173 24-JUN-2013 10:53:43.33
@@ -52930,7 +52930,7 @@ if (I1 >= 0 && I1 <= 9) {
         !/**
         !   Converter active fault/tripped message 1.
         !   The fault message is displayed in the object graph.
-        !   Note, Proview displays the decimal value while the 
+        !   Note, ProviewR displays the decimal value while the 
         !   the hexadecimal value is used in ABB references.
         !*/
         Object ConvertFaultMess1 $Attribute 174 24-JUN-2013 10:53:43.33
@@ -82814,7 +82814,7 @@ this parameter settings menu."
     !  ABB drives which enables the connection of the drive to an
     !  Ethernet Powerlink network, in this case with ABB drives profile.
     ! 
-    !  This Proview configuration requires the Powerlink adapter module is
+    !  This ProviewR configuration requires the Powerlink adapter module is
     !  placed in the driver slot A also named 'FBA A' (Fieldbus Adapter Module slot A).
     ! 
     !  @image orm_abb_acs880_epl_fepl.gif  
@@ -82836,7 +82836,7 @@ this parameter settings menu."
     !  @b Configuration
     !  A Powerlink network consists of a Managing Node, MN, and a number of 
     !  Controlled Nodes, CN. A CN can contain a number of modules. 
-    !  In this case the Proview system is the MN and the ABB converter a CN,
+    !  In this case the ProviewR system is the MN and the ABB converter a CN,
     !  containing one single module. 
     ! 
     !  Create a Epl_CN object under a Epl_MN object in the node hierarchy, and
@@ -82923,7 +82923,7 @@ this parameter settings menu."
     !  Parameter group 52 data IN and 53 Data OUT in the converter specify 
     !  the data exchange except reference word, CW word and SW word.
     ! 
-    !  Data out is data from Proview (PLC writing). Note that the parameters
+    !  Data out is data from ProviewR (PLC writing). Note that the parameters
     !  52.1 and 52.3 represents a 32 bit word and therefore allocates one more
     !  word in data in. The name of these words in class object
     !  ABB_ACS880_Epl_IoModule is I_CURR_0107 and I_TORQ_0110 respectively.
@@ -82942,7 +82942,7 @@ this parameter settings menu."
     !  the open source POWERLINK protocol stack for master and slave nodes.
     !  
     !  Every node in a Powerlink network must be configured in this openCONFIGURATOR
-    !  tool. In a Proview project all Powerlink CN nodes memory mapping is a reflection
+    !  tool. In a ProviewR project all Powerlink CN nodes memory mapping is a reflection
     !  of the memory mapping in a openCONFIGURATOR project.
     ! 
     !  From the openCONFIGURATOR configuration a cdc file is generated. This file is
@@ -82956,7 +82956,7 @@ this parameter settings menu."
     !  @b Case study
     !  The case study example 11 to 20 below is an example that contains a project 
     !  VHXP20 and one MN and one CN node. The CN node is an ABB frequency converter ACS880. 
-    !  Example 11 to 13 shows the Proview settings, the other examples is from the
+    !  Example 11 to 13 shows the ProviewR settings, the other examples is from the
     !  openCONFIGURATOR.
     ! 
     !  Note It is recommended that you study the help in the openCONFIGURATOR
@@ -82967,27 +82967,27 @@ this parameter settings menu."
     !   - Open existing project, in this case vhxp20.oct.
     !   - Make your changes and build the project. The will generate the cdc-file.
     !   - Transfer cdc file to $pwrp_load.
-    !   - In Proview distribute function a copy command is needed for file mnobd.cdc
+    !   - In ProviewR distribute function a copy command is needed for file mnobd.cdc
     !      to be copied to runtime environment location $pwrp_load.
-    !   - Build the Proview project and distribute.
+    !   - Build the ProviewR project and distribute.
     !   - Note the bug in example 18.
     ! 
-    !  @b Example 11 Settings in Proview Powerlink MN node 
-    !  Settings needed in Proview class Epl_MN node. Node id
+    !  @b Example 11 Settings in ProviewR Powerlink MN node 
+    !  Settings needed in ProviewR class Epl_MN node. Node id
     !  for MN node is always 240.
     ! 
     !  @image orm_abb_acs880_epl_example11.gif
     ! 
     ! 
-    !  @b Example 11.1 Settings in Proview Directory 
-    !  Settings needed in Proview distribute function for binary file mnobd.cdc. This
+    !  @b Example 11.1 Settings in ProviewR Directory 
+    !  Settings needed in ProviewR distribute function for binary file mnobd.cdc. This
     !  file is transfered via openCONFIGURATOR to $pwrp_load, see also example 20.
     ! 
     !  @image orm_abb_acs880_epl_example11_1.gif
     ! 
     ! 
-    !  @b Example 12 Settings in Proview node CN
-    !  Settings needed in Proview for class Epl_CN. The NodeId should
+    !  @b Example 12 Settings in ProviewR node CN
+    !  Settings needed in ProviewR for class Epl_CN. The NodeId should
     !  be the same as in the openCONFIGURATOR.
     ! 
     !  @image orm_abb_acs880_epl_example12.gif
@@ -83008,11 +83008,11 @@ this parameter settings menu."
     ! 
     !  @b Example 14.1 Import the ABB ACS880 xdd file
     !  Create a new CN node and import the ABB xdd file from the $pwr_exe directory
-    !  of the current Proview release. This file is prepared with all memory
-    !  mapping (TPDO, RPDO) needed for the Proview class object ABB_ACS880_Epl.
+    !  of the current ProviewR release. This file is prepared with all memory
+    !  mapping (TPDO, RPDO) needed for the ProviewR class object ABB_ACS880_Epl.
     !  Build the project with project settings "auto generate" set to YES. Then follow
     !  example 18 to fix the ABB bug. After that you transfer the new mnobd.cdc
-    !  file to Proview project $pwrp_load folder. Example 16 and 17 shows TPDO and
+    !  file to ProviewR project $pwrp_load folder. Example 16 and 17 shows TPDO and
     !  RPDO memory mapping. Example 20 shows the script file "transfer.sh".
     ! 
     !  @image orm_abb_acs880_epl_example14_1.gif
@@ -83037,7 +83037,7 @@ this parameter settings menu."
     !  @b Example 16.1 
     !  The yellow marked address 0x4006 index 0x32 is the address specification pointing 
     !  to ABB parameter group 6.50 in the converter i.e user statusword 1 which is used 
-    !  by Proview to handle extra status as magnetized, zero speed etc.
+    !  by ProviewR to handle extra status as magnetized, zero speed etc.
     ! 
     !  @image orm_abb_acs880_epl_example16_1.gif
     ! 
@@ -83052,7 +83052,7 @@ this parameter settings menu."
     ! 
     !  @b Example 17.1 
     !  The yellow marked address 0x2101 is the address specification for Control Word in the converter which
-    !  is used by Proview to start and stop the drive.
+    !  is used by ProviewR to start and stop the drive.
     ! 
     !  @image orm_abb_acs880_epl_example17_1.gif
     ! 
@@ -85350,7 +85350,7 @@ this parameter settings menu."
     !  ABB drives which enables the connection of the drive to an
     !  Ethernet network, in this case Profinet IO and ABB drives profile.
     ! 
-    !  This Proview configuration requires the Profinet adapter module is
+    !  This ProviewR configuration requires the Profinet adapter module is
     !  placed in the driver slot A also named 'FBA A' (Fieldbus Adapter Module slot A).
     ! 
     !  Fig 2 below explain the diagnostics LEDs on the FENA-11 adapter. 
@@ -85365,10 +85365,10 @@ this parameter settings menu."
     !  @h1 Configuration 
     !  A lot of configurations steps has to be done through several tools:
     ! 
-    !   1  Creat a master profinet object PnControllerSoftingPNAK in Proview workbench,
+    !   1  Creat a master profinet object PnControllerSoftingPNAK in ProviewR workbench,
     !      see classhelp PnControllerSoftingPNAK for more help.
     ! 
-    !   2  Create ABB_ABB_ACS880_PnDevice object in Proview workbench node hierarchy.
+    !   2  Create ABB_ABB_ACS880_PnDevice object in ProviewR workbench node hierarchy.
     !   
     !   3  Create module and Io object and XML file through 'Configure Device tool'.
     !      Give the attribute DeviceName an unique name and IP adressa and a net mask. 
@@ -85379,7 +85379,7 @@ this parameter settings menu."
     !   5  Set some parameter groups in the ABB driver ACS880:
     !      choose Protocoll/Profile Profinet IO and ABB drives profile, IP adress and a net mask. 
     !   
-    !   6  Configuration of NIC (network interface controller) in Proview master station:
+    !   6  Configuration of NIC (network interface controller) in ProviewR master station:
     !      IP adress, net mask and a MAC adress. In this case eth1 is choosed as a NIC.
     ! 
     !   All this steps except step 1 are describe here. 
@@ -85391,7 +85391,7 @@ this parameter settings menu."
     !  ABB_ACS880_PnModule.
     ! 
     ! 
-    !  @h1 Configuration Proview
+    !  @h1 Configuration ProviewR
     !  Before configuration step 1 and 2 below you must have a unique device name for FENA-11
     !  and an IP adress and a net mask. Via tool 'Profinet viewer' in a terminal window you can
     !  read and set the device name, see 'Configuration via Profinet Viewer' below, example 9-12
@@ -85456,7 +85456,7 @@ this parameter settings menu."
     ! 
     !   
     !  @b Example 5 find out the XML file.
-    !  Do the 'show objid' command in Proview command line and convert the last four objid digit
+    !  Do the 'show objid' command in ProviewR command line and convert the last four objid digit
     !  from decimalt to hex format and you have the end of the generated XML file. In this case
     !  5122 is converted to hex 1402 and the file name will be 'pwr_pn_000_001_001_057_00001402.xml'
     !  @image orm_abb_acs880_pn_example12.gif
@@ -85469,7 +85469,7 @@ this parameter settings menu."
     ! 
     !  @h1 Configuration via Profinet Viewer (case study)
     !  After the adapter module FENA-11 has been initialized by the drive ACS880, the
-    !  Proview master station must be prepared for communication with the module.
+    !  ProviewR master station must be prepared for communication with the module.
     !  To do this you must identify, read and change the DeviceName via a tool
     !  'Profinet Viewer'. 
     ! 
@@ -85479,7 +85479,7 @@ this parameter settings menu."
     !   2  Slave/device Ip adress 192.168.90.11 and mask 255.255.254.0
     ! 
     !  Before starting the Profinet Viewer the NIC configuration in this case are
-    !  done like example 9 below, i.e. Proview master station ip adress 192.168.90.1,
+    !  done like example 9 below, i.e. ProviewR master station ip adress 192.168.90.1,
     !  mask 255.255.254.0, HWaddress aa:00:04:00:21:14 and ethernet interface eth1.
     ! 
     !  Note The HWadress must be between an interval specified under the Profinet master
@@ -85510,12 +85510,12 @@ this parameter settings menu."
     !  In some cases the ip address has to be set as well. Also when a device is configured for the 
     !  first time, the device name and meyby ip address has to be set on the device.
     ! 
-    !  In this ABB case it is only neccecery to set the DeviceName. The Ip adress will be set by Proview
+    !  In this ABB case it is only neccecery to set the DeviceName. The Ip adress will be set by ProviewR
     !  (XML file) during the start up and detection of slave/device abb-drive1.
     !  
     !  The steps to set the device name for an ABB ACS880 frequency converter:
     !  
-    !  @b 1  NOTE Stop Proview runtime environment on the current node before you start the viewer.
+    !  @b 1  NOTE Stop ProviewR runtime environment on the current node before you start the viewer.
     ! 
     !   2  Start the Profinet Viewer, command: profinet_viewer (default eth1).
     ! 
@@ -85538,7 +85538,7 @@ this parameter settings menu."
     !  @h1 Configuration of ABB driver ACS880
     !  @b Example 12 shows the setting in ACS880 parameter group 51.
     !  The Ip adress 1-4 and Subnet CIDR setting (24 = 255.255.255.0) is not necessery due
-    !  to settings in the Proview master station and the auto initiate , but it is recommended
+    !  to settings in the ProviewR master station and the auto initiate , but it is recommended
     !  to do it. The orange colored field in the example is not default setting in the driver.   
     !  @image orm_abb_acs880_pn_example5.gif
     ! 
@@ -86109,7 +86109,7 @@ this parameter settings menu."
     ! 
     ! 
     !  @b Profinet communication
-    !  The Profinet communication (data flow) between converter and Proview is specified
+    !  The Profinet communication (data flow) between converter and ProviewR is specified
     !  by telegram types named PPO.
     ! 
     !  @b Communication data flow 
@@ -86179,7 +86179,7 @@ this parameter settings menu."
     !  @b Settings 4 
     !  Parameter group 51 settings to be performed.
     !  The Ip adress 1-4 and Subnet CIDR setting (24 = 255.255.255.0) is
-    !  NOT necessery due to settings in the Proview master station and the
+    !  NOT necessery due to settings in the ProviewR master station and the
     !  auto initiate. See class object ABB_ACS880_PnDevice form more
     !  information about protocol, IP adress and net mask etc.
     !  @image orm_abb_acs880_pn_example5.gif
@@ -86187,7 +86187,7 @@ this parameter settings menu."
     ! 
     !  @b Settings 5
     !  Parameter group 52 data IN and 53 Data OUT in the converter specifies 
-    !  the data exchange. Data out is data from Proview (PLC writing). Note
+    !  the data exchange. Data out is data from ProviewR (PLC writing). Note
     !  that the parameter 52.3 value is a 32 bit word and therefore also 
     !  allocates FBA A data in4. The name of this word in class
     !  ABB_ACS880_PPO_V1_IoModule is I_PZD3_4.  

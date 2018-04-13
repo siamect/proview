@@ -1,8 +1,7 @@
 
 <topic> __DocumentTitlePage
 
-<image> pwr_logga.gif
-
+<image> pwr_logga_doc.png
 
 
 
@@ -21,24 +20,16 @@
 
 
 
-
-
-
-
-
-
-
-
 <hr>
-2009-08-04
-Version 5.0.0	
+2018-03-29
+Version 5.6.0	
 <hr>
 </topic>
 
 <topic> __DocumentInfoPage
 
 
-Copyright 2005-2016 SSAB EMEA AB
+Copyright 2005-2018 SSAB EMEA AB
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.2
@@ -59,7 +50,7 @@ Operators Guide
 <h1>Operators Guide
 
 Introduction <link> opg_introduction
-About Proview <link> opg_proview
+About ProviewR <link> opg_proview
 The Operator Place <link> opg_opplace
 Alarm and Events <link> opg_events
 Curves <link> opg_curves
@@ -80,8 +71,8 @@ Index	<index>
 <topic> opg_introduction
 Introduction
 
-Proview Operator's Guide is intended for persons who will be in contact with running
-Proview systems in their daily work. It could be
+ProviewR Operator's Guide is intended for persons who will be in contact with running
+ProviewR systems in their daily work. It could be
 
 - operators that supervise and handle a process.
 - maintenance personnel troubleshooting the plant.
@@ -96,14 +87,14 @@ belongs to a certain group are determined from the privileges the user is grante
 
 <chapter>
 <topic> opg_proview
-About Proview
+About ProviewR
 
-<h1>What is Proview
-Proview is a modern, powerful and general process control system. It contains all the
+<h1>What is ProviewR
+ProviewR is a modern, powerful and general process control system. It contains all the
 functions normally required for successful sequential control, adjustment, data
 acquisition, communication, supervision, HMI/SCADA, history data storage etc.
 
-Proview is a distributed system, it consists of a number of computers (nodes) connected
+ProviewR is a distributed system, it consists of a number of computers (nodes) connected
 in a network. The nodes can be of type process station, operator station or storage
 station.
 
@@ -149,14 +140,14 @@ configuration is modified for a station, the new configuration is distributed to
 via the network.
 
 <image>opg_fig1.png
-<b>Fig Components in a Proview system
+<b>Fig Components in a ProviewR system
 </topic>
 
 <topic>opg_object
 Objects
 
 <h1>The object tree
-Object is a central concept in Proview. Sensors, valves, motors, controllers etc. are all
+Object is a central concept in ProviewR. Sensors, valves, motors, controllers etc. are all
 represented by objects in a database. The objects are ordered in a tree structure where
 different hierarchy levels in the tree represent parts of the plant or process. If we look
 at a furnace, the top level can represent the whole furnace. The furnace consists of four
@@ -327,7 +318,7 @@ Functions/User/Return <t><t>Return to the original user.
 Functions/Help/Project <t><t>Show helptexts for the project.
 Functions/Help/Overview <t><t>Show an overview of helptexts.
 Functions/Help/Operator Window <t><t>Display help on the operator window.
-Functions/Help/About Proview <t><t>Display Proview into, for example version of install package.
+Functions/Help/About ProviewR <t><t>Display ProviewR into, for example version of install package.
 Functions/Close <t><t>Close down the operator place.
 
 <b>Pushbuttons
@@ -372,7 +363,7 @@ About alarm and events
 <h1>Alarms
 Alarms are sent to the operator station when something occurs that operator has to pay
 attention to. It could be a temperature crossing a limit, or a bad value entered in a
-process graph. In Proview there are special supervision objects that supervise signals
+process graph. In ProviewR there are special supervision objects that supervise signals
 and generates alarms.
 
 Alarm are viewed in the alarmlist.<link>opg_alarmlist
@@ -775,7 +766,7 @@ In the middle part of the operator window there is a help button that opens the 
 for the project.
 
 <h2>The Navigator menu
-The menu entry Help/Overview gives help on Proview and the operator environment. 
+The menu entry Help/Overview gives help on ProviewR and the operator environment. 
 Help/Project gives help on the project.
 
 <h2>Command
@@ -838,7 +829,7 @@ Alarm / Event List <t><t>Opens the event list. <link>opg_eventlist
 Alarm / Blocked Alarms <t><t>Shows the list of blocked alarms. <link>opg_blocklist
 Alarm / Historical List <t><t>Shows the event log.<link>opg_eventlog
 Store <t><t>Shows stored collection views.
-System / Nethandler / Link <t><t>Shows links to other Proview systems. <link>opg_nav_link
+System / Nethandler / Link <t><t>Shows links to other ProviewR systems. <link>opg_nav_link
 System / Nethandler / Subscription Client <t><t>Shows subscriptions (client). <link>opg_nav_subcli
 System / Nethandler / Subscription Server <t><t>Shows subscriptions (server). <link>opg_nav_subsrv
 System / Communication / RemNode <t><t>Shows remote communication (nodes). <link>opg_nav_remnode
@@ -937,7 +928,7 @@ navigator. Only methods that are valid for an object are sensitive.
 
 <topic> opg_nav_link
 System / Nethandler / Link
-The map 'System / Nethandler / Link' shows links to other Proview stations. The current
+The map 'System / Nethandler / Link' shows links to other ProviewR stations. The current
 station is also viewed in the list.
 
 In the figure below you can see that the local node aristotle has contact with the node
@@ -1067,7 +1058,7 @@ System / Device
 
 Shows a list of I/O devices.
 
-The I/O system in Proview is divided into four levels, agent, rack, card and channel.
+The I/O system in ProviewR is divided into four levels, agent, rack, card and channel.
 In the device list, all the card objects are displayed.
 
 <image> opg_fig22.png
@@ -1103,7 +1094,7 @@ Description of the columns
 
 PlcThread <t>Name of thread object.
 Prio <t>Thread priority.
-LoopCnt <t>Counter of number of cycles since Proview startup.
+LoopCnt <t>Counter of number of cycles since ProviewR startup.
 ScanTime <t>Configured cycletime.
 Mean <t>Meanvalue of measured cycletime.
 Coverage <t>The execution time for the thread in proportion to the cycletime in percent.
@@ -1224,7 +1215,7 @@ with the 'Restore' button.
 <topic> opg_nav_systemmsg
 System / System Messages
 
-The Proview system logg contains information, warning and error messages, written by the
+The ProviewR system logg contains information, warning and error messages, written by the
 server processes of the system. Also applications can write to the system log by using
 the errh interface.
 
@@ -1237,7 +1228,7 @@ W <t>yellow <t>Warning.
 I <t>green <t>Information.
 S <t>green <t>Success.
 
-Also the Proview startup is marked with a yellow colored row.
+Also the ProviewR startup is marked with a yellow colored row.
 
 Above all you should notice red messages implying something is wrong in the system.
 
@@ -1437,7 +1428,7 @@ Example of a symbol used as a variable
 <topic> opg_security
 Users and privileges
 
-Proview contains a system with users that are granted privileges. To perform specific tasks
+ProviewR contains a system with users that are granted privileges. To perform specific tasks
 certain privileges are needed, and only if the user has this privileges he is allowed
 to perform them.
 
@@ -2865,6 +2856,7 @@ GetUser()		<LINK> getuser()
 GetPrivileges()		<LINK> getprivileges()
 GetGraphInstance()	<LINK> getgraphinstance()
 GetGraphInstanceNext()	<LINK> getgraphinstancenext()
+Quit()			<LINK> quit()
 
 <h2>xtt-commands
 xtt-commands		<LINK> xtt-commands
@@ -4089,6 +4081,7 @@ GetUser() 	<t>Get the current user. <LINK> getuser()
 GetPrivileges()	<t>Get the privileges for the current user. <LINK> getprivileges()
 GetGraphInstance() <t>Get the instance object for a graph. <LINK> getgraphinstance()
 GetGraphInstanceNext() <t>Get the instance object for next graph. <LINK> getgraphinstancenext()
+Quit() 		<t>Quit the operator environment. <LINK> quit()
 </TOPIC>
 
 <headerlevel>
@@ -4382,6 +4375,16 @@ string		<t>previous	<t>Previous instance.
 <c>    printf( "Instance %s\n", instance);
 <c>    instance = GetGraphInstanceNext( "$pwr_exe/pwr_c_dv.pwg", instance);
 <c>  endwile
+</TOPIC>
+
+<TOPIC> quit() <style> function
+Quit()
+
+Quit()
+
+<b>Description
+
+Quit the operator environment.
 </TOPIC>
 
 </headerlevel>

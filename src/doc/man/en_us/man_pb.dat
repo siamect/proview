@@ -1,22 +1,13 @@
 
 <topic> __DocumentTitlePage
 
-<image> pwr_logga.gif
+<image> pwr_logga_doc.png
 
 
 
 
 
-
-<h1> Operator's Guide
-
-
-
-
-
-
-
-
+<h1> Profinet Viewer
 
 
 
@@ -31,14 +22,14 @@
 
 <hr>
 2009-08-04
-Version 5.0.0	
+Version 5.6.0	
 <hr>
 </topic>
 
 <topic> __DocumentInfoPage
 
 
-Copyright 2005-2016 SSAB EMEA AB
+Copyright 2005-2018 SSAB EMEA AB
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.2
@@ -52,11 +43,9 @@ Texts.
 
 <option> printdisable
 <topic> index
-Pofinet
+Profinet
 
-<image> pwr_logga.gif
-
-<h1>Profnet
+<h1>Profinet
 
 Profinet Viewer <link> profinet_viewer
 </topic>

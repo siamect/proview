@@ -290,7 +290,7 @@ Volume Opc $ClassVolume 0.0.250.9
     !  @Version 1.0
     !  @Summary Opc client access.
     !  Part of the Opc_ServerConfig object that defines the authorization for an
-    !  OPC client to access a Proview OPC Server.
+    !  OPC client to access a ProviewR OPC Server.
     !  The client is identified by the ip-address, and can have the access None,
     !  ReadOnly or ReadWrite.
     !*/

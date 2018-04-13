@@ -1,23 +1,13 @@
 
 <topic> __DocumentTitlePage
 
-<image> pwr_logga.gif
+<image> pwr_logga_doc.png
 
 
 
 
 
-
-<h1> Handbok för
-<h1> Operatörer
-
-
-
-
-
-
-
-
+<h1> Handbok för Operatörer
 
 
 
@@ -31,15 +21,15 @@
 
 
 <hr>
-2009-08-04
-Version 5.0.0	
+2018-03-29
+Version 5.6.0	
 <hr>
 </topic>
 
 <topic> __DocumentInfoPage
 
 
-Copyright (C) 2005-2016 SSAB EMEA AB
+Copyright (C) 2005-2018 SSAB EMEA AB
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.2
@@ -60,7 +50,7 @@ Operatörshandbok
 <h1>Operatörshandbok
 
 Introduktion <link> opg_introduction
-Allmänt om Proview <link> opg_proview
+Allmänt om ProviewR <link> opg_proview
 Operatörsplatsen <link> opg_opplace
 Larm och händelser <link> opg_events
 Kurvor <link> opg_curves
@@ -81,7 +71,7 @@ Index	<index>
 <topic> opg_introduction
 Inledning
 
-Proview Handbok för Operatörer är främst avsedd för personer som kommer i kontakt med gående
+ProviewR Handbok för Operatörer är främst avsedd för personer som kommer i kontakt med gående
 proviewsystem i sitt dagliga arbete. Det kan vara
 
 - operatörer som övervakar och sköter en process.
@@ -97,14 +87,14 @@ som tillhör in viss grupp bestäms av de privilegier som en viss användare är til
 
 <chapter>
 <topic> opg_proview
-Allmänt om Proview
+Allmänt om ProviewR
 
-<h1>Vad är Proview
-Proview är ett modernt, kraftfullt och generellt processtyrsystem. Det innehåller alla de
+<h1>Vad är ProviewR
+ProviewR är ett modernt, kraftfullt och generellt processtyrsystem. Det innehåller alla de
 funktioner som normalt behövs för för att styra och övervaka en process: sekvensstyrning, 
 reglering, datainsamling, kommunikation, larmhantering, HMI/SCADA, historisk datalagring mm.
 
-Proview är ett distribuerat system, dvs det består av ett antal datorer (noder) förbundna
+ProviewR är ett distribuerat system, dvs det består av ett antal datorer (noder) förbundna
 i ett nätverk. Noderna kan vara av typen processtation, operatörsstation eller 
 lagringsstation.
 
@@ -154,14 +144,14 @@ en ändring i konfigureringen för en station, laddas det nya konfigureringen ner 
 stationen via nätverket.
 
 <image>opg_fig1.png
-<b>Fig Komponenter i ett Proview system
+<b>Fig Komponenter i ett ProviewR system
 </topic>
 
 <topic>opg_object
 Objekt
 
 <h1>Objektträd
-Ett centralt begrepp i Proview är objekt. Givare, ventiler, motorer, regulatorer etc, 
+Ett centralt begrepp i ProviewR är objekt. Givare, ventiler, motorer, regulatorer etc, 
 representeras av objekt i en databas. Objekten är ordnade i en trädsstruktur där olika
 hierarkinivåer i trädet motsvarar delar i anläggningen och processen. Om vi betraktar en ugn
 kan den översta nivån representera ugnen. Ugnen består av 4 värningszoner som var och en 
@@ -329,7 +319,7 @@ Functions/User/Return <t><t>Återgår till den ursprungliga användaren.
 Functions/Help/Project <t><t>Visar hjälptexter för projektet.
 Functions/Help/Overview <t><t>Visar en översikt över hjälptexter.
 Functions/Help/Operator Window <t><t>Visar hjälp för operatörsfönstret.
-Functions/Help/About Proview <t><t>Visar info om Proview, t ex version av installat paket.
+Functions/Help/About ProviewR <t><t>Visar info om ProviewR, t ex version av installat paket.
 Functions/Close <t><t>Stänger ner operatörsplatsen.
 
 <b>Trycknappar
@@ -372,7 +362,7 @@ Allmänt om larm och händelser
 <h1>Larm
 Larm skickas ut till operatören när någonting inträffar som operatören måste uppmärksamma.
 Det kan t ex vara en temperatur som går över en gräns, eller att man har matat in ett
-felaktigt värde i en bild. I Proview finns speciella övervakningsobjekt som övervakar
+felaktigt värde i en bild. I ProviewR finns speciella övervakningsobjekt som övervakar
 signaler och genererar larm.
 
 Larm visas i larmlistan.<link>opg_alarmlist
@@ -769,7 +759,7 @@ Hjälpfunktionen kan öppnas på följande sätt
 I operaörsfönstrets mitt-del finns en hjälpknapp som visar hjälptexter för projektet.
 
 <h2>Navigatorns meny
-Menyentryt Help/Overview ger hjälp om Proview och operatörsmiljön. Help/Project ger hjälp
+Menyentryt Help/Overview ger hjälp om ProviewR och operatörsmiljön. Help/Project ger hjälp
 om projektet.
 
 <h2>Kommando
@@ -831,7 +821,7 @@ Alarm / Event List <t><t>Öppnar händleselistan. <link>opg_eventlist
 Alarm / Blocked Alarms <t><t>Visar listan över blockerade larm. <link>opg_blocklist
 Alarm / Historical List <t><t>Visar händelseloggen.<link>opg_eventlog
 Store <t><t>Visar sparade samlingsbilder.
-System / Nethandler / Link <t><t>Visar länkar till andra Proview system. <link>opg_nav_link
+System / Nethandler / Link <t><t>Visar länkar till andra ProviewR system. <link>opg_nav_link
 System / Nethandler / Subscription Client <t><t>Visar prenumerationer (client). <link>opg_nav_subcli
 System / Nethandler / Subscription Server <t><t>Visar prenumerationer (server). <link>opg_nav_subsrv
 System / Communication / RemNode <t><t>Visar remote kommunikation (noder) <link>opg_nav_remnode
@@ -930,7 +920,7 @@ metoder som är relevanta för ett objekt är tryckkänsliga.
 
 <topic> opg_nav_link
 System / Nethandler / Link
-Mappen 'System / Nethandler / Link' visar länkar till andra Proview-stationer. Även den egna
+Mappen 'System / Nethandler / Link' visar länkar till andra ProviewR-stationer. Även den egna
 noden finns med i listan.
 
 I figuren nedan kan man se att den lokala noden aristotle, har kontakt med noden pwrutv.
@@ -1059,7 +1049,7 @@ System / Device
 
 Visar lista med I/O enheter.
 
-I/O systemet i Proview är indelat i fyra nivåer, agent, rack, kort och kanal. 
+I/O systemet i ProviewR är indelat i fyra nivåer, agent, rack, kort och kanal. 
 I Device listan visas alla kort-objekt.
 
 <image> opg_fig22.png
@@ -1094,7 +1084,7 @@ Beskrivning av kolumner
 
 PlcThread <t>Namn på trådobjektet.
 Prio <t>Trådens prioritet.
-LoopCnt <t>Räknare för antal cykler sedan start av Proview.
+LoopCnt <t>Räknare för antal cykler sedan start av ProviewR.
 ScanTime <t>Konfigurerad cykeltid.
 Mean <t>Medelvärde på uppmätt cykeltid.
 Coverage <t>Exekveringstiden för tråden i förhållande till cykeltiden i procent.
@@ -1224,7 +1214,7 @@ W <t>gult <t>Warning, är ett varningsmeddelande.
 I <t>grönt<t>Information, är ett informations meddelande.
 S <t>grönt <t>Success, är ett meddelande om en framgångsrikt utförd aktivitet.
 
-Dessutom markeras uppstart av Proview med en gulfärgad rad.
+Dessutom markeras uppstart av ProviewR med en gulfärgad rad.
 
 Framför allt ska man vara uppmärksam på röda meddelanden som innebär att någonting är 
 fel i systemet.
@@ -1428,7 +1418,7 @@ Exempel på en symbol använd som en variabel
 <topic> opg_security
 Användare och privilegier
 
-Proview innehåller ett system med användare som tilldelas privilegier. För att utföra vissa 
+ProviewR innehåller ett system med användare som tilldelas privilegier. För att utföra vissa 
 saker krävs privilegier, och endast om användaren har dessa privilegier tillåts han att 
 utföra dem.
 
@@ -2445,7 +2435,7 @@ plc-trådarna.
 <TOPIC> show links <style> function
 Kommando   show links
 
-Visa länkar till andra Proview system.
+Visa länkar till andra ProviewR system.
 
 <B>xtt> show links
 </TOPIC>
@@ -2638,6 +2628,9 @@ ODD()			<LINK> ODD()
 get_language()		<LINK> get_language()
 GetUser()		<LINK> getuser()
 GetPrivileges()		<LINK> getprivileges()
+GetGraphInstance()	<LINK> getgraphinstance()
+GetGraphInstanceNext()	<LINK> getgraphinstancenext()
+Quit()			<LINK> quit()
 
 <h2>xtt-commands
 xtt-commands		<LINK> xtt-commands
@@ -3850,6 +3843,9 @@ ODD()		<t>Testa om ett värde är udda.	<LINK> ODD()
 get_language()	<t>Hämta nuvarande språk <LINK> get_language()
 GetUser() 	<t>Hämta nuvarande användare. <LINK> getuser()
 GetPrivileges()	<t>Hämta privilegier för nuvarande användare. <LINK> getprivileges()
+GetGraphInstance() <t>Hämta instansobjekt för en objektgraf. <LINK> getgraphinstance()
+GetGraphInstanceNext() <t>Hämta instansobjekt för nästa graf. <LINK> getgraphinstancenext()
+Quit() 		<t>Avsluta operatörsmiljön. <LINK> quit()
 </TOPIC>
 
 <headerlevel>
@@ -3972,7 +3968,7 @@ string get_pwr_config( string name)
 
 <b>Beskivning
 
-Hämta värdet för en Proview konfigureringsvariabel.
+Hämta värdet för en ProviewR konfigureringsvariabel.
 Konfigureringsvariabler sätts i /etc/proview.cnf.
 Returnerar värdet på konfigureringsvariablen.
 
@@ -4092,6 +4088,69 @@ Hämta privilegier för nuvarande användare.
 <c>    ...
 <c>  endif
 </TOPIC>
+
+<TOPIC> getgraphinstance() <style> function
+GetGraphInstance()
+
+string GetGraphInstance( string graph)
+
+<b>Beskrivning
+
+Hämta instansobjektet för en öppnad objektsbild.
+Returnerar instansobjektet, eller en tom sträng om 
+grafen inte är öppnad.
+
+<b>Argument
+
+string		<t>graph	<t>Filnamn för graf.
+
+<b>Exempel
+
+<c>  string instance;
+
+<c>  instance = GetGraphInstance( "$pwr_exe/pwr_c_dv.pwg");
+
+</TOPIC>
+
+<TOPIC> getgraphinstancenext() <style> function
+GetGraphInstanceNext()
+
+string GetGraphInstanceNext( string graph, string previous)
+
+<b>Beskrivning
+
+Hämta nästa instansobjekt för den angivna objektsbilden.
+Används när flera versioner av samma objektsbild är öppen
+för olika objekt.
+Returnerar instansobjektet, eller en tom sträng om det inte
+finns någon mer instans.
+
+<b>Argument
+
+string		<t>graph	<t>Filname för graf.
+string		<t>previous	<t>Föregående instans.
+
+<b>Exempel
+
+<c>  string instance;
+
+<c>  instance = GetGraphInstance( "$pwr_exe/pwr_c_dv.pwg");
+<c>  while ( instance != "")
+<c>    printf( "Instance %s\n", instance);
+<c>    instance = GetGraphInstanceNext( "$pwr_exe/pwr_c_dv.pwg", instance);
+<c>  endwile
+</TOPIC>
+
+<TOPIC> quit() <style> function
+Quit()
+
+Quit()
+
+<b>Beskrivning
+
+Avsluta operatörsmiljön.
+</TOPIC>
+
 </headerlevel>
 
 <TOPIC> xtt-commands <style> function

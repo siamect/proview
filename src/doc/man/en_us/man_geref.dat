@@ -1,24 +1,13 @@
 
 <topic> __DocumentTitlePage
 
-<image> pwr_logga.gif
+<image> pwr_logga_doc.png
 
 
 
 
 
-
-<h1> Ge
-<h1> Designer's Guide
-
-
-
-
-
-
-
-
-
+<h1> Ge Designer's Guide
 
 
 
@@ -32,15 +21,15 @@
 
 
 <hr>
-2011-11-17
-Version 5.0.0	
+2018-03-29
+Version 5.6.0	
 <hr>
 </topic>
 
 <topic> __DocumentInfoPage
 
 
-Copyright 2005-2014 SSAB EMEA AB
+Copyright 2005-2018 SSAB EMEA AB
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.2
@@ -84,8 +73,8 @@ Script and commands <link>gecmd
 <topic>geref_intro
 Introduction
 
-Ge is an editor to build operator graphics in Proview. The editor is integrated in the 
-Proview development environment and started from the Configurator. The graphs are built of
+Ge is an editor to build operator graphics in ProviewR. The editor is integrated in the 
+ProviewR development environment and started from the Configurator. The graphs are built of
 base objects in shapes of rectangles, circles, lines and texts, and of subgraphs, i.e. a
 kind of composed object. Ge contains a collection of subgraphs for some common components: 
 valves, motors, pumps etc. Other components, the constructor can easily draw himself. The 
@@ -118,7 +107,7 @@ it in vertical and horizontal parts.
 <h2>Connection point
 A point in a subgraph to which a connection can be connected.
 <h2>Signal
-Signal is used as a common name for an attribute of an object in the Proview realtime database.
+Signal is used as a common name for an attribute of an object in the ProviewR realtime database.
 Often its the value for a Di, Do, Dv, Ai, Ao or Av, but it can be an attribute in an arbitrary
 object.
 <h2>MB1
@@ -128,7 +117,7 @@ The middle mouse button or the scroll wheel.
 <h2>MB3
 The right mouse button.
 <h2>Rtdb
-The Proview realtime database.
+The ProviewR realtime database.
 </topic>
 </chapter>
 
@@ -800,7 +789,7 @@ popup menu for the object. Also object graphs can be viewed in window objects by
 specifying the name of the graph file. Also the database object that the graph should be
 connected to has to be specified in Window.Object.
 
-If the object class is a part of the Proview release, the filename for the object graph is
+If the object class is a part of the ProviewR release, the filename for the object graph is
 $pwr_exe/pwr_c_'classname'.pwg. For an Av object this will be $pwr_exe/pwr_c_av.pwg. You 
 have to specify the path in the filename as the file is located in the default directory
 $pwrp_exe.
@@ -1342,7 +1331,7 @@ H1-Dv3 is high.
 <b>Fig The indicator with four different colors
 
 <h1>Colors for warning and error
-In Proview the colors yellow and red are consistently used for warning and error respectively.
+In ProviewR the colors yellow and red are consistently used for warning and error respectively.
 There are two types of dynamic, DigWarning and DigError, that sets yellow and red color.
 The advantage compared to DigLowColor or DigColor is that you don't have to specify the color.
 You just have to connect the dynamic to a digital signal in the database.
@@ -2303,7 +2292,7 @@ working area.
 
 The subgraph palette consists of a number of folders with subgraphs. Under the Local/Subgraphs
 folder there are subgraphs that is created within the project. Other folder contain subgraphs 
-that comes with Proview.
+that comes with ProviewR.
 
 <h1>The color palette
 
@@ -4894,10 +4883,10 @@ AppMotion   <t>Action for motion event in Android app.
 <h1>Object and hierarchy graphs
 This chapter describes how to create Ge graphs that displays the content of an object of a 
 certain class, and is able to display all object of that class. It also describes how you can
-construct common graphs for similar hierarchies in the Proview database.
+construct common graphs for similar hierarchies in the ProviewR database.
 
 <h1>Object graph
-For some classes that belongs to Proview baseclasses, there are so called object graphs, i.e.
+For some classes that belongs to ProviewR baseclasses, there are so called object graphs, i.e.
 graphs that can be opened for each instance of the class. Object graphs exist for example for
 the classes PID, Mode, Av, Ai, Ao, Di, Do and Dv, and is opened with the command 
 'open graph/instance=' where you in /instance supply the name of the object. You can also open
@@ -4966,7 +4955,7 @@ Testing
 
 <h1>Preview
 There is a function to test the graph immediately in the editor. One requirement is that you
-have to start the Proview runtime environment on the development station, to be able to find 
+have to start the ProviewR runtime environment on the development station, to be able to find 
 signals that occurs in the graph. From 'View/Preview' in the menu, the editor connects to the
 database and starts executing the dynamic of the graph. Preview is closed with 'View/Preview 
 close' and then you can continue to edit the graph.
@@ -5160,7 +5149,7 @@ This is how the configuration is done:
 Create a WebHandler object under the node object in the node hierarchy. The WebHandler object
 will cause the start of a server process that supplies the graphs with the dynamic information
 from the realtime database. In the object you also state if you should be able to log in as a 
-Proview user. Under the WebHandler object you create a WebGraph object for each graph that is
+ProviewR user. Under the WebHandler object you create a WebGraph object for each graph that is
 to be opened from the menu.
 Under the WebHandler object, you can also create WebLink objects. Each WebLink object give rise
 to a menu entry that is connected to an URL, e.g. documents for working instructions, function
@@ -5209,7 +5198,7 @@ A ge graph can be exported as a java frame. This is opened in xtt with the comma
 To view process graphs on the intranet, you have to install a web server in an operator station.
 We recommend Apache on Linux.
 
-In Proview you create a WebHandler object in the noder hierarchy, to start a server process
+In ProviewR you create a WebHandler object in the noder hierarchy, to start a server process
 in runtime that supplies the web graphs with database data.
 
 <h1>Distribution
@@ -5567,7 +5556,7 @@ Create a subgraph object.
 
 /x1 <t>x-coordinate for the upper left corner.
 /y1 <t>y-coordinate for the upper left corner.
-/subgraph <t>The name of the subgraph. If the subgraph is a part of the Proview
+/subgraph <t>The name of the subgraph. If the subgraph is a part of the ProviewR
     <t>base system is always has the prefix 'pwr_' and is written with lower case,
     <t>e.g. 'Valve' has the name pwr_valve.
 /x2 <t>If the point (x2, y2) is supplied, the subgraph is scaled to fit inside a
