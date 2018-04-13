@@ -835,9 +835,9 @@ void pkg_node::fetchFiles( bool distribute)
     "%Package: " << endl << 
     pkg_name << endl <<
     "%Brief:" << endl <<
-    "Proview package " << m_name << " Version " << version << " " << time_str << endl <<
+    "ProviewR package " << m_name << " Version " << version << " " << time_str << endl <<
     "%Description:" << endl <<
-    "Proview package:	" << pkg_name << endl <<
+    "ProviewR package:	" << pkg_name << endl <<
     "Node:		" << m_name << endl <<
     "Version:		" << version << endl <<
     "Created:		" << time_str << endl <<

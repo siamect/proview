@@ -85,7 +85,7 @@
 #define pwrv_cPwrVersionStr      "V5.6.0"
 #define pwrv_cPwrVersion         SET_VERSION('V', 5, 6, 0)
 
-#define pwrv_cWbdbVersionShortStr "V55"
+#define pwrv_cWbdbVersionShortStr "V56"
 #define pwrv_cPwrCopyright	 "Copyright (C) 2005-2018 SSAB EMEA AB"
 
 #if (pwr_dHost_byteOrder == pwr_dLittleEndian)
