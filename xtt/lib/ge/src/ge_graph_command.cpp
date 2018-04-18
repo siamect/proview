@@ -4255,6 +4255,71 @@ static int graph_getobjecttext_func(
   return 1;
 }
 
+static int graph_setobjecttext_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+  int type;
+  grow_tObject o;
+  ccm_sArg *arg_p2; 	// Text
+
+  if ( arg_count != 2)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+  if ( arg_p2->value_decl != CCM_DECL_STRING)
+    return CCM__ARGMISM;
+
+  o = (grow_tObject)arg_list->value_int;
+  graph_get_stored_graph( &graph);
+
+  type = grow_GetObjectType( o);
+  if ( type == glow_eObjectType_GrowText) {    
+    grow_SetObjectText( o, arg_p2->value_string);
+  }
+  return 1;
+}
+
+static int graph_findobjectbyname_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+  grow_tObject object;
+  int sts;
+
+  if ( arg_count != 1)
+    return CCM__ARGMISM;
+
+  if ( arg_list->value_decl != CCM_DECL_STRING)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  sts = grow_FindObjectByName( graph->grow->ctx, arg_list->value_string, &object);
+  if ( ODD(sts)) 
+    *return_int = (long int)object;
+  else
+    *return_int = 0;
+  *return_decl = CCM_DECL_INT;
+
+  return 1;
+}
+
 static int graph_reload_func(
   void *filectx,
   ccm_sArg *arg_list, 
@@ -5204,6 +5269,10 @@ int Graph::readcmdfile( 	char		*incommand)
     sts = ccm_register_function( "Ge", "GetObjectDynType", graph_getobjectdyntype_func);
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "Ge", "GetObjectText", graph_getobjecttext_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "Ge", "SetObjectText", graph_setobjecttext_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "Ge", "FindObjectByName", graph_findobjectbyname_func);
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "Ge", "Reload", graph_reload_func);
     if ( EVEN(sts)) return sts;
