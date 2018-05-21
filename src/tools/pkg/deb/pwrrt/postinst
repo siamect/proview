@@ -288,10 +288,8 @@ if [ -e /etc/apache2/apache2.conf ]; then
 	Alias /pwrp_web/ /pwrp/common/web/
 
 	<Directory /pwrp/common/web>
-	    Options Indexes MultiViews
 	    AllowOverride None
-	    Order allow,deny
-	    Allow from all
+	    Require all granted
 	</Directory>
 EOF
   fi
@@ -305,10 +303,8 @@ EOF
 	Alias /pwrp_log/ /pwrp/common/log/
 
 	<Directory /pwrp/common/log>
-	    Options Indexes MultiViews
 	    AllowOverride None
-	    Order allow,deny
-	    Allow from all
+	    Require all granted
 	</Directory>
 EOF
   fi
@@ -323,10 +319,8 @@ EOF
 	Alias /pwr_doc/ /usr/pwrrt/doc/
 
 	<Directory /usr/pwrrt/doc>
-	    Options Indexes MultiViews
 	    AllowOverride None
-	    Order allow,deny
-	    Allow from all
+	    Require all granted
 	</Directory>
 EOF
   fi
