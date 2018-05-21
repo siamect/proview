@@ -19,7 +19,7 @@ pwra_set_func()
     # Command is "set base"
     basename=$2
     basename=${basename//\./\\.}
-    baseroot=`eval cat $pwra_db/pwr_projectlist.dat | grep "\s"$basename"\s" | grep "^"%base"\s" | awk '{print $3}'`
+    baseroot=`eval cat $pwra_db/pwr_projectlist.dat | grep -a "\s"$basename"\s" | grep -a "^"%base"\s" | awk '{print $3}'`
     if [ -z $baseroot ]; then
       echo "Unable to find base '$2'"
       return
@@ -60,14 +60,14 @@ pwra_set_func()
     # Command is "set project"
 
     project=$2
-    basename=`eval cat $pwra_db/pwr_projectlist.dat | grep "^"$project"\b" | awk '{print $2}'`
+    basename=`eval cat $pwra_db/pwr_projectlist.dat | grep -a "^"$project"\b" | awk '{print $2}'`
     basename=${basename//\./\\.}
     if [ -z $basename ]; then
       echo "Unable to find project '$2'"
       return
     fi
-    
-    baseroot=`eval cat $pwra_db/pwr_projectlist.dat | grep "\s"$basename"\s" | grep "^"%base"\s" | awk '{print $3}'`
+
+    baseroot=`eval cat $pwra_db/pwr_projectlist.dat | grep -a "\s"$basename"\s" | grep -a "^"%base"\s" | awk '{print $3}'`
     if [ -z $baseroot ]; then
       echo "Unable to find base '$2'"
       return
@@ -83,7 +83,7 @@ pwra_set_func()
       fi
       source $baseroot/$os/$hw/exp/exe/pwrp_env.sh set baseroot $baseroot
       source $baseroot/$os/$hw/exp/exe/pwrp_env.sh set project $project
-      export PS1='\u@\h/$pwrp_projectname/-.\W> '    
+      export PS1='\u@\h/$pwrp_projectname/-.\W> '
     fi
     return
   fi
@@ -94,7 +94,7 @@ pwra_set_func()
   fi
   source $pwr_exe/pwrp_env.sh set $1 $2 $3
 
-}  
+}
 
 
 pwra_help_func()
@@ -139,7 +139,7 @@ pwra_parse ()
     else
       machine="x86"
     fi
-    os="os_linux"  
+    os="os_linux"
     hw="hw_"$machine
   fi
 

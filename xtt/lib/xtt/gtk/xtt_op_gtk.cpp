@@ -1,20 +1,20 @@
-/* 
+/*
  * ProviewR   Open Source Process Control.
  * Copyright (C) 2005-2018 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
- * published by the Free Software Foundation, either version 2 of 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 2 of
  * the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * This program is distributed in the hope that it will be useful
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
+ * You should have received a copy of the GNU General Public License
  * along with ProviewR. If not, see <http://www.gnu.org/licenses/>
  *
  * Linking ProviewR statically or dynamically with other modules is
@@ -67,13 +67,13 @@
 
 static GtkWidget *image_button( const char *filename)
 {
-  
+
   GtkWidget *image, *box;
   pwr_tFileName fname;
 
   box = gtk_button_new();
   // gtk_container_set_border_width(GTK_CONTAINER(box), 2);
-  
+
   dcli_translate_filename( fname, filename);
   image = gtk_image_new_from_file( fname);
 
@@ -94,7 +94,7 @@ static void cnv_pango_text( char *in, char *out, int size)
     if ( *s == '&') {
       // & -> &amp;
       if ( i+4 >= size)
-	break;
+        break;
       *(t++) = 'a';
       *(t++) = 'm';
       *(t++) = 'p';
@@ -106,14 +106,14 @@ static void cnv_pango_text( char *in, char *out, int size)
 
 
 OpGtk::OpGtk( void *op_parent_ctx,
-	      GtkWidget *op_parent_wid,
-	      char *opplace,
-	      pwr_tStatus *status) :
+              GtkWidget *op_parent_wid,
+              char *opplace,
+              pwr_tStatus *status) :
   Op( op_parent_ctx, opplace, status), parent_wid(op_parent_wid), title_label(0), a_height(2),
   text_size(12)
 {
   pwr_tStatus sts;
-  int root_width, root_height;
+  GdkRectangle xtt_monitor_geometry;
   GdkColor black_color;
 
   memset( a_exist, 0, sizeof(a_exist));
@@ -126,19 +126,16 @@ OpGtk::OpGtk( void *op_parent_ctx,
   gdk_color_parse( "Black", &black_color);
   gdk_color_parse( "White", &white_color);
 
-
-  toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
-			   "default-height", OP_HEIGHT_MIN,
-			   "default-width", 1100,
-			   NULL);
+  toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW,
+                           "default-height", OP_HEIGHT_MIN,
+                           "default-width", 1100,
+                           NULL);
 
   gtk_window_set_decorated( GTK_WINDOW(toplevel), FALSE);
   CoWowGtk::SetWindowIcon( toplevel);
-  GdkWindow *rootwindow = gtk_widget_get_root_window( toplevel);
-  gdk_drawable_get_size( rootwindow, &root_width, &root_height);
-  if ( root_width / root_height >= 2)
-    // Assume two screens
-    root_width = root_width / 2;
+  GdkScreen *xtt_screen = gtk_widget_get_screen(toplevel);
+  int xtt_monitor = gdk_screen_get_monitor_at_point(xtt_screen, 0, 0);
+  gdk_screen_get_monitor_geometry(xtt_screen, xtt_monitor, &xtt_monitor_geometry);
 
   pwr_tFileName fname;
   dcli_translate_filename( fname, "$pwr_exe/xtt_alarm_active.png");
@@ -269,7 +266,7 @@ OpGtk::OpGtk( void *op_parent_ctx,
   gtk_widget_set_size_request( aalarm_active[4], -1, 20);
   gtk_widget_set_size_request( aalarm_info[4], 20, 20);
   g_signal_connect(aalarm_info[4], "clicked", G_CALLBACK(activate_info), this);
-  
+
   GtkWidget *vbox_aalarm = gtk_vbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(vbox_aalarm), aalarm_box[0], FALSE, FALSE, 1);
   gtk_box_pack_start( GTK_BOX(vbox_aalarm), aalarm_box[1], FALSE, FALSE, 1);
@@ -298,38 +295,38 @@ OpGtk::OpGtk( void *op_parent_ctx,
   // Acknowledge button for a alarms
   GtkWidget *aalarm_ack = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/xtt_acknowledge.png");
-  gtk_container_add( GTK_CONTAINER(aalarm_ack), 
-		     gtk_image_new_from_file( fname));
+  gtk_container_add( GTK_CONTAINER(aalarm_ack),
+                     gtk_image_new_from_file( fname));
   gtk_widget_set_size_request( aalarm_ack, 30, 20);
   gtk_widget_set_size_request( aalarm_mark, -1, 20);
   g_signal_connect(aalarm_ack, "clicked", G_CALLBACK(activate_aalarm_ack), this);
-  
+
   // Increment size button
   GtkWidget *incr_button = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/xtt_down.png");
-  gtk_container_add( GTK_CONTAINER(incr_button), 
-		     gtk_image_new_from_file( fname));
+  gtk_container_add( GTK_CONTAINER(incr_button),
+                     gtk_image_new_from_file( fname));
   gtk_widget_set_size_request( incr_button, 30, 20);
   gtk_widget_set_size_request( alarmcnt_label, -1, 20);
   g_signal_connect(incr_button, "clicked", G_CALLBACK(activate_aalarm_incr), this);
-  
+
   // Decrement size button
   decr_button = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/xtt_up.png");
-  gtk_container_add( GTK_CONTAINER(decr_button), 
-		     gtk_image_new_from_file( fname));
+  gtk_container_add( GTK_CONTAINER(decr_button),
+                     gtk_image_new_from_file( fname));
   gtk_widget_set_size_request( decr_button, 30, 20);
   g_signal_connect(decr_button, "clicked", G_CALLBACK(activate_aalarm_decr), this);
-  
+
   // Acknowledge button for b alarms
   GtkWidget *balarm_ack = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/xtt_acknowledge.png");
-  gtk_container_add( GTK_CONTAINER(balarm_ack), 
-		     gtk_image_new_from_file( fname));
+  gtk_container_add( GTK_CONTAINER(balarm_ack),
+                     gtk_image_new_from_file( fname));
   gtk_widget_set_size_request( balarm_ack, 30, 20);
   gtk_widget_set_size_request( balarm_mark, -1, 20);
   g_signal_connect(balarm_ack, "clicked", G_CALLBACK(activate_balarm_ack), this);
-  
+
   GtkWidget *hbox_abutton = gtk_hbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(hbox_abutton), aalarm_ack, FALSE, FALSE, 2);
   gtk_box_pack_start( GTK_BOX(hbox_abutton), aalarm_mark, FALSE, FALSE, 2);
@@ -359,7 +356,7 @@ OpGtk::OpGtk( void *op_parent_ctx,
   gtk_box_pack_start( GTK_BOX(hbox_b), hbox_bbutton, FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(hbox_b), balarm_box, TRUE, TRUE, 0);
 
-  
+
   GtkWidget *vbox_ala = gtk_vbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(vbox_ala), hbox_a, TRUE, TRUE, 0);
   gtk_box_pack_start( GTK_BOX(vbox_ala), gtk_hseparator_new(), FALSE, FALSE, 2);
@@ -377,31 +374,31 @@ OpGtk::OpGtk( void *op_parent_ctx,
 
   GtkWidget *functions_alarm_alarmlist = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_AlarmList"));
   dcli_translate_filename( fname, "$pwr_exe/xtt_alarmlist.png");
-  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_alarm_alarmlist), 
-				 gtk_image_new_from_file( fname));
-  g_signal_connect( functions_alarm_alarmlist, "activate", 
-		    G_CALLBACK(activate_alarmlist), this);
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_alarm_alarmlist),
+                                 gtk_image_new_from_file( fname));
+  g_signal_connect( functions_alarm_alarmlist, "activate",
+                    G_CALLBACK(activate_alarmlist), this);
 
   GtkWidget *functions_alarm_eventlist = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_EventList"));
   dcli_translate_filename( fname, "$pwr_exe/xtt_eventlist.png");
-  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_alarm_eventlist), 
-				 gtk_image_new_from_file( fname));
-  g_signal_connect( functions_alarm_eventlist, "activate", 
-		    G_CALLBACK(activate_eventlist), this);
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_alarm_eventlist),
+                                 gtk_image_new_from_file( fname));
+  g_signal_connect( functions_alarm_eventlist, "activate",
+                    G_CALLBACK(activate_eventlist), this);
 
   GtkWidget *functions_alarm_eventlog = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("Event_Log"));
   dcli_translate_filename( fname, "$pwr_exe/xtt_eventlog.png");
-  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_alarm_eventlog), 
-				 gtk_image_new_from_file( fname));
-  g_signal_connect( functions_alarm_eventlog, "activate", 
-		    G_CALLBACK(activate_eventlog), this);
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_alarm_eventlog),
+                                 gtk_image_new_from_file( fname));
+  g_signal_connect( functions_alarm_eventlog, "activate",
+                    G_CALLBACK(activate_eventlog), this);
 
   GtkWidget *functions_alarm_blocklist = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_BlockList"));
   dcli_translate_filename( fname, "$pwr_exe/xtt_blocklist.png");
-  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_alarm_blocklist), 
-				 gtk_image_new_from_file( fname));
-  g_signal_connect( functions_alarm_blocklist, "activate", 
-		    G_CALLBACK(activate_blocklist), this);
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_alarm_blocklist),
+                                 gtk_image_new_from_file( fname));
+  g_signal_connect( functions_alarm_blocklist, "activate",
+                    G_CALLBACK(activate_blocklist), this);
 
   GtkWidget *functions_alarm = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Alarm"));
   GtkMenu *functions_alarm_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
@@ -410,27 +407,27 @@ OpGtk::OpGtk( void *op_parent_ctx,
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_alarm_menu), functions_alarm_eventlog);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_alarm_menu), functions_alarm_blocklist);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(functions_alarm),
-			    GTK_WIDGET(functions_alarm_menu));
+                            GTK_WIDGET(functions_alarm_menu));
   // End Alarm submenu
 
   // Submenu Curves
   GtkWidget *functions_curves_trend = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Trends"));
   dcli_translate_filename( fname, "$pwr_exe/xtt_meth_trend.png");
-  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_curves_trend), 
-				 gtk_image_new_from_file( fname));
-  g_signal_connect( functions_curves_trend, "activate", 
-		    G_CALLBACK(activate_trend), this);
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_curves_trend),
+                                 gtk_image_new_from_file( fname));
+  g_signal_connect( functions_curves_trend, "activate",
+                    G_CALLBACK(activate_trend), this);
 
   GtkWidget *functions_curves_fast = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Fast"));
   dcli_translate_filename( fname, "$pwr_exe/xtt_meth_fast.png");
-  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_curves_fast), 
-				 gtk_image_new_from_file( fname));
-  g_signal_connect( functions_curves_fast, "activate", 
-		    G_CALLBACK(activate_fast), this);
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_curves_fast),
+                                 gtk_image_new_from_file( fname));
+  g_signal_connect( functions_curves_fast, "activate",
+                    G_CALLBACK(activate_fast), this);
 
   GtkWidget *functions_curves_history = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Process History"));
-  g_signal_connect( functions_curves_history, "activate", 
-		    G_CALLBACK(activate_history), this);
+  g_signal_connect( functions_curves_history, "activate",
+                    G_CALLBACK(activate_history), this);
 
 
   GtkWidget *functions_curves = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Curves"));
@@ -439,27 +436,27 @@ OpGtk::OpGtk( void *op_parent_ctx,
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_curves_menu), functions_curves_fast);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_curves_menu), functions_curves_history);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(functions_curves),
-			    GTK_WIDGET(functions_curves_menu));
+                            GTK_WIDGET(functions_curves_menu));
   // End Curves submenu
 
   // Submenu View
   GtkWidget *functions_view_colortheme = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Color theme"));
-  g_signal_connect( functions_view_colortheme, "activate", 
-		    G_CALLBACK(activate_colortheme), this);
+  g_signal_connect( functions_view_colortheme, "activate",
+                    G_CALLBACK(activate_colortheme), this);
 
   GtkWidget *functions_view_incr = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Larger Text"));
   dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_in.png");
-  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_view_incr), 
-				 gtk_image_new_from_file( fname));
-  g_signal_connect( functions_view_incr, "activate", 
-		    G_CALLBACK(activate_zoom_in), this);
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_view_incr),
+                                 gtk_image_new_from_file( fname));
+  g_signal_connect( functions_view_incr, "activate",
+                    G_CALLBACK(activate_zoom_in), this);
 
   GtkWidget *functions_view_decr = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Smaller Text"));
   dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_out.png");
-  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_view_decr), 
-				 gtk_image_new_from_file( fname));
-  g_signal_connect( functions_view_decr, "activate", 
-		    G_CALLBACK(activate_zoom_out), this);
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_view_decr),
+                                 gtk_image_new_from_file( fname));
+  g_signal_connect( functions_view_decr, "activate",
+                    G_CALLBACK(activate_zoom_out), this);
 
   GtkWidget *functions_view = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_View"));
   GtkMenu *functions_view_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
@@ -467,21 +464,21 @@ OpGtk::OpGtk( void *op_parent_ctx,
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_view_menu), functions_view_incr);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_view_menu), functions_view_decr);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(functions_view),
-			    GTK_WIDGET(functions_view_menu));
+                            GTK_WIDGET(functions_view_menu));
   // End View submenu
 
   // Submenu User
   GtkWidget *functions_user_switch = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("S_witch User"));
-  g_signal_connect( functions_user_switch, "activate", 
-		    G_CALLBACK(activate_switch_user), this);
+  g_signal_connect( functions_user_switch, "activate",
+                    G_CALLBACK(activate_switch_user), this);
 
   GtkWidget *functions_user_show = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Show User"));
-  g_signal_connect( functions_user_show, "activate", 
-		    G_CALLBACK(activate_show_user), this);
+  g_signal_connect( functions_user_show, "activate",
+                    G_CALLBACK(activate_show_user), this);
 
   GtkWidget *functions_user_logout = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Return"));
-  g_signal_connect( functions_user_logout, "activate", 
-		    G_CALLBACK(activate_logout), this);
+  g_signal_connect( functions_user_logout, "activate",
+                    G_CALLBACK(activate_logout), this);
 
   GtkWidget *functions_user = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_User"));
   GtkMenu *functions_user_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
@@ -489,46 +486,46 @@ OpGtk::OpGtk( void *op_parent_ctx,
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_user_menu), functions_user_show);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_user_menu), functions_user_logout);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(functions_user),
-			    GTK_WIDGET(functions_user_menu));
+                            GTK_WIDGET(functions_user_menu));
   // End User submenu
 
   GtkWidget *functions_navigator = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Navigator"));
   dcli_translate_filename( fname, "$pwr_exe/xtt_navigator.png");
-  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_navigator), 
-				 gtk_image_new_from_file( fname));
-  g_signal_connect( functions_navigator, "activate", 
-		    G_CALLBACK(activate_navigator), this);
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_navigator),
+                                 gtk_image_new_from_file( fname));
+  g_signal_connect( functions_navigator, "activate",
+                    G_CALLBACK(activate_navigator), this);
   // gtk_widget_add_accelerator( functions_navigator, "activate", accel_g,
   //			      'd', GdkModifierType(GDK_CONTROL_MASK), GTK_ACCEL_VISIBLE);
 
   GtkWidget *functions_graph = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Process Graphics"));
   dcli_translate_filename( fname, "$pwr_exe/wtt_ge.png"); //TODO
-  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_graph), 
-				 gtk_image_new_from_file( fname));
-  g_signal_connect( functions_graph, "activate", 
-		    G_CALLBACK(activate_graph), this);
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_graph),
+                                 gtk_image_new_from_file( fname));
+  g_signal_connect( functions_graph, "activate",
+                    G_CALLBACK(activate_graph), this);
   // gtk_widget_add_accelerator( functions_graph, "activate", accel_g,
   //			      'g', GdkModifierType(GDK_CONTROL_MASK), GTK_ACCEL_VISIBLE);
 
   // Submenu Help
   GtkWidget *functions_help_project = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Project"));
   dcli_translate_filename( fname, "$pwr_exe/xtt_help.png");
-  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_help_project), 
-				 gtk_image_new_from_file( fname));
-  g_signal_connect( functions_help_project, "activate", 
-		    G_CALLBACK(activate_help), this);
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_help_project),
+                                 gtk_image_new_from_file( fname));
+  g_signal_connect( functions_help_project, "activate",
+                    G_CALLBACK(activate_help), this);
 
   GtkWidget *functions_help_overview = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Overview"));
-  g_signal_connect( functions_help_overview, "activate", 
-		    G_CALLBACK(activate_help_overview), this);
+  g_signal_connect( functions_help_overview, "activate",
+                    G_CALLBACK(activate_help_overview), this);
 
   GtkWidget *functions_help_opwin = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_OperatorWindow"));
-  g_signal_connect( functions_help_opwin, "activate", 
-		    G_CALLBACK(activate_help_opwin), this);
+  g_signal_connect( functions_help_opwin, "activate",
+                    G_CALLBACK(activate_help_opwin), this);
 
   GtkWidget *functions_help_proview = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_About ProviewR"));
-  g_signal_connect( functions_help_proview, "activate", 
-		    G_CALLBACK(activate_help_proview), this);
+  g_signal_connect( functions_help_proview, "activate",
+                    G_CALLBACK(activate_help_proview), this);
 
 
   GtkWidget *functions_help = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Help"));
@@ -538,12 +535,12 @@ OpGtk::OpGtk( void *op_parent_ctx,
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_help_menu), functions_help_opwin);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_help_menu), functions_help_proview);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(functions_help),
-			    GTK_WIDGET(functions_help_menu));
+                            GTK_WIDGET(functions_help_menu));
   // End Help submenu
 
   functions_close = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Close"));
-  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_close), 
-				 gtk_image_new_from_stock( "gtk-close", GTK_ICON_SIZE_MENU));
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_close),
+                                 gtk_image_new_from_stock( "gtk-close", GTK_ICON_SIZE_MENU));
 
   g_signal_connect(functions_close, "activate", G_CALLBACK(activate_exit), this);
   // gtk_widget_add_accelerator( functions_close, "activate", accel_g,
@@ -561,8 +558,8 @@ OpGtk::OpGtk( void *op_parent_ctx,
 
   GtkWidget *functions = gtk_image_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Functions"));
   dcli_translate_filename( fname, "$pwr_exe/xtt_down.png");
-  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions), 
-				 gtk_image_new_from_file( fname));
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions),
+                                 gtk_image_new_from_file( fname));
 
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), functions);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(functions), GTK_WIDGET(functions_menu));
@@ -574,64 +571,64 @@ OpGtk::OpGtk( void *op_parent_ctx,
 
   GtkWidget *tools_zoom_in = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_in.png");
-  gtk_container_add( GTK_CONTAINER(tools_zoom_in), 
-		     gtk_image_new_from_file( fname));
+  gtk_container_add( GTK_CONTAINER(tools_zoom_in),
+                     gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_in, "clicked", G_CALLBACK(activate_zoom_in), this);
   gtk_toolbar_append_widget( GTK_TOOLBAR(tools), tools_zoom_in, CoWowGtk::translate_utf8("Larger Text"), "");
 
   GtkWidget *tools_zoom_out = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_out.png");
-  gtk_container_add( GTK_CONTAINER(tools_zoom_out), 
-		     gtk_image_new_from_file( fname));
+  gtk_container_add( GTK_CONTAINER(tools_zoom_out),
+                     gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_out, "clicked", G_CALLBACK(activate_zoom_out), this);
   gtk_toolbar_append_widget( GTK_TOOLBAR(tools), tools_zoom_out, CoWowGtk::translate_utf8("Smaller Text"), "");
 
   GtkWidget *tools_help = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/xtt_help.png");
-  gtk_container_add( GTK_CONTAINER(tools_help), 
-	  gtk_image_new_from_file( fname));
+  gtk_container_add( GTK_CONTAINER(tools_help),
+          gtk_image_new_from_file( fname));
   g_signal_connect(tools_help, "clicked", G_CALLBACK(activate_help), this);
   gtk_toolbar_append_widget( GTK_TOOLBAR(tools), tools_help, CoWowGtk::translate_utf8("Help"), "");
 
   tools_close = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/xtt_close.png");
-  gtk_container_add( GTK_CONTAINER(tools_close), 
-	  gtk_image_new_from_file( fname));
+  gtk_container_add( GTK_CONTAINER(tools_close),
+          gtk_image_new_from_file( fname));
   g_signal_connect(tools_close, "clicked", G_CALLBACK(activate_exit), this);
   gtk_toolbar_append_widget( GTK_TOOLBAR(tools), tools_close, CoWowGtk::translate_utf8("Close"), "");
 
   GtkWidget *tools_alarmlist = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/xtt_alarmlist.png");
-  gtk_container_add( GTK_CONTAINER(tools_alarmlist), 
-	  gtk_image_new_from_file( fname));
+  gtk_container_add( GTK_CONTAINER(tools_alarmlist),
+          gtk_image_new_from_file( fname));
   g_signal_connect(tools_alarmlist, "clicked", G_CALLBACK(activate_alarmlist), this);
   gtk_toolbar_append_widget( GTK_TOOLBAR(tools2), tools_alarmlist, CoWowGtk::translate_utf8("Alarm List"), "");
 
   GtkWidget *tools_eventlist = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/xtt_eventlist.png");
-  gtk_container_add( GTK_CONTAINER(tools_eventlist), 
-	  gtk_image_new_from_file( fname));
+  gtk_container_add( GTK_CONTAINER(tools_eventlist),
+          gtk_image_new_from_file( fname));
   g_signal_connect(tools_eventlist, "clicked", G_CALLBACK(activate_eventlist), this);
   gtk_toolbar_append_widget( GTK_TOOLBAR(tools2), tools_eventlist, CoWowGtk::translate_utf8("Event List"), "");
 
   GtkWidget *tools_eventlog = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/xtt_eventlog.png");
-  gtk_container_add( GTK_CONTAINER(tools_eventlog), 
-	  gtk_image_new_from_file( fname));
+  gtk_container_add( GTK_CONTAINER(tools_eventlog),
+          gtk_image_new_from_file( fname));
   g_signal_connect(tools_eventlog, "clicked", G_CALLBACK(activate_eventlog), this);
   gtk_toolbar_append_widget( GTK_TOOLBAR(tools2), tools_eventlog, CoWowGtk::translate_utf8("Event Log"), "");
 
   GtkWidget *tools_blocklist = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/xtt_blocklist.png");
-  gtk_container_add( GTK_CONTAINER(tools_blocklist), 
-	  gtk_image_new_from_file( fname));
+  gtk_container_add( GTK_CONTAINER(tools_blocklist),
+          gtk_image_new_from_file( fname));
   g_signal_connect(tools_blocklist, "clicked", G_CALLBACK(activate_blocklist), this);
   gtk_toolbar_append_widget( GTK_TOOLBAR(tools2), tools_blocklist, CoWowGtk::translate_utf8("Blocked Alarms"), "");
 
   GtkWidget *tools_navigator = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/xtt_navigator.png");
-  gtk_container_add( GTK_CONTAINER( tools_navigator), 
-		     gtk_image_new_from_file( fname));
+  gtk_container_add( GTK_CONTAINER( tools_navigator),
+                     gtk_image_new_from_file( fname));
   g_signal_connect(tools_navigator, "clicked", G_CALLBACK(activate_navigator), this);
   gtk_toolbar_append_widget( GTK_TOOLBAR(tools2), tools_navigator, CoWowGtk::translate_utf8("Navigator"), "");
 
@@ -668,12 +665,12 @@ OpGtk::OpGtk( void *op_parent_ctx,
     if ( sup_vect.size() > 10) {
       padding1 = 0;
       padding2 = 0;
-      buttonwidth = (root_width - 350) / sup_vect.size();
+      buttonwidth = (xtt_monitor_geometry.width - 350) / sup_vect.size();
     }
     else if ( sup_vect.size() > 6) {
       padding1 = 8;
       padding2 = 5;
-      buttonwidth = (root_width - 350) / sup_vect.size() - 2 * padding2;
+      buttonwidth = (xtt_monitor_geometry.width - 350) / sup_vect.size() - 2 * padding2;
     }
     else {
       padding1 = 8;
@@ -710,14 +707,14 @@ OpGtk::OpGtk( void *op_parent_ctx,
       gtk_box_pack_start( GTK_BOX(node_image), node_ind_filler2, TRUE, TRUE, 0);
 
       gtk_widget_modify_bg( GTK_WIDGET(node_ind), GTK_STATE_NORMAL, &gray_color);
-      gtk_widget_set_size_request( node_ind, 18, 18);      
+      gtk_widget_set_size_request( node_ind, 18, 18);
       gtk_widget_modify_bg( GTK_WIDGET(node_ind_frame), GTK_STATE_NORMAL, &black_color);
       gtk_widget_modify_bg( GTK_WIDGET(node_ind_frame), GTK_STATE_PRELIGHT, &black_color);
       gtk_widget_modify_bg( GTK_WIDGET(node_ind_frame), GTK_STATE_ACTIVE, &black_color);
       gtk_widget_set_size_request( node_ind_frame, 20, 20);
-      
+
       if ( buttonwidth)
-	gtk_widget_set_size_request( node_button, buttonwidth, -1);
+        gtk_widget_set_size_request( node_button, buttonwidth, -1);
       // gtk_button_set_relief( GTK_BUTTON(node_button), GTK_RELIEF_NONE);
       gtk_container_add( GTK_CONTAINER(node_button), node_image);
       sup_vect[i].indw = (void *)node_ind;
@@ -731,7 +728,7 @@ OpGtk::OpGtk( void *op_parent_ctx,
       gtk_box_pack_start( GTK_BOX(status_bar), GTK_WIDGET(node_button), FALSE, FALSE, padding2);
     }
     if ( buttonwidth)
-      gtk_widget_set_size_request( status_bar, root_width - 6, -1);
+      gtk_widget_set_size_request( status_bar, xtt_monitor_geometry.width, -1);
   }
 
   // Main window
@@ -756,7 +753,7 @@ OpGtk::OpGtk( void *op_parent_ctx,
   GdkColor background;
   gdk_color_parse( "black", &background);
   gtk_widget_modify_bg( frame, GTK_STATE_NORMAL, &background);
-  
+
   gtk_container_add( GTK_CONTAINER(frame), vbox_conf);
   gtk_container_add( GTK_CONTAINER(toplevel), frame);
 
@@ -788,7 +785,7 @@ OpGtk::OpGtk( void *op_parent_ctx,
     activate_aalarm_decr( 0, this);
   }
 
-  gtk_window_resize( GTK_WINDOW(toplevel), root_width - 6, OP_HEIGHT_MIN);
+  gtk_window_resize( GTK_WINDOW(toplevel), xtt_monitor_geometry.width, OP_HEIGHT_MIN);
   gtk_window_move( GTK_WINDOW(toplevel), 0, 0);
 
   wow = new CoWowGtk( toplevel);
@@ -868,7 +865,7 @@ void  OpGtk::update_alarm_info()
   int		show_time = 0;
   time_eFormat  time_format;
   char 		*s;
-  
+
   if ( get_alarm_info_cb) {
     sts = (get_alarm_info_cb)( parent_ctx, &info);
     if ( EVEN(sts)) return;
@@ -899,47 +896,47 @@ void  OpGtk::update_alarm_info()
 
       if ( info.a_alarm_exist[i]) {
 
-	cnv_pango_text( info.a_alarm_text[i], ctext, sizeof(ctext));
+        cnv_pango_text( info.a_alarm_text[i], ctext, sizeof(ctext));
 
-	if ( show_time) {
-	  sts = time_AtoAscii( &info.a_alarm_time[i], time_format, timestr, sizeof(timestr));
-	  if ( (s = strrchr( timestr, '.')))
-	    *s = 0;
-	  
-	  snprintf( text, sizeof(text), "<span size=\"%d\">%s %s  %s</span>", 
-		    fsize, timestr, info.a_alarm_alias[i], ctext);
-	}
-	else
-	  snprintf( text, sizeof(text), "<span size=\"%d\">%s  %s</span>", 
-		    fsize, info.a_alarm_alias[i], ctext);
-      
-	gtk_label_set_markup( GTK_LABEL(aalarm_label[i]), CoWowGtk::convert_utf8(text));
-	
-	snprintf( text, sizeof(text), "<span size=\"%d\">%s</span>", 
-		  fsize, timestr);
+        if ( show_time) {
+          sts = time_AtoAscii( &info.a_alarm_time[i], time_format, timestr, sizeof(timestr));
+          if ( (s = strrchr( timestr, '.')))
+            *s = 0;
 
-	// gtk_widget_modify_bg( aalarm_box[i], GTK_STATE_NORMAL, &red_color);
-	if ( i < a_height) {
-	  g_object_set( aalarm_box[i], "visible", TRUE, NULL);
-	  if ( info.a_alarm_active[i]) {
-	    g_object_set( aalarm_active[i], "visible", TRUE, NULL);
-	  }
-	  else {
-	    g_object_set( aalarm_active[i], "visible", FALSE, NULL);
-	  }
-	  if ( strcmp(info.a_alarm_moretext[i], "") != 0) {
-	    g_object_set( aalarm_info[i], "visible", TRUE, NULL);
-	  }
-	  else {
-	    g_object_set( aalarm_info[i], "visible", FALSE, NULL);
-	  }
-	}
+          snprintf( text, sizeof(text), "<span size=\"%d\">%s %s  %s</span>",
+                    fsize, timestr, info.a_alarm_alias[i], ctext);
+        }
+        else
+          snprintf( text, sizeof(text), "<span size=\"%d\">%s  %s</span>",
+                    fsize, info.a_alarm_alias[i], ctext);
+
+        gtk_label_set_markup( GTK_LABEL(aalarm_label[i]), CoWowGtk::convert_utf8(text));
+
+        snprintf( text, sizeof(text), "<span size=\"%d\">%s</span>",
+                  fsize, timestr);
+
+        // gtk_widget_modify_bg( aalarm_box[i], GTK_STATE_NORMAL, &red_color);
+        if ( i < a_height) {
+          g_object_set( aalarm_box[i], "visible", TRUE, NULL);
+          if ( info.a_alarm_active[i]) {
+            g_object_set( aalarm_active[i], "visible", TRUE, NULL);
+          }
+          else {
+            g_object_set( aalarm_active[i], "visible", FALSE, NULL);
+          }
+          if ( strcmp(info.a_alarm_moretext[i], "") != 0) {
+            g_object_set( aalarm_info[i], "visible", TRUE, NULL);
+          }
+          else {
+            g_object_set( aalarm_info[i], "visible", FALSE, NULL);
+          }
+        }
       }
       else {
-	gtk_label_set_text( GTK_LABEL(aalarm_label[i]), "");
-	// gtk_widget_modify_bg( aalarm_box[i], GTK_STATE_NORMAL, &bg_color);
-	g_object_set( aalarm_active[i], "visible", FALSE, NULL);
-	g_object_set( aalarm_box[i], "visible", FALSE, NULL);
+        gtk_label_set_text( GTK_LABEL(aalarm_label[i]), "");
+        // gtk_widget_modify_bg( aalarm_box[i], GTK_STATE_NORMAL, &bg_color);
+        g_object_set( aalarm_active[i], "visible", FALSE, NULL);
+        g_object_set( aalarm_box[i], "visible", FALSE, NULL);
       }
     }
 
@@ -952,16 +949,16 @@ void  OpGtk::update_alarm_info()
       cnv_pango_text( info.b_alarm_text[0], ctext, sizeof(ctext));
 
       if ( show_time) {
-	sts = time_AtoAscii( &info.b_alarm_time[0], time_format, timestr, sizeof(timestr));
-	if ( (s = strrchr( timestr, '.')))
-	  *s = 0;
+        sts = time_AtoAscii( &info.b_alarm_time[0], time_format, timestr, sizeof(timestr));
+        if ( (s = strrchr( timestr, '.')))
+          *s = 0;
 
-	snprintf( text, sizeof(text), "<span size=\"%d\">%s %s  %s</span>", 
-		  fsize, timestr, info.b_alarm_alias[0], ctext);
+        snprintf( text, sizeof(text), "<span size=\"%d\">%s %s  %s</span>",
+                  fsize, timestr, info.b_alarm_alias[0], ctext);
       }
-      else 
-	snprintf( text, sizeof(text), "<span size=\"%d\">%s  %s</span>", 
-		  fsize, info.b_alarm_alias[0], ctext);
+      else
+        snprintf( text, sizeof(text), "<span size=\"%d\">%s  %s</span>",
+                  fsize, info.b_alarm_alias[0], ctext);
 
       gtk_label_set_markup( GTK_LABEL(balarm_label), CoWowGtk::convert_utf8(text));
       gtk_widget_modify_bg( balarm_ebox, GTK_STATE_NORMAL, &yellow_color);
@@ -970,16 +967,16 @@ void  OpGtk::update_alarm_info()
       gtk_label_set_text( GTK_LABEL(balarm_mark), "B");
 
       if ( info.b_alarm_active[0]) {
-	g_object_set( balarm_active, "visible", TRUE, NULL);
+        g_object_set( balarm_active, "visible", TRUE, NULL);
       }
       else {
-	g_object_set( balarm_active, "visible", FALSE, NULL);
+        g_object_set( balarm_active, "visible", FALSE, NULL);
       }
       if ( strcmp(info.b_alarm_moretext[0], "") != 0) {
-	g_object_set( balarm_info, "visible", TRUE, NULL);
+        g_object_set( balarm_info, "visible", TRUE, NULL);
       }
       else {
-	g_object_set( balarm_info, "visible", FALSE, NULL);
+        g_object_set( balarm_info, "visible", FALSE, NULL);
       }
     }
     else if ( info.c_alarm_exist[0]) {
@@ -991,16 +988,16 @@ void  OpGtk::update_alarm_info()
       strcpy( b_alarm_moretext, info.c_alarm_moretext[0]);
       cnv_pango_text( info.c_alarm_text[0], ctext, sizeof(ctext));
       if ( show_time) {
-	sts = time_AtoAscii( &info.c_alarm_time[0], time_format, timestr, sizeof(timestr));
-	if ( (s = strrchr( timestr, '.')))
-	  *s = 0;
+        sts = time_AtoAscii( &info.c_alarm_time[0], time_format, timestr, sizeof(timestr));
+        if ( (s = strrchr( timestr, '.')))
+          *s = 0;
 
-	snprintf( text, sizeof(text), "<span size=\"%d\">%s %s  %s</span>", 
-		  fsize, timestr, info.c_alarm_alias[i], ctext);
+        snprintf( text, sizeof(text), "<span size=\"%d\">%s %s  %s</span>",
+                  fsize, timestr, info.c_alarm_alias[i], ctext);
       }
-      else 
-	snprintf( text, sizeof(text), "<span size=\"%d\">%s  %s</span>", 
-		  fsize, info.c_alarm_alias[0], ctext);
+      else
+        snprintf( text, sizeof(text), "<span size=\"%d\">%s  %s</span>",
+                  fsize, info.c_alarm_alias[0], ctext);
       gtk_label_set_markup( GTK_LABEL(balarm_label), CoWowGtk::convert_utf8(text));
       gtk_widget_modify_bg( balarm_ebox, GTK_STATE_NORMAL, &blue_color);
       g_object_set( balarm_box, "visible", TRUE, NULL);
@@ -1008,16 +1005,16 @@ void  OpGtk::update_alarm_info()
       gtk_label_set_text( GTK_LABEL(balarm_mark), "C");
 
       if ( info.c_alarm_active[0]) {
-	g_object_set( balarm_active, "visible", TRUE, NULL);
+        g_object_set( balarm_active, "visible", TRUE, NULL);
       }
       else {
-	g_object_set( balarm_active, "visible", FALSE, NULL);
+        g_object_set( balarm_active, "visible", FALSE, NULL);
       }
       if ( strcmp(info.c_alarm_moretext[0], "") != 0) {
-	g_object_set( balarm_info, "visible", TRUE, NULL);
+        g_object_set( balarm_info, "visible", TRUE, NULL);
       }
       else {
-	g_object_set( balarm_info, "visible", FALSE, NULL);
+        g_object_set( balarm_info, "visible", FALSE, NULL);
       }
     }
     else if ( info.d_alarm_exist[0])
@@ -1030,16 +1027,16 @@ void  OpGtk::update_alarm_info()
       strcpy( b_alarm_moretext, info.d_alarm_moretext[0]);
       cnv_pango_text( info.d_alarm_text[0], ctext, sizeof(ctext));
       if ( show_time) {
-	sts = time_AtoAscii( &info.d_alarm_time[0], time_format, timestr, sizeof(timestr));
-	if ( (s = strrchr( timestr, '.')))
-	  *s = 0;
+        sts = time_AtoAscii( &info.d_alarm_time[0], time_format, timestr, sizeof(timestr));
+        if ( (s = strrchr( timestr, '.')))
+          *s = 0;
 
-	snprintf( text, sizeof(text), "<span size=\"%d\">%s %s  %s</span>", 
-		  fsize, timestr, info.d_alarm_alias[0], ctext);
+        snprintf( text, sizeof(text), "<span size=\"%d\">%s %s  %s</span>",
+                  fsize, timestr, info.d_alarm_alias[0], ctext);
       }
-      else 
-	snprintf( text, sizeof(text), "<span size=\"%d\">%s  %s</span>", 
-		  fsize, info.d_alarm_alias[0], ctext);
+      else
+        snprintf( text, sizeof(text), "<span size=\"%d\">%s  %s</span>",
+                  fsize, info.d_alarm_alias[0], ctext);
       gtk_label_set_markup( GTK_LABEL(balarm_label), CoWowGtk::convert_utf8(text));
       gtk_widget_modify_bg( balarm_ebox, GTK_STATE_NORMAL, &violet_color);
       g_object_set( balarm_box, "visible", TRUE, NULL);
@@ -1047,16 +1044,16 @@ void  OpGtk::update_alarm_info()
       gtk_label_set_text( GTK_LABEL(balarm_mark), "D");
 
       if ( info.b_alarm_active[0]) {
-	g_object_set( balarm_active, "visible", TRUE, NULL);
+        g_object_set( balarm_active, "visible", TRUE, NULL);
       }
       else {
-	g_object_set( balarm_active, "visible", FALSE, NULL);
+        g_object_set( balarm_active, "visible", FALSE, NULL);
       }
       if ( strcmp(info.d_alarm_moretext [0], "") != 0) {
-	g_object_set( balarm_info, "visible", TRUE, NULL);
+        g_object_set( balarm_info, "visible", TRUE, NULL);
       }
       else {
-	g_object_set( balarm_info, "visible", FALSE, NULL);
+        g_object_set( balarm_info, "visible", FALSE, NULL);
       }
     }
     else if ( info.i_alarm_exist[0])
@@ -1066,36 +1063,36 @@ void  OpGtk::update_alarm_info()
       strcpy( b_alarm_moretext, info.i_alarm_moretext[0]);
       cnv_pango_text( info.i_alarm_text[0], ctext, sizeof(ctext));
       if ( show_time) {
-	sts = time_AtoAscii( &info.i_alarm_time[0], time_format, timestr, sizeof(timestr));
-	if ( (s = strrchr( timestr, '.')))
-	  *s = 0;
+        sts = time_AtoAscii( &info.i_alarm_time[0], time_format, timestr, sizeof(timestr));
+        if ( (s = strrchr( timestr, '.')))
+          *s = 0;
 
-	snprintf( text, sizeof(text), "<span size=\"%d\">%s %s  %s</span>", 
-		  fsize, timestr, info.i_alarm_alias[0], ctext);
+        snprintf( text, sizeof(text), "<span size=\"%d\">%s %s  %s</span>",
+                  fsize, timestr, info.i_alarm_alias[0], ctext);
       }
-      else 
-      snprintf( text, sizeof(text), "<span size=\"%d\">%s  %s</span>", 
-	       fsize, info.i_alarm_alias[0], ctext);
+      else
+      snprintf( text, sizeof(text), "<span size=\"%d\">%s  %s</span>",
+               fsize, info.i_alarm_alias[0], ctext);
       gtk_label_set_markup( GTK_LABEL(balarm_label), CoWowGtk::convert_utf8(text));
       if ( balarm_type == evlist_eEventType_InfoSuccess)
-	gtk_widget_modify_bg( balarm_ebox, GTK_STATE_NORMAL, &green_color);
+        gtk_widget_modify_bg( balarm_ebox, GTK_STATE_NORMAL, &green_color);
       else
-	gtk_widget_modify_bg( balarm_ebox, GTK_STATE_NORMAL, &white_color);
+        gtk_widget_modify_bg( balarm_ebox, GTK_STATE_NORMAL, &white_color);
       g_object_set( balarm_box, "visible", TRUE, NULL);
 
       gtk_label_set_text( GTK_LABEL(balarm_mark), "I");
 
       if ( info.i_alarm_active[0]) {
-	g_object_set( balarm_active, "visible", TRUE, NULL);
+        g_object_set( balarm_active, "visible", TRUE, NULL);
       }
       else {
-	g_object_set( balarm_active, "visible", FALSE, NULL);
+        g_object_set( balarm_active, "visible", FALSE, NULL);
       }
       if ( strcmp(info.i_alarm_moretext[0], "") != 0) {
-	g_object_set( balarm_info, "visible", TRUE, NULL);
+        g_object_set( balarm_info, "visible", TRUE, NULL);
       }
       else {
-	g_object_set( balarm_info, "visible", FALSE, NULL);
+        g_object_set( balarm_info, "visible", FALSE, NULL);
       }
     }
     else {
@@ -1166,14 +1163,14 @@ int OpGtk::configure( char *opplace_str)
     }
 
     attrref = cdh_ArefAdd( &opplace_p->FastAvail[i], &attrref);
-    sts = gdh_GetObjectInfoAttrref( &attrref, (void *)button_title[i], 
-		sizeof(button_title[0]));
+    sts = gdh_GetObjectInfoAttrref( &attrref, (void *)button_title[i],
+                sizeof(button_title[0]));
     if ( EVEN(sts)) continue;
 
     if ( strcmp( button_title[i], "") == 0) {
       // Take object name instead
-      sts = gdh_AttrrefToName( &opplace_p->FastAvail[i], button_title[i], sizeof(button_title[0]), 
-			       cdh_mName_object);
+      sts = gdh_AttrrefToName( &opplace_p->FastAvail[i], button_title[i], sizeof(button_title[0]),
+                               cdh_mName_object);
       if ( EVEN(sts)) continue;
     }
 
@@ -1278,7 +1275,7 @@ int OpGtk::configure( char *opplace_str)
       funcbox[0] = gtk_hbox_new( FALSE, 0);
       gtk_box_pack_start( GTK_BOX(appl_form), funcbox[0], FALSE, FALSE, 0);
     }
-    else if ( i == 4) {      
+    else if ( i == 4) {
       funcbox[1] = gtk_hbox_new( FALSE, 0);
       gtk_box_pack_start( GTK_BOX(appl_form), funcbox[1], FALSE, FALSE, 0);
     }
@@ -1297,26 +1294,26 @@ int OpGtk::configure( char *opplace_str)
 
     if ( i < 5) {
       if ( cdh_ObjidIsNotNull( button_aref[i].Objid))
-	gtk_box_pack_start( GTK_BOX(funcbox[0]), appl_buttons[i], TRUE, TRUE, 0);
+        gtk_box_pack_start( GTK_BOX(funcbox[0]), appl_buttons[i], TRUE, TRUE, 0);
     }
     else if ( i < 10) {
       if ( cdh_ObjidIsNotNull( button_aref[i].Objid))
-	gtk_box_pack_start( GTK_BOX(funcbox[1]), appl_buttons[i], TRUE, TRUE, 0);
+        gtk_box_pack_start( GTK_BOX(funcbox[1]), appl_buttons[i], TRUE, TRUE, 0);
     }
     else if ( i < 15) {
       if ( cdh_ObjidIsNotNull( button_aref[i].Objid))
-	gtk_box_pack_start( GTK_BOX(funcbox[2]), appl_buttons[i], TRUE, TRUE, 0);
+        gtk_box_pack_start( GTK_BOX(funcbox[2]), appl_buttons[i], TRUE, TRUE, 0);
     }
     else if ( i < 20) {
       if ( cdh_ObjidIsNotNull( button_aref[i].Objid)) {
-	gtk_box_pack_start( GTK_BOX(funcbox[3]), appl_buttons[i], TRUE, TRUE, 0);
-	a_height = 4;
+        gtk_box_pack_start( GTK_BOX(funcbox[3]), appl_buttons[i], TRUE, TRUE, 0);
+        a_height = 4;
       }
     }
     else if ( i < 25) {
       if ( cdh_ObjidIsNotNull( button_aref[i].Objid)) {
-	gtk_box_pack_start( GTK_BOX(funcbox[4]), appl_buttons[i], TRUE, TRUE, 0);
-	a_height = 5;
+        gtk_box_pack_start( GTK_BOX(funcbox[4]), appl_buttons[i], TRUE, TRUE, 0);
+        a_height = 5;
       }
     }
   }
@@ -1404,13 +1401,13 @@ void OpGtk::activate_aalarm_incr( GtkWidget *w, gpointer data)
   for ( int i = 2; i < 5; i++) {
     if ( i < op->a_height) {
       if ( op->a_exist[i]) {
-	g_object_set( op->aalarm_box[i], "visible", TRUE, NULL);
-	if ( op->a_active[i]) {
-	  g_object_set( op->aalarm_active[i], "visible", TRUE, NULL);
-	}
-	else {
-	  g_object_set( op->aalarm_active[i], "visible", FALSE, NULL);
-	}
+        g_object_set( op->aalarm_box[i], "visible", TRUE, NULL);
+        if ( op->a_active[i]) {
+          g_object_set( op->aalarm_active[i], "visible", TRUE, NULL);
+        }
+        else {
+          g_object_set( op->aalarm_active[i], "visible", FALSE, NULL);
+        }
       }
     }
   }
@@ -1428,7 +1425,7 @@ void OpGtk::activate_aalarm_decr( GtkWidget *w, gpointer data)
     return;
 
   op->a_height--;
-  height = OP_HEIGHT_MIN + (op->a_height - 2) * OP_HEIGHT_INC + 
+  height = OP_HEIGHT_MIN + (op->a_height - 2) * OP_HEIGHT_INC +
     ((op->layout_mask & pwr_mOpWindLayoutMask_HideStatusBar) ? 0 : 1) * OP_HEIGHT_STATUSBAR;
 
   if ( op->a_height == 2) {
@@ -1443,9 +1440,9 @@ void OpGtk::activate_aalarm_decr( GtkWidget *w, gpointer data)
   for ( int i = 2; i < 5; i++) {
     if ( i >= op->a_height) {
       if ( op->a_exist[i]) {
-	g_object_set( op->aalarm_box[i], "visible", FALSE, NULL);
-	g_object_set( op->aalarm_active[i], "visible", FALSE, NULL);
-	g_object_set( op->aalarm_info[i], "visible", FALSE, NULL);
+        g_object_set( op->aalarm_box[i], "visible", FALSE, NULL);
+        g_object_set( op->aalarm_active[i], "visible", FALSE, NULL);
+        g_object_set( op->aalarm_info[i], "visible", FALSE, NULL);
       }
     }
   }
@@ -1786,7 +1783,7 @@ int OpGtk::get_cmd( GtkWidget *w, char *cmd)
   for ( unsigned int i = 0; i < cmd_vect.size(); i++) {
     if ( w == cmd_vect[i].w) {
       strcpy( cmd, cmd_vect[i].cmd);
-      return 1;	
+      return 1;
     }
   }
   return 0;
@@ -1820,7 +1817,7 @@ void OpGtk::change_sup_color( void *imagew, op_eSupColor color)
   gtk_widget_modify_bg( GTK_WIDGET(imagew), GTK_STATE_ACTIVE, col);
 }
 
-void  OpGtk::set_title( char *user) 
+void  OpGtk::set_title( char *user)
 {
   char title[80];
   char text[120];
@@ -1911,8 +1908,8 @@ void OpGtk::set_color_theme( int idx)
   menu_text.blue = 0xFFFF * colors[(glow_eCtColor_MenuTextcolor-glow_eDrawType_CustomColor1)*3+2];
 
   gtk_widget_modify_bg( toplevel, GTK_STATE_NORMAL, &bg);
-  gtk_widget_modify_fg( GTK_WIDGET(title_label), GTK_STATE_NORMAL, &bg_text);     
-  
+  gtk_widget_modify_fg( GTK_WIDGET(title_label), GTK_STATE_NORMAL, &bg_text);
+
   gtk_widget_modify_bg( GTK_WIDGET(tools), GTK_STATE_NORMAL, &bg);
   gtk_widget_modify_bg( GTK_WIDGET(tools2), GTK_STATE_NORMAL, &bg);
 
@@ -1933,13 +1930,13 @@ void OpGtk::set_color_theme( int idx)
   GList *child;
   for ( child = g_list_first(children); child; child = g_list_next(child)) {
     gtk_widget_modify_bg( GTK_WIDGET(child->data), GTK_STATE_NORMAL, &menu);
-    gtk_widget_modify_fg( GTK_WIDGET(child->data), GTK_STATE_NORMAL, &menu_text);    
+    gtk_widget_modify_fg( GTK_WIDGET(child->data), GTK_STATE_NORMAL, &menu_text);
 
     GList *children2 = gtk_container_get_children( GTK_CONTAINER(child->data));
     GList *child2;
     for ( child2 = g_list_first(children2); child2; child2 = g_list_next(child2)) {
       gtk_widget_modify_bg( GTK_WIDGET(child2->data), GTK_STATE_NORMAL, &menu);
-      gtk_widget_modify_fg( GTK_WIDGET(child2->data), GTK_STATE_NORMAL, &menu_text);    
+      gtk_widget_modify_fg( GTK_WIDGET(child2->data), GTK_STATE_NORMAL, &menu_text);
     }
     g_list_free( children2);
   }
@@ -1947,14 +1944,14 @@ void OpGtk::set_color_theme( int idx)
 
   for ( unsigned int i = 0; i < sup_vect.size(); i++) {
     gtk_widget_modify_bg( GTK_WIDGET(sup_vect[i].buttonw), GTK_STATE_NORMAL, &button_bg);
-    gtk_widget_modify_bg( GTK_WIDGET(sup_vect[i].buttonw), GTK_STATE_PRELIGHT, &button_prelight);     
-    gtk_widget_modify_bg( GTK_WIDGET(sup_vect[i].buttonw), GTK_STATE_ACTIVE, &button_active);     
+    gtk_widget_modify_bg( GTK_WIDGET(sup_vect[i].buttonw), GTK_STATE_PRELIGHT, &button_prelight);
+    gtk_widget_modify_bg( GTK_WIDGET(sup_vect[i].buttonw), GTK_STATE_ACTIVE, &button_active);
     gtk_widget_modify_bg( GTK_WIDGET(sup_vect[i].indfiller1w), GTK_STATE_NORMAL, &button_bg);
-    gtk_widget_modify_bg( GTK_WIDGET(sup_vect[i].indfiller1w), GTK_STATE_PRELIGHT, &button_prelight);     
-    gtk_widget_modify_bg( GTK_WIDGET(sup_vect[i].indfiller1w), GTK_STATE_ACTIVE, &button_active);     
+    gtk_widget_modify_bg( GTK_WIDGET(sup_vect[i].indfiller1w), GTK_STATE_PRELIGHT, &button_prelight);
+    gtk_widget_modify_bg( GTK_WIDGET(sup_vect[i].indfiller1w), GTK_STATE_ACTIVE, &button_active);
     gtk_widget_modify_bg( GTK_WIDGET(sup_vect[i].indfiller2w), GTK_STATE_NORMAL, &button_bg);
-    gtk_widget_modify_bg( GTK_WIDGET(sup_vect[i].indfiller2w), GTK_STATE_PRELIGHT, &button_prelight);     
-    gtk_widget_modify_bg( GTK_WIDGET(sup_vect[i].indfiller2w), GTK_STATE_ACTIVE, &button_active);     
+    gtk_widget_modify_bg( GTK_WIDGET(sup_vect[i].indfiller2w), GTK_STATE_PRELIGHT, &button_prelight);
+    gtk_widget_modify_bg( GTK_WIDGET(sup_vect[i].indfiller2w), GTK_STATE_ACTIVE, &button_active);
     gtk_widget_modify_fg( GTK_WIDGET(sup_vect[i].textw), GTK_STATE_NORMAL, &button_text);
     gtk_widget_modify_fg( GTK_WIDGET(sup_vect[i].textw), GTK_STATE_PRELIGHT, &button_text);
     gtk_widget_modify_fg( GTK_WIDGET(sup_vect[i].textw), GTK_STATE_ACTIVE, &button_text);
@@ -1967,8 +1964,8 @@ void OpGtk::set_color_theme( int idx)
   for ( unsigned int i = 0; i < 25; i++) {
     if ( appl_buttons[i]) {
       gtk_widget_modify_bg( GTK_WIDGET(appl_buttons[i]), GTK_STATE_NORMAL, &button_bg);
-      gtk_widget_modify_bg( GTK_WIDGET(appl_buttons[i]), GTK_STATE_PRELIGHT, &button_prelight);     
-      gtk_widget_modify_bg( GTK_WIDGET(appl_buttons[i]), GTK_STATE_ACTIVE, &button_active);           
+      gtk_widget_modify_bg( GTK_WIDGET(appl_buttons[i]), GTK_STATE_PRELIGHT, &button_prelight);
+      gtk_widget_modify_bg( GTK_WIDGET(appl_buttons[i]), GTK_STATE_ACTIVE, &button_active);
       gtk_widget_modify_fg( GTK_WIDGET(gtk_bin_get_child(GTK_BIN(appl_buttons[i]))), GTK_STATE_NORMAL, &button_text);
       gtk_widget_modify_fg( GTK_WIDGET(gtk_bin_get_child(GTK_BIN(appl_buttons[i]))), GTK_STATE_PRELIGHT, &button_text);
       gtk_widget_modify_fg( GTK_WIDGET(gtk_bin_get_child(GTK_BIN(appl_buttons[i]))), GTK_STATE_ACTIVE, &button_text);
