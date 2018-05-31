@@ -38,14 +38,19 @@ jdk=`eval ls -1 /usr/local | sort -r | grep ^jdk | head -1`
 if [ -z "$jdk" ]; then
   jdk=`eval ls -1 /usr/local | sort -r | grep ^jre | head -1`
 fi
-# If no local jdk/jres were found check for openjdk. Ubuntu should have a default-java
+# If no local jdk/jres were found check for openjdk. Ubuntu can have a default-java
 # symlink in /usr/lib/jvm which can be changed with update-java-alternatives if openjdk
-# is in use
+# is in use. If no default-java excists try to use the one with the highest version
 if [ -z "$jdk" ]; then
-    jdk=`eval realpath -qe /usr/lib/jvm/default-java`
-    if [ $? != 0 ]; then
-        jdk="";
+    if [ -e /usr/lib/jvm/default-java ]; then
+      jdk=`eval realpath -qe /usr/lib/jvm/default-java`
     else
+      jdk_name=`eval ls -1 /usr/lib/jvm | sort -r | grep ^java | head -1`
+      jdk=`eval realpath -qe /usr/lib/jvm/$jdk_name`
+      unset jdk_name
+    fi
+
+    if [ ! -z "$jdk" ]; then
         export jdk=$jdk
         export JAVA_HOME=$jdk
         export jdk_home=$jdk/bin
