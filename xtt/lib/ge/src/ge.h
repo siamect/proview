@@ -66,7 +66,7 @@ class SubGraphs;
 #ifndef glow_growapi_h
 //#include "glow_growapi.h"
 typedef void *grow_tObject;
-typedef void *GlowCtx;
+class GlowCtx;
 #endif
 #ifndef cow_wow_h
 #include "cow_wow.h"

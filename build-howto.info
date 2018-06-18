@@ -40,6 +40,10 @@ libdb5.1-dev
 libdb5.1++-dev
 doxygen
 
+qt4-dev-tools
+libphonon4
+libphonon-dev 
+
 Optional:
 
 openjdk-6-jdk               Web interface and java API

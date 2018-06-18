@@ -1,0 +1,366 @@
+#include "glow_std.h"
+
+#include <cstdio>
+#include <cstring>
+#include <vector>
+
+#include "co_dcli.h"
+
+#include "flow.h"
+#include "flow_browctx.h"
+#include "flow_browapi.h"
+#include "flow_browwidget_qt.h"
+#include "glow.h"
+#include "glow_colpalctx.h"
+#include "glow_colpalapi.h"
+#include "glow_colpalwidget_qt.h"
+#include "glow_msg.h"
+
+#include "glow_growctx.h"
+#include "glow_growapi.h"
+#include "glow_growwidget_qt.h"
+#include "ge_graph_qt.h"
+#include "ge_qt.h"
+#include "ge_subpalette_qt.h"
+#include "ge_subgraphs_qt.h"
+#include "ge_util.h"
+#include "ge_msg.h"
+#include "ge_item_view_qt.h"
+#include "wb_wnav_selformat.h"
+#include "cow_wow_qt.h"
+#include "cow_logw_qt.h"
+#include "wb_nav_qt.h"
+#include "wb_log.h"
+
+#include "ge_item_view_qt.h"
+
+#include <QMenu>
+#include <QMouseEvent>
+#include <QScrollArea>
+#include <QVBoxLayout>
+
+static pwr_tString80 *graph_list_files();
+
+GeItemViewQt::GeItemViewQt(Ge *gectx) : ge_ctx(gectx), tree_widget(0)
+{
+  char full_path[256];
+
+  tree_widget = new QTreeWidget(this);
+  tree_widget->setSelectionMode(QAbstractItemView::SingleSelection);
+
+  connect(tree_widget, SIGNAL(itemActivated(QTreeWidgetItem * , int)), this,
+          SLOT(activate_tree_widget(QTreeWidgetItem * , int)));
+
+  tree_widget->setColumnCount(1);
+
+  autosave_button = new QCheckBox("Autosave", this);
+  connect(autosave_button, SIGNAL(stateChanged(int)), this,
+          SLOT(autosave_toggled(int)));
+
+  QScrollArea *scrolled_widget = new QScrollArea();
+  scrolled_widget->setWidgetResizable(true);
+  scrolled_widget->setWidget(tree_widget);
+
+  QVBoxLayout *vbox = new QVBoxLayout(this);
+  vbox->addWidget(autosave_button);
+  add_expanding(vbox, scrolled_widget);
+
+  setLayout(vbox);
+
+  update();
+
+  dcli_translate_filename(full_path, "$pwrp_pop");
+  watcher = new QFileSystemWatcher(this);
+  watcher->addPath(full_path);
+  connect(watcher, SIGNAL(directoryChanged(const QString &)), this, SLOT(directory_changed(const QString &)));
+}
+
+QWidget *GeItemViewQt::widget()
+{
+  return this;
+}
+
+void GeItemViewQt::update()
+{
+  char *texts = (char *) graph_list_files();
+  if (!texts) {
+    return;
+  }
+
+  char *name_p;
+  int textsize;
+
+  textsize = 80;
+  name_p = texts;
+
+  while (strcmp(name_p, "") != 0) {
+    QTreeWidgetItem *item = new QTreeWidgetItem(tree_widget);
+    item->setText(0, QString::fromLatin1(name_p));
+    tree_widget->addTopLevelItem(item);
+
+    name_p += textsize;
+  }
+}
+
+void GeItemViewQt::update(char *full_name, int event)
+{
+  char *name_p = strrchr(full_name, '/');
+  full_name = strstr(name_p, ".pwg");
+  if (!full_name) {
+    return;
+  }
+
+  name_p[full_name - name_p] = 0;
+  name_p++; // skip slash
+
+  if (event == 1) {
+    QTreeWidgetItem *item = new QTreeWidgetItem(tree_widget);
+    item->setText(0, QString::fromLatin1(name_p));
+    tree_widget->addTopLevelItem(item);
+
+    tree_widget->sortItems(0, Qt::AscendingOrder);
+  } else if (event == 0) {
+    for (int i = 0; i < tree_widget->topLevelItemCount(); i++) {
+      if (QString::fromLatin1(name_p)
+              .compare(tree_widget->topLevelItem(i)->text(0)) == 0) {
+        tree_widget->takeTopLevelItem(i);
+      }
+    }
+  }
+}
+
+QString GeItemViewQt::selected_text(QTreeWidget *tree_widget)
+{
+  return tree_widget->selectedItems()[0]->text(0);
+}
+
+QString GeItemViewQt::selected_text()
+{
+  return selected_text(tree_widget);
+}
+
+void GeItemViewQt::activate_menu_open()
+{
+  if (ge_ctx->graph->is_modified()) {
+    int rv;
+    char title[] = "Save changes";
+    char message[64];
+
+    sprintf(message, "Your changes will be lost. Do you want to save?");
+    rv = ge_ctx
+        ->create_modal_dialog(title, message, "Yes", "Discard", "Cancel", NULL);
+    switch (rv) {
+      case wow_eModalDialogReturn_Button1:
+        // Yes
+        ge_ctx->activate_save();
+        break;
+      case wow_eModalDialogReturn_Button2:
+        // Discard
+        break;
+      default:
+        // Cancel
+        return;
+    }
+  }
+  activate_tree_widget(NULL, 0);
+}
+
+void GeItemViewQt::activate_menu_delete()
+{
+  QByteArray sel_text = selected_text().toLocal8Bit();
+  if (sel_text.data()) {
+    int rv;
+    char title[] = "Delete graph";
+    char message[64];
+    pwr_tCmd cmd;
+
+    sprintf(message, "Do you want to delete %s?", sel_text.data());
+    rv = ge_ctx
+        ->create_modal_dialog(title, message, "Yes", "Cancel", NULL, NULL);
+    if (rv != wow_eModalDialogReturn_Button1) {
+      return;
+    }
+
+    sprintf(cmd, "rm -f $pwrp_pop/%s.pwg", sel_text.data());
+    system(cmd);
+  }
+}
+
+pwr_tString80 *graph_list_files()
+{
+  int file_cnt;
+  int allocated, old_allocated;
+  pwr_tString80 *file_p;
+  pwr_tString80 *old_file_p;
+  char found_file[80];
+  char fname[80];
+  int sts;
+  char dev[80];
+  char dir[80];
+  char file[80];
+  char type[80];
+  int version;
+
+  // Get the pwg files and order them
+  dcli_translate_filename(fname, "$pwrp_pop/*.pwg");
+
+  file_cnt = 0;
+  allocated = 0;
+  sts = dcli_search_file(fname, found_file, DCLI_DIR_SEARCH_INIT);
+  while (ODD(sts)) {
+    if (strstr(found_file, "__p")) {
+      // Skip subgraph pages
+      sts = dcli_search_file(fname, found_file, DCLI_DIR_SEARCH_NEXT);
+      continue;
+    }
+    file_cnt++;
+    if (file_cnt > allocated - 1) {
+      if (allocated == 0) {
+        allocated = 100;
+        file_p = (pwr_tString80 *) malloc(allocated * sizeof(*file_p));
+      } else {
+        old_file_p = file_p;
+        old_allocated = allocated;
+        allocated += 100;
+        file_p = (pwr_tString80 *) malloc(allocated * sizeof(*file_p));
+        memcpy(file_p, old_file_p, old_allocated * sizeof(*file_p));
+        free(old_file_p);
+      }
+    }
+    dcli_parse_filename(found_file, dev, dir, file, type, &version);
+    strcpy(file_p[file_cnt - 1], file);
+    if (strcmp(file, "") == 0) {
+      file_cnt--;
+    }
+    sts = dcli_search_file(fname, found_file, DCLI_DIR_SEARCH_NEXT);
+  }
+  dcli_search_file(fname, found_file, DCLI_DIR_SEARCH_END);
+
+  if (!file_cnt) {
+    return 0;
+  }
+
+  strcpy(file_p[file_cnt], "");
+  qsort(file_p, file_cnt, sizeof(*file_p), Ge::sort_files);
+
+  return file_p;
+}
+
+void GeItemViewQt::directory_changed(const QString &path)
+{
+  QStringList files2 = watcher->files();
+
+  for (int i = 0; i < files.size(); i++) {
+    if (!files2.contains(files[i])) {
+      // File deleted
+      if (!files[i].contains("__p")) {
+        QByteArray ba = files[i].toLocal8Bit();
+        update(ba.data(), 1);
+      }
+    }
+  }
+
+  for (int i = 0; i < files2.size(); i++) {
+    if (!files.contains(files2[i])) {
+      // File created
+      if (!files2[i].contains("__p")) {
+        QByteArray ba = files2[i].toLocal8Bit();
+        update(ba.data(), 0);
+      }
+    }
+  }
+
+  files = files2;
+}
+
+void GeItemViewQt::activate_tree_widget(QTreeWidgetItem *item, int idx)
+{
+  if (item) {
+    bool autosave = autosave_button->isChecked();
+    if (ge_ctx->graph->is_modified()) {
+      char name[80];
+      ge_ctx->graph->get_name(name);
+      if (strcmp(name, "") == 0) {
+        ge_ctx->wow->DisplayError("Not saved", "Save current graph first");
+        return;
+      }
+
+      if (autosave) {
+        ge_ctx->activate_save();
+      } else {
+        int rv;
+        char title[] = "Save changes";
+        char message[64];
+
+        sprintf(message, "Your changes will be lost.\nDo you want to save?");
+        rv = ge_ctx
+            ->create_modal_dialog(title, message, "Yes", "Discard", "Cancel",
+                                  NULL);
+        switch (rv) {
+          case wow_eModalDialogReturn_Button1:
+            // Yes
+            ge_ctx->activate_save();
+            break;
+          case wow_eModalDialogReturn_Button2:
+            // Discard
+            break;
+          default:
+            return;
+        }
+      }
+    }
+  }
+
+  QString sel_text = selected_text(tree_widget);
+  if (!sel_text.isNull()) {
+    QByteArray ba = sel_text.toLocal8Bit();
+    ge_ctx->open_graph(ba.data());
+  }
+}
+
+void GeItemViewQt::focusOutEvent(QFocusEvent *event)
+{
+  tree_widget->clearSelection();
+
+  QWidget::focusOutEvent(event);
+}
+
+void GeItemViewQt::mousePressEvent(QMouseEvent *event)
+{
+  static const char *item_text[] = {"Open", " ", "Delete", ""};
+
+  if (event->button() != Qt::RightButton) {
+    return;
+  }
+
+  QMenu *menu = new QMenu(this);
+  for (int i = 0; item_text[i][0]; i++) {
+    if (item_text[i][0] == ' ') {
+      menu->addSeparator();
+    } else {
+      QAction *a = menu->addAction(item_text[i]);
+      if (i == 0) {
+        connect(a, SIGNAL(triggered()), this, SLOT(activate_menu_open()));
+      } else if (i == 2) {
+        connect(a, SIGNAL(triggered()), this, SLOT(activate_menu_delete()));
+      }
+    }
+  }
+
+  QList < QTreeWidgetItem * > selection = tree_widget->selectedItems();
+  int sel_count = selection.size();
+  if (sel_count <= 1) {
+    /* Get tree path for row that was clicked */
+    QTreeWidgetItem *path = tree_widget->itemAt(event->x(), event->y());
+    tree_widget->clearSelection();
+    tree_widget->setCurrentItem(path);
+  }
+
+  menu->popup(QPoint());
+
+  QWidget::mousePressEvent(event);
+}
+
+void GeItemViewQt::autosave_toggled(int set)
+{
+}
