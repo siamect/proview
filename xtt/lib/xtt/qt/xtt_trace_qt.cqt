@@ -307,10 +307,10 @@ RtTraceQt::RtTraceQt(void *tr_parent_ctx, QWidget *tr_parent_wid,
   QToolBar *tools = new QToolBar(toplevel);
 
   pwr_tObjid parent;
-  par_tCid parent_cid;
+  pwr_tCid parent_cid;
   sts = gdh_GetParent(objid, &parent);
   if (ODD(sts)) {
-    sts = gdx_GetObjectClass(parent, &parent_cid);
+    sts = gdh_GetObjectClass(parent, &parent_cid);
     if (ODD(sts) && parent_cid != pwr_cClass_plc) {
       addToolItem(toplevel, tools, "Open parent window",
                   SLOT(activate_parent_window()), "$pwr_exe/xtt_up.png");

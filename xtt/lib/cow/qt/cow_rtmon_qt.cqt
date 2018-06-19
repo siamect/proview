@@ -81,7 +81,7 @@ static QPushButton *addButton(QWidget *parent, QBoxLayout *layout,
 {
   QPushButton *button = new QPushButton(fl(text));
   button->setFixedSize(170, 25);
-  QObject::connect(button, SIGNAL(triggered()), parent, SLOT(callback()));
+  QObject::connect(button, SIGNAL(pressed()), parent, SLOT(callback()));
   layout->addWidget(button);
   return button;
 }
@@ -195,7 +195,7 @@ RtMonQt::RtMonQt(void *rtmon_parent_ctx, QWidget *rtmon_parent_wid,
   wow = new CoWowQt(toplevel);
 
   timerid = new QTimer();
-  QObject::connect(timerid, SIGNAL(timeout()), toplevel, SLOT(rtmon_scan));
+  QObject::connect(timerid, SIGNAL(timeout()), toplevel, SLOT(rtmon_scan()));
   timerid->start(1000);
 
   *status = 1;
@@ -288,6 +288,16 @@ void RtMonQtWidget::focusInEvent(QFocusEvent *event)
   QWidget::focusInEvent(event);
 }
 
+void RtMonQtWidget::activate_xtt()
+{
+  rtmon->activate_xtt();
+}
+
+void RtMonQtWidget::activate_op()
+{
+  rtmon->activate_op();
+}
+
 void RtMonQtWidget::activate_zoom_in()
 {
   rtmon->nodelistnav->zoom(1.2);
@@ -301,4 +311,9 @@ void RtMonQtWidget::activate_zoom_out()
 void RtMonQtWidget::activate_zoom_reset()
 {
   rtmon->nodelistnav->unzoom();
+}
+
+void RtMonQtWidget::activate_help()
+{
+  rtmon->activate_help();
 }

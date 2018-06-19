@@ -454,9 +454,9 @@ QMenu *XNavQt::build_menu(int MenuType, const char *MenuTitle,
 
         // Check that the Cascade contains any pushbuttons
         int found = 0;
-        unsigned int cascade_level = Items[*idx].Level;
+        unsigned int cascade_level = Items[idx].Level;
         int cidx;
-        for (cidx = *idx + 1; Items[cidx].Level != 0 &&
+        for (cidx = idx + 1; Items[cidx].Level != 0 &&
              Items[cidx].Level > cascade_level; cidx++) {
  	        if (Items[cidx].Item == xmenu_eMenuItem_Ref ||
               Items[cidx].Item == xmenu_eMenuItem_Button) {
@@ -476,7 +476,7 @@ QMenu *XNavQt::build_menu(int MenuType, const char *MenuTitle,
         // Separator
         menu->addSeparator();
         break;
-      case xmenu_eMenuItem_Button:
+      case xmenu_eMenuItem_Button: {
         // Pushbutton
         QAction *w = menu->addAction(translate_utf8(Items[idx].Name));
         w->setEnabled(Items[idx].Flags.f.Sensitive ? TRUE : FALSE);
@@ -485,6 +485,7 @@ QMenu *XNavQt::build_menu(int MenuType, const char *MenuTitle,
           QObject::connect(w, SIGNAL(triggered()), popup_obj, Callback);
         }
         break;
+      }
       default: ;
     }
   }

@@ -96,6 +96,9 @@ public slots:
   void activate_zoom_in();
   void activate_zoom_out();
   void activate_zoom_reset();
+  void activate_xtt();
+  void activate_op();
+  void activate_help();
 
   void rtmon_scan();
 

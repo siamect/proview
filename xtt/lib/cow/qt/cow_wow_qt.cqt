@@ -67,6 +67,7 @@
 #include <QPrinter>
 #include <QPushButton>
 #include <QScrollArea>
+#include <QTextEdit>
 #include <QTimer>
 #include <QVBoxLayout>
 

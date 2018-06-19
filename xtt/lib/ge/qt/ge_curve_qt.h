@@ -82,8 +82,14 @@ public:
   QWidget *menu_snapshot;
   QWidget *menu_export;
   QWidget *menu_add;
-  QWidget *tools_snapshot;
-  QWidget *tools_add;
+  QAction *tools_snapshot;
+  QAction *tools_add;
+  QAction *tools_curvetype_line;
+  QAction *tools_curvetype_points;
+  QAction *tools_curvetype_linepoints;
+  QAction *tools_curvetype_square;
+  QAction *tools_curve_fill;
+  QAction *tools_curve_digsplit;
   QWidget *export_widget;
   QComboBox *export_attrcombo_widget;
   QLineEdit *export_fromtime_widget;
@@ -150,7 +156,7 @@ public slots:
   void activate_madd();
   void activate_remove();
   void activate_timecombo(int index);
-  void activate_filledcurves(bool set);
+  void activate_filledcurves(bool set = false);
   void activate_curvetype();
   void activate_digsplit();
   void activate_xlimits();

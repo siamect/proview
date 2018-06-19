@@ -79,14 +79,32 @@ void showNow(QWidget *w)
 QIcon get_icon(const char *iconName)
 {
   if (strcmp(iconName, "")) {
-    QIcon icon = QIcon::fromTheme(fl(iconName));
-    if (icon.isNull()) {
-      if (strchr(iconName, '$')) { // iconName is a relative path to a local icon
-        pwr_tFileName fname;
-        dcli_translate_filename(fname, iconName);
-        icon = QIcon(fl(fname));
-      } else { // iconName is an absolute path to a local icon
-        icon = QIcon(fl(iconName));
+    // iconName is not equal to ""
+    QIcon icon;
+    
+    // First check if this is a standard gnome icon, e.g. "zoom-in"
+    QIcon::setThemeName("gnome");
+    if (QIcon::hasThemeIcon(fl(iconName))) {
+      icon = QIcon::fromTheme(fl(iconName));
+      if (icon.isNull() || icon.pixmap(16).isNull()) {
+        printf("Warning! Could not find theme icon: %s\n", iconName);
+      }
+      return icon;
+    }
+
+    if (strchr(iconName, '$')) {
+      // iconName is a relative path to a local icon, e.g. "xtt_close"
+      pwr_tFileName fname;
+      dcli_translate_filename(fname, iconName);
+      icon = QIcon(fl(fname));
+      if (icon.isNull() || icon.pixmap(16).isNull()) {
+        printf("Warning! Could not find proview icon: %s, path: %s\n", iconName, fname);
+      }
+    } else {
+      // iconName is an absolute path to a local icon
+      icon = QIcon(fl(iconName));
+      if (icon.isNull() || icon.pixmap(16).isNull()) {
+        printf("Warning! Could not find icon: %s\n", iconName);
       }
     }
     return icon;

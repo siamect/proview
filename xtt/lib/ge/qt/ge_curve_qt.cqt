@@ -261,11 +261,10 @@ void GeCurveQtWidget::activate_showname()
 
 void GeCurveQtWidget::activate_filledcurves(bool set)
 {
-  int set;
   if (sender() == ((GeCurveQt *)curve)->tools_curve_fill) {
     set = curve->fill_curves = !curve->fill_curves;
   } else {
-    set = ((QCheckBox *)sender())->isChecked();
+    set = ((QAction *)sender())->isChecked();
   }
   curve->activate_filledcurves(set);
 }
@@ -429,6 +428,7 @@ void GeCurveQt::enable(unsigned int mask)
   }
   if (mask & curve_mEnable_Add) {
     tools_add->setVisible(true);
+  }
   if (mask & curve_mEnable_CurveType) {
     tools_curvetype_line->setVisible(true);
     tools_curvetype_points->setVisible(true);
@@ -704,28 +704,27 @@ GeCurveQt::GeCurveQt(void *gc_parent_ctx, QWidget *parent_widget,
               "$pwr_exe/ge_scroll_right.png");
   addToolItem(toplevel, tools, "Page right", SLOT(activate_page_right()),
               "$pwr_exe/ge_page_right.png");
-  addToolItem(toplevel, tools, "Add", SLOT(activate_add()),
-              "$pwr_exe/xtt_add.png");
-  QAction *a = addToolItem(toplevel, tools, "Curve line",
-                           SLOT(activate_curvetype()),
-                           "$pwr_exe/xtt_curve_line.png");
-  a->setData(glow_eCurveType_Line);
-  a = addToolItem(toplevel, tools, "Curve points", SLOT(activate_curvetype()),
-                  "$pwr_exe/xtt_curve_points.png");
-  a->setData(glow_eCurveType_Points);
-  a = addToolItem(toplevel, tools, "Curve line and points",
-                  SLOT(activate_curvetype()),
-                  "$pwr_exe/xtt_curve_linepoints.png");
-  a->setData(glow_eCurveType_LinePoints);
-  a = addToolItem(toplevel, tools, "Curve square", SLOT(activate_curvetype()),
-                  "$pwr_exe/xtt_curve_square.png");
-  a->setData(glow_eCurveType_Square);
-  addToolItem(toplevel, tools, "Filled curves", SLOT(activate_filledcurves()),
-              "$pwr_exe/xtt_curve_fill.png");
-  addToolItem(toplevel, tools, "Split digital curves",
-              SLOT(activate_digsplit()), "$pwr_exe/xtt_curve_digsplit.png");
-  addToolItem(toplevel, tools, "Snapshot", SLOT(activate_shapshot()),
-              "$pwr_exe/xtt_snapshot.png");
+  tools_add = addToolItem(toplevel, tools, "Add", SLOT(activate_add()),
+      "$pwr_exe/xtt_add.png");
+  tools_curvetype_line = addToolItem(toplevel, tools, "Curve line",
+      SLOT(activate_curvetype()), "$pwr_exe/xtt_curve_line.png");
+  tools_curvetype_line->setData(glow_eCurveType_Line);
+  tools_curvetype_points = addToolItem(toplevel, tools, "Curve points",
+      SLOT(activate_curvetype()), "$pwr_exe/xtt_curve_points.png");
+  tools_curvetype_points->setData(glow_eCurveType_Points);
+  tools_curvetype_linepoints = addToolItem(toplevel, tools,
+      "Curve line and points", SLOT(activate_curvetype()),
+      "$pwr_exe/xtt_curve_linepoints.png");
+  tools_curvetype_linepoints->setData(glow_eCurveType_LinePoints);
+  tools_curvetype_square = addToolItem(toplevel, tools, "Curve square",
+      SLOT(activate_curvetype()), "$pwr_exe/xtt_curve_square.png");
+  tools_curvetype_square->setData(glow_eCurveType_Square);
+  tools_curve_fill = addToolItem(toplevel, tools, "Filled curves",
+      SLOT(activate_filledcurves()), "$pwr_exe/xtt_curve_fill.png");
+  tools_curve_digsplit = addToolItem(toplevel, tools, "Split digital curves",
+      SLOT(activate_digsplit()), "$pwr_exe/xtt_curve_digsplit.png");
+  tools_snapshot = addToolItem(toplevel, tools, "Snapshot",
+      SLOT(activate_shapshot()), "$pwr_exe/xtt_snapshot.png");
 
   // Time box
   QToolBar *timetools = new QToolBar();
