@@ -46,6 +46,8 @@
 
 #include "glow_scroll_widget_qt.h"
 
+#include "cow_qt_helpers.h"
+
 static void scroll_callback(glow_sScroll *data)
 {
   widget_sScroll *scroll_data = (widget_sScroll *) data->scroll_data;
@@ -92,6 +94,7 @@ QWidget *colpalwidgetqt_new(int (*init_proc)(GlowCtx *ctx, void *client_data),
                             void *client_data)
 {
   QtScrollWidgetGlow *w = new QtScrollWidgetGlow();
+  debug_print("creating a new glow scroll widget\n");
   w->init(glow_eCtxType_ColPal, init_proc, client_data, colpal_init_proc);
   return w;
 }
@@ -102,7 +105,7 @@ QWidget *scrolledcolpalwidgetqt_new(
 {
   QtScrollWidgetGlow *w = new QtScrollWidgetGlow();
   *colpalwidget = w;
-
+  debug_print("creating a new glow scroll widget\n");
   return w->initScroll(glow_eCtxType_ColPal, init_proc, client_data,
                        colpal_init_proc);
 }
@@ -110,6 +113,7 @@ QWidget *scrolledcolpalwidgetqt_new(
 QWidget *colpalnavwidgetqt_new(QWidget *main_colpal)
 {
   QtScrollWidgetGlow *w = new QtScrollWidgetGlow();
+  debug_print("creating a new glow scroll widget\n");
   w->init(glow_eCtxType_ColPal, main_colpal);
   return w;
 }

@@ -68,6 +68,7 @@ PalQt::PalQt(void *pal_parent_ctx, QWidget *pal_parent_wid,
 {
   trace_obj = new PalQtTraceObject(this);
 
+  debug_print("creating a scrolledbrowwidgetqt\n");
   QWidget *scrolledbrow =
       scrolledbrowwidgetqt_new(Pal::init_brow_cb, this, &brow_widget);
 

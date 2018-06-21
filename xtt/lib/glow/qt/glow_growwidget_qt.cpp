@@ -47,6 +47,8 @@
 
 #include "glow_scroll_widget_qt.h"
 
+#include "cow_qt_helpers.h"
+
 static void scroll_callback(glow_sScroll *data)
 {
   widget_sScroll *scroll_data = (widget_sScroll *) data->scroll_data;
@@ -86,6 +88,7 @@ QWidget *growwidgetqt_new(int (*init_proc)(GlowCtx *ctx, void *client_data),
                           void *client_data)
 {
   QtScrollWidgetGlow *w = new QtScrollWidgetGlow();
+  debug_print("creating a new glow scroll widget\n");
   w->init(glow_eCtxType_Grow, init_proc, client_data, grow_init_proc);
   return (QWidget *) w;
 }
@@ -96,7 +99,7 @@ QWidget *scrolledgrowwidgetqt_new(
 {
   QtScrollWidgetGlow *w = new QtScrollWidgetGlow();
   *growwidget = w;
-
+  debug_print("creating a new glow scroll widget\n");
   return (QWidget *) w
       ->initScroll(glow_eCtxType_Grow, init_proc, client_data, grow_init_proc);;
 }
@@ -104,6 +107,7 @@ QWidget *scrolledgrowwidgetqt_new(
 QWidget *grownavwidgetqt_new(QWidget *main_grow)
 {
   QtScrollWidgetGlow *w = new QtScrollWidgetGlow();
+  debug_print("creating a new glow scroll widget\n");
   w->init(glow_eCtxType_Grow, main_grow);
   return (QWidget *) w;
 }

@@ -68,6 +68,7 @@ CoXHelpNavQt::CoXHelpNavQt(void *xn_parent_ctx, QWidget *xn_parent_wid,
                            QWidget **w, pwr_tStatus *status)
     : CoXHelpNav(xn_parent_ctx, xn_name, xn_utility, status)
 {
+  debug_print("creating a scrolledbrowwidgetqt\n");
   form_widget = scrolledbrowwidgetqt_new(CoXHelpNav::init_brow_base_cb, this,
                                          &brow_widget);
 

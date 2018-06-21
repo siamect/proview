@@ -47,6 +47,8 @@
 
 #include "flow_scroll_widget_qt.h"
 
+#include "cow_qt_helpers.h"
+
 static void scroll_callback(flow_sScroll *data)
 {
   widget_sScroll *scroll_data = (widget_sScroll *) data->scroll_data;
@@ -86,6 +88,7 @@ QWidget *flowwidgetqt_new(int (*init_proc)(FlowCtx *ctx, void *client_data),
                           void *client_data)
 {
   QtScrollWidgetFlow *w = new QtScrollWidgetFlow();
+  debug_print("creating a new flow scroll widget\n");
   w->init(flow_eCtxType_Flow, init_proc, client_data, flow_init_proc);
   return w;
 }
@@ -96,7 +99,7 @@ QWidget *scrolledflowwidgetqt_new(
 {
   QtScrollWidgetFlow *w = new QtScrollWidgetFlow();
   *flowwidget = w;
-
+  debug_print("creating a new flow scroll widget\n");
   return w
       ->initScroll(flow_eCtxType_Flow, init_proc, client_data, flow_init_proc);
 }
@@ -104,6 +107,7 @@ QWidget *scrolledflowwidgetqt_new(
 QWidget *flownavwidgetqt_new(QWidget *main_flow)
 {
   QtScrollWidgetFlow *w = new QtScrollWidgetFlow();
+  debug_print("creating a new flow scroll widget\n");
   w->init(flow_eCtxType_Flow, main_flow);
   return w;
 }

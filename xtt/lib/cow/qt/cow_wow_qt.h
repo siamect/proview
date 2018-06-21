@@ -49,14 +49,6 @@
 
 #include "cow_qt_helpers.h"
 
-class CoWowWidgetQt : public CoWowWidget {
-  CoWowWidgetQt(QWidget *w) : widget(w)
-  {
-  }
-
-  QWidget *widget;
-};
-
 class CoWowEntryQt : public QLineEdit {
   Q_OBJECT
 
@@ -181,13 +173,13 @@ public slots:
   void list_cancel_cb();
 };
 
-class CoWowQt;
+class CoWowQtObject;
 
 class CoWowWarrantQt : public QDialog {
   Q_OBJECT
 
 public:
-  explicit CoWowWarrantQt(CoWowQt *parent_ctx, QWidget *parent);
+  explicit CoWowWarrantQt(CoWowQtObject *parent);
 
 public slots:
   virtual void reject();
@@ -195,12 +187,8 @@ public slots:
 
 protected:
   void destroy(bool destroyWindow = true, bool destroySubWindows = true);
-
-private:
-  CoWowQt *ctx;
 };
 
-class CoWowQtObject;
 class CoWowQt : public CoWow {
 public:
   CoWowQtObject *object;

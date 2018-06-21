@@ -2064,6 +2064,7 @@ GeQt::GeQt(void *x_parent_ctx, QWidget *x_parent_widget,
   subpalette_mapped = 1;
 
   // Color palette
+  debug_print("creating a scrolledcolpalwidgetqt\n");
   colpal_main_widget =
       scrolledcolpalwidgetqt_new(Ge::init_colorpalette_cb, this,
                                  &colorpalette_widget);

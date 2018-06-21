@@ -82,6 +82,14 @@ CoHelpQt::CoHelpQt(int argc, char *argv[], int *return_sts) : CoHelpMain(argc,
                                                                          return_sts)
 {
   pwr_tStatus sts;
+
+  debug_print("co_help_qt: started with arguments:\n");
+  if (argc > 1) {
+    for (int i = 1; i < argc; i++) {
+      debug_print("arg%d: %s\n", i, argv[i]);
+    }
+  }
+
   // Create help window
   CoXHelp
       *xhelp = new CoXHelpQt(0 /*toplevel*/, this, xhelp_eUtility_Xtt, &sts);

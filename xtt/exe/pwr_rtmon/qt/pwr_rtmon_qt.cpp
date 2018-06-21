@@ -67,8 +67,11 @@ int main(int argc, char *argv[])
   int sts;
   char display[80] = "";
 
+  debug_print("pwr_rtmon_qt: started with arguments:\n");
+
   if (argc > 1) {
     for (int i = 1; i < argc; i++) {
+      debug_print("arg%d: %s\n", i, argv[i]);
       if (strcmp(argv[i], "-h") == 0) {
         usage();
         exit(0);

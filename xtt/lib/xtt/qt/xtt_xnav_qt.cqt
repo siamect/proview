@@ -100,6 +100,7 @@ XNavQt::XNavQt(void *xn_parent_ctx, QWidget *xn_parent_wid, const char *xn_name,
                int xn_op_close_button, pwr_tStatus *status)
     : XNav(xn_parent_ctx, xn_name, root_menu, xn_opplace_name, xn_op_close_button, status), parent_wid(xn_parent_wid)
 {
+  debug_print("creating a scrolledbrowwidgetqt\n");
   form_widget = scrolledbrowwidgetqt_new(init_brow_base_cb, this, &brow_widget);
 
   showNow(brow_widget);

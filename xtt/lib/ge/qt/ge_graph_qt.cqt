@@ -70,9 +70,11 @@ GraphQt::GraphQt(void *xn_parent_ctx, QWidget *xn_parent_wid,
 
   default_access = xn_default_access;
   if (scrollbar) {
+    debug_print("creating a scrolledgrowwidgetqt\n");
     form_widget =
         scrolledgrowwidgetqt_new(graph_init_grow_base_cb, this, &grow_widget);
   } else {
+    debug_print("creating a growwidgetqt\n");
     grow_widget = form_widget = growwidgetqt_new(graph_init_grow_base_cb, this);
   }
 
@@ -136,6 +138,7 @@ void GraphQt::trace_timer_add(int time)
 
 int GraphQt::create_navigator(QWidget *parent)
 {
+  debug_print("creating a grownavwidgetqt\n");
   nav_widget = grownavwidgetqt_new(grow_widget);
   return 1;
 }

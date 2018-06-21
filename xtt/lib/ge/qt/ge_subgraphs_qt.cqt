@@ -162,6 +162,7 @@ SubGraphsQt::SubGraphsQt(void *xn_parent_ctx, QWidget *xn_parent_wid,
   QMenu *help = menu_bar->addMenu(fl("&Help"));
   addMenuItem(toplevel, help, "&Help", SLOT(subgraphs_activate_help()), "CTRL+H");
 
+  debug_print("creating a scrolledbrowwidgetqt\n");
   form_widget =
       scrolledbrowwidgetqt_new(SubGraphs::init_brow_cb, this, &brow_widget);
 

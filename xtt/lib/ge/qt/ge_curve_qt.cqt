@@ -774,13 +774,14 @@ GeCurveQt::GeCurveQt(void *gc_parent_ctx, QWidget *parent_widget,
   addToolItem(toplevel, timetools, "Remove selected curve", SLOT(activate_remove()),
               "$pwr_exe/xtt_remove.png");
 
+  debug_print("creating a scrolledgrowwidgetqt\n");
   QWidget *w;
   grownames_main_widget = scrolledgrowwidgetqt_new(init_grownames_cb, this, &w);
-
+  debug_print("creating a curvewidgetqt\n");
   growcurve_main_widget = curvewidgetqt_new(init_growcurve_cb, this);
-
+  debug_print("creating a growwidgetqt\n");
   growaxis_main_widget = growwidgetqt_new(init_growaxis_cb, this);
-
+  debug_print("creating a curvenavwidgetqt\n");
   nav_widget = curvenavwidgetqt_new(growcurve_main_widget);
 
   QHBoxLayout *hbox = new QHBoxLayout();

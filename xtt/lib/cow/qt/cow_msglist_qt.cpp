@@ -57,6 +57,7 @@ extern "C" {
 MsgListQt::MsgListQt(void *ev_parent_ctx, QWidget *ev_parent_wid, QWidget **w)
     : MsgList(ev_parent_ctx)
 {
+  debug_print("creating a scrolledbrowwidgetqt\n");
   form_widget =
       scrolledbrowwidgetqt_new(MsgList::init_brow_cb, this, &brow_widget);
 

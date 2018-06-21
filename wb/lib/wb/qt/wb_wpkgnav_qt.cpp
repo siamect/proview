@@ -63,6 +63,7 @@ WPkgNavQt::WPkgNavQt(void *wa_parent_ctx, QWidget *wa_parent_wid,
                      pwr_tStatus *status)
     : WPkgNav(wa_parent_ctx, wa_name, wa_utility, status)
 {
+  debug_print("creating a scrolledbrowwidgetqt\n");
   form_widget = scrolledbrowwidgetqt_new(init_brow_cb, this, &brow_widget);
 
   showNow(brow_widget);

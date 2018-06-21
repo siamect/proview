@@ -44,6 +44,15 @@
 #include <QString>
 #include <QToolBar>
 
+void print_time(FILE *stream, int fulldate = 0);
+
+#define DEBUG 1
+
+void dbg_print(const char *file, int line, const char *fmt, ...);
+
+#define debug_print(fmt, args...) \
+    do { if (DEBUG) { dbg_print(__FILE__, __LINE__, fmt, ##args); } } while (0)
+
 /*
  * Qt Helper functions
  */

@@ -88,6 +88,7 @@ XttKeyboardQt::XttKeyboardQt(void *xn_parent_ctx, QWidget *xn_parent_wid,
   toplevel->setWindowTitle(translate_utf8(xn_name));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
+  debug_print("creating a keyboardwidgetqt\n");
   keyboard_widget = keyboardwidgetqt_new(init_keyboard_cb, this);
 
   QVBoxLayout *vbox = new QVBoxLayout(toplevel);

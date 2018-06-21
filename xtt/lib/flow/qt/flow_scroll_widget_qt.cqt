@@ -221,7 +221,6 @@ void QtScrollWidgetFlow::moveEvent(QMoveEvent *event)
 
 void QtScrollWidgetFlow::resizeEvent(QResizeEvent *event)
 {
-  printf("QtScrollWidgetFlow::resizeEvent\n");
   realize();
   handleEvent(event, true);
   QWidget::resizeEvent(event);
@@ -229,7 +228,6 @@ void QtScrollWidgetFlow::resizeEvent(QResizeEvent *event)
 
 void QtScrollWidgetFlow::showEvent(QShowEvent *event)
 {
-  printf("QtScrollWidgetFlow::showEvent\n");
   realize();
   QWidget::showEvent(event);
 }
@@ -273,8 +271,6 @@ void QtScrollWidgetFlow::realize()
   if (is_realized) {
     return;
   }
-
-  printf("QtScrollWidgetGlow::realize\n");
 
   if (!parent_ctx) {
     if (is_navigator) {

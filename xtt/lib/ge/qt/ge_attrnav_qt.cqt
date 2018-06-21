@@ -73,6 +73,7 @@ AttrNavQt::AttrNavQt(void *xn_parent_ctx, QWidget *xn_parent_wid,
 {
   trace_obj = new AttrNavQtTraceObject(this);
 
+  debug_print("creating a scrolledbrowwidgetqt\n");
   form_widget =
       scrolledbrowwidgetqt_new(AttrNav::init_brow_cb, this, &brow_widget);
 

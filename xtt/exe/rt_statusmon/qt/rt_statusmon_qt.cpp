@@ -71,8 +71,11 @@ int main(int argc, char *argv[])
   int view_descr = 0;
   char language[20] = "";
 
+  debug_print("rt_statusmon_qt: started with arguments:\n");
+
   if (argc > 1) {
     for (int i = 1; i < argc; i++) {
+      debug_print("arg%d: %s\n", i, argv[i]);
       if (strcmp(argv[i], "-h") == 0) {
         usage();
         exit(0);

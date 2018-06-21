@@ -144,12 +144,15 @@ WbQt::WbQt(int argc, char *argv[]) : mainwindow(0)
   strcpy(username, "");
   strcpy(password, "");
 
+  debug_print("wb_qt: started with arguments:\n");
+
   // Open directory volume as default
   volumename_p = volumename;
   strcpy(volumename, "directory");
   sw_projectvolume = 1;
   arg_cnt = 0;
   for (i = 1; i < argc; i++) {
+    debug_print("arg%d: %s\n", i, argv[i]);
     if (argv[i][0] == '-') {
       switch (argv[i][1]) {
         case 'h':
@@ -221,6 +224,7 @@ WbQt::WbQt(int argc, char *argv[]) : mainwindow(0)
   }
 
   toplevel = new QWidget();
+  toplevel->setToolTip(fl("WbQt widget"));
   toplevel->setMinimumSize(100, 100);
   toplevel->setWindowTitle(fl("Pwr wb"));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);

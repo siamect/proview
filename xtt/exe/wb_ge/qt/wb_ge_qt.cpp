@@ -95,8 +95,11 @@ int main(int argc, char *argv[])
   CoXHelpQt *xhelp = new CoXHelpQt(mainwindow, 0, xhelp_eUtility_Wtt, &sts);
   CoXHelpQt::set_default(xhelp);
 
+  debug_print("wb_ge_qt: started with arguments:\n");
+
   if (argc > 1) {
     for (i = 1; i < argc; i++) {
+      debug_print("arg%d: %s\n", i, argv[i]);
       if (strcmp(argv[i], "-l") == 0) {
         if (i + 1 >= argc) {
           usage();

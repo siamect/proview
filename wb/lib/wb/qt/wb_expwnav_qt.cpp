@@ -60,6 +60,7 @@ WbExpWNavQt::WbExpWNavQt(void *l_parent_ctx, QWidget *l_parent_wid,
                          QWidget **w)
     : WbExpWNav(l_parent_ctx, l_ldhses, l_type, l_editmode)
 {
+  debug_print("creating a scrolledbrowwidgetqt\n");
   form_widget =
       scrolledbrowwidgetqt_new(WbExpWNav::init_brow_cb, this, &brow_widget);
 

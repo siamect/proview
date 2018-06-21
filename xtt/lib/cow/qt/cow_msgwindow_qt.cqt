@@ -66,6 +66,7 @@ MsgWindowQt::MsgWindowQt(void *msg_parent_ctx, QWidget *msg_parent_wid,
     : MsgWindow(msg_parent_ctx, msg_name, status)
 {
   toplevel = new MsgWindowQtWidget(this, msg_parent_wid);
+  toplevel->setToolTip(fl("MsgWindowQt widget"));
   toplevel->setFixedSize(800, 600);
   toplevel->setWindowTitle(translate_utf8(msg_name));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
@@ -97,6 +98,7 @@ MsgWindowQt::MsgWindowQt(void *msg_parent_ctx, QWidget *msg_parent_wid,
   msgnav->find_ge_cb = MsgWindow::msgw_find_ge_cb;
 
   form->setMenuBar(menu_bar);
+  nav_widget->setToolTip(fl("MsgList widget"));
   add_expanding(form, nav_widget);
 
   toplevel->setLayout(form);

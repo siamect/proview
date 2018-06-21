@@ -67,7 +67,6 @@
 #include <QPrinter>
 #include <QPushButton>
 #include <QScrollArea>
-#include <QTextEdit>
 #include <QTimer>
 #include <QVBoxLayout>
 
@@ -334,7 +333,7 @@ void CoWowQt::DeleteList(void *data)
 
 void CoWowWarrantQt::display_license()
 {
-  ctx->DisplayLicense();
+  ((CoWowQtObject *) parentWidget())->DisplayLicense();
 }
 
 void CoWowWarrantQt::reject()
@@ -384,8 +383,8 @@ QString loadText(string filename)
   }
 }
 
-CoWowWarrantQt::CoWowWarrantQt(CoWowQt *parent_ctx, QWidget *parent)
-    : QDialog(parent), ctx(parent_ctx)
+CoWowWarrantQt::CoWowWarrantQt(CoWowQtObject *parent)
+    : QDialog(parent)
 {
   QVBoxLayout *main_layout = new QVBoxLayout();
 
@@ -397,7 +396,8 @@ CoWowWarrantQt::CoWowWarrantQt(CoWowQt *parent_ctx, QWidget *parent)
   inner_layout->addWidget(image);
   inner_layout->setAlignment(image, Qt::AlignTop);
 
-  QTextEdit *label = new QTextEdit(loadText("acceptlicense.txt"), this);
+  QLabel *label = new QLabel(loadText("acceptlicense.txt"), this);
+  label->setWordWrap(true);
   add_expanding(inner_layout, label);
 
   main_layout->addLayout(inner_layout, 1);
@@ -427,7 +427,7 @@ CoWowWarrantQt::CoWowWarrantQt(CoWowQt *parent_ctx, QWidget *parent)
 
 void CoWowQtObject::DisplayWarranty()
 {
-  new CoWowWarrantQt(wow, this);
+  new CoWowWarrantQt(this);
 }
 
 void CoWowQtObject::DisplayLicense()
@@ -438,12 +438,13 @@ void CoWowQtObject::DisplayLicense()
   mbox->setAttribute(Qt::WA_DeleteOnClose);
 
   QScrollArea *scroll = new QScrollArea(mbox);
-  scroll->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
   scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
-  scroll->setWidgetResizable(true);
   scroll->setWidget(new QLabel(loadText("license.txt")));
-  scroll->setMinimumSize(600, 600);
+  scroll->adjustSize();
+  scroll->setFixedWidth(scroll->width());
+  scroll->setFixedHeight(600);
+  scroll->setWidgetResizable(true);
 
   QGridLayout *dialog_layout = ((QGridLayout *) mbox->layout());
   dialog_layout->addWidget(scroll, 0, 0);

@@ -68,6 +68,7 @@ TreeNavQt::TreeNavQt(
     : TreeNav(xn_parent_ctx, xn_itemlist, xn_item_cnt, xn_options,
               xn_get_object_info, xn_get_node_info, status)
 {
+  debug_print("creating a scrolledbrowwidgetqt\n");
   form_widget =
       scrolledbrowwidgetqt_new(TreeNav::init_brow_cb, this, &brow_widget);
 

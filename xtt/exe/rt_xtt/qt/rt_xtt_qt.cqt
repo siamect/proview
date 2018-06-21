@@ -607,6 +607,13 @@ XttQt::XttQt(int argc, char *argv[], int *return_sts) : Xtt(&argc, &argv,
     strcat(title, nodename);
   }
 
+  debug_print("rt_xtt_qt: started with arguments:\n");
+  if (argc > 1) {
+    for (int i = 1; i < argc; i++) {
+      debug_print("arg%d: %s\n", i, argv[i]);
+    }
+  }
+
   // Qt
   toplevel = new XttQtWidget(this);
   toplevel->setFixedSize(window_width, window_height);

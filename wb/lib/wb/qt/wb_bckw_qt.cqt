@@ -61,6 +61,7 @@ WbBckWQt::WbBckWQt(void *bckw_parent_ctx, QWidget *bckw_parent_wid,
              status)
 {
   toplevel = new WbBckWQtWidget(this, bckw_parent_wid);
+  toplevel->setToolTip(fl("WbBckWQt widget"));
   toplevel->setMinimumSize(1100, 600);
   toplevel->setWindowTitle(fl(bckw_name));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
