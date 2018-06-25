@@ -127,6 +127,7 @@ CowTreeQt::CowTreeQt(QWidget *a_parent_wid, void *a_parent_ctx,
   int sts;
 
   toplevel = new CowTreeQtWidget(this, a_parent_wid);
+  toplevel->setToolTip(fl("cow_tree widget"));
   toplevel->setMinimumSize(600, 400);
   toplevel->setWindowTitle(fl(title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);

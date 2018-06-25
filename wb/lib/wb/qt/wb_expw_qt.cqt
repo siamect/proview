@@ -50,7 +50,6 @@
 #include "wb_expw_qt.h"
 #include "wb_expwnav_qt.h"
 #include "cow_wow_qt.h"
-#include "../../../../xtt/lib/cow/qt/cow_wow_qt.h"
 
 #include <QMenuBar>
 #include <QVBoxLayout>
@@ -62,6 +61,7 @@ WbExpWQt::WbExpWQt(void *expw_parent_ctx, QWidget *expw_parent_wid,
              status)
 {
   toplevel = new WbExpWQtWidget(this, expw_parent_wid);
+  toplevel->setToolTip(fl("wb_expw widget"));
   toplevel->setMinimumSize(1100, 600);
   toplevel->setWindowTitle(fl(expw_name));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);

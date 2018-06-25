@@ -1347,6 +1347,7 @@ GeQt::GeQt(void *x_parent_ctx, QWidget *x_parent_widget,
   }
 
   toplevel = new GeQtWidget(this, x_parent_widget);
+  toplevel->setToolTip(fl("ge widget"));
 
   toplevel->setMinimumSize(window_width, window_height);
   toplevel->setWindowTitle(fl(title));

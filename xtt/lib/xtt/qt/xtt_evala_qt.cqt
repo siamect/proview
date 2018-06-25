@@ -97,6 +97,7 @@ EvAlaQt::EvAlaQt(void *ev_parent_ctx, QWidget *ev_parent_wid, char *ala_name,
 
   if (!(options & ev_mAlaOptions_Embedded)) {
     toplevel = new EvAlaQtWidget(this, ev_parent_wid);
+    toplevel->setToolTip(fl("xtt_evala widget"));
     toplevel->setMinimumSize(ala_width, ala_height);
     toplevel->setWindowTitle(translate_utf8(ala_name));
     toplevel->setAttribute(Qt::WA_DeleteOnClose);

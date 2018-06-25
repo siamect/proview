@@ -58,7 +58,6 @@
 #include "glow_growapi.h"
 #include "ge_graph.h"
 #include "rt_xnav_msg.h"
-#include "../../cow/qt/cow_wow_qt.h"
 
 #include <QApplication>
 #include <QDesktopWidget>
@@ -153,6 +152,7 @@ OpQt::OpQt(void *op_parent_ctx, QWidget *op_parent_wid, char *opplace,
   white_color = QColor("white");
 
   toplevel = new OpQtWidget(this, op_parent_wid);
+  toplevel->setToolTip(fl("xtt_op widget"));
   toplevel->setMinimumSize(1100, OP_HEIGHT_MIN);
   toplevel->setWindowFlags(Qt::CustomizeWindowHint);
 

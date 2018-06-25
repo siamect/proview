@@ -83,6 +83,7 @@ XttKeyboardQt::XttKeyboardQt(void *xn_parent_ctx, QWidget *xn_parent_wid,
   int height = 161;
 
   toplevel = new XttKeyboardQtWidget(this, xn_parent_wid);
+  toplevel->setToolTip(fl("xtt_keyboard widget"));
 
   toplevel->setMinimumSize(width, height);
   toplevel->setWindowTitle(translate_utf8(xn_name));

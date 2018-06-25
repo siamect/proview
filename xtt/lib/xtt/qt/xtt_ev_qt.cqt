@@ -134,6 +134,7 @@ EvQt::EvQt(void *ev_parent_ctx, QWidget *ev_parent_wid, char *eve_name,
     parent_wid_eve = new CallbackWidget(this, &EvQt::eve_activate_exit,
                                         &EvQt::eve_action_inputfocus);
     parent_wid_eve->setMinimumSize(eve_width, eve_height);
+    parent_wid_eve->setToolTip(fl("xtt_ev eve widget"));
     parent_wid_eve->setWindowTitle(translate_utf8(eve_name));
     parent_wid_eve->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -239,6 +240,7 @@ EvQt::EvQt(void *ev_parent_ctx, QWidget *ev_parent_wid, char *eve_name,
   {
     parent_wid_ala = new CallbackWidget(this, &EvQt::ala_activate_exit,
                                         &EvQt::ala_action_inputfocus);
+    parent_wid_eve->setToolTip(fl("xtt_ev ala widget"));
     parent_wid_ala->setMinimumSize(ala_width, ala_height);
     parent_wid_ala->setWindowTitle(translate_utf8(ala_name));
     parent_wid_ala->setAttribute(Qt::WA_DeleteOnClose);
@@ -379,6 +381,7 @@ EvQt::EvQt(void *ev_parent_ctx, QWidget *ev_parent_wid, char *eve_name,
   {
     parent_wid_blk = new CallbackWidget(this, &EvQt::blk_activate_exit,
                                         &EvQt::blk_action_inputfocus);
+    parent_wid_eve->setToolTip(fl("xtt_ev blk widget"));
     parent_wid_blk->setMinimumSize(blk_width, blk_height);
     parent_wid_blk->setWindowTitle(translate_utf8(blk_name));
     parent_wid_blk->setAttribute(Qt::WA_DeleteOnClose);

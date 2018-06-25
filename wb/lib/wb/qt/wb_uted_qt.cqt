@@ -164,6 +164,7 @@ WUtedQt::WUtedQt(void *wu_parent_ctx, QWidget *wu_parent_wid,
             wu_editmode, wu_quit_cb, status)
 {
   toplevel = new WUtedQtWidget(this, wu_parent_wid);
+  toplevel->setToolTip(fl("wb_uted widget"));
   toplevel->setMinimumSize(800, 400);
   toplevel->setWindowTitle(fl("Wb Utilities"));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);

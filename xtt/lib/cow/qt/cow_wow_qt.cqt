@@ -104,7 +104,7 @@ void CoWowQt::DisplayQuestion(void *ctx, const char *title, const char *text,
                               void *data)
 {
   QMessageBox::StandardButton reply =
-      QMessageBox::question(object, translate_utf8(title), translate_utf8(text));
+      QMessageBox::question(object->parent_wid, translate_utf8(title), translate_utf8(text));
 
   if (reply == QMessageBox::Yes) {
     if (questionbox_ok) {
@@ -137,7 +137,7 @@ void CoWowQt::CreateInputDialog(void *ctx, const char *title, const char *text,
 
   bool ok;
   QString str =
-      QInputDialog::getText(object, translate_utf8(title), translate_utf8(text),
+      QInputDialog::getText(object->parent_wid, translate_utf8(title), translate_utf8(text),
                             QLineEdit::Normal, temp_txt, &ok);
   if (ok) {
     QByteArray ba = str.toLatin1();
@@ -172,7 +172,7 @@ void CoWowQt::DisplayError(const char *title, const char *text,
   }
 
   QMessageBox msgBox(QMessageBox::Critical, fl(title), ctext,
-                     QMessageBox::NoButton, object->window());
+                     QMessageBox::NoButton, object->parent_wid->window());
   QDialogButtonBox *buttonBox = qFindChild<QDialogButtonBox *>(&msgBox);
   Q_ASSERT(buttonBox != 0);
 
@@ -194,7 +194,7 @@ void CoWowQt::DisplayError(const char *title, const char *text,
 void CoWowQt::DisplayText(const char *title, const char *text, int width,
                           int height)
 {
-  QMessageBox::information(object, translate_utf8(title),
+  QMessageBox::information(object->parent_wid, translate_utf8(title),
                            QString::fromLatin1(text));
 }
 
@@ -314,7 +314,7 @@ void *CoWowQt::CreateList(const char *title, const char *texts, int textsize,
                           int show_apply_button)
 {
   CoWowListWidgetQt *tree =
-      new CoWowListWidgetQt(object, title, texts, textsize, action_cb,
+      new CoWowListWidgetQt(object->parent_wid, title, texts, textsize, action_cb,
                             cancel_cb, parent_ctx, show_apply_button);
   return tree;
 }
@@ -384,7 +384,7 @@ QString loadText(string filename)
 }
 
 CoWowWarrantQt::CoWowWarrantQt(CoWowQtObject *parent)
-    : QDialog(parent)
+    : QDialog(parent->parent_wid)
 {
   QVBoxLayout *main_layout = new QVBoxLayout();
 
@@ -502,7 +502,7 @@ void CoWowQt::CreateFileSelDia(const char *title, void *parent_ctx,
 {
   pwr_tFileName fname;
 
-  QFileDialog dialog(object);
+  QFileDialog dialog(object->parent_wid);
 
   pwr_tFileName folder;
   QString filter;
@@ -530,7 +530,7 @@ void CoWowQt::CreateFileSelDia(const char *title, void *parent_ctx,
   }
 
   QString filename =
-      QFileDialog::getOpenFileName(object, fl(title), fl(folder), filter);
+      QFileDialog::getOpenFileName(object->parent_wid, fl(title), fl(folder), filter);
 
   if (!filename.isNull()) {
     QByteArray ba = filename.toLocal8Bit();
@@ -854,7 +854,7 @@ int CoWowQt::CreateModalDialog(const char *title, const char *text,
                                const char *button3, const char *image)
 {
   QDialog *dialog_w =
-      new CoWowModalDialogQt(object, title, text, button1, button2, button3,
+      new CoWowModalDialogQt(object->parent_wid, title, text, button1, button2, button3,
                              image);
   return dialog_w->exec();
 }
@@ -869,7 +869,7 @@ wow_sModalInputDialog *CoWowQt::CreateModalInputDialog(const char *title,
                                                        CoWowRecall *recall)
 {
   CoWowModalDialogQt *dialog_w =
-      new CoWowModalDialogQt(object, title, text, button1, button2, button3,
+      new CoWowModalDialogQt(object->parent_wid, title, text, button1, button2, button3,
                              image, input_length, recall);
 
   int status = dialog_w->exec();
@@ -897,7 +897,7 @@ pwr_tStatus CoWowQt::CreateMenuItem(const char *name, void *menu, int pixmap,
   if (!name_cnt) { return 0; }
 
   if (name_cnt == 1) {
-    *(QMenu **) w = new QMenu(translate_utf8(name_array[0]), object);
+    *(QMenu **) w = new QMenu(translate_utf8(name_array[0]), object->parent_wid);
 
     if (pixmap != wow_ePixmap_No && pixmap < wow_ePixmap__) {
       switch (pixmap) {
@@ -928,7 +928,7 @@ pwr_tStatus CoWowQt::CreateMenuItem(const char *name, void *menu, int pixmap,
 
       if (!child) {
         // Create the menu item
-        QMenu *item = new QMenu(translate_utf8(name_array[i]), object);
+        QMenu *item = new QMenu(translate_utf8(name_array[i]), object->parent_wid);
         if (i == name_cnt - 1 && pixmap != wow_ePixmap_No &&
             pixmap <= wow_ePixmap__) {
           switch (pixmap) {
@@ -1120,7 +1120,7 @@ void CoWowQt::update_title(QWidget *w, int editmode)
 }
 
 CoWowQt::CoWowQt(QWidget *parent) {
-  object = new CoWowQtObject(this, parent);
+  object = new CoWowQtObject(parent);
 }
 
 CoWowQt::~CoWowQt() {
@@ -1129,5 +1129,5 @@ CoWowQt::~CoWowQt() {
 
 void CoWowQt::SetParent(QWidget *parent)
 {
-  object->setParent(parent);
+  object->parent_wid = parent;
 }

@@ -313,6 +313,7 @@ AttrQt::AttrQt(QWidget *a_parent_wid, void *a_parent_ctx, attr_eType a_type,
 
   if (!embedded) {
     toplevel = new AttrQtWidget(this, a_parent_wid);
+    toplevel->setToolTip(fl("ge_attr widget"));
     toplevel->setMinimumSize(500, 700);
     toplevel->setWindowTitle(fl("Object Attributes"));
     toplevel->setAttribute(Qt::WA_DeleteOnClose);

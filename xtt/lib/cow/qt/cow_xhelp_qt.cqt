@@ -205,6 +205,7 @@ CoXHelpQt::CoXHelpQt(QWidget *xa_parent_wid, void *xa_parent_ctx,
   strcpy(title, Lng::translate("Help"));
 
   toplevel = new CoXHelpQtWidget(this, xa_parent_wid);
+  toplevel->setToolTip(fl("cow_xhelp widget"));
   toplevel->setFixedSize(700, 600);
   toplevel->setWindowTitle(fl(title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);

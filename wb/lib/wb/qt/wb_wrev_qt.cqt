@@ -60,8 +60,6 @@
 #include "wb_log.h"
 #include "cow_logw_qt.h"
 #include "cow_xhelp.h"
-#include "../../../../xtt/lib/cow/qt/cow_qt_helpers.h"
-#include "../../../../xtt/lib/cow/qt/cow_wow_qt.h"
 
 #include <QDialogButtonBox>
 #include <QMenuBar>
@@ -147,6 +145,7 @@ WRevQt::WRevQt(QWidget *wa_parent_wid, void *wa_parent_ctx,
   int sts;
 
   toplevel = new WRevQtWidget(this, wa_parent_wid);
+  toplevel->setToolTip(fl("wb_wrev widget"));
   toplevel->setMinimumSize(700, 300);
   toplevel->setWindowTitle(fl("Revisions"));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);

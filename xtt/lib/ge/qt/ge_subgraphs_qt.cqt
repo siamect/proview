@@ -62,7 +62,6 @@ extern "C" {
 #include "ge_attr_qt.h"
 #include "ge_subgraphs_qt.h"
 #include "ge_graph.h"
-#include "../../flow/src/flow_browapi.h"
 
 #include <QMenuBar>
 #include <QVBoxLayout>
@@ -136,6 +135,7 @@ SubGraphsQt::SubGraphsQt(void *xn_parent_ctx, QWidget *xn_parent_wid,
       parent_wid(xn_parent_wid)
 {
   toplevel = new SubGraphsQtWidget(this, xn_parent_wid);
+  toplevel->setToolTip(fl("ge_subgraphs widget"));
 
   toplevel->setMinimumSize(300, 500);
   toplevel->setWindowTitle(fl(name));

@@ -272,21 +272,18 @@ public:
   static void update_title(QWidget *w, int editmode);
 };
 
-class CoWowQtObject : public QWidget {
+class CoWowQtObject : public QObject {
   Q_OBJECT
 
 public:
-  CoWowQtObject(CoWowQt *parent_ctx, QWidget *parent) : QWidget(parent),
-                                                        wow(parent_ctx) {}
+  CoWowQtObject(QWidget *parent) : QObject(), parent_wid(parent) {}
+  QWidget *parent_wid;
 
 public slots:
   void DisplayWarranty();
   void DisplayLicense();
 
   void wait_cb();
-
-private:
-  CoWowQt *wow;
 };
 
 #endif

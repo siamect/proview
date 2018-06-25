@@ -646,6 +646,7 @@ GeCurveQt::GeCurveQt(void *gc_parent_ctx, QWidget *parent_widget,
 
   // Qt
   toplevel = new GeCurveQtWidget(this, parent_widget);
+  toplevel->setToolTip(fl("ge_curve widget"));
   if (!(options & curve_mOptions_Embedded)) {
     toplevel->setMinimumSize(window_width, window_height);
     toplevel->setWindowTitle(convert_utf8(title));

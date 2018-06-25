@@ -102,6 +102,7 @@ RtMonQt::RtMonQt(void *rtmon_parent_ctx, QWidget *rtmon_parent_wid,
   strcat(title, rtmon_name);
 
   toplevel = new RtMonQtWidget(this, rtmon_parent_wid);
+  toplevel->setToolTip(fl("cow_rtmon widget"));
   toplevel->setMinimumSize(480, 340);
   toplevel->setWindowTitle(fl(title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);

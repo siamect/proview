@@ -45,7 +45,6 @@
 #include "co_lng.h"
 #include "cow_wow_qt.h"
 #include "co_msg.h"
-#include "../../cow/qt/cow_wow_qt.h"
 
 #include <QButtonGroup>
 #include <QDialogButtonBox>
@@ -142,6 +141,7 @@ BlockQt::BlockQt(void *b_parent_ctx, QWidget *b_parent_wid, pwr_sAttrRef *b_oar,
   strcat(title, "    ");
   strcat(title, aname);
 
+  toplevel->setToolTip(fl("xtt_block widget"));
   toplevel->setMinimumSize(500, 300);
   toplevel->setWindowTitle(fl(title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);

@@ -541,6 +541,7 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
 {
   pwr_tStatus sts;
 
+  toplevel->setToolTip(fl("wb_foe widget"));
   toplevel->setMinimumSize(1100, 1000);
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 

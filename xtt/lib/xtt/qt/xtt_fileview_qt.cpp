@@ -159,6 +159,7 @@ XttFileviewQt::XttFileviewQt(void *xn_parent_ctx, QWidget *xn_parent_wid,
   }
 
   toplevel = new XttFileviewQtWidget(this, xn_parent_wid);
+  toplevel->setToolTip(fl("xtt_fileview widget"));
   toplevel->setMinimumSize(500, 500);
   toplevel->setWindowTitle(translate_utf8(xn_title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);

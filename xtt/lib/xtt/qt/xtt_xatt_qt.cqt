@@ -328,6 +328,7 @@ XAttQt::XAttQt(QWidget *xa_parent_wid, void *xa_parent_ctx,
   cdh_StrncpyCutOff(title, title, 100, 1);
 
   toplevel = new XAttQtWidget(this, xa_parent_wid);
+  toplevel->setToolTip(fl("xtt_xatt widget"));
   toplevel->setFixedSize(420, 600);
   toplevel->setWindowTitle(convert_utf8(title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);

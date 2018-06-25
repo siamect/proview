@@ -98,6 +98,7 @@ HistQt::HistQt(void *hist_parent_ctx, QWidget *hist_parent_wid, char *hist_name,
 
   // Qt
   toplevel = new HistQtWidget(this, hist_parent_wid);
+  toplevel->setToolTip(fl("xtt_hist widget"));
   toplevel->setMinimumSize(hist_width, hist_height);
   toplevel->setWindowTitle(translate_utf8(hist_name));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);

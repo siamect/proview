@@ -54,7 +54,6 @@
 #include "wb_wtt.h"
 #include "wb_wnav.h"
 #include "cow_xhelp.h"
-#include "../../../../xtt/lib/cow/qt/cow_wow_qt.h"
 
 #include <QDialogButtonBox>
 #include <QMenuBar>
@@ -376,6 +375,7 @@ WAttQt::WAttQt(QWidget *wa_parent_wid, void *wa_parent_ctx,
   if (EVEN(sts)) { return; }
 
   toplevel = new WAttQtWidget(this, wa_parent_wid);
+  toplevel->setToolTip(fl("wb_watt widget"));
   toplevel->setFixedSize(410, 570);
   toplevel->setWindowTitle(fl(namep));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);

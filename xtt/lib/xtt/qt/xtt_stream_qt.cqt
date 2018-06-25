@@ -44,7 +44,6 @@
 #include "xtt_stream_qt.h"
 #include "rt_xnav_msg.h"
 #include "cow_wow_qt.h"
-#include "../../cow/qt/cow_wow_qt.h"
 
 #include <QHBoxLayout>
 #include <QLabel>
@@ -432,6 +431,7 @@ XttStreamQt::XttStreamQt(QWidget *st_parent_wid, void *st_parent_ctx,
   */
 
   if (!embedded) {
+    toplevel->setToolTip(fl("xtt_stream widget"));
     toplevel->setWindowTitle(QString::fromLatin1(name));
     toplevel->setAttribute(Qt::WA_DeleteOnClose);
 

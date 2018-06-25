@@ -1962,6 +1962,7 @@ WttQt::WttQt(void *wt_parent_ctx, QWidget *wt_parent_wid, const char *wt_name,
 
   // Qt
   toplevel = new WttQtWidget(this, wt_parent_wid);
+  toplevel->setToolTip(fl("wb_wtt widget"));
   toplevel->setMinimumSize(window_width, window_height);
   toplevel->setWindowTitle(fl(title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);

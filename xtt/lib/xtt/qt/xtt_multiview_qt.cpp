@@ -191,6 +191,7 @@ XttMultiViewQt::XttMultiViewQt(QWidget *mv_parent_wid, void *mv_parent_ctx,
   // Qt
   if (!(options & ge_mOptions_Embedded)) {
     toplevel = new XttMultiViewQtWidget(this, mv_parent_wid);
+    toplevel->setToolTip(fl("xtt_multiview widget"));
     toplevel->setMinimumSize(window_width, window_height);
     toplevel->setWindowTitle(QString::fromLatin1(mv.Title));
     toplevel->setAttribute(Qt::WA_DeleteOnClose);

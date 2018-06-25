@@ -139,6 +139,7 @@ WNavQt::WNavQt(void *xn_parent_ctx, QWidget *xn_parent_wid, const char *xn_name,
   wow = new CoWowQt(parent_wid);
 
   toplevel = scrolledbrow;
+  toplevel->setToolTip(fl("wb_wnav widget"));
   *status = 1;
 }
 

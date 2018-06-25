@@ -53,7 +53,6 @@
 #include "rt_xnav_msg.h"
 #include "xtt_clog_qt.h"
 #include "xtt_clognav_qt.h"
-#include "../../cow/qt/cow_wow_qt.h"
 
 #include <QDialogButtonBox>
 #include <QLabel>
@@ -77,6 +76,7 @@ CLogQt::CLogQt(void *clog_parent_ctx, QWidget *clog_parent_wid,
       filter_form(0)
 {
   toplevel = new CLogQtWidget(this, clog_parent_wid);
+  toplevel->setToolTip(fl("xtt_clog widget"));
   toplevel->setMinimumSize(1000, 800);
   toplevel->setWindowTitle(translate_utf8(clog_name));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
