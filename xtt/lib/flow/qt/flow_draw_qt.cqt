@@ -59,7 +59,8 @@
 #include "cow_qt_helpers.h"
 
 #define DRAW_PRESS_PIX 9
-#define TEXT_SCALE 1024
+
+#define roundi(x) ((int) round(x))
 
 typedef struct {
   QWidget *w;
@@ -910,6 +911,7 @@ int FlowDrawQt::rect_helper(FlowCtx *ctx, int painter_type, int size, int x,
   if (fill) {
     painter->fillRect(x, y, width, height, painter->brush());
   } else {
+    painter->setBrush(Qt::NoBrush);
     painter->drawRect(x, y, width, height);
   }
 
@@ -978,6 +980,7 @@ int FlowDrawQt::triangle_helper(FlowCtx *ctx, int painter_type, int size, int x,
     path.addPolygon(poly);
     painter->fillPath(path, painter->brush());
   } else {
+    painter->setBrush(Qt::NoBrush);
     painter->drawPolygon(poly);
   }
 
@@ -1105,6 +1108,7 @@ int FlowDrawQt::arc_helper(FlowCtx *ctx, int painter_type, int size, int x,
   if (nav && ctx->no_nav) { return 1; }
 
   QPainter *painter = get_painter(painter_type, size, nav);
+  painter->setBrush(Qt::NoBrush);
   painter->drawArc(x, y, width, height, angle1 * 64, angle2 * 64);
   delete painter;
 
@@ -1257,14 +1261,13 @@ int FlowDrawQt::text_pango_helper(FlowCtx *ctx, int x, int y, char *text,
   int height = rect.height();
 
   if (erase_rect > 0) {
-    painter->eraseRect(x, y - (int) (0.8 / TEXT_SCALE * height),
-                       rect.width() / TEXT_SCALE,
-                       height / TEXT_SCALE * (erase_rect / 10.0));
+    painter->eraseRect(x, roundi(y - 0.8 * height),
+                       rect.width(),
+                       roundi(height * (erase_rect / 10.0)));
   }
 
   if (erase_rect < 12) {
-    painter
-        ->drawText(TEXT_SCALE * x, (int) (TEXT_SCALE * y - 0.8 * height), str);
+    painter->drawText(x, roundi(y - 0.8 * height), rect.width(), height, Qt::TextDontClip, str);
   }
 
   delete painter;
@@ -1686,8 +1689,8 @@ int FlowDrawQt::get_text_extent_pango(FlowCtx *ctx, const char *text, int len,
 
   QRect boundingRect = painter->fontMetrics().boundingRect(str);
 
-  *width = boundingRect.width() / TEXT_SCALE;
-  *height = boundingRect.height() / TEXT_SCALE;
+  *width = boundingRect.width();
+  *height = boundingRect.height();
 
   delete painter;
 

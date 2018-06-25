@@ -74,7 +74,8 @@ using namespace std;
 #include "cow_qt_helpers.h"
 
 #define DRAW_PRESS_PIX 9
-#define TEXT_SCALE 1024
+
+#define roundi(x) ((int) round(x))
 
 static char font_names[glow_eFont__][glow_eDrawFont__][DRAW_FONT_SIZE][80] =
     {{{"-*-Helvetica-Medium-R-Normal--8-*-*-*-P-*-ISO8859-1",              "-*-Helvetica-Bold-R-Normal--10-*-*-*-P-*-ISO8859-1",              "-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1",              "-*-Helvetica-Bold-R-Normal--14-*-*-*-P-*-ISO8859-1",              "-*-Helvetica-Bold-R-Normal--14-*-*-*-P-*-ISO8859-1",              "-*-Helvetica-Bold-R-Normal--18-*-*-*-P-*-ISO8859-1",              "-*-Helvetica-Bold-R-Normal--18-*-*-*-P-*-ISO8859-1",              "-*-Helvetica-Bold-R-Normal--18-*-*-*-P-*-ISO8859-1",              "-*-Helvetica-Bold-R-Normal--24-*-*-*-P-*-ISO8859-1"},              {"-*-Helvetica-Medium-R-Normal--8-*-*-*-P-*-ISO8859-1",              "-*-Helvetica-Medium-R-Normal--10-*-*-*-P-*-ISO8859-1",              "-*-Helvetica-Medium-R-Normal--12-*-*-*-P-*-ISO8859-1",              "-*-Helvetica-Medium-R-Normal--14-*-*-*-P-*-ISO8859-1",              "-*-Helvetica-Medium-R-Normal--14-*-*-*-P-*-ISO8859-1",              "-*-Helvetica-Medium-R-Normal--18-*-*-*-P-*-ISO8859-1",                     "-*-Helvetica-Medium-R-Normal--18-*-*-*-P-*-ISO8859-1", "-*-Helvetica-Medium-R-Normal--18-*-*-*-P-*-ISO8859-1", "-*-Helvetica-Medium-R-Normal--24-*-*-*-P-*-ISO8859-1"}},
@@ -941,6 +942,7 @@ int GlowDrawQt::rect_helper(GlowWind *wind, int painter_type, int size, int x,
   if (fill) {
     painter->fillRect(x, y, width, height, painter->brush());
   } else {
+    painter->setBrush(Qt::NoBrush);
     painter->drawRect(x, y, width, height);
   }
 
@@ -1037,6 +1039,7 @@ int GlowDrawQt::arc_helper(GlowWind *wind, int painter_type, int size, int x,
   if (fill) {
     painter->drawPie(x, y, width, height, angle1 * 64, angle2 * 64);
   } else {
+    painter->setBrush(Qt::NoBrush);
     painter->drawArc(x, y, width, height, angle1 * 64, angle2 * 64);
   }
 
@@ -1227,11 +1230,10 @@ int GlowDrawQt::polyline_helper(GlowWind *wind, int painter_type, int size,
   int cnt;
   QPoint *qpoints = points_to_qt_points_curve(wind, points, point_cnt, &cnt);
 
-  if (fill) {
-    painter->drawPolygon(qpoints, point_cnt);
-  } else {
-    painter->drawLines(qpoints, cnt);
+  if (!fill) {
+    painter->setBrush(Qt::NoBrush);
   }
+  painter->drawPolygon(qpoints, point_cnt);
 
   delete qpoints;
   delete painter;
@@ -1305,7 +1307,8 @@ int GlowDrawQt::text(GlowWind *wind, int x, int y, char *text, int len,
   }
 
   painter->setFont(QFont(font_names[font_idx][font_type][idx]));
-  painter->drawText(x, y, QString::fromLocal8Bit(text, len));
+  QRect rect = painter->fontMetrics().boundingRect(QString::fromLocal8Bit(text, len));
+  painter->drawText(x, y, rect.width(), rect.height(), Qt::TextDontClip, QString::fromLocal8Bit(text, len));
 
   delete painter;
 
@@ -1378,7 +1381,8 @@ int GlowDrawQt::text_erase(GlowWind *wind, int x, int y, char *text, int len,
   }
 
   painter->setFont(QFont(font_names[font_idx][font_type][idx]));
-  painter->drawText(x, y, QString::fromLocal8Bit(text, len));
+  QRect rect = painter->fontMetrics().boundingRect(QString::fromLocal8Bit(text, len));
+  painter->drawText(x, y, rect.width(), rect.height(), Qt::TextDontClip, QString::fromLocal8Bit(text, len));
 
   delete painter;
 
@@ -3133,19 +3137,19 @@ int GlowDrawQt::text_qt(GlowWind *wind, int x, int y, char *text, int len,
 
   int px, py;
   if (rot == 180) {
-    px = -TEXT_SCALE * x - width;
-    py = (int) (-TEXT_SCALE * y - FONT_DESCENT * height);
+    px = -x - width;
+    py = (int) (-y - FONT_DESCENT * height);
   } else if (rot == 90) {
-    px = -TEXT_SCALE * y - width + height / 2;
-    py = TEXT_SCALE * x;
+    px = -y - width + height / 2;
+    py = x;
   } else if (rot == 270) {
-    px = TEXT_SCALE * y - width;
-    py = -TEXT_SCALE * x - height;
+    px = y - width;
+    py = -x - height;
   } else {
-    px = TEXT_SCALE * x;
-    py = (int) (TEXT_SCALE * y - (1.0 - FONT_DESCENT) * height);
+    px = x;
+    py = (int) (y - (1.0 - FONT_DESCENT) * height);
   }
-  painter->drawText(px, py, str);
+  painter->drawText(px, py, rect.width(), rect.height(), Qt::TextDontClip, str);
 
   delete painter;
 
@@ -3195,20 +3199,20 @@ int GlowDrawQt::text_erase_qt(GlowWind *wind, int x, int y, char *text, int len,
   }
 
   if (rot == 90) {
-    px = x;// - height/TEXT_SCALE/2;
-    py = y - width / TEXT_SCALE;
-    ph = width / TEXT_SCALE;
-    pw = height / TEXT_SCALE;
+    px = x;// - height/2;
+    py = y - width;
+    ph = width;
+    pw = height;
   } else if (rot == 270) {
-    px = x;// - height/TEXT_SCALE/2;
-    py = y - height / TEXT_SCALE / 2;
-    ph = width / TEXT_SCALE;
-    pw = height / TEXT_SCALE;
+    px = x;// - height/2;
+    py = y - height / 2;
+    ph = width;
+    pw = height;
   } else {
     px = x;
-    py = (int) (y - (1.0 - FONT_DESCENT) * height / TEXT_SCALE);
-    pw = width / TEXT_SCALE;
-    ph = height / TEXT_SCALE;
+    py = (int) (y - (1.0 - FONT_DESCENT) * height);
+    pw = width;
+    ph = height;
   }
 
   QPainter *painter = get_painter(w->buffer, this, painter_type, idx);
@@ -3258,13 +3262,13 @@ int GlowDrawQt::get_text_extent_qt(const char *text, int len,
   lheight = (int) (lheight * 0.9);
 
   if (rot == 90 || rot == 270) {
-    *height = lwidth / TEXT_SCALE;
-    *width = lheight / TEXT_SCALE;
+    *height = lwidth;
+    *width = lheight;
   } else {
-    *width = lwidth / TEXT_SCALE;
-    *height = lheight / TEXT_SCALE;
+    *width = lwidth;
+    *height = lheight;
   }
-  *descent = (int) (FONT_DESCENT * lheight / TEXT_SCALE);
+  *descent = (int) (FONT_DESCENT * lheight);
 
   delete painter;
 

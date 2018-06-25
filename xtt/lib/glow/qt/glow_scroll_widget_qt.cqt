@@ -221,6 +221,7 @@ void QtScrollWidgetGlow::moveEvent(QMoveEvent *event)
 void QtScrollWidgetGlow::resizeEvent(
     QResizeEvent *event)
 {
+  this->image = QImage(event->size(), QImage::Format_RGB32);
   realize();
   handleEvent(event, true);
   QWidget::resizeEvent(event);
