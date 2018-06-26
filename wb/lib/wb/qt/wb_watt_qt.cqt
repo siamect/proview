@@ -194,7 +194,7 @@ void WAttQt::print(const char *title)
 
   CoWowQt::CreateBrowPrintDialogQt(title, wattnav->brow->ctx,
                                    flow_eOrientation_Portrait, 1.0,
-                                   (void *) this, &sts);
+                                   toplevel, &sts);
 }
 
 void WAttQt::change_value_close()

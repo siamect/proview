@@ -102,7 +102,7 @@ void CoLogWQt::print()
 
   CoWowQt::CreateBrowPrintDialogQt(name, logwnav->brow->ctx,
                                    flow_eOrientation_Portrait, 1.0,
-                                   (void *) this, &sts);
+                                   toplevel, &sts);
 }
 
 void CoLogWQtWidget::focusInEvent(QFocusEvent *event)

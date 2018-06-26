@@ -147,7 +147,7 @@ void MsgWindowQt::print()
 
   CoWowQt::CreateBrowPrintDialogQt(title, msgnav->brow->ctx,
                                    flow_eOrientation_Landscape, 1.4,
-                                   (void *) this, &sts);
+                                   toplevel, &sts);
 }
 
 void MsgWindowQtWidget::focusInEvent(QFocusEvent *event)

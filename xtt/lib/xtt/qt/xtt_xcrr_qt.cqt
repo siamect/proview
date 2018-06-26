@@ -97,7 +97,7 @@ void XCrrQt::print()
 
   CoWowQt::CreateBrowPrintDialogQt(title, xcrrnav->brow->ctx,
                                    flow_eOrientation_Portrait, 1.0,
-                                   (void *) this, &sts);
+                                   toplevel, &sts);
 }
 
 void XCrrQtWidget::closeEvent(QCloseEvent *event)

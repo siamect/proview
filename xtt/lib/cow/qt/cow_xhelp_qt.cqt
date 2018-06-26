@@ -174,7 +174,7 @@ void CoXHelpQt::print()
 
   CoWowQt::CreateBrowPrintDialogQt(title, xhelpnav->brow->ctx,
                                    flow_eOrientation_Portrait, 0.7,
-                                   (void *) this, &sts);
+                                   toplevel, &sts);
 }
 
 void CoXHelpQtWidget::closeEvent(QCloseEvent *event)

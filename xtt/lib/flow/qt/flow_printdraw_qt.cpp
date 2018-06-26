@@ -57,6 +57,7 @@ FlowPrintDrawQt::FlowPrintDrawQt(void *context, const char *t, int p,
     print_margin_x = 10;
     print_margin_y = 10;
   }
+  print_margin_x = print_margin_y = 0;
 
   *sts = 1;
 }
@@ -77,6 +78,7 @@ int FlowPrintDrawQt::print_page(double ll_x, double ll_y, double ur_x,
       print_margin_y = 10;
     }
   }
+  print_margin_x = print_margin_y = 0;
 
   if (ur_x - ll_x > ur_y - ll_y) {
     ctx->print_zoom_factor = 730 / (ur_x - ll_x);
@@ -104,7 +106,6 @@ int FlowPrintDrawQt::print_page(double ll_x, double ll_y, double ur_x,
     sprintf(page_str, "Page %d", page + 1);
     painter->drawText(print_margin_x + width - 90, print_margin_y - height,
                       fl(page_str));
-
     painter->drawText(print_margin_x, print_margin_y - height, fl(title));
   }
 
@@ -134,6 +135,7 @@ int FlowPrintDrawQt::rect(double x, double y, double width, double height,
 
   pen.setWidth(0.5 * idx);
   painter->setPen(pen);
+  painter->setBrush(Qt::NoBrush);
   painter->drawRect(print_margin_x + x - page_x, print_margin_y + y - page_y,
                     width, height);
 
@@ -143,27 +145,22 @@ int FlowPrintDrawQt::rect(double x, double y, double width, double height,
 int FlowPrintDrawQt::filled_rect(double x, double y, double width,
                                  double height, flow_eDrawType type, double idx)
 {
-  QBrush brush = painter->brush();
   switch (type) {
     case flow_eDrawType_LineRed:
-      brush.setColor(QColor::fromRgbF(1, 0, 0));
+      painter->setBrush(QBrush(QColor::fromRgbF(1, 0, 0)));
       break;
     case flow_eDrawType_Green:
-      brush.setColor(QColor::fromRgbF(0, 1, 0));
+      painter->setBrush(QBrush(QColor::fromRgbF(0, 1, 0)));
       break;
     case flow_eDrawType_Yellow:
-      brush.setColor(QColor::fromRgbF(1, 1, 0));
+      painter->setBrush(QBrush(QColor::fromRgbF(1, 1, 0)));
       break;
     case flow_eDrawType_DarkGray:
-      brush.setColor(QColor::fromRgbF(0.3, 0.3, 0.3));
+      painter->setBrush(QBrush(QColor::fromRgbF(0.3, 0.3, 0.3)));
       break;
     default:
-      brush.setColor(QColor::fromRgbF(0, 0, 0));
+      painter->setBrush(QBrush(QColor::fromRgbF(0, 0, 0)));
   }
-  painter->setBrush(brush);
-
-  painter->fillRect(print_margin_x + x - page_x, print_margin_y + y - page_y,
-                    width, height, painter->brush());
 
   QPen pen = QPen(QColor::fromRgbF(0, 0, 0));
   pen.setWidth(0.5 * idx);
@@ -251,16 +248,17 @@ int FlowPrintDrawQt::line(double x1, double y1, double x2, double y2,
 int FlowPrintDrawQt::text(double x, double y, char *text, int len,
                           flow_eDrawType type, double size, int line)
 {
-  char font[40];
+  QFont font;
   switch (type) {
     case flow_eDrawType_TextHelvetica:
-      sprintf(font, "Lucida Sans %3.1f", 1.0 * size);
+      font = QFont(fl("Lucida Sans"), -1);
       break;
     case flow_eDrawType_TextHelveticaBold:
-      sprintf(font, "Lucida Sans Bold %3.1f", 1.0 * size);
+      font = QFont(fl("Lucida Sans"), -1, QFont::Bold);
       break;
     default:;
   }
+  font.setPointSizeF(size);
 
   char *s;
   for (s = text; *s; s++) {
@@ -272,14 +270,11 @@ int FlowPrintDrawQt::text(double x, double y, char *text, int len,
   if (s - text > 0) {
     QString textutf8 = QString::fromLatin1(text, s - text);
 
-    painter->setFont(fl(font));
-    QBrush target = painter->brush();
-    target.setColor(QColor::fromRgbF(0, 0, 0));
-    painter->setBrush(target);
+    painter->setFont(font);
+    painter->setBrush(QBrush(QColor::fromRgbF(0, 0, 0)));
 
     painter->drawText(print_margin_x + x - page_x,
-                      print_margin_y + y - page_y - 0.8 / 1024 * size * 1093 +
-                      0.4 / 1024 * size * 1093 * line, textutf8);
+                      print_margin_y + y - page_y, textutf8);
   }
 
   return 1;
@@ -318,12 +313,15 @@ int FlowPrintDrawQt::arrow(double x1, double y1, double x2, double y2,
   switch (type) {
     case flow_eDrawType_LineRed:
       painter->setPen(QColor::fromRgbF(1, 0, 0));
+      painter->setBrush(QBrush(QColor::fromRgbF(1, 0, 0)));
       break;
     case flow_eDrawType_LineGray:
       painter->setPen(QColor::fromRgbF(0.7, 0.7, 0.7));
+      painter->setBrush(QBrush(QColor::fromRgbF(0.7, 0.7, 0.7)));
       break;
     default:
       painter->setPen(QColor::fromRgbF(0, 0, 0));
+      painter->setBrush(QBrush(QColor::fromRgbF(0, 0, 0)));
       break;
   }
 

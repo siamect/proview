@@ -302,7 +302,7 @@ void XAttQt::print()
 
   CoWowQt::CreateBrowPrintDialogQt(title, xattnav->brow->ctx,
                                    flow_eOrientation_Portrait, 1.0,
-                                   (void *) this, &sts);
+                                   toplevel, &sts);
 }
 
 void XAttQtWidget::closeEvent(QCloseEvent *event)
