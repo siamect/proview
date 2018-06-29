@@ -340,8 +340,29 @@ int GlowDrawQt::event_handler(QEvent *event)
     return 1;
   }
 
-  if (QApplication::focusWidget() == m_wind->window->window() ||
-      event->type() == QEvent::KeyPress) {
+  QObject *parent = m_wind->window;
+  bool windowEvent = false;
+  while (parent != NULL) {
+    if (QApplication::focusWidget() == parent) {
+      windowEvent = true;
+      break;
+    }
+    parent = parent->parent();
+  }
+
+  bool navWindowEvent = false;
+  if (!windowEvent) {
+    parent = nav_wind->window;
+    while (parent != NULL) {
+      if (QApplication::focusWidget() == parent) {
+        navWindowEvent = true;
+        break;
+      }
+      parent = parent->parent();
+    }
+  }
+
+  if (windowEvent || event->type() == QEvent::KeyPress) {
     if (GlowCtx::eventlog_enabled) {
       log_event(event);
     }
@@ -852,7 +873,7 @@ int GlowDrawQt::event_handler(QEvent *event)
       default:
         break;
     }
-  } else if (QApplication::focusWidget() == nav_wind->window) {
+  } else if (navWindowEvent) {
     switch (event->type()) {
       case QEvent::MouseButtonPress: {
         QMouseEvent *mouseEvent = ((QMouseEvent *) event);
@@ -1834,10 +1855,8 @@ void GlowDrawQt::set_clip(DrawWind *wind, QPainter *painter)
 void GlowDrawQt::set_image_clip_mask(QPainter *painter, glow_tPixmap pixmap,
                                      int x, int y)
 {
-  QBitmap mask = QBitmap(*((QPixmap *) pixmap));
-  QRegion clipRegion = QRegion(mask);
-  clipRegion.translate(x, y);
-  painter->setClipRegion(clipRegion);
+  QRegion clipRegion = QRegion(((QPixmap *) pixmap)->createMaskFromColor(Qt::black));
+  painter->setClipRegion(clipRegion.translated(x, y));
   painter->setClipping(true);
 }
 

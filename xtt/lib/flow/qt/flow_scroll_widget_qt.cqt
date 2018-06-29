@@ -42,16 +42,24 @@
 
 #include <assert.h>
 
-#include <QMainWindow>
 #include <QPainter>
-#include <QScrollArea>
+
+#include "cow_qt_helpers.h"
+
+QImage QtScrollWidgetFlow::createBuffer(QSize size)
+{
+  QImage image = QImage(size, QImage::Format_RGB32);
+  QPainter imPainter(&image);
+  imPainter.fillRect(image.rect(), palette().color(QPalette::Background));
+  return image;
+}
 
 void QtScrollWidgetFlow::init(
     unsigned int eCtxType, int (*init_proc)(FlowCtx *ctx, void *client_data),
     void *client_data, int (*init_proc2)(QWidget *w, FlowCtx *ctx,
                                             void *client_data))
 {
-  this->image = QImage(size(), QImage::Format_RGB32);
+  this->image = createBuffer(size());
   this->ctxType = eCtxType;
   this->init_proc = init_proc;
   this->init_widget_proc = init_proc2;
@@ -63,15 +71,13 @@ QWidget *QtScrollWidgetFlow::initScroll(
     void *client_data, int (*init_proc2)(QWidget *w, FlowCtx *ctx,
                                          void *client_data))
 {
-  this->image = QImage(size(), QImage::Format_RGB32);
+  this->image = createBuffer(size());
   this->ctxType = eCtxType;
   this->init_proc = init_proc;
   this->init_widget_proc = init_proc2;
   this->client_data = client_data;
 
-  QMainWindow *window = new QMainWindow();
-  window->setAttribute(Qt::WA_DeleteOnClose);
-  QScrollArea *form = new QScrollArea();
+  QScrollAreaFlow *form = new QScrollAreaFlow();
   scroll_h = form->horizontalScrollBar();
   scroll_v = form->verticalScrollBar();
   QObject::connect(scroll_h, SIGNAL(valueChanged(int)), this,
@@ -79,15 +85,21 @@ QWidget *QtScrollWidgetFlow::initScroll(
   QObject::connect(scroll_v, SIGNAL(valueChanged(int)), this,
                    SLOT(scroll_v_action(int)));
 
-  form->setWidgetResizable(true);
   form->setWidget(this);
-  window->setCentralWidget(form);
-  return window;
+  form->setWidgetResizable(true);
+  return form;
+}
+
+bool QScrollAreaFlow::event(QEvent *event)
+{
+  QtScrollWidgetFlow *child = ((QtScrollWidgetFlow *) widget());
+  child->handleEvent(event);
+  return QScrollArea::event(event);
 }
 
 void QtScrollWidgetFlow::init(unsigned int eCtxType, QWidget *main)
 {
-  this->image = QImage(size(), QImage::Format_RGB32);
+  this->image = createBuffer(size());
   this->ctxType = eCtxType;
   is_navigator = 1;
   main_widget = main;
@@ -200,37 +212,12 @@ void QtScrollWidgetFlow::scroll_v_action(int value)
 
 void QtScrollWidgetFlow::paintEvent(QPaintEvent *event)
 {
-  handleEvent(event);
-  QWidget::paintEvent(event);
   QPainter painter(this);
   QRect dirtyRect = event->rect();
   painter.drawImage(dirtyRect, image, dirtyRect);
-}
-
-void QtScrollWidgetFlow::mouseMoveEvent(QMouseEvent *event)
-{
-  handleEvent(event, false, true);
-  QWidget::mouseMoveEvent(event);
-}
-
-void QtScrollWidgetFlow::moveEvent(QMoveEvent *event)
-{
-  handleEvent(event, true);
-  QWidget::moveEvent(event);
-}
-
-void QtScrollWidgetFlow::resizeEvent(QResizeEvent *event)
-{
-  this->image = QImage(event->size(), QImage::Format_RGB32);
-  realize();
-  handleEvent(event, true);
-  QWidget::resizeEvent(event);
-}
-
-void QtScrollWidgetFlow::showEvent(QShowEvent *event)
-{
-  realize();
-  QWidget::showEvent(event);
+  QPainter imPainter(&image);
+  imPainter.fillRect(image.rect(), palette().color(QPalette::Background));
+  QWidget::paintEvent(event);
 }
 
 void QtScrollWidgetFlow::closeEvent(QCloseEvent *event)
@@ -249,17 +236,16 @@ void QtScrollWidgetFlow::closeEvent(QCloseEvent *event)
   QWidget::closeEvent(event);
 }
 
-void QtScrollWidgetFlow::handleEvent(QEvent *event, bool conf_scroll,
-                                     bool update)
+void QtScrollWidgetFlow::handleEvent(QEvent *event)
 {
   if (!destroyed) {
-    if (conf_scroll) {
+    if (event->type() == QEvent::Resize || event->type() == QEvent::Move) {
       scroll_configure = 1;
     }
     if (parent_ctx) {
       FlowCtx * ctx = (FlowCtx *) parent_ctx;
       FlowDrawQt *drawer = ((FlowDrawQt *) ctx->fdraw);
-      if (update) {
+      if (event->type() == QEvent::MouseMove) {
         drawer->window->update();
       }
       drawer->event_handler(event);
@@ -267,11 +253,22 @@ void QtScrollWidgetFlow::handleEvent(QEvent *event, bool conf_scroll,
   }
 }
 
+bool QtScrollWidgetFlow::event(QEvent *event)
+{
+  if (event->type() == QEvent::Resize) {
+    this->image = createBuffer(((QResizeEvent *) event)->size());
+  }
+  if (!is_realized && (event->type() == QEvent::Show || event->type() == QEvent::Resize)) {
+    realize();
+    is_realized = true;
+  }
+  handleEvent(event);
+  return QWidget::event(event);
+}
+
 void QtScrollWidgetFlow::realize()
 {
-  if (is_realized) {
-    return;
-  }
+  debug_print("realize\n");
 
   if (!parent_ctx) {
     if (is_navigator) {
@@ -280,6 +277,7 @@ void QtScrollWidgetFlow::realize()
 
       if (main && !main->is_realized) {
         main->realize();
+        main->is_realized = true;
       }
 
       assert(main->parent_ctx != NULL);
@@ -294,6 +292,4 @@ void QtScrollWidgetFlow::realize()
                                 static_cast<flow_eCtxType>(ctxType));
     }
   }
-
-  is_realized = true;
 }

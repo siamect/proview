@@ -45,11 +45,9 @@
 #include "glow_ctx.h"
 #include "glow_draw_qt.h"
 
-#include <QMouseEvent>
-#include <QMoveEvent>
 #include <QPaintEvent>
-#include <QResizeEvent>
 #include <QScrollBar>
+#include <QScrollArea>
 #include <QWidget>
 
 typedef struct {
@@ -60,6 +58,13 @@ typedef struct {
   int scroll_h_managed;
   int scroll_v_managed;
 } widget_sScroll;
+
+// QScrollArea does not forward events to its child widget
+// So we subclass QScrollArea and override the event() handler
+class QScrollAreaGlow : public QScrollArea {
+protected:
+  bool event(QEvent *event);
+};
 
 class QtScrollWidgetGlow : public QWidget {
   Q_OBJECT
@@ -100,21 +105,21 @@ public:
 
   QImage image;
 
+  virtual void handleEvent(QEvent *event);
+
 protected:
   virtual void realize();
-  virtual void handleEvent(QEvent *event, bool conf_scroll = false,
-                           bool update = false);
 
   void paintEvent(QPaintEvent *event);
-  void mouseMoveEvent(QMouseEvent *event);
-  void moveEvent(QMoveEvent *event);
-  void resizeEvent(QResizeEvent *event);
   void closeEvent(QCloseEvent *event);
 
-  void showEvent(QShowEvent *event);
+  bool event(QEvent *event);
 
   bool is_realized;
   unsigned int ctxType;
+
+private:
+  QImage createBuffer(QSize size);
 
 public slots:
   void scroll_h_action(int value);

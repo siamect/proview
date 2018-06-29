@@ -272,6 +272,7 @@ FlowDrawQt::FlowDrawQt(QWidget *x_toplevel, void **flow_ctx,
 
 int FlowDrawQt::init_nav(QWidget *nav_widget, void *flow_ctx)
 {
+  //debug_print("init_nav\n");
   nav_toplevel = nav_widget;
   nav_window = nav_toplevel->window();
   nav_window_canvas = &(((QtScrollWidgetFlow *) nav_window)->image);
@@ -302,11 +303,31 @@ int FlowDrawQt::event_handler(QEvent *event)
     return 1;
   }
 
-  if (QApplication::focusWidget() == window ||
-      event->type() == QEvent::KeyPress) {
+  QObject *windowParent = window;
+  QObject *navWindowParent = nav_window;
+  bool windowEvent = false;
+  bool navWindowEvent = false;
+  if (QApplication::focusWidget() != NULL) {
+    while (!(windowParent == NULL && navWindowParent == NULL)) {
+      windowEvent = (QApplication::focusWidget() == windowParent);
+      navWindowEvent = (QApplication::focusWidget() == navWindowParent);
+      if (windowEvent || navWindowEvent) {
+        break;
+      }
+      windowParent = (windowParent == NULL) ? NULL : windowParent->parent();
+      navWindowParent = (navWindowParent == NULL) ? NULL : navWindowParent->parent();
+    }
+  }
+
+  if (event->type() == QEvent::KeyPress) {
+    debug_print("event_handler: KeyPress!\n");
+  }
+
+  if (windowEvent || event->type() == QEvent::KeyPress) {
     switch (event->type()) {
       case QEvent::KeyPress : {
         QKeyEvent *keyEvent = ((QKeyEvent *) event);
+        debug_print("event_handler: KeyPress key=%d\n", keyEvent->key());
 
         switch (keyEvent->key()) {
           case Qt::Key_Return:
@@ -373,6 +394,7 @@ int FlowDrawQt::event_handler(QEvent *event)
       }
       case QEvent::MouseButtonPress: {
         QMouseEvent *mouseEvent = ((QMouseEvent *) event);
+        debug_print("event_handler: MouseButtonPress button=%d\n", mouseEvent->button());
         switch (mouseEvent->button()) {
           case Qt::LeftButton:
             basectx->event_handler(flow_eEvent_MB1Down, mouseEvent->x(),
@@ -521,6 +543,7 @@ int FlowDrawQt::event_handler(QEvent *event)
       }
       case QEvent::MouseButtonRelease: {
         QMouseEvent *mouseEvent = ((QMouseEvent *) event);
+        debug_print("event_handler: MouseButtonRelease button=%d\n", mouseEvent->button());
         button1_pressed = 0;
         button2_pressed = 0;
         button3_pressed = 0;
@@ -689,6 +712,7 @@ int FlowDrawQt::event_handler(QEvent *event)
       }
       case QEvent::MouseMove: {
         QMouseEvent *mouseEvent = ((QMouseEvent *) event);
+        debug_print("event_handler: MouseMove\n");
         QPoint pos = QCursor::pos();
 
         if (button3_pressed) {
@@ -792,6 +816,7 @@ int FlowDrawQt::event_handler(QEvent *event)
       case QEvent::FocusOut:
         break;
       case QEvent::Wheel: {
+        debug_print("event_handler: Wheel\n");
         QWheelEvent *wheelEvent = ((QWheelEvent *) event);
         if (wheelEvent->delta() > 0) {
           sts = basectx->event_handler(flow_eEvent_ScrollUp, 0, 0, 0, 0);
@@ -803,10 +828,11 @@ int FlowDrawQt::event_handler(QEvent *event)
       default:
         break;
     }
-  } else if (QApplication::focusWidget() == nav_window) {
+  } else if (navWindowEvent) {
     switch (event->type()) {
       case QEvent::MouseButtonPress: {
         QMouseEvent *mouseEvent = ((QMouseEvent *) event);
+        debug_print("event_handler: MouseButtonPress button=%d\n", mouseEvent->button());
         switch (mouseEvent->button()) {
           case Qt::LeftButton: // Button1
             button1_pressed = 1;
@@ -830,6 +856,7 @@ int FlowDrawQt::event_handler(QEvent *event)
       }
       case QEvent::MouseButtonRelease: {
         QMouseEvent *mouseEvent = ((QMouseEvent *) event);
+        debug_print("event_handler: MouseButtonRelease button=%d\n", mouseEvent->button());
         switch (mouseEvent->button()) {
           case Qt::LeftButton: // Button1
             button1_pressed = 0;
@@ -861,6 +888,7 @@ int FlowDrawQt::event_handler(QEvent *event)
         break;
       }
       case QEvent::MouseMove: {
+        debug_print("event_handler: MouseMove\n");
         QPoint pos = QCursor::pos();
         if (button1_pressed || button2_pressed || button3_pressed) {
           sts = basectx
@@ -909,8 +937,10 @@ int FlowDrawQt::rect_helper(FlowCtx *ctx, int painter_type, int size, int x,
   QPainter *painter = get_painter(painter_type, size, nav);
 
   if (fill) {
+    //debug_print("fillRect [%d, %d, %d, %d]\n", x, y, width, height);
     painter->fillRect(x, y, width, height, painter->brush());
   } else {
+    //debug_print("drawRect [%d, %d, %d, %d]\n", x, y, width, height);
     painter->setBrush(Qt::NoBrush);
     painter->drawRect(x, y, width, height);
   }
@@ -976,10 +1006,12 @@ int FlowDrawQt::triangle_helper(FlowCtx *ctx, int painter_type, int size, int x,
   poly[3] = QPoint(x, y + height);
 
   if (fill) {
+    //debug_print("fillTriangle (%d, %d) (%d, %d) (%d, %d)\n", x, y + height, x + width / 2, y, x + width, y + height);
     QPainterPath path;
     path.addPolygon(poly);
     painter->fillPath(path, painter->brush());
   } else {
+    //debug_print("drawTriangle (%d, %d) (%d, %d) (%d, %d)\n", x, y + height, x + width / 2, y, x + width, y + height);
     painter->setBrush(Qt::NoBrush);
     painter->drawPolygon(poly);
   }
@@ -1054,6 +1086,7 @@ int FlowDrawQt::arrow_helper(FlowCtx *ctx, int painter_type, int size, int x1,
 
   QPainterPath path;
   path.addPolygon(poly);
+  //debug_print("arrow (%d, %d) (%d, %d) (%d, %d)\n", x1, y1, x2, y2, x3, y3);
   painter->fillPath(path, painter->brush());
 
   delete painter;
@@ -1109,6 +1142,7 @@ int FlowDrawQt::arc_helper(FlowCtx *ctx, int painter_type, int size, int x,
 
   QPainter *painter = get_painter(painter_type, size, nav);
   painter->setBrush(Qt::NoBrush);
+  //debug_print("arrow [%d, %d, %d, %d], %d, %d\n", x, y, width, height, angle1 * 64, angle2 * 64);
   painter->drawArc(x, y, width, height, angle1 * 64, angle2 * 64);
   delete painter;
 
@@ -1165,6 +1199,7 @@ int FlowDrawQt::line_helper(FlowCtx *ctx, int painter_type, int size, int x1,
   if (nav && ctx->no_nav) { return 1; }
 
   QPainter *painter = get_painter(painter_type, size, nav);
+  //debug_print("line (%d, %d) (%d, %d)\n", x1, y1, x2, y2);
   painter->drawLine(x1, y1, x2, y2);
   delete painter;
 
@@ -1261,12 +1296,14 @@ int FlowDrawQt::text_pango_helper(FlowCtx *ctx, int x, int y, char *text,
   int height = rect.height();
 
   if (erase_rect > 0) {
+    //debug_print("eraseRect [%d, %d, %d, %d], color=%s\n", x, roundi(y - 0.8 * height), rect.width(), roundi(height * (erase_rect / 10.0)), painter->background().color().name().toAscii().data());
     painter->eraseRect(x, roundi(y - 0.8 * height),
                        rect.width(),
                        roundi(height * (erase_rect / 10.0)));
   }
 
   if (erase_rect < 12) {
+    //debug_print("drawText %s at (%d, %d)\n", text, x, roundi(y - 0.8 * height));
     painter->drawText(x, roundi(y - 0.8 * height), rect.width(), height, Qt::TextDontClip, str);
   }
 
@@ -1331,6 +1368,7 @@ int FlowDrawQt::nav_text_helper(FlowCtx *ctx, flow_eDrawType painter_type,
 
   QPainter *painter = get_painter(painter_type, size, true);
   painter->setFont(QFont(font_names[font_idx][size]));
+  //debug_print("drawText %s at (%d, %d)\n", text, x, y);
   painter->drawText(x, y, QString::fromLocal8Bit(text, len));
 
   delete painter;
@@ -1366,18 +1404,12 @@ int FlowDrawQt::pixmaps_create(FlowCtx *ctx, flow_sPixmapData *pixmap_data,
       *pdata = (flow_sPixmapDataElem *) pixmap_data;
   int i;
 
+  debug_print("pixmaps_create, width=%d, height=%d\n", pdata->width, pdata->height);
+
   pms = new draw_sPixmap();
   for (i = 0; i < DRAW_PIXMAP_SIZE; i++) {
     if (i == 0 || (i > 0 && pdata->bits != prev_pdata->bits)) {
-      QImage image(pdata->width, pdata->height, QImage::Format_Mono);
-      image.setColor(0, QColor(Qt::color0).rgb());
-      image.setColor(1, QColor(Qt::color1).rgb());
-      int bytesPerLine = (pdata->width + 7) / 8;
-      for (int y = 0; y < pdata->height; ++y) {
-        memcpy(image.scanLine(y), (char *) pdata->bits + bytesPerLine * y,
-               bytesPerLine);
-      }
-      pms->pixmap[i] = QPixmap::fromImage(image);
+      pms->pixmap[i] = QBitmap::fromData(QSize(pdata->width, pdata->height), (uchar *) pdata->bits, QImage::Format_Mono);
     } else {
       pms->pixmap[i] = pms->pixmap[i - 1];
     }
@@ -1405,18 +1437,20 @@ int FlowDrawQt::pixmap(FlowCtx *ctx, int x, int y,
 
   pms = (draw_sPixmap *) pixmaps;
 
+  debug_print("pixmap foreground=%s, background=%s\n", foreground.name().toAscii().data(), background.name().toAscii().data());
   QPainter *painter = get_painter(painter_type, idx);
+
+  debug_print("pixmap fillRect [%d, %d, %d, %d] with color %s and painter_type=%d\n", x, y, pdata->width, pdata->height, painter->brush().color().name().toAscii().data(), painter_type);
   painter->fillRect(x, y, pdata->width, pdata->height, painter->brush());
   delete painter;
 
   painter = get_painter(flow_eDrawType_LineErase, idx);
 
-  QBitmap mask = QBitmap(pms->pixmap[idx]);
-  QRegion clipRegion = QRegion(mask);
-  clipRegion.translate(x, y);
-  painter->setClipRegion(clipRegion);
+  QRegion clipRegion = QRegion(pms->pixmap[idx].createMaskFromColor(Qt::black));
+  painter->setClipRegion(clipRegion.translated(x, y));
   painter->setClipping(true);
 
+  debug_print("pixmap fillRect [%d, %d, %d, %d] with color %s and painter_type=%d using mask\n", x, y, pdata->width, pdata->height, painter->brush().color().name().toAscii().data(), painter_type);
   painter->fillRect(x, y, pdata->width, pdata->height, painter->brush());
 
   delete painter;
@@ -1436,17 +1470,17 @@ int FlowDrawQt::pixmap_inverse(FlowCtx *ctx, int x, int y,
   pms = (draw_sPixmap *) pixmaps;
 
   QPainter *painter = get_painter(flow_eDrawType_LineErase, idx);
+  //debug_print("pixmap_inverse fillRect [%d, %d, %d, %d] with color %s\n", x, y, pdata->width, pdata->height, painter->brush().color().name().toAscii().data());
   painter->fillRect(x, y, pdata->width, pdata->height, painter->brush());
   delete painter;
 
   painter = get_painter(painter_type, idx);
 
-  QBitmap mask = QBitmap(pms->pixmap[idx]);
-  QRegion clipRegion = QRegion(mask);
-  clipRegion.translate(x, y);
-  painter->setClipRegion(clipRegion);
+  QRegion clipRegion = QRegion(pms->pixmap[idx].createMaskFromColor(Qt::black));
+  painter->setClipRegion(clipRegion.translated(x, y));
   painter->setClipping(true);
 
+  //debug_print("pixmap_inverse fillRect [%d, %d, %d, %d] with color %s using mask\n", x, y, pdata->width, pdata->height, painter->brush().color().name().toAscii().data());
   painter->fillRect(x, y, pdata->width, pdata->height, painter->brush());
 
   delete painter;
@@ -1462,6 +1496,7 @@ int FlowDrawQt::pixmap_erase(FlowCtx *ctx, int x, int y,
   if (ctx->nodraw) { return 1; }
 
   QPainter *painter = get_painter(painter_type, idx);
+  //debug_print("pixmap_erase [%d, %d, %d, %d]\n", x, y, pdata->width, pdata->height);
   painter->eraseRect(x, y, pdata->width, pdata->height);
   delete painter;
 
@@ -1481,6 +1516,7 @@ int FlowDrawQt::nav_pixmap(FlowCtx *ctx, int x, int y,
   pms = (draw_sPixmap *) pixmaps;
 
   QPainter *painter = get_painter(painter_type, idx);
+  //debug_print("nav_pixmap [%d, %d, %d, %d]\n", x, y, pdata->width, pdata->height);
   painter->drawPixmap(x, y, pdata->width, pdata->height, pms->pixmap[idx]);
   delete painter;
 
@@ -1495,6 +1531,7 @@ int FlowDrawQt::nav_pixmap_erase(FlowCtx *ctx, int x, int y,
   if (ctx->no_nav || ctx->nodraw) { return 1; }
 
   QPainter *painter = get_painter(painter_type, idx);
+  //debug_print("nav_pixmap_erase [%d, %d, %d, %d]\n", x, y, pdata->width, pdata->height);
   painter->eraseRect(x, y, pdata->width, pdata->height);
   delete painter;
 
@@ -1529,6 +1566,7 @@ int FlowDrawQt::image(FlowCtx *ctx, int x, int y, int width, int height,
     set_image_clip_mask(painter, clip_mask, x, y);
   }
 
+  //debug_print("image [%d, %d, %d, %d]\n", x, y, width, height);
   painter->drawImage(QRect(x, y, width, height), *((QImage *) image));
 
   delete painter;
@@ -1540,14 +1578,26 @@ void FlowDrawQt::clear(FlowCtx *ctx)
 {
   if (ctx->nodraw) { return; }
 
-  QPainter(window_canvas).eraseRect(window->rect());
+  QPainter *painter = new QPainter(window_canvas);
+  painter->setBackground(QBrush(background));
+
+  //debug_print("clear color=%s\n", painter->background().color().name().toAscii().data());
+  painter->eraseRect(window->rect());
+  
+  delete painter;
 }
 
 void FlowDrawQt::nav_clear(FlowCtx *ctx)
 {
   if (ctx->no_nav || ctx->nodraw) { return; }
 
-  QPainter(nav_window_canvas).eraseRect(nav_window->rect());
+  QPainter *painter = new QPainter(nav_window_canvas);
+  painter->setBackground(QBrush(background));
+
+  //debug_print("nav_clear color=%s\n", painter->background().color().name().toAscii().data());
+  painter->eraseRect(nav_window->rect());
+  
+  delete painter;
 }
 
 void FlowDrawQt::get_window_size(FlowCtx *ctx, int *width, int *height)
@@ -1558,6 +1608,7 @@ void FlowDrawQt::get_window_size(FlowCtx *ctx, int *width, int *height)
 
 void FlowDrawQt::get_nav_window_size(FlowCtx *ctx, int *width, int *height)
 {
+  debug_print("get_nav_window_size, nav_window == NULL ? %d\n", (nav_window == NULL));
   *width = nav_window->width();
   *height = nav_window->height();
 }
@@ -1701,10 +1752,13 @@ void FlowDrawQt::copy_area(FlowCtx *ctx, int x, int y)
 {
   if (ctx->nodraw) { return; }
 
+  debug_print("copy_area: x=%d, y=%d\n", x, y);
+
+  QPixmap screenShot = QPixmap::grabWidget(window);
   QPainter *painter = get_painter(flow_eDrawType_Line, 3);
   if (x >= 0 && y >= 0) {
-    painter->drawPixmap(x, y, QPixmap::grabWidget(window), 0, 0,
-                        ctx->window_width - x, ctx->window_height - y);
+    painter->drawPixmap(x, y, screenShot, 0, 0, ctx->window_width - x,
+                        ctx->window_height - y);
     if (x) {
       painter->eraseRect(0, 0, x, ctx->window_height);
     }
@@ -1712,8 +1766,8 @@ void FlowDrawQt::copy_area(FlowCtx *ctx, int x, int y)
       painter->eraseRect(x, 0, ctx->window_width, y);
     }
   } else if (x <= 0 && y <= 0) {
-    painter->drawPixmap(0, 0, QPixmap::grabWidget(window), -x, -y,
-                        ctx->window_width + x, ctx->window_height + y);
+    painter->drawPixmap(0, 0, screenShot, -x, -y, ctx->window_width + x,
+                        ctx->window_height + y);
     if (x) {
       painter->eraseRect(ctx->window_width + x, 0, ctx->window_width,
                          ctx->window_height);
@@ -1723,8 +1777,8 @@ void FlowDrawQt::copy_area(FlowCtx *ctx, int x, int y)
                          ctx->window_height);
     }
   } else if (x <= 0 && y >= 0) {
-    painter->drawPixmap(0, y, QPixmap::grabWidget(window), -x, 0,
-                        ctx->window_width + x, ctx->window_height - y);
+    painter->drawPixmap(0, y, screenShot, -x, 0, ctx->window_width + x,
+                        ctx->window_height - y);
     if (x) {
       painter->eraseRect(ctx->window_width + x, 0, ctx->window_width,
                          ctx->window_height);
@@ -1733,8 +1787,8 @@ void FlowDrawQt::copy_area(FlowCtx *ctx, int x, int y)
       painter->eraseRect(0, 0, ctx->window_width + x, y);
     }
   } else {
-    painter->drawPixmap(x, 0, QPixmap::grabWidget(window), 0, -y,
-                        ctx->window_width - x, ctx->window_height + y);
+    painter->drawPixmap(x, 0, screenShot, 0, -y, ctx->window_width - x,
+                        ctx->window_height + y);
     if (x) {
       painter->eraseRect(0, 0, x, ctx->window_height);
     }
@@ -1743,6 +1797,7 @@ void FlowDrawQt::copy_area(FlowCtx *ctx, int x, int y)
                          ctx->window_height);
     }
   }
+  delete painter;
 }
 
 void FlowDrawQt::clear_area(FlowCtx *ctx, int ll_x, int ur_x, int ll_y,
@@ -1750,11 +1805,18 @@ void FlowDrawQt::clear_area(FlowCtx *ctx, int ll_x, int ur_x, int ll_y,
 {
   if (ctx->nodraw) { return; }
 
-  QPainter(window_canvas).eraseRect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y);
+  QPainter *painter = new QPainter(window_canvas);
+  painter->setBackground(QBrush(background));
+
+  //debug_print("clear_area [%d, %d, %d, %d], color=%s\n", ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, painter->background().color().name().toAscii().data());
+  painter->eraseRect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y);
+  
+  delete painter;
 }
 
 void FlowDrawQt::set_inputfocus(FlowCtx *ctx)
 {
+  debug_print("set_inputfocus\n");
   window->setFocus(Qt::OtherFocusReason);
 }
 
@@ -1766,16 +1828,16 @@ void FlowDrawQt::set_click_sensitivity(FlowCtx *ctx, int value)
 void FlowDrawQt::set_image_clip_mask(QPainter *painter, flow_tPixmap pixmap,
                                      int x, int y)
 {
-  QBitmap mask = QBitmap(*((QPixmap *) pixmap));
-  QRegion clipRegion = QRegion(mask);
-  clipRegion.translate(x, y);
-  painter->setClipRegion(clipRegion);
+  QRegion clipRegion = QRegion(((QPixmap *) pixmap)->createMaskFromColor(Qt::black));
+  painter->setClipRegion(clipRegion.translated(x, y));
   painter->setClipping(true);
 }
 
 void FlowDrawQt::set_white_background(FlowCtx *ctx)
 {
   background = flow_allocate_color(this, "white");
+
+  //debug_print("set_white_background\n");
 
   QPalette pal;
   pal.setColor(QPalette::Background, background);
@@ -1826,6 +1888,8 @@ int FlowDrawQt::image_load(const char *imagefile, float scale, float nav_scale,
   bool found = false;
 
   strcpy(filename, imagefile);
+
+  debug_print("image_load %s\n", imagefile);
 
   // Look for file in $pwrp_exe, $pwr_doc/en_us/orm and $pwr_exe
   for (int i = 0; i < 3; i++) {
