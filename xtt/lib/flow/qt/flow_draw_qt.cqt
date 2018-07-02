@@ -135,6 +135,7 @@ static QPainter *get_painter(QPaintDevice *window, FlowDrawQt *draw_ctx,
     case flow_eDrawType_TextHelveticaErase:
     case flow_eDrawType_TextHelveticaEraseBold: {
       painter->setBrush(QBrush(draw_type_to_color(draw_ctx, painter_type)));
+      painter->setPen(QPen(painter->brush(), size + 1));
       painter->setBackground(QBrush(draw_ctx->background));
       QFont font = QFont("Helvetica");
       if (painter_type == flow_eDrawType_TextHelveticaBold ||
@@ -1272,15 +1273,9 @@ int FlowDrawQt::text_pango_helper(FlowCtx *ctx, int x, int y, char *text,
   if (ctx->nodraw) { return 1; }
 
   QPainter *painter = get_painter(painter_type, idx);
-
   if (dimmed) {
     painter->setBrush(QBrush(flow_allocate_color(this, "gray")));
-  } else { // Called from one of the erase functions
-    if (painter_type == flow_eDrawType_TextHelvetica) {
-      painter_type = flow_eDrawType_TextHelveticaErase;
-    } else if (painter_type == flow_eDrawType_TextHelveticaBold) {
-      painter_type = flow_eDrawType_TextHelveticaEraseBold;
-    }
+    painter->setPen(QPen(painter->brush(), size + 1));
   }
 
   QString str;
@@ -1303,7 +1298,7 @@ int FlowDrawQt::text_pango_helper(FlowCtx *ctx, int x, int y, char *text,
   }
 
   if (erase_rect < 12) {
-    //debug_print("drawText %s at (%d, %d)\n", text, x, roundi(y - 0.8 * height));
+    //debug_print("drawText %s at (%d, %d), painter_type=%d, brush=%s, pen=%s, background=%s\n", text, x, roundi(y - 0.8 * height), painter_type, painter->brush().color().name().toAscii().data(), painter->pen().color().name().toAscii().data(), background.name().toAscii().data());
     painter->drawText(x, roundi(y - 0.8 * height), rect.width(), height, Qt::TextDontClip, str);
   }
 
@@ -1324,6 +1319,11 @@ int FlowDrawQt::text_inverse_pango(FlowCtx *ctx, int x, int y, char *text,
                                    int len, flow_eDrawType painter_type,
                                    int idx, int line, double size)
 {
+  if (painter_type == flow_eDrawType_TextHelvetica) {
+    painter_type = flow_eDrawType_TextHelveticaErase;
+  } else if (painter_type == flow_eDrawType_TextHelveticaBold) {
+    painter_type = flow_eDrawType_TextHelveticaEraseBold;
+  }
   return text_pango_helper(ctx, x, y, text, len, painter_type, idx, size,
                            false);
 }
@@ -1332,6 +1332,11 @@ int FlowDrawQt::text_erase_pango(FlowCtx *ctx, int x, int y, char *text,
                                  int len, flow_eDrawType painter_type, int idx,
                                  int line, double size)
 {
+  if (painter_type == flow_eDrawType_TextHelvetica) {
+    painter_type = flow_eDrawType_TextHelveticaErase;
+  } else if (painter_type == flow_eDrawType_TextHelveticaBold) {
+    painter_type = flow_eDrawType_TextHelveticaEraseBold;
+  }
   return text_pango_helper(ctx, x, y, text, len, painter_type, idx, size, false,
                            12);
 }
@@ -1404,12 +1409,10 @@ int FlowDrawQt::pixmaps_create(FlowCtx *ctx, flow_sPixmapData *pixmap_data,
       *pdata = (flow_sPixmapDataElem *) pixmap_data;
   int i;
 
-  debug_print("pixmaps_create, width=%d, height=%d\n", pdata->width, pdata->height);
-
   pms = new draw_sPixmap();
   for (i = 0; i < DRAW_PIXMAP_SIZE; i++) {
     if (i == 0 || (i > 0 && pdata->bits != prev_pdata->bits)) {
-      pms->pixmap[i] = QBitmap::fromData(QSize(pdata->width, pdata->height), (uchar *) pdata->bits, QImage::Format_Mono);
+      pms->pixmap[i] = QBitmap::fromData(QSize(pdata->width, pdata->height), (uchar *) pdata->bits, QImage::Format_MonoLSB);
     } else {
       pms->pixmap[i] = pms->pixmap[i - 1];
     }
@@ -1437,10 +1440,8 @@ int FlowDrawQt::pixmap(FlowCtx *ctx, int x, int y,
 
   pms = (draw_sPixmap *) pixmaps;
 
-  debug_print("pixmap foreground=%s, background=%s\n", foreground.name().toAscii().data(), background.name().toAscii().data());
   QPainter *painter = get_painter(painter_type, idx);
 
-  debug_print("pixmap fillRect [%d, %d, %d, %d] with color %s and painter_type=%d\n", x, y, pdata->width, pdata->height, painter->brush().color().name().toAscii().data(), painter_type);
   painter->fillRect(x, y, pdata->width, pdata->height, painter->brush());
   delete painter;
 
@@ -1450,7 +1451,6 @@ int FlowDrawQt::pixmap(FlowCtx *ctx, int x, int y,
   painter->setClipRegion(clipRegion.translated(x, y));
   painter->setClipping(true);
 
-  debug_print("pixmap fillRect [%d, %d, %d, %d] with color %s and painter_type=%d using mask\n", x, y, pdata->width, pdata->height, painter->brush().color().name().toAscii().data(), painter_type);
   painter->fillRect(x, y, pdata->width, pdata->height, painter->brush());
 
   delete painter;

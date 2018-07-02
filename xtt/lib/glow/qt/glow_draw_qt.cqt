@@ -175,6 +175,7 @@ static QPainter *get_painter(QPaintDevice *window, GlowDrawQt *draw_ctx,
     case glow_eDrawType_TextHelveticaEraseBold: {
       painter
           ->setBrush(QBrush(draw_type_to_color(draw_ctx, painter_type, size)));
+      painter->setPen(QPen(painter->brush(), size + 1));
       painter->setBackground(QBrush(draw_ctx->background));
       if (size > 0) {
         QFont font = QFont("Helvetica");
@@ -1322,9 +1323,8 @@ int GlowDrawQt::text(GlowWind *wind, int x, int y, char *text, int len,
   }
 
   if (color != glow_eDrawType_Line) {
-    QBrush target = painter->brush();
-    target.setColor(draw_type_to_color(this, color, idx));
-    painter->setBrush(target);
+    painter->setBrush(QBrush(draw_type_to_color(this, color, idx)));
+    painter->setPen(QPen(painter->brush(), size + 1));
   }
 
   painter->setFont(QFont(font_names[font_idx][font_type][idx]));
@@ -3130,9 +3130,8 @@ int GlowDrawQt::text_qt(GlowWind *wind, int x, int y, char *text, int len,
   }
 
   if (color != glow_eDrawType_Line) {
-    QBrush target = painter->brush();
-    target.setColor(draw_type_to_color(this, color, idx));
-    painter->setBrush(target);
+    painter->setBrush(QBrush(draw_type_to_color(this, color, idx)));
+    painter->setPen(QPen(painter->brush(), size + 1));
   }
 
   QString str;
