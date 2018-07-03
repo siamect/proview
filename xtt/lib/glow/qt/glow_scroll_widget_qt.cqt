@@ -93,7 +93,11 @@ QWidget *QtScrollWidgetGlow::initScroll(
 bool QScrollAreaGlow::event(QEvent *event)
 {
   QtScrollWidgetGlow *child = ((QtScrollWidgetGlow *) widget());
-  child->handleEvent(event);
+  time_t t;
+  time(&t);
+  if (event->type() != child->lastEvent->type() || difftime(t, child->t) > 0.000001) {
+    child->handleEvent(event);
+  }
   return QScrollArea::event(event);
 }
 
@@ -263,6 +267,8 @@ bool QtScrollWidgetGlow::event(QEvent *event)
     is_realized = true;
   }
   handleEvent(event);
+  lastEvent = event;
+  time(&t);
   return QWidget::event(event);
 }
 

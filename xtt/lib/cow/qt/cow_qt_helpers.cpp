@@ -77,9 +77,16 @@ void dbg_print(const char *file, int line, const char *fmt, ...)
   }
 }
 
-void dbg_print(QString str)
+void dbg_print(const char *file, int line, QString str)
 {
   if (DEBUG) {
+    // 1. print timestamp
+    print_time(stderr);
+    // 2. print filename only, without path
+    const char *file2 = strrchr(file, '/');
+    file2 = file2 ? (file2 + 1) : file;
+    fprintf(stderr, " %s:%d: ", file2, line);
+    // 3. print the actual debug message
     QByteArray ba = str.toLocal8Bit();
     const char *c_str = ba.data();
     fprintf(stderr, "%s\n", c_str);

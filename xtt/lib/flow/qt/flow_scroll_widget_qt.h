@@ -105,6 +105,9 @@ public:
 
   QImage image;
 
+  QEvent *lastEvent;
+  time_t t;
+
   virtual void handleEvent(QEvent *event);
 
 protected:
