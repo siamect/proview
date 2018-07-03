@@ -79,6 +79,7 @@ extern "C" {
 
 #include <QColor>
 #include <QInputDialog>
+#include <QScrollArea>
 #include <QTimer>
 #include <QVBoxLayout>
 
@@ -102,11 +103,11 @@ WNavQt::WNavQt(void *xn_parent_ctx, QWidget *xn_parent_wid, const char *xn_name,
 
   trace_obj = new WNavQtTraceObject(this);
 
-  debug_print("creating a scrolledbrowwidgetqt\n");
-  QWidget *scrolledbrow =
-      scrolledbrowwidgetqt_new(WNav::init_brow_base_cb, this, &brow_widget);
-
-  scrolledbrow->setStyleSheet("QMainWindow{border: 3px solid black;}");
+  QScrollArea *scrolledbrow = ((QScrollArea *) 
+      scrolledbrowwidgetqt_new(WNav::init_brow_base_cb, this, &brow_widget));
+  
+  scrolledbrow->setFrameShape(QFrame::Box);
+  scrolledbrow->setLineWidth(3);
 
   showNow(brow_widget);
 

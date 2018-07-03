@@ -587,31 +587,25 @@ void CoWowQt::PopupPosition(QWidget *parent, int x_event, int y_event, int *x,
   int x1 = 0;
   int y1 = 0;
 
-  int x0 = (int) x_event;
-  int y0 = (int) y_event;
+  QPoint p0((int) x_event, (int) y_event);
 
   grandparent = parent->parentWidget();
   while (!grandparent->isWindow()) {
-    if (!x1 && !y1 && (parent->pos().x() || parent->pos().y())) {
-      // Add first widget with nonzero position
-      x1 = parent->pos().x();
-      y1 = parent->pos().y();
-      x0 += x1;
-      y0 += y1;
+    if ( !x1  && !y1 && (parent->geometry().x() || parent->geometry().y())) {
+      x1 = parent->geometry().x();
+      y1 = parent->geometry().y();
+      p0 = parent->mapToParent(p0);
     }
     parent = grandparent;
     grandparent = parent->parentWidget();
   }
   if (grandparent) {
     // Add window widget position
-    x1 = grandparent->pos().x();
-    y1 = grandparent->pos().y();
-    x0 += x1;
-    y0 += y1;
+    p0 = grandparent->mapToParent(p0);
   }
 
-  *x = x0;
-  *y = y0;
+  *x = p0.x();
+  *y = p0.y();
 }
 
 //

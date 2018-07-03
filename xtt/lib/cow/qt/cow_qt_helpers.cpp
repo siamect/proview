@@ -77,6 +77,15 @@ void dbg_print(const char *file, int line, const char *fmt, ...)
   }
 }
 
+void dbg_print(QString str)
+{
+  if (DEBUG) {
+    QByteArray ba = str.toLocal8Bit();
+    const char *c_str = ba.data();
+    fprintf(stderr, "%s\n", c_str);
+  }
+}
+
 QString fl(const char *text)
 {
   return QString::fromLocal8Bit(text);

@@ -395,7 +395,7 @@ int FlowDrawQt::event_handler(QEvent *event)
       }
       case QEvent::MouseButtonPress: {
         QMouseEvent *mouseEvent = ((QMouseEvent *) event);
-        debug_print("event_handler: MouseButtonPress button=%d\n", mouseEvent->button());
+        debug_print("event_handler: MouseButtonPress button=%d, x=%d, y=%d, globalX=%d, globalY=%d\n", mouseEvent->button(), mouseEvent->x(), mouseEvent->y(), mouseEvent->globalX(), mouseEvent->globalY());
         switch (mouseEvent->button()) {
           case Qt::LeftButton:
             basectx->event_handler(flow_eEvent_MB1Down, mouseEvent->x(),

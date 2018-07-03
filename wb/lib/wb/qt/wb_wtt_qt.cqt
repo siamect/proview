@@ -613,7 +613,8 @@ int WttQt::create_popup_menu(pwr_sAttrRef aref, int x, int y)
   } else {
     return 0;
   }
-  popupmenu_x += 10;
+  popupmenu_x += palette_paned->pos().x();
+  popupmenu_y += palette_paned->pos().y();
 
   // Create the menu
   sts = get_popup_menu_items(aref, pwr_cNCid);
@@ -2560,6 +2561,7 @@ QMenu *WttQt::build_submenu(int MenuType, const char *MenuTitle,
 
     if (Items[idx].Item == ldh_eMenuItem_Cascade) {
       QMenu *sub = menu->addMenu(fl(Items[idx].Name));
+      debug_print("build_submenu recursively calling build_submenu to add a submenu\n");
       QMenu *w = build_submenu(MENU_PULLDOWN, Items[idx].Name, Callback, Items,
                                idx + 1);
       sub->addMenu(w);
