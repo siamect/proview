@@ -1875,7 +1875,7 @@ void FlowDrawQt::image_scale(float scale, flow_tImImage orig_im,
   if (*im) {
     delete ((QImage *) *im);
   }
-  *((QImage * ) * im) = ((QImage *) orig_im)->scaled(width, height);
+  *im = new QImage(((QImage *) orig_im)->scaled(width, height));
 }
 
 int FlowDrawQt::image_load(const char *imagefile, float scale, float nav_scale,

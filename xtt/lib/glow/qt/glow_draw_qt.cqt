@@ -2401,9 +2401,8 @@ int GlowDrawQt::image_scale(int width, int height, glow_tImImage orig_im,
       return 0;
     }
 
-    QImage *im_old = (QImage * ) * im;
-    *((QImage * ) * im) = ((QImage * ) * im)->scaled(width, height);
-    delete im_old;
+    delete ((QImage *) *im);
+    *im = new QImage(((QImage *) orig_im)->scaled(width, height));
   } else {
     // Scale from orig_im
 
@@ -2424,7 +2423,7 @@ int GlowDrawQt::image_scale(int width, int height, glow_tImImage orig_im,
       if (*im) {
         delete ((QImage * ) * im);
       }
-      *((QImage * ) * im) = ((QImage *) orig_im)->scaled(width, height);
+      *im = new QImage(((QImage *) orig_im)->scaled(width, height));
     }
   }
   return 1;
