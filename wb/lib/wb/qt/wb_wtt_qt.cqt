@@ -2443,7 +2443,7 @@ void OptionsDialog::activate_options_cancel()
 }
 
 OptionsDialog::OptionsDialog(WttQt *parent_ctx, QWidget *parent)
-    : QDialog(parent), wtt(parent_ctx)
+    : QDialog(), wtt(parent_ctx)
 {
   setMinimumSize(650, 450);
   setWindowTitle(fl("Options"));
@@ -2455,7 +2455,7 @@ OptionsDialog::OptionsDialog(WttQt *parent_ctx, QWidget *parent)
   wtt->show_plant_w = new QCheckBox(fl("Plant Configuration"), this);
   wtt->show_node_w = new QCheckBox(fl("Node Configuration"), this);
 
-  QVBoxLayout *hier_vbox = new QVBoxLayout(this);
+  QVBoxLayout *hier_vbox = new QVBoxLayout();
   hier_vbox->addWidget(hier_label);
   hier_vbox->addWidget(wtt->enable_comment_w);
   hier_vbox->addWidget(wtt->enable_revisions_w);
@@ -2471,7 +2471,7 @@ OptionsDialog::OptionsDialog(WttQt *parent_ctx, QWidget *parent)
   wtt->show_attrref_w = new QCheckBox(fl("Attribute Reference"), this);
   wtt->show_attrxref_w = new QCheckBox(fl("Attribute Cross Reference"), this);
 
-  QVBoxLayout *entry_vbox = new QVBoxLayout(this);
+  QVBoxLayout *entry_vbox = new QVBoxLayout();
   entry_vbox->addWidget(entry_label);
   entry_vbox->addWidget(wtt->show_class_w);
   entry_vbox->addWidget(wtt->show_alias_w);
@@ -2490,7 +2490,7 @@ OptionsDialog::OptionsDialog(WttQt *parent_ctx, QWidget *parent)
   wtt->build_manual_w = new QCheckBox(fl("Manual"), this);
   wtt->build_nocopy_w = new QCheckBox(fl("Disable Copy"), this);
 
-  QVBoxLayout *build_vbox = new QVBoxLayout(this);
+  QVBoxLayout *build_vbox = new QVBoxLayout();
   build_vbox->addWidget(build_label);
   build_vbox->addWidget(wtt->build_force_w);
   build_vbox->addWidget(wtt->build_debug_w);
@@ -2500,7 +2500,7 @@ OptionsDialog::OptionsDialog(WttQt *parent_ctx, QWidget *parent)
   build_vbox->addWidget(wtt->build_manual_w);
   build_vbox->addWidget(wtt->build_nocopy_w);
 
-  QHBoxLayout *hbox = new QHBoxLayout(this);
+  QHBoxLayout *hbox = new QHBoxLayout();
   hbox->addLayout(hier_vbox);
   hbox->addWidget(separator(QFrame::VLine));
   hbox->addLayout(entry_vbox);

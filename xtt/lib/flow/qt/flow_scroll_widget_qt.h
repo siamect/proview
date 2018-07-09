@@ -122,7 +122,7 @@ protected:
   unsigned int ctxType;
 
 private:
-  QImage createBuffer(QSize size);
+  void createBuffer(QSize size);
 
 public slots:
   void scroll_h_action(int value);

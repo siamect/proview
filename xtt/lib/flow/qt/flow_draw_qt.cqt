@@ -1582,7 +1582,7 @@ void FlowDrawQt::clear(FlowCtx *ctx)
   painter->setBackground(QBrush(background));
 
   //debug_print("clear color=%s\n", painter->background().color().name().toAscii().data());
-  painter->eraseRect(window->rect());
+  painter->eraseRect(window_canvas->rect());
   
   delete painter;
 }
@@ -1595,7 +1595,7 @@ void FlowDrawQt::nav_clear(FlowCtx *ctx)
   painter->setBackground(QBrush(background));
 
   //debug_print("nav_clear color=%s\n", painter->background().color().name().toAscii().data());
-  painter->eraseRect(nav_window->rect());
+  painter->eraseRect(nav_window_canvas->rect());
   
   delete painter;
 }

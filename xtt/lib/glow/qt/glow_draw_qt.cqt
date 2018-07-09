@@ -1498,7 +1498,7 @@ void GlowDrawQt::clear(GlowWind *wind)
   DrawWindQt *w = (DrawWindQt *) wind->window;
 
   if (!w->double_buffer_on) {
-    QPainter(w->buffer).eraseRect(w->window->rect());
+    QPainter(w->buffer).eraseRect(w->buffer->rect());
   } else {
     buffer_background(w, 0);
   }
