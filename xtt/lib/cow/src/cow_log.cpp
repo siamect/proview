@@ -75,14 +75,11 @@ void CoLog::log( const char *category, const char *str, const char *cmt, unsigne
       strncpy( comment, ret->input_str, sizeof(comment));
     free( ret);
   }
-  for ( int i = 0; i < 5; i++) {
-    fp.open( m_filename, ios::out | ios::app);
-    if ( fp)
-      break;
-    sleep(1);
-  }
-  if ( !fp)
+  fp.open( m_filename, ios::out | ios::app);
+  if (!fp) {
+    fprintf(stderr, "Warning! CoLog::log could not open log file %s\n", m_filename);
     return;
+  }
   
   if ( m_level == 1)
     fp << "1  ";
@@ -104,7 +101,7 @@ void CoLog::log( const char *category, const char *str, const char *cmt, unsigne
   if ( strcmp( comment, "") != 0)
     fp << " \"" << comment << "\"";
   fp << endl;
-  fp.close();  
+  fp.close();
 }
 
 void CoLog::get( char categories[][20], char *item, 
