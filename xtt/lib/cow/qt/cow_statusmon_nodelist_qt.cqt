@@ -225,6 +225,41 @@ void NodelistQtWidget::focusInEvent(QFocusEvent *event)
   QWidget::focusInEvent(event);
 }
 
+void NodelistQtWidget::activate_add_node()
+{
+  nodelist->activate_add_node();
+}
+
+void NodelistQtWidget::activate_modify_node()
+{
+  nodelist->activate_modify_node();
+}
+
+void NodelistQtWidget::activate_remove_node()
+{
+  nodelist->activate_remove_node();
+}
+
+void NodelistQtWidget::activate_open_xtt()
+{
+  nodelist->activate_open_xtt();
+}
+
+void NodelistQtWidget::activate_open_opplace()
+{
+  nodelist->activate_open_opplace();
+}
+
+void NodelistQtWidget::activate_open_rtmon()
+{
+  nodelist->activate_open_rtmon();
+}
+
+void NodelistQtWidget::activate_save()
+{
+  nodelist->activate_save();
+}
+
 void NodelistQtWidget::activate_show_events()
 {
   nodelist->msg_window->map();
@@ -293,6 +328,11 @@ void NodelistQtWidget::activate_zoom_out()
 void NodelistQtWidget::activate_zoom_reset()
 {
   nodelist->nodelistnav->unzoom();
+}
+
+void NodelistQtWidget::activate_help()
+{
+  nodelist->activate_help();
 }
 
 void NodelistQt::open_add_input_dialog(const char *text, const char *text2,
@@ -368,11 +408,11 @@ NodelistInputDialogQt::NodelistInputDialogQt(NodelistQt *parent_ctx,
 
   QPushButton *ok = new QPushButton(fl("Ok"));
   ok->setFixedSize(70, 25);
-  connect(ok, SIGNAL(clicked()), this, SLOT(activate_ok));
+  connect(ok, SIGNAL(clicked()), this, SLOT(activate_ok()));
 
   QPushButton *cancel = new QPushButton(fl("Cancel"));
   cancel->setFixedSize(70, 25);
-  connect(cancel, SIGNAL(clicked()), this, SLOT(activate_cancel));
+  connect(cancel, SIGNAL(clicked()), this, SLOT(activate_cancel()));
 
   QVBoxLayout *vboxtext = new QVBoxLayout();
   vboxtext->addWidget(text);

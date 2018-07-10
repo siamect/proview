@@ -118,6 +118,13 @@ protected:
   void closeEvent(QCloseEvent *event);
 
 public slots:
+  void activate_add_node();
+  void activate_modify_node();
+  void activate_remove_node();
+  void activate_open_xtt();
+  void activate_open_opplace();
+  void activate_open_rtmon();
+  void activate_save();
   void activate_show_events();
   void activate_pop_events();
   void activate_gui_motif();
@@ -132,6 +139,7 @@ public slots:
   void activate_zoom_in();
   void activate_zoom_out();
   void activate_zoom_reset();
+  void activate_help();
 
 private:
   NodelistQt *nodelist;
