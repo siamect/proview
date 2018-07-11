@@ -78,13 +78,18 @@ class WbExpWQtWidget : public QWidget {
 
 public:
   WbExpWQtWidget(WbExpWQt *parent_ctx, QWidget *parent)
-      : QWidget(parent, Qt::Window), exp(parent_ctx) {}
+      : QWidget(parent, Qt::Window), expw(parent_ctx) {}
 
 protected:
   void focusInEvent(QFocusEvent *event);
   void closeEvent(QCloseEvent *event);
 
 public slots:
+  void activate_export();
+  void activate_update();
+  void activate_check_all();
+  void activate_check_clear();
+  void activate_check_reset();
   void activate_show_all(bool set);
   void activate_zoom_in();
   void activate_zoom_out();
@@ -92,7 +97,7 @@ public slots:
   void activate_help();
 
 private:
-  WbExpWQt *exp;
+  WbExpWQt *expw;
 };
 
 #endif

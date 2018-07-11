@@ -99,7 +99,11 @@ protected:
   void closeEvent(QCloseEvent *event);
 
 public slots:
+  void attr_activate_changevalue();
+  void attr_activate_store();
+  void attr_activate_recall();
   void attr_activate_help();
+  void attr_activate_recall_prev();
   void attr_activate_cmd_entry();
   void attr_activate_cmd_scrolled_ok();
   void attr_activate_cmd_scrolled_ca();

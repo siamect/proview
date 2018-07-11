@@ -264,7 +264,7 @@ EvQt::EvQt(void *ev_parent_ctx, QWidget *ev_parent_wid, char *eve_name,
     addMenuItem(object, functions, "&Acknowledge",
                 SLOT(ala_activate_ack_last()), "CTRL+K");
     addMenuItem(object, functions, "A&cknowledge All",
-                SLOT(eve_activate_ack_all()));
+                SLOT(ala_activate_ack_all()));
     addMenuItem(object, functions, "Open &Program",
                 SLOT(ala_activate_open_plc()), "CTRL+L");
     addMenuItem(object, functions, "&Display object in Navigator",
@@ -674,6 +674,36 @@ void EvQt::blk_activate_exit()
   blk_displayed = 0;
 }
 
+void EvQtObject::eve_activate_print()
+{
+  ev->eve_activate_print();
+}
+
+void EvQtObject::ala_activate_print()
+{
+  ev->ala_activate_print();
+}
+
+void EvQtObject::blk_activate_print()
+{
+  ev->blk_activate_print();
+}
+
+void EvQtObject::eve_activate_ack_last()
+{
+  ev->eve_activate_ack_last();
+}
+
+void EvQtObject::ala_activate_ack_last()
+{
+  ev->ala_activate_ack_last();
+}
+
+void EvQtObject::ala_activate_ack_all()
+{
+  ev->eve_activate_ack_all();
+}
+
 void EvQtObject::ala_activate_shift_view()
 {
   ev->view_shift();
@@ -798,4 +828,29 @@ void EvQtObject::eve_activate_hide_text(bool set)
 void EvQtObject::ala_activate_hide_text(bool set)
 {
   ev->ala->set_hide_text(set);
+}
+
+void EvQtObject::eve_activate_help()
+{
+  ev->eve_activate_help();
+}
+
+void EvQtObject::eve_activate_helpevent()
+{
+  ev->eve_activate_helpevent();
+}
+
+void EvQtObject::ala_activate_help()
+{
+  ev->ala_activate_help();
+}
+
+void EvQtObject::ala_activate_helpevent()
+{
+  ev->ala_activate_helpevent();
+}
+
+void EvQtObject::blk_activate_help()
+{
+  ev->blk_activate_help();
 }

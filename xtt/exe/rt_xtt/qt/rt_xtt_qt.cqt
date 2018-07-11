@@ -467,6 +467,16 @@ void XttQtWidget::activate_advanceduser()
   activate_advanceduser();
 }
 
+void XttQtWidget::activate_zoom_in()
+{
+  xtt->activate_zoom_in();
+}
+
+void XttQtWidget::activate_zoom_out()
+{
+  xtt->activate_zoom_out();
+}
+
 void XttQtWidget::activate_zoom_reset()
 {
   xtt->xnav->unzoom();
@@ -680,7 +690,7 @@ XttQt::XttQt(int argc, char *argv[], int *return_sts) : Xtt(&argc, &argv,
               SLOT(activate_collect_signals()), "CTRL+SHIFT+T");
   addMenuItem(toplevel, functions_collect, "&IO Signals",
               SLOT(activate_collect_iosignals()), "CTRL+T");
-  addMenuItem(toplevel, functions_collect, "&Open", SLOT(functions_collect_open()));
+  addMenuItem(toplevel, functions_collect, "&Open", SLOT(activate_collect_open()));
   // End submenu
 
   addMenuItem(toplevel, functions, "&Advanced user", SLOT(activate_advanceduser()),

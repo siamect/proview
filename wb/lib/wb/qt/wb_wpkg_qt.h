@@ -80,6 +80,12 @@ protected:
   void closeEvent(QCloseEvent *event);
 
 public slots:
+  void activate_distribute();
+  void activate_createpkg();
+  void activate_deletepkg();
+  void activate_zoom_in();
+  void activate_zoom_out();
+  void activate_zoom_reset();
   void activate_dmode_filediff(bool set);
   void activate_dmode_filetime(bool set);
   void activate_dmode_filepath(bool set);

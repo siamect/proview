@@ -107,18 +107,30 @@ protected:
   void closeEvent(QCloseEvent *event);
 
 public slots:
+  void activate_print();
   void activate_zoom_in();
   void activate_zoom_out();
   void activate_zoom_reset();
   void activate_hide_search(bool set);
   void activate_open_plc();
+  void activate_stat();
   void activate_display_in_xnav();
   void activate_disp_hundredth(bool set);
   void activate_hide_object(bool set);
   void activate_hide_text(bool set);
+  void activate_help();
+  void activate_helpevent();
   void ok_btn();
   //callbackfunctions from the searchdialog
   void cancel_cb();
+  void today_cb();
+  void yesterday_cb();
+  void thisw_cb();
+  void lastw_cb();
+  void thism_cb();
+  void lastm_cb();
+  void all_cb();
+  void time_cb();
 
 private:
   HistQt *hist;

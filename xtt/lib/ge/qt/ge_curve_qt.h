@@ -139,10 +139,16 @@ protected:
   void closeEvent(QCloseEvent *event);
 
 public slots:
-  void activate_showname();
-  void activate_zoom_in();
-  void activate_zoom_out();
-  void activate_zoom_reset();
+  void activate_configure();
+  void activate_print();
+  void activate_new();
+  void activate_save();
+  void activate_open();
+  void activate_snapshot();
+  void activate_export();
+  void activate_zoomin();
+  void activate_zoomout();
+  void activate_zoomreset();
   void activate_page_left();
   void activate_page_right();
   void activate_scroll_left();
@@ -156,10 +162,13 @@ public slots:
   void activate_madd();
   void activate_remove();
   void activate_timecombo(int index);
+  void activate_background();
+  void activate_showname();
   void activate_filledcurves(bool set = false);
   void activate_curvetype();
   void activate_digsplit();
   void activate_xlimits();
+  void activate_help();
   void activate_minmax_ok();
   void activate_minmax_cancel();
   void activate_minmax_save();

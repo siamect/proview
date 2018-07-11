@@ -61,7 +61,7 @@ protected:
   void closeEvent(QCloseEvent *event);
 
 private:
-  WRevQt *wrev;
+  WRevQt *rev;
   QLineEdit *india_text1;
   QLineEdit *india_text2;
 
@@ -109,7 +109,14 @@ protected:
   void closeEvent(QCloseEvent *event);
 
 public slots:
+  void activate_store();
+  void activate_restore();
+  void activate_delete();
+  void activate_build();
   void activate_history();
+  void activate_zoom_in();
+  void activate_zoom_out();
+  void activate_zoom_reset();
   void activate_help();
 
 private:

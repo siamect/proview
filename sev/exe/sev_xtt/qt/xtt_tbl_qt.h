@@ -87,10 +87,15 @@ public slots:
   void activate_command();
   void valchanged_cmd_input();
   void activate_print();
+  void activate_login();
+  void activate_logout();
   void activate_opensevhist();
   void activate_delete_item();
   void activate_tree_layout();
   void activate_list_layout();
+  void activate_zoom_in();
+  void activate_zoom_out();
+  void activate_zoom_reset();
   void activate_help();
   void activate_help_project();
   void activate_help_proview();

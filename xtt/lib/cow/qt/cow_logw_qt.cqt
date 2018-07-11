@@ -121,6 +121,11 @@ void CoLogWQtWidget::closeEvent(QCloseEvent *event)
   QWidget::closeEvent(event);
 }
 
+void CoLogWQtWidget::activate_print()
+{
+  logw->activate_print();
+}
+
 void CoLogWQtWidget::activate_zoom_in()
 {
   logw->logwnav->zoom(1.2);

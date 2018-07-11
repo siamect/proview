@@ -123,7 +123,7 @@ HistQt::HistQt(void *hist_parent_ctx, QWidget *hist_parent_wid, char *hist_name,
   addMenuItem(toplevel, functions, "&Display object in Navigator",
               SLOT(activate_display_in_xnav()), "CTRL+D");
   addMenuItem(toplevel, functions, "&Search", SLOT(ok_btn()), "CTRL+F");
-  addMenuItem(toplevel, functions, "S&tatistics", SLOT(stat()));
+  addMenuItem(toplevel, functions, "S&tatistics", SLOT(activate_stat()));
 
   // View entry
   QMenu *view = menu_bar->addMenu(translate_utf8("&View"));
@@ -268,7 +268,7 @@ HistQt::HistQt(void *hist_parent_ctx, QWidget *hist_parent_wid, char *hist_name,
 
   QPushButton *sea_search_button = new QPushButton(translate_utf8("Search"));
   sea_search_button->setFixedSize(80, 25);
-  QObject::connect(sea_search_button, SLOT(clicked()), toplevel,
+  QObject::connect(sea_search_button, SIGNAL(clicked()), toplevel,
                    SLOT(ok_btn()));
 
   QHBoxLayout *sea_numeventsbox = new QHBoxLayout();
@@ -314,13 +314,11 @@ HistQt::HistQt(void *hist_parent_ctx, QWidget *hist_parent_wid, char *hist_name,
 
   // Toolbar
   QToolBar *tools = new QToolBar();
-  addToolItem(toplevel, tools, "Zoom in", SLOT(eve_activate_zoom_in()),
+  addToolItem(toplevel, tools, "Zoom in", SLOT(activate_zoom_in()),
               "$pwr_exe/xtt_zoom_in.png");
-  addToolItem(toplevel, tools, "Zoom out", SLOT(eve_activate_zoom_out()),
+  addToolItem(toplevel, tools, "Zoom out", SLOT(activate_zoom_out()),
               "$pwr_exe/xtt_zoom_out.png");
-  addToolItem(toplevel, tools, "Zoom reset", SLOT(eve_activate_zoom_reset()),
-              "$pwr_exe/xtt_zoom_reset.png");
-  addToolItem(toplevel, tools, "Zoom reset", SLOT(eve_activate_zoom_reset()),
+  addToolItem(toplevel, tools, "Zoom reset", SLOT(activate_zoom_reset()),
               "$pwr_exe/xtt_zoom_reset.png");
 
   // Hide search dialog checkbutton
@@ -416,6 +414,11 @@ void HistQtWidget::ok_btn()
   free(hist->eventName_str);
 }
 
+void HistQtWidget::activate_print()
+{
+  hist->activate_print();
+}
+
 void HistQtWidget::activate_zoom_in()
 {
   hist->hist->zoom(1.2);
@@ -450,6 +453,11 @@ void HistQtWidget::activate_display_in_xnav()
   hist->hist->display_in_xnav();
 }
 
+void HistQtWidget::activate_stat()
+{
+  hist->stat();
+}
+
 void HistQtWidget::activate_disp_hundredth(bool set)
 {
   hist->hist->set_display_hundredth(set);
@@ -465,10 +473,60 @@ void HistQtWidget::activate_hide_text(bool set)
   hist->hist->set_hide_text(set);
 }
 
+void HistQtWidget::activate_help()
+{
+  hist->activate_help();
+}
+
+void HistQtWidget::activate_helpevent()
+{
+  hist->activate_helpevent();
+}
+
 //callbackfunctions from the searchdialog
 void HistQtWidget::cancel_cb()
 {
 //  printf("hist_cancel_cb\n");
+}
+
+void HistQtWidget::today_cb()
+{
+  hist->today_cb();
+}
+
+void HistQtWidget::yesterday_cb()
+{
+  hist->yesterday_cb();
+}
+
+void HistQtWidget::thisw_cb()
+{
+  hist->thisw_cb();
+}
+
+void HistQtWidget::lastw_cb()
+{
+  hist->lastw_cb();
+}
+
+void HistQtWidget::thism_cb()
+{
+  hist->thism_cb();
+}
+
+void HistQtWidget::lastm_cb()
+{
+  hist->lastm_cb();
+}
+
+void HistQtWidget::all_cb()
+{
+  hist->all_cb();
+}
+
+void HistQtWidget::time_cb()
+{
+  hist->time_cb();
 }
 
 void HistQt::set_num_of_events(int nrOfEvents)

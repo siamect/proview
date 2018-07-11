@@ -91,6 +91,41 @@ void WRevQtWidget::activate_history()
   logw->CoLogW::show(categories, 0);
 }
 
+void WRevQtWidget::activate_store()
+{
+  rev->activate_store();
+}
+
+void WRevQtWidget::activate_restore()
+{
+  rev->activate_restore();
+}
+
+void WRevQtWidget::activate_delete()
+{
+  rev->activate_delete();
+}
+
+void WRevQtWidget::activate_build()
+{
+  rev->activate_build();
+}
+
+void WRevQtWidget::activate_zoom_in()
+{
+  rev->activate_zoom_in();
+}
+
+void WRevQtWidget::activate_zoom_out()
+{
+  rev->activate_zoom_out();
+}
+
+void WRevQtWidget::activate_zoom_reset()
+{
+  rev->activate_zoom_reset();
+}
+
 void WRevQtWidget::activate_help()
 {
   CoXHelp::dhelp("revisions", 0, navh_eHelpFile_Other, "$pwr_lang/man_dg.dat",
@@ -219,8 +254,8 @@ WRevQt::WRevQt(QWidget *wa_parent_wid, void *wa_parent_ctx,
 void WRevInputDialog::closeEvent(QCloseEvent *event)
 {
   QWidget::closeEvent(event);
-  wrev->dialog_count--;
-  wrev->india_widget = 0;
+  rev->dialog_count--;
+  rev->india_widget = 0;
 }
 
 void WRevInputDialog::activate_ok()
@@ -228,18 +263,18 @@ void WRevInputDialog::activate_ok()
   QByteArray text1 = india_text1->text().toLatin1();
   QByteArray text2 = india_text2->text().toLatin1();
 
-  wrev->dialog_count--;
-  wrev->india_widget = 0;
+  rev->dialog_count--;
+  rev->india_widget = 0;
 
-  (wrev->india_ok_cb)(wrev, text1.data(), text2.data());
+  (rev->india_ok_cb)(rev, text1.data(), text2.data());
   close();
 }
 
 void WRevInputDialog::activate_cancel()
 {
   close();
-  wrev->dialog_count--;
-  wrev->india_widget = 0;
+  rev->dialog_count--;
+  rev->india_widget = 0;
 }
 
 void WRevQt::open_input_dialog(const char *text1, const char *text2,
@@ -257,7 +292,7 @@ void WRevQt::open_input_dialog(const char *text1, const char *text2,
 WRevInputDialog::WRevInputDialog(WRevQt *parent_ctx, QWidget *parent,
                                  const char *text1, const char *text2,
                                  const char *init_text1, const char *init_text2)
-    : QDialog(parent), wrev(parent_ctx)
+    : QDialog(parent), rev(parent_ctx)
 {
   setMinimumSize(350, 150);
   setWindowTitle(fl("New Revision"));

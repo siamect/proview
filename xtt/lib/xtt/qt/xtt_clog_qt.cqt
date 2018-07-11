@@ -234,11 +234,31 @@ void CLogQt::file_selected_cb(void *ctx, char *text, int ok_pressed)
   clog->reset_cursor();
 }
 
+void CLogQtWidget::activate_next_file()
+{
+  clog->activate_next_file();
+}
+
+void CLogQtWidget::activate_prev_file()
+{
+  clog->activate_prev_file();
+}
+
 void CLogQtWidget::activate_update()
 {
   clog->set_clock_cursor();
   clog->clognav->update();
   clog->reset_cursor();
+}
+
+void CLogQtWidget::activate_print()
+{
+  clog->activate_print();
+}
+
+void CLogQtWidget::activate_help()
+{
+  clog->activate_help();
 }
 
 void CLogQtWidget::activate_helpmsg()

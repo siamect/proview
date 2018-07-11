@@ -85,6 +85,7 @@ protected:
   void closeEvent(QCloseEvent *event);
 
 public slots:
+  void eve_activate_print();
   void eve_activate_zoom_in();
   void eve_activate_zoom_out();
   void eve_activate_zoom_reset();
@@ -93,6 +94,8 @@ public slots:
   void eve_activate_disp_hundredth(bool set);
   void eve_activate_hide_object(bool set);
   void eve_activate_hide_text(bool set);
+  void eve_activate_help();
+  void eve_activate_helpevent();
   void eve_activate_shift_view();
   void eve_activate_select_flat();
   void eve_activate_select_view();

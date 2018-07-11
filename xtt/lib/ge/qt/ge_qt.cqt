@@ -563,24 +563,10 @@ void GeQtWidget::activate_select_objects()
   ge->activate_select_objects();
 }
 
-void GeQtWidget::activate_select_nextright()
+void GeQtWidget::activate_select_next()
 {
-  ge->activate_select_nextobject(glow_eDirection_Right);
-}
-
-void GeQtWidget::activate_select_nextleft()
-{
-  ge->activate_select_nextobject(glow_eDirection_Left);
-}
-
-void GeQtWidget::activate_select_nextup()
-{
-  ge->activate_select_nextobject(glow_eDirection_Up);
-}
-
-void GeQtWidget::activate_select_nextdown()
-{
-  ge->activate_select_nextobject(glow_eDirection_Down);
+  ge->activate_select_nextobject(
+      static_cast<glow_eDirection>(((QAction *) sender())->data().toInt()));
 }
 
 void GeQtWidget::activate_group()
@@ -1243,7 +1229,7 @@ void GeQt::update()
 
 void GeQtWidget::closeEvent(QCloseEvent *event)
 {
-  ge->activate_exit();
+  ge->Ge::activate_exit();
   QWidget::closeEvent(event);
 }
 
@@ -1507,14 +1493,18 @@ GeQt::GeQt(void *x_parent_ctx, QWidget *x_parent_widget,
               SLOT(activate_select_cons()));
   addMenuItem(toplevel, functions_select, "All &Objects",
               SLOT(activate_select_objects()));
-  addMenuItem(toplevel, functions_select, "Next Right",
-              SLOT(activate_select_nextright()), "CTRL+Right");
-  addMenuItem(toplevel, functions_select, "Next Left",
-              SLOT(activate_select_nextleft()), "CTRL+Left");
-  addMenuItem(toplevel, functions_select, "Next Up", SLOT(activate_select_nextup()),
-              "CTRL+Up");
-  addMenuItem(toplevel, functions_select, "Next Down",
-              SLOT(activate_select_nextdown()), "CTRL+Down");
+  QAction *a = addMenuItem(toplevel, functions_select, "Next Right",
+              SLOT(activate_select_next()), "CTRL+Right");
+  a->setData(glow_eDirection_Right);
+  a = addMenuItem(toplevel, functions_select, "Next Left",
+              SLOT(activate_select_next()), "CTRL+Left");
+  a->setData(glow_eDirection_Left);
+  a = addMenuItem(toplevel, functions_select, "Next Up",
+              SLOT(activate_select_next()), "CTRL+Up");
+  a->setData(glow_eDirection_Up);
+  a = addMenuItem(toplevel, functions_select, "Next Down",
+              SLOT(activate_select_next()), "CTRL+Down");
+  a->setData(glow_eDirection_Down);
 
   addMenuItem(toplevel, functions, "&Group", SLOT(activate_group()));
   addMenuItem(toplevel, functions, "&Ungroup", SLOT(activate_ungroup()));

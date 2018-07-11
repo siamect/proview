@@ -1146,34 +1146,16 @@ void WttQtWidget::activate_rename()
   wtt->open_change_name();
 }
 
-void WttQtWidget::activate_creaobjafter()
+void WttQtWidget::activate_creaobj()
 {
-  wtt->activate_creaobj(ldh_eDest_After);
+  wtt->activate_creaobj(
+      static_cast<ldh_eDest>(((QAction *) sender())->data().toInt()));
 }
 
-void WttQtWidget::activate_creaobjfirst()
+void WttQtWidget::activate_moveobj()
 {
-  wtt->activate_creaobj(ldh_eDest_IntoFirst);
-}
-
-void WttQtWidget::activate_moveobjup()
-{
-  wtt->activate_moveobj(wnav_eDestCode_Before);
-}
-
-void WttQtWidget::activate_moveobjdown()
-{
-  wtt->activate_moveobj(wnav_eDestCode_After);
-}
-
-void WttQtWidget::activate_moveobjinto()
-{
-  wtt->activate_moveobj(wnav_eDestCode_FirstChild);
-}
-
-void WttQtWidget::activate_moveobjontop()
-{
-  wtt->activate_moveobj(wnav_eDestCode_LastChild);
+  wtt->activate_moveobj(
+      static_cast<wnav_eDestCode>(((QAction *) sender())->data().toInt()));
 }
 
 void WttQtWidget::activate_deleteobj()
@@ -2036,26 +2018,32 @@ WttQt::WttQt(void *wt_parent_ctx, QWidget *wt_parent_wid, const char *wt_name,
   // Submenu Create Object
   QMenu *edit_creaobj = edit->addMenu(translate_utf8("C&reate Object"));
   menu_creaobjafter_w =
-      addMenuItem(toplevel, edit_creaobj, "&After", SLOT(activate_creaobjafter()),
+      addMenuItem(toplevel, edit_creaobj, "&After", SLOT(activate_creaobj()),
                   "CTRL+D");
+  menu_creaobjafter_w->setData(ldh_eDest_After);
   menu_creaobjfirst_w = addMenuItem(toplevel, edit_creaobj, "&First Child",
-                                    SLOT(activate_creaobjfirst()),
+                                    SLOT(activate_creaobj()),
                                     "CTRL+SHIFT+D");
+  menu_creaobjfirst_w->setData(ldh_eDest_IntoFirst);
 
   // Submenu Move Object
   QMenu *edit_moveobj = edit->addMenu(translate_utf8("&Move Object"));
   menu_moveobjup_w =
-      addMenuItem(toplevel, edit_moveobj, "&Up", SLOT(activate_moveobjup()),
+      addMenuItem(toplevel, edit_moveobj, "&Up", SLOT(activate_moveobj()),
                   "CTRL+SHIFT+UP");
+  menu_moveobjup_w->setData(wnav_eDestCode_Before);
   menu_moveobjdown_w =
-      addMenuItem(toplevel, edit_moveobj, "&Down", SLOT(activate_moveobjdown()),
+      addMenuItem(toplevel, edit_moveobj, "&Down", SLOT(activate_moveobj()),
                   "CTRL+SHIFT+DOWN");
+  menu_moveobjdown_w->setData(wnav_eDestCode_After);
   menu_moveobjinto_w =
-      addMenuItem(toplevel, edit_moveobj, "&Into", SLOT(activate_moveobjinto()),
+      addMenuItem(toplevel, edit_moveobj, "&Into", SLOT(activate_moveobj()),
                   "CTRL+SHIFT+RIGHT");
+  menu_moveobjinto_w->setData(wnav_eDestCode_FirstChild);
   menu_moveobjontop_w =
-      addMenuItem(toplevel, edit_moveobj, "&OnTop", SLOT(activate_moveobjontop()),
+      addMenuItem(toplevel, edit_moveobj, "&OnTop", SLOT(activate_moveobj()),
                   "CTRL+SHIFT+LEFT");
+  menu_moveobjontop_w->setData(wnav_eDestCode_LastChild);
 
   menu_deleteobj_w =
       addMenuItem(toplevel, edit, "&Delete Object", SLOT(activate_deleteobj()),

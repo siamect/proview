@@ -100,13 +100,25 @@ protected:
   void closeEvent(QCloseEvent *event);
 
 public slots:
+  void activate_open();
+  void activate_save();
+  void activate_saveas();
+  void activate_insert();
+  void activate_delete();
+  void activate_print();
+  void activate_moveup();
+  void activate_movedown();
   void activate_change_value();
-  void activate_zoom_reset();
-  void activate_scantime1();
-  void activate_scantime2();
-  void activate_scantime3();
-  void activate_scantime4();
-  void activate_scantime5();
+  void activate_close_changeval();
+  void activate_display_object();
+  void activate_show_cross();
+  void activate_open_classgraph();
+  void activate_open_plc();
+  void activate_zoomin();
+  void activate_zoomout();
+  void activate_zoomreset();
+  void activate_scantime();
+  void activate_help();
   void activate_cmd_entry();
   void activate_cmd_scrolled_ok();
   void activate_cmd_scrolled_ca();

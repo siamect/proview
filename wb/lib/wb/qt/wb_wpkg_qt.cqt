@@ -75,19 +75,49 @@ void WPkgQt::message(char severity, const char *message)
 //
 //  Callbackfunctions from menu entries
 //
+void WPkgQtWidget::activate_distribute()
+{
+  pkg->activate_distribute();
+}
+
+void WPkgQtWidget::activate_createpkg()
+{
+  pkg->activate_createpkg();
+}
+
+void WPkgQtWidget::activate_zoom_in()
+{
+  pkg->activate_zoom_in();
+}
+
+void WPkgQtWidget::activate_zoom_out()
+{
+  pkg->activate_zoom_out();
+}
+
+void WPkgQtWidget::activate_zoom_reset()
+{
+  pkg->activate_zoom_reset();
+}
+
+void WPkgQtWidget::activate_deletepkg()
+{
+  pkg->activate_deletepkg();
+}
+
 void WPkgQtWidget::activate_dmode_filediff(bool set)
 {
-  activate_dmode_filediff(set);
+  pkg->activate_dmode_filediff(set);
 }
 
 void WPkgQtWidget::activate_dmode_filetime(bool set)
 {
-  activate_dmode_filetime(set);
+  pkg->activate_dmode_filetime(set);
 }
 
 void WPkgQtWidget::activate_dmode_filepath(bool set)
 {
-  activate_dmode_filepath(set);
+  pkg->activate_dmode_filepath(set);
 }
 
 void WPkgQtWidget::activate_help()

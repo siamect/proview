@@ -286,6 +286,11 @@ void EvEveQtWidget::closeEvent(QCloseEvent *event)
   QWidget::closeEvent(event);
 }
 
+void EvEveQtWidget::eve_activate_print()
+{
+  eve->eve_activate_print();
+}
+
 void EvEveQtWidget::eve_activate_shift_view()
 {
   eve->view_shift();
@@ -340,4 +345,14 @@ void EvEveQtWidget::eve_activate_hide_object(bool set)
 void EvEveQtWidget::eve_activate_hide_text(bool set)
 {
   eve->ala->set_hide_text(set);
+}
+
+void EvEveQtWidget::eve_activate_help()
+{
+  eve->eve_activate_help();
+}
+
+void EvEveQtWidget::eve_activate_helpevent()
+{
+  eve->eve_activate_helpevent();
 }

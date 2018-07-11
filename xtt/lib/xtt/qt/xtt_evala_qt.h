@@ -85,6 +85,9 @@ protected:
   void closeEvent(QCloseEvent *event);
 
 public slots:
+  void ala_activate_print();
+  void ala_activate_ack_last();
+  void ala_activate_ack_all();
   void ala_activate_zoom_in();
   void ala_activate_zoom_out();
   void ala_activate_zoom_reset();
@@ -93,6 +96,8 @@ public slots:
   void ala_activate_disp_hundredth(bool set);
   void ala_activate_hide_object(bool set);
   void ala_activate_hide_text(bool set);
+  void ala_activate_help();
+  void ala_activate_helpevent();
   void ala_activate_shift_view();
   void ala_activate_select_flat();
   void ala_activate_select_view();

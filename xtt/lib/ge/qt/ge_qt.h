@@ -168,10 +168,7 @@ public slots:
   void activate_equid_horiz_center();
   void activate_select_cons();
   void activate_select_objects();
-  void activate_select_nextright();
-  void activate_select_nextleft();
-  void activate_select_nextup();
-  void activate_select_nextdown();
+  void activate_select_next();
   void activate_group();
   void activate_ungroup();
   void activate_connect();

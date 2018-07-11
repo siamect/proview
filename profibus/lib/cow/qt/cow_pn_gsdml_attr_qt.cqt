@@ -133,6 +133,11 @@ void GsdmlAttrQt::change_value()
 //
 //  Callbackfunctions from menu entries
 //
+void GsdmlAttrQtWidget::activate_change_value()
+{
+  attr->change_value();
+}
+
 void GsdmlAttrQtWidget::activate_ordermoduletype_default()
 {
   attr->activate_ordermoduletype(attr_eOrderModuleType_Default);
@@ -140,17 +145,87 @@ void GsdmlAttrQtWidget::activate_ordermoduletype_default()
 
 void GsdmlAttrQtWidget::activate_ordermoduletype_name()
 {
-  attr->activate_ordermoduletype(attr_eOrderModuleType_Name);
+  attr->activate_ordermoduletype( attr_eOrderModuleType_Name);
 }
 
 void GsdmlAttrQtWidget::activate_ordermoduletype_number()
 {
-  attr->activate_ordermoduletype(attr_eOrderModuleType_Number);
+  attr->activate_ordermoduletype( attr_eOrderModuleType_Number);
+}
+
+void GsdmlAttrQtWidget::activate_exit()
+{
+  attr->activate_exit();
+}
+
+void GsdmlAttrQtWidget::activate_help()
+{
+  attr->activate_help();
+}
+
+void GsdmlAttrQtWidget::activate_copy()
+{
+  attr->activate_copy();
+}
+
+void GsdmlAttrQtWidget::activate_cut()
+{
+  attr->activate_cut();
+}
+
+void GsdmlAttrQtWidget::activate_paste()
+{
+  attr->activate_paste();
 }
 
 void GsdmlAttrQtWidget::activate_viewio(bool set)
 {
   attr->activate_viewio(set);
+}
+
+void GsdmlAttrQtWidget::activate_zoom_in()
+{
+  attr->activate_zoom_in();
+}
+
+void GsdmlAttrQtWidget::activate_zoom_out()
+{
+  attr->activate_zoom_out();
+}
+
+void GsdmlAttrQtWidget::activate_zoom_reset()
+{
+  attr->activate_zoom_reset();
+}
+
+void GsdmlAttrQtWidget::activate_collapse()
+{
+  attr->activate_collapse();
+}
+
+void GsdmlAttrQtWidget::activate_expand_all()
+{
+  attr->activate_expand_all();
+}
+
+void GsdmlAttrQtWidget::activate_print()
+{
+  attr->activate_print();
+}
+
+void GsdmlAttrQtWidget::activate_cmd_ok()
+{
+  attr->activate_cmd_ok();
+}
+
+void GsdmlAttrQtWidget::activate_cmd_apply()
+{
+  attr->activate_cmd_apply();
+}
+
+void GsdmlAttrQtWidget::activate_cmd_ca()
+{
+  attr->activate_cmd_ca();
 }
 
 void GsdmlAttrQtWidget::activate_cmd_entry()
@@ -228,7 +303,7 @@ GsdmlAttrQt::GsdmlAttrQt(QWidget *a_parent_wid, void *a_parent_ctx,
   // Functions entry
   QMenu *functions = menu_bar->addMenu(translate_utf8("F&unctions"));
   menubutton_changevalue = addMenuItem(toplevel, functions, "&Change Value",
-                                       SLOT(activate_changevalue()), "CTRL+Q");
+                                       SLOT(activate_change_value()), "CTRL+Q");
 
   // Submenu Order module type
   QActionGroup *radio_group = new QActionGroup(toplevel);

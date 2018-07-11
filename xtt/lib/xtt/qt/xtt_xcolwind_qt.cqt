@@ -172,34 +172,94 @@ void XColWindQtWidget::activate_change_value()
   colwind->change_value(1);
 }
 
-void XColWindQtWidget::activate_zoom_reset()
+void XColWindQtWidget::activate_open()
+{
+  colwind->activate_open();
+}
+
+void XColWindQtWidget::activate_save()
+{
+  colwind->activate_save();
+}
+
+void XColWindQtWidget::activate_saveas()
+{
+  colwind->activate_saveas();
+}
+
+void XColWindQtWidget::activate_print()
+{
+  colwind->activate_print();
+}
+
+void XColWindQtWidget::activate_close_changeval()
+{
+  colwind->change_value_close();
+}
+
+void XColWindQtWidget::activate_insert()
+{
+  colwind->activate_collect_insert();
+}
+
+void XColWindQtWidget::activate_delete()
+{
+  colwind->activate_collect_delete();
+}
+
+void XColWindQtWidget::activate_moveup()
+{
+  colwind->activate_moveup();
+}
+
+void XColWindQtWidget::activate_movedown()
+{
+  colwind->activate_movedown();
+}
+
+void XColWindQtWidget::activate_display_object()
+{
+  colwind->activate_display_object();
+}
+
+void XColWindQtWidget::activate_show_cross()
+{
+  colwind->activate_show_cross();
+}
+
+void XColWindQtWidget::activate_open_classgraph()
+{
+  colwind->activate_open_classgraph();
+}
+
+void XColWindQtWidget::activate_open_plc()
+{
+  colwind->activate_open_plc();
+}
+
+void XColWindQtWidget::activate_zoomin()
+{
+  colwind->activate_zoomin();
+}
+
+void XColWindQtWidget::activate_zoomout()
+{
+  colwind->activate_zoomout();
+}
+
+void XColWindQtWidget::activate_zoomreset()
 {
   colwind->xattnav->unzoom();
 }
 
-void XColWindQtWidget::activate_scantime1()
+void XColWindQtWidget::activate_scantime()
 {
-  colwind->xattnav->set_scantime(500);
+  colwind->xattnav->set_scantime(((QAction *) sender())->data().toInt());
 }
 
-void XColWindQtWidget::activate_scantime2()
+void XColWindQtWidget::activate_help()
 {
-  colwind->xattnav->set_scantime(200);
-}
-
-void XColWindQtWidget::activate_scantime3()
-{
-  colwind->xattnav->set_scantime(100);
-}
-
-void XColWindQtWidget::activate_scantime4()
-{
-  colwind->xattnav->set_scantime(50);
-}
-
-void XColWindQtWidget::activate_scantime5()
-{
-  colwind->xattnav->set_scantime(20);
+  colwind->activate_help();
 }
 
 void XColWindQtWidget::focusInEvent(QFocusEvent *event)
@@ -402,8 +462,8 @@ XColWindQt::XColWindQt(QWidget *xa_parent_wid, void *xa_parent_ctx,
 
   // Edit entry
   QMenu *edit = menu_bar->addMenu(translate_utf8("&Edit"));
-  addMenuItem(toplevel, edit, "&Insert", SLOT(activate_collect_insert()), "CTRL+V");
-  addMenuItem(toplevel, edit, "&Delete", SLOT(activate_collect_delete()), "Delete");
+  addMenuItem(toplevel, edit, "&Insert", SLOT(activate_insert()), "CTRL+V");
+  addMenuItem(toplevel, edit, "&Delete", SLOT(activate_delete()), "Delete");
   addMenuItem(toplevel, edit, "Move &Up", SLOT(activate_moveup()), "Up");
   addMenuItem(toplevel, edit, "Move &Down", SLOT(activate_movedown()), "Down");
 
@@ -428,24 +488,28 @@ XColWindQt::XColWindQt(QWidget *xa_parent_wid, void *xa_parent_ctx,
               "zoom-in");
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoomout()), "CTRL+O",
               "zoom-out");
-  addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "CTRL+B",
+  addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoomreset()), "CTRL+B",
               "zoom-original");
 
   // Submenu ScanTime
   QMenu *view_sc = view->addMenu(translate_utf8("&ScanTime"));
   QActionGroup *view_sc_group = new QActionGroup(toplevel);
-  QAction *view_scantime1 =
-      addMenuRadioItem(toplevel, view_sc, "0.50 s", SLOT(activate_scantime1()),
+  QAction *a = addMenuRadioItem(toplevel, view_sc, "0.50 s",
+                                SLOT(activate_scantime()), view_sc_group);
+  a->setData(500);
+  a->setChecked(true);
+  a = addMenuRadioItem(toplevel, view_sc, "0.20 s", SLOT(activate_scantime()),
                        view_sc_group);
-  view_scantime1->setChecked(true);
-  addMenuRadioItem(toplevel, view_sc, "0.20 s", SLOT(activate_scantime2()),
-                   view_sc_group);
-  addMenuRadioItem(toplevel, view_sc, "0.10 s", SLOT(activate_scantime3()),
-                   view_sc_group);
-  addMenuRadioItem(toplevel, view_sc, "0.05 s", SLOT(activate_scantime4()),
-                   view_sc_group);
-  addMenuRadioItem(toplevel, view_sc, "0.02 s", SLOT(activate_scantime5()),
-                   view_sc_group);
+  a->setData(200);
+  a = addMenuRadioItem(toplevel, view_sc, "0.10 s", SLOT(activate_scantime()),
+                       view_sc_group);
+  a->setData(100);
+  a = addMenuRadioItem(toplevel, view_sc, "0.05 s", SLOT(activate_scantime()),
+                       view_sc_group);
+  a->setData(50);
+  a = addMenuRadioItem(toplevel, view_sc, "0.02 s", SLOT(activate_scantime()),
+                       view_sc_group);
+  a->setData(20);
   // End submenu
   // End View entry
 

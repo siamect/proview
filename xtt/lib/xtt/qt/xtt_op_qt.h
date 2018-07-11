@@ -142,12 +142,31 @@ protected:
   void closeEvent(QCloseEvent *event);
 
 public slots:
+  void activate_aalarm_ack();
+  void activate_balarm_ack();
   void activate_aalarm_incr();
   void activate_aalarm_decr();
   void activate_zoom_in();
   void activate_zoom_out();
   void activate_colortheme();
-  void activate_cmd_menu_item(QAction *action);
+  void activate_alarmlist();
+  void activate_eventlist();
+  void activate_eventlog();
+  void activate_blocklist();
+  void activate_navigator();
+  void activate_help();
+  void activate_help_overview();
+  void activate_help_opwin();
+  void activate_help_proview();
+  void activate_trend();
+  void activate_fast();
+  void activate_history();
+  void activate_switch_user();
+  void activate_show_user();
+  void activate_logout();
+  void activate_cmd_menu_item();
+  void activate_sup_node();
+  void activate_graph();
   void activate_appl();
   void activate_info();
 

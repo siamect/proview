@@ -76,6 +76,7 @@ protected:
   void closeEvent(QCloseEvent *event);
 
 public slots:
+  void activate_print();
   void activate_zoom_in();
   void activate_zoom_out();
   void activate_zoom_reset();

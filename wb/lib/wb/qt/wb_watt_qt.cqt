@@ -137,18 +137,18 @@ void WAttQt::change_value(int set_focus)
 
 void WAttQtWidget::action_text_inserted()
 {
-  int count = att->cmd_scrolled_buffer->toPlainText().length();
+  int count = watt->cmd_scrolled_buffer->toPlainText().length();
 
-  if (count > att->input_max_length) {
+  if (count > watt->input_max_length) {
     // Remove inserted chars
-    QString txt = att->cmd_scrolled_buffer->toPlainText();
-    txt.truncate(att->input_max_length);
-    att->cmd_scrolled_buffer->setText(txt);
+    QString txt = watt->cmd_scrolled_buffer->toPlainText();
+    txt.truncate(watt->input_max_length);
+    watt->cmd_scrolled_buffer->setText(txt);
 
     CoWowQt wow(this);
     wow.DisplayError("Error message", "Attribute size exceeded");
   } else {
-    att->message(' ', "");
+    watt->message(' ', "");
   }
 }
 
@@ -157,12 +157,17 @@ void WAttQtWidget::action_text_inserted()
 //
 void WAttQtWidget::activate_change_value()
 {
-  att->change_value(1);
+  watt->change_value(1);
 }
 
 void WAttQtWidget::activate_close_changeval()
 {
-  att->change_value_close();
+  watt->change_value_close();
+}
+
+void WAttQtWidget::activate_print()
+{
+  watt->activate_print();
 }
 
 void WAttQtWidget::activate_help()
@@ -173,16 +178,16 @@ void WAttQtWidget::activate_help()
 
 void WAttQtWidget::focusInEvent(QFocusEvent *event)
 {
-  if (!att->focustimer.disabled()) {
-    if (att->cmd_scrolledinput->isVisible()) {
-      att->cmd_scrolled_buffer->setFocus();
-    } else if (att->cmd_entry->isVisible()) {
-      att->cmd_entry->setFocus();
-    } else if (att->wattnav) {
-      att->wattnav->set_inputfocus();
+  if (!watt->focustimer.disabled()) {
+    if (watt->cmd_scrolledinput->isVisible()) {
+      watt->cmd_scrolled_buffer->setFocus();
+    } else if (watt->cmd_entry->isVisible()) {
+      watt->cmd_entry->setFocus();
+    } else if (watt->wattnav) {
+      watt->wattnav->set_inputfocus();
     }
 
-    att->focustimer.disable(400);
+    watt->focustimer.disable(400);
   }
 
   QWidget::focusInEvent(event);
@@ -255,39 +260,39 @@ void WAttQt::change_value_close()
 
 void WAttQtWidget::activate_cmd_entry()
 {
-  att->wattnav->set_inputfocus();
+  watt->wattnav->set_inputfocus();
 
-  QByteArray ba = att->cmd_entry->text().toLatin1();
+  QByteArray ba = watt->cmd_entry->text().toLatin1();
   char *text = ba.data();
 
-  if (att->input_open) {
+  if (watt->input_open) {
     if (text) {
-      att->wattnav->set_attr_value(att->input_node, att->input_name, text);
+      watt->wattnav->set_attr_value(watt->input_node, watt->input_name, text);
     }
-    att->cmd_entry->setVisible(false);
-    att->set_prompt("");
-    att->input_open = 0;
-    if (att->redraw_cb) {
-      (att->redraw_cb)(att);
+    watt->cmd_entry->setVisible(false);
+    watt->set_prompt("");
+    watt->input_open = 0;
+    if (watt->redraw_cb) {
+      (watt->redraw_cb)(watt);
     }
   }
 
-  att->cmd_prompt->setVisible(false);
-  att->cmd_entry->setVisible(false);
+  watt->cmd_prompt->setVisible(false);
+  watt->cmd_entry->setVisible(false);
 
   if (!text) {
-    att->message('E', "Input error, invalid character");
+    watt->message('E', "Input error, invalid character");
   }
 
-  if (att->pending_close) {
+  if (watt->pending_close) {
     close();
   }
 }
 
 void WAttQtWidget::activate_cmd_scrolled_ok()
 {
-  if (att->input_open) {
-    QByteArray ba = att->cmd_scrolled_buffer->toPlainText().toLatin1();
+  if (watt->input_open) {
+    QByteArray ba = watt->cmd_scrolled_buffer->toPlainText().toLatin1();
     char *text = ba.data();
 
     if (text) {
@@ -298,22 +303,22 @@ void WAttQtWidget::activate_cmd_scrolled_ok()
         }
       }
 
-      att->wattnav->set_attr_value(att->input_node, att->input_name, text);
+      watt->wattnav->set_attr_value(watt->input_node, watt->input_name, text);
     }
-    att->cmd_scrolledinput->setVisible(false);
-    att->set_prompt("");
-    att->input_open = 0;
+    watt->cmd_scrolledinput->setVisible(false);
+    watt->set_prompt("");
+    watt->input_open = 0;
 
-    set_pane_position(att->pane, -50);
+    set_pane_position(watt->pane, -50);
 
-    att->wattnav->redraw();
-    att->wattnav->set_inputfocus();
+    watt->wattnav->redraw();
+    watt->wattnav->set_inputfocus();
 
     if (!text) {
-      att->message('E', "Input error, invalid character");
+      watt->message('E', "Input error, invalid character");
     }
 
-    if (att->pending_close) {
+    if (watt->pending_close) {
       close();
     }
   }
@@ -321,14 +326,14 @@ void WAttQtWidget::activate_cmd_scrolled_ok()
 
 void WAttQtWidget::activate_cmd_scrolled_ca()
 {
-  if (att->input_open) {
-    att->cmd_scrolledinput->setVisible(false);
+  if (watt->input_open) {
+    watt->cmd_scrolledinput->setVisible(false);
 
-    set_pane_position(att->pane, -50);
+    set_pane_position(watt->pane, -50);
 
-    att->set_prompt("");
-    att->input_open = 0;
-    att->wattnav->set_inputfocus();
+    watt->set_prompt("");
+    watt->input_open = 0;
+    watt->wattnav->set_inputfocus();
   }
 }
 
@@ -353,10 +358,10 @@ void WAttQt::update_title()
 
 void WAttQtWidget::closeEvent(QCloseEvent *event)
 {
-  if (att->close_cb) {
-    (att->close_cb)(att);
+  if (watt->close_cb) {
+    (watt->close_cb)(watt);
   } else {
-    delete att;
+    delete watt;
   }
   QWidget::closeEvent(event);
 }

@@ -85,8 +85,13 @@ protected:
   void closeEvent(QCloseEvent *event);
 
 public slots:
+  void activate_print();
   void activate_tree_layout();
   void activate_list_layout();
+  void activate_zoom_in();
+  void activate_zoom_out();
+  void activate_zoom_reset();
+  void activate_help();
   void activate_button_ok();
 
 private:

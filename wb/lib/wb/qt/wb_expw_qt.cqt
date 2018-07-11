@@ -142,9 +142,9 @@ void WbExpWQt::print()
 
 void WbExpWQtWidget::focusInEvent(QFocusEvent *event)
 {
-  if (!exp->focustimer.disabled()) {
-    exp->expwnav->set_input_focus();
-    exp->focustimer.disable(400);
+  if (!expw->focustimer.disabled()) {
+    expw->expwnav->set_input_focus();
+    expw->focustimer.disable(400);
   }
 
   QWidget::focusInEvent(event);
@@ -152,7 +152,7 @@ void WbExpWQtWidget::focusInEvent(QFocusEvent *event)
 
 void WbExpWQtWidget::closeEvent(QCloseEvent *event)
 {
-  delete exp;
+  delete expw;
   QWidget::closeEvent(event);
 }
 
@@ -161,32 +161,57 @@ void WbExpWQt::set_title(char *title)
   toplevel->setWindowTitle(QString::fromLatin1(title));
 }
 
+void WbExpWQtWidget::activate_export()
+{
+  expw->activate_export();
+}
+
+void WbExpWQtWidget::activate_update()
+{
+  expw->activate_update();
+}
+
+void WbExpWQtWidget::activate_check_all()
+{
+  expw->activate_check_all();
+}
+
+void WbExpWQtWidget::activate_check_clear()
+{
+  expw->activate_check_clear();
+}
+
+void WbExpWQtWidget::activate_check_reset()
+{
+  expw->activate_check_reset();
+}
+
 void WbExpWQtWidget::activate_show_all(bool set)
 {
-  exp->expwnav->set_show_all(set);
+  expw->expwnav->set_show_all(set);
 }
 
 void WbExpWQtWidget::activate_zoom_in()
 {
-  exp->expwnav->zoom(1.2);
+  expw->expwnav->zoom(1.2);
 }
 
 void WbExpWQtWidget::activate_zoom_out()
 {
-  exp->expwnav->zoom(5.0 / 6);
+  expw->expwnav->zoom(5.0 / 6);
 }
 
 void WbExpWQtWidget::activate_zoom_reset()
 {
-  exp->expwnav->unzoom();
+  expw->expwnav->unzoom();
 }
 
 void WbExpWQtWidget::activate_help()
 {
-  if (exp->type == expw_eType_Export || exp->type == expw_eType_Import) {
+  if (expw->type == expw_eType_Export || expw->type == expw_eType_Import) {
     CoXHelp::dhelp("exportimport_refman", 0, navh_eHelpFile_Other,
                    "$pwr_lang/man_dg.dat", true);
-  } else if (exp->type == expw_eType_BuildDirectories) {
+  } else if (expw->type == expw_eType_BuildDirectories) {
     CoXHelp::dhelp("builddir_refman", 0, navh_eHelpFile_Other,
                    "$pwr_lang/man_dg.dat", true);
   }

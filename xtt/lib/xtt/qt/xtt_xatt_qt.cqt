@@ -165,6 +165,41 @@ void XAttQtWidget::activate_change_value()
   xatt->change_value(1);
 }
 
+void XAttQtWidget::activate_close_changeval()
+{
+  xatt->change_value_close();
+}
+
+void XAttQtWidget::activate_print()
+{
+  xatt->activate_print();
+}
+
+void XAttQtWidget::activate_display_object()
+{
+  xatt->activate_display_object();
+}
+
+void XAttQtWidget::activate_show_cross()
+{
+  xatt->activate_show_cross();
+}
+
+void XAttQtWidget::activate_open_classgraph()
+{
+  xatt->activate_open_classgraph();
+}
+
+void XAttQtWidget::activate_open_plc()
+{
+  xatt->activate_open_plc();
+}
+
+void XAttQtWidget::activate_help()
+{
+  xatt->activate_help();
+}
+
 void XAttQtWidget::focusInEvent(QFocusEvent *event)
 {
   if (!xatt->focustimer.disabled()) {

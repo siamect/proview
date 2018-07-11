@@ -127,6 +127,8 @@ public slots:
   void activate_collect_iosignals();
   void activate_collect_open();
   void activate_advanceduser();
+  void activate_zoom_in();
+  void activate_zoom_out();
   void activate_zoom_reset();
   void activate_help();
   void activate_help_navigator();

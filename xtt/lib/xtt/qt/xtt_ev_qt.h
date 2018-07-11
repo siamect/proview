@@ -105,6 +105,12 @@ public:
   EvQtObject(EvQt *parent_ctx) : QObject(), ev(parent_ctx) {}
 
 public slots:
+  void eve_activate_print();
+  void ala_activate_print();
+  void blk_activate_print();
+  void eve_activate_ack_last();
+  void ala_activate_ack_last();
+  void ala_activate_ack_all();
   void eve_activate_zoom_in();
   void ala_activate_zoom_in();
   void blk_activate_zoom_in();
@@ -127,6 +133,11 @@ public slots:
   void ala_activate_hide_object(bool set);
   void eve_activate_hide_text(bool set);
   void ala_activate_hide_text(bool set);
+  void eve_activate_help();
+  void ala_activate_help();
+  void blk_activate_help();
+  void eve_activate_helpevent();
+  void ala_activate_helpevent();
   void ala_activate_shift_view();
   void ala_activate_select_flat();
   void ala_activate_select_view();

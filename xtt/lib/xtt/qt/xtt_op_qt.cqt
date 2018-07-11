@@ -200,27 +200,27 @@ OpQt::OpQt(void *op_parent_ctx, QWidget *op_parent_wid, char *opplace,
   aalarm_ack->setFixedSize(30, 20);
   aalarm_mark->setFixedHeight(20);
   QObject::connect(aalarm_ack, SIGNAL(clicked()), toplevel,
-                   SLOT(activate_aalarm_ack));
+                   SLOT(activate_aalarm_ack()));
 
   // Increment size button
   QPushButton *incr_button = image_button(toplevel, "$pwr_exe/xtt_down.png");
   incr_button->setFixedSize(30, 20);
   alarmcnt_label->setFixedHeight(20);
   QObject::connect(incr_button, SIGNAL(clicked()), toplevel,
-                   SLOT(activate_aalarm_incr));
+                   SLOT(activate_aalarm_incr()));
 
   // Decrement size button
   decr_button = image_button(toplevel, "$pwr_exe/xtt_up.png");
   decr_button->setFixedSize(30, 20);
   QObject::connect(decr_button, SIGNAL(clicked()), toplevel,
-                   SLOT(activate_aalarm_decr));
+                   SLOT(activate_aalarm_decr()));
 
   // Acknowledge button for b alarms
   QPushButton *balarm_ack = image_button(toplevel, "$pwr_exe/xtt_acknowledge.png");
   balarm_ack->setFixedSize(30, 20);
   balarm_mark->setFixedHeight(20);
   QObject::connect(balarm_ack, SIGNAL(clicked()), toplevel,
-                   SLOT(activate_balarm_ack));
+                   SLOT(activate_balarm_ack()));
 
   QHBoxLayout *hbox_abutton = new QHBoxLayout();
   hbox_abutton->addWidget(aalarm_ack);
@@ -427,7 +427,7 @@ OpQt::OpQt(void *op_parent_ctx, QWidget *op_parent_wid, char *opplace,
       sup_vect[i].textw = (void *) node_label;
       sup_vect[i].textbgw = (void *) node_label;
       sup_vect[i].buttonw = (void *) node_image;
-      QObject::connect(node_image, SLOT(clicked()), toplevel,
+      QObject::connect(node_image, SIGNAL(clicked()), toplevel,
                        SLOT(activate_sup_node()));
       status_bar->setContentsMargins(padding2, padding2, padding2, padding2);
       status_bar->addWidget(node_image);
@@ -915,6 +915,16 @@ int OpQt::configure(char *opplace_str)
   return XNAV__SUCCESS;
 }
 
+void OpQtWidget::activate_aalarm_ack()
+{
+  op->activate_aalarm_ack();
+}
+
+void OpQtWidget::activate_balarm_ack()
+{
+  op->activate_balarm_ack();
+}
+
 void OpQtWidget::activate_zoom_in()
 {
   if (op->text_size >= 18) {
@@ -1013,15 +1023,100 @@ void OpQtWidget::activate_aalarm_decr()
   resize(width, height);
 }
 
-void OpQtWidget::activate_cmd_menu_item(QAction *w)
+void OpQtWidget::activate_alarmlist()
+{
+  op->activate_alarmlist();
+}
+
+void OpQtWidget::activate_eventlist()
+{
+  op->activate_eventlist();
+}
+
+void OpQtWidget::activate_eventlog()
+{
+  op->activate_eventlog();
+}
+
+void OpQtWidget::activate_blocklist()
+{
+  op->activate_blocklist();
+}
+
+void OpQtWidget::activate_navigator()
+{
+  op->activate_navigator();
+}
+
+void OpQtWidget::activate_help()
+{
+  op->activate_help();
+}
+
+void OpQtWidget::activate_help_overview()
+{
+  op->activate_help_overview();
+}
+
+void OpQtWidget::activate_help_opwin()
+{
+  op->activate_help_opwin();
+}
+
+void OpQtWidget::activate_help_proview()
+{
+  op->activate_help_proview();
+}
+
+void OpQtWidget::activate_trend()
+{
+  op->activate_trend();
+}
+
+void OpQtWidget::activate_fast()
+{
+  op->activate_fast();
+}
+
+void OpQtWidget::activate_history()
+{
+  op->activate_history();
+}
+
+void OpQtWidget::activate_graph()
+{
+  op->activate_graph();
+}
+
+void OpQtWidget::activate_switch_user()
+{
+  op->activate_switch_user();
+}
+
+void OpQtWidget::activate_show_user()
+{
+  op->activate_show_user();
+}
+
+void OpQtWidget::activate_logout()
+{
+  op->activate_logout();
+}
+
+void OpQtWidget::activate_cmd_menu_item()
 {
   pwr_tCmd cmd;
   int sts;
 
-  sts = op->get_cmd(w->menu(), cmd);
+  sts = op->get_cmd(((QAction *) sender())->menu(), cmd);
   if (ODD(sts)) {
     op->activate_cmd_menu_item(cmd);
   }
+}
+
+void OpQtWidget::activate_sup_node()
+{
+  op->activate_sup_node(((QAction *) sender())->parentWidget());
 }
 
 void OpQtWidget::activate_appl()

@@ -84,6 +84,7 @@ protected:
   void closeEvent(QCloseEvent *event);
 
 public slots:
+  void activate_print();
   void activate_openplc();
   void activate_help();
 

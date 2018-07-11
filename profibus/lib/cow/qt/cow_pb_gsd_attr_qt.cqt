@@ -122,6 +122,66 @@ void GsdAttrQt::change_value()
 //
 //  Callbackfunctions from menu entries
 //
+void GsdAttrQtWidget::activate_change_value()
+{
+  attr->change_value();
+}
+
+void GsdAttrQtWidget::activate_help()
+{
+  attr->activate_help();
+}
+
+void GsdAttrQtWidget::activate_copy()
+{
+  attr->activate_copy();
+}
+
+void GsdAttrQtWidget::activate_cut()
+{
+  attr->activate_cut();
+}
+
+void GsdAttrQtWidget::activate_paste()
+{
+  attr->activate_paste();
+}
+
+void GsdAttrQtWidget::activate_zoom_in()
+{
+  attr->activate_zoom_in();
+}
+
+void GsdAttrQtWidget::activate_zoom_out()
+{
+  attr->activate_zoom_out();
+}
+
+void GsdAttrQtWidget::activate_zoom_reset()
+{
+  attr->activate_zoom_reset();
+}
+
+void GsdAttrQtWidget::activate_print()
+{
+  attr->activate_print();
+}
+
+void GsdAttrQtWidget::activate_cmd_ok()
+{
+  attr->activate_cmd_ok();
+}
+
+void GsdAttrQtWidget::activate_cmd_apply()
+{
+  attr->activate_cmd_apply();
+}
+
+void GsdAttrQtWidget::activate_cmd_ca()
+{
+  attr->activate_cmd_ca();
+}
+
 void GsdAttrQtWidget::activate_cmd_input()
 {
   attr->cmd_prompt->setVisible(false);
@@ -194,7 +254,7 @@ GsdAttrQt::GsdAttrQt(QWidget *a_parent_wid, void *a_parent_ctx, void *a_object,
   // Functions entry
   QMenu *functions = menu_bar->addMenu(translate_utf8("F&unctions"));
   menubutton_changevalue = addMenuItem(toplevel, functions, "&Change Value",
-                                       SLOT(activate_changevalue()), "CTRL+Q");
+                                       SLOT(activate_change_value()), "CTRL+Q");
 
   // View Entry
   QMenu *view = menu_bar->addMenu(translate_utf8("&View"));

@@ -91,7 +91,7 @@ class WAttQtWidget : public QWidget {
 
 public:
   WAttQtWidget(WAttQt *parent_ctx, QWidget *parent)
-      : QWidget(parent, Qt::Window), att(parent_ctx) {}
+      : QWidget(parent, Qt::Window), watt(parent_ctx) {}
 
 protected:
   void focusInEvent(QFocusEvent *event);
@@ -100,6 +100,7 @@ protected:
 public slots:
   void activate_change_value();
   void activate_close_changeval();
+  void activate_print();
   void activate_help();
   void activate_cmd_entry();
   void activate_cmd_scrolled_ok();
@@ -107,7 +108,7 @@ public slots:
   void action_text_inserted();
 
 private:
-  WAttQt *att;
+  WAttQt *watt;
 };
 
 #endif

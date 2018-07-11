@@ -229,9 +229,24 @@ void PnViewerQtWidget::focusInEvent(QFocusEvent *event)
   QWidget::focusInEvent(event);
 }
 
+void PnViewerQtWidget::activate_update()
+{
+  viewer->activate_update();
+}
+
 void PnViewerQtWidget::activate_filter()
 {
   viewer->activate_filter(viewer_eFilterType_NotMatching);
+}
+
+void PnViewerQtWidget::activate_setdevice()
+{
+  viewer->activate_setdevice();
+}
+
+void PnViewerQtWidget::activate_changevalue()
+{
+  viewer->activate_changevalue();
 }
 
 void PnViewerQtWidget::activate_zoom_in()
@@ -247,6 +262,11 @@ void PnViewerQtWidget::activate_zoom_out()
 void PnViewerQtWidget::activate_zoom_reset()
 {
   viewer->viewernav->unzoom();
+}
+
+void PnViewerQtWidget::activate_help()
+{
+  viewer->activate_help();
 }
 
 #endif

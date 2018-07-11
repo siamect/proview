@@ -93,11 +93,15 @@ protected:
 
 public slots:
   void activate_select_file();
+  void activate_next_file();
+  void activate_prev_file();
   void activate_update();
+  void activate_print();
   void activate_zoom_in();
   void activate_zoom_out();
   void activate_zoom_reset();
   void activate_filter();
+  void activate_help();
   void activate_helpmsg();
   void filter_apply_cb();
 

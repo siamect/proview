@@ -58,6 +58,11 @@
 #include <QMenuBar>
 #include <QVBoxLayout>
 
+void WCrrQtWidget::activate_print()
+{
+  crr->activate_print();
+}
+
 void WCrrQtWidget::activate_openplc()
 {
   // xcrrnav->start_trace();

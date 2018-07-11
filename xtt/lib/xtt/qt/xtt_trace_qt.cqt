@@ -75,44 +75,109 @@ void RtTraceQtWidget::activate_print()
                                    &sts);
 }
 
-void RtTraceQtWidget::activate_zoom_in()
+void RtTraceQtWidget::activate_printselect()
 {
-  flow_Zoom(rt->flow_ctx, 1.0 / 0.7);
+  rt->activate_printselect();
 }
 
-void RtTraceQtWidget::activate_zoom_out()
+void RtTraceQtWidget::activate_savetrace()
 {
-  flow_Zoom(rt->flow_ctx, 0.7);
+  rt->activate_savetrace();
 }
 
-void RtTraceQtWidget::activate_zoom_reset()
+void RtTraceQtWidget::activate_restoretrace()
 {
-  flow_UnZoom(rt->flow_ctx);
+  rt->activate_restoretrace();
 }
 
-void RtTraceQtWidget::activate_scantime1()
+void RtTraceQtWidget::activate_cleartrace()
 {
-  rt->scan_time = 0.5;
+  rt->activate_cleartrace();
 }
 
-void RtTraceQtWidget::activate_scantime2()
+void RtTraceQtWidget::activate_display_object()
 {
-  rt->scan_time = 0.2;
+  rt->activate_display_object();
 }
 
-void RtTraceQtWidget::activate_scantime3()
+void RtTraceQtWidget::activate_parent_window()
 {
-  rt->scan_time = 0.1;
+  rt->activate_parent_window();
 }
 
-void RtTraceQtWidget::activate_scantime4()
+void RtTraceQtWidget::activate_collect_insert()
 {
-  rt->scan_time = 0.05;
+  rt->activate_collect_insert();
 }
 
-void RtTraceQtWidget::activate_scantime5()
+void RtTraceQtWidget::activate_open_object()
 {
-  rt->scan_time = 0.02;
+  rt->activate_open_object();
+}
+
+void RtTraceQtWidget::activate_open_subwindow()
+{
+  rt->activate_open_subwindow();
+}
+
+void RtTraceQtWidget::activate_show_cross()
+{
+  rt->activate_show_cross();
+}
+
+void RtTraceQtWidget::activate_open_classgraph()
+{
+  rt->activate_open_classgraph();
+}
+
+void RtTraceQtWidget::activate_trace()
+{
+  rt->activate_trace();
+}
+
+void RtTraceQtWidget::activate_simulate()
+{
+  rt->activate_simulate();
+}
+
+void RtTraceQtWidget::activate_view()
+{
+  rt->activate_view();
+}
+
+void RtTraceQtWidget::activate_zoomin()
+{
+  flow_Zoom( rt->flow_ctx, 1.0/0.7);
+}
+
+void RtTraceQtWidget::activate_zoomout()
+{
+  flow_Zoom( rt->flow_ctx, 0.7);
+}
+
+void RtTraceQtWidget::activate_zoomreset()
+{
+  flow_UnZoom( rt->flow_ctx);
+}
+
+void RtTraceQtWidget::activate_scantime()
+{
+  rt->scan_time = ((QAction *) sender())->data().toInt();
+}
+
+void RtTraceQtWidget::activate_help()
+{
+  rt->activate_help();
+}
+
+void RtTraceQtWidget::activate_helpplc()
+{
+  rt->activate_helpplc();
+}
+
+void RtTraceQtWidget::activate_helpplclist()
+{
+  rt->activate_helpplclist();
 }
 
 RtTraceQt::~RtTraceQt()
@@ -261,28 +326,32 @@ RtTraceQt::RtTraceQt(void *tr_parent_ctx, QWidget *tr_parent_wid,
 
   // View Entry
   QMenu *view = menu_bar->addMenu(translate_utf8("&View"));
-  addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoom_in()), "CTRL+I",
+  addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoomin()), "CTRL+I",
               "zoom-in");
-  addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
+  addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoomout()), "CTRL+O",
               "zoom-out");
-  addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "CTRL+B",
+  addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoomreset()), "CTRL+B",
               "zoom-original");
 
   // Submenu ScanTime
   QMenu *view_sc = view->addMenu(translate_utf8("&ScanTime"));
   QActionGroup *view_sc_group = new QActionGroup(toplevel);
-  QAction *view_scantime1 =
-      addMenuRadioItem(toplevel, view_sc, "0.50 s", SLOT(activate_scantime1()),
+  QAction *a = addMenuRadioItem(toplevel, view_sc, "0.50 s",
+                                SLOT(activate_scantime()), view_sc_group);
+  a->setData(500);
+  a->setChecked(true);
+  a = addMenuRadioItem(toplevel, view_sc, "0.20 s", SLOT(activate_scantime()),
                        view_sc_group);
-  view_scantime1->setChecked(true);
-  addMenuRadioItem(toplevel, view_sc, "0.20 s", SLOT(activate_scantime2()),
-                   view_sc_group);
-  addMenuRadioItem(toplevel, view_sc, "0.10 s", SLOT(activate_scantime3()),
-                   view_sc_group);
-  addMenuRadioItem(toplevel, view_sc, "0.05 s", SLOT(activate_scantime4()),
-                   view_sc_group);
-  addMenuRadioItem(toplevel, view_sc, "0.02 s", SLOT(activate_scantime5()),
-                   view_sc_group);
+  a->setData(200);
+  a = addMenuRadioItem(toplevel, view_sc, "0.10 s", SLOT(activate_scantime()),
+                       view_sc_group);
+  a->setData(100);
+  a = addMenuRadioItem(toplevel, view_sc, "0.05 s", SLOT(activate_scantime()),
+                       view_sc_group);
+  a->setData(50);
+  a = addMenuRadioItem(toplevel, view_sc, "0.02 s", SLOT(activate_scantime()),
+                       view_sc_group);
+  a->setData(20);
   // End submenu
   // End View entry
 
@@ -322,11 +391,11 @@ RtTraceQt::RtTraceQt(void *tr_parent_ctx, QWidget *tr_parent_wid,
               SLOT(activate_display_object()), "$pwr_exe/xtt_navigator.png");
   addToolItem(toplevel, tools, "Show Crossreferences", SLOT(activate_show_cross()),
               "$pwr_exe/xtt_crossref.png");
-  addToolItem(toplevel, tools, "Zoom in", SLOT(activate_zoom_in()),
+  addToolItem(toplevel, tools, "Zoom in", SLOT(activate_zoomin()),
               "$pwr_exe/xtt_zoom_in.png");
-  addToolItem(toplevel, tools, "Zoom out", SLOT(activate_zoom_out()),
+  addToolItem(toplevel, tools, "Zoom out", SLOT(activate_zoomout()),
               "$pwr_exe/xtt_zoom_out.png");
-  addToolItem(toplevel, tools, "Zoom reset", SLOT(activate_zoom_reset()),
+  addToolItem(toplevel, tools, "Zoom reset", SLOT(activate_zoomreset()),
               "$pwr_exe/xtt_zoom_reset.png");
 
   // Flow widget

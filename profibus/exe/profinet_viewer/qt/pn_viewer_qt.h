@@ -84,10 +84,14 @@ protected:
 
 public slots:
   void valchanged_cmd_entry();
+  void activate_update();
   void activate_filter();
+  void activate_setdevice();
+  void activate_changevalue();
   void activate_zoom_in();
   void activate_zoom_out();
   void activate_zoom_reset();
+  void activate_help();
 
 private:
   PnViewerQt *viewer;

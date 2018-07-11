@@ -151,6 +151,36 @@ void WdaQtWidget::activate_change_value()
   wda->change_value(1);
 }
 
+void WdaQtWidget::activate_close_changeval()
+{
+  wda->change_value_close();
+}
+
+void WdaQtWidget::activate_print()
+{
+  wda->activate_print();
+}
+
+void WdaQtWidget::activate_export_text()
+{
+  wda->print_textfile();
+}
+
+void WdaQtWidget::activate_import_text()
+{
+  wda->import_textfile();
+}
+
+void WdaQtWidget::activate_setclass()
+{
+  wda->Wda::open_class_dialog();
+}
+
+void WdaQtWidget::activate_setattr()
+{
+  wda->open_attr_dialog();
+}
+
 void WdaQtWidget::activate_nextattr()
 {
   int sts = wda->next_attr();
@@ -412,15 +442,15 @@ WdaQt::WdaQt(QWidget *wa_parent_wid, void *wa_parent_ctx,
 
   // File entry
   QMenu *file = menu_bar->addMenu(translate_utf8("&File"));
-  addMenuItem(toplevel, file, "&Select Class", SLOT(open_class_dialog()), "CTRL+C");
-  addMenuItem(toplevel, file, "Select &Attribute", SLOT(open_attr_dialog()),
+  addMenuItem(toplevel, file, "&Select Class", SLOT(activate_setclass()), "CTRL+C");
+  addMenuItem(toplevel, file, "Select &Attribute", SLOT(activate_setattr()),
               "CTRL+A");
   addMenuItem(toplevel, file, "Next Attribute", SLOT(activate_nextattr()),
               "CTRL+N");
   addMenuItem(toplevel, file, "Previous Attribute", SLOT(activate_prevattr()),
               "CTRL+P");
-  addMenuItem(toplevel, file, "Export to Textfile", SLOT(print_textfile()));
-  addMenuItem(toplevel, file, "Import from Textfile", SLOT(import_textfile()));
+  addMenuItem(toplevel, file, "Export to Textfile", SLOT(activate_export_text()));
+  addMenuItem(toplevel, file, "Import from Textfile", SLOT(activate_import_text()));
   addMenuItem(toplevel, file, "&Print", SLOT(activate_print()));
   addMenuItem(toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
@@ -429,7 +459,7 @@ WdaQt::WdaQt(QWidget *wa_parent_wid, void *wa_parent_ctx,
   addMenuItem(toplevel, functions, "Change &Value", SLOT(activate_change_value()),
               "CTRL+Q");
   addMenuItem(toplevel, functions, "C&lose Change Value",
-              SLOT(change_value_close()), "CTRL+T");
+              SLOT(activate_close_changeval()), "CTRL+T");
 
   // Help entry
   QMenu *help = menu_bar->addMenu(translate_utf8("&Help"));

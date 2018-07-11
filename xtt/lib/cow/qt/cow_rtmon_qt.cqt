@@ -77,11 +77,11 @@ void RtMonQtWidget::closeEvent(QCloseEvent *event)
 }
 
 static QPushButton *addButton(QWidget *parent, QBoxLayout *layout,
-                              const char *text, void (RtMonQt::*callback)(void))
+                              const char *text, const char *callback)
 {
   QPushButton *button = new QPushButton(fl(text));
   button->setFixedSize(170, 25);
-  QObject::connect(button, SIGNAL(pressed()), parent, SLOT(callback()));
+  QObject::connect(button, SIGNAL(pressed()), parent, callback);
   layout->addWidget(button);
   return button;
 }
@@ -167,15 +167,16 @@ RtMonQt::RtMonQt(void *rtmon_parent_ctx, QWidget *rtmon_parent_wid,
   bbox_label->setEnabled(false);
 
   QVBoxLayout *bbox = new QVBoxLayout();
-  bbox_start = addButton(toplevel, bbox, "Start Runtime", &RtMonQt::activate_start);
+  bbox_start =
+      addButton(toplevel, bbox, "Start Runtime", SLOT(activate_start()));
   bbox_restart =
-      addButton(toplevel, bbox, "Restart Runtime", &RtMonQt::activate_restart);
-  bbox_stop = addButton(toplevel, bbox, "Stop Runtime", &RtMonQt::activate_stop);
+      addButton(toplevel, bbox, "Restart Runtime", SLOT(activate_restart()));
+  bbox_stop = addButton(toplevel, bbox, "Stop Runtime", SLOT(activate_stop()));
 
   QVBoxLayout *lbox = new QVBoxLayout();
   lbox->setSpacing(33);
   lbox->addWidget(bbox_label);
-  addButton(toplevel, lbox, "Reset Runtime", &RtMonQt::activate_reset);
+  addButton(toplevel, lbox, "Reset Runtime", SLOT(activate_reset()));
 
   QHBoxLayout *bbox_vbox = new QHBoxLayout();
   bbox_vbox->addWidget(bbox_image);
@@ -214,16 +215,16 @@ void RtMonQtWidget::rtmon_scan()
     if (sts == PWR__SRVCONNECTION) {
       strcpy(color_name, "Gray");
       strcpy(text, "Down");
-      rtmon->bbox_start->setEnabled(TRUE);
-      rtmon->bbox_restart->setEnabled(FALSE);
-      rtmon->bbox_stop->setEnabled(FALSE);
-      rtmon->tools_xtt->setEnabled(FALSE);
-      rtmon->tools_op->setEnabled(FALSE);
-      rtmon->file_xtt->setEnabled(FALSE);
-      rtmon->file_op->setEnabled(FALSE);
+      rtmon->bbox_start->setEnabled(true);
+      rtmon->bbox_restart->setEnabled(false);
+      rtmon->bbox_stop->setEnabled(false);
+      rtmon->tools_xtt->setEnabled(false);
+      rtmon->tools_op->setEnabled(false);
+      rtmon->file_xtt->setEnabled(false);
+      rtmon->file_op->setEnabled(false);
 
-      rtmon->bbox_image->setVisible(FALSE);
-      rtmon->bbox_image_gray->setVisible(TRUE);
+      rtmon->bbox_image->setVisible(false);
+      rtmon->bbox_image_gray->setVisible(true);
     } else {
       if (((sts & 7) == 2) || ((sts & 7) == 4)) {
         strcpy(color_name, "Red");
@@ -235,15 +236,15 @@ void RtMonQtWidget::rtmon_scan()
         strcpy(color_name, "Green");
         strcpy(text, "Running");
       }
-      rtmon->bbox_start->setEnabled(FALSE);
-      rtmon->bbox_restart->setEnabled(TRUE);
-      rtmon->bbox_stop->setEnabled(TRUE);
-      rtmon->tools_xtt->setEnabled(TRUE);
-      rtmon->tools_op->setEnabled(TRUE);
-      rtmon->file_xtt->setEnabled(TRUE);
-      rtmon->file_op->setEnabled(TRUE);
-      rtmon->bbox_image->setVisible(TRUE);
-      rtmon->bbox_image_gray->setVisible(FALSE);
+      rtmon->bbox_start->setEnabled(false);
+      rtmon->bbox_restart->setEnabled(true);
+      rtmon->bbox_stop->setEnabled(true);
+      rtmon->tools_xtt->setEnabled(true);
+      rtmon->tools_op->setEnabled(true);
+      rtmon->file_xtt->setEnabled(true);
+      rtmon->file_op->setEnabled(true);
+      rtmon->bbox_image->setVisible(true);
+      rtmon->bbox_image_gray->setVisible(false);
     }
 
     QPalette pal;
@@ -287,6 +288,26 @@ void RtMonQtWidget::focusInEvent(QFocusEvent *event)
   }
 
   QWidget::focusInEvent(event);
+}
+
+void RtMonQtWidget::activate_start()
+{
+  rtmon->activate_start();
+}
+
+void RtMonQtWidget::activate_restart()
+{
+  rtmon->activate_restart();
+}
+
+void RtMonQtWidget::activate_stop()
+{
+  rtmon->activate_stop();
+}
+
+void RtMonQtWidget::activate_reset()
+{
+  rtmon->activate_reset();
 }
 
 void RtMonQtWidget::activate_xtt()

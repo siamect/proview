@@ -97,6 +97,13 @@ protected:
 
 public slots:
   void activate_change_value();
+  void activate_close_changeval();
+  void activate_print();
+  void activate_display_object();
+  void activate_show_cross();
+  void activate_open_classgraph();
+  void activate_open_plc();
+  void activate_help();
   void activate_cmd_entry();
   void activate_cmd_scrolled_ok();
   void activate_cmd_scrolled_ca();

@@ -245,7 +245,7 @@ WGeQt::WGeQt(QWidget *wge_parent_wid, void *wge_parent_ctx, char *wge_name,
   graph->is_authorized_cb = &wge_is_authorized_cb;
 
   QObject::connect(((GraphQt *) graph)->grow_widget,
-                   SLOT(resize_signal(QResizeEvent * )), toplevel,
+                   SIGNAL(resize_signal(QResizeEvent * )), toplevel,
                    SLOT(action_resize(QResizeEvent * )));
   //TODO: grow_widget must emit a resize_signal signal in resizeEvent()
 

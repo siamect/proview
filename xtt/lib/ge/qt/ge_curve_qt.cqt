@@ -138,6 +138,11 @@ int GeCurveQt::get_period(time_ePeriod *period)
   return 0;
 }
 
+void GeCurveQtWidget::activate_configure()
+{
+  curve->activate_configure();
+}
+
 void GeCurveQtWidget::activate_madd()
 {
   if (curve->madd_cb) {
@@ -145,17 +150,22 @@ void GeCurveQtWidget::activate_madd()
   }
 }
 
-void GeCurveQtWidget::activate_zoom_in()
+void GeCurveQtWidget::activate_print()
+{
+  curve->activate_print();
+}
+
+void GeCurveQtWidget::activate_zoomin()
 {
   curve_Zoom(curve->growcurve_ctx, 2.0);
 }
 
-void GeCurveQtWidget::activate_zoom_out()
+void GeCurveQtWidget::activate_zoomout()
 {
   curve_Zoom(curve->growcurve_ctx, 0.5);
 }
 
-void GeCurveQtWidget::activate_zoom_reset()
+void GeCurveQtWidget::activate_zoomreset()
 {
   curve_Unzoom(curve->growcurve_ctx);
 }
@@ -255,6 +265,11 @@ void GeCurveQtWidget::activate_timecombo(int index)
   curve->current_period = period;
 }
 
+void GeCurveQtWidget::activate_background()
+{
+  curve->activate_background();
+}
+
 void GeCurveQtWidget::activate_showname()
 {
 }
@@ -281,6 +296,36 @@ void GeCurveQtWidget::activate_digsplit() {
 void GeCurveQtWidget::activate_xlimits()
 {
   curve->open_minmax(0);
+}
+
+void GeCurveQtWidget::activate_new()
+{
+  curve->activate_new();
+}
+
+void GeCurveQtWidget::activate_save()
+{
+  curve->activate_save();
+}
+
+void GeCurveQtWidget::activate_open()
+{
+  curve->activate_open();
+}
+
+void GeCurveQtWidget::activate_snapshot()
+{
+  curve->activate_snapshot();
+}
+
+void GeCurveQtWidget::activate_export()
+{
+  curve->activate_export();
+}
+
+void GeCurveQtWidget::activate_help()
+{
+  curve->activate_help();
 }
 
 void GeCurveQtWidget::activate_minmax_ok()
@@ -672,11 +717,11 @@ GeCurveQt::GeCurveQt(void *gc_parent_ctx, QWidget *parent_widget,
 
   // View menu
   QMenu *view = menu_bar->addMenu(translate_utf8("&View"));
-  addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoom_in()), "CTRL+I",
+  addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoomin()), "CTRL+I",
               "zoom-in");
-  addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
+  addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoomout()), "CTRL+O",
               "zoom-out");
-  addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "",
+  addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoomreset()), "",
               "zoom-original");
   addMenuItem(toplevel, view, "&Background Color", SLOT(activate_background()));
   addMenuItem(toplevel, view, "&Show Names", SLOT(activate_showname()), "CTRL+W");
@@ -691,11 +736,11 @@ GeCurveQt::GeCurveQt(void *gc_parent_ctx, QWidget *parent_widget,
 
   // Toolbar
   QToolBar *tools = new QToolBar();
-  addToolItem(toplevel, tools, "Zoom in", SLOT(activate_zoom_in()),
+  addToolItem(toplevel, tools, "Zoom in", SLOT(activate_zoomin()),
               "$pwr_exe/xtt_zoom_in.png");
-  addToolItem(toplevel, tools, "Zoom out", SLOT(activate_zoom_out()),
+  addToolItem(toplevel, tools, "Zoom out", SLOT(activate_zoomout()),
               "$pwr_exe/xtt_zoom_out.png");
-  addToolItem(toplevel, tools, "Zoom reset", SLOT(activate_zoom_reset()),
+  addToolItem(toplevel, tools, "Zoom reset", SLOT(activate_zoomreset()),
               "$pwr_exe/xtt_zoom_reset.png");
   addToolItem(toplevel, tools, "Page left", SLOT(activate_page_left()),
               "$pwr_exe/ge_page_left.png");
@@ -964,9 +1009,9 @@ void GeCurveQt::create_export_dialog()
   buttons->addButton(QDialogButtonBox::Cancel);
 
   QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
-                   toplevel, SLOT(activate_export_ok));
+                   toplevel, SLOT(activate_export_ok()));
   QObject::connect(buttons->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
-                   toplevel, SLOT(activate_export_cancel));
+                   toplevel, SLOT(activate_export_cancel()));
 
   QHBoxLayout *export_hbox1 = new QHBoxLayout();
   export_hbox1->addWidget(attr_label);

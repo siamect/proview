@@ -343,7 +343,7 @@ XttGeQt::XttGeQt(QWidget *xg_parent_wid, void *xg_parent_ctx,
   graph->eventlog_cb = &ge_eventlog_cb;
 
   QObject::connect(((GraphQt *) graph)->grow_widget,
-                   SLOT(resize_signal(QResizeEvent * )), toplevel,
+                   SIGNAL(resize_signal(QResizeEvent * )), toplevel,
                    SLOT(action_resize(QResizeEvent * )));
   //TODO: grow_widget must emit a resize_signal signal in resizeEvent()
 

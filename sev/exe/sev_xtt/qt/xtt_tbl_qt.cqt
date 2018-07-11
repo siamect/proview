@@ -99,6 +99,31 @@ void XttTblQtWidget::activate_print()
   tbl->activate_print();
 }
 
+void XttTblQtWidget::activate_login()
+{
+  tbl->open_login();
+}
+
+void XttTblQtWidget::activate_logout()
+{
+  tbl->logout();
+}
+
+void XttTblQtWidget::activate_zoom_in()
+{
+  tbl->activate_zoom_in();
+}
+
+void XttTblQtWidget::activate_zoom_out()
+{
+  tbl->activate_zoom_out();
+}
+
+void XttTblQtWidget::activate_zoom_reset()
+{
+  tbl->activate_zoom_reset();
+}
+
 void XttTblQtWidget::activate_help()
 {
   if (!tbl->is_authorized()) {
@@ -246,8 +271,8 @@ XttTblQt::XttTblQt(QWidget *a_parent_wid, void *a_parent_ctx,
   QMenu *file = menu_bar->addMenu(translate_utf8("&File"));
   addMenuItem(toplevel, file, "&Print", SLOT(activate_print()), "",
               "document-print");
-  addMenuItem(toplevel, file, "&Login", SLOT(open_login()));
-  addMenuItem(toplevel, file, "Log&Out", SLOT(logout()));
+  addMenuItem(toplevel, file, "&Login", SLOT(activate_login()));
+  addMenuItem(toplevel, file, "Log&Out", SLOT(activate_logout()));
   addMenuItem(toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
   // Functions entry
@@ -280,11 +305,11 @@ XttTblQt::XttTblQt(QWidget *a_parent_wid, void *a_parent_ctx,
 
   addToolItem(toplevel, tools, "Open history item", SLOT(activate_opensevhist()),
               "$pwr_exe/xtt_meth_trend.png");
-  addToolItem(toplevel, tools, "Zoom in", SLOT(activate_zoomin()),
+  addToolItem(toplevel, tools, "Zoom in", SLOT(activate_zoom_in()),
               "$pwr_exe/xtt_zoom_in.png");
-  addToolItem(toplevel, tools, "Zoom out", SLOT(activate_zoomout()),
+  addToolItem(toplevel, tools, "Zoom out", SLOT(activate_zoom_out()),
               "$pwr_exe/xtt_zoom_out.png");
-  addToolItem(toplevel, tools, "Zoom reset", SLOT(activate_zoomreset()),
+  addToolItem(toplevel, tools, "Zoom reset", SLOT(activate_zoom_reset()),
               "$pwr_exe/xtt_zoom_reset.png");
 
   // Statusbar and cmd input

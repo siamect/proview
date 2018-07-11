@@ -78,14 +78,27 @@ protected:
 
 public slots:
   void activate_print();
-  void activate_zoom_in();
-  void activate_zoom_out();
-  void activate_zoom_reset();
-  void activate_scantime1();
-  void activate_scantime2();
-  void activate_scantime3();
-  void activate_scantime4();
-  void activate_scantime5();
+  void activate_printselect();
+  void activate_savetrace();
+  void activate_restoretrace();
+  void activate_cleartrace();
+  void activate_parent_window();
+  void activate_display_object();
+  void activate_collect_insert();
+  void activate_open_object();
+  void activate_open_subwindow();
+  void activate_show_cross();
+  void activate_open_classgraph();
+  void activate_trace();
+  void activate_simulate();
+  void activate_view();
+  void activate_zoomin();
+  void activate_zoomout();
+  void activate_zoomreset();
+  void activate_scantime();
+  void activate_help();
+  void activate_helpplc();
+  void activate_helpplclist();
 
 private:
   RtTraceQt *rt;

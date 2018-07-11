@@ -81,7 +81,20 @@ protected:
   void closeEvent(QCloseEvent *event);
 
 public slots:
+  void activate_change_value();
+  void activate_exit();
+  void activate_help();
+  void activate_copy();
+  void activate_cut();
+  void activate_paste();
+  void activate_zoom_in();
+  void activate_zoom_out();
+  void activate_zoom_reset();
+  void activate_print();
   void activate_cmd_input();
+  void activate_cmd_ok();
+  void activate_cmd_apply();
+  void activate_cmd_ca();
 
   void valchanged_cmd_input()
   {

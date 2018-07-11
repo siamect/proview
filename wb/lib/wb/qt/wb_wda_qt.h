@@ -106,6 +106,12 @@ protected:
 
 public slots:
   void activate_change_value();
+  void activate_close_changeval();
+  void activate_export_text();
+  void activate_import_text();
+  void activate_print();
+  void activate_setclass();
+  void activate_setattr();
   void activate_nextattr();
   void activate_prevattr();
   void activate_help();

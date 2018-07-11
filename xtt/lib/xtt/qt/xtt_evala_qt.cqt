@@ -298,6 +298,21 @@ void EvAlaQtWidget::closeEvent(QCloseEvent *event)
   QWidget::closeEvent(event);
 }
 
+void EvAlaQtWidget::ala_activate_print()
+{
+  ala->ala_activate_print();
+}
+
+void EvAlaQtWidget::ala_activate_ack_last()
+{
+  ala->ala_activate_ack_last();
+}
+
+void EvAlaQtWidget::ala_activate_ack_all()
+{
+  ala->ala_activate_ack_all();
+}
+
 void EvAlaQtWidget::ala_activate_shift_view()
 {
   ala->view_shift();
@@ -352,4 +367,14 @@ void EvAlaQtWidget::ala_activate_hide_object(bool set)
 void EvAlaQtWidget::ala_activate_hide_text(bool set)
 {
   ala->ala->set_hide_text(set);
+}
+
+void EvAlaQtWidget::ala_activate_help()
+{
+  ala->ala_activate_help();
+}
+
+void EvAlaQtWidget::ala_activate_helpevent()
+{
+  ala->ala_activate_helpevent();
 }

@@ -261,12 +261,8 @@ public slots:
   void activate_pasteinto();
   void activate_copykeep();
   void activate_rename();
-  void activate_creaobjafter();
-  void activate_creaobjfirst();
-  void activate_moveobjup();
-  void activate_moveobjdown();
-  void activate_moveobjinto();
-  void activate_moveobjontop();
+  void activate_creaobj();
+  void activate_moveobj();
   void activate_deleteobj();
   void activate_configure();
   void activate_utilities();

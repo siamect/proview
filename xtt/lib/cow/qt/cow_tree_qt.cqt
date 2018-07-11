@@ -90,6 +90,31 @@ void CowTreeQtWidget::focusInEvent(QFocusEvent *event)
   QWidget::focusInEvent(event);
 }
 
+void CowTreeQtWidget::activate_print()
+{
+  tree->activate_print();
+}
+
+void CowTreeQtWidget::activate_zoom_in()
+{
+  tree->activate_zoom_in();
+}
+
+void CowTreeQtWidget::activate_zoom_out()
+{
+  tree->activate_zoom_out();
+}
+
+void CowTreeQtWidget::activate_zoom_reset()
+{
+  tree->activate_zoom_reset();
+}
+
+void CowTreeQtWidget::activate_help()
+{
+  tree->activate_help();
+}
+
 void CowTreeQtWidget::activate_tree_layout()
 {
   tree->treenav->show_tree();

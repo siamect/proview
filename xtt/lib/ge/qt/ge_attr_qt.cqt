@@ -284,9 +284,29 @@ void AttrQtWidget::attr_activate_cmd_scrolled_ca()
   }
 }
 
+void AttrQtWidget::attr_activate_changevalue()
+{
+  attr->change_value();
+}
+
+void AttrQtWidget::attr_activate_store()
+{
+  attr->store();
+}
+
+void AttrQtWidget::attr_activate_recall()
+{
+  attr->recall_next();
+}
+
 void AttrQtWidget::attr_activate_help()
 {
   // Not yet implemented
+}
+
+void AttrQtWidget::attr_activate_recall_prev()
+{
+  attr->recall_prev();
 }
 
 void AttrQtWidget::action_text_inserted()
@@ -329,12 +349,14 @@ AttrQt::AttrQt(QWidget *a_parent_wid, void *a_parent_ctx, attr_eType a_type,
 
     // Functions entry
     QMenu *functions = menu_bar->addMenu(translate_utf8("&Functions"));
-    addMenuItem(toplevel, functions, "&Change Value", SLOT(change_value()),
-                "CTRL+Q");
-    addMenuItem(toplevel, functions, "&Store", SLOT(store()), "CTRL+T");
-    addMenuItem(toplevel, functions, "&Recall", SLOT(recall_next()), "CTRL+N");
-    addMenuItem(toplevel, functions, "Recall &previous", SLOT(recall_prev()),
-                "CTRL+P");
+    addMenuItem(toplevel, functions, "&Change Value",
+                SLOT(attr_activate_changevalue()), "CTRL+Q");
+    addMenuItem(toplevel, functions, "&Store", SLOT(attr_activate_store()),
+                "CTRL+T");
+    addMenuItem(toplevel, functions, "&Recall", SLOT(attr_activate_recall()),
+                "CTRL+N");
+    addMenuItem(toplevel, functions, "Recall &previous",
+                SLOT(attr_activate_recall_prev()), "CTRL+P");
 
     // Help entry
     QMenu *help = menu_bar->addMenu(translate_utf8("&Help"));
@@ -363,7 +385,7 @@ AttrQt::AttrQt(QWidget *a_parent_wid, void *a_parent_ctx, attr_eType a_type,
     cmd_entry = new CoWowEntryQt(&value_recall);
     cmd_entry->setFixedHeight(25);
     QObject::connect(cmd_entry, SIGNAL(editingFinished()), toplevel,
-                     SLOT(attr_activate_cmd_input()));
+                     SLOT(attr_activate_cmd_entry()));
 
     statusbar->addWidget(msg_label);
     statusbar->addWidget(cmd_prompt);
@@ -384,10 +406,10 @@ AttrQt::AttrQt(QWidget *a_parent_wid, void *a_parent_ctx, attr_eType a_type,
     buttons->addButton(QDialogButtonBox::Cancel);
     buttons->button(QDialogButtonBox::Cancel)->setFixedSize(70, 25);
     QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
-                     toplevel, SLOT(activate_cmd_scrolled_ok()));
+                     toplevel, SLOT(attr_activate_cmd_scrolled_ok()));
     QObject::connect(buttons->button(QDialogButtonBox::Cancel),
                      SIGNAL(clicked()), toplevel,
-                     SLOT(activate_cmd_scrolled_ca()));
+                     SLOT(attr_activate_cmd_scrolled_ca()));
 
     QVBoxLayout *cmd_scrolledinput_layout = new QVBoxLayout();
     add_expanding(cmd_scrolledinput_layout, cmd_scrolled_buffer);
@@ -415,9 +437,8 @@ AttrQt::AttrQt(QWidget *a_parent_wid, void *a_parent_ctx, attr_eType a_type,
       toplevel->setModal(true);
     }
   } else {
-    attrnav =
-        new AttrNavQt(this, a_parent_wid, type, "Plant", itemlist, item_cnt,
-                      &brow_widget, &sts);
+    attrnav = new AttrNavQt(this, a_parent_wid, type, "Plant", itemlist,
+                            item_cnt, &brow_widget, &sts);
     attrnav->message_cb = &Attr::message;
     attrnav->change_value_cb = &Attr::change_value_c;
     attrnav->get_subgraph_info_cb = &Attr::get_subgraph_info_c;

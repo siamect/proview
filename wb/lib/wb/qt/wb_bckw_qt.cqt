@@ -154,6 +154,46 @@ void WbBckWQt::set_title(char *title)
   toplevel->setWindowTitle(QString::fromLatin1(title));
 }
 
+void WbBckWQtWidget::activate_print()
+{
+  bck->activate_print();
+}
+
+void WbBckWQtWidget::activate_open()
+{
+  bck->activate_open();
+}
+
+void WbBckWQtWidget::activate_diff()
+{
+  bck->activate_diff();
+}
+
+void WbBckWQtWidget::activate_diff_wb()
+{
+  bck->activate_diff_wb();
+}
+
+void WbBckWQtWidget::activate_transfer_wb()
+{
+  bck->activate_transfer_wb();
+}
+
+void WbBckWQtWidget::activate_filter()
+{
+  bck->activate_filter();
+}
+
+void WbBckWQtWidget::activate_check_all()
+{
+  bck->activate_check_all();
+}
+
+void WbBckWQtWidget::activate_check_clear()
+{
+  bck->activate_check_clear();
+}
+
 void WbBckWQtWidget::activate_zoom_in()
 {
   bck->bckwnav->zoom(1.2);
