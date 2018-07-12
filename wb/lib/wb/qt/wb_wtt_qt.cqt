@@ -1485,7 +1485,7 @@ void WttQt::open_confirm(const char *text, const char *title,
   QMessageBox::StandardButton reply = QMessageBox::question(
       toplevel, translate_utf8(title), translate_utf8(text),
       QMessageBox::Ok | QMessageBox::No | QMessageBox::Cancel);
-  if (reply == QMessageBox::Yes) {
+  if (reply == QMessageBox::Ok) {
     if (ok_cb) {
       (ok_cb)(this);
     }
