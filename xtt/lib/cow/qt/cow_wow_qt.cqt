@@ -397,6 +397,8 @@ CoWowWarrantQt::CoWowWarrantQt(CoWowQtObject *parent)
   inner_layout->setAlignment(image, Qt::AlignTop);
 
   QLabel *label = new QLabel(loadText("acceptlicense.txt"), this);
+  label->adjustSize();
+  label->setMinimumWidth(label->width());
   label->setWordWrap(true);
   add_expanding(inner_layout, label);
 
@@ -418,7 +420,7 @@ CoWowWarrantQt::CoWowWarrantQt(CoWowQtObject *parent)
 
   setLayout(main_layout);
 
-  setFixedSize(850, 600);
+  adjustSize();
   setWindowTitle(translate_utf8("Accept License Terms"));
   setAttribute(Qt::WA_DeleteOnClose);
 
