@@ -320,15 +320,11 @@ int FlowDrawQt::event_handler(QEvent *event)
     }
   }
 
-  if (event->type() == QEvent::KeyPress) {
-    debug_print("event_handler: KeyPress!\n");
-  }
-
   if (windowEvent || event->type() == QEvent::KeyPress) {
     switch (event->type()) {
       case QEvent::KeyPress : {
         QKeyEvent *keyEvent = ((QKeyEvent *) event);
-        debug_print("event_handler: KeyPress key=%d\n", keyEvent->key());
+        debug_print("event_handler: KeyPress key=%s\n", QKeySequence(keyEvent->key()).toString().toAscii().data());
 
         switch (keyEvent->key()) {
           case Qt::Key_Return:

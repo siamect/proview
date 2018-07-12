@@ -59,13 +59,6 @@ typedef struct {
   int scroll_v_managed;
 } widget_sScroll;
 
-// QScrollArea does not forward events to its child widget
-// So we subclass QScrollArea and override the event() handler
-class QScrollAreaFlow : public QScrollArea {
-protected:
-  bool event(QEvent *event);
-};
-
 class QtScrollWidgetFlow : public QWidget {
   Q_OBJECT
 
@@ -104,9 +97,6 @@ public:
   int destroyed;
 
   QImage image;
-
-  QEvent *lastEvent;
-  time_t t;
 
   virtual void handleEvent(QEvent *event);
 

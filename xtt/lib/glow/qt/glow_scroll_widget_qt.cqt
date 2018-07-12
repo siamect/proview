@@ -59,6 +59,7 @@ void QtScrollWidgetGlow::init(
                                          void *client_data))
 {
   createBuffer(size());
+  setFocusPolicy(Qt::StrongFocus);
   this->ctxType = eCtxType;
   this->init_proc = init_proc;
   this->init_widget_proc = init_proc2;
@@ -71,12 +72,13 @@ QWidget *QtScrollWidgetGlow::initScroll(
                                          void *client_data))
 {
   createBuffer(size());
+  setFocusPolicy(Qt::StrongFocus);
   this->ctxType = eCtxType;
   this->init_proc = init_proc;
   this->init_widget_proc = init_proc2;
   this->client_data = client_data;
 
-  QScrollAreaGlow *form = new QScrollAreaGlow();
+  QScrollArea *form = new QScrollArea();
   scroll_h = form->horizontalScrollBar();
   scroll_v = form->verticalScrollBar();
   QObject::connect(scroll_h, SIGNAL(valueChanged(int)), this,
@@ -89,20 +91,10 @@ QWidget *QtScrollWidgetGlow::initScroll(
   return form;
 }
 
-bool QScrollAreaGlow::event(QEvent *event)
-{
-  QtScrollWidgetGlow *child = ((QtScrollWidgetGlow *) widget());
-  time_t t;
-  time(&t);
-  if (event->type() != child->lastEvent->type() || difftime(t, child->t) > 0.000001) {
-    child->handleEvent(event);
-  }
-  return QScrollArea::event(event);
-}
-
 void QtScrollWidgetGlow::init(unsigned int eCtxType, QWidget *main)
 {
   createBuffer(size());
+  setFocusPolicy(Qt::StrongFocus);
   this->ctxType = eCtxType;
   is_navigator = 1;
   main_widget = main;
@@ -266,8 +258,6 @@ bool QtScrollWidgetGlow::event(QEvent *event)
     is_realized = true;
   }
   handleEvent(event);
-  lastEvent = event;
-  time(&t);
   return QWidget::event(event);
 }
 
