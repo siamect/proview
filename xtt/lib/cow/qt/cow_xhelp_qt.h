@@ -38,40 +38,34 @@
 #define cow_xhelp_qt_h
 
 #ifndef cow_xhelp_h
-# include "cow_xhelp.h"
+#include "cow_xhelp.h"
 #endif
 
-#ifndef cow_wow_qt_h
-# include "cow_wow_qt.h"
-#endif
-
-#include <QToolBar>
-#include <QWidget>
+#include "cow_wow_qt.h"
 
 class CoXHelpQtWidget;
 
 class CoXHelpQt : public CoXHelp {
 public:
-  CoXHelpQt(QWidget *xa_parent_wid, void *xa_parent_ctx, xhelp_eUtility utility,
-            int *xa_sts);
+  CoXHelpQt(QWidget* xa_parent_wid, void* xa_parent_ctx, xhelp_eUtility utility,
+      int* xa_sts);
 
-  CoXHelpQtWidget *toplevel;
-  QWidget *brow_widget;
-  QWidget *form_widget;
-  QWidget *parent_wid;
+  CoXHelpQtWidget* toplevel;
+  QWidget* brow_widget;
+  QWidget* form_widget;
+  QWidget* parent_wid;
   CoWowFocusTimerQt focustimer;
 
   void set_dimension(int width, int height);
   void pop();
   void print();
-  void open_input_dialog(const char *text, const char *title,
-                         const char *init_text,
-                         void (*ok_cb)(CoXHelp *, char *));
+  void open_input_dialog(const char* text, const char* title,
+      const char* init_text, void (*ok_cb)(CoXHelp*, char*));
 
-  static QWidget *get_widget()
+  static QWidget* get_widget()
   {
     if (default_xhelp) {
-      return ((CoXHelpQt *) default_xhelp)->parent_wid;
+      return ((CoXHelpQt*)default_xhelp)->parent_wid;
     } else {
       return 0;
     }
@@ -82,12 +76,14 @@ class CoXHelpQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  CoXHelpQtWidget(CoXHelpQt *parent_ctx, QWidget *parent)
-      : QWidget(parent, Qt::Window), xhelp(parent_ctx) {}
+  CoXHelpQtWidget(CoXHelpQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), xhelp(parent_ctx)
+  {
+  }
 
 protected:
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void activate_print();
@@ -104,7 +100,7 @@ public slots:
   void activate_help();
 
 private:
-  CoXHelpQt *xhelp;
+  CoXHelpQt* xhelp;
 };
 
 #endif

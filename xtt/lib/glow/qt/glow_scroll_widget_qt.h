@@ -41,20 +41,17 @@
 #ifndef GLOW_SCROLL_WIDGET_QT_H
 #define GLOW_SCROLL_WIDGET_QT_H
 
-#include "glow.h"
-#include "glow_ctx.h"
 #include "glow_draw_qt.h"
 
 #include <QPaintEvent>
 #include <QScrollBar>
 #include <QScrollArea>
-#include <QWidget>
 
 typedef struct {
-  QWidget *parent;
-  QWidget *form;
-  QScrollBar *scroll_h;
-  QScrollBar *scroll_v;
+  QWidget* parent;
+  QWidget* form;
+  QScrollBar* scroll_h;
+  QScrollBar* scroll_v;
   int scroll_h_managed;
   int scroll_v_managed;
 } widget_sScroll;
@@ -64,25 +61,22 @@ class QtScrollWidgetGlow : public QWidget {
 
 public:
   void init(unsigned int eCtxType,
-            int (*init_proc)(GlowCtx *ctx, void *client_data),
-            void *client_data,
-            int (*init_proc2)(QWidget *w, GlowCtx *ctx, void *client_data));
-  QWidget *initScroll(unsigned int eCtxType,
-                      int (*init_proc)(GlowCtx *ctx, void *client_data),
-                      void *client_data,
-                      int (*init_proc2)(QWidget *w, GlowCtx *ctx,
-                                        void *client_data));
-  void init(unsigned int eCtxType, QWidget *main);
+      int (*init_proc)(GlowCtx* ctx, void* client_data), void* client_data,
+      int (*init_proc2)(QWidget* w, GlowCtx* ctx, void* client_data));
+  QWidget* initScroll(unsigned int eCtxType,
+      int (*init_proc)(GlowCtx* ctx, void* client_data), void* client_data,
+      int (*init_proc2)(QWidget* w, GlowCtx* ctx, void* client_data));
+  void init(unsigned int eCtxType, QWidget* main);
 
-  void *parent_ctx;
-  GlowDrawQt *draw_ctx;
-  int (*init_proc)(GlowCtx *ctx, void *clien_data);
-  int (*init_widget_proc)(QWidget *w, GlowCtx *ctx, void *client_data);
+  void* parent_ctx;
+  GlowDrawQt* draw_ctx;
+  int (*init_proc)(GlowCtx* ctx, void* clien_data);
+  int (*init_widget_proc)(QWidget* w, GlowCtx* ctx, void* client_data);
   int is_navigator;
-  void *client_data;
-  QWidget *main_widget;
-  QScrollBar *scroll_h;
-  QScrollBar *scroll_v;
+  void* client_data;
+  QWidget* main_widget;
+  QScrollBar* scroll_h;
+  QScrollBar* scroll_v;
   int scroll_h_ignore;
   int scroll_v_ignore;
   double scroll_h_value;
@@ -91,22 +85,22 @@ public:
   int scroll_v_pagesize;
   int scroll_h_upper;
   int scroll_v_upper;
-  QTimer *scroll_timerid;
+  QTimer* scroll_timerid;
   glow_sScroll scroll_data;
   int scroll_configure;
   int destroyed;
 
   QImage image;
 
-  virtual void handleEvent(QEvent *event);
+  virtual void handleEvent(QEvent* event);
 
 protected:
   virtual void realize();
 
-  void paintEvent(QPaintEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void paintEvent(QPaintEvent* event);
+  void closeEvent(QCloseEvent* event);
 
-  bool event(QEvent *event);
+  bool event(QEvent* event);
 
   bool is_realized;
   unsigned int ctxType;
@@ -120,4 +114,4 @@ public slots:
   void scroll_callback_cb();
 };
 
-#endif //GLOW_SCROLL_WIDGET_QT_H
+#endif // GLOW_SCROLL_WIDGET_QT_H

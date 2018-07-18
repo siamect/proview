@@ -37,36 +37,28 @@
 /* wb_cmd_gtk.c -- command file processing
    The main program of pwrc.  */
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <vector>
 #include <gtk/gtk.h>
 
-#include "pwr.h"
-#include "pwr_class.h"
 #include "co_dcli.h"
-#include "ge.h"
 #include "rt_load.h"
-#include "wb_foe_msg.h"
-#include "co_dcli.h"
-#include "co_dcli_input.h"
-#include "flow.h"
-#include "flow_ctx.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
-#include "wb_utl.h"
-#include "wb_lfu.h"
+
 #include "cow_login.h"
+#include "cow_msgwindow.h"
+
+#include "ge.h"
+
+#include "wb_cmdc_gtk.h"
+#include "wb_foe_msg.h"
+#include "wb_lfu.h"
+#include "wb_log_gtk.h"
+#include "wb_pal.h"
+#include "wb_utl.h"
+#include "wb_watt.h"
 #include "wb_wnav_gtk.h"
 #include "wb_wnav_item.h"
-#include "wb_pal.h"
-#include "wb_watt.h"
 #include "wb_wnav_msg.h"
-#include "wb_cmdc_gtk.h"
-#include "wb.h"
-#include "wb_log_gtk.h"
-#include "cow_msgwindow.h"
 
 CmdGtk::CmdGtk( int argc, char *argv[])
 {

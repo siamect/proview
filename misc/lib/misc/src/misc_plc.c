@@ -36,15 +36,12 @@
 
 /* misc_plc.c  Plc function object code. */
 
+#include <float.h>
 #include <math.h>
 #include <stdlib.h>
-#include <float.h>
-#include "pwr.h"
-#include "pwr_baseclasses.h"
-#include "pwr_miscellaneousclasses.h"
-#include "rt_gdh.h"
-#include "rt_plc.h"
+
 #include "co_time.h"
+
 #include "misc.h"
 
 #define BASE_SPEED 10

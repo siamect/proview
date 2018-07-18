@@ -40,7 +40,7 @@
 /* xtt_clog_qt.h -- Alarm and event windows in xtt */
 
 #ifndef xtt_clog_h
-# include "xtt_clog.h"
+#include "xtt_clog.h"
 #endif
 
 #include <QCheckBox>
@@ -50,23 +50,23 @@ class CLogQtWidget;
 
 class CLogQt : public CLog {
 public:
-  CLogQt(void *clog_parent_ctx, QWidget *clog_parent_wid, const char *clog_name,
-         pwr_tStatus *status);
+  CLogQt(void* clog_parent_ctx, QWidget* clog_parent_wid, const char* clog_name,
+      pwr_tStatus* status);
 
-  QWidget *parent_wid;
-  QWidget *parent_wid_clog;
-  QWidget *form_clog;
-  QWidget *clognav_widget;
-  QWidget *filter_form;
-  QCheckBox *show_success_w;
-  QCheckBox *show_info_w;
-  QCheckBox *show_warning_w;
-  QCheckBox *show_error_w;
-  QCheckBox *show_fatal_w;
-  QCheckBox *show_text_w;
-  QLineEdit *filter_string_w;
-  QWidget *filesel_form;
-  QWidget *filesel_list_w;
+  QWidget* parent_wid;
+  QWidget* parent_wid_clog;
+  QWidget* form_clog;
+  QWidget* clognav_widget;
+  QWidget* filter_form;
+  QCheckBox* show_success_w;
+  QCheckBox* show_info_w;
+  QCheckBox* show_warning_w;
+  QCheckBox* show_error_w;
+  QCheckBox* show_fatal_w;
+  QCheckBox* show_text_w;
+  QLineEdit* filter_string_w;
+  QWidget* filesel_form;
+  QWidget* filesel_list_w;
 
   void pop();
   void set_clock_cursor();
@@ -74,22 +74,24 @@ public:
   void create_filter_dialog();
   void print();
 
-  static void file_selected_cb(void *ctx, char *text, int ok_pressed);
+  static void file_selected_cb(void* ctx, char* text, int ok_pressed);
 
 private:
-  CLogQtWidget *toplevel;
+  CLogQtWidget* toplevel;
 };
 
 class CLogQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  CLogQtWidget(CLogQt *parent_ctx, QWidget *parent)
-      : QWidget(parent, Qt::Window), clog(parent_ctx) {}
+  CLogQtWidget(CLogQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), clog(parent_ctx)
+  {
+  }
 
 protected:
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void activate_select_file();
@@ -106,7 +108,7 @@ public slots:
   void filter_apply_cb();
 
 private:
-  CLogQt *clog;
+  CLogQt* clog;
 };
 
 #endif

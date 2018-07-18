@@ -36,37 +36,19 @@
 
 /* ge_subgraphs_qt.cpp -- Display object info */
 
-#include "glow_std.h"
-
-#include <stdio.h>
 #include <stdlib.h>
-#include <vector>
 
-extern "C" {
-#include "co_cdh.h"
-#include "co_time.h"
-#include "pwr_baseclasses.h"
-#include "co_dcli.h"
-}
+#include "cow_qt_helpers.h"
 
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
 #include "flow_browwidget_qt.h"
 
-#include "glow.h"
-#include "glow_growctx.h"
-#include "glow_growapi.h"
-
-#include "ge_dyn.h"
 #include "ge_attr_qt.h"
 #include "ge_subgraphs_qt.h"
-#include "ge_graph.h"
 
 #include <QMenuBar>
 #include <QVBoxLayout>
 
-void SubGraphsQtWidget::closeEvent(QCloseEvent *event)
+void SubGraphsQtWidget::closeEvent(QCloseEvent* event)
 {
   if (subgraphs->close_cb) {
     (subgraphs->close_cb)(subgraphs);
@@ -76,17 +58,17 @@ void SubGraphsQtWidget::closeEvent(QCloseEvent *event)
   QWidget::closeEvent(event);
 }
 
-void SubGraphsQtWidget::focusInEvent(QFocusEvent *event)
+void SubGraphsQtWidget::focusInEvent(QFocusEvent* event)
 {
   subgraphs->brow_widget->window()->setFocus();
 }
 
 void SubGraphsQtWidget::subgraphs_activate_attr()
 {
-  ItemSubGraph *item;
+  ItemSubGraph* item;
   int sts;
 
-  sts = subgraphs->get_select((void **) &item);
+  sts = subgraphs->get_select((void**)&item);
   if (ODD(sts)) {
     subgraphs->edit_attributes(item->nodeclass);
   }
@@ -94,10 +76,10 @@ void SubGraphsQtWidget::subgraphs_activate_attr()
 
 void SubGraphsQtWidget::subgraphs_activate_set_extern()
 {
-  ItemSubGraph *item;
+  ItemSubGraph* item;
   int sts;
 
-  sts = subgraphs->get_select((void **) &item);
+  sts = subgraphs->get_select((void**)&item);
   if (ODD(sts)) {
     item->set_extern(1);
   }
@@ -105,10 +87,10 @@ void SubGraphsQtWidget::subgraphs_activate_set_extern()
 
 void SubGraphsQtWidget::subgraphs_activate_set_intern()
 {
-  ItemSubGraph *item;
+  ItemSubGraph* item;
   int sts;
 
-  sts = subgraphs->get_select((void **) &item);
+  sts = subgraphs->get_select((void**)&item);
   if (ODD(sts)) {
     item->set_extern(0);
   }
@@ -128,9 +110,8 @@ void SubGraphsQtWidget::subgraphs_activate_help()
 {
 }
 
-SubGraphsQt::SubGraphsQt(void *xn_parent_ctx, QWidget *xn_parent_wid,
-                         const char *xn_name, void *xn_growctx, QWidget **w,
-                         pwr_tStatus *status)
+SubGraphsQt::SubGraphsQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
+    const char* xn_name, void* xn_growctx, QWidget** w, pwr_tStatus* status)
     : SubGraphs(xn_parent_ctx, xn_name, xn_growctx, status),
       parent_wid(xn_parent_wid)
 {
@@ -142,31 +123,33 @@ SubGraphsQt::SubGraphsQt(void *xn_parent_ctx, QWidget *xn_parent_wid,
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
   // Menu
-  QMenuBar *menu_bar = new QMenuBar(toplevel);
+  QMenuBar* menu_bar = new QMenuBar(toplevel);
 
   // File entry
-  QMenu *file = menu_bar->addMenu(fl("&File"));
-  addMenuItem(toplevel, file, "&Attributes", SLOT(subgraphs_activate_attr()),
-              "CTRL+A");
-  addMenuItem(toplevel, file, "Set &Extern", SLOT(subgraphs_activate_set_extern()),
-              "CTRL+E");
-  addMenuItem(toplevel, file, "Set &Intern", SLOT(subgraphs_activate_set_intern()),
-              "CTRL+I");
+  QMenu* file = menu_bar->addMenu(fl("&File"));
+  addMenuItem(
+      toplevel, file, "&Attributes", SLOT(subgraphs_activate_attr()), "CTRL+A");
+  addMenuItem(toplevel, file, "Set &Extern",
+      SLOT(subgraphs_activate_set_extern()), "CTRL+E");
+  addMenuItem(toplevel, file, "Set &Intern",
+      SLOT(subgraphs_activate_set_intern()), "CTRL+I");
   addMenuItem(toplevel, file, "Set &All Intern",
-              SLOT(subgraphs_activate_set_all_intern()), "CTRL+L");
+      SLOT(subgraphs_activate_set_all_intern()), "CTRL+L");
   addMenuItem(toplevel, file, "Set A&ll Extern",
-              SLOT(subgraphs_activate_set_all_extern()), "CTRL+K");
-  addMenuItem(toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+      SLOT(subgraphs_activate_set_all_extern()), "CTRL+K");
+  addMenuItem(
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
   // Help entry
-  QMenu *help = menu_bar->addMenu(fl("&Help"));
-  addMenuItem(toplevel, help, "&Help", SLOT(subgraphs_activate_help()), "CTRL+H");
+  QMenu* help = menu_bar->addMenu(fl("&Help"));
+  addMenuItem(
+      toplevel, help, "&Help", SLOT(subgraphs_activate_help()), "CTRL+H");
 
   debug_print("creating a scrolledbrowwidgetqt\n");
-  form_widget =
-      scrolledbrowwidgetqt_new(SubGraphs::init_brow_cb, this, &brow_widget);
+  form_widget
+      = scrolledbrowwidgetqt_new(SubGraphs::init_brow_cb, this, &brow_widget);
 
-  QVBoxLayout *vbox = new QVBoxLayout(toplevel);
+  QVBoxLayout* vbox = new QVBoxLayout(toplevel);
   vbox->setMenuBar(menu_bar);
   add_expanding(vbox, form_widget);
 
@@ -188,7 +171,7 @@ SubGraphsQt::~SubGraphsQt()
   while (attrlist_p) {
     next_p = attrlist_p->next;
     delete attrlist_p->attrctx;
-    free((char *) attrlist_p);
+    free((char*)attrlist_p);
     attrlist_p = next_p;
   }
 
@@ -214,8 +197,8 @@ void SubGraphsQtWidget::trace_scan()
   }
 }
 
-Attr *SubGraphsQt::new_attr(void *object, attr_sItem *items, int num)
+Attr* SubGraphsQt::new_attr(void* object, attr_sItem* items, int num)
 {
-  return new AttrQt(parent_wid, this, attr_eType_Attributes, object, items,
-                    num);
+  return new AttrQt(
+      parent_wid, this, attr_eType_Attributes, object, items, num);
 }

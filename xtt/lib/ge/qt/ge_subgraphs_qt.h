@@ -37,15 +37,11 @@
 #ifndef ge_subgraphs_qt_h
 #define ge_subgraphs_qt_h
 
-#include "glow.h"
-#include "glow_growctx.h"
-#include "glow_growapi.h"
-
-#include "ge_dyn.h"
 #ifndef ge_subgraphs_h
-# include "ge_subgraphs.h"
+#include "ge_subgraphs.h"
 #endif
 
+#include <QTimer>
 #include <QWidget>
 
 /*! \file ge_subgraphs_qt.h
@@ -58,32 +54,34 @@ class SubGraphsQtWidget;
 //! Display loaded subgraphs.
 class SubGraphsQt : public SubGraphs {
 public:
-  SubGraphsQt(void *xn_parent_ctx, QWidget *xn_parent_wid, const char *xn_name,
-              void *grow_ctx, QWidget **w, pwr_tStatus *status);
+  SubGraphsQt(void* xn_parent_ctx, QWidget* xn_parent_wid, const char* xn_name,
+      void* grow_ctx, QWidget** w, pwr_tStatus* status);
 
-  QWidget *subgraphs_form;
-  QWidget *brow_widget;
-  QWidget *form_widget;
+  QWidget* subgraphs_form;
+  QWidget* brow_widget;
+  QWidget* form_widget;
 
   void trace_start();
-  Attr *new_attr(void *object, attr_sItem *items, int num);
+  Attr* new_attr(void* object, attr_sItem* items, int num);
   ~SubGraphsQt();
 
 private:
-  SubGraphsQtWidget *toplevel;
-  QWidget *parent_wid;
+  SubGraphsQtWidget* toplevel;
+  QWidget* parent_wid;
 };
 
 class SubGraphsQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  SubGraphsQtWidget(SubGraphsQt *parent_ctx, QWidget *parent)
-      : QWidget(parent, Qt::Window), subgraphs(parent_ctx) {}
+  SubGraphsQtWidget(SubGraphsQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), subgraphs(parent_ctx)
+  {
+  }
 
 protected:
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void trace_scan();
@@ -95,8 +93,8 @@ public slots:
   void subgraphs_activate_help();
 
 private:
-  QTimer *trace_timerid;
-  SubGraphsQt *subgraphs;
+  QTimer* trace_timerid;
+  SubGraphsQt* subgraphs;
 };
 
 /*@}*/

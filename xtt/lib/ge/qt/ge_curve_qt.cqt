@@ -34,38 +34,17 @@
  * General Public License plus this exception.
  **/
 
-#include "glow_std.h"
-
 #include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <math.h>
-#include <float.h>
 
-#include "rt_load.h"
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
-#include "flow_browwidget_qt.h"
-#include "glow.h"
-#include "glow_curvectx.h"
-#include "glow_curvewidget_qt.h"
-#include "glow_growctx.h"
-#include "glow_growwidget_qt.h"
-#include "glow_curveapi.h"
-#include "glow_msg.h"
-#include "rt_gdh.h"
-#include "rt_gdh_msg.h"
 #include "co_cdh.h"
-#include "co_time.h"
-#include "co_dcli.h"
-#include "cow_wow_qt.h"
-#include "co_lng.h"
 
-#include "glow_growctx.h"
-#include "glow_growapi.h"
+#include "cow_qt_helpers.h"
+
+#include "glow_curveapi.h"
+#include "glow_curvewidget_qt.h"
+#include "glow_growwidget_qt.h"
+
 #include "ge_curve_qt.h"
-#include "ge_msg.h"
 
 #include <QDialogButtonBox>
 #include <QHBoxLayout>
@@ -79,30 +58,25 @@ typedef struct {
   time_ePeriod period;
 } ge_sTimeComboText;
 
-ge_sTimeComboText curve_timecombo_text[] =
-    {{"One Second",      time_ePeriod_OneSecond},
-     {"10 Seconds",      time_ePeriod_10Seconds},
-     {"One Minute",      time_ePeriod_OneMinute},
-     {"10 Minutes",      time_ePeriod_10Minutes},
-     {"One Hour",        time_ePeriod_OneHour},
-     {"One Day",         time_ePeriod_OneDay},
-     {"One Week",        time_ePeriod_OneWeek},
-     {"One Month",       time_ePeriod_OneMonth},
-     {"One Year",        time_ePeriod_OneYear},
-     {"Last Minute",     time_ePeriod_LastMinute},
-     {"Last 10 Minutes", time_ePeriod_Last10Minutes},
-     {"Last Hour",       time_ePeriod_LastHour},
-     {"Today",           time_ePeriod_Today},
-     {"Yesterday",       time_ePeriod_Yesterday},
-     {"This Week",       time_ePeriod_ThisWeek},
-     {"Last Week",       time_ePeriod_LastWeek},
-     {"This Month",      time_ePeriod_ThisMonth},
-     {"Last Month",      time_ePeriod_LastMonth},
-     {"This Year",       time_ePeriod_ThisYear},
-     {"All Time",        time_ePeriod_AllTime},
-     {"Edit",            time_ePeriod_UserDefined},
-     {"Markers",         ge_ePeriod_Markers},
-     {"",                time_ePeriod_}};
+ge_sTimeComboText curve_timecombo_text[] = { { "One Second",
+                                                 time_ePeriod_OneSecond },
+  { "10 Seconds", time_ePeriod_10Seconds },
+  { "One Minute", time_ePeriod_OneMinute },
+  { "10 Minutes", time_ePeriod_10Minutes },
+  { "One Hour", time_ePeriod_OneHour }, { "One Day", time_ePeriod_OneDay },
+  { "One Week", time_ePeriod_OneWeek }, { "One Month", time_ePeriod_OneMonth },
+  { "One Year", time_ePeriod_OneYear },
+  { "Last Minute", time_ePeriod_LastMinute },
+  { "Last 10 Minutes", time_ePeriod_Last10Minutes },
+  { "Last Hour", time_ePeriod_LastHour }, { "Today", time_ePeriod_Today },
+  { "Yesterday", time_ePeriod_Yesterday },
+  { "This Week", time_ePeriod_ThisWeek },
+  { "Last Week", time_ePeriod_LastWeek },
+  { "This Month", time_ePeriod_ThisMonth },
+  { "Last Month", time_ePeriod_LastMonth },
+  { "This Year", time_ePeriod_ThisYear }, { "All Time", time_ePeriod_AllTime },
+  { "Edit", time_ePeriod_UserDefined }, { "Markers", ge_ePeriod_Markers },
+  { "", time_ePeriod_ } };
 
 void GeCurveQt::set_period(time_ePeriod period, int nocallback)
 {
@@ -120,7 +94,7 @@ void GeCurveQt::set_period(time_ePeriod period, int nocallback)
   }
 }
 
-int GeCurveQt::get_period(time_ePeriod *period)
+int GeCurveQt::get_period(time_ePeriod* period)
 {
   *period = time_ePeriod_;
 
@@ -253,7 +227,9 @@ void GeCurveQtWidget::activate_timecombo(int index)
   }
 
   int sts = curve->get_period(&period);
-  if (EVEN(sts)) { return; }
+  if (EVEN(sts)) {
+    return;
+  }
 
   if (period == time_ePeriod_UserDefined) {
     curve->activate_edit();
@@ -276,20 +252,22 @@ void GeCurveQtWidget::activate_showname()
 
 void GeCurveQtWidget::activate_filledcurves(bool set)
 {
-  if (sender() == ((GeCurveQt *)curve)->tools_curve_fill) {
+  if (sender() == ((GeCurveQt*)curve)->tools_curve_fill) {
     set = curve->fill_curves = !curve->fill_curves;
   } else {
-    set = ((QAction *)sender())->isChecked();
+    set = ((QAction*)sender())->isChecked();
   }
   curve->activate_filledcurves(set);
 }
 
-void GeCurveQtWidget::activate_curvetype() {
-  QAction *a = ((QAction *) sender());
+void GeCurveQtWidget::activate_curvetype()
+{
+  QAction* a = ((QAction*)sender());
   curve->activate_curvetype(static_cast<glow_eCurveType>(a->data().toInt()));
 }
 
-void GeCurveQtWidget::activate_digsplit() {
+void GeCurveQtWidget::activate_digsplit()
+{
   curve->activate_digsplit();
 }
 
@@ -378,7 +356,9 @@ void GeCurveQtWidget::activate_export_ok()
   time_GetTime(&to);
 
   QString value = curve->export_attrcombo_widget->currentText();
-  if (value.isNull()) { return; }
+  if (value.isNull()) {
+    return;
+  }
 
   if (value.compare(translate_utf8("All Attributes")) == 0) {
     idx = -1;
@@ -421,7 +401,8 @@ void GeCurveQtWidget::activate_export_ok()
   curve->export_widget->setVisible(false);
 
   if (curve->export_cb) {
-    sts = (curve->export_cb)(curve->parent_ctx, &from, &to, rows, idx, filename);
+    sts = (curve->export_cb)(
+        curve->parent_ctx, &from, &to, rows, idx, filename);
     if (EVEN(sts)) {
       curve->wow->DisplayError("Export error", "Export error");
       return;
@@ -437,15 +418,14 @@ void GeCurveQtWidget::activate_export_cancel()
 void GeCurveQtWidget::activate_export_browse()
 {
   QByteArray ba = translate_utf8("File Selection").toLocal8Bit();
-  curve->wow->CreateFileSelDia(ba.data(), (void *) this,
-                               GeCurveQt::export_file_selected_cb,
-                               wow_eFileSelType_History);
+  curve->wow->CreateFileSelDia(ba.data(), (void*)this,
+      GeCurveQt::export_file_selected_cb, wow_eFileSelType_History);
 }
 
-void GeCurveQt::export_file_selected_cb(void *ctx, char *filename,
-                                        wow_eFileSelType file_type)
+void GeCurveQt::export_file_selected_cb(
+    void* ctx, char* filename, wow_eFileSelType file_type)
 {
-  GeCurveQt *curve = (GeCurveQt *) ctx;
+  GeCurveQt* curve = (GeCurveQt*)ctx;
 
   curve->export_filename_widget->setText(fl(filename));
 }
@@ -501,12 +481,17 @@ void GeCurveQt::setup(unsigned int mask)
   menu_export->setVisible(mask & curve_mEnable_Export ? TRUE : FALSE);
   sea_timebox->setVisible(mask & curve_mEnable_Timebox ? TRUE : FALSE);
   tools_add->setVisible(mask & curve_mEnable_Add ? TRUE : FALSE);
-  tools_curvetype_line->setVisible(mask & curve_mEnable_CurveType ? TRUE : FALSE);
-  tools_curvetype_points->setVisible(mask & curve_mEnable_CurveType ? TRUE : FALSE);
-  tools_curvetype_linepoints->setVisible(mask & curve_mEnable_CurveType ? TRUE : FALSE);
-  tools_curvetype_square->setVisible(mask & curve_mEnable_CurveType ? TRUE : FALSE);
+  tools_curvetype_line->setVisible(
+      mask & curve_mEnable_CurveType ? TRUE : FALSE);
+  tools_curvetype_points->setVisible(
+      mask & curve_mEnable_CurveType ? TRUE : FALSE);
+  tools_curvetype_linepoints->setVisible(
+      mask & curve_mEnable_CurveType ? TRUE : FALSE);
+  tools_curvetype_square->setVisible(
+      mask & curve_mEnable_CurveType ? TRUE : FALSE);
   tools_curve_fill->setVisible(mask & curve_mEnable_FillCurve ? TRUE : FALSE);
-  tools_curve_digsplit->setVisible(mask & curve_mEnable_DigitalSplit ? TRUE : FALSE);
+  tools_curve_digsplit->setVisible(
+      mask & curve_mEnable_DigitalSplit ? TRUE : FALSE);
   layout_mask = mask;
 }
 
@@ -515,7 +500,7 @@ void GeCurveQt::pop()
   ::pop(toplevel);
 }
 
-void GeCurveQt::write_title(char *str)
+void GeCurveQt::write_title(char* str)
 {
   toplevel->setWindowTitle(fl(str));
 }
@@ -558,8 +543,8 @@ void GeCurveQt::open_minmax(int idx)
   minmax_idx = idx;
 }
 
-void GeCurveQt::open_export(pwr_tTime *from, pwr_tTime *to, int rows,
-                            char *filename)
+void GeCurveQt::open_export(
+    pwr_tTime* from, pwr_tTime* to, int rows, char* filename)
 {
   char fromtime_str[40];
   char totime_str[40];
@@ -568,8 +553,8 @@ void GeCurveQt::open_export(pwr_tTime *from, pwr_tTime *to, int rows,
   create_export_dialog();
 
   if (layout_mask & curve_mEnable_ExportTime) {
-    time_AtoAscii(from, time_eFormat_DateAndTime, fromtime_str,
-                  sizeof(fromtime_str));
+    time_AtoAscii(
+        from, time_eFormat_DateAndTime, fromtime_str, sizeof(fromtime_str));
     time_AtoAscii(to, time_eFormat_DateAndTime, totime_str, sizeof(totime_str));
     sprintf(rows_str, "%d", rows);
 
@@ -580,7 +565,7 @@ void GeCurveQt::open_export(pwr_tTime *from, pwr_tTime *to, int rows,
   export_filename_widget->setText(fl(filename));
 }
 
-void GeCurveQt::set_times(pwr_tTime *from, pwr_tTime *to)
+void GeCurveQt::set_times(pwr_tTime* from, pwr_tTime* to)
 {
   char timestr[32];
 
@@ -597,7 +582,7 @@ void GeCurveQt::set_times_sensitivity(int sensitive)
   timebox_stop_time->setEnabled(sensitive ? TRUE : FALSE);
 }
 
-pwr_tStatus GeCurveQt::get_times(pwr_tTime *from, pwr_tTime *to)
+pwr_tStatus GeCurveQt::get_times(pwr_tTime* from, pwr_tTime* to)
 {
   QByteArray from_p = timebox_start_time->text().toLocal8Bit();
   pwr_tStatus sts = time_FormAsciiToA(from_p.data(), SWE, SECOND, from);
@@ -629,7 +614,7 @@ void GeCurveQt::reset_cursor()
   toplevel->unsetCursor();
 }
 
-void *GeCurveQt::get_widget()
+void* GeCurveQt::get_widget()
 {
   if (options & curve_mOptions_Embedded) {
     return vbox;
@@ -646,15 +631,15 @@ GeCurveQt::~GeCurveQt()
   }
 }
 
-void GeCurveQtWidget::closeEvent(QCloseEvent *event)
+void GeCurveQtWidget::closeEvent(QCloseEvent* event)
 {
-  if ( !(curve->options & curve_mOptions_Embedded)) {
+  if (!(curve->options & curve_mOptions_Embedded)) {
     curve->activate_exit();
   }
   QWidget::closeEvent(event);
 }
 
-void GeCurveQtWidget::focusInEvent(QFocusEvent *event)
+void GeCurveQtWidget::focusInEvent(QFocusEvent* event)
 {
   if (!curve->focustimer.disabled()) {
     curve->set_inputfocus();
@@ -664,13 +649,12 @@ void GeCurveQtWidget::focusInEvent(QFocusEvent *event)
   QWidget::focusInEvent(event);
 }
 
-GeCurveQt::GeCurveQt(void *gc_parent_ctx, QWidget *parent_widget,
-                     char *curve_name, char *filename, GeCurveData *curve_data,
-                     int pos_right, int gc_width, int gc_height,
-                     unsigned int gc_options, int gc_color_theme,
-                     void *basewidget)
+GeCurveQt::GeCurveQt(void* gc_parent_ctx, QWidget* parent_widget,
+    char* curve_name, char* filename, GeCurveData* curve_data, int pos_right,
+    int gc_width, int gc_height, unsigned int gc_options, int gc_color_theme,
+    void* basewidget)
     : GeCurve(gc_parent_ctx, curve_name, filename, curve_data, pos_right,
-              gc_width, gc_height, gc_options, gc_color_theme),
+          gc_width, gc_height, gc_options, gc_color_theme),
       minmax_widget(0), export_widget(0), disable_timecombo_callback(0)
 {
   int window_width = 900;
@@ -683,7 +667,7 @@ GeCurveQt::GeCurveQt(void *gc_parent_ctx, QWidget *parent_widget,
     window_width = gc_width;
   }
   if (gc_height != 0) {
-    height_scale = (float) gc_height / window_height;
+    height_scale = (float)gc_height / window_height;
     window_height = gc_height;
   }
 
@@ -700,67 +684,69 @@ GeCurveQt::GeCurveQt(void *gc_parent_ctx, QWidget *parent_widget,
     CoWowQt::SetWindowIcon(toplevel);
   }
 
-  QMenuBar *menu_bar = new QMenuBar();
+  QMenuBar* menu_bar = new QMenuBar();
 
   // File Entry
-  QMenu *file = menu_bar->addMenu(translate_utf8("&File"));
+  QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
   addMenuItem(toplevel, file, "&Add", SLOT(activate_madd()));
   addMenuItem(toplevel, file, "&Refresh", SLOT(activate_configure()), "CTRL+R");
-  addMenuItem(toplevel, file, "&Print", SLOT(activate_print()), "",
-              "document-print");
+  addMenuItem(
+      toplevel, file, "&Print", SLOT(activate_print()), "", "document-print");
   addMenuItem(toplevel, file, "&New", SLOT(activate_new()));
   addMenuItem(toplevel, file, "&Open", SLOT(activate_open()));
   addMenuItem(toplevel, file, "S&ave", SLOT(activate_save()), "CTRL+S");
   addMenuItem(toplevel, file, "&Snapshot", SLOT(activate_snapshot()), "CTRL+N");
   addMenuItem(toplevel, file, "&Export", SLOT(activate_export()));
-  addMenuItem(toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+  addMenuItem(
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
   // View menu
-  QMenu *view = menu_bar->addMenu(translate_utf8("&View"));
-  addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoomin()), "CTRL+I",
-              "zoom-in");
+  QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
+  addMenuItem(
+      toplevel, view, "Zoom &In", SLOT(activate_zoomin()), "CTRL+I", "zoom-in");
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoomout()), "CTRL+O",
-              "zoom-out");
+      "zoom-out");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoomreset()), "",
-              "zoom-original");
+      "zoom-original");
   addMenuItem(toplevel, view, "&Background Color", SLOT(activate_background()));
-  addMenuItem(toplevel, view, "&Show Names", SLOT(activate_showname()), "CTRL+W");
-  addCheckableMenuItem(toplevel, view, "&Filled Curves",
-                       SLOT(activate_filledcurves()));
+  addMenuItem(
+      toplevel, view, "&Show Names", SLOT(activate_showname()), "CTRL+W");
+  addCheckableMenuItem(
+      toplevel, view, "&Filled Curves", SLOT(activate_filledcurves()));
   addMenuItem(toplevel, view, "_X-Axis Limits", SLOT(activate_xlimits()));
 
   // Menu Help
-  QMenu *help = menu_bar->addMenu(translate_utf8("&Help"));
-  addMenuItem(toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H",
-              "system-help");
+  QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
+  addMenuItem(
+      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "system-help");
 
   // Toolbar
-  QToolBar *tools = new QToolBar();
+  QToolBar* tools = new QToolBar();
   addToolItem(toplevel, tools, "Zoom in", SLOT(activate_zoomin()),
-              "$pwr_exe/xtt_zoom_in.png");
+      "$pwr_exe/xtt_zoom_in.png");
   addToolItem(toplevel, tools, "Zoom out", SLOT(activate_zoomout()),
-              "$pwr_exe/xtt_zoom_out.png");
+      "$pwr_exe/xtt_zoom_out.png");
   addToolItem(toplevel, tools, "Zoom reset", SLOT(activate_zoomreset()),
-              "$pwr_exe/xtt_zoom_reset.png");
+      "$pwr_exe/xtt_zoom_reset.png");
   addToolItem(toplevel, tools, "Page left", SLOT(activate_page_left()),
-              "$pwr_exe/ge_page_left.png");
+      "$pwr_exe/ge_page_left.png");
   addToolItem(toplevel, tools, "Scroll left", SLOT(activate_scroll_left()),
-              "$pwr_exe/ge_scroll_left.png");
+      "$pwr_exe/ge_scroll_left.png");
   addToolItem(toplevel, tools, "Scroll right", SLOT(activate_scroll_right()),
-              "$pwr_exe/ge_scroll_right.png");
+      "$pwr_exe/ge_scroll_right.png");
   addToolItem(toplevel, tools, "Page right", SLOT(activate_page_right()),
-              "$pwr_exe/ge_page_right.png");
-  tools_add = addToolItem(toplevel, tools, "Add", SLOT(activate_add()),
-      "$pwr_exe/xtt_add.png");
+      "$pwr_exe/ge_page_right.png");
+  tools_add = addToolItem(
+      toplevel, tools, "Add", SLOT(activate_add()), "$pwr_exe/xtt_add.png");
   tools_curvetype_line = addToolItem(toplevel, tools, "Curve line",
       SLOT(activate_curvetype()), "$pwr_exe/xtt_curve_line.png");
   tools_curvetype_line->setData(glow_eCurveType_Line);
   tools_curvetype_points = addToolItem(toplevel, tools, "Curve points",
       SLOT(activate_curvetype()), "$pwr_exe/xtt_curve_points.png");
   tools_curvetype_points->setData(glow_eCurveType_Points);
-  tools_curvetype_linepoints = addToolItem(toplevel, tools,
-      "Curve line and points", SLOT(activate_curvetype()),
-      "$pwr_exe/xtt_curve_linepoints.png");
+  tools_curvetype_linepoints
+      = addToolItem(toplevel, tools, "Curve line and points",
+          SLOT(activate_curvetype()), "$pwr_exe/xtt_curve_linepoints.png");
   tools_curvetype_linepoints->setData(glow_eCurveType_LinePoints);
   tools_curvetype_square = addToolItem(toplevel, tools, "Curve square",
       SLOT(activate_curvetype()), "$pwr_exe/xtt_curve_square.png");
@@ -773,9 +759,9 @@ GeCurveQt::GeCurveQt(void *gc_parent_ctx, QWidget *parent_widget,
       SLOT(activate_shapshot()), "$pwr_exe/xtt_snapshot.png");
 
   // Time box
-  QToolBar *timetools = new QToolBar();
+  QToolBar* timetools = new QToolBar();
 
-  QLabel *sea_time_start_label = new QLabel(translate_utf8("Time"));
+  QLabel* sea_time_start_label = new QLabel(translate_utf8("Time"));
   sea_time_start_label->setFixedWidth(70);
   timetools->addWidget(sea_time_start_label);
 
@@ -787,14 +773,14 @@ GeCurveQt::GeCurveQt(void *gc_parent_ctx, QWidget *parent_widget,
   }
 
   QObject::connect(timebox_timecombo, SIGNAL(activated(int)), toplevel,
-          SLOT(activate_timecombo(int)));
+      SLOT(activate_timecombo(int)));
 
   timetools->addWidget(timebox_timecombo);
   timebox_start_time = new QLineEdit();
   timebox_start_time->setFixedWidth(160);
   timetools->addWidget(timebox_start_time);
 
-  QLabel *sea_time_stop_label = new QLabel(translate_utf8("-"));
+  QLabel* sea_time_stop_label = new QLabel(translate_utf8("-"));
   sea_time_stop_label->setFixedWidth(20);
   timetools->addWidget(sea_time_stop_label);
 
@@ -802,26 +788,26 @@ GeCurveQt::GeCurveQt(void *gc_parent_ctx, QWidget *parent_widget,
   timebox_stop_time->setFixedWidth(160);
   timetools->addWidget(timebox_stop_time);
 
-  addToolItem(toplevel, timetools, "Previous period", SLOT(activate_prev_period()),
-              "$pwr_exe/ge_scroll_left.png");
+  addToolItem(toplevel, timetools, "Previous period",
+      SLOT(activate_prev_period()), "$pwr_exe/ge_scroll_left.png");
   addToolItem(toplevel, timetools, "Next period", SLOT(activate_next_period()),
-              "$pwr_exe/ge_scroll_right.png");
+      "$pwr_exe/ge_scroll_right.png");
   addToolItem(toplevel, timetools, "Increase period",
-              SLOT(activate_increase_period()), "$pwr_exe/xtt_up.png");
+      SLOT(activate_increase_period()), "$pwr_exe/xtt_up.png");
   addToolItem(toplevel, timetools, "Decrease period",
-              SLOT(activate_decrease_period()), "$pwr_exe/xtt_down.png");
+      SLOT(activate_decrease_period()), "$pwr_exe/xtt_down.png");
 
   timetools->addSeparator();
 
   addToolItem(toplevel, timetools, "Update curve", SLOT(activate_reload()),
-              "$pwr_exe/ge_reload.png");
+      "$pwr_exe/ge_reload.png");
   addToolItem(toplevel, timetools, "Add curve item", SLOT(activate_add()),
-              "$pwr_exe/xtt_add.png");
-  addToolItem(toplevel, timetools, "Remove selected curve", SLOT(activate_remove()),
-              "$pwr_exe/xtt_remove.png");
+      "$pwr_exe/xtt_add.png");
+  addToolItem(toplevel, timetools, "Remove selected curve",
+      SLOT(activate_remove()), "$pwr_exe/xtt_remove.png");
 
   debug_print("creating a scrolledgrowwidgetqt\n");
-  QWidget *w;
+  QWidget* w;
   grownames_main_widget = scrolledgrowwidgetqt_new(init_grownames_cb, this, &w);
   debug_print("creating a curvewidgetqt\n");
   growcurve_main_widget = curvewidgetqt_new(init_growcurve_cb, this);
@@ -830,12 +816,12 @@ GeCurveQt::GeCurveQt(void *gc_parent_ctx, QWidget *parent_widget,
   debug_print("creating a curvenavwidgetqt\n");
   nav_widget = curvenavwidgetqt_new(growcurve_main_widget);
 
-  QHBoxLayout *hbox = new QHBoxLayout();
+  QHBoxLayout* hbox = new QHBoxLayout();
   hbox->addWidget(growaxis_main_widget);
   add_expanding(hbox, growcurve_main_widget);
 
-  QSplitter *vpaned1 = new QSplitter(Qt::Vertical);
-  QSplitter *vpaned2 = new QSplitter(Qt::Vertical);
+  QSplitter* vpaned1 = new QSplitter(Qt::Vertical);
+  QSplitter* vpaned2 = new QSplitter(Qt::Vertical);
 
   vpaned1->addWidget(grownames_main_widget);
   vpaned1->addWidget(vpaned2);
@@ -843,7 +829,7 @@ GeCurveQt::GeCurveQt(void *gc_parent_ctx, QWidget *parent_widget,
   add_expanding(vpaned2, hbox);
   vpaned2->addWidget(nav_widget);
 
-  QVBoxLayout *vbox_layout = new QVBoxLayout(toplevel);
+  QVBoxLayout* vbox_layout = new QVBoxLayout(toplevel);
   vbox_layout->setMenuBar(menu_bar);
   vbox_layout->addWidget(tools);
   vbox_layout->addWidget(timetools);
@@ -859,8 +845,8 @@ GeCurveQt::GeCurveQt(void *gc_parent_ctx, QWidget *parent_widget,
   }
 
   set_pane_position(vpaned1, names_height * height_scale);
-  set_pane_position(vpaned2, (window_height - names_height - nav_height - 50) *
-                             height_scale);
+  set_pane_position(
+      vpaned2, (window_height - names_height - nav_height - 50) * height_scale);
 
   timetools->setVisible(false);
   menu_new->setVisible(false);
@@ -913,35 +899,35 @@ void GeCurveQt::create_minmax_dialog()
   minmax_widget->setAttribute(Qt::WA_DeleteOnClose);
 
   minmax_textmin_widget = new QLineEdit();
-  QLabel *min_label = new QLabel(translate_utf8("MinValue"));
+  QLabel* min_label = new QLabel(translate_utf8("MinValue"));
   min_label->setFixedWidth(100);
   minmax_textmax_widget = new QLineEdit();
   QObject::connect(minmax_textmax_widget, SIGNAL(editingFinished()), toplevel,
-          SLOT(activate_minmax_ok()));
-  QLabel *max_label = new QLabel(translate_utf8("MaxValue"));
+      SLOT(activate_minmax_ok()));
+  QLabel* max_label = new QLabel(translate_utf8("MaxValue"));
   max_label->setFixedWidth(100);
 
-  QDialogButtonBox *buttons = new QDialogButtonBox();
+  QDialogButtonBox* buttons = new QDialogButtonBox();
   buttons->addButton(QDialogButtonBox::Ok);
   buttons->addButton(QDialogButtonBox::Cancel);
   buttons->addButton(QDialogButtonBox::Save);
 
   QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
-                   toplevel, SLOT(activate_minmax_ok()));
+      toplevel, SLOT(activate_minmax_ok()));
   QObject::connect(buttons->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
-                   toplevel, SLOT(activate_minmax_cancel()));
+      toplevel, SLOT(activate_minmax_cancel()));
   QObject::connect(buttons->button(QDialogButtonBox::Save), SIGNAL(clicked()),
-                   toplevel, SLOT(activate_minmax_save()));
+      toplevel, SLOT(activate_minmax_save()));
 
-  QHBoxLayout *minmax_hbox1 = new QHBoxLayout();
+  QHBoxLayout* minmax_hbox1 = new QHBoxLayout();
   minmax_hbox1->addWidget(min_label);
   add_expanding(minmax_hbox1, minmax_textmin_widget);
 
-  QHBoxLayout *minmax_hbox2 = new QHBoxLayout();
+  QHBoxLayout* minmax_hbox2 = new QHBoxLayout();
   minmax_hbox2->addWidget(max_label);
   add_expanding(minmax_hbox2, minmax_textmax_widget);
 
-  QVBoxLayout *minmax_vbox = new QVBoxLayout(minmax_widget);
+  QVBoxLayout* minmax_vbox = new QVBoxLayout(minmax_widget);
   minmax_vbox->addLayout(minmax_hbox1);
   add_expanding(minmax_vbox, minmax_hbox2);
   minmax_vbox->addWidget(separator(QFrame::HLine));
@@ -969,7 +955,7 @@ void GeCurveQt::create_export_dialog()
   export_widget->setWindowTitle(fl("Export"));
   export_widget->setAttribute(Qt::WA_DeleteOnClose);
 
-  QLabel *attr_label = new QLabel(translate_utf8("Attribute"));
+  QLabel* attr_label = new QLabel(translate_utf8("Attribute"));
   attr_label->setFixedWidth(90);
   export_attrcombo_widget = new QComboBox();
   export_attrcombo_widget->addItem(translate_utf8("All Attributes"));
@@ -978,9 +964,9 @@ void GeCurveQt::create_export_dialog()
   }
   export_attrcombo_widget->setCurrentIndex(0);
 
-  QLabel *fromtime_label;
-  QLabel *totime_label;
-  QLabel *rows_label;
+  QLabel* fromtime_label;
+  QLabel* totime_label;
+  QLabel* rows_label;
   if (layout_mask & curve_mEnable_ExportTime) {
     export_fromtime_widget = new QLineEdit();
     export_fromtime_widget->setFixedWidth(200);
@@ -999,25 +985,25 @@ void GeCurveQt::create_export_dialog()
   }
 
   export_filename_widget = new QLineEdit();
-  QLabel *filename_label = new QLabel(translate_utf8("Filename"));
+  QLabel* filename_label = new QLabel(translate_utf8("Filename"));
   filename_label->setFixedWidth(90);
-  QPushButton *export_browse = new QPushButton(translate_utf8("Browse"));
+  QPushButton* export_browse = new QPushButton(translate_utf8("Browse"));
   export_browse->setFixedSize(70, 25);
 
-  QDialogButtonBox *buttons = new QDialogButtonBox();
+  QDialogButtonBox* buttons = new QDialogButtonBox();
   buttons->addButton(QDialogButtonBox::Ok);
   buttons->addButton(QDialogButtonBox::Cancel);
 
   QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
-                   toplevel, SLOT(activate_export_ok()));
+      toplevel, SLOT(activate_export_ok()));
   QObject::connect(buttons->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
-                   toplevel, SLOT(activate_export_cancel()));
+      toplevel, SLOT(activate_export_cancel()));
 
-  QHBoxLayout *export_hbox1 = new QHBoxLayout();
+  QHBoxLayout* export_hbox1 = new QHBoxLayout();
   export_hbox1->addWidget(attr_label);
   add_expanding(export_hbox1, export_attrcombo_widget);
 
-  QHBoxLayout *export_hbox2 = new QHBoxLayout();
+  QHBoxLayout* export_hbox2 = new QHBoxLayout();
   if (layout_mask & curve_mEnable_ExportTime) {
     export_hbox2->addWidget(fromtime_label);
     export_hbox2->addWidget(export_fromtime_widget);
@@ -1025,18 +1011,18 @@ void GeCurveQt::create_export_dialog()
     export_hbox2->addWidget(export_totime_widget);
   }
 
-  QHBoxLayout *export_hbox4 = new QHBoxLayout();
+  QHBoxLayout* export_hbox4 = new QHBoxLayout();
   if (layout_mask & curve_mEnable_ExportTime) {
     export_hbox4->addWidget(rows_label);
     export_hbox4->addWidget(export_rows_widget);
   }
 
-  QHBoxLayout *export_hbox5 = new QHBoxLayout();
+  QHBoxLayout* export_hbox5 = new QHBoxLayout();
   export_hbox5->addWidget(filename_label);
   add_expanding(export_hbox5, export_filename_widget);
   export_hbox5->addWidget(export_browse);
 
-  QVBoxLayout *export_vbox = new QVBoxLayout(export_widget);
+  QVBoxLayout* export_vbox = new QVBoxLayout(export_widget);
   export_vbox->addLayout(export_hbox1);
   export_vbox->addLayout(export_hbox2);
   add_expanding(export_vbox, export_hbox4);

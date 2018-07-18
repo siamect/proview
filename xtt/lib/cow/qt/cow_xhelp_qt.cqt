@@ -34,41 +34,24 @@
  * General Public License plus this exception.
  **/
 
-#include "glow_std.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
-
-#include "co_cdh.h"
-#include "co_dcli.h"
-#include "co_time.h"
-#include "cow_wow_qt.h"
-#include "co_lng.h"
-#include "cow_xhelpnav_qt.h"
+#include "cow_qt_helpers.h"
 #include "cow_xhelp_qt.h"
+#include "cow_xhelpnav_qt.h"
 
-#include <QAction>
 #include <QInputDialog>
 #include <QMenu>
 #include <QMenuBar>
-#include <QToolBar>
 #include <QVBoxLayout>
 
-void CoXHelpQt::open_input_dialog(const char *text, const char *title,
-                                  const char *init_text,
-                                  void (*ok_cb)(CoXHelp *, char *))
+void CoXHelpQt::open_input_dialog(const char* text, const char* title,
+    const char* init_text, void (*ok_cb)(CoXHelp*, char*))
 {
   bool ok;
-  QString str =
-      QInputDialog::getText(toplevel, fl("Input Dialog"), fl("Graph Name"),
-                            QLineEdit::Normal, fl(init_text), &ok);
+  QString str = QInputDialog::getText(toplevel, fl("Input Dialog"),
+      fl("Graph Name"), QLineEdit::Normal, fl(init_text), &ok);
   if (ok) {
     QByteArray ba = str.toLatin1();
-    char *text = ba.data();
+    char* text = ba.data();
 
     (ok_cb)(this, text);
   }
@@ -128,7 +111,8 @@ void CoXHelpQtWidget::activate_zoom_reset()
 
 void CoXHelpQtWidget::activate_search()
 {
-  xhelp->open_input_dialog("Search string", "Search string", "", &CoXHelp::find_ok);
+  xhelp->open_input_dialog(
+      "Search string", "Search string", "", &CoXHelp::find_ok);
 }
 
 void CoXHelpQtWidget::activate_searchnext()
@@ -144,10 +128,10 @@ void CoXHelpQtWidget::activate_searchprevious()
 void CoXHelpQtWidget::activate_help()
 {
   CoXHelp::dhelp("helpwindow_refman", 0, navh_eHelpFile_Other,
-                 "$pwr_lang/man_dg.dat", true);
+      "$pwr_lang/man_dg.dat", true);
 }
 
-void CoXHelpQtWidget::focusInEvent(QFocusEvent *event)
+void CoXHelpQtWidget::focusInEvent(QFocusEvent* event)
 {
   if (!xhelp->focustimer.disabled()) {
     if (xhelp->xhelpnav && xhelp->displayed) {
@@ -173,11 +157,10 @@ void CoXHelpQt::print()
   strcpy(title, ba.data());
 
   CoWowQt::CreateBrowPrintDialogQt(title, xhelpnav->brow->ctx,
-                                   flow_eOrientation_Portrait, 0.7,
-                                   toplevel, &sts);
+      flow_eOrientation_Portrait, 0.7, toplevel, &sts);
 }
 
-void CoXHelpQtWidget::closeEvent(QCloseEvent *event)
+void CoXHelpQtWidget::closeEvent(QCloseEvent* event)
 {
   if (xhelp->close_cb) {
     (xhelp->close_cb)(xhelp->parent_ctx, xhelp);
@@ -195,8 +178,8 @@ void CoXHelpQt::pop()
   displayed = 1;
 }
 
-CoXHelpQt::CoXHelpQt(QWidget *xa_parent_wid, void *xa_parent_ctx,
-                     xhelp_eUtility utility, int *xa_sts)
+CoXHelpQt::CoXHelpQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
+    xhelp_eUtility utility, int* xa_sts)
     : CoXHelp(xa_parent_ctx, utility, xa_sts), parent_wid(xa_parent_wid)
 {
   int sts;
@@ -212,63 +195,65 @@ CoXHelpQt::CoXHelpQt(QWidget *xa_parent_wid, void *xa_parent_ctx,
   CoWowQt::SetWindowIcon(toplevel);
 
   // Menu
-  QMenuBar *menu_bar = new QMenuBar();
+  QMenuBar* menu_bar = new QMenuBar();
 
   // File entry
-  QMenu *file = menu_bar->addMenu(translate_utf8("&File"));
+  QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
   addMenuItem(toplevel, file, "&Print", SLOT(activate_print()));
   addMenuItem(toplevel, file, "&Home", SLOT(activate_home()), "CTRL+A");
   addMenuItem(toplevel, file, "&Back", SLOT(activate_back()), "CTRL+B");
-  addMenuItem(toplevel, file, "&Next Topic", SLOT(activate_nexttopic()), "CTRL+N");
+  addMenuItem(
+      toplevel, file, "&Next Topic", SLOT(activate_nexttopic()), "CTRL+N");
   addMenuItem(toplevel, file, "&Previous Topic", SLOT(activate_previoustopic()),
-              "CTRL+P");
-  addMenuItem(toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+      "CTRL+P");
+  addMenuItem(
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
   // Edit entry
-  QMenu *edit = menu_bar->addMenu(translate_utf8("&Edit"));
+  QMenu* edit = menu_bar->addMenu(translate_utf8("&Edit"));
   addMenuItem(toplevel, edit, "&Search", SLOT(activate_search()), "CTRL+F",
-              "system-search");
-  addMenuItem(toplevel, edit, "Search &Next", SLOT(activate_searchnext()),
-              "CTRL+G");
-  addMenuItem(toplevel, edit, "Search &Previous", SLOT(activate_searchprevious()),
-              "CTRL+D");
+      "system-search");
+  addMenuItem(
+      toplevel, edit, "Search &Next", SLOT(activate_searchnext()), "CTRL+G");
+  addMenuItem(toplevel, edit, "Search &Previous",
+      SLOT(activate_searchprevious()), "CTRL+D");
 
   // Menu View
-  QMenu *view = menu_bar->addMenu(translate_utf8("&View"));
+  QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
   addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoom_in()), "CTRL+I",
-              "zoom-in");
+      "zoom-in");
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
-              "zoom-out");
+      "zoom-out");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "",
-              "zoom-original");
+      "zoom-original");
 
   // Menu Help
-  QMenu *help = menu_bar->addMenu(translate_utf8("&Help"));
-  addMenuItem(toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H",
-              "system-help");
+  QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
+  addMenuItem(
+      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "system-help");
 
   // Toolbar
-  QToolBar *tools = new QToolBar();
+  QToolBar* tools = new QToolBar();
   addToolItem(toplevel, tools, "Go to start page", SLOT(activate_home()),
-              "$pwr_exe/xtt_home.png");
+      "$pwr_exe/xtt_home.png");
   addToolItem(toplevel, tools, "Go back", SLOT(activate_back()),
-              "$pwr_exe/xtt_back.png");
+      "$pwr_exe/xtt_back.png");
   addToolItem(toplevel, tools, "Previous topic", SLOT(activate_previoustopic()),
-              "$pwr_exe/xtt_previous.png");
+      "$pwr_exe/xtt_previous.png");
   addToolItem(toplevel, tools, "Next topic", SLOT(activate_nexttopic()),
-              "$pwr_exe/xtt_next.png");
+      "$pwr_exe/xtt_next.png");
 
   addToolItem(toplevel, tools, "Zoom in", SLOT(activate_zoom_in()),
-              "$pwr_exe/xtt_zoom_in.png");
+      "$pwr_exe/xtt_zoom_in.png");
   addToolItem(toplevel, tools, "Zoom out", SLOT(activate_zoom_out()),
-              "$pwr_exe/xtt_zoom_out.png");
+      "$pwr_exe/xtt_zoom_out.png");
   addToolItem(toplevel, tools, "Zoom reset", SLOT(activate_zoom_reset()),
-              "$pwr_exe/xtt_zoom_reset.png");
+      "$pwr_exe/xtt_zoom_reset.png");
 
-  QVBoxLayout *vbox = new QVBoxLayout();
+  QVBoxLayout* vbox = new QVBoxLayout();
 
-  xhelpnav = new CoXHelpNavQt(this, toplevel, title, utility, &brow_widget,
-                              &sts);
+  xhelpnav
+      = new CoXHelpNavQt(this, toplevel, title, utility, &brow_widget, &sts);
   xhelpnav->open_URL_cb = CoXHelp::open_URL;
 
   vbox->setMenuBar(menu_bar);

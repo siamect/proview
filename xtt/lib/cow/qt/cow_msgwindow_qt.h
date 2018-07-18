@@ -40,21 +40,19 @@
 /* cow_msgwindow_qt.h -- Message window */
 
 #ifndef cow_msgwindow_h
-# include "cow_msgwindow.h"
+#include "cow_msgwindow.h"
 #endif
 
-#ifndef cow_wow_qt_h
-# include "cow_wow_qt.h"
-#endif
+#include "cow_wow_qt.h"
 
 class MsgWindowQtWidget;
 
 class MsgWindowQt : public MsgWindow {
 public:
-  MsgWindowQt(void *msg_parent_ctx, QWidget *msg_parent_wid,
-              const char *msg_name, pwr_tStatus *status);
+  MsgWindowQt(void* msg_parent_ctx, QWidget* msg_parent_wid,
+      const char* msg_name, pwr_tStatus* status);
 
-  QWidget *nav_widget;
+  QWidget* nav_widget;
   CoWowFocusTimerQt focustimer;
   CoWowFocusTimerQt maptimer;
 
@@ -63,19 +61,21 @@ public:
   void print();
 
 private:
-  MsgWindowQtWidget *toplevel;
+  MsgWindowQtWidget* toplevel;
 };
 
 class MsgWindowQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  MsgWindowQtWidget(MsgWindowQt *parent_ctx, QWidget *parent)
-      : QWidget(parent, Qt::Window), msgwin(parent_ctx) {}
+  MsgWindowQtWidget(MsgWindowQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), msgwin(parent_ctx)
+  {
+  }
 
 protected:
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void activate_print();
@@ -88,7 +88,7 @@ public slots:
   void activate_help_message();
 
 private:
-  MsgWindowQt *msgwin;
+  MsgWindowQt* msgwin;
 };
 
 #endif

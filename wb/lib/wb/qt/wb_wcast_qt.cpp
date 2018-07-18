@@ -36,26 +36,13 @@
 
 /* wb_wcast_qt.cpp -- Attribute object casting window. */
 
-#include "flow_std.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "co_cdh.h"
-#include "co_time.h"
-#include "co_dcli.h"
-#include "pwr_baseclasses.h"
-#include "wb_ldh.h"
 #include "cow_wow_qt.h"
-#include "wb_erep.h"
-#include "wb_session.h"
-#include "wb_attribute.h"
-#include "co_msg.h"
+
 #include "wb_wcast_qt.h"
 
-WCastQt::WCastQt(void *wc_parent_ctx, QWidget *wc_parent_wid,
-                 const char *wc_name, ldh_tSesContext wc_ldhses,
-                 pwr_sAttrRef wc_aref, pwr_tStatus *status)
+WCastQt::WCastQt(void* wc_parent_ctx, QWidget* wc_parent_wid,
+    const char* wc_name, ldh_tSesContext wc_ldhses, pwr_sAttrRef wc_aref,
+    pwr_tStatus* status)
     : WCast(wc_parent_ctx, wc_name, wc_ldhses, wc_aref, status)
 {
   wow = new CoWowQt(wc_parent_wid);

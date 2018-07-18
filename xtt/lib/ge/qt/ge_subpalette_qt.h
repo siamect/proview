@@ -50,31 +50,33 @@ class SubPaletteQtWidget;
 
 class SubPaletteQt : public SubPalette {
 public:
-  SubPaletteQt(void *xn_parent_ctx, QWidget *xn_parent_wid, const char *xn_name,
-               QWidget **w, pwr_tStatus *status);
+  SubPaletteQt(void* xn_parent_ctx, QWidget* xn_parent_wid, const char* xn_name,
+      QWidget** w, pwr_tStatus* status);
   ~SubPaletteQt();
 
-  SubPaletteQtWidget *toplevel;
-  QWidget *brow_widget;
-  QWidget *form_widget;
+  SubPaletteQtWidget* toplevel;
+  QWidget* brow_widget;
+  QWidget* form_widget;
   char popup_help_filename[200];
 
   void set_inputfocus(int focus);
-  void create_popup_menu(char *filename, int x, int y);
+  void create_popup_menu(char* filename, int x, int y);
 };
 
 class SubPaletteQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  SubPaletteQtWidget(SubPaletteQt *parent_ctx, QWidget *parent)
-      : QWidget(parent), subpalette(parent_ctx) {}
+  SubPaletteQtWidget(SubPaletteQt* parent_ctx, QWidget* parent)
+      : QWidget(parent), subpalette(parent_ctx)
+  {
+  }
 
 public slots:
   void activate_help();
 
 private:
-  SubPaletteQt *subpalette;
+  SubPaletteQt* subpalette;
 };
 
 /*@}*/

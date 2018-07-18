@@ -23,7 +23,7 @@
    Include only the soapcpp2-generated headers and source code files.
 */
 
-//gsoapopt w
+// gsoapopt w
 
 /******************************************************************************\
  *                                                                            *
@@ -31,15 +31,13 @@
  *                                                                            *
 \******************************************************************************/
 
-
 /******************************************************************************\
  *                                                                            *
  * Import                                                                     *
  *                                                                            *
 \******************************************************************************/
 
-
-// STL vector containers (use option -s to disable)
+// STL std::vector containers (use option -s to disable)
 #import "stlvector.h"
 
 /******************************************************************************\
@@ -47,7 +45,6 @@
  * Schema Namespaces                                                          *
  *                                                                            *
 \******************************************************************************/
-
 
 /* NOTE:
 
@@ -59,9 +56,10 @@ s0 = "http://www.proview.se/webservices/statussrv/1.0/"
 
 */
 
-//gsoap s0    schema namespace:	http://www.proview.se/webservices/statussrv/1.0/
-//gsoap s0    schema elementForm:	qualified
-//gsoap s0    schema attributeForm:	unqualified
+// gsoap s0    schema namespace:
+// http://www.proview.se/webservices/statussrv/1.0/
+// gsoap s0    schema elementForm:	qualified
+// gsoap s0    schema attributeForm:	unqualified
 
 /******************************************************************************\
  *                                                                            *
@@ -69,20 +67,22 @@ s0 = "http://www.proview.se/webservices/statussrv/1.0/"
  *                                                                            *
 \******************************************************************************/
 
-class xsd__anyType { _XML __item; struct soap *soap; };
+class xsd__anyType {
+  _XML __item;
+  struct soap* soap;
+};
 
 /// Class wrapper for built-in type "xs:int" derived from xsd__anyType
-class xsd__int : public xsd__anyType
-{ public:
-    int                                  __item;                       
+class xsd__int : public xsd__anyType {
+  public:
+  int __item;
 };
 
 /// Class wrapper for built-in type "xs:string" derived from xsd__anyType
-class xsd__string : public xsd__anyType
-{ public:
-    std::string                          __item;                       
+class xsd__string : public xsd__anyType {
+  public:
+  std::string __item;
 };
-
 
 //  Forward declaration of class _s0__GetStatus.
 class _s0__GetStatus;
@@ -114,414 +114,425 @@ class _s0__RtMonStart;
 //  Forward declaration of class _s0__RtMonStartResponse.
 class _s0__RtMonStartResponse;
 
+/// Element "http://www.proview.se/webservices/statussrv/1.0/":GetStatus of
+/// complexType.
 
-/// Element "http://www.proview.se/webservices/statussrv/1.0/":GetStatus of complexType.
-
-/// "http://www.proview.se/webservices/statussrv/1.0/":GetStatus is a complexType.
-class _s0__GetStatus
-{ public:
-/// Attribute ClientRequestHandle of type xs:string.
-   @std::string*                         ClientRequestHandle            0;	///< Optional attribute.
-/// A handle to the soap struct that manages this instance (automatically set)
-    struct soap                         *soap                          ;
+/// "http://www.proview.se/webservices/statussrv/1.0/":GetStatus is a
+/// complexType.
+class _s0__GetStatus {
+  public:
+  /// Attribute ClientRequestHandle of type xs:string.
+  @std::string* ClientRequestHandle 0; ///< Optional attribute.
+  /// A handle to the soap struct that manages this instance (automatically set)
+  struct soap* soap;
 };
 
+/// Element "http://www.proview.se/webservices/statussrv/1.0/":GetStatusResponse
+/// of complexType.
 
-/// Element "http://www.proview.se/webservices/statussrv/1.0/":GetStatusResponse of complexType.
-
-/// "http://www.proview.se/webservices/statussrv/1.0/":GetStatusResponse is a complexType.
-class _s0__GetStatusResponse
-{ public:
-/// Element Version of type xs:string.
-    std::string                          Version                        1;	///< Required element.
-/// Element SystemStatus of type xs:int.
-    int                                  SystemStatus                   1;	///< Required element.
-/// Element SystemStatusStr of type xs:string.
-    std::string                          SystemStatusStr                1;	///< Required element.
-/// Element Description of type xs:string.
-    std::string*                         Description                    0;	///< Optional element.
-/// Element SystemTime of type xs:string.
-    std::string*                         SystemTime                     0;	///< Optional element.
-/// Element BootTime of type xs:string.
-    std::string*                         BootTime                       0;	///< Optional element.
-/// Element RestartTime of type xs:string.
-    std::string*                         RestartTime                    0;	///< Optional element.
-/// Element Restarts of type xs:int.
-    int*                                 Restarts                       0;	///< Optional element.
-/// Element UserStatus1 of type xs:int.
-    int                                  UserStatus1                    1;	///< Required element.
-/// Element UserStatusStr1 of type xs:string.
-    std::string*                         UserStatusStr1                 0;	///< Optional element.
-/// Element UserStatus2 of type xs:int.
-    int                                  UserStatus2                    1;	///< Required element.
-/// Element UserStatusStr2 of type xs:string.
-    std::string*                         UserStatusStr2                 0;	///< Optional element.
-/// Element UserStatus3 of type xs:int.
-    int                                  UserStatus3                    1;	///< Required element.
-/// Element UserStatusStr3 of type xs:string.
-    std::string*                         UserStatusStr3                 0;	///< Optional element.
-/// Element UserStatus4 of type xs:int.
-    int                                  UserStatus4                    1;	///< Required element.
-/// Element UserStatusStr4 of type xs:string.
-    std::string*                         UserStatusStr4                 0;	///< Optional element.
-/// Element UserStatus5 of type xs:int.
-    int                                  UserStatus5                    1;	///< Required element.
-/// Element UserStatusStr5 of type xs:string.
-    std::string*                         UserStatusStr5                 0;	///< Optional element.
-/// Attribute ClientRequestHandle of type xs:string.
-   @std::string*                         ClientRequestHandle            0;	///< Optional attribute.
-/// A handle to the soap struct that manages this instance (automatically set)
-    struct soap                         *soap                          ;
+/// "http://www.proview.se/webservices/statussrv/1.0/":GetStatusResponse is a
+/// complexType.
+class _s0__GetStatusResponse {
+  public:
+  /// Element Version of type xs:string.
+  std::string Version 1; ///< Required element.
+  /// Element SystemStatus of type xs:int.
+  int SystemStatus 1; ///< Required element.
+  /// Element SystemStatusStr of type xs:string.
+  std::string SystemStatusStr 1; ///< Required element.
+  /// Element Description of type xs:string.
+  std::string* Description 0; ///< Optional element.
+  /// Element SystemTime of type xs:string.
+  std::string* SystemTime 0; ///< Optional element.
+  /// Element BootTime of type xs:string.
+  std::string* BootTime 0; ///< Optional element.
+  /// Element RestartTime of type xs:string.
+  std::string* RestartTime 0; ///< Optional element.
+  /// Element Restarts of type xs:int.
+  int* Restarts 0; ///< Optional element.
+  /// Element UserStatus1 of type xs:int.
+  int UserStatus1 1; ///< Required element.
+  /// Element UserStatusStr1 of type xs:string.
+  std::string* UserStatusStr1 0; ///< Optional element.
+  /// Element UserStatus2 of type xs:int.
+  int UserStatus2 1; ///< Required element.
+  /// Element UserStatusStr2 of type xs:string.
+  std::string* UserStatusStr2 0; ///< Optional element.
+  /// Element UserStatus3 of type xs:int.
+  int UserStatus3 1; ///< Required element.
+  /// Element UserStatusStr3 of type xs:string.
+  std::string* UserStatusStr3 0; ///< Optional element.
+  /// Element UserStatus4 of type xs:int.
+  int UserStatus4 1; ///< Required element.
+  /// Element UserStatusStr4 of type xs:string.
+  std::string* UserStatusStr4 0; ///< Optional element.
+  /// Element UserStatus5 of type xs:int.
+  int UserStatus5 1; ///< Required element.
+  /// Element UserStatusStr5 of type xs:string.
+  std::string* UserStatusStr5 0; ///< Optional element.
+  /// Attribute ClientRequestHandle of type xs:string.
+  @std::string* ClientRequestHandle 0; ///< Optional attribute.
+  /// A handle to the soap struct that manages this instance (automatically set)
+  struct soap* soap;
 };
 
+/// Element "http://www.proview.se/webservices/statussrv/1.0/":GetExtStatus of
+/// complexType.
 
-/// Element "http://www.proview.se/webservices/statussrv/1.0/":GetExtStatus of complexType.
-
-/// "http://www.proview.se/webservices/statussrv/1.0/":GetExtStatus is a complexType.
-class _s0__GetExtStatus
-{ public:
-/// Attribute ClientRequestHandle of type xs:string.
-   @std::string*                         ClientRequestHandle            0;	///< Optional attribute.
-/// A handle to the soap struct that manages this instance (automatically set)
-    struct soap                         *soap                          ;
+/// "http://www.proview.se/webservices/statussrv/1.0/":GetExtStatus is a
+/// complexType.
+class _s0__GetExtStatus {
+  public:
+  /// Attribute ClientRequestHandle of type xs:string.
+  @std::string* ClientRequestHandle 0; ///< Optional attribute.
+  /// A handle to the soap struct that manages this instance (automatically set)
+  struct soap* soap;
 };
 
+/// Element
+/// "http://www.proview.se/webservices/statussrv/1.0/":GetExtStatusResponse of
+/// complexType.
 
-/// Element "http://www.proview.se/webservices/statussrv/1.0/":GetExtStatusResponse of complexType.
-
-/// "http://www.proview.se/webservices/statussrv/1.0/":GetExtStatusResponse is a complexType.
-class _s0__GetExtStatusResponse
-{ public:
-/// Element ServerSts1 of type xs:int.
-    int                                  ServerSts1                     1;	///< Required element.
-/// Element ServerSts1Str of type xs:string.
-    std::string                          ServerSts1Str                  1;	///< Required element.
-/// Element ServerSts1Name of type xs:string.
-    std::string                          ServerSts1Name                 1;	///< Required element.
-/// Element ServerSts2 of type xs:int.
-    int                                  ServerSts2                     1;	///< Required element.
-/// Element ServerSts2Str of type xs:string.
-    std::string                          ServerSts2Str                  1;	///< Required element.
-/// Element ServerSts2Name of type xs:string.
-    std::string                          ServerSts2Name                 1;	///< Required element.
-/// Element ServerSts3 of type xs:int.
-    int                                  ServerSts3                     1;	///< Required element.
-/// Element ServerSts3Str of type xs:string.
-    std::string                          ServerSts3Str                  1;	///< Required element.
-/// Element ServerSts3Name of type xs:string.
-    std::string                          ServerSts3Name                 1;	///< Required element.
-/// Element ServerSts4 of type xs:int.
-    int                                  ServerSts4                     1;	///< Required element.
-/// Element ServerSts4Str of type xs:string.
-    std::string                          ServerSts4Str                  1;	///< Required element.
-/// Element ServerSts4Name of type xs:string.
-    std::string                          ServerSts4Name                 1;	///< Required element.
-/// Element ServerSts5 of type xs:int.
-    int                                  ServerSts5                     1;	///< Required element.
-/// Element ServerSts5Str of type xs:string.
-    std::string                          ServerSts5Str                  1;	///< Required element.
-/// Element ServerSts5Name of type xs:string.
-    std::string                          ServerSts5Name                 1;	///< Required element.
-/// Element ServerSts6 of type xs:int.
-    int                                  ServerSts6                     1;	///< Required element.
-/// Element ServerSts6Str of type xs:string.
-    std::string                          ServerSts6Str                  1;	///< Required element.
-/// Element ServerSts6Name of type xs:string.
-    std::string                          ServerSts6Name                 1;	///< Required element.
-/// Element ServerSts7 of type xs:int.
-    int                                  ServerSts7                     1;	///< Required element.
-/// Element ServerSts7Str of type xs:string.
-    std::string                          ServerSts7Str                  1;	///< Required element.
-/// Element ServerSts7Name of type xs:string.
-    std::string                          ServerSts7Name                 1;	///< Required element.
-/// Element ServerSts8 of type xs:int.
-    int                                  ServerSts8                     1;	///< Required element.
-/// Element ServerSts8Str of type xs:string.
-    std::string                          ServerSts8Str                  1;	///< Required element.
-/// Element ServerSts8Name of type xs:string.
-    std::string                          ServerSts8Name                 1;	///< Required element.
-/// Element ServerSts9 of type xs:int.
-    int                                  ServerSts9                     1;	///< Required element.
-/// Element ServerSts9Str of type xs:string.
-    std::string                          ServerSts9Str                  1;	///< Required element.
-/// Element ServerSts9Name of type xs:string.
-    std::string                          ServerSts9Name                 1;	///< Required element.
-/// Element ServerSts10 of type xs:int.
-    int                                  ServerSts10                    1;	///< Required element.
-/// Element ServerSts10Str of type xs:string.
-    std::string                          ServerSts10Str                 1;	///< Required element.
-/// Element ServerSts10Name of type xs:string.
-    std::string                          ServerSts10Name                1;	///< Required element.
-/// Element ServerSts11 of type xs:int.
-    int                                  ServerSts11                    1;	///< Required element.
-/// Element ServerSts11Str of type xs:string.
-    std::string                          ServerSts11Str                 1;	///< Required element.
-/// Element ServerSts11Name of type xs:string.
-    std::string                          ServerSts11Name                1;	///< Required element.
-/// Element ServerSts12 of type xs:int.
-    int                                  ServerSts12                    1;	///< Required element.
-/// Element ServerSts12Str of type xs:string.
-    std::string                          ServerSts12Str                 1;	///< Required element.
-/// Element ServerSts12Name of type xs:string.
-    std::string                          ServerSts12Name                1;	///< Required element.
-/// Element ServerSts13 of type xs:int.
-    int                                  ServerSts13                    1;	///< Required element.
-/// Element ServerSts13Str of type xs:string.
-    std::string                          ServerSts13Str                 1;	///< Required element.
-/// Element ServerSts13Name of type xs:string.
-    std::string                          ServerSts13Name                1;	///< Required element.
-/// Element ServerSts14 of type xs:int.
-    int                                  ServerSts14                    1;	///< Required element.
-/// Element ServerSts14Str of type xs:string.
-    std::string                          ServerSts14Str                 1;	///< Required element.
-/// Element ServerSts14Name of type xs:string.
-    std::string                          ServerSts14Name                1;	///< Required element.
-/// Element ServerSts15 of type xs:int.
-    int                                  ServerSts15                    1;	///< Required element.
-/// Element ServerSts15Str of type xs:string.
-    std::string                          ServerSts15Str                 1;	///< Required element.
-/// Element ServerSts15Name of type xs:string.
-    std::string                          ServerSts15Name                1;	///< Required element.
-/// Element ServerSts16 of type xs:int.
-    int                                  ServerSts16                    1;	///< Required element.
-/// Element ServerSts16Str of type xs:string.
-    std::string                          ServerSts16Str                 1;	///< Required element.
-/// Element ServerSts16Name of type xs:string.
-    std::string                          ServerSts16Name                1;	///< Required element.
-/// Element ServerSts17 of type xs:int.
-    int                                  ServerSts17                    1;	///< Required element.
-/// Element ServerSts17Str of type xs:string.
-    std::string                          ServerSts17Str                 1;	///< Required element.
-/// Element ServerSts17Name of type xs:string.
-    std::string                          ServerSts17Name                1;	///< Required element.
-/// Element ServerSts18 of type xs:int.
-    int                                  ServerSts18                    1;	///< Required element.
-/// Element ServerSts18Str of type xs:string.
-    std::string                          ServerSts18Str                 1;	///< Required element.
-/// Element ServerSts18Name of type xs:string.
-    std::string                          ServerSts18Name                1;	///< Required element.
-/// Element ServerSts19 of type xs:int.
-    int                                  ServerSts19                    1;	///< Required element.
-/// Element ServerSts19Str of type xs:string.
-    std::string                          ServerSts19Str                 1;	///< Required element.
-/// Element ServerSts19Name of type xs:string.
-    std::string                          ServerSts19Name                1;	///< Required element.
-/// Element ServerSts20 of type xs:int.
-    int                                  ServerSts20                    1;	///< Required element.
-/// Element ServerSts20Str of type xs:string.
-    std::string                          ServerSts20Str                 1;	///< Required element.
-/// Element ServerSts20Name of type xs:string.
-    std::string                          ServerSts20Name                1;	///< Required element.
-/// Element ApplSts1 of type xs:int.
-    int                                  ApplSts1                       1;	///< Required element.
-/// Element ApplSts1Str of type xs:string.
-    std::string                          ApplSts1Str                    1;	///< Required element.
-/// Element ApplSts1Name of type xs:string.
-    std::string                          ApplSts1Name                   1;	///< Required element.
-/// Element ApplSts2 of type xs:int.
-    int                                  ApplSts2                       1;	///< Required element.
-/// Element ApplSts2Str of type xs:string.
-    std::string                          ApplSts2Str                    1;	///< Required element.
-/// Element ApplSts2Name of type xs:string.
-    std::string                          ApplSts2Name                   1;	///< Required element.
-/// Element ApplSts3 of type xs:int.
-    int                                  ApplSts3                       1;	///< Required element.
-/// Element ApplSts3Str of type xs:string.
-    std::string                          ApplSts3Str                    1;	///< Required element.
-/// Element ApplSts3Name of type xs:string.
-    std::string                          ApplSts3Name                   1;	///< Required element.
-/// Element ApplSts4 of type xs:int.
-    int                                  ApplSts4                       1;	///< Required element.
-/// Element ApplSts4Str of type xs:string.
-    std::string                          ApplSts4Str                    1;	///< Required element.
-/// Element ApplSts4Name of type xs:string.
-    std::string                          ApplSts4Name                   1;	///< Required element.
-/// Element ApplSts5 of type xs:int.
-    int                                  ApplSts5                       1;	///< Required element.
-/// Element ApplSts5Str of type xs:string.
-    std::string                          ApplSts5Str                    1;	///< Required element.
-/// Element ApplSts5Name of type xs:string.
-    std::string                          ApplSts5Name                   1;	///< Required element.
-/// Element ApplSts6 of type xs:int.
-    int                                  ApplSts6                       1;	///< Required element.
-/// Element ApplSts6Str of type xs:string.
-    std::string                          ApplSts6Str                    1;	///< Required element.
-/// Element ApplSts6Name of type xs:string.
-    std::string                          ApplSts6Name                   1;	///< Required element.
-/// Element ApplSts7 of type xs:int.
-    int                                  ApplSts7                       1;	///< Required element.
-/// Element ApplSts7Str of type xs:string.
-    std::string                          ApplSts7Str                    1;	///< Required element.
-/// Element ApplSts7Name of type xs:string.
-    std::string                          ApplSts7Name                   1;	///< Required element.
-/// Element ApplSts8 of type xs:int.
-    int                                  ApplSts8                       1;	///< Required element.
-/// Element ApplSts8Str of type xs:string.
-    std::string                          ApplSts8Str                    1;	///< Required element.
-/// Element ApplSts8Name of type xs:string.
-    std::string                          ApplSts8Name                   1;	///< Required element.
-/// Element ApplSts9 of type xs:int.
-    int                                  ApplSts9                       1;	///< Required element.
-/// Element ApplSts9Str of type xs:string.
-    std::string                          ApplSts9Str                    1;	///< Required element.
-/// Element ApplSts9Name of type xs:string.
-    std::string                          ApplSts9Name                   1;	///< Required element.
-/// Element ApplSts10 of type xs:int.
-    int                                  ApplSts10                      1;	///< Required element.
-/// Element ApplSts10Str of type xs:string.
-    std::string                          ApplSts10Str                   1;	///< Required element.
-/// Element ApplSts10Name of type xs:string.
-    std::string                          ApplSts10Name                  1;	///< Required element.
-/// Element ApplSts11 of type xs:int.
-    int                                  ApplSts11                      1;	///< Required element.
-/// Element ApplSts11Str of type xs:string.
-    std::string                          ApplSts11Str                   1;	///< Required element.
-/// Element ApplSts11Name of type xs:string.
-    std::string                          ApplSts11Name                  1;	///< Required element.
-/// Element ApplSts12 of type xs:int.
-    int                                  ApplSts12                      1;	///< Required element.
-/// Element ApplSts12Str of type xs:string.
-    std::string                          ApplSts12Str                   1;	///< Required element.
-/// Element ApplSts12Name of type xs:string.
-    std::string                          ApplSts12Name                  1;	///< Required element.
-/// Element ApplSts13 of type xs:int.
-    int                                  ApplSts13                      1;	///< Required element.
-/// Element ApplSts13Str of type xs:string.
-    std::string                          ApplSts13Str                   1;	///< Required element.
-/// Element ApplSts13Name of type xs:string.
-    std::string                          ApplSts13Name                  1;	///< Required element.
-/// Element ApplSts14 of type xs:int.
-    int                                  ApplSts14                      1;	///< Required element.
-/// Element ApplSts14Str of type xs:string.
-    std::string                          ApplSts14Str                   1;	///< Required element.
-/// Element ApplSts14Name of type xs:string.
-    std::string                          ApplSts14Name                  1;	///< Required element.
-/// Element ApplSts15 of type xs:int.
-    int                                  ApplSts15                      1;	///< Required element.
-/// Element ApplSts15Str of type xs:string.
-    std::string                          ApplSts15Str                   1;	///< Required element.
-/// Element ApplSts15Name of type xs:string.
-    std::string                          ApplSts15Name                  1;	///< Required element.
-/// Element ApplSts16 of type xs:int.
-    int                                  ApplSts16                      1;	///< Required element.
-/// Element ApplSts16Str of type xs:string.
-    std::string                          ApplSts16Str                   1;	///< Required element.
-/// Element ApplSts16Name of type xs:string.
-    std::string                          ApplSts16Name                  1;	///< Required element.
-/// Element ApplSts17 of type xs:int.
-    int                                  ApplSts17                      1;	///< Required element.
-/// Element ApplSts17Str of type xs:string.
-    std::string                          ApplSts17Str                   1;	///< Required element.
-/// Element ApplSts17Name of type xs:string.
-    std::string                          ApplSts17Name                  1;	///< Required element.
-/// Element ApplSts18 of type xs:int.
-    int                                  ApplSts18                      1;	///< Required element.
-/// Element ApplSts18Str of type xs:string.
-    std::string                          ApplSts18Str                   1;	///< Required element.
-/// Element ApplSts18Name of type xs:string.
-    std::string                          ApplSts18Name                  1;	///< Required element.
-/// Element ApplSts19 of type xs:int.
-    int                                  ApplSts19                      1;	///< Required element.
-/// Element ApplSts19Str of type xs:string.
-    std::string                          ApplSts19Str                   1;	///< Required element.
-/// Element ApplSts19Name of type xs:string.
-    std::string                          ApplSts19Name                  1;	///< Required element.
-/// Element ApplSts20 of type xs:int.
-    int                                  ApplSts20                      1;	///< Required element.
-/// Element ApplSts20Str of type xs:string.
-    std::string                          ApplSts20Str                   1;	///< Required element.
-/// Element ApplSts20Name of type xs:string.
-    std::string                          ApplSts20Name                  1;	///< Required element.
-/// Attribute ClientRequestHandle of type xs:string.
-   @std::string*                         ClientRequestHandle            0;	///< Optional attribute.
-/// A handle to the soap struct that manages this instance (automatically set)
-    struct soap                         *soap                          ;
+/// "http://www.proview.se/webservices/statussrv/1.0/":GetExtStatusResponse is a
+/// complexType.
+class _s0__GetExtStatusResponse {
+  public:
+  /// Element ServerSts1 of type xs:int.
+  int ServerSts1 1; ///< Required element.
+  /// Element ServerSts1Str of type xs:string.
+  std::string ServerSts1Str 1; ///< Required element.
+  /// Element ServerSts1Name of type xs:string.
+  std::string ServerSts1Name 1; ///< Required element.
+  /// Element ServerSts2 of type xs:int.
+  int ServerSts2 1; ///< Required element.
+  /// Element ServerSts2Str of type xs:string.
+  std::string ServerSts2Str 1; ///< Required element.
+  /// Element ServerSts2Name of type xs:string.
+  std::string ServerSts2Name 1; ///< Required element.
+  /// Element ServerSts3 of type xs:int.
+  int ServerSts3 1; ///< Required element.
+  /// Element ServerSts3Str of type xs:string.
+  std::string ServerSts3Str 1; ///< Required element.
+  /// Element ServerSts3Name of type xs:string.
+  std::string ServerSts3Name 1; ///< Required element.
+  /// Element ServerSts4 of type xs:int.
+  int ServerSts4 1; ///< Required element.
+  /// Element ServerSts4Str of type xs:string.
+  std::string ServerSts4Str 1; ///< Required element.
+  /// Element ServerSts4Name of type xs:string.
+  std::string ServerSts4Name 1; ///< Required element.
+  /// Element ServerSts5 of type xs:int.
+  int ServerSts5 1; ///< Required element.
+  /// Element ServerSts5Str of type xs:string.
+  std::string ServerSts5Str 1; ///< Required element.
+  /// Element ServerSts5Name of type xs:string.
+  std::string ServerSts5Name 1; ///< Required element.
+  /// Element ServerSts6 of type xs:int.
+  int ServerSts6 1; ///< Required element.
+  /// Element ServerSts6Str of type xs:string.
+  std::string ServerSts6Str 1; ///< Required element.
+  /// Element ServerSts6Name of type xs:string.
+  std::string ServerSts6Name 1; ///< Required element.
+  /// Element ServerSts7 of type xs:int.
+  int ServerSts7 1; ///< Required element.
+  /// Element ServerSts7Str of type xs:string.
+  std::string ServerSts7Str 1; ///< Required element.
+  /// Element ServerSts7Name of type xs:string.
+  std::string ServerSts7Name 1; ///< Required element.
+  /// Element ServerSts8 of type xs:int.
+  int ServerSts8 1; ///< Required element.
+  /// Element ServerSts8Str of type xs:string.
+  std::string ServerSts8Str 1; ///< Required element.
+  /// Element ServerSts8Name of type xs:string.
+  std::string ServerSts8Name 1; ///< Required element.
+  /// Element ServerSts9 of type xs:int.
+  int ServerSts9 1; ///< Required element.
+  /// Element ServerSts9Str of type xs:string.
+  std::string ServerSts9Str 1; ///< Required element.
+  /// Element ServerSts9Name of type xs:string.
+  std::string ServerSts9Name 1; ///< Required element.
+  /// Element ServerSts10 of type xs:int.
+  int ServerSts10 1; ///< Required element.
+  /// Element ServerSts10Str of type xs:string.
+  std::string ServerSts10Str 1; ///< Required element.
+  /// Element ServerSts10Name of type xs:string.
+  std::string ServerSts10Name 1; ///< Required element.
+  /// Element ServerSts11 of type xs:int.
+  int ServerSts11 1; ///< Required element.
+  /// Element ServerSts11Str of type xs:string.
+  std::string ServerSts11Str 1; ///< Required element.
+  /// Element ServerSts11Name of type xs:string.
+  std::string ServerSts11Name 1; ///< Required element.
+  /// Element ServerSts12 of type xs:int.
+  int ServerSts12 1; ///< Required element.
+  /// Element ServerSts12Str of type xs:string.
+  std::string ServerSts12Str 1; ///< Required element.
+  /// Element ServerSts12Name of type xs:string.
+  std::string ServerSts12Name 1; ///< Required element.
+  /// Element ServerSts13 of type xs:int.
+  int ServerSts13 1; ///< Required element.
+  /// Element ServerSts13Str of type xs:string.
+  std::string ServerSts13Str 1; ///< Required element.
+  /// Element ServerSts13Name of type xs:string.
+  std::string ServerSts13Name 1; ///< Required element.
+  /// Element ServerSts14 of type xs:int.
+  int ServerSts14 1; ///< Required element.
+  /// Element ServerSts14Str of type xs:string.
+  std::string ServerSts14Str 1; ///< Required element.
+  /// Element ServerSts14Name of type xs:string.
+  std::string ServerSts14Name 1; ///< Required element.
+  /// Element ServerSts15 of type xs:int.
+  int ServerSts15 1; ///< Required element.
+  /// Element ServerSts15Str of type xs:string.
+  std::string ServerSts15Str 1; ///< Required element.
+  /// Element ServerSts15Name of type xs:string.
+  std::string ServerSts15Name 1; ///< Required element.
+  /// Element ServerSts16 of type xs:int.
+  int ServerSts16 1; ///< Required element.
+  /// Element ServerSts16Str of type xs:string.
+  std::string ServerSts16Str 1; ///< Required element.
+  /// Element ServerSts16Name of type xs:string.
+  std::string ServerSts16Name 1; ///< Required element.
+  /// Element ServerSts17 of type xs:int.
+  int ServerSts17 1; ///< Required element.
+  /// Element ServerSts17Str of type xs:string.
+  std::string ServerSts17Str 1; ///< Required element.
+  /// Element ServerSts17Name of type xs:string.
+  std::string ServerSts17Name 1; ///< Required element.
+  /// Element ServerSts18 of type xs:int.
+  int ServerSts18 1; ///< Required element.
+  /// Element ServerSts18Str of type xs:string.
+  std::string ServerSts18Str 1; ///< Required element.
+  /// Element ServerSts18Name of type xs:string.
+  std::string ServerSts18Name 1; ///< Required element.
+  /// Element ServerSts19 of type xs:int.
+  int ServerSts19 1; ///< Required element.
+  /// Element ServerSts19Str of type xs:string.
+  std::string ServerSts19Str 1; ///< Required element.
+  /// Element ServerSts19Name of type xs:string.
+  std::string ServerSts19Name 1; ///< Required element.
+  /// Element ServerSts20 of type xs:int.
+  int ServerSts20 1; ///< Required element.
+  /// Element ServerSts20Str of type xs:string.
+  std::string ServerSts20Str 1; ///< Required element.
+  /// Element ServerSts20Name of type xs:string.
+  std::string ServerSts20Name 1; ///< Required element.
+  /// Element ApplSts1 of type xs:int.
+  int ApplSts1 1; ///< Required element.
+  /// Element ApplSts1Str of type xs:string.
+  std::string ApplSts1Str 1; ///< Required element.
+  /// Element ApplSts1Name of type xs:string.
+  std::string ApplSts1Name 1; ///< Required element.
+  /// Element ApplSts2 of type xs:int.
+  int ApplSts2 1; ///< Required element.
+  /// Element ApplSts2Str of type xs:string.
+  std::string ApplSts2Str 1; ///< Required element.
+  /// Element ApplSts2Name of type xs:string.
+  std::string ApplSts2Name 1; ///< Required element.
+  /// Element ApplSts3 of type xs:int.
+  int ApplSts3 1; ///< Required element.
+  /// Element ApplSts3Str of type xs:string.
+  std::string ApplSts3Str 1; ///< Required element.
+  /// Element ApplSts3Name of type xs:string.
+  std::string ApplSts3Name 1; ///< Required element.
+  /// Element ApplSts4 of type xs:int.
+  int ApplSts4 1; ///< Required element.
+  /// Element ApplSts4Str of type xs:string.
+  std::string ApplSts4Str 1; ///< Required element.
+  /// Element ApplSts4Name of type xs:string.
+  std::string ApplSts4Name 1; ///< Required element.
+  /// Element ApplSts5 of type xs:int.
+  int ApplSts5 1; ///< Required element.
+  /// Element ApplSts5Str of type xs:string.
+  std::string ApplSts5Str 1; ///< Required element.
+  /// Element ApplSts5Name of type xs:string.
+  std::string ApplSts5Name 1; ///< Required element.
+  /// Element ApplSts6 of type xs:int.
+  int ApplSts6 1; ///< Required element.
+  /// Element ApplSts6Str of type xs:string.
+  std::string ApplSts6Str 1; ///< Required element.
+  /// Element ApplSts6Name of type xs:string.
+  std::string ApplSts6Name 1; ///< Required element.
+  /// Element ApplSts7 of type xs:int.
+  int ApplSts7 1; ///< Required element.
+  /// Element ApplSts7Str of type xs:string.
+  std::string ApplSts7Str 1; ///< Required element.
+  /// Element ApplSts7Name of type xs:string.
+  std::string ApplSts7Name 1; ///< Required element.
+  /// Element ApplSts8 of type xs:int.
+  int ApplSts8 1; ///< Required element.
+  /// Element ApplSts8Str of type xs:string.
+  std::string ApplSts8Str 1; ///< Required element.
+  /// Element ApplSts8Name of type xs:string.
+  std::string ApplSts8Name 1; ///< Required element.
+  /// Element ApplSts9 of type xs:int.
+  int ApplSts9 1; ///< Required element.
+  /// Element ApplSts9Str of type xs:string.
+  std::string ApplSts9Str 1; ///< Required element.
+  /// Element ApplSts9Name of type xs:string.
+  std::string ApplSts9Name 1; ///< Required element.
+  /// Element ApplSts10 of type xs:int.
+  int ApplSts10 1; ///< Required element.
+  /// Element ApplSts10Str of type xs:string.
+  std::string ApplSts10Str 1; ///< Required element.
+  /// Element ApplSts10Name of type xs:string.
+  std::string ApplSts10Name 1; ///< Required element.
+  /// Element ApplSts11 of type xs:int.
+  int ApplSts11 1; ///< Required element.
+  /// Element ApplSts11Str of type xs:string.
+  std::string ApplSts11Str 1; ///< Required element.
+  /// Element ApplSts11Name of type xs:string.
+  std::string ApplSts11Name 1; ///< Required element.
+  /// Element ApplSts12 of type xs:int.
+  int ApplSts12 1; ///< Required element.
+  /// Element ApplSts12Str of type xs:string.
+  std::string ApplSts12Str 1; ///< Required element.
+  /// Element ApplSts12Name of type xs:string.
+  std::string ApplSts12Name 1; ///< Required element.
+  /// Element ApplSts13 of type xs:int.
+  int ApplSts13 1; ///< Required element.
+  /// Element ApplSts13Str of type xs:string.
+  std::string ApplSts13Str 1; ///< Required element.
+  /// Element ApplSts13Name of type xs:string.
+  std::string ApplSts13Name 1; ///< Required element.
+  /// Element ApplSts14 of type xs:int.
+  int ApplSts14 1; ///< Required element.
+  /// Element ApplSts14Str of type xs:string.
+  std::string ApplSts14Str 1; ///< Required element.
+  /// Element ApplSts14Name of type xs:string.
+  std::string ApplSts14Name 1; ///< Required element.
+  /// Element ApplSts15 of type xs:int.
+  int ApplSts15 1; ///< Required element.
+  /// Element ApplSts15Str of type xs:string.
+  std::string ApplSts15Str 1; ///< Required element.
+  /// Element ApplSts15Name of type xs:string.
+  std::string ApplSts15Name 1; ///< Required element.
+  /// Element ApplSts16 of type xs:int.
+  int ApplSts16 1; ///< Required element.
+  /// Element ApplSts16Str of type xs:string.
+  std::string ApplSts16Str 1; ///< Required element.
+  /// Element ApplSts16Name of type xs:string.
+  std::string ApplSts16Name 1; ///< Required element.
+  /// Element ApplSts17 of type xs:int.
+  int ApplSts17 1; ///< Required element.
+  /// Element ApplSts17Str of type xs:string.
+  std::string ApplSts17Str 1; ///< Required element.
+  /// Element ApplSts17Name of type xs:string.
+  std::string ApplSts17Name 1; ///< Required element.
+  /// Element ApplSts18 of type xs:int.
+  int ApplSts18 1; ///< Required element.
+  /// Element ApplSts18Str of type xs:string.
+  std::string ApplSts18Str 1; ///< Required element.
+  /// Element ApplSts18Name of type xs:string.
+  std::string ApplSts18Name 1; ///< Required element.
+  /// Element ApplSts19 of type xs:int.
+  int ApplSts19 1; ///< Required element.
+  /// Element ApplSts19Str of type xs:string.
+  std::string ApplSts19Str 1; ///< Required element.
+  /// Element ApplSts19Name of type xs:string.
+  std::string ApplSts19Name 1; ///< Required element.
+  /// Element ApplSts20 of type xs:int.
+  int ApplSts20 1; ///< Required element.
+  /// Element ApplSts20Str of type xs:string.
+  std::string ApplSts20Str 1; ///< Required element.
+  /// Element ApplSts20Name of type xs:string.
+  std::string ApplSts20Name 1; ///< Required element.
+  /// Attribute ClientRequestHandle of type xs:string.
+  @std::string* ClientRequestHandle 0; ///< Optional attribute.
+  /// A handle to the soap struct that manages this instance (automatically set)
+  struct soap* soap;
 };
 
-
-/// Element "http://www.proview.se/webservices/statussrv/1.0/":Restart of complexType.
+/// Element "http://www.proview.se/webservices/statussrv/1.0/":Restart of
+/// complexType.
 
 /// "http://www.proview.se/webservices/statussrv/1.0/":Restart is a complexType.
-class _s0__Restart
-{ public:
-/// Attribute ClientRequestHandle of type xs:string.
-   @std::string*                         ClientRequestHandle            0;	///< Optional attribute.
-/// A handle to the soap struct that manages this instance (automatically set)
-    struct soap                         *soap                          ;
+class _s0__Restart {
+  public:
+  /// Attribute ClientRequestHandle of type xs:string.
+  @std::string* ClientRequestHandle 0; ///< Optional attribute.
+  /// A handle to the soap struct that manages this instance (automatically set)
+  struct soap* soap;
 };
 
+/// Element "http://www.proview.se/webservices/statussrv/1.0/":RestartResponse
+/// of complexType.
 
-/// Element "http://www.proview.se/webservices/statussrv/1.0/":RestartResponse of complexType.
-
-/// "http://www.proview.se/webservices/statussrv/1.0/":RestartResponse is a complexType.
-class _s0__RestartResponse
-{ public:
-/// Attribute ClientRequestHandle of type xs:string.
-   @std::string*                         ClientRequestHandle            0;	///< Optional attribute.
-/// A handle to the soap struct that manages this instance (automatically set)
-    struct soap                         *soap                          ;
+/// "http://www.proview.se/webservices/statussrv/1.0/":RestartResponse is a
+/// complexType.
+class _s0__RestartResponse {
+  public:
+  /// Attribute ClientRequestHandle of type xs:string.
+  @std::string* ClientRequestHandle 0; ///< Optional attribute.
+  /// A handle to the soap struct that manages this instance (automatically set)
+  struct soap* soap;
 };
 
+/// Element "http://www.proview.se/webservices/statussrv/1.0/":XttStart of
+/// complexType.
 
-/// Element "http://www.proview.se/webservices/statussrv/1.0/":XttStart of complexType.
-
-/// "http://www.proview.se/webservices/statussrv/1.0/":XttStart is a complexType.
-class _s0__XttStart
-{ public:
-/// Element OpPlace of type xs:string.
-    std::string*                         OpPlace                        0;	///< Optional element.
-/// Element Language of type xs:string.
-    std::string*                         Language                       0;	///< Optional element.
-/// Element Display of type xs:string.
-    std::string*                         Display                        0;	///< Optional element.
-/// Element GUI of type xs:string.
-    std::string*                         GUI                            0;	///< Optional element.
-/// Attribute ClientRequestHandle of type xs:string.
-   @std::string*                         ClientRequestHandle            0;	///< Optional attribute.
-/// A handle to the soap struct that manages this instance (automatically set)
-    struct soap                         *soap                          ;
+/// "http://www.proview.se/webservices/statussrv/1.0/":XttStart is a
+/// complexType.
+class _s0__XttStart {
+  public:
+  /// Element OpPlace of type xs:string.
+  std::string* OpPlace 0; ///< Optional element.
+  /// Element Language of type xs:string.
+  std::string* Language 0; ///< Optional element.
+  /// Element Display of type xs:string.
+  std::string* Display 0; ///< Optional element.
+  /// Element GUI of type xs:string.
+  std::string* GUI 0; ///< Optional element.
+  /// Attribute ClientRequestHandle of type xs:string.
+  @std::string* ClientRequestHandle 0; ///< Optional attribute.
+  /// A handle to the soap struct that manages this instance (automatically set)
+  struct soap* soap;
 };
 
+/// Element "http://www.proview.se/webservices/statussrv/1.0/":XttStartResponse
+/// of complexType.
 
-/// Element "http://www.proview.se/webservices/statussrv/1.0/":XttStartResponse of complexType.
-
-/// "http://www.proview.se/webservices/statussrv/1.0/":XttStartResponse is a complexType.
-class _s0__XttStartResponse
-{ public:
-/// Attribute ClientRequestHandle of type xs:string.
-   @std::string*                         ClientRequestHandle            0;	///< Optional attribute.
-/// A handle to the soap struct that manages this instance (automatically set)
-    struct soap                         *soap                          ;
+/// "http://www.proview.se/webservices/statussrv/1.0/":XttStartResponse is a
+/// complexType.
+class _s0__XttStartResponse {
+  public:
+  /// Attribute ClientRequestHandle of type xs:string.
+  @std::string* ClientRequestHandle 0; ///< Optional attribute.
+  /// A handle to the soap struct that manages this instance (automatically set)
+  struct soap* soap;
 };
 
+/// Element "http://www.proview.se/webservices/statussrv/1.0/":RtMonStart of
+/// complexType.
 
-/// Element "http://www.proview.se/webservices/statussrv/1.0/":RtMonStart of complexType.
-
-/// "http://www.proview.se/webservices/statussrv/1.0/":RtMonStart is a complexType.
-class _s0__RtMonStart
-{ public:
-/// Element Language of type xs:string.
-    std::string*                         Language                       0;	///< Optional element.
-/// Element Display of type xs:string.
-    std::string*                         Display                        0;	///< Optional element.
-/// Element GUI of type xs:string.
-    std::string*                         GUI                            0;	///< Optional element.
-/// Attribute ClientRequestHandle of type xs:string.
-   @std::string*                         ClientRequestHandle            0;	///< Optional attribute.
-/// A handle to the soap struct that manages this instance (automatically set)
-    struct soap                         *soap                          ;
+/// "http://www.proview.se/webservices/statussrv/1.0/":RtMonStart is a
+/// complexType.
+class _s0__RtMonStart {
+  public:
+  /// Element Language of type xs:string.
+  std::string* Language 0; ///< Optional element.
+  /// Element Display of type xs:string.
+  std::string* Display 0; ///< Optional element.
+  /// Element GUI of type xs:string.
+  std::string* GUI 0; ///< Optional element.
+  /// Attribute ClientRequestHandle of type xs:string.
+  @std::string* ClientRequestHandle 0; ///< Optional attribute.
+  /// A handle to the soap struct that manages this instance (automatically set)
+  struct soap* soap;
 };
 
+/// Element
+/// "http://www.proview.se/webservices/statussrv/1.0/":RtMonStartResponse of
+/// complexType.
 
-/// Element "http://www.proview.se/webservices/statussrv/1.0/":RtMonStartResponse of complexType.
-
-/// "http://www.proview.se/webservices/statussrv/1.0/":RtMonStartResponse is a complexType.
-class _s0__RtMonStartResponse
-{ public:
-/// Attribute ClientRequestHandle of type xs:string.
-   @std::string*                         ClientRequestHandle            0;	///< Optional attribute.
-/// A handle to the soap struct that manages this instance (automatically set)
-    struct soap                         *soap                          ;
+/// "http://www.proview.se/webservices/statussrv/1.0/":RtMonStartResponse is a
+/// complexType.
+class _s0__RtMonStartResponse {
+  public:
+  /// Attribute ClientRequestHandle of type xs:string.
+  @std::string* ClientRequestHandle 0; ///< Optional attribute.
+  /// A handle to the soap struct that manages this instance (automatically set)
+  struct soap* soap;
 };
 
 /******************************************************************************\
@@ -530,11 +541,11 @@ class _s0__RtMonStartResponse
  *                                                                            *
 \******************************************************************************/
 
-
-//gsoap s0   service name:	Service 
-//gsoap s0   service type:	Service 
-//gsoap s0   service namespace:	http://www.proview.se/webservices/statussrv/1.0/ 
-//gsoap s0   service transport:	http://schemas.xmlsoap.org/soap/http 
+// gsoap s0   service name:	Service
+// gsoap s0   service type:	Service
+// gsoap s0   service namespace:
+// http://www.proview.se/webservices/statussrv/1.0/
+// gsoap s0   service transport:	http://schemas.xmlsoap.org/soap/http
 
 /** @mainpage Service Definitions
 
@@ -564,13 +575,11 @@ class _s0__RtMonStartResponse
  *                                                                            *
 \******************************************************************************/
 
-
 /******************************************************************************\
  *                                                                            *
  * __s0__GetStatus                                                            *
  *                                                                            *
 \******************************************************************************/
-
 
 /// Operation "__s0__GetStatus" of service binding "Service"
 
@@ -594,7 +603,8 @@ C stub function (defined in soapClient.c[pp] generated by soapcpp2):
   );
 @endcode
 
-C server function (called from the service dispatcher defined in soapServer.c[pp]):
+C server function (called from the service dispatcher defined in
+soapServer.c[pp]):
 @code
   int __s0__GetStatus(
     struct soap *soap,
@@ -610,20 +620,18 @@ C++ proxy class (defined in soapServiceProxy.h):
 
 */
 
-//gsoap s0   service method-style:	GetStatus document
-//gsoap s0   service method-encoding:	GetStatus literal
-//gsoap s0   service method-action:	GetStatus s0:GetStatus
-int __s0__GetStatus(
-    _s0__GetStatus*                     s0__GetStatus,	///< Request parameter
-    _s0__GetStatusResponse*             s0__GetStatusResponse	///< Response parameter
-);
+// gsoap s0   service method-style:	GetStatus document
+// gsoap s0   service method-encoding:	GetStatus literal
+// gsoap s0   service method-action:	GetStatus s0:GetStatus
+int __s0__GetStatus(_s0__GetStatus* s0__GetStatus, ///< Request parameter
+    _s0__GetStatusResponse* s0__GetStatusResponse ///< Response parameter
+    );
 
 /******************************************************************************\
  *                                                                            *
  * __s0__GetExtStatus                                                         *
  *                                                                            *
 \******************************************************************************/
-
 
 /// Operation "__s0__GetExtStatus" of service binding "Service"
 
@@ -647,7 +655,8 @@ C stub function (defined in soapClient.c[pp] generated by soapcpp2):
   );
 @endcode
 
-C server function (called from the service dispatcher defined in soapServer.c[pp]):
+C server function (called from the service dispatcher defined in
+soapServer.c[pp]):
 @code
   int __s0__GetExtStatus(
     struct soap *soap,
@@ -663,20 +672,19 @@ C++ proxy class (defined in soapServiceProxy.h):
 
 */
 
-//gsoap s0   service method-style:	GetExtStatus document
-//gsoap s0   service method-encoding:	GetExtStatus literal
-//gsoap s0   service method-action:	GetExtStatus s0:GetExtStatus
+// gsoap s0   service method-style:	GetExtStatus document
+// gsoap s0   service method-encoding:	GetExtStatus literal
+// gsoap s0   service method-action:	GetExtStatus s0:GetExtStatus
 int __s0__GetExtStatus(
-    _s0__GetExtStatus*                  s0__GetExtStatus,	///< Request parameter
-    _s0__GetExtStatusResponse*          s0__GetExtStatusResponse	///< Response parameter
-);
+    _s0__GetExtStatus* s0__GetExtStatus, ///< Request parameter
+    _s0__GetExtStatusResponse* s0__GetExtStatusResponse ///< Response parameter
+    );
 
 /******************************************************************************\
  *                                                                            *
  * __s0__Restart                                                              *
  *                                                                            *
 \******************************************************************************/
-
 
 /// Operation "__s0__Restart" of service binding "Service"
 
@@ -700,7 +708,8 @@ C stub function (defined in soapClient.c[pp] generated by soapcpp2):
   );
 @endcode
 
-C server function (called from the service dispatcher defined in soapServer.c[pp]):
+C server function (called from the service dispatcher defined in
+soapServer.c[pp]):
 @code
   int __s0__Restart(
     struct soap *soap,
@@ -716,20 +725,18 @@ C++ proxy class (defined in soapServiceProxy.h):
 
 */
 
-//gsoap s0   service method-style:	Restart document
-//gsoap s0   service method-encoding:	Restart literal
-//gsoap s0   service method-action:	Restart s0:Restart
-int __s0__Restart(
-    _s0__Restart*                       s0__Restart,	///< Request parameter
-    _s0__RestartResponse*               s0__RestartResponse	///< Response parameter
-);
+// gsoap s0   service method-style:	Restart document
+// gsoap s0   service method-encoding:	Restart literal
+// gsoap s0   service method-action:	Restart s0:Restart
+int __s0__Restart(_s0__Restart* s0__Restart, ///< Request parameter
+    _s0__RestartResponse* s0__RestartResponse ///< Response parameter
+    );
 
 /******************************************************************************\
  *                                                                            *
  * __s0__XttStart                                                             *
  *                                                                            *
 \******************************************************************************/
-
 
 /// Operation "__s0__XttStart" of service binding "Service"
 
@@ -753,7 +760,8 @@ C stub function (defined in soapClient.c[pp] generated by soapcpp2):
   );
 @endcode
 
-C server function (called from the service dispatcher defined in soapServer.c[pp]):
+C server function (called from the service dispatcher defined in
+soapServer.c[pp]):
 @code
   int __s0__XttStart(
     struct soap *soap,
@@ -769,20 +777,18 @@ C++ proxy class (defined in soapServiceProxy.h):
 
 */
 
-//gsoap s0   service method-style:	XttStart document
-//gsoap s0   service method-encoding:	XttStart literal
-//gsoap s0   service method-action:	XttStart s0:XttStart
-int __s0__XttStart(
-    _s0__XttStart*                      s0__XttStart,	///< Request parameter
-    _s0__XttStartResponse*              s0__XttStartResponse	///< Response parameter
-);
+// gsoap s0   service method-style:	XttStart document
+// gsoap s0   service method-encoding:	XttStart literal
+// gsoap s0   service method-action:	XttStart s0:XttStart
+int __s0__XttStart(_s0__XttStart* s0__XttStart, ///< Request parameter
+    _s0__XttStartResponse* s0__XttStartResponse ///< Response parameter
+    );
 
 /******************************************************************************\
  *                                                                            *
  * __s0__RtMonStart                                                           *
  *                                                                            *
 \******************************************************************************/
-
 
 /// Operation "__s0__RtMonStart" of service binding "Service"
 
@@ -806,7 +812,8 @@ C stub function (defined in soapClient.c[pp] generated by soapcpp2):
   );
 @endcode
 
-C server function (called from the service dispatcher defined in soapServer.c[pp]):
+C server function (called from the service dispatcher defined in
+soapServer.c[pp]):
 @code
   int __s0__RtMonStart(
     struct soap *soap,
@@ -822,12 +829,11 @@ C++ proxy class (defined in soapServiceProxy.h):
 
 */
 
-//gsoap s0   service method-style:	RtMonStart document
-//gsoap s0   service method-encoding:	RtMonStart literal
-//gsoap s0   service method-action:	RtMonStart s0:RtMonStart
-int __s0__RtMonStart(
-    _s0__RtMonStart*                    s0__RtMonStart,	///< Request parameter
-    _s0__RtMonStartResponse*            s0__RtMonStartResponse	///< Response parameter
-);
+// gsoap s0   service method-style:	RtMonStart document
+// gsoap s0   service method-encoding:	RtMonStart literal
+// gsoap s0   service method-action:	RtMonStart s0:RtMonStart
+int __s0__RtMonStart(_s0__RtMonStart* s0__RtMonStart, ///< Request parameter
+    _s0__RtMonStartResponse* s0__RtMonStartResponse ///< Response parameter
+    );
 
 /* End of statussrv_msg.h */

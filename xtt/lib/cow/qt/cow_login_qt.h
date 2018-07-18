@@ -50,20 +50,22 @@ class CoLoginQtWidget;
 
 class CoLoginQt : public CoLogin {
 public:
-  CoLoginQtWidget *toplevel;
-  QLabel *label;
-  QDialogButtonBox *buttons;
-  QLineEdit *username;
-  QLineEdit *password;
+  CoLoginQtWidget* toplevel;
+  QLabel* label;
+  QDialogButtonBox* buttons;
+  QLineEdit* username;
+  QLineEdit* password;
   int sts;
 
-  CoLoginQt(void *wl_parent_ctx, QWidget *wl_parent_wid, const char *wl_name,
-            const char *wl_groupname, void (*wl_bc_success)(void *),
-            void (*wl_bc_cancel)(void *), void *base_widget, pwr_tStatus *sts);
-  ~CoLoginQt() {}
+  CoLoginQt(void* wl_parent_ctx, QWidget* wl_parent_wid, const char* wl_name,
+      const char* wl_groupname, void (*wl_bc_success)(void*),
+      void (*wl_bc_cancel)(void*), void* base_widget, pwr_tStatus* sts);
+  ~CoLoginQt()
+  {
+  }
 
   pwr_tStatus get_values();
-  void message(const char *new_label);
+  void message(const char* new_label);
   void pop();
 };
 
@@ -71,11 +73,13 @@ class CoLoginQtWidget : public QDialog {
   Q_OBJECT
 
 public:
-  CoLoginQtWidget(CoLoginQt *parent_ctx, QWidget *parent)
-      : QDialog(parent), login(parent_ctx), del(true) {}
+  CoLoginQtWidget(CoLoginQt* parent_ctx, QWidget* parent)
+      : QDialog(parent), login(parent_ctx), del(true)
+  {
+  }
 
 protected:
-  void closeEvent(QCloseEvent *event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void activate_ok();
@@ -84,7 +88,7 @@ public slots:
   void valchanged_username();
 
 private:
-  CoLoginQt *login;
+  CoLoginQt* login;
   bool del;
 };
 

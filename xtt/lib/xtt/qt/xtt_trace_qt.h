@@ -37,44 +37,49 @@
 #ifndef xtt_trace_qt_h
 #define xtt_trace_qt_h
 
-#include "flow_ctx.h"
-#include "flow_api.h"
+#include "pwr_baseclasses.h"
+
+#include "cow_qt_helpers.h"
+
 #ifndef xtt_trace_h
 #include "xtt_trace.h"
 #endif
+
 #include <QWidget>
 
 class RtTraceQtWidget;
 
 class RtTraceQt : public RtTrace {
 public:
-  QWidget *flow_widget;
-  QWidget *form;
-  QWidget *menu;
-  QWidget *nav_shell;
-  QWidget *nav_widget;
+  QWidget* flow_widget;
+  QWidget* form;
+  QWidget* menu;
+  QWidget* nav_shell;
+  QWidget* nav_widget;
 
-  RtTraceQt(void *parent_ctx, QWidget *parent_wid, pwr_tObjid objid,
-            pwr_tStatus *status);
+  RtTraceQt(void* parent_ctx, QWidget* parent_wid, pwr_tObjid objid,
+      pwr_tStatus* status);
   ~RtTraceQt();
 
   void pop();
-  void popup_menu_position(int event_x, int event_y, int *x, int *y);
-  RtTrace *subwindow_new(void *ctx, pwr_tObjid oid, pwr_tStatus *sts);
+  void popup_menu_position(int event_x, int event_y, int* x, int* y);
+  RtTrace* subwindow_new(void* ctx, pwr_tObjid oid, pwr_tStatus* sts);
 
 private:
-  RtTraceQtWidget *toplevel;
+  RtTraceQtWidget* toplevel;
 };
 
 class RtTraceQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  RtTraceQtWidget(RtTraceQt *parent_ctx, QWidget *parent)
-      : QWidget(parent, Qt::Window), rt(parent_ctx) {}
+  RtTraceQtWidget(RtTraceQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), rt(parent_ctx)
+  {
+  }
 
 protected:
-  void closeEvent(QCloseEvent *event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void activate_print();
@@ -101,7 +106,7 @@ public slots:
   void activate_helpplclist();
 
 private:
-  RtTraceQt *rt;
+  RtTraceQt* rt;
 };
 
 #endif

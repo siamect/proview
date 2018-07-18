@@ -8,421 +8,416 @@
 
 SOAP_SOURCE_STAMP("@(#) opc_soap_Client.cpp ver 2.7.9d 2007-03-30 08:43:57 GMT")
 
-
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__GetStatus(struct soap *soap, const char *soap_endpoint, const char *soap_action, _s0__GetStatus *s0__GetStatus, _s0__GetStatusResponse *s0__GetStatusResponse)
-{	struct __s0__GetStatus soap_tmp___s0__GetStatus;
-	if (!soap_action)
-		soap_action = "http://opcfoundation.org/webservices/XMLDA/1.0/GetStatus";
-	soap->encodingStyle = NULL;
-	soap_tmp___s0__GetStatus.s0__GetStatus = s0__GetStatus;
-	soap_begin(soap);
-	soap_serializeheader(soap);
-	soap_serialize___s0__GetStatus(soap, &soap_tmp___s0__GetStatus);
-	if (soap_begin_count(soap))
-		return soap->error;
-	if (soap->mode & SOAP_IO_LENGTH)
-	{	if (soap_envelope_begin_out(soap)
-		 || soap_putheader(soap)
-		 || soap_body_begin_out(soap)
-		 || soap_put___s0__GetStatus(soap, &soap_tmp___s0__GetStatus, "-s0:GetStatus", "")
-		 || soap_body_end_out(soap)
-		 || soap_envelope_end_out(soap))
-			 return soap->error;
-	}
-	if (soap_end_count(soap))
-		return soap->error;
-	if (soap_connect(soap, soap_endpoint, soap_action)
-	 || soap_envelope_begin_out(soap)
-	 || soap_putheader(soap)
-	 || soap_body_begin_out(soap)
-	 || soap_put___s0__GetStatus(soap, &soap_tmp___s0__GetStatus, "-s0:GetStatus", "")
-	 || soap_body_end_out(soap)
-	 || soap_envelope_end_out(soap)
-	 || soap_end_send(soap))
-		return soap_closesock(soap);
-	if (!s0__GetStatusResponse)
-		return soap_closesock(soap);
-	s0__GetStatusResponse->soap_default(soap);
-	if (soap_begin_recv(soap)
-	 || soap_envelope_begin_in(soap)
-	 || soap_recv_header(soap)
-	 || soap_body_begin_in(soap))
-		return soap_closesock(soap);
-	s0__GetStatusResponse->soap_get(soap, "s0:GetStatusResponse", "");
-	if (soap->error)
-	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
-			return soap_recv_fault(soap);
-		return soap_closesock(soap);
-	}
-	if (soap_body_end_in(soap)
-	 || soap_envelope_end_in(soap)
-	 || soap_end_recv(soap))
-		return soap_closesock(soap);
-	return soap_closesock(soap);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__GetStatus(struct soap* soap,
+    const char* soap_endpoint, const char* soap_action,
+    _s0__GetStatus* s0__GetStatus,
+    _s0__GetStatusResponse* s0__GetStatusResponse)
+{
+  struct __s0__GetStatus soap_tmp___s0__GetStatus;
+  if (!soap_action)
+    soap_action = "http://opcfoundation.org/webservices/XMLDA/1.0/GetStatus";
+  soap->encodingStyle = NULL;
+  soap_tmp___s0__GetStatus.s0__GetStatus = s0__GetStatus;
+  soap_begin(soap);
+  soap_serializeheader(soap);
+  soap_serialize___s0__GetStatus(soap, &soap_tmp___s0__GetStatus);
+  if (soap_begin_count(soap))
+    return soap->error;
+  if (soap->mode & SOAP_IO_LENGTH) {
+    if (soap_envelope_begin_out(soap) || soap_putheader(soap)
+        || soap_body_begin_out(soap)
+        || soap_put___s0__GetStatus(
+               soap, &soap_tmp___s0__GetStatus, "-s0:GetStatus", "")
+        || soap_body_end_out(soap) || soap_envelope_end_out(soap))
+      return soap->error;
+  }
+  if (soap_end_count(soap))
+    return soap->error;
+  if (soap_connect(soap, soap_endpoint, soap_action)
+      || soap_envelope_begin_out(soap) || soap_putheader(soap)
+      || soap_body_begin_out(soap)
+      || soap_put___s0__GetStatus(
+             soap, &soap_tmp___s0__GetStatus, "-s0:GetStatus", "")
+      || soap_body_end_out(soap) || soap_envelope_end_out(soap)
+      || soap_end_send(soap))
+    return soap_closesock(soap);
+  if (!s0__GetStatusResponse)
+    return soap_closesock(soap);
+  s0__GetStatusResponse->soap_default(soap);
+  if (soap_begin_recv(soap) || soap_envelope_begin_in(soap)
+      || soap_recv_header(soap) || soap_body_begin_in(soap))
+    return soap_closesock(soap);
+  s0__GetStatusResponse->soap_get(soap, "s0:GetStatusResponse", "");
+  if (soap->error) {
+    if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+      return soap_recv_fault(soap);
+    return soap_closesock(soap);
+  }
+  if (soap_body_end_in(soap) || soap_envelope_end_in(soap)
+      || soap_end_recv(soap))
+    return soap_closesock(soap);
+  return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__Read(struct soap *soap, const char *soap_endpoint, const char *soap_action, _s0__Read *s0__Read, _s0__ReadResponse *s0__ReadResponse)
-{	struct __s0__Read soap_tmp___s0__Read;
-	if (!soap_action)
-		soap_action = "http://opcfoundation.org/webservices/XMLDA/1.0/Read";
-	soap->encodingStyle = NULL;
-	soap_tmp___s0__Read.s0__Read = s0__Read;
-	soap_begin(soap);
-	soap_serializeheader(soap);
-	soap_serialize___s0__Read(soap, &soap_tmp___s0__Read);
-	if (soap_begin_count(soap))
-		return soap->error;
-	if (soap->mode & SOAP_IO_LENGTH)
-	{	if (soap_envelope_begin_out(soap)
-		 || soap_putheader(soap)
-		 || soap_body_begin_out(soap)
-		 || soap_put___s0__Read(soap, &soap_tmp___s0__Read, "-s0:Read", "")
-		 || soap_body_end_out(soap)
-		 || soap_envelope_end_out(soap))
-			 return soap->error;
-	}
-	if (soap_end_count(soap))
-		return soap->error;
-	if (soap_connect(soap, soap_endpoint, soap_action)
-	 || soap_envelope_begin_out(soap)
-	 || soap_putheader(soap)
-	 || soap_body_begin_out(soap)
-	 || soap_put___s0__Read(soap, &soap_tmp___s0__Read, "-s0:Read", "")
-	 || soap_body_end_out(soap)
-	 || soap_envelope_end_out(soap)
-	 || soap_end_send(soap))
-		return soap_closesock(soap);
-	if (!s0__ReadResponse)
-		return soap_closesock(soap);
-	s0__ReadResponse->soap_default(soap);
-	if (soap_begin_recv(soap)
-	 || soap_envelope_begin_in(soap)
-	 || soap_recv_header(soap)
-	 || soap_body_begin_in(soap))
-		return soap_closesock(soap);
-	s0__ReadResponse->soap_get(soap, "s0:ReadResponse", "");
-	if (soap->error)
-	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
-			return soap_recv_fault(soap);
-		return soap_closesock(soap);
-	}
-	if (soap_body_end_in(soap)
-	 || soap_envelope_end_in(soap)
-	 || soap_end_recv(soap))
-		return soap_closesock(soap);
-	return soap_closesock(soap);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__Read(struct soap* soap,
+    const char* soap_endpoint, const char* soap_action, _s0__Read* s0__Read,
+    _s0__ReadResponse* s0__ReadResponse)
+{
+  struct __s0__Read soap_tmp___s0__Read;
+  if (!soap_action)
+    soap_action = "http://opcfoundation.org/webservices/XMLDA/1.0/Read";
+  soap->encodingStyle = NULL;
+  soap_tmp___s0__Read.s0__Read = s0__Read;
+  soap_begin(soap);
+  soap_serializeheader(soap);
+  soap_serialize___s0__Read(soap, &soap_tmp___s0__Read);
+  if (soap_begin_count(soap))
+    return soap->error;
+  if (soap->mode & SOAP_IO_LENGTH) {
+    if (soap_envelope_begin_out(soap) || soap_putheader(soap)
+        || soap_body_begin_out(soap)
+        || soap_put___s0__Read(soap, &soap_tmp___s0__Read, "-s0:Read", "")
+        || soap_body_end_out(soap) || soap_envelope_end_out(soap))
+      return soap->error;
+  }
+  if (soap_end_count(soap))
+    return soap->error;
+  if (soap_connect(soap, soap_endpoint, soap_action)
+      || soap_envelope_begin_out(soap) || soap_putheader(soap)
+      || soap_body_begin_out(soap)
+      || soap_put___s0__Read(soap, &soap_tmp___s0__Read, "-s0:Read", "")
+      || soap_body_end_out(soap) || soap_envelope_end_out(soap)
+      || soap_end_send(soap))
+    return soap_closesock(soap);
+  if (!s0__ReadResponse)
+    return soap_closesock(soap);
+  s0__ReadResponse->soap_default(soap);
+  if (soap_begin_recv(soap) || soap_envelope_begin_in(soap)
+      || soap_recv_header(soap) || soap_body_begin_in(soap))
+    return soap_closesock(soap);
+  s0__ReadResponse->soap_get(soap, "s0:ReadResponse", "");
+  if (soap->error) {
+    if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+      return soap_recv_fault(soap);
+    return soap_closesock(soap);
+  }
+  if (soap_body_end_in(soap) || soap_envelope_end_in(soap)
+      || soap_end_recv(soap))
+    return soap_closesock(soap);
+  return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__Write(struct soap *soap, const char *soap_endpoint, const char *soap_action, _s0__Write *s0__Write, _s0__WriteResponse *s0__WriteResponse)
-{	struct __s0__Write soap_tmp___s0__Write;
-	if (!soap_action)
-		soap_action = "http://opcfoundation.org/webservices/XMLDA/1.0/Write";
-	soap->encodingStyle = NULL;
-	soap_tmp___s0__Write.s0__Write = s0__Write;
-	soap_begin(soap);
-	soap_serializeheader(soap);
-	soap_serialize___s0__Write(soap, &soap_tmp___s0__Write);
-	if (soap_begin_count(soap))
-		return soap->error;
-	if (soap->mode & SOAP_IO_LENGTH)
-	{	if (soap_envelope_begin_out(soap)
-		 || soap_putheader(soap)
-		 || soap_body_begin_out(soap)
-		 || soap_put___s0__Write(soap, &soap_tmp___s0__Write, "-s0:Write", "")
-		 || soap_body_end_out(soap)
-		 || soap_envelope_end_out(soap))
-			 return soap->error;
-	}
-	if (soap_end_count(soap))
-		return soap->error;
-	if (soap_connect(soap, soap_endpoint, soap_action)
-	 || soap_envelope_begin_out(soap)
-	 || soap_putheader(soap)
-	 || soap_body_begin_out(soap)
-	 || soap_put___s0__Write(soap, &soap_tmp___s0__Write, "-s0:Write", "")
-	 || soap_body_end_out(soap)
-	 || soap_envelope_end_out(soap)
-	 || soap_end_send(soap))
-		return soap_closesock(soap);
-	if (!s0__WriteResponse)
-		return soap_closesock(soap);
-	s0__WriteResponse->soap_default(soap);
-	if (soap_begin_recv(soap)
-	 || soap_envelope_begin_in(soap)
-	 || soap_recv_header(soap)
-	 || soap_body_begin_in(soap))
-		return soap_closesock(soap);
-	s0__WriteResponse->soap_get(soap, "s0:WriteResponse", "");
-	if (soap->error)
-	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
-			return soap_recv_fault(soap);
-		return soap_closesock(soap);
-	}
-	if (soap_body_end_in(soap)
-	 || soap_envelope_end_in(soap)
-	 || soap_end_recv(soap))
-		return soap_closesock(soap);
-	return soap_closesock(soap);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__Write(struct soap* soap,
+    const char* soap_endpoint, const char* soap_action, _s0__Write* s0__Write,
+    _s0__WriteResponse* s0__WriteResponse)
+{
+  struct __s0__Write soap_tmp___s0__Write;
+  if (!soap_action)
+    soap_action = "http://opcfoundation.org/webservices/XMLDA/1.0/Write";
+  soap->encodingStyle = NULL;
+  soap_tmp___s0__Write.s0__Write = s0__Write;
+  soap_begin(soap);
+  soap_serializeheader(soap);
+  soap_serialize___s0__Write(soap, &soap_tmp___s0__Write);
+  if (soap_begin_count(soap))
+    return soap->error;
+  if (soap->mode & SOAP_IO_LENGTH) {
+    if (soap_envelope_begin_out(soap) || soap_putheader(soap)
+        || soap_body_begin_out(soap)
+        || soap_put___s0__Write(soap, &soap_tmp___s0__Write, "-s0:Write", "")
+        || soap_body_end_out(soap) || soap_envelope_end_out(soap))
+      return soap->error;
+  }
+  if (soap_end_count(soap))
+    return soap->error;
+  if (soap_connect(soap, soap_endpoint, soap_action)
+      || soap_envelope_begin_out(soap) || soap_putheader(soap)
+      || soap_body_begin_out(soap)
+      || soap_put___s0__Write(soap, &soap_tmp___s0__Write, "-s0:Write", "")
+      || soap_body_end_out(soap) || soap_envelope_end_out(soap)
+      || soap_end_send(soap))
+    return soap_closesock(soap);
+  if (!s0__WriteResponse)
+    return soap_closesock(soap);
+  s0__WriteResponse->soap_default(soap);
+  if (soap_begin_recv(soap) || soap_envelope_begin_in(soap)
+      || soap_recv_header(soap) || soap_body_begin_in(soap))
+    return soap_closesock(soap);
+  s0__WriteResponse->soap_get(soap, "s0:WriteResponse", "");
+  if (soap->error) {
+    if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+      return soap_recv_fault(soap);
+    return soap_closesock(soap);
+  }
+  if (soap_body_end_in(soap) || soap_envelope_end_in(soap)
+      || soap_end_recv(soap))
+    return soap_closesock(soap);
+  return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__Subscribe(struct soap *soap, const char *soap_endpoint, const char *soap_action, _s0__Subscribe *s0__Subscribe, _s0__SubscribeResponse *s0__SubscribeResponse)
-{	struct __s0__Subscribe soap_tmp___s0__Subscribe;
-	if (!soap_action)
-		soap_action = "http://opcfoundation.org/webservices/XMLDA/1.0/Subscribe";
-	soap->encodingStyle = NULL;
-	soap_tmp___s0__Subscribe.s0__Subscribe = s0__Subscribe;
-	soap_begin(soap);
-	soap_serializeheader(soap);
-	soap_serialize___s0__Subscribe(soap, &soap_tmp___s0__Subscribe);
-	if (soap_begin_count(soap))
-		return soap->error;
-	if (soap->mode & SOAP_IO_LENGTH)
-	{	if (soap_envelope_begin_out(soap)
-		 || soap_putheader(soap)
-		 || soap_body_begin_out(soap)
-		 || soap_put___s0__Subscribe(soap, &soap_tmp___s0__Subscribe, "-s0:Subscribe", "")
-		 || soap_body_end_out(soap)
-		 || soap_envelope_end_out(soap))
-			 return soap->error;
-	}
-	if (soap_end_count(soap))
-		return soap->error;
-	if (soap_connect(soap, soap_endpoint, soap_action)
-	 || soap_envelope_begin_out(soap)
-	 || soap_putheader(soap)
-	 || soap_body_begin_out(soap)
-	 || soap_put___s0__Subscribe(soap, &soap_tmp___s0__Subscribe, "-s0:Subscribe", "")
-	 || soap_body_end_out(soap)
-	 || soap_envelope_end_out(soap)
-	 || soap_end_send(soap))
-		return soap_closesock(soap);
-	if (!s0__SubscribeResponse)
-		return soap_closesock(soap);
-	s0__SubscribeResponse->soap_default(soap);
-	if (soap_begin_recv(soap)
-	 || soap_envelope_begin_in(soap)
-	 || soap_recv_header(soap)
-	 || soap_body_begin_in(soap))
-		return soap_closesock(soap);
-	s0__SubscribeResponse->soap_get(soap, "s0:SubscribeResponse", "");
-	if (soap->error)
-	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
-			return soap_recv_fault(soap);
-		return soap_closesock(soap);
-	}
-	if (soap_body_end_in(soap)
-	 || soap_envelope_end_in(soap)
-	 || soap_end_recv(soap))
-		return soap_closesock(soap);
-	return soap_closesock(soap);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__Subscribe(struct soap* soap,
+    const char* soap_endpoint, const char* soap_action,
+    _s0__Subscribe* s0__Subscribe,
+    _s0__SubscribeResponse* s0__SubscribeResponse)
+{
+  struct __s0__Subscribe soap_tmp___s0__Subscribe;
+  if (!soap_action)
+    soap_action = "http://opcfoundation.org/webservices/XMLDA/1.0/Subscribe";
+  soap->encodingStyle = NULL;
+  soap_tmp___s0__Subscribe.s0__Subscribe = s0__Subscribe;
+  soap_begin(soap);
+  soap_serializeheader(soap);
+  soap_serialize___s0__Subscribe(soap, &soap_tmp___s0__Subscribe);
+  if (soap_begin_count(soap))
+    return soap->error;
+  if (soap->mode & SOAP_IO_LENGTH) {
+    if (soap_envelope_begin_out(soap) || soap_putheader(soap)
+        || soap_body_begin_out(soap)
+        || soap_put___s0__Subscribe(
+               soap, &soap_tmp___s0__Subscribe, "-s0:Subscribe", "")
+        || soap_body_end_out(soap) || soap_envelope_end_out(soap))
+      return soap->error;
+  }
+  if (soap_end_count(soap))
+    return soap->error;
+  if (soap_connect(soap, soap_endpoint, soap_action)
+      || soap_envelope_begin_out(soap) || soap_putheader(soap)
+      || soap_body_begin_out(soap)
+      || soap_put___s0__Subscribe(
+             soap, &soap_tmp___s0__Subscribe, "-s0:Subscribe", "")
+      || soap_body_end_out(soap) || soap_envelope_end_out(soap)
+      || soap_end_send(soap))
+    return soap_closesock(soap);
+  if (!s0__SubscribeResponse)
+    return soap_closesock(soap);
+  s0__SubscribeResponse->soap_default(soap);
+  if (soap_begin_recv(soap) || soap_envelope_begin_in(soap)
+      || soap_recv_header(soap) || soap_body_begin_in(soap))
+    return soap_closesock(soap);
+  s0__SubscribeResponse->soap_get(soap, "s0:SubscribeResponse", "");
+  if (soap->error) {
+    if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+      return soap_recv_fault(soap);
+    return soap_closesock(soap);
+  }
+  if (soap_body_end_in(soap) || soap_envelope_end_in(soap)
+      || soap_end_recv(soap))
+    return soap_closesock(soap);
+  return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__SubscriptionPolledRefresh(struct soap *soap, const char *soap_endpoint, const char *soap_action, _s0__SubscriptionPolledRefresh *s0__SubscriptionPolledRefresh, _s0__SubscriptionPolledRefreshResponse *s0__SubscriptionPolledRefreshResponse)
-{	struct __s0__SubscriptionPolledRefresh soap_tmp___s0__SubscriptionPolledRefresh;
-	if (!soap_action)
-		soap_action = "http://opcfoundation.org/webservices/XMLDA/1.0/SubscriptionPolledRefresh";
-	soap->encodingStyle = NULL;
-	soap_tmp___s0__SubscriptionPolledRefresh.s0__SubscriptionPolledRefresh = s0__SubscriptionPolledRefresh;
-	soap_begin(soap);
-	soap_serializeheader(soap);
-	soap_serialize___s0__SubscriptionPolledRefresh(soap, &soap_tmp___s0__SubscriptionPolledRefresh);
-	if (soap_begin_count(soap))
-		return soap->error;
-	if (soap->mode & SOAP_IO_LENGTH)
-	{	if (soap_envelope_begin_out(soap)
-		 || soap_putheader(soap)
-		 || soap_body_begin_out(soap)
-		 || soap_put___s0__SubscriptionPolledRefresh(soap, &soap_tmp___s0__SubscriptionPolledRefresh, "-s0:SubscriptionPolledRefresh", "")
-		 || soap_body_end_out(soap)
-		 || soap_envelope_end_out(soap))
-			 return soap->error;
-	}
-	if (soap_end_count(soap))
-		return soap->error;
-	if (soap_connect(soap, soap_endpoint, soap_action)
-	 || soap_envelope_begin_out(soap)
-	 || soap_putheader(soap)
-	 || soap_body_begin_out(soap)
-	 || soap_put___s0__SubscriptionPolledRefresh(soap, &soap_tmp___s0__SubscriptionPolledRefresh, "-s0:SubscriptionPolledRefresh", "")
-	 || soap_body_end_out(soap)
-	 || soap_envelope_end_out(soap)
-	 || soap_end_send(soap))
-		return soap_closesock(soap);
-	if (!s0__SubscriptionPolledRefreshResponse)
-		return soap_closesock(soap);
-	s0__SubscriptionPolledRefreshResponse->soap_default(soap);
-	if (soap_begin_recv(soap)
-	 || soap_envelope_begin_in(soap)
-	 || soap_recv_header(soap)
-	 || soap_body_begin_in(soap))
-		return soap_closesock(soap);
-	s0__SubscriptionPolledRefreshResponse->soap_get(soap, "s0:SubscriptionPolledRefreshResponse", "");
-	if (soap->error)
-	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
-			return soap_recv_fault(soap);
-		return soap_closesock(soap);
-	}
-	if (soap_body_end_in(soap)
-	 || soap_envelope_end_in(soap)
-	 || soap_end_recv(soap))
-		return soap_closesock(soap);
-	return soap_closesock(soap);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__SubscriptionPolledRefresh(
+    struct soap* soap, const char* soap_endpoint, const char* soap_action,
+    _s0__SubscriptionPolledRefresh* s0__SubscriptionPolledRefresh,
+    _s0__SubscriptionPolledRefreshResponse*
+        s0__SubscriptionPolledRefreshResponse)
+{
+  struct __s0__SubscriptionPolledRefresh
+      soap_tmp___s0__SubscriptionPolledRefresh;
+  if (!soap_action)
+    soap_action = "http://opcfoundation.org/webservices/XMLDA/1.0/"
+                  "SubscriptionPolledRefresh";
+  soap->encodingStyle = NULL;
+  soap_tmp___s0__SubscriptionPolledRefresh.s0__SubscriptionPolledRefresh
+      = s0__SubscriptionPolledRefresh;
+  soap_begin(soap);
+  soap_serializeheader(soap);
+  soap_serialize___s0__SubscriptionPolledRefresh(
+      soap, &soap_tmp___s0__SubscriptionPolledRefresh);
+  if (soap_begin_count(soap))
+    return soap->error;
+  if (soap->mode & SOAP_IO_LENGTH) {
+    if (soap_envelope_begin_out(soap) || soap_putheader(soap)
+        || soap_body_begin_out(soap)
+        || soap_put___s0__SubscriptionPolledRefresh(soap,
+               &soap_tmp___s0__SubscriptionPolledRefresh,
+               "-s0:SubscriptionPolledRefresh", "")
+        || soap_body_end_out(soap) || soap_envelope_end_out(soap))
+      return soap->error;
+  }
+  if (soap_end_count(soap))
+    return soap->error;
+  if (soap_connect(soap, soap_endpoint, soap_action)
+      || soap_envelope_begin_out(soap) || soap_putheader(soap)
+      || soap_body_begin_out(soap)
+      || soap_put___s0__SubscriptionPolledRefresh(soap,
+             &soap_tmp___s0__SubscriptionPolledRefresh,
+             "-s0:SubscriptionPolledRefresh", "")
+      || soap_body_end_out(soap) || soap_envelope_end_out(soap)
+      || soap_end_send(soap))
+    return soap_closesock(soap);
+  if (!s0__SubscriptionPolledRefreshResponse)
+    return soap_closesock(soap);
+  s0__SubscriptionPolledRefreshResponse->soap_default(soap);
+  if (soap_begin_recv(soap) || soap_envelope_begin_in(soap)
+      || soap_recv_header(soap) || soap_body_begin_in(soap))
+    return soap_closesock(soap);
+  s0__SubscriptionPolledRefreshResponse->soap_get(
+      soap, "s0:SubscriptionPolledRefreshResponse", "");
+  if (soap->error) {
+    if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+      return soap_recv_fault(soap);
+    return soap_closesock(soap);
+  }
+  if (soap_body_end_in(soap) || soap_envelope_end_in(soap)
+      || soap_end_recv(soap))
+    return soap_closesock(soap);
+  return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__SubscriptionCancel(struct soap *soap, const char *soap_endpoint, const char *soap_action, _s0__SubscriptionCancel *s0__SubscriptionCancel, _s0__SubscriptionCancelResponse *s0__SubscriptionCancelResponse)
-{	struct __s0__SubscriptionCancel soap_tmp___s0__SubscriptionCancel;
-	if (!soap_action)
-		soap_action = "http://opcfoundation.org/webservices/XMLDA/1.0/SubscriptionCancel";
-	soap->encodingStyle = NULL;
-	soap_tmp___s0__SubscriptionCancel.s0__SubscriptionCancel = s0__SubscriptionCancel;
-	soap_begin(soap);
-	soap_serializeheader(soap);
-	soap_serialize___s0__SubscriptionCancel(soap, &soap_tmp___s0__SubscriptionCancel);
-	if (soap_begin_count(soap))
-		return soap->error;
-	if (soap->mode & SOAP_IO_LENGTH)
-	{	if (soap_envelope_begin_out(soap)
-		 || soap_putheader(soap)
-		 || soap_body_begin_out(soap)
-		 || soap_put___s0__SubscriptionCancel(soap, &soap_tmp___s0__SubscriptionCancel, "-s0:SubscriptionCancel", "")
-		 || soap_body_end_out(soap)
-		 || soap_envelope_end_out(soap))
-			 return soap->error;
-	}
-	if (soap_end_count(soap))
-		return soap->error;
-	if (soap_connect(soap, soap_endpoint, soap_action)
-	 || soap_envelope_begin_out(soap)
-	 || soap_putheader(soap)
-	 || soap_body_begin_out(soap)
-	 || soap_put___s0__SubscriptionCancel(soap, &soap_tmp___s0__SubscriptionCancel, "-s0:SubscriptionCancel", "")
-	 || soap_body_end_out(soap)
-	 || soap_envelope_end_out(soap)
-	 || soap_end_send(soap))
-		return soap_closesock(soap);
-	if (!s0__SubscriptionCancelResponse)
-		return soap_closesock(soap);
-	s0__SubscriptionCancelResponse->soap_default(soap);
-	if (soap_begin_recv(soap)
-	 || soap_envelope_begin_in(soap)
-	 || soap_recv_header(soap)
-	 || soap_body_begin_in(soap))
-		return soap_closesock(soap);
-	s0__SubscriptionCancelResponse->soap_get(soap, "s0:SubscriptionCancelResponse", "");
-	if (soap->error)
-	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
-			return soap_recv_fault(soap);
-		return soap_closesock(soap);
-	}
-	if (soap_body_end_in(soap)
-	 || soap_envelope_end_in(soap)
-	 || soap_end_recv(soap))
-		return soap_closesock(soap);
-	return soap_closesock(soap);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__SubscriptionCancel(struct soap* soap,
+    const char* soap_endpoint, const char* soap_action,
+    _s0__SubscriptionCancel* s0__SubscriptionCancel,
+    _s0__SubscriptionCancelResponse* s0__SubscriptionCancelResponse)
+{
+  struct __s0__SubscriptionCancel soap_tmp___s0__SubscriptionCancel;
+  if (!soap_action)
+    soap_action
+        = "http://opcfoundation.org/webservices/XMLDA/1.0/SubscriptionCancel";
+  soap->encodingStyle = NULL;
+  soap_tmp___s0__SubscriptionCancel.s0__SubscriptionCancel
+      = s0__SubscriptionCancel;
+  soap_begin(soap);
+  soap_serializeheader(soap);
+  soap_serialize___s0__SubscriptionCancel(
+      soap, &soap_tmp___s0__SubscriptionCancel);
+  if (soap_begin_count(soap))
+    return soap->error;
+  if (soap->mode & SOAP_IO_LENGTH) {
+    if (soap_envelope_begin_out(soap) || soap_putheader(soap)
+        || soap_body_begin_out(soap)
+        || soap_put___s0__SubscriptionCancel(soap,
+               &soap_tmp___s0__SubscriptionCancel, "-s0:SubscriptionCancel", "")
+        || soap_body_end_out(soap) || soap_envelope_end_out(soap))
+      return soap->error;
+  }
+  if (soap_end_count(soap))
+    return soap->error;
+  if (soap_connect(soap, soap_endpoint, soap_action)
+      || soap_envelope_begin_out(soap) || soap_putheader(soap)
+      || soap_body_begin_out(soap)
+      || soap_put___s0__SubscriptionCancel(soap,
+             &soap_tmp___s0__SubscriptionCancel, "-s0:SubscriptionCancel", "")
+      || soap_body_end_out(soap) || soap_envelope_end_out(soap)
+      || soap_end_send(soap))
+    return soap_closesock(soap);
+  if (!s0__SubscriptionCancelResponse)
+    return soap_closesock(soap);
+  s0__SubscriptionCancelResponse->soap_default(soap);
+  if (soap_begin_recv(soap) || soap_envelope_begin_in(soap)
+      || soap_recv_header(soap) || soap_body_begin_in(soap))
+    return soap_closesock(soap);
+  s0__SubscriptionCancelResponse->soap_get(
+      soap, "s0:SubscriptionCancelResponse", "");
+  if (soap->error) {
+    if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+      return soap_recv_fault(soap);
+    return soap_closesock(soap);
+  }
+  if (soap_body_end_in(soap) || soap_envelope_end_in(soap)
+      || soap_end_recv(soap))
+    return soap_closesock(soap);
+  return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__Browse(struct soap *soap, const char *soap_endpoint, const char *soap_action, _s0__Browse *s0__Browse, _s0__BrowseResponse *s0__BrowseResponse)
-{	struct __s0__Browse soap_tmp___s0__Browse;
-	if (!soap_action)
-		soap_action = "http://opcfoundation.org/webservices/XMLDA/1.0/Browse";
-	soap->encodingStyle = NULL;
-	soap_tmp___s0__Browse.s0__Browse = s0__Browse;
-	soap_begin(soap);
-	soap_serializeheader(soap);
-	soap_serialize___s0__Browse(soap, &soap_tmp___s0__Browse);
-	if (soap_begin_count(soap))
-		return soap->error;
-	if (soap->mode & SOAP_IO_LENGTH)
-	{	if (soap_envelope_begin_out(soap)
-		 || soap_putheader(soap)
-		 || soap_body_begin_out(soap)
-		 || soap_put___s0__Browse(soap, &soap_tmp___s0__Browse, "-s0:Browse", "")
-		 || soap_body_end_out(soap)
-		 || soap_envelope_end_out(soap))
-			 return soap->error;
-	}
-	if (soap_end_count(soap))
-		return soap->error;
-	if (soap_connect(soap, soap_endpoint, soap_action)
-	 || soap_envelope_begin_out(soap)
-	 || soap_putheader(soap)
-	 || soap_body_begin_out(soap)
-	 || soap_put___s0__Browse(soap, &soap_tmp___s0__Browse, "-s0:Browse", "")
-	 || soap_body_end_out(soap)
-	 || soap_envelope_end_out(soap)
-	 || soap_end_send(soap))
-		return soap_closesock(soap);
-	if (!s0__BrowseResponse)
-		return soap_closesock(soap);
-	s0__BrowseResponse->soap_default(soap);
-	if (soap_begin_recv(soap)
-	 || soap_envelope_begin_in(soap)
-	 || soap_recv_header(soap)
-	 || soap_body_begin_in(soap))
-		return soap_closesock(soap);
-	s0__BrowseResponse->soap_get(soap, "s0:BrowseResponse", "");
-	if (soap->error)
-	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
-			return soap_recv_fault(soap);
-		return soap_closesock(soap);
-	}
-	if (soap_body_end_in(soap)
-	 || soap_envelope_end_in(soap)
-	 || soap_end_recv(soap))
-		return soap_closesock(soap);
-	return soap_closesock(soap);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__Browse(struct soap* soap,
+    const char* soap_endpoint, const char* soap_action, _s0__Browse* s0__Browse,
+    _s0__BrowseResponse* s0__BrowseResponse)
+{
+  struct __s0__Browse soap_tmp___s0__Browse;
+  if (!soap_action)
+    soap_action = "http://opcfoundation.org/webservices/XMLDA/1.0/Browse";
+  soap->encodingStyle = NULL;
+  soap_tmp___s0__Browse.s0__Browse = s0__Browse;
+  soap_begin(soap);
+  soap_serializeheader(soap);
+  soap_serialize___s0__Browse(soap, &soap_tmp___s0__Browse);
+  if (soap_begin_count(soap))
+    return soap->error;
+  if (soap->mode & SOAP_IO_LENGTH) {
+    if (soap_envelope_begin_out(soap) || soap_putheader(soap)
+        || soap_body_begin_out(soap)
+        || soap_put___s0__Browse(soap, &soap_tmp___s0__Browse, "-s0:Browse", "")
+        || soap_body_end_out(soap) || soap_envelope_end_out(soap))
+      return soap->error;
+  }
+  if (soap_end_count(soap))
+    return soap->error;
+  if (soap_connect(soap, soap_endpoint, soap_action)
+      || soap_envelope_begin_out(soap) || soap_putheader(soap)
+      || soap_body_begin_out(soap)
+      || soap_put___s0__Browse(soap, &soap_tmp___s0__Browse, "-s0:Browse", "")
+      || soap_body_end_out(soap) || soap_envelope_end_out(soap)
+      || soap_end_send(soap))
+    return soap_closesock(soap);
+  if (!s0__BrowseResponse)
+    return soap_closesock(soap);
+  s0__BrowseResponse->soap_default(soap);
+  if (soap_begin_recv(soap) || soap_envelope_begin_in(soap)
+      || soap_recv_header(soap) || soap_body_begin_in(soap))
+    return soap_closesock(soap);
+  s0__BrowseResponse->soap_get(soap, "s0:BrowseResponse", "");
+  if (soap->error) {
+    if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+      return soap_recv_fault(soap);
+    return soap_closesock(soap);
+  }
+  if (soap_body_end_in(soap) || soap_envelope_end_in(soap)
+      || soap_end_recv(soap))
+    return soap_closesock(soap);
+  return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__GetProperties(struct soap *soap, const char *soap_endpoint, const char *soap_action, _s0__GetProperties *s0__GetProperties, _s0__GetPropertiesResponse *s0__GetPropertiesResponse)
-{	struct __s0__GetProperties soap_tmp___s0__GetProperties;
-	if (!soap_action)
-		soap_action = "http://opcfoundation.org/webservices/XMLDA/1.0/GetProperties";
-	soap->encodingStyle = NULL;
-	soap_tmp___s0__GetProperties.s0__GetProperties = s0__GetProperties;
-	soap_begin(soap);
-	soap_serializeheader(soap);
-	soap_serialize___s0__GetProperties(soap, &soap_tmp___s0__GetProperties);
-	if (soap_begin_count(soap))
-		return soap->error;
-	if (soap->mode & SOAP_IO_LENGTH)
-	{	if (soap_envelope_begin_out(soap)
-		 || soap_putheader(soap)
-		 || soap_body_begin_out(soap)
-		 || soap_put___s0__GetProperties(soap, &soap_tmp___s0__GetProperties, "-s0:GetProperties", "")
-		 || soap_body_end_out(soap)
-		 || soap_envelope_end_out(soap))
-			 return soap->error;
-	}
-	if (soap_end_count(soap))
-		return soap->error;
-	if (soap_connect(soap, soap_endpoint, soap_action)
-	 || soap_envelope_begin_out(soap)
-	 || soap_putheader(soap)
-	 || soap_body_begin_out(soap)
-	 || soap_put___s0__GetProperties(soap, &soap_tmp___s0__GetProperties, "-s0:GetProperties", "")
-	 || soap_body_end_out(soap)
-	 || soap_envelope_end_out(soap)
-	 || soap_end_send(soap))
-		return soap_closesock(soap);
-	if (!s0__GetPropertiesResponse)
-		return soap_closesock(soap);
-	s0__GetPropertiesResponse->soap_default(soap);
-	if (soap_begin_recv(soap)
-	 || soap_envelope_begin_in(soap)
-	 || soap_recv_header(soap)
-	 || soap_body_begin_in(soap))
-		return soap_closesock(soap);
-	s0__GetPropertiesResponse->soap_get(soap, "s0:GetPropertiesResponse", "");
-	if (soap->error)
-	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
-			return soap_recv_fault(soap);
-		return soap_closesock(soap);
-	}
-	if (soap_body_end_in(soap)
-	 || soap_envelope_end_in(soap)
-	 || soap_end_recv(soap))
-		return soap_closesock(soap);
-	return soap_closesock(soap);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__GetProperties(struct soap* soap,
+    const char* soap_endpoint, const char* soap_action,
+    _s0__GetProperties* s0__GetProperties,
+    _s0__GetPropertiesResponse* s0__GetPropertiesResponse)
+{
+  struct __s0__GetProperties soap_tmp___s0__GetProperties;
+  if (!soap_action)
+    soap_action
+        = "http://opcfoundation.org/webservices/XMLDA/1.0/GetProperties";
+  soap->encodingStyle = NULL;
+  soap_tmp___s0__GetProperties.s0__GetProperties = s0__GetProperties;
+  soap_begin(soap);
+  soap_serializeheader(soap);
+  soap_serialize___s0__GetProperties(soap, &soap_tmp___s0__GetProperties);
+  if (soap_begin_count(soap))
+    return soap->error;
+  if (soap->mode & SOAP_IO_LENGTH) {
+    if (soap_envelope_begin_out(soap) || soap_putheader(soap)
+        || soap_body_begin_out(soap)
+        || soap_put___s0__GetProperties(
+               soap, &soap_tmp___s0__GetProperties, "-s0:GetProperties", "")
+        || soap_body_end_out(soap) || soap_envelope_end_out(soap))
+      return soap->error;
+  }
+  if (soap_end_count(soap))
+    return soap->error;
+  if (soap_connect(soap, soap_endpoint, soap_action)
+      || soap_envelope_begin_out(soap) || soap_putheader(soap)
+      || soap_body_begin_out(soap)
+      || soap_put___s0__GetProperties(
+             soap, &soap_tmp___s0__GetProperties, "-s0:GetProperties", "")
+      || soap_body_end_out(soap) || soap_envelope_end_out(soap)
+      || soap_end_send(soap))
+    return soap_closesock(soap);
+  if (!s0__GetPropertiesResponse)
+    return soap_closesock(soap);
+  s0__GetPropertiesResponse->soap_default(soap);
+  if (soap_begin_recv(soap) || soap_envelope_begin_in(soap)
+      || soap_recv_header(soap) || soap_body_begin_in(soap))
+    return soap_closesock(soap);
+  s0__GetPropertiesResponse->soap_get(soap, "s0:GetPropertiesResponse", "");
+  if (soap->error) {
+    if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+      return soap_recv_fault(soap);
+    return soap_closesock(soap);
+  }
+  if (soap_body_end_in(soap) || soap_envelope_end_in(soap)
+      || soap_end_recv(soap))
+    return soap_closesock(soap);
+  return soap_closesock(soap);
 }
 
 /* End of opc_soap_Client.cpp */

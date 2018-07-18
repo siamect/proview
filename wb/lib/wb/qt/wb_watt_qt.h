@@ -39,63 +39,62 @@
 
 /* wb_watt_qt.h -- Object attribute editor */
 
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
+#include "cow_wow_qt.h"
+
 #ifndef wb_watt_h
-# include "wb_watt.h"
+#include "wb_watt.h"
 #endif
 
-#ifndef cow_wow_qt_h
-# include "cow_wow_qt.h"
-#endif
-
+#include <QLabel>
+#include <QSplitter>
 #include <QTextEdit>
 
 class WAttQtWidget;
 
 class WAttQt : public WAtt {
 public:
-  WAttQt(QWidget *wa_parent_wid, void *wa_parent_ctx, ldh_tSesContext wa_ldhses,
-         pwr_sAttrRef wa_aref, int wa_editmode, int wa_advanced_user,
-         int wa_display_objectname);
-  QWidget *brow_widget;
-  QWidget *form_widget;
-  QLabel *msg_label;
-  QLabel *cmd_prompt;
-  QWidget *cmd_scrolledinput;
-  QWidget *cmd_scrolled_ok;
-  QWidget *cmd_scrolled_ca;
-  QTextEdit *cmd_scrolled_buffer;
-  QSplitter *pane;
+  WAttQt(QWidget* wa_parent_wid, void* wa_parent_ctx, ldh_tSesContext wa_ldhses,
+      pwr_sAttrRef wa_aref, int wa_editmode, int wa_advanced_user,
+      int wa_display_objectname);
+  QWidget* brow_widget;
+  QWidget* form_widget;
+  QLabel* msg_label;
+  QLabel* cmd_prompt;
+  QWidget* cmd_scrolledinput;
+  QWidget* cmd_scrolled_ok;
+  QWidget* cmd_scrolled_ca;
+  QTextEdit* cmd_scrolled_buffer;
+  QSplitter* pane;
   static CoWowRecall value_recall;
-  CoWowEntryQt *cmd_entry;
+  CoWowEntryQt* cmd_entry;
   CoWowFocusTimerQt focustimer;
   int input_max_length;
 
-  void message(char severity, const char *message);
-  void set_prompt(const char *prompt);
+  void message(char severity, const char* message);
+  void set_prompt(const char* prompt);
   void change_value(int set_focus);
-  int open_changevalue(char *name);
+  int open_changevalue(char* name);
   void change_value_close();
   void pop();
-  void print(const char *title);
+  void print(const char* title);
   void update_title();
 
 private:
-  WAttQtWidget *toplevel;
+  WAttQtWidget* toplevel;
 };
 
 class WAttQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  WAttQtWidget(WAttQt *parent_ctx, QWidget *parent)
-      : QWidget(parent, Qt::Window), watt(parent_ctx) {}
+  WAttQtWidget(WAttQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), watt(parent_ctx)
+  {
+  }
 
 protected:
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void activate_change_value();
@@ -108,7 +107,7 @@ public slots:
   void action_text_inserted();
 
 private:
-  WAttQt *watt;
+  WAttQt* watt;
 };
 
 #endif

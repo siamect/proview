@@ -34,14 +34,13 @@
  * General Public License plus this exception.
  **/
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
-#include "co_login_msg.h"
-#include "cow_login_qt.h"
-#include "co_api.h"
 #include "co_dcli.h"
+#include "co_login_msg.h"
+
+#include "cow_login_qt.h"
+#include "cow_qt_helpers.h"
 #include "cow_wow_qt.h"
 
 #include <QHBoxLayout>
@@ -89,7 +88,7 @@ void CoLoginQtWidget::valchanged_username()
   }
 }
 
-void CoLoginQtWidget::closeEvent(QCloseEvent *event)
+void CoLoginQtWidget::closeEvent(QCloseEvent* event)
 {
   if (del) {
     login->activate_cancel();
@@ -98,13 +97,11 @@ void CoLoginQtWidget::closeEvent(QCloseEvent *event)
   QDialog::closeEvent(event);
 }
 
-CoLoginQt::CoLoginQt(void *wl_parent_ctx, QWidget *wl_parent_wid,
-                     const char *wl_name, const char *wl_groupname,
-                     void    (*wl_bc_success)(void *),
-                     void    (*wl_bc_cancel)(void *), void *basewidget,
-                     pwr_tStatus *status)
-    : CoLogin(wl_parent_ctx, wl_name, wl_groupname, wl_bc_success,
-              wl_bc_cancel, status)
+CoLoginQt::CoLoginQt(void* wl_parent_ctx, QWidget* wl_parent_wid,
+    const char* wl_name, const char* wl_groupname, void (*wl_bc_success)(void*),
+    void (*wl_bc_cancel)(void*), void* basewidget, pwr_tStatus* status)
+    : CoLogin(wl_parent_ctx, wl_name, wl_groupname, wl_bc_success, wl_bc_cancel,
+          status)
 {
   // Create an input dialog
   toplevel = new CoLoginQtWidget(this, wl_parent_wid);
@@ -116,23 +113,23 @@ CoLoginQt::CoLoginQt(void *wl_parent_ctx, QWidget *wl_parent_wid,
   username = new QLineEdit();
   username->setFixedHeight(20);
   QObject::connect(username, SIGNAL(editingFinished()), toplevel,
-                   SLOT(valchanged_username()));
+      SLOT(valchanged_username()));
 
-  QWidget *usernamelabel = new QLabel("Username");
+  QWidget* usernamelabel = new QLabel("Username");
   usernamelabel->setFixedHeight(20);
 
   password = new QLineEdit();
   password->setFixedHeight(20);
   QObject::connect(password, SIGNAL(editingFinished()), toplevel,
-                   SLOT(valchanged_password()));
+      SLOT(valchanged_password()));
 
-  QWidget *passwordlabel = new QLabel("Password");
+  QWidget* passwordlabel = new QLabel("Password");
   passwordlabel->setFixedHeight(20);
   password->setEchoMode(QLineEdit::Password);
 
   pwr_tFileName fname;
   dcli_translate_filename(fname, "$pwr_exe/pwr_logofull.png");
-  QLabel *image = new_image_label(toplevel, fname);
+  QLabel* image = new_image_label(toplevel, fname);
 
   buttons = new QDialogButtonBox();
   buttons->addButton(QDialogButtonBox::Ok);
@@ -140,26 +137,26 @@ CoLoginQt::CoLoginQt(void *wl_parent_ctx, QWidget *wl_parent_wid,
   buttons->button(QDialogButtonBox::Ok)->setFixedSize(70, 25);
   buttons->button(QDialogButtonBox::Cancel)->setFixedSize(70, 25);
   QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
-                   toplevel, SLOT(activate_ok()));
+      toplevel, SLOT(activate_ok()));
   QObject::connect(buttons->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
-                   toplevel, SLOT(activate_cancel()));
+      toplevel, SLOT(activate_cancel()));
 
   label = new QLabel("");
 
-  QVBoxLayout *vbox1 = new QVBoxLayout();
+  QVBoxLayout* vbox1 = new QVBoxLayout();
   vbox1->addWidget(usernamelabel);
   vbox1->addWidget(passwordlabel);
 
-  QVBoxLayout *vbox2 = new QVBoxLayout();
+  QVBoxLayout* vbox2 = new QVBoxLayout();
   vbox2->addWidget(username);
   vbox2->addWidget(password);
 
-  QHBoxLayout *hbox = new QHBoxLayout();
+  QHBoxLayout* hbox = new QHBoxLayout();
   hbox->addWidget(image);
   hbox->addLayout(vbox1);
   add_expanding(hbox, vbox2);
 
-  QVBoxLayout *vbox = new QVBoxLayout();
+  QVBoxLayout* vbox = new QVBoxLayout();
   add_expanding(vbox, hbox);
   vbox->addWidget(label);
   vbox->addWidget(separator(QFrame::HLine));
@@ -205,7 +202,7 @@ pwr_tStatus CoLoginQt::get_values()
 //
 //	Displays a message in the login window.
 //
-void CoLoginQt::message(const char *new_label)
+void CoLoginQt::message(const char* new_label)
 {
   label->setText(fl(new_label));
 }

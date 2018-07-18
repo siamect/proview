@@ -36,40 +36,19 @@
 
 /* rt_xtt_qt.cpp -- Display plant and node hiererachy */
 
-#include "flow_std.h"
+#include "co_dcli.h"
+#include "co_syi.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "rt_gdh.h"
-#include "rt_gdh_msg.h"
-#include "rt_ini_event.h"
-#include "rt_qcom_msg.h"
-#include "co_cdh.h"
-#include "co_time.h"
-#include "cow_wow_qt.h"
 #include "cow_login_qt.h"
-#include "pwr_baseclasses.h"
-#include "pwr_nmpsclasses.h"
+#include "cow_qt_helpers.h"
+#include "cow_xhelp_qt.h"
 
 #include "xtt_hotkey_qt.h"
-#include "co_dcli.h"
-
-#include "co_lng.h"
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
-#include "rt_xtt_qt.h"
-#include "xtt_xnav_qt.h"
-#include "xtt_item.h"
-#include "xtt_url.h"
-#include "xtt_xcolwind.h"
-#include "co_lng.h"
-#include "cow_xhelp_qt.h"
-#include "cow_wow_qt.h"
-#include "rt_xnav_msg.h"
-#include "co_syi.h"
 #include "xtt_methodtoolbar_qt.h"
+#include "xtt_xcolwind.h"
+#include "xtt_xnav_qt.h"
+
+#include "rt_xtt_qt.h"
 
 #include <QApplication>
 #include <QDesktopWidget>
@@ -77,56 +56,54 @@
 #include <QMenuBar>
 #include <QVBoxLayout>
 
-void XttQt::hotkey_Command(char *arg, void *userdata)
+void XttQt::hotkey_Command(char* arg, void* userdata)
 {
-  Xtt *xtt = (Xtt *) userdata;
+  Xtt* xtt = (Xtt*)userdata;
   xtt->hotkey_activate_command(arg);
 }
 
-void XttQt::hotkey_ToggleDig(char *arg, void *userdata)
+void XttQt::hotkey_ToggleDig(char* arg, void* userdata)
 {
   hotkey_activate_toggledig(arg);
 }
 
-void XttQt::hotkey_SetDig(char *arg, void *userdata)
+void XttQt::hotkey_SetDig(char* arg, void* userdata)
 {
   hotkey_activate_setdig(arg);
 }
 
-void XttQt::hotkey_ResetDig(char *arg, void *userdata)
+void XttQt::hotkey_ResetDig(char* arg, void* userdata)
 {
   hotkey_activate_resetdig(arg);
 }
 
-bool eventFilter(QObject *obj, QEvent *event)
+bool eventFilter(QObject* obj, QEvent* event)
 {
   return XttHotkey::event_handler(event, obj);
 }
 
-void XttQt::open_input_dialog(const char *text, const char *title,
-                              const char *init_text,
-                              void (*ok_cb)(Xtt *, char *))
+void XttQt::open_input_dialog(const char* text, const char* title,
+    const char* init_text, void (*ok_cb)(Xtt*, char*))
 {
   bool ok;
   QString str = QInputDialog::getText(toplevel, translate_utf8(title),
-                                      translate_utf8(text), QLineEdit::Normal,
-                                      fl(init_text), &ok);
+      translate_utf8(text), QLineEdit::Normal, fl(init_text), &ok);
   if (ok) {
     QByteArray ba = str.toLatin1();
-    char *text = ba.data();
+    char* text = ba.data();
 
     (ok_cb)(this, text);
   }
 }
 
-void XttQt::message(char severity, const char *msg)
+void XttQt::message(char severity, const char* msg)
 {
   msg_label->setText(QString::fromLatin1(msg));
 }
 
-void XttQt::close(void *ctx, int terminate)
+void XttQt::close(void* ctx, int terminate)
 {
-  XttQt *xtt = (XttQt *) ctx;
+  XttQt* xtt = (XttQt*)ctx;
   char title[80];
 
   if (terminate) {
@@ -135,29 +112,29 @@ void XttQt::close(void *ctx, int terminate)
     }
 
     strcpy(title, "Confirm");
-    xtt->wow
-       ->DisplayQuestion(xtt, title, "Do you want to close", close_ok, 0, 0);
+    xtt->wow->DisplayQuestion(
+        xtt, title, "Do you want to close", close_ok, 0, 0);
   } else {
     xtt->xnav->displayed = 0;
     xtt->toplevel->setVisible(false);
   }
 }
 
-void XttQt::set_dimension(void *ctx, int width, int height)
+void XttQt::set_dimension(void* ctx, int width, int height)
 {
-  XttQt *xtt = (XttQt *) ctx;
+  XttQt* xtt = (XttQt*)ctx;
   xtt->toplevel->resize(width, height);
 }
 
-void XttQt::map(void *ctx)
+void XttQt::map(void* ctx)
 {
-  XttQt *xtt = (XttQt *) ctx;
+  XttQt* xtt = (XttQt*)ctx;
 
   pop(xtt->toplevel);
   xtt->xnav->displayed = 1;
 }
 
-void XttQt::set_prompt(const char *prompt)
+void XttQt::set_prompt(const char* prompt)
 {
   if (strcmp(prompt, "") == 0) {
     cmd_prompt->setVisible(false);
@@ -258,7 +235,7 @@ void XttQt::print()
   }
 
   wow->CreateBrowPrintDialog(title, xnav->brow->ctx, flow_eOrientation_Portrait,
-                             1.0, (void *) this, &sts);
+      1.0, (void*)this, &sts);
   if (sts == WOW__PRINTDIALOGDISABLED) {
     pwr_tFileName filename;
     pwr_tCmd cmd;
@@ -527,7 +504,7 @@ void XttQtWidget::activate_back()
   xtt->xnav->brow_push();
 }
 
-void XttQtWidget::focusInEvent(QFocusEvent *event)
+void XttQtWidget::focusInEvent(QFocusEvent* event)
 {
   if (!xtt->focustimer.disabled()) {
     if (xtt->xnav) {
@@ -542,7 +519,7 @@ void XttQtWidget::focusInEvent(QFocusEvent *event)
 void XttQtWidget::valchanged_cmd_entry()
 {
   QByteArray ba = xtt->cmd_entry->text().toLatin1();
-  char *text = ba.data();
+  char* text = ba.data();
 
   if (!text) {
     xtt->cmd_entry->setVisible(false);
@@ -572,7 +549,7 @@ void XttQtWidget::valchanged_cmd_entry()
   }
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
   int sts;
 
@@ -590,15 +567,15 @@ XttQt::~XttQt()
   delete methodtoolbar;
 }
 
-void XttQtWidget::closeEvent(QCloseEvent *event)
+void XttQtWidget::closeEvent(QCloseEvent* event)
 {
-  xtt->close(xtt, xtt->xnav->op || xtt->xnav->ge_main
-                  || xtt->xnav->multiview_main ? 0 : 1);
+  xtt->close(xtt,
+      xtt->xnav->op || xtt->xnav->ge_main || xtt->xnav->multiview_main ? 0 : 1);
   QWidget::closeEvent(event);
 }
 
-XttQt::XttQt(int argc, char *argv[], int *return_sts) : Xtt(&argc, &argv,
-                                                            return_sts)
+XttQt::XttQt(int argc, char* argv[], int* return_sts)
+    : Xtt(&argc, &argv, return_sts)
 {
   const int window_width = 400;
   const int window_height = 700;
@@ -607,7 +584,9 @@ XttQt::XttQt(int argc, char *argv[], int *return_sts) : Xtt(&argc, &argv,
   char title[120] = "Xtt ";
   char nodename[80];
 
-  if (EVEN(*return_sts)) { return; }
+  if (EVEN(*return_sts)) {
+    return;
+  }
 
   setlocale(LC_TIME, "en_US");
   setlocale(LC_NUMERIC, "POSIX");
@@ -632,109 +611,110 @@ XttQt::XttQt(int argc, char *argv[], int *return_sts) : Xtt(&argc, &argv,
 
   CoWowQt::SetWindowIcon(toplevel);
 
-  QMenuBar *menu_bar = new QMenuBar();
+  QMenuBar* menu_bar = new QMenuBar();
 
   // File Entry
-  QMenu *file = menu_bar->addMenu(translate_utf8("&File"));
-  addMenuItem(toplevel, file, "&Print", SLOT(activate_print()), "",
-              "document-print");
+  QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
+  addMenuItem(
+      toplevel, file, "&Print", SLOT(activate_print()), "", "document-print");
   addMenuItem(toplevel, file, "&Login", SLOT(activate_login()));
   addMenuItem(toplevel, file, "Log&out", SLOT(activate_logout()));
-  addMenuItem(toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+  addMenuItem(
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
   // Edit Entry
-  QMenu *edit = menu_bar->addMenu(translate_utf8("&Edit"));
+  QMenu* edit = menu_bar->addMenu(translate_utf8("&Edit"));
   // Submenu Search
-  QMenu *edit_search = edit->addMenu(translate_utf8("&Search"));
-  addMenuItem(toplevel, edit_search, "&Find Object", SLOT(activate_find()),
-              "CTRL+F");
+  QMenu* edit_search = edit->addMenu(translate_utf8("&Search"));
+  addMenuItem(
+      toplevel, edit_search, "&Find Object", SLOT(activate_find()), "CTRL+F");
   addMenuItem(toplevel, edit_search, "Find &Regular expression",
-              SLOT(activate_findregex()));
+      SLOT(activate_findregex()));
   addMenuItem(toplevel, edit_search, "Find &Next", SLOT(activate_findnext()),
-              "CTRL+SHIFT+F");
+      "CTRL+SHIFT+F");
   // End submenu
 
   addMenuItem(toplevel, edit, "Co&llapse", SLOT(activate_collapse()));
 
   // Functions menu
-  QMenu *functions = menu_bar->addMenu(translate_utf8("&Functions"));
-  addMenuItem(toplevel, functions, "&Open Object...", SLOT(activate_openobject()),
-              "CTRL+A");
-  addMenuItem(toplevel, functions, "Open &Program", SLOT(activate_openplc()),
-              "CTRL+L");
-  addMenuItem(toplevel, functions, "Open &ClassGraph", SLOT(activate_opengraph()),
-              "CTRL+G");
+  QMenu* functions = menu_bar->addMenu(translate_utf8("&Functions"));
+  addMenuItem(toplevel, functions, "&Open Object...",
+      SLOT(activate_openobject()), "CTRL+A");
+  addMenuItem(
+      toplevel, functions, "Open &Program", SLOT(activate_openplc()), "CTRL+L");
+  addMenuItem(toplevel, functions, "Open &ClassGraph",
+      SLOT(activate_opengraph()), "CTRL+G");
   addMenuItem(toplevel, functions, "Show C&rossreferences",
-              SLOT(activate_showcrossref()), "CTRL+R");
-  addMenuItem(toplevel, functions, "Change &Value", SLOT(activate_change_value()),
-              "CTRL+Q");
-  addMenuItem(toplevel, functions, "Co&mmand", SLOT(activate_command()), "CTRL+B");
+      SLOT(activate_showcrossref()), "CTRL+R");
+  addMenuItem(toplevel, functions, "Change &Value",
+      SLOT(activate_change_value()), "CTRL+Q");
+  addMenuItem(
+      toplevel, functions, "Co&mmand", SLOT(activate_command()), "CTRL+B");
 
   // Submenu Search
-  QMenu *functions_collect = functions->addMenu(translate_utf8("&Collect"));
+  QMenu* functions_collect = functions->addMenu(translate_utf8("&Collect"));
   addMenuItem(toplevel, functions_collect, "&Insert",
-              SLOT(activate_collect_insert()), "CTRL+V");
-  addMenuItem(toplevel, functions_collect, "&Show", SLOT(activate_collect_show()),
-              "CTRL+N");
-  addMenuItem(toplevel, functions_collect, "&Remove",
-              SLOT(activate_collect_remove()));
-  addMenuItem(toplevel, functions_collect, "C&lear",
-              SLOT(activate_collect_clear()));
+      SLOT(activate_collect_insert()), "CTRL+V");
+  addMenuItem(toplevel, functions_collect, "&Show",
+      SLOT(activate_collect_show()), "CTRL+N");
+  addMenuItem(
+      toplevel, functions_collect, "&Remove", SLOT(activate_collect_remove()));
+  addMenuItem(
+      toplevel, functions_collect, "C&lear", SLOT(activate_collect_clear()));
   addMenuItem(toplevel, functions_collect, "O&pen Graph",
-              SLOT(activate_collect_opengraph()));
+      SLOT(activate_collect_opengraph()));
   addMenuItem(toplevel, functions_collect, "&Copy to Window",
-              SLOT(activate_collect_window()));
+      SLOT(activate_collect_window()));
   addMenuItem(toplevel, functions_collect, "&New Window",
-              SLOT(activate_collect_new_window()));
+      SLOT(activate_collect_new_window()));
   addMenuItem(toplevel, functions_collect, "&Signals",
-              SLOT(activate_collect_signals()), "CTRL+SHIFT+T");
+      SLOT(activate_collect_signals()), "CTRL+SHIFT+T");
   addMenuItem(toplevel, functions_collect, "&IO Signals",
-              SLOT(activate_collect_iosignals()), "CTRL+T");
-  addMenuItem(toplevel, functions_collect, "&Open", SLOT(activate_collect_open()));
+      SLOT(activate_collect_iosignals()), "CTRL+T");
+  addMenuItem(
+      toplevel, functions_collect, "&Open", SLOT(activate_collect_open()));
   // End submenu
 
-  addMenuItem(toplevel, functions, "&Advanced user", SLOT(activate_advanceduser()),
-              "CTRL+U");
+  addMenuItem(toplevel, functions, "&Advanced user",
+      SLOT(activate_advanceduser()), "CTRL+U");
 
   // View menu
-  QMenu *view = menu_bar->addMenu(translate_utf8("&View"));
+  QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
   addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoom_in()), "CTRL+I",
-              "zoom-in");
+      "zoom-in");
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
-              "zoom-out");
+      "zoom-out");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "",
-              "zoom-original");
+      "zoom-original");
 
   // Menu Help
-  QMenu *help = menu_bar->addMenu(translate_utf8("&Help"));
+  QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
   addMenuItem(toplevel, help, "&Overview", SLOT(activate_help()), "CTRL+H",
-              "system-help");
+      "system-help");
   addMenuItem(toplevel, help, "&Navigator", SLOT(activate_help_navigator()));
   addMenuItem(toplevel, help, "&Project", SLOT(activate_help_project()));
   addMenuItem(toplevel, help, "&About Proview", SLOT(activate_help_proview()));
 
   // Toolbar
-  QToolBar *tools = new QToolBar();
+  QToolBar* tools = new QToolBar();
   addToolItem(toplevel, tools, "Go back", SLOT(activate_back()), "go-previous");
-  QAction *tools_advuser =
-      addToolItem(toplevel, tools, "Advanced user", SLOT(activate_advanceduser()),
-                  "$pwr_exe/xtt_advuser.png");
+  QAction* tools_advuser = addToolItem(toplevel, tools, "Advanced user",
+      SLOT(activate_advanceduser()), "$pwr_exe/xtt_advuser.png");
   addToolItem(toplevel, tools, "Zoom in", SLOT(activate_zoom_in()),
-              "$pwr_exe/xtt_zoom_in.png");
+      "$pwr_exe/xtt_zoom_in.png");
   addToolItem(toplevel, tools, "Zoom out", SLOT(activate_zoom_out()),
-              "$pwr_exe/xtt_zoom_out.png");
+      "$pwr_exe/xtt_zoom_out.png");
   addToolItem(toplevel, tools, "Zoom reset", SLOT(activate_zoom_reset()),
-              "$pwr_exe/xtt_zoom_reset.png");
+      "$pwr_exe/xtt_zoom_reset.png");
 
   // Toolbar
-  methodtoolbar =
-      new XttMethodToolbarQt(0, 0, ~pwr_mXttOpMethodsMask_ParentObjectGraph,
-                             ~pwr_mXttMntMethodsMask_RtNavigator, "");
-  QToolBar
-      *tools2 = (QToolBar * )((XttMethodToolbarQt *) methodtoolbar)->build();
+  methodtoolbar
+      = new XttMethodToolbarQt(0, 0, ~pwr_mXttOpMethodsMask_ParentObjectGraph,
+          ~pwr_mXttMntMethodsMask_RtNavigator, "");
+  QToolBar* tools2 = (QToolBar*)((XttMethodToolbarQt*)methodtoolbar)->build();
 
   // Statusbar and cmd input
-  QStatusBar *statusbar = new QStatusBar();
+  QStatusBar* statusbar = new QStatusBar();
   msg_label = new QLabel("");
   msg_label->setFixedHeight(25);
   cmd_prompt = new QLabel("value > ");
@@ -745,7 +725,7 @@ XttQt::XttQt(int argc, char *argv[], int *return_sts) : Xtt(&argc, &argv,
   cmd_entry = new CoWowEntryQt(cmd_recall);
   cmd_entry->setFixedHeight(25);
   QObject::connect(cmd_entry, SIGNAL(editing_finished()), toplevel,
-                   SLOT(valchanged_cmd_entry()));
+      SLOT(valchanged_cmd_entry()));
 
   statusbar->addWidget(msg_label);
   statusbar->addWidget(cmd_prompt);
@@ -754,8 +734,7 @@ XttQt::XttQt(int argc, char *argv[], int *return_sts) : Xtt(&argc, &argv,
   statusbar->show();
 
   xnav = new XNavQt(this, xnav_form, "Plant", &brow_widget,
-                    (xnav_sStartMenu *) root_menu, opplace_str, op_close_button,
-                    &sts);
+      (xnav_sStartMenu*)root_menu, opplace_str, op_close_button, &sts);
   xnav->message_cb = &xtt_message_cb;
   xnav->close_cb = &close;
   xnav->map_cb = &map;
@@ -768,18 +747,18 @@ XttQt::XttQt(int argc, char *argv[], int *return_sts) : Xtt(&argc, &argv,
   methodtoolbar->m_parent_ctx = xnav;
   methodtoolbar->get_select_cb = xnav_get_select;
 
-  QVBoxLayout *vbox1 = new QVBoxLayout();
+  QVBoxLayout* vbox1 = new QVBoxLayout();
   vbox1->addWidget(menu_bar);
   vbox1->addWidget(tools);
 
   dcli_translate_filename(fname, "$pwr_exe/pwr_logohalf2y.png");
-  QLabel *xtt_image = new_image_label(toplevel, fname);
+  QLabel* xtt_image = new_image_label(toplevel, fname);
 
-  QHBoxLayout *hbox1 = new QHBoxLayout();
+  QHBoxLayout* hbox1 = new QHBoxLayout();
   hbox1->addLayout(vbox1);
   hbox1->addWidget(xtt_image);
 
-  QVBoxLayout *vbox = new QVBoxLayout();
+  QVBoxLayout* vbox = new QVBoxLayout();
   vbox->addLayout(hbox1);
   vbox->addWidget(tools2);
   add_expanding(vbox, brow_widget);
@@ -792,7 +771,7 @@ XttQt::XttQt(int argc, char *argv[], int *return_sts) : Xtt(&argc, &argv,
   cmd_entry->setVisible(false);
 
   // Create help window
-  CoXHelp *xhelp = new CoXHelpQt(toplevel, this, xhelp_eUtility_Xtt, &sts);
+  CoXHelp* xhelp = new CoXHelpQt(toplevel, this, xhelp_eUtility_Xtt, &sts);
   xhelp->open_URL_cb = open_URL_cb;
   CoXHelp::set_default(xhelp);
 
@@ -804,13 +783,13 @@ XttQt::XttQt(int argc, char *argv[], int *return_sts) : Xtt(&argc, &argv,
   if (!quiet) {
     if (xnav->cologin) {
       // Set login window as parent to warranty as focus is left to parent.
-      ((CoWowQt *) wow)->SetParent(((CoLoginQt *) xnav->cologin)->toplevel);
+      ((CoWowQt*)wow)->SetParent(((CoLoginQt*)xnav->cologin)->toplevel);
     }
 
     wow->DisplayWarranty();
 
     if (xnav->cologin) {
-      ((CoWowQt *) wow)->SetParent(toplevel);
+      ((CoWowQt*)wow)->SetParent(toplevel);
     }
   }
 

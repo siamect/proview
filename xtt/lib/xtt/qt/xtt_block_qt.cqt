@@ -36,15 +36,17 @@
 
 /* xtt_block_qt.cpp -- Alarm blocking window in xtt. */
 
-#include "pwr_class.h"
 #include "pwr_privilege.h"
+
+#include "co_msg.h"
+
 #include "rt_gdh.h"
 #include "rt_mh_outunit.h"
-#include "co_cdh.h"
-#include "xtt_block_qt.h"
-#include "co_lng.h"
+
+#include "cow_qt_helpers.h"
 #include "cow_wow_qt.h"
-#include "co_msg.h"
+
+#include "xtt_block_qt.h"
 
 #include <QButtonGroup>
 #include <QDialogButtonBox>
@@ -65,7 +67,7 @@ int BlockQt::execute()
   } else if (toggleD->isChecked()) {
     prio = mh_eEventPrio_D;
   } else {
-    prio = (mh_eEventPrio) 0;
+    prio = (mh_eEventPrio)0;
   }
 
   sts = mh_OutunitBlock(oar.Objid, prio);
@@ -83,26 +85,26 @@ void BlockQt::update()
   pwr_tStatus sts;
   mh_uEventInfo block_level;
 
-  sts = gdh_GetAlarmInfo(oar.Objid, NULL, NULL, (pwr_tUInt32 * ) & block_level,
-                         NULL, NULL);
+  sts = gdh_GetAlarmInfo(
+      oar.Objid, NULL, NULL, (pwr_tUInt32*)&block_level, NULL, NULL);
   switch (block_level.Event.Prio) {
-    case mh_eEventPrio_A:
-      toggleA->setChecked(true);
-      break;
-    case mh_eEventPrio_B:
-      toggleB->setChecked(true);
-      break;
-    case mh_eEventPrio_C:
-      toggleC->setChecked(true);
-      break;
-    case mh_eEventPrio_D:
-      toggleD->setChecked(true);
-      break;
-    case 0:
-      toggleNo->setChecked(true);
-      break;
-    default:
-      break;
+  case mh_eEventPrio_A:
+    toggleA->setChecked(true);
+    break;
+  case mh_eEventPrio_B:
+    toggleB->setChecked(true);
+    break;
+  case mh_eEventPrio_C:
+    toggleC->setChecked(true);
+    break;
+  case mh_eEventPrio_D:
+    toggleD->setChecked(true);
+    break;
+  case 0:
+    toggleNo->setChecked(true);
+    break;
+  default:
+    break;
   }
 }
 
@@ -121,20 +123,23 @@ void BlockQtWidget::activate_ok()
   }
 }
 
-void BlockQtWidget::closeEvent(QCloseEvent *event) {
+void BlockQtWidget::closeEvent(QCloseEvent* event)
+{
   delete block;
   QWidget::closeEvent(event);
 }
 
-BlockQt::BlockQt(void *b_parent_ctx, QWidget *b_parent_wid, pwr_sAttrRef *b_oar,
-                 char *name, unsigned int priv, pwr_tStatus *sts)
+BlockQt::BlockQt(void* b_parent_ctx, QWidget* b_parent_wid, pwr_sAttrRef* b_oar,
+    char* name, unsigned int priv, pwr_tStatus* sts)
     : Block(b_parent_ctx, b_oar, name, priv, sts)
 {
   char title[400];
   pwr_tAName aname;
 
   *sts = gdh_AttrrefToName(&oar, aname, sizeof(aname), cdh_mNName);
-  if (EVEN(*sts)) { return; }
+  if (EVEN(*sts)) {
+    return;
+  }
 
   toplevel = new BlockQtWidget(this, b_parent_wid);
   strcpy(title, name);
@@ -148,7 +153,7 @@ BlockQt::BlockQt(void *b_parent_ctx, QWidget *b_parent_wid, pwr_sAttrRef *b_oar,
 
   CoWowQt::SetWindowIcon(toplevel);
 
-  QButtonGroup *bl_group = new QButtonGroup();
+  QButtonGroup* bl_group = new QButtonGroup();
   toggleA = new QRadioButton("A Alarm");
   bl_group->addButton(toggleA);
   toggleB = new QRadioButton("B Alarm");
@@ -160,14 +165,14 @@ BlockQt::BlockQt(void *b_parent_ctx, QWidget *b_parent_wid, pwr_sAttrRef *b_oar,
   toggleNo = new QRadioButton("No Blocking");
   bl_group->addButton(toggleNo);
 
-  QVBoxLayout *toggle_vbox = new QVBoxLayout();
+  QVBoxLayout* toggle_vbox = new QVBoxLayout();
   toggle_vbox->addWidget(toggleA);
   toggle_vbox->addWidget(toggleB);
   toggle_vbox->addWidget(toggleC);
   toggle_vbox->addWidget(toggleD);
   toggle_vbox->addWidget(toggleNo);
 
-  QDialogButtonBox *buttons = new QDialogButtonBox();
+  QDialogButtonBox* buttons = new QDialogButtonBox();
   buttons->addButton(QDialogButtonBox::Ok);
   buttons->addButton(QDialogButtonBox::Apply);
   buttons->addButton(QDialogButtonBox::Cancel);
@@ -175,13 +180,13 @@ BlockQt::BlockQt(void *b_parent_ctx, QWidget *b_parent_wid, pwr_sAttrRef *b_oar,
   buttons->button(QDialogButtonBox::Apply)->setFixedSize(70, 25);
   buttons->button(QDialogButtonBox::Cancel)->setFixedSize(70, 25);
   QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
-                   toplevel, SLOT(activate_ok()));
+      toplevel, SLOT(activate_ok()));
   QObject::connect(buttons->button(QDialogButtonBox::Apply), SIGNAL(clicked()),
-                   toplevel, SLOT(activate_apply()));
+      toplevel, SLOT(activate_apply()));
   QObject::connect(buttons->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
-                   toplevel, SLOT(close()));
+      toplevel, SLOT(close()));
 
-  QVBoxLayout *vbox = new QVBoxLayout(toplevel);
+  QVBoxLayout* vbox = new QVBoxLayout(toplevel);
   vbox->addLayout(toggle_vbox);
   vbox->addWidget(separator(QFrame::HLine));
   vbox->addWidget(buttons);

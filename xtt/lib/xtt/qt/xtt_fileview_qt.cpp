@@ -36,16 +36,20 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 
-#include "pwr.h"
-#include "rt_gdh.h"
-#include "cow_wow_qt.h"
+//#include "pwr_baseclasses.h"
+
 #include "co_lng.h"
+
+#include "rt_gdh.h"
+
+#include "cow_qt_helpers.h"
+#include "cow_wow.h"
+
 #include "xtt_fileview_qt.h"
 #include "xtt_xnav.h"
 
-void XttFileviewQt::execute(char *file)
+void XttFileviewQt::execute(char* file)
 {
   pwr_tStatus sts;
   pwr_tFileName fname;
@@ -68,7 +72,7 @@ void XttFileviewQt::execute(char *file)
   }
 }
 
-void XttFileviewQtWidget::list_ok_cb(const QString &file)
+void XttFileviewQtWidget::list_ok_cb(const QString& file)
 {
   if (fileview->type == fileview_eType_Open) {
     char selected_text[80];
@@ -103,11 +107,11 @@ void XttFileviewQtWidget::list_ok_cb(const QString &file)
 
       strcpy(fileview->selected_file, input_text);
       sprintf(msg, "%s %s\n", input_text, Lng::translate("already exists"));
-      sprintf(&msg[strlen(msg)], "%s",
-              Lng::translate("Do you want to replace it"));
-      ((XNav *) fileview->parent_ctx)->wow->DisplayQuestion(
-          this, Lng::translate("File already exists"), msg,
-          XttFileviewQt::list_save_cb, 0, 0);
+      sprintf(
+          &msg[strlen(msg)], "%s", Lng::translate("Do you want to replace it"));
+      ((XNav*)fileview->parent_ctx)
+          ->wow->DisplayQuestion(this, Lng::translate("File already exists"),
+              msg, XttFileviewQt::list_save_cb, 0, 0);
       return;
     }
     fileview->execute(input_text);
@@ -115,29 +119,26 @@ void XttFileviewQtWidget::list_ok_cb(const QString &file)
   close();
 }
 
-void XttFileviewQtWidget::closeEvent(QCloseEvent *event)
+void XttFileviewQtWidget::closeEvent(QCloseEvent* event)
 {
   free(fileview->filelist);
   delete fileview;
   QWidget::closeEvent(event);
 }
 
-void XttFileviewQt::list_save_cb(void *ctx, void *data)
+void XttFileviewQt::list_save_cb(void* ctx, void* data)
 {
-  XttFileviewQt *fileview = (XttFileviewQt *) ctx;
+  XttFileviewQt* fileview = (XttFileviewQt*)ctx;
 
   fileview->execute(fileview->selected_file);
 
   fileview->toplevel->close();
 }
 
-XttFileviewQt::XttFileviewQt(void *xn_parent_ctx, QWidget *xn_parent_wid,
-                             pwr_tOid xn_oid, char *xn_title, char *xn_dir,
-                             char *xn_pattern, int xn_type,
-                             char *xn_target_attr, char *xn_trigger_attr,
-                             char *xn_filetype) : filelist(0),
-                                                  parent_ctx(xn_parent_ctx),
-                                                  oid(xn_oid), type(xn_type)
+XttFileviewQt::XttFileviewQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
+    pwr_tOid xn_oid, char* xn_title, char* xn_dir, char* xn_pattern,
+    int xn_type, char* xn_target_attr, char* xn_trigger_attr, char* xn_filetype)
+    : filelist(0), parent_ctx(xn_parent_ctx), oid(xn_oid), type(xn_type)
 {
   pwr_tStatus sts;
 
@@ -176,8 +177,8 @@ XttFileviewQt::XttFileviewQt(void *xn_parent_ctx, QWidget *xn_parent_wid,
     toplevel->setAcceptMode(QFileDialog::AcceptOpen);
   }
 
-  QObject::connect(toplevel, SIGNAL(fileSelected(const QString &)), toplevel,
-                   SLOT(list_ok_cb(const QString &)));
+  QObject::connect(toplevel, SIGNAL(fileSelected(const QString&)), toplevel,
+      SLOT(list_ok_cb(const QString&)));
 
   toplevel->exec();
 }

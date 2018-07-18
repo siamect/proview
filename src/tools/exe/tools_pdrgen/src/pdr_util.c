@@ -1,11 +1,11 @@
 /*********************************************************************
  * RPC for the Windows NT Operating System
  * 1993 by Martin F. Gergeleit
- * Users may use, copy or modify Sun RPC for the Windows NT Operating 
+ * Users may use, copy or modify Sun RPC for the Windows NT Operating
  * System according to the Sun copyright below.
  *
- * RPC for the Windows NT Operating System COMES WITH ABSOLUTELY NO 
- * WARRANTY, NOR WILL I BE LIABLE FOR ANY DAMAGES INCURRED FROM THE 
+ * RPC for the Windows NT Operating System COMES WITH ABSOLUTELY NO
+ * WARRANTY, NOR WILL I BE LIABLE FOR ANY DAMAGES INCURRED FROM THE
  * USE OF. USE ENTIRELY AT YOUR OWN RISK!!!
  *********************************************************************/
 
@@ -17,23 +17,23 @@
  * may copy or modify Sun RPC without charge, but are not authorized
  * to license or distribute it to anyone else except as part of a product or
  * program developed by the user.
- * 
+ *
  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE
  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.
- * 
+ *
  * Sun RPC is provided with no support and without any obligation on the
  * part of Sun Microsystems, Inc. to assist in its use, correction,
  * modification or enhancement.
- * 
+ *
  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE
  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC
  * OR ANY PART THEREOF.
- * 
+ *
  * In no event will Sun Microsystems, Inc. be liable for any lost revenue
  * or profits or other special, indirect and consequential damages, even if
  * Sun has been advised of the possibility of such damages.
- * 
+ *
  * Sun Microsystems, Inc.
  * 2550 Garcia Avenue
  * Mountain View, California  94043
@@ -43,10 +43,9 @@ static char sccsid[] = "@(#)rpc_util.c 1.5 87/06/24 (C) 1987 SMI";
 #endif
 
 /*
- * rpc_util.c, Utility routines for the RPC protocol compiler 
- * Copyright (C) 1987, Sun Microsystems, Inc. 
+ * rpc_util.c, Utility routines for the RPC protocol compiler
+ * Copyright (C) 1987, Sun Microsystems, Inc.
  */
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -55,416 +54,322 @@ static char sccsid[] = "@(#)rpc_util.c 1.5 87/06/24 (C) 1987 SMI";
 #include "pdr_parse.h"
 #include "pdr_util.h"
 
-char curline[MAXLINESIZE];	/* current read line */
-char *where = curline;	/* current point in line */
-int linenum = 0;	/* current line number */
+char curline[MAXLINESIZE]; /* current read line */
+char* where = curline; /* current point in line */
+int linenum = 0; /* current line number */
 
-char *infilename;	/* input filename */
+char* infilename; /* input filename */
 
 #define NFILES 4
-char *outfiles[NFILES];	/* output file names */
+char* outfiles[NFILES]; /* output file names */
 int nfiles;
 
-FILE *fout;	/* file pointer of current output */
-FILE *fin;	/* file pointer of current input */
+FILE* fout; /* file pointer of current output */
+FILE* fin; /* file pointer of current input */
 
-list *defined;	/* list of defined things */
+list* defined; /* list of defined things */
 
+static char* fixit(char* type, char* orig);
 
+static int findit(definition* def, char* type);
+static int typedefed(definition* def, char* type);
 
+static char* locase(char* str);
 
-static char *fixit(char *type,
-                   char *orig);
-
-static int findit(definition *def,
-                  char *type);
-static int typedefed(definition *def,
-                     char *type);
-
-static char *locase(char *str);
-
-static char *toktostr(tok_kind kind);
+static char* toktostr(tok_kind kind);
 
 static void printbuf();
 
 static void printwhere();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
- * Reinitialize the world 
+ * Reinitialize the world
  */
 void reinitialize()
 {
-	bzero(curline, MAXLINESIZE);
-	where = curline;
-	linenum = 0;
-	defined = NULL;
+  bzero(curline, MAXLINESIZE);
+  where = curline;
+  linenum = 0;
+  defined = NULL;
 }
 
 /*
- * string equality 
+ * string equality
  */
-int streq(char *a,
-          char *b)
+int streq(char* a, char* b)
 {
-	return (strcmp(a, b) == 0);
+  return (strcmp(a, b) == 0);
 }
 
 /*
- * find a value in a list 
+ * find a value in a list
  */
-char *
-findval(list *lst,
-	char *val,
-	int (*cmp) ())
+char* findval(list* lst, char* val, int (*cmp)())
 
 {
-	for (; lst != NULL; lst = lst->next) {
-		if ((*cmp) (lst->val, val)) {
-			return (lst->val);
-		}
-	}
-	return (NULL);
+  for (; lst != NULL; lst = lst->next) {
+    if ((*cmp)(lst->val, val)) {
+      return (lst->val);
+    }
+  }
+  return (NULL);
 }
 
 /*
- * store a value in a list 
+ * store a value in a list
  */
-void
-storeval(list **lstp,
-         char *val)
+void storeval(list** lstp, char* val)
 {
-	list **l;
-	list *lst;
+  list** l;
+  list* lst;
 
-	for (l = lstp; *l != NULL; l = (list **) & (*l)->next);
-	lst = ALLOC(list);
-	lst->val = val;
-	lst->next = NULL;
-	*l = lst;
+  for (l = lstp; *l != NULL; l = (list**)&(*l)->next)
+    ;
+  lst = ALLOC(list);
+  lst->val = val;
+  lst->next = NULL;
+  *l = lst;
 }
 
-
-static int
-findit(definition *def,
-       char *type)
+static int findit(definition* def, char* type)
 {
-	return (streq(def->def_name, type));
+  return (streq(def->def_name, type));
 }
 
-
-static char *
-fixit(char *type,
-      char *orig)
+static char* fixit(char* type, char* orig)
 {
-	definition *def;
+  definition* def;
 
-	def = (definition *) FINDVAL(defined, type, findit);
-	if (def == NULL || def->def_kind != DEF_TYPEDEF) {
-		return (orig);
-	}
-	switch (def->def.ty.rel) {
-	case REL_VECTOR:
-		return (def->def.ty.old_type);
-	case REL_ALIAS:
-		return (fixit(def->def.ty.old_type, orig));
-	default:
-		return (orig);
-	}
+  def = (definition*)FINDVAL(defined, type, findit);
+  if (def == NULL || def->def_kind != DEF_TYPEDEF) {
+    return (orig);
+  }
+  switch (def->def.ty.rel) {
+  case REL_VECTOR:
+    return (def->def.ty.old_type);
+  case REL_ALIAS:
+    return (fixit(def->def.ty.old_type, orig));
+  default:
+    return (orig);
+  }
 }
 
-char *
-fixtype(char *type)
+char* fixtype(char* type)
 {
-	return (fixit(type, type));
+  return (fixit(type, type));
 }
 
-char *
-stringfix(char *type)
+char* stringfix(char* type)
 {
-	if (streq(type, "string")) {
-		return ("wrapstring");
-	} else {
-		return (type);
-	}
+  if (streq(type, "string")) {
+    return ("wrapstring");
+  } else {
+    return (type);
+  }
 }
 
-void
-ptype(char *prefix,
-      char *type,
-      int follow)
+void ptype(char* prefix, char* type, int follow)
 {
-	if (prefix != NULL) {
-		if (streq(prefix, "enum")) {
-			f_print(fout, "enum ");
-		} else {
-			f_print(fout, "struct ");
-		}
-	}
-	if (streq(type, "bool")) {
-		f_print(fout, "bool_t ");
-	} else if (streq(type, "string")) {
-		f_print(fout, "char *");
-	} else {
-		f_print(fout, "%s ", follow ? fixtype(type) : type);
-	}
+  if (prefix != NULL) {
+    if (streq(prefix, "enum")) {
+      f_print(fout, "enum ");
+    } else {
+      f_print(fout, "struct ");
+    }
+  }
+  if (streq(type, "bool")) {
+    f_print(fout, "bool_t ");
+  } else if (streq(type, "string")) {
+    f_print(fout, "char *");
+  } else {
+    f_print(fout, "%s ", follow ? fixtype(type) : type);
+  }
 }
 
-
-static int
-typedefed(definition *def,
-          char *type)
+static int typedefed(definition* def, char* type)
 {
-	if (def->def_kind != DEF_TYPEDEF || def->def.ty.old_prefix != NULL) {
-		return (0);
-	} else {
-		return (streq(def->def_name, type));
-	}
+  if (def->def_kind != DEF_TYPEDEF || def->def.ty.old_prefix != NULL) {
+    return (0);
+  } else {
+    return (streq(def->def_name, type));
+  }
 }
 
-int
-isvectordef(char *type,
-            relation rel)
+int isvectordef(char* type, relation rel)
 {
-	definition *def;
+  definition* def;
 
-	for (;;) {
-		switch (rel) {
-		case REL_VECTOR:
-			return (!streq(type, "string"));
-		case REL_ARRAY:
-			return (0);
-		case REL_POINTER:
-			return (0);
-		case REL_ALIAS:
-			def = (definition *) FINDVAL(defined, type, typedefed);
-			if (def == NULL) {
-				return (0);
-			}
-			type = def->def.ty.old_type;
-			rel = def->def.ty.rel;
-		}
-	}
+  for (;;) {
+    switch (rel) {
+    case REL_VECTOR:
+      return (!streq(type, "string"));
+    case REL_ARRAY:
+      return (0);
+    case REL_POINTER:
+      return (0);
+    case REL_ALIAS:
+      def = (definition*)FINDVAL(defined, type, typedefed);
+      if (def == NULL) {
+        return (0);
+      }
+      type = def->def.ty.old_type;
+      rel = def->def.ty.rel;
+    }
+  }
 }
 
-
-static char *
-locase(char *str)
+static char* locase(char* str)
 {
-	char c;
-	static char buf[100];
-	char *p = buf;
+  char c;
+  static char buf[100];
+  char* p = buf;
 
-	while ((c = *str++)) {
-		*p++ = (c >= 'A' && c <= 'Z') ? (c - 'A' + 'a') : c;
-	}
-	*p = 0;
-	return (buf);
+  while ((c = *str++)) {
+    *p++ = (c >= 'A' && c <= 'Z') ? (c - 'A' + 'a') : c;
+  }
+  *p = 0;
+  return (buf);
 }
 
-
-void
-pvname(char *pname,
-       char *vnum)
+void pvname(char* pname, char* vnum)
 {
-	f_print(fout, "%s_%s", locase(pname), vnum);
+  f_print(fout, "%s_%s", locase(pname), vnum);
 }
-
 
 /*
- * print a useful (?) error message, and then die 
+ * print a useful (?) error message, and then die
  */
-void
-error(char *msg)
+void error(char* msg)
 {
-	printwhere();
-	f_print(stderr, "%s, line %d: ", infilename, linenum);
-	f_print(stderr, "%s\n", msg);
-	crash();
+  printwhere();
+  f_print(stderr, "%s, line %d: ", infilename, linenum);
+  f_print(stderr, "%s\n", msg);
+  crash();
 }
 
 /*
  * Something went wrong, unlink any files that we may have created and then
- * die. 
+ * die.
  */
-void
-crash()
+void crash()
 {
-	int i;
+  int i;
 
-	for (i = 0; i < nfiles; i++) {
-		(void) unlink(outfiles[i]);
-	}
-	exit(1);
+  for (i = 0; i < nfiles; i++) {
+    (void)unlink(outfiles[i]);
+  }
+  exit(1);
 }
 
-
-void
-record_open(char *file)
+void record_open(char* file)
 {
-	if (nfiles < NFILES) {
-		outfiles[nfiles++] = file;
-	} else {
-		f_print(stderr, "too many files!\n");
-		crash();
-	}
+  if (nfiles < NFILES) {
+    outfiles[nfiles++] = file;
+  } else {
+    f_print(stderr, "too many files!\n");
+    crash();
+  }
 }
 
 static char expectbuf[100];
-static char *toktostr();
+static char* toktostr();
 
 /*
- * error, token encountered was not the expected one 
+ * error, token encountered was not the expected one
  */
-void
-expected1(tok_kind exp1)
+void expected1(tok_kind exp1)
 {
-	s_print(expectbuf, "expected '%s'",
-		toktostr(exp1));
-	error(expectbuf);
+  s_print(expectbuf, "expected '%s'", toktostr(exp1));
+  error(expectbuf);
 }
 
 /*
- * error, token encountered was not one of two expected ones 
+ * error, token encountered was not one of two expected ones
  */
-void
-expected2(tok_kind exp1, 
-          tok_kind exp2)
+void expected2(tok_kind exp1, tok_kind exp2)
 {
-	s_print(expectbuf, "expected '%s' or '%s'",
-		toktostr(exp1),
-		toktostr(exp2));
-	error(expectbuf);
+  s_print(expectbuf, "expected '%s' or '%s'", toktostr(exp1), toktostr(exp2));
+  error(expectbuf);
 }
 
 /*
- * error, token encountered was not one of 3 expected ones 
+ * error, token encountered was not one of 3 expected ones
  */
-void
-expected3(tok_kind exp1, 
-          tok_kind exp2, 
-          tok_kind exp3)
+void expected3(tok_kind exp1, tok_kind exp2, tok_kind exp3)
 {
-	s_print(expectbuf, "expected '%s', '%s' or '%s'",
-		toktostr(exp1),
-		toktostr(exp2),
-		toktostr(exp3));
-	error(expectbuf);
+  s_print(expectbuf, "expected '%s', '%s' or '%s'", toktostr(exp1),
+      toktostr(exp2), toktostr(exp3));
+  error(expectbuf);
 }
 
-void
-tabify(FILE *f,
-       int tab)
+void tabify(FILE* f, int tab)
 {
-	while (tab--) {
-		(void) fputc('\t', f);
-	}
+  while (tab--) {
+    (void)fputc('\t', f);
+  }
 }
 
+static token tokstrings[] = { { TOK_IDENT, "identifier" },
+  { TOK_CONST, "const" }, { TOK_RPAREN, ")" }, { TOK_LPAREN, "(" },
+  { TOK_RBRACE, "}" }, { TOK_LBRACE, "{" }, { TOK_LBRACKET, "[" },
+  { TOK_RBRACKET, "]" }, { TOK_STAR, "*" }, { TOK_COMMA, "," },
+  { TOK_EQUAL, "=" }, { TOK_COLON, ":" }, { TOK_SEMICOLON, ";" },
+  { TOK_UNION, "union" }, { TOK_STRUCT, "struct" }, { TOK_SWITCH, "switch" },
+  { TOK_CASE, "case" }, { TOK_DEFAULT, "default" }, { TOK_ENUM, "enum" },
+  { TOK_TYPEDEF, "typedef" }, { TOK_INT, "int" }, { TOK_SHORT, "short" },
+  { TOK_LONG, "long" }, { TOK_UNSIGNED, "unsigned" }, { TOK_DOUBLE, "double" },
+  { TOK_FLOAT, "float" }, { TOK_CHAR, "char" }, { TOK_STRING, "string" },
+  { TOK_OPAQUE, "opaque" }, { TOK_BOOL, "bool" }, { TOK_VOID, "void" },
+  { TOK_PROGRAM, "program" }, { TOK_VERSION, "pdr_version" },
+  { TOK_EOF, "??????" } };
 
-
-static token tokstrings[] = {
-			     {TOK_IDENT, "identifier"},
-			     {TOK_CONST, "const"},
-			     {TOK_RPAREN, ")"},
-			     {TOK_LPAREN, "("},
-			     {TOK_RBRACE, "}"},
-			     {TOK_LBRACE, "{"},
-			     {TOK_LBRACKET, "["},
-			     {TOK_RBRACKET, "]"},
-			     {TOK_STAR, "*"},
-			     {TOK_COMMA, ","},
-			     {TOK_EQUAL, "="},
-			     {TOK_COLON, ":"},
-			     {TOK_SEMICOLON, ";"},
-			     {TOK_UNION, "union"},
-			     {TOK_STRUCT, "struct"},
-			     {TOK_SWITCH, "switch"},
-			     {TOK_CASE, "case"},
-			     {TOK_DEFAULT, "default"},
-			     {TOK_ENUM, "enum"},
-			     {TOK_TYPEDEF, "typedef"},
-			     {TOK_INT, "int"},
-			     {TOK_SHORT, "short"},
-			     {TOK_LONG, "long"},
-			     {TOK_UNSIGNED, "unsigned"},
-			     {TOK_DOUBLE, "double"},
-			     {TOK_FLOAT, "float"},
-			     {TOK_CHAR, "char"},
-			     {TOK_STRING, "string"},
-			     {TOK_OPAQUE, "opaque"},
-			     {TOK_BOOL, "bool"},
-			     {TOK_VOID, "void"},
-			     {TOK_PROGRAM, "program"},
-			     {TOK_VERSION, "pdr_version"},
-			     {TOK_EOF, "??????"}
-};
-
-static char *
-toktostr(tok_kind kind)
+static char* toktostr(tok_kind kind)
 {
-	token *sp;
+  token* sp;
 
-	for (sp = tokstrings; sp->kind != TOK_EOF && sp->kind != kind; sp++);
-	return (sp->str);
+  for (sp = tokstrings; sp->kind != TOK_EOF && sp->kind != kind; sp++)
+    ;
+  return (sp->str);
 }
 
-
-
-static void
-printbuf()
+static void printbuf()
 {
-	char c;
-	int i;
-	int cnt;
+  char c;
+  int i;
+  int cnt;
 
-#	define TABSIZE 4
+#define TABSIZE 4
 
-	for (i = 0; (c = curline[i]); i++) {
-		if (c == '\t') {
-			cnt = 8 - (i % TABSIZE);
-			c = ' ';
-		} else {
-			cnt = 1;
-		}
-		while (cnt--) {
-			(void) fputc(c, stderr);
-		}
-	}
+  for (i = 0; (c = curline[i]); i++) {
+    if (c == '\t') {
+      cnt = 8 - (i % TABSIZE);
+      c = ' ';
+    } else {
+      cnt = 1;
+    }
+    while (cnt--) {
+      (void)fputc(c, stderr);
+    }
+  }
 }
 
-
-static void
-printwhere()
+static void printwhere()
 {
-	int i;
-	char c;
-	int cnt;
+  int i;
+  char c;
+  int cnt;
 
-	printbuf();
-	for (i = 0; i < where - curline; i++) {
-		c = curline[i];
-		if (c == '\t') {
-			cnt = 8 - (i % TABSIZE);
-		} else {
-			cnt = 1;
-		}
-		while (cnt--) {
-			(void) fputc('^', stderr);
-		}
-	}
-	(void) fputc('\n', stderr);
+  printbuf();
+  for (i = 0; i < where - curline; i++) {
+    c = curline[i];
+    if (c == '\t') {
+      cnt = 8 - (i % TABSIZE);
+    } else {
+      cnt = 1;
+    }
+    while (cnt--) {
+      (void)fputc('^', stderr);
+    }
+  }
+  (void)fputc('\n', stderr);
 }

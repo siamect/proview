@@ -34,30 +34,17 @@
  * General Public License plus this exception.
  */
 
-#include "glow_std.h"
+#include "cow_qt_helpers.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "glow.h"
-#include "glow_ctx.h"
-
-#include "rt_gdh.h"
-#include "rt_gdh_msg.h"
-#include "co_cdh.h"
-#include "co_dcli.h"
-#include "co_time.h"
-#include "cow_wow_qt.h"
-#include "glow_growctx.h"
-#include "glow_growapi.h"
-#include "co_lng.h"
-#include "wb_wge_qt.h"
 #include "ge_graph_qt.h"
 
+#include "wb_wge_qt.h"
+
 #include <QMenuBar>
+#include <QMessageBox>
 #include <QVBoxLayout>
 
-void WGeQtWidget::focusInEvent(QFocusEvent *event)
+void WGeQtWidget::focusInEvent(QFocusEvent* event)
 {
   if (!ge->focustimer.disabled()) {
     if (ge->graph) {
@@ -70,9 +57,9 @@ void WGeQtWidget::focusInEvent(QFocusEvent *event)
   QWidget::focusInEvent(event);
 }
 
-void WGeQt::change_value_cb(void *ge_ctx, void *value_object, char *text)
+void WGeQt::change_value_cb(void* ge_ctx, void* value_object, char* text)
 {
-  WGeQt *ge = (WGeQt *) ge_ctx;
+  WGeQt* ge = (WGeQt*)ge_ctx;
 
   if (ge->value_input_open) {
     ge->value_dialog->setVisible(false);
@@ -92,9 +79,9 @@ void WGeQt::change_value_cb(void *ge_ctx, void *value_object, char *text)
   ge->current_value_object = value_object;
 }
 
-void WGeQt::confirm_cb(void *ge_ctx, void *confirm_object, char *text)
+void WGeQt::confirm_cb(void* ge_ctx, void* confirm_object, char* text)
 {
-  WGeQt *ge = (WGeQt *) ge_ctx;
+  WGeQt* ge = (WGeQt*)ge_ctx;
 
   if (ge->confirm_open) {
     ge->confirm_open = 0;
@@ -105,18 +92,17 @@ void WGeQt::confirm_cb(void *ge_ctx, void *confirm_object, char *text)
 
   ge->confirm_open = 1;
   ge->current_confirm_object = confirm_object;
-  QMessageBox::StandardButton reply =
-      QMessageBox::question(ge->toplevel, fl("Confirm"), fl(text),
-                            QMessageBox::Yes | QMessageBox::No);
+  QMessageBox::StandardButton reply = QMessageBox::question(ge->toplevel,
+      fl("Confirm"), fl(text), QMessageBox::Yes | QMessageBox::No);
   if (reply == QMessageBox::Yes) {
     ge->graph->confirm_ok(ge->current_confirm_object);
   }
   ge->confirm_open = 0;
 }
 
-void WGeQt::message_dialog_cb(void *ge_ctx, const char *text)
+void WGeQt::message_dialog_cb(void* ge_ctx, const char* text)
 {
-  WGeQt *ge = (WGeQt *) ge_ctx;
+  WGeQt* ge = (WGeQt*)ge_ctx;
 
   ge->message_dia_widget->setVisible(true);
 
@@ -147,7 +133,7 @@ void WGeQtWidget::activate_help()
   }
 }
 
-void WGeQtWidget::action_resize(QResizeEvent *event)
+void WGeQtWidget::action_resize(QResizeEvent* event)
 {
   if (ge->graph && !ge->scrollbar && !ge->navigator && ge->graph->grow) {
     ge->graph->set_default_layout();
@@ -190,7 +176,7 @@ void WGeQt::pop()
   ::pop(toplevel);
 }
 
-void WGeQtWidget::closeEvent(QCloseEvent *event)
+void WGeQtWidget::closeEvent(QCloseEvent* event)
 {
   if (ge->modal) {
     ge->terminated = 1;
@@ -200,10 +186,10 @@ void WGeQtWidget::closeEvent(QCloseEvent *event)
   QWidget::closeEvent(event);
 }
 
-WGeQt::WGeQt(QWidget *wge_parent_wid, void *wge_parent_ctx, char *wge_name,
-             char *wge_filename, int wge_scrollbar, int wge_menu,
-             int wge_navigator, int wge_width, int wge_height, int x, int y,
-             char *object_name, int wge_modal = 0)
+WGeQt::WGeQt(QWidget* wge_parent_wid, void* wge_parent_ctx, char* wge_name,
+    char* wge_filename, int wge_scrollbar, int wge_menu, int wge_navigator,
+    int wge_width, int wge_height, int x, int y, char* object_name,
+    int wge_modal = 0)
     : WGe(wge_parent_ctx, wge_name, wge_filename, wge_scrollbar, wge_menu,
           wge_navigator, wge_width, wge_height, x, y, object_name, wge_modal),
       nav_shell(0), value_dialog(0)
@@ -232,9 +218,9 @@ WGeQt::WGeQt(QWidget *wge_parent_wid, void *wge_parent_ctx, char *wge_name,
     // Set position...
   }
 
-  QVBoxLayout *graph_form = new QVBoxLayout();
+  QVBoxLayout* graph_form = new QVBoxLayout();
   graph = new GraphQt(this, toplevel, "Plant", &grow_widget, &sts, "pwrp_exe:",
-                      graph_eMode_Runtime, scrollbar, 1, object_name, 0, 0);
+      graph_eMode_Runtime, scrollbar, 1, object_name, 0, 0);
   graph->message_cb = &message;
   graph->close_cb = &graph_close_cb;
   graph->init_cb = &graph_init_cb;
@@ -244,31 +230,32 @@ WGeQt::WGeQt(QWidget *wge_parent_wid, void *wge_parent_ctx, char *wge_name,
   graph->command_cb = &wge_command_cb;
   graph->is_authorized_cb = &wge_is_authorized_cb;
 
-  QObject::connect(((GraphQt *) graph)->grow_widget,
-                   SIGNAL(resize_signal(QResizeEvent * )), toplevel,
-                   SLOT(action_resize(QResizeEvent * )));
-  //TODO: grow_widget must emit a resize_signal signal in resizeEvent()
+  QObject::connect(((GraphQt*)graph)->grow_widget,
+      SIGNAL(resize_signal(QResizeEvent*)), toplevel,
+      SLOT(action_resize(QResizeEvent*)));
+  // TODO: grow_widget must emit a resize_signal signal in resizeEvent()
 
   if (wge_menu) {
-    QMenuBar *menu_bar = new QMenuBar();
+    QMenuBar* menu_bar = new QMenuBar();
 
     // File Entry
-    QMenu *file = menu_bar->addMenu(translate_utf8("&File"));
-    addMenuItem(toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+    QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
+    addMenuItem(
+        toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
     // View menu
-    QMenu *view = menu_bar->addMenu(translate_utf8("&View"));
+    QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
     addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoom_in()), "CTRL+I",
-                "zoom-in");
-    addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
-                "zoom-out");
+        "zoom-in");
+    addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()),
+        "CTRL+O", "zoom-out");
     addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "",
-                "zoom-original");
+        "zoom-original");
 
     // Menu Help
-    QMenu *help = menu_bar->addMenu(translate_utf8("&Help"));
+    QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
     addMenuItem(toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H",
-                "system-help");
+        "system-help");
 
     graph_form->setMenuBar(menu_bar);
   }
@@ -285,9 +272,9 @@ WGeQt::WGeQt(QWidget *wge_parent_wid, void *wge_parent_ctx, char *wge_name,
     nav_shell->setWindowTitle(fl("Navigator"));
     nav_shell->setAttribute(Qt::WA_DeleteOnClose);
 
-    ((GraphQt *) graph)->create_navigator(nav_shell);
-    QVBoxLayout *l = new QVBoxLayout(nav_shell);
-    l->addWidget(((GraphQt *) graph)->nav_widget);
+    ((GraphQt*)graph)->create_navigator(nav_shell);
+    QVBoxLayout* l = new QVBoxLayout(nav_shell);
+    l->addWidget(((GraphQt*)graph)->nav_widget);
     nav_shell->setLayout(l);
 
     nav_shell->show();

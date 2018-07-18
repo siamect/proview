@@ -36,29 +36,20 @@
 
 /* wb_bckw_qt.cpp -- Backupfile display window */
 
-#include "glow_std.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "co_cdh.h"
-#include "co_time.h"
-#include "co_dcli.h"
-#include "co_lng.h"
+#include "cow_qt_helpers.h"
 #include "cow_xhelp.h"
-#include "wb_ldh.h"
+
 #include "wb_bckw_qt.h"
 #include "wb_bckwnav_qt.h"
-#include "cow_wow_qt.h"
 
 #include <QMenuBar>
 #include <QVBoxLayout>
 
-WbBckWQt::WbBckWQt(void *bckw_parent_ctx, QWidget *bckw_parent_wid,
-                   ldh_tSession bckw_ldhses, const char *bckw_name,
-                   wb_bck_list *l_list, int l_editmode, pwr_tStatus *status)
-    : WbBckW(bckw_parent_ctx, bckw_ldhses, bckw_name, l_list, l_editmode,
-             status)
+WbBckWQt::WbBckWQt(void* bckw_parent_ctx, QWidget* bckw_parent_wid,
+    ldh_tSession bckw_ldhses, const char* bckw_name, wb_bck_list* l_list,
+    int l_editmode, pwr_tStatus* status)
+    : WbBckW(
+          bckw_parent_ctx, bckw_ldhses, bckw_name, l_list, l_editmode, status)
 {
   toplevel = new WbBckWQtWidget(this, bckw_parent_wid);
   toplevel->setToolTip(fl("wb_bckw widget"));
@@ -68,44 +59,45 @@ WbBckWQt::WbBckWQt(void *bckw_parent_ctx, QWidget *bckw_parent_wid,
 
   CoWowQt::SetWindowIcon(toplevel);
 
-  QMenuBar *menu_bar = new QMenuBar();
+  QMenuBar* menu_bar = new QMenuBar();
 
   // File Entry
-  QMenu *file = menu_bar->addMenu(translate_utf8("&File"));
+  QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
   addMenuItem(toplevel, file, "&Open", SLOT(activate_open()));
   addMenuItem(toplevel, file, "&Compare Backup File", SLOT(activate_diff()));
   addMenuItem(toplevel, file, "C&ompare Database", SLOT(activate_diff_wb()));
-  addMenuItem(toplevel, file, "&Print", SLOT(activate_print()), "",
-              "document-print");
-  addMenuItem(toplevel, file, "&Transfer to database",
-              SLOT(activate_transfer_wb()));
+  addMenuItem(
+      toplevel, file, "&Print", SLOT(activate_print()), "", "document-print");
+  addMenuItem(
+      toplevel, file, "&Transfer to database", SLOT(activate_transfer_wb()));
   addMenuItem(toplevel, file, "&Filter", SLOT(activate_filter()));
-  addMenuItem(toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+  addMenuItem(
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
   // Edit menu
-  QMenu *edit = menu_bar->addMenu(translate_utf8("&Edit"));
+  QMenu* edit = menu_bar->addMenu(translate_utf8("&Edit"));
   addMenuItem(toplevel, edit, "&Check all", SLOT(activate_check_all()));
   addMenuItem(toplevel, edit, "&Check clear", SLOT(activate_check_clear()));
 
   // View menu
-  QMenu *view = menu_bar->addMenu(translate_utf8("&View"));
+  QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
   addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoom_in()), "CTRL+I",
-              "zoom-in");
+      "zoom-in");
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
-              "zoom-out");
+      "zoom-out");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "",
-              "zoom-original");
+      "zoom-original");
 
   // Help menu
-  QMenu *help = menu_bar->addMenu(translate_utf8("&Help"));
-  addMenuItem(toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H",
-              "system-help");
+  QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
+  addMenuItem(
+      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "system-help");
 
-  QVBoxLayout *form = new QVBoxLayout(toplevel);
+  QVBoxLayout* form = new QVBoxLayout(toplevel);
 
   // Create bckwnav
-  bckwnav =
-      new WbBckWNavQt(this, toplevel, bckw_ldhses, l_list, l_editmode, &nav_widget);
+  bckwnav = new WbBckWNavQt(
+      this, toplevel, bckw_ldhses, l_list, l_editmode, &nav_widget);
 
   form->setMenuBar(menu_bar);
   add_expanding(form, nav_widget);
@@ -129,11 +121,10 @@ void WbBckWQt::print()
   pwr_tStatus sts;
 
   CoWowQt::CreateBrowPrintDialogQt(name, bckwnav->brow->ctx,
-                                   flow_eOrientation_Portrait, 1.0,
-                                   toplevel, &sts);
+      flow_eOrientation_Portrait, 1.0, toplevel, &sts);
 }
 
-void WbBckWQtWidget::focusInEvent(QFocusEvent *event)
+void WbBckWQtWidget::focusInEvent(QFocusEvent* event)
 {
   if (!bck->focustimer.disabled()) {
     bck->bckwnav->set_input_focus();
@@ -143,13 +134,13 @@ void WbBckWQtWidget::focusInEvent(QFocusEvent *event)
   QWidget::focusInEvent(event);
 }
 
-void WbBckWQtWidget::closeEvent(QCloseEvent *event)
+void WbBckWQtWidget::closeEvent(QCloseEvent* event)
 {
   delete bck;
   QWidget::closeEvent(event);
 }
 
-void WbBckWQt::set_title(char *title)
+void WbBckWQt::set_title(char* title)
 {
   toplevel->setWindowTitle(QString::fromLatin1(title));
 }
@@ -211,6 +202,6 @@ void WbBckWQtWidget::activate_zoom_reset()
 
 void WbBckWQtWidget::activate_help()
 {
-  CoXHelp::dhelp("backup_refman", 0, navh_eHelpFile_Other,
-                 "$pwr_lang/man_dg.dat", true);
+  CoXHelp::dhelp(
+      "backup_refman", 0, navh_eHelpFile_Other, "$pwr_lang/man_dg.dat", true);
 }

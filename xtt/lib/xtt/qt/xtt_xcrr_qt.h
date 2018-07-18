@@ -39,45 +39,42 @@
 
 /* xtt_xcrr_qt.h -- Object crossreferences */
 
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
-#ifndef xtt_xcrr_h
-# include "xtt_xcrr.h"
-#endif
+#include "cow_wow_qt.h"
 
-#ifndef cow_wow_qt_h
-# include "cow_wow_qt.h"
+#ifndef xtt_xcrr_h
+#include "xtt_xcrr.h"
 #endif
 
 class XCrrQtWidget;
 
 class XCrrQt : public XCrr {
 public:
-  XCrrQt(QWidget *xa_parent_wid, void *xa_parent_ctx, pwr_sAttrRef *xa_objar,
-         int xa_advanced_user, int *xa_sts);
-  QWidget *brow_widget;
-  QWidget *form_widget;
-  QWidget *xcrrnav_form;
+  XCrrQt(QWidget* xa_parent_wid, void* xa_parent_ctx, pwr_sAttrRef* xa_objar,
+      int xa_advanced_user, int* xa_sts);
+  QWidget* brow_widget;
+  QWidget* form_widget;
+  QWidget* xcrrnav_form;
   CoWowFocusTimerQt focustimer;
 
   void pop();
   void print();
 
 private:
-  XCrrQtWidget *toplevel;
+  XCrrQtWidget* toplevel;
 };
 
 class XCrrQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  XCrrQtWidget(XCrrQt *parent_ctx, QWidget *parent)
-      : QWidget(parent, Qt::Window), xcrr(parent_ctx) {}
+  XCrrQtWidget(XCrrQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), xcrr(parent_ctx)
+  {
+  }
 
 protected:
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void activate_print();
@@ -85,7 +82,7 @@ public slots:
   void activate_help();
 
 private:
-  XCrrQt *xcrr;
+  XCrrQt* xcrr;
 };
 
 #endif

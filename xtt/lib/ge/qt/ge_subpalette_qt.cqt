@@ -34,46 +34,24 @@
  * General Public License plus this exception.
  **/
 
-#include "glow_std.h"
-
-#include <vector>
 #include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
 
-extern "C" {
-#include "co_cdh.h"
-#include "co_time.h"
-#include "pwr_baseclasses.h"
-#include "co_dcli.h"
-}
+#include "cow_qt_helpers.h"
 #include "cow_wow_qt.h"
 
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
 #include "flow_browwidget_qt.h"
 
-#include "glow.h"
-#include "glow_growctx.h"
-#include "glow_growapi.h"
-#include "glow_growwidget_qt.h"
-
-#include "ge_dyn.h"
-#include "ge_attr.h"
 #include "ge_subpalette_qt.h"
 
 #include <QMenu>
-#include <cstring>
 
-SubPaletteQt::SubPaletteQt(void *xn_parent_ctx, QWidget *xn_parent_wid,
-                           const char *xn_name, QWidget **w,
-                           pwr_tStatus *status)
+SubPaletteQt::SubPaletteQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
+    const char* xn_name, QWidget** w, pwr_tStatus* status)
     : SubPalette(xn_parent_ctx, xn_name, status)
 {
   debug_print("creating a scrolledbrowwidgetqt\n");
-  form_widget =
-      scrolledbrowwidgetqt_new(SubPalette::init_brow_cb, this, &brow_widget);
+  form_widget
+      = scrolledbrowwidgetqt_new(SubPalette::init_brow_cb, this, &brow_widget);
 
   // Create the root item
   *w = form_widget;
@@ -96,7 +74,7 @@ void SubPaletteQt::set_inputfocus(int focus)
   }
 }
 
-void SubPaletteQt::create_popup_menu(char *filename, int x, int y)
+void SubPaletteQt::create_popup_menu(char* filename, int x, int y)
 {
   int wind_x, wind_y;
 
@@ -104,7 +82,7 @@ void SubPaletteQt::create_popup_menu(char *filename, int x, int y)
 
   CoWowQt::PopupPosition(form_widget, x, y, &wind_x, &wind_y);
 
-  QMenu *menu = new QMenu(toplevel);
+  QMenu* menu = new QMenu(toplevel);
   addMenuItem(toplevel, menu, "Help", SLOT(activate_help()));
 
   menu->popup(QPoint(wind_x, wind_y));
@@ -115,7 +93,7 @@ void SubPaletteQtWidget::activate_help()
 {
   char helpfile[80] = "$pwr_exe/man_subgraph.dat";
   char topic[200];
-  char *s;
+  char* s;
 
   printf("Help callback %s\n", subpalette->popup_help_filename);
 

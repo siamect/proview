@@ -36,46 +36,32 @@
 
 /* wb_gtk.cpp -- work bench */
 
-#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <map>
-#include <gtk/gtk.h>
 
-#include "wb_env.h"
-#include "flow.h"
-#include "flow_ctx.h"
-#include "flow_api.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
-
-#include "pwr.h"
-#include "co_msg.h"
-#include "co_cdh.h"
 #include "co_dcli.h"
-#include "cow_wow.h"
-#include "wb.h"
-#include "wb_ldh.h"
-#include "cow_login_gtk.h"
 #include "co_login_msg.h"
-#include "wb_utl_api.h"
+#include "co_msg.h"
+#include "co_user.h"
 
-#include "wb_vsel_gtk.h"
+#include "cow_login_gtk.h"
 #include "cow_msgwindow_gtk.h"
 #include "cow_xhelp_gtk.h"
-#include "co_lng.h"
-#include "cow_wow_gtk.h"
-#include "co_user.h"
-#include "wb_wtt_gtk.h"
-#include "wb_log_gtk.h"
 
-#include "wb_erep.h"
-#include "wb_vrepwbl.h"
-#include "wb_vrepdbs.h"
-#include "wb_vrepmem.h"
-#include "wb_vrepext.h"
+#include "flow_api.h"
+#include "flow_browapi.h"
+
+#include "wb_env.h"
 #include "wb_gtk.h"
+#include "wb_log_gtk.h"
+#include "wb_utl_api.h"
+#include "wb_vrepdbs.h"
+#include "wb_vrepext.h"
+#include "wb_vrepmem.h"
+#include "wb_vrepwbl.h"
+#include "wb_vsel_gtk.h"
+#include "wb_wtt_gtk.h"
 
 using namespace std;
 

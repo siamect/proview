@@ -39,13 +39,13 @@
 
 /* wb_wrev_qt.h -- Package window */
 
+#include "cow_wow_qt.h"
+
 #ifndef wb_wrev_h
-# include "wb_wrev.h"
+#include "wb_wrev.h"
 #endif
 
-#ifndef cow_wow_qt_h
-# include "cow_wow_qt.h"
-#endif
+#include <QLabel>
 
 class WRevQt;
 
@@ -53,17 +53,16 @@ class WRevInputDialog : public QDialog {
   Q_OBJECT
 
 public:
-  WRevInputDialog(WRevQt *parent_ctx, QWidget *parent, const char *text1,
-                  const char *text2, const char *init_text1,
-                  const char *init_text2);
+  WRevInputDialog(WRevQt* parent_ctx, QWidget* parent, const char* text1,
+      const char* text2, const char* init_text1, const char* init_text2);
 
 protected:
-  void closeEvent(QCloseEvent *event);
+  void closeEvent(QCloseEvent* event);
 
 private:
-  WRevQt *rev;
-  QLineEdit *india_text1;
-  QLineEdit *india_text2;
+  WRevQt* rev;
+  QLineEdit* india_text1;
+  QLineEdit* india_text2;
 
 public slots:
   void activate_ok();
@@ -74,39 +73,40 @@ class WRevQtWidget;
 
 class WRevQt : public WRev {
 public:
-  WRevQt(QWidget *wa_parent_wid, void *wa_parent_ctx, ldh_tSession wb_ldhses);
-  QWidget *brow_widget;
-  QWidget *form_widget;
-  QLabel *msg_label;
-  QWidget *wrevnav_form;
-  QWidget *india_widget;
+  WRevQt(QWidget* wa_parent_wid, void* wa_parent_ctx, ldh_tSession wb_ldhses);
+  QWidget* brow_widget;
+  QWidget* form_widget;
+  QLabel* msg_label;
+  QWidget* wrevnav_form;
+  QWidget* india_widget;
   CoWowFocusTimerQt focustimer;
 
-  void message(char severity, const char *message);
+  void message(char severity, const char* message);
   void pop();
   void set_clock_cursor();
   void reset_cursor();
   void flush();
   void create_input_dialog();
-  void open_input_dialog(const char *text1, const char *text2,
-                         const char *title, const char *init_text1,
-                         const char *init_text2,
-                         void (*ok_cb)(WRev *, char *, char *));
+  void open_input_dialog(const char* text1, const char* text2,
+      const char* title, const char* init_text1, const char* init_text2,
+      void (*ok_cb)(WRev*, char*, char*));
 
 private:
-  WRevQtWidget *toplevel;
+  WRevQtWidget* toplevel;
 };
 
 class WRevQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  WRevQtWidget(WRevQt *parent_ctx, QWidget *parent)
-      : QWidget(parent, Qt::Window), rev(parent_ctx) {}
+  WRevQtWidget(WRevQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), rev(parent_ctx)
+  {
+  }
 
 protected:
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void activate_store();
@@ -120,7 +120,7 @@ public slots:
   void activate_help();
 
 private:
-  WRevQt *rev;
+  WRevQt* rev;
 };
 
 #endif

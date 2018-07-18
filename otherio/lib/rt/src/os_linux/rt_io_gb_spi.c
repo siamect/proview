@@ -56,15 +56,16 @@ void setup_spi()
 // datasheet of the AD chip (MCP3002)
 //
 int read_adc(int chan) // 'chan' must be 0 or 1. This is not checked!
-{ unsigned char v1,v2;
+{
+  unsigned char v1, v2;
   int status;
   // Set up for single ended, MS comes out first
-  v1 = 0xD0 | (chan<<5);
+  v1 = 0xD0 | (chan << 5);
   // Delay to make sure chip select is high for a short while
   short_wait();
 
   // Enable SPI interface: Use CS 0 and set activate bit
-  SPI0_CNTLSTAT = SPI0_CS_CHIPSEL0|SPI0_CS_ACTIVATE;
+  SPI0_CNTLSTAT = SPI0_CS_CHIPSEL0 | SPI0_CS_ACTIVATE;
 
   // Write the command into the FIFO so it will
   // be transmitted out of the SPI interface to the ADC
@@ -76,8 +77,8 @@ int read_adc(int chan) // 'chan' must be 0 or 1. This is not checked!
   // wait for SPI to be ready
   // This will take about 16 micro seconds
   do {
-     status = SPI0_CNTLSTAT;
-  } while ((status & SPI0_CS_DONE)==0);
+    status = SPI0_CNTLSTAT;
+  } while ((status & SPI0_CS_DONE) == 0);
   SPI0_CNTLSTAT = SPI0_CS_DONE; // clear the done bit
 
   // Data from the ADC chip should now be in the receiver
@@ -89,7 +90,7 @@ int read_adc(int chan) // 'chan' must be 0 or 1. This is not checked!
   // I have checked the result and it returns 3 bits in the MS byte not 2!!
   // So I might have my SPI clock/data pahse wrong.
   // For now its easier to dadpt the results (running out of time)
-  return ( (v1<<7) | (v2>>1) ) & 0x3FF;
+  return ((v1 << 7) | (v2 >> 1)) & 0x3FF;
 } // read_adc
 
 //
@@ -99,14 +100,15 @@ int read_adc(int chan) // 'chan' must be 0 or 1. This is not checked!
 // datasheet of the AD chip (MCP4802/MCP4812/MCP4822)
 //
 void write_dac(int chan, // chan must be 0 or 1, this is not checked
-                int val) // chan must be max 12 bit
-{ char v1,v2,dummy;
+    int val) // chan must be max 12 bit
+{
+  char v1, v2, dummy;
   int status;
-  val &= 0xFFF;  // force value in 12 bits
+  val &= 0xFFF; // force value in 12 bits
 
   // Build the first byte: write, channel 0 or 1 bit
   // and the 4 most significant data bits
-  v1 = 0x30 | (chan<<7) | (val>>8);
+  v1 = 0x30 | (chan << 7) | (val >> 8);
   // Remain the Least Significant 8 data bits
   v2 = val & 0xFF;
 
@@ -114,7 +116,7 @@ void write_dac(int chan, // chan must be 0 or 1, this is not checked
   short_wait();
 
   // Enable SPI: Use CS 1 and set activate bit
-  SPI0_CNTLSTAT = SPI0_CS_CHIPSEL1|SPI0_CS_ACTIVATE;
+  SPI0_CNTLSTAT = SPI0_CS_CHIPSEL1 | SPI0_CS_ACTIVATE;
 
   // send the values
   SPI0_FIFO = v1;
@@ -123,8 +125,8 @@ void write_dac(int chan, // chan must be 0 or 1, this is not checked
   // wait for SPI to be ready
   // This will take about 16 micro seconds
   do {
-     status = SPI0_CNTLSTAT;
-  } while ((status & SPI0_CS_DONE)==0);
+    status = SPI0_CNTLSTAT;
+  } while ((status & SPI0_CS_DONE) == 0);
   SPI0_CNTLSTAT = SPI0_CS_DONE; // clear the done bit
 
   // For every transmit there is also data coming back

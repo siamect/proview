@@ -36,21 +36,14 @@
 
 /* xtt_clog_qt.cpp -- Console log in xtt */
 
-#include "glow_std.h"
+//#include "pwr_baseclasses.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "co_cdh.h"
-#include "co_time.h"
 #include "co_syi.h"
-#include "pwr_baseclasses.h"
-#include "rt_gdh.h"
+#include "co_time.h"
 
-#include "co_lng.h"
+#include "cow_qt_helpers.h"
 #include "cow_wow_qt.h"
-#include "xtt_clog.h"
-#include "rt_xnav_msg.h"
+
 #include "xtt_clog_qt.h"
 #include "xtt_clognav_qt.h"
 
@@ -60,7 +53,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-void CLogQtWidget::closeEvent(QCloseEvent *event)
+void CLogQtWidget::closeEvent(QCloseEvent* event)
 {
   if (clog->close_cb) {
     (clog->close_cb)(clog->parent_ctx);
@@ -70,8 +63,8 @@ void CLogQtWidget::closeEvent(QCloseEvent *event)
   QWidget::closeEvent(event);
 }
 
-CLogQt::CLogQt(void *clog_parent_ctx, QWidget *clog_parent_wid,
-               const char *clog_name, pwr_tStatus *status)
+CLogQt::CLogQt(void* clog_parent_ctx, QWidget* clog_parent_wid,
+    const char* clog_name, pwr_tStatus* status)
     : CLog(clog_parent_ctx, clog_name, status), parent_wid(clog_parent_wid),
       filter_form(0)
 {
@@ -83,37 +76,39 @@ CLogQt::CLogQt(void *clog_parent_ctx, QWidget *clog_parent_wid,
 
   CoWowQt::SetWindowIcon(toplevel);
 
-  QVBoxLayout *vbox = new QVBoxLayout(toplevel);
+  QVBoxLayout* vbox = new QVBoxLayout(toplevel);
 
   // Menu
-  QMenuBar *menu_bar = new QMenuBar();
+  QMenuBar* menu_bar = new QMenuBar();
 
   // File entry
-  QMenu *file = menu_bar->addMenu(translate_utf8("&File"));
+  QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
   addMenuItem(toplevel, file, "&Filter", SLOT(activate_filter()));
   addMenuItem(toplevel, file, "&Select File", SLOT(activate_select_file()));
-  addMenuItem(toplevel, file, "&Next File", SLOT(activate_next_file()), "CTRL+N");
-  addMenuItem(toplevel, file, "&Previous File", SLOT(activate_prev_file()),
-              "CTRL+P");
+  addMenuItem(
+      toplevel, file, "&Next File", SLOT(activate_next_file()), "CTRL+N");
+  addMenuItem(
+      toplevel, file, "&Previous File", SLOT(activate_prev_file()), "CTRL+P");
   addMenuItem(toplevel, file, "&Update", SLOT(activate_update()), "CTRL+U");
   addMenuItem(toplevel, file, "&Print", SLOT(activate_print()));
-  addMenuItem(toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+  addMenuItem(
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
   // View menu
-  QMenu *view = menu_bar->addMenu(translate_utf8("&View"));
+  QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
   addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoom_in()), "CTRL+I",
-              "zoom-in");
+      "zoom-in");
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
-              "zoom-out");
-  addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "CTRL+B",
-              "zoom-original");
+      "zoom-out");
+  addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()),
+      "CTRL+B", "zoom-original");
 
   // Menu Help
-  QMenu *help = menu_bar->addMenu(translate_utf8("&Help"));
+  QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
   addMenuItem(toplevel, help, "&Help on System Messages", SLOT(activate_help()),
-              "CTRL+H", "system-help");
-  addMenuItem(toplevel, help, "Help on &Selected Message",
-              SLOT(activate_helpmsg()));
+      "CTRL+H", "system-help");
+  addMenuItem(
+      toplevel, help, "Help on &Selected Message", SLOT(activate_helpmsg()));
 
   clognav = new CLogNavQt(this, toplevel, &clognav_widget);
 
@@ -143,7 +138,7 @@ void CLogQt::reset_cursor()
   toplevel->window()->unsetCursor();
 }
 
-void CLogQtWidget::focusInEvent(QFocusEvent *event)
+void CLogQtWidget::focusInEvent(QFocusEvent* event)
 {
   if (clog->clog_displayed) {
     clog->clognav->set_input_focus();
@@ -183,14 +178,14 @@ void CLogQtWidget::activate_filter()
 
 void CLogQtWidget::activate_select_file()
 {
-  char *s;
-  pwr_tString80 *str;
+  char* s;
+  pwr_tString80* str;
 
-  str = (pwr_tString80 *) calloc(clog->clognav->file_list.size() + 1,
-                                 sizeof(*str));
-  for (int i = 0; i < (int) clog->clognav->file_list.size(); i++) {
+  str = (pwr_tString80*)calloc(
+      clog->clognav->file_list.size() + 1, sizeof(*str));
+  for (int i = 0; i < (int)clog->clognav->file_list.size(); i++) {
     time_AtoAscii(&clog->clognav->file_list[i].time,
-                  time_eFormat_ComprDateAndTime, str[i], sizeof(str[i]));
+        time_eFormat_ComprDateAndTime, str[i], sizeof(str[i]));
     str[i][17] = 0;
     strcat(str[i], "    ");
     s = strrchr(clog->clognav->file_list[i].name, '/');
@@ -200,20 +195,20 @@ void CLogQtWidget::activate_select_file()
       strcat(str[i], clog->clognav->file_list[i].name);
     }
   }
-  clog->wow->CreateList("Select File", (char *) str, 80,
-                        CLogQt::file_selected_cb, 0, clog);
+  clog->wow->CreateList(
+      "Select File", (char*)str, 80, CLogQt::file_selected_cb, 0, clog);
 
   free(str);
 }
 
-void CLogQt::file_selected_cb(void *ctx, char *text, int ok_pressed)
+void CLogQt::file_selected_cb(void* ctx, char* text, int ok_pressed)
 {
-  CLog *clog = (CLog *) ctx;
+  CLog* clog = (CLog*)ctx;
   int idx = -1;
-  char *s;
+  char* s;
 
   // Indentify the index of the selected text
-  for (int i = 0; i < (int) clog->clognav->file_list.size(); i++) {
+  for (int i = 0; i < (int)clog->clognav->file_list.size(); i++) {
     s = strrchr(clog->clognav->file_list[i].name, '/');
     if (s) {
       s++;
@@ -277,7 +272,8 @@ void CLogQtWidget::filter_apply_cb()
   QByteArray str = clog->filter_string_w->text().toLocal8Bit();
 
   clog->set_clock_cursor();
-  clog->clognav->set_filter(success, info, warning, error, fatal, text, str.data());
+  clog->clognav->set_filter(
+      success, info, warning, error, fatal, text, str.data());
   clog->reset_cursor();
 }
 
@@ -294,9 +290,9 @@ void CLogQt::create_filter_dialog()
   filter_form->setWindowTitle(fl("Filter Messages"));
   filter_form->setAttribute(Qt::WA_DeleteOnClose);
 
-  QLabel *severity_label = new QLabel("Message Severity");
+  QLabel* severity_label = new QLabel("Message Severity");
   severity_label->setFixedWidth(140);
-  QLabel *string_label = new QLabel("String");
+  QLabel* string_label = new QLabel("String");
   string_label->setFixedWidth(140);
   filter_string_w = new QLineEdit();
 
@@ -307,7 +303,7 @@ void CLogQt::create_filter_dialog()
   show_fatal_w = new QCheckBox("Fatal");
   show_text_w = new QCheckBox("Text");
 
-  QVBoxLayout *severity_vbox = new QVBoxLayout();
+  QVBoxLayout* severity_vbox = new QVBoxLayout();
   severity_vbox->addWidget(show_success_w);
   severity_vbox->addWidget(show_info_w);
   severity_vbox->addWidget(show_warning_w);
@@ -315,15 +311,15 @@ void CLogQt::create_filter_dialog()
   severity_vbox->addWidget(show_fatal_w);
   severity_vbox->addWidget(show_text_w);
 
-  QHBoxLayout *severity_hbox = new QHBoxLayout();
+  QHBoxLayout* severity_hbox = new QHBoxLayout();
   severity_hbox->addWidget(severity_label);
   severity_hbox->addLayout(severity_vbox);
 
-  QHBoxLayout *string_hbox = new QHBoxLayout();
+  QHBoxLayout* string_hbox = new QHBoxLayout();
   string_hbox->addWidget(string_label);
   add_expanding(string_hbox, filter_string_w);
 
-  QDialogButtonBox *buttons = new QDialogButtonBox();
+  QDialogButtonBox* buttons = new QDialogButtonBox();
   buttons->addButton(QDialogButtonBox::Ok);
   buttons->addButton(QDialogButtonBox::Apply);
   buttons->addButton(QDialogButtonBox::Cancel);
@@ -331,11 +327,11 @@ void CLogQt::create_filter_dialog()
   buttons->button(QDialogButtonBox::Apply)->setFixedSize(70, 25);
   buttons->button(QDialogButtonBox::Cancel)->setFixedSize(70, 25);
   QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
-                   toplevel, SLOT(filter_apply_cb()));
+      toplevel, SLOT(filter_apply_cb()));
   QObject::connect(buttons->button(QDialogButtonBox::Apply), SIGNAL(clicked()),
-                   toplevel, SLOT(filter_apply_cb()));
+      toplevel, SLOT(filter_apply_cb()));
 
-  QVBoxLayout *filter_vbox = new QVBoxLayout(filter_form);
+  QVBoxLayout* filter_vbox = new QVBoxLayout(filter_form);
   filter_vbox->addLayout(severity_hbox);
   add_expanding(filter_vbox, string_hbox);
   filter_vbox->addWidget(separator(QFrame::HLine));
@@ -360,7 +356,7 @@ void CLogQt::print()
   }
 
   wow->CreateBrowPrintDialog(title, clognav->brow->ctx,
-                             flow_eOrientation_Landscape, 1.0, parent_wid, &sts);
+      flow_eOrientation_Landscape, 1.0, parent_wid, &sts);
   if (sts == WOW__PRINTDIALOGDISABLED) {
     wow->DisplayError("Disabled", "Print Dialog is disabled");
   }

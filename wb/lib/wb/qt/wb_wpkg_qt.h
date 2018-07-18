@@ -39,45 +39,47 @@
 
 /* wb_wpkg_qt.h -- Package window */
 
+#include "cow_wow_qt.h"
+
 #ifndef wb_wpkg_h
-# include "wb_wpkg.h"
+#include "wb_wpkg.h"
 #endif
 
-#ifndef cow_wow_qt_h
-# include "cow_wow_qt.h"
-#endif
+#include <QLabel>
 
 class WPkgQtWidget;
 
 class WPkgQt : public WPkg {
 public:
-  WPkgQt(QWidget *wa_parent_wid, void *wa_parent_ctx);
-  QWidget *brow_widget;
-  QWidget *form_widget;
-  QLabel *msg_label;
-  QWidget *wpkgnav_form;
+  WPkgQt(QWidget* wa_parent_wid, void* wa_parent_ctx);
+  QWidget* brow_widget;
+  QWidget* form_widget;
+  QLabel* msg_label;
+  QWidget* wpkgnav_form;
   CoWowFocusTimerQt focustimer;
 
-  void message(char severity, const char *message);
+  void message(char severity, const char* message);
   void pop();
   void set_clock_cursor();
   void reset_cursor();
   void flush();
 
 private:
-  WPkgQtWidget *toplevel;
+  WPkgQtWidget* toplevel;
 };
 
 class WPkgQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  WPkgQtWidget(WPkgQt *parent_ctx, QWidget *parent)
-      : QWidget(parent, Qt::Window), pkg(parent_ctx) {}
+  WPkgQtWidget(WPkgQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), pkg(parent_ctx)
+  {
+  }
 
 protected:
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void activate_distribute();
@@ -93,7 +95,7 @@ public slots:
   void activate_help();
 
 private:
-  WPkgQt *pkg;
+  WPkgQt* pkg;
 };
 
 #endif

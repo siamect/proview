@@ -34,34 +34,18 @@
  * General Public License plus this exception.
  */
 
-typedef void *Widget;
+#include "cow_qt_helpers.h"
 
-#include "glow_std.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "glow.h"
-
-#include "xtt_xnav.h"
-#include "rt_gdh.h"
-#include "rt_gdh_msg.h"
-#include "co_cdh.h"
-#include "co_dcli.h"
-#include "co_time.h"
-#include "cow_wow_qt.h"
-
-#include "glow_growctx.h"
-#include "glow_growapi.h"
-#include "co_lng.h"
-#include "xtt_ge_qt.h"
 #include "ge_graph_qt.h"
+
+#include "xtt_ge_qt.h"
 #include "xtt_log.h"
+#include "xtt_xnav.h"
 
 #include <QMenuBar>
 #include <QVBoxLayout>
 
-void XttGeQtWidget::focusInEvent(QFocusEvent *event)
+void XttGeQtWidget::focusInEvent(QFocusEvent* event)
 {
   if (!ge->focustimer.disabled()) {
     if (ge->graph) {
@@ -85,14 +69,16 @@ void XttGeQt::iconify(int val)
 
 void XttGeQt::set_below(int val)
 {
-  toplevel->setWindowFlags(toplevel->windowFlags() | Qt::WindowStaysOnBottomHint);
+  toplevel->setWindowFlags(
+      toplevel->windowFlags() | Qt::WindowStaysOnBottomHint);
 }
 
 void XttGeQtWidget::resize(int width, int height)
 {
   int default_width;
   int default_height;
-  float rd = 0.05;;
+  float rd = 0.05;
+  ;
 
   default_width = width + 20;
   default_height = height + 20;
@@ -110,9 +96,9 @@ void XttGeQt::set_size(int width, int height)
   toplevel->setFixedSize(width, height);
 }
 
-void XttGeQt::ge_change_value_cb(void *ge_ctx, void *value_object, char *text)
+void XttGeQt::ge_change_value_cb(void* ge_ctx, void* value_object, char* text)
 {
-  XttGeQt *ge = (XttGeQt *) ge_ctx;
+  XttGeQt* ge = (XttGeQt*)ge_ctx;
 
   if (ge->value_input_open) {
     ge->value_dialog->setVisible(false);
@@ -132,9 +118,9 @@ void XttGeQt::ge_change_value_cb(void *ge_ctx, void *value_object, char *text)
   ge->current_value_object = value_object;
 }
 
-void XttGeQt::confirm_cb(void *ge_ctx, void *confirm_object, char *text)
+void XttGeQt::confirm_cb(void* ge_ctx, void* confirm_object, char* text)
 {
-  XttGeQt *ge = (XttGeQt *) ge_ctx;
+  XttGeQt* ge = (XttGeQt*)ge_ctx;
 
   if (ge->confirm_open) {
     ge->confirm_open = 0;
@@ -151,9 +137,9 @@ void XttGeQt::confirm_cb(void *ge_ctx, void *confirm_object, char *text)
   ge->current_confirm_object = confirm_object;
 }
 
-void XttGeQt::message_dialog_cb(void *ge_ctx, const char *text)
+void XttGeQt::message_dialog_cb(void* ge_ctx, const char* text)
 {
-  XttGeQt *ge = (XttGeQt *) ge_ctx;
+  XttGeQt* ge = (XttGeQt*)ge_ctx;
   CoWowQt wow(ge->toplevel);
   char title[80];
 
@@ -189,7 +175,8 @@ void XttGeQtWidget::activate_confirm_cancel()
   ge->confirm_open = 0;
   ge->confirm_widget->setVisible(false);
   if (ge->eventlog_cb) {
-    (ge->eventlog_cb)(ge->parent_ctx, ge, xttlog_eCategory_GeConfirmCancel, 0, 0);
+    (ge->eventlog_cb)(
+        ge->parent_ctx, ge, xttlog_eCategory_GeConfirmCancel, 0, 0);
   }
 }
 
@@ -217,7 +204,7 @@ void XttGeQtWidget::activate_help()
   }
 }
 
-void XttGeQtWidget::action_resize(QResizeEvent *event)
+void XttGeQtWidget::action_resize(QResizeEvent* event)
 {
   if (ge->graph && !ge->scrollbar && !ge->navigator && ge->graph->grow) {
     ge->graph->set_default_layout();
@@ -247,7 +234,7 @@ void XttGeQt::iconify()
   toplevel->showMinimized();
 }
 
-void XttGeQtWidget::closeEvent(QCloseEvent *event)
+void XttGeQtWidget::closeEvent(QCloseEvent* event)
 {
   if (ge->options & ge_mOptions_IsMain) {
     (ge->close_cb)(ge->parent_ctx, ge);
@@ -257,22 +244,20 @@ void XttGeQtWidget::closeEvent(QCloseEvent *event)
   QWidget::closeEvent(event);
 }
 
-XttGeQt::XttGeQt(QWidget *xg_parent_wid, void *xg_parent_ctx,
-                 const char *xg_name, const char *xg_filename, int xg_scrollbar,
-                 int xg_menu, int xg_navigator, int xg_width, int xg_height,
-                 int x, int y, double scan_time, const char *object_name,
-                 int use_default_access, unsigned int access,
-                 unsigned int options, void *basewidget, double *borders,
-                 int color_theme,
-                 int (*xg_command_cb)(void *, char *, char *, void *),
-                 int (*xg_get_current_objects_cb)(void *, pwr_sAttrRef **,
-                                                  int **),
-                 int (*xg_is_authorized_cb)(void *, unsigned int),
-                 void (*xg_keyboard_cb)(void *, void *, int, int))
+XttGeQt::XttGeQt(QWidget* xg_parent_wid, void* xg_parent_ctx,
+    const char* xg_name, const char* xg_filename, int xg_scrollbar, int xg_menu,
+    int xg_navigator, int xg_width, int xg_height, int x, int y,
+    double scan_time, const char* object_name, int use_default_access,
+    unsigned int access, unsigned int options, void* basewidget,
+    double* borders, int color_theme,
+    int (*xg_command_cb)(void*, char*, char*, void*),
+    int (*xg_get_current_objects_cb)(void*, pwr_sAttrRef**, int**),
+    int (*xg_is_authorized_cb)(void*, unsigned int),
+    void (*xg_keyboard_cb)(void*, void*, int, int))
     : XttGe(xg_parent_ctx, xg_name, xg_filename, xg_scrollbar, xg_menu,
-            xg_navigator, xg_width, xg_height, x, y, scan_time, object_name,
-            use_default_access, access, options, color_theme, xg_command_cb,
-            xg_get_current_objects_cb, xg_is_authorized_cb, xg_keyboard_cb),
+          xg_navigator, xg_width, xg_height, x, y, scan_time, object_name,
+          use_default_access, access, options, color_theme, xg_command_cb,
+          xg_get_current_objects_cb, xg_is_authorized_cb, xg_keyboard_cb),
       nav_shell(0), value_dialog(0)
 {
   int window_width = 600;
@@ -284,8 +269,8 @@ XttGeQt::XttGeQt(QWidget *xg_parent_wid, void *xg_parent_ctx,
     window_width = xg_width;
     window_height = xg_height;
   } else {
-    sts = Graph::get_dimension(filename, "pwrp_exe:", &window_width,
-                               &window_height);
+    sts = Graph::get_dimension(
+        filename, "pwrp_exe:", &window_width, &window_height);
     if (EVEN(sts)) {
       window_width = 600;
       window_height = 500;
@@ -320,12 +305,11 @@ XttGeQt::XttGeQt(QWidget *xg_parent_wid, void *xg_parent_ctx,
     }
   }
 
-  QVBoxLayout *graph_form = new QVBoxLayout();
+  QVBoxLayout* graph_form = new QVBoxLayout();
   this->graph_form = layout_to_widget(graph_form);
   graph = new GraphQt(this, this->graph_form, "Plant", &grow_widget, &sts,
-                      "pwrp_exe:", graph_eMode_Runtime, scrollbar, 1,
-                      object_name, use_default_access, access, 0, color_theme,
-                      ge_keyboard_cb);
+      "pwrp_exe:", graph_eMode_Runtime, scrollbar, 1, object_name,
+      use_default_access, access, 0, color_theme, ge_keyboard_cb);
   // graph->set_scantime( scan_time);
   graph->message_cb = &message_cb;
   graph->close_cb = &graph_close_cb;
@@ -342,31 +326,32 @@ XttGeQt::XttGeQt(QWidget *xg_parent_wid, void *xg_parent_ctx,
   graph->sound_cb = &ge_sound_cb;
   graph->eventlog_cb = &ge_eventlog_cb;
 
-  QObject::connect(((GraphQt *) graph)->grow_widget,
-                   SIGNAL(resize_signal(QResizeEvent * )), toplevel,
-                   SLOT(action_resize(QResizeEvent * )));
-  //TODO: grow_widget must emit a resize_signal signal in resizeEvent()
+  QObject::connect(((GraphQt*)graph)->grow_widget,
+      SIGNAL(resize_signal(QResizeEvent*)), toplevel,
+      SLOT(action_resize(QResizeEvent*)));
+  // TODO: grow_widget must emit a resize_signal signal in resizeEvent()
 
   if (xg_menu) {
-    QMenuBar *menu_bar = new QMenuBar();
+    QMenuBar* menu_bar = new QMenuBar();
 
     // File Entry
-    QMenu *file = menu_bar->addMenu(translate_utf8("&File"));
-    addMenuItem(toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+    QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
+    addMenuItem(
+        toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
     // View menu
-    QMenu *view = menu_bar->addMenu(translate_utf8("&View"));
+    QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
     addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoom_in()), "CTRL+I",
-                "zoom-in");
-    addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
-                "zoom-out");
+        "zoom-in");
+    addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()),
+        "CTRL+O", "zoom-out");
     addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "",
-                "zoom-original");
+        "zoom-original");
 
     // Menu Help
-    QMenu *help = menu_bar->addMenu(translate_utf8("&Help"));
+    QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
     addMenuItem(toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H",
-                "system-help");
+        "system-help");
 
     graph_form->setMenuBar(menu_bar);
   }
@@ -383,11 +368,11 @@ XttGeQt::XttGeQt(QWidget *xg_parent_wid, void *xg_parent_ctx,
       nav_shell->setWindowTitle(fl("Navigator"));
       nav_shell->setAttribute(Qt::WA_DeleteOnClose);
 
-      ((GraphQt *) graph)->create_navigator(nav_shell);
-      nav_shell->layout()->addWidget(((GraphQt *) graph)->nav_widget);
+      ((GraphQt*)graph)->create_navigator(nav_shell);
+      nav_shell->layout()->addWidget(((GraphQt*)graph)->nav_widget);
 
       nav_shell->show();
-      ((Graph *) graph)->set_nav_background_color();
+      ((Graph*)graph)->set_nav_background_color();
     }
 
     if (!(x == 0 && y == 0)) {
@@ -411,7 +396,7 @@ XttGeQt::XttGeQt(QWidget *xg_parent_wid, void *xg_parent_ctx,
   }
 
   if (borders) {
-    ((Graph *) graph)->set_borders(borders);
+    ((Graph*)graph)->set_borders(borders);
   }
 
   if (strcmp(filename, "_none_") == 0 && xg_width == 0 && xg_height == 0) {
@@ -430,13 +415,13 @@ XttGeQt::XttGeQt(QWidget *xg_parent_wid, void *xg_parent_ctx,
 void XttGeQt::create_confirm_dialog()
 {
   // Create a confirm window
-  confirm_widget =
-      new QMessageBox(QMessageBox::Question, translate_utf8("Confirm"), "",
-                      QMessageBox::Yes | QMessageBox::No, toplevel);
+  confirm_widget
+      = new QMessageBox(QMessageBox::Question, translate_utf8("Confirm"), "",
+          QMessageBox::Yes | QMessageBox::No, toplevel);
   QObject::connect(confirm_widget, SIGNAL(accepted()), toplevel,
-                   SLOT(activate_confirm_ok()));
+      SLOT(activate_confirm_ok()));
   QObject::connect(confirm_widget, SIGNAL(rejected()), toplevel,
-                   SLOT(activate_confirm_cancel()));
+      SLOT(activate_confirm_cancel()));
 
   ::pop(confirm_widget);
 }

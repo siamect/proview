@@ -39,39 +39,40 @@
 
 /* cow_pn_gsdml_attr_qt.h -- Profibus gsd attribute editor */
 
-#include <stdio.h>
 #include <stdlib.h>
 
-#include "co_cdh.h"
 #include "cow_wow_qt.h"
 #include "cow_pn_gsdml_attr.h"
+
+#include <QLabel>
+#include <QTextEdit>
 
 class GsdmlAttrQtWidget;
 
 class GsdmlAttrQt : public GsdmlAttr {
 public:
-  GsdmlAttrQtWidget *toplevel;
-  QWidget *brow_widget;
-  QWidget *form_widget;
-  QLabel *msg_label;
-  QLabel *cmd_prompt;
-  QTextEdit *help_text;
-  QAction *menubutton_copy;
-  QAction *menubutton_cut;
-  QAction *menubutton_paste;
-  QAction *menubutton_changevalue;
-  QAction *menubutton_viewio;
+  GsdmlAttrQtWidget* toplevel;
+  QWidget* brow_widget;
+  QWidget* form_widget;
+  QLabel* msg_label;
+  QLabel* cmd_prompt;
+  QTextEdit* help_text;
+  QAction* menubutton_copy;
+  QAction* menubutton_cut;
+  QAction* menubutton_paste;
+  QAction* menubutton_changevalue;
+  QAction* menubutton_viewio;
   CoWowFocusTimerQt focustimer;
   static CoWowRecall value_recall;
-  CoWowEntryQt *cmd_entry;
+  CoWowEntryQt* cmd_entry;
 
-  GsdmlAttrQt(QWidget *a_parent_wid, void *a_parent_ctx, void *a_object,
-              pn_gsdml *a_gsdml, int a_edit_mode, const char *a_data_filename,
-              pwr_tStatus *a_sts);
+  GsdmlAttrQt(QWidget* a_parent_wid, void* a_parent_ctx, void* a_object,
+      pn_gsdml* a_gsdml, int a_edit_mode, const char* a_data_filename,
+      pwr_tStatus* a_sts);
 
-  void message(char severity, const char *message);
-  void attr_help_text(const char *help_text);
-  void set_prompt(const char *prompt);
+  void message(char severity, const char* message);
+  void attr_help_text(const char* help_text);
+  void set_prompt(const char* prompt);
   void change_value();
 };
 
@@ -79,12 +80,14 @@ class GsdmlAttrQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  GsdmlAttrQtWidget(GsdmlAttrQt *parent_ctx, QWidget *parent)
-      : QWidget(parent, Qt::Window), attr(parent_ctx) {}
+  GsdmlAttrQtWidget(GsdmlAttrQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), attr(parent_ctx)
+  {
+  }
 
 protected:
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void activate_change_value();
@@ -96,7 +99,7 @@ public slots:
   void activate_copy();
   void activate_cut();
   void activate_paste();
-  void activate_viewio();
+  void activate_viewio(bool);
   void activate_zoom_in();
   void activate_zoom_out();
   void activate_zoom_reset();
@@ -108,12 +111,10 @@ public slots:
   void activate_cmd_apply();
   void activate_cmd_ca();
 
-  void valchanged_cmd_entry()
-  {
-  };
+  void valchanged_cmd_entry(){};
 
 private:
-  GsdmlAttrQt *attr;
+  GsdmlAttrQt* attr;
 };
 
 #endif

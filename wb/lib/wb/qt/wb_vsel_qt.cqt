@@ -37,30 +37,16 @@
 /* wb_vsel_qt.cpp -- select volume */
 
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
-#include "pwr.h"
-#include "pwr_systemclasses.h"
-#include "rt_load.h"
-#include "flow.h"
-#include "flow_ctx.h"
-#include "flow_api.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
-#include "co_cdh.h"
-#include "co_dcli.h"
-#include "wb.h"
-#include "wb_ldh.h"
-#include "wb_foe.h"
-#include "wb_utl_api.h"
-#include "wb_lfu.h"
-#include "cow_login.h"
 #include "co_login_msg.h"
-#include "wb_foe_msg.h"
-#include "wb_ldh_msg.h"
-#include "cow_msgwindow.h"
+
+#include "cow_qt_helpers.h"
 #include "cow_wow_qt.h"
+
+#include "wb_foe.h"
+#include "wb_ldh_msg.h"
 #include "wb_vsel_qt.h"
 
 #include <QDialogButtonBox>
@@ -70,13 +56,11 @@
 #include <QScrollArea>
 #include <QVBoxLayout>
 
-#define BEEP putchar('\7');
-
 /*  Local function prototypes.	*/
 
-static void vsel_exit_qb_yes(void *ctx, void *cbdata)
+static void vsel_exit_qb_yes(void* ctx, void* cbdata)
 {
-  WVselQt *vsel = (WVselQt *) ctx;
+  WVselQt* vsel = (WVselQt*)ctx;
 
   vsel->toplevel->close();
 }
@@ -91,7 +75,7 @@ static void vsel_exit_qb_yes(void *ctx, void *cbdata)
 void WVselQtWidget::activate_ok()
 {
   char selected_text[80];
-  QList<QTreeWidgetItem *> selection = sel->volumelist->selectedItems();
+  QList<QTreeWidgetItem*> selection = sel->volumelist->selectedItems();
   if (selection.size() > 0) {
     QByteArray text = selection[0]->text(0).toLocal8Bit();
     strcpy(selected_text, text.data());
@@ -99,16 +83,18 @@ void WVselQtWidget::activate_ok()
 
   pwr_tVid vid;
   int sts = ldh_VolumeNameToId(sel->wbctx, selected_text, &vid);
-  if (EVEN(sts)) { return; }
+  if (EVEN(sts)) {
+    return;
+  }
 
-  pwr_tVid *volume_ptr =
-      (pwr_tVolumeId *) calloc(sel->volume_count, sizeof(pwr_tVolumeId));
+  pwr_tVid* volume_ptr
+      = (pwr_tVolumeId*)calloc(sel->volume_count, sizeof(pwr_tVolumeId));
   *volume_ptr = vid;
 
   if (sel->vsel_bc_success != NULL) {
     sts = (sel->vsel_bc_success)(sel, volume_ptr, 1);
   }
-  free((char *) volume_ptr);
+  free((char*)volume_ptr);
 
   if (ODD(sts)) {
     close();
@@ -142,7 +128,7 @@ void WVselQtWidget::activate_close()
 {
   if ((sel->vsel_bc_time_to_exit)(sel->parent_ctx)) {
     sel->wow->DisplayQuestion(this, "Pwr exit", "Do you really want to exit ?",
-                         vsel_exit_qb_yes, NULL, NULL);
+        vsel_exit_qb_yes, NULL, NULL);
   } else {
     activate_cancel();
   }
@@ -178,14 +164,13 @@ void WVselQtWidget::activate_showall(bool set)
 *	Create a new login window
 **************************************************************************/
 
-WVselQt::WVselQt(pwr_tStatus *status, void *wv_parent_ctx,
-                 QWidget *wv_parent_wid, const char *wv_name,
-                 ldh_tWBContext wv_wbctx, char *volumename,
-                 int    (*bc_success)(void *, pwr_tVolumeId *, int),
-                 void    (*bc_cancel)(), int    (*bc_time_to_exit)(void *),
-                 int show_volumes, wb_eType wv_wb_type)
+WVselQt::WVselQt(pwr_tStatus* status, void* wv_parent_ctx,
+    QWidget* wv_parent_wid, const char* wv_name, ldh_tWBContext wv_wbctx,
+    char* volumename, int (*bc_success)(void*, pwr_tVolumeId*, int),
+    void (*bc_cancel)(), int (*bc_time_to_exit)(void*), int show_volumes,
+    wb_eType wv_wb_type)
     : WVsel(status, wv_parent_ctx, wv_name, wv_wbctx, volumename, bc_success,
-            bc_cancel, bc_time_to_exit, show_volumes, wv_wb_type)
+          bc_cancel, bc_time_to_exit, show_volumes, wv_wb_type)
 {
   int sts;
   pwr_tVolumeId volid, *volume_ptr;
@@ -212,8 +197,8 @@ WVselQt::WVselQt(pwr_tStatus *status, void *wv_parent_ctx,
         return;
       }
 
-      if (cdh_isClassVolumeClass(classid) ||
-          classid == pwr_eClass_WorkBenchVolume || volume == ldh_cRtVolume) {
+      if (cdh_isClassVolumeClass(classid)
+          || classid == pwr_eClass_WorkBenchVolume || volume == ldh_cRtVolume) {
         sts = ldh_GetNextVolume(wbctx, volume, &volume);
         continue;
       }
@@ -231,7 +216,6 @@ WVselQt::WVselQt(pwr_tStatus *status, void *wv_parent_ctx,
     }
   }
 
-
   //  If volume name is supplied, find this volume and open the navigator.
   if (strcmp(volname, "") && wb_type != wb_eType_Buffer) {
     /* Check syntax, if new volumes is found, show the window */
@@ -242,9 +226,9 @@ WVselQt::WVselQt(pwr_tStatus *status, void *wv_parent_ctx,
     sts = ldh_VolumeNameToId(wbctx, volname, &volid);
     WFoe::error_msg(sts);
     if (ODD(sts)) {
-      volume_ptr = (pwr_tVolumeId *) calloc(1, sizeof(pwr_tVolumeId));
+      volume_ptr = (pwr_tVolumeId*)calloc(1, sizeof(pwr_tVolumeId));
       *volume_ptr = volid;
-      (vsel_bc_success)((void *) this, volume_ptr, 1);
+      (vsel_bc_success)((void*)this, volume_ptr, 1);
       if (vsel_bc_cancel != NULL) {
         (vsel_bc_cancel)();
       }
@@ -266,16 +250,17 @@ WVselQt::WVselQt(pwr_tStatus *status, void *wv_parent_ctx,
   CoWowQt::SetWindowIcon(toplevel);
 
   // Menu
-  QMenuBar *menu_bar = new QMenuBar();
+  QMenuBar* menu_bar = new QMenuBar();
 
   // File Entry
-  QMenu *file = menu_bar->addMenu(translate_utf8("&File"));
-  addMenuItem(toplevel, file, "&Close", SLOT(activate_close()), "CTRL+W", "window-close");
+  QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
+  addMenuItem(toplevel, file, "&Close", SLOT(activate_close()), "CTRL+W",
+      "window-close");
 
   // Functions Entry
-  QMenu *functions = menu_bar->addMenu(translate_utf8("F&unctions"));
+  QMenu* functions = menu_bar->addMenu(translate_utf8("F&unctions"));
   addCheckableMenuItem(toplevel, functions, "&Show All Volumes",
-                       SLOT(activate_showall(bool)), "CTRL+A");
+      SLOT(activate_showall(bool)), "CTRL+A");
 
   // List widget
   volumelist = new QTreeWidget();
@@ -284,21 +269,21 @@ WVselQt::WVselQt(pwr_tStatus *status, void *wv_parent_ctx,
   volumelist->setColumnCount(3);
   volumelist->header()->close();
 
-  QDialogButtonBox *buttons = new QDialogButtonBox();
+  QDialogButtonBox* buttons = new QDialogButtonBox();
   buttons->addButton(QDialogButtonBox::Ok);
   buttons->addButton(QDialogButtonBox::Cancel);
   buttons->button(QDialogButtonBox::Ok)->setFixedSize(70, 25);
   buttons->button(QDialogButtonBox::Cancel)->setFixedSize(70, 25);
   QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
-                   toplevel, SLOT(activate_ok()));
+      toplevel, SLOT(activate_ok()));
   QObject::connect(buttons->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
-                   toplevel, SLOT(activate_cancel()));
+      toplevel, SLOT(activate_cancel()));
 
-  QScrollArea *scrolled_window = new QScrollArea();
+  QScrollArea* scrolled_window = new QScrollArea();
   scrolled_window->setWidgetResizable(true);
   scrolled_window->setWidget(volumelist);
 
-  QVBoxLayout *vbox = new QVBoxLayout(toplevel);
+  QVBoxLayout* vbox = new QVBoxLayout(toplevel);
   vbox->setMenuBar(menu_bar);
   add_expanding(vbox, scrolled_window);
   vbox->addWidget(buttons);
@@ -326,11 +311,11 @@ void WVselQt::list_clear()
   volumelist->clear();
 }
 
-void WVselQt::list_add_item(char *str)
+void WVselQt::list_add_item(char* str)
 {
-  QTreeWidgetItem *item = new QTreeWidgetItem(volumelist);
-  QStringList items = QString::fromLatin1(str).split(QRegExp("\\s+"),
-                                                     QString::SkipEmptyParts);
+  QTreeWidgetItem* item = new QTreeWidgetItem(volumelist);
+  QStringList items = QString::fromLatin1(str).split(
+      QRegExp("\\s+"), QString::SkipEmptyParts);
   for (int i = 0; i < items.size(); ++i) {
     item->setText(i, items.at(i));
   }

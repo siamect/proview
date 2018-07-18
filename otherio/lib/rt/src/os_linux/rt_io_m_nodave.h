@@ -3,15 +3,14 @@
 #ifndef rt_io_m_nodave_h
 #define rt_io_m_nodave_h
 
-
 typedef struct {
   _daveOSserialType fds;
-  daveInterface *di;
-  daveConnection *dc;
+  daveInterface* di;
+  daveConnection* dc;
   int status;
   int reset_inputs;
-  char *input_area;
-  char *output_area;
+  char* input_area;
+  char* output_area;
   unsigned int input_size;
   unsigned int output_size;
 } io_sRackLocal;
@@ -24,8 +23,8 @@ typedef struct {
   unsigned int output_size;
   int op_read;
   int op_write;
-  char *input_area;
-  char *output_area;
+  char* input_area;
+  char* output_area;
 } io_sCardLocal;
 
 #endif

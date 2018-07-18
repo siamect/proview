@@ -39,50 +39,48 @@
 
 /* wb_expw_qt.h -- Backupfile display window */
 
-#include "co_dcli.h"
-#include "wb_ldh.h"
-#ifndef wb_expw_h
-# include "wb_expw.h"
-#endif
+#include "cow_wow_qt.h"
 
-#ifndef cow_wow_qt_h
-# include "cow_wow_qt.h"
+#ifndef wb_expw_h
+#include "wb_expw.h"
 #endif
 
 class WbExpWQtWidget;
 
 class WbExpWQt : public WbExpW {
 public:
-  WbExpWQt(void *l_parent_ctx, QWidget *l_parent_wid, ldh_tSession l_ldhses,
-           const char *l_name, int type, int l_editmode, pwr_tStatus *status);
+  WbExpWQt(void* l_parent_ctx, QWidget* l_parent_wid, ldh_tSession l_ldhses,
+      const char* l_name, int type, int l_editmode, pwr_tStatus* status);
 
-  QWidget *form;
-  QWidget *nav_widget;
-  QWidget *edit_check_all;
-  QWidget *edit_check_clear;
-  QWidget *edit_check_reset;
-  QWidget *edit_show_all;
-  QWidget *file_export;
+  QWidget* form;
+  QWidget* nav_widget;
+  QWidget* edit_check_all;
+  QWidget* edit_check_clear;
+  QWidget* edit_check_reset;
+  QWidget* edit_show_all;
+  QWidget* file_export;
   CoWowFocusTimerQt focustimer;
   CoWowFocusTimerQt maptimer;
 
   void print();
-  void set_title(char *title);
+  void set_title(char* title);
 
 private:
-  WbExpWQtWidget *toplevel;
+  WbExpWQtWidget* toplevel;
 };
 
 class WbExpWQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  WbExpWQtWidget(WbExpWQt *parent_ctx, QWidget *parent)
-      : QWidget(parent, Qt::Window), expw(parent_ctx) {}
+  WbExpWQtWidget(WbExpWQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), expw(parent_ctx)
+  {
+  }
 
 protected:
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void activate_export();
@@ -97,7 +95,7 @@ public slots:
   void activate_help();
 
 private:
-  WbExpWQt *expw;
+  WbExpWQt* expw;
 };
 
 #endif

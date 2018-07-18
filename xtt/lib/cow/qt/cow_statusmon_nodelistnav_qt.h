@@ -42,7 +42,7 @@
 // Status is defined as int i xlib...
 
 #ifndef cow_statusmon_nodelistnav_h
-# include "cow_statusmon_nodelistnav.h"
+#include "cow_statusmon_nodelistnav.h"
 #endif
 
 #include <QTimer>
@@ -52,39 +52,40 @@ class NodelistNavQtTraceObject;
 
 class NodelistNavQt : public NodelistNav {
 public:
-  NodelistNavQt(void *ev_parent_ctx, QWidget *nodelistnav_parent_wid,
-                MsgWindow *nodelistnav_msg_window,
-                char *nodelistnav_msg_nodename, int nodelistnav_mode,
-                int nodelistnav_view_node_descr, int nodelist_msgw_pop,
-                QWidget **w);
+  NodelistNavQt(void* ev_parent_ctx, QWidget* nodelistnav_parent_wid,
+      MsgWindow* nodelistnav_msg_window, char* nodelistnav_msg_nodename,
+      int nodelistnav_mode, int nodelistnav_view_node_descr,
+      int nodelist_msgw_pop, QWidget** w);
   ~NodelistNavQt();
 
-  QWidget *brow_widget;
-  QWidget *form_widget;
+  QWidget* brow_widget;
+  QWidget* form_widget;
 
-  void start_trace(pwr_tObjid Objid, char *object_str);
+  void start_trace(pwr_tObjid Objid, char* object_str);
   void set_input_focus();
   void trace_start();
   void beep();
 
 private:
-  NodelistNav *nodelistnav;
-  NodelistNavQtTraceObject *trace_obj;
+  NodelistNav* nodelistnav;
+  NodelistNavQtTraceObject* trace_obj;
 };
 
 class NodelistNavQtTraceObject : public QWidget {
   Q_OBJECT
 
 public:
-  NodelistNavQtTraceObject(NodelistNavQt *parent) : QWidget(),
-                                                    nodelistnav(parent) {}
+  NodelistNavQtTraceObject(NodelistNavQt* parent)
+      : QWidget(), nodelistnav(parent)
+  {
+  }
 
 public slots:
   void trace_scan();
 
 private:
-  QTimer *trace_timerid;
-  NodelistNavQt *nodelistnav;
+  QTimer* trace_timerid;
+  NodelistNavQt* nodelistnav;
 };
 
 #endif

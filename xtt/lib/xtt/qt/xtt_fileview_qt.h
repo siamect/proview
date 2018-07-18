@@ -47,49 +47,51 @@ class XttFileviewQtWidget;
 
 class XttFileviewQt : public XttFileview {
 public:
-  XttFileviewQt(void *xn_parent_ctx, QWidget *xn_parent_wid, pwr_tOid xn_oid,
-                char *xn_title, char *xn_dir, char *xn_pattern, int xn_type,
-                char *xn_target_attr, char *xn_trigger_attr, char *xn_filetype);
+  XttFileviewQt(void* xn_parent_ctx, QWidget* xn_parent_wid, pwr_tOid xn_oid,
+      char* xn_title, char* xn_dir, char* xn_pattern, int xn_type,
+      char* xn_target_attr, char* xn_trigger_attr, char* xn_filetype);
 
   ~XttFileviewQt()
   {
   }
 
-  QWidget *list;
-  QWidget *input_text;
+  QWidget* list;
+  QWidget* input_text;
   pwr_tFileName dir;
   pwr_tString40 pattern;
   pwr_tAName target_attr;
   pwr_tAName trigger_attr;
-  pwr_tString40 *filelist;
+  pwr_tString40* filelist;
   pwr_tString40 selected_file;
   pwr_tString40 filetype;
   int filecnt;
-  void *parent_ctx;
+  void* parent_ctx;
   pwr_tOid oid;
   int type;
 
-  void execute(char *file);
+  void execute(char* file);
 
-  static void list_save_cb(void *ctx, void *data);
+  static void list_save_cb(void* ctx, void* data);
 
 private:
-  XttFileviewQtWidget *toplevel;
+  XttFileviewQtWidget* toplevel;
 };
 
 class XttFileviewQtWidget : public QFileDialog {
 public:
-  XttFileviewQtWidget(XttFileviewQt *parent_ctx, QWidget *parent)
-      : QFileDialog(parent), fileview(parent_ctx) {}
+  XttFileviewQtWidget(XttFileviewQt* parent_ctx, QWidget* parent)
+      : QFileDialog(parent), fileview(parent_ctx)
+  {
+  }
 
 protected:
-  void closeEvent(QCloseEvent *event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
-  void list_ok_cb(const QString &file);
+  void list_ok_cb(const QString& file);
 
 private:
-  XttFileviewQt *fileview;
+  XttFileviewQt* fileview;
 };
 
 #endif

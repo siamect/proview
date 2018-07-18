@@ -36,34 +36,24 @@
 
 /* wb_nav_qt.cpp -- Display plant and node hiererachy or plc-editor */
 
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "wb_ldh.h"
-#include "wb_ldh_msg.h"
-#include "co_cdh.h"
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
-#include "flow_browwidget_qt.h"
-#include "wb_nav_qt.h"
-
 #include "cow_qt_helpers.h"
 
-#include <QVBoxLayout>
+#include "flow_browwidget_qt.h"
+
+#include "wb_nav_qt.h"
 
 #include <qlocalsocket.h>
 
-NavQt::NavQt(void *nav_parent_ctx, QWidget *nav_parent_wid,
-             const char *nav_name, ldh_tSesContext nav_ldhses,
-             const char *nav_root_name, QWidget **w, pwr_tStatus *status)
+NavQt::NavQt(void* nav_parent_ctx, QWidget* nav_parent_wid,
+    const char* nav_name, ldh_tSesContext nav_ldhses, const char* nav_root_name,
+    QWidget** w, pwr_tStatus* status)
     : Nav(nav_parent_ctx, nav_name, nav_ldhses, nav_root_name, status)
 {
   trace_obj = new NavQtTraceObject(this);
 
   debug_print("creating a scrolledbrowwidgetqt\n");
-  QWidget *scrolledbrow =
-      scrolledbrowwidgetqt_new(Nav::init_brow_cb, this, &brow_widget);
+  QWidget* scrolledbrow
+      = scrolledbrowwidgetqt_new(Nav::init_brow_cb, this, &brow_widget);
 
   scrolledbrow->setStyleSheet("QMainWindow{border: 3px solid black;}");
 
@@ -71,8 +61,8 @@ NavQt::NavQt(void *nav_parent_ctx, QWidget *nav_parent_wid,
 
   server = new QLocalServer(trace_obj);
   server->listen("STRING");
-  QObject::connect(server, SIGNAL(newConnection()), trace_obj,
-                   SLOT(sel_convert_cb()));
+  QObject::connect(
+      server, SIGNAL(newConnection()), trace_obj, SLOT(sel_convert_cb()));
 
   showNow(brow_widget);
 
@@ -112,7 +102,7 @@ void NavQtTraceObject::sel_convert_cb()
   QDataStream out(&block, QIODevice::WriteOnly);
   out.writeRawData(name, strlen(name));
 
-  QLocalSocket *clientConnection = nav->server->nextPendingConnection();
+  QLocalSocket* clientConnection = nav->server->nextPendingConnection();
   clientConnection->write(block);
   clientConnection->flush();
   clientConnection->disconnectFromServer();
@@ -126,7 +116,7 @@ void NavQt::set_selection_owner(int set)
   selection_owner = set;
 }
 
-static void modifyBackground(QWidget *widget, QColor color)
+static void modifyBackground(QWidget* widget, QColor color)
 {
   QPalette pal;
   pal.setColor(QPalette::Background, color);

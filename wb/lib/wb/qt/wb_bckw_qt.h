@@ -39,48 +39,46 @@
 
 /* wb_bckw_qt.h -- Backupfile display window */
 
-#include "co_dcli.h"
-#include "wb_ldh.h"
-#ifndef wb_bckw_h
-# include "wb_bckw.h"
-#endif
+#include "cow_wow_qt.h"
 
-#ifndef cow_wow_qt_h
-# include "cow_wow_qt.h"
+#ifndef wb_bckw_h
+#include "wb_bckw.h"
 #endif
 
 class WbBckWQtWidget;
 
 class WbBckWQt : public WbBckW {
 public:
-  WbBckWQt(void *l_parent_ctx, QWidget *l_parent_wid, ldh_tSession l_ldhses,
-           const char *l_name, wb_bck_list *l_list, int l_editmode,
-           pwr_tStatus *status);
+  WbBckWQt(void* l_parent_ctx, QWidget* l_parent_wid, ldh_tSession l_ldhses,
+      const char* l_name, wb_bck_list* l_list, int l_editmode,
+      pwr_tStatus* status);
 
-  QWidget *nav_widget;
-  QWidget *file_transfer_wb;
-  QWidget *edit_check_all;
-  QWidget *edit_check_clear;
+  QWidget* nav_widget;
+  QWidget* file_transfer_wb;
+  QWidget* edit_check_all;
+  QWidget* edit_check_clear;
   CoWowFocusTimerQt focustimer;
   CoWowFocusTimerQt maptimer;
 
   void print();
-  void set_title(char *title);
+  void set_title(char* title);
 
 private:
-  WbBckWQtWidget *toplevel;
+  WbBckWQtWidget* toplevel;
 };
 
 class WbBckWQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  WbBckWQtWidget(WbBckWQt *parent_ctx, QWidget *parent)
-      : QWidget(parent, Qt::Window), bck(parent_ctx) {}
+  WbBckWQtWidget(WbBckWQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), bck(parent_ctx)
+  {
+  }
 
 protected:
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void activate_print();
@@ -97,7 +95,7 @@ public slots:
   void activate_help();
 
 private:
-  WbBckWQt *bck;
+  WbBckWQt* bck;
 };
 
 #endif

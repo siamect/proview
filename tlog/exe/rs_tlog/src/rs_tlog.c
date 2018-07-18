@@ -55,25 +55,17 @@
 #include <string.h>
 #endif
 
-#include "pwr.h"
-#include "pwr_class.h"
 #include "pwr_baseclasses.h"
-#include "rt_errh.h"
 #include "pwr_tlogclasses.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
-#ifndef rt_mh_h
-#include "rt_mh.h"
-#endif
 #ifndef rt_mh_outunit_h
 #include "rt_mh_outunit.h"
 #endif
-#include "rt_mh_msg.h"
 #include "rt_mh_appl.h"
 #include "rs_tlog_msg.h"
-#include "co_math.h"
 #include "co_time.h"
 
 #define	LogAndExit( status) \

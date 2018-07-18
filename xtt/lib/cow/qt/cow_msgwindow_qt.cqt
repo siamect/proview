@@ -36,33 +36,24 @@
 
 /* co_msgwindow_qt.cpp -- Message window */
 
-#include "glow_std.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "co_cdh.h"
-#include "co_time.h"
-#include "co_dcli.h"
-#include "co_lng.h"
-#include "cow_xhelp.h"
-#include "cow_msgwindow_qt.h"
 #include "cow_msglist_qt.h"
+#include "cow_msgwindow_qt.h"
+#include "cow_qt_helpers.h"
 #include "cow_wow_qt.h"
+#include "cow_xhelp.h"
 
-#include <QAction>
 #include <QMenu>
 #include <QMenuBar>
 #include <QVBoxLayout>
 
-void MsgWindowQtWidget::closeEvent(QCloseEvent *event)
+void MsgWindowQtWidget::closeEvent(QCloseEvent* event)
 {
   activate_exit();
   QWidget::closeEvent(event);
 }
 
-MsgWindowQt::MsgWindowQt(void *msg_parent_ctx, QWidget *msg_parent_wid,
-                         const char *msg_name, pwr_tStatus *status)
+MsgWindowQt::MsgWindowQt(void* msg_parent_ctx, QWidget* msg_parent_wid,
+    const char* msg_name, pwr_tStatus* status)
     : MsgWindow(msg_parent_ctx, msg_name, status)
 {
   toplevel = new MsgWindowQtWidget(this, msg_parent_wid);
@@ -73,25 +64,26 @@ MsgWindowQt::MsgWindowQt(void *msg_parent_ctx, QWidget *msg_parent_wid,
 
   CoWowQt::SetWindowIcon(toplevel);
 
-  QMenuBar *menu_bar = new QMenuBar();
+  QMenuBar* menu_bar = new QMenuBar();
 
   // File Entry
-  QMenu *file = menu_bar->addMenu(translate_utf8("&File"));
+  QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
   addMenuItem(toplevel, file, "C&lear", SLOT(activate_clear()));
   addMenuItem(toplevel, file, "&Print", SLOT(activate_print()));
-  addMenuItem(toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+  addMenuItem(
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
   // View menu
-  QMenu *view = menu_bar->addMenu(translate_utf8("&View"));
+  QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
   addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoom_in()), "CTRL+I",
-              "zoom-in");
+      "zoom-in");
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
-              "zoom-out");
+      "zoom-out");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "",
-              "zoom-original");
+      "zoom-original");
 
   // Create msgnav
-  QVBoxLayout *form = new QVBoxLayout();
+  QVBoxLayout* form = new QVBoxLayout();
   msgnav = new MsgListQt(this, toplevel, &nav_widget);
   msgnav->find_wnav_cb = MsgWindow::msgw_find_wnav_cb;
   msgnav->find_plc_cb = MsgWindow::msgw_find_plc_cb;
@@ -146,11 +138,10 @@ void MsgWindowQt::print()
   strncpy(title, ba.data(), sizeof(title));
 
   CoWowQt::CreateBrowPrintDialogQt(title, msgnav->brow->ctx,
-                                   flow_eOrientation_Landscape, 1.4,
-                                   toplevel, &sts);
+      flow_eOrientation_Landscape, 1.4, toplevel, &sts);
 }
 
-void MsgWindowQtWidget::focusInEvent(QFocusEvent *event)
+void MsgWindowQtWidget::focusInEvent(QFocusEvent* event)
 {
   if (msgwin->displayed && !msgwin->focustimer.disabled()) {
     msgwin->msgnav->set_input_focus();
@@ -195,7 +186,7 @@ void MsgWindowQtWidget::activate_zoom_reset()
 void MsgWindowQtWidget::activate_help()
 {
   CoXHelp::dhelp("messagewindow_refman", 0, navh_eHelpFile_Other,
-                 "$pwr_lang/man_dg.dat", true);
+      "$pwr_lang/man_dg.dat", true);
 }
 
 void MsgWindowQtWidget::activate_help_message()

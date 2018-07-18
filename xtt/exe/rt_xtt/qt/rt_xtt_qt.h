@@ -39,19 +39,13 @@
 
 /* rt_xtt_qt.h -- Simple navigator */
 
-typedef void *Widget;
-
 #ifndef rt_xtt_main_h
-# include "rt_xtt_main.h"
+#include "rt_xtt_main.h"
 #endif
 
-#ifndef cow_wow_qt_h
-# include "cow_wow_qt.h"
-#endif
+#include "cow_wow_qt.h"
 
-class CoWowRecall;
-
-class CoWowEntryQt;
+#include <QLabel>
 
 class XttHotkey;
 
@@ -59,48 +53,50 @@ class XttQtWidget;
 
 class XttQt : public Xtt {
 public:
-  XttQtWidget *toplevel;
-  QWidget *brow_widget;
-  QWidget *form_widget;
-  QLabel *msg_label;
-  QLabel *cmd_prompt;
-  QWidget *xnav_form;
+  XttQtWidget* toplevel;
+  QWidget* brow_widget;
+  QWidget* form_widget;
+  QLabel* msg_label;
+  QLabel* cmd_prompt;
+  QWidget* xnav_form;
   CoWowFocusTimerQt focustimer;
-  CoWowRecall *cmd_recall;
-  CoWowRecall *value_recall;
-  CoWowEntryQt *cmd_entry;
-  XttHotkey *hotkey;
+  CoWowRecall* cmd_recall;
+  CoWowRecall* value_recall;
+  CoWowEntryQt* cmd_entry;
+  XttHotkey* hotkey;
 
-  XttQt(int argc, char *argv[], int *sts);
+  XttQt(int argc, char* argv[], int* sts);
   ~XttQt();
 
-  void message(char severity, const char *msg);
-  void open_input_dialog(const char *text, const char *title,
-                         const char *init_text, void (*ok_cb)(Xtt *, char *));
-  void set_prompt(const char *prompt);
+  void message(char severity, const char* msg);
+  void open_input_dialog(const char* text, const char* title,
+      const char* init_text, void (*ok_cb)(Xtt*, char*));
+  void set_prompt(const char* prompt);
   void open_change_value();
   void create_input_dialog();
   void print();
 
-  static void close(void *ctx, int terminate);
-  static void set_dimension(void *ctx, int width, int height);
-  static void map(void *ctx);
+  static void close(void* ctx, int terminate);
+  static void set_dimension(void* ctx, int width, int height);
+  static void map(void* ctx);
 
-  static void hotkey_Command(char *arg, void *userdata);
-  static void hotkey_ToggleDig(char *arg, void *userdata);
-  static void hotkey_SetDig(char *arg, void *userdata);
-  static void hotkey_ResetDig(char *arg, void *userdata);
+  static void hotkey_Command(char* arg, void* userdata);
+  static void hotkey_ToggleDig(char* arg, void* userdata);
+  static void hotkey_SetDig(char* arg, void* userdata);
+  static void hotkey_ResetDig(char* arg, void* userdata);
 };
 
 class XttQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  XttQtWidget(XttQt *parent_ctx) : QWidget(), xtt(parent_ctx) {}
+  XttQtWidget(XttQt* parent_ctx) : QWidget(), xtt(parent_ctx)
+  {
+  }
 
 protected:
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void activate_change_value();
@@ -138,7 +134,7 @@ public slots:
   void valchanged_cmd_entry();
 
 private:
-  XttQt *xtt;
+  XttQt* xtt;
 };
 
 #endif

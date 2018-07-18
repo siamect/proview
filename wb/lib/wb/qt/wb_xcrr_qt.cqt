@@ -36,24 +36,13 @@
 
 /* xtt_xcrr_qt.cpp -- Display object crossreferences */
 
-#include "glow_std.h"
+#include "rt_xatt_msg.h"
 
-#include <stdio.h>
-#include <stdlib.h>
+#include "cow_qt_helpers.h"
 
-#include "co_cdh.h"
-#include "co_dcli.h"
-#include "co_time.h"
-#include "cow_wow_qt.h"
-#include "rt_xnav_msg.h"
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
-#include "wb_xcrr_qt.h"
 #include "wb_utility.h"
 #include "wb_wattnav_qt.h"
-#include "co_lng.h"
-#include "rt_xatt_msg.h"
+#include "wb_xcrr_qt.h"
 
 #include <QMenuBar>
 #include <QVBoxLayout>
@@ -73,7 +62,7 @@ void WCrrQtWidget::activate_help()
   // Not yet implemented
 }
 
-void WCrrQtWidget::focusInEvent(QFocusEvent *event)
+void WCrrQtWidget::focusInEvent(QFocusEvent* event)
 {
   if (!crr->focustimer.disabled()) {
     if (crr->xcrrnav) {
@@ -93,21 +82,22 @@ void WCrrQt::pop()
 void WCrrQt::print()
 {
   pwr_tStatus sts;
-  char *namep;
+  char* namep;
   int size;
   pwr_tAName title;
 
   sts = ldh_AttrRefToName(ldhses, &objar, cdh_mNName, &namep, &size);
-  if (EVEN(sts)) { return; }
+  if (EVEN(sts)) {
+    return;
+  }
 
   strncpy(title, namep, sizeof(title));
 
   CoWowQt::CreateBrowPrintDialogQt(title, xcrrnav->brow->ctx,
-                                   flow_eOrientation_Portrait, 1.0,
-                                   toplevel, &sts);
+      flow_eOrientation_Portrait, 1.0, toplevel, &sts);
 }
 
-void WCrrQtWidget::closeEvent(QCloseEvent *event)
+void WCrrQtWidget::closeEvent(QCloseEvent* event)
 {
   if (crr->close_cb) {
     (crr->close_cb)(crr->parent_ctx, crr);
@@ -117,18 +107,20 @@ void WCrrQtWidget::closeEvent(QCloseEvent *event)
   QWidget::closeEvent(event);
 }
 
-WCrrQt::WCrrQt(QWidget *xa_parent_wid, void *xa_parent_ctx,
-               ldh_tSesContext xa_ldhses, pwr_sAttrRef *xa_objar,
-               int xa_advanced_user, int *xa_sts)
+WCrrQt::WCrrQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
+    ldh_tSesContext xa_ldhses, pwr_sAttrRef* xa_objar, int xa_advanced_user,
+    int* xa_sts)
     : WCrr(xa_parent_ctx, xa_ldhses, xa_objar, xa_advanced_user, xa_sts)
 {
   int sts;
-  char *namep;
+  char* namep;
   int size;
   pwr_tAName title;
 
   *xa_sts = ldh_AttrRefToName(xa_ldhses, &objar, cdh_mNName, &namep, &size);
-  if (EVEN(*xa_sts)) { return; }
+  if (EVEN(*xa_sts)) {
+    return;
+  }
 
   strncpy(title, namep, sizeof(title));
 
@@ -140,30 +132,31 @@ WCrrQt::WCrrQt(QWidget *xa_parent_wid, void *xa_parent_ctx,
 
   CoWowQt::SetWindowIcon(toplevel);
 
-  QVBoxLayout *vbox = new QVBoxLayout(toplevel);
+  QVBoxLayout* vbox = new QVBoxLayout(toplevel);
 
   // Menu
-  QMenuBar *menu_bar = new QMenuBar();
+  QMenuBar* menu_bar = new QMenuBar();
 
   // File entry
-  QMenu *file = menu_bar->addMenu(translate_utf8("&File"));
-  addMenuItem(toplevel, file, "&Print", SLOT(activate_print()), "",
-              "document-print");
-  addMenuItem(toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+  QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
+  addMenuItem(
+      toplevel, file, "&Print", SLOT(activate_print()), "", "document-print");
+  addMenuItem(
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
   // Functions entry
-  QMenu *functions = menu_bar->addMenu(translate_utf8("&Functions"));
-  addMenuItem(toplevel, functions, "Open &Program", SLOT(activate_openplc()),
-              "CTRL+L");
+  QMenu* functions = menu_bar->addMenu(translate_utf8("&Functions"));
+  addMenuItem(
+      toplevel, functions, "Open &Program", SLOT(activate_openplc()), "CTRL+L");
 
   // Help entry
-  QMenu *help = menu_bar->addMenu(translate_utf8("&Help"));
+  QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
   addMenuItem(toplevel, help, "&Overview", SLOT(activate_help()), "CTRL+H",
-              "system-help");
+      "system-help");
 
   xcrrnav = new WAttNavQt(this, wattnav_eType_CrossRef, toplevel, "Plant",
-                          xa_ldhses, objar, 0, xa_advanced_user, 1,
-                          wb_eUtility_AttributeEditor, &brow_widget, &sts);
+      xa_ldhses, objar, 0, xa_advanced_user, 1, wb_eUtility_AttributeEditor,
+      &brow_widget, &sts);
   // xcrrnav->popup_menu_cb = &xcrr_popup_menu_cb;
   // xcrrnav->start_trace_cb = &xcrr_start_trace_cb;
   // xcrrnav->close_cb = &xcrr_close_cb;

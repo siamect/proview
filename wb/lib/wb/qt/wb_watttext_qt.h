@@ -40,49 +40,48 @@
 /* wb_watttext_qt.h -- Object attribute editor */
 
 #ifndef wb_watttext_h
-# include "wb_watttext.h"
+#include "wb_watttext.h"
 #endif
 
-#ifndef cow_wow_qt_h
-# include "cow_wow_qt.h"
-#endif
-
+#include <QLabel>
 #include <QTextEdit>
 
 class WAttTextQtWidget;
 
 class WAttTextQt : public WAttText {
 public:
-  WAttTextQt(QWidget *wa_parent_wid, void *wa_parent_ctx,
-             ldh_tSesContext wa_ldhses, pwr_sAttrRef wa_aref, int wa_editmode,
-             pwr_tStatus *status);
-  QLabel *msg_label;
-  QWidget *button_ok;
-  QWidget *button_apply;
-  QWidget *button_cancel;
-  QTextEdit *textbuffer;
+  WAttTextQt(QWidget* wa_parent_wid, void* wa_parent_ctx,
+      ldh_tSesContext wa_ldhses, pwr_sAttrRef wa_aref, int wa_editmode,
+      pwr_tStatus* status);
+  QLabel* msg_label;
+  QWidget* button_ok;
+  QWidget* button_apply;
+  QWidget* button_cancel;
+  QTextEdit* textbuffer;
   int input_max_length;
   int init;
 
-  void message(char severity, const char *message);
+  void message(char severity, const char* message);
   void pop();
   void set_editmode(int editmode, ldh_tSesContext ldhses);
   void set_attr_value();
 
 private:
-  WAttTextQtWidget *toplevel;
+  WAttTextQtWidget* toplevel;
 };
 
 class WAttTextQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  WAttTextQtWidget(WAttTextQt *parent_ctx, QWidget *parent)
-      : QWidget(parent, Qt::Window), atxt(parent_ctx) {}
+  WAttTextQtWidget(WAttTextQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), atxt(parent_ctx)
+  {
+  }
 
 protected:
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void activate_save();
@@ -96,7 +95,7 @@ public slots:
   void action_text_inserted();
 
 private:
-  WAttTextQt *atxt;
+  WAttTextQt* atxt;
 };
 
 #endif

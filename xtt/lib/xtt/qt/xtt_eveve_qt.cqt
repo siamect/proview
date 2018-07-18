@@ -36,38 +36,30 @@
 
 /* xtt_ev_qt.cpp -- Alarm and event window in xtt */
 
-#include "glow_std.h"
+//#include "pwr_baseclasses.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "co_cdh.h"
-#include "co_time.h"
-#include "co_dcli.h"
-#include "cow_wow_qt.h"
-#include "pwr_baseclasses.h"
 #include "rt_gdh.h"
-#include "rt_mh.h"
-#include "rt_mh_outunit.h"
-#include "rt_mh_util.h"
-#include "co_lng.h"
-#include "xtt_evlist_qt.h"
-#include "xtt_eveve_qt.h"
-#include "xtt_ev.h"
-#include "xtt_methodtoolbar_qt.h"
 #include "rt_xnav_msg.h"
+
+#include "cow_qt_helpers.h"
+#include "cow_wow_qt.h"
+
+#include "xtt_ev.h"
+#include "xtt_eveve_qt.h"
+#include "xtt_evlist_qt.h"
+#include "xtt_methodtoolbar_qt.h"
 
 #include <QMenuBar>
 
-EvEveQt::EvEveQt(void *ev_parent_ctx, QWidget *ev_parent_wid, char *eve_name,
-                 pwr_tObjid ev_user, int ev_eventname_seg, int ev_width,
-                 int ev_height, int ev_x, int ev_y, pwr_tObjid ev_view,
-                 unsigned int ev_options, void *widget, pwr_tStatus *status)
+EvEveQt::EvEveQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* eve_name,
+    pwr_tObjid ev_user, int ev_eventname_seg, int ev_width, int ev_height,
+    int ev_x, int ev_y, pwr_tObjid ev_view, unsigned int ev_options,
+    void* widget, pwr_tStatus* status)
     : EvEve(ev_parent_ctx, eve_name, ev_user, ev_eventname_seg, ev_width,
-            ev_height, ev_x, ev_y, ev_view, ev_options, status)
+          ev_height, ev_x, ev_y, ev_view, ev_options, status)
 {
   pwr_tStatus sts;
-  pwr_sClass_OpPlace *opp;
+  pwr_sClass_OpPlace* opp;
   int eve_width = 700;
   int eve_height = 300;
 
@@ -84,7 +76,7 @@ EvEveQt::EvEveQt(void *ev_parent_ctx, QWidget *ev_parent_wid, char *eve_name,
     return;
   }
 
-  sts = gdh_ObjidToPointer(user, (pwr_tAddress * ) & opp);
+  sts = gdh_ObjidToPointer(user, (pwr_tAddress*)&opp);
   if (EVEN(sts)) {
     *status = XNAV__NOUSER;
     return;
@@ -103,72 +95,73 @@ EvEveQt::EvEveQt(void *ev_parent_ctx, QWidget *ev_parent_wid, char *eve_name,
 
     CoWowQt::SetWindowIcon(parent_wid_ala);
   } else {
-    parent_wid_ala = (QWidget *) widget;
+    parent_wid_ala = (QWidget*)widget;
   }
 
   eve_vbox = new QVBoxLayout();
 
   // Menu
-  QMenuBar *menu_bar = new QMenuBar();
+  QMenuBar* menu_bar = new QMenuBar();
 
   // File entry
-  QMenu *file = menu_bar->addMenu(translate_utf8("&File"));
+  QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
   addMenuItem(toplevel, file, "&Print", SLOT(eve_activate_print()), "",
-              "document-print");
-  addMenuItem(toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+      "document-print");
+  addMenuItem(
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
   // Functions entry
-  QMenu *functions = menu_bar->addMenu(translate_utf8("&Functions"));
-  addMenuItem(toplevel, functions, "Open &Program", SLOT(eve_activate_open_plc()),
-              "CTRL+L");
+  QMenu* functions = menu_bar->addMenu(translate_utf8("&Functions"));
+  addMenuItem(toplevel, functions, "Open &Program",
+      SLOT(eve_activate_open_plc()), "CTRL+L");
   addMenuItem(toplevel, functions, "&Display object in Navigator",
-              SLOT(eve_activate_display_in_xnav()), "CTRL+D");
+      SLOT(eve_activate_display_in_xnav()), "CTRL+D");
 
   // View entry
-  QMenu *view = menu_bar->addMenu(translate_utf8("&View"));
-  addMenuItem(toplevel, view, "S&hift View", SLOT(eve_activate_shift_view()),
-              "CTRL+N");
+  QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
+  addMenuItem(
+      toplevel, view, "S&hift View", SLOT(eve_activate_shift_view()), "CTRL+N");
 
   for (unsigned int i = 0;
        i < sizeof(opp->AlarmViews) / sizeof(opp->AlarmViews[0]); i++) {
-    pwr_sClass_AlarmView *viewp;
+    pwr_sClass_AlarmView* viewp;
 
     if (cdh_ObjidIsNull(opp->AlarmViews[i])) {
       break;
     }
 
-    sts = gdh_ObjidToPointer(opp->AlarmViews[i], (void **) &viewp);
+    sts = gdh_ObjidToPointer(opp->AlarmViews[i], (void**)&viewp);
     if (ODD(sts)) {
       alarm_views[i] = opp->AlarmViews[i];
-      QAction *a = addMenuItem(toplevel, view, viewp->Name,
-                               SLOT(eve_activate_select_view()));
+      QAction* a = addMenuItem(
+          toplevel, view, viewp->Name, SLOT(eve_activate_select_view()));
       a->setData(i);
     }
   }
 
-  addMenuItem(toplevel, view, "Zoom &In", SLOT(eve_activate_zoom_in()), "CTRL+I",
-              "zoom-in");
-  addMenuItem(toplevel, view, "Zoom &Out", SLOT(eve_activate_zoom_out()), "CTRL+O",
-              "zoom-out");
+  addMenuItem(toplevel, view, "Zoom &In", SLOT(eve_activate_zoom_in()),
+      "CTRL+I", "zoom-in");
+  addMenuItem(toplevel, view, "Zoom &Out", SLOT(eve_activate_zoom_out()),
+      "CTRL+O", "zoom-out");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(eve_activate_zoom_reset()),
-              "CTRL+B", "zoom-reset");
+      "CTRL+B", "zoom-reset");
   addCheckableMenuItem(toplevel, view, "&Display hundredth",
-                       SLOT(eve_activate_disp_hundredth()));
-  addCheckableMenuItem(toplevel, view, "&Hide Event Name",
-                       SLOT(eve_activate_hide_object()));
-  addCheckableMenuItem(toplevel, view, "Hide &Event Text",
-                       SLOT(eve_activate_hide_text()));
+      SLOT(eve_activate_disp_hundredth()));
+  addCheckableMenuItem(
+      toplevel, view, "&Hide Event Name", SLOT(eve_activate_hide_object()));
+  addCheckableMenuItem(
+      toplevel, view, "Hide &Event Text", SLOT(eve_activate_hide_text()));
 
   // Help entry
-  QMenu *help = menu_bar->addMenu(translate_utf8("&Help"));
+  QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
   addMenuItem(toplevel, help, "&Help", SLOT(eve_activate_help()), "CTRL+H",
-              "system-help");
-  addMenuItem(toplevel, help, "Help Selected Event",
-              SLOT(eve_activate_helpevent()));
+      "system-help");
+  addMenuItem(
+      toplevel, help, "Help Selected Event", SLOT(eve_activate_helpevent()));
 
   // Create ala evlist
   ala = new EvListQt(this, parent_wid_ala, ev_eType_EventList, eve_size,
-                     eventname_seg, &eve_widget, eve_init_cb);
+      eventname_seg, &eve_widget, eve_init_cb);
   ala->start_trace_cb = &eve_start_trace_cb;
   ala->display_in_xnav_cb = &eve_display_in_xnav_cb;
   ala->name_to_alias_cb = &eve_name_to_alias_cb;
@@ -178,35 +171,33 @@ EvEveQt::EvEveQt(void *ev_parent_ctx, QWidget *ev_parent_wid, char *eve_name,
   ala->selection_changed_cb = &eve_selection_changed_cb;
 
   // Toolbar
-  QToolBar *tools = new QToolBar();
+  QToolBar* tools = new QToolBar();
   addToolItem(toplevel, tools, "Zoom in", SLOT(eve_activate_zoom_in()),
-              "$pwr_exe/xtt_zoom_in.png");
+      "$pwr_exe/xtt_zoom_in.png");
   addToolItem(toplevel, tools, "Zoom out", SLOT(eve_activate_zoom_out()),
-              "$pwr_exe/xtt_zoom_out.png");
+      "$pwr_exe/xtt_zoom_out.png");
   addToolItem(toplevel, tools, "Zoom reset", SLOT(eve_activate_zoom_reset()),
-              "$pwr_exe/xtt_zoom_reset.png");
+      "$pwr_exe/xtt_zoom_reset.png");
 
-  eve_methodtoolbar =
-      new XttMethodToolbarQt(0, 0, ~pwr_mXttOpMethodsMask_ParentObjectGraph, ~0,
-                             "");
-  QToolBar *tools_meth =
-      (QToolBar * )((XttMethodToolbarQt *) eve_methodtoolbar)->build();
+  eve_methodtoolbar = new XttMethodToolbarQt(
+      0, 0, ~pwr_mXttOpMethodsMask_ParentObjectGraph, ~0, "");
+  QToolBar* tools_meth
+      = (QToolBar*)((XttMethodToolbarQt*)eve_methodtoolbar)->build();
 
-  eve_methodtoolbar->m_xnav = (XNav * )((Ev *) parent_ctx)->parent_ctx;
+  eve_methodtoolbar->m_xnav = (XNav*)((Ev*)parent_ctx)->parent_ctx;
   eve_methodtoolbar->m_parent_ctx = ala;
   eve_methodtoolbar->get_select_cb = ala->get_select;
 
   eve_sup_methodtoolbar = new XttMethodToolbarQt(0, 0, 0,
-                                                 pwr_mXttMntMethodsMask_OpenTrace |
-                                                 pwr_mXttMntMethodsMask_RtNavigator,
-                                                 " for supervisory object");
-  QToolBar *tools_sup =
-      (QToolBar * )((XttMethodToolbarQt *) eve_sup_methodtoolbar)->build();
-  eve_sup_methodtoolbar->m_xnav = (XNav * )((Ev *) parent_ctx)->parent_ctx;
+      pwr_mXttMntMethodsMask_OpenTrace | pwr_mXttMntMethodsMask_RtNavigator,
+      " for supervisory object");
+  QToolBar* tools_sup
+      = (QToolBar*)((XttMethodToolbarQt*)eve_sup_methodtoolbar)->build();
+  eve_sup_methodtoolbar->m_xnav = (XNav*)((Ev*)parent_ctx)->parent_ctx;
   eve_sup_methodtoolbar->m_parent_ctx = ala;
   eve_sup_methodtoolbar->get_select_cb = ala->get_select_supobject;
 
-  QHBoxLayout *eve_toolsbox = new QHBoxLayout();
+  QHBoxLayout* eve_toolsbox = new QHBoxLayout();
   eve_toolsbox->addWidget(tools);
   eve_toolsbox->addWidget(separator(QFrame::VLine));
   eve_toolsbox->addWidget(tools_sup);
@@ -261,14 +252,14 @@ void EvEveQt::unmap_ala()
   }
 }
 
-void EvEveQt::set_title_ala(char *title)
+void EvEveQt::set_title_ala(char* title)
 {
   if (!(options & ev_mAlaOptions_Embedded)) {
     parent_wid_ala->setWindowTitle(fl(title));
   }
 }
 
-void EvEveQtWidget::focusInEvent(QFocusEvent *event)
+void EvEveQtWidget::focusInEvent(QFocusEvent* event)
 {
   if (eve->eve_displayed) {
     eve->ala->set_input_focus();
@@ -277,7 +268,7 @@ void EvEveQtWidget::focusInEvent(QFocusEvent *event)
   QWidget::focusInEvent(event);
 }
 
-void EvEveQtWidget::closeEvent(QCloseEvent *event)
+void EvEveQtWidget::closeEvent(QCloseEvent* event)
 {
   if (!(eve->options & ev_mAlaOptions_Embedded)) {
     delete eve;
@@ -303,7 +294,7 @@ void EvEveQtWidget::eve_activate_select_flat()
 
 void EvEveQtWidget::eve_activate_select_view()
 {
-  QAction *a = ((QAction *) sender());
+  QAction* a = ((QAction*)sender());
   eve->set_view(eve->alarm_views[a->data().toInt()]);
 }
 

@@ -39,21 +39,20 @@
 
 /* cow_pb_gsd_attrnav_qt.h -- Profibus gsd configurator navigator */
 
-#ifndef cow_pb_gsd_attrnav_h
-# include "cow_pb_gsd_attrnav.h"
-#endif
+#include "cow_pb_gsd_attrnav.h"
+
+#include <QWidget>
 
 //! The navigation area of the attribute editor.
 class GsdAttrNavQt : public GsdAttrNav {
 public:
-  GsdAttrNavQt(void *xn_parent_ctx, QWidget *xn_parent_wid, const char *xn_name,
-               pb_gsd *xn_gsd, int xn_edit_mode, QWidget **w,
-               pwr_tStatus *status);
+  GsdAttrNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid, const char* xn_name,
+      pb_gsd* xn_gsd, int xn_edit_mode, QWidget** w, pwr_tStatus* status);
   ~GsdAttrNavQt();
   void set_inputfocus();
 
-  QWidget *brow_widget;
-  QWidget *form_widget;
+  QWidget* brow_widget;
+  QWidget* form_widget;
 };
 
 #endif

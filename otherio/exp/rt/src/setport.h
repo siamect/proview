@@ -1,6 +1,6 @@
 /*
  Part of Libnodave, a free communication libray for Siemens S7 300/400.
- 
+
  (C) Thomas Hergenhahn (thomas.hergenhahn@web.de) 2001.
 
  Libnodave is free software; you can redistribute it and/or modify
@@ -15,37 +15,37 @@
 
  You should have received a copy of the GNU General Public License
  along with Libnodave; see the file COPYING.  If not, write to
- the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  
+ the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
 #ifndef setport__
 #define setport__
 
-#ifdef __cplusplus  
-    extern "C" {        
-#endif              
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #ifdef BCCWIN
 
 #ifdef DOEXPORT
-#define EXPORTSPEC __declspec (dllexport)
+#define EXPORTSPEC __declspec(dllexport)
 #else
-#define EXPORTSPEC __declspec (dllimport)
+#define EXPORTSPEC __declspec(dllimport)
 #endif
 
-EXPORTSPEC HANDLE __stdcall setPort(char * name, char* baud,char parity);
+EXPORTSPEC HANDLE __stdcall setPort(char* name, char* baud, char parity);
 
 EXPORTSPEC int __stdcall closePort(HANDLE port);
 #endif
 
 #ifdef LINUX
-int setPort(char * name, char* baud, char parity);
+int setPort(char* name, char* baud, char parity);
 
 int closePort(int port);
 #endif
 
 #ifdef __cplusplus
-    }
+}
 #endif
 
 #endif // setport__

@@ -40,7 +40,7 @@
 /* xtt_block_qt.h -- Alarm blocking window */
 
 #ifndef xtt_block_h
-# include "xtt_block.h"
+#include "xtt_block.h"
 #endif
 
 #include <QRadioButton>
@@ -50,40 +50,42 @@ class BlockQtWidget;
 
 class BlockQt : public Block {
 public:
-  BlockQt(void *b_parent_ctx, QWidget *b_parent_wid, pwr_sAttrRef *b_oar,
-          char *name, unsigned int priv, pwr_tStatus *status);
+  BlockQt(void* b_parent_ctx, QWidget* b_parent_wid, pwr_sAttrRef* b_oar,
+      char* name, unsigned int priv, pwr_tStatus* status);
   int execute();
   void update();
 
-  QWidget *form;
-  QRadioButton *toggleA;
-  QRadioButton *toggleB;
-  QRadioButton *toggleC;
-  QRadioButton *toggleD;
-  QRadioButton *toggleNo;
-  QWidget *buttonOk;
-  QWidget *buttonApply;
+  QWidget* form;
+  QRadioButton* toggleA;
+  QRadioButton* toggleB;
+  QRadioButton* toggleC;
+  QRadioButton* toggleD;
+  QRadioButton* toggleNo;
+  QWidget* buttonOk;
+  QWidget* buttonApply;
 
 private:
-  BlockQtWidget *toplevel;
+  BlockQtWidget* toplevel;
 };
 
 class BlockQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  BlockQtWidget(BlockQt *parent_ctx, QWidget *parent)
-      : QWidget(parent, Qt::Window), block(parent_ctx) {}
+  BlockQtWidget(BlockQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), block(parent_ctx)
+  {
+  }
 
 protected:
-  void closeEvent(QCloseEvent *event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void activate_ok();
   void activate_apply();
 
 private:
-  BlockQt *block;
+  BlockQt* block;
 };
 
 #endif

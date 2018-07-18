@@ -36,25 +36,16 @@
 
 /* xtt_xattone.cpp -- Display object attributes */
 
-#include "glow_std.h"
-
-#include <stdio.h>
 #include <stdlib.h>
 
 #include "co_cdh.h"
-#include "co_dcli.h"
-#include "co_time.h"
-#include "cow_wow_qt.h"
-#include "rt_xnav_msg.h"
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
-#include "co_lng.h"
-#include "xtt_xattone_qt.h"
-#include "xtt_xattnav.h"
-#include "xtt_xnav.h"
+
 #include "rt_xatt_msg.h"
-#include "pwr_privilege.h"
+
+#include "cow_qt_helpers.h"
+
+#include "xtt_xattone_qt.h"
+#include "xtt_xnav.h"
 
 #include <QDialogButtonBox>
 #include <QMenuBar>
@@ -64,12 +55,12 @@
 
 CoWowRecall XAttOneQt::value_recall;
 
-void XAttOneQt::message(char severity, const char *message)
+void XAttOneQt::message(char severity, const char* message)
 {
   msg_label->setText(fl(message));
 }
 
-void XAttOneQt::set_prompt(char *prompt)
+void XAttOneQt::set_prompt(char* prompt)
 {
   if (strcmp(prompt, "") == 0) {
     cmd_prompt->setVisible(false);
@@ -98,8 +89,8 @@ int XAttOneQt::set_value()
     }
 
     char buff[1024];
-    int sts = XNav::attr_string_to_value(atype, text.data(), buff, sizeof(buff),
-                                         asize);
+    int sts = XNav::attr_string_to_value(
+        atype, text.data(), buff, sizeof(buff), asize);
     if (EVEN(sts)) {
       message('E', "Input syntax error");
       return sts;
@@ -117,30 +108,34 @@ int XAttOneQt::set_value()
 int XAttOneQt::change_value(int set_focus)
 {
   int sts = gdh_GetAttributeCharAttrref(&aref, &atype, &asize, &aoffs, &aelem);
-  if (EVEN(sts)) { return sts; }
+  if (EVEN(sts)) {
+    return sts;
+  }
 
   int input_size;
   switch (atype) {
-    case pwr_eType_String:
-    case pwr_eType_Text:
-      input_size = asize;
-      break;
-    default:
-      input_size = 80;
+  case pwr_eType_String:
+  case pwr_eType_Text:
+    input_size = asize;
+    break;
+  default:
+    input_size = 80;
   }
 
   char aval[1024];
   sts = gdh_GetObjectInfoAttrref(&aref, aval, sizeof(aval));
-  if (EVEN(sts)) { return sts; }
+  if (EVEN(sts)) {
+    return sts;
+  }
 
-  char *value = 0;
+  char* value = 0;
   char buf[1024];
   if (atype == pwr_eType_Text) {
     value = aval;
   } else {
     int len;
-    XNav::attrvalue_to_string(atype, atype, &aval, buf, sizeof(buf), &len, NULL,
-                              0);
+    XNav::attrvalue_to_string(
+        atype, atype, &aval, buf, sizeof(buf), &len, NULL, 0);
     value = buf;
   }
 
@@ -151,7 +146,7 @@ int XAttOneQt::change_value(int set_focus)
       cmd_entry->setVisible(false);
       cmd_scrolledinput->setVisible(true);
 
-      //set_pane_position(pane, -170);
+      // set_pane_position(pane, -170);
       if (set_focus) {
         cmd_scrolled_buffer->setFocus();
       }
@@ -194,7 +189,7 @@ void XAttOneQtWidget::activate_help()
   // Not yet implemented
 }
 
-void XAttOneQtWidget::focusInEvent(QFocusEvent *event)
+void XAttOneQtWidget::focusInEvent(QFocusEvent* event)
 {
   if (attone->input_open) {
     if (attone->input_multiline) {
@@ -235,7 +230,7 @@ void XAttOneQt::pop()
   ::pop(toplevel);
 }
 
-void XAttOneQtWidget::closeEvent(QCloseEvent *event)
+void XAttOneQtWidget::closeEvent(QCloseEvent* event)
 {
   if (attone->close_cb) {
     (attone->close_cb)(attone->parent_ctx, attone);
@@ -245,15 +240,16 @@ void XAttOneQtWidget::closeEvent(QCloseEvent *event)
   QWidget::closeEvent(event);
 }
 
-XAttOneQt::XAttOneQt(QWidget *xa_parent_wid, void *xa_parent_ctx,
-                     pwr_sAttrRef *xa_aref, char *xa_title,
-                     unsigned int xa_priv, int *xa_sts)
+XAttOneQt::XAttOneQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
+    pwr_sAttrRef* xa_aref, char* xa_title, unsigned int xa_priv, int* xa_sts)
     : XAttOne(xa_parent_ctx, xa_aref, xa_title, xa_priv, xa_sts)
 {
   pwr_tAName title;
 
   *xa_sts = gdh_AttrrefToName(&aref, title, sizeof(title), cdh_mNName);
-  if (EVEN(*xa_sts)) { return; }
+  if (EVEN(*xa_sts)) {
+    return;
+  }
 
   toplevel = new XAttOneQtWidget(this, xa_parent_wid);
   toplevel->setToolTip(fl("xtt_xattone widget"));
@@ -264,16 +260,17 @@ XAttOneQt::XAttOneQt(QWidget *xa_parent_wid, void *xa_parent_ctx,
   CoWowQt::SetWindowIcon(toplevel);
 
   // Menu
-  QMenuBar *menu_bar = new QMenuBar();
+  QMenuBar* menu_bar = new QMenuBar();
 
   // File entry
-  QMenu *file = menu_bar->addMenu(translate_utf8("&File"));
-  addMenuItem(toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+  QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
+  addMenuItem(
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
   // Help entry
-  QMenu *help = menu_bar->addMenu(translate_utf8("&Help"));
-  addMenuItem(toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H",
-              "system-help");
+  QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
+  addMenuItem(
+      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "system-help");
 
   // Prompt, label, input entry
   msg_label = new QLabel("");
@@ -285,13 +282,13 @@ XAttOneQt::XAttOneQt(QWidget *xa_parent_wid, void *xa_parent_ctx,
   cmd_entry = new CoWowEntryQt(&value_recall);
   cmd_entry->setFixedHeight(25);
   QObject::connect(cmd_entry, SIGNAL(editingFinished()), toplevel,
-                   SLOT(activate_cmd_entry()));
+      SLOT(activate_cmd_entry()));
 
   // Scrolled text input
   cmd_scrolled_buffer = new QTextEdit();
 
   // Buttons
-  QDialogButtonBox *buttons = new QDialogButtonBox();
+  QDialogButtonBox* buttons = new QDialogButtonBox();
   buttons->addButton(QDialogButtonBox::Ok);
   buttons->button(QDialogButtonBox::Ok)->setFixedSize(70, 25);
   buttons->addButton(QDialogButtonBox::Apply);
@@ -299,27 +296,27 @@ XAttOneQt::XAttOneQt(QWidget *xa_parent_wid, void *xa_parent_ctx,
   buttons->addButton(QDialogButtonBox::Cancel);
   buttons->button(QDialogButtonBox::Cancel)->setFixedSize(70, 25);
   QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
-                   toplevel, SLOT(activate_cmd_scrolled_ok()));
+      toplevel, SLOT(activate_cmd_scrolled_ok()));
   QObject::connect(buttons->button(QDialogButtonBox::Apply), SIGNAL(clicked()),
-                   toplevel, SLOT(activate_cmd_scrolled_ap()));
+      toplevel, SLOT(activate_cmd_scrolled_ap()));
   QObject::connect(buttons->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
-                   toplevel, SLOT(close()));
+      toplevel, SLOT(close()));
 
   // Horizontal box
-  QStatusBar *statusbar = new QStatusBar();
+  QStatusBar* statusbar = new QStatusBar();
   statusbar->addWidget(msg_label);
   statusbar->addWidget(cmd_prompt);
   add_expanding(statusbar, cmd_label);
   add_expanding(statusbar, cmd_entry);
 
-  QVBoxLayout *cmd_scrolledinput_layout = new QVBoxLayout();
+  QVBoxLayout* cmd_scrolledinput_layout = new QVBoxLayout();
   add_expanding(cmd_scrolledinput_layout, cmd_scrolled_buffer);
   cmd_scrolledinput_layout->addWidget(buttons);
   cmd_scrolledinput = layout_to_widget(cmd_scrolledinput_layout);
 
   add_expanding(statusbar, cmd_scrolledinput);
 
-  QVBoxLayout *vbox = new QVBoxLayout();
+  QVBoxLayout* vbox = new QVBoxLayout();
   vbox->setMenuBar(menu_bar);
   add_expanding(vbox, statusbar);
 

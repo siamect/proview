@@ -38,22 +38,18 @@
 
 #ifdef PWRE_CONF_PNAK
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <locale.h>
-
-#include "pwr.h"
-
-#include "co_lng.h"
 #include "co_error.h"
+
+#include "cow_qt_helpers.h"
 #include "cow_xhelp_qt.h"
+
 #include "pn_viewer_qt.h"
 
 #include <QApplication>
 
 typedef struct {
-  QWidget *toplevel;
-  PnViewer *viewer;
+  QWidget* toplevel;
+  PnViewer* viewer;
 } tViewer;
 
 static void usage()
@@ -61,22 +57,21 @@ static void usage()
   printf("\nUsage: profinet_viewer [-l language] [device]\n");
 }
 
-static void viewer_close(void *c)
+static void viewer_close(void* c)
 {
-  ((tViewer *) c)->viewer->toplevel->close();
   exit(0);
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
   int i;
   int sts;
-  tViewer *ctx;
+  tViewer* ctx;
   char dev_name[20] = "eth1";
 
   QApplication app(argc, argv);
 
-  ctx = (tViewer *) calloc(1, sizeof(tViewer));
+  ctx = (tViewer*)calloc(1, sizeof(tViewer));
 
   setlocale(LC_NUMERIC, "POSIX");
   setlocale(LC_TIME, "en_US");
@@ -87,8 +82,8 @@ int main(int argc, char *argv[])
   ctx->toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
   // Create help window
-  CoXHelpQt *xhelp = new CoXHelpQt(ctx->toplevel, 0, xhelp_eUtility_Wtt,
-                                   (int *) &sts);
+  CoXHelpQt* xhelp
+      = new CoXHelpQt(ctx->toplevel, 0, xhelp_eUtility_Wtt, (int*)&sts);
   CoXHelpQt::set_default(xhelp);
 
   for (i = 1; i < argc; i++) {
@@ -109,10 +104,10 @@ int main(int argc, char *argv[])
 
   // Open window
   try {
-    ctx->viewer =
-        new PnViewerQt(ctx, ctx->toplevel, "Profinet Viewer", dev_name, &sts);
+    ctx->viewer
+        = new PnViewerQt(ctx, ctx->toplevel, "Profinet Viewer", dev_name, &sts);
     ctx->viewer->close_cb = viewer_close;
-  } catch (co_error &e) {
+  } catch (co_error& e) {
     printf("** Exception: %s\n", e.what().c_str());
     exit(0);
   }
@@ -121,7 +116,7 @@ int main(int argc, char *argv[])
 
   try {
     ctx->viewer->update_devices();
-  } catch (co_error &e) {
+  } catch (co_error& e) {
     printf("** Exception: %s\n", e.what().c_str());
   }
 

@@ -37,51 +37,50 @@
 #ifndef xtt_tbl_qt_h
 #define xtt_tbl_qt_h
 
-#include "../src/xtt_tbl.h"
-#include "xtt_tblnav_qt.h"
 #include "cow_wow_qt.h"
 
+#include "../src/xtt_tbl.h"
+
+#include <QLabel>
+
 /* ge_tbl.h -- Ge tblibute editor */
-
-class CoWowRecall;
-
-class CoWowEntryQt;
 
 class XttTblQtWidget;
 
 class XttTblQt : public XttTbl {
 public:
-  XttTblQt(QWidget *a_parent_wid, void *a_parent_ctx, sevcli_tCtx a_sevcli,
-           sevcli_sHistItem *itemlist, int item_cnt);
+  XttTblQt(QWidget* a_parent_wid, void* a_parent_ctx, sevcli_tCtx a_sevcli,
+      sevcli_sHistItem* itemlist, int item_cnt);
 
-  XttTblQtWidget *toplevel;
-  QWidget *brow_widget;
-  QWidget *form_widget;
-  QLabel *msg_label;
-  QLabel *cmd_prompt;
-  CoWowRecall *cmd_recall;
-  CoWowEntryQt *cmd_entry;
+  XttTblQtWidget* toplevel;
+  QWidget* brow_widget;
+  QWidget* form_widget;
+  QLabel* msg_label;
+  QLabel* cmd_prompt;
+  CoWowRecall* cmd_recall;
+  CoWowEntryQt* cmd_entry;
 
-  void message(char severity, const char *message);
-  XttSevHist *sevhist_new(pwr_tOid *oidv, pwr_tOName *anamev,
-                          pwr_tOName *onamev, bool *sevhistobjectv,
-                          pwr_tStatus *sts);
-  CoLogin *login_new(const char *wl_name, const char *wl_groupname,
-                     void (*wl_bc_success)(void *),
-                     void (*wl_bc_cancel)(void *), pwr_tStatus *status);
-  void set_prompt(const char *prompt);
+  void message(char severity, const char* message);
+  XttSevHist* sevhist_new(pwr_tOid* oidv, pwr_tOName* anamev,
+      pwr_tOName* onamev, bool* sevhistobjectv, pwr_tStatus* sts);
+  CoLogin* login_new(const char* wl_name, const char* wl_groupname,
+      void (*wl_bc_success)(void*), void (*wl_bc_cancel)(void*),
+      pwr_tStatus* status);
+  void set_prompt(const char* prompt);
 };
 
 class XttTblQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  XttTblQtWidget(XttTblQt *parent_ctx, QWidget *parent)
-      : QWidget(parent, Qt::Window), tbl(parent_ctx) {}
+  XttTblQtWidget(XttTblQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), tbl(parent_ctx)
+  {
+  }
 
 protected:
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void activate_command();
@@ -101,7 +100,7 @@ public slots:
   void activate_help_proview();
 
 private:
-  XttTblQt *tbl;
+  XttTblQt* tbl;
 };
 
 #endif

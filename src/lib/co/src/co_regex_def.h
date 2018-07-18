@@ -1,4 +1,4 @@
-/** 
+/**
    Proview   $Id: co_regex_def.h,v 1.2 2005-09-01 14:57:52 claes Exp $
    Definitions for data structures callers pass the regex library.
 
@@ -18,7 +18,6 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
-
 #ifndef __REGEXP_LIBRARY
 #define __REGEXP_LIBRARY
 
@@ -30,14 +29,11 @@
 
 #define BYTEWIDTH 8
 
-
 /* Maximum number of duplicates an interval can allow.  */
-#define RE_DUP_MAX  ((1 << 15) - 1) 
-
+#define RE_DUP_MAX ((1 << 15) - 1)
 
 /* This defines the various regexp syntaxes.  */
-  extern int obscure_syntax;
-
+extern int obscure_syntax;
 
 /* The following bits are used in the obscure_syntax variable to choose among
    alternative regexp syntaxes.  */
@@ -46,14 +42,14 @@
      parentheses are needed for literal searching.
    If not set, backslash-parentheses are grouping, and plain parentheses
      are for literal searching.  */
-#define RE_NO_BK_PARENS	1
+#define RE_NO_BK_PARENS 1
 
-/* If this bit is set, plain | serves as the `or'-operator, and \| is a 
+/* If this bit is set, plain | serves as the `or'-operator, and \| is a
      literal.
    If not set, \| serves as the `or'-operator, and | is a literal.  */
 #define RE_NO_BK_VBAR (1 << 1)
 
-/* If this bit is not set, plain + or ? serves as an operator, and \+, \? are 
+/* If this bit is not set, plain + or ? serves as an operator, and \+, \? are
      literals.
    If set, \+, \? are operators and plain +, ? are literals.  */
 #define RE_BK_PLUS_QM (1 << 2)
@@ -68,15 +64,15 @@
 
 /* If this bit is set, then special characters may act as normal
    characters in some contexts. Specifically, this applies to:
-	^ -- only special at the beginning, or after ( or |;
-	$ -- only special at the end, or before ) or |;
-	*, +, ? -- only special when not after the beginning, (, or |.
+        ^ -- only special at the beginning, or after ( or |;
+        $ -- only special at the end, or before ) or |;
+        *, +, ? -- only special when not after the beginning, (, or |.
    If this bit is not set, special characters (such as *, ^, and $)
    always have their special meaning regardless of the surrounding
    context.  */
 #define RE_CONTEXT_INDEP_OPS (1 << 5)
 
-/* If this bit is not set, then \ before anything inside [ and ] is taken as 
+/* If this bit is not set, then \ before anything inside [ and ] is taken as
      a real \.
    If set, then such a \ escapes the following character.  This is a
      special case for awk.  */
@@ -86,9 +82,9 @@
    If not set, then \{ and \} and { and } are treated as literals.  */
 #define RE_INTERVALS (1 << 7)
 
-/* If this bit is not set, then \{ and \} serve as interval operators and 
+/* If this bit is not set, then \{ and \} serve as interval operators and
      { and } are literals.
-   If set, then { and } serve as interval operators and \{ and \} are 
+   If set, then { and } serve as interval operators and \{ and \} are
      literals.  */
 #define RE_NO_BK_CURLY_BRACES (1 << 8)
 
@@ -115,7 +111,7 @@
    subexpression is treated as literal characters.  */
 #define RE_NO_EMPTY_BK_REF (1 << 13)
 
-/* If this bit is set, bracket expressions can't be empty.  
+/* If this bit is set, bracket expressions can't be empty.
    If it is set, they can be empty.  */
 #define RE_NO_EMPTY_BRACKETS (1 << 14)
 
@@ -140,61 +136,54 @@
    If it isn't, then it can.  */
 #define RE_NO_HYPHEN_RANGE_END (1 << 18)
 
-
 /* Define combinations of bits for the standard possibilities.  */
-#define RE_SYNTAX_POSIX_AWK (RE_NO_BK_PARENS | RE_NO_BK_VBAR \
-			| RE_CONTEXT_INDEP_OPS)
-#define RE_SYNTAX_AWK (RE_NO_BK_PARENS | RE_NO_BK_VBAR \
-			| RE_CONTEXT_INDEP_OPS | RE_AWK_CLASS_HACK)
-#define RE_SYNTAX_EGREP (RE_NO_BK_PARENS | RE_NO_BK_VBAR \
-			| RE_CONTEXT_INDEP_OPS | RE_NEWLINE_OR)
+#define RE_SYNTAX_POSIX_AWK                                                    \
+  (RE_NO_BK_PARENS | RE_NO_BK_VBAR | RE_CONTEXT_INDEP_OPS)
+#define RE_SYNTAX_AWK                                                          \
+  (RE_NO_BK_PARENS | RE_NO_BK_VBAR | RE_CONTEXT_INDEP_OPS | RE_AWK_CLASS_HACK)
+#define RE_SYNTAX_EGREP                                                        \
+  (RE_NO_BK_PARENS | RE_NO_BK_VBAR | RE_CONTEXT_INDEP_OPS | RE_NEWLINE_OR)
 #define RE_SYNTAX_GREP (RE_BK_PLUS_QM | RE_NEWLINE_OR)
 #define RE_SYNTAX_EMACS 0
-#define RE_SYNTAX_POSIX_BASIC (RE_INTERVALS | RE_BK_PLUS_QM 		\
-			| RE_CHAR_CLASSES | RE_DOT_NOT_NULL 		\
-                        | RE_HAT_NOT_NEWLINE | RE_NO_EMPTY_BK_REF 	\
-                        | RE_NO_EMPTY_BRACKETS | RE_LIMITED_OPS		\
-                        | RE_NO_EMPTY_RANGES | RE_NO_HYPHEN_RANGE_END)	
-                        
-#define RE_SYNTAX_POSIX_EXTENDED (RE_INTERVALS | RE_NO_BK_CURLY_BRACES	   \
-			| RE_NO_BK_VBAR | RE_NO_BK_PARENS 		   \
-                        | RE_HAT_NOT_NEWLINE | RE_CHAR_CLASSES 		   \
-                        | RE_NO_EMPTY_BRACKETS | RE_CONTEXTUAL_INVALID_OPS \
-                        | RE_NO_BK_REFS | RE_NO_EMPTY_RANGES 		   \
-                        | RE_NO_HYPHEN_RANGE_END)
+#define RE_SYNTAX_POSIX_BASIC                                                  \
+  (RE_INTERVALS | RE_BK_PLUS_QM | RE_CHAR_CLASSES | RE_DOT_NOT_NULL            \
+      | RE_HAT_NOT_NEWLINE | RE_NO_EMPTY_BK_REF | RE_NO_EMPTY_BRACKETS         \
+      | RE_LIMITED_OPS | RE_NO_EMPTY_RANGES | RE_NO_HYPHEN_RANGE_END)
 
+#define RE_SYNTAX_POSIX_EXTENDED                                               \
+  (RE_INTERVALS | RE_NO_BK_CURLY_BRACES | RE_NO_BK_VBAR | RE_NO_BK_PARENS      \
+      | RE_HAT_NOT_NEWLINE | RE_CHAR_CLASSES | RE_NO_EMPTY_BRACKETS            \
+      | RE_CONTEXTUAL_INVALID_OPS | RE_NO_BK_REFS | RE_NO_EMPTY_RANGES         \
+      | RE_NO_HYPHEN_RANGE_END)
 
 /* This data structure is used to represent a compiled pattern.  */
 
-struct re_pattern_buffer
-  {
-    char *buffer;	/* Space holding the compiled pattern commands.  */
-    long allocated;	/* Size of space that `buffer' points to. */
-    long used;		/* Length of portion of buffer actually occupied  */
-    char *fastmap;	/* Pointer to fastmap, if any, or zero if none.  */
-			/* re_search uses the fastmap, if there is one,
-			   to skip over totally implausible characters.  */
-    char *translate;	/* Translate table to apply to all characters before 
-		           comparing, or zero for no translation.
-			   The translation is applied to a pattern when it is 
-                           compiled and to data when it is matched.  */
-    char fastmap_accurate;
-			/* Set to zero when a new pattern is stored,
-			   set to one when the fastmap is updated from it.  */
-    char can_be_null;   /* Set to one by compiling fastmap
-			   if this pattern might match the null string.
-			   It does not necessarily match the null string
-			   in that case, but if this is zero, it cannot.
-			   2 as value means can match null string
-			   but at end of range or before a character
-			   listed in the fastmap.  */
-  };
-
+struct re_pattern_buffer {
+  char* buffer; /* Space holding the compiled pattern commands.  */
+  long allocated; /* Size of space that `buffer' points to. */
+  long used; /* Length of portion of buffer actually occupied  */
+  char* fastmap; /* Pointer to fastmap, if any, or zero if none.  */
+  /* re_search uses the fastmap, if there is one,
+     to skip over totally implausible characters.  */
+  char* translate; /* Translate table to apply to all characters before
+                      comparing, or zero for no translation.
+                      The translation is applied to a pattern when it is
+                      compiled and to data when it is matched.  */
+  char fastmap_accurate;
+  /* Set to zero when a new pattern is stored,
+     set to one when the fastmap is updated from it.  */
+  char can_be_null; /* Set to one by compiling fastmap
+                       if this pattern might match the null string.
+                       It does not necessarily match the null string
+                       in that case, but if this is zero, it cannot.
+                       2 as value means can match null string
+                       but at end of range or before a character
+                       listed in the fastmap.  */
+};
 
 /* search.c (search_buffer) needs this one value.  It is defined both in
    regex.c and here.  */
 #define RE_EXACTN_VALUE 1
-
 
 /* Structure to store register contents data in.
 
@@ -206,50 +195,45 @@ struct re_pattern_buffer
    one after the ending index.  start[0] and end[0] are analogous, for
    the entire pattern.  */
 
-struct re_registers
-  {
-    int start[RE_NREGS];
-    int end[RE_NREGS];
-  };
-
-
+struct re_registers {
+  int start[RE_NREGS];
+  int end[RE_NREGS];
+};
 
 #ifdef __STDC__
 
-extern int re_compile_pattern (char *, int, struct re_pattern_buffer *);
+extern int re_compile_pattern(char*, int, struct re_pattern_buffer*);
 /* Is this really advertised?  */
-extern void re_compile_fastmap (struct re_pattern_buffer *);
-extern int re_search (struct re_pattern_buffer *, char*, int, int, int,
-		      struct re_registers *);
-extern int re_search_2 (struct re_pattern_buffer *, char *, int,
-			char *, int, int, int,
-			struct re_registers *, int);
-extern int re_match (struct re_pattern_buffer *, char *, int, int,
-		     struct re_registers *);
-extern int re_match_2 (struct re_pattern_buffer *, char *, int,
-		       char *, int, int, struct re_registers *, int);
+extern void re_compile_fastmap(struct re_pattern_buffer*);
+extern int re_search(
+    struct re_pattern_buffer*, char*, int, int, int, struct re_registers*);
+extern int re_search_2(struct re_pattern_buffer*, char*, int, char*, int, int,
+    int, struct re_registers*, int);
+extern int re_match(
+    struct re_pattern_buffer*, char*, int, int, struct re_registers*);
+extern int re_match_2(struct re_pattern_buffer*, char*, int, char*, int, int,
+    struct re_registers*, int);
 
 /* 4.2 bsd compatibility.  */
-extern char *re_comp (char *);
-extern int re_exec (char *);
+extern char* re_comp(char*);
+extern int re_exec(char*);
 
 #else /* !__STDC__ */
 
-extern int re_compile_pattern ();
+extern int re_compile_pattern();
 /* Is this really advertised? */
-extern void re_compile_fastmap ();
-extern int re_search (), re_search_2 ();
-extern int re_match (), re_match_2 ();
+extern void re_compile_fastmap();
+extern int re_search(), re_search_2();
+extern int re_match(), re_match_2();
 
 /* 4.2 bsd compatibility.  */
-extern char *re_comp ();
-extern int re_exec ();
+extern char* re_comp();
+extern int re_exec();
 
 #endif /* __STDC__ */
 
-
 #ifdef SYNTAX_TABLE
-extern char *re_syntax_table;
+extern char* re_syntax_table;
 #endif
 
 #endif /* !__REGEXP_LIBRARY */

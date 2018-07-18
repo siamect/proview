@@ -39,10 +39,8 @@
 
 /* xtt_ev_qt.h -- Alarm and event windows in xtt */
 
-#include "pwr_baseclasses.h"
-
 #ifndef xtt_ev_h
-# include "xtt_ev.h"
+#include "xtt_ev.h"
 #endif
 
 #include <QDialog>
@@ -52,20 +50,20 @@ class EvQtObject;
 
 class EvQt : public Ev {
 public:
-  EvQt(void *ev_parent_ctx, QWidget *ev_parent_wid, char *eve_name,
-       char *ala_name, char *blk_name, pwr_tObjid ev_user, int display_ala,
-       int display_eve, int display_blk, int display_return, int display_ack,
-       int ev_beep, pwr_tMask ev_pop_mask, int ev_eventname_seg,
-       pwr_tStatus *status);
+  EvQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* eve_name,
+      char* ala_name, char* blk_name, pwr_tObjid ev_user, int display_ala,
+      int display_eve, int display_blk, int display_return, int display_ack,
+      int ev_beep, pwr_tMask ev_pop_mask, int ev_eventname_seg,
+      pwr_tStatus* status);
   ~EvQt();
 
-  QWidget *parent_wid;
-  QDialog *parent_wid_eve;
-  QDialog *parent_wid_ala;
-  QDialog *parent_wid_blk;
-  QWidget *eve_widget;
-  QWidget *ala_widget;
-  QWidget *blk_widget;
+  QWidget* parent_wid;
+  QDialog* parent_wid_eve;
+  QDialog* parent_wid_ala;
+  QDialog* parent_wid_blk;
+  QWidget* eve_widget;
+  QWidget* ala_widget;
+  QWidget* blk_widget;
   pwr_tObjid alarm_views[25];
 
   void map_eve(unsigned int options);
@@ -74,18 +72,16 @@ public:
   void unmap_eve();
   void unmap_ala();
   void unmap_blk();
-  void set_transient_eve(void *basewidget);
-  void set_transient_ala(void *basewidget);
-  void set_transient_blk(void *basewidget);
-  void set_title_ala(char *title);
-  EvAla *open_alarmlist_satellite(const char *title, pwr_tStatus *sts,
-                                  int width, int height, int x, int y,
-                                  pwr_tObjid view, unsigned int options = 0,
-                                  void *widget = 0);
-  EvEve *open_eventlist_satellite(const char *title, pwr_tStatus *sts,
-                                  int width, int height, int x, int y,
-                                  pwr_tObjid view, unsigned int options = 0,
-                                  void *widget = 0);
+  void set_transient_eve(void* basewidget);
+  void set_transient_ala(void* basewidget);
+  void set_transient_blk(void* basewidget);
+  void set_title_ala(char* title);
+  EvAla* open_alarmlist_satellite(const char* title, pwr_tStatus* sts,
+      int width, int height, int x, int y, pwr_tObjid view,
+      unsigned int options = 0, void* widget = 0);
+  EvEve* open_eventlist_satellite(const char* title, pwr_tStatus* sts,
+      int width, int height, int x, int y, pwr_tObjid view,
+      unsigned int options = 0, void* widget = 0);
 
   void eve_action_inputfocus();
   void ala_action_inputfocus();
@@ -95,14 +91,16 @@ public:
   void blk_activate_exit();
 
 private:
-  EvQtObject *object;
+  EvQtObject* object;
 };
 
 class EvQtObject : public QObject {
   Q_OBJECT
 
 public:
-  EvQtObject(EvQt *parent_ctx) : QObject(), ev(parent_ctx) {}
+  EvQtObject(EvQt* parent_ctx) : QObject(), ev(parent_ctx)
+  {
+  }
 
 public slots:
   void eve_activate_print();
@@ -143,7 +141,7 @@ public slots:
   void ala_activate_select_view();
 
 private:
-  EvQt *ev;
+  EvQt* ev;
 };
 
 #endif

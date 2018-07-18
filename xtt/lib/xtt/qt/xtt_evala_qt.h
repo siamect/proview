@@ -39,9 +39,8 @@
 
 /* xtt_evala_qt.h -- Alarm window in xtt */
 
-#include "pwr_baseclasses.h"
 #ifndef xtt_evala_h
-# include "xtt_evala.h"
+#include "xtt_evala.h"
 #endif
 
 #include <QVBoxLayout>
@@ -51,23 +50,23 @@ class EvAlaQtWidget;
 
 class EvAlaQt : public EvAla {
 public:
-  EvAlaQt(void *ev_parent_ctx, QWidget *ev_parent_wid, char *ala_name,
-          pwr_tObjid ev_user, int ev_eventname_seg, int ev_width, int ev_height,
-          int ev_x, int ev_y, pwr_tObjid ev_view, unsigned int ev_options,
-          void *widget, pwr_tStatus *status);
+  EvAlaQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* ala_name,
+      pwr_tObjid ev_user, int ev_eventname_seg, int ev_width, int ev_height,
+      int ev_x, int ev_y, pwr_tObjid ev_view, unsigned int ev_options,
+      void* widget, pwr_tStatus* status);
   ~EvAlaQt();
 
-  EvAlaQtWidget *toplevel;
-  QWidget *parent_wid_ala;
-  QWidget *ala_widget;
-  QVBoxLayout *ala_vbox;
+  EvAlaQtWidget* toplevel;
+  QWidget* parent_wid_ala;
+  QWidget* ala_widget;
+  QVBoxLayout* ala_vbox;
   pwr_tObjid alarm_views[25];
 
   void map_ala();
   void unmap_ala();
-  void set_title_ala(char *title);
+  void set_title_ala(char* title);
 
-  QWidget *get_widget()
+  QWidget* get_widget()
   {
     return parent_wid_ala;
   }
@@ -77,12 +76,14 @@ class EvAlaQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  EvAlaQtWidget(EvAlaQt *parent_ctx, QWidget *parent)
-      : QWidget(parent, Qt::Window), ala(parent_ctx) {}
+  EvAlaQtWidget(EvAlaQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), ala(parent_ctx)
+  {
+  }
 
 protected:
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void ala_activate_print();
@@ -103,7 +104,7 @@ public slots:
   void ala_activate_select_view();
 
 private:
-  EvAlaQt *ala;
+  EvAlaQt* ala;
 };
 
 #endif

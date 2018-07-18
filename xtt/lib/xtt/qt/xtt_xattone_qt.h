@@ -39,15 +39,10 @@
 
 /* xtt_xattone_qt.h -- Single attribute editor */
 
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
-#ifndef xtt_xattone_h
-# include "xtt_xattone.h"
-#endif
+#include "cow_wow_qt.h"
 
-#ifndef cow_wow_qt_h
-# include "cow_wow_qt.h"
+#ifndef xtt_xattone_h
+#include "xtt_xattone.h"
 #endif
 
 #include <QLabel>
@@ -57,41 +52,43 @@ class XAttOneQtWidget;
 
 class XAttOneQt : public XAttOne {
 public:
-  XAttOneQt(QWidget *xa_parent_wid, void *xa_parent_ctx, pwr_sAttrRef *xa_objar,
-            char *xa_title, unsigned int xa_priv, int *xa_sts);
+  XAttOneQt(QWidget* xa_parent_wid, void* xa_parent_ctx, pwr_sAttrRef* xa_objar,
+      char* xa_title, unsigned int xa_priv, int* xa_sts);
 
-  QWidget *form_widget;
-  QLabel *msg_label;
-  QLabel *cmd_prompt;
-  QLabel *cmd_label;
-  QWidget *cmd_scrolledinput;
-  QTextEdit *cmd_scrolled_buffer;
+  QWidget* form_widget;
+  QLabel* msg_label;
+  QLabel* cmd_prompt;
+  QLabel* cmd_label;
+  QWidget* cmd_scrolledinput;
+  QTextEdit* cmd_scrolled_buffer;
   static CoWowRecall value_recall;
-  CoWowEntryQt *cmd_entry;
+  CoWowEntryQt* cmd_entry;
 
-  void message(char severity, const char *message);
-  void set_prompt(char *prompt);
+  void message(char severity, const char* message);
+  void set_prompt(char* prompt);
   int change_value(int set_focus);
-  int open_changevalue(char *name);
+  int open_changevalue(char* name);
   void change_value_close();
   void pop();
   void swap(int mode);
   int set_value();
 
 private:
-  XAttOneQtWidget *toplevel;
+  XAttOneQtWidget* toplevel;
 };
 
 class XAttOneQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  XAttOneQtWidget(XAttOneQt *parent_ctx, QWidget *parent)
-      : QWidget(parent, Qt::Window), attone(parent_ctx) {}
+  XAttOneQtWidget(XAttOneQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), attone(parent_ctx)
+  {
+  }
 
 protected:
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void activate_help();
@@ -100,7 +97,7 @@ public slots:
   void activate_cmd_scrolled_ap();
 
 private:
-  XAttOneQt *attone;
+  XAttOneQt* attone;
 };
 
 #endif

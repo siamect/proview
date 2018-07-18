@@ -36,39 +36,29 @@
 
 /* xtt_ev_qt.cpp -- Alarm and event window in xtt */
 
-#include "glow_std.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "co_cdh.h"
-#include "co_time.h"
-#include "co_dcli.h"
-#include "cow_wow_qt.h"
-#include "pwr_baseclasses.h"
 #include "rt_gdh.h"
-#include "rt_mh.h"
-#include "rt_mh_outunit.h"
-#include "rt_mh_util.h"
-#include "co_lng.h"
-#include "xtt_evlist_qt.h"
-#include "xtt_evala_qt.h"
-#include "xtt_ev.h"
-#include "xtt_methodtoolbar_qt.h"
 #include "rt_xnav_msg.h"
+
+#include "cow_qt_helpers.h"
+#include "cow_wow_qt.h"
+
+#include "xtt_ev.h"
+#include "xtt_evala_qt.h"
+#include "xtt_evlist_qt.h"
+#include "xtt_methodtoolbar_qt.h"
 
 #include <QMenuBar>
 #include <QToolBar>
 
-EvAlaQt::EvAlaQt(void *ev_parent_ctx, QWidget *ev_parent_wid, char *ala_name,
-                 pwr_tObjid ev_user, int ev_eventname_seg, int ev_width,
-                 int ev_height, int ev_x, int ev_y, pwr_tObjid ev_view,
-                 unsigned int ev_options, void *widget, pwr_tStatus *status)
+EvAlaQt::EvAlaQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* ala_name,
+    pwr_tObjid ev_user, int ev_eventname_seg, int ev_width, int ev_height,
+    int ev_x, int ev_y, pwr_tObjid ev_view, unsigned int ev_options,
+    void* widget, pwr_tStatus* status)
     : EvAla(ev_parent_ctx, ala_name, ev_user, ev_eventname_seg, ev_width,
-            ev_height, ev_x, ev_y, ev_view, ev_options, status)
+          ev_height, ev_x, ev_y, ev_view, ev_options, status)
 {
   pwr_tStatus sts;
-  pwr_sClass_OpPlace *opp;
+  pwr_sClass_OpPlace* opp;
   int ala_width = 700;
   int ala_height = 300;
 
@@ -85,7 +75,7 @@ EvAlaQt::EvAlaQt(void *ev_parent_ctx, QWidget *ev_parent_wid, char *ala_name,
     return;
   }
 
-  sts = gdh_ObjidToPointer(user, (pwr_tAddress * ) & opp);
+  sts = gdh_ObjidToPointer(user, (pwr_tAddress*)&opp);
   if (EVEN(sts)) {
     *status = XNAV__NOUSER;
     return;
@@ -106,78 +96,79 @@ EvAlaQt::EvAlaQt(void *ev_parent_ctx, QWidget *ev_parent_wid, char *ala_name,
 
     CoWowQt::SetWindowIcon(parent_wid_ala);
   } else {
-    parent_wid_ala = (QWidget *) widget;
+    parent_wid_ala = (QWidget*)widget;
   }
 
   // Menu
-  QMenuBar *menu_bar = new QMenuBar();
+  QMenuBar* menu_bar = new QMenuBar();
 
   // File entry
-  QMenu *file = menu_bar->addMenu(translate_utf8("&File"));
+  QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
   addMenuItem(toplevel, file, "&Print", SLOT(ala_activate_print()), "",
-              "document-print");
-  addMenuItem(toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+      "document-print");
+  addMenuItem(
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
   // Functions entry
-  QMenu *functions = menu_bar->addMenu(translate_utf8("&Functions"));
-  addMenuItem(toplevel, functions, "&Acknowledge", SLOT(ala_activate_ack_last()),
-              "CTRL+K");
-  addMenuItem(toplevel, functions, "A&cknowledge All",
-              SLOT(ala_activate_ack_all()));
-  addMenuItem(toplevel, functions, "Open &Program", SLOT(ala_activate_open_plc()),
-              "CTRL+L");
+  QMenu* functions = menu_bar->addMenu(translate_utf8("&Functions"));
+  addMenuItem(toplevel, functions, "&Acknowledge",
+      SLOT(ala_activate_ack_last()), "CTRL+K");
+  addMenuItem(
+      toplevel, functions, "A&cknowledge All", SLOT(ala_activate_ack_all()));
+  addMenuItem(toplevel, functions, "Open &Program",
+      SLOT(ala_activate_open_plc()), "CTRL+L");
   addMenuItem(toplevel, functions, "&Display object in Navigator",
-              SLOT(ala_activate_display_in_xnav()), "CTRL+D");
+      SLOT(ala_activate_display_in_xnav()), "CTRL+D");
 
   // View entry
-  QMenu *view = menu_bar->addMenu(translate_utf8("&View"));
-  addMenuItem(toplevel, view, "S&hift View", SLOT(ala_activate_shift_view()),
-              "CTRL+N");
+  QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
+  addMenuItem(
+      toplevel, view, "S&hift View", SLOT(ala_activate_shift_view()), "CTRL+N");
 
   // Submenu Select View
-  QMenu *view_select = view->addMenu("&Select View");
+  QMenu* view_select = view->addMenu("&Select View");
   addMenuItem(toplevel, view_select, "&Flat", SLOT(ala_activate_select_flat()));
 
   for (unsigned int i = 0;
        i < sizeof(opp->AlarmViews) / sizeof(opp->AlarmViews[0]); i++) {
-    pwr_sClass_AlarmView *viewp;
+    pwr_sClass_AlarmView* viewp;
 
     if (cdh_ObjidIsNull(opp->AlarmViews[i])) {
       break;
     }
 
-    sts = gdh_ObjidToPointer(opp->AlarmViews[i], (void **) &viewp);
+    sts = gdh_ObjidToPointer(opp->AlarmViews[i], (void**)&viewp);
     if (ODD(sts)) {
       alarm_views[i] = opp->AlarmViews[i];
-      QAction *a = addMenuItem(toplevel, view, viewp->Name,
-                               SLOT(ala_activate_select_view()));
+      QAction* a = addMenuItem(
+          toplevel, view, viewp->Name, SLOT(ala_activate_select_view()));
       a->setData(i);
     }
   }
 
-  addMenuItem(toplevel, view, "Zoom &In", SLOT(ala_activate_zoom_in()), "CTRL+I",
-              "zoom-in");
-  addMenuItem(toplevel, view, "Zoom &Out", SLOT(ala_activate_zoom_out()), "CTRL+O",
-              "zoom-out");
+  addMenuItem(toplevel, view, "Zoom &In", SLOT(ala_activate_zoom_in()),
+      "CTRL+I", "zoom-in");
+  addMenuItem(toplevel, view, "Zoom &Out", SLOT(ala_activate_zoom_out()),
+      "CTRL+O", "zoom-out");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(ala_activate_zoom_reset()),
-              "CTRL+B", "zoom-reset");
+      "CTRL+B", "zoom-reset");
   addCheckableMenuItem(toplevel, view, "&Display hundredth",
-                       SLOT(ala_activate_disp_hundredth()));
-  addCheckableMenuItem(toplevel, view, "&Hide Event Name",
-                       SLOT(ala_activate_hide_object()));
-  addCheckableMenuItem(toplevel, view, "Hide &Event Text",
-                       SLOT(ala_activate_hide_text()));
+      SLOT(ala_activate_disp_hundredth()));
+  addCheckableMenuItem(
+      toplevel, view, "&Hide Event Name", SLOT(ala_activate_hide_object()));
+  addCheckableMenuItem(
+      toplevel, view, "Hide &Event Text", SLOT(ala_activate_hide_text()));
 
   // Help entry
-  QMenu *help = menu_bar->addMenu(translate_utf8("&Help"));
+  QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
   addMenuItem(toplevel, help, "&Help", SLOT(ala_activate_help()), "CTRL+H",
-              "system-help");
-  addMenuItem(toplevel, help, "Help Selected Event",
-              SLOT(ala_activate_helpevent()));
+      "system-help");
+  addMenuItem(
+      toplevel, help, "Help Selected Event", SLOT(ala_activate_helpevent()));
 
   // Create ala evlist
   ala = new EvListQt(this, parent_wid_ala, ev_eType_AlarmList, ala_size,
-                     eventname_seg, &ala_widget, ala_init_cb);
+      eventname_seg, &ala_widget, ala_init_cb);
   ala->start_trace_cb = &ala_start_trace_cb;
   ala->display_in_xnav_cb = &ala_display_in_xnav_cb;
   ala->name_to_alias_cb = &ala_name_to_alias_cb;
@@ -187,37 +178,35 @@ EvAlaQt::EvAlaQt(void *ev_parent_ctx, QWidget *ev_parent_wid, char *ala_name,
   ala->selection_changed_cb = &ala_selection_changed_cb;
 
   // Toolbar
-  QToolBar *tools = new QToolBar();
+  QToolBar* tools = new QToolBar();
   addToolItem(toplevel, tools, "Acknowledge", SLOT(ala_activate_ack_last()),
-              "$pwr_exe/xtt_acknowledge.png");
+      "$pwr_exe/xtt_acknowledge.png");
   addToolItem(toplevel, tools, "Zoom in", SLOT(ala_activate_zoom_in()),
-              "$pwr_exe/xtt_zoom_in.png");
+      "$pwr_exe/xtt_zoom_in.png");
   addToolItem(toplevel, tools, "Zoom out", SLOT(ala_activate_zoom_out()),
-              "$pwr_exe/xtt_zoom_out.png");
+      "$pwr_exe/xtt_zoom_out.png");
   addToolItem(toplevel, tools, "Zoom reset", SLOT(ala_activate_zoom_reset()),
-              "$pwr_exe/xtt_zoom_reset.png");
+      "$pwr_exe/xtt_zoom_reset.png");
 
-  ala_methodtoolbar =
-      new XttMethodToolbarQt(0, 0, ~pwr_mXttOpMethodsMask_ParentObjectGraph, ~0,
-                             "");
-  QToolBar *tools_meth =
-      (QToolBar * )((XttMethodToolbarQt *) ala_methodtoolbar)->build();
+  ala_methodtoolbar = new XttMethodToolbarQt(
+      0, 0, ~pwr_mXttOpMethodsMask_ParentObjectGraph, ~0, "");
+  QToolBar* tools_meth
+      = (QToolBar*)((XttMethodToolbarQt*)ala_methodtoolbar)->build();
 
-  ala_methodtoolbar->m_xnav = (XNav * )((Ev *) parent_ctx)->parent_ctx;
+  ala_methodtoolbar->m_xnav = (XNav*)((Ev*)parent_ctx)->parent_ctx;
   ala_methodtoolbar->m_parent_ctx = ala;
   ala_methodtoolbar->get_select_cb = ala->get_select;
 
   ala_sup_methodtoolbar = new XttMethodToolbarQt(0, 0, 0,
-                                                 pwr_mXttMntMethodsMask_OpenTrace |
-                                                 pwr_mXttMntMethodsMask_RtNavigator,
-                                                 " for supervisory object");
-  QToolBar *tools_sup =
-      (QToolBar * )((XttMethodToolbarQt *) ala_sup_methodtoolbar)->build();
-  ala_sup_methodtoolbar->m_xnav = (XNav * )((Ev *) parent_ctx)->parent_ctx;
+      pwr_mXttMntMethodsMask_OpenTrace | pwr_mXttMntMethodsMask_RtNavigator,
+      " for supervisory object");
+  QToolBar* tools_sup
+      = (QToolBar*)((XttMethodToolbarQt*)ala_sup_methodtoolbar)->build();
+  ala_sup_methodtoolbar->m_xnav = (XNav*)((Ev*)parent_ctx)->parent_ctx;
   ala_sup_methodtoolbar->m_parent_ctx = ala;
   ala_sup_methodtoolbar->get_select_cb = ala->get_select_supobject;
 
-  QHBoxLayout *ala_toolsbox = new QHBoxLayout();
+  QHBoxLayout* ala_toolsbox = new QHBoxLayout();
   ala_toolsbox->addWidget(tools);
   ala_toolsbox->addWidget(separator(QFrame::VLine));
   ala_toolsbox->addWidget(tools_sup);
@@ -273,14 +262,14 @@ void EvAlaQt::unmap_ala()
   }
 }
 
-void EvAlaQt::set_title_ala(char *title)
+void EvAlaQt::set_title_ala(char* title)
 {
   if (!(options & ev_mAlaOptions_Embedded)) {
     parent_wid_ala->setWindowTitle(fl(title));
   }
 }
 
-void EvAlaQtWidget::focusInEvent(QFocusEvent *event)
+void EvAlaQtWidget::focusInEvent(QFocusEvent* event)
 {
   if (ala->ala_displayed) {
     ala->ala->set_input_focus();
@@ -289,7 +278,7 @@ void EvAlaQtWidget::focusInEvent(QFocusEvent *event)
   QWidget::focusInEvent(event);
 }
 
-void EvAlaQtWidget::closeEvent(QCloseEvent *event)
+void EvAlaQtWidget::closeEvent(QCloseEvent* event)
 {
   if (!(ala->options & ev_mAlaOptions_Embedded)) {
     delete ala;
@@ -325,7 +314,7 @@ void EvAlaQtWidget::ala_activate_select_flat()
 
 void EvAlaQtWidget::ala_activate_select_view()
 {
-  QAction *a = ((QAction *) sender());
+  QAction* a = ((QAction*)sender());
   ala->set_view(ala->alarm_views[a->data().toInt()]);
 }
 

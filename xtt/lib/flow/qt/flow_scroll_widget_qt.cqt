@@ -38,13 +38,12 @@
  * WARNING! This file is a mirrored version of glow_scroll_widget_qt.
  * If you modify it, you must modify flow_scroll_widget_qt in the same way!
  */
-#include "flow_scroll_widget_qt.h"
 
 #include <assert.h>
 
-#include <QPainter>
-
 #include "cow_qt_helpers.h"
+
+#include "flow_scroll_widget_qt.h"
 
 void QtScrollWidgetFlow::createBuffer(QSize size)
 {
@@ -53,10 +52,9 @@ void QtScrollWidgetFlow::createBuffer(QSize size)
   imPainter.fillRect(image.rect(), palette().color(QPalette::Background));
 }
 
-void QtScrollWidgetFlow::init(
-    unsigned int eCtxType, int (*init_proc)(FlowCtx *ctx, void *client_data),
-    void *client_data, int (*init_proc2)(QWidget *w, FlowCtx *ctx,
-                                            void *client_data))
+void QtScrollWidgetFlow::init(unsigned int eCtxType,
+    int (*init_proc)(FlowCtx* ctx, void* client_data), void* client_data,
+    int (*init_proc2)(QWidget* w, FlowCtx* ctx, void* client_data))
 {
   createBuffer(size());
   setFocusPolicy(Qt::StrongFocus);
@@ -66,10 +64,9 @@ void QtScrollWidgetFlow::init(
   this->client_data = client_data;
 }
 
-QWidget *QtScrollWidgetFlow::initScroll(
-    unsigned int eCtxType, int (*init_proc)(FlowCtx *ctx, void *client_data),
-    void *client_data, int (*init_proc2)(QWidget *w, FlowCtx *ctx,
-                                         void *client_data))
+QWidget* QtScrollWidgetFlow::initScroll(unsigned int eCtxType,
+    int (*init_proc)(FlowCtx* ctx, void* client_data), void* client_data,
+    int (*init_proc2)(QWidget* w, FlowCtx* ctx, void* client_data))
 {
   createBuffer(size());
   setFocusPolicy(Qt::StrongFocus);
@@ -77,20 +74,20 @@ QWidget *QtScrollWidgetFlow::initScroll(
   this->init_proc = init_proc;
   this->init_widget_proc = init_proc2;
   this->client_data = client_data;
-  QScrollArea *form = new QScrollArea();
+  QScrollArea* form = new QScrollArea();
   scroll_h = form->horizontalScrollBar();
   scroll_v = form->verticalScrollBar();
-  QObject::connect(scroll_h, SIGNAL(valueChanged(int)), this,
-                   SLOT(scroll_h_action(int)));
-  QObject::connect(scroll_v, SIGNAL(valueChanged(int)), this,
-                   SLOT(scroll_v_action(int)));
+  QObject::connect(
+      scroll_h, SIGNAL(valueChanged(int)), this, SLOT(scroll_h_action(int)));
+  QObject::connect(
+      scroll_v, SIGNAL(valueChanged(int)), this, SLOT(scroll_v_action(int)));
 
   form->setWidget(this);
   form->setWidgetResizable(true);
   return form;
 }
 
-void QtScrollWidgetFlow::init(unsigned int eCtxType, QWidget *main)
+void QtScrollWidgetFlow::init(unsigned int eCtxType, QWidget* main)
 {
   createBuffer(size());
   setFocusPolicy(Qt::StrongFocus);
@@ -101,8 +98,8 @@ void QtScrollWidgetFlow::init(unsigned int eCtxType, QWidget *main)
 
 void QtScrollWidgetFlow::scroll_callback_cb()
 {
-  flow_sScroll *data = &this->scroll_data;
-  widget_sScroll *scroll_data = (widget_sScroll *) data->scroll_data;
+  flow_sScroll* data = &this->scroll_data;
+  widget_sScroll* scroll_data = (widget_sScroll*)data->scroll_data;
 
   scroll_timerid = 0;
 
@@ -154,11 +151,11 @@ void QtScrollWidgetFlow::scroll_callback_cb()
 
   if (scroll_data->scroll_h_managed) {
     scroll_h_ignore = 1;
-    scroll_h_value = (double) data->offset_x;
+    scroll_h_value = (double)data->offset_x;
     scroll_h_pagesize = data->window_width;
     scroll_h_upper = data->total_width;
-    if (data->window_width != scroll_h_pagesize ||
-        data->total_width != scroll_h_upper || scroll_configure) {
+    if (data->window_width != scroll_h_pagesize
+        || data->total_width != scroll_h_upper || scroll_configure) {
       scroll_data->scroll_h->setMaximum(scroll_h_upper);
       scroll_data->scroll_h->setPageStep(scroll_h_pagesize);
     }
@@ -167,11 +164,11 @@ void QtScrollWidgetFlow::scroll_callback_cb()
 
   if (scroll_data->scroll_v_managed) {
     scroll_v_ignore = 1;
-    scroll_v_value = (double) data->offset_y;
+    scroll_v_value = (double)data->offset_y;
     scroll_v_pagesize = data->window_height;
     scroll_v_upper = data->total_height;
-    if (data->window_height != scroll_v_pagesize ||
-        data->total_height != scroll_v_upper || scroll_configure) {
+    if (data->window_height != scroll_v_pagesize
+        || data->total_height != scroll_v_upper || scroll_configure) {
       scroll_data->scroll_v->setMaximum(scroll_v_upper);
       scroll_data->scroll_v->setPageStep(scroll_v_pagesize);
     }
@@ -188,7 +185,7 @@ void QtScrollWidgetFlow::scroll_h_action(int value)
   }
 
   scroll_h_value = value;
-  FlowCtx *ctx = (FlowCtx *) parent_ctx;
+  FlowCtx* ctx = (FlowCtx*)parent_ctx;
   flow_scroll_horizontal(ctx, value, 0);
 }
 
@@ -200,11 +197,11 @@ void QtScrollWidgetFlow::scroll_v_action(int value)
   }
 
   scroll_v_value = value;
-  FlowCtx *ctx = (FlowCtx *) parent_ctx;
+  FlowCtx* ctx = (FlowCtx*)parent_ctx;
   flow_scroll_vertical(ctx, value, 0);
 }
 
-void QtScrollWidgetFlow::paintEvent(QPaintEvent *event)
+void QtScrollWidgetFlow::paintEvent(QPaintEvent* event)
 {
   QPainter painter(this);
   QRect dirtyRect = event->rect();
@@ -214,7 +211,7 @@ void QtScrollWidgetFlow::paintEvent(QPaintEvent *event)
   QWidget::paintEvent(event);
 }
 
-void QtScrollWidgetFlow::closeEvent(QCloseEvent *event)
+void QtScrollWidgetFlow::closeEvent(QCloseEvent* event)
 {
   if (!destroyed) {
     destroyed = 1;
@@ -222,23 +219,23 @@ void QtScrollWidgetFlow::closeEvent(QCloseEvent *event)
       delete scroll_timerid;
     }
     if (is_navigator && parent_ctx) {
-      if (!((QtScrollWidgetFlow *) main_widget)->destroyed) {
-        ((FlowCtx *) parent_ctx)->no_nav = 1;
+      if (!((QtScrollWidgetFlow*)main_widget)->destroyed) {
+        ((FlowCtx*)parent_ctx)->no_nav = 1;
       }
     }
   }
   QWidget::closeEvent(event);
 }
 
-void QtScrollWidgetFlow::handleEvent(QEvent *event)
+void QtScrollWidgetFlow::handleEvent(QEvent* event)
 {
   if (!destroyed) {
     if (event->type() == QEvent::Resize || event->type() == QEvent::Move) {
       scroll_configure = 1;
     }
     if (parent_ctx) {
-      FlowCtx * ctx = (FlowCtx *) parent_ctx;
-      FlowDrawQt *drawer = ((FlowDrawQt *) ctx->fdraw);
+      FlowCtx* ctx = (FlowCtx*)parent_ctx;
+      FlowDrawQt* drawer = ((FlowDrawQt*)ctx->fdraw);
       if (event->type() == QEvent::MouseMove) {
         drawer->window->update();
       }
@@ -247,12 +244,13 @@ void QtScrollWidgetFlow::handleEvent(QEvent *event)
   }
 }
 
-bool QtScrollWidgetFlow::event(QEvent *event)
+bool QtScrollWidgetFlow::event(QEvent* event)
 {
   if (event->type() == QEvent::Resize) {
-    createBuffer(((QResizeEvent *) event)->size());
+    createBuffer(((QResizeEvent*)event)->size());
   }
-  if (!is_realized && (event->type() == QEvent::Show || event->type() == QEvent::Resize)) {
+  if (!is_realized
+      && (event->type() == QEvent::Show || event->type() == QEvent::Resize)) {
     realize();
     is_realized = true;
   }
@@ -266,8 +264,8 @@ void QtScrollWidgetFlow::realize()
 
   if (!parent_ctx) {
     if (is_navigator) {
-      QtScrollWidgetFlow *main = dynamic_cast<QtScrollWidgetFlow *>(
-          this->main_widget);
+      QtScrollWidgetFlow* main
+          = dynamic_cast<QtScrollWidgetFlow*>(this->main_widget);
 
       if (main && !main->is_realized) {
         main->realize();
@@ -282,8 +280,7 @@ void QtScrollWidgetFlow::realize()
       draw_ctx->init_nav(this, parent_ctx);
     } else {
       draw_ctx = new FlowDrawQt(this, &parent_ctx, init_widget_proc,
-                                client_data,
-                                static_cast<flow_eCtxType>(ctxType));
+          client_data, static_cast<flow_eCtxType>(ctxType));
     }
   }
 }

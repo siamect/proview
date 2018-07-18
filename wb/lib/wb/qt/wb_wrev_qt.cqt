@@ -36,37 +36,19 @@
 
 /* wb_wrev_qt.cpp -- package window */
 
-#include "glow_std.h"
+#include "cow_logw_qt.h"
+#include "cow_qt_helpers.h"
+#include "cow_xhelp.h"
 
-#include <typeinfo>
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "co_cdh.h"
-#include "co_dcli.h"
-#include "co_time.h"
-#include "cow_wow_qt.h"
-#include "wb_pkg_msg.h"
-
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
 #include "wb_wrev_qt.h"
 #include "wb_wrevnav_qt.h"
-#include "wb_wtt.h"
-#include "wb_wnav.h"
-#include "wb_pkg.h"
-#include "wb_error.h"
-#include "wb_log.h"
-#include "cow_logw_qt.h"
-#include "cow_xhelp.h"
 
 #include <QDialogButtonBox>
 #include <QMenuBar>
 #include <QPushButton>
 #include <QVBoxLayout>
 
-void WRevQt::message(char severity, const char *message)
+void WRevQt::message(char severity, const char* message)
 {
   msg_label->setText(fl(message));
 
@@ -86,8 +68,8 @@ void WRevQtWidget::activate_history()
   wb_log::category_to_string(wlog_eCategory_RevisionRestore, categories[1]);
   strcpy(categories[2], "");
 
-  CoLogWQt
-      *logw = new CoLogWQt(rev, parentWidget(), "Revision History", 1, &sts);
+  CoLogWQt* logw
+      = new CoLogWQt(rev, parentWidget(), "Revision History", 1, &sts);
   logw->CoLogW::show(categories, 0);
 }
 
@@ -128,14 +110,14 @@ void WRevQtWidget::activate_zoom_reset()
 
 void WRevQtWidget::activate_help()
 {
-  CoXHelp::dhelp("revisions", 0, navh_eHelpFile_Other, "$pwr_lang/man_dg.dat",
-                 true);
+  CoXHelp::dhelp(
+      "revisions", 0, navh_eHelpFile_Other, "$pwr_lang/man_dg.dat", true);
 }
 
-void WRevQtWidget::focusInEvent(QFocusEvent *event)
+void WRevQtWidget::focusInEvent(QFocusEvent* event)
 {
   if (!rev->focustimer.disabled()) {
-    ((WRevNav *) rev->wrevnav)->set_inputfocus();
+    ((WRevNav*)rev->wrevnav)->set_inputfocus();
 
     rev->focustimer.disable(400);
   }
@@ -163,7 +145,7 @@ void WRevQt::reset_cursor()
   toplevel->window()->unsetCursor();
 }
 
-void WRevQtWidget::closeEvent(QCloseEvent *event)
+void WRevQtWidget::closeEvent(QCloseEvent* event)
 {
   if (rev->close_cb) {
     (rev->close_cb)(rev->parent_ctx);
@@ -173,8 +155,8 @@ void WRevQtWidget::closeEvent(QCloseEvent *event)
   QWidget::closeEvent(event);
 }
 
-WRevQt::WRevQt(QWidget *wa_parent_wid, void *wa_parent_ctx,
-               ldh_tSession wa_ldhses)
+WRevQt::WRevQt(
+    QWidget* wa_parent_wid, void* wa_parent_ctx, ldh_tSession wa_ldhses)
     : WRev(wa_parent_ctx, wa_ldhses), india_widget(0)
 {
   int sts;
@@ -188,54 +170,56 @@ WRevQt::WRevQt(QWidget *wa_parent_wid, void *wa_parent_ctx,
   CoWowQt::SetWindowIcon(toplevel);
 
   // Menu
-  QMenuBar *menu_bar = new QMenuBar();
+  QMenuBar* menu_bar = new QMenuBar();
 
   // File Entry
-  QMenu *file = menu_bar->addMenu(translate_utf8("&File"));
+  QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
   addMenuItem(toplevel, file, "&History", SLOT(activate_history()));
-  addMenuItem(toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+  addMenuItem(
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
   // Functions Entry
-  QMenu *functions = menu_bar->addMenu(translate_utf8("F&unctions"));
+  QMenu* functions = menu_bar->addMenu(translate_utf8("F&unctions"));
   addMenuItem(toplevel, functions, "&New Revision", SLOT(activate_store()));
-  addMenuItem(toplevel, functions, "&Restore Revision", SLOT(activate_restore()));
+  addMenuItem(
+      toplevel, functions, "&Restore Revision", SLOT(activate_restore()));
   addMenuItem(toplevel, functions, "&Delete Revision", SLOT(activate_delete()));
   addMenuItem(toplevel, functions, "&Build All", SLOT(activate_build()));
 
   // View menu
-  QMenu *view = menu_bar->addMenu(translate_utf8("&View"));
+  QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
   addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoom_in()), "CTRL+I",
-              "zoom-in");
+      "zoom-in");
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
-              "zoom-out");
+      "zoom-out");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "",
-              "zoom-original");
+      "zoom-original");
 
   // Menu Help
-  QMenu *help = menu_bar->addMenu(translate_utf8("&Help"));
-  addMenuItem(toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H",
-              "system-help");
+  QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
+  addMenuItem(
+      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "system-help");
 
   // Toolbar
-  QToolBar *tools = new QToolBar();
+  QToolBar* tools = new QToolBar();
   addToolItem(toplevel, tools, "Zoom in", SLOT(activate_zoom_in()),
-              "$pwr_exe/xtt_zoom_in.png");
+      "$pwr_exe/xtt_zoom_in.png");
   addToolItem(toplevel, tools, "Zoom out", SLOT(activate_zoom_out()),
-              "$pwr_exe/xtt_zoom_out.png");
+      "$pwr_exe/xtt_zoom_out.png");
   addToolItem(toplevel, tools, "Zoom reset", SLOT(activate_zoom_reset()),
-              "$pwr_exe/xtt_zoom_reset.png");
+      "$pwr_exe/xtt_zoom_reset.png");
 
-  QVBoxLayout *vbox = new QVBoxLayout(toplevel);
+  QVBoxLayout* vbox = new QVBoxLayout(toplevel);
 
-  utility = ((WUtility *) parent_ctx)->utype;
-  wrevnav = new WRevNavQt(this, toplevel, ldhses, "Packages", utility,
-                          &brow_widget, &sts);
-  ((WRevNav *) wrevnav)->message_cb = message_cb;
-  ((WRevNav *) wrevnav)->set_clock_cursor_cb = set_clock_cursor_cb;
-  ((WRevNav *) wrevnav)->reset_cursor_cb = reset_cursor_cb;
-  ((WRevNav *) wrevnav)->command_cb = rev_command_cb;
+  utility = ((WUtility*)parent_ctx)->utype;
+  wrevnav = new WRevNavQt(
+      this, toplevel, ldhses, "Packages", utility, &brow_widget, &sts);
+  ((WRevNav*)wrevnav)->message_cb = message_cb;
+  ((WRevNav*)wrevnav)->set_clock_cursor_cb = set_clock_cursor_cb;
+  ((WRevNav*)wrevnav)->reset_cursor_cb = reset_cursor_cb;
+  ((WRevNav*)wrevnav)->command_cb = rev_command_cb;
 
-  QStatusBar *statusbar = new QStatusBar();
+  QStatusBar* statusbar = new QStatusBar();
   msg_label = new QLabel("");
 
   statusbar->addWidget(msg_label);
@@ -251,7 +235,7 @@ WRevQt::WRevQt(QWidget *wa_parent_wid, void *wa_parent_ctx,
   wow = new CoWowQt(toplevel);
 }
 
-void WRevInputDialog::closeEvent(QCloseEvent *event)
+void WRevInputDialog::closeEvent(QCloseEvent* event)
 {
   QWidget::closeEvent(event);
   rev->dialog_count--;
@@ -277,21 +261,20 @@ void WRevInputDialog::activate_cancel()
   rev->india_widget = 0;
 }
 
-void WRevQt::open_input_dialog(const char *text1, const char *text2,
-                               const char *title, const char *init_text1,
-                               const char *init_text2,
-                               void (*ok_cb)(WRev *, char *, char *))
+void WRevQt::open_input_dialog(const char* text1, const char* text2,
+    const char* title, const char* init_text1, const char* init_text2,
+    void (*ok_cb)(WRev*, char*, char*))
 {
-  india_widget =
-      new WRevInputDialog(this, toplevel, text1, text2, init_text1, init_text2);
+  india_widget = new WRevInputDialog(
+      this, toplevel, text1, text2, init_text1, init_text2);
 
   india_ok_cb = ok_cb;
   dialog_count++;
 }
 
-WRevInputDialog::WRevInputDialog(WRevQt *parent_ctx, QWidget *parent,
-                                 const char *text1, const char *text2,
-                                 const char *init_text1, const char *init_text2)
+WRevInputDialog::WRevInputDialog(WRevQt* parent_ctx, QWidget* parent,
+    const char* text1, const char* text2, const char* init_text1,
+    const char* init_text2)
     : QDialog(parent), rev(parent_ctx)
 {
   setMinimumSize(350, 150);
@@ -300,28 +283,28 @@ WRevInputDialog::WRevInputDialog(WRevQt *parent_ctx, QWidget *parent,
 
   india_text1 = new QLineEdit(fl(init_text1));
   india_text2 = new QLineEdit(fl(init_text2));
-  QLabel *india_label1 = new QLabel(fl(text1));
-  QLabel *india_label2 = new QLabel(fl(text2));
+  QLabel* india_label1 = new QLabel(fl(text1));
+  QLabel* india_label2 = new QLabel(fl(text2));
 
-  QDialogButtonBox *buttons = new QDialogButtonBox();
+  QDialogButtonBox* buttons = new QDialogButtonBox();
   buttons->addButton(QDialogButtonBox::Ok);
   buttons->addButton(QDialogButtonBox::Cancel);
   buttons->button(QDialogButtonBox::Ok)->setFixedSize(70, 25);
   buttons->button(QDialogButtonBox::Cancel)->setFixedSize(70, 25);
   connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()), this,
-          SLOT(activate_ok()));
+      SLOT(activate_ok()));
   connect(buttons->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), this,
-          SLOT(activate_cancel()));
+      SLOT(activate_cancel()));
 
-  QHBoxLayout *hboxtext1 = new QHBoxLayout();
+  QHBoxLayout* hboxtext1 = new QHBoxLayout();
   hboxtext1->addWidget(india_label1);
   add_expanding(hboxtext1, india_text1);
 
-  QHBoxLayout *hboxtext2 = new QHBoxLayout();
+  QHBoxLayout* hboxtext2 = new QHBoxLayout();
   hboxtext2->addWidget(india_label2);
   add_expanding(hboxtext2, india_text2);
 
-  QVBoxLayout *vbox = new QVBoxLayout(this);
+  QVBoxLayout* vbox = new QVBoxLayout(this);
   add_expanding(vbox, hboxtext1);
   add_expanding(vbox, hboxtext2);
   vbox->addWidget(separator(QFrame::HLine));

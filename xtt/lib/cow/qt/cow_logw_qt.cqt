@@ -36,25 +36,16 @@
 
 /* co_logw_qt.cpp -- History log window */
 
-#include "glow_std.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "co_cdh.h"
-#include "co_time.h"
-#include "co_dcli.h"
-#include "co_lng.h"
 #include "cow_xhelp.h"
 #include "cow_logw_qt.h"
 #include "cow_logwnav_qt.h"
-#include "cow_wow_qt.h"
+#include "cow_qt_helpers.h"
 
 #include <QMenuBar>
 #include <QVBoxLayout>
 
-CoLogWQt::CoLogWQt(void *logw_parent_ctx, QWidget *logw_parent_wid,
-                   const char *logw_name, int l_show_item, pwr_tStatus *status)
+CoLogWQt::CoLogWQt(void* logw_parent_ctx, QWidget* logw_parent_wid,
+    const char* logw_name, int l_show_item, pwr_tStatus* status)
     : CoLogW(logw_parent_ctx, logw_name, l_show_item, status)
 {
   toplevel = new CoLogWQtWidget(this, logw_parent_wid);
@@ -65,24 +56,25 @@ CoLogWQt::CoLogWQt(void *logw_parent_ctx, QWidget *logw_parent_wid,
 
   CoWowQt::SetWindowIcon(toplevel);
 
-  QMenuBar *menu_bar = new QMenuBar();
+  QMenuBar* menu_bar = new QMenuBar();
 
   // File Entry
-  QMenu *file = menu_bar->addMenu("&File");
-  addMenuItem(toplevel, file, "&Print", SLOT(activate_print()), "",
-              "document-print");
-  addMenuItem(toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+  QMenu* file = menu_bar->addMenu("&File");
+  addMenuItem(
+      toplevel, file, "&Print", SLOT(activate_print()), "", "document-print");
+  addMenuItem(
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
   // View menu
-  QMenu *view = menu_bar->addMenu("&View");
+  QMenu* view = menu_bar->addMenu("&View");
   addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoom_in()), "CTRL+I",
-              "zoom-in");
+      "zoom-in");
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
-              "zoom-out");
+      "zoom-out");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "",
-              "zoom-original");
+      "zoom-original");
 
-  QVBoxLayout *form = new QVBoxLayout(toplevel);
+  QVBoxLayout* form = new QVBoxLayout(toplevel);
 
   // Create logwnav
   logwnav = new CoLogWNavQt(this, toplevel, l_show_item, &nav_widget);
@@ -101,11 +93,10 @@ void CoLogWQt::print()
   pwr_tStatus sts;
 
   CoWowQt::CreateBrowPrintDialogQt(name, logwnav->brow->ctx,
-                                   flow_eOrientation_Portrait, 1.0,
-                                   toplevel, &sts);
+      flow_eOrientation_Portrait, 1.0, toplevel, &sts);
 }
 
-void CoLogWQtWidget::focusInEvent(QFocusEvent *event)
+void CoLogWQtWidget::focusInEvent(QFocusEvent* event)
 {
   if (!logw->focustimer.disabled()) {
     logw->logwnav->set_input_focus();
@@ -115,7 +106,7 @@ void CoLogWQtWidget::focusInEvent(QFocusEvent *event)
   QWidget::focusInEvent(event);
 }
 
-void CoLogWQtWidget::closeEvent(QCloseEvent *event)
+void CoLogWQtWidget::closeEvent(QCloseEvent* event)
 {
   delete logw;
   QWidget::closeEvent(event);
@@ -144,5 +135,5 @@ void CoLogWQtWidget::activate_zoom_reset()
 void CoLogWQtWidget::activate_help()
 {
   CoXHelp::dhelp("messagewindow_refman", 0, navh_eHelpFile_Other,
-                 "$pwr_lang/man_dg.dat", true);
+      "$pwr_lang/man_dg.dat", true);
 }

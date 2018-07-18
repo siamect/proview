@@ -39,18 +39,16 @@
 
 /* pn_viewernav_qt.h -- Profinet viewer */
 
-#ifndef pn_viewernav_h
-# include "../src/pn_viewernav.h"
-#endif
+#include "../src/pn_viewernav.h"
 
 class PnViewerNavQt : public PnViewerNav {
 public:
-  PnViewerNavQt(void *v_parent_ctx, QWidget *v_parent_wid, viewer_eType v_type,
-                QWidget **w);
+  PnViewerNavQt(void* v_parent_ctx, QWidget* v_parent_wid, viewer_eType v_type,
+      QWidget** w);
   ~PnViewerNavQt();
 
-  QWidget *brow_widget;
-  QWidget *form_widget;
+  QWidget* brow_widget;
+  QWidget* form_widget;
 
   void set_input_focus();
 };

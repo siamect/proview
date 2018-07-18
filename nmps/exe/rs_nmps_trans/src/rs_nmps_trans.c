@@ -56,26 +56,21 @@
 #include <float.h>
 #endif
 
-#include "pwr.h"
 #include "pwr_baseclasses.h"
 #include "pwr_nmpsclasses.h"
 #include "pwr_remoteclasses.h"
 #include "co_cdh.h"
-#include "co_math.h"
 #include "co_time.h"
 #include "rt_gdh.h"
-#include "rt_errh.h"
-#include "rt_qcom.h"
-#include "rt_ini_event.h"
-#include "rt_qcom_msg.h"
-#include "rt_mh_msg.h"
-#include "rt_mh_net.h"
-#include "rt_mh_appl.h"
-#include "rt_plc_utl.h"
 #include "rt_gdh_msg.h"
 #include "rt_hash_msg.h"
-#include "nmps_cnv.h"
+#include "rt_ini_event.h"
+#include "rt_mh_appl.h"
 #include "rs_nmps_msg.h"
+#include "rt_plc_utl.h"
+#include "rt_qcom_msg.h"
+
+#include "nmps_cnv.h"
 
 /* Global functions________________________________________________________*/
 

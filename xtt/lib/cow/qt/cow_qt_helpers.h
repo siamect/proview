@@ -44,62 +44,64 @@
 #include <QString>
 #include <QToolBar>
 
-void print_time(FILE *stream, int fulldate = 0);
+void print_time(FILE* stream, int fulldate = 0);
 
 #define DEBUG 1
 
-void dbg_print(const char *file, int line, const char *fmt, ...);
+void dbg_print(const char* file, int line, const char* fmt, ...);
 
-void dbg_print(const char *file, int line, QString str);
+void dbg_print(const char* file, int line, QString str);
 
-#define debug_print(fmt, args...) \
-    do { if (DEBUG) { dbg_print(__FILE__, __LINE__, fmt, ##args); } } while (0)
+#define debug_print(fmt, args...)                                              \
+  do {                                                                         \
+    if (DEBUG) {                                                               \
+      dbg_print(__FILE__, __LINE__, fmt, ##args);                              \
+    }                                                                          \
+  } while (0)
 
-#define debug_print2(qstr) \
-    do { if (DEBUG) { dbg_print(__FILE__, __LINE__, qstr); } } while (0)
+#define debug_print2(qstr)                                                     \
+  do {                                                                         \
+    if (DEBUG) {                                                               \
+      dbg_print(__FILE__, __LINE__, qstr);                                     \
+    }                                                                          \
+  } while (0)
 
 /*
  * Qt Helper functions
  */
-QString fl(const char *text);
-QString convert_utf8(const char *str);
-QString translate_utf8(const char *str);
-void pop(QWidget *w);
-void showNow(QWidget *w);
-QIcon get_icon(const char *iconName);
-QAction *addMenuItem(QObject *parent, QMenu *menu, const char *text,
-                     const char *callback, const char *shortcut = "",
-                     const char *iconName = "");
-QAction *addMenuItemMapped(QObject *parent, QMenu *menu, const char *text,
-                           const char *callback, const char *signal,
-                           const char *shortcut = "",
-                           const char *iconName = "");
-QAction *addCheckableMenuItem(QObject *parent, QMenu *menu, const char *text,
-                              const char *callback, const char *shortcut = "",
-                              const char *iconName = "");
-QAction *addMenuRadioItem(QObject *parent, QMenu *menu, const char *text,
-                          const char *callback, QActionGroup *group,
-                          const char *shortcut = "");
-QAction *addToolItem(QObject *parent, QToolBar *tools, const char *text,
-                     const char *callback, const char *iconName);
-QAction *addToolItemMapped(QObject *parent, QToolBar *tools, const char *text,
-                           const char *callback, const char *signal,
-                           const char *iconName = "");
-QAction *addToolRadioItem(QObject *parent, QToolBar *tools, const char *text,
-                          const char *callback, QActionGroup *group);
-QAction *addCheckableToolItem(QObject *parent, QToolBar *tools,
-                              const char *text, const char *callback,
-                              const char *iconName);
-QMenu *addToolMenu(QWidget *parent, QToolBar *tools, const char *text);
-QWidget *layout_to_widget(QLayout *layout);
-void set_pane_position(QSplitter *pane, int right);
-QFrame *separator(QFrame::Shape shape);
-QLabel *new_image_label(QWidget *parent, const char *fname);
-void fixed_put(QWidget *parent, QWidget *widget, int x, int y);
-void add_expanding(QStatusBar *statusbar, QWidget *widget);
-void add_expanding(QSplitter *splitter, QWidget *widget);
-void add_expanding(QSplitter *splitter, QLayout *widget);
-void add_expanding(QLayout *layout, QWidget *widget);
-void add_expanding(QLayout *layout, QLayout *widget);
+QString fl(const char* text);
+QString convert_utf8(const char* str);
+QString translate_utf8(const char* str);
+void pop(QWidget* w);
+void showNow(QWidget* w);
+QIcon get_icon(const char* iconName);
+QAction* addMenuItem(QObject* parent, QMenu* menu, const char* text,
+    const char* callback, const char* shortcut = "", const char* iconName = "");
+QAction* addMenuItemMapped(QObject* parent, QMenu* menu, const char* text,
+    const char* callback, const char* signal, const char* shortcut = "",
+    const char* iconName = "");
+QAction* addCheckableMenuItem(QObject* parent, QMenu* menu, const char* text,
+    const char* callback, const char* shortcut = "", const char* iconName = "");
+QAction* addMenuRadioItem(QObject* parent, QMenu* menu, const char* text,
+    const char* callback, QActionGroup* group, const char* shortcut = "");
+QAction* addToolItem(QObject* parent, QToolBar* tools, const char* text,
+    const char* callback, const char* iconName);
+QAction* addToolItemMapped(QObject* parent, QToolBar* tools, const char* text,
+    const char* callback, const char* signal, const char* iconName = "");
+QAction* addToolRadioItem(QObject* parent, QToolBar* tools, const char* text,
+    const char* callback, QActionGroup* group);
+QAction* addCheckableToolItem(QObject* parent, QToolBar* tools,
+    const char* text, const char* callback, const char* iconName);
+QMenu* addToolMenu(QWidget* parent, QToolBar* tools, const char* text);
+QWidget* layout_to_widget(QLayout* layout);
+void set_pane_position(QSplitter* pane, int right);
+QFrame* separator(QFrame::Shape shape);
+QLabel* new_image_label(QWidget* parent, const char* fname);
+void fixed_put(QWidget* parent, QWidget* widget, int x, int y);
+void add_expanding(QStatusBar* statusbar, QWidget* widget);
+void add_expanding(QSplitter* splitter, QWidget* widget);
+void add_expanding(QSplitter* splitter, QLayout* widget);
+void add_expanding(QLayout* layout, QWidget* widget);
+void add_expanding(QLayout* layout, QLayout* widget);
 
-#endif //QT_HELPERS_H
+#endif // QT_HELPERS_H

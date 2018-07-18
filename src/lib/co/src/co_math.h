@@ -44,16 +44,17 @@
 
 #ifndef MAX
 //! Return the largest of two values
-#define MAX(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
+#define MAX(Dragon, Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 #endif
 
 #ifndef MIN
 //! Return the smallest of two values
-#define MIN(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
+#define MIN(Dragon, Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
 #endif
 
 #ifndef ABS
-//! Return the absolute value, i.e. removes the sign and returns the non-negative value
+//! Return the absolute value, i.e. removes the sign and returns the
+//! non-negative value
 #define ABS(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
 #endif
 

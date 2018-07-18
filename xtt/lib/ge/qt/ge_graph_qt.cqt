@@ -34,36 +34,22 @@
  * General Public License plus this exception.
  **/
 
-#include "glow_std.h"
+#include "cow_qt_helpers.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <float.h>
-
-#include "co_cdh.h"
-#include "co_time.h"
-#include "rt_gdh.h"
-#include "co_dcli.h"
-#include "ge_msg.h"
-
-#include "glow.h"
-#include "glow_growctx.h"
-#include "glow_growapi.h"
+#include "glow_growwidget_qt.h"
 
 #include "ge_graph_qt.h"
 #include "ge_attr_qt.h"
-#include "glow_growwidget_qt.h"
 
-GraphQt::GraphQt(void *xn_parent_ctx, QWidget *xn_parent_wid,
-                 const char *xn_name, QWidget **w, pwr_tStatus *status,
-                 const char *xn_default_path, graph_eMode graph_mode,
-                 int scrollbar, int xn_gdh_init_done,
-                 const char *xn_object_name, int xn_use_default_access,
-                 unsigned int xn_default_access, unsigned int xn_options,
-                 int xn_color_theme, void (*xn_keyboard_cb)(void *, int, int))
+GraphQt::GraphQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
+    const char* xn_name, QWidget** w, pwr_tStatus* status,
+    const char* xn_default_path, graph_eMode graph_mode, int scrollbar,
+    int xn_gdh_init_done, const char* xn_object_name, int xn_use_default_access,
+    unsigned int xn_default_access, unsigned int xn_options, int xn_color_theme,
+    void (*xn_keyboard_cb)(void*, int, int))
     : Graph(xn_parent_ctx, xn_name, xn_default_path, graph_mode,
-            xn_gdh_init_done, xn_object_name, xn_use_default_access,
-            xn_default_access, xn_options, xn_color_theme, xn_keyboard_cb),
+          xn_gdh_init_done, xn_object_name, xn_use_default_access,
+          xn_default_access, xn_options, xn_color_theme, xn_keyboard_cb),
       parent_wid(xn_parent_wid)
 {
   trace_obj = new GraphQtTraceObject(this);
@@ -71,8 +57,8 @@ GraphQt::GraphQt(void *xn_parent_ctx, QWidget *xn_parent_wid,
   default_access = xn_default_access;
   if (scrollbar) {
     debug_print("creating a scrolledgrowwidgetqt\n");
-    form_widget =
-        scrolledgrowwidgetqt_new(graph_init_grow_base_cb, this, &grow_widget);
+    form_widget
+        = scrolledgrowwidgetqt_new(graph_init_grow_base_cb, this, &grow_widget);
   } else {
     debug_print("creating a growwidgetqt\n");
     grow_widget = form_widget = growwidgetqt_new(graph_init_grow_base_cb, this);
@@ -88,7 +74,7 @@ GraphQt::GraphQt(void *xn_parent_ctx, QWidget *xn_parent_wid,
 
 GraphQt::~GraphQt()
 {
-  Attr *attrctx;
+  Attr* attrctx;
   int sts;
 
   closing_down = 1;
@@ -97,11 +83,11 @@ GraphQt::~GraphQt()
     close_trace(0);
   }
 
-  sts = attr_list.get_first((void **) &attrctx);
+  sts = attr_list.get_first((void**)&attrctx);
   while (sts) {
     delete attrctx;
-    attr_list.remove((void *) attrctx);
-    sts = attr_list.get_first((void **) &attrctx);
+    attr_list.remove((void*)attrctx);
+    sts = attr_list.get_first((void**)&attrctx);
   }
 
   localdb_free();
@@ -131,20 +117,20 @@ void GraphQt::trace_timer_add(int time)
 {
   trace_timerid = new QTimer();
   trace_timerid->setSingleShot(true);
-  QObject::connect(trace_timerid, SIGNAL(triggered()), trace_obj,
-                   SLOT(trace_scan()));
+  QObject::connect(
+      trace_timerid, SIGNAL(triggered()), trace_obj, SLOT(trace_scan()));
   trace_timerid->start(time);
 }
 
-int GraphQt::create_navigator(QWidget *parent)
+int GraphQt::create_navigator(QWidget* parent)
 {
   debug_print("creating a grownavwidgetqt\n");
   nav_widget = grownavwidgetqt_new(grow_widget);
   return 1;
 }
 
-Attr *GraphQt::attr_new(void *parent_ctx, attr_eType type, void *object,
-                        attr_sItem *itemlist, int item_cnt)
+Attr* GraphQt::attr_new(void* parent_ctx, attr_eType type, void* object,
+    attr_sItem* itemlist, int item_cnt)
 {
   return new AttrQt(parent_wid, parent_ctx, type, object, itemlist, item_cnt);
 }
@@ -156,7 +142,7 @@ void GraphQt::set_inputfocus(int focus)
   }
 }
 
-void GraphQt::popup_position(int event_x, int event_y, int *x, int *y)
+void GraphQt::popup_position(int event_x, int event_y, int* x, int* y)
 {
   CoWowQt::PopupPosition(grow_widget, event_x, event_y, x, y);
 }

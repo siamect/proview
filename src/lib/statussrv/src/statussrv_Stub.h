@@ -16,540 +16,622 @@
  *                                                                            *
 \******************************************************************************/
 
-
 /******************************************************************************\
  *                                                                            *
  * Classes and Structs                                                        *
  *                                                                            *
 \******************************************************************************/
 
-
-
-
 #ifndef SOAP_TYPE_xsd__anyType
 #define SOAP_TYPE_xsd__anyType (7)
 /* Primitive xsd:anyType schema type: */
-class SOAP_CMAC xsd__anyType
-{
-public:
-	char *__item;
-	struct soap *soap;	/* transient */
-public:
-	virtual int soap_type() const { return 7; } /* = unique id SOAP_TYPE_xsd__anyType */
-	virtual void soap_default(struct soap*);
-	virtual void soap_serialize(struct soap*) const;
-	virtual int soap_put(struct soap*, const char*, const char*) const;
-	virtual int soap_out(struct soap*, const char*, int, const char*) const;
-	virtual void *soap_get(struct soap*, const char*, const char*);
-	virtual void *soap_in(struct soap*, const char*, const char*);
-	         xsd__anyType() : __item(NULL), soap(NULL) { }
-	virtual ~xsd__anyType() { }
+class SOAP_CMAC xsd__anyType {
+  public:
+  char* __item;
+  struct soap* soap; /* transient */
+  public:
+  virtual int soap_type() const
+  {
+    return 7;
+  } /* = unique id SOAP_TYPE_xsd__anyType */
+  virtual void soap_default(struct soap*);
+  virtual void soap_serialize(struct soap*) const;
+  virtual int soap_put(struct soap*, const char*, const char*) const;
+  virtual int soap_out(struct soap*, const char*, int, const char*) const;
+  virtual void* soap_get(struct soap*, const char*, const char*);
+  virtual void* soap_in(struct soap*, const char*, const char*);
+  xsd__anyType() : __item(NULL), soap(NULL)
+  {
+  }
+  virtual ~xsd__anyType()
+  {
+  }
 };
 #endif
 
 #ifndef SOAP_TYPE_xsd__int
 #define SOAP_TYPE_xsd__int (10)
 /* Primitive xsd:int schema type: */
-class SOAP_CMAC xsd__int : public xsd__anyType
-{
-public:
-	int __item;
-public:
-	virtual int soap_type() const { return 10; } /* = unique id SOAP_TYPE_xsd__int */
-	virtual void soap_default(struct soap*);
-	virtual void soap_serialize(struct soap*) const;
-	virtual int soap_put(struct soap*, const char*, const char*) const;
-	virtual int soap_out(struct soap*, const char*, int, const char*) const;
-	virtual void *soap_get(struct soap*, const char*, const char*);
-	virtual void *soap_in(struct soap*, const char*, const char*);
-	         xsd__int()  { }
-	virtual ~xsd__int() { }
+class SOAP_CMAC xsd__int : public xsd__anyType {
+  public:
+  int __item;
+
+  public:
+  virtual int soap_type() const
+  {
+    return 10;
+  } /* = unique id SOAP_TYPE_xsd__int */
+  virtual void soap_default(struct soap*);
+  virtual void soap_serialize(struct soap*) const;
+  virtual int soap_put(struct soap*, const char*, const char*) const;
+  virtual int soap_out(struct soap*, const char*, int, const char*) const;
+  virtual void* soap_get(struct soap*, const char*, const char*);
+  virtual void* soap_in(struct soap*, const char*, const char*);
+  xsd__int()
+  {
+  }
+  virtual ~xsd__int()
+  {
+  }
 };
 #endif
 
 #ifndef SOAP_TYPE_xsd__string
 #define SOAP_TYPE_xsd__string (11)
 /* Primitive xsd:string schema type: */
-class SOAP_CMAC xsd__string : public xsd__anyType
-{
-public:
-	std::string __item;
-public:
-	virtual int soap_type() const { return 11; } /* = unique id SOAP_TYPE_xsd__string */
-	virtual void soap_default(struct soap*);
-	virtual void soap_serialize(struct soap*) const;
-	virtual int soap_put(struct soap*, const char*, const char*) const;
-	virtual int soap_out(struct soap*, const char*, int, const char*) const;
-	virtual void *soap_get(struct soap*, const char*, const char*);
-	virtual void *soap_in(struct soap*, const char*, const char*);
-	         xsd__string()  { }
-	virtual ~xsd__string() { }
+class SOAP_CMAC xsd__string : public xsd__anyType {
+  public:
+  std::string __item;
+
+  public:
+  virtual int soap_type() const
+  {
+    return 11;
+  } /* = unique id SOAP_TYPE_xsd__string */
+  virtual void soap_default(struct soap*);
+  virtual void soap_serialize(struct soap*) const;
+  virtual int soap_put(struct soap*, const char*, const char*) const;
+  virtual int soap_out(struct soap*, const char*, int, const char*) const;
+  virtual void* soap_get(struct soap*, const char*, const char*);
+  virtual void* soap_in(struct soap*, const char*, const char*);
+  xsd__string()
+  {
+  }
+  virtual ~xsd__string()
+  {
+  }
 };
 #endif
 
 #ifndef SOAP_TYPE__s0__GetStatus
 #define SOAP_TYPE__s0__GetStatus (13)
 /* s0:GetStatus */
-class SOAP_CMAC _s0__GetStatus
-{
-public:
-	std::string *ClientRequestHandle;	/* optional attribute */
-	struct soap *soap;	/* transient */
-public:
-	virtual int soap_type() const { return 13; } /* = unique id SOAP_TYPE__s0__GetStatus */
-	virtual void soap_default(struct soap*);
-	virtual void soap_serialize(struct soap*) const;
-	virtual int soap_put(struct soap*, const char*, const char*) const;
-	virtual int soap_out(struct soap*, const char*, int, const char*) const;
-	virtual void *soap_get(struct soap*, const char*, const char*);
-	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _s0__GetStatus() : ClientRequestHandle(NULL), soap(NULL) { }
-	virtual ~_s0__GetStatus() { }
+class SOAP_CMAC _s0__GetStatus {
+  public:
+  std::string* ClientRequestHandle; /* optional attribute */
+  struct soap* soap; /* transient */
+  public:
+  virtual int soap_type() const
+  {
+    return 13;
+  } /* = unique id SOAP_TYPE__s0__GetStatus */
+  virtual void soap_default(struct soap*);
+  virtual void soap_serialize(struct soap*) const;
+  virtual int soap_put(struct soap*, const char*, const char*) const;
+  virtual int soap_out(struct soap*, const char*, int, const char*) const;
+  virtual void* soap_get(struct soap*, const char*, const char*);
+  virtual void* soap_in(struct soap*, const char*, const char*);
+  _s0__GetStatus() : ClientRequestHandle(NULL), soap(NULL)
+  {
+  }
+  virtual ~_s0__GetStatus()
+  {
+  }
 };
 #endif
 
 #ifndef SOAP_TYPE__s0__GetStatusResponse
 #define SOAP_TYPE__s0__GetStatusResponse (14)
 /* s0:GetStatusResponse */
-class SOAP_CMAC _s0__GetStatusResponse
-{
-public:
-	std::string Version;	/* RPC return element */	/* required element of type xsd:string */
-	int SystemStatus;	/* required element of type xsd:int */
-	std::string SystemStatusStr;	/* required element of type xsd:string */
-	std::string *Description;	/* optional element of type xsd:string */
-	std::string *SystemTime;	/* optional element of type xsd:string */
-	std::string *BootTime;	/* optional element of type xsd:string */
-	std::string *RestartTime;	/* optional element of type xsd:string */
-	int *Restarts;	/* optional element of type xsd:int */
-	int UserStatus1;	/* required element of type xsd:int */
-	std::string *UserStatusStr1;	/* optional element of type xsd:string */
-	int UserStatus2;	/* required element of type xsd:int */
-	std::string *UserStatusStr2;	/* optional element of type xsd:string */
-	int UserStatus3;	/* required element of type xsd:int */
-	std::string *UserStatusStr3;	/* optional element of type xsd:string */
-	int UserStatus4;	/* required element of type xsd:int */
-	std::string *UserStatusStr4;	/* optional element of type xsd:string */
-	int UserStatus5;	/* required element of type xsd:int */
-	std::string *UserStatusStr5;	/* optional element of type xsd:string */
-	std::string *ClientRequestHandle;	/* optional attribute */
-	struct soap *soap;	/* transient */
-public:
-	virtual int soap_type() const { return 14; } /* = unique id SOAP_TYPE__s0__GetStatusResponse */
-	virtual void soap_default(struct soap*);
-	virtual void soap_serialize(struct soap*) const;
-	virtual int soap_put(struct soap*, const char*, const char*) const;
-	virtual int soap_out(struct soap*, const char*, int, const char*) const;
-	virtual void *soap_get(struct soap*, const char*, const char*);
-	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _s0__GetStatusResponse() : Description(NULL), SystemTime(NULL), BootTime(NULL), RestartTime(NULL), Restarts(NULL), UserStatusStr1(NULL), UserStatusStr2(NULL), UserStatusStr3(NULL), UserStatusStr4(NULL), UserStatusStr5(NULL), ClientRequestHandle(NULL), soap(NULL) { }
-	virtual ~_s0__GetStatusResponse() { }
+class SOAP_CMAC _s0__GetStatusResponse {
+  public:
+  std::string Version;
+      /* RPC return element */ /* required element of type xsd:string */
+  int SystemStatus; /* required element of type xsd:int */
+  std::string SystemStatusStr; /* required element of type xsd:string */
+  std::string* Description; /* optional element of type xsd:string */
+  std::string* SystemTime; /* optional element of type xsd:string */
+  std::string* BootTime; /* optional element of type xsd:string */
+  std::string* RestartTime; /* optional element of type xsd:string */
+  int* Restarts; /* optional element of type xsd:int */
+  int UserStatus1; /* required element of type xsd:int */
+  std::string* UserStatusStr1; /* optional element of type xsd:string */
+  int UserStatus2; /* required element of type xsd:int */
+  std::string* UserStatusStr2; /* optional element of type xsd:string */
+  int UserStatus3; /* required element of type xsd:int */
+  std::string* UserStatusStr3; /* optional element of type xsd:string */
+  int UserStatus4; /* required element of type xsd:int */
+  std::string* UserStatusStr4; /* optional element of type xsd:string */
+  int UserStatus5; /* required element of type xsd:int */
+  std::string* UserStatusStr5; /* optional element of type xsd:string */
+  std::string* ClientRequestHandle; /* optional attribute */
+  struct soap* soap; /* transient */
+  public:
+  virtual int soap_type() const
+  {
+    return 14;
+  } /* = unique id SOAP_TYPE__s0__GetStatusResponse */
+  virtual void soap_default(struct soap*);
+  virtual void soap_serialize(struct soap*) const;
+  virtual int soap_put(struct soap*, const char*, const char*) const;
+  virtual int soap_out(struct soap*, const char*, int, const char*) const;
+  virtual void* soap_get(struct soap*, const char*, const char*);
+  virtual void* soap_in(struct soap*, const char*, const char*);
+  _s0__GetStatusResponse()
+      : Description(NULL), SystemTime(NULL), BootTime(NULL), RestartTime(NULL),
+        Restarts(NULL), UserStatusStr1(NULL), UserStatusStr2(NULL),
+        UserStatusStr3(NULL), UserStatusStr4(NULL), UserStatusStr5(NULL),
+        ClientRequestHandle(NULL), soap(NULL)
+  {
+  }
+  virtual ~_s0__GetStatusResponse()
+  {
+  }
 };
 #endif
 
 #ifndef SOAP_TYPE__s0__GetExtStatus
 #define SOAP_TYPE__s0__GetExtStatus (15)
 /* s0:GetExtStatus */
-class SOAP_CMAC _s0__GetExtStatus
-{
-public:
-	std::string *ClientRequestHandle;	/* optional attribute */
-	struct soap *soap;	/* transient */
-public:
-	virtual int soap_type() const { return 15; } /* = unique id SOAP_TYPE__s0__GetExtStatus */
-	virtual void soap_default(struct soap*);
-	virtual void soap_serialize(struct soap*) const;
-	virtual int soap_put(struct soap*, const char*, const char*) const;
-	virtual int soap_out(struct soap*, const char*, int, const char*) const;
-	virtual void *soap_get(struct soap*, const char*, const char*);
-	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _s0__GetExtStatus() : ClientRequestHandle(NULL), soap(NULL) { }
-	virtual ~_s0__GetExtStatus() { }
+class SOAP_CMAC _s0__GetExtStatus {
+  public:
+  std::string* ClientRequestHandle; /* optional attribute */
+  struct soap* soap; /* transient */
+  public:
+  virtual int soap_type() const
+  {
+    return 15;
+  } /* = unique id SOAP_TYPE__s0__GetExtStatus */
+  virtual void soap_default(struct soap*);
+  virtual void soap_serialize(struct soap*) const;
+  virtual int soap_put(struct soap*, const char*, const char*) const;
+  virtual int soap_out(struct soap*, const char*, int, const char*) const;
+  virtual void* soap_get(struct soap*, const char*, const char*);
+  virtual void* soap_in(struct soap*, const char*, const char*);
+  _s0__GetExtStatus() : ClientRequestHandle(NULL), soap(NULL)
+  {
+  }
+  virtual ~_s0__GetExtStatus()
+  {
+  }
 };
 #endif
 
 #ifndef SOAP_TYPE__s0__GetExtStatusResponse
 #define SOAP_TYPE__s0__GetExtStatusResponse (16)
 /* s0:GetExtStatusResponse */
-class SOAP_CMAC _s0__GetExtStatusResponse
-{
-public:
-	int ServerSts1;	/* RPC return element */	/* required element of type xsd:int */
-	std::string ServerSts1Str;	/* required element of type xsd:string */
-	std::string ServerSts1Name;	/* required element of type xsd:string */
-	int ServerSts2;	/* required element of type xsd:int */
-	std::string ServerSts2Str;	/* required element of type xsd:string */
-	std::string ServerSts2Name;	/* required element of type xsd:string */
-	int ServerSts3;	/* required element of type xsd:int */
-	std::string ServerSts3Str;	/* required element of type xsd:string */
-	std::string ServerSts3Name;	/* required element of type xsd:string */
-	int ServerSts4;	/* required element of type xsd:int */
-	std::string ServerSts4Str;	/* required element of type xsd:string */
-	std::string ServerSts4Name;	/* required element of type xsd:string */
-	int ServerSts5;	/* required element of type xsd:int */
-	std::string ServerSts5Str;	/* required element of type xsd:string */
-	std::string ServerSts5Name;	/* required element of type xsd:string */
-	int ServerSts6;	/* required element of type xsd:int */
-	std::string ServerSts6Str;	/* required element of type xsd:string */
-	std::string ServerSts6Name;	/* required element of type xsd:string */
-	int ServerSts7;	/* required element of type xsd:int */
-	std::string ServerSts7Str;	/* required element of type xsd:string */
-	std::string ServerSts7Name;	/* required element of type xsd:string */
-	int ServerSts8;	/* required element of type xsd:int */
-	std::string ServerSts8Str;	/* required element of type xsd:string */
-	std::string ServerSts8Name;	/* required element of type xsd:string */
-	int ServerSts9;	/* required element of type xsd:int */
-	std::string ServerSts9Str;	/* required element of type xsd:string */
-	std::string ServerSts9Name;	/* required element of type xsd:string */
-	int ServerSts10;	/* required element of type xsd:int */
-	std::string ServerSts10Str;	/* required element of type xsd:string */
-	std::string ServerSts10Name;	/* required element of type xsd:string */
-	int ServerSts11;	/* required element of type xsd:int */
-	std::string ServerSts11Str;	/* required element of type xsd:string */
-	std::string ServerSts11Name;	/* required element of type xsd:string */
-	int ServerSts12;	/* required element of type xsd:int */
-	std::string ServerSts12Str;	/* required element of type xsd:string */
-	std::string ServerSts12Name;	/* required element of type xsd:string */
-	int ServerSts13;	/* required element of type xsd:int */
-	std::string ServerSts13Str;	/* required element of type xsd:string */
-	std::string ServerSts13Name;	/* required element of type xsd:string */
-	int ServerSts14;	/* required element of type xsd:int */
-	std::string ServerSts14Str;	/* required element of type xsd:string */
-	std::string ServerSts14Name;	/* required element of type xsd:string */
-	int ServerSts15;	/* required element of type xsd:int */
-	std::string ServerSts15Str;	/* required element of type xsd:string */
-	std::string ServerSts15Name;	/* required element of type xsd:string */
-	int ServerSts16;	/* required element of type xsd:int */
-	std::string ServerSts16Str;	/* required element of type xsd:string */
-	std::string ServerSts16Name;	/* required element of type xsd:string */
-	int ServerSts17;	/* required element of type xsd:int */
-	std::string ServerSts17Str;	/* required element of type xsd:string */
-	std::string ServerSts17Name;	/* required element of type xsd:string */
-	int ServerSts18;	/* required element of type xsd:int */
-	std::string ServerSts18Str;	/* required element of type xsd:string */
-	std::string ServerSts18Name;	/* required element of type xsd:string */
-	int ServerSts19;	/* required element of type xsd:int */
-	std::string ServerSts19Str;	/* required element of type xsd:string */
-	std::string ServerSts19Name;	/* required element of type xsd:string */
-	int ServerSts20;	/* required element of type xsd:int */
-	std::string ServerSts20Str;	/* required element of type xsd:string */
-	std::string ServerSts20Name;	/* required element of type xsd:string */
-	int ApplSts1;	/* required element of type xsd:int */
-	std::string ApplSts1Str;	/* required element of type xsd:string */
-	std::string ApplSts1Name;	/* required element of type xsd:string */
-	int ApplSts2;	/* required element of type xsd:int */
-	std::string ApplSts2Str;	/* required element of type xsd:string */
-	std::string ApplSts2Name;	/* required element of type xsd:string */
-	int ApplSts3;	/* required element of type xsd:int */
-	std::string ApplSts3Str;	/* required element of type xsd:string */
-	std::string ApplSts3Name;	/* required element of type xsd:string */
-	int ApplSts4;	/* required element of type xsd:int */
-	std::string ApplSts4Str;	/* required element of type xsd:string */
-	std::string ApplSts4Name;	/* required element of type xsd:string */
-	int ApplSts5;	/* required element of type xsd:int */
-	std::string ApplSts5Str;	/* required element of type xsd:string */
-	std::string ApplSts5Name;	/* required element of type xsd:string */
-	int ApplSts6;	/* required element of type xsd:int */
-	std::string ApplSts6Str;	/* required element of type xsd:string */
-	std::string ApplSts6Name;	/* required element of type xsd:string */
-	int ApplSts7;	/* required element of type xsd:int */
-	std::string ApplSts7Str;	/* required element of type xsd:string */
-	std::string ApplSts7Name;	/* required element of type xsd:string */
-	int ApplSts8;	/* required element of type xsd:int */
-	std::string ApplSts8Str;	/* required element of type xsd:string */
-	std::string ApplSts8Name;	/* required element of type xsd:string */
-	int ApplSts9;	/* required element of type xsd:int */
-	std::string ApplSts9Str;	/* required element of type xsd:string */
-	std::string ApplSts9Name;	/* required element of type xsd:string */
-	int ApplSts10;	/* required element of type xsd:int */
-	std::string ApplSts10Str;	/* required element of type xsd:string */
-	std::string ApplSts10Name;	/* required element of type xsd:string */
-	int ApplSts11;	/* required element of type xsd:int */
-	std::string ApplSts11Str;	/* required element of type xsd:string */
-	std::string ApplSts11Name;	/* required element of type xsd:string */
-	int ApplSts12;	/* required element of type xsd:int */
-	std::string ApplSts12Str;	/* required element of type xsd:string */
-	std::string ApplSts12Name;	/* required element of type xsd:string */
-	int ApplSts13;	/* required element of type xsd:int */
-	std::string ApplSts13Str;	/* required element of type xsd:string */
-	std::string ApplSts13Name;	/* required element of type xsd:string */
-	int ApplSts14;	/* required element of type xsd:int */
-	std::string ApplSts14Str;	/* required element of type xsd:string */
-	std::string ApplSts14Name;	/* required element of type xsd:string */
-	int ApplSts15;	/* required element of type xsd:int */
-	std::string ApplSts15Str;	/* required element of type xsd:string */
-	std::string ApplSts15Name;	/* required element of type xsd:string */
-	int ApplSts16;	/* required element of type xsd:int */
-	std::string ApplSts16Str;	/* required element of type xsd:string */
-	std::string ApplSts16Name;	/* required element of type xsd:string */
-	int ApplSts17;	/* required element of type xsd:int */
-	std::string ApplSts17Str;	/* required element of type xsd:string */
-	std::string ApplSts17Name;	/* required element of type xsd:string */
-	int ApplSts18;	/* required element of type xsd:int */
-	std::string ApplSts18Str;	/* required element of type xsd:string */
-	std::string ApplSts18Name;	/* required element of type xsd:string */
-	int ApplSts19;	/* required element of type xsd:int */
-	std::string ApplSts19Str;	/* required element of type xsd:string */
-	std::string ApplSts19Name;	/* required element of type xsd:string */
-	int ApplSts20;	/* required element of type xsd:int */
-	std::string ApplSts20Str;	/* required element of type xsd:string */
-	std::string ApplSts20Name;	/* required element of type xsd:string */
-	std::string *ClientRequestHandle;	/* optional attribute */
-	struct soap *soap;	/* transient */
-public:
-	virtual int soap_type() const { return 16; } /* = unique id SOAP_TYPE__s0__GetExtStatusResponse */
-	virtual void soap_default(struct soap*);
-	virtual void soap_serialize(struct soap*) const;
-	virtual int soap_put(struct soap*, const char*, const char*) const;
-	virtual int soap_out(struct soap*, const char*, int, const char*) const;
-	virtual void *soap_get(struct soap*, const char*, const char*);
-	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _s0__GetExtStatusResponse() : ClientRequestHandle(NULL), soap(NULL) { }
-	virtual ~_s0__GetExtStatusResponse() { }
+class SOAP_CMAC _s0__GetExtStatusResponse {
+  public:
+  int ServerSts1;
+      /* RPC return element */ /* required element of type xsd:int */
+  std::string ServerSts1Str; /* required element of type xsd:string */
+  std::string ServerSts1Name; /* required element of type xsd:string */
+  int ServerSts2; /* required element of type xsd:int */
+  std::string ServerSts2Str; /* required element of type xsd:string */
+  std::string ServerSts2Name; /* required element of type xsd:string */
+  int ServerSts3; /* required element of type xsd:int */
+  std::string ServerSts3Str; /* required element of type xsd:string */
+  std::string ServerSts3Name; /* required element of type xsd:string */
+  int ServerSts4; /* required element of type xsd:int */
+  std::string ServerSts4Str; /* required element of type xsd:string */
+  std::string ServerSts4Name; /* required element of type xsd:string */
+  int ServerSts5; /* required element of type xsd:int */
+  std::string ServerSts5Str; /* required element of type xsd:string */
+  std::string ServerSts5Name; /* required element of type xsd:string */
+  int ServerSts6; /* required element of type xsd:int */
+  std::string ServerSts6Str; /* required element of type xsd:string */
+  std::string ServerSts6Name; /* required element of type xsd:string */
+  int ServerSts7; /* required element of type xsd:int */
+  std::string ServerSts7Str; /* required element of type xsd:string */
+  std::string ServerSts7Name; /* required element of type xsd:string */
+  int ServerSts8; /* required element of type xsd:int */
+  std::string ServerSts8Str; /* required element of type xsd:string */
+  std::string ServerSts8Name; /* required element of type xsd:string */
+  int ServerSts9; /* required element of type xsd:int */
+  std::string ServerSts9Str; /* required element of type xsd:string */
+  std::string ServerSts9Name; /* required element of type xsd:string */
+  int ServerSts10; /* required element of type xsd:int */
+  std::string ServerSts10Str; /* required element of type xsd:string */
+  std::string ServerSts10Name; /* required element of type xsd:string */
+  int ServerSts11; /* required element of type xsd:int */
+  std::string ServerSts11Str; /* required element of type xsd:string */
+  std::string ServerSts11Name; /* required element of type xsd:string */
+  int ServerSts12; /* required element of type xsd:int */
+  std::string ServerSts12Str; /* required element of type xsd:string */
+  std::string ServerSts12Name; /* required element of type xsd:string */
+  int ServerSts13; /* required element of type xsd:int */
+  std::string ServerSts13Str; /* required element of type xsd:string */
+  std::string ServerSts13Name; /* required element of type xsd:string */
+  int ServerSts14; /* required element of type xsd:int */
+  std::string ServerSts14Str; /* required element of type xsd:string */
+  std::string ServerSts14Name; /* required element of type xsd:string */
+  int ServerSts15; /* required element of type xsd:int */
+  std::string ServerSts15Str; /* required element of type xsd:string */
+  std::string ServerSts15Name; /* required element of type xsd:string */
+  int ServerSts16; /* required element of type xsd:int */
+  std::string ServerSts16Str; /* required element of type xsd:string */
+  std::string ServerSts16Name; /* required element of type xsd:string */
+  int ServerSts17; /* required element of type xsd:int */
+  std::string ServerSts17Str; /* required element of type xsd:string */
+  std::string ServerSts17Name; /* required element of type xsd:string */
+  int ServerSts18; /* required element of type xsd:int */
+  std::string ServerSts18Str; /* required element of type xsd:string */
+  std::string ServerSts18Name; /* required element of type xsd:string */
+  int ServerSts19; /* required element of type xsd:int */
+  std::string ServerSts19Str; /* required element of type xsd:string */
+  std::string ServerSts19Name; /* required element of type xsd:string */
+  int ServerSts20; /* required element of type xsd:int */
+  std::string ServerSts20Str; /* required element of type xsd:string */
+  std::string ServerSts20Name; /* required element of type xsd:string */
+  int ApplSts1; /* required element of type xsd:int */
+  std::string ApplSts1Str; /* required element of type xsd:string */
+  std::string ApplSts1Name; /* required element of type xsd:string */
+  int ApplSts2; /* required element of type xsd:int */
+  std::string ApplSts2Str; /* required element of type xsd:string */
+  std::string ApplSts2Name; /* required element of type xsd:string */
+  int ApplSts3; /* required element of type xsd:int */
+  std::string ApplSts3Str; /* required element of type xsd:string */
+  std::string ApplSts3Name; /* required element of type xsd:string */
+  int ApplSts4; /* required element of type xsd:int */
+  std::string ApplSts4Str; /* required element of type xsd:string */
+  std::string ApplSts4Name; /* required element of type xsd:string */
+  int ApplSts5; /* required element of type xsd:int */
+  std::string ApplSts5Str; /* required element of type xsd:string */
+  std::string ApplSts5Name; /* required element of type xsd:string */
+  int ApplSts6; /* required element of type xsd:int */
+  std::string ApplSts6Str; /* required element of type xsd:string */
+  std::string ApplSts6Name; /* required element of type xsd:string */
+  int ApplSts7; /* required element of type xsd:int */
+  std::string ApplSts7Str; /* required element of type xsd:string */
+  std::string ApplSts7Name; /* required element of type xsd:string */
+  int ApplSts8; /* required element of type xsd:int */
+  std::string ApplSts8Str; /* required element of type xsd:string */
+  std::string ApplSts8Name; /* required element of type xsd:string */
+  int ApplSts9; /* required element of type xsd:int */
+  std::string ApplSts9Str; /* required element of type xsd:string */
+  std::string ApplSts9Name; /* required element of type xsd:string */
+  int ApplSts10; /* required element of type xsd:int */
+  std::string ApplSts10Str; /* required element of type xsd:string */
+  std::string ApplSts10Name; /* required element of type xsd:string */
+  int ApplSts11; /* required element of type xsd:int */
+  std::string ApplSts11Str; /* required element of type xsd:string */
+  std::string ApplSts11Name; /* required element of type xsd:string */
+  int ApplSts12; /* required element of type xsd:int */
+  std::string ApplSts12Str; /* required element of type xsd:string */
+  std::string ApplSts12Name; /* required element of type xsd:string */
+  int ApplSts13; /* required element of type xsd:int */
+  std::string ApplSts13Str; /* required element of type xsd:string */
+  std::string ApplSts13Name; /* required element of type xsd:string */
+  int ApplSts14; /* required element of type xsd:int */
+  std::string ApplSts14Str; /* required element of type xsd:string */
+  std::string ApplSts14Name; /* required element of type xsd:string */
+  int ApplSts15; /* required element of type xsd:int */
+  std::string ApplSts15Str; /* required element of type xsd:string */
+  std::string ApplSts15Name; /* required element of type xsd:string */
+  int ApplSts16; /* required element of type xsd:int */
+  std::string ApplSts16Str; /* required element of type xsd:string */
+  std::string ApplSts16Name; /* required element of type xsd:string */
+  int ApplSts17; /* required element of type xsd:int */
+  std::string ApplSts17Str; /* required element of type xsd:string */
+  std::string ApplSts17Name; /* required element of type xsd:string */
+  int ApplSts18; /* required element of type xsd:int */
+  std::string ApplSts18Str; /* required element of type xsd:string */
+  std::string ApplSts18Name; /* required element of type xsd:string */
+  int ApplSts19; /* required element of type xsd:int */
+  std::string ApplSts19Str; /* required element of type xsd:string */
+  std::string ApplSts19Name; /* required element of type xsd:string */
+  int ApplSts20; /* required element of type xsd:int */
+  std::string ApplSts20Str; /* required element of type xsd:string */
+  std::string ApplSts20Name; /* required element of type xsd:string */
+  std::string* ClientRequestHandle; /* optional attribute */
+  struct soap* soap; /* transient */
+  public:
+  virtual int soap_type() const
+  {
+    return 16;
+  } /* = unique id SOAP_TYPE__s0__GetExtStatusResponse */
+  virtual void soap_default(struct soap*);
+  virtual void soap_serialize(struct soap*) const;
+  virtual int soap_put(struct soap*, const char*, const char*) const;
+  virtual int soap_out(struct soap*, const char*, int, const char*) const;
+  virtual void* soap_get(struct soap*, const char*, const char*);
+  virtual void* soap_in(struct soap*, const char*, const char*);
+  _s0__GetExtStatusResponse() : ClientRequestHandle(NULL), soap(NULL)
+  {
+  }
+  virtual ~_s0__GetExtStatusResponse()
+  {
+  }
 };
 #endif
 
 #ifndef SOAP_TYPE__s0__Restart
 #define SOAP_TYPE__s0__Restart (17)
 /* s0:Restart */
-class SOAP_CMAC _s0__Restart
-{
-public:
-	std::string *ClientRequestHandle;	/* optional attribute */
-	struct soap *soap;	/* transient */
-public:
-	virtual int soap_type() const { return 17; } /* = unique id SOAP_TYPE__s0__Restart */
-	virtual void soap_default(struct soap*);
-	virtual void soap_serialize(struct soap*) const;
-	virtual int soap_put(struct soap*, const char*, const char*) const;
-	virtual int soap_out(struct soap*, const char*, int, const char*) const;
-	virtual void *soap_get(struct soap*, const char*, const char*);
-	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _s0__Restart() : ClientRequestHandle(NULL), soap(NULL) { }
-	virtual ~_s0__Restart() { }
+class SOAP_CMAC _s0__Restart {
+  public:
+  std::string* ClientRequestHandle; /* optional attribute */
+  struct soap* soap; /* transient */
+  public:
+  virtual int soap_type() const
+  {
+    return 17;
+  } /* = unique id SOAP_TYPE__s0__Restart */
+  virtual void soap_default(struct soap*);
+  virtual void soap_serialize(struct soap*) const;
+  virtual int soap_put(struct soap*, const char*, const char*) const;
+  virtual int soap_out(struct soap*, const char*, int, const char*) const;
+  virtual void* soap_get(struct soap*, const char*, const char*);
+  virtual void* soap_in(struct soap*, const char*, const char*);
+  _s0__Restart() : ClientRequestHandle(NULL), soap(NULL)
+  {
+  }
+  virtual ~_s0__Restart()
+  {
+  }
 };
 #endif
 
 #ifndef SOAP_TYPE__s0__RestartResponse
 #define SOAP_TYPE__s0__RestartResponse (18)
 /* s0:RestartResponse */
-class SOAP_CMAC _s0__RestartResponse
-{
-public:
-	std::string *ClientRequestHandle;	/* optional attribute */
-	struct soap *soap;	/* transient */
-public:
-	virtual int soap_type() const { return 18; } /* = unique id SOAP_TYPE__s0__RestartResponse */
-	virtual void soap_default(struct soap*);
-	virtual void soap_serialize(struct soap*) const;
-	virtual int soap_put(struct soap*, const char*, const char*) const;
-	virtual int soap_out(struct soap*, const char*, int, const char*) const;
-	virtual void *soap_get(struct soap*, const char*, const char*);
-	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _s0__RestartResponse() : ClientRequestHandle(NULL), soap(NULL) { }
-	virtual ~_s0__RestartResponse() { }
+class SOAP_CMAC _s0__RestartResponse {
+  public:
+  std::string* ClientRequestHandle; /* optional attribute */
+  struct soap* soap; /* transient */
+  public:
+  virtual int soap_type() const
+  {
+    return 18;
+  } /* = unique id SOAP_TYPE__s0__RestartResponse */
+  virtual void soap_default(struct soap*);
+  virtual void soap_serialize(struct soap*) const;
+  virtual int soap_put(struct soap*, const char*, const char*) const;
+  virtual int soap_out(struct soap*, const char*, int, const char*) const;
+  virtual void* soap_get(struct soap*, const char*, const char*);
+  virtual void* soap_in(struct soap*, const char*, const char*);
+  _s0__RestartResponse() : ClientRequestHandle(NULL), soap(NULL)
+  {
+  }
+  virtual ~_s0__RestartResponse()
+  {
+  }
 };
 #endif
 
 #ifndef SOAP_TYPE__s0__XttStart
 #define SOAP_TYPE__s0__XttStart (19)
 /* s0:XttStart */
-class SOAP_CMAC _s0__XttStart
-{
-public:
-	std::string *OpPlace;	/* optional element of type xsd:string */
-	std::string *Language;	/* optional element of type xsd:string */
-	std::string *Display;	/* optional element of type xsd:string */
-	std::string *GUI;	/* optional element of type xsd:string */
-	std::string *ClientRequestHandle;	/* optional attribute */
-	struct soap *soap;	/* transient */
-public:
-	virtual int soap_type() const { return 19; } /* = unique id SOAP_TYPE__s0__XttStart */
-	virtual void soap_default(struct soap*);
-	virtual void soap_serialize(struct soap*) const;
-	virtual int soap_put(struct soap*, const char*, const char*) const;
-	virtual int soap_out(struct soap*, const char*, int, const char*) const;
-	virtual void *soap_get(struct soap*, const char*, const char*);
-	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _s0__XttStart() : OpPlace(NULL), Language(NULL), Display(NULL), GUI(NULL), ClientRequestHandle(NULL), soap(NULL) { }
-	virtual ~_s0__XttStart() { }
+class SOAP_CMAC _s0__XttStart {
+  public:
+  std::string* OpPlace; /* optional element of type xsd:string */
+  std::string* Language; /* optional element of type xsd:string */
+  std::string* Display; /* optional element of type xsd:string */
+  std::string* GUI; /* optional element of type xsd:string */
+  std::string* ClientRequestHandle; /* optional attribute */
+  struct soap* soap; /* transient */
+  public:
+  virtual int soap_type() const
+  {
+    return 19;
+  } /* = unique id SOAP_TYPE__s0__XttStart */
+  virtual void soap_default(struct soap*);
+  virtual void soap_serialize(struct soap*) const;
+  virtual int soap_put(struct soap*, const char*, const char*) const;
+  virtual int soap_out(struct soap*, const char*, int, const char*) const;
+  virtual void* soap_get(struct soap*, const char*, const char*);
+  virtual void* soap_in(struct soap*, const char*, const char*);
+  _s0__XttStart()
+      : OpPlace(NULL), Language(NULL), Display(NULL), GUI(NULL),
+        ClientRequestHandle(NULL), soap(NULL)
+  {
+  }
+  virtual ~_s0__XttStart()
+  {
+  }
 };
 #endif
 
 #ifndef SOAP_TYPE__s0__XttStartResponse
 #define SOAP_TYPE__s0__XttStartResponse (20)
 /* s0:XttStartResponse */
-class SOAP_CMAC _s0__XttStartResponse
-{
-public:
-	std::string *ClientRequestHandle;	/* optional attribute */
-	struct soap *soap;	/* transient */
-public:
-	virtual int soap_type() const { return 20; } /* = unique id SOAP_TYPE__s0__XttStartResponse */
-	virtual void soap_default(struct soap*);
-	virtual void soap_serialize(struct soap*) const;
-	virtual int soap_put(struct soap*, const char*, const char*) const;
-	virtual int soap_out(struct soap*, const char*, int, const char*) const;
-	virtual void *soap_get(struct soap*, const char*, const char*);
-	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _s0__XttStartResponse() : ClientRequestHandle(NULL), soap(NULL) { }
-	virtual ~_s0__XttStartResponse() { }
+class SOAP_CMAC _s0__XttStartResponse {
+  public:
+  std::string* ClientRequestHandle; /* optional attribute */
+  struct soap* soap; /* transient */
+  public:
+  virtual int soap_type() const
+  {
+    return 20;
+  } /* = unique id SOAP_TYPE__s0__XttStartResponse */
+  virtual void soap_default(struct soap*);
+  virtual void soap_serialize(struct soap*) const;
+  virtual int soap_put(struct soap*, const char*, const char*) const;
+  virtual int soap_out(struct soap*, const char*, int, const char*) const;
+  virtual void* soap_get(struct soap*, const char*, const char*);
+  virtual void* soap_in(struct soap*, const char*, const char*);
+  _s0__XttStartResponse() : ClientRequestHandle(NULL), soap(NULL)
+  {
+  }
+  virtual ~_s0__XttStartResponse()
+  {
+  }
 };
 #endif
 
 #ifndef SOAP_TYPE__s0__RtMonStart
 #define SOAP_TYPE__s0__RtMonStart (21)
 /* s0:RtMonStart */
-class SOAP_CMAC _s0__RtMonStart
-{
-public:
-	std::string *Language;	/* optional element of type xsd:string */
-	std::string *Display;	/* optional element of type xsd:string */
-	std::string *GUI;	/* optional element of type xsd:string */
-	std::string *ClientRequestHandle;	/* optional attribute */
-	struct soap *soap;	/* transient */
-public:
-	virtual int soap_type() const { return 21; } /* = unique id SOAP_TYPE__s0__RtMonStart */
-	virtual void soap_default(struct soap*);
-	virtual void soap_serialize(struct soap*) const;
-	virtual int soap_put(struct soap*, const char*, const char*) const;
-	virtual int soap_out(struct soap*, const char*, int, const char*) const;
-	virtual void *soap_get(struct soap*, const char*, const char*);
-	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _s0__RtMonStart() : Language(NULL), Display(NULL), GUI(NULL), ClientRequestHandle(NULL), soap(NULL) { }
-	virtual ~_s0__RtMonStart() { }
+class SOAP_CMAC _s0__RtMonStart {
+  public:
+  std::string* Language; /* optional element of type xsd:string */
+  std::string* Display; /* optional element of type xsd:string */
+  std::string* GUI; /* optional element of type xsd:string */
+  std::string* ClientRequestHandle; /* optional attribute */
+  struct soap* soap; /* transient */
+  public:
+  virtual int soap_type() const
+  {
+    return 21;
+  } /* = unique id SOAP_TYPE__s0__RtMonStart */
+  virtual void soap_default(struct soap*);
+  virtual void soap_serialize(struct soap*) const;
+  virtual int soap_put(struct soap*, const char*, const char*) const;
+  virtual int soap_out(struct soap*, const char*, int, const char*) const;
+  virtual void* soap_get(struct soap*, const char*, const char*);
+  virtual void* soap_in(struct soap*, const char*, const char*);
+  _s0__RtMonStart()
+      : Language(NULL), Display(NULL), GUI(NULL), ClientRequestHandle(NULL),
+        soap(NULL)
+  {
+  }
+  virtual ~_s0__RtMonStart()
+  {
+  }
 };
 #endif
 
 #ifndef SOAP_TYPE__s0__RtMonStartResponse
 #define SOAP_TYPE__s0__RtMonStartResponse (22)
 /* s0:RtMonStartResponse */
-class SOAP_CMAC _s0__RtMonStartResponse
-{
-public:
-	std::string *ClientRequestHandle;	/* optional attribute */
-	struct soap *soap;	/* transient */
-public:
-	virtual int soap_type() const { return 22; } /* = unique id SOAP_TYPE__s0__RtMonStartResponse */
-	virtual void soap_default(struct soap*);
-	virtual void soap_serialize(struct soap*) const;
-	virtual int soap_put(struct soap*, const char*, const char*) const;
-	virtual int soap_out(struct soap*, const char*, int, const char*) const;
-	virtual void *soap_get(struct soap*, const char*, const char*);
-	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _s0__RtMonStartResponse() : ClientRequestHandle(NULL), soap(NULL) { }
-	virtual ~_s0__RtMonStartResponse() { }
+class SOAP_CMAC _s0__RtMonStartResponse {
+  public:
+  std::string* ClientRequestHandle; /* optional attribute */
+  struct soap* soap; /* transient */
+  public:
+  virtual int soap_type() const
+  {
+    return 22;
+  } /* = unique id SOAP_TYPE__s0__RtMonStartResponse */
+  virtual void soap_default(struct soap*);
+  virtual void soap_serialize(struct soap*) const;
+  virtual int soap_put(struct soap*, const char*, const char*) const;
+  virtual int soap_out(struct soap*, const char*, int, const char*) const;
+  virtual void* soap_get(struct soap*, const char*, const char*);
+  virtual void* soap_in(struct soap*, const char*, const char*);
+  _s0__RtMonStartResponse() : ClientRequestHandle(NULL), soap(NULL)
+  {
+  }
+  virtual ~_s0__RtMonStartResponse()
+  {
+  }
 };
 #endif
 
 #ifndef SOAP_TYPE___s0__GetStatus
 #define SOAP_TYPE___s0__GetStatus (28)
 /* Operation wrapper: */
-struct __s0__GetStatus
-{
-public:
-	_s0__GetStatus *s0__GetStatus;	/* optional element of type s0:GetStatus */
+struct __s0__GetStatus {
+  public:
+  _s0__GetStatus* s0__GetStatus; /* optional element of type s0:GetStatus */
 };
 #endif
 
 #ifndef SOAP_TYPE___s0__GetExtStatus
 #define SOAP_TYPE___s0__GetExtStatus (32)
 /* Operation wrapper: */
-struct __s0__GetExtStatus
-{
-public:
-	_s0__GetExtStatus *s0__GetExtStatus;	/* optional element of type s0:GetExtStatus */
+struct __s0__GetExtStatus {
+  public:
+  _s0__GetExtStatus*
+      s0__GetExtStatus; /* optional element of type s0:GetExtStatus */
 };
 #endif
 
 #ifndef SOAP_TYPE___s0__Restart
 #define SOAP_TYPE___s0__Restart (36)
 /* Operation wrapper: */
-struct __s0__Restart
-{
-public:
-	_s0__Restart *s0__Restart;	/* optional element of type s0:Restart */
+struct __s0__Restart {
+  public:
+  _s0__Restart* s0__Restart; /* optional element of type s0:Restart */
 };
 #endif
 
 #ifndef SOAP_TYPE___s0__XttStart
 #define SOAP_TYPE___s0__XttStart (40)
 /* Operation wrapper: */
-struct __s0__XttStart
-{
-public:
-	_s0__XttStart *s0__XttStart;	/* optional element of type s0:XttStart */
+struct __s0__XttStart {
+  public:
+  _s0__XttStart* s0__XttStart; /* optional element of type s0:XttStart */
 };
 #endif
 
 #ifndef SOAP_TYPE___s0__RtMonStart
 #define SOAP_TYPE___s0__RtMonStart (44)
 /* Operation wrapper: */
-struct __s0__RtMonStart
-{
-public:
-	_s0__RtMonStart *s0__RtMonStart;	/* optional element of type s0:RtMonStart */
+struct __s0__RtMonStart {
+  public:
+  _s0__RtMonStart* s0__RtMonStart; /* optional element of type s0:RtMonStart */
 };
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Header
 #define SOAP_TYPE_SOAP_ENV__Header (47)
 /* SOAP Header: */
-struct SOAP_ENV__Header
-{
-public:
-	void *dummy;	/* transient */
+struct SOAP_ENV__Header {
+  public:
+  void* dummy; /* transient */
 };
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Code
 #define SOAP_TYPE_SOAP_ENV__Code (48)
 /* SOAP Fault Code: */
-struct SOAP_ENV__Code
-{
-public:
-	char *SOAP_ENV__Value;	/* optional element of type xsd:QName */
-	struct SOAP_ENV__Code *SOAP_ENV__Subcode;	/* optional element of type SOAP-ENV:Code */
+struct SOAP_ENV__Code {
+  public:
+  char* SOAP_ENV__Value; /* optional element of type xsd:QName */
+  struct SOAP_ENV__Code*
+      SOAP_ENV__Subcode; /* optional element of type SOAP-ENV:Code */
 };
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Detail
 #define SOAP_TYPE_SOAP_ENV__Detail (50)
 /* SOAP-ENV:Detail */
-struct SOAP_ENV__Detail
-{
-public:
-	int __type;	/* any type of element <fault> (defined below) */
-	void *fault;	/* transient */
-	char *__any;
+struct SOAP_ENV__Detail {
+  public:
+  int __type; /* any type of element <fault> (defined below) */
+  void* fault; /* transient */
+  char* __any;
 };
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Reason
 #define SOAP_TYPE_SOAP_ENV__Reason (51)
 /* SOAP-ENV:Reason */
-struct SOAP_ENV__Reason
-{
-public:
-	char *SOAP_ENV__Text;	/* optional element of type xsd:string */
+struct SOAP_ENV__Reason {
+  public:
+  char* SOAP_ENV__Text; /* optional element of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Fault
 #define SOAP_TYPE_SOAP_ENV__Fault (52)
 /* SOAP Fault: */
-struct SOAP_ENV__Fault
-{
-public:
-	char *faultcode;	/* optional element of type xsd:QName */
-	char *faultstring;	/* optional element of type xsd:string */
-	char *faultactor;	/* optional element of type xsd:string */
-	struct SOAP_ENV__Detail *detail;	/* optional element of type SOAP-ENV:Detail */
-	struct SOAP_ENV__Code *SOAP_ENV__Code;	/* optional element of type SOAP-ENV:Code */
-	struct SOAP_ENV__Reason *SOAP_ENV__Reason;	/* optional element of type SOAP-ENV:Reason */
-	char *SOAP_ENV__Node;	/* optional element of type xsd:string */
-	char *SOAP_ENV__Role;	/* optional element of type xsd:string */
-	struct SOAP_ENV__Detail *SOAP_ENV__Detail;	/* optional element of type SOAP-ENV:Detail */
+struct SOAP_ENV__Fault {
+  public:
+  char* faultcode; /* optional element of type xsd:QName */
+  char* faultstring; /* optional element of type xsd:string */
+  char* faultactor; /* optional element of type xsd:string */
+  struct SOAP_ENV__Detail*
+      detail; /* optional element of type SOAP-ENV:Detail */
+  struct SOAP_ENV__Code*
+      SOAP_ENV__Code; /* optional element of type SOAP-ENV:Code */
+  struct SOAP_ENV__Reason*
+      SOAP_ENV__Reason; /* optional element of type SOAP-ENV:Reason */
+  char* SOAP_ENV__Node; /* optional element of type xsd:string */
+  char* SOAP_ENV__Role; /* optional element of type xsd:string */
+  struct SOAP_ENV__Detail*
+      SOAP_ENV__Detail; /* optional element of type SOAP-ENV:Detail */
 };
 #endif
 
@@ -559,7 +641,6 @@ public:
  *                                                                            *
 \******************************************************************************/
 
-
 /******************************************************************************\
  *                                                                            *
  * Typedefs                                                                   *
@@ -568,14 +649,13 @@ public:
 
 #ifndef SOAP_TYPE__XML
 #define SOAP_TYPE__XML (4)
-typedef char *_XML;
+typedef char* _XML;
 #endif
 
 #ifndef SOAP_TYPE__QName
 #define SOAP_TYPE__QName (5)
-typedef char *_QName;
+typedef char* _QName;
 #endif
-
 
 /******************************************************************************\
  *                                                                            *
@@ -583,13 +663,11 @@ typedef char *_QName;
  *                                                                            *
 \******************************************************************************/
 
-
 /******************************************************************************\
  *                                                                            *
  * Externals                                                                  *
  *                                                                            *
 \******************************************************************************/
-
 
 /******************************************************************************\
  *                                                                            *
@@ -597,16 +675,23 @@ typedef char *_QName;
  *                                                                            *
 \******************************************************************************/
 
+SOAP_FMAC5 int SOAP_FMAC6 __s0__GetStatus(struct soap*,
+    _s0__GetStatus* s0__GetStatus,
+    _s0__GetStatusResponse* s0__GetStatusResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 __s0__GetStatus(struct soap*, _s0__GetStatus *s0__GetStatus, _s0__GetStatusResponse *s0__GetStatusResponse);
+SOAP_FMAC5 int SOAP_FMAC6 __s0__GetExtStatus(struct soap*,
+    _s0__GetExtStatus* s0__GetExtStatus,
+    _s0__GetExtStatusResponse* s0__GetExtStatusResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 __s0__GetExtStatus(struct soap*, _s0__GetExtStatus *s0__GetExtStatus, _s0__GetExtStatusResponse *s0__GetExtStatusResponse);
+SOAP_FMAC5 int SOAP_FMAC6 __s0__Restart(struct soap*, _s0__Restart* s0__Restart,
+    _s0__RestartResponse* s0__RestartResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 __s0__Restart(struct soap*, _s0__Restart *s0__Restart, _s0__RestartResponse *s0__RestartResponse);
+SOAP_FMAC5 int SOAP_FMAC6 __s0__XttStart(struct soap*,
+    _s0__XttStart* s0__XttStart, _s0__XttStartResponse* s0__XttStartResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 __s0__XttStart(struct soap*, _s0__XttStart *s0__XttStart, _s0__XttStartResponse *s0__XttStartResponse);
-
-SOAP_FMAC5 int SOAP_FMAC6 __s0__RtMonStart(struct soap*, _s0__RtMonStart *s0__RtMonStart, _s0__RtMonStartResponse *s0__RtMonStartResponse);
+SOAP_FMAC5 int SOAP_FMAC6 __s0__RtMonStart(struct soap*,
+    _s0__RtMonStart* s0__RtMonStart,
+    _s0__RtMonStartResponse* s0__RtMonStartResponse);
 
 /******************************************************************************\
  *                                                                            *
@@ -614,16 +699,28 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__RtMonStart(struct soap*, _s0__RtMonStart *s0__Rt
  *                                                                            *
 \******************************************************************************/
 
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__GetStatus(struct soap* soap,
+    const char* soap_endpoint, const char* soap_action,
+    _s0__GetStatus* s0__GetStatus,
+    _s0__GetStatusResponse* s0__GetStatusResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__GetStatus(struct soap *soap, const char *soap_endpoint, const char *soap_action, _s0__GetStatus *s0__GetStatus, _s0__GetStatusResponse *s0__GetStatusResponse);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__GetExtStatus(struct soap* soap,
+    const char* soap_endpoint, const char* soap_action,
+    _s0__GetExtStatus* s0__GetExtStatus,
+    _s0__GetExtStatusResponse* s0__GetExtStatusResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__GetExtStatus(struct soap *soap, const char *soap_endpoint, const char *soap_action, _s0__GetExtStatus *s0__GetExtStatus, _s0__GetExtStatusResponse *s0__GetExtStatusResponse);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__Restart(struct soap* soap,
+    const char* soap_endpoint, const char* soap_action,
+    _s0__Restart* s0__Restart, _s0__RestartResponse* s0__RestartResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__Restart(struct soap *soap, const char *soap_endpoint, const char *soap_action, _s0__Restart *s0__Restart, _s0__RestartResponse *s0__RestartResponse);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__XttStart(struct soap* soap,
+    const char* soap_endpoint, const char* soap_action,
+    _s0__XttStart* s0__XttStart, _s0__XttStartResponse* s0__XttStartResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__XttStart(struct soap *soap, const char *soap_endpoint, const char *soap_action, _s0__XttStart *s0__XttStart, _s0__XttStartResponse *s0__XttStartResponse);
-
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__RtMonStart(struct soap *soap, const char *soap_endpoint, const char *soap_action, _s0__RtMonStart *s0__RtMonStart, _s0__RtMonStartResponse *s0__RtMonStartResponse);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__RtMonStart(struct soap* soap,
+    const char* soap_endpoint, const char* soap_action,
+    _s0__RtMonStart* s0__RtMonStart,
+    _s0__RtMonStartResponse* s0__RtMonStartResponse);
 
 /******************************************************************************\
  *                                                                            *

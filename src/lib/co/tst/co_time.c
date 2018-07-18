@@ -5,7 +5,7 @@ int main()
   pwr_tDeltaTime d1, d2;
   struct tm tm1;
   struct tm tm2;
-  struct tm *tmP;
+  struct tm* tmP;
   char tsStr[32], tsStr2[32], tsStr3[128];
   pwr_tStatus sts;
 
@@ -26,19 +26,18 @@ int main()
   printf("tm.tm_min ..... %d\n", tm1.tm_min);
   printf("tm.tm_sec ..... %d\n", tm1.tm_sec);
 
-
   time_AtoAscii(&ts1, 0, tsStr, sizeof(tsStr));
 
-  strftime (tsStr, sizeof(tsStr), "%Y %A", &tm1);
+  strftime(tsStr, sizeof(tsStr), "%Y %A", &tm1);
   printf("strftime ...... %s\n", tsStr);
 
   tm2.tm_year = 102;
-  tm2.tm_mon  = 2 ;
+  tm2.tm_mon = 2;
   tm2.tm_wday = 4;
   tm2.tm_mday = 12;
   tm2.tm_hour = 11;
-  tm2.tm_min  = 1;
-  tm2.tm_sec  = 1;
+  tm2.tm_min = 1;
+  tm2.tm_sec = 1;
 
   printf("Bogus time .. year = %d\n", tm2.tm_year);
   printf("Bogus time ... mon = %d\n", tm2.tm_mon);
@@ -68,7 +67,6 @@ int main()
 
   time_AtoFormAscii(&ts1, MINUTE, GB, tsStr, sizeof(tsStr));
   printf("time_AtoFormAscii, MINUTE\t %s\n", tsStr);
-
 
   sts = time_AsciiToD("3 23:34:56.34", &d2);
   if (EVEN(sts)) {
@@ -102,7 +100,6 @@ int main()
     printf("%s is a valid delta time\n", tsStr);
   }
 
-
   while (1) {
     char buf[64];
     char buf2[64];
@@ -115,7 +112,7 @@ int main()
     strcat(buf, " ");
     strcat(buf, buf2);
     printf("\n\t%s\n", buf);
-    
+
     if (EVEN(time_AsciiToA(buf, &ts1)))
       printf("Error in date format, Str not valid\n");
     else {
@@ -123,9 +120,9 @@ int main()
       sts = time_AtoAscii(&ts1, 0, buf, sizeof(buf));
       if (ODD(sts))
         printf("time_AtoAscii: %s\n", buf);
-      else 
+      else
         printf("time_AtoAscii failed\n");
     }
   }
-    return 1;
+  return 1;
 }

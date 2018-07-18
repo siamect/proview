@@ -37,30 +37,21 @@
 /* wb_uted_qt.cpp */
 
 #include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 #include <string.h>
 
-#include "flow_ctx.h"
-#include "co_time.h"
-#include "co_msg.h"
 #include "co_dcli.h"
-#include "cow_xhelp.h"
+
+#include "cow_qt_helpers.h"
 #include "cow_wow_qt.h"
-#include "wb_ldh.h"
-#include "wb_foe.h"
+#include "cow_xhelp.h"
+
 #include "wb_foe_msg.h"
-#include "wb_vldh_msg.h"
-#include "wb_cmd_msg.h"
-#include "wb_vldh.h"
 #include "wb_uted_qt.h"
 
 #include <QMenu>
 #include <QMenuBar>
 #include <QPushButton>
 #include <QVBoxLayout>
-
-#define BEEP putchar('\7');
 
 #define UTED_INDEX_NOCOMMAND -1
 #define UTED_TEXT_NOCOMMAND "No command selected"
@@ -79,7 +70,7 @@ void WUtedQt::remove_command_window()
 {
 }
 
-void WUtedQtWidget::closeEvent(QCloseEvent *event)
+void WUtedQtWidget::closeEvent(QCloseEvent* event)
 {
   delete uted;
   QWidget::closeEvent(event);
@@ -100,13 +91,13 @@ void WUtedQtWidget::activate_command()
 void WUtedQtWidget::activate_helputils()
 {
   CoXHelp::dhelp("utilities_refman", 0, navh_eHelpFile_Other,
-                 "$pwr_lang/man_dg.dat", true);
+      "$pwr_lang/man_dg.dat", true);
 }
 
 void WUtedQtWidget::activate_helppwr_plc()
 {
-  CoXHelp::dhelp("help command", 0, navh_eHelpFile_Other,
-                 "$pwr_lang/man_dg.dat", true);
+  CoXHelp::dhelp(
+      "help command", 0, navh_eHelpFile_Other, "$pwr_lang/man_dg.dat", true);
 }
 
 void WUtedQtWidget::activate_batch()
@@ -146,7 +137,7 @@ void WUtedQtWidget::commandchanged()
 void WUtedQtWidget::activate_present(bool set)
 {
   uted->message("");
-  int idx = ((QAction *) sender())->data().toInt();
+  int idx = ((QAction*)sender())->data().toInt();
   uted->present_sts[idx] = set;
 }
 
@@ -155,13 +146,12 @@ void WUtedQt::update_title(int editmode)
   CoWowQt::update_title(toplevel, editmode);
 }
 
-WUtedQt::WUtedQt(void *wu_parent_ctx, QWidget *wu_parent_wid,
-                 const char *wu_name, const char *wu_iconname,
-                 ldh_tWBContext wu_ldhwb, ldh_tSesContext wu_ldhses,
-                 int wu_editmode, void (*wu_quit_cb)(void *),
-                 pwr_tStatus *status)
+WUtedQt::WUtedQt(void* wu_parent_ctx, QWidget* wu_parent_wid,
+    const char* wu_name, const char* wu_iconname, ldh_tWBContext wu_ldhwb,
+    ldh_tSesContext wu_ldhses, int wu_editmode, void (*wu_quit_cb)(void*),
+    pwr_tStatus* status)
     : WUted(wu_parent_ctx, wu_name, wu_iconname, wu_ldhwb, wu_ldhses,
-            wu_editmode, wu_quit_cb, status)
+          wu_editmode, wu_quit_cb, status)
 {
   toplevel = new WUtedQtWidget(this, wu_parent_wid);
   toplevel->setToolTip(fl("wb_uted widget"));
@@ -171,41 +161,42 @@ WUtedQt::WUtedQt(void *wu_parent_ctx, QWidget *wu_parent_wid,
 
   CoWowQt::SetWindowIcon(toplevel);
 
-  QMenuBar *menu_bar = new QMenuBar();
+  QMenuBar* menu_bar = new QMenuBar();
 
   // File Entry
-  QMenu *file = menu_bar->addMenu(translate_utf8("&File"));
-  addMenuItem(toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+  QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
+  addMenuItem(
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
   // View Entry
-  QMenu *view = menu_bar->addMenu(translate_utf8("&View"));
-  addMenuItem(toplevel, view, "&Show Current Command", SLOT(activate_show_cmd()));
+  QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
+  addMenuItem(
+      toplevel, view, "&Show Current Command", SLOT(activate_show_cmd()));
 
   // Commands entry
-  QMenu *commands_menu = menu_bar->addMenu(translate_utf8("&Commands"));
+  QMenu* commands_menu = menu_bar->addMenu(translate_utf8("&Commands"));
 
-  QMenu *current_menu = commands_menu;
+  QMenu* current_menu = commands_menu;
 
   int j = 0;
   int in_submenu = 0;
-  uted_sCommand *next_cmd;
-  for (uted_sCommand *command_ptr = commands; command_ptr->command[0];
+  uted_sCommand* next_cmd;
+  for (uted_sCommand* command_ptr = commands; command_ptr->command[0];
        command_ptr++) {
     // Build submenu if first command verb is equal to next
     char cmd_verb[5][80];
     int num;
     char next_cmd_verb[5][80];
     int next_num;
-    num = dcli_parse(command_ptr->command, " ", "", (char *) cmd_verb,
-                     sizeof(cmd_verb) / sizeof(cmd_verb[0]),
-                     sizeof(cmd_verb[0]), 0);
+    num = dcli_parse(command_ptr->command, " ", "", (char*)cmd_verb,
+        sizeof(cmd_verb) / sizeof(cmd_verb[0]), sizeof(cmd_verb[0]), 0);
 
     next_cmd = command_ptr + 1;
     int close_submenu = 0;
     if (next_cmd->command[0]) {
-      next_num = dcli_parse(next_cmd->command, " ", "", (char *) next_cmd_verb,
-                            sizeof(next_cmd_verb) / sizeof(next_cmd_verb[0]),
-                            sizeof(next_cmd_verb[0]), 0);
+      next_num = dcli_parse(next_cmd->command, " ", "", (char*)next_cmd_verb,
+          sizeof(next_cmd_verb) / sizeof(next_cmd_verb[0]),
+          sizeof(next_cmd_verb[0]), 0);
 
       if (in_submenu) {
         // Check if time to close menu
@@ -215,7 +206,7 @@ WUtedQt::WUtedQt(void *wu_parent_ctx, QWidget *wu_parent_wid,
         }
       } else if (strcmp(cmd_verb[0], next_cmd_verb[0]) == 0) {
         // Open submenu
-        QMenu *submenu = commands_menu->addMenu(cmd_verb[0]);
+        QMenu* submenu = commands_menu->addMenu(cmd_verb[0]);
         current_menu = submenu;
         in_submenu = 1;
       }
@@ -224,8 +215,8 @@ WUtedQt::WUtedQt(void *wu_parent_ctx, QWidget *wu_parent_wid,
       close_submenu = 1;
     }
 
-    optmenubuttons[j] = addMenuItem(toplevel, current_menu, command_ptr->command,
-                                    SLOT(activate_command()));
+    optmenubuttons[j] = addMenuItem(
+        toplevel, current_menu, command_ptr->command, SLOT(activate_command()));
 
     if (close_submenu) {
       current_menu = commands_menu;
@@ -236,63 +227,63 @@ WUtedQt::WUtedQt(void *wu_parent_ctx, QWidget *wu_parent_wid,
   }
 
   // Menu Help
-  QMenu *help = menu_bar->addMenu(translate_utf8("&Help"));
-  addMenuItem(toplevel, help, "&On Window", SLOT(activate_helputils()), "CTRL+H",
-              "system-help");
+  QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
+  addMenuItem(toplevel, help, "&On Window", SLOT(activate_helputils()),
+      "CTRL+H", "system-help");
   addMenuItem(toplevel, help, "On &Commands", SLOT(activate_helppwr_plc()));
 
   // Qualifier labels, entries and checkboxes
-  QVBoxLayout *qual_box_qual = new QVBoxLayout();
-  QVBoxLayout *qual_box_value = new QVBoxLayout();
+  QVBoxLayout* qual_box_qual = new QVBoxLayout();
+  QVBoxLayout* qual_box_value = new QVBoxLayout();
   for (j = 0; j < 10; j++) {
     qualifier[j] = new QLabel("Qual");
     qualifier[j]->setFixedSize(120, 20);
     qual_box_qual->addWidget(qualifier[j]);
-    QHBoxLayout *box = new QHBoxLayout();
+    QHBoxLayout* box = new QHBoxLayout();
     value[j] = new QLineEdit();
     value[j]->setFixedHeight(20);
     add_expanding(box, value[j]);
     present[j] = new QCheckBox();
     present[j]->setFixedHeight(20);
     QObject::connect(present[j], SIGNAL(toggled(bool)), toplevel,
-                     SLOT(activate_present(bool)));
+        SLOT(activate_present(bool)));
     box->addWidget(present[j]);
     qual_box_value->addLayout(box);
   }
 
   // Command label
-  QLabel *cmdlabel = new QLabel("Command");
+  QLabel* cmdlabel = new QLabel("Command");
   commandlabel = new QLabel("No command selected");
   commandlabel->setFixedWidth(140);
 
-  QHBoxLayout *hbox_command = new QHBoxLayout();
+  QHBoxLayout* hbox_command = new QHBoxLayout();
   hbox_command->addWidget(cmdlabel);
   hbox_command->addWidget(commandlabel);
 
   // Apply button
-  QPushButton *applybutton = new QPushButton("Apply");
+  QPushButton* applybutton = new QPushButton("Apply");
   applybutton->setFixedSize(70, 25);
-  QObject::connect(applybutton, SIGNAL(clicked()), toplevel,
-                   SLOT(activate_ok()));
+  QObject::connect(
+      applybutton, SIGNAL(clicked()), toplevel, SLOT(activate_ok()));
 
-  QVBoxLayout *left_box = new QVBoxLayout();
+  QVBoxLayout* left_box = new QVBoxLayout();
   left_box->addLayout(hbox_command);
 
-  QHBoxLayout *button_box = new QHBoxLayout();
+  QHBoxLayout* button_box = new QHBoxLayout();
   button_box->addWidget(applybutton);
 
-  QHBoxLayout *qual_box = new QHBoxLayout();
+  QHBoxLayout* qual_box = new QHBoxLayout();
   qual_box->addLayout(left_box);
   qual_box->addWidget(separator(QFrame::VLine));
   qual_box->addLayout(qual_box_qual);
   add_expanding(qual_box, qual_box_value);
 
   // Statusbar
-  QStatusBar *statusbar = new QStatusBar();
+  QStatusBar* statusbar = new QStatusBar();
   label = new QLabel("");
   statusbar->addWidget(label);
 
-  QVBoxLayout *vbox = new QVBoxLayout(toplevel);
+  QVBoxLayout* vbox = new QVBoxLayout(toplevel);
   vbox->setMenuBar(menu_bar);
   add_expanding(vbox, qual_box);
   vbox->addWidget(separator(QFrame::HLine));
@@ -320,7 +311,7 @@ WUtedQt::~WUtedQt()
 }
 
 // Get value from textentry with specified index
-void WUtedQt::get_value(int idx, char *str, int len)
+void WUtedQt::get_value(int idx, char* str, int len)
 {
   QByteArray ba = value[idx]->text().toLatin1();
   strncpy(str, ba.data(), len);
@@ -347,20 +338,20 @@ void WUtedQt::reset_qual()
 
 //	Displays a message in the ute window.
 //	Changes the label of a label widget which id is stored in the context.
-void WUtedQt::message(const char *new_label)
+void WUtedQt::message(const char* new_label)
 {
   label->setText(fl(new_label));
 }
 
-void WUtedQt::set_command_window(char *cmd)
+void WUtedQt::set_command_window(char* cmd)
 {
 }
 
-void WUtedQt::configure_quals(char *label)
+void WUtedQt::configure_quals(char* label)
 {
   int i;
   int index;
-  uted_sQual *qual_ptr;
+  uted_sQual* qual_ptr;
 
   /* Reset the picture */
   reset_qual();
@@ -394,7 +385,7 @@ void WUtedQt::configure_quals(char *label)
 void WUtedQt::enable_entries(int enable)
 {
   int j;
-  uted_sCommand *command_ptr;
+  uted_sCommand* command_ptr;
 
   mode = enable ? UTED_MODE_EDIT : UTED_MODE_VIEW;
 
@@ -410,8 +401,8 @@ void WUtedQt::enable_entries(int enable)
 
   /* If view and current command is not sensitiv, change to first command */
   if (!enable) {
-    if (current_index != UTED_INDEX_NOCOMMAND &&
-        !commands[current_index].view_sensitivity) {
+    if (current_index != UTED_INDEX_NOCOMMAND
+        && !commands[current_index].view_sensitivity) {
       reset_qual();
     }
   }
@@ -439,11 +430,9 @@ void WUtedQt::enable_entries(int enable)
 *		void yes_or_no_answer( uted_ctx ute)
 *
 **************************************************************************/
-void WUtedQt::questionbox(char *question_title, char *question_text,
-                          void (*yes_procedure)(WUted *),
-                          void (*no_procedure)(WUted *),
-                          void (*cancel_procedure)(WUted *),
-                          pwr_tBoolean cancel)
+void WUtedQt::questionbox(char* question_title, char* question_text,
+    void (*yes_procedure)(WUted*), void (*no_procedure)(WUted*),
+    void (*cancel_procedure)(WUted*), pwr_tBoolean cancel)
 {
 }
 

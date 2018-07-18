@@ -39,15 +39,10 @@
 
 /* xtt_xatt_qt.h -- Object attribute editor */
 
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
-#ifndef xtt_xatt_h
-# include "xtt_xatt.h"
-#endif
+#include "cow_wow_qt.h"
 
-#ifndef cow_wow_qt_h
-# include "cow_wow_qt.h"
+#ifndef xtt_xatt_h
+#include "xtt_xatt.h"
 #endif
 
 #include <QLabel>
@@ -58,42 +53,44 @@ class XAttQtWidget;
 
 class XAttQt : public XAtt {
 public:
-  XAttQt(QWidget *xa_parent_wid, void *xa_parent_ctx, pwr_sAttrRef *xa_objar,
-         int xa_advanced_user, int *xa_sts);
-  QWidget *brow_widget;
-  QWidget *form_widget;
-  QLabel *msg_label;
-  QLabel *cmd_prompt;
-  QWidget *cmd_scrolledinput;
-  QTextEdit *cmd_scrolled_buffer;
-  QSplitter *pane;
+  XAttQt(QWidget* xa_parent_wid, void* xa_parent_ctx, pwr_sAttrRef* xa_objar,
+      int xa_advanced_user, int* xa_sts);
+  QWidget* brow_widget;
+  QWidget* form_widget;
+  QLabel* msg_label;
+  QLabel* cmd_prompt;
+  QWidget* cmd_scrolledinput;
+  QTextEdit* cmd_scrolled_buffer;
+  QSplitter* pane;
   static CoWowRecall value_recall;
-  CoWowEntryQt *cmd_entry;
+  CoWowEntryQt* cmd_entry;
   CoWowFocusTimerQt focustimer;
   int input_max_length;
 
-  void message(char severity, const char *message);
-  void set_prompt(const char *prompt);
+  void message(char severity, const char* message);
+  void set_prompt(const char* prompt);
   void change_value(int set_focus);
-  int open_changevalue(char *name);
+  int open_changevalue(char* name);
   void change_value_close();
   void pop();
   void print();
 
 private:
-  XAttQtWidget *toplevel;
+  XAttQtWidget* toplevel;
 };
 
 class XAttQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  XAttQtWidget(XAttQt *parent_ctx, QWidget *parent)
-      : QWidget(parent, Qt::Window), xatt(parent_ctx) {}
+  XAttQtWidget(XAttQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), xatt(parent_ctx)
+  {
+  }
 
 protected:
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void activate_change_value();
@@ -110,7 +107,7 @@ public slots:
   void action_text_inserted();
 
 private:
-  XAttQt *xatt;
+  XAttQt* xatt;
 };
 
 #endif

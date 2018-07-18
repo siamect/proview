@@ -39,46 +39,51 @@
 
 /* cow_pb_gsd_attr_qt.h -- Profibus gsd attribute editor */
 
-#include "cow_pb_gsd_attr.h"
 #include "cow_wow_qt.h"
+
+#include "cow_pb_gsd_attr.h"
+
+#include <QLabel>
 
 class GsdAttrQtWidget;
 
 class GsdAttrQt : public GsdAttr {
 public:
-  QWidget *brow_widget;
-  QWidget *form_widget;
-  QLabel *msg_label;
-  QLabel *cmd_prompt;
-  QLineEdit *cmd_input;
-  QWidget *attrnav_form;
-  QAction *menubutton_copy;
-  QAction *menubutton_cut;
-  QAction *menubutton_paste;
-  QAction *menubutton_changevalue;
+  QWidget* brow_widget;
+  QWidget* form_widget;
+  QLabel* msg_label;
+  QLabel* cmd_prompt;
+  QLineEdit* cmd_input;
+  QWidget* attrnav_form;
+  QAction* menubutton_copy;
+  QAction* menubutton_cut;
+  QAction* menubutton_paste;
+  QAction* menubutton_changevalue;
   CoWowFocusTimerQt focustimer;
 
-  GsdAttrQt(QWidget *a_parent_wid, void *a_parent_ctx, void *a_object,
-            pb_gsd *a_gsd, int a_edit_mode);
+  GsdAttrQt(QWidget* a_parent_wid, void* a_parent_ctx, void* a_object,
+      pb_gsd* a_gsd, int a_edit_mode);
 
-  void message(char severity, const char *message);
-  void set_prompt(const char *prompt);
+  void message(char severity, const char* message);
+  void set_prompt(const char* prompt);
   void change_value();
 
 private:
-  GsdAttrQtWidget *toplevel;
+  GsdAttrQtWidget* toplevel;
 };
 
 class GsdAttrQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  GsdAttrQtWidget(GsdAttrQt *parent_ctx, QWidget *parent)
-      : QWidget(parent, Qt::Window), attr(parent_ctx) {}
+  GsdAttrQtWidget(GsdAttrQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), attr(parent_ctx)
+  {
+  }
 
 protected:
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void activate_change_value();
@@ -96,12 +101,10 @@ public slots:
   void activate_cmd_apply();
   void activate_cmd_ca();
 
-  void valchanged_cmd_input()
-  {
-  };
+  void valchanged_cmd_input(){};
 
 private:
-  GsdAttrQt *attr;
+  GsdAttrQt* attr;
 };
 
 #endif

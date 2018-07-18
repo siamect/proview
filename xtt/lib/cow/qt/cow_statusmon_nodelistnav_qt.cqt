@@ -36,34 +36,20 @@
 
 /* co_statusmon_nodelistnav_qt.cpp -- Console message window. */
 
-#include "glow_std.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/stat.h>
-
-#include "co_cdh.h"
-#include "co_dcli.h"
-#include "co_time.h"
-#include "cow_wow_qt.h"
-#include "rt_gdh.h"
-#include "co_syi.h"
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
-#include "flow_browwidget_qt.h"
+#include "cow_qt_helpers.h"
 #include "cow_statusmon_nodelistnav_qt.h"
+#include "cow_wow_qt.h"
+
+#include "flow_browwidget_qt.h"
 
 #include <QApplication>
 
-NodelistNavQt::NodelistNavQt(void *nodelist_parent_ctx,
-                             QWidget *nodelist_parent_wid,
-                             MsgWindow *nodelist_msg_window,
-                             char *nodelist_nodename, int nodelist_mode,
-                             int nodelist_view_node_descr,
-                             int nodelist_msgw_pop, QWidget **w)
+NodelistNavQt::NodelistNavQt(void* nodelist_parent_ctx,
+    QWidget* nodelist_parent_wid, MsgWindow* nodelist_msg_window,
+    char* nodelist_nodename, int nodelist_mode, int nodelist_view_node_descr,
+    int nodelist_msgw_pop, QWidget** w)
     : NodelistNav(nodelist_parent_ctx, nodelist_msg_window, nodelist_nodename,
-                  nodelist_mode, nodelist_view_node_descr, nodelist_msgw_pop)
+          nodelist_mode, nodelist_view_node_descr, nodelist_msgw_pop)
 {
   trace_obj = new NodelistNavQtTraceObject(this);
 

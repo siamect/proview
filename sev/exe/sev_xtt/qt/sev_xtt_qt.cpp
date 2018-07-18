@@ -34,31 +34,23 @@
  * General Public License plus this exception.
  */
 
-#include <fstream>
-#include <vector>
-#include <locale.h>
-
-#include "pwr.h"
-#include "pwr_class.h"
 #include "co_error.h"
-#include "rt_qcom.h"
-#include "rt_errh.h"
-#include "rt_sevcli.h"
+
 #include "xtt_tbl_qt.h"
 
 #include <QApplication>
 
-void tbl_close_cb(void *tbl)
+void tbl_close_cb(void* tbl)
 {
   exit(0);
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
   pwr_tStatus sts;
   qcom_sAid aid;
   sevcli_tCtx sevcli;
-  sevcli_sHistItem *items;
+  sevcli_sHistItem* items;
   unsigned int itemcnt;
   char servername[40] = "";
 
@@ -71,7 +63,9 @@ int main(int argc, char *argv[])
   }
 
   sts = qcom_Init(&sts, &aid, "sev_xtt");
-  if (EVEN(sts)) { co_error(sts); }
+  if (EVEN(sts)) {
+    co_error(sts);
+  }
 
   sevcli_init(&sts, &sevcli);
   if (EVEN(sts)) {
@@ -94,7 +88,7 @@ int main(int argc, char *argv[])
   setlocale(LC_NUMERIC, "POSIX");
   setlocale(LC_TIME, "en_US");
 
-  XttTblQt *tbl = new XttTblQt(0, 0, sevcli, items, itemcnt);
+  XttTblQt* tbl = new XttTblQt(0, 0, sevcli, items, itemcnt);
   tbl->close_cb = tbl_close_cb;
 
   return app.exec();

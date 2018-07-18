@@ -36,65 +36,47 @@
 
 /* ge_attr.cpp -- Display object attributes */
 
-#include <vector>
+#include "cow_qt_helpers.h"
 
-#include "glow_std.h"
-
-#include "co_cdh.h"
-#include "co_time.h"
-#include "cow_wow_qt.h"
-
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
-#include "flow_browwidget_qt.h"
-
-#include "flow_msg.h"
-
-#include "glow.h"
-#include "glow_growctx.h"
-#include "glow_growapi.h"
-
-#include "ge_dyn.h"
 #include "ge_attr_qt.h"
 #include "ge_attrnav_qt.h"
+#include "ge_dyn.h"
 #include "ge_msg.h"
 
 #include <QDialogButtonBox>
 #include <QMenuBar>
 #include <QPushButton>
-#include <QStatusBar>
 #include <QVBoxLayout>
 
 CoWowRecall AttrQt::value_recall;
 
-void AttrQt::message(char severity, const char *message)
+void AttrQt::message(char severity, const char* message)
 {
   if (msg_label) {
     msg_label->setText(fl(message));
   }
 }
 
-void AttrQt::message_popup(char severity, const char *message)
+void AttrQt::message_popup(char severity, const char* message)
 {
   char title[40];
 
   switch (severity) {
-    case 'I':
-      strcpy(title, "Info message");
-      break;
-    case 'W':
-      strcpy(title, "Warning message");
-      break;
-    default:
-      strcpy(title, "Error message");
+  case 'I':
+    strcpy(title, "Info message");
+    break;
+  case 'W':
+    strcpy(title, "Warning message");
+    break;
+  default:
+    strcpy(title, "Error message");
   }
 
   CoWowQt wow(toplevel);
   wow.DisplayError(title, message);
 }
 
-void AttrQt::set_prompt(const char *prompt)
+void AttrQt::set_prompt(const char* prompt)
 {
   if (strcmp(prompt, "") == 0) {
     cmd_prompt->setVisible(false);
@@ -109,7 +91,7 @@ void AttrQt::change_value()
 {
   int sts;
   int multiline;
-  char *value;
+  char* value;
   int size;
 
   sts = attrnav->check_attr_value(&multiline, &size, &value);
@@ -169,7 +151,7 @@ void AttrQt::change_value()
 
 int AttrQt::reconfigure_attr()
 {
-  attr_sItem *itemlist;
+  attr_sItem* itemlist;
   int item_cnt;
   int sts;
 
@@ -178,9 +160,8 @@ int AttrQt::reconfigure_attr()
   }
   reconfigure_attr_cb(parent_ctx, object, &itemlist, &item_cnt, &client_data);
 
-  attrnav =
-      new AttrNavQt(this, pane, type, "Plant", itemlist, item_cnt, &brow_widget,
-                    &sts);
+  attrnav = new AttrNavQt(
+      this, pane, type, "Plant", itemlist, item_cnt, &brow_widget, &sts);
   if (pane->widget(0)) {
     pane->widget(0)->setParent(NULL);
   }
@@ -202,18 +183,18 @@ int AttrQt::reconfigure_attr()
   return 1;
 }
 
-void AttrQtWidget::closeEvent(QCloseEvent *event)
+void AttrQtWidget::closeEvent(QCloseEvent* event)
 {
   if (attr->close_cb) {
-    (attr->close_cb)(attr->parent_ctx, attr, attr->object, attr->client_data,
-                     0);
+    (attr->close_cb)(
+        attr->parent_ctx, attr, attr->object, attr->client_data, 0);
   } else {
     delete attr;
   }
   QWidget::closeEvent(event);
 }
 
-void AttrQtWidget::focusInEvent(QFocusEvent *event)
+void AttrQtWidget::focusInEvent(QFocusEvent* event)
 {
   bool scrolledinput_visible = attr->cmd_scrolledinput->isVisible();
   bool input_visible = attr->cmd_entry->isVisible();
@@ -236,7 +217,7 @@ void AttrQtWidget::attr_activate_cmd_entry()
   attr->attrnav->set_inputfocus();
 
   QByteArray ba = attr->cmd_entry->text().toLatin1();
-  char *text = ba.data();
+  char* text = ba.data();
 
   if (attr->input_open) {
     attr->attrnav->set_attr_value(text, 0, 0);
@@ -244,8 +225,8 @@ void AttrQtWidget::attr_activate_cmd_entry()
     attr->set_prompt("");
     attr->input_open = 0;
     if (attr->redraw_cb) {
-      (attr->redraw_cb)(attr->parent_ctx, attr, attr->object,
-                        attr->client_data);
+      (attr->redraw_cb)(
+          attr->parent_ctx, attr, attr->object, attr->client_data);
     }
   }
 }
@@ -254,7 +235,7 @@ void AttrQtWidget::attr_activate_cmd_scrolled_ok()
 {
   if (attr->input_open) {
     QByteArray ba = attr->cmd_scrolled_buffer->toPlainText().toLatin1();
-    char *text = ba.data();
+    char* text = ba.data();
 
     attr->attrnav->set_attr_value(text, 0, 0);
     attr->cmd_scrolledinput->setVisible(false);
@@ -264,8 +245,8 @@ void AttrQtWidget::attr_activate_cmd_scrolled_ok()
     set_pane_position(attr->pane, -50);
 
     if (attr->redraw_cb) {
-      (attr->redraw_cb)(attr->parent_ctx, attr, attr->object,
-                        attr->client_data);
+      (attr->redraw_cb)(
+          attr->parent_ctx, attr, attr->object, attr->client_data);
     }
 
     attr->attrnav->set_inputfocus();
@@ -314,7 +295,8 @@ void AttrQtWidget::action_text_inserted()
   int count = attr->cmd_scrolled_buffer->toPlainText().size();
 
   if (count > attr->input_max_length) {
-    // Remove inserted chars (note that iter now points at the end of the inserted text)
+    // Remove inserted chars (note that iter now points at the end of the
+    // inserted text)
     QString txt = attr->cmd_scrolled_buffer->toPlainText();
     txt.truncate(attr->input_max_length);
     attr->cmd_scrolled_buffer->setText(txt);
@@ -324,8 +306,8 @@ void AttrQtWidget::action_text_inserted()
   }
 }
 
-AttrQt::AttrQt(QWidget *a_parent_wid, void *a_parent_ctx, attr_eType a_type,
-               void *a_object, attr_sItem *itemlist, int item_cnt)
+AttrQt::AttrQt(QWidget* a_parent_wid, void* a_parent_ctx, attr_eType a_type,
+    void* a_object, attr_sItem* itemlist, int item_cnt)
     : Attr(a_parent_ctx, a_type, a_object, itemlist, item_cnt), msg_label(0),
       input_max_length(0)
 {
@@ -341,32 +323,33 @@ AttrQt::AttrQt(QWidget *a_parent_wid, void *a_parent_ctx, attr_eType a_type,
     CoWowQt::SetWindowIcon(toplevel);
 
     // Menu
-    QMenuBar *menu_bar = new QMenuBar(toplevel);
+    QMenuBar* menu_bar = new QMenuBar(toplevel);
 
     // File entry
-    QMenu *file = menu_bar->addMenu(translate_utf8("&File"));
-    addMenuItem(toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+    QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
+    addMenuItem(
+        toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
     // Functions entry
-    QMenu *functions = menu_bar->addMenu(translate_utf8("&Functions"));
+    QMenu* functions = menu_bar->addMenu(translate_utf8("&Functions"));
     addMenuItem(toplevel, functions, "&Change Value",
-                SLOT(attr_activate_changevalue()), "CTRL+Q");
-    addMenuItem(toplevel, functions, "&Store", SLOT(attr_activate_store()),
-                "CTRL+T");
-    addMenuItem(toplevel, functions, "&Recall", SLOT(attr_activate_recall()),
-                "CTRL+N");
+        SLOT(attr_activate_changevalue()), "CTRL+Q");
+    addMenuItem(
+        toplevel, functions, "&Store", SLOT(attr_activate_store()), "CTRL+T");
+    addMenuItem(
+        toplevel, functions, "&Recall", SLOT(attr_activate_recall()), "CTRL+N");
     addMenuItem(toplevel, functions, "Recall &previous",
-                SLOT(attr_activate_recall_prev()), "CTRL+P");
+        SLOT(attr_activate_recall_prev()), "CTRL+P");
 
     // Help entry
-    QMenu *help = menu_bar->addMenu(translate_utf8("&Help"));
+    QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
     addMenuItem(toplevel, help, "&Help", SLOT(attr_activate_help()), "CTRL+H",
-                "system-help");
+        "system-help");
 
     pane = new QSplitter(Qt::Vertical);
 
-    attrnav = new AttrNavQt(this, pane, type, "Plant", itemlist, item_cnt,
-                            &brow_widget, &sts);
+    attrnav = new AttrNavQt(
+        this, pane, type, "Plant", itemlist, item_cnt, &brow_widget, &sts);
     attrnav->message_cb = &Attr::message;
     attrnav->change_value_cb = &Attr::change_value_c;
     attrnav->get_subgraph_info_cb = &Attr::get_subgraph_info_c;
@@ -377,7 +360,7 @@ AttrQt::AttrQt(QWidget *a_parent_wid, void *a_parent_ctx, attr_eType a_type,
     attrnav->get_current_color_tone_cb = &Attr::get_current_color_tone_c;
     attrnav->get_object_list_cb = &Attr::get_object_list_c;
 
-    QStatusBar *statusbar = new QStatusBar();
+    QStatusBar* statusbar = new QStatusBar();
     msg_label = new QLabel("");
     msg_label->setFixedHeight(25);
     cmd_prompt = new QLabel("value > ");
@@ -385,33 +368,32 @@ AttrQt::AttrQt(QWidget *a_parent_wid, void *a_parent_ctx, attr_eType a_type,
     cmd_entry = new CoWowEntryQt(&value_recall);
     cmd_entry->setFixedHeight(25);
     QObject::connect(cmd_entry, SIGNAL(editingFinished()), toplevel,
-                     SLOT(attr_activate_cmd_entry()));
+        SLOT(attr_activate_cmd_entry()));
 
     statusbar->addWidget(msg_label);
     statusbar->addWidget(cmd_prompt);
     add_expanding(statusbar, cmd_entry);
 
-    QVBoxLayout *vbox = new QVBoxLayout();
+    QVBoxLayout* vbox = new QVBoxLayout();
     vbox->setMenuBar(menu_bar);
 
     add_expanding(pane, brow_widget);
 
     cmd_scrolled_buffer = new QTextEdit();
     QObject::connect(cmd_scrolled_buffer, SIGNAL(textChanged()), toplevel,
-                     SLOT(action_text_inserted()));
+        SLOT(action_text_inserted()));
 
-    QDialogButtonBox *buttons = new QDialogButtonBox();
+    QDialogButtonBox* buttons = new QDialogButtonBox();
     buttons->addButton(QDialogButtonBox::Ok);
     buttons->button(QDialogButtonBox::Ok)->setFixedSize(70, 25);
     buttons->addButton(QDialogButtonBox::Cancel);
     buttons->button(QDialogButtonBox::Cancel)->setFixedSize(70, 25);
     QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
-                     toplevel, SLOT(attr_activate_cmd_scrolled_ok()));
+        toplevel, SLOT(attr_activate_cmd_scrolled_ok()));
     QObject::connect(buttons->button(QDialogButtonBox::Cancel),
-                     SIGNAL(clicked()), toplevel,
-                     SLOT(attr_activate_cmd_scrolled_ca()));
+        SIGNAL(clicked()), toplevel, SLOT(attr_activate_cmd_scrolled_ca()));
 
-    QVBoxLayout *cmd_scrolledinput_layout = new QVBoxLayout();
+    QVBoxLayout* cmd_scrolledinput_layout = new QVBoxLayout();
     add_expanding(cmd_scrolledinput_layout, cmd_scrolled_buffer);
     cmd_scrolledinput_layout->addWidget(buttons);
     cmd_scrolledinput = layout_to_widget(cmd_scrolledinput_layout);
@@ -438,7 +420,7 @@ AttrQt::AttrQt(QWidget *a_parent_wid, void *a_parent_ctx, attr_eType a_type,
     }
   } else {
     attrnav = new AttrNavQt(this, a_parent_wid, type, "Plant", itemlist,
-                            item_cnt, &brow_widget, &sts);
+        item_cnt, &brow_widget, &sts);
     attrnav->message_cb = &Attr::message;
     attrnav->change_value_cb = &Attr::change_value_c;
     attrnav->get_subgraph_info_cb = &Attr::get_subgraph_info_c;

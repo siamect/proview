@@ -45,10 +45,10 @@
 #include <QShowEvent>
 #include <QToolButton>
 
-void print_time(FILE *stream, int fulldate)
+void print_time(FILE* stream, int fulldate)
 {
   time_t t;
-  struct tm *tm;
+  struct tm* tm;
   char Date[11], Time[11];
   time(&t);
   tm = localtime(&t);
@@ -60,13 +60,13 @@ void print_time(FILE *stream, int fulldate)
   fprintf(stream, "%s", Time);
 }
 
-void dbg_print(const char *file, int line, const char *fmt, ...)
+void dbg_print(const char* file, int line, const char* fmt, ...)
 {
   if (DEBUG) {
     // 1. print timestamp
     print_time(stderr);
     // 2. print filename only, without path
-    const char *file2 = strrchr(file, '/');
+    const char* file2 = strrchr(file, '/');
     file2 = file2 ? (file2 + 1) : file;
     fprintf(stderr, " %s:%d: ", file2, line);
     // 3. print the actual debug message
@@ -77,28 +77,28 @@ void dbg_print(const char *file, int line, const char *fmt, ...)
   }
 }
 
-void dbg_print(const char *file, int line, QString str)
+void dbg_print(const char* file, int line, QString str)
 {
   if (DEBUG) {
     // 1. print timestamp
     print_time(stderr);
     // 2. print filename only, without path
-    const char *file2 = strrchr(file, '/');
+    const char* file2 = strrchr(file, '/');
     file2 = file2 ? (file2 + 1) : file;
     fprintf(stderr, " %s:%d: ", file2, line);
     // 3. print the actual debug message
     QByteArray ba = str.toLocal8Bit();
-    const char *c_str = ba.data();
+    const char* c_str = ba.data();
     fprintf(stderr, "%s\n", c_str);
   }
 }
 
-QString fl(const char *text)
+QString fl(const char* text)
 {
   return QString::fromLocal8Bit(text);
 }
 
-QString convert_utf8(const char *str)
+QString convert_utf8(const char* str)
 {
   if (Lng::translatefile_coding() == lng_eCoding_UTF_8) {
     return QString::fromUtf8(str);
@@ -107,29 +107,29 @@ QString convert_utf8(const char *str)
   }
 }
 
-QString translate_utf8(const char *str)
+QString translate_utf8(const char* str)
 {
   return convert_utf8(Lng::translate(str));
 }
 
-void pop(QWidget *w)
+void pop(QWidget* w)
 {
   w->show();
   w->raise();
   w->activateWindow();
 }
 
-void showNow(QWidget *w)
+void showNow(QWidget* w)
 {
   QApplication::sendEvent(w, new QShowEvent());
 }
 
-QIcon get_icon(const char *iconName)
+QIcon get_icon(const char* iconName)
 {
   if (strcmp(iconName, "")) {
     // iconName is not equal to ""
     QIcon icon;
-    
+
     // First check if this is a standard gnome icon, e.g. "zoom-in"
     QIcon::setThemeName("gnome");
     if (QIcon::hasThemeIcon(fl(iconName))) {
@@ -146,7 +146,8 @@ QIcon get_icon(const char *iconName)
       dcli_translate_filename(fname, iconName);
       icon = QIcon(fl(fname));
       if (icon.isNull() || icon.pixmap(16).isNull()) {
-        printf("Warning! Could not find proview icon: %s, path: %s\n", iconName, fname);
+        printf("Warning! Could not find proview icon: %s, path: %s\n", iconName,
+            fname);
       }
     } else {
       // iconName is an absolute path to a local icon
@@ -161,12 +162,11 @@ QIcon get_icon(const char *iconName)
   }
 }
 
-QAction *addMenuItem(QObject *parent, QMenu *menu, const char *text,
-                     const char *callback, const char *shortcut,
-                     const char *iconName)
+QAction* addMenuItem(QObject* parent, QMenu* menu, const char* text,
+    const char* callback, const char* shortcut, const char* iconName)
 {
-  QAction
-      *action = new QAction(get_icon(iconName), translate_utf8(text), parent);
+  QAction* action
+      = new QAction(get_icon(iconName), translate_utf8(text), parent);
   if (!strcmp(shortcut, "")) {
     action->setShortcut(fl(shortcut));
   }
@@ -176,12 +176,12 @@ QAction *addMenuItem(QObject *parent, QMenu *menu, const char *text,
   return action;
 }
 
-QAction *addMenuItemMapped(QObject *parent, QMenu *menu, const char *text,
-                           const char *callback, const char *signal,
-                           const char *shortcut, const char *iconName)
+QAction* addMenuItemMapped(QObject* parent, QMenu* menu, const char* text,
+    const char* callback, const char* signal, const char* shortcut,
+    const char* iconName)
 {
-  QAction
-      *action = new QAction(get_icon(iconName), translate_utf8(text), parent);
+  QAction* action
+      = new QAction(get_icon(iconName), translate_utf8(text), parent);
   if (!strcmp(shortcut, "")) {
     action->setShortcut(fl(shortcut));
   }
@@ -191,12 +191,11 @@ QAction *addMenuItemMapped(QObject *parent, QMenu *menu, const char *text,
   return action;
 }
 
-QAction *addCheckableMenuItem(QObject *parent, QMenu *menu, const char *text,
-                              const char *callback, const char *shortcut,
-                              const char *iconName)
+QAction* addCheckableMenuItem(QObject* parent, QMenu* menu, const char* text,
+    const char* callback, const char* shortcut, const char* iconName)
 {
-  QAction
-      *action = new QAction(get_icon(iconName), translate_utf8(text), parent);
+  QAction* action
+      = new QAction(get_icon(iconName), translate_utf8(text), parent);
   if (!strcmp(shortcut, "")) {
     action->setShortcut(fl(shortcut));
   }
@@ -207,11 +206,10 @@ QAction *addCheckableMenuItem(QObject *parent, QMenu *menu, const char *text,
   return action;
 }
 
-QAction *addMenuRadioItem(QObject *parent, QMenu *menu, const char *text,
-                          const char *callback, QActionGroup *group,
-                          const char *shortcut)
+QAction* addMenuRadioItem(QObject* parent, QMenu* menu, const char* text,
+    const char* callback, QActionGroup* group, const char* shortcut)
 {
-  QAction *action = new QAction(translate_utf8(text), parent);
+  QAction* action = new QAction(translate_utf8(text), parent);
   if (!strcmp(shortcut, "")) {
     action->setShortcut(fl(shortcut));
   }
@@ -222,33 +220,32 @@ QAction *addMenuRadioItem(QObject *parent, QMenu *menu, const char *text,
   return action;
 }
 
-QAction *addToolItem(QObject *parent, QToolBar *tools, const char *text,
-                     const char *callback, const char *iconName)
+QAction* addToolItem(QObject* parent, QToolBar* tools, const char* text,
+    const char* callback, const char* iconName)
 {
-  QAction
-      *action = new QAction(get_icon(iconName), translate_utf8(text), parent);
+  QAction* action
+      = new QAction(get_icon(iconName), translate_utf8(text), parent);
   QObject::connect(action, SIGNAL(triggered()), parent, callback);
 
   tools->addAction(action);
   return action;
 }
 
-QAction *addToolItemMapped(QObject *parent, QToolBar *tools, const char *text,
-                           const char *callback, const char *signal,
-                           const char *iconName)
+QAction* addToolItemMapped(QObject* parent, QToolBar* tools, const char* text,
+    const char* callback, const char* signal, const char* iconName)
 {
-  QAction
-      *action = new QAction(get_icon(iconName), translate_utf8(text), parent);
+  QAction* action
+      = new QAction(get_icon(iconName), translate_utf8(text), parent);
   QObject::connect(action, signal, parent, callback);
 
   tools->addAction(action);
   return action;
 }
 
-QAction *addToolRadioItem(QObject *parent, QToolBar *tools, const char *text,
-                          const char *callback, QActionGroup *group)
+QAction* addToolRadioItem(QObject* parent, QToolBar* tools, const char* text,
+    const char* callback, QActionGroup* group)
 {
-  QAction *action = new QAction(translate_utf8(text), parent);
+  QAction* action = new QAction(translate_utf8(text), parent);
   QObject::connect(action, SIGNAL(triggered()), parent, callback);
   action->setCheckable(true);
   action->setActionGroup(group);
@@ -256,12 +253,11 @@ QAction *addToolRadioItem(QObject *parent, QToolBar *tools, const char *text,
   return action;
 }
 
-QAction *addCheckableToolItem(QObject *parent, QToolBar *tools,
-                              const char *text, const char *callback,
-                              const char *iconName)
+QAction* addCheckableToolItem(QObject* parent, QToolBar* tools,
+    const char* text, const char* callback, const char* iconName)
 {
-  QAction
-      *action = new QAction(get_icon(iconName), translate_utf8(text), parent);
+  QAction* action
+      = new QAction(get_icon(iconName), translate_utf8(text), parent);
   action->setCheckable(true);
   QObject::connect(action, SIGNAL(triggered(bool)), parent, callback);
 
@@ -269,25 +265,25 @@ QAction *addCheckableToolItem(QObject *parent, QToolBar *tools,
   return action;
 }
 
-QMenu *addToolMenu(QWidget *parent, QToolBar *tools, const char *text)
+QMenu* addToolMenu(QWidget* parent, QToolBar* tools, const char* text)
 {
-  QToolButton *button = new QToolButton(parent);
+  QToolButton* button = new QToolButton(parent);
   button->setText(translate_utf8(text));
   button->setPopupMode(QToolButton::InstantPopup);
-  QMenu *menu = new QMenu(button);
+  QMenu* menu = new QMenu(button);
   button->setMenu(menu);
   tools->addWidget(button);
   return menu;
 }
 
-QWidget *layout_to_widget(QLayout *layout)
+QWidget* layout_to_widget(QLayout* layout)
 {
-  QWidget *container = new QWidget();
+  QWidget* container = new QWidget();
   container->setLayout(layout);
   return container;
 }
 
-void set_pane_position(QSplitter *pane, int right)
+void set_pane_position(QSplitter* pane, int right)
 {
   QList<int> sizes;
   int total;
@@ -305,51 +301,51 @@ void set_pane_position(QSplitter *pane, int right)
   pane->setSizes(sizes);
 }
 
-QFrame *separator(QFrame::Shape shape)
+QFrame* separator(QFrame::Shape shape)
 {
-  QFrame *line = new QFrame();
+  QFrame* line = new QFrame();
   line->setFrameShape(shape);
   line->setFrameShadow(QFrame::Sunken);
   return line;
 }
 
-QLabel *new_image_label(QWidget *parent, const char *fname)
+QLabel* new_image_label(QWidget* parent, const char* fname)
 {
-  QLabel *label = new QLabel(parent);
+  QLabel* label = new QLabel(parent);
   label->setPixmap(QPixmap(fl(fname)));
   return label;
 }
 
-void fixed_put(QWidget *parent, QWidget *widget, int x, int y)
+void fixed_put(QWidget* parent, QWidget* widget, int x, int y)
 {
   widget->setParent(parent);
   widget->move(x, y);
 }
 
-void add_expanding(QStatusBar *statusbar, QWidget *widget)
+void add_expanding(QStatusBar* statusbar, QWidget* widget)
 {
   widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   statusbar->addWidget(widget);
 }
 
-void add_expanding(QSplitter *splitter, QWidget *widget)
+void add_expanding(QSplitter* splitter, QWidget* widget)
 {
   widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   splitter->addWidget(widget);
 }
 
-void add_expanding(QSplitter *splitter, QLayout *widget)
+void add_expanding(QSplitter* splitter, QLayout* widget)
 {
   add_expanding(splitter, layout_to_widget(widget));
 }
 
-void add_expanding(QLayout *layout, QWidget *widget)
+void add_expanding(QLayout* layout, QWidget* widget)
 {
   widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   layout->addWidget(widget);
 }
 
-void add_expanding(QLayout *layout, QLayout *widget)
+void add_expanding(QLayout* layout, QLayout* widget)
 {
   add_expanding(layout, layout_to_widget(widget));
 }

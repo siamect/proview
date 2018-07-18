@@ -4,17 +4,17 @@
 #define ra_io_m_onewire_h
 
 typedef struct {
-  FILE *value_fp;
+  FILE* value_fp;
   int interval_cnt;
 } io_sLocalDS18B20;
 
 typedef struct {
-  FILE *value_fp;
+  FILE* value_fp;
   int interval_cnt;
 } io_sLocalAiDevice;
 
 typedef struct {
-  FILE *value_fp;
+  FILE* value_fp;
   int interval_cnt;
 } io_sLocalAoDevice;
 

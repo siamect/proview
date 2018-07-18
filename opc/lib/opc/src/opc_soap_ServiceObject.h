@@ -15,23 +15,44 @@
  *                                                                            *
 \******************************************************************************/
 
-class Service : public soap
-{    public:
-	Service()
-	{ static const struct Namespace namespaces[] =
-{
-	{"SOAP-ENV", "http://schemas.xmlsoap.org/soap/envelope/", "http://www.w3.org/*/soap-envelope", NULL},
-	{"SOAP-ENC", "http://schemas.xmlsoap.org/soap/encoding/", "http://www.w3.org/*/soap-encoding", NULL},
-	{"xsi", "http://www.w3.org/2001/XMLSchema-instance", "http://www.w3.org/*/XMLSchema-instance", NULL},
-	{"xsd", "http://www.w3.org/2001/XMLSchema", "http://www.w3.org/*/XMLSchema", NULL},
-	{"s0", "http://opcfoundation.org/webservices/XMLDA/1.0/", NULL, NULL},
-	{NULL, NULL, NULL, NULL}
-};
-	soap_init(this); if (!this->namespaces) this->namespaces = namespaces; };
-	virtual ~Service() { soap_destroy(this); soap_end(this); soap_done(this); };
-	virtual	int bind(const char *host, int port, int backlog) { return soap_bind(this, host, port, backlog); };
-	virtual	int accept() { return soap_accept(this); };
-	virtual	int serve() { return soap_serve(this); };
+class Service : public soap {
+public:
+  Service()
+  {
+    static const struct Namespace namespaces[] = {
+      { "SOAP-ENV", "http://schemas.xmlsoap.org/soap/envelope/",
+          "http://www.w3.org/*/soap-envelope", NULL },
+      { "SOAP-ENC", "http://schemas.xmlsoap.org/soap/encoding/",
+          "http://www.w3.org/*/soap-encoding", NULL },
+      { "xsi", "http://www.w3.org/2001/XMLSchema-instance",
+          "http://www.w3.org/*/XMLSchema-instance", NULL },
+      { "xsd", "http://www.w3.org/2001/XMLSchema",
+          "http://www.w3.org/*/XMLSchema", NULL },
+      { "s0", "http://opcfoundation.org/webservices/XMLDA/1.0/", NULL, NULL },
+      { NULL, NULL, NULL, NULL }
+    };
+    soap_init(this);
+    if (!this->namespaces)
+      this->namespaces = namespaces;
+  };
+  virtual ~Service()
+  {
+    soap_destroy(this);
+    soap_end(this);
+    soap_done(this);
+  };
+  virtual int bind(const char* host, int port, int backlog)
+  {
+    return soap_bind(this, host, port, backlog);
+  };
+  virtual int accept()
+  {
+    return soap_accept(this);
+  };
+  virtual int serve()
+  {
+    return soap_serve(this);
+  };
 };
 
 /******************************************************************************\
@@ -40,21 +61,34 @@ class Service : public soap
  *                                                                            *
 \******************************************************************************/
 
+SOAP_FMAC5 int SOAP_FMAC6 __s0__GetStatus(struct soap*,
+    _s0__GetStatus* s0__GetStatus,
+    _s0__GetStatusResponse* s0__GetStatusResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 __s0__GetStatus(struct soap*, _s0__GetStatus *s0__GetStatus, _s0__GetStatusResponse *s0__GetStatusResponse);
+SOAP_FMAC5 int SOAP_FMAC6 __s0__Read(
+    struct soap*, _s0__Read* s0__Read, _s0__ReadResponse* s0__ReadResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 __s0__Read(struct soap*, _s0__Read *s0__Read, _s0__ReadResponse *s0__ReadResponse);
+SOAP_FMAC5 int SOAP_FMAC6 __s0__Write(
+    struct soap*, _s0__Write* s0__Write, _s0__WriteResponse* s0__WriteResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 __s0__Write(struct soap*, _s0__Write *s0__Write, _s0__WriteResponse *s0__WriteResponse);
+SOAP_FMAC5 int SOAP_FMAC6 __s0__Subscribe(struct soap*,
+    _s0__Subscribe* s0__Subscribe,
+    _s0__SubscribeResponse* s0__SubscribeResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 __s0__Subscribe(struct soap*, _s0__Subscribe *s0__Subscribe, _s0__SubscribeResponse *s0__SubscribeResponse);
+SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionPolledRefresh(struct soap*,
+    _s0__SubscriptionPolledRefresh* s0__SubscriptionPolledRefresh,
+    _s0__SubscriptionPolledRefreshResponse*
+        s0__SubscriptionPolledRefreshResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionPolledRefresh(struct soap*, _s0__SubscriptionPolledRefresh *s0__SubscriptionPolledRefresh, _s0__SubscriptionPolledRefreshResponse *s0__SubscriptionPolledRefreshResponse);
+SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionCancel(struct soap*,
+    _s0__SubscriptionCancel* s0__SubscriptionCancel,
+    _s0__SubscriptionCancelResponse* s0__SubscriptionCancelResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionCancel(struct soap*, _s0__SubscriptionCancel *s0__SubscriptionCancel, _s0__SubscriptionCancelResponse *s0__SubscriptionCancelResponse);
+SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap*, _s0__Browse* s0__Browse,
+    _s0__BrowseResponse* s0__BrowseResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap*, _s0__Browse *s0__Browse, _s0__BrowseResponse *s0__BrowseResponse);
-
-SOAP_FMAC5 int SOAP_FMAC6 __s0__GetProperties(struct soap*, _s0__GetProperties *s0__GetProperties, _s0__GetPropertiesResponse *s0__GetPropertiesResponse);
+SOAP_FMAC5 int SOAP_FMAC6 __s0__GetProperties(struct soap*,
+    _s0__GetProperties* s0__GetProperties,
+    _s0__GetPropertiesResponse* s0__GetPropertiesResponse);
 
 #endif

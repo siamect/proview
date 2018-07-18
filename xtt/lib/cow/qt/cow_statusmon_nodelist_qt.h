@@ -40,12 +40,12 @@
 /* cow_statusmon_nodelist_qt.h -- Status Monitor */
 
 #ifndef cow_statusmon_nodelist_h
-# include "cow_statusmon_nodelist.h"
+#include "cow_statusmon_nodelist.h"
 #endif
 
-#ifndef cow_wow_qt_h
-# include "cow_wow_qt.h"
-#endif
+#include "cow_wow_qt.h"
+
+#include <QLabel>
 
 class NodelistQt;
 class NodelistQtWidget;
@@ -54,36 +54,36 @@ class NodelistInputDialogQt : public QDialog {
   Q_OBJECT
 
 public:
-  NodelistInputDialogQt(NodelistQt *parent_ctx, QWidget *parent,
-                        bool input_callback = true);
+  NodelistInputDialogQt(
+      NodelistQt* parent_ctx, QWidget* parent, bool input_callback = true);
 
-  QLabel *label;
-  QLabel *label2;
-  QLabel *label3;
-  QLineEdit *text;
-  QLineEdit *text2;
-  QLineEdit *text3;
+  QLabel* label;
+  QLabel* label2;
+  QLabel* label3;
+  QLineEdit* text;
+  QLineEdit* text2;
+  QLineEdit* text3;
 
 public slots:
   void activate_ok();
   void activate_cancel();
 
 private:
-  NodelistQt *nodelist;
+  NodelistQt* nodelist;
 };
 
 class NodelistQt : public Nodelist {
 public:
-  NodelistQt(void *nodelist_parent_ctx, QWidget *nodelist_parent_wid,
-             const char *nodelist_name, int nodelist_mode,
-             int nodelist_view_node_descr, int msgw_pop, pwr_tStatus *status);
+  NodelistQt(void* nodelist_parent_ctx, QWidget* nodelist_parent_wid,
+      const char* nodelist_name, int nodelist_mode,
+      int nodelist_view_node_descr, int msgw_pop, pwr_tStatus* status);
 
-  QWidget *parent_wid_nodelist;
-  QWidget *form_nodelist;
-  QWidget *nodelistnav_widget;
+  QWidget* parent_wid_nodelist;
+  QWidget* form_nodelist;
+  QWidget* nodelistnav_widget;
 
-  NodelistInputDialogQt *add_india_widget;
-  NodelistInputDialogQt *mod_india_widget;
+  NodelistInputDialogQt* add_india_widget;
+  NodelistInputDialogQt* mod_india_widget;
 
   CoWowFocusTimerQt focustimer;
 
@@ -92,30 +92,30 @@ public:
   void reset_cursor();
   void create_add_input_dialog();
   void create_mod_input_dialog();
-  void open_add_input_dialog(const char *text, const char *text2,
-                             const char *text3, const char *title,
-                             const char *init_text,
-                             void (*ok_cb)(Nodelist *, char *, char *, char *));
-  void open_mod_input_dialog(const char *text, const char *text2,
-                             const char *text3, const char *title,
-                             const char *init_text, const char *init_text2,
-                             const char *init_text3,
-                             void (*ok_cb)(Nodelist *, char *, char *, char *));
+  void open_add_input_dialog(const char* text, const char* text2,
+      const char* text3, const char* title, const char* init_text,
+      void (*ok_cb)(Nodelist*, char*, char*, char*));
+  void open_mod_input_dialog(const char* text, const char* text2,
+      const char* text3, const char* title, const char* init_text,
+      const char* init_text2, const char* init_text3,
+      void (*ok_cb)(Nodelist*, char*, char*, char*));
 
 private:
-  NodelistQtWidget *toplevel;
+  NodelistQtWidget* toplevel;
 };
 
 class NodelistQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  NodelistQtWidget(NodelistQt *parent_ctx, QWidget *parent)
-      : QWidget(parent, Qt::Window), nodelist(parent_ctx) {}
+  NodelistQtWidget(NodelistQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), nodelist(parent_ctx)
+  {
+  }
 
 protected:
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void activate_add_node();
@@ -142,7 +142,7 @@ public slots:
   void activate_help();
 
 private:
-  NodelistQt *nodelist;
+  NodelistQt* nodelist;
 };
 
 #endif

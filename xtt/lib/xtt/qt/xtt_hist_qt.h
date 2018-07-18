@@ -42,7 +42,7 @@
 #if defined OS_POSIX && defined PWRE_CONF_LIBDB
 
 #ifndef xtt_hist_h
-# include "xtt_hist.h"
+#include "xtt_hist.h"
 #endif
 
 #include <QCheckBox>
@@ -53,58 +53,60 @@ class HistQtWidget;
 
 class HistQt : public Hist {
 public:
-  HistQt(void *hist_parent_ctx, QWidget *hist_parent_wid, char *hist_name,
-         pwr_tAttrRef *arp, pwr_tStatus *status);
+  HistQt(void* hist_parent_ctx, QWidget* hist_parent_wid, char* hist_name,
+      pwr_tAttrRef* arp, pwr_tStatus* status);
 
-  QWidget *form_hist;
-  QWidget *hist_widget;
-  QWidget *start_time_help_lbl_w;
-  QLineEdit *start_time_entry_w;
-  QLineEdit *stop_time_entry_w;
-  QLineEdit *event_text_entry_w;
-  QLineEdit *event_name_entry_w;
-  QCheckBox *alarm_toggle_w;
-  QCheckBox *info_toggle_w;
-  QCheckBox *infosuccess_toggle_w;
-  QCheckBox *mnt_alarm_toggle_w;
-  QCheckBox *sys_alarm_toggle_w;
-  QCheckBox *user_alarm1_toggle_w;
-  QCheckBox *user_alarm2_toggle_w;
-  QCheckBox *user_alarm3_toggle_w;
-  QCheckBox *user_alarm4_toggle_w;
-  QCheckBox *ack_toggle_w;
-  QCheckBox *ret_toggle_w;
-  QCheckBox *prioA_toggle_w;
-  QCheckBox *prioB_toggle_w;
-  QCheckBox *prioC_toggle_w;
-  QCheckBox *prioD_toggle_w;
-  QLabel *nrofevents_string_lbl_w;
-  QLabel *search_string_lbl_w;
-  QLabel *search_string2_lbl_w;
-  QLabel *search_string3_lbl_w;
-  QLabel *search_string4_lbl_w;
-  QWidget *search_vbox;
+  QWidget* form_hist;
+  QWidget* hist_widget;
+  QWidget* start_time_help_lbl_w;
+  QLineEdit* start_time_entry_w;
+  QLineEdit* stop_time_entry_w;
+  QLineEdit* event_text_entry_w;
+  QLineEdit* event_name_entry_w;
+  QCheckBox* alarm_toggle_w;
+  QCheckBox* info_toggle_w;
+  QCheckBox* infosuccess_toggle_w;
+  QCheckBox* mnt_alarm_toggle_w;
+  QCheckBox* sys_alarm_toggle_w;
+  QCheckBox* user_alarm1_toggle_w;
+  QCheckBox* user_alarm2_toggle_w;
+  QCheckBox* user_alarm3_toggle_w;
+  QCheckBox* user_alarm4_toggle_w;
+  QCheckBox* ack_toggle_w;
+  QCheckBox* ret_toggle_w;
+  QCheckBox* prioA_toggle_w;
+  QCheckBox* prioB_toggle_w;
+  QCheckBox* prioC_toggle_w;
+  QCheckBox* prioD_toggle_w;
+  QLabel* nrofevents_string_lbl_w;
+  QLabel* search_string_lbl_w;
+  QLabel* search_string2_lbl_w;
+  QLabel* search_string3_lbl_w;
+  QLabel* search_string4_lbl_w;
+  QWidget* search_vbox;
 
   void set_num_of_events(int nrOfEvents);
-  void set_search_string(const char *s1, const char *s2, const char *s3,
-                         const char *s4);
+  void set_search_string(
+      const char* s1, const char* s2, const char* s3, const char* s4);
   void SetListTime(pwr_tTime StartTime, pwr_tTime StopTime, int Sensitive);
-  void insert_eventname(const char *name);
+  void insert_eventname(const char* name);
 
 private:
-  HistQtWidget *toplevel;
+  HistQtWidget* toplevel;
 };
 
 class HistQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  HistQtWidget(HistQt *parent_ctx, QWidget *parent)
-      : QWidget(parent, Qt::Window), hist(parent_ctx) {}
+  HistQtWidget(HistQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), hist(parent_ctx)
+  {
+  }
 
 protected:
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void activate_print();
@@ -121,7 +123,7 @@ public slots:
   void activate_help();
   void activate_helpevent();
   void ok_btn();
-  //callbackfunctions from the searchdialog
+  // callbackfunctions from the searchdialog
   void cancel_cb();
   void today_cb();
   void yesterday_cb();
@@ -133,20 +135,20 @@ public slots:
   void time_cb();
 
 private:
-  HistQt *hist;
+  HistQt* hist;
 };
 
 #else
 // Dummy for other platforms then OS_LINUX
 #ifndef xtt_hist_h
-# include "xtt_hist.h"
+#include "xtt_hist.h"
 #endif
 
 class HistQt : public Hist {
 public:
-  HistQt(void *hist_parent_ctx, QWidget *hist_parent_wid, char *hist_name,
-         pwr_tAttrRef *arp, pwr_tStatus *status) : Hist(hist_parent_ctx,
-                                                        hist_name, arp, status)
+  HistQt(void* hist_parent_ctx, QWidget* hist_parent_wid, char* hist_name,
+      pwr_tAttrRef* arp, pwr_tStatus* status)
+      : Hist(hist_parent_ctx, hist_name, arp, status)
   {
   }
 };

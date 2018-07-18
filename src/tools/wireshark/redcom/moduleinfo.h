@@ -7,7 +7,6 @@
 /* Name of package */
 #define PACKAGE "redcom"
 
-
 #ifdef VERSION
 #undef VERSION
 #endif

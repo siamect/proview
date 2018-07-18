@@ -41,7 +41,6 @@
 #include "wb_pwrs.h"
 #include "wb_pwrb_msg.h"
 #include "pwr_abbclasses.h"
-#include "wb_ldh.h"
 #include "wb_wsx.h"
 #include "wb_session.h"
 

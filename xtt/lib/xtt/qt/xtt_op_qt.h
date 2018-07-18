@@ -39,26 +39,25 @@
 
 /* xtt_op_qt.h -- Operator window in xtt */
 
-#include "pwr_baseclasses.h"
-#ifndef xtt_op_h
-# include "xtt_op.h"
-#endif
-
-#ifndef cow_wow_qt_h
-# include "cow_wow_qt.h"
-#endif
-
 #include <vector>
 
-#include <QHBoxLayout>
+#ifndef xtt_op_h
+#include "xtt_op.h"
+#endif
+
+#include "cow_wow_qt.h"
+
+#include <QLabel>
 #include <QMenuBar>
+#include <QToolBar>
+#include <QVBoxLayout>
 
 class OpCmd {
 public:
-  QMenu *w;
+  QMenu* w;
   pwr_tCmd cmd;
 
-  OpCmd(QMenu *widget, const char *command) : w(widget)
+  OpCmd(QMenu* widget, const char* command) : w(widget)
   {
     strncpy(cmd, command, sizeof(cmd));
   }
@@ -68,36 +67,36 @@ class OpQtWidget;
 
 class OpQt : public Op {
 public:
-  OpQt(void *op_parent_ctx, QWidget *op_parent_wid, char *opplace,
-       pwr_tStatus *status);
+  OpQt(void* op_parent_ctx, QWidget* op_parent_wid, char* opplace,
+      pwr_tStatus* status);
   ~OpQt();
 
-  QWidget *parent_wid_op;
-  QLabel *alarmcnt_label;
-  QWidget *aalarm_mark;
-  QLabel *aalarm_label[5];
-  QWidget *aalarm_active[5];
-  QWidget *aalarm_active_box[5];
-  QWidget *aalarm_info[5];
-  QWidget *aalarm_filler[5];
-  QWidget *aalarm_box[5];
-  QLabel *balarm_label;
-  QWidget *balarm_active;
-  QWidget *balarm_active_box;
-  QWidget *balarm_info;
-  QWidget *balarm_box;
-  QWidget *balarm_ebox;
-  QLabel *balarm_mark;
-  QVBoxLayout *appl_form;
-  QWidget *decr_button;
-  QWidget *tools_close;
-  QWidget *functions_close;
-  QWidget *funcbox[5];
-  QMenuBar *menu_bar;
-  QLabel *title_label;
-  QWidget *appl_buttons[25];
-  QToolBar *tools;
-  QToolBar *tools2;
+  QWidget* parent_wid_op;
+  QLabel* alarmcnt_label;
+  QWidget* aalarm_mark;
+  QLabel* aalarm_label[5];
+  QWidget* aalarm_active[5];
+  QWidget* aalarm_active_box[5];
+  QWidget* aalarm_info[5];
+  QWidget* aalarm_filler[5];
+  QWidget* aalarm_box[5];
+  QLabel* balarm_label;
+  QWidget* balarm_active;
+  QWidget* balarm_active_box;
+  QWidget* balarm_info;
+  QWidget* balarm_box;
+  QWidget* balarm_ebox;
+  QLabel* balarm_mark;
+  QVBoxLayout* appl_form;
+  QWidget* decr_button;
+  QWidget* tools_close;
+  QWidget* functions_close;
+  QWidget* funcbox[5];
+  QMenuBar* menu_bar;
+  QLabel* title_label;
+  QWidget* appl_buttons[25];
+  QToolBar* tools;
+  QToolBar* tools2;
   QColor red_color;
   QColor yellow_color;
   QColor green_color;
@@ -110,36 +109,38 @@ public:
   char b_alarm_moretext[256];
   int text_size;
   CoWowFocusTimerQt poptimer;
-  vector <OpCmd> cmd_vect;
+  std::vector<OpCmd> cmd_vect;
 
   void map();
-  int configure(char *opplace_str);
+  int configure(char* opplace_str);
   void update_alarm_info();
   void add_close_button();
-  int get_cmd(QMenu *w, char *cmd);
-  int create_menu_item(const char *name, int pixmap, int append,
-                       const char *cmd);
-  int delete_menu_item(const char *name);
-  void change_sup_color(void *imagew, op_eSupColor color);
-  void set_title(char *user);
+  int get_cmd(QMenu* w, char* cmd);
+  int create_menu_item(
+      const char* name, int pixmap, int append, const char* cmd);
+  int delete_menu_item(const char* name);
+  void change_sup_color(void* imagew, op_eSupColor color);
+  void set_title(char* user);
   void set_color_theme(int idx);
   void set_text_size();
 
 private:
   void alarm_box_helper(int i);
 
-  OpQtWidget *toplevel;
+  OpQtWidget* toplevel;
 };
 
 class OpQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  OpQtWidget(OpQt *parent_ctx, QWidget *parent) : QWidget(parent, Qt::Window),
-                                                  op(parent_ctx) {}
+  OpQtWidget(OpQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), op(parent_ctx)
+  {
+  }
 
 protected:
-  void closeEvent(QCloseEvent *event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void activate_aalarm_ack();
@@ -171,7 +172,7 @@ public slots:
   void activate_info();
 
 private:
-  OpQt *op;
+  OpQt* op;
 };
 
 #endif

@@ -38,51 +38,46 @@
 #define cow_tree_qt_h
 
 #include "cow_tree.h"
-#include "cow_treenav.h"
-#include "cow_wow_qt.h"
 
 #include <QLabel>
+#include <QWidget>
 
 /* cow_tree.h -- Tree viewer */
-
-class CoWowRecall;
-
-class CoWowEntryQt;
-
-class CowTreeNavQt;
 
 class CowTreeQtWidget;
 
 class CowTreeQt : public CowTree {
 public:
-  CowTreeQt(QWidget *a_parent_wid, void *a_parent_ctx, const char *title,
-            pwr_tAttrRef *itemlist, int item_cnt, unsigned int options,
-            pwr_tStatus (*get_object_info)(void *, pwr_tAttrRef *, char *, int,
-                                           char *, char *, int),
-            pwr_tStatus (*get_node_info)(void *, char *, char *, int),
-            pwr_tStatus (*action)(void *, pwr_tAttrRef *));
-  QWidget *brow_widget;
-  QWidget *form_widget;
-  QLabel *msg_label;
-  QWidget *pane;
+  CowTreeQt(QWidget* a_parent_wid, void* a_parent_ctx, const char* title,
+      pwr_tAttrRef* itemlist, int item_cnt, unsigned int options,
+      pwr_tStatus (*get_object_info)(
+          void*, pwr_tAttrRef*, char*, int, char*, char*, int),
+      pwr_tStatus (*get_node_info)(void*, char*, char*, int),
+      pwr_tStatus (*action)(void*, pwr_tAttrRef*));
+  QWidget* brow_widget;
+  QWidget* form_widget;
+  QLabel* msg_label;
+  QWidget* pane;
 
-  void message(char severity, const char *message);
+  void message(char severity, const char* message);
   void pop();
 
 private:
-  CowTreeQtWidget *toplevel;
+  CowTreeQtWidget* toplevel;
 };
 
 class CowTreeQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  CowTreeQtWidget(CowTreeQt *parent_ctx, QWidget *parent)
-      : QWidget(parent, Qt::Window), tree(parent_ctx) {}
+  CowTreeQtWidget(CowTreeQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), tree(parent_ctx)
+  {
+  }
 
 protected:
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void activate_print();
@@ -95,7 +90,7 @@ public slots:
   void activate_button_ok();
 
 private:
-  CowTreeQt *tree;
+  CowTreeQt* tree;
 };
 
 #endif

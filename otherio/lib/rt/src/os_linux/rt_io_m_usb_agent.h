@@ -6,7 +6,7 @@
 #if defined PWRE_CONF_LIBUSB
 
 typedef struct {
-  libusb_context *libusb_ctx;
+  libusb_context* libusb_ctx;
 } io_sLocalUSB_Agent;
 
 #endif

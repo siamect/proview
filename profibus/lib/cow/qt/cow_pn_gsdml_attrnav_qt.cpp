@@ -36,33 +36,16 @@
 
 /* cow_pn_gsdml_attrnav_qt.cpp -- Display gsd attributes */
 
-#include "glow_std.h"
+#include "cow_qt_helpers.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <vector>
-
-#include "co_cdh.h"
-#include "co_time.h"
-#include "cow_wow_qt.h"
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
 #include "flow_browwidget_qt.h"
-#include "flow_msg.h"
-#include "glow.h"
-#include "glow_growctx.h"
-#include "glow_growapi.h"
-#include "glow_growwidget_qt.h"
-#include "cow_pn_gsdml.h"
+
 #include "cow_pn_gsdml_attr_qt.h"
 #include "cow_pn_gsdml_attrnav_qt.h"
-#include "rt_pb_msg.h"
 
-GsdmlAttrNavQt::GsdmlAttrNavQt(void *xn_parent_ctx, QWidget *xn_parent_wid,
-                               const char *xn_name, pn_gsdml *xn_gsdml,
-                               int xn_edit_mode, QWidget **w,
-                               pwr_tStatus *status)
+GsdmlAttrNavQt::GsdmlAttrNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
+    const char* xn_name, pn_gsdml* xn_gsdml, int xn_edit_mode, QWidget** w,
+    pwr_tStatus* status)
     : GsdmlAttrNav(xn_parent_ctx, xn_name, xn_gsdml, xn_edit_mode, status)
 {
   form_widget = scrolledbrowwidgetqt_new(init_brow_cb, this, &brow_widget);
@@ -89,43 +72,44 @@ void GsdmlAttrNavQt::set_inputfocus()
 
 void GsdmlAttrNavQt::display_attr_help_text()
 {
-  brow_tNode *node_list;
+  brow_tNode* node_list;
   int node_count;
-  ItemPn *base_item;
+  ItemPn* base_item;
 
   brow_GetSelectedNodes(brow->ctx, &node_list, &node_count);
   if (!node_count)
     return;
-  
-  brow_GetUserData(node_list[0], (void **)&base_item);
+
+  brow_GetUserData(node_list[0], (void**)&base_item);
   free(node_list);
 
-  switch(base_item->type) {
-    /*
-     * The following two item types could make use of the same info_text that the the base class does,
-     * but since they already contained references they were used instead...
-     */
-    case attrnav_eItemType_PnParValue:
-    case attrnav_eItemType_PnParEnum: {
-      ItemPnParEnum *item = (ItemPnParEnum *)base_item;
-      gsdml_ValueItem *vi = 0;
+  switch (base_item->type) {
+  /*
+   * The following two item types could make use of the same info_text that the
+   * the base class does,
+   * but since they already contained references they were used instead...
+   */
+  case attrnav_eItemType_PnParValue:
+  case attrnav_eItemType_PnParEnum: {
+    ItemPnParEnum* item = (ItemPnParEnum*)base_item;
+    gsdml_ValueItem* vi = 0;
 
-      if (item->value_ref)
-        vi = (gsdml_ValueItem *)item->value_ref->Body.ValueItemTarget.p;
-      
-      //If we do have help available show it
-      if (vi && vi->Body.Help.p)
-        ((GsdmlAttrQt*)parent_ctx)->attr_help_text((char*)vi->Body.Help.p);
-      else
-        ((GsdmlAttrQt*)parent_ctx)->attr_help_text("");
-      
-      break;
-    }
-    default: {
-      if (base_item->info_text)
-        ((GsdmlAttrQt*)parent_ctx)->attr_help_text(base_item->info_text);
-      else
-        ((GsdmlAttrQt*)parent_ctx)->attr_help_text("");
-    }
+    if (item->value_ref)
+      vi = (gsdml_ValueItem*)item->value_ref->Body.ValueItemTarget.p;
+
+    // If we do have help available show it
+    if (vi && vi->Body.Help.p)
+      ((GsdmlAttrQt*)parent_ctx)->attr_help_text((char*)vi->Body.Help.p);
+    else
+      ((GsdmlAttrQt*)parent_ctx)->attr_help_text("");
+
+    break;
+  }
+  default: {
+    if (base_item->info_text)
+      ((GsdmlAttrQt*)parent_ctx)->attr_help_text(base_item->info_text);
+    else
+      ((GsdmlAttrQt*)parent_ctx)->attr_help_text("");
+  }
   }
 }

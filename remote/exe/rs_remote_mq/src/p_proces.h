@@ -19,7 +19,7 @@
 /**  52.227-19, as applicable.                                               **/
 /**                                                                          **/
 /******************************************************************************/
- 
+
 /*** MODULE PAMS_C_PROCESS IDENT V4.0-03 ***/
 /**/
 #ifndef _P_PROCES_H
@@ -88,4 +88,4 @@
 /*                                                                          */
 /*                                                                          */
 /**/
-#endif	/* end P_PROCES_H */
+#endif /* end P_PROCES_H */

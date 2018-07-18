@@ -39,12 +39,14 @@
 
 /* ge_graph_qt.h -- Simple graphic editor */
 
-#include "glow_growctx.h"
-#include "glow_growapi.h"
+// #include "glow_growctx.h"
+// #include "glow_growapi.h"
+
 #ifndef ge_graph_h
-# include "ge_graph.h"
+#include "ge_graph.h"
 #endif
 
+#include <QTimer>
 #include <QWidget>
 
 class GraphQtTraceObject;
@@ -62,50 +64,56 @@ public:
     \param graph_mode		Mode, development or runtime.
     \param scrollbar		Use scrollbars.
     \param xn_gdh_init_done	Gdh is alread initialized.
-    \param xn_object_name	Object name for a class graph. If zero, this is not a class graph.
-    \param xn_use_default_access Use the default access and not the access of the current user.
-    \param xn_default_access	Default access. Can be used to override the access of the current user.
+    \param xn_object_name	Object name for a class graph. If zero, this is
+    not
+    a class graph.
+    \param xn_use_default_access Use the default access and not the access of
+    the current user.
+    \param xn_default_access	Default access. Can be used to override the
+    access of the current user.
   */
-  GraphQt(void *xn_parent_ctx, QWidget *xn_parent_wid, const char *xn_name,
-          QWidget **w, pwr_tStatus *status, const char *xn_default_path,
-          graph_eMode graph_mode = graph_eMode_Development, int scrollbar = 1,
-          int xn_gdh_init_done = 0, const char *xn_object_name = 0,
-          int xn_use_default_access = 0, unsigned int xn_default_access = 0,
-          unsigned int xn_options = 0, int xn_color_theme = 0,
-          void (*xn_keyboard_cb)(void *, int, int) = 0);
+  GraphQt(void* xn_parent_ctx, QWidget* xn_parent_wid, const char* xn_name,
+      QWidget** w, pwr_tStatus* status, const char* xn_default_path,
+      graph_eMode graph_mode = graph_eMode_Development, int scrollbar = 1,
+      int xn_gdh_init_done = 0, const char* xn_object_name = 0,
+      int xn_use_default_access = 0, unsigned int xn_default_access = 0,
+      unsigned int xn_options = 0, int xn_color_theme = 0,
+      void (*xn_keyboard_cb)(void*, int, int) = 0);
 
   void trace_timer_remove();
   void trace_timer_add(int time);
-  int create_navigator(QWidget *parent);
-  Attr *attr_new(void *parent_ctx, attr_eType type, void *object,
-                 attr_sItem *itemlist, int item_cnt);
+  int create_navigator(QWidget* parent);
+  Attr* attr_new(void* parent_ctx, attr_eType type, void* object,
+      attr_sItem* itemlist, int item_cnt);
   void set_inputfocus(int focus);
-  void popup_position(int event_x, int event_y, int *x, int *y);
+  void popup_position(int event_x, int event_y, int* x, int* y);
 
-  QWidget *grow_widget;    //! Grow widget.
-  QWidget *form_widget;    //! Pane widget.
-  QWidget *nav_widget;    //! Navigation window widget.
-  QTimer *trace_timerid;    //!< Timer id for runtime scan.
+  QWidget* grow_widget; //! Grow widget.
+  QWidget* form_widget; //! Pane widget.
+  QWidget* nav_widget; //! Navigation window widget.
+  QTimer* trace_timerid; //!< Timer id for runtime scan.
 
   ~GraphQt();
 
 private:
-  QWidget *parent_wid;
-  GraphQtTraceObject *trace_obj;
+  QWidget* parent_wid;
+  GraphQtTraceObject* trace_obj;
 };
 
 class GraphQtTraceObject : public QObject {
   Q_OBJECT
 
 public:
-  GraphQtTraceObject(GraphQt *parent) : QObject(), graph(parent) {}
+  GraphQtTraceObject(GraphQt* parent) : QObject(), graph(parent)
+  {
+  }
 
 public slots:
   void trace_scan();
 
 private:
-  GraphQt *graph;
-  QTimer *trace_timerid;
+  GraphQt* graph;
+  QTimer* trace_timerid;
 };
 
 #endif

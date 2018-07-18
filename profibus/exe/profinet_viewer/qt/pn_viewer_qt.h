@@ -39,48 +39,45 @@
 
 /* pn_viewer_qt.h -- Profinet viewer */
 
-#ifndef pn_viewer_h
-# include "../src/pn_viewer.h"
-#endif
+#include "../src/pn_viewer.h"
 
-#ifndef cow_wow_qt_h
-# include "cow_wow_qt.h"
-#endif
+#include "cow_wow_qt.h"
+
+#include <QLabel>
 
 class PnViewerQtWidget;
 
 class PnViewerQt : public PnViewer {
 public:
-  PnViewerQt(void *v_parent_ctx, QWidget *v_parent_wid, const char *v_name,
-             const char *v_device, pwr_tStatus *status);
+  PnViewerQt(void* v_parent_ctx, QWidget* v_parent_wid, const char* v_name,
+      const char* v_device, pwr_tStatus* status);
 
-  QWidget *nav_widget;
-  QWidget *navconf_widget;
-  QLabel *msg_label;
-  QLabel *cmd_prompt;
+  QWidget* nav_widget;
+  QWidget* navconf_widget;
+  QLabel* msg_label;
+  QLabel* cmd_prompt;
   CoWowFocusTimerQt focustimer;
   CoWowFocusTimerQt maptimer;
-  CoWowRecall *value_recall;
-  CoWowEntryQt *cmd_entry;
+  CoWowRecall* value_recall;
+  CoWowEntryQt* cmd_entry;
 
-  void message(char severity, const char *msg);
-  void set_prompt(const char *prompt);
+  void message(char severity, const char* msg);
+  void set_prompt(const char* prompt);
   void open_change_value();
 
-private:
-  PnViewerQtWidget *toplevel;
+  PnViewerQtWidget* toplevel;
 };
 
 class PnViewerQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  PnViewerQtWidget(PnViewerQt *parent_ctx, QWidget *parent)
-      : QWidget(parent, Qt::Window), viewer(parent_ctx) {}
+  PnViewerQtWidget(PnViewerQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), viewer(parent_ctx){};
 
 protected:
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void valchanged_cmd_entry();
@@ -94,7 +91,7 @@ public slots:
   void activate_help();
 
 private:
-  PnViewerQt *viewer;
+  PnViewerQt* viewer;
 };
 
 #endif

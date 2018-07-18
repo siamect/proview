@@ -39,15 +39,10 @@
 
 /* xtt_xcolwind_qt.h -- Collect window */
 
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
-#ifndef xtt_xcolwind_h
-# include "xtt_xcolwind.h"
-#endif
+#include "cow_wow_qt.h"
 
-#ifndef cow_wow_qt_h
-# include "cow_wow_qt.h"
+#ifndef xtt_xcolwind_h
+#include "xtt_xcolwind.h"
 #endif
 
 #include <QLabel>
@@ -58,46 +53,48 @@ class XColWindQtWidget;
 
 class XColWindQt : public XColWind {
 public:
-  XColWindQt(QWidget *xa_parent_wid, void *xa_parent_ctx,
-             pwr_sAttrRef *xa_objar, char *xa_title, int xa_advanced_user,
-             xcolwind_eType xa_type, int *xa_sts);
-  QWidget *brow_widget;
-  QWidget *form_widget;
-  QLabel *msg_label;
-  QLabel *cmd_prompt;
-  QWidget *cmd_scrolledinput;
-  QTextEdit *cmd_scrolled_buffer;
-  QSplitter *pane;
+  XColWindQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
+      pwr_sAttrRef* xa_objar, char* xa_title, int xa_advanced_user,
+      xcolwind_eType xa_type, int* xa_sts);
+  QWidget* brow_widget;
+  QWidget* form_widget;
+  QLabel* msg_label;
+  QLabel* cmd_prompt;
+  QWidget* cmd_scrolledinput;
+  QTextEdit* cmd_scrolled_buffer;
+  QSplitter* pane;
   static CoWowRecall value_recall;
-  CoWowEntryQt *cmd_entry;
+  CoWowEntryQt* cmd_entry;
   CoWowFocusTimerQt focustimer;
   int input_max_length;
 
-  void message(char severity, const char *message);
-  void set_prompt(const char *prompt);
+  void message(char severity, const char* message);
+  void set_prompt(const char* prompt);
   void change_value(int set_focus);
-  int open_changevalue(char *name);
+  int open_changevalue(char* name);
   void change_value_close();
   void pop();
-  void set_title(char *title);
+  void set_title(char* title);
   void set_window_size(int w, int h);
-  void get_window_size(int *w, int *h);
+  void get_window_size(int* w, int* h);
   void print();
 
 private:
-  XColWindQtWidget *toplevel;
+  XColWindQtWidget* toplevel;
 };
 
 class XColWindQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  XColWindQtWidget(XColWindQt *parent_ctx, QWidget *parent)
-      : QWidget(parent, Qt::Window), colwind(parent_ctx) {}
+  XColWindQtWidget(XColWindQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), colwind(parent_ctx)
+  {
+  }
 
 protected:
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void activate_open();
@@ -125,7 +122,7 @@ public slots:
   void action_text_inserted();
 
 private:
-  XColWindQt *colwind;
+  XColWindQt* colwind;
 };
 
 #endif

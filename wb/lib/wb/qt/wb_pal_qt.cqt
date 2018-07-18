@@ -36,41 +36,24 @@
 
 /* wb_pal_qt.cpp -- Palette of configurator or plc-editor */
 
-#include <stdio.h>
-#include <stdlib.h>
-
-extern "C" {
-#include "wb_ldh.h"
-#include "co_cdh.h"
-#include "co_dcli.h"
-#include "pwr_baseclasses.h"
-}
-
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
-#include "flow_browwidget_qt.h"
-#include "wb_pal_qt.h"
-
-#include "glow.h"
-#include "glow_growctx.h"
-
 #include "cow_qt_helpers.h"
 
-#include <QVBoxLayout>
+#include "flow_browwidget_qt.h"
+
+#include "wb_pal_qt.h"
 
 #include <qlocalsocket.h>
 
-PalQt::PalQt(void *pal_parent_ctx, QWidget *pal_parent_wid,
-             const char *pal_name, ldh_tSesContext pal_ldhses,
-             const char *pal_root_name, QWidget **w, pwr_tStatus *status)
+PalQt::PalQt(void* pal_parent_ctx, QWidget* pal_parent_wid,
+    const char* pal_name, ldh_tSesContext pal_ldhses, const char* pal_root_name,
+    QWidget** w, pwr_tStatus* status)
     : Pal(pal_parent_ctx, pal_name, pal_ldhses, pal_root_name, status)
 {
   trace_obj = new PalQtTraceObject(this);
 
   debug_print("creating a scrolledbrowwidgetqt\n");
-  QWidget *scrolledbrow =
-      scrolledbrowwidgetqt_new(Pal::init_brow_cb, this, &brow_widget);
+  QWidget* scrolledbrow
+      = scrolledbrowwidgetqt_new(Pal::init_brow_cb, this, &brow_widget);
 
   showNow(brow_widget);
 
@@ -80,8 +63,8 @@ PalQt::PalQt(void *pal_parent_ctx, QWidget *pal_parent_wid,
 
   server = new QLocalServer(trace_obj);
   server->listen("STRING");
-  QObject::connect(server, SIGNAL(newConnection()), trace_obj,
-                   SLOT(sel_convert_cb()));
+  QObject::connect(
+      server, SIGNAL(newConnection()), trace_obj, SLOT(sel_convert_cb()));
 
   set_inputfocus(0);
 
@@ -102,7 +85,7 @@ void PalQt::create_popup_menu(pwr_tCid cid, int x, int y)
   (create_popup_menu_cb)(parent_ctx, cid, x, y);
 }
 
-static void modifyBackground(QWidget *widget, QColor color)
+static void modifyBackground(QWidget* widget, QColor color)
 {
   QPalette pal;
   pal.setColor(QPalette::Background, color);
@@ -133,7 +116,7 @@ void PalQt::set_selection_owner()
 void PalQtTraceObject::sel_convert_cb()
 {
   char name[200];
-  brow_tNode *node_list;
+  brow_tNode* node_list;
   int node_count;
 
   if (!pal->selection_owner) {
@@ -144,16 +127,16 @@ void PalQtTraceObject::sel_convert_cb()
   if (!node_count) {
     strcpy(name, "");
   } else {
-    PalItem *item;
-    brow_GetUserData(node_list[0], (void **) &item);
+    PalItem* item;
+    brow_GetUserData(node_list[0], (void**)&item);
 
     switch (item->type) {
-      case pal_ePalItemType_ClassVolume:
-      case pal_ePalItemType_Class:
-      case pal_ePalItemType_Object:
-      default:
-        brow_GetAnnotation(node_list[0], 0, name, sizeof(name));
-        free(node_list);
+    case pal_ePalItemType_ClassVolume:
+    case pal_ePalItemType_Class:
+    case pal_ePalItemType_Object:
+    default:
+      brow_GetAnnotation(node_list[0], 0, name, sizeof(name));
+      free(node_list);
     }
   }
 
@@ -161,7 +144,7 @@ void PalQtTraceObject::sel_convert_cb()
   QDataStream out(&block, QIODevice::WriteOnly);
   out.writeRawData(name, strlen(name));
 
-  QLocalSocket *clientConnection = pal->server->nextPendingConnection();
+  QLocalSocket* clientConnection = pal->server->nextPendingConnection();
   clientConnection->write(block);
   clientConnection->flush();
   clientConnection->disconnectFromServer();

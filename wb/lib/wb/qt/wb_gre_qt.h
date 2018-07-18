@@ -38,8 +38,6 @@
 #define wb_gre_qt_h
 
 #ifndef wb_gre_h
-#include "flow_ctx.h"
-#include "flow_api.h"
 #include "wb_gre.h"
 #endif
 
@@ -49,38 +47,40 @@ class WGreQtTraceObject;
 
 class WGreQt : public WGre {
 public:
-  QWidget *gre_window;
-  QWidget *flow_widget;
-  QWidget *form_widget;
-  QWidget *nav_shell;
-  QWidget *nav_widget;
+  QWidget* gre_window;
+  QWidget* flow_widget;
+  QWidget* form_widget;
+  QWidget* nav_shell;
+  QWidget* nav_widget;
 
-  WGreQt(void *parent_ctx, QWidget *parent_wid, const char *name);
+  WGreQt(void* parent_ctx, QWidget* parent_wid, const char* name);
   ~WGreQt();
 
   void trace_start();
   void trace_stop();
-  void get_popup_position(int *x, int *y);
+  void get_popup_position(int* x, int* y);
 
-  int new_navigator(QWidget *parent);
+  int new_navigator(QWidget* parent);
   int new_navigator_popup();
 
 private:
-  WGreQtTraceObject *trace_obj;
+  WGreQtTraceObject* trace_obj;
 };
 
 class WGreQtTraceObject : public QObject {
   Q_OBJECT
 
 public:
-  WGreQtTraceObject(WGreQt *parent) : QObject(), wgre(parent) {}
+  WGreQtTraceObject(WGreQt* parent) : QObject(), wgre(parent)
+  {
+  }
 
 public slots:
   void trace_scan();
 
 private:
-  WGreQt *wgre;
-  QTimer *trace_timerid;
+  WGreQt* wgre;
+  QTimer* trace_timerid;
 };
 
 #endif

@@ -38,35 +38,15 @@
 
 #if defined OS_POSIX && defined PWRE_CONF_LIBDB
 
-using namespace std;
-
-#include "glow_std.h"
-
 #include <stdio.h>
-#include <stdlib.h>
-#include <string>
-
-#include "co_cdh.h"
-#include "co_time.h"
-#include "cow_wow_qt.h"
-#include "pwr_baseclasses.h"
-#include "rt_gdh.h"
-#include "rt_mh.h"
-#include "rt_mh_outunit.h"
-#include "rt_mh_util.h"
-#include "rt_elog.h"
-#include "co_dcli.h"
-extern "C" {
-#include <db.h>
-}
-
-#include <deque>
-#include <algorithm>
 
 #include "co_lng.h"
-#include "xtt_hist_qt.h"
-#include "rt_xnav_msg.h"
+
+#include "cow_qt_helpers.h"
+#include "cow_wow_qt.h"
+
 #include "xtt_evlist_qt.h"
+#include "xtt_hist_qt.h"
 #include "xtt_methodtoolbar_qt.h"
 
 #include <QGroupBox>
@@ -74,26 +54,26 @@ extern "C" {
 #include <QPushButton>
 #include <QVBoxLayout>
 
-#define SENS  1
-#define INSENS  0
+#define SENS 1
+#define INSENS 0
 #define DONT_SET_SENS -1
 /* 24 hours in seconds */
 #define ONEDAY 86400
 
-void HistQtWidget::closeEvent(QCloseEvent *event)
+void HistQtWidget::closeEvent(QCloseEvent* event)
 {
   hist->close_cb(hist);
   QWidget::closeEvent(event);
 }
 
-HistQt::HistQt(void *hist_parent_ctx, QWidget *hist_parent_wid, char *hist_name,
-               pwr_tAttrRef *arp, pwr_tStatus *status)
-               : Hist(hist_parent_ctx, hist_name, arp, status)
+HistQt::HistQt(void* hist_parent_ctx, QWidget* hist_parent_wid, char* hist_name,
+    pwr_tAttrRef* arp, pwr_tStatus* status)
+    : Hist(hist_parent_ctx, hist_name, arp, status)
 {
   const int hist_width = 800;
   const int hist_height = 700;
 
-  //shall be MessageHandler.EventLogSize
+  // shall be MessageHandler.EventLogSize
   hist_size = 100000;
 
   // Qt
@@ -105,66 +85,65 @@ HistQt::HistQt(void *hist_parent_ctx, QWidget *hist_parent_wid, char *hist_name,
 
   CoWowQt::SetWindowIcon(toplevel);
 
-  QVBoxLayout *hist_vbox = new QVBoxLayout(toplevel);
+  QVBoxLayout* hist_vbox = new QVBoxLayout(toplevel);
 
   // Menu
-  QMenuBar *menu_bar = new QMenuBar();
+  QMenuBar* menu_bar = new QMenuBar();
 
   // File entry
-  QMenu *file = menu_bar->addMenu(translate_utf8("&File"));
-  addMenuItem(toplevel, file, "&Print", SLOT(activate_print()), "",
-              "document-print");
-  addMenuItem(toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+  QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
+  addMenuItem(
+      toplevel, file, "&Print", SLOT(activate_print()), "", "document-print");
+  addMenuItem(
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
   // Functions entry
-  QMenu *functions = menu_bar->addMenu(translate_utf8("&Functions"));
+  QMenu* functions = menu_bar->addMenu(translate_utf8("&Functions"));
   addMenuItem(toplevel, functions, "Open &Program", SLOT(activate_open_plc()),
-              "CTRL+L");
+      "CTRL+L");
   addMenuItem(toplevel, functions, "&Display object in Navigator",
-              SLOT(activate_display_in_xnav()), "CTRL+D");
+      SLOT(activate_display_in_xnav()), "CTRL+D");
   addMenuItem(toplevel, functions, "&Search", SLOT(ok_btn()), "CTRL+F");
   addMenuItem(toplevel, functions, "S&tatistics", SLOT(activate_stat()));
 
   // View entry
-  QMenu *view = menu_bar->addMenu(translate_utf8("&View"));
+  QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
   addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoom_in()), "CTRL+I",
-              "zoom-in");
+      "zoom-in");
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
-              "zoom-out");
-  addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "CTRL+B",
-              "zoom-original");
+      "zoom-out");
+  addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()),
+      "CTRL+B", "zoom-original");
   addCheckableMenuItem(toplevel, view, "Hide &Search Dialog",
-                       SLOT(activate_hide_search(bool)), "CTRL+E");
+      SLOT(activate_hide_search(bool)), "CTRL+E");
   addCheckableMenuItem(toplevel, view, "&Display hundredth",
-                       SLOT(activate_disp_hundredth(bool)));
-  addCheckableMenuItem(toplevel, view, "&Hide Event Name",
-                       SLOT(activate_hide_object(bool)));
-  addCheckableMenuItem(toplevel, view, "Hide &Event Text",
-                       SLOT(activate_hide_text(bool)));
+      SLOT(activate_disp_hundredth(bool)));
+  addCheckableMenuItem(
+      toplevel, view, "&Hide Event Name", SLOT(activate_hide_object(bool)));
+  addCheckableMenuItem(
+      toplevel, view, "Hide &Event Text", SLOT(activate_hide_text(bool)));
 
   // Help entry
-  QMenu *help = menu_bar->addMenu(translate_utf8("&Help"));
-  addCheckableMenuItem(toplevel, help, "&Help", SLOT(activate_help(bool)), "CTRL+H",
-                       "system-help");
-  addCheckableMenuItem(toplevel, help, "Help Selected Event",
-                       SLOT(activate_helpevent(bool)));
+  QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
+  addCheckableMenuItem(toplevel, help, "&Help", SLOT(activate_help(bool)),
+      "CTRL+H", "system-help");
+  addCheckableMenuItem(
+      toplevel, help, "Help Selected Event", SLOT(activate_helpevent(bool)));
 
   // Search dialog
   // Time box
-  QLabel *sea_time_start_label =
-      new QLabel(translate_utf8("Start time"));
+  QLabel* sea_time_start_label = new QLabel(translate_utf8("Start time"));
   sea_time_start_label->setFixedWidth(120);
   start_time_entry_w = new QLineEdit();
   start_time_entry_w->setFixedWidth(160);
 
-  QLabel *sea_time_stop_label =
-      new QLabel(translate_utf8("Stop time"));
+  QLabel* sea_time_stop_label = new QLabel(translate_utf8("Stop time"));
   sea_time_stop_label->setFixedWidth(120);
   stop_time_entry_w = new QLineEdit();
   stop_time_entry_w->setFixedWidth(160);
 
   // Time option menu
-  QToolBar *sea_time_menu = new QToolBar();
+  QToolBar* sea_time_menu = new QToolBar();
   addToolItem(toplevel, sea_time_menu, "All    ", SLOT(all_cb()), "");
   addToolItem(toplevel, sea_time_menu, "Today", SLOT(today_cb()), "");
   addToolItem(toplevel, sea_time_menu, "Yesterday", SLOT(yesterday_cb()), "");
@@ -174,7 +153,7 @@ HistQt::HistQt(void *hist_parent_ctx, QWidget *hist_parent_wid, char *hist_name,
   addToolItem(toplevel, sea_time_menu, "Last Month", SLOT(lastm_cb()), "");
   addToolItem(toplevel, sea_time_menu, "Time", SLOT(time_cb()), "");
 
-  QHBoxLayout *sea_timebox = new QHBoxLayout();
+  QHBoxLayout* sea_timebox = new QHBoxLayout();
   sea_timebox->addWidget(sea_time_start_label);
   sea_timebox->addWidget(start_time_entry_w);
   sea_timebox->addWidget(sea_time_stop_label);
@@ -182,7 +161,7 @@ HistQt::HistQt(void *hist_parent_ctx, QWidget *hist_parent_wid, char *hist_name,
   sea_timebox->addWidget(sea_time_menu);
 
   // Event type box
-  QLabel *sea_type_label = new QLabel(translate_utf8("Event type"));
+  QLabel* sea_type_label = new QLabel(translate_utf8("Event type"));
   sea_type_label->setFixedWidth(120);
 
   info_toggle_w = new QCheckBox(translate_utf8("Info"));
@@ -208,7 +187,7 @@ HistQt::HistQt(void *hist_parent_ctx, QWidget *hist_parent_wid, char *hist_name,
   ack_toggle_w = new QCheckBox(translate_utf8("Ack"));
   ack_toggle_w->setFixedWidth(120);
 
-  QHBoxLayout *sea_typebox = new QHBoxLayout();
+  QHBoxLayout* sea_typebox = new QHBoxLayout();
   sea_typebox->addWidget(sea_type_label);
   sea_typebox->addWidget(info_toggle_w);
   sea_typebox->addWidget(infosuccess_toggle_w);
@@ -223,8 +202,7 @@ HistQt::HistQt(void *hist_parent_ctx, QWidget *hist_parent_wid, char *hist_name,
   sea_typebox->addWidget(ack_toggle_w);
 
   // Event priority box
-  QLabel
-      *sea_prio_label = new QLabel(translate_utf8("Priority"));
+  QLabel* sea_prio_label = new QLabel(translate_utf8("Priority"));
   sea_prio_label->setFixedWidth(120);
 
   prioA_toggle_w = new QCheckBox(translate_utf8("A-Alarm"));
@@ -236,7 +214,7 @@ HistQt::HistQt(void *hist_parent_ctx, QWidget *hist_parent_wid, char *hist_name,
   prioD_toggle_w = new QCheckBox(translate_utf8("D-Alarm"));
   prioD_toggle_w->setFixedWidth(120);
 
-  QHBoxLayout *sea_priobox = new QHBoxLayout();
+  QHBoxLayout* sea_priobox = new QHBoxLayout();
   sea_priobox->addWidget(sea_prio_label);
   sea_priobox->addWidget(prioA_toggle_w);
   sea_priobox->addWidget(prioB_toggle_w);
@@ -244,34 +222,34 @@ HistQt::HistQt(void *hist_parent_ctx, QWidget *hist_parent_wid, char *hist_name,
   sea_priobox->addWidget(prioD_toggle_w);
 
   // Event name box
-  QLabel *sea_eventname_label = new QLabel(translate_utf8("Event name"));
+  QLabel* sea_eventname_label = new QLabel(translate_utf8("Event name"));
   sea_eventname_label->setFixedWidth(120);
   event_name_entry_w = new QLineEdit();
 
-  QHBoxLayout *sea_eventnamebox = new QHBoxLayout();
+  QHBoxLayout* sea_eventnamebox = new QHBoxLayout();
   sea_eventnamebox->addWidget(sea_eventname_label);
   add_expanding(sea_eventnamebox, event_name_entry_w);
 
   // Event text box
-  QLabel *sea_eventtext_label = new QLabel(translate_utf8("Event text"));
+  QLabel* sea_eventtext_label = new QLabel(translate_utf8("Event text"));
   sea_eventtext_label->setFixedWidth(120);
   event_text_entry_w = new QLineEdit();
 
-  QHBoxLayout *sea_eventtextbox = new QHBoxLayout();
+  QHBoxLayout* sea_eventtextbox = new QHBoxLayout();
   sea_eventtextbox->addWidget(sea_eventtext_label);
   add_expanding(sea_eventtextbox, event_text_entry_w);
 
   // Number of events box
-  QLabel *sea_numevents_label = new QLabel(translate_utf8("Number of Events:"));
+  QLabel* sea_numevents_label = new QLabel(translate_utf8("Number of Events:"));
   sea_numevents_label->setFixedWidth(140);
   nrofevents_string_lbl_w = new QLabel("");
 
-  QPushButton *sea_search_button = new QPushButton(translate_utf8("Search"));
+  QPushButton* sea_search_button = new QPushButton(translate_utf8("Search"));
   sea_search_button->setFixedSize(80, 25);
-  QObject::connect(sea_search_button, SIGNAL(clicked()), toplevel,
-                   SLOT(ok_btn()));
+  QObject::connect(
+      sea_search_button, SIGNAL(clicked()), toplevel, SLOT(ok_btn()));
 
-  QHBoxLayout *sea_numeventsbox = new QHBoxLayout();
+  QHBoxLayout* sea_numeventsbox = new QHBoxLayout();
   sea_numeventsbox->addWidget(sea_numevents_label);
   add_expanding(sea_numeventsbox, nrofevents_string_lbl_w);
   sea_numeventsbox->addWidget(sea_search_button);
@@ -282,17 +260,17 @@ HistQt::HistQt(void *hist_parent_ctx, QWidget *hist_parent_wid, char *hist_name,
   search_string3_lbl_w = new QLabel("");
   search_string4_lbl_w = new QLabel("");
 
-  QVBoxLayout *sea_stringbox = new QVBoxLayout();
+  QVBoxLayout* sea_stringbox = new QVBoxLayout();
   sea_stringbox->addWidget(search_string_lbl_w);
   sea_stringbox->addWidget(search_string2_lbl_w);
   sea_stringbox->addWidget(search_string3_lbl_w);
   sea_stringbox->addWidget(search_string4_lbl_w);
 
-  QGroupBox *sea_stringframe = new QGroupBox(
-      translate_utf8("Search Condition"));
+  QGroupBox* sea_stringframe
+      = new QGroupBox(translate_utf8("Search Condition"));
   sea_stringframe->setLayout(sea_stringbox);
 
-  QVBoxLayout *search_vbox_layout = new QVBoxLayout();
+  QVBoxLayout* search_vbox_layout = new QVBoxLayout();
   search_vbox_layout->addLayout(sea_timebox);
   search_vbox_layout->addLayout(sea_typebox);
   search_vbox_layout->addLayout(sea_priobox);
@@ -305,7 +283,7 @@ HistQt::HistQt(void *hist_parent_ctx, QWidget *hist_parent_wid, char *hist_name,
 
   // Create hist
   hist = new EvListQt(this, toplevel, ev_eType_HistList, hist_size, 0,
-                      &hist_widget, hist_init_cb);
+      &hist_widget, hist_init_cb);
   hist->start_trace_cb = &hist_start_trace_cb;
   hist->display_in_xnav_cb = &hist_display_in_xnav_cb;
   hist->popup_menu_cb = &hist_popup_menu_cb;
@@ -313,41 +291,39 @@ HistQt::HistQt(void *hist_parent_ctx, QWidget *hist_parent_wid, char *hist_name,
   hist->selection_changed_cb = &selection_changed_cb;
 
   // Toolbar
-  QToolBar *tools = new QToolBar();
+  QToolBar* tools = new QToolBar();
   addToolItem(toplevel, tools, "Zoom in", SLOT(activate_zoom_in()),
-              "$pwr_exe/xtt_zoom_in.png");
+      "$pwr_exe/xtt_zoom_in.png");
   addToolItem(toplevel, tools, "Zoom out", SLOT(activate_zoom_out()),
-              "$pwr_exe/xtt_zoom_out.png");
+      "$pwr_exe/xtt_zoom_out.png");
   addToolItem(toplevel, tools, "Zoom reset", SLOT(activate_zoom_reset()),
-              "$pwr_exe/xtt_zoom_reset.png");
+      "$pwr_exe/xtt_zoom_reset.png");
 
   // Hide search dialog checkbutton
   addCheckableToolItem(toplevel, tools, "Maximize",
-                       SLOT(activate_hide_search(bool)),
-                       "$pwr_exe/xtt_maximize.png");
+      SLOT(activate_hide_search(bool)), "$pwr_exe/xtt_maximize.png");
 
   // Method toolbar
-  methodtoolbar = new XttMethodToolbarQt(0, 0,
-                                          ~(pwr_mXttOpMethodsMask_ParentObjectGraph |
-                                            pwr_mXttOpMethodsMask_HistEvent),
-                                          ~0, "");
-  QToolBar *tools_meth =
-      (QToolBar * )((XttMethodToolbarQt *) methodtoolbar)->build();
-  methodtoolbar->m_xnav = (XNav *) parent_ctx;
+  methodtoolbar
+      = new XttMethodToolbarQt(0, 0, ~(pwr_mXttOpMethodsMask_ParentObjectGraph
+                                         | pwr_mXttOpMethodsMask_HistEvent),
+          ~0, "");
+  QToolBar* tools_meth
+      = (QToolBar*)((XttMethodToolbarQt*)methodtoolbar)->build();
+  methodtoolbar->m_xnav = (XNav*)parent_ctx;
   methodtoolbar->m_parent_ctx = hist;
   methodtoolbar->get_select_cb = hist->get_select;
 
   sup_methodtoolbar = new XttMethodToolbarQt(0, 0, 0,
-                                              pwr_mXttMntMethodsMask_OpenTrace |
-                                              pwr_mXttMntMethodsMask_RtNavigator,
-                                              " for supervisory object");
-  QToolBar *tools_sup =
-      (QToolBar * )((XttMethodToolbarQt *) sup_methodtoolbar)->build();
-  sup_methodtoolbar->m_xnav = (XNav *) parent_ctx;
+      pwr_mXttMntMethodsMask_OpenTrace | pwr_mXttMntMethodsMask_RtNavigator,
+      " for supervisory object");
+  QToolBar* tools_sup
+      = (QToolBar*)((XttMethodToolbarQt*)sup_methodtoolbar)->build();
+  sup_methodtoolbar->m_xnav = (XNav*)parent_ctx;
   sup_methodtoolbar->m_parent_ctx = hist;
   sup_methodtoolbar->get_select_cb = hist->get_select_supobject;
 
-  QToolBar *toolsbox = new QToolBar();
+  QToolBar* toolsbox = new QToolBar();
   toolsbox->addWidget(tools);
   toolsbox->addSeparator();
   toolsbox->addWidget(tools_sup);
@@ -368,7 +344,7 @@ HistQt::HistQt(void *hist_parent_ctx, QWidget *hist_parent_wid, char *hist_name,
   *status = 1;
 }
 
-void HistQtWidget::focusInEvent(QFocusEvent *event)
+void HistQtWidget::focusInEvent(QFocusEvent* event)
 {
   hist->hist->set_input_focus();
 
@@ -483,10 +459,10 @@ void HistQtWidget::activate_helpevent()
   hist->activate_helpevent();
 }
 
-//callbackfunctions from the searchdialog
+// callbackfunctions from the searchdialog
 void HistQtWidget::cancel_cb()
 {
-//  printf("hist_cancel_cb\n");
+  //  printf("hist_cancel_cb\n");
 }
 
 void HistQtWidget::today_cb()
@@ -537,8 +513,8 @@ void HistQt::set_num_of_events(int nrOfEvents)
   nrofevents_string_lbl_w->setText(buf);
 }
 
-void HistQt::set_search_string(const char *s1, const char *s2, const char *s3,
-                               const char *s4)
+void HistQt::set_search_string(
+    const char* s1, const char* s2, const char* s3, const char* s4)
 {
   search_string_lbl_w->setText(convert_utf8(s1));
   search_string2_lbl_w->setText(convert_utf8(s2));
@@ -546,7 +522,7 @@ void HistQt::set_search_string(const char *s1, const char *s2, const char *s3,
   search_string4_lbl_w->setText(convert_utf8(s4));
 }
 
-void HistQt::insert_eventname(const char *name)
+void HistQt::insert_eventname(const char* name)
 {
   event_name_entry_w->setText(fl(name));
 }

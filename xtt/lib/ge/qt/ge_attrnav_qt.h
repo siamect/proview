@@ -39,17 +39,8 @@
 
 /* xtt_attrnav_qt.h -- Simple navigator */
 
-#include "glow.h"
-#include "glow_growctx.h"
-#include "glow_growapi.h"
-#include "glow_growwidget_qt.h"
-
-#include "glow_growapi.h"
-#include "ge_dyn.h"
-#include "ge_attr.h"
-
 #ifndef ge_attrnav_h
-# include "ge_attrnav.h"
+#include "ge_attrnav.h"
 #endif
 
 #include <QObject>
@@ -61,35 +52,37 @@ class AttrNavQtTraceObject;
 //! The navigation area of the attribute editor.
 class AttrNavQt : public AttrNav {
 public:
-  AttrNavQt(void *xn_parent_ctx, QWidget *xn_parent_wid, attr_eType xn_type,
-            const char *xn_name, attr_sItem *xn_itemlist, int xn_item_cnt,
-            QWidget **w, pwr_tStatus *status);
+  AttrNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid, attr_eType xn_type,
+      const char* xn_name, attr_sItem* xn_itemlist, int xn_item_cnt,
+      QWidget** w, pwr_tStatus* status);
   ~AttrNavQt();
 
-  QWidget *brow_widget;
-  QWidget *form_widget;
+  QWidget* brow_widget;
+  QWidget* form_widget;
 
-  void start_trace(pwr_tObjid Objid, char *object_str);
+  void start_trace(pwr_tObjid Objid, char* object_str);
   void set_inputfocus();
   void trace_start();
 
 private:
-  AttrNavQtTraceObject *trace_obj;
+  AttrNavQtTraceObject* trace_obj;
 };
 
 class AttrNavQtTraceObject : public QObject {
   Q_OBJECT
 
 public:
-  AttrNavQtTraceObject(AttrNavQt *parent) : QObject(), attrnav(parent) {}
+  AttrNavQtTraceObject(AttrNavQt* parent) : QObject(), attrnav(parent)
+  {
+  }
   ~AttrNavQtTraceObject();
 
 public slots:
   void trace_scan();
 
 private:
-  AttrNavQt *attrnav;
-  QTimer *trace_timerid;
+  AttrNavQt* attrnav;
+  QTimer* trace_timerid;
 };
 
 #endif

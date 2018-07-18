@@ -19,7 +19,7 @@
 /**  52.227-19, as applicable.                                               **/
 /**                                                                          **/
 /******************************************************************************/
- 
+
 /* $RCSfile: p_symbol.h,v $, $Revision: 1.1 $, $Date: 2006-02-09 09:51:05 $ */
 /*                                                                          */
 #ifndef _P_SYMBOL_H
@@ -29,7 +29,6 @@
 /* Define the Selective Receive symbols                                     */
 /************************************************************************** */
 /*                                                                          */
-
 
 #define PSEL_SOURCE -1
 #define PSEL_CLASS -2
@@ -65,21 +64,21 @@
 /************************************************************************** */
 /*                                                                          */
 
-#define PSEL_OPER_ANY     0
-#define PSEL_OPER_EQ     -1
-#define PSEL_OPER_NEQ    -2
-#define PSEL_OPER_GTR    -3
-#define PSEL_OPER_LT     -4
-#define PSEL_OPER_GTRE   -5
-#define PSEL_OPER_LTE    -6
+#define PSEL_OPER_ANY 0
+#define PSEL_OPER_EQ -1
+#define PSEL_OPER_NEQ -2
+#define PSEL_OPER_GTR -3
+#define PSEL_OPER_LT -4
+#define PSEL_OPER_GTRE -5
+#define PSEL_OPER_LTE -6
 /*                                                                          */
 /************************************************************************** */
 /* Define the Selective Order                                               */
 /************************************************************************** */
 /*                                                                          */
-#define PSEL_ORDER_FIFO   0
-#define PSEL_ORDER_MIN   -1
-#define PSEL_ORDER_MAX   -2
+#define PSEL_ORDER_FIFO 0
+#define PSEL_ORDER_MIN -1
+#define PSEL_ORDER_MAX -2
 /*                                                                          */
 /************************************************************************** */
 /* Define Delivery Mode symbols                                             */
@@ -394,19 +393,19 @@
 /************************************************************************** */
 /*                                                                          */
 
-#define PSYM_SHOW_VERSION               (1 <<  0)
-#define PSYM_SHOW_STATUS                (1 <<  1)
-#define PSYM_SHOW_SIZE                  (1 <<  2)
-#define PSYM_SHOW_FLAGS                 (1 <<  3)
-#define PSYM_SHOW_URCODE                (1 <<  5)
-#define PSYM_SHOW_TARGET                (1 << 10)
-#define PSYM_SHOW_ORIGINAL_TARGET       (1 << 11)
-#define PSYM_SHOW_SOURCE                (1 << 12)
-#define PSYM_SHOW_ORIGINAL_SOURCE       (1 << 13)
-#define PSYM_SHOW_DELIVERY              (1 << 14)
-#define PSYM_SHOW_PRIORITY              (1 << 15)
-#define PSYM_SHOW_ENDIAN                (1 << 16)
-#define PSYM_SHOW_CORRELATION_ID        (1 << 17)
+#define PSYM_SHOW_VERSION (1 << 0)
+#define PSYM_SHOW_STATUS (1 << 1)
+#define PSYM_SHOW_SIZE (1 << 2)
+#define PSYM_SHOW_FLAGS (1 << 3)
+#define PSYM_SHOW_URCODE (1 << 5)
+#define PSYM_SHOW_TARGET (1 << 10)
+#define PSYM_SHOW_ORIGINAL_TARGET (1 << 11)
+#define PSYM_SHOW_SOURCE (1 << 12)
+#define PSYM_SHOW_ORIGINAL_SOURCE (1 << 13)
+#define PSYM_SHOW_DELIVERY (1 << 14)
+#define PSYM_SHOW_PRIORITY (1 << 15)
+#define PSYM_SHOW_ENDIAN (1 << 16)
+#define PSYM_SHOW_CORRELATION_ID (1 << 17)
 
 /*                                                                          */
 /************************************************************************** */

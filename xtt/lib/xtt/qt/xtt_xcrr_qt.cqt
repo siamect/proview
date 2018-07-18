@@ -36,24 +36,16 @@
 
 /* xtt_xcrr_qt.cpp -- Display object crossreferences */
 
-#include "glow_std.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-
 #include "co_cdh.h"
-#include "co_dcli.h"
-#include "co_time.h"
-#include "cow_wow_qt.h"
-#include "rt_xnav_msg.h"
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
-#include "xtt_xcrr_qt.h"
-#include "xtt_xattnav_qt.h"
-#include "co_lng.h"
-#include "xtt_xnav.h"
+
+#include "rt_gdh.h"
+
 #include "rt_xatt_msg.h"
+
+#include "cow_qt_helpers.h"
+
+#include "xtt_xattnav_qt.h"
+#include "xtt_xcrr_qt.h"
 
 #include <QAction>
 #include <QMenu>
@@ -75,7 +67,7 @@ void XCrrQtWidget::activate_help()
   // Not yet implemented
 }
 
-void XCrrQtWidget::focusInEvent(QFocusEvent *event)
+void XCrrQtWidget::focusInEvent(QFocusEvent* event)
 {
   if (!xcrr->focustimer.disabled()) {
     if (xcrr->xcrrnav) {
@@ -98,14 +90,15 @@ void XCrrQt::print()
   pwr_tAName title;
 
   sts = gdh_AttrrefToName(&objar, title, sizeof(title), cdh_mNName);
-  if (EVEN(sts)) { return; }
+  if (EVEN(sts)) {
+    return;
+  }
 
   CoWowQt::CreateBrowPrintDialogQt(title, xcrrnav->brow->ctx,
-                                   flow_eOrientation_Portrait, 1.0,
-                                   toplevel, &sts);
+      flow_eOrientation_Portrait, 1.0, toplevel, &sts);
 }
 
-void XCrrQtWidget::closeEvent(QCloseEvent *event)
+void XCrrQtWidget::closeEvent(QCloseEvent* event)
 {
   if (xcrr->close_cb) {
     (xcrr->close_cb)(xcrr->parent_ctx, xcrr);
@@ -115,15 +108,17 @@ void XCrrQtWidget::closeEvent(QCloseEvent *event)
   QWidget::closeEvent(event);
 }
 
-XCrrQt::XCrrQt(QWidget *xa_parent_wid, void *xa_parent_ctx,
-               pwr_sAttrRef *xa_objar, int xa_advanced_user, int *xa_sts)
+XCrrQt::XCrrQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
+    pwr_sAttrRef* xa_objar, int xa_advanced_user, int* xa_sts)
     : XCrr(xa_parent_ctx, xa_objar, xa_advanced_user, xa_sts)
 {
   int sts;
   pwr_tAName title;
 
   *xa_sts = gdh_AttrrefToName(&objar, title, sizeof(title), cdh_mNName);
-  if (EVEN(*xa_sts)) { return; }
+  if (EVEN(*xa_sts)) {
+    return;
+  }
 
   toplevel = new XCrrQtWidget(this, xa_parent_wid);
   toplevel->setToolTip(fl("xtt_xcrr widget"));
@@ -134,26 +129,27 @@ XCrrQt::XCrrQt(QWidget *xa_parent_wid, void *xa_parent_ctx,
   CoWowQt::SetWindowIcon(toplevel);
 
   // Menu
-  QMenuBar *menu_bar = new QMenuBar();
+  QMenuBar* menu_bar = new QMenuBar();
 
   // File entry
-  QMenu *file = menu_bar->addMenu(translate_utf8("&File"));
+  QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
   addMenuItem(toplevel, file, "&Print", SLOT(activate_print()));
-  addMenuItem(toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+  addMenuItem(
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
   // Functions entry
-  QMenu *functions = menu_bar->addMenu(translate_utf8("&Functions"));
+  QMenu* functions = menu_bar->addMenu(translate_utf8("&Functions"));
   addMenuItem(toplevel, functions, "Open &Program", SLOT(activate_open_plc()),
-              "CTRL+L");
+      "CTRL+L");
 
   // Help entry
-  QMenu *help = menu_bar->addMenu(translate_utf8("&Help"));
-  addMenuItem(toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H",
-              "system-help");
+  QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
+  addMenuItem(
+      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "system-help");
 
-  QVBoxLayout *vbox = new QVBoxLayout();
+  QVBoxLayout* vbox = new QVBoxLayout();
   xcrrnav = new XAttNavQt(this, toplevel, xattnav_eType_CrossRef, "Plant",
-                          &objar, xa_advanced_user, 0, &brow_widget, &sts);
+      &objar, xa_advanced_user, 0, &brow_widget, &sts);
   xcrrnav->popup_menu_cb = &xcrr_popup_menu_cb;
   xcrrnav->start_trace_cb = &xcrr_start_trace_cb;
   xcrrnav->close_cb = &xcrr_close_cb;

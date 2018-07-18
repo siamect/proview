@@ -34,26 +34,16 @@
  * General Public License plus this exception.
  **/
 
-#include <stdlib.h>
-#include <math.h>
-
-#include "glow_std.h"
-
-#include "flow.h"
-#include "flow_ctx.h"
-#include "flow_browctx.h"
-#include "flow_draw.h"
-#include "flow_draw_qt.h"
-#include "flow_browwidget_qt.h"
-
-#include "flow_scroll_widget_qt.h"
-
 #include "cow_qt_helpers.h"
 
-static void scroll_callback(flow_sScroll *data)
+#include "flow_browctx.h"
+#include "flow_browwidget_qt.h"
+#include "flow_scroll_widget_qt.h"
+
+static void scroll_callback(flow_sScroll* data)
 {
-  widget_sScroll *scroll_data = (widget_sScroll *) data->scroll_data;
-  QtScrollWidgetFlow *brow = ((QtScrollWidgetFlow *) scroll_data->parent);
+  widget_sScroll* scroll_data = (widget_sScroll*)data->scroll_data;
+  QtScrollWidgetFlow* brow = ((QtScrollWidgetFlow*)scroll_data->parent);
 
   if (brow->scroll_timerid) {
     delete brow->scroll_timerid;
@@ -62,59 +52,59 @@ static void scroll_callback(flow_sScroll *data)
   brow->scroll_timerid = new QTimer();
   brow->scroll_timerid->setSingleShot(true);
   QObject::connect(brow->scroll_timerid, SIGNAL(timeout()), brow,
-                   SLOT(scroll_callback_cb()));
+      SLOT(scroll_callback_cb()));
   brow->scroll_timerid->start(200);
   brow->scroll_data = *data;
 }
 
-static int brow_init_proc(QWidget *w, FlowCtx *fctx, void *client_data)
+static int brow_init_proc(QWidget* w, FlowCtx* fctx, void* client_data)
 {
-  QtScrollWidgetFlow *brow = ((QtScrollWidgetFlow *) w);
-  BrowCtx *ctx = ((BrowCtx *) brow->parent_ctx);
+  QtScrollWidgetFlow* brow = ((QtScrollWidgetFlow*)w);
+  BrowCtx* ctx = ((BrowCtx*)brow->parent_ctx);
 
   if (brow->scroll_h) {
-    widget_sScroll *scroll_data = new widget_sScroll();
+    widget_sScroll* scroll_data = new widget_sScroll();
     scroll_data->parent = w;
     scroll_data->scroll_h = brow->scroll_h;
     scroll_data->scroll_v = brow->scroll_v;
     scroll_data->scroll_h_managed = 1;
     scroll_data->scroll_v_managed = 1;
 
-    ctx->register_scroll_callback((void *) scroll_data, scroll_callback);
+    ctx->register_scroll_callback((void*)scroll_data, scroll_callback);
   }
   return (brow->init_proc)(ctx, client_data);
 }
 
-QWidget *browwidgetqt_new(int (*init_proc)(FlowCtx *ctx, void *client_data),
-                          void *client_data)
+QWidget* browwidgetqt_new(
+    int (*init_proc)(FlowCtx* ctx, void* client_data), void* client_data)
 {
-  QtScrollWidgetFlow *w = new QtScrollWidgetFlow();
+  QtScrollWidgetFlow* w = new QtScrollWidgetFlow();
   debug_print("creating a new flow scroll widget\n");
   w->init(flow_eCtxType_Brow, init_proc, client_data, brow_init_proc);
   return w;
 }
 
-QWidget *scrolledbrowwidgetqt_new(
-    int (*init_proc)(FlowCtx *ctx, void *client_data), void *client_data,
-    QWidget **browwidget)
+QWidget* scrolledbrowwidgetqt_new(
+    int (*init_proc)(FlowCtx* ctx, void* client_data), void* client_data,
+    QWidget** browwidget)
 {
-  QtScrollWidgetFlow *w = new QtScrollWidgetFlow();
+  QtScrollWidgetFlow* w = new QtScrollWidgetFlow();
   debug_print("creating a new flow scroll widget\n");
-  QWidget *form = w->initScroll(flow_eCtxType_Brow, init_proc, client_data,
-                                brow_init_proc);
+  QWidget* form = w->initScroll(
+      flow_eCtxType_Brow, init_proc, client_data, brow_init_proc);
   *browwidget = w;
   return form;
 }
 
-QWidget *brownavwidgetqt_new(QWidget *main_brow)
+QWidget* brownavwidgetqt_new(QWidget* main_brow)
 {
-  QtScrollWidgetFlow *w = new QtScrollWidgetFlow();
+  QtScrollWidgetFlow* w = new QtScrollWidgetFlow();
   debug_print("creating a new flow scroll widget\n");
   w->init(flow_eCtxType_Brow, main_brow);
   return w;
 }
 
-void browwidgetqt_modify_ctx(QWidget *w, void *ctx)
+void browwidgetqt_modify_ctx(QWidget* w, void* ctx)
 {
-  ((QtScrollWidgetFlow *) w)->parent_ctx = ctx;
+  ((QtScrollWidgetFlow*)w)->parent_ctx = ctx;
 }

@@ -36,70 +36,47 @@
 
 /* ge_qt.cpp -- Graphical editor window */
 
-#include "glow_std.h"
-
-#if defined OS_POSIX
-#define LDH 1
-#endif
-
 #include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <vector>
-#include <ctype.h>
 #include <float.h>
 #include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 #include <sstream>
 
-#include "co_cdh.h"
-#include "co_time.h"
-#include "co_dcli.h"
-#include "cow_xhelp.h"
-#include "cow_wow_qt.h"
-
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
-#include "flow_browwidget_qt.h"
-#include "glow.h"
-#include "glow_colpalctx.h"
-#include "glow_colpalapi.h"
-#include "glow_colpalwidget_qt.h"
-#include "glow_msg.h"
-
-#include "glow_growctx.h"
-#include "glow_growapi.h"
-#include "glow_growwidget_qt.h"
-#include "ge_graph_qt.h"
-#include "ge_qt.h"
-#include "ge_subpalette_qt.h"
-#include "ge_subgraphs_qt.h"
-#include "ge_util.h"
-#include "ge_msg.h"
-#include "ge_item_view_qt.h"
-#include "ge_attr_qt.h"
-#include "wb_wnav_selformat.h"
-#include "cow_wow_qt.h"
 #include "cow_logw_qt.h"
-#include "wb_nav_qt.h"
+#include "cow_qt_helpers.h"
+
+#include "glow_colpalwidget_qt.h"
+
+#include "ge_attr_qt.h"
+#include "ge_graph_qt.h"
+#include "ge_item_view_qt.h"
+#include "ge_qt.h"
+#include "ge_subgraphs_qt.h"
+#include "ge_subpalette_qt.h"
+#include "ge_util.h"
+
 #include "wb_log.h"
+#include "wb_nav_qt.h"
+#include "wb_wnav_selformat.h"
 
 #include <QApplication>
 #include <QHBoxLayout>
 #include <QInputDialog>
 #include <QMenuBar>
+#include <QMessageBox>
 #include <QPushButton>
 
-int GeQt::create_modal_dialog(const char *title, const char *text,
-                              const char *button1, const char *button2,
-                              const char *button3, const char *image)
+int GeQt::create_modal_dialog(const char* title, const char* text,
+    const char* button1, const char* button2, const char* button3,
+    const char* image)
 {
   return wow->CreateModalDialog(title, text, button1, button2, button3, image);
 }
 
-void *GeQt::create_list(const char *title, const char *texts,
-                        void (action_cb)(void *, char *, int),
-                        void (cancel_cb)(void *), void *ctx)
+void* GeQt::create_list(const char* title, const char* texts,
+    void(action_cb)(void*, char*, int), void(cancel_cb)(void*), void* ctx)
 {
   CoWowQt wow(toplevel);
   return wow.CreateList(title, texts, 80, action_cb, cancel_cb, ctx, 1);
@@ -109,47 +86,44 @@ void GeQt::subgraphs_new()
 {
   int sts;
 
-  subgraphs =
-      new SubGraphsQt(this, toplevel, "SubGraphs", (void *) graph->grow->ctx,
-                      &subgraphs_widget, &sts);
+  subgraphs = new SubGraphsQt(this, toplevel, "SubGraphs",
+      (void*)graph->grow->ctx, &subgraphs_widget, &sts);
   subgraphs->message_cb = &Ge::message_cb;
   subgraphs->close_cb = &Ge::subgraphs_close_cb;
 }
 
-void GeQt::set_title(char *title)
+void GeQt::set_title(char* title)
 {
   toplevel->setWindowTitle(fl(title));
 }
 
-void GeQt::open_input_dialog(const char *text, const char *title,
-                             const char *init_text,
-                             void (*x_india_ok_cb)(Ge *, char *))
+void GeQt::open_input_dialog(const char* text, const char* title,
+    const char* init_text, void (*x_india_ok_cb)(Ge*, char*))
 {
   india_ok_cb = x_india_ok_cb;
 
   bool ok;
-  QString txt =
-      QInputDialog::getText(toplevel, fl(title), fl(text), QLineEdit::Normal,
-                            fl(init_text), &ok);
+  QString txt = QInputDialog::getText(
+      toplevel, fl(title), fl(text), QLineEdit::Normal, fl(init_text), &ok);
   if (ok && !txt.isEmpty()) {
     QByteArray ba = txt.toLatin1();
     activate_india_ok(ba.data());
   }
 }
 
-void GeQt::message(char severity, const char *message)
+void GeQt::message(char severity, const char* message)
 {
   msg_label->setText(QString::fromLatin1(message));
 }
 
-void GeQt::status_msg(char *pos_str)
+void GeQt::status_msg(char* pos_str)
 {
   cursor_position->setText(fl(pos_str));
 }
 
-void GeQt::change_text_cb(void *ge_ctx, void *text_object, const char *text)
+void GeQt::change_text_cb(void* ge_ctx, void* text_object, const char* text)
 {
-  GeQt *gectx = (GeQt *) ge_ctx;
+  GeQt* gectx = (GeQt*)ge_ctx;
 
   if (gectx->text_input_open || gectx->value_input_open) {
     gectx->recall_entry->setVisible(false);
@@ -179,12 +153,12 @@ void GeQt::change_text_cb(void *ge_ctx, void *text_object, const char *text)
   gectx->current_text_object = text_object;
 }
 
-void GeQt::change_name_cb(void *ge_ctx, void *text_object, char *text)
+void GeQt::change_name_cb(void* ge_ctx, void* text_object, char* text)
 {
-  GeQt *gectx = (GeQt *) ge_ctx;
+  GeQt* gectx = (GeQt*)ge_ctx;
 
-  if (gectx->text_input_open || gectx->name_input_open ||
-      gectx->value_input_open) {
+  if (gectx->text_input_open || gectx->name_input_open
+      || gectx->value_input_open) {
     gectx->recall_entry->setVisible(false);
     gectx->set_prompt("");
     gectx->name_input_open = 0;
@@ -212,12 +186,12 @@ void GeQt::change_name_cb(void *ge_ctx, void *text_object, char *text)
   gectx->current_text_object = text_object;
 }
 
-void GeQt::change_value_cb(void *ge_ctx, void *value_object, char *text)
+void GeQt::change_value_cb(void* ge_ctx, void* value_object, char* text)
 {
-  GeQt *gectx = (GeQt *) ge_ctx;
+  GeQt* gectx = (GeQt*)ge_ctx;
 
-  if (gectx->text_input_open || gectx->value_input_open ||
-      gectx->name_input_open) {
+  if (gectx->text_input_open || gectx->value_input_open
+      || gectx->name_input_open) {
     gectx->recall_entry->setVisible(false);
     gectx->set_prompt("");
     gectx->value_input_open = 0;
@@ -245,13 +219,13 @@ void GeQt::change_value_cb(void *ge_ctx, void *value_object, char *text)
   gectx->current_value_object = value_object;
 }
 
-void GeQt::objectnav_change_value_cb(void *ge_ctx, int multiline, int size,
-                                     char *text)
+void GeQt::objectnav_change_value_cb(
+    void* ge_ctx, int multiline, int size, char* text)
 {
-  GeQt *gectx = (GeQt *) ge_ctx;
+  GeQt* gectx = (GeQt*)ge_ctx;
 
-  if (gectx->text_input_open || gectx->value_input_open ||
-      gectx->name_input_open || gectx->objectnav_input_open) {
+  if (gectx->text_input_open || gectx->value_input_open
+      || gectx->name_input_open || gectx->objectnav_input_open) {
     gectx->recall_entry->setVisible(false);
     gectx->set_prompt("");
     gectx->value_input_open = 0;
@@ -279,9 +253,8 @@ void GeQt::objectnav_change_value_cb(void *ge_ctx, int multiline, int size,
   gectx->objectnav_input_open = 1;
 }
 
-int GeQt::get_plant_select(char *select_name, int size)
+int GeQt::get_plant_select(char* select_name, int size)
 {
-#ifdef LDH
   pwr_sAttrRef attrref;
   int is_attrref;
   int sts;
@@ -301,10 +274,10 @@ int GeQt::get_plant_select(char *select_name, int size)
     return sts;
   }
 
-  sts = ((Nav *) plantctx)->get_select(&attrref, &is_attrref);
+  sts = ((Nav*)plantctx)->get_select(&attrref, &is_attrref);
   if (ODD(sts)) {
     if (!wnav_format_selection(ldhses, attrref, 0, is_attrref,
-                               wnav_eSelectionMode_Normal, 0, 1, 1, buff)) {
+            wnav_eSelectionMode_Normal, 0, 1, 1, buff)) {
       return 0;
     }
 
@@ -322,25 +295,11 @@ int GeQt::get_plant_select(char *select_name, int size)
     }
     return sts;
   }
-#else
-  pwr_tStatus sts;
-
-  sts = CoWowQt::GetSelection(str, sizeof(str), "PWR_GRAPH");
-  if (ODD(sts)) {
-    strncpy(select_name, str, size);
-  } else {
-    sts = CoWowQt::GetSelection(str, sizeof(str), "STRING");
-    if (ODD(sts)) {
-      strncpy(select_name, str, size);
-    }
-  }
-  return sts;
-#endif
   return 0;
 }
 
-void GeQt::open_yesnodia(const char *text, const char *title,
-                         void (*yes_cb)(Ge *), void (*no_cb)(Ge *))
+void GeQt::open_yesnodia(const char* text, const char* title,
+    void (*yes_cb)(Ge*), void (*no_cb)(Ge*))
 {
   message(' ', "");
 
@@ -348,8 +307,7 @@ void GeQt::open_yesnodia(const char *text, const char *title,
   yesnodia_yes_cb = yes_cb;
   yesnodia_no_cb = no_cb;
   int sts = QMessageBox::question(toplevel, fl(title), fl(text),
-                                  QMessageBox::Yes | QMessageBox::No |
-                                  QMessageBox::Cancel);
+      QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
   if (sts == QMessageBox::Yes) {
     activate_yesnodia_yes();
   } else if (sts == QMessageBox::No) {
@@ -359,16 +317,16 @@ void GeQt::open_yesnodia(const char *text, const char *title,
   }
 }
 
-void GeQt::confirm_cb(void *ge_ctx, void *confirm_object, char *text)
+void GeQt::confirm_cb(void* ge_ctx, void* confirm_object, char* text)
 {
-  GeQt *gectx = (GeQt *) ge_ctx;
+  GeQt* gectx = (GeQt*)ge_ctx;
 
   gectx->message(' ', "");
 
   gectx->confirm_open = 1;
   gectx->current_confirm_object = confirm_object;
   int sts = QMessageBox::question(gectx->toplevel, fl("Confirm"), fl(text),
-                                  QMessageBox::Ok | QMessageBox::Cancel);
+      QMessageBox::Ok | QMessageBox::Cancel);
   if (sts == QMessageBox::Ok) {
     gectx->activate_confirm_ok();
   } else {
@@ -376,7 +334,7 @@ void GeQt::confirm_cb(void *ge_ctx, void *confirm_object, char *text)
   }
 }
 
-void GeQt::set_prompt(const char *prompt)
+void GeQt::set_prompt(const char* prompt)
 {
   if (strcmp(prompt, "") == 0) {
     cmd_prompt->setVisible(false);
@@ -566,7 +524,7 @@ void GeQtWidget::activate_select_objects()
 void GeQtWidget::activate_select_next()
 {
   ge->activate_select_nextobject(
-      static_cast<glow_eDirection>(((QAction *) sender())->data().toInt()));
+      static_cast<glow_eDirection>(((QAction*)sender())->data().toInt()));
 }
 
 void GeQtWidget::activate_group()
@@ -681,7 +639,7 @@ void GeQtWidget::activate_history()
 
   strcpy(title, "History ");
   strcat(title, name);
-  CoLogWQt *logw = new CoLogWQt(this, this, title, 0, &sts);
+  CoLogWQt* logw = new CoLogWQt(this, this, title, 0, &sts);
   logw->CoLogW::show(categories, name);
 }
 
@@ -745,20 +703,20 @@ void GeQtWidget::activate_export_plcfo_as()
   ge->activate_export_plcfo_as();
 }
 
-void GeQt::graph_file_selected_cb(void *ctx, char *filename,
-                                  wow_eFileSelType file_type)
+void GeQt::graph_file_selected_cb(
+    void* ctx, char* filename, wow_eFileSelType file_type)
 {
-  Ge *ge = (Ge *) ctx;
+  Ge* ge = (Ge*)ctx;
   ge->open_graph(filename);
 }
 
-void GeQt::image_file_selected_cb(void *ctx, char *filename,
-                                  wow_eFileSelType file_type)
+void GeQt::image_file_selected_cb(
+    void* ctx, char* filename, wow_eFileSelType file_type)
 {
-  Ge *ge = (Ge *) ctx;
+  Ge* ge = (Ge*)ctx;
   pwr_tCmd cmd;
   pwr_tFileName str;
-  char *s;
+  char* s;
 
   dcli_translate_filename(str, "$pwrp_pop/");
   sprintf(cmd, "cp \'%s\' %s", filename, str);
@@ -803,14 +761,14 @@ void GeQtWidget::activate_customcolors_write()
 
 void GeQtWidget::activate_import_graph()
 {
-  ge->wow->CreateFileSelDia("Graph Selection", (void *) this,
-                            GeQt::graph_file_selected_cb, wow_eFileSelType_Graph);
+  ge->wow->CreateFileSelDia("Graph Selection", (void*)this,
+      GeQt::graph_file_selected_cb, wow_eFileSelType_Graph);
 }
 
 void GeQtWidget::activate_import_image()
 {
-  ge->wow->CreateFileSelDia("Image Selection", (void *) this,
-                            GeQt::image_file_selected_cb, wow_eFileSelType_Image);
+  ge->wow->CreateFileSelDia("Image Selection", (void*)this,
+      GeQt::image_file_selected_cb, wow_eFileSelType_Image);
 }
 
 void GeQtWidget::activate_creanextpage()
@@ -926,8 +884,8 @@ void GeQtWidget::activate_decr_intensity()
   ge->activate_decr_intensity();
 }
 
-void GeQtWidget::activate_incr_shift(){
-
+void GeQtWidget::activate_incr_shift()
+{
   ge->activate_incr_shift();
 }
 
@@ -938,7 +896,7 @@ void GeQtWidget::activate_decr_shift()
 
 void GeQtWidget::activate_gradient()
 {
-  QAction *a = ((QAction *) sender());
+  QAction* a = ((QAction*)sender());
   ge->activate_gradient(static_cast<glow_eGradient>(a->data().toInt()));
 }
 
@@ -969,32 +927,33 @@ void GeQtWidget::activate_grid(bool set)
 
 void GeQtWidget::activate_linewidth()
 {
-  QAction *a = ((QAction *) sender());
+  QAction* a = ((QAction*)sender());
   ge->activate_linewidth(a->data().toInt());
 }
 
 void GeQtWidget::activate_linetype()
 {
-  QAction *a = ((QAction *) sender());
+  QAction* a = ((QAction*)sender());
   ge->graph->set_linetype(static_cast<glow_eLineType>(a->data().toInt()));
-  ge->graph->set_select_linetype(static_cast<glow_eLineType>(a->data().toInt()));
+  ge->graph->set_select_linetype(
+      static_cast<glow_eLineType>(a->data().toInt()));
 }
 
 void GeQtWidget::activate_gridsize()
 {
-  QAction *a = ((QAction *) sender());
+  QAction* a = ((QAction*)sender());
   ge->activate_gridsize(a->data().toDouble());
 }
 
 void GeQtWidget::activate_textsize()
 {
-  QAction *a = ((QAction *) sender());
+  QAction* a = ((QAction*)sender());
   ge->activate_textsize(a->data().toInt());
 }
 
 void GeQtWidget::activate_textfont()
 {
-  QAction *a = ((QAction *) sender());
+  QAction* a = ((QAction*)sender());
   ge->activate_textfont(static_cast<glow_eFont>(a->data().toInt()));
 }
 
@@ -1020,7 +979,6 @@ void GeQtWidget::activate_zoom_reset()
 
 void GeQtWidget::activate_view_plant(bool set)
 {
-#ifdef LDH
   if (!ge->ldhses) {
     return;
   }
@@ -1041,7 +999,6 @@ void GeQtWidget::activate_view_plant(bool set)
     ge->subpalette_mapped = 1;
   }
   ge->set_focus(0);
-#endif
 }
 
 void GeQtWidget::activate_view_graphlist(bool set)
@@ -1105,7 +1062,7 @@ void GeQtWidget::activate_concorner_rounded()
 
 void GeQtWidget::activate_round_amount()
 {
-  QAction *a = ((QAction *) sender());
+  QAction* a = ((QAction*)sender());
   ge->activate_round_amount(a->data().toDouble());
 }
 
@@ -1227,21 +1184,21 @@ void GeQt::update()
   }
 }
 
-void GeQtWidget::closeEvent(QCloseEvent *event)
+void GeQtWidget::closeEvent(QCloseEvent* event)
 {
   ge->Ge::activate_exit();
   QWidget::closeEvent(event);
 }
 
-void GeQtWidget::focusInEvent(QFocusEvent *event)
+void GeQtWidget::focusInEvent(QFocusEvent* event)
 {
   if (ge->graph->trace_started) {
     if (ge->graph) {
       ge->graph->set_inputfocus(1);
     }
   } else {
-    if (ge->value_input_open || ge->name_input_open || ge->text_input_open ||
-        ge->command_open) {
+    if (ge->value_input_open || ge->name_input_open || ge->text_input_open
+        || ge->command_open) {
       ge->recall_entry->setFocus();
     } else {
       ge->set_focus(0);
@@ -1277,21 +1234,18 @@ void GeQt::save_and_close()
 
 GeQt::~GeQt()
 {
-  if (graph->is_modified())
-  {
-    open_yesnodia("Do you wan't to save changes", "Save",
-                  Ge::exit_save_cb, Ge::exit_nosave_cb);
+  if (graph->is_modified()) {
+    open_yesnodia("Do you wan't to save changes", "Save", Ge::exit_save_cb,
+        Ge::exit_nosave_cb);
   }
 
   if (open_dialog) {
     wow->DeleteList(open_dialog);
   }
 
-#ifdef LDH
   if (plantctx) {
     delete plantctx;
   }
-#endif
 
   toplevel->close();
 
@@ -1305,9 +1259,9 @@ GeQt::~GeQt()
   }
 }
 
-GeQt::GeQt(void *x_parent_ctx, QWidget *x_parent_widget,
-           ldh_tSesContext x_ldhses, int x_exit_when_close,
-           unsigned int x_options, char *graph_name)
+GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
+    ldh_tSesContext x_ldhses, int x_exit_when_close, unsigned int x_options,
+    char* graph_name)
     : Ge(x_parent_ctx, x_ldhses, x_exit_when_close, x_options)
 {
   const int window_width = 980;
@@ -1315,9 +1269,9 @@ GeQt::GeQt(void *x_parent_ctx, QWidget *x_parent_widget,
   const int palette_width = 200;
   char title[200];
   char tmp_name[200];
-  char *s;
+  char* s;
   int path_cnt;
-  char *path;
+  char* path;
   char systemname[80];
 
   strcpy(title, "PwR Ge");
@@ -1341,218 +1295,222 @@ GeQt::GeQt(void *x_parent_ctx, QWidget *x_parent_widget,
 
   CoWowQt::SetWindowIcon(toplevel);
 
-  QMenuBar *menu_bar = new QMenuBar();
-  QToolBar *tools = new QToolBar();
-  QToolBar *tools2 = new QToolBar();
-  QToolBar *tools3 = new QToolBar();
+  QMenuBar* menu_bar = new QMenuBar();
+  QToolBar* tools = new QToolBar();
+  QToolBar* tools2 = new QToolBar();
+  QToolBar* tools3 = new QToolBar();
 
   // File Entry
-  QMenu *file = menu_bar->addMenu(translate_utf8("&File"));
+  QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
   addMenuItem(toplevel, file, "&New", SLOT(activate_new()), "", "document-new");
-  addMenuItem(toplevel, file, "&Open...", SLOT(activate_open()), "",
-              "document-open");
-  addMenuItem(toplevel, file, "Save", SLOT(activate_save()), "", "document-save");
-  addMenuItem(toplevel, file, "Save As", SLOT(activate_save_as()), "CTRL+SHIFT+S",
-              "document-save-as");
+  addMenuItem(
+      toplevel, file, "&Open...", SLOT(activate_open()), "", "document-open");
+  addMenuItem(
+      toplevel, file, "Save", SLOT(activate_save()), "", "document-save");
+  addMenuItem(toplevel, file, "Save As", SLOT(activate_save_as()),
+      "CTRL+SHIFT+S", "document-save-as");
   addMenuItem(toplevel, file, "&Build", SLOT(activate_build()));
-  addMenuItem(toplevel, file, "&Graph attributes...", SLOT(activate_graph_attr()),
-              "ALT+G");
+  addMenuItem(toplevel, file, "&Graph attributes...",
+      SLOT(activate_graph_attr()), "ALT+G");
 
   // Submenu colortheme
-  QMenu *file_colortheme = file->addMenu(translate_utf8("ColorTheme"));
+  QMenu* file_colortheme = file->addMenu(translate_utf8("ColorTheme"));
   addMenuItem(toplevel, file_colortheme, "&Select",
-              SLOT(activate_colortheme_select()), "CTRL+SHIFT+T");
-  addMenuItem(toplevel, file_colortheme, "&Next", SLOT(activate_colortheme_next()),
-              "CTRL+ALT+T");
+      SLOT(activate_colortheme_select()), "CTRL+SHIFT+T");
+  addMenuItem(toplevel, file_colortheme, "&Next",
+      SLOT(activate_colortheme_next()), "CTRL+ALT+T");
 
   // Submenu customcolors
-  QMenu *file_customcolors = file->addMenu(translate_utf8("CustomColors"));
-  addMenuItem(toplevel, file_customcolors, "&Load",
-              SLOT(activate_customcolors_read()));
+  QMenu* file_customcolors = file->addMenu(translate_utf8("CustomColors"));
+  addMenuItem(
+      toplevel, file_customcolors, "&Load", SLOT(activate_customcolors_read()));
   addMenuItem(toplevel, file_customcolors, "&Save",
-              SLOT(activate_customcolors_write()));
+      SLOT(activate_customcolors_write()));
 
-  addMenuItem(toplevel, file, "&Loaded Subgraphs...", SLOT(activate_subgraphs()),
-              "CTRL+L");
+  addMenuItem(toplevel, file, "&Loaded Subgraphs...",
+      SLOT(activate_subgraphs()), "CTRL+L");
 
   // Submenu export
-  QMenu *file_export = file->addMenu(translate_utf8("Export"));
+  QMenu* file_export = file->addMenu(translate_utf8("Export"));
   addMenuItem(toplevel, file_export, "&Java", SLOT(activate_export_java()));
-  addMenuItem(toplevel, file_export, "J&ava as...",
-              SLOT(activate_export_java_as()));
+  addMenuItem(
+      toplevel, file_export, "J&ava as...", SLOT(activate_export_java_as()));
   addMenuItem(toplevel, file_export, "&PlcFo", SLOT(activate_export_plcfo()));
-  addMenuItem(toplevel, file_export, "P&lcFo as...",
-              SLOT(activate_export_plcfo_as()));
+  addMenuItem(
+      toplevel, file_export, "P&lcFo as...", SLOT(activate_export_plcfo_as()));
 
-  addMenuItem(toplevel, file, "&Import Graph...", SLOT(activate_import_graph()));
-  addMenuItem(toplevel, file, "&Import Image...", SLOT(activate_import_image()));
-  addMenuItem(toplevel, file, "&Next Page", SLOT(activate_nextpage()), "CTRL+N");
-  addMenuItem(toplevel, file, "P&revious Page", SLOT(activate_prevpage()),
-              "CTRL+J");
-  addMenuItem(toplevel, file, "&Create Next Page", SLOT(activate_creanextpage()),
-              "CTRL+SHIFT+N");
+  addMenuItem(
+      toplevel, file, "&Import Graph...", SLOT(activate_import_graph()));
+  addMenuItem(
+      toplevel, file, "&Import Image...", SLOT(activate_import_image()));
+  addMenuItem(
+      toplevel, file, "&Next Page", SLOT(activate_nextpage()), "CTRL+N");
+  addMenuItem(
+      toplevel, file, "P&revious Page", SLOT(activate_prevpage()), "CTRL+J");
+  addMenuItem(toplevel, file, "&Create Next Page",
+      SLOT(activate_creanextpage()), "CTRL+SHIFT+N");
   addMenuItem(toplevel, file, "&History", SLOT(activate_history()));
-  addMenuItem(toplevel, file, "&Print", SLOT(activate_print()), "",
-              "document-print");
-  addMenuItem(toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+  addMenuItem(
+      toplevel, file, "&Print", SLOT(activate_print()), "", "document-print");
+  addMenuItem(
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
   // Edit entry
-  QMenu *edit = menu_bar->addMenu(translate_utf8("&Edit"));
-  addMenuItem(toplevel, edit, "&Cut", SLOT(activate_cut()), "CTRL+X", "edit-cut");
-  addMenuItem(toplevel, edit, "&Copy", SLOT(activate_copy()), "CTRL+C",
-              "edit-copy");
-  addMenuItem(toplevel, edit, "&Paste", SLOT(activate_paste()), "CTRL+V",
-              "edit-paste");
+  QMenu* edit = menu_bar->addMenu(translate_utf8("&Edit"));
+  addMenuItem(
+      toplevel, edit, "&Cut", SLOT(activate_cut()), "CTRL+X", "edit-cut");
+  addMenuItem(
+      toplevel, edit, "&Copy", SLOT(activate_copy()), "CTRL+C", "edit-copy");
+  addMenuItem(
+      toplevel, edit, "&Paste", SLOT(activate_paste()), "CTRL+V", "edit-paste");
   addMenuItem(toplevel, edit, "&Delete", SLOT(activate_delete()), "Delete",
-              "edit-delete");
-  addMenuItem(toplevel, edit, "&Undo", SLOT(activate_undo()), "CTRL+Z",
-              "edit-undo");
+      "edit-delete");
+  addMenuItem(
+      toplevel, edit, "&Undo", SLOT(activate_undo()), "CTRL+Z", "edit-undo");
   addMenuItem(toplevel, edit, "&Redo", SLOT(activate_redo()), "CTRL+ALT+Z",
-              "edit-redo");
+      "edit-redo");
   addMenuItem(toplevel, edit, "&Rotate...", SLOT(activate_rotate()), "CTRL+R");
   addMenuItem(toplevel, edit, "&Edit Polyline", SLOT(activate_edit_polyline()));
-  addMenuItem(toplevel, edit, "&Create Subgraph", SLOT(activate_create_subgraph()),
-              "CTRL+D");
-  addMenuItem(toplevel, edit, "Change &Text", SLOT(activate_change_text()),
-              "CTRL+T");
+  addMenuItem(toplevel, edit, "&Create Subgraph",
+      SLOT(activate_create_subgraph()), "CTRL+D");
+  addMenuItem(
+      toplevel, edit, "Change &Text", SLOT(activate_change_text()), "CTRL+T");
   addMenuItem(toplevel, edit, "&Search Object", SLOT(activate_search_object()));
   addMenuItem(toplevel, edit, "&Object Attributes Store",
-              SLOT(activate_objattr_store()), "CTRL+SHIFT+A");
+      SLOT(activate_objattr_store()), "CTRL+SHIFT+A");
   addMenuItem(toplevel, edit, "O&bject Attributes Recall",
-              SLOT(activate_objattr_recall()), "CTRL+SHIFT+D");
+      SLOT(activate_objattr_recall()), "CTRL+SHIFT+D");
   addMenuItem(toplevel, edit, "&Command", SLOT(activate_command()), "CTRL+B");
 
   // Functions entry
-  QMenu *functions = menu_bar->addMenu(translate_utf8("&Functions"));
+  QMenu* functions = menu_bar->addMenu(translate_utf8("&Functions"));
   addMenuItem(toplevel, functions, "&Set Background Color",
-              SLOT(activate_background_color()));
+      SLOT(activate_background_color()));
   addMenuItem(toplevel, functions, "&Pop", SLOT(activate_pop()));
   addMenuItem(toplevel, functions, "P&ush", SLOT(activate_push()));
   addMenuItem(toplevel, functions, "&Scale Equal", SLOT(activate_scale_equal()),
-              "CTRL+E");
+      "CTRL+E");
 
   // Submenu move restrictions
-  QMenu *functions_move_restrictions =
-      functions->addMenu(translate_utf8("&Move Restrictions"));
+  QMenu* functions_move_restrictions
+      = functions->addMenu(translate_utf8("&Move Restrictions"));
   addMenuItem(toplevel, functions_move_restrictions, "&Horizontal",
-              SLOT(activate_move_horizontal()), "CTRL+H");
+      SLOT(activate_move_horizontal()), "CTRL+H");
   addMenuItem(toplevel, functions_move_restrictions, "&Vertical",
-              SLOT(activate_move_vertical()), "CTRL+G");
+      SLOT(activate_move_vertical()), "CTRL+G");
   addMenuItem(toplevel, functions_move_restrictions, "&No",
-              SLOT(activate_move_reset()));
+      SLOT(activate_move_reset()));
 
   // Submenu Align
-  QMenu *functions_align = functions->addMenu(translate_utf8("&Align"));
+  QMenu* functions_align = functions->addMenu(translate_utf8("&Align"));
 
   // Subsubmenu Align Vertical
-  QMenu *functions_align_vert =
-      functions_align->addMenu(translate_utf8("&Vertical"));
+  QMenu* functions_align_vert
+      = functions_align->addMenu(translate_utf8("&Vertical"));
   addMenuItem(toplevel, functions_align_vert, "&Left",
-              SLOT(activate_align_vert_left()));
+      SLOT(activate_align_vert_left()));
   addMenuItem(toplevel, functions_align_vert, "&Right",
-              SLOT(activate_align_vert_right()));
+      SLOT(activate_align_vert_right()));
   addMenuItem(toplevel, functions_align_vert, "&Center",
-              SLOT(activate_align_vert_center()));
+      SLOT(activate_align_vert_center()));
 
   // Subsubmenu Align Horizontal
-  QMenu *functions_align_horiz =
-      functions_align->addMenu(translate_utf8("&Horizontal"));
-  addMenuItem(toplevel, functions_align_horiz, "&Top",
-              SLOT(activate_align_horiz_up()));
+  QMenu* functions_align_horiz
+      = functions_align->addMenu(translate_utf8("&Horizontal"));
+  addMenuItem(
+      toplevel, functions_align_horiz, "&Top", SLOT(activate_align_horiz_up()));
   addMenuItem(toplevel, functions_align_horiz, "&Bottom",
-              SLOT(activate_align_horiz_down()));
+      SLOT(activate_align_horiz_down()));
   addMenuItem(toplevel, functions_align_horiz, "&Center",
-              SLOT(activate_align_horiz_center()));
+      SLOT(activate_align_horiz_center()));
 
   // Submenu Equid
-  QMenu *functions_equid = functions->addMenu(translate_utf8("Equi&Distance"));
+  QMenu* functions_equid = functions->addMenu(translate_utf8("Equi&Distance"));
 
   // Submenu Equid Horizontal
-  QMenu *functions_equid_horiz =
-      functions_equid->addMenu(translate_utf8("&Horizontal"));
+  QMenu* functions_equid_horiz
+      = functions_equid->addMenu(translate_utf8("&Horizontal"));
   addMenuItem(toplevel, functions_equid_horiz, "&Left",
-              SLOT(activate_equid_horiz_left()));
+      SLOT(activate_equid_horiz_left()));
   addMenuItem(toplevel, functions_equid_horiz, "&Right",
-              SLOT(activate_equid_horiz_right()));
+      SLOT(activate_equid_horiz_right()));
   addMenuItem(toplevel, functions_equid_horiz, "&Center",
-              SLOT(activate_equid_horiz_center()));
+      SLOT(activate_equid_horiz_center()));
 
   // Submenu Equid Vertical
-  QMenu *functions_equid_vert =
-      functions_equid->addMenu(translate_utf8("&Horizontal"));
-  addMenuItem(toplevel, functions_equid_vert, "&Top",
-              SLOT(activate_equid_vert_up()));
+  QMenu* functions_equid_vert
+      = functions_equid->addMenu(translate_utf8("&Horizontal"));
+  addMenuItem(
+      toplevel, functions_equid_vert, "&Top", SLOT(activate_equid_vert_up()));
   addMenuItem(toplevel, functions_equid_vert, "&Bottom",
-              SLOT(activate_equid_vert_down()));
+      SLOT(activate_equid_vert_down()));
   addMenuItem(toplevel, functions_equid_vert, "&Center",
-              SLOT(activate_equid_vert_center()));
+      SLOT(activate_equid_vert_center()));
 
   // Submenu Select
-  QMenu *functions_select = functions->addMenu(translate_utf8("Select"));
+  QMenu* functions_select = functions->addMenu(translate_utf8("Select"));
   addMenuItem(toplevel, functions_select, "All &Connections",
-              SLOT(activate_select_cons()));
+      SLOT(activate_select_cons()));
   addMenuItem(toplevel, functions_select, "All &Objects",
-              SLOT(activate_select_objects()));
-  QAction *a = addMenuItem(toplevel, functions_select, "Next Right",
-              SLOT(activate_select_next()), "CTRL+Right");
+      SLOT(activate_select_objects()));
+  QAction* a = addMenuItem(toplevel, functions_select, "Next Right",
+      SLOT(activate_select_next()), "CTRL+Right");
   a->setData(glow_eDirection_Right);
   a = addMenuItem(toplevel, functions_select, "Next Left",
-              SLOT(activate_select_next()), "CTRL+Left");
+      SLOT(activate_select_next()), "CTRL+Left");
   a->setData(glow_eDirection_Left);
   a = addMenuItem(toplevel, functions_select, "Next Up",
-              SLOT(activate_select_next()), "CTRL+Up");
+      SLOT(activate_select_next()), "CTRL+Up");
   a->setData(glow_eDirection_Up);
   a = addMenuItem(toplevel, functions_select, "Next Down",
-              SLOT(activate_select_next()), "CTRL+Down");
+      SLOT(activate_select_next()), "CTRL+Down");
   a->setData(glow_eDirection_Down);
 
   addMenuItem(toplevel, functions, "&Group", SLOT(activate_group()));
   addMenuItem(toplevel, functions, "&Ungroup", SLOT(activate_ungroup()));
-  addMenuItem(toplevel, functions, "&Connect", SLOT(activate_connect()), "CTRL+Q");
-  addMenuItem(toplevel, functions, "C&onnect Second",
-              SLOT(activate_connectsecond()));
+  addMenuItem(
+      toplevel, functions, "&Connect", SLOT(activate_connect()), "CTRL+Q");
+  addMenuItem(
+      toplevel, functions, "C&onnect Second", SLOT(activate_connectsecond()));
   addMenuItem(toplevel, functions, "&Object Attributes",
-              SLOT(activate_objectattributes()), "CTRL+A");
+      SLOT(activate_objectattributes()), "CTRL+A");
   addMenuItem(toplevel, functions, "S&how Grid", SLOT(activate_show_grid()));
 
   // Menu Connections
-  QMenu *cons = menu_bar->addMenu(translate_utf8("&Connections"));
+  QMenu* cons = menu_bar->addMenu(translate_utf8("&Connections"));
 
   // Submenu Conpoint Direction
-  QActionGroup *condir_group = new QActionGroup(toplevel);
-  QMenu *cons_condir = cons->addMenu(translate_utf8("Conpoint &Direction"));
-  addMenuRadioItem(toplevel, cons_condir, "&Center", SLOT(activate_condir_center()),
-                   condir_group);
+  QActionGroup* condir_group = new QActionGroup(toplevel);
+  QMenu* cons_condir = cons->addMenu(translate_utf8("Conpoint &Direction"));
+  addMenuRadioItem(toplevel, cons_condir, "&Center",
+      SLOT(activate_condir_center()), condir_group);
   addMenuRadioItem(toplevel, cons_condir, "&Left", SLOT(activate_condir_left()),
-                   condir_group);
-  addMenuRadioItem(toplevel, cons_condir, "&Right", SLOT(activate_condir_right()),
-                   condir_group);
-  addMenuRadioItem(toplevel, cons_condir, "&Up", SLOT(activate_condir_up()),
-                   condir_group);
+      condir_group);
+  addMenuRadioItem(toplevel, cons_condir, "&Right",
+      SLOT(activate_condir_right()), condir_group);
+  addMenuRadioItem(
+      toplevel, cons_condir, "&Up", SLOT(activate_condir_up()), condir_group);
   addMenuRadioItem(toplevel, cons_condir, "&Down", SLOT(activate_condir_down()),
-                   condir_group);
+      condir_group);
 
   // Submenu Corners
-  QActionGroup *corners_group = new QActionGroup(toplevel);
-  QMenu *cons_corners = cons->addMenu(translate_utf8("&Corners"));
+  QActionGroup* corners_group = new QActionGroup(toplevel);
+  QMenu* cons_corners = cons->addMenu(translate_utf8("&Corners"));
   addMenuRadioItem(toplevel, cons_corners, "&Right",
-                   SLOT(activate_concorner_right()), corners_group);
-  QAction *cons_corners_rounded =
-      addMenuRadioItem(toplevel, cons_corners, "R&ounded",
-                       SLOT(activate_concorner_rounded()), corners_group);
+      SLOT(activate_concorner_right()), corners_group);
+  QAction* cons_corners_rounded = addMenuRadioItem(toplevel, cons_corners,
+      "R&ounded", SLOT(activate_concorner_rounded()), corners_group);
   cons_corners_rounded->setChecked(true);
 
   // Submenu Corner Round Amount
-  QActionGroup *round_amount_group = new QActionGroup(toplevel);
-  QMenu *cons_round_amount =
-      cons->addMenu(translate_utf8("Corners &Round Amount"));
+  QActionGroup* round_amount_group = new QActionGroup(toplevel);
+  QMenu* cons_round_amount
+      = cons->addMenu(translate_utf8("Corners &Round Amount"));
   for (int i = 0; i < 5; i++) {
     double num = pow(2, i) / 4.0;
     QByteArray ba = QString::number(num, 'f').toLocal8Bit();
-    QAction *cons_round_amount_t =
-        addMenuRadioItem(toplevel, cons_round_amount, ba.data(),
-                         SLOT(activate_round_amount()),
-                         round_amount_group);
+    QAction* cons_round_amount_t = addMenuRadioItem(toplevel, cons_round_amount,
+        ba.data(), SLOT(activate_round_amount()), round_amount_group);
     cons_round_amount_t->setData(num);
     if (i == 1) {
       cons_round_amount_t->setChecked(true);
@@ -1560,433 +1518,393 @@ GeQt::GeQt(void *x_parent_ctx, QWidget *x_parent_widget,
   }
 
   // Submenu Connections Type
-  QActionGroup *type_group = new QActionGroup(toplevel);
-  QMenu *cons_type = cons->addMenu(translate_utf8("&Type"));
+  QActionGroup* type_group = new QActionGroup(toplevel);
+  QMenu* cons_type = cons->addMenu(translate_utf8("&Type"));
   addMenuRadioItem(toplevel, cons_type, "&Straight",
-                   SLOT(activate_contype_straight()), type_group);
-  QAction *cons_type_routed = addMenuRadioItem(toplevel, cons_type, "&Routed",
-                                               SLOT(activate_contype_routed()),
-                                               type_group);
+      SLOT(activate_contype_straight()), type_group);
+  QAction* cons_type_routed = addMenuRadioItem(toplevel, cons_type, "&Routed",
+      SLOT(activate_contype_routed()), type_group);
   cons_type_routed->setChecked(true);
   addMenuRadioItem(toplevel, cons_type, "Straight &One Arrow",
-                   SLOT(activate_contype_stronearr()), type_group);
+      SLOT(activate_contype_stronearr()), type_group);
   addMenuRadioItem(toplevel, cons_type, "St&ep Diverge",
-                   SLOT(activate_contype_stepdiv()), type_group);
+      SLOT(activate_contype_stepdiv()), type_group);
   addMenuRadioItem(toplevel, cons_type, "Ste&p Converge",
-                   SLOT(activate_contype_stepconv()), type_group);
+      SLOT(activate_contype_stepconv()), type_group);
   addMenuRadioItem(toplevel, cons_type, "&Trans Diverge",
-                   SLOT(activate_contype_transdiv()), type_group);
+      SLOT(activate_contype_transdiv()), type_group);
   addMenuRadioItem(toplevel, cons_type, "Tr&ans Converge",
-                   SLOT(activate_contype_transconv()), type_group);
+      SLOT(activate_contype_transconv()), type_group);
 
   // Menu View
-  QMenu *view = menu_bar->addMenu(translate_utf8("&View"));
+  QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
   addMenuItem(toplevel, view, "&Preview", SLOT(activate_preview_start()));
   addMenuItem(toplevel, view, "Preview &Stop", SLOT(activate_preview_stop()));
   addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoom_in()), "CTRL+I",
-              "zoom-in");
+      "zoom-in");
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
-              "zoom-out");
+      "zoom-out");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "",
-              "zoom-reset");
-  view_plant_w = addCheckableMenuItem(toplevel, view, "Vi&ew Plant",
-                                      SLOT(activate_view_plant(bool)),
-                                      "CTRL+P");
-  view_graphlist_w = addCheckableMenuItem(toplevel, view, "Vie&w Graph List",
-                                          SLOT(activate_view_graphlist(bool)));
+      "zoom-reset");
+  view_plant_w = addCheckableMenuItem(
+      toplevel, view, "Vi&ew Plant", SLOT(activate_view_plant(bool)), "CTRL+P");
+  view_graphlist_w = addCheckableMenuItem(
+      toplevel, view, "Vie&w Graph List", SLOT(activate_view_graphlist(bool)));
   view_objectnav_w = addCheckableMenuItem(toplevel, view, "View Object &Tree",
-                                          SLOT(activate_view_objectnav(bool)),
-                                          "CTRL+SHIFT+O");
+      SLOT(activate_view_objectnav(bool)), "CTRL+SHIFT+O");
 
   // Menu Help
-  QMenu *help = menu_bar->addMenu(translate_utf8("&Help"));
-  addMenuItem(toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H",
-              "system-help");
-  addMenuItem(toplevel, help, "H&elp on Subgraphs", SLOT(activate_help_subgraph()));
+  QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
+  addMenuItem(
+      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "system-help");
+  addMenuItem(
+      toplevel, help, "H&elp on Subgraphs", SLOT(activate_help_subgraph()));
 
   // Toolbar 1
   addToolItem(toplevel, tools, "Draw a rectangle", SLOT(activate_rect()),
-              "$pwr_exe/ge_rect.png");
+      "$pwr_exe/ge_rect.png");
   addToolItem(toplevel, tools, "Draw a rounded rectangle",
-              SLOT(activate_rectrounded()), "$pwr_exe/ge_roundedrect.png");
-  addToolItem(toplevel, tools, "Draw a circle or ellipse", SLOT(activate_circle()),
-              "$pwr_exe/ge_circ.png");
+      SLOT(activate_rectrounded()), "$pwr_exe/ge_roundedrect.png");
+  addToolItem(toplevel, tools, "Draw a circle or ellipse",
+      SLOT(activate_circle()), "$pwr_exe/ge_circ.png");
   addToolItem(toplevel, tools, "Draw a line", SLOT(activate_line()),
-              "$pwr_exe/ge_line.png");
+      "$pwr_exe/ge_line.png");
   addToolItem(toplevel, tools, "Draw a polyline or polygon",
-              SLOT(activate_polyline()), "$pwr_exe/ge_polyline.png");
+      SLOT(activate_polyline()), "$pwr_exe/ge_polyline.png");
   addToolItem(toplevel, tools, "Draw a text", SLOT(activate_text()),
-              "$pwr_exe/ge_text.png");
+      "$pwr_exe/ge_text.png");
   addToolItem(toplevel, tools, "Insert an annotation", SLOT(activate_annot()),
-              "$pwr_exe/ge_annot.png");
+      "$pwr_exe/ge_annot.png");
   addToolItem(toplevel, tools, "Insert a connectionpoint",
-              SLOT(activate_conpoint()), "$pwr_exe/ge_conpoint.png");
+      SLOT(activate_conpoint()), "$pwr_exe/ge_conpoint.png");
 
   addCheckableToolItem(toplevel, tools,
-                       "Set border property on selected objects, and as default",
-                       SLOT(activate_border(bool)), "$pwr_exe/ge_border.png");
+      "Set border property on selected objects, and as default",
+      SLOT(activate_border(bool)), "$pwr_exe/ge_border.png");
 
   addCheckableToolItem(toplevel, tools,
-                       "Set fill property on selected objects, and as default",
-                       SLOT(activate_fill(bool)), "$pwr_exe/ge_fill.png");
+      "Set fill property on selected objects, and as default",
+      SLOT(activate_fill(bool)), "$pwr_exe/ge_fill.png");
 
   addCheckableToolItem(toplevel, tools,
-                       "Set 3D property on selected objects, and as default",
-                       SLOT(activate_shadow(bool)), "$pwr_exe/ge_3d.png");
+      "Set 3D property on selected objects, and as default",
+      SLOT(activate_shadow(bool)), "$pwr_exe/ge_3d.png");
 
   addToolItem(toplevel, tools, "Pop selected objects", SLOT(activate_pop()),
-              "$pwr_exe/ge_pop.png");
+      "$pwr_exe/ge_pop.png");
   addToolItem(toplevel, tools, "Push selected objects", SLOT(activate_push()),
-              "$pwr_exe/ge_push.png");
+      "$pwr_exe/ge_push.png");
 
-  addToolItem(toplevel, tools, "Move horizontal", SLOT(activate_move_horizontal()),
-              "$pwr_exe/ge_move_horiz.png");
+  addToolItem(toplevel, tools, "Move horizontal",
+      SLOT(activate_move_horizontal()), "$pwr_exe/ge_move_horiz.png");
   addToolItem(toplevel, tools, "Move vertical", SLOT(activate_move_vertical()),
-              "$pwr_exe/ge_move_vert.png");
+      "$pwr_exe/ge_move_vert.png");
 
   addToolItem(toplevel, tools, "Group selected objects", SLOT(activate_group()),
-              "$pwr_exe/ge_group.png");
+      "$pwr_exe/ge_group.png");
   addToolItem(toplevel, tools, "Split selected group", SLOT(activate_ungroup()),
-              "$pwr_exe/ge_ungroup.png");
+      "$pwr_exe/ge_ungroup.png");
 
   addToolItem(toplevel, tools, "Align selected objects bottom side horizontal",
-              SLOT(activate_align_horiz_down()),
-              "$pwr_exe/ge_align_horiz_bottom.png");
+      SLOT(activate_align_horiz_down()), "$pwr_exe/ge_align_horiz_bottom.png");
   addToolItem(toplevel, tools, "Align selected objects center horizontal",
-              SLOT(activate_align_horiz_center()),
-              "$pwr_exe/ge_align_horiz_center.png");
+      SLOT(activate_align_horiz_center()),
+      "$pwr_exe/ge_align_horiz_center.png");
   addToolItem(toplevel, tools, "Align selected objects top side horizontal",
-              SLOT(activate_align_horiz_up()),
-              "$pwr_exe/ge_align_horiz_top.png");
+      SLOT(activate_align_horiz_up()), "$pwr_exe/ge_align_horiz_top.png");
 
   addToolItem(toplevel, tools, "Align selected objects left side vertical",
-              SLOT(activate_align_vert_left()),
-              "$pwr_exe/ge_align_vert_left.png");
+      SLOT(activate_align_vert_left()), "$pwr_exe/ge_align_vert_left.png");
   addToolItem(toplevel, tools, "Align selected objects center vertical",
-              SLOT(activate_align_vert_center()),
-              "$pwr_exe/ge_align_vert_center.png");
+      SLOT(activate_align_vert_center()), "$pwr_exe/ge_align_vert_center.png");
   addToolItem(toplevel, tools, "Align selected objects right side vertical",
-              SLOT(activate_align_vert_right()),
-              "$pwr_exe/ge_align_vert_right.png");
+      SLOT(activate_align_vert_right()), "$pwr_exe/ge_align_vert_right.png");
 
   addToolItem(toplevel, tools,
-              "Set equal distance between objects left side horizontal",
-              SLOT(activate_equid_horiz_left()),
-              "$pwr_exe/ge_equidist_left.png");
+      "Set equal distance between objects left side horizontal",
+      SLOT(activate_equid_horiz_left()), "$pwr_exe/ge_equidist_left.png");
   addToolItem(toplevel, tools,
-              "Set equal distance between objects bottom side vertical",
-              SLOT(activate_equid_vert_down()),
-              "$pwr_exe/ge_equidist_bottom.png");
+      "Set equal distance between objects bottom side vertical",
+      SLOT(activate_equid_vert_down()), "$pwr_exe/ge_equidist_bottom.png");
 
   addCheckableToolItem(toplevel, tools, "View plant hierarchy",
-                       SLOT(activate_view_plant(bool)),
-                       "$pwr_exe/xtt_navigator.png");
+      SLOT(activate_view_plant(bool)), "$pwr_exe/xtt_navigator.png");
   addToolItem(toplevel, tools, "Open selected object",
-              SLOT(activate_objectattributes()), "$pwr_exe/xtt_object.png");
+      SLOT(activate_objectattributes()), "$pwr_exe/xtt_object.png");
 
   // Toolbar 2
   addToolItem(toplevel, tools2, "Mode reset", SLOT(activate_reset_mode()),
-              "$pwr_exe/ge_reset.png");
-  addToolItem(toplevel, tools2, "Scale selected objects", SLOT(activate_scale()),
-              "$pwr_exe/ge_scale.png");
+      "$pwr_exe/ge_reset.png");
+  addToolItem(toplevel, tools2, "Scale selected objects",
+      SLOT(activate_scale()), "$pwr_exe/ge_scale.png");
   addToolItem(toplevel, tools2, "Scale selected objects to double size",
-              SLOT(activate_scale_double()), "$pwr_exe/ge_scale_double.png");
+      SLOT(activate_scale_double()), "$pwr_exe/ge_scale_double.png");
   addToolItem(toplevel, tools2, "Scale selected objects to half size",
-              SLOT(activate_scale_half()), "$pwr_exe/ge_scale_half.png");
+      SLOT(activate_scale_half()), "$pwr_exe/ge_scale_half.png");
   addToolItem(toplevel, tools2, "Rotate selected objects 90 degrees",
-              SLOT(activate_rotate90()), "$pwr_exe/ge_flip.png");
+      SLOT(activate_rotate90()), "$pwr_exe/ge_flip.png");
   addToolItem(toplevel, tools2, "Mirror selected objects horizontal",
-              SLOT(activate_flip_horiz()), "$pwr_exe/ge_mirrorhorizontal.png");
+      SLOT(activate_flip_horiz()), "$pwr_exe/ge_mirrorhorizontal.png");
   addToolItem(toplevel, tools2, "Mirror selected objects vertical",
-              SLOT(activate_flip_vert()), "$pwr_exe/ge_mirrorvertical.png");
+      SLOT(activate_flip_vert()), "$pwr_exe/ge_mirrorvertical.png");
 
   // Toolbar 3
   addToolItem(toplevel, tools3, "Save", SLOT(activate_save()), "document-save");
   addToolItem(toplevel, tools3, "Build", SLOT(activate_build()), "system-run");
   addToolItem(toplevel, tools3, "Zoom in", SLOT(activate_zoom_in()),
-              "$pwr_exe/ge_zoom_in.png");
+      "$pwr_exe/ge_zoom_in.png");
   addToolItem(toplevel, tools3, "Zoom out", SLOT(activate_zoom_out()),
-              "$pwr_exe/ge_zoom_out.png");
+      "$pwr_exe/ge_zoom_out.png");
   addToolItem(toplevel, tools3, "Zoom reset", SLOT(activate_zoom_reset()),
-              "$pwr_exe/ge_zoom_reset.png");
-  addToolItem(toplevel, tools3, "Undo", SLOT(activate_undo()),
-              "$pwr_exe/ge_undo.png");
-  addToolItem(toplevel, tools3, "Redo", SLOT(activate_redo()),
-              "$pwr_exe/ge_redo.png");
-
+      "$pwr_exe/ge_zoom_reset.png");
+  addToolItem(
+      toplevel, tools3, "Undo", SLOT(activate_undo()), "$pwr_exe/ge_undo.png");
+  addToolItem(
+      toplevel, tools3, "Redo", SLOT(activate_redo()), "$pwr_exe/ge_redo.png");
 
   // Line width option menu
-  QMenu *tools_linewidth = addToolMenu(toplevel, tools3, "Line Width");
+  QMenu* tools_linewidth = addToolMenu(toplevel, tools3, "Line Width");
   for (int i = 1; i <= 8; i++) {
     std::ostringstream txt;
     txt << "Linewidth " << i;
     std::ostringstream fname;
     fname << "$pwr_exe/ge_linewidth_" << i << ".png";
-    QAction *action = addMenuItem(toplevel, tools_linewidth, txt.str().c_str(),
-                                  SLOT(activate_linewidth()), "",
-                                  fname.str().c_str());
+    QAction* action = addMenuItem(toplevel, tools_linewidth, txt.str().c_str(),
+        SLOT(activate_linewidth()), "", fname.str().c_str());
     action->setData(i);
   }
 
   // Line type option menu
-  QMenu *tools_linetype = addToolMenu(toplevel, tools3, "Line Type");
+  QMenu* tools_linetype = addToolMenu(toplevel, tools3, "Line Type");
   for (int i = 0; i < 7; i++) {
     std::ostringstream txt;
     txt << "Linetype " << i;
     std::ostringstream fname;
     fname << "$pwr_exe/ge_linetype_" << i << ".png";
-    QAction *action = addMenuItem(toplevel, tools_linetype, txt.str().c_str(),
-                                  SLOT(activate_linetype()), "",
-                                  fname.str().c_str());
+    QAction* action = addMenuItem(toplevel, tools_linetype, txt.str().c_str(),
+        SLOT(activate_linetype()), "", fname.str().c_str());
     action->setData(i);
   }
 
   // Text size options menu
-  QMenu *tools_textsize = addToolMenu(toplevel, tools3, "Text Size");
-  int sizes[] = {8, 10, 12, 14, 18, 24};
+  QMenu* tools_textsize = addToolMenu(toplevel, tools3, "Text Size");
+  int sizes[] = { 8, 10, 12, 14, 18, 24 };
   for (int i = 0; i <= 5; i++) {
     std::ostringstream txt;
     txt << "Textsize " << sizes[i];
     std::ostringstream fname;
     fname << "$pwr_exe/ge_textsize_" << sizes[i] << ".png";
-    QAction *action = addMenuItem(toplevel, tools_textsize, txt.str().c_str(),
-                                  SLOT(activate_textsize()), "",
-                                  fname.str().c_str());
+    QAction* action = addMenuItem(toplevel, tools_textsize, txt.str().c_str(),
+        SLOT(activate_textsize()), "", fname.str().c_str());
     action->setData(i);
   }
 
   // Text font options menu
-  QMenu *tools_textfont = addToolMenu(toplevel, tools3, "Font");
+  QMenu* tools_textfont = addToolMenu(toplevel, tools3, "Font");
 
-  QAction *tools_textfont_1 = addMenuItem(toplevel, tools_textfont, "Helvetica",
-                                          SLOT(activate_textfont()));
+  QAction* tools_textfont_1 = addMenuItem(
+      toplevel, tools_textfont, "Helvetica", SLOT(activate_textfont()));
   tools_textfont_1->setFont(QFont(fl("Helvetica")));
   tools_textfont_1->setData(glow_eFont_Helvetica);
-  QAction *tools_textfont_2 = addMenuItem(toplevel, tools_textfont, "Times",
-                                          SLOT(activate_textfont()));
+  QAction* tools_textfont_2 = addMenuItem(
+      toplevel, tools_textfont, "Times", SLOT(activate_textfont()));
 
   tools_textfont_2->setFont(QFont(fl("Times")));
   tools_textfont_2->setData(glow_eFont_Times);
-  QAction *tools_textfont_3 =
-      addMenuItem(toplevel, tools_textfont, "New Century Schoolbook",
-                  SLOT(activate_textfont()));
+  QAction* tools_textfont_3 = addMenuItem(toplevel, tools_textfont,
+      "New Century Schoolbook", SLOT(activate_textfont()));
   tools_textfont_3->setFont(QFont(fl("New Century Schoolbook")));
   tools_textfont_3->setData(glow_eFont_NewCenturySchoolbook);
-  QAction *tools_textfont_4 = addMenuItem(toplevel, tools_textfont, "Courier",
-                                          SLOT(activate_textfont()));
+  QAction* tools_textfont_4 = addMenuItem(
+      toplevel, tools_textfont, "Courier", SLOT(activate_textfont()));
 
   tools_textfont_4->setFont(QFont(fl("Courier")));
   tools_textfont_4->setData(glow_eFont_Courier);
-  QAction *tools_textfont_5 = addMenuItem(toplevel, tools_textfont, "Lucida Sans",
-                                          SLOT(activate_textfont()));
+  QAction* tools_textfont_5 = addMenuItem(
+      toplevel, tools_textfont, "Lucida Sans", SLOT(activate_textfont()));
   tools_textfont_5->setFont(QFont(fl("Lucida Sans")));
   tools_textfont_5->setData(glow_eFont_LucidaSans);
 
   // Bold checkbutton
   addCheckableToolItem(toplevel, tools3,
-                       "Set bold on selected text, and as default",
-                       SLOT(activate_textbold(bool)), "");
+      "Set bold on selected text, and as default",
+      SLOT(activate_textbold(bool)), "");
 
   // Toolbar 2 (again)
 
   // Grid size options menu
-  QMenu *tools_gridsize = addToolMenu(toplevel, tools2, "Grid Size");
-  double sizes2[] = {1.0, 0.5, 0.25, 0.1};
+  QMenu* tools_gridsize = addToolMenu(toplevel, tools2, "Grid Size");
+  double sizes2[] = { 1.0, 0.5, 0.25, 0.1 };
   for (int i = 0; i < 4; i++) {
     std::ostringstream txt;
     txt << "Gridsize " << sizes2[i];
-    grid_sizes[i] = addMenuItem(toplevel, tools_gridsize, txt.str().c_str(),
-                                SLOT(activate_gridsize()));
+    grid_sizes[i] = addMenuItem(
+        toplevel, tools_gridsize, txt.str().c_str(), SLOT(activate_gridsize()));
     grid_sizes[i]->setData(sizes2[i]);
   }
 
   // Show grid checkbutton
   show_grid_w = addCheckableToolItem(toplevel, tools2, "Show grid",
-                                     SLOT(activate_show_grid(bool)),
-                                     "$pwr_exe/ge_showgrid.png");
+      SLOT(activate_show_grid(bool)), "$pwr_exe/ge_showgrid.png");
 
   // Snap to grid checkbutton
   grid_on_w = addCheckableToolItem(toplevel, tools2, "Snap to grid",
-                                   SLOT(activate_grid(bool)),
-                                   "$pwr_exe/ge_snap.png");
+      SLOT(activate_grid(bool)), "$pwr_exe/ge_snap.png");
 
   // Brightness
   addToolItem(toplevel, tools2, "Decrease brightness",
-              SLOT(activate_decr_lightness()), "$pwr_exe/ge_arrowleft.png");
+      SLOT(activate_decr_lightness()), "$pwr_exe/ge_arrowleft.png");
   addToolItem(toplevel, tools2, "Increase brightness",
-              SLOT(activate_incr_lightness()), "$pwr_exe/ge_brightness.png");
+      SLOT(activate_incr_lightness()), "$pwr_exe/ge_brightness.png");
 
   // Separator
   tools2->addSeparator();
 
   // Intensity
   addToolItem(toplevel, tools2, "Decrease color intensity",
-              SLOT(activate_decr_intensity()), "$pwr_exe/ge_arrowleft.png");
+      SLOT(activate_decr_intensity()), "$pwr_exe/ge_arrowleft.png");
   addToolItem(toplevel, tools2, "Increase color intensity",
-              SLOT(activate_incr_intensity()), "$pwr_exe/ge_arrowright.png");
+      SLOT(activate_incr_intensity()), "$pwr_exe/ge_arrowright.png");
 
   // Separator
   tools2->addSeparator();
 
   // Shift
   addToolItem(toplevel, tools2, "Shift color", SLOT(activate_decr_shift()),
-              "$pwr_exe/ge_arrowleft.png");
+      "$pwr_exe/ge_arrowleft.png");
   addToolItem(toplevel, tools2, "Shift color", SLOT(activate_incr_shift()),
-              "$pwr_exe/ge_arrowright.png");
+      "$pwr_exe/ge_arrowright.png");
 
   // Gradient option menu
-  QMenu *tools_gradient = addToolMenu(toplevel, tools2, "Gradient");
-  QAction *tools_gradient_no = addMenuItem(toplevel, tools_gradient, "Gradient No",
-                                           SLOT(activate_gradient()), "",
-                                           "$pwr_exe/ge_gradient_no.png");
+  QMenu* tools_gradient = addToolMenu(toplevel, tools2, "Gradient");
+  QAction* tools_gradient_no
+      = addMenuItem(toplevel, tools_gradient, "Gradient No",
+          SLOT(activate_gradient()), "", "$pwr_exe/ge_gradient_no.png");
   tools_gradient_no->setData(glow_eGradient_No);
 
-  QAction *tools_gradient_horizup =
-      addMenuItem(toplevel, tools_gradient, "Gradient HorizontalUp",
-                  SLOT(activate_gradient()), "",
-                  "$pwr_exe/ge_gradient_horizup.png");
+  QAction* tools_gradient_horizup
+      = addMenuItem(toplevel, tools_gradient, "Gradient HorizontalUp",
+          SLOT(activate_gradient()), "", "$pwr_exe/ge_gradient_horizup.png");
   tools_gradient_horizup->setData(glow_eGradient_HorizontalUp);
 
-  QAction *tools_gradient_horizdown =
-      addMenuItem(toplevel, tools_gradient, "Gradient HorizontalDown",
-                  SLOT(activate_gradient()), "",
-                  "$pwr_exe/ge_gradient_horizdown.png");
+  QAction* tools_gradient_horizdown
+      = addMenuItem(toplevel, tools_gradient, "Gradient HorizontalDown",
+          SLOT(activate_gradient()), "", "$pwr_exe/ge_gradient_horizdown.png");
   tools_gradient_horizdown->setData(glow_eGradient_HorizontalDown);
 
-  QAction *tools_gradient_horiztube1 =
-      addMenuItem(toplevel, tools_gradient, "Gradient HorizontalTube1",
-                  SLOT(activate_gradient()), "",
-                  "$pwr_exe/ge_gradient_horiztube1.png");
+  QAction* tools_gradient_horiztube1
+      = addMenuItem(toplevel, tools_gradient, "Gradient HorizontalTube1",
+          SLOT(activate_gradient()), "", "$pwr_exe/ge_gradient_horiztube1.png");
   tools_gradient_horiztube1->setData(glow_eGradient_HorizontalTube1);
 
-  QAction *tools_gradient_horiztube2 =
-      addMenuItem(toplevel, tools_gradient, "Gradient HorizontalTube2",
-                  SLOT(activate_gradient()), "",
-                  "$pwr_exe/ge_gradient_horiztube2.png");
+  QAction* tools_gradient_horiztube2
+      = addMenuItem(toplevel, tools_gradient, "Gradient HorizontalTube2",
+          SLOT(activate_gradient()), "", "$pwr_exe/ge_gradient_horiztube2.png");
   tools_gradient_horiztube2->setData(glow_eGradient_HorizontalTube2);
 
-  QAction *tools_gradient_vertleft =
-      addMenuItem(toplevel, tools_gradient, "Gradient VerticalLeft",
-                  SLOT(activate_gradient()), "",
-                  "$pwr_exe/ge_gradient_vertleft.png");
+  QAction* tools_gradient_vertleft
+      = addMenuItem(toplevel, tools_gradient, "Gradient VerticalLeft",
+          SLOT(activate_gradient()), "", "$pwr_exe/ge_gradient_vertleft.png");
   tools_gradient_vertleft->setData(glow_eGradient_VerticalLeft);
 
-  QAction *tools_gradient_vertright =
-      addMenuItem(toplevel, tools_gradient, "Gradient VerticalRight",
-                  SLOT(activate_gradient()), "",
-                  "$pwr_exe/ge_gradient_vertright.png");
+  QAction* tools_gradient_vertright
+      = addMenuItem(toplevel, tools_gradient, "Gradient VerticalRight",
+          SLOT(activate_gradient()), "", "$pwr_exe/ge_gradient_vertright.png");
   tools_gradient_vertright->setData(glow_eGradient_VerticalRight);
 
-  QAction *tools_gradient_verttube1 =
-      addMenuItem(toplevel, tools_gradient, "Gradient VerticalTube1",
-                  SLOT(activate_gradient()), "",
-                  "$pwr_exe/ge_gradient_verttube1.png");
+  QAction* tools_gradient_verttube1
+      = addMenuItem(toplevel, tools_gradient, "Gradient VerticalTube1",
+          SLOT(activate_gradient()), "", "$pwr_exe/ge_gradient_verttube1.png");
   tools_gradient_verttube1->setData(glow_eGradient_VerticalTube1);
 
-  QAction *tools_gradient_verttube2 =
-      addMenuItem(toplevel, tools_gradient, "Gradient VerticalTube2",
-                  SLOT(activate_gradient()), "",
-                  "$pwr_exe/ge_gradient_verttube2.png");
+  QAction* tools_gradient_verttube2
+      = addMenuItem(toplevel, tools_gradient, "Gradient VerticalTube2",
+          SLOT(activate_gradient()), "", "$pwr_exe/ge_gradient_verttube2.png");
   tools_gradient_verttube2->setData(glow_eGradient_VerticalTube2);
 
-  QAction *tools_gradient_diagupperleft =
-      addMenuItem(toplevel, tools_gradient, "Gradient DiagonalUpperLeft",
-                  SLOT(activate_gradient()), "",
-                  "$pwr_exe/ge_gradient_diagupperleft.png");
+  QAction* tools_gradient_diagupperleft = addMenuItem(toplevel, tools_gradient,
+      "Gradient DiagonalUpperLeft", SLOT(activate_gradient()), "",
+      "$pwr_exe/ge_gradient_diagupperleft.png");
   tools_gradient_diagupperleft->setData(glow_eGradient_DiagonalUpperLeft);
 
-  QAction *tools_gradient_diaglowerleft =
-      addMenuItem(toplevel, tools_gradient, "Gradient DiagonalLowerLeft",
-                  SLOT(activate_gradient()), "",
-                  "$pwr_exe/ge_gradient_diaglowerleft.png");
+  QAction* tools_gradient_diaglowerleft = addMenuItem(toplevel, tools_gradient,
+      "Gradient DiagonalLowerLeft", SLOT(activate_gradient()), "",
+      "$pwr_exe/ge_gradient_diaglowerleft.png");
   tools_gradient_diaglowerleft->setData(glow_eGradient_DiagonalLowerLeft);
 
-  QAction *tools_gradient_diagupperright =
-      addMenuItem(toplevel, tools_gradient, "Gradient DiagonalUpperRight",
-                  SLOT(activate_gradient()), "",
-                  "$pwr_exe/ge_gradient_diagupperright.png");
+  QAction* tools_gradient_diagupperright = addMenuItem(toplevel, tools_gradient,
+      "Gradient DiagonalUpperRight", SLOT(activate_gradient()), "",
+      "$pwr_exe/ge_gradient_diagupperright.png");
   tools_gradient_diagupperright->setData(glow_eGradient_DiagonalUpperRight);
 
-  QAction *tools_gradient_diaglowerright =
-      addMenuItem(toplevel, tools_gradient, "Gradient DiagonalLowerRight",
-                  SLOT(activate_gradient()), "",
-                  "$pwr_exe/ge_gradient_diaglowerright.png");
+  QAction* tools_gradient_diaglowerright = addMenuItem(toplevel, tools_gradient,
+      "Gradient DiagonalLowerRight", SLOT(activate_gradient()), "",
+      "$pwr_exe/ge_gradient_diaglowerright.png");
   tools_gradient_diaglowerright->setData(glow_eGradient_DiagonalLowerRight);
 
-  QAction *tools_gradient_diaguptube =
-      addMenuItem(toplevel, tools_gradient, "Gradient DiagonalUpTube",
-                  SLOT(activate_gradient()), "",
-                  "$pwr_exe/ge_gradient_diaguptube.png");
+  QAction* tools_gradient_diaguptube
+      = addMenuItem(toplevel, tools_gradient, "Gradient DiagonalUpTube",
+          SLOT(activate_gradient()), "", "$pwr_exe/ge_gradient_diaguptube.png");
   tools_gradient_diaguptube->setData(glow_eGradient_DiagonalUpTube);
 
-  QAction *tools_gradient_diagdowntube =
-      addMenuItem(toplevel, tools_gradient, "Gradient DiagonalDownTube",
-                  SLOT(activate_gradient()), "",
-                  "$pwr_exe/ge_gradient_diagdowntube.png");
+  QAction* tools_gradient_diagdowntube = addMenuItem(toplevel, tools_gradient,
+      "Gradient DiagonalDownTube", SLOT(activate_gradient()), "",
+      "$pwr_exe/ge_gradient_diagdowntube.png");
   tools_gradient_diagdowntube->setData(glow_eGradient_DiagonalDownTube);
 
-  QAction *tools_gradient_globe =
-      addMenuItem(toplevel, tools_gradient, "Gradient Globe",
-                  SLOT(activate_gradient()), "",
-                  "$pwr_exe/ge_gradient_globe.png");
+  QAction* tools_gradient_globe
+      = addMenuItem(toplevel, tools_gradient, "Gradient Globe",
+          SLOT(activate_gradient()), "", "$pwr_exe/ge_gradient_globe.png");
   tools_gradient_globe->setData(glow_eGradient_Globe);
 
-  QAction *tools_gradient_radcenter =
-      addMenuItem(toplevel, tools_gradient, "Gradient RadialCenter",
-                  SLOT(activate_gradient()), "",
-                  "$pwr_exe/ge_gradient_radcenter.png");
+  QAction* tools_gradient_radcenter
+      = addMenuItem(toplevel, tools_gradient, "Gradient RadialCenter",
+          SLOT(activate_gradient()), "", "$pwr_exe/ge_gradient_radcenter.png");
   tools_gradient_radcenter->setData(glow_eGradient_RadialCenter);
 
-  QAction *tools_gradient_radupperleft =
-      addMenuItem(toplevel, tools_gradient, "Gradient RadialUpperLeft",
-                  SLOT(activate_gradient()), "",
-                  "$pwr_exe/ge_gradient_radupperleft.png");
+  QAction* tools_gradient_radupperleft = addMenuItem(toplevel, tools_gradient,
+      "Gradient RadialUpperLeft", SLOT(activate_gradient()), "",
+      "$pwr_exe/ge_gradient_radupperleft.png");
   tools_gradient_radupperleft->setData(glow_eGradient_RadialUpperLeft);
 
-  QAction *tools_gradient_radlowerleft =
-      addMenuItem(toplevel, tools_gradient, "Gradient RadialLowerLeft",
-                  SLOT(activate_gradient()), "",
-                  "$pwr_exe/ge_gradient_radlowerleft.png");
+  QAction* tools_gradient_radlowerleft = addMenuItem(toplevel, tools_gradient,
+      "Gradient RadialLowerLeft", SLOT(activate_gradient()), "",
+      "$pwr_exe/ge_gradient_radlowerleft.png");
   tools_gradient_radlowerleft->setData(glow_eGradient_RadialLowerLeft);
 
-  QAction *tools_gradient_radupperright =
-      addMenuItem(toplevel, tools_gradient, "Gradient RadialUpperRight",
-                  SLOT(activate_gradient()), "",
-                  "$pwr_exe/ge_gradient_radupperright.png");
+  QAction* tools_gradient_radupperright = addMenuItem(toplevel, tools_gradient,
+      "Gradient RadialUpperRight", SLOT(activate_gradient()), "",
+      "$pwr_exe/ge_gradient_radupperright.png");
   tools_gradient_radupperright->setData(glow_eGradient_RadialUpperRight);
 
-  QAction *tools_gradient_radlowerright =
-      addMenuItem(toplevel, tools_gradient, "Gradient RadialLowerRight",
-                  SLOT(activate_gradient()), "",
-                  "$pwr_exe/ge_gradient_radlowerright.png");
+  QAction* tools_gradient_radlowerright = addMenuItem(toplevel, tools_gradient,
+      "Gradient RadialLowerRight", SLOT(activate_gradient()), "",
+      "$pwr_exe/ge_gradient_radlowerright.png");
   tools_gradient_radlowerright->setData(glow_eGradient_RadialLowerRight);
 
   // Gradient buttons
-  QAction *tools_button_gradient_no =
-      addToolItem(toplevel, tools2, "Reset gradient on selected object",
-                  SLOT(activate_gradient()), "$pwr_exe/ge_gradient_no.png");
+  QAction* tools_button_gradient_no
+      = addToolItem(toplevel, tools2, "Reset gradient on selected object",
+          SLOT(activate_gradient()), "$pwr_exe/ge_gradient_no.png");
   tools_button_gradient_no->setData(glow_eGradient_No);
 
-  QAction *tools_button_gradient_vert =
-      addToolItem(toplevel, tools2, "Set vertical gradient on selected object",
-                  SLOT(activate_gradient()),
-                  "$pwr_exe/ge_gradient_vertright.png");
+  QAction* tools_button_gradient_vert = addToolItem(toplevel, tools2,
+      "Set vertical gradient on selected object", SLOT(activate_gradient()),
+      "$pwr_exe/ge_gradient_vertright.png");
   tools_button_gradient_vert->setData(glow_eGradient_VerticalRight);
 
-  QAction *tools_button_gradient_horiz =
-      addToolItem(toplevel, tools2, "Set horizontal gradient on selected object",
-                  SLOT(activate_gradient()),
-                  "$pwr_exe/ge_gradient_horizdown.png");
+  QAction* tools_button_gradient_horiz = addToolItem(toplevel, tools2,
+      "Set horizontal gradient on selected object", SLOT(activate_gradient()),
+      "$pwr_exe/ge_gradient_horizdown.png");
   tools_button_gradient_horiz->setData(glow_eGradient_HorizontalDown);
 
-  QAction *tools_button_gradient_diag =
-      addToolItem(toplevel, tools2, "Set diagonal gradient on selected object",
-                  SLOT(activate_gradient()),
-                  "$pwr_exe/ge_gradient_diaglowerright.png");
+  QAction* tools_button_gradient_diag = addToolItem(toplevel, tools2,
+      "Set diagonal gradient on selected object", SLOT(activate_gradient()),
+      "$pwr_exe/ge_gradient_diaglowerright.png");
   tools_button_gradient_diag->setData(glow_eGradient_DiagonalLowerRight);
 
   // Statusbar and cmd input
-  QStatusBar *statusbar = new QStatusBar();
+  QStatusBar* statusbar = new QStatusBar();
   msg_label = new QLabel(fl(""));
   msg_label->setFixedHeight(25);
   cmd_prompt = new QLabel(fl("value > "));
@@ -2000,7 +1918,7 @@ GeQt::GeQt(void *x_parent_ctx, QWidget *x_parent_widget,
   recall_entry->setFixedHeight(25);
   cursor_position = new QLabel(fl(""));
   QObject::connect(recall_entry, SIGNAL(editingFinished()), toplevel,
-                   SLOT(valchanged_cmd_entry()));
+      SLOT(valchanged_cmd_entry()));
 
   statusbar->addWidget(msg_label);
   statusbar->addWidget(cmd_prompt);
@@ -2010,12 +1928,12 @@ GeQt::GeQt(void *x_parent_ctx, QWidget *x_parent_widget,
 
   // Graph component
   int sts;
-  unsigned int opt =
-      x_options & ge_mOption_IgnoreJournal ? graph_mOption_IgnoreJournal : 0;
+  unsigned int opt
+      = x_options & ge_mOption_IgnoreJournal ? graph_mOption_IgnoreJournal : 0;
 
-  graph = new GraphQt(this, toplevel, "GraphQt", &grow_widget, &sts, "pwrp_pop:",
-                      graph_eMode_Development, 1, 0, 0, 0, 0, opt);
-  /**/showNow(grow_widget);
+  graph = new GraphQt(this, toplevel, "GraphQt", &grow_widget, &sts,
+      "pwrp_pop:", graph_eMode_Development, 1, 0, 0, 0, 0, opt);
+  /**/ showNow(grow_widget);
   graph->message_cb = &Ge::message_cb;
   graph->get_current_subgraph_cb = &Ge::subpalette_get_select;
   graph->get_current_colors_cb = &Ge::colorpalette_get_current;
@@ -2038,14 +1956,14 @@ GeQt::GeQt(void *x_parent_ctx, QWidget *x_parent_widget,
   graph->refresh_objects_cb = &Ge::refresh_objects_cb;
 
   // Vertical palette pane
-  QSplitter *vpaned1 = new QSplitter(Qt::Vertical);
-  QSplitter *vpaned2 = new QSplitter(Qt::Vertical);
+  QSplitter* vpaned1 = new QSplitter(Qt::Vertical);
+  QSplitter* vpaned2 = new QSplitter(Qt::Vertical);
 
-  QHBoxLayout *palbox = new QHBoxLayout();
+  QHBoxLayout* palbox = new QHBoxLayout();
 
   // SubGraphs palette
-  subpalette =
-      new SubPaletteQt(this, vpaned1, "SubGraphs", &subpalette_widget, &sts);
+  subpalette
+      = new SubPaletteQt(this, vpaned1, "SubGraphs", &subpalette_widget, &sts);
   subpalette->message_cb = &Ge::message_cb;
   subpalette->set_focus_cb = &Ge::set_focus_cb;
   subpalette->traverse_focus_cb = &Ge::traverse_focus;
@@ -2056,28 +1974,24 @@ GeQt::GeQt(void *x_parent_ctx, QWidget *x_parent_widget,
 
   // Color palette
   debug_print("creating a scrolledcolpalwidgetqt\n");
-  colpal_main_widget =
-      scrolledcolpalwidgetqt_new(Ge::init_colorpalette_cb, this,
-                                 &colorpalette_widget);
+  colpal_main_widget = scrolledcolpalwidgetqt_new(
+      Ge::init_colorpalette_cb, this, &colorpalette_widget);
   showNow(colpal_main_widget);
 
-#ifdef LDH
   if (ldhses) {
-    plantctx =
-        new NavQt(this, vpaned1, "Plant", ldhses, "NavigatorW1", &plant_widget,
-                  &sts);
-    ((NavQt *) plantctx)->get_plant_select_cb = Ge::get_plant_select_cb;
-    ((NavQt *) plantctx)->set_focus_cb = Ge::set_focus_cb;
-    ((NavQt *) plantctx)->traverse_focus_cb = Ge::traverse_focus;
+    plantctx = new NavQt(
+        this, vpaned1, "Plant", ldhses, "NavigatorW1", &plant_widget, &sts);
+    ((NavQt*)plantctx)->get_plant_select_cb = Ge::get_plant_select_cb;
+    ((NavQt*)plantctx)->set_focus_cb = Ge::set_focus_cb;
+    ((NavQt*)plantctx)->traverse_focus_cb = Ge::traverse_focus;
     add_expanding(palbox, plant_widget);
   }
-#endif
 
-  QSplitter *hpaned2 = new QSplitter(Qt::Horizontal);
+  QSplitter* hpaned2 = new QSplitter(Qt::Horizontal);
   hpaned3 = new QSplitter(Qt::Horizontal);
 
   objectnav = new AttrQt(hpaned3, this, attr_eType_ObjectTree, 0, 0, 0);
-  objectnav_w = ((AttrQt *) objectnav)->brow_widget;
+  objectnav_w = ((AttrQt*)objectnav)->brow_widget;
   assert(objectnav_w != NULL);
   objectnav->set_graph(graph);
   objectnav->close_cb = graph_attr_close_cb;
@@ -2099,17 +2013,17 @@ GeQt::GeQt(void *x_parent_ctx, QWidget *x_parent_widget,
   add_expanding(vpaned1, palbox);
   vpaned1->addWidget(colpal_main_widget);
 
-  ((GraphQt *) graph)->create_navigator(vpaned1);
+  ((GraphQt*)graph)->create_navigator(vpaned1);
   add_expanding(vpaned2, vpaned1);
-  vpaned1->addWidget(((GraphQt *) graph)->nav_widget);
-  showNow(((GraphQt *) graph)->nav_widget);
+  vpaned1->addWidget(((GraphQt*)graph)->nav_widget);
+  showNow(((GraphQt*)graph)->nav_widget);
 
   // Horizontal pane
-  QSplitter *hpaned = new QSplitter(Qt::Horizontal);
+  QSplitter* hpaned = new QSplitter(Qt::Horizontal);
   add_expanding(hpaned, grow_widget);
   hpaned->addWidget(vpaned2);
 
-  GeItemViewQt *item_view = new GeItemViewQt(this);
+  GeItemViewQt* item_view = new GeItemViewQt(this);
   graph_list = item_view->widget();
 
   hpaned3->addWidget(graph_list);
@@ -2118,7 +2032,7 @@ GeQt::GeQt(void *x_parent_ctx, QWidget *x_parent_widget,
   hpaned2->addWidget(hpaned3);
   add_expanding(hpaned2, hpaned);
 
-  QVBoxLayout *vbox = new QVBoxLayout(toplevel);
+  QVBoxLayout* vbox = new QVBoxLayout(toplevel);
   vbox->setMenuBar(menu_bar);
   vbox->addWidget(tools3);
   vbox->addWidget(tools2);
@@ -2139,11 +2053,9 @@ GeQt::GeQt(void *x_parent_ctx, QWidget *x_parent_widget,
   set_pane_position(vpaned1, -380);
   set_pane_position(vpaned2, -290);
 
-#ifdef LDH
   if (ldhses) {
     plant_widget->setVisible(false);
   }
-#endif
   cmd_prompt->setVisible(false);
   recall_entry->setVisible(false);
 

@@ -36,23 +36,10 @@
 
 /* cow_pb_gsd_attr_qt.cpp -- Display gsd attributes */
 
-#include "glow_std.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "co_cdh.h"
-#include "co_time.h"
-#include "co_dcli.h"
-#include "cow_wow_qt.h"
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
-#include "glow.h"
-#include "glow_growctx.h"
-#include "glow_growapi.h"
-#include "flow_msg.h"
 #include "rt_pb_msg.h"
+
+#include "cow_qt_helpers.h"
+
 #include "cow_pb_gsd_attr_qt.h"
 #include "cow_pb_gsd_attrnav_qt.h"
 
@@ -61,12 +48,12 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-void GsdAttrQt::message(char severity, const char *message)
+void GsdAttrQt::message(char severity, const char* message)
 {
   msg_label->setText(fl(message));
 }
 
-void GsdAttrQt::set_prompt(const char *prompt)
+void GsdAttrQt::set_prompt(const char* prompt)
 {
   if (strcmp(prompt, "") == 0) {
     cmd_prompt->setVisible(false);
@@ -91,7 +78,7 @@ void GsdAttrQt::change_value()
     return;
   }
 
-  char *value;
+  char* value;
   int sts = attrnav->check_attr_value(&value);
   if (EVEN(sts)) {
     if (sts == PB__NOATTRSEL) {
@@ -125,6 +112,11 @@ void GsdAttrQt::change_value()
 void GsdAttrQtWidget::activate_change_value()
 {
   attr->change_value();
+}
+
+void GsdAttrQtWidget::activate_exit()
+{
+  attr->activate_exit();
 }
 
 void GsdAttrQtWidget::activate_help()
@@ -198,7 +190,7 @@ void GsdAttrQtWidget::activate_cmd_input()
   }
 }
 
-void GsdAttrQtWidget::focusInEvent(QFocusEvent *event)
+void GsdAttrQtWidget::focusInEvent(QFocusEvent* event)
 {
   if (!attr->focustimer.disabled()) {
     if (attr->cmd_input->isVisible()) {
@@ -213,14 +205,14 @@ void GsdAttrQtWidget::focusInEvent(QFocusEvent *event)
   QWidget::focusInEvent(event);
 }
 
-void GsdAttrQtWidget::closeEvent(QCloseEvent *event)
+void GsdAttrQtWidget::closeEvent(QCloseEvent* event)
 {
   attr->activate_exit();
   QWidget::closeEvent(event);
 }
 
-GsdAttrQt::GsdAttrQt(QWidget *a_parent_wid, void *a_parent_ctx, void *a_object,
-                     pb_gsd *a_gsd, int a_edit_mode)
+GsdAttrQt::GsdAttrQt(QWidget* a_parent_wid, void* a_parent_ctx, void* a_object,
+    pb_gsd* a_gsd, int a_edit_mode)
     : GsdAttr(a_parent_ctx, a_object, a_gsd, a_edit_mode)
 {
   int sts;
@@ -231,53 +223,51 @@ GsdAttrQt::GsdAttrQt(QWidget *a_parent_wid, void *a_parent_ctx, void *a_object,
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
   // Menu
-  QMenuBar *menu_bar = new QMenuBar();
+  QMenuBar* menu_bar = new QMenuBar();
 
   // File entry
-  QMenu *file = menu_bar->addMenu(translate_utf8("&File"));
-  addMenuItem(toplevel, file, "&Print", SLOT(activate_print()), "",
-              "document-print");
-  addMenuItem(toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+  QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
+  addMenuItem(
+      toplevel, file, "&Print", SLOT(activate_print()), "", "document-print");
+  addMenuItem(
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
   // Edit entry
-  QMenu *edit = menu_bar->addMenu(translate_utf8("&Edit"));
-  menubutton_copy =
-      addMenuItem(toplevel, edit, "&Copy", SLOT(activate_copy()), "CTRL+C",
-                  "edit-copy");
-  menubutton_cut =
-      addMenuItem(toplevel, edit, "&Cut", SLOT(activate_cut()), "CTRL+X",
-                  "edit-cut");
-  menubutton_paste =
-      addMenuItem(toplevel, edit, "&Paste", SLOT(activate_paste()), "CTRL+V",
-                  "edit-paste");
+  QMenu* edit = menu_bar->addMenu(translate_utf8("&Edit"));
+  menubutton_copy = addMenuItem(
+      toplevel, edit, "&Copy", SLOT(activate_copy()), "CTRL+C", "edit-copy");
+  menubutton_cut = addMenuItem(
+      toplevel, edit, "&Cut", SLOT(activate_cut()), "CTRL+X", "edit-cut");
+  menubutton_paste = addMenuItem(
+      toplevel, edit, "&Paste", SLOT(activate_paste()), "CTRL+V", "edit-paste");
 
   // Functions entry
-  QMenu *functions = menu_bar->addMenu(translate_utf8("F&unctions"));
+  QMenu* functions = menu_bar->addMenu(translate_utf8("F&unctions"));
   menubutton_changevalue = addMenuItem(toplevel, functions, "&Change Value",
-                                       SLOT(activate_change_value()), "CTRL+Q");
+      SLOT(activate_change_value()), "CTRL+Q");
 
   // View Entry
-  QMenu *view = menu_bar->addMenu(translate_utf8("&View"));
+  QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
   addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoom_in()), "CTRL+I",
-              "zoom-in");
+      "zoom-in");
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
-              "zoom-out");
+      "zoom-out");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "",
-              "zoom-reset");
+      "zoom-reset");
 
   // Help entry
-  QMenu *help = menu_bar->addMenu(translate_utf8("&Help"));
-  addMenuItem(toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H",
-              "system-help");
+  QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
+  addMenuItem(
+      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "system-help");
 
   // Navigator
-  attrnav =
-      new GsdAttrNavQt(this, toplevel, "Plant", gsd, edit_mode, &brow_widget, &sts);
+  attrnav = new GsdAttrNavQt(
+      this, toplevel, "Plant", gsd, edit_mode, &brow_widget, &sts);
   attrnav->message_cb = &GsdAttr::gsdattr_message;
   attrnav->change_value_cb = &GsdAttr::gsdattr_change_value_cb;
 
   // Status bar and value input
-  QStatusBar *statusbar = new QStatusBar();
+  QStatusBar* statusbar = new QStatusBar();
   msg_label = new QLabel("");
   msg_label->setFixedHeight(25);
   cmd_prompt = new QLabel("value > ");
@@ -286,14 +276,14 @@ GsdAttrQt::GsdAttrQt(QWidget *a_parent_wid, void *a_parent_ctx, void *a_object,
   cmd_input = new QLineEdit();
   cmd_input->setFixedHeight(25);
   QObject::connect(cmd_input, SIGNAL(editing_finished()), toplevel,
-                   SLOT(valchanged_cmd_input()));
+      SLOT(valchanged_cmd_input()));
 
   statusbar->addWidget(msg_label);
   statusbar->addWidget(cmd_prompt);
   add_expanding(statusbar, cmd_input);
 
   // Apply and Ok buttons
-  QDialogButtonBox *buttons = new QDialogButtonBox();
+  QDialogButtonBox* buttons = new QDialogButtonBox();
   buttons->addButton(QDialogButtonBox::Ok);
   buttons->button(QDialogButtonBox::Ok)->setFixedSize(70, 25);
   buttons->addButton(QDialogButtonBox::Apply);
@@ -301,13 +291,13 @@ GsdAttrQt::GsdAttrQt(QWidget *a_parent_wid, void *a_parent_ctx, void *a_object,
   buttons->addButton(QDialogButtonBox::Cancel);
   buttons->button(QDialogButtonBox::Cancel)->setFixedSize(70, 25);
   QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
-                   toplevel, SLOT(activate_cmd_ok()));
+      toplevel, SLOT(activate_cmd_ok()));
   QObject::connect(buttons->button(QDialogButtonBox::Apply), SIGNAL(clicked()),
-                   toplevel, SLOT(activate_cmd_apply()));
+      toplevel, SLOT(activate_cmd_apply()));
   QObject::connect(buttons->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
-                   toplevel, SLOT(activate_cmd_ca()));
+      toplevel, SLOT(activate_cmd_ca()));
 
-  QVBoxLayout *vbox = new QVBoxLayout(toplevel);
+  QVBoxLayout* vbox = new QVBoxLayout(toplevel);
   vbox->setMenuBar(menu_bar);
   add_expanding(vbox, brow_widget);
   vbox->addWidget(statusbar);

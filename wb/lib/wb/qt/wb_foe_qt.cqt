@@ -39,36 +39,27 @@
 //   the graphical editor.
 
 #include <math.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "flow.h"
-#include "flow_ctx.h"
-#include "flow_browapi.h"
-#include "pwr.h"
 #include "pwr_baseclasses.h"
-#include "co_cdh.h"
-#include "co_dcli.h"
-#include "wb_ldh.h"
-#include "wb_foe_msg.h"
-#include "wb_vldh_msg.h"
-#include "wb_vldh.h"
-#include "wb_log.h"
 
+#include "cow_logw_qt.h"
+#include "cow_qt_helpers.h"
+
+#include "wb_foe_msg.h"
+#include "wb_foe_qt.h"
+#include "wb_gre_qt.h"
+#include "wb_log.h"
+#include "wb_nav_qt.h"
+#include "wb_pal_qt.h"
 #include "wb_watt_qt.h"
 #include "wb_watttext_qt.h"
-#include "wb_gre_qt.h"
-#include "wb_foe_qt.h"
-#include "cow_login.h"
-#include "wb_pal_qt.h"
-#include "wb_nav_qt.h"
-#include "cow_wow_qt.h"
-#include "cow_logw_qt.h"
 
 #include <QHBoxLayout>
 #include <QMenu>
 #include <QMenuBar>
+#include <QMessageBox>
 #include <QTimer>
 
 void WFoeQtWidget::activate_save()
@@ -109,12 +100,14 @@ void WFoeQtWidget::activate_history()
   strcpy(categories[2], "");
 
   sts = ldh_ObjidToName(foe->gre->wind->hw.ldhses, foe->gre->wind->lw.oid,
-                        ldh_eName_VolPath, wname, sizeof(wname), &size);
-  if (EVEN(sts)) { return; }
+      ldh_eName_VolPath, wname, sizeof(wname), &size);
+  if (EVEN(sts)) {
+    return;
+  }
 
   strcpy(title, "History ");
   strcat(title, wname);
-  CoLogWQt *logw = new CoLogWQt(this, this, title, 0, &sts);
+  CoLogWQt* logw = new CoLogWQt(this, this, title, 0, &sts);
   logw->CoLogW::show(categories, wname);
 }
 
@@ -127,8 +120,7 @@ void WFoeQtWidget::activate_printdialog()
 {
   pwr_tStatus sts;
   CoWowQt::CreateFlowPrintDialogQt("PlcEditor", foe->gre->flow_ctx,
-                                   flow_eOrientation_Landscape, 1.0,
-                                   this, &sts);
+      flow_eOrientation_Landscape, 1.0, this, &sts);
 }
 
 void WFoeQtWidget::activate_printoverv()
@@ -170,9 +162,9 @@ void WFoeQtWidget::activate_createobject()
 {
   double x, y;
 
-  foe->gre->pixel_to_position(foe->gre->popup_menu_x, foe->gre->popup_menu_y,
-                              &x, &y);
-  foe->activate_createobject((float) x, (float) y);
+  foe->gre->pixel_to_position(
+      foe->gre->popup_menu_x, foe->gre->popup_menu_y, &x, &y);
+  foe->activate_createobject((float)x, (float)y);
 }
 
 void WFoeQtWidget::activate_changetext()
@@ -198,31 +190,31 @@ void WFoeQtWidget::activate_paste()
 void WFoeQtWidget::activate_select_next()
 {
   foe->activate_select_nextobject(
-      static_cast<flow_eDirection>(((QAction *) sender())->data().toInt()));
+      static_cast<flow_eDirection>(((QAction*)sender())->data().toInt()));
 }
 
 void WFoeQtWidget::activate_select_addnext()
 {
   foe->activate_select_addnextobject(
-      static_cast<flow_eDirection>(((QAction *) sender())->data().toInt()));
+      static_cast<flow_eDirection>(((QAction*)sender())->data().toInt()));
 }
 
 void WFoeQtWidget::activate_select_cp_next()
 {
   foe->activate_select_nextconpoint(
-      static_cast<flow_eDirection>(((QAction *) sender())->data().toInt()));
+      static_cast<flow_eDirection>(((QAction*)sender())->data().toInt()));
 }
 
 void WFoeQtWidget::activate_scroll()
 {
   foe->activate_scroll(
-      static_cast<flow_eDirection>(((QAction *) sender())->data().toInt()));
+      static_cast<flow_eDirection>(((QAction*)sender())->data().toInt()));
 }
 
 void WFoeQtWidget::activate_move()
 {
   foe->activate_move_object(
-      static_cast<flow_eDirection>(((QAction *) sender())->data().toInt()));
+      static_cast<flow_eDirection>(((QAction*)sender())->data().toInt()));
 }
 
 void WFoeQtWidget::activate_attribute()
@@ -268,7 +260,7 @@ void WFoeQtWidget::activate_conpoint_lock()
 // Sets gridsize.
 void WFoeQtWidget::activate_gridsize()
 {
-  foe->gre->set_grid_size(((QAction *) sender())->data().toDouble());
+  foe->gre->set_grid_size(((QAction*)sender())->data().toDouble());
 }
 
 void WFoeQtWidget::activate_showgrid()
@@ -365,7 +357,7 @@ void WFoeQtWidget::activate_palette_plant()
 }
 
 void WFoeQtWidget::activate_refcon(bool set)
-{ 
+{
   foe->activate_refcon(set);
 }
 
@@ -375,7 +367,7 @@ void WFoeQtWidget::activate_showexeord(bool set)
 }
 
 void WFoeQtWidget::activate_plcattribute()
-{  
+{
   foe->activate_plcattribute();
 }
 
@@ -518,18 +510,17 @@ void WFoeQtWidget::popup_unmap_cb()
 int WFoeQt::modify_popup(unsigned long popupmenu_mask, int x, int y)
 {
   static const int bsize = 12;
-  static char buttontext[bsize][40] =
-      {"ObjectEditor", "SubWindow", "Connect", "Delete", "Paste", "Copy", "Cut",
-       "PrintSelect", "HelpClass", "CreateObject", "EditCode", "EditText"};
-  static QString menu_callbacks[bsize] =
-      {SLOT(activate_attribute()), SLOT(activate_subwindow()),
-       SLOT(activate_getobj()), SLOT(activate_delete()), SLOT(activate_paste()),
-       SLOT(activate_copy()), SLOT(activate_cut()),
-       SLOT(activate_printselect()), SLOT(activate_helpclass()),
-       SLOT(activate_createobject()), SLOT(activate_editcode()),
-       SLOT(activate_editcode())};
+  static char buttontext[bsize][40] = { "ObjectEditor", "SubWindow", "Connect",
+    "Delete", "Paste", "Copy", "Cut", "PrintSelect", "HelpClass",
+    "CreateObject", "EditCode", "EditText" };
+  static QString menu_callbacks[bsize] = { SLOT(activate_attribute()),
+    SLOT(activate_subwindow()), SLOT(activate_getobj()),
+    SLOT(activate_delete()), SLOT(activate_paste()), SLOT(activate_copy()),
+    SLOT(activate_cut()), SLOT(activate_printselect()),
+    SLOT(activate_helpclass()), SLOT(activate_createobject()),
+    SLOT(activate_editcode()), SLOT(activate_editcode()) };
 
-  QMenu *menu = new QMenu(toplevel);
+  QMenu* menu = new QMenu(toplevel);
   for (int i = 0; i < bsize; i++) {
     if (popupmenu_mask & (1 << i)) {
       QByteArray ba = menu_callbacks[i].toLocal8Bit();
@@ -537,15 +528,15 @@ int WFoeQt::modify_popup(unsigned long popupmenu_mask, int x, int y)
     }
   }
 
-  QObject::connect(menu, SIGNAL(aboutToHide()), toplevel,
-                   SLOT(popup_unmap_cb()));
+  QObject::connect(
+      menu, SIGNAL(aboutToHide()), toplevel, SLOT(popup_unmap_cb()));
   menu->popup(QPoint(x + 5, y));
   popupmenu = menu;
 
   return FOE__SUCCESS;
 }
 
-void WFoeQtWidget::focusInEvent(QFocusEvent *event)
+void WFoeQtWidget::focusInEvent(QFocusEvent* event)
 {
   if (!foe->focustimer.disabled()) {
     if (foe->nav_palette_managed) {
@@ -565,20 +556,19 @@ void WFoeQtWidget::focusInEvent(QFocusEvent *event)
 // Start the attribute editor and store the attribute context pointer
 // together with WFoe and the nodepointer to use when a backcall
 // comes.
-WAtt *WFoeQt::watt_new(void *a_parent_ctx, ldh_tSesContext a_ldhses,
-                       pwr_sAttrRef a_aref, int a_editmode, int a_advanced_user,
-                       int a_display_objectname)
+WAtt* WFoeQt::watt_new(void* a_parent_ctx, ldh_tSesContext a_ldhses,
+    pwr_sAttrRef a_aref, int a_editmode, int a_advanced_user,
+    int a_display_objectname)
 {
   return new WAttQt(toplevel->parentWidget(), a_parent_ctx, a_ldhses, a_aref,
-                    a_editmode, a_advanced_user, a_display_objectname);
+      a_editmode, a_advanced_user, a_display_objectname);
 }
 
-WAttText *WFoeQt::watttext_new(void *a_parent_ctx, ldh_tSesContext a_ldhses,
-                               pwr_sAttrRef a_aref, int a_editmode,
-                               pwr_tStatus *status)
+WAttText* WFoeQt::watttext_new(void* a_parent_ctx, ldh_tSesContext a_ldhses,
+    pwr_sAttrRef a_aref, int a_editmode, pwr_tStatus* status)
 {
-  return new WAttTextQt(toplevel->parentWidget(), a_parent_ctx, a_ldhses, a_aref,
-                        a_editmode, status);
+  return new WAttTextQt(toplevel->parentWidget(), a_parent_ctx, a_ldhses,
+      a_aref, a_editmode, status);
 }
 
 // Destroys a foe instance.
@@ -603,18 +593,15 @@ void WFoeQt::set_title()
   }
 }
 
-WFoe *WFoeQt::subwindow_new(void *f_parent_ctx, char *f_name,
-                            pwr_tObjid plcprogram, ldh_tWBContext ldhwbctx,
-                            ldh_tSesContext ldhsesctx, vldh_t_node nodeobject,
-                            unsigned long windowindex, unsigned long new_window,
-                            int f_map_window, ldh_eAccess f_access,
-                            foe_eFuncAccess function_access,
-                            unsigned int f_options, pwr_tStatus *sts)
+WFoe* WFoeQt::subwindow_new(void* f_parent_ctx, char* f_name,
+    pwr_tObjid plcprogram, ldh_tWBContext ldhwbctx, ldh_tSesContext ldhsesctx,
+    vldh_t_node nodeobject, unsigned long windowindex, unsigned long new_window,
+    int f_map_window, ldh_eAccess f_access, foe_eFuncAccess function_access,
+    unsigned int f_options, pwr_tStatus* sts)
 {
-  WFoeQt *foe =
-      new WFoeQt(f_parent_ctx, foe_window, f_name, plcprogram, ldhwbctx,
-                 ldhsesctx, nodeobject, windowindex, new_window, f_map_window,
-                 f_access, function_access, f_options, sts);
+  WFoeQt* foe = new WFoeQt(f_parent_ctx, foe_window, f_name, plcprogram,
+      ldhwbctx, ldhsesctx, nodeobject, windowindex, new_window, f_map_window,
+      f_access, function_access, f_options, sts);
   if (ODD(*sts)) {
     get_build_options_cb = get_build_options_subwindow_cb;
   }
@@ -629,14 +616,16 @@ WFoe *WFoeQt::subwindow_new(void *f_parent_ctx, char *f_name,
 //    	To avoid unnecessary call to this routine the context variable :
 //     	foe.msg_label_id is set to null if the the message to be displayed
 //     	is "" . This case occurs when you want to erase a previous message.
-void WFoeQt::message(const char *new_label)
+void WFoeQt::message(const char* new_label)
 {
   int l;
 
   gre->search_rectangle_delete();
   l = strlen(new_label);
   msg_label_id = (l != 0);
-  if (l == 0) { new_label = " "; }
+  if (l == 0) {
+    new_label = " ";
+  }
   label->setText(QString::fromLatin1(new_label));
 }
 
@@ -645,7 +634,7 @@ void WFoeQt::message(const char *new_label)
 // be sure that the user see the message.
 // Author: SG
 // Date : 24.02.91
-void WFoeQt::msgbox(const char *new_label)
+void WFoeQt::msgbox(const char* new_label)
 {
   wow->DisplayError("Message", new_label);
 }
@@ -655,18 +644,15 @@ void WFoeQt::msgbox(const char *new_label)
 // be executed when the yes button is pressed in the caution box.
 // Author: SG
 // Date : 13.02.91
-void WFoeQt::popupmsg(const char *new_label, void (*yes_procedure)(WFoe *),
-                      void (*no_procedure)(WFoe *),
-                      void (*cancel_procedure)(WFoe *))
+void WFoeQt::popupmsg(const char* new_label, void (*yes_procedure)(WFoe*),
+    void (*no_procedure)(WFoe*), void (*cancel_procedure)(WFoe*))
 {
   popupmsg_yes_p = yes_procedure;
   popupmsg_no_p = no_procedure;
   popupmsg_cancel_p = cancel_procedure;
-  QMessageBox::StandardButton reply =
-      QMessageBox::question(toplevel, fl("Confirm"),
-                            QString::fromLatin1(new_label),
-                            QMessageBox::Yes | QMessageBox::No
-                            | QMessageBox::Cancel);
+  QMessageBox::StandardButton reply = QMessageBox::question(toplevel,
+      fl("Confirm"), QString::fromLatin1(new_label),
+      QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
   if (reply == QMessageBox::Yes) {
     if (popupmsg_yes_p != NULL) {
       (popupmsg_yes_p)(this);
@@ -682,51 +668,53 @@ void WFoeQt::popupmsg(const char *new_label, void (*yes_procedure)(WFoe *),
   }
 }
 
-WFoeQt::WFoeQt(void *f_parent_ctx, QWidget *f_parent_wid, const char *f_name,
-               pwr_tObjid plcprogram, ldh_tWBContext ldhwbctx,
-               ldh_tSesContext ldhsesctx, vldh_t_node nodeobject,
-               unsigned long windowindex, unsigned long new_window,
-               int f_map_window, ldh_eAccess f_access,
-               foe_eFuncAccess function_access, unsigned int f_options,
-               pwr_tStatus *sts)
+WFoeQt::WFoeQt(void* f_parent_ctx, QWidget* f_parent_wid, const char* f_name,
+    pwr_tObjid plcprogram, ldh_tWBContext ldhwbctx, ldh_tSesContext ldhsesctx,
+    vldh_t_node nodeobject, unsigned long windowindex, unsigned long new_window,
+    int f_map_window, ldh_eAccess f_access, foe_eFuncAccess function_access,
+    unsigned int f_options, pwr_tStatus* sts)
     : WFoe(f_parent_ctx, f_name, plcprogram, ldhwbctx, ldhsesctx, nodeobject,
-           windowindex, new_window, f_map_window, f_access, function_access,
-           f_options, sts)
+          windowindex, new_window, f_map_window, f_access, function_access,
+          f_options, sts)
 {
   *sts = new_local(plcprogram, ldhwbctx, ldhsesctx, nodeobject, windowindex,
-                   new_window, function_access);
+      new_window, function_access);
 
   toplevel = new WFoeQtWidget(this, f_parent_wid);
   wow = new CoWowQt(toplevel);
 }
 
-WFoeQt::WFoeQt(void *f_parent_ctx, QWidget *f_parent_wid, const char *f_name,
-               pwr_tObjid plcprogram, ldh_tWBContext ldhwbctx,
-               ldh_tSesContext ldhsesctx, int f_map_window,
-               ldh_eAccess f_access, unsigned int f_options, pwr_tStatus *sts)
+WFoeQt::WFoeQt(void* f_parent_ctx, QWidget* f_parent_wid, const char* f_name,
+    pwr_tObjid plcprogram, ldh_tWBContext ldhwbctx, ldh_tSesContext ldhsesctx,
+    int f_map_window, ldh_eAccess f_access, unsigned int f_options,
+    pwr_tStatus* sts)
     : WFoe(f_parent_ctx, f_name, plcprogram, ldhwbctx, ldhsesctx, f_map_window,
-           f_access, f_options, sts)
+          f_access, f_options, sts)
 {
   int size;
   pwr_tFullName new_name;
   ldh_tSesContext ldhses;
 
   /* Check that it is possible to open a session */
-  *sts = ldh_OpenSession(&ldhses, ldh_SessionToVol(ldhsesctx), access,
-                         ldh_eUtility_PlcEditor);
-  if (EVEN(*sts)) { return; }
+  *sts = ldh_OpenSession(
+      &ldhses, ldh_SessionToVol(ldhsesctx), access, ldh_eUtility_PlcEditor);
+  if (EVEN(*sts)) {
+    return;
+  }
 
   *sts = ldh_CloseSession(ldhses);
 
   /* New title */
   *sts = ldh_ObjidToName(ldhsesctx, plcprogram, ldh_eName_Hierarchy, new_name,
-                         sizeof(new_name), &size);
+      sizeof(new_name), &size);
   error_msg(*sts);
-  if (EVEN(*sts)) { return; }
+  if (EVEN(*sts)) {
+    return;
+  }
 
   strcpy(name, new_name);
-  *sts =
-      new_local(plcprogram, ldhwbctx, ldhsesctx, 0, 0, 0, foe_eFuncAccess_Edit);
+  *sts = new_local(
+      plcprogram, ldhwbctx, ldhsesctx, 0, 0, 0, foe_eFuncAccess_Edit);
 
   toplevel = new WFoeQtWidget(this, f_parent_wid);
   wow = new CoWowQt(toplevel);
@@ -738,7 +726,7 @@ void WFoeQt::pop()
   ::pop(toplevel);
 }
 
-void WFoeQtWidget::closeEvent(QCloseEvent *event)
+void WFoeQtWidget::closeEvent(QCloseEvent* event)
 {
   foe->activate_quit();
   QWidget::closeEvent(event);
@@ -758,8 +746,7 @@ void WFoeQtWidget::closeEvent(QCloseEvent *event)
 // SG 2.05.91 New parameter : function ( edit , trace , view , simulate ..)
 // to indicate which neted events and which menu entries should be alllowed.
 pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
-                                  int height_adb, ldh_tSesContext ldhsession,
-                                  foe_eFuncAccess function_access)
+    int height_adb, ldh_tSesContext ldhsession, foe_eFuncAccess function_access)
 {
   pwr_tStatus sts;
 
@@ -769,319 +756,299 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
 
   CoWowQt::SetWindowIcon(toplevel);
 
-  QMenuBar *menu_bar = new QMenuBar();
+  QMenuBar* menu_bar = new QMenuBar();
 
   // File Entry
-  QMenu *file = menu_bar->addMenu(translate_utf8("&File"));
-  save = addMenuItem(toplevel, file, "Save", SLOT(activate_save()), "",
-                     "document-save");
+  QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
+  save = addMenuItem(
+      toplevel, file, "Save", SLOT(activate_save()), "", "document-save");
 
   // Submenu Print
-  QMenu *file_print = file->addMenu(translate_utf8("&Print"));
+  QMenu* file_print = file->addMenu(translate_utf8("&Print"));
   addMenuItem(toplevel, file_print, "&Print...", SLOT(activate_printdialog()));
   addMenuItem(toplevel, file_print, "&Documents", SLOT(activate_print()));
   addMenuItem(toplevel, file_print, "&Overview", SLOT(activate_printoverv()));
   addMenuItem(toplevel, file_print, "&Selected Documents",
-              SLOT(activate_printselect()));
+      SLOT(activate_printselect()));
   addMenuItem(toplevel, file_print, "To Pdf &File", SLOT(activate_printpdf()));
 
-  syntax = addMenuItem(toplevel, file, "Synta&x Check", SLOT(activate_syntax()));
+  syntax
+      = addMenuItem(toplevel, file, "Synta&x Check", SLOT(activate_syntax()));
   compile = addMenuItem(toplevel, file, "&Build", SLOT(activate_compile()),
-                        "CTRL+SHIFT+B", "system-run");
-  plcattribute = addMenuItem(toplevel, file, "Plc &Attributes...",
-                             SLOT(activate_plcattribute()));
-  winddelete =
-      addMenuItem(toplevel, file, "&Delete Window", SLOT(activate_winddelete()));
-  savetrace =
-      addMenuItem(toplevel, file, "Save &Trace", SLOT(activate_savetrace()));
-  restoretrace =
-      addMenuItem(toplevel, file, "&Restore Trace", SLOT(activate_restoretrace()));
+      "CTRL+SHIFT+B", "system-run");
+  plcattribute = addMenuItem(
+      toplevel, file, "Plc &Attributes...", SLOT(activate_plcattribute()));
+  winddelete = addMenuItem(
+      toplevel, file, "&Delete Window", SLOT(activate_winddelete()));
+  savetrace
+      = addMenuItem(toplevel, file, "Save &Trace", SLOT(activate_savetrace()));
+  restoretrace = addMenuItem(
+      toplevel, file, "&Restore Trace", SLOT(activate_restoretrace()));
   addMenuItem(toplevel, file, "&History", SLOT(activate_history()));
-  exit = addMenuItem(toplevel, file, "&Close", SLOT(close()), "CTRL+W",
-                     "window-close");
+  exit = addMenuItem(
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
   // Edit Entry
-  QMenu *edit = menu_bar->addMenu(translate_utf8("&Edit"));
-  undelete = addMenuItem(toplevel, edit, "&Undo Delete", SLOT(activate_undelete()));
+  QMenu* edit = menu_bar->addMenu(translate_utf8("&Edit"));
+  undelete
+      = addMenuItem(toplevel, edit, "&Undo Delete", SLOT(activate_undelete()));
 
-  createnode =
-      addMenuItem(toplevel, edit, "&Create Object", SLOT(activate_createnode()),
-                  "ALT+D");
-  createcon =
-      addMenuItem(toplevel, edit, "C&reate Connection", SLOT(activate_createcon()),
-                  "CTRL+D");
-  connectA =
-      addMenuItem(toplevel, edit, "C&onnect", SLOT(activate_getobj()), "CTRL+Q");
+  createnode = addMenuItem(
+      toplevel, edit, "&Create Object", SLOT(activate_createnode()), "ALT+D");
+  createcon = addMenuItem(toplevel, edit, "C&reate Connection",
+      SLOT(activate_createcon()), "CTRL+D");
+  connectA = addMenuItem(
+      toplevel, edit, "C&onnect", SLOT(activate_getobj()), "CTRL+Q");
   lockconpoint = addMenuItem(toplevel, edit, "&Lock ConnectionPoint Selection",
-                             SLOT(activate_conpoint_lock()), "CTRL+SHIFT+D");
-  cut = addMenuItem(toplevel, edit, "&Cut", SLOT(activate_cut()), "CTRL+X",
-                    "edit-cut");
-  copy = addMenuItem(toplevel, edit, "&Copy", SLOT(activate_copy()), "CTRL+C",
-                     "edit-copy");
-  paste = addMenuItem(toplevel, edit, "&Paste", SLOT(activate_paste()), "CTRL+V",
-                      "edit-paste");
+      SLOT(activate_conpoint_lock()), "CTRL+SHIFT+D");
+  cut = addMenuItem(
+      toplevel, edit, "&Cut", SLOT(activate_cut()), "CTRL+X", "edit-cut");
+  copy = addMenuItem(
+      toplevel, edit, "&Copy", SLOT(activate_copy()), "CTRL+C", "edit-copy");
+  paste = addMenuItem(
+      toplevel, edit, "&Paste", SLOT(activate_paste()), "CTRL+V", "edit-paste");
   del = addMenuItem(toplevel, edit, "&Delete", SLOT(activate_delete_confirm()),
-                    "Delete", "edit-delete");
+      "Delete", "edit-delete");
 
   // Edit Select submenu
-  QMenu *edit_select = edit->addMenu(translate_utf8("Select"));
-  unselect = addMenuItem(toplevel, edit_select, "&Reset", SLOT(activate_unselect()),
-                         "ALT+Z");
-  QAction *a =
-      addMenuItem(toplevel, edit_select, "Next Right", SLOT(activate_select_next()),
-                  "SHIFT+Right");
+  QMenu* edit_select = edit->addMenu(translate_utf8("Select"));
+  unselect = addMenuItem(
+      toplevel, edit_select, "&Reset", SLOT(activate_unselect()), "ALT+Z");
+  QAction* a = addMenuItem(toplevel, edit_select, "Next Right",
+      SLOT(activate_select_next()), "SHIFT+Right");
   a->setData(flow_eDirection_Right);
-  a = addMenuItem(toplevel, edit_select, "Next Left", SLOT(activate_select_next()),
-                  "SHIFT+Left");
+  a = addMenuItem(toplevel, edit_select, "Next Left",
+      SLOT(activate_select_next()), "SHIFT+Left");
   a->setData(flow_eDirection_Left);
-  a = addMenuItem(toplevel, edit_select, "Next Up", SLOT(activate_select_next()),
-                  "SHIFT+Up");
+  a = addMenuItem(toplevel, edit_select, "Next Up",
+      SLOT(activate_select_next()), "SHIFT+Up");
   a->setData(flow_eDirection_Up);
-  a = addMenuItem(toplevel, edit_select, "Next Down", SLOT(activate_select_next()),
-                  "SHIFT+Down");
+  a = addMenuItem(toplevel, edit_select, "Next Down",
+      SLOT(activate_select_next()), "SHIFT+Down");
   a->setData(flow_eDirection_Down);
 
   select_addnextright = addMenuItem(toplevel, edit_select, "Add Next Right",
-                                    SLOT(activate_select_addnext()),
-                                    "ALT+SHIFT+Right");
+      SLOT(activate_select_addnext()), "ALT+SHIFT+Right");
   select_addnextright->setData(flow_eDirection_Right);
   select_addnextleft = addMenuItem(toplevel, edit_select, "Add Next Left",
-                                   SLOT(activate_select_addnext()),
-                                   "ALT+SHIFT+Left");
+      SLOT(activate_select_addnext()), "ALT+SHIFT+Left");
   select_addnextleft->setData(flow_eDirection_Left);
   select_addnextup = addMenuItem(toplevel, edit_select, "Add Next Up",
-                                 SLOT(activate_select_addnext()),
-                                 "ALT+SHIFT+Up");
+      SLOT(activate_select_addnext()), "ALT+SHIFT+Up");
   select_addnextup->setData(flow_eDirection_Up);
   select_addnextdown = addMenuItem(toplevel, edit_select, "Add Next Down",
-                                   SLOT(activate_select_addnext()),
-                                   "ALT+SHIFT+Down");
+      SLOT(activate_select_addnext()), "ALT+SHIFT+Down");
   select_addnextdown->setData(flow_eDirection_Down);
 
-  select_cp_nextright =
-      addMenuItem(toplevel, edit_select, "Next ConnectionPoint Right",
-                  SLOT(activate_select_cp_next()), "CTRL+Right");
+  select_cp_nextright
+      = addMenuItem(toplevel, edit_select, "Next ConnectionPoint Right",
+          SLOT(activate_select_cp_next()), "CTRL+Right");
   select_cp_nextright->setData(flow_eDirection_Right);
-  select_cp_nextleft =
-      addMenuItem(toplevel, edit_select, "Next ConnectionPoint Left",
-                  SLOT(activate_select_cp_next()), "CTRL+Left");
+  select_cp_nextleft
+      = addMenuItem(toplevel, edit_select, "Next ConnectionPoint Left",
+          SLOT(activate_select_cp_next()), "CTRL+Left");
   select_cp_nextleft->setData(flow_eDirection_Left);
-  select_cp_nextup = addMenuItem(toplevel, edit_select, "Next ConnectionPoint Up",
-                                 SLOT(activate_select_cp_next()), "CTRL+Up");
+  select_cp_nextup = addMenuItem(toplevel, edit_select,
+      "Next ConnectionPoint Up", SLOT(activate_select_cp_next()), "CTRL+Up");
   select_cp_nextup->setData(flow_eDirection_Up);
-  select_cp_nextdown =
-      addMenuItem(toplevel, edit_select, "Next ConnectionPoint Down",
-                  SLOT(activate_select_cp_next()), "CTRL+Down");
+  select_cp_nextdown
+      = addMenuItem(toplevel, edit_select, "Next ConnectionPoint Down",
+          SLOT(activate_select_cp_next()), "CTRL+Down");
   select_cp_nextdown->setData(flow_eDirection_Down);
 
   // Edit Scroll submenu
-  QMenu *edit_scroll = edit->addMenu(translate_utf8("Scroll"));
-  a = addMenuItem(toplevel, edit_scroll, "Right", SLOT(activate_scroll()),
-                  "ALT+Right");
+  QMenu* edit_scroll = edit->addMenu(translate_utf8("Scroll"));
+  a = addMenuItem(
+      toplevel, edit_scroll, "Right", SLOT(activate_scroll()), "ALT+Right");
   a->setData(flow_eDirection_Right);
-  a = addMenuItem(toplevel, edit_scroll, "Left", SLOT(activate_scroll()),
-                  "ALT+Left");
+  a = addMenuItem(
+      toplevel, edit_scroll, "Left", SLOT(activate_scroll()), "ALT+Left");
   a->setData(flow_eDirection_Left);
-  a = addMenuItem(toplevel, edit_scroll, "Up", SLOT(activate_scroll()), "ALT+Up");
+  a = addMenuItem(
+      toplevel, edit_scroll, "Up", SLOT(activate_scroll()), "ALT+Up");
   a->setData(flow_eDirection_Up);
-  a = addMenuItem(toplevel, edit_scroll, "Down", SLOT(activate_scroll()),
-                  "ALT+Down");
+  a = addMenuItem(
+      toplevel, edit_scroll, "Down", SLOT(activate_scroll()), "ALT+Down");
   a->setData(flow_eDirection_Down);
 
   // Edit Move submenu
-  QMenu *edit_move = edit->addMenu(translate_utf8("Move"));
-  a = addMenuItem(toplevel, edit_move, "Right", SLOT(activate_move()),
-                  "CTRL+SHIFT+Right");
+  QMenu* edit_move = edit->addMenu(translate_utf8("Move"));
+  a = addMenuItem(
+      toplevel, edit_move, "Right", SLOT(activate_move()), "CTRL+SHIFT+Right");
   a->setData(flow_eDirection_Right);
-  a = addMenuItem(toplevel, edit_move, "Left", SLOT(activate_move()),
-                  "CTRL+SHIFT+Left");
+  a = addMenuItem(
+      toplevel, edit_move, "Left", SLOT(activate_move()), "CTRL+SHIFT+Left");
   a->setData(flow_eDirection_Left);
-  a = addMenuItem(toplevel, edit_move, "Up", SLOT(activate_move()),
-                  "CTRL+SHIFT+Up");
+  a = addMenuItem(
+      toplevel, edit_move, "Up", SLOT(activate_move()), "CTRL+SHIFT+Up");
   a->setData(flow_eDirection_Up);
-  a = addMenuItem(toplevel, edit_move, "Down", SLOT(activate_move()),
-                  "CTRL+SHIFT+Down");
+  a = addMenuItem(
+      toplevel, edit_move, "Down", SLOT(activate_move()), "CTRL+SHIFT+Down");
   a->setData(flow_eDirection_Down);
 
-  changetext =
-      addMenuItem(toplevel, edit, "C&hange Text", SLOT(activate_changetext()),
-                  "CTRL+T");
-  expand = addMenuItem(toplevel, edit, "E&xpand Object", SLOT(activate_expand()),
-                       "CTRL+K");
-  compress =
-      addMenuItem(toplevel, edit, "C&ompress Object", SLOT(activate_compress()),
-                  "CTRL+J");
+  changetext = addMenuItem(
+      toplevel, edit, "C&hange Text", SLOT(activate_changetext()), "CTRL+T");
+  expand = addMenuItem(
+      toplevel, edit, "E&xpand Object", SLOT(activate_expand()), "CTRL+K");
+  compress = addMenuItem(
+      toplevel, edit, "C&ompress Object", SLOT(activate_compress()), "CTRL+J");
 
   // Search Entry
-  QMenu *search = menu_bar->addMenu(translate_utf8("&Search"));
+  QMenu* search = menu_bar->addMenu(translate_utf8("&Search"));
   addMenuItem(toplevel, search, "&Object", SLOT(activate_searchobject()));
-  addMenuItem(toplevel, search, "&String", SLOT(activate_searchstring()), "CTRL+F");
+  addMenuItem(
+      toplevel, search, "&String", SLOT(activate_searchstring()), "CTRL+F");
   addMenuItem(toplevel, search, "&Next", SLOT(activate_searchnext()), "CTRL+G");
 
   // View Entry
-  QMenu *view = menu_bar->addMenu(translate_utf8("&View"));
+  QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
 
   // Submenu Palette
-  QActionGroup *view_pal_group = new QActionGroup(toplevel);
-  QMenu *view_pal = view->addMenu(translate_utf8("&Palette"));
+  QActionGroup* view_pal_group = new QActionGroup(toplevel);
+  QMenu* view_pal = view->addMenu(translate_utf8("&Palette"));
   view_objectpal = addMenuRadioItem(toplevel, view_pal, "&Object",
-                                    SLOT(activate_palette_object()),
-                                    view_pal_group, "ALT+O");
+      SLOT(activate_palette_object()), view_pal_group, "ALT+O");
   view_conpal = addMenuRadioItem(toplevel, view_pal, "&Connection",
-                                 SLOT(activate_palette_con()), view_pal_group,
-                                 "ALT+I");
-  view_plantpal =
-      addMenuRadioItem(toplevel, view_pal, "&Plant", SLOT(activate_palette_plant()),
-                       view_pal_group, "ALT+P");
+      SLOT(activate_palette_con()), view_pal_group, "ALT+I");
+  view_plantpal = addMenuRadioItem(toplevel, view_pal, "&Plant",
+      SLOT(activate_palette_plant()), view_pal_group, "ALT+P");
 
   addCheckableMenuItem(toplevel, view, "&Reference Connections",
-                       SLOT(activate_refcon(bool)), "CTRL+R");
+      SLOT(activate_refcon(bool)), "CTRL+R");
 
   // Submenu gridsize
-  QActionGroup *view_gs_group = new QActionGroup(toplevel);
-  QMenu *view_gs = view->addMenu(translate_utf8("&Grid Size"));
+  QActionGroup* view_gs_group = new QActionGroup(toplevel);
+  QMenu* view_gs = view->addMenu(translate_utf8("&Grid Size"));
   for (int i = 0; i < 5; i++) {
     double num = pow(2, i) / (16 * 5);
     QString txt = QString::number(i + 1).prepend('_');
     QByteArray ba = txt.toLocal8Bit();
-    QAction *view_gs_t =
-        addMenuRadioItem(toplevel, view_gs, ba.data(), SLOT(activate_gridsize()),
-                         view_gs_group);
+    QAction* view_gs_t = addMenuRadioItem(
+        toplevel, view_gs, ba.data(), SLOT(activate_gridsize()), view_gs_group);
     view_gs_t->setData(num);
   }
 
   addMenuItem(toplevel, view, "&Show Grid", SLOT(activate_showgrid()));
 
   // Zoom submenu
-  QMenu *view_zoom = menu_bar->addMenu(translate_utf8("&Zoom"));
-  addMenuItem(toplevel, view_zoom, "Zoom &In", SLOT(activate_zoomin()), "CTRL+I",
-              "zoom-in");
-  addMenuItem(toplevel, view_zoom, "Zoom &Out", SLOT(activate_zoomout()), "CTRL+O",
-              "zoom-out");
+  QMenu* view_zoom = menu_bar->addMenu(translate_utf8("&Zoom"));
+  addMenuItem(toplevel, view_zoom, "Zoom &In", SLOT(activate_zoomin()),
+      "CTRL+I", "zoom-in");
+  addMenuItem(toplevel, view_zoom, "Zoom &Out", SLOT(activate_zoomout()),
+      "CTRL+O", "zoom-out");
   addMenuItem(toplevel, view_zoom, "Zoom &Reset", SLOT(activate_unzoom()), "",
-              "zoom-reset");
+      "zoom-reset");
 
-  addCheckableMenuItem(toplevel, view, "S&how Execute Order",
-                       SLOT(activate_showexeord(bool)));
+  addCheckableMenuItem(
+      toplevel, view, "S&how Execute Order", SLOT(activate_showexeord(bool)));
 
   redraw = addMenuItem(toplevel, view, "R&edraw", SLOT(activate_redraw()), "",
-                       "$pwr_exe/foe_redraw.png");
+      "$pwr_exe/foe_redraw.png");
 
   // Functions Entry
-  QMenu *functions = menu_bar->addMenu(translate_utf8("&Functions"));
-  addMenuItem(toplevel, functions, "&Open Object...", SLOT(activate_attribute()),
-              "CTRL+A");
-  addMenuItem(toplevel, functions, "Open &Subwindow", SLOT(activate_subwindow()),
-              "CTRL+J");
+  QMenu* functions = menu_bar->addMenu(translate_utf8("&Functions"));
+  addMenuItem(toplevel, functions, "&Open Object...",
+      SLOT(activate_attribute()), "CTRL+A");
+  addMenuItem(toplevel, functions, "Open &Subwindow",
+      SLOT(activate_subwindow()), "CTRL+J");
 
   // Mode entry
-  QMenu *mode = menu_bar->addMenu(translate_utf8("&Mode"));
-  view_togg =
-      addCheckableMenuItem(toplevel, mode, "&View", SLOT(activate_view_togg(bool)));
-  edit_togg =
-      addCheckableMenuItem(toplevel, mode, "&Edit", SLOT(activate_edit_togg(bool)),
-                           "CTRL+E");
-  trace_togg = addCheckableMenuItem(toplevel, mode, "&Trace",
-                                    SLOT(activate_trace_togg(bool)));
-  simulate_togg = addCheckableMenuItem(toplevel, mode, "&Simulate",
-                                       SLOT(activate_simulate_togg(bool)));
+  QMenu* mode = menu_bar->addMenu(translate_utf8("&Mode"));
+  view_togg = addCheckableMenuItem(
+      toplevel, mode, "&View", SLOT(activate_view_togg(bool)));
+  edit_togg = addCheckableMenuItem(
+      toplevel, mode, "&Edit", SLOT(activate_edit_togg(bool)), "CTRL+E");
+  trace_togg = addCheckableMenuItem(
+      toplevel, mode, "&Trace", SLOT(activate_trace_togg(bool)));
+  simulate_togg = addCheckableMenuItem(
+      toplevel, mode, "&Simulate", SLOT(activate_simulate_togg(bool)));
 
   // Menu Help
-  QMenu *help = menu_bar->addMenu(translate_utf8("&Help"));
-  addMenuItem(toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H",
-              "system-help");
+  QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
+  addMenuItem(
+      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "system-help");
   addMenuItem(toplevel, help, "H&elp on PlcPgm", SLOT(activate_helpplc()));
-  addMenuItem(toplevel, help, "He&lp PlcPgm Overview",
-              SLOT(activate_helpplclist()));
+  addMenuItem(
+      toplevel, help, "He&lp PlcPgm Overview", SLOT(activate_helpplclist()));
 
   // Toolbar
-  QToolBar *tools = new QToolBar();
-  tools_save =
-      addToolItem(toplevel, tools, "Save", SLOT(activate_save()), "document-save");
+  QToolBar* tools = new QToolBar();
+  tools_save = addToolItem(
+      toplevel, tools, "Save", SLOT(activate_save()), "document-save");
   addToolItem(toplevel, tools, "Print documents", SLOT(activate_print()),
-              "document-print");
+      "document-print");
   addToolItem(toplevel, tools, "Set edit mode", SLOT(activate_edit_togg()),
-              "$pwr_exe/foe_edit.png");
+      "$pwr_exe/foe_edit.png");
   addToolItem(toplevel, tools, "Set view mode", SLOT(activate_view_togg()),
-              "$pwr_exe/foe_view.png");
-  tools_build =
-      addToolItem(toplevel, tools, "Build Program", SLOT(activate_compile()),
-                  "system-run");
+      "$pwr_exe/foe_view.png");
+  tools_build = addToolItem(
+      toplevel, tools, "Build Program", SLOT(activate_compile()), "system-run");
   addToolItem(toplevel, tools, "Zoom in", SLOT(activate_zoomin()),
-              "$pwr_exe/xtt_zoom_in.png");
+      "$pwr_exe/xtt_zoom_in.png");
   addToolItem(toplevel, tools, "Zoom out", SLOT(activate_zoomout()),
-              "$pwr_exe/xtt_zoom_out.png");
+      "$pwr_exe/xtt_zoom_out.png");
   addToolItem(toplevel, tools, "Zoom reset", SLOT(activate_unzoom()),
-              "$pwr_exe/xtt_zoom_reset.png");
+      "$pwr_exe/xtt_zoom_reset.png");
   addToolItem(toplevel, tools, "Show Object palette",
-              SLOT(activate_palette_object()),
-              "$pwr_exe/foe_objectpalette.png");
+      SLOT(activate_palette_object()), "$pwr_exe/foe_objectpalette.png");
   addToolItem(toplevel, tools, "Show Connection palette",
-              SLOT(activate_palette_con()), "$pwr_exe/foe_conpalette.png");
+      SLOT(activate_palette_con()), "$pwr_exe/foe_conpalette.png");
   addToolItem(toplevel, tools, "Show Plant Hierarchy",
-              SLOT(activate_palette_plant()), "$pwr_exe/xtt_navigator.png");
+      SLOT(activate_palette_plant()), "$pwr_exe/xtt_navigator.png");
 
   // Redraw pushbutton
   tools_redraw = addToolItem(toplevel, tools, "Redraw", SLOT(activate_redraw()),
-                             "$pwr_exe/foe_redraw.png");
+      "$pwr_exe/foe_redraw.png");
 
   // Feedback connection checkbutton
   tools_confeedback = addCheckableToolItem(toplevel, tools, "Redraw",
-                                           SLOT(activate_confeedback(bool)),
-                                           "$pwr_exe/foe_confeedback.png");
+      SLOT(activate_confeedback(bool)), "$pwr_exe/foe_confeedback.png");
 
   // Singlelinetext button
   tools_singlelinetext = addToolItem(toplevel, tools, "Single line text",
-                                     SLOT(activate_singlelinetext()),
-                                     "$pwr_exe/foe_singlelinetext.png");
+      SLOT(activate_singlelinetext()), "$pwr_exe/foe_singlelinetext.png");
 
   // Bodytext button
-  tools_bodytext =
-      addToolItem(toplevel, tools, "Multi line text", SLOT(activate_bodytext()),
-                  "$pwr_exe/foe_bodytext.png");
+  tools_bodytext = addToolItem(toplevel, tools, "Multi line text",
+      SLOT(activate_bodytext()), "$pwr_exe/foe_bodytext.png");
 
   // Textheader button
-  tools_textheader =
-      addToolItem(toplevel, tools, "Text header", SLOT(activate_textheader()),
-                  "$pwr_exe/foe_textheader.png");
+  tools_textheader = addToolItem(toplevel, tools, "Text header",
+      SLOT(activate_textheader()), "$pwr_exe/foe_textheader.png");
 
   // Document button
-  tools_document =
-      addToolItem(toplevel, tools, "Document portrait", SLOT(activate_document()),
-                  "$pwr_exe/foe_document.png");
+  tools_document = addToolItem(toplevel, tools, "Document portrait",
+      SLOT(activate_document()), "$pwr_exe/foe_document.png");
 
   // Document_Landscape button
   tools_document = addToolItem(toplevel, tools, "Document landscape",
-                               SLOT(activate_document_landscape()),
-                               "$pwr_exe/foe_document_landscape.png");
+      SLOT(activate_document_landscape()),
+      "$pwr_exe/foe_document_landscape.png");
 
   // Statusbar and cmd input
-  QStatusBar *statusbar = new QStatusBar();
+  QStatusBar* statusbar = new QStatusBar();
   label = new QLabel("");
   label->setFixedHeight(25);
   textinput = new QLineEdit();
   textinput->setFixedHeight(25);
   QObject::connect(textinput, SIGNAL(editingFinished()), toplevel,
-                   SLOT(valchanged_textinput()));
+      SLOT(valchanged_textinput()));
 
   statusbar->addWidget(label);
   add_expanding(statusbar, textinput);
 
   subpane = new QSplitter(Qt::Vertical);
-  QHBoxLayout *palbox = new QHBoxLayout();
-  node_palctx =
-      new PalQt(this, subpane, "Objects", ldhsession, "PlcEditorPalette",
-                &node_palette, &sts);
+  QHBoxLayout* palbox = new QHBoxLayout();
+  node_palctx = new PalQt(this, subpane, "Objects", ldhsession,
+      "PlcEditorPalette", &node_palette, &sts);
   node_palette_managed = 1;
   node_palctx->select_cb = pal_select_cb;
 
-  con_palctx =
-      new PalQt(this, subpane, "Connections", ldhsession, "PlcEditorConPalette",
-                &con_palette, &sts);
+  con_palctx = new PalQt(this, subpane, "Connections", ldhsession,
+      "PlcEditorConPalette", &con_palette, &sts);
 
-  navctx =
-      new NavQt(this, subpane, "Plant", ldhsession, "NavigatorW1", &nav_palette,
-                &sts);
+  navctx = new NavQt(
+      this, subpane, "Plant", ldhsession, "NavigatorW1", &nav_palette, &sts);
 
   add_expanding(palbox, node_palette);
   add_expanding(palbox, con_palette);
@@ -1092,13 +1059,13 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
   pane = new QSplitter(Qt::Horizontal);
   gre = new WGreQt(this, pane, "Name");
 
-  ((WGreQt *) gre)->new_navigator(subpane);
-  subpane->addWidget(((WGreQt *) gre)->nav_widget);
+  ((WGreQt*)gre)->new_navigator(subpane);
+  subpane->addWidget(((WGreQt*)gre)->nav_widget);
 
-  add_expanding(pane, ((WGreQt *) gre)->form_widget);
+  add_expanding(pane, ((WGreQt*)gre)->form_widget);
   pane->addWidget(subpane);
 
-  QVBoxLayout *vbox = new QVBoxLayout(toplevel);
+  QVBoxLayout* vbox = new QVBoxLayout(toplevel);
   vbox->setMenuBar(menu_bar);
   vbox->addWidget(tools);
   add_expanding(vbox, pane);
@@ -1123,23 +1090,23 @@ void WFoeQt::set_mode_button_state(int mode, int state)
 {
   bool active = state ? TRUE : FALSE;
   switch (mode) {
-    case VIEW:
-      view_togg->setChecked(active);
-      break;
-    case EDIT:
-      edit_togg->setChecked(active);
-      break;
-    case TRACE:
-      trace_togg->setChecked(active);
-      break;
-    case SIMULATE:
-      simulate_togg->setChecked(active);
-      break;
+  case VIEW:
+    view_togg->setChecked(active);
+    break;
+  case EDIT:
+    edit_togg->setChecked(active);
+    break;
+  case TRACE:
+    trace_togg->setChecked(active);
+    break;
+  case SIMULATE:
+    simulate_togg->setChecked(active);
+    break;
   }
 }
 
 // Show the text input widget.
-int WFoeQt::get_textinput(const char *msg, int (*function)(WFoe *, char *))
+int WFoeQt::get_textinput(const char* msg, int (*function)(WFoe*, char*))
 {
   /* Print the text */
   message(msg);
@@ -1303,7 +1270,7 @@ int WFoeQt::view_set_entries()
   return FOE__SUCCESS;
 }
 
-int WFoeQt::get_selection(char *str, int len)
+int WFoeQt::get_selection(char* str, int len)
 {
   int sts = CoWowQt::GetSelection(str, len, "PWR_OBJID");
   if (EVEN(sts)) {

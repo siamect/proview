@@ -39,153 +39,148 @@
 
 /* wb_foe_qt.h -- function block object editor */
 
-#include "flow_ctx.h"
-#include "flow_api.h"
 #ifndef wb_foe_h
 #include "wb_foe.h"
 #endif
 
-#ifndef cow_wow_qt_h
 #include "cow_wow_qt.h"
-#endif
+
+#include <QLabel>
+#include <QSplitter>
 
 class WFoeQtWidget;
 
 class WFoeQt : public WFoe {
 public:
-  QLabel *label;
-  QLineEdit *textinput;
-  QSplitter *pane;
-  QSplitter *subpane;
-  QWidget *caution;
-  QWidget *caution_label;
-  QWidget *adb;
-  QWidget *foe_window;
-  QWidget *popupmenu;
-  QWidget *file_entry;
-  QAction *save;
-  QAction *exit;
-  QAction *savetrace;
-  QAction *restoretrace;
-  QWidget *print;
-  QAction *syntax;
-  QAction *compile;
-  QAction *redraw;
-  QAction *plcattribute;
-  QAction *winddelete;
-  QWidget *quit;
-  QAction *cut;
-  QAction *copy;
-  QAction *paste;
-  QAction *undelete;
-  QAction *unselect;
-  QAction *createnode;
-  QAction *createcon;
-  QAction *connectA;
-  QAction *del;
-  QAction *changetext;
-  QAction *expand;
-  QAction *compress;
-  QWidget *edit_entry;       /* entry of the menu */
-  QWidget *search_entry;     /* entry of the menu */
-  QWidget *customize_entry;  /* entry of the menu */
-  QAction *trace_togg;       /* togg under the function entry of the menu */
-  QAction *simulate_togg;    /* togg under the function entry of the menu */
-  QAction *view_togg;        /* togg under the function entry of the menu */
-  QAction *edit_togg;        /* togg under the function entry of the menu */
-  QWidget *con_palette;
-  QWidget *node_palette;
-  QWidget *nav_palette;
-  QAction *view_objectpal;
-  QAction *view_conpal;
-  QAction *view_plantpal;
-  QAction *tools_save;
-  QAction *tools_build;
-  QAction *tools_redraw;
-  QAction *tools_singlelinetext;
-  QAction *tools_bodytext;
-  QAction *tools_textheader;
-  QAction *tools_document;
-  QAction *tools_document_landscape;
-  QAction *tools_confeedback;
-  QAction *lockconpoint;
-  QAction *move_right;
-  QAction *move_left;
-  QAction *move_up;
-  QAction *move_down;
-  QAction *select_addnextright;
-  QAction *select_addnextleft;
-  QAction *select_addnextup;
-  QAction *select_addnextdown;
-  QAction *select_cp_nextright;
-  QAction *select_cp_nextleft;
-  QAction *select_cp_nextup;
-  QAction *select_cp_nextdown;
+  QLabel* label;
+  QLineEdit* textinput;
+  QSplitter* pane;
+  QSplitter* subpane;
+  QWidget* caution;
+  QWidget* caution_label;
+  QWidget* adb;
+  QWidget* foe_window;
+  QWidget* popupmenu;
+  QWidget* file_entry;
+  QAction* save;
+  QAction* exit;
+  QAction* savetrace;
+  QAction* restoretrace;
+  QWidget* print;
+  QAction* syntax;
+  QAction* compile;
+  QAction* redraw;
+  QAction* plcattribute;
+  QAction* winddelete;
+  QWidget* quit;
+  QAction* cut;
+  QAction* copy;
+  QAction* paste;
+  QAction* undelete;
+  QAction* unselect;
+  QAction* createnode;
+  QAction* createcon;
+  QAction* connectA;
+  QAction* del;
+  QAction* changetext;
+  QAction* expand;
+  QAction* compress;
+  QWidget* edit_entry; /* entry of the menu */
+  QWidget* search_entry; /* entry of the menu */
+  QWidget* customize_entry; /* entry of the menu */
+  QAction* trace_togg; /* togg under the function entry of the menu */
+  QAction* simulate_togg; /* togg under the function entry of the menu */
+  QAction* view_togg; /* togg under the function entry of the menu */
+  QAction* edit_togg; /* togg under the function entry of the menu */
+  QWidget* con_palette;
+  QWidget* node_palette;
+  QWidget* nav_palette;
+  QAction* view_objectpal;
+  QAction* view_conpal;
+  QAction* view_plantpal;
+  QAction* tools_save;
+  QAction* tools_build;
+  QAction* tools_redraw;
+  QAction* tools_singlelinetext;
+  QAction* tools_bodytext;
+  QAction* tools_textheader;
+  QAction* tools_document;
+  QAction* tools_document_landscape;
+  QAction* tools_confeedback;
+  QAction* lockconpoint;
+  QAction* move_right;
+  QAction* move_left;
+  QAction* move_up;
+  QAction* move_down;
+  QAction* select_addnextright;
+  QAction* select_addnextleft;
+  QAction* select_addnextup;
+  QAction* select_addnextdown;
+  QAction* select_cp_nextright;
+  QAction* select_cp_nextleft;
+  QAction* select_cp_nextup;
+  QAction* select_cp_nextdown;
   CoWowFocusTimerQt focustimer;
 
-  WFoeQt(void *f_parent_ctx, QWidget *f_parent_wid, const char *f_name,
-         pwr_tObjid plcprogram, ldh_tWBContext ldhwbctx,
-         ldh_tSesContext ldhsesctx, int f_map_window, ldh_eAccess f_access,
-         unsigned int f_options, pwr_tStatus *sts);
-  WFoeQt(void *f_parent_ctx, QWidget *f_parent_wid, const char *f_name,
-         pwr_tObjid plcprogram, ldh_tWBContext ldhwbctx,
-         ldh_tSesContext ldhsesctx, vldh_t_node nodeobject,
-         unsigned long windowindex, unsigned long new_window, int f_map_window,
-         ldh_eAccess f_access, foe_eFuncAccess function_access,
-         unsigned int f_options, pwr_tStatus *sts);
+  WFoeQt(void* f_parent_ctx, QWidget* f_parent_wid, const char* f_name,
+      pwr_tObjid plcprogram, ldh_tWBContext ldhwbctx, ldh_tSesContext ldhsesctx,
+      int f_map_window, ldh_eAccess f_access, unsigned int f_options,
+      pwr_tStatus* sts);
+  WFoeQt(void* f_parent_ctx, QWidget* f_parent_wid, const char* f_name,
+      pwr_tObjid plcprogram, ldh_tWBContext ldhwbctx, ldh_tSesContext ldhsesctx,
+      vldh_t_node nodeobject, unsigned long windowindex,
+      unsigned long new_window, int f_map_window, ldh_eAccess f_access,
+      foe_eFuncAccess function_access, unsigned int f_options,
+      pwr_tStatus* sts);
 
   virtual void pop();
-  virtual WAtt *watt_new(void *a_parent_ctx, ldh_tSesContext a_ldhses,
-                         pwr_sAttrRef a_aref, int a_editmode,
-                         int a_advanced_user, int a_display_objectname);
-  virtual WAttText *watttext_new(void *a_parent_ctx, ldh_tSesContext a_ldhses,
-                                 pwr_sAttrRef a_aref, int a_editmode,
-                                 pwr_tStatus *status);
-  virtual WFoe *subwindow_new(void *f_parent_ctx, char *f_name,
-                              pwr_tObjid plcprogram, ldh_tWBContext ldhwbctx,
-                              ldh_tSesContext ldhsesctx, vldh_t_node nodeobject,
-                              unsigned long windowindex,
-                              unsigned long new_window, int f_map_window,
-                              ldh_eAccess f_access,
-                              foe_eFuncAccess function_access,
-                              unsigned int f_options, pwr_tStatus *sts);
+  virtual WAtt* watt_new(void* a_parent_ctx, ldh_tSesContext a_ldhses,
+      pwr_sAttrRef a_aref, int a_editmode, int a_advanced_user,
+      int a_display_objectname);
+  virtual WAttText* watttext_new(void* a_parent_ctx, ldh_tSesContext a_ldhses,
+      pwr_sAttrRef a_aref, int a_editmode, pwr_tStatus* status);
+  virtual WFoe* subwindow_new(void* f_parent_ctx, char* f_name,
+      pwr_tObjid plcprogram, ldh_tWBContext ldhwbctx, ldh_tSesContext ldhsesctx,
+      vldh_t_node nodeobject, unsigned long windowindex,
+      unsigned long new_window, int f_map_window, ldh_eAccess f_access,
+      foe_eFuncAccess function_access, unsigned int f_options,
+      pwr_tStatus* sts);
   virtual void destroy();
   virtual void set_title();
-  virtual void message(const char *new_label);
-  virtual void msgbox(const char *new_label);
+  virtual void message(const char* new_label);
+  virtual void msgbox(const char* new_label);
   virtual int create_window(int x_top, int y_top, int width_adb, int height_adb,
-                            ldh_tSesContext ldhsession,
-                            foe_eFuncAccess function_access);
-  virtual int get_textinput(const char *message,
-                            int (*function)(WFoe *, char *));
+      ldh_tSesContext ldhsession, foe_eFuncAccess function_access);
+  virtual int get_textinput(const char* message, int (*function)(WFoe*, char*));
   virtual int edit_set_entries();
   virtual int view_set_entries();
   virtual void set_mode_button_state(int mode, int state);
   virtual int modify_popup(unsigned long popupmenu_mask, int x, int y);
-  virtual int get_selection(char *str, int len);
-  virtual void popupmsg(const char *new_label, void (*yes_procedure)(WFoe *),
-                        void (*no_procedure)(WFoe *),
-                        void (*cancel_procedure)(WFoe *));
+  virtual int get_selection(char* str, int len);
+  virtual void popupmsg(const char* new_label, void (*yes_procedure)(WFoe*),
+      void (*no_procedure)(WFoe*), void (*cancel_procedure)(WFoe*));
 
   int register_callbacks();
 
-  static void reset_current_node(WFoe *foe);
-  static void delete_subwindow_ok_cb(void *ctx, void *data);
+  static void reset_current_node(WFoe* foe);
+  static void delete_subwindow_ok_cb(void* ctx, void* data);
 
 private:
-  WFoeQtWidget *toplevel;
+  WFoeQtWidget* toplevel;
 };
 
 class WFoeQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  WFoeQtWidget(WFoeQt *parent_ctx, QWidget *parent)
-      : QWidget(parent, Qt::Window), foe(parent_ctx) {}
+  WFoeQtWidget(WFoeQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), foe(parent_ctx)
+  {
+  }
 
 protected:
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void activate_save();
@@ -260,7 +255,7 @@ public slots:
   void wfoeqt_reset_current_node();
 
 private:
-  WFoeQt *foe;
+  WFoeQt* foe;
 };
 
 #endif

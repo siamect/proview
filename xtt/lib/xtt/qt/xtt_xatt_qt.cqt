@@ -36,24 +36,15 @@
 
 /* xtt_xatt.cpp -- Display object attributes */
 
-#include "glow_std.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-
 #include "co_cdh.h"
-#include "co_dcli.h"
-#include "co_time.h"
-#include "rt_xnav_msg.h"
 
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
-#include "co_lng.h"
+#include "rt_xatt_msg.h"
+
+#include "cow_qt_helpers.h"
+
 #include "xtt_xatt_qt.h"
 #include "xtt_xattnav_qt.h"
 #include "xtt_xnav.h"
-#include "rt_xatt_msg.h"
 
 #include <QAction>
 #include <QDialogButtonBox>
@@ -65,12 +56,12 @@
 
 CoWowRecall XAttQt::value_recall;
 
-void XAttQt::message(char severity, const char *message)
+void XAttQt::message(char severity, const char* message)
 {
   msg_label->setText(fl(message));
 }
 
-void XAttQt::set_prompt(const char *prompt)
+void XAttQt::set_prompt(const char* prompt)
 {
   if (strcmp(prompt, "") == 0) {
     cmd_prompt->setVisible(false);
@@ -85,7 +76,7 @@ void XAttQt::change_value(int set_focus)
 {
   int sts;
   int multiline;
-  char *value;
+  char* value;
   int input_size;
 
   if (input_open) {
@@ -96,8 +87,8 @@ void XAttQt::change_value(int set_focus)
     return;
   }
 
-  sts = xattnav
-      ->check_attr(&multiline, &input_node, input_name, &value, &input_size);
+  sts = xattnav->check_attr(
+      &multiline, &input_node, input_name, &value, &input_size);
   if (EVEN(sts)) {
     if (sts == XATT__NOATTRSEL) {
       message('E', "No attribute is selected");
@@ -150,7 +141,8 @@ void XAttQtWidget::action_text_inserted()
   int count = xatt->cmd_scrolled_buffer->toPlainText().size();
 
   if (count > xatt->input_max_length) {
-    // Remove inserted chars (note that iter now points at the end of the inserted text)
+    // Remove inserted chars (note that iter now points at the end of the
+    // inserted text)
     QString txt = xatt->cmd_scrolled_buffer->toPlainText();
     txt.truncate(xatt->input_max_length);
     xatt->cmd_scrolled_buffer->setText(txt);
@@ -200,7 +192,7 @@ void XAttQtWidget::activate_help()
   xatt->activate_help();
 }
 
-void XAttQtWidget::focusInEvent(QFocusEvent *event)
+void XAttQtWidget::focusInEvent(QFocusEvent* event)
 {
   if (!xatt->focustimer.disabled()) {
     if (xatt->cmd_scrolledinput->isVisible()) {
@@ -222,7 +214,7 @@ void XAttQt::change_value_close()
   if (input_open) {
     if (input_multiline) {
       QByteArray ba = cmd_scrolled_buffer->toPlainText().toLatin1();
-      char *text = ba.data();
+      char* text = ba.data();
 
       if (text) {
         xattnav->set_attr_value(input_node, input_name, text);
@@ -241,7 +233,7 @@ void XAttQt::change_value_close()
       }
     } else {
       QByteArray ba = cmd_entry->text().toLatin1();
-      char *text = ba.data();
+      char* text = ba.data();
 
       if (text) {
         xattnav->set_attr_value(input_node, input_name, text);
@@ -269,7 +261,7 @@ void XAttQtWidget::activate_cmd_entry()
   xatt->xattnav->set_inputfocus();
 
   QByteArray ba = xatt->cmd_entry->text().toLatin1();
-  char *text = ba.data();
+  char* text = ba.data();
 
   if (xatt->input_open) {
     if (text) {
@@ -291,7 +283,7 @@ void XAttQtWidget::activate_cmd_scrolled_ok()
 {
   if (xatt->input_open) {
     QByteArray ba = xatt->cmd_scrolled_buffer->toPlainText().toLatin1();
-    char *text = ba.data();
+    char* text = ba.data();
 
     if (text) {
       xatt->xattnav->set_attr_value(xatt->input_node, xatt->input_name, text);
@@ -333,14 +325,15 @@ void XAttQt::print()
   pwr_tAName title;
 
   pwr_tStatus sts = gdh_AttrrefToName(&objar, title, sizeof(title), cdh_mNName);
-  if (EVEN(sts)) { return; }
+  if (EVEN(sts)) {
+    return;
+  }
 
   CoWowQt::CreateBrowPrintDialogQt(title, xattnav->brow->ctx,
-                                   flow_eOrientation_Portrait, 1.0,
-                                   toplevel, &sts);
+      flow_eOrientation_Portrait, 1.0, toplevel, &sts);
 }
 
-void XAttQtWidget::closeEvent(QCloseEvent *event)
+void XAttQtWidget::closeEvent(QCloseEvent* event)
 {
   if (xatt->close_cb) {
     (xatt->close_cb)(xatt->parent_ctx, xatt);
@@ -350,15 +343,17 @@ void XAttQtWidget::closeEvent(QCloseEvent *event)
   QWidget::closeEvent(event);
 }
 
-XAttQt::XAttQt(QWidget *xa_parent_wid, void *xa_parent_ctx,
-               pwr_sAttrRef *xa_objar, int xa_advanced_user, int *xa_sts)
+XAttQt::XAttQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
+    pwr_sAttrRef* xa_objar, int xa_advanced_user, int* xa_sts)
     : XAtt(xa_parent_ctx, xa_objar, xa_advanced_user, xa_sts)
 {
   int sts;
   pwr_tAName title;
 
   *xa_sts = gdh_AttrrefToName(&objar, title, sizeof(title), cdh_mNName);
-  if (EVEN(*xa_sts)) { return; }
+  if (EVEN(*xa_sts)) {
+    return;
+  }
 
   cdh_StrncpyCutOff(title, title, 100, 1);
 
@@ -371,45 +366,45 @@ XAttQt::XAttQt(QWidget *xa_parent_wid, void *xa_parent_ctx,
   CoWowQt::SetWindowIcon(toplevel);
 
   // Menu
-  QMenuBar *menu_bar = new QMenuBar();
+  QMenuBar* menu_bar = new QMenuBar();
 
   // File entry
-  QMenu *file = menu_bar->addMenu(translate_utf8("&File"));
+  QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
   addMenuItem(toplevel, file, "&Print", SLOT(activate_print()));
-  addMenuItem(toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+  addMenuItem(
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
   // Functions entry
-  QMenu *functions = menu_bar->addMenu(translate_utf8("&Functions"));
-  addMenuItem(toplevel, functions, "Change &Value", SLOT(activate_change_value()),
-              "CTRL+Q");
+  QMenu* functions = menu_bar->addMenu(translate_utf8("&Functions"));
+  addMenuItem(toplevel, functions, "Change &Value",
+      SLOT(activate_change_value()), "CTRL+Q");
   addMenuItem(toplevel, functions, "C&lose Change Value",
-              SLOT(change_value_close()), "CTRL+T");
+      SLOT(change_value_close()), "CTRL+T");
   addMenuItem(toplevel, functions, "Open &Program", SLOT(activate_open_plc()),
-              "CTRL+L");
+      "CTRL+L");
   addMenuItem(toplevel, functions, "&Display object in Navigator",
-              SLOT(activate_display_object()), "CTRL+D");
+      SLOT(activate_display_object()), "CTRL+D");
   addMenuItem(toplevel, functions, "&Show C_rossreferences",
-              SLOT(activate_show_cross()), "CTRL+R");
+      SLOT(activate_show_cross()), "CTRL+R");
   addMenuItem(toplevel, functions, "Open &ClassGraph",
-              SLOT(activate_open_classgraph()), "CTRL+G");
+      SLOT(activate_open_classgraph()), "CTRL+G");
 
   // Help entry
-  QMenu *help = menu_bar->addMenu(translate_utf8("&Help"));
-  addMenuItem(toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H",
-              "system-help");
+  QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
+  addMenuItem(
+      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "system-help");
 
   pane = new QSplitter(Qt::Vertical);
 
-  xattnav =
-      new XAttNavQt(this, pane, xattnav_eType_Object, "Plant", &objar,
-                    xa_advanced_user, 0, &brow_widget, &sts);
+  xattnav = new XAttNavQt(this, pane, xattnav_eType_Object, "Plant", &objar,
+      xa_advanced_user, 0, &brow_widget, &sts);
   xattnav->message_cb = &message_cb;
   xattnav->change_value_cb = &change_value_cb;
   xattnav->popup_menu_cb = &xatt_popup_menu_cb;
   xattnav->is_authorized_cb = &xatt_is_authorized_cb;
   xattnav->init_cb = &init_cb;
 
-  QStatusBar *statusbar = new QStatusBar();
+  QStatusBar* statusbar = new QStatusBar();
   msg_label = new QLabel("");
   msg_label->setFixedHeight(25);
   cmd_prompt = new QLabel("value > ");
@@ -417,13 +412,13 @@ XAttQt::XAttQt(QWidget *xa_parent_wid, void *xa_parent_ctx,
   cmd_entry = new CoWowEntryQt(&value_recall);
   cmd_entry->setFixedHeight(25);
   QObject::connect(cmd_entry, SIGNAL(editingFinished()), toplevel,
-                   SLOT(activate_cmd_entry()));
+      SLOT(activate_cmd_entry()));
 
   statusbar->addWidget(msg_label);
   statusbar->addWidget(cmd_prompt);
   add_expanding(statusbar, cmd_entry);
 
-  QVBoxLayout *vbox = new QVBoxLayout();
+  QVBoxLayout* vbox = new QVBoxLayout();
   vbox->setMenuBar(menu_bar);
 
   add_expanding(pane, brow_widget);
@@ -435,19 +430,19 @@ XAttQt::XAttQt(QWidget *xa_parent_wid, void *xa_parent_ctx,
 
   cmd_scrolled_buffer = new QTextEdit();
   QObject::connect(cmd_scrolled_buffer, SIGNAL(textChanged()), toplevel,
-                   SLOT(action_text_inserted()));
+      SLOT(action_text_inserted()));
 
-  QDialogButtonBox *buttons = new QDialogButtonBox();
+  QDialogButtonBox* buttons = new QDialogButtonBox();
   buttons->addButton(QDialogButtonBox::Ok);
   buttons->button(QDialogButtonBox::Ok)->setFixedSize(70, 25);
   buttons->addButton(QDialogButtonBox::Cancel);
   buttons->button(QDialogButtonBox::Cancel)->setFixedSize(70, 25);
   QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
-                   toplevel, SLOT(activate_cmd_scrolled_ok()));
+      toplevel, SLOT(activate_cmd_scrolled_ok()));
   QObject::connect(buttons->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
-                   toplevel, SLOT(activate_cmd_scrolled_ca()));
+      toplevel, SLOT(activate_cmd_scrolled_ca()));
 
-  QVBoxLayout *cmd_scrolledinput_layout = new QVBoxLayout();
+  QVBoxLayout* cmd_scrolledinput_layout = new QVBoxLayout();
   add_expanding(cmd_scrolledinput_layout, cmd_scrolled_buffer);
   cmd_scrolledinput_layout->addWidget(buttons);
   cmd_scrolledinput = layout_to_widget(cmd_scrolledinput_layout);

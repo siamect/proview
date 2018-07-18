@@ -36,37 +36,22 @@
 
 /* co_rtmon_qt.cpp -- Console log in statusmon */
 
-#include "glow_std.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "co_cdh.h"
-#include "co_time.h"
-#include "co_syi.h"
-#include "rt_gdh.h"
-
-#include "co_lng.h"
-#include "cow_wow_qt.h"
-#include "cow_msgwindow_qt.h"
-#include "cow_rtmon.h"
 #include "co_dcli.h"
+#include "co_syi.h"
 #include "rt_pwr_msg.h"
+
+#include "cow_qt_helpers.h"
 #include "cow_rtmon_qt.h"
 #include "cow_statusmon_nodelistnav_qt.h"
+#include "cow_wow_qt.h"
 
-#include <QAction>
 #include <QHBoxLayout>
-#include <QLabel>
 #include <QMenu>
 #include <QMenuBar>
 #include <QPalette>
-#include <QPushButton>
-#include <QTimer>
-#include <QToolBar>
 #include <QVBoxLayout>
 
-void RtMonQtWidget::closeEvent(QCloseEvent *event)
+void RtMonQtWidget::closeEvent(QCloseEvent* event)
 {
   if (rtmon->close_cb) {
     (rtmon->close_cb)(rtmon->parent_ctx);
@@ -76,19 +61,18 @@ void RtMonQtWidget::closeEvent(QCloseEvent *event)
   QWidget::closeEvent(event);
 }
 
-static QPushButton *addButton(QWidget *parent, QBoxLayout *layout,
-                              const char *text, const char *callback)
+static QPushButton* addButton(
+    QWidget* parent, QBoxLayout* layout, const char* text, const char* callback)
 {
-  QPushButton *button = new QPushButton(fl(text));
+  QPushButton* button = new QPushButton(fl(text));
   button->setFixedSize(170, 25);
   QObject::connect(button, SIGNAL(pressed()), parent, callback);
   layout->addWidget(button);
   return button;
 }
 
-RtMonQt::RtMonQt(void *rtmon_parent_ctx, QWidget *rtmon_parent_wid,
-                 const char *rtmon_name, const char *rtmon_display,
-                 pwr_tStatus *status)
+RtMonQt::RtMonQt(void* rtmon_parent_ctx, QWidget* rtmon_parent_wid,
+    const char* rtmon_name, const char* rtmon_display, pwr_tStatus* status)
     : RtMon(rtmon_parent_ctx, rtmon_name, rtmon_display, status), timerid(0),
       old_status(9999)
 {
@@ -110,49 +94,48 @@ RtMonQt::RtMonQt(void *rtmon_parent_ctx, QWidget *rtmon_parent_wid,
   CoWowQt::SetWindowIcon(toplevel);
 
   // Menu
-  QMenuBar *menu_bar = new QMenuBar();
+  QMenuBar* menu_bar = new QMenuBar();
 
   // File entry
-  QMenu *file = menu_bar->addMenu(translate_utf8("&File"));
-  file_xtt =
-      addMenuItem(toplevel, file, "&Start Runtime Navigator", SLOT(activate_xtt()));
-  file_op = addMenuItem(toplevel, file, "&Start Operator Environment",
-                        SLOT(activate_op()));
-  addMenuItem(toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+  QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
+  file_xtt = addMenuItem(
+      toplevel, file, "&Start Runtime Navigator", SLOT(activate_xtt()));
+  file_op = addMenuItem(
+      toplevel, file, "&Start Operator Environment", SLOT(activate_op()));
+  addMenuItem(
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
   // View menu
-  QMenu *view = menu_bar->addMenu(translate_utf8("&View"));
+  QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
   addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoom_in()), "CTRL+I",
-              "zoom-in");
+      "zoom-in");
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
-              "zoom-out");
+      "zoom-out");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "",
-              "zoom-original");
+      "zoom-original");
 
   // Menu Help
-  QMenu *help = menu_bar->addMenu(translate_utf8("&Help"));
-  addMenuItem(toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H",
-              "system-help");
+  QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
+  addMenuItem(
+      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "system-help");
 
-  QVBoxLayout *vbox = new QVBoxLayout();
-  nodelistnav =
-      new NodelistNavQt(this, toplevel, 0, nodename, nodelist_eMode_SystemStatus, 0,
-                        0, &nodelistnav_widget);
+  QVBoxLayout* vbox = new QVBoxLayout();
+  nodelistnav = new NodelistNavQt(this, toplevel, 0, nodename,
+      nodelist_eMode_SystemStatus, 0, 0, &nodelistnav_widget);
 
   // Toolbar
-  QToolBar *tools = new QToolBar();
+  QToolBar* tools = new QToolBar();
   addToolItem(toplevel, tools, "Zoom in", SLOT(activate_zoom_in()),
-              "$pwr_exe/xtt_zoom_in.png");
+      "$pwr_exe/xtt_zoom_in.png");
   addToolItem(toplevel, tools, "Zoom out", SLOT(activate_zoom_out()),
-              "$pwr_exe/xtt_zoom_out.png");
+      "$pwr_exe/xtt_zoom_out.png");
   addToolItem(toplevel, tools, "Zoom reset", SLOT(activate_zoom_reset()),
-              "$pwr_exe/xtt_zoom_reset.png");
+      "$pwr_exe/xtt_zoom_reset.png");
 
-  tools_xtt =
-      addToolItem(toplevel, tools, "Start Runtime Navigator", SLOT(activate_xtt()),
-                  "$pwr_exe/xtt_navigator.png");
+  tools_xtt = addToolItem(toplevel, tools, "Start Runtime Navigator",
+      SLOT(activate_xtt()), "$pwr_exe/xtt_navigator.png");
   tools_op = addToolItem(toplevel, tools, "Start Operator Environment",
-                         SLOT(activate_op()), "$pwr_exe/xtt_op.png");
+      SLOT(activate_op()), "$pwr_exe/xtt_op.png");
 
   // Button box
   pwr_tFileName fname;
@@ -166,19 +149,19 @@ RtMonQt::RtMonQt(void *rtmon_parent_ctx, QWidget *rtmon_parent_wid,
   bbox_label->setFixedSize(170, 25);
   bbox_label->setEnabled(false);
 
-  QVBoxLayout *bbox = new QVBoxLayout();
-  bbox_start =
-      addButton(toplevel, bbox, "Start Runtime", SLOT(activate_start()));
-  bbox_restart =
-      addButton(toplevel, bbox, "Restart Runtime", SLOT(activate_restart()));
+  QVBoxLayout* bbox = new QVBoxLayout();
+  bbox_start
+      = addButton(toplevel, bbox, "Start Runtime", SLOT(activate_start()));
+  bbox_restart
+      = addButton(toplevel, bbox, "Restart Runtime", SLOT(activate_restart()));
   bbox_stop = addButton(toplevel, bbox, "Stop Runtime", SLOT(activate_stop()));
 
-  QVBoxLayout *lbox = new QVBoxLayout();
+  QVBoxLayout* lbox = new QVBoxLayout();
   lbox->setSpacing(33);
   lbox->addWidget(bbox_label);
   addButton(toplevel, lbox, "Reset Runtime", SLOT(activate_reset()));
 
-  QHBoxLayout *bbox_vbox = new QHBoxLayout();
+  QHBoxLayout* bbox_vbox = new QHBoxLayout();
   bbox_vbox->addWidget(bbox_image);
   bbox_vbox->addWidget(bbox_image_gray);
   bbox_vbox->addLayout(bbox);
@@ -205,8 +188,8 @@ RtMonQt::RtMonQt(void *rtmon_parent_ctx, QWidget *rtmon_parent_wid,
 
 void RtMonQtWidget::rtmon_scan()
 {
-  if (rtmon->nodelistnav->node_list[0].item->data.SystemStatus !=
-      rtmon->old_status) {
+  if (rtmon->nodelistnav->node_list[0].item->data.SystemStatus
+      != rtmon->old_status) {
     QColor color;
     char text[20];
     char color_name[20];
@@ -281,7 +264,7 @@ void RtMonQt::reset_cursor()
   toplevel->unsetCursor();
 }
 
-void RtMonQtWidget::focusInEvent(QFocusEvent *event)
+void RtMonQtWidget::focusInEvent(QFocusEvent* event)
 {
   if (rtmon->rtmon_displayed) {
     rtmon->nodelistnav->set_input_focus();

@@ -37,29 +37,18 @@
 /* pn_viewernav_qt.cpp -- Profinet viewer */
 #ifdef PWRE_CONF_PNAK
 
-#include "glow_std.h"
+#include "cow_qt_helpers.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-
-extern "C" {
-#include "co_cdh.h"
-#include "co_time.h"
-}
-
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
 #include "flow_browwidget_qt.h"
 
 #include "pn_viewernav_qt.h"
 
-PnViewerNavQt::PnViewerNavQt(void *l_parent_ctx, QWidget *l_parent_wid,
-                             viewer_eType l_type, QWidget **w)
+PnViewerNavQt::PnViewerNavQt(
+    void* l_parent_ctx, QWidget* l_parent_wid, viewer_eType l_type, QWidget** w)
     : PnViewerNav(l_parent_ctx, l_type)
 {
-  form_widget =
-      scrolledbrowwidgetqt_new(PnViewerNav::init_brow_cb, this, &brow_widget);
+  form_widget
+      = scrolledbrowwidgetqt_new(PnViewerNav::init_brow_cb, this, &brow_widget);
 
   showNow(brow_widget);
 

@@ -38,26 +38,23 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 
 #if defined OS_LINUX
 #include <sys/stat.h>
 #endif
 
-#include "pwr.h"
-#include "pwr_baseclasses.h"
-#include "pwr_privilege.h"
+//#include "pwr_baseclasses.h"
 
-#include "flow_ctx.h"
-#include "flow_api.h"
 #include "co_cdh.h"
 #include "co_time.h"
-#include "co_api.h"
-#include "co_dcli.h"
+
 #include "rt_gdh.h"
-#include "flow_widget_qt.h"
-#include "xtt_trace_qt.h"
+
 #include "cow_wow_qt.h"
+
+#include "flow_widget_qt.h"
+
+#include "xtt_trace_qt.h"
 
 #include <QAction>
 #include <QMenu>
@@ -70,9 +67,8 @@ void RtTraceQtWidget::activate_print()
 {
   pwr_tStatus sts;
 
-  CoWowQt::CreateFlowPrintDialogQt("Trace", rt->flow_ctx,
-                                   flow_eOrientation_Landscape, 1.0, this,
-                                   &sts);
+  CoWowQt::CreateFlowPrintDialogQt(
+      "Trace", rt->flow_ctx, flow_eOrientation_Landscape, 1.0, this, &sts);
 }
 
 void RtTraceQtWidget::activate_printselect()
@@ -147,22 +143,22 @@ void RtTraceQtWidget::activate_view()
 
 void RtTraceQtWidget::activate_zoomin()
 {
-  flow_Zoom( rt->flow_ctx, 1.0/0.7);
+  flow_Zoom(rt->flow_ctx, 1.0 / 0.7);
 }
 
 void RtTraceQtWidget::activate_zoomout()
 {
-  flow_Zoom( rt->flow_ctx, 0.7);
+  flow_Zoom(rt->flow_ctx, 0.7);
 }
 
 void RtTraceQtWidget::activate_zoomreset()
 {
-  flow_UnZoom( rt->flow_ctx);
+  flow_UnZoom(rt->flow_ctx);
 }
 
 void RtTraceQtWidget::activate_scantime()
 {
-  rt->scan_time = ((QAction *) sender())->data().toInt();
+  rt->scan_time = ((QAction*)sender())->data().toInt();
 }
 
 void RtTraceQtWidget::activate_help()
@@ -190,7 +186,7 @@ RtTraceQt::~RtTraceQt()
   for (node = trace_list; node;) {
     delete node->tractx;
     fnode = node->Next;
-    free((char *) node);
+    free((char*)node);
     node = fnode;
   }
   if (nav_shell) {
@@ -207,24 +203,24 @@ void RtTraceQt::pop()
   ::pop(toplevel);
 }
 
-void RtTraceQt::popup_menu_position(int event_x, int event_y, int *x, int *y)
+void RtTraceQt::popup_menu_position(int event_x, int event_y, int* x, int* y)
 {
   CoWowQt::PopupPosition(flow_widget, event_x, event_y, x, y);
 }
 
-RtTrace *RtTraceQt::subwindow_new(void *ctx, pwr_tObjid oid, pwr_tStatus *sts)
+RtTrace* RtTraceQt::subwindow_new(void* ctx, pwr_tObjid oid, pwr_tStatus* sts)
 {
   return new RtTraceQt(ctx, flow_widget, oid, sts);
 }
 
-void RtTraceQtWidget::closeEvent(QCloseEvent *event)
+void RtTraceQtWidget::closeEvent(QCloseEvent* event)
 {
   rt->activate_close();
   QWidget::closeEvent(event);
 }
 
-RtTraceQt::RtTraceQt(void *tr_parent_ctx, QWidget *tr_parent_wid,
-                     pwr_tObjid tr_objid, pwr_tStatus *status)
+RtTraceQt::RtTraceQt(void* tr_parent_ctx, QWidget* tr_parent_wid,
+    pwr_tObjid tr_objid, pwr_tStatus* status)
     : RtTrace(tr_parent_ctx, tr_objid, status), nav_shell(0)
 {
   const int window_width = 900;
@@ -252,8 +248,9 @@ RtTraceQt::RtTraceQt(void *tr_parent_ctx, QWidget *tr_parent_wid,
     return;
   }
 
-  if (!(cid == pwr_cClass_windowplc || cid == pwr_cClass_windowcond ||
-        cid == pwr_cClass_windoworderact || cid == pwr_cClass_windowsubstep)) {
+  if (!(cid == pwr_cClass_windowplc || cid == pwr_cClass_windowcond
+          || cid == pwr_cClass_windoworderact
+          || cid == pwr_cClass_windowsubstep)) {
     sts = gdh_GetChild(tr_objid, &window_objid);
     if (EVEN(sts)) {
       *status = sts;
@@ -269,8 +266,9 @@ RtTraceQt::RtTraceQt(void *tr_parent_ctx, QWidget *tr_parent_wid,
     return;
   }
 
-  if (!(cid == pwr_cClass_windowplc || cid == pwr_cClass_windowcond ||
-        cid == pwr_cClass_windoworderact || cid == pwr_cClass_windowsubstep)) {
+  if (!(cid == pwr_cClass_windowplc || cid == pwr_cClass_windowcond
+          || cid == pwr_cClass_windoworderact
+          || cid == pwr_cClass_windowsubstep)) {
     *status = 0;
     return;
   }
@@ -297,84 +295,84 @@ RtTraceQt::RtTraceQt(void *tr_parent_ctx, QWidget *tr_parent_wid,
 
   CoWowQt::SetWindowIcon(toplevel);
 
-  QMenuBar *menu_bar = new QMenuBar(toplevel);
+  QMenuBar* menu_bar = new QMenuBar(toplevel);
 
   // File Entry
-  QMenu *file = menu_bar->addMenu(translate_utf8("&File"));
+  QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
   addMenuItem(toplevel, file, "&Print", SLOT(activate_print()));
   addMenuItem(toplevel, file, "Print &Selected Documents",
-              SLOT(activate_printselect()));
+      SLOT(activate_printselect()));
   addMenuItem(toplevel, file, "Save &Trace", SLOT(activate_savetrace()));
   addMenuItem(toplevel, file, "&Restore Trace", SLOT(activate_restoretrace()));
   addMenuItem(toplevel, file, "C&lear Trace", SLOT(activate_cleartrace()));
-  addMenuItem(toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+  addMenuItem(
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
   // Functions Entry
-  QMenu *functions = menu_bar->addMenu(translate_utf8("&Functions"));
+  QMenu* functions = menu_bar->addMenu(translate_utf8("&Functions"));
   addMenuItem(toplevel, functions, "&Open Object", SLOT(activate_open_object()),
-              "CTRL+A");
+      "CTRL+A");
   addMenuItem(toplevel, functions, "Open S&ubwindow",
-              SLOT(activate_open_subwindow()), "CTRL+L");
+      SLOT(activate_open_subwindow()), "CTRL+L");
   addMenuItem(toplevel, functions, "&Display object in Navigator",
-              SLOT(activate_display_object()), "CTRL+D");
+      SLOT(activate_display_object()), "CTRL+D");
   addMenuItem(toplevel, functions, "&Show Crossreferences",
-              SLOT(activate_show_cross()), "CTRL+R");
+      SLOT(activate_show_cross()), "CTRL+R");
   addMenuItem(toplevel, functions, "&Open ObjectGraph",
-              SLOT(activate_open_classgraph()), "CTRL+G");
+      SLOT(activate_open_classgraph()), "CTRL+G");
   addMenuItem(toplevel, functions, "&Collect Insert",
-              SLOT(activate_collect_insert()), "CTRL+V");
+      SLOT(activate_collect_insert()), "CTRL+V");
 
   // View Entry
-  QMenu *view = menu_bar->addMenu(translate_utf8("&View"));
-  addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoomin()), "CTRL+I",
-              "zoom-in");
+  QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
+  addMenuItem(
+      toplevel, view, "Zoom &In", SLOT(activate_zoomin()), "CTRL+I", "zoom-in");
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoomout()), "CTRL+O",
-              "zoom-out");
-  addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoomreset()), "CTRL+B",
-              "zoom-original");
+      "zoom-out");
+  addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoomreset()),
+      "CTRL+B", "zoom-original");
 
   // Submenu ScanTime
-  QMenu *view_sc = view->addMenu(translate_utf8("&ScanTime"));
-  QActionGroup *view_sc_group = new QActionGroup(toplevel);
-  QAction *a = addMenuRadioItem(toplevel, view_sc, "0.50 s",
-                                SLOT(activate_scantime()), view_sc_group);
+  QMenu* view_sc = view->addMenu(translate_utf8("&ScanTime"));
+  QActionGroup* view_sc_group = new QActionGroup(toplevel);
+  QAction* a = addMenuRadioItem(
+      toplevel, view_sc, "0.50 s", SLOT(activate_scantime()), view_sc_group);
   a->setData(500);
   a->setChecked(true);
-  a = addMenuRadioItem(toplevel, view_sc, "0.20 s", SLOT(activate_scantime()),
-                       view_sc_group);
+  a = addMenuRadioItem(
+      toplevel, view_sc, "0.20 s", SLOT(activate_scantime()), view_sc_group);
   a->setData(200);
-  a = addMenuRadioItem(toplevel, view_sc, "0.10 s", SLOT(activate_scantime()),
-                       view_sc_group);
+  a = addMenuRadioItem(
+      toplevel, view_sc, "0.10 s", SLOT(activate_scantime()), view_sc_group);
   a->setData(100);
-  a = addMenuRadioItem(toplevel, view_sc, "0.05 s", SLOT(activate_scantime()),
-                       view_sc_group);
+  a = addMenuRadioItem(
+      toplevel, view_sc, "0.05 s", SLOT(activate_scantime()), view_sc_group);
   a->setData(50);
-  a = addMenuRadioItem(toplevel, view_sc, "0.02 s", SLOT(activate_scantime()),
-                       view_sc_group);
+  a = addMenuRadioItem(
+      toplevel, view_sc, "0.02 s", SLOT(activate_scantime()), view_sc_group);
   a->setData(20);
   // End submenu
   // End View entry
 
   // Mode entry
-  QMenu *mode = menu_bar->addMenu(translate_utf8("&Mode"));
-  QActionGroup *mode_group = new QActionGroup(toplevel);
+  QMenu* mode = menu_bar->addMenu(translate_utf8("&Mode"));
+  QActionGroup* mode_group = new QActionGroup(toplevel);
   addMenuRadioItem(toplevel, mode, "V&iew", SLOT(activate_view()), mode_group);
-  QAction *mode_trace =
-      addMenuRadioItem(toplevel, mode, "&Trace", SLOT(activate_trace()),
-                       mode_group);
+  QAction* mode_trace = addMenuRadioItem(
+      toplevel, mode, "&Trace", SLOT(activate_trace()), mode_group);
   mode_trace->setChecked(true);
-  addMenuRadioItem(toplevel, mode, "&Simulate", SLOT(activate_simulate()),
-                   mode_group);
+  addMenuRadioItem(
+      toplevel, mode, "&Simulate", SLOT(activate_simulate()), mode_group);
 
   // Menu Help
-  QMenu *help = menu_bar->addMenu(translate_utf8("&Help"));
+  QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
   addMenuItem(toplevel, help, "On &Trace", SLOT(activate_help()), "CTRL+H",
-              "system-help");
+      "system-help");
   addMenuItem(toplevel, help, "On &PlcPgm", SLOT(activate_helpplc()));
   addMenuItem(toplevel, help, "P&lcPgm Overview", SLOT(activate_helpplclist()));
 
   // Toolbar
-  QToolBar *tools = new QToolBar(toplevel);
+  QToolBar* tools = new QToolBar(toplevel);
 
   pwr_tObjid parent;
   pwr_tCid parent_cid;
@@ -383,34 +381,34 @@ RtTraceQt::RtTraceQt(void *tr_parent_ctx, QWidget *tr_parent_wid,
     sts = gdh_GetObjectClass(parent, &parent_cid);
     if (ODD(sts) && parent_cid != pwr_cClass_plc) {
       addToolItem(toplevel, tools, "Open parent window",
-                  SLOT(activate_parent_window()), "$pwr_exe/xtt_up.png");
+          SLOT(activate_parent_window()), "$pwr_exe/xtt_up.png");
     }
   }
 
   addToolItem(toplevel, tools, "Display object in Navigator",
-              SLOT(activate_display_object()), "$pwr_exe/xtt_navigator.png");
-  addToolItem(toplevel, tools, "Show Crossreferences", SLOT(activate_show_cross()),
-              "$pwr_exe/xtt_crossref.png");
+      SLOT(activate_display_object()), "$pwr_exe/xtt_navigator.png");
+  addToolItem(toplevel, tools, "Show Crossreferences",
+      SLOT(activate_show_cross()), "$pwr_exe/xtt_crossref.png");
   addToolItem(toplevel, tools, "Zoom in", SLOT(activate_zoomin()),
-              "$pwr_exe/xtt_zoom_in.png");
+      "$pwr_exe/xtt_zoom_in.png");
   addToolItem(toplevel, tools, "Zoom out", SLOT(activate_zoomout()),
-              "$pwr_exe/xtt_zoom_out.png");
+      "$pwr_exe/xtt_zoom_out.png");
   addToolItem(toplevel, tools, "Zoom reset", SLOT(activate_zoomreset()),
-              "$pwr_exe/xtt_zoom_reset.png");
+      "$pwr_exe/xtt_zoom_reset.png");
 
   // Flow widget
   debug_print("creating a scrolledflowwidgetqt\n");
-  QWidget
-      *flow_scrolled = scrolledflowwidgetqt_new(init_flow, this, &flow_widget);
+  QWidget* flow_scrolled
+      = scrolledflowwidgetqt_new(init_flow, this, &flow_widget);
   showNow(flow_widget);
   debug_print("creating a flownavwidgetqt\n");
   nav_widget = flownavwidgetqt_new(flow_widget);
 
-  QSplitter *paned = new QSplitter(toplevel);
+  QSplitter* paned = new QSplitter(toplevel);
   add_expanding(paned, flow_scrolled);
   paned->addWidget(nav_widget);
 
-  QVBoxLayout *vbox = new QVBoxLayout();
+  QVBoxLayout* vbox = new QVBoxLayout();
   vbox->setMenuBar(menu_bar);
   vbox->addWidget(tools);
   add_expanding(vbox, paned);
@@ -432,7 +430,7 @@ RtTraceQt::RtTraceQt(void *tr_parent_ctx, QWidget *tr_parent_wid,
   {
     struct stat info;
 
-    if ( stat( filename, &info) != -1)
+    if (stat(filename, &info) != -1)
       version = info.st_ctime;
   }
 #endif
@@ -448,7 +446,9 @@ RtTraceQt::RtTraceQt(void *tr_parent_ctx, QWidget *tr_parent_wid,
   strcat(aname, ".Version");
 
   sts = gdh_GetObjectInfo(aname, &window_version, sizeof(window_version));
-  if (EVEN(sts)) { return; }
+  if (EVEN(sts)) {
+    return;
+  }
 
   if (flow_version != window_version) {
     char msg[200];
@@ -459,18 +459,18 @@ RtTraceQt::RtTraceQt(void *tr_parent_ctx, QWidget *tr_parent_wid,
     t.tv_sec = flow_version;
     t.tv_nsec = 0;
     time_AtoAscii(&t, time_eFormat_DateAndTime, flow_version_str,
-                  sizeof(flow_version_str));
+        sizeof(flow_version_str));
     t.tv_sec = window_version;
     t.tv_nsec = 0;
     time_AtoAscii(&t, time_eFormat_DateAndTime, window_version_str,
-                  sizeof(window_version_str));
+        sizeof(window_version_str));
 
     if (flow_version > window_version) {
       sprintf(msg, "Trace file is newer than database version\n(%s > %s)",
-              flow_version_str, window_version_str);
+          flow_version_str, window_version_str);
     } else if (flow_version < window_version) {
       sprintf(msg, "Trace file is older than database version\n(%s < %s)",
-              flow_version_str, window_version_str);
+          flow_version_str, window_version_str);
     }
     wow->DisplayError("Version mismatch", msg);
   }

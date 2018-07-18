@@ -40,40 +40,45 @@
 /* xtt_keyboard_qt.h -- Virtual keyboard */
 
 #ifndef xtt_keyboard_h
-# include "xtt_keyboard.h"
+#include "xtt_keyboard.h"
 #endif
+
+#include <QDialog>
+#include <QWidget>
 
 class XttKeyboardQt : public XttKeyboard {
 public:
-  XttKeyboardQt(void *xn_parent_ctx, QWidget *xn_parent_wid,
-                const char *xn_name, QWidget **w, keyboard_eKeymap keymap,
-                keyboard_eType type, int xn_color_theme, pwr_tStatus *status);
+  XttKeyboardQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
+      const char* xn_name, QWidget** w, keyboard_eKeymap keymap,
+      keyboard_eType type, int xn_color_theme, pwr_tStatus* status);
   ~XttKeyboardQt();
 
   void set_inputfocus();
   void pop();
-  void set_transient(void *basewidget);
+  void set_transient(void* basewidget);
 
-  QWidget *keyboard_widget;
-  QWidget *form_widget;
+  QWidget* keyboard_widget;
+  QWidget* form_widget;
   int displayed;
   int closing_down;
 
 private:
-  QDialog *toplevel;
+  QDialog* toplevel;
 };
 
 class XttKeyboardQtWidget : public QDialog {
 public:
-  XttKeyboardQtWidget(XttKeyboardQt *parent_ctx, QWidget *parent)
-      : QDialog(parent), kb(parent_ctx) {}
+  XttKeyboardQtWidget(XttKeyboardQt* parent_ctx, QWidget* parent)
+      : QDialog(parent), kb(parent_ctx)
+  {
+  }
 
 protected:
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 private:
-  XttKeyboardQt *kb;
+  XttKeyboardQt* kb;
 };
 
 #endif

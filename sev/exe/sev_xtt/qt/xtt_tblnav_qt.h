@@ -39,22 +39,20 @@
 
 /* xtt_tblnav_qt.h -- Simple navigator */
 
-#ifndef xtt_tblnav_h
-# include "../src/xtt_tblnav.h"
-#endif
+#include "../src/xtt_tblnav.h"
 
 #include <QWidget>
 
 //! The navigation area of the attribute editor.
 class TblNavQt : public TblNav {
 public:
-  TblNavQt(void *xn_parent_ctx, QWidget *xn_parent_wid,
-           sevcli_sHistItem *xn_itemlist, int xn_item_cnt, QWidget **w,
-           pwr_tStatus *status);
+  TblNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
+      sevcli_sHistItem* xn_itemlist, int xn_item_cnt, QWidget** w,
+      pwr_tStatus* status);
   ~TblNavQt();
 
-  QWidget *brow_widget;
-  QWidget *form_widget;
+  QWidget* brow_widget;
+  QWidget* form_widget;
 
   void set_inputfocus();
 };

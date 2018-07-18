@@ -5,7 +5,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-# include "config.h"
+#include "config.h"
 #endif
 
 #include <gmodule.h>
@@ -17,15 +17,19 @@ G_MODULE_EXPORT const gchar version[] = VERSION;
 
 /* Start the functions we need for the plugin stuff */
 
-G_MODULE_EXPORT void
-plugin_register (void)
+G_MODULE_EXPORT void plugin_register(void)
 {
-  {extern void proto_register_handoff_redcom (void); proto_register_handoff_redcom ();}
-  {extern void proto_register_redcom (void); proto_register_redcom ();}
+  {
+    extern void proto_register_handoff_redcom(void);
+    proto_register_handoff_redcom();
+  }
+  {
+    extern void proto_register_redcom(void);
+    proto_register_redcom();
+  }
 }
 
-G_MODULE_EXPORT void
-plugin_reg_handoff(void)
+G_MODULE_EXPORT void plugin_reg_handoff(void)
 {
 }
 #endif

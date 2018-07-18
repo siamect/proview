@@ -36,38 +36,28 @@
 
 /* wb_wda_qt.cpp -- spreadsheet editor */
 
-#include "glow_std.h"
+#include "cow_qt_helpers.h"
+#include "cow_xhelp.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "co_cdh.h"
-#include "co_dcli.h"
-#include "co_time.h"
 #include "wb_wda_msg.h"
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
 #include "wb_wda_qt.h"
 #include "wb_wdanav_qt.h"
-#include "wb_wtt.h"
 #include "wb_wnav.h"
-#include "cow_xhelp.h"
-#include "cow_wow_qt.h"
+#include "wb_wtt.h"
 
 #include <QDialogButtonBox>
 #include <QMenuBar>
-#include <QVBoxLayout>
 #include <QPushButton>
+#include <QVBoxLayout>
 
 CoWowRecall WdaQt::value_recall;
 
-void WdaQt::message(char severity, const char *message)
+void WdaQt::message(char severity, const char* message)
 {
   msg_label->setText(fl(message));
 }
 
-void WdaQt::set_prompt(const char *prompt)
+void WdaQt::set_prompt(const char* prompt)
 {
   if (strcmp(prompt, "") == 0) {
     cmd_prompt->setVisible(false);
@@ -78,19 +68,18 @@ void WdaQt::set_prompt(const char *prompt)
   }
 }
 
-void WdaQt::print(const char *title)
+void WdaQt::print(const char* title)
 {
   pwr_tStatus sts;
 
   wow->CreateBrowPrintDialog(title, wdanav->brow->ctx,
-                             flow_eOrientation_Portrait, 1.0, (void *) this,
-                             &sts);
+      flow_eOrientation_Portrait, 1.0, (void*)this, &sts);
 }
 
 void WdaQt::change_value(int set_focus)
 {
   int multiline;
-  char *value;
+  char* value;
   int input_size;
 
   if (input_open) {
@@ -101,8 +90,8 @@ void WdaQt::change_value(int set_focus)
     return;
   }
 
-  int sts = wdanav
-      ->check_attr(&multiline, &input_node, input_name, &value, &input_size);
+  int sts = wdanav->check_attr(
+      &multiline, &input_node, input_name, &value, &input_size);
   if (EVEN(sts)) {
     if (sts == WDA__NOATTRSEL) {
       message('E', "No attribute is selected");
@@ -200,7 +189,7 @@ void WdaQtWidget::activate_prevattr()
 void WdaQtWidget::activate_help()
 {
   CoXHelp::dhelp("spreadsheeteditor_refman", 0, navh_eHelpFile_Other,
-                 "$pwr_lang/man_dg.dat", true);
+      "$pwr_lang/man_dg.dat", true);
 }
 
 void WdaQtWidget::class_activate_ok()
@@ -209,11 +198,11 @@ void WdaQtWidget::class_activate_ok()
   pwr_tClassId new_classid;
 
   QByteArray ba = wda->wdaclass_hiervalue->text().toLatin1();
-  char *hiername = ba.data();
+  char* hiername = ba.data();
   ba = wda->wdaclass_namevalue->text().toLatin1();
-  char *searchname = ba.data();
+  char* searchname = ba.data();
   ba = wda->wdaclass_classvalue->text().toLatin1();
-  char *classname = ba.data();
+  char* classname = ba.data();
 
   wda->attrobjects = wda->wdaclass_attrobjects->isChecked();
 
@@ -244,9 +233,9 @@ void WdaQtWidget::class_activate_ok()
     wda->open_attr_dialog();
   } else {
     // Find new attributes
-    sts = ((WdaNav *) wda->wdanav)->update(wda->objid, wda->classid,
-                                           wda->attribute, wda->attrobjects,
-                                           wda->search_name);
+    sts = ((WdaNav*)wda->wdanav)
+              ->update(wda->objid, wda->classid, wda->attribute,
+                  wda->attrobjects, wda->search_name);
     if (EVEN(sts)) {
       CoWowQt ww(wda->wdaclass_dia);
       ww.DisplayError("Spreadsheet error", wnav_get_message(sts));
@@ -254,7 +243,7 @@ void WdaQtWidget::class_activate_ok()
   }
 }
 
-void WdaQtWidget::focusInEvent(QFocusEvent *event)
+void WdaQtWidget::focusInEvent(QFocusEvent* event)
 {
   if (!wda->focustimer.disabled()) {
     if (wda->cmd_scrolledinput->isVisible()) {
@@ -276,10 +265,10 @@ void WdaQt::change_value_close()
   if (input_open) {
     if (input_multiline) {
       QByteArray ba = cmd_scrolled_buffer->toPlainText().toLatin1();
-      char *text = ba.data();
+      char* text = ba.data();
 
       // Replace ctrl characters with space
-      for (unsigned char *s = (unsigned char *) text; *s; s++) {
+      for (unsigned char* s = (unsigned char*)text; *s; s++) {
         if (*s < ' ' && *s != 10 && *s != 13) {
           *s = ' ';
         }
@@ -300,7 +289,7 @@ void WdaQt::change_value_close()
       }
     } else {
       QByteArray ba = cmd_entry->text().toLatin1();
-      char *text = ba.data();
+      char* text = ba.data();
 
       if (text) {
         wdanav->set_attr_value(input_node, input_name, text);
@@ -329,7 +318,7 @@ void WdaQtWidget::activate_cmd_entry()
   wda->wdanav->set_inputfocus();
 
   QByteArray ba = wda->cmd_entry->text().toLatin1();
-  char *text = ba.data();
+  char* text = ba.data();
 
   if (wda->input_open) {
     if (text) {
@@ -352,11 +341,11 @@ void WdaQtWidget::activate_cmd_scrolled_ok()
 {
   if (wda->input_open) {
     QByteArray ba = wda->cmd_scrolled_buffer->toPlainText().toLatin1();
-    char *text = ba.data();
+    char* text = ba.data();
 
     if (text) {
       // Replace ctrl characters with space
-      for (unsigned char *s = (unsigned char *) text; *s; s++) {
+      for (unsigned char* s = (unsigned char*)text; *s; s++) {
         if (*s < ' ' && *s != 10 && *s != 13) {
           *s = ' ';
         }
@@ -396,7 +385,7 @@ void WdaQt::pop()
   ::pop(toplevel);
 }
 
-void WdaQt::open_class_dialog(char *hierstr, char *classstr, char *namestr)
+void WdaQt::open_class_dialog(char* hierstr, char* classstr, char* namestr)
 {
   wdaclass_hiervalue->setText(fl(hierstr));
   wdaclass_classvalue->setText(fl(classstr));
@@ -410,7 +399,7 @@ void WdaQt::update_title()
   CoWowQt::update_title(toplevel, editmode);
 }
 
-void WdaQtWidget::closeEvent(QCloseEvent *event)
+void WdaQtWidget::closeEvent(QCloseEvent* event)
 {
   if (wda->close_cb) {
     (wda->close_cb)(wda);
@@ -420,12 +409,13 @@ void WdaQtWidget::closeEvent(QCloseEvent *event)
   QWidget::closeEvent(event);
 }
 
-WdaQt::WdaQt(QWidget *wa_parent_wid, void *wa_parent_ctx,
-             ldh_tSesContext wa_ldhses, pwr_tObjid wa_objid,
-             pwr_tClassId wa_classid, const char *wa_attribute, int wa_editmode,
-             int wa_advanced_user, int wa_display_objectname)
+WdaQt::WdaQt(QWidget* wa_parent_wid, void* wa_parent_ctx,
+    ldh_tSesContext wa_ldhses, pwr_tObjid wa_objid, pwr_tClassId wa_classid,
+    const char* wa_attribute, int wa_editmode, int wa_advanced_user,
+    int wa_display_objectname)
     : Wda(wa_parent_ctx, wa_ldhses, wa_objid, wa_classid, wa_attribute,
-          wa_editmode, wa_advanced_user, wa_display_objectname), wdaclass_dia(0)
+          wa_editmode, wa_advanced_user, wa_display_objectname),
+      wdaclass_dia(0)
 {
   int sts;
 
@@ -438,44 +428,48 @@ WdaQt::WdaQt(QWidget *wa_parent_wid, void *wa_parent_ctx,
   CoWowQt::SetWindowIcon(toplevel);
 
   // Menu
-  QMenuBar *menu_bar = new QMenuBar();
+  QMenuBar* menu_bar = new QMenuBar();
 
   // File entry
-  QMenu *file = menu_bar->addMenu(translate_utf8("&File"));
-  addMenuItem(toplevel, file, "&Select Class", SLOT(activate_setclass()), "CTRL+C");
-  addMenuItem(toplevel, file, "Select &Attribute", SLOT(activate_setattr()),
-              "CTRL+A");
-  addMenuItem(toplevel, file, "Next Attribute", SLOT(activate_nextattr()),
-              "CTRL+N");
+  QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
+  addMenuItem(
+      toplevel, file, "&Select Class", SLOT(activate_setclass()), "CTRL+C");
+  addMenuItem(
+      toplevel, file, "Select &Attribute", SLOT(activate_setattr()), "CTRL+A");
+  addMenuItem(
+      toplevel, file, "Next Attribute", SLOT(activate_nextattr()), "CTRL+N");
   addMenuItem(toplevel, file, "Previous Attribute", SLOT(activate_prevattr()),
-              "CTRL+P");
-  addMenuItem(toplevel, file, "Export to Textfile", SLOT(activate_export_text()));
-  addMenuItem(toplevel, file, "Import from Textfile", SLOT(activate_import_text()));
+      "CTRL+P");
+  addMenuItem(
+      toplevel, file, "Export to Textfile", SLOT(activate_export_text()));
+  addMenuItem(
+      toplevel, file, "Import from Textfile", SLOT(activate_import_text()));
   addMenuItem(toplevel, file, "&Print", SLOT(activate_print()));
-  addMenuItem(toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+  addMenuItem(
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
   // Functions entry
-  QMenu *functions = menu_bar->addMenu(translate_utf8("&Functions"));
-  addMenuItem(toplevel, functions, "Change &Value", SLOT(activate_change_value()),
-              "CTRL+Q");
+  QMenu* functions = menu_bar->addMenu(translate_utf8("&Functions"));
+  addMenuItem(toplevel, functions, "Change &Value",
+      SLOT(activate_change_value()), "CTRL+Q");
   addMenuItem(toplevel, functions, "C&lose Change Value",
-              SLOT(activate_close_changeval()), "CTRL+T");
+      SLOT(activate_close_changeval()), "CTRL+T");
 
   // Help entry
-  QMenu *help = menu_bar->addMenu(translate_utf8("&Help"));
-  addMenuItem(toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H",
-              "system-help");
+  QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
+  addMenuItem(
+      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "system-help");
 
   pane = new QSplitter(Qt::Vertical);
 
-  utility = ((WUtility *) parent_ctx)->utype;
-  wdanav = new WdaNavQt(this, pane, "Plant", ldhses, objid, classid,
-                        attribute, wa_editmode, wa_advanced_user,
-                        wa_display_objectname, utility, &brow_widget, &sts);
+  utility = ((WUtility*)parent_ctx)->utype;
+  wdanav = new WdaNavQt(this, pane, "Plant", ldhses, objid, classid, attribute,
+      wa_editmode, wa_advanced_user, wa_display_objectname, utility,
+      &brow_widget, &sts);
   wdanav->message_cb = &Wda::message_cb;
   wdanav->change_value_cb = &Wda::change_value_cb;
 
-  QStatusBar *statusbar = new QStatusBar();
+  QStatusBar* statusbar = new QStatusBar();
   msg_label = new QLabel("");
   msg_label->setFixedHeight(25);
   cmd_prompt = new QLabel("value > ");
@@ -483,13 +477,13 @@ WdaQt::WdaQt(QWidget *wa_parent_wid, void *wa_parent_ctx,
   cmd_entry = new CoWowEntryQt(&value_recall);
   cmd_entry->setFixedHeight(25);
   QObject::connect(cmd_entry, SIGNAL(editingFinished()), toplevel,
-                   SLOT(activate_cmd_entry()));
+      SLOT(activate_cmd_entry()));
 
   statusbar->addWidget(msg_label);
   statusbar->addWidget(cmd_prompt);
   add_expanding(statusbar, cmd_entry);
 
-  QVBoxLayout *vbox = new QVBoxLayout(toplevel);
+  QVBoxLayout* vbox = new QVBoxLayout(toplevel);
   vbox->setMenuBar(menu_bar);
 
   add_expanding(pane, brow_widget);
@@ -501,17 +495,17 @@ WdaQt::WdaQt(QWidget *wa_parent_wid, void *wa_parent_ctx,
 
   cmd_scrolled_buffer = new QTextEdit();
 
-  QDialogButtonBox *buttons = new QDialogButtonBox();
+  QDialogButtonBox* buttons = new QDialogButtonBox();
   buttons->addButton(QDialogButtonBox::Ok);
   buttons->button(QDialogButtonBox::Ok)->setFixedSize(70, 25);
   buttons->addButton(QDialogButtonBox::Cancel);
   buttons->button(QDialogButtonBox::Cancel)->setFixedSize(70, 25);
   QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
-                   toplevel, SLOT(activate_cmd_scrolled_ok()));
+      toplevel, SLOT(activate_cmd_scrolled_ok()));
   QObject::connect(buttons->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
-                   toplevel, SLOT(activate_cmd_scrolled_ca()));
+      toplevel, SLOT(activate_cmd_scrolled_ca()));
 
-  QVBoxLayout *cmd_scrolledinput_layout = new QVBoxLayout();
+  QVBoxLayout* cmd_scrolledinput_layout = new QVBoxLayout();
   add_expanding(cmd_scrolledinput_layout, cmd_scrolled_buffer);
   cmd_scrolledinput_layout->addWidget(buttons);
   cmd_scrolledinput = layout_to_widget(cmd_scrolledinput_layout);
@@ -532,7 +526,7 @@ WdaQt::WdaQt(QWidget *wa_parent_wid, void *wa_parent_ctx,
   update_title();
 
   if (utility == wb_eUtility_Wtt) {
-    ((Wtt *) parent_ctx)->register_utility(this, wb_eUtility_SpreadsheetEditor);
+    ((Wtt*)parent_ctx)->register_utility(this, wb_eUtility_SpreadsheetEditor);
   }
   Wda::open_class_dialog();
 }
@@ -550,40 +544,40 @@ void WdaQt::create_class_dialog()
   wdaclass_dia->setAttribute(Qt::WA_DeleteOnClose);
 
   wdaclass_classvalue = new QLineEdit();
-  QLabel *class_label = new QLabel("Class");
+  QLabel* class_label = new QLabel("Class");
   class_label->setFixedWidth(95);
   wdaclass_hiervalue = new QLineEdit();
-  QLabel *hier_label = new QLabel("Hierarchy");
+  QLabel* hier_label = new QLabel("Hierarchy");
   hier_label->setFixedWidth(95);
   wdaclass_namevalue = new QLineEdit();
-  QLabel *name_label = new QLabel("Name");
+  QLabel* name_label = new QLabel("Name");
   name_label->setFixedWidth(95);
   wdaclass_attrobjects = new QCheckBox("Attribute Objects");
 
-  QHBoxLayout *india_hboxclass = new QHBoxLayout();
+  QHBoxLayout* india_hboxclass = new QHBoxLayout();
   india_hboxclass->addWidget(class_label);
   add_expanding(india_hboxclass, wdaclass_classvalue);
 
-  QHBoxLayout *india_hboxhier = new QHBoxLayout();
+  QHBoxLayout* india_hboxhier = new QHBoxLayout();
   india_hboxhier->addWidget(hier_label);
   add_expanding(india_hboxhier, wdaclass_hiervalue);
 
-  QHBoxLayout *india_hboxname = new QHBoxLayout();
+  QHBoxLayout* india_hboxname = new QHBoxLayout();
   india_hboxname->addWidget(name_label);
   add_expanding(india_hboxname, wdaclass_namevalue);
 
-  QHBoxLayout *india_hboxattrobj = new QHBoxLayout();
+  QHBoxLayout* india_hboxattrobj = new QHBoxLayout();
   india_hboxattrobj->addWidget(wdaclass_attrobjects);
 
-  QDialogButtonBox *buttons = new QDialogButtonBox();
+  QDialogButtonBox* buttons = new QDialogButtonBox();
   buttons->addButton(QDialogButtonBox::Ok);
   buttons->addButton(QDialogButtonBox::Cancel);
   buttons->button(QDialogButtonBox::Ok)->setFixedSize(70, 25);
   buttons->button(QDialogButtonBox::Cancel)->setFixedSize(70, 25);
   QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
-                   toplevel, SLOT(class_activate_ok()));
+      toplevel, SLOT(class_activate_ok()));
 
-  QVBoxLayout *india_vbox = new QVBoxLayout(wdaclass_dia);
+  QVBoxLayout* india_vbox = new QVBoxLayout(wdaclass_dia);
   india_vbox->addLayout(india_hboxclass);
   india_vbox->addLayout(india_hboxhier);
   india_vbox->addLayout(india_hboxname);

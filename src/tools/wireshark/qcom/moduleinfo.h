@@ -7,7 +7,6 @@
 /* Name of package */
 #define PACKAGE "qcom"
 
-
 #ifdef VERSION
 #undef VERSION
 #endif

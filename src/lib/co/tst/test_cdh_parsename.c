@@ -1,20 +1,18 @@
 #include <stddef.h>
 #include <stdio.h>
-#include "pwr.h"
 #include "co_cdh.h"
 
-main ()
+main()
 {
-  char			string[256];
-  cdh_sParseName	ParseName;
-  cdh_sParseName	*pn;
-  pwr_tStatus		sts;
-  pwr_tObjid		poid = pwr_cNObjid;
-  int			i;
-  char			str[80];
+  char string[256];
+  cdh_sParseName ParseName;
+  cdh_sParseName* pn;
+  pwr_tStatus sts;
+  pwr_tObjid poid = pwr_cNObjid;
+  int i;
+  char str[80];
 
   while (gets(string) != NULL) {
-
     pn = cdh_ParseName(&sts, &ParseName, poid, string, 0);
     if (pn == NULL) {
       printf("Error, sts = %d\n", sts);
@@ -22,17 +20,28 @@ main ()
     }
 
     printf("flags: ");
-    if (pn->flags.b.parent) printf("Parent,");
-    if (pn->flags.b.idString) printf("IdString,");
-    if (pn->flags.b.volume) printf("Volume,");
-    if (pn->flags.b.path) printf("Path,");
-    if (pn->flags.b.object) printf("Object,");
-    if (pn->flags.b.bodyId) printf("BodyId,");
-    if (pn->flags.b.bodyName) printf("BodyName,");
-    if (pn->flags.b.attribute) printf("Attribute,");
-    if (pn->flags.b.index) printf("Index,");
-    if (pn->flags.b.escapeGMS) printf("EscapeGMS,");
-    if (pn->flags.b.separator) printf("Separator,");
+    if (pn->flags.b.parent)
+      printf("Parent,");
+    if (pn->flags.b.idString)
+      printf("IdString,");
+    if (pn->flags.b.volume)
+      printf("Volume,");
+    if (pn->flags.b.path)
+      printf("Path,");
+    if (pn->flags.b.object)
+      printf("Object,");
+    if (pn->flags.b.bodyId)
+      printf("BodyId,");
+    if (pn->flags.b.bodyName)
+      printf("BodyName,");
+    if (pn->flags.b.attribute)
+      printf("Attribute,");
+    if (pn->flags.b.index)
+      printf("Index,");
+    if (pn->flags.b.escapeGMS)
+      printf("EscapeGMS,");
+    if (pn->flags.b.separator)
+      printf("Separator,");
     printf("\n");
     printf("Parent : %s\n", cdh_ObjidToString(pn->poid, 1));
     printf("Index  : %d\n", pn->index);
@@ -44,58 +53,60 @@ main ()
     if (pn->flags.b.idString) {
       switch (pn->eId) {
       case cdh_eId_objectIx:
-	printf("eId  : ObjectIx\n");
-	printf("Value: %s\n", cdh_ObjectIxToString(NULL, pn->uId.oix, 1));
-	break;
+        printf("eId  : ObjectIx\n");
+        printf("Value: %s\n", cdh_ObjectIxToString(NULL, pn->uId.oix, 1));
+        break;
       case cdh_eId_objid:
-	printf("eId  : Objid\n");
-	printf("Value: %s\n", cdh_ObjidToString(pn->uId.oid, 1));
-	break;
+        printf("eId  : Objid\n");
+        printf("Value: %s\n", cdh_ObjidToString(pn->uId.oid, 1));
+        break;
       case cdh_eId_classId:
-	printf("eId  : ClassId\n");
-	printf("Value: %s\n", cdh_ClassIdToString(NULL, pn->uId.cid, 1));
-	break;
+        printf("eId  : ClassId\n");
+        printf("Value: %s\n", cdh_ClassIdToString(NULL, pn->uId.cid, 1));
+        break;
       case cdh_eId_volumeId:
-	printf("eId  : VolumId\n");
-	printf("Value: %s\n", cdh_VolumeIdToString(0, 0, pn->uId.vid, 1, 1));
-	break;
+        printf("eId  : VolumId\n");
+        printf("Value: %s\n", cdh_VolumeIdToString(0, 0, pn->uId.vid, 1, 1));
+        break;
       case cdh_eId_typeId:
-	printf("eId  : TypeId\n");
-	printf("Value: %s\n", cdh_TypeIdToString(NULL, pn->uId.tid, 1));
-	break;
+        printf("eId  : TypeId\n");
+        printf("Value: %s\n", cdh_TypeIdToString(NULL, pn->uId.tid, 1));
+        break;
       case cdh_eId_aref:
-	printf("eId  : Aref\n");
-	printf("Value: %s\n", cdh_ArefToString(NULL, &pn->uId.aref, 1));
-	break;
+        printf("eId  : Aref\n");
+        printf("Value: %s\n", cdh_ArefToString(NULL, &pn->uId.aref, 1));
+        break;
       case cdh_eId_subid:
-	cdh_SubidToString(str, sizeof(str), pn->uId.sid, 1);
-	printf("eId  : Subid\n");
-	printf("Value: %s\n", str);
-	break;
+        cdh_SubidToString(str, sizeof(str), pn->uId.sid, 1);
+        printf("eId  : Subid\n");
+        printf("Value: %s\n", str);
+        break;
       case cdh_eId_dlid:
-	cdh_DlidToString(str, sizeof(str), pn->uId.did, 1);
-	printf("eId  : DLid\n");
-	printf("Value: %s\n", str);
-	break;
+        cdh_DlidToString(str, sizeof(str), pn->uId.did, 1);
+        printf("eId  : DLid\n");
+        printf("Value: %s\n", str);
+        break;
       default:
-	printf("eId: Error");
+        printf("eId: Error");
       }
     }
     if (pn->flags.b.volume)
-      printf("Volume      : %d,%d,%c,%c, %s %s\n", pn->volume.pack.c.len, pn->volume.pack.c.hash,
-	pn->volume.pack.c.first, pn->volume.pack.c.last, pn->volume.orig, pn->volume.norm);
+      printf("Volume      : %d,%d,%c,%c, %s %s\n", pn->volume.pack.c.len,
+          pn->volume.pack.c.hash, pn->volume.pack.c.first,
+          pn->volume.pack.c.last, pn->volume.orig, pn->volume.norm);
     for (i = 0; i < pn->nObject; i++) {
-      printf("Object(%.4d): %d,%d,%c,%c, %s %s\n", i, pn->object[i].pack.c.len, pn->object[i].pack.c.hash,
-	pn->object[i].pack.c.first, pn->object[i].pack.c.last, pn->object[i].orig, pn->object[i].norm);
+      printf("Object(%.4d): %d,%d,%c,%c, %s %s\n", i, pn->object[i].pack.c.len,
+          pn->object[i].pack.c.hash, pn->object[i].pack.c.first,
+          pn->object[i].pack.c.last, pn->object[i].orig, pn->object[i].norm);
     }
     for (i = 0; i < pn->nBody; i++) {
-      printf("Body(%.4d)  : %d,%d,%c,%c, %s %s\n", i, pn->body[i].pack.c.len, pn->body[i].pack.c.hash,
-	pn->body[i].pack.c.first, pn->body[i].pack.c.last, pn->body[i].orig, pn->body[i].norm);
+      printf("Body(%.4d)  : %d,%d,%c,%c, %s %s\n", i, pn->body[i].pack.c.len,
+          pn->body[i].pack.c.hash, pn->body[i].pack.c.first,
+          pn->body[i].pack.c.last, pn->body[i].orig, pn->body[i].norm);
     }
     if (pn->flags.b.attribute)
-      printf("Attribute   : %d,%d,%c,%c, %s %s\n", pn->attribute.pack.c.len, pn->attribute.pack.c.hash,
-	pn->attribute.pack.c.first, pn->attribute.pack.c.last, pn->attribute.orig, pn->attribute.norm);
+      printf("Attribute   : %d,%d,%c,%c, %s %s\n", pn->attribute.pack.c.len,
+          pn->attribute.pack.c.hash, pn->attribute.pack.c.first,
+          pn->attribute.pack.c.last, pn->attribute.orig, pn->attribute.norm);
   }
-
-
 }

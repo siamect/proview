@@ -36,34 +36,20 @@
 
 /* co_statusmon_nodelist_qt.cpp -- Console log in statusmon */
 
-#include "glow_std.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "co_cdh.h"
-#include "co_time.h"
-#include "rt_gdh.h"
-
-#include "co_lng.h"
 #include "co_dcli.h"
-#include "cow_wow_qt.h"
+
 #include "cow_msgwindow_qt.h"
-#include "cow_statusmon_nodelist.h"
-#include "rt_xnav_msg.h"
+#include "cow_qt_helpers.h"
 #include "cow_statusmon_nodelist_qt.h"
 #include "cow_statusmon_nodelistnav_qt.h"
 
-#include <QAction>
 #include <QApplication>
-#include <QLabel>
 #include <QMenu>
 #include <QMenuBar>
 #include <QPushButton>
-#include <QToolBar>
 #include <QVBoxLayout>
 
-void NodelistQtWidget::closeEvent(QCloseEvent *event)
+void NodelistQtWidget::closeEvent(QCloseEvent* event)
 {
   if (nodelist->close_cb) {
     (nodelist->close_cb)(nodelist->parent_ctx);
@@ -73,13 +59,12 @@ void NodelistQtWidget::closeEvent(QCloseEvent *event)
   QWidget::closeEvent(event);
 }
 
-NodelistQt::NodelistQt(void *nodelist_parent_ctx, QWidget *nodelist_parent_wid,
-                       const char *nodelist_name, int nodelist_mode,
-                       int nodelist_view_node_descr, int msgw_pop,
-                       pwr_tStatus *status)
+NodelistQt::NodelistQt(void* nodelist_parent_ctx, QWidget* nodelist_parent_wid,
+    const char* nodelist_name, int nodelist_mode, int nodelist_view_node_descr,
+    int msgw_pop, pwr_tStatus* status)
     : Nodelist(nodelist_parent_ctx, nodelist_name, nodelist_mode,
-               nodelist_view_node_descr, status), add_india_widget(0),
-      mod_india_widget(0)
+          nodelist_view_node_descr, status),
+      add_india_widget(0), mod_india_widget(0)
 {
   pwr_tStatus sts;
 
@@ -92,97 +77,100 @@ NodelistQt::NodelistQt(void *nodelist_parent_ctx, QWidget *nodelist_parent_wid,
   CoWowQt::SetWindowIcon(toplevel);
 
   // Menu
-  QMenuBar *menu_bar = new QMenuBar();
+  QMenuBar* menu_bar = new QMenuBar();
 
   // File entry
-  QMenu *file = menu_bar->addMenu(translate_utf8("&File"));
+  QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
   addMenuItem(toplevel, file, "&Save Configuration", SLOT(activate_save()), "",
-              "document-save");
+      "document-save");
   addMenuItem(toplevel, file, "&Add Node", SLOT(activate_add_node()));
   addMenuItem(toplevel, file, "&Modify Node", SLOT(activate_modify_node()));
   addMenuItem(toplevel, file, "&Remove Node", SLOT(activate_remove_node()));
 
   pwr_tFileName fname;
   dcli_translate_filename(fname, "$pwr_exe/xtt_navigator.png");
-  addMenuItem(toplevel, file, "Open Runtime &Navigator", SLOT(activate_open_xtt()),
-              "", fname);
+  addMenuItem(toplevel, file, "Open Runtime &Navigator",
+      SLOT(activate_open_xtt()), "", fname);
   dcli_translate_filename(fname, "$pwr_exe/xtt_op.png");
-  addMenuItem(toplevel, file, "&Open Operatorplace", SLOT(activate_open_opplace()),
-              "", fname);
+  addMenuItem(toplevel, file, "&Open Operatorplace",
+      SLOT(activate_open_opplace()), "", fname);
   dcli_translate_filename(fname, "$pwr_exe/xtt_rtmon.png");
-  addMenuItem(toplevel, file, "Open Runtime &Monitor", SLOT(activate_open_rtmon()),
-              "", fname);
-  addMenuItem(toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+  addMenuItem(toplevel, file, "Open Runtime &Monitor",
+      SLOT(activate_open_rtmon()), "", fname);
+  addMenuItem(
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
   // View menu
-  QMenu *view = menu_bar->addMenu(translate_utf8("&View"));
+  QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
   addMenuItem(toplevel, view, "Show &Events", SLOT(activate_show_events()));
   addMenuItem(toplevel, view, "&Pop Events", SLOT(activate_pop_events()));
 
   // Submenu Remote GUI
-  QMenu *view_gui = view->addMenu(fl("&Remote GUI"));
-  QActionGroup *rg_group = new QActionGroup(toplevel);
-  addMenuRadioItem(toplevel, view_gui, "&QT", SLOT(activate_gui_qt()), rg_group);
-  addMenuRadioItem(toplevel, view_gui, "&GTK", SLOT(activate_gui_gtk()), rg_group);
-  addMenuRadioItem(toplevel, view_gui, "&Motif", SLOT(activate_gui_motif()),
-                   rg_group);
+  QMenu* view_gui = view->addMenu(fl("&Remote GUI"));
+  QActionGroup* rg_group = new QActionGroup(toplevel);
+  addMenuRadioItem(
+      toplevel, view_gui, "&QT", SLOT(activate_gui_qt()), rg_group);
+  addMenuRadioItem(
+      toplevel, view_gui, "&GTK", SLOT(activate_gui_gtk()), rg_group);
+  addMenuRadioItem(
+      toplevel, view_gui, "&Motif", SLOT(activate_gui_motif()), rg_group);
 
   // Submenu Mode
-  QMenu *view_mode = view->addMenu(fl("&Mode"));
-  QActionGroup *mode_group = new QActionGroup(toplevel);
+  QMenu* view_mode = view->addMenu(fl("&Mode"));
+  QActionGroup* mode_group = new QActionGroup(toplevel);
   addMenuRadioItem(toplevel, view_mode, "&SystemStatus",
-                   SLOT(activate_mode_systemstatus()), mode_group);
+      SLOT(activate_mode_systemstatus()), mode_group);
   addMenuRadioItem(toplevel, view_mode, "UserStatus&1",
-                   SLOT(activate_mode_userstatus1()), mode_group);
+      SLOT(activate_mode_userstatus1()), mode_group);
   addMenuRadioItem(toplevel, view_mode, "UserStatus&2",
-                   SLOT(activate_mode_userstatus2()), mode_group);
+      SLOT(activate_mode_userstatus2()), mode_group);
   addMenuRadioItem(toplevel, view_mode, "UserStatus&3",
-                   SLOT(activate_mode_userstatus3()), mode_group);
+      SLOT(activate_mode_userstatus3()), mode_group);
   addMenuRadioItem(toplevel, view_mode, "UserStatus&4",
-                   SLOT(activate_mode_userstatus4()), mode_group);
+      SLOT(activate_mode_userstatus4()), mode_group);
   addMenuRadioItem(toplevel, view_mode, "UserStatus&5",
-                   SLOT(activate_mode_userstatus5()), mode_group);
+      SLOT(activate_mode_userstatus5()), mode_group);
 
   addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoom_in()), "CTRL+I",
-              "zoom-in");
+      "zoom-in");
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
-              "zoom-out");
+      "zoom-out");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "",
-              "zoom-original");
+      "zoom-original");
 
   // Menu Help
-  QMenu *help = menu_bar->addMenu(translate_utf8("&Help"));
-  addMenuItem(toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H",
-              "system-help");
+  QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
+  addMenuItem(
+      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "system-help");
 
   msg_window = new MsgWindowQt(this, toplevel, "Status Events", &sts);
   msg_window->find_wnav_cb = find_node_cb;
   msg_window->msg('I', "Status Montitor started");
 
-  QVBoxLayout *vbox = new QVBoxLayout();
-  nodelistnav =
-      new NodelistNavQt(this, toplevel, msg_window, 0, mode, view_node_descr,
-                        msgw_pop, &nodelistnav_widget);
+  QVBoxLayout* vbox = new QVBoxLayout();
+  nodelistnav = new NodelistNavQt(this, toplevel, msg_window, 0, mode,
+      view_node_descr, msgw_pop, &nodelistnav_widget);
 
   // Toolbar
-  QToolBar *tools = new QToolBar();
+  QToolBar* tools = new QToolBar();
   addToolItem(toplevel, tools, "Save configuration", SLOT(activate_save()),
-              "document-save");
-  addToolItem(toplevel, tools, "Add node", SLOT(activate_add_node()), "list-add");
+      "document-save");
+  addToolItem(
+      toplevel, tools, "Add node", SLOT(activate_add_node()), "list-add");
   addToolItem(toplevel, tools, "Remove node", SLOT(activate_remove_node()),
-              "list-remove");
+      "list-remove");
   addToolItem(toplevel, tools, "Start Runtime Navigator on selected node",
-              SLOT(activate_open_xtt()), "$pwr_exe/xtt_navigator.png");
+      SLOT(activate_open_xtt()), "$pwr_exe/xtt_navigator.png");
   addToolItem(toplevel, tools, "Start Operatorplace on selected node",
-              SLOT(activate_open_opplace()), "$pwr_exe/xtt_op.png");
+      SLOT(activate_open_opplace()), "$pwr_exe/xtt_op.png");
   addToolItem(toplevel, tools, "Start Runtime Monitor on selected node",
-              SLOT(activate_open_rtmon()), "$pwr_exe/xtt_rtmon.png");
+      SLOT(activate_open_rtmon()), "$pwr_exe/xtt_rtmon.png");
   addToolItem(toplevel, tools, "Zoom in", SLOT(activate_zoom_in()),
-              "$pwr_exe/xtt_zoom_in.png");
+      "$pwr_exe/xtt_zoom_in.png");
   addToolItem(toplevel, tools, "Zoom out", SLOT(activate_zoom_out()),
-              "$pwr_exe/xtt_zoom_out.png");
+      "$pwr_exe/xtt_zoom_out.png");
   addToolItem(toplevel, tools, "Zoom reset", SLOT(activate_zoom_reset()),
-              "$pwr_exe/xtt_zoom_reset.png");
+      "$pwr_exe/xtt_zoom_reset.png");
 
   vbox->setMenuBar(menu_bar);
   vbox->addWidget(tools);
@@ -212,7 +200,7 @@ void NodelistQt::reset_cursor()
   toplevel->unsetCursor();
 }
 
-void NodelistQtWidget::focusInEvent(QFocusEvent *event)
+void NodelistQtWidget::focusInEvent(QFocusEvent* event)
 {
   if (!nodelist->focustimer.disabled()) {
     if (nodelist->nodelist_displayed) {
@@ -335,11 +323,9 @@ void NodelistQtWidget::activate_help()
   nodelist->activate_help();
 }
 
-void NodelistQt::open_add_input_dialog(const char *text, const char *text2,
-                                       const char *text3, const char *title,
-                                       const char *init_text,
-                                       void (*ok_cb)(Nodelist *, char *, char *,
-                                                     char *))
+void NodelistQt::open_add_input_dialog(const char* text, const char* text2,
+    const char* text3, const char* title, const char* init_text,
+    void (*ok_cb)(Nodelist*, char*, char*, char*))
 {
   create_add_input_dialog();
 
@@ -379,10 +365,9 @@ void NodelistInputDialogQt::activate_cancel()
   reject();
 }
 
-NodelistInputDialogQt::NodelistInputDialogQt(NodelistQt *parent_ctx,
-                                             QWidget *parent,
-                                             bool input_callback) : QDialog(
-    parent), nodelist(parent_ctx)
+NodelistInputDialogQt::NodelistInputDialogQt(
+    NodelistQt* parent_ctx, QWidget* parent, bool input_callback)
+    : QDialog(parent), nodelist(parent_ctx)
 {
   setFixedSize(600, 150);
   setWindowTitle(fl("Input Dialog"));
@@ -401,39 +386,39 @@ NodelistInputDialogQt::NodelistInputDialogQt(NodelistQt *parent_ctx,
   label2 = new QLabel();
   label3 = new QLabel();
 
-  QLabel *image = new QLabel();
-  image->setPixmap(
-      QApplication::style()->standardIcon(QStyle::SP_MessageBoxQuestion)
-                           .pixmap(48));
+  QLabel* image = new QLabel();
+  image->setPixmap(QApplication::style()
+                       ->standardIcon(QStyle::SP_MessageBoxQuestion)
+                       .pixmap(48));
 
-  QPushButton *ok = new QPushButton(fl("Ok"));
+  QPushButton* ok = new QPushButton(fl("Ok"));
   ok->setFixedSize(70, 25);
   connect(ok, SIGNAL(clicked()), this, SLOT(activate_ok()));
 
-  QPushButton *cancel = new QPushButton(fl("Cancel"));
+  QPushButton* cancel = new QPushButton(fl("Cancel"));
   cancel->setFixedSize(70, 25);
   connect(cancel, SIGNAL(clicked()), this, SLOT(activate_cancel()));
 
-  QVBoxLayout *vboxtext = new QVBoxLayout();
+  QVBoxLayout* vboxtext = new QVBoxLayout();
   vboxtext->addWidget(text);
   vboxtext->addWidget(text2);
   vboxtext->addWidget(text3);
 
-  QVBoxLayout *vboxlabel = new QVBoxLayout();
+  QVBoxLayout* vboxlabel = new QVBoxLayout();
   vboxlabel->addWidget(label);
   vboxlabel->addWidget(label2);
   vboxlabel->addWidget(label3);
 
-  QHBoxLayout *hboxtext = new QHBoxLayout();
+  QHBoxLayout* hboxtext = new QHBoxLayout();
   hboxtext->addWidget(image);
   hboxtext->addLayout(vboxlabel);
   add_expanding(hboxtext, vboxtext);
 
-  QHBoxLayout *hboxbuttons = new QHBoxLayout();
+  QHBoxLayout* hboxbuttons = new QHBoxLayout();
   hboxbuttons->addWidget(ok);
   hboxbuttons->addWidget(cancel);
 
-  QVBoxLayout *vbox = new QVBoxLayout(this);
+  QVBoxLayout* vbox = new QVBoxLayout(this);
   add_expanding(vbox, hboxtext);
   vbox->addWidget(separator(QFrame::HLine));
   vbox->addLayout(hboxbuttons);
@@ -452,13 +437,10 @@ void NodelistQt::create_add_input_dialog()
   add_india_widget = new NodelistInputDialogQt(this, toplevel);
 }
 
-void NodelistQt::open_mod_input_dialog(const char *text, const char *text2,
-                                       const char *text3, const char *title,
-                                       const char *init_text,
-                                       const char *init_text2,
-                                       const char *init_text3,
-                                       void (*ok_cb)(Nodelist *, char *, char *,
-                                                     char *))
+void NodelistQt::open_mod_input_dialog(const char* text, const char* text2,
+    const char* text3, const char* title, const char* init_text,
+    const char* init_text2, const char* init_text3,
+    void (*ok_cb)(Nodelist*, char*, char*, char*))
 {
   create_mod_input_dialog();
 

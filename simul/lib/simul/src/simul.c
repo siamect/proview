@@ -44,7 +44,6 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "pwr.h"
 #include "simul.h"
 
 // This is for further development:

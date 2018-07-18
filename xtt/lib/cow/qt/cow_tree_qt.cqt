@@ -36,42 +36,22 @@
 
 /* cow_tree_qt.cpp -- Tree viewer */
 
-#include <fstream>
-#include <vector>
-
-#include "glow_std.h"
-
-#include "co_cdh.h"
-#include "co_time.h"
-#include "co_dcli.h"
-#include "cow_wow_qt.h"
-#include "cow_xhelp_qt.h"
-
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
-#include "flow_browwidget_qt.h"
-
-#include "glow.h"
-#include "glow_curvectx.h"
-
-#include "flow_msg.h"
-
+#include "cow_qt_helpers.h"
 #include "cow_tree_qt.h"
 #include "cow_treenav_qt.h"
+#include "cow_wow_qt.h"
 
 #include <QDialogButtonBox>
 #include <QMenuBar>
 #include <QPushButton>
-#include <QStatusBar>
 #include <QVBoxLayout>
 
-void CowTreeQt::message(char severity, const char *message)
+void CowTreeQt::message(char severity, const char* message)
 {
   msg_label->setText(fl(message));
 }
 
-void CowTreeQtWidget::closeEvent(QCloseEvent *event)
+void CowTreeQtWidget::closeEvent(QCloseEvent* event)
 {
   if (tree->close_cb) {
     (tree->close_cb)(tree->parent_ctx);
@@ -81,7 +61,7 @@ void CowTreeQtWidget::closeEvent(QCloseEvent *event)
   QWidget::closeEvent(event);
 }
 
-void CowTreeQtWidget::focusInEvent(QFocusEvent *event)
+void CowTreeQtWidget::focusInEvent(QFocusEvent* event)
 {
   if (tree->treenav) {
     tree->treenav->set_inputfocus();
@@ -138,16 +118,14 @@ void CowTreeQt::pop()
   ::pop(toplevel);
 }
 
-CowTreeQt::CowTreeQt(QWidget *a_parent_wid, void *a_parent_ctx,
-                     const char *title, pwr_tAttrRef *itemlist, int item_cnt,
-                     unsigned int options,
-                     pwr_tStatus (*get_object_info)(void *, pwr_tAttrRef *,
-                                                    char *, int, char *, char *,
-                                                    int),
-                     pwr_tStatus (*get_node_info)(void *, char *, char *, int),
-                     pwr_tStatus (*action)(void *, pwr_tAttrRef *))
+CowTreeQt::CowTreeQt(QWidget* a_parent_wid, void* a_parent_ctx,
+    const char* title, pwr_tAttrRef* itemlist, int item_cnt,
+    unsigned int options, pwr_tStatus (*get_object_info)(void*, pwr_tAttrRef*,
+                              char*, int, char*, char*, int),
+    pwr_tStatus (*get_node_info)(void*, char*, char*, int),
+    pwr_tStatus (*action)(void*, pwr_tAttrRef*))
     : CowTree(a_parent_ctx, itemlist, item_cnt, options, get_object_info,
-              get_node_info, action)
+          get_node_info, action)
 {
   int sts;
 
@@ -159,64 +137,64 @@ CowTreeQt::CowTreeQt(QWidget *a_parent_wid, void *a_parent_ctx,
 
   CoWowQt::SetWindowIcon(toplevel);
 
-  QVBoxLayout *vbox = new QVBoxLayout(toplevel);
+  QVBoxLayout* vbox = new QVBoxLayout(toplevel);
 
   // Menu
-  QMenuBar *menu_bar = new QMenuBar();
+  QMenuBar* menu_bar = new QMenuBar();
 
   // File entry
-  QMenu *file = menu_bar->addMenu(translate_utf8("&File"));
+  QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
   addMenuItem(toplevel, file, "&Print", SLOT(activate_print()));
-  addMenuItem(toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+  addMenuItem(
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
   // View menu
-  QMenu *view = menu_bar->addMenu(translate_utf8("&View"));
+  QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
   addMenuItem(toplevel, view, "&Tree Layout", SLOT(activate_tree_layout()));
   addMenuItem(toplevel, view, "&List Layout", SLOT(activate_list_layout()));
   addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoom_in()), "CTRL+I",
-              "zoom-in");
+      "zoom-in");
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
-              "zoom-out");
+      "zoom-out");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "",
-              "zoom-original");
+      "zoom-original");
 
   // Help entry
-  QMenu *help = menu_bar->addMenu(translate_utf8("&Help"));
+  QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
   addMenuItem(toplevel, help, "&Overview", SLOT(activate_help()), "CTRL+H",
-              "system-help");
+      "system-help");
 
   // Toolbar
-  QToolBar *tools = new QToolBar();
+  QToolBar* tools = new QToolBar();
   addToolItem(toplevel, tools, "Zoom in", SLOT(activate_zoom_in()),
-              "$pwr_exe/xtt_zoom_in.png");
+      "$pwr_exe/xtt_zoom_in.png");
   addToolItem(toplevel, tools, "Zoom out", SLOT(activate_zoom_out()),
-              "$pwr_exe/xtt_zoom_out.png");
+      "$pwr_exe/xtt_zoom_out.png");
   addToolItem(toplevel, tools, "Zoom reset", SLOT(activate_zoom_reset()),
-              "$pwr_exe/xtt_zoom_reset.png");
+      "$pwr_exe/xtt_zoom_reset.png");
 
   // Ok can Cancel buttons
-  QDialogButtonBox *buttons = new QDialogButtonBox();
+  QDialogButtonBox* buttons = new QDialogButtonBox();
   buttons->addButton(QDialogButtonBox::Ok);
   buttons->addButton(QDialogButtonBox::Apply);
   buttons->addButton(QDialogButtonBox::Cancel);
 
   QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
-                   toplevel, SLOT(activate_button_ok()));
+      toplevel, SLOT(activate_button_ok()));
   QObject::connect(buttons->button(QDialogButtonBox::Apply), SIGNAL(clicked()),
-                   toplevel, SLOT(activate_button_ok()));
+      toplevel, SLOT(activate_button_ok()));
   QObject::connect(buttons->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
-                   toplevel, SLOT(close()));
+      toplevel, SLOT(close()));
 
   // Statusbar
-  QStatusBar *statusbar = new QStatusBar();
+  QStatusBar* statusbar = new QStatusBar();
   msg_label = new QLabel("");
   msg_label->setFixedHeight(25);
 
   statusbar->addWidget(msg_label);
 
-  treenav =
-      new TreeNavQt(this, toplevel, itemlist, item_cnt, options,
-                    get_object_info, get_node_info, &brow_widget, &sts);
+  treenav = new TreeNavQt(this, toplevel, itemlist, item_cnt, options,
+      get_object_info, get_node_info, &brow_widget, &sts);
   treenav->message_cb = &CowTree::message;
 
   vbox->setMenuBar(menu_bar);

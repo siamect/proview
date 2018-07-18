@@ -36,28 +36,22 @@
 
 /* rt_io_m_siemens_diagrepeater.c -- io methods for a Siemens Diagnostic Repeater slave */
 
-
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
 #include <sys/file.h>
 #include <sys/ioctl.h>
 
-#include "pwr.h"
 #include "co_cdh.h"
-#include "pwr_baseclasses.h"
 #include "pwr_basecomponentclasses.h"
 #include "pwr_profibusclasses.h"
 #include "pwr_siemensclasses.h"
-#include "rt_gdh.h"
 #include "rt_io_base.h"
 #include "rt_io_bus.h"
 #include "rt_io_msg.h"
-#include "rt_errh.h"
 #include "co_cdh.h"
 #include "rt_io_profiboard.h"
 #include "rt_pb_msg.h"
-
 
 /*----------------------------------------------------------------------------*\
    Read method for the Pb DP slave 

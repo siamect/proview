@@ -15,23 +15,44 @@
  *                                                                            *
 \******************************************************************************/
 
-class Service : public soap
-{    public:
-	Service()
-	{ static const struct Namespace namespaces[] =
-{
-	{"SOAP-ENV", "http://schemas.xmlsoap.org/soap/envelope/", "http://www.w3.org/*/soap-envelope", NULL},
-	{"SOAP-ENC", "http://schemas.xmlsoap.org/soap/encoding/", "http://www.w3.org/*/soap-encoding", NULL},
-	{"xsi", "http://www.w3.org/2001/XMLSchema-instance", "http://www.w3.org/*/XMLSchema-instance", NULL},
-	{"xsd", "http://www.w3.org/2001/XMLSchema", "http://www.w3.org/*/XMLSchema", NULL},
-	{"s0", "http://www.proview.se/webservices/statussrv/1.0/", NULL, NULL},
-	{NULL, NULL, NULL, NULL}
-};
-	soap_init(this); if (!this->namespaces) this->namespaces = namespaces; };
-	virtual ~Service() { soap_destroy(this); soap_end(this); soap_done(this); };
-	virtual	int bind(const char *host, int port, int backlog) { return soap_bind(this, host, port, backlog); };
-	virtual	int accept() { return soap_accept(this); };
-	virtual	int serve() { return soap_serve(this); };
+class Service : public soap {
+  public:
+  Service()
+  {
+    static const struct Namespace namespaces[] = {
+      { "SOAP-ENV", "http://schemas.xmlsoap.org/soap/envelope/",
+          "http://www.w3.org/*/soap-envelope", NULL },
+      { "SOAP-ENC", "http://schemas.xmlsoap.org/soap/encoding/",
+          "http://www.w3.org/*/soap-encoding", NULL },
+      { "xsi", "http://www.w3.org/2001/XMLSchema-instance",
+          "http://www.w3.org/*/XMLSchema-instance", NULL },
+      { "xsd", "http://www.w3.org/2001/XMLSchema",
+          "http://www.w3.org/*/XMLSchema", NULL },
+      { "s0", "http://www.proview.se/webservices/statussrv/1.0/", NULL, NULL },
+      { NULL, NULL, NULL, NULL }
+    };
+    soap_init(this);
+    if (!this->namespaces)
+      this->namespaces = namespaces;
+  };
+  virtual ~Service()
+  {
+    soap_destroy(this);
+    soap_end(this);
+    soap_done(this);
+  };
+  virtual int bind(const char* host, int port, int backlog)
+  {
+    return soap_bind(this, host, port, backlog);
+  };
+  virtual int accept()
+  {
+    return soap_accept(this);
+  };
+  virtual int serve()
+  {
+    return soap_serve(this);
+  };
 };
 
 /******************************************************************************\
@@ -40,15 +61,22 @@ class Service : public soap
  *                                                                            *
 \******************************************************************************/
 
+SOAP_FMAC5 int SOAP_FMAC6 __s0__GetStatus(struct soap*,
+    _s0__GetStatus* s0__GetStatus,
+    _s0__GetStatusResponse* s0__GetStatusResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 __s0__GetStatus(struct soap*, _s0__GetStatus *s0__GetStatus, _s0__GetStatusResponse *s0__GetStatusResponse);
+SOAP_FMAC5 int SOAP_FMAC6 __s0__GetExtStatus(struct soap*,
+    _s0__GetExtStatus* s0__GetExtStatus,
+    _s0__GetExtStatusResponse* s0__GetExtStatusResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 __s0__GetExtStatus(struct soap*, _s0__GetExtStatus *s0__GetExtStatus, _s0__GetExtStatusResponse *s0__GetExtStatusResponse);
+SOAP_FMAC5 int SOAP_FMAC6 __s0__Restart(struct soap*, _s0__Restart* s0__Restart,
+    _s0__RestartResponse* s0__RestartResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 __s0__Restart(struct soap*, _s0__Restart *s0__Restart, _s0__RestartResponse *s0__RestartResponse);
+SOAP_FMAC5 int SOAP_FMAC6 __s0__XttStart(struct soap*,
+    _s0__XttStart* s0__XttStart, _s0__XttStartResponse* s0__XttStartResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 __s0__XttStart(struct soap*, _s0__XttStart *s0__XttStart, _s0__XttStartResponse *s0__XttStartResponse);
-
-SOAP_FMAC5 int SOAP_FMAC6 __s0__RtMonStart(struct soap*, _s0__RtMonStart *s0__RtMonStart, _s0__RtMonStartResponse *s0__RtMonStartResponse);
+SOAP_FMAC5 int SOAP_FMAC6 __s0__RtMonStart(struct soap*,
+    _s0__RtMonStart* s0__RtMonStart,
+    _s0__RtMonStartResponse* s0__RtMonStartResponse);
 
 #endif

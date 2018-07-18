@@ -36,30 +36,22 @@
 
 /* co_help_qt.cpp -- Help window */
 
-#include "flow_std.h"
-
-#include <stdio.h>
-#include <stdlib.h>
 #include <locale.h>
 
-#include "co_dcli.h"
-
-#include "co_lng.h"
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
 #include "co_help_qt.h"
+
+#include "cow_qt_helpers.h"
 #include "cow_xhelp_qt.h"
 
 #include <QApplication>
 
-void CoHelpQt::close_cb(void *ctx, void *xhelp)
+void CoHelpQt::close_cb(void* ctx, void* xhelp)
 {
-  ((CoXHelpQt *) xhelp)->toplevel->close();
+  ((CoXHelpQt*)xhelp)->toplevel->close();
   exit(0);
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
   int sts;
 
@@ -77,9 +69,8 @@ CoHelpQt::~CoHelpQt()
 {
 }
 
-CoHelpQt::CoHelpQt(int argc, char *argv[], int *return_sts) : CoHelpMain(argc,
-                                                                         argv,
-                                                                         return_sts)
+CoHelpQt::CoHelpQt(int argc, char* argv[], int* return_sts)
+    : CoHelpMain(argc, argv, return_sts)
 {
   pwr_tStatus sts;
 
@@ -91,8 +82,8 @@ CoHelpQt::CoHelpQt(int argc, char *argv[], int *return_sts) : CoHelpMain(argc,
   }
 
   // Create help window
-  CoXHelp
-      *xhelp = new CoXHelpQt(0 /*toplevel*/, this, xhelp_eUtility_Xtt, &sts);
+  CoXHelp* xhelp
+      = new CoXHelpQt(0 /*toplevel*/, this, xhelp_eUtility_Xtt, &sts);
   // xhelp->open_URL_cb = open_URL_cb;
   CoXHelp::set_default(xhelp);
   xhelp->close_cb = close_cb;

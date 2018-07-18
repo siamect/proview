@@ -39,104 +39,102 @@
 
 /* ge_curve_qt.h -- Curve widget */
 
-#include "co_cdh.h"
-#include "co_time.h"
 #include "cow_wow_qt.h"
-#include "glow_growctx.h"
-#include "glow_growapi.h"
+
 #ifndef ge_curve_h
 #include "ge_curve.h"
 #endif
 
 #include <QComboBox>
-#include <QDialog>
 
 class GeCurveQtWidget;
 
 class GeCurveQt : public GeCurve {
 public:
-  GeCurveQt(void *gc_parent_ctx, QWidget *parent_widget, char *curve_name,
-            char *filename, GeCurveData *curve_data, int pos_right,
-            int gc_width, int gc_height, unsigned int gc_options,
-            int gc_color_theme, void *basewidget);
+  GeCurveQt(void* gc_parent_ctx, QWidget* parent_widget, char* curve_name,
+      char* filename, GeCurveData* curve_data, int pos_right, int gc_width,
+      int gc_height, unsigned int gc_options, int gc_color_theme,
+      void* basewidget);
   ~GeCurveQt();
 
-  GeCurveQtWidget *toplevel;
-  QWidget *grow_widget;
-  QWidget *curve_widget;
-  QWidget *axisform_widget;
-  QWidget *nameform_widget;
-  QWidget *curveform_widget;
-  QWidget *pane_widget;
-  QWidget *vbox;
-  QWidget *growcurve_main_widget;
-  QWidget *growaxis_main_widget;
-  QWidget *grownames_main_widget;
-  QWidget *nav_widget;
-  QWidget *minmax_widget;
-  QLineEdit *minmax_textmin_widget;
-  QLineEdit *minmax_textmax_widget;
-  QWidget *menu_new;
-  QWidget *menu_save;
-  QWidget *menu_open;
-  QWidget *menu_snapshot;
-  QWidget *menu_export;
-  QWidget *menu_add;
-  QAction *tools_snapshot;
-  QAction *tools_add;
-  QAction *tools_curvetype_line;
-  QAction *tools_curvetype_points;
-  QAction *tools_curvetype_linepoints;
-  QAction *tools_curvetype_square;
-  QAction *tools_curve_fill;
-  QAction *tools_curve_digsplit;
-  QWidget *export_widget;
-  QComboBox *export_attrcombo_widget;
-  QLineEdit *export_fromtime_widget;
-  QLineEdit *export_totime_widget;
-  QLineEdit *export_rows_widget;
-  QLineEdit *export_filename_widget;
-  QWidget *sea_timebox;
-  QLineEdit *timebox_start_time;
-  QLineEdit *timebox_stop_time;
-  QComboBox *timebox_timecombo;
+  GeCurveQtWidget* toplevel;
+  QWidget* grow_widget;
+  QWidget* curve_widget;
+  QWidget* axisform_widget;
+  QWidget* nameform_widget;
+  QWidget* curveform_widget;
+  QWidget* pane_widget;
+  QWidget* vbox;
+  QWidget* growcurve_main_widget;
+  QWidget* growaxis_main_widget;
+  QWidget* grownames_main_widget;
+  QWidget* nav_widget;
+  QWidget* minmax_widget;
+  QLineEdit* minmax_textmin_widget;
+  QLineEdit* minmax_textmax_widget;
+  QWidget* menu_new;
+  QWidget* menu_save;
+  QWidget* menu_open;
+  QWidget* menu_snapshot;
+  QWidget* menu_export;
+  QWidget* menu_add;
+  QAction* tools_snapshot;
+  QAction* tools_add;
+  QAction* tools_curvetype_line;
+  QAction* tools_curvetype_points;
+  QAction* tools_curvetype_linepoints;
+  QAction* tools_curvetype_square;
+  QAction* tools_curve_fill;
+  QAction* tools_curve_digsplit;
+  QWidget* export_widget;
+  QComboBox* export_attrcombo_widget;
+  QLineEdit* export_fromtime_widget;
+  QLineEdit* export_totime_widget;
+  QLineEdit* export_rows_widget;
+  QLineEdit* export_filename_widget;
+  QWidget* sea_timebox;
+  QLineEdit* timebox_start_time;
+  QLineEdit* timebox_stop_time;
+  QComboBox* timebox_timecombo;
   CoWowFocusTimerQt focustimer;
   int disable_timecombo_callback;
 
   void pop();
-  void write_title(char *str);
+  void write_title(char* str);
   void resize();
   void open_minmax(int idx);
-  void open_export(pwr_tTime *from, pwr_tTime *to, int rows, char *filename);
+  void open_export(pwr_tTime* from, pwr_tTime* to, int rows, char* filename);
   void axis_set_width(int width);
   void create_minmax_dialog();
   void create_export_dialog();
   void set_inputfocus();
   void enable(unsigned int mask);
   void setup(unsigned int mask);
-  void set_times(pwr_tTime *from, pwr_tTime *to);
+  void set_times(pwr_tTime* from, pwr_tTime* to);
   void set_times_sensitivity(int sensitive);
-  pwr_tStatus get_times(pwr_tTime *from, pwr_tTime *to);
-  int get_period(time_ePeriod *period);
+  pwr_tStatus get_times(pwr_tTime* from, pwr_tTime* to);
+  int get_period(time_ePeriod* period);
   void set_period(time_ePeriod period, int nocallback);
   void set_clock_cursor();
   void reset_cursor();
-  void *get_widget();
+  void* get_widget();
 
-  static void export_file_selected_cb(void *ctx, char *filename,
-                                      wow_eFileSelType file_type);
+  static void export_file_selected_cb(
+      void* ctx, char* filename, wow_eFileSelType file_type);
 };
 
 class GeCurveQtWidget : public QDialog {
   Q_OBJECT
 
 public:
-  GeCurveQtWidget(GeCurveQt *parent_ctx, QWidget *parent) : QDialog(parent),
-                                                            curve(parent_ctx) {}
+  GeCurveQtWidget(GeCurveQt* parent_ctx, QWidget* parent)
+      : QDialog(parent), curve(parent_ctx)
+  {
+  }
 
 protected:
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void activate_configure();
@@ -177,7 +175,7 @@ public slots:
   void activate_export_browse();
 
 private:
-  GeCurveQt *curve;
+  GeCurveQt* curve;
 };
 
 #endif

@@ -36,32 +36,17 @@
 
 /* xtt_keyboard_qt.cpp -- Virtual keyboard */
 
-typedef void *Widget;
+#include "cow_qt_helpers.h"
 
-#include "flow_std.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <iostream>
-#include <fstream>
-#include <vector>
-
-#include "pwr.h"
-#include "co_math.h"
-#include "rt_xnav_msg.h"
-
-#include "glow.h"
 #include "glow_keyboardwidget_qt.h"
-#include "glow_growctx.h"
-#include "glow_keyboardapi.h"
-#include "cow_wow_qt.h"
+
 #include "xtt_keyboard_qt.h"
 
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QVBoxLayout>
 
-void XttKeyboardQtWidget::closeEvent(QCloseEvent *event)
+void XttKeyboardQtWidget::closeEvent(QCloseEvent* event)
 {
   if (kb->close_cb) {
     (kb->close_cb)(kb->parent_ctx);
@@ -71,12 +56,11 @@ void XttKeyboardQtWidget::closeEvent(QCloseEvent *event)
   QWidget::closeEvent(event);
 }
 
-XttKeyboardQt::XttKeyboardQt(void *xn_parent_ctx, QWidget *xn_parent_wid,
-                             const char *xn_name, QWidget **w,
-                             keyboard_eKeymap xn_keymap, keyboard_eType xn_type,
-                             int xn_color_theme, pwr_tStatus *status)
-    : XttKeyboard(xn_parent_ctx, xn_name, xn_keymap, xn_type, xn_color_theme,
-                  status),
+XttKeyboardQt::XttKeyboardQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
+    const char* xn_name, QWidget** w, keyboard_eKeymap xn_keymap,
+    keyboard_eType xn_type, int xn_color_theme, pwr_tStatus* status)
+    : XttKeyboard(
+          xn_parent_ctx, xn_name, xn_keymap, xn_type, xn_color_theme, status),
       displayed(0), closing_down(0)
 {
   int width = 1145;
@@ -92,7 +76,7 @@ XttKeyboardQt::XttKeyboardQt(void *xn_parent_ctx, QWidget *xn_parent_wid,
   debug_print("creating a keyboardwidgetqt\n");
   keyboard_widget = keyboardwidgetqt_new(init_keyboard_cb, this);
 
-  QVBoxLayout *vbox = new QVBoxLayout(toplevel);
+  QVBoxLayout* vbox = new QVBoxLayout(toplevel);
 
   add_expanding(vbox, keyboard_widget);
 
@@ -107,7 +91,7 @@ XttKeyboardQt::XttKeyboardQt(void *xn_parent_ctx, QWidget *xn_parent_wid,
   int screen_height = rec.height();
 
   if (width > screen_width) {
-    height = ((float) screen_width) * 0.9 / width * height;
+    height = ((float)screen_width) * 0.9 / width * height;
     width = screen_width * 0.9;
     keyboard_SetSize(keyboardctx, width, height);
   }
@@ -136,7 +120,7 @@ void XttKeyboardQt::set_inputfocus()
   }
 }
 
-void XttKeyboardQtWidget::focusInEvent(QFocusEvent *event)
+void XttKeyboardQtWidget::focusInEvent(QFocusEvent* event)
 {
   if (kb->displayed) {
     // kb->set_input_focus();
@@ -150,8 +134,8 @@ void XttKeyboardQt::pop()
   ::pop(toplevel);
 }
 
-void XttKeyboardQt::set_transient(void *basewidget)
+void XttKeyboardQt::set_transient(void* basewidget)
 {
-  toplevel->setParent((QWidget *) basewidget);
+  toplevel->setParent((QWidget*)basewidget);
   toplevel->setModal(true);
 }

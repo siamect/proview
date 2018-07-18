@@ -38,35 +38,18 @@
    This module creates the flow window and handles
    the flow callbacks.  */
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <math.h>
 
-#include "pwr.h"
-#include "pwr_baseclasses.h"
-
-#include "flow_ctx.h"
-#include "flow_api.h"
-#include "flow_widget_qt.h"
-#include "co_cdh.h"
-#include "co_time.h"
-#include "co_dcli.h"
+#include "cow_qt_helpers.h"
 #include "cow_wow_qt.h"
-#include "wb_ldh.h"
-#include "wb_foe_msg.h"
-#include "wb_vldh_msg.h"
-#include "wb_vldh.h"
-#include "wb_foe.h"
-#include "wb_goec.h"
-#include "wb_goen.h"
-#include "wb_utl_api.h"
+
+#include "flow_widget_qt.h"
+
 #include "wb_gre_qt.h"
-#include "wb_tra.h"
 
 #include <QTimer>
 
-WGreQt::WGreQt(void *wg_parent_ctx, QWidget *wg_parent_wid, const char *name)
+WGreQt::WGreQt(void* wg_parent_ctx, QWidget* wg_parent_wid, const char* name)
     : WGre(wg_parent_ctx, 0), trace_obj(0)
 {
   ctx_init();
@@ -81,7 +64,7 @@ WGreQt::~WGreQt()
   form_widget->close();
 }
 
-int WGreQt::new_navigator(QWidget *parent)
+int WGreQt::new_navigator(QWidget* parent)
 {
   debug_print("creating a flownavwidgetqt\n");
   nav_widget = flownavwidgetqt_new(flow_widget);
@@ -119,7 +102,7 @@ void WGreQt::trace_stop()
   }
 }
 
-void WGreQt::get_popup_position(int *x, int *y)
+void WGreQt::get_popup_position(int* x, int* y)
 {
   int wind_x, wind_y;
 

@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.cqt": "cpp",
+        "vector": "cpp",
+        "map": "cpp",
+        "fstream": "cpp",
+        "qmenubar": "cpp",
+        "qvboxlayout": "cpp"
+    }
+}

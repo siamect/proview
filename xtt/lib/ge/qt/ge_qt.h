@@ -37,11 +37,11 @@
 #ifndef ge_qt_h
 #define ge_qt_h
 
+#include "cow_wow_qt.h"
+
 #ifndef ge_h
 #include "ge.h"
 #endif
-
-#include "cow_wow.h"
 
 #include <QAction>
 #include <QLabel>
@@ -49,86 +49,82 @@
 
 /* ge_qt.h -- Simple graphic editor */
 
-class CoWowRecall;
-
-class CoWowEntryQt;
-
 class GeQtWidget;
 
 class GeQt : public Ge {
 public:
-  GeQtWidget *toplevel;
-  QWidget *grow_widget;
-  QWidget *colorpalette_widget;
-  QWidget *colpal_main_widget;
-  QWidget *plant_widget;
-  QWidget *subpalette_widget;
-  QWidget *subgraphs_widget;
-  QLabel *cursor_position;
-  QLabel *msg_label;
-  QLabel *cmd_prompt;
-  QAction *grid_on_w;
-  QAction *grid_sizes[];
-  QAction *show_grid_w;
-  QAction *view_plant_w;
-  QAction *view_graphlist_w;
-  QAction *view_objectnav_w;
-  QWidget *graph_list;
-  QWidget *objectnav_w;
-  QSplitter *hpaned3;
-  CoWowRecall *text_recall;
-  CoWowRecall *name_recall;
-  CoWowRecall *value_recall;
-  CoWowRecall *cmd_recall;
-  CoWowEntryQt *recall_entry;
+  GeQtWidget* toplevel;
+  QWidget* grow_widget;
+  QWidget* colorpalette_widget;
+  QWidget* colpal_main_widget;
+  QWidget* plant_widget;
+  QWidget* subpalette_widget;
+  QWidget* subgraphs_widget;
+  QLabel* cursor_position;
+  QLabel* msg_label;
+  QLabel* cmd_prompt;
+  QAction* grid_on_w;
+  QAction* grid_sizes[];
+  QAction* show_grid_w;
+  QAction* view_plant_w;
+  QAction* view_graphlist_w;
+  QAction* view_objectnav_w;
+  QWidget* graph_list;
+  QWidget* objectnav_w;
+  QSplitter* hpaned3;
+  CoWowRecall* text_recall;
+  CoWowRecall* name_recall;
+  CoWowRecall* value_recall;
+  CoWowRecall* cmd_recall;
+  CoWowEntryQt* recall_entry;
 
 public:
-  GeQt(void *parent_ctx, QWidget *parent_widget, ldh_tSesContext ldhses,
-       int exit_when_close, unsigned int options, char *graph_name);
+  GeQt(void* parent_ctx, QWidget* parent_widget, ldh_tSesContext ldhses,
+      int exit_when_close, unsigned int options, char* graph_name);
   ~GeQt();
 
-  virtual void set_title(char *title);
-  virtual void open_input_dialog(const char *text, const char *title,
-                                 const char *init_text,
-                                 void (*india_ok_cb)(Ge *, char *));
-  virtual void message(char severity, const char *message);
-  virtual void status_msg(char *pos_str);
-  virtual void open_yesnodia(const char *text, const char *title,
-                             void (*yes_cb)(Ge *), void (*no_cb)(Ge *));
-  virtual void set_prompt(const char *prompt);
+  virtual void set_title(char* title);
+  virtual void open_input_dialog(const char* text, const char* title,
+      const char* init_text, void (*india_ok_cb)(Ge*, char*));
+  virtual void message(char severity, const char* message);
+  virtual void status_msg(char* pos_str);
+  virtual void open_yesnodia(const char* text, const char* title,
+      void (*yes_cb)(Ge*), void (*no_cb)(Ge*));
+  virtual void set_prompt(const char* prompt);
   virtual void subgraphs_new();
   virtual void update();
-  virtual int get_plant_select(char *name, int size);
-  virtual void *create_list(const char *title, const char *texts,
-                            void (action_cb)(void *, char *, int),
-                            void (cancel_cb)(void *), void *ctx);
-  virtual int create_modal_dialog(const char *title, const char *text,
-                                  const char *button1, const char *button2,
-                                  const char *button3, const char *image);
+  virtual int get_plant_select(char* name, int size);
+  virtual void* create_list(const char* title, const char* texts,
+      void(action_cb)(void*, char*, int), void(cancel_cb)(void*), void* ctx);
+  virtual int create_modal_dialog(const char* title, const char* text,
+      const char* button1, const char* button2, const char* button3,
+      const char* image);
 
-  static void change_text_cb(void *ge_ctx, void *text_object, const char *text);
-  static void change_name_cb(void *ge_ctx, void *text_object, char *text);
-  static void change_value_cb(void *ge_ctx, void *value_object, char *text);
-  static void objectnav_change_value_cb(void *ge_ctx, int multiline, int size,
-                                        char *text);
-  static void confirm_cb(void *ge_ctx, void *confirm_object, char *text);
+  static void change_text_cb(void* ge_ctx, void* text_object, const char* text);
+  static void change_name_cb(void* ge_ctx, void* text_object, char* text);
+  static void change_value_cb(void* ge_ctx, void* value_object, char* text);
+  static void objectnav_change_value_cb(
+      void* ge_ctx, int multiline, int size, char* text);
+  static void confirm_cb(void* ge_ctx, void* confirm_object, char* text);
 
-  static void graph_file_selected_cb(void *ctx, char *filename,
-                                     wow_eFileSelType file_type);
-  static void image_file_selected_cb(void *ctx, char *filename,
-                                     wow_eFileSelType file_type);
+  static void graph_file_selected_cb(
+      void* ctx, char* filename, wow_eFileSelType file_type);
+  static void image_file_selected_cb(
+      void* ctx, char* filename, wow_eFileSelType file_type);
 };
 
 class GeQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  GeQtWidget(GeQt *parent_ctx, QWidget *parent) : QWidget(parent, Qt::Window),
-                                                  ge(parent_ctx) {}
+  GeQtWidget(GeQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), ge(parent_ctx)
+  {
+  }
 
 protected:
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void valchanged_cmd_entry();
@@ -261,7 +257,7 @@ public slots:
   void activate_help_subgraph();
 
 private:
-  GeQt *ge;
+  GeQt* ge;
 };
 
 #endif

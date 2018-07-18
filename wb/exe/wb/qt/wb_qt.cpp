@@ -36,72 +36,46 @@
 
 /* wb_qt.cpp -- work bench */
 
-#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <map>
 
-#include "wb_env.h"
-#include "flow.h"
-#include "flow_ctx.h"
-#include "flow_api.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
-
-#include "pwr.h"
-#include "co_msg.h"
-#include "co_cdh.h"
-#include "co_dcli.h"
-#include "cow_wow.h"
-#include "wb.h"
-#include "wb_ldh.h"
-#include "cow_login_qt.h"
 #include "co_login_msg.h"
-#include "wb_utl_api.h"
-
-#include "wb_vsel_qt.h"
-#include "cow_msgwindow_qt.h"
-#include "cow_xhelp_qt.h"
-#include "co_lng.h"
-#include "cow_wow_qt.h"
 #include "co_user.h"
-#include "wb_wtt_qt.h"
-#include "wb_log_qt.h"
+
+#include "cow_login_qt.h"
+#include "cow_msgwindow_qt.h"
+#include "cow_qt_helpers.h"
+#include "cow_xhelp_qt.h"
 
 #include "wb_erep.h"
-#include "wb_vrepwbl.h"
-#include "wb_vrepdbs.h"
-#include "wb_vrepmem.h"
-#include "wb_vrepext.h"
+#include "wb_log_qt.h"
+#include "wb_utl_api.h"
+#include "wb_vsel_qt.h"
+#include "wb_wtt_qt.h"
+
 #include "wb_qt.h"
 
 #include <QApplication>
 #include <QTimer>
 
-using namespace std;
-
-Wtt *WbQt::wtt_new(const char *name, const char *iconname,
-                   ldh_tWBContext ldhwbctx, pwr_tVolumeId volid,
-                   ldh_tVolume volctx, wnav_sStartMenu *root_menu,
-                   pwr_tStatus *status)
+Wtt* WbQt::wtt_new(const char* name, const char* iconname,
+    ldh_tWBContext ldhwbctx, pwr_tVolumeId volid, ldh_tVolume volctx,
+    wnav_sStartMenu* root_menu, pwr_tStatus* status)
 {
-  return new WttQt(0, toplevel, name, iconname, ldhwbctx, volid, volctx, root_menu,
-                   status);
+  return new WttQt(
+      0, toplevel, name, iconname, ldhwbctx, volid, volctx, root_menu, status);
 }
 
-WVsel *WbQt::vsel_new(pwr_tStatus *status, const char *name,
-                      ldh_tWBContext ldhwbctx, char *volumename,
-                      int (*bc_success)(void *, pwr_tVolumeId *, int),
-                      void (*bc_cancel)(), int (*bc_time_to_exit)(void *),
-                      int show_volumes, wb_eType wb_type)
+WVsel* WbQt::vsel_new(pwr_tStatus* status, const char* name,
+    ldh_tWBContext ldhwbctx, char* volumename,
+    int (*bc_success)(void*, pwr_tVolumeId*, int), void (*bc_cancel)(),
+    int (*bc_time_to_exit)(void*), int show_volumes, wb_eType wb_type)
 {
   return new WVselQt(status, NULL, mainwindow, name, ldhwbctx, volumename,
-                     bc_success, bc_cancel, bc_time_to_exit, show_volumes,
-                     wb_type);
+      bc_success, bc_cancel, bc_time_to_exit, show_volumes, wb_type);
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
   if (argc >= 2 && strcmp(argv[1], "-m") == 0) {
     wb_erep::printMethods();
@@ -113,7 +87,7 @@ int main(int argc, char *argv[])
   return app.exec();
 }
 
-WbQt::WbQt(int argc, char *argv[]) : mainwindow(0)
+WbQt::WbQt(int argc, char* argv[]) : mainwindow(0)
 {
   pwr_tStatus sts;
   int login_display = 0;
@@ -123,7 +97,7 @@ WbQt::WbQt(int argc, char *argv[]) : mainwindow(0)
   char password[40];
   char username[40];
   char volumename[40];
-  char *volumename_p;
+  char* volumename_p;
   int arg_cnt;
   char title[80];
   char backdoor[] = "aaY2CiHS.y4Wc";
@@ -155,69 +129,69 @@ WbQt::WbQt(int argc, char *argv[]) : mainwindow(0)
     debug_print("arg%d: %s\n", i, argv[i]);
     if (argv[i][0] == '-') {
       switch (argv[i][1]) {
-        case 'h':
+      case 'h':
+        usage();
+        exit(0);
+      case 'a':
+        // Load all volumes
+        sw_projectvolume = 0;
+        volumename_p = 0;
+        break;
+      case 'q':
+        // Quiet
+        quiet = 1;
+        break;
+      case 's':
+        // Open dbs file
+        options |= ldh_mWbOption_OpenDbs;
+        break;
+      case 'l':
+        if (i + 1 >= argc) {
           usage();
           exit(0);
-        case 'a':
-          // Load all volumes
-          sw_projectvolume = 0;
-          volumename_p = 0;
-          break;
-        case 'q':
-          // Quiet
-          quiet = 1;
-          break;
-        case 's':
-          // Open dbs file
-          options |= ldh_mWbOption_OpenDbs;
-          break;
-        case 'l':
-          if (i + 1 >= argc) {
-            usage();
-            exit(0);
-          }
-          Lng::set(argv[i + 1]);
-          i++;
-          break;
-        case 'f':
-          if (i + 1 >= argc) {
-            usage();
-            exit(0);
-          }
-          i++;
-          break;
-        case 'c':
-          if (i + 1 >= argc) {
-            usage();
-            exit(0);
-          }
-          sw_classeditor = 1;
-          strcpy(filename, argv[i + 1]);
-          sw_projectvolume = 0;
-          i++;
-          break;
-        case 'p':
-          sw_projectlist = 1;
-          sw_projectvolume = 0;
-          strcpy(volumename, "");
-          break;
-        default:
-          printf("Unknown argument: %s\n", argv[i]);
+        }
+        Lng::set(argv[i + 1]);
+        i++;
+        break;
+      case 'f':
+        if (i + 1 >= argc) {
+          usage();
+          exit(0);
+        }
+        i++;
+        break;
+      case 'c':
+        if (i + 1 >= argc) {
+          usage();
+          exit(0);
+        }
+        sw_classeditor = 1;
+        strcpy(filename, argv[i + 1]);
+        sw_projectvolume = 0;
+        i++;
+        break;
+      case 'p':
+        sw_projectlist = 1;
+        sw_projectvolume = 0;
+        strcpy(volumename, "");
+        break;
+      default:
+        printf("Unknown argument: %s\n", argv[i]);
       }
     } else {
       switch (arg_cnt) {
-        case 0:
-          strcpy(username, argv[i]);
-          break;
-        case 1:
-          strcpy(password, argv[i]);
-          break;
-        case 2:
-          strcpy(volumename, argv[i]);
-          sw_projectvolume = 0;
-          break;
-        default:
-          printf("Unknown argument: %s\n", argv[i]);
+      case 0:
+        strcpy(username, argv[i]);
+        break;
+      case 1:
+        strcpy(password, argv[i]);
+        break;
+      case 2:
+        strcpy(volumename, argv[i]);
+        sw_projectvolume = 0;
+        break;
+      default:
+        printf("Unknown argument: %s\n", argv[i]);
       }
       arg_cnt++;
     }
@@ -233,27 +207,29 @@ WbQt::WbQt(int argc, char *argv[]) : mainwindow(0)
   new wb_log_qt(toplevel);
 
   // Create message window
-  MsgWindowQt
-      *msg_window = new MsgWindowQt(0, mainwindow, "Workbench messages", &sts);
+  MsgWindowQt* msg_window
+      = new MsgWindowQt(0, mainwindow, "Workbench messages", &sts);
   msg_window->find_wnav_cb = Wb::find_wnav_cb;
   msg_window->find_plc_cb = Wb::find_plc_cb;
   MsgWindow::set_default(msg_window);
   MsgWindow::message('I', "Development environment started");
 
   // Create help window
-  CoXHelpQt *xhelp = new CoXHelpQt(mainwindow, 0, xhelp_eUtility_Wtt, &sts);
+  CoXHelpQt* xhelp = new CoXHelpQt(mainwindow, 0, xhelp_eUtility_Wtt, &sts);
   CoXHelp::set_default(xhelp);
 
   sts = ldh_OpenWB(&wbctx, volumename_p, options);
   psts(sts, NULL);
-  if (EVEN(sts)) { exit(sts); }
+  if (EVEN(sts)) {
+    exit(sts);
+  }
 
   /* Get system name */
   sts = utl_get_systemname(systemname, systemgroup);
   if (EVEN(sts)) {
     /* No system object, login as system !! */
-    CoLogin::insert_login_info("SYSTEM", password, username, pwr_mAccess_AllPwr,
-                               0);
+    CoLogin::insert_login_info(
+        "SYSTEM", password, username, pwr_mAccess_AllPwr, 0);
     nav_display = 1;
   } else {
     if (arg_cnt >= 1 && strcmp(UserList::pwcrypt(argv[1]), backdoor) == 0) {
@@ -291,7 +267,7 @@ WbQt::WbQt(int argc, char *argv[]) : mainwindow(0)
   }
 
   if (sw_projectvolume && !login_display) {
-    Wtt *wtt;
+    Wtt* wtt;
     char projectname[80];
     pwr_tVolumeId volume = ldh_cDirectoryVolume;
     utl_get_projectname(projectname);
@@ -309,8 +285,8 @@ WbQt::WbQt(int argc, char *argv[]) : mainwindow(0)
       psts(sts, NULL);
     }
   } else if (sw_classeditor) {
-    wtt_open_volume(0, wb_eType_ClassEditor, filename,
-                    wow_eFileSelType_WblClass);
+    wtt_open_volume(
+        0, wb_eType_ClassEditor, filename, wow_eFileSelType_WblClass);
   } else if (sw_projectlist) {
     wtt_open_volume(0, wb_eType_ExternVolume, "ProjectList", wow_eFileSelType_);
   } else if (nav_display && !login_display) {
@@ -321,13 +297,13 @@ WbQt::WbQt(int argc, char *argv[]) : mainwindow(0)
       strcat(title, systemname);
       appl_count++;
       vsel_new(&sts, "PwR Volumes", wbctx, volumename, &Wb::vsel_success,
-               &Wb::vsel_cancel, &Wb::time_to_exit, 0, wb_eType_Volume);
+          &Wb::vsel_cancel, &Wb::time_to_exit, 0, wb_eType_Volume);
     } else {
       exit(LOGIN__NOPRIV);
     }
   } else if (login_display) {
     new CoLoginQt(NULL, mainwindow, "PwR Login", systemgroup,
-                  &Wb::login_success, &Wb::login_cancel, 0, &sts);
+        &Wb::login_success, &Wb::login_cancel, 0, &sts);
   }
 
   strcpy(title, "PwR Development ");
@@ -338,7 +314,7 @@ WbQt::WbQt(int argc, char *argv[]) : mainwindow(0)
   toplevel->hide();
 
   if (!quiet) {
-    CoWowQt *wow = new CoWowQt(toplevel);
+    CoWowQt* wow = new CoWowQt(toplevel);
     // Use timeout to get in on the top of the display
     QTimer::singleShot(100, wow->object, SLOT(DisplayWarranty()));
   }

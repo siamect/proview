@@ -8,26 +8,72 @@
 #ifndef statussrv_Service_H
 #define statussrv_Service_H
 #include "statussrv_H.h"
-class Service
-{   public:
-	struct soap *soap;
-	const char *endpoint;
-	Service()
-	{ soap = soap_new(); endpoint = "http://localhost:80"; if (soap && !soap->namespaces) { static const struct Namespace namespaces[] = 
-{
-	{"SOAP-ENV", "http://schemas.xmlsoap.org/soap/envelope/", "http://www.w3.org/*/soap-envelope", NULL},
-	{"SOAP-ENC", "http://schemas.xmlsoap.org/soap/encoding/", "http://www.w3.org/*/soap-encoding", NULL},
-	{"xsi", "http://www.w3.org/2001/XMLSchema-instance", "http://www.w3.org/*/XMLSchema-instance", NULL},
-	{"xsd", "http://www.w3.org/2001/XMLSchema", "http://www.w3.org/*/XMLSchema", NULL},
-	{"s0", "http://www.proview.se/webservices/statussrv/1.0/", NULL, NULL},
-	{NULL, NULL, NULL, NULL}
-};
-	soap->namespaces = namespaces; } };
-	virtual ~Service() { if (soap) { soap_destroy(soap); soap_end(soap); soap_free(soap); } };
-	virtual int __s0__GetStatus(_s0__GetStatus *s0__GetStatus, _s0__GetStatusResponse *s0__GetStatusResponse) { return soap ? soap_call___s0__GetStatus(soap, endpoint, NULL, s0__GetStatus, s0__GetStatusResponse) : SOAP_EOM; };
-	virtual int __s0__GetExtStatus(_s0__GetExtStatus *s0__GetExtStatus, _s0__GetExtStatusResponse *s0__GetExtStatusResponse) { return soap ? soap_call___s0__GetExtStatus(soap, endpoint, NULL, s0__GetExtStatus, s0__GetExtStatusResponse) : SOAP_EOM; };
-	virtual int __s0__Restart(_s0__Restart *s0__Restart, _s0__RestartResponse *s0__RestartResponse) { return soap ? soap_call___s0__Restart(soap, endpoint, NULL, s0__Restart, s0__RestartResponse) : SOAP_EOM; };
-	virtual int __s0__XttStart(_s0__XttStart *s0__XttStart, _s0__XttStartResponse *s0__XttStartResponse) { return soap ? soap_call___s0__XttStart(soap, endpoint, NULL, s0__XttStart, s0__XttStartResponse) : SOAP_EOM; };
-	virtual int __s0__RtMonStart(_s0__RtMonStart *s0__RtMonStart, _s0__RtMonStartResponse *s0__RtMonStartResponse) { return soap ? soap_call___s0__RtMonStart(soap, endpoint, NULL, s0__RtMonStart, s0__RtMonStartResponse) : SOAP_EOM; };
+class Service {
+  public:
+  struct soap* soap;
+  const char* endpoint;
+  Service()
+  {
+    soap = soap_new();
+    endpoint = "http://localhost:80";
+    if (soap && !soap->namespaces) {
+      static const struct Namespace namespaces[]
+          = { { "SOAP-ENV", "http://schemas.xmlsoap.org/soap/envelope/",
+                  "http://www.w3.org/*/soap-envelope", NULL },
+              { "SOAP-ENC", "http://schemas.xmlsoap.org/soap/encoding/",
+                  "http://www.w3.org/*/soap-encoding", NULL },
+              { "xsi", "http://www.w3.org/2001/XMLSchema-instance",
+                  "http://www.w3.org/*/XMLSchema-instance", NULL },
+              { "xsd", "http://www.w3.org/2001/XMLSchema",
+                  "http://www.w3.org/*/XMLSchema", NULL },
+              { "s0", "http://www.proview.se/webservices/statussrv/1.0/", NULL,
+                  NULL },
+              { NULL, NULL, NULL, NULL } };
+      soap->namespaces = namespaces;
+    }
+  };
+  virtual ~Service()
+  {
+    if (soap) {
+      soap_destroy(soap);
+      soap_end(soap);
+      soap_free(soap);
+    }
+  };
+  virtual int __s0__GetStatus(_s0__GetStatus* s0__GetStatus,
+      _s0__GetStatusResponse* s0__GetStatusResponse)
+  {
+    return soap ? soap_call___s0__GetStatus(soap, endpoint, NULL, s0__GetStatus,
+                      s0__GetStatusResponse)
+                : SOAP_EOM;
+  };
+  virtual int __s0__GetExtStatus(_s0__GetExtStatus* s0__GetExtStatus,
+      _s0__GetExtStatusResponse* s0__GetExtStatusResponse)
+  {
+    return soap ? soap_call___s0__GetExtStatus(soap, endpoint, NULL,
+                      s0__GetExtStatus, s0__GetExtStatusResponse)
+                : SOAP_EOM;
+  };
+  virtual int __s0__Restart(
+      _s0__Restart* s0__Restart, _s0__RestartResponse* s0__RestartResponse)
+  {
+    return soap ? soap_call___s0__Restart(
+                      soap, endpoint, NULL, s0__Restart, s0__RestartResponse)
+                : SOAP_EOM;
+  };
+  virtual int __s0__XttStart(
+      _s0__XttStart* s0__XttStart, _s0__XttStartResponse* s0__XttStartResponse)
+  {
+    return soap ? soap_call___s0__XttStart(
+                      soap, endpoint, NULL, s0__XttStart, s0__XttStartResponse)
+                : SOAP_EOM;
+  };
+  virtual int __s0__RtMonStart(_s0__RtMonStart* s0__RtMonStart,
+      _s0__RtMonStartResponse* s0__RtMonStartResponse)
+  {
+    return soap ? soap_call___s0__RtMonStart(soap, endpoint, NULL,
+                      s0__RtMonStart, s0__RtMonStartResponse)
+                : SOAP_EOM;
+  };
 };
 #endif

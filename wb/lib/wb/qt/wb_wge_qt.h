@@ -37,67 +37,69 @@
 #ifndef wb_wge_qt_h
 #define wb_wge_qt_h
 
+#include "cow_wow_qt.h"
+
 #ifndef wb_wge_h
-# include "wb_wge.h"
+#include "wb_wge.h"
 #endif
 
-#ifndef cow_wow_qt_h
-# include "cow_wow_qt.h"
-#endif
+#include <QLabel>
 
 class WGeQtWidget;
 
 class WGeQt : public WGe {
 public:
-  QWidget *grow_widget;
-  QWidget *form_widget;
-  QWidget *nav_shell;
-  QWidget *nav_widget;
-  QWidget *menu_widget;
-  QLineEdit *value_input;
-  QWidget *value_dialog;
-  QWidget *message_dia_widget;
-  QLabel *message_dia_label;
+  QWidget* grow_widget;
+  QWidget* form_widget;
+  QWidget* nav_shell;
+  QWidget* nav_widget;
+  QWidget* menu_widget;
+  QLineEdit* value_input;
+  QWidget* value_dialog;
+  QWidget* message_dia_widget;
+  QLabel* message_dia_label;
   CoWowFocusTimerQt focustimer;
 
   void pop();
   void set_size(int width, int height);
   void set_subwindow_release();
 
-  WGeQt(QWidget *parent_wid, void *parent_ctx, char *name, char *filename,
-        int scrollbar, int menu, int navigator, int width, int height, int x,
-        int y, char *object_name, int modal);
+  WGeQt(QWidget* parent_wid, void* parent_ctx, char* name, char* filename,
+      int scrollbar, int menu, int navigator, int width, int height, int x,
+      int y, char* object_name, int modal);
   ~WGeQt();
 
-  static void change_value_cb(void *ge_ctx, void *value_object, char *text);
-  static void confirm_cb(void *ge_ctx, void *confirm_object, char *text);
-  static void message_dialog_cb(void *ge_ctx, const char *text);
+  static void change_value_cb(void* ge_ctx, void* value_object, char* text);
+  static void confirm_cb(void* ge_ctx, void* confirm_object, char* text);
+  static void message_dialog_cb(void* ge_ctx, const char* text);
 
 private:
-  WGeQtWidget *toplevel;
+  WGeQtWidget* toplevel;
 };
 
 class WGeQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  WGeQtWidget(WGeQt *parent_ctx, QWidget *parent) : QWidget(parent, Qt::Window),
-                                                    ge(parent_ctx) {}
+  WGeQtWidget(WGeQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), ge(parent_ctx)
+  {
+  }
 
 protected:
   void resize(int width, int height);
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void activate_zoom_in();
   void activate_zoom_out();
   void activate_zoom_reset();
   void activate_help();
-  void action_resize(QResizeEvent *event);
+  void action_resize(QResizeEvent* event);
 
 private:
-  WGeQt *ge;
+  WGeQt* ge;
 };
 
 #endif

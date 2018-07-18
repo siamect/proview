@@ -37,19 +37,13 @@
 #ifndef ge_attr_qt_h
 #define ge_attr_qt_h
 
-#include "glow.h"
-#include "glow_growctx.h"
-#include "glow_growapi.h"
-
-#include "ge_dyn.h"
-#include "ge_attr.h"
-#include "ge_attrnav_qt.h"
 #include "cow_wow_qt.h"
+
+#include "ge_attr.h"
 
 #include <QLabel>
 #include <QSplitter>
 #include <QTextEdit>
-#include <QWidget>
 
 /* ge_attr.h -- Ge attribute editor */
 
@@ -63,24 +57,24 @@ class AttrQtWidget;
 /*! Displays grow attributes and dynamic attributes for an object or graph. */
 class AttrQt : public Attr {
 public:
-  AttrQt(QWidget *a_parent_wid, void *a_parent_ctx, attr_eType a_type,
-         void *a_object, attr_sItem *itemlist, int item_cnt);
+  AttrQt(QWidget* a_parent_wid, void* a_parent_ctx, attr_eType a_type,
+      void* a_object, attr_sItem* itemlist, int item_cnt);
 
-  AttrQtWidget *toplevel;
-  QWidget *brow_widget;
-  QWidget *form_widget;
-  QLabel *msg_label;
-  QLabel *cmd_prompt;
-  QWidget *cmd_scrolledinput;
-  QTextEdit *cmd_scrolled_buffer;
-  QSplitter *pane;
+  AttrQtWidget* toplevel;
+  QWidget* brow_widget;
+  QWidget* form_widget;
+  QLabel* msg_label;
+  QLabel* cmd_prompt;
+  QWidget* cmd_scrolledinput;
+  QTextEdit* cmd_scrolled_buffer;
+  QSplitter* pane;
   static CoWowRecall value_recall;
-  CoWowEntryQt *cmd_entry;
+  CoWowEntryQt* cmd_entry;
   int input_max_length;
 
-  void message(char severity, const char *message);
-  void message_popup(char severity, const char *message);
-  void set_prompt(const char *prompt);
+  void message(char severity, const char* message);
+  void message_popup(char severity, const char* message);
+  void set_prompt(const char* prompt);
   void change_value();
   int reconfigure_attr();
 
@@ -91,12 +85,14 @@ class AttrQtWidget : public QDialog {
   Q_OBJECT
 
 public:
-  AttrQtWidget(AttrQt *parent_ctx, QWidget *parent) : QDialog(parent),
-                                                      attr(parent_ctx) {}
+  AttrQtWidget(AttrQt* parent_ctx, QWidget* parent)
+      : QDialog(parent), attr(parent_ctx)
+  {
+  }
 
 protected:
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void attr_activate_changevalue();
@@ -111,7 +107,7 @@ public slots:
   void action_text_inserted();
 
 private:
-  AttrQt *attr;
+  AttrQt* attr;
 };
 
 #endif

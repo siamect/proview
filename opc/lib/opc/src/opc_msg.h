@@ -23,7 +23,7 @@
    Include only the soapcpp2-generated headers and source code files.
 */
 
-//gsoapopt w
+// gsoapopt w
 
 /******************************************************************************\
  *                                                                            *
@@ -31,13 +31,11 @@
  *                                                                            *
 \******************************************************************************/
 
-
 /******************************************************************************\
  *                                                                            *
  * Import                                                                     *
  *                                                                            *
 \******************************************************************************/
-
 
 // STL vector containers (use option -s to disable)
 #import "stlvector.h"
@@ -47,7 +45,6 @@
  * Schema Namespaces                                                          *
  *                                                                            *
 \******************************************************************************/
-
 
 /* NOTE:
 
@@ -59,9 +56,10 @@ s0 = "http://opcfoundation.org/webservices/XMLDA/1.0/"
 
 */
 
-//gsoap s0    schema namespace:	http://opcfoundation.org/webservices/XMLDA/1.0/
-//gsoap s0    schema elementForm:	qualified
-//gsoap s0    schema attributeForm:	unqualified
+// gsoap s0    schema namespace:
+// http://opcfoundation.org/webservices/XMLDA/1.0/
+// gsoap s0    schema elementForm:	qualified
+// gsoap s0    schema attributeForm:	unqualified
 
 /******************************************************************************\
  *                                                                            *
@@ -69,110 +67,112 @@ s0 = "http://opcfoundation.org/webservices/XMLDA/1.0/"
  *                                                                            *
 \******************************************************************************/
 
-class xsd__anyType { _XML __item; struct soap *soap; };
+class xsd__anyType {
+  _XML __item;
+  struct soap* soap;
+};
 
 /// Primitive built-in type "xs:QName"
 typedef std::string xsd__QName;
 
 /// Class wrapper for built-in type "xs:QName" derived from xsd__anyType
-class xsd__QName_ : public xsd__anyType
-{ public:
-    xsd__QName                           __item;                       
+class xsd__QName_ : public xsd__anyType {
+public:
+  xsd__QName __item;
 };
 
 /// Class wrapper for built-in type "xs:boolean" derived from xsd__anyType
-class xsd__boolean : public xsd__anyType
-{ public:
-    bool                                 __item;                       
+class xsd__boolean : public xsd__anyType {
+public:
+  bool __item;
 };
 
 /// Class wrapper for built-in type "xs:byte" derived from xsd__anyType
-class xsd__byte : public xsd__anyType
-{ public:
-    char                                 __item;                       
+class xsd__byte : public xsd__anyType {
+public:
+  char __item;
 };
 
 /// Class wrapper for built-in type "xs:dateTime" derived from xsd__anyType
-class xsd__dateTime : public xsd__anyType
-{ public:
-    std::string                          __item;                       
+class xsd__dateTime : public xsd__anyType {
+public:
+  std::string __item;
 };
 
 /// Class wrapper for built-in type "xs:duration" derived from xsd__anyType
-class xsd__duration : public xsd__anyType
-{ public:
-    std::string                          __item;                       
+class xsd__duration : public xsd__anyType {
+public:
+  std::string __item;
 };
 
 /// Primitive built-in type "xs:decimal"
 typedef std::string xsd__decimal;
 
 /// Class wrapper for built-in type "xs:decimal" derived from xsd__anyType
-class xsd__decimal_ : public xsd__anyType
-{ public:
-    xsd__decimal                         __item;                       
+class xsd__decimal_ : public xsd__anyType {
+public:
+  xsd__decimal __item;
 };
 
 /// Class wrapper for built-in type "xs:double" derived from xsd__anyType
-class xsd__double : public xsd__anyType
-{ public:
-    double                               __item;                       
+class xsd__double : public xsd__anyType {
+public:
+  double __item;
 };
 
 /// Class wrapper for built-in type "xs:float" derived from xsd__anyType
-class xsd__float : public xsd__anyType
-{ public:
-    float                                __item;                       
+class xsd__float : public xsd__anyType {
+public:
+  float __item;
 };
 
 /// Class wrapper for built-in type "xs:int" derived from xsd__anyType
-class xsd__int : public xsd__anyType
-{ public:
-    int                                  __item;                       
+class xsd__int : public xsd__anyType {
+public:
+  int __item;
 };
 
 /// Class wrapper for built-in type "xs:long" derived from xsd__anyType
-class xsd__long : public xsd__anyType
-{ public:
-    LONG64                               __item;                       
+class xsd__long : public xsd__anyType {
+public:
+  LONG64 __item;
 };
 
 /// Class wrapper for built-in type "xs:short" derived from xsd__anyType
-class xsd__short : public xsd__anyType
-{ public:
-    short                                __item;                       
+class xsd__short : public xsd__anyType {
+public:
+  short __item;
 };
 
 /// Class wrapper for built-in type "xs:string" derived from xsd__anyType
-class xsd__string : public xsd__anyType
-{ public:
-    std::string                          __item;                       
+class xsd__string : public xsd__anyType {
+public:
+  std::string __item;
 };
 
 /// Class wrapper for built-in type "xs:unsignedByte" derived from xsd__anyType
-class xsd__unsignedByte : public xsd__anyType
-{ public:
-    unsigned char                        __item;                       
+class xsd__unsignedByte : public xsd__anyType {
+public:
+  unsigned char __item;
 };
 
 /// Class wrapper for built-in type "xs:unsignedInt" derived from xsd__anyType
-class xsd__unsignedInt : public xsd__anyType
-{ public:
-    unsigned int                         __item;                       
+class xsd__unsignedInt : public xsd__anyType {
+public:
+  unsigned int __item;
 };
 
 /// Class wrapper for built-in type "xs:unsignedLong" derived from xsd__anyType
-class xsd__unsignedLong : public xsd__anyType
-{ public:
-    ULONG64                              __item;                       
+class xsd__unsignedLong : public xsd__anyType {
+public:
+  ULONG64 __item;
 };
 
 /// Class wrapper for built-in type "xs:unsignedShort" derived from xsd__anyType
-class xsd__unsignedShort : public xsd__anyType
-{ public:
-    unsigned short                       __item;                       
+class xsd__unsignedShort : public xsd__anyType {
+public:
+  unsigned short __item;
 };
-
 
 //  Forward declaration of class s0__ReplyBase.
 class s0__ReplyBase;
@@ -324,751 +324,837 @@ class _s0__GetProperties;
 //  Forward declaration of class _s0__GetPropertiesResponse.
 class _s0__GetPropertiesResponse;
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":serverState is a simpleType restriction of xs:string.
-/// Note: enum values are prefixed with 's0__serverState' to avoid name clashes, please use wsdl2h option -e to omit this prefix
-enum s0__serverState
-{
-	s0__serverState__running,	///< xs:string value="running"
-	s0__serverState__failed,	///< xs:string value="failed"
-	s0__serverState__noConfig,	///< xs:string value="noConfig"
-	s0__serverState__suspended,	///< xs:string value="suspended"
-	s0__serverState__test,	///< xs:string value="test"
-	s0__serverState__commFault,	///< xs:string value="commFault"
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":serverState is a
+/// simpleType restriction of xs:string.
+/// Note: enum values are prefixed with 's0__serverState' to avoid name clashes,
+/// please use wsdl2h option -e to omit this prefix
+enum s0__serverState {
+  s0__serverState__running, ///< xs:string value="running"
+  s0__serverState__failed, ///< xs:string value="failed"
+  s0__serverState__noConfig, ///< xs:string value="noConfig"
+  s0__serverState__suspended, ///< xs:string value="suspended"
+  s0__serverState__test, ///< xs:string value="test"
+  s0__serverState__commFault, ///< xs:string value="commFault"
 };
 
 /// Class wrapper
-class s0__serverState_ : public xsd__anyType
-{ public:
-    enum s0__serverState                 __item;                       
+class s0__serverState_ : public xsd__anyType {
+public:
+  enum s0__serverState __item;
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":interfaceVersion is a simpleType restriction of xs:string.
-/// Note: enum values are prefixed with 's0__interfaceVersion' to avoid name clashes, please use wsdl2h option -e to omit this prefix
-enum s0__interfaceVersion
-{
-	s0__interfaceVersion__XML_USCOREDA_USCOREVersion_USCORE1_USCORE0,	///< xs:string value="XML_DA_Version_1_0"
-};
-
-/// Class wrapper
-class s0__interfaceVersion_ : public xsd__anyType
-{ public:
-    enum s0__interfaceVersion            __item;                       
-};
-
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":qualityBits is a simpleType restriction of xs:string.
-/// Note: enum values are prefixed with 's0__qualityBits' to avoid name clashes, please use wsdl2h option -e to omit this prefix
-enum s0__qualityBits
-{
-	s0__qualityBits__bad,	///< xs:string value="bad"
-	s0__qualityBits__badConfigurationError,	///< xs:string value="badConfigurationError"
-	s0__qualityBits__badNotConnected,	///< xs:string value="badNotConnected"
-	s0__qualityBits__badDeviceFailure,	///< xs:string value="badDeviceFailure"
-	s0__qualityBits__badSensorFailure,	///< xs:string value="badSensorFailure"
-	s0__qualityBits__badLastKnownValue,	///< xs:string value="badLastKnownValue"
-	s0__qualityBits__badCommFailure,	///< xs:string value="badCommFailure"
-	s0__qualityBits__badOutOfService,	///< xs:string value="badOutOfService"
-	s0__qualityBits__badWaitingForInitialData,	///< xs:string value="badWaitingForInitialData"
-	s0__qualityBits__uncertain,	///< xs:string value="uncertain"
-	s0__qualityBits__uncertainLastUsableValue,	///< xs:string value="uncertainLastUsableValue"
-	s0__qualityBits__uncertainSensorNotAccurate,	///< xs:string value="uncertainSensorNotAccurate"
-	s0__qualityBits__uncertainEUExceeded,	///< xs:string value="uncertainEUExceeded"
-	s0__qualityBits__uncertainSubNormal,	///< xs:string value="uncertainSubNormal"
-	s0__qualityBits__good,	///< xs:string value="good"
-	s0__qualityBits__goodLocalOverride,	///< xs:string value="goodLocalOverride"
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":interfaceVersion is a
+/// simpleType restriction of xs:string.
+/// Note: enum values are prefixed with 's0__interfaceVersion' to avoid name
+/// clashes, please use wsdl2h option -e to omit this prefix
+enum s0__interfaceVersion {
+  s0__interfaceVersion__XML_USCOREDA_USCOREVersion_USCORE1_USCORE0, ///<
+  /// xs:string
+  /// value="XML_DA_Version_1_0"
 };
 
 /// Class wrapper
-class s0__qualityBits_ : public xsd__anyType
-{ public:
-    enum s0__qualityBits                 __item;                       
+class s0__interfaceVersion_ : public xsd__anyType {
+public:
+  enum s0__interfaceVersion __item;
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":limitBits is a simpleType restriction of xs:string.
-/// Note: enum values are prefixed with 's0__limitBits' to avoid name clashes, please use wsdl2h option -e to omit this prefix
-enum s0__limitBits
-{
-	s0__limitBits__none,	///< xs:string value="none"
-	s0__limitBits__low,	///< xs:string value="low"
-	s0__limitBits__high,	///< xs:string value="high"
-	s0__limitBits__constant,	///< xs:string value="constant"
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":qualityBits is a
+/// simpleType restriction of xs:string.
+/// Note: enum values are prefixed with 's0__qualityBits' to avoid name clashes,
+/// please use wsdl2h option -e to omit this prefix
+enum s0__qualityBits {
+  s0__qualityBits__bad, ///< xs:string value="bad"
+  s0__qualityBits__badConfigurationError, ///< xs:string
+  /// value="badConfigurationError"
+  s0__qualityBits__badNotConnected, ///< xs:string value="badNotConnected"
+  s0__qualityBits__badDeviceFailure, ///< xs:string value="badDeviceFailure"
+  s0__qualityBits__badSensorFailure, ///< xs:string value="badSensorFailure"
+  s0__qualityBits__badLastKnownValue, ///< xs:string value="badLastKnownValue"
+  s0__qualityBits__badCommFailure, ///< xs:string value="badCommFailure"
+  s0__qualityBits__badOutOfService, ///< xs:string value="badOutOfService"
+  s0__qualityBits__badWaitingForInitialData, ///< xs:string
+  /// value="badWaitingForInitialData"
+  s0__qualityBits__uncertain, ///< xs:string value="uncertain"
+  s0__qualityBits__uncertainLastUsableValue, ///< xs:string
+  /// value="uncertainLastUsableValue"
+  s0__qualityBits__uncertainSensorNotAccurate, ///< xs:string
+  /// value="uncertainSensorNotAccurate"
+  s0__qualityBits__uncertainEUExceeded, ///< xs:string
+  /// value="uncertainEUExceeded"
+  s0__qualityBits__uncertainSubNormal, ///< xs:string value="uncertainSubNormal"
+  s0__qualityBits__good, ///< xs:string value="good"
+  s0__qualityBits__goodLocalOverride, ///< xs:string value="goodLocalOverride"
 };
 
 /// Class wrapper
-class s0__limitBits_ : public xsd__anyType
-{ public:
-    enum s0__limitBits                   __item;                       
+class s0__qualityBits_ : public xsd__anyType {
+public:
+  enum s0__qualityBits __item;
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":browseFilter is a simpleType restriction of xs:string.
-/// Note: enum values are prefixed with 's0__browseFilter' to avoid name clashes, please use wsdl2h option -e to omit this prefix
-enum s0__browseFilter
-{
-	s0__browseFilter__all,	///< xs:string value="all"
-	s0__browseFilter__branch,	///< xs:string value="branch"
-	s0__browseFilter__item,	///< xs:string value="item"
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":limitBits is a simpleType
+/// restriction of xs:string.
+/// Note: enum values are prefixed with 's0__limitBits' to avoid name clashes,
+/// please use wsdl2h option -e to omit this prefix
+enum s0__limitBits {
+  s0__limitBits__none, ///< xs:string value="none"
+  s0__limitBits__low, ///< xs:string value="low"
+  s0__limitBits__high, ///< xs:string value="high"
+  s0__limitBits__constant, ///< xs:string value="constant"
 };
 
 /// Class wrapper
-class s0__browseFilter_ : public xsd__anyType
-{ public:
-    enum s0__browseFilter                __item;                       
+class s0__limitBits_ : public xsd__anyType {
+public:
+  enum s0__limitBits __item;
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ReplyBase is a complexType.
-class s0__ReplyBase : public xsd__anyType
-{ public:
-/// Attribute RcvTime of type xs:dateTime.
-   @std::string                          RcvTime                        1;	///< Required attribute.
-/// Attribute ReplyTime of type xs:dateTime.
-   @std::string                          ReplyTime                      1;	///< Required attribute.
-/// Attribute ClientRequestHandle of type xs:string.
-   @std::string*                         ClientRequestHandle            0;	///< Optional attribute.
-/// Attribute RevisedLocaleID of type xs:string.
-   @std::string*                         RevisedLocaleID                0;	///< Optional attribute.
-/// Attribute ServerState of type "http://opcfoundation.org/webservices/XMLDA/1.0/":serverState.
-   @enum s0__serverState                 ServerState                    1;	///< Required attribute.
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":browseFilter is a
+/// simpleType restriction of xs:string.
+/// Note: enum values are prefixed with 's0__browseFilter' to avoid name
+/// clashes, please use wsdl2h option -e to omit this prefix
+enum s0__browseFilter {
+  s0__browseFilter__all, ///< xs:string value="all"
+  s0__browseFilter__branch, ///< xs:string value="branch"
+  s0__browseFilter__item, ///< xs:string value="item"
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ServerStatus is a complexType.
-class s0__ServerStatus : public xsd__anyType
-{ public:
-/// Element StatusInfo of type xs:string.
-    std::string*                         StatusInfo                     0;	///< Optional element.
-/// Element VendorInfo of type xs:string.
-    std::string*                         VendorInfo                     0;	///< Optional element.
-/// Vector of std::string with length 0..unbounded
-    std::vector<std::string            > SupportedLocaleIDs             0;
-/// Vector of enum s0__interfaceVersion with length 0..unbounded
-    std::vector<enum s0__interfaceVersion> SupportedInterfaceVersions     0;
-/// Attribute StartTime of type xs:dateTime.
-   @std::string                          StartTime                      1;	///< Required attribute.
-/// Attribute ProductVersion of type xs:string.
-   @std::string*                         ProductVersion                 0;	///< Optional attribute.
+/// Class wrapper
+class s0__browseFilter_ : public xsd__anyType {
+public:
+  enum s0__browseFilter __item;
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":RequestOptions is a complexType.
-class s0__RequestOptions : public xsd__anyType
-{ public:
-/// Attribute ReturnErrorText of type xs:boolean.
-   @bool*                                ReturnErrorText                0;	///< Optional attribute.
-/// Attribute ReturnDiagnosticInfo of type xs:boolean.
-   @bool*                                ReturnDiagnosticInfo           0;	///< Optional attribute.
-/// Attribute ReturnItemTime of type xs:boolean.
-   @bool*                                ReturnItemTime                 0;	///< Optional attribute.
-/// Attribute ReturnItemPath of type xs:boolean.
-   @bool*                                ReturnItemPath                 0;	///< Optional attribute.
-/// Attribute ReturnItemName of type xs:boolean.
-   @bool*                                ReturnItemName                 0;	///< Optional attribute.
-/// Attribute RequestDeadline of type xs:dateTime.
-   @std::string*                       RequestDeadline                0;	///< Optional attribute.
-/// Attribute ClientRequestHandle of type xs:string.
-   @std::string*                         ClientRequestHandle            0;	///< Optional attribute.
-/// Attribute LocaleID of type xs:string.
-   @std::string*                         LocaleID                       0;	///< Optional attribute.
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ReplyBase is a
+/// complexType.
+class s0__ReplyBase : public xsd__anyType {
+public:
+  /// Attribute RcvTime of type xs:dateTime.
+  @std::string RcvTime 1; ///< Required attribute.
+  /// Attribute ReplyTime of type xs:dateTime.
+  @std::string ReplyTime 1; ///< Required attribute.
+  /// Attribute ClientRequestHandle of type xs:string.
+  @std::string* ClientRequestHandle 0; ///< Optional attribute.
+  /// Attribute RevisedLocaleID of type xs:string.
+  @std::string* RevisedLocaleID 0; ///< Optional attribute.
+  /// Attribute ServerState of type
+  /// "http://opcfoundation.org/webservices/XMLDA/1.0/":serverState.
+  @ enum s0__serverState ServerState 1; ///< Required attribute.
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ReadRequestItemList is a complexType.
-class s0__ReadRequestItemList : public xsd__anyType
-{ public:
-/// Vector of s0__ReadRequestItem* with length 0..unbounded
-    std::vector<s0__ReadRequestItem*   > Items                          0;
-/// Attribute ItemPath of type xs:string.
-   @std::string*                         ItemPath                       0;	///< Optional attribute.
-/// Attribute ReqType of type xs:QName.
-   @xsd__QName*                          ReqType                        0;	///< Optional attribute.
-/// Attribute MaxAge of type xs:int.
-   @int*                                 MaxAge                         0;	///< Optional attribute.
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ServerStatus is a
+/// complexType.
+class s0__ServerStatus : public xsd__anyType {
+public:
+  /// Element StatusInfo of type xs:string.
+  std::string* StatusInfo 0; ///< Optional element.
+  /// Element VendorInfo of type xs:string.
+  std::string* VendorInfo 0; ///< Optional element.
+  /// Vector of std::string with length 0..unbounded
+  std::vector<std::string> SupportedLocaleIDs 0;
+  /// Vector of enum s0__interfaceVersion with length 0..unbounded
+  std::vector<enum s0__interfaceVersion> SupportedInterfaceVersions 0;
+  /// Attribute StartTime of type xs:dateTime.
+  @std::string StartTime 1; ///< Required attribute.
+  /// Attribute ProductVersion of type xs:string.
+  @std::string* ProductVersion 0; ///< Optional attribute.
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ReadRequestItem is a complexType.
-class s0__ReadRequestItem : public xsd__anyType
-{ public:
-/// Attribute ItemPath of type xs:string.
-   @std::string*                         ItemPath                       0;	///< Optional attribute.
-/// Attribute ReqType of type xs:QName.
-   @xsd__QName*                          ReqType                        0;	///< Optional attribute.
-/// Attribute ItemName of type xs:string.
-   @std::string*                         ItemName                       0;	///< Optional attribute.
-/// Attribute ClientItemHandle of type xs:string.
-   @std::string*                         ClientItemHandle               0;	///< Optional attribute.
-/// Attribute MaxAge of type xs:int.
-   @int*                                 MaxAge                         0;	///< Optional attribute.
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":RequestOptions is a
+/// complexType.
+class s0__RequestOptions : public xsd__anyType {
+public:
+  /// Attribute ReturnErrorText of type xs:boolean.
+  @ bool* ReturnErrorText 0; ///< Optional attribute.
+  /// Attribute ReturnDiagnosticInfo of type xs:boolean.
+  @ bool* ReturnDiagnosticInfo 0; ///< Optional attribute.
+  /// Attribute ReturnItemTime of type xs:boolean.
+  @ bool* ReturnItemTime 0; ///< Optional attribute.
+  /// Attribute ReturnItemPath of type xs:boolean.
+  @ bool* ReturnItemPath 0; ///< Optional attribute.
+  /// Attribute ReturnItemName of type xs:boolean.
+  @ bool* ReturnItemName 0; ///< Optional attribute.
+  /// Attribute RequestDeadline of type xs:dateTime.
+  @std::string* RequestDeadline 0; ///< Optional attribute.
+  /// Attribute ClientRequestHandle of type xs:string.
+  @std::string* ClientRequestHandle 0; ///< Optional attribute.
+  /// Attribute LocaleID of type xs:string.
+  @std::string* LocaleID 0; ///< Optional attribute.
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ReplyItemList is a complexType.
-class s0__ReplyItemList : public xsd__anyType
-{ public:
-/// Vector of s0__ItemValue* with length 0..unbounded
-    std::vector<s0__ItemValue*         > Items                          0;
-/// Attribute Reserved of type xs:string.
-   @std::string*                         Reserved                       0;	///< Optional attribute.
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ReadRequestItemList is a
+/// complexType.
+class s0__ReadRequestItemList : public xsd__anyType {
+public:
+  /// Vector of s0__ReadRequestItem* with length 0..unbounded
+  std::vector<s0__ReadRequestItem*> Items 0;
+  /// Attribute ItemPath of type xs:string.
+  @std::string* ItemPath 0; ///< Optional attribute.
+  /// Attribute ReqType of type xs:QName.
+  @xsd__QName* ReqType 0; ///< Optional attribute.
+  /// Attribute MaxAge of type xs:int.
+  @ int* MaxAge 0; ///< Optional attribute.
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ItemValue is a complexType.
-class s0__ItemValue : public xsd__anyType
-{ public:
-/// Element DiagnosticInfo of type xs:string.
-    std::string*                         DiagnosticInfo                 0;	///< Optional element.
-/// Element 'Value' has no type or ref: assuming XML content.
-    @xsd__anyType*                       Value                          0;	///< Optional element.
-/// Element Quality of type "http://opcfoundation.org/webservices/XMLDA/1.0/":OPCQuality.
-    s0__OPCQuality*                      Quality                        0;	///< Optional element.
-/// Attribute ValueTypeQualifier of type xs:QName.
-   @xsd__QName*                          ValueTypeQualifier             0;	///< Optional attribute.
-/// Attribute ItemPath of type xs:string.
-   @std::string*                         ItemPath                       0;	///< Optional attribute.
-/// Attribute ItemName of type xs:string.
-   @std::string*                         ItemName                       0;	///< Optional attribute.
-/// Attribute ClientItemHandle of type xs:string.
-   @std::string*                         ClientItemHandle               0;	///< Optional attribute.
-/// Attribute Timestamp of type xs:dateTime.
-   @std::string*                         Timestamp                      0;	///< Optional attribute.
-/// Attribute ResultID of type xs:QName.
-   @xsd__QName*                          ResultID                       0;	///< Optional attribute.
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ReadRequestItem is a
+/// complexType.
+class s0__ReadRequestItem : public xsd__anyType {
+public:
+  /// Attribute ItemPath of type xs:string.
+  @std::string* ItemPath 0; ///< Optional attribute.
+  /// Attribute ReqType of type xs:QName.
+  @xsd__QName* ReqType 0; ///< Optional attribute.
+  /// Attribute ItemName of type xs:string.
+  @std::string* ItemName 0; ///< Optional attribute.
+  /// Attribute ClientItemHandle of type xs:string.
+  @std::string* ClientItemHandle 0; ///< Optional attribute.
+  /// Attribute MaxAge of type xs:int.
+  @ int* MaxAge 0; ///< Optional attribute.
+};
+
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ReplyItemList is a
+/// complexType.
+class s0__ReplyItemList : public xsd__anyType {
+public:
+  /// Vector of s0__ItemValue* with length 0..unbounded
+  std::vector<s0__ItemValue*> Items 0;
+  /// Attribute Reserved of type xs:string.
+  @std::string* Reserved 0; ///< Optional attribute.
+};
+
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ItemValue is a
+/// complexType.
+class s0__ItemValue : public xsd__anyType {
+public:
+  /// Element DiagnosticInfo of type xs:string.
+  std::string* DiagnosticInfo 0; ///< Optional element.
+  /// Element 'Value' has no type or ref: assuming XML content.
+  @xsd__anyType* Value 0; ///< Optional element.
+  /// Element Quality of type
+  /// "http://opcfoundation.org/webservices/XMLDA/1.0/":OPCQuality.
+  s0__OPCQuality* Quality 0; ///< Optional element.
+  /// Attribute ValueTypeQualifier of type xs:QName.
+  @xsd__QName* ValueTypeQualifier 0; ///< Optional attribute.
+  /// Attribute ItemPath of type xs:string.
+  @std::string* ItemPath 0; ///< Optional attribute.
+  /// Attribute ItemName of type xs:string.
+  @std::string* ItemName 0; ///< Optional attribute.
+  /// Attribute ClientItemHandle of type xs:string.
+  @std::string* ClientItemHandle 0; ///< Optional attribute.
+  /// Attribute Timestamp of type xs:dateTime.
+  @std::string* Timestamp 0; ///< Optional attribute.
+  /// Attribute ResultID of type xs:QName.
+  @xsd__QName* ResultID 0; ///< Optional attribute.
 };
 
 /// "http://opcfoundation.org/webservices/XMLDA/1.0/":Value is a complexType.
-class s0__Value : public xsd__anyType
-{ public:
-/// Attribute xsi:type of type xs:QName.
-   @xsd__QName*                          xsi__type                      0;	///< Optional attribute.
+class s0__Value : public xsd__anyType {
+public:
+  /// Attribute xsi:type of type xs:QName.
+  @xsd__QName* xsi__type 0; ///< Optional attribute.
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":OPCQuality is a complexType.
-class s0__OPCQuality : public xsd__anyType
-{ public:
-/// Attribute QualityField of type "http://opcfoundation.org/webservices/XMLDA/1.0/":qualityBits.
-   @enum s0__qualityBits*                QualityField                   0;	///< Optional attribute.
-/// Attribute LimitField of type "http://opcfoundation.org/webservices/XMLDA/1.0/":limitBits.
-   @enum s0__limitBits*                  LimitField                     0;	///< Optional attribute.
-/// Attribute VendorField of type xs:unsignedByte.
-   @unsigned short*                      VendorField                    0;	///< Optional attribute.
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":OPCQuality is a
+/// complexType.
+class s0__OPCQuality : public xsd__anyType {
+public:
+  /// Attribute QualityField of type
+  /// "http://opcfoundation.org/webservices/XMLDA/1.0/":qualityBits.
+  @ enum s0__qualityBits* QualityField 0; ///< Optional attribute.
+  /// Attribute LimitField of type
+  /// "http://opcfoundation.org/webservices/XMLDA/1.0/":limitBits.
+  @ enum s0__limitBits* LimitField 0; ///< Optional attribute.
+  /// Attribute VendorField of type xs:unsignedByte.
+  @ unsigned short* VendorField 0; ///< Optional attribute.
 };
 
 /// "http://opcfoundation.org/webservices/XMLDA/1.0/":OPCError is a complexType.
-class s0__OPCError : public xsd__anyType
-{ public:
-/// Element Text of type xs:string.
-    std::string*                         Text                           0;	///< Optional element.
-/// Attribute ID of type xs:QName.
-   @xsd__QName                           ID                             1;	///< Required attribute.
+class s0__OPCError : public xsd__anyType {
+public:
+  /// Element Text of type xs:string.
+  std::string* Text 0; ///< Optional element.
+  /// Attribute ID of type xs:QName.
+  @xsd__QName ID 1; ///< Required attribute.
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ArrayOfFloat is a complexType.
-class s0__ArrayOfFloat : public xsd__anyType
-{ public:
-/// Vector of float with length 0..unbounded
-    std::vector<float                  > float_                         0;
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ArrayOfFloat is a
+/// complexType.
+class s0__ArrayOfFloat : public xsd__anyType {
+public:
+  /// Vector of float with length 0..unbounded
+  std::vector<float> float_ 0;
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ArrayOfInt is a complexType.
-class s0__ArrayOfInt : public xsd__anyType
-{ public:
-/// Vector of int with length 0..unbounded
-    std::vector<int                    > int_                           0;
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ArrayOfInt is a
+/// complexType.
+class s0__ArrayOfInt : public xsd__anyType {
+public:
+  /// Vector of int with length 0..unbounded
+  std::vector<int> int_ 0;
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ArrayOfUnsignedInt is a complexType.
-class s0__ArrayOfUnsignedInt : public xsd__anyType
-{ public:
-/// Vector of unsigned int with length 0..unbounded
-    std::vector<unsigned int           > unsignedInt                    0;
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ArrayOfUnsignedInt is a
+/// complexType.
+class s0__ArrayOfUnsignedInt : public xsd__anyType {
+public:
+  /// Vector of unsigned int with length 0..unbounded
+  std::vector<unsigned int> unsignedInt 0;
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ArrayOfLong is a complexType.
-class s0__ArrayOfLong : public xsd__anyType
-{ public:
-/// Vector of LONG64 with length 0..unbounded
-    std::vector<LONG64                 > long_                          0;
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ArrayOfLong is a
+/// complexType.
+class s0__ArrayOfLong : public xsd__anyType {
+public:
+  /// Vector of LONG64 with length 0..unbounded
+  std::vector<LONG64> long_ 0;
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ArrayOfUnsignedLong is a complexType.
-class s0__ArrayOfUnsignedLong : public xsd__anyType
-{ public:
-/// Vector of ULONG64 with length 0..unbounded
-    std::vector<ULONG64                > unsignedLong                   0;
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ArrayOfUnsignedLong is a
+/// complexType.
+class s0__ArrayOfUnsignedLong : public xsd__anyType {
+public:
+  /// Vector of ULONG64 with length 0..unbounded
+  std::vector<ULONG64> unsignedLong 0;
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ArrayOfDouble is a complexType.
-class s0__ArrayOfDouble : public xsd__anyType
-{ public:
-/// Vector of double with length 0..unbounded
-    std::vector<double                 > double_                        0;
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ArrayOfDouble is a
+/// complexType.
+class s0__ArrayOfDouble : public xsd__anyType {
+public:
+  /// Vector of double with length 0..unbounded
+  std::vector<double> double_ 0;
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ArrayOfUnsignedShort is a complexType.
-class s0__ArrayOfUnsignedShort : public xsd__anyType
-{ public:
-/// Vector of unsigned short with length 0..unbounded
-    std::vector<unsigned short         > unsignedShort                  0;
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ArrayOfUnsignedShort is a
+/// complexType.
+class s0__ArrayOfUnsignedShort : public xsd__anyType {
+public:
+  /// Vector of unsigned short with length 0..unbounded
+  std::vector<unsigned short> unsignedShort 0;
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ArrayOfBoolean is a complexType.
-class s0__ArrayOfBoolean : public xsd__anyType
-{ public:
-/// Vector of bool with length 0..unbounded
-    std::vector<bool                   > boolean                        0;
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ArrayOfBoolean is a
+/// complexType.
+class s0__ArrayOfBoolean : public xsd__anyType {
+public:
+  /// Vector of bool with length 0..unbounded
+  std::vector<bool> boolean 0;
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ArrayOfString is a complexType.
-class s0__ArrayOfString : public xsd__anyType
-{ public:
-/// Vector of std::string with length 0..unbounded
-    std::vector<std::string            > string                         0;	///< Nullable pointer.
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ArrayOfString is a
+/// complexType.
+class s0__ArrayOfString : public xsd__anyType {
+public:
+  /// Vector of std::string with length 0..unbounded
+  std::vector<std::string> string 0; ///< Nullable pointer.
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ArrayOfDateTime is a complexType.
-class s0__ArrayOfDateTime : public xsd__anyType
-{ public:
-/// Vector of time_t with length 0..unbounded
-    std::vector<std::string             > dateTime                       0;
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ArrayOfDateTime is a
+/// complexType.
+class s0__ArrayOfDateTime : public xsd__anyType {
+public:
+  /// Vector of time_t with length 0..unbounded
+  std::vector<std::string> dateTime 0;
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ArrayOfAnyType is a complexType.
-class s0__ArrayOfAnyType : public xsd__anyType
-{ public:
-/// Element 'anyType' has no type or ref: assuming XML content.
-/// Vector of XML with length 0..unbounded
-    std::vector<_XML                   > anyType                        0;	///< Nullable pointer.
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ArrayOfAnyType is a
+/// complexType.
+class s0__ArrayOfAnyType : public xsd__anyType {
+public:
+  /// Element 'anyType' has no type or ref: assuming XML content.
+  /// Vector of XML with length 0..unbounded
+  std::vector<_XML> anyType 0; ///< Nullable pointer.
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ArrayOfDecimal is a complexType.
-class s0__ArrayOfDecimal : public xsd__anyType
-{ public:
-/// Vector of xsd__decimal with length 0..unbounded
-    std::vector<xsd__decimal           > decimal                        0;
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ArrayOfDecimal is a
+/// complexType.
+class s0__ArrayOfDecimal : public xsd__anyType {
+public:
+  /// Vector of xsd__decimal with length 0..unbounded
+  std::vector<xsd__decimal> decimal 0;
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ArrayOfByte is a complexType.
-class s0__ArrayOfByte : public xsd__anyType
-{ public:
-/// Vector of char with length 0..unbounded
-    std::vector<char                   > byte                           0;
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ArrayOfByte is a
+/// complexType.
+class s0__ArrayOfByte : public xsd__anyType {
+public:
+  /// Vector of char with length 0..unbounded
+  std::vector<char> byte 0;
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ArrayOfShort is a complexType.
-class s0__ArrayOfShort : public xsd__anyType
-{ public:
-/// Vector of short with length 0..unbounded
-    std::vector<short                  > short_                         0;
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ArrayOfShort is a
+/// complexType.
+class s0__ArrayOfShort : public xsd__anyType {
+public:
+  /// Vector of short with length 0..unbounded
+  std::vector<short> short_ 0;
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":WriteRequestItemList is a complexType.
-class s0__WriteRequestItemList : public xsd__anyType
-{ public:
-/// Vector of s0__ItemValue* with length 0..unbounded
-    std::vector<s0__ItemValue*         > Items                          0;
-/// Attribute ItemPath of type xs:string.
-   @std::string*                         ItemPath                       0;	///< Optional attribute.
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":WriteRequestItemList is a
+/// complexType.
+class s0__WriteRequestItemList : public xsd__anyType {
+public:
+  /// Vector of s0__ItemValue* with length 0..unbounded
+  std::vector<s0__ItemValue*> Items 0;
+  /// Attribute ItemPath of type xs:string.
+  @std::string* ItemPath 0; ///< Optional attribute.
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscribeRequestItemList is a complexType.
-class s0__SubscribeRequestItemList : public xsd__anyType
-{ public:
-/// Vector of s0__SubscribeRequestItem* with length 0..unbounded
-    std::vector<s0__SubscribeRequestItem*> Items                          0;
-/// Attribute ItemPath of type xs:string.
-   @std::string*                         ItemPath                       0;	///< Optional attribute.
-/// Attribute ReqType of type xs:QName.
-   @xsd__QName*                          ReqType                        0;	///< Optional attribute.
-/// Attribute Deadband of type xs:float.
-   @float*                               Deadband                       0;	///< Optional attribute.
-/// Attribute RequestedSamplingRate of type xs:int.
-   @int*                                 RequestedSamplingRate          0;	///< Optional attribute.
-/// Attribute EnableBuffering of type xs:boolean.
-   @bool*                                EnableBuffering                0;	///< Optional attribute.
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscribeRequestItemList
+/// is a complexType.
+class s0__SubscribeRequestItemList : public xsd__anyType {
+public:
+  /// Vector of s0__SubscribeRequestItem* with length 0..unbounded
+  std::vector<s0__SubscribeRequestItem*> Items 0;
+  /// Attribute ItemPath of type xs:string.
+  @std::string* ItemPath 0; ///< Optional attribute.
+  /// Attribute ReqType of type xs:QName.
+  @xsd__QName* ReqType 0; ///< Optional attribute.
+  /// Attribute Deadband of type xs:float.
+  @ float* Deadband 0; ///< Optional attribute.
+  /// Attribute RequestedSamplingRate of type xs:int.
+  @ int* RequestedSamplingRate 0; ///< Optional attribute.
+  /// Attribute EnableBuffering of type xs:boolean.
+  @ bool* EnableBuffering 0; ///< Optional attribute.
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscribeRequestItem is a complexType.
-class s0__SubscribeRequestItem : public xsd__anyType
-{ public:
-/// Attribute ItemPath of type xs:string.
-   @std::string*                         ItemPath                       0;	///< Optional attribute.
-/// Attribute ReqType of type xs:QName.
-   @xsd__QName*                          ReqType                        0;	///< Optional attribute.
-/// Attribute ItemName of type xs:string.
-   @std::string*                         ItemName                       0;	///< Optional attribute.
-/// Attribute ClientItemHandle of type xs:string.
-   @std::string*                         ClientItemHandle               0;	///< Optional attribute.
-/// Attribute Deadband of type xs:float.
-   @float*                               Deadband                       0;	///< Optional attribute.
-/// Attribute RequestedSamplingRate of type xs:int.
-   @int*                                 RequestedSamplingRate          0;	///< Optional attribute.
-/// Attribute EnableBuffering of type xs:boolean.
-   @bool*                                EnableBuffering                0;	///< Optional attribute.
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscribeRequestItem is a
+/// complexType.
+class s0__SubscribeRequestItem : public xsd__anyType {
+public:
+  /// Attribute ItemPath of type xs:string.
+  @std::string* ItemPath 0; ///< Optional attribute.
+  /// Attribute ReqType of type xs:QName.
+  @xsd__QName* ReqType 0; ///< Optional attribute.
+  /// Attribute ItemName of type xs:string.
+  @std::string* ItemName 0; ///< Optional attribute.
+  /// Attribute ClientItemHandle of type xs:string.
+  @std::string* ClientItemHandle 0; ///< Optional attribute.
+  /// Attribute Deadband of type xs:float.
+  @ float* Deadband 0; ///< Optional attribute.
+  /// Attribute RequestedSamplingRate of type xs:int.
+  @ int* RequestedSamplingRate 0; ///< Optional attribute.
+  /// Attribute EnableBuffering of type xs:boolean.
+  @ bool* EnableBuffering 0; ///< Optional attribute.
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscribeReplyItemList is a complexType.
-class s0__SubscribeReplyItemList : public xsd__anyType
-{ public:
-/// Vector of s0__SubscribeItemValue* with length 0..unbounded
-    std::vector<s0__SubscribeItemValue*> Items                          0;
-/// Attribute RevisedSamplingRate of type xs:int.
-   @int*                                 RevisedSamplingRate            0;	///< Optional attribute.
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscribeReplyItemList is
+/// a complexType.
+class s0__SubscribeReplyItemList : public xsd__anyType {
+public:
+  /// Vector of s0__SubscribeItemValue* with length 0..unbounded
+  std::vector<s0__SubscribeItemValue*> Items 0;
+  /// Attribute RevisedSamplingRate of type xs:int.
+  @ int* RevisedSamplingRate 0; ///< Optional attribute.
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscribeItemValue is a complexType.
-class s0__SubscribeItemValue : public xsd__anyType
-{ public:
-/// Element ItemValue of type "http://opcfoundation.org/webservices/XMLDA/1.0/":ItemValue.
-    s0__ItemValue*                       ItemValue                      0;	///< Optional element.
-/// Attribute RevisedSamplingRate of type xs:int.
-   @int*                                 RevisedSamplingRate            0;	///< Optional attribute.
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscribeItemValue is a
+/// complexType.
+class s0__SubscribeItemValue : public xsd__anyType {
+public:
+  /// Element ItemValue of type
+  /// "http://opcfoundation.org/webservices/XMLDA/1.0/":ItemValue.
+  s0__ItemValue* ItemValue 0; ///< Optional element.
+  /// Attribute RevisedSamplingRate of type xs:int.
+  @ int* RevisedSamplingRate 0; ///< Optional attribute.
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscribePolledRefreshReplyItemList is a complexType.
-class s0__SubscribePolledRefreshReplyItemList : public xsd__anyType
-{ public:
-/// Vector of s0__ItemValue* with length 0..unbounded
-    std::vector<s0__ItemValue*         > Items                          0;
-/// Attribute SubscriptionHandle of type xs:string.
-   @std::string*                         SubscriptionHandle             0;	///< Optional attribute.
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscribePolledRefreshReplyItemList
+/// is a complexType.
+class s0__SubscribePolledRefreshReplyItemList : public xsd__anyType {
+public:
+  /// Vector of s0__ItemValue* with length 0..unbounded
+  std::vector<s0__ItemValue*> Items 0;
+  /// Attribute SubscriptionHandle of type xs:string.
+  @std::string* SubscriptionHandle 0; ///< Optional attribute.
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":BrowseElement is a complexType.
-class s0__BrowseElement : public xsd__anyType
-{ public:
-/// Vector of s0__ItemProperty* with length 0..unbounded
-    std::vector<s0__ItemProperty*      > Properties                     0;
-/// Attribute Name of type xs:string.
-   @std::string*                         Name                           0;	///< Optional attribute.
-/// Attribute ItemPath of type xs:string.
-   @std::string*                         ItemPath                       0;	///< Optional attribute.
-/// Attribute ItemName of type xs:string.
-   @std::string*                         ItemName                       0;	///< Optional attribute.
-/// Attribute IsItem of type xs:boolean.
-   @bool                                 IsItem                         1;	///< Required attribute.
-/// Attribute HasChildren of type xs:boolean.
-   @bool                                 HasChildren                    1;	///< Required attribute.
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":BrowseElement is a
+/// complexType.
+class s0__BrowseElement : public xsd__anyType {
+public:
+  /// Vector of s0__ItemProperty* with length 0..unbounded
+  std::vector<s0__ItemProperty*> Properties 0;
+  /// Attribute Name of type xs:string.
+  @std::string* Name 0; ///< Optional attribute.
+  /// Attribute ItemPath of type xs:string.
+  @std::string* ItemPath 0; ///< Optional attribute.
+  /// Attribute ItemName of type xs:string.
+  @std::string* ItemName 0; ///< Optional attribute.
+  /// Attribute IsItem of type xs:boolean.
+  @ bool IsItem 1; ///< Required attribute.
+  /// Attribute HasChildren of type xs:boolean.
+  @ bool HasChildren 1; ///< Required attribute.
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ItemProperty is a complexType.
-class s0__ItemProperty : public xsd__anyType
-{ public:
-/// Element 'Value' has no type or ref: assuming XML content.
-   @xsd__anyType*                        Value                          0;	///< Optional element.
-/// Attribute Name of type xs:QName.
-   @xsd__QName                           Name                           1;	///< Required attribute.
-/// Attribute Description of type xs:string.
-   @std::string*                         Description                    0;	///< Optional attribute.
-/// Attribute ItemPath of type xs:string.
-   @std::string*                         ItemPath                       0;	///< Optional attribute.
-/// Attribute ItemName of type xs:string.
-   @std::string*                         ItemName                       0;	///< Optional attribute.
-/// Attribute ResultID of type xs:QName.
-   @xsd__QName*                          ResultID                       0;	///< Optional attribute.
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ItemProperty is a
+/// complexType.
+class s0__ItemProperty : public xsd__anyType {
+public:
+  /// Element 'Value' has no type or ref: assuming XML content.
+  @xsd__anyType* Value 0; ///< Optional element.
+  /// Attribute Name of type xs:QName.
+  @xsd__QName Name 1; ///< Required attribute.
+  /// Attribute Description of type xs:string.
+  @std::string* Description 0; ///< Optional attribute.
+  /// Attribute ItemPath of type xs:string.
+  @std::string* ItemPath 0; ///< Optional attribute.
+  /// Attribute ItemName of type xs:string.
+  @std::string* ItemName 0; ///< Optional attribute.
+  /// Attribute ResultID of type xs:QName.
+  @xsd__QName* ResultID 0; ///< Optional attribute.
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ItemIdentifier is a complexType.
-class s0__ItemIdentifier : public xsd__anyType
-{ public:
-/// Attribute ItemPath of type xs:string.
-   @std::string*                         ItemPath                       0;	///< Optional attribute.
-/// Attribute ItemName of type xs:string.
-   @std::string*                         ItemName                       0;	///< Optional attribute.
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ItemIdentifier is a
+/// complexType.
+class s0__ItemIdentifier : public xsd__anyType {
+public:
+  /// Attribute ItemPath of type xs:string.
+  @std::string* ItemPath 0; ///< Optional attribute.
+  /// Attribute ItemName of type xs:string.
+  @std::string* ItemName 0; ///< Optional attribute.
 };
 
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":PropertyReplyList is a complexType.
-class s0__PropertyReplyList : public xsd__anyType
-{ public:
-/// Vector of s0__ItemProperty* with length 0..unbounded
-    std::vector<s0__ItemProperty*      > Properties                     0;
-/// Attribute ItemPath of type xs:string.
-   @std::string*                         ItemPath                       0;	///< Optional attribute.
-/// Attribute ItemName of type xs:string.
-   @std::string*                         ItemName                       0;	///< Optional attribute.
-/// Attribute ResultID of type xs:QName.
-   @xsd__QName*                          ResultID                       0;	///< Optional attribute.
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":PropertyReplyList is a
+/// complexType.
+class s0__PropertyReplyList : public xsd__anyType {
+public:
+  /// Vector of s0__ItemProperty* with length 0..unbounded
+  std::vector<s0__ItemProperty*> Properties 0;
+  /// Attribute ItemPath of type xs:string.
+  @std::string* ItemPath 0; ///< Optional attribute.
+  /// Attribute ItemName of type xs:string.
+  @std::string* ItemName 0; ///< Optional attribute.
+  /// Attribute ResultID of type xs:QName.
+  @xsd__QName* ResultID 0; ///< Optional attribute.
 };
 
+/// Element "http://opcfoundation.org/webservices/XMLDA/1.0/":GetStatus of
+/// complexType.
 
-/// Element "http://opcfoundation.org/webservices/XMLDA/1.0/":GetStatus of complexType.
-
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":GetStatus is a complexType.
-class _s0__GetStatus
-{ public:
-/// Attribute LocaleID of type xs:string.
-   @std::string*                         LocaleID                       0;	///< Optional attribute.
-/// Attribute ClientRequestHandle of type xs:string.
-   @std::string*                         ClientRequestHandle            0;	///< Optional attribute.
-/// A handle to the soap struct that manages this instance (automatically set)
-    struct soap                         *soap                          ;
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":GetStatus is a
+/// complexType.
+class _s0__GetStatus {
+public:
+  /// Attribute LocaleID of type xs:string.
+  @std::string* LocaleID 0; ///< Optional attribute.
+  /// Attribute ClientRequestHandle of type xs:string.
+  @std::string* ClientRequestHandle 0; ///< Optional attribute.
+  /// A handle to the soap struct that manages this instance (automatically set)
+  struct soap* soap;
 };
 
+/// Element "http://opcfoundation.org/webservices/XMLDA/1.0/":GetStatusResponse
+/// of complexType.
 
-/// Element "http://opcfoundation.org/webservices/XMLDA/1.0/":GetStatusResponse of complexType.
-
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":GetStatusResponse is a complexType.
-class _s0__GetStatusResponse
-{ public:
-/// Element GetStatusResult of type "http://opcfoundation.org/webservices/XMLDA/1.0/":ReplyBase.
-    s0__ReplyBase*                       GetStatusResult                0;	///< Optional element.
-/// Element Status of type "http://opcfoundation.org/webservices/XMLDA/1.0/":ServerStatus.
-    s0__ServerStatus*                    Status                         0;	///< Optional element.
-/// A handle to the soap struct that manages this instance (automatically set)
-    struct soap                         *soap                          ;
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":GetStatusResponse is a
+/// complexType.
+class _s0__GetStatusResponse {
+public:
+  /// Element GetStatusResult of type
+  /// "http://opcfoundation.org/webservices/XMLDA/1.0/":ReplyBase.
+  s0__ReplyBase* GetStatusResult 0; ///< Optional element.
+  /// Element Status of type
+  /// "http://opcfoundation.org/webservices/XMLDA/1.0/":ServerStatus.
+  s0__ServerStatus* Status 0; ///< Optional element.
+  /// A handle to the soap struct that manages this instance (automatically set)
+  struct soap* soap;
 };
 
-
-/// Element "http://opcfoundation.org/webservices/XMLDA/1.0/":Read of complexType.
+/// Element "http://opcfoundation.org/webservices/XMLDA/1.0/":Read of
+/// complexType.
 
 /// "http://opcfoundation.org/webservices/XMLDA/1.0/":Read is a complexType.
-class _s0__Read
-{ public:
-/// Element Options of type "http://opcfoundation.org/webservices/XMLDA/1.0/":RequestOptions.
-    s0__RequestOptions*                  Options                        0;	///< Optional element.
-/// Element ItemList of type "http://opcfoundation.org/webservices/XMLDA/1.0/":ReadRequestItemList.
-    s0__ReadRequestItemList*             ItemList                       0;	///< Optional element.
-/// A handle to the soap struct that manages this instance (automatically set)
-    struct soap                         *soap                          ;
+class _s0__Read {
+public:
+  /// Element Options of type
+  /// "http://opcfoundation.org/webservices/XMLDA/1.0/":RequestOptions.
+  s0__RequestOptions* Options 0; ///< Optional element.
+  /// Element ItemList of type
+  /// "http://opcfoundation.org/webservices/XMLDA/1.0/":ReadRequestItemList.
+  s0__ReadRequestItemList* ItemList 0; ///< Optional element.
+  /// A handle to the soap struct that manages this instance (automatically set)
+  struct soap* soap;
 };
 
+/// Element "http://opcfoundation.org/webservices/XMLDA/1.0/":ReadResponse of
+/// complexType.
 
-/// Element "http://opcfoundation.org/webservices/XMLDA/1.0/":ReadResponse of complexType.
-
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ReadResponse is a complexType.
-class _s0__ReadResponse
-{ public:
-/// Element ReadResult of type "http://opcfoundation.org/webservices/XMLDA/1.0/":ReplyBase.
-    s0__ReplyBase*                       ReadResult                     0;	///< Optional element.
-/// Element RItemList of type "http://opcfoundation.org/webservices/XMLDA/1.0/":ReplyItemList.
-    s0__ReplyItemList*                   RItemList                      0;	///< Optional element.
-/// Vector of s0__OPCError* with length 0..unbounded
-    std::vector<s0__OPCError*          > Errors                         0;
-/// A handle to the soap struct that manages this instance (automatically set)
-    struct soap                         *soap                          ;
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":ReadResponse is a
+/// complexType.
+class _s0__ReadResponse {
+public:
+  /// Element ReadResult of type
+  /// "http://opcfoundation.org/webservices/XMLDA/1.0/":ReplyBase.
+  s0__ReplyBase* ReadResult 0; ///< Optional element.
+  /// Element RItemList of type
+  /// "http://opcfoundation.org/webservices/XMLDA/1.0/":ReplyItemList.
+  s0__ReplyItemList* RItemList 0; ///< Optional element.
+  /// Vector of s0__OPCError* with length 0..unbounded
+  std::vector<s0__OPCError*> Errors 0;
+  /// A handle to the soap struct that manages this instance (automatically set)
+  struct soap* soap;
 };
 
-
-/// Element "http://opcfoundation.org/webservices/XMLDA/1.0/":Write of complexType.
+/// Element "http://opcfoundation.org/webservices/XMLDA/1.0/":Write of
+/// complexType.
 
 /// "http://opcfoundation.org/webservices/XMLDA/1.0/":Write is a complexType.
-class _s0__Write
-{ public:
-/// Element Options of type "http://opcfoundation.org/webservices/XMLDA/1.0/":RequestOptions.
-    s0__RequestOptions*                  Options                        0;	///< Optional element.
-/// Element ItemList of type "http://opcfoundation.org/webservices/XMLDA/1.0/":WriteRequestItemList.
-    s0__WriteRequestItemList*            ItemList                       0;	///< Optional element.
-/// Attribute ReturnValuesOnReply of type xs:boolean.
-   @bool                                 ReturnValuesOnReply            1;	///< Required attribute.
-/// A handle to the soap struct that manages this instance (automatically set)
-    struct soap                         *soap                          ;
+class _s0__Write {
+public:
+  /// Element Options of type
+  /// "http://opcfoundation.org/webservices/XMLDA/1.0/":RequestOptions.
+  s0__RequestOptions* Options 0; ///< Optional element.
+  /// Element ItemList of type
+  /// "http://opcfoundation.org/webservices/XMLDA/1.0/":WriteRequestItemList.
+  s0__WriteRequestItemList* ItemList 0; ///< Optional element.
+  /// Attribute ReturnValuesOnReply of type xs:boolean.
+  @ bool ReturnValuesOnReply 1; ///< Required attribute.
+  /// A handle to the soap struct that manages this instance (automatically set)
+  struct soap* soap;
 };
 
+/// Element "http://opcfoundation.org/webservices/XMLDA/1.0/":WriteResponse of
+/// complexType.
 
-/// Element "http://opcfoundation.org/webservices/XMLDA/1.0/":WriteResponse of complexType.
-
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":WriteResponse is a complexType.
-class _s0__WriteResponse
-{ public:
-/// Element WriteResult of type "http://opcfoundation.org/webservices/XMLDA/1.0/":ReplyBase.
-    s0__ReplyBase*                       WriteResult                    0;	///< Optional element.
-/// Element RItemList of type "http://opcfoundation.org/webservices/XMLDA/1.0/":ReplyItemList.
-    s0__ReplyItemList*                   RItemList                      0;	///< Optional element.
-/// Vector of s0__OPCError* with length 0..unbounded
-    std::vector<s0__OPCError*          > Errors                         0;
-/// A handle to the soap struct that manages this instance (automatically set)
-    struct soap                         *soap                          ;
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":WriteResponse is a
+/// complexType.
+class _s0__WriteResponse {
+public:
+  /// Element WriteResult of type
+  /// "http://opcfoundation.org/webservices/XMLDA/1.0/":ReplyBase.
+  s0__ReplyBase* WriteResult 0; ///< Optional element.
+  /// Element RItemList of type
+  /// "http://opcfoundation.org/webservices/XMLDA/1.0/":ReplyItemList.
+  s0__ReplyItemList* RItemList 0; ///< Optional element.
+  /// Vector of s0__OPCError* with length 0..unbounded
+  std::vector<s0__OPCError*> Errors 0;
+  /// A handle to the soap struct that manages this instance (automatically set)
+  struct soap* soap;
 };
 
+/// Element "http://opcfoundation.org/webservices/XMLDA/1.0/":Subscribe of
+/// complexType.
 
-/// Element "http://opcfoundation.org/webservices/XMLDA/1.0/":Subscribe of complexType.
-
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":Subscribe is a complexType.
-class _s0__Subscribe
-{ public:
-/// Element Options of type "http://opcfoundation.org/webservices/XMLDA/1.0/":RequestOptions.
-    s0__RequestOptions*                  Options                        0;	///< Optional element.
-/// Element ItemList of type "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscribeRequestItemList.
-    s0__SubscribeRequestItemList*        ItemList                       0;	///< Optional element.
-/// Attribute ReturnValuesOnReply of type xs:boolean.
-   @bool                                 ReturnValuesOnReply            1;	///< Required attribute.
-/// Attribute SubscriptionPingRate of type xs:int.
-   @int*                                 SubscriptionPingRate           0;	///< Optional attribute.
-/// A handle to the soap struct that manages this instance (automatically set)
-    struct soap                         *soap                          ;
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":Subscribe is a
+/// complexType.
+class _s0__Subscribe {
+public:
+  /// Element Options of type
+  /// "http://opcfoundation.org/webservices/XMLDA/1.0/":RequestOptions.
+  s0__RequestOptions* Options 0; ///< Optional element.
+  /// Element ItemList of type
+  /// "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscribeRequestItemList.
+  s0__SubscribeRequestItemList* ItemList 0; ///< Optional element.
+  /// Attribute ReturnValuesOnReply of type xs:boolean.
+  @ bool ReturnValuesOnReply 1; ///< Required attribute.
+  /// Attribute SubscriptionPingRate of type xs:int.
+  @ int* SubscriptionPingRate 0; ///< Optional attribute.
+  /// A handle to the soap struct that manages this instance (automatically set)
+  struct soap* soap;
 };
 
+/// Element "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscribeResponse
+/// of complexType.
 
-/// Element "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscribeResponse of complexType.
-
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscribeResponse is a complexType.
-class _s0__SubscribeResponse
-{ public:
-/// Element SubscribeResult of type "http://opcfoundation.org/webservices/XMLDA/1.0/":ReplyBase.
-    s0__ReplyBase*                       SubscribeResult                0;	///< Optional element.
-/// Element RItemList of type "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscribeReplyItemList.
-    s0__SubscribeReplyItemList*          RItemList                      0;	///< Optional element.
-/// Vector of s0__OPCError* with length 0..unbounded
-    std::vector<s0__OPCError*          > Errors                         0;
-/// Attribute ServerSubHandle of type xs:string.
-   @std::string*                         ServerSubHandle                0;	///< Optional attribute.
-/// A handle to the soap struct that manages this instance (automatically set)
-    struct soap                         *soap                          ;
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscribeResponse is a
+/// complexType.
+class _s0__SubscribeResponse {
+public:
+  /// Element SubscribeResult of type
+  /// "http://opcfoundation.org/webservices/XMLDA/1.0/":ReplyBase.
+  s0__ReplyBase* SubscribeResult 0; ///< Optional element.
+  /// Element RItemList of type
+  /// "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscribeReplyItemList.
+  s0__SubscribeReplyItemList* RItemList 0; ///< Optional element.
+  /// Vector of s0__OPCError* with length 0..unbounded
+  std::vector<s0__OPCError*> Errors 0;
+  /// Attribute ServerSubHandle of type xs:string.
+  @std::string* ServerSubHandle 0; ///< Optional attribute.
+  /// A handle to the soap struct that manages this instance (automatically set)
+  struct soap* soap;
 };
 
+/// Element
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscriptionPolledRefresh
+/// of complexType.
 
-/// Element "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscriptionPolledRefresh of complexType.
-
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscriptionPolledRefresh is a complexType.
-class _s0__SubscriptionPolledRefresh
-{ public:
-/// Element Options of type "http://opcfoundation.org/webservices/XMLDA/1.0/":RequestOptions.
-    s0__RequestOptions*                  Options                        0;	///< Optional element.
-/// Vector of std::string with length 0..unbounded
-    std::vector<std::string            > ServerSubHandles               0;
-/// Attribute HoldTime of type xs:dateTime.
-   @std::string*                         HoldTime                       0;	///< Optional attribute.
-/// Attribute WaitTime of type xs:int.
-   @int*                                 WaitTime                       0;	///< Optional attribute.
-/// Attribute ReturnAllItems of type xs:boolean.
-   @bool*                                ReturnAllItems                 0;	///< Optional attribute.
-/// A handle to the soap struct that manages this instance (automatically set)
-    struct soap                         *soap                          ;
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscriptionPolledRefresh
+/// is a complexType.
+class _s0__SubscriptionPolledRefresh {
+public:
+  /// Element Options of type
+  /// "http://opcfoundation.org/webservices/XMLDA/1.0/":RequestOptions.
+  s0__RequestOptions* Options 0; ///< Optional element.
+  /// Vector of std::string with length 0..unbounded
+  std::vector<std::string> ServerSubHandles 0;
+  /// Attribute HoldTime of type xs:dateTime.
+  @std::string* HoldTime 0; ///< Optional attribute.
+  /// Attribute WaitTime of type xs:int.
+  @ int* WaitTime 0; ///< Optional attribute.
+  /// Attribute ReturnAllItems of type xs:boolean.
+  @ bool* ReturnAllItems 0; ///< Optional attribute.
+  /// A handle to the soap struct that manages this instance (automatically set)
+  struct soap* soap;
 };
 
+/// Element
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscriptionPolledRefreshResponse
+/// of complexType.
 
-/// Element "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscriptionPolledRefreshResponse of complexType.
-
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscriptionPolledRefreshResponse is a complexType.
-class _s0__SubscriptionPolledRefreshResponse
-{ public:
-/// Element SubscriptionPolledRefreshResult of type "http://opcfoundation.org/webservices/XMLDA/1.0/":ReplyBase.
-    s0__ReplyBase*                       SubscriptionPolledRefreshResult 0;	///< Optional element.
-/// Vector of std::string with length 0..unbounded
-    std::vector<std::string            > InvalidServerSubHandles        0;
-/// Vector of s0__SubscribePolledRefreshReplyItemList* with length 0..unbounded
-    std::vector<s0__SubscribePolledRefreshReplyItemList*> RItemList                      0;
-/// Vector of s0__OPCError* with length 0..unbounded
-    std::vector<s0__OPCError*          > Errors                         0;
-/// Attribute DataBufferOverflow of type xs:boolean.
-   @bool*                                DataBufferOverflow             0;	///< Optional attribute.
-/// A handle to the soap struct that manages this instance (automatically set)
-    struct soap                         *soap                          ;
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscriptionPolledRefreshResponse
+/// is a complexType.
+class _s0__SubscriptionPolledRefreshResponse {
+public:
+  /// Element SubscriptionPolledRefreshResult of type
+  /// "http://opcfoundation.org/webservices/XMLDA/1.0/":ReplyBase.
+  s0__ReplyBase* SubscriptionPolledRefreshResult 0; ///< Optional element.
+  /// Vector of std::string with length 0..unbounded
+  std::vector<std::string> InvalidServerSubHandles 0;
+  /// Vector of s0__SubscribePolledRefreshReplyItemList* with length
+  /// 0..unbounded
+  std::vector<s0__SubscribePolledRefreshReplyItemList*> RItemList 0;
+  /// Vector of s0__OPCError* with length 0..unbounded
+  std::vector<s0__OPCError*> Errors 0;
+  /// Attribute DataBufferOverflow of type xs:boolean.
+  @ bool* DataBufferOverflow 0; ///< Optional attribute.
+  /// A handle to the soap struct that manages this instance (automatically set)
+  struct soap* soap;
 };
 
+/// Element "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscriptionCancel
+/// of complexType.
 
-/// Element "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscriptionCancel of complexType.
-
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscriptionCancel is a complexType.
-class _s0__SubscriptionCancel
-{ public:
-/// Attribute ServerSubHandle of type xs:string.
-   @std::string*                         ServerSubHandle                0;	///< Optional attribute.
-/// Attribute ClientRequestHandle of type xs:string.
-   @std::string*                         ClientRequestHandle            0;	///< Optional attribute.
-/// A handle to the soap struct that manages this instance (automatically set)
-    struct soap                         *soap                          ;
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscriptionCancel is a
+/// complexType.
+class _s0__SubscriptionCancel {
+public:
+  /// Attribute ServerSubHandle of type xs:string.
+  @std::string* ServerSubHandle 0; ///< Optional attribute.
+  /// Attribute ClientRequestHandle of type xs:string.
+  @std::string* ClientRequestHandle 0; ///< Optional attribute.
+  /// A handle to the soap struct that manages this instance (automatically set)
+  struct soap* soap;
 };
 
+/// Element
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscriptionCancelResponse
+/// of complexType.
 
-/// Element "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscriptionCancelResponse of complexType.
-
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscriptionCancelResponse is a complexType.
-class _s0__SubscriptionCancelResponse
-{ public:
-/// Attribute ClientRequestHandle of type xs:string.
-   @std::string*                         ClientRequestHandle            0;	///< Optional attribute.
-/// A handle to the soap struct that manages this instance (automatically set)
-    struct soap                         *soap                          ;
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":SubscriptionCancelResponse
+/// is a complexType.
+class _s0__SubscriptionCancelResponse {
+public:
+  /// Attribute ClientRequestHandle of type xs:string.
+  @std::string* ClientRequestHandle 0; ///< Optional attribute.
+  /// A handle to the soap struct that manages this instance (automatically set)
+  struct soap* soap;
 };
 
-
-/// Element "http://opcfoundation.org/webservices/XMLDA/1.0/":Browse of complexType.
+/// Element "http://opcfoundation.org/webservices/XMLDA/1.0/":Browse of
+/// complexType.
 
 /// "http://opcfoundation.org/webservices/XMLDA/1.0/":Browse is a complexType.
-class _s0__Browse
-{ public:
-/// Vector of xsd__QName with length 0..unbounded
-    std::vector<xsd__QName             > PropertyNames                  0;
-/// Attribute LocaleID of type xs:string.
-   @std::string*                         LocaleID                       0;	///< Optional attribute.
-/// Attribute ClientRequestHandle of type xs:string.
-   @std::string*                         ClientRequestHandle            0;	///< Optional attribute.
-/// Attribute ItemPath of type xs:string.
-   @std::string*                         ItemPath                       0;	///< Optional attribute.
-/// Attribute ItemName of type xs:string.
-   @std::string*                         ItemName                       0;	///< Optional attribute.
-/// Attribute ContinuationPoint of type xs:string.
-   @std::string*                         ContinuationPoint              0;	///< Optional attribute.
-/// Attribute MaxElementsReturned of type xs:int.
-   @int*                                 MaxElementsReturned            0;	///< Optional attribute.
-/// Attribute BrowseFilter of type "http://opcfoundation.org/webservices/XMLDA/1.0/":browseFilter.
-   @enum s0__browseFilter*               BrowseFilter                   0;	///< Optional attribute.
-/// Attribute ElementNameFilter of type xs:string.
-   @std::string*                         ElementNameFilter              0;	///< Optional attribute.
-/// Attribute VendorFilter of type xs:string.
-   @std::string*                         VendorFilter                   0;	///< Optional attribute.
-/// Attribute ReturnAllProperties of type xs:boolean.
-   @bool*                                ReturnAllProperties            0;	///< Optional attribute.
-/// Attribute ReturnPropertyValues of type xs:boolean.
-   @bool*                                ReturnPropertyValues           0;	///< Optional attribute.
-/// Attribute ReturnErrorText of type xs:boolean.
-   @bool*                                ReturnErrorText                0;	///< Optional attribute.
-/// A handle to the soap struct that manages this instance (automatically set)
-    struct soap                         *soap                          ;
+class _s0__Browse {
+public:
+  /// Vector of xsd__QName with length 0..unbounded
+  std::vector<xsd__QName> PropertyNames 0;
+  /// Attribute LocaleID of type xs:string.
+  @std::string* LocaleID 0; ///< Optional attribute.
+  /// Attribute ClientRequestHandle of type xs:string.
+  @std::string* ClientRequestHandle 0; ///< Optional attribute.
+  /// Attribute ItemPath of type xs:string.
+  @std::string* ItemPath 0; ///< Optional attribute.
+  /// Attribute ItemName of type xs:string.
+  @std::string* ItemName 0; ///< Optional attribute.
+  /// Attribute ContinuationPoint of type xs:string.
+  @std::string* ContinuationPoint 0; ///< Optional attribute.
+  /// Attribute MaxElementsReturned of type xs:int.
+  @ int* MaxElementsReturned 0; ///< Optional attribute.
+  /// Attribute BrowseFilter of type
+  /// "http://opcfoundation.org/webservices/XMLDA/1.0/":browseFilter.
+  @ enum s0__browseFilter* BrowseFilter 0; ///< Optional attribute.
+  /// Attribute ElementNameFilter of type xs:string.
+  @std::string* ElementNameFilter 0; ///< Optional attribute.
+  /// Attribute VendorFilter of type xs:string.
+  @std::string* VendorFilter 0; ///< Optional attribute.
+  /// Attribute ReturnAllProperties of type xs:boolean.
+  @ bool* ReturnAllProperties 0; ///< Optional attribute.
+  /// Attribute ReturnPropertyValues of type xs:boolean.
+  @ bool* ReturnPropertyValues 0; ///< Optional attribute.
+  /// Attribute ReturnErrorText of type xs:boolean.
+  @ bool* ReturnErrorText 0; ///< Optional attribute.
+  /// A handle to the soap struct that manages this instance (automatically set)
+  struct soap* soap;
 };
 
+/// Element "http://opcfoundation.org/webservices/XMLDA/1.0/":BrowseResponse of
+/// complexType.
 
-/// Element "http://opcfoundation.org/webservices/XMLDA/1.0/":BrowseResponse of complexType.
-
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":BrowseResponse is a complexType.
-class _s0__BrowseResponse
-{ public:
-/// Element BrowseResult of type "http://opcfoundation.org/webservices/XMLDA/1.0/":ReplyBase.
-    s0__ReplyBase*                       BrowseResult                   0;	///< Optional element.
-/// Vector of s0__BrowseElement* with length 0..unbounded
-    std::vector<s0__BrowseElement*     > Elements                       0;
-/// Vector of s0__OPCError* with length 0..unbounded
-    std::vector<s0__OPCError*          > Errors                         0;
-/// Attribute ContinuationPoint of type xs:string.
-   @std::string*                         ContinuationPoint              0;	///< Optional attribute.
-/// Attribute MoreElements of type xs:boolean.
-   @bool*                                MoreElements                   0;	///< Optional attribute.
-/// A handle to the soap struct that manages this instance (automatically set)
-    struct soap                         *soap                          ;
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":BrowseResponse is a
+/// complexType.
+class _s0__BrowseResponse {
+public:
+  /// Element BrowseResult of type
+  /// "http://opcfoundation.org/webservices/XMLDA/1.0/":ReplyBase.
+  s0__ReplyBase* BrowseResult 0; ///< Optional element.
+  /// Vector of s0__BrowseElement* with length 0..unbounded
+  std::vector<s0__BrowseElement*> Elements 0;
+  /// Vector of s0__OPCError* with length 0..unbounded
+  std::vector<s0__OPCError*> Errors 0;
+  /// Attribute ContinuationPoint of type xs:string.
+  @std::string* ContinuationPoint 0; ///< Optional attribute.
+  /// Attribute MoreElements of type xs:boolean.
+  @ bool* MoreElements 0; ///< Optional attribute.
+  /// A handle to the soap struct that manages this instance (automatically set)
+  struct soap* soap;
 };
 
+/// Element "http://opcfoundation.org/webservices/XMLDA/1.0/":GetProperties of
+/// complexType.
 
-/// Element "http://opcfoundation.org/webservices/XMLDA/1.0/":GetProperties of complexType.
-
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":GetProperties is a complexType.
-class _s0__GetProperties
-{ public:
-/// Vector of s0__ItemIdentifier* with length 0..unbounded
-    std::vector<s0__ItemIdentifier*    > ItemIDs                        0;
-/// Vector of xsd__QName with length 0..unbounded
-    std::vector<xsd__QName             > PropertyNames                  0;
-/// Attribute LocaleID of type xs:string.
-   @std::string*                         LocaleID                       0;	///< Optional attribute.
-/// Attribute ClientRequestHandle of type xs:string.
-   @std::string*                         ClientRequestHandle            0;	///< Optional attribute.
-/// Attribute ItemPath of type xs:string.
-   @std::string*                         ItemPath                       0;	///< Optional attribute.
-/// Attribute ReturnAllProperties of type xs:boolean.
-   @bool*                                ReturnAllProperties            0;	///< Optional attribute.
-/// Attribute ReturnPropertyValues of type xs:boolean.
-   @bool*                                ReturnPropertyValues           0;	///< Optional attribute.
-/// Attribute ReturnErrorText of type xs:boolean.
-   @bool*                                ReturnErrorText                0;	///< Optional attribute.
-/// A handle to the soap struct that manages this instance (automatically set)
-    struct soap                         *soap                          ;
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":GetProperties is a
+/// complexType.
+class _s0__GetProperties {
+public:
+  /// Vector of s0__ItemIdentifier* with length 0..unbounded
+  std::vector<s0__ItemIdentifier*> ItemIDs 0;
+  /// Vector of xsd__QName with length 0..unbounded
+  std::vector<xsd__QName> PropertyNames 0;
+  /// Attribute LocaleID of type xs:string.
+  @std::string* LocaleID 0; ///< Optional attribute.
+  /// Attribute ClientRequestHandle of type xs:string.
+  @std::string* ClientRequestHandle 0; ///< Optional attribute.
+  /// Attribute ItemPath of type xs:string.
+  @std::string* ItemPath 0; ///< Optional attribute.
+  /// Attribute ReturnAllProperties of type xs:boolean.
+  @ bool* ReturnAllProperties 0; ///< Optional attribute.
+  /// Attribute ReturnPropertyValues of type xs:boolean.
+  @ bool* ReturnPropertyValues 0; ///< Optional attribute.
+  /// Attribute ReturnErrorText of type xs:boolean.
+  @ bool* ReturnErrorText 0; ///< Optional attribute.
+  /// A handle to the soap struct that manages this instance (automatically set)
+  struct soap* soap;
 };
 
+/// Element
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":GetPropertiesResponse of
+/// complexType.
 
-/// Element "http://opcfoundation.org/webservices/XMLDA/1.0/":GetPropertiesResponse of complexType.
-
-/// "http://opcfoundation.org/webservices/XMLDA/1.0/":GetPropertiesResponse is a complexType.
-class _s0__GetPropertiesResponse
-{ public:
-/// Element GetPropertiesResult of type "http://opcfoundation.org/webservices/XMLDA/1.0/":ReplyBase.
-    s0__ReplyBase*                       GetPropertiesResult            0;	///< Optional element.
-/// Vector of s0__PropertyReplyList* with length 0..unbounded
-    std::vector<s0__PropertyReplyList* > PropertyLists                  0;
-/// Vector of s0__OPCError* with length 0..unbounded
-    std::vector<s0__OPCError*          > Errors                         0;
-/// A handle to the soap struct that manages this instance (automatically set)
-    struct soap                         *soap                          ;
+/// "http://opcfoundation.org/webservices/XMLDA/1.0/":GetPropertiesResponse is a
+/// complexType.
+class _s0__GetPropertiesResponse {
+public:
+  /// Element GetPropertiesResult of type
+  /// "http://opcfoundation.org/webservices/XMLDA/1.0/":ReplyBase.
+  s0__ReplyBase* GetPropertiesResult 0; ///< Optional element.
+  /// Vector of s0__PropertyReplyList* with length 0..unbounded
+  std::vector<s0__PropertyReplyList*> PropertyLists 0;
+  /// Vector of s0__OPCError* with length 0..unbounded
+  std::vector<s0__OPCError*> Errors 0;
+  /// A handle to the soap struct that manages this instance (automatically set)
+  struct soap* soap;
 };
 
 /******************************************************************************\
@@ -1077,11 +1163,11 @@ class _s0__GetPropertiesResponse
  *                                                                            *
 \******************************************************************************/
 
-
-//gsoap s0   service name:	Service 
-//gsoap s0   service type:	Service 
-//gsoap s0   service namespace:	http://opcfoundation.org/webservices/XMLDA/1.0/ 
-//gsoap s0   service transport:	http://schemas.xmlsoap.org/soap/http 
+// gsoap s0   service name:	Service
+// gsoap s0   service type:	Service
+// gsoap s0   service namespace:
+// http://opcfoundation.org/webservices/XMLDA/1.0/
+// gsoap s0   service transport:	http://schemas.xmlsoap.org/soap/http
 
 /** @mainpage Service Definitions
 
@@ -1114,13 +1200,11 @@ class _s0__GetPropertiesResponse
  *                                                                            *
 \******************************************************************************/
 
-
 /******************************************************************************\
  *                                                                            *
  * __s0__GetStatus                                                            *
  *                                                                            *
 \******************************************************************************/
-
 
 /// Operation "__s0__GetStatus" of service binding "Service"
 
@@ -1144,7 +1228,8 @@ C stub function (defined in soapClient.c[pp] generated by soapcpp2):
   );
 @endcode
 
-C server function (called from the service dispatcher defined in soapServer.c[pp]):
+C server function (called from the service dispatcher defined in
+soapServer.c[pp]):
 @code
   int __s0__GetStatus(
     struct soap *soap,
@@ -1160,20 +1245,19 @@ C++ proxy class (defined in soapServiceProxy.h):
 
 */
 
-//gsoap s0   service method-style:	GetStatus document
-//gsoap s0   service method-encoding:	GetStatus literal
-//gsoap s0   service method-action:	GetStatus http://opcfoundation.org/webservices/XMLDA/1.0/GetStatus
-int __s0__GetStatus(
-    _s0__GetStatus*                     s0__GetStatus,	///< Request parameter
-    _s0__GetStatusResponse*             s0__GetStatusResponse	///< Response parameter
-);
+// gsoap s0   service method-style:	GetStatus document
+// gsoap s0   service method-encoding:	GetStatus literal
+// gsoap s0   service method-action:	GetStatus
+// http://opcfoundation.org/webservices/XMLDA/1.0/GetStatus
+int __s0__GetStatus(_s0__GetStatus* s0__GetStatus, ///< Request parameter
+    _s0__GetStatusResponse* s0__GetStatusResponse ///< Response parameter
+    );
 
 /******************************************************************************\
  *                                                                            *
  * __s0__Read                                                                 *
  *                                                                            *
 \******************************************************************************/
-
 
 /// Operation "__s0__Read" of service binding "Service"
 
@@ -1197,7 +1281,8 @@ C stub function (defined in soapClient.c[pp] generated by soapcpp2):
   );
 @endcode
 
-C server function (called from the service dispatcher defined in soapServer.c[pp]):
+C server function (called from the service dispatcher defined in
+soapServer.c[pp]):
 @code
   int __s0__Read(
     struct soap *soap,
@@ -1213,20 +1298,19 @@ C++ proxy class (defined in soapServiceProxy.h):
 
 */
 
-//gsoap s0   service method-style:	Read document
-//gsoap s0   service method-encoding:	Read literal
-//gsoap s0   service method-action:	Read http://opcfoundation.org/webservices/XMLDA/1.0/Read
-int __s0__Read(
-    _s0__Read*                          s0__Read,	///< Request parameter
-    _s0__ReadResponse*                  s0__ReadResponse	///< Response parameter
-);
+// gsoap s0   service method-style:	Read document
+// gsoap s0   service method-encoding:	Read literal
+// gsoap s0   service method-action:	Read
+// http://opcfoundation.org/webservices/XMLDA/1.0/Read
+int __s0__Read(_s0__Read* s0__Read, ///< Request parameter
+    _s0__ReadResponse* s0__ReadResponse ///< Response parameter
+    );
 
 /******************************************************************************\
  *                                                                            *
  * __s0__Write                                                                *
  *                                                                            *
 \******************************************************************************/
-
 
 /// Operation "__s0__Write" of service binding "Service"
 
@@ -1250,7 +1334,8 @@ C stub function (defined in soapClient.c[pp] generated by soapcpp2):
   );
 @endcode
 
-C server function (called from the service dispatcher defined in soapServer.c[pp]):
+C server function (called from the service dispatcher defined in
+soapServer.c[pp]):
 @code
   int __s0__Write(
     struct soap *soap,
@@ -1266,20 +1351,19 @@ C++ proxy class (defined in soapServiceProxy.h):
 
 */
 
-//gsoap s0   service method-style:	Write document
-//gsoap s0   service method-encoding:	Write literal
-//gsoap s0   service method-action:	Write http://opcfoundation.org/webservices/XMLDA/1.0/Write
-int __s0__Write(
-    _s0__Write*                         s0__Write,	///< Request parameter
-    _s0__WriteResponse*                 s0__WriteResponse	///< Response parameter
-);
+// gsoap s0   service method-style:	Write document
+// gsoap s0   service method-encoding:	Write literal
+// gsoap s0   service method-action:	Write
+// http://opcfoundation.org/webservices/XMLDA/1.0/Write
+int __s0__Write(_s0__Write* s0__Write, ///< Request parameter
+    _s0__WriteResponse* s0__WriteResponse ///< Response parameter
+    );
 
 /******************************************************************************\
  *                                                                            *
  * __s0__Subscribe                                                            *
  *                                                                            *
 \******************************************************************************/
-
 
 /// Operation "__s0__Subscribe" of service binding "Service"
 
@@ -1303,7 +1387,8 @@ C stub function (defined in soapClient.c[pp] generated by soapcpp2):
   );
 @endcode
 
-C server function (called from the service dispatcher defined in soapServer.c[pp]):
+C server function (called from the service dispatcher defined in
+soapServer.c[pp]):
 @code
   int __s0__Subscribe(
     struct soap *soap,
@@ -1319,20 +1404,19 @@ C++ proxy class (defined in soapServiceProxy.h):
 
 */
 
-//gsoap s0   service method-style:	Subscribe document
-//gsoap s0   service method-encoding:	Subscribe literal
-//gsoap s0   service method-action:	Subscribe http://opcfoundation.org/webservices/XMLDA/1.0/Subscribe
-int __s0__Subscribe(
-    _s0__Subscribe*                     s0__Subscribe,	///< Request parameter
-    _s0__SubscribeResponse*             s0__SubscribeResponse	///< Response parameter
-);
+// gsoap s0   service method-style:	Subscribe document
+// gsoap s0   service method-encoding:	Subscribe literal
+// gsoap s0   service method-action:	Subscribe
+// http://opcfoundation.org/webservices/XMLDA/1.0/Subscribe
+int __s0__Subscribe(_s0__Subscribe* s0__Subscribe, ///< Request parameter
+    _s0__SubscribeResponse* s0__SubscribeResponse ///< Response parameter
+    );
 
 /******************************************************************************\
  *                                                                            *
  * __s0__SubscriptionPolledRefresh                                            *
  *                                                                            *
 \******************************************************************************/
-
 
 /// Operation "__s0__SubscriptionPolledRefresh" of service binding "Service"
 
@@ -1341,7 +1425,8 @@ int __s0__Subscribe(
 Operation details:
 
   - SOAP document/literal style
-  - SOAP action="http://opcfoundation.org/webservices/XMLDA/1.0/SubscriptionPolledRefresh"
+  - SOAP
+action="http://opcfoundation.org/webservices/XMLDA/1.0/SubscriptionPolledRefresh"
 
 C stub function (defined in soapClient.c[pp] generated by soapcpp2):
 @code
@@ -1352,18 +1437,21 @@ C stub function (defined in soapClient.c[pp] generated by soapcpp2):
     // request parameters:
     _s0__SubscriptionPolledRefresh*     s0__SubscriptionPolledRefresh,
     // response parameters:
-    _s0__SubscriptionPolledRefreshResponse* s0__SubscriptionPolledRefreshResponse
+    _s0__SubscriptionPolledRefreshResponse*
+s0__SubscriptionPolledRefreshResponse
   );
 @endcode
 
-C server function (called from the service dispatcher defined in soapServer.c[pp]):
+C server function (called from the service dispatcher defined in
+soapServer.c[pp]):
 @code
   int __s0__SubscriptionPolledRefresh(
     struct soap *soap,
     // request parameters:
     _s0__SubscriptionPolledRefresh*     s0__SubscriptionPolledRefresh,
     // response parameters:
-    _s0__SubscriptionPolledRefreshResponse* s0__SubscriptionPolledRefreshResponse
+    _s0__SubscriptionPolledRefreshResponse*
+s0__SubscriptionPolledRefreshResponse
   );
 @endcode
 
@@ -1372,20 +1460,22 @@ C++ proxy class (defined in soapServiceProxy.h):
 
 */
 
-//gsoap s0   service method-style:	SubscriptionPolledRefresh document
-//gsoap s0   service method-encoding:	SubscriptionPolledRefresh literal
-//gsoap s0   service method-action:	SubscriptionPolledRefresh http://opcfoundation.org/webservices/XMLDA/1.0/SubscriptionPolledRefresh
+// gsoap s0   service method-style:	SubscriptionPolledRefresh document
+// gsoap s0   service method-encoding:	SubscriptionPolledRefresh literal
+// gsoap s0   service method-action:	SubscriptionPolledRefresh
+// http://opcfoundation.org/webservices/XMLDA/1.0/SubscriptionPolledRefresh
 int __s0__SubscriptionPolledRefresh(
-    _s0__SubscriptionPolledRefresh*     s0__SubscriptionPolledRefresh,	///< Request parameter
-    _s0__SubscriptionPolledRefreshResponse* s0__SubscriptionPolledRefreshResponse	///< Response parameter
-);
+    _s0__SubscriptionPolledRefresh*
+        s0__SubscriptionPolledRefresh, ///< Request parameter
+    _s0__SubscriptionPolledRefreshResponse*
+        s0__SubscriptionPolledRefreshResponse ///< Response parameter
+    );
 
 /******************************************************************************\
  *                                                                            *
  * __s0__SubscriptionCancel                                                   *
  *                                                                            *
 \******************************************************************************/
-
 
 /// Operation "__s0__SubscriptionCancel" of service binding "Service"
 
@@ -1394,7 +1484,8 @@ int __s0__SubscriptionPolledRefresh(
 Operation details:
 
   - SOAP document/literal style
-  - SOAP action="http://opcfoundation.org/webservices/XMLDA/1.0/SubscriptionCancel"
+  - SOAP
+action="http://opcfoundation.org/webservices/XMLDA/1.0/SubscriptionCancel"
 
 C stub function (defined in soapClient.c[pp] generated by soapcpp2):
 @code
@@ -1409,7 +1500,8 @@ C stub function (defined in soapClient.c[pp] generated by soapcpp2):
   );
 @endcode
 
-C server function (called from the service dispatcher defined in soapServer.c[pp]):
+C server function (called from the service dispatcher defined in
+soapServer.c[pp]):
 @code
   int __s0__SubscriptionCancel(
     struct soap *soap,
@@ -1425,20 +1517,21 @@ C++ proxy class (defined in soapServiceProxy.h):
 
 */
 
-//gsoap s0   service method-style:	SubscriptionCancel document
-//gsoap s0   service method-encoding:	SubscriptionCancel literal
-//gsoap s0   service method-action:	SubscriptionCancel http://opcfoundation.org/webservices/XMLDA/1.0/SubscriptionCancel
+// gsoap s0   service method-style:	SubscriptionCancel document
+// gsoap s0   service method-encoding:	SubscriptionCancel literal
+// gsoap s0   service method-action:	SubscriptionCancel
+// http://opcfoundation.org/webservices/XMLDA/1.0/SubscriptionCancel
 int __s0__SubscriptionCancel(
-    _s0__SubscriptionCancel*            s0__SubscriptionCancel,	///< Request parameter
-    _s0__SubscriptionCancelResponse*    s0__SubscriptionCancelResponse	///< Response parameter
-);
+    _s0__SubscriptionCancel* s0__SubscriptionCancel, ///< Request parameter
+    _s0__SubscriptionCancelResponse*
+        s0__SubscriptionCancelResponse ///< Response parameter
+    );
 
 /******************************************************************************\
  *                                                                            *
  * __s0__Browse                                                               *
  *                                                                            *
 \******************************************************************************/
-
 
 /// Operation "__s0__Browse" of service binding "Service"
 
@@ -1462,7 +1555,8 @@ C stub function (defined in soapClient.c[pp] generated by soapcpp2):
   );
 @endcode
 
-C server function (called from the service dispatcher defined in soapServer.c[pp]):
+C server function (called from the service dispatcher defined in
+soapServer.c[pp]):
 @code
   int __s0__Browse(
     struct soap *soap,
@@ -1478,20 +1572,19 @@ C++ proxy class (defined in soapServiceProxy.h):
 
 */
 
-//gsoap s0   service method-style:	Browse document
-//gsoap s0   service method-encoding:	Browse literal
-//gsoap s0   service method-action:	Browse http://opcfoundation.org/webservices/XMLDA/1.0/Browse
-int __s0__Browse(
-    _s0__Browse*                        s0__Browse,	///< Request parameter
-    _s0__BrowseResponse*                s0__BrowseResponse	///< Response parameter
-);
+// gsoap s0   service method-style:	Browse document
+// gsoap s0   service method-encoding:	Browse literal
+// gsoap s0   service method-action:	Browse
+// http://opcfoundation.org/webservices/XMLDA/1.0/Browse
+int __s0__Browse(_s0__Browse* s0__Browse, ///< Request parameter
+    _s0__BrowseResponse* s0__BrowseResponse ///< Response parameter
+    );
 
 /******************************************************************************\
  *                                                                            *
  * __s0__GetProperties                                                        *
  *                                                                            *
 \******************************************************************************/
-
 
 /// Operation "__s0__GetProperties" of service binding "Service"
 
@@ -1515,7 +1608,8 @@ C stub function (defined in soapClient.c[pp] generated by soapcpp2):
   );
 @endcode
 
-C server function (called from the service dispatcher defined in soapServer.c[pp]):
+C server function (called from the service dispatcher defined in
+soapServer.c[pp]):
 @code
   int __s0__GetProperties(
     struct soap *soap,
@@ -1531,12 +1625,14 @@ C++ proxy class (defined in soapServiceProxy.h):
 
 */
 
-//gsoap s0   service method-style:	GetProperties document
-//gsoap s0   service method-encoding:	GetProperties literal
-//gsoap s0   service method-action:	GetProperties http://opcfoundation.org/webservices/XMLDA/1.0/GetProperties
+// gsoap s0   service method-style:	GetProperties document
+// gsoap s0   service method-encoding:	GetProperties literal
+// gsoap s0   service method-action:	GetProperties
+// http://opcfoundation.org/webservices/XMLDA/1.0/GetProperties
 int __s0__GetProperties(
-    _s0__GetProperties*                 s0__GetProperties,	///< Request parameter
-    _s0__GetPropertiesResponse*         s0__GetPropertiesResponse	///< Response parameter
-);
+    _s0__GetProperties* s0__GetProperties, ///< Request parameter
+    _s0__GetPropertiesResponse*
+        s0__GetPropertiesResponse ///< Response parameter
+    );
 
 /* End of opc_msg.h */

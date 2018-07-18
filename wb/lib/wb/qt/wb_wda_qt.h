@@ -39,70 +39,69 @@
 
 /* wb_wda_qt.h -- Spreadsheet editor */
 
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
-#ifndef wb_wda_h
-# include "wb_wda.h"
-#endif
+#include "cow_wow_qt.h"
 
-#ifndef cow_wow_qt_h
-# include "cow_wow_qt.h"
+#ifndef wb_wda_h
+#include "wb_wda.h"
 #endif
 
 #include <QCheckBox>
+#include <QLabel>
+#include <QSplitter>
 #include <QTextEdit>
 
 class WdaQtWidget;
 
 class WdaQt : public Wda {
 public:
-  WdaQt(QWidget *wa_parent_wid, void *wa_parent_ctx, ldh_tSesContext wa_ldhses,
-        pwr_tObjid wa_objid, pwr_tClassId wa_classid, const char *wa_attribute,
-        int wa_editmode, int wa_advanced_user, int wa_display_objectname);
-  QWidget *brow_widget;
-  QWidget *form_widget;
-  QLabel *msg_label;
-  QLabel *cmd_prompt;
-  QWidget *cmd_scrolledinput;
-  QWidget *cmd_scrolled_ok;
-  QWidget *cmd_scrolled_ca;
-  QTextEdit *cmd_scrolled_buffer;
-  QSplitter *pane;
-  QWidget *wdaclass_dia;
-  QLineEdit *wdaclass_hiervalue;
-  QLineEdit *wdaclass_namevalue;
-  QLineEdit *wdaclass_classvalue;
-  QCheckBox *wdaclass_attrobjects;
-  QWidget *wdaattr_dia;
+  WdaQt(QWidget* wa_parent_wid, void* wa_parent_ctx, ldh_tSesContext wa_ldhses,
+      pwr_tObjid wa_objid, pwr_tClassId wa_classid, const char* wa_attribute,
+      int wa_editmode, int wa_advanced_user, int wa_display_objectname);
+  QWidget* brow_widget;
+  QWidget* form_widget;
+  QLabel* msg_label;
+  QLabel* cmd_prompt;
+  QWidget* cmd_scrolledinput;
+  QWidget* cmd_scrolled_ok;
+  QWidget* cmd_scrolled_ca;
+  QTextEdit* cmd_scrolled_buffer;
+  QSplitter* pane;
+  QWidget* wdaclass_dia;
+  QLineEdit* wdaclass_hiervalue;
+  QLineEdit* wdaclass_namevalue;
+  QLineEdit* wdaclass_classvalue;
+  QCheckBox* wdaclass_attrobjects;
+  QWidget* wdaattr_dia;
   static CoWowRecall value_recall;
-  CoWowEntryQt *cmd_entry;
+  CoWowEntryQt* cmd_entry;
   CoWowFocusTimerQt focustimer;
 
-  void message(char severity, const char *message);
-  void set_prompt(const char *prompt);
+  void message(char severity, const char* message);
+  void set_prompt(const char* prompt);
   void change_value(int set_focus);
   void change_value_close();
   void pop();
-  void open_class_dialog(char *hierstr, char *classstr, char *namestr);
+  void open_class_dialog(char* hierstr, char* classstr, char* namestr);
   void create_class_dialog();
-  void print(const char *title);
+  void print(const char* title);
   void update_title();
 
 private:
-  WdaQtWidget *toplevel;
+  WdaQtWidget* toplevel;
 };
 
 class WdaQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  WdaQtWidget(WdaQt *parent_ctx, QWidget *parent) : QWidget(parent, Qt::Window),
-                                                    wda(parent_ctx) {}
+  WdaQtWidget(WdaQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), wda(parent_ctx)
+  {
+  }
 
 protected:
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void activate_change_value();
@@ -121,7 +120,7 @@ public slots:
   void class_activate_ok();
 
 private:
-  WdaQt *wda;
+  WdaQt* wda;
 };
 
 #endif

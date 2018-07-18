@@ -40,40 +40,40 @@
 /* cow_logw_qt.h -- History log window */
 
 #ifndef cow_logw_h
-# include "cow_logw.h"
+#include "cow_logw.h"
 #endif
 
-#ifndef cow_wow_qt_h
-# include "cow_wow_qt.h"
-#endif
+#include "cow_wow_qt.h"
 
 class CoLogWQtWidget;
 
 class CoLogWQt : public CoLogW {
 public:
-  CoLogWQt(void *msg_parent_ctx, QWidget *msg_parent_wid, const char *msg_name,
-           int l_show_item, pwr_tStatus *status);
+  CoLogWQt(void* msg_parent_ctx, QWidget* msg_parent_wid, const char* msg_name,
+      int l_show_item, pwr_tStatus* status);
 
-  QWidget *nav_widget;
+  QWidget* nav_widget;
   CoWowFocusTimerQt focustimer;
   CoWowFocusTimerQt maptimer;
 
   void print();
 
 private:
-  CoLogWQtWidget *toplevel;
+  CoLogWQtWidget* toplevel;
 };
 
 class CoLogWQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  CoLogWQtWidget(CoLogWQt *parent_ctx, QWidget *parent)
-      : QWidget(parent, Qt::Window), logw(parent_ctx) {}
+  CoLogWQtWidget(CoLogWQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), logw(parent_ctx)
+  {
+  }
 
 protected:
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void activate_print();
@@ -83,7 +83,7 @@ public slots:
   void activate_help();
 
 private:
-  CoLogWQt *logw;
+  CoLogWQt* logw;
 };
 
 #endif

@@ -36,31 +36,16 @@
 
 /* cow_pb_gsd_attrnav_qt.cpp -- Display gsd attributes */
 
-#include "glow_std.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "co_cdh.h"
-#include "co_time.h"
+#include "cow_qt_helpers.h"
 #include "cow_wow_qt.h"
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
-#include "flow_browwidget_qt.h"
-#include "flow_msg.h"
-#include "glow.h"
-#include "glow_growctx.h"
-#include "glow_growapi.h"
-#include "glow_growwidget_qt.h"
-#include "cow_pb_gsd.h"
-#include "cow_pb_gsd_attr_qt.h"
-#include "cow_pb_gsd_attrnav_qt.h"
-#include "rt_pb_msg.h"
 
-GsdAttrNavQt::GsdAttrNavQt(void *xn_parent_ctx, QWidget *xn_parent_wid,
-                           const char *xn_name, pb_gsd *xn_gsd,
-                           int xn_edit_mode, QWidget **w, pwr_tStatus *status)
+#include "flow_browwidget_qt.h"
+
+#include "cow_pb_gsd_attrnav_qt.h"
+
+GsdAttrNavQt::GsdAttrNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
+    const char* xn_name, pb_gsd* xn_gsd, int xn_edit_mode, QWidget** w,
+    pwr_tStatus* status)
     : GsdAttrNav(xn_parent_ctx, xn_name, xn_gsd, xn_edit_mode, status)
 {
   form_widget = scrolledbrowwidgetqt_new(init_brow_cb, this, &brow_widget);

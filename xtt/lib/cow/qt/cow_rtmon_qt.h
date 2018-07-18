@@ -40,57 +40,60 @@
 /* cow_rtmon_qt.h -- Status Monitor */
 
 #ifndef cow_rtmon_h
-# include "cow_rtmon.h"
+#include "cow_rtmon.h"
 #endif
 
+#include <QAction>
 #include <QLabel>
 #include <QPushButton>
+#include <QTimer>
 #include <QWidget>
 
 class RtMonQtWidget;
 
 class RtMonQt : public RtMon {
 public:
-  RtMonQt(void *rtmon_parent_ctx, QWidget *rtmon_parent_wid,
-          const char *rtmon_name, const char *rtmon_display,
-          pwr_tStatus *status);
+  RtMonQt(void* rtmon_parent_ctx, QWidget* rtmon_parent_wid,
+      const char* rtmon_name, const char* rtmon_display, pwr_tStatus* status);
   ~RtMonQt();
 
-  QWidget *nodelistnav_widget;
-  QPushButton *bbox_label;
-  QWidget *bbox_start;
-  QWidget *bbox_restart;
-  QWidget *bbox_stop;
-  QLabel *bbox_image;
-  QLabel *bbox_image_gray;
-  QAction *tools_xtt;
-  QAction *tools_op;
-  QAction *file_xtt;
-  QAction *file_op;
-  QTimer *timerid;
+  QWidget* nodelistnav_widget;
+  QPushButton* bbox_label;
+  QWidget* bbox_start;
+  QWidget* bbox_restart;
+  QWidget* bbox_stop;
+  QLabel* bbox_image;
+  QLabel* bbox_image_gray;
+  QAction* tools_xtt;
+  QAction* tools_op;
+  QAction* file_xtt;
+  QAction* file_op;
+  QTimer* timerid;
   pwr_tStatus old_status;
 
   void pop();
   void set_clock_cursor();
   void reset_cursor();
   void create_input_dialog();
-  void open_input_dialog(char *text, char *title, char *init_text,
-                         void (*ok_cb)(RtMon *, char *));
+  void open_input_dialog(
+      char* text, char* title, char* init_text, void (*ok_cb)(RtMon*, char*));
 
 private:
-  RtMonQtWidget *toplevel;
+  RtMonQtWidget* toplevel;
 };
 
 class RtMonQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  RtMonQtWidget(RtMonQt *parent_ctx, QWidget *parent)
-      : QWidget(parent, Qt::Window), rtmon(parent_ctx) {}
+  RtMonQtWidget(RtMonQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), rtmon(parent_ctx)
+  {
+  }
 
 protected:
-  void focusInEvent(QFocusEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void focusInEvent(QFocusEvent* event);
+  void closeEvent(QCloseEvent* event);
 
 public slots:
   void activate_start();
@@ -107,7 +110,7 @@ public slots:
   void rtmon_scan();
 
 private:
-  RtMonQt *rtmon;
+  RtMonQt* rtmon;
 };
 
 #endif

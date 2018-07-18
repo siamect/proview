@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+exec > >(tee compilation_log.txt)
+exec 2>&1
+
 root=`eval pwd`
 
 if [ -e $root/src/exp/inc/src/pwr_version.h ]; then
@@ -65,7 +68,7 @@ elif [ $unamestr == "FreeBSD" ]; then
   os="freebsd"
   hw=$machine
 else
-  os="linux"  
+  os="linux"
   hw=$machine
 fi
 
@@ -84,8 +87,9 @@ pwre create_all_modules
 pwre build_kernel $gui
 pwre method_build $gui
 
+
 # Create a package version html file
-$root/src/tools/pkg/deb/pwrrt/build.sh -v 
+$root/src/tools/pkg/deb/pwrrt/build.sh -v
 co_convert -t -d $pwr_doc $pwr_eexe/xtt_version_help.dat
 
 echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"

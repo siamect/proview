@@ -36,52 +36,33 @@
 
 /* wb_wnav_qt.cpp -- Display plant and node hiererachy */
 
-#include "flow_std.h"
-
-#include <stdio.h>
 #include <stdlib.h>
 
-extern "C" {
-#include "pwr_privilege.h"
-#include "co_cdh.h"
-#include "co_dcli.h"
-#include "co_msg.h"
-#include "co_time.h"
-#include "pwr_baseclasses.h"
-#include "wb_wnav_msg.h"
-#include "wb_ldh_msg.h"
-#include "wb_ldh.h"
-#include "wb_wccm.h"
-}
-
-#include "co_math.h"
-
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
-#include "flow_browwidget_qt.h"
-
-#include "wb_wnav_qt.h"
-#include "wb_wnav_item.h"
-#include "cow_wow_qt.h"
 #include "cow_login_qt.h"
 #include "cow_logw_qt.h"
-#include "wb_wge_qt.h"
+#include "cow_qt_helpers.h"
+#include "cow_wow_qt.h"
+
+#include "flow_browwidget_qt.h"
+
 #include "ge_qt.h"
-#include "wb_wda_qt.h"
-#include "wb_foe_qt.h"
-#include "wb_utl_qt.h"
-#include "wb_xcrr_qt.h"
+
 #include "wb_bckw_qt.h"
 #include "wb_expw_qt.h"
+#include "wb_foe_qt.h"
+#include "wb_utl_qt.h"
 #include "wb_watttext_qt.h"
+#include "wb_wda_qt.h"
+#include "wb_wge_qt.h"
+#include "wb_wnav_item.h"
+#include "wb_wnav_qt.h"
 #include "wb_wrev_qt.h"
+#include "wb_xcrr_qt.h"
 
 #include <QColor>
 #include <QInputDialog>
+#include <QMessageBox>
 #include <QScrollArea>
-#include <QTimer>
-#include <QVBoxLayout>
 
 #include <qlocalsocket.h>
 
@@ -90,12 +71,12 @@ void WNavQt::pop()
   ::pop(toplevel);
 }
 
-WNavQt::WNavQt(void *xn_parent_ctx, QWidget *xn_parent_wid, const char *xn_name,
-               const char *xn_layout, QWidget **w, ldh_tSesContext xn_ldhses,
-               wnav_sStartMenu *root_menu, wnav_eWindowType xn_type,
-               pwr_tStatus *status)
+WNavQt::WNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid, const char* xn_name,
+    const char* xn_layout, QWidget** w, ldh_tSesContext xn_ldhses,
+    wnav_sStartMenu* root_menu, wnav_eWindowType xn_type, pwr_tStatus* status)
     : WNav(xn_parent_ctx, xn_name, xn_layout, xn_ldhses, root_menu, xn_type,
-           status), parent_wid(xn_parent_wid)
+          status),
+      parent_wid(xn_parent_wid)
 {
   if (window_type == wnav_eWindowType_No) {
     return;
@@ -103,9 +84,9 @@ WNavQt::WNavQt(void *xn_parent_ctx, QWidget *xn_parent_wid, const char *xn_name,
 
   trace_obj = new WNavQtTraceObject(this);
 
-  QScrollArea *scrolledbrow = ((QScrollArea *) 
-      scrolledbrowwidgetqt_new(WNav::init_brow_base_cb, this, &brow_widget));
-  
+  QScrollArea* scrolledbrow = ((QScrollArea*)scrolledbrowwidgetqt_new(
+      WNav::init_brow_base_cb, this, &brow_widget));
+
   scrolledbrow->setFrameShape(QFrame::Box);
   scrolledbrow->setLineWidth(3);
 
@@ -116,20 +97,20 @@ WNavQt::WNavQt(void *xn_parent_ctx, QWidget *xn_parent_wid, const char *xn_name,
 
   serverString = new QLocalServer(trace_obj);
   serverString->listen("STRING");
-  QObject::connect(serverString, SIGNAL(newConnection()), trace_obj,
-                   SLOT(sel_convert_cb()));
+  QObject::connect(
+      serverString, SIGNAL(newConnection()), trace_obj, SLOT(sel_convert_cb()));
   serverGraph = new QLocalServer(trace_obj);
   serverGraph->listen("PWR_GRAPH");
-  QObject::connect(serverGraph, SIGNAL(newConnection()), trace_obj,
-                   SLOT(sel_convert_cb()));
+  QObject::connect(
+      serverGraph, SIGNAL(newConnection()), trace_obj, SLOT(sel_convert_cb()));
   serverObjId = new QLocalServer(trace_obj);
   serverObjId->listen("PWR_OBJID");
-  QObject::connect(serverObjId, SIGNAL(newConnection()), trace_obj,
-                   SLOT(sel_convert_cb()));
+  QObject::connect(
+      serverObjId, SIGNAL(newConnection()), trace_obj, SLOT(sel_convert_cb()));
   serverAttrRef = new QLocalServer(trace_obj);
   serverAttrRef->listen("PWR_ATTRREF");
   QObject::connect(serverAttrRef, SIGNAL(newConnection()), trace_obj,
-                   SLOT(sel_convert_cb()));
+      SLOT(sel_convert_cb()));
 
   gbl.load_config(this);
 
@@ -161,7 +142,7 @@ WNavQt::~WNavQt()
   form_widget->close();
 }
 
-static void modifyBackground(QWidget *widget, QColor color)
+static void modifyBackground(QWidget* widget, QColor color)
 {
   QPalette pal;
   pal.setColor(QPalette::Background, color);
@@ -202,15 +183,15 @@ void WNavQtTraceObject::trace_scan()
   }
 }
 
-void WNavQt::print(const char *title)
+void WNavQt::print(const char* title)
 {
   pwr_tStatus sts;
 
-  wow->CreateBrowPrintDialog(title, brow->ctx, flow_eOrientation_Portrait, 1.0,
-                             (void *) 0, &sts);
+  wow->CreateBrowPrintDialog(
+      title, brow->ctx, flow_eOrientation_Portrait, 1.0, (void*)0, &sts);
 }
 
-int WNavQt::get_selection(char *str, int len)
+int WNavQt::get_selection(char* str, int len)
 {
   int sts;
 
@@ -232,7 +213,7 @@ void WNavQt::create_popup_menu(pwr_tAttrRef aref, int x, int y)
   (create_popup_menu_cb)(parent_ctx, aref, x, y);
 }
 
-Ge *WNavQt::ge_new(char *graph_name, int nojournal)
+Ge* WNavQt::ge_new(char* graph_name, int nojournal)
 {
   unsigned int options = 0;
 
@@ -246,23 +227,23 @@ Ge *WNavQt::ge_new(char *graph_name, int nojournal)
   return new GeQt(NULL, toplevel, ldhses, 0, options, graph_name);
 }
 
-WGe *WNavQt::wge_new(char *name, char *filename, char *object_name, int modal)
+WGe* WNavQt::wge_new(char* name, char* filename, char* object_name, int modal)
 {
   return new WGeQt(parent_wid, this, name, filename, 0, 0, 0, 0, 0, 0, 0,
-                   object_name, modal);
+      object_name, modal);
 }
 
-wb_utl *WNavQt::utl_new()
+wb_utl* WNavQt::utl_new()
 {
   return new wb_utl_qt(parent_wid);
 }
 
-WRev *WNavQt::rev_new()
+WRev* WNavQt::rev_new()
 {
   return new WRevQt(parent_wid, this, ldhses);
 }
 
-void WNavQt::logw_new(char *item, wlog_eCategory *categories, int show_item)
+void WNavQt::logw_new(char* item, wlog_eCategory* categories, int show_item)
 {
   char categories_str[10][20];
   char title[300];
@@ -288,7 +269,7 @@ void WNavQt::logw_new(char *item, wlog_eCategory *categories, int show_item)
     title[strlen(title) - 1] = 0;
   }
 
-  CoLogWQt *logw = new CoLogWQt(this, parent_wid, title, show_item, &sts);
+  CoLogWQt* logw = new CoLogWQt(this, parent_wid, title, show_item, &sts);
   if (categories) {
     logw->CoLogW::show(categories_str, item);
   } else {
@@ -296,14 +277,14 @@ void WNavQt::logw_new(char *item, wlog_eCategory *categories, int show_item)
   }
 }
 
-static void selection_data_set(WNavQt *wnav, QLocalServer *server,
-                               const char *data)
+static void selection_data_set(
+    WNavQt* wnav, QLocalServer* server, const char* data)
 {
   QByteArray block;
   QDataStream out(&block, QIODevice::WriteOnly);
   out.writeRawData(data, strlen(data));
 
-  QLocalSocket *clientConnection = server->nextPendingConnection();
+  QLocalSocket* clientConnection = server->nextPendingConnection();
   clientConnection->write(block);
   clientConnection->flush();
   clientConnection->disconnectFromServer();
@@ -315,9 +296,9 @@ static void selection_data_set(WNavQt *wnav, QLocalServer *server,
 void WNavQtTraceObject::sel_convert_cb()
 {
   pwr_sAttrRef attrref;
-  char *buffp;
+  char* buffp;
 
-  QLocalServer *server = ((QLocalServer *) sender());
+  QLocalServer* server = ((QLocalServer*)sender());
 
   wnav_eSelectionFormat format;
   if (server == wnav->serverGraph) {
@@ -331,73 +312,77 @@ void WNavQtTraceObject::sel_convert_cb()
   }
 
   int node_count;
-  brow_tNode *node_list;
+  brow_tNode* node_list;
   brow_GetSelectedNodes(wnav->brow->ctx, &node_list, &node_count);
   if (!node_count) {
     return;
   }
 
-  WItem *item;
-  brow_GetUserData(node_list[0], (void **) &item);
+  WItem* item;
+  brow_GetUserData(node_list[0], (void**)&item);
 
   switch (item->type) {
-    case wnav_eItemType_Attr:
-    case wnav_eItemType_AttrInput:
-    case wnav_eItemType_AttrInputInv:
-    case wnav_eItemType_AttrInputF:
-    case wnav_eItemType_AttrOutput:
-    case wnav_eItemType_AttrArray:
-    case wnav_eItemType_AttrArrayOutput:
-    case wnav_eItemType_AttrArrayElem:
-    case wnav_eItemType_AttrObject: {
-      WItemBaseAttr *aitem = (WItemBaseAttr *) item;
+  case wnav_eItemType_Attr:
+  case wnav_eItemType_AttrInput:
+  case wnav_eItemType_AttrInputInv:
+  case wnav_eItemType_AttrInputF:
+  case wnav_eItemType_AttrOutput:
+  case wnav_eItemType_AttrArray:
+  case wnav_eItemType_AttrArrayOutput:
+  case wnav_eItemType_AttrArrayElem:
+  case wnav_eItemType_AttrObject: {
+    WItemBaseAttr* aitem = (WItemBaseAttr*)item;
 
-      int size;
-      pwr_tAName attr_str;
-      int sts =
-          ldh_ObjidToName(wnav->ldhses, item->objid, ldh_eName_Hierarchy, attr_str,
-                          sizeof(attr_str), &size);
-      if (EVEN(sts)) { break; }
-
-      strcat(attr_str, ".");
-      strcat(attr_str, aitem->name);
-      sts = ldh_NameToAttrRef(wnav->ldhses, attr_str, &attrref);
-      if (EVEN(sts)) { break; }
-      sts = (wnav->format_selection_cb)(wnav->parent_ctx, attrref, &buffp, 0, 1, format);
-      if (sts) {
-        selection_data_set(wnav, server, buffp);
-        free(node_list);
-        return;
-      }
+    int size;
+    pwr_tAName attr_str;
+    int sts = ldh_ObjidToName(wnav->ldhses, item->objid, ldh_eName_Hierarchy,
+        attr_str, sizeof(attr_str), &size);
+    if (EVEN(sts)) {
       break;
     }
-    case wnav_eItemType_Object: {
-      memset(&attrref, 0, sizeof(attrref));
-      attrref.Objid = item->objid;
-      int sts =
-          (wnav->format_selection_cb)(wnav->parent_ctx, attrref, &buffp, 0, 0, format);
-      if (sts) {
-        selection_data_set(wnav, server, buffp);
-        free(node_list);
-        return;
-      }
+
+    strcat(attr_str, ".");
+    strcat(attr_str, aitem->name);
+    sts = ldh_NameToAttrRef(wnav->ldhses, attr_str, &attrref);
+    if (EVEN(sts)) {
+      break;
     }
-    default: {
-      char name[200];
-      brow_GetAnnotation(node_list[0], 0, name, sizeof(name));
-      selection_data_set(wnav, server, name);
+    sts = (wnav->format_selection_cb)(
+        wnav->parent_ctx, attrref, &buffp, 0, 1, format);
+    if (sts) {
+      selection_data_set(wnav, server, buffp);
+      free(node_list);
+      return;
+    }
+    break;
+  }
+  case wnav_eItemType_Object: {
+    memset(&attrref, 0, sizeof(attrref));
+    attrref.Objid = item->objid;
+    int sts = (wnav->format_selection_cb)(
+        wnav->parent_ctx, attrref, &buffp, 0, 0, format);
+    if (sts) {
+      selection_data_set(wnav, server, buffp);
       free(node_list);
       return;
     }
   }
+  default: {
+    char name[200];
+    brow_GetAnnotation(node_list[0], 0, name, sizeof(name));
+    selection_data_set(wnav, server, name);
+    free(node_list);
+    return;
+  }
+  }
   free(node_list);
 }
 
-int WNavQt::open_foe(const char *name, pwr_tOid plcpgm, void **foectx,
-                     int map_window, ldh_eAccess access, pwr_tOid oid)
+int WNavQt::open_foe(const char* name, pwr_tOid plcpgm, void** foectx,
+    int map_window, ldh_eAccess access, pwr_tOid oid)
 {
   pwr_tStatus sts;
-  WFoe *foe;
+  WFoe* foe;
   unsigned int options;
 
   if (gbl.enable_comment) {
@@ -410,9 +395,11 @@ int WNavQt::open_foe(const char *name, pwr_tOid plcpgm, void **foectx,
   if (foe) {
     foe->pop();
   } else {
-    foe = new WFoeQt((void *) this, parent_wid, name, plcpgm, wbctx, ldhses,
-                     map_window, access, options, &sts);
-    if (EVEN(sts)) { return sts; }
+    foe = new WFoeQt((void*)this, parent_wid, name, plcpgm, wbctx, ldhses,
+        map_window, access, options, &sts);
+    if (EVEN(sts)) {
+      return sts;
+    }
     foe->get_build_options_cb = foe_get_build_options_cb;
   }
   if (cdh_ObjidIsNotNull(oid)) {
@@ -422,62 +409,60 @@ int WNavQt::open_foe(const char *name, pwr_tOid plcpgm, void **foectx,
   return sts;
 }
 
-void WNavQt::wda_new(pwr_tOid oid, pwr_tCid cid, char *attribute, int edit_mode,
-                     int advuser, int display_objectname)
+void WNavQt::wda_new(pwr_tOid oid, pwr_tCid cid, char* attribute, int edit_mode,
+    int advuser, int display_objectname)
 {
-  new WdaQt(parent_wid, this, ldhses, oid, cid, attribute, edit_mode,
-            advuser, display_objectname);
+  new WdaQt(parent_wid, this, ldhses, oid, cid, attribute, edit_mode, advuser,
+      display_objectname);
 }
 
-CoLogin *WNavQt::login_new(const char *name, const char *groupname,
-                           void    (*bc_success)(void *),
-                           void    (*bc_cancel)(void *), pwr_tStatus *status)
+CoLogin* WNavQt::login_new(const char* name, const char* groupname,
+    void (*bc_success)(void*), void (*bc_cancel)(void*), pwr_tStatus* status)
 {
-  return new CoLoginQt(this, parent_wid, name, groupname, bc_success,
-                       bc_cancel, 0, status);
+  return new CoLoginQt(
+      this, parent_wid, name, groupname, bc_success, bc_cancel, 0, status);
 }
 
-WCrr *WNavQt::wcrr_new(pwr_tAttrRef *aref, pwr_tStatus *status)
+WCrr* WNavQt::wcrr_new(pwr_tAttrRef* aref, pwr_tStatus* status)
 {
-  return new WCrrQt(parent_wid, this, ldhses, aref, gbl.advanced_user,
-                    status);
+  return new WCrrQt(parent_wid, this, ldhses, aref, gbl.advanced_user, status);
 }
 
-WbBckW *WNavQt::bckw_new(char *name, wb_bck_list *list, pwr_tStatus *status)
+WbBckW* WNavQt::bckw_new(char* name, wb_bck_list* list, pwr_tStatus* status)
 {
-  return new WbBckWQt(this, parent_wid, ldhses, name, list, editmode,
-                      status);
+  return new WbBckWQt(this, parent_wid, ldhses, name, list, editmode, status);
 }
 
-WbExpW *WNavQt::expw_new(char *name, int type, pwr_tStatus *status)
+WbExpW* WNavQt::expw_new(char* name, int type, pwr_tStatus* status)
 {
   return new WbExpWQt(this, parent_wid, ldhses, name, type, 1, status);
 }
 
-WAttText *WNavQt::watttext_new(pwr_tAttrRef aref, int editmode,
-                               pwr_tStatus *status)
+WAttText* WNavQt::watttext_new(
+    pwr_tAttrRef aref, int editmode, pwr_tStatus* status)
 {
   return new WAttTextQt(parent_wid, this, ldhses, aref, editmode, status);
 }
 
-void WNavQt::wge_subwindow_loop(WGe *wge)
+void WNavQt::wge_subwindow_loop(WGe* wge)
 {
 }
 
-void WNavQt::wge_modal_loop(WGe *wge)
+void WNavQt::wge_modal_loop(WGe* wge)
 {
 }
 
-void WNavQt::message_dialog(char *title, char *text)
+void WNavQt::message_dialog(char* title, char* text)
 {
-  QMessageBox::critical(toplevel->window(), translate_utf8(title), translate_utf8(text));
+  QMessageBox::critical(
+      toplevel->window(), translate_utf8(title), translate_utf8(text));
 }
 
-int WNavQt::confirm_dialog(char *title, char *text, int display_cancel,
-                           int *cancel)
+int WNavQt::confirm_dialog(
+    char* title, char* text, int display_cancel, int* cancel)
 {
-  QMessageBox::StandardButton reply =
-      QMessageBox::question(toplevel, translate_utf8(title), translate_utf8(text));
+  QMessageBox::StandardButton reply = QMessageBox::question(
+      toplevel, translate_utf8(title), translate_utf8(text));
 
   if (reply == QMessageBox::Yes) {
     return 1;
@@ -487,12 +472,11 @@ int WNavQt::confirm_dialog(char *title, char *text, int display_cancel,
   }
 }
 
-int WNavQt::continue_dialog(char *title, char *text)
+int WNavQt::continue_dialog(char* title, char* text)
 {
   // Create a question window
-  QMessageBox::StandardButton reply =
-      QMessageBox::question(toplevel, fl(title), fl(text),
-                            QMessageBox::Ok | QMessageBox::Cancel);
+  QMessageBox::StandardButton reply = QMessageBox::question(
+      toplevel, fl(title), fl(text), QMessageBox::Ok | QMessageBox::Cancel);
   if (reply == QMessageBox::Ok) {
     return 1;
   } else {
@@ -500,12 +484,11 @@ int WNavQt::continue_dialog(char *title, char *text)
   }
 }
 
-int WNavQt::prompt_dialog(char *title, char *text, char **value)
+int WNavQt::prompt_dialog(char* title, char* text, char** value)
 {
   bool ok;
-  QString str =
-      QInputDialog::getText(toplevel, translate_utf8(title), translate_utf8(text),
-                            QLineEdit::Normal, "", &ok);
+  QString str = QInputDialog::getText(toplevel, translate_utf8(title),
+      translate_utf8(text), QLineEdit::Normal, "", &ok);
   if (ok) {
     QByteArray ba = str.toLatin1();
     strcpy(*value, ba.data());

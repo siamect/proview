@@ -36,46 +36,22 @@
 
 /* ge_attrnav.cpp -- Display object info */
 
-#include "glow_std.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <vector>
-
-#include "co_cdh.h"
-#include "co_time.h"
-
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
-#include "flow_browwidget_qt.h"
-#include "flow_msg.h"
-
-#include "glow.h"
-#include "glow_growctx.h"
-#include "glow_growapi.h"
-#include "glow_growwidget_qt.h"
-
-#include "glow_growapi.h"
-#include "ge_dyn.h"
-#include "ge_attr.h"
-#include "ge_attrnav_qt.h"
-#include "ge_msg.h"
-
 #include "cow_qt_helpers.h"
 
-AttrNavQt::AttrNavQt(void *xn_parent_ctx, QWidget *xn_parent_wid,
-                     attr_eType xn_type, const char *xn_name,
-                     attr_sItem *xn_itemlist, int xn_item_cnt, QWidget **w,
-                     pwr_tStatus *status)
-    : AttrNav(xn_parent_ctx, xn_type, xn_name, xn_itemlist, xn_item_cnt,
-              status)
+#include "flow_browwidget_qt.h"
+
+#include "ge_attrnav_qt.h"
+
+AttrNavQt::AttrNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
+    attr_eType xn_type, const char* xn_name, attr_sItem* xn_itemlist,
+    int xn_item_cnt, QWidget** w, pwr_tStatus* status)
+    : AttrNav(xn_parent_ctx, xn_type, xn_name, xn_itemlist, xn_item_cnt, status)
 {
   trace_obj = new AttrNavQtTraceObject(this);
 
   debug_print("creating a scrolledbrowwidgetqt\n");
-  form_widget =
-      scrolledbrowwidgetqt_new(AttrNav::init_brow_cb, this, &brow_widget);
+  form_widget
+      = scrolledbrowwidgetqt_new(AttrNav::init_brow_cb, this, &brow_widget);
 
   showNow(brow_widget);
 

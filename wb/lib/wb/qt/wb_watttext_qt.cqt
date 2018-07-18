@@ -36,23 +36,13 @@
 
 /* wb_watttext_qt.cpp -- Display object attributes */
 
-#include "glow_std.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "co_cdh.h"
-#include "co_dcli.h"
-#include "co_time.h"
+#include "cow_qt_helpers.h"
 #include "cow_wow_qt.h"
-#include "wb_watt_msg.h"
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
-#include "wb_watttext_qt.h"
-#include "wb_wtt.h"
-#include "wb_wnav.h"
 #include "cow_xhelp.h"
+
+#include "wb_watttext_qt.h"
+#include "wb_wnav.h"
+#include "wb_wtt.h"
 
 #include <QApplication>
 #include <QClipboard>
@@ -61,7 +51,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-void WAttTextQt::message(char severity, const char *message)
+void WAttTextQt::message(char severity, const char* message)
 {
   msg_label->setText(fl(message));
 }
@@ -132,10 +122,10 @@ void WAttTextQtWidget::activate_apply()
 void WAttTextQtWidget::activate_help()
 {
   CoXHelp::dhelp("objecttexteditor_refman", 0, navh_eHelpFile_Other,
-                 "$pwr_lang/man_dg.dat", true);
+      "$pwr_lang/man_dg.dat", true);
 }
 
-void WAttTextQtWidget::focusInEvent(QFocusEvent *event)
+void WAttTextQtWidget::focusInEvent(QFocusEvent* event)
 {
   if (atxt->editmode) {
     atxt->textbuffer->setFocus();
@@ -163,11 +153,11 @@ void WAttTextQt::set_attr_value()
 {
   if (editmode) {
     QByteArray ba = textbuffer->toPlainText().toLatin1();
-    char *text = ba.data();
+    char* text = ba.data();
 
     if (text) {
       // Replace ctrl characters with space
-      for (unsigned char *s = (unsigned char *) text; *s; s++) {
+      for (unsigned char* s = (unsigned char*)text; *s; s++) {
         if (*s < ' ' && *s != 10 && *s != 13) {
           *s = ' ';
         }
@@ -181,9 +171,9 @@ void WAttTextQt::set_attr_value()
   }
 }
 
-void WAttTextQtWidget::closeEvent(QCloseEvent *event)
+void WAttTextQtWidget::closeEvent(QCloseEvent* event)
 {
-  if ( atxt->close_cb) {
+  if (atxt->close_cb) {
     (atxt->close_cb)(atxt);
   } else {
     delete atxt;
@@ -192,14 +182,14 @@ void WAttTextQtWidget::closeEvent(QCloseEvent *event)
   QWidget::closeEvent(event);
 }
 
-WAttTextQt::WAttTextQt(QWidget *wa_parent_wid, void *wa_parent_ctx,
-                       ldh_tSesContext wa_ldhses, pwr_sAttrRef wa_aref,
-                       int wa_editmode, pwr_tStatus *status)
+WAttTextQt::WAttTextQt(QWidget* wa_parent_wid, void* wa_parent_ctx,
+    ldh_tSesContext wa_ldhses, pwr_sAttrRef wa_aref, int wa_editmode,
+    pwr_tStatus* status)
     : WAttText(wa_parent_ctx, wa_ldhses, wa_aref, wa_editmode, status), init(1)
 {
   int sts;
   int size;
-  char *namep;
+  char* namep;
 
   if (EVEN(*status)) {
     return;
@@ -220,39 +210,41 @@ WAttTextQt::WAttTextQt(QWidget *wa_parent_wid, void *wa_parent_ctx,
   CoWowQt::SetWindowIcon(toplevel);
 
   // Menu
-  QMenuBar *menu_bar = new QMenuBar();
+  QMenuBar* menu_bar = new QMenuBar();
 
   // File entry
-  QMenu *file = menu_bar->addMenu(translate_utf8("&File"));
+  QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
   addMenuItem(toplevel, file, "&Save", SLOT(activate_save()), "CTRL+S",
-              "document-save");
-  addMenuItem(toplevel, file, "S&ave and close", SLOT(activate_saveandclose()), "CTRL+T");
-  addMenuItem(toplevel, file, "&Close", SLOT(close()), "CTRL+W",
-              "window-close");
+      "document-save");
+  addMenuItem(toplevel, file, "S&ave and close", SLOT(activate_saveandclose()),
+      "CTRL+T");
+  addMenuItem(
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
   // Edit entry
-  QMenu *edit = menu_bar->addMenu(translate_utf8("&Edit"));
-  addMenuItem(toplevel, edit, "&Copy", SLOT(activate_copy()), "CTRL+C",
-              "edit-copy");
-  addMenuItem(toplevel, edit, "&Cut", SLOT(activate_cut()), "CTRL+X", "edit-cut");
-  addMenuItem(toplevel, edit, "&Paste", SLOT(activate_paste()), "CTRL+V",
-              "edit-paste");
+  QMenu* edit = menu_bar->addMenu(translate_utf8("&Edit"));
+  addMenuItem(
+      toplevel, edit, "&Copy", SLOT(activate_copy()), "CTRL+C", "edit-copy");
+  addMenuItem(
+      toplevel, edit, "&Cut", SLOT(activate_cut()), "CTRL+X", "edit-cut");
+  addMenuItem(
+      toplevel, edit, "&Paste", SLOT(activate_paste()), "CTRL+V", "edit-paste");
 
   // Help entry
-  QMenu *help = menu_bar->addMenu(translate_utf8("&Help"));
-  addMenuItem(toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H",
-              "system-help");
+  QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
+  addMenuItem(
+      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "system-help");
 
-  if (((WUtility *) parent_ctx)->utype == wb_eUtility_WNav) {
-    parent_ctx = ((WNav *) parent_ctx)->parent_ctx;
+  if (((WUtility*)parent_ctx)->utype == wb_eUtility_WNav) {
+    parent_ctx = ((WNav*)parent_ctx)->parent_ctx;
   }
-  utility = ((WUtility *) parent_ctx)->utype;
+  utility = ((WUtility*)parent_ctx)->utype;
 
   textbuffer = new QTextEdit();
   QObject::connect(textbuffer, SIGNAL(textChanged()), toplevel,
-                   SLOT(action_text_inserted()));
+      SLOT(action_text_inserted()));
 
-  QDialogButtonBox *buttons = new QDialogButtonBox();
+  QDialogButtonBox* buttons = new QDialogButtonBox();
   buttons->addButton(QDialogButtonBox::Ok);
   buttons->addButton(QDialogButtonBox::Apply);
   buttons->addButton(QDialogButtonBox::Cancel);
@@ -260,16 +252,16 @@ WAttTextQt::WAttTextQt(QWidget *wa_parent_wid, void *wa_parent_ctx,
   buttons->button(QDialogButtonBox::Apply)->setFixedSize(70, 25);
   buttons->button(QDialogButtonBox::Cancel)->setFixedSize(70, 25);
   QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
-                   toplevel, SLOT(activate_ok()));
+      toplevel, SLOT(activate_ok()));
   QObject::connect(buttons->button(QDialogButtonBox::Apply), SIGNAL(clicked()),
-                   toplevel, SLOT(activate_apply()));
+      toplevel, SLOT(activate_apply()));
   QObject::connect(buttons->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
-                   toplevel, SLOT(close()));
+      toplevel, SLOT(close()));
 
   msg_label = new QLabel("");
   msg_label->setFixedHeight(25);
 
-  QVBoxLayout *vbox = new QVBoxLayout(toplevel);
+  QVBoxLayout* vbox = new QVBoxLayout(toplevel);
   vbox->setMenuBar(menu_bar);
   add_expanding(vbox, textbuffer);
   vbox->addWidget(buttons);
@@ -279,10 +271,10 @@ WAttTextQt::WAttTextQt(QWidget *wa_parent_wid, void *wa_parent_ctx,
   toplevel->show();
 
   if (utility == wb_eUtility_Wtt) {
-    ((Wtt *) parent_ctx)->register_utility(this, wb_eUtility_AttrTextEditor);
+    ((Wtt*)parent_ctx)->register_utility(this, wb_eUtility_AttrTextEditor);
   }
 
-  char *value;
+  char* value;
   ldh_sAttrRefInfo ainfo;
 
   sts = ldh_GetAttrRefInfo(ldhses, &aref, &ainfo);
@@ -291,15 +283,15 @@ WAttTextQt::WAttTextQt(QWidget *wa_parent_wid, void *wa_parent_ctx,
     return;
   }
 
-  char *s = strchr(namep, '.');
+  char* s = strchr(namep, '.');
   if (!s) {
     return;
   }
 
   strncpy(aname, s + 1, sizeof(aname));
 
-  sts = ldh_GetObjectPar(ldhses, aref.Objid, "DevBody", aname, (char **) &value,
-                         &size);
+  sts = ldh_GetObjectPar(
+      ldhses, aref.Objid, "DevBody", aname, (char**)&value, &size);
   if (EVEN(sts)) {
     *status = sts;
     return;

@@ -39,7 +39,6 @@
 
 /* wb_vsel_qt.h -- select volume */
 
-#include "wb_ldh.h"
 #ifndef wb_vsel_h
 #include "wb_vsel.h"
 #endif
@@ -50,16 +49,15 @@ class WVselQtWidget;
 
 class WVselQt : public WVsel {
 public:
-  WVselQt(pwr_tStatus *status, void *wv_parent_ctx, QWidget *wv_parent_wid,
-          const char *wv_name, ldh_tWBContext wv_wbctx, char *volumename,
-          int    (*bc_success)(void *, pwr_tVolumeId *, int),
-          void    (*bc_cancel)(), int    (*bc_time_to_exit)(void *),
-          int show_volumes, wb_eType wv_wb_type);
+  WVselQt(pwr_tStatus* status, void* wv_parent_ctx, QWidget* wv_parent_wid,
+      const char* wv_name, ldh_tWBContext wv_wbctx, char* volumename,
+      int (*bc_success)(void*, pwr_tVolumeId*, int), void (*bc_cancel)(),
+      int (*bc_time_to_exit)(void*), int show_volumes, wb_eType wv_wb_type);
 
-  WVselQtWidget *toplevel;
-  QTreeWidget *volumelist;
+  WVselQtWidget* toplevel;
+  QTreeWidget* volumelist;
 
-  void list_add_item(char *str);
+  void list_add_item(char* str);
   void list_clear();
 };
 
@@ -67,8 +65,10 @@ class WVselQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  WVselQtWidget(WVselQt *parent_ctx, QWidget *parent)
-      : QWidget(parent, Qt::Window), sel(parent_ctx) {}
+  WVselQtWidget(WVselQt* parent_ctx, QWidget* parent)
+      : QWidget(parent, Qt::Window), sel(parent_ctx)
+  {
+  }
 
 public slots:
   // Backcall functions from uil
@@ -78,7 +78,7 @@ public slots:
   void activate_close();
 
 private:
-  WVselQt *sel;
+  WVselQt* sel;
 };
 
 #endif

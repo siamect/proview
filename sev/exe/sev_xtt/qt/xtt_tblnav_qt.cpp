@@ -36,36 +36,19 @@
 
 /* sev_tblnav.cpp -- Sev Table Viewer */
 
-#include "glow_std.h"
+#include "cow_qt_helpers.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <vector>
-
-#include "co_cdh.h"
-#include "co_time.h"
-
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
 #include "flow_browwidget_qt.h"
-#include "flow_msg.h"
 
-#include "glow.h"
-#include "glow_growctx.h"
-#include "glow_growapi.h"
-#include "glow_growwidget_qt.h"
-
-#include "xtt_tbl_qt.h"
 #include "xtt_tblnav_qt.h"
 
-TblNavQt::TblNavQt(void *xn_parent_ctx, QWidget *xn_parent_wid,
-                   sevcli_sHistItem *xn_itemlist, int xn_item_cnt, QWidget **w,
-                   pwr_tStatus *status)
+TblNavQt::TblNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
+    sevcli_sHistItem* xn_itemlist, int xn_item_cnt, QWidget** w,
+    pwr_tStatus* status)
     : TblNav(xn_parent_ctx, xn_itemlist, xn_item_cnt, status)
 {
-  form_widget =
-      scrolledbrowwidgetqt_new(TblNav::init_brow_cb, this, &brow_widget);
+  form_widget
+      = scrolledbrowwidgetqt_new(TblNav::init_brow_cb, this, &brow_widget);
 
   showNow(brow_widget);
 
