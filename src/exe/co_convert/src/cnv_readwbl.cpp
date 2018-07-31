@@ -1224,7 +1224,7 @@ int CnvReadWbl::copy_tmp_file(const char* tmpfilename, std::ofstream& fp_to)
     fp_to.put(c);
   fclose(fp);
 
-  sprintf(cmd, "rm %s &> /dev/null", tmpfilename);
+  sprintf(cmd, "rm -f %s", tmpfilename);
   system(cmd);
 
   return 1;

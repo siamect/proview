@@ -306,7 +306,7 @@ int CnvPdfObj::print_image()
 
   cnv_free_image(image, pixmap);
   fimg.close();
-  sprintf(cmd, "rm %s &> /dev/null", fname);
+  sprintf(cmd, "rm -f %s", fname);
   system(cmd);
   return 1;
 }
