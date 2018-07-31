@@ -221,8 +221,7 @@ void GsdmlAttrQtWidget::activate_cmd_entry()
   attr->attrnav->set_inputfocus();
 
   if (attr->input_open) {
-    QByteArray text = attr->cmd_entry->text().toLocal8Bit();
-    attr->attrnav->set_attr_value(text.data());
+    attr->attrnav->set_attr_value(qPrintable(attr->cmd_entry->text()));
     attr->cmd_entry->setVisible(false);
     attr->set_prompt("");
     attr->input_open = 0;

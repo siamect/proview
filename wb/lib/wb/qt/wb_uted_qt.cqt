@@ -82,8 +82,7 @@ void WUtedQtWidget::activate_command()
 
   for (int j = 0; uted->optmenubuttons[j]; j++) {
     if (sender() == uted->optmenubuttons[j]) {
-      QByteArray label = uted->optmenubuttons[j]->text().toLocal8Bit();
-      uted->configure_quals(label.data());
+      uted->configure_quals(qPrintable(uted->optmenubuttons[j]->text()));
     }
   }
 }
@@ -347,7 +346,7 @@ void WUtedQt::set_command_window(char* cmd)
 {
 }
 
-void WUtedQt::configure_quals(char* label)
+void WUtedQt::configure_quals(const char* label)
 {
   int i;
   int index;

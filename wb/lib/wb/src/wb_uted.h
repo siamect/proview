@@ -127,7 +127,7 @@ public:
   virtual void reset_cursor()
   {
   }
-  virtual void configure_quals(char* label)
+  virtual void configure_quals(const char* label)
   {
   }
   virtual void enable_entries(int enable)
@@ -146,7 +146,7 @@ public:
   }
 
   static void get_message_error(pwr_tStatus sts, char* str);
-  static pwr_tStatus get_command_index(char* label, int* index);
+  static pwr_tStatus get_command_index(const char* label, int* index);
   static void get_filename(char* filename);
 };
 

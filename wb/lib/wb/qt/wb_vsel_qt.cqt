@@ -77,8 +77,7 @@ void WVselQtWidget::activate_ok()
   char selected_text[80];
   QList<QTreeWidgetItem*> selection = sel->volumelist->selectedItems();
   if (selection.size() > 0) {
-    QByteArray text = selection[0]->text(0).toLocal8Bit();
-    strcpy(selected_text, text.data());
+    strcpy(selected_text, qPrintable(selection[0]->text(0)));
   }
 
   pwr_tVid vid;

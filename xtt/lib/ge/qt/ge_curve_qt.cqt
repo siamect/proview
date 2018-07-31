@@ -372,16 +372,15 @@ void GeCurveQtWidget::activate_export_ok()
   }
 
   if (curve->layout_mask & curve_mEnable_ExportTime) {
-    QByteArray ba = curve->export_fromtime_widget->text().toLocal8Bit();
-    sts = time_AsciiToA(ba.data(), &from);
+    sts = time_AsciiToA(
+        qPrintable(curve->export_fromtime_widget->text()), &from);
 
     if (EVEN(sts)) {
       curve->wow->DisplayError("Syntax Error", "From time syntax error");
       return;
     }
 
-    ba = curve->export_totime_widget->text().toLocal8Bit();
-    sts = time_AsciiToA(ba.data(), &to);
+    sts = time_AsciiToA(qPrintable(curve->export_totime_widget->text()), &to);
     if (EVEN(sts)) {
       curve->wow->DisplayError("Syntax Error", "To time syntax error");
       return;
@@ -395,8 +394,7 @@ void GeCurveQtWidget::activate_export_ok()
     }
   }
 
-  QByteArray ba = curve->export_filename_widget->text().toLocal8Bit();
-  strcpy(filename, ba.data());
+  strcpy(filename, qPrintable(curve->export_filename_widget->text()));
 
   curve->export_widget->setVisible(false);
 
@@ -417,9 +415,9 @@ void GeCurveQtWidget::activate_export_cancel()
 
 void GeCurveQtWidget::activate_export_browse()
 {
-  QByteArray ba = translate_utf8("File Selection").toLocal8Bit();
-  curve->wow->CreateFileSelDia(ba.data(), (void*)this,
-      GeCurveQt::export_file_selected_cb, wow_eFileSelType_History);
+  curve->wow->CreateFileSelDia(qPrintable(translate_utf8("File Selection")),
+      (void*)this, GeCurveQt::export_file_selected_cb,
+      wow_eFileSelType_History);
 }
 
 void GeCurveQt::export_file_selected_cb(
@@ -584,14 +582,12 @@ void GeCurveQt::set_times_sensitivity(int sensitive)
 
 pwr_tStatus GeCurveQt::get_times(pwr_tTime* from, pwr_tTime* to)
 {
-  QByteArray from_p = timebox_start_time->text().toLocal8Bit();
-  pwr_tStatus sts = time_FormAsciiToA(from_p.data(), SWE, SECOND, from);
+  pwr_tStatus sts = time_FormAsciiToA(qPrintable(timebox_start_time->text()), SWE, SECOND, from);
   if (EVEN(sts)) {
     return sts;
   }
 
-  QByteArray to_p = timebox_stop_time->text().toLocal8Bit();
-  sts = time_FormAsciiToA(to_p.data(), SWE, SECOND, to);
+  sts = time_FormAsciiToA(qPrintable(timebox_stop_time->text()), SWE, SECOND, to);
   if (EVEN(sts)) {
     return sts;
   }

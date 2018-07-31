@@ -2254,7 +2254,7 @@ int pn_gsdml::datavalue_to_string(gsdml_eValueDataType datatype, void* value,
 }
 
 int pn_gsdml::string_to_datavalue(
-    gsdml_eValueDataType datatype, void* value, unsigned int size, char* str)
+    gsdml_eValueDataType datatype, void* value, unsigned int size, const char* str)
 {
   switch (datatype) {
   case gsdml_eValueDataType_Integer8:

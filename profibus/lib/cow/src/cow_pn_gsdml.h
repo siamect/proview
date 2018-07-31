@@ -1569,7 +1569,7 @@ public:
   int datavalue_to_string(gsdml_eValueDataType datatype, void* value,
       unsigned int size, char* str, unsigned int strsize);
   int string_to_datavalue(
-      gsdml_eValueDataType datatype, void* value, unsigned int size, char* str);
+      gsdml_eValueDataType datatype, void* value, unsigned int size, const char* str);
   int get_datavalue_length(
       gsdml_eValueDataType datatype, int strlength, unsigned int* len);
   void set_classes(gsdml_sModuleClass* mclist)

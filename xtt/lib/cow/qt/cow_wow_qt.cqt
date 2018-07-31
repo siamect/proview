@@ -528,8 +528,7 @@ void CoWowQt::CreateFileSelDia(const char* title, void* parent_ctx,
       object->parent_wid, fl(title), fl(folder), filter);
 
   if (!filename.isNull()) {
-    QByteArray ba = filename.toLocal8Bit();
-    strcpy(fname, ba.data());
+    strcpy(fname, qPrintable(filename));
   }
 
   if (file_selected_cb) {
@@ -671,8 +670,7 @@ void CoWowEntryQt::keyPressEvent(QKeyEvent* event)
       for (int i = m_re->m_recall_size - 2; i >= 0; i--) {
         strcpy(m_re->m_recall[i + 1], m_re->m_recall[i]);
       }
-      QByteArray ba = txt.toLocal8Bit();
-      strncpy(m_re->m_recall[0], ba.data(), m_re->m_line_size);
+      strncpy(m_re->m_recall[0], qPrintable(txt), m_re->m_line_size);
       m_re->m_recall[0][m_re->m_line_size - 1] = 0;
     }
     m_re->m_current_recall_line = 0;

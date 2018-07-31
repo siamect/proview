@@ -153,8 +153,7 @@ void CoXHelpQt::print()
   pwr_tStatus sts;
   char title[80];
 
-  QByteArray ba = translate_utf8("Help").toLocal8Bit();
-  strcpy(title, ba.data());
+  strcpy(title, qPrintable(translate_utf8("Help")));
 
   CoWowQt::CreateBrowPrintDialogQt(title, xhelpnav->brow->ctx,
       flow_eOrientation_Portrait, 0.7, toplevel, &sts);

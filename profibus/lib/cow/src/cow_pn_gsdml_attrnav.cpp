@@ -112,7 +112,7 @@ static char null_str[] = "";
 //
 // Convert attribute string to value
 //
-int GsdmlAttrNav::attr_string_to_value(int type_id, char* value_str,
+int GsdmlAttrNav::attr_string_to_value(int type_id, const char* value_str,
     void* buffer_ptr, int buff_size, int attr_size)
 {
   switch (type_id) {
@@ -577,7 +577,7 @@ int GsdmlAttrNav::get_select(ItemPn** item)
 //
 // Set attribute value
 //
-int GsdmlAttrNav::set_attr_value(char* value_str)
+int GsdmlAttrNav::set_attr_value(const char* value_str)
 {
   brow_tNode* node_list;
   int node_count;
@@ -1961,7 +1961,7 @@ int ItemPnBase::scan(GsdmlAttrNav* attrnav, void* p)
   return 1;
 }
 
-void ItemPnBase::value_changed(GsdmlAttrNav* attrnav, char* value_str)
+void ItemPnBase::value_changed(GsdmlAttrNav* attrnav, const char* value_str)
 {
   char buffer[1024];
   int sts;
@@ -4001,7 +4001,7 @@ int ItemPnParValue::scan(GsdmlAttrNav* attrnav, void* p)
   return 1;
 }
 
-void ItemPnParValue::value_changed(GsdmlAttrNav* attrnav, char* value_str)
+void ItemPnParValue::value_changed(GsdmlAttrNav* attrnav, const char* value_str)
 {
   int sts;
 

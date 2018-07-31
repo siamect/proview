@@ -134,8 +134,7 @@ void MsgWindowQt::print()
   pwr_tStatus sts;
   char title[80];
 
-  QByteArray ba = translate_utf8(name).toLocal8Bit();
-  strncpy(title, ba.data(), sizeof(title));
+  strncpy(title, qPrintable(translate_utf8(name)), sizeof(title));
 
   CoWowQt::CreateBrowPrintDialogQt(title, msgnav->brow->ctx,
       flow_eOrientation_Landscape, 1.4, toplevel, &sts);

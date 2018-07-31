@@ -591,7 +591,7 @@ void WUtedGtk::set_command_window(char* cmd)
 {
 }
 
-void WUtedGtk::configure_quals(char* label)
+void WUtedGtk::configure_quals(const char* label)
 {
   int i;
   int index;

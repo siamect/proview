@@ -157,7 +157,7 @@ public:
   }
 
   void start_trace(pwr_tObjid Objid, char* object_str);
-  int set_attr_value(char* value_str);
+  int set_attr_value(const char* value_str);
   int check_attr_value(char** value);
   int get_select(pwr_sAttrRef* attrref, int* is_attr);
   void message(char sev, const char* text);
@@ -198,7 +198,7 @@ public:
       flow_eTraceType type, void** p);
   static int trace_disconnect_bc(brow_tObject object);
   static int init_brow_cb(FlowCtx* fctx, void* client_data);
-  static int attr_string_to_value(int type_id, char* value_str,
+  static int attr_string_to_value(int type_id, const char* value_str,
       void* buffer_ptr, int buff_size, int attr_size);
   static void attrvalue_to_string(int type_id, void* value_ptr, char* str,
       int size, int* len, char* format);
@@ -239,7 +239,7 @@ public:
   virtual void update(GsdmlAttrNav* attrnav)
   {
   }
-  virtual void value_changed(GsdmlAttrNav* attrnav, char* value_str)
+  virtual void value_changed(GsdmlAttrNav* attrnav, const char* value_str)
   {
   }
 };
@@ -262,7 +262,7 @@ public:
   int subgraph;
 
   virtual int scan(GsdmlAttrNav* attrnav, void* p);
-  virtual void value_changed(GsdmlAttrNav* attrnav, char* value_str);
+  virtual void value_changed(GsdmlAttrNav* attrnav, const char* value_str);
 };
 
 //! Item for an enum attribute.
@@ -524,7 +524,7 @@ public:
   int noedit;
 
   int scan(GsdmlAttrNav* attrnav, void* p);
-  void value_changed(GsdmlAttrNav* attrnav, char* value_str);
+  void value_changed(GsdmlAttrNav* attrnav, const char* value_str);
 };
 
 class ParEnumValue {

@@ -190,7 +190,7 @@ public:
   void save_and_close();
 
   void clear_all();
-  void open_graph(char* name);
+  void open_graph(const char* name);
   int set_focus(void* component);
   void close();
   int select_object(char* name);

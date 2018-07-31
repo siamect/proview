@@ -83,7 +83,7 @@ public:
   void raise_window();
   void clock_cursor();
   void reset_cursor();
-  void configure_quals(char* label);
+  void configure_quals(const char* label);
   void enable_entries(int enable);
   void get_value(int idx, char* str, int len);
   void questionbox(char* question_title, char* question_text,

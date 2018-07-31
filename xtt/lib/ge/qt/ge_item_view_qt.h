@@ -58,7 +58,7 @@ public:
 
   QWidget* widget();
   void update();
-  void update(char*, int);
+  void update(const char*, int);
 
 protected:
   void focusOutEvent(QFocusEvent* event);

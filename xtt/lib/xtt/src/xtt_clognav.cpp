@@ -295,7 +295,7 @@ CLogNavBrow::~CLogNavBrow()
 }
 
 void CLogNav::set_filter(bool success, bool info, bool warning, bool error,
-    bool fatal, bool text, char* str)
+    bool fatal, bool text, const char* str)
 {
   filter.show_success = success;
   filter.show_info = info;

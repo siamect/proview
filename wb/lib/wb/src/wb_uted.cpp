@@ -437,7 +437,7 @@ int WUted::execute(int show)
   return FOE__SUCCESS;
 }
 
-pwr_tStatus WUted::get_command_index(char* label, int* index)
+pwr_tStatus WUted::get_command_index(const char* label, int* index)
 {
   uted_sCommand* command_ptr;
   int i;

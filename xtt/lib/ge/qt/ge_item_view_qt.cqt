@@ -115,9 +115,9 @@ void GeItemViewQt::update()
   }
 }
 
-void GeItemViewQt::update(char* full_name, int event)
+void GeItemViewQt::update(const char* full_name, int event)
 {
-  char* name_p = strrchr(full_name, '/');
+  char* name_p = (char *) strrchr(full_name, '/');
   full_name = strstr(name_p, ".pwg");
   if (!full_name) {
     return;
@@ -181,21 +181,20 @@ void GeItemViewQt::activate_menu_open()
 
 void GeItemViewQt::activate_menu_delete()
 {
-  QByteArray sel_text = selected_text().toLocal8Bit();
-  if (sel_text.data()) {
+  if (qPrintable(selected_text())) {
     int rv;
     char title[] = "Delete graph";
     char message[64];
     pwr_tCmd cmd;
 
-    sprintf(message, "Do you want to delete %s?", sel_text.data());
+    sprintf(message, "Do you want to delete %s?", qPrintable(selected_text()));
     rv = ge_ctx->create_modal_dialog(
         title, message, "Yes", "Cancel", NULL, NULL);
     if (rv != wow_eModalDialogReturn_Button1) {
       return;
     }
 
-    sprintf(cmd, "rm -f $pwrp_pop/%s.pwg", sel_text.data());
+    sprintf(cmd, "rm -f $pwrp_pop/%s.pwg", qPrintable(selected_text()));
     system(cmd);
   }
 }
@@ -268,8 +267,7 @@ void GeItemViewQt::directory_changed(const QString& path)
     if (!files2.contains(files[i])) {
       // File deleted
       if (!files[i].contains("__p")) {
-        QByteArray ba = files[i].toLocal8Bit();
-        update(ba.data(), 1);
+        update(qPrintable(files[i]), 1);
       }
     }
   }
@@ -278,8 +276,7 @@ void GeItemViewQt::directory_changed(const QString& path)
     if (!files.contains(files2[i])) {
       // File created
       if (!files2[i].contains("__p")) {
-        QByteArray ba = files2[i].toLocal8Bit();
-        update(ba.data(), 0);
+        update(qPrintable(files2[i]), 0);
       }
     }
   }
@@ -326,8 +323,7 @@ void GeItemViewQt::activate_tree_widget(QTreeWidgetItem* item, int idx)
 
   QString sel_text = selected_text(tree_widget);
   if (!sel_text.isNull()) {
-    QByteArray ba = sel_text.toLocal8Bit();
-    ge_ctx->open_graph(ba.data());
+    ge_ctx->open_graph(qPrintable(sel_text));
   }
 }
 

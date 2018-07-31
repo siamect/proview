@@ -269,11 +269,9 @@ void CLogQtWidget::filter_apply_cb()
   bool fatal = clog->show_fatal_w->isChecked();
   bool text = clog->show_text_w->isChecked();
 
-  QByteArray str = clog->filter_string_w->text().toLocal8Bit();
-
   clog->set_clock_cursor();
-  clog->clognav->set_filter(
-      success, info, warning, error, fatal, text, str.data());
+  clog->clognav->set_filter(success, info, warning, error, fatal, text,
+      qPrintable(clog->filter_string_w->text()));
   clog->reset_cursor();
 }
 

@@ -173,8 +173,7 @@ void XttQt::open_change_value()
   cmd_entry->setFocus();
 
   cmd_entry->setText("");
-  QByteArray ba = translate_utf8("value >").toLocal8Bit();
-  set_prompt(ba.data());
+  set_prompt(qPrintable(translate_utf8("value >")));
   input_open = 1;
 }
 

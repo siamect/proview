@@ -163,8 +163,8 @@ void XttStreamQtWidget::error_cb(Phonon::ErrorType error)
 {
   printf("Message %d\n", error);
   /* Print error details on the screen */
-  QByteArray err = stream->playbin2->mediaObject()->errorString().toLocal8Bit();
-  printf("Error received from element: %s\n", err.data());
+  printf("Error received from element: %s\n",
+      qPrintable(stream->playbin2->mediaObject()->errorString()));
 
   if (error == Phonon::FatalError) {
     stream->no_uri = 1;
@@ -505,19 +505,17 @@ XttStreamQt::XttStreamQt(QWidget* st_parent_wid, void* st_parent_ctx,
 
     for (int i = 0; i < 10; i++) {
       QString text1, text2, text3;
-      text1 += "PresetPosition[";
+      text1 = "PresetPosition[";
       text1 += QString::number(i);
       text1 += "].Description";
-      QByteArray ba1 = text1.toLocal8Bit();
-      text2 += "Preset position ";
+      text2 = "Preset position ";
       text2 += QString::number(i + 1);
-      QByteArray ba2 = text2.toLocal8Bit();
-      text3 += "$pwr_exe/xtt_pos";
+      text3 = "$pwr_exe/xtt_pos";
       text3 += QString::number(i + 1);
       text3 += ".png";
-      QByteArray ba3 = text3.toLocal8Bit();
-      QAction* a = addToolItemSpecial(tools, ba1.data(), ba2.data(),
-          SLOT(activate_preset_position()), ba3.data());
+      QAction* a
+          = addToolItemSpecial(tools, qPrintable(text1), qPrintable(text2),
+              SLOT(activate_preset_position()), qPrintable(text3));
       a->setData(i);
     }
 
@@ -654,8 +652,7 @@ void XttStreamQt::create_popup_menu(int x, int y)
     QString text;
     text += "Position ";
     text += QString::number(i + 1);
-    QByteArray ba = text.toLocal8Bit();
-    QAction* a = addMenuItem(toplevel, menu_preset_store, ba.data(),
+    QAction* a = addMenuItem(toplevel, menu_preset_store, qPrintable(text),
         SLOT(activate_preset_store_pos()));
     a->setData(i);
   }

@@ -523,8 +523,7 @@ int WFoeQt::modify_popup(unsigned long popupmenu_mask, int x, int y)
   QMenu* menu = new QMenu(toplevel);
   for (int i = 0; i < bsize; i++) {
     if (popupmenu_mask & (1 << i)) {
-      QByteArray ba = menu_callbacks[i].toLocal8Bit();
-      addMenuItem(toplevel, menu, buttontext[i], ba.data());
+      addMenuItem(toplevel, menu, buttontext[i], qPrintable(menu_callbacks[i]));
     }
   }
 
@@ -922,9 +921,8 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
   for (int i = 0; i < 5; i++) {
     double num = pow(2, i) / (16 * 5);
     QString txt = QString::number(i + 1).prepend('_');
-    QByteArray ba = txt.toLocal8Bit();
-    QAction* view_gs_t = addMenuRadioItem(
-        toplevel, view_gs, ba.data(), SLOT(activate_gridsize()), view_gs_group);
+    QAction* view_gs_t = addMenuRadioItem(toplevel, view_gs, qPrintable(txt),
+        SLOT(activate_gridsize()), view_gs_group);
     view_gs_t->setData(num);
   }
 

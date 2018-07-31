@@ -148,7 +148,7 @@ public:
   void reset_nodraw();
   void read(int* idx_list, int idx_cnt);
   void set_filter(bool success, bool info, bool warning, bool error, bool fatal,
-      bool text, char* str);
+      bool text, const char* str);
   void get_filter(bool* success, bool* info, bool* warning, bool* error,
       bool* fatal, bool* text);
   void draw();

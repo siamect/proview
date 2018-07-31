@@ -907,7 +907,7 @@ void WUtedMotif::set_command_window(char* cmd)
   XmStringFree(cstr);
 }
 
-void WUtedMotif::configure_quals(char* label)
+void WUtedMotif::configure_quals(const char* label)
 {
   Arg arg[1];
   Arg args[1];

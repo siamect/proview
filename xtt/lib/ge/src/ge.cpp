@@ -538,7 +538,7 @@ void Ge::export_gejava(Ge* gectx, char* name)
   }
 }
 
-void Ge::open_graph(char* name)
+void Ge::open_graph(const char* name)
 {
   pwr_tFileName filename;
   char graphname[80];

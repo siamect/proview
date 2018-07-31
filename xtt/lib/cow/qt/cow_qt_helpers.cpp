@@ -87,9 +87,7 @@ void dbg_print(const char* file, int line, QString str)
     file2 = file2 ? (file2 + 1) : file;
     fprintf(stderr, " %s:%d: ", file2, line);
     // 3. print the actual debug message
-    QByteArray ba = str.toLocal8Bit();
-    const char* c_str = ba.data();
-    fprintf(stderr, "%s\n", c_str);
+    fprintf(stderr, "%s\n", qPrintable(str));
   }
 }
 

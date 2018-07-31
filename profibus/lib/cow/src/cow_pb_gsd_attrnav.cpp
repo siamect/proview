@@ -113,7 +113,7 @@ static char null_str[] = "";
 //
 // Convert attribute string to value
 //
-int GsdAttrNav::attr_string_to_value(int type_id, char* value_str,
+int GsdAttrNav::attr_string_to_value(int type_id, const char* value_str,
     void* buffer_ptr, int buff_size, int attr_size)
 {
   switch (type_id) {
@@ -485,7 +485,7 @@ int GsdAttrNav::get_select(ItemPb** item)
 //
 // Set attribute value
 //
-int GsdAttrNav::set_attr_value(char* value_str)
+int GsdAttrNav::set_attr_value(const char* value_str)
 {
   brow_tNode* node_list;
   int node_count;

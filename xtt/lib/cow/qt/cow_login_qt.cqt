@@ -183,12 +183,10 @@ pwr_tStatus CoLoginQt::get_values()
   char user[40];
 
   /* Get UserName */
-  QByteArray ba = username->text().toLocal8Bit();
-  strcpy(user, ba.data());
+  strcpy(user, qPrintable(username->text()));
 
   /* Get Password */
-  ba = password->text().toLocal8Bit();
-  strcpy(passwd, ba.data());
+  strcpy(passwd, qPrintable(password->text()));
 
   pwr_tStatus sts = user_check(groupname, user, passwd);
   if (EVEN(sts)) {
