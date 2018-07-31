@@ -398,7 +398,8 @@ if [ $pwre_hw == "hw_arm" ] && [ $ebuild -eq 1 ]; then
     pwre_config_check_include qt    QT   1 "/usr/include/qt4/QtCore/QtCore"
     pwre_config_check_include qt    QT   1 "/usr/include/qt4/QtGui/QtGui"
     pwre_config_check_include qt    QT   1 "/usr/include/qt4/QtNetwork/QtNetwork"
-  else
+  fi
+  if [ $pwre_conf_gtk -eq 1 ]; then
     pwre_config_check_lib gtk       GTK      gtk gtk 0 "/usr/lib/libgtk-x11-2.0.so:/usr/lib/$hwpl-linux-$gnu/libgtk-x11-2.0.so"
     pwre_config_check_include gtk   GTK   1 "/usr/local/include/gtk-2.0/gtk.h:/usr/local/include/gtk-2.0/gtk/gtk.h:/usr/include/gtk-2.0/gtk/gtk.h"
   fi
@@ -467,7 +468,8 @@ else
   echo "Mandatory :"
   if [ $pwre_conf_qt -eq 1 ]; then
     pwre_config_check_lib qt        QT      qt qt 0 "/usr/lib/libQtGui.so:/usr/lib/$hwpl-linux-$gnu/libQtGui.so"
-  else
+  fi
+  if [ $pwre_conf_gtk -eq 1 ]; then
     pwre_config_check_lib gtk       GTK      gtk gtk 0 "/usr/lib/libgtk-x11-2.0.so:/usr/lib/$hwpl-linux-$gnu/libgtk-x11-2.0.so"
   fi
 
@@ -488,7 +490,8 @@ else
     pwre_config_check_include qt    QT   1 "/usr/include/qt4/QtCore/QtCore"
     pwre_config_check_include qt    QT   1 "/usr/include/qt4/QtGui/QtGui"
     pwre_config_check_include qt    QT   1 "/usr/include/qt4/QtNetwork/QtNetwork"
-  else
+  fi
+  if [ $pwre_conf_gtk -eq 1 ]; then
     pwre_config_check_include gtk   GTK   1 "/usr/local/include/gtk-2.0/gtk.h:/usr/local/include/gtk-2.0/gtk/gtk.h:/usr/include/gtk-2.0/gtk/gtk.h"
   fi
   pwre_config_check_include alsa  ALSA  1 "/usr/include/alsa/asoundlib.h"

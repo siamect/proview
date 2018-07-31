@@ -155,20 +155,6 @@ set_env()
 	else
 	  export pwre_conf_mysql=0
         fi
-# Gtk
-	if [ -e /usr/lib/libgtk-x11-2.0.so ]; then
-          export pwre_conf_gtk=1
-	else
-	  export pwre_conf_gtk=0
-        fi
-# Qt
-	if [ -e /usr/lib/x86_64-linux-gnu/libQtGui.so ]; then
-          export pwre_conf_qt=1
-	elif [ -e /usr/lib/i386-linux-gnu/libQtGui.so ]; then
-		  export pwre_conf_qt=1
-	else
-	  export pwre_conf_qt=0
-        fi
 	
 # libusb
 	if [ -e /usr/lib/libusb-1.0.so ]; then

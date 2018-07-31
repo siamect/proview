@@ -77,6 +77,12 @@ ename=$ver$hw
 desc=$verl
 gui="qt"
 
+if [ $gui == "qt" ]; then
+  export pwre_conf_qt=1
+elif [ $gui == "gtk" ]; then
+  export pwre_conf_gtk=1
+fi
+
 pwre add $ename $root/src \"\" $root/rls $btype $os $hw "$desc"
 pwre init $ename
 
@@ -84,8 +90,9 @@ pwre init $ename
 mkdir -p $pwre_broot
 pwre configure
 pwre create_all_modules
-pwre build_kernel $gui
-pwre method_build $gui
+pwre build_all_modules $gui
+#pwre build_kernel $gui
+#pwre method_build $gui
 
 
 # Create a package version html file
