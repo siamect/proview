@@ -1644,6 +1644,7 @@ static void daemonize()
 {
   pid_t pid = 0;
   struct sigaction act;
+  int fd;
 
   // First fork
   pid = fork();
@@ -1672,7 +1673,7 @@ static void daemonize()
   chdir("/");
 
   // Close all file descriptors
-  for (int fd = sysconf(_SC_OPEN_MAX); fd > 0; fd--)
+  for (fd = sysconf(_SC_OPEN_MAX); fd > 0; fd--)
     close(fd);
 
   // Reopen some fds
