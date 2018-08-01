@@ -575,7 +575,7 @@ void CompOnOffZoneFo_exec(plc_sThread* tp, pwr_sClass_CompOnOffZoneFo* o)
   x = ((x) < (min)) ? (min) : (((x) > (max)) ? (max) : (x))
 //#define Normalize(x, y, xmin, xmax, ymin, ymax) y =
 //(((((ymax)-(ymin))/((xmax)-(xmin)))*((x)-(xmin)))+(ymin)) // replaced by a
-//function in v0.3
+// function in v0.3
 
 void CompIMC_Fo_init(pwr_sClass_CompIMC_Fo* plc_obj)
 {
@@ -587,145 +587,143 @@ void CompIMC_Fo_init(pwr_sClass_CompIMC_Fo* plc_obj)
     plc_obj->PlcConnectP = 0;
 }
 
+void Normalize(pwr_tFloat32 x, pwr_tFloat32* y, pwr_tFloat32 xmin,
+    pwr_tFloat32 xmax, pwr_tFloat32 ymin, pwr_tFloat32 ymax) // v0.3
+{
+  if ((xmax - xmin) != 0.0)
+    *y = (ymax - ymin) / (xmax - xmin) * (x - xmin) + ymin;
+  else
+    return;
+}
+
+void LagFilter(plc_sThread* tp, pwr_sClass_CompIMC* plant_obj, pwr_tInt16 n,
+    pwr_tFloat32 Tlag)
+{
+  if (Tlag < Te) {
+    plant_obj->S[n + 1] = plant_obj->S[n];
+    return;
+  }
+  pwr_tFloat32 kf = 1.0 / (1.0 + Tlag / Te);
+  Clamp(plant_obj->S[n + 1], 0.0, 100.0);
+  plant_obj->S[n + 1] = (1.0 - kf) * plant_obj->S[n + 1] + kf * plant_obj->S[n];
+}
+
+void LeadLagFilter(plc_sThread* tp, pwr_sClass_CompIMC* plant_obj, pwr_tInt16 n,
+    pwr_tFloat32 T1, pwr_tFloat32 T2)
+{
+  if (T2 < Te) {
+    plant_obj->S[n + 1] = plant_obj->S[n];
+    plant_obj->M[n] = plant_obj->S[n];
+    return;
+  }
+  pwr_tFloat32 kc = -T1 / Te;
+  pwr_tFloat32 kd = T2 / Te;
+  pwr_tFloat32 ka = 1.0 + kd;
+  pwr_tFloat32 kb = 1.0 - kc;
+  if (ka <= 0)
+    return; // v0.3
+  Clamp(plant_obj->S[n + 1], 0.0, 100.0);
+  plant_obj->S[n + 1] = kd / ka * plant_obj->S[n + 1]
+      + kb / ka * plant_obj->S[n] + kc / ka * plant_obj->M[n];
+  plant_obj->M[n] = plant_obj->S[n];
+}
+
+void SouFilter(plc_sThread* tp, pwr_sClass_CompIMC* plant_obj, pwr_tInt16 n,
+    pwr_tFloat32 w0P, pwr_tFloat32 ksi)
+{
+  if (w0P <= 0.0) {
+    plant_obj->S[n + 1] = plant_obj->S[n];
+    return;
+  }
+  pwr_tFloat32 a0 = Te * Te * w0P * w0P + 2.0 * ksi * Te * w0P + 1.0;
+  pwr_tFloat32 a1 = 2.0 * (ksi * Te * w0P + 1.0);
+  pwr_tFloat32 a2 = -1.0;
+  pwr_tFloat32 b0 = Te * Te * w0P * w0P;
+  if (a0 <= 0)
+    return; // v0.3
+  Clamp(plant_obj->S[n + 1], 0.0, 100.0);
+  plant_obj->uOutm2 = plant_obj->uOutm1;
+  plant_obj->uOutm1 = plant_obj->S[n + 1];
+  plant_obj->S[n + 1] = a1 / a0 * plant_obj->uOutm1
+      + a2 / a0 * plant_obj->uOutm2 + b0 / a0 * plant_obj->S[n];
+}
+
+void SouTOoFilter(plc_sThread* tp, pwr_sClass_CompIMC* plant_obj, pwr_tInt16 n,
+    pwr_tFloat32 w0, pwr_tFloat32 ksi, pwr_tFloat32 Tl1, pwr_tFloat32 Tl2)
+{
+  if (w0 <= 0.0) {
+    plant_obj->S[n + 1] = plant_obj->S[n];
+    return;
+  }
+  pwr_tFloat32 b0 = Te * Te * w0 * w0 + 2.0 * ksi * Te * w0 + 1.0;
+  pwr_tFloat32 b1 = -2.0 * (ksi * Te * w0 + 1.0);
+  pwr_tFloat32 b2 = 1.0;
+  pwr_tFloat32 a0 = w0 * w0 * (Tl1 + Te) * (Tl2 + Te);
+  pwr_tFloat32 a1 = w0 * w0 * (2.0 * Tl1 * Tl2 + Te * (Tl1 + Tl2));
+  pwr_tFloat32 a2 = -w0 * w0 * Tl1 * Tl2;
+  if (a0 <= 0)
+    return; // v0.3
+  Clamp(plant_obj->S[n + 1], 0.0, 100.0);
+  plant_obj->Outm2 = plant_obj->Outm1;
+  plant_obj->Outm1 = plant_obj->S[n + 1];
+  plant_obj->S[n + 1] = a1 / a0 * plant_obj->Outm1 + a2 / a0 * plant_obj->Outm2
+      + b0 / a0 * plant_obj->S[n] + b1 / a0 * plant_obj->Inm1
+      + b2 / a0 * plant_obj->Inm2;
+  plant_obj->Inm2 = plant_obj->Inm1;
+  plant_obj->Inm1 = plant_obj->S[n];
+}
+
+void Delay(plc_sThread* tp, pwr_sClass_CompIMC* plant_obj, pwr_tInt16 n,
+    pwr_tFloat32 Delay) // Only one delay per IMC objectavailable
+{
+  pwr_tFloat32 OP = 0.0;
+  int i, Ntime, Nscan;
+  if ((int)Delay < Te) {
+    plant_obj->S[n + 1] = plant_obj->S[n];
+    return;
+  } // return if nothing can be done
+  if (plant_obj->PrevDelay != Delay)
+    for (i = MAXCELLS - 1; i >= 0; i--)
+      plant_obj->D[i] = plant_obj->S[n]; // reset if delay param as changed
+  plant_obj->PrevDelay = Delay; // Apply new delay
+  Nscan = (int)(0.5 + Delay / Te); // Calculate number of cells needed
+  if (Nscan > MAXCELLS) // Things to do if delay time is more than 100 times
+  // scan time
+  {
+    Ntime = (int)(0.5
+        + Delay
+            / (Te * (pwr_tFloat32)
+                        MAXCELLS)); // calculate number of time lags to count
+    if (plant_obj->DtCtr == 0)
+      for (i = 0; i <= MAXCELLS; i++)
+        plant_obj->D[i] = plant_obj->S[n]; // reset all the array
+    OP = plant_obj->D[MAXCELLS - 1]; // copy last array item to output
+    if (plant_obj->DtCtr >= Ntime) // if time elapsed -> shift array
+    {
+      plant_obj->DtCtr = 0; // Reset time lag counter
+      for (i = MAXCELLS - 1; i > 0; i--)
+        plant_obj->D[i] = plant_obj->D[i - 1]; // shift all the array
+      plant_obj->D[0] = plant_obj->S[n]; // copy input to first array item
+    }
+    plant_obj->DtCtr++; // decrement time lag counter
+  } else // things to do if delay time is less than (or equal to) 100 times
+  // scan time
+  {
+    OP = plant_obj->D[Nscan - 1]; // copy last active array item to output
+    for (i = Nscan; i > 0; i--)
+      plant_obj->D[i]
+          = plant_obj->D[i - 1]; // shift a sufficient part of the array
+    plant_obj->D[0] = plant_obj->S[n]; // copy input to first array item
+  }
+  plant_obj->S[n + 1] = OP; // copy to function output
+}
+
 void CompIMC_Fo_exec(plc_sThread* tp, pwr_sClass_CompIMC_Fo* plc_obj)
 {
   pwr_sClass_CompIMC* plant_obj = (pwr_sClass_CompIMC*)plc_obj->PlcConnectP;
   if (!plant_obj)
     return;
   pwr_tFloat32 man_OP, sig, yr, LSP, PV, nLSP, nPV, Tl1, Tl2;
-
-  void Normalize(pwr_tFloat32 x, pwr_tFloat32 * y, pwr_tFloat32 xmin,
-      pwr_tFloat32 xmax, pwr_tFloat32 ymin, pwr_tFloat32 ymax) // v0.3
-  {
-    if ((xmax - xmin) != 0.0)
-      *y = (ymax - ymin) / (xmax - xmin) * (x - xmin) + ymin;
-    else
-      return;
-  }
-
-  void LagFilter(pwr_tInt16 n, pwr_tFloat32 Tlag)
-  {
-    if (Tlag < Te) {
-      plant_obj->S[n + 1] = plant_obj->S[n];
-      return;
-    }
-    pwr_tFloat32 kf = 1.0 / (1.0 + Tlag / Te);
-    Clamp(plant_obj->S[n + 1], 0.0, 100.0);
-    plant_obj->S[n + 1]
-        = (1.0 - kf) * plant_obj->S[n + 1] + kf * plant_obj->S[n];
-  }
-
-  void LeadLagFilter(pwr_tInt16 n, pwr_tFloat32 T1, pwr_tFloat32 T2)
-  {
-    if (T2 < Te) {
-      plant_obj->S[n + 1] = plant_obj->S[n];
-      plant_obj->M[n] = plant_obj->S[n];
-      return;
-    }
-    pwr_tFloat32 kc = -T1 / Te;
-    pwr_tFloat32 kd = T2 / Te;
-    pwr_tFloat32 ka = 1.0 + kd;
-    pwr_tFloat32 kb = 1.0 - kc;
-
-    if (ka <= 0)
-      return; // v0.3
-    Clamp(plant_obj->S[n + 1], 0.0, 100.0);
-    plant_obj->S[n + 1] = kd / ka * plant_obj->S[n + 1]
-        + kb / ka * plant_obj->S[n] + kc / ka * plant_obj->M[n];
-    plant_obj->M[n] = plant_obj->S[n];
-  }
-
-  void SouFilter(pwr_tInt16 n, pwr_tFloat32 w0P, pwr_tFloat32 ksi)
-  {
-    if (w0P <= 0.0) {
-      plant_obj->S[n + 1] = plant_obj->S[n];
-      return;
-    }
-    pwr_tFloat32 a0 = Te * Te * w0P * w0P + 2.0 * ksi * Te * w0P + 1.0;
-    pwr_tFloat32 a1 = 2.0 * (ksi * Te * w0P + 1.0);
-    pwr_tFloat32 a2 = -1.0;
-    pwr_tFloat32 b0 = Te * Te * w0P * w0P;
-
-    if (a0 <= 0)
-      return; // v0.3
-    Clamp(plant_obj->S[n + 1], 0.0, 100.0);
-    plant_obj->uOutm2 = plant_obj->uOutm1;
-    plant_obj->uOutm1 = plant_obj->S[n + 1];
-    plant_obj->S[n + 1] = a1 / a0 * plant_obj->uOutm1
-        + a2 / a0 * plant_obj->uOutm2 + b0 / a0 * plant_obj->S[n];
-  }
-
-  void SouTOoFilter(pwr_tInt16 n, pwr_tFloat32 w0, pwr_tFloat32 ksi,
-      pwr_tFloat32 Tl1, pwr_tFloat32 Tl2)
-  {
-    if (w0 <= 0.0) {
-      plant_obj->S[n + 1] = plant_obj->S[n];
-      return;
-    }
-    pwr_tFloat32 b0 = Te * Te * w0 * w0 + 2.0 * ksi * Te * w0 + 1.0;
-    pwr_tFloat32 b1 = -2.0 * (ksi * Te * w0 + 1.0);
-    pwr_tFloat32 b2 = 1.0;
-    pwr_tFloat32 a0 = w0 * w0 * (Tl1 + Te) * (Tl2 + Te);
-    pwr_tFloat32 a1 = w0 * w0 * (2.0 * Tl1 * Tl2 + Te * (Tl1 + Tl2));
-    pwr_tFloat32 a2 = -w0 * w0 * Tl1 * Tl2;
-
-    if (a0 <= 0)
-      return; // v0.3
-    Clamp(plant_obj->S[n + 1], 0.0, 100.0);
-    plant_obj->Outm2 = plant_obj->Outm1;
-    plant_obj->Outm1 = plant_obj->S[n + 1];
-    plant_obj->S[n + 1] = a1 / a0 * plant_obj->Outm1
-        + a2 / a0 * plant_obj->Outm2 + b0 / a0 * plant_obj->S[n]
-        + b1 / a0 * plant_obj->Inm1 + b2 / a0 * plant_obj->Inm2;
-    plant_obj->Inm2 = plant_obj->Inm1;
-    plant_obj->Inm1 = plant_obj->S[n];
-  }
-
-  void Delay(pwr_tInt16 n,
-      pwr_tFloat32 Delay) // Only one delay per IMC object available
-  {
-    pwr_tFloat32 OP = 0.0;
-    int i, Ntime, Nscan;
-
-    if ((int)Delay < Te) {
-      plant_obj->S[n + 1] = plant_obj->S[n];
-      return;
-    } // return if nothing can be done
-    if (plant_obj->PrevDelay != Delay)
-      for (i = MAXCELLS - 1; i >= 0; i--)
-        plant_obj->D[i] = plant_obj->S[n]; // reset if delay param as changed
-    plant_obj->PrevDelay = Delay; // Apply new delay
-    Nscan = (int)(0.5 + Delay / Te); // Calculate number of cells needed
-    if (Nscan > MAXCELLS) // Things to do if delay time is more than 100 times
-                          // scan time
-    {
-      Ntime = (int)(0.5
-          + Delay
-              / (Te * (pwr_tFloat32)
-                          MAXCELLS)); // calculate number of time lags to count
-      if (plant_obj->DtCtr == 0)
-        for (i = 0; i <= MAXCELLS; i++)
-          plant_obj->D[i] = plant_obj->S[n]; // reset all the array
-      OP = plant_obj->D[MAXCELLS - 1]; // copy last array item to output
-      if (plant_obj->DtCtr >= Ntime) // if time elapsed -> shift array
-      {
-        plant_obj->DtCtr = 0; // Reset time lag counter
-        for (i = MAXCELLS - 1; i > 0; i--)
-          plant_obj->D[i] = plant_obj->D[i - 1]; // shift all the array
-        plant_obj->D[0] = plant_obj->S[n]; // copy input to first array item
-      }
-      plant_obj->DtCtr++; // decrement time lag counter
-    } else // things to do if delay time is less than (or equal to) 100 times
-           // scan time
-    {
-      OP = plant_obj->D[Nscan - 1]; // copy last active array item to output
-      for (i = Nscan; i > 0; i--)
-        plant_obj->D[i]
-            = plant_obj->D[i - 1]; // shift a sufficient part of the array
-      plant_obj->D[0] = plant_obj->S[n]; // copy input to first array item
-    }
-    plant_obj->S[n + 1] = OP; // copy to function output
-  }
 
   pwr_tInt16 i;
   pwr_tFloat32 OP;
@@ -779,29 +777,32 @@ void CompIMC_Fo_exec(plc_sThread* tp, pwr_sClass_CompIMC_Fo* plc_obj)
 
     plant_obj->S[0] = sig + plant_obj->S[11]; // Add previous model's feedback
 
-    LagFilter(
-        0, plant_obj->RobTau); // Increasing robustness by low pass filtering
+    LagFilter(tp, plant_obj, 0,
+        plant_obj->RobTau); // Increasing robustness by low pass filtering
 
     if (plant_obj->ProcModel & 8) {
-      LagFilter(1, plant_obj->LeadT);
-      LeadLagFilter(2, plant_obj->LagT3, plant_obj->LagT3 / plant_obj->Accel);
+      LagFilter(tp, plant_obj, 1, plant_obj->LeadT);
+      LeadLagFilter(tp, plant_obj, 2, plant_obj->LagT3,
+          plant_obj->LagT3 / plant_obj->Accel);
     } else
       plant_obj->S[3] = plant_obj->S[2] = plant_obj->S[1];
 
     if (plant_obj->ProcModel & 1)
-      LeadLagFilter(3, plant_obj->LagT1, plant_obj->LagT1 / plant_obj->Accel);
+      LeadLagFilter(tp, plant_obj, 3, plant_obj->LagT1,
+          plant_obj->LagT1 / plant_obj->Accel);
     else
       plant_obj->S[4] = plant_obj->S[3];
 
     if (plant_obj->ProcModel & 2)
-      LeadLagFilter(4, plant_obj->LagT2, plant_obj->LagT2 / plant_obj->Accel);
+      LeadLagFilter(tp, plant_obj, 4, plant_obj->LagT2,
+          plant_obj->LagT2 / plant_obj->Accel);
     else
       plant_obj->S[5] = plant_obj->S[4];
 
     if (plant_obj->ProcModel & 4) {
       Tl1 = Tl2
           = plant_obj->ksi * M_PI / (2.0 * plant_obj->Accel * plant_obj->w0);
-      SouTOoFilter(5, plant_obj->w0, plant_obj->ksi, Tl1, Tl2);
+      SouTOoFilter(tp, plant_obj, 5, plant_obj->w0, plant_obj->ksi, Tl1, Tl2);
     } else
       plant_obj->S[6] = plant_obj->S[5];
 
@@ -817,26 +818,26 @@ void CompIMC_Fo_exec(plc_sThread* tp, pwr_sClass_CompIMC_Fo* plc_obj)
     // Model's feedback
 
     if (plant_obj->ProcModel & 1)
-      LagFilter(6, plant_obj->LagT1);
+      LagFilter(tp, plant_obj, 6, plant_obj->LagT1);
     else
       plant_obj->S[7] = plant_obj->S[6];
 
     if (plant_obj->ProcModel & 2)
-      LagFilter(7, plant_obj->LagT2);
+      LagFilter(tp, plant_obj, 7, plant_obj->LagT2);
     else
       plant_obj->S[8] = plant_obj->S[7];
 
     if (plant_obj->ProcModel & 8)
-      LeadLagFilter(8, plant_obj->LeadT, plant_obj->LagT3);
+      LeadLagFilter(tp, plant_obj, 8, plant_obj->LeadT, plant_obj->LagT3);
     else
       plant_obj->S[9] = plant_obj->S[8];
 
     if (plant_obj->ProcModel & 4)
-      SouFilter(9, plant_obj->w0, plant_obj->ksi);
+      SouFilter(tp, plant_obj, 9, plant_obj->w0, plant_obj->ksi);
     else
       plant_obj->S[10] = plant_obj->S[9];
 
-    Delay(10, plant_obj->DelayT);
+    Delay(tp, plant_obj, 10, plant_obj->DelayT);
   }
 }
 
@@ -884,13 +885,13 @@ void CompModeIMC_Fo_exec(plc_sThread* tp, pwr_sClass_CompModeIMC_Fo* plc_obj)
   if ((plant_obj->Mode != pwr_eImcModeEnum_Manual)
       && (plant_obj->PrevMode == pwr_eImcModeEnum_Manual)
       && (plant_obj->BumpLess)) // copy PV to SP when bumpless is set & aut to
-                                // man transition
+    // man transition
     plant_obj->Loc_SP = plant_obj->PV;
 
   if ((plant_obj->Mode == pwr_eImcModeEnum_Auto)
       && (plant_obj->PrevMode == pwr_eImcModeEnum_Remote)
       && (plant_obj->BumpLess)) // copy PV to SP when bumpless is set & rem to
-                                // man transition
+    // man transition
     plant_obj->Loc_SP = plant_obj->PV;
 
   if (plant_obj->Loc_SP != plant_obj->SP)
