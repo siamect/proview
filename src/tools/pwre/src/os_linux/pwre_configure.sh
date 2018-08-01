@@ -466,10 +466,9 @@ else
 
   #Gtk
   echo "Mandatory :"
-  if [ $pwre_conf_qt -eq 1 ]; then
+  if [ ! -z $pwre_conf_qt ]; then
     pwre_config_check_lib qt        QT      qt qt 0 "/usr/lib/libQtGui.so:/usr/lib/$hwpl-linux-$gnu/libQtGui.so"
-  fi
-  if [ $pwre_conf_gtk -eq 1 ]; then
+  elif [ ! -z $pwre_conf_gtk ]; then
     pwre_config_check_lib gtk       GTK      gtk gtk 0 "/usr/lib/libgtk-x11-2.0.so:/usr/lib/$hwpl-linux-$gnu/libgtk-x11-2.0.so"
   fi
 
@@ -485,13 +484,12 @@ else
   pwre_config_check_lib libfl     LIBFL    lib lib 0 "/usr/lib/libfl.so:/usr/lib/libfl.a:/usr/lib/$hwpl-linux-$gnu/libfl.so"
   pwre_config_check_lib libX11    LIBX11   lib lib 0 "/usr/lib/libX11.so:/usr/lib/$hwpl-linux-$gnu/libX11.so"
 
-  if [ $pwre_conf_qt -eq 1 ]; then
+  if [ ! -z $pwre_conf_qt ]; then
     pwre_config_check_include qt    QT   1 "/usr/include/qt4/QtGui"
     pwre_config_check_include qt    QT   1 "/usr/include/qt4/QtCore/QtCore"
     pwre_config_check_include qt    QT   1 "/usr/include/qt4/QtGui/QtGui"
     pwre_config_check_include qt    QT   1 "/usr/include/qt4/QtNetwork/QtNetwork"
-  fi
-  if [ $pwre_conf_gtk -eq 1 ]; then
+  elif [ ! -z $pwre_conf_gtk ]; then
     pwre_config_check_include gtk   GTK   1 "/usr/local/include/gtk-2.0/gtk.h:/usr/local/include/gtk-2.0/gtk/gtk.h:/usr/include/gtk-2.0/gtk/gtk.h"
   fi
   pwre_config_check_include alsa  ALSA  1 "/usr/include/alsa/asoundlib.h"
