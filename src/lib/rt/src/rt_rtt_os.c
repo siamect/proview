@@ -214,7 +214,7 @@ int rtt_replace_env(char* str, char* newstr)
 {
   char* s;
   char* t;
-  char* u;
+  char* u = NULL;
   int symbolmode;
   long int size;
   char* value;

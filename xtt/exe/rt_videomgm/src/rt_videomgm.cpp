@@ -978,6 +978,14 @@ int Json::get_attribute_value(
   return 0;
 }
 
+XttVideoMgm::XttVideoMgm() : m_camera_cnt(0), m_scantime(0.5), m_op(0)
+{
+}
+
+XttVideoMgm::~XttVideoMgm()
+{
+}
+
 int XttVideoMgm::cinit()
 {
   unsigned int i;
@@ -1197,6 +1205,56 @@ void XttVideoMgm::configure_layout()
   }
 }
 
+int XttVideoMgm::init()
+{
+  return 0;
+}
+
+int XttVideoMgm::authorize(char* user, char* password)
+{
+  return 0;
+}
+
+int XttVideoMgm::get_panels()
+{
+  return 0;
+}
+
+int XttVideoMgm::get_cameras()
+{
+  return 0;
+}
+
+int XttVideoMgm::get_camera_image(int idx, const char* jpgfile)
+{
+  return 0;
+}
+
+int XttVideoMgm::assign_camera(int panel_idx, int cell_idx, int camera_idx)
+{
+  return 0;
+}
+
+int XttVideoMgm::set_camera_fullscreen(int camera_idx)
+{
+  return 0;
+}
+
+int XttVideoMgm::display_panel(int panel_idx)
+{
+  return 0;
+}
+
+int XttVideoMgm::create_panel(char* name)
+{
+  return 0;
+}
+
+int XttVideoMgm::delete_panel(char* name)
+{
+  return 0;
+}
+
 void init(qcom_sQid* qid)
 {
   qcom_sQid qini;
@@ -1238,7 +1296,7 @@ int main(int argc, char* argv[])
 {
   VideoMgmServer srv;
   pwr_tStatus sts;
-  int tmo;
+  int tmo = 0;
   char mp[2000];
   qcom_sQid qid = qcom_cNQid;
   qcom_sGet get;

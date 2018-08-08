@@ -79,10 +79,10 @@ public:
   {
     ctx_type = glow_eCtxType_Keyboard;
     grid_on = 0;
-  };
+  }
 
   //! Destructor
-  ~KeyboardCtx(){};
+  ~KeyboardCtx(){}
 
   //! Set keymap
   void set_keymap(keyboard_eKeymap keymap);
@@ -105,7 +105,7 @@ public:
   void unzoom()
   {
     zoom(mw.base_zoom_factor / mw.zoom_factor_y);
-  };
+  }
 
   //! Event handler
   /*!

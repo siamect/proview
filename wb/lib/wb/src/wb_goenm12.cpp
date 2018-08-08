@@ -74,7 +74,7 @@ int goen_create_nodetype_m12(pwr_sGraphPlcNode* graphbody, pwr_tClassId cid,
   int annot_nr[3];
   char name[80];
   int size;
-  flow_tNodeClass nc;
+  flow_tNodeClass nc = NULL;
   pwr_tFileName fname;
 
   sts = ldh_ClassIdToName(ldhses, cid, name, sizeof(name), &size);

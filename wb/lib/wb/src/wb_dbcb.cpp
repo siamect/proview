@@ -44,7 +44,7 @@
 
 pwr_tStatus dbcb_InsertPlcThreadObject(ldh_tSesContext ldhses, pwr_tOid object)
 {
-  pwr_tMask process;
+  pwr_tMask process = 0;
   int process_found = 0;
   pwr_tOid thread_oid;
   int thread_found = 0;

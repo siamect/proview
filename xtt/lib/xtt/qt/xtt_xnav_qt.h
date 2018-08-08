@@ -136,7 +136,6 @@ public:
 
 private:
   QWidget* parent_wid;
-  QWidget* W;
   XNavQtPopupObject* popup_obj;
 };
 

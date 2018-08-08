@@ -133,6 +133,8 @@ INCLUDES
 #include <windows.h>
 #endif
 
+#include "co_math.h"
+
 #include <pb_type.h>
 #include <pb_if.h>
 #include <pb_fmb.h>
@@ -154,16 +156,6 @@ LOCAL_DEFINES
 #define _IS_I_CONN(x) ((x & 0x03) == I_CONN)
 #define _IS_CYCLIC(type) (type & 0x02)
 #define _WITHOUT_SLAVE_INITIATIVE(type) (!(type & 0x04))
-#define _IS_CONN_LESS(x) ((x & 0x09) == BRCT)
-#define _IS_CONN_ORIENTED(x) (!_IS_CONN_LESS(x))
-
-#ifndef min
-#define min(a, b) (((a) < (b)) ? (a) : (b))
-#endif
-
-#ifndef max
-#define max(a, b) (((a) > (b)) ? (a) : (b))
-#endif
 
 LOCAL_TYPEDEFS
 
@@ -495,28 +487,28 @@ possible return values:
   case M_MM:
     /* Master in Master/Master Connection ----------------------------- */
 
-    snd_req = (USIGN8)(max(1, /* snd ASS.req */
+    snd_req = (USIGN8)(MAX(1, /* snd ASS.req */
                            (max_scc /* snd DTC.req */
                                + max_sac)) /* snd DTA.req */
         + 1 /* snd ABT.req */
         );
 
-    lli_api_snd_resrc = (USIGN8)(min(ci, 1) /* snd IDLE.req */
+    lli_api_snd_resrc = (USIGN8)(MIN(ci, 1) /* snd IDLE.req */
         + 1 /* LLI abort resrc */
         );
 
-    rcv_res = (USIGN8)(max(1, /* rcv ASS_RES_PDU */
+    rcv_res = (USIGN8)(MAX(1, /* rcv ASS_RES_PDU */
         (max_scc /* rcv DTC_RES_PDU */
             + max_sac)) /* rcv DTA_ACK_PDU */
         );
 
-    rcv_ind = (USIGN8)(max(1, /* rcv ASS_REQ_PDU */
+    rcv_ind = (USIGN8)(MAX(1, /* rcv ASS_REQ_PDU */
                            (max_rcc /* rcv DTC_REQ_PDU */
                                + max_rac)) /* rcv DTA_REQ_PDU */
         + 1 /* rcv ABT_REQ_PDU */
         );
 
-    lli_rcv_ind = (USIGN8)min(ci, 1); /* rcv IDLE_REQ_PDU */
+    lli_rcv_ind = (USIGN8)MIN(ci, 1); /* rcv IDLE_REQ_PDU */
     fdl_sap = 1; /* act/deact LSAP */
     break;
 
@@ -535,13 +527,13 @@ possible return values:
       multiplier = 1;
     }
 
-    lli_poll_elem = (USIGN8)(max(multiplier, 1)); /* poll_list_element */
+    lli_poll_elem = (USIGN8)(MAX(multiplier, 1)); /* poll_list_element */
 
-    lli_api_resrc = (USIGN8)(min(ci, 1) /* snd IDLE_REQ_PDU */
+    lli_api_resrc = (USIGN8)(MIN(ci, 1) /* snd IDLE_REQ_PDU */
         + 1 /* LLI abort resrc */
         );
 
-    snd_req_csrd = (USIGN8)(max(1, /* snd ASS.req */
+    snd_req_csrd = (USIGN8)(MAX(1, /* snd ASS.req */
                                 (max_scc /* snd DTC.req */
                                     + max_sac)) /* snd DTA.req */
         + 1 /* snd ABT.req */
@@ -578,17 +570,17 @@ possible return values:
 
     rcv_res = max_sac; /* rcv DTA_ACK_PDU */
 
-    lli_sr_snd_resrc = (USIGN8)(min(ci, 1) /* snd IDLE.req */
+    lli_sr_snd_resrc = (USIGN8)(MIN(ci, 1) /* snd IDLE.req */
         + 1 /* LLI abort resrc */
         );
 
-    rcv_ind = (USIGN8)(max(1, /* rcv ASS_REQ_PDU */
+    rcv_ind = (USIGN8)(MAX(1, /* rcv ASS_REQ_PDU */
                            (max_rcc /* rcv DTC_REQ_PDU */
                                + max_rac)) /* rcv DTA_REQ_PDU */
         + 1 /* rcv ABT_REQ_PDU */
         );
 
-    lli_rcv_ind = (USIGN8)(min(ci, 1) /* rcv IDLE_REQ_PDU */
+    lli_rcv_ind = (USIGN8)(MIN(ci, 1) /* rcv IDLE_REQ_PDU */
         + 2 /* rcv poll telegrams */
         );
     fdl_sap = 1; /* act/deact LSAP */
@@ -597,13 +589,13 @@ possible return values:
 
   case S_CL:
     /* Broadcast/Multicast Sender ------------------------------------- */
-    snd_req = (USIGN8)max(1, max_sac); /* snd DTU.req */
+    snd_req = (USIGN8)MAX(1, max_sac); /* snd DTU.req */
     fdl_sap = 1; /* act/deact LSAP */
     break;
 
   case R_CL:
     /* Broadcast/Multicast Receiver ----------------------------------- */
-    rcv_ind = (USIGN8)max(1, max_rac); /* rcv DTU_REQ_PDU */
+    rcv_ind = (USIGN8)MAX(1, max_rac); /* rcv DTU_REQ_PDU */
     fdl_sap = 1; /* act/deact LSAP */
     break;
 

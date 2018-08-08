@@ -34,25 +34,25 @@ class Service : public soap {
     soap_init(this);
     if (!this->namespaces)
       this->namespaces = namespaces;
-  };
+  }
   virtual ~Service()
   {
     soap_destroy(this);
     soap_end(this);
     soap_done(this);
-  };
+  }
   virtual int bind(const char* host, int port, int backlog)
   {
     return soap_bind(this, host, port, backlog);
-  };
+  }
   virtual int accept()
   {
     return soap_accept(this);
-  };
+  }
   virtual int serve()
   {
     return soap_serve(this);
-  };
+  }
 };
 
 /******************************************************************************\

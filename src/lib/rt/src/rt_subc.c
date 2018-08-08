@@ -169,14 +169,14 @@ static gdb_sNode* testClient(pwr_tStatus* sts, sub_sClient* cp)
   gdb_sVolume* vp;
   gdb_sNode* np = NULL;
   mvol_sAttribute attribute;
-  mvol_sAttribute* ap;
-  pwr_sAttrRef* arp;
+  mvol_sAttribute* ap = NULL;
+  pwr_sAttrRef* arp = NULL;
   pwr_sAttrRef* rarp;
-  gdb_sCclass* ccp;
+  gdb_sCclass* ccp = NULL;
   gdb_sCclass* ccpLocked;
   pool_tRef ccr;
   pwr_tUInt32 ridx;
-  pwr_tBoolean equal;
+  pwr_tBoolean equal = 0;
   pwr_tBoolean fetched;
 
   gdb_AssumeLocked;

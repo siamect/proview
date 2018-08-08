@@ -1034,9 +1034,9 @@ void Wtt::activate_findnext()
 
 void Wtt::activate_copy()
 {
-  pwr_sAttrRef* sel_list;
-  int* is_attr;
-  int sel_cnt;
+  pwr_sAttrRef* sel_list = NULL;
+  int* is_attr = NULL;
+  int sel_cnt = 0;
   int sts = 0;
 
   message(' ', "");
@@ -1070,9 +1070,9 @@ void Wtt::activate_copy()
 
 void Wtt::activate_cut()
 {
-  pwr_sAttrRef* sel_list;
-  int* is_attr;
-  int sel_cnt;
+  pwr_sAttrRef* sel_list = NULL;
+  int* is_attr = NULL;
+  int sel_cnt = 0;
   int sts = 0;
 
   message(' ', "");
@@ -1260,9 +1260,9 @@ void Wtt::activate_pasteinto()
 
 void Wtt::activate_copykeep()
 {
-  pwr_sAttrRef* sel_list;
-  int* is_attr;
-  int sel_cnt;
+  pwr_sAttrRef* sel_list = NULL;
+  int* is_attr = NULL;
+  int sel_cnt = 0;
   int sts = 0;
 
   message(' ', "");
@@ -1990,7 +1990,7 @@ void Wtt::activate_buildvolume()
 void Wtt::activate_buildnode()
 {
   pwr_tStatus sts;
-  lfu_t_volumelist *vp, *volp;
+  lfu_t_volumelist *vp, *volp = NULL;
   int node_type;
 
   message(' ', "");
@@ -2372,11 +2372,11 @@ int Wtt::find_plc(pwr_tOid oid)
 int Wtt::get_popup_menu_items(pwr_sAttrRef aref, pwr_tCid cid)
 {
   pwr_tStatus sts;
-  pwr_sAttrRef* sel1_list;
-  int* sel1_is_attr;
+  pwr_sAttrRef* sel1_list = NULL;
+  int* sel1_is_attr = NULL;
   int sel1_cnt;
-  pwr_sAttrRef* sel2_list;
-  int* sel2_is_attr;
+  pwr_sAttrRef* sel2_list = NULL;
+  int* sel2_is_attr = NULL;
   int sel2_cnt;
 
   if (mcp == NULL)
@@ -2546,7 +2546,7 @@ void WttApplList::insert(
 void WttApplList::remove(void* ctx)
 {
   WttApplListElem* elem;
-  WttApplListElem* prev;
+  WttApplListElem* prev = NULL;
 
   for (elem = root; elem; elem = elem->next) {
     if (elem->ctx == ctx) {

@@ -119,55 +119,21 @@ public:
   std::vector<VideoMgmPanel> m_panel;
   std::vector<VideoMgmCamera> m_camera;
 
-  XttVideoMgm() : m_camera_cnt(0), m_scantime(0.5), m_op(0)
-  {
-  }
-  virtual ~XttVideoMgm()
-  {
-  }
+  XttVideoMgm();
+  virtual ~XttVideoMgm();
   int cinit();
   void cscan();
   void configure_layout();
-  virtual int init()
-  {
-    return 0;
-  }
-  virtual int authorize(char* user, char* password)
-  {
-    return 0;
-  }
-  virtual int get_panels()
-  {
-    return 0;
-  }
-  virtual int get_cameras()
-  {
-    return 0;
-  }
-  virtual int get_camera_image(int idx, const char* jpgfile)
-  {
-    return 0;
-  }
-  virtual int assign_camera(int panel_idx, int cell_idx, int camera_idx)
-  {
-    return 0;
-  }
-  virtual int set_camera_fullscreen(int camera_idx)
-  {
-    return 0;
-  }
-  virtual int display_panel(int panel_idx)
-  {
-    return 0;
-  }
-  virtual int create_panel(char* name)
-  {
-    return 0;
-  }
-  virtual int delete_panel(char* name)
-  {
-    return 0;
-  }
+  virtual int init();
+  virtual int authorize(char* user, char* password);
+  virtual int get_panels();
+  virtual int get_cameras();
+  virtual int get_camera_image(int idx, const char* jpgfile);
+  virtual int assign_camera(int panel_idx, int cell_idx, int camera_idx);
+  virtual int set_camera_fullscreen(int camera_idx);
+  virtual int display_panel(int panel_idx);
+  virtual int create_panel(char* name);
+  virtual int delete_panel(char* name);
 };
 
 class XttVideoMgmAimetis : public XttVideoMgm {

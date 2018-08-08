@@ -1078,12 +1078,6 @@ void wb_erep::bindMethods()
     }
     delete cdrep;
   }
-
-#if PWR_DEBUG
-  for (methods_iterator it = m_methods.begin(); it != m_methods.end(); it++) {
-    std::cout << " Method: " << it->first << '\n';
-  }
-#endif
 }
 
 void wb_erep::printMethods()

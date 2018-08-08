@@ -2440,9 +2440,9 @@ int vldh_get_conpoint_nodes_close(vldh_t_node node, unsigned long point,
     unsigned long* point_count, vldh_t_conpoint** pointlist,
     unsigned long attributemask)
 {
-  int i, j, found, sts;
-  vldh_t_node next_node;
-  unsigned long next_point;
+  int i, j, found = 0, sts;
+  vldh_t_node next_node = NULL;
+  unsigned long next_point = 0;
   vldh_t_con next_con;
 
   *point_count = 0;
@@ -3173,8 +3173,8 @@ int vldh_paste_con_insert(vldh_t_wind send_window, vldh_t_con send_con)
 {
   vldh_t_con con;
   vldh_t_node node_pointer;
-  vldh_t_node source_node_pointer;
-  vldh_t_node dest_node_pointer;
+  vldh_t_node source_node_pointer = NULL;
+  vldh_t_node dest_node_pointer = NULL;
   int dest_found;
   int source_found;
 
@@ -3393,7 +3393,7 @@ int vldh_paste_copy(vldh_t_wind wind, float x, float y,
   vldh_t_node node;
   vldh_t_con paste_con;
   vldh_t_node paste_node;
-  vldh_t_node* nodelist_pointer;
+  vldh_t_node* nodelist_pointer = NULL;
   vldh_t_con* conlist_pointer;
   int i;
   char segment_name[32];
@@ -3577,7 +3577,7 @@ int vldh_node_update_spec(vldh_t_node node)
   vldh_t_wind wind;
   ldh_tSesContext ldhses;
   vldh_t_plc plc;
-  float* time_ptr;
+  float* time_ptr = NULL;
   unsigned long* objdid_ptr;
 
   wind = node->hn.wind;
@@ -3855,12 +3855,12 @@ int vldh_node_create_spec(vldh_t_node node)
   int rows;
   char* parvalue;
   int noclass;
-  pwr_tClassId cid;
+  pwr_tClassId cid = 0;
   char graphname[2];
   ldh_tSesContext ldhses;
   vldh_t_plc plc;
   vldh_t_wind wind;
-  float* time_ptr;
+  float* time_ptr = NULL;
   unsigned long* objdid_ptr;
 
   wind = node->hn.wind;

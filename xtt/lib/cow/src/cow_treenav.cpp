@@ -619,6 +619,19 @@ void TreeNav::unzoom()
   brow_UnZoom(brow->ctx);
 }
 
+TrItemBase::TrItemBase(treenav_eItemType t) : type(t)
+{
+}
+
+TrItemBase::~TrItemBase()
+{
+}
+
+int TrItemBase::close(TreeNav* treenav, double x, double y)
+{
+  return 1;
+}
+
 TrItemObject::TrItemObject(TreeNav* treenav, TreeNav_object* xitem,
     brow_tNode dest, flow_eDest dest_code)
     : TrItemBase(treenav_eItemType_Object), item(*xitem)
@@ -655,6 +668,10 @@ int TrItemObject::close(TreeNav* treenav, double x, double y)
   return 1;
 }
 
+TrItemObject::~TrItemObject()
+{
+}
+
 TrItemTreeObject::TrItemTreeObject(TreeNav* treenav, TreeNav_object* xitem,
     int index, brow_tNode dest, flow_eDest dest_code)
     : TrItemObject(treenav, xitem, dest, dest_code), idx(index)
@@ -669,6 +686,10 @@ TrItemTreeObject::TrItemTreeObject(TreeNav* treenav, TreeNav_object* xitem,
   else
     strcpy(aname, item.name);
   brow_SetAnnotation(node, 0, aname, strlen(aname));
+}
+
+TrItemTreeObject::~TrItemTreeObject()
+{
 }
 
 TrItemNode::TrItemNode(TreeNav* treenav, char* name, char* descr, int index,
@@ -740,6 +761,10 @@ int TrItemNode::close(TreeNav* treenav, double x, double y)
     brow_Redraw(treenav->brow->ctx, node_y);
   }
   return 1;
+}
+
+TrItemNode::~TrItemNode()
+{
 }
 
 void TreeNav::build_tree()

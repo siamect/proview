@@ -46,28 +46,28 @@ public:
   void insert(FlowArrayElem* element)
   {
     a.insert(element);
-  };
+  }
   void zoom()
   {
     a.zoom();
-  };
+  }
   void nav_zoom()
   {
     a.nav_zoom();
-  };
+  }
   void print_zoom()
   {
     a.print_zoom();
-  };
+  }
   void traverse(int x, int y)
   {
     a.traverse(x, y);
-  };
+  }
   void get_borders(double pos_x, double pos_y, double* x_right, double* x_left,
       double* y_high, double* y_low, void* node)
   {
     a.get_borders(pos_x, pos_y, x_right, x_left, y_high, y_low, node);
-  };
+  }
   void get_obstacle_borders(double pos_x, double pos_y, double* x_right,
       double* x_left, double* y_high, double* y_low, void* node);
   int event_handler(void* pos, flow_eEvent event, int x, int y, void* node);
@@ -84,7 +84,7 @@ public:
   flow_eObjectType type()
   {
     return flow_eObjectType_NodeClass;
-  };
+  }
   void erase_annotation(void* pos, int highlight, int hot, void* node, int num);
   void draw_annotation(void* pos, int highlight, int hot, void* node, int num);
   void configure_annotations(void* pos, void* node);

@@ -187,7 +187,7 @@ pwr_tBoolean wnav_format_selection(ldh_tSesContext ldhses, pwr_sAttrRef attrref,
 
     if (select_type && !cdh_tidIsCid(classid)) {
       ldh_sAttrRefInfo info;
-      int idx;
+      int idx = 0;
 
       ldh_GetAttrRefInfo(lses, &aref, &info);
       if (ODD(sts) && wnav_type_to_string(info.type, type_buff, NULL)) {

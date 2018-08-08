@@ -119,6 +119,41 @@ wb_revision::wb_revision()
   }
 }
 
+wb_revision::~wb_revision()
+{
+  if (m_manager)
+    delete m_manager;
+}
+
+void* wb_revision::parent_ctx()
+{
+  return m_parent_ctx;
+}
+
+void wb_revision::command_cb(int (*cmd_cb)(void*, char*))
+{
+  m_command_cb = cmd_cb;
+}
+wb_rev_item* wb_revision::vect(int idx)
+{
+  return &m_vect[idx];
+}
+
+int wb_revision::size()
+{
+  return (int)m_vect.size();
+}
+
+pwr_eVersionManagerEnum wb_revision::manager_enum()
+{
+  return m_manager_enum;
+}
+
+void wb_revision::set_manager_enum(pwr_eVersionManagerEnum manager_enum)
+{
+  m_manager_enum = manager_enum;
+}
+
 bool wb_revision::set_current(int idx)
 {
   bool found = false;
@@ -184,7 +219,7 @@ char* wb_revision::branch_name(char* name)
   static char bname[80];
 
   strcpy(bname, "B_");
-  strncat(bname, name, sizeof(bname));
+  strncat(bname, name, sizeof(bname) - strlen(bname) - 1);
   return bname;
 }
 
@@ -223,7 +258,7 @@ pwr_tStatus wb_revision::create(int all, char* name, char* descr)
     pwr_tFileName proot;
     pwr_tCmd cmd;
     bool in_main = false;
-    int main_idx;
+    int main_idx = 0;
     pwr_tFileName file_spec, found_file;
     pwr_tStatus lsts;
 
@@ -331,8 +366,8 @@ pwr_tStatus wb_revision::restore(char* name)
   pwr_tCmd cmd;
   char project_name[80];
   std::vector<lfu_volume_info> vol;
-  int main_idx;
-  int sub_idx;
+  int main_idx = 0;
+  int sub_idx = 0;
   int checkout_master = 0;
   int checkout_branch = 0;
   char branch[80];
@@ -909,6 +944,54 @@ int wb_revision::check_add_file(char* filename)
   if (rev.m_manager)
     return rev.m_manager->check_add(filename);
   return 0;
+}
+
+wb_version_manager::wb_version_manager() : m_sts(0)
+{
+}
+
+pwr_tStatus wb_version_manager::sts()
+{
+  return m_sts;
+}
+
+wb_version_manager::~wb_version_manager()
+{
+}
+
+void wb_version_manager::init()
+{
+}
+
+int wb_version_manager::store_revision(char* name, char* descr, bool new_branch)
+{
+  return 0;
+}
+
+int wb_version_manager::restore_revision(
+    char* name, char* branch, int checkout_master, int checkout_branch)
+{
+  return 0;
+}
+
+int wb_version_manager::get_current(char* name)
+{
+  return 0;
+}
+
+int wb_version_manager::check(std::vector<wb_rev_item>& v)
+{
+  return 0;
+}
+
+int wb_version_manager::check_add(char* filename)
+{
+  return 0;
+}
+
+bool wb_version_manager::modified()
+{
+  return true;
 }
 
 bool wb_version_manager_git::m_found = false;

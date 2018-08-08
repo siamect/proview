@@ -40,6 +40,7 @@
 
 #include "pwr_baseclasses.h"
 #include "co_dcli.h"
+#include "co_msg.h"
 #include "co_time.h"
 
 #include "wb_erep.h"

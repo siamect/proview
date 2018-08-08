@@ -668,7 +668,6 @@ int net_StringToAddr(char* str, struct in_addr* naddr)
     case AF_INET6:
       /* Not yet implemented */
       return 0;
-      break;
     }
     freeaddrinfo(res);
   }

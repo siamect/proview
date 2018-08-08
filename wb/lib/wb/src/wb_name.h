@@ -153,233 +153,61 @@ public:
 
   wb_name& operator=(const wb_name& n);
 
-  operator bool() const
-  {
-    return oddSts();
-  }
+  operator bool() const;
   operator wb_nrep*() const;
   bool operator==(wb_name&);
 
   // Name representation
-  bool hasVolume() const throw(wb_error)
-  {
-    check();
-    return m_nrep->hasVolume();
-  }
-  bool hasPath() const throw(wb_error)
-  {
-    check();
-    return m_nrep->hasPath();
-  }
-  bool hasObject() const throw(wb_error)
-  {
-    check();
-    return m_nrep->hasObject();
-  }
-  bool hasSegment(int idx = 0) const throw(wb_error)
-  {
-    check();
-    return m_nrep->hasSegment(idx);
-  }
-  bool hasAttribute(int idx = 0) const throw(wb_error)
-  {
-    check();
-    return m_nrep->hasAttribute(idx);
-  }
-  bool hasAttrIndex(int idx = 0) const throw(wb_error)
-  {
-    check();
-    return m_nrep->hasAttrIndex(idx);
-  }
-  int attributes()
-  {
-    check();
-    return m_nrep->attributes();
-  }
-  int segments()
-  {
-    check();
-    return m_nrep->segments();
-  }
-  int attrIndex(int idx = 0) const throw(wb_error)
-  {
-    check();
-    return m_nrep->attrIndex(idx);
-  }
-  char* segment(int idx = 0, char* res = 0) const throw(wb_error)
-  {
-    check();
-    return m_nrep->segment(idx, res);
-  }
-  char* path(char* res = 0) const throw(wb_error)
-  {
-    check();
-    return m_nrep->path(res);
-  }
-  char* volume(char* res = 0) const throw(wb_error)
-  {
-    check();
-    return m_nrep->volume(res);
-  }
-  char* object(char* res = 0) const throw(wb_error)
-  {
-    check();
-    return m_nrep->object(res);
-  }
-  char* attribute(int idx = 0, char* res = 0) const throw(wb_error)
-  {
-    check();
-    return m_nrep->attribute(idx, res);
-  }
-  char* normSegment(int idx = 0, char* res = 0) const throw(wb_error)
-  {
-    check();
-    return m_nrep->normSegment(idx, res);
-  }
-  char* normPath(char* res = 0) const throw(wb_error)
-  {
-    check();
-    return m_nrep->normPath(res);
-  }
-  char* normVolume(char* res = 0) const throw(wb_error)
-  {
-    check();
-    return m_nrep->normVolume(res);
-  }
-  char* normObject(char* res = 0) const throw(wb_error)
-  {
-    check();
-    return m_nrep->normObject(res);
-  }
-  char* normAttribute(int idx = 0, char* res = 0) const throw(wb_error)
-  {
-    check();
-    return m_nrep->normAttribute(idx, res);
-  }
-  char* name() const throw(wb_error)
-  {
-    check();
-    return m_nrep->name();
-  }
-  char* normName() const throw(wb_error)
-  {
-    check();
-    return m_nrep->normName();
-  }
-  char* name(int ntype) const throw(wb_error)
-  {
-    check();
-    return m_nrep->name(ntype);
-  }
-  char* normName(int ntype) const throw(wb_error)
-  {
-    check();
-    return m_nrep->normName(ntype);
-  }
-  bool volumeIsEqual(const char* n) const throw(wb_error)
-  {
-    check();
-    return m_nrep->volumeIsEqual(n);
-  }
-  bool objectIsEqual(const char* n) const throw(wb_error)
-  {
-    check();
-    return m_nrep->objectIsEqual(n);
-  }
-  bool segmentIsEqual(const char* n, int idx = 0) const throw(wb_error)
-  {
-    check();
-    return m_nrep->segmentIsEqual(n, idx);
-  }
-  bool attributeIsEqual(const char* n, int idx = 0) const throw(wb_error)
-  {
-    check();
-    return m_nrep->attributeIsEqual(n, idx);
-  }
-  char* segmentsAll(int idx = 0) const throw(wb_error)
-  {
-    check();
-    return m_nrep->segmentsAll(idx);
-  }
-  char* attributesAll(int idx = 0) const throw(wb_error)
-  {
-    check();
-    return m_nrep->attributesAll(idx);
-  }
-  char* attributesAllTrue(int idx = 0) const throw(wb_error)
-  {
-    check();
-    return m_nrep->attributesAll(idx, 0, true);
-  }
+  bool hasVolume() const throw(wb_error);
+  bool hasPath() const throw(wb_error);
+  bool hasObject() const throw(wb_error);
+  bool hasSegment(int idx = 0) const throw(wb_error);
+  bool hasAttribute(int idx = 0) const throw(wb_error);
+  bool hasAttrIndex(int idx = 0) const throw(wb_error);
+  int attributes();
+  int segments();
+  int attrIndex(int idx = 0) const throw(wb_error);
+  char* segment(int idx = 0, char* res = 0) const throw(wb_error);
+  char* path(char* res = 0) const throw(wb_error);
+  char* volume(char* res = 0) const throw(wb_error);
+  char* object(char* res = 0) const throw(wb_error);
+  char* attribute(int idx = 0, char* res = 0) const throw(wb_error);
+  char* normSegment(int idx = 0, char* res = 0) const throw(wb_error);
+  char* normPath(char* res = 0) const throw(wb_error);
+  char* normVolume(char* res = 0) const throw(wb_error);
+  char* normObject(char* res = 0) const throw(wb_error);
+  char* normAttribute(int idx = 0, char* res = 0) const throw(wb_error);
+  char* name() const throw(wb_error);
+  char* normName() const throw(wb_error);
+  char* name(int ntype) const throw(wb_error);
+  char* normName(int ntype) const throw(wb_error);
+  bool volumeIsEqual(const char* n) const throw(wb_error);
+  bool objectIsEqual(const char* n) const throw(wb_error);
+  bool segmentIsEqual(const char* n, int idx = 0) const throw(wb_error);
+  bool attributeIsEqual(const char* n, int idx = 0) const throw(wb_error);
+  char* segmentsAll(int idx = 0) const throw(wb_error);
+  char* attributesAll(int idx = 0) const throw(wb_error);
+  char* attributesAllTrue(int idx = 0) const throw(wb_error);
 
   // Id representation
-  char* vid(char* res = 0) const throw(wb_error)
-  {
-    check();
-    return m_nrep->volume(res);
-  }
-  char* oix(char* res = 0) const throw(wb_error)
-  {
-    check();
-    return m_nrep->segment(1, res);
-  }
-  char* bodyName(char* res = 0) const throw(wb_error)
-  {
-    check();
-    return m_nrep->segment(2, res);
-  }
-  int bodyOffset() const throw(wb_error)
-  {
-    check();
-    return m_nrep->bodyOffset();
-  }
-  int bodySize() const throw(wb_error)
-  {
-    check();
-    return m_nrep->bodySize();
-  }
-  bool hasSuper() const throw(wb_error)
-  {
-    check();
-    return m_nrep->hasSuper();
-  }
-  void setShadowed(bool shadowed) throw(wb_error)
-  {
-    check();
-    m_nrep->setShadowed(shadowed);
-  }
+  char* vid(char* res = 0) const throw(wb_error);
+  char* oix(char* res = 0) const throw(wb_error);
+  char* bodyName(char* res = 0) const throw(wb_error);
+  int bodyOffset() const throw(wb_error);
+  int bodySize() const throw(wb_error);
+  bool hasSuper() const throw(wb_error);
+  void setShadowed(bool shadowed) throw(wb_error);
 
   // bool bodyId();
   // bool bodyName();
 
-  static char* unatName(const char* name)
-  {
-    return wb_nrep::unatName(name);
-  }
-  static bool checkObjectName(const char* name)
-  {
-    return wb_nrep::checkObjectName(name);
-  }
+  static char* unatName(const char* name);
+  static bool checkObjectName(const char* name);
 
 private:
-  void check() const
-  {
-    if (evenSts())
-      throw wb_error(m_sts);
-  }
+  void check() const;
 };
 
-inline const char* wb_name::c_str() const
-{
-  if (m_nrep == 0)
-    return m_emptyString;
-  else
-    return m_nrep->name();
-}
-
-inline std::ostream& operator<<(std::ostream& os, const wb_name& name)
-{
-  return os << name.c_str();
-}
+std::ostream& operator<<(std::ostream& os, const wb_name& name);
 
 #endif

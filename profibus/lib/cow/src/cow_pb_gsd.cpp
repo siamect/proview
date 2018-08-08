@@ -852,7 +852,7 @@ int pb_gsd::read(char* filename)
       break;
     }
     case gsd_ExtUserPrmDataConst: {
-      gsd_sExtUserPrmDataConst* e;
+      gsd_sExtUserPrmDataConst* e = NULL;
       unsigned char* t;
       char* s;
       int new_data = 0;

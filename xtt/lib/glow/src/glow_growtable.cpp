@@ -152,7 +152,7 @@ void GrowTable::save(std::ofstream& fp, glow_eSaveMode mode)
 
 void GrowTable::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;
@@ -1344,7 +1344,7 @@ void GrowTable::v_value_changed_cb(void* o, double value)
 {
   GrowTable* gw = (GrowTable*)o;
 
-  if (gw->v_value != value) {
+  if (!feq(gw->v_value, value)) {
     gw->v_value = value;
     gw->draw();
   }
@@ -1354,7 +1354,7 @@ void GrowTable::h_value_changed_cb(void* o, double value)
 {
   GrowTable* gw = (GrowTable*)o;
 
-  if (gw->h_value != value) {
+  if (!feq(gw->h_value, value)) {
     gw->h_value = value;
     gw->draw();
   }
@@ -1498,16 +1498,16 @@ int GrowTable::make_cell_visible(int column, int row)
     // scroll_y = cell_y_high - o_ur_y;
     scroll_y = MAX(cell_y_high - o_ur_y, int(table_size / 3) * row_height);
 
-  if (scroll_x != 0 && horizontal_scrollbar) {
+  if (!feq(scroll_x, 0.0) && horizontal_scrollbar) {
     h_value += scroll_x;
     h_value = h_scrollbar->set_value(h_value);
   }
-  if (scroll_y != 0 && vertical_scrollbar) {
+  if (!feq(scroll_y, 0.0) && vertical_scrollbar) {
     v_value += scroll_y;
     v_value = v_scrollbar->set_value(v_value);
   }
-  if ((scroll_x != 0 && horizontal_scrollbar)
-      || (scroll_y != 0 && vertical_scrollbar)) {
+  if ((!feq(scroll_x, 0.0) && horizontal_scrollbar)
+      || (!feq(scroll_y, 0.0) && vertical_scrollbar)) {
     draw();
     return 1;
   }

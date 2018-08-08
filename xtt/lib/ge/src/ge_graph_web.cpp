@@ -598,7 +598,7 @@ static int graph_get_applet_size(char* graphname, int* width, int* height)
 {
   char fname[200];
   FILE* file;
-  int w, h;
+  int w = 0, h = 0;
   int width_found = 0;
   int height_found = 0;
   char* s;

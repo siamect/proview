@@ -631,7 +631,7 @@ void WbExpWNav::update()
   brow_tNode node;
   pwr_tString80* open_nodes;
   int select_exist = 0;
-  expwitem_eItemType select_type;
+  expwitem_eItemType select_type = expwitem_eItemType_Exp;
   pwr_tString80 select_name;
   pwr_tFileName select_source;
   pwr_tFileName select_target;
@@ -785,9 +785,9 @@ void WbExpWNav::show_export_import()
           // Target is a directory, add file name
           char* s = strrchr(source, '/');
           if (!s)
-            strncat(target, source, sizeof(target));
+            strncat(target, source, sizeof(target) - strlen(target) - 1);
           else
-            strncat(target, s + 1, sizeof(target));
+            strncat(target, s + 1, sizeof(target) - strlen(target) - 1);
         }
 
         dcli_translate_filename(target, target);
@@ -881,9 +881,9 @@ void WbExpWNav::show_builddir()
           // Target is a directory, add file name
           char* s = strrchr(source, '/');
           if (!s)
-            strncat(target, source, sizeof(target));
+            strncat(target, source, sizeof(target) - strlen(target) - 1);
           else
-            strncat(target, s + 1, sizeof(target));
+            strncat(target, s + 1, sizeof(target) - strlen(target) - 1);
         }
 
         dcli_translate_filename(target, target);
@@ -1317,6 +1317,10 @@ ItemExp::ItemExp(WbExpWNav* item_expwnav, char* item_source, char* item_target,
   brow_SetAnnotPixmap(node, 0, expwnav->brow->pixmap_export);
 }
 
+ItemExp::~ItemExp()
+{
+}
+
 void ItemExp::update()
 {
   if (button_value)
@@ -1373,6 +1377,10 @@ ItemDir::ItemDir(WbExpWNav* item_expwnav, ExpWDir* item_dir, char* item_name,
     brow_SetAnnotPixmap(node, 0, expwnav->brow->pixmap_map);
   else
     brow_SetAnnotPixmap(node, 0, expwnav->brow->pixmap_leaf);
+}
+
+ItemDir::~ItemDir()
+{
 }
 
 void ItemDir::update()

@@ -139,7 +139,7 @@ int dcli_replace_env(const char* str, char* newstr)
 {
   char* s;
   char* t;
-  char* u;
+  char* u = NULL;
   int symbolmode;
   long int size;
   char* value;
@@ -261,7 +261,7 @@ int dcli_translate_filename(char* out, const char* in)
   const char* s;
   char* t;
   int i;
-  int state;
+  int state = 0;
   int sts;
 
   if (strchr(in, ':') != 0 || strchr(in, '[') != 0 || strchr(in, '<') != 0) {

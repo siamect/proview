@@ -34,7 +34,6 @@
  * General Public License plus this exception.
  **/
 
-#include <float.h>
 #include <math.h>
 #include <string.h>
 
@@ -269,7 +268,7 @@ void FlowNodeClass::close_annotation_input(void* node, int num)
 
 int FlowNodeClass::get_annotation_input(void* node, int num, char** text)
 {
-  int i, sts;
+  int i, sts = 0;
 
   for (i = 0; i < a.a_size; i++) {
     if (a.a[i]->type() == flow_eObjectType_Annot
@@ -352,8 +351,8 @@ int FlowNodeClass::load(char* filename)
 int FlowNodeClass::get_next_conpoint(
     int cp_num, flow_eDirection dir, double x0, double y0, int* next_cp_num)
 {
-  double x, y, a_x, a_y;
-  double dir_angle;
+  double x = 0.0, y = 0.0, a_x, a_y;
+  double dir_angle = 0.0;
   std::vector<NextConPoint> a0;
 
   switch (dir) {

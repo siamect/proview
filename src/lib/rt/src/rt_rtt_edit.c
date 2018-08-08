@@ -3354,9 +3354,9 @@ static rtt_t_comtbl dtt_command_table[] = { { "LEARN", &rttcmd_learn_func,
   { "SHOW", &dtt_show_func, { "rtt_arg1", "rtt_arg2", "/NAME", "" } },
   { "EXPORT", &dtt_export_func, { "rtt_arg1", "rtt_arg2", "" } },
   { "LIST", &dtt_list_func, { "rtt_arg1", "rtt_arg2", "/ALL", "" } },
-  { "CLEAR", &dtt_clear_func, { "rtt_arg1", "" } }, {
-                                                        "",
-                                                    } };
+  { "CLEAR", &dtt_clear_func, { "rtt_arg1", "" } },
+  { "", NULL, { "" } }
+};
 
 /*************************************************************************
 *
@@ -5015,7 +5015,7 @@ int dtt_menu_new(menu_ctx parent_ctx, rtt_t_menu** menu_p, char* title,
     if (terminator == RTT_K_DELETE) {
       /* Delete current item */
       /* Check that this is a dynamic menu */
-      if (ctx->menutype && RTT_MENUTYPE_DYN) {
+      if (ctx->menutype & RTT_MENUTYPE_DYN) {
         /* Delete current item */
         rtt_menu_item_delete(ctx, ctx->current_item);
         /* Reconfigure the menu */
@@ -5520,12 +5520,12 @@ static int dtt_paste_item_copy(
 static int dtt_edit_save_menues(char* filename, int generate_only)
 {
   int sts;
-  FILE* fout;
-  FILE* fout_c;
-  FILE* fout_h;
-  FILE* fout_db1;
-  FILE* fout_db2;
-  FILE* fout_decl;
+  FILE* fout = NULL;
+  FILE* fout_c = NULL;
+  FILE* fout_h = NULL;
+  FILE* fout_db1 = NULL;
+  FILE* fout_db2 = NULL;
+  FILE* fout_decl = NULL;
   FILE* fout_hlp = 0;
   pwr_tFileName fname;
   pwr_tFileName fnamebld_noext;
@@ -6007,10 +6007,10 @@ static int dtt_edit_read_one_menu(
     FILE* fin, menu_ctx parent_ctx, int parent_item)
 {
   int sts;
-  menu_ctx ctx;
+  menu_ctx ctx = NULL;
   rtt_t_menu* menu_ptr;
   rtt_t_menu* menulist = 0;
-  rtt_t_menu* parent_menu_ptr;
+  rtt_t_menu* parent_menu_ptr = NULL;
   long int index;
   int type;
   int first = 0;
@@ -8085,10 +8085,10 @@ static int dtt_edit_include_one_menu(
     FILE* fin, menu_ctx parent_ctx, int parent_item)
 {
   int sts;
-  menu_ctx ctx;
+  menu_ctx ctx = NULL;
   rtt_t_menu* menu_ptr;
   rtt_t_menu* menulist = 0;
-  rtt_t_menu* parent_menu_ptr;
+  rtt_t_menu* parent_menu_ptr = NULL;
   int index;
   int type;
   int first = 0;
@@ -8326,7 +8326,7 @@ static int dtt_show_menu(menu_ctx ctx, char* menu_name)
   int nr;
   int found;
   int sts;
-  menu_ctx menuctx;
+  menu_ctx menuctx = NULL;
 
   /* Parse the menu_name */
   nr = rtt_parse(menu_name, "-", "", (char*)name_array,
@@ -8686,11 +8686,11 @@ static int dtt_setup(menu_ctx parent_ctx)
   rtt_t_menu_upd* menulist = 0;
   int i;
   unsigned long elements;
-  char* parameter_ptr;
+  char* parameter_ptr = NULL;
   char text[80];
-  int size;
-  unsigned int type;
-  unsigned int priv;
+  int size = 0;
+  unsigned int type = 0;
+  unsigned int priv = 0;
   float maxlimit;
   float minlimit;
 

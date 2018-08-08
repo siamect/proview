@@ -132,10 +132,6 @@ sem_t* posix_sem_open(const char* name, int oflag, ...)
 int posix_sem_init_shared(sem_t* sem, int key, unsigned int value)
 {
   int semid;
-  if (value < 0) {
-    errno = EINVAL;
-    return -1;
-  }
   sem->semkey = key;
   sem->initialized = 0;
   sem->semid = -1;
@@ -163,10 +159,6 @@ int posix_sem_init_shared(sem_t* sem, int key, unsigned int value)
 int posix_sem_init(sem_t* sem, int pshared, unsigned int value)
 {
   int semid;
-  if (value < 0) {
-    errno = EINVAL;
-    return -1;
-  }
   sem->semkey = pshared ? (long)sem : IPC_PRIVATE;
   sem->initialized = 0;
   sem->semid = -1;

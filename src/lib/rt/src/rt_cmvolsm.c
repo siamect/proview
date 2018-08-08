@@ -62,8 +62,8 @@ void cmvolsm_GetCclass(qcom_sGet* get)
   pwr_tBoolean equal = FALSE;
   const int maxacnt
       = ((net_cSizeLarge - sizeof(*rmp)) / sizeof(rmp->attr[0])) + 1;
-  int maxaidx;
-  int acnt;
+  int maxaidx = 0;
+  int acnt = 0;
   pwr_tTime mp_time;
 
   gdb_AssumeUnlocked;

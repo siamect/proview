@@ -42,8 +42,6 @@
 
 #if defined OS_POSIX && defined PWRE_CONF_LIBDB
 
-using namespace std;
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
@@ -67,11 +65,11 @@ extern "C" {
 #include "xtt_evlist_gtk.h"
 #include "xtt_methodtoolbar_gtk.h"
 
-#define SENS 1
-#define INSENS 0
+using namespace std;
+
+//#define SENS 1
+//#define INSENS 0
 #define DONT_SET_SENS -1
-/* 24 hours in seconds */
-#define ONEDAY 86400
 
 static gint delete_event(GtkWidget* w, GdkEvent* event, gpointer data)
 {

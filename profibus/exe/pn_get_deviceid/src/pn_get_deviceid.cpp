@@ -80,8 +80,8 @@ void parse_file(char* filename)
   std::ifstream fp;
   pwr_tFileName fname;
   char line[1024];
-  unsigned int deviceid;
-  unsigned int vendorid;
+  unsigned int deviceid = 0;
+  unsigned int vendorid = 0;
   char infotextid[500] = "";
   char infotext[500] = "";
   char family[500] = "";

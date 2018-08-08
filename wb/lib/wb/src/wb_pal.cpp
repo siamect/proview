@@ -608,7 +608,7 @@ PalItemMenu::PalItemMenu(Pal* pal, char* item_name, brow_tNode dest,
 
 int PalItemMenu::open(Pal* pal, double x, double y)
 {
-  int action_open;
+  int action_open = 0;
 
   if (!is_root) {
     if (!brow_IsOpen(node))

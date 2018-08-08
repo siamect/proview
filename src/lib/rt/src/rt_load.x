@@ -61,19 +61,6 @@ enum load_eSect {
   load_eSect_
 };
 
-%
-%#define load_mSect_Boot		pwr_Bit(load_eSect_Boot)
-%#define load_mSect_CreObj	pwr_Bit(load_eSect_CreObj)
-%#define load_mSect_ChgObj	pwr_Bit(load_eSect_ChgObj)
-%#define load_mSect_DelObj	pwr_Bit(load_eSect_DelObj)
-%#define load_mSect_End		pwr_Bit(load_eSect_End)
-%#define load_mSect_File		pwr_Bit(load_eSect_File)
-%#define load_mSect_ObjBody	pwr_Bit(load_eSect_ObjBody)
-%#define load_mSect_ObjHead	pwr_Bit(load_eSect_ObjHead)
-%#define load_mSect_Volume	pwr_Bit(load_eSect_Volume)
-%#define load_mSect_VolRef	pwr_Bit(load_eSect_VolRef)
-%
-
 enum load_eFile {
   load_eFile__		= 0,
   load_eFile_Boot	= 1,

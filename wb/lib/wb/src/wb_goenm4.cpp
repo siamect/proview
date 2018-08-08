@@ -492,7 +492,7 @@ int goen_create_nodetype_m4(pwr_sGraphPlcNode* graphbody, pwr_tClassId cid,
   case goen_eGraphIndex_True:
   case goen_eGraphIndex_False: {
     char text[80];
-    int w;
+    int w = 0;
 
     switch (graph_index) {
     case goen_eGraphIndex_FirstScan:

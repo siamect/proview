@@ -92,7 +92,7 @@ pwr_tStatus XttOTree::get_node_info(
   pwr_tAName dname;
 
   strncpy(dname, name, sizeof(dname));
-  strncat(dname, ".Description", sizeof(dname));
+  strncat(dname, ".Description", sizeof(dname) - strlen(dname) - 1);
   sts = gdh_GetObjectInfo(dname, descr, dsize);
   if (EVEN(sts))
     strcpy(descr, "");

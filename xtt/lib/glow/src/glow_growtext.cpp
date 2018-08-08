@@ -34,7 +34,6 @@
  * General Public License plus this exception.
  **/
 
-#include <float.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -72,7 +71,7 @@ GrowText::GrowText(GrowCtx* glow_ctx, const char* name, const char* text1,
 
 GrowText::GrowText(const GrowText& n) : GlowText(n)
 {
-  memcpy(this, &n, sizeof(n));
+  memcpy((void *)this, (void *)&n, sizeof(n));
   if (n.text) {
     text = (char*)malloc(strlen(n.text) + 1);
     strcpy(text, n.text);
@@ -292,7 +291,7 @@ void GrowText::save(std::ofstream& fp, glow_eSaveMode mode)
 
 void GrowText::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;
@@ -496,7 +495,7 @@ void GrowText::set_position(double x, double y)
 {
   double old_x_left, old_x_right, old_y_low, old_y_high;
 
-  if (trf.a13 == x && trf.a23 == y)
+  if (feq(trf.a13, x) && feq(trf.a23, y))
     return;
   old_x_left = x_left;
   old_x_right = x_right;
@@ -677,8 +676,8 @@ void GrowText::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       return;
     hot = 0;
   }
-  int x1, y1, rx1, ry1;
-  int z_width, z_height, z_descent;
+  int x1, y1, rx1 = 0, ry1 = 0;
+  int z_width = 0, z_height = 0, z_descent;
   int rot;
   double trf_scale = trf.vertical_scale(t);
   int idx = int(
@@ -790,7 +789,7 @@ void GrowText::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
       return;
     hot = 0;
   }
-  int x1, y1, rx1, ry1;
+  int x1, y1, rx1 = 0, ry1 = 0;
   int rot;
   double trf_scale = trf.vertical_scale(t);
   int idx = int(
@@ -798,7 +797,7 @@ void GrowText::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
   double tsize = trf_scale * w->zoom_factor_y / w->base_zoom_factor
       * (8 + 2 * text_size);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  int z_width, z_height, z_descent;
+  int z_width = 0, z_height = 0, z_descent;
   int highl = highlight;
   if (node)
     highl = ((GrowNode*)node)->highlight;

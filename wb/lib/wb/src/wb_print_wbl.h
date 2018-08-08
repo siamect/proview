@@ -113,10 +113,10 @@ public:
     m_noFoCodeFlag = true;
   }
 
-  void printHierarchy(wb_volume& v, wb_object& o); //< Prints a hierarchy
+  void printHierarchy(wb_volume& v, wb_object& o); ///< Prints a hierarchy
   void printObject(
-      wb_volume& v, wb_object& o, bool recursive = true); //< Prints an object
-  void printVolume(wb_volume& v, bool recursive = true); //< Prints the volume
+      wb_volume& v, wb_object& o, bool recursive = true); ///< Prints an object
+  void printVolume(wb_volume& v, bool recursive = true); ///< Prints the volume
 };
 
 #endif

@@ -269,7 +269,7 @@ WGeGtk::WGeGtk(GtkWidget* wge_parent_wid, void* wge_parent_ctx, char* wge_name,
   int window_height = 500;
   GdkGeometry geometry;
   pwr_tStatus sts;
-  GtkMenuBar* menu_bar;
+  GtkMenuBar* menu_bar = NULL;
   char title[300];
 
   if (wge_width != 0 && wge_height != 0) {

@@ -124,21 +124,23 @@ static unsigned int ReceiveHandler();
 #define RESP_MESSAGE_SIZE 6
 
 #define NUMBER_OF_STOP_CHAR 3
+/*
 #define NET_HEADER_SIZE_IO 6
 #define NET_HEADER_SIZE_COMMON 8
-//#define MAX_SIZE_TELEGRAM 2048
+#define MAX_SIZE_TELEGRAM 2048
 
-//#define TIMEOUT_REC_ANSWER_SEC 2
-//#define TIMEOUT_REC_ANSWER_USEC 0
+#define TIMEOUT_REC_ANSWER_SEC 2
+#define TIMEOUT_REC_ANSWER_USEC 0
 
-//#define TIMEOUT_REC_CHAR_SEC 0
-//#define TIMEOUT_REC_CHAR_USEC 900000
+#define TIMEOUT_REC_CHAR_SEC 0
+#define TIMEOUT_REC_CHAR_USEC 900000
 
-//#define TIMEOUT_SND_ANSWER_SEC 2
-//#define TIMEOUT_SND_ANSWER_USEC 0
+#define TIMEOUT_SND_ANSWER_SEC 2
+#define TIMEOUT_SND_ANSWER_USEC 0
 
-//#define TIMEOUT_SND_CHAR_SEC 0
-//#define TIMEOUT_SND_CHAR_USEC 900000
+#define TIMEOUT_SND_CHAR_SEC 0
+#define TIMEOUT_SND_CHAR_USEC 900000
+*/
 
 #define BYTE_MASK 0xFF
 #define CPU_NR_MASK 0xF0
@@ -148,8 +150,6 @@ static unsigned int ReceiveHandler();
 #define ETX 3
 #define DLE 16
 #define NAK 21
-
-#define DLE_BITMASK 0x10000
 
 /*_variables_______________________________________________________________*/
 
@@ -677,7 +677,7 @@ static unsigned int send_it(char* buf, int buffer_size, int double_dle)
 static unsigned int Receive()
 {
   static int sts;
-  int rsts;
+  int rsts = 0;
   unsigned char received_char = NUL;
   static unsigned char snak[2] = { NAK, NUL };
   static unsigned char sdle[2] = { DLE, NUL };
@@ -765,7 +765,7 @@ static unsigned int ReceiveHandler(int fd)
   unsigned char receive_buffer[MAX_SIZE_TELEGRAM];
   unsigned char sdle = DLE;
   unsigned char received_char;
-  remtrans_item* remtrans;
+  remtrans_item* remtrans = NULL;
   int i;
   unsigned char CODE = '\0';
   static unsigned int datasize;

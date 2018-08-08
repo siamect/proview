@@ -34,7 +34,6 @@
  * General Public License plus this exception.
  **/
 
-#include <float.h>
 #include <math.h>
 #include <string.h>
 
@@ -103,7 +102,7 @@ void KeyboardCtx::set_type(keyboard_eType t)
 
 void KeyboardCtx::configure()
 {
-  double x, y, width, height;
+  double x = 0.0, y, width = 0.0, height = 0.0;
   double d = 4.0;
   double sep = 0.1;
   char key_text[40];
@@ -661,9 +660,9 @@ int KeyboardCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
   int i;
   GlowCtx* ctx;
   double fx, fy;
-  int keyc;
+  int keyc = 0;
   int send_cb = 0;
-  int idx;
+  int idx = 0;
   char* keymap;
   char name[40];
 

@@ -100,7 +100,7 @@ public:
   void erase(GlowWind* w)
   {
     erase(w, (GlowTransform*)NULL, hot, NULL);
-  };
+  }
 
   //! Draw the objects if any part is inside the drawing area.
   /*!
@@ -138,7 +138,7 @@ public:
   glow_eObjectType type()
   {
     return glow_eObjectType_GrowFolder;
-  };
+  }
 
   int folders; //!< Number of folders.
   int text_size; //!< Header text size.
@@ -235,7 +235,7 @@ public:
   {
     text_color_drawtype = drawtype;
     draw();
-  };
+  }
 
   //! Set displayed folder.
   /*!

@@ -77,6 +77,7 @@ public:
       glow_mDisplayLevel display_lev = glow_mDisplayLevel_1, int fill_rect = 0,
       int display_border = 1, glow_eDrawType fill_d_type = glow_eDrawType_Line,
       int nodraw = 0);
+  virtual ~GrowCurve();
 
   glow_eCurveType type; //!< Type of curve.
   int split_digsquare; //!< Split digtal curves on different lines

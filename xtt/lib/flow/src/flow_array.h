@@ -42,7 +42,7 @@
 class FlowArray {
 public:
   FlowArray(int allocate, int incr);
-  FlowArray(){};
+  FlowArray(){}
   void new_array(const FlowArray& array);
   FlowArrayElem* operator[](int idx);
   void copy_from(const FlowArray& array);
@@ -51,7 +51,7 @@ public:
   int size()
   {
     return a_size;
-  };
+  }
   int insert(FlowArrayElem* element);
   void remove(FlowArrayElem* element);
   int find(FlowArrayElem* element);

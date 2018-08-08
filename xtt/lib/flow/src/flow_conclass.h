@@ -46,27 +46,27 @@ public:
       double arrow_w = 0, double arrow_l = 0, double round_corner_amnt = 0.5,
       flow_eConGroup grp = flow_eConGroup_Common);
   friend std::ostream& operator<<(std::ostream& o, const FlowConClass cc);
-  void zoom(){};
-  void nav_zoom(){};
-  void print_zoom(){};
-  void traverse(int x, int y){};
+  void zoom(){}
+  void nav_zoom(){}
+  void print_zoom(){}
+  void traverse(int x, int y){}
   void get_borders(double pos_x, double pos_y, double* x_right, double* x_left,
-      double* y_high, double* y_low, void* node){};
+      double* y_high, double* y_low, void* node){}
   int event_handler(void* pos, flow_eEvent event, int x, int y, void* node)
   {
     return 0;
-  };
-  void print(FlowPoint* pos, void* node){};
+  }
+  void print(FlowPoint* pos, void* node){}
   void save(std::ofstream& fp, flow_eSaveMode mode);
   void open(std::ifstream& fp);
-  void draw(FlowPoint* pos, int highlight, int hot, void* node){};
-  void nav_draw(FlowPoint* pos, int highlight, void* node){};
-  void erase(FlowPoint* pos, int hot, void* node){};
-  void nav_erase(FlowPoint* pos, void* node){};
+  void draw(FlowPoint* pos, int highlight, int hot, void* node){}
+  void nav_draw(FlowPoint* pos, int highlight, void* node){}
+  void erase(FlowPoint* pos, int hot, void* node){}
+  void nav_erase(FlowPoint* pos, void* node){}
   flow_eObjectType type()
   {
     return flow_eObjectType_ConClass;
-  };
+  }
   void get_object_name(char* name);
   FlowCtx* ctx;
   FlowPoint zero;

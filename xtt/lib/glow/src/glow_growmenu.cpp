@@ -169,7 +169,7 @@ void GrowMenu::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
   int ll_x, ll_y, ur_x, ur_y;
 
-  int z_width, z_height, z_descent;
+  int z_width, z_height = 0, z_descent;
   int max_z_width = 0;
   double tot_z_height = 0;
   int i;

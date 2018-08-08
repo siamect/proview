@@ -53,7 +53,6 @@
 #include "opc_utl.h"
 #include "Service.nsmap"
 
-#define START_OIX 1000
 #define procom_obj_mFlags_Analog (1 << 31)
 
 typedef std::map<pwr_tUInt32, opcprv_sub>::iterator sublist_iterator;
@@ -97,7 +96,7 @@ void opc_provider::insert_object(pwr_tOix fth, pwr_tOix bws,
 {
   opcprv_obj* o = new opcprv_obj();
   xsd__anyType* valp;
-  int opctype;
+  int opctype = 0;
 
   strcpy(o->po.name, name_to_objectname((char*)element->Name->c_str()));
   if (element->ItemPath)
@@ -645,7 +644,7 @@ void opc_provider::objectOid(co_procom* pcom, pwr_tOix oix)
     }
   }
 
-  if (oix >= m_list.size() || oix < 0) {
+  if (oix >= m_list.size()) {
     pcom->provideStatus(GDH__NOSUCHOBJ);
     return;
   }

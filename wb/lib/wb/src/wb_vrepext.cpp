@@ -437,7 +437,6 @@ wb_orep* wb_vrepext::createObject(pwr_tStatus* sts, wb_cdef cdef,
     *sts = amsg.Object.Status;
     return 0;
   }
-  return 0;
 }
 
 bool wb_vrepext::createVolumeObject(const char* name)
@@ -514,7 +513,6 @@ wb_orep* wb_vrepext::copyObject(pwr_tStatus* sts, const wb_orep* orep,
     *sts = amsg.Object.Status;
     return 0;
   }
-  return 0;
 }
 
 bool wb_vrepext::moveObject(pwr_tStatus* sts, wb_orep* orep, wb_destination& d)

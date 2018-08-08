@@ -54,8 +54,8 @@ typedef enum { bld_eNodeType_Node, bld_eNodeType_Sev } bld_eNodeType;
 
 class wb_build : public wb_status {
 public:
-  wb_build(wb_session ses, WNav* wnav = 0)
-      : m_session(ses), m_wnav(wnav), m_hierarchy(pwr_cNOid){};
+  wb_build(wb_session ses, WNav* wnav = 0);
+  virtual ~wb_build();
 
   void classlist(pwr_tCid cid);
   void all(int no_export = 0, int no_classvolumes = 0, int no_flowfiles = 0);

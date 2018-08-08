@@ -38,6 +38,10 @@
 
 #include "wb_attrname.h"
 
+wb_attrname::wb_attrname() : wb_name()
+{
+}
+
 wb_attrname::wb_attrname(const char* name)
 {
   try {
@@ -54,4 +58,8 @@ wb_attrname::wb_attrname(const char* name)
     m_sts = e.sts();
     m_nrep = 0;
   }
+}
+
+wb_attrname::~wb_attrname()
+{
 }

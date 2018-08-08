@@ -320,7 +320,7 @@ void cvolcm_MoveObject(qcom_sGet* get)
   gdb_sObject* pop;
   gdb_sObject* sop;
   pwr_tObjid soid;
-  gdb_sVolume* vp;
+  gdb_sVolume* vp = NULL;
   net_sMoveObject* mop = (net_sMoveObject*)get->data;
 
   gdb_AssumeUnlocked;

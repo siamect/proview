@@ -41,8 +41,8 @@
 /*_Include files_________________________________________________________*/
 
 #include <stdarg.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 #include <pthread.h>
 
 #include "co_cdh.h"
@@ -146,7 +146,7 @@ int XttLogging::logging_set(float a_logg_time, char* filename, char* parameter,
     int priority, int create, int a_line_size, int shortname)
 {
   int i, sts;
-  int found, par_index;
+  int found, par_index = 0;
   char buffer[8];
   char msg[80];
   int type_error;
@@ -230,7 +230,7 @@ int XttLogging::logging_set(float a_logg_time, char* filename, char* parameter,
       strcpy(conditionstr, condition);
     }
   }
-  if (a_logg_time != 0)
+  if (!feqf(a_logg_time, 0.0f))
     logg_time = a_logg_time;
 
   if (a_logg_type != 0)
@@ -460,7 +460,7 @@ int XttLogging::store(char* filename)
   fprintf(
       outfile, "logging set/create/entry=current/file=\"%s\"\n", logg_filename);
   fprintf(outfile, "logging delete/entry=current/all\n");
-  if (logg_time != 0)
+  if (!feqf(logg_time, 0.0f))
     fprintf(outfile, "logging set/entry=current/time=%f\n", logg_time);
   fprintf(outfile, "logging set/entry=current/buffer=%d\n", wanted_buffer_size);
   fprintf(outfile, "logging set/entry=current/line_size=%d\n", line_size);
@@ -625,7 +625,7 @@ int XttLogging::start()
   }
 
   /* Check time */
-  if (logg_time == 0) {
+  if (feqf(logg_time, 0.0f)) {
     message('E', "Time is missing");
     return XNAV__HOLDCOMMAND;
   }
@@ -739,7 +739,7 @@ int XttLogging::entry_stop()
 int XttLogging::remove(char* parameter)
 {
   int i;
-  int found;
+  int found = 0;
 
   if (parameter) {
     /* Remove this parameter */
@@ -1036,7 +1036,7 @@ static void* xtt_logproc(void* arg)
           old_value_ptr = (char*)&logg->old_value[i];
           switch (logg->parameter_type[i]) {
           case pwr_eType_Float32:
-            if ((*(pwr_tFloat32*)value_ptr != *(pwr_tFloat32*)old_value_ptr)
+            if ((!feqf(*(pwr_tFloat32*)value_ptr, *(pwr_tFloat32*)old_value_ptr))
                 || first_scan) {
               /* Value is changed, print */
               time_AtoAscii(
@@ -1049,7 +1049,7 @@ static void* xtt_logproc(void* arg)
             break;
 
           case pwr_eType_Float64:
-            if ((*(pwr_tFloat64*)value_ptr != *(pwr_tFloat64*)old_value_ptr)
+            if ((!feq(*(pwr_tFloat64*)value_ptr, *(pwr_tFloat64*)old_value_ptr))
                 || first_scan) {
               logg->log_print("	%s", &(logg->parameterstr[i]));
               logg->log_print("	%f\n", *(pwr_tFloat64*)value_ptr);

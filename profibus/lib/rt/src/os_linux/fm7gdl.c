@@ -518,7 +518,6 @@ possible return values:
 
   default:
     return (E_IF_INVALID_SERVICE);
-    break;
   }
 
   return (E_OK);

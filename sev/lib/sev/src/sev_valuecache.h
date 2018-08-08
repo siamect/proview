@@ -65,34 +65,15 @@ public:
   int m_useridx;
   void (*m_write_cb)(void*, int, void*, pwr_tTime*, void*);
 
-  sev_valuecache(sev_eCvType type)
-      : m_type(type), m_userdata(0), m_useridx(0), m_write_cb(0)
-  {
-  }
-  sev_valuecache(const sev_valuecache& x)
-      : m_type(x.m_type), m_userdata(x.m_userdata), m_useridx(x.m_useridx),
-        m_write_cb(x.m_write_cb)
-  {
-  }
-  virtual ~sev_valuecache(){};
-  virtual void add(void* value, pwr_tTime* time, void* thread)
-  {
-  }
-  virtual int evaluate(double maxtime, void* thread)
-  {
-    return SEV__NOWRITE;
-  }
-  virtual void write(int index, void* thread)
-  {
-  }
+  sev_valuecache(sev_eCvType type);
+  sev_valuecache(const sev_valuecache& x);
+  virtual ~sev_valuecache();
+  virtual void add(void* value, pwr_tTime* time, void* thread);
+  virtual int evaluate(double maxtime, void* thread);
+  virtual void write(int index, void* thread);
   virtual void set_write_cb(
       void (*write_cb)(void*, int, void*, pwr_tTime*, void*), void* userdata,
-      int idx)
-  {
-    m_write_cb = write_cb;
-    m_userdata = userdata;
-    m_useridx = idx;
-  }
+      int idx);
 };
 
 class sev_valuecache_double : public sev_valuecache {
@@ -114,38 +95,13 @@ class sev_valuecache_double : public sev_valuecache {
 
 public:
   sev_valuecache_double(
-      sev_eCvType type, double deadband_value, double deadband_time)
-      : sev_valuecache(type), m_length(0), m_first(0), m_last(0),
-        m_inited(false), m_deadband_value(deadband_value),
-        m_deadband_time(deadband_time)
-  {
-    memset(&m_wval, 0, sizeof(m_wval));
-    time_GetTime(&m_start_time);
-  }
-  sev_valuecache_double(const sev_valuecache_double& x)
-      : sev_valuecache(x), m_length(x.m_length), m_first(x.m_first),
-        m_last(x.m_last), m_inited(x.m_inited), m_k(x.m_k),
-        m_deadband(x.m_deadband), m_deadband_value(x.m_deadband_value),
-        m_deadband_time(x.m_deadband_time),
-        m_last_opt_write(x.m_last_opt_write), m_start_time(x.m_start_time),
-        m_last_k(x.m_last_k)
-  {
-    memcpy(m_val, x.m_val, sizeof(m_val));
-    memcpy(&m_wval, &x.m_wval, sizeof(m_wval));
-  }
-  ~sev_valuecache_double()
-  {
-  }
-  int length()
-  {
-    return m_length;
-  }
+      sev_eCvType type, double deadband_value, double deadband_time);
+  sev_valuecache_double(const sev_valuecache_double& x);
+  ~sev_valuecache_double();
+  int length();
   int idx(int index);
   sev_sCacheValueDouble& operator[](const int index);
-  sev_sCacheValueDouble& wval()
-  {
-    return m_wval;
-  }
+  sev_sCacheValueDouble& wval();
   void add(void* value, pwr_tTime* time, void* thread);
   int evaluate(double maxtime, void* thread);
   void calculate_k();
@@ -155,14 +111,8 @@ public:
   bool check_deadband(int index);
   bool check_deadband();
   int get_optimal_write();
-  double epsilon(int index)
-  {
-    return m_val[idx(index)].epsilon;
-  }
-  double get_k()
-  {
-    return m_k;
-  }
+  double epsilon(int index);
+  double get_k();
 };
 
 class sev_valuecache_bool : public sev_valuecache {
@@ -171,22 +121,10 @@ class sev_valuecache_bool : public sev_valuecache {
   sev_sCacheValueBool m_wval;
 
 public:
-  sev_valuecache_bool(sev_eCvType type) : sev_valuecache(type), m_inited(false)
-  {
-    memset(&m_wval, 0, sizeof(m_wval));
-  }
-  sev_valuecache_bool(const sev_valuecache_bool& x)
-      : sev_valuecache(x), m_inited(x.m_inited)
-  {
-    memcpy(&m_wval, &x.m_wval, sizeof(m_wval));
-  }
-  ~sev_valuecache_bool()
-  {
-  }
-  sev_sCacheValueBool& wval()
-  {
-    return m_wval;
-  }
+  sev_valuecache_bool(sev_eCvType type);
+  sev_valuecache_bool(const sev_valuecache_bool& x);
+  ~sev_valuecache_bool();
+  sev_sCacheValueBool& wval();
   void add(void* value, pwr_tTime* time, void* thread);
   int evaluate(double maxtime, void* thread);
   void write(int index, void* thread);

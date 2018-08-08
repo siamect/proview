@@ -102,7 +102,7 @@ void GrowBarChart::save(std::ofstream& fp, glow_eSaveMode mode)
 
 void GrowBarChart::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;
@@ -363,7 +363,7 @@ void GrowBarChart::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
   int bar_ll_y, bar_ur_y;
   double f_bar_ll_y;
   double width;
-  int brect_ll_x, brect_ll_y, brect_width, brect_height;
+  int brect_ll_x = 0, brect_ll_y = 0, brect_width = 0, brect_height = 0;
 
   width = double(ur_x - ll_x) / bars;
   bar_ur_x = ll_x;
@@ -378,7 +378,7 @@ void GrowBarChart::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     bar_ll_y = ur_y;
     f_bar_ll_y = ur_y;
     for (int i = 0; i < barsegments + 1; i++) {
-      glow_eDrawType fillcolor;
+      glow_eDrawType fillcolor = glow_eDrawType_Line;
 
       skip = 0;
       bar_ur_y = bar_ll_y;

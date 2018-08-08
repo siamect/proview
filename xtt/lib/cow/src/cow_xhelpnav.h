@@ -146,34 +146,27 @@ public:
 
 class HItem {
 public:
-  HItem() : type(xhelpnav_eHItemType_Object), node(NULL){};
+  HItem();
+  virtual ~HItem();
   virtual int doubleclick_action(
-      CoXHelpNavBrow* brow, CoXHelpNav* xhelpnav, double x, double y)
-  {
-    return 1;
-  }
-  virtual bool search(char* str, bool strict)
-  {
-    return false;
-  }
+      CoXHelpNavBrow* brow, CoXHelpNav* xhelpnav, double x, double y);
+  virtual bool search(char* str, bool strict);
   xhelpnav_eHItemType type;
   brow_tNode node;
-
-  virtual ~HItem()
-  {
-  }
 };
 
 class HItemHeader : public HItem {
 public:
   HItemHeader(CoXHelpNavBrow* brow, const char* item_name, const char* title,
       brow_tNode dest, flow_eDest dest_code);
+  virtual ~HItemHeader();
 };
 
 class HItemHelpLine : public HItem {
 public:
   HItemHelpLine(CoXHelpNavBrow* brow, const char* item_name, brow_tNode dest,
       flow_eDest dest_code);
+  virtual ~HItemHelpLine();
 };
 
 class HItemHelpImage : public HItem {

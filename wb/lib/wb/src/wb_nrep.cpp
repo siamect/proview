@@ -115,7 +115,6 @@ wb_nrep::wb_nrep(const char* n) throw(wb_error)
     }
     if (name_len >= (int)sizeof(oname)) {
       throw wb_error(LDH__BADNAME);
-      return;
     }
   } else {
     name_type = wname_eType_Name;
@@ -140,7 +139,6 @@ wb_nrep::wb_nrep(const char* n) throw(wb_error)
     }
     if (name_len >= (int)sizeof(oname)) {
       throw wb_error(LDH__BADNAME);
-      return;
     }
   }
   if (seg_cnt)
@@ -399,7 +397,6 @@ void wb_nrep::parse() throw(wb_error)
         break;
       case 9: // offset.size after ']', must be nothing there!
         throw wb_error(LDH__BADNAME);
-        break;
       }
     }
 
@@ -871,7 +868,6 @@ char* wb_nrep::volumeName(const char* n, char* res)
       return result;
     }
   }
-  return result;
 }
 
 char* wb_nrep::name(int ntype, char* res)

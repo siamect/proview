@@ -1089,7 +1089,7 @@ int WAttNav::select_by_name(const char* name)
   int object_cnt;
   int i;
   int found;
-  brow_tObject object;
+  brow_tObject object = NULL;
 
   brow_GetObjectList(brow->ctx, &object_list, &object_cnt);
   found = 0;

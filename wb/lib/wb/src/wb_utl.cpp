@@ -171,7 +171,7 @@ typedef struct {
 #define CRR_READ 0
 #define CRR_WRITE 1
 #define CRR_GETFROMOBJECT 2
-#define CRR_IGNORE 3
+//#define CRR_IGNORE 3
 #define CRR_REF 4
 
 static void u_row(utl_ctx utlctx);
@@ -369,6 +369,39 @@ static bool is_focodeobject(ldh_tSesContext ldhses, pwr_tCid cid)
   return false;
 }
 
+wb_utl::wb_utl()
+{
+}
+
+wb_utl::~wb_utl()
+{
+}
+
+int wb_utl::create_mainwindow(int argc, char** argv)
+{
+  return 0;
+}
+
+int wb_utl::destroy_mainwindow()
+{
+  return 0;
+}
+
+int wb_utl::utl_foe_new(const char* name, pwr_tOid plcpgm,
+    ldh_tWBContext ldhwbctx, ldh_tSesContext ldhsesctx, WFoe** foectx,
+    int map_window, ldh_eAccess access)
+{
+  return 0;
+}
+
+int wb_utl::utl_foe_new_local(WFoe* foectx, const char* name, pwr_tOid plcpgm,
+    ldh_tWBContext ldhwbctx, ldh_tSesContext ldhsesctx, vldh_t_node nodeobject,
+    unsigned long windowindex, unsigned long new_window, WFoe** return_foectx,
+    int map_window, ldh_eAccess access, foe_eFuncAccess function_access)
+{
+  return 0;
+}
+
 /*************************************************************************
 *
 * Name:		print_plc()
@@ -440,7 +473,7 @@ int wb_utl::print_plc_hier(ldh_tSesContext ldhses, ldh_tWBContext ldhwb,
   pwr_tObjid fromobjdid;
   int from;
   int from_found;
-  FILE* plclink;
+  FILE* plclink = NULL;
   int plclink_open = 0;
 
   /* Get class */
@@ -1691,7 +1724,7 @@ static int utl_list_insert(utl_t_list** list, int* count, pwr_sAttrRef* arp,
     unsigned long specification, int check, int dum)
 {
   int found;
-  utl_t_list* list_ptr;
+  utl_t_list* list_ptr = NULL;
 
   /* Check if the attrref already is inserted */
   found = 0;
@@ -2684,7 +2717,7 @@ int utl_show_modules(ldh_tSesContext ldhses, char* objdidstr, char* name,
 int utl_show_object(ldh_tSesContext ldhses, char* windowstring,
     pwr_tObjid sendobjdid, int terminal, char* filename)
 {
-  utl_ctx utlctx;
+  utl_ctx utlctx = NULL;
   int sts, size;
   int i;
   pwr_tClassId cid;
@@ -2692,7 +2725,7 @@ int utl_show_object(ldh_tSesContext ldhses, char* windowstring,
   pwr_tOName class_hier_name;
   pwr_tObjid window;
   unsigned long object_count;
-  pwr_tObjid* objectlist;
+  pwr_tObjid* objectlist = NULL;
   pwr_tObjid* objectlist_ptr;
   char objidstr[80];
 
@@ -4258,13 +4291,13 @@ static int utl_print_object_full(
 static int utl_print_object_par(pwr_sAttrRef* arp, ldh_tSesContext ldhses,
     utl_ctx utlctx, char* parameter, int* element)
 {
-  int sts, size, i, j, k;
+  int sts, size, i, j = 0, k;
   pwr_tClassId cid;
   pwr_tAName pname;
   char *np, *s;
   pwr_tAName hier_name;
   char* hier_name_p;
-  ldh_sParDef* bodydef;
+  ldh_sParDef* bodydef = NULL;
   int rows;
   char body[20];
   char parname[32];
@@ -4866,7 +4899,7 @@ static int utl_set_parameter(pwr_sAttrRef* arp, ldh_tSesContext ldhses,
   static char yes_or_no[200];
   int sts, size, k;
   int parsize;
-  char* object_par;
+  char* object_par = NULL;
   char* object_element;
   int elements;
   char logstr[200];
@@ -5372,7 +5405,7 @@ int utl_compile(ldh_tSesContext ldhses, ldh_tWBContext ldhwb, char* plcname,
   ldh_sSessInfo info;
   int status = GSX__NOMODIF;
   int other_volume_attached;
-  ldh_tVolContext volctx;
+  ldh_tVolContext volctx = NULL;
   ldh_tSesContext l_ldhses;
   char vol_str[UTL_INPUTLIST_MAX + 1][80];
   pwr_tVolumeId volume_vect[UTL_INPUTLIST_MAX + 1];
@@ -5380,7 +5413,7 @@ int utl_compile(ldh_tSesContext ldhses, ldh_tWBContext ldhwb, char* plcname,
   trv_tCtx trvctx;
   pwr_tVolumeId vol_id;
   int thisvolume;
-  pwr_tVolumeId current_volid;
+  pwr_tVolumeId current_volid = 0;
   ldh_sVolumeInfo volinfo;
   int access;
 
@@ -5456,7 +5489,6 @@ int utl_compile(ldh_tSesContext ldhses, ldh_tWBContext ldhwb, char* plcname,
           i++;
           if (i > UTL_INPUTLIST_MAX) {
             return FOE__MAXITEM;
-            goto error_return;
           }
         }
         sts = ldh_GetNextVolume(ldh_SessionToWB(ldhses), vol_id, &vol_id);
@@ -5947,9 +5979,9 @@ static int utl_externref(
           { pwr_cClass_stoap, "DevBody", "Object", CRR_WRITE, 0 },
           { pwr_cClass_CStoIp, "DevBody", "Object", CRR_WRITE, 0 },
           { pwr_cClass_GetIp, "DevBody", "IpObject", CRR_READ, 0 },
-          { pwr_cClass_StoIp, "DevBody", "Object", CRR_WRITE, 0 }, {
-                                                                       0,
-                                                                   } };
+          { pwr_cClass_StoIp, "DevBody", "Object", CRR_WRITE, 0 },
+          { 0, "", "", 0, 0 }
+        };
 
   /* get all the children to the object */
   childlistcount = 0;
@@ -6046,9 +6078,9 @@ static int utl_signalref(
           { pwr_cClass_pos3p, "DevBody", "DoClose", CRR_WRITE, 0 },
           { pwr_cClass_inc3p, "DevBody", "DoOpen", CRR_WRITE, 0 },
           { pwr_cClass_inc3p, "DevBody", "DoClose", CRR_WRITE, 0 },
-          { pwr_cClass_GetPi, "DevBody", "CoObject", CRR_READ, 0 }, {
-                                                                        0,
-                                                                    } };
+          { pwr_cClass_GetPi, "DevBody", "CoObject", CRR_READ, 0 },
+          { 0, "", "", 0, 0 }
+        };
 
   /* get all the children to the object */
   childcount = 0;
@@ -6339,7 +6371,7 @@ int utl_list(ldh_tSesContext ldhses, char* list_str, char* hier_str,
 {
   pwr_tObjid listobjdid;
   int i, j;
-  int changed;
+  int changed = 0;
   utl_t_listbody* listbody_ptr;
 
   char* hiername;
@@ -7018,7 +7050,7 @@ static int utl_list_sublist_print(utl_ctx utlctx, pwr_tObjid listobjdid,
     utl_t_list* list, int listcount, int* first)
 {
   int i, j, k;
-  int changed;
+  int changed = 0;
   utl_t_listbody* listbody_ptr;
 
   char* parameter;
@@ -7038,7 +7070,7 @@ static int utl_list_sublist_print(utl_ctx utlctx, pwr_tObjid listobjdid,
   int listobject_count;
   int new_row;
   int print_ok;
-  int printlist_ok;
+  int printlist_ok = 0;
   int page;
 
   /* Read the list object */
@@ -7531,9 +7563,9 @@ static int utl_list_print_par(utl_ctx utlctx, pwr_sAttrRef* o,
 static int utl_list_get_parvalue(
     utl_ctx utlctx, pwr_tObjid Objdid, utl_t_listpar* list_desc, char* text)
 {
-  int sts, size, i, j;
+  int sts, size, i, j = 0;
   pwr_tClassId cid;
-  ldh_sParDef* bodydef;
+  ldh_sParDef* bodydef = NULL;
   int rows;
   char body[20];
   pwr_tOName parname;
@@ -7883,7 +7915,7 @@ static int utl_list_print_columnheader(
 int utl_cut_segments(char* outname, char* name, int segments)
 {
   char* s[20];
-  int i, j, last_i;
+  int i, j, last_i = 0;
 
   for (i = 0; i < segments; i++) {
     s[i] = strrchr(name, '-');
@@ -9327,7 +9359,7 @@ int utl_create_loadfiles(ldh_tSesContext ldhses, char* volumes, int allvolumes)
   ldh_sSessInfo info;
   int status;
   int other_volume_attached;
-  ldh_tVolContext volctx;
+  ldh_tVolContext volctx = NULL;
   ldh_tSesContext l_ldhses;
   char vol_str[UTL_INPUTLIST_MAX + 1][80];
   pwr_tVolumeId volume_vect[UTL_INPUTLIST_MAX + 1];
@@ -9458,8 +9490,6 @@ error_return:
 * Cross document list functions.
 *
 **************************************************************************/
-
-#define CROSS_DOCALLOC 500
 
 static int cross_doclist_loaded = 0;
 static crossdoc_t_list* cross_doclist = 0;
@@ -9699,8 +9729,6 @@ static int cross_get_object_page(
 *
 **************************************************************************/
 
-#define CROSS_CROSSALLOC 500
-
 #define CROSSLIST_DI 0
 #define CROSSLIST_DO 1
 #define CROSSLIST_DV 2
@@ -9902,9 +9930,7 @@ static int cross_crosslist_object_insert(pwr_sAttrRef* arp,
     { pwr_cClass_Io, "RtBody", "SigChanCon", CRR_REF, CROSSLIST_OBJ },
     { pwr_cClass_Co, "RtBody", "SigChanCon", CRR_REF, CROSSLIST_OBJ },
     { pwr_cClass_Po, "RtBody", "SigChanCon", CRR_REF, CROSSLIST_OBJ },
-    {
-        0,
-    }
+    { 0, "", "", 0, 0 }
   };
 
   int sts, size;

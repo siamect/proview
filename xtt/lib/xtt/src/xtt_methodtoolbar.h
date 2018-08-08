@@ -53,17 +53,10 @@ public:
 
   XttMethodToolbar(void* parent_ctx, void* xnav, unsigned int op_method_mask,
       unsigned int mnt_method_mask, const char* tooltip_suffix);
-  virtual ~XttMethodToolbar()
-  {
-  }
-  virtual void set_sensitive()
-  {
-  }
+  virtual ~XttMethodToolbar();
+  virtual void set_sensitive();
 
-  static void disable()
-  {
-    m_disabled = 1;
-  }
+  static void disable();
 };
 
 #endif

@@ -159,7 +159,7 @@ bool wb_vrepwbl::createSnapshot(
     dbs.importVolume(*this);
 
     return true;
-  } catch (wb_error& e) {
+  } catch (wb_error&) {
     return false;
   }
 }
@@ -170,7 +170,7 @@ bool wb_vrepwbl::exportVolume(wb_import& i)
     i.importVolume(*this);
 
     return true;
-  } catch (wb_error& e) {
+  } catch (wb_error&) {
     return false;
   }
 }
@@ -640,7 +640,7 @@ int wb_vrepwbl::getTypeInfo(
         *size = tdrep->size();
         *elements = tdrep->nElement();
         delete tdrep;
-      } catch (wb_error& e) {
+      } catch (wb_error&) {
         // Try cdrep
         wb_cdrep* cdrep = m_merep->cdrep(&sts, tid);
         if (EVEN(sts))
@@ -727,7 +727,6 @@ int wb_vrepwbl::getClassInfo(pwr_tCid cid, size_t* rsize, size_t* dsize)
     delete cdrep;
     return 1;
   }
-  return 0;
 }
 
 #define IF_ATTR(attribute, etype, elem, level)                                 \
@@ -1062,7 +1061,7 @@ int wb_vrepwbl::nameToAttrRef(const char* name, pwr_sAttrRef* attrref)
     char cname[120];
     pwr_sAttrRef aref;
     pwr_tCid cid;
-    pwr_tVid vid;
+    pwr_tVid vid = 0;
 
     if (aname.volumeIsEqual("$PlcMain"))
       vid = ldh_cPlcMainVolume;
@@ -1314,7 +1313,6 @@ int wb_vrepwbl::getTemplateBody(
     }
   }
   }
-  return 0;
 }
 
 int wb_vrepwbl::load_files(const char* file_spec)

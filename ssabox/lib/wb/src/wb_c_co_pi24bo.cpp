@@ -191,7 +191,7 @@ static pwr_tStatus PostUnadopt(
   pwr_sClass_ChanCo ChanCo;
   pwr_sdClass_Co_PI24BO DCard;
   pwr_tUInt32 MaxCounter;
-  pwr_tUInt32 Chan;
+  pwr_tUInt32 Chan = 0;
   pwr_tString80 NewName;
 
   if (Class != pwr_cClass_ChanCo)

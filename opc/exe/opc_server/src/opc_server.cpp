@@ -38,7 +38,6 @@
  * General Public License plus this exception.
  */
 
-#include <float.h>
 #include <pthread.h>
 
 #include <map>
@@ -497,7 +496,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Read(
       strncpy(itempath, path, sizeof(itempath));
 
     strncpy(itemname, itempath, sizeof(itemname));
-    strncat(itemname, item->ItemName->c_str(), sizeof(itemname));
+    strncat(itemname, item->ItemName->c_str(), sizeof(itemname) - strlen(itemname) - 1);
 
     if (options & opc_mRequestOption_ReturnItemPath) {
       iv->ItemPath = soap_new_std__string(soap, -1);
@@ -641,7 +640,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Write(struct soap* soap, _s0__Write* s0__Write,
       strncpy(itempath, path, sizeof(itempath));
 
     strncpy(itemname, itempath, sizeof(itemname));
-    strncat(itemname, item->ItemName->c_str(), sizeof(itemname));
+    strncat(itemname, item->ItemName->c_str(), sizeof(itemname) - strlen(itemname) - 1);
 
     if (options & opc_mRequestOption_ReturnItemPath) {
       iv->ItemPath = soap_new_std__string(soap, -1);
@@ -772,7 +771,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Subscribe(struct soap* soap,
           deadband = *s0__Subscribe->ItemList->Items[i]->Deadband;
 
         sub.deadband = 0;
-        if (deadband != 0) {
+        if (!feqf(deadband, 0.0f)) {
           // Deadband in percentage of range, get range
           pwr_tAName oname;
           pwr_tAttrRef oaref;
@@ -828,7 +827,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Subscribe(struct soap* soap,
               sts = gdh_GetObjectInfoAttrref(
                   &aaref, &range_low, sizeof(range_low));
 
-            if (ODD(sts) && !(range_high == 0 && range_low == 0)) {
+            if (ODD(sts) && !(feqf(range_high, 0.0f) && feqf(range_low, 0.0f))) {
               sub.deadband = (range_high - range_low) * deadband / 100;
               break;
             }
@@ -855,7 +854,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Subscribe(struct soap* soap,
               sts = gdh_GetObjectInfoAttrref(
                   &aaref, &range_low, sizeof(range_low));
 
-            if (ODD(sts) && !(range_high == 0 && range_low == 0))
+            if (ODD(sts) && !(feqf(range_high, 0.0f) && feqf(range_low, 0.0f)))
               sub.deadband = (range_high - range_low) * deadband / 100;
 
             break;
@@ -966,7 +965,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionPolledRefresh(struct soap* soap,
   }
 
   pwr_tTime hold_time;
-  int wait_time;
+  int wait_time = 0;
   bool has_holdtime = false;
   bool has_waittime = false;
   int waited_time = 0;
@@ -1072,7 +1071,6 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionPolledRefresh(struct soap* soap,
         //	it->second[jj].size, it->second[jj].opc_type,
         // it->second[jj].pwr_type, it->second[jj].subid.nid,
         //	it->second[jj].subid.rix);
-        jj++;
       }
 
       s0__SubscribePolledRefreshReplyItemList* rlist

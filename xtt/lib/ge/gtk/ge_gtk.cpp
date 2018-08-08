@@ -36,12 +36,7 @@
 
 /* ge_gtk.cpp -- Graphical editor window */
 
-#if defined OS_POSIX
-#define LDH 1
-#endif
-
 #include <ctype.h>
-#include <float.h>
 #include <math.h>
 #include <string.h>
 #include <gdk/gdkkeysyms.h>
@@ -326,7 +321,6 @@ void GeGtk::objectnav_change_value_cb(
 
 int GeGtk::get_plant_select(char* select_name, int size)
 {
-#ifdef LDH
   pwr_sAttrRef attrref;
   int is_attrref;
   int sts;
@@ -366,21 +360,6 @@ int GeGtk::get_plant_select(char* select_name, int size)
     }
     return sts;
   }
-#else
-  pwr_tStatus sts;
-  GeGtk* gectx = (GeGtk*)ge_ctx;
-
-  sts = CoWowGtk::GetSelection(toplevel, str, sizeof(str), graph_atom);
-  if (ODD(sts))
-    strncpy(select_name, str, size);
-  else {
-    sts = CoWowGtk::GetSelection(toplevel, str, sizeof(str), GDK_ATOM_STRING);
-    if (ODD(sts))
-      strncpy(select_name, str, size);
-  }
-  return sts;
-#endif
-  return 0;
 }
 
 void GeGtk::open_yesnodia(const char* text, const char* title,
@@ -1328,7 +1307,6 @@ void GeGtk::activate_zoom_reset(GtkWidget* w, gpointer gectx)
 
 void GeGtk::activate_view_plant(GtkWidget* w, gpointer data)
 {
-#ifdef LDH
   Ge* ge = (Ge*)data;
 
   if (!ge->ldhses)
@@ -1354,7 +1332,6 @@ void GeGtk::activate_view_plant(GtkWidget* w, gpointer data)
     ge->subpalette_mapped = 1;
   }
   ge->set_focus(0);
-#endif
 }
 
 void GeGtk::activate_view_graphlist(GtkWidget* w, gpointer data)
@@ -1702,10 +1679,8 @@ GeGtk::~GeGtk()
   delete cmd_recall;
   delete graph;
   delete wow;
-#ifdef LDH
   if (plantctx)
     delete plantctx;
-#endif
   if (objectnav)
     delete objectnav;
   gtk_widget_destroy(india_widget);
@@ -3577,7 +3552,6 @@ GeGtk::GeGtk(void* x_parent_ctx, GtkWidget* x_parent_widget,
       Ge::init_colorpalette_cb, this, &colorpalette_widget);
   gtk_widget_show(colpal_main_widget);
 
-#ifdef LDH
   if (ldhses) {
     plantctx = new NavGtk(
         this, palbox, "Plant", ldhses, "NavigatorW1", &plant_widget, &sts);
@@ -3586,7 +3560,6 @@ GeGtk::GeGtk(void* x_parent_ctx, GtkWidget* x_parent_widget,
     ((NavGtk*)plantctx)->traverse_focus_cb = Ge::traverse_focus;
     gtk_box_pack_start(GTK_BOX(palbox), plant_widget, TRUE, TRUE, 0);
   }
-#endif
 
   GtkWidget* hpaned2 = gtk_hpaned_new();
   hpaned3 = gtk_hpaned_new();
@@ -3657,10 +3630,8 @@ GeGtk::GeGtk(void* x_parent_ctx, GtkWidget* x_parent_widget,
   gtk_paned_set_position(GTK_PANED(vpaned1), window_height - 380);
   gtk_paned_set_position(GTK_PANED(vpaned2), window_height - 290);
 
-#ifdef LDH
   if (ldhses)
     g_object_set(plant_widget, "visible", FALSE, NULL);
-#endif
   g_object_set(cmd_prompt, "visible", FALSE, NULL);
   g_object_set(cmd_input, "visible", FALSE, NULL);
 

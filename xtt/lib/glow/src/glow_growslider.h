@@ -70,7 +70,7 @@ public:
       double x1, double y1, int nodraw = 0, int rel_annot_pos = 0);
 
   //! Noargs constructor
-  GrowSlider(){};
+  GrowSlider(){}
 
   //! Make this object a copy of another image object.
   /*!
@@ -85,7 +85,7 @@ public:
   glow_eObjectType type()
   {
     return glow_eObjectType_GrowSlider;
-  };
+  }
 
   //! Save the content of the object to file.
   /*!

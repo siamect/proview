@@ -658,7 +658,6 @@ bool wb_vrepced::importPasteObject(pwr_tOid destination, ldh_eDest destcode,
   if (!classeditorCheck(
           ldh_eDest_IntoLast, po, cid, &woidl.oix, namel, &sts, true)) {
     throw wb_error(sts);
-    return 0;
   }
   if (woidl.oix)
     woidl.vid = m_vrep->vid();
@@ -1262,7 +1261,7 @@ bool wb_vrepced::buildTemplate(pwr_tStatus* sts, wb_orep* co)
     pwr_tTid typeref;
     pwr_tUInt32 flags;
     pwr_tUInt32 elements;
-    pwr_tUInt32 offset;
+    pwr_tUInt32 offset = 0;
     pwr_tUInt32 size;
     pwr_tOid toid;
 
@@ -2216,7 +2215,7 @@ void wb_vrepced::printPaletteFile()
   int palette_found = 0;
   PalFileMenu* menu = PalFile::config_tree_build(
       0, pal_cLocalPaletteFile, pal_eNameType_All, "", 0);
-  PalFileMenu *mp, *mp2, *mp3, *mp4;
+  PalFileMenu *mp, *mp2 = NULL, *mp3 = NULL, *mp4;
   wb_orep *cedch, *cedcd, *cedgn, *otmp;
 
   // Add menu "NavigatorPalette-AllClasses-'volumename' if not found
@@ -2451,7 +2450,7 @@ void wb_vrepced::printStructFile(bool hpp)
 {
   // Print new include file
   pwr_tStatus sts;
-  wb_orep *o_root, *o_tdef, *o_cdef, *o_value, *o_bdef, *o_adef, *otmp;
+  wb_orep *o_root, *o_tdef = NULL, *o_cdef, *o_value, *o_bdef, *o_adef, *otmp;
   std::ofstream fp;
   pwr_tFileName filename;
   pwr_tFileName fname, incname;

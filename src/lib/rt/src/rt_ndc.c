@@ -587,7 +587,7 @@ pwr_tBoolean ndc_ConvertData(pwr_tStatus* sts, const gdb_sNode* np,
     char ebuf[80];
     sprintf(ebuf, "unknown op: %d", op);
     errh_Bugcheck(NDC__OP, ebuf);
-  } break;
+  }
   }
 
   pwr_Return(YES, sts, NDC__SUCCESS);
@@ -890,7 +890,7 @@ pwr_tBoolean ndc_ConvertRemoteData(pwr_tStatus* sts, const gdb_sNode* np,
     char ebuf[80];
     sprintf(ebuf, "unknown op: %d", op);
     errh_Bugcheck(NDC__OP, ebuf);
-  } break;
+  }
   }
 
   pwr_Return(YES, sts, NDC__SUCCESS);

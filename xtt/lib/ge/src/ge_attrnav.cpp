@@ -57,9 +57,9 @@
 #include "xnav_bitmap_openattr12.h"
 
 #define ATTRNAV__INPUT_SYNTAX 2
-#define ATTRNAV__OBJNOTFOUND 4
+//#define ATTRNAV__OBJNOTFOUND 4
 #define ATTRNAV__STRINGTOLONG 6
-#define ATTRNAV__ITEM_NOCREA 8
+//#define ATTRNAV__ITEM_NOCREA 8
 #define ATTRNAV__SUCCESS 1
 
 static attrnav_sEnumElement elem_dyn_type1[]
@@ -1212,7 +1212,7 @@ int AttrNav::string_to_mask(int type_id, char* str, pwr_tMask* mask)
 {
   attrnav_sEnumElement* elem_p;
   attrnav_sEnum* enum_p;
-  int found;
+  int found = 0;
   char vect[32][40];
   int nr;
   unsigned int m = 0;
@@ -1250,7 +1250,7 @@ int AttrNav::string_to_enum(int type_id, char* str, pwr_tEnum* enumval)
 {
   attrnav_sEnumElement* elem_p;
   attrnav_sEnum* enum_p;
-  int found;
+  int found = 0;
 
   for (enum_p = enum_types; enum_p->elements; enum_p++) {
     if (enum_p->num == (unsigned int)type_id) {
@@ -1276,7 +1276,7 @@ int AttrNav::enum_to_string(
 {
   attrnav_sEnumElement* elem_p;
   attrnav_sEnum* enum_p;
-  int found;
+  int found = 0;
 
   for (enum_p = enum_types; enum_p->elements; enum_p++) {
     if (enum_p->num == (unsigned int)type_id) {
@@ -1436,7 +1436,7 @@ void attrnav_attrvalue_to_string(
   case ge_eAttrType_MethodsMenuType:
   case ge_eAttrType_MethodToolbarType:
   case ge_eAttrType_KeyboardType: {
-    attrnav_sEnumElement* elem_p;
+    attrnav_sEnumElement* elem_p = NULL;
     attrnav_sEnum* enum_p;
     int found;
 
@@ -1631,7 +1631,7 @@ int AttrNav::set_attr_value(
       }
     }
 
-    if (item->max_limit != 0 || item->min_limit != 0) {
+    if (!feq(item->max_limit, 0.0) || !feq(item->min_limit, 0.0)) {
       if (item->type_id == glow_eType_Double) {
         if (*(double*)&buffer < item->min_limit
             || *(double*)&buffer > item->max_limit) {
@@ -3395,7 +3395,7 @@ int AItemLocal::open_children(AttrNav* attrnav, double x, double y)
     brow_ResetNodraw(attrnav->brow->ctx);
     brow_Redraw(attrnav->brow->ctx, node_y);
   } else if (parent && !noedit) {
-    attrnav_sEnumElement* elem_p;
+    attrnav_sEnumElement* elem_p = NULL;
     attrnav_sEnum* enum_p;
     int found;
 
@@ -3535,7 +3535,7 @@ AItemMask::AItemMask(AttrNav* attrnav, char* item_name, unsigned int item_mask,
 
 static char* attrnav_mask_to_string(int type_id, int value)
 {
-  attrnav_sEnumElement* elem_p;
+  attrnav_sEnumElement* elem_p = NULL;
   attrnav_sEnum* enum_p;
   int found;
   bool first = true;

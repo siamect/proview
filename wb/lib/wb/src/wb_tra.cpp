@@ -49,8 +49,6 @@
 
 #define TRA_MAX_TRACEMETHOD 10
 
-#define BEEP putchar('\7');
-
 /*_Include files_________________________________________________________*/
 
 #include <stdlib.h>

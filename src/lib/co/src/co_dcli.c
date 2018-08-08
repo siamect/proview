@@ -37,7 +37,7 @@
 /* co_dcli.c
    Command line interpreter. */
 
-#include <float.h>
+#include <ctype.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -48,9 +48,6 @@
 #include "co_dcli.h"
 #include "co_dcli_msg.h"
 
-#define r_toupper(c) (((c) >= 'a' && (c) <= 'z') ? (c)&0xDF : (c))
-#define r_tolower(c) (((c) >= 'A' && (c) <= 'Z') ? (c) | 0x20 : (c))
-
 #define DCLI_SUBST_SLASH 3
 #define DCLI_SUBST_EQUAL 4
 
@@ -60,7 +57,6 @@ typedef struct {
 } dcli_t_symboltable;
 
 #define DCLI_SYMBOLTABLE_SIZE 500
-#define CMD_BUFF_SIZE (DCLI_SYMBOLTABLE_SIZE * 160)
 
 static char dcli_qual_str[10][2][400];
 static dcli_t_symboltable dcli_symboltable[DCLI_SYMBOLTABLE_SIZE];
@@ -221,9 +217,9 @@ int dcli_cli(dcli_tCmdTable* command_table, const char* string, void* userdata1,
   int nr, i, j, valuenr;
   int hitnr, sts;
   char command[DCLI_CMD_SIZE];
-  int (*func)();
+  int (*func)() = NULL;
   dcli_tCmdTable* comtbl_ptr;
-  dcli_tCmdTable* current_comtbl;
+  dcli_tCmdTable* current_comtbl = NULL;
   int arg_count;
   char qual[80];
   char *s, *t;
@@ -472,7 +468,7 @@ int dcli_replace_symbol(char* command, char* newcommand, int newsize)
 {
   char* s;
   char* t;
-  char* u;
+  char* u = NULL;
   int symbolmode;
   long int size;
   char value[80];
@@ -831,7 +827,7 @@ int dcli_toupper(char* str_upper, char* str)
     if (namechar == '"' && prev_char != '\\')
       convert = !convert;
     if (convert) {
-      *t = (char)r_toupper(namechar);
+      *t = (char)toupper(namechar);
       if (*t == 'ö')
         *t = (char)'Ö';
       else if (*t == 'ä')
@@ -1010,5 +1006,5 @@ unsigned int dcli_random()
   int itime = t.tv_nsec + t.tv_sec % 10000;
 
   srand(itime);
-  return (unsigned int)((double)rand() / ((double)RAND_MAX + 1) * 999999);
+  return (unsigned int)(rand() / ((double)RAND_MAX + 1) * 999999);
 }

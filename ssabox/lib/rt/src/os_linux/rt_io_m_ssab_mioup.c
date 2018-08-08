@@ -93,7 +93,7 @@ static pwr_tStatus AoRangeToCoef(io_sChannel* chanp)
     cop->CalculateNewCoef = 0;
 
     /* Coef for ActualValue to RawValue conversion */
-    if (cop->ActValRangeHigh != cop->ActValRangeLow) {
+    if (!feqf(cop->ActValRangeHigh, cop->ActValRangeLow)) {
       cop->SigValPolyCoef1
           = (cop->SensorSigValRangeHigh - cop->SensorSigValRangeLow)
           / (cop->ActValRangeHigh - cop->ActValRangeLow);
@@ -108,7 +108,7 @@ static pwr_tStatus AoRangeToCoef(io_sChannel* chanp)
       return IO__CHANRANGE;
     }
     /* Coef for ActualValue to SignalValue conversion */
-    if (cop->ChannelSigValRangeHigh != 0) {
+    if (!feqf(cop->ChannelSigValRangeHigh, 0.0f)) {
       PolyCoef0 = 0;
       PolyCoef1 = cop->RawValRangeHigh / cop->ChannelSigValRangeHigh;
       cop->OutPolyCoef1 = cop->SigValPolyCoef1 * PolyCoef1;
@@ -201,7 +201,7 @@ static pwr_tStatus AiRangeToCoef(io_sChannel* chanp)
 
     /* Coef for SignalValue to ActualValue conversion */
     if (chanp->ChanClass != pwr_cClass_ChanAit && cop->SensorPolyType == 1) {
-      if (cop->SensorSigValRangeHigh != cop->SensorSigValRangeLow) {
+      if (!feqf(cop->SensorSigValRangeHigh, cop->SensorSigValRangeLow)) {
         PolyCoef1 = (cop->ActValRangeHigh - cop->ActValRangeLow)
             / (cop->SensorSigValRangeHigh - cop->SensorSigValRangeLow);
         PolyCoef0
@@ -291,7 +291,7 @@ static pwr_tStatus IoCardRead(
   pwr_sClass_Ssab_BaseMCard* op;
   pwr_sClass_Ssab_RemoteRack* rrp;
   int i;
-  pwr_tFloat32 actvalue;
+  pwr_tFloat32 actvalue = 0.0;
   io_sChannel* chanp;
   pwr_sClass_ChanAi* cop;
   pwr_sClass_Ai* sop;
@@ -473,7 +473,7 @@ static pwr_tStatus IoCardWrite(
     cop = (pwr_sClass_ChanAo*)chanp->cop;
     sop = (pwr_sClass_Ao*)chanp->sop;
 
-    if (*(pwr_tFloat32*)chanp->vbp != local->OldValue[i]
+    if (!feqf(*(pwr_tFloat32*)chanp->vbp, local->OldValue[i])
         || local->WriteFirst > 0 || cop->CalculateNewCoef || fixout
         || cop->TestOn || local->OldTestOn[i] != cop->TestOn) {
       if (fixout)

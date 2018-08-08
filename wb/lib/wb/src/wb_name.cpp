@@ -76,6 +76,14 @@ wb_name::~wb_name()
     m_nrep->unref();
 }
 
+const char* wb_name::c_str() const
+{
+  if (m_nrep == 0)
+    return m_emptyString;
+  else
+    return m_nrep->name();
+}
+
 wb_name& wb_name::operator=(const wb_name& n)
 {
   if (n.m_nrep)
@@ -85,4 +93,257 @@ wb_name& wb_name::operator=(const wb_name& n)
   m_nrep = n.m_nrep;
   m_sts = n.sts();
   return *this;
+}
+
+wb_name::operator bool() const
+{
+  return oddSts();
+}
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Winfinite-recursion"
+std::ostream& operator<<(std::ostream& os, const wb_name& name)
+{
+  os << (name.c_str());
+  return os;
+}
+#pragma GCC diagnostic pop
+
+bool wb_name::hasVolume() const throw(wb_error)
+{
+  check();
+  return m_nrep->hasVolume();
+}
+
+bool wb_name::hasPath() const throw(wb_error)
+{
+  check();
+  return m_nrep->hasPath();
+}
+
+bool wb_name::hasObject() const throw(wb_error)
+{
+  check();
+  return m_nrep->hasObject();
+}
+
+bool wb_name::hasSegment(int idx) const throw(wb_error)
+{
+  check();
+  return m_nrep->hasSegment(idx);
+}
+
+bool wb_name::hasAttribute(int idx) const throw(wb_error)
+{
+  check();
+  return m_nrep->hasAttribute(idx);
+}
+
+bool wb_name::hasAttrIndex(int idx) const throw(wb_error)
+{
+  check();
+  return m_nrep->hasAttrIndex(idx);
+}
+
+int wb_name::attributes()
+{
+  check();
+  return m_nrep->attributes();
+}
+
+int wb_name::segments()
+{
+  check();
+  return m_nrep->segments();
+}
+
+int wb_name::attrIndex(int idx) const throw(wb_error)
+{
+  check();
+  return m_nrep->attrIndex(idx);
+}
+
+char* wb_name::segment(int idx, char* res) const throw(wb_error)
+{
+  check();
+  return m_nrep->segment(idx, res);
+}
+
+char* wb_name::path(char* res) const throw(wb_error)
+{
+  check();
+  return m_nrep->path(res);
+}
+
+char* wb_name::volume(char* res) const throw(wb_error)
+{
+  check();
+  return m_nrep->volume(res);
+}
+
+char* wb_name::object(char* res) const throw(wb_error)
+{
+  check();
+  return m_nrep->object(res);
+}
+
+char* wb_name::attribute(int idx, char* res) const throw(wb_error)
+{
+  check();
+  return m_nrep->attribute(idx, res);
+}
+
+char* wb_name::normSegment(int idx, char* res) const throw(wb_error)
+{
+  check();
+  return m_nrep->normSegment(idx, res);
+}
+
+char* wb_name::normPath(char* res) const throw(wb_error)
+{
+  check();
+  return m_nrep->normPath(res);
+}
+
+char* wb_name::normVolume(char* res) const throw(wb_error)
+{
+  check();
+  return m_nrep->normVolume(res);
+}
+
+char* wb_name::normObject(char* res) const throw(wb_error)
+{
+  check();
+  return m_nrep->normObject(res);
+}
+
+char* wb_name::normAttribute(int idx, char* res) const throw(wb_error)
+{
+  check();
+  return m_nrep->normAttribute(idx, res);
+}
+
+char* wb_name::name() const throw(wb_error)
+{
+  check();
+  return m_nrep->name();
+}
+
+char* wb_name::normName() const throw(wb_error)
+{
+  check();
+  return m_nrep->normName();
+}
+
+char* wb_name::name(int ntype) const throw(wb_error)
+{
+  check();
+  return m_nrep->name(ntype);
+}
+
+char* wb_name::normName(int ntype) const throw(wb_error)
+{
+  check();
+  return m_nrep->normName(ntype);
+}
+
+bool wb_name::volumeIsEqual(const char* n) const throw(wb_error)
+{
+  check();
+  return m_nrep->volumeIsEqual(n);
+}
+
+bool wb_name::objectIsEqual(const char* n) const throw(wb_error)
+{
+  check();
+  return m_nrep->objectIsEqual(n);
+}
+
+bool wb_name::segmentIsEqual(const char* n, int idx) const throw(wb_error)
+{
+  check();
+  return m_nrep->segmentIsEqual(n, idx);
+}
+
+bool wb_name::attributeIsEqual(const char* n, int idx) const throw(wb_error)
+{
+  check();
+  return m_nrep->attributeIsEqual(n, idx);
+}
+
+char* wb_name::segmentsAll(int idx) const throw(wb_error)
+{
+  check();
+  return m_nrep->segmentsAll(idx);
+}
+
+char* wb_name::attributesAll(int idx) const throw(wb_error)
+{
+  check();
+  return m_nrep->attributesAll(idx);
+}
+
+char* wb_name::attributesAllTrue(int idx) const throw(wb_error)
+{
+  check();
+  return m_nrep->attributesAll(idx, 0, true);
+}
+
+// Id representation
+char* wb_name::vid(char* res) const throw(wb_error)
+{
+  check();
+  return m_nrep->volume(res);
+}
+
+char* wb_name::oix(char* res) const throw(wb_error)
+{
+  check();
+  return m_nrep->segment(1, res);
+}
+
+char* wb_name::bodyName(char* res) const throw(wb_error)
+{
+  check();
+  return m_nrep->segment(2, res);
+}
+
+int wb_name::bodyOffset() const throw(wb_error)
+{
+  check();
+  return m_nrep->bodyOffset();
+}
+
+int wb_name::bodySize() const throw(wb_error)
+{
+  check();
+  return m_nrep->bodySize();
+}
+
+bool wb_name::hasSuper() const throw(wb_error)
+{
+  check();
+  return m_nrep->hasSuper();
+}
+
+void wb_name::setShadowed(bool shadowed) throw(wb_error)
+{
+  check();
+  m_nrep->setShadowed(shadowed);
+}
+
+char* wb_name::unatName(const char* name)
+{
+  return wb_nrep::unatName(name);
+}
+
+bool wb_name::checkObjectName(const char* name)
+{
+  return wb_nrep::checkObjectName(name);
+}
+
+void wb_name::check() const
+{
+  if (evenSts())
+    throw wb_error(m_sts);
 }

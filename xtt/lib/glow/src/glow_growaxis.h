@@ -95,7 +95,7 @@ public:
   void erase(GlowWind* w)
   {
     erase(w, (GlowTransform*)NULL, hot, NULL);
-  };
+  }
 
   //! Draw the objects if any part is inside the drawing area.
   /*!
@@ -133,7 +133,7 @@ public:
   glow_eObjectType type()
   {
     return glow_eObjectType_GrowAxis;
-  };
+  }
 
   int text_size; //!< Size of text.
   glow_eDrawType text_drawtype; //!< Drawtype for text.
@@ -273,7 +273,7 @@ public:
   {
     text_color_drawtype = drawtype;
     draw();
-  };
+  }
 
   //! Format axis text.
   /*!

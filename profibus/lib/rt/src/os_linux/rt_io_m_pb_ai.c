@@ -63,7 +63,7 @@ void ConvertAi(pwr_sClass_ChanAi* cop, pwr_tInt16 nobits, pwr_tUInt8 rawvalue8,
   pwr_tFloat32 sigvalue;
   pwr_tFloat32 actvalue;
   pwr_tFloat32* polycoef_p;
-  pwr_tFloat32 f_raw;
+  pwr_tFloat32 f_raw = 0.0;
   int i;
 
   if (nobits == 32) {
@@ -134,7 +134,7 @@ void ConvertAit(pwr_sClass_ChanAit* cop, pwr_tInt16 nobits,
   pwr_tUInt16 Middle;
   pwr_tUInt16 Last;
   pwr_tFloat32 sigvalue;
-  pwr_tFloat32 f_raw;
+  pwr_tFloat32 f_raw = 0.0;
 
   if (nobits == 32) {
     if (representation == PB_NUMREP_SIGNEDINT)
@@ -225,7 +225,7 @@ static pwr_tStatus IoCardRead(
   pwr_tUInt16 udata16 = 0;
   pwr_tInt32 data32 = 0;
   pwr_tUInt32 udata32 = 0;
-  pwr_tFloat32 actvalue;
+  pwr_tFloat32 actvalue = 0.0;
   int i;
 
   local = (io_sCardLocal*)cp->Local;

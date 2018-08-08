@@ -43,7 +43,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include <float.h>
 #include <math.h>
 #include <vector>
 #include <Xm/Xm.h>

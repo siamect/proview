@@ -60,9 +60,7 @@ public:
 
   virtual bool importMeta(dbs_sMenv* mep) = 0;
 
-  virtual ~wb_import()
-  {
-  }
+  virtual ~wb_import();
 };
 
 #endif

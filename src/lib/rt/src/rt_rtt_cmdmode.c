@@ -39,7 +39,6 @@
 
 /*_Include files_________________________________________________________*/
 
-#include <float.h>
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
@@ -182,7 +181,7 @@ int rtt_replace_symbol(char* command, char* newcommand)
 {
   char* s;
   char* t;
-  char* u;
+  char* u = NULL;
   int symbolmode;
   long int size;
   char value[80];
@@ -590,9 +589,9 @@ int rtt_attribute_func(char* name, int* return_decl, ccm_tFloat* return_float,
   char* s;
   char* t;
   int len;
-  int decl;
-  ccm_tInt int_val;
-  ccm_tFloat float_val;
+  int decl = 0;
+  ccm_tInt int_val = 0;
+  ccm_tFloat float_val = 0.0;
   ccm_tString string_val;
   pwr_sAttrRef attrref;
   pwr_tTypeId attrtype;

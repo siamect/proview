@@ -34,7 +34,6 @@
  * General Public License plus this exception.
  **/
 
-#include <float.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -185,21 +184,21 @@ int GrowLine::local_event_handler(glow_eEvent event, double x, double y)
   y1 = p1.y;
   y2 = p2.y;
 
-  if ((x1 == x2 && y1 < y2 && // Vertical
+  if ((feq(x1, x2) && y1 < y2 && // Vertical
           fabs(x1 - x) < dx && y1 < y && y < y2)
-      || (x1 == x2 && y1 > y2 && // Vertical
+      || (feq(x1, x2) && y1 > y2 && // Vertical
              fabs(x1 - x) < dx && y2 < y && y < y1)
-      || (y1 == y2 && x1 < x2 && // Horizontal
+      || (feq(y1, y2) && x1 < x2 && // Horizontal
              fabs(y1 - y) < dy && x1 < x && x < x2)
-      || (y1 == y2 && x1 > x2 && // Horizontal
+      || (feq(y1, y2) && x1 > x2 && // Horizontal
              fabs(y1 - y) < dy && x2 < x && x < x1)) {
     //  std::cout << "Event handler: Hit in line\n";
     return 1;
-  } else if ((!(x1 == x2 || y1 == y2) && x1 < x2 && x1 <= x && x <= x2
+  } else if ((!(feq(x1, x2) || feq(y1, y2)) && x1 < x2 && x1 <= x && x <= x2
                  && fabs(y - (y2 - y1) / (x2 - x1) * x - y1
                         + (y2 - y1) / (x2 - x1) * x1)
                      < dx)
-      || (!(x1 == x2 || y1 == y2) && x1 > x2 && x2 <= x && x <= x1
+      || (!(feq(x1, x2) || feq(y1, y2)) && x1 > x2 && x2 <= x && x <= x1
              && fabs(y - (y2 - y1) / (x2 - x1) * x - y1
                     + (y2 - y1) / (x2 - x1) * x1)
                  < dx)) {
@@ -298,7 +297,7 @@ void GrowLine::save(std::ofstream& fp, glow_eSaveMode mode)
 
 void GrowLine::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;
@@ -502,7 +501,7 @@ void GrowLine::set_position(double x, double y)
 {
   double old_x_left, old_x_right, old_y_low, old_y_high;
 
-  if (trf.a13 == x && trf.a23 == y)
+  if (feq(trf.a13, x) && feq(trf.a23, y))
     return;
   old_x_left = x_left;
   old_x_right = x_right;
@@ -858,7 +857,7 @@ void GrowLine::export_javabean(GlowTransform* t, void* node,
     x2 = trf.x(t, p2.x, p2.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
     y2 = trf.y(t, p2.x, p2.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
   }
-  if (x1 == x2 && y1 == y2)
+  if (feq(x1, x2) && feq(y1, y2))
     return;
   ctx->export_jbean->line(
       x1, y1, x2, y2, draw_type, idx, pass, shape_cnt, node_cnt, fp);

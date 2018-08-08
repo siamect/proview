@@ -52,7 +52,7 @@
 class GlowLine : public GlowArrayElem {
 public:
   //! Noargs constructor.
-  GlowLine(){};
+  GlowLine(){}
 
   //! Constuctor
   /*!
@@ -99,7 +99,7 @@ public:
       GlowWind* w, void* pos, glow_eEvent event, int x, int y, void* node);
 
   //! Not implemented
-  void conpoint_select(void* pos, int x, int y, double* distance, void** cp){};
+  void conpoint_select(void* pos, int x, int y, double* distance, void** cp){}
 
   //! Save the content of the object to file.
   /*!
@@ -210,7 +210,7 @@ public:
   int get_conpoint(int num, double* x, double* y, glow_eDirection* dir)
   {
     return 0;
-  };
+  }
 
   //! Get the object type
   /*!
@@ -219,7 +219,7 @@ public:
   glow_eObjectType type()
   {
     return glow_eObjectType_Line;
-  };
+  }
 
   //! Set the color.
   /*!
@@ -228,7 +228,7 @@ public:
   void set_drawtype(glow_eDrawType drawtype)
   {
     draw_type = drawtype;
-  };
+  }
 
   //! Set the linewidth.
   /*!
@@ -238,7 +238,7 @@ public:
   void set_linewidth(int linewidth)
   {
     line_width = linewidth;
-  };
+  }
 
   //! Export the object as a java shape.
   /*!

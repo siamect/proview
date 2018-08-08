@@ -36,6 +36,8 @@
 
 #include <string.h>
 
+#include "co_math.h"
+
 #include "rt_plc.h"
 #include "rt_plc_io.h"
 
@@ -74,7 +76,7 @@ void pipos_exec(plc_sThread* tp, pwr_sClass_pipos* object)
     pdiff = object->CalPos2 - object->PosCal1;
     idiff = object->PulsIn - object->PICal1;
 
-    if (pdiff != 0 && idiff != 0) {
+    if (!feqf(pdiff, 0.0f) && idiff != 0) {
       object->Gain = pdiff / idiff;
       object->PosCal2 = object->ActVal = object->CalPos2;
     }

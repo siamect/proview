@@ -69,7 +69,7 @@ public:
       double y, int nodraw = 0);
 
   //! Noargs constructor.
-  GrowToolbar(){};
+  GrowToolbar(){}
 
   ~GrowToolbar();
 
@@ -122,7 +122,7 @@ public:
   {
     *list = nc->a.a;
     *size = nc->a.size();
-  };
+  }
 
   //! Find a member object with the specified name.
   /*!

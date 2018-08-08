@@ -765,8 +765,7 @@ SOCKET USER INTERFACE
 
 /*--- Socket options --------------------------------------------------------*/
 
-/** \anchor SocketFlags @name Socket Flags
- * Definitions for Socket Flags
+/** Definitions for Socket Flags
  * @{
  */
 
@@ -791,8 +790,7 @@ SOCKET USER INTERFACE
 
 /*--- Socket error codes ----------------------------------------------------*/
 
-/** \anchor ErrorCode @name Socket Interface Error Codes
- * Definitions for Socket Interface Error Codes
+/** Definitions for Socket Interface Error Codes
  * @{
  */
 

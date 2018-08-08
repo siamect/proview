@@ -39,6 +39,9 @@
 #include "rt_rtt_menu.h"
 #include "rt_rtt_edit.h"
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+
 RTT_HELP_START
 RTT_HELP_SUBJ("PWR_RTT")
 RTT_HELP_INFO("  Välj ut önskat ämne med piltangenterna och tryck på RETURN")
@@ -59,6 +62,8 @@ RTT_MENUITEM_EXIT("EXIT")
 }
 }
 ;
+
+#pragma GCC diagnostic pop
 
 int main(int argc, char* argv[])
 {

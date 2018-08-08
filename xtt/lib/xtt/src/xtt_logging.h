@@ -109,11 +109,11 @@ public:
   int set_prio(int prio)
   {
     return 1;
-  };
+  }
   int set_default_prio()
   {
     return 1;
-  };
+  }
   void message(char severity, const char* msg);
 };
 

@@ -223,7 +223,6 @@ void Xtt::qcom_events(void* data)
 {
   Xtt* xtt = (Xtt*)data;
   char mp[2000];
-  qcom_sQid qid = qcom_cNQid;
   qcom_sGet get;
   static int swap = 0;
   pwr_tStatus sts = 1;
@@ -585,7 +584,7 @@ Xtt::Xtt(int* argc, char** argv[], int* return_sts)
   qcom_sQattr qAttr;
   qcom_sQid qini;
   char language[20] = "";
-  pwr_sClass_OpPlace* opp;
+  pwr_sClass_OpPlace* opp = NULL;
   static char display[80];
   static char display_opt[20] = "--display";
 
@@ -898,6 +897,31 @@ Xtt::Xtt(int* argc, char** argv[], int* return_sts)
 
   if (strcmp(language, "") != 0)
     Lng::set(language);
+}
+
+Xtt::~Xtt()
+{
+}
+
+void Xtt::message(char severity, const char* msg)
+{
+}
+
+void Xtt::open_input_dialog(const char* text, const char* title,
+    const char* init_text, void (*ok_cb)(Xtt*, char*))
+{
+}
+
+void Xtt::set_prompt(const char* prompt)
+{
+}
+
+void Xtt::open_change_value()
+{
+}
+
+void Xtt::print()
+{
 }
 
 void Xtt::opplace_selected_cb(void* ctx, char* text, int ok_pressed)

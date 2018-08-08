@@ -59,45 +59,20 @@ typedef enum {
 class XttCameraControl {
 public:
   pwr_tURL url;
-  XttCameraControl(char* x_url)
-  {
-  }
-  virtual ~XttCameraControl()
-  {
-  }
-  virtual void zoom_relative(double factor)
-  {
-  }
-  virtual void zoom_absolute(double factor)
-  {
-  }
-  virtual void pan_relative(double value)
-  {
-  }
-  virtual void pan_absolute(double value)
-  {
-  }
-  virtual void tilt_relative(double value)
-  {
-  }
-  virtual void tilt_absolute(double value)
-  {
-  }
-  virtual void pan_tilt_zoom_absolute(double pan, double tilt, double zoom)
-  {
-  }
+  XttCameraControl(char* x_url);
+  virtual ~XttCameraControl();
+  virtual void zoom_relative(double factor);
+  virtual void zoom_absolute(double factor);
+  virtual void pan_relative(double value);
+  virtual void pan_absolute(double value);
+  virtual void tilt_relative(double value);
+  virtual void tilt_absolute(double value);
+  virtual void pan_tilt_zoom_absolute(double pan, double tilt, double zoom);
   virtual void center(
-      int x, int y, int width, int height, int stream_width, int stream_height)
-  {
-  }
+      int x, int y, int width, int height, int stream_width, int stream_height);
   virtual void area_zoom(int x, int y, int width, int height, int window_width,
-      int window_height, int stream_width, int stream_height)
-  {
-  }
-  virtual int get_position(double* pan, double* tilt, double* zoom)
-  {
-    return 0;
-  }
+      int window_height, int stream_width, int stream_height);
+  virtual int get_position(double* pan, double* tilt, double* zoom);
 };
 
 class XttCameraControlVapix : public XttCameraControl {
@@ -106,9 +81,7 @@ public:
   char authstr[100];
 
   XttCameraControlVapix(char* x_url, char* x_user, char* x_password);
-  ~XttCameraControlVapix()
-  {
-  }
+  ~XttCameraControlVapix();
   void zoom_relative(double factor);
   void zoom_absolute(double factor);
   void pan_relative(double value);
@@ -152,10 +125,7 @@ public:
   XttStream(void* st_parent_ctx, const char* name, const char* st_uri,
       int st_width, int st_height, int x, int y, double st_scan_time,
       unsigned int st_options, int st_embedded, pwr_tAttrRef* st_arp);
-  virtual ~XttStream()
-  {
-    delete camera_control;
-  }
+  virtual ~XttStream();
 
   void position(double pan, double tilt, double zoom);
   void action_click(int x, int y);
@@ -166,22 +136,11 @@ public:
   void activate_preset_position(int idx);
   void activate_preset_store_pos(int idx);
 
-  virtual void pop()
-  {
-  }
-  virtual void set_size(int width, int height)
-  {
-  }
-  virtual void setup()
-  {
-  }
-  virtual void* get_widget()
-  {
-    return 0;
-  }
-  virtual void create_popup_menu(int x, int y)
-  {
-  }
+  virtual void pop();
+  virtual void set_size(int width, int height);
+  virtual void setup();
+  virtual void* get_widget();
+  virtual void create_popup_menu(int x, int y);
 };
 
 #endif

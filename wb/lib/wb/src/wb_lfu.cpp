@@ -62,7 +62,6 @@
 #include "wb_vrepdb.h"
 
 #define LFU_MAX_NODE_VOLUMES 100
-#define LFU_MAX_BUS 50
 #define LFU_MAX_VOLREF 40
 
 lfu_volume_info::lfu_volume_info() : vid(0), cid(0), volrep(ldh_eVolRep_Db)
@@ -150,7 +149,7 @@ pwr_tStatus lfu_volumelist_load(
   int nr;
   int line_count;
   int list_alloc;
-  lfu_t_volumelist* list;
+  lfu_t_volumelist* list = NULL;
   lfu_t_volumelist* list_ptr;
   int sts;
   int count;
@@ -667,7 +666,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
   int objcount;
   trv_tCtx trvctx;
   pwr_tObjid distrobjid;
-  pwr_tVolumeId volume_id;
+  pwr_tVolumeId volume_id = 0;
   pwr_tMask distr_options = 0;
   int distr_disable;
   char fname[200];
@@ -1007,7 +1006,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
             int* dbenum_p = 0;
             char* server_p = 0;
             ldh_eVolRep volrep;
-            pwr_tCid volcid;
+            pwr_tCid volcid = 0;
             pwr_tString40 server = "";
 
             switch (vcid) {
@@ -1382,7 +1381,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
               if (EVEN(sts))
                 return sts;
 
-              if (*scantime_ptr == 0) {
+              if (feqf(*scantime_ptr, 0.0f)) {
                 char msg[200];
                 sprintf(msg, "Error in NodeConfig object '%s', "
                              "SimulateSingleScanTime is missing",
@@ -3546,7 +3545,7 @@ static void lfu_creadb_qb_yes(void* ctx, void* d)
     wb_env env = sp->env();
     wb_volume vdb = env.createVolume(
         data->vid, data->cid, data->name, data->volrep, data->server, false);
-  } catch (wb_error& e) {
+  } catch (wb_error&) {
     MsgWindow::message('E', "Unable to create volume", msgw_ePop_Default);
   }
   free((char*)data);

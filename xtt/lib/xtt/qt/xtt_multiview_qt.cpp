@@ -209,9 +209,9 @@ XttMultiViewQt::XttMultiViewQt(QWidget* mv_parent_wid, void* mv_parent_ctx,
     rows = mv.Rows;
     cols = mv.Columns;
 
-    QHBoxLayout* col_widget_box;
-    QSplitter* col_widget_pane;
-    QGridLayout* col_widget_table;
+    QHBoxLayout* col_widget_box = NULL;
+    QSplitter* col_widget_pane = NULL;
+    QGridLayout* col_widget_table = NULL;
 
     switch (mv.Layout) {
     case pwr_eMultiViewLayoutEnum_Box:
@@ -229,8 +229,8 @@ XttMultiViewQt::XttMultiViewQt(QWidget* mv_parent_wid, void* mv_parent_ctx,
 
     bool escape = false;
     for (int i = 0; i < cols; i++) {
-      QVBoxLayout* row_widget_box;
-      QSplitter* row_widget_pane;
+      QVBoxLayout* row_widget_box = NULL;
+      QSplitter* row_widget_pane = NULL;
 
       if (mv.Layout == pwr_eMultiViewLayoutEnum_Pane && i > 1) {
         break;
@@ -324,16 +324,16 @@ XttMultiViewQt::XttMultiViewQt(QWidget* mv_parent_wid, void* mv_parent_ctx,
             if (k == 0) {
               strncpy(objectname, oname, sizeof(objectname));
             } else {
-              strncat(objectname, ",", sizeof(objectname));
-              strncat(objectname, oname, sizeof(objectname));
+              strncat(objectname, ",", sizeof(objectname) - strlen(objectname) - 1);
+              strncat(objectname, oname, sizeof(objectname) - strlen(objectname) - 1);
             }
             objectname_p = objectname;
           }
 
-          if (mv.Action[i * rows + j].Borders[0] != 0
-              || mv.Action[i * rows + j].Borders[1] != 0
-              || mv.Action[i * rows + j].Borders[2] != 0
-              || mv.Action[i * rows + j].Borders[3] != 0) {
+          if (!feqf(mv.Action[i * rows + j].Borders[0], 0.0f)
+              || !feqf(mv.Action[i * rows + j].Borders[1], 0.0f)
+              || !feqf(mv.Action[i * rows + j].Borders[2], 0.0f)
+              || !feqf(mv.Action[i * rows + j].Borders[3], 0.0f)) {
             for (int k = 0; k < 4; k++) {
               borders[k] = mv.Action[i * rows + j].Borders[k];
             }

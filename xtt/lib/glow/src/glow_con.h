@@ -99,7 +99,7 @@ public:
   ~GlowCon();
 
   //! Noargs constructor.
-  GlowCon(){};
+  GlowCon(){}
 
   //! Copyconstructor with new source and destination nodes.
   /*!
@@ -114,14 +114,14 @@ public:
   void zoom();
   void nav_zoom();
   void get_borders(
-      double* x1_right, double* x1_left, double* y1_high, double* y1_low){};
+      double* x1_right, double* x1_left, double* y1_high, double* y1_low){}
   void get_con_borders();
   int event_handler(GlowWind* w, glow_eEvent event, int x, int y);
   int event_handler(
       GlowWind* w, glow_eEvent event, int x, int y, double fx, double fy)
   {
     return event_handler(w, event, x, y);
-  };
+  }
 
   //! Save the content of the object to file.
   /*!
@@ -138,12 +138,12 @@ public:
   void draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
   void draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y);
   void draw();
-  void erase(){};
+  void erase(){}
   void move(double delta_x, double delta_y, int grid);
   void move_noerase(int delta_x, int delta_y, int move);
   void reconfigure();
-  void store_position(){};
-  void restore_position(){};
+  void store_position(){}
+  void restore_position(){}
   void redraw_node_cons(void* node);
   int delete_node_cons(void* node);
   int con_route(double src_x, double src_y, glow_eDirection src_dir,
@@ -159,13 +159,13 @@ public:
   int get_highlight()
   {
     return highlight;
-  };
+  }
   void set_hot(int on);
   void select_region_insert(double ll_x, double ll_y, double ur_x, double ur_y);
   glow_eObjectType type()
   {
     return glow_eObjectType_Con;
-  };
+  }
   double x_right;
   double x_left;
   double y_high;
@@ -175,11 +175,11 @@ public:
   GlowNode* destination()
   {
     return dest_node;
-  };
+  }
   GlowNode* source()
   {
     return source_node;
-  };
+  }
   GlowNode* dest_node;
   GlowNode* source_node;
   int dest_conpoint;
@@ -235,26 +235,26 @@ public:
   {
     link = *(GlowCon**)start;
     *start = (void*)this;
-  };
+  }
   int in_area(double ll_x, double ll_y, double ur_x, double ur_y)
   {
     return ((x_left + ctx->draw_delta) < ur_x
         && (x_right + ctx->draw_delta) > ll_x
         && (y_low + ctx->draw_delta) < ur_y
         && (y_high + ctx->draw_delta) > ll_y);
-  };
+  }
   int in_area_exact(double ll_x, double ll_y, double ur_x, double ur_y)
   {
     return (x_left < ur_x && x_right > ll_x && y_low < ur_y && y_high > ll_y);
-  };
+  }
   int in_vert_line(double x, double l_y, double u_y)
   {
     return 0;
-  };
+  }
   int in_horiz_line(double y, double l_x, double u_x)
   {
     return 0;
-  };
+  }
   int find_horiz_line_next_line(con_tHorizLines* horiz_line);
   int find_vert_line_next_line(con_tVertLines* vert_line);
   int sort_lines(double dest_x, double dest_y, glow_eDirection dest_dir,
@@ -273,37 +273,37 @@ public:
   void set_user_data(void* data)
   {
     user_data = data;
-  };
+  }
   void get_user_data(void** data)
   {
     *data = user_data;
-  };
+  }
   int trace_scan();
   int trace_init();
   void trace_close();
   void* get_ctx()
   {
     return this->ctx;
-  };
+  }
   void get_con_position(double* x_arr[], double* y_arr[], int* num)
   {
     *x_arr = point_x;
     *y_arr = point_y;
     *num = p_num;
-  };
+  }
   glow_eConGroup get_group()
   {
     return cc->group;
-  };
+  }
   void set_movement_type(GlowArrayElem** a, int a_size);
   void set_movement_type(glow_eMoveType move_type)
   {
     movement_type = move_type;
-  };
+  }
   int is_connected_to(GlowNode* node)
   {
     return source_node == node || dest_node == node;
-  };
+  }
   void change_conclass(GlowConClass* conclass);
   void export_javabean(GlowTransform* t, void* node, glow_eExportPass pass,
       int* shape_cnt, int node_cnt, int in_nc, std::ofstream& fp);

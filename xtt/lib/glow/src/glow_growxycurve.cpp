@@ -65,7 +65,7 @@ void GrowXYCurve::save(std::ofstream& fp, glow_eSaveMode mode)
 */
 void GrowXYCurve::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -192,14 +192,14 @@ void GrowXYCurve::set_xy_data(
   for (i = 0, idx = 0; i < cpoints; i++, idx++) {
     if (!fill_curve) {
       idx = i;
-      if (y_max_value[j] != y_min_value[j])
+      if (!feq(y_max_value[j], y_min_value[j]))
         point_p->y = ur.y
             - (y_data[idx] - y_min_value[j]) / (y_max_value[j] - y_min_value[j])
                 * (ur.y - ll.y);
 
       point_p->y = MAX(ll.y, MIN(point_p->y, ur.y));
 
-      if (x_max_value[j] != x_min_value[j])
+      if (!feq(x_max_value[j], x_min_value[j]))
         point_p->x = ll.x
             + (x_data[idx] - x_min_value[j]) / (x_max_value[j] - x_min_value[j])
                 * (ur.x - ll.x);
@@ -207,7 +207,7 @@ void GrowXYCurve::set_xy_data(
       point_p->x = MAX(ll.x, MIN(point_p->x, ur.x));
     } else {
       if (i == 0) {
-        if (x_max_value[j] != x_min_value[j])
+        if (!feq(x_max_value[j], x_min_value[j]))
           point_p->x = ll.x
               + (x_data[idx] - x_min_value[j])
                   / (x_max_value[j] - x_min_value[j]) * (ur.x - ll.x);
@@ -216,7 +216,7 @@ void GrowXYCurve::set_xy_data(
         point_p->y = ur.y;
         idx--;
       } else if (i == cpoints - 1) {
-        if (x_max_value[j] != x_min_value[j])
+        if (!feq(x_max_value[j], x_min_value[j]))
           point_p->x = ll.x
               + (x_data[idx - 1] - x_min_value[j])
                   / (x_max_value[j] - x_min_value[j]) * (ur.x - ll.x);
@@ -224,14 +224,14 @@ void GrowXYCurve::set_xy_data(
         point_p->x = MAX(ll.x, MIN(point_p->x, ur.x));
         point_p->y = ur.y;
       } else {
-        if (y_max_value[j] != y_min_value[j])
+        if (!feq(y_max_value[j], y_min_value[j]))
           point_p->y = ur.y
               - (y_data[idx] - y_min_value[j])
                   / (y_max_value[j] - y_min_value[j]) * (ur.y - ll.y);
 
         point_p->y = MAX(ll.y, MIN(point_p->y, ur.y));
 
-        if (x_max_value[j] != x_min_value[j])
+        if (!feq(x_max_value[j], x_min_value[j]))
           point_p->x = ll.x
               + (x_data[idx] - x_min_value[j])
                   / (x_max_value[j] - x_min_value[j]) * (ur.x - ll.x);

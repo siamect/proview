@@ -42,11 +42,207 @@
 #include "wb_merep.h"
 #include "wb_dbs.h"
 
+wb_vrepref::wb_vrepref(wb_erep* erep, pwr_tVid vid)
+    : wb_vrep(vid), m_erep(erep), m_merep(erep->merep()), m_nRef(0)
+{
+  m_cid = pwr_eClass_VolatileVolume;
+  switch (m_vid) {
+  case ldh_cPlcMainVolume:
+    strcpy(m_name, "$PlcMain");
+    break;
+  case ldh_cPlcFoVolume:
+    strcpy(m_name, "$PlcFo");
+    break;
+  case ldh_cIoConnectVolume:
+    strcpy(m_name, "$IoConnect");
+    break;
+  }
+}
+
+wb_vrepref::~wb_vrepref()
+{
+}
+
+ldh_eVolRep wb_vrepref::type() const
+{
+  return ldh_eVolRep_Ref;
+}
+
+pwr_tVid wb_vrepref::vid() const
+{
+  return m_vid;
+}
+
+pwr_tCid wb_vrepref::cid() const
+{
+  return m_cid;
+}
+
+void wb_vrepref::setMerep(wb_merep* merep)
+{
+  m_merep = merep;
+}
+
+wb_vrep* wb_vrepref::next()
+{
+  pwr_tStatus sts;
+  return m_erep->nextVolume(&sts, vid());
+}
+
+void wb_vrepref::unref()
+{
+  if (--m_nRef == 0)
+    delete this;
+}
+
+wb_vrep* wb_vrepref::ref()
+{
+  m_nRef++;
+  return this;
+}
+
+wb_erep* wb_vrepref::erep()
+{
+  return m_erep;
+}
+
+wb_merep* wb_vrepref::merep() const
+{
+  return m_merep;
+}
+
+bool wb_vrepref::createSnapshot(
+    const char* fileName, const pwr_tTime* time, const int rtonly)
+{
+  return false;
+}
+
+pwr_tStatus wb_vrepref::updateMeta()
+{
+  return 0;
+}
+
+pwr_tOid wb_vrepref::oid(pwr_tStatus* sts, const wb_orep* o)
+{
+  return pwr_cNOid;
+}
+
+pwr_tVid wb_vrepref::vid(pwr_tStatus* sts, const wb_orep* o)
+{
+  return pwr_cNVid;
+}
+
+pwr_tOix wb_vrepref::oix(pwr_tStatus* sts, const wb_orep* o)
+{
+  return pwr_cNOix;
+}
+
+pwr_tCid wb_vrepref::cid(pwr_tStatus* sts, const wb_orep* o)
+{
+  return pwr_cNCid;
+}
+
+pwr_tOid wb_vrepref::poid(pwr_tStatus* sts, const wb_orep* o)
+{
+  return pwr_cNOid;
+}
+
+pwr_tOid wb_vrepref::foid(pwr_tStatus* sts, const wb_orep* o)
+{
+  return pwr_cNOid;
+}
+
+pwr_tOid wb_vrepref::loid(pwr_tStatus* sts, const wb_orep* o)
+{
+  return pwr_cNOid;
+}
+
+pwr_tOid wb_vrepref::boid(pwr_tStatus* sts, const wb_orep* o)
+{
+  return pwr_cNOid;
+}
+
+pwr_tOid wb_vrepref::aoid(pwr_tStatus* sts, const wb_orep* o)
+{
+  return pwr_cNOid;
+}
+
+const char* wb_vrepref::objectName(pwr_tStatus* sts, const wb_orep* o)
+{
+  return "";
+}
+
+wb_name wb_vrepref::longName(pwr_tStatus* sts, const wb_orep* o)
+{
+  return wb_name();
+}
+
+pwr_tTime wb_vrepref::ohTime(pwr_tStatus* sts, const wb_orep* o)
+{
+  return o->ohTime();
+}
+
+pwr_tTime wb_vrepref::rbTime(pwr_tStatus* sts, const wb_orep* o)
+{
+  return o->rbTime();
+}
+
+pwr_tTime wb_vrepref::dbTime(pwr_tStatus* sts, const wb_orep* o)
+{
+  return o->dbTime();
+}
+
+pwr_mClassDef wb_vrepref::flags(pwr_tStatus* sts, const wb_orep* o)
+{
+  pwr_mClassDef f;
+  f.m = 0;
+  return f;
+}
+
+void wb_vrepref::objectName(const wb_orep* o, char* str)
+{
+  pwr_tStatus sts;
+  char n[120];
+  char* s;
+
+  wb_cdrep* cdrep = m_merep->cdrep(&sts, ((wb_orepref*)o)->m_cid);
+  if (EVEN(sts)) {
+    strcpy(str, "");
+    return;
+  }
+
+  strcpy(str, m_name);
+  strcat(str, ":");
+  strcpy(n, cdrep->longName().c_str());
+  delete cdrep;
+  if ((s = strchr(n, ':')))
+    *s = '-';
+  strcat(str, n);
+}
+
+bool wb_vrepref::isOffspringOf(
+      pwr_tStatus* sts, const wb_orep* child, const wb_orep* parent)
+  {
+    return false;
+  }
+
+wb_orep* wb_vrepref::object(pwr_tStatus* sts)
+{
+  *sts = LDH__NOSUCHOBJ;
+  return 0;
+}
+
 wb_orep* wb_vrepref::object(pwr_tStatus* sts, pwr_tOid oid)
 {
   wb_orepref* o = new wb_orepref(this, oid.oix);
   *sts = LDH__SUCCESS;
   return (wb_orep*)o;
+}
+
+wb_orep* wb_vrepref::object(pwr_tStatus* sts, pwr_tCid cid)
+{
+  *sts = LDH__NOSUCHOBJ;
+  return 0;
 }
 
 wb_orep* wb_vrepref::object(pwr_tStatus* sts, wb_name& name)
@@ -71,23 +267,243 @@ wb_orep* wb_vrepref::object(pwr_tStatus* sts, wb_name& name)
   return (wb_orep*)o;
 }
 
-void wb_vrepref::objectName(const wb_orep* o, char* str)
+wb_orep* wb_vrepref::object(
+    pwr_tStatus* sts, const wb_orep* parent, wb_name& name)
 {
-  pwr_tStatus sts;
-  char n[120];
-  char* s;
+  *sts = LDH__NOSUCHOBJ;
+  return 0;
+}
 
-  wb_cdrep* cdrep = m_merep->cdrep(&sts, ((wb_orepref*)o)->m_cid);
-  if (EVEN(sts)) {
-    strcpy(str, "");
-    return;
-  }
+wb_orep* wb_vrepref::createObject(pwr_tStatus* sts, wb_cdef cdef,
+    wb_destination& d, wb_name& name, pwr_tOix oix)
+{
+  return 0;
+}
 
-  strcpy(str, m_name);
-  strcat(str, ":");
-  strcpy(n, cdrep->longName().c_str());
-  delete cdrep;
-  if ((s = strchr(n, ':')))
-    *s = '-';
-  strcat(str, n);
+wb_orep* wb_vrepref::copyObject(pwr_tStatus* sts, const wb_orep* orep,
+    wb_destination& d, wb_name& name, pwr_tOix oix)
+{
+  return 0;
+}
+
+bool wb_vrepref::copyOset(pwr_tStatus* sts, wb_oset* oset, wb_destination& d)
+{
+  return false;
+}
+
+bool wb_vrepref::moveObject(pwr_tStatus* sts, wb_orep* orep, wb_destination& d)
+{
+  return false;
+}
+
+bool wb_vrepref::deleteObject(pwr_tStatus* sts, wb_orep* orep)
+{
+  return false;
+}
+
+bool wb_vrepref::deleteFamily(pwr_tStatus* sts, wb_orep* orep)
+{
+  return false;
+}
+
+bool wb_vrepref::deleteOset(pwr_tStatus* sts, wb_oset* oset)
+{
+  return false;
+}
+
+bool wb_vrepref::renameObject(pwr_tStatus* sts, wb_orep* orep, wb_name& name)
+{
+  return false;
+}
+
+bool wb_vrepref::commit(pwr_tStatus* sts)
+{
+  return false;
+}
+
+bool wb_vrepref::abort(pwr_tStatus* sts)
+{
+  return false;
+}
+
+bool wb_vrepref::writeAttribute(pwr_tStatus* sts, wb_orep* o, pwr_eBix bix,
+    size_t offset, size_t size, void* p)
+{
+  return false;
+}
+
+void* wb_vrepref::readAttribute(pwr_tStatus* sts, const wb_orep* o,
+    pwr_eBix bix, size_t offset, size_t size, void* p)
+{
+  return 0;
+}
+
+void* wb_vrepref::readBody(
+    pwr_tStatus* sts, const wb_orep* o, pwr_eBix bix, void* p)
+{
+  return 0;
+}
+
+bool wb_vrepref::writeBody(pwr_tStatus* sts, wb_orep* o, pwr_eBix bix, void* p)
+{
+  return false;
+}
+
+wb_orep* wb_vrepref::ancestor(pwr_tStatus* sts, const wb_orep* o)
+{
+  *sts = LDH__NOSUCHOBJ;
+  return 0;
+}
+
+wb_orep* wb_vrepref::parent(pwr_tStatus* sts, const wb_orep* o)
+{
+  *sts = LDH__NOSUCHOBJ;
+  return 0;
+}
+
+wb_orep* wb_vrepref::after(pwr_tStatus* sts, const wb_orep* o)
+{
+  *sts = LDH__NOSUCHOBJ;
+  return 0;
+}
+
+wb_orep* wb_vrepref::before(pwr_tStatus* sts, const wb_orep* o)
+{
+  *sts = LDH__NOSUCHOBJ;
+  return 0;
+}
+
+wb_orep* wb_vrepref::first(pwr_tStatus* sts, const wb_orep* o)
+{
+  *sts = LDH__NOSUCHOBJ;
+  return 0;
+}
+
+wb_orep* wb_vrepref::child(pwr_tStatus* sts, const wb_orep* o, wb_name& name)
+{
+  *sts = LDH__NOSUCHOBJ;
+  return 0;
+}
+
+wb_orep* wb_vrepref::last(pwr_tStatus* sts, const wb_orep* o)
+{
+  *sts = LDH__NOSUCHOBJ;
+  return 0;
+}
+
+wb_orep* wb_vrepref::next(pwr_tStatus* sts, const wb_orep* o)
+{
+  *sts = LDH__NOSUCHOBJ;
+  return 0;
+}
+
+wb_orep* wb_vrepref::previous(pwr_tStatus* sts, const wb_orep* o)
+{
+  *sts = LDH__NOSUCHOBJ;
+  return 0;
+}
+
+wb_srep* wb_vrepref::newSession()
+{
+  return 0;
+}
+
+bool wb_vrepref::isLocal(const wb_orep* o)
+{
+  return o->oid().vid == vid();
+}
+
+bool wb_vrepref::accessSupported(ldh_eAccess access)
+{
+  return false;
+}
+
+const char* wb_vrepref::fileName()
+{
+  return "";
+}
+
+bool wb_vrepref::exportVolume(wb_import& i)
+{
+  return false;
+}
+
+bool wb_vrepref::exportHead(wb_import& i)
+{
+  return false;
+}
+
+bool wb_vrepref::exportRbody(wb_import& i)
+{
+  return false;
+}
+
+bool wb_vrepref::exportDbody(wb_import& i)
+{
+  return false;
+}
+
+bool wb_vrepref::exportDocBlock(wb_import& i)
+{
+  return false;
+}
+
+bool wb_vrepref::exportMeta(wb_import& i)
+{
+  return false;
+}
+
+bool wb_vrepref::exportTree(wb_treeimport& i, pwr_tOid oid)
+{
+  return false;
+}
+
+bool wb_vrepref::exportTreeIsImplemented()
+{
+  return false;
+}
+
+bool wb_vrepref::exportPaste(wb_treeimport& i, pwr_tOid destination,
+    ldh_eDest destcode, bool keepoid, pwr_tOid** rootlist)
+{
+  return false;
+}
+
+bool wb_vrepref::importTreeObject(wb_merep* merep, pwr_tOid oid, pwr_tCid cid,
+    pwr_tOid poid, pwr_tOid boid, const char* name, pwr_mClassDef flags,
+    size_t rbSize, size_t dbSize, void* rbody, void* dbody)
+{
+  return false;
+}
+
+bool wb_vrepref::importTree(bool keepref, bool keepsym)
+{
+  return false;
+}
+
+bool wb_vrepref::importPasteObject(pwr_tOid destination, ldh_eDest destcode,
+    bool keepoid, pwr_tOid oid, pwr_tCid cid, pwr_tOid poid, pwr_tOid boid,
+    const char* name, pwr_mClassDef flags, size_t rbSize, size_t dbSize,
+    void* rbody, void* dbody, pwr_tOid woid, pwr_tOid* roid)
+{
+  return false;
+}
+
+bool wb_vrepref::importPaste()
+{
+  return false;
+}
+
+void wb_vrepref::importIgnoreErrors()
+{
+}
+
+bool wb_vrepref::updateObject(wb_orep* o, bool keepref)
+{
+  return false;
+}
+
+bool wb_vrepref::updateSubClass(wb_adrep* subattr, char* body, bool keepref)
+{
+  return false;
 }

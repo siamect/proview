@@ -34,8 +34,6 @@
  * General Public License plus this exception.
  **/
 
-#include <float.h>
-
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_time.h"

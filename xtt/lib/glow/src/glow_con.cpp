@@ -34,7 +34,6 @@
  * General Public License plus this exception.
  **/
 
-#include <float.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -446,7 +445,7 @@ GlowCon::~GlowCon()
 
 GlowCon::GlowCon(const GlowCon& c, GlowNode* source, GlowNode* dest)
 {
-  memcpy(this, &c, sizeof(c));
+  memcpy((void *)this, (void *)&c, sizeof(c));
   source_node = source;
   dest_node = dest;
 
@@ -801,7 +800,7 @@ void GlowCon::save(std::ofstream& fp, glow_eSaveMode mode)
 
 void GlowCon::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   char name[80];
@@ -1063,7 +1062,7 @@ int GlowCon::con_route_noobstacle(double src_x, double src_y,
 {
   double x[8], y[8];
   int point;
-  route_eState state;
+  route_eState state = eState_No;
 
   point = 0;
   x[0] = src_x;
@@ -1848,7 +1847,7 @@ int GlowCon::con_route_area(
   }
 
   /* Select the shortest */
-  int min_idx;
+  int min_idx = 0;
   int min_cnt = 10000;
   for (i = 0; i < line_table_cnt; i++) {
     if (line_table[i].complete) {

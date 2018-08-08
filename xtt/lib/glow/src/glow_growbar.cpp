@@ -110,7 +110,7 @@ void GrowBar::save(std::ofstream& fp, glow_eSaveMode mode)
 
 void GrowBar::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;
@@ -382,7 +382,7 @@ void GrowBar::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
   drawtype = ctx->get_drawtype(draw_type, glow_eDrawType_LineHighlight,
       highlight, (GrowNode*)colornode, 0);
 
-  if (max_value != min_value) {
+  if (!feq(max_value, min_value)) {
     double rotation;
     int x0, y0, width, height, l_x0, l_y0, l_x1, l_y1;
 

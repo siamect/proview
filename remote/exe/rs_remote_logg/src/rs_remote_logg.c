@@ -85,12 +85,6 @@ qcom_sGet remlogg_get;
     exit(status);                                                              \
   }
 
-#define LogAndReturn(status1, status2)                                         \
-  {                                                                            \
-    errh_CErrLog(status1, errh_ErrArgMsg(status2), NULL);                      \
-    return status2;                                                            \
-  }
-
 #define Log(status1, status2)                                                  \
   {                                                                            \
     errh_CErrLog(status1, errh_ErrArgMsg(status2), NULL);                      \
@@ -139,7 +133,6 @@ void exit_hdlr()
 {
   gdh_DLUnrefObjectInfoAll();
   errh_Info("Exiting\n");
-  return;
 }
 
 /****************************************************************************
@@ -156,7 +149,6 @@ void exit_hdlr()
 void interrupt_hdlr()
 {
   exit(0);
-  return;
 }
 
 /****************************************************************************
@@ -363,7 +355,7 @@ static pwr_tStatus logg_print(logg_ctx loggctx, pwr_tUInt32 ident, char* msg)
   int found;
   int i;
   logg_t_loggconf_list* conflist_ptr;
-  logg_t_loggconf_list* garbage_conflist_ptr;
+  logg_t_loggconf_list* garbage_conflist_ptr = NULL;
   int garbage_loggconf_found;
 
   if (loggctx->loggconf_count == 0)
@@ -483,7 +475,7 @@ static pwr_tStatus logg_get_message(
 
 static pwr_tStatus logg_free_message(void)
 {
-  pwr_tStatus sts;
+  pwr_tStatus sts = 0;
 
   if (remlogg_get.data != 0)
     qcom_Free(&sts, remlogg_get.data);

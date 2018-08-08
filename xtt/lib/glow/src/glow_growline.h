@@ -150,7 +150,7 @@ public:
       double* x1_right, double* x1_left, double* y1_high, double* y1_low)
   {
     get_borders((GlowTransform*)NULL, x1_right, x1_left, y1_high, y1_low);
-  };
+  }
 
   //! Update the borders of the object.
   /*! The borders of the object is stored in x_right, x_left, y_high and y_low.
@@ -160,7 +160,7 @@ public:
     x_left = y_low = 1e37;
     x_right = y_high = -1e37;
     get_borders((GlowTransform*)NULL, &x_right, &x_left, &y_high, &y_low);
-  };
+  }
 
   //! Save the content of the object to file.
   /*!
@@ -202,7 +202,7 @@ public:
   void erase(GlowWind* w)
   {
     erase(w, (GlowTransform*)NULL, hot, NULL);
-  };
+  }
 
   //! Move the object.
   /*!
@@ -233,10 +233,10 @@ public:
   int get_highlight()
   {
     return highlight;
-  };
+  }
 
   //! Not used.
-  void set_hot(int on){};
+  void set_hot(int on){}
 
   //! Insert object in select list, if it is inside the selection area.
   /*!
@@ -256,7 +256,7 @@ public:
   glow_eObjectType type()
   {
     return glow_eObjectType_GrowLine;
-  };
+  }
 
   //! Measure the extent of the object.
   /*!
@@ -271,7 +271,7 @@ public:
     *ll_y = y_low;
     *ur_x = x_right;
     *ur_y = y_high;
-  };
+  }
 
   double x_right; //!< Right border of object.
   double x_left; //!< Left border of object.
@@ -298,7 +298,7 @@ public:
   void set_user_data(void* data)
   {
     user_data = data;
-  };
+  }
 
   //! Get user data.
   /*!
@@ -307,7 +307,7 @@ public:
   void get_user_data(void** data)
   {
     *data = user_data;
-  };
+  }
 
   //! Set dynamic code
   /*!
@@ -325,7 +325,7 @@ public:
   {
     *code = dynamic;
     *size = dynamicsize;
-  };
+  }
 
   //! Get grow context.
   /*!
@@ -334,7 +334,7 @@ public:
   void* get_ctx()
   {
     return this->ctx;
-  };
+  }
 
   //! Execute the dynamic code.
   void exec_dynamic();
@@ -376,14 +376,14 @@ public:
   {
     draw_type = drawtype;
     draw();
-  };
+  }
 
   //! Reset the border color to the original border color.
   void reset_border_color()
   {
     draw_type = original_border_drawtype;
     draw();
-  };
+  }
 
   //! Set the original border color.
   /*!
@@ -393,7 +393,7 @@ public:
   {
     original_border_drawtype = drawtype;
     reset_border_color();
-  };
+  }
 
   //! Draw the object.
   /*!
@@ -442,7 +442,7 @@ public:
   void set_transform_from_stored(GlowTransform* t)
   {
     trf.set_from_stored(t), get_node_borders();
-  };
+  }
 
   //! Store the current transform
   /*! The stored transform can be used as starting point for future scaling or
@@ -451,7 +451,7 @@ public:
   void store_transform()
   {
     trf.store();
-  };
+  }
 
   //! Set the linewidth.
   /*!
@@ -463,7 +463,7 @@ public:
   void get_ctx(void** c)
   {
     *c = (void*)ctx;
-  }; //!< Should be replace by get_ctx() !!
+  } //!< Should be replace by get_ctx() !!
 
   //! Moves object to alignment line or point.
   /*!
@@ -503,7 +503,7 @@ public:
   void set_last_group(char* name)
   {
     strcpy(last_group, name);
-  };
+  }
 
   //! Return the name of the last group the object was a member of
   /*!
@@ -512,7 +512,7 @@ public:
   char* get_last_group()
   {
     return last_group;
-  };
+  }
 
   //! Mirror the object around a horizontal or vertical mirror line.
   /*!

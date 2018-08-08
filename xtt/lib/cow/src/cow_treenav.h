@@ -111,7 +111,7 @@ public:
 //! Class for handling of brow.
 class TreeNavBrow {
 public:
-  TreeNavBrow(BrowCtx* brow_ctx, void* xn) : ctx(brow_ctx), treenav(xn){};
+  TreeNavBrow(BrowCtx* brow_ctx, void* xn) : ctx(brow_ctx), treenav(xn){}
   ~TreeNavBrow();
 
   BrowCtx* ctx;
@@ -177,17 +177,10 @@ public:
 
 class TrItemBase {
 public:
-  TrItemBase(treenav_eItemType t) : type(t)
-  {
-  }
-  virtual ~TrItemBase()
-  {
-  }
+  TrItemBase(treenav_eItemType t);
+  virtual ~TrItemBase();
   treenav_eItemType type;
-  virtual int close(TreeNav* treenav, double x, double y)
-  {
-    return 1;
-  }
+  virtual int close(TreeNav* treenav, double x, double y);
 };
 
 //! Item for an object in list layout.
@@ -195,10 +188,7 @@ class TrItemObject : public TrItemBase {
 public:
   TrItemObject(TreeNav* treenav, TreeNav_object* item, brow_tNode dest,
       flow_eDest dest_code);
-
-  virtual ~TrItemObject()
-  {
-  }
+  virtual ~TrItemObject();
 
   TreeNav_object item;
   brow_tNode node;
@@ -211,9 +201,7 @@ class TrItemTreeObject : public TrItemObject {
 public:
   TrItemTreeObject(TreeNav* treenav, TreeNav_object* item, int index,
       brow_tNode dest, flow_eDest dest_code);
-  virtual ~TrItemTreeObject()
-  {
-  }
+  virtual ~TrItemTreeObject();
 
   int idx;
 };
@@ -223,9 +211,7 @@ class TrItemNode : public TrItemBase {
 public:
   TrItemNode(TreeNav* treenav, char* name, char* descr, int index,
       brow_tNode dest, flow_eDest dest_code);
-  virtual ~TrItemNode()
-  {
-  }
+  virtual ~TrItemNode();
 
   brow_tNode node;
   int idx;

@@ -92,9 +92,11 @@ typedef struct {
 
 #define STX 2
 #define ETB 15
+/*
 #define ENQ 5
 #define ACK 6
 #define UDP_MAX_SIZE 32768
+*/
 
 static char rcv_buffer[65536];
 
@@ -222,7 +224,7 @@ static pwr_tStatus IoCardInit(
   pwr_sClass_UDP_IO* op = (pwr_sClass_UDP_IO*)cp->op;
   int sts;
   unsigned char badr[4];
-  unsigned int iadr[4] = { -1, -1, -1, -1 };
+  int iadr[4] = { -1, -1, -1, -1 };
   struct hostent* he;
   struct sockaddr_in address;
   socklen_t address_len = sizeof(struct sockaddr_in);

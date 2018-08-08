@@ -63,7 +63,7 @@ void GlowAnnot::save(std::ofstream& fp, glow_eSaveMode mode)
 
 void GlowAnnot::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;
@@ -138,7 +138,7 @@ void glow_measure_annot_text(GrowCtx* ctx, char* text, glow_eDrawType draw_type,
     *rows = 1;
     break;
   case glow_eAnnotType_MultiLine: {
-    int l_width, l_height, l_descent;
+    int l_width, l_height = 0, l_descent;
     int len = 0;
     int line_cnt = 0;
     char* line = text;

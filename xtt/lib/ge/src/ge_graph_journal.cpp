@@ -1745,7 +1745,7 @@ int GraphJournal::restore(char* fname)
 {
   char line[200];
   int nr = 0;
-  int tag;
+  int tag = 0;
   int action;
   int idx;
   int end_found = 0;

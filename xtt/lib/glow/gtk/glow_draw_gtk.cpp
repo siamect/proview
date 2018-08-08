@@ -34,8 +34,6 @@
  * General Public License plus this exception.
  **/
 
-using namespace std;
-
 #include <ctype.h>
 #include <string.h>
 #include <math.h>
@@ -54,6 +52,8 @@ using namespace std;
 #include "glow_customcolors_gtk.h"
 #include "glow_keyboardctx.h"
 #include "glow_msg.h"
+
+using namespace std;
 
 #define DRAW_PRESS_PIX 9
 
@@ -2698,7 +2698,7 @@ int GlowDrawGtk::print(char* filename, double x0, double x1, int end)
   width = gdk_pixbuf_get_width(image);
   height = gdk_pixbuf_get_height(image);
 
-  if (x0 != 0 || x1 != 0) {
+  if (!feq(x0, 0.0) || !feq(x1, 0.0)) {
     double total_width = width / (x1 - x0);
 
     if (total_width * scalex > ps_cPageWidth - ps_cLeftMargin) {
@@ -2720,7 +2720,7 @@ int GlowDrawGtk::print(char* filename, double x0, double x1, int end)
       scaley = scaley * scale_factor;
     }
   }
-  if ((x0 == 0 && x1 == 0) || x1 == 1.0)
+  if ((feq(x0, 0.0) && feq(x1, 0.0)) || feq(x1, 1.0))
     ps->y -= scaley * height;
 
   if (new_file) {
@@ -3494,7 +3494,7 @@ int GlowDrawGtk::gradient_fill_rect(GlowWind* wind, int x, int y, int w, int h,
   if (ctx->nodraw)
     return 1;
 
-  cairo_t* cr;
+  cairo_t* cr = NULL;
   for (int i = 0; i < 2; i++) {
     if (i == 0) {
       if (!ww->draw_buffer_only)
@@ -3534,7 +3534,7 @@ int GlowDrawGtk::gradient_fill_rectrounded(GlowWind* wind, int x, int y, int w,
   if (ctx->nodraw)
     return 1;
 
-  cairo_t* cr;
+  cairo_t* cr = NULL;
   for (int i = 0; i < 2; i++) {
     if (i == 0) {
       if (!ww->draw_buffer_only)
@@ -3596,7 +3596,7 @@ int GlowDrawGtk::gradient_fill_arc(GlowWind* wind, int x, int y, int w, int h,
   else if (angle1 < 0)
     angle1 = angle1 + (-angle1 / 360 + 1) * 360;
 
-  cairo_t* cr;
+  cairo_t* cr = NULL;
   for (int i = 0; i < 2; i++) {
     if (i == 0) {
       if (!ww->draw_buffer_only)
@@ -3646,7 +3646,7 @@ int GlowDrawGtk::gradient_fill_polyline(GlowWind* wind, glow_sPointX* points,
   if (ctx->nodraw)
     return 1;
 
-  cairo_t* cr;
+  cairo_t* cr = NULL;
   double x0, y0, x1, y1;
   for (int i = 0; i < 2; i++) {
     if (i == 0) {
@@ -3698,7 +3698,6 @@ int GlowDrawGtk::gradient_fill_polyline(GlowWind* wind, glow_sPointX* points,
   return 1;
 }
 
-#define FONTSTR "Lucida Sans"
 #define FONT_SCALE 0.7
 #define FONT_DESCENT 0.22
 

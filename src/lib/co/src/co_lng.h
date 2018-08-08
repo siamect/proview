@@ -247,7 +247,7 @@ class Row {
 
 class Lng {
   public:
-  Lng(){};
+  Lng() {}
   static lng_eLanguage lang;
   static lng_eCoding translfile_coding;
   static const int Help = 0;

@@ -1336,8 +1336,8 @@ pwr_tUInt32 bck_init()
 int main(int argc, char* argv[])
 {
   pwr_tStatus sts;
-  pwr_tInt32 sts4a;
-  pwr_tUInt32 c;
+  /* pwr_tInt32 sts4a;
+  pwr_tUInt32 c; */
   int i;
   qcom_sQid my_q = qcom_cNQid;
 
@@ -1382,16 +1382,16 @@ int main(int argc, char* argv[])
     exit(sts);
   }
 
-  for (;;) {
-    while (1) {
+  /* for (;;) {
+    while (1) { */
       qcom_WaitAnd(
           &sts, &my_q, &qcom_cQini, ini_mEvent_terminate, qcom_cTmoEternal);
       //      pause();
       exit(0);
-    }
+  /* }
 
-    /* We were activated from the outer world. Trigger */
-    /* the collector threads... */
+    // We were activated from the outer world.
+    // Trigger the collector threads...
 
     pthread_mutex_lock(&frcactmtx);
 
@@ -1403,4 +1403,5 @@ int main(int argc, char* argv[])
 
     pthread_mutex_unlock(&frcactmtx);
   }
+  */
 }

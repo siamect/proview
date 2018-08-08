@@ -52,8 +52,6 @@ extern "C" {
 #include "cnv_xtthelptotext.h"
 #include "cnv_image.h"
 
-#define text_cCellSize 110
-
 #define CNV_TAB 25
 
 void CnvXtthelpToText::subject_to_fname(

@@ -213,7 +213,7 @@ static pwr_tStatus IoCardRead(
 {
   io_sLocalSPI_Slave* local = (io_sLocalSPI_Slave*)cp->Local;
   pwr_sClass_SPI_Slave* op = (pwr_sClass_SPI_Slave*)cp->op;
-  int sts;
+  int sts = 0;
   int i;
 
   // sts = read( local->fd, local->input_area, local->input_area_size);
@@ -269,7 +269,7 @@ static pwr_tStatus IoCardWrite(
 {
   io_sLocalSPI_Slave* local = (io_sLocalSPI_Slave*)cp->Local;
   pwr_sClass_SPI_Slave* op = (pwr_sClass_SPI_Slave*)cp->op;
-  int sts;
+  int sts = 0;
   int i;
 
   io_bus_card_write(ctx, cp, local->output_area, local->byte_ordering,

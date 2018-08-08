@@ -86,7 +86,7 @@ GrowGroup::~GrowGroup()
 
 void GrowGroup::copy_from(const GrowGroup& n)
 {
-  memcpy(this, &n, sizeof(n));
+  memcpy((void *)this, (void *)&n, sizeof(n));
   if (n.dynamicsize) {
     dynamic = (char*)calloc(1, n.dynamicsize);
     memcpy(dynamic, n.nc->dynamic, n.dynamicsize);
@@ -120,7 +120,7 @@ void GrowGroup::save(std::ofstream& fp, glow_eSaveMode mode)
 
 void GrowGroup::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 

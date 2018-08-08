@@ -48,7 +48,7 @@ public:
   WttGtk(void* wt_parent_ctx, GtkWidget* wt_parent_wid, const char* wt_name,
       const char* iconname, ldh_tWBContext wt_wbctx, pwr_tVolumeId wt_volid,
       ldh_tVolume wt_volctx, wnav_sStartMenu* root_menu, pwr_tStatus* status);
-  WttGtk(){};
+  WttGtk(){}
 
   GtkWidget* parent_wid;
   GtkWidget* wnav_brow_widget;

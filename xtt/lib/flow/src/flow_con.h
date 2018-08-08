@@ -67,7 +67,7 @@ public:
       int nodraw = 0, int point_num = 0, double* x_vect = 0,
       double* y_vect = 0);
   ~FlowCon();
-  FlowCon(){};
+  FlowCon(){}
   FlowCon(const FlowCon& c, FlowNode* source, FlowNode* dest);
   friend std::ostream& operator<<(std::ostream& o, const FlowCon c);
   void zoom();
@@ -76,9 +76,9 @@ public:
   void traverse(int x, int y)
   {
     line_a.traverse(x, y);
-  };
+  }
   void get_borders(
-      double* x1_right, double* x1_left, double* y1_high, double* y1_low){};
+      double* x1_right, double* x1_left, double* y1_high, double* y1_low){}
   void get_con_borders();
   int event_handler(flow_eEvent event, int x, int y);
   void print(double ll_x, double ll_y, double ur_x, double ur_y);
@@ -86,13 +86,13 @@ public:
   void open(std::ifstream& fp);
   void draw(int ll_x, int ll_y, int ur_x, int ur_y);
   void nav_draw(int ll_x, int ll_y, int ur_x, int ur_y);
-  void erase(){};
-  void nav_erase(){};
+  void erase(){}
+  void nav_erase(){}
   void move(int delta_x, int delta_y, int grid);
   void move_noerase(int delta_x, int delta_y, int move);
   void reconfigure();
-  void store_position(){};
-  void restore_position(){};
+  void store_position(){}
+  void restore_position(){}
   void redraw_node_cons(void* node);
   int delete_node_cons(void* node);
   int con_route(double src_x, double src_y, flow_eDirection src_dir,
@@ -108,13 +108,13 @@ public:
   int get_highlight()
   {
     return highlight;
-  };
+  }
   void set_hot(int on);
   void select_region_insert(double ll_x, double ll_y, double ur_x, double ur_y);
   flow_eObjectType type()
   {
     return flow_eObjectType_Con;
-  };
+  }
   int is_reference()
   {
     return temporary_ref || cc->con_type == flow_eConType_Reference;
@@ -129,11 +129,11 @@ public:
   FlowNode* destination()
   {
     return dest_node;
-  };
+  }
   FlowNode* source()
   {
     return source_node;
-  };
+  }
   FlowNode* dest_node;
   FlowNode* source_node;
   int dest_conpoint;
@@ -191,26 +191,26 @@ public:
   {
     link = *(FlowCon**)start;
     *start = (FlowArrayElem*)this;
-  };
+  }
   int in_area(double ll_x, double ll_y, double ur_x, double ur_y)
   {
     return ((x_left + ctx->draw_delta) < ur_x
         && (x_right + ctx->draw_delta) > ll_x
         && (y_low + ctx->draw_delta) < ur_y
         && (y_high + ctx->draw_delta) > ll_y);
-  };
+  }
   int in_area_exact(double ll_x, double ll_y, double ur_x, double ur_y)
   {
     return (x_left < ur_x && x_right > ll_x && y_low < ur_y && y_high > ll_y);
-  };
+  }
   int in_vert_line(double x, double l_y, double u_y)
   {
     return 0;
-  };
+  }
   int in_horiz_line(double y, double l_x, double u_x)
   {
     return 0;
-  };
+  }
   int find_horiz_line_next_line(con_tHorizLines* horiz_line);
   int find_vert_line_next_line(con_tVertLines* vert_line);
   int sort_lines(double dest_x, double dest_y, flow_eDirection dest_dir,
@@ -226,11 +226,11 @@ public:
   void set_user_data(void* data)
   {
     user_data = data;
-  };
+  }
   void get_user_data(void** data)
   {
     *data = user_data;
-  };
+  }
   void set_trace_attr(const char* object, const char* attribute,
       flow_eTraceType type, int inverted);
   void get_trace_attr(
@@ -241,27 +241,27 @@ public:
   void* get_ctx()
   {
     return this->ctx;
-  };
+  }
   void get_con_position(double* x_arr[], double* y_arr[], int* num)
   {
     *x_arr = point_x;
     *y_arr = point_y;
     *num = p_num;
-  };
+  }
   flow_eConGroup get_group()
   {
     return cc->group;
-  };
+  }
   void get_object_name(char* name);
   void set_movement_type(FlowArrayElem** a, int a_size);
   void set_movement_type(flow_eMoveType move_type)
   {
     movement_type = move_type;
-  };
+  }
   int is_connected_to(FlowNode* node)
   {
     return source_node == node || dest_node == node;
-  };
+  }
 };
 
 #endif

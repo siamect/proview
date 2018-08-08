@@ -147,83 +147,35 @@ public:
       unsigned long new_window, int f_map_window, ldh_eAccess f_access,
       foe_eFuncAccess function_access, unsigned int f_options,
       pwr_tStatus* sts);
-  virtual ~WFoe()
-  {
-  }
+  virtual ~WFoe();
 
-  virtual void pop()
-  {
-  }
+  virtual void pop();
   virtual WAtt* watt_new(void* a_parent_ctx, ldh_tSesContext a_ldhses,
       pwr_sAttrRef a_aref, int a_editmode, int a_advanced_user,
-      int a_display_objectname)
-  {
-    return 0;
-  }
+      int a_display_objectname);
   virtual WAttText* watttext_new(void* a_parent_ctx, ldh_tSesContext a_ldhses,
-      pwr_sAttrRef a_aref, int a_editmode, pwr_tStatus* status)
-  {
-    *status = 0;
-    return 0;
-  }
+      pwr_sAttrRef a_aref, int a_editmode, pwr_tStatus* status);
   virtual WFoe* subwindow_new(void* f_parent_ctx, char* f_name,
       pwr_tObjid plcprogram, ldh_tWBContext ldhwbctx, ldh_tSesContext ldhsesctx,
       vldh_t_node nodeobject, unsigned long windowindex,
       unsigned long new_window, int f_map_window, ldh_eAccess f_access,
-      foe_eFuncAccess function_access, unsigned int f_options, pwr_tStatus* sts)
-  {
-    return 0;
-  }
-  virtual void destroy()
-  {
-  }
-  virtual void set_title()
-  {
-  }
-  virtual void message(const char* new_label)
-  {
-  }
-  virtual void msgbox(const char* new_label)
-  {
-  }
+      foe_eFuncAccess function_access, unsigned int f_options, pwr_tStatus* sts);
+  virtual void destroy();
+  virtual void set_title();
+  virtual void message(const char* new_label);
+  virtual void msgbox(const char* new_label);
   virtual int create_window(int x_top, int y_top, int width_adb, int height_adb,
-      ldh_tSesContext ldhsession, foe_eFuncAccess function_access)
-  {
-    return 0;
-  }
-  virtual int get_textinput(const char* message, int (*function)(WFoe*, char*))
-  {
-    return 0;
-  }
-  virtual int edit_set_entries()
-  {
-    return 0;
-  }
-  virtual int view_set_entries()
-  {
-    return 0;
-  }
-  virtual void set_mode_button_state(int mode, int state)
-  {
-  }
-  virtual int modify_popup(unsigned long popupmenu_mask, int x, int y)
-  {
-    return 0;
-  }
-  virtual void clock_cursor()
-  {
-  }
-  virtual void normal_cursor()
-  {
-  }
-  virtual int get_selection(char* str, int len)
-  {
-    return 0;
-  }
+      ldh_tSesContext ldhsession, foe_eFuncAccess function_access);
+  virtual int get_textinput(const char* message, int (*function)(WFoe*, char*));
+  virtual int edit_set_entries();
+  virtual int view_set_entries();
+  virtual void set_mode_button_state(int mode, int state);
+  virtual int modify_popup(unsigned long popupmenu_mask, int x, int y);
+  virtual void clock_cursor();
+  virtual void normal_cursor();
+  virtual int get_selection(char* str, int len);
   virtual void popupmsg(const char* new_label, void (*yes_procedure)(WFoe*),
-      void (*no_procedure)(WFoe*), void (*cancel_procedure)(WFoe*))
-  {
-  }
+      void (*no_procedure)(WFoe*), void (*cancel_procedure)(WFoe*));
 
   void activate_save();
   void activate_exit();

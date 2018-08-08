@@ -590,7 +590,7 @@ void cbuf_UpdateCircBufferMsg(qcom_sGet* get)
   gdb_sNode* np;
   pwr_tStatus sts;
   pwr_tUInt32 size;
-  pwr_tUInt32 total_size;
+  pwr_tUInt32 total_size = 0;
   qcom_sPut put;
   cbuf_sCircBuffInfo info[10];
   int i, offs;

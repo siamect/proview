@@ -314,8 +314,8 @@ void rt_report::create_report(pwr_sClass_Report* o)
       if (s) {
         *s = 0;
         strncpy(group, systemgroup, sizeof(group));
-        strncat(group, ".", sizeof(group));
-        strncat(group, str, sizeof(group));
+        strncat(group, ".", sizeof(group) - strlen(group) - 1);
+        strncat(group, str, sizeof(group) - strlen(group) - 1);
         strncpy(user, s + 1, sizeof(user));
       } else {
         strncpy(group, systemgroup, sizeof(group));
@@ -389,8 +389,8 @@ void rt_report::create_report(pwr_sClass_Report* o)
       if (s) {
         *s = 0;
         strncpy(group, systemgroup, sizeof(group));
-        strncat(group, ".", sizeof(group));
-        strncat(group, str, sizeof(group));
+        strncat(group, ".", sizeof(group) - strlen(group) - 1);
+        strncat(group, str, sizeof(group) - strlen(group) - 1);
         strncpy(user, s + 1, sizeof(user));
       } else {
         strncpy(group, systemgroup, sizeof(group));
@@ -584,7 +584,7 @@ int rt_report::replace_value(char* out, unsigned int size, char* in)
   char fstr[400];
   char format[40];
   char buf[400];
-  pwr_tTypeId a_tid;
+  pwr_tTypeId a_tid = 0;
   pwr_tUInt32 a_size;
   pwr_tUInt32 a_offs;
   pwr_tUInt32 a_elem;
@@ -765,7 +765,7 @@ void rt_report::init(qcom_sQid* qid)
 
 void rt_report::replace_symbol(char* outstr, char* instr)
 {
-  char *s, *t, *u;
+  char *s, *t, *u = NULL;
   int symbolmode = 0;
   char symbol[80];
   char csymbol[80];
@@ -950,7 +950,7 @@ int rt_report::parse(char* line)
              << '\n'; // Should be with /hide but it sometimes doesn't work...
       else
         fout << "  open graph " << graph_str << '\n';
-      if (btime != 0)
+      if (!feqf(btime, 0.0f))
         fout << "  wait " << btime << '\n';
       if (strcmp(graph_str, "") == 0)
         fout << "  export graph /" << object_str << " /file=\"" << line_array[3]
@@ -958,7 +958,7 @@ int rt_report::parse(char* line)
       else
         fout << "  export graph /graph=" << graph_str << " /file=\""
              << image_str << "\"\n";
-      if (atime != 0)
+      if (!feqf(atime, 0.0f))
         fout << "  wait " << atime << '\n';
       fout << "endmain\n";
       fout.close();
@@ -992,7 +992,7 @@ int rt_report::parse(char* line)
 int main(int argc, char* argv[])
 {
   pwr_tStatus sts;
-  int tmo;
+  int tmo = 0;
   char mp[2000];
   qcom_sQid qid = qcom_cNQid;
   qcom_sGet get;

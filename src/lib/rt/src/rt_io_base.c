@@ -36,7 +36,6 @@
 
 /* rt_io_base.c -- io base routines. */
 
-#include <float.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -48,15 +47,6 @@
 #include "rt_io_supervise.h"
 
 #define IO_CONVMASK_ALL 0xFFFF
-#define IO_CLASSES_SIZE 200
-
-#define DI_AREA_MIN_SIZE 2048
-#define DO_AREA_MIN_SIZE 2048
-#define AI_AREA_MIN_SIZE 512
-#define AO_AREA_MIN_SIZE 512
-#define DV_AREA_MIN_SIZE 4096
-#define AV_AREA_MIN_SIZE 512
-#define CO_AREA_MIN_SIZE 64
 
 pwr_tBoolean io_writeerr;
 pwr_tBoolean io_readerr;
@@ -236,7 +226,7 @@ pwr_tStatus io_init_ai_signals(pwr_sClass_IOHandler* io_op)
   pwr_tObjid area_objid;
   pwr_sClass_AiArea* area_op;
   pwr_sClass_Ai* sig_op;
-  pwr_sClass_ChanAi* chan_op;
+  pwr_sClass_ChanAi* chan_op = NULL;
   pwr_sAttrRef sig_aref;
   pwr_tAName buf;
   pwr_tUInt32 sig_count = 0;
@@ -1904,7 +1894,7 @@ static pwr_tStatus io_FindMethods(pwr_tClassId class, io_eType type,
     pwr_tStatus (**Init)(), pwr_tStatus (**Close)(), pwr_tStatus (**Read)(),
     pwr_tStatus (**Write)(), pwr_tStatus (**Swap)())
 {
-  int found;
+  int found = 0;
   pwr_tStatus sts;
   int i, j, k;
   char* s;
@@ -2070,16 +2060,16 @@ static pwr_tStatus io_handle_channels(gdh_sAttrDef* bd, int i, int csize,
     io_sCard* cp, int offset, int* chan_cnt, pwr_tAName cname)
 {
   void* chan_op;
-  void* sig_op;
+  void* sig_op = NULL;
   io_sChannel* chanp;
   int elem;
-  int number;
+  int number = 0;
   pwr_sAttrRef sigchancon;
   pwr_tAName attrname;
   pwr_tDlid sigdlid;
-  pwr_tClassId sigclass;
+  pwr_tClassId sigclass = 0;
   int sig_found;
-  pwr_tStatus sts;
+  pwr_tStatus sts = 0;
   int j;
   pwr_tCid scid;
 
@@ -2339,9 +2329,9 @@ static pwr_tStatus io_init_card(
   pwr_tUInt16 maxchan;
   pwr_sAttrRef sigchancon;
   void* chan_op;
-  void* sig_op;
+  void* sig_op = NULL;
   io_sChannel* chanp;
-  pwr_tClassId sigclass;
+  pwr_tClassId sigclass = 0;
   pwr_tFloat32 scantime;
   pwr_tObjid thread;
   int ok;
@@ -3853,7 +3843,7 @@ pwr_tStatus io_AiRangeToCoef(io_sChannel* chanp)
     cop->CalculateNewCoef = 0;
 
     /* Coef for RawValue to SignalValue conversion */
-    if (cop->RawValRangeHigh != cop->RawValRangeLow) {
+    if (!feqf(cop->RawValRangeHigh, cop->RawValRangeLow)) {
       cop->SigValPolyCoef1
           = (cop->ChannelSigValRangeHigh - cop->ChannelSigValRangeLow)
           / (cop->RawValRangeHigh - cop->RawValRangeLow);
@@ -3870,7 +3860,7 @@ pwr_tStatus io_AiRangeToCoef(io_sChannel* chanp)
 
     /* Coef for RawValue to ActualValue conversion */
     if (chanp->ChanClass != pwr_cClass_ChanAit && cop->SensorPolyType == 1) {
-      if (cop->SensorSigValRangeHigh != cop->SensorSigValRangeLow) {
+      if (!feqf(cop->SensorSigValRangeHigh, cop->SensorSigValRangeLow)) {
         PolyCoef1 = (cop->ActValRangeHigh - cop->ActValRangeLow)
             / (cop->SensorSigValRangeHigh - cop->SensorSigValRangeLow);
         PolyCoef0
@@ -3904,7 +3894,7 @@ pwr_tStatus io_BiRangeToCoef(io_sChannel* chanp)
     cop->CalculateNewCoef = 0;
 
     /* Coef for RawValue to SignalValue conversion */
-    if (cop->RawValRangeHigh != cop->RawValRangeLow) {
+    if (!feqf(cop->RawValRangeHigh, cop->RawValRangeLow)) {
       cop->SigValPolyCoef1
           = (cop->ChannelSigValRangeHigh - cop->ChannelSigValRangeLow)
           / (cop->RawValRangeHigh - cop->RawValRangeLow);
@@ -3921,7 +3911,7 @@ pwr_tStatus io_BiRangeToCoef(io_sChannel* chanp)
 
     /* Coef for RawValue to ActualValue conversion */
     if (cop->SensorPolyType == 1) {
-      if (cop->SensorSigValRangeHigh != cop->SensorSigValRangeLow) {
+      if (!feqf(cop->SensorSigValRangeHigh, cop->SensorSigValRangeLow)) {
         PolyCoef1 = (cop->ActValRangeHigh - cop->ActValRangeLow)
             / (cop->SensorSigValRangeHigh - cop->SensorSigValRangeLow);
         PolyCoef0
@@ -3959,7 +3949,7 @@ pwr_tStatus io_AoRangeToCoef(io_sChannel* chanp)
     cop->CalculateNewCoef = 0;
 
     /* Coef for ActualValue to RawValue conversion */
-    if (cop->ActValRangeHigh != cop->ActValRangeLow) {
+    if (!feqf(cop->ActValRangeHigh, cop->ActValRangeLow)) {
       cop->SigValPolyCoef1
           = (cop->SensorSigValRangeHigh - cop->SensorSigValRangeLow)
           / (cop->ActValRangeHigh - cop->ActValRangeLow);
@@ -3974,7 +3964,7 @@ pwr_tStatus io_AoRangeToCoef(io_sChannel* chanp)
       return IO__CHANRANGE;
     }
     /* Coef for ActualValue to SignalValue conversion */
-    if (cop->ChannelSigValRangeHigh != 0) {
+    if (!feqf(cop->ChannelSigValRangeHigh, 0.0f)) {
       PolyCoef1 = (cop->RawValRangeHigh - cop->RawValRangeLow)
           / (cop->ChannelSigValRangeHigh - cop->ChannelSigValRangeLow);
       PolyCoef0
@@ -4007,7 +3997,7 @@ pwr_tStatus io_BoRangeToCoef(io_sChannel* chanp)
     cop->CalculateNewCoef = 0;
 
     /* Coef for ActualValue to RawValue conversion */
-    if (cop->ActValRangeHigh != cop->ActValRangeLow) {
+    if (!feqf(cop->ActValRangeHigh, cop->ActValRangeLow)) {
       cop->SigValPolyCoef1
           = (cop->SensorSigValRangeHigh - cop->SensorSigValRangeLow)
           / (cop->ActValRangeHigh - cop->ActValRangeLow);
@@ -4022,7 +4012,7 @@ pwr_tStatus io_BoRangeToCoef(io_sChannel* chanp)
       return IO__CHANRANGE;
     }
     /* Coef for ActualValue to SignalValue conversion */
-    if (cop->ChannelSigValRangeHigh != 0) {
+    if (!feqf(cop->ChannelSigValRangeHigh, 0.0f)) {
       PolyCoef1 = (cop->RawValRangeHigh - cop->RawValRangeLow)
           / (cop->ChannelSigValRangeHigh - cop->ChannelSigValRangeLow);
       PolyCoef0

@@ -124,7 +124,7 @@ int col_print(FILE* fp, char* format, ...)
 
 int main(int argc, char* argv[])
 {
-  FILE* outFile;
+  FILE* outFile = NULL;
   pwr_tInt32 ret;
 
   if (argc > 1

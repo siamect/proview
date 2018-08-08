@@ -150,8 +150,8 @@ static pwr_tStatus Connect(ldh_sMenuCall* ip)
       return 0;
 
     strncpy(aname, aname_p, sizeof(aname));
-    strncat(aname, ".", sizeof(aname));
-    strncat(aname, mb.MethodArguments[0], sizeof(aname));
+    strncat(aname, ".", sizeof(aname) - strlen(aname) - 1);
+    strncat(aname, mb.MethodArguments[0], sizeof(aname) - strlen(aname) - 1);
 
     sts = ldh_NameToAttrRef(ip->PointedSession, aname, &PattrRef);
     // sts = ldh_GetAttrRef(ip->PointedSession, ip->Pointed.Objid,

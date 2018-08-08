@@ -36,7 +36,6 @@
 
 #if defined OS_POSIX
 #include <stdio.h>
-#include <float.h>
 #include <string.h>
 #endif
 
@@ -127,7 +126,7 @@ void NMpsCell_exec(plc_sThread* tp, pwr_sClass_NMpsCell* object)
   int size;
   pwr_sAttrRef extern_attrref;
   gdh_tDlid data_dlid;
-  unsigned long* data_pointer;
+  unsigned long* data_pointer = NULL;
   int reloaddone;
 #if defined OS_LINUX
   char* tmp_buf;
@@ -656,7 +655,7 @@ void NMpsStoreCell_exec(plc_sThread* tp, pwr_sClass_NMpsStoreCell* object)
   int size;
   pwr_sAttrRef extern_attrref;
   gdh_tDlid data_dlid;
-  unsigned long* data_pointer;
+  unsigned long* data_pointer = NULL;
   int reloaddone;
 #if defined OS_LINUX
   char* tmp_buf;

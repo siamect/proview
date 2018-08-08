@@ -51,7 +51,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include <float.h>
 #endif
 
 #include "pwr_nmpsclasses.h"
@@ -1479,8 +1478,8 @@ static pwr_tStatus nmpsbck_read(bck_ctx bckctx, char* backupfile)
   pwr_tUInt32 record_start[NMPSBCK_MAX_RECORDS];
   nmpsbck_t_clist* clist = 0;
   nmpsbck_t_clist* clist_ptr;
-  int cell_read_success;
-  int data_read_success;
+  int cell_read_success = 0;
+  int data_read_success = 0;
   int i;
   pwr_tObjid objid;
   int data_count;

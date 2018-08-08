@@ -62,6 +62,8 @@
 **********************************************************************
 **********************************************************************/
 
+#include "co_math.h"
+
 #include "ssabox_plc_antisway.h"
 
 /*_*
@@ -88,12 +90,11 @@ void Ssab_AntiSway_exec(plc_sThread* tp, pwr_sClass_Ssab_AntiSway* object)
   int hoisted = FALSE;
   int i;
   char* mstr;
-  double omega, dt;
+  double omega = 0.0, dt;
   const AS_shaper* shp;
 
-  dt = tp->PlcThread
-           ->ScanTime; /* Constant scan time (the ideal value, not the
-                          measuremen of last cycle time) */
+  dt = tp->PlcThread->ScanTime; /* Constant scan time (the ideal value, not the
+                                   measuremen of last cycle time) */
   object->done = TRUE;
 
   /***********************************************
@@ -120,13 +121,12 @@ void Ssab_AntiSway_exec(plc_sThread* tp, pwr_sClass_Ssab_AntiSway* object)
                                   errstatus if enable is switched off */
       if (!object->enable)
         object->errstatus = 0;
-    } else if (object
-                   ->enable) /* already disabled, from not enable mode. Reset
-                                errstatus if enable is switched on */
+    } else if (object->enable) /* already disabled, from not enable mode. Reset
+                                  errstatus if enable is switched on */
       object->errstatus = 0;
 
     newCall = TRUE; // why? needed if errstatus is reset. in which case this
-                    // will be an ordinary execution cycle.
+    // will be an ordinary execution cycle.
   }
 
   /************************************************
@@ -170,10 +170,10 @@ void Ssab_AntiSway_exec(plc_sThread* tp, pwr_sClass_Ssab_AntiSway* object)
 
   /* Fetch command velocity and command position and check its validity. This is
    * done independently of mode */
-  if (object->uCommand != *object->uCommandP) {
+  if (!feqf(object->uCommand, *object->uCommandP)) {
     object->uCommand = *object->uCommandP;
     /* Check command velocity */
-    if (fabs(object->uCommand)
+    if (ABS(object->uCommand)
         > AS_OBJ_UMAXSM) { /* Non-valid command velocity - disable! */
       if (!(object->errstatus
               & AS_ERR_UCOM)) { /* Error flag not already set. */
@@ -188,18 +188,18 @@ void Ssab_AntiSway_exec(plc_sThread* tp, pwr_sClass_Ssab_AntiSway* object)
                                                     "uCommand=%.3f umaxSM=%.3f",
             object->uCommand, AS_OBJ_UMAXSM);
       }
-    } else if (fabs(object->uCommand) < AS_OBJ_UR_MIN)
+    } else if (ABS(object->uCommand) < AS_OBJ_UR_MIN)
       object->uCommand = 0.0;
     if (object->manual)
       newCall = TRUE;
   }
 
-  if (object->xCommand != *object->xCommandP) {
-    if (fabs(object->xCommand - *object->xCommandP) > AS_OBJ_XCOM_MIN_CHANGE) {
+  if (!feqf(object->xCommand, *object->xCommandP)) {
+    if (ABS(object->xCommand - *object->xCommandP) > AS_OBJ_XCOM_MIN_CHANGE) {
       object->xCommand = *object->xCommandP; // Q: New command is always
-                                             // written. What if switched from
-                                             // man, and the same position is
-                                             // commanded?
+      // written. What if switched from
+      // man, and the same position is
+      // commanded?
       if (!object->manual) // A: newCall is always set in case of a switch.
         newCall = TRUE;
     }
@@ -225,23 +225,23 @@ void Ssab_AntiSway_exec(plc_sThread* tp, pwr_sClass_Ssab_AntiSway* object)
 
   if (object->manual) { // man-specific L retreival
     /* Check for new L and hoisting */
-    if (fabs(object->Lc - *object->LcP) > AS_OBJ_L_MIN_CHANGE) {
+    if (ABS(object->Lc - *object->LcP) > AS_OBJ_L_MIN_CHANGE) {
       hoisted = TRUE;
       object->Lc = *object->LcP;
     }
-    hoisting = (fabs(object->DLc) > AS_OBJ_DL_MIN);
+    hoisting = (ABS(object->DLc) > AS_OBJ_DL_MIN);
   } else { // auto mode. auto-specific input..
 
     /* Check for new L. */
-    if (fabs(object->Lc - *object->LcP) > AS_OBJ_L_MIN_CHANGE) {
+    if (ABS(object->Lc - *object->LcP) > AS_OBJ_L_MIN_CHANGE) {
       if (object->compensate >= AS_AUTO_COMP_L) {
         hoisted = TRUE;
         object->Lc = *object->LcP;
         if (object->compensate >= AS_AUTO_COMP_DL)
-          hoisting = (fabs(object->DLc) > AS_OBJ_DL_MIN);
-      } else if (newCall || (AS_OBJ_SETP->N
-                                == 0)) /* No compensation. Update Lc when new
-                                          call or if not working on a set. */
+          hoisting = (ABS(object->DLc) > AS_OBJ_DL_MIN);
+      } else if (newCall
+          || (AS_OBJ_SETP->N == 0)) /* No compensation. Update Lc when new
+                                       call or if not working on a set. */
         object->Lc = *object->LcP;
     }
 
@@ -257,10 +257,10 @@ void Ssab_AntiSway_exec(plc_sThread* tp, pwr_sClass_Ssab_AntiSway* object)
     object->other = *object->otherP;
     if (object->other != NULL
         && (AS_OBJ_OTHER->enable && !AS_OBJ_OTHER->manual)) // second condition
-                                                            // will not be
-                                                            // tested if first
-                                                            // is not true.
-                                                            // Important!
+      // will not be
+      // tested if first
+      // is not true.
+      // Important!
       object->autostatus |= AS_AUTO_2D;
     else /* other is NULL pointer, or not enable */
       object->autostatus &= (~AS_AUTO_2D);
@@ -313,8 +313,8 @@ void Ssab_AntiSway_exec(plc_sThread* tp, pwr_sClass_Ssab_AntiSway* object)
         AS_OBJ_SETALARM(i);
       } else if (AS_OBJ_MESSAGEQP(i)->count
           == (AS_OBJ_M_ALWAIT + AS_OBJ_M_ALHOLD)) { // dequeue message or move
-                                                    // and reset counter. Reset
-                                                    // alarm.
+        // and reset counter. Reset
+        // alarm.
         if (strlen(AS_OBJ_MESSAGEQP(i)->mess) > AS_OBJ_M_LENGTH) {
           /*move not copied substring to beginning of queue message */
           memmove(AS_OBJ_MESSAGEQP(i)->mess,
@@ -337,12 +337,12 @@ void Ssab_AntiSway_exec(plc_sThread* tp, pwr_sClass_Ssab_AntiSway* object)
   }
   for (i = 0; i < AS_NERR_FLAGS; i++)
     object->flags[i]
-        = ((object->errstatus & (int)(.1 + AS_ROUND(pow(2.0, (double)i))))
+        = ((object->errstatus & (int)(.1 + ROUND(pow(2.0, (double)i))))
             && TRUE);
   for (; i < (AS_NERR_FLAGS + AS_NAUTO_FLAGS); i++)
     object->flags[i]
         = ((object->autostatus
-               & (int)(.1 + AS_ROUND(pow(2.0, (double)(i - AS_NERR_FLAGS)))))
+               & (int)(.1 + ROUND(pow(2.0, (double)(i - AS_NERR_FLAGS)))))
             && TRUE);
 
   /* If crucial error or not enabled - Reset reference values and exit. */
@@ -379,11 +379,11 @@ void Ssab_AntiSway_exec(plc_sThread* tp, pwr_sClass_Ssab_AntiSway* object)
 
     else {
       object->aR = 0.0;
-      if (fabs(object->uR) < AS_OBJ_UR_ZEROLIM) { /* Reset xR if at rest */
+      if (ABS(object->uR) < AS_OBJ_UR_ZEROLIM) { /* Reset xR if at rest */
         AS_OBJ_XR = object->xc;
         AS_OBJ_XRM = object->xc;
       }
-      if (fabs(object->uR - object->uCommand)
+      if (ABS(object->uR - object->uCommand)
           > AS_OBJ_UR_ATTAIN_ERRLIM) { /* Error in velocity attainment ? A small
                                           error will always occur in the
                                           floating point operations.*/
@@ -424,9 +424,9 @@ void Ssab_AntiSway_exec(plc_sThread* tp, pwr_sClass_Ssab_AntiSway* object)
 
       /* Error in velocity attainment ? A small error will always occur in the
        * floating point operations.*/
-      if (fabs(object->uR)
+      if (ABS(object->uR)
           > AS_OBJ_UR_ATTAIN_ERRLIM) { // in auto mode, "uCommand" is always
-                                       // zero when not working on a set.
+        // zero when not working on a set.
         object->errstatus |= AS_ERR_UR_ATTAIN;
         if (object->verbose >= AS_VERB_ERR)
           printf("\n\tAntiSway: Error in command velocity attainment larger "
@@ -441,7 +441,7 @@ void Ssab_AntiSway_exec(plc_sThread* tp, pwr_sClass_Ssab_AntiSway* object)
 
       /* Error in position attainment ? A small error will always occur in the
        * floating point operations.*/
-      if (fabs(AS_OBJ_XR - object->xCommand) > AS_OBJ_XR_ATTAIN_ERRLIM) {
+      if (ABS(AS_OBJ_XR - object->xCommand) > AS_OBJ_XR_ATTAIN_ERRLIM) {
         object->errstatus |= AS_ERR_XR_ATTAIN;
         if (object->verbose >= AS_VERB_ERR)
           printf("\n\tAntiSway: Error in command position attainment larger "
@@ -452,9 +452,8 @@ void Ssab_AntiSway_exec(plc_sThread* tp, pwr_sClass_Ssab_AntiSway* object)
                                                "xR=%.4f, xCommand=%.4f.",
             AS_OBJ_XR_ATTAIN_ERRLIM, AS_OBJ_XR, object->xCommand);
       }
-      AS_OBJ_XR = object
-                      ->xCommand; /* Reset xR to reference position at end of
-                                     travel */
+      AS_OBJ_XR = object->xCommand; /* Reset xR to reference position at end of
+                                       travel */
       AS_OBJ_XRM = object->xCommand;
     }
   }
@@ -465,9 +464,9 @@ void Ssab_AntiSway_exec(plc_sThread* tp, pwr_sClass_Ssab_AntiSway* object)
 
   /* 4.1 Check reference acceleration for bounds. Store 32-bit output */
 
-  if ((fabs(object->aR) - shp->AMax * AS_OBJ_AMAXHMA) > 100.0
-          * FLT_EPSILON) { /* If too large error, disable. This should never
-                              happen.. */
+  if ((ABS(object->aR) - shp->AMax * AS_OBJ_AMAXHMA)
+      > 100.0 * FLT_EPSILON) { /* If too large error, disable. This should never
+                                  happen.. */
     object->errstatus |= AS_ERR_AMAX;
     if (object->verbose >= AS_VERB_DISABLED)
       printf("\nAntiSway: reference acceleration greater than hard limit. "
@@ -494,9 +493,9 @@ void Ssab_AntiSway_exec(plc_sThread* tp, pwr_sClass_Ssab_AntiSway* object)
 
   /* 4.3 Check reference velocity for bounds. Store 32-bit output */
 
-  if ((fabs(object->uR) - AS_OBJ_UMAXHMA)
-      > AS_EPSILON) { /* uR > hard limit ? */
-    if (fabs(object->uR) > AS_OBJ_UMAXHMA * AS_OBJ_UR_MAX_ERRFACT) {
+  if ((ABS(object->uR) - AS_OBJ_UMAXHMA)
+      > 100.0 * DBL_EPSILON) { /* uR > hard limit ? */
+    if (ABS(object->uR) > AS_OBJ_UMAXHMA * AS_OBJ_UR_MAX_ERRFACT) {
       /* If too large error, disable. A small violation is allowed, since many
        * shapers can temporarily cause... */
       object->errstatus |= AS_ERR_UMAX; /*...uR to exceed umax slightly when
@@ -520,11 +519,11 @@ void Ssab_AntiSway_exec(plc_sThread* tp, pwr_sClass_Ssab_AntiSway* object)
           "umaxH=%.3f. Changed output to sign*umaxH.",
           object->uR, AS_OBJ_UMAXHMA);
     }
-    object->uRO = AS_SIGN(object->uR) * AS_OBJ_UMAXHMA;
-  } else if (
-      fabs(object->uR) < AS_OBJ_UR_ZEROLIM) /* Reset to zero if close enough.
-                                               Sometimes the reset to uCommand
-                                               in step 3 is insufficient. */
+    object->uRO = SIGN(object->uR) * AS_OBJ_UMAXHMA;
+  } else if (ABS(object->uR)
+      < AS_OBJ_UR_ZEROLIM) /* Reset to zero if close enough.
+                               Sometimes the reset to uCommand
+                               in step 3 is insufficient. */
     object->uRO
         = 0.0; /* Exact zero output is often used as a condition in plc
                   programs. (e.g. for disabling of a frequency converter) */
@@ -536,8 +535,8 @@ void Ssab_AntiSway_exec(plc_sThread* tp, pwr_sClass_Ssab_AntiSway* object)
     /* 4.4 Check reference position for bounds. Store 32-bit output. Will only
      * perform control if the position input object->xc is used. */
     if ((object->xcP != &object->xc)
-        && (((AS_OBJ_XR - AS_OBJ_XMAX) > AS_EPSILON)
-               || ((AS_OBJ_XR - AS_OBJ_XMIN) < -AS_EPSILON))) {
+        && (((AS_OBJ_XR - AS_OBJ_XMAX) > 100.0 * DBL_EPSILON)
+               || ((AS_OBJ_XR - AS_OBJ_XMIN) < -100.0 * DBL_EPSILON))) {
       object->errstatus |= AS_ERR_MAN_XLIM;
       if (object->verbose >= AS_VERB_ERR)
         printf("\nAntiSway: reference position off limits. xR=%f, xmax=%f, "
@@ -560,8 +559,8 @@ void Ssab_AntiSway_exec(plc_sThread* tp, pwr_sClass_Ssab_AntiSway* object)
     /* 4.4 Check reference position for bounds. In auto mode, disable if not
      * valid. Store 32-bit output */
 
-    if (((AS_OBJ_XR - AS_OBJ_XMAX > AS_EPSILON))
-        || ((AS_OBJ_XR - AS_OBJ_XMIN) < -AS_EPSILON)) {
+    if (((AS_OBJ_XR - AS_OBJ_XMAX > 100.0 * DBL_EPSILON))
+        || ((AS_OBJ_XR - AS_OBJ_XMIN) < -100.0 * DBL_EPSILON)) {
       object->errstatus |= AS_ERR_XLIM;
       if (object->verbose >= AS_VERB_DISABLED)
         printf("\nAntiSway: reference position off limits. xR=%f, xmax=%f, "
@@ -582,7 +581,7 @@ void Ssab_AntiSway_exec(plc_sThread* tp, pwr_sClass_Ssab_AntiSway* object)
   }
 
   object->xRO = AS_OBJ_XR; /* Reference position. 32-bit output. */
-  object->thRO = 180.0 / AS_PI * AS_OBJ_THR; /* "Reference" sway angle.
+  object->thRO = 180.0 / M_PI * AS_OBJ_THR; /* "Reference" sway angle.
                                                 Conversion from radians to
                                                 degrees. 32-bit output. */
 

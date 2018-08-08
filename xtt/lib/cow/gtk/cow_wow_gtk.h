@@ -87,13 +87,6 @@ public:
   static gboolean event_cb(GtkWidget* w, GdkEvent* event, gpointer data);
 };
 
-class CoWowWidgetGtk : public CoWowWidget {
-  CoWowWidgetGtk(GtkWidget* w) : widget(w)
-  {
-  }
-  GtkWidget* widget;
-};
-
 class CoWowFocusTimerGtk {
 public:
   CoWowFocusTimerGtk() : set_focus_disabled(0), request_cnt(0), focus_timerid(0)

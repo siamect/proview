@@ -430,7 +430,7 @@ bool wb_vrepmem::createSnapshot(
       m_cid = vcid;
 
     return true;
-  } catch (wb_error& e) {
+  } catch (wb_error&) {
     return false;
   }
 }
@@ -441,7 +441,7 @@ bool wb_vrepmem::exportVolume(wb_import& i)
     i.importVolume(*this);
 
     return true;
-  } catch (wb_error& e) {
+  } catch (wb_error&) {
     return false;
   }
 }
@@ -904,7 +904,6 @@ mem_object* mem_object::find(wb_name* oname, int level)
     return fws->find(oname, level);
   else
     return 0;
-  return 0;
 }
 
 bool mem_object::docBlock(char** block, int* size) const
@@ -1618,7 +1617,6 @@ bool wb_vrepmem::updateObject(wb_orep* o, bool keepref, bool keepsym)
   wb_cdrep* cdrep = m_merep->cdrep(&sts, o->cid());
   if (EVEN(sts))
     return false;
-  pwr_mClassDef flags = cdrep->flags();
 
   for (int i = 0; i < 2; i++) {
     pwr_eBix bix = i ? pwr_eBix_rt : pwr_eBix_dev;
@@ -2271,7 +2269,7 @@ void wb_vrepmem::classeditorRenameObject(
         cdrep->renameClass(&sts, name);
         delete cdrep;
       }
-    } catch (wb_error& e) {
+    } catch (wb_error&) {
     }
     break;
   }
@@ -2303,7 +2301,7 @@ void wb_vrepmem::classeditorRenameObject(
 
       adrep->renameAttribute(&sts, name);
       delete adrep;
-    } catch (wb_error& e) {
+    } catch (wb_error&) {
     }
     break;
   }
@@ -2316,7 +2314,7 @@ void wb_vrepmem::classeditorRenameObject(
         tdrep->renameType(&sts, name);
         delete tdrep;
       }
-    } catch (wb_error& e) {
+    } catch (wb_error&) {
     }
     break;
   }
@@ -2953,7 +2951,7 @@ void wb_vrepmem::printPaletteFile()
   int palette_found = 0;
   PalFileMenu* menu = PalFile::config_tree_build(
       0, pal_cLocalPaletteFile, pal_eNameType_All, "", 0);
-  PalFileMenu *mp, *mp2, *mp3, *mp4, *mp5;
+  PalFileMenu *mp, *mp2 = NULL, *mp3 = NULL, *mp4 = NULL, *mp5;
   mem_object *memch, *memch2, *memcd, *memcd2, *memgn;
   int hier_inserted;
 

@@ -533,6 +533,14 @@ ItemMsg::ItemMsg(MsgList* item_msglist, const char* item_name, char* item_text,
   //  brow_SetAnnotPixmap( node, 0, msglist->brow->pixmap_leaf);
 }
 
+ItemMsg::~ItemMsg()
+{
+}
+
+void ItemMsg::find()
+{
+}
+
 ItemMsgObject::ItemMsgObject(MsgList* item_msglist, const char* item_name,
     char* item_text, int item_severity, pwr_tOid item_oid, brow_tNode dest,
     flow_eDest dest_code)

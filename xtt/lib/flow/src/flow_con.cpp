@@ -34,7 +34,6 @@
  * General Public License plus this exception.
  **/
 
-#include <float.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -389,7 +388,7 @@ FlowCon::~FlowCon()
 
 FlowCon::FlowCon(const FlowCon& c, FlowNode* source, FlowNode* dest)
 {
-  memcpy(this, &c, sizeof(c));
+  memcpy((void *)this, (void *)&c, sizeof(c));
   source_node = source;
   dest_node = dest;
 
@@ -996,10 +995,9 @@ int FlowCon::con_route_noobstacle(double src_x, double src_y,
     flow_eDirection dest_dir)
 {
   double x[8], y[8];
-  int point;
-  route_eState state;
+  int point = 0;
+  route_eState state = eState_No;
 
-  point = 0;
   x[0] = src_x;
   y[0] = src_y;
   point++;
@@ -1786,7 +1784,7 @@ int FlowCon::con_route_area(
   }
 
   /* Select the shortest */
-  int min_idx;
+  int min_idx = 0;
   int min_cnt = 10000;
   for (i = 0; i < line_table_cnt; i++) {
     if (line_table[i].complete) {

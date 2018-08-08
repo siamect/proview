@@ -56,7 +56,20 @@ CoLogW::CoLogW(void* msg_parent_ctx, const char* logw_name, int l_show_item,
   strcpy(name, logw_name);
 }
 
+CoLogW::~CoLogW()
+{
+}
+
+void CoLogW::print()
+{
+}
+
 void CoLogW::show(char categories[][20], char* item)
 {
   logwnav->show(categories, item);
+}
+
+void CoLogW::activate_print()
+{
+  print();
 }

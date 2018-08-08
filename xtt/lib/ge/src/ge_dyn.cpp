@@ -36,7 +36,6 @@
 
 /* gedyn.cpp -- Display plant and node hiererachy */
 
-#include <float.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -63,7 +62,7 @@
 #define xmenu_eItemType_AttrObject 2
 #define xmenu_eItemType_Attribute 3
 #define glow_cJBean_Offset 2
-#define glow_cJBean_SizeCorr 2
+//#define glow_cJBean_SizeCorr 2
 
 static int pdummy;
 
@@ -647,7 +646,7 @@ void GeDyn::save(std::ofstream& fp)
 
 void GeDyn::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   int tmp;
   char dummy[40];
@@ -2578,7 +2577,7 @@ void GeDigLowColor::save(std::ofstream& fp)
 
 void GeDigLowColor::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   int tmp;
   char dummy[40];
@@ -2922,7 +2921,7 @@ void GeDigColor::save(std::ofstream& fp)
 
 void GeDigColor::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   int tmp;
   char dummy[40];
@@ -3177,7 +3176,7 @@ void GeDigWarning::save(std::ofstream& fp)
 
 void GeDigWarning::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -3384,7 +3383,7 @@ void GeDigError::save(std::ofstream& fp)
 
 void GeDigError::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -3630,7 +3629,7 @@ void GeDigFlash::save(std::ofstream& fp)
 
 void GeDigFlash::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   int tmp;
   char dummy[40];
@@ -3922,7 +3921,7 @@ void GeInvisible::save(std::ofstream& fp)
 
 void GeInvisible::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int tmp;
   int end_found = 0;
   char dummy[40];
@@ -4172,7 +4171,7 @@ void GeDigTextColor::save(std::ofstream& fp)
 
 void GeDigTextColor::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   int tmp;
   char dummy[40];
@@ -4370,7 +4369,7 @@ void GeDigBorder::save(std::ofstream& fp)
 
 void GeDigBorder::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   int tmp;
   char dummy[40];
@@ -4621,7 +4620,7 @@ void GeDigText::save(std::ofstream& fp)
 
 void GeDigText::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   int tmp;
   char dummy[40];
@@ -4944,7 +4943,7 @@ void GeValue::save(std::ofstream& fp)
 
 void GeValue::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;
@@ -5152,7 +5151,7 @@ int GeValue::disconnect(grow_tObject object)
 int GeValue::scan(grow_tObject object)
 {
   char buf[120];
-  int len;
+  int len = 0;
 
   if (!p)
     return 1;
@@ -5786,7 +5785,7 @@ void GeValueInput::save(std::ofstream& fp)
 
 void GeValueInput::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;
@@ -6044,7 +6043,7 @@ int GeValueInput::change_value(grow_tObject object, char* text)
     }
   }
 
-  if (!(max_value == 0 && min_value == 0)) {
+  if (!(feq(max_value, 0.0) && feq(min_value, 0.0))) {
     // Max value is supplied
     int max_exceeded = 0;
 
@@ -6090,7 +6089,7 @@ int GeValueInput::change_value(grow_tObject object, char* text)
         max_exceeded = 1;
       break;
     case pwr_eType_DeltaTime:
-      if (double(((pwr_tDeltaTime*)buf)->tv_sec) == max_value
+      if (feq(double(((pwr_tDeltaTime*)buf)->tv_sec), max_value)
           && ((pwr_tDeltaTime*)buf)->tv_nsec > 0)
         max_exceeded = 1;
       else if (double(((pwr_tDeltaTime*)buf)->tv_sec) > max_value)
@@ -6521,7 +6520,7 @@ void GeAnalogColor::save(std::ofstream& fp)
 
 void GeAnalogColor::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;
@@ -6660,7 +6659,7 @@ int GeAnalogColor::scan(grow_tObject object)
   if (!p || dyn->ignore_color)
     return 1;
 
-  bool state;
+  bool state = false;
 
   switch (type) {
   case pwr_eType_Float32: {
@@ -6724,7 +6723,7 @@ int GeAnalogColor::scan(grow_tObject object)
       state = val <= limit;
       break;
     case ge_eLimitType_Eq:
-      state = val == limit;
+      state = feq((double)val, limit);
       break;
     }
 
@@ -6895,7 +6894,7 @@ void GeRotate::save(std::ofstream& fp)
 
 void GeRotate::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -6960,7 +6959,7 @@ int GeRotate::connect(
   first_scan = true;
   if (!grow_TransformIsStored(object))
     grow_StoreTransform(object);
-  if (x0 != 0 || y0 != 0)
+  if (!feq(x0, 0.0) || !feq(y0, 0.0))
     rotation_point = glow_eRotationPoint_FixPoint;
   else
     rotation_point = glow_eRotationPoint_Zero;
@@ -7003,7 +7002,7 @@ int GeRotate::export_java(
   double x1, x2, y1, y2;
   double rotation_x, rotation_y;
 
-  if (x0 != 0 || y0 != 0) {
+  if (!feq(x0, 0.0) || !feq(y0, 0.0)) {
     rotation_x = x0;
     rotation_y = y0;
 
@@ -7192,7 +7191,7 @@ void GeMove::save(std::ofstream& fp)
 
 void GeMove::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;
@@ -7257,9 +7256,9 @@ void GeMove::open(std::ifstream& fp)
     if (end_found)
       break;
   }
-  if (y_factor == 0)
+  if (feq(y_factor, 0.0))
     y_factor = x_factor;
-  if (scale_y_factor == 0)
+  if (feq(scale_y_factor, 0.0))
     scale_y_factor = scale_x_factor;
 }
 
@@ -7653,7 +7652,7 @@ void GeAnalogShift::save(std::ofstream& fp)
 
 void GeAnalogShift::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -7855,7 +7854,7 @@ void GeDigShift::save(std::ofstream& fp)
 
 void GeDigShift::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -8065,7 +8064,7 @@ void GeDigFourShift::save(std::ofstream& fp)
 
 void GeDigFourShift::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -8368,7 +8367,7 @@ void GeScrollingText::save(std::ofstream& fp)
 
 void GeScrollingText::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;
@@ -8596,7 +8595,7 @@ void GeColorThemeLightness::save(std::ofstream& fp)
 
 void GeColorThemeLightness::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -8768,7 +8767,7 @@ void GeDigBackgroundColor::save(std::ofstream& fp)
 
 void GeDigBackgroundColor::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   int tmp;
   char dummy[40];
@@ -8991,7 +8990,7 @@ void GeDigSwap::save(std::ofstream& fp)
 
 void GeDigSwap::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -9031,7 +9030,7 @@ int GeDigSwap::connect(
 {
   int attr_type, attr_size;
   pwr_tAName parsed_name;
-  int sts;
+  int sts = 0;
 
   size = 4;
   p = 0;
@@ -9225,7 +9224,7 @@ void GeAnimation::replace_attribute(char* from, char* to, int* cnt, int strict)
 
 void GeAnimation::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   int tmp;
   char dummy[40];
@@ -9460,7 +9459,7 @@ void GeVideo::save(std::ofstream& fp)
 
 void GeVideo::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -9614,7 +9613,7 @@ void GeBar::save(std::ofstream& fp)
 
 void GeBar::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -9751,7 +9750,7 @@ int GeBar::scan(grow_tObject object)
     pwr_tFloat32 maxval = *max_value_p;
     pwr_tFloat32 minval = *min_value_p;
 
-    if (maxval != old_max_value || minval != old_min_value) {
+    if (!feqf(maxval, old_max_value) || !feqf(minval, old_min_value)) {
       if (fabsf(maxval - minval) > FLT_EPSILON) {
         grow_SetBarRange(object, double(minval), double(maxval));
       }
@@ -9971,7 +9970,7 @@ void GeTrend::save(std::ofstream& fp)
 
 void GeTrend::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;
@@ -10189,7 +10188,7 @@ int GeTrend::connect(grow_tObject object, glow_sTraceData* trace_data, bool now)
     case graph_eDatabase_Local:
       timerange_p = (pwr_tFloat32*)dyn->graph->localdb_ref_or_create(
           parsed_name, attr_type);
-      if (*timerange_p == 0)
+      if (feqf(*timerange_p, 0.0f))
         *timerange_p = scan_time * no_of_points;
       break;
     default:;
@@ -10279,7 +10278,7 @@ int GeTrend::scan(grow_tObject object)
   if (max_value1_p && min_value1_p) {
     pwr_tFloat32 maxval = *max_value1_p;
     pwr_tFloat32 minval = *min_value1_p;
-    if (maxval != old_max_value1 || minval != old_min_value1) {
+    if (!feqf(maxval, old_max_value1) || !feqf(minval, old_min_value1)) {
       if (fabsf(maxval - minval) > FLT_EPSILON) {
         grow_SetTrendRangeY(object, 0, double(minval), double(maxval));
       }
@@ -10291,7 +10290,7 @@ int GeTrend::scan(grow_tObject object)
     pwr_tFloat32 maxval = *max_value2_p;
     pwr_tFloat32 minval = *min_value2_p;
 
-    if (maxval != old_max_value2 || minval != old_min_value2) {
+    if (!feqf(maxval, old_max_value2) || !feqf(minval, old_min_value2)) {
       if (fabsf(maxval - minval) > FLT_EPSILON) {
         grow_SetTrendRangeY(object, 1, double(minval), double(maxval));
       }
@@ -10810,7 +10809,7 @@ void GeXY_Curve::save(std::ofstream& fp)
 
 void GeXY_Curve::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   int tmp;
   char dummy[40];
@@ -11105,15 +11104,15 @@ int GeXY_Curve::scan(grow_tObject object)
     redraw = true;
 
   if (first_scan && !(x_max_value_p && x_min_value_p)
-      && fabsf(x_max_value - x_min_value) > FLT_EPSILON)
+      && fabs(x_max_value - x_min_value) > DBL_EPSILON)
     grow_SetXYCurveRangeX(object, curve_number - 1, x_min_value, x_max_value);
   if (first_scan && !(y_max_value_p && y_min_value_p)
-      && fabsf(y_max_value - y_min_value) > FLT_EPSILON)
+      && fabs(y_max_value - y_min_value) > DBL_EPSILON)
     grow_SetXYCurveRangeY(object, curve_number - 1, y_min_value, y_max_value);
 
   if (x_max_value_p && x_min_value_p
-      && (*x_max_value_p != old_x_max_value
-             || *x_min_value_p != old_x_min_value)) {
+      && (!feqf(*x_max_value_p, old_x_max_value)
+             || !feqf(*x_min_value_p, old_x_min_value))) {
     if (fabsf(*x_max_value_p - *x_min_value_p) > FLT_EPSILON) {
       grow_SetXYCurveRangeX(object, curve_number - 1, double(*x_min_value_p),
           double(*x_max_value_p));
@@ -11126,8 +11125,8 @@ int GeXY_Curve::scan(grow_tObject object)
   }
 
   if (y_max_value_p && y_min_value_p
-      && (*y_max_value_p != old_y_max_value
-             || *y_min_value_p != old_y_min_value)) {
+      && (!feqf(*y_max_value_p, old_y_max_value)
+             || !feqf(*y_min_value_p, old_y_min_value))) {
     if (fabsf(*y_max_value_p - *y_min_value_p) > FLT_EPSILON) {
       grow_SetXYCurveRangeY(object, curve_number - 1, double(*y_min_value_p),
           double(*y_max_value_p));
@@ -11173,7 +11172,7 @@ int GeXY_Curve::scan(grow_tObject object)
 
   if (first_scan || redraw) {
     int attr_type_x;
-    int attr_type_y;
+    int attr_type_y = 0;
     int attr_size;
     int attr_elem;
     pwr_tAName parsed_name;
@@ -11747,7 +11746,7 @@ void GeTable::save(std::ofstream& fp)
 
 void GeTable::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -12290,7 +12289,6 @@ int GeTable::scan(grow_tObject object)
         case pwr_eType_UInt32:
           len = sprintf(buf, format[i], *(pwr_tInt32*)(p[i] + offs));
           break;
-          break;
         case pwr_eType_String:
           len = sprintf(buf, format[i], (char*)(p[i] + offs));
           break;
@@ -12514,7 +12512,7 @@ int GeTable::action(grow_tObject object, glow_tEvent event)
   case glow_eEvent_Key_Down:
   case glow_eEvent_Key_Left:
   case glow_eEvent_Key_Right: {
-    int column, row, new_column, new_row;
+    int column, row, new_column = 0, new_row = 0;
     pwr_tBoolean value;
     int sts;
     pwr_tAName parsed_name;
@@ -12587,7 +12585,6 @@ int GeTable::action(grow_tObject object, glow_tEvent event)
       }
     }
     return GE__NO_PROPAGATE;
-    break;
   }
   case glow_eEvent_MB3Press: {
     int sts;
@@ -12820,7 +12817,7 @@ void GeStatusColor::save(std::ofstream& fp)
 
 void GeStatusColor::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   int tmp;
   char dummy[40];
@@ -13113,7 +13110,7 @@ void GePie::save(std::ofstream& fp)
 
 void GePie::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -13393,7 +13390,7 @@ void GeBarChart::save(std::ofstream& fp)
 
 void GeBarChart::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -13663,7 +13660,7 @@ void GeAxis::save(std::ofstream& fp)
 
 void GeAxis::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -13818,8 +13815,8 @@ int GeAxis::scan(grow_tObject object)
     if (!(max_value_p || min_value_p))
       return 1;
 
-    if (!(first_scan || (max_value_p && (*max_value_p != max_value))
-            || (min_value_p && (*min_value_p != min_value)))) {
+    if (!(first_scan || (max_value_p && (!feqf(*max_value_p, max_value)))
+            || (min_value_p && (!feqf(*min_value_p, min_value))))) {
       return 1;
     }
     if (first_scan)
@@ -13830,7 +13827,7 @@ int GeAxis::scan(grow_tObject object)
     if (max_value_p)
       max_value = *max_value_p;
 
-    if (max_value == min_value)
+    if (feqf(max_value, min_value))
       return 1;
 
     grow_SetAxisRange(object, min_value, max_value, keep_settings);
@@ -13934,7 +13931,7 @@ void GeTimeoutColor::save(std::ofstream& fp)
 
 void GeTimeoutColor::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   int tmp;
   char dummy[40];
@@ -14345,7 +14342,7 @@ void GeHostObject::save(std::ofstream& fp)
 
 void GeHostObject::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -14587,7 +14584,7 @@ void GeDigSound::save(std::ofstream& fp)
 
 void GeDigSound::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   int tmp;
   char dummy[40];
@@ -14710,7 +14707,7 @@ int GeDigSound::scan(grow_tObject object)
     if (val) {
       if (time_since_last >= interval)
         time_since_last = 0;
-      if (time_since_last == 0)
+      if (feq(time_since_last, 0.0))
         dyn->graph->sound(&soundaref);
 
       time_since_last += dyn->graph->scan_time;
@@ -14864,7 +14861,7 @@ void GeFillLevel::save(std::ofstream& fp)
 
 void GeFillLevel::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   int tmp;
   char dummy[40];
@@ -15006,7 +15003,7 @@ int GeFillLevel::scan(grow_tObject object)
     return 1;
 
   if (max_value_p && min_value_p
-      && (*max_value_p != max_value || *min_value_p != min_value)) {
+      && (!feqf(*max_value_p, max_value) || !feqf(*min_value_p, min_value))) {
     min_value = *min_value_p;
     max_value = *max_value_p;
     first_scan = 1;
@@ -15019,10 +15016,10 @@ int GeFillLevel::scan(grow_tObject object)
   } else
     first_scan = false;
 
-  if (max_value == min_value)
+  if (feqf(max_value, min_value))
     return 1;
 
-  double value;
+  double value = 0.0;
   if (!limits_found)
     value = (*p - min_value) / (max_value - min_value);
   else {
@@ -15075,7 +15072,7 @@ int GeFillLevel::export_java(
   if (EVEN(sts)) {
     min_limit = max_limit = 0;
     dir = direction;
-  } else if (!(min_limit == 0 && max_limit == 0)) {
+  } else if (!(feq(min_limit, 0.0) && feq(max_limit, 0.0))) {
     min_limit += glow_cJBean_Offset;
     max_limit += glow_cJBean_Offset;
   }
@@ -15230,7 +15227,7 @@ void GeDigCommand::save(std::ofstream& fp)
 
 void GeDigCommand::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   int tmp;
   char dummy[40];
@@ -15455,7 +15452,7 @@ void GeDigScript::save(std::ofstream& fp)
 
 void GeDigScript::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[200];
   char c;
@@ -15670,7 +15667,7 @@ void GeRefUpdate::save(std::ofstream& fp)
 
 void GeRefUpdate::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[200];
 
@@ -15998,7 +15995,7 @@ void GePopupMenu::save(std::ofstream& fp)
 
 void GePopupMenu::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -16349,7 +16346,7 @@ void GeSetDig::save(std::ofstream& fp)
 
 void GeSetDig::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;
@@ -16451,7 +16448,7 @@ int GeSetDig::action(grow_tObject object, glow_tEvent event)
         // Get bit number from parsed name
         pwr_tUInt32 value = 1;
         char* s;
-        int bitnum;
+        int bitnum = 0;
 
         if ((s = strrchr(parsed_name, '['))) {
           sscanf(s + 1, "%d", &bitnum);
@@ -16612,7 +16609,7 @@ void GeResetDig::save(std::ofstream& fp)
 
 void GeResetDig::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;
@@ -16703,7 +16700,7 @@ int GeResetDig::action(grow_tObject object, glow_tEvent event)
       // Get bit number from parsed name
       pwr_tUInt32 value = 0;
       char* s;
-      int bitnum;
+      int bitnum = 0;
 
       if ((s = strrchr(parsed_name, '['))) {
         sscanf(s + 1, "%d", &bitnum);
@@ -16824,7 +16821,7 @@ void GeToggleDig::save(std::ofstream& fp)
 
 void GeToggleDig::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -16919,7 +16916,7 @@ int GeToggleDig::action(grow_tObject object, glow_tEvent event)
         // Get bit number from parsed name
         pwr_tUInt32 value;
         char* s;
-        int bitnum;
+        int bitnum = 0;
 
         if ((s = strrchr(parsed_name, '['))) {
           sscanf(s + 1, "%d", &bitnum);
@@ -17069,7 +17066,7 @@ void GeStoDig::save(std::ofstream& fp)
 
 void GeStoDig::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -17219,7 +17216,7 @@ void GeCommand::save(std::ofstream& fp)
 
 void GeCommand::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -17357,7 +17354,7 @@ void GeCommandDoubleClick::save(std::ofstream& fp)
 
 void GeCommandDoubleClick::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -17487,7 +17484,7 @@ void GeScript::save(std::ofstream& fp)
 
 void GeScript::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[200];
   char c;
@@ -17630,7 +17627,7 @@ void GeConfirm::save(std::ofstream& fp)
 
 void GeConfirm::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -17830,7 +17827,7 @@ void GeIncrAnalog::save(std::ofstream& fp)
 
 void GeIncrAnalog::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -17906,7 +17903,7 @@ int GeIncrAnalog::action(grow_tObject object, glow_tEvent event)
       }
 
       value += int(increment > 0 ? increment + 0.5 : increment - 0.5);
-      if (!(min_value == 0 && max_value == 0)) {
+      if (!(feq(min_value, 0.0) && feq(max_value, 0.0))) {
         value = MAX(
             value, int(min_value > 0 ? min_value + 0.5 : min_value - 0.5));
         value = MIN(
@@ -17926,7 +17923,7 @@ int GeIncrAnalog::action(grow_tObject object, glow_tEvent event)
       }
 
       value += increment;
-      if (!(min_value == 0 && max_value == 0)) {
+      if (!(feq(min_value, 0.0) && feq(max_value, 0.0))) {
         value = MAX(value, min_value);
         value = MIN(value, max_value);
       }
@@ -18021,7 +18018,7 @@ void GeRadioButton::save(std::ofstream& fp)
 
 void GeRadioButton::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -18271,7 +18268,7 @@ void GeTipText::save(std::ofstream& fp)
 
 void GeTipText::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -18323,7 +18320,7 @@ int GeTipText::action(grow_tObject object, glow_tEvent event)
         for (GeDynElem* elem = dyn->elements; elem; elem = elem->next) {
           if (elem->action_type1 == ge_mActionType1_PopupMenu) {
             strncpy(attr, ((GePopupMenu*)elem)->ref_object, sizeof(attr));
-            strncat(attr, ".Description", sizeof(attr));
+            strncat(attr, ".Description", sizeof(attr) - strlen(attr) - 1);
             found = 1;
             break;
           }
@@ -18332,7 +18329,7 @@ int GeTipText::action(grow_tObject object, glow_tEvent event)
         for (GeDynElem* elem = dyn->elements; elem; elem = elem->next) {
           if (elem->dyn_type1 == ge_mDynType1_HostObject) {
             strncpy(attr, ((GeHostObject*)elem)->hostobject, sizeof(attr));
-            strncat(attr, ".Description", sizeof(attr));
+            strncat(attr, ".Description", sizeof(attr) - strlen(attr) - 1);
             found = 1;
             break;
           }
@@ -18452,7 +18449,7 @@ void GeHelp::save(std::ofstream& fp)
 
 void GeHelp::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -18619,7 +18616,7 @@ void GeOpenGraph::save(std::ofstream& fp)
 
 void GeOpenGraph::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -18805,7 +18802,7 @@ void GeOpenURL::save(std::ofstream& fp)
 
 void GeOpenURL::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -18958,7 +18955,7 @@ void GeInputFocus::save(std::ofstream& fp)
 
 void GeInputFocus::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -19004,7 +19001,7 @@ void GeInputFocus::open(std::ifstream& fp)
 int GeInputFocus::action(grow_tObject object, glow_tEvent event)
 {
   int sts;
-  grow_tObject next;
+  grow_tObject next = NULL;
   int found;
   GeDyn* next_dyn;
   GeInputFocus* next_inputfocus;
@@ -19100,7 +19097,7 @@ int GeInputFocus::action(grow_tObject object, glow_tEvent event)
       int object_cnt;
       int i;
       GeDyn* gm_dyn;
-      grow_tObject prev;
+      grow_tObject prev = NULL;
 
       grow_GetObjectName(object, name, sizeof(name), glow_eName_Object);
 
@@ -19187,7 +19184,7 @@ int GeInputFocus::action(grow_tObject object, glow_tEvent event)
       int object_cnt;
       int i;
       GeDyn* gm_dyn;
-      grow_tObject prev;
+      grow_tObject prev = NULL;
       int found;
 
       grow_GetObjectName(object, name, sizeof(name), glow_eName_Object);
@@ -19354,7 +19351,7 @@ void GeCloseGraph::save(std::ofstream& fp)
 
 void GeCloseGraph::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -19521,7 +19518,7 @@ void GeSlider::save(std::ofstream& fp)
 
 void GeSlider::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -19738,7 +19735,7 @@ int GeSlider::scan(grow_tObject object)
   }
 
   if (max_value_p && min_value_p
-      && (*max_value_p != old_max_value || *min_value_p != old_min_value)) {
+      && (!feqf(*max_value_p, old_max_value) || !feqf(*min_value_p, old_min_value))) {
     if (fabsf(*max_value_p - *min_value_p) > FLT_EPSILON) {
       first_scan = 1;
     }
@@ -19768,12 +19765,12 @@ int GeSlider::scan(grow_tObject object)
 
   grow_GetSliderInfo(
       object, &direction, &max_value, &min_value, &max_pos, &min_pos);
-  if (max_value_p && min_value_p && *max_value_p != *min_value_p) {
+  if (max_value_p && min_value_p && !feqf(*max_value_p, *min_value_p)) {
     max_value = *max_value_p;
     min_value = *min_value_p;
   }
-  if (min_pos != max_pos) {
-    if (dyn->graph->current_slider != object && max_value != min_value) {
+  if (!feq(min_pos, max_pos)) {
+    if (dyn->graph->current_slider != object && !feq(max_value, min_value)) {
       float value;
       double pos_x, pos_y;
 
@@ -19915,8 +19912,8 @@ int GeSlider::action(grow_tObject object, glow_tEvent event)
 
     grow_GetSliderInfo(
         object, &direction, &max_value, &min_value, &max_pos, &min_pos);
-    if (min_pos != max_pos) {
-      if (max_value_p && min_value_p && *max_value_p != *min_value_p) {
+    if (!feq(min_pos, max_pos)) {
+      if (max_value_p && min_value_p && !feqf(*max_value_p, *min_value_p)) {
         max_value = *max_value_p;
         min_value = *min_value_p;
       }
@@ -20118,7 +20115,7 @@ void GeFastCurve::save(std::ofstream& fp)
 
 void GeFastCurve::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -20275,7 +20272,7 @@ int GeFastCurve::scan(grow_tObject object)
 
   int i, j, k;
   pwr_tStatus sts;
-  int trigg_index, first_index, last_index;
+  int trigg_index, first_index = 0, last_index = 0;
   double* data[DYN_FAST_MAX];
 
   // Check if any new value
@@ -20593,7 +20590,7 @@ void GePulldownMenu::save(std::ofstream& fp)
 
 void GePulldownMenu::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;
@@ -21592,7 +21589,7 @@ void GeOptionMenu::save(std::ofstream& fp)
 
 void GeOptionMenu::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;
@@ -22086,7 +22083,7 @@ int GeOptionMenu::scan(grow_tObject object)
     if (!found)
       grow_SetAnnotation(object, 1, "", 0);
   } else {
-    if (enum_value >= 0 && (unsigned int)enum_value < text_size) {
+    if ((unsigned int)enum_value < text_size) {
       int len = MIN(strlen(items_text[enum_value]), sizeof(pwr_tString80));
       grow_SetAnnotation(object, 1, items_text[enum_value], len);
     } else
@@ -22114,7 +22111,6 @@ int GeOptionMenu::action(grow_tObject object, glow_tEvent event)
       break;
     grow_MenuShiftCurrentItem(menu_object, -1);
     return GE__NO_PROPAGATE;
-    break;
   case glow_eEvent_Key_Down:
     if (!menu_object) {
       // Create a menu by triggering a click event
@@ -22126,7 +22122,6 @@ int GeOptionMenu::action(grow_tObject object, glow_tEvent event)
     }
     grow_MenuShiftCurrentItem(menu_object, 1);
     return GE__NO_PROPAGATE;
-    break;
   case glow_eEvent_Key_Return:
     if (!menu_object) {
       // Open menu, simulate a MB1 click event
@@ -22235,7 +22230,7 @@ int GeOptionMenu::action(grow_tObject object, glow_tEvent event)
       break;
     if (event->menu.object == menu_object) {
       // Set enum value to attribute
-      int sts;
+      int sts = 0;
       pwr_tAName parsed_name;
       int inverted;
       int attr_type, attr_size;
@@ -22449,7 +22444,7 @@ void GeAnalogText::save(std::ofstream& fp)
 
 void GeAnalogText::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -22614,7 +22609,7 @@ void GeSetValue::save(std::ofstream& fp)
 
 void GeSetValue::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;
@@ -22824,7 +22819,7 @@ void GeMethodToolbar::save(std::ofstream& fp)
 
 void GeMethodToolbar::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;
@@ -23053,7 +23048,7 @@ void GeMethodPulldownMenu::save(std::ofstream& fp)
 
 void GeMethodPulldownMenu::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;
@@ -23465,7 +23460,7 @@ void GeCatchSignal::save(std::ofstream& fp)
 
 void GeCatchSignal::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -23584,7 +23579,7 @@ void GeEmitSignal::save(std::ofstream& fp)
 
 void GeEmitSignal::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 

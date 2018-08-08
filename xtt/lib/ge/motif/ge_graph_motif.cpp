@@ -36,7 +36,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <float.h>
 
 extern "C" {
 #include "co_cdh.h"

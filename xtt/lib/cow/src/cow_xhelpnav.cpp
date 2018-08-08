@@ -739,6 +739,25 @@ pwr_tStatus CoXHelpNav::search_exec(bool reverse)
   return XHELP__SEARCHNOTFOUND;
 }
 
+HItem::HItem() : type(xhelpnav_eHItemType_Object), node(NULL)
+{
+}
+
+HItem::~HItem()
+{
+}
+
+int HItem::doubleclick_action(
+    CoXHelpNavBrow* brow, CoXHelpNav* xhelpnav, double x, double y)
+{
+  return 1;
+}
+
+bool HItem::search(char* str, bool strict)
+{
+  return false;
+}
+
 HItemHeader::HItemHeader(CoXHelpNavBrow* brow, const char* item_name,
     const char* title, brow_tNode dest, flow_eDest dest_code)
 {
@@ -748,12 +767,20 @@ HItemHeader::HItemHeader(CoXHelpNavBrow* brow, const char* item_name,
   brow_SetAnnotation(node, 0, title, strlen(title));
 }
 
+HItemHeader::~HItemHeader()
+{
+}
+
 HItemHelpLine::HItemHelpLine(CoXHelpNavBrow* brow, const char* item_name,
     brow_tNode dest, flow_eDest dest_code)
 {
   type = xhelpnav_eHItemType_HelpLine;
   brow_CreateNode(brow->ctx, "header", brow->nc_line, dest, dest_code,
       (void*)this, 1, &node);
+}
+
+HItemHelpLine::~HItemHelpLine()
+{
 }
 
 HItemHelpImage::HItemHelpImage(CoXHelpNavBrow* brow, const char* item_name,

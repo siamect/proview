@@ -36,8 +36,6 @@
 
 #if defined PWRE_CONF_HDF5
 
-#include <math.h>
-
 #include "co_syi.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
@@ -4558,54 +4556,54 @@ int sev_dbhdf5::check_deadband(pwr_eType type, unsigned int size,
   int deadband_active = 0;
   switch (type) {
   case pwr_eType_Float32:
-    if (fabsf(*(pwr_tFloat32*)value - *(pwr_tFloat32*)oldvalue) < deadband) {
+    if (ABS(*(pwr_tFloat32*)value - *(pwr_tFloat32*)oldvalue) < deadband) {
       deadband_active = 1;
     }
     break;
   case pwr_eType_Float64:
-    if (fabsf(*(pwr_tFloat64*)value - *(pwr_tFloat64*)oldvalue) < deadband) {
+    if (ABS(*(pwr_tFloat64*)value - *(pwr_tFloat64*)oldvalue) < deadband) {
       deadband_active = 1;
     }
     break;
   case pwr_eType_Int64:
-    if (fabsf(*(pwr_tInt64*)value - *(pwr_tInt64*)oldvalue) < deadband) {
+    if (ABS(*(pwr_tInt64*)value - *(pwr_tInt64*)oldvalue) < deadband) {
       deadband_active = 1;
     }
     break;
   case pwr_eType_Int32:
-    if (fabsf(*(pwr_tInt32*)value - *(pwr_tInt32*)oldvalue) < deadband) {
+    if (ABS(*(pwr_tInt32*)value - *(pwr_tInt32*)oldvalue) < deadband) {
       deadband_active = 1;
     }
     break;
   case pwr_eType_Int16:
-    if (fabsf(*(pwr_tInt16*)value - *(pwr_tInt16*)oldvalue) < deadband) {
+    if (ABS(*(pwr_tInt16*)value - *(pwr_tInt16*)oldvalue) < deadband) {
       deadband_active = 1;
     }
     break;
   case pwr_eType_Int8:
   case pwr_eType_Char:
-    if (fabsf(*(pwr_tInt8*)value - *(pwr_tInt8*)oldvalue) < deadband) {
+    if (ABS(*(pwr_tInt8*)value - *(pwr_tInt8*)oldvalue) < deadband) {
       deadband_active = 1;
     }
     break;
   case pwr_eType_UInt64:
-    if (fabsf(*(pwr_tUInt64*)value - *(pwr_tUInt64*)oldvalue) < deadband) {
+    if (ABS(*(pwr_tUInt64*)value - *(pwr_tUInt64*)oldvalue) < deadband) {
       deadband_active = 1;
     }
     break;
   case pwr_eType_UInt32:
   case pwr_eType_Boolean:
-    if (fabsf(*(pwr_tUInt32*)value - *(pwr_tUInt32*)oldvalue) < deadband) {
+    if (ABS(*(pwr_tUInt32*)value - *(pwr_tUInt32*)oldvalue) < deadband) {
       deadband_active = 1;
     }
     break;
   case pwr_eType_UInt16:
-    if (fabsf(*(pwr_tUInt16*)value - *(pwr_tUInt16*)oldvalue) < deadband) {
+    if (ABS(*(pwr_tUInt16*)value - *(pwr_tUInt16*)oldvalue) < deadband) {
       deadband_active = 1;
     }
     break;
   case pwr_eType_UInt8:
-    if (fabsf(*(pwr_tUInt8*)value - *(pwr_tUInt8*)oldvalue) < deadband) {
+    if (ABS(*(pwr_tUInt8*)value - *(pwr_tUInt8*)oldvalue) < deadband) {
       deadband_active = 1;
     }
     break;

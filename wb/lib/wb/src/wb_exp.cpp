@@ -37,7 +37,6 @@
 /* wb_exp.cpp -- export PLC programs
    Module for exporting the plcprogram.  */
 
-#include <float.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -111,7 +110,7 @@ static pwr_tStatus exp_vldh_load_window(ldh_tWBContext ldhwb,
   pwr_tStatus sts;
   int i;
   vldh_t_wind wind;
-  vldh_t_wind parentwind;
+  vldh_t_wind parentwind = NULL;
   vldh_t_plc plc;
   vldh_t_node node;
   pwr_tObjid* parentlist;
@@ -596,7 +595,7 @@ static pwr_tStatus gen_m3(exp_genctx genctx, vldh_t_node node)
   int rows;
   int i;
   int found;
-  pwr_tObjid* parvalue;
+  pwr_tObjid* parvalue = NULL;
   char* nocondef_ptr;
   union {
     int bo;
@@ -693,7 +692,7 @@ static pwr_tStatus gen_m4(exp_genctx genctx, vldh_t_node node)
   int rows;
   int i;
   int found;
-  pwr_tObjid* parvalue;
+  pwr_tObjid* parvalue = NULL;
   char* parameter;
   char* nocondef_ptr;
   union {

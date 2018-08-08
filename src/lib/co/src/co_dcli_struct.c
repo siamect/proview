@@ -39,7 +39,6 @@
 
 /*_Include files_________________________________________________________*/
 
-#include <float.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -121,7 +120,7 @@ static int process_struct(t_ctx ctx, t_filectx filectx, char* struct_line,
   int elnumcount;
   int elnum[5];
   char *s, *t;
-  char *begin_addr, *end_addr;
+  char *begin_addr, *end_addr = NULL;
   char name[80];
   int i, j, k;
   dcli_sStructElement* element_p;
@@ -380,7 +379,7 @@ static int add_element(t_ctx ctx, t_filectx filectx, char* line,
   char *s1, *s2;
   int elnumcount;
   int elnum[5];
-  dcli_sStructElement* element_ptr;
+  dcli_sStructElement* element_ptr = NULL;
   dcli_sStructElement* element_p;
   int undefined;
   int struct_begin;
@@ -727,20 +726,20 @@ static int find_struct(t_ctx ctx, char* filename, char* struct_name,
   int size;
   int sts;
   int struct_found;
-  int name_found;
-  int type_found;
+  int name_found = 0;
+  int type_found = 0;
   int start_found;
   int typedef_line;
-  int begin_line;
-  int begin_typedef, end_typedef;
-  int end_of_typedef;
-  int parlevel;
+  int begin_line = 0;
+  int begin_typedef = 0, end_typedef = 0;
+  int end_of_typedef = 0;
+  int parlevel = 0;
   char *s, *t, *u;
-  char *begin_addr, *end_addr;
+  char *begin_addr = NULL, *end_addr = NULL;
   char name[80];
   char typename[80];
   int i, j, k;
-  dcli_sStructElement *element_p, *e_p, *e_ptr, *element_ptr;
+  dcli_sStructElement *element_p, *e_p, *e_ptr = NULL, *element_ptr;
   dcli_sStructElement* element_list;
   dcli_sStructElement* struct_element;
   dcli_sStructElement* next_ptr;

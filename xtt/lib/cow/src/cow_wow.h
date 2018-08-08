@@ -80,18 +80,10 @@ public:
   void (*m_callback)(void*);
   void* m_data;
 
-  CoWowTimer()
-  {
-  }
-  virtual ~CoWowTimer()
-  {
-  }
-  virtual void add(int time, void (*callback)(void* data), void* data)
-  {
-  }
-  virtual void remove()
-  {
-  }
+  CoWowTimer();
+  virtual ~CoWowTimer();
+  virtual void add(int time, void (*callback)(void* data), void* data);
+  virtual void remove();
 };
 
 class CoWowRecall {
@@ -112,111 +104,56 @@ protected:
   static void* m_transient_wid;
 
 public:
-  CoWow()
-  {
-  }
+  CoWow();
   virtual ~CoWow();
 
   virtual void DisplayQuestion(void* ctx, const char* title, const char* text,
       void (*questionbox_ok)(void*, void*),
-      void (*questionbox_cancel)(void*, void*), void* data)
-  {
-  }
+      void (*questionbox_cancel)(void*, void*), void* data);
   virtual void DisplayError(const char* title, const char* text,
-      lng_eCoding coding = lng_eCoding_ISO8859_1)
-  {
-  }
+      lng_eCoding coding = lng_eCoding_ISO8859_1);
   virtual void DisplayText(
-      const char* title, const char* text, int width = 0, int height = 0)
-  {
-  }
+      const char* title, const char* text, int width = 0, int height = 0);
   virtual void CreateInputDialog(void* ctx, const char* title, const char* text,
       void (*inputdialogbox_ok)(void*, void*, char*),
       void (*inputdialogbox_cancel)(void*, void*), int input_length,
-      char* init_text, void* data)
-  {
-  }
+      char* init_text, void* data);
   virtual void* CreateList(const char* title, const char* texts, int textsize,
       void(action_cb)(void*, char*, int), void(cancel_cb)(void*), void* ctx,
-      int show_apply_button = 0)
-  {
-    return NULL;
-  }
-  virtual void PopList(void* ctx){};
-  virtual void DeleteList(void* ctx){};
+      int show_apply_button = 0);
+  virtual void PopList(void* ctx);
+  virtual void DeleteList(void* ctx);
   virtual void CreateFileSelDia(const char* title, void* parent_ctx,
       void (*file_selected_cb)(void*, char*, wow_eFileSelType),
-      wow_eFileSelType file_type)
-  {
-  }
+      wow_eFileSelType file_type);
   virtual int CreateModalDialog(const char* title, const char* text,
       const char* button1, const char* button2, const char* button3,
-      const char* image)
-  {
-    return wow_eModalDialogReturn_NYI;
-  }
+      const char* image);
   virtual wow_sModalInputDialog* CreateModalInputDialog(const char* title,
       const char* text, const char* button1, const char* button2,
       const char* button3, const char* image, int input_length,
-      CoWowRecall* recall = 0)
-  {
-    return 0;
-  }
-  virtual void Wait(float time)
-  {
-  }
+      CoWowRecall* recall = 0);
+  virtual void Wait(float time);
 
   static int HideWarranty();
   void* CreateFileList(const char* title, const char* dir, const char* pattern,
       const char* type, void(action_cb)(void*, char*, int),
       void(cancel_cb)(void*), void* ctx, int show_apply_button = 0);
-  virtual int DisplayWarranty()
-  {
-    return 0;
-  }
-  virtual void DisplayLicense()
-  {
-  }
-  virtual CoWowTimer* timer_new()
-  {
-    return 0;
-  }
+  virtual int DisplayWarranty();
+  virtual void DisplayLicense();
+  virtual CoWowTimer* timer_new();
   virtual pwr_tStatus CreateMenuItem(
-      const char* name, void* menu, int pixmap, int append, void* w)
-  {
-    return 0;
-  }
-  virtual pwr_tStatus DeleteMenuItem(const char* name, void* menu)
-  {
-    return 0;
-  }
+      const char* name, void* menu, int pixmap, int append, void* w);
+  virtual pwr_tStatus DeleteMenuItem(const char* name, void* menu);
   virtual void CreateBrowPrintDialog(const char* title, void* brow_ctx,
-      int orientation, double scale, void* parent_widget, pwr_tStatus* sts)
-  {
-    *sts = WOW__NYI;
-  }
+      int orientation, double scale, void* parent_widget, pwr_tStatus* sts);
   virtual void CreateFlowPrintDialog(const char* title, void* flow_ctx,
-      int orientation, double scale, void* parent_widget, pwr_tStatus* sts)
-  {
-    *sts = WOW__NYI;
-  }
+      int orientation, double scale, void* parent_widget, pwr_tStatus* sts);
   static void SetDefaultPrinter(const char* printer);
-  static void DisablePrintDialog()
-  {
-    m_printdialog_disable = true;
-  }
-  static bool PrintDialogIsDisabled()
-  {
-    return m_printdialog_disable;
-  }
-  static void SetAutoRemove(bool on)
-  {
-    m_autoremove = on;
-  }
-  static void SetTransient(void* transient_wid)
-  {
-    m_transient_wid = transient_wid;
-  }
+  static void DisablePrintDialog();
+  static bool PrintDialogIsDisabled();
+  static void SetAutoRemove(bool on);
+  static void SetTransient(void* transient_wid);
 };
 
 #endif

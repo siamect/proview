@@ -37,6 +37,8 @@
 #ifndef wb_treeexport_h
 #define wb_treeexport_h
 
+#include "pwr.h"
+
 class wb_treeimport;
 
 class wb_treeexport {
@@ -44,9 +46,7 @@ public:
   virtual bool exportTree(wb_treeimport& i, pwr_tOid oid) = 0;
   virtual bool exportTreeIsImplemented() = 0;
 
-  virtual ~wb_treeexport()
-  {
-  }
+  virtual ~wb_treeexport();
 };
 
 #endif

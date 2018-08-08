@@ -34,7 +34,6 @@
  * General Public License plus this exception.
  **/
 
-#include <float.h>
 #include <string.h>
 
 #include <iostream>
@@ -439,7 +438,7 @@ int wb_wblnode::stringToTime(const char* buf, pwr_tTime* time) const
 
 int wb_wblnode::lookup(int* type, const char* keyword, wbl_sSym* table)
 {
-  int cond;
+  int cond = 0;
   wbl_sSym* p = table;
 
   while (p->sym != NULL && (cond = strcmp(keyword, p->sym)))
@@ -1150,7 +1149,7 @@ void wb_wblnode::buildTemplate(ref_wblnode classdef)
 
 void wb_wblnode::buildBody(ref_wblnode object)
 {
-  pwr_eBix bix;
+  pwr_eBix bix = pwr_eBix_sys;
   ref_wblnode first_child;
   ref_wblnode next_sibling;
 
@@ -1803,7 +1802,7 @@ void wb_wblnode::registerNode(wb_vrepwbl* vol)
         m_vrep->error("Bad body index", getFileName(), line_number);
     }
   } else if (getType() == wbl_eToken_Volume) {
-    pwr_tVid vid;
+    pwr_tVid vid = 0;
     int sts;
 
     o = new wbl_object();

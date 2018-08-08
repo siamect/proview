@@ -636,7 +636,7 @@ int exo_exec_m5(exo_ctx exoctx, vldh_t_node node)
   vldh_t_node* nodelist;
   vldh_t_node* node_ptr;
   unsigned long node_count;
-  unsigned long step_execute_order;
+  unsigned long step_execute_order = 0;
 
   if (node->hn.executeorder != EXO_NOT_YET_EXECUTED) {
     return GSX__SUCCESS;
@@ -677,7 +677,6 @@ int exo_exec_m5(exo_ctx exoctx, vldh_t_node node)
           step_execute_order = 0;
       }
     }
-    i++;
   }
 
   /* Check the nodes connected with executer order connections */
@@ -760,7 +759,6 @@ int exo_exec_m6(exo_ctx exoctx, vldh_t_node node)
           order_execute_order = 0;
       }
     }
-    i++;
   }
 
   /* Check the nodes connected with executer order connections */

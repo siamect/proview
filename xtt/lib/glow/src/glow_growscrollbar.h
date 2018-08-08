@@ -100,7 +100,7 @@ public:
   void erase(GlowWind* w)
   {
     erase(w, (GlowTransform*)NULL, hot, NULL);
-  };
+  }
 
   //! Set object highlight.
   /*!
@@ -115,7 +115,7 @@ public:
   glow_eObjectType type()
   {
     return glow_eObjectType_GrowScrollBar;
-  };
+  }
 
   double max_value; //!< Max value for bar value
   double min_value; //!< Min value for bar value
@@ -192,7 +192,7 @@ public:
   void set_user_data(void* data)
   {
     user_data = data;
-  };
+  }
 
   //! Get user data.
   /*!
@@ -201,7 +201,7 @@ public:
   void get_user_data(void** data)
   {
     *data = user_data;
-  };
+  }
 
   //! Export the object as a javabean.
   /*!

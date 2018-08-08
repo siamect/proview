@@ -1475,7 +1475,6 @@ short DevGetMessage(unsigned short usDevNumber, unsigned short usSize,
  */
 
 #define MAX_DOWNLOAD_MSG_LENGTH 240
-#define TO_COLDSTART 10000L
 #define TO_SEND_MSG 500L
 #define TO_1ST_MSG 10000L
 #define TO_CONT_MSG 1000L
@@ -1533,7 +1532,7 @@ void closeFile(FILEDATA* ptFile)
   <En> */
 short openFile(const char* fileName, FILEDATA* ptFile)
 {
-  unsigned int lNumberOfBytesRead;
+  int lNumberOfBytesRead;
   short sRet = DRV_NO_ERROR;
   // Clear file structure
   memset(ptFile, 0, sizeof(FILEDATA));

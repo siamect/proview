@@ -301,7 +301,6 @@ netError:
  */
 void cmvolc_GetNonExistingClass(pwr_tStatus* sts, gdb_sObject* op, pwr_tCid cid)
 {
-#define MAX_ATTR (((net_cSizeLarge - sizeof(*rmp)) / sizeof(rmp->attr[0])) + 1)
 #define MAX_MSG 50
 
   qcom_sQid tgt;

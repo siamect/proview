@@ -53,17 +53,15 @@
 #include "rt_sev_msg.h"
 #include "rt_pwr_msg.h"
 
-#define sevclient_cQix 121
-
-#define evbuf_next_idx(idx)                                                    \
-  idx++;                                                                       \
-  if (idx >= sizeof(event_buffer) / sizeof(event_buffer[0]))                   \
+#define evbuf_next_idx(idx)                                  \
+  idx++;                                                     \
+  if (idx >= sizeof(event_buffer) / sizeof(event_buffer[0])) \
     idx = 0;
 
-#define evbuf_previous_idx(idx)                                                \
-  if (idx == 0)                                                                \
-    idx = sizeof(event_buffer) / sizeof(event_buffer[0]) - 1;                  \
-  else                                                                         \
+#define evbuf_previous_idx(idx)                               \
+  if (idx == 0)                                               \
+    idx = sizeof(event_buffer) / sizeof(event_buffer[0]) - 1; \
+  else                                                        \
     idx--;
 
 static rt_sevhistmon* shm;
@@ -611,7 +609,6 @@ bool rt_sevhistmon::correct_histtype(const pwr_eType type)
   case pwr_eType_String:
   case pwr_eType_Time:
     return true;
-    break;
   default:
     return false;
   }

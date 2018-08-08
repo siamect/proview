@@ -34,7 +34,6 @@
  * General Public License plus this exception.
  **/
 
-#include <float.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -118,7 +117,7 @@ GrowNode::~GrowNode()
 
 void GrowNode::copy_from(const GrowNode& n)
 {
-  memcpy(this, &n, sizeof(n));
+  memcpy((void *)this, (void *)&n, sizeof(n));
   for (int i = 0; i < 10; i++) {
     if (annotsize[i]) {
       annotv[i] = (char*)calloc(1, annotsize[i]);
@@ -225,13 +224,13 @@ void GrowNode::save(std::ofstream& fp, glow_eSaveMode mode)
 
 void GrowNode::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;
   int i, j;
   char c;
-  int arg_cnt;
+  int arg_cnt = 0;
   char* new_text;
 
   for (;;) {
@@ -750,7 +749,7 @@ void GrowNode::set_position(double x, double y)
 {
   double old_x_left, old_x_right, old_y_low, old_y_high;
 
-  if (trf.a13 == trf.s_a13 + x && trf.a23 == trf.s_a23 + y)
+  if (feq(trf.a13, trf.s_a13 + x) && feq(trf.a23, trf.s_a23 + y))
     return;
   old_x_left = x_left;
   old_x_right = x_right;
@@ -826,7 +825,7 @@ void GrowNode::set_scale(
 {
   double old_x_left, old_x_right, old_y_low, old_y_high;
 
-  if (!((scale_x == -1 && scale_y == 1) || (scale_x == 1 && scale_y == -1))) {
+  if (!((feq(scale_x, -1.0) && feq(scale_y, 1.0)) || (feq(scale_x, 1.0) && feq(scale_y, -1.0)))) {
     if (scale_x < 0)
       scale_x = 0;
     if (scale_y < 0)
@@ -1145,7 +1144,7 @@ void GrowNode::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       && !((GrowGroup*)root_node)->hot)
     hot = 1;
 
-  if (fill_level == 1) {
+  if (feq(fill_level, 1.0)) {
     if (t) {
       GlowTransform trf_tot = *t * trf;
 
@@ -1157,10 +1156,10 @@ void GrowNode::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     } else
       nc->draw(w, &trf, highlight, hot, node, node);
   } else {
-    int x1, x2, y1, y2, x_level, y_level;
+    int x1, x2, y1, y2, x_level = 0, y_level = 0;
     int clip_sts = 0;
-    glow_eDrawTone old_color_tone;
-    glow_eDrawType old_fill_drawtype;
+    glow_eDrawTone old_color_tone = glow_eDrawTone_No;
+    glow_eDrawType old_fill_drawtype = glow_eDrawType_No;
 
     if (!t) {
       x1 = int(x_left * w->zoom_factor_x + 0.5) - w->offset_x;
@@ -1702,9 +1701,9 @@ int GrowNode::is_refobject_sensitive()
 
 int GrowNode::get_limits(double* min, double* max, glow_eDirection* direction)
 {
-  if (nc->y0 == 0 && nc->y1 == 0)
+  if (feq(nc->y0, 0.0) && feq(nc->y1, 0.0))
     return 0;
-  if (!(nc->x0 == 0 && nc->x1 == 0))
+  if (!(feq(nc->x0, 0.0) && feq(nc->x1, 0.0)))
     return 0;
 
   double x1, x2, y1, y2;
@@ -1742,9 +1741,9 @@ int GrowNode::get_limits(double* min, double* max, glow_eDirection* direction)
 int GrowNode::get_limits_pixel(
     double* pix_min, double* pix_max, glow_eDirection* direction)
 {
-  if (nc->y0 == 0 && nc->y1 == 0)
+  if (feq(nc->y0, 0.0) && feq(nc->y1, 0.0))
     return 0;
-  if (!(nc->x0 == 0 && nc->x1 == 0))
+  if (!(feq(nc->x0, 0.0) && feq(nc->x1, 0.0)))
     return 0;
 
   double x1, x2, y1, y2, nc_x_right, nc_x_left, nc_y_high, nc_y_low, x0, y0;
@@ -1763,7 +1762,7 @@ int GrowNode::get_limits_pixel(
   y0 = trf.y(0, nc_y_low);
 
   rotation = (trf.rot() / 360 - floor(trf.rot() / 360)) * 360;
-  double min, max;
+  double min = 0.0, max = 0.0;
 
   if (45 >= rotation || rotation > 315) {
     *direction = glow_eDirection_Down;
@@ -1809,7 +1808,7 @@ int GrowNode::get_background_object_limits(GlowTransform* t,
 
   if (!((int)type & dyn_type))
     return 0;
-  if (nc->y0 == 0 && nc->y1 == 0)
+  if (feq(nc->y0, 0.0) && feq(nc->y1, 0.0))
     return 0;
 
   double x1, x2, y1, y2;
@@ -2003,7 +2002,7 @@ void GrowNode::set_annotation_selection(int selection)
 void GrowNode::annot_input_event(glow_eEvent event, int keycode)
 {
   int i;
-  int idx;
+  int idx = 0;
   char* s;
 
   for (i = 0; i < 10; i++) {

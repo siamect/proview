@@ -984,7 +984,7 @@ List of the help subjects in rtt.\n\n\
 To display the help text for a subject, select a subject and press return.\n\
 " },
   {
-      0, "",
+      0, "", "", ""
   } };
 
 rtt_t_helptext* rtt_command_helptext = helptext;
@@ -1579,7 +1579,7 @@ Example\n\n\
   object = GetCurrentObject();\n\
 " },
   {
-      0, "",
+      0, "", "", ""
   } };
 
 rtt_t_helptext* rtt_script_helptext = script_helptext;

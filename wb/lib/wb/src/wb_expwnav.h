@@ -135,7 +135,7 @@ public:
 class WbExpWNavBrow {
 public:
   WbExpWNavBrow(BrowCtx* brow_ctx, void* lwnav)
-      : ctx(brow_ctx), expwnav(lwnav){};
+      : ctx(brow_ctx), expwnav(lwnav){}
   ~WbExpWNavBrow();
 
   BrowCtx* ctx;
@@ -206,9 +206,7 @@ public:
 
   void set(int value);
   void update();
-  virtual ~ItemExp()
-  {
-  }
+  virtual ~ItemExp();
 };
 
 class ItemDir {
@@ -227,9 +225,7 @@ public:
   int close();
   void set(int value);
   void update();
-  virtual ~ItemDir()
-  {
-  }
+  virtual ~ItemDir();
 };
 
 #endif

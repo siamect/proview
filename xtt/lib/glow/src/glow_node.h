@@ -68,7 +68,7 @@ public:
       double x1, double y1, int nodraw = 0, int rel_annot_pos = 0);
 
   // Noargs constructor.
-  GlowNode(){};
+  GlowNode(){}
 
   // Destructor.
   ~GlowNode();
@@ -77,12 +77,12 @@ public:
   {
     nc->zoom();
     pos.zoom();
-  };
+  }
   void nav_zoom()
   {
     nc->nav_zoom();
     pos.nav_zoom();
-  };
+  }
   void get_borders(
       double* x1_right, double* x1_left, double* y1_high, double* y1_low)
   {
@@ -94,17 +94,17 @@ public:
       *y1_high = y_high;
     if (y_low < *y1_low)
       *y1_low = y_low;
-  };
+  }
   void get_node_borders()
   {
     nc->get_borders(
         pos.x, pos.y, &x_right, &x_left, &y_high, &y_low, (void*)this);
-  };
+  }
   void get_node_obstacle_borders()
   {
     nc->get_obstacle_borders(pos.x, pos.y, &obst_x_right, &obst_x_left,
         &obst_y_high, &obst_y_low, (void*)this);
-  };
+  }
 
   //! Save the content of the object to file.
   /*!
@@ -122,23 +122,23 @@ public:
   void store_position()
   {
     stored_pos = pos;
-  };
+  }
   void restore_position()
   {
     pos = stored_pos;
-  };
+  }
   int get_conpoint(int num, double* x, double* y, glow_eDirection* dir);
-  void redraw_node_cons(void* node){};
+  void redraw_node_cons(void* node){}
   int delete_node_cons(void* node)
   {
     return 0;
-  };
+  }
   void select_region_insert(double ll_x, double ll_y, double ur_x, double ur_y,
       glow_eSelectPolicy select_policy);
   glow_eObjectType type()
   {
     return glow_eObjectType_Node;
-  };
+  }
   void set_annotation(int num, char* text, int size, int nodraw, int brief = 0);
   void get_annotation(int num, char* text, int size);
 
@@ -157,7 +157,7 @@ public:
     *ll_y = y_low;
     *ur_x = x_right;
     *ur_y = y_high;
-  };
+  }
 
   double x_right; //!< Right border of object.
   double x_left; //!< Left border of object.
@@ -195,7 +195,7 @@ public:
   {
     link = *(GlowNode**)start;
     *start = (void*)this;
-  };
+  }
 
   //! Check if object is inside an area with some margin (draw_delta).
   /*!
@@ -211,7 +211,7 @@ public:
         && (obst_x_right + ctx->draw_delta) > ll_x
         && (obst_y_low - ctx->draw_delta) < ur_y
         && (obst_y_high + ctx->draw_delta) > ll_y);
-  };
+  }
 
   //! Check if object is inside an area.
   /*!
@@ -225,7 +225,7 @@ public:
   {
     return (obst_x_left < ur_x && obst_x_right > ll_x && obst_y_low < ur_y
         && obst_y_high > ll_y);
-  };
+  }
 
   //! Check if object crosses a vertical line.
   /*!
@@ -240,7 +240,7 @@ public:
         && (obst_x_right + ctx->draw_delta) > x
         && (obst_y_low - ctx->draw_delta) < u_y
         && (obst_y_high + ctx->draw_delta) > l_y);
-  };
+  }
 
   //! Check if object crosses a horizontal line.
   /*!
@@ -255,7 +255,7 @@ public:
         && (obst_x_right + ctx->draw_delta) > l_x
         && (obst_y_low - ctx->draw_delta) < y
         && (obst_y_high + ctx->draw_delta) > y);
-  };
+  }
 
   //! Reconfigure reference connections for a connections point.
   /*!
@@ -263,8 +263,8 @@ public:
   */
   void conpoint_refcon_reconfig(int conpoint);
 
-  void conpoint_refcon_redraw(void* node, int conpoint){};
-  void conpoint_refcon_erase(void* node, int conpoint){};
+  void conpoint_refcon_redraw(void* node, int conpoint){}
+  void conpoint_refcon_erase(void* node, int conpoint){}
   void remove_notify();
 
   void* user_data; //!< User data.
@@ -276,7 +276,7 @@ public:
   void set_user_data(void* data)
   {
     user_data = data;
-  };
+  }
 
   //! Get user data.
   /*!
@@ -285,14 +285,14 @@ public:
   void get_user_data(void** data)
   {
     *data = user_data;
-  };
+  }
 
   void set_trace_attr(GlowTraceData* attr);
   void get_trace_attr(GlowTraceData** attr);
   void set_trace_data(void* data)
   {
     trace.p = data;
-  };
+  }
 
   //! Scan trace
   /*! Calls the trace scan callback.
@@ -313,44 +313,44 @@ public:
   void* get_ctx()
   {
     return this->ctx;
-  };
+  }
 
   void get_node_position(double* x, double* y)
   {
     *x = pos.x;
     *y = pos.y;
-  };
+  }
   glow_eNodeGroup get_group()
   {
     return nc->group;
-  };
+  }
 
   //  brow stuff
   void set_level(int lev)
   {
     level = lev;
-  };
+  }
   int get_level()
   {
     return level;
-  };
+  }
   int is_open()
   {
     return node_open;
-  };
+  }
   void set_open(int mask)
   {
     node_open |= mask;
-  };
+  }
   void reset_open(int mask)
   {
     node_open &= ~mask;
-  };
+  }
   void open_annotation_input(int num);
   int annotation_input_is_open(int num)
   {
     return annotv_inputmode[num];
-  };
+  }
   void close_annotation_input(int num);
   int level;
   int node_open;

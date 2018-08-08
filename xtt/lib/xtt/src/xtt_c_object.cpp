@@ -2117,7 +2117,6 @@ static pwr_tStatus OpenTypeGraphFilter(xmenu_sMenuCall* ip)
   case pwr_eType_Int32:
   case pwr_eType_UInt32:
     return XNAV__SUCCESS;
-    break;
   default:
     return XNAV__INVISIBLE;
   }

@@ -174,7 +174,7 @@ void wb_pkg::readConfig()
           pkg_pattern p(line_item[3], line_item[4], severity);
           n.push_back(p);
         }
-      } catch (wb_error& e) {
+      } catch (wb_error&) {
         continue;
       }
     } else if (strcmp(cdh_Low(line_item[0]), "depnode") == 0) {
@@ -185,7 +185,7 @@ void wb_pkg::readConfig()
         pkg_node& n = getNode(line_item[1]);
         pkg_depnode dn(line_item[2], line_item[3]);
         n.depnodeAdd(dn);
-      } catch (wb_error& e) {
+      } catch (wb_error&) {
         continue;
       }
     } else if (strcmp(cdh_Low(line_item[0]), "load") == 0) {
@@ -445,7 +445,7 @@ void pkg_node::checkNode()
 
 void pkg_node::checkVolume(char* filename)
 {
-  lfu_t_volref* volref;
+  lfu_t_volref* volref = NULL;
   int volref_cnt;
   pwr_tVid vol_vid;
   pwr_tCid vol_cid;
@@ -571,8 +571,8 @@ int pkg_node::compareFiles()
 
     // Add file to list
     strncpy(timstr, line_item[3], sizeof(timstr));
-    strncat(timstr, " ", sizeof(timstr) - strlen(timstr));
-    strncat(timstr, line_item[4], sizeof(timstr) - strlen(timstr));
+    strncat(timstr, " ", sizeof(timstr) - strlen(timstr) - 1);
+    strncat(timstr, line_item[4], sizeof(timstr) - strlen(timstr) - 1);
 
     strncpy(source, &line_item[5][10], sizeof(source));
 
@@ -649,7 +649,7 @@ int pkg_node::compareFiles()
     if (artime_minute)
       diff = 60;
 
-    if (abs(tar_time.tv_sec - src_time.tv_sec) > diff) {
+    if (ABS(tar_time.tv_sec - src_time.tv_sec) > diff) {
       printf("New file: %s\n", m_filelist[k].m_arname);
       new_files++;
     }

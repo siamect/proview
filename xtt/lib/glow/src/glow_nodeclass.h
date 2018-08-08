@@ -82,29 +82,29 @@ public:
   void insert(GlowArrayElem* element)
   {
     a.insert(element);
-  };
+  }
 
   void zoom()
   {
     a.zoom();
-  };
+  }
   void nav_zoom()
   {
     a.nav_zoom();
-  };
+  }
   void print_zoom()
   {
     a.print_zoom();
-  };
+  }
   void traverse(int x, int y)
   {
     a.traverse(x, y);
-  };
+  }
   void get_borders(double pos_x, double pos_y, double* x_right, double* x_left,
       double* y_high, double* y_low, void* node)
   {
     a.get_borders(pos_x, pos_y, x_right, x_left, y_high, y_low, node);
-  };
+  }
 
   //! Get borders of a node.
   /*!
@@ -197,7 +197,7 @@ public:
   glow_eObjectType type()
   {
     return glow_eObjectType_NodeClass;
-  };
+  }
   void erase_annotation(void* pos, int highlight, int hot, void* node, int num);
   void draw_annotation(void* pos, int highlight, int hot, void* node, int num);
 
@@ -269,7 +269,7 @@ public:
   int is_slider()
   {
     return slider;
-  };
+  }
 
   //! Find and redraw the background rectangle for an annotation
   /*!
@@ -325,14 +325,14 @@ public:
   void set_saved(int value)
   {
     saved = value;
-  };
+  }
 
   //! Check if this is a next page
   /*! \return 1 if this is a next page, 0 if this is the first page. */
   int is_next()
   {
     return prev_nc != 0;
-  };
+  }
 
   //! Get number of pages.
   /*! \return Number of pages for this nodeclass. */
@@ -347,7 +347,7 @@ public:
   {
     *list = a.a;
     *size = a.size();
-  };
+  }
 
   //! Get the base nodeclass, i.e. nodeclass of first page.
   /*! \return The base nodeclass. */
@@ -364,7 +364,7 @@ public:
   void set_extern(int ext)
   {
     nc_extern = ext;
-  };
+  }
 
   //! Return origo for the nodeclass in the coordinate system of transform t.
   /*!
@@ -410,7 +410,7 @@ public:
   void set_user_data(void* data)
   {
     user_data = data;
-  };
+  }
 
   //! Get user data.
   /*!
@@ -419,7 +419,7 @@ public:
   void get_user_data(void** data)
   {
     *data = user_data;
-  };
+  }
 
   //! Get grow context.
   /*!
@@ -428,7 +428,7 @@ public:
   void* get_ctx()
   {
     return this->ctx;
-  };
+  }
 
   GrowCtx* ctx; //!< Glow context.
   GlowArray a; //!< Array of nodeclass elements.

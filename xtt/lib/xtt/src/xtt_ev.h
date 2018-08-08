@@ -158,15 +158,15 @@ public:
   int is_mapped_eve()
   {
     return eve_displayed;
-  };
+  }
   int is_mapped_ala()
   {
     return ala_displayed;
-  };
+  }
   int is_mapped_blk()
   {
     return blk_displayed;
-  };
+  }
   int get_alarm_info(evlist_sAlarmInfo* info);
   void ack_last_prio(unsigned long type, unsigned long prio);
   void ack_all();

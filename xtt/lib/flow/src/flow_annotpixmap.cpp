@@ -50,7 +50,7 @@ FlowAnnotPixmap::FlowAnnotPixmap(FlowCtx* flow_ctx, int num, double x, double y,
 
 FlowAnnotPixmap::FlowAnnotPixmap(const FlowAnnotPixmap& p)
 {
-  memcpy(this, &p, sizeof(p));
+  memcpy((void *)this, (void *)&p, sizeof(p));
 }
 
 FlowAnnotPixmap::~FlowAnnotPixmap()

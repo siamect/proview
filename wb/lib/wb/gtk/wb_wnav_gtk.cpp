@@ -71,7 +71,7 @@ extern "C" {
 
 void WNavGtk::pop()
 {
-  GtkWidget *parent, *top;
+  GtkWidget *parent, *top = NULL;
 
   parent = gtk_widget_get_parent(toplevel);
   while (parent) {
@@ -400,7 +400,7 @@ void WNavGtk::sel_lose_cb(GtkWidget* w, GdkEventSelection* event, gpointer data)
 int WNavGtk::open_foe(const char* name, pwr_tOid plcpgm, void** foectx,
     int map_window, ldh_eAccess access, pwr_tOid oid)
 {
-  pwr_tStatus sts;
+  pwr_tStatus sts = 0;
   WFoe* foe;
   unsigned int options;
 

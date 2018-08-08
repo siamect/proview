@@ -50,20 +50,20 @@ public:
   void traverse(int x, int y);
   int event_handler(void* pos, flow_eEvent event, int x, int y, void* node);
   void conpoint_select(void* pos, int x, int y, double* distance, void** cp);
-  void print(void* pos, void* node){};
+  void print(void* pos, void* node){}
   void save(std::ofstream& fp, flow_eSaveMode mode);
   void open(std::ifstream& fp);
   void draw(void* pos, int highlight, int dimmed, int hot, void* node);
-  void nav_draw(void* pos, int highlight, void* node){};
+  void nav_draw(void* pos, int highlight, void* node){}
   void erase(void* pos, int hot, void* node);
-  void nav_erase(void* pos, void* node){};
+  void nav_erase(void* pos, void* node){}
   void get_borders(double pos_x, double pos_y, double* x_right, double* x_left,
-      double* y_high, double* y_low, void* node){};
+      double* y_high, double* y_low, void* node){}
   int get_conpoint(int num, double* x, double* y, flow_eDirection* dir);
   flow_eObjectType type()
   {
     return flow_eObjectType_ConPoint;
-  };
+  }
   void set_trace_attr(const char* object, const char* attribute,
       flow_eTraceType type, int inverted);
   void get_trace_attr(

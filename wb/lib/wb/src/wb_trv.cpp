@@ -46,9 +46,11 @@
 #include "wb_utl_api.h"
 #include "wb_vldh.h"
 
+/*
 #define TRV_CROSS_SEARCH 0
 #define TRV_CROSS_CROSSREF 1
 #define TRV_CROSS_RETURN 2
+*/
 
 /*_Local procedues_______________________________________________________*/
 
@@ -65,9 +67,11 @@ static int trv_get_child_rtnode(ldh_tSesContext ldhses, pwr_tObjid objdid,
 static int trv_get_window_subwindows(ldh_tSesContext ldhses, pwr_tObjid window,
     unsigned long* wind_count, pwr_tObjid** windlist);
 
+/*
 static int trv_get_child_object(ldh_tSesContext ldhses, pwr_tObjid objdid,
     trv_tBcFunc backcall, void* arg1, void* arg2, void* arg3, void* arg4,
     void* arg5);
+*/
 
 static int trv_get_child_object_class(ldh_tSesContext ldhses, pwr_tClassId cid,
     pwr_tObjid objdid, trv_tBcFunc backcall, void* arg1, void* arg2, void* arg3,
@@ -78,6 +82,7 @@ static int trv_get_child_object_hi_cl_na(ldh_tSesContext ldhses,
     pwr_tObjid childobjdid, trv_tBcFunc backcall, void* arg1, void* arg2,
     void* arg3, void* arg4, void* arg5);
 
+/*
 static int trv_get_child_object_name(ldh_tSesContext ldhses, char* name,
     pwr_tObjid objdid, trv_tBcFunc backcall, void* arg1, void* arg2, void* arg3,
     void* arg4, void* arg5);
@@ -91,6 +96,7 @@ static int trv_get_child_object_hier_class(ldh_tSesContext ldhses,
     pwr_tObjid hierobjdid, unsigned long* hierflag, pwr_tClassId cid,
     pwr_tObjid objdid, trv_tBcFunc backcall, void* arg1, void* arg2, void* arg3,
     void* arg4, void* arg5);
+*/
 
 static int trv_get_child_docobject(ldh_tSesContext ldhses, pwr_tObjid objdid,
     trv_tBcFunc backcall, void* arg1, void* arg2, void* arg3, void* arg4,
@@ -750,7 +756,7 @@ int trv_get_parentlist(ldh_tSesContext ldhses, pwr_tObjid object,
 *	found to the given objdid.
 *
 **************************************************************************/
-
+/*
 static int trv_get_child_object(ldh_tSesContext ldhses, pwr_tObjid objdid,
     trv_tBcFunc backcall, void* arg1, void* arg2, void* arg3, void* arg4,
     void* arg5)
@@ -758,13 +764,13 @@ static int trv_get_child_object(ldh_tSesContext ldhses, pwr_tObjid objdid,
   int sts;
   pwr_sAttrRef aref;
 
-  /* call the backcall routine */
+  // call the backcall routine
   aref = cdh_ObjidToAref(objdid);
   sts = (backcall)(&aref, arg1, arg2, arg3, arg4, arg5);
   if (EVEN(sts))
     return sts;
 
-  /* Get the first child to the object */
+  // Get the first child to the object
   sts = ldh_GetChild(ldhses, objdid, &objdid);
   while (ODD(sts)) {
     sts = trv_get_child_object(
@@ -776,6 +782,7 @@ static int trv_get_child_object(ldh_tSesContext ldhses, pwr_tObjid objdid,
 
   return GSX__SUCCESS;
 }
+*/
 
 /*************************************************************************
 *
@@ -1343,7 +1350,7 @@ int trv_get_children_class_name(ldh_tSesContext ldhses, pwr_tObjid parentobjdid,
 *	found to the given objdid.
 *
 **************************************************************************/
-
+/*
 static int trv_get_child_object_name(ldh_tSesContext ldhses, char* name,
     pwr_tObjid objdid, trv_tBcFunc backcall, void* arg1, void* arg2, void* arg3,
     void* arg4, void* arg5)
@@ -1351,7 +1358,7 @@ static int trv_get_child_object_name(ldh_tSesContext ldhses, char* name,
   int sts, size;
   pwr_tOName obj_name;
 
-  /* Get the name of the object */
+  // Get the name of the object
   sts = ldh_ObjidToName(
       ldhses, objdid, ldh_eName_Hierarchy, obj_name, sizeof(obj_name), &size);
   if (EVEN(sts))
@@ -1365,7 +1372,7 @@ static int trv_get_child_object_name(ldh_tSesContext ldhses, char* name,
       return sts;
   }
 
-  /* Get the first child to the object */
+  // Get the first child to the object
   sts = ldh_GetChild(ldhses, objdid, &objdid);
   while (ODD(sts)) {
     sts = trv_get_child_object_name(
@@ -1377,6 +1384,7 @@ static int trv_get_child_object_name(ldh_tSesContext ldhses, char* name,
 
   return GSX__SUCCESS;
 }
+*/
 
 /*************************************************************************
 *
@@ -1407,7 +1415,7 @@ static int trv_get_child_object_name(ldh_tSesContext ldhses, char* name,
 *	found to the given objdid.
 *
 **************************************************************************/
-
+/*
 static int trv_get_child_object_hier_name(ldh_tSesContext ldhses,
     pwr_tObjid hierobjdid, unsigned long* hierflag, char* name,
     pwr_tObjid objdid, trv_tBcFunc backcall, void* arg1, void* arg2, void* arg3,
@@ -1420,14 +1428,14 @@ static int trv_get_child_object_hier_name(ldh_tSesContext ldhses,
   if (*hierflag == TRV_CROSS_RETURN)
     return GSX__SUCCESS;
 
-  /* check if the objdid is the hierchy objdid */
+  // check if the objdid is the hierchy objdid
   if (cdh_ObjidIsEqual(objdid, hierobjdid))
-    /* Equal */
+    // Equal
     *hierflag = TRV_CROSS_CROSSREF;
 
   if (*hierflag == TRV_CROSS_CROSSREF) {
-    /* call the backcall routine */
-    /* Get the name of the object */
+    // call the backcall routine
+    // Get the name of the object
     sts = ldh_ObjidToName(
         ldhses, objdid, ldh_eName_Hierarchy, obj_name, sizeof(obj_name), &size);
     if (EVEN(sts))
@@ -1442,7 +1450,7 @@ static int trv_get_child_object_hier_name(ldh_tSesContext ldhses,
     }
   }
 
-  /* Get the first child to the object */
+  // Get the first child to the object
   sts = ldh_GetChild(ldhses, objdid, &childobjdid);
   while (ODD(sts)) {
     sts = trv_get_child_object_hier_name(ldhses, hierobjdid, hierflag, name,
@@ -1452,13 +1460,14 @@ static int trv_get_child_object_hier_name(ldh_tSesContext ldhses,
     sts = ldh_GetNextSibling(ldhses, childobjdid, &childobjdid);
   }
 
-  /* if this is the hierobjdid, exit at fast as possible */
+  // if this is the hierobjdid, exit at fast as possible
   if (cdh_ObjidIsEqual(objdid, hierobjdid))
-    /* Equal */
+    // Equal
     *hierflag = TRV_CROSS_RETURN;
 
   return GSX__SUCCESS;
 }
+*/
 
 /*************************************************************************
 *
@@ -1489,7 +1498,7 @@ static int trv_get_child_object_hier_name(ldh_tSesContext ldhses,
 *	found to the given objdid.
 *
 **************************************************************************/
-
+/*
 static int trv_get_child_object_hier_class(ldh_tSesContext ldhses,
     pwr_tObjid hierobjdid, unsigned long* hierflag, pwr_tClassId cid,
     pwr_tObjid objdid, trv_tBcFunc backcall, void* arg1, void* arg2, void* arg3,
@@ -1502,13 +1511,13 @@ static int trv_get_child_object_hier_class(ldh_tSesContext ldhses,
   if (*hierflag == TRV_CROSS_RETURN)
     return GSX__SUCCESS;
 
-  /* check if the objdid is the hierchy objdid */
+  // check if the objdid is the hierchy objdid
   if (cdh_ObjidIsEqual(objdid, hierobjdid))
-    /* Equal */
+    // Equal
     *hierflag = TRV_CROSS_CROSSREF;
 
   if (*hierflag == TRV_CROSS_CROSSREF) {
-    /* call the backcall routine */
+    // call the backcall routine
     sts = ldh_GetObjectClass(ldhses, objdid, &obj_class);
     if (EVEN(sts))
       return sts;
@@ -1522,7 +1531,7 @@ static int trv_get_child_object_hier_class(ldh_tSesContext ldhses,
     }
   }
 
-  /* Get the first child to the object */
+  // Get the first child to the object
   sts = ldh_GetChild(ldhses, objdid, &childobjdid);
   while (ODD(sts)) {
     sts = trv_get_child_object_hier_class(ldhses, hierobjdid, hierflag, cid,
@@ -1532,13 +1541,14 @@ static int trv_get_child_object_hier_class(ldh_tSesContext ldhses,
     sts = ldh_GetNextSibling(ldhses, childobjdid, &childobjdid);
   }
 
-  /* if this is the hierobjdid, exit at fast as possible */
+  // if this is the hierobjdid, exit at fast as possible
   if (cdh_ObjidIsEqual(objdid, hierobjdid))
-    /* Equal */
+    // Equal
     *hierflag = TRV_CROSS_RETURN;
 
   return GSX__SUCCESS;
 }
+*/
 
 /*************************************************************************
 *

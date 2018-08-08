@@ -38,14 +38,13 @@
    This module contains the access routines to the Global Data
    Handler. Those routines are callable from application level.  */
 
-#include <float.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "co_time.h"
-#include "co_dcli.h"
 #include "co_array.h"
+#include "co_dcli.h"
+#include "co_time.h"
+
 #include "rt_gdh_msg.h"
 #include "rt_hash_msg.h"
 #include "rt_pwr_msg.h"
@@ -85,11 +84,10 @@
   cvolc_TouchObject(op)
 
 #define STS_M_SEVERITY 0x7
-#define STS_K_WARNING 0 /**< WARNING                          */
-#define STS_K_SUCCESS 1 /**< SUCCESSFUL COMPLETION            */
+//#define STS_K_WARNING 0 /**< WARNING                          */
+//#define STS_K_SUCCESS 1 /**< SUCCESSFUL COMPLETION            */
 #define STS_K_ERROR 2 /**< ERROR                            */
 #define STS_K_INFO 3 /**< INFORMATION                      */
-#define STS_K_SEVERE 4 /**< SEVERE ERROR                     */
 
 static void (*gdh_log_cb)(char*, void*, unsigned int) = 0;
 
@@ -764,12 +762,12 @@ pwr_tStatus gdh_GetObjectInfo(
   mvol_sAttribute* ap;
   void* p;
   pwr_sAttrRef aref;
-  pwr_sAttrRef* arp;
+  pwr_sAttrRef* arp = NULL;
   pwr_sAttrRef raref;
   pwr_sAttrRef* rarp = NULL;
-  gdb_sCclass* ccp;
+  gdb_sCclass* ccp = NULL;
   gdb_sCclass* ccpLocked = NULL;
-  pwr_tBoolean equal;
+  pwr_tBoolean equal = 0;
   pwr_tBoolean fetched;
   pwr_tUInt32 ridx = UINT_MAX;
 
@@ -888,11 +886,11 @@ pwr_tStatus gdh_GetObjectInfoAttrref(
   mvol_sAttribute attribute;
   mvol_sAttribute* ap;
   void* p;
-  gdb_sCclass* ccp;
+  gdb_sCclass* ccp = NULL;
   gdb_sCclass* ccpLocked = NULL;
   pwr_sAttrRef raref;
   pwr_sAttrRef* rarp = NULL;
-  pwr_tBoolean equal;
+  pwr_tBoolean equal = 0;
   pwr_tBoolean fetched;
   pwr_tUInt32 ridx = UINT_MAX;
 
@@ -1430,7 +1428,7 @@ pwr_tStatus gdh_GetNextSibling(pwr_tObjid oid, /**< The object identity. */
 {
   pwr_tStatus sts = GDH__SUCCESS;
   gdb_sObject* op;
-  gdb_sObject* pop;
+  gdb_sObject* pop = NULL;
   pwr_tObjid noid;
 
   if (new_oid == NULL)
@@ -1475,7 +1473,7 @@ pwr_tStatus gdh_GetPreviousSibling(pwr_tObjid oid, /**< The object identity. */
 {
   pwr_tStatus sts = GDH__SUCCESS;
   gdb_sObject* op;
-  gdb_sObject* pop;
+  gdb_sObject* pop = NULL;
   pwr_tObjid noid;
 
   if (new_oid == NULL)
@@ -2034,7 +2032,7 @@ pwr_tStatus gdh_MDAttribute(
 {
   pwr_tStatus sts = GDH__SUCCESS;
   cdh_sParseName parseName;
-  cdh_sParseName* pn;
+  cdh_sParseName* pn = NULL;
   mvol_sAttribute attribute;
   mvol_sAttribute* ap = NULL;
 
@@ -2517,13 +2515,13 @@ pwr_tStatus gdh_SetObjectInfo(
   gdb_sVolume* vp;
   gdb_sNode* np = NULL;
   pwr_sAttrRef aref;
-  pwr_sAttrRef* arp;
+  pwr_sAttrRef* arp = NULL;
   void* p;
   pwr_sAttrRef raref;
   pwr_sAttrRef* rarp = NULL;
-  gdb_sCclass* ccp;
+  gdb_sCclass* ccp = NULL;
   gdb_sCclass* ccpLocked = NULL;
-  pwr_tBoolean equal;
+  pwr_tBoolean equal = 0;
   pwr_tBoolean fetched;
   pwr_tUInt32 ridx = UINT_MAX;
 
@@ -2660,11 +2658,11 @@ pwr_tStatus gdh_SetObjectInfoAttrref(
   gdb_sVolume* vp;
   gdb_sNode* np = NULL;
   void* p;
-  gdb_sCclass* ccp;
+  gdb_sCclass* ccp = NULL;
   gdb_sCclass* ccpLocked = NULL;
   pwr_sAttrRef raref;
   pwr_sAttrRef* rarp = NULL;
-  pwr_tBoolean equal;
+  pwr_tBoolean equal = 0;
   pwr_tBoolean fetched;
   pwr_tUInt32 ridx = UINT_MAX;
 
@@ -2901,7 +2899,7 @@ pwr_tStatus gdh_SubUnrefObjectInfoList(
 {
   pwr_tStatus retsts = GDH__SUCCESS;
   pwr_tStatus sts = GDH__SUCCESS;
-  sub_sClient* cp;
+  sub_sClient* cp = NULL;
   pool_sQlink* lh;
   pwr_tUInt32 i;
   cdh_uRefId rid;
@@ -2996,7 +2994,7 @@ pwr_tStatus gdh_SubData(
 {
   pwr_tStatus sts = GDH__SUCCESS;
   sub_sClient* cp;
-  const void* p;
+  const void* p = NULL;
   net_sSubData* dp;
   mvol_sAttribute attribute;
   mvol_sAttribute* ap;
@@ -3485,7 +3483,6 @@ pwr_tStatus gdh_SetAlarmBlockLevel(
 
 /**
  * @brief  Convert pointer to rtdb relative pointer.
- * @return pwr_tStatus
  */
 void gdh_StoreRtdbPointer(unsigned long* rp, void* p)
 {
@@ -4482,16 +4479,16 @@ pwr_tStatus gdh_AttrValueToString(pwr_eType type_id, /**< Attribute type */
     break;
   }
   case pwr_eType_Float32: {
-    if (*(float*)value_ptr == FLT_MIN) {
+    if (feqf(*(float*)value_ptr, FLT_MIN)) {
       strcpy(str, "FltMin");
       *len = strlen(str);
-    } else if (*(float*)value_ptr == -FLT_MIN) {
+    } else if (feqf(*(float*)value_ptr, -FLT_MIN)) {
       strcpy(str, "FltNMin");
       *len = strlen(str);
-    } else if (*(float*)value_ptr == FLT_MAX) {
+    } else if (feqf(*(float*)value_ptr, FLT_MAX)) {
       strcpy(str, "FltMax");
       *len = strlen(str);
-    } else if (*(float*)value_ptr == -FLT_MAX) {
+    } else if (feqf(*(float*)value_ptr, -FLT_MAX)) {
       strcpy(str, "FltNMax");
       *len = strlen(str);
     } else {
@@ -5251,8 +5248,6 @@ pwr_tStatus gdh_GetLocalClassList(int cidcnt, pwr_tCid* cid, int attrobjects,
  * the operation.
  * The application first has to attach the time lock with a call to
  * lck_Create(&sts, lck_eLock_Time).
- *
- * @return pwr_tStatus
  */
 void gdh_GetTimeDL(pwr_tTime* atp, /**< Direct link to time attribute */
     pwr_tTime* time /**< Receives the requested time */
@@ -5269,8 +5264,6 @@ void gdh_GetTimeDL(pwr_tTime* atp, /**< Direct link to time attribute */
  * the operation.
  * The application first has to attach the time lock with a call to
  * lck_Create(&sts, lck_eLock_Time).
- *
- * @return pwr_tStatus
  */
 void gdh_SetTimeDL(pwr_tTime* atp, /**< Direct link to time attribute */
     pwr_tTime* time /**< Time value to set */
@@ -5294,8 +5287,6 @@ void gdh_SetTimeDL(pwr_tTime* atp, /**< Direct link to time attribute */
  * the operation.
  * The application first has to attach the time lock with a call to
  * lck_Create(&sts, lck_eLock_Time).
- *
- * @return pwr_tStatus
  */
 void gdh_GetDeltaTimeDL(
     pwr_tDeltaTime* dtp, /**< Direct link to time attribute */
@@ -5313,8 +5304,6 @@ void gdh_GetDeltaTimeDL(
  * the operation.
  * The application first has to attach the time lock with a call to
  * lck_Create(&sts, lck_eLock_Time).
- *
- * @return pwr_tStatus
  */
 void gdh_SetDeltaTimeDL(
     pwr_tDeltaTime* dtp, /**< Direct link to time attribute */
@@ -5332,8 +5321,6 @@ void gdh_SetDeltaTimeDL(
  * the operation.
  * The application first has to attach the string lock with a call to
  * lck_Create(&sts, lck_eLock_Str).
- *
- * @return pwr_tStatus
  */
 void gdh_GetStrDL(char* sp, /**< Direct link to string attribute */
     char* str, /**< Receives the requested string */
@@ -5351,8 +5338,6 @@ void gdh_GetStrDL(char* sp, /**< Direct link to string attribute */
  * the operation.
  * The application first has to attach the string lock with a call to
  * lck_Create(&sts, lck_eLock_Str).
- *
- * @return pwr_tStatus
  */
 void gdh_SetStrDL(char* sp, /**< Direct link to string attribute */
     char* str, /**< Time value to set */

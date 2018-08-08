@@ -35,7 +35,6 @@
  **/
 
 #include <ctype.h>
-#include <float.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -47,9 +46,6 @@
 #include "rt_gdh.h"
 
 #include "ge_graph_ccm.h"
-
-#define r_toupper(c) (((c) >= 'a' && (c) <= 'z') ? (c)&0xDF : (c))
-#define r_tolower(c) (((c) >= 'A' && (c) <= 'Z') ? (c) | 0x20 : (c))
 
 #define K_PWRARGNAME_SIZE 32
 #define K_PWRARG_MAX 20
@@ -117,8 +113,8 @@
 #define K_OPERAND_PWRNAME 8
 #define K_OPERAND_PWRARGUMENT 9
 
-#define K_LOCTYPE_NO 0
-#define K_LOCTYPE_BEFORE 1
+//#define K_LOCTYPE_NO 0
+//#define K_LOCTYPE_BEFORE 1
 #define K_LOCTYPE_AFTER 2
 
 #define K_TYPE_OPERATOR 0
@@ -484,7 +480,7 @@ static int rtt_toupper(char* str_upper, char* str)
                 convert = !convert;
     */
     if (convert) {
-      *t = (char)r_toupper(namechar);
+      *t = (char)toupper(namechar);
       if (*t == 'ö')
         *t = (char)'Ö';
       else if (*t == 'ä')
@@ -747,7 +743,7 @@ static int gccm_replace_symbol(
 {
   char* s;
   char* t;
-  char* u;
+  char* u = NULL;
   int symbolmode;
   int size;
   char value[K_STRING_SIZE];
@@ -3164,8 +3160,8 @@ int gccm_create_pwr_args(char* pwr_argnames, int* pwr_argtypes,
   gccm_t_file_ctx filectx;
   t_func_ctx funcctx;
   int decl;
-  int int_val;
-  float float_val;
+  int int_val = 0;
+  float float_val = 0.0;
   char string_val[K_STRING_SIZE];
   int i;
   int sts;
@@ -3618,7 +3614,7 @@ static int gccm_func_say(void* filectx, gccm_s_arg* arg_list, int arg_count,
     int* return_decl, float* return_float, int* return_int, char* return_string)
 {
   gccm_s_arg* arg_p;
-  int sts;
+  int sts = 0;
 
   if (arg_count != 1)
     return CCM__ARGMISM;
@@ -3643,7 +3639,7 @@ static int gccm_func_scanf(void* filectx, gccm_s_arg* arg_list, int arg_count,
 {
   gccm_s_arg* arg_p;
   char format[K_STRING_SIZE];
-  int sts;
+  int sts = 0;
 
   if (arg_count != 2)
     return CCM__ARGMISM;
@@ -3669,7 +3665,7 @@ static int gccm_func_ask(void* filectx, gccm_s_arg* arg_list, int arg_count,
     int* return_decl, float* return_float, int* return_int, char* return_string)
 {
   gccm_s_arg* arg_p;
-  int sts;
+  int sts = 0;
 
   if (arg_count != 2)
     return CCM__ARGMISM;
@@ -4260,12 +4256,12 @@ static int gccm_function_exec(gccm_t_file_ctx filectx, char* name,
   int i;
   s_line* line_p;
   s_line* l_p;
-  int sts;
-  s_line* start_line;
-  s_line* end_line;
+  int sts = 0;
+  s_line* start_line = NULL;
+  s_line* end_line = NULL;
   int main_found;
   int found;
-  s_func* func_p;
+  s_func* func_p = NULL;
   char arg_str[20][32];
   char elm_str[4][K_LINE_SIZE];
   gccm_s_arg* arg_p;
@@ -4838,8 +4834,8 @@ int gccm_file_exec(char* buff, int (*externcmd_func)(char*, void*),
   char string_val[K_STRING_SIZE];
   int sts;
   gccm_t_file_ctx filectx;
-  gccm_s_arg *arg_list, *arg_p, *next_arg;
-  int arg_count;
+  gccm_s_arg *arg_list = NULL, *arg_p, *next_arg;
+  int arg_count = 0;
 
   if (resume) {
     filectx = *ctx;
@@ -4911,8 +4907,8 @@ int gccm_file_syntax(char* buff, int (*externcmd_func)(char*, void*),
   char string_val[K_STRING_SIZE];
   int sts;
   gccm_t_file_ctx filectx;
-  gccm_s_arg *arg_list, *arg_p, *next_arg;
-  int arg_count;
+  gccm_s_arg *arg_list = NULL, *arg_p, *next_arg;
+  int arg_count = 0;
 
   if (resume) {
     filectx = *ctx;

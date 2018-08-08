@@ -56,22 +56,11 @@
 #define ANNOT_LEN_MAX 8192
 #define ANNOT_NR_MAX 8
 
-#define CLOCK_CURSOR
-
-#define NORMAL_CURSOR
-
 #define DEFERRED_UPDATE
 
 #define UPDATE_SCREEN
 
 #define BEEP putchar('\7');
-
-#define GRE_MASKTST(cb, func)                                                  \
-  (((cb->button == gre->func##_mask)                                           \
-       || (cb->button == (gre->func##_mask | LockMask)))                       \
-      && (cb->type == gre->func##_click))
-
-#define GRE_SEARCHRECT_OFFSET 0.01
 
 /*_Global variable______________________________________________________*/
 
@@ -130,13 +119,13 @@ int WGre::get_annotations(vldh_t_node node, char* annot_str, int* annot_nr,
   pwr_sGraphPlcNode* graphbody;
   ldh_sParDef* bodydef;
   int rows;
-  int annotnr, type;
+  int annotnr, type = 0;
   char* parvalue;
   pwr_tObjid* parobjdid;
   pwr_sAttrRef* parattrref;
-  char* parname;
-  int annotcond;
-  int annotsegments;
+  char* parname = NULL;
+  int annotcond = 0;
+  int annotsegments = 0;
   char condparname[36];
   pwr_sAttrRef last_attrref;
   pwr_tBoolean* condparvalue;
@@ -547,7 +536,7 @@ int WGre::node_annot_message(
   pwr_sGraphPlcNode* graphbody;
   ldh_sParDef* bodydef;
   int rows;
-  int annotnr, type;
+  int annotnr, type = 0;
   char annot_str[ANNOT_LEN_MAX + 80];
   char* parvalue;
   pwr_tObjid* parobjdid;
@@ -2509,8 +2498,8 @@ int WGre::node_update(vldh_t_node object)
   double ll_x, ll_y, ur_x, ur_y;
   int point_conv[VLDH_MAX_CONPOINTS];
   int point_conv_count;
-  int point;
-  int deleted_connections;
+  int point = 0;
+  int deleted_connections = 0;
   char msg[80];
 
   if (!object->hn.node_id)
@@ -3287,7 +3276,7 @@ void WGre::select_next_conpoint(flow_eDirection dir)
   flow_tNode* select_list;
   int* select_num;
   int select_cnt;
-  int sel_num, next_num;
+  int sel_num = 0, next_num;
   int sts;
 
   flow_GetConPointSelectList(flow_ctx, &select_list, &select_num, &select_cnt);
@@ -3348,7 +3337,7 @@ void WGre::select_next_conpoint(flow_eDirection dir)
 
 void WGre::move_object(flow_eDirection dir)
 {
-  double x, y, ll_x, ll_y;
+  double x = 0.0, y = 0.0, ll_x, ll_y;
   unsigned long node_count;
   vldh_t_node* nodelist;
 
@@ -3449,7 +3438,7 @@ int WGre::get_conpoint(
 
 void WGre::scroll(flow_eDirection dir)
 {
-  double x, y;
+  double x = 0.0, y = 0.0;
 
   switch (dir) {
   case flow_eDirection_Right:

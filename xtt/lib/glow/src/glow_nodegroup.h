@@ -48,7 +48,7 @@ public:
   glow_eObjectType type()
   {
     return glow_eObjectType_NodeGroup;
-  };
+  }
   void save(std::ofstream& fp, glow_eSaveMode mode);
   void open(std::ifstream& fp);
   void ungroup(GlowTransform* t);

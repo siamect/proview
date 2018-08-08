@@ -34,7 +34,6 @@
  * General Public License plus this exception.
  */
 
-#include <float.h>
 #include <math.h>
 #include <string.h>
 
@@ -408,9 +407,9 @@ void timemean_exec(plc_sThread* tp, pwr_sClass_timemean* o)
 */
 void curve_exec(plc_sThread* tp, pwr_sClass_curve* object)
 {
-  float x0;
+  float x0 = 0.0;
   float x1;
-  float y0;
+  float y0 = 0.0;
   float y1;
   float number;
   float* tabpointer;
@@ -1342,7 +1341,6 @@ void AtDemux_exec(plc_sThread* tp, pwr_sClass_AtDemux* o)
 */
 void DtDemux_exec(plc_sThread* tp, pwr_sClass_DtDemux* o)
 {
-#define DTDEMUX_SIZE 24
   int idx, i;
   pwr_tDeltaTime* outp = &o->Out0;
 

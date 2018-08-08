@@ -94,7 +94,7 @@ static pwr_tStatus AiRangeToCoef(io_sChannel* chanp)
 
     /* Coef for RawValue to ActualValue conversion */
     if (chanp->ChanClass != pwr_cClass_ChanAit && cop->SensorPolyType == 1) {
-      if (cop->SensorSigValRangeHigh != cop->SensorSigValRangeLow) {
+      if (!feqf(cop->SensorSigValRangeHigh, cop->SensorSigValRangeLow)) {
         PolyCoef1 = (cop->ActValRangeHigh - cop->ActValRangeLow)
             / (cop->SensorSigValRangeHigh - cop->SensorSigValRangeLow);
         PolyCoef0
@@ -171,14 +171,14 @@ static pwr_tStatus IoCardRead(
   pwr_tUInt16 data = 0;
   pwr_sClass_Ai_HVAI32* op;
   int i, j;
-  pwr_tFloat32 actvalue;
+  pwr_tFloat32 actvalue = 0.0;
   io_sChannel* chanp;
   pwr_sClass_ChanAi* cop;
   pwr_sClass_Ai* sop;
   int sts;
   qbus_io_read rb;
   qbus_io_write wb;
-  int timeout;
+  int timeout = 0;
 
   local = (io_sLocal*)cp->Local;
   op = (pwr_sClass_Ai_HVAI32*)cp->op;

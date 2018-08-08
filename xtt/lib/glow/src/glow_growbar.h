@@ -101,7 +101,7 @@ public:
   void erase(GlowWind* w)
   {
     erase(w, (GlowTransform*)NULL, hot, NULL);
-  };
+  }
 
   //! Draw the objects if any part is inside the drawing area.
   /*!
@@ -139,7 +139,7 @@ public:
   glow_eObjectType type()
   {
     return glow_eObjectType_GrowBar;
-  };
+  }
 
   void set_trace_attr(GlowTraceData* attr); //!< Obsolete
   void get_trace_attr(GlowTraceData** attr); //!< Obsolete
@@ -231,7 +231,7 @@ public:
   void set_user_data(void* data)
   {
     user_data = data;
-  };
+  }
 
   //! Get user data.
   /*!
@@ -240,7 +240,7 @@ public:
   void get_user_data(void** data)
   {
     *data = user_data;
-  };
+  }
 
   //! Set parameters for the bar.
   /*!

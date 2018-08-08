@@ -152,9 +152,6 @@ union i3e_s_be {
 
 #define VAX_F_BIAS 0x81
 #define I3E_S_BIAS 0x7f
-#define VAX_D_BIAS 0x81
-#define VAX_G_BIAS 0x401
-#define I3E_D_BIAS 0x3ff
 
 #define IBYTE0(i) ((i >> 0x18) & 0x000000ff)
 #define IBYTE1(i) ((i >> 0x08) & 0x0000ff00)

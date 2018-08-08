@@ -102,7 +102,7 @@ public:
   void erase(GlowWind* w)
   {
     erase(w, (GlowTransform*)NULL, hot, NULL);
-  };
+  }
 
   //! Draw the objects if any part is inside the drawing area.
   /*!
@@ -135,7 +135,7 @@ public:
   glow_eObjectType type()
   {
     return glow_eObjectType_GrowMenu;
-  };
+  }
 
   glow_sMenuInfo info; //!< Button text and types.
   int text_size; //!< Button text size.

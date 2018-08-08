@@ -99,7 +99,7 @@ public:
     this->editmode = editmode;
     if (ldhses != 0)
       this->ldhses = ldhses;
-  };
+  }
   int select_by_name(const char* name);
 
   static int init_brow_cb(FlowCtx* fctx, void* client_data);

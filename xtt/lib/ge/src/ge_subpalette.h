@@ -132,7 +132,7 @@ public:
   {
     *path_count = path_cnt;
     *path_vect = (char*)path;
-  };
+  }
   void select_by_name(char* name);
   static int init_brow_cb(FlowCtx* fctx, void* client_data);
 };
@@ -140,21 +140,13 @@ public:
 class Item {
 public:
   Item(subpalette_eItemType item_type);
-  virtual ~Item()
-  {
-  }
+  virtual ~Item();
   subpalette_eItemType type;
   char name[120];
   brow_tNode node;
 
-  virtual int open_children(SubPalette* subpalette, double x, double y)
-  {
-    return 0;
-  }
-  virtual int close(SubPalette* subpalette, double x, double y)
-  {
-    return 0;
-  }
+  virtual int open_children(SubPalette* subpalette, double x, double y);
+  virtual int close(SubPalette* subpalette, double x, double y);
 };
 
 class ItemLocalSubGraphs : public Item {
@@ -171,6 +163,7 @@ class ItemFile : public Item {
 public:
   ItemFile(SubPalette* subpalette, char* item_name, char* item_filename,
       int item_pixmap, brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemFile();
   char filename[120];
   int pixmap;
 };

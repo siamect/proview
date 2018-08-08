@@ -56,15 +56,11 @@
 
 #define Log_Error(a, b)                                                        \
   errh_CErrLog(DS__ERROR, errh_ErrArgAF(b), errh_ErrArgMsg(a), NULL)
-#define Log(b) errh_CErrLog(DS__LOG, errh_ErrArgAF(b), NULL)
 #define Log_Error_Exit(a, b)                                                   \
   {                                                                            \
     Log_Error(a, b);                                                           \
     exit(a);                                                                   \
   }
-#define If_Error_Log(a, b)                                                     \
-  if ((a & 1) != 1)                                                            \
-  Log_Error(a, b)
 #define If_Error_Log_Exit(a, b)                                                \
   if ((a & 1) != 1)                                                            \
   Log_Error_Exit(a, b)
@@ -235,8 +231,6 @@ int main(int argc, char** argv)
 
     aproc_TimeStamp(ctx->scantime, 5.0);
   }
-
-  return 1;
 }
 
 /* Set up subscriptions for every local DsTrend object and
@@ -656,7 +650,7 @@ static void StoreData(trend_tCtx ctx)
     void* BuffP;
     pwr_sClass_DsTrendCurve* o;
     int i;
-    unsigned int current_index;
+    unsigned int current_index = 0;
     unsigned int first_index = 0;
     pwr_tTime time;
     int first_sample;

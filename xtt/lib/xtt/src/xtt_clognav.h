@@ -71,7 +71,7 @@ public:
 
 class CLogNavBrow {
 public:
-  CLogNavBrow(BrowCtx* brow_ctx, void* evl) : ctx(brow_ctx), clognav(evl){};
+  CLogNavBrow(BrowCtx* brow_ctx, void* evl) : ctx(brow_ctx), clognav(evl){}
   ~CLogNavBrow();
 
   BrowCtx* ctx;

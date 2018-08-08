@@ -94,7 +94,7 @@ int main(int argc, char* argv[])
   pwr_tFileName filespec;
   pwr_tFileName outfile;
   pwr_tFileName found_file;
-  merge_eMtype mtype;
+  merge_eMtype mtype = 0;
   FILE* fp;
   FILE* outfp;
   char line[200];

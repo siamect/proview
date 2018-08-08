@@ -1369,7 +1369,7 @@ void EvList::beep(double scantime)
 
   sts = get_last_not_acked_beep(&id);
   if (ODD(sts)) {
-    if (acc_beep_time == 0) {
+    if (feq(acc_beep_time, 0.0)) {
       sts = 0;
       if (sound_cb) {
         ItemAlarm* item;
@@ -3080,7 +3080,7 @@ void EvList::fill_alarm_tables()
   ItemAlarm* item;
   pwr_sClass_AlarmTable at;
   int idx;
-  int eventtype;
+  int eventtype = 0;
 
   brow_GetObjectList(browbase->ctx, &object_list, &object_cnt);
   for (unsigned int j = 0; j < alarm_table_cnt; j++) {

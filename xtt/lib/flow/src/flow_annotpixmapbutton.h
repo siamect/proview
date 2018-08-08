@@ -53,7 +53,7 @@ public:
   flow_eObjectType type()
   {
     return flow_eObjectType_AnnotPixmapButton;
-  };
+  }
   int event_handler(void* pos, flow_eEvent event, int x, int y, void* node);
 };
 

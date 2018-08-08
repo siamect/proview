@@ -45,8 +45,6 @@
 #include <termios.h>
 #include <unistd.h>
 
-#define DCLI_QIO_RETRY 10
-
 #include "pwr_class.h"
 #include "co_dcli.h"
 #include "co_dcli_input.h"
@@ -57,7 +55,6 @@
 #define DCLI_K_MAXLEN 0
 
 #define DCLI_TERM 1000
-#define DCLI_K_NONE 0
 #define DCLI_K_DELETE 127
 #define DCLI_K_ARROW_UP 274
 #define DCLI_K_ARROW_DOWN 275

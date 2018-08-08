@@ -361,7 +361,7 @@ void CreateSocket()
 {
   int sts;
   unsigned char badr[4];
-  unsigned int iadr[4] = { -1, -1, -1, -1 };
+  int iadr[4] = { -1, -1, -1, -1 };
   struct hostent* he;
   struct sockaddr_in address;
   socklen_t address_len = sizeof(struct sockaddr_in);

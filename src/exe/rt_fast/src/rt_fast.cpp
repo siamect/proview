@@ -481,7 +481,7 @@ int main()
 {
   pwr_tStatus sts;
   rt_fast fast;
-  int tmo;
+  int tmo = 0;
   char mp[2000];
   qcom_sQid qid = qcom_cNQid;
   qcom_sGet get;

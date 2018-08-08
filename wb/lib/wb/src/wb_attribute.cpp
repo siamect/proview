@@ -535,7 +535,6 @@ int wb_attribute::flags() const
 pwr_tAix wb_attribute::aix() const
 {
   throw wb_error_str("wb_attribute::aix() NYI");
-  return 0; // Fix
 }
 
 pwr_tCid wb_attribute::cid() const
@@ -557,9 +556,6 @@ pwr_eBix wb_attribute::bix() const
 pwr_tOid wb_attribute::boid() const
 {
   throw wb_error_str("wb_attribute::boid() NYI");
-
-  pwr_tOid oid;
-  return oid; // Fix
 }
 
 pwr_tCid wb_attribute::subClass() const
@@ -572,19 +568,16 @@ pwr_tCid wb_attribute::subClass() const
 bool wb_attribute::checkXref() const
 {
   throw wb_error_str("wb_attribute::checkXref() NYI");
-  return true; // Fix
 }
 
 pwr_sAttrXRef* wb_attribute::xref() const
 {
   throw wb_error_str("wb_attribute::xref() NYI");
-  return (pwr_sAttrXRef*)0; // Fix
 }
 
 pwr_sObjXRef* wb_attribute::oxref() const
 {
   throw wb_error_str("wb_attribute::oxref() NYI");
-  return (pwr_sObjXRef*)0; // Fix
 }
 
 void* wb_attribute::value(void* p)
@@ -650,22 +643,16 @@ pwr_tDisableAttr wb_attribute::disabled()
 std::string wb_attribute::toString() const
 {
   throw wb_error_str("wb_attribute::toString() NYI");
-  std::string a;
-  return a;
 }
 
 pwr_tStatus wb_attribute::fromString(std::string) const
 {
   throw wb_error_str("wb_attribute::fromString() NYI");
-  pwr_tStatus sts;
-  return sts;
 }
 
 pwr_tStatus wb_attribute::fromString(char*) const
 {
   throw wb_error_str("wb_attribute::fromString() NYI");
-  pwr_tStatus sts;
-  return sts;
 }
 
 wb_attribute wb_attribute::after() const

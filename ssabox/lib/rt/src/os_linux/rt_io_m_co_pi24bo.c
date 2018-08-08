@@ -197,13 +197,13 @@ static pwr_tStatus IoCardRead(
   pwr_tUInt16 wr_data[2];
   pwr_tUInt16 re_data[2];
   pwr_tUInt32* wr_data_p;
-  pwr_tUInt32* re_data_p;
+  pwr_tUInt32* re_data_p = NULL;
   pwr_sClass_Co_PI24BO* op;
-  pwr_tInt32 numofword;
+  pwr_tInt32 numofword = 0;
   int i;
   pwr_tInt16 co16_data;
   pwr_tInt32 newdiff, diff, co24_data;
-  int sts, sts1, sts2;
+  int sts, sts1 = 0, sts2 = 0;
   qbus_io_read rb;
   qbus_io_write wb;
   io_sRackLocal* r_local = (io_sRackLocal*)(rp->Local);

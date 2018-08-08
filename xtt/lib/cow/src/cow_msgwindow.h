@@ -57,9 +57,7 @@ class CoWowFocusTimer;
 class MsgWindow {
 public:
   MsgWindow(void* msg_parent_ctx, const char* msg_name, pwr_tStatus* status);
-  virtual ~MsgWindow()
-  {
-  }
+  virtual ~MsgWindow();
 
   void* parent_ctx;
   char name[80];
@@ -77,44 +75,22 @@ public:
   static MsgWindow* default_window;
   static int hide_info;
 
-  virtual void map()
-  {
-  }
-  virtual void unmap()
-  {
-  }
-  virtual void print()
-  {
-  }
+  virtual void map();
+  virtual void unmap();
+  virtual void print();
 
-  int is_mapped()
-  {
-    return displayed;
-  };
+  int is_mapped();
   void insert(int severity, const char* text, pwr_tOid oid = pwr_cNOid,
       msgw_eRow row = msgw_eRow_);
   void insert(int severity, const char* text, char* object, void* utility,
       msgw_eRow row = msgw_eRow_);
-  void set_nodraw()
-  {
-    msgnav->set_nodraw();
-    nodraw++;
-  }
+  void set_nodraw();
   void reset_nodraw();
   void msg(int severity, const char* text, msgw_ePop pop = msgw_ePop_Default,
       pwr_tOid oid = pwr_cNOid, msgw_eRow row = msgw_eRow_);
-  void activate_print()
-  {
-    print();
-  }
-  static void set_default(MsgWindow* msgw)
-  {
-    default_window = msgw;
-  }
-  static int has_default()
-  {
-    return default_window ? 1 : 0;
-  }
+  void activate_print();
+  static void set_default(MsgWindow* msgw);
+  static int has_default();
   static void message(int severity, const char* text,
       msgw_ePop pop = msgw_ePop_Default, pwr_tOid oid = pwr_cNOid,
       msgw_eRow row = msgw_eRow_);
@@ -129,33 +105,12 @@ public:
   static void message(int severity, const char* text1, const char* text2,
       const char* text3, char* object, void* utility,
       msgw_eRow row = msgw_eRow_);
-  static bool has_window()
-  {
-    return default_window != 0;
-  }
-  static CoWow* get_wow()
-  {
-    return default_window ? default_window->wow : 0;
-  }
-  static void map_default()
-  {
-    if (default_window)
-      default_window->map();
-  }
-  static void dset_nodraw()
-  {
-    if (default_window)
-      default_window->set_nodraw();
-  }
-  static void dreset_nodraw()
-  {
-    if (default_window)
-      default_window->reset_nodraw();
-  }
-  static void hide_info_messages(int hide)
-  {
-    hide_info = hide;
-  }
+  static bool has_window();
+  static CoWow* get_wow();
+  static void map_default();
+  static void dset_nodraw();
+  static void dreset_nodraw();
+  static void hide_info_messages(int hide);
   static void msgw_find_wnav_cb(void* ctx, pwr_tOid oid);
   static void msgw_find_plc_cb(void* ctx, pwr_tOid oid);
   static void msgw_find_ge_cb(void* ctx, char* object, void* utility);

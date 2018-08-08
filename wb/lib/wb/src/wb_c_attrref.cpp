@@ -165,8 +165,8 @@ static pwr_tStatus Connect(ldh_sMenuCall* ip)
         ip->PointedSession, &ip->Pointed, ldh_eName_VolPath, &name_p, &size);
     if (ODD(sts)) {
       strncpy(name, name_p, sizeof(name));
-      strncat(name, ".", sizeof(name));
-      strncat(name, mb.MethodArguments[0], sizeof(name));
+      strncat(name, ".", sizeof(name) - strlen(name) - 1);
+      strncat(name, mb.MethodArguments[0], sizeof(name) - strlen(name) - 1);
 
       sts = ldh_NameToAttrRef(ip->PointedSession, name, &PattrRef);
       if (ODD(sts))
@@ -290,7 +290,7 @@ static pwr_tStatus IoConnect(ldh_sMenuCall* ip)
       ip->PointedSession, &ip->Pointed, ldh_eName_VolPath, &name_p, &size);
   if (ODD(sts)) {
     strncpy(name, name_p, sizeof(name));
-    strncat(name, ".IoConnect", sizeof(name));
+    strncat(name, ".IoConnect", sizeof(name) - strlen(name) - 1);
 
     sts = ldh_NameToAttrRef(ip->PointedSession, name, &PattrRef);
     if (ODD(sts))

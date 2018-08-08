@@ -1674,8 +1674,8 @@ int Graph::export_javaframe(
   int i;
   char background_image[80];
   int background_tiled;
-  int bg_image_width;
-  int bg_image_height;
+  int bg_image_width = 0;
+  int bg_image_height = 0;
   int sts;
 
   grow_GetBackgroundImage(grow->ctx, background_image, &background_tiled);
@@ -1872,8 +1872,8 @@ int Graph::export_gejava(char* filename, char* bean_name, int applet, int html)
   double scan_time, fast_scan_time, animation_scan_time;
   char background_image[80];
   int background_tiled;
-  int bg_image_width;
-  int bg_image_height;
+  int bg_image_width = 0;
+  int bg_image_height = 0;
   int sts;
   int baseclass;
 
@@ -2400,20 +2400,21 @@ int Graph::export_BarTraceAttr(std::ofstream& fp, grow_tObject object, int cnt)
   var_name[0] = _tolower(var_name[0]);
   sprintf(&var_name[strlen(var_name)], "%d", cnt);
 
-  for (GeDynElem* elem = dyn->elements; elem; elem = elem->next) {
-    if (elem->dyn_type1 == ge_mDynType1_Bar) {
-      if (strcmp(((GeBar*)elem)->attribute, "") != 0)
-        fp << "    " << var_name << ".setPwrAttribute(\""
-           << ((GeBar*)elem)->attribute << "\");\n";
-      if (strcmp(((GeBar*)elem)->minvalue_attr, "") != 0)
-        fp << "    " << var_name << ".setMinValueAttr(\""
-           << ((GeBar*)elem)->minvalue_attr << "\");\n";
-      if (strcmp(((GeBar*)elem)->maxvalue_attr, "") != 0)
-        fp << "    " << var_name << ".setMaxValueAttr(\""
-           << ((GeBar*)elem)->maxvalue_attr << "\");\n";
-    }
-    break;
+  GeDynElem* elem = dyn->elements;
+  // for (GeDynElem* elem = dyn->elements; elem; elem = elem->next) {
+  if (elem->dyn_type1 == ge_mDynType1_Bar) {
+    if (strcmp(((GeBar*)elem)->attribute, "") != 0)
+      fp << "    " << var_name << ".setPwrAttribute(\""
+         << ((GeBar*)elem)->attribute << "\");\n";
+    if (strcmp(((GeBar*)elem)->minvalue_attr, "") != 0)
+      fp << "    " << var_name << ".setMinValueAttr(\""
+         << ((GeBar*)elem)->minvalue_attr << "\");\n";
+    if (strcmp(((GeBar*)elem)->maxvalue_attr, "") != 0)
+      fp << "    " << var_name << ".setMaxValueAttr(\""
+         << ((GeBar*)elem)->maxvalue_attr << "\");\n";
   }
+  // break;
+  //}
   if (dyn->total_action_type1 & ~ge_mActionType1_Inherit) {
     fp << "    " << var_name << ".dd.setActionType("
        << (int)dyn->total_action_type1 << ");\n"
@@ -2439,29 +2440,30 @@ int Graph::export_TrendTraceAttr(
   var_name[0] = _tolower(var_name[0]);
   sprintf(&var_name[strlen(var_name)], "%d", cnt);
 
-  for (GeDynElem* elem = dyn->elements; elem; elem = elem->next) {
-    if (elem->dyn_type1 == ge_mDynType1_Trend) {
-      if (strcmp(((GeTrend*)elem)->attribute1, "") != 0)
-        fp << "    " << var_name << ".setPwrAttribute1(\""
-           << ((GeTrend*)elem)->attribute1 << "\");\n";
-      if (strcmp(((GeTrend*)elem)->attribute2, "") != 0)
-        fp << "    " << var_name << ".setPwrAttribute2(\""
-           << ((GeTrend*)elem)->attribute2 << "\");\n";
-      if (strcmp(((GeTrend*)elem)->minvalue_attr1, "") != 0)
-        fp << "    " << var_name << ".setMinValueAttr1(\""
-           << ((GeTrend*)elem)->minvalue_attr1 << "\");\n";
-      if (strcmp(((GeTrend*)elem)->maxvalue_attr1, "") != 0)
-        fp << "    " << var_name << ".setMaxValueAttr1(\""
-           << ((GeTrend*)elem)->maxvalue_attr1 << "\");\n";
-      if (strcmp(((GeTrend*)elem)->minvalue_attr2, "") != 0)
-        fp << "    " << var_name << ".setMinValueAttr2(\""
-           << ((GeTrend*)elem)->minvalue_attr2 << "\");\n";
-      if (strcmp(((GeTrend*)elem)->maxvalue_attr2, "") != 0)
-        fp << "    " << var_name << ".setMaxValueAttr2(\""
-           << ((GeTrend*)elem)->maxvalue_attr2 << "\");\n";
-    }
-    break;
+  GeDynElem* elem = dyn->elements;
+  // for (GeDynElem* elem = dyn->elements; elem; elem = elem->next) {
+  if (elem->dyn_type1 == ge_mDynType1_Trend) {
+    if (strcmp(((GeTrend*)elem)->attribute1, "") != 0)
+      fp << "    " << var_name << ".setPwrAttribute1(\""
+         << ((GeTrend*)elem)->attribute1 << "\");\n";
+    if (strcmp(((GeTrend*)elem)->attribute2, "") != 0)
+      fp << "    " << var_name << ".setPwrAttribute2(\""
+         << ((GeTrend*)elem)->attribute2 << "\");\n";
+    if (strcmp(((GeTrend*)elem)->minvalue_attr1, "") != 0)
+      fp << "    " << var_name << ".setMinValueAttr1(\""
+         << ((GeTrend*)elem)->minvalue_attr1 << "\");\n";
+    if (strcmp(((GeTrend*)elem)->maxvalue_attr1, "") != 0)
+      fp << "    " << var_name << ".setMaxValueAttr1(\""
+         << ((GeTrend*)elem)->maxvalue_attr1 << "\");\n";
+    if (strcmp(((GeTrend*)elem)->minvalue_attr2, "") != 0)
+      fp << "    " << var_name << ".setMinValueAttr2(\""
+         << ((GeTrend*)elem)->minvalue_attr2 << "\");\n";
+    if (strcmp(((GeTrend*)elem)->maxvalue_attr2, "") != 0)
+      fp << "    " << var_name << ".setMaxValueAttr2(\""
+         << ((GeTrend*)elem)->maxvalue_attr2 << "\");\n";
   }
+  // break;
+  //}
   if (dyn->total_action_type1 & ~ge_mActionType1_Inherit) {
     fp << "    " << var_name << ".dd.setActionType("
        << (int)dyn->total_action_type1 << ");\n"
@@ -2486,24 +2488,25 @@ int Graph::export_PieTraceAttr(std::ofstream& fp, grow_tObject object, int cnt)
   var_name[0] = _tolower(var_name[0]);
   sprintf(&var_name[strlen(var_name)], "%d", cnt);
 
-  for (GeDynElem* elem = dyn->elements; elem; elem = elem->next) {
-    if (elem->dyn_type1 == ge_mDynType1_Pie) {
-      fp << "    " << var_name << ".setPwrAttribute(new String[]{";
+  GeDynElem* elem = dyn->elements;
+  // for (GeDynElem* elem = dyn->elements; elem; elem = elem->next) {
+  if (elem->dyn_type1 == ge_mDynType1_Pie) {
+    fp << "    " << var_name << ".setPwrAttribute(new String[]{";
 
-      for (int i = 0; i < PIE_MAX_SECTORS; i++) {
-        if (strcmp(((GePie*)elem)->attribute[i], "") != 0)
-          fp << "\"" << ((GePie*)elem)->attribute[i] << "\"";
-        else
-          fp << "null";
-        if (i != PIE_MAX_SECTORS - 1)
-          fp << ",";
-      }
-      fp << "});\n"
-         << "    " << var_name << ".setFixRange(" << ((GePie*)elem)->fix_range
-         << ");\n";
+    for (int i = 0; i < PIE_MAX_SECTORS; i++) {
+      if (strcmp(((GePie*)elem)->attribute[i], "") != 0)
+        fp << "\"" << ((GePie*)elem)->attribute[i] << "\"";
+      else
+        fp << "null";
+      if (i != PIE_MAX_SECTORS - 1)
+        fp << ",";
     }
-    break;
+    fp << "});\n"
+       << "    " << var_name << ".setFixRange(" << ((GePie*)elem)->fix_range
+       << ");\n";
   }
+  // break;
+  //}
   if (dyn->total_action_type1 & ~ge_mActionType1_Inherit) {
     fp << "    " << var_name << ".dd.setActionType("
        << (int)dyn->total_action_type1 << ");\n"
@@ -2529,22 +2532,23 @@ int Graph::export_BarChartTraceAttr(
   var_name[0] = _tolower(var_name[0]);
   sprintf(&var_name[strlen(var_name)], "%d", cnt);
 
-  for (GeDynElem* elem = dyn->elements; elem; elem = elem->next) {
-    if (elem->dyn_type1 == ge_mDynType1_BarChart) {
-      fp << "    " << var_name << ".setPwrAttribute(new String[]{";
+  GeDynElem* elem = dyn->elements;
+  // for (GeDynElem* elem = dyn->elements; elem; elem = elem->next) {
+  if (elem->dyn_type1 == ge_mDynType1_BarChart) {
+    fp << "    " << var_name << ".setPwrAttribute(new String[]{";
 
-      for (int i = 0; i < BARCHART_MAX_BARSEGMENTS; i++) {
-        if (strcmp(((GeBarChart*)elem)->attribute[i], "") != 0)
-          fp << "\"" << ((GeBarChart*)elem)->attribute[i] << "\"";
-        else
-          fp << "null";
-        if (i != BARCHART_MAX_BARSEGMENTS - 1)
-          fp << ",";
-      }
-      fp << "});\n";
+    for (int i = 0; i < BARCHART_MAX_BARSEGMENTS; i++) {
+      if (strcmp(((GeBarChart*)elem)->attribute[i], "") != 0)
+        fp << "\"" << ((GeBarChart*)elem)->attribute[i] << "\"";
+      else
+        fp << "null";
+      if (i != BARCHART_MAX_BARSEGMENTS - 1)
+        fp << ",";
     }
-    break;
+    fp << "});\n";
   }
+  // break;
+  //}
   if (dyn->total_action_type1 & ~ge_mActionType1_Inherit) {
     fp << "    " << var_name << ".dd.setActionType("
        << (int)dyn->total_action_type1 << ");\n"

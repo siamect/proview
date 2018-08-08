@@ -50,30 +50,28 @@ extern "C" {
 /*@{*/
 
 class sysmon_object {
-  public:
-  sysmon_object(pwr_sAttrRef* arp) : aref(*arp), p(0), scan_div(0), scan_cnt(0)
-  {
-  }
-  virtual ~sysmon_object()
-  {
-  }
+public:
+  sysmon_object(pwr_sAttrRef* arp);
+  virtual ~sysmon_object();
   void open(double base_scantime);
   void close();
   void scan();
   pwr_tStatus status();
 
-  protected:
+protected:
   pwr_sAttrRef aref;
   pwr_tAddress p;
   pwr_tRefId p_dlid;
   pwr_tCid cid;
   int scan_div;
   int scan_cnt;
-  virtual void exec(){};
+  virtual void exec()
+  {
+  }
 };
 
 class disksup_object : public sysmon_object {
-  public:
+public:
   disksup_object(pwr_sAttrRef* arp) : sysmon_object(arp)
   {
   }
@@ -86,7 +84,7 @@ class disksup_object : public sysmon_object {
 */
 
 class rt_sysmon {
-  public:
+public:
   rt_sysmon() : sysmon_cnt(0), scan_time(10)
   {
   }
@@ -103,7 +101,7 @@ class rt_sysmon {
   static int alarm_send(
       pwr_tOid oid, char* alarm_text, char* alarm_name, int alarm_prio);
 
-  private:
+private:
   std::vector<sysmon_object*> objects;
   pwr_sClass_SysMonConfig* conf;
   pwr_tRefId conf_dlid;

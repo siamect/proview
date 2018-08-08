@@ -149,9 +149,9 @@ static int connect_slave(io_sRackLocal* local, io_sRack* rp)
 pwr_tStatus mb_recv_data(
     io_sRackLocal* local, io_sRack* rp, pwr_sClass_Modbus_TCP_Slave* sp)
 {
-  io_sCardLocalMsg* local_card;
+  io_sCardLocalMsg* local_card = NULL;
   io_sCard* cardp;
-  pwr_sClass_Modbus_ModuleMsg* mp;
+  pwr_sClass_Modbus_ModuleMsg* mp = NULL;
   pwr_tStatus sts;
   fd_set fdr; /* For select call */
   struct timeval tv;
@@ -161,7 +161,7 @@ pwr_tStatus mb_recv_data(
   char rcv_buffer[260];
   pwr_tCid cid;
   unsigned char fc;
-  short int trans_id;
+  short int trans_id = 0;
   short int size_of_msg;
   int modules;
   int i;
@@ -216,7 +216,7 @@ pwr_tStatus mb_recv_data(
             pwr_tDeltaTime max_dt;
             float max_timeout = sp->MaxTimeout;
 
-            if (max_timeout == 0)
+            if (feqf(max_timeout, 0.0f))
               max_timeout = 2;
             time_FloatToD(&max_dt, max_timeout);
             time_GetTimeMonotonic(&now);
@@ -409,8 +409,8 @@ pwr_tStatus mb_send_data(io_sRackLocal* local, io_sRack* rp,
 {
   io_sCardLocalMsg* local_card;
   io_sCard* cardp;
-  pwr_sClass_Modbus_ModuleMsg* mp;
-  pwr_tStatus sts;
+  pwr_sClass_Modbus_ModuleMsg* mp = NULL;
+  pwr_tStatus sts = 0;
   pwr_tCid cid;
   int modules;
   int i;

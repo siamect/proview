@@ -960,9 +960,9 @@ void GeCurveQt::create_export_dialog()
   }
   export_attrcombo_widget->setCurrentIndex(0);
 
-  QLabel* fromtime_label;
-  QLabel* totime_label;
-  QLabel* rows_label;
+  QLabel* fromtime_label = NULL;
+  QLabel* totime_label = NULL;
+  QLabel* rows_label = NULL;
   if (layout_mask & curve_mEnable_ExportTime) {
     export_fromtime_widget = new QLineEdit();
     export_fromtime_widget->setFixedWidth(200);

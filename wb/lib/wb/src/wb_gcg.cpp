@@ -77,11 +77,7 @@ extern "C" {
 #define PLCLIB_FROZEN_LINK_UNIX "-lplcf"
 
 /* Filename of cc-compile and link command file */
-#define CC_COMMAND "pwr_exe:wb_gcg.com"
 #define CC_COMMAND_UNIX "$pwr_exe/wb_gcg.sh"
-
-/* Filename of struct includefile */
-#define STRUCTINC "pwr_baseclasses.h"
 
 /* Filename of macro includefile */
 #define MACROINC "rt_plc_macro.h"
@@ -120,11 +116,7 @@ extern "C" {
   (IS_LINUX(os) || IS_LYNX(os) || IS_MACOS(os) || IS_FREEBSD(os)               \
       || IS_OPENBSD(os) || IS_CYGWIN(os))
 
-#define IS_NOT_UNIX(os) (!IS_UNIX(os))
-
-#define IS_VALID_OS(os) (IS_UNIX(os))
-
-#define IS_NOT_VALID_OS(os) (!IS_VALID_OS(os))
+#define IS_NOT_VALID_OS(os) (!IS_UNIX(os))
 
 typedef struct {
   pwr_tObjid thread_objid;
@@ -245,7 +237,7 @@ gcg_tMethod gcg_comp_m[80]
         gcg_comp_m63, gcg_comp_m64, gcg_comp_m65, gcg_comp_m66, gcg_comp_m67,
         gcg_comp_m68, gcg_comp_m69, gcg_comp_m70, gcg_comp_m71 };
 
-static pwr_tStatus gcg_get_build_host(pwr_mOpSys os, char* buf, int bufsize);
+//static pwr_tStatus gcg_get_build_host(pwr_mOpSys os, char* buf, int bufsize);
 
 static int gcg_cc(unsigned long filetype, const char* p1, const char* p2,
     const char* p3, pwr_mOpSys os, unsigned long spawn);
@@ -529,6 +521,7 @@ static int gcg_timer_print(gcg_ctx gcgctx, pwr_tObjid objdid)
 * Description: Gets the name of UNIX build host
 *
 **************************************************************************/
+/*
 static pwr_tStatus gcg_get_build_host(pwr_mOpSys os, char* buf, int bufsize)
 {
   int sts = GSX__SUCCESS;
@@ -572,6 +565,7 @@ static pwr_tStatus gcg_get_build_host(pwr_mOpSys os, char* buf, int bufsize)
 
   return sts;
 }
+*/
 
 /*************************************************************************
 *
@@ -608,14 +602,14 @@ static pwr_tStatus gcg_get_build_host(pwr_mOpSys os, char* buf, int bufsize)
 static int gcg_cc(unsigned long filetype, const char* p1, const char* p2,
     const char* p3, pwr_mOpSys os, unsigned long spawn)
 {
-  char build_host[32];
+  //char build_host[32];
   char systemname[80];
   int sts;
   static pwr_tCmd cmd;
   pwr_tFileName fname;
 
   // TODO
-  if (1 /* os & pwr_mOpSys_X86_LINUX */) {
+  //if (1 /* os & pwr_mOpSys_X86_LINUX */) {
     if (p2 == NULL)
       p2 = "-";
     if (p3 == NULL)
@@ -678,10 +672,10 @@ static int gcg_cc(unsigned long filetype, const char* p1, const char* p2,
           return GSX__CCWARNING;
       }
     }
-  } else {
+  /*} else {
     printf("NYI...\n");
     gcg_get_build_host(os, build_host, sizeof(build_host));
-  }
+  } */
   return GSX__SUCCESS;
 }
 
@@ -1331,7 +1325,7 @@ int gcg_get_debug(vldh_t_node node, char* debug_parname, char* conn_obj,
   size_t pos;
   ldh_sParDef* bodydef;
   int rows;
-  int par_index, found;
+  int par_index = 0, found;
 
   gcgctx.ldhses = (node->hn.wind)->hw.ldhses;
   gcgctx.errorcount = 0;
@@ -1431,7 +1425,7 @@ int gcg_get_debug_virtual(vldh_t_node node, char* debug_parname, char* conn_obj,
   size_t pos;
   ldh_sParDef* bodydef;
   int rows;
-  int par_index, found;
+  int par_index = 0, found;
   unsigned long point;
   unsigned long inverted;
   vldh_t_node conn_node;
@@ -1502,7 +1496,7 @@ static int gcg_parname_to_pgmname(
 {
   ldh_sParDef* bodydef;
   int rows;
-  int sts, i, par_index, found;
+  int sts, i, par_index = 0, found;
   char* s;
   char indexstr[10];
   char superstr[80];
@@ -1578,7 +1572,7 @@ static int gcg_pgmname_to_parname(
 {
   ldh_sParDef* bodydef;
   int rows;
-  int sts, i, par_index, found;
+  int sts, i, par_index = 0, found;
   char* s;
   char indexstr[10];
   char pname[80];
@@ -1669,10 +1663,10 @@ int gcg_wind_comp_all(ldh_tWBContext ldhwb, ldh_tSesContext ldhses,
   pwr_tObjid* windlist_ptr;
   int sts, j, i;
   vldh_t_wind wind;
-  vldh_t_wind parentwind;
-  vldh_t_plc plc;
+  vldh_t_wind parentwind = NULL;
+  vldh_t_plc plc = NULL;
   vldh_t_node node;
-  pwr_tObjid* parentlist;
+  pwr_tObjid* parentlist = NULL;
   unsigned long parent_count = 0;
   unsigned long errorcount;
   unsigned long warningcount;
@@ -4617,7 +4611,7 @@ int gcg_comp_rtnode(char* nodename, pwr_mOpSys os, pwr_tUInt32 bus,
   char module_name[80];
   pwr_tFileName plcfilename;
   unsigned long plc_count;
-  gcg_t_plclist* plclist;
+  gcg_t_plclist* plclist = NULL;
   gcg_t_timebase* timebase;
   int timebase_count;
   int found;
@@ -4630,9 +4624,9 @@ int gcg_comp_rtnode(char* nodename, pwr_mOpSys os, pwr_tUInt32 bus,
   pwr_tVolumeId* volumelist_ptr;
   char os_str[20];
   int max_no_timebase;
-  gcg_t_threadlist* threadlist;
+  gcg_t_threadlist* threadlist = NULL;
   unsigned long thread_count;
-  gcg_t_plcproclist* plcproclist;
+  gcg_t_plcproclist* plcproclist = NULL;
   unsigned long plcproc_count;
   char text[400];
   char nodename_low[80];
@@ -4780,7 +4774,7 @@ int gcg_comp_rtnode(char* nodename, pwr_mOpSys os, pwr_tUInt32 bus,
   }
   timebase_count = thread_count;
 
-  if (single_scantime != 0) {
+  if (!feqf(single_scantime, 0.0f)) {
     /* Insert all plcpgm's into one timebase */
     timebase->prio = 1;
     timebase_count = 1;
@@ -5326,7 +5320,7 @@ int gcg_comp_m1(vldh_t_wind wind, unsigned long codetype,
   pwr_mOpSys operating_system;
   ldh_sSessInfo info;
   pwr_tOName wind_name;
-  ldh_eAccess session_access;
+  ldh_eAccess session_access = ldh_eAccess_ReadOnly;
   char gcdir[80];
   char plclibrary[80];
   unsigned long opsys;
@@ -6127,7 +6121,6 @@ int gcg_comp_m8(gcg_ctx gcgctx, vldh_t_node node)
     /* Insert io object in ioread list */
     gcg_aref_insert(gcgctx, attrref, GCG_PREFIX_REF, node);
     return GSX__SUCCESS;
-    break;
   case pwr_cClass_GetConstIv:
     if (cid != pwr_cClass_ConstIv) {
       gcg_error_msg(gcgctx, GSX__REFCLASS, node);
@@ -6137,7 +6130,6 @@ int gcg_comp_m8(gcg_ctx gcgctx, vldh_t_node node)
     /* Insert io object in ioread list */
     gcg_aref_insert(gcgctx, attrref, GCG_PREFIX_REF, node);
     return GSX__SUCCESS;
-    break;
   case pwr_cClass_GetDataRefv:
     if (cid != pwr_cClass_DataRefv) {
       gcg_error_msg(gcgctx, GSX__REFCLASS, node);
@@ -6563,12 +6555,12 @@ int gcg_comp_m15(gcg_ctx gcgctx, vldh_t_node node)
   unsigned long output_count;
   unsigned long output_point;
   ldh_sParDef output_bodydef;
-  int pincond_found, wind_found;
+  int pincond_found = 0, wind_found;
   char delimstr[8];
   char* windbuffer;
   pwr_tObjid windowobjdid;
   pwr_tClassId windclass;
-  int stepcount;
+  int stepcount = 0;
 
   ldhses = (node->hn.wind)->hw.ldhses;
   strcpy(delimstr, " _z_ ");
@@ -10463,6 +10455,7 @@ int gcg_comp_m39(gcg_ctx gcgctx, vldh_t_node node)
 
 int gcg_comp_m40(gcg_ctx gcgctx, vldh_t_node node)
 {
+  /*
   unsigned long point;
   unsigned long par_inverted;
   vldh_t_node output_node;
@@ -10481,24 +10474,25 @@ int gcg_comp_m40(gcg_ctx gcgctx, vldh_t_node node)
   ldh_tSesContext ldhses;
   char* expression;
   char* s;
+  */
 
   /* Same method as dataarithm */
-  sts = gcg_comp_m42(gcgctx, node);
-  return sts;
+  return gcg_comp_m42(gcgctx, node);
 
+  /*
   ldhses = (node->hn.wind)->hw.ldhses;
 
-  /* Get c-expression stored in devbody */
+  // Get c-expression stored in devbody
   sts = ldh_GetObjectPar(
       ldhses, node->ln.oid, "DevBody", "Code", (char**)&expression, &size);
   if (EVEN(sts))
     return sts;
 
   if (*expression == '\0')
-    /* There is no expression */
+    // There is no expression
     gcg_error_msg(gcgctx, GSX__NOEXPR, node);
 
-  /* Print the expression */
+  // Print the expression
   IF_PR fprintf(gcgctx->files[GCGM1_CODE_FILE],
       "#define EXPR%s(A1,A2,A3,A4,A5,A6,A7,A8,d1,d2,d3,d4,d5,d6,d7,d8,\
 OA1,OA2,OA3,OA4,OA5,OA6,OA7,OA8,od1,od2,od3,od4,od5,od6,od7,od8) ",
@@ -10519,12 +10513,12 @@ OA1,OA2,OA3,OA4,OA5,OA6,OA7,OA8,od1,od2,od3,od4,od5,od6,od7,od8) ",
 
   sts = gcg_ref_insert(gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
-  /* Get name for this class */
+  // Get name for this class
   sts = gcg_get_structname(gcgctx, node->ln.oid, &name);
   if (EVEN(sts))
     return sts;
 
-  /* Print the execute command */
+  // Print the execute command
   IF_PR fprintf(gcgctx->files[GCGM1_CODE_FILE], "%s_exec( %c%s,\n\
 EXPR%s((*%c%s->AIn1P),(*%c%s->AIn2P),(*%c%s->AIn3P),(*%c%s->AIn4P),\n",
       name, GCG_PREFIX_REF, vldh_IdToStr(0, node->ln.oid),
@@ -10576,7 +10570,7 @@ EXPR%s((*%c%s->AIn1P),(*%c%s->AIn2P),(*%c%s->AIn3P),(*%c%s->AIn4P),\n",
       vldh_IdToStr(2, node->ln.oid), GCG_PREFIX_REF,
       vldh_IdToStr(3, node->ln.oid));
 
-  /* Get the runtime parameters for this class */
+  // Get the runtime parameters for this class
   sts = ldh_GetObjectBodyDef(
       (node->hn.wind)->hw.ldhses, node->ln.cid, "RtBody", 1, &bodydef, &rows);
   if (EVEN(sts))
@@ -10585,11 +10579,11 @@ EXPR%s((*%c%s->AIn1P),(*%c%s->AIn2P),(*%c%s->AIn3P),(*%c%s->AIn4P),\n",
   i = 0;
   first_par = 1;
   while ((i < rows) && (bodydef[i].ParClass == pwr_eClass_Input)) {
-    /* Get the point for this parameter if there is one */
+    // Get the point for this parameter if there is one
     output_found = 0;
     sts = gcg_get_inputpoint(node, i, &point, &par_inverted);
     if (ODD(sts)) {
-      /* Look for an output connected to this point */
+      // Look for an output connected to this point
       sts = gcg_get_output(node, point, &output_count, &output_node,
           &output_point, &output_bodydef,
           GOEN_CON_SIGNAL | GOEN_CON_OUTPUTTOINPUT);
@@ -10620,14 +10614,14 @@ EXPR%s((*%c%s->AIn1P),(*%c%s->AIn2P),(*%c%s->AIn3P),(*%c%s->AIn4P),\n",
                                          : vldh_AttrRefToStr(0, output_attrref),
             output_par);
       } else {
-        /* Point visible but not connected, errormessage */
+        // Point visible but not connected, errormessage
         gcg_error_msg(gcgctx, GSX__NOTCON, node);
       }
       first_par = 0;
     }
     if (!output_found) {
-      /* The point is not connected and will point to its
-         own object */
+      // The point is not connected and will point to its
+         own object
 
       IF_PR fprintf(gcgctx->files[GCGM1_REF_FILE], "%c%s->%sP = &%c%s->%s;\n",
           GCG_PREFIX_REF, vldh_IdToStr(0, node->ln.oid),
@@ -10639,6 +10633,7 @@ EXPR%s((*%c%s->AIn1P),(*%c%s->AIn2P),(*%c%s->AIn3P),(*%c%s->AIn4P),\n",
   free((char*)bodydef);
 
   return GSX__SUCCESS;
+  */
 }
 
 /*************************************************************************
@@ -11148,7 +11143,7 @@ int gcg_comp_m45(gcg_ctx gcgctx, vldh_t_node node)
   char output_par[80];
   char output_prefix;
   char* name;
-  char* refstructname;
+  char* refstructname = NULL;
   pwr_tAttrRef refaref;
   pwr_tAttrRef* refaref_ptr;
   ldh_tSesContext ldhses;
@@ -11647,8 +11642,8 @@ int gcg_comp_m49(gcg_ctx gcgctx, vldh_t_node node)
   ldh_sParDef* bodydef;
   int rows, sts;
   int i;
-  int size, found;
-  pwr_tObjid* parvalue;
+  int size = 0, found;
+  pwr_tObjid* parvalue = NULL;
   pwr_tClassId cid;
 
   ldhses = (node->hn.wind)->hw.ldhses;
@@ -12550,7 +12545,7 @@ int gcg_comp_m57(gcg_ctx gcgctx, vldh_t_node node)
   ldhses = (node->hn.wind)->hw.ldhses;
 
   if (!gcgctx->order_comp) {
-    if ((node->ln.cid == pwr_cClass_StoDattr)) {
+    if (node->ln.cid == pwr_cClass_StoDattr) {
       /* Check first if the object is connected to an order object,
         if it is, it will be compiled when by the ordermethod, when
         gcgctx->order_comp is true */
@@ -12808,7 +12803,7 @@ int gcg_comp_m58(gcg_ctx gcgctx, vldh_t_node node)
   char* name;
   pwr_tOName oname;
   pwr_tClassId cid;
-  pwr_tTime* instance_time;
+  pwr_tTime* instance_time = NULL;
   pwr_tTime* template_time;
   pwr_tObjid template_plc;
   pwr_tObjid template_window;
@@ -14520,7 +14515,7 @@ int gcg_comp_m69(gcg_ctx gcgctx, vldh_t_node node)
   gcg_t_nocondef nocondef[2];
   unsigned long nocontype[2];
   char* name;
-  int info_size;
+  int info_size = 0;
 
   nocondef[1].bo = 1;
   nocontype[1] = GCG_BOOLEAN;

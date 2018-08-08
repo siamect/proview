@@ -176,7 +176,7 @@ public:
   virtual void set_image_clip_mask(
       QPainter* painter, glow_tPixmap pixmap, int x, int y);
 
-  virtual void reset_image_clip_mask(){};
+  virtual void reset_image_clip_mask(){}
 
   virtual int set_clip_rectangle(
       GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y);

@@ -311,7 +311,7 @@ public:
     \param appl_ctx	Application object.
   */
   GraphApplList(void* appl_key, void* appl_ctx)
-      : key(appl_key), ctx(appl_ctx), prev(NULL), next(NULL){};
+      : key(appl_key), ctx(appl_ctx), prev(NULL), next(NULL){}
 
   void* key; //!< Key.
   void* ctx; //!< Application object.
@@ -373,7 +373,7 @@ public:
     \param xn		Graph.
   */
   GraphGrow(GrowCtx* grow_ctx, void* xn)
-      : ctx(grow_ctx), graph(xn), stack_cnt(0){};
+      : ctx(grow_ctx), graph(xn), stack_cnt(0){}
 
   //! Destructor.
   ~GraphGrow();
@@ -423,13 +423,9 @@ public:
   //! Constructor
   /*!
     \param xn_parent_ctx	Parent context.
-    \param xn_parent_wid	Parent widget.
     \param xn_name		Name.
-    \param w			Graph widget.
-    \param status		Returned status.
     \param xn_default_path	Default path for .pwg files.
     \param graph_mode		Mode, development or runtime.
-    \param scrollbar		Use scrollbars.
     \param xn_gdh_init_done	Gdh is alread initialized.
     \param xn_object_name	Object name for a class graph. If zero, this is
     not
@@ -644,70 +640,70 @@ public:
   void set_linewidth(int width)
   {
     linewidth = width;
-  };
+  }
 
   //! Set linetype.
   /*! \param type	Line type. */
   void set_linetype(glow_eLineType type)
   {
     linetype = type;
-  };
+  }
 
   //! Set textsize.
   /*! \param size	Text size. */
   void set_textsize(int size)
   {
     textsize = size;
-  };
+  }
 
   //! Set text bold.
   /*! \param bold	Bold text. */
   void set_textbold(int bold)
   {
     textbold = bold;
-  };
+  }
 
   //! Set text font.
   /*! \param font	Text font. */
   void set_textfont(glow_eFont font)
   {
     textfont = font;
-  };
+  }
 
   //! Set border color.
   /*! \param color_idx	Border color. */
   void set_border_color(int color_idx)
   {
     border_color = color_idx;
-  };
+  }
 
   //! Set fill color.
   /*! \param color_idx	Fill color. */
   void set_fill_color(int color_idx)
   {
     fill_color = color_idx;
-  };
+  }
 
   //! Set fill.
   /*! \param fill_on	Fill. */
   void set_fill(int fill_on)
   {
     fill = fill_on;
-  };
+  }
 
   //! Set border.
   /*! \param border_on	Border. */
   void set_border(int border_on)
   {
     border = border_on;
-  };
+  }
 
   //! Set shadow.
   /*! \param shadow_on	Draw object with shadow. */
   void set_shadow(int shadow_on)
   {
     shadow = shadow_on;
-  };
+  }
 
   //! Set fill color on all selected objects.
   /*! Set currently selected fillcolor on all selected objects. */
@@ -865,28 +861,28 @@ public:
   void set_condir(glow_eDirection dir)
   {
     conpoint_direction = dir;
-  };
+  }
 
   //! Set connection type.
   /*! \param type	Connection type. */
   void set_contype(glow_eConType type)
   {
     con_type = type;
-  };
+  }
 
   //! Set connection corner.
   /*! \param corner	Connection corner, rounded or straight. */
   void set_concorner(glow_eCorner corner)
   {
     con_corner = corner;
-  };
+  }
 
   //! Set connection corner round amount.
   /*! \param round_amount	Size of the arc in rounded corner. */
   void set_corner_round_amount(double round_amount)
   {
     corner_round_amount = round_amount;
-  };
+  }
 
   //! Open attribute editor for an object.
   /*! \param object	Object. */
@@ -1123,7 +1119,7 @@ public:
   void set_scantime(double time)
   {
     scan_time = time;
-  };
+  }
 
   //! Parse a reference to a database attribute.
   /*!
@@ -1298,21 +1294,21 @@ public:
   void set_nodraw()
   {
     grow_SetNodraw(grow->ctx);
-  };
+  }
 
   //! Reset no draw.
   /*! Reset of a previos call to set_nodraw. */
   void reset_nodraw()
   {
     grow_ResetNodraw(grow->ctx);
-  };
+  }
 
   //! Redraw the window.
   /*! Redraw the background and all objects. */
   void redraw()
   {
     grow_Redraw(grow->ctx);
-  };
+  }
 
   //! Group the selected objects.
   /*!

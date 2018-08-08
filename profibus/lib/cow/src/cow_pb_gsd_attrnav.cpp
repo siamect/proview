@@ -103,10 +103,9 @@
 #include "xnav_bitmap_attrenum24.h"
 
 #define ATTRNAV__INPUT_SYNTAX 2
-#define ATTRNAV__OBJNOTFOUND 4
+//#define ATTRNAV__OBJNOTFOUND 4
 #define ATTRNAV__STRINGTOLONG 6
-#define ATTRNAV__ITEM_NOCREA 8
-#define ATTRNAV__SUCCESS 1
+//#define ATTRNAV__ITEM_NOCREA 8
 
 static char null_str[] = "";
 
@@ -509,7 +508,7 @@ int GsdAttrNav::set_attr_value(const char* value_str)
     if (EVEN(sts))
       return sts;
 
-    if (item->max_limit != 0 || item->min_limit != 0) {
+    if (!feq(item->max_limit, 0.0) || !feq(item->min_limit, 0.0)) {
       switch (item->type_id) {
       case pwr_eType_Int32:
       case pwr_eType_UInt32:
@@ -1323,9 +1322,9 @@ int GsdAttrNav::object_attr()
 {
   gsd_sKeyword* keyp;
   gsd_sData* datap;
-  unsigned int type;
+  unsigned int type = 0;
   int size;
-  void* p;
+  void* p = NULL;
 
   brow_SetNodraw(brow->ctx);
 
@@ -1542,6 +1541,19 @@ int GsdAttrNav::search_class(
   return 0;
 }
 
+ItemPb::ItemPb() : parent(0)
+{
+}
+
+ItemPb::~ItemPb()
+{
+}
+
+int ItemPb::open_children(GsdAttrNav* attrnav, double x, double y)
+{
+  return 1;
+}
+
 ItemPbBase::ItemPbBase(GsdAttrNav* attrnav, const char* item_name,
     const char* attr, int attr_type, int attr_size, double attr_min_limit,
     double attr_max_limit, void* attr_value_p, int attr_noedit,
@@ -1569,6 +1581,10 @@ ItemPbBase::ItemPbBase(GsdAttrNav* attrnav, const char* item_name,
   brow_SetTraceAttr(node, attr, "", flow_eTraceType_User);
 }
 
+ItemPbBase::~ItemPbBase()
+{
+}
+
 ItemPbEnum::ItemPbEnum(GsdAttrNav* attrnav, const char* item_name,
     const char* attr, int attr_type, int attr_size, double attr_min_limit,
     double attr_max_limit, void* attr_value_p, int attr_noedit,
@@ -1578,6 +1594,10 @@ ItemPbEnum::ItemPbEnum(GsdAttrNav* attrnav, const char* item_name,
           dest_code)
 {
   type = attrnav_eItemType_PbEnum;
+}
+
+ItemPbEnum::~ItemPbEnum()
+{
 }
 
 int ItemPbEnum::open_children(GsdAttrNav* attrnav, double x, double y)
@@ -1666,6 +1686,10 @@ ItemPbEnumValue::ItemPbEnumValue(GsdAttrNav* attrnav, const char* item_name,
   else
     brow_SetRadiobutton(node, 0, 0);
   brow_SetTraceAttr(node, name, "", flow_eTraceType_User);
+}
+
+ItemPbEnumValue::~ItemPbEnumValue()
+{
 }
 
 ItemPbModule::ItemPbModule(GsdAttrNav* attrnav, const char* item_name,
@@ -2018,9 +2042,9 @@ ItemPbMoreData::ItemPbMoreData(GsdAttrNav* attrnav, const char* item_name,
 int ItemPbMoreData::open_children(GsdAttrNav* attrnav, double x, double y)
 {
   double node_x, node_y;
-  unsigned int type;
+  unsigned int type = 0;
   int size;
-  void* p;
+  void* p = NULL;
   gsd_sKeyword* keyp;
   gsd_sData* datap;
 

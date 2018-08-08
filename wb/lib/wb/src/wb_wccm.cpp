@@ -418,7 +418,7 @@ static int wccm_getclasslistattrref_func(void* filectx, ccm_sArg* arg_list,
     ccm_tInt* return_int, char* return_string)
 {
   int sts;
-  char* name;
+  char* name = NULL;
   pwr_tCid cid;
   pwr_tAttrRef aref;
   int size;
@@ -458,7 +458,7 @@ static int wccm_getnextattrref_func(void* filectx, ccm_sArg* arg_list,
     ccm_tInt* return_int, char* return_string)
 {
   int sts;
-  char* name;
+  char* name = NULL;
   pwr_tAttrRef aref;
   pwr_tAttrRef next_aref;
   int size;
@@ -506,7 +506,7 @@ static int wccm_getnexttemplateattrref_func(void* filectx, ccm_sArg* arg_list,
     ccm_tInt* return_int, char* return_string)
 {
   int sts;
-  char* name;
+  char* name = NULL;
   pwr_tAttrRef aref;
   pwr_tAttrRef next_aref;
   int size;
@@ -668,7 +668,7 @@ static int wccm_moveobject_func(void* filectx, ccm_sArg* arg_list,
   ldh_tSesContext ldhses;
   ccm_sArg* arg_p2;
   ccm_sArg* arg_p3;
-  ldh_eDest dcode;
+  ldh_eDest dcode = ldh_eDest_Before;
 
   sts = wccm_get_ldhses(&ldhses);
   if (EVEN(sts)) {
@@ -1400,13 +1400,13 @@ static int wccm_createplcobject_func(void* filectx, ccm_sArg* arg_list,
     int arg_count, int* return_decl, ccm_tFloat* return_float,
     ccm_tInt* return_int, char* return_string)
 {
-  ccm_sArg *arg_p2, *arg_p3, *arg_p4, *arg_p5, *arg_p6, *arg_p7, *arg_p8;
+  ccm_sArg *arg_p2, *arg_p3, *arg_p4, *arg_p5 = NULL, *arg_p6 = NULL, *arg_p7 = NULL, *arg_p8;
   int sts;
   pwr_tObjName dest;
   pwr_tObjName classname, name;
   float x;
   float y;
-  unsigned int inputmask, outputmask, invertmask;
+  unsigned int inputmask = 0, outputmask = 0, invertmask = 0;
   ldh_tSesContext ldhses;
   int use_default_masks = 1;
   pwr_tCid cid;
@@ -1461,8 +1461,8 @@ static int wccm_createplcobject_func(void* filectx, ccm_sArg* arg_list,
     }
     if (strcmp(arg_p5->value_string, "") != 0) {
       strncpy(dest, stored_foe_window, sizeof(dest));
-      strncat(dest, "-", sizeof(dest));
-      strncat(dest, arg_p5->value_string, sizeof(dest));
+      strncat(dest, "-", sizeof(dest) - strlen(dest) - 1);
+      strncat(dest, arg_p5->value_string, sizeof(dest) - strlen(dest) - 1);
       dest_found = 1;
     }
   }
@@ -1570,7 +1570,7 @@ static int wccm_setplcobjectattr_func(void* filectx, ccm_sArg* arg_list,
 
   strcpy(name, stored_foe_window);
   strcat(name, "-");
-  strncat(name, arg_list->value_string, sizeof(name));
+  strncat(name, arg_list->value_string, sizeof(name) - strlen(name) - 1);
   if ((s = strrchr(name, '.'))) {
     *s = 0;
     strcpy(attr, s + 1);
@@ -1650,11 +1650,11 @@ static int wccm_createplcconnection_func(void* filectx, ccm_sArg* arg_list,
 
   strcpy(srcname, stored_foe_window);
   strcat(srcname, "-");
-  strncat(srcname, arg_list->value_string, sizeof(srcname));
+  strncat(srcname, arg_list->value_string, sizeof(srcname) - strlen(srcname) - 1);
   strncpy(srcattr, arg_p2->value_string, sizeof(srcattr));
   strcpy(destname, stored_foe_window);
   strcat(destname, "-");
-  strncat(destname, arg_p3->value_string, sizeof(destname));
+  strncat(destname, arg_p3->value_string, sizeof(destname) - strlen(destname) - 1);
   strncpy(destattr, arg_p4->value_string, sizeof(destattr));
 
   sts = ldh_NameToObjid(ldhses, &srcoid, srcname);
@@ -1722,7 +1722,7 @@ static int wccm_plcconnect_func(void* filectx, ccm_sArg* arg_list,
 
   strcpy(nodename, stored_foe_window);
   strcat(nodename, "-");
-  strncat(nodename, arg_list->value_string, sizeof(nodename));
+  strncat(nodename, arg_list->value_string, sizeof(nodename) - strlen(nodename) - 1);
   strncpy(attrname, arg_p2->value_string, sizeof(attrname));
 
   sts = ldh_NameToObjid(ldhses, &nodeoid, nodename);
@@ -1991,9 +1991,9 @@ static int wccm_attribute_func(char* name, int* return_decl,
   pwr_tAName hier_name;
   char* hier_name_p;
   char* valuep;
-  int decl;
-  int int_val;
-  float float_val;
+  int decl = 0;
+  int int_val = 0;
+  float float_val = 0.0;
   char string_val[80];
   ldh_tSesContext ldhses;
 
@@ -2165,7 +2165,7 @@ static int wccm_attribute_func(char* name, int* return_decl,
 static int wccm_cut_segments(char* outname, char* name, int segments)
 {
   char* s[20];
-  int i, j, last_i;
+  int i, j, last_i = 0;
 
   for (i = 0; i < segments; i++) {
     s[i] = strrchr(name, '-');

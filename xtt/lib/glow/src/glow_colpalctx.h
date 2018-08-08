@@ -78,10 +78,10 @@ public:
   {
     ctx_type = glow_eCtxType_ColPal;
     grid_on = 0;
-  };
+  }
 
   //! Destructor
-  ~ColPalCtx(){};
+  ~ColPalCtx(){}
 
   //! Configure the palette.
   /*! This function creates all color rectangles and texts in the palette, and
@@ -105,7 +105,7 @@ public:
   void unzoom()
   {
     zoom(mw.base_zoom_factor / mw.zoom_factor_y);
-  };
+  }
 
   //! Not used.
   void print(char* filename);

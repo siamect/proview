@@ -96,7 +96,7 @@ dcli_tCmdTable xtttbl_command_table[] = {
   { "LOGOUT", &xtttbl_logout_func, { "" } },
   { "LOGIN", &xtttbl_login_func, { "dcli_arg1", "dcli_arg2", "" } },
   {
-      "",
+      "", NULL, { "" }
   }
 };
 

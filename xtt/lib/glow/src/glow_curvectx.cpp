@@ -34,7 +34,6 @@
  * General Public License plus this exception.
  **/
 
-#include <float.h>
 #include <math.h>
 
 #include "glow_curvectx.h"
@@ -96,7 +95,7 @@ void CurveCtx::adjust_layout()
   int width, height;
 
   gdraw->get_window_size(&mw, &width, &height);
-  if ((mw.window_height != height && y_high != y_low) || !layout_adjusted) {
+  if ((mw.window_height != height && !feq(y_high, y_low)) || !layout_adjusted) {
     mw.zoom_factor_y = height / (y_high - y_low);
     if (!layout_adjusted && initial_position == glow_eDirection_Right) {
       mw.offset_x = int(x_right * mw.zoom_factor_x) - width;
@@ -120,7 +119,7 @@ void CurveCtx::nav_zoom()
     x_nav_right = x_right;
     y_nav_low = y_low;
     y_nav_high = y_high;
-    if (x_nav_right - x_nav_left == 0 || y_nav_high - y_nav_low == 0)
+    if (feq(x_nav_right, x_nav_left) || feq(y_nav_high, y_nav_low))
       return;
     navw.zoom_factor_x = navw.window_width / (x_nav_right - x_nav_left);
     navw.zoom_factor_y = navw.window_height / (y_nav_high - y_nav_low);

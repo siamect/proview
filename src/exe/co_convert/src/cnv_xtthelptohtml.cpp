@@ -439,7 +439,7 @@ static int find_symbol(char* name, char* value)
   int nr;
   char elemv[3][80];
   int j;
-  int found;
+  int found = 0;
 
   // Read the file
   if (!loaded) {

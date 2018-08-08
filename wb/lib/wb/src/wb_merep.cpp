@@ -387,9 +387,8 @@ wb_cdrep* wb_merep::cdrep(pwr_tStatus* sts, wb_name name)
         cdrep->merep(this);
         *sts = LDH__SUCCESS;
         return cdrep;
-      } catch (wb_error& e) {
+      } catch (wb_error&) {
         // Not found in this volume, try next
-        continue;
       }
     }
   }
@@ -449,7 +448,7 @@ wb_tdrep* wb_merep::tdrep(pwr_tStatus* sts, wb_name name)
         tdrep = new wb_tdrep(it->second, name);
         *sts = LDH__SUCCESS;
         return tdrep;
-      } catch (wb_error& e) {
+      } catch (wb_error&) {
         // Not found in this volume, try next
       }
     }

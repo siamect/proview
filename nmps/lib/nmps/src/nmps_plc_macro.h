@@ -36,8 +36,6 @@
 
 /*		 PREPROCESSOR RUTINER					    */
 
-#include <float.h>
-
 #ifndef nmps_data_info
 #define nmps_data_info
 

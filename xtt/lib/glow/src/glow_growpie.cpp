@@ -96,7 +96,7 @@ void GrowPie::save(std::ofstream& fp, glow_eSaveMode mode)
 
 void GrowPie::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;
@@ -378,7 +378,7 @@ void GrowPie::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     grad = ((GrowNode*)node)->gradient;
 
   double a1 = angle1;
-  double a2;
+  double a2 = 0.0;
   int ia1 = angle1;
   int ia2;
   for (int i = 0; i < sectors + 1; i++) {
@@ -411,7 +411,7 @@ void GrowPie::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
         drawtype = fillcolor;
       ctx->gdraw->fill_arc(
           w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, ia1 - rot, ia2, drawtype, 0);
-    } else if (!display_shadow || shadow_width == 0) {
+    } else if (!display_shadow || feq(shadow_width, 0.0)) {
       glow_eDrawType f1, f2;
       if (gradient_contrast >= 0) {
         f2 = GlowColor::shift_drawtype(

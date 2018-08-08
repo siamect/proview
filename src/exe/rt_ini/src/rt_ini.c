@@ -898,7 +898,7 @@ static pwr_tStatus events(ini_sContext* cp)
 
     /* Request for termination ?? */
     if (sts != QCOM__TMO && sts != QCOM__QEMPTY && get.type.b == 11) {
-      sts = terminate(cp);
+      sts = terminate();
       return sts;
     }
 
@@ -1729,9 +1729,6 @@ static void daemonize()
 
 /**
  * @brief handle_signal
- * @param sig
- * @param si
- * @param ctx
  */
 void handle_signal(int sig, siginfo_t* si, void* ctx)
 {

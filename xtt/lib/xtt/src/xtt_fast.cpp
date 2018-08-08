@@ -170,7 +170,7 @@ XttFast::XttFast(void* parent_ctx, char* name, pwr_sAttrRef* fast_arp,
   for (i = 0; i < FAST_CURVES; i++) {
     if (fp.CurveValid[i]) {
       j = fast_idx[i];
-      if (fp.YMinValue[i] != fp.YMaxValue[i])
+      if (!feqf(fp.YMinValue[i], fp.YMaxValue[i]))
         gcd->scale(gcd->y_axis_type[j], gcd->y_value_type[j], fp.YMinValue[i],
             fp.YMaxValue[i], &gcd->y_min_value_axis[j],
             &gcd->y_max_value_axis[j], &gcd->y_trend_lines[j],
@@ -244,7 +244,7 @@ void XttFast::fast_scan(void* data)
   XttFast* fast = (XttFast*)data;
   int i, j, k;
   pwr_tStatus sts;
-  int trigg_index, first_index, last_index;
+  int trigg_index, first_index = 0, last_index = 0;
 
   // Check if any new value
   if ((*fast->new_p && !fast->old_new) || fast->first_scan) {
@@ -498,8 +498,8 @@ int XttFast::fast_export_cb(void* ctx, pwr_tTime* from, pwr_tTime* to, int rows,
 
     strncpy(str, s1 + strlen("$date"), sizeof(str));
     *s1 = 0;
-    strncat(fname, timstr, sizeof(fname));
-    strncat(fname, str, sizeof(fname));
+    strncat(fname, timstr, sizeof(fname) - strlen(fname) - 1);
+    strncat(fname, str, sizeof(fname) - strlen(fname) - 1);
   }
 
   dcli_translate_filename(fname, fname);

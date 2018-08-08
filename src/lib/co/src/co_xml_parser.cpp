@@ -58,6 +58,44 @@ typedef enum {
   xml_eState_EndTag = 1 << 12
 } xml_eState;
 
+co_xml_interpreter::co_xml_interpreter() : tag_stack_cnt(0), object_stack_cnt(0)
+{
+}
+
+co_xml_interpreter::~co_xml_interpreter()
+{
+}
+
+int co_xml_interpreter::tag(const char* name)
+{
+  return 0;
+}
+
+int co_xml_interpreter::metatag(const char* name)
+{
+  return 0;
+}
+
+int co_xml_interpreter::tag_end(const char* name)
+{
+  return 0;
+}
+
+int co_xml_interpreter::metatag_end(const char* name)
+{
+  return 0;
+}
+
+int co_xml_interpreter::tag_value(const char* value)
+{
+  return 0;
+}
+
+int co_xml_interpreter::tag_attribute(const char* name, const char* value)
+{
+  return 0;
+}
+
 co_xml_parser::co_xml_parser(co_xml_interpreter* i)
     : interpreter(i), logglevel(0), first_token(true), state(xml_eState_Init),
       line_cnt(1), char_cnt(0), in_comment(false), c(0), c_f(0), c_ff(0),
@@ -68,10 +106,14 @@ co_xml_parser::co_xml_parser(co_xml_interpreter* i)
   interpreter->parser = this;
 }
 
+co_xml_parser::~co_xml_parser()
+{
+}
+
 bool co_xml_parser::next_token()
 {
-  char t;
-  bool sts;
+  char t = '\0';
+  bool sts = false;
 
   if (first_token) {
     first_token = false;

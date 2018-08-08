@@ -447,7 +447,7 @@ struct net_sSubSpec {
 %		return (FALSE);
 %	}
 %	for (offset = 0; count > 0; count--) {
-%		if (!xdr_net_sSubData(xdrs, (char *)objp->subdata, &offset)) {
+%		if (!xdr_net_sSubData(xdrs, (net_sSubData *)objp->subdata, &offset)) {
 %			return (FALSE);
 %		}
 %	}

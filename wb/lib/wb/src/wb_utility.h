@@ -53,12 +53,8 @@ typedef enum {
 
 class WUtility {
 public:
-  WUtility(wb_eUtility type) : utype(type)
-  {
-  }
-  virtual ~WUtility()
-  {
-  }
+  WUtility(wb_eUtility type);
+  virtual ~WUtility();
   wb_eUtility utype;
 };
 

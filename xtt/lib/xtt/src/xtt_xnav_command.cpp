@@ -305,7 +305,7 @@ dcli_tCmdTable xnav_command_table[] = {
   { "EMIT", &xnav_emit_func,
       { "dcli_arg1", "/SIGNALNAME", "/GRAPH", "/INSTANCE", "" } },
   {
-      "",
+      "", NULL, { "" }
   }
 };
 
@@ -793,8 +793,8 @@ static int xnav_set_func(void* client_data, void* client_flag)
       } else
         borders[3] = 0;
 
-      if (borders[0] == 0 && borders[1] == 0 && borders[2] == 0
-          && borders[3] == 0)
+      if (feq(borders[0], 0.0) && feq(borders[1], 0.0) && feq(borders[2], 0.0)
+          && feq(borders[3], 0.0))
         bordersp = 0;
 
       sts = gdh_NameToAttrref(pwr_cNObjid, graph_str, &aref);
@@ -3070,7 +3070,7 @@ static int xnav_open_func(void* client_data, void* client_flag)
       int inputempty;
       char tmp_str[80];
       int use_default_access;
-      unsigned int access;
+      unsigned int access = 0;
       int nr;
 
       IF_NOGDH_RETURN;
@@ -3114,7 +3114,7 @@ static int xnav_open_func(void* client_data, void* client_flag)
       int inputempty;
       pwr_tFileName fname;
       int use_default_access;
-      unsigned int access;
+      unsigned int access = 0;
 
       // Command is "OPEN GRAPH" without graph object
       scrollbar = ODD(dcli_get_qualifier("/SCROLLBAR", 0, 0));
@@ -3273,8 +3273,8 @@ static int xnav_open_func(void* client_data, void* client_flag)
       } else
         borders[3] = 0;
 
-      if (borders[0] == 0 && borders[1] == 0 && borders[2] == 0
-          && borders[3] == 0)
+      if (feq(borders[0], 0.0) && feq(borders[1], 0.0) && feq(borders[2], 0.0)
+          && feq(borders[3], 0.0))
         bordersp = 0;
 
       if (ODD(dcli_get_qualifier("/ACCESS", tmp_str, sizeof(tmp_str)))) {
@@ -4804,7 +4804,7 @@ static int xnav_open_func(void* client_data, void* client_flag)
     pwr_sAttrRef aref;
     int sts;
     pwr_tClassId classid;
-    int width, height, nr;
+    int width = 0, height = 0, nr;
     char tmp_str[40];
     int fullscreen;
     int maximize;
@@ -5977,7 +5977,7 @@ static int xnav_create_func(void* client_data, void* client_flag)
     char pixmap_str[80];
     menu_ePixmap pixmap;
     int dest_code;
-    int item_type;
+    int item_type = 0;
     xnav_sMenu* menu_item;
 
     // Command is "CREATE ITEM"
@@ -6289,10 +6289,10 @@ static int xnav_collect_func(void* client_data, void* client_flag)
       if (width != 0 && height != 0)
         xnav->last_xcolwind->set_window_size(width, height);
 
-      if (zoomfactor != 0)
+      if (!feq(zoomfactor, 0.0))
         xnav->last_xcolwind->zoom(zoomfactor);
 
-      if (scantime != 0)
+      if (!feq(scantime, 0.0))
         xnav->last_xcolwind->set_scantime(int(scantime * 1000 + 0.5));
 
       if (last)
@@ -6638,7 +6638,7 @@ static int xnav_logging_func(void* client_data, void* client_flag)
     char* condition_ptr;
     int buffer_size;
     int nr;
-    int logg_type;
+    int logg_type = 0;
     int insert;
     int create;
     int shortname;
@@ -8097,7 +8097,7 @@ static int xnav_getobjectclass_func(void* filectx, ccm_sArg* arg_list,
   int sts;
   pwr_tOName name;
   pwr_tObjid objid;
-  pwr_tClassId classid;
+  pwr_tClassId classid = 0;
 
   if (arg_count != 1)
     return CCM__ARGMISM;
@@ -8578,7 +8578,6 @@ static int xnav_quit_func(void* filectx, ccm_sArg* arg_list, int arg_count,
     char* return_string)
 {
   exit(0);
-  return 0;
 }
 
 static int xnav_ccm_deffilename_func(
@@ -8625,8 +8624,8 @@ int xnav_externcmd_func(char* cmd, void* client_data)
 int XNav::readcmdfile(char* incommand, char* buffer)
 {
   char input_str[160];
-  int sts;
-  int appl_sts;
+  int sts = 0;
+  int appl_sts = 0;
 
   if (!ccm_func_registred) {
     sts = ccm_register_function(
@@ -8738,7 +8737,7 @@ int XNav::readcmdfile(char* incommand, char* buffer)
 int xnav_cut_segments(char* outname, char* name, int segments)
 {
   char* s[20];
-  int i, j, last_i;
+  int i, j, last_i = 0;
 
   for (i = 0; i < segments; i++) {
     s[i] = strrchr(name, '-');
@@ -8784,9 +8783,9 @@ static int xnav_attribute_func(char* name, int* return_decl,
   char* s;
   char* t;
   int len;
-  int decl;
-  ccm_tInt int_val;
-  ccm_tFloat float_val;
+  int decl = 0;
+  ccm_tInt int_val = 0;
+  ccm_tFloat float_val = 0.0;
   ccm_tString string_val;
   pwr_sAttrRef attrref;
   pwr_tTypeId attrtype;
@@ -9647,15 +9646,15 @@ int XNav::exec_xttgraph(pwr_tObjid xttgraph, char* instance, char* focus,
       if (i == 0)
         strncpy(instance_str, oname, sizeof(instance_str));
       else {
-        strncat(instance_str, ",", sizeof(instance_str));
-        strncat(instance_str, oname, sizeof(instance_str));
+        strncat(instance_str, ",", sizeof(instance_str) - strlen(instance_str) - 1);
+        strncat(instance_str, oname, sizeof(instance_str) - strlen(instance_str) - 1);
       }
       instance = instance_str;
     }
   }
 
-  if (xttgraph_o.Borders[0] != 0 || xttgraph_o.Borders[1] != 0
-      || xttgraph_o.Borders[2] != 0 || xttgraph_o.Borders[3] != 0) {
+  if (!feqf(xttgraph_o.Borders[0], 0.0f) || !feqf(xttgraph_o.Borders[1], 0.0f)
+      || !feqf(xttgraph_o.Borders[2], 0.0f) || !feqf(xttgraph_o.Borders[3], 0.0f)) {
     for (int i = 0; i < 4; i++)
       borders[i] = xttgraph_o.Borders[i];
     bordersp = borders;
@@ -9962,7 +9961,7 @@ int XNav::create_object(char* classname, char* name)
 {
   int sts;
   pwr_tObjid objid;
-  pwr_tClassId classid;
+  pwr_tClassId classid = 0;
 
   /* Check if class */
   if (classname != NULL) {
@@ -10067,7 +10066,7 @@ static void xnav_colortheme_selector_ok_cb(
   pwr_tOid oid;
   pwr_tStatus sts;
   int found;
-  int idx;
+  int idx = 0;
   ApplListElem* elem;
 
   sts = gdh_NameToObjid("pwrb:Type-ColorThemeEnum", &oid);
@@ -10302,7 +10301,7 @@ int XNav::collect_window(int copy, int type)
 void XNav::open_keyboard(void* owner, keyboard_eKeymap keymap, int type)
 {
   pwr_tStatus sts;
-  keyboard_eType keyboard_type;
+  keyboard_eType keyboard_type = keyboard_eType_Standard;
   int shifted = 0;
   void* basewidget = 0;
 

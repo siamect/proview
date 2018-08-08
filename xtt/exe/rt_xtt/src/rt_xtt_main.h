@@ -67,25 +67,13 @@ public:
   int network_optimized;
 
   Xtt(int* argc, char** argv[], int* return_sts);
-  virtual ~Xtt()
-  {
-  }
-  virtual void message(char severity, const char* msg)
-  {
-  }
+  virtual ~Xtt();
+  virtual void message(char severity, const char* msg);
   virtual void open_input_dialog(const char* text, const char* title,
-      const char* init_text, void (*ok_cb)(Xtt*, char*))
-  {
-  }
-  virtual void set_prompt(const char* prompt)
-  {
-  }
-  virtual void open_change_value()
-  {
-  }
-  virtual void print()
-  {
-  }
+      const char* init_text, void (*ok_cb)(Xtt*, char*));
+  virtual void set_prompt(const char* prompt);
+  virtual void open_change_value();
+  virtual void print();
 
   void list_opplace();
   static void opplace_selected_cb(void* ctx, char* text, int ok_pressed);

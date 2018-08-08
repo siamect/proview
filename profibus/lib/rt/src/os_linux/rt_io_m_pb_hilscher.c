@@ -131,7 +131,7 @@ The last entry must be a null termination (entry == 0).
 */
 boards known_boards[]
     = { { 1, { 8, 50, 66, { 'C', 'I', 'F' } }, 8, "Hilscher CIF 50-PB" },
-        { 0 } };
+        { 0, {}, 0, "" } };
 #endif /* FLASH_WRITE_ENABLE  */
 
 /* Initializes Profibus DP interface on the CIF board referred to by local.
@@ -839,7 +839,7 @@ static void dpm_update_slave_diag(
 {
   short rv;
   RCS_MESSAGETELEGRAM_10 rcv_msg;
-  pwr_sClass_Pb_DP_Slave* sp;
+  pwr_sClass_Pb_DP_Slave* sp = NULL;
   io_sRack* sl;
 
   /* Clears struct.  */

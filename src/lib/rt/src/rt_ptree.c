@@ -588,7 +588,7 @@ static pool_tRef insertNode(ptree_sTable* tp, pool_tRef zr)
   pool_tRef yr;
   ptree_sNode* x;
   pool_tRef xr;
-  int comp;
+  int comp = 0;
   int h;
   ptree_sNode *left, *right, *parent;
   ptree_sNode* z = pool_Address(&sts, tp->php, zr);

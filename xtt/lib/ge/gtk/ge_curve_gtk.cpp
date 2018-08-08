@@ -35,7 +35,6 @@
  **/
 
 #include <ctype.h>
-#include <float.h>
 #include <math.h>
 
 #include "co_cdh.h"
@@ -1474,9 +1473,9 @@ void GeCurveGtk::create_export_dialog()
   }
   gtk_combo_box_set_active(GTK_COMBO_BOX(export_attrcombo_widget), 0);
 
-  GtkWidget* fromtime_label;
-  GtkWidget* totime_label;
-  GtkWidget* rows_label;
+  GtkWidget* fromtime_label = NULL;
+  GtkWidget* totime_label = NULL;
+  GtkWidget* rows_label = NULL;
   if (layout_mask & curve_mEnable_ExportTime) {
     export_fromtime_widget = gtk_entry_new();
     gtk_widget_set_size_request(export_fromtime_widget, 200, -1);

@@ -34,7 +34,6 @@
  * General Public License plus this exception.
  **/
 
-#include <float.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -246,7 +245,7 @@ void GrowTrend::save(std::ofstream& fp, glow_eSaveMode mode)
 */
 void GrowTrend::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;
@@ -846,12 +845,12 @@ void GrowTrend::draw()
 */
 void GrowTrend::add_value(double value, int idx)
 {
-  double curve_value;
+  double curve_value = 0.0;
 
   if (idx >= curve_cnt)
     return;
 
-  if (y_max_value[idx] != y_min_value[idx])
+  if (!feq(y_max_value[idx], y_min_value[idx]))
     curve_value = ur.y
         - (value - y_min_value[idx]) / (y_max_value[idx] - y_min_value[idx])
             * (ur.y - ll.y);
@@ -1107,7 +1106,7 @@ void GrowTrend::set_data(double* data[3], int data_curves, int data_points)
     for (i = 0, idx = 0; i < cpoints; i++, idx++) {
       if (!fill_curve) {
         idx = i;
-        if (y_max_value[j] != y_min_value[j])
+        if (!feq(y_max_value[j], y_min_value[j]))
           point_p->y = ur.y
               - (data[j + 1][idx] - y_min_value[j])
                   / (y_max_value[j] - y_min_value[j]) * (ur.y - ll.y);
@@ -1125,7 +1124,7 @@ void GrowTrend::set_data(double* data[3], int data_curves, int data_points)
           point_p->x = ur.x;
           point_p->y = ur.y;
         } else {
-          if (y_max_value[j] != y_min_value[j])
+          if (!feq(y_max_value[j], y_min_value[j]))
             point_p->y = ur.y
                 - (data[j + 1][idx] - y_min_value[j])
                     / (y_max_value[j] - y_min_value[j]) * (ur.y - ll.y);

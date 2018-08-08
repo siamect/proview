@@ -122,7 +122,7 @@ int CowTree::activate_button_ok()
 {
   TrItemBase* item;
   pwr_tAttrRef aref;
-  pwr_tStatus sts;
+  pwr_tStatus sts = 0;
 
   if (!treenav->get_select(&item)) {
     message('E', "Select an object");

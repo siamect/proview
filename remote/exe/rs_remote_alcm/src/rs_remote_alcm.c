@@ -402,7 +402,7 @@ unsigned short int Receive()
   remtrans_item* remtrans;
   unsigned char search_remtrans = true;
   unsigned char send_response = false;
-  int msg_size;
+  int msg_size = 0;
   unsigned int sts;
   char name[7];
   unsigned int apl_size;
@@ -422,7 +422,7 @@ unsigned short int Receive()
   reject = true;
   loop_count = 0;
 
-  remnode_alcm* local;
+  remnode_alcm* local = NULL;
 
   // Avvisa multicast- och broadcastpaket
 

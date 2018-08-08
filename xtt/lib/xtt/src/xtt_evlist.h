@@ -136,7 +136,7 @@ typedef struct {
 
 class EvListBrow {
 public:
-  EvListBrow(BrowCtx* brow_ctx, void* evl) : ctx(brow_ctx), evlist(evl){};
+  EvListBrow(BrowCtx* brow_ctx, void* evl) : ctx(brow_ctx), evlist(evl){}
   ~EvListBrow();
 
   BrowCtx* ctx;

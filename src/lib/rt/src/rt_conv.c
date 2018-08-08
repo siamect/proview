@@ -62,10 +62,10 @@
     *tsize -= sizeof(TTYPE);                                                   \
   }
 
-#define FLOAT_TO_BOOL(STYPE)                                                   \
+#define FLOAT_TO_BOOL(STYPE, EPS)                                                   \
   for (; tcount > 0 && *tsize >= sizeof(pwr_tBoolean); tcount--, scount--) {   \
     if (scount > 0 && !sadef.b.privatepointer) {                               \
-      *(pwr_tBoolean*)tp = (*(STYPE*)sp != 0) ? TRUE : FALSE;                  \
+      *(pwr_tBoolean*)tp = !(ABS(*(STYPE*)sp < EPS));                  \
       sp += sizeof(STYPE);                                                     \
     } else                                                                     \
       *(pwr_tBoolean*)tp = 0;                                                  \
@@ -547,7 +547,7 @@ static pwr_tBoolean boolToInt32(CONV_ARGS)
  */
 static pwr_tBoolean float32ToBool(CONV_ARGS)
 {
-  FLOAT_TO_BOOL(pwr_tFloat32);
+  FLOAT_TO_BOOL(pwr_tFloat32, FLT_EPSILON);
   return TRUE;
 }
 
@@ -580,7 +580,7 @@ static pwr_tBoolean float32ToInt32(CONV_ARGS)
  */
 static pwr_tBoolean float64ToBool(CONV_ARGS)
 {
-  FLOAT_TO_BOOL(pwr_tFloat64);
+  FLOAT_TO_BOOL(pwr_tFloat64, DBL_EPSILON);
   return TRUE;
 }
 

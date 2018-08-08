@@ -59,34 +59,21 @@
 #ifndef ssabox_as_phasor_methods_h
 #define ssabox_as_phasor_methods_h
 
-#include <stdio.h>
 #include <math.h>
-#include <string.h>
+#include <stdio.h>
 #include <stdlib.h>
-#include <float.h>
+#include <string.h>
 
 #include "pwr_baseclasses.h"
 #include "pwr_basecomponentclasses.h"
 #include "pwr_ssaboxclasses.h"
 
-#define AS_MAX(a, b) ((a) > (b) ? (a) : (b))
-#define AS_MIN(a, b) ((a) < (b) ? (a) : (b))
-#define AS_SIGN(a) ((a) >= 0.0 ? 1.0 : -1.0)
-#define AS_ROUND(x)                                                            \
-  ((x) >= 0 ? (int)((x) + 0.5) : (int)((x)-0.5)) /* rounds 1.5 to 2 and -1.5   \
-                                                    to -2. Overflow if x       \
-                                                    larger than max int*/
-
 /* 1. Machine and natural constants */
 
-#define AS_PI 3.14159265358979323846
 /* g in Oxelösund, latitude 58°40'00"N = 1.02392649450334 rad. The formula is:
  * g = 9.780495*(1 + 0.0052892*(sin(p))^2 - 0.0000073*(sin(2*p))^2), where p is
  * the latitude in radians */
 #define AS_GRAV_ACCEL 9.81818072105388
-/* Epsilon used in some comparisons between doubles. DBL_EPSILON itself turned
- * out insufficient. */
-#define AS_EPSILON 100.0 * DBL_EPSILON
 
 /* 2. Error mask codes */
 

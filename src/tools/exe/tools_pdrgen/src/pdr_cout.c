@@ -76,7 +76,7 @@ static void print_ifstat(int indent, char* prefix, char* type, relation rel,
 
 static void emit_enum(definition* def);
 
-static void emit_union(definition* def);
+//static void emit_union(definition* def);
 
 static void emit_struct(definition* def);
 
@@ -98,8 +98,8 @@ void emit(definition* def)
     fprintf(stderr, "*** Error: Union not supported\n");
     exit(1);
 
-    emit_union(def);
-    break;
+    //emit_union(def);
+    //break;
   case DEF_ENUM:
     emit_enum(def);
     break;
@@ -269,6 +269,7 @@ static void emit_enum(definition* def)
   print_ifclose(1);
 }
 
+/*
 static void emit_union(definition* def)
 {
   declaration* dflt;
@@ -310,6 +311,7 @@ static void emit_union(definition* def)
   }
   f_print(fout, "\t}\n");
 }
+*/
 
 static void emit_struct(definition* def)
 {

@@ -473,7 +473,7 @@ int GlowArray::brow_insert(
 {
   GlowArrayElem** a_tmp;
   int idx, i, j, found;
-  int destination_level;
+  int destination_level = 0;
 
   if (find(element))
     return 0;
@@ -660,7 +660,7 @@ void GlowArray::brow_remove(void* ctx, GlowArrayElem* element)
 void GlowArray::brow_close(void* ctx, GlowArrayElem* element)
 {
   int i;
-  int idx, next_idx;
+  int idx = 0, next_idx;
   int found;
   int level;
   GlowArrayElem* e;
@@ -696,7 +696,7 @@ void GlowArray::brow_close(void* ctx, GlowArrayElem* element)
 int GlowArray::brow_get_parent(GlowArrayElem* element, GlowArrayElem** parent)
 {
   int i;
-  int idx;
+  int idx = 0;
   int found;
   int level;
 
@@ -809,7 +809,7 @@ void GlowArray::save(std::ofstream& fp, glow_eSaveMode mode)
 
 void GlowArray::open(GrowCtx* ctx, std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int errcnt = 0;
@@ -1200,7 +1200,7 @@ int GlowArray::find_by_name(const char* name, GlowArrayElem** element)
 
   if ((s = strchr((char*)name, '-')) != 0) {
     // Find in a group
-    GlowArrayElem* group;
+    GlowArrayElem* group = NULL;
     int len;
     char gname[80];
     int found;
@@ -1783,7 +1783,7 @@ char* GlowArray::get_last_group()
   int group_cnt;
   int found;
   int max_members;
-  int max_idx;
+  int max_idx = 0;
   int i, j;
 
   memset(member_cnt, 0, sizeof(member_cnt));
@@ -1833,7 +1833,7 @@ int GlowArray::get_background_object_limits(GlowTransform* t,
     glow_eTraceType type, double x, double y, GlowArrayElem** background,
     double* min, double* max, glow_eDirection* direction)
 {
-  int sts;
+  int sts = 0;
 
   for (int i = 0; i < a_size; i++) {
     sts = a[i]->get_background_object_limits(

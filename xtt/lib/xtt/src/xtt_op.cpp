@@ -48,10 +48,6 @@
 #include "xtt_op.h"
 #include "rt_xnav_msg.h"
 
-#define OP_HEIGHT_MIN 80
-#define OP_HEIGHT_INC 20
-#define OP_HEIGHT_MAX (OP_HEIGHT_MIN + 3 * OP_HEIGHT_INC)
-
 Op::Op(void* op_parent_ctx, char* opplace, pwr_tStatus* status)
     : parent_ctx(op_parent_ctx), start_jop(0), jop(NULL), command_cb(NULL),
       map_cb(NULL), help_cb(NULL), close_cb(NULL), get_alarm_info_cb(NULL),
@@ -382,7 +378,7 @@ void Op::sup_scan(void* data)
   int time = 1000;
 
   for (unsigned int i = 0; i < op->sup_vect.size(); i++) {
-    op_eSupColor color;
+    op_eSupColor color = op_eSupColor_Black;
     pwr_tStatus status = *op->sup_vect[i].p;
 
     if (status == 0)

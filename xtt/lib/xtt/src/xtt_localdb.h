@@ -55,11 +55,11 @@ typedef struct sLdbEntry {
 
 class XNavLdb {
 public:
-  XNavLdb() : root(NULL){};
+  XNavLdb() : root(NULL){}
   ~XNavLdb()
   {
     remove_all();
-  };
+  }
   xnav_sLdbEntry* root;
   int entry_cnt;
 

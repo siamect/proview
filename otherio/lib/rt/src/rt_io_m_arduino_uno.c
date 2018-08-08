@@ -43,7 +43,6 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <string.h>
-#include <float.h>
 
 #include <termios.h>
 
@@ -110,12 +109,14 @@ typedef struct {
 } io_sLocal;
 
 #define ARD__SUCCESS 1
+/*
 #define ARD__DICONFIG 2
 #define ARD__DOCONFIG 4
 #define ARD__AICONFIG 6
 #define ARD__AOCONFIG 8
 #define ARD__COMMERROR 10
 #define ARD__MSGSIZE 12
+*/
 #define ARD__NOMSG 14
 #define ARD__CHECKSUM 16
 
@@ -219,7 +220,7 @@ static int send_configuration(
   int sts;
 
   // Configure Watchdog
-  if (op->WatchdogTime == 0)
+  if (feqf(op->WatchdogTime, 0.0f))
     wdg = 0;
   else if (op->WatchdogTime > 255)
     wdg = 255;
@@ -276,7 +277,6 @@ static int send_configuration(
     if (sts == pwr_eArduino_StatusEnum_NoMessage)
       sts = pwr_eArduino_StatusEnum_ConnectionTimeout;
     return IO__INITFAIL;
-    printf("Config read error %d\n", sts);
   }
 
   return IO__SUCCESS;
@@ -820,7 +820,7 @@ static pwr_tStatus IoCardWrite(
   unsigned char m;
   pwr_tUInt32 error_count = op->ErrorCount;
   ard_sMsg msg;
-  int sts;
+  int sts = 0;
   int skip_ao;
   io_sChannel* chanp;
 

@@ -49,9 +49,10 @@
 /*_Include filer_________________________________________________________*/
 
 #include <stdlib.h>
-#include <float.h>
 
 #include "pwr.h"
+#include "co_math.h"
+
 #include "ssabox_ssabutil.h"
 #include "rs_sutl_msg.h"
 
@@ -208,7 +209,7 @@ int ssab_curve_2d(
     z2 = TABLE2D_Z(x_size, y_idx + 1);
     y1 = TABLE2D_Y(y_idx);
     y2 = TABLE2D_Y(y_idx + 1);
-    if (abs(y2 - y1) < FLT_EPSILON)
+    if (feqf(y2, y1))
       *z = z1;
     else
       *z = z1 + (z2 - z1) * (y - y1) / (y2 - y1);
@@ -217,7 +218,7 @@ int ssab_curve_2d(
     z2 = TABLE2D_Z(1, y_idx + 1);
     y1 = TABLE2D_Y(y_idx);
     y2 = TABLE2D_Y(y_idx + 1);
-    if (abs(y2 - y1) < FLT_EPSILON)
+    if (feqf(y2, y1))
       *z = z1;
     else
       *z = z1 + (z2 - z1) * (y - y1) / (y2 - y1);
@@ -226,7 +227,7 @@ int ssab_curve_2d(
     z2 = TABLE2D_Z(x_idx + 1, 1);
     x1 = TABLE2D_X(x_idx);
     x2 = TABLE2D_X(x_idx + 1);
-    if (abs(x2 - x1) < FLT_EPSILON)
+    if (feqf(x2, x1))
       *z = z1;
     else
       *z = z1 + (z2 - z1) * (x - x1) / (x2 - x1);
@@ -235,7 +236,7 @@ int ssab_curve_2d(
     z2 = TABLE2D_Z(x_idx + 1, y_size);
     x1 = TABLE2D_X(x_idx);
     x2 = TABLE2D_X(x_idx + 1);
-    if (abs(x2 - x1) < FLT_EPSILON)
+    if (feqf(x2, x1))
       *z = z1;
     else
       *z = z1 + (z2 - z1) * (x - x1) / (x2 - x1);
@@ -248,14 +249,14 @@ int ssab_curve_2d(
     y2 = TABLE2D_Y(y_idx + 1);
     x1 = TABLE2D_X(x_idx);
     x2 = TABLE2D_X(x_idx + 1);
-    if (abs(y2 - y1) < FLT_EPSILON) {
+    if (feqf(y2, y1)) {
       z1 = z11;
       z2 = z12;
     } else {
       z1 = z11 + (z21 - z11) * (y - y1) / (y2 - y1);
       z2 = z12 + (z22 - z12) * (y - y1) / (y2 - y1);
     }
-    if (abs(x2 - x1) < FLT_EPSILON)
+    if (feqf(x2, x1))
       *z = z1;
     else
       *z = z1 + (z2 - z1) * (x - x1) / (x2 - x1);

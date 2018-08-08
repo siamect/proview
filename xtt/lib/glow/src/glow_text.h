@@ -99,7 +99,7 @@ public:
       GlowWind* w, void* pos, glow_eEvent event, int x, int y, void* node);
 
   //! Not implemented
-  void conpoint_select(void* pos, int x, int y, double* distance, void** cp){};
+  void conpoint_select(void* pos, int x, int y, double* distance, void** cp){}
 
   //! Save the content of the object to file.
   /*!
@@ -172,7 +172,7 @@ public:
   int get_conpoint(int num, double* x, double* y, glow_eDirection* dir)
   {
     return 0;
-  };
+  }
 
   //! Get the object type
   /*!
@@ -181,7 +181,7 @@ public:
   glow_eObjectType type()
   {
     return glow_eObjectType_Text;
-  };
+  }
 
   GrowCtx* ctx; //!< Glow context.
   GlowPoint p; //!< Position point.

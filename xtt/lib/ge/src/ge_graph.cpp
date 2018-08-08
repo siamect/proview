@@ -40,6 +40,7 @@
 #include "co_ccm.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_msg.h"
 #include "co_time.h"
 
 #include "rt_gdh.h"
@@ -1130,7 +1131,7 @@ void Graph::set_select_gradient(glow_eGradient gradient)
 
 void Graph::set_select_textsize(int size)
 {
-  int textsize;
+  int textsize = 0;
 
   switch (size) {
   case 0:
@@ -1394,8 +1395,8 @@ int Graph::get_attr_items(grow_tObject object, attr_sItem** itemlist,
 {
   static attr_sItem items[200];
   int i;
-  grow_sAttrInfo *grow_info, *grow_info_p;
-  int grow_info_cnt;
+  grow_sAttrInfo *grow_info = NULL, *grow_info_p;
+  int grow_info_cnt = 0;
 
   memset(items, 0, sizeof(items));
   if (grow_GetObjectType(object) == glow_eObjectType_GrowNode
@@ -1857,7 +1858,6 @@ int Graph::graph_reconfigure_attr_cb(void* g, grow_tObject object,
       return graph->get_graph_attr_items(itemlist, itemlist_cnt, client_data);
     }
   }
-  return 0;
 }
 
 void Graph::graph_attr_store_cb(void* g, grow_tObject object)
@@ -2644,7 +2644,7 @@ static int graph_grow_cb(GlowCtx* ctx, glow_tEvent event)
     case grow_eMode_Annot: {
       grow_tObject a1;
       glow_eDrawType drawtype;
-      int textsize;
+      int textsize = 0;
       char name[80];
 
       sprintf(name, "O%d", grow_IncrNextObjectNameNumber(graph->grow->ctx));
@@ -2688,7 +2688,7 @@ static int graph_grow_cb(GlowCtx* ctx, glow_tEvent event)
     case grow_eMode_Text: {
       grow_tObject t1;
       glow_eDrawType drawtype;
-      int textsize;
+      int textsize = 0;
       char name[80];
 
       sprintf(name, "O%d", grow_IncrNextObjectNameNumber(graph->grow->ctx));
@@ -3753,7 +3753,6 @@ static int graph_trace_grow_cb(GlowCtx* ctx, glow_tEvent event)
         graph->grow->push();
       return 0;
     }
-    break;
   }
   case glow_eEvent_TipText: {
     if (grow_GetObjectType(event->object.object) == glow_eObjectType_GrowNode
@@ -4396,7 +4395,7 @@ void Graph::get_command(char* in, char* out, GeDyn* dyn)
 
       *s = 0;
       end = start2 + strlen(start2) + 1;
-      strncat(str, start2, sizeof(str));
+      strncat(str, start2, sizeof(str) - strlen(str) - 1);
       strcpy(refname, str);
 
       sts = gdh_GetAttributeCharacteristics(refname, &atid, &asize, 0, 0);
@@ -4767,7 +4766,7 @@ int Graph::get_refupdate(char* in, pwr_tAName ref[], pwr_tTid ref_tid[],
 
       *s = 0;
       end = start2 + strlen(start2) + 1;
-      strncat(str, start2, sizeof(str));
+      strncat(str, start2, sizeof(str) - strlen(str) - 1);
       strcpy(refname, str);
 
       sts = gdh_GetAttributeCharacteristics(refname, &atid, &asize, 0, 0);
@@ -4814,7 +4813,7 @@ graph_eDatabase Graph::parse_attr_name(char* name, char* parsed_name,
   pwr_tAName str;
   pwr_tAName str1;
   char *s, *s1;
-  int elements;
+  int elements = 0;
 
   graph_remove_space(str, name);
 

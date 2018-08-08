@@ -45,7 +45,7 @@ class GrowCtx;
 
 class GlowPoint : public GlowArrayElem {
 public:
-  GlowPoint(){};
+  GlowPoint(){}
   GlowPoint(GrowCtx* glow_ctx, double x1 = 0, double y1 = 0);
   const GlowPoint& operator+=(const GlowPoint p);
   GlowPoint operator+(const GlowPoint p);
@@ -63,7 +63,7 @@ public:
   glow_eObjectType type()
   {
     return glow_eObjectType_Point;
-  };
+  }
   GrowCtx* ctx;
   double x;
   double y;

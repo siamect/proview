@@ -36,6 +36,8 @@
 #ifndef co_math_h
 #define co_math_h
 
+#include <float.h>
+
 /**
   @file co_math.h
 
@@ -56,6 +58,49 @@
 //! Return the absolute value, i.e. removes the sign and returns the
 //! non-negative value
 #define ABS(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
+#endif
+
+#ifndef CLAMP
+#define CLAMP(x, min, max) ((x) < (min)) ? (min) : (((x) > (max)) ? (max) : (x))
+#endif
+
+#ifndef SIGN
+#define SIGN(a) ((a) >= 0 ? 1 : -1)
+#endif
+
+#ifndef ROUND
+#define ROUND(x) ((x) >= 0 ? (int)((x) + 0.5) : (int)((x)-0.5))
+#endif
+
+#ifndef typecheck
+//! Typechecking macro from the Linux kernel
+//! Generates a compile-time warning if x is not of type 'type'
+//! Usage: typecheck(int, 0.5f) -> warning
+//!        typecheck(int, 10) -> no warning
+#define typecheck(type,x) \
+({	type __dummy; \
+	typeof(x) __dummy2; \
+	(void)(&__dummy == &__dummy2); \
+	1; \
+})
+#endif
+
+#ifndef feq
+//! Checks whether two floating point numbers are equal
+#define feq(a, b) \
+({ typecheck(double, a); \
+   typecheck(double, b); \
+  (ABS((a) - (b)) < DBL_EPSILON); \
+})
+#endif
+
+#ifndef feqf
+//! Checks whether two floating point numbers are equal
+#define feqf(a, b) \
+({ typecheck(float, a); \
+   typecheck(float, b); \
+  (ABS((a) - (b)) < FLT_EPSILON); \
+})
 #endif
 
 #endif

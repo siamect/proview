@@ -116,9 +116,9 @@ dcli_tCmdTable graph_command_table[] = { { "SHOW", &graph_show_func,
   { "SEARCH", &graph_search_func, { "dcli_arg", "dcli_arg2", "/NAME", "" } },
   { "FILTER", &graph_filter_func,
       { "dcli_arg", "/RESET", "/TYPE", "/PATTERN", "" } },
-  { "CHECK", &graph_check_func, { "dcli_arg", "/INSTANCE", "" } }, {
-                                                                       "",
-                                                                   } };
+  { "CHECK", &graph_check_func, { "dcli_arg", "/INSTANCE", "" } },
+  { "", NULL, { "" } }
+};
 
 static void graph_store_graph(Graph* graph)
 {
@@ -1127,8 +1127,8 @@ static int graph_set_func(void* client_data, void* client_flag)
     char arg3_str[80];
     int i, j;
     grow_sAttrInfo* grow_info = 0;
-    grow_sAttrInfo* grow_info_sub;
-    grow_sAttrInfo* grow_info_p;
+    grow_sAttrInfo* grow_info_sub = NULL;
+    grow_sAttrInfo* grow_info_p = NULL;
     int grow_info_cnt;
     char attr_name[80];
     int i_value;
@@ -2243,7 +2243,7 @@ static int graph_create_func(void* client_data, void* client_flag)
     }
 
     glow_eDrawType drawtype;
-    int textsize;
+    int textsize = 0;
 
     if (graph->textbold)
       drawtype = glow_eDrawType_TextHelveticaBold;
@@ -2282,7 +2282,7 @@ static int graph_create_func(void* client_data, void* client_flag)
     char str[80];
     int sts;
     float value;
-    double x1, y1, x2, y2;
+    double x1, y1, x2 = 0.0, y2 = 0.0;
     char subgraph_str[80];
     char name[80];
     grow_tNodeClass nc;
@@ -2320,7 +2320,7 @@ static int graph_create_func(void* client_data, void* client_flag)
         return GE__SYNTAX;
       }
       x2 = value;
-      if (x1 == x2) {
+      if (feq(x1, x2)) {
         graph->message('E', "Invalid coordinate");
         return GE__COORDINATE;
       }
@@ -2335,7 +2335,7 @@ static int graph_create_func(void* client_data, void* client_flag)
         return GE__SYNTAX;
       }
       y2 = value;
-      if (y1 == y2) {
+      if (feq(y1, y2)) {
         graph->message('E', "Invalid coordinate");
         return GE__COORDINATE;
       }
@@ -2391,7 +2391,7 @@ static int graph_create_func(void* client_data, void* client_flag)
     char str[80];
     int sts;
     float value;
-    double x1, y1, x2, y2;
+    double x1, y1, x2 = 0.0, y2 = 0.0;
 
     grow_tNode n1;
     int scale_x, scale_y;
@@ -2427,7 +2427,7 @@ static int graph_create_func(void* client_data, void* client_flag)
         return GE__SYNTAX;
       }
       x2 = value;
-      if (x1 == x2) {
+      if (feq(x1, x2)) {
         graph->message('E', "Invalid coordinate");
         return GE__COORDINATE;
       }
@@ -2442,7 +2442,7 @@ static int graph_create_func(void* client_data, void* client_flag)
         return GE__SYNTAX;
       }
       y2 = value;
-      if (y1 == y2) {
+      if (feq(y1, y2)) {
         graph->message('E', "Invalid coordinate");
         return GE__COORDINATE;
       }
@@ -2778,8 +2778,8 @@ static int graph_gettextextent_func(void* filectx, ccm_sArg* arg_list,
   ccm_sArg* arg_p2; // Textsize
   ccm_sArg* arg_p3; // Bold
   ccm_sArg* arg_p4; // Width
-  ccm_sArg* arg_p5; // Height
-  ccm_sArg* arg_p6; // Descent
+  ccm_sArg* arg_p5 = NULL; // Height
+  ccm_sArg* arg_p6 = NULL; // Descent
   Graph* graph;
   glow_eDrawType draw_type;
   double z_width, z_height, z_descent;
@@ -3565,9 +3565,9 @@ static int graph_getobjectdyntype_func(void* filectx, ccm_sArg* arg_list,
   Graph* graph;
   int type;
   ccm_sArg* arg_p2; // Dyntype1 return
-  ccm_sArg* arg_p3; // Dyntype2 return
-  ccm_sArg* arg_p4; // Actiontype1 return
-  ccm_sArg* arg_p5; // Actiontype2 return
+  ccm_sArg* arg_p3 = NULL; // Dyntype2 return
+  ccm_sArg* arg_p4 = NULL; // Actiontype1 return
+  ccm_sArg* arg_p5 = NULL; // Actiontype2 return
   GeDyn* dyn;
   grow_tObject o;
 
@@ -4278,14 +4278,14 @@ static int graph_setobjectclass_func(void* filectx, ccm_sArg* arg_list,
     // Load the subgraph
 
     strcpy(cname, "$pwrp_exe/");
-    strncat(cname, arg_p2->value_string, sizeof(cname));
-    strncat(cname, ".pwsg", sizeof(cname));
+    strncat(cname, arg_p2->value_string, sizeof(cname) - strlen(cname) - 1);
+    strncat(cname, ".pwsg", sizeof(cname) - strlen(cname) - 1);
 
     sts = grow_OpenSubGraph(graph->grow->ctx, cname);
     if (EVEN(sts)) {
       strcpy(cname, "$pwr_exe/");
-      strncat(cname, arg_p2->value_string, sizeof(cname));
-      strncat(cname, ".pwsg", sizeof(cname));
+      strncat(cname, arg_p2->value_string, sizeof(cname) - strlen(cname) - 1);
+      strncat(cname, ".pwsg", sizeof(cname) - strlen(cname) - 1);
 
       sts = grow_OpenSubGraph(graph->grow->ctx, cname);
     }

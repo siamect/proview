@@ -37,7 +37,6 @@
 /* ge_qt.cpp -- Graphical editor window */
 
 #include <assert.h>
-#include <float.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -295,7 +294,6 @@ int GeQt::get_plant_select(char* select_name, int size)
     }
     return sts;
   }
-  return 0;
 }
 
 void GeQt::open_yesnodia(const char* text, const char* title,

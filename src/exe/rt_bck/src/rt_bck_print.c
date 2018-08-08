@@ -284,7 +284,7 @@ int print_data(pwr_sAttrRef* arp, FILE* fp)
   pwr_tAttrRef aref;
   int object_backup;
   int array_element = 0;
-  int index;
+  int index = 0;
   int nr;
 
   sts = gdh_AttrrefToName(arp, dataname, sizeof(dataname), cdh_mNName);

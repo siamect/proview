@@ -78,7 +78,7 @@ typedef enum {
 typedef enum { user_mSystemAttr_UserInherit = 1 } user_mSystemAttr;
 
 class SystemName {
-  public:
+public:
   SystemName(const char* system_name);
   char pathname[80];
   char segname[10][40];
@@ -89,11 +89,11 @@ class SystemName {
   char* name()
   {
     return pathname;
-  };
+  }
   char* segment(int idx)
   {
     return segname[idx];
-  };
+  }
 };
 
 class UserList;
@@ -103,11 +103,11 @@ class SystemList {
   friend class GeUser;
   friend class UserList;
 
-  public:
+public:
   SystemList(pwr_tOix sl_id, const char* sl_name, int sl_level,
       unsigned int sl_attributes, char* sl_descr);
 
-  private:
+private:
   pwr_tObjName name;
   int level;
   pwr_tMask attributes;
@@ -117,7 +117,7 @@ class SystemList {
   SystemList* childlist;
   UserList* userlist;
 
-  public:
+public:
   int load(std::ifstream& fp);
   void save(std::ofstream& fp);
   void print(int brief);
@@ -161,12 +161,12 @@ class UserList {
   friend class SystemList;
   friend class GeUser;
 
-  public:
+public:
   UserList(pwr_tOix ul_id, const char* ul_name, const char* ul_password,
       pwr_tMask ul_priv, const char* ul_fullname, const char* ul_description,
       const char* ul_email, const char* ul_phone, const char* ul_sms);
 
-  private:
+private:
   pwr_tObjName name;
   char password[40];
   pwr_tMask priv;
@@ -181,7 +181,7 @@ class UserList {
   unsigned int icrypt(unsigned int i);
   unsigned int idecrypt(unsigned int i);
 
-  public:
+public:
   int load(std::ifstream& fp);
   void save(std::ofstream& fp);
   void print(int brief);
@@ -212,13 +212,12 @@ class GeUser {
   friend class SystemList;
   friend class UserList;
 
-  public:
+public:
   GeUser();
   ~GeUser();
 
-  private:
+private:
   SystemList* root;
-  SystemList* last_system;
   char version[20];
   char fname[256];
   pwr_tOix next_id;
@@ -226,7 +225,7 @@ class GeUser {
   bool get_system_name_child(SystemList* s, SystemList* system, char* name);
   SystemList* get_system_child(SystemList* system, UserList* user);
 
-  public:
+public:
   int load(char* filename);
   void clear();
   int save()

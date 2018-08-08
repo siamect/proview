@@ -35,7 +35,6 @@
  */
 
 /*  Remote plc macros */
-#include <float.h>
 
 /*_*
   RemTransSend

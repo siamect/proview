@@ -43,13 +43,6 @@
 #include "rt_load.h"
 #include "ini_loader.h"
 
-/* PLC job behaviour  */
-
-#define PLC_PRIORITY 5
-#define PLC_KERNELSTACK 30
-#define PLC_DEBUG FALSE
-#define PLC_NAME "PLC_%d_%d"
-
 void ini_StartApplications()
 {
   pwr_tStatus sts;

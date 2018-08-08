@@ -273,7 +273,7 @@ int main(int argc, char* argv[])
             // printf( "Updating SigChanCon \"%s\" %s\n",
             // a_attr.longName().c_str(), upg_sigchancon[i].value[j]);
           }
-        } catch (wb_error& e) {
+        } catch (wb_error&) {
           continue;
         }
       }

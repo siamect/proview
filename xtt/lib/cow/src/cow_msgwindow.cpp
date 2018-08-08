@@ -50,25 +50,119 @@
 MsgWindow* MsgWindow::default_window = 0;
 int MsgWindow::hide_info = 0;
 
-void MsgWindow::msgw_find_wnav_cb(void* ctx, pwr_tOid oid)
+MsgWindow::MsgWindow(
+    void* msg_parent_ctx, const char* msg_name, pwr_tStatus* status)
+    : parent_ctx(msg_parent_ctx), msgnav(NULL), displayed(0), deferred_map(0),
+      nodraw(0), size(0), max_size(500), find_wnav_cb(0), find_plc_cb(0),
+      find_ge_cb(0), wow(0)
 {
-  MsgWindow* msgw = (MsgWindow*)ctx;
-  if (msgw->find_wnav_cb)
-    (msgw->find_wnav_cb)(msgw->parent_ctx, oid);
+  *status = 1;
+  strcpy(name, msg_name);
 }
 
-void MsgWindow::msgw_find_plc_cb(void* ctx, pwr_tOid oid)
+MsgWindow::~MsgWindow()
 {
-  MsgWindow* msgw = (MsgWindow*)ctx;
-  if (msgw->find_plc_cb)
-    (msgw->find_plc_cb)(msgw->parent_ctx, oid);
 }
 
-void MsgWindow::msgw_find_ge_cb(void* ctx, char* object, void* utility)
+void MsgWindow::map()
 {
-  MsgWindow* msgw = (MsgWindow*)ctx;
-  if (msgw->find_ge_cb)
-    (msgw->find_ge_cb)(msgw->parent_ctx, object, utility);
+}
+
+void MsgWindow::unmap()
+{
+}
+
+void MsgWindow::print()
+{
+}
+
+int MsgWindow::is_mapped()
+{
+  return displayed;
+}
+
+void MsgWindow::insert(
+    int severity, const char* text, pwr_tOid oid, msgw_eRow row)
+{
+  if (size > max_size - 1)
+    msgnav->set_nodraw();
+
+  if (cdh_ObjidIsNull(oid))
+    new ItemMsg(msgnav, "", (char*)text, severity, NULL, flow_eDest_Before);
+  else if (row == msgw_eRow_Plc)
+    new ItemMsgObjectPlc(
+        msgnav, "", (char*)text, severity, oid, NULL, flow_eDest_Before);
+  else
+    new ItemMsgObject(
+        msgnav, "", (char*)text, severity, oid, NULL, flow_eDest_Before);
+
+  if (size > max_size - 1) {
+    msgnav->remove_oldest();
+    msgnav->reset_nodraw();
+  } else
+    size++;
+}
+
+void MsgWindow::insert(
+    int severity, const char* text, char* object, void* utility, msgw_eRow row)
+{
+  if (size > max_size - 1)
+    msgnav->set_nodraw();
+
+  if (!object)
+    new ItemMsg(msgnav, "", (char*)text, severity, NULL, flow_eDest_Before);
+  else if (row == msgw_eRow_Ge)
+    new ItemMsgObjectGe(msgnav, "", (char*)text, severity, object, utility,
+        NULL, flow_eDest_Before);
+  else
+    new ItemMsg(msgnav, "", (char*)text, severity, NULL, flow_eDest_Before);
+
+  if (size > max_size - 1) {
+    msgnav->remove_oldest();
+    msgnav->reset_nodraw();
+  } else
+    size++;
+}
+
+void MsgWindow::set_nodraw()
+{
+  msgnav->set_nodraw();
+  nodraw++;
+}
+
+void MsgWindow::reset_nodraw()
+{
+  msgnav->reset_nodraw();
+  nodraw--;
+  if (!nodraw && deferred_map)
+    map();
+}
+
+void MsgWindow::msg(
+    int severity, const char* text, msgw_ePop pop, pwr_tOid oid, msgw_eRow row)
+{
+  if (severity == 'O')
+    severity = 'I';
+  insert(severity, text, oid, row);
+  if ((pop == msgw_ePop_Yes
+          || (pop == msgw_ePop_Default
+                 && (severity == 'E' || severity == 'F' || severity == 'W'))))
+    map();
+}
+
+void MsgWindow::activate_print()
+{
+  print();
+}
+
+void MsgWindow::set_default(MsgWindow* msgw)
+{
+  default_window = msgw;
+}
+
+int MsgWindow::has_default()
+{
+  return default_window ? 1 : 0;
 }
 
 void MsgWindow::message(
@@ -117,18 +211,6 @@ void MsgWindow::message(int severity, const char* text, msgw_ePop pop,
     default_window->map();
 }
 
-void MsgWindow::msg(
-    int severity, const char* text, msgw_ePop pop, pwr_tOid oid, msgw_eRow row)
-{
-  if (severity == 'O')
-    severity = 'I';
-  insert(severity, text, oid, row);
-  if ((pop == msgw_ePop_Yes
-          || (pop == msgw_ePop_Default
-                 && (severity == 'E' || severity == 'F' || severity == 'W'))))
-    map();
-}
-
 void MsgWindow::message(const co_error& e, const char* text1, const char* text2,
     pwr_tOid oid, msgw_eRow row)
 {
@@ -163,13 +245,13 @@ void MsgWindow::message(int severity, const char* text1, const char* text2,
   strncpy(text, text1, sizeof(text));
   text[sizeof(text) - 1] = 0;
   if (text2) {
-    strncat(text, " ", sizeof(text) - strlen(text));
-    strncat(text, text2, sizeof(text) - strlen(text));
+    strncat(text, " ", 400 - strlen(text));
+    strncat(text, text2, 400 - strlen(text));
     text[sizeof(text) - 1] = 0;
   }
   if (text3) {
-    strncat(text, " ", sizeof(text) - strlen(text));
-    strncat(text, text3, sizeof(text) - strlen(text));
+    strncat(text, " ", 400 - strlen(text));
+    strncat(text, text3, 400 - strlen(text));
     text[sizeof(text) - 1] = 0;
   }
   MsgWindow::message(severity, text, msgw_ePop_Default, oid, row);
@@ -182,75 +264,68 @@ void MsgWindow::message(int severity, const char* text1, const char* text2,
   strncpy(text, text1, sizeof(text));
   text[sizeof(text) - 1] = 0;
   if (text2) {
-    strncat(text, " ", sizeof(text) - strlen(text));
-    strncat(text, text2, sizeof(text) - strlen(text));
+    strncat(text, " ", 400 - strlen(text));
+    strncat(text, text2, 400 - strlen(text));
     text[sizeof(text) - 1] = 0;
   }
   if (text3) {
-    strncat(text, " ", sizeof(text) - strlen(text));
-    strncat(text, text3, sizeof(text) - strlen(text));
+    strncat(text, " ", 400 - strlen(text));
+    strncat(text, text3, 400 - strlen(text));
     text[sizeof(text) - 1] = 0;
   }
   MsgWindow::message(severity, text, msgw_ePop_Default, object, utility, row);
 }
 
-MsgWindow::MsgWindow(
-    void* msg_parent_ctx, const char* msg_name, pwr_tStatus* status)
-    : parent_ctx(msg_parent_ctx), msgnav(NULL), displayed(0), deferred_map(0),
-      nodraw(0), size(0), max_size(500), find_wnav_cb(0), find_plc_cb(0),
-      find_ge_cb(0), wow(0)
+bool MsgWindow::has_window()
 {
-  *status = 1;
-  strcpy(name, msg_name);
+  return default_window != 0;
 }
 
-void MsgWindow::reset_nodraw()
+CoWow* MsgWindow::get_wow()
 {
-  msgnav->reset_nodraw();
-  nodraw--;
-  if (!nodraw && deferred_map)
-    map();
+  return default_window ? default_window->wow : 0;
 }
 
-void MsgWindow::insert(
-    int severity, const char* text, pwr_tOid oid, msgw_eRow row)
+void MsgWindow::map_default()
 {
-  if (size > max_size - 1)
-    msgnav->set_nodraw();
-
-  if (cdh_ObjidIsNull(oid))
-    new ItemMsg(msgnav, "", (char*)text, severity, NULL, flow_eDest_Before);
-  else if (row == msgw_eRow_Plc)
-    new ItemMsgObjectPlc(
-        msgnav, "", (char*)text, severity, oid, NULL, flow_eDest_Before);
-  else
-    new ItemMsgObject(
-        msgnav, "", (char*)text, severity, oid, NULL, flow_eDest_Before);
-
-  if (size > max_size - 1) {
-    msgnav->remove_oldest();
-    msgnav->reset_nodraw();
-  } else
-    size++;
+  if (default_window)
+    default_window->map();
 }
 
-void MsgWindow::insert(
-    int severity, const char* text, char* object, void* utility, msgw_eRow row)
+void MsgWindow::dset_nodraw()
 {
-  if (size > max_size - 1)
-    msgnav->set_nodraw();
+  if (default_window)
+    default_window->set_nodraw();
+}
 
-  if (!object)
-    new ItemMsg(msgnav, "", (char*)text, severity, NULL, flow_eDest_Before);
-  else if (row == msgw_eRow_Ge)
-    new ItemMsgObjectGe(msgnav, "", (char*)text, severity, object, utility,
-        NULL, flow_eDest_Before);
-  else
-    new ItemMsg(msgnav, "", (char*)text, severity, NULL, flow_eDest_Before);
+void MsgWindow::dreset_nodraw()
+{
+  if (default_window)
+    default_window->reset_nodraw();
+}
 
-  if (size > max_size - 1) {
-    msgnav->remove_oldest();
-    msgnav->reset_nodraw();
-  } else
-    size++;
+void MsgWindow::hide_info_messages(int hide)
+{
+  hide_info = hide;
+}
+
+void MsgWindow::msgw_find_wnav_cb(void* ctx, pwr_tOid oid)
+{
+  MsgWindow* msgw = (MsgWindow*)ctx;
+  if (msgw->find_wnav_cb)
+    (msgw->find_wnav_cb)(msgw->parent_ctx, oid);
+}
+
+void MsgWindow::msgw_find_plc_cb(void* ctx, pwr_tOid oid)
+{
+  MsgWindow* msgw = (MsgWindow*)ctx;
+  if (msgw->find_plc_cb)
+    (msgw->find_plc_cb)(msgw->parent_ctx, oid);
+}
+
+void MsgWindow::msgw_find_ge_cb(void* ctx, char* object, void* utility)
+{
+  MsgWindow* msgw = (MsgWindow*)ctx;
+  if (msgw->find_ge_cb)
+    (msgw->find_ge_cb)(msgw->parent_ctx, object, utility);
 }

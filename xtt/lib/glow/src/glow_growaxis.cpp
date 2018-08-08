@@ -34,7 +34,6 @@
  * General Public License plus this exception.
  **/
 
-#include <float.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -119,7 +118,7 @@ void GrowAxis::save(std::ofstream& fp, glow_eSaveMode mode)
 
 void GrowAxis::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;
@@ -270,7 +269,7 @@ void GrowAxis::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
   char text[20];
   int line_length;
   int x_text, y_text;
-  int z_height, z_width, z_descent;
+  int z_height = 0, z_width, z_descent = 0;
   int max_z_width = 0;
   double rotation;
   glow_eDrawType drawtype;

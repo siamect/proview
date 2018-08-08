@@ -38,8 +38,6 @@
    Contains macros for object that does not fit anywhere else.
    This code is used in the PLC-program environment.  */
 
-#define PLC_ABS(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
-
 #define Backup_init(object, data) strcpy(&(object->DataName), data);
 
 /*_*
@@ -90,12 +88,12 @@
 /*_*
   @aref abs Abs
 */
-#define Abs_exec(object, in) object->ActVal = fabsf(in);
+#define Abs_exec(object, in) object->ActVal = ABS(in);
 
 /*_*
   @aref iabs IAbs
 */
-#define IAbs_exec(object, in) object->ActVal = PLC_ABS(in);
+#define IAbs_exec(object, in) object->ActVal = ABS(in);
 
 /*_*
   @aref sin Sin

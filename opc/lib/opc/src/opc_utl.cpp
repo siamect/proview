@@ -34,12 +34,12 @@
  * General Public License plus this exception.
  */
 
-#include <float.h>
 #include <iconv.h>
 
 #include <typeinfo>
 
 #include "pwr_class.h"
+#include "co_math.h"
 #include "co_time.h"
 #include "co_time_msg.h"
 
@@ -263,80 +263,67 @@ xsd__anyType* opc_opctype_to_value(
     xsd__string* val = soap_new_xsd__string(soap, -1);
     val->__item.assign((char*)bufp);
     return val;
-    break;
   }
   case opc_eDataType_boolean: {
     xsd__boolean* val = soap_new_xsd__boolean(soap, -1);
     val->__item = (bool)(*(char*)bufp);
     return val;
-    break;
   }
   case opc_eDataType_float: {
     xsd__float* val = soap_new_xsd__float(soap, -1);
     val->__item = *(pwr_tFloat32*)bufp;
     return val;
-    break;
   }
   case opc_eDataType_decimal: {
     xsd__decimal_* val = soap_new_xsd__decimal_(soap, -1);
     sprintf((char*)bufp, "%f", *(pwr_tFloat64*)bufp);
     val->__item = std::string((char*)bufp);
     return val;
-    break;
   }
   case opc_eDataType_double: {
     xsd__double* val = soap_new_xsd__double(soap, -1);
     val->__item = *(pwr_tFloat64*)bufp;
     return val;
-    break;
   }
   case opc_eDataType_long: {
     xsd__long* val = soap_new_xsd__long(soap, -1);
     val->__item = *(pwr_tInt64*)bufp;
     return val;
-    break;
   }
   case opc_eDataType_int: {
     xsd__int* val = soap_new_xsd__int(soap, -1);
     val->__item = *(pwr_tInt32*)bufp;
     return val;
-    break;
   }
   case opc_eDataType_short: {
     xsd__short* val = soap_new_xsd__short(soap, -1);
     val->__item = *(pwr_tInt16*)bufp;
     return val;
-    break;
   }
   case opc_eDataType_byte: {
     xsd__byte* val = soap_new_xsd__byte(soap, -1);
     val->__item = *(pwr_tChar*)bufp;
     return val;
-    break;
   }
   case opc_eDataType_unsignedLong: {
     xsd__unsignedLong* val = soap_new_xsd__unsignedLong(soap, -1);
     val->__item = *(pwr_tUInt64*)bufp;
     return val;
-    break;
   }
   case opc_eDataType_unsignedInt: {
     xsd__unsignedInt* val = soap_new_xsd__unsignedInt(soap, -1);
     val->__item = *(pwr_tInt32*)bufp;
     return val;
-    break;
   }
   case opc_eDataType_unsignedShort: {
     xsd__unsignedShort* val = soap_new_xsd__unsignedShort(soap, -1);
     val->__item = *(pwr_tUInt16*)bufp;
     return val;
-    break;
   }
   case opc_eDataType_unsignedByte: {
     xsd__unsignedByte* val = soap_new_xsd__unsignedByte(soap, -1);
     val->__item = *(pwr_tUInt8*)bufp;
     return val;
-    break;
   }
   case opc_eDataType_dateTime: {
     xsd__dateTime* val = soap_new_xsd__dateTime(soap, -1);
@@ -345,7 +332,6 @@ xsd__anyType* opc_opctype_to_value(
     time_AtoOPCAscii((pwr_tTime*)bufp, timstr, sizeof(timstr));
     val->__item.assign(timstr);
     return val;
-    break;
   }
   case opc_eDataType_duration: {
     xsd__duration* val = soap_new_xsd__duration(soap, -1);
@@ -355,7 +341,6 @@ xsd__anyType* opc_opctype_to_value(
     // time_DtoOPCAscii( (pwr_tTime *)bufp, timstr, sizeof(timstr));
     // val->__item = std::string( timstr);
     return val;
-    break;
   }
   default:
     break;
@@ -1945,7 +1930,7 @@ bool opc_cmp_pwr(void* p1, void* p2, int size, int type, float deadband)
       return true;
     break;
   case pwr_eType_Float32:
-    if (deadband == 0) {
+    if (feqf(deadband, 0.0f)) {
       if (fabs(*(pwr_tFloat32*)p1 - *(pwr_tFloat32*)p2) < FLT_EPSILON)
         return true;
     } else {

@@ -72,7 +72,7 @@ public:
       double x1, double y1, int nodraw = 0, int rel_annot_pos = 0);
 
   //! Noargs constructor
-  GrowNode(){};
+  GrowNode(){}
 
   //! Get the object type
   /*!
@@ -81,7 +81,7 @@ public:
   glow_eObjectType type()
   {
     return object_type;
-  };
+  }
 
   //! Make this object a copy of another image object.
   /*!
@@ -93,7 +93,7 @@ public:
   void erase(GlowWind* w)
   {
     erase(w, (GlowTransform*)NULL, hot, NULL);
-  };
+  }
 
   //! Update the borders of the object.
   /*! The borders of the object is stored in x_right, x_left, y_high and y_low.
@@ -263,7 +263,7 @@ public:
   {
     *code = dynamic;
     *size = dynamicsize;
-  };
+  }
 
   //! Execute the dynamic code.
   void exec_dynamic();
@@ -280,7 +280,7 @@ public:
     color_lightness = 0;
     color_intensity = 0;
     draw();
-  };
+  }
 
   //! Reset the fill color to the original fill color.
   void reset_fill_color()
@@ -293,7 +293,7 @@ public:
     color_lightness = original_color_lightness;
     color_intensity = original_color_intensity;
     draw();
-  };
+  }
 
   //! Set the border color.
   /*!
@@ -309,7 +309,7 @@ public:
     color_lightness = 0;
     color_intensity = 0;
     draw();
-  };
+  }
 
   //! Reset the border color to the original border color.
   void reset_border_color()
@@ -318,7 +318,7 @@ public:
       return;
     draw_type = original_border_drawtype;
     draw();
-  };
+  }
 
   //! Set the text color.
   /*!
@@ -334,7 +334,7 @@ public:
     color_lightness = 0;
     color_intensity = 0;
     draw();
-  };
+  }
 
   //! Reset the text color to the original text color.
   void reset_text_color()
@@ -343,7 +343,7 @@ public:
       return;
     text_drawtype = original_text_drawtype;
     draw();
-  };
+  }
 
   //! Set the original fill color.
   /*!
@@ -361,7 +361,7 @@ public:
     color_intensity = 0;
     original_fill_drawtype = drawtype;
     reset_fill_color();
-  };
+  }
 
   //! Set the original border color.
   /*!
@@ -379,7 +379,7 @@ public:
     color_intensity = 0;
     original_border_drawtype = drawtype;
     reset_border_color();
-  };
+  }
 
   //! Set the original text color.
   /*!
@@ -397,7 +397,7 @@ public:
     color_intensity = 0;
     original_text_drawtype = drawtype;
     reset_text_color();
-  };
+  }
 
   //! Set the original color tone
   /*!
@@ -413,7 +413,7 @@ public:
     original_color_intensity = 0;
     color_intensity = 0;
     reset_color_tone();
-  };
+  }
 
   //! Set the color tone
   /*!
@@ -426,7 +426,7 @@ public:
     color_tone = tone;
     color_shift = 0;
     draw();
-  };
+  }
 
   //! Reset color tone to original color tone.
   void reset_color_tone()
@@ -436,7 +436,7 @@ public:
     color_tone = original_color_tone;
     color_shift = original_color_shift;
     draw();
-  };
+  }
 
   //! Set the original color lightness.
   /*!
@@ -446,7 +446,7 @@ public:
   {
     original_color_lightness = lightness;
     reset_color_lightness();
-  };
+  }
 
   //! Increment the original color lightness.
   /*!
@@ -460,7 +460,7 @@ public:
     if (original_color_lightness < -9)
       original_color_lightness = -9;
     reset_color_lightness();
-  };
+  }
 
   //! Set the color lightness.
   /*!
@@ -472,7 +472,7 @@ public:
       return;
     color_lightness = lightness;
     draw();
-  };
+  }
 
   //! Reset color lightness to original color lightness.
   void reset_color_lightness()
@@ -481,7 +481,7 @@ public:
       return;
     color_lightness = original_color_lightness;
     draw();
-  };
+  }
 
   //! Set the original color intensity.
   /*!
@@ -491,7 +491,7 @@ public:
   {
     original_color_intensity = intensity;
     reset_color_intensity();
-  };
+  }
 
   //! Increment the original color intensity.
   /*!
@@ -505,7 +505,7 @@ public:
     if (original_color_intensity < -3)
       original_color_intensity = -3;
     reset_color_intensity();
-  };
+  }
 
   //! Set the color intensity.
   /*!
@@ -517,7 +517,7 @@ public:
       return;
     color_intensity = intensity;
     draw();
-  };
+  }
 
   //! Reset the color intensity to original color intensity.
   void reset_color_intensity()
@@ -526,7 +526,7 @@ public:
       return;
     color_intensity = original_color_intensity;
     draw();
-  };
+  }
 
   //! Set the original color shift.
   /*!
@@ -536,7 +536,7 @@ public:
   {
     original_color_shift = shift;
     reset_color_shift();
-  };
+  }
 
   //! Increment the original color shift.
   /*!
@@ -546,7 +546,7 @@ public:
   {
     original_color_shift += shift;
     reset_color_shift();
-  };
+  }
 
   //! Increment the color shift.
   /*!
@@ -558,7 +558,7 @@ public:
       return;
     color_shift += shift;
     draw();
-  };
+  }
 
   //! Set the original color shift.
   /*!
@@ -570,7 +570,7 @@ public:
       return;
     color_shift = shift;
     draw();
-  };
+  }
 
   //! Reset the color shift to original color shift.
   void reset_color_shift()
@@ -579,7 +579,7 @@ public:
       return;
     color_shift = original_color_shift;
     draw();
-  };
+  }
 
   //! Set the color inverse.
   /*!
@@ -589,7 +589,7 @@ public:
   {
     color_inverse = inverse;
     draw();
-  };
+  }
 
   //! Set the original background color.
   /*!
@@ -599,7 +599,7 @@ public:
   {
     original_background_drawtype = drawtype;
     reset_background_color();
-  };
+  }
 
   //! Set the background color.
   /*!
@@ -778,7 +778,7 @@ public:
   void set_transform_from_stored(GlowTransform* t)
   {
     trf.set_from_stored(t), get_node_borders();
-  };
+  }
 
   //! Get info for a connection point
   /*!
@@ -812,12 +812,12 @@ public:
   void store_transform()
   {
     trf.store();
-  };
+  }
   void revert_transform()
   {
     trf.revert();
     get_node_borders();
-  };
+  }
 
   //! Check if there is a stored transform
   /*!
@@ -827,7 +827,7 @@ public:
   bool transform_is_stored()
   {
     return trf.is_stored();
-  };
+  }
 
   //! Get dynamic code argument
   /*!
@@ -854,7 +854,7 @@ public:
   void get_ctx(void** c)
   {
     *c = (void*)ctx;
-  }; //!< Should be replace by get_ctx() !!
+  } //!< Should be replace by get_ctx() !!
 
   //! Redraw an annotation background
   /*!
@@ -869,7 +869,7 @@ public:
   int draw_annot_background(GlowTransform* t, double x, double y)
   {
     return nc->draw_annot_background(t, (void*)this, x, y);
-  };
+  }
 
   //! Moves object to alignment line or point.
   /*!
@@ -931,7 +931,7 @@ public:
   void get_animation_count(int* count)
   {
     *count = nc->animation_count;
-  };
+  }
 
   //! Check if an node class is used by this node
   /*!
@@ -947,7 +947,7 @@ public:
   void ungroup()
   {
     root_node = 0;
-  };
+  }
 
   //! Register the name of the last group
   /*!
@@ -966,7 +966,7 @@ public:
   char* get_last_group()
   {
     return last_group;
-  };
+  }
 
   //! Determine whether the node is sensitive for any action.
   /*!

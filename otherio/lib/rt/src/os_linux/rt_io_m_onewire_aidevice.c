@@ -36,7 +36,6 @@
 
 /* rt_io_m_onewire_aidevice.c -- I/O methods for class OneWire_AiDevice. */
 
-#include <float.h>
 #include <math.h>
 
 #include "pwr_basecomponentclasses.h"
@@ -74,7 +73,7 @@ static pwr_tStatus IoCardInit(
     while ((s = strstr(s, "%s"))) {
       strncpy(tmp, s + 2, sizeof(tmp));
       strcpy(s, name);
-      strncat(fname, tmp, sizeof(fname));
+      strncat(fname, tmp, sizeof(fname) - strlen(fname) - 1);
     }
     local->value_fp = fopen(fname, "r");
     if (!local->value_fp) {
@@ -151,7 +150,7 @@ static pwr_tStatus IoCardRead(
 
         sscanf(s + strlen(op->ValueSearchString), "%f", &fvalue);
 
-        if (op->ErrorValue != 0
+        if (!feqf(op->ErrorValue, 0.0f)
             && fabs(op->ErrorValue - fvalue) > FLT_EPSILON) {
           /* TODO Check CRC Probably power loss...
              op->Super.ErrorCount++; */
@@ -180,7 +179,7 @@ static pwr_tStatus IoCardRead(
 
         io_ConvertAi32(cop, ivalue, &actvalue);
 
-        if (op->ErrorValue != 0
+        if (!feqf(op->ErrorValue, 0.0f)
             && fabs(op->ErrorValue - ivalue) > FLT_EPSILON) {
           /* TODO Check CRC Probably power loss...
              op->Super.ErrorCount++; */

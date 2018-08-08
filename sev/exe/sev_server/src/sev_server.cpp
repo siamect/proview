@@ -34,7 +34,6 @@
  * General Public License plus this exception.
  **/
 
-#include <float.h>
 #include <math.h>
 #include <pthread.h>
 #include <unistd.h>
@@ -529,19 +528,19 @@ int sev_server::mainloop()
 
     if (time_Acomp(&currenttime, &next_stat) == 1) {
       m_stat.current_load = 100.0 * fbusy / (fbusy + fidle);
-      if (m_stat.medium_load == 0)
+      if (feqf(m_stat.medium_load, 0.0f))
         m_stat.medium_load = m_stat.current_load;
       else
         m_stat.medium_load
             = a * m_stat.medium_load + (1.0 - a) * m_stat.current_load;
       m_stat.storage_rate = (float)m_storage_cnt / (fbusy + fidle);
       m_stat.write_rate = (float)m_write_cnt / (fbusy + fidle);
-      if (m_stat.medium_storage_rate == 0)
+      if (feqf(m_stat.medium_storage_rate, 0.0f))
         m_stat.medium_storage_rate = m_stat.storage_rate;
       else
         m_stat.medium_storage_rate
             = a * m_stat.medium_storage_rate + (1.0 - a) * m_stat.storage_rate;
-      if (m_stat.medium_write_rate == 0)
+      if (feqf(m_stat.medium_write_rate, 0.0f))
         m_stat.medium_write_rate = m_stat.write_rate;
       else
         m_stat.medium_write_rate
@@ -1091,8 +1090,8 @@ int sev_server::send_objecthistdata(
 
 void* sev_server::send_objecthistdata_thread(void* arg)
 {
-  pwr_tTime* tbuf;
-  void* vbuf;
+  pwr_tTime* tbuf = NULL;
+  void* vbuf = NULL;
   unsigned int rows = 0;
   sev_sMsgHistObjectDataGet* msg;
   int msize;
@@ -1191,7 +1190,7 @@ int sev_server::receive_events(
   }
 
   // Get index
-  int idx;
+  int idx = 0;
   int found = 0;
   for (unsigned int i = 0; i < m_db->m_items.size(); i++) {
     if (m_db->m_items[i].deleted)
@@ -1314,10 +1313,6 @@ void* sev_server::garbage_collector_thread(void* arg)
       time_Aadd(&next_garco, &next_garco, &garco_interval);
     }
   }
-
-  sev->m_db->delete_thread(thread);
-
-  return (void*)1;
 }
 
 void sev_server::garbage_collector(void* thread)
@@ -1446,19 +1441,19 @@ void* sev_server::receive_histdata_thread(void* arg)
       if (th->conf_idx >= 0 && time_Acomp(&currenttime, &next_stat) == 1) {
         thread_conf->QueueAlloc = th->alloc;
         current_load = 100.0 * fbusy / (fbusy + fidle);
-        if (thread_conf->MediumLoad == 0)
+        if (feqf(thread_conf->MediumLoad, 0.0f))
           thread_conf->MediumLoad = current_load;
         else
           thread_conf->MediumLoad
               = a * thread_conf->MediumLoad + (1.0 - a) * current_load;
         thread_conf->StorageRate = (float)storage_cnt / (fbusy + fidle);
-        if (thread_conf->MediumStorageRate == 0)
+        if (feqf(thread_conf->MediumStorageRate, 0.0f))
           thread_conf->MediumStorageRate = thread_conf->StorageRate;
         else
           thread_conf->MediumStorageRate = a * thread_conf->MediumStorageRate
               + (1.0 - a) * thread_conf->StorageRate;
         thread_conf->WriteRate = (float)write_cnt / (fbusy + fidle);
-        if (thread_conf->MediumWriteRate == 0)
+        if (feqf(thread_conf->MediumWriteRate, 0.0f))
           thread_conf->MediumWriteRate = thread_conf->WriteRate;
         else
           thread_conf->MediumWriteRate = a * thread_conf->MediumWriteRate
@@ -1577,8 +1572,6 @@ void* sev_server::receive_histdata_thread(void* arg)
       free(qmsg);
     }
   }
-
-  return (void*)1;
 }
 
 sev_sThread* sev_server::create_thread(int key)

@@ -38,42 +38,21 @@
 #define co_status_h
 
 #include <string>
-extern "C" {
-#include "co_msg.h"
-}
+
+#include "pwr.h"
 
 class co_status {
-  protected:
+protected:
   pwr_tStatus m_sts;
 
-  public:
-  co_status() : m_sts(0)
-  {
-  }
-  co_status(pwr_tStatus sts) : m_sts(sts)
-  {
-  }
-  virtual ~co_status(){};
-  pwr_tStatus sts() const
-  {
-    return m_sts;
-  }
-  bool evenSts() const
-  {
-    return EVEN(m_sts);
-  }
-  bool oddSts() const
-  {
-    return ODD(m_sts);
-  }
-  virtual std::string what() const
-  {
-    char msg[200];
-
-    msg_GetMsg(m_sts, msg, sizeof(msg));
-    std::string s(msg);
-    return s;
-  }
+public:
+  co_status();
+  co_status(pwr_tStatus sts);
+  virtual ~co_status();
+  pwr_tStatus sts() const;
+  bool evenSts() const;
+  bool oddSts() const;
+  virtual std::string what() const;
 };
 
 #endif

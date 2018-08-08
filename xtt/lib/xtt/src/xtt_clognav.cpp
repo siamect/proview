@@ -391,7 +391,7 @@ int CLogNav::prev_file()
 void CLogNav::read(int* pos_list, int pos_cnt)
 {
   char line[400];
-  errh_eSeverity severity;
+  errh_eSeverity severity = errh_eSeverity_Null;
   pwr_tTime time;
   pwr_tTime ztime = { 0, 0 };
   char time_str[40];

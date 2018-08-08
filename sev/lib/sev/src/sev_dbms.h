@@ -65,10 +65,7 @@ public:
 
   sev_dbms_env(const sev_dbms_env&);
   void operator=(const sev_dbms_env&);
-  virtual ~sev_dbms_env()
-  {
-    close();
-  }
+  virtual ~sev_dbms_env();
 
   int create(const char* fileName, const char* host, const char* user,
       const char* passwd, const char* dbName, unsigned int port,
@@ -90,10 +87,7 @@ public:
   MYSQL* openDb(unsigned int* sts);
   MYSQL* open_thread(unsigned int* sts);
   void close_thread(MYSQL* con);
-  bool exists()
-  {
-    return m_exists;
-  }
+  bool exists();
   int close(void);
   static int get_systemname();
 
@@ -106,32 +100,14 @@ public:
   void socket(const char* socket);
 
   static char* dbName(void);
-  inline char* fileName(void)
-  {
-    return m_fileName;
-  }
+  char* fileName(void);
   char* host(void);
-  inline char* user(void)
-  {
-    return m_user;
-  }
-  inline char* passwd(void)
-  {
-    return m_passwd;
-  }
-  inline unsigned int port(void)
-  {
-    return m_port;
-  }
-  inline char* socket(void)
-  {
-    return m_socket;
-  }
+  char* user(void);
+  char* passwd(void);
+  unsigned int port(void);
+  char* socket(void);
 
-  inline MYSQL* con(void)
-  {
-    return m_con;
-  }
+  MYSQL* con(void);
 
 private:
   int create();
@@ -179,10 +155,7 @@ public:
   int remove_item(pwr_tStatus* sts, pwr_tOid oid, char* aname);
   static sev_db* open_database();
   static char* oid_to_table(pwr_tOid oid, char* aname);
-  char* dbName()
-  {
-    return sev_dbms_env::dbName();
-  }
+  char* dbName();
   char* pwrtype_to_type(pwr_eType type, unsigned int size);
   static int timestr_to_time(char* tstr, pwr_tTime* ts);
   static void write_db_cb(
@@ -249,16 +222,7 @@ public:
       pwr_tMask options, unsigned int* first, unsigned int* last);
   int get_time_range(pwr_tStatus* sts, sev_item* item, pwr_tMask options,
       pwr_tTime* first, pwr_tTime* last);
-  inline char* create_colName(unsigned int index, char* attributename)
-  {
-    static char colName[constMaxColNameLength];
-    strncpy(colName, attributename, constMaxColNameLength);
-    if (strlen(attributename) > constMaxColNameLength) {
-      colName[constMaxColNameLength - 5] = 0;
-      snprintf(&colName[strlen(colName)], 5, "_%d", index);
-    }
-    return colName;
-  }
+  char* create_colName(unsigned int index, char* attributename);
 };
 #endif
 #endif

@@ -43,34 +43,18 @@
 
 class wb_utl {
 public:
-  wb_utl()
-  {
-  }
-  virtual ~wb_utl()
-  {
-  }
-  virtual int create_mainwindow(int argc, char** argv)
-  {
-    return 0;
-  }
-  virtual int destroy_mainwindow()
-  {
-    return 0;
-  }
+  wb_utl();
+  virtual ~wb_utl();
+  virtual int create_mainwindow(int argc, char** argv);
+  virtual int destroy_mainwindow();
   virtual int utl_foe_new(const char* name, pwr_tOid plcpgm,
       ldh_tWBContext ldhwbctx, ldh_tSesContext ldhsesctx, WFoe** foectx,
-      int map_window, ldh_eAccess access)
-  {
-    return 0;
-  }
+      int map_window, ldh_eAccess access);
   virtual int utl_foe_new_local(WFoe* foectx, const char* name, pwr_tOid plcpgm,
       ldh_tWBContext ldhwbctx, ldh_tSesContext ldhsesctx,
       vldh_t_node nodeobject, unsigned long windowindex,
       unsigned long new_window, WFoe** return_foectx, int map_window,
-      ldh_eAccess access, foe_eFuncAccess function_access)
-  {
-    return 0;
-  }
+      ldh_eAccess access, foe_eFuncAccess function_access);
   int print_plc(ldh_tSesContext ldhses, ldh_tWBContext ldhwb, char* plcstring,
       int document, int overview, int pdf);
   int print_plc_hier(ldh_tSesContext ldhses, ldh_tWBContext ldhwb,

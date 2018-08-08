@@ -51,77 +51,27 @@ typedef enum {
 class CnvWblTo {
   public:
   // CnvWblTo() {}
-  virtual ~CnvWblTo()
-  {
-  }
+  virtual ~CnvWblTo();
 
   virtual int init(char*);
-  virtual int close()
-  {
-    return 1;
-  }
-  virtual int class_exec()
-  {
-    return 1;
-  }
-  virtual int class_close()
-  {
-    return 1;
-  }
-  virtual int body_exec()
-  {
-    return 1;
-  }
-  virtual int body_close()
-  {
-    return 1;
-  }
-  virtual int attribute_exec()
-  {
-    return 1;
-  }
-  virtual int typedef_exec()
-  {
-    return 1;
-  }
-  virtual int typedef_close()
-  {
-    return 1;
-  }
-  virtual int bit_exec()
-  {
-    return 1;
-  }
-  virtual int graphplcnode()
-  {
-    return 1;
-  }
-  virtual int graphplccon()
-  {
-    return 1;
-  }
-  virtual int template_exec()
-  {
-    return 1;
-  }
-  virtual Cnv_eWblToType type()
-  {
-    return Cnv_eWblToType_H;
-  }
-  virtual int class_open()
-  {
-    return 0;
-  }
-  virtual int index_open()
-  {
-    return 0;
-  }
-  virtual bool confpass()
-  {
-    return false;
-  }
-  virtual void set_confpass(bool conf){};
-  virtual void add_depend(char*){};
+  virtual int close();
+  virtual int class_exec();
+  virtual int class_close();
+  virtual int body_exec();
+  virtual int body_close();
+  virtual int attribute_exec();
+  virtual int typedef_exec();
+  virtual int typedef_close();
+  virtual int bit_exec();
+  virtual int graphplcnode();
+  virtual int graphplccon();
+  virtual int template_exec();
+  virtual Cnv_eWblToType type();
+  virtual int class_open();
+  virtual int index_open();
+  virtual bool confpass();
+  virtual void set_confpass(bool conf);
+  virtual void add_depend(char*);
 };
 
 #endif

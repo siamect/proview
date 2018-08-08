@@ -31,7 +31,7 @@ public:
       };
       soap->namespaces = namespaces;
     }
-  };
+  }
   virtual ~Service()
   {
     if (soap) {
@@ -39,35 +39,35 @@ public:
       soap_end(soap);
       soap_free(soap);
     }
-  };
+  }
   virtual int __s0__GetStatus(_s0__GetStatus* s0__GetStatus,
       _s0__GetStatusResponse* s0__GetStatusResponse)
   {
     return soap ? soap_call___s0__GetStatus(soap, endpoint, NULL, s0__GetStatus,
                       s0__GetStatusResponse)
                 : SOAP_EOM;
-  };
+  }
   virtual int __s0__Read(
       _s0__Read* s0__Read, _s0__ReadResponse* s0__ReadResponse)
   {
     return soap
         ? soap_call___s0__Read(soap, endpoint, NULL, s0__Read, s0__ReadResponse)
         : SOAP_EOM;
-  };
+  }
   virtual int __s0__Write(
       _s0__Write* s0__Write, _s0__WriteResponse* s0__WriteResponse)
   {
     return soap ? soap_call___s0__Write(
                       soap, endpoint, NULL, s0__Write, s0__WriteResponse)
                 : SOAP_EOM;
-  };
+  }
   virtual int __s0__Subscribe(_s0__Subscribe* s0__Subscribe,
       _s0__SubscribeResponse* s0__SubscribeResponse)
   {
     return soap ? soap_call___s0__Subscribe(soap, endpoint, NULL, s0__Subscribe,
                       s0__SubscribeResponse)
                 : SOAP_EOM;
-  };
+  }
   virtual int __s0__SubscriptionPolledRefresh(
       _s0__SubscriptionPolledRefresh* s0__SubscriptionPolledRefresh,
       _s0__SubscriptionPolledRefreshResponse*
@@ -77,7 +77,7 @@ public:
                       NULL, s0__SubscriptionPolledRefresh,
                       s0__SubscriptionPolledRefreshResponse)
                 : SOAP_EOM;
-  };
+  }
   virtual int __s0__SubscriptionCancel(
       _s0__SubscriptionCancel* s0__SubscriptionCancel,
       _s0__SubscriptionCancelResponse* s0__SubscriptionCancelResponse)
@@ -85,20 +85,20 @@ public:
     return soap ? soap_call___s0__SubscriptionCancel(soap, endpoint, NULL,
                       s0__SubscriptionCancel, s0__SubscriptionCancelResponse)
                 : SOAP_EOM;
-  };
+  }
   virtual int __s0__Browse(
       _s0__Browse* s0__Browse, _s0__BrowseResponse* s0__BrowseResponse)
   {
     return soap ? soap_call___s0__Browse(
                       soap, endpoint, NULL, s0__Browse, s0__BrowseResponse)
                 : SOAP_EOM;
-  };
+  }
   virtual int __s0__GetProperties(_s0__GetProperties* s0__GetProperties,
       _s0__GetPropertiesResponse* s0__GetPropertiesResponse)
   {
     return soap ? soap_call___s0__GetProperties(soap, endpoint, NULL,
                       s0__GetProperties, s0__GetPropertiesResponse)
                 : SOAP_EOM;
-  };
+  }
 };
 #endif

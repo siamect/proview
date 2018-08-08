@@ -161,7 +161,7 @@ public:
 
 class ApplList {
 public:
-  ApplList() : root(NULL){};
+  ApplList() : root(NULL){}
 
   ApplListElem* root;
   void insert(
@@ -432,7 +432,7 @@ public:
   int is_editmode()
   {
     return editmode;
-  };
+  }
   void set_editmode(int value);
   int volume_attached(
       ldh_tWBContext wbcontext, ldh_tSesContext ldhsession, int pop);

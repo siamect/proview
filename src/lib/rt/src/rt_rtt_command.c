@@ -39,6 +39,7 @@
 
 /*_Include files_________________________________________________________*/
 
+#include <ctype.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -56,9 +57,6 @@
 #include "rt_gdh_msg.h"
 #include "rt_rtt_helptext.h"
 #include "rt_load.h"
-
-#define r_toupper(c) (((c) >= 'a' && (c) <= 'z') ? (c)&0xDF : (c))
-#define r_tolower(c) (((c) >= 'A' && (c) <= 'Z') ? (c) | 0x20 : (c))
 
 #define IF_NOGDH_RETURN                                                        \
   if (!rtt_gdh_started) {                                                      \
@@ -277,7 +275,7 @@ static int rtt_command_toupper(char* str_upper, char* str)
     if (namechar == '"' && prev_char != '\\')
       convert = !convert;
     if (convert) {
-      *t = (char)r_toupper(namechar);
+      *t = (char)toupper(namechar);
       if (*t == 'ö')
         *t = (char)'Ö';
       else if (*t == 'ä')
@@ -1545,7 +1543,7 @@ int rttcmd_print_func(menu_ctx ctx, int* flag)
 {
   int sts;
   char file_str[80];
-  char* file_ptr;
+  char* file_ptr = NULL;
   int append;
   int text_size;
   int parameter_size;
@@ -1775,7 +1773,7 @@ static int logging_func(menu_ctx ctx, int* flag)
     char* condition_ptr;
     int buffer_size;
     int nr;
-    int logg_type;
+    int logg_type = 0;
     int insert;
     int create;
     int shortname;
@@ -1917,7 +1915,7 @@ static int logging_func(menu_ctx ctx, int* flag)
     char* condition_ptr;
     int buffer_size;
     int nr;
-    int logg_type;
+    int logg_type = 0;
     int insert;
     int shortname;
 
@@ -3961,7 +3959,7 @@ rtt_t_comtbl rtt_command_table[] = {
   { "VIEW", &rtt_view_func, { "rtt_arg1", "/FILE", "" } },
   { "LOGIN", &rtt_login_func, { "rtt_arg1", "rtt_arg2", "" } },
   {
-      "",
+      "", NULL, { "" }
   }
 };
 
@@ -6277,7 +6275,7 @@ static int rtt_menulist_search(
     menu_ctx ctx, char* searchstr, int index, int* foundindex)
 {
   char* menu_ptr;
-  int size;
+  int size = 0;
   int i;
   char text[120];
 
@@ -6333,7 +6331,7 @@ static int rtt_getinput_func(void* filectx, ccm_sArg* arg_list, int arg_count,
     int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
     char* return_string)
 {
-  ccm_sArg *arg_p, *arg_p2, *arg_p3;
+  ccm_sArg *arg_p, *arg_p2 = NULL, *arg_p3 = NULL;
   int maxlen = 79;
   char input_str[80];
   int sts;
@@ -7940,7 +7938,7 @@ static int rtt_create_object(menu_ctx parent_ctx, char* classname, char* name)
 {
   int sts;
   pwr_tObjid objid;
-  pwr_tClassId class;
+  pwr_tClassId class = 0;
 
   /* Check if class */
   if (classname != NULL) {
@@ -8024,7 +8022,7 @@ static int rtt_delete_object(menu_ctx parent_ctx, char* name)
 
 static int rtt_show_step(menu_ctx parent_ctx, char* hiername, int initstep)
 {
-  int sts;
+  int sts = 0;
   int index = 0;
   rtt_t_menu_upd* menulist = 0;
   char title[80] = "ACTIVE STEP LIST";

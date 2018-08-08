@@ -408,7 +408,7 @@ static pwr_tStatus mb_rtu_send_data(io_sRack* rp, io_sAgentLocal* local_master,
 {
   io_sCardLocalMsg* local_card;
   io_sCard* cardp;
-  pwr_sClass_Modbus_RTU_Module* modulep;
+  pwr_sClass_Modbus_RTU_Module* modulep = NULL;
   pwr_tStatus sts;
   pwr_tCid cid;
   int modules;

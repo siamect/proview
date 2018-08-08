@@ -72,14 +72,14 @@ rt_io_comm     I/O Communication program\n\
 int main(int argc, char** argv)
 {
   pwr_tStatus sts = 1;
-  io_tCtx io_ctx;
+  io_tCtx io_ctx = NULL;
   io_tCtx io_ctx_swap;
   pwr_sClass_IOHandler* ihp;
   int swap_io;
   int close_io;
   int init_io;
   qcom_sQid qid = qcom_cNQid;
-  int tmo;
+  int tmo = 0;
   char mp[2000];
   qcom_sGet get;
   pwr_tTime now;
@@ -324,7 +324,7 @@ static pwr_sClass_IOHandler* init(qcom_sQid* qid, lst_sEntry** csup_lh,
 
   aproc_RegisterObject(oid);
 
-  if (*cycletime == 0)
+  if (feqf(*cycletime, 0.0f))
     *cycletime = ihp->CycleTimeBus;
 
   *csup_lh = csup_Init(&sts, oid, *cycletime);

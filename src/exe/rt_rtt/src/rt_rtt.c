@@ -37,6 +37,9 @@
 #include "rt_rtt_menu.h"
 #include "dtt_appl_rttsys_m.rdecl"
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+
 RTT_HELP_START
 
 RTT_HELP_SUBJ("PWR_RTT")
@@ -117,3 +120,5 @@ RTT_MENU_NEW("SYSTEM", dtt_menu_m6)
 RTT_MENUITEM_COMMAND("STORE", "SHOW FILE")
 RTT_MENUITEM_EXIT("EXIT")
 RTT_MAINMENU_END
+
+#pragma GCC diagnostic pop

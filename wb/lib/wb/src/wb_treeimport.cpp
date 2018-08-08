@@ -39,6 +39,10 @@
 #include "wb_cdrep.h"
 #include "wb_merep.h"
 
+wb_treeimport::~wb_treeimport()
+{
+}
+
 bool wb_treeimport::importTranslationTableInsert(pwr_tOix from, pwr_tOix to)
 {
   std::pair<pwr_tOix, pwr_tOix> p(from, to);
@@ -79,6 +83,11 @@ pwr_tCid wb_treeimport::importTranslateCid(pwr_tCid cid)
   if (it == m_translation_table_cid.end())
     return 0;
   return it->second;
+}
+
+void wb_treeimport::importSetSourceVid(pwr_tVid vid)
+{
+  m_import_source_vid = vid;
 }
 
 bool wb_treeimport::importUpdateTree(wb_vrep* vrep)
@@ -199,7 +208,6 @@ bool wb_treeimport::importUpdateObject(wb_orep* o, wb_vrep* vrep)
   wb_cdrep* cdrep = vrep->merep()->cdrep(&sts, o->cid());
   if (EVEN(sts))
     throw wb_error(sts);
-  pwr_mClassDef flags = cdrep->flags();
 
   for (int i = 0; i < 2; i++) {
     pwr_eBix bix = i ? pwr_eBix_rt : pwr_eBix_dev;

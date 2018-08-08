@@ -59,6 +59,15 @@ extern "C" {
 #include "rt_mh_appl.h"
 }
 
+sysmon_object::sysmon_object(pwr_sAttrRef* arp)
+    : aref(*arp), p(0), scan_div(0), scan_cnt(0)
+{
+}
+
+sysmon_object::~sysmon_object()
+{
+}
+
 void sysmon_object::open(double base_scantime)
 {
   pwr_tStatus sts;
@@ -226,7 +235,7 @@ int main()
 {
   pwr_tStatus sts;
   rt_sysmon sysmon;
-  int tmo;
+  int tmo = 0;
   char mp[2000];
   qcom_sQid qid = qcom_cNQid;
   qcom_sGet get;

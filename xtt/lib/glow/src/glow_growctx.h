@@ -123,7 +123,7 @@ public:
   void draw(GlowWind* w, double ll_x, double ll_y, double ur_x, double ur_y)
   {
     draw(w, (int)ll_x, (int)ll_y, (int)ur_x, (int)ur_y);
-  };
+  }
 
   //! Draw a specified area of the navigation window.
   /*! The drawing is done with extending drawing area which should be replaced
@@ -137,7 +137,7 @@ public:
   void nav_draw(GlowWind* w, double ll_x, double ll_y, double ur_x, double ur_y)
   {
     nav_draw(w, (int)ll_x, (int)ll_y, (int)ur_x, (int)ur_y);
-  };
+  }
 
   //! Draw the defered drawing area.
   /*! Redraw the area and deactivate refered drawing. */
@@ -152,7 +152,7 @@ public:
   grow_eMode mode()
   {
     return edit_mode;
-  };
+  }
 
   //! Open and load a subgraph with a specified name.
   /*!
@@ -218,7 +218,7 @@ public:
   int find_nc_by_name(const char* name, GlowArrayElem** element)
   {
     return a_nc.find_by_name(name, element);
-  };
+  }
 
   //! Find a conclass by name.
   /*!
@@ -229,7 +229,7 @@ public:
   int find_cc_by_name(char* name, GlowArrayElem** element)
   {
     return a_cc.find_by_name(name, element);
-  };
+  }
 
   //! Get next connection point number for a subgraph
   /*!
@@ -266,8 +266,6 @@ public:
 
   //! Set next objectname number.
   /*!
-    \return Next objectname number.
-
     Set the number for next objectname.
   */
   void set_next_objectname_num(int num)
@@ -300,18 +298,18 @@ public:
   {
     *list = a_move.a;
     *size = a_move.size();
-  };
+  }
   //! Reset polyline drawing sequence.
   void polyline_end()
   {
     polyline_not_first = 0;
-  };
+  }
 
   //! Execute dynamic code for all objects.
   void exec_dynamic()
   {
     a.exec_dynamic();
-  };
+  }
 
   //! Call the registred dynamic callback.
   void dynamic_cb(GlowArrayElem* object, char* code, glow_eDynamicType type);
@@ -321,119 +319,119 @@ public:
   void set_select_original_border_color(glow_eDrawType drawtype)
   {
     a_sel.set_original_border_color(drawtype);
-  };
+  }
 
   //! Set original text color on all selected objects.
   /*! \param drawtype	Original text color. */
   void set_select_original_text_color(glow_eDrawType drawtype)
   {
     a_sel.set_original_text_color(drawtype);
-  };
+  }
 
   //! Set original fill color on all selected objects.
   /*! \param drawtype	Original fill color. */
   void set_select_original_fill_color(glow_eDrawType drawtype)
   {
     a_sel.set_original_fill_color(drawtype);
-  };
+  }
 
   //! Set original color tone on all selected objects.
   /*! \param tone	Original color tone. */
   void set_select_original_color_tone(glow_eDrawTone tone)
   {
     a_sel.set_original_color_tone(tone);
-  };
+  }
 
   //! Set original background color on all selected objects.
   /*! \param drawtype	Background color. */
   void set_select_original_background_color(glow_eDrawType drawtype)
   {
     a_sel.set_original_background_color(drawtype);
-  };
+  }
 
   //! Set original color lighness on all selected objects.
   /*! \param lightness	Original color lightness. */
   void set_select_original_color_lightness(int lightness)
   {
     a_sel.set_original_color_lightness(lightness);
-  };
+  }
 
   //! Increase original color lightness on all selected objects.
   /*! \param lightness	Original color lightness increment. */
   void incr_select_original_color_lightness(int lightness)
   {
     a_sel.incr_original_color_lightness(lightness);
-  };
+  }
 
   //! Set original color intensity on all selected objects.
   /*! \param intensity	Original color intensity. */
   void set_select_original_color_intensity(int intensity)
   {
     a_sel.set_original_color_intensity(intensity);
-  };
+  }
 
   //! Increase original color intensity on all selected objects.
   /*! \param intensity	Original color intensiity increment. */
   void incr_select_original_color_intensity(int intensity)
   {
     a_sel.incr_original_color_intensity(intensity);
-  };
+  }
 
   //! Set original color shift on all selected objects.
   /*! \param shift	Original color shift. */
   void set_select_original_color_shift(int shift)
   {
     a_sel.set_original_color_shift(shift);
-  };
+  }
 
   //! Increase original color shift on all selected objects.
   /*! \param shift	Original color shift. */
   void incr_select_original_color_shift(int shift)
   {
     a_sel.incr_original_color_shift(shift);
-  };
+  }
 
   //! Set linewidth on all selected objects.
   /*! \param linewidth	Line width. */
   void set_select_linewidth(int linewidth)
   {
     a_sel.set_linewidth(linewidth);
-  };
+  }
 
   //! Set or reset fill on all selected objects.
   /*! \param fill	Fill. */
   void set_select_fill(int fill)
   {
     a_sel.set_fill(fill);
-  };
+  }
 
   //! Set or reset border on all selected objects.
   /*! \param border	Border. */
   void set_select_border(int border)
   {
     a_sel.set_border(border);
-  };
+  }
 
   //! Set or reset shadow on all selected objects.
   /*! \param shadow	Shadow. */
   void set_select_shadow(int shadow)
   {
     a_sel.set_shadow(shadow);
-  };
+  }
 
   //! Set gradient type on all selected objects.
   /*! \param gradient	Gradient type. */
   void set_select_gradient(glow_eGradient gradient)
   {
     a_sel.set_gradient(gradient);
-  };
+  }
 
   //! Set linetype on all selected objects.
   /*! \param type       Linetype. */
   void set_select_linetype(glow_eLineType type)
   {
     a_sel.set_linetype(type);
-  };
+  }
 
   //! Scale selected object.
   /*!
@@ -477,7 +475,7 @@ public:
   void get_background(glow_eDrawType* color)
   {
     *color = background_color;
-  };
+  }
 
   //! Set background image.
   /*! \param image	Name of image file. */
@@ -540,13 +538,13 @@ public:
   void disable_highlight()
   {
     highlight_disabled = 1;
-  };
+  }
 
   //! Enable hightlight function.
   void enable_highlight()
   {
     highlight_disabled = 0;
-  };
+  }
 
   //! Set dynamic code for subgraph.
   void set_dynamic(char* code, int size);
@@ -556,7 +554,7 @@ public:
   {
     *code = dynamic;
     *size = dynamicsize;
-  };
+  }
 
   //! Get list of nodeclasses.
   /*!
@@ -567,7 +565,7 @@ public:
   {
     *list = a_nc.a;
     *size = a_nc.size();
-  };
+  }
 
   //! Get list of groups.
   /*!
@@ -629,28 +627,28 @@ public:
   int is_subgraph()
   {
     return subgraph;
-  };
+  }
 
   //! Check if object is a slider.
   /*! \return 		Returns 1 if object is a slider, else 0. */
   int is_slider()
   {
     return slider;
-  };
+  }
 
   //! Set that graph is modified or not since last save.
   /*! \param mod 	1: graph is modified, 0: graph is not modified. */
   void set_modified(int mod)
   {
     modified = mod;
-  };
+  }
 
   //! Get if graph is modified or not since last save.
   /*! \return  	Returns 1 if graph is modified, 0 if graph is not modified. */
   int get_modified()
   {
     return modified;
-  };
+  }
 
   //! Measure the extension of a subgraph.
   /*!
@@ -793,7 +791,7 @@ public:
     *time = scantime;
     *fast_time = fast_scantime;
     *animation_time = animation_scantime;
-  };
+  }
 
   //! Store the current zoomfactor and offsets.
   /*! The stored geometry is restored with restore_geometry(); */
@@ -842,7 +840,7 @@ public:
     y0 = ny0;
     x1 = nx1;
     y1 = ny1;
-  };
+  }
 
   //! Get layout
   /*!
@@ -857,7 +855,7 @@ public:
     *ny0 = y0;
     *nx1 = x1;
     *ny1 = y1;
-  };
+  }
 
   //! Group the selected objects.
   /*!
@@ -916,7 +914,7 @@ public:
   void set_scale_equal(int equal)
   {
     scale_equal = equal;
-  };
+  }
 
   //! Call the translate callback if such a callback is registred.
   /*!

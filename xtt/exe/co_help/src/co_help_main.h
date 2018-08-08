@@ -50,9 +50,7 @@
 class CoHelpMain {
 public:
   CoHelpMain(int argc, char* argv[], int* return_sts);
-  virtual ~CoHelpMain()
-  {
-  }
+  virtual ~CoHelpMain();
   void exec_help();
 
   char topic[80];

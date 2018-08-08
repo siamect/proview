@@ -245,7 +245,7 @@ static pwr_tStatus GenerateXddFile(ldh_sMenuCall* ip)
         int ai16_cnt = 0;
         int ai32_cnt = 0;
         int rx_cnt = 0;
-        int entries;
+        int entries = 0;
         int rx_offset = 0;
 
         fprintf(fout, "          <Object index=\"1600\" "
@@ -391,7 +391,7 @@ static pwr_tStatus GenerateXddFile(ldh_sMenuCall* ip)
         int ao32_cnt = 0;
         int tx_cnt = 0;
         int tx_offset = 0;
-        int entries;
+        int entries = 0;
 
         fprintf(fout, "          <Object index=\"1A00\" "
                       "name=\"PDO_TxMappParam_00h_AU64\" objectType=\"8\" "

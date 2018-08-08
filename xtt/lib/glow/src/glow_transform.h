@@ -46,7 +46,7 @@ public:
   GlowTransform()
       : a11(1), a12(0), a13(0), a21(0), a22(1), a23(0), rotation(0), s_a11(1),
         s_a12(0), s_a13(0), s_a21(0), s_a22(1), s_a23(0), s_rotation(0),
-        stored(false){};
+        stored(false){}
   GlowTransform operator*(const GlowTransform p);
   void scale(double sx, double sy, double x0, double y0);
   void rotate(double angle, double x0, double y0);
@@ -59,7 +59,7 @@ public:
     a21 = 0;
     a22 = 1;
     a23 = 0;
-  };
+  }
   double x(double x1, double y1);
   double y(double x1, double y1);
   double x(GlowTransform* t, double x1, double y1);
@@ -70,11 +70,11 @@ public:
   double rot(GlowTransform* t)
   {
     return t->rotation + rotation;
-  };
+  }
   double rot()
   {
     return rotation;
-  };
+  }
   void store()
   {
     s_a11 = a11;
@@ -85,7 +85,7 @@ public:
     s_a23 = a23;
     s_rotation = rotation;
     stored = true;
-  };
+  }
   void revert()
   {
     a11 = s_a11;
@@ -95,7 +95,7 @@ public:
     a22 = s_a22;
     a23 = s_a23;
     rotation = s_rotation;
-  };
+  }
   void scale_from_stored(double sx, double sy, double x0, double y0);
   void rotate_from_stored(double angle, double x0, double y0);
   void move_from_stored(double x0, double y0);

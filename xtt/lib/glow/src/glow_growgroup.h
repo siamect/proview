@@ -63,7 +63,7 @@ public:
       GrowCtx* glow_ctx, const char* name, GlowArray& array, int nodraw = 0);
 
   //! Noargs constructor.
-  GrowGroup(){};
+  GrowGroup(){}
 
   GrowGroup(GrowCtx* glow_ctx, const char* name);
   ~GrowGroup();
@@ -130,7 +130,7 @@ public:
   {
     *list = nc->a.a;
     *size = nc->a.size();
-  };
+  }
 
   //! Find a member object with matching dyntype and coordinates.
   /*!

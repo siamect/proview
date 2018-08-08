@@ -76,7 +76,7 @@ public:
   void erase(GlowWind* w)
   {
     erase(w, (GlowTransform*)NULL, hot, NULL);
-  };
+  }
 
   void draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
 
@@ -91,7 +91,7 @@ public:
   glow_eObjectType type()
   {
     return glow_eObjectType_GrowTrend;
-  };
+  }
 
   void set_trace_attr(GlowTraceData* attr); //!< Obsolete
   void get_trace_attr(GlowTraceData** attr); //!< Obsolete
@@ -105,7 +105,7 @@ public:
   {
     vertical_lines = v;
     horizontal_lines = h;
-  };
+  }
 
   double y_max_value[TREND_MAX_CURVES]; //!< Max y values of the curves.
   double y_min_value[TREND_MAX_CURVES]; //!< Min y values of the curves.
@@ -165,7 +165,7 @@ public:
   void get_scan_time(double* time)
   {
     *time = scan_time;
-  };
+  }
 
   void set_range_y(int curve, double min, double max);
 
@@ -176,7 +176,7 @@ public:
   void set_fill_curve(int fill)
   {
     fill_curve = fill;
-  };
+  }
 
   //! Set user data.
   /*!
@@ -185,7 +185,7 @@ public:
   void set_user_data(void* data)
   {
     user_data = data;
-  };
+  }
 
   //! Get user data.
   /*!
@@ -194,7 +194,7 @@ public:
   void get_user_data(void** data)
   {
     *data = user_data;
-  };
+  }
 
   void set_trend_info(glow_sTrendInfo* info);
 

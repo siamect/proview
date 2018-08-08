@@ -64,8 +64,6 @@
 
 #define DRAW_PRESS_PIX 9
 
-#define roundi(x) ((x) >= 0 ? (int)((x) + 0.5) : (int)((x)-0.5))
-
 static char font_names[glow_eFont__][glow_eDrawFont__][DRAW_FONT_SIZE][80] = {
   { { "-*-Helvetica-Medium-R-Normal--8-*-*-*-P-*-ISO8859-1",
         "-*-Helvetica-Bold-R-Normal--10-*-*-*-P-*-ISO8859-1",
@@ -495,7 +493,7 @@ int GlowDrawQt::event_handler(QEvent* event)
         if (click_sensitivity & glow_mSensitivity_MB1Click
             && !(click_sensitivity & glow_mSensitivity_MB1DoubleClick)
             && !(click_sensitivity & glow_mSensitivity_MB1Press)) {
-          memcpy(&last_event, &event, sizeof(event));
+          memcpy((void*)&last_event, (void*)&event, sizeof(QEvent));
           button_pressed = 0;
           button_clicked = 1;
           last_press_x = mouseEvent->x();
@@ -504,7 +502,7 @@ int GlowDrawQt::event_handler(QEvent* event)
         } else if (!(click_sensitivity & glow_mSensitivity_MB1Click)
             && !(click_sensitivity & glow_mSensitivity_MB1DoubleClick)
             && click_sensitivity & glow_mSensitivity_MB1Press) {
-          memcpy(&last_event, &event, sizeof(event));
+          memcpy((void*)&last_event, (void*)&event, sizeof(QEvent));
           button_pressed = 1;
           button_clicked = 0;
           last_press_x = mouseEvent->x();
@@ -524,7 +522,7 @@ int GlowDrawQt::event_handler(QEvent* event)
         } else if (click_sensitivity & glow_mSensitivity_MB3Click
             && !(click_sensitivity & glow_mSensitivity_MB3DoubleClick)
             && !(click_sensitivity & glow_mSensitivity_MB3Press)) {
-          memcpy(&last_event, &event, sizeof(event));
+          memcpy((void*)&last_event, (void*)&event, sizeof(QEvent));
           button_pressed = 0;
           button_clicked = 1;
           last_press_x = mouseEvent->x();
@@ -542,7 +540,7 @@ int GlowDrawQt::event_handler(QEvent* event)
         button_clicked_and_pressed = 1;
         cancel_event_timer();
         button_clicked = 0;
-        memcpy(&last_event, &event, sizeof(event));
+        memcpy((void*)&last_event, (void*)&event, sizeof(QEvent));
         button_pressed = mouseEvent->button();
         last_press_x = mouseEvent->x();
         last_press_y = mouseEvent->y();
@@ -550,7 +548,7 @@ int GlowDrawQt::event_handler(QEvent* event)
         return 1;
       }
       if (!button_pressed) {
-        memcpy(&last_event, &event, sizeof(event));
+        memcpy((void*)&last_event, (void*)&event, sizeof(QEvent));
         button_pressed = mouseEvent->button();
         last_press_x = mouseEvent->x();
         last_press_y = mouseEvent->y();
@@ -700,7 +698,7 @@ int GlowDrawQt::event_handler(QEvent* event)
         cancel_event_timer();
         if (!button_clicked_and_pressed) {
           /* wait for button double click */
-          memcpy(&last_event, &event, sizeof(event));
+          memcpy((void*)&last_event, (void*)&event, sizeof(QEvent));
           button_clicked = 1;
           event_timer(200);
           button_pressed = 0;
@@ -1705,7 +1703,7 @@ int GlowDrawQt::get_text_extent(const char* text, int len,
 
   int font_type = get_font_type(painter_type);
 
-  QFontMetrics fontMetrics(QFont(font_names[font_idx][font_type][idx]));
+  QFontMetrics fontMetrics = QFontMetrics(QFont(font_names[font_idx][font_type][idx]));
   QRect rect = fontMetrics.boundingRect(QString::fromLocal8Bit(text, len));
   *width = rect.width();
   int text_ascent = fontMetrics.ascent();
@@ -2212,7 +2210,7 @@ int GlowDrawQt::print(char* filename, double x0, double x1, int end)
   width = image.width();
   height = image.height();
 
-  if (x0 != 0 || x1 != 0) {
+  if (!feq(x0, 0.0) || !feq(x1, 0.0)) {
     double total_width = width / (x1 - x0);
 
     if (total_width * scalex > ps_cPageWidth - ps_cLeftMargin) {
@@ -2234,7 +2232,7 @@ int GlowDrawQt::print(char* filename, double x0, double x1, int end)
       scaley = scaley * scale_factor;
     }
   }
-  if ((x0 == 0 && x1 == 0) || x1 == 1.0) {
+  if ((feq(x0, 0.0) && feq(x1, 0.0)) || feq(x1, 1.0)) {
     ps->y -= scaley * height;
   }
 
@@ -3121,7 +3119,6 @@ int GlowDrawQt::gradient_fill_polyline(GlowWind* wind, glow_sPointX* points,
   return 1;
 }
 
-#define FONTSTR "Lucida Sans"
 #define FONT_SCALE 0.7
 #define FONT_DESCENT 0.22
 
@@ -3396,7 +3393,7 @@ void GlowDrawQt::event_exec(void* event, unsigned int size)
     return;
   }
 
-  memcpy(&e, event, size);
+  memcpy((void *)&e, (void *)event, size);
   // e.any.window = m_wind->window;
 
   switch (e.type()) {

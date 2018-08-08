@@ -110,7 +110,7 @@ int Cmd::get_wbctx(void* ctx, ldh_tWBContext* wbctx)
 int Cmd::attach_volume_cb(void* ctx, pwr_tVolumeId volid, int pop)
 {
   Cmd* cmd = (Cmd*)ctx;
-  int sts;
+  int sts = 0;
   pwr_tVolumeId vid;
   pwr_tClassId classid;
 
@@ -475,5 +475,4 @@ GNU General Public License for more details.\n\n";
     dcli_remove_blank(str, str);
     sts = wnav->command(str);
   }
-  dcli_input_end(&chn, recall_buf);
 }

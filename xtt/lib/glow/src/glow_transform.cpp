@@ -172,8 +172,8 @@ double GlowTransform::y(GlowTransform* t, double x1, double y1)
 
 bool GlowTransform::reverse(double x, double y, double* rx, double* ry)
 {
-  if (a11 == 0 || (a12 * a21 - a11 * a22) == 0) {
-    if (a11 == 0 && a22 == 0 && a12 != 0 && a21 != 0) {
+  if (feq(a11, 0.0) || feq(a12 * a21 - a11 * a22, 0.0)) {
+    if (feq(a11, 0.0) && feq(a22, 0.0) && !feq(a12, 0.0) && !feq(a21, 0.0)) {
       *ry = (x - a13) / a12;
       *rx = (y - a23) / a21;
       return true;
@@ -212,7 +212,7 @@ void GlowTransform::save(std::ofstream& fp, glow_eSaveMode mode)
 
 void GlowTransform::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 

@@ -1023,8 +1023,8 @@ int XttSevHist::sevhist_export_cb(void* ctx, pwr_tTime* from, pwr_tTime* to,
 
     strncpy(str, s1 + strlen("$date"), sizeof(str));
     *s1 = 0;
-    strncat(fname, timstr, sizeof(fname));
-    strncat(fname, str, sizeof(fname));
+    strncat(fname, timstr, sizeof(fname) - strlen(fname) - 1);
+    strncat(fname, str, sizeof(fname) - strlen(fname) - 1);
   }
 
   dcli_translate_filename(fname, fname);

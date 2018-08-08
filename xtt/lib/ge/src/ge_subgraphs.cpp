@@ -55,12 +55,6 @@
 #include "xnav_bitmap_openmap12.h"
 #include "xnav_bitmap_attr12.h"
 
-#define SUBGRAPHS__INPUT_SYNTAX 2
-#define SUBGRAPHS__OBJNOTFOUND 4
-#define SUBGRAPHS__STRINGTOLONG 6
-#define SUBGRAPHS__ITEM_NOCREA 8
-#define SUBGRAPHS__SUCCESS 1
-
 static char null_str[] = "";
 
 static void subgraphs_attr_close_cb(
@@ -497,7 +491,7 @@ int SubGraphs::object_attr()
 
   brow_ResetNodraw(brow->ctx);
   brow_Redraw(brow->ctx, 0);
-  return SUBGRAPHS__SUCCESS;
+  return 1;
 }
 
 void SubGraphsBrow::brow_setup()

@@ -36,18 +36,20 @@
 
 /* xtt_xnav.cpp -- Display plant and node hierarchy */
 
-#include <float.h>
 #include <stdlib.h>
 
 #include "pwr_privilege.h"
-#include "rt_gdb.h"
-#include "rt_gdh_msg.h"
-#include "co_dcli.h"
 #include "co_api_user.h"
+#include "co_dcli.h"
+#include "co_msg.h"
 #include "co_syi.h"
 #include "co_time_msg.h"
 #include "co_error.h"
+#include "rt_gdb.h"
+#include "rt_gdh_msg.h"
+
 #include "cow_xhelp.h"
+
 #include "xtt_item.h"
 #include "xtt_xatt.h"
 #include "xtt_xcrr.h"
@@ -503,16 +505,16 @@ void XNav::attrvalue_to_string(int type_id, pwr_tTid tid, void* value_ptr,
     break;
   }
   case pwr_eType_Float32: {
-    if (*(float*)value_ptr == FLT_MIN) {
+    if (feqf(*(float*)value_ptr, FLT_MIN)) {
       strcpy(str, "FltMin");
       *len = strlen(str);
-    } else if (*(float*)value_ptr == -FLT_MIN) {
+    } else if (feqf(*(float*)value_ptr, -FLT_MIN)) {
       strcpy(str, "FltNMin");
       *len = strlen(str);
-    } else if (*(float*)value_ptr == FLT_MAX) {
+    } else if (feqf(*(float*)value_ptr, FLT_MAX)) {
       strcpy(str, "FltMax");
       *len = strlen(str);
-    } else if (*(float*)value_ptr == -FLT_MAX) {
+    } else if (feqf(*(float*)value_ptr, -FLT_MAX)) {
       strcpy(str, "FltNMax");
       *len = strlen(str);
     } else {
@@ -577,10 +579,10 @@ void XNav::attrvalue_to_string(int type_id, pwr_tTid tid, void* value_ptr,
     if (!format) {
       switch (conv) {
       case xnav_eConv_Hex:
-        *len = snprintf(str, size, "0x%hx", *(unsigned char*)value_ptr);
+        *len = snprintf(str, size, "0x%hhx", *(unsigned char*)value_ptr);
         break;
       case xnav_eConv_Octal:
-        *len = snprintf(str, size, "0%ho", *(unsigned char*)value_ptr);
+        *len = snprintf(str, size, "0%hho", *(unsigned char*)value_ptr);
         break;
       case xnav_eConv_Binary:
         cdh_MaskToBinaryString(*(unsigned int*)value_ptr, 8, str);
@@ -673,10 +675,10 @@ void XNav::attrvalue_to_string(int type_id, pwr_tTid tid, void* value_ptr,
     if (!format) {
       switch (conv) {
       case xnav_eConv_Hex:
-        *len = snprintf(str, size, "0x%hx", *(unsigned char*)value_ptr);
+        *len = snprintf(str, size, "0x%hhx", *(unsigned char*)value_ptr);
         break;
       case xnav_eConv_Octal:
-        *len = snprintf(str, size, "0%ho", *(unsigned char*)value_ptr);
+        *len = snprintf(str, size, "0%hho", *(unsigned char*)value_ptr);
         break;
       case xnav_eConv_Binary:
         cdh_MaskToBinaryString(*(unsigned int*)value_ptr, 8, str);
@@ -1450,7 +1452,7 @@ int XNav::set_attr_value(char* value_str)
     if (EVEN(sts))
       return sts;
 
-    if (!(item->max_limit == 0 && item->min_limit == 0)) {
+    if (!(feq(item->max_limit, 0.0) && feq(item->min_limit, 0.0))) {
       switch (item->type_id) {
       case pwr_eType_UInt32:
         if (*(pwr_tUInt32*)buffer < item->min_limit
@@ -2448,7 +2450,7 @@ int XNav::trace_scan_bc(brow_tObject object, void* p)
       brow_GetCtxUserData(brow_GetCtx(item->node), (void**)&xnav);
       try {
         ((ItemCollect*)item)->set_signal_flags(xnav->brow);
-      } catch (co_error& e) {
+      } catch (co_error&) {
       }
     }
 
@@ -2878,7 +2880,7 @@ int XNav::display_object(pwr_sAttrRef* arp, int open)
       pwr_tAName name;
       cdh_sParseName parsename;
       cdh_sParseName* pn;
-      Item* aitem;
+      Item* aitem = NULL;
       char idx[20];
 
       sts = gdh_AttrrefToName(arp, name, sizeof(name), cdh_mName_volumeStrict);
@@ -3235,7 +3237,7 @@ xnav_sMenu* XNav::menu_tree_build_children(
     xnav_sStartMenu* first_child, xnav_sMenu* parent)
 {
   xnav_sStartMenu* start_menu_p;
-  xnav_sMenu *menu_p, *prev;
+  xnav_sMenu *menu_p, *prev = NULL;
   xnav_sMenu* return_menu = NULL;
   int first = 1;
 
@@ -3343,7 +3345,7 @@ int XNav::menu_tree_insert(char* title, int item_type, char* command,
     menu_ePixmap pixmap, char* destination, int dest_code,
     xnav_sMenu** menu_item)
 {
-  xnav_sMenu* dest_item;
+  xnav_sMenu* dest_item = NULL;
   xnav_sMenu *menu_p, *child_p, *mp;
   int sts;
   int first_child = 0;
@@ -3455,7 +3457,7 @@ int XNav::menu_tree_search_children(
 {
   xnav_sMenu* menu_p;
   char* s;
-  char* next_search_name;
+  char* next_search_name = NULL;
   char search_name[80];
   char up_title[80];
   int final_search;
@@ -3912,7 +3914,7 @@ void ApplList::insert(applist_eType type, void* ctx, pwr_tObjid objid,
 void ApplList::remove(void* ctx)
 {
   ApplListElem* elem;
-  ApplListElem* prev;
+  ApplListElem* prev = NULL;
 
   for (elem = root; elem; elem = elem->next) {
     if (elem->ctx == ctx) {
@@ -4327,9 +4329,9 @@ void XNav::refresh()
   brow_tNode* node_list;
   int sel_node_count;
   Item* item_sel;
-  pwr_tObjid* sel_objid;
-  int* sel_type;
-  char* sel_attr;
+  pwr_tObjid* sel_objid = NULL;
+  int* sel_type = NULL;
+  char* sel_attr = NULL;
 
   // Store all open objects
 

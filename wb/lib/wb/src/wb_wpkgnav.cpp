@@ -481,6 +481,20 @@ int WPkgNav::get_select(WItemPkg*** items, int* item_cnt)
   return PKG__SUCCESS;
 }
 
+WItemPkg::WItemPkg() : node(0)
+{
+}
+
+int WItemPkg::open_children(
+    WNavBrow* brow, double x, double y, int display_mode)
+{
+  return 1;
+}
+
+WItemPkg::~WItemPkg()
+{
+}
+
 int WItemPkg::close(WNavBrow* brow, double x, double y)
 {
   double node_x, node_y;
@@ -685,6 +699,10 @@ WItemPkgInfo::WItemPkgInfo(WNavBrow* brow, const char* item_name,
   brow_SetAnnotation(node, 1, item_value, strlen(item_value));
 }
 
+WItemPkgInfo::~WItemPkgInfo()
+{
+}
+
 WItemPkgFileHier::WItemPkgFileHier(WNavBrow* brow, const char* item_name,
     char* item_packagename, brow_tNode dest, flow_eDest dest_code)
 {
@@ -713,7 +731,7 @@ int WItemPkgFileHier::open_children(
   int inserted = 0;
   brow_tObject child;
   int sts;
-  brow_tObject next_pkg, next_files, parent;
+  brow_tObject next_pkg = NULL, next_files = NULL, parent;
   int next_pkg_was_open = 0;
   int next_files_was_open = 0;
 
@@ -875,4 +893,8 @@ WItemPkgFile::WItemPkgFile(WNavBrow* brow, const char* item_name,
       brow_SetAnnotation(node, 0, filename, strlen(filename));
   }
   brow_SetAnnotation(node, 3, timestr, strlen(timestr));
+}
+
+WItemPkgFile::~WItemPkgFile()
+{
 }

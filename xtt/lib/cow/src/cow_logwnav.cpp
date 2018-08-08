@@ -427,6 +427,10 @@ ItemLog::ItemLog(CoLogWNav* item_logwnav, const char* item_name,
     brow_SetAnnotPixmap(node, 0, logwnav->brow->pixmap_clone);
 }
 
+ItemLog::~ItemLog()
+{
+}
+
 void CoLogWNav::item_cb(void* ctx, pwr_tTime time, char* category, char* user,
     char* item, char* comment)
 {

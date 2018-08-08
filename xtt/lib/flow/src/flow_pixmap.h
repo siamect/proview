@@ -51,7 +51,7 @@ public:
   void print_zoom();
   void traverse(int x, int y);
   int event_handler(void* pos, flow_eEvent event, int x, int y, void* node);
-  void conpoint_select(void* pos, int x, int y, double* distance, void** cp){};
+  void conpoint_select(void* pos, int x, int y, double* distance, void** cp){}
   void print(void* pos, void* node, int highlight);
   void save(std::ofstream& fp, flow_eSaveMode mode);
   void open(std::ifstream& fp);
@@ -68,11 +68,11 @@ public:
   int get_conpoint(int num, double* x, double* y, flow_eDirection* dir)
   {
     return 0;
-  };
+  }
   flow_eObjectType type()
   {
     return flow_eObjectType_Pixmap;
-  };
+  }
   FlowCtx* ctx;
   FlowPoint p;
   void* pixmaps;

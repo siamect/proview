@@ -67,7 +67,7 @@ void FlowLine::traverse(int x, int y)
 
 void FlowLine::print(void* pos, void* node, int highlight)
 {
-  if (p1.print_z_x == p2.print_z_x && p1.print_z_y == p2.print_z_y)
+  if (feq(p1.print_z_x, p2.print_z_x) && feq(p1.print_z_y, p2.print_z_y))
     return;
   double idx = ctx->print_zoom_factor / ctx->base_zoom_factor * line_width;
   idx = MAX(0, idx);

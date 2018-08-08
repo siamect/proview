@@ -39,6 +39,8 @@
 * Contains internal and engine functions for antisway objects.
 */
 
+#include "co_math.h"
+
 #include "ssabox_as_phasor_methods.h"
 
 /* Prototype declarations of internal functions */
@@ -104,8 +106,8 @@ unsigned int AS_Engine_man(int newCall, int hoisting, int hoisted, int verbose,
 
     /* If there is a chance SaComp can't be allocated - reduce and allocate
      * residual separately */
-    if (fabs(SaComp) > amaxH - amaxS) {
-      Sa0 = AS_SIGN(SaComp) * (amaxH - amaxS);
+    if (ABS(SaComp) > amaxH - amaxS) {
+      Sa0 = SIGN(SaComp) * (amaxH - amaxS);
       addPhasor(
           Setp, 0.0, -omega * dt, SaComp - Sa0); /* Add compensation residual */
       AS_collapseSet(Setp, shp, amaxS);
@@ -220,7 +222,7 @@ static unsigned int makeSet_man(AS_phasorSet* Setp, const AS_shaper* shp,
       || Setp->N > AS_COLLAPSE_LIM) { /* shaper ok with AS_collapseSet, or too
                                          many phasors in set */
     AS_collapseSet(Setp, shp, amax);
-  } else if (fabs(uCommand - uc) < fabs(Setp->extSum / omega)
+  } else if (ABS(uCommand - uc) < ABS(Setp->extSum / omega)
       && Setp->N > 0) { /* Non-collapse shaper. End allocation. */
     reflectionPoint = 0.0;
     reflectSet(Setp, &reflectionPoint);
@@ -313,9 +315,9 @@ static unsigned int makeSet_auto(AS_phasorSet* Setp, const AS_shaper* shp,
         else /* Empty set needs special treatment. Situation should not occur,
                 however.. */
           ext_travel = -phi_d;
-        if (fabs(ext_travel - ext_match)
+        if (ABS(ext_travel - ext_match)
             < ext_min) { /* Found new minimum extension */
-          ext_min = fabs(ext_travel - ext_match);
+          ext_min = ABS(ext_travel - ext_match);
           uCmd_minext = uCmd;
         }
       }
@@ -328,7 +330,7 @@ static unsigned int makeSet_auto(AS_phasorSet* Setp, const AS_shaper* shp,
 
   /* Check that a minimum positive extension was actually found before using
    * uCmd_minext. */
-  if (ext_min != DBL_MAX) {
+  if (!feq(ext_min, DBL_MAX)) {
     /* Use uCmd that yields min time */
     uCmd = uCmd_minext;
     assignSet(&aSet, Setp);
@@ -450,16 +452,16 @@ static unsigned int mergeSet(AS_phasorSet* Setp, const AS_shaper* shp,
   int n, count, addCount;
 
   /* Initialize variables */
-  S = AS_SIGN(SuDiff); /* Extracting the sign */
-  uDiff = fabs(SuDiff); /* Absolute value */
+  S = SIGN(SuDiff); /* Extracting the sign */
+  uDiff = ABS(SuDiff); /* Absolute value */
 
   offset = 0.0; /* Phase offset. Positive*/
   offsetlim = (reflected ? (shp->phi[shp->N - 1] - Setp->ph[Setp->N - 1].phiEnd)
                          : DBL_MAX);
   count = 0;
   addCount = 0;
-  while (fabs(uDiff) > AS_EPSILON
-      && (offsetlim - offset > AS_EPSILON
+  while (ABS(uDiff) > 100.0 * DBL_EPSILON
+      && (offsetlim - offset > 100.0 * DBL_EPSILON
              && count
                  < AS_MERGE_ITER_LIM)) { /* Allocate phasors until uCommand is
                                             attained */
@@ -472,12 +474,12 @@ static unsigned int mergeSet(AS_phasorSet* Setp, const AS_shaper* shp,
                                  acceleration. Positive */
     for (n = 0; n < shp->N; n++) /* Repeat for all the pulses in the shaper */
       phaseInterval(Setp, shp->phi[n] - offset, S * shp->A[n] * amax,
-          AS_SIGN(S * shp->A[n]) * AS_MAX(1.0, fabs(shp->A[n])) * amax, &aRatio,
+          SIGN(S * shp->A[n]) * MAX(1.0, ABS(shp->A[n])) * amax, &aRatio,
           &ext, reflected);
     if (aRatio
         > 0.0) { /* Possible to allocate phasors at current offset value ? */
       tmp = omega / (aRatio * shp->ASum * amax);
-      ext = AS_MIN(ext, uDiff * tmp);
+      ext = MIN(ext, uDiff * tmp);
       uDiff
           -= ext / tmp; /* count down uDiff, the velocity change remaining to
                            place out */
@@ -500,7 +502,7 @@ static unsigned int mergeSet(AS_phasorSet* Setp, const AS_shaper* shp,
         count, addCount);
 
   if (offsetlim - offset
-      <= AS_EPSILON) /* Could not allocate phasors further (should be possible
+      <= 100.0 * DBL_EPSILON) /* Could not allocate phasors further (should be possible
                         only in reflected mode). */
     return AS_ERR_MERGE_OFFSETLIM;
 
@@ -539,19 +541,19 @@ static void phaseInterval(const AS_phasorSet* Setp, double phi, double SaWanted,
   cont = 1;
   while (php < Setp->ph + Setp->N && cont) {
     if (phi - php->phiEnd
-        > AS_EPSILON) { /* Found first phasor located after phi in time */
-      if (phi - php->phiStart > AS_EPSILON) { /* in front of phasor (i.e. not
+        > 100.0 * DBL_EPSILON) { /* Found first phasor located after phi in time */
+      if (phi - php->phiStart > 100.0 * DBL_EPSILON) { /* in front of phasor (i.e. not
                                                  within, or at phiStart of
                                                  phasor) ? */
-        *ext = AS_MIN(*ext, phi - php->phiStart);
+        *ext = MIN(*ext, phi - php->phiStart);
         *aRatio = ((php == Setp->ph && reflected)
                 ? 0.0
-                : AS_MIN(*aRatio, SamaxS
+                : MIN(*aRatio, SamaxS
                           / SaWanted)); /* Set ratio to zero if in reflected
                                            mode, and in front of FIRST phasor */
       } else { /* Within phasor */
-        *ext = AS_MIN(*ext, phi - php->phiEnd);
-        *aRatio = AS_MIN(*aRatio, AS_MAX(0.0, (SamaxS - php->Sa) / SaWanted));
+        *ext = MIN(*ext, phi - php->phiEnd);
+        *aRatio = MIN(*aRatio, MAX(0.0, (SamaxS - php->Sa) / SaWanted));
       }
       cont = 0; /* Do not continue further */
     } else /* Current phasor before phi in time. Step up phasor pointer to look
@@ -563,7 +565,7 @@ static void phaseInterval(const AS_phasorSet* Setp, double phi, double SaWanted,
                                 adjust aRatio. ext is fine.*/
     *aRatio = (reflected
             ? 0.0
-            : AS_MIN(*aRatio, SamaxS
+            : MIN(*aRatio, SamaxS
                       / SaWanted)); /* Set ratio to zero if in reflected mode */
 }
 
@@ -587,8 +589,8 @@ static void cleanSet(AS_phasorSet* Setp)
   /* Delete zero extension phasors */
   for (n = 0; n < Setp->N; n++) {
     php = Setp->ph + n;
-    if (AS_MIN(fabs(php->phiEnd - php->Phi), fabs(php->phiStart - php->Phi))
-        < AS_EPSILON)
+    if (MIN(ABS(php->phiEnd - php->Phi), ABS(php->phiStart - php->Phi))
+        < 100.0 * DBL_EPSILON)
       removePhasor(Setp, n--); /* n is stepped down so that the subsequent
                                   phasor will not be skipped in the next loop
                                   run */
@@ -599,7 +601,7 @@ static void cleanSet(AS_phasorSet* Setp)
   php = Setp->ph;
   while (php + 1 < Setp->ph + Setp->N) {
     if ((php + 1)->phiStart - php->phiEnd
-        > AS_EPSILON) { /* overlap: end1 is beyond start2 */
+        > 100.0 * DBL_EPSILON) { /* overlap: end1 is beyond start2 */
       s1 = php->phiStart;
       s2 = (php + 1)->phiStart;
       e1 = php->phiEnd;
@@ -610,7 +612,7 @@ static void cleanSet(AS_phasorSet* Setp)
       removePhasor(Setp, n); /* Remove n */
       removePhasor(
           Setp, n); /* Remove the phasor that previously had index n+1 */
-      if (fabs(s1 - s2) < AS_EPSILON) { /* Same starting point */
+      if (ABS(s1 - s2) < 100.0 * DBL_EPSILON) { /* Same starting point */
         s1 = 0.5 * (s1 + s2);
         s2 = s1;
       } else {
@@ -619,7 +621,7 @@ static void cleanSet(AS_phasorSet* Setp)
         else /*1 starts before 2 in time */
           addPhasor(Setp, s1, s2, Sa1);
       }
-      if (fabs(e1 - e2) < AS_EPSILON) { /* Same end point */
+      if (ABS(e1 - e2) < 100.0 * DBL_EPSILON) { /* Same end point */
         e1 = 0.5 * (e1 + e2);
         e2 = e1;
       } else {
@@ -629,7 +631,7 @@ static void cleanSet(AS_phasorSet* Setp)
           addPhasor(Setp, e1, e2, Sa2);
       }
       if (Sa1 + Sa2 != 0.0) /* The overlap part */
-        addPhasor(Setp, AS_MIN(s1, s2), AS_MAX(e1, e2), Sa1 + Sa2);
+        addPhasor(Setp, MIN(s1, s2), MAX(e1, e2), Sa1 + Sa2);
       php = Setp->ph; /* reset phasor counter/pointer */
     } else
       php++;
@@ -638,8 +640,8 @@ static void cleanSet(AS_phasorSet* Setp)
   /* Join adjacent phasors with equal acceleration. */
   php = Setp->ph;
   while (php + 1 < Setp->ph + Setp->N) {
-    if (fabs(php->phiEnd - (php + 1)->phiStart) < AS_EPSILON
-        && php->Sa == (php + 1)->Sa) { /* adjacent and equal acc. */
+    if (ABS(php->phiEnd - (php + 1)->phiStart) < 100.0 * DBL_EPSILON
+        && feq(php->Sa, (php + 1)->Sa)) { /* adjacent and equal acc. */
       Sa1 = php->Sa;
       s1 = php->phiStart;
       e2 = (php + 1)->phiEnd;
@@ -666,7 +668,7 @@ static void cleanSet(AS_phasorSet* Setp)
  * sum.
  * The resulting phasors are the minimum phase/time representation of the set,
  * given a=amax, located in the first
- * half plane, [0, -AS_PI). If one phasor is not enough (i.e. the one phasor
+ * half plane, [0, -M_PI). If one phasor is not enough (i.e. the one phasor
  * would reach into the 2nd half plane,
  * or into the positive half plane), the undesired part is reflected into the
  * first negative half plane.
@@ -704,30 +706,30 @@ void AS_collapseSet(AS_phasorSet* Setp, const AS_shaper* shp, double amax)
         > 1.0) { /* Too large arcsin argument - reduce! (residual allocated in
                     next half plane) */
       RNew = 2.0 * amax / AS_GRAV_ACCEL;
-      extp5 = 0.5 * AS_PI;
+      extp5 = 0.5 * M_PI;
     } else
       extp5 = asin(sArg); /* Half extension of residual phasor, given a=amax */
-    /* Make sure PhiNew is in the half plane [base, base-AS_PI) */
-    while (PhiNew <= base - AS_PI) {
-      PhiNew += AS_PI;
+    /* Make sure PhiNew is in the half plane [base, base-M_PI) */
+    while (PhiNew <= base - M_PI) {
+      PhiNew += M_PI;
       RNew *= -1.0;
     }
     while (PhiNew > base) {
-      PhiNew -= AS_PI;
+      PhiNew -= M_PI;
       RNew *= -1.0;
     }
 
     /* Add the calculated residual phasor. */
     if (PhiNew + extp5 > base) { /* Overlap into previous phase? */
-      addPhasor(Setp, base, PhiNew - extp5, AS_SIGN(-RNew) * amax);
+      addPhasor(Setp, base, PhiNew - extp5, SIGN(-RNew) * amax);
       addPhasor(
-          Setp, -AS_PI + PhiNew + extp5, base - AS_PI, AS_SIGN(RNew) * amax);
+          Setp, -M_PI + PhiNew + extp5, base - M_PI, SIGN(RNew) * amax);
     } else if (PhiNew - extp5
-        < base - AS_PI) { /* Overlap into next half plane ? */
-      addPhasor(Setp, base, PhiNew - extp5 + AS_PI, AS_SIGN(RNew) * amax);
-      addPhasor(Setp, PhiNew + extp5, base - AS_PI, AS_SIGN(-RNew) * amax);
+        < base - M_PI) { /* Overlap into next half plane ? */
+      addPhasor(Setp, base, PhiNew - extp5 + M_PI, SIGN(RNew) * amax);
+      addPhasor(Setp, PhiNew + extp5, base - M_PI, SIGN(-RNew) * amax);
     } else /* No overlap */
-      addPhasor(Setp, PhiNew + extp5, PhiNew - extp5, AS_SIGN(-RNew) * amax);
+      addPhasor(Setp, PhiNew + extp5, PhiNew - extp5, SIGN(-RNew) * amax);
 
     /* Count down sums. Loop only over the newly added phasors. (Using that
      * phasors are added at end positions)*/
@@ -735,7 +737,7 @@ void AS_collapseSet(AS_phasorSet* Setp, const AS_shaper* shp, double amax)
       XSum -= Setp->ph[n].R * cos(Setp->ph[n].Phi);
       YSum -= Setp->ph[n].R * sin(Setp->ph[n].Phi);
     }
-    base -= AS_PI;
+    base -= M_PI;
   } while (sArg > 1.0);
 
   cleanSet(Setp);
@@ -779,7 +781,7 @@ static double timeStepSet(AS_phasorSet* Setp, double omegadt)
         DextSum = Setp->ph[0].phiStart * Setp->ph[0].Sa;
         Setp->ph[0].phiStart = 0.0;
         Setp->ph[0].Phi = Setp->ph[0].phiEnd * 0.5;
-        Setp->ph[0].R = -2.0 * (Setp->ph[0].Sa) * sin(fabs(Setp->ph[0].Phi))
+        Setp->ph[0].R = -2.0 * (Setp->ph[0].Sa) * sin(ABS(Setp->ph[0].Phi))
             / AS_GRAV_ACCEL;
         Setp->extSum -= DextSum;
         ac += DextSum / omegadt;
@@ -970,7 +972,7 @@ static int supAmax(AS_phasorSet* Setp, double amax)
   const AS_phasor* php;
 
   for (php = Setp->ph; php < (Setp->ph + Setp->N); php++) {
-    if (fabs(php->Sa) > amax)
+    if (ABS(php->Sa) > amax)
       return 1;
   }
 
@@ -980,11 +982,11 @@ static int supAmax(AS_phasorSet* Setp, double amax)
 static int subUmin(AS_phasorSet* Setp, double uc, double romega, double umin)
 {
   const AS_phasor* php;
-  double maxu = fabs(uc);
+  double maxu = ABS(uc);
 
   for (php = Setp->ph; php < (Setp->ph + Setp->N); php++) {
     uc += php->Sa * (php->phiStart - php->phiEnd) * romega;
-    maxu = AS_MAX(maxu, fabs(uc));
+    maxu = MAX(maxu, ABS(uc));
   }
   return (umin > maxu);
 }
@@ -992,11 +994,11 @@ static int subUmin(AS_phasorSet* Setp, double uc, double romega, double umin)
 static int supUmax(AS_phasorSet* Setp, double uc, double romega, double umax)
 {
   const AS_phasor* php;
-  double maxu = fabs(uc);
+  double maxu = ABS(uc);
 
   for (php = Setp->ph; php < (Setp->ph + Setp->N); php++) {
     uc += php->Sa * (php->phiStart - php->phiEnd) * romega;
-    maxu = AS_MAX(maxu, fabs(uc));
+    maxu = MAX(maxu, ABS(uc));
   }
   return (maxu > umax);
 }
@@ -1045,12 +1047,12 @@ static double getY(const AS_phasorSet* Setp)
 static double arctan360N(double Y, double X)
 {
   /* Will return an angle phi such that tan(phi) = Y/X
-   * The return value will be in the interval [0, -2AS_PI). */
+   * The return value will be in the interval [0, -2M_PI). */
 
   double phi;
 
   phi = atan2(Y, X);
-  return (phi > 0.0 ? phi - 2.0 * AS_PI : phi);
+  return (phi > 0.0 ? phi - 2.0 * M_PI : phi);
 }
 
 void AS_emptySet(AS_phasorSet* Setp)
@@ -1213,7 +1215,7 @@ void AS_displayQ(const double* acp, const double* aEp, double uc, double dt)
   printf("\n\tAntiSway/displayQ: Acceleration Queue: "
          "\n\t------------------------\n\n");
   for (atmp = acp, n = 0, am = 10000.0, SaSum = 0.0; atmp < aEp; atmp++, n++) {
-    if (*atmp != am) {
+    if (!feq(*atmp, am)) {
       am = *atmp;
       printf("a(%d)\t%f\n", n, *atmp);
     }
@@ -1262,14 +1264,14 @@ const AS_shaper* AS_SetupIST(int mode)
 
   const static AS_shaper no_antisway
       = { AS_NO_AS, 1, { 1.0, 0.0, 0.0, 0.0, 0.0 }, 1.0, 1.0, 1.0,
-          { 0.0, 0.0, 0.0, 0.0, 0.0 }, AS_PI };
+          { 0.0, 0.0, 0.0, 0.0, 0.0 }, M_PI };
   const static AS_shaper d_pulse = { AS_DPULSE, 2, { 1.0, 1.0, 0.0, 0.0, 0.0 },
-    2.0, 1.0, 1.0, { 0.0, -AS_PI, 0.0, 0.0, 0.0 }, AS_PI };
+    2.0, 1.0, 1.0, { 0.0, -M_PI, 0.0, 0.0, 0.0 }, M_PI };
   const static AS_shaper dd_pulse
       = { AS_DDPULSE, 3, { 0.5, 1.0, 0.5, 0.0, 0.0 }, 2.0, 0.5, 1.0,
-          { 0.0, -AS_PI, -2.0 * AS_PI, 0.0, 0.0 }, AS_PI };
+          { 0.0, -M_PI, -2.0 * M_PI, 0.0, 0.0 }, M_PI };
   const static AS_shaper um_zv = { AS_UMZV, 3, { 1.0, -1.0, 1.0, 0.0, 0.0 },
-    1.0, 1.0, 1.0, { 0.0, -AS_PI / 3.0, -AS_PI / 1.5, 0.0, 0.0 }, AS_PI / 3.0 };
+    1.0, 1.0, 1.0, { 0.0, -M_PI / 3.0, -M_PI / 1.5, 0.0, 0.0 }, M_PI / 3.0 };
   const static AS_shaper um_zvd = { AS_UMZVD, 5, { 1.0, -1.0, 1.0, -1.0, 1.0 },
     1.0, 1.0, 1.0, { 0.0, -0.56242392468373, -2.30111498488178,
                        -4.03980604507982, -4.60222996976355 },
@@ -1277,7 +1279,7 @@ const AS_shaper* AS_SetupIST(int mode)
   const static AS_shaper zv_122 = {
     AS_ZV122, 3, { 1.0, -2.0, 2.0, 0.0, 0.0 }, 1.0, 1.0, 2.0,
     { 0.0, -1.31811607165282, -1.82347658193698, 0.0, 0.0 }, 0.505360510284160
-  }; /* angles are 0, -AS_PI/2+asin(1/4), -AS_PI/2-asin(1/4) */
+  }; /* angles are 0, -M_PI/2+asin(1/4), -M_PI/2-asin(1/4) */
   const static AS_shaper zvd_122
       = { AS_ZVD122, 5, { 1.0, -2.0, 2.0, -2.0, 2.0 }, 1.0, 1.0, 2.0,
           { 0.0, -0.95759740098188, -1.74292794797482, -3.96664437406570,
@@ -1287,27 +1289,19 @@ const AS_shaper* AS_SetupIST(int mode)
   switch (mode) {
   case AS_NO_AS:
     return &no_antisway;
-    break;
   case AS_DPULSE:
     return &d_pulse;
-    break;
   case AS_DDPULSE:
     return &dd_pulse;
-    break;
   case AS_UMZV:
     return &um_zv;
-    break;
   case AS_UMZVD:
     return &um_zvd;
-    break;
   case AS_ZV122:
     return &zv_122;
-    break;
   case AS_ZVD122:
     return &zvd_122;
-    break;
   default:
     return NULL;
   }
-  return NULL;
 }

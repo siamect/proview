@@ -48,7 +48,7 @@ class WItemRevision;
 
 class WRevNavBrow {
 public:
-  WRevNavBrow(BrowCtx* brow_ctx, void* lwnav) : ctx(brow_ctx), wrevnav(lwnav){};
+  WRevNavBrow(BrowCtx* brow_ctx, void* lwnav) : ctx(brow_ctx), wrevnav(lwnav){}
 
   BrowCtx* ctx;
   void* wrevnav;
@@ -109,25 +109,16 @@ public:
 
 class WItemRev {
 public:
-  WItemRev() : node(0), children(0){};
+  WItemRev();
+  virtual ~WItemRev();
   virtual int open_children(
-      WRevNavBrow* brow, wb_revision* rev, double x, double y)
-  {
-    return 1;
-  }
-  virtual int open_attributes(WRevNavBrow* brow, double x, double y)
-  {
-    return 1;
-  }
+      WRevNavBrow* brow, wb_revision* rev, double x, double y);
+  virtual int open_attributes(WRevNavBrow* brow, double x, double y);
   virtual int close(WRevNavBrow* brow, double x, double y);
 
   brow_tNode node;
   char name[120];
   int children;
-
-  virtual ~WItemRev()
-  {
-  }
 };
 
 class WItemRevision : public WItemRev {
@@ -150,6 +141,7 @@ class WItemRevAttr : public WItemRev {
 public:
   WItemRevAttr(WRevNavBrow* brow, const char* item_name, char* item_value,
       brow_tNode dest, flow_eDest dest_code);
+  virtual ~WItemRevAttr();
   char value[120];
 };
 

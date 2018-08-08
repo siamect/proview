@@ -73,17 +73,17 @@ public:
 
   friend std::ostream& operator<<(std::ostream& o, const GlowConClass cc);
 
-  void zoom(){};
-  void nav_zoom(){};
-  void print_zoom(){};
-  void traverse(int x, int y){};
+  void zoom(){}
+  void nav_zoom(){}
+  void print_zoom(){}
+  void traverse(int x, int y){}
   void get_borders(double pos_x, double pos_y, double* x_right, double* x_left,
-      double* y_high, double* y_low, void* node){};
+      double* y_high, double* y_low, void* node){}
   int event_handler(void* pos, glow_eEvent event, int x, int y, void* node)
   {
     return 0;
-  };
-  void print(GlowPoint* pos, void* node){};
+  }
+  void print(GlowPoint* pos, void* node){}
 
   //! Save the content of the object to file.
   /*!
@@ -97,10 +97,10 @@ public:
     \param fp	Input file.
   */
   void open(std::ifstream& fp);
-  void draw(GlowPoint* pos, int highlight, int hot, void* node){};
-  void nav_draw(GlowPoint* pos, int highlight, void* node){};
-  void erase(GlowPoint* pos, int hot, void* node){};
-  void nav_erase(GlowPoint* pos, void* node){};
+  void draw(GlowPoint* pos, int highlight, int hot, void* node){}
+  void nav_draw(GlowPoint* pos, int highlight, void* node){}
+  void erase(GlowPoint* pos, int hot, void* node){}
+  void nav_erase(GlowPoint* pos, void* node){}
 
   //! Get the object type
   /*!
@@ -109,7 +109,7 @@ public:
   glow_eObjectType type()
   {
     return glow_eObjectType_ConClass;
-  };
+  }
 
   //! Conversion between different versions of Glow
   /*!

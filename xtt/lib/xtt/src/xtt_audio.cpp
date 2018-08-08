@@ -21,7 +21,6 @@
 #include "xtt_audio.h"
 
 #define OSS_BUFFER_SIZE 65536
-#define ALSA_BUFFER_SIZE (65536 * 4)
 #define AUDIO_BUFFER_SIZE (65536 * 4)
 #define AUDIO_SAMPLE_RATE 44100
 
@@ -148,9 +147,9 @@ int XttAudio::init(char* a_OSS_device, char* a_ALSA_device)
 
 int XttAudio::beep(pwr_tAttrRef* arp)
 {
-  int size;
+  int size = 0;
   int asize = 0;
-  short* buffer;
+  short* buffer = NULL;
   pwr_tTid tid;
   pwr_tStatus sts;
   pwr_tAttrRef prioaref;
@@ -385,8 +384,8 @@ int XttAudio::beep(pwr_tAttrRef* arp)
              i < int(sizeof(seq.SequenceTable) / sizeof(seq.SequenceTable[0]));
              i++) {
           if (!seq.SequenceTable[i].Used
-              || (seq.SequenceTable[i].VolumeRight == 0
-                     && seq.SequenceTable[i].VolumeLeft == 0))
+              || (feqf(seq.SequenceTable[i].VolumeRight, 0.0f)
+                     && feqf(seq.SequenceTable[i].VolumeLeft, 0.0f)))
             continue;
 
           if ((int)seq.SequenceTable[i].SoundIdx >= sound_cnt)
@@ -828,12 +827,12 @@ void XttAudio::MakeSine(short* buffer, int buffersize, double time,
 
     ampl = envelope(
         t - starttime, endtime - starttime, attack, decay, sustain, release);
-    if (ampl == 0)
+    if (feq(ampl, 0.0))
       continue;
 
     val = ampl * sin(freq[tone] * t * 2 * M_PI);
 
-    if (tremolo != 0)
+    if (!feq(tremolo, 0.0))
       valtremolo = 1 - tremolo * (sin(t * 6 * 2 * M_PI) + 1) / 2;
     else
       valtremolo = 1;
@@ -872,12 +871,12 @@ void XttAudio::MakeSquare(short* buffer, int buffersize, double time,
 
     ampl = envelope(
         t - starttime, endtime - starttime, attack, decay, sustain, release);
-    if (ampl == 0)
+    if (feq(ampl, 0.0))
       continue;
 
     val = ampl * (int(freq[tone] * t * 2) % 2 * 2 - 1);
 
-    if (tremolo != 0)
+    if (!feq(tremolo, 0.0))
       valtremolo = 1 - tremolo * (sin(t * 6 * 2 * M_PI) + 1) / 2;
     else
       valtremolo = 1;

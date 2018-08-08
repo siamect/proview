@@ -169,7 +169,7 @@ static pwr_tStatus IoCardRead(
   char endpoint = 0x81;
   int size = 8;
   int tsize;
-  unsigned char m;
+  unsigned char m = '\0';
   int sts;
   int i;
   pwr_tUInt32 error_count = op->Super.ErrorCount;

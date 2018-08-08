@@ -61,7 +61,7 @@ public:
 static void wnav_crr_insert_cb(void* ctx, void* parent_node,
     navc_eItemType item_type, char* text1, char* text2, int write)
 {
-  if (1) {
+  //if (1) {
     CrrCtx* cctx = (CrrCtx*)ctx;
 
     switch (item_type) {
@@ -77,6 +77,7 @@ static void wnav_crr_insert_cb(void* ctx, void* parent_node,
       new WItemText(cctx->brow, "crr", text1, parent_node, flow_eDest_IntoLast);
       break;
     }
+    /*
   } else { // TODO from pwrc ???
     // Print out crossref info
     switch (item_type) {
@@ -97,6 +98,7 @@ static void wnav_crr_insert_cb(void* ctx, void* parent_node,
       break;
     }
   }
+  */
 }
 
 int wnav_crr_name_to_objid_cb(void* ctx, char* name, pwr_tObjid* objid)

@@ -111,7 +111,7 @@ void GrowWindow::save(std::ofstream& fp, glow_eSaveMode mode)
 
 void GrowWindow::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;
@@ -990,7 +990,8 @@ void GrowWindow::new_ctx()
     fill_drawtype = original_fill_drawtype = window_ctx->background_color;
     fill = 1;
   }
-  if (window_ctx->x0 != window_ctx->x1 && window_ctx->y0 != window_ctx->y1) {
+  if (!feq(window_ctx->x0, window_ctx->x1)
+      && !feq(window_ctx->y0, window_ctx->y1)) {
     wctx_x0 = window_ctx->x0;
     wctx_x1 = window_ctx->x1;
     wctx_y0 = window_ctx->y0;

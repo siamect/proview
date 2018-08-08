@@ -100,7 +100,7 @@ public:
   {
     this->editmode = editmode;
     this->ldhses = ldhses;
-  };
+  }
   int select_by_name(char* name);
   int update(pwr_tObjid new_objid, pwr_tClassId new_classid,
       char* new_attribute, int new_attrobjects, char* new_search_name);

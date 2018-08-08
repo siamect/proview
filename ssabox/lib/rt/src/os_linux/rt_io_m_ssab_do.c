@@ -285,7 +285,7 @@ static pwr_tStatus IoCardWrite(
 static pwr_tStatus IoCardSwap(
     io_tCtx ctx, io_sAgent* ap, io_sRack* rp, io_sCard* cp, io_eEvent event)
 {
-  io_sLocal* local;
+  io_sLocal* local = NULL;
   io_sRackLocal* r_local = (io_sRackLocal*)(rp->Local);
   pwr_tUInt16 data = 0;
   pwr_sClass_Ssab_BaseDoCard* op;

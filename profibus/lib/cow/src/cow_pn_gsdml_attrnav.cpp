@@ -102,10 +102,9 @@
 #include "xnav_bitmap_attrenum24.h"
 
 #define ATTRNAV__INPUT_SYNTAX 2
-#define ATTRNAV__OBJNOTFOUND 4
+//#define ATTRNAV__OBJNOTFOUND 4
 #define ATTRNAV__STRINGTOLONG 6
-#define ATTRNAV__ITEM_NOCREA 8
-#define ATTRNAV__SUCCESS 1
+//#define ATTRNAV__ITEM_NOCREA 8
 
 static char null_str[] = "";
 
@@ -1973,7 +1972,7 @@ void ItemPnBase::value_changed(GsdmlAttrNav* attrnav, const char* value_str)
     return;
   }
 
-  if (max_limit != 0 || min_limit != 0) {
+  if (!feq(max_limit, 0.0) || !feq(min_limit, 0.0)) {
     switch (type_id) {
     case pwr_eType_Int32:
     case pwr_eType_UInt32:
@@ -2897,8 +2896,8 @@ int ItemPnDAP::open_children(GsdmlAttrNav* attrnav, double x, double y)
                 strncat(name,
                     (char*)attrnav->device_item->SubslotList->SubslotItem[i]
                         ->Body.TextId.p,
-                    sizeof(name) - strlen(name));
-                strncat(name, " ", sizeof(name) - strlen(name));
+                    sizeof(name) - strlen(name) - 1);
+                strncat(name, " ", sizeof(name) - strlen(name) - 1);
                 sprintf(&name[strlen(name)], "%hu", ii->Body.SubslotNumber);
               }
             }
@@ -2943,8 +2942,8 @@ int ItemPnDAP::open_children(GsdmlAttrNav* attrnav, double x, double y)
               strncat(name,
                   (char*)attrnav->device_item->SubslotList->SubslotItem[i]
                       ->Body.TextId.p,
-                  sizeof(name) - strlen(name));
-              strncat(name, " ", sizeof(name) - strlen(name));
+                  sizeof(name) - strlen(name) - 1);
+              strncat(name, " ", sizeof(name) - strlen(name) - 1);
               sprintf(&name[strlen(name)], "%hu", pi->Body.SubslotNumber);
             }
           }

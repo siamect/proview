@@ -96,7 +96,7 @@ public:
   int is_mapped_ala()
   {
     return ala_displayed;
-  };
+  }
   pwr_tStatus set_view(pwr_tOid view);
   void view_shift();
   void update();

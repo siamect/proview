@@ -55,17 +55,6 @@
     errh_SetStatus(PWR__SRVTERM);                                              \
     exit(a);                                                                   \
   }
-#define Log_Error_Return(a, b)                                                 \
-  {                                                                            \
-    Log_Error(a, b);                                                           \
-    return (a);                                                                \
-  }
-#define If_Error_Log(a, b)                                                     \
-  if ((a & 1) != 1)                                                            \
-  Log_Error(a, b)
-#define If_Error_Log_Return(a, b)                                              \
-  if ((a & 1) != 1)                                                            \
-  Log_Error_Return(a, b)
 #define If_Error_Log_Exit(a, b)                                                \
   if ((a & 1) != 1)                                                            \
   Log_Error_Exit(a, b)

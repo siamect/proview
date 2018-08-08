@@ -47,13 +47,13 @@ public:
       flow_mDisplayLevel display_lev = flow_mDisplayLevel_1)
       : ctx(flow_ctx), number(annot_num), p(flow_ctx, x, y), draw_type(d_type),
         text_size(t_size), annot_type(a_type), relative_pos(rel_pos),
-        display_level(display_lev){};
+        display_level(display_lev){}
   friend std::ostream& operator<<(std::ostream& o, const FlowAnnot cp);
   void zoom();
   void nav_zoom();
   void print_zoom();
   void traverse(int x, int y);
-  void conpoint_select(void* pos, int x, int y, double* distance, void** cp){};
+  void conpoint_select(void* pos, int x, int y, double* distance, void** cp){}
   int event_handler(void* pos, flow_eEvent event, int x, int y, void* node);
   void print(void* pos, void* node, int highlight);
   void save(std::ofstream& fp, flow_eSaveMode mode);
@@ -68,11 +68,11 @@ public:
   int get_conpoint(int num, double* x, double* y, flow_eDirection* dir)
   {
     return 0;
-  };
+  }
   flow_eObjectType type()
   {
     return flow_eObjectType_Annot;
-  };
+  }
   void measure_annot(char* text, double* width, double* height);
   void configure_annotations(void* pos, void* node);
   void open_annotation_input(void* pos, void* node);

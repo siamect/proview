@@ -573,9 +573,9 @@ int WdaNav::brow_cb(FlowCtx* ctx, flow_tEvent event)
 
 int WdaNav::get_attr()
 {
-  int i, j;
+  int i, j = 0;
   char body[20];
-  ldh_sParDef* bodydef;
+  ldh_sParDef* bodydef = NULL;
   int sts;
   int rows;
   int elements;
@@ -967,7 +967,7 @@ int WdaNav::select_by_name(char* name)
   int object_cnt;
   int i;
   int found;
-  brow_tObject object;
+  brow_tObject object = NULL;
 
   brow_GetObjectList(brow->ctx, &object_list, &object_cnt);
   found = 0;

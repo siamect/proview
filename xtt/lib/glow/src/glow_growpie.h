@@ -65,8 +65,6 @@ public:
     \param y2		y coordinate for second corner.
     \param border_d_type Border color.
     \param line_w	Linewidth of border.
-    \param t_size	Text size.
-    \param t_drawtype	Drawtype for text.
     \param nodraw	Don't draw the object now.
   */
   GrowPie(GrowCtx* glow_ctx, const char* name, double x1 = 0, double y1 = 0,
@@ -112,7 +110,7 @@ public:
   void erase(GlowWind* w)
   {
     erase(w, (GlowTransform*)NULL, hot, NULL);
-  };
+  }
 
   //! Draw the objects if any part is inside the drawing area.
   /*!
@@ -150,7 +148,7 @@ public:
   glow_eObjectType type()
   {
     return glow_eObjectType_GrowPie;
-  };
+  }
 
   int sectors; //!< Number of sectors.
   double min_value; //!< Range mininum value

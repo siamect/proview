@@ -79,25 +79,20 @@ pwr_tInt32 GetChanSize(pwr_eDataRepEnum rep)
   case pwr_eDataRepEnum_UInt64:
   case pwr_eDataRepEnum_Float64:
     return 8;
-    break;
   case pwr_eDataRepEnum_Bit32:
   case pwr_eDataRepEnum_Int32:
   case pwr_eDataRepEnum_UInt32:
   case pwr_eDataRepEnum_Float32:
     return 4;
-    break;
   case pwr_eDataRepEnum_Int24:
   case pwr_eDataRepEnum_UInt24:
     return 3;
-    break;
   case pwr_eDataRepEnum_Bit16:
   case pwr_eDataRepEnum_Int16:
   case pwr_eDataRepEnum_UInt16:
     return 2;
-    break;
   default:
     return 1;
-    break;
   }
 }
 
@@ -127,7 +122,7 @@ static void ConvertAi(io_tCtx ctx, pwr_tFloat32 f_raw,
     pwr_sClass_ChanAi* chan_ai, pwr_sClass_Ai* sig_ai, io_sChannel* chanp)
 {
   pwr_tFloat32 sigvalue;
-  pwr_tFloat32 actvalue;
+  pwr_tFloat32 actvalue = 0.0;
   pwr_tFloat32* polycoef_p;
   int i;
 
@@ -181,7 +176,7 @@ static void ConvertBi(io_tCtx ctx, pwr_tFloat32 rawvalue,
     pwr_tFloat32* actualvalue, pwr_sClass_ChanBi* chan_bi, io_sChannel* chanp)
 {
   pwr_tFloat32 sigvalue;
-  pwr_tFloat32 actvalue;
+  pwr_tFloat32 actvalue = 0.0;
   pwr_tFloat32* polycoef_p;
   int i;
 

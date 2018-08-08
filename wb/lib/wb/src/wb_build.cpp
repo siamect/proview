@@ -36,12 +36,18 @@
 
 #include <string.h>
 
-#include "cow_msgwindow.h"
-#include "co_dcli.h"
-#include "co_time.h"
-#include "co_syi.h"
-#include "rt_load.h"
 #include "pwr_names.h"
+#include "co_dcli.h"
+#include "co_msg.h"
+#include "co_syi.h"
+#include "co_time.h"
+#include "rt_load.h"
+
+#include "cow_msgwindow.h"
+
+#include "ge.h"
+#include "ge_graph.h"
+
 #include "wb_foe_msg.h"
 #include "wb_pwrb_msg.h"
 #include "wb_utl_api.h"
@@ -52,9 +58,6 @@
 #include "wb_merep.h"
 #include "wb_dblock.h"
 #include "wb_revision.h"
-
-#include "ge_graph.h"
-#include "ge.h"
 
 class build_dir {
 public:
@@ -69,6 +72,15 @@ public:
   pwr_tFileName src_dir;
   pwr_tFileName dest_dir;
 };
+
+wb_build::wb_build(wb_session ses, WNav* wnav)
+    : m_session(ses), m_wnav(wnav), m_hierarchy(pwr_cNOid)
+{
+}
+
+wb_build::~wb_build()
+{
+}
 
 void wb_build::classlist(pwr_tCid cid)
 {
@@ -492,7 +504,7 @@ void wb_build::cnf(char* nodename, void* volumelist, int volumecnt)
   pwr_tFileName src_dir, dest_dir, found_src_dir, found_dest_dir;
   pwr_tStatus src_sts, dest_sts;
   int status;
-  int bussid;
+  int bussid = 0;
   int found;
   char node[80];
 
@@ -676,7 +688,7 @@ void wb_build::volume()
 
 void wb_build::rootvolume(pwr_tVid vid)
 {
-  pwr_tStatus sumsts, plcsts;
+  pwr_tStatus sumsts = 0, plcsts = 0;
   pwr_tOid oid;
   pwr_tTime modtime;
   pwr_tObjName vname;
@@ -1938,9 +1950,9 @@ void wb_build::directories(char* dir, bld_ePass pass)
           // Target is a directory, add file name
           char* s = strrchr(source, '/');
           if (!s)
-            strncat(target, source, sizeof(target));
+            strncat(target, source, sizeof(target) - strlen(target) - 1);
           else
-            strncat(target, s + 1, sizeof(target));
+            strncat(target, s + 1, sizeof(target) - strlen(target) - 1);
         }
 
         dcli_translate_filename(target, target);
@@ -2134,9 +2146,9 @@ void wb_build::export_import_files(int type, bld_ePass pass)
           // Target is a directory, add file name
           char* s = strrchr(source, '/');
           if (!s)
-            strncat(target, source, sizeof(target));
+            strncat(target, source, sizeof(target) - strlen(target) - 1);
           else
-            strncat(target, s + 1, sizeof(target));
+            strncat(target, s + 1, sizeof(target) - strlen(target) - 1);
         }
 
         dcli_translate_filename(target, target);

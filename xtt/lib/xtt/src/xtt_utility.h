@@ -55,11 +55,8 @@ typedef enum {
 class XttUtility {
 public:
   xtt_eUtility type;
-
-  virtual xtt_eUtility get_type()
-  {
-    return xtt_eUtility_;
-  }
+  virtual ~XttUtility();
+  virtual xtt_eUtility get_type();
 };
 
 #endif

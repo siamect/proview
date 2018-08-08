@@ -40,7 +40,6 @@
 
 #include <ctype.h>
 #include <errno.h>
-#include <float.h>
 #include <math.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -1829,7 +1828,6 @@ aaaaaaaceeeeiiii!nooooooouuuuy!!\
         default:
           lsts = CDH__INVIDCHAR;
           goto error;
-          break;
         }
         if (EVEN(lsts))
           goto error;
@@ -1856,7 +1854,6 @@ aaaaaaaceeeeiiii!nooooooouuuuy!!\
         default:
           lsts = CDH__INVIDCHAR;
           goto error;
-          break;
         }
         if (EVEN(lsts)) {
           goto error;
@@ -1881,7 +1878,6 @@ aaaaaaaceeeeiiii!nooooooouuuuy!!\
         default:
           lsts = CDH__INVIDCHAR;
           goto error;
-          break;
         }
         if (EVEN(lsts))
           goto error;
@@ -2940,7 +2936,7 @@ pwr_tStatus cdh_NextObjectName(char* t, const char* s)
 void cdh_CutNameSegments(char* outname, char* name, int segments)
 {
   char* s[20];
-  int i, j, last_i;
+  int i, j, last_i = 0;
 
   for (i = 0; i < segments; i++) {
     s[i] = strrchr(name, '-');

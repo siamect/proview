@@ -35,7 +35,6 @@
  **/
 
 #include <ctype.h>
-#include <float.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -48,9 +47,6 @@
 #include "co_cnf.h"
 #include "co_syi.h"
 #include "co_api.h"
-
-#define r_toupper(c) (((c) >= 'a' && (c) <= 'z') ? (c)&0xDF : (c))
-#define r_tolower(c) (((c) >= 'A' && (c) <= 'Z') ? (c) | 0x20 : (c))
 
 #define CCM_FLT_EPSILON 5.0e-6
 
@@ -112,8 +108,8 @@
 #define K_OPERAND_RETURN 7
 #define K_OPERAND_DELETE 8
 
-#define K_LOCTYPE_NO 0
-#define K_LOCTYPE_BEFORE 1
+//#define K_LOCTYPE_NO 0
+//#define K_LOCTYPE_BEFORE 1
 #define K_LOCTYPE_AFTER 2
 
 #define K_TYPE_OPERATOR 0
@@ -410,7 +406,7 @@ static int rtt_toupper(char* str_upper, char* str)
                 convert = !convert;
     */
     if (convert) {
-      *t = (char)r_toupper(namechar);
+      *t = (char)toupper(namechar);
       if (*t == 'ö')
         *t = (char)'Ö';
       else if (*t == 'ä')
@@ -690,7 +686,7 @@ static int ccm_replace_symbol(
 {
   char* s;
   char* t;
-  char* u;
+  char* u = NULL;
   int symbolmode;
   long int size;
   char value[K_STRING_SIZE];
@@ -3866,7 +3862,7 @@ static int ccm_func_say(void* filectx, ccm_sArg* arg_list, int arg_count,
     char* return_string)
 {
   ccm_sArg* arg_p;
-  int sts;
+  int sts = 0;
 
   if (arg_count != 1)
     return CCM__ARGMISM;
@@ -3892,7 +3888,7 @@ static int ccm_func_scanf(void* filectx, ccm_sArg* arg_list, int arg_count,
 {
   ccm_sArg* arg_p;
   char format[K_STRING_SIZE];
-  int sts;
+  int sts = 0;
 
   if (arg_count != 2)
     return CCM__ARGMISM;
@@ -3919,7 +3915,7 @@ static int ccm_func_ask(void* filectx, ccm_sArg* arg_list, int arg_count,
     char* return_string)
 {
   ccm_sArg* arg_p;
-  int sts;
+  int sts = 0;
 
   if (arg_count != 2)
     return CCM__ARGMISM;
@@ -4647,12 +4643,12 @@ static int ccm_function_exec(ccm_tFileCtx filectx, char* name, ccm_tFunc* func,
   int i;
   ccm_sLine* line_p;
   ccm_sLine* l_p;
-  int sts;
-  ccm_sLine* start_line;
-  ccm_sLine* end_line;
+  int sts = 0;
+  ccm_sLine* start_line = NULL;
+  ccm_sLine* end_line = NULL;
   int main_found;
   int found;
-  ccm_sFunc* func_p;
+  ccm_sFunc* func_p = NULL;
   char arg_str[20][32];
   char elm_str[4][K_LINE_SIZE];
   ccm_sArg* arg_p;
@@ -5259,8 +5255,8 @@ int ccm_file_exec(char* cmd, int (*externcmd_func)(char*, void*),
   ccm_tFileCtx filectx;
   char elm_str[10][K_LINE_SIZE];
   int nr;
-  ccm_sArg *arg_list, *arg_p, *a_p, *next_arg;
-  int arg_count;
+  ccm_sArg *arg_list = NULL, *arg_p, *a_p, *next_arg;
+  int arg_count = 0;
 
   if (resume) {
     filectx = *ctx;

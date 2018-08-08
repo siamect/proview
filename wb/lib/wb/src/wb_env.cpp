@@ -54,6 +54,10 @@ wb_env::wb_env(wb_env& e) : wb_status(e.sts()), m_erep(e.m_erep)
     m_erep->ref();
 }
 
+wb_env::~wb_env()
+{
+}
+
 wb_env& wb_env::operator=(const wb_env& x)
 {
   // Note! first ref() then unref(), because if

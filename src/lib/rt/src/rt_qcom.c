@@ -219,7 +219,6 @@ pwr_tBoolean qcom_CreateQ(
       break;
     default:
       pwr_Return(NO, sts, QCOM__QTYPE);
-      break;
     }
   } else {
     type = qdb_eQue_private;
@@ -627,7 +626,7 @@ pwr_tBoolean qcom_Init(pwr_tStatus* status, qcom_sAid* aid, const char* aname)
 
 pwr_tBoolean qcom_Put(pwr_tStatus* status, const qcom_sQid* qidp, qcom_sPut* pp)
 {
-  qdb_sBuffer* bp;
+  qdb_sBuffer* bp = NULL;
   qdb_sNode* np = NULL;
   qdb_sQue* qp = NULL;
   pwr_dStatus(sts, status, QCOM__SUCCESS);

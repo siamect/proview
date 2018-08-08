@@ -546,7 +546,7 @@ bool wb_session::pasteOset(
     if (EVEN(m_sts))
       return false;
 
-    wb_vrepmem* prev;
+    wb_vrepmem* prev = NULL;
     while (mem) {
       prev = mem;
       mem = (wb_vrepmem*)mem->next();
@@ -632,7 +632,7 @@ bool wb_session::pasteOset(
 
 pwr_tStatus wb_session::getMenu(ldh_sMenuCall* ip)
 {
-  pwr_tStatus sts;
+  pwr_tStatus sts = 0;
   ldh_sMenuItem* Item = (ldh_sMenuItem*)&ldh_lMenuItem;
   pwr_tUInt32 i;
   pwr_tObjName MenuFolder;
@@ -925,7 +925,7 @@ void wb_session::getAllMenuItems(ldh_sMenuCall* ip, ldh_sMenuItem** Item,
 {
   pwr_sMenuButton* mbp;
   pwr_sMenuCascade* mcp;
-  wb_tMethod method;
+  wb_tMethod method = NULL;
   wb_tMethod filter;
   pwr_tStatus sts;
 

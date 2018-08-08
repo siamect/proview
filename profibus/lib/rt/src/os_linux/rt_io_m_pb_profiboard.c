@@ -682,8 +682,8 @@ static void dp_get_slave_diag_con(
     }
 
     if (log) {
-      sprintf(s, "Slave [%3hu] [0x%04hX]: Status = 0x%02hX 0x%02hX 0x%02hX, "
-                 "Master = %3hu, Ext = %hu, Diags = %hu",
+      sprintf(s, "Slave [%3hhu] [0x%04hX]: Status = 0x%02hhX 0x%02hhX 0x%02hhX, "
+                 "Master = %3hhu, Ext = %u, Diags = %hu",
           get_slave_diag_con_ptr->rem_add, swap16(diag_data_ptr->ident_number),
           diag_data_ptr->station_status_1, diag_data_ptr->station_status_2,
           diag_data_ptr->station_status_3, diag_data_ptr->master_add,

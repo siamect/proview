@@ -63,6 +63,10 @@ wb_dbms::wb_dbms(pwr_tVid vid)
   initTables();
 }
 
+wb_dbms::~wb_dbms()
+{
+}
+
 int wb_dbms::close()
 {
   if (m_txn) {
@@ -348,7 +352,7 @@ pwr_tOid wb_dbms::new_oid(wb_dbms_txn* txn, pwr_tOid oid)
   try {
     wb_dbms_ohead o(this, txn, woid);
     return pwr_cNOid;
-  } catch (wb_dbms_error& e) {
+  } catch (wb_dbms_error&) {
     pwr_tOix nextoix;
     int rc = 0;
     pwr_tOid oid = pwr_cNOid;
@@ -438,7 +442,7 @@ bool wb_dbms::deleteFamily(pwr_tStatus* sts, wb_dbms_ohead* o)
     // txn->commit(0);
     // o->mark(is_deleted);
 
-  } catch (wb_dbms_error& e) {
+  } catch (wb_dbms_error&) {
     txn->abort();
   }
 
@@ -472,7 +476,7 @@ bool wb_dbms::importHead(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
 
   try {
     n.ins(m_txn);
-  } catch (wb_dbms_error& e) {
+  } catch (wb_dbms_error&) {
     char newName[50];
     sprintf(newName, "O%u_%s", oid.oix, name);
     newName[31] = '\0';
@@ -519,6 +523,11 @@ bool wb_dbms::importDbody(pwr_tOid oid, size_t size, void* body)
   oh.dbTime(time);
   oh.upd(m_txn);
   b.ins(m_txn);
+  return true;
+}
+
+bool wb_dbms::importDocBlock(pwr_tOid oid, size_t size, char* block)
+{
   return true;
 }
 
@@ -593,6 +602,56 @@ int wb_dbms::initTables()
   return 0;
 }
 
+MYSQL* wb_dbms::con()
+{
+  return m_con;
+}
+
+wb_dbms_table* wb_dbms::tOhead()
+{
+  return m_t_ohead;
+}
+
+wb_dbms_table* wb_dbms::tRbody()
+{
+  return m_t_rbody;
+}
+
+wb_dbms_table* wb_dbms::tDbody()
+{
+  return m_t_dbody;
+}
+
+wb_dbms_table* wb_dbms::tClass()
+{
+  return m_t_class;
+}
+
+wb_dbms_table* wb_dbms::tName()
+{
+  return m_t_name;
+}
+
+wb_dbms_table* wb_dbms::tInfo()
+{
+  return m_t_info;
+}
+
+pwr_tCid wb_dbms::cid()
+{
+  return m_cid;
+}
+
+pwr_tVid wb_dbms::vid()
+{
+  return m_vid;
+}
+
+const char* wb_dbms::volumeName()
+{
+  return m_volumeName;
+}
+
 wb_dbms_env::wb_dbms_env(const char* v_fileName)
     : m_con(0), m_fileName(0), m_host(0), m_user(0), m_passwd(0), m_dbName(0),
       m_port(0), m_socket(0), m_exists(false)
@@ -612,6 +671,11 @@ wb_dbms_env::wb_dbms_env(const char* v_host, const char* v_user,
   dbName(v_dbName);
   port(v_port);
   socket(v_socket);
+}
+
+wb_dbms_env::~wb_dbms_env()
+{
+  close();
 }
 
 void wb_dbms_env::host(const char* host)
@@ -711,9 +775,9 @@ void wb_dbms_env::socket(const char* socket)
 
 wb_dbms_env::wb_dbms_env()
     : m_con(0), m_fileName(0), m_host(0), m_user(0), m_passwd(0), m_dbName(0),
-      m_port(0), m_socket(0), m_exists(false){
-
-      };
+      m_port(0), m_socket(0), m_exists(false)
+{
+}
 
 int wb_dbms_env::close()
 {
@@ -820,6 +884,11 @@ MYSQL* wb_dbms_env::openDb()
   }
 
   return con;
+}
+
+bool wb_dbms_env::exists()
+{
+  return m_exists;
 }
 
 int wb_dbms_env::create()
@@ -934,6 +1003,36 @@ int wb_dbms_env::open(void)
   return 0;
 }
 
+char* wb_dbms_env::fileName(void)
+{
+  return m_fileName;
+}
+
+char* wb_dbms_env::user(void)
+{
+  return m_user;
+}
+
+char* wb_dbms_env::passwd(void)
+{
+  return m_passwd;
+}
+
+unsigned int wb_dbms_env::port(void)
+{
+  return m_port;
+}
+
+char* wb_dbms_env::socket(void)
+{
+  return m_socket;
+}
+
+MYSQL* wb_dbms_env::con(void)
+{
+  return m_con;
+}
+
 int wb_dbms_env::txn_begin(wb_dbms_txn* pid, wb_dbms_txn** tid)
 {
   int rc = mysql_rollback(m_con);
@@ -951,8 +1050,76 @@ int wb_dbms_env::txn_begin(wb_dbms_txn* pid, wb_dbms_txn** tid)
   return rc;
 }
 
+wb_dbms_qe::wb_dbms_qe()
+    : m_data(0), m_off(0), m_size(0), m_bSize(0), m_isNull(0)
+{
+}
+
+wb_dbms_qe::wb_dbms_qe(void* data, size_t size)
+    : m_data((char*)data), m_off(0), m_size(size), m_bSize(size), m_isNull(0)
+{
+}
+
+wb_dbms_qe::~wb_dbms_qe()
+{
+}
+
+void wb_dbms_qe::data(void* data)
+{
+  m_data = (char*)data;
+}
+
+char* wb_dbms_qe::data() const
+{
+  return m_data;
+}
+
+void wb_dbms_qe::size(size_t size)
+{
+  m_size = size;
+}
+
+size_t wb_dbms_qe::size() const
+{
+  return m_size;
+}
+
+void wb_dbms_qe::offset(size_t off)
+{
+  m_off = off;
+}
+
+size_t wb_dbms_qe::offset() const
+{
+  return m_off;
+}
+
+void wb_dbms_qe::bSize(size_t bSize)
+{
+  m_bSize = bSize;
+}
+
+size_t wb_dbms_qe::bSize() const
+{
+  return m_bSize;
+}
+
+size_t* wb_dbms_qe::a_size()
+{
+  return &m_size;
+}
+
+my_bool* wb_dbms_qe::a_isNull()
+{
+  return &m_isNull;
+}
+
 wb_dbms_info::wb_dbms_info(wb_dbms* db)
     : m_db(db), m_data(&m_volume, sizeof(m_volume))
+{
+}
+
+wb_dbms_info::~wb_dbms_info()
 {
 }
 
@@ -996,6 +1163,41 @@ void wb_dbms_info::upd(wb_dbms_txn* txn)
 
   ret = m_db->m_t_info->upd(txn, &m_key, &m_data);
   printf("info ins: %d\n", ret);
+}
+
+pwr_tCid wb_dbms_info::cid()
+{
+  return m_volume.cid;
+}
+
+pwr_tVid wb_dbms_info::vid()
+{
+  return m_volume.vid;
+}
+
+pwr_tTime wb_dbms_info::time()
+{
+  return m_volume.time;
+}
+
+char* wb_dbms_info::name()
+{
+  return m_volume.name;
+}
+
+void wb_dbms_info::cid(pwr_tCid cid)
+{
+  m_volume.cid = cid;
+}
+
+void wb_dbms_info::vid(pwr_tVid vid)
+{
+  m_volume.vid = vid;
+}
+
+void wb_dbms_info::time(pwr_tTime time)
+{
+  m_volume.time = time;
 }
 
 void wb_dbms_info::name(char const* name)
@@ -1098,6 +1300,19 @@ void wb_dbms_class::iter(void (*func)(pwr_tOid oid, pwr_tCid cid))
   m_dbc = 0;
 }
 
+pwr_tCid wb_dbms_class::cid()
+{
+  return m_k.cid;
+}
+
+pwr_tOid wb_dbms_class::oid()
+{
+  pwr_tOid oid;
+  oid.oix = m_k.oix;
+  oid.vid = m_db->vid();
+  return oid;
+}
+
 wb_dbms_class::~wb_dbms_class()
 {
   if (m_dbc)
@@ -1128,6 +1343,11 @@ wb_dbms_class_iterator::wb_dbms_class_iterator(
   m_atEnd = (m_rc != 0);
   m_k.oix = oid.oix;
   m_k.cid = cid;
+}
+
+bool wb_dbms_class_iterator::atEnd()
+{
+  return m_atEnd;
 }
 
 bool wb_dbms_class_iterator::first()
@@ -1171,6 +1391,29 @@ bool wb_dbms_class_iterator::succClass(pwr_tCid cid)
   m_atEnd = (m_rc != 0);
 
   return !m_atEnd;
+}
+
+pwr_tOid wb_dbms_class_iterator::oid()
+{
+  pwr_tOid oid;
+  oid.vid = m_db->vid();
+  oid.oix = m_k.oix;
+  return oid;
+}
+
+pwr_tCid wb_dbms_class_iterator::cid()
+{
+  return m_k.cid;
+}
+
+void wb_dbms_class_iterator::oid(pwr_tOid oid)
+{
+  m_k.oix = oid.oix;
+}
+
+void wb_dbms_class_iterator::cid(pwr_tCid cid)
+{
+  m_k.cid = cid;
 }
 
 wb_dbms_class_iterator::~wb_dbms_class_iterator()
@@ -1275,6 +1518,11 @@ void wb_dbms_name::iter(
   m_dbc = 0;
 }
 
+pwr_tOid wb_dbms_name::oid()
+{
+  return m_d.oid;
+}
+
 wb_dbms_ohead::wb_dbms_ohead()
     : m_db(0), m_key(&m_oid, sizeof(m_oid)), m_data(&m_o, sizeof(m_o))
 {
@@ -1329,6 +1577,11 @@ wb_dbms_ohead::wb_dbms_ohead(wb_dbms* db, pwr_tOid oid, pwr_tCid cid,
   m_o.body[1].size = dbSize;
 }
 
+void wb_dbms_ohead::setDb(wb_dbms* db)
+{
+  m_db = db;
+}
+
 wb_dbms_ohead& wb_dbms_ohead::get(wb_dbms_txn* txn)
 {
   int rc = 0;
@@ -1375,6 +1628,91 @@ int wb_dbms_ohead::del(wb_dbms_txn* txn)
   return m_db->m_t_ohead->del(txn, &m_key, 0);
 }
 
+pwr_tOid wb_dbms_ohead::oid()
+{
+  return m_o.oid;
+}
+
+pwr_tVid wb_dbms_ohead::vid()
+{
+  return m_o.oid.vid;
+}
+
+pwr_tOix wb_dbms_ohead::oix()
+{
+  return m_o.oid.oix;
+}
+
+pwr_tCid wb_dbms_ohead::cid()
+{
+  return m_o.cid;
+}
+
+pwr_tOid wb_dbms_ohead::poid()
+{
+  return m_o.poid;
+}
+
+pwr_tOid wb_dbms_ohead::foid()
+{
+  return m_o.foid;
+}
+
+pwr_tOid wb_dbms_ohead::loid()
+{
+  return m_o.loid;
+}
+
+pwr_tOid wb_dbms_ohead::boid()
+{
+  return m_o.boid;
+}
+
+pwr_tOid wb_dbms_ohead::aoid()
+{
+  return m_o.aoid;
+}
+
+pwr_tTime wb_dbms_ohead::ohTime()
+{
+  return m_o.time;
+}
+
+const char* wb_dbms_ohead::name()
+{
+  return m_o.name;
+}
+
+const char* wb_dbms_ohead::normname()
+{
+  return m_o.normname;
+}
+
+pwr_mClassDef wb_dbms_ohead::flags()
+{
+  return m_o.flags;
+}
+
+size_t wb_dbms_ohead::rbSize()
+{
+  return m_o.body[0].size;
+}
+
+size_t wb_dbms_ohead::dbSize()
+{
+  return m_o.body[1].size;
+}
+
+pwr_tTime wb_dbms_ohead::rbTime()
+{
+  return m_o.body[0].time;
+}
+
+pwr_tTime wb_dbms_ohead::dbTime()
+{
+  return m_o.body[1].time;
+}
+
 void wb_dbms_ohead::name(wb_name& name)
 {
   memset(m_o.name, 0, sizeof(m_o.name));
@@ -1389,6 +1727,71 @@ void wb_dbms_ohead::name(pwr_tOid& oid)
   memset(m_o.normname, 0, sizeof(m_o.normname));
   sprintf(m_o.name, "O%u", oid.oix);
   strcpy(m_o.normname, m_o.name);
+}
+
+void wb_dbms_ohead::oid(pwr_tOid oid)
+{
+  m_o.oid = m_oid = oid;
+}
+
+void wb_dbms_ohead::cid(pwr_tCid cid)
+{
+  m_o.cid = cid;
+}
+
+void wb_dbms_ohead::poid(pwr_tOid oid)
+{
+  m_o.poid = oid;
+}
+
+void wb_dbms_ohead::foid(pwr_tOid oid)
+{
+  m_o.foid = oid;
+}
+
+void wb_dbms_ohead::loid(pwr_tOid oid)
+{
+  m_o.loid = oid;
+}
+
+void wb_dbms_ohead::boid(pwr_tOid oid)
+{
+  m_o.boid = oid;
+}
+
+void wb_dbms_ohead::aoid(pwr_tOid oid)
+{
+  m_o.aoid = oid;
+}
+
+void wb_dbms_ohead::flags(pwr_mClassDef flags)
+{
+  m_o.flags = flags;
+}
+
+void wb_dbms_ohead::rbSize(size_t size)
+{
+  m_o.body[0].size = size;
+}
+
+void wb_dbms_ohead::dbSize(size_t size)
+{
+  m_o.body[1].size = size;
+}
+
+void wb_dbms_ohead::ohTime(pwr_tTime& time)
+{
+  m_o.time = time;
+}
+
+void wb_dbms_ohead::rbTime(pwr_tTime& time)
+{
+  m_o.body[0].time = time;
+}
+
+void wb_dbms_ohead::dbTime(pwr_tTime& time)
+{
+  m_o.body[1].time = time;
 }
 
 void wb_dbms_ohead::clear()
@@ -1453,6 +1856,11 @@ wb_dbms_rbody::wb_dbms_rbody(wb_dbms* db, pwr_tOid oid)
     : m_db(db), m_oid(oid), m_size(0), m_p(0), m_key(&m_oid, sizeof(m_oid)),
       m_data(0, 0)
 {
+}
+
+void wb_dbms_rbody::oid(pwr_tOid oid)
+{
+  m_oid = oid;
 }
 
 int wb_dbms_rbody::ins(wb_dbms_txn* txn)
@@ -1594,6 +2002,11 @@ wb_dbms_dbody::wb_dbms_dbody(wb_dbms* db, pwr_tOid oid)
 {
 }
 
+void wb_dbms_dbody::oid(pwr_tOid oid)
+{
+  m_oid = oid;
+}
+
 int wb_dbms_dbody::ins(wb_dbms_txn* txn)
 {
   return m_db->m_t_dbody->ins(txn, &m_key, &m_data);
@@ -1718,6 +2131,18 @@ void wb_dbms_dbody::iter(wb_import& i)
   m_dbc = 0;
 }
 
+wb_dbms_txn::wb_dbms_txn()
+{
+}
+
+wb_dbms_txn::wb_dbms_txn(wb_dbms_env* env) : m_env(env)
+{
+}
+
+wb_dbms_txn::~wb_dbms_txn()
+{
+}
+
 int wb_dbms_txn::commit()
 {
   int rc;
@@ -1766,6 +2191,24 @@ error:
       "%s rc %d, %s\n", "wb_dbms::subAbort()", rc, mysql_error(m_env->con()));
   // throw wb_error(DB__TXNERROR);
   return 1;
+}
+
+int wb_dbms_txn::subCommit()
+{
+  return 0;
+}
+
+void wb_dbms_txn::set_env(wb_dbms_env* env)
+{
+  m_env = env;
+}
+
+wb_dbms_query::wb_dbms_query() : m_db(0), m_prepared(false), m_stmt(0)
+{
+}
+
+wb_dbms_query::~wb_dbms_query()
+{
 }
 
 int wb_dbms_query::prepare(const char* query, int nResult, int nParam)
@@ -1933,6 +2376,37 @@ void wb_dbms_query::error(const char* method, const char* func)
   throw wb_dbms_error(m_db, s);
 }
 
+wb_dbms_cursor::wb_dbms_cursor(wb_dbms_query* query) : m_query(query)
+{
+}
+
+wb_dbms_cursor::~wb_dbms_cursor()
+{
+}
+
+int wb_dbms_cursor::get()
+{
+  return mysql_stmt_fetch(m_query->m_stmt);
+}
+
+int wb_dbms_cursor::count()
+{
+  return 0;
+}
+
+int wb_dbms_cursor::close()
+{
+  return mysql_stmt_free_result(m_query->m_stmt);
+}
+
+wb_dbms_table::wb_dbms_table(wb_dbms* db) : m_db(db)
+{
+}
+
+wb_dbms_table::~wb_dbms_table()
+{
+}
+
 int wb_dbms_table::create(const char* query)
 {
   int rc = 0;
@@ -1959,6 +2433,842 @@ int wb_dbms_table::cursor(
     return rc;
 
   *cp = new wb_dbms_cursor(m_q_cursor);
+
+  return 0;
+}
+
+void wb_dbms_table::queryGet(wb_dbms_query* query)
+{
+  m_q_get = query;
+}
+
+void wb_dbms_table::querySucc(wb_dbms_query* query)
+{
+  m_q_succ = query;
+}
+
+void wb_dbms_table::queryPred(wb_dbms_query* query)
+{
+  m_q_pred = query;
+}
+
+void wb_dbms_table::queryIns(wb_dbms_query* query)
+{
+  m_q_ins = query;
+}
+
+void wb_dbms_table::queryUpd(wb_dbms_query* query)
+{
+  m_q_upd = query;
+}
+
+void wb_dbms_table::queryDel(wb_dbms_query* query)
+{
+  m_q_del = query;
+}
+
+void wb_dbms_table::queryCursor(wb_dbms_query* query)
+{
+  m_q_cursor = query;
+}
+
+int wb_dbms_table::get(wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  return m_q_get->execute(txn, key, data);
+}
+
+int wb_dbms_table::succ(wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  return m_q_succ->execute(txn, key, data);
+}
+
+int wb_dbms_table::pred(wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  return m_q_pred->execute(txn, key, data);
+}
+
+int wb_dbms_table::ins(wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  return m_q_ins->execute(txn, key, data);
+}
+
+int wb_dbms_table::upd(wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  return m_q_upd->execute(txn, key, data);
+}
+
+int wb_dbms_table::del(wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  return m_q_del->execute(txn, key, data);
+}
+
+wb_dbms_get_query::wb_dbms_get_query()
+{
+}
+
+wb_dbms_get_query::~wb_dbms_get_query()
+{
+}
+
+int wb_dbms_get_query::execute(
+    wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  int rc = 0;
+  static const char* method = "execute";
+
+  bind(txn, key, data);
+
+  rc = mysql_stmt_execute(m_stmt);
+  if (rc)
+    error(rc, method, "mysql_stmt_execute");
+
+  rc = mysql_stmt_store_result(m_stmt);
+  if (rc)
+    error(rc, method, "mysql_stmt_store_result");
+
+  if (mysql_stmt_num_rows(m_stmt) == 0)
+    return 1;
+
+  rc = mysql_stmt_fetch(m_stmt);
+  if (rc)
+    error(rc, method, "mysql_stmt_fetch");
+
+  mysql_stmt_free_result(m_stmt);
+
+  return 0;
+}
+
+wb_dbms_iter_query::wb_dbms_iter_query()
+{
+}
+
+wb_dbms_iter_query::~wb_dbms_iter_query()
+{
+}
+
+int wb_dbms_iter_query::execute(
+    wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  int rc = 0;
+  static const char* method = "execute";
+
+  bind(txn, key, data);
+
+  rc = mysql_stmt_execute(m_stmt);
+  if (rc)
+    error(rc, method, "mysql_stmt_execute");
+
+  rc = mysql_stmt_store_result(m_stmt);
+  if (rc)
+    error(rc, method, "mysql_stmt_store_result");
+
+  if (mysql_stmt_num_rows(m_stmt) == 0)
+    return 1;
+
+  rc = mysql_stmt_fetch(m_stmt);
+  if (rc)
+    error(rc, method, "mysql_stmt_fetch");
+
+  mysql_stmt_free_result(m_stmt);
+
+  if (m_result.is_null[0])
+    return 1;
+
+  return 0;
+}
+
+wb_dbms_ins_query::wb_dbms_ins_query()
+{
+}
+
+wb_dbms_ins_query::~wb_dbms_ins_query()
+{
+}
+
+int wb_dbms_ins_query::execute(
+    wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  int rc = 0;
+  static const char* method = "execute";
+
+  bind(txn, key, data);
+
+  rc = mysql_stmt_execute(m_stmt);
+  if (rc)
+    error(rc, method, "mysql_stmt_execute");
+
+  if (mysql_stmt_affected_rows(m_stmt) == 1)
+    return 0;
+
+  return 1;
+}
+
+wb_dbms_upd_query::wb_dbms_upd_query()
+{
+}
+
+wb_dbms_upd_query::~wb_dbms_upd_query()
+{
+}
+
+int wb_dbms_upd_query::execute(
+    wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  int rc = 0;
+  static const char* method = "execute";
+
+  bind(txn, key, data);
+
+  rc = mysql_stmt_execute(m_stmt);
+  if (rc)
+    error(rc, method, "mysql_stmt_execute");
+
+  if (mysql_stmt_affected_rows(m_stmt) <= 1)
+    return 0;
+
+  return 1;
+}
+
+wb_dbms_del_query::wb_dbms_del_query()
+{
+}
+
+wb_dbms_del_query::~wb_dbms_del_query()
+{
+}
+
+int wb_dbms_del_query::execute(
+    wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  int rc = 0;
+  static const char* method = "execute";
+
+  bind(txn, key, data);
+
+  rc = mysql_stmt_execute(m_stmt);
+  if (rc)
+    error(rc, method, "mysql_stmt_execute");
+
+  if (mysql_stmt_affected_rows(m_stmt) == 1)
+    return 0;
+
+  return 1;
+}
+
+wb_dbms_cursor_query::wb_dbms_cursor_query()
+{
+}
+
+wb_dbms_cursor_query::~wb_dbms_cursor_query()
+{
+}
+
+int wb_dbms_cursor_query::execute(
+    wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  int rc = 0;
+  static const char* method = "execute";
+
+  bind(txn, key, data);
+
+  rc = mysql_stmt_execute(m_stmt);
+  if (rc)
+    error(rc, method, "mysql_stmt_execute");
+
+  return 0;
+}
+
+wb_dbms_get_info::wb_dbms_get_info(wb_dbms* db)
+{
+  m_db = db;
+}
+
+wb_dbms_get_info::~wb_dbms_get_info()
+{
+}
+
+int wb_dbms_get_info::bind(wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  prepare("select volume from info where id = ?", 1, 1);
+
+  bindResult(0, MYSQL_TYPE_LONG_BLOB, (char*)data->data(), data->size());
+  bindParam(0, MYSQL_TYPE_LONG, (char*)key->data(), key->size());
+  bindQuery();
+
+  return 0;
+}
+
+wb_dbms_ins_info::wb_dbms_ins_info(wb_dbms* db)
+{
+  m_db = db;
+}
+
+wb_dbms_ins_info::~wb_dbms_ins_info()
+{
+}
+
+int wb_dbms_ins_info::bind(wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  prepare("insert into info (id, volume) values (?, ?)", 0, 2);
+
+  bindParam(0, MYSQL_TYPE_LONG, (char*)key->data(), key->size());
+  bindParam(1, MYSQL_TYPE_LONG_BLOB, (char*)data->data(), data->size());
+  bindQuery();
+
+  return 0;
+}
+
+wb_dbms_upd_info::wb_dbms_upd_info(wb_dbms* db)
+{
+  m_db = db;
+}
+
+wb_dbms_upd_info::~wb_dbms_upd_info()
+{
+}
+
+int wb_dbms_upd_info::bind(wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  prepare("update info set volume = ? where id = ?", 0, 2);
+
+  bindParam(0, MYSQL_TYPE_LONG_BLOB, (char*)data->data(), data->size());
+  bindParam(1, MYSQL_TYPE_LONG, (char*)key->data(), key->size());
+  bindQuery();
+
+  return 0;
+}
+
+wb_dbms_del_info::wb_dbms_del_info(wb_dbms* db)
+{
+  m_db = db;
+}
+
+wb_dbms_del_info::~wb_dbms_del_info()
+{
+}
+
+int wb_dbms_del_info::bind(wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  prepare("delete from inf where id = ?", 0, 1);
+
+  bindParam(0, MYSQL_TYPE_LONG, (char*)key->data(), key->size());
+  bindQuery();
+
+  return 0;
+}
+
+wb_dbms_get_ohead::wb_dbms_get_ohead(wb_dbms* db)
+{
+  m_db = db;
+}
+
+wb_dbms_get_ohead::~wb_dbms_get_ohead()
+{
+}
+
+int wb_dbms_get_ohead::bind(wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  prepare("select head from ohead where oid = ?", 1, 1);
+
+  bindResult(0, MYSQL_TYPE_LONG_BLOB, (char*)data->data(), data->size());
+  bindParam(0, MYSQL_TYPE_LONGLONG, (char*)key->data(), key->size());
+  bindQuery();
+
+  return 0;
+}
+
+wb_dbms_ins_ohead::wb_dbms_ins_ohead(wb_dbms* db)
+{
+  m_db = db;
+}
+
+wb_dbms_ins_ohead::~wb_dbms_ins_ohead()
+{
+}
+
+int wb_dbms_ins_ohead::bind(wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  prepare("insert into ohead (oid, head) values (?, ?)", 0, 2);
+
+  bindParam(0, MYSQL_TYPE_LONGLONG, (char*)key->data(), key->size());
+  bindParam(1, MYSQL_TYPE_LONG_BLOB, (char*)data->data(), data->size());
+  bindQuery();
+
+  return 0;
+}
+
+wb_dbms_upd_ohead::wb_dbms_upd_ohead(wb_dbms* db)
+{
+  m_db = db;
+}
+
+wb_dbms_upd_ohead::~wb_dbms_upd_ohead()
+{
+}
+
+int wb_dbms_upd_ohead::bind(wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  prepare("update ohead set head = ? where oid = ?", 0, 2);
+
+  bindParam(0, MYSQL_TYPE_LONG_BLOB, (char*)data->data(), data->size());
+  bindParam(1, MYSQL_TYPE_LONGLONG, (char*)key->data(), key->size());
+  bindQuery();
+
+  return 0;
+}
+
+wb_dbms_del_ohead::wb_dbms_del_ohead(wb_dbms* db)
+{
+  m_db = db;
+}
+
+wb_dbms_del_ohead::~wb_dbms_del_ohead()
+{
+}
+
+int wb_dbms_del_ohead::bind(wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  prepare("delete from ohead where oid = ?", 0, 1);
+
+  bindParam(0, MYSQL_TYPE_LONGLONG, (char*)key->data(), key->size());
+  bindQuery();
+
+  return 0;
+}
+
+wb_dbms_cursor_ohead::wb_dbms_cursor_ohead(wb_dbms* db)
+{
+  m_db = db;
+}
+
+wb_dbms_cursor_ohead::~wb_dbms_cursor_ohead()
+{
+}
+
+int wb_dbms_cursor_ohead::bind(
+    wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  prepare("select oid, head from ohead", 2, 0);
+
+  bindResult(0, MYSQL_TYPE_LONGLONG, (char*)key->data(), key->size());
+  bindResult(1, MYSQL_TYPE_LONG_BLOB, data);
+  bindQuery();
+
+  return 0;
+}
+
+wb_dbms_get_dbody::wb_dbms_get_dbody(wb_dbms* db)
+{
+  m_db = db;
+}
+
+wb_dbms_get_dbody::~wb_dbms_get_dbody()
+{
+}
+
+int wb_dbms_get_dbody::bind(wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  prepare("select body from dbody where oid = ?", 1, 1);
+
+  bindResult(0, MYSQL_TYPE_LONG_BLOB, data);
+  bindParam(0, MYSQL_TYPE_LONGLONG, (char*)key->data(), key->size());
+  bindQuery();
+
+  return 0;
+}
+
+wb_dbms_ins_dbody::wb_dbms_ins_dbody(wb_dbms* db)
+{
+  m_db = db;
+}
+
+wb_dbms_ins_dbody::~wb_dbms_ins_dbody()
+{
+}
+
+int wb_dbms_ins_dbody::bind(wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  prepare("insert into dbody (oid, body) values (?, ?)", 0, 2);
+
+  bindParam(0, MYSQL_TYPE_LONGLONG, (char*)key->data(), key->size());
+  bindParam(1, MYSQL_TYPE_LONG_BLOB, (char*)data->data(), data->size());
+  bindQuery();
+
+  return 0;
+}
+
+wb_dbms_upd_dbody::wb_dbms_upd_dbody(wb_dbms* db)
+{
+  m_db = db;
+}
+
+wb_dbms_upd_dbody::~wb_dbms_upd_dbody()
+{
+}
+
+int wb_dbms_upd_dbody::bind(wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  prepare("update dbody set body = ? where oid = ?", 0, 2);
+
+  bindParam(0, MYSQL_TYPE_LONG_BLOB, data);
+  bindParam(1, MYSQL_TYPE_LONGLONG, (char*)key->data(), key->size());
+  bindQuery();
+
+  return 0;
+}
+
+wb_dbms_del_dbody::wb_dbms_del_dbody(wb_dbms* db)
+{
+  m_db = db;
+}
+
+wb_dbms_del_dbody::~wb_dbms_del_dbody()
+{
+}
+
+int wb_dbms_del_dbody::bind(wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  prepare("delete from dbody where oid = ?", 0, 1);
+
+  bindParam(0, MYSQL_TYPE_LONGLONG, (char*)key->data(), key->size());
+  bindQuery();
+
+  return 0;
+}
+
+wb_dbms_cursor_dbody::wb_dbms_cursor_dbody(wb_dbms* db)
+{
+  m_db = db;
+}
+
+wb_dbms_cursor_dbody::~wb_dbms_cursor_dbody()
+{
+}
+
+int wb_dbms_cursor_dbody::bind(
+    wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  prepare("select oid, body from dbody", 2, 0);
+
+  bindResult(0, MYSQL_TYPE_LONGLONG, (char*)key->data(), key->size());
+  bindResult(1, MYSQL_TYPE_LONG_BLOB, data);
+  bindQuery();
+
+  return 0;
+}
+
+wb_dbms_get_rbody::wb_dbms_get_rbody(wb_dbms* db)
+{
+  m_db = db;
+}
+
+wb_dbms_get_rbody::~wb_dbms_get_rbody()
+{
+}
+
+int wb_dbms_get_rbody::bind(wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  prepare("select body from rbody where oid = ?", 1, 1);
+
+  bindResult(0, MYSQL_TYPE_LONG_BLOB, data);
+  bindParam(0, MYSQL_TYPE_LONGLONG, (char*)key->data(), key->size());
+  bindQuery();
+
+  return 0;
+}
+
+wb_dbms_ins_rbody::wb_dbms_ins_rbody(wb_dbms* db)
+{
+  m_db = db;
+}
+
+wb_dbms_ins_rbody::~wb_dbms_ins_rbody()
+{
+}
+
+int wb_dbms_ins_rbody::bind(wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  prepare("insert into rbody (oid, body) values (?, ?)", 0, 2);
+
+  bindParam(0, MYSQL_TYPE_LONGLONG, (char*)key->data(), key->size());
+  bindParam(1, MYSQL_TYPE_LONG_BLOB, (char*)data->data(), data->size());
+  bindQuery();
+
+  return 0;
+}
+
+wb_dbms_upd_rbody::wb_dbms_upd_rbody(wb_dbms* db)
+{
+  m_db = db;
+}
+
+wb_dbms_upd_rbody::~wb_dbms_upd_rbody()
+{
+}
+
+int wb_dbms_upd_rbody::bind(wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  prepare("update rbody set body = ? where oid = ?", 0, 2);
+
+  bindParam(0, MYSQL_TYPE_LONG_BLOB, data);
+  bindParam(1, MYSQL_TYPE_LONGLONG, (char*)key->data(), key->size());
+  bindQuery();
+
+  return 0;
+}
+
+wb_dbms_del_rbody::wb_dbms_del_rbody(wb_dbms* db)
+{
+  m_db = db;
+}
+
+wb_dbms_del_rbody::~wb_dbms_del_rbody()
+{
+}
+
+int wb_dbms_del_rbody::bind(wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  prepare("delete from rbody where oid = ?", 0, 1);
+
+  bindParam(0, MYSQL_TYPE_LONGLONG, (char*)key->data(), key->size());
+  bindQuery();
+
+  return 0;
+}
+
+wb_dbms_cursor_rbody::wb_dbms_cursor_rbody(wb_dbms* db)
+{
+  m_db = db;
+}
+
+wb_dbms_cursor_rbody::~wb_dbms_cursor_rbody()
+{
+}
+
+int wb_dbms_cursor_rbody::bind(
+    wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  prepare("select oid, body from rbody", 2, 0);
+
+  bindResult(0, MYSQL_TYPE_LONGLONG, (char*)key->data(), key->size());
+  bindResult(1, MYSQL_TYPE_LONG_BLOB, data);
+  bindQuery();
+
+  return 0;
+}
+
+wb_dbms_get_class::wb_dbms_get_class(wb_dbms* db)
+{
+  m_db = db;
+}
+
+wb_dbms_get_class::~wb_dbms_get_class()
+{
+}
+
+int wb_dbms_get_class::bind(wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  prepare("select cidoix from class where cidoix = ?", 1, 1);
+
+  bindResult(0, MYSQL_TYPE_LONGLONG, (char*)key->data(), key->size());
+  bindParam(0, MYSQL_TYPE_LONGLONG, (char*)key->data(), key->size());
+  bindQuery();
+
+  return 0;
+}
+
+wb_dbms_succ_class::wb_dbms_succ_class(wb_dbms* db)
+{
+  m_db = db;
+}
+
+wb_dbms_succ_class::~wb_dbms_succ_class()
+{
+}
+
+int wb_dbms_succ_class::bind(
+    wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  prepare("select MIN(cidoix) from class where cidoix > ?", 1, 1);
+
+  bindResult(0, MYSQL_TYPE_LONGLONG, (char*)key->data(), key->size());
+  bindParam(0, MYSQL_TYPE_LONGLONG, (char*)key->data(), key->size());
+  bindQuery();
+
+  return 0;
+}
+
+wb_dbms_pred_class::wb_dbms_pred_class(wb_dbms* db)
+{
+  m_db = db;
+}
+
+wb_dbms_pred_class::~wb_dbms_pred_class()
+{
+}
+
+int wb_dbms_pred_class::bind(
+    wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  prepare("select MAX(cidoix) from class where cidoix < ?", 1, 1);
+
+  bindResult(0, MYSQL_TYPE_LONGLONG, (char*)key->data(), key->size());
+  bindParam(0, MYSQL_TYPE_LONGLONG, (char*)key->data(), key->size());
+  bindQuery();
+
+  return 0;
+}
+
+wb_dbms_ins_class::wb_dbms_ins_class(wb_dbms* db)
+{
+  m_db = db;
+}
+
+wb_dbms_ins_class::~wb_dbms_ins_class()
+{
+}
+
+int wb_dbms_ins_class::bind(wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  prepare("insert into class (cidoix) values (?)", 0, 1);
+
+  bindParam(0, MYSQL_TYPE_LONGLONG, (char*)key->data(), key->size());
+  bindQuery();
+
+  return 0;
+}
+
+wb_dbms_del_class::wb_dbms_del_class(wb_dbms* db)
+{
+  m_db = db;
+}
+
+wb_dbms_del_class::~wb_dbms_del_class()
+{
+}
+
+int wb_dbms_del_class::bind(wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  prepare("delete from class where cidoix = ?", 0, 1);
+
+  bindParam(0, MYSQL_TYPE_LONGLONG, (char*)key->data(), key->size());
+  bindQuery();
+
+  return 0;
+}
+
+wb_dbms_cursor_class::wb_dbms_cursor_class(wb_dbms* db)
+{
+  m_db = db;
+}
+
+wb_dbms_cursor_class::~wb_dbms_cursor_class()
+{
+}
+
+int wb_dbms_cursor_class::bind(
+    wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  prepare("select cidoix from class", 1, 0);
+
+  bindResult(0, MYSQL_TYPE_LONGLONG, (char*)key->data(), key->size());
+  bindQuery();
+
+  return 0;
+}
+
+wb_dbms_get_name::wb_dbms_get_name(wb_dbms* db)
+{
+  m_db = db;
+}
+
+wb_dbms_get_name::~wb_dbms_get_name()
+{
+}
+
+int wb_dbms_get_name::bind(wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  prepare("select oid from name where poid = ? and normname = ?", 1, 2);
+
+  dbms_sNameKey* nk = (dbms_sNameKey*)key->data();
+
+  bindResult(0, MYSQL_TYPE_LONGLONG, (char*)data->data(), data->size());
+  bindParam(0, MYSQL_TYPE_LONGLONG, (char*)&nk->poid, sizeof(nk->poid));
+  bindParam(
+      1, MYSQL_TYPE_TINY_BLOB, (char*)&nk->normname, sizeof(nk->normname));
+  bindQuery();
+
+  return 0;
+}
+
+wb_dbms_ins_name::wb_dbms_ins_name(wb_dbms* db)
+{
+  m_db = db;
+}
+
+wb_dbms_ins_name::~wb_dbms_ins_name()
+{
+}
+
+int wb_dbms_ins_name::bind(wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  prepare("insert into name (poid, normname, oid) values (?, ?, ?)", 0, 3);
+
+  dbms_sNameKey* nk = (dbms_sNameKey*)key->data();
+
+  bindParam(0, MYSQL_TYPE_LONGLONG, (char*)&nk->poid, sizeof(nk->poid));
+  bindParam(
+      1, MYSQL_TYPE_TINY_BLOB, (char*)&nk->normname, sizeof(nk->normname));
+  bindParam(2, MYSQL_TYPE_LONGLONG, (char*)data->data(), data->size());
+  bindQuery();
+
+  return 0;
+}
+
+wb_dbms_del_name::wb_dbms_del_name(wb_dbms* db)
+{
+  m_db = db;
+}
+
+wb_dbms_del_name::~wb_dbms_del_name()
+{
+}
+
+int wb_dbms_del_name::bind(wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  prepare("delete from name where poid = ? and normname = ?", 0, 2);
+
+  dbms_sNameKey* nk = (dbms_sNameKey*)key->data();
+
+  bindParam(0, MYSQL_TYPE_LONGLONG, (char*)&nk->poid, sizeof(nk->poid));
+  bindParam(
+      1, MYSQL_TYPE_TINY_BLOB, (char*)&nk->normname, sizeof(nk->normname));
+  bindQuery();
+
+  return 0;
+}
+
+wb_dbms_cursor_name::wb_dbms_cursor_name(wb_dbms* db)
+{
+  m_db = db;
+}
+
+wb_dbms_cursor_name::~wb_dbms_cursor_name()
+{
+}
+
+int wb_dbms_cursor_name::bind(
+    wb_dbms_txn* txn, wb_dbms_qe* key, wb_dbms_qe* data)
+{
+  prepare("select poid, normname, oid from name", 3, 0);
+
+  dbms_sNameKey* nk = (dbms_sNameKey*)key->data();
+
+  bindResult(0, MYSQL_TYPE_LONGLONG, (char*)&nk->poid, sizeof(nk->poid));
+  bindResult(
+      1, MYSQL_TYPE_TINY_BLOB, (char*)&nk->normname, sizeof(nk->normname));
+  bindResult(2, MYSQL_TYPE_LONGLONG, (char*)data->data(), data->size());
+  bindQuery();
 
   return 0;
 }

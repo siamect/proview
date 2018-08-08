@@ -58,6 +58,9 @@ typedef pwr_tUInt32 mh_mOutunitFlags;
 
 /* Callback prototypes */
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdocumentation"
+
 /**
  * @brief Callback function to handle aknowledge messages.
  *
@@ -65,7 +68,7 @@ typedef pwr_tUInt32 mh_mOutunitFlags;
  * The function can have any name, but the address to the routine should be
  * passed in the mh_OutunitConnect call.
  * The mh_OutunitReceive calls this function if an acknowledge message arrives.
- * @param *mh_cbOutunitAck Addres of an acknowledge message.
+ * @param mh_sAck Addres of an acknowledge message.
  * @return pwr_tStatus - Status return in standard VMS-format.
  */
 typedef pwr_tStatus (*mh_cbOutunitAck)(mh_sAck*);
@@ -78,7 +81,7 @@ typedef pwr_tStatus (*mh_cbOutunitAck)(mh_sAck*);
  * passed in
  * the mh_OutunitConnect call.
  * The mh_Outunit API calls this function if an alarm message arrives.
- * @param mh_cbOutunitAlarm Address of an alarm message.
+ * @param mh_sMessage Address of an alarm message.
  * @return pwr_tStatus - Status return in standard VMS-format.
  */
 typedef pwr_tStatus (*mh_cbOutunitAlarm)(mh_sMessage*);
@@ -91,7 +94,7 @@ typedef pwr_tStatus (*mh_cbOutunitAlarm)(mh_sMessage*);
  * passed
  * in the mh_OutunitConnect call.
  * The mh_Outunit API calls this function if a block message arrives.
- * @param mh_cbOutunitBlock
+ * @param mh_sBlock Address of a block message.
  * @return pwr_tStatus - Status return in standard VMS-format.
  */
 typedef pwr_tStatus (*mh_cbOutunitBlock)(mh_sBlock*);
@@ -104,7 +107,7 @@ typedef pwr_tStatus (*mh_cbOutunitBlock)(mh_sBlock*);
  * passed
  * in the mh_OutunitConnect call.
  * The mh_Outunit API calls this function if a cancel message arrives.
- * @param mh_cbOutunitCancel Address of an cancel message.
+ * @param mh_sReturn Address of an cancel message.
  * @return pwr_tStatus - Status return in standard VMS-format.
  */
 typedef pwr_tStatus (*mh_cbOutunitCancel)(mh_sReturn*);
@@ -115,7 +118,7 @@ typedef pwr_tStatus (*mh_cbOutunitCancel)(mh_sReturn*);
  * This is a callback function. It should be declared to the mh_Outunit API
  * at the mh_OutunitConnect call. The function can have any name, but the
  * address to the routine should be passed in the mh_OutunitConnect call.
- * @param mh_cbOutunitClearAlarmList PAMS address of the node of which alarms
+ * @param pwr_tNodeIndex PAMS address of the node of which alarms
  * should be cleared.
  * @return pwr_tStatus - Status return in standard VMS-format.
  */
@@ -124,8 +127,8 @@ typedef pwr_tStatus (*mh_cbOutunitClearAlarmList)(pwr_tNodeIndex);
 /**
  * @brief  Callback function to clear blocklist.
  *
- *
- * @param mh_cbOutunitClearBlockList
+ * @param pwr_tNodeIndex PAMS address of the node of which blocks
+ * should be cleared.
  * @return pwr_tStatus - Status return in standard VMS-format.
  */
 typedef pwr_tStatus (*mh_cbOutunitClearBlockList)(pwr_tNodeIndex);
@@ -138,7 +141,7 @@ typedef pwr_tStatus (*mh_cbOutunitClearBlockList)(pwr_tNodeIndex);
  * passed
  * in the mh_OutunitConnect call.
  * The mh_Outunit API calls this function if an info message arrives.
- * @param mh_cbOutunitInfo Address of an info message.
+ * @param mh_sMessage Address of an info message.
  * @return pwr_tStatus - Status return in standard VMS-format.
  */
 typedef pwr_tStatus (*mh_cbOutunitInfo)(mh_sMessage*);
@@ -151,7 +154,7 @@ typedef pwr_tStatus (*mh_cbOutunitInfo)(mh_sMessage*);
  * passed
  * in the mh_OutunitConnect call.
  * The mh_Outunit API calls this function if a return message arrives.
- * @param mh_cbOutunitReturn Address of a return message.
+ * @param mh_sReturn Address of a return message.
  * @return pwr_tStatus - Status return in standard VMS-format.
  */
 typedef pwr_tStatus (*mh_cbOutunitReturn)(mh_sReturn*);
@@ -164,10 +167,12 @@ typedef pwr_tStatus (*mh_cbOutunitReturn)(mh_sReturn*);
  * passed
  * in the mh_OutunitConnect call.
  * The mh_Outunit API calls this function if an alarm status message arrives.
- * @param mh_cbOutunitAlarmStatus Address of a alarm status message.
+ * @param mh_sAlarmStatus Address of a alarm status message.
  * @return pwr_tStatus - Status return in standard VMS-format.
  */
 typedef pwr_tStatus (*mh_cbOutunitAlarmStatus)(mh_sAlarmStatus*);
+
+#pragma GCC diagnostic pop
 
 /* Exported functions */
 

@@ -53,6 +53,10 @@ GrowCurve::GrowCurve(GrowCtx* glow_ctx, const char* name, glow_sCurveData* data,
     draw(&ctx->mw, (GlowTransform*)NULL, highlight, hot, NULL, NULL);
 }
 
+GrowCurve::~GrowCurve()
+{
+}
+
 void GrowCurve::set_type(glow_eCurveType t)
 {
   type = t;
@@ -65,7 +69,7 @@ void GrowCurve::configure_curves(glow_sCurveData* data)
   glow_sPoint* pointarray;
   glow_sPoint* point_p;
   int i, idx = 0;
-  double y_value, x_value, prev_y_value;
+  double y_value, x_value, prev_y_value = 0.0;
   glow_eCurveType curve_type;
   int pix = 0;
   int dix = 0;
@@ -351,7 +355,7 @@ void GrowCurve::configure_curves(glow_sCurveData* data)
               y_value = y0;
 
             if (i == 0) {
-              if (data->y_data[idx][0] == 1) {
+              if (feq(data->y_data[idx][0], 1.0)) {
                 pointarray[pix].y = y0;
                 pointarray[pix++].x = ll.x;
                 pointarray[pix].y = y0;
@@ -394,7 +398,7 @@ void GrowCurve::configure_curves(glow_sCurveData* data)
               y_value = y0;
 
             if (i == 0) {
-              if (data->y_data[idx][0] == 1) {
+              if (feq(data->y_data[idx][0], 1.0)) {
                 pointarray[pix].y = y0;
                 pointarray[pix++].x = x_value;
               } else {
@@ -415,7 +419,7 @@ void GrowCurve::configure_curves(glow_sCurveData* data)
           }
 
           // Last point
-          if (data->y_data[idx][data->rows[0] - 1] != 0) {
+          if (!feq(data->y_data[idx][data->rows[0] - 1], 0.0)) {
             pointarray[pix].y = y1;
             pointarray[pix++].x = ur.x;
             pointarray[pix].y = y0;
@@ -660,7 +664,7 @@ void GrowCurve::configure_curves(glow_sCurveData* data)
               y_value = y0;
 
             if (i == 0) {
-              if (data->y_data[idx][0] == 1) {
+              if (feq(data->y_data[idx][0], 1.0)) {
                 pointarray[pix].y = y0;
                 pointarray[pix++].x = ll.x;
                 pointarray[pix].y = y0;
@@ -705,7 +709,7 @@ void GrowCurve::configure_curves(glow_sCurveData* data)
               y_value = y0;
 
             if (i == 0) {
-              if (data->y_data[idx][0] == 1) {
+              if (feq(data->y_data[idx][0], 1.0)) {
                 pointarray[pix].y = y0;
                 pointarray[pix++].x = x_value;
               } else {
@@ -726,7 +730,7 @@ void GrowCurve::configure_curves(glow_sCurveData* data)
           }
 
           // Last point
-          if (data->y_data[idx][data->rows[idx] - 1] != 0) {
+          if (!feq(data->y_data[idx][data->rows[idx] - 1], 0.0)) {
             pointarray[pix].y = y1;
             pointarray[pix++].x = ur.x;
             pointarray[pix].y = y0;

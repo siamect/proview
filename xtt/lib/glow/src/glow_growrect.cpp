@@ -34,7 +34,6 @@
  * General Public License plus this exception.
  **/
 
-#include <float.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -329,7 +328,7 @@ void GrowRect::save(std::ofstream& fp, glow_eSaveMode mode)
 
 void GrowRect::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;
@@ -572,7 +571,7 @@ void GrowRect::set_position(double x, double y)
 {
   double old_x_left, old_x_right, old_y_low, old_y_high;
 
-  if (trf.a13 == x && trf.a23 == y)
+  if (feq(trf.a13, x) && feq(trf.a23, y))
     return;
   old_x_left = x_left;
   old_x_right = x_right;
@@ -948,7 +947,7 @@ void GrowRect::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       }
     }
   }
-  if (border || !(fill || (display_shadow && shadow_width != 0))) {
+  if (border || !(fill || (display_shadow && !feq(shadow_width, 0.0)))) {
     drawtype = ctx->get_drawtype(draw_type, glow_eDrawType_LineHighlight,
         highlight, (GrowNode*)colornode, 0);
     ctx->gdraw->rect(w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, idx, 0);
@@ -1009,9 +1008,9 @@ void GrowRect::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
       = ((node && ((GrowNode*)node)->shadow) || shadow) && !disable_shadow;
 
   w->set_draw_buffer_only();
-  if (border || !(fill || (display_shadow && shadow_width != 0)))
+  if (border || !(fill || (display_shadow && !feq(shadow_width, 0.0))))
     ctx->gdraw->rect_erase(w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, idx);
-  if (fill || (shadow && shadow_width != 0))
+  if (fill || (shadow && !feq(shadow_width, 0.0)))
     ctx->gdraw->fill_rect(
         w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineErase);
   w->reset_draw_buffer_only();
@@ -1224,7 +1223,7 @@ void GrowRect::export_javabean(GlowTransform* t, void* node,
   if (relief == glow_eRelief_Down)
     drawtype_incr = -shadow_contrast;
 
-  int jborder = border || !(fill || (!disable_shadow && shadow_width != 0));
+  int jborder = border || !(fill || (!disable_shadow && !feq(shadow_width, 0.0)));
 
   if (gradient_contrast >= 0) {
     gc1 = gradient_contrast / 2;

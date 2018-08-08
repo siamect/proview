@@ -192,14 +192,14 @@ public:
   int insert(GlowArrayElem* element)
   {
     return a.insert(element);
-  };
+  }
 
   //! Remove an object.
   /*! \param element	Object to remove. */
   void remove(GlowArrayElem* element)
   {
     a.remove(element);
-  };
+  }
 
   //! Remove and delete all objects.
   void delete_all();
@@ -223,7 +223,7 @@ public:
   int nodeclass_insert(GlowArrayElem* element)
   {
     return a_nc.insert(element);
-  };
+  }
 
   //! Insert a connection class.
   /*!
@@ -233,7 +233,7 @@ public:
   int conclass_insert(GlowArrayElem* element)
   {
     return a_cc.insert(element);
-  };
+  }
 
   //! Find an object.
   /*!
@@ -243,7 +243,7 @@ public:
   int find(GlowArrayElem* element)
   {
     return a.find(element);
-  };
+  }
 
   //! Insert an object in select list.
   /*!
@@ -253,14 +253,14 @@ public:
   int select_insert(GlowArrayElem* element)
   {
     return a_sel.insert(element);
-  };
+  }
 
   //! Remove an object from selection list.
   /*! \param element	Object to remove. */
   void select_remove(GlowArrayElem* element)
   {
     a_sel.remove(element);
-  };
+  }
 
   //! Clear selection list.
   /*! Remove all objects from selection list. */
@@ -274,7 +274,7 @@ public:
   int select_find(GlowArrayElem* element)
   {
     return a_sel.find(element);
-  };
+  }
 
   //! Insert an object in list of currently moved objects.
   /*!
@@ -284,21 +284,21 @@ public:
   int move_insert(GlowArrayElem* element)
   {
     return a_move.insert(element);
-  };
+  }
 
   //! Remove an object from list or currently moved objects.
   /*! \param element	Object to remove. */
   void move_remove(GlowArrayElem* element)
   {
     a_move.remove(element);
-  };
+  }
 
   //! Clear list of currently moved objects.
   /*! Remove all objects from list. */
   void move_clear()
   {
     a_move.clear();
-  };
+  }
 
   //! Find an object in list of currently moved objects.
   /*!
@@ -308,7 +308,7 @@ public:
   int move_find(GlowArrayElem* element)
   {
     return a_move.find(element);
-  };
+  }
 
   //! Insert an object in paste list.
   /*!
@@ -318,21 +318,21 @@ public:
   int paste_insert(GlowArrayElem* element)
   {
     return a_paste.insert(element);
-  };
+  }
 
   //! Remove an object from paste list.
   /*! \param element	Object to remove. */
   void paste_remove(GlowArrayElem* element)
   {
     a_paste.remove(element);
-  };
+  }
 
   //! Clear selection list.
   /*! Remove all objects from paste list. */
   void paste_clear()
   {
     a_paste.clear();
-  }; // todo Delete objects also !!!
+  } // todo Delete objects also !!!
 
   //! Find an object in paste list.
   /*!
@@ -342,7 +342,7 @@ public:
   int paste_find(GlowArrayElem* element)
   {
     return a_paste.find(element);
-  };
+  }
 
   //! Paste object in pastelist into the window.
   /*! Call paste execute now, or when the cursor enters the window. */
@@ -373,28 +373,28 @@ public:
   void set_highlight(int on)
   {
     a.set_highlight(on);
-  };
+  }
 
   //! Set inverse on or off on all objects.
   /*! \param on		1 set inverse on, 0 set off. */
   void set_inverse(int on)
   {
     a.set_inverse(on);
-  };
+  }
 
   //! Set highlight on or off on all selected objects.
   /*! \param on		1 set highlight on, 0 set off. */
   void set_select_highlight(int on)
   {
     a_sel.set_highlight(on);
-  };
+  }
 
   //! Set inverse on or off on all objects.
   /*! \param on		1 set inverse on, 0 set off. */
   void set_select_inverse(int on)
   {
     a_sel.set_inverse(on);
-  };
+  }
 
   void node_movement(GlowArrayElem* node, int x, int y);
 
@@ -427,7 +427,7 @@ public:
   {
     *list = a_sel.a;
     *size = a_sel.size();
-  };
+  }
 
   //! Get the paste list.
   /*!
@@ -438,7 +438,7 @@ public:
   {
     *list = a_paste.a;
     *size = a_paste.size();
-  };
+  }
 
   //! Get the object list.
   /*!
@@ -449,7 +449,7 @@ public:
   {
     *list = a.a;
     *size = a.size();
-  };
+  }
 
   //! Set gridsize.
   /*!
@@ -460,14 +460,14 @@ public:
   {
     grid_size_x = size_x;
     grid_size_y = size_y;
-  };
+  }
 
   //! Set snap to grid on or off.
   /*! \param on		1 snap is on, 0 snap is off. */
   void set_grid(int on)
   {
     grid_on = on;
-  };
+  }
 
   //! Find the closest grid point.
   /*!
@@ -574,7 +574,7 @@ public:
   void set_default_conclass(void* cc)
   {
     default_conclass = cc;
-  };
+  }
 
   //! Get default connection class. This is used as default when a connection is
   //! created.
@@ -582,7 +582,7 @@ public:
   void* get_default_conclass()
   {
     return default_conclass;
-  };
+  }
 
   //! Print to postscript. Not implemented.
   void print(double ll_x, double ll_y, double ur_x, double ur_y);
@@ -620,7 +620,7 @@ public:
   void draw(GlowWind* w, double ll_x, double ll_y, double ur_x, double ur_y)
   {
     draw(w, (int)ll_x, (int)ll_y, (int)ur_x, (int)ur_y);
-  };
+  }
 
   //! Clear the window.
   /*! Draw background color. */
@@ -665,7 +665,7 @@ public:
   void nav_draw(GlowWind* w, double ll_x, double ll_y, double ur_x, double ur_y)
   {
     nav_draw(w, (int)ll_x, (int)ll_y, (int)ur_x, (int)ur_y);
-  };
+  }
 
   //! Handle events.
   /*! Calls the event handler of GrowCtx. */
@@ -743,7 +743,7 @@ public:
   {
     callback_object = object;
     callback_object_type = type;
-  };
+  }
 
   //! Insert objects in selection list that for the specified selection region.
   /*!
@@ -772,7 +772,7 @@ public:
   void set_user_highlight(int mode)
   {
     user_highlight = mode;
-  };
+  }
 
   double grid_size_x; //!< Grid size in x direction.
   double grid_size_y; //!< Grid size in y direction.
@@ -801,7 +801,7 @@ public:
   void conpoint_refcon_redraw(void* node, int conpoint)
   {
     a.conpoint_refcon_redraw(node, conpoint);
-  };
+  }
 
   //! Erase the reference connections for a specific node and connection point.
   /*!
@@ -811,7 +811,7 @@ public:
   void conpoint_refcon_erase(void* node, int conpoint)
   {
     a.conpoint_refcon_erase(node, conpoint);
-  };
+  }
 
   //! Get object from name.
   /*!
@@ -872,14 +872,14 @@ public:
   void set_user_data(void* data)
   {
     user_data = data;
-  };
+  }
 
   //! Get user data.
   /*! \param data	User data. */
   void get_user_data(void** data)
   {
     *data = user_data;
-  };
+  }
 
   //! Get list of selected nodes, i.e objects of type GlowNode.
   /*!
@@ -910,14 +910,14 @@ public:
   {
     *pix_x = int(x * mw.zoom_factor_x - mw.offset_x);
     *pix_y = int(y * mw.zoom_factor_y - mw.offset_y);
-  };
+  }
 
   //! Unzoom.
   /*! Return to base zoom factor. */
   void unzoom()
   {
     zoom(mw.base_zoom_factor / mw.zoom_factor_x);
-  };
+  }
 
   //! Position the view so that the specified object is in the center of the
   //! window.
@@ -937,7 +937,7 @@ public:
   void set_nodraw()
   {
     nodraw++;
-  };
+  }
 
   //! Reset nodraw.
   /*! Drawing is resumed when the nodraw counter is zero. */
@@ -945,7 +945,7 @@ public:
   {
     if (nodraw)
       nodraw--;
-  };
+  }
 
   void reconfigure();
 
@@ -982,22 +982,22 @@ public:
   int type()
   {
     return ctx_type;
-  };
+  }
 
   // Move input widgets.
   void move_widgets(int x, int y)
   {
     if (widget_cnt)
       a.move_widgets(x, y);
-  };
+  }
 
   int display_level; //!< Current display level.
 
   //! Scroll the window the specified distance.
   /*!
-    \param delta_x	Scroll this factor in relation to window size in x
+    \param x	Scroll this factor in relation to window size in x
     direction.
-    \param delta_y	Scroll this factor in relation to window size in y
+    \param y	Scroll this factor in relation to window size in y
     direction.
   */
   void scroll(double x, double y);
@@ -1047,7 +1047,7 @@ public:
   {
     scroll_data = data;
     scroll_callback = callback;
-  };
+  }
 
   //! Update the scroobars.
   /*! The scrollbar callback function is called to update the scrollbars. */
@@ -1062,14 +1062,14 @@ public:
   int find_by_name(char* name, GlowArrayElem** element)
   {
     return a.find_by_name(name, element);
-  };
+  }
 
   //! Set hot mode.
   /*! \param mode	Hot mode. */
   void set_hot_mode(glow_eHotMode mode)
   {
     hot_mode = mode;
-  };
+  }
 
   //! Set show grid.
   /*! \param show	1 display the grid points, 0 hide. */

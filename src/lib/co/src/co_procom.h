@@ -51,7 +51,7 @@ typedef enum {
 } procom_obj_mFlags;
 
 class procom_obj {
-  public:
+public:
   int cid;
   pwr_tOix oix;
   pwr_tOix fthoix;
@@ -110,33 +110,19 @@ class procom_obj {
 };
 
 class co_procom {
-  public:
+public:
   co_provider* m_provider;
 
-  co_procom(co_provider* p) : m_provider(p)
-  {
-  }
-  virtual ~co_procom()
-  {
-  }
-  virtual void provideObjects(pwr_tStatus, std::vector<procom_obj>&)
-  {
-  }
+  co_procom(co_provider* p);
+  virtual ~co_procom();
+  virtual void provideObjects(pwr_tStatus, std::vector<procom_obj>&);
   virtual void provideObject(pwr_tStatus sts, pwr_tOix oix, pwr_tOix fthoix,
       pwr_tOix bwsoix, pwr_tOix fwsoix, pwr_tOix fchoix, pwr_tOix lchoix,
-      pwr_tCid cid, const char* name, const char* longname)
-  {
-  }
-  virtual void provideBody(pwr_tStatus sts, pwr_tOix oix, int size, void* body)
-  {
-  }
-  virtual void provideAttr(pwr_tStatus sts, pwr_tOix oix, int size, void* buff)
-  {
-  }
-  virtual void provideStatus(pwr_tStatus sts)
-  {
-  }
-  virtual void flushNodes(){};
+      pwr_tCid cid, const char* name, const char* longname);
+  virtual void provideBody(pwr_tStatus sts, pwr_tOix oix, int size, void* body);
+  virtual void provideAttr(pwr_tStatus sts, pwr_tOix oix, int size, void* buff);
+  virtual void provideStatus(pwr_tStatus sts);
+  virtual void flushNodes();
 };
 
 #endif

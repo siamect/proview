@@ -34,7 +34,6 @@
  * General Public License plus this exception.
  **/
 
-#include <float.h>
 #include <math.h>
 #include <string.h>
 
@@ -43,8 +42,6 @@
 #include "glow_growslider.h"
 #include "glow_draw.h"
 #include "glow_conpoint.h"
-
-#define SLIDER_BACKGROUND 21
 
 GrowSlider::GrowSlider(GrowCtx* glow_ctx, const char* name,
     GlowNodeClass* node_class, double x1, double y1, int nodraw,
@@ -57,7 +54,7 @@ GrowSlider::GrowSlider(GrowCtx* glow_ctx, const char* name,
 
 void GrowSlider::copy_from(const GrowSlider& n)
 {
-  memcpy(this, &n, sizeof(n));
+  memcpy((void *)this, (void *)&n, sizeof(n));
   for (int i = 0; i < 10; i++) {
     if (annotsize[i]) {
       annotv[i] = (char*)calloc(1, annotsize[i]);
@@ -90,7 +87,7 @@ void GrowSlider::save(std::ofstream& fp, glow_eSaveMode mode)
 
 void GrowSlider::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;

@@ -36,7 +36,6 @@
 
 /* wb_wnav.cpp -- Display plant and node hiererachy */
 
-#include <float.h>
 #include <string.h>
 
 #include "pwr_baseclasses.h"
@@ -319,16 +318,16 @@ void wnav_attrvalue_to_string(
     break;
   }
   case pwr_eType_Float32: {
-    if (*(float*)value_ptr == FLT_MIN) {
+    if (feqf(*(float*)value_ptr, FLT_MIN)) {
       strcpy(str, "FltMin");
       *len = strlen(str);
-    } else if (*(float*)value_ptr == -FLT_MIN) {
+    } else if (feqf(*(float*)value_ptr, -FLT_MIN)) {
       strcpy(str, "FltNMin");
       *len = strlen(str);
-    } else if (*(float*)value_ptr == FLT_MAX) {
+    } else if (feqf(*(float*)value_ptr, FLT_MAX)) {
       strcpy(str, "FltMax");
       *len = strlen(str);
-    } else if (*(float*)value_ptr == -FLT_MAX) {
+    } else if (feqf(*(float*)value_ptr, -FLT_MAX)) {
       strcpy(str, "FltNMax");
       *len = strlen(str);
     } else
@@ -1065,7 +1064,7 @@ int WNav::open_plc(pwr_tOid oid)
   int sts = WNAV__SUCCESS;
   void* foectx;
   pwr_tOid plc;
-  bool found;
+  bool found = false;
 
   plc = oid;
   while (ODD(sts)) {
@@ -1580,7 +1579,7 @@ int WNav::brow_cb(FlowCtx* ctx, flow_tEvent event)
       case wnav_eItemType_Attr:
       case wnav_eItemType_AttrArrayElem: {
         WItemBaseAttr* item_attr = (WItemBaseAttr*)item;
-        pwr_sAttrRef* sel_list;
+        pwr_sAttrRef* sel_list = NULL;
         int* sel_is_attr;
         int sel_cnt = 0;
         pwr_tOName str;
@@ -2504,7 +2503,7 @@ wnav_sMenu* WNav::menu_tree_build_children(
     wnav_sStartMenu* first_child, wnav_sMenu* parent)
 {
   wnav_sStartMenu* start_menu_p;
-  wnav_sMenu *menu_p, *prev;
+  wnav_sMenu *menu_p, *prev = NULL;
   wnav_sMenu* return_menu = NULL;
   int first = 1;
 
@@ -2610,8 +2609,8 @@ int WNav::menu_tree_delete(char* name)
 int WNav::menu_tree_insert(char* title, int item_type, char* command,
     char* destination, int dest_code, wnav_sMenu** menu_item)
 {
-  wnav_sMenu* dest_item;
-  wnav_sMenu *menu_p, *child_p, *mp;
+  wnav_sMenu* dest_item = NULL;
+  wnav_sMenu *menu_p = NULL, *child_p, *mp;
   int sts;
   int first_child = 0;
 
@@ -2721,7 +2720,7 @@ int WNav::menu_tree_search_children(
 {
   wnav_sMenu* menu_p;
   char* s;
-  char* next_search_name;
+  char* next_search_name = NULL;
   char search_name[80];
   char up_title[80];
   int final_search;
@@ -2793,14 +2792,14 @@ void WNav::ldh_refresh(pwr_tObjid new_open)
   brow_tNode* node_list;
   int sel_node_count;
   WItem* item_sel;
-  pwr_tObjid* sel_objid;
-  int* sel_type;
-  char* sel_attr;
+  pwr_tObjid* sel_objid = NULL;
+  int* sel_type = NULL;
+  char* sel_attr = NULL;
   pwr_tObjid last_sel_objid;
-  int last_sel_type;
+  int last_sel_type = 0;
   pwr_tOName last_sel_attr;
   pwr_tObjid prev_sel_objid;
-  int prev_sel_type;
+  int prev_sel_type = 0;
   pwr_tOName prev_sel_attr;
 
   if (brow->type != wnav_eBrowType_Volume)
@@ -3506,7 +3505,7 @@ void ApplList::insert(
 void ApplList::remove(void* ctx)
 {
   ApplListElem* elem;
-  ApplListElem* prev;
+  ApplListElem* prev = NULL;
 
   for (elem = root; elem; elem = elem->next) {
     if (elem->ctx == ctx) {

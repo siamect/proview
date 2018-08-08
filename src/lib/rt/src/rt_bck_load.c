@@ -65,7 +65,7 @@ pwr_tStatus bck_LoadBackup()
   pwr_tStatus sts;
   pwr_tInt32 csts;
   pwr_tObjid objid;
-  pwr_sClass_Backup_Conf* backup_confp; /* Backup_Conf object pointer */
+  pwr_sClass_Backup_Conf* backup_confp = NULL; /* Backup_Conf object pointer */
   FILE* f;
   BCK_FILEHEAD_STRUCT fh; /* File header */
   BCK_CYCLEHEAD_STRUCT ch_old;
@@ -75,8 +75,8 @@ pwr_tStatus bck_LoadBackup()
   pwr_tUInt32 c;
   pwr_tUInt32 d;
   char* strp;
-  char* datap;
-  char* namep;
+  char* datap = NULL;
+  char* namep = NULL;
   char fname[200];
   pwr_tAName objectname;
 

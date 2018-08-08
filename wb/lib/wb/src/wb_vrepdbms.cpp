@@ -233,7 +233,7 @@ bool wb_vrepdbms::createSnapshot(
     dbs.importVolume(*this);
 
     return true;
-  } catch (wb_error& e) {
+  } catch (wb_error&) {
     return false;
   }
 }
@@ -284,7 +284,7 @@ wb_orep* wb_vrepdbms::object(pwr_tStatus* sts)
     *sts = LDH__NOSUCHOBJ;
     printf("vrepdbms: %s\n", e.what().c_str());
     return 0;
-  } catch (wb_error& e) {
+  } catch (wb_error&) {
     *sts = LDH__NOSUCHOBJ;
     return 0;
   }
@@ -300,7 +300,7 @@ wb_orep* wb_vrepdbms::object(pwr_tStatus* sts, pwr_tOid oid)
   } catch (wb_error& e) {
     *sts = e.sts();
     return 0;
-  } catch (wb_dbms_error& e) {
+  } catch (wb_dbms_error&) {
     *sts = LDH__NOSUCHOBJ;
     // printf("vrepdbms: %s\n", e.what().c_str());
     return 0;
@@ -327,7 +327,7 @@ wb_orep* wb_vrepdbms::object(pwr_tStatus* sts, wb_name& name)
 
     m_ohead.get(m_db->m_txn, poid);
     return new (this) wb_orepdbms(&m_ohead.m_o);
-  } catch (wb_dbms_error& e) {
+  } catch (wb_dbms_error&) {
     *sts = LDH__NOSUCHOBJ;
     // printf("vrepdbms: %s\n", e.what().c_str());
     return 0;
@@ -342,7 +342,7 @@ wb_orep* wb_vrepdbms::object(
     wb_dbms_name n(m_db, m_db->m_txn, parent->oid(), name);
     m_ohead.get(m_db->m_txn, n.oid());
     return new (this) wb_orepdbms(&m_ohead.m_o);
-  } catch (wb_dbms_error& e) {
+  } catch (wb_dbms_error&) {
     *sts = LDH__NOSUCHOBJ;
     // printf("vrepdbms: %s\n", e.what().c_str());
     return 0;
@@ -440,7 +440,7 @@ wb_orep* wb_vrepdbms::copyObject(pwr_tStatus* sts, const wb_orep* orep,
       free(p);
     *sts = e.sts();
     return 0;
-  } catch (wb_dbms_error& e) {
+  } catch (wb_dbms_error&) {
     txn->subAbort();
     if (p)
       free(p);
@@ -543,7 +543,7 @@ wb_orep* wb_vrepdbms::createObject(pwr_tStatus* sts, wb_cdef cdef,
       free(p);
     //*sts = e.sts();
     throw e;
-  } catch (wb_dbms_error& e) {
+  } catch (wb_dbms_error&) {
     txn->subAbort();
     if (p)
       free(p);
@@ -580,7 +580,7 @@ bool wb_vrepdbms::deleteObject(pwr_tStatus* sts, wb_orep* orp)
     txn->subAbort();
     *sts = e.sts();
     return 0;
-  } catch (wb_dbms_error& e) {
+  } catch (wb_dbms_error&) {
     txn->subAbort();
     *sts = LDH__DBERROR;
     return false;
@@ -672,7 +672,7 @@ bool wb_vrepdbms::moveObject(pwr_tStatus* sts, wb_orep* orp, wb_destination& d)
     txn->subAbort();
     *sts = e.sts();
     return 0;
-  } catch (wb_dbms_error& e) {
+  } catch (wb_dbms_error&) {
     txn->subAbort();
     *sts = LDH__DBERROR;
   }
@@ -707,7 +707,7 @@ bool wb_vrepdbms::renameObject(pwr_tStatus* sts, wb_orep* orp, wb_name& name)
 
     txn->subCommit();
     return true;
-  } catch (wb_dbms_error& e) {
+  } catch (wb_dbms_error&) {
     txn->subAbort();
     // printf("wb_vrepdbms::renameObject, exception %s\n", e.what().c_str());
     m_ohead.clear();
@@ -1838,9 +1838,9 @@ int wb_vrepdbms::updateArefs(pwr_tOid oid, pwr_tCid cid)
       dp = (char*)calloc(1, dbSize);
       drc = db.get(m_db->m_txn, 0, dbSize, dp);
     }
-  } catch (wb_dbms_error& e) {
+  } catch (wb_dbms_error&) {
     ap = 0;
-  } catch (wb_error& e) {
+  } catch (wb_error&) {
     ap = 0;
   }
 
@@ -1872,7 +1872,7 @@ int wb_vrepdbms::updateArefs(pwr_tOid oid, pwr_tCid cid)
           arp_cid = arp->Body & ~7;
 
         wb_cdrep* n_cdrep = m_erep->merep()->cdrep(&sts, arp_cid);
-        wb_bdrep* n_bdrep;
+        wb_bdrep* n_bdrep = NULL;
         pwr_eBix bix = pwr_eBix_rt;
         if (EVEN(sts)) {
           pwr_tAttrRef a;
@@ -1915,10 +1915,10 @@ int wb_vrepdbms::updateArefs(pwr_tOid oid, pwr_tCid cid)
             arp->Size = cap->n.aref.Size;
           }
         }
-      } catch (wb_dbms_error& e) {
+      } catch (wb_dbms_error&) {
         // printf("wb_dbms_error vrepdbmsupdateArefs 2: %s, oid: %d.%d, cid: %d
         // \n", e.what().c_str(), oid.vid, oid.oix, cid);
-      } catch (wb_error& e) {
+      } catch (wb_error&) {
         // printf("wb_error vrepdbmsupdateArefs 2: oid: %d.%d, cid: %d %s\n",
         // oid.vid, oid.oix, cid, e.what().c_str().c_str());
       }
@@ -1938,10 +1938,10 @@ int wb_vrepdbms::updateArefs(pwr_tOid oid, pwr_tCid cid)
     if (dbSize && nAref[1]) {
       db.upd(m_db->m_txn, 0, dbSize, dp);
     }
-  } catch (wb_dbms_error& e) {
+  } catch (wb_dbms_error&) {
     // printf("wb_dbms_error vrepdbmsupdateArefs body.put: oid: %d.%d, cid: %d
     // %s\n", oid.vid, oid.oix, cid, e.what().c_str());
-  } catch (wb_error& e) {
+  } catch (wb_error&) {
     // printf("wb_error vrepdbmsupdateArefs body.put: oid: %d.%d, cid: %d %s\n",
     // oid.vid, oid.oix, cid, e.what().c_str().c_str());
   }

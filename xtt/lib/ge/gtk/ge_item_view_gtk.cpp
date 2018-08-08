@@ -279,7 +279,7 @@ void* graph_list_files()
 {
   int file_cnt;
   int allocated, old_allocated;
-  pwr_tString80* file_p;
+  pwr_tString80* file_p = NULL;
   pwr_tString80* old_file_p;
   char found_file[80];
   char fname[80];

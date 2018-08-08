@@ -36,10 +36,6 @@
 
 /* ge.cpp -- Graphical editor window */
 
-#if defined OS_POSIX
-#define LDH 1
-#endif
-
 #include <stdlib.h>
 
 #include "rt_gdh.h"
@@ -646,7 +642,7 @@ void Ge::status_msg(void* ge_ctx, double x, double y)
   static double old_x = 0;
   static double old_y = 0;
 
-  if (x == 0 && y == 0) {
+  if (feq(x, 0.0) && feq(y, 0.0)) {
     x = old_x;
     y = old_y;
   }
@@ -1500,7 +1496,7 @@ void Ge::activate_open()
   prevtable_clear();
   int file_cnt;
   int allocated, old_allocated;
-  pwr_tString80* file_p;
+  pwr_tString80* file_p = NULL;
   pwr_tString80* old_file_p;
   char found_file[80];
   char fname[80];
@@ -2089,7 +2085,6 @@ int Ge::init_colorpalette_cb(GlowCtx* fctx, void* client_data)
 
 int Ge::get_ldhses_cb(void* ctx, ldh_tSesContext* ldhses, int load)
 {
-#if LDH
   Ge* gectx = (Ge*)ctx;
   ldh_tWBContext wbctx;
   int sts;
@@ -2133,14 +2128,10 @@ int Ge::get_ldhses_cb(void* ctx, ldh_tSesContext* ldhses, int load)
       return sts;
   }
   return 1;
-#else
-  return 0;
-#endif
 }
 
 int Ge::check_ldh_object_cb(void* ctx, char* name, pwr_eType* type)
 {
-#if LDH
   Ge* gectx = (Ge*)ctx;
   pwr_tAttrRef aref;
   int sts;
@@ -2176,9 +2167,6 @@ int Ge::check_ldh_object_cb(void* ctx, char* name, pwr_eType* type)
       sts = ldh_GetAttrRefType(gectx->graph->ldhses, &aref, type);
   }
   return sts;
-#else
-  return 1;
-#endif
 }
 
 int Ge::traverse_focus(void* ctx, void* component)
@@ -2369,10 +2357,8 @@ void Ge::find_ge_cb(void* g, char* object, void* utility)
 
 Ge::~Ge()
 {
-#ifdef LDH
   if (ldhses)
     ldh_CloseSession(ldhses);
-#endif
 }
 
 Ge::Ge(void* x_parent_ctx, ldh_tSesContext x_ldhses, int x_exit_when_close,
@@ -2390,7 +2376,6 @@ Ge::Ge(void* x_parent_ctx, ldh_tSesContext x_ldhses, int x_exit_when_close,
 {
   strcpy(name, "PwR Ge");
 
-#ifdef LDH
   if (x_ldhses) {
     // Open a new session
     pwr_tStatus sts = ldh_OpenSession(&ldhses, ldh_SessionToVol(x_ldhses),
@@ -2398,5 +2383,4 @@ Ge::Ge(void* x_parent_ctx, ldh_tSesContext x_ldhses, int x_exit_when_close,
     if (EVEN(sts))
       return;
   }
-#endif
 }

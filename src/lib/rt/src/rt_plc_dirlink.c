@@ -143,7 +143,7 @@ static pwr_tStatus plc_GetObjectAttrValue(pwr_tClassId class,
 pwr_tStatus plc_rtdbref(plc_t_rtdbref (*LinkArray)[], plc_sThread* tp)
 {
   pwr_tStatus sts;
-  pwr_tInt32 Index;
+  pwr_tInt32 Index = 0;
   char aname[255];
   plc_t_rtdbref* la;
   pwr_tClassId class;

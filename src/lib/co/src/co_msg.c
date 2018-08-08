@@ -43,7 +43,6 @@
 #include "co_msg.h"
 #include "pwr_msg.h"
 
-#define SEVERITY(sts) (sts & 0x7)
 #define FACNUM(sts) (((sts >> 16) & 0x0fff) - 0x800)
 #define MSGIDX(sts) ((sts & 0x7fff) >> 3)
 

@@ -34,7 +34,6 @@
  * General Public License plus this exception.
  **/
 
-#include <float.h>
 #include <math.h>
 #include <string.h>
 
@@ -52,7 +51,7 @@ void ColPalCtx::configure()
 {
   GrowText* text;
   GrowRect* rect;
-  double x, y;
+  double x, y = 0.0;
   int i;
   double d = 0.02;
 
@@ -321,7 +320,7 @@ void colpal_scroll_vertical(ColPalCtx* ctx, int value, int bottom)
 
 int ColPalCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 {
-  int sts;
+  int sts = 0;
   int i;
   GlowCtx* ctx;
   double fx, fy;

@@ -115,7 +115,7 @@ pwr_sClass_RemoteConfig* remcfgp;
 
 static void AddTransports();
 
-static int StartTransport(unsigned int idx);
+static int StartTransport(int idx);
 
 /************************************************************************
 *
@@ -403,12 +403,12 @@ static void AddTransports()
 * StartTransport
 *
 ************************************************************************/
-static int StartTransport(unsigned int idx)
+static int StartTransport(int idx)
 {
   char arg1[40];
   char arg2[40];
   char arg3[40];
-  int res;
+  int res = 0;
 
   /* Check index */
 

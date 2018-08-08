@@ -103,7 +103,7 @@ int main(int argc, char* argv[])
   int i;
   int file_cnt;
   int allocated, old_allocated;
-  cnv_tName* file_p;
+  cnv_tName* file_p = NULL;
   cnv_tName* old_file_p;
   int xtthelp_to_html = 0;
   int xtthelp_to_xml = 0;

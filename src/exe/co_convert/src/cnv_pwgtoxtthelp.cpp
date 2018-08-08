@@ -175,7 +175,7 @@ CnvPwgToXtthelp::CnvPwgToXtthelp(CnvCtx* cnv_ctx) : ctx(cnv_ctx)
 
 int CnvPwgToXtthelp::exec_filelist(char* title)
 {
-  int idx, next_idx;
+  int idx = 0, next_idx;
 
   // Print index
   m_fp << "<topic> " << title << '\n' << title << '\n';

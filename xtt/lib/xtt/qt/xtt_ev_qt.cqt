@@ -54,7 +54,7 @@
 class CallbackWidget : public QDialog {
 public:
   CallbackWidget(EvQt* parent, void (EvQt::*close)(), void (EvQt::*focus)())
-      : QDialog(), ev(parent), close_cb(close), focus_cb(focus){};
+      : QDialog(), ev(parent), close_cb(close), focus_cb(focus){}
 
 protected:
   void closeEvent(QCloseEvent* event);

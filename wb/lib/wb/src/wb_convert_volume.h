@@ -48,20 +48,11 @@ public:
   bool m_update;
   int m_needUpdateCount;
 
-  wb_convert_volume()
-      : m_cidChecked(pwr_cNCid), m_classCount(0), m_instanceCount(0),
-        m_update(false){};
-  wb_convert_volume(bool update)
-      : m_cidChecked(pwr_cNCid), m_classCount(0), m_instanceCount(0),
-        m_update(update), m_needUpdateCount(0){};
-  virtual ~wb_convert_volume()
-  {
-  }
+  wb_convert_volume();
+  wb_convert_volume(bool update);
+  virtual ~wb_convert_volume();
 
-  void setUpdate(bool update)
-  {
-    m_update = update;
-  }
+  void setUpdate(bool update);
   virtual pwr_tStatus updateObject(pwr_tOid oid, pwr_tCid cid) = 0;
   virtual pwr_tStatus checkObject(pwr_tOid oid, pwr_tCid cid) = 0;
 };

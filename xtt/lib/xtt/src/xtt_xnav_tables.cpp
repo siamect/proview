@@ -483,7 +483,7 @@ extern "C" void xnav_show_subsrv_scan(XNav* xnav)
   brow_tObject* node_list;
   brow_tObject* object_p;
   int node_cnt;
-  ItemTable* item;
+  ItemTable* item = NULL;
   int i;
   pool_sQlink* sl;
   sub_sServer* ssrvp;
@@ -700,7 +700,7 @@ extern "C" void xnav_show_subcli_scan(XNav* xnav)
   brow_tObject* node_list;
   brow_tObject* object_p;
   int node_cnt;
-  ItemTable* item;
+  ItemTable* item = NULL;
   int i;
   pool_sQlink* sl;
   pool_sQlink* nl;
@@ -1698,7 +1698,7 @@ int XNav::show_remnode()
   int sts;
   pwr_tObjid objid;
   pwr_tOName namebuf;
-  pwr_tCid cid;
+  pwr_tCid cid = 0;
   void* object_ptr;
 
   brow_pop();

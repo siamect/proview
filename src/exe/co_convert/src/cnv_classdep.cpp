@@ -44,6 +44,18 @@ extern "C" {
 }
 #include "co_lng.h"
 
+CdpItem::CdpItem() : idx(0), fth(0), fch(0), lch(0), fws(0), bws(0)
+{
+}
+
+CnvClassDep::CnvClassDep(CnvCtx* cnv_ctx) : ctx(cnv_ctx)
+{
+}
+
+CnvClassDep::~CnvClassDep()
+{
+}
+
 int CnvClassDep::read()
 {
   pwr_tFileName fname, found_file;

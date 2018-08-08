@@ -72,8 +72,8 @@ void Attr::store()
 
 void Attr::recall_next()
 {
-  int sts;
-  GeDyn* old_data;
+  int sts = 0;
+  GeDyn* old_data = NULL;
   int idx;
 
   if (recall_idx == -1)

@@ -213,7 +213,7 @@ void* CnvXtthelpToPs::insert(navh_eItemType item_type, const char* text1,
   case navh_eItemType_HelpCode:
   case navh_eItemType_HelpBold: {
     int printmode;
-    CnvStyle* hstyle;
+    CnvStyle* hstyle = NULL;
 
     if (item_type == navh_eItemType_Help)
       hstyle = &tops.style[tops.ci].text;
@@ -340,5 +340,4 @@ void* CnvXtthelpToPs::insert(navh_eItemType item_type, const char* text1,
   default:
     return 0;
   }
-  return 0;
 }

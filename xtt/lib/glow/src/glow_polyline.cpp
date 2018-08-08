@@ -64,7 +64,7 @@ GlowPolyLine::~GlowPolyLine()
 
 GlowPolyLine::GlowPolyLine(const GlowPolyLine& c)
 {
-  memcpy(this, &c, sizeof(c));
+  memcpy((void *)this, (void *)&c, sizeof(c));
 
   a_points.new_array(c.a_points);
   a_points.copy_from(c.a_points);
@@ -105,7 +105,7 @@ void GlowPolyLine::save(std::ofstream& fp, glow_eSaveMode mode)
 
 void GlowPolyLine::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;

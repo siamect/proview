@@ -34,7 +34,6 @@
 * General Public License plus this exception.
 **/
 
-#include <float.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -747,7 +746,7 @@ void FlowCtx::nav_zoom()
     x_nav_right = MAX(x_right, (offset_x + window_width) / zoom_factor);
     y_nav_low = MIN(y_low, offset_y / zoom_factor);
     y_nav_high = MAX(y_high, (offset_y + window_height) / zoom_factor);
-    if (x_nav_right - x_nav_left == 0 || y_nav_high - y_nav_low == 0)
+    if (feq(x_nav_right, x_nav_left) || feq(y_nav_high, y_nav_low))
       return;
     nav_zoom_factor = MIN(nav_window_width / (x_nav_right - x_nav_left),
         nav_window_height / (y_nav_high - y_nav_low));
@@ -813,7 +812,7 @@ void FlowCtx::print_draw_page(void* context, const char* title, int page,
 
   int doc_cnt = 0;
   int found = 0;
-  int page_idx;
+  int page_idx = 0;
   for (int i = 0; i < a.a_size; i++) {
     if (a.a[i]->type() == flow_eObjectType_Node
         && ((FlowNode*)a.a[i])->nc->group == flow_eNodeGroup_Document) {
@@ -854,7 +853,7 @@ void FlowCtx::print_get_orientation(int page_nr, flow_eOrientation* orientation)
   double ll_x, ll_y, ur_x, ur_y;
   int doc_cnt = 0;
   int found = 0;
-  int page_idx;
+  int page_idx = 0;
   for (int i = 0; i < a.a_size; i++) {
     if (a.a[i]->type() == flow_eObjectType_Node
         && ((FlowNode*)a.a[i])->nc->group == flow_eNodeGroup_Document) {
@@ -1922,7 +1921,7 @@ int FlowCtx::get_next_object(
   double ll_x, ll_y, ur_x, ur_y;
   double a_ll_x, a_ll_y, a_ur_x, a_ur_y;
   double x, y, a_x, a_y, m_x, m_y, a_m_x, a_m_y;
-  double dir_angle, m_angle, m_distance;
+  double dir_angle = 0, m_angle, m_distance;
   std::vector<NextElem> a0;
 
   if (!object) {
@@ -2135,7 +2134,6 @@ int FlowCtx::get_next_conpoint(FlowArrayElem* object, int cp_num,
       if (loop_cnt > 100)
         return 0;
     }
-    return 0;
   }
 
   if (object->type() != flow_eObjectType_Node)
@@ -2245,7 +2243,7 @@ void FlowCtx::change_scrollbar()
     return;
 
   scroll_size = window_width / 100 / zoom_factor;
-  if (scroll_size == 0)
+  if (feq(scroll_size, 0.0))
     return;
 
   data.scroll_data = scroll_data;
@@ -2336,7 +2334,7 @@ void FlowCtx::auto_scrolling_stop()
 
 void auto_scrolling(FlowCtx* ctx)
 {
-  int delta_x, delta_y;
+  int delta_x = 0, delta_y = 0;
 
   ctx->auto_scrolling_active = 1;
   if (ctx->node_movement_active || ctx->node_movement_paste_active) {

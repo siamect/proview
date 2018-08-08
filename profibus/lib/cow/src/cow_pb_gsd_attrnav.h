@@ -69,7 +69,7 @@ class ItemPb;
 //! Class for handling of brow.
 class GsdAttrNavBrow {
 public:
-  GsdAttrNavBrow(BrowCtx* brow_ctx, void* xn) : ctx(brow_ctx), attrnav(xn){};
+  GsdAttrNavBrow(BrowCtx* brow_ctx, void* xn) : ctx(brow_ctx), attrnav(xn){}
   ~GsdAttrNavBrow();
 
   BrowCtx* ctx;
@@ -152,22 +152,15 @@ public:
 
 class ItemPb {
 public:
-  ItemPb() : parent(0)
-  {
-  }
+  ItemPb();
+  virtual ~ItemPb();
+
   attrnav_eItemType type;
   brow_tNode node;
   char name[120];
   int parent;
 
-  virtual ~ItemPb()
-  {
-  }
-
-  virtual int open_children(GsdAttrNav* attrnav, double x, double y)
-  {
-    return 1;
-  }
+  virtual int open_children(GsdAttrNav* attrnav, double x, double y);
   virtual int close(GsdAttrNav* attrnav, double x, double y);
 };
 
@@ -178,6 +171,8 @@ public:
       int attr_type, int attr_size, double attr_min_limit,
       double attr_max_limit, void* attr_value_p, int attr_noedit,
       gsd_sPrmText* attr_enumtext, brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemPbBase();
+
   void* value_p;
   char old_value[80];
   int first_scan;
@@ -196,9 +191,7 @@ public:
       int attr_type, int attr_size, double attr_min_limit,
       double attr_max_limit, void* attr_value_p, int attr_noedit,
       gsd_sPrmText* attr_enumtext, brow_tNode dest, flow_eDest dest_code);
-  virtual ~ItemPbEnum()
-  {
-  }
+  virtual ~ItemPbEnum();
 
   int old_value;
 
@@ -211,6 +204,8 @@ public:
   ItemPbEnumValue(GsdAttrNav* attrnav, const char* item_name, int item_num,
       int item_type_id, void* attr_value_p, brow_tNode dest,
       flow_eDest dest_code);
+  virtual ~ItemPbEnumValue();
+
   int num;
   int type_id;
   void* value_p;

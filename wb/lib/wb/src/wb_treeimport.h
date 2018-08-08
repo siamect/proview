@@ -61,9 +61,7 @@ class wb_treeimport {
   bool importUpdateObject(wb_orep* o, wb_vrep* vrep);
 
 public:
-  virtual ~wb_treeimport()
-  {
-  }
+  virtual ~wb_treeimport();
   virtual bool importTree(bool keepref, bool keepsym) = 0;
   virtual bool importTreeObject(wb_merep* merep, pwr_tOid oid, pwr_tCid cid,
       pwr_tOid poid, pwr_tOid boid, const char* name, pwr_mClassDef flags,
@@ -81,10 +79,7 @@ public:
   void importTranslationTableClear();
   pwr_tOix importTranslate(pwr_tOix oix);
   pwr_tCid importTranslateCid(pwr_tCid cid);
-  void importSetSourceVid(pwr_tVid vid)
-  {
-    m_import_source_vid = vid;
-  }
+  void importSetSourceVid(pwr_tVid vid);
   bool importUpdateTree(wb_vrep* vrep);
 };
 

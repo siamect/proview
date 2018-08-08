@@ -34,7 +34,6 @@
  * General Public License plus this exception.
  **/
 
-#include <float.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -123,7 +122,7 @@ void GrowAxisArc::save(std::ofstream& fp, glow_eSaveMode mode)
 
 void GrowAxisArc::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;

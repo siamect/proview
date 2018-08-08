@@ -595,6 +595,10 @@ ItemBck::ItemBck(WbBckWNav* item_bckwnav, bck_sItem* item_bck_item,
   brow_SetAnnotPixmap(node, 0, bckwnav->brow->pixmap_save);
 }
 
+ItemBck::~ItemBck()
+{
+}
+
 void ItemBck::update()
 {
   char str[1024];

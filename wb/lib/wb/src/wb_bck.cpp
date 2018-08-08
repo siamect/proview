@@ -153,7 +153,7 @@ pwr_tStatus wb_bck_list::read_db(wb_bck_list* lp)
   pwr_eType atype;
   char* anamep;
   int size;
-  void* valuep;
+  void* valuep = NULL;
   pwr_tAName aname;
   pwr_tAttrRef aref;
   pwr_tCid cid;
@@ -378,10 +378,10 @@ pwr_tStatus wb_bck_list::read()
   bck_t_cycleheader ch;
   bck_t_writeheader dh;
   int c, d;
-  unsigned char* datap;
+  unsigned char* datap = NULL;
   pwr_tStatus sts;
   int csts;
-  char* namep;
+  char* namep = NULL;
   pwr_tAName aname;
   int size;
 
@@ -431,7 +431,7 @@ pwr_tStatus wb_bck_list::read()
           printf("** Error, %s%s not found in this environment",
               cdh_ObjidToString(dh.objid, 1), aname);
         } else {
-          strncat(aname, namep, sizeof(aname));
+          strncat(aname, namep, sizeof(aname) - strlen(aname) - 1);
 
           pwr_tAttrRef aref;
           sts = ldh_NameToAttrRef(m_ldhses, aname, &aref);
@@ -460,11 +460,11 @@ pwr_tStatus bck_dump(ldh_tSession ldhses, char* filename, char* out)
   bck_t_writeheader dh;
   char timstr[24];
   int c, d;
-  unsigned char *datap, *p;
+  unsigned char *datap = NULL, *p;
   int i;
   pwr_tStatus sts;
   int csts;
-  char* namep;
+  char* namep = NULL;
   pwr_tAName aname;
   int size;
   int dump = 0;
@@ -534,7 +534,7 @@ pwr_tStatus bck_dump(ldh_tSession ldhses, char* filename, char* out)
               sizeof(aname), &size);
           if (EVEN(sts))
             strcpy(aname, cdh_ObjidToString(dh.objid, 1));
-          strncat(aname, namep, sizeof(aname));
+          strncat(aname, namep, sizeof(aname) - strlen(aname) - 1);
 
           fprintf(fout, "%s", aname);
 

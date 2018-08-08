@@ -54,9 +54,7 @@ public:
 public:
   // virtual wb_orep(int oid) = 0;
   wb_orep();
-  virtual ~wb_orep()
-  {
-  }
+  virtual ~wb_orep();
 
   void unref();
   wb_orep* ref();
@@ -84,29 +82,23 @@ public:
   // Navigational operations
 
   virtual wb_orep* ancestor(pwr_tStatus* sts)
-      = 0; //< get object at top of hierarchy
+      = 0; ///< get object at top of hierarchy
   virtual wb_orep* parent(pwr_tStatus* sts) = 0;
-  virtual wb_orep* after(pwr_tStatus* sts) = 0; //< get next sibling
-  virtual wb_orep* before(pwr_tStatus* sts) = 0; //< get previous sibling
-  virtual wb_orep* first(pwr_tStatus* sts) = 0; //< get first child
+  virtual wb_orep* after(pwr_tStatus* sts) = 0; ///< get next sibling
+  virtual wb_orep* before(pwr_tStatus* sts) = 0; ///< get previous sibling
+  virtual wb_orep* first(pwr_tStatus* sts) = 0; ///< get first child
   virtual wb_orep* child(pwr_tStatus* sts, wb_name& name)
-      = 0; //< get named child
-  virtual wb_orep* last(pwr_tStatus* sts) = 0; //< get last child
+      = 0; ///< get named child
+  virtual wb_orep* last(pwr_tStatus* sts) = 0; ///< get last child
   virtual wb_orep* next(pwr_tStatus* sts)
-      = 0; //< get next in list of objects of same class in one volume
+      = 0; ///< get next in list of objects of same class in one volume
   virtual wb_orep* previous(pwr_tStatus* sts)
-      = 0; //< get previous in list of objects of same class in one volume
+      = 0; ///< get previous in list of objects of same class in one volume
 
   virtual wb_adrep* attribute(pwr_tStatus*, const char* name) = 0;
   virtual wb_adrep* attribute(pwr_tStatus*) = 0;
-  virtual bool docBlock(char** block, int* size) const
-  {
-    return false;
-  }
-  virtual bool docBlock(char* block)
-  {
-    return false;
-  }
+  virtual bool docBlock(char** block, int* size) const;
+  virtual bool docBlock(char* block);
 
   virtual wb_erep* erep() const = 0;
   virtual wb_vrep* vrep() const = 0;

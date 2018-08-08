@@ -97,7 +97,7 @@ void GlowPoint::save(std::ofstream& fp, glow_eSaveMode mode)
 
 void GlowPoint::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 

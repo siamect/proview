@@ -54,7 +54,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include <float.h>
 #endif
 
 #include "pwr_nmpsclasses.h"
@@ -293,7 +292,7 @@ static pwr_tStatus nmpsmir_find_collect_cell(mir_ctx mirctx,
 {
   nmpsmir_t_cellmir_list* cellmir_ptr;
   int i;
-  int found;
+  int found = 0;
 
   /* Loop through the CellMir objects */
   cellmir_ptr = mirctx->cellmirlist;
@@ -1749,7 +1748,7 @@ int main()
   mir_ctx mirctx;
   pwr_tStatus sts;
   float scantime;
-  int reinit_count;
+  int reinit_count = 0;
   int init_retry = 5;
 
   /* Init pams and gdh */

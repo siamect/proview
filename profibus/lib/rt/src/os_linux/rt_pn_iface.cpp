@@ -69,15 +69,12 @@
 #define _PN_U16_HIGH_BYTE(U16) ((PN_U8)((U16) >> 8))
 #define _PN_U16_LOW_BYTE(U16) ((PN_U8)(U16))
 
-#define _HIGH_LOW_WORDS_TO_PN_U32(High, Low) ((((PN_U32)(High)) << 16) + (Low))
+//#define _HIGH_LOW_WORDS_TO_PN_U32(High, Low) ((((PN_U32)(High)) << 16) + (Low))
 #define _HIGH_LOW_BYTES_TO_PN_U16(High, Low)                                   \
   ((PN_U16)((((PN_U16)(High)) << 8) + (Low)))
 #define _HIGH_LOW_BYTES_TO_PN_U32(hwhb, hwlb, lwhb, lwlb)                      \
   ((PN_U32)((((PN_U32)(hwhb)) << 24) + (((PN_U32)(hwlb)) << 16)                \
       + (((PN_U32)(lwhb)) << 8) + (lwlb)))
-
-#define _
-#define NUM_DEVICES 2
 
 char file_vect[2][80] = {
   "pwr_pn_000_001_099_020_000000a2.xml", "pwr_pn_000_001_099_020_000000e5.xml",
@@ -1160,11 +1157,11 @@ int unpack_get_device_state_con(
     PN_U16 diff_mod_index;
     unsigned short device_ref, ii, jj;
 
-    PnDeviceData* device;
+    PnDeviceData* device = NULL;
     unsigned short save_first = TRUE;
-    unsigned short err_slot_number;
-    unsigned short err_module_state;
-    unsigned short phys_ident_number;
+    unsigned short err_slot_number = 0;
+    unsigned short err_module_state = 0;
+    unsigned short phys_ident_number = 0;
     unsigned short dev_ind;
 
     device_ref = pSdb->DeviceRef;
@@ -1221,7 +1218,7 @@ int unpack_get_device_state_con(
 
           PN_U16 no_subslots;
           PN_U16 subslot_ind;
-          PnModuleData* module_data;
+          PnModuleData* module_data = NULL;
 
           no_subslots = _HIGH_LOW_BYTES_TO_PN_U16(
               pModuleSlot->NumberOfSubmodulesHighByte,
@@ -1339,7 +1336,7 @@ int unpack_download_con(T_PNAK_SERVICE_DESCRIPTION* pSdb, io_sAgentLocal* local)
     PN_U16 IOCRIndex;
     unsigned short device_ref, ii, jj;
 
-    PnDeviceData* device;
+    PnDeviceData* device = NULL;
 
     device_ref = pSdb->DeviceRef;
 
@@ -1367,7 +1364,7 @@ int unpack_download_con(T_PNAK_SERVICE_DESCRIPTION* pSdb, io_sAgentLocal* local)
       T_PN_API_INFO* pAPIInfo = (T_PN_API_INFO*)(pIOCRInfo + 1);
       PN_U16 NumberAPIs;
       PN_U16 APIIndex;
-      PnIOCRData* iocr_data;
+      PnIOCRData* iocr_data = NULL;
 
       unsigned short type;
 
@@ -2142,5 +2139,4 @@ void* handle_events(void* ptr)
 
     //    pthread_mutex_unlock(&local->mutex);
   }
-  return 0;
 }

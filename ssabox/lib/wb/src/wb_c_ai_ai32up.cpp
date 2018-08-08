@@ -224,7 +224,7 @@ static pwr_tStatus PostUnadopt(
   pwr_sClass_ChanAit ChanAit;
   pwr_sdClass_Ai_AI32uP DCard;
   pwr_tUInt32 MaxChan;
-  pwr_tUInt32 Chan;
+  pwr_tUInt32 Chan = 0;
   pwr_tString80 NewName;
 
   if (Class != pwr_cClass_ChanAi && Class != pwr_cClass_ChanAit)

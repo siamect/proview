@@ -66,7 +66,7 @@ PalFileMenu* PalFile::config_tree_build(ldh_tSession ldhses,
   char name[120];
   int nr;
   PalFileMenu* menu_tree = NULL;
-  PalFileMenu *menu_p, *mp;
+  PalFileMenu *menu_p = NULL, *mp;
   char fname[120];
 
   dcli_translate_filename(fname, filename);
@@ -150,7 +150,7 @@ PalFileMenu* PalFile::config_tree_build(ldh_tSession ldhses,
 PalFileMenu* PalFile::config_tree_build_children(ldh_tSession ldhses,
     std::ifstream* fp, int* line_cnt, const char* filename, PalFileMenu* parent)
 {
-  PalFileMenu *menu_p, *prev, *mp;
+  PalFileMenu *menu_p, *prev = NULL, *mp = NULL;
   PalFileMenu* return_menu = NULL;
   int first = 1;
   int nr;

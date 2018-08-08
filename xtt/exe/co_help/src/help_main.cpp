@@ -61,6 +61,10 @@ static void usage()
             << "  -o    Open Operator Help\n\n";
 }
 
+CoHelpMain::~CoHelpMain()
+{
+}
+
 void CoHelpMain::exec_help()
 {
   pwr_tStatus sts;

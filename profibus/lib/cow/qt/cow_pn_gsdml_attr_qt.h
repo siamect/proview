@@ -111,7 +111,7 @@ public slots:
   void activate_cmd_apply();
   void activate_cmd_ca();
 
-  void valchanged_cmd_entry(){};
+  void valchanged_cmd_entry(){}
 
 private:
   GsdmlAttrQt* attr;

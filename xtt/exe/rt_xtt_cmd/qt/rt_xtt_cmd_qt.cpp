@@ -195,5 +195,4 @@ GNU General Public License for more details.\n\n";
       QApplication::processEvents();
     }
   }
-  dcli_input_end(&cmd->chn, cmd->recall_buf);
 }

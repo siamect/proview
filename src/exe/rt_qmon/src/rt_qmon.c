@@ -54,13 +54,11 @@
 #include "rt_qmon.h"
 #include "co_timelog.h"
 
-#define MAX_SEGSIZE (8192 - sizeof(sHead))
 #define RTT_RXMIN 0.0500 /* seconds */
 #define RTT_RXMAX 10.000 /* seconds */
-#define RACK_TMO 1
 #define EXPORT_BUF_WARN_LEVEL 300000
 #define EXPORT_BUF_QUOTA 600000
-#define IS_SECONDARY_NID(nid) ((nid)&0x80000000)
+//#define IS_SECONDARY_NID(nid) ((nid)&0x80000000)
 #define SECONDARY_NID(nid) ((nid) | 0x80000000)
 #define NID_LIX(nid) (((nid)&0x80000000) ? 1 : 0)
 #define NID(nid) ((nid)&0x7fffffff)
@@ -81,16 +79,10 @@ typedef union {
       pwr_Bits(bcast, 1), pwr_Bits(resent, 1), pwr_Bits(fill_1, 6), , , , , ,
       pwr_Bits(fill_2, 8), , , , , , , , pwr_Bits(event, 8), , , , , , , ) b;
 
-#define mSeg__ 0
 #define mSeg_first pwr_Bit(3)
 #define mSeg_middle pwr_Bit(4)
 #define mSeg_last pwr_Bit(5)
 #define mSeg_single (mSeg_first | mSeg_middle | mSeg_last)
-#define mSeg_sequence (mSeg_first | mSeg_middle | mSeg_last)
-#define mSeg_bcast pwr_Bit(8)
-
-#define mSeg_ (~mSeg__)
-
 } mSeg;
 
 typedef struct sLink sLink;
@@ -644,7 +636,7 @@ static sEseg* eseg_build(qdb_sBuffer* bp)
 {
   pwr_tStatus sts;
   int size;
-  sEseg* sp;
+  sEseg* sp = NULL;
   sEseg* msp = NULL;
   sEseg* csp;
   sEseg* mcsp;
@@ -936,10 +928,6 @@ static void* import_thread()
     que_Put(NULL, &sp->lp->q_in, &sp->c.le, sp);
     sp = iseg_alloc();
   }
-
-  thread_MutexUnlock(mp);
-
-  return NULL;
 }
 
 static void ini_link_info(qdb_sLinkInfo* lp)
@@ -1443,7 +1431,6 @@ static void* link_thread(sLink* lp)
       break;
     default:
       errh_Bugcheck(2, "unknown action");
-      break;
     }
     link_send(lp);
   }
@@ -1530,12 +1517,12 @@ static sLink* new_link(pwr_tNodeId nid, sMsg* mp)
   rtt_rxmin = (float)(MAX(lp->np->link[lp->lix].min_resend_time,
                   qdb->my_node->link[0].min_resend_time))
       / 1000;
-  if (rtt_rxmin == 0)
+  if (feqf(rtt_rxmin, 0.0f))
     rtt_rxmin = RTT_RXMIN;
   rtt_rxmax = (float)(MAX(lp->np->link[lp->lix].max_resend_time,
                   qdb->my_node->link[0].max_resend_time))
       / 1000;
-  if (rtt_rxmax == 0)
+  if (feqf(rtt_rxmax, 0.0f))
     rtt_rxmax = RTT_RXMAX;
   ack_delay
       = MAX(lp->np->link[lp->lix].ack_delay, qdb->my_node->link[0].ack_delay);

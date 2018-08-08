@@ -53,9 +53,7 @@ public:
 
   virtual bool exportMeta(wb_import& e) = 0;
 
-  virtual ~wb_export()
-  {
-  }
+  virtual ~wb_export();
 };
 
 #endif

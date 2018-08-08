@@ -50,18 +50,11 @@ class CoLogW {
 public:
   CoLogW(void* msg_parent_ctx, const char* logw_name, int l_show_item,
       pwr_tStatus* status);
-  virtual ~CoLogW()
-  {
-  }
+  virtual ~CoLogW();
 
-  virtual void print()
-  {
-  }
+  virtual void print();
   void show(char categories[][20], char* item);
-  void activate_print()
-  {
-    print();
-  }
+  void activate_print();
 
   void* parent_ctx;
   char name[80];

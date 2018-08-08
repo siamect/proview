@@ -36,7 +36,6 @@
 
 #if defined OS_POSIX
 #include <stdio.h>
-#include <float.h>
 #include <string.h>
 #endif
 
@@ -45,21 +44,11 @@
 #include "nmps.h"
 #include "rs_nmps_msg.h"
 
-#define NMPS_OPTYPE_FRONT 0
-#define NMPS_OPTYPE_BACK 1
-#define NMPS_OPTYPE_UNIT 2
-#define NMPS_OPTYPE_FORWARD_FRONT 3
-#define NMPS_OPTYPE_FORWARD_BACK 4
-#define NMPS_OPTYPE_FORWARD_UNIT 5
-#define NMPS_OPTYPE_REVERSE_FRONT 6
-#define NMPS_OPTYPE_REVERSE_BACK 7
-#define NMPS_OPTYPE_REVERSE_UNIT 8
-
 #define NMPS_DISP_SIZE 60
 #define NMPS_DISP_CELLNUM 10
 
 #define NMPS_DISP_DIRECT_FORW 0
-#define NMPS_DISP_DIRECT_BACKW 1
+//#define NMPS_DISP_DIRECT_BACKW 1
 
 #define NMPS_DISP_ORDERTYPE_NEXT 1
 #define NMPS_DISP_ORDERTYPE_PREV 2
@@ -1248,7 +1237,7 @@ void CellUpdate_exec(plc_sThread* tp, pwr_sClass_CellUpdate* object)
         if (datap) {
           object->Objid[i] = data_info->DataP.Aref.Objid;
           if (object->FloatAttrOffs[0] >= 0) {
-            if (object->F1[i] != object->F1Old[i])
+            if (!feqf(object->F1[i], object->F1Old[i]))
               *(pwr_tFloat32*)(datap + object->FloatAttrOffs[0])
                   = object->F1[i];
             else
@@ -1257,7 +1246,7 @@ void CellUpdate_exec(plc_sThread* tp, pwr_sClass_CellUpdate* object)
             object->F1Old[i] = object->F1[i];
           }
           if (object->FloatAttrOffs[1] >= 0) {
-            if (object->F2[i] != object->F2Old[i])
+            if (!feqf(object->F2[i], object->F2Old[i]))
               *(pwr_tFloat32*)(datap + object->FloatAttrOffs[1])
                   = object->F2[i];
             else
@@ -1266,7 +1255,7 @@ void CellUpdate_exec(plc_sThread* tp, pwr_sClass_CellUpdate* object)
             object->F2Old[i] = object->F2[i];
           }
           if (object->FloatAttrOffs[2] >= 0) {
-            if (object->F3[i] != object->F3Old[i])
+            if (!feqf(object->F3[i], object->F3Old[i]))
               *(pwr_tFloat32*)(datap + object->FloatAttrOffs[2])
                   = object->F3[i];
             else
@@ -1275,7 +1264,7 @@ void CellUpdate_exec(plc_sThread* tp, pwr_sClass_CellUpdate* object)
             object->F3Old[i] = object->F3[i];
           }
           if (object->FloatAttrOffs[3] >= 0) {
-            if (object->F4[i] != object->F4Old[i])
+            if (!feqf(object->F4[i], object->F4Old[i]))
               *(pwr_tFloat32*)(datap + object->FloatAttrOffs[3])
                   = object->F4[i];
             else
@@ -1284,7 +1273,7 @@ void CellUpdate_exec(plc_sThread* tp, pwr_sClass_CellUpdate* object)
             object->F4Old[i] = object->F4[i];
           }
           if (object->FloatAttrOffs[4] >= 0) {
-            if (object->F5[i] != object->F5Old[i])
+            if (!feqf(object->F5[i], object->F5Old[i]))
               *(pwr_tFloat32*)(datap + object->FloatAttrOffs[4])
                   = object->F5[i];
             else

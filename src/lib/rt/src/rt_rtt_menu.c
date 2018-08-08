@@ -42,7 +42,6 @@
 
 /*_Include files_________________________________________________________*/
 
-#include <float.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
@@ -610,9 +609,9 @@ int rtt_cli(
   int nr, i, j, valuenr;
   int hitnr, sts;
   char command[160];
-  int (*func)();
+  int (*func)() = NULL;
   rtt_t_comtbl* comtbl_ptr;
-  rtt_t_comtbl* current_comtbl;
+  rtt_t_comtbl* current_comtbl = NULL;
   int arg_count;
   char qual[80];
   char *s, *t;
@@ -2843,7 +2842,7 @@ int rtt_menu_new(menu_ctx parent_ctx, pwr_tObjid argoi, rtt_t_menu** menu_p,
     case RTT_K_DELETE:
       /* Delete current item */
       /* Check that this is a dynamic menu */
-      if (ctx->menutype && RTT_MENUTYPE_DYN) {
+      if (ctx->menutype & RTT_MENUTYPE_DYN) {
         /* Delete current item */
         rtt_menu_item_delete(ctx, ctx->current_item);
         /* Reconfigure the menu */
@@ -3228,7 +3227,7 @@ int rtt_menu_upd_new(menu_ctx parent_ctx, pwr_tObjid argoi,
     case RTT_K_DELETE:
       /* Delete current item */
       /* Check that this is a dynamic menu */
-      if (ctx->menutype && RTT_MENUTYPE_DYN) {
+      if (ctx->menutype & RTT_MENUTYPE_DYN) {
         /* Delete current item */
         rtt_menu_item_delete(ctx, ctx->current_item);
         /* Reconfigure the menu */
@@ -4784,7 +4783,7 @@ static int rtt_draw_bar(rtt_t_menu_upd* menu_ptr, unsigned long init)
   int old_length;
   int dif_length;
 
-  if (menu_ptr->maxlimit == menu_ptr->minlimit)
+  if (feqf(menu_ptr->maxlimit, menu_ptr->minlimit))
     return RTT__SUCCESS;
 
   /* Calculate lenght of the bar */
@@ -6174,7 +6173,7 @@ int rtt_hierarchy_child(menu_ctx parent_ctx, pwr_tObjid parent_objid,
       for (j = strlen(objname); j < 30; j++)
         strcat(objname, " ");
       strcat(objname, " ");
-      strncat(objname, description, sizeof(objname) - strlen(objname));
+      strncat(objname, description, sizeof(objname) - strlen(objname) - 1);
       objname[sizeof(objname) - 1] = 0;
     }
 
@@ -6557,7 +6556,7 @@ static int rtt_set_value(menu_ctx ctx, char* value_str)
   pwr_tVolumeId volumeid;
   pwr_tClassId class;
   int sts;
-  int size;
+  int size = 0;
 
   menu_ptr = (rtt_t_menu_upd*)ctx->menu;
   menu_ptr += ctx->current_item;
@@ -7073,7 +7072,6 @@ int rtt_help(menu_ctx parent_ctx, char* subject, rtt_t_helptext* helptext)
   strcat(title, helptext_ptr->subject);
   sts = rtt_view(0, 0, helptext_ptr->text, title, RTT_VIEWTYPE_BUF);
   return sts;
-  return 1;
 }
 
 /*************************************************************************
@@ -7242,7 +7240,7 @@ int rtt_menu_item_delete(menu_ctx ctx, int item)
   rtt_t_menu* menu_ptr;
   int size;
   int numberof_items;
-  int itemsize;
+  int itemsize = 0;
   int sts;
 
   rtt_get_menusize(ctx, &numberof_items);
@@ -7832,8 +7830,8 @@ static int rtt_menu_new_update_add(menu_ctx parent_ctx,
   pwr_tOName hiername;
   pwr_tOName parname;
   pwr_tClassId class;
-  unsigned long elements;
-  char* parameter_ptr;
+  unsigned long elements = 0;
+  char* parameter_ptr = NULL;
   SUBID subid;
   pwr_sParInfo parinfo;
   pwr_tOName objname;
@@ -8148,7 +8146,7 @@ int rtt_menu_parameter_reset(menu_ctx ctx, pwr_tObjid argoi,
 int rtt_menu_parameter_toggle(menu_ctx ctx, pwr_tObjid argoi,
     char* parameter_name, void* arg3, unsigned long priv, void* arg4)
 {
-  pwr_tBoolean value;
+  pwr_tBoolean value = 0;
   int sts;
   rtt_t_menu_upd* menu_ptr;
 
@@ -9103,7 +9101,7 @@ static int rtt_parse_mainmenu(char* mainmenu_title)
 int rtt_cut_segments(char* outname, char* name, int segments)
 {
   char* s[20];
-  int i, j, last_i;
+  int i, j, last_i = 0;
 
   for (i = 0; i < segments; i++) {
     s[i] = strrchr(name, '-');
@@ -9172,11 +9170,11 @@ int rtt_setup(menu_ctx parent_ctx)
   rtt_t_menu_upd* menulist = 0;
   int i;
   unsigned long elements;
-  char* parameter_ptr;
+  char* parameter_ptr = NULL;
   char text[80];
-  int size;
-  unsigned int type;
-  unsigned int priv;
+  int size = 0;
+  unsigned int type = 0;
+  unsigned int priv = 0;
   float maxlimit;
   float minlimit;
 

@@ -319,7 +319,6 @@ pwr_tStatus mh_OutunitConnect(
       break;
     default:
       return MH__NOOUTUNIT;
-      break;
     }
   }
 

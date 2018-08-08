@@ -77,7 +77,7 @@ typedef enum {
 class NodelistNavBrow {
 public:
   NodelistNavBrow(BrowCtx* brow_ctx, void* evl)
-      : ctx(brow_ctx), nodelistnav(evl){};
+      : ctx(brow_ctx), nodelistnav(evl){}
   ~NodelistNavBrow();
 
   BrowCtx* ctx;
@@ -206,28 +206,16 @@ public:
 
 class ItemBase {
 public:
-  ItemBase(NodelistNav* item_nodelistnav, const char* item_name)
-      : nodelistnav(item_nodelistnav)
-  {
-    strcpy(name, item_name);
-  }
-  virtual ~ItemBase()
-  {
-  }
+  ItemBase(NodelistNav* item_nodelistnav, const char* item_name);
+  virtual ~ItemBase();
 
   nodelistnav_eItemType type;
   NodelistNav* nodelistnav;
   brow_tNode node;
   char name[120];
 
-  virtual int open_children(NodelistNav* nodelistnav, double x, double y)
-  {
-    return 1;
-  }
-  virtual int close(NodelistNav* nodelistnav, double x, double y)
-  {
-    return 1;
-  }
+  virtual int open_children(NodelistNav* nodelistnav, double x, double y);
+  virtual int close(NodelistNav* nodelistnav, double x, double y);
 };
 
 class ItemNode : public ItemBase {
@@ -251,6 +239,7 @@ public:
   ItemAttr(NodelistNav* item_nodelistnav, const char* item_name,
       const char* attr, int attr_type, int attr_size, void* attr_value_p,
       brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemAttr();
   void* value_p;
   char old_value[120];
   int first_scan;
@@ -284,6 +273,7 @@ public:
       const char* attr, char* attr_value_p, pwr_tStatus* attr_status_p,
       char* attr_name_p, ItemAttrSysSts* attr_parent, brow_tNode dest,
       flow_eDest dest_code);
+  virtual ~ItemAttrSts();
   char* value_p;
   pwr_tStatus* status_p;
   char* name_p;

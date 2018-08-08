@@ -139,7 +139,7 @@ void GrowScrollBar::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
         w, ur_x - 1, ll_y + 1, ur_x - 1, ur_y - 1, shift_drawtype, 0, 0);
   }
 
-  if (max_value != min_value) {
+  if (!feq(max_value, min_value)) {
     switch (direction) {
     case glow_eDir_Vertical:
       height = int(bar_length / (max_value - min_value) * (ur_y - ll_y));
@@ -223,7 +223,7 @@ void GrowScrollBar::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
 double GrowScrollBar::set_value(double value, double length)
 {
   bar_value = value;
-  if (length != 0)
+  if (!feq(length, 0.0))
     bar_length = length;
 
   if (bar_value < min_value)
@@ -277,7 +277,7 @@ int GrowScrollBar::event_handler(
   if (event == glow_eEvent_ButtonMotion && !movement_active)
     return 0;
 
-  if (min_value == max_value)
+  if (feq(min_value, max_value))
     return 1;
 
   switch (event) {

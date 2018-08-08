@@ -178,7 +178,7 @@ WVselQt::WVselQt(pwr_tStatus* status, void* wv_parent_ctx,
   char volname[80];
   int size;
   int volume_count;
-  int display_window;
+  int display_window = 0;
 
   strcpy(volname, "");
   if (volumename != NULL && *volumename != 0 && !show_volumes) {

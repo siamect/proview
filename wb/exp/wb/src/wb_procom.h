@@ -46,7 +46,6 @@ class wb_procom : public co_procom {
   int m_connected;
   int m_msgsndid;
   int m_msgrcvid;
-  procom_eType type;
   vext_sAMsg m_msg;
   procom_eType m_type;
 

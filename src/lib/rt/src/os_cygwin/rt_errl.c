@@ -272,5 +272,4 @@ static void* log_thread(void* arg)
       }
     }
   }
-  return 0;
 }

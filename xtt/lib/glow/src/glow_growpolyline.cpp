@@ -34,7 +34,6 @@
  * General Public License plus this exception.
  **/
 
-#include <float.h>
 #include <limits.h>
 #include <math.h>
 #include <stdlib.h>
@@ -100,7 +99,7 @@ GrowPolyLine::GrowPolyLine(GrowCtx* glow_ctx, const char* name,
 
 int GrowPolyLine::shadow_direction()
 {
-  double a1, a2, a1_old, a0_old;
+  double a1, a2, a1_old = 0.0, a0_old = 0.0;
   double a_sum1 = 0;
   double a_sum2 = 0;
   int p_num = a_points.a_size;
@@ -455,7 +454,7 @@ void GrowPolyLine::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
   int display_shadow = ((node && ((GrowNode*)node)->shadow) || shadow)
       && !disable_shadow && !fill_eq_light && !fill_eq_shadow;
 
-  if (display_shadow && shadow_width != 0) {
+  if (display_shadow && !feq(shadow_width, 0.0)) {
     glow_sShadowInfo* sp;
     int p_num;
 
@@ -484,7 +483,7 @@ void GrowPolyLine::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       free(sp);
     }
   }
-  if (border || !(fill || (display_shadow && shadow_width != 0))) {
+  if (border || !(fill || (display_shadow && !feq(shadow_width, 0.0)))) {
     drawtype = ctx->get_drawtype(draw_type, glow_eDrawType_LineHighlight,
         highlight, (GrowNode*)colornode, 0);
     switch (curvetype) {
@@ -546,9 +545,9 @@ void GrowPolyLine::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
       && !disable_shadow && !fill_eq_light && !fill_eq_shadow;
 
   w->set_draw_buffer_only();
-  if (border || !(fill || (display_shadow && shadow_width != 0)))
+  if (border || !(fill || (display_shadow && !feq(shadow_width, 0.0))))
     ctx->gdraw->polyline_erase(w, points, a_points.a_size, idx);
-  if (fill || (display_shadow && shadow_width != 0))
+  if (fill || (display_shadow && !feq(shadow_width, 0.0)))
     ctx->gdraw->fill_polyline(
         w, points, a_points.a_size, glow_eDrawType_LineErase, 0);
   w->reset_draw_buffer_only();
@@ -756,21 +755,21 @@ int GrowPolyLine::local_event_handler(
       y1 = ((GlowPoint*)a_points[i])->y;
       y2 = ((GlowPoint*)a_points[i + 1])->y;
 
-      if ((x1 == x2 && y1 < y2 && // Vertical
+      if ((feq(x1, x2) && y1 < y2 && // Vertical
               fabs(x1 - x) < dx && y1 < y && y < y2)
-          || (x1 == x2 && y1 > y2 && // Vertical
+          || (feq(x1, x2) && y1 > y2 && // Vertical
                  fabs(x1 - x) < dx && y2 < y && y < y1)
-          || (y1 == y2 && x1 < x2 && // Horizontal
+          || (feq(y1, y2) && x1 < x2 && // Horizontal
                  fabs(y1 - y) < dy && x1 < x && x < x2)
-          || (y1 == y2 && x1 > x2 && // Horizontal
+          || (feq(y1, y2) && x1 > x2 && // Horizontal
                  fabs(y1 - y) < dy && x2 < x && x < x1)) {
         //      std::cout << "Event handler: Hit in line\n";
         return 1;
-      } else if ((!(x1 == x2 || y1 == y2) && x1 < x2 && x1 <= x && x <= x2
+      } else if ((!(feq(x1, x2) || feq(y1, y2)) && x1 < x2 && x1 <= x && x <= x2
                      && fabs(y - (y2 - y1) / (x2 - x1) * x - y1
                             + (y2 - y1) / (x2 - x1) * x1)
                          < dx)
-          || (!(x1 == x2 || y1 == y2) && x1 > x2 && x2 <= x && x <= x1
+          || (!(feq(x1, x2) || feq(y1, y2)) && x1 > x2 && x2 <= x && x <= x1
                  && fabs(y - (y2 - y1) / (x2 - x1) * x - y1
                         + (y2 - y1) / (x2 - x1) * x1)
                      < dx)) {
@@ -920,7 +919,7 @@ void GrowPolyLine::save(std::ofstream& fp, glow_eSaveMode mode)
 
 void GrowPolyLine::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;
@@ -1136,7 +1135,7 @@ void GrowPolyLine::get_borders(GlowTransform* t, double* x_right,
     double* x_left, double* y_high, double* y_low)
 {
   int i;
-  double x1, y1, x2, y2;
+  double x1, y1, x2 = 0.0, y2 = 0.0;
 
   for (i = 0; i < a_points.a_size - 1; i++) {
     if (t) {
@@ -1277,7 +1276,7 @@ void GrowPolyLine::set_position(double x, double y)
 {
   double old_x_left, old_x_right, old_y_low, old_y_high;
 
-  if (trf.a13 == x && trf.a23 == y)
+  if (feq(trf.a13, x) && feq(trf.a23, y))
     return;
   old_x_left = x_left;
   old_x_right = x_right;
@@ -1594,7 +1593,7 @@ void GrowPolyLine::export_javabean(GlowTransform* t, void* node,
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
   double x1, y1;
-  int jshadow = !disable_shadow && shadow_width != 0 && !fill_eq_light
+  int jshadow = !disable_shadow && !feq(shadow_width, 0.0) && !fill_eq_light
       && !fill_eq_shadow;
 
   glow_sPoint* p = (glow_sPoint*)malloc(a_points.a_size * sizeof(glow_sPoint));
@@ -1616,7 +1615,7 @@ void GrowPolyLine::export_javabean(GlowTransform* t, void* node,
     }
   }
 
-  int p_num;
+  int p_num = 0;
   glow_sShadowInfo* sp = 0;
   if (jshadow) {
     double trf_scale = trf.vertical_scale(t);
@@ -1630,7 +1629,7 @@ void GrowPolyLine::export_javabean(GlowTransform* t, void* node,
     else
       jshadow = 0;
   }
-  int jborder = border || !(fill || (!disable_shadow && shadow_width != 0));
+  int jborder = border || !(fill || (!disable_shadow && !feq(shadow_width, 0.0)));
 
   glow_eGradient grad = gradient;
   if (disable_gradient)

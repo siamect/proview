@@ -90,7 +90,7 @@ static pwr_tStatus AoRangeToCoef(io_sChannel* chanp)
     cop->CalculateNewCoef = 0;
 
     /* Coef for ActualValue to RawValue conversion */
-    if (cop->ActValRangeHigh != cop->ActValRangeLow) {
+    if (!feqf(cop->ActValRangeHigh, cop->ActValRangeLow)) {
       cop->SigValPolyCoef1
           = (cop->SensorSigValRangeHigh - cop->SensorSigValRangeLow)
           / (cop->ActValRangeHigh - cop->ActValRangeLow);
@@ -105,7 +105,7 @@ static pwr_tStatus AoRangeToCoef(io_sChannel* chanp)
       return IO__CHANRANGE;
     }
     /* Coef for ActualValue to SignalValue conversion */
-    if (cop->ChannelSigValRangeHigh != 0) {
+    if (!feqf(cop->ChannelSigValRangeHigh, 0.0f)) {
       PolyCoef0 = 0;
       PolyCoef1 = cop->RawValRangeHigh / cop->ChannelSigValRangeHigh;
       cop->OutPolyCoef1 = cop->SigValPolyCoef1 * PolyCoef1;
@@ -193,7 +193,7 @@ static pwr_tStatus IoCardWrite(
   pwr_tUInt16 data;
   pwr_tFloat32 rawvalue;
   qbus_io_write wb;
-  int sts;
+  int sts = 0;
   int bfb_error = 0;
   pwr_sClass_Ssab_RemoteRack* rrp;
   int remote;
@@ -254,7 +254,7 @@ static pwr_tStatus IoCardWrite(
     }
 
     /* Convert and write */
-    if (*(pwr_tFloat32*)chanp->vbp != local->OldValue[i]
+    if (!feqf(*(pwr_tFloat32*)chanp->vbp, local->OldValue[i])
         || local->WriteFirst > 0 || cop->CalculateNewCoef || fixout
         || cop->TestOn || local->OldTestOn[i] != cop->TestOn) {
       if (fixout)

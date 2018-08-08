@@ -1375,12 +1375,12 @@ struct soap_dime {
   {
     soap_multipart_iterator iter(list);
     return iter;
-  };
+  }
   soap_multipart_iterator end()
   {
     soap_multipart_iterator iter(NULL);
     return iter;
-  };
+  }
 #endif
 };
 #endif
@@ -1396,12 +1396,12 @@ struct soap_mime {
   {
     soap_multipart_iterator iter(list);
     return iter;
-  };
+  }
   soap_multipart_iterator end()
   {
     soap_multipart_iterator iter(NULL);
     return iter;
-  };
+  }
 #endif
 };
 #endif

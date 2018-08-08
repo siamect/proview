@@ -532,8 +532,8 @@ int XttTCurve::tcurve_export_cb(void* ctx, pwr_tTime* from, pwr_tTime* to,
 
     strncpy(str, s1 + strlen("$date"), sizeof(str));
     *s1 = 0;
-    strncat(fname, timstr, sizeof(fname));
-    strncat(fname, str, sizeof(fname));
+    strncat(fname, timstr, sizeof(fname) - strlen(fname) - 1);
+    strncat(fname, str, sizeof(fname) - strlen(fname) - 1);
   }
 
   dcli_translate_filename(fname, fname);
@@ -822,10 +822,10 @@ void XttTCurve::save(char* filename)
   else
     strcpy(fname, "");
 
-  strncat(fname, filename, sizeof(fname));
+  strncat(fname, filename, sizeof(fname) - strlen(fname) - 1);
   if (!(strlen(filename) < 9
           && strcmp(&filename[strlen(filename) - 9], ".rtt_trd") == 0))
-    strncat(fname, ".rtt_trd", sizeof(fname));
+    strncat(fname, ".rtt_trd", sizeof(fname) - strlen(fname) - 1);
 
   dcli_translate_filename(fname, fname);
 
@@ -852,10 +852,10 @@ void XttTCurve::open(char* filename)
   tcurve_sTc* tcp;
 
   strcpy(fname, "$pwrp_load/");
-  strncat(fname, filename, sizeof(fname));
+  strncat(fname, filename, sizeof(fname) - strlen(fname) - 1);
   if (!(strlen(filename) < 9
           && strcmp(&filename[strlen(filename) - 9], ".rtt_trd") == 0))
-    strncat(fname, ".rtt_trd", sizeof(fname));
+    strncat(fname, ".rtt_trd", sizeof(fname) - strlen(fname) - 1);
 
   dcli_translate_filename(fname, fname);
 

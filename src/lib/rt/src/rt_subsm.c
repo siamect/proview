@@ -56,7 +56,7 @@
 static void associateBuffer(sub_sServer* sp)
 {
   pwr_tStatus sts;
-  sub_sBuffer* bp;
+  sub_sBuffer* bp = NULL;
   pwr_tBoolean found;
   gdb_sNode* np;
   pool_sQlink* bl;
@@ -265,18 +265,18 @@ void subsm_Remove(qcom_sGet* get)
 pwr_tBoolean subsm_SendBuffer(sub_sBuffer* bp)
 {
   pwr_tStatus sts = 1;
-  net_sSubMessage* mp;
-  net_sSubData* dp;
+  net_sSubMessage* mp = NULL;
+  net_sSubData* dp = NULL;
   sub_sServer* sp;
   sub_sClient* cp;
   gdb_sNode* np;
   qcom_sQid tgt;
-  pwr_tUInt32 size;
-  pwr_tInt32 subdatahdrsize;
+  pwr_tUInt32 size = 0;
+  pwr_tInt32 subdatahdrsize = 0;
   pwr_tInt32 i;
   pwr_tBoolean remote = (bp->nid != gdbroot->db->nid);
   pool_sQlink* sl;
-  void* data;
+  void* data = NULL;
   gdb_sClass* classp;
   cdh_uTypeId cid;
   int asize;

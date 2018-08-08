@@ -116,11 +116,11 @@ void subcm_Data(qcom_sGet* get)
   pool_tRef dr;
   net_sSubData* dp;
   void* adrs;
-  gdb_sNode* np;
+  gdb_sNode* np = NULL;
   net_sSubRemove* rp = NULL;
   qcom_sQid tgt;
-  gdb_sCclass* ccp;
-  ndc_sRemoteToNative* tbl;
+  gdb_sCclass* ccp = NULL;
+  ndc_sRemoteToNative* tbl = NULL;
   int rsize;
 
   time_GetTime(&curtim);
@@ -197,7 +197,7 @@ void subcm_Data(qcom_sGet* get)
         cp->subdata = dr;
         refcount++;
 
-        if (1 || mp->msg.hdr.xdr) {
+        if (1/* || mp->msg.hdr.xdr*/) {
           if (cp->cclass == pool_cNRef) {
             gdb_sClass* classp;
             cdh_uTypeId cid;

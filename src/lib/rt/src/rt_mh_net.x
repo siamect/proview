@@ -97,18 +97,18 @@ enum mh_eEvent {
 % * number of unacknowledged alarms, identities of the alarms, and associated 
 % * message texts. For C and D priorities, only number of alarms and number of 
 % * unacknowledged alarms are shown. 
-% * @param mh_eEventPrio_A Priority A, the highest priority. 
-% * Alarm messages of this priority are shown in the upper part of the alarm window. 
-% * @param mh_eEventPrio_B Priority B. 
-% * These messages are shown in the lower part of the alarm window. 
-% * @param mh_eEventPrio_C Priority C. 
-% * @param mh_eEventPrio_D Priority D. This is the lowest priority. 
 % */
 enum mh_eEventPrio {
-  mh_eEventPrio__ = 0,    
-  mh_eEventPrio_A = 67,  
-  mh_eEventPrio_B = 66, 
+  mh_eEventPrio__ = 0,
+%  /// Priority A, the highest priority. Alarm messages of this priority are
+%  /// shown in the upper part of the alarm window. 
+  mh_eEventPrio_A = 67,
+%  /// Priority B. These messages are shown in the lower part of the alarm
+%  /// window.
+  mh_eEventPrio_B = 66,
+%  /// Priority C.
   mh_eEventPrio_C = 65,
+%  /// Priority D. This is the lowest priority. 
   mh_eEventPrio_D = 64,
   mh_eEventPrio_  = 63
 };
@@ -119,17 +119,17 @@ enum mh_eEventPrio {
 % * 
 % * This enumeration is used to indicate what kind of data is supplied 
 % * in an application message (See mh_sApplMessage).
-% * @param  mh_eSupType_Digital Digital supervision data
-% * @param  mh_eSupType_Analog Analog supervision data 
-% * @param  mh_eSupType_Link   ZZZ
-% * @param  mh_eSupType_Cycle  ZZZ
 % */
 enum mh_eSupType {
   mh_eSupType__		= 0,
-  mh_eSupType_Digital	= 1, 
+%  /// Digital supervision data
+  mh_eSupType_Digital	= 1,
+%  /// Analog supervision data
   mh_eSupType_Analog	= 2,
   mh_eSupType_None	= 3,
+%  /// ZZZ
   mh_eSupType_Link	= 4,
+%  /// ZZZ
   mh_eSupType_Cycle	= 4,
   mh_eSupType_		= 5
 };
@@ -195,20 +195,13 @@ enum mh_eSource {
 %/**
 % * @ingroup MSGH_DS
 % * @brief Defines a bit pattern. 
-% *
-% * @param mh_mEventFlags_Return Setting this flag enables a return message 
-% * associated with this message to be shown in the event list. 
-% * @param mh_mEventFlags_Ack Setting this flag enables an acknowledgement message 
-% * associated with this message to be shown in the event list. 
-% * @param mh_mEventFlags_Bell
-% * @param mh_mEventFlags_Force
-% * @param mh_mEventFlags_InfoWindow
-% * @param mh_mEventFlags_Returned
-% * @param mh_mEventFlags_NoObject
 % */
-
 enum mh_mEventFlags {
+%  /// Setting this flag enables a return message associated with this message
+%  /// to be shown in the event list. 
   mh_mEventFlags_Return		= 0x01,
+%  /// Setting this flag enables an acknowledgement message associated with
+%  /// this message to be shown in the event list. 
   mh_mEventFlags_Ack		= 0x02,
   mh_mEventFlags_Bell		= 0x04,
   mh_mEventFlags_Force		= 0x08,
@@ -220,21 +213,20 @@ enum mh_mEventFlags {
 %/**
 % * @ingroup MSGH_DS
 % * @brief Data describing supervision of an analog value 
-% *
-% * @param ActualValue The value of the supervised attribute at the 
-% *                    time when the message was generated. 
-% * @param CtrlLimit   The limit, at which a message will be generated. 
-% * @param Hysteres    How much the supervised value will have to change before 
-% *                    a return message will be issued. 
-% * @param High        Indicates whether the message will be generated when the 
-% *		       limit is exceeded (TRUE) or the value falls below it (FALSE).
-% * @param Unit        A string representing the unit of the value. 
 % */
 struct mh_sASupInfo {
+%  /// The value of the supervised attribute at the time when the message was
+%  /// generated. 
   pwr_tFloat32		ActualValue;
+%  /// The limit, at which a message will be generated.
   pwr_tFloat32		CtrlLimit;
+%  /// How much the supervised value will have to change before a return
+%  /// message will be issued. 
   pwr_tFloat32		Hysteres;
+%  /// Indicates whether the message will be generated when the limit is
+%  /// exceeded (TRUE) or the value falls below it (FALSE).
   pwr_tBoolean		High;
+%  /// A string representing the unit of the value. 
   pwr_tString16		Unit;
 };
 
@@ -242,13 +234,12 @@ struct mh_sASupInfo {
 % * @ingroup MSGH_DS
 % *
 % * @brief Data describing supervision of a digital value 
-% *
-% * @param ActualValue The value of the supervised attribute at the time 
-% *                    when the message was generated.
-% * @param High        Indicates whether a high or a low value generates a message.
 % */
 struct mh_sDSupInfo {
+%  /// The value of the supervised attribute at the time when the message was
+%  /// generated.
   pwr_tBoolean		ActualValue;
+%  /// Indicates whether a high or a low value generates a message.
   pwr_tBoolean		High;
 };
 
@@ -256,14 +247,12 @@ struct mh_sDSupInfo {
 %/**
 % * @ingroup MSGH_DS 
 % * @brief Data describing supervision data.
-% * @param mh_uSubInfo_u Union that contains either mh_sASupInfo or mh_sDSupInfo.
-% * @param mh_sASupInfo
-% * @param mh_sDSupInfo
 % */
 %struct mh_uSupInfo {
 %	mh_eSupType SupType;
 %	union { mh_sASupInfo A;
 %		mh_sDSupInfo D;
+%  /// Union that contains either mh_sASupInfo or mh_sDSupInfo.
 %	} mh_uSupInfo_u;
 %};
 %

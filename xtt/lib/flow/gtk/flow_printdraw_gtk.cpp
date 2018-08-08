@@ -35,7 +35,6 @@
  **/
 
 #include <math.h>
-#include <float.h>
 #include <stdlib.h>
 #include <string.h>
 

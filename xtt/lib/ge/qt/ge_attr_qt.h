@@ -47,8 +47,7 @@
 
 /* ge_attr.h -- Ge attribute editor */
 
-/*! \file ge_attr_qt.h
-    \brief Contains the AttrQt class. */
+/*! \brief Contains the AttrQt class. */
 /*! \addtogroup Ge */
 
 class AttrQtWidget;

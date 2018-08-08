@@ -65,9 +65,11 @@ wb_vrepdbs::wb_vrepdbs(wb_erep* erep, wb_merep* merep, const char* fileName,
   m_vid = vid;
   m_cid = cid;
   m_isDbsenvLoaded = false;
+  /*
   if (false && isCommonMeta())
     m_merep = m_erep->merep();
   else
+  */
     m_merep = new wb_merep(m_erep, (wb_mvrep*)this);
 }
 
@@ -77,9 +79,11 @@ wb_vrepdbs::wb_vrepdbs(wb_erep* erep, const char* fileName)
   strcpy(m_fileName, fileName);
 
   m_isDbsenvLoaded = false;
+  /*
   if (false && isCommonMeta())
     m_merep = m_erep->merep();
   else
+  */
     m_merep = new wb_merep(m_erep, (wb_mvrep*)this);
 }
 

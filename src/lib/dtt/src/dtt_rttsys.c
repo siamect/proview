@@ -60,11 +60,16 @@
 #include "pwr_remoteclasses.h"
 
 /*_Local rtt database____________________________________________________*/
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+
 RTT_RTTSYSDB_START
 #include "dtt_appl_rttsys_m.rdb1"
 RTT_RTTSYSDB_CONTINUE
 #include "dtt_appl_rttsys_m.rdb2"
 RTT_RTTSYSDB_END
+
+#pragma GCC diagnostic pop
 
 #define IF_NOGDH_RETURN                                                        \
   if (!rtt_gdh_started) {                                                      \
@@ -1591,19 +1596,19 @@ int RTTSYS_OBJECT_PID(menu_ctx ctx, int event, char* parameter_ptr,
     menu_ptr->value_ptr = (char*)&object_ptr->ProcVal;
     menu_ptr->minlimit = object_ptr->SetMinShow;
     menu_ptr->maxlimit = object_ptr->SetMaxShow;
-    if (menu_ptr->maxlimit == 0)
+    if (feqf(menu_ptr->maxlimit, 0.0f))
       menu_ptr->maxlimit = 100;
     menu_ptr++;
     menu_ptr->value_ptr = (char*)&object_ptr->SetVal;
     menu_ptr->minlimit = object_ptr->SetMinShow;
     menu_ptr->maxlimit = object_ptr->SetMaxShow;
-    if (menu_ptr->maxlimit == 0)
+    if (feqf(menu_ptr->maxlimit, 0.0f))
       menu_ptr->maxlimit = 100;
     menu_ptr++;
     menu_ptr->value_ptr = (char*)&object_ptr->OutVal;
     menu_ptr->minlimit = object_ptr->OutMinShow;
     menu_ptr->maxlimit = object_ptr->OutMaxShow;
-    if (menu_ptr->maxlimit == 0)
+    if (feqf(menu_ptr->maxlimit, 0.0f))
       menu_ptr->maxlimit = 100;
     menu_ptr++;
 
@@ -1864,17 +1869,17 @@ int RTTSYS_OBJECT_PID(menu_ctx ctx, int event, char* parameter_ptr,
     /* Bars */
     menu_ptr->minlimit = object_ptr->SetMinShow;
     menu_ptr->maxlimit = object_ptr->SetMaxShow;
-    if (menu_ptr->maxlimit == 0)
+    if (feqf(menu_ptr->maxlimit, 0.0f))
       menu_ptr->maxlimit = 100;
     menu_ptr++;
     menu_ptr->minlimit = object_ptr->SetMinShow;
     menu_ptr->maxlimit = object_ptr->SetMaxShow;
-    if (menu_ptr->maxlimit == 0)
+    if (feqf(menu_ptr->maxlimit, 0.0f))
       menu_ptr->maxlimit = 100;
     menu_ptr++;
     menu_ptr->minlimit = object_ptr->OutMinShow;
     menu_ptr->maxlimit = object_ptr->OutMaxShow;
-    if (menu_ptr->maxlimit == 0)
+    if (feqf(menu_ptr->maxlimit, 0.0f))
       menu_ptr->maxlimit = 100;
     menu_ptr++;
     /* Op SetVal */
@@ -2491,7 +2496,7 @@ int RTTSYS_GRAFCET(menu_ctx ctx, int event, char* parameter_ptr,
       plclist_ptr++;
       menu_ptr++;
     }
-    for (i = i; i < (grafcet_page + 1) * GRAFCET_PAGESIZE; i++) {
+    for (; i < (grafcet_page + 1) * GRAFCET_PAGESIZE; i++) {
       strcpy(menu_ptr->value_ptr, "");
       menu_ptr->func2 = 0;
       menu_ptr->func3 = &rtt_menu_new_sysedit;
@@ -3048,7 +3053,7 @@ int RTTSYS_PLCPGM(menu_ctx ctx, int event, char* parameter_ptr,
       menu_ptr++;
       plclist_ptr++;
     }
-    for (i = i; i < (page + 1) * PLCPGM_PAGESIZE; i++) {
+    for (; i < (page + 1) * PLCPGM_PAGESIZE; i++) {
       strcpy(menu_ptr->value_ptr, "");
       menu_ptr->func2 = 0;
       menu_ptr->func3 = 0;
@@ -3082,8 +3087,6 @@ int RTTSYS_PLCPGM(menu_ctx ctx, int event, char* parameter_ptr,
 *	Shows errorcounts on device objects.
 *
 **************************************************************************/
-
-#define ERROR_PAGESIZE 20
 
 static int rttsys_objectlist_add(pwr_tObjid object_objid, pwr_tClassId class,
     rttsys_t_step_list** objectlist, int* objectlist_count, int* alloc,
@@ -3259,7 +3262,7 @@ static int rttsys_thread_update(menu_ctx ctx, rttsys_t_step_list* objectlist,
     menu_ptr++;
     objectlist_ptr++;
   }
-  for (i = i; i < (page + 1) * THREAD_PAGESIZE; i++) {
+  for (; i < (page + 1) * THREAD_PAGESIZE; i++) {
     strcpy(menu_ptr->value_ptr, "");
     menu_ptr->func2 = 0;
     menu_ptr->func3 = 0;
@@ -3473,7 +3476,7 @@ static int rttsys_pid_update(menu_ctx ctx, rttsys_t_step_list* objectlist,
     objectlist_ptr++;
     objectlist_ptr++;
   }
-  for (i = i; i < (page + 1) * PID_PAGESIZE; i++) {
+  for (; i < (page + 1) * PID_PAGESIZE; i++) {
     strcpy(menu_ptr->value_ptr, "");
     menu_ptr->func2 = 0;
     menu_ptr->func3 = 0;
@@ -9487,7 +9490,7 @@ int RTTSYS_QCOM_QUEUE(menu_ctx ctx, int event, char* parameter_ptr,
   static int page;
   int i, k, l;
   pool_sQlink *al, *ql;
-  qdb_sAppl* ap;
+  qdb_sAppl* ap = NULL;
   qdb_sQue* qp;
   int found;
   static int aix;

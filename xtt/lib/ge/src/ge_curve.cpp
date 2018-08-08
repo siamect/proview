@@ -34,7 +34,6 @@
  * General Public License plus this exception.
  **/
 
-#include <float.h>
 #include <math.h>
 #include <stdlib.h>
 
@@ -209,7 +208,7 @@ void GeCurve::activate_period(time_ePeriod period)
   int low, high;
 
   if (center_from_window
-      && !(cd->x_max_value_axis[0] == 0 && cd->x_max_value_axis[0] == 0)) {
+      && !(feq(cd->x_max_value_axis[0], 0.0) && feq(cd->x_max_value_axis[0], 0.0))) {
     // Get the center time
     measure_window(&ll_x, &ll_y, &ur_x, &ur_y);
 
@@ -1836,7 +1835,7 @@ void GeCurveData::get_borders()
       if (y_data[i][j] > y_max_value[i])
         y_max_value[i] = y_data[i][j];
       if (y_value_type[i] == pwr_eType_Boolean
-          && !(y_data[i][j] == 1 || y_data[i][j] == 0)) {
+          && !(feq(y_data[i][j], 1.0) || feq(y_data[i][j], 0.0))) {
         y_value_type[i] = pwr_eType_Float64;
         // printf( "Not Boolean %s: %f\n", name[i], data[i][j]);
       }
@@ -2028,10 +2027,10 @@ void GeCurveData::scale(int axis_type, int value_type, double min_value,
     int* trend_lines, int* axis_lines, int* axis_linelongq, int* axis_valueq,
     char* format, double* axis_width, int not_zero, int allow_odd)
 {
-  double value, maxval, minval;
+  double value, maxval = 0.0, minval = 0.0;
   int i_value;
   int n, max_n, min_n;
-  int min_lines, max_lines;
+  int min_lines = 0, max_lines = 0;
   int min_zero, max_zero;
   int format_int, format_dec;
   int trendlinequot = 2;

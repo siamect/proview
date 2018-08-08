@@ -285,7 +285,7 @@ int rtt_logging_set(menu_ctx ctx, int entry, int logg_time, char* filename,
     int shortname)
 {
   int i, sts;
-  int found, par_index;
+  int found, par_index = 0;
   rtt_t_loggtable* entry_ptr;
   char buffer[8];
   pwr_sParInfo parinfo;
@@ -1302,7 +1302,7 @@ void* rtt_logging_logproc(void* arg)
           old_value_ptr = (char*)&entry_ptr->old_value[i];
           switch (entry_ptr->parameter_type[i]) {
           case pwr_eType_Float32:
-            if ((*(pwr_tFloat32*)value_ptr != *(pwr_tFloat32*)old_value_ptr)
+            if (!feqf(*(pwr_tFloat32*)value_ptr, *(pwr_tFloat32*)old_value_ptr)
                 || first_scan) {
               /* Value is changed, print */
               time_AtoAscii(
@@ -1315,7 +1315,7 @@ void* rtt_logging_logproc(void* arg)
             break;
 
           case pwr_eType_Float64:
-            if ((*(pwr_tFloat64*)value_ptr != *(pwr_tFloat64*)old_value_ptr)
+            if (!feq(*(pwr_tFloat64*)value_ptr, *(pwr_tFloat64*)old_value_ptr)
                 || first_scan) {
               log_print(entry_ptr, "	%s", &(entry_ptr->parameterstr[i]));
               log_print(entry_ptr, "	%f\n", *(pwr_tFloat64*)value_ptr);
@@ -1559,10 +1559,6 @@ void* rtt_logging_logproc(void* arg)
     nanosleep(&wait_time_ts, NULL);
 #endif
   }
-#if defined OS_POSIX
-  pthread_exit(0);
-#endif
-  return NULL;
 }
 
 /*************************************************************************

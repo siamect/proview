@@ -34,7 +34,6 @@
  * General Public License plus this exception.
  **/
 
-#include <float.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -88,7 +87,7 @@ FlowNode::FlowNode(FlowCtx* flow_ctx, const char* name,
 
 void FlowNode::copy_from(const FlowNode& n)
 {
-  memcpy(this, &n, sizeof(n));
+  memcpy((void *)this, (void *)&n, sizeof(n));
 }
 
 FlowNode::~FlowNode()

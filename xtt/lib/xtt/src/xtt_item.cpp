@@ -59,6 +59,44 @@
 static void xnav_set_sigchan_flags(XNavBrow* brow, pwr_tAttrRef* arp,
     pwr_tCid cid, brow_tNode node, int annot);
 
+Item::Item(pwr_tObjid item_objid, int item_is_root)
+    : type(xnav_eItemType_Object), objid(item_objid), is_root(item_is_root),
+      node(NULL)
+{
+}
+
+Item::~Item()
+{
+}
+
+int Item::open_attributes(XNavBrow* brow, double x, double y)
+{
+  return 1;
+}
+
+int Item::open_children(XNavBrow* brow, double x, double y)
+{
+  return XNAV__NOCHILD;
+}
+
+int Item::open_trace(XNavBrow* brow, double x, double y)
+{
+  return 1;
+}
+
+int Item::open_crossref(XNavBrow* brow, double x, double y)
+{
+  return 1;
+}
+
+void Item::close(XNavBrow* brow, double x, double y)
+{
+}
+
+void Item::set_conversion(xnav_eConv c)
+{
+}
+
 //
 // Member functions for ItemObject
 //
@@ -145,6 +183,15 @@ ItemObject::ItemObject(XNavBrow* brow, pwr_tObjid item_objid, brow_tNode dest,
     pwr_tAttrRef aref = cdh_ObjidToAref(objid);
     xnav_set_sigchan_flags(brow, &aref, cid, node, 3);
   }
+}
+
+ItemObject::~ItemObject()
+{
+}
+
+ItemBaseObject::ItemBaseObject(pwr_tObjid item_objid, int item_is_root)
+    : Item(item_objid, item_is_root), cid(0)
+{
 }
 
 int ItemBaseObject::open_children(XNavBrow* brow, double x, double y)
@@ -274,7 +321,7 @@ int ItemBaseObject::open_attributes(XNavBrow* brow, double x, double y)
     pwr_tClassId classid;
     unsigned long elements;
     Item* item;
-    int attr_exist;
+    int attr_exist = 0;
     int i;
     gdh_sAttrDef* bd;
     int rows;
@@ -574,6 +621,12 @@ void ItemBaseObject::close(XNavBrow* brow, double x, double y)
 //
 // ItemAttrArray
 //
+
+int ItemAttrArray::open_children(XNavBrow* brow, double x, double y)
+{
+  return 1;
+}
+
 int ItemAttrArray::open_attributes(XNavBrow* brow, double x, double y)
 {
   double node_x, node_y;
@@ -626,6 +679,18 @@ void ItemAttrArray::close(XNavBrow* brow, double x, double y)
     brow_ResetNodraw(brow->ctx);
     brow_Redraw(brow->ctx, node_y);
   }
+}
+
+ItemBaseAttr::ItemBaseAttr(pwr_tObjid item_objid, char* attr_name,
+    int attr_type_id, pwr_tTid attr_tid, int attr_size, int attr_flags,
+    int item_is_root, item_eDisplayType item_display_type)
+    : Item(item_objid, item_is_root), type_id(attr_type_id), tid(attr_tid),
+      size(attr_size), flags(attr_flags), subid(pwr_cNSubid), first_scan(1),
+      display_type(item_display_type), conversion(xnav_eConv_No)
+{
+  strcpy(attr, attr_name);
+  memset(old_value, 0, sizeof(old_value));
+  noedit = flags & PWR_MASK_PRIVATE ? 1 : 0;
 }
 
 int ItemBaseAttr::open_children(XNavBrow* brow, double x, double y)
@@ -739,6 +804,12 @@ void ItemBaseAttr::close(XNavBrow* brow, double x, double y)
   }
 }
 
+void ItemBaseAttr::set_conversion(xnav_eConv c)
+{
+  conversion = c;
+  memset(old_value, -99, sizeof(old_value));
+}
+
 ItemAttr::ItemAttr(XNavBrow* brow, pwr_tObjid item_objid, brow_tNode dest,
     flow_eDest dest_code, char* attr_name, int attr_type_id, pwr_tTid attr_tid,
     int attr_size, int attr_flags, int item_is_root,
@@ -817,6 +888,10 @@ ItemAttr::ItemAttr(XNavBrow* brow, pwr_tObjid item_objid, brow_tNode dest,
   }
 }
 
+ItemAttr::~ItemAttr()
+{
+}
+
 ItemAttrArray::ItemAttrArray(XNavBrow* brow, pwr_tObjid item_objid,
     brow_tNode dest, flow_eDest dest_code, char* attr_name, int attr_elements,
     int attr_type_id, pwr_tTid attr_tid, int attr_size, int attr_flags,
@@ -889,6 +964,10 @@ ItemAttrArrayElem::ItemAttrArrayElem(XNavBrow* brow, pwr_tObjid item_objid,
       throw co_error(sts);
     brow_SetTraceAttr(node, obj_name, name, flow_eTraceType_User);
   }
+}
+
+ItemAttrArrayElem::~ItemAttrArrayElem()
+{
 }
 
 ItemAttrObject::ItemAttrObject(XNavBrow* brow, pwr_tObjid item_objid,
@@ -998,7 +1077,7 @@ int ItemAttrObject::open_attributes(XNavBrow* brow, double x, double y)
     int sts;
     unsigned long elements;
     Item* item;
-    int attr_exist;
+    int attr_exist = 0;
     int i;
     gdh_sAttrDef* bd;
     int rows;
@@ -1195,6 +1274,10 @@ ItemHeader::ItemHeader(XNavBrow* brow, const char* item_name, const char* title,
   brow_SetAnnotation(node, 0, title, strlen(title));
 }
 
+ItemHeader::~ItemHeader()
+{
+}
+
 ItemHeaderLarge::ItemHeaderLarge(XNavBrow* brow, const char* item_name,
     const char* title, brow_tNode dest, flow_eDest dest_code)
     : Item(pwr_cNObjid, 0)
@@ -1204,6 +1287,10 @@ ItemHeaderLarge::ItemHeaderLarge(XNavBrow* brow, const char* item_name,
   brow_CreateNode(brow->ctx, "header", brow->nc_headerlarge, dest, dest_code,
       (void*)this, 1, &node);
   brow_SetAnnotation(node, 0, title, strlen(title));
+}
+
+ItemHeaderLarge::~ItemHeaderLarge()
+{
 }
 
 ItemTableHeader::ItemTableHeader(XNavBrow* brow, XNav* tab_xnav,
@@ -1222,6 +1309,17 @@ ItemTableHeader::ItemTableHeader(XNavBrow* brow, XNav* tab_xnav,
   brow_SetTraceAttr(node, "Yes", "", flow_eTraceType_User);
 }
 
+ItemTableHeader::~ItemTableHeader()
+{
+}
+
+void ItemTableHeader::add_bc(
+    void (*tab_scan)(XNav*), void (*tab_disconnect)(XNav*))
+{
+  scan = tab_scan;
+  disconnect = tab_disconnect;
+}
+
 ItemText::ItemText(XNavBrow* brow, const char* item_name, const char* text,
     brow_tNode dest, flow_eDest dest_code)
     : Item(pwr_cNObjid, 0)
@@ -1231,6 +1329,10 @@ ItemText::ItemText(XNavBrow* brow, const char* item_name, const char* text,
   brow_CreateNode(brow->ctx, "text", brow->nc_object, dest, dest_code,
       (void*)this, 1, &node);
   brow_SetAnnotation(node, 0, text, strlen(text));
+}
+
+ItemText::~ItemText()
+{
 }
 
 ItemHelpHeader::ItemHelpHeader(XNavBrow* brow, const char* item_name,
@@ -1463,6 +1565,10 @@ ItemCollect::ItemCollect(XNavBrow* brow, pwr_tObjid item_objid, char* attr_name,
   set_signal_flags(brow);
 }
 
+ItemCollect::~ItemCollect()
+{
+}
+
 // Add signal flags
 void ItemCollect::set_signal_flags(XNavBrow* brow)
 {
@@ -1539,6 +1645,17 @@ static int add_window(
     sts = gdh_GetNextSibling(child, &child);
   }
   return 1;
+}
+
+ItemPlc::ItemPlc(XNavBrow* brow, XNav* tab_xnav, pwr_tObjid objid,
+    item_sTable* table_columns, item_sTableSubid* table_subid,
+    int tab_change_value_idx, double tab_min_limit, double tab_max_limit,
+    int relative_pos, brow_tNode dest, flow_eDest dest_code)
+    : ItemTable(brow, tab_xnav, objid, table_columns, table_subid,
+          tab_change_value_idx, tab_min_limit, tab_max_limit, relative_pos,
+          dest, dest_code)
+{
+  type = xnav_eItemType_Plc;
 }
 
 int ItemPlc::open_children(XNavBrow* brow, double x, double y)
@@ -1827,6 +1944,10 @@ ItemObjectStruct::ItemObjectStruct(XNavBrow* brow, char* item_name, char* attr,
   brow_SetTraceAttr(node, attr, "", flow_eTraceType_User);
 }
 
+ItemObjectStruct::~ItemObjectStruct()
+{
+}
+
 ItemTable::ItemTable(XNavBrow* brow, XNav* tab_xnav, pwr_tObjid objid,
     item_sTable* table_columns, item_sTableSubid* table_subid,
     int tab_change_value_idx, double tab_min_limit, double tab_max_limit,
@@ -1858,6 +1979,27 @@ ItemTable::ItemTable(XNavBrow* brow, XNav* tab_xnav, pwr_tObjid objid,
   brow_SetTraceAttr(node, "Yes", "", flow_eTraceType_User);
 }
 
+ItemTable::~ItemTable()
+{
+}
+
+void ItemTable::add_bc(void (*tab_scan)(XNav*), void (*tab_disconnect)(XNav*))
+{
+  scan = tab_scan;
+  disconnect = tab_disconnect;
+}
+
+ItemDevice::ItemDevice(XNavBrow* brow, XNav* tab_xnav, pwr_tObjid objid,
+    item_sTable* table_columns, item_sTableSubid* table_subid,
+    int tab_change_value_idx, double tab_min_limit, double tab_max_limit,
+    int relative_pos, brow_tNode dest, flow_eDest dest_code)
+    : ItemTable(brow, tab_xnav, objid, table_columns, table_subid,
+          tab_change_value_idx, tab_min_limit, tab_max_limit, relative_pos,
+          dest, dest_code)
+{
+  type = xnav_eItemType_Device;
+}
+
 int ItemDevice::open_children(XNavBrow* brow, double x, double y)
 {
   if (brow->usertype != brow_eUserType_XNav)
@@ -1869,6 +2011,17 @@ int ItemDevice::open_children(XNavBrow* brow, double x, double y)
     return 1;
 
   return xnav->show_channels(objid);
+}
+
+ItemChannel::ItemChannel(XNavBrow* brow, XNav* tab_xnav, pwr_tObjid objid,
+    item_sTable* table_columns, item_sTableSubid* table_subid,
+    int tab_change_value_idx, double tab_min_limit, double tab_max_limit,
+    int relative_pos, brow_tNode dest, flow_eDest dest_code)
+    : ItemTable(brow, tab_xnav, objid, table_columns, table_subid,
+          tab_change_value_idx, tab_min_limit, tab_max_limit, relative_pos,
+          dest, dest_code)
+{
+  type = xnav_eItemType_Channel;
 }
 
 int ItemChannel::open_children(XNavBrow* brow, double x, double y)
@@ -1942,6 +2095,17 @@ int ItemChannel::open_crossref(XNavBrow* brow, double x, double y)
   return 1;
 }
 
+ItemRemNode::ItemRemNode(XNavBrow* brow, XNav* tab_xnav, pwr_tObjid objid,
+    item_sTable* table_columns, item_sTableSubid* table_subid,
+    int tab_change_value_idx, double tab_min_limit, double tab_max_limit,
+    int relative_pos, brow_tNode dest, flow_eDest dest_code)
+    : ItemTable(brow, tab_xnav, objid, table_columns, table_subid,
+          tab_change_value_idx, tab_min_limit, tab_max_limit, relative_pos,
+          dest, dest_code)
+{
+  type = xnav_eItemType_RemNode;
+}
+
 int ItemRemNode::open_children(XNavBrow* brow, double x, double y)
 {
   if (brow->usertype != brow_eUserType_XNav)
@@ -1950,6 +2114,17 @@ int ItemRemNode::open_children(XNavBrow* brow, double x, double y)
   XNav* xnav = (XNav*)brow->userdata;
 
   return xnav->show_remtrans(objid);
+}
+
+ItemRemTrans::ItemRemTrans(XNavBrow* brow, XNav* tab_xnav, pwr_tObjid objid,
+    item_sTable* table_columns, item_sTableSubid* table_subid,
+    int tab_change_value_idx, double tab_min_limit, double tab_max_limit,
+    int relative_pos, brow_tNode dest, flow_eDest dest_code)
+    : ItemTable(brow, tab_xnav, objid, table_columns, table_subid,
+          tab_change_value_idx, tab_min_limit, tab_max_limit, relative_pos,
+          dest, dest_code)
+{
+  type = xnav_eItemType_RemTrans;
 }
 
 int ItemRemTrans::open_children(XNavBrow* brow, double x, double y)
@@ -2042,6 +2217,11 @@ int ItemEnum::set_value()
   return sts;
 }
 
+int ItemEnum::open_children(XNavBrow* brow, double x, double y)
+{
+  return 0;
+}
+
 ItemMask::ItemMask(XNavBrow* brow, pwr_tObjid item_objid, brow_tNode dest,
     flow_eDest dest_code, char* attr_mask_name, char* attr_name,
     int attr_type_id, pwr_tTid attr_tid, int attr_size, int attr_flags,
@@ -2119,6 +2299,11 @@ int ItemMask::toggle_value()
     value = value | num;
   sts = gdh_SetObjectInfo(name, &value, sizeof(pwr_tMask));
   return sts;
+}
+
+int ItemMask::open_children(XNavBrow* brow, double x, double y)
+{
+  return 0;
 }
 
 static void xnav_set_sigchan_flags(

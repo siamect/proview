@@ -85,7 +85,7 @@ public:
       GlowWind* w, void* pos, glow_eEvent event, int x, int y, void* node);
 
   //! Not implemented
-  void conpoint_select(void* pos, int x, int y, double* distance, void** cp){};
+  void conpoint_select(void* pos, int x, int y, double* distance, void** cp){}
 
   //! Save the content of the object to file.
   /*!
@@ -133,12 +133,12 @@ public:
     border of the object.
   */
   void get_borders(double pos_x, double pos_y, double* x_right, double* x_left,
-      double* y_high, double* y_low, void* node){};
+      double* y_high, double* y_low, void* node){}
 
   int get_conpoint(int num, double* x, double* y, glow_eDirection* dir)
   {
     return 0;
-  };
+  }
 
   //! Get the object type
   /*!
@@ -147,7 +147,7 @@ public:
   glow_eObjectType type()
   {
     return glow_eObjectType_Arrow;
-  };
+  }
 
   //! Move the arrow to the specified coordinates.
   /*!
@@ -182,7 +182,7 @@ public:
   void set_drawtype(glow_eDrawType drawtype)
   {
     draw_type = drawtype;
-  };
+  }
 
   GrowCtx* ctx; //!< Glow context.
   GlowPoint p_dest; //!< Point of destination corner of arrow.

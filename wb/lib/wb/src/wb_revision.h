@@ -65,52 +65,21 @@ public:
 };
 
 class wb_version_manager {
-private:
-  pwr_eVersionManagerEnum m_manager;
-
 protected:
   pwr_tStatus m_sts;
 
 public:
-  wb_version_manager(pwr_eVersionManagerEnum manager)
-      : m_manager(manager), m_sts(0)
-  {
-  }
-  pwr_tStatus sts()
-  {
-    return m_sts;
-  }
-  virtual ~wb_version_manager()
-  {
-  }
-  virtual void init()
-  {
-  }
-  virtual int store_revision(char* name, char* descr, bool new_branch)
-  {
-    return 0;
-  }
+  wb_version_manager();
+  pwr_tStatus sts();
+  virtual ~wb_version_manager();
+  virtual void init();
+  virtual int store_revision(char* name, char* descr, bool new_branch);
   virtual int restore_revision(
-      char* name, char* branch, int checkout_master, int checkout_branch)
-  {
-    return 0;
-  }
-  virtual int get_current(char* name)
-  {
-    return 0;
-  }
-  virtual int check(std::vector<wb_rev_item>& v)
-  {
-    return 0;
-  }
-  virtual int check_add(char* filename)
-  {
-    return 0;
-  }
-  virtual bool modified()
-  {
-    return true;
-  }
+      char* name, char* branch, int checkout_master, int checkout_branch);
+  virtual int get_current(char* name);
+  virtual int check(std::vector<wb_rev_item>& v);
+  virtual int check_add(char* filename);
+  virtual bool modified();
 };
 
 class wb_version_manager_git : public wb_version_manager {
@@ -120,7 +89,7 @@ class wb_version_manager_git : public wb_version_manager {
   bool git_found();
 
 public:
-  wb_version_manager_git() : wb_version_manager(pwr_eVersionManagerEnum_None)
+  wb_version_manager_git() : wb_version_manager()
   {
     init();
   }
@@ -156,11 +125,7 @@ private:
 public:
   wb_revision();
   wb_revision(void* parent_ctx, wb_session* ses);
-  ~wb_revision()
-  {
-    if (m_manager)
-      delete m_manager;
-  }
+  ~wb_revision();
 
   pwr_tStatus create(int all, char* name, char* descr);
   pwr_tStatus restore(char* name);
@@ -174,30 +139,12 @@ public:
   int add(char* name, char* description, char* version, pwr_tTime* date,
       bool in_main, int sub_idx);
   void list();
-  void* parent_ctx()
-  {
-    return m_parent_ctx;
-  }
-  void command_cb(int (*cmd_cb)(void*, char*))
-  {
-    m_command_cb = cmd_cb;
-  }
-  wb_rev_item* vect(int idx)
-  {
-    return &m_vect[idx];
-  }
-  int size()
-  {
-    return (int)m_vect.size();
-  }
-  pwr_eVersionManagerEnum manager_enum()
-  {
-    return m_manager_enum;
-  }
-  void set_manager_enum(pwr_eVersionManagerEnum manager_enum)
-  {
-    m_manager_enum = manager_enum;
-  }
+  void* parent_ctx();
+  void command_cb(int (*cmd_cb)(void*, char*));
+  wb_rev_item* vect(int idx);
+  int size();
+  pwr_eVersionManagerEnum manager_enum();
+  void set_manager_enum(pwr_eVersionManagerEnum manager_enum);
   wb_rev_item* current();
   pwr_tStatus create_check();
   void get_info(wb_rev_info* info);

@@ -41,7 +41,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
-#include <float.h>
 
 #include "co_cdh.h"
 #include "pwr_basecomponentclasses.h"

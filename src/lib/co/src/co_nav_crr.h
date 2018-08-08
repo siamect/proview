@@ -54,7 +54,7 @@ typedef enum {
 class NavCrr {
   public:
   NavCrr(void* c_parent_ctx, void* c_parent_node)
-      : parent_ctx(c_parent_ctx), parent_node(c_parent_node){};
+      : parent_ctx(c_parent_ctx), parent_node(c_parent_node) {}
   void* parent_ctx;
   void* parent_node;
   void (*insert_cb)(void*, void*, navc_eItemType, char*, char*, int);

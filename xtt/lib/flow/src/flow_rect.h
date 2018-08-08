@@ -47,14 +47,14 @@ public:
       int fill_rect = 0)
       : ctx(flow_ctx), ll(flow_ctx, x, y), ur(flow_ctx, x + w, y + h),
         draw_type(d_type), line_width(line_w), fix_line_width(fix_line_w),
-        display_level(display_lev), fill(fill_rect){};
+        display_level(display_lev), fill(fill_rect){}
   friend std::ostream& operator<<(std::ostream& o, const FlowRect r);
   void zoom();
   void nav_zoom();
   void print_zoom();
   void traverse(int x, int y);
   int event_handler(void* pos, flow_eEvent event, int x, int y, void* node);
-  void conpoint_select(void* pos, int x, int y, double* distance, void** cp){};
+  void conpoint_select(void* pos, int x, int y, double* distance, void** cp){}
   virtual void print(void* pos, void* node, int highlight);
   virtual void save(std::ofstream& fp, flow_eSaveMode mode);
   virtual void open(std::ifstream& fp);
@@ -71,20 +71,20 @@ public:
   int get_conpoint(int num, double* x, double* y, flow_eDirection* dir)
   {
     return 0;
-  };
+  }
   flow_eObjectType type()
   {
     return flow_eObjectType_Rect;
-  };
+  }
   FlowCtx* ctx;
   double width()
   {
     return ur.x - ll.x;
-  };
+  }
   double height()
   {
     return ur.y - ll.y;
-  };
+  }
   FlowPoint ll;
   FlowPoint ur;
   flow_eDrawType draw_type;

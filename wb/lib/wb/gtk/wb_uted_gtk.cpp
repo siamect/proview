@@ -52,8 +52,6 @@
 #include "wb_uted_gtk.h"
 #include "wb_vldh_msg.h"
 
-#define BEEP putchar('\7');
-
 #define UTED_INDEX_NOCOMMAND -1
 #define UTED_TEXT_NOCOMMAND "No command selected"
 

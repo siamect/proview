@@ -768,7 +768,7 @@ gdb_sClass* mvol_NameToClass(pwr_tStatus* sts, const char* name)
   pwr_tClassId cid = pwr_eClass_ClassHier;
   gdb_sClass* cp;
   pool_sQlink* ol;
-  gdb_sObject* op;
+  gdb_sObject* op = NULL;
 
   pn = cdh_ParseName(sts, &ParseName, pwr_cNObjid, name, 0);
   if (pn == NULL)
@@ -991,7 +991,6 @@ void mvol_ClassListAttrRef(pwr_tStatus* sts, pwr_tClassId cid,
       }
       pwr_ReturnVoid(sts, GDH__NO_TYPE);
     }
-    break;
 
   case mvol_eList_next:
     if (op->g.cid == cid) {

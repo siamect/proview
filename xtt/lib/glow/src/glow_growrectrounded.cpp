@@ -34,7 +34,6 @@
  * General Public License plus this exception.
  **/
 
-#include <float.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -323,7 +322,7 @@ void GrowRectRounded::save(std::ofstream& fp, glow_eSaveMode mode)
 
 void GrowRectRounded::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;
@@ -548,7 +547,7 @@ void GrowRectRounded::set_position(double x, double y)
 {
   double old_x_left, old_x_right, old_y_low, old_y_high;
 
-  if (trf.a13 == x && trf.a23 == y)
+  if (feq(trf.a13, x) && feq(trf.a23, y))
     return;
   old_x_left = x_left;
   old_x_right = x_right;

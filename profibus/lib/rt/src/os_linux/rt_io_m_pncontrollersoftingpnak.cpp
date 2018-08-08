@@ -205,7 +205,7 @@ static pwr_tStatus IoAgentWrite(io_tCtx ctx, io_sAgent* ap)
   unsigned char* clean_io_datap;
   PnSubmoduleData* submodule;
   io_sRack* slave_list;
-  pwr_sClass_PnDevice* sp;
+  pwr_sClass_PnDevice* sp = NULL;
 
   unsigned short data_length, ii, jj, kk, ll;
   // unsigned char *status_datap;

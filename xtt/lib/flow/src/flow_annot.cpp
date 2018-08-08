@@ -250,7 +250,7 @@ void FlowAnnot::print(void* pos, void* node, int highlight)
               lix = 0;
             char* s1 = strstr(line, "<link>");
             int eix = 0;
-            char c;
+            char c = '\0';
             if (s1) {
               eix = strlen(s1);
               c = *s1;
@@ -483,7 +483,7 @@ void FlowAnnot::draw(void* pos, int highlight, int dimmed, int hot, void* node)
                 &z_width, &z_height, tsize(text_size));
             char* s1 = strstr(line, "<link>");
             int eix = 0;
-            char c;
+            char c = '\0';
             if (s1) {
               eix = strlen(s1);
               c = *s1;
@@ -629,7 +629,7 @@ void FlowAnnot::erase(void* pos, int hot, void* node)
               lix = 0;
             char* s1 = strstr(line, "<link>");
             int eix = 0;
-            char c;
+            char c = '\0';
             if (s1) {
               eix = strlen(s1);
               c = *s1;
@@ -776,7 +776,7 @@ void FlowAnnot::draw_inverse(void* pos, int hot, void* node)
               lix = 0;
             char* s1 = strstr(line, "<link>");
             int eix = 0;
-            char c;
+            char c = '\0';
             if (s1) {
               eix = strlen(s1);
               c = *s1;
@@ -1055,7 +1055,7 @@ void FlowAnnot::measure_annot(char* text, double* width, double* height)
               lix = 0;
             char* s1 = strstr(line, "<link>");
             int eix = 0;
-            char c;
+            char c = '\0';
             if (s1) {
               eix = strlen(s1);
               c = *s1;
@@ -1261,7 +1261,7 @@ void flow_measure_annot_text(FlowCtx* ctx, char* text, flow_eDrawType draw_type,
               lix = 0;
             char* s1 = strstr(line, "<link>");
             int eix = 0;
-            char c;
+            char c = '\0';
             if (s1) {
               eix = strlen(s1);
               c = *s1;

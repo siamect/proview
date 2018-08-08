@@ -58,7 +58,7 @@ static pwr_tStatus CopyObject(ldh_sMenuCall* ip)
   pwr_sMenuButton mb;
   int i;
   int j;
-  ldh_eDest Dest;
+  ldh_eDest Dest = ldh_eDest__;
   pwr_tObjid DestObject;
   pwr_tObjid NewObject;
   pwr_tBoolean Self = 0;
@@ -116,7 +116,7 @@ static int IsOkCopyObject(ldh_sMenuCall* ip, pwr_sMenuButton* mbp)
 {
   pwr_tStatus sts = LDH__SUCCESS;
   pwr_tStatus retsts = LDH__SUCCESS;
-  ldh_eDest Dest;
+  ldh_eDest Dest = ldh_eDest__;
   int i;
   pwr_tBoolean Self = 0;
   pwr_tObjid DestObject;
@@ -162,7 +162,7 @@ static pwr_tStatus CopyObjectTree(ldh_sMenuCall* ip)
 {
   pwr_tStatus sts = LDH__SUCCESS;
   pwr_sMenuButton mb;
-  ldh_eDest Dest;
+  ldh_eDest Dest = ldh_eDest__;
   pwr_tBoolean Self = 0;
   int i;
 
@@ -199,7 +199,7 @@ static int IsOkCopyObjectTree(ldh_sMenuCall* ip, pwr_sMenuButton* mbp)
 {
   pwr_tStatus sts = LDH__SUCCESS;
   pwr_tStatus retsts = LDH__SUCCESS;
-  ldh_eDest Dest;
+  ldh_eDest Dest = ldh_eDest__;
   int i;
   pwr_tBoolean Self = 0;
   pwr_tObjid DestObject;
@@ -245,7 +245,7 @@ static int IsOkCreateObject(ldh_sMenuCall* ip, pwr_sMenuButton* mbp)
 {
   pwr_tStatus sts;
   pwr_tClassId Class = cdh_ClassObjidToId(ip->Selected[0].Objid);
-  ldh_eDest Dest;
+  ldh_eDest Dest = ldh_eDest__;
 
   if (mbp->MethodArguments[0][0] != '\0') {
     if (strcmp(mbp->MethodArguments[0], "Before") == 0)
@@ -272,7 +272,7 @@ static pwr_tStatus CreateObject(ldh_sMenuCall* ip)
   pwr_tClassId Class = cdh_ClassObjidToId(ip->Selected[0].Objid);
   pwr_tObjid Object;
   pwr_sMenuButton mb;
-  ldh_eDest Dest;
+  ldh_eDest Dest = ldh_eDest__;
 
   sts = ldh_ReadObjectBody(ip->PointedSession,
       ip->ItemList[ip->ChosenItem].MenuObject, "SysBody", &mb,
@@ -396,7 +396,7 @@ static pwr_tStatus MoveObject(ldh_sMenuCall* ip)
   pwr_sMenuButton mb;
   int i;
   int j;
-  ldh_eDest Dest;
+  ldh_eDest Dest = ldh_eDest__;
 
   sts = ldh_ReadObjectBody(ip->PointedSession,
       ip->ItemList[ip->ChosenItem].MenuObject, "SysBody", &mb,
@@ -442,7 +442,7 @@ static int IsOkMoveObject(ldh_sMenuCall* ip, pwr_sMenuButton* mbp)
 {
   pwr_tStatus sts = LDH__SUCCESS;
   pwr_tStatus retsts = LDH__SUCCESS;
-  ldh_eDest Dest;
+  ldh_eDest Dest = ldh_eDest__;
   int i;
 
   if (mbp->MethodArguments[0][0] != '\0') {
@@ -489,7 +489,7 @@ static pwr_tStatus OpenTemplate(ldh_sMenuCall* ip)
   if (EVEN(sts))
     return sts;
 
-  strncat(Name, "-Template", sizeof(Name));
+  strncat(Name, "-Template", sizeof(Name) - strlen(Name) - 1);
   sts = ldh_NameToObjid(ip->PointedSession, &Template, Name);
   if (EVEN(sts))
     return sts;
@@ -512,7 +512,7 @@ static pwr_tStatus SetDefaults(ldh_sMenuCall* ip)
   if (EVEN(sts))
     return sts;
 
-  strncat(Name, "-Defaults", sizeof(Name));
+  strncat(Name, "-Defaults", sizeof(Name) - strlen(Name) - 1);
   sts = ldh_NameToObjid(ip->PointedSession, &Object, Name);
   if (EVEN(sts))
     return sts;
@@ -1062,7 +1062,7 @@ static pwr_tStatus ConfigureComponent(ldh_sMenuCall* ip)
         graph_configuration = 0;
 
       strncpy(aname, item[0], sizeof(aname));
-      strncat(aname, ".GraphConfiguration", sizeof(aname));
+      strncat(aname, ".GraphConfiguration", sizeof(aname) - strlen(aname) - 1);
 
       sts = ldh_ArefANameToAref(
           ip->PointedSession, &ip->Pointed, aname, &aaref);
@@ -1179,7 +1179,7 @@ static pwr_tStatus History(ldh_sMenuCall* ip)
 
     strncpy(categories, mb.MethodArguments[0], sizeof(categories));
     if (strcmp(mb.MethodArguments[1], "Descendants") == 0) {
-      strncat(item, "*", sizeof(item));
+      strncat(item, "*", sizeof(item) - strlen(item) - 1);
       showitem = 1;
     }
   }
@@ -1187,7 +1187,7 @@ static pwr_tStatus History(ldh_sMenuCall* ip)
   snprintf(cmd, sizeof(cmd), "open history/item=\"%s\"/categories=\"%s\"", item,
       categories);
   if (showitem)
-    strncat(cmd, "/showitem", sizeof(cmd));
+    strncat(cmd, "/showitem", sizeof(cmd) - strlen(cmd) - 1);
 
   ip->wnav->command(cmd);
   return 1;
@@ -1277,8 +1277,8 @@ static pwr_tStatus ConnectAttribute(ldh_sMenuCall* ip)
     return 0;
 
   strncpy(aname, aname_p, sizeof(aname));
-  strncat(aname, ".", sizeof(aname));
-  strncat(aname, mb.MethodArguments[0], sizeof(aname));
+  strncat(aname, ".", sizeof(aname) - strlen(aname) - 1);
+  strncat(aname, mb.MethodArguments[0], sizeof(aname) - strlen(aname) - 1);
 
   sts = ldh_NameToAttrRef(ip->PointedSession, aname, &PattrRef);
   if (ODD(sts))

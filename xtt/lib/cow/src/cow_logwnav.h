@@ -46,7 +46,7 @@ typedef enum { logwitem_eItemType_Log } logwitem_eItemType;
 class CoLogWNavBrow {
 public:
   CoLogWNavBrow(BrowCtx* brow_ctx, void* lwnav)
-      : ctx(brow_ctx), logwnav(lwnav){};
+      : ctx(brow_ctx), logwnav(lwnav){}
   ~CoLogWNavBrow();
 
   BrowCtx* ctx;
@@ -93,6 +93,8 @@ public:
   ItemLog(CoLogWNav* logwnav, const char* item_name, pwr_tTime item_time,
       char* item_catogory, char* item_user, char* item_comment, brow_tNode dest,
       flow_eDest dest_code);
+  virtual ~ItemLog();
+  
   logwitem_eItemType type;
   CoLogWNav* logwnav;
   brow_tNode node;
@@ -100,10 +102,6 @@ public:
   char category[20];
   char user[80];
   char comment[256];
-
-  virtual ~ItemLog()
-  {
-  }
 };
 
 #endif

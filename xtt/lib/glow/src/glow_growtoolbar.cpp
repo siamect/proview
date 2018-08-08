@@ -94,7 +94,7 @@ GrowToolbar::~GrowToolbar()
 
 void GrowToolbar::copy_from(const GrowToolbar& n)
 {
-  memcpy(this, &n, sizeof(n));
+  memcpy((void *)this, (void *)&n, sizeof(n));
   if (n.dynamicsize) {
     dynamic = (char*)calloc(1, n.dynamicsize);
     memcpy(dynamic, n.nc->dynamic, n.dynamicsize);
@@ -125,7 +125,7 @@ void GrowToolbar::save(std::ofstream& fp, glow_eSaveMode mode)
 
 void GrowToolbar::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
 
@@ -276,7 +276,7 @@ int GrowToolbar::event_handler(
 {
   int sts, lsts;
   int hot_type;
-  int idx, mask_idx, category;
+  int idx = 0, mask_idx, category;
   double rx, ry;
 
   if (invisible || dimmed)
@@ -487,7 +487,7 @@ void GrowToolbar::configure(char* tools1, char* tools2, int tools1_cnt,
     }
     mask = mask << 1;
   }
-  if (x1 != 0)
+  if (!feq(x1, 0.0))
     x1 += TOOLBAR_SPACING * 2;
 
   tools2_mask = 0;

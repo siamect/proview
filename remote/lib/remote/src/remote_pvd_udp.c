@@ -53,9 +53,8 @@
 #define STX 2
 #define ETB 15
 #define ENQ 5
-#define ACK 6
+//#define ACK 6
 #define UDP_MAX_SIZE 32768
-#define TIME_INCR 0.02
 
 #define errh_Error printf
 #define errh_Info printf
@@ -103,7 +102,7 @@ static int CreateSocket(udp_tCtx ctx)
 {
   int sts;
   unsigned char badr[4];
-  unsigned int iadr[4] = { -1, -1, -1, -1 };
+  int iadr[4] = { -1, -1, -1, -1 };
   struct hostent* he;
   struct sockaddr_in address;
   socklen_t address_len = sizeof(struct sockaddr_in);
@@ -259,7 +258,7 @@ pwr_tStatus udp_Receive(char** buff, int tmo)
   static char buf[UDP_MAX_SIZE];
   char unknown[24];
   unsigned char badr[24];
-  char* datapos;
+  char* datapos = NULL;
   int datasize;
   struct sockaddr_in from;
   unsigned int fromlen;

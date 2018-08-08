@@ -49,8 +49,6 @@
 #include "flow_api.h"
 #include "flow_browapi.h"
 
-#define WOW_MAXNAMES 400
-
 typedef struct {
   char str[200];
   int len;
@@ -585,7 +583,7 @@ void* CoWowGtk::CreateList(const char* title, const char* texts, int textsize,
   gtk_widget_set_size_request(ok_button, 70, 28);
   g_signal_connect(ok_button, "clicked", G_CALLBACK(CoWowGtk::list_ok_cb), ctx);
 
-  GtkWidget* apply_button;
+  GtkWidget* apply_button = NULL;
   if (show_apply_button) {
     apply_button = gtk_button_new_with_label(translate_utf8("Apply"));
     gtk_widget_set_size_request(apply_button, 70, 28);
@@ -1248,7 +1246,7 @@ int CoWowGtk::CreateModalDialog(const char* title, const char* text,
     const char* image)
 {
   int status = 0;
-  GtkWidget* image_w;
+  GtkWidget* image_w = NULL;
   pwr_tFileName fname;
 
   // Create a question window
@@ -1356,7 +1354,7 @@ wow_sModalInputDialog* CoWowGtk::CreateModalInputDialog(const char* title,
     CoWowRecall* recall)
 {
   int status = 0;
-  GtkWidget* image_w;
+  GtkWidget* image_w = NULL;
   pwr_tFileName fname;
 
   // Create a question window
@@ -1449,7 +1447,7 @@ pwr_tStatus CoWowGtk::CreateMenuItem(
   char name_array[10][40];
   int name_cnt;
   char label[80];
-  GtkWidget* child;
+  GtkWidget* child = NULL;
   pwr_tFileName fname;
 
   name_cnt = dcli_parse(name, "-", "", (char*)name_array,
@@ -1550,7 +1548,7 @@ pwr_tStatus CoWowGtk::DeleteMenuItem(const char* name, void* menu)
   char name_array[10][40];
   int name_cnt;
   char label[80];
-  GtkWidget* child;
+  GtkWidget* child = NULL;
 
   name_cnt = dcli_parse(name, "-", "", (char*)name_array,
       sizeof(name_array) / sizeof(name_array[0]), sizeof(name_array[0]), 0);

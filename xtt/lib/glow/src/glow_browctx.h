@@ -48,8 +48,8 @@ public:
         annotation_space(0.3)
   {
     ctx_type = glow_eCtxType_Brow;
-  };
-  ~BrowCtx(){};
+  }
+  ~BrowCtx(){}
   int insert(GlowArrayElem* element, GlowArrayElem* destination,
       glow_eDest destination_code);
   void close(GlowArrayElem* element);
@@ -61,28 +61,28 @@ public:
   void unzoom()
   {
     zoom(mw.base_zoom_factor / mw.zoom_factor_y);
-  };
+  }
   void print(char* filename);
   int get_first(GlowArrayElem** first)
   {
     return a.get_first(first);
-  };
+  }
   int get_last(GlowArrayElem** last)
   {
     return a.get_last(last);
-  };
+  }
   int get_previous(GlowArrayElem* element, GlowArrayElem** prev)
   {
     return a.get_previous(element, prev);
-  };
+  }
   int get_next(GlowArrayElem* element, GlowArrayElem** next)
   {
     return a.get_next(element, next);
-  };
+  }
   int get_parent(GlowArrayElem* element, GlowArrayElem** parent)
   {
     return a.brow_get_parent(element, parent);
-  };
+  }
   int is_visible(GlowArrayElem* element);
   void center_object(GlowArrayElem* object, double factor);
   double indentation;

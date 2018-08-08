@@ -49,28 +49,6 @@
 
 /* Local macros */
 
-#define Log_Error(a, b) errh_Error("%s\n%m", b, a)
-#define Log(b) errh_Info(b)
-#define Log_Error_Exit(a, b)                                                   \
-  {                                                                            \
-    Log_Error(a, b);                                                           \
-    exit(a);                                                                   \
-  }
-#define Log_Error_Return(a, b)                                                 \
-  {                                                                            \
-    Log_Error(a, b);                                                           \
-    return (a);                                                                \
-  }
-#define If_Error_Log(a, b)                                                     \
-  if ((a & 1) != 1)                                                            \
-  Log_Error(a, b)
-#define If_Error_Log_Return(a, b)                                              \
-  if ((a & 1) != 1)                                                            \
-  Log_Error_Return(a, b)
-#define If_Error_Log_Exit(a, b)                                                \
-  if ((a & 1) != 1)                                                            \
-  Log_Error_Exit(a, b)
-
 #define mh_cBlockFileVersion 1
 #define mh_cPageAlign 511L
 #define mh_cPageSize 512L
@@ -92,17 +70,17 @@ mh_sBlockDb* mh_BlockDbOpen(char* FileName, pwr_tUInt32* size)
 
   if (dp->File != NULL) {
     sprintf(msg, "BlockDbOpen: old file: %s", FileName);
-    Log(msg);
+    errh_Info(msg);
     if (fread(hp, sizeof(*hp), 1, dp->File) != 1) {
       sprintf(msg, "BlockDbOpen: read header, %s", strerror(errno));
-      Log(msg);
+      errh_Info(msg);
     } else {
       time_GetTime(&hp->OpenTime);
       if (size != NULL)
         *size = hp->SegSize;
       if (hp->Version == mh_cBlockFileVersion)
         return (dp);
-      Log("BlockDbOpen: file version mismatch");
+      errh_Info("BlockDbOpen: file version mismatch");
     }
     fclose(dp->File);
   }
@@ -112,10 +90,10 @@ mh_sBlockDb* mh_BlockDbOpen(char* FileName, pwr_tUInt32* size)
 
   if (dp->File == NULL) {
     sprintf(msg, "BlockDbOpen: %s", strerror(errno));
-    Log(msg);
+    errh_Info(msg);
   } else {
     sprintf(msg, "BlockDbOpen: new file, %s", FileName);
-    Log(msg);
+    errh_Info(msg);
 
     memset(hp, 0, sizeof(*hp));
     time_GetTime(&hp->CreationTime);
@@ -135,7 +113,7 @@ mh_sBlockDb* mh_BlockDbOpen(char* FileName, pwr_tUInt32* size)
     }
 
     sprintf(msg, "BlockDbOpen: write header, %s", strerror(errno));
-    Log(msg);
+    errh_Info(msg);
     fclose(dp->File);
   }
   free(dp);
@@ -170,7 +148,7 @@ mh_sBlockDb* mh_BlockDbGet(mh_sBlockDb* dp, pwr_tUInt32* size, char* buffer)
 
 error:
   sprintf(msg, "BlockDbGet: %s", strerror(errno));
-  Log(msg);
+  errh_Info(msg);
   return mh_BlockDbClose(dp);
 }
 
@@ -238,6 +216,6 @@ mh_sBlockDb* mh_BlockDbPut(mh_sBlockDb* dp, pwr_tUInt32 size, char* buffer)
 error:
   errc = strerror(errno);
   sprintf(msg, "BlockDbPut: %s", errc);
-  Log(msg);
+  errh_Info(msg);
   return mh_BlockDbClose(dp);
 }

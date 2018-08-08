@@ -232,10 +232,10 @@ pwr_tTime* time_Aadd_NE(pwr_tTime* result, pwr_tTime* t, pwr_tDeltaTime* a)
 }
 
 //! Compare two timespecs.
-/*!   Returns \n
-    1 if t1  > t2 \n
-    0 if t1 == t2 \n
-   -1 if t1  < t2 \n
+/*!   Returns
+    1 if t1  > t2
+    0 if t1 == t2
+   -1 if t1  < t2
 
    If argument 't2' is NULL the comparison will
    be done as if t2 == 0.
@@ -263,10 +263,10 @@ int time_Acomp(pwr_tTime* t1, pwr_tTime* t2)
 }
 
 //! Compare two timespecs.
-/*!   Returns \n
-    1 if t1  > t2 \n
-    0 if t1 == t2 \n
-   -1 if t1  < t2 \n
+/*!   Returns
+    1 if t1  > t2
+    0 if t1 == t2
+   -1 if t1  < t2
 
    If argument 't2' is NULL the comparison will
    be done as if t2 == 0.
@@ -571,10 +571,10 @@ pwr_tDeltaTime* time_Dadd_NE(
 }
 
 //! Compare two delta times.
-/*!   Returns \n
-    1 if t1  > t2 \n
-    0 if t1 == t2 \n
-   -1 if t1  < t2 \n
+/*!   Returns
+    1 if t1  > t2
+    0 if t1 == t2
+   -1 if t1  < t2
 
    If argument 't2' is NULL the comparison will
    be done as if t2 == 0.
@@ -602,10 +602,10 @@ int time_Dcomp(pwr_tDeltaTime* t1, pwr_tDeltaTime* t2)
 }
 
 //! Compare two delta times.
-/*!   Returns \n
-    1 if t1  > t2 \n
-    0 if t1 == t2 \n
-   -1 if t1  < t2 \n
+/*!   Returns
+    1 if t1  > t2
+    0 if t1 == t2
+   -1 if t1  < t2
 
    If argument 't2' is NULL the comparison will
    be done as if t2 == 0.
@@ -863,7 +863,7 @@ pwr_tStatus time_AsciiToD(const char* tstr, pwr_tDeltaTime* ts)
 {
   char *sp, *dp;
   char buf[64];
-  int day, hour, min, sec, hun = 0;
+  int day, hour = 0, min, sec, hun = 0;
   int useday = 1;
 
   strncpy(buf, tstr, sizeof(buf) - 1);
@@ -1984,7 +1984,6 @@ void time_NextPeriod(time_ePeriod period, pwr_tTime* prev_from,
       from->tv_sec = current.tv_sec - 365 * ONEDAY;
       from->tv_nsec = current.tv_nsec;
     }
-    break;
     break;
   case time_ePeriod_AllTime:
     time_Period(period, from, to, 0, 1);

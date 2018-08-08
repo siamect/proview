@@ -1052,10 +1052,10 @@ int RtTrace::flow_cb(FlowCtx* ctx, flow_tEvent event)
           s++;
         else
           s = name;
-        strncat(tiptext, s, sizeof(tiptext) - strlen(tiptext));
+        strncat(tiptext, s, sizeof(tiptext) - strlen(tiptext) - 1);
         if (strcmp(attr_str, "") != 0) {
           strcat(tiptext, ".");
-          strncat(tiptext, attr_str, sizeof(tiptext) - strlen(tiptext));
+          strncat(tiptext, attr_str, sizeof(tiptext) - strlen(tiptext) - 1);
         }
       } else if (is_plcmain) {
         if (strcmp(tiptext, "") != 0)
@@ -1064,10 +1064,10 @@ int RtTrace::flow_cb(FlowCtx* ctx, flow_tEvent event)
           s++;
         else
           s = name;
-        strncat(tiptext, s, sizeof(tiptext) - strlen(tiptext));
+        strncat(tiptext, s, sizeof(tiptext) - strlen(tiptext) - 1);
         if (strcmp(attr_str, "") != 0) {
           strcat(tiptext, ".");
-          strncat(tiptext, attr_str, sizeof(tiptext) - strlen(tiptext));
+          strncat(tiptext, attr_str, sizeof(tiptext) - strlen(tiptext) - 1);
         }
 
         // Write channel for signals
@@ -1099,7 +1099,7 @@ int RtTrace::flow_cb(FlowCtx* ctx, flow_tEvent event)
                 &aref, aname, sizeof(aname), cdh_mName_pathStrict);
             if (ODD(sts)) {
               strcat(tiptext, "\n");
-              strncat(tiptext, aname, sizeof(tiptext) - strlen(tiptext));
+              strncat(tiptext, aname, sizeof(tiptext) - strlen(tiptext) - 1);
             }
           }
 

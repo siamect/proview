@@ -589,7 +589,7 @@ int gobj_get_object_m7(WFoe* foe, vldh_t_node node, unsigned long index)
   ldh_tSesContext ldhses;
   ldh_sParDef* bodydef;
   int rows;
-  int type;
+  int type = 0;
   int i, sts;
   vldh_t_plc plc;
   pwr_sAttrRef attrref;
@@ -2411,7 +2411,7 @@ int gobj_get_object_m28(WFoe* foe, vldh_t_node node, unsigned long index)
   unsigned long con_count;
   int j;
   pwr_sAttrRef attrref;
-  pwr_tClassId create_classid;
+  pwr_tClassId create_classid = 0;
   char parname[40];
   int is_attr;
 
@@ -2882,7 +2882,7 @@ int gobj_get_object_m32(WFoe* foe, vldh_t_node node, unsigned long index)
     return sts;
 
   if (strcmp(bodydef[rows - 2].ParName, "ActualValue") == 0) {
-    if (bodydef[rows - 2].Par->Param.Info.Flags && PWR_MASK_ARRAY) {
+    if (bodydef[rows - 2].Par->Param.Info.Flags & PWR_MASK_ARRAY) {
       if (attrref.Flags.b.Array) {
         foe->message("Select and array element");
         BEEP;
@@ -3021,7 +3021,7 @@ int gobj_get_object_m33(WFoe* foe, vldh_t_node node, unsigned long index)
     return sts;
 
   if (strcmp(bodydef[rows - 2].ParName, "ActualValue") == 0) {
-    if (bodydef[rows - 2].Par->Param.Info.Flags && PWR_MASK_ARRAY) {
+    if (bodydef[rows - 2].Par->Param.Info.Flags & PWR_MASK_ARRAY) {
       if (attrref.Flags.b.Array) {
         foe->message("Select and array element");
         BEEP;

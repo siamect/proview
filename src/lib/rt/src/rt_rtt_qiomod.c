@@ -45,8 +45,6 @@
 #include <termios.h>
 #include <unistd.h>
 
-#define RTT_QIO_RETRY 10
-
 #include "pwr_baseclasses.h"
 #include "rt_rtt_global.h"
 #include "rt_rtt_msg.h"

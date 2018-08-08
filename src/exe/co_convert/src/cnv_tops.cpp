@@ -50,8 +50,6 @@ extern "C" {
 #include "co_lng.h"
 #include "cnv_image.h"
 
-#define CNV_TAB 18
-
 #define ps_cHead                                                               \
   "%!PS-Adobe-2.0\n\
 %%Creator: Proview co_convert\n\

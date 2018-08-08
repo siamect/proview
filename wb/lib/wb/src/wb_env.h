@@ -52,6 +52,8 @@ public:
   wb_env(wb_erep*);
   wb_env(wb_env& e);
 
+  virtual ~wb_env();
+
   wb_env& operator=(const wb_env& x);
 
   operator bool() const;

@@ -567,7 +567,6 @@ int ItemAttrObject::open_attributes(Nav* nav, double x, double y)
     char body[20];
     char parname[40];
     ldh_tSession ldhses;
-    pwr_tAttrRef aref = cdh_ObjidToAref(objid);
 
     if (brow_IsOpen(node) & nav_mOpen_Children) {
       // Close children first
@@ -1843,7 +1842,7 @@ int Nav::object_exist(brow_tObject object)
 int Nav::open_top()
 {
   int class_cnt;
-  int i, sts;
+  int i, sts = 0;
   pwr_tClassId valid_class[100];
   pwr_tObjid root;
   pwr_tClassId classid;

@@ -694,7 +694,6 @@ int PnViewerNav::check_attr_value()
       return 1;
     else
       return PB__ATTRNOEDIT;
-    break;
   default:
     return PB__ATTRNOEDIT;
   }
@@ -830,6 +829,10 @@ ItemDevice::ItemDevice(PnViewerNav* item_viewernav, const char* item_name,
   brow_SetAnnotPixmap(node, 0, viewernav->brow->pixmap_map);
 }
 
+ItemDevice::~ItemDevice()
+{
+}
+
 int ItemDevice::open_children(PnViewerNav* viewernav)
 {
   double node_x, node_y;
@@ -910,6 +913,10 @@ ItemDeviceAttr::ItemDeviceAttr(PnViewerNav* viewernav, const char* item_name,
       && (strcmp(item_name, "DeviceName") == 0
              || strcmp(item_name, "IP Address") == 0))
     brow_SetAnnotPixmap(node, 1, viewernav->brow->pixmap_edit);
+}
+
+ItemDeviceAttr::~ItemDeviceAttr()
+{
 }
 
 #endif

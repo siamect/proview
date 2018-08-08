@@ -133,7 +133,7 @@ static int create_timer(plc_sProcess* pp)
 
 int main(int argc, char* argv[])
 {
-  pwr_tStatus sts;
+  pwr_tStatus sts = 0;
   int event;
   plc_sProcess* pp;
   /*
@@ -218,13 +218,13 @@ static plc_sProcess* init_process(char* name)
   pwr_tStatus sts = PLC__SUCCESS;
   pwr_tOid pp_oid;
   pwr_tOid sim_oid;
-  int found;
+  int found = 0;
   char busidstr[10];
   char pp_name[80];
   pwr_tObjName oname;
   int busid;
   char* s;
-  int idx;
+  int idx = 0;
 
   errh_Init("pwr_plc", errh_eAnix_plc);
   errh_SetStatus(PWR__SRVSTARTUP);

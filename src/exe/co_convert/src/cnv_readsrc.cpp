@@ -49,7 +49,7 @@ int CnvReadSrc::read_src(char* filename)
   char orig_line[400];
   char line[400];
   char line_part[4][80];
-  int nr;
+  int nr = 0;
   FILE* fp;
 
   fp = fopen(filename, "r");

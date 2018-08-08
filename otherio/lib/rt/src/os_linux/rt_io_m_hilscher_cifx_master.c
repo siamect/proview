@@ -37,8 +37,6 @@
 /* rt_io_m_hilscher_cifx_master.c -- I/O methods for class Hilscher_cifX_Master.
  */
 
-#include <float.h>
-
 #include "pwr_basecomponentclasses.h"
 #include "pwr_otherioclasses.h"
 #include "co_cdh.h"

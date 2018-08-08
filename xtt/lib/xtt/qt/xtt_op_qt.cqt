@@ -60,7 +60,6 @@
 
 #define OP_HEIGHT_MIN 75
 #define OP_HEIGHT_INC 20
-#define OP_HEIGHT_MAX (OP_HEIGHT_MIN + 3 * OP_HEIGHT_INC)
 #define OP_HEIGHT_STATUSBAR 30
 
 static QPushButton* image_button(QWidget* parent, const char* filename)
@@ -355,7 +354,7 @@ OpQt::OpQt(void* op_parent_ctx, QWidget* op_parent_wid, char* opplace,
   }
 
   // Status bar
-  QStatusBar* status_bar;
+  QStatusBar* status_bar = NULL;
   if (!(layout_mask & pwr_mOpWindLayoutMask_HideStatusBar)) {
     char text[80];
     pwr_tTime time;
@@ -574,7 +573,7 @@ void OpQt::update_alarm_info()
   char timestr[40] = "";
   int fsize = text_size * 1024;
   int show_time = 0;
-  time_eFormat time_format;
+  time_eFormat time_format = time_eFormat_Time;
   char* s;
 
   if (get_alarm_info_cb) {
@@ -583,7 +582,6 @@ void OpQt::update_alarm_info()
       return;
     }
 
-    QColor red_color = QColor("red");
     QColor bg_color = QColor("gray");
 
     height = 22;
@@ -1158,7 +1156,7 @@ void OpQtWidget::activate_info()
     return;
   }
 
-  char* more;
+  char* more = NULL;
 
   for (int i = 0; i < 5; i++) {
     if (w == op->aalarm_info[i]) {

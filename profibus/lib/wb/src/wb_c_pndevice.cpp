@@ -610,7 +610,7 @@ static int pndevice_add_channels(device_sCtx* ctx,
           di->Body.DataType, &datatype);
 
       if (!di->Body.UseAsBits) {
-        unsigned int representation;
+        unsigned int representation = 0;
         int invalid_type = 0;
 
         switch (datatype) {
@@ -665,7 +665,7 @@ static int pndevice_add_channels(device_sCtx* ctx,
       } else {
         // Use as bits
         unsigned int bits;
-        unsigned int representation;
+        unsigned int representation = 0;
 
         switch (datatype) {
         case gsdml_eValueDataType_Integer8:
@@ -737,7 +737,7 @@ static int pndevice_add_channels(device_sCtx* ctx,
           di->Body.DataType, &datatype);
 
       if (!di->Body.UseAsBits) {
-        unsigned int representation;
+        unsigned int representation = 0;
         int invalid_type = 0;
 
         switch (datatype) {
@@ -794,7 +794,7 @@ static int pndevice_add_channels(device_sCtx* ctx,
       } else {
         // Use as bits
         unsigned int bits;
-        unsigned int representation;
+        unsigned int representation = 0;
 
         switch (datatype) {
         case gsdml_eValueDataType_Integer8:

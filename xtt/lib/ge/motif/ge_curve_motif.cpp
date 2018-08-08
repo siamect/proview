@@ -38,7 +38,6 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <math.h>
-#include <float.h>
 #include <Xm/Xm.h>
 #include <Xm/XmP.h>
 #include <Xm/Text.h>

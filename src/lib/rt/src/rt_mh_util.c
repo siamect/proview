@@ -55,8 +55,6 @@
 
 /* Local defines */
 
-#define PWR_WAIT_MH 96
-
 /* Local definitions */
 
 #if defined OS_LYNX

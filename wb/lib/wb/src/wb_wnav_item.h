@@ -80,46 +80,29 @@ typedef enum {
 
 class WItem {
 public:
-  WItem(pwr_tObjid item_objid, int item_is_root)
-      : type(wnav_eItemType_Object), objid(item_objid), is_root(item_is_root),
-        node(NULL){};
-  int open_attributes(WNav* wnav, double x, double y)
-  {
-    return 1;
-  };
-  int open_children(WNav* wnav, double x, double y)
-  {
-    return 1;
-  };
-  int open_trace(WNav* wnav, double x, double y)
-  {
-    return 1;
-  };
-  void close(WNav* wnav, double x, double y){};
+  WItem(pwr_tObjid item_objid, int item_is_root);
+  virtual ~WItem();
+  int open_attributes(WNav* wnav, double x, double y);
+  int open_children(WNav* wnav, double x, double y);
+  int open_trace(WNav* wnav, double x, double y);
+  void close(WNav* wnav, double x, double y);
   virtual pwr_sAttrRef aref();
   wnav_eItemType type;
   pwr_tObjid objid;
   int is_root;
   brow_tNode node;
   pwr_tOName name;
-
-  virtual ~WItem()
-  {
-  }
 };
 
 class WItemBaseObject : public WItem {
 public:
-  WItemBaseObject(pwr_tObjid item_objid, int item_is_root)
-      : WItem(item_objid, item_is_root){};
+  WItemBaseObject(pwr_tObjid item_objid, int item_is_root);
+  virtual ~WItemBaseObject();
   int open_children(WNav* wnav, double x, double y);
   int open_attributes(WNav* wnav, double x, double y);
   int close(WNav* wnav, double x, double y);
   int open_attribute(
-      WNav* wnav, double x, double y, char* attr_name, int element)
-  {
-    return 1;
-  };
+      WNav* wnav, double x, double y, char* attr_name, int element);
   int open_crossref(WNav* wnav, double x, double y);
 };
 
@@ -127,12 +110,14 @@ class WItemObject : public WItemBaseObject {
 public:
   WItemObject(WNav* wnav, pwr_tObjid item_objid, brow_tNode dest,
       flow_eDest dest_code, int item_is_root);
+  virtual ~WItemObject();
 };
 
 class WItemMenu : public WItem {
 public:
   WItemMenu(WNav* wnav, const char* item_name, brow_tNode dest,
       flow_eDest dest_code, wnav_sMenu** item_child_list, int item_is_root);
+  virtual ~WItemMenu();
   wnav_sMenu** child_list;
   int open_children(WNav* wnav, double x, double y);
   int close(WNav* wnav, double x, double y);
@@ -143,6 +128,7 @@ public:
   WItemCommand(WNav* wnav, const char* item_name, brow_tNode dest,
       flow_eDest dest_code, char* item_command, int item_is_root,
       flow_sAnnotPixmap* pixmap);
+  virtual ~WItemCommand();
   char command[400];
   int open_children(WNav* wnav, double x, double y);
 };
@@ -152,6 +138,7 @@ public:
   WItemLocal(WNav* wnav, const char* item_name, const char* attr, int attr_type,
       int attr_size, double attr_min_limit, double attr_max_limit,
       void* attr_value_p, brow_tNode dest, flow_eDest dest_code);
+  virtual ~WItemLocal();
   void* value_p;
   char old_value[80];
   int first_scan;
@@ -165,24 +152,28 @@ class WItemText : public WItem {
 public:
   WItemText(WNavBrow* brow, const char* item_name, char* text, brow_tNode dest,
       flow_eDest dest_code);
+  virtual ~WItemText();
 };
 
 class WItemHeader : public WItem {
 public:
   WItemHeader(WNavBrow* brow, const char* item_name, const char* title,
       brow_tNode dest, flow_eDest dest_code);
+  virtual ~WItemHeader();
 };
 
 class WItemHeaderLarge : public WItem {
 public:
   WItemHeaderLarge(WNavBrow* brow, const char* item_name, char* title,
       brow_tNode dest, flow_eDest dest_code);
+  virtual ~WItemHeaderLarge();
 };
 
 class WItemVolume : public WItem {
 public:
   WItemVolume(WNav* wnav, pwr_tVolumeId item_volid, brow_tNode dest,
       flow_eDest dest_code);
+  virtual ~WItemVolume();
   pwr_tVolumeId volid;
   ldh_tVolContext volctx;
   int open_children(WNav* wnav, double x, double y);
@@ -193,6 +184,7 @@ class WItemObjectName : public WItem {
 public:
   WItemObjectName(WNavBrow* item_brow, ldh_tSesContext item_ldhses,
       pwr_tObjid item_objid, brow_tNode dest, flow_eDest dest_code);
+  virtual ~WItemObjectName();
   WNavBrow* brow;
   ldh_tSesContext ldhses;
 
@@ -206,6 +198,7 @@ class WItemObjectModTime : public WItem {
 public:
   WItemObjectModTime(WNavBrow* item_brow, ldh_tSesContext item_ldhses,
       pwr_tObjid item_objid, brow_tNode dest, flow_eDest dest_code);
+  virtual ~WItemObjectModTime();
   WNavBrow* brow;
   ldh_tSesContext ldhses;
 
@@ -217,6 +210,7 @@ public:
   WItemDocBlock(WNavBrow* item_brow, ldh_tSesContext item_ldhses,
       pwr_tObjid item_objid, char* block, int item_size, brow_tNode dest,
       flow_eDest dest_code);
+  virtual ~WItemDocBlock();
   WNavBrow* brow;
   ldh_tSesContext ldhses;
 
@@ -228,6 +222,7 @@ class WItemFile : public WItem {
 public:
   WItemFile(WNav* wnav, const char* item_name, char* text, char* file,
       item_eFileType item_filetype, brow_tNode dest, flow_eDest dest_code);
+  virtual ~WItemFile();
   int open_children(WNav* wnav, double x, double y);
   char file_name[120];
   item_eFileType file_type;
@@ -238,6 +233,7 @@ public:
   WItemCrossref(WNavBrow* item_brow, ldh_tSesContext item_ldhses,
       char* item_ref_name, char* item_ref_class, int item_write,
       brow_tNode dest, flow_eDest dest_code);
+  virtual ~WItemCrossref();
   WNavBrow* brow;
   ldh_tSesContext ldhses;
   char ref_name[32];
@@ -250,7 +246,7 @@ public:
   WItemBaseAttr(WNavBrow* item_brow, ldh_tSesContext item_ldhses,
       pwr_tObjid item_objid, char* attr_name, int attr_type_id,
       pwr_tTid attr_tid, int attr_size, int attr_flags, char* attr_body);
-
+  virtual ~WItemBaseAttr();
   WNavBrow* brow;
   ldh_tSesContext ldhses;
   int type_id;
@@ -266,7 +262,7 @@ public:
   int update()
   {
     return 1;
-  };
+  }
 };
 
 class WItemAttr : public WItemBaseAttr {
@@ -275,6 +271,7 @@ public:
       pwr_tObjid item_objid, brow_tNode dest, flow_eDest dest_code,
       char* attr_name, int attr_type_id, pwr_tTid attr_tid, int attr_size,
       int attr_flags, char* attr_body, int fullname);
+  virtual ~WItemAttr();
   int open_children(double x, double y);
   int close(double x, double y);
   int update();
@@ -286,6 +283,7 @@ public:
       pwr_tObjid item_objid, brow_tNode dest, flow_eDest dest_code,
       char* attr_name, int attr_type_id, pwr_tTid attr_tid, int attr_size,
       int attr_flags, char* attr_body, int attr_input_num);
+  virtual ~WItemAttrInput();
   int update();
   int set_mask(int radio_button, int value);
   unsigned int mask;
@@ -297,6 +295,7 @@ public:
       pwr_tObjid item_objid, brow_tNode dest, flow_eDest dest_code,
       char* attr_name, int attr_type_id, pwr_tTid attr_tid, int attr_size,
       int attr_flags, char* attr_body, int attr_input_num);
+  virtual ~WItemAttrInputF();
   int update();
   int set_mask(int radio_button, int value);
   unsigned int mask;
@@ -308,6 +307,7 @@ public:
       pwr_tObjid item_objid, brow_tNode dest, flow_eDest dest_code,
       char* attr_name, int attr_type_id, pwr_tTid attr_tid, int attr_size,
       int attr_flags, char* attr_body, int attr_input_num);
+  virtual ~WItemAttrInputInv();
   int update();
   int set_mask(int radio_button, int value);
   unsigned int mask;
@@ -319,6 +319,7 @@ public:
       pwr_tObjid item_objid, brow_tNode dest, flow_eDest dest_code,
       char* attr_name, int attr_type_id, pwr_tTid attr_tid, int attr_size,
       int attr_flags, char* attr_body, int attr_output_num);
+  virtual ~WItemAttrOutput();
   int update();
   int set_mask(int radio_button, int value);
   unsigned int mask;
@@ -331,10 +332,11 @@ public:
       pwr_tObjid item_objid, brow_tNode dest, flow_eDest dest_code,
       char* attr_name, int attr_elements, int attr_type_id, pwr_tTid attr_tid,
       int attr_size, int attr_flags, char* attr_body, int fullname);
+  virtual ~WItemAttrArray();
   int open_children(double x, double y)
   {
     return 1;
-  };
+  }
   int open_attributes(double x, double y);
   int close(double x, double y);
 };
@@ -347,10 +349,11 @@ public:
       pwr_tObjid item_objid, brow_tNode dest, flow_eDest dest_code,
       char* attr_name, int attr_elements, int attr_type_id, pwr_tTid attr_tid,
       int attr_size, int attr_flags, char* attr_body, int attr_output_num);
+  virtual ~WItemAttrArrayOutput();
   int open_children(double x, double y)
   {
     return 1;
-  };
+  }
   int open_attributes(double x, double y);
   int close(double x, double y);
   int update();
@@ -365,6 +368,7 @@ public:
       pwr_tObjid item_objid, brow_tNode dest, flow_eDest dest_code,
       char* attr_name, int attr_element, int attr_type_id, pwr_tTid attr_tid,
       int attr_size, int attr_offset, int attr_flags, char* attr_body);
+  virtual ~WItemAttrArrayElem();
   int open_children(double x, double y);
   int close(double x, double y);
   int update();
@@ -380,10 +384,11 @@ public:
       pwr_tObjid item_objid, brow_tNode dest, flow_eDest dest_code,
       char* attr_name, int attr_type_id, int attr_size, bool attr_is_elem,
       int attr_idx, int attr_flags, char* attr_body, int fullname);
+  virtual ~WItemAttrObject();
   int open_children(double x, double y)
   {
     return 1;
-  };
+  }
   int open_attributes(double x, double y);
   int open_crossref(WNav* wnav, double x, double y);
   int close(double x, double y);
@@ -396,6 +401,7 @@ public:
       int attr_type_id, pwr_tTid attr_tid, int attr_size, int attr_flags,
       char* attr_body, unsigned int item_num, int item_is_element,
       int item_element, brow_tNode dest, flow_eDest dest_code);
+  virtual ~WItemEnum();
   char enum_name[80];
   unsigned int num;
   int is_element;
@@ -412,6 +418,7 @@ public:
       int attr_type_id, pwr_tTid attr_tid, int attr_size, int attr_flags,
       char* attr_body, unsigned int item_mask, int item_is_element,
       int item_element, brow_tNode dest, flow_eDest dest_code);
+  virtual ~WItemMask();
   char mask_name[40];
   unsigned int mask;
   int is_element;
@@ -428,6 +435,7 @@ public:
       int attr_type_id, pwr_tTid attr_tid, int attr_size, int attr_flags,
       char* attr_body, void* item_enum_value, int item_is_element,
       int item_element, int item_idx, brow_tNode dest, flow_eDest dest_code);
+  virtual ~WItemEnumObject();
   pwr_tOName enum_name;
   pwr_tAttrRef enum_aref;
   pwr_tString80 enum_string;

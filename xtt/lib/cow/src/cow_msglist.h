@@ -50,7 +50,9 @@ typedef enum { msglist_eItemType_Msg } msglist_eItemType;
 
 class MsgListBrow {
 public:
-  MsgListBrow(BrowCtx* brow_ctx, void* msgl) : ctx(brow_ctx), msglist(msgl){};
+  MsgListBrow(BrowCtx* brow_ctx, void* msgl) : ctx(brow_ctx), msglist(msgl)
+  {
+  }
   ~MsgListBrow();
 
   BrowCtx* ctx;
@@ -99,6 +101,8 @@ class ItemMsg {
 public:
   ItemMsg(MsgList* msglist, const char* item_name, char* item_text,
       int item_severity, brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemMsg();
+
   msglist_eItemType type;
   MsgList* msglist;
   brow_tNode node;
@@ -106,13 +110,7 @@ public:
   char text[200];
   int severity;
 
-  virtual void find()
-  {
-  }
-
-  virtual ~ItemMsg()
-  {
-  }
+  virtual void find();
 };
 
 class ItemMsgObject : public ItemMsg {

@@ -126,7 +126,6 @@ pwr_tStatus mh_NetXdrMessage(XDR* xdrs, int subtype, mh_sHead* hp)
     errh_Info("Unexpected message type: %d, (%s)", hp->type,
         qcom_QidToString(NULL, &hp->qid, 1));
     return MH__XDRUNEXPECT;
-    break;
   }
 
   return MH__SUCCESS;
@@ -176,7 +175,6 @@ static pwr_tStatus xdrEvent(XDR* xdrs, mh_eEvent event, mh_sMsgInfo* mp)
   default:
     errh_Info("Unexpected event type: %d", event);
     return MH__XDRUNEXPECT;
-    break;
   }
   return MH__SUCCESS;
 }

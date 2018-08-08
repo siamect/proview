@@ -42,6 +42,10 @@ wb_orep::wb_orep() : m_nRef(0)
   // printf( "orep C: %x %d\n", this, ++ocnt);
 }
 
+wb_orep::~wb_orep()
+{
+}
+
 void wb_orep::unref()
 {
   if (--m_nRef == 0) {
@@ -54,6 +58,16 @@ wb_orep* wb_orep::ref()
 {
   m_nRef++;
   return this;
+}
+
+bool wb_orep::docBlock(char** block, int* size) const
+{
+  return false;
+}
+
+bool wb_orep::docBlock(char* block)
+{
+  return false;
 }
 
 pwr_tTime wb_orep::modTime()

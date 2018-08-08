@@ -97,7 +97,7 @@ public:
   void erase(GlowWind* w)
   {
     erase(w, (GlowTransform*)NULL, hot, NULL);
-  };
+  }
 
   //! Draw the objects if any part is inside the drawing area.
   /*!
@@ -135,7 +135,7 @@ public:
   glow_eObjectType type()
   {
     return glow_eObjectType_GrowWindow;
-  };
+  }
 
   char file_name[80]; //!< Graph file name.
   char input_file_name[80]; //!< Filename inserted in attribute editor.
@@ -235,7 +235,7 @@ public:
   void set_user_data(void* data)
   {
     user_data = data;
-  };
+  }
 
   //! Get user data.
   /*!
@@ -244,7 +244,7 @@ public:
   void get_user_data(void** data)
   {
     *data = user_data;
-  };
+  }
 
   //! Export the object as a javabean.
   /*!

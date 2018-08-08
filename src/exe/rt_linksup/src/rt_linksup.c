@@ -253,7 +253,7 @@ static sNode* init_node(pwr_tObjid oid, sNode* np, pwr_tBoolean new_sub)
 {
   pwr_tStatus sts;
   pwr_sAttrRef aref;
-  pwr_sClass_NodeLinkSup* o;
+  pwr_sClass_NodeLinkSup* o = NULL;
   gdh_tDlid dlid = pwr_cNDlid;
   pwr_tBoolean is_alias = 0;
   cdh_uTypeId tid;
@@ -458,7 +458,7 @@ static void update_node(sNode* np)
 
   /* Check that the same Node object is supervised   */
   if (cdh_ObjidIsEqual(np->node.Node, np->o->Node)
-      && np->node.SubscriptionInterval == np->o->SubscriptionInterval) {
+      && feqf(np->node.SubscriptionInterval, np->o->SubscriptionInterval)) {
     new_sub = FALSE;
   } else {
     gdh_SubUnrefObjectInfo(np->o->SubId);

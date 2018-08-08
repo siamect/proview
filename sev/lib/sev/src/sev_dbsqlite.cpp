@@ -36,8 +36,6 @@
 
 #if defined PWRE_CONF_SQLITE3
 
-#include <math.h>
-
 #include <sstream>
 #include <string>
 
@@ -619,10 +617,10 @@ int sev_dbsqlite::store_value(pwr_tStatus* sts, void* thread, int item_idx,
         // Compare current value to old value
         switch (m_items[item_idx].attr[attr_idx].type) {
         case pwr_eType_Float32:
-          if ((m_items[item_idx].deadband == 0
+          if ((feqf(m_items[item_idx].deadband, 0.0f)
                   && !memcmp(buf, m_items[item_idx].old_value,
                          sizeof(pwr_tFloat32)))
-              || (fabsf(*(pwr_tFloat32*)buf
+              || (ABS(*(pwr_tFloat32*)buf
                       - *(pwr_tFloat32*)m_items[item_idx].old_value)
                      < m_items[item_idx].deadband)) {
             update_time_only = 1;
@@ -632,10 +630,10 @@ int sev_dbsqlite::store_value(pwr_tStatus* sts, void* thread, int item_idx,
           }
           break;
         case pwr_eType_Float64:
-          if ((m_items[item_idx].deadband == 0
+          if ((feqf(m_items[item_idx].deadband, 0.0f)
                   && !memcmp(buf, m_items[item_idx].old_value,
                          sizeof(pwr_tFloat64)))
-              || (fabsf(*(pwr_tFloat64*)buf
+              || (ABS(*(pwr_tFloat64*)buf
                       - *(pwr_tFloat64*)m_items[item_idx].old_value)
                      < m_items[item_idx].deadband)) {
             update_time_only = 1;
@@ -645,10 +643,10 @@ int sev_dbsqlite::store_value(pwr_tStatus* sts, void* thread, int item_idx,
           }
           break;
         case pwr_eType_Int64:
-          if ((m_items[item_idx].deadband == 0
+          if ((feqf(m_items[item_idx].deadband, 0.0f)
                   && !memcmp(
                          buf, m_items[item_idx].old_value, sizeof(pwr_tInt64)))
-              || (fabsf(*(pwr_tInt64*)buf
+              || (ABS(*(pwr_tInt64*)buf
                       - *(pwr_tInt64*)m_items[item_idx].old_value)
                      < m_items[item_idx].deadband)) {
             update_time_only = 1;
@@ -658,10 +656,10 @@ int sev_dbsqlite::store_value(pwr_tStatus* sts, void* thread, int item_idx,
           }
           break;
         case pwr_eType_Int32:
-          if ((m_items[item_idx].deadband == 0
+          if ((feqf(m_items[item_idx].deadband, 0.0f)
                   && !memcmp(
                          buf, m_items[item_idx].old_value, sizeof(pwr_tInt32)))
-              || (fabsf(*(pwr_tInt32*)buf
+              || (ABS(*(pwr_tInt32*)buf
                       - *(pwr_tInt32*)m_items[item_idx].old_value)
                      < m_items[item_idx].deadband)) {
             update_time_only = 1;
@@ -671,10 +669,10 @@ int sev_dbsqlite::store_value(pwr_tStatus* sts, void* thread, int item_idx,
           }
           break;
         case pwr_eType_Int16:
-          if ((m_items[item_idx].deadband == 0
+          if ((feqf(m_items[item_idx].deadband, 0.0f)
                   && !memcmp(
                          buf, m_items[item_idx].old_value, sizeof(pwr_tInt16)))
-              || (fabsf(*(pwr_tInt16*)buf
+              || (ABS(*(pwr_tInt16*)buf
                       - *(pwr_tInt16*)m_items[item_idx].old_value)
                      < m_items[item_idx].deadband)) {
             update_time_only = 1;
@@ -685,10 +683,10 @@ int sev_dbsqlite::store_value(pwr_tStatus* sts, void* thread, int item_idx,
           break;
         case pwr_eType_Int8:
         case pwr_eType_Char:
-          if ((m_items[item_idx].deadband == 0
+          if ((feqf(m_items[item_idx].deadband, 0.0f)
                   && !memcmp(
                          buf, m_items[item_idx].old_value, sizeof(pwr_tInt8)))
-              || (fabsf(*(pwr_tInt8*)buf
+              || (ABS(*(pwr_tInt8*)buf
                       - *(pwr_tInt8*)m_items[item_idx].old_value)
                      < m_items[item_idx].deadband)) {
             update_time_only = 1;
@@ -698,10 +696,10 @@ int sev_dbsqlite::store_value(pwr_tStatus* sts, void* thread, int item_idx,
           }
           break;
         case pwr_eType_UInt64:
-          if ((m_items[item_idx].deadband == 0
+          if ((feqf(m_items[item_idx].deadband, 0.0f)
                   && !memcmp(
                          buf, m_items[item_idx].old_value, sizeof(pwr_tUInt64)))
-              || (fabsf(*(pwr_tUInt64*)buf
+              || (ABS(*(pwr_tUInt64*)buf
                       - *(pwr_tUInt64*)m_items[item_idx].old_value)
                      < m_items[item_idx].deadband)) {
             update_time_only = 1;
@@ -712,10 +710,10 @@ int sev_dbsqlite::store_value(pwr_tStatus* sts, void* thread, int item_idx,
           break;
         case pwr_eType_UInt32:
         case pwr_eType_Boolean:
-          if ((m_items[item_idx].deadband == 0
+          if ((feqf(m_items[item_idx].deadband, 0.0f)
                   && !memcmp(
                          buf, m_items[item_idx].old_value, sizeof(pwr_tUInt32)))
-              || (fabsf(*(pwr_tUInt32*)buf
+              || (ABS(*(pwr_tUInt32*)buf
                       - *(pwr_tUInt32*)m_items[item_idx].old_value)
                      < m_items[item_idx].deadband)) {
             update_time_only = 1;
@@ -725,10 +723,10 @@ int sev_dbsqlite::store_value(pwr_tStatus* sts, void* thread, int item_idx,
           }
           break;
         case pwr_eType_UInt16:
-          if ((m_items[item_idx].deadband == 0
+          if ((feqf(m_items[item_idx].deadband, 0.0f)
                   && !memcmp(
                          buf, m_items[item_idx].old_value, sizeof(pwr_tUInt16)))
-              || (fabsf(*(pwr_tUInt16*)buf
+              || (ABS(*(pwr_tUInt16*)buf
                       - *(pwr_tUInt16*)m_items[item_idx].old_value)
                      < m_items[item_idx].deadband)) {
             update_time_only = 1;
@@ -738,10 +736,10 @@ int sev_dbsqlite::store_value(pwr_tStatus* sts, void* thread, int item_idx,
           }
           break;
         case pwr_eType_UInt8:
-          if ((m_items[item_idx].deadband == 0
+          if ((feqf(m_items[item_idx].deadband, 0.0f)
                   && !memcmp(
                          buf, m_items[item_idx].old_value, sizeof(pwr_tUInt8)))
-              || (fabsf(*(pwr_tUInt8*)buf
+              || (ABS(*(pwr_tUInt8*)buf
                       - *(pwr_tUInt8*)m_items[item_idx].old_value)
                      < m_items[item_idx].deadband)) {
             update_time_only = 1;
@@ -766,10 +764,10 @@ int sev_dbsqlite::store_value(pwr_tStatus* sts, void* thread, int item_idx,
         // Compare current value to old value
         switch (m_items[item_idx].attr[attr_idx].type) {
         case pwr_eType_Float32:
-          if ((m_items[item_idx].deadband == 0
+          if ((feqf(m_items[item_idx].deadband, 0.0f)
                   && !memcmp(buf, m_items[item_idx].old_value,
                          sizeof(pwr_tFloat32)))
-              || (fabsf(*(pwr_tFloat32*)buf
+              || (ABS(*(pwr_tFloat32*)buf
                       - *(pwr_tFloat32*)m_items[item_idx].old_value)
                      < m_items[item_idx].deadband)) {
             m_items[item_idx].deadband_active = 1;
@@ -778,10 +776,10 @@ int sev_dbsqlite::store_value(pwr_tStatus* sts, void* thread, int item_idx,
           *(pwr_tFloat32*)m_items[item_idx].old_value = *(pwr_tFloat32*)buf;
           break;
         case pwr_eType_Float64:
-          if ((m_items[item_idx].deadband == 0
+          if ((feqf(m_items[item_idx].deadband, 0.0f)
                   && !memcmp(buf, m_items[item_idx].old_value,
                          sizeof(pwr_tFloat64)))
-              || (fabsf(*(pwr_tFloat64*)buf
+              || (ABS(*(pwr_tFloat64*)buf
                       - *(pwr_tFloat64*)m_items[item_idx].old_value)
                      < m_items[item_idx].deadband)) {
             m_items[item_idx].deadband_active = 1;
@@ -790,10 +788,10 @@ int sev_dbsqlite::store_value(pwr_tStatus* sts, void* thread, int item_idx,
           *(pwr_tFloat64*)m_items[item_idx].old_value = *(pwr_tFloat64*)buf;
           break;
         case pwr_eType_Int64:
-          if ((m_items[item_idx].deadband == 0
+          if ((feqf(m_items[item_idx].deadband, 0.0f)
                   && !memcmp(
                          buf, m_items[item_idx].old_value, sizeof(pwr_tInt64)))
-              || (fabsf(*(pwr_tInt64*)buf
+              || (ABS(*(pwr_tInt64*)buf
                       - *(pwr_tInt64*)m_items[item_idx].old_value)
                      < m_items[item_idx].deadband)) {
             m_items[item_idx].deadband_active = 1;
@@ -802,10 +800,10 @@ int sev_dbsqlite::store_value(pwr_tStatus* sts, void* thread, int item_idx,
           *(pwr_tInt64*)m_items[item_idx].old_value = *(pwr_tInt64*)buf;
           break;
         case pwr_eType_Int32:
-          if ((m_items[item_idx].deadband == 0
+          if ((feqf(m_items[item_idx].deadband, 0.0f)
                   && !memcmp(
                          buf, m_items[item_idx].old_value, sizeof(pwr_tInt32)))
-              || (fabsf(*(pwr_tInt32*)buf
+              || (ABS(*(pwr_tInt32*)buf
                       - *(pwr_tInt32*)m_items[item_idx].old_value)
                      < m_items[item_idx].deadband)) {
             m_items[item_idx].deadband_active = 1;
@@ -814,10 +812,10 @@ int sev_dbsqlite::store_value(pwr_tStatus* sts, void* thread, int item_idx,
           *(pwr_tInt32*)m_items[item_idx].old_value = *(pwr_tInt32*)buf;
           break;
         case pwr_eType_Int16:
-          if ((m_items[item_idx].deadband == 0
+          if ((feqf(m_items[item_idx].deadband, 0.0f)
                   && !memcmp(
                          buf, m_items[item_idx].old_value, sizeof(pwr_tInt16)))
-              || (fabsf(*(pwr_tInt16*)buf
+              || (ABS(*(pwr_tInt16*)buf
                       - *(pwr_tInt16*)m_items[item_idx].old_value)
                      < m_items[item_idx].deadband)) {
             m_items[item_idx].deadband_active = 1;
@@ -827,10 +825,10 @@ int sev_dbsqlite::store_value(pwr_tStatus* sts, void* thread, int item_idx,
           break;
         case pwr_eType_Int8:
         case pwr_eType_Char:
-          if ((m_items[item_idx].deadband == 0
+          if ((feqf(m_items[item_idx].deadband, 0.0f)
                   && !memcmp(
                          buf, m_items[item_idx].old_value, sizeof(pwr_tInt8)))
-              || (fabsf(*(pwr_tInt8*)buf
+              || (ABS(*(pwr_tInt8*)buf
                       - *(pwr_tInt8*)m_items[item_idx].old_value)
                      < m_items[item_idx].deadband)) {
             m_items[item_idx].deadband_active = 1;
@@ -839,10 +837,10 @@ int sev_dbsqlite::store_value(pwr_tStatus* sts, void* thread, int item_idx,
           *(pwr_tInt8*)m_items[item_idx].old_value = *(pwr_tInt8*)buf;
           break;
         case pwr_eType_UInt64:
-          if ((m_items[item_idx].deadband == 0
+          if ((feqf(m_items[item_idx].deadband, 0.0f)
                   && !memcmp(
                          buf, m_items[item_idx].old_value, sizeof(pwr_tUInt64)))
-              || (fabsf(*(pwr_tUInt64*)buf
+              || (ABS(*(pwr_tUInt64*)buf
                       - *(pwr_tUInt64*)m_items[item_idx].old_value)
                      < m_items[item_idx].deadband)) {
             m_items[item_idx].deadband_active = 1;
@@ -852,10 +850,10 @@ int sev_dbsqlite::store_value(pwr_tStatus* sts, void* thread, int item_idx,
           break;
         case pwr_eType_UInt32:
         case pwr_eType_Boolean:
-          if ((m_items[item_idx].deadband == 0
+          if ((feqf(m_items[item_idx].deadband, 0.0f)
                   && !memcmp(
                          buf, m_items[item_idx].old_value, sizeof(pwr_tUInt32)))
-              || (fabsf(*(pwr_tUInt32*)buf
+              || (ABS(*(pwr_tUInt32*)buf
                       - *(pwr_tUInt32*)m_items[item_idx].old_value)
                      < m_items[item_idx].deadband)) {
             m_items[item_idx].deadband_active = 1;
@@ -864,10 +862,10 @@ int sev_dbsqlite::store_value(pwr_tStatus* sts, void* thread, int item_idx,
           *(pwr_tUInt32*)m_items[item_idx].old_value = *(pwr_tUInt32*)buf;
           break;
         case pwr_eType_UInt16:
-          if ((m_items[item_idx].deadband == 0
+          if ((feqf(m_items[item_idx].deadband, 0.0f)
                   && !memcmp(
                          buf, m_items[item_idx].old_value, sizeof(pwr_tUInt16)))
-              || (fabsf(*(pwr_tUInt16*)buf
+              || (ABS(*(pwr_tUInt16*)buf
                       - *(pwr_tUInt16*)m_items[item_idx].old_value)
                      < m_items[item_idx].deadband)) {
             m_items[item_idx].deadband_active = 1;
@@ -876,10 +874,10 @@ int sev_dbsqlite::store_value(pwr_tStatus* sts, void* thread, int item_idx,
           *(pwr_tUInt16*)m_items[item_idx].old_value = *(pwr_tUInt16*)buf;
           break;
         case pwr_eType_UInt8:
-          if ((m_items[item_idx].deadband == 0
+          if ((feqf(m_items[item_idx].deadband, 0.0f)
                   && !memcmp(
                          buf, m_items[item_idx].old_value, sizeof(pwr_tUInt8)))
-              || (fabsf(*(pwr_tUInt8*)buf
+              || (ABS(*(pwr_tUInt8*)buf
                       - *(pwr_tUInt8*)m_items[item_idx].old_value)
                      < m_items[item_idx].deadband)) {
             m_items[item_idx].deadband_active = 1;
@@ -1644,11 +1642,11 @@ int sev_dbsqlite::check_item(pwr_tStatus* sts, pwr_tOid oid, char* oname,
         sprintf(&query[strlen(query)], "vsize=%d,", size);
         m_items[i].attr[i].size = size;
       }
-      if (scantime != m_items[i].scantime) {
+      if (!feqf(scantime, m_items[i].scantime)) {
         sprintf(&query[strlen(query)], "scantime=%.1f,", scantime);
         m_items[i].scantime = scantime;
       }
-      if (deadband != m_items[i].deadband) {
+      if (!feqf(deadband, m_items[i].deadband)) {
         sprintf(&query[strlen(query)], "deadband=%.4f,", deadband);
         m_items[i].deadband = deadband;
       }
@@ -2779,54 +2777,54 @@ int sev_dbsqlite::check_deadband(pwr_eType type, unsigned int size,
   int deadband_active = 0;
   switch (type) {
   case pwr_eType_Float32:
-    if (fabsf(*(pwr_tFloat32*)value - *(pwr_tFloat32*)oldvalue) < deadband) {
+    if (ABS(*(pwr_tFloat32*)value - *(pwr_tFloat32*)oldvalue) < deadband) {
       deadband_active = 1;
     }
     break;
   case pwr_eType_Float64:
-    if (fabsf(*(pwr_tFloat64*)value - *(pwr_tFloat64*)oldvalue) < deadband) {
+    if (ABS(*(pwr_tFloat64*)value - *(pwr_tFloat64*)oldvalue) < deadband) {
       deadband_active = 1;
     }
     break;
   case pwr_eType_Int64:
-    if (fabsf(*(pwr_tInt64*)value - *(pwr_tInt64*)oldvalue) < deadband) {
+    if (ABS(*(pwr_tInt64*)value - *(pwr_tInt64*)oldvalue) < deadband) {
       deadband_active = 1;
     }
     break;
   case pwr_eType_Int32:
-    if (fabsf(*(pwr_tInt32*)value - *(pwr_tInt32*)oldvalue) < deadband) {
+    if (ABS(*(pwr_tInt32*)value - *(pwr_tInt32*)oldvalue) < deadband) {
       deadband_active = 1;
     }
     break;
   case pwr_eType_Int16:
-    if (fabsf(*(pwr_tInt16*)value - *(pwr_tInt16*)oldvalue) < deadband) {
+    if (ABS(*(pwr_tInt16*)value - *(pwr_tInt16*)oldvalue) < deadband) {
       deadband_active = 1;
     }
     break;
   case pwr_eType_Int8:
   case pwr_eType_Char:
-    if (fabsf(*(pwr_tInt8*)value - *(pwr_tInt8*)oldvalue) < deadband) {
+    if (ABS(*(pwr_tInt8*)value - *(pwr_tInt8*)oldvalue) < deadband) {
       deadband_active = 1;
     }
     break;
   case pwr_eType_UInt64:
-    if (fabsf(*(pwr_tUInt64*)value - *(pwr_tUInt64*)oldvalue) < deadband) {
+    if (ABS(*(pwr_tUInt64*)value - *(pwr_tUInt64*)oldvalue) < deadband) {
       deadband_active = 1;
     }
     break;
   case pwr_eType_UInt32:
   case pwr_eType_Boolean:
-    if (fabsf(*(pwr_tUInt32*)value - *(pwr_tUInt32*)oldvalue) < deadband) {
+    if (ABS(*(pwr_tUInt32*)value - *(pwr_tUInt32*)oldvalue) < deadband) {
       deadband_active = 1;
     }
     break;
   case pwr_eType_UInt16:
-    if (fabsf(*(pwr_tUInt16*)value - *(pwr_tUInt16*)oldvalue) < deadband) {
+    if (ABS(*(pwr_tUInt16*)value - *(pwr_tUInt16*)oldvalue) < deadband) {
       deadband_active = 1;
     }
     break;
   case pwr_eType_UInt8:
-    if (fabsf(*(pwr_tUInt8*)value - *(pwr_tUInt8*)oldvalue) < deadband) {
+    if (ABS(*(pwr_tUInt8*)value - *(pwr_tUInt8*)oldvalue) < deadband) {
       deadband_active = 1;
     }
     break;

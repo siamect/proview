@@ -30,29 +30,29 @@ public:
           "http://www.w3.org/*/XMLSchema", NULL },
       { "s0", "http://opcfoundation.org/webservices/XMLDA/1.0/", NULL, NULL },
       { NULL, NULL, NULL, NULL }
-    };
+    }
     soap_init(this);
     if (!this->namespaces)
       this->namespaces = namespaces;
-  };
+  }
   virtual ~Service()
   {
     soap_destroy(this);
     soap_end(this);
     soap_done(this);
-  };
+  }
   virtual int bind(const char* host, int port, int backlog)
   {
     return soap_bind(this, host, port, backlog);
-  };
+  }
   virtual int accept()
   {
     return soap_accept(this);
-  };
+  }
   virtual int serve()
   {
     return soap_serve(this);
-  };
+  }
 };
 
 /******************************************************************************\

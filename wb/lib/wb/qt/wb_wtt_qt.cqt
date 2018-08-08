@@ -73,10 +73,10 @@
 #include <QVBoxLayout>
 
 #define WTT_PALETTE_WIDTH 160
-#define MENU_BAR 1
+//#define MENU_BAR 1
 #define MENU_PULLDOWN 2
 #define MENU_POPUP 3
-#define MENU_OPTION 4
+//#define MENU_OPTION 4
 
 CoWowRecall WttQt::cmd_recall;
 CoWowRecall WttQt::value_recall;
@@ -804,10 +804,10 @@ void WttQtWidget::open_change_value()
 {
   int sts;
   brow_tObject* sellist;
-  int sel_cnt1, sel_cnt2;
+  int sel_cnt1, sel_cnt2 = 0;
   char* value = 0;
   int multiline;
-  int input_size;
+  int input_size = 0;
 
   if (wtt->input_open) {
     wtt->cmd_entry->setVisible(false);
@@ -898,7 +898,7 @@ void WttQtWidget::open_change_name()
 {
   int sts;
   brow_tObject* sellist;
-  int sel_cnt1, sel_cnt2;
+  int sel_cnt1, sel_cnt2 = 0;
   int size;
   char name[80];
 
@@ -1763,7 +1763,7 @@ WttQt::WttQt(void* wt_parent_ctx, QWidget* wt_parent_wid, const char* wt_name,
   pwr_tStatus sts;
   char title[80];
   char volname[80];
-  pwr_tClassId volclass;
+  pwr_tClassId volclass = 0;
   int size;
   char layout_w1[80];
   char layout_w2[80];

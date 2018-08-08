@@ -107,36 +107,14 @@ typedef struct {
 
 class Item {
 public:
-  Item(pwr_tObjid item_objid, int item_is_root)
-      : type(xnav_eItemType_Object), objid(item_objid), is_root(item_is_root),
-        node(NULL)
-  {
-  }
-  virtual ~Item()
-  {
-  }
-  virtual int open_attributes(XNavBrow* brow, double x, double y)
-  {
-    return 1;
-  }
-  virtual int open_children(XNavBrow* brow, double x, double y)
-  {
-    return XNAV__NOCHILD;
-  }
-  virtual int open_trace(XNavBrow* brow, double x, double y)
-  {
-    return 1;
-  }
-  virtual int open_crossref(XNavBrow* brow, double x, double y)
-  {
-    return 1;
-  }
-  virtual void close(XNavBrow* brow, double x, double y)
-  {
-  }
-  virtual void set_conversion(xnav_eConv c)
-  {
-  }
+  Item(pwr_tObjid item_objid, int item_is_root);
+  virtual ~Item();
+  virtual int open_attributes(XNavBrow* brow, double x, double y);
+  virtual int open_children(XNavBrow* brow, double x, double y);
+  virtual int open_trace(XNavBrow* brow, double x, double y);
+  virtual int open_crossref(XNavBrow* brow, double x, double y);
+  virtual void close(XNavBrow* brow, double x, double y);
+  virtual void set_conversion(xnav_eConv c);
 
   xnav_eItemType type;
   pwr_tObjid objid;
@@ -149,22 +127,10 @@ class ItemBaseAttr : public Item {
 public:
   ItemBaseAttr(pwr_tObjid item_objid, char* attr_name, int attr_type_id,
       pwr_tTid attr_tid, int attr_size, int attr_flags, int item_is_root,
-      item_eDisplayType item_display_type)
-      : Item(item_objid, item_is_root), type_id(attr_type_id), tid(attr_tid),
-        size(attr_size), flags(attr_flags), subid(pwr_cNSubid), first_scan(1),
-        display_type(item_display_type), conversion(xnav_eConv_No)
-  {
-    strcpy(attr, attr_name);
-    memset(old_value, 0, sizeof(old_value));
-    noedit = flags & PWR_MASK_PRIVATE ? 1 : 0;
-  };
+      item_eDisplayType item_display_type);
   virtual int open_children(XNavBrow* brow, double x, double y);
   virtual void close(XNavBrow* brow, double x, double y);
-  virtual void set_conversion(xnav_eConv c)
-  {
-    conversion = c;
-    memset(old_value, -99, sizeof(old_value));
-  }
+  virtual void set_conversion(xnav_eConv c);
 
   int type_id;
   pwr_tTid tid;
@@ -183,32 +149,32 @@ class ItemHeader : public Item {
 public:
   ItemHeader(XNavBrow* brow, const char* item_name, const char* title,
       brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemHeader();
 };
 
 class ItemHeaderLarge : public Item {
 public:
   ItemHeaderLarge(XNavBrow* brow, const char* item_name, const char* title,
       brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemHeaderLarge();
 };
 
 class ItemTableHeader : public Item {
 public:
   ItemTableHeader(XNavBrow* brow, XNav* tab_xnav, const char* item_name,
       item_sTableHeader* title, brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemTableHeader();
   XNav* xnav;
   void (*scan)(XNav*);
   void (*disconnect)(XNav*);
-  void add_bc(void (*tab_scan)(XNav*), void (*tab_disconnect)(XNav*))
-  {
-    scan = tab_scan;
-    disconnect = tab_disconnect;
-  };
+  void add_bc(void (*tab_scan)(XNav*), void (*tab_disconnect)(XNav*));
 };
 
 class ItemText : public Item {
 public:
   ItemText(XNavBrow* brow, const char* item_name, const char* text,
       brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemText();
 };
 
 class ItemHelp : public Item {
@@ -260,8 +226,7 @@ public:
 
 class ItemBaseObject : public Item {
 public:
-  ItemBaseObject(pwr_tObjid item_objid, int item_is_root)
-      : Item(item_objid, item_is_root), cid(0){};
+  ItemBaseObject(pwr_tObjid item_objid, int item_is_root);
   virtual int open_children(XNavBrow* brow, double x, double y);
   virtual int open_attributes(XNavBrow* brow, double x, double y);
   virtual int open_trace(XNavBrow* brow, double x, double y);
@@ -276,6 +241,7 @@ class ItemObject : public ItemBaseObject {
 public:
   ItemObject(XNavBrow* brow, pwr_tObjid item_objid, brow_tNode dest,
       flow_eDest dest_code, int item_is_root);
+  virtual ~ItemObject();
   pwr_tUInt32 alarm_level;
   pwr_tUInt32 max_alarm_level;
   pwr_tUInt32 block_level;
@@ -288,6 +254,7 @@ public:
       flow_eDest dest_code, char* attr_name, int attr_type_id,
       pwr_tTid attr_tid, int attr_size, int attr_flags, int item_is_root,
       item_eDisplayType item_display_type);
+  virtual ~ItemAttr();
 };
 
 class ItemAttrArray : public Item {
@@ -301,10 +268,7 @@ public:
       flow_eDest dest_code, char* attr_name, int attr_elements,
       int attr_type_id, pwr_tTid attr_tid, int attr_size, int attr_flags,
       int item_is_root);
-  int open_children(XNavBrow* brow, double x, double y)
-  {
-    return 1;
-  };
+  int open_children(XNavBrow* brow, double x, double y);
   int open_attributes(XNavBrow* brow, double x, double y);
   void close(XNavBrow* brow, double x, double y);
 };
@@ -316,6 +280,7 @@ public:
       flow_eDest dest_code, char* attr_name, int attr_element, int attr_type_id,
       pwr_tTid attr_tid, int attr_size, int attr_flags, int item_is_root,
       item_eDisplayType item_display_type);
+  virtual ~ItemAttrArrayElem();
 };
 
 class ItemAttrObject : public Item {
@@ -337,6 +302,7 @@ public:
   ItemCollect(XNavBrow* brow, pwr_tObjid item_objid, char* attr_name,
       brow_tNode dest, flow_eDest dest_code, int attr_type_id,
       pwr_tTid attr_tid, int attr_size, int attr_flags, int item_is_root);
+  virtual ~ItemCollect();
   void set_signal_flags(XNavBrow* brow);
 };
 
@@ -390,6 +356,7 @@ public:
       int attr_size, int attr_nochange, void* attr_value_p,
       pwr_tObjid attr_objid, pwr_tRefId attr_subid, brow_tNode dest,
       flow_eDest dest_code);
+  virtual ~ItemObjectStruct();
   void* value_p;
   char old_value[80];
   int first_scan;
@@ -405,6 +372,7 @@ public:
       item_sTable* table_columns, item_sTableSubid* table_subid,
       int tab_change_value_idx, double tab_min_limit, double tab_max_limit,
       int relative_pos, brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemTable();
   XNav* xnav;
   item_sTable col;
   item_sTableSubid subid;
@@ -416,11 +384,7 @@ public:
   char old_value[10][80];
   int first_scan;
   int found;
-  void add_bc(void (*tab_scan)(XNav*), void (*tab_disconnect)(XNav*))
-  {
-    scan = tab_scan;
-    disconnect = tab_disconnect;
-  };
+  void add_bc(void (*tab_scan)(XNav*), void (*tab_disconnect)(XNav*));
 };
 
 class ItemDevice : public ItemTable {
@@ -428,13 +392,7 @@ public:
   ItemDevice(XNavBrow* brow, XNav* tab_xnav, pwr_tObjid objid,
       item_sTable* table_columns, item_sTableSubid* table_subid,
       int tab_change_value_idx, double tab_min_limit, double tab_max_limit,
-      int relative_pos, brow_tNode dest, flow_eDest dest_code)
-      : ItemTable(brow, tab_xnav, objid, table_columns, table_subid,
-            tab_change_value_idx, tab_min_limit, tab_max_limit, relative_pos,
-            dest, dest_code)
-  {
-    type = xnav_eItemType_Device;
-  };
+      int relative_pos, brow_tNode dest, flow_eDest dest_code);
   int open_children(XNavBrow* brow, double x, double y);
 };
 
@@ -443,13 +401,7 @@ public:
   ItemChannel(XNavBrow* brow, XNav* tab_xnav, pwr_tObjid objid,
       item_sTable* table_columns, item_sTableSubid* table_subid,
       int tab_change_value_idx, double tab_min_limit, double tab_max_limit,
-      int relative_pos, brow_tNode dest, flow_eDest dest_code)
-      : ItemTable(brow, tab_xnav, objid, table_columns, table_subid,
-            tab_change_value_idx, tab_min_limit, tab_max_limit, relative_pos,
-            dest, dest_code)
-  {
-    type = xnav_eItemType_Channel;
-  };
+      int relative_pos, brow_tNode dest, flow_eDest dest_code);
   pwr_tAttrRef signal_aref;
   int open_children(XNavBrow* brow, double x, double y);
   int open_crossref(XNavBrow* brow, double x, double y);
@@ -460,13 +412,7 @@ public:
   ItemRemNode(XNavBrow* brow, XNav* tab_xnav, pwr_tObjid objid,
       item_sTable* table_columns, item_sTableSubid* table_subid,
       int tab_change_value_idx, double tab_min_limit, double tab_max_limit,
-      int relative_pos, brow_tNode dest, flow_eDest dest_code)
-      : ItemTable(brow, tab_xnav, objid, table_columns, table_subid,
-            tab_change_value_idx, tab_min_limit, tab_max_limit, relative_pos,
-            dest, dest_code)
-  {
-    type = xnav_eItemType_RemNode;
-  };
+      int relative_pos, brow_tNode dest, flow_eDest dest_code);
   int open_children(XNavBrow* brow, double x, double y);
 };
 
@@ -475,13 +421,7 @@ public:
   ItemRemTrans(XNavBrow* brow, XNav* tab_xnav, pwr_tObjid objid,
       item_sTable* table_columns, item_sTableSubid* table_subid,
       int tab_change_value_idx, double tab_min_limit, double tab_max_limit,
-      int relative_pos, brow_tNode dest, flow_eDest dest_code)
-      : ItemTable(brow, tab_xnav, objid, table_columns, table_subid,
-            tab_change_value_idx, tab_min_limit, tab_max_limit, relative_pos,
-            dest, dest_code)
-  {
-    type = xnav_eItemType_RemTrans;
-  };
+      int relative_pos, brow_tNode dest, flow_eDest dest_code);
   int open_children(XNavBrow* brow, double x, double y);
 };
 
@@ -490,13 +430,7 @@ public:
   ItemPlc(XNavBrow* brow, XNav* tab_xnav, pwr_tObjid objid,
       item_sTable* table_columns, item_sTableSubid* table_subid,
       int tab_change_value_idx, double tab_min_limit, double tab_max_limit,
-      int relative_pos, brow_tNode dest, flow_eDest dest_code)
-      : ItemTable(brow, tab_xnav, objid, table_columns, table_subid,
-            tab_change_value_idx, tab_min_limit, tab_max_limit, relative_pos,
-            dest, dest_code)
-  {
-    type = xnav_eItemType_Plc;
-  };
+      int relative_pos, brow_tNode dest, flow_eDest dest_code);
   int open_children(XNavBrow* brow, double x, double y);
 };
 
@@ -507,10 +441,7 @@ public:
       int attr_type_id, pwr_tTid attr_tid, int attr_size, int attr_flags,
       unsigned int item_num, int item_is_element, int item_element);
   int set_value();
-  int open_children(XNavBrow* brow, double x, double y)
-  {
-    return 0;
-  }
+  int open_children(XNavBrow* brow, double x, double y);
 
   int num;
   char enum_name[80];
@@ -526,10 +457,7 @@ public:
       unsigned int item_num, int item_is_element, int item_element);
   int set_value(int bittrue);
   int toggle_value();
-  int open_children(XNavBrow* brow, double x, double y)
-  {
-    return 0;
-  }
+  int open_children(XNavBrow* brow, double x, double y);
 
   int num;
   char mask_name[32];

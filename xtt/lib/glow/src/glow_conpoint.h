@@ -52,20 +52,20 @@ public:
   void conpoint_select(void* pos, int x, int y, double* distance, void** cp);
   void conpoint_select(GlowTransform* t, int x, int y, double* distance,
       void** cp, int* pix_x, int* pix_y);
-  void print(void* pos, void* node){};
+  void print(void* pos, void* node){}
   void save(std::ofstream& fp, glow_eSaveMode mode);
   void open(std::ifstream& fp);
-  void draw(void* pos, int highlight, int hot, void* node){};
-  void erase(void* pos, int hot, void* node){};
+  void draw(void* pos, int highlight, int hot, void* node){}
+  void erase(void* pos, int hot, void* node){}
   void get_borders(double pos_x, double pos_y, double* x_right, double* x_left,
-      double* y_high, double* y_low, void* node){};
+      double* y_high, double* y_low, void* node){}
   int get_conpoint(int num, double* x, double* y, glow_eDirection* dir);
   int get_conpoint(GlowTransform* t, int num, bool flip_horizontal,
       bool flip_vertical, double* x, double* y, glow_eDirection* dir);
   glow_eObjectType type()
   {
     return glow_eObjectType_ConPoint;
-  };
+  }
   GrowCtx* ctx;
   int number;
   GlowPoint p;

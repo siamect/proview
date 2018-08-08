@@ -96,7 +96,7 @@ public:
       const char* iconname, ldh_tWBContext wt_wbctx, pwr_tVolumeId wt_volid,
       ldh_tVolume wt_volctx, wnav_sStartMenu* root_menu, pwr_tStatus* status);
 
-  WttQt(){};
+  WttQt(){}
   ~WttQt();
 
   QWidget* wnav_brow_widget;

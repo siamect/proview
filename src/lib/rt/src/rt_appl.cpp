@@ -47,6 +47,13 @@
 #include "co_error.h"
 #include "pwr_baseclasses.h"
 
+rt_appl::rt_appl(
+    const char* name, errh_eAnix anix, double scantime, qcom_sQid qid)
+    : m_anix(anix), m_scantime(scantime), m_maxdelay(5), m_qid(qid)
+{
+  strcpy(m_name, name);
+}
+
 void rt_appl::init()
 {
   qcom_sQid qini;
@@ -108,7 +115,7 @@ void rt_appl::register_appl(const char* name)
 void rt_appl::mainloop()
 {
   pwr_tStatus sts;
-  int tmo;
+  int tmo = 0;
   char mp[2000];
   qcom_sGet get;
   int swap = 0;
@@ -159,4 +166,35 @@ void rt_appl::mainloop()
     }
     first_scan = false;
   }
+}
+
+double rt_appl::scantime()
+{
+  return m_scantime;
+}
+
+void rt_appl::set_scantime(double time)
+{
+  m_scantime = time;
+}
+
+pwr_tOid& rt_appl::apploid()
+{
+  return m_apploid;
+}
+
+void rt_appl::open()
+{
+}
+
+void rt_appl::close()
+{
+}
+
+void rt_appl::scan()
+{
+}
+
+rt_appl::~rt_appl()
+{
 }

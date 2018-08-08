@@ -53,7 +53,6 @@
 
 #define OP_HEIGHT_MIN 75
 #define OP_HEIGHT_INC 20
-#define OP_HEIGHT_MAX (OP_HEIGHT_MIN + 3 * OP_HEIGHT_INC)
 #define OP_HEIGHT_STATUSBAR 30
 
 static GtkWidget* image_button(const char* filename)
@@ -691,7 +690,7 @@ OpGtk::OpGtk(void* op_parent_ctx, GtkWidget* op_parent_wid, char* opplace,
     return;
 
   // Status bar
-  GtkWidget* status_bar;
+  GtkWidget* status_bar = NULL;
   if (!(layout_mask & pwr_mOpWindLayoutMask_HideStatusBar)) {
     char text[80];
     pwr_tTime time;
@@ -921,7 +920,7 @@ void OpGtk::update_alarm_info()
   char timestr[40] = "";
   int fsize = text_size * 1024;
   int show_time = 0;
-  time_eFormat time_format;
+  time_eFormat time_format = time_eFormat_Time;
   char* s;
 
   if (get_alarm_info_cb) {

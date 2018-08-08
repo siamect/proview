@@ -92,8 +92,6 @@ int sevcli_close(pwr_tStatus* sts, sevcli_tCtx ctx)
  * This function is called to state which server node you want to communicate
  * with.
  * The server is stated with node identity.
- *
- * @return pwr_tStatus
  */
 void sevcli_set_servernid(sevcli_tCtx ctx, pwr_tNid nid)
 {

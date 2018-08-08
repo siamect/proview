@@ -78,7 +78,7 @@ public:
       glow_mDisplayLevel display_lev = glow_mDisplayLevel_1, int nodraw = 0)
       : GlowAnnot(glow_ctx, x, y, annot_num, d_type, color_d_type, t_size,
             a_type, rel_pos, display_lev),
-        temporary_scale(0), adjustment(glow_eAdjustment_Left){};
+        temporary_scale(0), adjustment(glow_eAdjustment_Left){}
 
   //! Save the content of the object to file.
   /*!
@@ -103,7 +103,7 @@ public:
   glow_eObjectType type()
   {
     return glow_eObjectType_GrowAnnot;
-  };
+  }
 
   GlowTransform trf; //!< Transformation matrix of object.
   int temporary_scale; //!< Not used.

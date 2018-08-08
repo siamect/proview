@@ -138,7 +138,6 @@ int main(int argc, char** argv)
     free(a_valp);
 
     exit(0);
-
   } else {
     // Print the value of the attriute in astr
 
@@ -171,5 +170,4 @@ int main(int argc, char** argv)
 
     exit(0);
   }
-  exit(1);
 }

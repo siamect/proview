@@ -101,10 +101,6 @@
 #ifndef __DPM_USER_H
 #define __DPM_USER_H
 
-#if _MSC_VER >= 1000
-#pragma once
-#endif /* _MSC_VER >= 1000 */
-
 /* support for GNU compiler */
 #ifdef __GNUC__
 #define GNUC_PACKED __attribute__((__packed__))

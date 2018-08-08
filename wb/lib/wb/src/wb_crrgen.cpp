@@ -648,7 +648,7 @@ void wb_crrgen::load(pwr_tStatus* rsts, int sim, int graph)
 void wb_crrgen::write(pwr_tStatus* rsts)
 {
   pwr_tStatus sts;
-  char type_char;
+  char type_char = '\0';
   pwr_tAttrRef prev_target;
   pwr_tFileName fname;
 

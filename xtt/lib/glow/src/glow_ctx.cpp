@@ -34,7 +34,6 @@
  * General Public License plus this exception.
  **/
 
-#include <float.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -287,7 +286,7 @@ void GlowCtx::save_comment(std::ofstream& fp)
 int GlowCtx::open(char* filename, glow_eSaveMode mode)
 {
   std::ifstream fp;
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int grow_loaded = 0;
@@ -928,7 +927,7 @@ void GlowCtx::nav_zoom()
     y_nav_low = MIN(y_low, mw.offset_y / mw.zoom_factor_y);
     y_nav_high
         = MAX(y_high, (mw.offset_y + mw.window_height) / mw.zoom_factor_y);
-    if (x_nav_right - x_nav_left == 0 || y_nav_high - y_nav_low == 0)
+    if (feq(x_nav_right, x_nav_left) || feq(y_nav_high, y_nav_low))
       return;
     navw.zoom_factor_x = MIN(navw.window_width / (x_nav_right - x_nav_left),
         navw.window_height / (y_nav_high - y_nav_low));
@@ -2036,7 +2035,7 @@ void GlowCtx::change_scrollbar()
     return;
 
   scroll_size = mw.window_width / 100 / mw.zoom_factor_x;
-  if (scroll_size == 0)
+  if (feq(scroll_size, 0.0))
     return;
 
   data.scroll_data = scroll_data;
@@ -2223,7 +2222,7 @@ void GlowCtx::auto_scrolling_stop()
 
 void auto_scrolling(GlowCtx* ctx)
 {
-  int delta_x, delta_y;
+  int delta_x = 0, delta_y = 0;
 
   if (ctx->ctx_type == glow_eCtxType_Grow
       || ctx->ctx_type == glow_eCtxType_Curve) {

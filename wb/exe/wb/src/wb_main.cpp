@@ -83,6 +83,29 @@ Usage: wb [-a][-q][-s][-c][-p] [-l language] [username] [password] [volume]\n\
 \n");
 }
 
+Wb::Wb() : announce(0), appl_count(0)
+{
+}
+
+Wb::~Wb()
+{
+}
+
+Wtt* Wb::wtt_new(const char* name, const char* iconname, ldh_tWBContext wbctx,
+    pwr_tVolumeId volid, ldh_tVolume volctx, wnav_sStartMenu* root_menu,
+    pwr_tStatus* status)
+{
+  return 0;
+}
+
+WVsel* Wb::vsel_new(pwr_tStatus* status, const char* name, ldh_tWBContext wbctx,
+    char* volumename, int (*bc_success)(void*, pwr_tVolumeId*, int),
+    void (*bc_cancel)(), int (*bc_time_to_exit)(void*), int show_volumes,
+    wb_eType wb_type)
+{
+  return 0;
+}
+
 void Wb::wttlist_add(pwr_tStatus* sts, Wtt* wtt, pwr_tVid vid)
 {
   wttlist_iterator it = wttlist.find(vid);

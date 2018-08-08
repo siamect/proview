@@ -73,7 +73,7 @@ public:
 
 class ApplList {
 public:
-  ApplList() : root(NULL){};
+  ApplList() : root(NULL){}
 
   ~ApplList()
   {

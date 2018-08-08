@@ -40,10 +40,8 @@
 #include "cnv_ctx.h"
 
 class CdpItem {
-  public:
-  CdpItem() : idx(0), fth(0), fch(0), lch(0), fws(0), bws(0)
-  {
-  }
+public:
+  CdpItem();
 
   pwr_tObjName name;
   pwr_tObjName supername;
@@ -57,16 +55,12 @@ class CdpItem {
 };
 
 class CnvClassDep {
-  private:
+private:
   std::vector<CdpItem> classlist;
 
-  public:
-  CnvClassDep(CnvCtx* cnv_ctx) : ctx(cnv_ctx)
-  {
-  }
-  virtual ~CnvClassDep()
-  {
-  }
+public:
+  CnvClassDep(CnvCtx* cnv_ctx);
+  virtual ~CnvClassDep();
 
   CnvCtx* ctx;
 

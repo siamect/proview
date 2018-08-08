@@ -42,7 +42,6 @@
  */
 
 #include <assert.h>
-#include <float.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -335,9 +334,9 @@ bool wb_print_wbl::printValue(wb_volume& v, pwr_eType type, unsigned int flags,
     sprintf(sval, "%d", *(pwr_tBoolean*)val);
     break;
   case pwr_eType_Float32:
-    if (*(pwr_tFloat32*)val == FLT_MIN)
+    if (feqf(*(pwr_tFloat32*)val, FLT_MIN))
       strcpy(sval, "FLT_MIN");
-    else if (*(pwr_tFloat32*)val == FLT_MAX)
+    else if (feqf(*(pwr_tFloat32*)val, FLT_MAX))
       strcpy(sval, "FLT_MAX");
     else
       sprintf(sval, "%.*e", FLT_DIG, *(pwr_tFloat32*)val);
@@ -465,7 +464,7 @@ bool wb_print_wbl::printValue(wb_volume& v, pwr_eType type, unsigned int flags,
         else {
           sprintf(sval, "\"%s\"", cdh_AttrRefToString((pwr_sAttrRef*)val, 1));
         }
-      } catch (wb_error& e) {
+      } catch (wb_error&) {
         if (ldh_isSymbolicVid(((pwr_sAttrRef*)val)->Objid.vid))
           sprintf(sval, "\"%s\"", cdh_AttrRefToString((pwr_sAttrRef*)val, 1));
         else {

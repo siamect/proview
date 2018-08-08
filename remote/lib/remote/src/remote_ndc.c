@@ -153,36 +153,6 @@ union i3e_s_be {
   } v;
 };
 
-#define IBYTE0(i) ((i >> 0x18) & 0x000000ff)
-#define IBYTE1(i) ((i >> 0x08) & 0x0000ff00)
-#define IBYTE2(i) ((i << 0x08) & 0x00ff0000)
-#define IBYTE3(i) ((i << 0x18) & 0xff000000)
-
-#ifndef ENDIAN_SWAP_INT
-#define ENDIAN_SWAP_INT(t, s)                                                  \
-  {                                                                            \
-    int i = *(int*)s;                                                          \
-    *(int*)t = (IBYTE0(i) | IBYTE1(i) | IBYTE2(i) | IBYTE3(i));                \
-  }
-#endif
-
-#define SBYTE0(s) ((s >> 0x08) & 0x00ff)
-#define SBYTE1(s) ((s << 0x08) & 0xff00)
-
-#ifndef ENDIAN_SWAP_SHORT
-#define ENDIAN_SWAP_SHORT(t, s)                                                \
-  {                                                                            \
-    short int i = *(short*)s;                                                  \
-    *(short*)t = (SBYTE0(i) | SBYTE1(i));                                      \
-  }
-#endif
-
-#define ENDIAN_SWAP_BOOL(t, s) ENDIAN_SWAP_INT(t, s)
-
-#define touchObject(op)                                                        \
-  if (op != NULL && op->l.flags.b.isCached)                                    \
-  cvolc_TouchObject(op)
-
 union {
   float ff;
   int ii;
@@ -288,7 +258,7 @@ pwr_tBoolean rndc_ConvertData(pwr_tStatus* sts, const gdb_sNode* np,
     char ebuf[80];
     sprintf(ebuf, "unknown op: %d", op);
     errh_Bugcheck(NDC__OP, ebuf);
-  } break;
+  }
   }
 
   pwr_Return(YES, sts, NDC__SUCCESS);

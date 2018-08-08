@@ -2377,7 +2377,7 @@ static void handleMessage(qcom_sGet* get)
 
 static void handleReturn(sSupActive* sp)
 {
-  sEvent* ep;
+  sEvent* ep = NULL;
 
   switch (sp->link.event) {
   case mh_eEvent_Alarm:
@@ -2415,8 +2415,8 @@ static void handlerEvent(
     pwr_eSystemEventTypeEnum event, pwr_tNodeIndex nix, int status)
 {
   mh_sApplMessage* ip;
-  sApplActive* hp;
-  sEvent* ep;
+  sApplActive* hp = NULL;
+  sEvent* ep = NULL;
   pwr_tBoolean local = FALSE;
   pwr_sClass_SystemSup* ssup;
   pwr_tOName attr;
@@ -2722,12 +2722,12 @@ static pwr_tStatus initSupActiveCB(pwr_tAttrRef* SupObject, pwr_tClassId cid,
     sSupActive** spp, pwr_tBoolean Allocate, pwr_tBoolean NewAttribute)
 {
   pwr_tStatus sts;
-  sASup* asp;
-  sDSup* dsp;
-  sASupComp* ascompp;
-  sDSupComp* dscompp;
-  pwr_sClass_NodeLinkSup* nlsp;
-  pwr_sClass_CycleSup* csp;
+  sASup* asp = NULL;
+  sDSup* dsp = NULL;
+  sASupComp* ascompp = NULL;
+  sDSupComp* dscompp = NULL;
+  pwr_sClass_NodeLinkSup* nlsp = NULL;
+  pwr_sClass_CycleSup* csp = NULL;
   pwr_tAttrRef Object;
   sSupActive* sp;
   gdh_tDlid Dlid;
@@ -3778,7 +3778,6 @@ static pwr_tBoolean reSendEventToOutunit(sOutunit* op, sEventTab* etp)
     errh_Error("source %d", ap->source);
     errh_Error("idx: %d, event: %d, ep: %d", etp->idx, etp->event, etp->ep);
     return FALSE;
-    break;
   }
 
   switch (event.message.Info.EventType) {
@@ -4311,15 +4310,15 @@ static void updateAlarmInfo(sActive* iap)
 
 static void updateSupActive(sSupActive* sp)
 {
-  pwr_tStatus sts;
+  pwr_tStatus sts = 0;
   sActive* ap;
   sASup* asp;
   sDSup* dsp;
   sASupComp* ascompp;
   sDSupComp* dscompp;
-  sSup* sup;
+  sSup* sup = NULL;
   mh_eAgent agent;
-  pwr_tClassId cid;
+  pwr_tClassId cid = 0;
   pwr_tBoolean newAttribute;
   LstLink(sSupActive)* dl = LstEnd(&l.detect_l);
 
@@ -4755,7 +4754,7 @@ static pwr_tStatus emon_redu_receive()
   int events;
   int i;
   LstLink(sActive) * al;
-  sActive *ap, *tp;
+  sActive *ap = NULL, *tp;
   sSupActive* sp;
   sEvent* ep;
   sOutunit* op;

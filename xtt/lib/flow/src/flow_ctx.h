@@ -87,11 +87,11 @@ public:
   int insert(FlowArrayElem* element)
   {
     return a.insert(element);
-  };
+  }
   void remove(FlowArrayElem* element)
   {
     a.remove(element);
-  };
+  }
   void delete_all();
   void delete_object(FlowArrayElem* element)
   {
@@ -103,56 +103,56 @@ public:
   int nodeclass_insert(FlowArrayElem* element)
   {
     return a_nc.insert(element);
-  };
+  }
   int conclass_insert(FlowArrayElem* element)
   {
     return a_cc.insert(element);
-  };
+  }
   int select_insert(FlowArrayElem* element)
   {
     return a_sel.insert(element);
-  };
+  }
   void select_remove(FlowArrayElem* element)
   {
     a_sel.remove(element);
-  };
+  }
   void select_clear();
   int select_find(FlowArrayElem* element)
   {
     return a_sel.find(element);
-  };
+  }
   int move_insert(FlowArrayElem* element)
   {
     return a_move.insert(element);
-  };
+  }
   void move_remove(FlowArrayElem* element)
   {
     a_move.remove(element);
-  };
+  }
   void move_clear()
   {
     a_move.clear();
-  };
+  }
   int move_find(FlowArrayElem* element)
   {
     return a_move.find(element);
-  };
+  }
   int paste_insert(FlowArrayElem* element)
   {
     return a_paste.insert(element);
-  };
+  }
   void paste_remove(FlowArrayElem* element)
   {
     a_paste.remove(element);
-  };
+  }
   void paste_clear()
   {
     a_paste.clear();
-  }; // Delete objects also !!!
+  } // Delete objects also !!!
   int paste_find(FlowArrayElem* element)
   {
     return a_paste.find(element);
-  };
+  }
   void paste();
   void paste_execute();
   void cut();
@@ -160,23 +160,23 @@ public:
   void set_highlight(int on)
   {
     a.set_highlight(on);
-  };
+  }
   void set_dimmed(int on)
   {
     a.set_dimmed(on);
-  };
+  }
   void set_inverse(int on)
   {
     a.set_inverse(on);
-  };
+  }
   void set_select_highlight(int on)
   {
     a_sel.set_highlight(on);
-  };
+  }
   void set_select_inverse(int on)
   {
     a_sel.set_inverse(on);
-  };
+  }
   void node_movement(FlowArrayElem* node, int x, int y);
   void con_create_source(FlowArrayElem* node, int cp_num, int cp_x, int cp_y);
   void con_create_dest(
@@ -188,32 +188,32 @@ public:
   {
     *list = a_sel.a;
     *size = a_sel.size();
-  };
+  }
   void get_pastelist(FlowArrayElem*** list, int* size)
   {
     *list = a_paste.a;
     *size = a_paste.size();
-  };
+  }
   void get_objectlist(FlowArrayElem*** list, int* size)
   {
     *list = a.a;
     *size = a.size();
-  };
+  }
   void get_conpoint_selectlist(FlowArrayElem*** list, int** num_list, int* size)
   {
     *list = conpoint_select_node;
     *num_list = conpoint_select_num;
     *size = conpoint_select_idx;
-  };
+  }
   void set_gridsize(double size_x, double size_y)
   {
     grid_size_x = size_x;
     grid_size_y = size_y;
-  };
+  }
   void set_grid(int on)
   {
     grid_on = on;
-  };
+  }
   void find_grid(double x, double y, double* x_grid, double* y_grid);
   FlowArrayElem* node_moved;
   int node_move_last_x;
@@ -259,11 +259,11 @@ public:
   void set_default_conclass(void* cc)
   {
     default_conclass = cc;
-  };
+  }
   void* get_default_conclass()
   {
     return default_conclass;
-  };
+  }
   void print(double ll_x, double ll_y, double ur_x, double ur_y);
   void draw(int ll_x, int ll_y, int ur_x, int ur_y);
   void clear();
@@ -312,7 +312,7 @@ public:
   {
     callback_object = object;
     callback_object_type = type;
-  };
+  }
   void select_region_insert(double ll_x, double ll_y, double ur_x, double ur_y)
   {
     a.select_region_insert(ll_x, ll_y, ur_x, ur_y);
@@ -325,7 +325,7 @@ public:
   void set_user_highlight(int mode)
   {
     user_highlight = mode;
-  };
+  }
   double grid_size_x;
   double grid_size_y;
   int grid_on;
@@ -349,11 +349,11 @@ public:
   void conpoint_refcon_redraw(void* node, int conpoint)
   {
     a.conpoint_refcon_redraw(node, conpoint);
-  };
+  }
   void conpoint_refcon_erase(void* node, int conpoint)
   {
     a.conpoint_refcon_erase(node, conpoint);
-  };
+  }
   FlowArrayElem* get_node_from_name(char* name);
   FlowArrayElem* get_nodeclass_from_name(char* name);
   FlowArrayElem* get_conclass_from_name(char* name);
@@ -391,16 +391,16 @@ public:
   {
     *pix_x = int(x * zoom_factor - offset_x);
     *pix_y = int(y * zoom_factor - offset_y);
-  };
+  }
   void pixel_to_position(int pix_x, int pix_y, double* x, double* y)
   {
     *x = double(pix_x + offset_x) / zoom_factor;
     *y = double(pix_y + offset_y) / zoom_factor;
-  };
+  }
   void unzoom()
   {
     zoom(base_zoom_factor / zoom_factor);
-  };
+  }
   void center_object(FlowArrayElem* object);
   FlowArrayElem* get_document(double x, double y);
   int unobscured;
@@ -415,12 +415,12 @@ public:
   void set_nodraw()
   {
     nodraw++;
-  };
+  }
   void reset_nodraw()
   {
     if (nodraw)
       nodraw--;
-  };
+  }
   void reconfigure();
   void redraw();
   void object_deleted(FlowArrayElem* object);
@@ -430,12 +430,12 @@ public:
   int type()
   {
     return ctx_type;
-  };
+  }
   void move_widgets(int x, int y)
   {
     if (widget_cnt)
       a.move_widgets(x, y);
-  };
+  }
   int display_level;
   void scroll(int delta_x, int delta_y);
   void scroll(double delta_x, double delta_y);
@@ -446,20 +446,20 @@ public:
   {
     scroll_data = data;
     scroll_callback = callback;
-  };
+  }
   void change_scrollbar();
   int find_by_name(char* name, FlowArrayElem** element)
   {
     return a.find_by_name(name, element);
-  };
+  }
   int find_by_name_no_case(char* name, FlowArrayElem** element)
   {
     return a.find_by_name_no_case(name, element);
-  };
+  }
   void get_zoom(double* zoom)
   {
     *zoom = zoom_factor;
-  };
+  }
   int get_next_object(
       FlowArrayElem* object, flow_eDirection dir, FlowArrayElem** next);
   int get_next_conpoint(FlowArrayElem* object, int cp_num, flow_eDirection dir,

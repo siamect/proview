@@ -68,7 +68,6 @@
 
 #define SENS 1
 #define INSENS 0
-#define DONT_SET_SENS -1
 /* 24 hours in seconds */
 #define ONEDAY 86400
 
@@ -903,7 +902,7 @@ void Hist::printSearchStr()
 int Hist::GoBackMonth(pwr_tTime TimeIn, pwr_tTime* FromTime, pwr_tTime* ToTime)
 {
   struct tm* Tm;
-  int DaysOfMonth, Month, TmYear, Year;
+  int DaysOfMonth = 0, Month, TmYear, Year;
 
   /* Get the time in and blank time values. */
 

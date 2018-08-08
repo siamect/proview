@@ -195,7 +195,6 @@ int FlowRadiobutton::event_handler(
       if (sts == FLOW__DESTROYED)
         return sts;
       return FLOW__NO_PROPAGATE;
-      break;
     default:;
     }
     return 1;

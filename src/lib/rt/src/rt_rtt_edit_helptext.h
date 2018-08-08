@@ -338,5 +338,5 @@ Syntax check in a picture. Check of syntax in the update items\n\n\
 rtt_edit> syntax\n\
 " },
   {
-      0, "",
+      0, "", "", ""
   } };

@@ -189,7 +189,6 @@ static pwr_tStatus plc_redu_receive_active(plc_sThread* tp)
     return sts;
 
   switch (((redu_sHeader*)msg)->type) {
-    break;
   case redu_eMsgType_Table:
     if (tp->redu->t)
       redu_free_table(tp->redu);
@@ -304,7 +303,7 @@ static pwr_tStatus plc_redu_send(plc_sThread* tp)
 
 void plc_thread(plc_sThread* tp)
 {
-  pwr_tStatus sts;
+  pwr_tStatus sts = 0;
   int rel_vec;
   long int phase;
   uid_t ruid;

@@ -193,10 +193,8 @@ static pwr_tBoolean freeItem(pwr_tStatus* sts, pool_sHead* php, pool_sEntry* ep)
     lp->next = offs;
     gpsp->alloccnt--;
     return YES;
-    break;
   case pool_eSegType_named:
     errh_ReturnOrBugcheck(NO, sts, POOL__FREENAMED, "");
-    break;
   default:
     break;
   }
@@ -552,7 +550,7 @@ pwr_tBoolean pool_AllocLookasideSegment(
   pool_sSegment* psp;
   pool_tRef offs;
   pwr_tUInt32 esize;
-  pool_sEntry* ep;
+  pool_sEntry* ep = NULL;
 
   gphp = php->gphp;
 

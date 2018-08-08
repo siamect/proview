@@ -40,33 +40,19 @@
 #include "co_status.h"
 
 class co_error : public co_status {
-  public:
-  co_error(){};
-  co_error(pwr_tStatus sts) : co_status(sts)
-  {
-  }
+public:
+  co_error();
+  co_error(pwr_tStatus sts);
+  virtual std::string what() const;
 };
 
 class co_error_str : public co_error {
   std::string m_error_str;
 
-  public:
-  co_error_str(std::string str) : m_error_str(str)
-  {
-  }
-  co_error_str(pwr_tStatus sts, std::string str)
-      : co_error(sts), m_error_str(str)
-  {
-  }
-  std::string what() const
-  {
-    std::string s;
-    if (m_sts)
-      s = m_error_str + ", " + co_error::what();
-    else
-      s = m_error_str;
-    return s;
-  }
+public:
+  co_error_str(std::string str);
+  co_error_str(pwr_tStatus sts, std::string str);
+  std::string what() const;
 };
 
 #endif

@@ -67,9 +67,6 @@
 #include "wb_wnav_msg.h"
 #include "wb_wrev.h"
 
-#define WNAV_MENU_CREATE 0
-#define WNAV_MENU_ADD 1
-
 static char wtt_version[] = pwrv_cPwrVersionStr;
 static WNav* current_wnav[20];
 static int wnav_cnt = 0;
@@ -232,7 +229,7 @@ dcli_tCmdTable wnav_command_table[] = {
           "/OUT", "/WINDOW", "" },
   },
   {
-      "",
+      "", NULL, { "" }
   }
 };
 
@@ -3419,7 +3416,7 @@ static int wnav_create_func(void* client_data, void* client_flag)
     char destination_str[80];
     char command_str[80];
     int dest_code;
-    int item_type;
+    int item_type = 0;
     wnav_sMenu* menu_item;
 
     if (wnav->window_type == wnav_eWindowType_No)
@@ -3619,7 +3616,7 @@ static int wnav_create_func(void* client_data, void* client_flag)
     pwr_tStatus sts;
     pwr_tCid cid;
     pwr_tVid vid;
-    ldh_eVolRep volrep;
+    ldh_eVolRep volrep = ldh_eVolRep_Db;
 
     // Command is "CREATE VOLUME"
 
@@ -4233,7 +4230,6 @@ static int wnav_wb_func(void* client_data, void* client_flag)
     wnav->message('E', "Syntax error");
     return WNAV__SYNTAX;
   }
-  return 1;
 }
 
 static int wnav_exit_func(void* client_data, void* client_flag)
@@ -4355,7 +4351,7 @@ static int wnav_revision_func(void* client_data, void* client_flag)
 static int wnav_crossref_func(void* client_data, void* client_flag)
 {
   WNav* wnav = (WNav*)client_data;
-  int sts;
+  int sts = 0;
   pwr_tFileName file_str;
   char string_str[80];
   char func_str[80];
@@ -4627,7 +4623,7 @@ static int wnav_build_func(void* client_data, void* client_flag)
     int volumecount;
     lfu_t_volumelist* vp;
     int found;
-    int node_type;
+    int node_type = 0;
 
     if (EVEN(dcli_get_qualifier("/NAME", namestr, sizeof(namestr)))) {
       if (EVEN(dcli_get_qualifier("dcli_arg2", namestr, sizeof(namestr)))) {
@@ -5298,7 +5294,7 @@ static void wnav_clone_volume_cb(void* ctx, char* text, int ok_pressed)
 {
   WNav* wnav = (WNav*)ctx;
   pwr_tObjName vname;
-  pwr_tVid vid;
+  pwr_tVid vid = 0;
   pwr_tStatus sts;
 
   // Get vid from project volume list
@@ -5345,7 +5341,7 @@ static int wnav_clone_func(void* client_data, void* client_flag)
   if (cdh_NoCaseStrncmp(arg1_str, "VOLUME", strlen(arg1_str)) == 0) {
     pwr_tObjName namestr;
     pwr_tStatus sts;
-    pwr_tVid vid;
+    pwr_tVid vid = 0;
     int clone_cnt = 0;
 
     // command  is "CLONE VOLUME"
@@ -5622,7 +5618,7 @@ int WNav::show_volume(int pop)
 int WNav::get_rootlist()
 {
   pwr_tObjid root;
-  int sts;
+  int sts = 0;
   int class_cnt;
   pwr_tClassId valid_class[100];
   int i;
@@ -6186,7 +6182,7 @@ static int wnav_opengraph_func(void* filectx, ccm_sArg* arg_list, int arg_count,
 {
   WNav* wnav;
   ccm_sArg* arg_p2;
-  ccm_sArg* arg_p3;
+  ccm_sArg* arg_p3 = NULL;
   int sts;
   pwr_tCmd cmd;
 
@@ -6566,7 +6562,7 @@ int WNav::readcmdfile(char* incommand)
 int wnav_cut_segments(char* outname, char* name, int segments)
 {
   char* s[20];
-  int i, j, last_i;
+  int i, j, last_i = 0;
 
   for (i = 0; i < segments; i++) {
     s[i] = strrchr(name, '-');
@@ -6729,7 +6725,7 @@ int WNav::search_next()
 int WNav::search_root(char* search_str, pwr_tObjid* found_objid, int next)
 {
   pwr_tObjid root;
-  int sts, search_sts;
+  int sts = 0, search_sts;
   int class_cnt;
   pwr_tClassId valid_class[100];
   int i;

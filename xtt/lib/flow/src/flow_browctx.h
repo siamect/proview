@@ -48,7 +48,7 @@ public:
         annotation_space(0.3)
   {
     ctx_type = flow_eCtxType_Brow;
-  };
+  }
   int insert(FlowArrayElem* element, FlowArrayElem* destination,
       flow_eDest destination_code);
   void close(FlowArrayElem* element);
@@ -60,7 +60,7 @@ public:
   void unzoom()
   {
     zoom(base_zoom_factor / zoom_factor);
-  };
+  }
   int print(char* filename);
   void print_draw_page(void* context, const char* title, int page,
       flow_eOrientation orientation, double scale);
@@ -68,43 +68,43 @@ public:
   int get_first(FlowArrayElem** first)
   {
     return a.get_first(first);
-  };
+  }
   int get_last(FlowArrayElem** last)
   {
     return a.get_last(last);
-  };
+  }
   int get_previous(FlowArrayElem* element, FlowArrayElem** prev)
   {
     return a.get_previous(element, prev);
-  };
+  }
   int get_next(FlowArrayElem* element, FlowArrayElem** next)
   {
     return a.get_next(element, next);
-  };
+  }
   int get_parent(FlowArrayElem* element, FlowArrayElem** parent)
   {
     return a.brow_get_parent(element, parent);
-  };
+  }
   int get_child(FlowArrayElem* element, FlowArrayElem** child)
   {
     return a.brow_get_child(element, child);
-  };
+  }
   int get_next_sibling(FlowArrayElem* element, FlowArrayElem** sibling)
   {
     return a.brow_get_next_sibling(element, sibling);
-  };
+  }
   int get_previous_sibling(FlowArrayElem* element, FlowArrayElem** sibling)
   {
     return a.brow_get_previous_sibling(element, sibling);
-  };
+  }
   int move_up(FlowArrayElem* element)
   {
     return a.move_up(element);
-  };
+  }
   int move_down(FlowArrayElem* element)
   {
     return a.move_down(element);
-  };
+  }
   int sort_children(
       FlowArrayElem* element, int offset, int (*comp)(const void*, const void*))
   {
@@ -117,7 +117,7 @@ public:
   int page(double factor);
   void zoom_absolute(double factor);
 
-  ~BrowCtx(){};
+  ~BrowCtx(){}
   double indentation;
   double frame_x_right;
   double annotation_space;

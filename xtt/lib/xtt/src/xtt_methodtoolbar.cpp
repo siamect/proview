@@ -51,3 +51,16 @@ XttMethodToolbar::XttMethodToolbar(void* parent_ctx, void* xnav,
 {
   strcpy(m_tooltip_suffix, tooltip_suffix);
 }
+
+XttMethodToolbar::~XttMethodToolbar()
+{
+}
+
+void XttMethodToolbar::set_sensitive()
+{
+}
+
+void XttMethodToolbar::disable()
+{
+  m_disabled = 1;
+}

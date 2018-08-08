@@ -53,10 +53,12 @@
 #include "xnav_bitmap_attr12.h"
 #include "xnav_bitmap_attrarra12.h"
 
+/*
 #define TBLNAV__INPUT_SYNTAX 2
 #define TBLNAV__OBJNOTFOUND 4
 #define TBLNAV__STRINGTOLONG 6
 #define TBLNAV__ITEM_NOCREA 8
+*/
 #define TBLNAV__SUCCESS 1
 
 void TblNav::message(char sev, const char* text)
@@ -633,6 +635,19 @@ void TblNav::add_item_command(char* name, char* command)
   tree_add(name, commandlist.size() - 1, tblnav_eTreeItemType_Command);
 }
 
+ItemBase::ItemBase(tblnav_eItemType t) : type(t)
+{
+}
+
+ItemBase::~ItemBase()
+{
+}
+
+int ItemBase::close(TblNav* tblnav, double x, double y)
+{
+  return 1;
+}
+
 ItemLocal::ItemLocal(TblNav* tblnav, TblNav_sevhistobject* xitem,
     brow_tNode dest, flow_eDest dest_code)
     : ItemBase(tblnav_eItemType_Local), item(*xitem)
@@ -815,6 +830,10 @@ ItemLocalAttr::ItemLocalAttr(TblNav* tblnav, const char* name, char* value,
   brow_SetAnnotation(node, 1, value, strlen(value));
 }
 
+ItemLocalAttr::~ItemLocalAttr()
+{
+}
+
 ItemTreeLocal::ItemTreeLocal(TblNav* tblnav, TblNav_sevhistobject* xitem,
     int index, brow_tNode dest, flow_eDest dest_code)
     : ItemLocal(tblnav, xitem, dest, dest_code), idx(index)
@@ -835,28 +854,8 @@ ItemTreeLocal::ItemTreeLocal(TblNav* tblnav, TblNav_sevhistobject* xitem,
   brow_SetAnnotation(node, 0, aname, strlen(aname));
 }
 
-ItemTreeCommand::ItemTreeCommand(TblNav* tblnav, TblNav_command* xitem,
-    int index, brow_tNode dest, flow_eDest dest_code)
-    : ItemBase(tblnav_eItemType_TreeCommand), item(*xitem), idx(index)
+ItemTreeLocal::~ItemTreeLocal()
 {
-  pwr_tAName aname;
-  char* s;
-
-  type = tblnav_eItemType_TreeCommand;
-  if ((s = strrchr(item.oname, '-')))
-    strcpy(aname, s + 1);
-  else
-    strcpy(aname, item.oname);
-
-  brow_CreateNode(tblnav->brow->ctx, "TreeNodeCommand", tblnav->brow->nc_attr,
-      dest, dest_code, (void*)this, 1, &node);
-
-  if (tblnav->tree[idx].fch)
-    brow_SetAnnotPixmap(node, 0, tblnav->brow->pixmap_map);
-  else
-    brow_SetAnnotPixmap(node, 0, tblnav->brow->pixmap_leaf);
-
-  brow_SetAnnotation(node, 0, aname, strlen(aname));
 }
 
 ItemTreeNode::ItemTreeNode(TblNav* tblnav, char* name, int index,
@@ -872,6 +871,10 @@ ItemTreeNode::ItemTreeNode(TblNav* tblnav, char* name, int index,
     brow_SetAnnotPixmap(node, 0, tblnav->brow->pixmap_leaf);
 
   brow_SetAnnotation(node, 0, name, strlen(name));
+}
+
+ItemTreeNode::~ItemTreeNode()
+{
 }
 
 int ItemTreeNode::open_children(TblNav* tblnav, double x, double y)
@@ -927,6 +930,34 @@ int ItemTreeNode::close(TblNav* tblnav, double x, double y)
     brow_Redraw(tblnav->brow->ctx, node_y);
   }
   return 1;
+}
+
+ItemTreeCommand::ItemTreeCommand(TblNav* tblnav, TblNav_command* xitem,
+    int index, brow_tNode dest, flow_eDest dest_code)
+    : ItemBase(tblnav_eItemType_TreeCommand), item(*xitem), idx(index)
+{
+  pwr_tAName aname;
+  char* s;
+
+  type = tblnav_eItemType_TreeCommand;
+  if ((s = strrchr(item.oname, '-')))
+    strcpy(aname, s + 1);
+  else
+    strcpy(aname, item.oname);
+
+  brow_CreateNode(tblnav->brow->ctx, "TreeNodeCommand", tblnav->brow->nc_attr,
+      dest, dest_code, (void*)this, 1, &node);
+
+  if (tblnav->tree[idx].fch)
+    brow_SetAnnotPixmap(node, 0, tblnav->brow->pixmap_map);
+  else
+    brow_SetAnnotPixmap(node, 0, tblnav->brow->pixmap_leaf);
+
+  brow_SetAnnotation(node, 0, aname, strlen(aname));
+}
+
+ItemTreeCommand::~ItemTreeCommand()
+{
 }
 
 void TblNav::build_tree()

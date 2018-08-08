@@ -102,7 +102,6 @@ definition* get_definition()
     break;
   case TOK_EOF:
     return (NULL);
-    break;
   default:
     error("definition keyword expected");
   }

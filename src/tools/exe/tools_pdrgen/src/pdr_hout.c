@@ -56,7 +56,7 @@ static void pconstdef(definition* def);
 
 static void pstructdef(definition* def);
 
-static void puniondef(definition* def);
+//static void puniondef(definition* def);
 
 static void pdefine(char* name, char* num);
 
@@ -92,8 +92,8 @@ void print_datadef(definition* def)
     fprintf(stderr, "*** Error: Union not supported\n");
     exit(1);
 
-    puniondef(def);
-    break;
+    //puniondef(def);
+    //break;
   case DEF_ENUM:
     penumdef(def);
     break;
@@ -134,6 +134,7 @@ static void pstructdef(definition* def)
   f_print(fout, "typedef struct %s %s;\n", name, name);
 }
 
+/*
 static void puniondef(definition* def)
 {
   case_list* l;
@@ -159,6 +160,7 @@ static void puniondef(definition* def)
   f_print(fout, "};\n");
   f_print(fout, "typedef struct %s %s;\n", name, name);
 }
+*/
 
 static void pdefine(char* name, char* num)
 {
@@ -185,8 +187,6 @@ static int define_printed(proc_list* stop, version_list* start)
     }
   }
   abort();
-  /* NOTREACHED */
-  return -1;
 }
 
 static void pprogramdef(definition* def)

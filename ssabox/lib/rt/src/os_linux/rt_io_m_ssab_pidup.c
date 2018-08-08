@@ -61,7 +61,7 @@
 
 \*----------------------------------------------------------------------------*/
 
-#define init_mask 0x0001
+//#define init_mask 0x0001
 #define inc3p_mask 0x0002
 #define pos3p_mask 0x0004
 #define ao_mask 0x0008
@@ -314,7 +314,7 @@ static pwr_tStatus IoCardRead(
         (unsigned int*)&local->objP->OutVal, (unsigned int*)&c_stat.OutVal);
     swap_word((unsigned int*)&local->objP->ControlDiff,
         (unsigned int*)&c_stat.ControlDiff);
-    if (local->objP->BiasGain != 0)
+    if (!feqf(local->objP->BiasGain, 0.0f))
       swap_word((unsigned int*)&local->objP->Bias, (unsigned int*)&c_stat.Bias);
     local->objP->EndMin = c_stat.EndMin;
     local->objP->EndMax = c_stat.EndMax;
@@ -365,29 +365,29 @@ static pwr_tStatus IoCardWrite(
   /* Check if static parameters has changed */
   if ((local->objP->PidAlg != local->Par.PidAlg)
       || (local->objP->Inverse != local->Par.Inverse)
-      || (local->objP->PidGain != local->Par.PidGain)
-      || (local->objP->IntTime != local->Par.IntTime)
-      || (local->objP->DerTime != local->Par.DerTime)
-      || (local->objP->DerGain != local->Par.DerGain)
-      || (local->objP->BiasGain != local->Par.BiasGain)
-      || (local->objP->MinOut != local->Par.MinOut)
-      || (local->objP->MaxOut != local->Par.MaxOut)
-      || (local->objP->EndHys != local->Par.EndHys)
-      || (local->objP->ProcFiltTime != local->Par.ProcFiltTime)
-      || (local->objP->ProcMax != local->ProcRange.Max)
-      || (local->objP->ProcMin != local->ProcRange.Min)
-      || (local->objP->AoMax != local->AoRange.Max)
-      || (local->objP->AoMin != local->AoRange.Min)
-      || (local->Par.inc3pGain != local->objP->Inc3pGain)
-      || (local->Par.MinTim != local->objP->MinTim)
-      || (local->Par.MaxTim != local->objP->MaxTim)
-      || (local->Par.MaxInteg != local->objP->MaxInteg))
+      || !feqf(local->objP->PidGain, local->Par.PidGain)
+      || !feqf(local->objP->IntTime, local->Par.IntTime)
+      || !feqf(local->objP->DerTime, local->Par.DerTime)
+      || !feqf(local->objP->DerGain, local->Par.DerGain)
+      || !feqf(local->objP->BiasGain, local->Par.BiasGain)
+      || !feqf(local->objP->MinOut, local->Par.MinOut)
+      || !feqf(local->objP->MaxOut, local->Par.MaxOut)
+      || !feqf(local->objP->EndHys, local->Par.EndHys)
+      || !feqf(local->objP->ProcFiltTime, local->Par.ProcFiltTime)
+      || !feqf(local->objP->ProcMax, local->ProcRange.Max)
+      || !feqf(local->objP->ProcMin, local->ProcRange.Min)
+      || !feqf(local->objP->AoMax, local->AoRange.Max)
+      || !feqf(local->objP->AoMin, local->AoRange.Min)
+      || !feqf(local->Par.inc3pGain, local->objP->Inc3pGain)
+      || !feqf(local->Par.MinTim, local->objP->MinTim)
+      || !feqf(local->Par.MaxTim, local->objP->MaxTim)
+      || !feqf(local->Par.MaxInteg, local->objP->MaxInteg))
     paramc = 1;
 
   /* Check if dynamic parameters has changed */
-  if ((local->objP->SetVal != local->Dyn.SetVal)
-      || (local->objP->Bias != local->Dyn.BiasD)
-      || (local->objP->ForcVal != local->Dyn.ForcVal)
+  if (!feqf(local->objP->SetVal, local->Dyn.SetVal)
+      || !feqf(local->objP->Bias, local->Dyn.BiasD)
+      || !feqf(local->objP->ForcVal, local->Dyn.ForcVal)
       || (local->objP->IntOff != local->Dyn.IntOff)
       || (local->objP->Force != local->Dyn.Force))
     dynparc = 1;
@@ -403,7 +403,7 @@ static pwr_tStatus IoCardWrite(
     local->ProcRange.Min = local->objP->ProcMin;
     local->ProcRange.RawMax = local->objP->ProcRawMax;
     local->ProcRange.RawMin = local->objP->ProcRawMin;
-    if (local->ProcRange.RawMax != local->ProcRange.RawMin) {
+    if (!feqf(local->ProcRange.RawMax, local->ProcRange.RawMin)) {
       local->Par.AVcoeff[0] = (local->ProcRange.Max - local->ProcRange.Min)
           / (local->ProcRange.RawMax - local->ProcRange.RawMin);
       local->Par.AVcoeff[1] = local->ProcRange.Min
@@ -413,7 +413,7 @@ static pwr_tStatus IoCardWrite(
     local->BiasRange.Min = local->objP->BiasMin;
     local->BiasRange.RawMax = local->objP->BiasRawMax;
     local->BiasRange.RawMin = local->objP->BiasRawMin;
-    if (local->BiasRange.RawMax != local->BiasRange.RawMin) {
+    if (!feqf(local->BiasRange.RawMax, local->BiasRange.RawMin)) {
       local->Par.BVcoeff[0] = (local->BiasRange.Max - local->BiasRange.Min)
           / (local->BiasRange.RawMax - local->BiasRange.RawMin);
       local->Par.BVcoeff[1] = local->BiasRange.Min
@@ -423,7 +423,7 @@ static pwr_tStatus IoCardWrite(
     local->AoRange.Min = local->objP->AoMin;
     local->AoRange.RawMax = local->objP->AoRawMax;
     local->AoRange.RawMin = local->objP->AoRawMin;
-    if (local->AoRange.Max != local->AoRange.Min) {
+    if (!feqf(local->AoRange.Max, local->AoRange.Min)) {
       local->Par.OVcoeff[0] = (local->AoRange.RawMax - local->AoRange.RawMin)
           / (local->AoRange.Max - local->AoRange.Min);
       local->Par.OVcoeff[1]
@@ -433,7 +433,7 @@ static pwr_tStatus IoCardWrite(
     local->PosRange.Min = local->objP->PosMin;
     local->PosRange.RawMax = local->objP->PosRawMax;
     local->PosRange.RawMin = local->objP->PosRawMin;
-    if (local->PosRange.RawMax != local->PosRange.RawMin) {
+    if (!feqf(local->PosRange.RawMax, local->PosRange.RawMin)) {
       local->Par.PVcoeff[0] = (local->PosRange.Max - local->PosRange.Min)
           / (local->PosRange.RawMax - local->PosRange.RawMin);
       local->Par.PVcoeff[1] = local->PosRange.Min

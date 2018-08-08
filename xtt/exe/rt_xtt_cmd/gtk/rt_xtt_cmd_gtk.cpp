@@ -190,5 +190,4 @@ GNU General Public License for more details.\n\n";
     while (gtk_events_pending())
       gtk_main_iteration();
   }
-  dcli_input_end(&cmd->chn, cmd->recall_buf);
 }

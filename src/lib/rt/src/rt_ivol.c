@@ -126,7 +126,7 @@ static pwr_tBoolean mountClients(pwr_tStatus* sts, gdb_sVolume* vp)
 
 static gdb_sVolume* mountVolume(pwr_tStatus* sts, gdb_sObject* op)
 {
-  gdb_sVolume* vp;
+  gdb_sVolume* vp = NULL;
   gdb_sMountServer* msp;
   void* p;
   pwr_tObjid soid = pwr_cNObjid;

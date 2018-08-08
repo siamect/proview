@@ -49,33 +49,20 @@
   implement the virtual functions open(), close() and scan().
 */
 class rt_appl {
-  public:
+public:
   //! Constructor.
-  rt_appl(const char* name, //< Process name.
-      errh_eAnix anix, //< Application index.
-      double scantime = 1.0, //< Scantime for call of the scan() function.
-      qcom_sQid qid = qcom_cNQid //< Qcom queue identity.
-      )
-      : m_anix(anix), m_scantime(scantime), m_maxdelay(5), m_qid(qid)
-  {
-    strcpy(m_name, name);
-  }
+  rt_appl(const char* name, ///< Process name.
+      errh_eAnix anix, ///< Application index.
+      double scantime = 1.0, ///< Scantime for call of the scan() function.
+      qcom_sQid qid = qcom_cNQid ///< Qcom queue identity.
+      );
   void init();
 
   void register_appl(const char* name);
   void mainloop();
-  double scantime()
-  {
-    return m_scantime;
-  }
-  void set_scantime(double time)
-  {
-    m_scantime = time;
-  }
-  pwr_tOid& apploid()
-  {
-    return m_apploid;
-  }
+  double scantime();
+  void set_scantime(double time);
+  pwr_tOid& apploid();
 
   //! Initialize the application.
   /*! The open() function is called after initialization, and may contain setup
@@ -84,13 +71,13 @@ class rt_appl {
 
     The open() function is also called after a soft restart.
   */
-  virtual void open(){};
+  virtual void open();
 
   //! Closes the application.
   /*! the close() is called when a restart or stop event is received. It should
     unlink to all direct links.
   */
-  virtual void close(){};
+  virtual void close();
 
   //! Cyclic function.
   /*! The scan() function is called cyclic with the scantime specified in the
@@ -98,13 +85,11 @@ class rt_appl {
     In this function all the control and supervision work of the application is
     placed.
   */
-  virtual void scan(){};
+  virtual void scan();
 
-  virtual ~rt_appl()
-  {
-  }
+  virtual ~rt_appl();
 
-  private:
+private:
   errh_eAnix m_anix;
   double m_scantime;
   double m_maxdelay;

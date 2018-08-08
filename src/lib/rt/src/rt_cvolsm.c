@@ -333,7 +333,7 @@ void cvolsm_SetObjectInfo(qcom_sGet* get)
   pwr_tStatus sts;
   mvol_sAttribute Attribute;
   mvol_sAttribute* ap;
-  void* p;
+  void* p = NULL;
   net_sSetObjectInfoR* rmp;
   qcom_sPut put;
   net_sSetObjectInfo* mp = get->data;

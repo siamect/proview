@@ -46,12 +46,95 @@ bool CoWow::m_printdialog_disable = false;
 char CoWow::m_default_printer[80] = "";
 void* CoWow::m_transient_wid = 0;
 
+CoWowTimer::CoWowTimer()
+{
+}
+
+CoWowTimer::~CoWowTimer()
+{
+}
+
+void CoWowTimer::add(int time, void (*callback)(void* data), void* data)
+{
+}
+
+void CoWowTimer::remove()
+{
+}
+
 CoWowRecall::CoWowRecall() : m_current_recall_line(0)
 {
   memset(m_recall, 0, sizeof(m_recall));
 }
 
+CoWow::CoWow()
+{
+}
+
 CoWow::~CoWow()
+{
+}
+
+void CoWow::DisplayQuestion(void* ctx, const char* title, const char* text,
+    void (*questionbox_ok)(void*, void*),
+    void (*questionbox_cancel)(void*, void*), void* data)
+{
+}
+
+void CoWow::DisplayError(const char* title, const char* text,
+    lng_eCoding coding)
+{
+}
+
+void CoWow::DisplayText(
+    const char* title, const char* text, int width, int height)
+{
+}
+
+void CoWow::CreateInputDialog(void* ctx, const char* title,
+    const char* text, void (*inputdialogbox_ok)(void*, void*, char*),
+    void (*inputdialogbox_cancel)(void*, void*), int input_length,
+    char* init_text, void* data)
+{
+}
+
+void* CoWow::CreateList(const char* title, const char* texts,
+    int textsize, void(action_cb)(void*, char*, int), void(cancel_cb)(void*),
+    void* ctx, int show_apply_button)
+{
+  return NULL;
+}
+
+void CoWow::PopList(void* ctx)
+{
+}
+
+void CoWow::DeleteList(void* ctx)
+{
+}
+
+void CoWow::CreateFileSelDia(const char* title, void* parent_ctx,
+    void (*file_selected_cb)(void*, char*, wow_eFileSelType),
+    wow_eFileSelType file_type)
+{
+}
+
+int CoWow::CreateModalDialog(const char* title, const char* text,
+    const char* button1, const char* button2, const char* button3,
+    const char* image)
+{
+  return wow_eModalDialogReturn_NYI;
+}
+
+wow_sModalInputDialog* CoWow::CreateModalInputDialog(const char* title,
+    const char* text, const char* button1, const char* button2,
+    const char* button3, const char* image, int input_length,
+    CoWowRecall* recall)
+{
+  return 0;
+}
+
+void CoWow::Wait(float time)
 {
 }
 
@@ -77,12 +160,10 @@ void* CoWow::CreateFileList(const char* title, const char* dir,
   int i, cnt;
 
   if (type) {
-    if (type[0] == '.')
-      strncat(stype, type, sizeof(stype));
-    else {
+    if (type[0] != '.') {
       strcpy(stype, ".");
-      strncat(stype, type, sizeof(stype) - 1);
     }
+    strncat(stype, type, sizeof(stype) - strlen(stype) - 1);
     sprintf(file_spec, "%s/%s%s", dir, pattern, stype);
   } else
     sprintf(file_spec, "%s/%s", dir, pattern);
@@ -120,7 +201,64 @@ void* CoWow::CreateFileList(const char* title, const char* dir,
       show_apply_button);
 }
 
+int CoWow::DisplayWarranty()
+{
+  return 0;
+}
+
+void CoWow::DisplayLicense()
+{
+}
+
+CoWowTimer* CoWow::timer_new()
+{
+  return 0;
+}
+
+pwr_tStatus CoWow::CreateMenuItem(
+    const char* name, void* menu, int pixmap, int append, void* w)
+{
+  return 0;
+}
+
+pwr_tStatus CoWow::DeleteMenuItem(const char* name, void* menu)
+{
+  return 0;
+}
+
+void CoWow::CreateBrowPrintDialog(const char* title, void* brow_ctx,
+    int orientation, double scale, void* parent_widget, pwr_tStatus* sts)
+{
+  *sts = WOW__NYI;
+}
+
+void CoWow::CreateFlowPrintDialog(const char* title, void* flow_ctx,
+    int orientation, double scale, void* parent_widget, pwr_tStatus* sts)
+{
+  *sts = WOW__NYI;
+}
+
 void CoWow::SetDefaultPrinter(const char* printer)
 {
   strncpy(m_default_printer, printer, sizeof(m_default_printer));
+}
+
+void CoWow::DisablePrintDialog()
+{
+  m_printdialog_disable = true;
+}
+
+bool CoWow::PrintDialogIsDisabled()
+{
+  return m_printdialog_disable;
+}
+
+void CoWow::SetAutoRemove(bool on)
+{
+  m_autoremove = on;
+}
+
+void CoWow::SetTransient(void* transient_wid)
+{
+  m_transient_wid = transient_wid;
 }

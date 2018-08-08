@@ -54,8 +54,6 @@ extern "C" {
 #include "flow_topdf.h"
 #include "co_lng.h"
 
-#define CNV_TAB 18
-
 #define pdf_cHead "%PDF-1.4"
 
 CnvContentElem::CnvContentElem() : page_number(0), header_level(0)
@@ -503,7 +501,7 @@ void CnvToPdf::draw_triangle(double lw, double x, double y, double w, double h)
 void CnvToPdf::draw_filled_triangle(
     flow_eDrawType color, double x, double y, double w, double h)
 {
-  float r, g, b;
+  float r = 0.0, g = 0.0, b = 0.0;
 
   if (color == flow_eDrawType_LineRed || color == flow_eDrawType_Yellow) {
     if (color == flow_eDrawType_LineRed) {

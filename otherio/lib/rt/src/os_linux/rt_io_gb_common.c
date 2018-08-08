@@ -42,7 +42,7 @@
 #define PWM_BASE (BCM2708_PERI_BASE + 0x20C000) /* PWM    */
 #define SPI0_BASE (BCM2708_PERI_BASE + 0x204000) /* SPI0 controller */
 #define UART0_BASE (BCM2708_PERI_BASE + 0x201000) /* Uart 0 */
-#define UART1_BASE (BCM2708_PERI_BASE + 0x215000) /* Uart 1 (not used) */
+//#define UART1_BASE (BCM2708_PERI_BASE + 0x215000) /* Uart 1 (not used) */
 
 #include <string.h>
 #include <stdlib.h>
@@ -78,6 +78,7 @@ volatile unsigned* uart;
 
 // GPIO setup macros. Always use INP_GPIO(x) before using OUT_GPIO(x) or
 // SET_GPIO_ALT(x,y)
+/*
 #define INP_GPIO(g) *(gpio + ((g) / 10)) &= ~(7 << (((g) % 10) * 3))
 #define OUT_GPIO(g) *(gpio + ((g) / 10)) |= (1 << (((g) % 10) * 3))
 #define SET_GPIO_ALT(g, a)                                                     \
@@ -98,6 +99,7 @@ volatile unsigned* uart;
 
 #define UART0_BAUD_HI *(uart + 9)
 #define UART0_BAUD_LO *(uart + 10)
+*/
 
 void setup_io();
 void restore_io();

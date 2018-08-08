@@ -50,8 +50,6 @@ extern "C" {
 #include "pwr_names.h"
 #include "cnv_xtthelpto.h"
 
-#define CNV_TAB 18
-
 CnvReadXtthelp::CnvReadXtthelp(
     char* x_name, char* x_directory, CnvXtthelpTo* to)
     : xtthelpto(to)

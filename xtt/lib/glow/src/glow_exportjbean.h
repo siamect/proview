@@ -47,7 +47,7 @@ public:
       : ctx(glow_ctx), nc(nodeclass), page(1), func_cnt(0), frc_created(0)
   {
     is_nodeclass = (nc != NULL);
-  };
+  }
   void growctx(glow_eExportPass pass, std::ofstream& fp);
   void nodeclass(GlowNodeClass* nc, glow_eExportPass pass, std::ofstream& fp,
       int page, int pages);

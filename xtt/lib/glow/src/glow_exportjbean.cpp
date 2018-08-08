@@ -470,8 +470,9 @@ void GlowExportJBean::polyline(glow_sPoint* points, int point_cnt, int fill,
     else
       ((GrowCtx*)ctx)->measure_javabean(&dim_x1, &dim_x0, &dim_y1, &dim_y0);
 
-    if (fill || (points[0].x == points[point_cnt - 1].x
-                    && points[0].y == points[point_cnt - 1].y)) {
+    if (fill
+        || (feq(points[0].x, points[point_cnt - 1].x)
+               && feq(points[0].y, points[point_cnt - 1].y))) {
       fp << "    new Polygon( new int[] { ";
       for (i = 0; i < point_cnt; i++) {
         x = points[i].x - dim_x0 + glow_cJBean_Offset;
@@ -1126,7 +1127,8 @@ void GlowExportJBean::rect(double x0, double y0, double width, double height,
     fp << "    new Rectangle2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset
        << "F, " << y0 - dim_y0 + glow_cJBean_Offset << "F, " << width << "F, "
        << height << "F),\n";
-    if ((is_nodeclass && shadow_width != 0) || (!is_nodeclass && shadow)) {
+    if ((is_nodeclass && !feq(shadow_width, 0.0))
+        || (!is_nodeclass && shadow)) {
       fp << "    new Polygon( new int[] { "
          << int(x0 - dim_x0 + glow_cJBean_Offset + 0.5) << ", "
          << int(x0 + width - dim_x0 + glow_cJBean_Offset + 0.5) << ", "
@@ -1179,7 +1181,7 @@ void GlowExportJBean::rect(double x0, double y0, double width, double height,
       strcpy(fixcolor_str, "false");
 
     if (is_nodeclass) {
-      if (shadow_width == 0) {
+      if (feq(shadow_width, 0.0)) {
         if (gradient == glow_eGradient_No) {
           // No gradient, No shadow, Nodeclass
           fp << "    {\n"; // Avoid multiple declarations of fcolor
@@ -1522,8 +1524,8 @@ void GlowExportJBean::rectrounded(double x0, double y0, double width,
        << "F, " << y0 - dim_y0 + glow_cJBean_Offset << "F, " << width << "F, "
        << height << "F, " << 2 * roundamount << "F, " << 2 * roundamount
        << "F),\n";
-    if (fill
-        && ((is_nodeclass && shadow_width != 0) || (!is_nodeclass && shadow))) {
+    if (fill && ((is_nodeclass && !feq(shadow_width, 0.0))
+                    || (!is_nodeclass && shadow))) {
       // Light shadow
       fp << "    new Rectangle2D.Float("
          << x0 - dim_x0 + glow_cJBean_Offset + roundamount << "F, "
@@ -1603,7 +1605,7 @@ void GlowExportJBean::rectrounded(double x0, double y0, double width,
       ((GrowCtx*)ctx)->measure_javabean(&dim_x1, &dim_x0, &dim_y1, &dim_y0);
 
     if (is_nodeclass) {
-      if (shadow_width == 0) {
+      if (feq(shadow_width, 0.0)) {
         if (gradient == glow_eGradient_No) {
           // No gradient, No shadow, Nodeclass
           if (fill) {
@@ -2034,13 +2036,15 @@ void GlowExportJBean::arc(double x0, double y0, double width, double height,
       strcpy(arc_type_str, "PIE");
 
     if (is_nodeclass) {
-      if (shadow_width == 0 || angle2 != 360) {
+      if (feq(shadow_width, 0.0)
+          || !feq(angle2, 360.0)) {
         // No shadow
         fp << "    new Arc2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset
            << "F, " << y0 - dim_y0 + glow_cJBean_Offset << "F, " << width
            << "F, " << height << "F, " << angle1 << "F, " << angle2
            << "F, Arc2D." << arc_type_str << "),\n";
-      } else if (shadow_width != 0 && gradient != glow_eGradient_No) {
+      } else if (!feq(shadow_width, 0.0)
+          && gradient != glow_eGradient_No) {
         fp << "    new Arc2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset
            << "F, " << y0 - dim_y0 + glow_cJBean_Offset << "F, " << width
            << "F, " << height << "F, " << angle1 << "F, " << angle2
@@ -2080,7 +2084,7 @@ void GlowExportJBean::arc(double x0, double y0, double width, double height,
            << "F, Arc2D." << arc_type_str << "),\n";
       }
     } else { // Not nodeclass
-      if (!shadow || angle2 != 360) {
+      if (!shadow || !feq(angle2, 360.0)) {
         // No shadow
         fp << "    new Arc2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset
            << "F, " << y0 - dim_y0 + glow_cJBean_Offset << "F, " << width
@@ -2145,7 +2149,8 @@ void GlowExportJBean::arc(double x0, double y0, double width, double height,
       ((GrowCtx*)ctx)->measure_javabean(&dim_x1, &dim_x0, &dim_y1, &dim_y0);
 
     if (is_nodeclass) {
-      if (shadow_width == 0 || angle2 != 360) {
+      if (feq(shadow_width, 0.0)
+          || !feq(angle2, 360.0)) {
         // Nodeclass, No shadow
         if (gradient == glow_eGradient_No) {
           // No gradient, No shadow, Nodeclass
@@ -2484,7 +2489,7 @@ void GlowExportJBean::arc(double x0, double y0, double width, double height,
       }
     } else {
       // No nodeclass
-      if (!shadow || angle2 != 360) {
+      if (!shadow || !feq(angle2, 360.0)) {
         // No nodeclass, No shadow
         if (gradient == glow_eGradient_No) {
           // No gradient, No shadow, No nodeclass
@@ -4088,7 +4093,7 @@ void GlowExportJBean::gradient_paint(glow_eGradient gradient, int gc1, int gc2,
     double x0, double y0, double w, double h, int fixcolor,
     glow_eDrawType fill_drawtype, std::ofstream& fp)
 {
-  float gx0, gy0, gx1, gy1, gr;
+  float gx0 = 0.0, gy0 = 0.0, gx1 = 0.0, gy1 = 0.0, gr = 0.0;
   double dim_x1, dim_x0, dim_y1, dim_y0;
   double x, y;
 

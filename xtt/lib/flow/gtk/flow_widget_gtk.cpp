@@ -206,7 +206,7 @@ static void scroll_h_action(GtkWidget* w, gpointer data)
   gdouble value;
   value = gtk_range_get_value(GTK_RANGE(floww->scroll_h));
 
-  if (value == 0 && fabs(floww->scroll_h_value) > 2) {
+  if (feq(value, 0.0) && ABS(floww->scroll_h_value) > 2) {
     // Probably a resize that seems to set value to zero, set old value
     ctx->change_scrollbar();
     return;
@@ -229,7 +229,7 @@ static void scroll_v_action(GtkWidget* w, gpointer data)
   gdouble value;
   value = gtk_range_get_value(GTK_RANGE(floww->scroll_v));
 
-  if (value == 0 && fabs(floww->scroll_v_value) > 2) {
+  if (feq(value, 0.0) && ABS(floww->scroll_v_value) > 2) {
     // Probably a resize that seems to set value to zero, set old value
     ctx->change_scrollbar();
     return;

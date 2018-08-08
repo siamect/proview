@@ -62,21 +62,6 @@
 
 /* Global functions________________________________________________________*/
 
-#define LogAndReturn(status1, status2)                                         \
-  {                                                                            \
-    errh_CErrLog(status1, errh_ErrArgMsg(status2), NULL);                      \
-    return status2;                                                            \
-  }
-
-#define Log(status1, status2)                                                  \
-  {                                                                            \
-    errh_CErrLog(status1, errh_ErrArgMsg(status2), NULL);                      \
-  }
-
-#define NMPS_CELLBUFF_SIZE                                                     \
-  1000 /* This must be >= the size of                                          \
-          the largest cell */
-
 typedef struct nmpsappl_s_data_list {
   pwr_tObjid objid;
   pwr_tString80 name;
@@ -97,7 +82,7 @@ typedef struct nmpsappl_s_basectx {
   nmpsappl_t_data_list* datalist;
 } * nmpsappl_t_basectx;
 
-/*_Globala variabler______________________________________________________*/
+/*_Global variables______________________________________________________*/
 
 static nmpsappl_t_basectx nmpsappl_basectx = 0;
 

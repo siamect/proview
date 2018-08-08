@@ -75,7 +75,7 @@
 #include "wb_wtt_gtk.h"
 
 #define WTT_PALETTE_WIDTH 160
-#define MENU_BAR 1
+//#define MENU_BAR 1
 #define MENU_PULLDOWN 2
 #define MENU_POPUP 3
 #define MENU_OPTION 4
@@ -812,10 +812,10 @@ void WttGtk::open_change_value()
 {
   int sts;
   brow_tObject* sellist;
-  int sel_cnt1, sel_cnt2;
+  int sel_cnt1, sel_cnt2 = 0;
   char* value = 0;
   int multiline;
-  int input_size;
+  int input_size = 0;
 
   if (input_open) {
     g_object_set(cmd_input, "visible", FALSE, NULL);
@@ -910,7 +910,7 @@ void WttGtk::open_change_name()
 {
   int sts;
   brow_tObject* sellist;
-  int sel_cnt1, sel_cnt2;
+  int sel_cnt1, sel_cnt2 = 0;
   int size;
   char name[80];
 
@@ -2090,7 +2090,7 @@ WttGtk::WttGtk(void* wt_parent_ctx, GtkWidget* wt_parent_wid,
   pwr_tStatus sts;
   char title[80];
   char volname[80];
-  pwr_tClassId volclass;
+  pwr_tClassId volclass = 0;
   int size;
   char layout_w1[80];
   char layout_w2[80];

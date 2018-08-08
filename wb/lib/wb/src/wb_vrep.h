@@ -66,7 +66,7 @@ protected:
   int m_no_nix_incr;
 
 public:
-  virtual ~wb_vrep(){};
+  virtual ~wb_vrep(){}
 
   wb_vrep() : m_vid(pwr_cNVid), m_cid(pwr_cNCid), m_no_nix_incr(0)
   {
@@ -214,7 +214,7 @@ public:
   virtual pwr_tStatus updateMeta()
   {
     return 0;
-  };
+  }
 
   virtual void objectName(const wb_orep* o, char* str) = 0;
   virtual bool isCommonMeta() const

@@ -58,7 +58,7 @@ public:
   int size()
   {
     return a_size;
-  };
+  }
   void insert(GlowArrayElem* element);
   void zoom();
   friend class GlowNodeClass;

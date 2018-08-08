@@ -41,10 +41,9 @@
 
 class wb_attrname : public wb_name {
 public:
-  wb_attrname() : wb_name()
-  {
-  }
+  wb_attrname();
   wb_attrname(const char*);
+  virtual ~wb_attrname();
 };
 
 #endif

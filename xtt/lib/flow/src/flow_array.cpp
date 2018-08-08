@@ -49,9 +49,6 @@
 #include "flow_radiobutton.h"
 #include "flow_msg.h"
 
-#define r_toupper(c) (((c) >= 'a' && (c) <= 'z') ? (c)&0xDF : (c))
-#define r_tolower(c) (((c) >= 'A' && (c) <= 'Z') ? (c) | 0x20 : (c))
-
 FlowArray::FlowArray(int allocate, int incr)
     : allocated(allocate), alloc_incr(incr), a_size(0)
 {
@@ -226,7 +223,7 @@ int FlowArray::brow_insert(
 {
   FlowArrayElem** a_tmp;
   int idx, i, j, found;
-  int destination_level;
+  int destination_level = 0;
 
   if (find(element))
     return 0;
@@ -342,7 +339,7 @@ void FlowArray::brow_remove(void* ctx, FlowArrayElem* element)
 void FlowArray::brow_close(void* ctx, FlowArrayElem* element)
 {
   int i;
-  int idx, next_idx;
+  int idx = 0, next_idx;
   int found;
   int level;
   FlowArrayElem* e;
@@ -378,7 +375,7 @@ void FlowArray::brow_close(void* ctx, FlowArrayElem* element)
 int FlowArray::brow_get_parent(FlowArrayElem* element, FlowArrayElem** parent)
 {
   int i;
-  int idx;
+  int idx = 0;
   int found;
   int level;
 
@@ -411,7 +408,7 @@ int FlowArray::brow_get_parent(FlowArrayElem* element, FlowArrayElem** parent)
 int FlowArray::brow_get_child(FlowArrayElem* element, FlowArrayElem** child)
 {
   int i;
-  int idx;
+  int idx = 0;
   int found;
 
   found = 0;
@@ -440,7 +437,7 @@ int FlowArray::brow_get_next_sibling(
     FlowArrayElem* element, FlowArrayElem** sibling)
 {
   int i;
-  int idx;
+  int idx = 0;
   int found;
   int level;
 
@@ -475,7 +472,7 @@ int FlowArray::brow_get_previous_sibling(
     FlowArrayElem* element, FlowArrayElem** sibling)
 {
   int i;
-  int idx;
+  int idx = 0;
   int found;
   int level;
 
@@ -787,12 +784,12 @@ int FlowArray::find_by_name_no_case(char* name, FlowArrayElem** element)
 
   strcpy(lname, name);
   for (s = lname; *s; s++)
-    *s = r_toupper(*s);
+    *s = toupper(*s);
 
   for (i = 0; i < a_size; i++) {
     a[i]->get_object_name(object_name);
     for (s = object_name; *s; s++)
-      *s = r_toupper(*s);
+      *s = toupper(*s);
     if (strcmp(lname, object_name) == 0) {
       *element = a[i];
       return 1;
@@ -1073,8 +1070,8 @@ int FlowArray::sort_children(
 {
   // Count children
   int i;
-  int idx;
-  int last_idx;
+  int idx = 0;
+  int last_idx = 0;
   int found;
   int level;
 

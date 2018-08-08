@@ -68,7 +68,7 @@ static pwr_tStatus io_ConnectToDigSupLst(io_tSupCtx Ctx, pwr_tClassId Class,
 static void ASup_exec_io(io_tSupCtx Ctx, sASupLstLink* TimerLstP,
     pwr_sClass_ASup* o, pwr_tFloat32 In, pwr_tBoolean con)
 {
-  sASupLstLink *NextLstP, *NextP; /* Diff. */
+  sASupLstLink *NextLstP = NULL, *NextP; /* Diff. */
 
   if ((o->High && In <= (o->CtrlLimit - o->Hysteres))
       || (!o->High && In >= (o->CtrlLimit + o->Hysteres))) {
@@ -135,7 +135,7 @@ static void ASup_exec_io(io_tSupCtx Ctx, sASupLstLink* TimerLstP,
 static void DSup_exec_io(io_tSupCtx Ctx, sDSupLstLink* TimerLstP,
     pwr_sClass_DSup* o, pwr_tBoolean In, pwr_tBoolean con)
 {
-  sDSupLstLink *NextLstP, *NextP; /* Diff. */
+  sDSupLstLink *NextLstP = NULL, *NextP; /* Diff. */
 
   if (In != o->CtrlPosition) {
     if (o->Action)
@@ -247,7 +247,7 @@ static pwr_tStatus io_ConnectToAnaSupLst(io_tSupCtx Ctx, pwr_tClassId Class,
   pwr_tObjid SupId;
   pwr_tClassId ObjClass;
   sASupLstLink* ASupLstP;
-  sASupLstLink *NextASupLstP, *NextP;
+  sASupLstLink *NextASupLstP = NULL, *NextP;
 
   switch (Class) {
   case pwr_cClass_Ai:
@@ -262,7 +262,6 @@ static pwr_tStatus io_ConnectToAnaSupLst(io_tSupCtx Ctx, pwr_tClassId Class,
 
   default:
     return (IO__SUCCESS);
-    break;
   }
 
   /* Get child with class ASup */
@@ -326,7 +325,7 @@ static pwr_tStatus io_ConnectToDigSupLst(io_tSupCtx Ctx, pwr_tClassId Class,
   pwr_tObjid SupId;
   pwr_tClassId ObjClass;
   sDSupLstLink* DSupLstP;
-  sDSupLstLink *NextDSupLstP, *NextP;
+  sDSupLstLink *NextDSupLstP = NULL, *NextP;
 
   switch (Class) {
   case pwr_cClass_Di:
@@ -346,7 +345,6 @@ static pwr_tStatus io_ConnectToDigSupLst(io_tSupCtx Ctx, pwr_tClassId Class,
 
   default:
     return (IO__SUCCESS);
-    break;
   }
 
   /* Get child with class DSup */

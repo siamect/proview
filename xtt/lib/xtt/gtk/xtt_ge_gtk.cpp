@@ -325,7 +325,7 @@ XttGeGtk::XttGeGtk(GtkWidget* xg_parent_wid, void* xg_parent_ctx,
   int window_height = 500;
   GdkGeometry geometry;
   pwr_tStatus sts;
-  GtkMenuBar* menu_bar;
+  GtkMenuBar* menu_bar = NULL;
   char title[300];
 
   if (xg_width != 0 && xg_height != 0) {

@@ -62,23 +62,6 @@
 
 #include "nmps.h"
 
-#define LogAndExit(status)                                                     \
-  {                                                                            \
-    errh_CErrLog(NMPS__EXIT, errh_ErrArgMsg(status));                          \
-    exit(status);                                                              \
-  }
-
-#define LogAndReturn(status1, status2)                                         \
-  {                                                                            \
-    errh_CErrLog(status1, errh_ErrArgMsg(status2));                            \
-    return status2;                                                            \
-  }
-
-#define Log(status1, status2)                                                  \
-  {                                                                            \
-    errh_CErrLog(status1, errh_ErrArgMsg(status2));                            \
-  }
-
 #define NMPS_BCK_FILEVERSION 1
 #define NMPSBCK_MAX_RECORDS 500
 

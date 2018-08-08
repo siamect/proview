@@ -148,17 +148,8 @@ LOCAL_DATA
 
 // --- copyright
 #if defined(WIN32) || defined(_WIN32) || defined(WIN16) || defined(_WIN16)
-static const char copyright[] = "PROFIBUS WinXP/Win2K/WinNT API (c) Copyright "
-                                "1995-2005. SOFTING AG. All Rights Reserved.";
-
 // --- Operation Mode
 static USIGN32 OperationMode;
-
-#endif
-
-#ifdef _LINUX
-static const char copyright[] = "PROFIBUS Linux API (c) Copyright 1995-2005. "
-                                "SOFTING AG. All Rights Reserved.";
 #endif
 
 #if defined(WIN32) || defined(_WIN32) || defined(WIN16) || defined(_WIN16)
@@ -2000,7 +1991,10 @@ Possible return values:
 #endif
 
   strcat(pPapiVersion, (CSTRING*)SW_VERSION);
+  #pragma GCC diagnostic push
+  #pragma GCC diagnostic ignored "-Wdate-time"
   strcat(pPapiVersion, (CSTRING*)__DATE__);
+  #pragma GCC diagnostic pop
 
   // --- get PROFIBUS firmware version
   DataLength = (USIGN16)VERSION_STRING_LENGTH;

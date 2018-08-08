@@ -68,7 +68,7 @@ dcli_tCmdTable user_command_table[] = { { "help", &user_help_func,
   { "login", &user_login_func,
       { "dcli_arg1", "dcli_arg2", "/administrator", "" } },
   {
-      "",
+      "", NULL, { "" }
   } };
 
 static int user_help_func(void* client_data, void* client_flag)
@@ -198,7 +198,6 @@ static int user_quit_func(void* client_data, void* client_flag)
 {
   dcli_input_end(&user_chn, user_recall_buf);
   exit(0);
-  return 1;
 }
 
 static int user_add_func(void* client_data, void* client_flag)
@@ -802,7 +801,6 @@ static int user_login_func(void* client_data, void* client_flag)
     }
     return 1;
   }
-  return 1;
 }
 
 static void user_message(char severity, const char* msg)

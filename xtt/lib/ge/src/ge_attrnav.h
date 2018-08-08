@@ -114,7 +114,7 @@ class AItemObject;
 //! Class for handling of brow.
 class AttrNavBrow {
 public:
-  AttrNavBrow(BrowCtx* brow_ctx, void* xn) : ctx(brow_ctx), attrnav(xn){};
+  AttrNavBrow(BrowCtx* brow_ctx, void* xn) : ctx(brow_ctx), attrnav(xn){}
   ~AttrNavBrow();
 
   BrowCtx* ctx;

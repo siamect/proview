@@ -94,7 +94,7 @@ public:
   void erase(GlowWind* w)
   {
     erase(w, (GlowTransform*)NULL, hot, NULL);
-  };
+  }
 
   //! Draw the objects if any part is inside the drawing area.
   /*!
@@ -132,7 +132,7 @@ public:
   glow_eObjectType type()
   {
     return glow_eObjectType_GrowConGlue;
-  };
+  }
 
   int line_width_up; //!< Width in the up direction.
   int line_width_down; //!< Width in the down direction.

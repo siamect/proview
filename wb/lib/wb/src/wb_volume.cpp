@@ -233,7 +233,7 @@ wb_cdef wb_volume::cdef(wb_object o)
       // Object in other volume, get class info from this volume's meta
       // environment
       cdrep = m_vrep->erep()->cdrep(&sts, *orep);
-  } catch (wb_error& e) {
+  } catch (wb_error&) {
     return wb_cdef();
   }
   return wb_cdef(cdrep);
@@ -501,7 +501,7 @@ bool wb_volume::exportTree(wb_volume& import, pwr_tOid oid)
 pwr_tStatus wb_volume::syntaxCheck(int* errorcount, int* warningcount)
 {
   pwr_tStatus sts = LDH__SUCCESS;
-  pwr_tStatus osts;
+  pwr_tStatus osts = 0;
 
   for (wb_object o = object(); o; o = o.after()) {
     if (o.cid() == pwr_eClass_LibHier)

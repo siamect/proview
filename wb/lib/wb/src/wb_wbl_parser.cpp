@@ -103,7 +103,7 @@ int wb_wbl_parser::next_token(std::ifstream& is, char* line,
     const char* start_delim, const char* end_delim, wbl_eToken type,
     char** start, unsigned int* len, int* allocated)
 {
-  char *s, *token;
+  char *s, *token = NULL;
   const char* d;
   int state = eState_StartDelim;
   bool in_string = false;

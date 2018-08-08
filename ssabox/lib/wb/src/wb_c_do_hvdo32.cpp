@@ -199,7 +199,7 @@ static pwr_tStatus PostUnadopt(
   pwr_sClass_ChanDo ChanDo;
   pwr_sdClass_Do_HVDO32 DCard;
   pwr_tUInt32 MaxChan;
-  pwr_tUInt32 Chan;
+  pwr_tUInt32 Chan = 0;
   pwr_tString80 NewName;
 
   if (Class != pwr_cClass_ChanDo)

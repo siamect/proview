@@ -34,7 +34,6 @@
  * General Public License plus this exception.
  **/
 
-#include <float.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -1048,7 +1047,7 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       select_rect_last_x = x;
       select_rect_last_y = y;
     } else if (select_rect_active && edit_mode == grow_eMode_Scale) {
-      double x1, y1, x2, y2;
+      double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
       double scale;
 
       if (scale_type == glow_eScaleType_No)
@@ -2042,7 +2041,7 @@ int GrowCtx::get_dimension(char* filename, int* width, int* height)
   char line[200];
   bool width_found = false;
   bool height_found = false;
-  int num;
+  int num = 0;
   std::ifstream fp;
 
   dcli_translate_filename(fname, filename);
@@ -2076,13 +2075,13 @@ int GrowCtx::get_dimension(char* filename, int* width, int* height)
 
 void GrowCtx::open_grow(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;
   int i, j;
   char c;
-  int double_buffered;
+  int double_buffered = 0;
 
   for (;;) {
     if (!fp.good()) {
@@ -2464,7 +2463,7 @@ int GrowCtx::open_subgraph_from_name(const char* name, glow_eSaveMode mode)
 int GrowCtx::open_subgraph(char* filename, glow_eSaveMode mode)
 {
   std::ifstream fp;
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   char fname[120];
@@ -2699,7 +2698,7 @@ void GrowCtx::dynamic_cb(
 
 void GrowCtx::scale_select(double scale_x, double scale_y, glow_eScaleType type)
 {
-  double sx, sy, x0, y0;
+  double sx = 0.0, sy = 0.0, x0 = 0.0, y0 = 0.0;
   double ll_x, ll_y, ur_x, ur_y;
   GlowTransform t;
 
@@ -2761,7 +2760,7 @@ void GrowCtx::scale_select(double scale_x, double scale_y, glow_eScaleType type)
 void GrowCtx::rotate_select(double angle, glow_eRotationPoint type)
 {
   double ll_x, ll_y, ur_x, ur_y;
-  double x0, y0;
+  double x0 = 0.0, y0 = 0.0;
   GlowTransform t;
 
   ur_x = ur_y = -1e10;
@@ -3004,7 +3003,7 @@ void GrowCtx::change_select_conclass(GlowArrayElem* conclass)
 
 void grow_auto_scrolling(GrowCtx* ctx)
 {
-  int delta_x, delta_y;
+  int delta_x = 0, delta_y = 0;
 
   if (ctx->edit_mode == grow_eMode_Scale && !ctx->scale_active)
     return;
@@ -3139,7 +3138,7 @@ void GrowCtx::set_move_restrictions(glow_eMoveRestriction restriction,
 void GrowCtx::align_select(glow_eAlignDirection direction)
 {
   int i;
-  double object_x, object_y;
+  double object_x = 0.0, object_y = 0.0;
   double ll_x, ll_y, ur_x, ur_y;
 
   if (a_sel.size() < 2)
@@ -3401,7 +3400,7 @@ void GrowCtx::equidistance_select(glow_eAlignDirection direction)
 void GrowCtx::measure_javabean(double* pix_x_right, double* pix_x_left,
     double* pix_y_high, double* pix_y_low)
 {
-  if (java_width == 0 || (x0 == 0 && x1 == 0)) {
+  if (java_width == 0 || (feq(x0, 0.0) && feq(x1, 0.0))) {
     double jb_x_right = -1e10;
     double jb_x_left = 1e10;
     double jb_y_high = -1e10;
@@ -3436,7 +3435,7 @@ void GrowCtx::to_pixel(double x, double y, double* pix_x, double* pix_y)
 void GrowCtx::set_javaframe(double* pix_x_right, double* pix_x_left,
     double* pix_y_high, double* pix_y_low)
 {
-  if (java_width == 0 || (x0 == 0 && x1 == 0)) {
+  if (java_width == 0 || (feq(x0, 0.0) && feq(x1, 0.0))) {
     unzoom();
     measure_javabean(pix_x_right, pix_x_left, pix_y_high, pix_y_low);
   } else {
@@ -3852,7 +3851,7 @@ void GrowCtx::store_geometry()
 
 void GrowCtx::restore_geometry()
 {
-  if (stored_zoom_factor_x == 0)
+  if (feq(stored_zoom_factor_x, 0.0))
     return;
   mw.offset_x = stored_offset_x;
   mw.offset_y = stored_offset_y;
@@ -4149,7 +4148,7 @@ int GrowCtx::get_next_object_position(
   double ll_x, ll_y, ur_x, ur_y;
   double a_ll_x, a_ll_y, a_ur_x, a_ur_y;
   double x, y, a_x, a_y;
-  double dir_angle;
+  double dir_angle = 0.0;
   std::vector<NextElem> a0;
 
   if (!object) {

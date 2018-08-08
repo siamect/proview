@@ -106,7 +106,6 @@ pwr_tStatus hd_NetXdrMessage(XDR* xdrs, int subtype, hd_sHead* hp)
     errh_Info("Unexpected message type: %d, (%s)", hp->type,
         qcom_QidToString(NULL, &hp->qid, 1));
     return HD__XDRUNEXPECT;
-    break;
   }
 
   return HD__SUCCESS;

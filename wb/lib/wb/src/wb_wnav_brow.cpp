@@ -994,8 +994,8 @@ void WNavBrow::create_nodeclasses()
   // Create multi object class
   for (int i = 0; i < wnav_eMultiobject_; i++) {
     char name[20];
-    flow_eDrawType square_drawtype;
-    flow_eDrawType triangle_drawtype;
+    flow_eDrawType square_drawtype = flow_eDrawType_Line;
+    flow_eDrawType triangle_drawtype = flow_eDrawType_Line;
 
     sprintf(name, "NavigatorObject%d", i);
 

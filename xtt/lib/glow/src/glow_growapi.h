@@ -1391,7 +1391,6 @@ int grow_IncrNextObjectNameNumber(grow_tCtx ctx);
 //! Set next objectname number.
 /*!
   \param ctx	Grow context.
-  \return Next objectname number.
 
   Sets the number for next objectname.
 */
@@ -1511,8 +1510,7 @@ void grow_AddPolyLinePoints(
 //! Set fill for an object.
 /*!
   \param object	Object.
-  \param border       Border value. 1 the object is drawn with border, 0 without
-  border.
+  \param fill		Fill value. 1 the object is drawn with fill, 0 without
 */
 void grow_SetObjectBorder(grow_tObject object, int fill);
 
@@ -2409,7 +2407,7 @@ void grow_SetXYCurveYMark2(grow_tObject object, double mark);
 //! Set number of curves a xy curve object.
 /*!
   \param object	Trend object.
-  \param noofcurve	Number of curves.
+  \param noofcurves	Number of curves.
 */
 void grow_SetXYCurveNoOfCurves(grow_tObject object, int noofcurves);
 

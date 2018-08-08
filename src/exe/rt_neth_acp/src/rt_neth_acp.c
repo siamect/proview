@@ -329,8 +329,8 @@ static void lockMountServers(gdb_sNode* np)
           && msp->nodms_ll.self == msp->nodms_ll.blink)
         pool_QinsertPred(NULL, gdbroot->pool, &msp->nodms_ll, &np->nodms_lh);
 
-      if (0)
-        errh_Info("Locking object %s", op->g.f.name.orig);
+      /* if (0)
+        errh_Info("Locking object %s", op->g.f.name.orig); */
       cvolc_LockObject(&sts, op);
     }
   }

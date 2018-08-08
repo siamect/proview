@@ -229,7 +229,7 @@ pwr_tStatus rt_sim::load()
       if (nr != 3)
         continue;
 
-      sts = gdh_ClassNameToId(line_elem[2], &tid);
+      sts = gdh_ClassNameToId(line_elem[1], &tid);
       if (EVEN(sts)) {
         printf("** Unable to find object class %s, line %d\n", line_elem[1],
             line_cnt);
@@ -1108,7 +1108,7 @@ void rt_sim::open()
 int main(int argc, char* argv[])
 {
   pwr_tStatus sts;
-  int tmo;
+  int tmo = 0;
   char mp[2000];
   qcom_sQid qid = qcom_cNQid;
   qcom_sGet get;

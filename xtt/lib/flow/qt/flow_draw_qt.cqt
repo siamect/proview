@@ -408,7 +408,7 @@ int FlowDrawQt::event_handler(QEvent* event)
         if (click_sensitivity & flow_mSensitivity_MB1Click
             && !(click_sensitivity & flow_mSensitivity_MB1DoubleClick)
             && !(click_sensitivity & flow_mSensitivity_MB1Press)) {
-          memcpy(&last_event, &event, sizeof(event));
+          memcpy((void*)&last_event, (void*)&event, sizeof(QEvent));
           button_pressed = 0;
           button_clicked = 1;
           last_press_x = mouseEvent->x();
@@ -417,7 +417,7 @@ int FlowDrawQt::event_handler(QEvent* event)
         } else if (!(click_sensitivity & flow_mSensitivity_MB1Click)
             && !(click_sensitivity & flow_mSensitivity_MB1DoubleClick)
             && click_sensitivity & flow_mSensitivity_MB1Press) {
-          memcpy(&last_event, &event, sizeof(event));
+          memcpy((void*)&last_event, (void*)&event, sizeof(QEvent));
           button_pressed = 1;
           button_clicked = 0;
           last_press_x = mouseEvent->x();
@@ -430,7 +430,7 @@ int FlowDrawQt::event_handler(QEvent* event)
         if (click_sensitivity & flow_mSensitivity_MB2Click
             && !(click_sensitivity & flow_mSensitivity_MB2DoubleClick)
             && !(click_sensitivity & flow_mSensitivity_MB2Press)) {
-          memcpy(&last_event, &event, sizeof(event));
+          memcpy((void*)&last_event, (void*)&event, sizeof(QEvent));
           button_pressed = 0;
           button_clicked = 1;
           last_press_x = mouseEvent->x();
@@ -439,7 +439,7 @@ int FlowDrawQt::event_handler(QEvent* event)
         } else if (!(click_sensitivity & flow_mSensitivity_MB2Click)
             && !(click_sensitivity & flow_mSensitivity_MB2DoubleClick)
             && click_sensitivity & flow_mSensitivity_MB2Press) {
-          memcpy(&last_event, &event, sizeof(event));
+          memcpy((void*)&last_event, (void*)&event, sizeof(QEvent));
           button_pressed = 1;
           button_clicked = 0;
           last_press_x = mouseEvent->x();
@@ -466,7 +466,7 @@ int FlowDrawQt::event_handler(QEvent* event)
         button_clicked_and_pressed = 1;
         cancel_event_timer();
         button_clicked = 0;
-        memcpy(&last_event, &event, sizeof(event));
+        memcpy((void*)&last_event, (void*)&event, sizeof(QEvent));
         button_pressed = mouseEvent->button();
         last_press_x = mouseEvent->x();
         last_press_y = mouseEvent->y();
@@ -474,7 +474,7 @@ int FlowDrawQt::event_handler(QEvent* event)
         return 1;
       }
       if (!button_pressed) {
-        memcpy(&last_event, &event, sizeof(event));
+        memcpy((void*)&last_event, (void*)&event, sizeof(QEvent));
         button_pressed = mouseEvent->button();
         last_press_x = mouseEvent->x();
         last_press_y = mouseEvent->y();
@@ -606,7 +606,7 @@ int FlowDrawQt::event_handler(QEvent* event)
         cancel_event_timer();
         if (!button_clicked_and_pressed) {
           /* wait for button double click */
-          memcpy(&last_event, &event, sizeof(event));
+          memcpy((void*)&last_event, (void*)&event, sizeof(QEvent));
           button_clicked = 1;
           event_timer(200);
           button_pressed = 0;
@@ -1389,7 +1389,7 @@ int FlowDrawQt::pixmaps_create(
     FlowCtx* ctx, flow_sPixmapData* pixmap_data, void** pixmaps)
 {
   draw_sPixmap* pms;
-  flow_sPixmapDataElem *prev_pdata,
+  flow_sPixmapDataElem *prev_pdata = NULL,
       *pdata = (flow_sPixmapDataElem *)pixmap_data;
   int i;
 

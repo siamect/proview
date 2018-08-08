@@ -42,38 +42,16 @@
 class co_xml_parser;
 
 class co_xml_interpreter {
-  public:
-  co_xml_interpreter() : tag_stack_cnt(0), object_stack_cnt(0)
-  {
-  }
-  virtual ~co_xml_interpreter()
-  {
-  }
+public:
+  co_xml_interpreter();
+  virtual ~co_xml_interpreter();
 
-  virtual int tag(const char* name)
-  {
-    return 0;
-  }
-  virtual int metatag(const char* name)
-  {
-    return 0;
-  }
-  virtual int tag_end(const char* name)
-  {
-    return 0;
-  }
-  virtual int metatag_end(const char* name)
-  {
-    return 0;
-  }
-  virtual int tag_value(const char* value)
-  {
-    return 0;
-  }
-  virtual int tag_attribute(const char* name, const char* value)
-  {
-    return 0;
-  }
+  virtual int tag(const char* name);
+  virtual int metatag(const char* name);
+  virtual int tag_end(const char* name);
+  virtual int metatag_end(const char* name);
+  virtual int tag_value(const char* value);
+  virtual int tag_attribute(const char* name, const char* value);
 
   int tag_stack_push(unsigned int id);
   int tag_stack_pull(unsigned int id);
@@ -93,11 +71,9 @@ class co_xml_interpreter {
 };
 
 class co_xml_parser {
-  public:
+public:
   co_xml_parser(co_xml_interpreter* i);
-  ~co_xml_parser()
-  {
-  }
+  ~co_xml_parser();
 
   co_xml_interpreter* interpreter;
   std::ifstream fp;

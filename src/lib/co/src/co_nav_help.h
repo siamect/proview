@@ -78,7 +78,7 @@ class NavHelp {
   public:
   NavHelp(
       void* h_parent_ctx, const char* h_base_file, const char* h_project_file);
-  ;
+
   void* parent_ctx;
   void* (*insert_cb)(void*, navh_eItemType, const char*, const char*,
       const char*, const char*, const char*, const char*, navh_eHelpFile, int,

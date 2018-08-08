@@ -1226,7 +1226,6 @@ void wb_dbs::getAliasServer(sOentry* oep, void* p)
     printf("   Alias will not be loaded.\n");
     m_warnings++;
     return;
-    break;
   case pwr_eClass_MountVolume:
   case pwr_eClass_CreateVolume:
   case pwr_eClass_MountObject:
@@ -1236,7 +1235,6 @@ void wb_dbs::getAliasServer(sOentry* oep, void* p)
     printf("   Alias will not be loaded.\n");
     m_warnings++;
     return;
-    break;
   }
 
   oep->o.flags.b.isAliasClient = 1;

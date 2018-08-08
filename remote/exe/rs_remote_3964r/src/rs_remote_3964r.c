@@ -117,7 +117,6 @@ static unsigned int ReceiveHandler();
 
 #define NUMBER_OF_STOP_CHAR 3
 #define NET_HEADER_SIZE_IO 6
-#define NET_HEADER_SIZE_COMMON 8
 #define MAX_SIZE_TELEGRAM 2048
 
 //#define TIMEOUT_REC_ANSWER_SEC 2
@@ -137,8 +136,6 @@ static unsigned int ReceiveHandler();
 #define ETX 3
 #define DLE 16
 #define NAK 21
-
-#define DLE_BITMASK 0x10000
 
 /*_variables_______________________________________________________________*/
 

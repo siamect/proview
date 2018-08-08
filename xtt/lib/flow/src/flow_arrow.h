@@ -48,7 +48,7 @@ public:
   void print_zoom();
   void traverse(int x, int y);
   int event_handler(void* pos, flow_eEvent event, int x, int y, void* node);
-  void conpoint_select(void* pos, int x, int y, double* distance, void** cp){};
+  void conpoint_select(void* pos, int x, int y, double* distance, void** cp){}
   void print(void* pos, void* node, int highlight);
   void save(std::ofstream& fp, flow_eSaveMode mode);
   void open(std::ifstream& fp);
@@ -58,18 +58,18 @@ public:
   void draw_inverse(void* pos, int hot, void* node)
   {
     erase(pos, hot, node);
-  };
+  }
   void nav_erase(void* pos, void* node);
   void get_borders(double pos_x, double pos_y, double* x_right, double* x_left,
-      double* y_high, double* y_low, void* node){};
+      double* y_high, double* y_low, void* node){}
   int get_conpoint(int num, double* x, double* y, flow_eDirection* dir)
   {
     return 0;
-  };
+  }
   flow_eObjectType type()
   {
     return flow_eObjectType_Arrow;
-  };
+  }
   void move(void* pos, double x1, double y1, double x2, double y2,
       int highlight, int dimmed, int hot);
   void shift(void* pos, double delta_x, double delta_y, int highlight,

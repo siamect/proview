@@ -302,12 +302,6 @@
 #include "ge_bitmap_methodtoolbar251.h"
 #include "ge_bitmap_pwrlogotype252.h"
 
-#define SUBPALETTE__INPUT_SYNTAX 2
-#define SUBPALETTE__OBJNOTFOUND 4
-#define SUBPALETTE__STRINGTOLONG 6
-#define SUBPALETTE__ITEM_NOCREA 8
-#define SUBPALETTE__SUCCESS 1
-
 static char null_str[] = "";
 
 class LocalFile {
@@ -982,7 +976,7 @@ int SubPalette::object_attr()
 
   brow_ResetNodraw(brow->ctx);
   brow_Redraw(brow->ctx, 0);
-  return SUBPALETTE__SUCCESS;
+  return 1;
 }
 
 void SubPalette::select_by_name(char* name)
@@ -997,10 +991,10 @@ void SubPalette::select_by_name(char* name)
   char itemname[200];
   int level = 0;
   brow_tObject* nodelist;
-  brow_tObject current;
+  brow_tObject current = NULL;
   brow_tObject child;
   int nodecnt;
-  Item* item;
+  Item* item = NULL;
   int sts;
 
   for (;;) {
@@ -1070,7 +1064,7 @@ void SubPalette::menu_tree_build(char* filename)
 subpalette_sMenu* SubPalette::menu_tree_build_children(
     std::ifstream* fp, int* line_cnt, char* filename, subpalette_sMenu* parent)
 {
-  subpalette_sMenu *menu_p, *prev;
+  subpalette_sMenu *menu_p = NULL, *prev = NULL;
   subpalette_sMenu* return_menu = NULL;
   int first = 1;
   int nr;
@@ -1310,9 +1304,27 @@ ItemFile::ItemFile(SubPalette* subpalette, char* item_name, char* item_filename,
   brow_SetAnnotation(node, 0, item_name, strlen(item_name));
 }
 
+ItemFile::~ItemFile()
+{
+}
+
 Item::Item(subpalette_eItemType item_type) : type(item_type), node(0)
 {
   strcpy(name, "");
+}
+
+Item::~Item()
+{
+}
+
+int Item::open_children(SubPalette* subpalette, double x, double y)
+{
+  return 0;
+}
+
+int Item::close(SubPalette* subpalette, double x, double y)
+{
+  return 0;
 }
 
 int ItemLocalSubGraphs::open_children(
@@ -1441,7 +1453,7 @@ ItemMenu::ItemMenu(SubPalette* subpalette, const char* item_name,
 
 int ItemMenu::open_children(SubPalette* subpalette, double x, double y)
 {
-  int action_open;
+  int action_open = 0;
 
   if (!is_root) {
     if (!brow_IsOpen(node))

@@ -1952,7 +1952,7 @@ void WFoe::gre_cut(WGre* gre, void* object, unsigned long object_type)
   vldh_t_node* node_ptr;
   int i, subwind_found;
   int sts;
-  WFoe* foe;
+  WFoe* foe = NULL;
 
   if (object == 0) {
     /* Check that any node doesn't contain a subwindow */
@@ -2893,6 +2893,101 @@ WFoe::WFoe(void* f_parent_ctx, const char* f_name, pwr_tObjid plcprogram,
   strcpy(name, f_name);
 }
 
+WFoe::~WFoe()
+{
+}
+
+void WFoe::pop()
+{
+}
+
+WAtt* WFoe::watt_new(void* a_parent_ctx, ldh_tSesContext a_ldhses,
+    pwr_sAttrRef a_aref, int a_editmode, int a_advanced_user,
+    int a_display_objectname)
+{
+  return 0;
+}
+
+WAttText* WFoe::watttext_new(void* a_parent_ctx, ldh_tSesContext a_ldhses,
+    pwr_sAttrRef a_aref, int a_editmode, pwr_tStatus* status)
+{
+  *status = 0;
+  return 0;
+}
+
+WFoe* WFoe::subwindow_new(void* f_parent_ctx, char* f_name,
+    pwr_tObjid plcprogram, ldh_tWBContext ldhwbctx, ldh_tSesContext ldhsesctx,
+    vldh_t_node nodeobject, unsigned long windowindex, unsigned long new_window,
+    int f_map_window, ldh_eAccess f_access, foe_eFuncAccess function_access,
+    unsigned int f_options, pwr_tStatus* sts)
+{
+  return 0;
+}
+
+void WFoe::destroy()
+{
+}
+
+void WFoe::set_title()
+{
+}
+
+void WFoe::message(const char* new_label)
+{
+}
+
+void WFoe::msgbox(const char* new_label)
+{
+}
+
+int WFoe::create_window(int x_top, int y_top, int width_adb, int height_adb,
+    ldh_tSesContext ldhsession, foe_eFuncAccess function_access)
+{
+  return 0;
+}
+
+int WFoe::get_textinput(const char* message, int (*function)(WFoe*, char*))
+{
+  return 0;
+}
+
+int WFoe::edit_set_entries()
+{
+  return 0;
+}
+
+int WFoe::view_set_entries()
+{
+  return 0;
+}
+
+void WFoe::set_mode_button_state(int mode, int state)
+{
+}
+
+int WFoe::modify_popup(unsigned long popupmenu_mask, int x, int y)
+{
+  return 0;
+}
+
+void WFoe::clock_cursor()
+{
+}
+
+void WFoe::normal_cursor()
+{
+}
+
+int WFoe::get_selection(char* str, int len)
+{
+  return 0;
+}
+
+void WFoe::popupmsg(const char* new_label, void (*yes_procedure)(WFoe*),
+    void (*no_procedure)(WFoe*), void (*cancel_procedure)(WFoe*))
+{
+}
+
 //
 // Get the foe of a plcpgm, return 0 if not found.
 //
@@ -2924,7 +3019,7 @@ int WFoe::new_local(pwr_tObjid plcprogram, ldh_tWBContext ldhwbctx,
   WFoe* old_foe;
   pwr_tObjid windowobjdid;
   vldh_t_plc plc;
-  vldh_t_wind windowobject;
+  vldh_t_wind windowobject = NULL;
   pwr_tClassId wind_class;
   int sts, size;
   pwr_tClassId bodyclass;
@@ -3316,7 +3411,7 @@ int WFoe::search_string_next()
   vldh_t_node* node_ptr;
   unsigned long node_count;
   int i, j, found;
-  vldh_t_node node;
+  vldh_t_node node = NULL;
   int len1, len2;
   vldh_t_wind wind;
   pwr_tObjName class_name;
@@ -4442,7 +4537,7 @@ int WFoe::cmd_create_node(char* name, pwr_tCid cid, pwr_tOid* destoid, float x,
     // Coordinates are relative to destination node
     vldh_t_node* nodelist;
     unsigned long node_count;
-    vldh_t_node destnode;
+    vldh_t_node destnode = NULL;
     float ll_x, ll_y, width, height;
 
     sts = vldh_get_nodes(gre->wind, &node_count, &nodelist);
@@ -4494,7 +4589,7 @@ int WFoe::cmd_create_node(char* name, pwr_tCid cid, pwr_tOid* destoid, float x,
 int WFoe::cmd_create_con(pwr_tOid srcoid, char* srcattr, pwr_tOid destoid,
     char* destattr, int feedback)
 {
-  vldh_t_node srcnode, destnode;
+  vldh_t_node srcnode = NULL, destnode = NULL;
   vldh_t_node* nodelist;
   unsigned long node_count;
   int i, sts;
@@ -4611,7 +4706,7 @@ int WFoe::cmd_create_con(pwr_tOid srcoid, char* srcattr, pwr_tOid destoid,
 
 int WFoe::cmd_connect(pwr_tAttrRef* aref, pwr_tOid plcnode)
 {
-  vldh_t_node node;
+  vldh_t_node node = NULL;
   vldh_t_node* nodelist;
   unsigned long node_count;
   int sts;

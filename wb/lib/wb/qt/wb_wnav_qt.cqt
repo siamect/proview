@@ -381,7 +381,7 @@ void WNavQtTraceObject::sel_convert_cb()
 int WNavQt::open_foe(const char* name, pwr_tOid plcpgm, void** foectx,
     int map_window, ldh_eAccess access, pwr_tOid oid)
 {
-  pwr_tStatus sts;
+  pwr_tStatus sts = 0;
   WFoe* foe;
   unsigned int options;
 

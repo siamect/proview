@@ -840,6 +840,25 @@ int WRevNav::rev_command_cb(void* ctx, char* cmd)
   return 0;
 }
 
+WItemRev::WItemRev() : node(0), children(0)
+{
+}
+
+int WItemRev::open_children(
+    WRevNavBrow* brow, wb_revision* rev, double x, double y)
+{
+  return 1;
+}
+
+int WItemRev::open_attributes(WRevNavBrow* brow, double x, double y)
+{
+  return 1;
+}
+
+WItemRev::~WItemRev()
+{
+}
+
 int WItemRev::close(WRevNavBrow* brow, double x, double y)
 {
   double node_x, node_y;
@@ -907,7 +926,7 @@ int WItemRevision::open_children(
     return 1;
 
   // Find in revision
-  wb_rev_item* rev_item;
+  wb_rev_item* rev_item = NULL;
   bool found = false;
   for (int i = 0; i < rev->size(); i++) {
     rev_item = rev->vect(i);
@@ -978,4 +997,8 @@ WItemRevAttr::WItemRevAttr(WRevNavBrow* brow, const char* item_name,
   brow_SetAnnotPixmap(node, 0, brow->pixmap_attr);
   brow_SetAnnotation(node, 0, name, strlen(name));
   brow_SetAnnotation(node, 1, value, strlen(value));
+}
+
+WItemRevAttr::~WItemRevAttr()
+{
 }

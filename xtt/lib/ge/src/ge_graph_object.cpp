@@ -449,9 +449,9 @@ void Graph::trend_scan(graph_sObjectTrend* td)
 {
   // Reconfigure bar and trend if limits are changed
   if (td->pres_max_limit_p && td->pres_min_limit_p
-      && (*td->pres_max_limit_p != td->pres_max_limit_old
-             || *td->pres_min_limit_p != td->pres_min_limit_old)) {
-    if (*td->pres_max_limit_p != *td->pres_min_limit_p) {
+      && (!feqf(*td->pres_max_limit_p, td->pres_max_limit_old)
+             || !feqf(*td->pres_min_limit_p, td->pres_min_limit_old))) {
+    if (!feqf(*td->pres_max_limit_p, *td->pres_min_limit_p)) {
       if (td->bar_object)
         grow_SetBarRange(td->bar_object, double(*td->pres_min_limit_p),
             double(*td->pres_max_limit_p));
@@ -470,7 +470,7 @@ void Graph::trend_scan(graph_sObjectTrend* td)
   }
 
   // Reconfigure new scantime
-  if (td->scan_time_p && *td->scan_time_p != td->old_scan_time) {
+  if (td->scan_time_p && !feqf(*td->scan_time_p, td->old_scan_time)) {
     if (scan_time > *td->scan_time_p / 200) {
       scan_time = *td->scan_time_p / 200;
       animation_scan_time = *td->scan_time_p / 200;
@@ -543,7 +543,7 @@ int Graph::trend_init(graph_sObjectTrend* td, pwr_sAttrRef* arp)
   // Configure bar
   sts = grow_FindObjectByName(grow->ctx, "ActualValueBar", &td->bar_object);
   if (ODD(sts)) {
-    if (min_limit != max_limit)
+    if (!feqf(min_limit, max_limit))
       grow_SetBarRange(td->bar_object, double(min_limit), double(max_limit));
   }
 
@@ -574,7 +574,7 @@ int Graph::trend_init(graph_sObjectTrend* td, pwr_sAttrRef* arp)
     return sts;
 
   if (td->pres_min_limit_p && td->pres_max_limit_p) {
-    if (min_limit != max_limit)
+    if (!feqf(min_limit, max_limit))
       grow_SetTrendRangeY(
           td->trend_object, 0, double(min_limit), double(max_limit));
   }
@@ -584,7 +584,7 @@ int Graph::trend_init(graph_sObjectTrend* td, pwr_sAttrRef* arp)
       grow->ctx, "ActualValueSlider", &td->slider_object);
   if (ODD(sts)) {
     if (td->pres_min_limit_p && td->pres_max_limit_p) {
-      if (min_limit != max_limit)
+      if (!feqf(min_limit, max_limit))
         grow_SetSliderRange(
             td->slider_object, double(min_limit), double(max_limit));
     }
@@ -875,11 +875,11 @@ int Graph::create_node(const char* node_name, const char* subgraph_str,
   grow_MoveNode(*node, x1, y1);
 
   grow_MeasureNode(*node, &ll_x, &ll_y, &ur_x, &ur_y);
-  if (x2 != x1)
+  if (!feq(x2, x1))
     sx = (x2 - x1) / (ur_x - ll_x);
   else
     sx = 1;
-  if (y2 != y1)
+  if (!feq(y2, y1))
     sy = (y2 - y1) / (ur_y - ll_y);
   else
     sy = 1;
@@ -915,9 +915,9 @@ static void graph_object_PlcThread_scan(Graph* graph)
 
   // Reconfigure bar and trend if limits are changed
   if (od->set_max_show_p && od->set_min_show_p
-      && (*od->set_max_show_p != od->set_max_show_old
-             || *od->set_min_show_p != od->set_min_show_old)) {
-    if (*od->set_max_show_p != *od->set_min_show_p) {
+      && (!feqf(*od->set_max_show_p, od->set_max_show_old)
+             || !feqf(*od->set_min_show_p, od->set_min_show_old))) {
+    if (!feqf(*od->set_max_show_p, *od->set_min_show_p)) {
       grow_SetBarRange(od->set_bar_object, double(*od->set_min_show_p),
           double(*od->set_max_show_p));
       grow_SetTrendRangeY(od->set_trend_object, 0, double(*od->set_min_show_p),
@@ -975,7 +975,7 @@ static int graph_object_PlcThread(Graph* graph, pwr_sAttrRef* arp)
   if (EVEN(sts))
     return sts;
 
-  if (min_limit != max_limit)
+  if (!feqf(min_limit, max_limit))
     grow_SetBarRange(od->set_bar_object, double(min_limit), double(max_limit));
 
   // Get pointers to max and min value
@@ -993,7 +993,7 @@ static int graph_object_PlcThread(Graph* graph, pwr_sAttrRef* arp)
   if (EVEN(sts))
     return sts;
 
-  if (min_limit != max_limit) {
+  if (!feqf(min_limit, max_limit)) {
     grow_SetTrendRangeY(
         od->set_trend_object, 0, double(min_limit), double(max_limit));
     grow_SetTrendRangeY(

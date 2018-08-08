@@ -315,7 +315,7 @@ int XttLog::play(XNav* xnav, char* filename, double speed, int pid)
     case xttlog_eCategory_SetObjectInfo: {
       unsigned char buf[500];
       unsigned int size;
-      pwr_tStatus sts;
+      pwr_tStatus sts = 0;
 
       sscanf(s, "%s %s", attr, value);
 

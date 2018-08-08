@@ -55,8 +55,6 @@
 #include "wb_utl_api.h"
 #include "wb_vsel_gtk.h"
 
-#define BEEP putchar('\7');
-
 /*  Local function prototypes.	*/
 
 static void vsel_exit_qb_yes(void* ctx, void* cbdata);
@@ -209,7 +207,7 @@ WVselGtk::WVselGtk(pwr_tStatus* status, void* wv_parent_ctx,
   char volname[80];
   int size;
   int volume_count;
-  int display_window;
+  int display_window = 0;
   GtkCellRenderer* text_renderer;
   GtkTreeViewColumn* name_column;
 

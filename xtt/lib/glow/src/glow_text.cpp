@@ -87,7 +87,7 @@ void GlowText::save(std::ofstream& fp, glow_eSaveMode mode)
 
 void GlowText::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   char tmp_text[500];

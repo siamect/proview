@@ -71,8 +71,6 @@
 
 #include <qlocalsocket.h>
 
-#define WOW_MAXNAMES 400
-
 typedef struct {
   char str[200];
   int len;
@@ -739,11 +737,10 @@ CoWowModalDialogQt::CoWowModalDialogQt(QWidget* parent, const char* title,
   if (image) {
     dcli_translate_filename(fname, image);
     image_w = new QPixmap(fname);
-  }
-  if (!image) {
-    *image_w = QApplication::style()
+  } else {
+    image_w = new QPixmap(QApplication::style()
                    ->standardIcon(QStyle::SP_MessageBoxQuestion)
-                   .pixmap(48);
+                   .pixmap(48));
   }
   QLabel* image_widget = new QLabel(this);
   image_widget->setPixmap(*image_w);

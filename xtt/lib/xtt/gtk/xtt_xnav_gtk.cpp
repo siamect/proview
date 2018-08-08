@@ -165,7 +165,7 @@ void XNavGtk::create_popup_menu(pwr_sAttrRef attrref, xmenu_eItemType item_type,
 //
 void XNavGtk::pop()
 {
-  GtkWidget *parent, *top;
+  GtkWidget *parent, *top = NULL;
 
   parent = gtk_widget_get_parent(form_widget);
   while (parent) {
@@ -193,7 +193,7 @@ void XNavGtk::reset_cursor()
 
 void XNavGtk::set_transient(void* basewidget)
 {
-  GtkWidget *parent, *top;
+  GtkWidget *parent, *top = NULL;
 
   parent = gtk_widget_get_parent(form_widget);
   while (parent) {

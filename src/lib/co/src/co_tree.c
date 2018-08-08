@@ -537,7 +537,7 @@ static tree_sNode* insertNode(tree_sTable* tp, tree_sNode* z)
   tree_sNode* p2;
   tree_sNode* y;
   tree_sNode* x;
-  int comp;
+  int comp = 0;
   int h;
 
   for (y = tp->null, x = tp->root; x != tp->null;) {

@@ -73,7 +73,7 @@ typedef enum {
 class PnViewerNavBrow {
 public:
   PnViewerNavBrow(BrowCtx* brow_ctx, void* lvnav)
-      : ctx(brow_ctx), viewernav(lvnav){};
+      : ctx(brow_ctx), viewernav(lvnav){}
   ~PnViewerNavBrow();
 
   BrowCtx* ctx;
@@ -127,6 +127,8 @@ public:
       unsigned char* item_ipaddress, unsigned char* item_macaddress,
       char* item_devname, int vendorid, int deviceid, brow_tNode dest,
       flow_eDest dest_code);
+  virtual ~ItemDevice();
+  
   viewitem_eItemType type;
   PnViewerNav* viewernav;
   brow_tNode node;
@@ -144,9 +146,6 @@ public:
 
   int open_children(PnViewerNav* viewernav);
   void close(PnViewerNav* viewernav);
-  virtual ~ItemDevice()
-  {
-  }
 };
 
 class ItemDeviceAttr {
@@ -154,16 +153,14 @@ public:
   ItemDeviceAttr(PnViewerNav* viewernav, const char* item_name,
       pwr_eType item_attr_type, void* item_p, brow_tNode dest,
       flow_eDest dest_code);
+  virtual ~ItemDeviceAttr();
+
   viewitem_eItemType type;
   char name[80];
   pwr_eType attr_type;
   PnViewerNav* viewernav;
   brow_tNode node;
   void* p;
-
-  virtual ~ItemDeviceAttr()
-  {
-  }
 };
 
 #endif

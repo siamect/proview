@@ -34,22 +34,6 @@
 #include "co_regex.h"
 #endif
 
-/* AIX requires the alloca decl to be the first thing in the file. */
-
-#ifdef __GNUC__
-#define alloca __builtin_alloca
-#else
-#ifdef sparc
-#include <alloca.h>
-#else
-#ifdef _AIX
-#pragma alloca
-#else
-char* alloca();
-#endif
-#endif
-#endif
-
 #ifdef emacs
 
 /* The `emacs' switch turns on certain special matching commands
@@ -1000,7 +984,6 @@ struct re_pattern_buffer* bufp;
         beg_interval = 0;
         PATFETCH(c); /* normal_char expects char in `c'.  */
         goto normal_char;
-        break;
 
 #ifdef emacs
       case '=':
@@ -1089,7 +1072,6 @@ struct re_pattern_buffer* bufp;
           goto handle_plus;
         else
           goto normal_backsl;
-        break;
 
       default:
       normal_backsl:
@@ -1562,10 +1544,6 @@ int mstop;
       return startpos;
     if (val == -2)
       return -2;
-
-#ifdef C_ALLOCA
-    alloca(0);
-#endif /* C_ALLOCA */
 
   advance:
     if (!range)

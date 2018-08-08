@@ -1511,7 +1511,7 @@ int FlowDrawGtk::pixmaps_create(
     FlowCtx* ctx, flow_sPixmapData* pixmap_data, void** pixmaps)
 {
   draw_sPixmap* pms;
-  flow_sPixmapDataElem *prev_pdata,
+  flow_sPixmapDataElem *prev_pdata = NULL,
       *pdata = (flow_sPixmapDataElem *)pixmap_data;
   int i;
 

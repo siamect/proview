@@ -66,7 +66,7 @@ public:
   GlowArray(int allocate, int incr);
 
   //! Noargs constructor.
-  GlowArray(){};
+  GlowArray(){}
 
   //! Initiates an array to be a copy of another array.
   /*!
@@ -105,7 +105,7 @@ public:
   int size()
   {
     return a_size;
-  };
+  }
 
   //! Insert an element last.
   /*!

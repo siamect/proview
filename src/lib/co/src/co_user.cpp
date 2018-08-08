@@ -224,7 +224,7 @@ int GeUser::add_system(
 int GeUser::remove_system(char* name)
 {
   int sts;
-  SystemList *sl_p, *prev;
+  SystemList *sl_p, *prev = NULL;
 
   SystemName* sn = new SystemName(name);
   sts = sn->parse();
@@ -779,7 +779,7 @@ int SystemList::add_system(
 
 int SystemList::remove_system(SystemList* sys)
 {
-  SystemList *sl, *prev;
+  SystemList *sl, *prev = NULL;
 
   for (sl = childlist; sl; sl = sl->next) {
     if (sl == sys) {
@@ -797,7 +797,7 @@ int SystemList::remove_system(SystemList* sys)
 
 int SystemList::remove_user(char* user)
 {
-  UserList *ul, *ul_p, *prev;
+  UserList *ul, *ul_p, *prev = NULL;
 
   ul = (UserList*)find_user(user);
   if (!ul)

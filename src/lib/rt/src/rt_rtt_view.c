@@ -361,7 +361,7 @@ int rtt_view(
   int redraw = 1;
   char str[100];
   char title[80];
-  FILE* infile;
+  FILE* infile = NULL;
   char last_char;
   char pagestr[80];
 

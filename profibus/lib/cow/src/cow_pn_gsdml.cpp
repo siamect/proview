@@ -36,15 +36,16 @@
 
 /* cow_pn_gsdml.cpp -- Parse gsdml file */
 
+#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
-#include <float.h>
-#include <stddef.h>
 
+#include "pwr_baseclasses.h"
 #include "co_dcli.h"
+#include "co_math.h"
+
 #include "cow_pn_gsdml.h"
 #include "rt_pb_msg.h"
-#include "pwr_baseclasses.h"
 
 static char noref[] = "Unresolved reference";
 
@@ -226,7 +227,7 @@ static gsdml_sTag taglist[] = { { "xml", gsdml_eTag_xml, gsdml_eType_, 0, 0,
   { "Language", gsdml_eTag_Language, gsdml_eType_, 0, 0, 1 },
   { "Text", gsdml_eTag_Text, gsdml_eType_, 0, 0, 1 },
   { "CertificationInfo", gsdml_eTag_CertificationInfo, gsdml_eType_, 0, 0, 1 },
-  { "", gsdml_eTag_, gsdml_eType_, 0 } };
+  { "", gsdml_eTag_, gsdml_eType_, 0, 0, 1 } };
 
 static gsdml_sAttribute attrlist[] = {
   { "version", gsdml_eTag_xml, gsdml_eTag_, gsdml_eType_String,
@@ -1252,8 +1253,8 @@ void pn_gsdml::set_language(const char* lang)
 
 bool pn_gsdml::next_token()
 {
-  char t;
-  bool sts;
+  char t = '\0';
+  bool sts = 0;
 
   if (first_token) {
     first_token = false;
@@ -2526,11 +2527,8 @@ int pn_gsdml::get_datavalue_length(
   case gsdml_eValueDataType_NetworkTimeDiff:
     // TODO
     return PB__NYI;
-    *len = 0;
-    break;
   default:
     return PB__NYI;
-    *len = 0;
   }
   return PB__SUCCESS;
 }
@@ -4579,9 +4577,9 @@ void gsdml_IsochroneMode::print(int ind)
          "%s  T_DC_Base=\"%hu\"\n"
          "%s  T_DC_Min=\"%hu\"\n"
          "%s  T_DC_Max=\"%hu\"\n"
-         "%s  T_IO_Base=\"%hu\"\n"
-         "%s  T_IO_InputMin=\"%hu\"\n"
-         "%s  T_IO_OutputMin=\"%hu\"\n"
+         "%s  T_IO_Base=\"%u\"\n"
+         "%s  T_IO_InputMin=\"%u\"\n"
+         "%s  T_IO_OutputMin=\"%u\"\n"
          "%s  IsochroneModeRequired=\"%d\"/>\n",
       is, is, Body.T_DC_Base, is, Body.T_DC_Min, is, Body.T_DC_Max, is,
       Body.T_IO_Base, is, Body.T_IO_InputMin, is, Body.T_IO_OutputMin, is,
@@ -4759,7 +4757,7 @@ void gsdml_InterfaceSubmoduleItem_ApplicationRelations::print(int ind)
          "%s  NumberOfAdditionalOutputCR=\"%hu\"\n"
          "%s  NumberOfAdditionalMulticastProviderCR=\"%hu\"\n"
          "%s  NumberOfMulticastConsumerCR=\"%hu\"\n"
-         "%s  PullModuleAlarmSupported=\"%hu\">\n",
+         "%s  PullModuleAlarmSupported=\"%u\">\n",
       is, is, Body.NumberOfAdditionalInputCR, is,
       Body.NumberOfAdditionalOutputCR, is,
       Body.NumberOfAdditionalMulticastProviderCR, is,
@@ -6093,9 +6091,9 @@ void gsdml_Valuelist::sort()
 
 int gsdml_Valuelist::parse(char* str)
 {
-  unsigned int v1, v2;
+  unsigned int v1 = 0, v2;
   char vstr[40];
-  char* s1;
+  char* s1 = NULL;
   char* s;
   unsigned int state = gsdml_eValuelistState_Init;
 
@@ -6250,9 +6248,9 @@ void gsdml_SValuelist::sort()
 
 int gsdml_SValuelist::parse(char* str)
 {
-  int v1, v2;
+  int v1 = 0, v2;
   char vstr[40];
-  char* s1;
+  char* s1 = NULL;
   char* s;
   unsigned int state = gsdml_eValuelistState_Init;
 
@@ -6375,9 +6373,9 @@ void gsdml_FValuelist::sort()
 
 int gsdml_FValuelist::parse(char* str)
 {
-  double v1, v2;
+  double v1 = 0, v2;
   char vstr[40];
-  char* s1;
+  char* s1 = NULL;
   char* s;
   unsigned int state = gsdml_eValuelistState_Init;
 
@@ -6465,7 +6463,7 @@ bool gsdml_FValuelist::in_list(double val)
     if (value[i].is_range && val >= value[i].value1 - 100 * FLT_EPSILON
         && val <= value[i].value2 + 100 * FLT_EPSILON)
       return true;
-    else if (!value[i].is_range && value[i].value1 == val)
+    else if (!value[i].is_range && feq(value[i].value1, val))
       return true;
   }
   return false;

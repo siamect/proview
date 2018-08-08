@@ -227,8 +227,8 @@ glow_eDrawType GlowColor::get_drawtype(glow_eDrawType local_drawtype,
   glow_eDrawType drawtype;
   int base_drawtype;
   int incr;
-  int lightness;
-  int intensity;
+  int lightness = 0;
+  int intensity = 0;
 
   if (node) {
     lightness = ((GrowNode*)node)->color_lightness;

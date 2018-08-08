@@ -289,7 +289,7 @@ XttTrend::XttTrend(void* parent_ctx, char* name, pwr_sAttrRef* trend_list,
   } else if (trend_tid == pwr_cClass_DsTrendCurve) {
     pwr_sClass_DsTrendCurve tcp[XTT_TREND_MAX];
     unsigned int actual_data_size[XTT_TREND_MAX];
-    double fmin_interval;
+    double fmin_interval = 0.0;
     int tcp_i;
 
     // Get current status of the trend objects

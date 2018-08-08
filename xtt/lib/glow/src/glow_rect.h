@@ -71,7 +71,7 @@ public:
       int fill_rect = 0)
       : ctx(glow_ctx), ll(glow_ctx, x, y), ur(glow_ctx, x + w, y + h),
         draw_type(d_type), line_width(line_w), fix_line_width(fix_line_w),
-        display_level(display_lev), fill(fill_rect){};
+        display_level(display_lev), fill(fill_rect){}
 
   //! Adjust pixel coordinates to current zoom factor.
   void zoom();
@@ -97,7 +97,7 @@ public:
       GlowWind* w, void* pos, glow_eEvent event, int x, int y, void* node);
 
   //! Not implemented
-  void conpoint_select(void* pos, int x, int y, double* distance, void** cp){};
+  void conpoint_select(void* pos, int x, int y, double* distance, void** cp){}
 
   //! Save the content of the object to file.
   /*!
@@ -169,7 +169,7 @@ public:
   int get_conpoint(int num, double* x, double* y, glow_eDirection* dir)
   {
     return 0;
-  };
+  }
   //! Get the object type
   /*!
     \return The type of the object.
@@ -177,7 +177,7 @@ public:
   glow_eObjectType type()
   {
     return glow_eObjectType_Rect;
-  };
+  }
 
   GrowCtx* ctx; //!< Glow context
 
@@ -188,7 +188,7 @@ public:
   double width()
   {
     return ur.x - ll.x;
-  };
+  }
 
   //! Get the height.
   /*!
@@ -197,7 +197,7 @@ public:
   double height()
   {
     return ur.y - ll.y;
-  };
+  }
 
   //! Set the linewidth.
   /*!
@@ -207,7 +207,7 @@ public:
   void set_linewidth(int linewidth)
   {
     line_width = linewidth;
-  };
+  }
 
   //! Set fill.
   /*!
@@ -217,7 +217,7 @@ public:
   void set_fill(int fillval)
   {
     fill = fillval;
-  };
+  }
 
   GlowPoint ll; //!< Lower left point of rectangle.
   GlowPoint ur; //!< Upper right point of rectangle.

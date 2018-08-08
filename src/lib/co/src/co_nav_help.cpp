@@ -113,7 +113,7 @@ int NavHelp::help(const char* help_key, const char* help_bookmark,
   char include_file[80];
   char subject[80];
   char subject_part[4][40];
-  int key_nr;
+  int key_nr = 0;
   int subject_nr;
   int hit = 0;
   int sts;
@@ -121,7 +121,7 @@ int NavHelp::help(const char* help_key, const char* help_bookmark,
   char link[200];
   char link_bookmark[80];
   char link_filename[80];
-  char* link_filename_p;
+  char* link_filename_p = NULL;
   int link_nr;
   char link_part[4][200];
   char bookmark[80];

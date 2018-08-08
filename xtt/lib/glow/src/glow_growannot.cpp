@@ -64,7 +64,7 @@ void GrowAnnot::save(std::ofstream& fp, glow_eSaveMode mode)
 
 void GrowAnnot::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;
@@ -160,7 +160,7 @@ void GrowAnnot::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
 
   switch (annot_type) {
   case glow_eAnnotType_OneLine: {
-    int width, height, descent;
+    int width = 0, height = 0, descent = 0;
     char* textp;
     int text_len;
 
@@ -320,7 +320,7 @@ void GrowAnnot::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
 
   switch (annot_type) {
   case glow_eAnnotType_OneLine: {
-    int width, height, descent;
+    int width = 0, height = 0, descent = 0;
     char* textp;
     int text_len;
 

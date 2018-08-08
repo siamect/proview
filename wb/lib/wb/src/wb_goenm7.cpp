@@ -109,7 +109,7 @@ int goen_create_nodetype_m7(pwr_sGraphPlcNode* graphbody, pwr_tClassId cid,
   int annot_count;
   double annot_width[3];
   double annot_height;
-  float f_width_left;
+  float f_width_left = 0.0;
 
   flow_tNodeClass nc_pid;
   char name[80];

@@ -60,14 +60,12 @@ public:
   /*!
     \param glow_ctx 	The glow context.
     \param name		Name (max 31 char).
-    \param x1		x coordinate for first corner.
-    \param y1		y coordinate for first corner.
-    \param x2		x coordinate for second corner.
-    \param y2		y coordinate for second corner.
+    \param x		x coordinate for first corner.
+    \param y		y coordinate for first corner.
+    \param w		x coordinate for second corner.
+    \param h		y coordinate for second corner.
     \param border_d_type Border color.
     \param line_w	Linewidth of border.
-    \param t_size	Text size.
-    \param t_drawtype	Drawtype for text.
     \param nodraw	Don't draw the object now.
   */
   GrowBarChart(GrowCtx* glow_ctx, const char* name, double x = 0, double y = 0,
@@ -113,7 +111,7 @@ public:
   void erase(GlowWind* w)
   {
     erase(w, (GlowTransform*)NULL, hot, NULL);
-  };
+  }
 
   //! Draw the objects if any part is inside the drawing area.
   /*!
@@ -151,7 +149,7 @@ public:
   glow_eObjectType type()
   {
     return glow_eObjectType_GrowBarChart;
-  };
+  }
 
   int bars; //!< Number of bars.
   int barsegments; //!< Number of bar parts.

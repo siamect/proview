@@ -198,7 +198,7 @@ public:
     strcpy(OpPlace, "");
     strcpy(default_directory, "");
     strcpy(setupscript, "");
-  };
+  }
   char version[10];
   char time[80];
   unsigned long priv;

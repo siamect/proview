@@ -325,7 +325,7 @@ pwr_tInt32 RemTrans_Cyclic(remnode_item* remnode,
         pwr_sClass_RemTrans* remtrans, char* buf, int buf_size))
 
 {
-  pwr_tStatus sts;
+  pwr_tStatus sts = 0;
   remtrans_item* remtrans;
   pwr_sClass_RemTrans* RemTransP;
   rem_t_transbuff *buffp, *nextp;

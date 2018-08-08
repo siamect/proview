@@ -322,11 +322,10 @@ void pid_exec(plc_sThread* tp, pwr_sClass_pid* object)
 #define DALG 8 /* Derivative part exists */
 #define DAVV 16 /* Derivative part working on control difference */
 
-#define IWUP 1 /* Windup limitation on I part */
+//#define IWUP 1 /* Windup limitation on I part */
 #define BIWUP 2 /* Windup limitation on Bias and I part */
 #define BPIWUP 4 /* Windup limitation on Bias PI part */
-#define BPIDWUP                                                                \
-  8 /* Windup limitation on Bias and PID part (Default, old funcionality */
+#define BPIDWUP 8 /* Windup limitation on Bias and PID part (Default, old funcionality */
 
   float xold; /* Local variables */
   float eold;

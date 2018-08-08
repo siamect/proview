@@ -237,8 +237,8 @@ pwr_tStatus rt_post::mh_alarm_bc(mh_sMessage* MsgP)
     if (s) {
       *s = 0;
       strncpy(group, post->systemgroup, sizeof(group));
-      strncat(group, ".", sizeof(group));
-      strncat(group, str, sizeof(group));
+      strncat(group, ".", sizeof(group) - strlen(group) - 1);
+      strncat(group, str, sizeof(group) - strlen(group) - 1);
       strncpy(user, s + 1, sizeof(user));
     } else {
       strncpy(group, post->systemgroup, sizeof(group));
@@ -413,7 +413,7 @@ void rt_post::format_cmd(char* cmd, char* format, char* address, char* text)
 
 void rt_post::replace_symbol(char* outstr, char* instr)
 {
-  char *s, *t, *u;
+  char *s, *t, *u = NULL;
   int symbolmode = 0;
   char symbol[80];
   char csymbol[80];
@@ -531,7 +531,7 @@ int rt_post::sms_check(mh_sEventId* id)
 int main()
 {
   pwr_tStatus sts;
-  int tmo;
+  int tmo = 0;
   char mp[2000];
   qcom_sQid qid = qcom_cNQid;
   qcom_sGet get;

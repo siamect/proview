@@ -72,7 +72,7 @@ typedef struct {
 
 class wbl_class {
 public:
-  wbl_class() : cid(0), cix(0), templ(0), code(0){};
+  wbl_class() : cid(0), cix(0), templ(0), code(0){}
   pwr_tCid cid;
   int cix;
   ref_wblnode templ;
@@ -81,7 +81,7 @@ public:
 
 class wbl_type {
 public:
-  wbl_type() : tid(0), type(pwr_eType_), elements(0), size(0){};
+  wbl_type() : tid(0), type(pwr_eType_), elements(0), size(0){}
   pwr_tTid tid;
   pwr_eType type;
   int elements;
@@ -100,7 +100,7 @@ public:
 class wbl_attribute {
 public:
   wbl_attribute()
-      : tid(0), size(0), offset(0), elements(0), flags(0), index(0){};
+      : tid(0), size(0), offset(0), elements(0), flags(0), index(0){}
   pwr_tTid tid;
   size_t size;
   size_t offset;
@@ -112,7 +112,7 @@ public:
 
 class wbl_template {
 public:
-  wbl_template() : created(0){};
+  wbl_template() : created(0){}
   bool created;
 };
 

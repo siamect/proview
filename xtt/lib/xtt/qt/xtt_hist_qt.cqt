@@ -54,11 +54,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-#define SENS 1
-#define INSENS 0
 #define DONT_SET_SENS -1
-/* 24 hours in seconds */
-#define ONEDAY 86400
 
 void HistQtWidget::closeEvent(QCloseEvent* event)
 {

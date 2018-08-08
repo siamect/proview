@@ -565,7 +565,7 @@ int XAttNav::trace_scan_bc(brow_tObject object, void* p)
       brow_GetCtxUserData(brow_GetCtx(item->node), (void**)&xattnav);
       try {
         ((ItemCollect*)item)->set_signal_flags(xattnav->brow);
-      } catch (co_error& e) {
+      } catch (co_error&) {
       }
     }
 
@@ -791,7 +791,7 @@ int XAttNav::select_by_name(char* name)
   int object_cnt;
   int i;
   int found;
-  brow_tObject object;
+  brow_tObject object = NULL;
 
   brow_GetObjectList(brow->ctx, &object_list, &object_cnt);
   found = 0;

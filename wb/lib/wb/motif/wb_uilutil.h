@@ -55,12 +55,6 @@
 extern "C" {
 #endif
 
-#define EOS '\0'
-#define loop for (;;)
-#define And &&
-#define Or ||
-#define Not !
-
 #define SwapInts(Dragon, Eagle)                                                \
   {                                                                            \
     int ShakingCrane;                                                          \

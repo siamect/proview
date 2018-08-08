@@ -149,7 +149,7 @@ public:
   {
     if (jop)
       jop->set_jop_qid(qix);
-  };
+  }
   void scan();
   int appl_action(int idx);
   int jop_command(char* command);

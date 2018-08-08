@@ -51,7 +51,7 @@ FlowPixmap::FlowPixmap(FlowCtx* flow_ctx, flow_sPixmapData* pix_data, double x,
 
 FlowPixmap::FlowPixmap(const FlowPixmap& p)
 {
-  memcpy(this, &p, sizeof(p));
+  memcpy((void *)this, (void *)&p, sizeof(p));
   ctx->fdraw->pixmaps_create(ctx, (flow_sPixmapData*)pixmap_data, &pixmaps);
 }
 

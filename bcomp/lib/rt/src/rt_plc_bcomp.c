@@ -231,7 +231,7 @@ void CompPID_Fo_init(pwr_sClass_CompPID_Fo* o)
 #define DALG 8 /* Derivative part exists */
 #define DAVV 16 /* Derivative part working on control difference */
 
-#define IWUP 1 /* Windup limitation on I part */
+//#define IWUP 1 /* Windup limitation on I part */
 #define BIWUP 2 /* Windup limitation on Bias and I part */
 #define BPIWUP 4 /* Windup limitation on Bias PI part */
 #define BPIDWUP                                                                \
@@ -548,7 +548,7 @@ void CompOnOffZoneFo_exec(plc_sThread* tp, pwr_sClass_CompOnOffZoneFo* o)
     if (co->Power != 100.0)
       co->CycleTime = co->BurnerTimeMinOff * 100.0 / co->Power;
   } else {
-    if (co->Power != 0)
+    if (!feqf(co->Power, 0.0f))
       co->CycleTime = co->BurnerTimeMinOn * 100.0 / (100.0 - co->Power);
   }
   co->CycleCount += *o->ScanTime / co->CycleTime * 100;
@@ -569,10 +569,7 @@ void CompOnOffZoneFo_exec(plc_sThread* tp, pwr_sClass_CompOnOffZoneFo* o)
   2017 - 04 - 14    Bruno: remove "division by zero" potential bugs v0.3
 */
 
-#define Te tp->ActualScanTime
 #define MAXCELLS 100
-#define Clamp(x, min, max)                                                     \
-  x = ((x) < (min)) ? (min) : (((x) > (max)) ? (max) : (x))
 //#define Normalize(x, y, xmin, xmax, ymin, ymax) y =
 //(((((ymax)-(ymin))/((xmax)-(xmin)))*((x)-(xmin)))+(ymin)) // replaced by a
 // function in v0.3
@@ -599,30 +596,30 @@ void Normalize(pwr_tFloat32 x, pwr_tFloat32* y, pwr_tFloat32 xmin,
 void LagFilter(plc_sThread* tp, pwr_sClass_CompIMC* plant_obj, pwr_tInt16 n,
     pwr_tFloat32 Tlag)
 {
-  if (Tlag < Te) {
+  if (Tlag < tp->ActualScanTime) {
     plant_obj->S[n + 1] = plant_obj->S[n];
     return;
   }
-  pwr_tFloat32 kf = 1.0 / (1.0 + Tlag / Te);
-  Clamp(plant_obj->S[n + 1], 0.0, 100.0);
+  pwr_tFloat32 kf = 1.0 / (1.0 + Tlag / tp->ActualScanTime);
+  plant_obj->S[n + 1] = CLAMP(plant_obj->S[n + 1], 0.0, 100.0);
   plant_obj->S[n + 1] = (1.0 - kf) * plant_obj->S[n + 1] + kf * plant_obj->S[n];
 }
 
 void LeadLagFilter(plc_sThread* tp, pwr_sClass_CompIMC* plant_obj, pwr_tInt16 n,
     pwr_tFloat32 T1, pwr_tFloat32 T2)
 {
-  if (T2 < Te) {
+  if (T2 < tp->ActualScanTime) {
     plant_obj->S[n + 1] = plant_obj->S[n];
     plant_obj->M[n] = plant_obj->S[n];
     return;
   }
-  pwr_tFloat32 kc = -T1 / Te;
-  pwr_tFloat32 kd = T2 / Te;
+  pwr_tFloat32 kc = -T1 / tp->ActualScanTime;
+  pwr_tFloat32 kd = T2 / tp->ActualScanTime;
   pwr_tFloat32 ka = 1.0 + kd;
   pwr_tFloat32 kb = 1.0 - kc;
   if (ka <= 0)
     return; // v0.3
-  Clamp(plant_obj->S[n + 1], 0.0, 100.0);
+  plant_obj->S[n + 1] = CLAMP(plant_obj->S[n + 1], 0.0, 100.0);
   plant_obj->S[n + 1] = kd / ka * plant_obj->S[n + 1]
       + kb / ka * plant_obj->S[n] + kc / ka * plant_obj->M[n];
   plant_obj->M[n] = plant_obj->S[n];
@@ -635,13 +632,13 @@ void SouFilter(plc_sThread* tp, pwr_sClass_CompIMC* plant_obj, pwr_tInt16 n,
     plant_obj->S[n + 1] = plant_obj->S[n];
     return;
   }
-  pwr_tFloat32 a0 = Te * Te * w0P * w0P + 2.0 * ksi * Te * w0P + 1.0;
-  pwr_tFloat32 a1 = 2.0 * (ksi * Te * w0P + 1.0);
+  pwr_tFloat32 a0 = tp->ActualScanTime * tp->ActualScanTime * w0P * w0P + 2.0 * ksi * tp->ActualScanTime * w0P + 1.0;
+  pwr_tFloat32 a1 = 2.0 * (ksi * tp->ActualScanTime * w0P + 1.0);
   pwr_tFloat32 a2 = -1.0;
-  pwr_tFloat32 b0 = Te * Te * w0P * w0P;
+  pwr_tFloat32 b0 = tp->ActualScanTime * tp->ActualScanTime * w0P * w0P;
   if (a0 <= 0)
     return; // v0.3
-  Clamp(plant_obj->S[n + 1], 0.0, 100.0);
+  plant_obj->S[n + 1] = CLAMP(plant_obj->S[n + 1], 0.0, 100.0);
   plant_obj->uOutm2 = plant_obj->uOutm1;
   plant_obj->uOutm1 = plant_obj->S[n + 1];
   plant_obj->S[n + 1] = a1 / a0 * plant_obj->uOutm1
@@ -655,15 +652,15 @@ void SouTOoFilter(plc_sThread* tp, pwr_sClass_CompIMC* plant_obj, pwr_tInt16 n,
     plant_obj->S[n + 1] = plant_obj->S[n];
     return;
   }
-  pwr_tFloat32 b0 = Te * Te * w0 * w0 + 2.0 * ksi * Te * w0 + 1.0;
-  pwr_tFloat32 b1 = -2.0 * (ksi * Te * w0 + 1.0);
+  pwr_tFloat32 b0 = tp->ActualScanTime * tp->ActualScanTime * w0 * w0 + 2.0 * ksi * tp->ActualScanTime * w0 + 1.0;
+  pwr_tFloat32 b1 = -2.0 * (ksi * tp->ActualScanTime * w0 + 1.0);
   pwr_tFloat32 b2 = 1.0;
-  pwr_tFloat32 a0 = w0 * w0 * (Tl1 + Te) * (Tl2 + Te);
-  pwr_tFloat32 a1 = w0 * w0 * (2.0 * Tl1 * Tl2 + Te * (Tl1 + Tl2));
+  pwr_tFloat32 a0 = w0 * w0 * (Tl1 + tp->ActualScanTime) * (Tl2 + tp->ActualScanTime);
+  pwr_tFloat32 a1 = w0 * w0 * (2.0 * Tl1 * Tl2 + tp->ActualScanTime * (Tl1 + Tl2));
   pwr_tFloat32 a2 = -w0 * w0 * Tl1 * Tl2;
   if (a0 <= 0)
     return; // v0.3
-  Clamp(plant_obj->S[n + 1], 0.0, 100.0);
+  plant_obj->S[n + 1] = CLAMP(plant_obj->S[n + 1], 0.0, 100.0);
   plant_obj->Outm2 = plant_obj->Outm1;
   plant_obj->Outm1 = plant_obj->S[n + 1];
   plant_obj->S[n + 1] = a1 / a0 * plant_obj->Outm1 + a2 / a0 * plant_obj->Outm2
@@ -678,21 +675,21 @@ void Delay(plc_sThread* tp, pwr_sClass_CompIMC* plant_obj, pwr_tInt16 n,
 {
   pwr_tFloat32 OP = 0.0;
   int i, Ntime, Nscan;
-  if ((int)Delay < Te) {
+  if ((int)Delay < tp->ActualScanTime) {
     plant_obj->S[n + 1] = plant_obj->S[n];
     return;
   } // return if nothing can be done
-  if (plant_obj->PrevDelay != Delay)
+  if (!feqf(plant_obj->PrevDelay, Delay))
     for (i = MAXCELLS - 1; i >= 0; i--)
       plant_obj->D[i] = plant_obj->S[n]; // reset if delay param as changed
   plant_obj->PrevDelay = Delay; // Apply new delay
-  Nscan = (int)(0.5 + Delay / Te); // Calculate number of cells needed
+  Nscan = (int)(0.5 + Delay / tp->ActualScanTime); // Calculate number of cells needed
   if (Nscan > MAXCELLS) // Things to do if delay time is more than 100 times
   // scan time
   {
     Ntime = (int)(0.5
         + Delay
-            / (Te * (pwr_tFloat32)
+            / (tp->ActualScanTime * (pwr_tFloat32)
                         MAXCELLS)); // calculate number of time lags to count
     if (plant_obj->DtCtr == 0)
       for (i = 0; i <= MAXCELLS; i++)
@@ -733,7 +730,7 @@ void CompIMC_Fo_exec(plc_sThread* tp, pwr_sClass_CompIMC_Fo* plc_obj)
   plant_obj->aut = *plc_obj->autP; // Auto input: copy IMC_Fo to IMC
 
   LSP = plant_obj->SP + plant_obj->Trim_SP; // Calculate working setpoint
-  Clamp(LSP, plant_obj->LL_SP, plant_obj->HL_SP); // Apply limits
+  LSP = CLAMP(LSP, plant_obj->LL_SP, plant_obj->HL_SP); // Apply limits
   Normalize(LSP, &nLSP, plant_obj->LR_PV, plant_obj->HR_PV, 0.0,
       100.0); // Normalize setpoint value // v0.3
 
@@ -761,12 +758,12 @@ void CompIMC_Fo_exec(plc_sThread* tp, pwr_sClass_CompIMC_Fo* plc_obj)
     plant_obj->uOutm1 = plant_obj->uOutm2 = man_OP;
 
     yr = *plc_obj->Man_OPP;
-    Clamp(yr, plant_obj->LL_OP,
+    yr = CLAMP(yr, plant_obj->LL_OP,
         plant_obj->HL_OP); // Apply limits on control signal
     plc_obj->OP = plant_obj->OP = yr;
   } else { // Calculate IMC controller
 
-    if (Te <= 0)
+    if (tp->ActualScanTime <= 0)
       return; // v0.3
     if (plant_obj->Accel < 1.0)
       return; // v0.3
@@ -807,11 +804,11 @@ void CompIMC_Fo_exec(plc_sThread* tp, pwr_sClass_CompIMC_Fo* plc_obj)
       plant_obj->S[6] = plant_obj->S[5];
 
     OP = plant_obj->S[6];
-    Clamp(OP, 0.0, 100.0); // Apply limits on model output
+    OP = CLAMP(OP, 0.0, 100.0); // Apply limits on model output
     Normalize(OP, &yr, 0.0, 100.0, plant_obj->LR_OP,
         plant_obj->HR_OP); // Denormalize output // v0.3
     yr += plant_obj->FF; // Add feedforward input value
-    Clamp(yr, plant_obj->LL_OP,
+    yr = CLAMP(yr, plant_obj->LL_OP,
         plant_obj->HL_OP); // Apply limits to control signal
     plc_obj->OP = plant_obj->OP = yr; // copy to GUI objects
 
@@ -894,7 +891,7 @@ void CompModeIMC_Fo_exec(plc_sThread* tp, pwr_sClass_CompModeIMC_Fo* plc_obj)
     // man transition
     plant_obj->Loc_SP = plant_obj->PV;
 
-  if (plant_obj->Loc_SP != plant_obj->SP)
+  if (!feqf(plant_obj->Loc_SP, plant_obj->SP))
     plant_obj->SP = plant_obj->Loc_SP; // set SP to manual GUI SP setting
   if (plant_obj->Mode == pwr_eImcModeEnum_Remote)
     plant_obj->SP

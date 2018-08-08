@@ -34,7 +34,6 @@
  * General Public License plus this exception.
  **/
 
-#include <float.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -322,7 +321,7 @@ void GrowArc::save(std::ofstream& fp, glow_eSaveMode mode)
 
 void GrowArc::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;
@@ -553,7 +552,7 @@ void GrowArc::set_position(double x, double y)
 {
   double old_x_left, old_x_right, old_y_low, old_y_high;
 
-  if (trf.a13 == x && trf.a23 == y)
+  if (feq(trf.a13, x) && feq(trf.a23, y))
     return;
   old_x_left = x_left;
   old_x_right = x_right;
@@ -825,7 +824,7 @@ void GrowArc::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
         && !disable_gradient)
       grad = ((GrowNode*)node)->gradient;
 
-    if (!display_shadow || shadow_width == 0 || angle2 != 360) {
+    if (!display_shadow || feq(shadow_width, 0.0) || angle2 != 360) {
       if (grad == glow_eGradient_No || fillcolor == glow_eDrawType_ColorRed) {
         if (chot)
           drawtype = GlowColor::shift_drawtype(fillcolor, chot, 0);

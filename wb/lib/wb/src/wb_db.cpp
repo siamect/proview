@@ -976,9 +976,9 @@ void wb_db::open(const char* fileName)
 
 static void printstat(DbEnv* ep, const char* s)
 {
-  DB_LOCK_STAT* lp;
-
   return;
+  /*
+  DB_LOCK_STAT* lp;
 
   printf("DbEnv loc statistics, %s:\n", s);
 
@@ -1009,6 +1009,7 @@ static void printstat(DbEnv* ep, const char* s)
   printf("  region_wait..: %u\n", (unsigned int)lp->st_region_wait);
   printf("  region_nowait: %u\n", (unsigned int)lp->st_region_nowait);
   printf("\n");
+  */
 }
 
 extern "C" {
@@ -1164,7 +1165,7 @@ pwr_tOid wb_db::new_oid(wb_db_txn* txn, pwr_tOid oid)
   try {
     wb_db_ohead o(this, txn, woid);
     return pwr_cNOid;
-  } catch (DbException& e) {
+  } catch (DbException&) {
     pwr_tOix nextoix;
     int rc = 0;
     pwr_tOid oid = pwr_cNOid;
@@ -1248,7 +1249,7 @@ bool wb_db::deleteFamily(pwr_tStatus* sts, wb_db_ohead* o)
     // txn->commit(0);
     // o->mark(is_deleted);
 
-  } catch (DbException& e) {
+  } catch (DbException&) {
     txn->abort();
   }
 

@@ -273,8 +273,6 @@ void sancm_Update(qcom_sGet* get)
   gdb_ScopeLock
   {
     error = 0;
-    if (0)
-      errh_Info("sancm_Update, recieved %d", up->count);
     for (i = 0; i < up->count; i++) {
       op = hash_Search(NULL, gdbroot->oid_ht, &up->data[i].sane.oid);
       if (op == NULL

@@ -34,10 +34,6 @@
  * General Public License plus this exception.
  */
 
-/* stdlib.h on Lynx defines NULL as 0, does not work! */
-#define NULL (void*)0
-
-#include <float.h>
 #include <stdlib.h>
 
 #include "pwr_baseclasses.h"

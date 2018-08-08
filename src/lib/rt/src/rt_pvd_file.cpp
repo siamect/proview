@@ -47,8 +47,6 @@ extern "C" {
 #include "co_dcli.h"
 }
 
-#define START_OIX 1000
-
 // Wb only
 void rt_pvd_file::object(co_procom* pcom)
 {
@@ -70,7 +68,7 @@ void rt_pvd_file::objectOid(co_procom* pcom, pwr_tOix oix)
         m_list[oix].fwsoix, m_list[oix].fchoix, m_list[oix].lchoix,
         m_list[oix].cid, m_list[oix].name, longname(oix));
   } else {
-    if (oix >= m_list.size() || oix < 0) {
+    if (oix >= m_list.size()) {
       pcom->provideStatus(GDH__NOSUCHOBJ);
       return;
     }

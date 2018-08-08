@@ -107,7 +107,7 @@ XttStream::XttStream(void* st_parent_ctx, const char* name, const char* st_uri,
     if (EVEN(sts))
       strcpy(user, "");
 
-    pwr_tFloat32 tmo;
+    pwr_tFloat32 tmo = 0.0;
     sts = gdh_ArefANameToAref(&aref, "ConnectionTimeout", &aaref);
     if (ODD(sts))
       sts = gdh_GetObjectInfoAttrref(&aaref, &tmo, sizeof(tmo));
@@ -118,7 +118,7 @@ XttStream::XttStream(void* st_parent_ctx, const char* name, const char* st_uri,
     } else
       connection_timeout = 10;
 
-    pwr_tFloat32 time;
+    pwr_tFloat32 time = 0.0;
     sts = gdh_ArefANameToAref(&aref, "ReconnectTime", &aaref);
     if (ODD(sts))
       sts = gdh_GetObjectInfoAttrref(&aaref, &time, sizeof(time));
@@ -156,6 +156,11 @@ XttStream::XttStream(void* st_parent_ctx, const char* name, const char* st_uri,
     x_offset = 0;
     y_offset = (height - ((float)width) / stream_ratio) / 2;
   }
+}
+
+XttStream::~XttStream()
+{
+  delete camera_control;
 }
 
 void XttStream::position(double pan, double tilt, double zoom)
@@ -274,6 +279,79 @@ void XttStream::activate_preset_store_pos(int idx)
     return;
 }
 
+void XttStream::pop()
+{
+}
+
+void XttStream::set_size(int width, int height)
+{
+}
+
+void XttStream::setup()
+{
+}
+
+void* XttStream::get_widget()
+{
+  return 0;
+}
+
+void XttStream::create_popup_menu(int x, int y)
+{
+}
+
+XttCameraControl::XttCameraControl(char* x_url)
+{
+}
+
+XttCameraControl::~XttCameraControl()
+{
+}
+
+void XttCameraControl::zoom_relative(double factor)
+{
+}
+
+void XttCameraControl::zoom_absolute(double factor)
+{
+}
+
+void XttCameraControl::pan_relative(double value)
+{
+}
+
+void XttCameraControl::pan_absolute(double value)
+{
+}
+
+void XttCameraControl::tilt_relative(double value)
+{
+}
+
+void XttCameraControl::tilt_absolute(double value)
+{
+}
+
+void XttCameraControl::pan_tilt_zoom_absolute(
+    double pan, double tilt, double zoom)
+{
+}
+
+void XttCameraControl::center(
+    int x, int y, int width, int height, int stream_width, int stream_height)
+{
+}
+
+void XttCameraControl::area_zoom(int x, int y, int width, int height,
+    int window_width, int window_height, int stream_width, int stream_height)
+{
+}
+
+int XttCameraControl::get_position(double* pan, double* tilt, double* zoom)
+{
+  return 0;
+}
+
 XttCameraControlVapix::XttCameraControlVapix(
     char* x_url, char* x_user, char* x_password)
     : XttCameraControl(x_url)
@@ -296,6 +374,10 @@ XttCameraControlVapix::XttCameraControlVapix(
     sprintf(authstr, "--user %s --password %s", x_user, x_password);
   else
     strcpy(authstr, "");
+}
+
+XttCameraControlVapix::~XttCameraControlVapix()
+{
 }
 
 // Relative zoom, factor is -100 - 100, - zoom out, + zoom in.
@@ -500,7 +582,7 @@ int XttCameraControlVapix::get_position(double* pan, double* tilt, double* zoom)
   char line[100];
   char* s;
   int sts;
-  float cpan, ctilt, czoom;
+  float cpan = 0.0, ctilt = 0.0, czoom = 0.0;
   int pan_found, tilt_found, zoom_found;
   pwr_tTime old_time;
   pwr_tTime time;

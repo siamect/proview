@@ -48,7 +48,7 @@ pwr_tStatus sev_db::tree_update()
   pwr_tAName hname;
   pwr_tStatus sts;
   pwr_tOid oid;
-  pwr_tCid cid;
+  pwr_tCid cid = 0;
   char* s;
   pwr_sClass_SevItem ritem;
   char oname_array[20][pwr_cSizObjName + 1];
@@ -239,7 +239,7 @@ pwr_tStatus sev_db::tree_update_value(int item_idx, pwr_tTime time, void* buf)
   else if (m_items[item_idx].options & pwr_mSevOptionsMask_MeanValue2)
     interval = m_cnf.MeanValueInterval2;
 
-  if (interval != 0) {
+  if (!feqf(interval, 0.0f)) {
     pwr_tDeltaTime dtime;
     float scantime;
     float prev_deviation;

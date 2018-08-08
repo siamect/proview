@@ -51,8 +51,6 @@ extern "C" {
 #include "co_lng.h"
 #include "cnv_image.h"
 
-#define CNV_TAB 18
-
 #define pdf_cHead "%PDF-1.4"
 
 void CnvPdfObj::print_begin()

@@ -101,7 +101,7 @@ public slots:
   void activate_cmd_apply();
   void activate_cmd_ca();
 
-  void valchanged_cmd_input(){};
+  void valchanged_cmd_input(){}
 
 private:
   GsdAttrQt* attr;

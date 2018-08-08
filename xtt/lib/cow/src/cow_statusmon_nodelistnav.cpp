@@ -860,7 +860,7 @@ void NodelistNav::message(
 
   strcpy(msg, node);
   strcat(msg, "  ");
-  strncat(msg, text, sizeof(msg) - strlen(msg));
+  strncat(msg, text, sizeof(msg) - strlen(msg) - 1);
   oid.oix = idx;
 
   msgw_ePop pop;
@@ -895,7 +895,7 @@ int NodelistNav::update_nodes()
   pwr_tStatus sts;
   statussrv_sGetStatus response;
   int nodraw = 0;
-  pwr_tStatus current_status;
+  pwr_tStatus current_status = 0;
   char current_status_str[120];
 
   for (int i = 0; i < (int)node_list.size(); i++) {
@@ -1229,6 +1229,26 @@ void NodelistNav::attrvalue_to_string(
   }
 }
 
+ItemBase::ItemBase(NodelistNav* item_nodelistnav, const char* item_name)
+    : nodelistnav(item_nodelistnav)
+{
+  strcpy(name, item_name);
+}
+
+ItemBase::~ItemBase()
+{
+}
+
+int ItemBase::open_children(NodelistNav* nodelistnav, double x, double y)
+{
+  return 1;
+}
+
+int ItemBase::close(NodelistNav* nodelistnav, double x, double y)
+{
+  return 1;
+}
+
 ItemNode::ItemNode(NodelistNav* item_nodelistnav, const char* item_name,
     const char* item_node_descr, brow_tNode dest, flow_eDest dest_code)
     : ItemBase(item_nodelistnav, item_name), syssts_open(0)
@@ -1360,6 +1380,10 @@ ItemAttr::ItemAttr(NodelistNav* item_nodelistnav, const char* item_name,
 
   brow_SetAnnotation(node, 0, item_name, strlen(item_name));
   brow_SetTraceAttr(node, attr, "", flow_eTraceType_User);
+}
+
+ItemAttr::~ItemAttr()
+{
 }
 
 ItemAttrSysSts::ItemAttrSysSts(NodelistNav* item_nodelistnav,
@@ -1617,4 +1641,8 @@ ItemAttrSts::ItemAttrSts(NodelistNav* item_nodelistnav, const char* item_name,
 
   brow_SetAnnotation(node, 0, item_name, strlen(item_name));
   brow_SetTraceAttr(node, attr, "", flow_eTraceType_User);
+}
+
+ItemAttrSts::~ItemAttrSts()
+{
 }

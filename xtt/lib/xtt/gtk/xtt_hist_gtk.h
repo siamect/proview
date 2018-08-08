@@ -35,7 +35,7 @@
  */
 
 #ifndef xtt_hist_gtk_h
-#define xtt_hist_gkt_h
+#define xtt_hist_gtk_h
 
 /* xtt_hist_gtk.h -- Historical event window in xtt */
 

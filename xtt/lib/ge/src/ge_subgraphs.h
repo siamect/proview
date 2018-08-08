@@ -64,7 +64,7 @@ typedef struct subgraph_sAttr {
 
 class SubGraphsBrow {
 public:
-  SubGraphsBrow(BrowCtx* brow_ctx, void* xn) : ctx(brow_ctx), subgraphs(xn){};
+  SubGraphsBrow(BrowCtx* brow_ctx, void* xn) : ctx(brow_ctx), subgraphs(xn){}
   ~SubGraphsBrow();
 
   BrowCtx* ctx;
@@ -123,7 +123,7 @@ public:
 //! Base item class.
 class SubGraphBaseItem {
 public:
-  SubGraphBaseItem(subgraphs_eItemType item_type) : type(item_type){};
+  SubGraphBaseItem(subgraphs_eItemType item_type) : type(item_type){}
   subgraphs_eItemType type;
 };
 
@@ -145,7 +145,7 @@ public:
   {
     *extern_p = value;
     grow_SetModified((grow_tCtx)grow_ctx, 1);
-  };
+  }
 };
 
 /*@}*/

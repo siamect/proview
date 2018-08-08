@@ -25630,7 +25630,7 @@ SOAP_FMAC3 std::vector<bool>* SOAP_FMAC4 soap_in_std__vectorTemplateOfbool(
     return NULL;
   if (!a && !(a = soap_new_std__vectorTemplateOfbool(soap, -1)))
     return NULL;
-  bool n;
+  bool n = false;
   bool* p;
   do {
     soap_revert(soap);

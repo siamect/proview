@@ -204,7 +204,7 @@ static pwr_tStatus IoCardInit(
   }
 
   if (local->portB_hasAi) {
-    int num_ai;
+    int num_ai = 0;
     for (i = 0; i < 8; i++) {
       if (local->portB_aiMask & (1 << i))
         num_ai = i + 1;

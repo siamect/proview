@@ -151,8 +151,8 @@ static void* mb_receive(void* data)
       case pwr_eModbus_FCEnum_ReadInputRegisters:
       case pwr_eModbus_FCEnum_ReadHoldingRegisters: {
         io_sCard* cardp;
-        io_sServerModuleLocal* local_card;
-        pwr_sClass_Modbus_TCP_ServerModule* mp;
+        io_sServerModuleLocal* local_card = NULL;
+        pwr_sClass_Modbus_TCP_ServerModule* mp = NULL;
         read_req* rmsg = (read_req*)rb;
         rsp_read msg;
         int found;
@@ -217,7 +217,7 @@ static void* mb_receive(void* data)
       case pwr_eModbus_FCEnum_ReadCoils:
       case pwr_eModbus_FCEnum_ReadDiscreteInputs: {
         io_sCard* cardp;
-        io_sServerModuleLocal* local_card;
+        io_sServerModuleLocal* local_card = NULL;
         pwr_sClass_Modbus_TCP_ServerModule* mp;
         read_req* rmsg = (read_req*)rb;
         rsp_read msg;
@@ -307,8 +307,8 @@ static void* mb_receive(void* data)
       }
       case pwr_eModbus_FCEnum_WriteSingleRegister: {
         io_sCard* cardp;
-        io_sServerModuleLocal* local_card;
-        pwr_sClass_Modbus_TCP_ServerModule* mp;
+        io_sServerModuleLocal* local_card = NULL;
+        pwr_sClass_Modbus_TCP_ServerModule* mp = NULL;
         write_single_req* rmsg = (write_single_req*)rb;
         rsp_single_write msg;
         int found;
@@ -366,8 +366,8 @@ static void* mb_receive(void* data)
       }
       case pwr_eModbus_FCEnum_WriteMultipleRegisters: {
         io_sCard* cardp;
-        io_sServerModuleLocal* local_card;
-        pwr_sClass_Modbus_TCP_ServerModule* mp;
+        io_sServerModuleLocal* local_card = NULL;
+        pwr_sClass_Modbus_TCP_ServerModule* mp = NULL;
         write_reg_req* rmsg = (write_reg_req*)rb;
         rsp_write msg;
         int found;
@@ -431,7 +431,7 @@ static void* mb_receive(void* data)
       }
       case pwr_eModbus_FCEnum_WriteSingleCoil: {
         io_sCard* cardp;
-        io_sServerModuleLocal* local_card;
+        io_sServerModuleLocal* local_card = NULL;
         pwr_sClass_Modbus_TCP_ServerModule* mp;
         write_single_req* rmsg = (write_single_req*)rb;
         rsp_single_write msg;
@@ -501,7 +501,7 @@ static void* mb_receive(void* data)
       }
       case pwr_eModbus_FCEnum_WriteMultipleCoils: {
         io_sCard* cardp;
-        io_sServerModuleLocal* local_card;
+        io_sServerModuleLocal* local_card = NULL;
         pwr_sClass_Modbus_TCP_ServerModule* mp;
         write_reg_req* rmsg = (write_reg_req*)rb;
         rsp_write msg;
@@ -692,7 +692,6 @@ static void* mb_receive(void* data)
       }
     }
   }
-  return 0;
 }
 
 static void* mb_connect(void* arg)
@@ -705,7 +704,7 @@ static void* mb_connect(void* arg)
   socklen_t r_addr_len;
   int c_socket;
   mb_sCondata* condata;
-  int idx;
+  int idx = 0;
   int found;
   int i;
 
@@ -786,7 +785,6 @@ static void* mb_connect(void* arg)
       continue;
     }
   }
-  return 0;
 }
 
 /*----------------------------------------------------------------------------*\

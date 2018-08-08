@@ -47,7 +47,7 @@ class WbMotif : public Wb {
   Widget mainwindow;
 
   WbMotif( int argc, char *argv[]);
-  ~WbMotif() {};
+  ~WbMotif() {}
   Wtt *wtt_new( const char *name, const char *iconname, ldh_tWBContext wbctx,
 		pwr_tVolumeId volid, ldh_tVolume volctx,
 		wnav_sStartMenu *root_menu, pwr_tStatus *status);

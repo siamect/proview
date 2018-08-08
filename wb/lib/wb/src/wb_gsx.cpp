@@ -195,7 +195,7 @@ int gsx_check_connection(WFoe* foe, vldh_t_node sourceobject,
     vldh_t_node trans_object, other_object;
     unsigned long trans_point, other_point;
     pwr_tClassId other_class;
-    int transcount, stepcount;
+    int transcount = 0, stepcount = 0;
     int k;
     pwr_tClassId cid;
 

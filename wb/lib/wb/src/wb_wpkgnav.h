@@ -104,20 +104,14 @@ public:
 
 class WItemPkg {
 public:
-  WItemPkg() : node(0){};
+  WItemPkg();
+  virtual ~WItemPkg();
   virtual int open_children(
-      WNavBrow* brow, double x, double y, int display_mode)
-  {
-    return 1;
-  }
+      WNavBrow* brow, double x, double y, int display_mode);
   virtual int close(WNavBrow* brow, double x, double y);
 
   brow_tNode node;
   char name[120];
-
-  virtual ~WItemPkg()
-  {
-  }
 };
 
 class WItemPkgNode : public WItemPkg {
@@ -166,6 +160,7 @@ class WItemPkgInfo : public WItemPkg {
 public:
   WItemPkgInfo(WNavBrow* brow, const char* item_name, char* item_value,
       brow_tNode dest, flow_eDest dest_code);
+  virtual ~WItemPkgInfo();
   char name[120];
   char value[120];
 };
@@ -174,6 +169,7 @@ class WItemPkgFile : public WItemPkg {
 public:
   WItemPkgFile(WNavBrow* brow, const char* item_name, char* item_filename,
       pwr_tTime item_time, int dmode, brow_tNode dest, flow_eDest dest_code);
+  virtual ~WItemPkgFile();
   char filename[120];
   pwr_tTime time;
 };

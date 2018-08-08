@@ -34,7 +34,6 @@
  * General Public License plus this exception.
  **/
 
-#include <float.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -102,7 +101,7 @@ GrowImage::GrowImage(GrowCtx* glow_ctx, const char* name, double x, double y,
 
 void GrowImage::copy_from(const GrowImage& im)
 {
-  memcpy(this, &im, sizeof(im));
+  memcpy((void *)this, (void *)&im, sizeof(im));
   image = 0;
   original_image = 0;
   pixmap = 0;
@@ -495,7 +494,7 @@ void GrowImage::save(std::ofstream& fp, glow_eSaveMode mode)
 
 void GrowImage::open(std::ifstream& fp)
 {
-  int type;
+  int type = 0;
   int end_found = 0;
   char dummy[40];
   int tmp;
@@ -705,7 +704,7 @@ void GrowImage::set_position(double x, double y)
 {
   double old_x_left, old_x_right, old_y_low, old_y_high;
 
-  if (trf.a13 == x && trf.a23 == y)
+  if (feq(trf.a13, x) && feq(trf.a23, y))
     return;
   old_x_left = x_left;
   old_x_right = x_right;
@@ -906,7 +905,7 @@ void GrowImage::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
   ll_y = MIN(y1, y2);
   ur_y = MAX(y1, y2);
 
-  if (ll_x == ur_x || ll_y == ur_y)
+  if (feq(ll_x, ur_x) || feq(ll_y, ur_y))
     return;
 
   double rot;

@@ -256,7 +256,7 @@ int rtt_crr_signal(char* filename, char* signalname)
   char* buff;
   pwr_tVolumeId volid;
   pwr_tObjid objid;
-  int buffcnt;
+  int buffcnt = 0;
 
   rtt_toupper(signalname, signalname);
 
@@ -375,8 +375,6 @@ finish:
     rtt_message('E', "Object not found");
     return RTT__NOPICTURE;
   }
-  free(buff);
-  return RTT__SUCCESS;
 }
 
 /*************************************************************************
@@ -412,7 +410,7 @@ int rtt_crr_object(char* filename, char* objectname)
   char* buff;
   pwr_tVolumeId volid;
   pwr_tObjid objid;
-  int buffcnt;
+  int buffcnt = 0;
 
   rtt_toupper(objectname, objectname);
 
@@ -541,8 +539,6 @@ finish:
     rtt_message('E', "Object not found");
     return RTT__NOPICTURE;
   }
-  free(buff);
-  return RTT__SUCCESS;
 }
 
 /*************************************************************************
@@ -578,7 +574,7 @@ int rtt_crr_code(
   char* buff;
   pwr_tVolumeId volid;
   pwr_tObjid objid;
-  int buffcnt;
+  int buffcnt = 0;
   int len;
   int i;
   int objname_written;
@@ -729,8 +725,6 @@ finish:
       rtt_message('E', "Function not found");
     return RTT__NOPICTURE;
   }
-  free(buff);
-  return RTT__SUCCESS;
 }
 
 /*************************************************************************

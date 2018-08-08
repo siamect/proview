@@ -1139,7 +1139,7 @@ public:
   }
 
   //! Destructor
-  virtual ~GeDynElem(){};
+  virtual ~GeDynElem(){}
 };
 
 //! Set the supplied fill color when the signal is low.
@@ -1896,8 +1896,8 @@ public:
   pwr_tAName attribute;
   glow_eDrawType color;
   glow_eDirection direction;
-  double min_value;
-  double max_value;
+  float min_value;
+  float max_value;
   pwr_tAName minvalue_attr;
   pwr_tAName maxvalue_attr;
 
@@ -3019,8 +3019,8 @@ class GeAxis : public GeDynElem {
 public:
   bool first_scan;
 
-  double min_value;
-  double max_value;
+  float min_value;
+  float max_value;
   int keep_settings;
   int imin_value;
   int imax_value;

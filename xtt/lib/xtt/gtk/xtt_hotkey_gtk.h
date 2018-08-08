@@ -42,8 +42,6 @@
 #include <vector>
 #include "pwr.h"
 
-using namespace std;
-
 class HotkeyAction {
 public:
   char m_name[80];
@@ -93,8 +91,8 @@ public:
 class XttHotkey {
 public:
   pwr_tFileName m_filename;
-  vector<HotkeyAction> m_actions;
-  vector<HotkeyKey> m_keys;
+  std::vector<HotkeyAction> m_actions;
+  std::vector<HotkeyKey> m_keys;
   XttHotkey(const char* filename);
   ~XttHotkey();
   void register_action(
@@ -110,8 +108,8 @@ public:
 class XttHotkey {
 public:
   // pwr_tFileName m_filename;
-  // vector<HotkeyAction> m_actions;
-  // vector<HotkeyKey> m_keys;
+  // std::vector<HotkeyAction> m_actions;
+  // std::vector<HotkeyKey> m_keys;
   XttHotkey(const char* filename)
   {
   }

@@ -296,7 +296,7 @@ static int ini_datafile_get_next(char* parameter, char** data, int* elements)
 {
   char line[256];
   char data_array[10][132];
-  int found, nr, sts;
+  int found, nr = 0, sts;
   char param[80];
 
   if (ini_datafile == 0)

@@ -85,7 +85,6 @@ private:
   wb_nameattributes* attr;
   pwr_tAName oname;
   pwr_tAName norm_name;
-  pwr_tStatus status;
   bool m_hasSuper;
   bool m_shadowed;
 

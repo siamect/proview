@@ -159,7 +159,7 @@ realclean : clean $(clean_h_includes) $(clean_hpp_includes) clean_dirs
 $(export_exe) : $(link_rule) $(export_flv_obj) $(objects)
 	@ $(log_link_exe)
 	@ if [ "$(link)" != ":" ]; then \
-	  $(link)  -t | grep $(pwre_broot) | awk -f $(pwre_kroot)/tools/bld/src/$(os_name)/ld_trace_to_d.awk -v target=$(target) > $(link_dependencies); \
+	  $(link)  | grep $(pwre_broot) | awk -f $(pwre_kroot)/tools/bld/src/$(os_name)/ld_trace_to_d.awk -v target=$(target) > $(link_dependencies); \
 	fi
 	@ $(linkcp);
 
