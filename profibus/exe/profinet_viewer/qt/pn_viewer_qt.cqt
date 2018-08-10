@@ -49,6 +49,7 @@
 
 void PnViewerQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("PnViewerQtWidget::closeEvent\n");
   viewer->activate_close();
   QWidget::closeEvent(event);
 }

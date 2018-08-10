@@ -57,6 +57,7 @@ CoLogWNavQt::CoLogWNavQt(
 
 CoLogWNavQt::~CoLogWNavQt()
 {
+  debug_print("CoLogWNavQt::~CoLogWNavQt\n");
   delete brow;
   form_widget->close();
 }

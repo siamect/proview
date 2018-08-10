@@ -68,6 +68,7 @@ private:
 
 void CallbackWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("CallbackWidget::closeEvent\n");
   ((ev)->*(close_cb))();
   QDialog::closeEvent(event);
 }
@@ -513,6 +514,7 @@ EvEve* EvQt::open_eventlist_satellite(const char* title, pwr_tStatus* sts,
 
 EvQt::~EvQt()
 {
+  debug_print("EvQt::~EvQt\n");
   if (connected) {
     mh_OutunitDisconnect();
   }

@@ -60,6 +60,7 @@ MsgListQt::MsgListQt(void* ev_parent_ctx, QWidget* ev_parent_wid, QWidget** w)
 
 MsgListQt::~MsgListQt()
 {
+  debug_print("MsgListQt::~MsgListQt\n");
   delete brow;
   form_widget->close();
 }

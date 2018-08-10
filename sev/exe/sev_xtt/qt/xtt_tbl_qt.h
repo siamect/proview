@@ -74,7 +74,7 @@ class XttTblQtWidget : public QWidget {
 
 public:
   XttTblQtWidget(XttTblQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), tbl(parent_ctx)
+      : QWidget(), tbl(parent_ctx)
   {
   }
 

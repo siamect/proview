@@ -1991,10 +1991,7 @@ Possible return values:
 #endif
 
   strcat(pPapiVersion, (CSTRING*)SW_VERSION);
-  #pragma GCC diagnostic push
-  #pragma GCC diagnostic ignored "-Wdate-time"
   strcat(pPapiVersion, (CSTRING*)__DATE__);
-  #pragma GCC diagnostic pop
 
   // --- get PROFIBUS firmware version
   DataLength = (USIGN16)VERSION_STRING_LENGTH;

@@ -73,7 +73,7 @@ class WPkgQtWidget : public QWidget {
 
 public:
   WPkgQtWidget(WPkgQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), pkg(parent_ctx)
+      : QWidget(), pkg(parent_ctx)
   {
   }
 

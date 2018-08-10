@@ -64,6 +64,7 @@ WAttNavQt::WAttNavQt(void* wa_parent_ctx, wattnav_eType wa_type,
 
 WAttNavQt::~WAttNavQt()
 {
+  debug_print("WAttNavQt::~WAttNavQt\n");
   delete brow;
   form_widget->close();
 }

@@ -108,6 +108,7 @@ void CoLogWQtWidget::focusInEvent(QFocusEvent* event)
 
 void CoLogWQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("CoLogWQtWidget::closeEvent\n");
   delete logw;
   QWidget::closeEvent(event);
 }

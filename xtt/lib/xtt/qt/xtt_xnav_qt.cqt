@@ -106,6 +106,7 @@ XNavQt::XNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid, const char* xn_name,
 
 XNavQt::~XNavQt()
 {
+  debug_print("XNavQt::~XNavQt\n");
   closing_down = 1;
 
   delete autoack_timerid;
@@ -369,51 +370,32 @@ void XNavQt::get_popup_menu(pwr_sAttrRef attrref, xmenu_eItemType item_type,
     xmenu_mUtility caller, unsigned int priv, char* arg, int x, int y)
 {
   QMenu* popup;
+  int i = 0;
 
   get_popup_menu_items(attrref, item_type, caller, priv, arg);
 
-  popup = build_menu(MENU_POPUP, "", SLOT(popup_button_cb()),
-      (xmenu_sMenuItem*)mcp->ItemList, 0);
+  popup = build_menu(SLOT(popup_button_cb()), (xmenu_sMenuItem*)mcp->ItemList, &i);
   if (!popup) {
     return;
   }
 
-  popupmenu_x = x;
-  popupmenu_y = y;
   popup->popup(QPoint(x, y));
 }
 
-QMenu* XNavQt::build_menu(int MenuType, const char* MenuTitle,
-    const char* Callback, xmenu_sMenuItem* Items, int idx)
+QMenu* XNavQt::build_menu(const char* Callback, xmenu_sMenuItem* Items, int* idx)
 {
   QMenu* menu = new QMenu(parent_wid);
+  int i;
+  unsigned int Level = Items[*idx].Level;
 
-  unsigned int Level = Items[idx].Level;
-
-  for (; Items[idx].Level != 0 && Items[idx].Level >= Level; idx++) {
-    switch (Items[idx].Item) {
-    case xmenu_eMenuItem_Ref: {
-      if (MenuType == MENU_OPTION) {
-        printf("You can't have submenus from option menu items.");
-        return NULL;
-      }
-      QMenu* sub = menu->addMenu(translate_utf8(Items[idx].Name));
-      QMenu* w = build_menu(MENU_PULLDOWN, Lng::translate(Items[idx].Name),
-          Callback, Items, idx + 1);
-      sub->addMenu(w);
-      break;
-    }
+  for (; Items[*idx].Level != 0 && Items[*idx].Level >= Level; (*idx)++) {
+    switch (Items[*idx].Item) {
     case xmenu_eMenuItem_Cascade: {
-      if (MenuType == MENU_OPTION) {
-        printf("You can't have submenus from option menu items.");
-        return NULL;
-      }
-
       // Check that the Cascade contains any pushbuttons
       int found = 0;
-      unsigned int cascade_level = Items[idx].Level;
+      unsigned int cascade_level = Items[*idx].Level;
       int cidx;
-      for (cidx = idx + 1;
+      for (cidx = *idx + 1;
            Items[cidx].Level != 0 && Items[cidx].Level > cascade_level;
            cidx++) {
         if (Items[cidx].Item == xmenu_eMenuItem_Ref
@@ -422,12 +404,17 @@ QMenu* XNavQt::build_menu(int MenuType, const char* MenuTitle,
           break;
         }
       }
-      if (found) {
-        QMenu* sub = menu->addMenu(translate_utf8(Items[idx].Name));
-        QMenu* w = build_menu(MENU_PULLDOWN, Lng::translate(Items[idx].Name),
-            Callback, Items, idx + 1);
-        sub->addMenu(w);
-      }
+      if (!found) {
+        break;
+      } // else fall through and run the code for xmenu_eMenuItem_Ref
+    }
+    case xmenu_eMenuItem_Ref: {
+      i = *idx;
+      (*idx)++;
+      QMenu* w = build_menu(Callback, Items, idx);
+      (*idx)--;
+      w->setTitle(translate_utf8(Items[i].Name));
+      menu->addMenu(w);
       break;
     }
     case xmenu_eMenuItem_Separator:
@@ -436,9 +423,9 @@ QMenu* XNavQt::build_menu(int MenuType, const char* MenuTitle,
       break;
     case xmenu_eMenuItem_Button: {
       // Pushbutton
-      QAction* w = menu->addAction(translate_utf8(Items[idx].Name));
-      w->setEnabled(Items[idx].Flags.f.Sensitive ? TRUE : FALSE);
-      w->setData(idx);
+      QAction* w = menu->addAction(translate_utf8(Items[*idx].Name));
+      w->setEnabled(Items[*idx].Flags.f.Sensitive ? true : false);
+      w->setData(*idx);
       if (Callback) {
         QObject::connect(w, SIGNAL(triggered()), popup_obj, Callback);
       }

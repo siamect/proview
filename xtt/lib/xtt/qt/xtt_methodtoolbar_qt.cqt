@@ -66,6 +66,7 @@ XttMethodToolbarQt::XttMethodToolbarQt(void* parent_ctx, void* xnav,
 
 XttMethodToolbarQt::~XttMethodToolbarQt()
 {
+  debug_print("XttMethodToolbarQt::~XttMethodToolbarQt\n");
   if (m_timerid) {
     delete m_timerid;
   }

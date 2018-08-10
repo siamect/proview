@@ -97,7 +97,7 @@ class WUtedQtWidget : public QWidget {
 
 public:
   WUtedQtWidget(WUtedQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), uted(parent_ctx)
+      : QWidget(), uted(parent_ctx)
   {
   }
 

@@ -73,7 +73,7 @@ class BlockQtWidget : public QWidget {
 
 public:
   BlockQtWidget(BlockQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), block(parent_ctx)
+      : QWidget(), block(parent_ctx)
   {
   }
 

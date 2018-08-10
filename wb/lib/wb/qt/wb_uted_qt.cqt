@@ -72,6 +72,7 @@ void WUtedQt::remove_command_window()
 
 void WUtedQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("WUtedQtWidget::closeEvent\n");
   delete uted;
   QWidget::closeEvent(event);
 }
@@ -304,6 +305,7 @@ WUtedQt::WUtedQt(void* wu_parent_ctx, QWidget* wu_parent_wid,
 // Destroys the widget and frees allocated memory for the context.
 WUtedQt::~WUtedQt()
 {
+  debug_print("WUtedQt::~WUtedQt\n");
   if (quit_cb) {
     (quit_cb)(parent_ctx);
   }

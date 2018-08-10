@@ -79,7 +79,6 @@ QWidget* browwidgetqt_new(
     int (*init_proc)(FlowCtx* ctx, void* client_data), void* client_data)
 {
   QtScrollWidgetFlow* w = new QtScrollWidgetFlow();
-  debug_print("creating a new flow scroll widget\n");
   w->init(flow_eCtxType_Brow, init_proc, client_data, brow_init_proc);
   return w;
 }
@@ -89,7 +88,6 @@ QWidget* scrolledbrowwidgetqt_new(
     QWidget** browwidget)
 {
   QtScrollWidgetFlow* w = new QtScrollWidgetFlow();
-  debug_print("creating a new flow scroll widget\n");
   QWidget* form = w->initScroll(
       flow_eCtxType_Brow, init_proc, client_data, brow_init_proc);
   *browwidget = w;
@@ -99,7 +97,6 @@ QWidget* scrolledbrowwidgetqt_new(
 QWidget* brownavwidgetqt_new(QWidget* main_brow)
 {
   QtScrollWidgetFlow* w = new QtScrollWidgetFlow();
-  debug_print("creating a new flow scroll widget\n");
   w->init(flow_eCtxType_Brow, main_brow);
   return w;
 }

@@ -60,16 +60,12 @@
 #include "pwr_remoteclasses.h"
 
 /*_Local rtt database____________________________________________________*/
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 
 RTT_RTTSYSDB_START
 #include "dtt_appl_rttsys_m.rdb1"
 RTT_RTTSYSDB_CONTINUE
 #include "dtt_appl_rttsys_m.rdb2"
 RTT_RTTSYSDB_END
-
-#pragma GCC diagnostic pop
 
 #define IF_NOGDH_RETURN                                                        \
   if (!rtt_gdh_started) {                                                      \

@@ -88,7 +88,7 @@ class XColWindQtWidget : public QWidget {
 
 public:
   XColWindQtWidget(XColWindQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), colwind(parent_ctx)
+      : QWidget(), colwind(parent_ctx)
   {
   }
 

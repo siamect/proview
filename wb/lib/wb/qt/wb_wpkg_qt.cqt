@@ -156,6 +156,7 @@ void WPkgQt::reset_cursor()
 
 void WPkgQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("WPkgQtWidget::closeEvent\n");
   if (pkg->close_cb) {
     (pkg->close_cb)(pkg->parent_ctx);
   } else {

@@ -173,6 +173,7 @@ void WAttTextQt::set_attr_value()
 
 void WAttTextQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("WAttTextQtWidget::closeEvent\n");
   if (atxt->close_cb) {
     (atxt->close_cb)(atxt);
   } else {

@@ -60,6 +60,7 @@
 /* This function is called when the main window is closed */
 void XttStreamQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("XttStreamQtWidget::closeEvent\n");
   stream->playbin2->stop();
 
   if (stream->close_cb) {
@@ -608,6 +609,7 @@ XttStreamQt::XttStreamQt(QWidget* st_parent_wid, void* st_parent_ctx,
 
 XttStreamQt::~XttStreamQt()
 {
+  debug_print("XttStreamQt::~XttStreamQt\n");
   if (timerid) {
     timerid->remove();
   }

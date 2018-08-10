@@ -108,6 +108,7 @@ void XttMultiViewQt::set_size(int width, int height)
 
 XttMultiViewQt::~XttMultiViewQt()
 {
+  debug_print("XttMultiViewQt::~XttMultiViewQt\n");
   if (close_cb) {
     (close_cb)(parent_ctx, this);
   }
@@ -120,6 +121,7 @@ void XttMultiViewQt::pop()
 
 void XttMultiViewQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("XttMultiViewQtWidget::closeEvent\n");
   if (multiview->options & ge_mOptions_IsMain) {
     (multiview->close_cb)(multiview->parent_ctx, multiview);
   } else {

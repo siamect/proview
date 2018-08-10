@@ -48,6 +48,7 @@
 
 void XttKeyboardQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("XttKeyboardQtWidget::closeEvent\n");
   if (kb->close_cb) {
     (kb->close_cb)(kb->parent_ctx);
   } else {
@@ -110,6 +111,7 @@ XttKeyboardQt::XttKeyboardQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
 
 XttKeyboardQt::~XttKeyboardQt()
 {
+  debug_print("XttKeyboardQt::~XttKeyboardQt\n");
   closing_down = 1;
 }
 

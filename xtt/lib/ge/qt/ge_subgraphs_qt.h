@@ -75,7 +75,7 @@ class SubGraphsQtWidget : public QWidget {
 
 public:
   SubGraphsQtWidget(SubGraphsQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), subgraphs(parent_ctx)
+      : QWidget(), subgraphs(parent_ctx)
   {
   }
 

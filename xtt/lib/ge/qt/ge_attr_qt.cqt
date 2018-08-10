@@ -185,6 +185,7 @@ int AttrQt::reconfigure_attr()
 
 void AttrQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("AttrQtWidget::closeEvent\n");
   if (attr->close_cb) {
     (attr->close_cb)(
         attr->parent_ctx, attr, attr->object, attr->client_data, 0);
@@ -437,6 +438,7 @@ AttrQt::AttrQt(QWidget* a_parent_wid, void* a_parent_ctx, attr_eType a_type,
 
 AttrQt::~AttrQt()
 {
+  debug_print("AttrQt::~AttrQt\n");
   if (original_data) {
     delete original_data;
   }

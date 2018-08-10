@@ -81,7 +81,7 @@ class GsdmlAttrQtWidget : public QWidget {
 
 public:
   GsdmlAttrQtWidget(GsdmlAttrQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), attr(parent_ctx)
+      : QWidget(), attr(parent_ctx)
   {
   }
 

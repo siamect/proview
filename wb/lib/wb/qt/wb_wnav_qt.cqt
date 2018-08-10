@@ -84,8 +84,10 @@ WNavQt::WNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid, const char* xn_name,
 
   trace_obj = new WNavQtTraceObject(this);
 
+  debug_print("creating a scrolledbrowwidgetqt\n");
   QScrollArea* scrolledbrow = ((QScrollArea*)scrolledbrowwidgetqt_new(
       WNav::init_brow_base_cb, this, &brow_widget));
+  brow_widget->setToolTip(fl("WNavQt"));
 
   scrolledbrow->setFrameShape(QFrame::Box);
   scrolledbrow->setLineWidth(3);
@@ -127,6 +129,7 @@ WNavQt::WNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid, const char* xn_name,
 
 WNavQt::~WNavQt()
 {
+  debug_print("WNavQt::~WNavQt\n");
   closing_down = 1;
 
   delete trace_obj;

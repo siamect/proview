@@ -65,6 +65,7 @@ NodelistNavQt::NodelistNavQt(void* nodelist_parent_ctx,
 
 NodelistNavQt::~NodelistNavQt()
 {
+  debug_print("NodelistNavQt::~NodelistNavQt\n");
   delete trace_obj;
 
   delete brow;

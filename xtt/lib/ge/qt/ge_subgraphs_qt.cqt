@@ -50,6 +50,7 @@
 
 void SubGraphsQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("SubGraphsQtWidget::closeEvent\n");
   if (subgraphs->close_cb) {
     (subgraphs->close_cb)(subgraphs);
   } else {
@@ -163,6 +164,7 @@ SubGraphsQt::SubGraphsQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
 
 SubGraphsQt::~SubGraphsQt()
 {
+  debug_print("SubGraphsQt::~SubGraphsQt\n");
   subgraphs_tAttr attrlist_p, next_p;
 
   // Delete all attr-widgets in attrlist

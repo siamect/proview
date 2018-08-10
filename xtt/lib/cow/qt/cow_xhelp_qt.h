@@ -77,7 +77,7 @@ class CoXHelpQtWidget : public QWidget {
 
 public:
   CoXHelpQtWidget(CoXHelpQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), xhelp(parent_ctx)
+      : QWidget(), xhelp(parent_ctx)
   {
   }
 

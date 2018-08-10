@@ -233,14 +233,11 @@ public:
     return m_vrep->readAttribute(sts, o, bix, offset, size, p);
   }
 
-  #pragma GCC diagnostic push
-  #pragma GCC diagnostic ignored "-Winfinite-recursion"
   virtual void* readBody(
       pwr_tStatus* sts, const wb_orep* o, pwr_eBix bix, void* p)
   {
     return readBody(sts, o, bix, p);
   }
-  #pragma GCC diagnostic pop
 
   virtual bool writeBody(pwr_tStatus* sts, wb_orep* o, pwr_eBix bix, void* p);
 

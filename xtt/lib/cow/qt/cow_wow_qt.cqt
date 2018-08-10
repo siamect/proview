@@ -237,7 +237,7 @@ void CoWowListWidgetQt::list_cancel_cb()
 CoWowListWidgetQt::CoWowListWidgetQt(QWidget* parent, const char* title,
     const char* texts, int textsize, void(action_cb)(void*, char*, int),
     void(cancel_cb)(void*), void* parent_ctx, int show_apply_button)
-    : QWidget(parent, Qt::Window), action_cb(action_cb), cancel_cb(cancel_cb),
+    : QWidget(), action_cb(action_cb), cancel_cb(cancel_cb),
       parent_ctx(parent_ctx)
 {
   QVBoxLayout* vbox = new QVBoxLayout(this);
@@ -281,6 +281,7 @@ CoWowListWidgetQt::CoWowListWidgetQt(QWidget* parent, const char* title,
 
   setFixedSize(200, 400);
   setWindowTitle(translate_utf8(title));
+  debug_print("Created a CoWowListWidgetQt\n");
   setAttribute(Qt::WA_DeleteOnClose);
 
   show();
@@ -296,6 +297,7 @@ void CoWowListWidgetQt::focusInEvent(QFocusEvent* event)
 
 void CoWowListWidgetQt::closeEvent(QCloseEvent* event)
 {
+  debug_print("CoWowListWidgetQt::closeEvent\n");
   QWidget::closeEvent(event);
   list_cancel_cb();
 }
@@ -321,19 +323,16 @@ void CoWowQt::DeleteList(void* data)
   ctx->close();
 }
 
-void CoWowWarrantQt::display_license()
-{
-  ((CoWowQtObject*)parentWidget())->DisplayLicense();
-}
-
 void CoWowWarrantQt::reject()
 {
+  debug_print("Shutting down...\n");
   QDialog::reject();
   exit(0);
 }
 
 void CoWowWarrantQt::destroy(bool destroyWindow, bool destroySubWindows)
 {
+  debug_print("Shutting down...\n");
   QDialog::destroy(destroyWindow, destroySubWindows);
   exit(0);
 }
@@ -406,7 +405,7 @@ CoWowWarrantQt::CoWowWarrantQt(CoWowQtObject* parent)
 
   connect(accept, SIGNAL(clicked()), this, SLOT(accept()));
   connect(reject, SIGNAL(clicked()), this, SLOT(reject()));
-  connect(help, SIGNAL(clicked()), this, SLOT(display_license()));
+  connect(help, SIGNAL(clicked()), parent, SLOT(DisplayLicense()));
 
   main_layout->addWidget(buttons);
 
@@ -414,6 +413,7 @@ CoWowWarrantQt::CoWowWarrantQt(CoWowQtObject* parent)
 
   adjustSize();
   setWindowTitle(translate_utf8("Accept License Terms"));
+  debug_print("Created a CoWowWarrantQt\n");
   setAttribute(Qt::WA_DeleteOnClose);
 
   pop(this);
@@ -426,9 +426,9 @@ void CoWowQtObject::DisplayWarranty()
 
 void CoWowQtObject::DisplayLicense()
 {
-  QMessageBox* mbox = new QMessageBox(0);
+  QMessageBox* mbox = new QMessageBox(parent_wid);
   mbox->setWindowTitle(translate_utf8("License"));
-  mbox->setWindowFlags(Qt::Window);
+  debug_print("Created a DisplayLicense\n");
   mbox->setAttribute(Qt::WA_DeleteOnClose);
 
   QScrollArea* scroll = new QScrollArea(mbox);
@@ -546,6 +546,7 @@ CoWowTimerQt::CoWowTimerQt()
 
 CoWowTimerQt::~CoWowTimerQt()
 {
+  debug_print("CoWowTimerQt::~CoWowTimerQt\n");
   delete object;
 }
 
@@ -630,6 +631,7 @@ void CoWowFocusTimerQt::enable_set_focus()
 
 CoWowFocusTimerQt::~CoWowFocusTimerQt()
 {
+  debug_print("CoWowFocusTimerQt::~CoWowFocusTimerQt\n");
   if (set_focus_disabled) {
     delete timer;
   }
@@ -729,6 +731,7 @@ CoWowModalDialogQt::CoWowModalDialogQt(QWidget* parent, const char* title,
 
   setFixedSize(400, 150);
   setWindowTitle(fl(title));
+  debug_print("Created a CoWowModalDialogQt\n");
   setAttribute(Qt::WA_DeleteOnClose);
 
   QLabel* text_w = new QLabel(fl(text));
@@ -801,6 +804,7 @@ CoWowModalDialogQt::CoWowModalDialogQt(QWidget* parent, const char* title,
 
 void CoWowModalDialogQt::destroy(bool destroyWindow, bool destroySubWindows)
 {
+  debug_print("Not shutting down...\n");
   setResult(wow_eModalDialogReturn_Deleted);
   QDialog::destroy(destroyWindow, destroySubWindows);
 }
@@ -1105,10 +1109,11 @@ CoWowQt::CoWowQt(QWidget* parent)
 
 CoWowQt::~CoWowQt()
 {
+  debug_print("CoWowQt::~CoWowQt\n");
   delete object;
 }
 
 void CoWowQt::SetParent(QWidget* parent)
 {
-  object->parent_wid = parent;
+  object->setParent(parent);
 }

@@ -401,6 +401,7 @@ void WdaQt::update_title()
 
 void WdaQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("WdaQtWidget::closeEvent\n");
   if (wda->close_cb) {
     (wda->close_cb)(wda);
   } else {

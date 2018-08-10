@@ -74,6 +74,7 @@ NavQt::NavQt(void* nav_parent_ctx, QWidget* nav_parent_wid,
 
 NavQt::~NavQt()
 {
+  debug_print("NavQt::~NavQt\n");
   PalFile::config_tree_free(menu);
   free_pixmaps();
   delete trace_obj;

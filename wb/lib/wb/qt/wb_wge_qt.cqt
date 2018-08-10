@@ -142,6 +142,7 @@ void WGeQtWidget::action_resize(QResizeEvent* event)
 
 WGeQt::~WGeQt()
 {
+  debug_print("WGeQt::~WGeQt\n");
   if (nav_shell) {
     nav_shell->close();
   }
@@ -178,6 +179,7 @@ void WGeQt::pop()
 
 void WGeQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("WGeQtWidget::closeEvent\n");
   if (ge->modal) {
     ge->terminated = 1;
   } else {

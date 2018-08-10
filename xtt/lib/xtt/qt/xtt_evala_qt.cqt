@@ -244,6 +244,7 @@ EvAlaQt::EvAlaQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* ala_name,
 
 EvAlaQt::~EvAlaQt()
 {
+  debug_print("EvAlaQt::~EvAlaQt\n");
   delete ala_methodtoolbar;
   delete ala_sup_methodtoolbar;
 }
@@ -280,6 +281,7 @@ void EvAlaQtWidget::focusInEvent(QFocusEvent* event)
 
 void EvAlaQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("EvAlaQtWidget::closeEvent\n");
   if (!(ala->options & ev_mAlaOptions_Embedded)) {
     delete ala;
   }

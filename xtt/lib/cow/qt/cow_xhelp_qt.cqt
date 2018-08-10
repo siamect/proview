@@ -161,6 +161,7 @@ void CoXHelpQt::print()
 
 void CoXHelpQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("CoXHelpQtWidget::closeEvent\n");
   if (xhelp->close_cb) {
     (xhelp->close_cb)(xhelp->parent_ctx, xhelp);
   } else {

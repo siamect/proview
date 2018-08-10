@@ -100,7 +100,7 @@ class HistQtWidget : public QWidget {
 
 public:
   HistQtWidget(HistQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), hist(parent_ctx)
+      : QWidget(), hist(parent_ctx)
   {
   }
 

@@ -180,7 +180,6 @@ public:
 
 public slots:
   virtual void reject();
-  virtual void display_license();
 
 protected:
   void destroy(bool destroyWindow = true, bool destroySubWindows = true);
@@ -263,7 +262,7 @@ class CoWowQtObject : public QObject {
   Q_OBJECT
 
 public:
-  CoWowQtObject(QWidget* parent) : QObject(), parent_wid(parent)
+  CoWowQtObject(QWidget* parent) : QObject(parent), parent_wid(parent)
   {
   }
   QWidget* parent_wid;

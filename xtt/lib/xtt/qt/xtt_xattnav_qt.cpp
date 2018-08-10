@@ -64,6 +64,7 @@ XAttNavQt::XAttNavQt(void* xa_parent_ctx, QWidget* xa_parent_wid,
 
 XAttNavQt::~XAttNavQt()
 {
+  debug_print("XAttNavQt::~XAttNavQt\n");
   if (trace_started) {
     trace_timerid->remove();
   }

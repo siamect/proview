@@ -209,13 +209,12 @@ void QtScrollWidgetGlow::paintEvent(QPaintEvent* event)
   QPainter painter(this);
   QRect dirtyRect = event->rect();
   painter.drawImage(dirtyRect, image, dirtyRect);
-  QPainter imPainter(&image);
-  imPainter.fillRect(image.rect(), palette().color(QPalette::Background));
   QWidget::paintEvent(event);
 }
 
 void QtScrollWidgetGlow::closeEvent(QCloseEvent* event)
 {
+  debug_print("QtScrollWidgetGlow::closeEvent\n");
   if (!destroyed) {
     destroyed = 1;
     if (scroll_timerid) {
@@ -263,8 +262,6 @@ bool QtScrollWidgetGlow::event(QEvent* event)
 
 void QtScrollWidgetGlow::realize()
 {
-  debug_print("realize\n");
-
   if (!parent_ctx) {
     if (is_navigator) {
       QtScrollWidgetGlow* main

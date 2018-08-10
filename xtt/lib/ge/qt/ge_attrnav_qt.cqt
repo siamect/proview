@@ -63,6 +63,7 @@ AttrNavQt::AttrNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
 
 AttrNavQt::~AttrNavQt()
 {
+  debug_print("AttrNavQt::~AttrNavQt\n");
   delete trace_obj;
 
   delete brow;
@@ -76,6 +77,7 @@ void AttrNavQt::trace_start()
 
 AttrNavQtTraceObject::~AttrNavQtTraceObject()
 {
+  debug_print("AttrNavQtTraceObject::~AttrNavQtTraceObject\n");
   delete trace_timerid;
 }
 

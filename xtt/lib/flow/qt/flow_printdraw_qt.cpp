@@ -58,6 +58,7 @@ FlowPrintDrawQt::FlowPrintDrawQt(void* context, const char* t, int p,
 
 FlowPrintDrawQt::~FlowPrintDrawQt()
 {
+  debug_print("FlowPrintDrawQt::~FlowPrintDrawQt\n");
 }
 
 int FlowPrintDrawQt::print_page(

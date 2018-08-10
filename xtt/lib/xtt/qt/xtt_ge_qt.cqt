@@ -213,6 +213,7 @@ void XttGeQtWidget::action_resize(QResizeEvent* event)
 
 XttGeQt::~XttGeQt()
 {
+  debug_print("XttGeQt::~XttGeQt\n");
   if (close_cb) {
     (close_cb)(parent_ctx, this);
   }
@@ -236,6 +237,7 @@ void XttGeQt::iconify()
 
 void XttGeQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("XttGeQtWidget::closeEvent\n");
   if (ge->options & ge_mOptions_IsMain) {
     (ge->close_cb)(ge->parent_ctx, ge);
   } else if (!(ge->options & ge_mOptions_Embedded)) {

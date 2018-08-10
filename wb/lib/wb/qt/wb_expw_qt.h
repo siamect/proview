@@ -74,7 +74,7 @@ class WbExpWQtWidget : public QWidget {
 
 public:
   WbExpWQtWidget(WbExpWQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), expw(parent_ctx)
+      : QWidget(), expw(parent_ctx)
   {
   }
 

@@ -75,7 +75,7 @@ class WAttTextQtWidget : public QWidget {
 
 public:
   WAttTextQtWidget(WAttTextQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), atxt(parent_ctx)
+      : QWidget(), atxt(parent_ctx)
   {
   }
 

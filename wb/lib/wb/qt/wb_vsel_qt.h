@@ -66,7 +66,7 @@ class WVselQtWidget : public QWidget {
 
 public:
   WVselQtWidget(WVselQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), sel(parent_ctx)
+      : QWidget(), sel(parent_ctx)
   {
   }
 

@@ -77,7 +77,7 @@ class GsdAttrQtWidget : public QWidget {
 
 public:
   GsdAttrQtWidget(GsdAttrQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), attr(parent_ctx)
+      : QWidget(), attr(parent_ctx)
   {
   }
 

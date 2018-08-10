@@ -51,6 +51,7 @@
 
 void NodelistQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("NodelistQtWidget::closeEvent\n");
   if (nodelist->close_cb) {
     (nodelist->close_cb)(nodelist->parent_ctx);
   } else {

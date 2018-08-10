@@ -186,6 +186,7 @@ static QColor flow_allocate_color(FlowDrawQt* draw_ctx, const char* named_color)
 
 FlowDrawQt::~FlowDrawQt()
 {
+  debug_print("FlowDrawQt::~FlowDrawQt\n");
   closing_down = 1;
 
   basectx->set_nodraw();
@@ -851,7 +852,7 @@ int FlowDrawQt::event_handler(QEvent* event)
       break;
     }
     case QEvent::Show: {
-      sts = basectx->event_handler_nav(flow_eEvent_Exposure, 0, 0);
+      sts = basectx->event_handler_nav(flow_eEvent_Map, 0, 0);
       break;
     }
     case QEvent::MouseMove: {

@@ -178,6 +178,7 @@ void RtTraceQtWidget::activate_helpplclist()
 
 RtTraceQt::~RtTraceQt()
 {
+  debug_print("RtTraceQt::~RtTraceQt\n");
   trace_tNode *node, *fnode;
 
   trace_stop();
@@ -215,6 +216,7 @@ RtTrace* RtTraceQt::subwindow_new(void* ctx, pwr_tObjid oid, pwr_tStatus* sts)
 
 void RtTraceQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("RtTraceQtWidget::closeEvent\n");
   rt->activate_close();
   QWidget::closeEvent(event);
 }

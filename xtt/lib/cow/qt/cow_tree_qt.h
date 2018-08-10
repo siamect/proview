@@ -71,7 +71,7 @@ class CowTreeQtWidget : public QWidget {
 
 public:
   CowTreeQtWidget(CowTreeQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), tree(parent_ctx)
+      : QWidget(), tree(parent_ctx)
   {
   }
 

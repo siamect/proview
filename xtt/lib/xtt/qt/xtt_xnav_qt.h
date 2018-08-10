@@ -126,13 +126,10 @@ public:
   void set_clock_cursor();
   void reset_cursor();
   int confirm_dialog(char* title, char* text);
-  QMenu* build_menu(int MenuType, const char* MenuTitle, const char* Callback,
-      xmenu_sMenuItem* Items, int idx);
+  QMenu* build_menu(const char* Callback, xmenu_sMenuItem* Items, int* idx);
 
   QWidget* brow_widget;
   QWidget* form_widget;
-  int popupmenu_x;
-  int popupmenu_y;
 
 private:
   QWidget* parent_wid;

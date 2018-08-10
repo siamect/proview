@@ -245,6 +245,7 @@ void GsdmlAttrQtWidget::focusInEvent(QFocusEvent* event)
 
 void GsdmlAttrQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("GsdmlAttrQtWidget::closeEvent\n");
   attr->activate_exit();
   QWidget::closeEvent(event);
 }

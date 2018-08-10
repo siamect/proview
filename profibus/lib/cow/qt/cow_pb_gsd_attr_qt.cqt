@@ -206,6 +206,7 @@ void GsdAttrQtWidget::focusInEvent(QFocusEvent* event)
 
 void GsdAttrQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("GsdAttrQtWidget::closeEvent\n");
   attr->activate_exit();
   QWidget::closeEvent(event);
 }

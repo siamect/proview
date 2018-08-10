@@ -95,7 +95,7 @@ class WdaQtWidget : public QWidget {
 
 public:
   WdaQtWidget(WdaQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), wda(parent_ctx)
+      : QWidget(), wda(parent_ctx)
   {
   }
 

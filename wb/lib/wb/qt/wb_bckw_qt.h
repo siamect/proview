@@ -72,7 +72,7 @@ class WbBckWQtWidget : public QWidget {
 
 public:
   WbBckWQtWidget(WbBckWQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), bck(parent_ctx)
+      : QWidget(), bck(parent_ctx)
   {
   }
 

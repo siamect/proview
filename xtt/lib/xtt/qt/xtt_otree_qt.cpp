@@ -34,6 +34,7 @@
  * General Public License plus this exception.
  **/
 
+#include "cow_qt_helpers.h"
 #include "cow_tree_qt.h"
 
 #include "xtt_otree_qt.h"
@@ -53,4 +54,5 @@ XttOTreeQt::XttOTreeQt(QWidget* parent_wid, void* xn_parent_ctx,
 
 XttOTreeQt::~XttOTreeQt()
 {
+  debug_print("XttOTreeQt::~XttOTreeQt\n");
 }

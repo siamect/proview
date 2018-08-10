@@ -727,6 +727,7 @@ void WFoeQt::pop()
 
 void WFoeQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("WFoeQtWidget::closeEvent\n");
   foe->activate_quit();
   QWidget::closeEvent(event);
 }

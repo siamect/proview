@@ -65,6 +65,7 @@ EvListQt::EvListQt(void* ev_parent_ctx, QWidget* ev_parent_wid,
 
 EvListQt::~EvListQt()
 {
+  debug_print("EvListQt::~EvListQt\n");
   if (browtree) {
     delete browtree->ctx;
   }

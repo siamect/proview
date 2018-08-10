@@ -74,7 +74,7 @@ class RtTraceQtWidget : public QWidget {
 
 public:
   RtTraceQtWidget(RtTraceQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), rt(parent_ctx)
+      : QWidget(), rt(parent_ctx)
   {
   }
 

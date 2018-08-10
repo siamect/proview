@@ -621,6 +621,7 @@ void* GeCurveQt::get_widget()
 
 GeCurveQt::~GeCurveQt()
 {
+  debug_print("GeCurveQt::~GeCurveQt\n");
   delete wow;
   if (minmax_widget) {
     minmax_widget->close();
@@ -629,6 +630,7 @@ GeCurveQt::~GeCurveQt()
 
 void GeCurveQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("GeCurveQtWidget::closeEvent\n");
   if (!(curve->options & curve_mOptions_Embedded)) {
     curve->activate_exit();
   }

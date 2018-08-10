@@ -63,6 +63,7 @@
 #include "wb_wpkg_qt.h"
 #include "wb_wtt_qt.h"
 
+#include <QCloseEvent>
 #include <QDialogButtonBox>
 #include <QInputDialog>
 #include <QMenu>
@@ -605,14 +606,7 @@ int WttQt::create_popup_menu(pwr_sAttrRef aref, int x, int y)
     return sts;
   }
 
-  QMenu* popup = build_menu();
-  if (!popup) {
-    return 0;
-  }
-
-  popup->popup(QPoint(popupmenu_x, popupmenu_y));
-
-  return 1;
+  return build_menu(popupmenu_x, popupmenu_y);
 }
 
 int WttQt::create_pal_popup_menu(pwr_tCid cid, int x, int y)
@@ -627,14 +621,7 @@ int WttQt::create_pal_popup_menu(pwr_tCid cid, int x, int y)
     return sts;
   }
 
-  QMenu* popup = build_menu();
-  if (!popup) {
-    return 0;
-  }
-
-  popup->popup(QPoint(popupmenu_x, popupmenu_y));
-
-  return 1;
+  return build_menu(popupmenu_x, popupmenu_y);
 }
 
 void WttQt::set_noedit_show()
@@ -1609,6 +1596,7 @@ void BootDialog::boot_cancel_cb()
 // Destroy callback
 void BootDialog::closeEvent(QCloseEvent* event)
 {
+  debug_print("BootDialog::closeEvent\n");
   if (wtt->boot_volumelist && wtt->boot_volumecount) {
     free((char*)wtt->boot_volumelist);
     wtt->boot_volumelist = 0;
@@ -1746,8 +1734,9 @@ void WttQt::set_options()
 
 void WttQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("WttQtWidget::closeEvent\n");
   Wtt::close(wtt);
-  QWidget::closeEvent(event);
+  event->ignore();
 }
 
 WttQt::WttQt(void* wt_parent_ctx, QWidget* wt_parent_wid, const char* wt_name,
@@ -2339,6 +2328,7 @@ WttQt::WttQt(void* wt_parent_ctx, QWidget* wt_parent_wid, const char* wt_name,
 
 WttQt::~WttQt()
 {
+  debug_print("WttQt::~WttQt\n");
   if (close_cb) {
     (close_cb)(this);
   }
@@ -2359,6 +2349,7 @@ WttQt::~WttQt()
   }
 
   if (!close_cb) {
+    debug_print("Shutting down...\n");
     exit(0);
   }
 }
@@ -2370,6 +2361,7 @@ void WttQt::pop()
 
 void OptionsDialog::closeEvent(QCloseEvent* event)
 {
+  debug_print("OptionsDialog::closeEvent\n");
   wtt->update_options_form();
   QWidget::closeEvent(event);
 }
@@ -2398,6 +2390,7 @@ void OptionsDialog::activate_options_cancel()
 {
   wtt->message(' ', "");
   wtt->update_options_form();
+  setVisible(false);
 }
 
 OptionsDialog::OptionsDialog(WttQt* parent_ctx, QWidget* parent)
@@ -2499,40 +2492,49 @@ void WttQt::create_options_dialog()
   options_form = new OptionsDialog(this, toplevel);
 }
 
-QMenu* WttQt::build_menu()
+int WttQt::build_menu(int x, int y)
 {
-  return build_submenu(MENU_POPUP, "", SLOT(popup_button_cb()),
-      (ldh_sMenuItem*)mcp->ItemList, 0);
+  int i = 0;
+
+  QMenu* popup = build_submenu(
+      SLOT(popup_button_cb()), (ldh_sMenuItem*)mcp->ItemList, &i);
+  if (!popup) {
+    return 0;
+  }
+
+  popup->popup(QPoint(x, y));
+
+  return 1;
 }
 
-QMenu* WttQt::build_submenu(int MenuType, const char* MenuTitle,
-    const char* Callback, ldh_sMenuItem* Items, int idx)
+QMenu* WttQt::build_submenu(
+    const char* Callback, ldh_sMenuItem* Items, int* idx)
 {
   QMenu* menu = new QMenu(toplevel);
+  int i;
+  unsigned int Level = Items[*idx].Level;
 
-  unsigned int Level = Items[idx].Level;
-
-  for (; Items[idx].Level != 0 && Items[idx].Level >= Level; idx++) {
-    if (Items[idx].Disabled) {
+  for (; Items[*idx].Level != 0 && Items[*idx].Level >= Level; (*idx)++) {
+    if (Items[*idx].Disabled) {
       continue;
     }
 
-    if (Items[idx].Item == ldh_eMenuItem_Cascade) {
-      QMenu* sub = menu->addMenu(fl(Items[idx].Name));
-      debug_print(
-          "build_submenu recursively calling build_submenu to add a submenu\n");
-      QMenu* w = build_submenu(
-          MENU_PULLDOWN, Items[idx].Name, Callback, Items, idx + 1);
-      sub->addMenu(w);
+    if (Items[*idx].Item == ldh_eMenuItem_Cascade) {
+      i = *idx;
+      (*idx)++;
+      QMenu* w = build_submenu(Callback, Items, idx);
+      (*idx)--;
+      w->setTitle(fl(Items[i].Name));
+      menu->addMenu(w);
     } else {
-      if (Items[idx].Item == ldh_eMenuItem_Separator) {
+      if (Items[*idx].Item == ldh_eMenuItem_Separator) {
         // Separator
         menu->addSeparator();
       } else {
         // Pushbutton
-        QAction* w = menu->addAction(fl(Items[idx].Name));
-        w->setEnabled(Items[idx].Flags.f.Sensitive ? true : false);
-        w->setData(idx);
+        QAction* w = menu->addAction(fl(Items[*idx].Name));
+        w->setEnabled(Items[*idx].Flags.f.Sensitive ? true : false);
+        w->setData(*idx);
         if (Callback) {
           QObject::connect(w, SIGNAL(triggered()), toplevel, Callback);
         }

@@ -47,6 +47,7 @@
 
 void CoHelpQt::close_cb(void* ctx, void* xhelp)
 {
+  debug_print("Shutting down...\n");
   ((CoXHelpQt*)xhelp)->toplevel->close();
   exit(0);
 }
@@ -67,6 +68,7 @@ int main(int argc, char* argv[])
 
 CoHelpQt::~CoHelpQt()
 {
+  debug_print("CoHelpQt::~CoHelpQt\n");
 }
 
 CoHelpQt::CoHelpQt(int argc, char* argv[], int* return_sts)

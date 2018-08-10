@@ -38,6 +38,8 @@
 
 #include "rt_xnav_msg.h"
 
+#include "cow_qt_helpers.h"
+
 #include "ge_curve_qt.h"
 
 #include "xtt_otree_qt.h"
@@ -122,6 +124,7 @@ XttSevHistQt::XttSevHistQt(void* parent_ctx, QWidget* x_parent_wid,
 
 XttSevHistQt::~XttSevHistQt()
 {
+  debug_print("XttSevHistQt::~XttSevHistQt\n");
   if (otree) {
     delete otree;
   }

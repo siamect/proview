@@ -54,6 +54,7 @@ PalQt::PalQt(void* pal_parent_ctx, QWidget* pal_parent_wid,
   debug_print("creating a scrolledbrowwidgetqt\n");
   QWidget* scrolledbrow
       = scrolledbrowwidgetqt_new(Pal::init_brow_cb, this, &brow_widget);
+  brow_widget->setToolTip(fl("PalQt"));
 
   showNow(brow_widget);
 
@@ -74,6 +75,7 @@ PalQt::PalQt(void* pal_parent_ctx, QWidget* pal_parent_wid,
 
 PalQt::~PalQt()
 {
+  debug_print("PalQt::~PalQt\n");
   PalFile::config_tree_free(menu);
   free_pixmaps();
   delete trace_obj;

@@ -58,9 +58,6 @@ typedef pwr_tUInt32 mh_mOutunitFlags;
 
 /* Callback prototypes */
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdocumentation"
-
 /**
  * @brief Callback function to handle aknowledge messages.
  *
@@ -171,8 +168,6 @@ typedef pwr_tStatus (*mh_cbOutunitReturn)(mh_sReturn*);
  * @return pwr_tStatus - Status return in standard VMS-format.
  */
 typedef pwr_tStatus (*mh_cbOutunitAlarmStatus)(mh_sAlarmStatus*);
-
-#pragma GCC diagnostic pop
 
 /* Exported functions */
 

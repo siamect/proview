@@ -153,9 +153,6 @@ union i3e_s_be {
 #define VAX_F_BIAS 0x81
 #define I3E_S_BIAS 0x7f
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-macros"
-
 #define IBYTE0(i) ((i >> 0x18) & 0x000000ff)
 #define IBYTE1(i) ((i >> 0x08) & 0x0000ff00)
 #define IBYTE2(i) ((i << 0x08) & 0x00ff0000)
@@ -166,8 +163,6 @@ union i3e_s_be {
     int i = *(int*)s;                                                          \
     *(int*)t = (IBYTE0(i) | IBYTE1(i) | IBYTE2(i) | IBYTE3(i));                \
   }
-
-#pragma GCC diagnostic pop
 
 #if (defined(OS_LINUX)) && (pwr_dHost_byteOrder == pwr_dBigEndian)
 

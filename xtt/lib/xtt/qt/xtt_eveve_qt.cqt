@@ -234,6 +234,7 @@ EvEveQt::EvEveQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* eve_name,
 
 EvEveQt::~EvEveQt()
 {
+  debug_print("EvEveQt::~EvEveQt\n");
   delete eve_methodtoolbar;
   delete eve_sup_methodtoolbar;
 }
@@ -270,6 +271,7 @@ void EvEveQtWidget::focusInEvent(QFocusEvent* event)
 
 void EvEveQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("EvEveQtWidget::closeEvent\n");
   if (!(eve->options & ev_mAlaOptions_Embedded)) {
     delete eve;
   }

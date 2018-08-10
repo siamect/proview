@@ -53,6 +53,7 @@
 
 void RtMonQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("RtMonQtWidget::closeEvent\n");
   if (rtmon->close_cb) {
     (rtmon->close_cb)(rtmon->parent_ctx);
   } else {
@@ -243,6 +244,7 @@ void RtMonQtWidget::rtmon_scan()
 
 RtMonQt::~RtMonQt()
 {
+  debug_print("RtMonQt::~RtMonQt\n");
   if (timerid) {
     delete timerid;
   }

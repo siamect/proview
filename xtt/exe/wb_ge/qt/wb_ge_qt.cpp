@@ -92,7 +92,7 @@ int main(int argc, char* argv[])
       if (strcmp(argv[i], "-l") == 0) {
         if (i + 1 >= argc) {
           usage();
-          exit(0);
+          debug_print("Shutting down...\n"); exit(0);
         }
         Lng::set(argv[i + 1]);
         i++;

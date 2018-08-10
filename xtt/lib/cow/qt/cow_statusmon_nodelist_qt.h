@@ -109,7 +109,7 @@ class NodelistQtWidget : public QWidget {
 
 public:
   NodelistQtWidget(NodelistQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), nodelist(parent_ctx)
+      : QWidget(), nodelist(parent_ctx)
   {
   }
 

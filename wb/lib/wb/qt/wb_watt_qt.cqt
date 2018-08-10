@@ -349,6 +349,7 @@ void WAttQt::update_title()
 
 void WAttQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("WAttQtWidget::closeEvent\n");
   if (watt->close_cb) {
     (watt->close_cb)(watt);
   } else {

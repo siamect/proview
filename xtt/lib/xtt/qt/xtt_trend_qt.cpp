@@ -42,6 +42,8 @@
 #include "glow_growctx.h"
 #include "glow_growapi.h"
 
+#include "cow_qt_helpers.h"
+
 #include "ge_curve_qt.h"
 
 #include "xtt_otree_qt.h"
@@ -86,6 +88,7 @@ XttTrendQt::XttTrendQt(void* parent_ctx, QWidget* x_parent_wid, char* name,
 
 XttTrendQt::~XttTrendQt()
 {
+  debug_print("XttTrendQt::~XttTrendQt\n");
   if (timerid) {
     timerid->remove();
   }

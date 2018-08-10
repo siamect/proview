@@ -232,6 +232,7 @@ void XAttOneQt::pop()
 
 void XAttOneQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("XAttOneQtWidget::closeEvent\n");
   if (attone->close_cb) {
     (attone->close_cb)(attone->parent_ctx, attone);
   } else {

@@ -68,7 +68,7 @@ class WCrrQtWidget : public QWidget {
 
 public:
   WCrrQtWidget(WCrrQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), crr(parent_ctx)
+      : QWidget(), crr(parent_ctx)
   {
   }
 

@@ -58,6 +58,7 @@
 
 void HistQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("HistQtWidget::closeEvent\n");
   hist->close_cb(hist);
   QWidget::closeEvent(event);
 }

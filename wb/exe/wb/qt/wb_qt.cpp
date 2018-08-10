@@ -62,6 +62,7 @@ Wtt* WbQt::wtt_new(const char* name, const char* iconname,
     ldh_tWBContext ldhwbctx, pwr_tVolumeId volid, ldh_tVolume volctx,
     wnav_sStartMenu* root_menu, pwr_tStatus* status)
 {
+  debug_print("Creating a WttQt\n");
   return new WttQt(
       0, toplevel, name, iconname, ldhwbctx, volid, volctx, root_menu, status);
 }
@@ -71,6 +72,7 @@ WVsel* WbQt::vsel_new(pwr_tStatus* status, const char* name,
     int (*bc_success)(void*, pwr_tVolumeId*, int), void (*bc_cancel)(),
     int (*bc_time_to_exit)(void*), int show_volumes, wb_eType wb_type)
 {
+  debug_print("Creating a WVselQt\n");
   return new WVselQt(status, NULL, mainwindow, name, ldhwbctx, volumename,
       bc_success, bc_cancel, bc_time_to_exit, show_volumes, wb_type);
 }
@@ -79,12 +81,14 @@ int main(int argc, char* argv[])
 {
   if (argc >= 2 && strcmp(argv[1], "-m") == 0) {
     wb_erep::printMethods();
-    exit(0);
+    debug_print("Shutting down...\n"); exit(0);
   }
 
   QApplication app(argc, argv);
-  new WbQt(argc, argv);
-  return app.exec();
+  WbQt(argc, argv);
+  int res = app.exec();
+  debug_print("app.exec() finished executing!\n");
+  return res;
 }
 
 WbQt::WbQt(int argc, char* argv[]) : mainwindow(0)
@@ -118,20 +122,19 @@ WbQt::WbQt(int argc, char* argv[]) : mainwindow(0)
   strcpy(username, "");
   strcpy(password, "");
 
-  debug_print("wb_qt: started with arguments:\n");
-
   // Open directory volume as default
   volumename_p = volumename;
   strcpy(volumename, "directory");
   sw_projectvolume = 1;
   arg_cnt = 0;
+  debug_print("%s ", argv[0]);
   for (i = 1; i < argc; i++) {
-    debug_print("arg%d: %s\n", i, argv[i]);
+    fprintf(stderr, "%s ", argv[i]);
     if (argv[i][0] == '-') {
       switch (argv[i][1]) {
       case 'h':
         usage();
-        exit(0);
+        debug_print("Shutting down...\n"); exit(0);
       case 'a':
         // Load all volumes
         sw_projectvolume = 0;
@@ -148,7 +151,7 @@ WbQt::WbQt(int argc, char* argv[]) : mainwindow(0)
       case 'l':
         if (i + 1 >= argc) {
           usage();
-          exit(0);
+          debug_print("Shutting down...\n"); exit(0);
         }
         Lng::set(argv[i + 1]);
         i++;
@@ -156,14 +159,14 @@ WbQt::WbQt(int argc, char* argv[]) : mainwindow(0)
       case 'f':
         if (i + 1 >= argc) {
           usage();
-          exit(0);
+          debug_print("Shutting down...\n"); exit(0);
         }
         i++;
         break;
       case 'c':
         if (i + 1 >= argc) {
           usage();
-          exit(0);
+          debug_print("Shutting down...\n"); exit(0);
         }
         sw_classeditor = 1;
         strcpy(filename, argv[i + 1]);
@@ -196,6 +199,7 @@ WbQt::WbQt(int argc, char* argv[]) : mainwindow(0)
       arg_cnt++;
     }
   }
+  fprintf(stderr, "\n");
 
   toplevel = new QWidget();
   toplevel->setToolTip(fl("WbQt widget"));
@@ -207,6 +211,7 @@ WbQt::WbQt(int argc, char* argv[]) : mainwindow(0)
   new wb_log_qt(toplevel);
 
   // Create message window
+  debug_print("Creating a MsgWindowQt\n");
   MsgWindowQt* msg_window
       = new MsgWindowQt(0, mainwindow, "Workbench messages", &sts);
   msg_window->find_wnav_cb = Wb::find_wnav_cb;
@@ -215,6 +220,7 @@ WbQt::WbQt(int argc, char* argv[]) : mainwindow(0)
   MsgWindow::message('I', "Development environment started");
 
   // Create help window
+  debug_print("Creating a CoXHelpQt\n");
   CoXHelpQt* xhelp = new CoXHelpQt(mainwindow, 0, xhelp_eUtility_Wtt, &sts);
   CoXHelp::set_default(xhelp);
 
@@ -302,6 +308,7 @@ WbQt::WbQt(int argc, char* argv[]) : mainwindow(0)
       exit(LOGIN__NOPRIV);
     }
   } else if (login_display) {
+    debug_print("Creating a CoLoginQt\n");
     new CoLoginQt(NULL, mainwindow, "PwR Login", systemgroup,
         &Wb::login_success, &Wb::login_cancel, 0, &sts);
   }
@@ -314,8 +321,13 @@ WbQt::WbQt(int argc, char* argv[]) : mainwindow(0)
   toplevel->hide();
 
   if (!quiet) {
+    debug_print("Creating a CoWowQt\n");
     CoWowQt* wow = new CoWowQt(toplevel);
     // Use timeout to get in on the top of the display
     QTimer::singleShot(100, wow->object, SLOT(DisplayWarranty()));
   }
+}
+
+WbQt::~WbQt(){
+  debug_print("Shutting down...\n");
 }

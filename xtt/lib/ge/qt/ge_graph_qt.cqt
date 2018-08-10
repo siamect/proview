@@ -74,6 +74,7 @@ GraphQt::GraphQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
 
 GraphQt::~GraphQt()
 {
+  debug_print("GraphQt::~GraphQt\n");
   Attr* attrctx;
   int sts;
 

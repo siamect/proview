@@ -77,7 +77,7 @@ class EvEveQtWidget : public QWidget {
 
 public:
   EvEveQtWidget(EvEveQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), eve(parent_ctx)
+      : QWidget(), eve(parent_ctx)
   {
   }
 

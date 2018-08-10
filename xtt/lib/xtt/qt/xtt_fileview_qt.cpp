@@ -121,6 +121,7 @@ void XttFileviewQtWidget::list_ok_cb(const QString& file)
 
 void XttFileviewQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("XttFileviewQtWidget::closeEvent\n");
   free(fileview->filelist);
   delete fileview;
   QWidget::closeEvent(event);

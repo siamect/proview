@@ -82,7 +82,7 @@ class WGeQtWidget : public QWidget {
 
 public:
   WGeQtWidget(WGeQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), ge(parent_ctx)
+      : QWidget(), ge(parent_ctx)
   {
   }
 

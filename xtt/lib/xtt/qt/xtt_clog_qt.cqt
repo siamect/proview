@@ -55,6 +55,7 @@
 
 void CLogQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("CLogQtWidget::closeEvent\n");
   if (clog->close_cb) {
     (clog->close_cb)(clog->parent_ctx);
   } else {

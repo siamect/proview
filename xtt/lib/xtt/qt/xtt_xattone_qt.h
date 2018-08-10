@@ -82,7 +82,7 @@ class XAttOneQtWidget : public QWidget {
 
 public:
   XAttOneQtWidget(XAttOneQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), attone(parent_ctx)
+      : QWidget(), attone(parent_ctx)
   {
   }
 

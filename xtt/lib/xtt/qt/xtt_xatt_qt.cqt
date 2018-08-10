@@ -335,6 +335,7 @@ void XAttQt::print()
 
 void XAttQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("XAttQtWidget::closeEvent\n");
   if (xatt->close_cb) {
     (xatt->close_cb)(xatt->parent_ctx, xatt);
   } else {

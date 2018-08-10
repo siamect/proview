@@ -174,7 +174,7 @@ class WFoeQtWidget : public QWidget {
 
 public:
   WFoeQtWidget(WFoeQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), foe(parent_ctx)
+      : QWidget(), foe(parent_ctx)
   {
   }
 

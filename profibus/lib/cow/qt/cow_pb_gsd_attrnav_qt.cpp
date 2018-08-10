@@ -48,6 +48,7 @@ GsdAttrNavQt::GsdAttrNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
     pwr_tStatus* status)
     : GsdAttrNav(xn_parent_ctx, xn_name, xn_gsd, xn_edit_mode, status)
 {
+  debug_print("creating a scrolledbrowwidgetqt\n");
   form_widget = scrolledbrowwidgetqt_new(init_brow_cb, this, &brow_widget);
   showNow(brow_widget);
 

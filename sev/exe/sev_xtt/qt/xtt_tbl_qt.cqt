@@ -56,6 +56,7 @@ void XttTblQt::message(char severity, const char* message)
 
 void XttTblQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("XttTblQtWidget::closeEvent\n");
   if (tbl->close_cb) {
     (tbl->close_cb)(tbl);
   } else {

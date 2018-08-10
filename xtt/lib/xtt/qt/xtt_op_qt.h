@@ -135,7 +135,7 @@ class OpQtWidget : public QWidget {
 
 public:
   OpQtWidget(OpQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), op(parent_ctx)
+      : QWidget(), op(parent_ctx)
   {
   }
 

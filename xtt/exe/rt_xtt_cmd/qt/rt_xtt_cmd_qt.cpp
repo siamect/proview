@@ -93,7 +93,7 @@ int main(int argc, char* argv[])
       switch (argv[i][1]) {
       case 'h':
         XttCmd::usage();
-        exit(0);
+        debug_print("Shutting down...\n"); exit(0);
       case 'q':
         // Quiet
         quiet = 1;
@@ -120,7 +120,7 @@ int main(int argc, char* argv[])
   sts = gdh_Init("rt_xtt_cmd");
   if (EVEN(sts)) {
     printf("Unable to connect to database\n");
-    exit(0);
+    debug_print("Shutting down...\n"); exit(0);
   }
 
   QApplication app(argc, argv);

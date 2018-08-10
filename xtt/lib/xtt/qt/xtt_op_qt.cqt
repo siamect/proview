@@ -504,6 +504,7 @@ OpQt::OpQt(void* op_parent_ctx, QWidget* op_parent_wid, char* opplace,
 
 OpQt::~OpQt()
 {
+  debug_print("OpQt::~OpQt\n");
   if (jop) {
     delete jop;
   }
@@ -515,6 +516,7 @@ OpQt::~OpQt()
 
 void OpQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("OpQtWidget::closeEvent\n");
   if (op->close_cb) {
     (op->close_cb)(op->parent_ctx);
   }

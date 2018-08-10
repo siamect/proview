@@ -58,7 +58,7 @@ static void usage()
 
 static void statusmon_close(void* ctx)
 {
-  exit(0);
+  debug_print("Shutting down...\n"); exit(0);
 }
 
 int main(int argc, char* argv[])
@@ -75,14 +75,14 @@ int main(int argc, char* argv[])
       debug_print("arg%d: %s\n", i, argv[i]);
       if (strcmp(argv[i], "-h") == 0) {
         usage();
-        exit(0);
+        debug_print("Shutting down...\n"); exit(0);
       } else if (strcmp(argv[i], "-l") == 0 && i + 1 < argc) {
         strncpy(language, argv[i + 1], sizeof(language));
         Lng::set(language);
       } else if (strcmp(argv[i], "-m") == 0) {
         if (argc == i) {
           usage();
-          exit(0);
+          debug_print("Shutting down...\n"); exit(0);
         }
         if (strcmp(argv[i + 1], "1") == 0) {
           mode = nodelist_eMode_Status1;
@@ -96,7 +96,7 @@ int main(int argc, char* argv[])
           mode = nodelist_eMode_Status5;
         } else {
           usage();
-          exit(0);
+          debug_print("Shutting down...\n"); exit(0);
         }
         i++;
       } else if (strcmp(argv[i], "-e") == 0) {

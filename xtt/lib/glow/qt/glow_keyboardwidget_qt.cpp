@@ -58,7 +58,6 @@ QWidget* keyboardwidgetqt_new(
     int (*init_proc)(GlowCtx* ctx, void* client_data), void* client_data)
 {
   QtScrollWidgetGlow* w = new QtScrollWidgetGlow();
-  debug_print("creating a new glow scroll widget\n");
   w->init(glow_eCtxType_Keyboard, init_proc, client_data, keyboard_init_proc);
   return (QWidget*)w;
 }
@@ -66,7 +65,6 @@ QWidget* keyboardwidgetqt_new(
 QWidget* keyboardnavwidgetqt_new(QWidget* main_keyboard)
 {
   QtScrollWidgetGlow* w = new QtScrollWidgetGlow();
-  debug_print("creating a new glow scroll widget\n");
   w->init(glow_eCtxType_Keyboard, main_keyboard);
   return (QWidget*)w;
 }

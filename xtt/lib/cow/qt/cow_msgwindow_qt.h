@@ -69,7 +69,7 @@ class MsgWindowQtWidget : public QWidget {
 
 public:
   MsgWindowQtWidget(MsgWindowQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), msgwin(parent_ctx)
+      : QWidget(), msgwin(parent_ctx)
   {
   }
 

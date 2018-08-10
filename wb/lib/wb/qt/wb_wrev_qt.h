@@ -100,7 +100,7 @@ class WRevQtWidget : public QWidget {
 
 public:
   WRevQtWidget(WRevQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), rev(parent_ctx)
+      : QWidget(), rev(parent_ctx)
   {
   }
 

@@ -38,6 +38,8 @@
 
 #include "rt_xnav_msg.h"
 
+#include "cow_qt_helpers.h"
+
 #include "ge_curve_qt.h"
 
 #include "xtt_tcurve_qt.h"
@@ -85,6 +87,7 @@ XttTCurveQt::XttTCurveQt(void* parent_ctx, QWidget* parent_wid,
 
 XttTCurveQt::~XttTCurveQt()
 {
+  debug_print("XttTCurveQt::~XttTCurveQt\n");
   timerid->remove();
 
   if (gcd) {

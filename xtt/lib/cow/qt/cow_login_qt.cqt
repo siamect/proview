@@ -90,6 +90,7 @@ void CoLoginQtWidget::valchanged_username()
 
 void CoLoginQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("CoLoginQtWidget::closeEvent\n");
   if (del) {
     login->activate_cancel();
     del = false;

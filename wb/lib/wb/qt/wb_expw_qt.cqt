@@ -143,6 +143,7 @@ void WbExpWQtWidget::focusInEvent(QFocusEvent* event)
 
 void WbExpWQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("WbExpWQtWidget::closeEvent\n");
   delete expw;
   QWidget::closeEvent(event);
 }

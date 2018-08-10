@@ -54,14 +54,9 @@
 #include "rt_rtt_menu.h"
 #include "dtt_rttsys_functions.h"
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
-
 RTT_RTTSYSDB_START
 RTT_RTTSYSDB_CONTINUE
 RTT_RTTSYSDB_END
-
-#pragma GCC diagnostic pop
 
 int rttsys_start_grafcet_monitor(menu_ctx ctx, pwr_tObjid plc_objid)
 {

@@ -84,7 +84,7 @@ class XAttQtWidget : public QWidget {
 
 public:
   XAttQtWidget(XAttQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), xatt(parent_ctx)
+      : QWidget(), xatt(parent_ctx)
   {
   }
 

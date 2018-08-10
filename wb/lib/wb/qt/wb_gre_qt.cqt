@@ -61,6 +61,7 @@ WGreQt::WGreQt(void* wg_parent_ctx, QWidget* wg_parent_wid, const char* name)
 
 WGreQt::~WGreQt()
 {
+  debug_print("WGreQt::~WGreQt\n");
   form_widget->close();
 }
 

@@ -85,7 +85,7 @@ class CLogQtWidget : public QWidget {
 
 public:
   CLogQtWidget(CLogQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), clog(parent_ctx)
+      : QWidget(), clog(parent_ctx)
   {
   }
 

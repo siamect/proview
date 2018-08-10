@@ -99,6 +99,7 @@ void WCrrQt::print()
 
 void WCrrQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("WCrrQtWidget::closeEvent\n");
   if (crr->close_cb) {
     (crr->close_cb)(crr->parent_ctx, crr);
   } else {

@@ -77,7 +77,7 @@ class EvAlaQtWidget : public QWidget {
 
 public:
   EvAlaQtWidget(EvAlaQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), ala(parent_ctx)
+      : QWidget(), ala(parent_ctx)
   {
   }
 

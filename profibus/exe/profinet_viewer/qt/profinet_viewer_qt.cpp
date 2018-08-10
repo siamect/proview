@@ -59,7 +59,7 @@ static void usage()
 
 static void viewer_close(void* c)
 {
-  exit(0);
+  debug_print("Shutting down...\n"); exit(0);
 }
 
 int main(int argc, char* argv[])
@@ -89,11 +89,11 @@ int main(int argc, char* argv[])
   for (i = 1; i < argc; i++) {
     if (strcmp(argv[i], "-h") == 0) {
       usage();
-      exit(0);
+      debug_print("Shutting down...\n"); exit(0);
     } else if (strcmp(argv[i], "-l") == 0) {
       if (i + 1 >= argc) {
         usage();
-        exit(0);
+        debug_print("Shutting down...\n"); exit(0);
       }
       Lng::set(argv[i + 1]);
       i++;
@@ -109,7 +109,7 @@ int main(int argc, char* argv[])
     ctx->viewer->close_cb = viewer_close;
   } catch (co_error& e) {
     printf("** Exception: %s\n", e.what().c_str());
-    exit(0);
+    debug_print("Shutting down...\n"); exit(0);
   }
 
   ctx->toplevel->show();

@@ -107,7 +107,6 @@ QWidget* curvewidgetqt_new(
     int (*init_proc)(GlowCtx* ctx, void* client_data), void* client_data)
 {
   CurveWidgetQt* w = new CurveWidgetQt();
-  debug_print("creating a new glow scroll widget\n");
   w->init(glow_eCtxType_Curve, init_proc, client_data, curve_init_proc);
   return (QWidget*)w;
 }
@@ -118,7 +117,6 @@ QWidget* scrolledcurvewidgetqt_new(
 {
   CurveWidgetQt* w = new CurveWidgetQt();
   *curvewidget = w;
-  debug_print("creating a new glow scroll widget\n");
   return w->initScroll(
       glow_eCtxType_Curve, init_proc, client_data, curve_init_proc);
 }
@@ -126,7 +124,6 @@ QWidget* scrolledcurvewidgetqt_new(
 QWidget* curvenavwidgetqt_new(QWidget* main_curve)
 {
   CurveWidgetQt* w = new CurveWidgetQt();
-  debug_print("creating a new glow scroll widget\n");
   w->init(glow_eCtxType_Curve, main_curve);
   return (QWidget*)w;
 }

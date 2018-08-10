@@ -96,7 +96,9 @@ public:
       const char* iconname, ldh_tWBContext wt_wbctx, pwr_tVolumeId wt_volid,
       ldh_tVolume wt_volctx, wnav_sStartMenu* root_menu, pwr_tStatus* status);
 
-  WttQt(){}
+  WttQt()
+  {
+  }
   ~WttQt();
 
   QWidget* wnav_brow_widget;
@@ -180,9 +182,8 @@ public:
   CoWowFocusTimerQt focustimer;
   int realized;
 
-  QMenu* build_menu();
-  QMenu* build_submenu(int MenuType, const char* MenuTitle,
-      const char* Callback, ldh_sMenuItem* Items, int idx);
+  int build_menu(int x, int y);
+  QMenu* build_submenu(const char* Callback, ldh_sMenuItem* Items, int* idx);
 
   virtual void set_clock_cursor();
   virtual void reset_cursor();
@@ -228,8 +229,7 @@ class WttQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  WttQtWidget(WttQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), wtt(parent_ctx)
+  WttQtWidget(WttQt* parent_ctx, QWidget* parent) : QWidget(), wtt(parent_ctx)
   {
   }
 

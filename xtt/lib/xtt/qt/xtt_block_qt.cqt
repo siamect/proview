@@ -125,6 +125,7 @@ void BlockQtWidget::activate_ok()
 
 void BlockQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("BlockQtWidget::closeEvent\n");
   delete block;
   QWidget::closeEvent(event);
 }

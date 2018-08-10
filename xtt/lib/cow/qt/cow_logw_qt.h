@@ -67,7 +67,7 @@ class CoLogWQtWidget : public QWidget {
 
 public:
   CoLogWQtWidget(CoLogWQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), logw(parent_ctx)
+      : QWidget(), logw(parent_ctx)
   {
   }
 

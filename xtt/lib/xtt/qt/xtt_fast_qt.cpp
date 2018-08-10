@@ -41,6 +41,8 @@
 #include "rt_gdh.h"
 #include "rt_xnav_msg.h"
 
+#include "cow_qt_helpers.h"
+
 #include "ge_curve_qt.h"
 
 #include "xtt_fast_qt.h"
@@ -105,6 +107,7 @@ XttFastQt::XttFastQt(void* parent_ctx, QWidget* parent_wid, const char* name,
 
 XttFastQt::~XttFastQt()
 {
+  debug_print("XttFastQt::~XttFastQt\n");
   if (timerid) {
     timerid->remove();
   }

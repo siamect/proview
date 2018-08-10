@@ -410,6 +410,7 @@ void XColWindQt::print()
 
 void XColWindQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("XColWindQtWidget::closeEvent\n");
   if (colwind->close_cb) {
     (colwind->close_cb)(colwind->parent_ctx, colwind);
   } else {

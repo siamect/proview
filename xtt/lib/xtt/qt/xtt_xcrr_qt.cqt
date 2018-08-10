@@ -100,6 +100,7 @@ void XCrrQt::print()
 
 void XCrrQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("XCrrQtWidget::closeEvent\n");
   if (xcrr->close_cb) {
     (xcrr->close_cb)(xcrr->parent_ctx, xcrr);
   } else {

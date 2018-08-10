@@ -87,7 +87,7 @@ class RtMonQtWidget : public QWidget {
 
 public:
   RtMonQtWidget(RtMonQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), rtmon(parent_ctx)
+      : QWidget(), rtmon(parent_ctx)
   {
   }
 

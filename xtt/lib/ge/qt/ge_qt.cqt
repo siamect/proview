@@ -1184,6 +1184,7 @@ void GeQt::update()
 
 void GeQtWidget::closeEvent(QCloseEvent* event)
 {
+  debug_print("GeQtWidget::closeEvent\n");
   ge->Ge::activate_exit();
   QWidget::closeEvent(event);
 }
@@ -1232,6 +1233,7 @@ void GeQt::save_and_close()
 
 GeQt::~GeQt()
 {
+  debug_print("GeQt::~GeQt\n");
   if (graph->is_modified()) {
     open_yesnodia("Do you wan't to save changes", "Save", Ge::exit_save_cb,
         Ge::exit_nosave_cb);

@@ -88,7 +88,7 @@ class WAttQtWidget : public QWidget {
 
 public:
   WAttQtWidget(WAttQt* parent_ctx, QWidget* parent)
-      : QWidget(parent, Qt::Window), watt(parent_ctx)
+      : QWidget(), watt(parent_ctx)
   {
   }
 
