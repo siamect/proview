@@ -74,10 +74,6 @@
 #include <QVBoxLayout>
 
 #define WTT_PALETTE_WIDTH 160
-//#define MENU_BAR 1
-#define MENU_PULLDOWN 2
-#define MENU_POPUP 3
-//#define MENU_OPTION 4
 
 CoWowRecall WttQt::cmd_recall;
 CoWowRecall WttQt::value_recall;
@@ -787,7 +783,7 @@ void WttQt::close_change_value()
   }
 }
 
-void WttQtWidget::open_change_value()
+void WttQt::open_change_value()
 {
   int sts;
   brow_tObject* sellist;
@@ -796,92 +792,92 @@ void WttQtWidget::open_change_value()
   int multiline;
   int input_size = 0;
 
-  if (wtt->input_open) {
-    wtt->cmd_entry->setVisible(false);
-    wtt->set_prompt("");
-    wtt->input_open = 0;
-    wtt->focused_wnav->set_inputfocus(1);
+  if (input_open) {
+    cmd_entry->setVisible(false);
+    set_prompt("");
+    input_open = 0;
+    focused_wnav->set_inputfocus(1);
     return;
   }
 
-  sts = wtt->wnav->get_selected_nodes(&sellist, &sel_cnt1);
+  sts = wnav->get_selected_nodes(&sellist, &sel_cnt1);
   if (ODD(sts)) {
     if (sel_cnt1 != 1) {
-      wtt->message('E', "Select one attribute");
+      message('E', "Select one attribute");
       return;
     }
 
-    sts = wtt->wnav->check_attr_value(
+    sts = wnav->check_attr_value(
         sellist[0], &multiline, &value, &input_size);
     if (EVEN(sts)) {
-      wtt->message('E', wnav_get_message(sts));
+      message('E', wnav_get_message(sts));
       return;
     }
     if (multiline) {
-      wtt->message('E', "Edit multiline attributes in the Object Editor");
+      message('E', "Edit multiline attributes in the Object Editor");
       return;
     }
 
-    wtt->input_node = sellist[0];
-    wtt->input_wnav = wtt->wnav;
-    wtt->wnav->node_to_objid(wtt->input_node, &wtt->input_objid);
+    input_node = sellist[0];
+    input_wnav = wnav;
+    wnav->node_to_objid(input_node, &input_objid);
     free(sellist);
   } else {
-    sts = wtt->wnavnode->get_selected_nodes(&sellist, &sel_cnt2);
+    sts = wnavnode->get_selected_nodes(&sellist, &sel_cnt2);
     if (ODD(sts)) {
       if (sel_cnt2 != 1) {
-        wtt->message('E', "Select one attribute");
+        message('E', "Select one attribute");
         return;
       }
 
-      sts = wtt->wnavnode->check_attr_value(
+      sts = wnavnode->check_attr_value(
           sellist[0], &multiline, &value, &input_size);
       if (EVEN(sts)) {
-        wtt->message('E', wnav_get_message(sts));
+        message('E', wnav_get_message(sts));
         return;
       }
       if (multiline) {
-        wtt->message('E', "Edit multiline attributes in the attribute editor");
+        message('E', "Edit multiline attributes in the attribute editor");
         return;
       }
 
-      wtt->input_node = sellist[0];
-      wtt->input_wnav = wtt->wnavnode;
-      wtt->wnavnode->node_to_objid(wtt->input_node, &wtt->input_objid);
+      input_node = sellist[0];
+      input_wnav = wnavnode;
+      wnavnode->node_to_objid(input_node, &input_objid);
       free(sellist);
     }
   }
   if (sel_cnt1 == 0 && sel_cnt2 == 0) {
-    wtt->message('E', "Select an attribute");
+    message('E', "Select an attribute");
     return;
   }
 
-  if (wtt->command_open) {
-    wtt->command_open = 0;
+  if (command_open) {
+    command_open = 0;
   } else {
-    wtt->cmd_entry->setVisible(true);
+    cmd_entry->setVisible(true);
   }
 
-  wtt->cmd_entry->setMaxLength(input_size);
-  wtt->message(' ', "");
-  wtt->cmd_entry->set_recall_buffer(&wtt->value_recall);
-  wtt->cmd_entry->setFocus();
+  cmd_entry->setMaxLength(input_size);
+  message(' ', "");
+  cmd_entry->set_recall_buffer(&value_recall);
+  cmd_entry->setFocus();
 
   if (value) {
-    wtt->cmd_entry->setText(QString::fromLatin1(value));
+    cmd_entry->setText(QString::fromLatin1(value));
 
     // Select the text
-    wtt->cmd_entry->selectAll();
+    cmd_entry->selectAll();
   } else {
-    wtt->cmd_entry->setText("");
+    cmd_entry->setText("");
   }
 
-  wtt->set_prompt("value >");
-  wtt->input_open = 1;
-  wtt->input_mode = wtt_eInputMode_Attribute;
+  set_prompt("value >");
+  input_open = 1;
+  input_mode = wtt_eInputMode_Attribute;
 }
 
-void WttQtWidget::open_change_name()
+void WttQt::open_change_name()
 {
   int sts;
   brow_tObject* sellist;
@@ -889,77 +885,77 @@ void WttQtWidget::open_change_name()
   int size;
   char name[80];
 
-  if (wtt->input_open) {
-    wtt->cmd_entry->setVisible(false);
-    wtt->set_prompt("");
-    wtt->input_open = 0;
+  if (input_open) {
+    cmd_entry->setVisible(false);
+    set_prompt("");
+    input_open = 0;
     return;
   }
 
-  sts = wtt->wnav->get_selected_nodes(&sellist, &sel_cnt1);
+  sts = wnav->get_selected_nodes(&sellist, &sel_cnt1);
   if (ODD(sts)) {
     if (sel_cnt1 != 1) {
-      wtt->message('E', "Select one object");
+      message('E', "Select one object");
       return;
     }
 
-    sts = wtt->wnav->check_object_name(sellist[0]);
+    sts = wnav->check_object_name(sellist[0]);
     if (EVEN(sts)) {
-      wtt->message('E', wnav_get_message(sts));
+      message('E', wnav_get_message(sts));
       return;
     }
 
-    wtt->input_node = sellist[0];
-    wtt->input_wnav = wtt->wnav;
-    wtt->wnav->node_to_objid(wtt->input_node, &wtt->input_objid);
+    input_node = sellist[0];
+    input_wnav = wnav;
+    wnav->node_to_objid(input_node, &input_objid);
     free(sellist);
   } else {
-    sts = wtt->wnavnode->get_selected_nodes(&sellist, &sel_cnt2);
+    sts = wnavnode->get_selected_nodes(&sellist, &sel_cnt2);
     if (ODD(sts)) {
       if (sel_cnt2 != 1) {
-        wtt->message('E', "Select one object");
+        message('E', "Select one object");
         return;
       }
 
-      sts = wtt->wnavnode->check_object_name(sellist[0]);
+      sts = wnavnode->check_object_name(sellist[0]);
       if (EVEN(sts)) {
-        wtt->message('E', wnav_get_message(sts));
+        message('E', wnav_get_message(sts));
         return;
       }
 
-      wtt->input_node = sellist[0];
-      wtt->input_wnav = wtt->wnavnode;
-      wtt->wnavnode->node_to_objid(wtt->input_node, &wtt->input_objid);
+      input_node = sellist[0];
+      input_wnav = wnavnode;
+      wnavnode->node_to_objid(input_node, &input_objid);
       free(sellist);
     }
   }
   if (sel_cnt1 == 0 && sel_cnt2 == 0) {
-    wtt->message('E', "Select an object");
+    message('E', "Select an object");
     return;
   }
 
-  if (wtt->command_open) {
-    wtt->command_open = 0;
+  if (command_open) {
+    command_open = 0;
   } else {
-    wtt->cmd_entry->setVisible(true);
+    cmd_entry->setVisible(true);
   }
 
-  wtt->cmd_entry->setMaxLength(sizeof(pwr_tObjName) - 1);
-  wtt->message(' ', "");
-  wtt->cmd_entry->set_recall_buffer(&wtt->name_recall);
-  wtt->cmd_entry->setFocus();
+  cmd_entry->setMaxLength(sizeof(pwr_tObjName) - 1);
+  message(' ', "");
+  cmd_entry->set_recall_buffer(&name_recall);
+  cmd_entry->setFocus();
 
-  sts = ldh_ObjidToName(wtt->ldhses, wtt->input_objid, ldh_eName_Object, name,
+  sts = ldh_ObjidToName(ldhses, input_objid, ldh_eName_Object, name,
       sizeof(name), &size);
 
-  wtt->cmd_entry->setText(QString::fromLatin1(name));
+  cmd_entry->setText(QString::fromLatin1(name));
 
   // Select the text
-  wtt->cmd_entry->selectAll();
+  cmd_entry->selectAll();
 
-  wtt->set_prompt("name >");
-  wtt->input_open = 1;
-  wtt->input_mode = wtt_eInputMode_ObjectName;
+  set_prompt("name >");
+  input_open = 1;
+  input_mode = wtt_eInputMode_ObjectName;
 }
 
 //
@@ -1367,6 +1363,7 @@ void WttQtWidget::valchanged_cmd_entry()
   int sts;
 
   QByteArray text = wtt->cmd_entry->text().toLatin1();
+  debug_print("text=%s\n", text.data());
 
   if (!text.data()) {
     wtt->wnav->wow->DisplayError("Input error", "Invalid character");
@@ -2062,7 +2059,7 @@ WttQt::WttQt(void* wt_parent_ctx, QWidget* wt_parent_wid, const char* wt_name,
       SLOT(activate_showcrossref()), "CTRL+R");
   addMenuItem(toplevel, functions, "S&yntax Check", SLOT(activate_syntax()));
   menu_change_value_w = addMenuItem(toplevel, functions, "Change &Value",
-      SLOT(open_change_value()), "CTRL+Q");
+      SLOT(activate_change_value()), "CTRL+Q");
   addMenuItem(
       toplevel, functions, "Co&mmand", SLOT(activate_command()), "CTRL+B");
 
@@ -2225,12 +2222,9 @@ WttQt::WttQt(void* wt_parent_ctx, QWidget* wt_parent_wid, const char* wt_name,
   // Statusbar and cmd input
   QStatusBar* statusbar = new QStatusBar();
   msg_label = new QLabel("");
-  msg_label->setFixedHeight(25);
   cmd_prompt = new QLabel(fl("value > "));
-  cmd_prompt->setFixedHeight(25);
   cmd_entry = new CoWowEntryQt(&cmd_recall);
   cmd_entry->set_hide_on_esc(true);
-  cmd_entry->setFixedHeight(25);
   QObject::connect(cmd_entry, SIGNAL(editingFinished()), toplevel,
       SLOT(valchanged_cmd_entry()));
   QObject::connect(
@@ -2239,6 +2233,7 @@ WttQt::WttQt(void* wt_parent_ctx, QWidget* wt_parent_wid, const char* wt_name,
   statusbar->addWidget(msg_label);
   statusbar->addWidget(cmd_prompt);
   add_expanding(statusbar, cmd_entry);
+  statusbar->setFixedHeight(25);
 
   QVBoxLayout* vbox1 = new QVBoxLayout();
   vbox1->addWidget(menu_bar);

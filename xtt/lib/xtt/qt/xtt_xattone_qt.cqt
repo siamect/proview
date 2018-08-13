@@ -275,13 +275,9 @@ XAttOneQt::XAttOneQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
 
   // Prompt, label, input entry
   msg_label = new QLabel("");
-  msg_label->setFixedHeight(25);
   cmd_prompt = new QLabel("value > ");
-  cmd_prompt->setFixedHeight(25);
   cmd_label = new QLabel("");
-  cmd_label->setFixedHeight(25);
   cmd_entry = new CoWowEntryQt(&value_recall);
-  cmd_entry->setFixedHeight(25);
   QObject::connect(cmd_entry, SIGNAL(editingFinished()), toplevel,
       SLOT(activate_cmd_entry()));
 
@@ -309,6 +305,7 @@ XAttOneQt::XAttOneQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
   statusbar->addWidget(cmd_prompt);
   add_expanding(statusbar, cmd_label);
   add_expanding(statusbar, cmd_entry);
+  statusbar->setFixedHeight(25);
 
   QVBoxLayout* cmd_scrolledinput_layout = new QVBoxLayout();
   add_expanding(cmd_scrolledinput_layout, cmd_scrolled_buffer);

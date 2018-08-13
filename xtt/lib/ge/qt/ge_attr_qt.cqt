@@ -363,17 +363,15 @@ AttrQt::AttrQt(QWidget* a_parent_wid, void* a_parent_ctx, attr_eType a_type,
 
     QStatusBar* statusbar = new QStatusBar();
     msg_label = new QLabel("");
-    msg_label->setFixedHeight(25);
     cmd_prompt = new QLabel("value > ");
-    cmd_prompt->setFixedHeight(25);
     cmd_entry = new CoWowEntryQt(&value_recall);
-    cmd_entry->setFixedHeight(25);
     QObject::connect(cmd_entry, SIGNAL(editingFinished()), toplevel,
         SLOT(attr_activate_cmd_entry()));
 
     statusbar->addWidget(msg_label);
     statusbar->addWidget(cmd_prompt);
     add_expanding(statusbar, cmd_entry);
+    statusbar->setFixedHeight(25);
 
     QVBoxLayout* vbox = new QVBoxLayout();
     vbox->setMenuBar(menu_bar);

@@ -200,7 +200,9 @@ public:
   virtual void set_twowindows(int two, int display_wnav, int display_wnavnode);
   virtual void message(char severity, const char* message);
   virtual void set_prompt(const char* prompt);
+  virtual void open_change_value();
   virtual void close_change_value();
+  virtual void open_change_name();
   virtual void watt_new(pwr_tAttrRef aref);
   virtual void wda_new(pwr_tOid oid);
   virtual Ge* ge_new(char* graphname);
@@ -240,9 +242,6 @@ protected:
 public slots:
   void set_selection_owner_proc();
   void set_palette_selection_owner_proc();
-
-  virtual void open_change_value();
-  virtual void open_change_name();
 
   void activate_change_value();
   void activate_command();
