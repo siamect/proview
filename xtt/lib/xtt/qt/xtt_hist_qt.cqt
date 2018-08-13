@@ -368,16 +368,10 @@ void HistQtWidget::ok_btn()
   hist->eventPrio_C = hist->prioC_toggle_w->isChecked();
   hist->eventPrio_D = hist->prioD_toggle_w->isChecked();
 
-  QByteArray ba = hist->start_time_entry_w->text().toLatin1();
-  hist->minTime_str = ba.data();
-  ba = hist->stop_time_entry_w->text().toLatin1();
-  hist->maxTime_str = ba.data();
-
-  ba = hist->event_text_entry_w->text().toLatin1();
-  hist->eventText_str = ba.data();
-
-  ba = hist->event_name_entry_w->text().toLatin1();
-  hist->eventName_str = ba.data();
+  hist->minTime_str = qPrintableLatin1(hist->start_time_entry_w->text());
+  hist->maxTime_str = qPrintableLatin1(hist->stop_time_entry_w->text());
+  hist->eventText_str = qPrintableLatin1(hist->event_text_entry_w->text());
+  hist->eventName_str = qPrintableLatin1(hist->event_name_entry_w->text());
 
   hist->get_hist_list();
 

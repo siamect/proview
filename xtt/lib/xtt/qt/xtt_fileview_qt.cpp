@@ -77,16 +77,14 @@ void XttFileviewQtWidget::list_ok_cb(const QString& file)
   if (fileview->type == fileview_eType_Open) {
     char selected_text[80];
 
-    QByteArray textiso = file.toLatin1();
-    strcpy(selected_text, textiso.data());
+    strcpy(selected_text, qPrintableLatin1(file));
 
     fileview->execute(selected_text);
   } else {
     bool file_exist = false;
     char input_text[200];
 
-    QByteArray text = file.toLatin1();
-    strncpy(input_text, text.data(), sizeof(input_text));
+    strncpy(input_text, qPrintableLatin1(file), sizeof(input_text));
 
     /*
     if (strcmp(filetype, "") != 0) {

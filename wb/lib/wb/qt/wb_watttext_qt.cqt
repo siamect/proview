@@ -152,8 +152,7 @@ void WAttTextQt::set_editmode(int editmode, ldh_tSesContext ldhses)
 void WAttTextQt::set_attr_value()
 {
   if (editmode) {
-    QByteArray ba = textbuffer->toPlainText().toLatin1();
-    char* text = ba.data();
+    char* text = qPrintableLatin1(textbuffer->toPlainText());
 
     if (text) {
       // Replace ctrl characters with space

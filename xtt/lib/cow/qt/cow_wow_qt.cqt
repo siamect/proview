@@ -134,11 +134,8 @@ void CoWowQt::CreateInputDialog(void* ctx, const char* title, const char* text,
   QString str = QInputDialog::getText(object->parent_wid, translate_utf8(title),
       translate_utf8(text), QLineEdit::Normal, temp_txt, &ok);
   if (ok) {
-    QByteArray ba = str.toLatin1();
-    char* text = ba.data();
-
     if (inputdialogbox_ok) {
-      (inputdialogbox_ok)(ctx, data, text);
+      (inputdialogbox_ok)(ctx, data, qPrintableLatin1(str));
     }
   } else {
     if (inputdialogbox_cancel) {
@@ -214,10 +211,7 @@ void CoWowListWidgetQt::list_apply_cb()
     selected_text = item->text(0);
   }
   if (action_cb) {
-    QByteArray ba = selected_text.toLatin1();
-    char* text = ba.data();
-
-    (action_cb)(parent_ctx, text, ok_pressed);
+    (action_cb)(parent_ctx, qPrintableLatin1(selected_text), ok_pressed);
   }
 }
 
@@ -842,9 +836,7 @@ wow_sModalInputDialog* CoWowQt::CreateModalInputDialog(const char* title,
   wow_sModalInputDialog* ret = new wow_sModalInputDialog();
   ret->status = status;
 
-  QString valueutf8 = dialog_w->text();
-  QByteArray ba = valueutf8.toLatin1();
-  strncpy(ret->input_str, ba.data(), sizeof(ret->input_str));
+  strncpy(ret->input_str, qPrintableLatin1(dialog_w->text()), sizeof(ret->input_str));
 
   return ret;
 }

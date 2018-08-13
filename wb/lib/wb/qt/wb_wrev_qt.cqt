@@ -246,13 +246,10 @@ void WRevInputDialog::closeEvent(QCloseEvent* event)
 
 void WRevInputDialog::activate_ok()
 {
-  QByteArray text1 = india_text1->text().toLatin1();
-  QByteArray text2 = india_text2->text().toLatin1();
-
   rev->dialog_count--;
   rev->india_widget = 0;
 
-  (rev->india_ok_cb)(rev, text1.data(), text2.data());
+  (rev->india_ok_cb)(rev, qPrintableLatin1(india_text1->text()), qPrintableLatin1(india_text2->text()));
   close();
 }
 

@@ -89,16 +89,16 @@ void XttQt::open_input_dialog(const char* text, const char* title,
   QString str = QInputDialog::getText(toplevel, translate_utf8(title),
       translate_utf8(text), QLineEdit::Normal, fl(init_text), &ok);
   if (ok) {
-    QByteArray ba = str.toLatin1();
-    char* text = ba.data();
-
-    (ok_cb)(this, text);
+    (ok_cb)(this, qPrintableLatin1(str));
   }
 }
 
 void XttQt::message(char severity, const char* msg)
 {
   msg_label->setText(QString::fromLatin1(msg));
+  if (strcmp(msg, "") != 0) {
+    msg_label->setVisible(true);
+  }
 }
 
 void XttQt::close(void* ctx, int terminate)
@@ -517,10 +517,7 @@ void XttQtWidget::focusInEvent(QFocusEvent* event)
 
 void XttQtWidget::valchanged_cmd_entry()
 {
-  QByteArray ba = xtt->cmd_entry->text().toLatin1();
-  char* text = ba.data();
-
-  if (!text) {
+  if (xtt->cmd_entry->text().isEmpty()) {
     xtt->cmd_entry->setVisible(false);
     xtt->set_prompt("");
     xtt->input_open = 0;
@@ -529,6 +526,8 @@ void XttQtWidget::valchanged_cmd_entry()
     xtt->message('E', "Input error, invalid character");
     return;
   }
+
+  char* text = qPrintableLatin1(xtt->cmd_entry->text());
 
   if (xtt->input_open) {
     int sts = xtt->xnav->set_attr_value(text);
@@ -766,6 +765,7 @@ XttQt::XttQt(int argc, char* argv[], int* return_sts)
   toplevel->setLayout(vbox);
   toplevel->show();
 
+  msg_label->setVisible(false);
   cmd_prompt->setVisible(false);
   cmd_entry->setVisible(false);
 

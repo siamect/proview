@@ -55,6 +55,9 @@ CoWowRecall WdaQt::value_recall;
 void WdaQt::message(char severity, const char* message)
 {
   msg_label->setText(fl(message));
+  if (strcmp(message, "") != 0) {
+    msg_label->setVisible(true);
+  }
 }
 
 void WdaQt::set_prompt(const char* prompt)
@@ -197,12 +200,9 @@ void WdaQtWidget::class_activate_ok()
   int sts;
   pwr_tClassId new_classid;
 
-  QByteArray ba = wda->wdaclass_hiervalue->text().toLatin1();
-  char* hiername = ba.data();
-  ba = wda->wdaclass_namevalue->text().toLatin1();
-  char* searchname = ba.data();
-  ba = wda->wdaclass_classvalue->text().toLatin1();
-  char* classname = ba.data();
+  char* hiername = qPrintableLatin1(wda->wdaclass_hiervalue->text());
+  char* searchname = qPrintableLatin1(wda->wdaclass_namevalue->text());
+  char* classname = qPrintableLatin1(wda->wdaclass_classvalue->text());
 
   wda->attrobjects = wda->wdaclass_attrobjects->isChecked();
 
@@ -264,8 +264,7 @@ void WdaQt::change_value_close()
 {
   if (input_open) {
     if (input_multiline) {
-      QByteArray ba = cmd_scrolled_buffer->toPlainText().toLatin1();
-      char* text = ba.data();
+      char* text = qPrintableLatin1(cmd_scrolled_buffer->toPlainText());
 
       // Replace ctrl characters with space
       for (unsigned char* s = (unsigned char*)text; *s; s++) {
@@ -288,8 +287,7 @@ void WdaQt::change_value_close()
         message('E', "Input error, invalid character");
       }
     } else {
-      QByteArray ba = cmd_entry->text().toLatin1();
-      char* text = ba.data();
+      char* text = qPrintableLatin1(cmd_entry->text());
 
       if (text) {
         wdanav->set_attr_value(input_node, input_name, text);
@@ -317,8 +315,7 @@ void WdaQtWidget::activate_cmd_entry()
 
   wda->wdanav->set_inputfocus();
 
-  QByteArray ba = wda->cmd_entry->text().toLatin1();
-  char* text = ba.data();
+  char* text = qPrintableLatin1(wda->cmd_entry->text());
 
   if (wda->input_open) {
     if (text) {
@@ -340,8 +337,7 @@ void WdaQtWidget::activate_cmd_entry()
 void WdaQtWidget::activate_cmd_scrolled_ok()
 {
   if (wda->input_open) {
-    QByteArray ba = wda->cmd_scrolled_buffer->toPlainText().toLatin1();
-    char* text = ba.data();
+    char* text = qPrintableLatin1(wda->cmd_scrolled_buffer->toPlainText());
 
     if (text) {
       // Replace ctrl characters with space
@@ -513,6 +509,7 @@ WdaQt::WdaQt(QWidget* wa_parent_wid, void* wa_parent_ctx,
 
   toplevel->show();
 
+  msg_label->setVisible(false);
   cmd_prompt->setVisible(false);
   cmd_entry->setVisible(false);
   cmd_scrolledinput->setVisible(false);

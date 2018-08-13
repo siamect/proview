@@ -54,6 +54,9 @@ void AttrQt::message(char severity, const char* message)
 {
   if (msg_label) {
     msg_label->setText(fl(message));
+    if (strcmp(message, "") != 0) {
+      msg_label->setVisible(true);
+    }
   }
 }
 
@@ -217,11 +220,9 @@ void AttrQtWidget::attr_activate_cmd_entry()
 
   attr->attrnav->set_inputfocus();
 
-  QByteArray ba = attr->cmd_entry->text().toLatin1();
-  char* text = ba.data();
-
   if (attr->input_open) {
-    attr->attrnav->set_attr_value(text, 0, 0);
+    attr->attrnav->set_attr_value(
+        qPrintableLatin1(attr->cmd_entry->text()), 0, 0);
     attr->cmd_entry->setVisible(false);
     attr->set_prompt("");
     attr->input_open = 0;
@@ -235,10 +236,8 @@ void AttrQtWidget::attr_activate_cmd_entry()
 void AttrQtWidget::attr_activate_cmd_scrolled_ok()
 {
   if (attr->input_open) {
-    QByteArray ba = attr->cmd_scrolled_buffer->toPlainText().toLatin1();
-    char* text = ba.data();
-
-    attr->attrnav->set_attr_value(text, 0, 0);
+    attr->attrnav->set_attr_value(
+        qPrintableLatin1(attr->cmd_scrolled_buffer->toPlainText()), 0, 0);
     attr->cmd_scrolledinput->setVisible(false);
     attr->set_prompt("");
     attr->input_open = 0;
@@ -407,6 +406,7 @@ AttrQt::AttrQt(QWidget* a_parent_wid, void* a_parent_ctx, attr_eType a_type,
 
     toplevel->show();
 
+    msg_label->setVisible(false);
     cmd_prompt->setVisible(false);
     cmd_entry->setVisible(false);
     cmd_scrolledinput->setVisible(false);

@@ -717,6 +717,9 @@ void WttQt::set_twowindows(int two, int display_wnav, int display_wnavnode)
 void WttQt::message(char severity, const char* message)
 {
   msg_label->setText(QString::fromLatin1(message));
+  if (strcmp(message, "") != 0) {
+    msg_label->setVisible(true);
+  }
 }
 
 void WttQt::set_prompt(const char* prompt)
@@ -1362,11 +1365,8 @@ void WttQtWidget::valchanged_cmd_entry()
 {
   int sts;
 
-  QByteArray text = wtt->cmd_entry->text().toLatin1();
-  debug_print("text=%s\n", text.data());
-
-  if (!text.data()) {
-    wtt->wnav->wow->DisplayError("Input error", "Invalid character");
+  if (wtt->cmd_entry->text().isEmpty()) {
+    wtt->wnav->wow->DisplayError("Input error", "Input cannot be empty");
     return;
   }
 
@@ -1375,7 +1375,7 @@ void WttQtWidget::valchanged_cmd_entry()
     case wtt_eInputMode_Attribute:
       wtt->input_wnav->select_object(wtt->input_node);
       sts = wtt->input_wnav->set_attr_value(
-          wtt->input_node, wtt->input_objid, text.data());
+          wtt->input_node, wtt->input_objid, qPrintableLatin1(wtt->cmd_entry->text()));
       if (EVEN(sts)) {
         wtt->message('E', wnav_get_message(sts));
       }
@@ -1383,7 +1383,7 @@ void WttQtWidget::valchanged_cmd_entry()
     case wtt_eInputMode_ObjectName:
       wtt->input_wnav->select_object(wtt->input_node);
       sts = wtt->input_wnav->set_object_name(
-          wtt->input_node, wtt->input_objid, text.data());
+          wtt->input_node, wtt->input_objid, qPrintableLatin1(wtt->cmd_entry->text()));
       if (EVEN(sts)) {
         wtt->message('E', wnav_get_message(sts));
       }
@@ -1400,7 +1400,7 @@ void WttQtWidget::valchanged_cmd_entry()
       wtt->set_focus_default();
     }
     wtt->set_clock_cursor();
-    wtt->focused_wnav->command(text.data());
+    wtt->focused_wnav->command(qPrintableLatin1(wtt->cmd_entry->text()));
     wtt->reset_cursor();
     wtt->cmd_entry->setVisible(false);
     wtt->set_prompt("");
@@ -1438,10 +1438,7 @@ void WttQt::open_input_dialog(const char* text, const char* title,
   QString str = QInputDialog::getText(toplevel, translate_utf8(title),
       translate_utf8(text), QLineEdit::Normal, fl(init_text), &ok);
   if (ok) {
-    QByteArray ba = str.toLatin1();
-    char* text = ba.data();
-
-    (ok_cb)(this, text);
+    (ok_cb)(this, qPrintableLatin1(str));
   }
 }
 
@@ -2270,6 +2267,7 @@ WttQt::WttQt(void* wt_parent_ctx, QWidget* wt_parent_wid, const char* wt_name,
   if (!editmode) {
     palette_widget->setVisible(false);
   }
+  msg_label->setVisible(false);
   cmd_prompt->setVisible(false);
   cmd_entry->setVisible(false);
   set_pane_position(wnav_paned, window_width / 2);

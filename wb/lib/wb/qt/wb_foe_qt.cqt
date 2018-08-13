@@ -478,16 +478,14 @@ void WFoeQtWidget::valchanged_textinput()
     return;
   }
 
-  QByteArray value = foe->textinput->text().toLatin1();
-
-  strcpy(foe->searchstring, value.data());
+  strcpy(foe->searchstring, qPrintableLatin1(foe->textinput->text()));
 
   foe->message("");
   foe->textinput->setText("");
   foe->textinput->setVisible(false);
 
   /* Call the specified function */
-  sts = (foe->textinput_func)(foe, value.data());
+  sts = (foe->textinput_func)(foe, foe->searchstring);
   foe->error_msg(sts);
 }
 

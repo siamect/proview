@@ -50,10 +50,7 @@ void CoXHelpQt::open_input_dialog(const char* text, const char* title,
   QString str = QInputDialog::getText(toplevel, fl("Input Dialog"),
       fl("Graph Name"), QLineEdit::Normal, fl(init_text), &ok);
   if (ok) {
-    QByteArray ba = str.toLatin1();
-    char* text = ba.data();
-
-    (ok_cb)(this, text);
+    (ok_cb)(this, qPrintableLatin1(str));
   }
 }
 

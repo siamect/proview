@@ -57,6 +57,9 @@ CoWowRecall XColWindQt::value_recall;
 void XColWindQt::message(char severity, const char* message)
 {
   msg_label->setText(fl(message));
+  if (strcmp(message, "") != 0) {
+    msg_label->setVisible(true);
+  }
 }
 
 void XColWindQt::set_prompt(const char* prompt)
@@ -272,8 +275,7 @@ void XColWindQt::change_value_close()
 {
   if (input_open) {
     if (input_multiline) {
-      QByteArray ba = cmd_scrolled_buffer->toPlainText().toLatin1();
-      char* text = ba.data();
+      char* text = qPrintableLatin1(cmd_scrolled_buffer->toPlainText());
 
       if (text) {
         xattnav->set_attr_value(input_node, input_name, text);
@@ -291,8 +293,7 @@ void XColWindQt::change_value_close()
         message('E', "Input error, invalid character");
       }
     } else {
-      QByteArray ba = cmd_entry->text().toLatin1();
-      char* text = ba.data();
+      char* text = qPrintableLatin1(cmd_entry->text());
 
       if (text) {
         xattnav->set_attr_value(input_node, input_name, text);
@@ -319,10 +320,9 @@ void XColWindQtWidget::activate_cmd_entry()
 
   colwind->xattnav->set_inputfocus();
 
-  QByteArray ba = colwind->cmd_entry->text().toLatin1();
-  char* text = ba.data();
-
   if (colwind->input_open) {
+    char* text = qPrintableLatin1(colwind->cmd_entry->text());
+
     if (text) {
       colwind->xattnav->set_attr_value(
           colwind->input_node, colwind->input_name, text);
@@ -343,8 +343,7 @@ void XColWindQtWidget::activate_cmd_entry()
 void XColWindQtWidget::activate_cmd_scrolled_ok()
 {
   if (colwind->input_open) {
-    QByteArray ba = colwind->cmd_scrolled_buffer->toPlainText().toLatin1();
-    char* text = ba.data();
+    char* text = qPrintableLatin1(colwind->cmd_scrolled_buffer->toPlainText());
 
     if (text) {
       colwind->xattnav->set_attr_value(
@@ -577,6 +576,7 @@ XColWindQt::XColWindQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
 
   toplevel->show();
 
+  msg_label->setVisible(false);
   cmd_prompt->setVisible(false);
   cmd_entry->setVisible(false);
   cmd_scrolledinput->setVisible(false);

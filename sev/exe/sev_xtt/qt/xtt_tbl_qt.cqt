@@ -225,9 +225,7 @@ void XttTblQt::set_prompt(const char* prompt)
 
 void XttTblQtWidget::valchanged_cmd_input()
 {
-  QByteArray text = tbl->cmd_entry->text().toLatin1();
-
-  tbl->command(text.data());
+  tbl->command(qPrintableLatin1(tbl->cmd_entry->text()));
   tbl->cmd_entry->setVisible(false);
   tbl->set_prompt("");
   tbl->command_open = 0;

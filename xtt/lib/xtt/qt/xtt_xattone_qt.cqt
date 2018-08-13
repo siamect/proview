@@ -58,6 +58,9 @@ CoWowRecall XAttOneQt::value_recall;
 void XAttOneQt::message(char severity, const char* message)
 {
   msg_label->setText(fl(message));
+  if (strcmp(message, "") != 0) {
+    msg_label->setVisible(true);
+  }
 }
 
 void XAttOneQt::set_prompt(char* prompt)
@@ -81,16 +84,14 @@ int XAttOneQt::set_value()
       textutf8 = cmd_entry->text();
     }
 
-    QByteArray text = textutf8.toLatin1();
-
-    if (!text.data()) {
-      message('E', "Input error, invalid character");
+    if (textutf8.isEmpty()) {
+      message('E', "Input cannot be empty");
       return 0;
     }
 
     char buff[1024];
     int sts = XNav::attr_string_to_value(
-        atype, text.data(), buff, sizeof(buff), asize);
+        atype, qPrintableLatin1(textutf8), buff, sizeof(buff), asize);
     if (EVEN(sts)) {
       message('E', "Input syntax error");
       return sts;
@@ -327,6 +328,7 @@ XAttOneQt::XAttOneQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
     access_rw = 0;
   }
 
+  msg_label->setVisible(false);
   if (access_rw) {
     cmd_label->setVisible(false);
   } else {

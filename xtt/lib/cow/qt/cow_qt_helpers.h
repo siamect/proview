@@ -70,6 +70,10 @@ void dbg_print(const char* file, int line, QString str);
  * Qt Helper functions
  */
 QString fl(const char* text);
+
+#ifndef qPrintableLatin1
+#define qPrintableLatin1(string) (string).toLatin1().data()
+#endif
 QString convert_utf8(const char* str);
 QString translate_utf8(const char* str);
 void pop(QWidget* w);

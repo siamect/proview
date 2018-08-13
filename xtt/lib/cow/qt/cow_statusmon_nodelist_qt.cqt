@@ -345,18 +345,8 @@ void NodelistQt::open_add_input_dialog(const char* text, const char* text2,
 
 void NodelistInputDialogQt::activate_ok()
 {
-  char *txt, *txt2, *txt3;
-
-  QByteArray ba = text->text().toLatin1();
-  txt = ba.data();
-
-  ba = text2->text().toLatin1();
-  txt2 = ba.data();
-
-  ba = text3->text().toLatin1();
-  txt3 = ba.data();
-
-  (nodelist->add_india_ok_cb)(nodelist, txt, txt2, txt3);
+  (nodelist->add_india_ok_cb)(nodelist, qPrintableLatin1(text->text()),
+      qPrintableLatin1(text2->text()), qPrintableLatin1(text3->text()));
 
   accept();
 }

@@ -493,8 +493,7 @@ int WNavQt::prompt_dialog(char* title, char* text, char** value)
   QString str = QInputDialog::getText(toplevel, translate_utf8(title),
       translate_utf8(text), QLineEdit::Normal, "", &ok);
   if (ok) {
-    QByteArray ba = str.toLatin1();
-    strcpy(*value, ba.data());
+    strcpy(*value, qPrintableLatin1(str));
   } else {
     strcpy(*value, "");
   }

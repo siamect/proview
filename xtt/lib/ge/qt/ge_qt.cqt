@@ -105,8 +105,7 @@ void GeQt::open_input_dialog(const char* text, const char* title,
   QString txt = QInputDialog::getText(
       toplevel, fl(title), fl(text), QLineEdit::Normal, fl(init_text), &ok);
   if (ok && !txt.isEmpty()) {
-    QByteArray ba = txt.toLatin1();
-    activate_india_ok(ba.data());
+    activate_india_ok(qPrintableLatin1(txt));
   }
 }
 
@@ -1141,22 +1140,20 @@ void GeQtWidget::activate_help_subgraph()
 
 void GeQtWidget::valchanged_cmd_entry()
 {
-  QByteArray text = ge->recall_entry->text().toLatin1();
-
   if (ge->text_input_open) {
-    ge->graph->change_text(ge->current_text_object, text.data());
+    ge->graph->change_text(ge->current_text_object, qPrintableLatin1(ge->recall_entry->text()));
     ge->text_input_open = 0;
   } else if (ge->name_input_open) {
-    ge->graph->change_name(ge->current_text_object, text.data());
+    ge->graph->change_name(ge->current_text_object, qPrintableLatin1(ge->recall_entry->text()));
     ge->name_input_open = 0;
   } else if (ge->value_input_open) {
-    ge->graph->change_value(ge->current_value_object, text.data());
+    ge->graph->change_value(ge->current_value_object, qPrintableLatin1(ge->recall_entry->text()));
     ge->value_input_open = 0;
   } else if (ge->objectnav_input_open) {
-    ge->objectnav->set_attr_value(text.data());
+    ge->objectnav->set_attr_value(qPrintableLatin1(ge->recall_entry->text()));
     ge->objectnav_input_open = 0;
   } else if (ge->command_open) {
-    ge->graph->command(text.data());
+    ge->graph->command(qPrintableLatin1(ge->recall_entry->text()));
     ge->command_open = 0;
   }
 

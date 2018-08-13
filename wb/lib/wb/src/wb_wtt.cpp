@@ -892,7 +892,6 @@ void Wtt::close(void* ctx)
 
 void Wtt::change_value(void* ctx)
 {
-  fprintf(stderr, "Wtt::change_value\n");
   ((Wtt*)ctx)->open_change_value();
 }
 

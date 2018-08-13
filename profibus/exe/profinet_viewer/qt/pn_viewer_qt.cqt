@@ -191,8 +191,7 @@ void PnViewerQt::open_change_value()
 void PnViewerQtWidget::valchanged_cmd_entry()
 {
   if (viewer->input_open) {
-    QByteArray text = viewer->cmd_entry->text().toLatin1();
-    viewer->viewernav->set_attr_value(text.data());
+    viewer->viewernav->set_attr_value(qPrintableLatin1(viewer->cmd_entry->text()));
     viewer->cmd_entry->setVisible(false);
     viewer->set_prompt("");
     viewer->input_open = 0;

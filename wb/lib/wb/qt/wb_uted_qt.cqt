@@ -314,8 +314,7 @@ WUtedQt::~WUtedQt()
 // Get value from textentry with specified index
 void WUtedQt::get_value(int idx, char* str, int len)
 {
-  QByteArray ba = value[idx]->text().toLatin1();
-  strncpy(str, ba.data(), len);
+  strncpy(str, qPrintableLatin1(value[idx]->text()), len);
 }
 
 // Hide all qualifiers.

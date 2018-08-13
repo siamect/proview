@@ -59,6 +59,9 @@ CoWowRecall XAttQt::value_recall;
 void XAttQt::message(char severity, const char* message)
 {
   msg_label->setText(fl(message));
+  if (strcmp(message, "") != 0) {
+    msg_label->setVisible(true);
+  }
 }
 
 void XAttQt::set_prompt(const char* prompt)
@@ -213,8 +216,7 @@ void XAttQt::change_value_close()
 {
   if (input_open) {
     if (input_multiline) {
-      QByteArray ba = cmd_scrolled_buffer->toPlainText().toLatin1();
-      char* text = ba.data();
+      char* text = qPrintableLatin1(cmd_scrolled_buffer->toPlainText());
 
       if (text) {
         xattnav->set_attr_value(input_node, input_name, text);
@@ -232,8 +234,7 @@ void XAttQt::change_value_close()
         message('E', "Input error, invalid character");
       }
     } else {
-      QByteArray ba = cmd_entry->text().toLatin1();
-      char* text = ba.data();
+      char* text = qPrintableLatin1(cmd_entry->text());
 
       if (text) {
         xattnav->set_attr_value(input_node, input_name, text);
@@ -260,10 +261,9 @@ void XAttQtWidget::activate_cmd_entry()
 
   xatt->xattnav->set_inputfocus();
 
-  QByteArray ba = xatt->cmd_entry->text().toLatin1();
-  char* text = ba.data();
-
   if (xatt->input_open) {
+    char* text = qPrintableLatin1(xatt->cmd_entry->text());
+
     if (text) {
       xatt->xattnav->set_attr_value(xatt->input_node, xatt->input_name, text);
     }
@@ -282,8 +282,7 @@ void XAttQtWidget::activate_cmd_entry()
 void XAttQtWidget::activate_cmd_scrolled_ok()
 {
   if (xatt->input_open) {
-    QByteArray ba = xatt->cmd_scrolled_buffer->toPlainText().toLatin1();
-    char* text = ba.data();
+    char* text = qPrintableLatin1(xatt->cmd_scrolled_buffer->toPlainText());
 
     if (text) {
       xatt->xattnav->set_attr_value(xatt->input_node, xatt->input_name, text);
@@ -450,6 +449,7 @@ XAttQt::XAttQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
 
   toplevel->show();
 
+  msg_label->setVisible(false);
   cmd_prompt->setVisible(false);
   cmd_entry->setVisible(false);
   cmd_scrolledinput->setVisible(false);

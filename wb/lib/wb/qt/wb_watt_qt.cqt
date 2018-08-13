@@ -55,6 +55,9 @@ CoWowRecall WAttQt::value_recall;
 void WAttQt::message(char severity, const char* message)
 {
   msg_label->setText(fl(message));
+  if (strcmp(message, "") != 0) {
+    msg_label->setVisible(true);
+  }
 }
 
 void WAttQt::set_prompt(const char* prompt)
@@ -195,8 +198,7 @@ void WAttQt::change_value_close()
 {
   if (input_open) {
     if (input_multiline) {
-      QByteArray ba = cmd_scrolled_buffer->toPlainText().toLatin1();
-      char* text = ba.data();
+      char* text = qPrintableLatin1(cmd_scrolled_buffer->toPlainText());
 
       if (text) {
         // Replace ctrl characters with space
@@ -221,8 +223,7 @@ void WAttQt::change_value_close()
         message('E', "Input error, invalid character");
       }
     } else {
-      QByteArray ba = cmd_entry->text().toLatin1();
-      char* text = ba.data();
+      char* text = qPrintableLatin1(cmd_entry->text());
 
       if (text) {
         wattnav->set_attr_value(input_node, input_name, text);
@@ -251,8 +252,7 @@ void WAttQtWidget::activate_cmd_entry()
 {
   watt->wattnav->set_inputfocus();
 
-  QByteArray ba = watt->cmd_entry->text().toLatin1();
-  char* text = ba.data();
+  char* text = qPrintableLatin1(watt->cmd_entry->text());
 
   if (watt->input_open) {
     if (text) {
@@ -281,8 +281,7 @@ void WAttQtWidget::activate_cmd_entry()
 void WAttQtWidget::activate_cmd_scrolled_ok()
 {
   if (watt->input_open) {
-    QByteArray ba = watt->cmd_scrolled_buffer->toPlainText().toLatin1();
-    char* text = ba.data();
+    char* text = qPrintableLatin1(watt->cmd_scrolled_buffer->toPlainText());
 
     if (text) {
       // Replace ctrl characters with space
@@ -461,6 +460,7 @@ WAttQt::WAttQt(QWidget* wa_parent_wid, void* wa_parent_ctx,
 
   toplevel->show();
 
+  msg_label->setVisible(false);
   cmd_prompt->setVisible(false);
   cmd_entry->setVisible(false);
   cmd_scrolledinput->setVisible(false);
