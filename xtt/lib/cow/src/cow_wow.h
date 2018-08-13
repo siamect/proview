@@ -92,6 +92,13 @@ public:
   static const int m_line_size = 160;
   char m_recall[m_recall_size][m_line_size];
   int m_current_recall_line;
+  int m_current_size;
+  char tmp[m_recall_size][m_line_size];
+
+  void push(const char* src);
+  void resetTmp();
+  const char* popUp(const char* src);
+  const char* popDown(const char* src);
 
   CoWowRecall();
 };

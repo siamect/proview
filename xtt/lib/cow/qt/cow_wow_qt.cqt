@@ -659,56 +659,39 @@ CoWowEntryQt::CoWowEntryQt(CoWowRecall* re) : m_re(re), m_hide_on_esc(false)
 
 void CoWowEntryQt::keyPressEvent(QKeyEvent* event)
 {
-  int keysym = event->key();
-  QString txt = text();
-
-  switch (keysym) {
+  switch (event->key()) {
   case Qt::Key_Return:
   case Qt::Key_Enter: {
     // Insert in recall buffer
-    if (txt.compare("") != 0) {
-      for (int i = m_re->m_recall_size - 2; i >= 0; i--) {
-        strcpy(m_re->m_recall[i + 1], m_re->m_recall[i]);
-      }
-      strncpy(m_re->m_recall[0], qPrintable(txt), m_re->m_line_size);
-      m_re->m_recall[0][m_re->m_line_size - 1] = 0;
-    }
-    m_re->m_current_recall_line = 0;
+    m_re->push(qPrintable(text()));
     break;
   }
   case Qt::Key_Up: {
-    m_re->m_current_recall_line++;
-    if (m_re->m_current_recall_line > m_re->m_recall_size - 1) {
-      m_re->m_current_recall_line = m_re->m_recall_size - 1;
+    const char *prev = m_re->popUp(qPrintable(text()));
+    if (strcmp(prev, "") != 0) {
+      setText(fl(prev));
     }
-
-    setText(QString::fromLocal8Bit(
-        m_re->m_recall[m_re->m_current_recall_line - 1]));
     end(false);
     break;
   }
   case Qt::Key_Down: {
-    if (m_re->m_current_recall_line == 0) {
-      setText("");
-    } else if (m_re->m_current_recall_line == 1) {
-      setText("");
-      m_re->m_current_recall_line--;
-    } else {
-      m_re->m_current_recall_line--;
-      setText(m_re->m_recall[m_re->m_current_recall_line - 1]);
-      end(false);
+    const char *next = m_re->popDown(qPrintable(text()));
+    if (strcmp(next, "") != 0) {
+      setText(fl(next));
     }
+    end(false);
     break;
   }
   case Qt::Key_Escape:
     if (m_hide_on_esc) {
       hide();
     }
+    m_re->resetTmp();
     break;
   default:
-    QLineEdit::keyPressEvent(event);
     break;
   }
+  QLineEdit::keyPressEvent(event);
 }
 
 void CoWowEntryQt::hideEvent(QHideEvent* event)

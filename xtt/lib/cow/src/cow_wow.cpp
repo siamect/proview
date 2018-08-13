@@ -62,9 +62,53 @@ void CoWowTimer::remove()
 {
 }
 
-CoWowRecall::CoWowRecall() : m_current_recall_line(0)
+CoWowRecall::CoWowRecall() : m_current_recall_line(0), m_current_size(0)
 {
   memset(m_recall, 0, sizeof(m_recall));
+}
+
+void CoWowRecall::push(const char* src)
+{
+  if (strcmp(src, "") != 0 && strcmp(src, m_recall[0]) != 0) {
+    for (int i = m_recall_size - 2; i >= 0; i--) {
+      strcpy(m_recall[i + 1], m_recall[i]);
+    }
+    strncpy(m_recall[0], src, m_line_size);
+    m_recall[0][m_line_size - 1] = 0;
+    m_current_size++;
+    if (m_current_size > m_recall_size) {
+      m_current_size = m_recall_size;
+    }
+  }
+  resetTmp();
+}
+
+void CoWowRecall::resetTmp()
+{
+  for (int i = 0; i < m_current_size; i++) {
+    strcpy(tmp[i], m_recall[i]);
+  }
+  m_current_recall_line = 0;
+}
+
+const char* CoWowRecall::popUp(const char* src)
+{
+  strncpy(tmp[m_current_recall_line], src, m_line_size);
+  m_current_recall_line++;
+  if (m_current_recall_line > m_current_size - 1) {
+    m_current_recall_line = m_current_size - 1;
+  }
+  return tmp[m_current_recall_line];
+}
+
+const char* CoWowRecall::popDown(const char* src)
+{
+  strncpy(tmp[m_current_recall_line], src, m_line_size);
+  if (m_current_recall_line <= 0) {
+    return tmp[m_current_recall_line];
+  }
+  m_current_recall_line--;
+  return tmp[m_current_recall_line];
 }
 
 CoWow::CoWow()
