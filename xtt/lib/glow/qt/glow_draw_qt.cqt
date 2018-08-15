@@ -388,25 +388,20 @@ int GlowDrawQt::event_handler(QEvent* event)
     return 1;
   }
 
-  QObject* parent = m_wind->window;
+  QObject* windowParent = m_wind->window;
+  QObject* navWindowParent = nav_wind->window;
   bool windowEvent = false;
-  while (parent != NULL) {
-    if (QApplication::focusWidget() == parent) {
-      windowEvent = true;
-      break;
-    }
-    parent = parent->parent();
-  }
-
   bool navWindowEvent = false;
-  if (!windowEvent) {
-    parent = nav_wind->window;
-    while (parent != NULL) {
-      if (QApplication::focusWidget() == parent) {
-        navWindowEvent = true;
+  if (QApplication::focusWidget() != NULL) {
+    while (!(windowParent == NULL && navWindowParent == NULL)) {
+      windowEvent = (QApplication::focusWidget() == windowParent);
+      navWindowEvent = (QApplication::focusWidget() == navWindowParent);
+      if (windowEvent || navWindowEvent) {
         break;
       }
-      parent = parent->parent();
+      windowParent = (windowParent == NULL) ? NULL : windowParent->parent();
+      navWindowParent
+          = (navWindowParent == NULL) ? NULL : navWindowParent->parent();
     }
   }
 

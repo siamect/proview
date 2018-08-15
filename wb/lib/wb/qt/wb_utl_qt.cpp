@@ -41,6 +41,7 @@
 #include <string.h>
 
 #include "cow_qt_helpers.h"
+#include "cow_style_qt.h"
 
 #include "wb_foe_msg.h"
 #include "wb_foe_qt.h"
@@ -108,6 +109,7 @@ int wb_utl_qt::create_mainwindow(int argc, char** argv)
 
   if (!qt_initialized) {
     QApplication app(argc, argv);
+    QApplication::setStyle(new PwrStyle());
     qt_initialized = 1;
     app.exec();
   }

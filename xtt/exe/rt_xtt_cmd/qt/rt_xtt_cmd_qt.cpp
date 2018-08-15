@@ -42,6 +42,7 @@
 #include "co_dcli.h"
 
 #include "cow_qt_helpers.h"
+#include "cow_style_qt.h"
 
 #include "xtt_xnav_qt.h"
 
@@ -124,6 +125,7 @@ int main(int argc, char* argv[])
   }
 
   QApplication app(argc, argv);
+  QApplication::setStyle(new PwrStyle());
 
   setlocale(LC_TIME, "en_US");
   setlocale(LC_NUMERIC, "POSIX");

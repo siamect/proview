@@ -68,7 +68,7 @@
 
 void WNavQt::pop()
 {
-  ::pop(toplevel);
+  ::pop(form_widget);
 }
 
 WNavQt::WNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid, const char* xn_name,
@@ -92,10 +92,12 @@ WNavQt::WNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid, const char* xn_name,
   scrolledbrow->setFrameShape(QFrame::Box);
   scrolledbrow->setLineWidth(3);
 
+  form_widget = scrolledbrow;
+
   showNow(brow_widget);
 
   // Create the root item
-  *w = scrolledbrow;
+  *w = form_widget;
 
   serverString = new QLocalServer(trace_obj);
   serverString->listen("STRING");
@@ -113,7 +115,7 @@ WNavQt::WNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid, const char* xn_name,
   serverAttrRef->listen("PWR_ATTRREF");
   QObject::connect(serverAttrRef, SIGNAL(newConnection()), trace_obj,
       SLOT(sel_convert_cb()));
-
+  
   gbl.load_config(this);
 
   if (root_menu && !ldhses) {
@@ -122,8 +124,7 @@ WNavQt::WNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid, const char* xn_name,
 
   wow = new CoWowQt(parent_wid);
 
-  toplevel = scrolledbrow;
-  toplevel->setToolTip(fl("wb_wnav widget"));
+  form_widget->setToolTip(fl("wb_wnav widget"));
   *status = 1;
 }
 
@@ -227,7 +228,7 @@ Ge* WNavQt::ge_new(char* graph_name, int nojournal)
     options |= ge_mOption_IgnoreJournal;
   }
 
-  return new GeQt(NULL, toplevel, ldhses, 0, options, graph_name);
+  return new GeQt(NULL, form_widget, ldhses, 0, options, graph_name);
 }
 
 WGe* WNavQt::wge_new(char* name, char* filename, char* object_name, int modal)
@@ -458,14 +459,14 @@ void WNavQt::wge_modal_loop(WGe* wge)
 void WNavQt::message_dialog(char* title, char* text)
 {
   QMessageBox::critical(
-      toplevel->window(), translate_utf8(title), translate_utf8(text));
+      form_widget->window(), translate_utf8(title), translate_utf8(text));
 }
 
 int WNavQt::confirm_dialog(
     char* title, char* text, int display_cancel, int* cancel)
 {
   QMessageBox::StandardButton reply = QMessageBox::question(
-      toplevel, translate_utf8(title), translate_utf8(text));
+      form_widget, translate_utf8(title), translate_utf8(text));
 
   if (reply == QMessageBox::Yes) {
     return 1;
@@ -479,7 +480,7 @@ int WNavQt::continue_dialog(char* title, char* text)
 {
   // Create a question window
   QMessageBox::StandardButton reply = QMessageBox::question(
-      toplevel, fl(title), fl(text), QMessageBox::Ok | QMessageBox::Cancel);
+      form_widget, fl(title), fl(text), QMessageBox::Ok | QMessageBox::Cancel);
   if (reply == QMessageBox::Ok) {
     return 1;
   } else {
@@ -490,7 +491,7 @@ int WNavQt::continue_dialog(char* title, char* text)
 int WNavQt::prompt_dialog(char* title, char* text, char** value)
 {
   bool ok;
-  QString str = QInputDialog::getText(toplevel, translate_utf8(title),
+  QString str = QInputDialog::getText(form_widget, translate_utf8(title),
       translate_utf8(text), QLineEdit::Normal, "", &ok);
   if (ok) {
     strcpy(*value, qPrintableLatin1(str));

@@ -40,6 +40,7 @@
 
 #include "cow_msgwindow_qt.h"
 #include "cow_qt_helpers.h"
+#include "cow_style_qt.h"
 #include "cow_xhelp_qt.h"
 
 #include "ge_qt.h"
@@ -71,6 +72,7 @@ int main(int argc, char* argv[])
   pwr_tFileName fname;
 
   QApplication app(argc, argv);
+  QApplication::setStyle(new PwrStyle());
 
   setlocale(LC_NUMERIC, "POSIX");
   setlocale(LC_TIME, "en_US");

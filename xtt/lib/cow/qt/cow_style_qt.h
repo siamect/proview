@@ -32,53 +32,22 @@
  * the source code of Proview (the version used to produce the
  * combined work), being distributed under the terms of the GNU
  * General Public License plus this exception.
- */
+ **/
 
-/* wb_cmd_qt.c -- command file processing
-   The main program of pwrc.  */
+#ifndef cow_style_qt_h
+#define cow_style_qt_h
 
-#include <stdlib.h>
-#include <string.h>
+#include <QGtkStyle>
 
-#include "cow_style_qt.h"
-
-#include "wb_log_qt.h"
-#include "wb_wnav_qt.h"
-
-#include "wb_cmdc_qt.h"
-
-#include <QApplication>
-
-CmdQt::CmdQt(int argc, char* argv[])
+class PwrStyle : public QGtkStyle
 {
-  QWidget* w;
-  pwr_tStatus sts;
+    Q_OBJECT
 
-  // Attach to history log
-  new wb_log_qt(0);
+public:
+    PwrStyle() : QGtkStyle() {}
 
-  for (int i = 0; i < argc; i++) {
-    printf(argv[i]);
-    printf(" ");
-  }
-  printf("\n");
+    int pixelMetric(PixelMetric which, const QStyleOption *option,
+                    const QWidget *widget = 0) const;
+};
 
-  wnav = new WNavQt((void*)this, NULL, "", "", &w, ldhses, (wnav_sStartMenu*)0,
-      wnav_eWindowType_No, &sts);
-  wnav->attach_volume_cb = attach_volume_cb;
-  wnav->detach_volume_cb = detach_volume_cb;
-  wnav->get_wbctx_cb = get_wbctx;
-  wnav->save_cb = save_cb;
-  wnav->revert_cb = revert_cb;
-  wnav->close_cb = close_cb;
-
-  parse(argc, argv);
-}
-
-int main(int argc, char* argv[])
-{
-  QApplication app(argc, argv);
-  QApplication::setStyle(new PwrStyle());
-  new CmdQt(argc, argv);
-  return app.exec();
-}
+#endif

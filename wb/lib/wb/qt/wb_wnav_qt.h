@@ -104,7 +104,6 @@ public:
   WAttText* watttext_new(pwr_tAttrRef aref, int editmode, pwr_tStatus* status);
 
 private:
-  QWidget* toplevel;
   QWidget* parent_wid;
   WNavQtTraceObject* trace_obj;
 };

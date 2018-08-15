@@ -41,6 +41,7 @@
 
 #include "cow_login_qt.h"
 #include "cow_qt_helpers.h"
+#include "cow_style_qt.h"
 #include "cow_xhelp_qt.h"
 
 #include "xtt_hotkey_qt.h"
@@ -552,6 +553,7 @@ int main(int argc, char* argv[])
   int sts;
 
   QApplication app(argc, argv);
+  QApplication::setStyle(new PwrStyle());
   new XttQt(argc, argv, &sts);
   app.exec();
   exit(sts);

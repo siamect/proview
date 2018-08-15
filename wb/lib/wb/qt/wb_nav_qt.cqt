@@ -42,6 +42,8 @@
 
 #include "wb_nav_qt.h"
 
+#include <QScrollArea>
+
 #include <qlocalsocket.h>
 
 NavQt::NavQt(void* nav_parent_ctx, QWidget* nav_parent_wid,
@@ -52,10 +54,10 @@ NavQt::NavQt(void* nav_parent_ctx, QWidget* nav_parent_wid,
   trace_obj = new NavQtTraceObject(this);
 
   debug_print("creating a scrolledbrowwidgetqt\n");
-  QWidget* scrolledbrow
-      = scrolledbrowwidgetqt_new(Nav::init_brow_cb, this, &brow_widget);
+  QScrollArea* scrolledbrow = ((QScrollArea*) scrolledbrowwidgetqt_new(Nav::init_brow_cb, this, &brow_widget));
 
-  scrolledbrow->setStyleSheet("QMainWindow{border: 3px solid black;}");
+  scrolledbrow->setFrameShape(QFrame::Box);
+  scrolledbrow->setLineWidth(3);
 
   form_widget = scrolledbrow;
 

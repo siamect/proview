@@ -2016,7 +2016,7 @@ WttQt::WttQt(void* wt_parent_ctx, QWidget* wt_parent_wid, const char* wt_name,
   menu_pasteinto_w = addMenuItem(
       toplevel, edit, "Paste Into", SLOT(activate_pasteinto()), "CTRL+SHIFT+V");
   menu_rename_w = addMenuItem(
-      toplevel, edit, "Rename", SLOT(open_change_name()), "CTRL+SHIFT+N");
+      toplevel, edit, "Rename", SLOT(activate_rename()), "CTRL+SHIFT+N");
 
   // Functions menu
   QMenu* functions = menu_bar->addMenu(translate_utf8("&Functions"));

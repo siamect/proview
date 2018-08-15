@@ -42,6 +42,8 @@
 
 #include "wb_pal_qt.h"
 
+#include <QScrollArea>
+
 #include <qlocalsocket.h>
 
 PalQt::PalQt(void* pal_parent_ctx, QWidget* pal_parent_wid,
@@ -52,15 +54,15 @@ PalQt::PalQt(void* pal_parent_ctx, QWidget* pal_parent_wid,
   trace_obj = new PalQtTraceObject(this);
 
   debug_print("creating a scrolledbrowwidgetqt\n");
-  QWidget* scrolledbrow
-      = scrolledbrowwidgetqt_new(Pal::init_brow_cb, this, &brow_widget);
+  QScrollArea* scrolledbrow = ((QScrollArea*) scrolledbrowwidgetqt_new(Pal::init_brow_cb, this, &brow_widget));
   brow_widget->setToolTip(fl("PalQt"));
 
-  showNow(brow_widget);
+  scrolledbrow->setFrameShape(QFrame::Box);
+  scrolledbrow->setLineWidth(3);
 
   form_widget = scrolledbrow;
 
-  form_widget->setStyleSheet("QMainWindow{border: 3px solid black;}");
+  showNow(brow_widget);
 
   server = new QLocalServer(trace_obj);
   server->listen("STRING");

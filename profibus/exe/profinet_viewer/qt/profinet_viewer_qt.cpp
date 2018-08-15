@@ -41,6 +41,7 @@
 #include "co_error.h"
 
 #include "cow_qt_helpers.h"
+#include "cow_style_qt.h"
 #include "cow_xhelp_qt.h"
 
 #include "pn_viewer_qt.h"
@@ -70,6 +71,7 @@ int main(int argc, char* argv[])
   char dev_name[20] = "eth1";
 
   QApplication app(argc, argv);
+  QApplication::setStyle(new PwrStyle());
 
   ctx = (tViewer*)calloc(1, sizeof(tViewer));
 
