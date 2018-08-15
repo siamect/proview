@@ -46,6 +46,10 @@ int PwrStyle::pixelMetric(
   case PM_LayoutTopMargin:
   case PM_LayoutRightMargin:
   case PM_LayoutBottomMargin:
+  case PM_LayoutHorizontalSpacing:
+  case PM_LayoutVerticalSpacing:
+  case PM_ToolBarItemMargin:
+  case PM_ToolBarItemSpacing:
     return 0;
   default:
     return QGtkStyle::pixelMetric(which, option, widget);
