@@ -1221,23 +1221,14 @@ int FlowDrawQt::nav_line_erase(
 #define FONTSTR "Lucida Sans"
 #define FONT_SCALE 0.7
 
-static char* font_string(flow_eDrawType painter_type, double size)
+static QFont font(flow_eDrawType painter_type, double size)
 {
-  static char str[80];
-  switch (painter_type) {
-  case flow_eDrawType_TextHelveticaBold:
-  case flow_eDrawType_TextHelveticaEraseBold:
-    sprintf(str, "%s Bold %f", FONTSTR, FONT_SCALE * size);
-    break;
-  default:
-    sprintf(str, "%s %f", FONTSTR, FONT_SCALE * size);
+  QFont res(FONTSTR);
+  res.setPointSizeF(FONT_SCALE * size);
+  if (painter_type == flow_eDrawType_TextHelveticaBold || painter_type == flow_eDrawType_TextHelveticaEraseBold) {
+    res.setWeight(QFont::Bold);
   }
-  for (char* s = str; *s; s++) {
-    if (*s == ',') {
-      *s = '.';
-    }
-  }
-  return str;
+  return res;
 }
 
 int FlowDrawQt::text_pango_helper(FlowCtx* ctx, int x, int y, char* text,
@@ -1261,7 +1252,7 @@ int FlowDrawQt::text_pango_helper(FlowCtx* ctx, int x, int y, char* text,
     str = QString::fromUtf8(text);
   }
 
-  painter->setFont(fl(font_string(painter_type, size)));
+  painter->setFont(font(painter_type, size));
 
   QRect rect = painter->fontMetrics().boundingRect(str);
   int height = rect.height();
@@ -1743,7 +1734,7 @@ int FlowDrawQt::get_text_extent_pango(FlowCtx* ctx, const char* text, int len,
     str = QString::fromUtf8(text);
   }
 
-  painter->setFont(fl(font_string(painter_type, size)));
+  painter->setFont(font(painter_type, size));
 
   QRect boundingRect = painter->fontMetrics().boundingRect(str);
 

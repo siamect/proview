@@ -3116,40 +3116,33 @@ int GlowDrawQt::gradient_fill_polyline(GlowWind* wind, glow_sPointX* points,
 #define FONT_SCALE 0.7
 #define FONT_DESCENT 0.22
 
-static char* font_string(int font_idx, int font_type, double size)
+static QFont font(int font_idx, int font_type, double size)
 {
-  static char str[80];
-  char bold_str[20];
-
-  if (font_type == glow_eDrawFont_HelveticaBold) {
-    strcpy(bold_str, "Bold ");
-  } else {
-    strcpy(bold_str, "");
-  }
+  QFont res;
 
   switch (font_idx) {
   case glow_eFont_Helvetica:
-    sprintf(str, "%s %s%f", "Helvetica", bold_str, FONT_SCALE * size);
+    res = QFont("Helvetica");
     break;
   case glow_eFont_Times:
-    sprintf(str, "%s %s%f", "DejaVu Serif", bold_str, FONT_SCALE * size);
+    res = QFont("DejaVu Serif");
     break;
   case glow_eFont_NewCenturySchoolbook:
-    sprintf(
-        str, "%s %s%f", "Century Schoolbook L", bold_str, FONT_SCALE * size);
+    res = QFont("Century Schoolbook L");
     break;
   case glow_eFont_Courier:
-    sprintf(str, "%s %s%f", "Courier 10 pitch", bold_str, FONT_SCALE * size);
+    res = QFont("Courier 10 pitch");
     break;
   default:
-    sprintf(str, "%s %s%f", "Lucida Sans", bold_str, FONT_SCALE * size);
+    res = QFont("Lucida Sans");
+    break;
   }
-  for (char* s = str; *s; s++) {
-    if (*s == ',') {
-      *s = '.';
-    }
+
+  res.setPointSizeF(FONT_SCALE * size);
+  if (font_type == glow_eDrawFont_HelveticaBold) {
+    res.setWeight(QFont::Bold);
   }
-  return str;
+  return res;
 }
 
 int GlowDrawQt::text_qt(GlowWind* wind, int x, int y, char* text, int len,
@@ -3190,7 +3183,7 @@ int GlowDrawQt::text_qt(GlowWind* wind, int x, int y, char* text, int len,
     painter->rotate(rot);
   }
 
-  painter->setFont(fl(font_string(font_idx, font_type, size)));
+  painter->setFont(font(font_idx, font_type, size));
 
   QRect rect = painter->fontMetrics().boundingRect(str);
   int width = rect.width();
@@ -3252,7 +3245,7 @@ int GlowDrawQt::text_erase_qt(GlowWind* wind, int x, int y, char* text, int len,
       str = QString::fromUtf8(text);
     }
 
-    painter->setFont(fl(font_string(font_idx, font_type, size)));
+    painter->setFont(font(font_idx, font_type, size));
 
     QRect rect = painter->fontMetrics().boundingRect(str);
     width = rect.width();
@@ -3309,8 +3302,7 @@ int GlowDrawQt::get_text_extent_qt(const char* text, int len,
   }
 
   QPainter* painter = get_painter(w->buffer, this, painter_type, 0);
-  painter->setFont(
-      fl(font_string(font_idx, get_font_type(painter_type), size)));
+  painter->setFont(font(font_idx, get_font_type(painter_type), size));
 
   QString str;
   if (((GrowCtx*)ctx)->text_coding != glow_eTextCoding_UTF_8) {
