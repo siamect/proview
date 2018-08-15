@@ -58,6 +58,7 @@ void QtScrollWidgetFlow::init(unsigned int eCtxType,
 {
   createBuffer(size());
   setFocusPolicy(Qt::StrongFocus);
+  setMouseTracking(true);
   this->ctxType = eCtxType;
   this->init_proc = init_proc;
   this->init_widget_proc = init_proc2;
@@ -70,6 +71,7 @@ QWidget* QtScrollWidgetFlow::initScroll(unsigned int eCtxType,
 {
   createBuffer(size());
   setFocusPolicy(Qt::StrongFocus);
+  setMouseTracking(true);
   this->ctxType = eCtxType;
   this->init_proc = init_proc;
   this->init_widget_proc = init_proc2;
@@ -91,6 +93,7 @@ void QtScrollWidgetFlow::init(unsigned int eCtxType, QWidget* main)
 {
   createBuffer(size());
   setFocusPolicy(Qt::StrongFocus);
+  setMouseTracking(true);
   this->ctxType = eCtxType;
   is_navigator = 1;
   main_widget = main;

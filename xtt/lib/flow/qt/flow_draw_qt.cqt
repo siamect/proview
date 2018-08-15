@@ -92,7 +92,7 @@ static char font_names[draw_eFont__][DRAW_FONT_SIZE][80]
             "-*-Helvetica-Medium-R-Normal--18-*-*-*-P-*-ISO8859-1",
             "-*-Helvetica-Medium-R-Normal--24-*-*-*-P-*-ISO8859-1" } };
 
-static QEvent last_event(QEvent::None);
+static QMouseEvent *last_event;
 
 static QColor flow_allocate_color(
     FlowDrawQt* draw_ctx, const char* named_color);
@@ -409,7 +409,6 @@ int FlowDrawQt::event_handler(QEvent* event)
         if (click_sensitivity & flow_mSensitivity_MB1Click
             && !(click_sensitivity & flow_mSensitivity_MB1DoubleClick)
             && !(click_sensitivity & flow_mSensitivity_MB1Press)) {
-          memcpy((void*)&last_event, (void*)&event, sizeof(QEvent));
           button_pressed = 0;
           button_clicked = 1;
           last_press_x = mouseEvent->x();
@@ -418,7 +417,6 @@ int FlowDrawQt::event_handler(QEvent* event)
         } else if (!(click_sensitivity & flow_mSensitivity_MB1Click)
             && !(click_sensitivity & flow_mSensitivity_MB1DoubleClick)
             && click_sensitivity & flow_mSensitivity_MB1Press) {
-          memcpy((void*)&last_event, (void*)&event, sizeof(QEvent));
           button_pressed = 1;
           button_clicked = 0;
           last_press_x = mouseEvent->x();
@@ -431,7 +429,6 @@ int FlowDrawQt::event_handler(QEvent* event)
         if (click_sensitivity & flow_mSensitivity_MB2Click
             && !(click_sensitivity & flow_mSensitivity_MB2DoubleClick)
             && !(click_sensitivity & flow_mSensitivity_MB2Press)) {
-          memcpy((void*)&last_event, (void*)&event, sizeof(QEvent));
           button_pressed = 0;
           button_clicked = 1;
           last_press_x = mouseEvent->x();
@@ -440,7 +437,6 @@ int FlowDrawQt::event_handler(QEvent* event)
         } else if (!(click_sensitivity & flow_mSensitivity_MB2Click)
             && !(click_sensitivity & flow_mSensitivity_MB2DoubleClick)
             && click_sensitivity & flow_mSensitivity_MB2Press) {
-          memcpy((void*)&last_event, (void*)&event, sizeof(QEvent));
           button_pressed = 1;
           button_clicked = 0;
           last_press_x = mouseEvent->x();
@@ -467,21 +463,20 @@ int FlowDrawQt::event_handler(QEvent* event)
         button_clicked_and_pressed = 1;
         cancel_event_timer();
         button_clicked = 0;
-        memcpy((void*)&last_event, (void*)&event, sizeof(QEvent));
         button_pressed = mouseEvent->button();
         last_press_x = mouseEvent->x();
         last_press_y = mouseEvent->y();
-        event_timer(200);
+        event_timer(mouseEvent);
         return 1;
       }
       if (!button_pressed) {
-        memcpy((void*)&last_event, (void*)&event, sizeof(QEvent));
         button_pressed = mouseEvent->button();
         last_press_x = mouseEvent->x();
         last_press_y = mouseEvent->y();
-        event_timer(200);
+        event_timer(mouseEvent);
         return 1;
       } else {
+        debug_print("event_handler: MouseButtonPress from timer\n");
         /* Press event, callback from timer */
         button_pressed = 0;
         button_clicked_and_pressed = 0;
@@ -607,9 +602,8 @@ int FlowDrawQt::event_handler(QEvent* event)
         cancel_event_timer();
         if (!button_clicked_and_pressed) {
           /* wait for button double click */
-          memcpy((void*)&last_event, (void*)&event, sizeof(QEvent));
           button_clicked = 1;
-          event_timer(200);
+          event_timer(mouseEvent);
           button_pressed = 0;
           return 1;
         } else {
@@ -690,8 +684,7 @@ int FlowDrawQt::event_handler(QEvent* event)
     }
     case QEvent::MouseMove: {
       QMouseEvent* mouseEvent = ((QMouseEvent*)event);
-      debug_print("event_handler: MouseMove\n");
-      QPoint pos = QCursor::pos();
+      QPoint pos = mouseEvent->pos();
 
       if (button3_pressed) {
         button3_pressed = 0;
@@ -1642,7 +1635,7 @@ bool FlowDrawQt::event_timer_cb()
 {
   delete timer_id;
   timer_id = 0;
-  event_handler(&last_event);
+  event_handler(last_event);
   return FALSE;
 }
 
@@ -1654,12 +1647,17 @@ void FlowDrawQt::cancel_event_timer()
   }
 }
 
-void FlowDrawQt::event_timer(int time_ms)
+void FlowDrawQt::event_timer(QMouseEvent *event)
 {
+  if (last_event) {
+    delete last_event;
+  }
+  last_event = new QMouseEvent(event->type(), event->pos(), event->globalPos(), event->button(), event->buttons(), event->modifiers());
+
   timer_id = new QTimer();
   timer_id->setSingleShot(true);
   connect(timer_id, SIGNAL(timeout()), this, SLOT(event_timer_cb()));
-  timer_id->start(time_ms);
+  timer_id->start(200);
 }
 
 void FlowDrawQt::set_timer(

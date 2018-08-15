@@ -258,7 +258,7 @@ private:
       int x, int y, char* text, int len);
   void cursor_helper(FlowCtx* ctx, draw_eCursor cursor, bool nav = false);
 
-  void event_timer(int timer_ms);
+  void event_timer(QMouseEvent *event);
   void cancel_event_timer();
 
   flow_draw_sTimerCb* timer_cb;

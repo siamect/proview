@@ -272,7 +272,7 @@ private:
   int image_helper(GlowWind* wind, int x, int y, int width, int height,
       glow_tImImage image, glow_tPixmap clip_mask, bool d = false);
 
-  void event_timer(int time_ms);
+  void event_timer(QMouseEvent *event);
   void cancel_event_timer();
 
   glow_draw_sTimerCb* timer_cb;
