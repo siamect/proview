@@ -36,15 +36,28 @@
 
 #include "cow_style_qt.h"
 
-int PwrStyle::pixelMetric(PixelMetric which, const QStyleOption *option, const QWidget *widget) const
+#include <QDialogButtonBox>
+
+int PwrStyle::pixelMetric(
+    PixelMetric which, const QStyleOption* option, const QWidget* widget) const
 {
-    switch(which) {
-        case PM_LayoutLeftMargin:
-        case PM_LayoutTopMargin:
-        case PM_LayoutRightMargin:
-        case PM_LayoutBottomMargin:
-          return 0;
-        default:
-          return QGtkStyle::pixelMetric(which, option, widget);
-    }
+  switch (which) {
+  case PM_LayoutLeftMargin:
+  case PM_LayoutTopMargin:
+  case PM_LayoutRightMargin:
+  case PM_LayoutBottomMargin:
+    return 0;
+  default:
+    return QGtkStyle::pixelMetric(which, option, widget);
+  }
+}
+
+int PwrStyle::styleHint(StyleHint hint, const QStyleOption* option,
+    const QWidget* widget, QStyleHintReturn* returnData) const
+{
+  if (hint == SH_DialogButtonLayout) {
+    return QDialogButtonBox::WinLayout;
+  }
+
+  return QGtkStyle::styleHint(hint, option, widget, returnData);
 }

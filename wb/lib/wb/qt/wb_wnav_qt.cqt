@@ -466,7 +466,7 @@ int WNavQt::confirm_dialog(
     char* title, char* text, int display_cancel, int* cancel)
 {
   QMessageBox::StandardButton reply = QMessageBox::question(
-      form_widget, translate_utf8(title), translate_utf8(text));
+      form_widget, translate_utf8(title), translate_utf8(text), QMessageBox::Yes | QMessageBox::No);
 
   if (reply == QMessageBox::Yes) {
     return 1;

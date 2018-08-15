@@ -99,8 +99,9 @@ void CoWowQt::DisplayQuestion(void* ctx, const char* title, const char* text,
     void (*questionbox_ok)(void*, void*),
     void (*questionbox_cancel)(void*, void*), void* data)
 {
-  QMessageBox::StandardButton reply = QMessageBox::question(
-      object->parent_wid, translate_utf8(title), translate_utf8(text));
+  QMessageBox::StandardButton reply
+      = QMessageBox::question(object->parent_wid, translate_utf8(title),
+          translate_utf8(text), QMessageBox::Yes | QMessageBox::No);
 
   if (reply == QMessageBox::Yes) {
     if (questionbox_ok) {
@@ -393,9 +394,9 @@ CoWowWarrantQt::CoWowWarrantQt(CoWowQtObject* parent)
   QPushButton* reject = buttons->addButton(
       translate_utf8("Quit"), QDialogButtonBox::RejectRole);
   QPushButton* accept = buttons->addButton(
-      translate_utf8("I Accept"), QDialogButtonBox::HelpRole);
+      translate_utf8("I Accept"), QDialogButtonBox::ResetRole);
   QPushButton* help = buttons->addButton(
-      translate_utf8("Show License"), QDialogButtonBox::AcceptRole);
+      translate_utf8("Show License"), QDialogButtonBox::HelpRole);
 
   connect(accept, SIGNAL(clicked()), this, SLOT(accept()));
   connect(reject, SIGNAL(clicked()), this, SLOT(reject()));
@@ -661,7 +662,7 @@ void CoWowEntryQt::keyPressEvent(QKeyEvent* event)
     break;
   }
   case Qt::Key_Up: {
-    const char *prev = m_re->popUp(qPrintable(text()));
+    const char* prev = m_re->popUp(qPrintable(text()));
     if (strcmp(prev, "") != 0) {
       setText(fl(prev));
     }
@@ -669,7 +670,7 @@ void CoWowEntryQt::keyPressEvent(QKeyEvent* event)
     break;
   }
   case Qt::Key_Down: {
-    const char *next = m_re->popDown(qPrintable(text()));
+    const char* next = m_re->popDown(qPrintable(text()));
     if (strcmp(next, "") != 0) {
       setText(fl(next));
     }
@@ -719,8 +720,8 @@ CoWowModalDialogQt::CoWowModalDialogQt(QWidget* parent, const char* title,
     image_w = new QPixmap(fname);
   } else {
     image_w = new QPixmap(QApplication::style()
-                   ->standardIcon(QStyle::SP_MessageBoxQuestion)
-                   .pixmap(48));
+                              ->standardIcon(QStyle::SP_MessageBoxQuestion)
+                              .pixmap(48));
   }
   QLabel* image_widget = new QLabel(this);
   image_widget->setPixmap(*image_w);
@@ -836,7 +837,8 @@ wow_sModalInputDialog* CoWowQt::CreateModalInputDialog(const char* title,
   wow_sModalInputDialog* ret = new wow_sModalInputDialog();
   ret->status = status;
 
-  strncpy(ret->input_str, qPrintableLatin1(dialog_w->text()), sizeof(ret->input_str));
+  strncpy(ret->input_str, qPrintableLatin1(dialog_w->text()),
+      sizeof(ret->input_str));
 
   return ret;
 }

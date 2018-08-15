@@ -39,15 +39,18 @@
 
 #include <QGtkStyle>
 
-class PwrStyle : public QGtkStyle
-{
-    Q_OBJECT
+class PwrStyle : public QGtkStyle {
+  Q_OBJECT
 
 public:
-    PwrStyle() : QGtkStyle() {}
+  PwrStyle() : QGtkStyle()
+  {
+  }
 
-    int pixelMetric(PixelMetric which, const QStyleOption *option,
-                    const QWidget *widget = 0) const;
+  int pixelMetric(PixelMetric which, const QStyleOption* option,
+      const QWidget* widget = 0) const;
+  int styleHint(StyleHint hint, const QStyleOption* option,
+      const QWidget* widget, QStyleHintReturn* returnData = 0) const;
 };
 
 #endif

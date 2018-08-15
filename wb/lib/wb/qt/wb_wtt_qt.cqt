@@ -810,8 +810,7 @@ void WttQt::open_change_value()
       return;
     }
 
-    sts = wnav->check_attr_value(
-        sellist[0], &multiline, &value, &input_size);
+    sts = wnav->check_attr_value(sellist[0], &multiline, &value, &input_size);
     if (EVEN(sts)) {
       message('E', wnav_get_message(sts));
       return;
@@ -948,8 +947,8 @@ void WttQt::open_change_name()
   cmd_entry->set_recall_buffer(&name_recall);
   cmd_entry->setFocus();
 
-  sts = ldh_ObjidToName(ldhses, input_objid, ldh_eName_Object, name,
-      sizeof(name), &size);
+  sts = ldh_ObjidToName(
+      ldhses, input_objid, ldh_eName_Object, name, sizeof(name), &size);
 
   cmd_entry->setText(QString::fromLatin1(name));
 
@@ -1374,16 +1373,16 @@ void WttQtWidget::valchanged_cmd_entry()
     switch (wtt->input_mode) {
     case wtt_eInputMode_Attribute:
       wtt->input_wnav->select_object(wtt->input_node);
-      sts = wtt->input_wnav->set_attr_value(
-          wtt->input_node, wtt->input_objid, qPrintableLatin1(wtt->cmd_entry->text()));
+      sts = wtt->input_wnav->set_attr_value(wtt->input_node, wtt->input_objid,
+          qPrintableLatin1(wtt->cmd_entry->text()));
       if (EVEN(sts)) {
         wtt->message('E', wnav_get_message(sts));
       }
       break;
     case wtt_eInputMode_ObjectName:
       wtt->input_wnav->select_object(wtt->input_node);
-      sts = wtt->input_wnav->set_object_name(
-          wtt->input_node, wtt->input_objid, qPrintableLatin1(wtt->cmd_entry->text()));
+      sts = wtt->input_wnav->set_object_name(wtt->input_node, wtt->input_objid,
+          qPrintableLatin1(wtt->cmd_entry->text()));
       if (EVEN(sts)) {
         wtt->message('E', wnav_get_message(sts));
       }
@@ -1451,8 +1450,9 @@ void WttQt::open_confirm(const char* text, const char* title,
   confirm_no_cb = no_cb;
   QMessageBox::StandardButton reply = QMessageBox::question(toplevel,
       translate_utf8(title), translate_utf8(text),
-      QMessageBox::Ok | QMessageBox::No | QMessageBox::Cancel);
-  if (reply == QMessageBox::Ok) {
+      QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+
+  if (reply == QMessageBox::Yes) {
     if (ok_cb) {
       (ok_cb)(this);
     }
