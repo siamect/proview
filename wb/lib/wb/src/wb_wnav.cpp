@@ -609,12 +609,10 @@ int WNav::create_object_item(pwr_tObjid objid, brow_tNode dest,
 WNav::WNav(void* xn_parent_ctx, const char* xn_name, const char* xn_layout,
     ldh_tSesContext xn_ldhses, wnav_sStartMenu* root_menu,
     wnav_eWindowType xn_type, pwr_tStatus* status)
-    :
-
-      WUtility(wb_eUtility_WNav),
-      parent_ctx(xn_parent_ctx), window_type(xn_type), ldhses(xn_ldhses),
-      wbctx(0), brow(0), brow_cnt(0), trace_started(0), message_cb(NULL),
-      close_cb(NULL), map_cb(NULL), change_value_cb(NULL),
+    : WUtility(wb_eUtility_WNav), parent_ctx(xn_parent_ctx),
+      window_type(xn_type), ldhses(xn_ldhses), wbctx(0), brow(0), brow_cnt(0),
+      trace_started(0), message_cb(NULL), close_cb(NULL), map_cb(NULL),
+      change_value_cb(NULL), script_filename_cb(NULL),
       get_build_options_cb(NULL), ccm_func_registred(0), menu_tree(NULL),
       closing_down(0), base_priv(pwr_mPrv_System), priv(pwr_mPrv_System),
       editmode(0), layout_objid(pwr_cNObjid), search_last(pwr_cNObjid),
