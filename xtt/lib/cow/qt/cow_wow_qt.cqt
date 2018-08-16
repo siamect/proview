@@ -349,7 +349,7 @@ QString loadText(std::string filename)
     }
   }
 
-  char text[4000];
+  char text[20000];
   int i;
   for (i = 0; i < (int)sizeof(text) - 1; i++) {
     int c = fgetc(fp);
@@ -363,9 +363,9 @@ QString loadText(std::string filename)
 
   if (strncmp(text, "Coding:UTF-8", 12) == 0) {
     cdh_Strcpy(text, &text[13]);
-    return QString::fromUtf8(text);
+    return QString::fromUtf8(text).trimmed();
   } else {
-    return QString::fromLatin1(text);
+    return QString::fromLatin1(text).trimmed();
   }
 }
 
@@ -385,9 +385,9 @@ CoWowWarrantQt::CoWowWarrantQt(CoWowQtObject* parent)
   QLabel* label = new QLabel(loadText("acceptlicense.txt"), this);
   label->adjustSize();
   label->setMinimumWidth(label->width());
-  label->setWordWrap(true);
   add_expanding(inner_layout, label);
 
+  main_layout->setSpacing(label->fontMetrics().lineSpacing());
   main_layout->addLayout(inner_layout, 1);
 
   QDialogButtonBox* buttons = new QDialogButtonBox();
