@@ -56,10 +56,7 @@ NavQt::NavQt(void* nav_parent_ctx, QWidget* nav_parent_wid,
   debug_print("creating a scrolledbrowwidgetqt\n");
   QScrollArea* scrolledbrow = ((QScrollArea*) scrolledbrowwidgetqt_new(Nav::init_brow_cb, this, &brow_widget));
 
-  scrolledbrow->setFrameShape(QFrame::Box);
-  scrolledbrow->setLineWidth(3);
-
-  form_widget = scrolledbrow;
+  form_widget = wrapInFrame(scrolledbrow);
 
   server = new QLocalServer(trace_obj);
   server->listen("STRING");

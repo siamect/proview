@@ -130,12 +130,12 @@ private:
   OpQtWidget* toplevel;
 };
 
-class OpQtWidget : public QWidget {
+class OpQtWidget : public QFrame {
   Q_OBJECT
 
 public:
   OpQtWidget(OpQt* parent_ctx, QWidget* parent)
-      : QWidget(), op(parent_ctx)
+      : QFrame(), op(parent_ctx)
   {
   }
 

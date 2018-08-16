@@ -347,3 +347,15 @@ void add_expanding(QLayout* layout, QLayout* widget)
 {
   add_expanding(layout, layout_to_widget(widget));
 }
+
+QFrame* wrapInFrame(QFrame* widget)
+{
+  widget->setFrameStyle(QFrame::NoFrame);
+  QFrame *frame = new QFrame();
+  frame->setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
+  QVBoxLayout *layout = new QVBoxLayout();
+  layout->setContentsMargins(3, 3, 3, 3);
+  layout->addWidget(widget);
+  frame->setLayout(layout);
+  return frame;
+}

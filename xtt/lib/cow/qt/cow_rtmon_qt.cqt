@@ -49,6 +49,7 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QPalette>
+#include <QPushButton>
 #include <QVBoxLayout>
 
 void RtMonQtWidget::closeEvent(QCloseEvent* event)
@@ -146,9 +147,9 @@ RtMonQt::RtMonQt(void* rtmon_parent_ctx, QWidget* rtmon_parent_wid,
   dcli_translate_filename(fname, "$pwr_exe/pwr_logofullg.png");
   bbox_image_gray = new_image_label(toplevel, fname);
 
-  bbox_label = new QPushButton("Down");
+  bbox_label = new QLabel("Down");
   bbox_label->setFixedSize(170, 25);
-  bbox_label->setEnabled(false);
+  bbox_label->setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
 
   QVBoxLayout* bbox = new QVBoxLayout();
   bbox_start

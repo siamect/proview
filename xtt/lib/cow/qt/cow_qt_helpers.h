@@ -108,4 +108,6 @@ void add_expanding(QSplitter* splitter, QLayout* widget);
 void add_expanding(QLayout* layout, QWidget* widget);
 void add_expanding(QLayout* layout, QLayout* widget);
 
+QFrame* wrapInFrame(QFrame* widget);
+
 #endif // QT_HELPERS_H

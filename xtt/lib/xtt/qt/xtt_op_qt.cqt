@@ -460,6 +460,7 @@ OpQt::OpQt(void* op_parent_ctx, QWidget* op_parent_wid, char* opplace,
   modifyBackground(toplevel, background);
 
   toplevel->setLayout(vbox_conf);
+  toplevel->setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
   toplevel->show();
 
   if (start_jop) {

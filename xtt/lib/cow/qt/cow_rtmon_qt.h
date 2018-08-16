@@ -45,7 +45,6 @@
 
 #include <QAction>
 #include <QLabel>
-#include <QPushButton>
 #include <QTimer>
 #include <QWidget>
 
@@ -58,7 +57,7 @@ public:
   ~RtMonQt();
 
   QWidget* nodelistnav_widget;
-  QPushButton* bbox_label;
+  QLabel* bbox_label;
   QWidget* bbox_start;
   QWidget* bbox_restart;
   QWidget* bbox_stop;

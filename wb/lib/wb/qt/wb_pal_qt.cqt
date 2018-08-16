@@ -57,10 +57,7 @@ PalQt::PalQt(void* pal_parent_ctx, QWidget* pal_parent_wid,
   QScrollArea* scrolledbrow = ((QScrollArea*) scrolledbrowwidgetqt_new(Pal::init_brow_cb, this, &brow_widget));
   brow_widget->setToolTip(fl("PalQt"));
 
-  scrolledbrow->setFrameShape(QFrame::Box);
-  scrolledbrow->setLineWidth(3);
-
-  form_widget = scrolledbrow;
+  form_widget = wrapInFrame(scrolledbrow);
 
   showNow(brow_widget);
 
