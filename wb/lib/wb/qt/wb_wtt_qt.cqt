@@ -1365,11 +1365,6 @@ void WttQtWidget::valchanged_cmd_entry()
 {
   int sts;
 
-  if (wtt->cmd_entry->text().isEmpty()) {
-    wtt->wnav->wow->DisplayError("Input error", "Input cannot be empty");
-    return;
-  }
-
   if (wtt->input_open) {
     switch (wtt->input_mode) {
     case wtt_eInputMode_Attribute:
