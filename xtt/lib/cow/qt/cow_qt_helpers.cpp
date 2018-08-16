@@ -165,7 +165,7 @@ QAction* addMenuItem(QObject* parent, QMenu* menu, const char* text,
 {
   QAction* action
       = new QAction(get_icon(iconName), translate_utf8(text), parent);
-  if (!strcmp(shortcut, "")) {
+  if (strcmp(shortcut, "")) {
     action->setShortcut(fl(shortcut));
   }
   QObject::connect(action, SIGNAL(triggered()), parent, callback);
@@ -180,7 +180,7 @@ QAction* addMenuItemMapped(QObject* parent, QMenu* menu, const char* text,
 {
   QAction* action
       = new QAction(get_icon(iconName), translate_utf8(text), parent);
-  if (!strcmp(shortcut, "")) {
+  if (strcmp(shortcut, "")) {
     action->setShortcut(fl(shortcut));
   }
   QObject::connect(action, signal, parent, callback);
@@ -194,7 +194,7 @@ QAction* addCheckableMenuItem(QObject* parent, QMenu* menu, const char* text,
 {
   QAction* action
       = new QAction(get_icon(iconName), translate_utf8(text), parent);
-  if (!strcmp(shortcut, "")) {
+  if (strcmp(shortcut, "")) {
     action->setShortcut(fl(shortcut));
   }
   action->setCheckable(true);
@@ -208,7 +208,7 @@ QAction* addMenuRadioItem(QObject* parent, QMenu* menu, const char* text,
     const char* callback, QActionGroup* group, const char* shortcut)
 {
   QAction* action = new QAction(translate_utf8(text), parent);
-  if (!strcmp(shortcut, "")) {
+  if (strcmp(shortcut, "")) {
     action->setShortcut(fl(shortcut));
   }
   QObject::connect(action, SIGNAL(triggered()), parent, callback);
