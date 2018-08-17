@@ -42,6 +42,8 @@
 
 #include "ge_attrnav_qt.h"
 
+#include <QTimer>
+
 AttrNavQt::AttrNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
     attr_eType xn_type, const char* xn_name, attr_sItem* xn_itemlist,
     int xn_item_cnt, QWidget** w, pwr_tStatus* status)
@@ -75,23 +77,22 @@ void AttrNavQt::trace_start()
   trace_obj->trace_scan();
 }
 
+AttrNavQtTraceObject::AttrNavQtTraceObject(AttrNavQt* parent) : QObject(), attrnav(parent)
+{
+  trace_timerid = new QTimer(this);
+}
+
 AttrNavQtTraceObject::~AttrNavQtTraceObject()
 {
   debug_print("AttrNavQtTraceObject::~AttrNavQtTraceObject\n");
-  delete trace_timerid;
 }
 
 void AttrNavQtTraceObject::trace_scan()
 {
-  int time = 200;
-
   if (attrnav->trace_started) {
     brow_TraceScan(attrnav->brow->ctx);
 
-    trace_timerid = new QTimer();
-    trace_timerid->setSingleShot(true);
-    connect(trace_timerid, SIGNAL(timeout()), this, SLOT(trace_scan()));
-    trace_timerid->start(time);
+    initOneShotTimer(trace_timerid, SLOT(trace_scan()), 200);
   }
 }
 

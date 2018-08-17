@@ -50,6 +50,7 @@
 #include <QMenuBar>
 #include <QPalette>
 #include <QPushButton>
+#include <QTimer>
 #include <QVBoxLayout>
 
 void RtMonQtWidget::closeEvent(QCloseEvent* event)

@@ -40,7 +40,6 @@
 #include "xtt_methodtoolbar.h"
 
 #include <QAction>
-#include <QTimer>
 #include <QToolBar>
 
 class XttMethodToolbarQt;

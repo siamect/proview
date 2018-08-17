@@ -171,17 +171,16 @@ void WNavQt::trace_start()
   trace_obj->trace_scan();
 }
 
+WNavQtTraceObject::WNavQtTraceObject(WNavQt* parent) : QObject(), wnav(parent)
+{
+  trace_timerid = new QTimer(this);
+}
+
 void WNavQtTraceObject::trace_scan()
 {
-  int time = 1000;
-
   if (wnav->trace_started) {
     brow_TraceScan(wnav->brow->ctx);
-
-    trace_timerid = new QTimer(this);
-    trace_timerid->setSingleShot(true);
-    connect(trace_timerid, SIGNAL(timeout()), this, SLOT(trace_scan()));
-    trace_timerid->start(time);
+    initOneShotTimer(trace_timerid, SLOT(trace_scan()), 1000);
   }
 }
 

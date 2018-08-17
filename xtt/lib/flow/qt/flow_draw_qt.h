@@ -42,7 +42,6 @@
 #include <QColor>
 #include <QEvent>
 #include <QPainter>
-#include <QTimer>
 #include <QWidget>
 
 typedef struct {

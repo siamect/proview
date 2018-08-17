@@ -46,7 +46,6 @@
 #include "ge_graph.h"
 #endif
 
-#include <QTimer>
 #include <QWidget>
 
 class GraphQtTraceObject;
@@ -113,7 +112,6 @@ public slots:
 
 private:
   GraphQt* graph;
-  QTimer* trace_timerid;
 };
 
 #endif

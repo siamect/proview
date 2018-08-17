@@ -41,7 +41,6 @@
 #include "ge_subgraphs.h"
 #endif
 
-#include <QTimer>
 #include <QWidget>
 
 /*! \file ge_subgraphs_qt.h
@@ -74,10 +73,7 @@ class SubGraphsQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  SubGraphsQtWidget(SubGraphsQt* parent_ctx, QWidget* parent)
-      : QWidget(), subgraphs(parent_ctx)
-  {
-  }
+  SubGraphsQtWidget(SubGraphsQt* parent_ctx, QWidget* parent);
 
 protected:
   void focusInEvent(QFocusEvent* event);

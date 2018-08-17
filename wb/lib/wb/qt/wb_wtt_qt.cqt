@@ -71,7 +71,6 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QScrollArea>
-#include <QTimer>
 #include <QVBoxLayout>
 
 #define WTT_PALETTE_WIDTH 160
@@ -544,20 +543,12 @@ void WttQt::menu_setup()
 
 void WttQt::set_selection_owner()
 {
-  selection_timerid = new QTimer();
-  selection_timerid->setSingleShot(true);
-  QObject::connect(selection_timerid, SIGNAL(timeout()), toplevel,
-      SLOT(set_selection_owner_proc()));
-  selection_timerid->start(200);
+  initOneShotTimer(selection_timerid, SLOT(set_selection_owner_proc()), 200);
 }
 
 void WttQt::set_palette_selection_owner()
 {
-  selection_timerid = new QTimer();
-  selection_timerid->setSingleShot(true);
-  QObject::connect(selection_timerid, SIGNAL(timeout()), toplevel,
-      SLOT(set_palette_selection_owner_proc()));
-  selection_timerid->start(200);
+  initOneShotTimer(selection_timerid, SLOT(set_palette_selection_owner_proc()), 200);
 }
 
 void WttQtWidget::set_selection_owner_proc()
@@ -565,7 +556,7 @@ void WttQtWidget::set_selection_owner_proc()
   // Delay call to own selection, to make it possible to paste previous
   // selection
   // to value inputwith MB2
-  wtt->selection_timerid = 0;
+  wtt->selection_timerid->stop();
   if (wtt->focused_wnav) {
     wtt->focused_wnav->set_selection_owner();
   }
@@ -576,7 +567,7 @@ void WttQtWidget::set_palette_selection_owner_proc()
   // Delay call to own selection, to make it possible to paste previous
   // selection
   // to value inputwith MB2
-  wtt->selection_timerid = 0;
+  wtt->selection_timerid->stop();
   wtt->palette->set_selection_owner();
 }
 
@@ -1735,7 +1726,7 @@ WttQt::WttQt(void* wt_parent_ctx, QWidget* wt_parent_wid, const char* wt_name,
     : Wtt(wt_parent_ctx, wt_name, iconname, wt_wbctx, wt_volid, wt_volctx,
           root_menu, status),
       boot_dia(0), options_form(0), set_focus_disabled(0), disfocus_timerid(0),
-      selection_timerid(0), avoid_deadlock(0), realized(0)
+      avoid_deadlock(0), realized(0)
 {
   int window_width = 900;
   int window_height = 800;
@@ -1908,6 +1899,8 @@ WttQt::WttQt(void* wt_parent_ctx, QWidget* wt_parent_wid, const char* wt_name,
   toplevel->setMinimumSize(window_width, window_height);
   toplevel->setWindowTitle(fl(title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
+
+  selection_timerid = new QTimer(toplevel);
 
   CoWowQt::SetWindowIcon(toplevel);
 
@@ -2320,10 +2313,6 @@ WttQt::~WttQt()
   debug_print("WttQt::~WttQt\n");
   if (close_cb) {
     (close_cb)(this);
-  }
-
-  if (selection_timerid) {
-    delete selection_timerid;
   }
 
   wnav->closing_down = 1;

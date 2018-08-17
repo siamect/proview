@@ -537,6 +537,7 @@ CoWowTimer* CoWowQt::timer_new()
 CoWowTimerQt::CoWowTimerQt()
 {
   object = new CoWowTimerQtObject(this);
+  timer = new QTimer(object);
 }
 
 CoWowTimerQt::~CoWowTimerQt()
@@ -549,10 +550,7 @@ void CoWowTimerQt::add(int time, void (*callback)(void*), void* data)
 {
   m_callback = callback;
   m_data = data;
-  timer = new QTimer(object);
-  timer->setSingleShot(true);
-  QObject::connect(timer, SIGNAL(timeout()), object, SLOT(timer_cb()));
-  timer->start(time);
+  initOneShotTimer(timer, SLOT(timer_cb()), time);
 }
 
 void CoWowTimerQt::remove()
@@ -605,10 +603,7 @@ void CoWowFocusTimerQt::disable(int time)
   if (request_cnt > 1) {
     request_cnt = 0;
   }
-  timer = new QTimer();
-  timer->setSingleShot(true);
-  connect(timer, SIGNAL(timeout()), this, SLOT(enable_set_focus()));
-  timer->start(time);
+  initOneShotTimer(timer, SLOT(enable_set_focus()), time);
 }
 
 int CoWowFocusTimerQt::disabled()
@@ -624,12 +619,14 @@ void CoWowFocusTimerQt::enable_set_focus()
   request_cnt = 0;
 }
 
+CoWowFocusTimerQt::CoWowFocusTimerQt() : set_focus_disabled(0), request_cnt(0)
+{
+  timer = new QTimer(this);
+}
+
 CoWowFocusTimerQt::~CoWowFocusTimerQt()
 {
   debug_print("CoWowFocusTimerQt::~CoWowFocusTimerQt\n");
-  if (set_focus_disabled) {
-    delete timer;
-  }
 }
 
 void CoWowQt::SetWindowIcon(QWidget* w)
@@ -971,10 +968,7 @@ void CoWowQtObject::wait_cb()
 
 void CoWowQt::Wait(float time)
 {
-  m_wait_timerid = new QTimer(object);
-  m_wait_timerid->setSingleShot(true);
-  QObject::connect(m_wait_timerid, SIGNAL(timeout()), object, SLOT(wait_cb()));
-  m_wait_timerid->start(int(time * 1000));
+  initOneShotTimer(m_wait_timerid, SLOT(wait_cb()), int(time * 1000));
 }
 
 void CoWowQt::CreateBrowPrintDialogQt(const char* title, void* brow_ctx,
@@ -1082,6 +1076,7 @@ void CoWowQt::update_title(QWidget* w, int editmode)
 CoWowQt::CoWowQt(QWidget* parent)
 {
   object = new CoWowQtObject(parent);
+  m_wait_timerid = new QTimer(object);
 }
 
 CoWowQt::~CoWowQt()

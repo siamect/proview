@@ -112,6 +112,9 @@ public slots:
   void scroll_h_action(int value);
   void scroll_v_action(int value);
   void scroll_callback_cb();
+
+signals:
+  void resize_signal(QResizeEvent*);
 };
 
 #endif // GLOW_SCROLL_WIDGET_QT_H

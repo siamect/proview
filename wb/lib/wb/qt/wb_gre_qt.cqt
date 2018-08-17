@@ -50,8 +50,10 @@
 #include <QTimer>
 
 WGreQt::WGreQt(void* wg_parent_ctx, QWidget* wg_parent_wid, const char* name)
-    : WGre(wg_parent_ctx, 0), trace_obj(0)
+    : WGre(wg_parent_ctx, 0)
 {
+  trace_obj = new WGreQtTraceObject(this);
+  trace_timerid = new QTimer(trace_obj);
   ctx_init();
   debug_print("creating a scrolledflowwidgetqt\n");
   form_widget = scrolledflowwidgetqt_new(init_flow, this, &flow_widget);
@@ -81,11 +83,7 @@ void WGreQtTraceObject::trace_scan()
 {
   if (wgre->trace_started) {
     flow_TraceScan(wgre->flow_ctx);
-
-    trace_timerid = new QTimer(this);
-    trace_timerid->setSingleShot(true);
-    connect(trace_timerid, SIGNAL(timeout()), this, SLOT(trace_scan()));
-    trace_timerid->start(500);
+    initOneShotTimer(wgre->trace_timerid, SLOT(trace_scan()), 500);
   }
 }
 
@@ -99,7 +97,7 @@ void WGreQt::trace_stop()
 {
   if (trace_started) {
     trace_started = 0;
-    delete trace_obj;
+    trace_timerid->stop();
   }
 }
 

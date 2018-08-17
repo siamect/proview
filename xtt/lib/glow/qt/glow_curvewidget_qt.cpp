@@ -44,15 +44,8 @@ static void scroll_callback(glow_sScroll* data)
   widget_sScroll* scroll_data = (widget_sScroll*)data->scroll_data;
   CurveWidgetQt* curve = ((CurveWidgetQt*)scroll_data->parent);
 
-  if (curve->scroll_timerid) {
-    delete curve->scroll_timerid;
-  }
+  initOneShotTimer(curve->scroll_timerid, SLOT(scroll_callback_cb()), 200);
 
-  curve->scroll_timerid = new QTimer();
-  curve->scroll_timerid->setSingleShot(true);
-  QObject::connect(curve->scroll_timerid, SIGNAL(timeout()), curve,
-      SLOT(scroll_callback_cb()));
-  curve->scroll_timerid->start(200);
   curve->scroll_data = *data;
 }
 

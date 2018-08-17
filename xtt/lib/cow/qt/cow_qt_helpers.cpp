@@ -43,6 +43,7 @@
 #include <QLayout>
 #include <QMenu>
 #include <QShowEvent>
+#include <QTimer>
 #include <QToolButton>
 
 void print_time(FILE* stream, int fulldate)
@@ -358,4 +359,11 @@ QFrame* wrapInFrame(QFrame* widget)
   layout->addWidget(widget);
   frame->setLayout(layout);
   return frame;
+}
+
+void initOneShotTimer(QTimer* timer, const char* slot, int time)
+{
+  timer->setSingleShot(true);
+  QObject::connect(timer, SIGNAL(timeout()), timer->parent(), slot);
+  timer->start(time);
 }

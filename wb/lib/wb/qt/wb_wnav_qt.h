@@ -112,9 +112,7 @@ class WNavQtTraceObject : public QObject {
   Q_OBJECT
 
 public:
-  WNavQtTraceObject(WNavQt* parent) : QObject(), wnav(parent)
-  {
-  }
+  WNavQtTraceObject(WNavQt* parent);
 
 public slots:
   void trace_scan();

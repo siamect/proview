@@ -99,10 +99,7 @@ class CoWowFocusTimerQt : public QObject {
   Q_OBJECT
 
 public:
-  CoWowFocusTimerQt() : set_focus_disabled(0), request_cnt(0), timer(0)
-  {
-  }
-
+  CoWowFocusTimerQt();
   ~CoWowFocusTimerQt();
   void disable(int time);
   int disabled();

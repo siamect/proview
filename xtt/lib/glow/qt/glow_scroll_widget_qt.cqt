@@ -46,6 +46,7 @@
 #include "glow_scroll_widget_qt.h"
 
 #include <QPainter>
+#include <QTimer>
 
 void QtScrollWidgetGlow::createBuffer(QSize size)
 {
@@ -65,6 +66,7 @@ void QtScrollWidgetGlow::init(unsigned int eCtxType,
   this->init_proc = init_proc;
   this->init_widget_proc = init_proc2;
   this->client_data = client_data;
+  this->scroll_timerid = new QTimer(this);
 }
 
 QWidget* QtScrollWidgetGlow::initScroll(unsigned int eCtxType,
@@ -78,6 +80,7 @@ QWidget* QtScrollWidgetGlow::initScroll(unsigned int eCtxType,
   this->init_proc = init_proc;
   this->init_widget_proc = init_proc2;
   this->client_data = client_data;
+  this->scroll_timerid = new QTimer(this);
 
   QScrollArea* form = new QScrollArea();
   scroll_h = form->horizontalScrollBar();
@@ -98,6 +101,7 @@ void QtScrollWidgetGlow::init(unsigned int eCtxType, QWidget* main)
   setFocusPolicy(Qt::StrongFocus);
   setMouseTracking(true);
   this->ctxType = eCtxType;
+  this->scroll_timerid = new QTimer(this);
   is_navigator = 1;
   main_widget = main;
 }
@@ -252,6 +256,7 @@ void QtScrollWidgetGlow::handleEvent(QEvent* event)
 bool QtScrollWidgetGlow::event(QEvent* event)
 {
   if (event->type() == QEvent::Resize) {
+    emit resize_signal((QResizeEvent*)event);
     createBuffer(((QResizeEvent*)event)->size());
   }
   if (!is_realized

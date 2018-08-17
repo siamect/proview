@@ -61,6 +61,7 @@
 #include <QColorDialog>
 #include <QKeyEvent>
 #include <QMouseEvent>
+#include <QTimer>
 
 #define DRAW_PRESS_PIX 9
 
@@ -303,10 +304,6 @@ GlowDrawQt::~GlowDrawQt()
   if (nav_wind->background_pixmap) {
     delete nav_wind->background_pixmap;
   }
-
-  if (timer_id) {
-    delete timer_id;
-  }
 }
 
 int GlowDrawQt::init_nav(QWidget* nav_widget)
@@ -327,8 +324,9 @@ int GlowDrawQt::init_nav(QWidget* nav_widget)
 GlowDrawQt::GlowDrawQt(QWidget* toplevel, void** glow_ctx,
     int (*init_proc)(QWidget* w, GlowCtx* ctx, void* client_data),
     void* client_data, glow_eCtxType type)
-    : timer_id(0), click_sensitivity(0), closing_down(0)
+    : click_sensitivity(0), closing_down(0)
 {
+  timer_id = new QTimer(this);
   m_wind = new DrawWindQt();
   nav_wind = new DrawWindQt();
   nav_wind->is_nav = 1;
@@ -1591,18 +1589,14 @@ bool GlowDrawQt::draw_timer_cb()
 
 bool GlowDrawQt::event_timer_cb()
 {
-  delete timer_id;
-  timer_id = 0;
+  timer_id->stop();
   event_handler(last_event);
   return FALSE;
 }
 
 void GlowDrawQt::cancel_event_timer()
 {
-  if (timer_id) {
-    delete timer_id;
-    timer_id = 0;
-  }
+  timer_id->stop();
 }
 
 void GlowDrawQt::event_timer(QMouseEvent *event)
@@ -1612,10 +1606,7 @@ void GlowDrawQt::event_timer(QMouseEvent *event)
   }
   last_event = new QMouseEvent(event->type(), event->pos(), event->globalPos(), event->button(), event->buttons(), event->modifiers());
 
-  timer_id = new QTimer();
-  timer_id->setSingleShot(true);
-  QObject::connect(timer_id, SIGNAL(timeout()), this, SLOT(event_timer_cb()));
-  timer_id->start(200);
+  initOneShotTimer(timer_id, SLOT(event_timer_cb()), 200);
 }
 
 void GlowDrawQt::set_timer(GlowCtx* paintertx, int time_ms,
@@ -1624,11 +1615,9 @@ void GlowDrawQt::set_timer(GlowCtx* paintertx, int time_ms,
   timer_cb = new glow_draw_sTimerCb();
   timer_cb->ctx = paintertx;
   timer_cb->callback_func = callback_func;
+  timer_cb->timer_id = new QTimer(this);
 
-  timer_cb->timer_id = new QTimer();
-  timer_cb->timer_id->setSingleShot(true);
-  connect(timer_cb->timer_id, SIGNAL(timeout()), this, SLOT(draw_timer_cb()));
-  timer_cb->timer_id->start(time_ms);
+  initOneShotTimer(timer_cb->timer_id, SLOT(draw_timer_cb()), time_ms);
 
   *id = (void*)timer_cb;
 }

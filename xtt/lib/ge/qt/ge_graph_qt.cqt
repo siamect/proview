@@ -41,6 +41,8 @@
 #include "ge_graph_qt.h"
 #include "ge_attr_qt.h"
 
+#include <QTimer>
+
 GraphQt::GraphQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
     const char* xn_name, QWidget** w, pwr_tStatus* status,
     const char* xn_default_path, graph_eMode graph_mode, int scrollbar,
@@ -53,6 +55,7 @@ GraphQt::GraphQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
       parent_wid(xn_parent_wid)
 {
   trace_obj = new GraphQtTraceObject(this);
+  trace_timerid = new QTimer(trace_obj);
 
   default_access = xn_default_access;
   if (scrollbar) {
@@ -105,8 +108,7 @@ GraphQt::~GraphQt()
 void GraphQt::trace_timer_remove()
 {
   delete trace_obj;
-  delete trace_timerid;
-  trace_timerid = 0;
+  trace_timerid->stop();
 }
 
 void GraphQtTraceObject::trace_scan()
@@ -116,11 +118,7 @@ void GraphQtTraceObject::trace_scan()
 
 void GraphQt::trace_timer_add(int time)
 {
-  trace_timerid = new QTimer();
-  trace_timerid->setSingleShot(true);
-  QObject::connect(
-      trace_timerid, SIGNAL(triggered()), trace_obj, SLOT(trace_scan()));
-  trace_timerid->start(time);
+  initOneShotTimer(trace_timerid, SLOT(trace_scan()),time);
 }
 
 int GraphQt::create_navigator(QWidget* parent)

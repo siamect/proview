@@ -49,7 +49,6 @@
 #include <QPixmap>
 #include <QPoint>
 #include <QRect>
-#include <QTimer>
 #include <QWidget>
 
 #define DRAW_CLIP_SIZE 10

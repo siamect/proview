@@ -49,12 +49,13 @@
 #include "xtt_methodtoolbar_qt.h"
 #include "xtt_xnav.h"
 
+#include <QTimer>
+
 XttMethodToolbarQt::XttMethodToolbarQt(void* parent_ctx, void* xnav,
     unsigned int op_method_mask, unsigned int mnt_method_mask,
     const char* tooltip_suffix)
     : XttMethodToolbar(
-          parent_ctx, xnav, op_method_mask, mnt_method_mask, tooltip_suffix),
-      m_timerid(0)
+          parent_ctx, xnav, op_method_mask, mnt_method_mask, tooltip_suffix)
 {
   for (int i = 0; i < 64; i++) {
     m_cb[i].mt = this;
@@ -62,14 +63,12 @@ XttMethodToolbarQt::XttMethodToolbarQt(void* parent_ctx, void* xnav,
   }
 
   object = new XttMethodToolbarQtObject(this);
+  m_timerid = new QTimer(object);
 }
 
 XttMethodToolbarQt::~XttMethodToolbarQt()
 {
   debug_print("XttMethodToolbarQt::~XttMethodToolbarQt\n");
-  if (m_timerid) {
-    delete m_timerid;
-  }
   if (m_toolbar_w) {
     delete m_toolbar_w;
   }
@@ -157,20 +156,12 @@ QWidget* XttMethodToolbarQt::build()
 
 void XttMethodToolbarQt::set_sensitive()
 {
-  if (m_timerid) {
-    delete m_timerid;
-  }
-
-  m_timerid = new QTimer(object);
-  m_timerid->setSingleShot(true);
-  QObject::connect(
-      m_timerid, SIGNAL(triggered()), object, SLOT(set_sensitive_cb()));
-  m_timerid->start(400);
+  initOneShotTimer(m_timerid, SLOT(set_sensitive_cb()), 400);
 }
 
 void XttMethodToolbarQtObject::set_sensitive_cb()
 {
-  toolbar->m_timerid = 0;
+  toolbar->m_timerid->stop();
   toolbar->set_current_sensitive();
 }
 

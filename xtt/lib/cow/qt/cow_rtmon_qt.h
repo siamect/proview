@@ -45,7 +45,6 @@
 
 #include <QAction>
 #include <QLabel>
-#include <QTimer>
 #include <QWidget>
 
 class RtMonQtWidget;

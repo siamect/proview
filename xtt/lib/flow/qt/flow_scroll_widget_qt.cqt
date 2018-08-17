@@ -45,6 +45,8 @@
 
 #include "flow_scroll_widget_qt.h"
 
+#include <QTimer>
+
 void QtScrollWidgetFlow::createBuffer(QSize size)
 {
   this->image = QImage(size, QImage::Format_RGB32);
@@ -63,6 +65,7 @@ void QtScrollWidgetFlow::init(unsigned int eCtxType,
   this->init_proc = init_proc;
   this->init_widget_proc = init_proc2;
   this->client_data = client_data;
+  this->scroll_timerid = new QTimer(this);
 }
 
 QWidget* QtScrollWidgetFlow::initScroll(unsigned int eCtxType,
@@ -76,6 +79,7 @@ QWidget* QtScrollWidgetFlow::initScroll(unsigned int eCtxType,
   this->init_proc = init_proc;
   this->init_widget_proc = init_proc2;
   this->client_data = client_data;
+  this->scroll_timerid = new QTimer(this);
   QScrollArea* form = new QScrollArea();
   scroll_h = form->horizontalScrollBar();
   scroll_v = form->verticalScrollBar();
@@ -95,6 +99,7 @@ void QtScrollWidgetFlow::init(unsigned int eCtxType, QWidget* main)
   setFocusPolicy(Qt::StrongFocus);
   setMouseTracking(true);
   this->ctxType = eCtxType;
+  this->scroll_timerid = new QTimer(this);
   is_navigator = 1;
   main_widget = main;
 }
@@ -104,7 +109,7 @@ void QtScrollWidgetFlow::scroll_callback_cb()
   flow_sScroll* data = &this->scroll_data;
   widget_sScroll* scroll_data = (widget_sScroll*)data->scroll_data;
 
-  scroll_timerid = 0;
+  scroll_timerid->stop();
 
   if (data->total_width <= data->window_width) {
     if (data->offset_x == 0) {
@@ -217,9 +222,6 @@ void QtScrollWidgetFlow::closeEvent(QCloseEvent* event)
   debug_print("QtScrollWidgetFlow::closeEvent\n");
   if (!destroyed) {
     destroyed = 1;
-    if (scroll_timerid) {
-      delete scroll_timerid;
-    }
     if (is_navigator && parent_ctx) {
       if (!((QtScrollWidgetFlow*)main_widget)->destroyed) {
         ((FlowCtx*)parent_ctx)->no_nav = 1;

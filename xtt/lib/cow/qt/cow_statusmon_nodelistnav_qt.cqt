@@ -43,6 +43,7 @@
 #include "flow_browwidget_qt.h"
 
 #include <QApplication>
+#include <QTimer>
 
 NodelistNavQt::NodelistNavQt(void* nodelist_parent_ctx,
     QWidget* nodelist_parent_wid, MsgWindow* nodelist_msg_window,
@@ -87,6 +88,12 @@ void NodelistNavQt::trace_start()
   trace_obj->trace_scan();
 }
 
+NodelistNavQtTraceObject::NodelistNavQtTraceObject(NodelistNavQt* parent)
+    : QWidget(), nodelistnav(parent)
+{
+  trace_timerid = new QTimer(this);
+}
+
 void NodelistNavQtTraceObject::trace_scan()
 {
   if (nodelistnav->trace_started) {
@@ -94,9 +101,6 @@ void NodelistNavQtTraceObject::trace_scan()
 
     brow_TraceScan(nodelistnav->brow->ctx);
 
-    trace_timerid = new QTimer();
-    trace_timerid->setSingleShot(true);
-    connect(trace_timerid, SIGNAL(timeout()), this, SLOT(trace_scan()));
-    trace_timerid->start(nodelistnav->scantime);
+    initOneShotTimer(trace_timerid, SLOT(trace_scan()), nodelistnav->scantime);
   }
 }

@@ -110,4 +110,6 @@ void add_expanding(QLayout* layout, QLayout* widget);
 
 QFrame* wrapInFrame(QFrame* widget);
 
+void initOneShotTimer(QTimer* timer, const char* slot, int time);
+
 #endif // QT_HELPERS_H

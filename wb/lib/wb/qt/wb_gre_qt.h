@@ -53,6 +53,8 @@ public:
   QWidget* nav_shell;
   QWidget* nav_widget;
 
+  QTimer* trace_timerid;
+
   WGreQt(void* parent_ctx, QWidget* parent_wid, const char* name);
   ~WGreQt();
 
@@ -80,7 +82,6 @@ public slots:
 
 private:
   WGreQt* wgre;
-  QTimer* trace_timerid;
 };
 
 #endif

@@ -45,15 +45,8 @@ static void scroll_callback(glow_sScroll* data)
   widget_sScroll* scroll_data = (widget_sScroll*)data->scroll_data;
   QtScrollWidgetGlow* grow = ((QtScrollWidgetGlow*)scroll_data->parent);
 
-  if (grow->scroll_timerid) {
-    delete grow->scroll_timerid;
-  }
+  initOneShotTimer(grow->scroll_timerid, SLOT(scroll_callback_cb()), 200);
 
-  grow->scroll_timerid = new QTimer();
-  grow->scroll_timerid->setSingleShot(true);
-  QObject::connect(grow->scroll_timerid, SIGNAL(timeout()), grow,
-      SLOT(scroll_callback_cb()));
-  grow->scroll_timerid->start(200);
   grow->scroll_data = *data;
 }
 

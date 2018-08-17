@@ -46,6 +46,7 @@
 #include "ge_subgraphs_qt.h"
 
 #include <QMenuBar>
+#include <QTimer>
 #include <QVBoxLayout>
 
 void SubGraphsQtWidget::closeEvent(QCloseEvent* event)
@@ -185,17 +186,18 @@ void SubGraphsQt::trace_start()
   toplevel->trace_scan();
 }
 
+SubGraphsQtWidget::SubGraphsQtWidget(SubGraphsQt* parent_ctx, QWidget* parent)
+    : QWidget(), subgraphs(parent_ctx)
+{
+  trace_timerid = new QTimer(this);
+}
+
 void SubGraphsQtWidget::trace_scan()
 {
-  int time = 200;
-
   if (subgraphs->trace_started) {
     brow_TraceScan(subgraphs->brow->ctx);
 
-    trace_timerid = new QTimer(this);
-    trace_timerid->setSingleShot(true);
-    connect(trace_timerid, SIGNAL(timeout()), this, SLOT(trace_scan()));
-    trace_timerid->start(time);
+    initOneShotTimer(trace_timerid, SLOT(trace_scan()), 200);
   }
 }
 

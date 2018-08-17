@@ -44,7 +44,6 @@
 #endif
 
 #include <QObject>
-#include <QTimer>
 #include <QWidget>
 
 class AttrNavQtTraceObject;
@@ -72,9 +71,7 @@ class AttrNavQtTraceObject : public QObject {
   Q_OBJECT
 
 public:
-  AttrNavQtTraceObject(AttrNavQt* parent) : QObject(), attrnav(parent)
-  {
-  }
+  AttrNavQtTraceObject(AttrNavQt* parent);
   ~AttrNavQtTraceObject();
 
 public slots:

@@ -45,7 +45,6 @@
 #include "cow_statusmon_nodelistnav.h"
 #endif
 
-#include <QTimer>
 #include <QWidget>
 
 class NodelistNavQtTraceObject;
@@ -75,10 +74,7 @@ class NodelistNavQtTraceObject : public QWidget {
   Q_OBJECT
 
 public:
-  NodelistNavQtTraceObject(NodelistNavQt* parent)
-      : QWidget(), nodelistnav(parent)
-  {
-  }
+  NodelistNavQtTraceObject(NodelistNavQt* parent);
 
 public slots:
   void trace_scan();
