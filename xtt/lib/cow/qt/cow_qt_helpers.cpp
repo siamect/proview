@@ -363,6 +363,7 @@ QFrame* wrapInFrame(QFrame* widget)
 
 void initOneShotTimer(QTimer* timer, const char* slot, int time)
 {
+  QObject::disconnect(timer, 0, 0, 0);
   timer->setSingleShot(true);
   QObject::connect(timer, SIGNAL(timeout()), timer->parent(), slot);
   timer->start(time);
