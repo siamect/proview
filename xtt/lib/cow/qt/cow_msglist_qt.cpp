@@ -48,10 +48,6 @@ MsgListQt::MsgListQt(void* ev_parent_ctx, QWidget* ev_parent_wid, QWidget** w)
   form_widget
       = scrolledbrowwidgetqt_new(MsgList::init_brow_cb, this, &brow_widget);
 
-  // The widget is not realized until it has processed a show event. By calling
-  // widget->show(), Qt processes the show event at some arbitrary time in the
-  // future. But in order to use the widget, we need to realize it NOW!
-  // This way, we force Qt to process the show() event immediately.
   showNow(brow_widget);
 
   // Create the root item

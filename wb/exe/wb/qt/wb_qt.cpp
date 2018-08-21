@@ -63,7 +63,6 @@ Wtt* WbQt::wtt_new(const char* name, const char* iconname,
     ldh_tWBContext ldhwbctx, pwr_tVolumeId volid, ldh_tVolume volctx,
     wnav_sStartMenu* root_menu, pwr_tStatus* status)
 {
-  debug_print("Creating a WttQt\n");
   return new WttQt(
       0, toplevel, name, iconname, ldhwbctx, volid, volctx, root_menu, status);
 }
@@ -273,14 +272,15 @@ WbQt::WbQt(int argc, char* argv[]) : mainwindow(0)
   }
 
   if (sw_projectvolume && !login_display) {
-    Wtt* wtt;
     char projectname[80];
     pwr_tVolumeId volume = ldh_cDirectoryVolume;
     utl_get_projectname(projectname);
     strcpy(title, CoLogin::username());
     strcat(title, " on ");
     strcat(title, projectname);
-    wtt = wtt_new(title, "Navigator", wbctx, volume, 0, 0, &sts);
+    debug_print("Opening project volume %s\n", projectname);
+    Wtt* wtt = wtt_new(title, "Navigator", wbctx, volume, 0, 0, &sts);
+    debug_print("Opening project volume sts=%d\n", sts);
     if (ODD(sts)) {
       appl_count++;
       wtt->close_cb = Wb::wtt_close;
@@ -291,11 +291,14 @@ WbQt::WbQt(int argc, char* argv[]) : mainwindow(0)
       psts(sts, NULL);
     }
   } else if (sw_classeditor) {
+    debug_print("Opening class editor\n");
     wtt_open_volume(
         0, wb_eType_ClassEditor, filename, wow_eFileSelType_WblClass);
   } else if (sw_projectlist) {
+    debug_print("Opening project list\n");
     wtt_open_volume(0, wb_eType_ExternVolume, "ProjectList", wow_eFileSelType_);
   } else if (nav_display && !login_display) {
+    debug_print("Opening navigator\n");
     if (CoLogin::privilege() & pwr_mPrv_DevRead) {
       strcpy(title, "PwR Navigator: ");
       strcat(title, CoLogin::username());
@@ -308,7 +311,7 @@ WbQt::WbQt(int argc, char* argv[]) : mainwindow(0)
       exit(LOGIN__NOPRIV);
     }
   } else if (login_display) {
-    debug_print("Creating a CoLoginQt\n");
+    debug_print("Opening a CoLoginQt\n");
     new CoLoginQt(NULL, mainwindow, "PwR Login", systemgroup,
         &Wb::login_success, &Wb::login_cancel, 0, &sts);
   }

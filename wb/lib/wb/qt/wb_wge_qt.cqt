@@ -40,6 +40,7 @@
 
 #include "wb_wge_qt.h"
 
+#include <QApplication>
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QVBoxLayout>
@@ -170,6 +171,8 @@ void WGeQt::set_size(int width, int height)
 void WGeQt::set_subwindow_release()
 {
   subwindow_release = 1;
+  debug_print("Shutting down...\n");
+  QApplication::exit();
 }
 
 void WGeQt::pop()
@@ -182,6 +185,8 @@ void WGeQtWidget::closeEvent(QCloseEvent* event)
   debug_print("WGeQtWidget::closeEvent\n");
   if (ge->modal) {
     ge->terminated = 1;
+    debug_print("Shutting down...\n");
+    QApplication::exit();
   } else {
     delete ge;
   }
@@ -235,7 +240,6 @@ WGeQt::WGeQt(QWidget* wge_parent_wid, void* wge_parent_ctx, char* wge_name,
   QObject::connect(((GraphQt*)graph)->grow_widget,
       SIGNAL(resize_signal(QResizeEvent*)), toplevel,
       SLOT(action_resize(QResizeEvent*)));
-  // TODO: grow_widget must emit a resize_signal signal in resizeEvent()
 
   if (wge_menu) {
     QMenuBar* menu_bar = new QMenuBar();
@@ -266,6 +270,8 @@ WGeQt::WGeQt(QWidget* wge_parent_wid, void* wge_parent_ctx, char* wge_name,
 
   toplevel->setLayout(graph_form);
   toplevel->show();
+
+  debug_print("Should be visible now...\n");
 
   if (navigator) {
     // Create navigator popup

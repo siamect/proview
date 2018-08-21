@@ -59,6 +59,7 @@
 #include "wb_wrev_qt.h"
 #include "wb_xcrr_qt.h"
 
+#include <QApplication>
 #include <QColor>
 #include <QInputDialog>
 #include <QLayout>
@@ -447,10 +448,14 @@ WAttText* WNavQt::watttext_new(
 
 void WNavQt::wge_subwindow_loop(WGe* wge)
 {
+  debug_print(" before wge_subwindow_loop\n");
+  QApplication::exec();
+  debug_print(" after wge_subwindow_loop\n");
 }
 
 void WNavQt::wge_modal_loop(WGe* wge)
 {
+  QApplication::exec();
 }
 
 void WNavQt::message_dialog(char* title, char* text)

@@ -93,7 +93,7 @@ static char font_names[draw_eFont__][DRAW_FONT_SIZE][80]
             "-*-Helvetica-Medium-R-Normal--18-*-*-*-P-*-ISO8859-1",
             "-*-Helvetica-Medium-R-Normal--24-*-*-*-P-*-ISO8859-1" } };
 
-static QMouseEvent *last_event;
+static QMouseEvent* last_event;
 
 static QColor flow_allocate_color(
     FlowDrawQt* draw_ctx, const char* named_color);
@@ -253,7 +253,8 @@ void FlowDrawQt::delete_secondary_ctx(FlowCtx* ctx)
 FlowDrawQt::FlowDrawQt(QWidget* x_toplevel, void** flow_ctx,
     int (*init_proc)(QWidget* w, FlowCtx* ctx, void* client_data),
     void* client_data, flow_eCtxType type)
-    : toplevel(x_toplevel), nav_toplevel(0), window(0), nav_window(0), closing_down(0)
+    : toplevel(x_toplevel), nav_toplevel(0), window(0), nav_window(0),
+      closing_down(0)
 {
   timer_id = new QTimer(this);
 
@@ -331,8 +332,8 @@ int FlowDrawQt::event_handler(QEvent* event)
     switch (event->type()) {
     case QEvent::KeyPress: {
       QKeyEvent* keyEvent = ((QKeyEvent*)event);
-      debug_print("event_handler: KeyPress key=%s\n",
-          QKeySequence(keyEvent->key()).toString().toAscii().data());
+      // debug_print("event_handler: KeyPress key=%s\n",
+      // QKeySequence(keyEvent->key()).toString().toAscii().data());
 
       switch (keyEvent->key()) {
       case Qt::Key_Return:
@@ -396,10 +397,9 @@ int FlowDrawQt::event_handler(QEvent* event)
     }
     case QEvent::MouseButtonPress: {
       QMouseEvent* mouseEvent = ((QMouseEvent*)event);
-      debug_print("event_handler: MouseButtonPress button=%d, x=%d, y=%d, "
-                  "globalX=%d, globalY=%d\n",
-          mouseEvent->button(), mouseEvent->x(), mouseEvent->y(),
-          mouseEvent->globalX(), mouseEvent->globalY());
+      // debug_print("event_handler: MouseButtonPress button=%d, x=%d, y=%d,
+      // globalX=%d, globalY=%d\n", mouseEvent->button(), mouseEvent->x(),
+      // mouseEvent->y(), mouseEvent->globalX(), mouseEvent->globalY());
       switch (mouseEvent->button()) {
       case Qt::LeftButton:
         basectx->event_handler(
@@ -474,7 +474,7 @@ int FlowDrawQt::event_handler(QEvent* event)
         event_timer(mouseEvent);
         return 1;
       } else {
-        debug_print("event_handler: MouseButtonPress from timer\n");
+        // debug_print("event_handler: MouseButtonPress from timer\n");
         /* Press event, callback from timer */
         button_pressed = 0;
         button_clicked_and_pressed = 0;
@@ -533,8 +533,8 @@ int FlowDrawQt::event_handler(QEvent* event)
     }
     case QEvent::MouseButtonRelease: {
       QMouseEvent* mouseEvent = ((QMouseEvent*)event);
-      debug_print("event_handler: MouseButtonRelease button=%d\n",
-          mouseEvent->button());
+      // debug_print("event_handler: MouseButtonRelease button=%d\n",
+      // mouseEvent->button());
       button1_pressed = 0;
       button2_pressed = 0;
       button3_pressed = 0;
@@ -777,7 +777,7 @@ int FlowDrawQt::event_handler(QEvent* event)
     case QEvent::FocusOut:
       break;
     case QEvent::Wheel: {
-      debug_print("event_handler: Wheel\n");
+      // debug_print("event_handler: Wheel\n");
       QWheelEvent* wheelEvent = ((QWheelEvent*)event);
       if (wheelEvent->delta() > 0) {
         sts = basectx->event_handler(flow_eEvent_ScrollUp, 0, 0, 0, 0);
@@ -793,8 +793,8 @@ int FlowDrawQt::event_handler(QEvent* event)
     switch (event->type()) {
     case QEvent::MouseButtonPress: {
       QMouseEvent* mouseEvent = ((QMouseEvent*)event);
-      debug_print(
-          "event_handler: MouseButtonPress button=%d\n", mouseEvent->button());
+      // debug_print("event_handler: MouseButtonPress button=%d\n",
+      // mouseEvent->button());
       switch (mouseEvent->button()) {
       case Qt::LeftButton: // Button1
         button1_pressed = 1;
@@ -816,8 +816,8 @@ int FlowDrawQt::event_handler(QEvent* event)
     }
     case QEvent::MouseButtonRelease: {
       QMouseEvent* mouseEvent = ((QMouseEvent*)event);
-      debug_print("event_handler: MouseButtonRelease button=%d\n",
-          mouseEvent->button());
+      // debug_print("event_handler: MouseButtonRelease button=%d\n",
+      // mouseEvent->button());
       switch (mouseEvent->button()) {
       case Qt::LeftButton: // Button1
         button1_pressed = 0;
@@ -847,7 +847,7 @@ int FlowDrawQt::event_handler(QEvent* event)
       break;
     }
     case QEvent::MouseMove: {
-      debug_print("event_handler: MouseMove\n");
+      // debug_print("event_handler: MouseMove\n");
       QPoint pos = QCursor::pos();
       if (button1_pressed || button2_pressed || button3_pressed) {
         sts = basectx->event_handler_nav(
@@ -1223,7 +1223,8 @@ static QFont font(flow_eDrawType painter_type, double size)
 {
   QFont res(FONTSTR);
   res.setPointSizeF(FONT_SCALE * size);
-  if (painter_type == flow_eDrawType_TextHelveticaBold || painter_type == flow_eDrawType_TextHelveticaEraseBold) {
+  if (painter_type == flow_eDrawType_TextHelveticaBold
+      || painter_type == flow_eDrawType_TextHelveticaEraseBold) {
     res.setWeight(QFont::Bold);
   }
   return res;
@@ -1373,7 +1374,7 @@ int FlowDrawQt::pixmaps_create(
 {
   draw_sPixmap* pms;
   flow_sPixmapDataElem *prev_pdata = NULL,
-      *pdata = (flow_sPixmapDataElem *)pixmap_data;
+                       *pdata = (flow_sPixmapDataElem *)pixmap_data;
   int i;
 
   pms = new draw_sPixmap();
@@ -1598,8 +1599,8 @@ void FlowDrawQt::get_window_size(FlowCtx* ctx, int* width, int* height)
 
 void FlowDrawQt::get_nav_window_size(FlowCtx* ctx, int* width, int* height)
 {
-  debug_print(
-      "get_nav_window_size, nav_window == NULL ? %d\n", (nav_window == NULL));
+  // debug_print("get_nav_window_size, nav_window == NULL ? %d\n", (nav_window
+  // == NULL));
   *width = nav_window->width();
   *height = nav_window->height();
 }
@@ -1634,12 +1635,13 @@ void FlowDrawQt::cancel_event_timer()
   }
 }
 
-void FlowDrawQt::event_timer(QMouseEvent *event)
+void FlowDrawQt::event_timer(QMouseEvent* event)
 {
   if (last_event) {
     delete last_event;
   }
-  last_event = new QMouseEvent(event->type(), event->pos(), event->globalPos(), event->button(), event->buttons(), event->modifiers());
+  last_event = new QMouseEvent(event->type(), event->pos(), event->globalPos(),
+      event->button(), event->buttons(), event->modifiers());
 
   initOneShotTimer(timer_id, SLOT(event_timer_cb()), 200);
 }
@@ -1743,7 +1745,7 @@ void FlowDrawQt::copy_area(FlowCtx* ctx, int x, int y)
     return;
   }
 
-  debug_print("copy_area: x=%d, y=%d\n", x, y);
+  // debug_print("copy_area: x=%d, y=%d\n", x, y);
 
   QPixmap screenShot = QPixmap::grabWidget(window);
   QPainter* painter = get_painter(flow_eDrawType_Line, 3);
@@ -1810,7 +1812,7 @@ void FlowDrawQt::clear_area(
 
 void FlowDrawQt::set_inputfocus(FlowCtx* ctx)
 {
-  debug_print("set_inputfocus\n");
+  // debug_print("set_inputfocus\n");
   window->setFocus(Qt::OtherFocusReason);
 }
 
@@ -1869,6 +1871,7 @@ void FlowDrawQt::image_scale(float scale, flow_tImImage orig_im,
   if (*im) {
     delete ((QImage*)*im);
   }
+  // debug_print("image_scale\n");
   *im = new QImage(((QImage*)orig_im)->scaled(width, height));
 }
 
@@ -1882,7 +1885,7 @@ int FlowDrawQt::image_load(const char* imagefile, float scale, float nav_scale,
 
   strcpy(filename, imagefile);
 
-  debug_print("image_load %s\n", imagefile);
+  // debug_print("image_load %s\n", imagefile);
 
   // Look for file in $pwrp_exe, $pwr_doc/en_us/orm and $pwr_exe
   for (int i = 0; i < 3; i++) {

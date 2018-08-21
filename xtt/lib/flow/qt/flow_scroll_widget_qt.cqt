@@ -49,6 +49,9 @@
 
 void QtScrollWidgetFlow::createBuffer(QSize size)
 {
+  if (size.isEmpty()) {
+    return;
+  }
   this->image = QImage(size, QImage::Format_RGB32);
   QPainter imPainter(&image);
   imPainter.fillRect(image.rect(), palette().color(QPalette::Background));
@@ -253,8 +256,7 @@ bool QtScrollWidgetFlow::event(QEvent* event)
   if (event->type() == QEvent::Resize) {
     createBuffer(((QResizeEvent*)event)->size());
   }
-  if (!is_realized
-      && (event->type() == QEvent::Show || event->type() == QEvent::Resize)) {
+  if (!is_realized && event->type() == QEvent::Show) {
     realize();
     is_realized = true;
   }

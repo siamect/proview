@@ -141,7 +141,7 @@ static char font_names[glow_eFont__][glow_eDrawFont__][DRAW_FONT_SIZE][80] = {
           "-*-courier-Medium-R-Normal--24-*-*-*-m-*-ISO8859-1" } }
 };
 
-static QMouseEvent *last_event;
+static QMouseEvent* last_event;
 
 static QColor glow_allocate_named_color(
     GlowDrawQt* draw_ctx, const char* named_color);
@@ -179,14 +179,13 @@ static QColor draw_type_to_color(
       QColor* color_array;
       int sts = glow_read_color_file(
           "/home/claes/test/ge_colors.dat", &color_array, &size);
-      if (sts) {
-        QColor* color_p = color_array + (painter_type - glow_eDrawType_Color4);
+      if (ODD(sts)) {
+        QColor color_p = color_array[painter_type - glow_eDrawType_Color4];
         QColor color = glow_allocate_color(
-            draw_ctx, color_p->red(), color_p->green(), color_p->blue());
+            draw_ctx, color_p.red(), color_p.green(), color_p.blue());
         delete color_array;
         return color;
       }
-      return glow_allocate_named_color(draw_ctx, "black");
     }
 
     double r, g, b;
@@ -970,8 +969,12 @@ int GlowDrawQt::rect_helper(GlowWind* wind, int painter_type, int size, int x,
   }
 
   if (fill) {
+    // debug_print("fillRect [%d, %d, %d, %d] painter_type=%d, with color %s\n",
+    // x, y, width, height, painter_type,
+    // qPrintable(painter->brush().color().name()));
     painter->fillRect(x, y, width, height, painter->brush());
   } else {
+    // debug_print("drawRect [%d, %d, %d, %d]\n", x, y, width, height);
     painter->setBrush(Qt::NoBrush);
     painter->drawRect(x, y, width, height);
   }
@@ -1019,6 +1022,7 @@ int GlowDrawQt::arrow_helper(GlowWind* wind, int painter_type, int size, int x1,
 
   QPainterPath path;
   path.addPolygon(poly);
+  // debug_print("arrow (%d, %d) (%d, %d) (%d, %d)\n", x1, y1, x2, y2, x3, y3);
   painter->fillPath(path, painter->brush());
   delete painter;
 
@@ -1072,8 +1076,12 @@ int GlowDrawQt::arc_helper(GlowWind* wind, int painter_type, int size, int x,
   }
 
   if (fill) {
+    // debug_print("pie [%d, %d, %d, %d], %d, %d\n", x, y, width, height, angle1
+    // * 64, angle2 * 64);
     painter->drawPie(x, y, width, height, angle1 * 64, angle2 * 64);
   } else {
+    // debug_print("arc [%d, %d, %d, %d], %d, %d\n", x, y, width, height, angle1
+    // * 64, angle2 * 64);
     painter->setBrush(Qt::NoBrush);
     painter->drawArc(x, y, width, height, angle1 * 64, angle2 * 64);
   }
@@ -1206,6 +1214,7 @@ int GlowDrawQt::line_helper(GlowWind* wind, int painter_type, int size, int x1,
     painter->setPen(pen);
   }
 
+  // debug_print("line (%d, %d) (%d, %d)\n", x1, y1, x2, y2);
   painter->drawLine(x1, y1, x2, y2);
 
   delete painter;
@@ -1271,6 +1280,8 @@ int GlowDrawQt::polyline_helper(GlowWind* wind, int painter_type, int size,
   if (!fill) {
     painter->setBrush(Qt::NoBrush);
   }
+  // debug_print("polyline painter_type=%d, fill=%d, point_cnt=%d\n",
+  // painter_type, fill, point_cnt);
   painter->drawPolygon(qpoints, point_cnt);
 
   delete qpoints;
@@ -1484,6 +1495,7 @@ int GlowDrawQt::image_helper(GlowWind* wind, int x, int y, int width,
     set_clip(w, painter);
   }
 
+  // debug_print("image [%d, %d, %d, %d]\n", x, y, width, height);
   if (d) {
     painter->drawImage(QPoint(x, y), *((QImage*)image));
   } else {
@@ -1599,12 +1611,13 @@ void GlowDrawQt::cancel_event_timer()
   timer_id->stop();
 }
 
-void GlowDrawQt::event_timer(QMouseEvent *event)
+void GlowDrawQt::event_timer(QMouseEvent* event)
 {
   if (last_event) {
     delete last_event;
   }
-  last_event = new QMouseEvent(event->type(), event->pos(), event->globalPos(), event->button(), event->buttons(), event->modifiers());
+  last_event = new QMouseEvent(event->type(), event->pos(), event->globalPos(),
+      event->button(), event->buttons(), event->modifiers());
 
   initOneShotTimer(timer_id, SLOT(event_timer_cb()), 200);
 }
@@ -1686,7 +1699,8 @@ int GlowDrawQt::get_text_extent(const char* text, int len,
 
   int font_type = get_font_type(painter_type);
 
-  QFontMetrics fontMetrics = QFontMetrics(QFont(font_names[font_idx][font_type][idx]));
+  QFontMetrics fontMetrics
+      = QFontMetrics(QFont(font_names[font_idx][font_type][idx]));
   QRect rect = fontMetrics.boundingRect(QString::fromLocal8Bit(text, len));
   *width = rect.width();
   int text_ascent = fontMetrics.ascent();
@@ -1849,6 +1863,8 @@ void GlowDrawQt::set_background(GlowWind* wind, glow_eDrawType drawtype,
     if (w->background_pixmap) {
       delete w->background_pixmap;
     }
+
+    // debug_print("set_background\n");
 
     *(w->background_pixmap) = QPixmap::fromImage(*((QImage*)image));
     w->background_pixmap_width = pixmap_width;
@@ -2392,7 +2408,9 @@ void GlowDrawQt::image_copy(glow_tImImage orig_image, glow_tImImage* image)
     delete ((QImage*)*image);
   }
 
-  *(*((QImage**)image)) = ((QImage*)orig_image)->copy();
+  // debug_print("image_copy\n");
+
+  *image = new QImage(((QImage*)orig_image)->copy());
 }
 
 void GlowDrawQt::image_rotate(
@@ -2402,6 +2420,9 @@ void GlowDrawQt::image_rotate(
   drot = int((float(drot) / 360 - floor(float(drot) / 360)) * 360);
   QTransform trans;
   trans.rotate(drot);
+
+  // debug_print("image_rotate\n");
+
   QImage* im = new QImage(((QImage*)*image)->transformed(trans));
   delete ((QImage*)*image);
   *image = (glow_tImImage)im;
@@ -2409,6 +2430,8 @@ void GlowDrawQt::image_rotate(
 
 void GlowDrawQt::image_flip_vertical(glow_tImImage* image)
 {
+  // debug_print("image_flip_vertical\n");
+
   QImage* im = new QImage(((QImage*)*image)->mirrored());
   delete ((QImage*)*image);
   *image = (glow_tImImage)im;
@@ -2416,6 +2439,8 @@ void GlowDrawQt::image_flip_vertical(glow_tImImage* image)
 
 void GlowDrawQt::image_flip_horizontal(glow_tImImage* image)
 {
+  // debug_print("image_flip_horizontal\n");
+
   QImage* im = new QImage(((QImage*)*image)->mirrored(true, false));
   delete ((QImage*)*image);
   *image = (glow_tImImage)im;
@@ -2425,6 +2450,8 @@ int GlowDrawQt::image_scale(int width, int height, glow_tImImage orig_im,
     glow_tImImage* im, glow_tImData* im_data, glow_tPixmap* im_pixmap,
     glow_tPixmap* im_mask)
 {
+  // debug_print("image_scale\n");
+
   if (width == ((QImage*)*im)->width() && height == ((QImage*)*im)->height()) {
     return 0;
   }
@@ -2485,7 +2512,7 @@ int GlowDrawQt::image_load(char* imagefile, glow_tImImage* orig_im,
   } else
 #endif
   {
-    *orig_im = ((glow_tImImage*)new QImage(imagefile));
+    *orig_im = new QImage(imagefile);
     if (!*orig_im) {
       if (im) {
         *im = 0;
@@ -2494,7 +2521,7 @@ int GlowDrawQt::image_load(char* imagefile, glow_tImImage* orig_im,
     }
   }
   if (im) {
-    *((QImage*)*im) = ((QImage*)*orig_im)->copy();
+    *im = new QImage(((QImage*)*orig_im)->copy());
   }
   return 1;
 }
@@ -2522,6 +2549,8 @@ void GlowDrawQt::image_pixel_iter(glow_tImImage orig_image,
   int rgb_height;
   int rgb_width;
   int rowstride;
+
+  // debug_print("image_pixel_iter\n");
 
   if (orig_image) {
     if (image && *image != orig_image) {
@@ -3368,7 +3397,7 @@ void GlowDrawQt::event_exec(void* event, unsigned int size)
     return;
   }
 
-  memcpy((void *)&e, (void *)event, size);
+  memcpy((void*)&e, (void*)event, size);
   // e.any.window = m_wind->window;
 
   switch (e.type()) {
