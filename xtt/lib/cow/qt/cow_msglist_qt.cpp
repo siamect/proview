@@ -44,7 +44,6 @@
 MsgListQt::MsgListQt(void* ev_parent_ctx, QWidget* ev_parent_wid, QWidget** w)
     : MsgList(ev_parent_ctx)
 {
-  debug_print("creating a scrolledbrowwidgetqt\n");
   form_widget
       = scrolledbrowwidgetqt_new(MsgList::init_brow_cb, this, &brow_widget);
 
@@ -56,7 +55,6 @@ MsgListQt::MsgListQt(void* ev_parent_ctx, QWidget* ev_parent_wid, QWidget** w)
 
 MsgListQt::~MsgListQt()
 {
-  debug_print("MsgListQt::~MsgListQt\n");
   delete brow;
   form_widget->close();
 }

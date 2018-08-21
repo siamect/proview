@@ -42,15 +42,15 @@
 #include "cow_wow_qt.h"
 #include "cow_xhelp.h"
 
+#include <QCloseEvent>
 #include <QMenu>
 #include <QMenuBar>
 #include <QVBoxLayout>
 
 void MsgWindowQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("MsgWindowQtWidget::closeEvent\n");
   activate_exit();
-  QWidget::closeEvent(event);
+  event->ignore();
 }
 
 MsgWindowQt::MsgWindowQt(void* msg_parent_ctx, QWidget* msg_parent_wid,
