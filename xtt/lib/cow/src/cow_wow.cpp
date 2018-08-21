@@ -93,7 +93,11 @@ void CoWowRecall::resetTmp()
 
 const char* CoWowRecall::popUp(const char* src)
 {
-  strncpy(tmp[m_current_recall_line], src, m_line_size);
+  if (m_current_recall_line == 0 && strcmp(src, tmp[0]) != 0) {
+    push(src);
+  } else {
+    strncpy(tmp[m_current_recall_line], src, m_line_size);
+  }
   m_current_recall_line++;
   if (m_current_recall_line > m_current_size - 1) {
     m_current_recall_line = m_current_size - 1;
