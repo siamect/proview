@@ -303,7 +303,7 @@ WRevInputDialog::WRevInputDialog(WRevQt* parent_ctx, QWidget* parent,
   hboxtext2->addWidget(india_label2);
   add_expanding(hboxtext2, india_text2);
 
-  QVBoxLayout* vbox = new QVBoxLayout(this);
+  QVBoxLayout* vbox = new QVBoxLayout();
   add_expanding(vbox, hboxtext1);
   add_expanding(vbox, hboxtext2);
   vbox->addWidget(separator(QFrame::HLine));

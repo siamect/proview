@@ -1384,7 +1384,7 @@ static int add_func(menu_ctx ctx, int* flag)
     int i;
     int command;
     int object;
-    pwr_tObjid objid;
+    pwr_tObjid objid = {0, 0};
 
     if (EVEN(rtt_get_qualifier("/TEXT", text_str))) {
       rtt_message('E', "Enter text");
@@ -3295,7 +3295,7 @@ static int rtt_create_func(menu_ctx ctx, int* flag)
     int i;
     int command;
     int object;
-    pwr_tObjid objid;
+    pwr_tObjid objid = {0, 0};
 
     if (EVEN(rtt_get_qualifier("/TEXT", text_str))) {
       rtt_message('E', "Enter text");
@@ -5410,7 +5410,7 @@ static int rtt_show_par_hier_class_name(menu_ctx parent_ctx,
   pwr_tObjid hierobjid;
   rtt_t_menu_upd* menulist = 0;
   char title[80] = "SEARCH LIST";
-  pwr_tObjid objid;
+  pwr_tObjid objid = {0, 0};
   char* s;
   int single_object = 0;
   char* t;
@@ -5584,7 +5584,7 @@ static int rtt_debug_obj_hier_class_name(menu_ctx parent_ctx, char* hiername,
   rtt_t_menu_upd* menulist = 0;
   char title[80] = "SEARCH LIST";
   int max_objects = 300;
-  pwr_tObjid objid;
+  pwr_tObjid objid = {0, 0};
   char* s;
   int single_object = 0;
 

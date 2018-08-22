@@ -90,7 +90,7 @@ int FlowPrintDrawQt::print_page(
 
   if (ctx->type() == flow_eCtxType_Brow) {
     QPen pen = QPen(QColor::fromRgbF(0, 0, 0));
-    pen.setWidth(0.5);
+    pen.setWidthF(0.5);
     painter->setPen(pen);
     painter->drawLine(
         print_margin_x, print_margin_y, print_margin_x + width, print_margin_y);

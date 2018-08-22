@@ -67,19 +67,17 @@ int main(int argc, char* argv[])
   int sts;
   char display[80] = "";
 
-  debug_print("pwr_rtmon_qt: started with arguments:\n");
-
-  if (argc > 1) {
-    for (int i = 1; i < argc; i++) {
-      debug_print("arg%d: %s\n", i, argv[i]);
-      if (strcmp(argv[i], "-h") == 0) {
-        usage();
-        debug_print("Shutting down...\n"); exit(0);
-      } else if (strcmp(argv[i], "--display") == 0 && i + 1 < argc) {
-        strncpy(display, argv[i + 1], sizeof(display));
-      }
+  debug_print("%s ", argv[0]);
+  for (int i = 1; i < argc; i++) {
+    fprintf(stderr, "%s ", argv[i]);
+    if (strcmp(argv[i], "-h") == 0) {
+      usage();
+      debug_print("Shutting down...\n"); exit(0);
+    } else if (strcmp(argv[i], "--display") == 0 && i + 1 < argc) {
+      strncpy(display, argv[i + 1], sizeof(display));
     }
   }
+  fprintf(stderr, "\n");
 
   QApplication app(argc, argv);
   QApplication::setStyle(new PwrStyle());

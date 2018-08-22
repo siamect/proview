@@ -1523,7 +1523,7 @@ BootDialog::BootDialog(WttQt* parent_ctx, QWidget* parent)
   connect(boot_list, SIGNAL(itemActivated(QTreeWidgetItem*, int)), this,
       SLOT(boot_row_activated_cb(QTreeWidgetItem*, int)));
 
-  QDialogButtonBox* buttons = new QDialogButtonBox(this);
+  QDialogButtonBox* buttons = new QDialogButtonBox();
   buttons->addButton(QDialogButtonBox::Ok);
   buttons->button(QDialogButtonBox::Ok)->setFixedSize(70, 25);
   buttons->addButton(QDialogButtonBox::Cancel);
@@ -1537,7 +1537,7 @@ BootDialog::BootDialog(WttQt* parent_ctx, QWidget* parent)
   scrolled_window->setWidgetResizable(true);
   scrolled_window->setWidget(boot_list);
 
-  QVBoxLayout* vbox = new QVBoxLayout(this);
+  QVBoxLayout* vbox = new QVBoxLayout();
   add_expanding(vbox, scrolled_window);
   vbox->addWidget(buttons);
 
@@ -2378,11 +2378,11 @@ OptionsDialog::OptionsDialog(WttQt* parent_ctx, QWidget* parent)
   setWindowTitle(fl("Options"));
   setAttribute(Qt::WA_DeleteOnClose);
 
-  QLabel* hier_label = new QLabel(fl("Hierarchy"), this);
-  wtt->enable_comment_w = new QCheckBox(fl("Enable Comment"), this);
-  wtt->enable_revisions_w = new QCheckBox(fl("Enable Revisions"), this);
-  wtt->show_plant_w = new QCheckBox(fl("Plant Configuration"), this);
-  wtt->show_node_w = new QCheckBox(fl("Node Configuration"), this);
+  QLabel* hier_label = new QLabel(fl("Hierarchy"));
+  wtt->enable_comment_w = new QCheckBox(fl("Enable Comment"));
+  wtt->enable_revisions_w = new QCheckBox(fl("Enable Revisions"));
+  wtt->show_plant_w = new QCheckBox(fl("Plant Configuration"));
+  wtt->show_node_w = new QCheckBox(fl("Node Configuration"));
 
   QVBoxLayout* hier_vbox = new QVBoxLayout();
   hier_vbox->addWidget(hier_label);
@@ -2391,14 +2391,14 @@ OptionsDialog::OptionsDialog(WttQt* parent_ctx, QWidget* parent)
   hier_vbox->addWidget(wtt->show_plant_w);
   hier_vbox->addWidget(wtt->show_node_w);
 
-  QLabel* entry_label = new QLabel(fl("Entry"), this);
-  wtt->show_class_w = new QCheckBox(fl("Class"), this);
-  wtt->show_alias_w = new QCheckBox(fl("Alias"), this);
-  wtt->show_descrip_w = new QCheckBox(fl("Description"), this);
-  wtt->show_objref_w = new QCheckBox(fl("Object Reference"), this);
-  wtt->show_objxref_w = new QCheckBox(fl("Object Cross Reference"), this);
-  wtt->show_attrref_w = new QCheckBox(fl("Attribute Reference"), this);
-  wtt->show_attrxref_w = new QCheckBox(fl("Attribute Cross Reference"), this);
+  QLabel* entry_label = new QLabel(fl("Entry"));
+  wtt->show_class_w = new QCheckBox(fl("Class"));
+  wtt->show_alias_w = new QCheckBox(fl("Alias"));
+  wtt->show_descrip_w = new QCheckBox(fl("Description"));
+  wtt->show_objref_w = new QCheckBox(fl("Object Reference"));
+  wtt->show_objxref_w = new QCheckBox(fl("Object Cross Reference"));
+  wtt->show_attrref_w = new QCheckBox(fl("Attribute Reference"));
+  wtt->show_attrxref_w = new QCheckBox(fl("Attribute Cross Reference"));
 
   QVBoxLayout* entry_vbox = new QVBoxLayout();
   entry_vbox->addWidget(entry_label);
@@ -2410,14 +2410,14 @@ OptionsDialog::OptionsDialog(WttQt* parent_ctx, QWidget* parent)
   entry_vbox->addWidget(wtt->show_attrref_w);
   entry_vbox->addWidget(wtt->show_attrxref_w);
 
-  QLabel* build_label = new QLabel(fl("Build"), this);
-  wtt->build_force_w = new QCheckBox(fl("Force"), this);
-  wtt->build_debug_w = new QCheckBox(fl("Debug"), this);
-  wtt->build_crossref_w = new QCheckBox(fl("Crossreference"), this);
-  wtt->build_crossrefsim_w = new QCheckBox(fl("      Simulation"), this);
-  wtt->build_crossrefgraph_w = new QCheckBox(fl("      Graph"), this);
-  wtt->build_manual_w = new QCheckBox(fl("Manual"), this);
-  wtt->build_nocopy_w = new QCheckBox(fl("Disable Copy"), this);
+  QLabel* build_label = new QLabel(fl("Build"));
+  wtt->build_force_w = new QCheckBox(fl("Force"));
+  wtt->build_debug_w = new QCheckBox(fl("Debug"));
+  wtt->build_crossref_w = new QCheckBox(fl("Crossreference"));
+  wtt->build_crossrefsim_w = new QCheckBox(fl("      Simulation"));
+  wtt->build_crossrefgraph_w = new QCheckBox(fl("      Graph"));
+  wtt->build_manual_w = new QCheckBox(fl("Manual"));
+  wtt->build_nocopy_w = new QCheckBox(fl("Disable Copy"));
 
   QVBoxLayout* build_vbox = new QVBoxLayout();
   build_vbox->addWidget(build_label);
@@ -2436,7 +2436,7 @@ OptionsDialog::OptionsDialog(WttQt* parent_ctx, QWidget* parent)
   hbox->addWidget(separator(QFrame::VLine));
   hbox->addLayout(build_vbox);
 
-  QDialogButtonBox* buttons = new QDialogButtonBox(this);
+  QDialogButtonBox* buttons = new QDialogButtonBox();
   buttons->addButton(QDialogButtonBox::Ok);
   buttons->addButton(QDialogButtonBox::Apply);
   buttons->addButton(QDialogButtonBox::Cancel);
@@ -2450,7 +2450,7 @@ OptionsDialog::OptionsDialog(WttQt* parent_ctx, QWidget* parent)
   connect(buttons->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), this,
       SLOT(activate_options_cancel()));
 
-  QVBoxLayout* vbox = new QVBoxLayout(this);
+  QVBoxLayout* vbox = new QVBoxLayout();
   add_expanding(vbox, hbox);
   vbox->addWidget(separator(QFrame::HLine));
   vbox->addWidget(buttons);

@@ -175,9 +175,7 @@ static QPainter* get_painter(
 
 static QColor flow_allocate_color(FlowDrawQt* draw_ctx, const char* named_color)
 {
-  QColor color;
-
-  color = QColor(named_color);
+  QColor color(named_color);
   if (!color.isValid()) {
     color = Qt::black;
   }
@@ -1649,6 +1647,10 @@ void FlowDrawQt::event_timer(QMouseEvent* event)
 void FlowDrawQt::set_timer(
     FlowCtx* ctx, int time_ms, void (*callback_func)(FlowCtx* ctx), void** id)
 {
+  if (timer_cb) {
+    delete timer_cb->timer_id;
+    delete timer_cb;
+  }
   timer_cb = new flow_draw_sTimerCb();
   timer_cb->ctx = ctx;
   timer_cb->callback_func = callback_func;

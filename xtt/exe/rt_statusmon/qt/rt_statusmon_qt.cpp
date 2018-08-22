@@ -69,42 +69,40 @@ int main(int argc, char* argv[])
   int view_descr = 0;
   char language[20] = "";
 
-  debug_print("rt_statusmon_qt: started with arguments:\n");
-
-  if (argc > 1) {
-    for (int i = 1; i < argc; i++) {
-      debug_print("arg%d: %s\n", i, argv[i]);
-      if (strcmp(argv[i], "-h") == 0) {
+  debug_print("%s ", argv[0]);
+  for (int i = 1; i < argc; i++) {
+    fprintf(stderr, "%s ", argv[i]);
+    if (strcmp(argv[i], "-h") == 0) {
+      usage();
+      debug_print("Shutting down...\n"); exit(0);
+    } else if (strcmp(argv[i], "-l") == 0 && i + 1 < argc) {
+      strncpy(language, argv[i + 1], sizeof(language));
+      Lng::set(language);
+    } else if (strcmp(argv[i], "-m") == 0) {
+      if (argc == i) {
         usage();
         debug_print("Shutting down...\n"); exit(0);
-      } else if (strcmp(argv[i], "-l") == 0 && i + 1 < argc) {
-        strncpy(language, argv[i + 1], sizeof(language));
-        Lng::set(language);
-      } else if (strcmp(argv[i], "-m") == 0) {
-        if (argc == i) {
-          usage();
-          debug_print("Shutting down...\n"); exit(0);
-        }
-        if (strcmp(argv[i + 1], "1") == 0) {
-          mode = nodelist_eMode_Status1;
-        } else if (strcmp(argv[i + 1], "2") == 0) {
-          mode = nodelist_eMode_Status2;
-        } else if (strcmp(argv[i + 1], "3") == 0) {
-          mode = nodelist_eMode_Status3;
-        } else if (strcmp(argv[i + 1], "4") == 0) {
-          mode = nodelist_eMode_Status4;
-        } else if (strcmp(argv[i + 1], "5") == 0) {
-          mode = nodelist_eMode_Status5;
-        } else {
-          usage();
-          debug_print("Shutting down...\n"); exit(0);
-        }
-        i++;
-      } else if (strcmp(argv[i], "-e") == 0) {
-        view_descr = 1;
       }
+      if (strcmp(argv[i + 1], "1") == 0) {
+        mode = nodelist_eMode_Status1;
+      } else if (strcmp(argv[i + 1], "2") == 0) {
+        mode = nodelist_eMode_Status2;
+      } else if (strcmp(argv[i + 1], "3") == 0) {
+        mode = nodelist_eMode_Status3;
+      } else if (strcmp(argv[i + 1], "4") == 0) {
+        mode = nodelist_eMode_Status4;
+      } else if (strcmp(argv[i + 1], "5") == 0) {
+        mode = nodelist_eMode_Status5;
+      } else {
+        usage();
+        debug_print("Shutting down...\n"); exit(0);
+      }
+      i++;
+    } else if (strcmp(argv[i], "-e") == 0) {
+      view_descr = 1;
     }
   }
+  fprintf(stderr, "\n");
 
   QApplication app(argc, argv);
   QApplication::setStyle(new PwrStyle());

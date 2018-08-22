@@ -2066,7 +2066,7 @@ static pwr_tStatus io_handle_channels(gdh_sAttrDef* bd, int i, int csize,
   int number = 0;
   pwr_sAttrRef sigchancon;
   pwr_tAName attrname;
-  pwr_tDlid sigdlid;
+  pwr_tDlid sigdlid = {0, 0};
   pwr_tClassId sigclass = 0;
   int sig_found;
   pwr_tStatus sts = 0;
@@ -2324,7 +2324,7 @@ static pwr_tStatus io_init_card(
   pwr_sAttrRef attrref;
   pwr_tObjid chan;
   pwr_tDlid chandlid;
-  pwr_tDlid sigdlid;
+  pwr_tDlid sigdlid = {0, 0};
   pwr_tUInt32 number;
   pwr_tUInt16 maxchan;
   pwr_sAttrRef sigchancon;

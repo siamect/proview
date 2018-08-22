@@ -455,7 +455,9 @@ void WNavQt::wge_subwindow_loop(WGe* wge)
 
 void WNavQt::wge_modal_loop(WGe* wge)
 {
+  debug_print(" before wge_modal_loop\n");
   QApplication::exec();
+  debug_print(" after wge_modal_loop\n");
 }
 
 void WNavQt::message_dialog(char* title, char* text)

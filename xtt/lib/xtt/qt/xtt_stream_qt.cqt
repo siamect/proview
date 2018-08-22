@@ -144,7 +144,7 @@ void XttStreamQt::reconnect(void* data)
       strcpy(luri, strm->uri);
     }
 
-    strm->playbin2->load(Phonon::MediaSource(fl(luri)));
+    strm->playbin2->load(Phonon::MediaSource(QUrl(fl(luri))));
   } else {
     strm->playbin2->play();
   }
@@ -426,7 +426,7 @@ XttStreamQt::XttStreamQt(QWidget* st_parent_wid, void* st_parent_ctx,
     strcpy(luri, uri);
   }
 
-  playbin2->load(Phonon::MediaSource(fl(luri)));
+  playbin2->load(Phonon::MediaSource(QUrl(fl(luri))));
 
   // Set timeout for connection
   /*

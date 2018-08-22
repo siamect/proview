@@ -165,7 +165,7 @@ mvol_sAttribute* mvol_AnameToAttribute(pwr_tStatus* sts, mvol_sAttribute* ap,
   gdb_sObject* abop;
   int offset = 0;
   int i;
-  pwr_tOid oid;
+  pwr_tOid oid = {0, 0};
   pwr_tCid tid;
 
   if (op != NULL)

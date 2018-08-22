@@ -7832,13 +7832,13 @@ static int rtt_menu_new_update_add(menu_ctx parent_ctx,
   pwr_tClassId class;
   unsigned long elements = 0;
   char* parameter_ptr = NULL;
-  SUBID subid;
+  SUBID subid = {0, 0};
   pwr_sParInfo parinfo;
   pwr_tOName objname;
   char* s;
   pwr_tOName name_array[2];
   int nr;
-  pwr_tObjid objid;
+  pwr_tObjid objid = {0, 0};
 
   if (database == RTT_DATABASE_GDH) {
     /* Parse the parameter name into a object and a parameter name */

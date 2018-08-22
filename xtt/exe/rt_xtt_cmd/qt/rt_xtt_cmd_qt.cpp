@@ -85,11 +85,10 @@ int main(int argc, char* argv[])
   /* If arguments, treat them as a command and then exit */
   // Open directory volume as default
 
-  debug_print("rt_xtt_cmd_qt: started with arguments:\n");
-
+  debug_print("%s ", argv[0]);
   str[0] = 0;
   for (i = 1; i < argc; i++) {
-    debug_print("arg%d: %s\n", i, argv[i]);
+    fprintf(stderr, "%s ", argv[i]);
     if (argv[i][0] == '-') {
       switch (argv[i][1]) {
       case 'h':
@@ -117,6 +116,7 @@ int main(int argc, char* argv[])
       strcat(str, argv[i]);
     }
   }
+  fprintf(stderr, "\n");
 
   sts = gdh_Init("rt_xtt_cmd");
   if (EVEN(sts)) {

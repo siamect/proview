@@ -2728,7 +2728,7 @@ static pwr_tStatus initSupActiveCB(pwr_tAttrRef* SupObject, pwr_tClassId cid,
   sDSupComp* dscompp = NULL;
   pwr_sClass_NodeLinkSup* nlsp = NULL;
   pwr_sClass_CycleSup* csp = NULL;
-  pwr_tAttrRef Object;
+  pwr_tAttrRef Object = {{0, 0}, 0, 0, 0, {0}};
   sSupActive* sp;
   gdh_tDlid Dlid;
   pwr_tBoolean IsAlias = 0;

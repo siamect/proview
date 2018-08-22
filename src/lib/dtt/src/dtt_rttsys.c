@@ -8688,7 +8688,7 @@ int RTTSYS_REMTRANS(menu_ctx ctx, int event, char* parameter_ptr,
   int remtrans_alloc;
   rttsys_t_remtrans_list* remtranslist_ptr;
   int i, j;
-  pwr_tObjid remnode_objid;
+  pwr_tObjid remnode_objid = {0, 0};
   int all;
   pwr_tClassId class;
 

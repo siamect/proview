@@ -65,7 +65,7 @@
 #define FLOAT_TO_BOOL(STYPE, EPS)                                                   \
   for (; tcount > 0 && *tsize >= sizeof(pwr_tBoolean); tcount--, scount--) {   \
     if (scount > 0 && !sadef.b.privatepointer) {                               \
-      *(pwr_tBoolean*)tp = !(ABS(*(STYPE*)sp < EPS));                  \
+      *(pwr_tBoolean*)tp = !(ABS(*(STYPE*)sp) < EPS);                  \
       sp += sizeof(STYPE);                                                     \
     } else                                                                     \
       *(pwr_tBoolean*)tp = 0;                                                  \

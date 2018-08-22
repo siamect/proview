@@ -1625,6 +1625,10 @@ void GlowDrawQt::event_timer(QMouseEvent* event)
 void GlowDrawQt::set_timer(GlowCtx* paintertx, int time_ms,
     void (*callback_func)(GlowCtx* ctx), void** id)
 {
+  if (timer_cb) {
+    delete timer_cb->timer_id;
+    delete timer_cb;
+  }
   timer_cb = new glow_draw_sTimerCb();
   timer_cb->ctx = paintertx;
   timer_cb->callback_func = callback_func;

@@ -66,7 +66,7 @@ void putlink(datatyp d, linktyp* lp)
 datatyp getlink(linktyp* lp)
 /* Returnerar data från en länk */
 {
-  datatyp d;
+  datatyp d = {{0, {0, 0}, 0}, {0, 0}};
 
   if (lp != NULL)
     d = lp->data;

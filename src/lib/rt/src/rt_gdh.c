@@ -1474,7 +1474,7 @@ pwr_tStatus gdh_GetPreviousSibling(pwr_tObjid oid, /**< The object identity. */
   pwr_tStatus sts = GDH__SUCCESS;
   gdb_sObject* op;
   gdb_sObject* pop = NULL;
-  pwr_tObjid noid;
+  pwr_tObjid noid = {0, 0};
 
   if (new_oid == NULL)
     return GDH__BADARG;
