@@ -1359,7 +1359,6 @@ void WttQtWidget::valchanged_cmd_entry()
   if (wtt->input_open) {
     switch (wtt->input_mode) {
     case wtt_eInputMode_Attribute:
-      wtt->input_wnav->select_object(wtt->input_node);
       sts = wtt->input_wnav->set_attr_value(wtt->input_node, wtt->input_objid,
           qPrintableLatin1(wtt->cmd_entry->text()));
       if (EVEN(sts)) {
@@ -1367,7 +1366,6 @@ void WttQtWidget::valchanged_cmd_entry()
       }
       break;
     case wtt_eInputMode_ObjectName:
-      wtt->input_wnav->select_object(wtt->input_node);
       sts = wtt->input_wnav->set_object_name(wtt->input_node, wtt->input_objid,
           qPrintableLatin1(wtt->cmd_entry->text()));
       if (EVEN(sts)) {
@@ -1376,11 +1374,7 @@ void WttQtWidget::valchanged_cmd_entry()
       break;
     default:;
     }
-    if (wtt->input_open) {
-      wtt->cmd_entry->setVisible(false);
-      wtt->set_prompt("");
-      wtt->input_open = 0;
-    }
+    wtt->cmd_entry->setVisible(false);
   } else if (wtt->command_open) {
     if (!wtt->focused_wnav) {
       wtt->set_focus_default();
@@ -2211,7 +2205,7 @@ WttQt::WttQt(void* wt_parent_ctx, QWidget* wt_parent_wid, const char* wt_name,
   cmd_prompt = new QLabel(fl("value > "));
   cmd_entry = new CoWowEntryQt(&cmd_recall);
   cmd_entry->set_hide_on_esc(true);
-  QObject::connect(cmd_entry, SIGNAL(editingFinished()), toplevel,
+  QObject::connect(cmd_entry, SIGNAL(returnPressed()), toplevel,
       SLOT(valchanged_cmd_entry()));
   QObject::connect(
       cmd_entry, SIGNAL(hidden()), toplevel, SLOT(hide_cmd_entry()));

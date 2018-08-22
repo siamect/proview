@@ -155,10 +155,6 @@ static void modifyBackground(QWidget* widget, QColor color)
 
 void WNavQt::set_inputfocus(int focus)
 {
-  if (!displayed) {
-    return;
-  }
-
   if (focus) {
     modifyBackground(form_widget, QColor("Black"));
     brow_widget->setFocus();
