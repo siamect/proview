@@ -47,8 +47,6 @@
 #include <QWidget>
 
 class CoWowEntryQt : public QLineEdit {
-  Q_OBJECT
-
 public:
   CoWowRecall* m_re;
   bool m_hide_on_esc;
@@ -65,12 +63,8 @@ public:
     m_hide_on_esc = hide;
   }
 
-signals:
-  void hidden();
-
 protected:
   void keyPressEvent(QKeyEvent* event);
-  void hideEvent(QHideEvent* event);
 };
 
 class CoWowModalDialogQt : public QDialog {

@@ -2208,7 +2208,7 @@ WttQt::WttQt(void* wt_parent_ctx, QWidget* wt_parent_wid, const char* wt_name,
   QObject::connect(cmd_entry, SIGNAL(returnPressed()), toplevel,
       SLOT(valchanged_cmd_entry()));
   QObject::connect(
-      cmd_entry, SIGNAL(hidden()), toplevel, SLOT(hide_cmd_entry()));
+      cmd_entry, SIGNAL(editingFinished()), toplevel, SLOT(hide_cmd_entry()));
 
   statusbar->addWidget(msg_label);
   statusbar->addWidget(cmd_prompt);

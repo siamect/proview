@@ -900,7 +900,7 @@ void GeCurveQt::create_minmax_dialog()
   QLabel* min_label = new QLabel(translate_utf8("MinValue"));
   min_label->setFixedWidth(100);
   minmax_textmax_widget = new QLineEdit();
-  QObject::connect(minmax_textmax_widget, SIGNAL(editingFinished()), toplevel,
+  QObject::connect(minmax_textmax_widget, SIGNAL(returnPressed()), toplevel,
       SLOT(activate_minmax_ok()));
   QLabel* max_label = new QLabel(translate_utf8("MaxValue"));
   max_label->setFixedWidth(100);

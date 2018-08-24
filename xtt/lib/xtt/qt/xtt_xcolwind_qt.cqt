@@ -535,7 +535,7 @@ XColWindQt::XColWindQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
   msg_label = new QLabel("");
   cmd_prompt = new QLabel("value > ");
   cmd_entry = new CoWowEntryQt(&value_recall);
-  QObject::connect(cmd_entry, SIGNAL(editingFinished()), toplevel,
+  QObject::connect(cmd_entry, SIGNAL(returnPressed()), toplevel,
       SLOT(activate_cmd_entry()));
 
   statusbar->addWidget(msg_label);

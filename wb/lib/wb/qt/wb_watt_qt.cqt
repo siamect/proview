@@ -186,6 +186,16 @@ void WAttQtWidget::focusInEvent(QFocusEvent* event)
   QWidget::focusInEvent(event);
 }
 
+void WAttQtWidget::hide_cmd_entry()
+{
+  watt->wattnav->set_inputfocus();
+
+  if (watt->input_open) {
+    watt->cmd_prompt->setVisible(false);
+    watt->input_open = 0;
+  }
+}
+
 void WAttQt::print(const char* title)
 {
   pwr_tStatus sts;
@@ -419,8 +429,10 @@ WAttQt::WAttQt(QWidget* wa_parent_wid, void* wa_parent_ctx,
   cmd_prompt = new QLabel("value > ");
   cmd_entry = new CoWowEntryQt(&value_recall);
   cmd_entry->set_hide_on_esc(true);
-  QObject::connect(cmd_entry, SIGNAL(editingFinished()), toplevel,
+  QObject::connect(cmd_entry, SIGNAL(returnPressed()), toplevel,
       SLOT(activate_cmd_entry()));
+  QObject::connect(cmd_entry, SIGNAL(editingFinished()), toplevel,
+      SLOT(hide_cmd_entry()));
 
   statusbar->addWidget(msg_label);
   statusbar->addWidget(cmd_prompt);

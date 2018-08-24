@@ -364,7 +364,7 @@ AttrQt::AttrQt(QWidget* a_parent_wid, void* a_parent_ctx, attr_eType a_type,
     msg_label = new QLabel("");
     cmd_prompt = new QLabel("value > ");
     cmd_entry = new CoWowEntryQt(&value_recall);
-    QObject::connect(cmd_entry, SIGNAL(editingFinished()), toplevel,
+    QObject::connect(cmd_entry, SIGNAL(returnPressed()), toplevel,
         SLOT(attr_activate_cmd_entry()));
 
     statusbar->addWidget(msg_label);

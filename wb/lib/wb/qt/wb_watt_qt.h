@@ -105,6 +105,7 @@ public slots:
   void activate_cmd_scrolled_ok();
   void activate_cmd_scrolled_ca();
   void action_text_inserted();
+  void hide_cmd_entry();
 
 private:
   WAttQt* watt;

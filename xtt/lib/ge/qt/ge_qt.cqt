@@ -1914,7 +1914,7 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
   recall_entry = new CoWowEntryQt(cmd_recall);
   recall_entry->setFixedHeight(25);
   cursor_position = new QLabel(fl(""));
-  QObject::connect(recall_entry, SIGNAL(editingFinished()), toplevel,
+  QObject::connect(recall_entry, SIGNAL(returnPressed()), toplevel,
       SLOT(valchanged_cmd_entry()));
 
   statusbar->addWidget(msg_label);

@@ -368,9 +368,9 @@ NodelistInputDialogQt::NodelistInputDialogQt(
   text2 = new QLineEdit();
   text3 = new QLineEdit();
   if (input_callback) {
-    connect(text, SIGNAL(editingFinished()), this, SLOT(activate_ok()));
-    connect(text2, SIGNAL(editingFinished()), this, SLOT(activate_ok()));
-    connect(text3, SIGNAL(editingFinished()), this, SLOT(activate_ok()));
+    connect(text, SIGNAL(returnPressed()), this, SLOT(activate_ok()));
+    connect(text2, SIGNAL(returnPressed()), this, SLOT(activate_ok()));
+    connect(text3, SIGNAL(returnPressed()), this, SLOT(activate_ok()));
   }
 
   label = new QLabel();

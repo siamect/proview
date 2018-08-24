@@ -687,12 +687,6 @@ void CoWowEntryQt::keyPressEvent(QKeyEvent* event)
   QLineEdit::keyPressEvent(event);
 }
 
-void CoWowEntryQt::hideEvent(QHideEvent* event)
-{
-  emit hidden();
-  QWidget::hideEvent(event);
-}
-
 //
 //  Modal Dialog with text and tree buttons
 //
@@ -735,12 +729,12 @@ CoWowModalDialogQt::CoWowModalDialogQt(QWidget* parent, const char* title,
     if (!recall) {
       textinput = new QLineEdit(this);
       textinput->setMaxLength(input_length);
-      connect(textinput, SIGNAL(editingFinished()), this,
+      connect(textinput, SIGNAL(returnPressed()), this,
           SLOT(modaldia_activate_cb()));
     } else {
       CoWowEntryQt* entry = new CoWowEntryQt(recall);
       textinput = entry;
-      connect(textinput, SIGNAL(editingFinished()), this,
+      connect(textinput, SIGNAL(returnPressed()), this,
           SLOT(modaldia_activate_cb()));
     }
 

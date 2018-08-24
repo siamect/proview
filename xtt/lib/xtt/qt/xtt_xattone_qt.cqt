@@ -279,7 +279,7 @@ XAttOneQt::XAttOneQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
   cmd_prompt = new QLabel("value > ");
   cmd_label = new QLabel("");
   cmd_entry = new CoWowEntryQt(&value_recall);
-  QObject::connect(cmd_entry, SIGNAL(editingFinished()), toplevel,
+  QObject::connect(cmd_entry, SIGNAL(returnPressed()), toplevel,
       SLOT(activate_cmd_entry()));
 
   // Scrolled text input
