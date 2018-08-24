@@ -2320,6 +2320,8 @@ WttQt::~WttQt()
     options_form->close();
   }
 
+  delete toplevel;
+
   if (!close_cb) {
     debug_print("Shutting down...\n");
     exit(0);

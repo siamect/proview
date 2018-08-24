@@ -497,6 +497,8 @@ int Wb::vsel_success(void* vselctx, pwr_tVolumeId* volumelist, int volume_count)
   int sts;
   pwr_tStatus status;
 
+  wb->appl_count--;
+
   sts = 1;
   if (CoLogin::privilege() & pwr_mPrv_DevRead) {
     for (i = 0; i < volume_count; i++) {

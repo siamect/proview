@@ -86,7 +86,7 @@ int main(int argc, char* argv[])
 
   QApplication app(argc, argv);
   QApplication::setStyle(new PwrStyle());
-  WbQt(argc, argv);
+  Wb::main_wb = new WbQt(argc, argv);
   return app.exec();
 }
 

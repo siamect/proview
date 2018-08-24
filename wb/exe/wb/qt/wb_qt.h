@@ -44,7 +44,7 @@
 #include <QWidget>
 
 class WbQt : public Wb {
-  public:
+public:
   QWidget* toplevel;
   QWidget* mainwindow;
 
