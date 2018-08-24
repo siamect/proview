@@ -521,12 +521,12 @@ void CoWowQt::CreateFileSelDia(const char* title, void* parent_ctx,
   QString filename = QFileDialog::getOpenFileName(
       object->parent_wid, fl(title), fl(folder), filter);
 
-  if (!filename.isNull()) {
+  if (!filename.isEmpty()) {
     strcpy(fname, qPrintable(filename));
-  }
 
-  if (file_selected_cb) {
-    (file_selected_cb)(parent_ctx, fname, file_type);
+    if (file_selected_cb) {
+      (file_selected_cb)(parent_ctx, fname, file_type);
+    }
   }
 }
 
