@@ -62,6 +62,9 @@ static void vsel_exit_qb_yes(void* ctx, void* cbdata)
 {
   WVselQt* vsel = (WVselQt*)ctx;
 
+  if (vsel->vsel_bc_cancel != NULL) {
+    (vsel->vsel_bc_cancel)();
+  }
   vsel->toplevel->close();
 }
 
@@ -96,6 +99,9 @@ void WVselQtWidget::activate_ok()
   free((char*)volume_ptr);
 
   if (ODD(sts)) {
+    if (sel->vsel_bc_cancel != NULL) {
+      (sel->vsel_bc_cancel)();
+    }
     close();
   } else if (sts == LDH__VOLALRATT || LDH__VOLIDALREXI) {
     sel->wow->DisplayError("Error", "Volume is already open");
