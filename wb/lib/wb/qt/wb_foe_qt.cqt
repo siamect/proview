@@ -674,11 +674,9 @@ WFoeQt::WFoeQt(void* f_parent_ctx, QWidget* f_parent_wid, const char* f_name,
           windowindex, new_window, f_map_window, f_access, function_access,
           f_options, sts)
 {
+  toplevel = new WFoeQtWidget(this, f_parent_wid);
   *sts = new_local(plcprogram, ldhwbctx, ldhsesctx, nodeobject, windowindex,
       new_window, function_access);
-
-  toplevel = new WFoeQtWidget(this, f_parent_wid);
-  wow = new CoWowQt(toplevel);
 }
 
 WFoeQt::WFoeQt(void* f_parent_ctx, QWidget* f_parent_wid, const char* f_name,
@@ -710,11 +708,9 @@ WFoeQt::WFoeQt(void* f_parent_ctx, QWidget* f_parent_wid, const char* f_name,
   }
 
   strcpy(name, new_name);
+  toplevel = new WFoeQtWidget(this, f_parent_wid);
   *sts = new_local(
       plcprogram, ldhwbctx, ldhsesctx, 0, 0, 0, foe_eFuncAccess_Edit);
-
-  toplevel = new WFoeQtWidget(this, f_parent_wid);
-  wow = new CoWowQt(toplevel);
 }
 
 // Pop the window
@@ -787,7 +783,7 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
       toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
   // Edit Entry
-  QMenu* edit = menu_bar->addMenu(translate_utf8("&Edit"));
+  edit = menu_bar->addMenu(translate_utf8("&Edit"));
   undelete
       = addMenuItem(toplevel, edit, "&Undo Delete", SLOT(activate_undelete()));
 
@@ -871,18 +867,18 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
 
   // Edit Move submenu
   QMenu* edit_move = edit->addMenu(translate_utf8("Move"));
-  a = addMenuItem(
+  move_right = addMenuItem(
       toplevel, edit_move, "Right", SLOT(activate_move()), "CTRL+SHIFT+Right");
-  a->setData(flow_eDirection_Right);
-  a = addMenuItem(
+  move_right->setData(flow_eDirection_Right);
+  move_left = addMenuItem(
       toplevel, edit_move, "Left", SLOT(activate_move()), "CTRL+SHIFT+Left");
-  a->setData(flow_eDirection_Left);
-  a = addMenuItem(
+  move_left->setData(flow_eDirection_Left);
+  move_up = addMenuItem(
       toplevel, edit_move, "Up", SLOT(activate_move()), "CTRL+SHIFT+Up");
-  a->setData(flow_eDirection_Up);
-  a = addMenuItem(
+  move_up->setData(flow_eDirection_Up);
+  move_down = addMenuItem(
       toplevel, edit_move, "Down", SLOT(activate_move()), "CTRL+SHIFT+Down");
-  a->setData(flow_eDirection_Down);
+  move_down->setData(flow_eDirection_Down);
 
   changetext = addMenuItem(
       toplevel, edit, "C&hange Text", SLOT(activate_changetext()), "CTRL+T");
@@ -934,7 +930,7 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
   addMenuItem(toplevel, view_zoom, "Zoom &Out", SLOT(activate_zoomout()),
       "CTRL+O", "zoom-out");
   addMenuItem(toplevel, view_zoom, "Zoom &Reset", SLOT(activate_unzoom()), "",
-      "zoom-reset");
+      "zoom-original");
 
   addCheckableMenuItem(
       toplevel, view, "S&how Execute Order", SLOT(activate_showexeord(bool)));
@@ -974,9 +970,9 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
       toplevel, tools, "Save", SLOT(activate_save()), "document-save");
   addToolItem(toplevel, tools, "Print documents", SLOT(activate_print()),
       "document-print");
-  addToolItem(toplevel, tools, "Set edit mode", SLOT(activate_edit_togg()),
+  addCheckableToolItem(toplevel, tools, "Set edit mode", SLOT(activate_edit_togg(bool)),
       "$pwr_exe/foe_edit.png");
-  addToolItem(toplevel, tools, "Set view mode", SLOT(activate_view_togg()),
+  addCheckableToolItem(toplevel, tools, "Set view mode", SLOT(activate_view_togg(bool)),
       "$pwr_exe/foe_view.png");
   tools_build = addToolItem(
       toplevel, tools, "Build Program", SLOT(activate_compile()), "system-run");
@@ -1018,7 +1014,7 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
       SLOT(activate_document()), "$pwr_exe/foe_document.png");
 
   // Document_Landscape button
-  tools_document = addToolItem(toplevel, tools, "Document landscape",
+  tools_document_landscape = addToolItem(toplevel, tools, "Document landscape",
       SLOT(activate_document_landscape()),
       "$pwr_exe/foe_document_landscape.png");
 
@@ -1080,6 +1076,8 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
   gre->init();
   function_setup();
 
+  wow = new CoWowQt(toplevel);
+
   return FOE__SUCCESS;
 }
 
@@ -1133,7 +1131,7 @@ int WFoeQt::edit_set_entries()
     redraw->setEnabled(true);
     plcattribute->setEnabled(true);
     winddelete->setEnabled(true);
-    edit_entry->setEnabled(true);
+    edit->setEnabled(true);
     cut->setEnabled(true);
     copy->setEnabled(true);
     paste->setEnabled(true);
@@ -1178,7 +1176,7 @@ int WFoeQt::edit_set_entries()
     redraw->setEnabled(true);
     plcattribute->setEnabled(true);
     winddelete->setEnabled(true);
-    edit_entry->setEnabled(true);
+    edit->setEnabled(true);
     cut->setEnabled(true);
     copy->setEnabled(true);
     paste->setEnabled(true);

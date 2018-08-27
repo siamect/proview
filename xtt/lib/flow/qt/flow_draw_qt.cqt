@@ -251,7 +251,7 @@ void FlowDrawQt::delete_secondary_ctx(FlowCtx* ctx)
 FlowDrawQt::FlowDrawQt(QWidget* x_toplevel, void** flow_ctx,
     int (*init_proc)(QWidget* w, FlowCtx* ctx, void* client_data),
     void* client_data, flow_eCtxType type)
-    : toplevel(x_toplevel), nav_toplevel(0), window(0), nav_window(0),
+    : toplevel(x_toplevel), window(0), nav_window(0),
       closing_down(0)
 {
   timer_id = new QTimer(this);
@@ -279,8 +279,8 @@ FlowDrawQt::FlowDrawQt(QWidget* x_toplevel, void** flow_ctx,
 int FlowDrawQt::init_nav(QWidget* nav_widget, void* flow_ctx)
 {
   // debug_print("init_nav\n");
-  nav_toplevel = nav_widget;
-  nav_window = nav_toplevel->window();
+  assert(dynamic_cast<QtScrollWidgetFlow*>(nav_widget) != NULL);
+  nav_window = dynamic_cast<QtScrollWidgetFlow*>(nav_widget);
   nav_window_canvas = &(((QtScrollWidgetFlow*)nav_window)->image);
 
   QPalette pal;

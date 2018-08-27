@@ -85,7 +85,7 @@ public:
   QAction* changetext;
   QAction* expand;
   QAction* compress;
-  QWidget* edit_entry; /* entry of the menu */
+  QMenu* edit; /* entry of the menu */
   QWidget* search_entry; /* entry of the menu */
   QWidget* customize_entry; /* entry of the menu */
   QAction* trace_togg; /* togg under the function entry of the menu */

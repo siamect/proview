@@ -55,8 +55,6 @@ class FlowDrawQt : private QObject, public FlowDraw {
 
 public:
   QWidget* toplevel;
-  QWidget* nav_shell;
-  QWidget* nav_toplevel;
   QWidget* window;
   QImage* window_canvas;
   QWidget* nav_window;
