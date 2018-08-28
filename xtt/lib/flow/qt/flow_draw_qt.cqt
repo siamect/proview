@@ -1599,6 +1599,7 @@ bool FlowDrawQt::draw_timer_cb()
   (timer_cb->callback_func)(timer_cb->ctx);
 
   draw_ctx->toplevel->update();
+  delete timer_cb->timer_id;
   delete timer_cb;
   return FALSE;
 }
@@ -1632,10 +1633,6 @@ void FlowDrawQt::event_timer(QMouseEvent* event, QWidget *target)
 void FlowDrawQt::set_timer(
     FlowCtx* ctx, int time_ms, void (*callback_func)(FlowCtx* ctx), void** id)
 {
-  if (timer_cb) {
-    delete timer_cb->timer_id;
-    delete timer_cb;
-  }
   timer_cb = new flow_draw_sTimerCb();
   timer_cb->ctx = ctx;
   timer_cb->callback_func = callback_func;

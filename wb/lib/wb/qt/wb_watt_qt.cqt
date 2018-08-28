@@ -260,8 +260,6 @@ void WAttQt::change_value_close()
 
 void WAttQtWidget::activate_cmd_entry()
 {
-  watt->wattnav->set_inputfocus();
-
   char* text = qPrintableLatin1(watt->cmd_entry->text());
 
   if (watt->input_open) {
@@ -278,6 +276,8 @@ void WAttQtWidget::activate_cmd_entry()
 
   watt->cmd_prompt->setVisible(false);
   watt->cmd_entry->setVisible(false);
+
+  watt->wattnav->set_inputfocus();
 
   if (!text) {
     watt->message('E', "Input error, invalid character");

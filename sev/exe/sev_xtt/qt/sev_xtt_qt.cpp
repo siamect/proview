@@ -36,6 +36,7 @@
 
 #include "co_error.h"
 
+#include "cow_qt_helpers.h"
 #include "cow_style_qt.h"
 
 #include "xtt_tbl_qt.h"
