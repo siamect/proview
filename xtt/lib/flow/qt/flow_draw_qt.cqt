@@ -94,6 +94,7 @@ static char font_names[draw_eFont__][DRAW_FONT_SIZE][80]
             "-*-Helvetica-Medium-R-Normal--24-*-*-*-P-*-ISO8859-1" } };
 
 static QMouseEvent* last_event;
+static QWidget* last_target;
 
 static QColor flow_allocate_color(
     FlowDrawQt* draw_ctx, const char* named_color);
@@ -293,7 +294,7 @@ int FlowDrawQt::init_nav(QWidget* nav_widget, void* flow_ctx)
   return 1;
 }
 
-int FlowDrawQt::event_handler(QEvent* event)
+int FlowDrawQt::event_handler(QEvent* event, QWidget* target)
 {
   static int button_pressed = 0;
   static int button_clicked = 0;
@@ -309,24 +310,7 @@ int FlowDrawQt::event_handler(QEvent* event)
     return 1;
   }
 
-  QObject* windowParent = window;
-  QObject* navWindowParent = nav_window;
-  bool windowEvent = false;
-  bool navWindowEvent = false;
-  if (QApplication::focusWidget() != NULL) {
-    while (!(windowParent == NULL && navWindowParent == NULL)) {
-      windowEvent = (QApplication::focusWidget() == windowParent);
-      navWindowEvent = (QApplication::focusWidget() == navWindowParent);
-      if (windowEvent || navWindowEvent) {
-        break;
-      }
-      windowParent = (windowParent == NULL) ? NULL : windowParent->parent();
-      navWindowParent
-          = (navWindowParent == NULL) ? NULL : navWindowParent->parent();
-    }
-  }
-
-  if (windowEvent || event->type() == QEvent::KeyPress) {
+  if (target == window || event->type() == QEvent::KeyPress) {
     switch (event->type()) {
     case QEvent::KeyPress: {
       QKeyEvent* keyEvent = ((QKeyEvent*)event);
@@ -462,14 +446,14 @@ int FlowDrawQt::event_handler(QEvent* event)
         button_pressed = mouseEvent->button();
         last_press_x = mouseEvent->x();
         last_press_y = mouseEvent->y();
-        event_timer(mouseEvent);
+        event_timer(mouseEvent, target);
         return 1;
       }
       if (!button_pressed) {
         button_pressed = mouseEvent->button();
         last_press_x = mouseEvent->x();
         last_press_y = mouseEvent->y();
-        event_timer(mouseEvent);
+        event_timer(mouseEvent, target);
         return 1;
       } else {
         // debug_print("event_handler: MouseButtonPress from timer\n");
@@ -599,7 +583,7 @@ int FlowDrawQt::event_handler(QEvent* event)
         if (!button_clicked_and_pressed) {
           /* wait for button double click */
           button_clicked = 1;
-          event_timer(mouseEvent);
+          event_timer(mouseEvent, target);
           button_pressed = 0;
           return 1;
         } else {
@@ -787,7 +771,7 @@ int FlowDrawQt::event_handler(QEvent* event)
     default:
       break;
     }
-  } else if (navWindowEvent) {
+  } else if (target == nav_window) {
     switch (event->type()) {
     case QEvent::MouseButtonPress: {
       QMouseEvent* mouseEvent = ((QMouseEvent*)event);
@@ -1622,7 +1606,7 @@ bool FlowDrawQt::draw_timer_cb()
 bool FlowDrawQt::event_timer_cb()
 {
   timer_id->stop();
-  event_handler(last_event);
+  event_handler(last_event, last_target);
   return FALSE;
 }
 
@@ -1633,13 +1617,14 @@ void FlowDrawQt::cancel_event_timer()
   }
 }
 
-void FlowDrawQt::event_timer(QMouseEvent* event)
+void FlowDrawQt::event_timer(QMouseEvent* event, QWidget *target)
 {
   if (last_event) {
     delete last_event;
   }
   last_event = new QMouseEvent(event->type(), event->pos(), event->globalPos(),
       event->button(), event->buttons(), event->modifiers());
+  last_target = target;
 
   initOneShotTimer(timer_id, SLOT(event_timer_cb()), 200);
 }

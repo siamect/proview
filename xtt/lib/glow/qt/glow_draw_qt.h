@@ -101,7 +101,7 @@ public:
   int closing_down;
   std::stack<GlowCustomColors> customcolors;
 
-  int event_handler(QEvent* event);
+  int event_handler(QEvent* event, QWidget *target);
   virtual void enable_event(glow_eEvent event, glow_eEventType event_type,
       int (*event_cb)(GlowCtx* ctx, glow_tEvent event));
   virtual void clear(GlowWind* w);
@@ -271,7 +271,7 @@ private:
   int image_helper(GlowWind* wind, int x, int y, int width, int height,
       glow_tImImage image, glow_tPixmap clip_mask, bool d = false);
 
-  void event_timer(QMouseEvent *event);
+  void event_timer(QMouseEvent *event, QWidget *target);
   void cancel_event_timer();
 
   glow_draw_sTimerCb* timer_cb;

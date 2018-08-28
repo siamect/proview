@@ -142,6 +142,7 @@ static char font_names[glow_eFont__][glow_eDrawFont__][DRAW_FONT_SIZE][80] = {
 };
 
 static QMouseEvent* last_event;
+static QWidget* last_target;
 
 static QColor glow_allocate_named_color(
     GlowDrawQt* draw_ctx, const char* named_color);
@@ -369,7 +370,7 @@ GlowDrawQt::GlowDrawQt(QWidget* toplevel, void** glow_ctx,
   init_proc(toplevel, ctx, client_data);
 }
 
-int GlowDrawQt::event_handler(QEvent* event)
+int GlowDrawQt::event_handler(QEvent* event, QWidget* target)
 {
   static int button_pressed = 0;
   static int button_clicked = 0;
@@ -385,24 +386,7 @@ int GlowDrawQt::event_handler(QEvent* event)
     return 1;
   }
 
-  QObject* windowParent = m_wind->window;
-  QObject* navWindowParent = nav_wind->window;
-  bool windowEvent = false;
-  bool navWindowEvent = false;
-  if (QApplication::focusWidget() != NULL) {
-    while (!(windowParent == NULL && navWindowParent == NULL)) {
-      windowEvent = (QApplication::focusWidget() == windowParent);
-      navWindowEvent = (QApplication::focusWidget() == navWindowParent);
-      if (windowEvent || navWindowEvent) {
-        break;
-      }
-      windowParent = (windowParent == NULL) ? NULL : windowParent->parent();
-      navWindowParent
-          = (navWindowParent == NULL) ? NULL : navWindowParent->parent();
-    }
-  }
-
-  if (windowEvent || event->type() == QEvent::KeyPress) {
+  if (target == m_wind->window || event->type() == QEvent::KeyPress) {
     if (GlowCtx::eventlog_enabled) {
       log_event(event);
     }
@@ -533,14 +517,14 @@ int GlowDrawQt::event_handler(QEvent* event)
         button_pressed = mouseEvent->button();
         last_press_x = mouseEvent->x();
         last_press_y = mouseEvent->y();
-        event_timer(mouseEvent);
+        event_timer(mouseEvent, target);
         return 1;
       }
       if (!button_pressed) {
         button_pressed = mouseEvent->button();
         last_press_x = mouseEvent->x();
         last_press_y = mouseEvent->y();
-        event_timer(mouseEvent);
+        event_timer(mouseEvent, target);
         return 1;
       } else {
         /* Press event, callback from timer */
@@ -687,7 +671,7 @@ int GlowDrawQt::event_handler(QEvent* event)
         if (!button_clicked_and_pressed) {
           /* wait for button double click */
           button_clicked = 1;
-          event_timer(mouseEvent);
+          event_timer(mouseEvent, target);
           button_pressed = 0;
           return 1;
         } else {
@@ -879,7 +863,7 @@ int GlowDrawQt::event_handler(QEvent* event)
     default:
       break;
     }
-  } else if (navWindowEvent) {
+  } else if (target == nav_wind->window) {
     switch (event->type()) {
     case QEvent::MouseButtonPress: {
       QMouseEvent* mouseEvent = ((QMouseEvent*)event);
@@ -1602,7 +1586,7 @@ bool GlowDrawQt::draw_timer_cb()
 bool GlowDrawQt::event_timer_cb()
 {
   timer_id->stop();
-  event_handler(last_event);
+  event_handler(last_event, last_target);
   return FALSE;
 }
 
@@ -1611,13 +1595,14 @@ void GlowDrawQt::cancel_event_timer()
   timer_id->stop();
 }
 
-void GlowDrawQt::event_timer(QMouseEvent* event)
+void GlowDrawQt::event_timer(QMouseEvent* event, QWidget *target)
 {
   if (last_event) {
     delete last_event;
   }
   last_event = new QMouseEvent(event->type(), event->pos(), event->globalPos(),
       event->button(), event->buttons(), event->modifiers());
+  last_target = target;
 
   initOneShotTimer(timer_id, SLOT(event_timer_cb()), 200);
 }
@@ -3416,7 +3401,7 @@ void GlowDrawQt::event_exec(void* event, unsigned int size)
   default:;
   }
 
-  event_handler(&e);
+  event_handler(&e, m_wind->window);
 }
 
 int GlowDrawQt::open_color_selection(double* r, double* g, double* b)

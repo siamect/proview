@@ -295,6 +295,7 @@ void set_pane_position(QSplitter* pane, int right)
   if (right > 0) {
     sizes << right << total - right;
   } else {
+    right = -right;
     sizes << total - right << right;
   }
   pane->setSizes(sizes);
