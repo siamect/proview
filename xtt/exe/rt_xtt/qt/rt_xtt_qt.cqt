@@ -586,10 +586,6 @@ XttQt::XttQt(int argc, char* argv[], int* return_sts)
   char title[120] = "Xtt ";
   char nodename[80];
 
-  if (EVEN(*return_sts)) {
-    return;
-  }
-
   setlocale(LC_TIME, "en_US");
   setlocale(LC_NUMERIC, "POSIX");
 
@@ -722,7 +718,7 @@ XttQt::XttQt(int argc, char* argv[], int* return_sts)
   cmd_recall = new CoWowRecall();
   value_recall = new CoWowRecall();
   cmd_entry = new CoWowEntryQt(cmd_recall);
-  QObject::connect(cmd_entry, SIGNAL(editing_finished()), toplevel,
+  QObject::connect(cmd_entry, SIGNAL(returnPressed()), toplevel,
       SLOT(valchanged_cmd_entry()));
 
   statusbar->addWidget(msg_label);

@@ -953,9 +953,7 @@ int GlowDrawQt::rect_helper(GlowWind* wind, int painter_type, int size, int x,
   }
 
   if (fill) {
-    // debug_print("fillRect [%d, %d, %d, %d] painter_type=%d, with color %s\n",
-    // x, y, width, height, painter_type,
-    // qPrintable(painter->brush().color().name()));
+    // debug_print("fillRect [%d, %d, %d, %d] painter_type=%d, with color %s\n", x, y, width, height, painter_type, qPrintable(painter->brush().color().name()));
     painter->fillRect(x, y, width, height, painter->brush());
   } else {
     // debug_print("drawRect [%d, %d, %d, %d]\n", x, y, width, height);
@@ -1716,6 +1714,8 @@ void GlowDrawQt::copy_area(GlowWind* wind, int x, int y)
     window_height = ctx->navw.window_height;
   }
 
+  // debug_print("copy_area [%d, %d, %d, %d]\n", x, y, window_width, window_height);
+
   QPainter* painterBuffer
       = get_painter(w->buffer, this, glow_eDrawType_Line, 3);
   if (x >= 0 && y >= 0) {
@@ -1767,7 +1767,14 @@ void GlowDrawQt::clear_area(
   }
   DrawWindQt* w = (DrawWindQt*)wind->window;
 
-  QPainter(w->buffer).eraseRect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y);
+  QPainter* painter = new QPainter(w->buffer);
+  painter->setBackground(QBrush(background));
+
+  // debug_print("clear_area [%d, %d, %d, %d], color=%s\n", ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, painter->background().color().name().toAscii().data());
+
+  painter->eraseRect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y);
+
+  delete painter;
 }
 
 void GlowDrawQt::set_inputfocus(GlowWind* wind)

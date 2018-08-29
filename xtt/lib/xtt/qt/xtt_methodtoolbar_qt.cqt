@@ -75,9 +75,9 @@ XttMethodToolbarQt::~XttMethodToolbarQt()
   delete object;
 }
 
-void XttMethodToolbarQtObject::activate_button(QAction* action)
+void XttMethodToolbarQtObject::activate_button()
 {
-  int idx = action->data().toInt();
+  int idx = ((QAction *) sender())->data().toInt();
 
   int sts = 0;
   int is_attr;

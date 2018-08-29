@@ -80,7 +80,7 @@ public:
   }
 
 public slots:
-  void activate_button(QAction* action);
+  void activate_button();
   void set_sensitive_cb();
 
 private:

@@ -253,7 +253,7 @@ class CoWowQtObject : public QObject {
   Q_OBJECT
 
 public:
-  CoWowQtObject(QWidget* parent) : QObject(parent), parent_wid(parent)
+  CoWowQtObject(QWidget* parent) : QObject(), parent_wid(parent)
   {
   }
   QWidget* parent_wid;

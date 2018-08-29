@@ -56,8 +56,6 @@
 
 #define DRAW_PRESS_PIX 9
 
-#define roundi(x) ((x) >= 0 ? (int)((x) + 0.5) : (int)((x)-0.5))
-
 typedef struct {
   QWidget* w;
   int x;
@@ -882,10 +880,10 @@ int FlowDrawQt::rect_helper(FlowCtx* ctx, int painter_type, int size, int x,
   QPainter* painter = get_painter(painter_type, size, nav);
 
   if (fill) {
-    // debug_print("fillRect [%d, %d, %d, %d]\n", x, y, width, height);
+    // debug_print("fillRect [%d, %d, %d, %d] painter_type=%d, with color %s\n", x, y, width, height, painter_type, qPrintable(painter->brush().color().name()));
     painter->fillRect(x, y, width, height, painter->brush());
   } else {
-    // debug_print("drawRect [%d, %d, %d, %d]\n", x, y, width, height);
+    // debug_print("drawRect [%d, %d, %d, %d] pen %s brush %s\n", x, y, width, height, qPrintable(painter->pen().color().name()), qPrintable(painter->brush().color().name()));
     painter->setBrush(Qt::NoBrush);
     painter->drawRect(x, y, width, height);
   }
@@ -1239,21 +1237,13 @@ int FlowDrawQt::text_pango_helper(FlowCtx* ctx, int x, int y, char* text,
   int height = rect.height();
 
   if (erase_rect > 0) {
-    // debug_print("eraseRect [%d, %d, %d, %d], color=%s\n", x, roundi(y - 0.8 *
-    // height), rect.width(), roundi(height * (erase_rect / 10.0)),
-    // painter->background().color().name().toAscii().data());
-    painter->eraseRect(x, roundi(y - 0.8 * height), rect.width(),
-        roundi(height * (erase_rect / 10.0)));
+    // debug_print("eraseRect [%d,%d,%d,%d]\n", x, ROUND(y - 0.8 * height), rect.width() + 1, ROUND(height * (erase_rect / 10.0)));
+    painter->eraseRect(x, ROUND(y - 0.8 * height), rect.width() + 1, ROUND(height * (erase_rect / 10.0)));
   }
 
   if (erase_rect < 12) {
-    // debug_print("drawText %s at (%d, %d), painter_type=%d, brush=%s, pen=%s,
-    // background=%s\n", text, x, roundi(y - 0.8 * height), painter_type,
-    // painter->brush().color().name().toAscii().data(),
-    // painter->pen().color().name().toAscii().data(),
-    // background.name().toAscii().data());
-    painter->drawText(x, roundi(y - 0.8 * height), rect.width(), height,
-        Qt::TextDontClip, str);
+    // debug_print("drawText %s at [%d,%d,%d,%d]\n", text, x, ROUND(y - 0.8 * height), rect.width(), height);
+    painter->drawText(x, ROUND(y - 0.8 * height), rect.width(), height, Qt::TextDontClip, str, &rect);
   }
 
   delete painter;
@@ -1550,8 +1540,7 @@ void FlowDrawQt::clear(FlowCtx* ctx)
   QPainter* painter = new QPainter(window_canvas);
   painter->setBackground(QBrush(background));
 
-  // debug_print("clear color=%s\n",
-  // painter->background().color().name().toAscii().data());
+  // debug_print("clear color=%s\n", painter->background().color().name().toAscii().data());
   painter->eraseRect(window_canvas->rect());
 
   delete painter;
@@ -1566,8 +1555,7 @@ void FlowDrawQt::nav_clear(FlowCtx* ctx)
   QPainter* painter = new QPainter(nav_window_canvas);
   painter->setBackground(QBrush(background));
 
-  // debug_print("nav_clear color=%s\n",
-  // painter->background().color().name().toAscii().data());
+  // debug_print("nav_clear color=%s\n\n", painter->background().color().name().toAscii().data());
   painter->eraseRect(nav_window_canvas->rect());
 
   delete painter;
@@ -1787,8 +1775,7 @@ void FlowDrawQt::clear_area(
   QPainter* painter = new QPainter(window_canvas);
   painter->setBackground(QBrush(background));
 
-  // debug_print("clear_area [%d, %d, %d, %d], color=%s\n", ll_x, ll_y, ur_x -
-  // ll_x, ur_y - ll_y, painter->background().color().name().toAscii().data());
+  // debug_print("clear_area [%d, %d, %d, %d], color=%s\n", ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, painter->background().color().name().toAscii().data());
   painter->eraseRect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y);
 
   delete painter;
