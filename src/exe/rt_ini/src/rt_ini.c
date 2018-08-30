@@ -71,34 +71,35 @@
 
 #define RT_INI_PIDFILE "/run/pwr/pwr.pid\0"
 
-static ini_sContext *createContext(int argc, char **argv);
-static int checkErrors(ini_sContext *cp);
-static pwr_tStatus events(ini_sContext *cp);
+static ini_sContext* createContext(int argc, char** argv);
+static int checkErrors(ini_sContext* cp);
+static pwr_tStatus events(ini_sContext* cp);
 static void daemonize();
 static void create_pidfile();
-static pwr_tStatus interactive(int argc, char **argv, ini_sContext *cp);
-static pwr_tStatus stop(ini_sContext *cp);
+static pwr_tStatus interactive(int argc, char** argv, ini_sContext* cp);
+static pwr_tStatus stop(ini_sContext* cp);
 static void create_locks();
 static void delete_locks();
 static void load_backup();
-static void logChanges(ini_sContext *cp);
-static void logCardinality(ini_sContext *cp);
-static pwr_tStatus restart(ini_sContext *cp);
+static void logChanges(ini_sContext* cp);
+static void logCardinality(ini_sContext* cp);
+static pwr_tStatus restart(ini_sContext* cp);
 static pwr_tStatus terminate();
-static pwr_tStatus start(ini_sContext *cp);
-static void usage(char *);
-static void ini_errl_cb(void *userdata, char *str, char severity,
+static pwr_tStatus start(ini_sContext* cp);
+static void usage(char*);
+static void ini_errl_cb(void* userdata, char* str, char severity,
                         pwr_tStatus sts, int anix, int message_type);
 
-void handle_signal(int sig, siginfo_t *si, void *ctx);
+void handle_signal(int sig, siginfo_t* si, void* ctx);
 
 static int pid_fd = -1;
 static char* pid_filename = NULL;
 
-void set_valid_time() { /* Set valid utc time */ }
+void set_valid_time() { /* Set valid utc time */}
 
-int main(int argc, char **argv) {
-  ini_sContext *cp;
+int main(int argc, char** argv)
+{
+  ini_sContext* cp;
   pwr_tStatus sts;
 
   set_valid_time();
@@ -107,20 +108,27 @@ int main(int argc, char **argv) {
 
   ver_WriteVersionInfo("ProviewR Runtime Environment");
 
-  if (cp->flags.b.restart) {
+  if (cp->flags.b.restart)
+  {
     sts = interactive(argc, argv, cp);
-  } else if (cp->flags.b.stop) {
+  }
+  else if (cp->flags.b.stop)
+  {
     sts = stop(cp);
-  } else {
+  }
+  else
+  {
     // Now lets daemonize if asked to
-    if (cp->flags.b.daemonize) {
+    if (cp->flags.b.daemonize)
+    {
       daemonize();
     }
 
     sts = start(cp);
 
     // Now lets create the pid file before starting our endless event loop
-    if (cp->flags.b.daemonize) {
+    if (cp->flags.b.daemonize)
+    {
       create_pidfile();
     }
 
@@ -131,7 +139,8 @@ int main(int argc, char **argv) {
   exit(sts);
 }
 
-static pwr_tStatus start(ini_sContext *cp) {
+static pwr_tStatus start(ini_sContext* cp)
+{
   pwr_tStatus sts;
   char console[80];
   int state;
@@ -145,7 +154,8 @@ static pwr_tStatus start(ini_sContext *cp) {
     strcpy(console, cp->console);
   if ((fd = open(console, O_APPEND | O_WRONLY)) == -1)
     errl_Init(NULL, ini_errl_cb, cp);
-  else {
+  else
+  {
     close(fd);
     errl_Init(console, ini_errl_cb, cp);
   }
@@ -167,7 +177,8 @@ static pwr_tStatus start(ini_sContext *cp) {
   ini_CheckNode(&sts, cp);
 
   cp->me = tree_Find(&sts, cp->nid_t, &cp->node.nid);
-  if (cp->me == NULL) {
+  if (cp->me == NULL)
+  {
     errh_LogFatal(&cp->log, "Cannot find my own node in %s\n",
                   cp->nodefile.name);
     exit(QCOM__WEIRD);
@@ -185,8 +196,10 @@ static pwr_tStatus start(ini_sContext *cp) {
 
   ini_BuildNode(&sts, cp);
 
-  if (cp->np != NULL) {
-    if (cp->np->ErrLogTerm[0] != '\0') {
+  if (cp->np != NULL)
+  {
+    if (cp->np->ErrLogTerm[0] != '\0')
+    {
       errh_LogInfo(&cp->log, "Setting log terminal to: %s", cp->np->ErrLogTerm);
       errl_SetTerm(cp->np->ErrLogTerm);
     }
@@ -230,7 +243,8 @@ static pwr_tStatus start(ini_sContext *cp) {
   qini_BuildDb(&sts, cp->nid_t, cp->me, NULL, cp->busid);
 
   sts = redu_get_initial_state(cp->nodename, cp->busid, &state);
-  if (ODD(sts)) {
+  if (ODD(sts))
+  {
     cp->np->RedundancyState = state;
     qcom_SetRedundancyState(state);
   }
@@ -248,7 +262,8 @@ static pwr_tStatus start(ini_sContext *cp) {
 
   net_Connect(&sts, &gdbroot->my_aid, &gdbroot->my_qid, NULL, "pwr_ini");
   /*if (!qcom_Init(&sts, 0)) {*/
-  if (EVEN(sts)) {
+  if (EVEN(sts))
+  {
     errh_LogFatal(&cp->log, "net_Connect, %m", sts);
     exit(sts);
   }
@@ -261,7 +276,8 @@ static pwr_tStatus start(ini_sContext *cp) {
   ini_ProcIter(&sts, cp, proc_mProcess_user, 0, ini_ProcPrio);
 
   qcom_CreateQ(&sts, &cp->eventQ, NULL, "iniEvent");
-  if (EVEN(sts)) {
+  if (EVEN(sts))
+  {
     errh_LogFatal(&cp->log, "qcom_CreateQ, %m", sts);
     exit(sts);
   }
@@ -279,7 +295,8 @@ static pwr_tStatus start(ini_sContext *cp) {
   return sts;
 }
 
-static pwr_tStatus interactive(int argc, char **argv, ini_sContext *cp) {
+static pwr_tStatus interactive(int argc, char** argv, ini_sContext* cp)
+{
   pwr_tStatus sts;
   qcom_sQid qid;
   qcom_sPut put;
@@ -291,24 +308,28 @@ static pwr_tStatus interactive(int argc, char **argv, ini_sContext *cp) {
 
   errh_Interactive();
 
-  if (!qcom_Init(&sts, 0, "pwr_ini_restart")) {
+  if (!qcom_Init(&sts, 0, "pwr_ini_restart"))
+  {
     errh_LogFatal(&cp->log, "qcom_Init, %m", sts);
     exit(sts);
   }
 
   qcom_CreateQ(&sts, &cp->myQ, NULL, "pwr_ini_restart");
-  if (EVEN(sts)) {
+  if (EVEN(sts))
+  {
     errh_LogFatal(&cp->log, "qcom_CreateQ, %m", sts);
     exit(sts);
   }
 
-  for (i = 0, totlen = 0; i < argc; i++) {
+  for (i = 0, totlen = 0; i < argc; i++)
+  {
     len = strlen(argv[i]);
     totlen += 1 + len;
     errh_LogInfo(&cp->log, "argv[%d]: %d \"%s\"", i, len, argv[i]);
   }
   bp = malloc(totlen);
-  for (i = 0, sp = bp; i < argc; i++) {
+  for (i = 0, sp = bp; i < argc; i++)
+  {
     len = strlen(argv[i]);
     memcpy(sp, argv[i], len + 1);
     sp += len + 1;
@@ -325,14 +346,18 @@ static pwr_tStatus interactive(int argc, char **argv, ini_sContext *cp) {
 
   qcom_Put(&sts, &qid, &put);
 
-  while (1) {
+  while (1)
+  {
     char* s;
 
     get.data = NULL;
     s = qcom_Get(&sts, &cp->myQ, &get, 100000);
-    if (sts == QCOM__TMO && sts == QCOM__QEMPTY) {
+    if (sts == QCOM__TMO && sts == QCOM__QEMPTY)
+    {
       break;
-    } else if (s != NULL) {
+    }
+    else if (s != NULL)
+    {
       printf("%s\n", s);
       qcom_Free(NULL, s);
     }
@@ -343,7 +368,8 @@ static pwr_tStatus interactive(int argc, char **argv, ini_sContext *cp) {
   return sts;
 }
 
-static pwr_tStatus stop(ini_sContext *cp) {
+static pwr_tStatus stop(ini_sContext* cp)
+{
   pwr_tStatus sts;
   qcom_sQid qid;
   qcom_sPut put;
@@ -356,7 +382,8 @@ static pwr_tStatus stop(ini_sContext *cp) {
 
   //  errh_Interactive();
 
-  if (!qcom_Init(&sts, 0, "pwr_ini_stop")) {
+  if (!qcom_Init(&sts, 0, "pwr_ini_stop"))
+  {
     exit(sts);
   }
 
@@ -407,11 +434,12 @@ static pwr_tStatus stop(ini_sContext *cp) {
   return 0;
 }
 
-static pwr_tStatus restart(ini_sContext *cp) {
+static pwr_tStatus restart(ini_sContext* cp)
+{
   pwr_tStatus sts;
   char time[24];
-  lst_sEntry *pl;
-  ini_sProc *pp;
+  lst_sEntry* pl;
+  ini_sProc* pp;
 
   ini_CheckContext(&sts, cp);
 
@@ -468,9 +496,11 @@ static pwr_tStatus restart(ini_sContext *cp) {
   qcom_SignalOr(&sts, &qcom_cQini, ini_mEvent_swapDone);
 
   for (pp = lst_Succ(NULL, &cp->proc_lh, &pl); pp != NULL;
-       pp = lst_Succ(NULL, pl, &pl)) {
-    if (pp->flags.m & ini_mProc_plc && pp->objectp) {
-      pwr_sClass_PlcProcess *plc = pp->objectp;
+       pp = lst_Succ(NULL, pl, &pl))
+  {
+    if (pp->flags.m & ini_mProc_plc && pp->objectp)
+    {
+      pwr_sClass_PlcProcess* plc = pp->objectp;
 
       time_GetTime(&plc->LastChgTime);
       if (time_Dcomp(&plc->StartTime, &plc->StopTime) == 1)
@@ -490,7 +520,8 @@ static pwr_tStatus restart(ini_sContext *cp) {
   return sts;
 }
 
-static pwr_tStatus terminate() {
+static pwr_tStatus terminate()
+{
   pwr_tStatus sts;
 
   qcom_SignalAnd(&sts, &qcom_cQini, 0);
@@ -536,7 +567,8 @@ static pwr_tStatus terminate() {
   exit(EXIT_SUCCESS);
 }
 
-static int ask_yes_no(char *text) {
+static int ask_yes_no(char* text)
+{
 
   printf("%s ? (y|n) [n]: ", text);
   printf("n\n");
@@ -544,71 +576,92 @@ static int ask_yes_no(char *text) {
   return 0;
 }
 
-static int checkErrors(ini_sContext *cp) {
+static int checkErrors(ini_sContext* cp)
+{
 
   if (cp->warnings == 0 && cp->errors == 0 && cp->fatals == 0)
     return 1;
 
-  if (cp->fatals > 0) {
+  if (cp->fatals > 0)
+  {
     errh_LogFatal(&cp->log,
                   "Found %d warning(s), %d error(s) and %d fatal error(s)",
                   cp->warnings, cp->errors, cp->fatals);
-    if (cp->flags.b.ignoreFatal) {
+    if (cp->flags.b.ignoreFatal)
+    {
       errh_LogInfo(&cp->log,
                    "Ignoring fatal errors, errors and warnings, continued...");
       return 1;
-    } else {
+    }
+    else
+    {
       return ask_yes_no("Do you want to continue");
     }
   }
-  if (cp->errors > 0) {
+  if (cp->errors > 0)
+  {
     errh_LogError(&cp->log,
                   "Found %d warning(s), %d error(s) and %d fatal error(s)",
                   cp->warnings, cp->errors, cp->fatals);
-    if (cp->flags.b.ignoreError) {
+    if (cp->flags.b.ignoreError)
+    {
       errh_LogInfo(&cp->log, "Ignoring errors and warnings, continued...");
       return 1;
-    } else {
+    }
+    else
+    {
       return ask_yes_no("Do you want to continue");
     }
   }
-  if (cp->warnings > 0) {
+  if (cp->warnings > 0)
+  {
     errh_LogWarning(&cp->log,
                     "Found %d warning(s), %d error(s) and %d fatal error(s)",
                     cp->warnings, cp->errors, cp->fatals);
-    if (cp->flags.b.ignoreWarning) {
+    if (cp->flags.b.ignoreWarning)
+    {
       errh_LogInfo(&cp->log, "Ignoring warnings, continued...");
       return 1;
-    } else {
+    }
+    else
+    {
       return ask_yes_no("Do you want to continue");
     }
   }
   return 1;
 }
 
-static ini_sContext *createContext(int argc, char **argv) {
+static ini_sContext* createContext(int argc, char** argv)
+{
   int i, j;
   ini_sContext* cp;
   pwr_tStatus sts;
 
-  if (argc > 1 && strcmp(argv[1], "--version") == 0) {
+  if (argc > 1 && strcmp(argv[1], "--version") == 0)
+  {
     system("cat $pwr_exe/rt_version.dat");
     exit(1);
   }
-  if (!(cp = ini_CreateContext(&sts))) {
+  if (!(cp = ini_CreateContext(&sts)))
+  {
     fprintf(stderr, "%s: could not allocate context\n", argv[0]);
     exit(1);
   }
 
-  for (i = 1; i < argc; i++) {
-    if (argv[i][0] == '-') {
+  for (i = 1; i < argc; i++)
+  {
+    if (argv[i][0] == '-')
+    {
       int i_incr = 0;
-      for (j = 1; argv[i][j] != 0 && argv[i][j] != ' ' && argv[i][j] != '	';
-           j++) {
-        switch (argv[i][j]) {
+      for (j = 1;
+           argv[i][j] != 0 && argv[i][j] != ' ' && argv[i][j] != '	'; j++)
+      {
+        switch (argv[i][j])
+        {
         case 'a':
           if (i + 1 >= argc ||
-              !(argv[i][j + 1] == ' ' || argv[i][j + 1] != '	')) {
+              !(argv[i][j + 1] == ' ' || argv[i][j + 1] != '	'))
+          {
             usage(argv[0]);
             exit(0);
           }
@@ -619,7 +672,8 @@ static ini_sContext *createContext(int argc, char **argv) {
           break;
         case 'b':
           if (i + 1 >= argc ||
-              !(argv[i][j + 1] == ' ' || argv[i][j + 1] != '	')) {
+              !(argv[i][j + 1] == ' ' || argv[i][j + 1] != '	'))
+          {
             usage(argv[0]);
             exit(0);
           }
@@ -628,7 +682,8 @@ static ini_sContext *createContext(int argc, char **argv) {
           break;
         case 'c':
           if (i + 1 >= argc ||
-              !(argv[i][j + 1] == ' ' || argv[i][j + 1] != '	')) {
+              !(argv[i][j + 1] == ' ' || argv[i][j + 1] != '	'))
+          {
             usage(argv[0]);
             exit(0);
           }
@@ -638,7 +693,8 @@ static ini_sContext *createContext(int argc, char **argv) {
           break;
         case 'd':
           if (i + 1 >= argc ||
-              !(argv[i][j + 1] == ' ' || argv[i][j + 1] != '	')) {
+              !(argv[i][j + 1] == ' ' || argv[i][j + 1] != '	'))
+          {
             usage(argv[0]);
             exit(0);
           }
@@ -654,7 +710,8 @@ static ini_sContext *createContext(int argc, char **argv) {
           break;
         case 'h':
           if (i + 1 >= argc ||
-              !(argv[i][j + 1] == ' ' || argv[i][j + 1] != '	')) {
+              !(argv[i][j + 1] == ' ' || argv[i][j + 1] != '	'))
+          {
             usage(argv[0]);
             exit(0);
           }
@@ -668,7 +725,8 @@ static ini_sContext *createContext(int argc, char **argv) {
           break;
         case 'n':
           if (i + 1 >= argc ||
-              !(argv[i][j + 1] == ' ' || argv[i][j + 1] != '	')) {
+              !(argv[i][j + 1] == ' ' || argv[i][j + 1] != '	'))
+          {
             usage(argv[0]);
             exit(0);
           }
@@ -679,12 +737,13 @@ static ini_sContext *createContext(int argc, char **argv) {
           break;
         case 'p':
           if (i + 1 >= argc ||
-              !(argv[i][j + 1] == ' ' || argv[i][j + 1] != '	')) {
+              !(argv[i][j + 1] == ' ' || argv[i][j + 1] != '	'))
+          {
             usage(argv[0]);
             exit(0);
           }
           cp->flags.b.plcfile = 1;
-          cp->plcfile = (ini_sFile *)calloc(1, sizeof(ini_sFile));
+          cp->plcfile = (ini_sFile*)calloc(1, sizeof(ini_sFile));
           cp->plcfile_cnt = 1;
           strcpy(cp->plcfile[0].name, argv[i + 1]);
           cp->plcfile[0].logOpenFail = errh_LogInfo;
@@ -693,7 +752,8 @@ static ini_sContext *createContext(int argc, char **argv) {
           break;
         case 'q':
           if (i + 1 >= argc ||
-              !(argv[i][j + 1] == ' ' || argv[i][j + 1] != '	')) {
+              !(argv[i][j + 1] == ' ' || argv[i][j + 1] != '	'))
+          {
             usage(argv[0]);
             exit(0);
           }
@@ -715,7 +775,8 @@ static ini_sContext *createContext(int argc, char **argv) {
           break;
         case 'A':
           if (i + 1 >= argc ||
-              !(argv[i][j + 1] == ' ' || argv[i][j + 1] != '	')) {
+              !(argv[i][j + 1] == ' ' || argv[i][j + 1] != '	'))
+          {
             usage(argv[0]);
             exit(0);
           }
@@ -729,7 +790,8 @@ static ini_sContext *createContext(int argc, char **argv) {
           break;
         case 'P':
           if (i + 1 >= argc ||
-              !(argv[i][j + 1] == ' ' || argv[i][j + 1] != '	')) {
+              !(argv[i][j + 1] == ' ' || argv[i][j + 1] != '	'))
+          {
             usage(argv[0]);
             exit(0);
           }
@@ -753,7 +815,8 @@ static ini_sContext *createContext(int argc, char **argv) {
 
   return cp;
 }
-static void usage(char *name) {
+static void usage(char* name)
+{
 #if defined OS_POSIX
   fprintf(stderr, "usage: %s -a arg -b arg -d arg -efg arg -hip arg -q arg -ru "
                   "arg -s arg -vwA arg -H arg\n",
@@ -784,30 +847,35 @@ static void usage(char *name) {
   fprintf(stderr, "  -v    : verbose\n");
   fprintf(stderr, "  -w    : ignore warnings\n");
   fprintf(stderr, "  -A arg: use 'arg' as alias file\n");
-  fprintf(stderr, "  -D    : Daemonize rt_ini. Default PID file is /run/pwr/pwr.pid\n");
+  fprintf(stderr,
+          "  -D    : Daemonize rt_ini. Default PID file is /run/pwr/pwr.pid\n");
   fprintf(stderr, "  -p    : PID file, implies -D\n");
   fprintf(stderr, "  -H arg: use 'arg' as hostname\n");
   fprintf(stderr, "  -N arg: use 'arg' as nodename\n");
   exit(1);
 }
 
-static void logChanges(ini_sContext *cp) {
-  lst_sEntry *vl;
-  lst_sEntry *ol;
-  ivol_sVolume *vp;
-  ivol_sObject *iop;
+static void logChanges(ini_sContext* cp)
+{
+  lst_sEntry* vl;
+  lst_sEntry* ol;
+  ivol_sVolume* vp;
+  ivol_sObject* iop;
   int cre, upd, upd_io;
 
   for (vp = lst_Succ(NULL, &cp->vol_lh, &vl); vp != NULL;
-       vp = lst_Succ(NULL, vl, &vl)) {
+       vp = lst_Succ(NULL, vl, &vl))
+  {
     cre = upd = upd_io = 0;
     for (iop = lst_Succ(NULL, &vp->cre_lh, &ol); iop != NULL;
-         iop = lst_Succ(NULL, ol, &ol)) {
+         iop = lst_Succ(NULL, ol, &ol))
+    {
       errh_LogInfo(&cp->log, "cre: %s\n", iop->oh.name);
       cre++;
     }
     for (iop = lst_Succ(NULL, &vp->upd_io_lh, &ol); iop != NULL;
-         iop = lst_Succ(NULL, ol, &ol)) {
+         iop = lst_Succ(NULL, ol, &ol))
+    {
       printf("upd: %s, (", iop->op->g.f.name.orig);
       if (iop->flags.b.father)
         printf("father, ");
@@ -827,7 +895,8 @@ static void logChanges(ini_sContext *cp) {
       upd_io++;
     }
     for (iop = lst_Succ(NULL, &vp->upd_lh, &ol); iop != NULL;
-         iop = lst_Succ(NULL, ol, &ol)) {
+         iop = lst_Succ(NULL, ol, &ol))
+    {
       printf("upd: %s, (", iop->op->g.f.name.orig);
       if (iop->flags.b.father)
         printf("father, ");
@@ -851,9 +920,10 @@ static void logChanges(ini_sContext *cp) {
   }
 }
 
-static void logCardinality(ini_sContext *cp) {
-  lst_sEntry *vl;
-  ivol_sVolume *vp;
+static void logCardinality(ini_sContext* cp)
+{
+  lst_sEntry* vl;
+  ivol_sVolume* vp;
 
   errh_LogInfo(&cp->log, "Cardinality: %d, bodysize: %d\n",
                cp->node.cardinality, cp->node.bodySize);
@@ -864,9 +934,10 @@ static void logCardinality(ini_sContext *cp) {
         vp->volume.name, vp->vid, vp->volume.cardinality, vp->volume.rbodySize);
 }
 
-static pwr_tStatus events(ini_sContext *cp) {
-  lst_sEntry *pl;
-  ini_sProc *pp;
+static pwr_tStatus events(ini_sContext* cp)
+{
+  lst_sEntry* pl;
+  ini_sProc* pp;
   pid_t pid;
   pid_t last_pid = 1;
   pwr_tStatus sts = INI__SUCCESS;
@@ -881,42 +952,49 @@ static pwr_tStatus events(ini_sContext *cp) {
   cp->myQ.nid = 0;
 
   qcom_CreateQ(&sts, &cp->myQ, NULL, "events");
-  if (EVEN(sts)) {
+  if (EVEN(sts))
+  {
     errh_LogFatal(&cp->log, "qcom_CreateQ, %m", sts);
     exit(sts);
   }
 
-  for (;;) {
+  for (;;)
+  {
     int status;
 
     get.data = NULL;
     qcom_Get(&sts, &cp->myQ, &get, tmo_ms);
 
     /* Request for termination ?? */
-    if (sts != QCOM__TMO && sts != QCOM__QEMPTY && get.type.b == 11) {
+    if (sts != QCOM__TMO && sts != QCOM__QEMPTY && get.type.b == 11)
+    {
       sts = terminate();
       return sts;
     }
 
     /* Request for restart */
-    if (sts != QCOM__TMO && sts != QCOM__QEMPTY && get.data != NULL) {
+    if (sts != QCOM__TMO && sts != QCOM__QEMPTY && get.data != NULL)
+    {
       int len, i, argc, totlen;
       char **argv, *s;
       ini_sContext* ncp;
 
-      for (argc = 0, s = get.data, totlen = 0; totlen < get.size; argc++) {
+      for (argc = 0, s = get.data, totlen = 0; totlen < get.size; argc++)
+      {
         len = strlen(s);
         s += len + 1;
         totlen += len + 1;
       }
-      argv = (char **)calloc(sizeof(void *), argc);
-      for (i = 0, s = get.data; i < argc; i++) {
+      argv = (char**)calloc(sizeof(void*), argc);
+      for (i = 0, s = get.data; i < argc; i++)
+      {
         len = strlen(s);
         argv[i] = s;
         s += len + 1;
       }
       ncp = createContext(argc, argv);
-      if (ncp != NULL) {
+      if (ncp != NULL)
+      {
         ncp->log.put.type.b = 10;
         ncp->log.put.type.s = 1;
         ncp->log.send = 1;
@@ -941,8 +1019,10 @@ static pwr_tStatus events(ini_sContext *cp) {
       break;
 
     for (pp = lst_Succ(NULL, &cp->proc_lh, &pl); pp != NULL;
-         pp = lst_Succ(NULL, pl, &pl)) {
-      if (pp->proc.pid == pid) {
+         pp = lst_Succ(NULL, pl, &pl))
+    {
+      if (pp->proc.pid == pid)
+      {
         errh_LogInfo(&cp->log, "Process %s exited with status %d",
                      pp->proc.name, status);
         break;
@@ -954,7 +1034,8 @@ static pwr_tStatus events(ini_sContext *cp) {
   return INI__SUCCESS;
 }
 
-static void create_locks() {
+static void create_locks()
+{
   pwr_tStatus sts;
 
   lck_Create(&sts, lck_eLock_Time);
@@ -968,7 +1049,8 @@ static void create_locks() {
     errh_Fatal("lock create NMps, %m", sts);
 }
 
-static void delete_locks() {
+static void delete_locks()
+{
   pwr_tStatus sts;
 
   lck_Delete(&sts, lck_eLock_Time);
@@ -982,213 +1064,246 @@ static void delete_locks() {
     errh_Fatal("lock delete NMps, %m", sts);
 }
 
-static void load_backup() {
+static void load_backup()
+{
   pwr_tObjid oid;
-  pwr_sClass_AvArea *avp;
-  pwr_sClass_DvArea *dvp;
-  pwr_sClass_IvArea *ivp;
-  pwr_sClass_ATvArea *atvp;
-  pwr_sClass_DTvArea *dtvp;
-  pwr_sClass_SvArea *svp;
-  pwr_sClass_InitArea *iavp;
-  pwr_sClass_InitArea *idvp;
-  pwr_sClass_InitArea *iivp;
-  pwr_sClass_InitArea *iatvp;
-  pwr_sClass_InitArea *idtvp;
-  pwr_sClass_InitArea *isvp;
+  pwr_sClass_AvArea* avp;
+  pwr_sClass_DvArea* dvp;
+  pwr_sClass_IvArea* ivp;
+  pwr_sClass_ATvArea* atvp;
+  pwr_sClass_DTvArea* dtvp;
+  pwr_sClass_SvArea* svp;
+  pwr_sClass_InitArea* iavp;
+  pwr_sClass_InitArea* idvp;
+  pwr_sClass_InitArea* iivp;
+  pwr_sClass_InitArea* iatvp;
+  pwr_sClass_InitArea* idtvp;
+  pwr_sClass_InitArea* isvp;
   pwr_tStatus sts;
   int i;
-  pwr_sClass_IOHandler *iop;
+  pwr_sClass_IOHandler* iop;
   pwr_sAttrRef aref;
 
   sts = io_get_iohandler_object(&iop, NULL);
-  if (EVEN(sts)) {
+  if (EVEN(sts))
+  {
     errh_Error("io_get_iohandler_object, %m", sts);
     return;
   }
 
   sts = gdh_NameToObjid("pwrNode-active-io-av", &oid);
-  if (EVEN(sts)) {
+  if (EVEN(sts))
+  {
     errh_Error("gdh_NameToObjid(pwrNode-active-io-av, &oid), %m", sts);
     return;
   }
 
-  sts = gdh_ObjidToPointer(oid, (void *)&avp);
-  if (EVEN(sts)) {
+  sts = gdh_ObjidToPointer(oid, (void*)&avp);
+  if (EVEN(sts))
+  {
     errh_Error("gdh_ObjidToPointer(oid, (void *) &avp), %m", sts);
     return;
   }
 
   sts = gdh_NameToObjid("pwrNode-active-io-av_init", &oid);
-  if (EVEN(sts)) {
+  if (EVEN(sts))
+  {
     errh_Error("gdh_NameToObjid(pwrNode-active-io-av_init, &oid), %m", sts);
     return;
   }
 
-  sts = gdh_ObjidToPointer(oid, (void *)&iavp);
-  if (EVEN(sts)) {
+  sts = gdh_ObjidToPointer(oid, (void*)&iavp);
+  if (EVEN(sts))
+  {
     errh_Error("gdh_ObjidToPointer(oid, (void *) &iavp), %m", sts);
     return;
   }
 
   sts = gdh_NameToObjid("pwrNode-active-io-dv", &oid);
-  if (EVEN(sts)) {
+  if (EVEN(sts))
+  {
     errh_Error("gdh_NameToObjid(pwrNode-active-io-dv, &oid), %m", sts);
     return;
   }
 
-  sts = gdh_ObjidToPointer(oid, (void *)&dvp);
-  if (EVEN(sts)) {
+  sts = gdh_ObjidToPointer(oid, (void*)&dvp);
+  if (EVEN(sts))
+  {
     errh_Error("gdh_ObjidToPointer(oid, (void *) &dvp), %m", sts);
     return;
   }
 
   sts = gdh_NameToObjid("pwrNode-active-io-dv_init", &oid);
-  if (EVEN(sts)) {
+  if (EVEN(sts))
+  {
     errh_Error("gdh_NameToObjid(pwrNode-active-io-dv_init, &oid), %m", sts);
     return;
   }
 
-  sts = gdh_ObjidToPointer(oid, (void *)&idvp);
-  if (EVEN(sts)) {
+  sts = gdh_ObjidToPointer(oid, (void*)&idvp);
+  if (EVEN(sts))
+  {
     errh_Error("gdh_ObjidToPointer(oid, (void *) &idvp), %m", sts);
     return;
   }
 
   sts = gdh_NameToObjid("pwrNode-active-io-iv", &oid);
-  if (EVEN(sts)) {
+  if (EVEN(sts))
+  {
     errh_Error("gdh_NameToObjid(pwrNode-active-io-iv, &oid), %m", sts);
     return;
   }
 
-  sts = gdh_ObjidToPointer(oid, (void *)&ivp);
-  if (EVEN(sts)) {
+  sts = gdh_ObjidToPointer(oid, (void*)&ivp);
+  if (EVEN(sts))
+  {
     errh_Error("gdh_ObjidToPointer(oid, (void *) &ivp), %m", sts);
     return;
   }
 
   sts = gdh_NameToObjid("pwrNode-active-io-atv", &oid);
-  if (EVEN(sts)) {
+  if (EVEN(sts))
+  {
     errh_Error("gdh_NameToObjid(pwrNode-active-io-atv, &oid), %m", sts);
     return;
   }
 
-  sts = gdh_ObjidToPointer(oid, (void *)&atvp);
-  if (EVEN(sts)) {
+  sts = gdh_ObjidToPointer(oid, (void*)&atvp);
+  if (EVEN(sts))
+  {
     errh_Error("gdh_ObjidToPointer(oid, (void *) &atvp), %m", sts);
     return;
   }
 
   sts = gdh_NameToObjid("pwrNode-active-io-dtv", &oid);
-  if (EVEN(sts)) {
+  if (EVEN(sts))
+  {
     errh_Error("gdh_NameToObjid(pwrNode-active-io-dtv, &oid), %m", sts);
     return;
   }
 
-  sts = gdh_ObjidToPointer(oid, (void *)&dtvp);
-  if (EVEN(sts)) {
+  sts = gdh_ObjidToPointer(oid, (void*)&dtvp);
+  if (EVEN(sts))
+  {
     errh_Error("gdh_ObjidToPointer(oid, (void *) &dtvp), %m", sts);
     return;
   }
 
   sts = gdh_NameToObjid("pwrNode-active-io-sv", &oid);
-  if (EVEN(sts)) {
+  if (EVEN(sts))
+  {
     errh_Error("gdh_NameToObjid(pwrNode-active-io-sv, &oid), %m", sts);
     return;
   }
 
-  sts = gdh_ObjidToPointer(oid, (void *)&svp);
-  if (EVEN(sts)) {
+  sts = gdh_ObjidToPointer(oid, (void*)&svp);
+  if (EVEN(sts))
+  {
     errh_Error("gdh_ObjidToPointer(oid, (void *) &svp), %m", sts);
     return;
   }
 
   sts = gdh_NameToObjid("pwrNode-active-io-iv_init", &oid);
-  if (EVEN(sts)) {
+  if (EVEN(sts))
+  {
     errh_Error("gdh_NameToObjid(pwrNode-active-io-iv_init, &oid), %m", sts);
     return;
   }
 
-  sts = gdh_ObjidToPointer(oid, (void *)&iivp);
-  if (EVEN(sts)) {
+  sts = gdh_ObjidToPointer(oid, (void*)&iivp);
+  if (EVEN(sts))
+  {
     errh_Error("gdh_ObjidToPointer(oid, (void *) &iivp), %m", sts);
     return;
   }
 
   sts = gdh_NameToObjid("pwrNode-active-io-atv_init", &oid);
-  if (EVEN(sts)) {
+  if (EVEN(sts))
+  {
     errh_Error("gdh_NameToObjid(pwrNode-active-io-atv_init, &oid), %m", sts);
     return;
   }
 
-  sts = gdh_ObjidToPointer(oid, (void *)&iatvp);
-  if (EVEN(sts)) {
+  sts = gdh_ObjidToPointer(oid, (void*)&iatvp);
+  if (EVEN(sts))
+  {
     errh_Error("gdh_ObjidToPointer(oid, (void *) &iatvp), %m", sts);
     return;
   }
 
   sts = gdh_NameToObjid("pwrNode-active-io-dtv_init", &oid);
-  if (EVEN(sts)) {
+  if (EVEN(sts))
+  {
     errh_Error("gdh_NameToObjid(pwrNode-active-io-dtv_init, &oid), %m", sts);
     return;
   }
 
-  sts = gdh_ObjidToPointer(oid, (void *)&idtvp);
-  if (EVEN(sts)) {
+  sts = gdh_ObjidToPointer(oid, (void*)&idtvp);
+  if (EVEN(sts))
+  {
     errh_Error("gdh_ObjidToPointer(oid, (void *) &idtvp), %m", sts);
     return;
   }
 
   sts = gdh_NameToObjid("pwrNode-active-io-sv_init", &oid);
-  if (EVEN(sts)) {
+  if (EVEN(sts))
+  {
     errh_Error("gdh_NameToObjid(pwrNode-active-io-sv_init, &oid), %m", sts);
     return;
   }
 
-  sts = gdh_ObjidToPointer(oid, (void *)&isvp);
-  if (EVEN(sts)) {
+  sts = gdh_ObjidToPointer(oid, (void*)&isvp);
+  if (EVEN(sts))
+  {
     errh_Error("gdh_ObjidToPointer(oid, (void *) &isvp), %m", sts);
     return;
   }
 
-  for (i = 0; i < iop->AvCount; i++) {
-    pwr_tFloat32 *ifp = gdh_TranslateRtdbPointer(iavp->Value[i]);
+  for (i = 0; i < iop->AvCount; i++)
+  {
+    pwr_tFloat32* ifp = gdh_TranslateRtdbPointer(iavp->Value[i]);
     avp->Value[i] = *ifp;
   }
 
-  for (i = 0; i < iop->DvCount; i++) {
+  for (i = 0; i < iop->DvCount; i++)
+  {
     pwr_tBoolean* ibp = gdh_TranslateRtdbPointer(idvp->Value[i]);
     dvp->Value[i] = *ibp;
   }
 
-  for (i = 0; i < iop->IvCount; i++) {
+  for (i = 0; i < iop->IvCount; i++)
+  {
     pwr_tInt32* iip = gdh_TranslateRtdbPointer(iivp->Value[i]);
     ivp->Value[i] = *iip;
   }
 
-  for (i = 1; i < iop->ATvCount; i++) {
+  for (i = 1; i < iop->ATvCount; i++)
+  {
     pwr_tTime* iatp = gdh_TranslateRtdbPointer(iatvp->Value[i]);
     atvp->Value[i] = *iatp;
   }
 
-  for (i = 0; i < iop->DTvCount; i++) {
+  for (i = 0; i < iop->DTvCount; i++)
+  {
     pwr_tDeltaTime* idtp = gdh_TranslateRtdbPointer(idtvp->Value[i]);
     dtvp->Value[i] = *idtp;
   }
 
-  for (i = 0; i < iop->SvCount; i++) {
-    char *istrp = gdh_TranslateRtdbPointer(isvp->Value[i]);
+  for (i = 0; i < iop->SvCount; i++)
+  {
+    char* istrp = gdh_TranslateRtdbPointer(isvp->Value[i]);
     strncpy(svp->Value[i], istrp, sizeof(svp->Value[0]));
   }
 
-  typedef struct {
+  typedef struct
+  {
     union {
-      pwr_tFloat32 *f;
-      pwr_tInt32 *i;
-      pwr_tBoolean *b;
-      pwr_tTime *at;
-      pwr_tDeltaTime *dt;
-      pwr_tString80 *str;
+      pwr_tFloat32* f;
+      pwr_tInt32* i;
+      pwr_tBoolean* b;
+      pwr_tTime* at;
+      pwr_tDeltaTime* dt;
+      pwr_tString80* str;
     } actval_p;
     pwr_tUInt32 validx;
     union {
@@ -1209,15 +1324,17 @@ static void load_backup() {
   } ini_sRestoreSig;
 
   // Store ActualValue pointers
-  ini_sRestoreSig *rsav = calloc(sizeof(ini_sRestoreSig), iop->AvCount);
+  ini_sRestoreSig* rsav = calloc(sizeof(ini_sRestoreSig), iop->AvCount);
   i = 0;
   for (sts = gdh_GetClassListAttrRef(pwr_cClass_Av, &aref); ODD(sts);
-       sts = gdh_GetNextAttrRef(pwr_cClass_Av, &aref, &aref)) {
+       sts = gdh_GetNextAttrRef(pwr_cClass_Av, &aref, &aref))
+  {
     if (i >= iop->AvCount)
       break;
 
-    sts = gdh_AttrRefToPointer(&aref, (pwr_tAddress *)&rsav[i].op.av);
-    if (EVEN(sts)) {
+    sts = gdh_AttrRefToPointer(&aref, (pwr_tAddress*)&rsav[i].op.av);
+    if (EVEN(sts))
+    {
       errh_Error("gdh_AttrRefToPointer Iv, %m", sts);
       return;
     }
@@ -1227,15 +1344,17 @@ static void load_backup() {
     i++;
   }
 
-  ini_sRestoreSig *rsdv = calloc(sizeof(ini_sRestoreSig), iop->DvCount);
+  ini_sRestoreSig* rsdv = calloc(sizeof(ini_sRestoreSig), iop->DvCount);
   i = 0;
   for (sts = gdh_GetClassListAttrRef(pwr_cClass_Dv, &aref); ODD(sts);
-       sts = gdh_GetNextAttrRef(pwr_cClass_Dv, &aref, &aref)) {
+       sts = gdh_GetNextAttrRef(pwr_cClass_Dv, &aref, &aref))
+  {
     if (i >= iop->DvCount)
       break;
 
-    sts = gdh_AttrRefToPointer(&aref, (pwr_tAddress *)&rsdv[i].op.dv);
-    if (EVEN(sts)) {
+    sts = gdh_AttrRefToPointer(&aref, (pwr_tAddress*)&rsdv[i].op.dv);
+    if (EVEN(sts))
+    {
       errh_Error("gdh_AttrRefToPointer Iv, %m", sts);
       return;
     }
@@ -1245,15 +1364,17 @@ static void load_backup() {
     i++;
   }
 
-  ini_sRestoreSig *rsiv = calloc(sizeof(ini_sRestoreSig), iop->IvCount);
+  ini_sRestoreSig* rsiv = calloc(sizeof(ini_sRestoreSig), iop->IvCount);
   i = 0;
   for (sts = gdh_GetClassListAttrRef(pwr_cClass_Iv, &aref); ODD(sts);
-       sts = gdh_GetNextAttrRef(pwr_cClass_Iv, &aref, &aref)) {
+       sts = gdh_GetNextAttrRef(pwr_cClass_Iv, &aref, &aref))
+  {
     if (i >= iop->IvCount)
       break;
 
-    sts = gdh_AttrRefToPointer(&aref, (pwr_tAddress *)&rsiv[i].op.iv);
-    if (EVEN(sts)) {
+    sts = gdh_AttrRefToPointer(&aref, (pwr_tAddress*)&rsiv[i].op.iv);
+    if (EVEN(sts))
+    {
       errh_Error("gdh_AttrRefToPointer Iv, %m", sts);
       return;
     }
@@ -1263,15 +1384,17 @@ static void load_backup() {
     i++;
   }
 
-  ini_sRestoreSig *rsatv = calloc(sizeof(ini_sRestoreSig), iop->ATvCount);
+  ini_sRestoreSig* rsatv = calloc(sizeof(ini_sRestoreSig), iop->ATvCount);
   i = 1;
   for (sts = gdh_GetClassListAttrRef(pwr_cClass_ATv, &aref); ODD(sts);
-       sts = gdh_GetNextAttrRef(pwr_cClass_ATv, &aref, &aref)) {
+       sts = gdh_GetNextAttrRef(pwr_cClass_ATv, &aref, &aref))
+  {
     if (i >= iop->ATvCount)
       break;
 
-    sts = gdh_AttrRefToPointer(&aref, (pwr_tAddress *)&rsatv[i].op.atv);
-    if (EVEN(sts)) {
+    sts = gdh_AttrRefToPointer(&aref, (pwr_tAddress*)&rsatv[i].op.atv);
+    if (EVEN(sts))
+    {
       errh_Error("gdh_AttrRefToPointer ATv, %m", sts);
       return;
     }
@@ -1281,15 +1404,17 @@ static void load_backup() {
     i++;
   }
 
-  ini_sRestoreSig *rsdtv = calloc(sizeof(ini_sRestoreSig), iop->DTvCount);
+  ini_sRestoreSig* rsdtv = calloc(sizeof(ini_sRestoreSig), iop->DTvCount);
   i = 0;
   for (sts = gdh_GetClassListAttrRef(pwr_cClass_DTv, &aref); ODD(sts);
-       sts = gdh_GetNextAttrRef(pwr_cClass_DTv, &aref, &aref)) {
+       sts = gdh_GetNextAttrRef(pwr_cClass_DTv, &aref, &aref))
+  {
     if (i >= iop->DTvCount)
       break;
 
-    sts = gdh_AttrRefToPointer(&aref, (pwr_tAddress *)&rsdtv[i].op.dtv);
-    if (EVEN(sts)) {
+    sts = gdh_AttrRefToPointer(&aref, (pwr_tAddress*)&rsdtv[i].op.dtv);
+    if (EVEN(sts))
+    {
       errh_Error("gdh_AttrRefToPointer DTv, %m", sts);
       return;
     }
@@ -1299,15 +1424,17 @@ static void load_backup() {
     i++;
   }
 
-  ini_sRestoreSig *rssv = calloc(sizeof(ini_sRestoreSig), iop->SvCount);
+  ini_sRestoreSig* rssv = calloc(sizeof(ini_sRestoreSig), iop->SvCount);
   i = 0;
   for (sts = gdh_GetClassListAttrRef(pwr_cClass_Sv, &aref); ODD(sts);
-       sts = gdh_GetNextAttrRef(pwr_cClass_Sv, &aref, &aref)) {
+       sts = gdh_GetNextAttrRef(pwr_cClass_Sv, &aref, &aref))
+  {
     if (i >= iop->SvCount)
       break;
 
-    sts = gdh_AttrRefToPointer(&aref, (pwr_tAddress *)&rssv[i].op.sv);
-    if (EVEN(sts)) {
+    sts = gdh_AttrRefToPointer(&aref, (pwr_tAddress*)&rssv[i].op.sv);
+    if (EVEN(sts))
+    {
       errh_Error("gdh_AttrRefToPointer Sv, %m", sts);
       return;
     }
@@ -1317,15 +1444,17 @@ static void load_backup() {
     i++;
   }
 
-  ini_sRestoreSig *rsai = calloc(sizeof(ini_sRestoreSig), iop->AiCount);
+  ini_sRestoreSig* rsai = calloc(sizeof(ini_sRestoreSig), iop->AiCount);
   i = 0;
   for (sts = gdh_GetClassListAttrRef(pwr_cClass_Ai, &aref); ODD(sts);
-       sts = gdh_GetNextAttrRef(pwr_cClass_Ai, &aref, &aref)) {
+       sts = gdh_GetNextAttrRef(pwr_cClass_Ai, &aref, &aref))
+  {
     if (i >= iop->AiCount)
       break;
 
-    sts = gdh_AttrRefToPointer(&aref, (pwr_tAddress *)&rsai[i].op.ai);
-    if (EVEN(sts)) {
+    sts = gdh_AttrRefToPointer(&aref, (pwr_tAddress*)&rsai[i].op.ai);
+    if (EVEN(sts))
+    {
       errh_Error("gdh_AttrRefToPointer Iv, %m", sts);
       return;
     }
@@ -1335,15 +1464,17 @@ static void load_backup() {
     i++;
   }
 
-  ini_sRestoreSig *rsao = calloc(sizeof(ini_sRestoreSig), iop->AoCount);
+  ini_sRestoreSig* rsao = calloc(sizeof(ini_sRestoreSig), iop->AoCount);
   i = 0;
   for (sts = gdh_GetClassListAttrRef(pwr_cClass_Ao, &aref); ODD(sts);
-       sts = gdh_GetNextAttrRef(pwr_cClass_Ao, &aref, &aref)) {
+       sts = gdh_GetNextAttrRef(pwr_cClass_Ao, &aref, &aref))
+  {
     if (i >= iop->AoCount)
       break;
 
-    sts = gdh_AttrRefToPointer(&aref, (pwr_tAddress *)&rsao[i].op.ao);
-    if (EVEN(sts)) {
+    sts = gdh_AttrRefToPointer(&aref, (pwr_tAddress*)&rsao[i].op.ao);
+    if (EVEN(sts))
+    {
       errh_Error("gdh_AttrRefToPointer Iv, %m", sts);
       return;
     }
@@ -1353,15 +1484,17 @@ static void load_backup() {
     i++;
   }
 
-  ini_sRestoreSig *rsii = calloc(sizeof(ini_sRestoreSig), iop->IiCount);
+  ini_sRestoreSig* rsii = calloc(sizeof(ini_sRestoreSig), iop->IiCount);
   i = 0;
   for (sts = gdh_GetClassListAttrRef(pwr_cClass_Ii, &aref); ODD(sts);
-       sts = gdh_GetNextAttrRef(pwr_cClass_Ii, &aref, &aref)) {
+       sts = gdh_GetNextAttrRef(pwr_cClass_Ii, &aref, &aref))
+  {
     if (i >= iop->IiCount)
       break;
 
-    sts = gdh_AttrRefToPointer(&aref, (pwr_tAddress *)&rsii[i].op.ii);
-    if (EVEN(sts)) {
+    sts = gdh_AttrRefToPointer(&aref, (pwr_tAddress*)&rsii[i].op.ii);
+    if (EVEN(sts))
+    {
       errh_Error("gdh_AttrRefToPointer Iv, %m", sts);
       return;
     }
@@ -1371,15 +1504,17 @@ static void load_backup() {
     i++;
   }
 
-  ini_sRestoreSig *rsio = calloc(sizeof(ini_sRestoreSig), iop->IoCount);
+  ini_sRestoreSig* rsio = calloc(sizeof(ini_sRestoreSig), iop->IoCount);
   i = 0;
   for (sts = gdh_GetClassListAttrRef(pwr_cClass_Io, &aref); ODD(sts);
-       sts = gdh_GetNextAttrRef(pwr_cClass_Io, &aref, &aref)) {
+       sts = gdh_GetNextAttrRef(pwr_cClass_Io, &aref, &aref))
+  {
     if (i >= iop->IoCount)
       break;
 
-    sts = gdh_AttrRefToPointer(&aref, (pwr_tAddress *)&rsio[i].op.io);
-    if (EVEN(sts)) {
+    sts = gdh_AttrRefToPointer(&aref, (pwr_tAddress*)&rsio[i].op.io);
+    if (EVEN(sts))
+    {
       errh_Error("gdh_AttrRefToPointer Iv, %m", sts);
       return;
     }
@@ -1389,15 +1524,17 @@ static void load_backup() {
     i++;
   }
 
-  ini_sRestoreSig *rsdi = calloc(sizeof(ini_sRestoreSig), iop->DiCount);
+  ini_sRestoreSig* rsdi = calloc(sizeof(ini_sRestoreSig), iop->DiCount);
   i = 0;
   for (sts = gdh_GetClassListAttrRef(pwr_cClass_Di, &aref); ODD(sts);
-       sts = gdh_GetNextAttrRef(pwr_cClass_Di, &aref, &aref)) {
+       sts = gdh_GetNextAttrRef(pwr_cClass_Di, &aref, &aref))
+  {
     if (i >= iop->DiCount)
       break;
 
-    sts = gdh_AttrRefToPointer(&aref, (pwr_tAddress *)&rsdi[i].op.di);
-    if (EVEN(sts)) {
+    sts = gdh_AttrRefToPointer(&aref, (pwr_tAddress*)&rsdi[i].op.di);
+    if (EVEN(sts))
+    {
       errh_Error("gdh_AttrRefToPointer Iv, %m", sts);
       return;
     }
@@ -1407,15 +1544,17 @@ static void load_backup() {
     i++;
   }
 
-  ini_sRestoreSig *rsdo = calloc(sizeof(ini_sRestoreSig), iop->DoCount);
+  ini_sRestoreSig* rsdo = calloc(sizeof(ini_sRestoreSig), iop->DoCount);
   i = 0;
   for (sts = gdh_GetClassListAttrRef(pwr_cClass_Do, &aref); ODD(sts);
-       sts = gdh_GetNextAttrRef(pwr_cClass_Do, &aref, &aref)) {
+       sts = gdh_GetNextAttrRef(pwr_cClass_Do, &aref, &aref))
+  {
     if (i >= iop->DoCount)
       break;
 
-    sts = gdh_AttrRefToPointer(&aref, (pwr_tAddress *)&rsdo[i].op.dox);
-    if (EVEN(sts)) {
+    sts = gdh_AttrRefToPointer(&aref, (pwr_tAddress*)&rsdo[i].op.dox);
+    if (EVEN(sts))
+    {
       errh_Error("gdh_AttrRefToPointer Iv, %m", sts);
       return;
     }
@@ -1425,16 +1564,18 @@ static void load_backup() {
     i++;
   }
 
-  ini_sRestoreSig *rsco = calloc(sizeof(ini_sRestoreSig), iop->CoCount);
-  pwr_tInt32 **rscoa = calloc(sizeof(pwr_tInt32 *), iop->CoCount);
+  ini_sRestoreSig* rsco = calloc(sizeof(ini_sRestoreSig), iop->CoCount);
+  pwr_tInt32** rscoa = calloc(sizeof(pwr_tInt32*), iop->CoCount);
   i = 0;
   for (sts = gdh_GetClassListAttrRef(pwr_cClass_Co, &aref); ODD(sts);
-       sts = gdh_GetNextAttrRef(pwr_cClass_Co, &aref, &aref)) {
+       sts = gdh_GetNextAttrRef(pwr_cClass_Co, &aref, &aref))
+  {
     if (i >= iop->CoCount)
       break;
 
-    sts = gdh_AttrRefToPointer(&aref, (pwr_tAddress *)&rsco[i].op.co);
-    if (EVEN(sts)) {
+    sts = gdh_AttrRefToPointer(&aref, (pwr_tAddress*)&rsco[i].op.co);
+    if (EVEN(sts))
+    {
       errh_Error("gdh_AttrRefToPointer Iv, %m", sts);
       return;
     }
@@ -1446,85 +1587,99 @@ static void load_backup() {
   }
 
   sts = bck_LoadBackup();
-  if (EVEN(sts)) {
+  if (EVEN(sts))
+  {
     errh_Error("bck_LoadBackup, %m", sts);
     return;
   }
 
   // Set stored ActualValue pointers
-  for (i = 0; i < iop->AvCount; i++) {
+  for (i = 0; i < iop->AvCount; i++)
+  {
     rsav[i].op.av->ActualValue = rsav[i].actval_p.f;
     rsav[i].op.av->ValueIndex = rsav[i].validx;
   }
   free(rsav);
 
-  for (i = 0; i < iop->DvCount; i++) {
+  for (i = 0; i < iop->DvCount; i++)
+  {
     rsdv[i].op.dv->ActualValue = rsdv[i].actval_p.b;
     rsdv[i].op.dv->ValueIndex = rsdv[i].validx;
   }
   free(rsdv);
 
-  for (i = 0; i < iop->IvCount; i++) {
+  for (i = 0; i < iop->IvCount; i++)
+  {
     rsiv[i].op.iv->ActualValue = rsiv[i].actval_p.i;
     rsiv[i].op.iv->ValueIndex = rsiv[i].validx;
   }
   free(rsiv);
 
-  for (i = 1; i < iop->ATvCount; i++) {
+  for (i = 1; i < iop->ATvCount; i++)
+  {
     rsatv[i].op.atv->ActualValue = rsatv[i].actval_p.at;
     rsatv[i].op.atv->ValueIndex = rsatv[i].validx;
   }
   free(rsatv);
 
-  for (i = 0; i < iop->DTvCount; i++) {
+  for (i = 0; i < iop->DTvCount; i++)
+  {
     rsdtv[i].op.dtv->ActualValue = rsdtv[i].actval_p.dt;
     rsdtv[i].op.dtv->ValueIndex = rsdtv[i].validx;
   }
   free(rsdtv);
 
-  for (i = 0; i < iop->SvCount; i++) {
+  for (i = 0; i < iop->SvCount; i++)
+  {
     rssv[i].op.sv->ActualValue = rssv[i].actval_p.str;
     rssv[i].op.sv->ValueIndex = rssv[i].validx;
   }
   free(rssv);
 
-  for (i = 0; i < iop->AiCount; i++) {
+  for (i = 0; i < iop->AiCount; i++)
+  {
     rsai[i].op.ai->ActualValue = rsai[i].actval_p.f;
     rsai[i].op.ai->ValueIndex = rsai[i].validx;
   }
   free(rsai);
 
-  for (i = 0; i < iop->AoCount; i++) {
+  for (i = 0; i < iop->AoCount; i++)
+  {
     rsao[i].op.ao->ActualValue = rsao[i].actval_p.f;
     rsao[i].op.ao->ValueIndex = rsao[i].validx;
   }
   free(rsao);
 
-  for (i = 0; i < iop->IiCount; i++) {
+  for (i = 0; i < iop->IiCount; i++)
+  {
     rsii[i].op.ii->ActualValue = rsii[i].actval_p.i;
     rsii[i].op.ii->ValueIndex = rsii[i].validx;
   }
   free(rsii);
 
-  for (i = 0; i < iop->IoCount; i++) {
+  for (i = 0; i < iop->IoCount; i++)
+  {
     rsio[i].op.io->ActualValue = rsio[i].actval_p.i;
     rsio[i].op.io->ValueIndex = rsio[i].validx;
   }
   free(rsio);
 
-  for (i = 0; i < iop->DiCount; i++) {
+  for (i = 0; i < iop->DiCount; i++)
+  {
     rsdi[i].op.di->ActualValue = rsdi[i].actval_p.b;
     rsdi[i].op.di->ValueIndex = rsdi[i].validx;
   }
   free(rsdi);
 
-  for (i = 0; i < iop->DoCount; i++) {
+  for (i = 0; i < iop->DoCount; i++)
+  {
     rsdo[i].op.dox->ActualValue = rsdo[i].actval_p.b;
     rsdo[i].op.dox->ValueIndex = rsdo[i].validx;
   }
   free(rsdo);
 
-  for (i = 0; i < iop->CoCount; i++) {
+  for (i = 0; i < iop->CoCount; i++)
+  {
     rsco[i].op.co->RawValue = rsco[i].actval_p.i;
     rsco[i].op.co->AbsValue = rscoa[i];
     rsco[i].op.co->ValueIndex = rsco[i].validx;
@@ -1532,52 +1687,63 @@ static void load_backup() {
   free(rsco);
   free(rscoa);
 
-  for (i = 0; i < iop->AvCount; i++) {
+  for (i = 0; i < iop->AvCount; i++)
+  {
     pwr_tFloat32* ifp = gdh_TranslateRtdbPointer(iavp->Value[i]);
     *ifp = avp->Value[i];
   }
 
-  for (i = 0; i < iop->DvCount; i++) {
+  for (i = 0; i < iop->DvCount; i++)
+  {
     pwr_tBoolean* ibp = gdh_TranslateRtdbPointer(idvp->Value[i]);
     *ibp = dvp->Value[i];
   }
 
-  for (i = 0; i < iop->IvCount; i++) {
+  for (i = 0; i < iop->IvCount; i++)
+  {
     pwr_tInt32* iip = gdh_TranslateRtdbPointer(iivp->Value[i]);
     *iip = ivp->Value[i];
   }
 
-  for (i = 1; i < iop->ATvCount; i++) {
+  for (i = 1; i < iop->ATvCount; i++)
+  {
     pwr_tTime* iatp = gdh_TranslateRtdbPointer(iatvp->Value[i]);
     *iatp = atvp->Value[i];
   }
 
-  for (i = 0; i < iop->DTvCount; i++) {
+  for (i = 0; i < iop->DTvCount; i++)
+  {
     pwr_tDeltaTime* idtp = gdh_TranslateRtdbPointer(idtvp->Value[i]);
     *idtp = dtvp->Value[i];
   }
 
-  for (i = 0; i < iop->SvCount; i++) {
-    char *istrp = gdh_TranslateRtdbPointer(isvp->Value[i]);
+  for (i = 0; i < iop->SvCount; i++)
+  {
+    char* istrp = gdh_TranslateRtdbPointer(isvp->Value[i]);
     strncpy(istrp, svp->Value[i], 80);
   }
 }
 
-static void ini_errl_cb(void *userdata, char *str, char severity,
-                        pwr_tStatus sts, int anix, int message_type) {
-  ini_sContext *cp = (ini_sContext *)userdata;
+static void ini_errl_cb(void* userdata, char* str, char severity,
+                        pwr_tStatus sts, int anix, int message_type)
+{
+  ini_sContext* cp = (ini_sContext*)userdata;
 
   if (anix == 0 || !cp->np)
     return;
-  if (anix >= sizeof(cp->np->ProcStatus) / sizeof(cp->np->ProcStatus[0])) {
+  if (anix >= sizeof(cp->np->ProcStatus) / sizeof(cp->np->ProcStatus[0]))
+  {
     printf("Init: undefined anix %d\n", anix);
     return;
   }
 
-  switch (message_type) {
+  switch (message_type)
+  {
   case errh_eMsgType_Log:
-    if (sts == 0) {
-      switch (severity) {
+    if (sts == 0)
+    {
+      switch (severity)
+      {
       case 'S':
       case 'I':
         sts = PWR__SRVINFO;
@@ -1608,18 +1774,21 @@ static void ini_errl_cb(void *userdata, char *str, char severity,
  * @brief create_pidfile Creates a pidfile for the process for things like
  * systemd to keep track of.
  */
-static void create_pidfile() {
+static void create_pidfile()
+{
   char str[256];
 
   if (pid_filename == NULL)
     pid_filename = strdup(RT_INI_PIDFILE);
 
   pid_fd = open(pid_filename, O_RDWR | O_CREAT, 0640);
-  if (pid_fd < 0) {
+  if (pid_fd < 0)
+  {
     exit(EXIT_FAILURE);
   }
 
-  if (lockf(pid_fd, F_TLOCK, 0) < 0) {
+  if (lockf(pid_fd, F_TLOCK, 0) < 0)
+  {
     exit(EXIT_FAILURE);
   }
 
@@ -1664,7 +1833,7 @@ static void daemonize()
   chdir("/");
 
   // Close all file descriptors
-  for (int fd = sysconf(_SC_OPEN_MAX); fd > 0; fd--)
+  for (fd = sysconf(_SC_OPEN_MAX); fd > 0; fd--)
     close(fd);
 
   // Reopen some fds
@@ -1679,64 +1848,36 @@ static void daemonize()
 
   if ((sigemptyset(&act.sa_mask) == -1) ||
       (sigaction(SIGTERM, &act, NULL) == -1) ||
-      (sigaction(SIGHUP, &act, NULL) == -1)) {
+      (sigaction(SIGHUP, &act, NULL) == -1))
+  {
     perror("Could not set up signal handlers for rt_ini");
   }
-
-  // signal(SIGTERM, handle_signal);
-  // signal(SIGINT, handle_signal);
 }
-
-// void handle_signal(int sig)
-//{
-//  //pwr_tStatus sts;
-
-//  switch (sig) {
-//    case SIGTERM:
-//    {
-//      errh_LogInfo(&cp->log, "SIGNAL CAUGHT (%d). Exiting!\n", sig,
-//      cp->node.bodySize);
-//      stop();
-//      //running = 0;
-//      if (cp->flags.b.daemonize)
-//      {
-//        if (pid_fd != -1)
-//        {
-//          lockf(pid_fd, F_ULOCK, 0);
-//          close(pid_fd);
-//        }
-
-//        if (pid_filename != NULL)
-//        {
-//          unlink(pid_filename);
-//        }
-//      }
-//    }
-//    default:
-//      // Noop
-//      break;
-//  }
-//}
 
 /**
  * @brief handle_signal
  */
-void handle_signal(int sig, siginfo_t *si, void *ctx) {
-  ini_sContext *cp = (ini_sContext *)ctx;
+void handle_signal(int sig, siginfo_t* si, void* ctx)
+{
+  ini_sContext* cp = (ini_sContext*)ctx;
 
-  switch (sig) {
+  switch (sig)
+  {
   case SIGTERM:
     errh_LogInfo(&cp->log, "SIGNAL CAUGHT (%d). Exiting!\n", sig,
                  cp->node.bodySize);
     stop(cp);
-    // running = 0;
-    if (cp->flags.b.daemonize) {
-      if (pid_fd != -1) {
+
+    if (cp->flags.b.daemonize)
+    {
+      if (pid_fd != -1)
+      {
         lockf(pid_fd, F_ULOCK, 0);
         close(pid_fd);
       }
 
-      if (pid_filename != NULL) {
+      if (pid_filename != NULL)
+      {
         unlink(pid_filename);
       }
     }
