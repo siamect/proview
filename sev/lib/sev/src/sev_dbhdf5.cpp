@@ -47,6 +47,10 @@
 #include "rt_errh.h"
 #include "co_dcli_msg.h"
 
+#include <cmath>
+
+using namespace std;
+
 #define ITER_MAX 50
 #define cName_Dir "/Dir"
 #define cName_Stat "/Stat"
