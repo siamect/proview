@@ -535,6 +535,7 @@ public class PrintfFormat {
    * arguments are treated as wrappers for primitive
    * types.
    * @param o The array of objects to format.
+   * @param sb The StringBuffer to return
    * @return  The formatted String.
    */
   public StringBuffer sprintf(Object[] o, StringBuffer sb) {
@@ -606,6 +607,7 @@ public class PrintfFormat {
   }
   /**
    * Format nothing.  Just use the control string.
+   * @param sb The StringBuffer to return
    * @return  the formatted String.
    */
   public StringBuffer sprintf( StringBuffer sb) {
@@ -625,6 +627,7 @@ public class PrintfFormat {
   /**
    * Format an int.
    * @param x The int to format.
+   * @param sb The StringBuffer to return
    * @return  The formatted String.
    * @exception IllegalArgumentException if the
    *     conversion character is f, e, E, g, G, s,
@@ -649,6 +652,7 @@ public class PrintfFormat {
   /**
    * Format an long.
    * @param x The long to format.
+   * @param sb The StringBuffer to return
    * @return  The formatted String.
    * @exception IllegalArgumentException if the
    *     conversion character is f, e, E, g, G, s,
@@ -673,6 +677,7 @@ public class PrintfFormat {
   /**
    * Format a double.
    * @param x The double to format.
+   * @param sb The StringBuffer to return
    * @return  The formatted String.
    * @exception IllegalArgumentException if the
    *     conversion character is c, C, s, S,
@@ -697,6 +702,7 @@ public class PrintfFormat {
   /**
    * Format a String.
    * @param x The String to format.
+   * @param sb The StringBuffer to return
    * @return  The formatted String.
    * @exception IllegalArgumentException if the
    *   conversion character is neither s nor S.
@@ -725,6 +731,7 @@ public class PrintfFormat {
    * Strings. Otherwise use the default formatter
    * (use toString).
    * @param x the Object to format.
+   * @param sb The StringBuffer to return
    * @return  the formatted String.
    * @exception IllegalArgumentException if the
    *    conversion character is inappropriate for
