@@ -71,26 +71,6 @@ typedef struct {
   QPixmap pixmap[DRAW_PIXMAP_SIZE];
 } draw_sPixmap;
 
-static char font_names[draw_eFont__][DRAW_FONT_SIZE][80]
-    = { { "-*-Helvetica-Bold-R-Normal--8-*-*-*-P-*-ISO8859-1",
-            "-*-Helvetica-Bold-R-Normal--10-*-*-*-P-*-ISO8859-1",
-            "-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1",
-            "-*-Helvetica-Bold-R-Normal--14-*-*-*-P-*-ISO8859-1",
-            "-*-Helvetica-Bold-R-Normal--14-*-*-*-P-*-ISO8859-1",
-            "-*-Helvetica-Bold-R-Normal--18-*-*-*-P-*-ISO8859-1",
-            "-*-Helvetica-Bold-R-Normal--18-*-*-*-P-*-ISO8859-1",
-            "-*-Helvetica-Bold-R-Normal--18-*-*-*-P-*-ISO8859-1",
-            "-*-Helvetica-Bold-R-Normal--24-*-*-*-P-*-ISO8859-1" },
-        { "-*-Helvetica-Medium-R-Normal--8-*-*-*-P-*-ISO8859-1",
-            "-*-Helvetica-Medium-R-Normal--10-*-*-*-P-*-ISO8859-1",
-            "-*-Helvetica-Medium-R-Normal--12-*-*-*-P-*-ISO8859-1",
-            "-*-Helvetica-Medium-R-Normal--14-*-*-*-P-*-ISO8859-1",
-            "-*-Helvetica-Medium-R-Normal--14-*-*-*-P-*-ISO8859-1",
-            "-*-Helvetica-Medium-R-Normal--18-*-*-*-P-*-ISO8859-1",
-            "-*-Helvetica-Medium-R-Normal--18-*-*-*-P-*-ISO8859-1",
-            "-*-Helvetica-Medium-R-Normal--18-*-*-*-P-*-ISO8859-1",
-            "-*-Helvetica-Medium-R-Normal--24-*-*-*-P-*-ISO8859-1" } };
-
 static QMouseEvent* last_event;
 static QWidget* last_target;
 
@@ -125,6 +105,19 @@ static QColor draw_type_to_color(FlowDrawQt* draw_ctx, int painter_type)
   }
 }
 
+#define FONT_SCALE 0.7
+
+static QFont get_font(int painter_type, double size, const char* fontstr = "Lucida Sans")
+{
+  QFont res(fontstr);
+  res.setPointSizeF(size);
+  if (painter_type == flow_eDrawType_TextHelveticaBold
+      || painter_type == flow_eDrawType_TextHelveticaEraseBold) {
+    res.setBold(true);
+  }
+  return res;
+}
+
 static QPainter* get_painter(
     QPaintDevice* window, FlowDrawQt* draw_ctx, int painter_type, int size)
 {
@@ -148,13 +141,8 @@ static QPainter* get_painter(
     painter->setBrush(QBrush(draw_type_to_color(draw_ctx, painter_type)));
     painter->setPen(QPen(painter->brush(), size + 1));
     painter->setBackground(QBrush(draw_ctx->background));
-    QFont font = QFont("Helvetica");
-    if (painter_type == flow_eDrawType_TextHelveticaBold
-        || painter_type == flow_eDrawType_TextHelveticaEraseBold) {
-      font.setBold(true);
-    }
-    font.setPixelSize(size);
-    painter->setFont(font);
+    int sizes[9] = {8, 10, 12, 14, 14, 18, 18, 18, 24};
+    painter->setFont(get_font(painter_type, sizes[size], "Helvetica"));
     return painter;
   }
   case flow_eDrawType_Green:
@@ -1196,20 +1184,6 @@ int FlowDrawQt::nav_line_erase(
   return line_helper(ctx, flow_eDrawType_LineErase, idx, x1, y1, x2, y2, true);
 }
 
-#define FONTSTR "Lucida Sans"
-#define FONT_SCALE 0.7
-
-static QFont font(flow_eDrawType painter_type, double size)
-{
-  QFont res(FONTSTR);
-  res.setPointSizeF(FONT_SCALE * size);
-  if (painter_type == flow_eDrawType_TextHelveticaBold
-      || painter_type == flow_eDrawType_TextHelveticaEraseBold) {
-    res.setWeight(QFont::Bold);
-  }
-  return res;
-}
-
 int FlowDrawQt::text_pango_helper(FlowCtx* ctx, int x, int y, char* text,
     int len, flow_eDrawType painter_type, int idx, double size, int dimmed,
     int erase_rect)
@@ -1231,7 +1205,7 @@ int FlowDrawQt::text_pango_helper(FlowCtx* ctx, int x, int y, char* text,
     str = QString::fromUtf8(text);
   }
 
-  painter->setFont(font(painter_type, size));
+  painter->setFont(get_font(painter_type, FONT_SCALE * size));
 
   QRect rect = painter->fontMetrics().boundingRect(str);
   int height = rect.height();
@@ -1311,10 +1285,7 @@ int FlowDrawQt::nav_text_helper(FlowCtx* ctx, flow_eDrawType painter_type,
     return 1;
   }
 
-  int font_idx = get_font_idx(painter_type);
-
   QPainter* painter = get_painter(painter_type, size, true);
-  painter->setFont(QFont(font_names[font_idx][size]));
   // debug_print("drawText %s at (%d, %d)\n", text, x, y);
   painter->drawText(x, y, QString::fromLocal8Bit(text, len));
 
@@ -1699,7 +1670,7 @@ int FlowDrawQt::get_text_extent_pango(FlowCtx* ctx, const char* text, int len,
     str = QString::fromUtf8(text);
   }
 
-  painter->setFont(font(painter_type, size));
+  painter->setFont(get_font(painter_type, FONT_SCALE * size));
 
   QRect boundingRect = painter->fontMetrics().boundingRect(str);
 
@@ -1811,16 +1782,6 @@ void FlowDrawQt::set_white_background(FlowCtx* ctx)
   pal.setColor(QPalette::Background, background);
   toplevel->setAutoFillBackground(true);
   toplevel->setPalette(pal);
-}
-
-int FlowDrawQt::get_font_idx(int painter_type)
-{
-  if (painter_type == flow_eDrawType_TextHelveticaBold
-      || painter_type == flow_eDrawType_TextHelveticaEraseBold) {
-    return draw_eFont_HelveticaBold;
-  } else {
-    return draw_eFont_Helvetica;
-  }
 }
 
 int FlowDrawQt::image_get_width(flow_tImImage image)

@@ -65,82 +65,6 @@
 
 #define DRAW_PRESS_PIX 9
 
-static char font_names[glow_eFont__][glow_eDrawFont__][DRAW_FONT_SIZE][80] = {
-  { { "-*-Helvetica-Medium-R-Normal--8-*-*-*-P-*-ISO8859-1",
-        "-*-Helvetica-Bold-R-Normal--10-*-*-*-P-*-ISO8859-1",
-        "-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1",
-        "-*-Helvetica-Bold-R-Normal--14-*-*-*-P-*-ISO8859-1",
-        "-*-Helvetica-Bold-R-Normal--14-*-*-*-P-*-ISO8859-1",
-        "-*-Helvetica-Bold-R-Normal--18-*-*-*-P-*-ISO8859-1",
-        "-*-Helvetica-Bold-R-Normal--18-*-*-*-P-*-ISO8859-1",
-        "-*-Helvetica-Bold-R-Normal--18-*-*-*-P-*-ISO8859-1",
-        "-*-Helvetica-Bold-R-Normal--24-*-*-*-P-*-ISO8859-1" },
-      { "-*-Helvetica-Medium-R-Normal--8-*-*-*-P-*-ISO8859-1",
-          "-*-Helvetica-Medium-R-Normal--10-*-*-*-P-*-ISO8859-1",
-          "-*-Helvetica-Medium-R-Normal--12-*-*-*-P-*-ISO8859-1",
-          "-*-Helvetica-Medium-R-Normal--14-*-*-*-P-*-ISO8859-1",
-          "-*-Helvetica-Medium-R-Normal--14-*-*-*-P-*-ISO8859-1",
-          "-*-Helvetica-Medium-R-Normal--18-*-*-*-P-*-ISO8859-1",
-          "-*-Helvetica-Medium-R-Normal--18-*-*-*-P-*-ISO8859-1",
-          "-*-Helvetica-Medium-R-Normal--18-*-*-*-P-*-ISO8859-1",
-          "-*-Helvetica-Medium-R-Normal--24-*-*-*-P-*-ISO8859-1" } },
-  { { "-*-times-Medium-R-Normal--8-*-*-*-*-*-ISO8859-1",
-        "-*-times-Bold-R-Normal--10-*-*-*-*-*-ISO8859-1",
-        "-*-times-Bold-R-Normal--12-*-*-*-*-*-ISO8859-1",
-        "-*-times-Bold-R-Normal--14-*-*-*-*-*-ISO8859-1",
-        "-*-times-Bold-R-Normal--14-*-*-*-*-*-ISO8859-1",
-        "-*-times-Bold-R-Normal--18-*-*-*-*-*-ISO8859-1",
-        "-*-times-Bold-R-Normal--18-*-*-*-*-*-ISO8859-1",
-        "-*-times-Bold-R-Normal--18-*-*-*-*-*-ISO8859-1",
-        "-*-times-Bold-R-Normal--24-*-*-*-*-*-ISO8859-1" },
-      { "-*-times-Medium-R-Normal--8-*-*-*-*-*-ISO8859-1",
-          "-*-times-Medium-R-Normal--10-*-*-*-*-*-ISO8859-1",
-          "-*-times-Medium-R-Normal--12-*-*-*-*-*-ISO8859-1",
-          "-*-times-Medium-R-Normal--14-*-*-*-*-*-ISO8859-1",
-          "-*-times-Medium-R-Normal--14-*-*-*-*-*-ISO8859-1",
-          "-*-times-Medium-R-Normal--18-*-*-*-*-*-ISO8859-1",
-          "-*-times-Medium-R-Normal--18-*-*-*-*-*-ISO8859-1",
-          "-*-times-Medium-R-Normal--18-*-*-*-*-*-ISO8859-1",
-          "-*-times-Medium-R-Normal--24-*-*-*-*-*-ISO8859-1" } },
-  { { "-*-new century schoolbook-Medium-R-Normal--8-*-*-*-*-*-ISO8859-1",
-        "-*-new century schoolbook-Bold-R-Normal--10-*-*-*-*-*-ISO8859-1",
-        "-*-new century schoolbook-Bold-R-Normal--12-*-*-*-*-*-ISO8859-1",
-        "-*-new century schoolbook-Bold-R-Normal--14-*-*-*-*-*-ISO8859-1",
-        "-*-new century schoolbook-Bold-R-Normal--14-*-*-*-*-*-ISO8859-1",
-        "-*-new century schoolbook-Bold-R-Normal--18-*-*-*-*-*-ISO8859-1",
-        "-*-new century schoolbook-Bold-R-Normal--18-*-*-*-*-*-ISO8859-1",
-        "-*-new century schoolbook-Bold-R-Normal--18-*-*-*-*-*-ISO8859-1",
-        "-*-new century schoolbook-Bold-R-Normal--24-*-*-*-*-*-ISO8859-1" },
-      { "-*-new century schoolbook-Medium-R-Normal--8-*-*-*-*-*-ISO8859-1",
-          "-*-new century schoolbook-Medium-R-Normal--10-*-*-*-*-*-ISO8859-1",
-          "-*-new century schoolbook-Medium-R-Normal--12-*-*-*-*-*-ISO8859-1",
-          "-*-new century schoolbook-Medium-R-Normal--14-*-*-*-*-*-ISO8859-1",
-          "-*-new century schoolbook-Medium-R-Normal--14-*-*-*-*-*-ISO8859-1",
-          "-*-new century schoolbook-Medium-R-Normal--18-*-*-*-*-*-ISO8859-1",
-          "-*-new century schoolbook-Medium-R-Normal--18-*-*-*-*-*-ISO8859-1",
-          "-*-new century schoolbook-Medium-R-Normal--18-*-*-*-*-*-ISO8859-1",
-          "-*-new century "
-          "schoolbook-Medium-R-Normal--24-*-*-*-*-*-ISO8859-1" } },
-  { { "-*-courier-Medium-R-Normal--8-*-*-*-m-*-ISO8859-1",
-        "-*-courier-Bold-R-Normal--10-*-*-*-m-*-ISO8859-1",
-        "-*-courier-Bold-R-Normal--12-*-*-*-m-*-ISO8859-1",
-        "-*-courier-Bold-R-Normal--14-*-*-*-m-*-ISO8859-1",
-        "-*-courier-Bold-R-Normal--14-*-*-*-m-*-ISO8859-1",
-        "-*-courier-Bold-R-Normal--18-*-*-*-m-*-ISO8859-1",
-        "-*-courier-Bold-R-Normal--18-*-*-*-m-*-ISO8859-1",
-        "-*-courier-Bold-R-Normal--18-*-*-*-m-*-ISO8859-1",
-        "-*-courier-Bold-R-Normal--24-*-*-*-m-*-ISO8859-1" },
-      { "-*-courier-Medium-R-Normal--8-*-*-*-m-*-ISO8859-1",
-          "-*-courier-Medium-R-Normal--10-*-*-*-m-*-ISO8859-1",
-          "-*-courier-Medium-R-Normal--12-*-*-*-m-*-ISO8859-1",
-          "-*-courier-Medium-R-Normal--14-*-*-*-m-*-ISO8859-1",
-          "-*-courier-Medium-R-Normal--14-*-*-*-m-*-ISO8859-1",
-          "-*-courier-Medium-R-Normal--18-*-*-*-m-*-ISO8859-1",
-          "-*-courier-Medium-R-Normal--18-*-*-*-m-*-ISO8859-1",
-          "-*-courier-Medium-R-Normal--18-*-*-*-m-*-ISO8859-1",
-          "-*-courier-Medium-R-Normal--24-*-*-*-m-*-ISO8859-1" } }
-};
-
 static QMouseEvent* last_event;
 static QWidget* last_target;
 
@@ -204,6 +128,38 @@ static QColor draw_type_to_color(
   }
 }
 
+#define FONT_SCALE 0.7
+#define FONT_DESCENT 0.22
+
+static QFont get_font(int font_idx, int painter_type, double size)
+{
+  QFont res;
+
+  switch (font_idx) {
+  case glow_eFont_Helvetica:
+    res = QFont("Helvetica");
+    break;
+  case glow_eFont_Times:
+    res = QFont("Times");
+    break;
+  case glow_eFont_NewCenturySchoolbook:
+    res = QFont("Century Schoolbook L");
+    break;
+  case glow_eFont_Courier:
+    res = QFont("Courier 10 pitch");
+    break;
+  default:
+    res = QFont("Lucida Sans");
+    break;
+  }
+
+  res.setPointSizeF(FONT_SCALE * size);
+  if (painter_type == glow_eDrawType_TextHelveticaBold || painter_type == glow_eDrawType_TextHelveticaEraseBold) {
+    res.setBold(true);
+  }
+  return res;
+}
+
 static QPainter* get_painter(
     QPaintDevice* window, GlowDrawQt* draw_ctx, int painter_type, int size)
 {
@@ -228,13 +184,7 @@ static QPainter* get_painter(
     painter->setPen(QPen(painter->brush(), size + 1));
     painter->setBackground(QBrush(draw_ctx->background));
     if (size > 0) {
-      QFont font = QFont("Helvetica");
-      if (painter_type == glow_eDrawType_TextHelveticaBold
-          || painter_type == glow_eDrawType_TextHelveticaEraseBold) {
-        font.setBold(true);
-      }
-      font.setPixelSize(size);
-      painter->setFont(font);
+      painter->setFont(get_font(glow_eFont_Helvetica, painter_type, size));
     }
     return painter;
   }
@@ -1325,10 +1275,8 @@ int GlowDrawQt::text(GlowWind* wind, int x, int y, char* text, int len,
     set_clip(w, painter);
   }
 
-  int font_type = get_font_type(painter_type);
-
   if (font_idx != glow_eFont_Helvetica) {
-    painter->setFont(QFont(font_names[font_idx][font_type][idx]));
+    painter->setFont(get_font(font_idx, painter_type, idx));
   }
 
   if (color != glow_eDrawType_Line) {
@@ -1336,7 +1284,6 @@ int GlowDrawQt::text(GlowWind* wind, int x, int y, char* text, int len,
     painter->setPen(QPen(painter->brush(), size + 1));
   }
 
-  painter->setFont(QFont(font_names[font_idx][font_type][idx]));
   QRect rect
       = painter->fontMetrics().boundingRect(QString::fromLocal8Bit(text, len));
   painter->drawText(x, y, rect.width(), rect.height(), Qt::TextDontClip,
@@ -1403,19 +1350,16 @@ int GlowDrawQt::text_erase(GlowWind* wind, int x, int y, char* text, int len,
     painter_type = glow_eDrawType_TextHelveticaEraseBold;
   }
 
-  int font_type = get_font_type(painter_type);
-
   QPainter* painter = get_painter(w->buffer, this, painter_type, idx);
 
   if (font_idx != glow_eFont_Helvetica) {
-    painter->setFont(QFont(font_names[font_idx][font_type][idx]));
+    painter->setFont(get_font(font_idx, painter_type, idx));
   }
 
   if (w->clip_on) {
     set_clip(w, painter);
   }
 
-  painter->setFont(QFont(font_names[font_idx][font_type][idx]));
   QRect rect
       = painter->fontMetrics().boundingRect(QString::fromLocal8Bit(text, len));
   painter->drawText(x, y, rect.width(), rect.height(), Qt::TextDontClip,
@@ -1684,10 +1628,9 @@ int GlowDrawQt::get_text_extent(const char* text, int len,
     font_idx = glow_eFont_Helvetica;
   }
 
-  int font_type = get_font_type(painter_type);
+  QFont font = get_font(font_idx, painter_type, idx);
 
-  QFontMetrics fontMetrics
-      = QFontMetrics(QFont(font_names[font_idx][font_type][idx]));
+  QFontMetrics fontMetrics = QFontMetrics(font);
   QRect rect = fontMetrics.boundingRect(QString::fromLocal8Bit(text, len));
   *width = rect.width();
   int text_ascent = fontMetrics.ascent();
@@ -2358,23 +2301,6 @@ QPoint* GlowDrawQt::points_to_qt_points_curve(
     *cnt = last_idx + 1;
   }
   return qpoints;
-}
-
-int GlowDrawQt::get_font_type(int painter_type)
-{
-  int font_type;
-
-  switch (painter_type) {
-  case glow_eDrawType_TextHelveticaBold:
-  case glow_eDrawType_TextHelveticaEraseBold:
-    font_type = glow_eDrawFont_HelveticaBold;
-    break;
-  default:
-    font_type = glow_eDrawFont_Helvetica;
-    break;
-  }
-
-  return font_type;
 }
 
 // Image functions
@@ -3127,38 +3053,6 @@ int GlowDrawQt::gradient_fill_polyline(GlowWind* wind, glow_sPointX* points,
   return 1;
 }
 
-#define FONT_SCALE 0.7
-#define FONT_DESCENT 0.22
-
-static QFont font(int font_idx, int font_type, double size)
-{
-  QFont res;
-
-  switch (font_idx) {
-  case glow_eFont_Helvetica:
-    res = QFont("Helvetica");
-    break;
-  case glow_eFont_Times:
-    res = QFont("DejaVu Serif");
-    break;
-  case glow_eFont_NewCenturySchoolbook:
-    res = QFont("Century Schoolbook L");
-    break;
-  case glow_eFont_Courier:
-    res = QFont("Courier 10 pitch");
-    break;
-  default:
-    res = QFont("Lucida Sans");
-    break;
-  }
-
-  res.setPointSizeF(FONT_SCALE * size);
-  if (font_type == glow_eDrawFont_HelveticaBold) {
-    res.setWeight(QFont::Bold);
-  }
-  return res;
-}
-
 int GlowDrawQt::text_qt(GlowWind* wind, int x, int y, char* text, int len,
     glow_eDrawType painter_type, glow_eDrawType color, int idx, int highlight,
     int line, glow_eFont font_idx, double size, int rot)
@@ -3171,8 +3065,6 @@ int GlowDrawQt::text_qt(GlowWind* wind, int x, int y, char* text, int len,
   if (font_idx >= glow_eFont__) {
     font_idx = glow_eFont_Helvetica;
   }
-
-  int font_type = get_font_type(painter_type);
 
   QPainter* painter = get_painter(w->buffer, this, painter_type, idx);
 
@@ -3197,7 +3089,7 @@ int GlowDrawQt::text_qt(GlowWind* wind, int x, int y, char* text, int len,
     painter->rotate(rot);
   }
 
-  painter->setFont(font(font_idx, font_type, size));
+  painter->setFont(get_font(font_idx, painter_type, size));
 
   QRect rect = painter->fontMetrics().boundingRect(str);
   int width = rect.width();
@@ -3245,8 +3137,6 @@ int GlowDrawQt::text_erase_qt(GlowWind* wind, int x, int y, char* text, int len,
     painter_type = glow_eDrawType_TextHelveticaEraseBold;
   }
 
-  int font_type = get_font_type(painter_type);
-
   int width, height;
 
   {
@@ -3259,7 +3149,7 @@ int GlowDrawQt::text_erase_qt(GlowWind* wind, int x, int y, char* text, int len,
       str = QString::fromUtf8(text);
     }
 
-    painter->setFont(font(font_idx, font_type, size));
+    painter->setFont(get_font(font_idx, painter_type, size));
 
     QRect rect = painter->fontMetrics().boundingRect(str);
     width = rect.width();
@@ -3316,7 +3206,7 @@ int GlowDrawQt::get_text_extent_qt(const char* text, int len,
   }
 
   QPainter* painter = get_painter(w->buffer, this, painter_type, 0);
-  painter->setFont(font(font_idx, get_font_type(painter_type), size));
+  painter->setFont(get_font(font_idx, painter_type, size));
 
   QString str;
   if (((GrowCtx*)ctx)->text_coding != glow_eTextCoding_UTF_8) {

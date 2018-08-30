@@ -211,8 +211,6 @@ public:
 
   void set_white_background(FlowCtx* ctx);
 
-  int get_font_idx(int gc_type);
-
   int image_get_width(flow_tImImage image);
   int image_get_height(flow_tImImage image);
   void image_scale(float scale, flow_tImImage orig_im, flow_tImImage* im,

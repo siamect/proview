@@ -200,8 +200,6 @@ public:
   QPoint* points_to_qt_points(glow_sPointX* points, int point_cnt);
   QPoint* points_to_qt_points_curve(
       GlowWind* w, glow_sPointX* points, int point_cnt, int* cnt);
-  int get_font_type(int painter_type);
-  void load_font(glow_eFont font_idx, int font_type, int idx);
   int image_get_width(glow_tImImage image);
   int image_get_height(glow_tImImage image);
   int image_get_rowstride(glow_tImImage image);
