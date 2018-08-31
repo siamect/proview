@@ -34,14 +34,15 @@
  * General Public License plus this exception.
  **/
 
-#include <string.h>
+#include "pwr_baseclasses.h"
 
+#include "co_string.h"
 #include "co_time.h"
+
 #include "wb_session.h"
 #include "wb_cdrep.h"
 #include "wb_merep.h"
 #include "wb_vrepmem.h"
-#include "pwr_baseclasses.h"
 
 static ldh_sMenuItem ldh_lMenuItem[100];
 
@@ -945,7 +946,7 @@ void wb_session::getAllMenuItems(ldh_sMenuCall* ip, ldh_sMenuItem** Item,
       // Check if method is overridden, ie name already exist
       for (int i = 0; i < *nItems; i++) {
         if (ldh_lMenuItem[i].Level == Level
-            && strcmp(ldh_lMenuItem[i].Name, mbp->ButtonName) == 0) {
+            && streq(ldh_lMenuItem[i].Name, mbp->ButtonName)) {
           (*Item)->Disabled = 1;
           for (int j = i + 1; j < *nItems; j++) {
             if (ldh_lMenuItem[j].Level > ldh_lMenuItem[i].Level)
@@ -990,7 +991,7 @@ void wb_session::getAllMenuItems(ldh_sMenuCall* ip, ldh_sMenuItem** Item,
       // Check if method is overridden, ie name already exist
       for (int i = 0; i < *nItems; i++) {
         if (ldh_lMenuItem[i].Level == Level
-            && strcmp(ldh_lMenuItem[i].Name, mcp->ButtonName) == 0) {
+            && streq(ldh_lMenuItem[i].Name, mcp->ButtonName)) {
           ldh_lMenuItem[i].Disabled = 1;
           for (int j = i + 1; j < *nItems; j++) {
             if (ldh_lMenuItem[j].Level > ldh_lMenuItem[i].Level)

@@ -44,6 +44,7 @@
 #include "co_cdh.h"
 #include "co_dcli_msg.h"
 #include "co_error.h"
+#include "co_string.h"
 #include "co_user.h"
 
 #include "rt_gdh_msg.h"
@@ -411,13 +412,13 @@ static int xnav_help_func(void* client_data, void* client_flag)
         key, bookmark_str, navh_eHelpFile_Other, file_str, strict);
     if (EVEN(sts))
       xnav->message('E', "No help on this subject");
-    else if (strcmp(return_str, "") != 0)
+    else if (!streq(return_str, ""))
       xnav->set_push_command(return_str);
   } else if (ODD(dcli_get_qualifier("/BASE", 0, 0))) {
     sts = CoXHelp::dhelp(key, bookmark_str, navh_eHelpFile_Base, 0, strict);
     if (EVEN(sts))
       xnav->message('E', "No help on this subject");
-    else if (strcmp(return_str, "") != 0)
+    else if (!streq(return_str, ""))
       xnav->set_push_command(return_str);
   } else {
     sts = CoXHelp::dhelp(key, bookmark_str, navh_eHelpFile_Project, 0, strict);
@@ -426,7 +427,7 @@ static int xnav_help_func(void* client_data, void* client_flag)
       if (EVEN(sts))
         xnav->message('E', "No help on this subject");
     }
-    // if ( ODD(sts) && strcmp( return_str, "") != 0)
+    // if ( ODD(sts) && !streq( return_str, ""))
     //  xnav->xhelp->set_push_command( return_str);
   }
 
@@ -547,7 +548,7 @@ static int xnav_logout_func(void* client_data, void* client_flag)
 
   int window = ODD(dcli_get_qualifier("/MESSAGEWINDOW", 0, 0));
 
-  if (strcmp(xnav->base_user, "") == 0) {
+  if (streq(xnav->base_user, "")) {
     sprintf(msg, "User %s logged out", xnav->user);
     XttLog::dlog(xttlog_eCategory_User, msg, 0, 0);
     xnav->message('I', msg);
@@ -736,7 +737,7 @@ static int xnav_set_func(void* client_data, void* client_flag)
         return XNAV__SUCCESS;
       return sts;
     } else if (xnav->appl.find_graph(graph_str, 0, (void**)&gectx)) {
-      if (strcmp(source_str, "") == 0) {
+      if (streq(source_str, "")) {
         xnav->message('E', "Syntax error");
         return XNAV__HOLDCOMMAND;
       }
@@ -1037,9 +1038,9 @@ static int xnav_set_func(void* client_data, void* client_flag)
     } else if (ODD(dcli_get_qualifier(
                    "/ICONIFY", iconify_str, sizeof(iconify_str)))) {
       int iconify;
-      if (strcmp(iconify_str, "1") == 0)
+      if (streq(iconify_str, "1"))
         iconify = 1;
-      else if (strcmp(iconify_str, "0") == 0)
+      else if (streq(iconify_str, "0"))
         iconify = 0;
       else {
         xnav->message('E', "Syntax error");
@@ -1050,9 +1051,9 @@ static int xnav_set_func(void* client_data, void* client_flag)
     } else if (ODD(dcli_get_qualifier(
                    "/BELOW", below_str, sizeof(below_str)))) {
       int below;
-      if (strcmp(below_str, "1") == 0)
+      if (streq(below_str, "1"))
         below = 1;
-      else if (strcmp(below_str, "0") == 0)
+      else if (streq(below_str, "0"))
         below = 0;
       else {
         xnav->message('E', "Syntax error");
@@ -1733,13 +1734,13 @@ static int xnav_show_func(void* client_data, void* client_flag)
       if (EVEN(sts))
         return sts;
       /* Check that this is a or a plc */
-      if (strcmp(classname, "pwrb:Class-PlcPgm") == 0) {
+      if (streq(classname, "pwrb:Class-PlcPgm")) {
         /* Get all the windows in the plc */
         strcat(name_str, "-W*");
-      } else if (!((strcmp(classname, "pwrb:Class-WindowPlc") == 0)
-                     || (strcmp(classname, "pwrb:Class-WindowOrderact") == 0)
-                     || (strcmp(classname, "pwrb:Class-WindowCond") == 0)
-                     || (strcmp(classname, "pwrb:Class-WindowSubstep") == 0))) {
+      } else if (!((streq(classname, "pwrb:Class-WindowPlc"))
+                     || (streq(classname, "pwrb:Class-WindowOrderact"))
+                     || (streq(classname, "pwrb:Class-WindowCond"))
+                     || (streq(classname, "pwrb:Class-WindowSubstep")))) {
         /* Try with the parent */
         sts = gdh_GetParent(objid, &parentobjid);
         if (EVEN(sts))
@@ -1752,10 +1753,10 @@ static int xnav_show_func(void* client_data, void* client_flag)
         if (EVEN(sts))
           return sts;
 
-        if (!((strcmp(classname, "pwrb:Class-WindowPlc") == 0)
-                || (strcmp(classname, "pwrb:Class-WindowOrderact") == 0)
-                || (strcmp(classname, "pwrb:Class-WindowCond") == 0)
-                || (strcmp(classname, "pwrb:Class-WindowSubstep") == 0))) {
+        if (!((streq(classname, "pwrb:Class-WindowPlc"))
+                || (streq(classname, "pwrb:Class-WindowOrderact"))
+                || (streq(classname, "pwrb:Class-WindowCond"))
+                || (streq(classname, "pwrb:Class-WindowSubstep")))) {
           xnav->message(
               'E', "Selected object has to be in a plcpgm or a plcpgm");
           return XNAV__HOLDCOMMAND;
@@ -2170,7 +2171,7 @@ static int xnav_show_func(void* client_data, void* client_flag)
 
     int window = ODD(dcli_get_qualifier("/WINDOW", 0, 0));
 
-    if (strcmp(xnav->user, "") == 0) {
+    if (streq(xnav->user, "")) {
       user_RtPrivToString(xnav->priv, priv_str, sizeof(priv_str));
       if (window) {
         sprintf(msg, "Current User:   Not logged in\n\nPrivileges:   %s)",
@@ -2185,8 +2186,8 @@ static int xnav_show_func(void* client_data, void* client_flag)
       if (window) {
         sprintf(msg, "Current User:   %s\n\nPrivileges:   %s", xnav->user,
             priv_str);
-        if (strcmp(xnav->base_user, "") != 0
-            && strcmp(xnav->base_user, xnav->user) != 0) {
+        if (!streq(xnav->base_user, "")
+            && !streq(xnav->base_user, xnav->user)) {
           strcat(msg, "\n\nOriginal User:   ");
           strcat(msg, xnav->base_user);
         }
@@ -2628,17 +2629,17 @@ static int xnav_eventlist_func(void* client_data, void* client_flag)
     if (xnav->ev) {
       if (ODD(dcli_get_qualifier("/PRIORITY", prio_str, sizeof(prio_str)))) {
         cdh_ToUpper(prio_str, prio_str);
-        if (strcmp(prio_str, "A") == 0)
+        if (streq(prio_str, "A"))
           xnav->ev->ack_last_prio(evlist_eEventType_Alarm, mh_eEventPrio_A);
-        else if (strcmp(prio_str, "B") == 0)
+        else if (streq(prio_str, "B"))
           xnav->ev->ack_last_prio(evlist_eEventType_Alarm, mh_eEventPrio_B);
-        else if (strcmp(prio_str, "C") == 0)
+        else if (streq(prio_str, "C"))
           xnav->ev->ack_last_prio(evlist_eEventType_Alarm, mh_eEventPrio_C);
-        else if (strcmp(prio_str, "D") == 0)
+        else if (streq(prio_str, "D"))
           xnav->ev->ack_last_prio(evlist_eEventType_Alarm, mh_eEventPrio_D);
         else if (strncmp(prio_str, "I", 1) == 0)
           xnav->ev->ack_last_prio(evlist_eEventType_Info, 0);
-        else if (strcmp(prio_str, "NOA") == 0) {
+        else if (streq(prio_str, "NOA")) {
           if (ODD(xnav->ev->get_last_not_acked_prio(
                   &id, evlist_eEventType_Alarm, mh_eEventPrio_B)))
             xnav->ev->ack_last_prio(evlist_eEventType_Alarm, mh_eEventPrio_B);
@@ -4360,7 +4361,7 @@ static int xnav_open_func(void* client_data, void* client_flag)
 
           memset(plot_objects, 0, sizeof(plot_objects));
           for (j = 0; j < 20; j++) {
-            if (strcmp(plot.ObjectName[j], "") != 0) {
+            if (!streq(plot.ObjectName[j], "")) {
               sts = gdh_NameToAttrref(
                   pwr_cNObjid, plot.ObjectName[j], &plot_objects[j]);
               if (EVEN(sts))
@@ -5452,7 +5453,7 @@ static int xnav_close_func(void* client_data, void* client_flag)
       names = dcli_parse(except_str, ",", "", (char*)name_array,
           sizeof(name_array) / sizeof(name_array[0]), sizeof(name_array[0]), 0);
       for (int i = 0; i < names; i++) {
-        if (strcmp(name_array[i], "$current") == 0) {
+        if (streq(name_array[i], "$current")) {
           except_current = 1;
           break;
         }
@@ -5466,7 +5467,7 @@ static int xnav_close_func(void* client_data, void* client_flag)
           sizeof(mvname_array) / sizeof(mvname_array[0]),
           sizeof(mvname_array[0]), 0);
       for (int i = 0; i < mvnames; i++) {
-        if (strcmp(mvname_array[i], "$current") == 0) {
+        if (streq(mvname_array[i], "$current")) {
           except_current = 1;
         } else {
           sts = gdh_NameToAttrref(
@@ -5995,7 +5996,7 @@ static int xnav_create_func(void* client_data, void* client_flag)
       xnav->message('E', "Enter destination");
       return XNAV__HOLDCOMMAND;
     }
-    if (strcmp(destination_str, "") == 0)
+    if (streq(destination_str, ""))
       destination_p = 0;
     if (ODD(dcli_get_qualifier("/COMMAND", command_str, sizeof(command_str))))
       item_type = xnav_eItemType_Command;
@@ -9026,11 +9027,11 @@ int XNav::show_file(char* filename, char* intitle, int hide_dir)
   } else
     strcpy(text, found_file);
   // cdh_ToUpper( type, type);
-  if (strcmp(type, ".rtt_com") == 0)
+  if (streq(type, ".rtt_com"))
     file_type = item_eFileType_Script;
-  else if (strcmp(type, ".pwg") == 0)
+  else if (streq(type, ".pwg"))
     file_type = item_eFileType_Graph;
-  else if (strcmp(type, ".rtt_log") == 0)
+  else if (streq(type, ".rtt_log"))
     file_type = item_eFileType_RttLog;
   else
     file_type = item_eFileType_Unknown;
@@ -9054,11 +9055,11 @@ int XNav::show_file(char* filename, char* intitle, int hide_dir)
       } else
         strcpy(text, found_file);
       // cdh_ToUpper( type, type);
-      if (strcmp(type, ".rtt_com") == 0)
+      if (streq(type, ".rtt_com"))
         file_type = item_eFileType_Script;
-      else if (strcmp(type, ".pwg") == 0)
+      else if (streq(type, ".pwg"))
         file_type = item_eFileType_Graph;
-      else if (strcmp(type, ".rtt_log") == 0)
+      else if (streq(type, ".rtt_log"))
         file_type = item_eFileType_RttLog;
       else
         file_type = item_eFileType_Unknown;
@@ -10079,7 +10080,7 @@ static void xnav_colortheme_selector_ok_cb(
 
   found = 0;
   for (i = 0; i < rows; i++) {
-    if (strcmp(text, vd[i].Name) == 0) {
+    if (streq(text, vd[i].Name)) {
       idx = vd[i].Value->Value;
       found = 1;
       break;

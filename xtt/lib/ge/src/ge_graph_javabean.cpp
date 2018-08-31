@@ -38,11 +38,13 @@
 
 #include <ctype.h>
 
-#include "co_cdh.h"
-#include "co_time.h"
 #include "co_ccm_msg.h"
-#include "co_dcli.h"
+#include "co_cdh.h"
 #include "co_cnf.h"
+#include "co_dcli.h"
+#include "co_string.h"
+#include "co_time.h"
+
 #include "rt_gdh.h"
 
 #include "ge_dyn.h"
@@ -1594,7 +1596,7 @@ int Graph::export_gejava_nodeclass(std::ofstream& fp, grow_tNodeClass nodeclass)
        << "  }\n";
     fp << "}\n";
 
-  } else if (strcmp(bean_name, "pwr_framethin") == 0) {
+  } else if (streq(bean_name, "pwr_framethin")) {
     // Use prefabricated class GeFrameThin
     fp << "protected class " << bean_name << " extends GeFrameThin {\n"
        << "  public " << bean_name << "( JopSession session)\n"
@@ -1679,7 +1681,7 @@ int Graph::export_javaframe(
   int sts;
 
   grow_GetBackgroundImage(grow->ctx, background_image, &background_tiled);
-  if (strcmp(background_image, "") != 0) {
+  if (!streq(background_image, "")) {
     sts = grow_GetBackgroundImageSize(
         grow->ctx, &bg_image_width, &bg_image_height);
     if (EVEN(sts))
@@ -1783,7 +1785,7 @@ int Graph::export_javaframe(
        << "  }\n"
        << "\n"
        << "class LocalPanel extends JPanel {\n";
-    if (strcmp(background_image, "") != 0) {
+    if (!streq(background_image, "")) {
       fp << "  GeImage backgroundImage = new GeImage( session);\n"
          << "  public LocalPanel() {\n"
          << "    backgroundImage.setSession( session);\n";
@@ -1880,7 +1882,7 @@ int Graph::export_gejava(char* filename, char* bean_name, int applet, int html)
   baseclass = (strncmp(filename, "Jopc", 4) == 0);
 
   grow_GetBackgroundImage(grow->ctx, background_image, &background_tiled);
-  if (strcmp(background_image, "") != 0) {
+  if (!streq(background_image, "")) {
     sts = grow_GetBackgroundImageSize(
         grow->ctx, &bg_image_width, &bg_image_height);
     if (EVEN(sts))
@@ -2043,7 +2045,7 @@ int Graph::export_gejava(char* filename, char* bean_name, int applet, int html)
        << "  }\n"
        << "\n"
        << "class LocalPanel extends JPanel {\n";
-    if (strcmp(background_image, "") != 0) {
+    if (!streq(background_image, "")) {
       fp << "  GeImage backgroundImage = new GeImage( session);\n"
          << "  public LocalPanel() {\n"
          << "    backgroundImage.setSession(session);\n";
@@ -2196,7 +2198,7 @@ int Graph::export_ObjectTraceAttr(
   case graph_eTrace_DigBorder:
   case graph_eTrace_DigWithText:
   case graph_eTrace_Invisible:
-    if (strcmp(trace_data->data[0], "") != 0) {
+    if (!streq(trace_data->data[0], "")) {
       fp << "    " << var_name << ".setPwrAttribute(\"" << trace_data->data[0]
          << "\");\n"
          << "    " << var_name << ".setLowColor(" << (int)trace_color << ");"
@@ -2204,10 +2206,10 @@ int Graph::export_ObjectTraceAttr(
     }
     break;
   case graph_eTrace_DigWithError:
-    if (strcmp(trace_data->data[0], "") != 0) {
+    if (!streq(trace_data->data[0], "")) {
       fp << "    " << var_name << ".setPwrAttribute(\"" << trace_data->data[0]
          << "\");\n";
-      if (strcmp(trace_data->data[1], "") != 0)
+      if (!streq(trace_data->data[1], ""))
         fp << "    " << var_name << ".setPwrAttrError(\"" << trace_data->data[1]
            << "\");\n";
       fp << "    " << var_name << ".setLowColor(" << (int)trace_color << ");"
@@ -2215,7 +2217,7 @@ int Graph::export_ObjectTraceAttr(
     }
     break;
   case graph_eTrace_DigTone:
-    if (strcmp(trace_data->data[0], "") != 0) {
+    if (!streq(trace_data->data[0], "")) {
       fp << "    " << var_name << ".setPwrAttribute(\"" << trace_data->data[0]
          << "\");\n"
          << "    " << var_name << ".setLowTone(" << (int)trace_color << ");"
@@ -2223,10 +2225,10 @@ int Graph::export_ObjectTraceAttr(
     }
     break;
   case graph_eTrace_DigToneWithError:
-    if (strcmp(trace_data->data[0], "") != 0) {
+    if (!streq(trace_data->data[0], "")) {
       fp << "    " << var_name << ".setPwrAttribute(\"" << trace_data->data[0]
          << "\");\n";
-      if (strcmp(trace_data->data[1], "") != 0)
+      if (!streq(trace_data->data[1], ""))
         fp << "    " << var_name << ".setPwrAttrError(\"" << trace_data->data[1]
            << "\");\n";
       fp << "    " << var_name << ".setLowTone(" << (int)trace_color << ");"
@@ -2234,7 +2236,7 @@ int Graph::export_ObjectTraceAttr(
     }
     break;
   case graph_eTrace_SetDig:
-    if (strcmp(trace_data->data[0], "") != 0) {
+    if (!streq(trace_data->data[0], "")) {
       fp << "    " << var_name << ".setPwrAttribute(\"" << trace_data->data[0]
          << "\");\n"
          << "    " << var_name << ".setClickAction(Jop.BUTTON_ACTION_SET);"
@@ -2242,7 +2244,7 @@ int Graph::export_ObjectTraceAttr(
     }
     break;
   case graph_eTrace_ResetDig:
-    if (strcmp(trace_data->data[0], "") != 0) {
+    if (!streq(trace_data->data[0], "")) {
       fp << "    " << var_name << ".setPwrAttribute(\"" << trace_data->data[0]
          << "\");\n"
          << "    " << var_name << ".setClickAction(Jop.BUTTON_ACTION_RESET);"
@@ -2250,7 +2252,7 @@ int Graph::export_ObjectTraceAttr(
     }
     break;
   case graph_eTrace_ToggleDig:
-    if (strcmp(trace_data->data[0], "") != 0) {
+    if (!streq(trace_data->data[0], "")) {
       fp << "    " << var_name << ".setPwrAttribute(\"" << trace_data->data[0]
          << "\");\n"
          << "    " << var_name << ".setClickAction(Jop.BUTTON_ACTION_TOGGLE);"
@@ -2258,7 +2260,7 @@ int Graph::export_ObjectTraceAttr(
     }
     break;
   case graph_eTrace_Command:
-    if (strcmp(trace_data->data[0], "") != 0) {
+    if (!streq(trace_data->data[0], "")) {
       fp << "    " << var_name << ".setCommand(\"" << trace_data->data[0]
          << "\");\n"
          << "    " << var_name << ".setClickAction(Jop.BUTTON_ACTION_COMMAND);"
@@ -2266,7 +2268,7 @@ int Graph::export_ObjectTraceAttr(
     }
     break;
   case graph_eTrace_SetDigWithTone:
-    if (strcmp(trace_data->data[0], "") != 0) {
+    if (!streq(trace_data->data[0], "")) {
       fp << "    " << var_name << ".setPwrAttribute(\"" << trace_data->data[0]
          << "\");\n"
          << "    " << var_name << ".setPwrAttrTone(\"" << trace_data->data[2]
@@ -2278,7 +2280,7 @@ int Graph::export_ObjectTraceAttr(
     }
     break;
   case graph_eTrace_ResetDigWithTone:
-    if (strcmp(trace_data->data[0], "") != 0) {
+    if (!streq(trace_data->data[0], "")) {
       fp << "    " << var_name << ".setPwrAttribute(\"" << trace_data->data[0]
          << "\");\n"
          << "    " << var_name << ".setPwrAttrTone(\"" << trace_data->data[2]
@@ -2290,7 +2292,7 @@ int Graph::export_ObjectTraceAttr(
     }
     break;
   case graph_eTrace_ToggleDigWithTone:
-    if (strcmp(trace_data->data[0], "") != 0) {
+    if (!streq(trace_data->data[0], "")) {
       fp << "    " << var_name << ".setPwrAttribute(\"" << trace_data->data[0]
          << "\");\n"
          << "    " << var_name << ".setPwrAttrTone(\"" << trace_data->data[2]
@@ -2309,7 +2311,7 @@ int Graph::export_ObjectTraceAttr(
 
   for (i = 0; i < annot_cnt; i++) {
     grow_GetAnnotation(object, numbers[i], annot_str, sizeof(annot_str));
-    if (strcmp(annot_str, "") != 0) {
+    if (!streq(annot_str, "")) {
       fp << "    " << var_name << ".setAnnot" << numbers[i] << "(\""
          << annot_str << "\");\n";
     }
@@ -2349,7 +2351,7 @@ int Graph::export_GejavaObjectTraceAttr(
 
   for (i = 0; i < annot_cnt; i++) {
     grow_GetAnnotation(object, numbers[i], annot_str, sizeof(annot_str));
-    if (strcmp(annot_str, "") != 0) {
+    if (!streq(annot_str, "")) {
       fp << "    " << var_name << ".setAnnot" << numbers[i] << "(\""
          << annot_str << "\");\n";
     }
@@ -2575,8 +2577,8 @@ int Graph::export_SliderTraceAttr(
   var_name[0] = _tolower(var_name[0]);
   sprintf(&var_name[strlen(var_name)], "%d", cnt);
 
-  if (strcmp(trace_data->data[0], "") != 0) {
-    if (strcmp(trace_data->data[0], "") != 0)
+  if (!streq(trace_data->data[0], "")) {
+    if (!streq(trace_data->data[0], ""))
       fp << "    " << var_name << ".setPwrAttribute(\"" << trace_data->data[0]
          << "\");\n"
          << "    " << var_name << ".setAccess(" << (int)trace_data->access

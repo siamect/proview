@@ -39,15 +39,15 @@
 
 /*_Include files_________________________________________________________*/
 
-#include <string.h>
 #include <stdlib.h>
 
 extern "C" {
 #include "co_cdh.h"
 #include "co_dcli.h"
 }
-
 #include "co_lng.h"
+#include "co_string.h"
+
 #include "cnv_ctx.h"
 #include "cnv_readxtthelp.h"
 #include "cnv_xtthelptopdf.h"
@@ -88,13 +88,13 @@ void* CnvXtthelpToPdf::insert(navh_eItemType item_type, const char* text1,
   if (option & pdf_mOption_printDisable && item_type != navh_eItemType_Option)
     return NULL;
 
-  if ((text2 && strcmp(text2, "") != 0) || (text3 && strcmp(text3, "") != 0)) {
+  if ((text2 && !streq(text2, "")) || (text3 && !streq(text3, ""))) {
     if (!(status & pdf_mStatus_table))
       status |= pdf_mStatus_table;
   } else {
     if (status & pdf_mStatus_table) {
       // Close table (keep if empty line)
-      if (!(text1 && strcmp(text1, "") == 0
+      if (!(text1 && streq(text1, "")
               && (item_type == navh_eItemType_Help
                      || item_type == navh_eItemType_HelpCode
                      || item_type == navh_eItemType_HelpBold)))
@@ -225,7 +225,7 @@ void* CnvXtthelpToPdf::insert(navh_eItemType item_type, const char* text1,
     else if (item_type == navh_eItemType_HelpCode)
       hstyle = &topdf.style[topdf.ci].code;
 
-    if (strcmp(link, "") != 0)
+    if (!streq(link, ""))
       printmode = pdf_mPrintMode_Start;
     else
       printmode = pdf_mPrintMode_Pos;
@@ -235,18 +235,18 @@ void* CnvXtthelpToPdf::insert(navh_eItemType item_type, const char* text1,
     } else {
       topdf.x = pdf_cLeftMargin;
       topdf.print_text(text1, *hstyle);
-      if (text2 && strcmp(text2, "") != 0) {
+      if (text2 && !streq(text2, "")) {
         topdf.x = pdf_cLeftMargin + pdf_cCellSize;
         topdf.print_text(
             text2, *hstyle, pdf_mPrintMode_KeepY | pdf_mPrintMode_FixX);
       }
-      if (text3 && strcmp(text3, "") != 0) {
+      if (text3 && !streq(text3, "")) {
         topdf.x = pdf_cLeftMargin + 2 * pdf_cCellSize;
         topdf.print_text(
             text3, *hstyle, pdf_mPrintMode_KeepY | pdf_mPrintMode_FixX);
       }
     }
-    if (strcmp(link, "") != 0 && !conf_pass) {
+    if (!streq(link, "") && !conf_pass) {
       pwr_tFileName fname;
       char str[200];
       int page;
@@ -336,9 +336,9 @@ void* CnvXtthelpToPdf::insert(navh_eItemType item_type, const char* text1,
     return NULL;
   }
   case navh_eItemType_Option: {
-    if (strcmp(text1, "printdisable") == 0)
+    if (streq(text1, "printdisable"))
       option |= pdf_mOption_printDisable;
-    else if (strcmp(text1, "printenable") == 0)
+    else if (streq(text1, "printenable"))
       option &= ~pdf_mOption_printDisable;
     return NULL;
   }

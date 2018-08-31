@@ -37,11 +37,12 @@
 /* cow_pb_gsd_attrnav.cpp -- Display gsd attributes */
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_time.h"
+
 #include "rt_pb_msg.h"
 
 #include "cow_wow.h"
@@ -1087,7 +1088,7 @@ int GsdAttrNav::trace_scan_bc(brow_tObject object, void* p)
       strcpy(buf, "");
     else
       strcpy(buf, item->mconf->module->Mod_Name);
-    if (strcmp(buf, item->old_type) != 0) {
+    if (!streq(buf, item->old_type)) {
       brow_SetAnnotation(object, 2, buf, strlen(buf));
       strcpy(item->old_type, buf);
     }
@@ -1137,7 +1138,7 @@ int GsdAttrNav::trace_connect_bc(
 
   /*  printf( "Connecting %s.%s\n", name, attr);  */
 
-  if (strcmp(name, "") == 0)
+  if (streq(name, ""))
     return 1;
 
   brow_GetUserData(object, (void**)&base_item);
@@ -1331,8 +1332,8 @@ int GsdAttrNav::object_attr()
   for (keyp = gsd->keywordlist, datap = gsd->datalist; keyp->type != gsd_End;
        keyp++, datap++) {
     if (datap->found) {
-      if (!(strcmp(keyp->name, "Vendor_Name") == 0
-              || strcmp(keyp->name, "Model_Name") == 0))
+      if (!(streq(keyp->name, "Vendor_Name")
+              || streq(keyp->name, "Model_Name")))
         continue;
       switch (keyp->type) {
       case gsd_ProfibusDP:
@@ -1368,7 +1369,7 @@ int GsdAttrNav::object_attr()
       if (size != 0)
         new ItemPbBase(this, keyp->name, "LocalGsdAttr", type, size, 0, 0, p, 1,
             0, NULL, flow_eDest_IntoLast);
-      if (strcmp(keyp->name, "Model_Name") == 0)
+      if (streq(keyp->name, "Model_Name"))
         strcpy(modelname, (char*)p);
     }
   }
@@ -1515,7 +1516,7 @@ int GsdAttrNav::search_class(
     }
 
     if (in_model) {
-      if (strcmp(itemv[0], "{") == 0)
+      if (streq(itemv[0], "{"))
         in_par = 1;
     }
 
@@ -1523,10 +1524,10 @@ int GsdAttrNav::search_class(
       if (num < 2)
         continue;
 
-      if (strcmp(itemv[0], "}") == 0)
+      if (streq(itemv[0], "}"))
         break;
 
-      if (strcmp(itemv[1], "-") == 0 || strcmp(itemv[1], "") == 0)
+      if (streq(itemv[1], "-") || streq(itemv[1], ""))
         continue;
 
       if (cdh_NoCaseStrcmp(itemv[0], lmodule) == 0) {
@@ -2066,8 +2067,8 @@ int ItemPbMoreData::open_children(GsdAttrNav* attrnav, double x, double y)
 
     for (keyp = attrnav->gsd->keywordlist, datap = attrnav->gsd->datalist;
          keyp->type != gsd_End; keyp++, datap++) {
-      if (strcmp(keyp->name, "Vendor_Name") == 0
-          || strcmp(keyp->name, "Model_Name") == 0)
+      if (streq(keyp->name, "Vendor_Name")
+          || streq(keyp->name, "Model_Name"))
         continue;
       if (datap->found) {
         switch (keyp->type) {

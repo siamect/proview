@@ -43,8 +43,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
+
+#include "co_string.h"
 
 int main(int argc, char* argv[])
 {
@@ -54,7 +55,7 @@ int main(int argc, char* argv[])
 
   strcpy(cmd, "firefox ");
   for (int i = 1; i < argc; i++) {
-    if (strcmp(argv[i], "-remote") == 0) {
+    if (streq(argv[i], "-remote")) {
       remote = true;
       strcat(cmd, argv[i]);
       strcat(cmd, " \"");

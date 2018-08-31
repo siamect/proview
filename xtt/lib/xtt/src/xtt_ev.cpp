@@ -39,16 +39,20 @@
 #include <stdlib.h>
 
 #include "pwr_privilege.h"
+
 #include "co_cdh.h"
-#include "co_time.h"
 #include "co_dcli.h"
-#include "cow_wow.h"
+#include "co_string.h"
+#include "co_time.h"
+
 #include "rt_gdh.h"
 #include "rt_mh_util.h"
+#include "rt_xnav_msg.h"
+
+#include "cow_wow.h"
 
 #include "xtt_ev.h"
 #include "xtt_methodtoolbar.h"
-#include "rt_xnav_msg.h"
 
 // Static pointer to Ev for mh callbacks
 Ev* Ev::ev = 0;
@@ -577,7 +581,7 @@ char* Ev::name_to_alias(char* name)
   for (int i = 0; i < (int)(sizeof(alias_list) / sizeof(alias_list[0])); i++) {
     if (alias_list[i].Alias[0] == 0)
       break;
-    if (strcmp(alias_list[i].Object, "") != 0
+    if (!streq(alias_list[i].Object, "")
         && strncmp(oname, alias_list[i].Object, strlen(alias_list[i].Object))
             == 0) {
       strcpy(alias, alias_list[i].Alias);

@@ -34,10 +34,14 @@
  * General Public License plus this exception.
  **/
 
-#include <string.h>
 #include <sys/stat.h>
 
 #include <iostream>
+
+extern "C" {
+#include "co_dcli.h"
+}
+#include "co_string.h"
 
 #include "wb_orepwbl.h"
 #include "wb_dbs.h"
@@ -46,10 +50,6 @@
 #include "wb_merep.h"
 #include "wb_tdrep.h"
 #include "cow_msgwindow.h"
-
-extern "C" {
-#include "co_dcli.h"
-}
 
 wb_vrepwbl::~wb_vrepwbl()
 {
@@ -308,7 +308,7 @@ int wb_vrepwbl::load(const char* fname)
     MsgWindow::message('F', "No file found, ", fname);
     return LDH__NOSUCHFILE;
   }
-  if (strcmp(volume_name, "") == 0) {
+  if (streq(volume_name, "")) {
     MsgWindow::message('F', "No volume found, ", fname);
     error_cnt++;
   }
@@ -412,65 +412,65 @@ int wb_vrepwbl::getTypeInfo(const char* name, pwr_tTid* tid, pwr_eType* type,
     type_extern = true;
 
   if (!type_extern) {
-    if (strcmp(tname, "Boolean") == 0)
+    if (streq(tname, "Boolean"))
       return getTypeInfo(
           *tid = (pwr_tTid)pwr_eType_Boolean, type, size, elements);
-    else if (strcmp(tname, "Float32") == 0)
+    else if (streq(tname, "Float32"))
       return getTypeInfo(
           *tid = (pwr_tTid)pwr_eType_Float32, type, size, elements);
-    else if (strcmp(tname, "Float64") == 0)
+    else if (streq(tname, "Float64"))
       return getTypeInfo(
           *tid = (pwr_tTid)pwr_eType_Float64, type, size, elements);
-    else if (strcmp(tname, "Char") == 0)
+    else if (streq(tname, "Char"))
       return getTypeInfo(*tid = (pwr_tTid)pwr_eType_Char, type, size, elements);
-    else if (strcmp(tname, "Int8") == 0)
+    else if (streq(tname, "Int8"))
       return getTypeInfo(*tid = (pwr_tTid)pwr_eType_Int8, type, size, elements);
-    else if (strcmp(tname, "Int16") == 0)
+    else if (streq(tname, "Int16"))
       return getTypeInfo(
           *tid = (pwr_tTid)pwr_eType_Int16, type, size, elements);
-    else if (strcmp(tname, "Int32") == 0)
+    else if (streq(tname, "Int32"))
       return getTypeInfo(
           *tid = (pwr_tTid)pwr_eType_Int32, type, size, elements);
-    else if (strcmp(tname, "UInt8") == 0)
+    else if (streq(tname, "UInt8"))
       return getTypeInfo(
           *tid = (pwr_tTid)pwr_eType_UInt8, type, size, elements);
-    else if (strcmp(tname, "UInt16") == 0)
+    else if (streq(tname, "UInt16"))
       return getTypeInfo(
           *tid = (pwr_tTid)pwr_eType_UInt16, type, size, elements);
-    else if (strcmp(tname, "UInt32") == 0)
+    else if (streq(tname, "UInt32"))
       return getTypeInfo(
           *tid = (pwr_tTid)pwr_eType_UInt32, type, size, elements);
-    else if (strcmp(tname, "Objid") == 0)
+    else if (streq(tname, "Objid"))
       return getTypeInfo(
           *tid = (pwr_tTid)pwr_eType_Objid, type, size, elements);
-    else if (strcmp(tname, "Enum") == 0)
+    else if (streq(tname, "Enum"))
       return getTypeInfo(*tid = (pwr_tTid)pwr_eType_Enum, type, size, elements);
-    else if (strcmp(tname, "Mask") == 0)
+    else if (streq(tname, "Mask"))
       return getTypeInfo(*tid = (pwr_tTid)pwr_eType_Mask, type, size, elements);
-    else if (strcmp(tname, "Time") == 0)
+    else if (streq(tname, "Time"))
       return getTypeInfo(*tid = (pwr_tTid)pwr_eType_Time, type, size, elements);
-    else if (strcmp(tname, "AttrRef") == 0)
+    else if (streq(tname, "AttrRef"))
       return getTypeInfo(
           *tid = (pwr_tTid)pwr_eType_AttrRef, type, size, elements);
-    else if (strcmp(tname, "Int64") == 0)
+    else if (streq(tname, "Int64"))
       return getTypeInfo(
           *tid = (pwr_tTid)pwr_eType_Int64, type, size, elements);
-    else if (strcmp(tname, "UInt64") == 0)
+    else if (streq(tname, "UInt64"))
       return getTypeInfo(
           *tid = (pwr_tTid)pwr_eType_UInt64, type, size, elements);
-    else if (strcmp(tname, "ClassId") == 0)
+    else if (streq(tname, "ClassId"))
       return getTypeInfo(
           *tid = (pwr_tTid)pwr_eType_ClassId, type, size, elements);
-    else if (strcmp(tname, "TypeId") == 0)
+    else if (streq(tname, "TypeId"))
       return getTypeInfo(
           *tid = (pwr_tTid)pwr_eType_TypeId, type, size, elements);
-    else if (strcmp(tname, "ObjectIx") == 0)
+    else if (streq(tname, "ObjectIx"))
       return getTypeInfo(
           *tid = (pwr_tTid)pwr_eType_ObjectIx, type, size, elements);
-    else if (strcmp(tname, "RefId") == 0)
+    else if (streq(tname, "RefId"))
       return getTypeInfo(
           *tid = (pwr_tTid)pwr_eType_RefId, type, size, elements);
-    else if (strcmp(tname, "DeltaTime") == 0)
+    else if (streq(tname, "DeltaTime"))
       return getTypeInfo(
           *tid = (pwr_tTid)pwr_eType_DeltaTime, type, size, elements);
     else {

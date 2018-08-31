@@ -49,14 +49,16 @@
 #if defined OS_POSIX
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <math.h>
 #endif
 
 #include "pwr_nmpsclasses.h"
+
 #include "co_cdh.h"
-#include "co_time.h"
 #include "co_dcli.h"
+#include "co_string.h"
+#include "co_time.h"
+
 #include "rt_gdh_msg.h"
 #include "rt_hash_msg.h"
 #include "rt_ini_event.h"
@@ -2344,7 +2346,7 @@ int main(int argc, char* argv[])
   char mp[2000];
   qcom_sGet get;
 
-  if (argc > 2 && strcmp(argv[1], "-l") == 0) {
+  if (argc > 2 && streq(argv[1], "-l")) {
     errh_Init("nmps_bck_load", 0);
 
     sts = gdh_Init("nmps_bck_load");

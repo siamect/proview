@@ -35,7 +35,6 @@
  */
 
 #include <stdio.h>
-#include <string.h>
 
 #include <fstream>
 
@@ -44,6 +43,7 @@ extern "C" {
 #include "co_cdh.h"
 #include "co_time.h"
 }
+#include "co_string.h"
 #include "cnv_changelog.h"
 
 CnvChangeLog::CnvChangeLog(CnvCtx* cnv_ctx, char* from_str)
@@ -51,7 +51,7 @@ CnvChangeLog::CnvChangeLog(CnvCtx* cnv_ctx, char* from_str)
 {
   pwr_tStatus sts;
 
-  if (strcmp(from_str, "") != 0) {
+  if (!streq(from_str, "")) {
     sts = time_AsciiToA(from_str, &from_time);
     if (ODD(sts))
       from = 1;
@@ -161,7 +161,7 @@ int CnvChangeLog::read(const char* module)
       } else {
         // Continuation of log entry
         CnvCtx::remove_spaces(orig_line, line);
-        if (strcmp(line, "") == 0)
+        if (streq(line, ""))
           continue;
 
         if (entries.size() == 0)

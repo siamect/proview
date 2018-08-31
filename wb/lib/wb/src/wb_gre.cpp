@@ -39,12 +39,12 @@
    the flow callbacks.  */
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "pwr_baseclasses.h"
 
-#include "co_time.h"
 #include "co_dcli.h"
+#include "co_string.h"
+#include "co_time.h"
 #include "co_trace.h"
 
 #include "wb_foe_msg.h"
@@ -244,7 +244,7 @@ int WGre::get_annotations(vldh_t_node node, char* annot_str, int* annot_nr,
             }
           }
 
-          if (strcmp(parname, "SigChanCon") == 0) {
+          if (streq(parname, "SigChanCon")) {
             /* Get attribute SigChanCon from previous attrref */
             pwr_tObjid oid;
             char* s;
@@ -638,7 +638,7 @@ int WGre::node_annot_message(
         break;
       }
       }
-      if (strcmp(annot_str, "") != 0) {
+      if (!streq(annot_str, "")) {
         if (annotcount != 0)
           strncat(message, ", ", msg_size - strlen(message));
         strncat(message, annot_str, msg_size - strlen(message));

@@ -39,16 +39,16 @@
 
 /*_Include files_________________________________________________________*/
 
-#include <string.h>
 #include <stdlib.h>
 
 extern "C" {
 #include "co_cdh.h"
 #include "co_dcli.h"
 }
-
 #include "co_nav_help.h"
 #include "co_lng.h"
+#include "co_string.h"
+
 #include "cnv_ctx.h"
 #include "cnv_xtthelptops.h"
 #include "cnv_image.h"
@@ -84,13 +84,13 @@ void* CnvXtthelpToPs::insert(navh_eItemType item_type, const char* text1,
   if (option & ps_mOption_printDisable && item_type != navh_eItemType_Option)
     return NULL;
 
-  if ((text2 && strcmp(text2, "") != 0) || (text3 && strcmp(text3, "") != 0)) {
+  if ((text2 && !streq(text2, "")) || (text3 && !streq(text3, ""))) {
     if (!(status & ps_mStatus_table))
       status |= ps_mStatus_table;
   } else {
     if (status & ps_mStatus_table) {
       // Close table (keep if empty line)
-      if (!(text1 && strcmp(text1, "") == 0
+      if (!(text1 && streq(text1, "")
               && (item_type == navh_eItemType_Help
                      || item_type == navh_eItemType_HelpCode
                      || item_type == navh_eItemType_HelpBold)))
@@ -222,7 +222,7 @@ void* CnvXtthelpToPs::insert(navh_eItemType item_type, const char* text1,
     else if (item_type == navh_eItemType_HelpCode)
       hstyle = &tops.style[tops.ci].code;
 
-    if (strcmp(link, "") != 0)
+    if (!streq(link, ""))
       printmode = ps_mPrintMode_Start;
     else
       printmode = ps_mPrintMode_Pos;
@@ -232,18 +232,18 @@ void* CnvXtthelpToPs::insert(navh_eItemType item_type, const char* text1,
     } else {
       tops.x = ps_cLeftMargin;
       tops.print_text(text1, *hstyle);
-      if (text2 && strcmp(text2, "") != 0) {
+      if (text2 && !streq(text2, "")) {
         tops.x = ps_cLeftMargin + ps_cCellSize;
         tops.print_text(
             text2, *hstyle, ps_mPrintMode_KeepY | ps_mPrintMode_FixX);
       }
-      if (text3 && strcmp(text3, "") != 0) {
+      if (text3 && !streq(text3, "")) {
         tops.x = ps_cLeftMargin + 2 * ps_cCellSize;
         tops.print_text(
             text3, *hstyle, ps_mPrintMode_KeepY | ps_mPrintMode_FixX);
       }
     }
-    if (strcmp(link, "") != 0 && !conf_pass) {
+    if (!streq(link, "") && !conf_pass) {
       pwr_tFileName fname;
       char str[200];
       int page;
@@ -331,9 +331,9 @@ void* CnvXtthelpToPs::insert(navh_eItemType item_type, const char* text1,
     return NULL;
   }
   case navh_eItemType_Option: {
-    if (strcmp(text1, "printdisable") == 0)
+    if (streq(text1, "printdisable"))
       option |= ps_mOption_printDisable;
-    else if (strcmp(text1, "printenable") == 0)
+    else if (streq(text1, "printenable"))
       option &= ~ps_mOption_printDisable;
     return NULL;
   }

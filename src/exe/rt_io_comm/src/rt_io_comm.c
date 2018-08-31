@@ -40,10 +40,11 @@
 #include <stdio.h>
 #include <stddef.h>
 #include <stdlib.h>
-#include <string.h>
 
-#include "co_time.h"
 #include "co_cdh.h"
+#include "co_string.h"
+#include "co_time.h"
+
 #include "rt_io_base.h"
 #include "rt_plc_utl.h"
 #include "rt_csup.h"
@@ -97,13 +98,13 @@ int main(int argc, char** argv)
   float cycletime = 0;
 
   for (i = 1; i < argc; i++) {
-    if (strcmp(argv[i], "-m") == 0) {
+    if (streq(argv[i], "-m")) {
       io_methods_print();
       exit(0);
-    } else if (strcmp(argv[i], "-h") == 0) {
+    } else if (streq(argv[i], "-h")) {
       usage();
       exit(0);
-    } else if (strcmp(argv[i], "-p") == 0) {
+    } else if (streq(argv[i], "-p")) {
       if (argc <= i + 1) {
         usage();
         exit(0);
@@ -123,7 +124,7 @@ int main(int argc, char** argv)
         exit(0);
       }
       i++;
-    } else if (strcmp(argv[i], "-a") == 0) {
+    } else if (streq(argv[i], "-a")) {
       if (argc <= i + 1) {
         usage();
         exit(0);
@@ -135,7 +136,7 @@ int main(int argc, char** argv)
         exit(0);
       }
       i++;
-    } else if (strcmp(argv[i], "-c") == 0) {
+    } else if (streq(argv[i], "-c")) {
       if (argc <= i + 1) {
         usage();
         exit(0);
@@ -146,7 +147,7 @@ int main(int argc, char** argv)
         exit(0);
       }
       i++;
-    } else if (strcmp(argv[i], "-o") == 0) {
+    } else if (streq(argv[i], "-o")) {
       if (argc <= i + 1) {
         usage();
         exit(0);
@@ -313,7 +314,7 @@ static pwr_sClass_IOHandler* init(qcom_sQid* qid, lst_sEntry** csup_lh,
     exit(sts);
   }
 
-  if (strcmp(oname, "") != 0) {
+  if (!streq(oname, "")) {
     /* Register this object instead of IoHandler */
     sts = gdh_NameToObjid(oname, &oid);
     if (EVEN(sts)) {

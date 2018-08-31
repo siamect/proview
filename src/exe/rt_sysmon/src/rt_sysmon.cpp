@@ -44,20 +44,24 @@
 #include <sys/statfs.h>
 #endif
 
-#include "rt_sysmon.h"
 #include "co_error.h"
-#include "rt_smon_msg.h"
+#include "co_string.h"
 extern "C" {
-#include "rt_gdh.h"
 #include "co_cdh.h"
 #include "co_errno.h"
 #include "co_time.h"
-#include "rt_ini_event.h"
+}
+
+extern "C" {
 #include "rt_aproc.h"
+#include "rt_gdh.h"
+#include "rt_ini_event.h"
+#include "rt_mh_appl.h"
 #include "rt_pwr_msg.h"
 #include "rt_qcom_msg.h"
-#include "rt_mh_appl.h"
 }
+#include "rt_smon_msg.h"
+#include "rt_sysmon.h"
 
 sysmon_object::sysmon_object(pwr_sAttrRef* arp)
     : aref(*arp), p(0), scan_div(0), scan_cnt(0)
@@ -321,7 +325,7 @@ void disksup_object::exec()
             aref.Objid, o->DetectText, name, o->EventPriority);
       }
       if (o->Action & pwr_mDiskSupActionMask_Command) {
-        if (strcmp(o->Command, "") != 0) {
+        if (!streq(o->Command, "")) {
           char msg[200];
 
           system(o->Command);

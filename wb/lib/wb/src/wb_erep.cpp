@@ -34,11 +34,10 @@
  * General Public License plus this exception.
  **/
 
-#include <string.h>
-
 #include <iostream>
 
 #include "co_cnf.h"
+#include "co_string.h"
 
 #include "cow_msgwindow.h"
 
@@ -606,12 +605,12 @@ void wb_erep::loadMeta(pwr_tStatus* status, char* db)
         load_externvolume = 1;
       else if (cdh_NoCaseStrcmp(vol_array[2], "ClassVolume") == 0
           || cdh_NoCaseStrcmp(vol_array[2], "DetachedClassVolume") == 0
-          || strcmp(vol_array[3], "load") == 0) {
+          || streq(vol_array[3], "load")) {
         if (j == 0)
           load_dbs = 1;
         if (((cdh_NoCaseStrcmp(vol_array[2], "ClassVolume") == 0
                  || cdh_NoCaseStrcmp(vol_array[2], "DetachedClassVolume") == 0)
-                && (strcmp(vol_array[3], "cnf") == 0 && db
+                && (streq(vol_array[3], "cnf") && db
                        && cdh_NoCaseStrcmp(db, vol_array[0]) == 0))) {
           if (j == 1)
             load_db = 1;
@@ -645,7 +644,7 @@ void wb_erep::loadMeta(pwr_tStatus* status, char* db)
         // Load dbs for this volume
         cdh_ToLower(vol_array[0], vol_array[0]);
 
-        if (strcmp(vol_array[3], "cnf") == 0) {
+        if (streq(vol_array[3], "cnf")) {
           // Configured in this project, load from pwrp_load
           strcpy(vname, "$pwrp_load/");
           strcat(vname, vol_array[0]);
@@ -750,7 +749,7 @@ void wb_erep::loadMeta(pwr_tStatus* status, char* db)
             db_type = eDbType_db;
           else
             db_type = eDbType_wbl;
-        } else if (strcmp(vol_array[3], "clone") == 0)
+        } else if (streq(vol_array[3], "clone"))
           db_type = eDbType_none;
         else {
           if (nr >= 5 && vol_array[4][0] == '1')

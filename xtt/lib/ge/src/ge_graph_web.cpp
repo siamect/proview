@@ -36,13 +36,16 @@
 
 /* ge_graph_web.cpp -- generate website */
 
-#include "co_cdh.h"
-#include "co_time.h"
-#include "co_ccm_msg.h"
-#include "co_dcli.h"
-#include "co_cnf.h"
 #include "pwr_names.h"
 #include "pwr_baseclasses.h"
+
+#include "co_ccm_msg.h"
+#include "co_cdh.h"
+#include "co_cnf.h"
+#include "co_dcli.h"
+#include "co_string.h"
+#include "co_time.h"
+
 #include "rt_gdh.h"
 
 #include "ge_graph.h"
@@ -122,7 +125,7 @@ int Graph::generate_web(ldh_tSesContext ldhses, pwr_tOid opplaceweb_oid)
       ldhses, opplaceweb_oid, "RtBody", "FileName", &value_p, &size);
   if (EVEN(sts))
     return sts;
-  if (strcmp(value_p, "") == 0)
+  if (streq(value_p, ""))
     strcpy(file_name, "index.html");
   else
     strcpy(file_name, value_p);
@@ -212,17 +215,17 @@ int Graph::generate_web(ldh_tSesContext ldhses, pwr_tOid opplaceweb_oid)
   strcpy(arlist, "pwr_rt_client.jar,pwr_jop.jar,pwr_jopg.jar");
   // strcat( arlist ",pwr_bcomp.jar,pwr_bcompfc.jar,pwr_abb.jar");
   dcli_trim(load_archives, load_archives);
-  if (strcmp(load_archives, "") != 0) {
+  if (!streq(load_archives, "")) {
     strcat(arlist, ",");
     strcat(arlist, load_archives);
   }
 
   // Login applet as default start URL
-  if (strcmp(start_URL, "") == 0 && enable_login)
+  if (streq(start_URL, "") && enable_login)
     strcpy(start_URL, "pwr_login.html");
 
   // pwr_css as default css
-  if (strcmp(style_sheet, "") == 0)
+  if (streq(style_sheet, ""))
     strcpy(style_sheet, "pwr_css.css");
 
   // Parse the name of the start page
@@ -301,7 +304,7 @@ int Graph::generate_web(ldh_tSesContext ldhses, pwr_tOid opplaceweb_oid)
            << "  <frameset cols=\"20%,80%\">\n"
            << "    <frame name=\"left\" src=\"" << menu_file_name << "\">"
            << '\n';
-  if (strcmp(start_URL, "") != 0)
+  if (!streq(start_URL, ""))
     fp_start << "    <frame name=\"right\" src=\"" << start_URL << "\">"
              << '\n';
   else
@@ -517,7 +520,7 @@ int Graph::generate_web(ldh_tSesContext ldhses, pwr_tOid opplaceweb_oid)
         << "      <param name=\"scriptable\" value=\"false\">\n"
         << "      <param name=\"pwrplace\" value=\"" << opplaceweb_name << "\">"
         << '\n';
-  if (strcmp(pwrhost, "") != 0)
+  if (!streq(pwrhost, ""))
     fp_ow << "      <param name=\"pwrhost\" value=\"" << pwrhost << "\">"
           << '\n';
   fp_ow << "     </object>\n"
@@ -537,7 +540,7 @@ int Graph::generate_web(ldh_tSesContext ldhses, pwr_tOid opplaceweb_oid)
         << "      <param name=\"scriptable\" value=\"false\">\n"
         << "      <param name=\"pwrplace\" value=\"" << opplaceweb_name << "\">"
         << '\n';
-  if (strcmp(pwrhost, "") != 0)
+  if (!streq(pwrhost, ""))
     fp_ow << "      <param name=\"pwrhost\" value=\"" << pwrhost << "\">"
           << '\n';
   fp_ow << "     </object>\n"

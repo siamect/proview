@@ -35,10 +35,10 @@
  */
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_string.h"
 
 typedef enum {
   merge_eMtype_IoBase,
@@ -155,18 +155,18 @@ int main(int argc, char* argv[])
 
   idx = 0;
   for (i = 1; i < argc; i++) {
-    if (strcmp(argv[i], "-k") == 0)
+    if (streq(argv[i], "-k"))
       arg_keep = 1;
-    else if (strcmp(argv[i], "-v") == 0)
+    else if (streq(argv[i], "-v"))
       arg_verbose = 1;
     else {
       switch (idx) {
       case 0:
-        if (strcmp(argv[i], "io_base") == 0)
+        if (streq(argv[i], "io_base"))
           mtype = merge_eMtype_IoBase;
-        else if (strcmp(argv[i], "wb_base") == 0)
+        else if (streq(argv[i], "wb_base"))
           mtype = merge_eMtype_WbBase;
-        else if (strcmp(argv[i], "xtt_base") == 0)
+        else if (streq(argv[i], "xtt_base"))
           mtype = merge_eMtype_XttBase;
         else {
           usage();

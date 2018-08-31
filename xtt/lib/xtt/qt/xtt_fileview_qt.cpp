@@ -35,11 +35,9 @@
  */
 
 #include <stdio.h>
-#include <string.h>
-
-//#include "pwr_baseclasses.h"
 
 #include "co_lng.h"
+#include "co_string.h"
 
 #include "rt_gdh.h"
 
@@ -87,7 +85,7 @@ void XttFileviewQtWidget::list_ok_cb(const QString& file)
     strncpy(input_text, qPrintableLatin1(file), sizeof(input_text));
 
     /*
-    if (strcmp(filetype, "") != 0) {
+    if (!streq(filetype, "")) {
       if (file.indexOf('.') == 0) {
         strcat(input_text, filetype);
       }
@@ -95,7 +93,7 @@ void XttFileviewQtWidget::list_ok_cb(const QString& file)
     */
 
     for (int i = 0; i < fileview->filecnt; i++) {
-      if (strcmp(fileview->filelist[i], input_text) == 0) {
+      if (streq(fileview->filelist[i], input_text)) {
         file_exist = true;
         break;
       }

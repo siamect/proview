@@ -34,9 +34,9 @@
  * General Public License plus this exception.
  **/
 
-#include <string.h>
-
 #include "pwr_names.h"
+
+#include "co_string.h"
 #include "co_time.h"
 
 #include "wb_error.h"
@@ -806,7 +806,7 @@ int WItemPkgFileHier::open_children(
       sts = brow_GetChild(brow->ctx, next_files, &child);
       while (ODD(sts)) {
         brow_GetUserData(child, (void**)&item);
-        if (strcmp(item->filename, line_item[2]) == 0) {
+        if (streq(item->filename, line_item[2])) {
           if (item->time.tv_sec == time.tv_sec)
             keep = 0;
           break;

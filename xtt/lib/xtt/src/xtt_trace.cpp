@@ -36,18 +36,21 @@
 
 /* xtt_trace.cpp -- trace in runtime environment */
 
-#include <string.h>
 #include <stdlib.h>
 
 #include "pwr_baseclasses.h"
+#include "pwr_names.h"
 #include "pwr_privilege.h"
 
 #include "co_cdh.h"
 #include "co_dcli.h"
-#include "cow_wow.h"
+#include "co_string.h"
 #include "co_trace.h"
+
 #include "rt_gdh.h"
-#include "pwr_names.h"
+
+#include "cow_wow.h"
+
 #include "xtt_trace.h"
 #include "xtt_menu.h"
 
@@ -194,7 +197,7 @@ int RtTrace::connect_bc(
 
   /*  printf( "Connecting %s.%s\n", name, attr);  */
 
-  if (strcmp(name, "") == 0 || strcmp(attr, "") == 0)
+  if (streq(name, "") || streq(attr, ""))
     return 1;
 
   if (type != flow_eTraceType_Boolean
@@ -274,7 +277,7 @@ int RtTrace::disconnect_bc(flow_tObject object)
         && flow_GetNodeGroup(object) != flow_eNodeGroup_Trace)
       return 1;
 
-    if (!(strcmp(name, "") == 0 || strcmp(attr, "") == 0)) {
+    if (!(streq(name, "") || streq(attr, ""))) {
       flow_GetUserData(object, (void**)&subid_p);
       if (subid_p) {
         sts = gdh_UnrefObjectInfo(*subid_p);
@@ -327,7 +330,7 @@ int RtTrace::scan_bc(flow_tObject object, void* trace_p)
       break;
     }
 
-    if (!(strcmp(trace_object, "") == 0 || strcmp(trace_attribute, "") == 0)) {
+    if (!(streq(trace_object, "") || streq(trace_attribute, ""))) {
       flow_GetUserData(object, (void**)&subid_p);
       if (subid_p) {
         sts = gdh_GetSubscriptionOldness(*subid_p, &old, 0, 0);
@@ -777,10 +780,10 @@ int RtTrace::flow_cb(FlowCtx* ctx, flow_tEvent event)
       sts = flow_GetConPointTraceAttr(event->con_create.source_object,
           event->con_create.source_conpoint, con_attr_str, &trace_type);
       /* If "$object", use object trace attribute */
-      if (strcmp(con_attr_str, "$object") != 0)
+      if (!streq(con_attr_str, "$object"))
         strcpy(attr_str, con_attr_str);
 
-      if (strcmp(attr_str, "") == 0)
+      if (streq(attr_str, ""))
         return 1;
 
       flow_CreateNode(ctx, name, tractx->trace_analyse_nc, event->object.x,
@@ -1022,7 +1025,7 @@ int RtTrace::flow_cb(FlowCtx* ctx, flow_tEvent event)
     } else
       strcpy(name, object_str);
 
-    if (strcmp(name, "") != 0) {
+    if (!streq(name, "")) {
       strcpy(aname, name);
       strcat(aname, ".Description");
 
@@ -1046,26 +1049,26 @@ int RtTrace::flow_cb(FlowCtx* ctx, flow_tEvent event)
       }
 
       if (is_plcfo) {
-        if (strcmp(tiptext, "") != 0)
+        if (!streq(tiptext, ""))
           strcat(tiptext, "\n");
         if ((s = strchr(name, ':')))
           s++;
         else
           s = name;
         strncat(tiptext, s, sizeof(tiptext) - strlen(tiptext) - 1);
-        if (strcmp(attr_str, "") != 0) {
+        if (!streq(attr_str, "")) {
           strcat(tiptext, ".");
           strncat(tiptext, attr_str, sizeof(tiptext) - strlen(tiptext) - 1);
         }
       } else if (is_plcmain) {
-        if (strcmp(tiptext, "") != 0)
+        if (!streq(tiptext, ""))
           strcat(tiptext, "\n");
         if ((s = strchr(name, ':')))
           s++;
         else
           s = name;
         strncat(tiptext, s, sizeof(tiptext) - strlen(tiptext) - 1);
-        if (strcmp(attr_str, "") != 0) {
+        if (!streq(attr_str, "")) {
           strcat(tiptext, ".");
           strncat(tiptext, attr_str, sizeof(tiptext) - strlen(tiptext) - 1);
         }
@@ -1109,7 +1112,7 @@ int RtTrace::flow_cb(FlowCtx* ctx, flow_tEvent event)
         }
       }
 
-      if (strcmp(tiptext, "") != 0)
+      if (!streq(tiptext, ""))
         flow_SetTipText(ctx, event->object.object, tiptext, event->any.x_pixel,
             event->any.y_pixel);
     }
@@ -1224,7 +1227,7 @@ int RtTrace::get_attrref(flow_tObject node, pwr_tAttrRef* aref)
     strcpy(name, object_str);
 
   if (options & trace_mAttrOptions_MenuAttr) {
-    if (strcmp(attr_str, "") != 0) {
+    if (!streq(attr_str, "")) {
       strcat(name, ".");
       strcat(name, attr_str);
 

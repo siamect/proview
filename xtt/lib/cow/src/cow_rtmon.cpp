@@ -37,10 +37,11 @@
 /* co_statusmon_nodelist.cpp -- Status Monitor */
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "co_cdh.h"
+#include "co_string.h"
 #include "co_time.h"
+
 #include "rt_gdh.h"
 
 #include "cow_wow.h"
@@ -134,7 +135,7 @@ void RtMon::activate_xtt()
   pwr_tCmd cmd;
   char displaystr[120] = "";
 
-  if (strcmp(display, "") != 0)
+  if (!streq(display, ""))
     sprintf(displaystr, "--display %s", display);
 
   sprintf(cmd, "rt_xtt -q %s &", displaystr);
@@ -146,7 +147,7 @@ void RtMon::activate_op()
   pwr_tCmd cmd;
   char displaystr[120] = "";
 
-  if (strcmp(display, "") != 0)
+  if (!streq(display, ""))
     sprintf(displaystr, "--display %s", display);
 
   sprintf(cmd, "rt_xtt -q -s -c %s &", displaystr);

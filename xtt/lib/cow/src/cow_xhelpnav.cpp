@@ -36,14 +36,15 @@
 
 /* co_xhelpnav.cpp -- helptext navigator */
 
-#include <string.h>
-
 #include "co_cdh.h"
 #include "co_dcli.h"
-#include "co_time.h"
 #include "co_msg.h"
-#include "flow_utils.h"
+#include "co_string.h"
+#include "co_time.h"
+
 #include "cow_xhelpnav.h"
+
+#include "flow_utils.h"
 
 #include "xnav_bitmap_morehelp8.h"
 #include "xnav_bitmap_morehelp10.h"
@@ -683,7 +684,7 @@ pwr_tStatus CoXHelpNav::search(char* str, bool strict)
 
 pwr_tStatus CoXHelpNav::search_next()
 {
-  if (strcmp(search_str, "") == 0)
+  if (streq(search_str, ""))
     return XHELP__SEARCHNOTSTARTED;
 
   return search_exec(false);
@@ -691,7 +692,7 @@ pwr_tStatus CoXHelpNav::search_next()
 
 pwr_tStatus CoXHelpNav::search_next_reverse()
 {
-  if (strcmp(search_str, "") == 0)
+  if (streq(search_str, ""))
     return XHELP__SEARCHNOTSTARTED;
 
   return search_exec(true);
@@ -810,7 +811,7 @@ int HItemHelpImage::doubleclick_action(
 {
   int sts;
 
-  if (strcmp(link, "") != 0) {
+  if (!streq(link, "")) {
     if (strncmp(link, "$web:", 5) == 0) {
       // Open the url
       xhelpnav_open_URL(xhelpnav, &link[5]);
@@ -938,7 +939,7 @@ int HItemHelp::doubleclick_action(
 
   if (index) {
     sts = xhelpnav->help_index(file_type, file_name, 1);
-  } else if (strcmp(link, "") != 0) {
+  } else if (!streq(link, "")) {
     if (strncmp(link, "$web:", 5) == 0) {
       // Open the url
       xhelpnav_open_URL(xhelpnav, &link[5]);
@@ -1010,7 +1011,7 @@ int HItemHelpBold::doubleclick_action(
 
   if (index) {
     sts = xhelpnav->help_index(file_type, file_name, 1);
-  } else if (strcmp(link, "") != 0) {
+  } else if (!streq(link, "")) {
     if (strncmp(link, "$web:", 5) == 0) {
       // Open the url
       xhelpnav_open_URL(xhelpnav, &link[5]);

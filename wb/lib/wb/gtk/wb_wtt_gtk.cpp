@@ -40,6 +40,7 @@
 #include <gdk/gdkkeysyms.h>
 
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_time.h"
 
 #include "pwr_names.h"
@@ -744,7 +745,7 @@ void WttGtk::message(char severity, const char* message)
 
 void WttGtk::set_prompt(const char* prompt)
 {
-  if (strcmp(prompt, "") == 0) {
+  if (streq(prompt, "")) {
     g_object_set(cmd_prompt, "visible", FALSE, NULL);
     g_object_set(msg_label, "visible", TRUE, NULL);
   } else {
@@ -1887,11 +1888,11 @@ void WttGtk::boot_ok_cb(GtkWidget* w, gpointer data)
     gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &text, -1);
     strcpy(nodeconfigname, "");
     for (j = 0; j < wtt->boot_volumecount; j++) {
-      if (strcmp(volumelist_ptr->p1, nodeconfigname) != 0) {
+      if (!streq(volumelist_ptr->p1, nodeconfigname)) {
         nodecount++;
 
         strcpy(nodeconfigname, volumelist_ptr->p1);
-        if (strcmp(nodeconfigname, text) == 0) {
+        if (streq(nodeconfigname, text)) {
           node_type = atoi(volumelist_ptr->p6);
           wb_build build(*(wb_session*)wtt->ldhses, wtt->focused_wnav);
           build.opt = wtt->focused_wnav->gbl.build;

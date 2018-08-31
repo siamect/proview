@@ -35,8 +35,9 @@
  */
 
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+
+#include "co_string.h"
 
 #include "cow_wow_gtk.h"
 
@@ -145,13 +146,13 @@ void XttFileviewGtk::list_ok_cb(GtkWidget* w, gpointer data)
     strncpy(input_text, text, sizeof(input_text));
     g_free(text);
 
-    if (strcmp(fileview->filetype, "") != 0) {
+    if (!streq(fileview->filetype, "")) {
       if (strchr(input_text, '.') == 0)
         strcat(input_text, fileview->filetype);
     }
 
     for (int i = 0; i < fileview->filecnt; i++) {
-      if (strcmp(fileview->filelist[i], input_text) == 0) {
+      if (streq(fileview->filelist[i], input_text)) {
         file_exist = true;
         break;
       }

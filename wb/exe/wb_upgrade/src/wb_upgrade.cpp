@@ -46,11 +46,12 @@
       BaseClasses-Drive  */
 
 #include <stdio.h>
-#include <string.h>
 
 #include <iostream>
 
 #include "pwr_baseclasses.h"
+
+#include "co_string.h"
 
 #include "wb_env.h"
 #include "wb_session.h"
@@ -246,7 +247,7 @@ int main(int argc, char* argv[])
       for (unsigned int j = 0; j
            < sizeof(upg_sigchancon[0].attr) / sizeof(upg_sigchancon[0].attr[0]);
            j++) {
-        if (strcmp(upg_sigchancon[i].attr[j], "") == 0)
+        if (streq(upg_sigchancon[i].attr[j], ""))
           break;
 
         try {

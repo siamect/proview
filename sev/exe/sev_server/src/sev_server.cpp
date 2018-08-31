@@ -42,7 +42,9 @@
 #include "co_cnf.h"
 #include "co_dcli.h"
 #include "co_error.h"
+#include "co_string.h"
 #include "co_tree.h"
+
 #include "rt_gdh.h"
 #include "rt_ini_event.h"
 #include "rt_pwr_msg.h"
@@ -1636,7 +1638,7 @@ int main(int argc, char* argv[])
   sev_server srv;
   int noneth = 0;
 
-  if (argc > 1 && strcmp(argv[1], "-n") == 0)
+  if (argc > 1 && streq(argv[1], "-n"))
     noneth = 1;
 
   srv.init(noneth);

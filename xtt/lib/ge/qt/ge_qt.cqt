@@ -43,6 +43,8 @@
 
 #include <sstream>
 
+#include "co_string.h"
+
 #include "cow_logw_qt.h"
 #include "cow_qt_helpers.h"
 
@@ -333,7 +335,7 @@ void GeQt::confirm_cb(void* ge_ctx, void* confirm_object, char* text)
 
 void GeQt::set_prompt(const char* prompt)
 {
-  if (strcmp(prompt, "") == 0) {
+  if (streq(prompt, "")) {
     cmd_prompt->setVisible(false);
     msg_label->setVisible(true);
   } else {
@@ -1212,7 +1214,7 @@ void GeQt::save_and_close()
   char name[40];
 
   graph->get_name( name);
-  if ( strcmp( name, "") == 0) {
+  if ( streq( name, "")) {
     if ( ! graph->is_subgraph())
       open_input_dialog( "Graph name", "Save Graph", "",
                          Ge::save_graph_and_close);

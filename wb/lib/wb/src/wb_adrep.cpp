@@ -35,7 +35,8 @@
  **/
 
 #include <stdio.h>
-#include <string.h>
+
+#include "co_string.h"
 
 #include "wb_adrep.h"
 #include "wb_bdrep.h"
@@ -319,7 +320,7 @@ void wb_adrep::add(wb_adrep* ad, int idx)
 
 const char* wb_adrep::subName() const
 {
-  if (strcmp(m_subName, "") == 0)
+  if (streq(m_subName, ""))
     return m_orep->name();
   else
     return m_subName;

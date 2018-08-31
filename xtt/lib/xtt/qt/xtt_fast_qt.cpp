@@ -37,6 +37,7 @@
 #include <stdlib.h>
 
 #include "co_cdh.h"
+#include "co_string.h"
 
 #include "rt_gdh.h"
 #include "rt_xnav_msg.h"
@@ -60,7 +61,7 @@ XttFastQt::XttFastQt(void* parent_ctx, QWidget* parent_wid, char* name,
 
   *sts = XNAV__SUCCESS;
 
-  if (strcmp(name, "") != 0) {
+  if (!streq(name, "")) {
     strncpy(title, name, sizeof(title));
   } else {
     gdh_AttrrefToName(fast_arp, title, sizeof(title), cdh_mNName);

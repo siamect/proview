@@ -36,10 +36,10 @@
 
 /* cow_wow.cpp -- useful windows */
 
-#include <string.h>
+#include "co_dcli.h"
+#include "co_string.h"
 
 #include "cow_wow.h"
-#include "co_dcli.h"
 
 bool CoWow::m_autoremove = false;
 bool CoWow::m_printdialog_disable = false;
@@ -69,7 +69,7 @@ CoWowRecall::CoWowRecall() : m_current_recall_line(0), m_current_size(0)
 
 void CoWowRecall::push(const char* src)
 {
-  if (strcmp(src, "") != 0 && strcmp(src, m_recall[0]) != 0) {
+  if (!streq(src, "") && !streq(src, m_recall[0])) {
     for (int i = m_recall_size - 2; i >= 0; i--) {
       strcpy(m_recall[i + 1], m_recall[i]);
     }
@@ -93,7 +93,7 @@ void CoWowRecall::resetTmp()
 
 const char* CoWowRecall::popUp(const char* src)
 {
-  if (m_current_recall_line == 0 && strcmp(src, tmp[0]) != 0) {
+  if (m_current_recall_line == 0 && !streq(src, tmp[0])) {
     push(src);
   } else {
     strncpy(tmp[m_current_recall_line], src, m_line_size);

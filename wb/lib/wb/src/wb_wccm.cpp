@@ -37,13 +37,14 @@
 /* wb_wccm.c -- Buildtin script functions for wb */
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "pwr_version.h"
 #include "pwr_baseclasses.h"
+
 #include "co_api_user.h"
 #include "co_ccm.h"
 #include "co_ccm_msg.h"
+#include "co_string.h"
 #include "co_time.h"
 
 #include "wb_utl_api.h"
@@ -1459,7 +1460,7 @@ static int wccm_createplcobject_func(void* filectx, ccm_sArg* arg_list,
       wccm_foe_close(ldhses);
       return CCM__VARTYPE;
     }
-    if (strcmp(arg_p5->value_string, "") != 0) {
+    if (!streq(arg_p5->value_string, "")) {
       strncpy(dest, stored_foe_window, sizeof(dest));
       strncat(dest, "-", sizeof(dest) - strlen(dest) - 1);
       strncat(dest, arg_p5->value_string, sizeof(dest) - strlen(dest) - 1);

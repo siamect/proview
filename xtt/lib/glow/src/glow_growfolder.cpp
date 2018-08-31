@@ -35,11 +35,12 @@
  **/
 
 #include <stdlib.h>
-#include <string.h>
 
 #include <iostream>
 
 #include "co_dcli.h"
+#include "co_string.h"
+
 #include "glow_growfolder.h"
 #include "glow_grownode.h"
 #include "glow_draw.h"
@@ -761,7 +762,7 @@ void GrowFolder::update_attributes()
   if (current_folder >= folders)
     current_folder = 0;
 
-  if (strcmp(folder_file_names[current_folder], "") != 0) {
+  if (!streq(folder_file_names[current_folder], "")) {
     strcpy(input_file_name, folder_file_names[current_folder]);
     window_scale = folder_scale[current_folder];
     vertical_scrollbar = folder_v_scrollbar[current_folder];

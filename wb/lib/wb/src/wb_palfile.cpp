@@ -38,7 +38,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+
+#include "co_string.h"
 
 #include "wb_palfile.h"
 
@@ -107,7 +108,7 @@ PalFileMenu* PalFile::config_tree_build(ldh_tSession ldhses,
         if (!fp.getline(line, sizeof(line)))
           break;
         line_cnt++;
-        if (strcmp(line, "{") != 0)
+        if (!streq(line, "{"))
           printf("** Syntax error in file %s, line %d\n", filename, line_cnt);
 
         menu_p = config_tree_build_children(
@@ -136,7 +137,7 @@ PalFileMenu* PalFile::config_tree_build(ldh_tSession ldhses,
       if (!fp.getline(line, sizeof(line)))
         break;
       line_cnt++;
-      if (strcmp(line, "{") != 0)
+      if (!streq(line, "{"))
         printf("** Syntax error in file %s, line %d\n", filename, line_cnt);
 
       menu_p->child_list = config_tree_build_children(
@@ -184,7 +185,7 @@ PalFileMenu* PalFile::config_tree_build_children(ldh_tSession ldhses,
     if (nr < 1)
       printf("** Syntax error in file %s, line %d\n", filename, *line_cnt);
 
-    if (strcmp(type, "{") == 0) {
+    if (streq(type, "{")) {
       if (!hide_children) {
         if (nr != 1 || !menu_p)
           printf("** Syntax error in file %s, line %d\n", filename, *line_cnt);
@@ -195,7 +196,7 @@ PalFileMenu* PalFile::config_tree_build_children(ldh_tSession ldhses,
           menu_p->child_list = mp;
       } else
         hide_children = 0;
-    } else if (strcmp(type, "}") == 0) {
+    } else if (streq(type, "}")) {
       if (nr != 1)
         printf("** Syntax error in file %s, line %d\n", filename, *line_cnt);
       return return_menu;
@@ -211,7 +212,7 @@ PalFileMenu* PalFile::config_tree_build_children(ldh_tSession ldhses,
       // Check if it already exist
       found = 0;
       for (menu_p = parent->child_list; menu_p; menu_p = menu_p->next) {
-        if (strcmp(menu_p->title, name) == 0) {
+        if (streq(menu_p->title, name)) {
           found = 1;
           break;
         }

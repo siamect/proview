@@ -39,6 +39,8 @@
 #include <locale.h>
 #include <stdlib.h>
 
+#include "co_string.h"
+
 #include "cow_rtmon_gtk.h"
 #include "cow_xhelp_gtk.h"
 
@@ -65,10 +67,10 @@ int main(int argc, char* argv[])
 
   if (argc > 1) {
     for (int i = 1; i < argc; i++) {
-      if (strcmp(argv[i], "-h") == 0) {
+      if (streq(argv[i], "-h")) {
         usage();
         exit(0);
-      } else if (strcmp(argv[i], "--display") == 0 && i + 1 < argc) {
+      } else if (streq(argv[i], "--display") && i + 1 < argc) {
         strncpy(display, argv[i + 1], sizeof(display));
       }
     }

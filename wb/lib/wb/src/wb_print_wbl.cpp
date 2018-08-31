@@ -43,12 +43,11 @@
 
 #include <assert.h>
 #include <stdio.h>
-#include <string.h>
 
-#include "wb_print_wbl.h"
-
+#include "co_string.h"
 #include "co_time.h"
 
+#include "wb_print_wbl.h"
 #include "wb_volume.h"
 
 wb_print_wbl::wb_print_wbl(std::ostream& os, int levelIndentation)
@@ -101,7 +100,7 @@ void wb_print_wbl::printObject(wb_volume& v, wb_object& o, bool recursive)
   char* block;
   int size;
 
-  if (o.docBlock(&block, &size) && strcmp(block, "") != 0) {
+  if (o.docBlock(&block, &size) && !streq(block, "")) {
     indent(0) << "!/**\n";
     indent(0) << "! ";
     for (char* s = block; *s; s++) {
@@ -625,7 +624,7 @@ void wb_print_wbl::printBody(
   indent(1) << "Body " << bname << timestr << '\n';
 
   for (int i = 0; i < rows; i++) {
-    if (bd[i].ParClass == pwr_eClass_Param && strcmp(bd[i].ParName, "Size") == 0
+    if (bd[i].ParClass == pwr_eClass_Param && streq(bd[i].ParName, "Size")
         && bd[i].Par->Param.Info.Flags & PWR_MASK_POINTER
         && !(bd[i].Par->Param.Info.Flags & PWR_MASK_PRIVATE)) {
       // Print Size for Pointers that is not private
@@ -946,7 +945,7 @@ pwr_tStatus wb_print_wbl::getBody(wb_volume& vol, pwr_tCid cid,
     m_body_cache = tree_CreateTable(&sts, sizeof(pwbl_sBodyItemKey),
         offsetof(pwbl_sBodyItem, key), sizeof(pwbl_sBodyItem), 100, comp_cid);
 
-  if (strcmp(bname, "DevBody") == 0)
+  if (streq(bname, "DevBody"))
     bix = pwr_eBix_dev;
   else
     bix = pwr_eBix_rt;

@@ -42,6 +42,7 @@
 #include "pwr_names.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_string.h"
 #include "cow_wow.h"
 
 /////////////////////////////////////////////////////////////////////
@@ -1429,7 +1430,7 @@ static pwr_tStatus Help(xmenu_sMenuCall* ip)
     if (EVEN(sts))
       return sts;
 
-    if (strcmp(helptopic, "") == 0)
+    if (streq(helptopic, ""))
       return 0;
 
     sprintf(cmd, "help %s", helptopic);
@@ -1471,7 +1472,7 @@ static pwr_tStatus HelpFilter(xmenu_sMenuCall* ip)
     if (EVEN(sts))
       return XNAV__INVISIBLE;
 
-    if (strcmp(helptopic, "") == 0)
+    if (streq(helptopic, ""))
       return XNAV__INVISIBLE;
   }
   return XNAV__SUCCESS;
@@ -1530,7 +1531,7 @@ static pwr_tStatus DataSheetFilter(xmenu_sMenuCall* ip)
   if (EVEN(sts))
     return XNAV__INVISIBLE;
 
-  if (strcmp(datasheet, "") == 0)
+  if (streq(datasheet, ""))
     return XNAV__INVISIBLE;
 
   return XNAV__SUCCESS;
@@ -1596,7 +1597,7 @@ static pwr_tStatus PhotoFilter(xmenu_sMenuCall* ip)
   if (EVEN(sts))
     return XNAV__INVISIBLE;
 
-  if (strcmp(photo, "") == 0)
+  if (streq(photo, ""))
     return XNAV__INVISIBLE;
 
   return XNAV__SUCCESS;
@@ -1630,7 +1631,7 @@ static pwr_tStatus CircuitDiagram(xmenu_sMenuCall* ip)
         name, (void*)circuitdiagram, sizeof(circuitdiagram));
     if (ODD(sts) && cdh_NoCaseStrcmp(circuitdiagram, "disabled") == 0)
       break;
-    if (ODD(sts) && strcmp(circuitdiagram, "") != 0) {
+    if (ODD(sts) && !streq(circuitdiagram, "")) {
       // CircuitDiagram found
       xnav_open_URL(circuitdiagram);
       break;
@@ -1673,7 +1674,7 @@ static pwr_tStatus CircuitDiagramFilter(xmenu_sMenuCall* ip)
         name, (void*)circuitdiagram, sizeof(circuitdiagram));
     if (ODD(sts) && cdh_NoCaseStrcmp(circuitdiagram, "disabled") == 0)
       break;
-    if (ODD(sts) && strcmp(circuitdiagram, "") != 0) {
+    if (ODD(sts) && !streq(circuitdiagram, "")) {
       // CircuitDiagram found
       return XNAV__SUCCESS;
     }
@@ -2284,7 +2285,7 @@ static pwr_tStatus OpenURL(xmenu_sMenuCall* ip)
       sts = gdh_GetObjectInfoAttrref(&ip->Pointed, (void*)url, sizeof(url));
       if (EVEN(sts))
         return sts;
-      if (strcmp(url, "") == 0)
+      if (streq(url, ""))
         return 1;
 
       xnav_open_URL(url);

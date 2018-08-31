@@ -38,13 +38,16 @@
 
 #undef Status
 #include <ctype.h>
-#include <string.h>
 
 #include "pwr_baseclasses.h"
+
 #include "co_dcli.h"
-#include "wb_pwrs.h"
-#include "wb_pwrb_msg.h"
+#include "co_string.h"
+
 #include "cow_login.h"
+
+#include "wb_pwrb_msg.h"
+#include "wb_pwrs.h"
 
 /*----------------------------------------------------------------------------*\
   To open a PLC program with the PLC editor.
@@ -138,7 +141,7 @@ static pwr_tStatus PostRename(ldh_tSesContext Session, pwr_tOid Object)
   if (EVEN(sts))
     return sts;
 
-  if (strcmp(project, "") == 0 || (project[0] == 'o' && isdigit(project[1]))) {
+  if (streq(project, "") || (project[0] == 'o' && isdigit(project[1]))) {
     sts = ldh_ObjidToName(
         Session, Object, ldh_eName_Object, name, sizeof(name), &size);
     if (EVEN(sts))

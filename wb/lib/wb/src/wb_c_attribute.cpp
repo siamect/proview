@@ -36,10 +36,11 @@
 
 /* wb_c_attribute.c -- work bench methods of the Attribute class. */
 
-#include <string.h>
-
 #include "pwr_baseclasses.h"
+
 #include "co_api.h"
+#include "co_string.h"
+
 #include "wb_pwrs.h"
 #include "wb_pwrs_msg.h"
 #include "wb_session.h"
@@ -141,7 +142,7 @@ static pwr_tStatus HelpClass(ldh_sMenuCall* ip)
       return sts;
 
     cdh_ToLower(vname, vname);
-    if (strcmp(attr, "") == 0)
+    if (streq(attr, ""))
       sprintf(cmd, "help %s /helpfile=\"$pwr_exe/%s/%s_xtthelp.dat\"/strict",
           cname, lng_get_language_str(), vname);
     else
@@ -154,12 +155,12 @@ static pwr_tStatus HelpClass(ldh_sMenuCall* ip)
   }
 
   if (cname[0] == '$') {
-    if (strcmp(attr, "") == 0)
+    if (streq(attr, ""))
       sprintf(cmd, "help %s /strict", &cname[1]);
     else
       sprintf(cmd, "help %s /bookmark=%s /strict", &cname[1], attr);
   } else {
-    if (strcmp(attr, "") == 0)
+    if (streq(attr, ""))
       sprintf(cmd, "help %s /strict", cname);
     else
       sprintf(cmd, "help %s /bookmark=%s/strict", cname, attr);

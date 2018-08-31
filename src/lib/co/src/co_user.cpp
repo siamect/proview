@@ -35,7 +35,6 @@
  **/
 
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 
 #if defined OS_CYGWIN
@@ -44,6 +43,7 @@
 
 #include <iostream>
 
+#include "co_string.h"
 #include "co_user.h"
 
 extern "C" {
@@ -108,7 +108,7 @@ int GeUser::load(char* filename)
     case user_eData_GeUserVersion:
       fp.get();
       fp.getline(version, sizeof(version));
-      if (strcmp(version, user_cVersion) != 0) {
+      if (!streq(version, user_cVersion)) {
         return USER__DBVERSION;
       }
       break;
@@ -1066,7 +1066,7 @@ void UserList::get_data(char* password, unsigned int* priv, pwr_tOix* id,
 
 int UserList::check_password(char* password)
 {
-  if (strcmp(this->password, password) == 0)
+  if (streq(this->password, password))
     return USER__SUCCESS;
   return USER__NOTAUTHORIZED;
 }
@@ -1086,7 +1086,7 @@ int SystemName::parse()
     if (*t == '.' || *t == 0) {
       strncpy(segname[segments], seg_start, t - seg_start);
       segname[segments][t - seg_start] = 0;
-      if (strcmp(segname[segments], "") == 0)
+      if (streq(segname[segments], ""))
         return USER__INVSYSNAME;
       segments++;
       if (segments >= int(sizeof(segname) / sizeof(segname[0])))

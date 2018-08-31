@@ -37,12 +37,13 @@
 /* wb_wtt.cpp -- Display plant and node hiererachy */
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "pwr_baseclasses.h"
 #include "pwr_names.h"
-#include "co_time.h"
+
 #include "co_dcli.h"
+#include "co_string.h"
+#include "co_time.h"
 
 #include "cow_login.h"
 #include "cow_msgwindow.h"
@@ -1855,7 +1856,7 @@ void Wtt::activate_openge()
         break;
 
       cdh_ToLower(graph_name, action);
-      if (strcmp(graph_name, "") != 0 && strstr(graph_name, ".pwg") == 0)
+      if (!streq(graph_name, "") && strstr(graph_name, ".pwg") == 0)
         strcat(graph_name, ".pwg");
       free((char*)action);
     } else
@@ -2621,7 +2622,7 @@ int WttApplList::find(wb_eUtility type, const char* name, void** ctx)
   WttApplListElem* elem;
 
   for (elem = root; elem; elem = elem->next) {
-    if (elem->type == type && strcmp(name, elem->name) == 0) {
+    if (elem->type == type && streq(name, elem->name)) {
       *ctx = elem->ctx;
       return 1;
     }

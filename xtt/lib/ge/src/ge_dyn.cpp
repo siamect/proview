@@ -38,13 +38,13 @@
 
 #include <math.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include <iostream>
 
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_msg.h"
+#include "co_string.h"
 #include "co_time.h"
 
 #include "rt_gdh.h"
@@ -1209,7 +1209,7 @@ void GeDyn::get_hostobject(char* hostobject)
       break;
     }
   }
-  if (!found && strcmp(recursive_hostobject, "") != 0)
+  if (!found && !streq(recursive_hostobject, ""))
     strcpy(hostobject, recursive_hostobject);
 }
 
@@ -1234,7 +1234,7 @@ graph_eDatabase GeDyn::parse_attr_name(char* name, char* parsed_name,
   char* s;
 
   if ((total_dyn_type1 & ge_mDynType1_HostObject
-          || strcmp(recursive_hostobject, "") != 0)
+          || !streq(recursive_hostobject, ""))
       && (s = strstr(name, "$hostobject"))) {
     // Replace string $hostobject with host object
     pwr_tAName hostobject;
@@ -2352,7 +2352,7 @@ void GeDyn::syntax_check_attribute(grow_tObject object, const char* text,
 
   db = parse_attr_name(
       attribute, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") == 0) {
+  if (streq(parsed_name, "")) {
     if (!optional) {
       char msg[200];
       sprintf(msg, "%s is missing", text);
@@ -2435,7 +2435,7 @@ void GeDyn::syntax_check_attribute(grow_tObject object, const char* text,
   case graph_eDatabase_Local:
     break;
   case graph_eDatabase_Gdh:
-    if (strcmp(parsed_name, "") != 0) {
+    if (!streq(parsed_name, "")) {
       sts = graph->check_ldh_object(parsed_name, &a_type);
       if (EVEN(sts)) {
         char msg[300];
@@ -2632,7 +2632,7 @@ int GeDigLowColor::connect(
   p = 0;
   db = dyn->parse_attr_name(
       attribute, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") == 0)
+  if (streq(parsed_name, ""))
     return 1;
 
   a_typeid = attr_type;
@@ -2984,7 +2984,7 @@ int GeDigColor::connect(
   p = 0;
   db = dyn->parse_attr_name(
       attribute, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") == 0)
+  if (streq(parsed_name, ""))
     return 1;
 
   get_bit(parsed_name, attr_type, &bitmask);
@@ -3222,7 +3222,7 @@ int GeDigWarning::connect(
   p = 0;
   db = dyn->parse_attr_name(
       attribute, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") == 0)
+  if (streq(parsed_name, ""))
     return 1;
 
   a_typeid = attr_type;
@@ -3429,7 +3429,7 @@ int GeDigError::connect(
   p = 0;
   db = dyn->parse_attr_name(
       attribute, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") == 0)
+  if (streq(parsed_name, ""))
     return 1;
 
   a_typeid = attr_type;
@@ -3688,7 +3688,7 @@ int GeDigFlash::connect(
   p = 0;
   db = dyn->parse_attr_name(
       attribute, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") == 0)
+  if (streq(parsed_name, ""))
     return 1;
 
   get_bit(parsed_name, attr_type, &bitmask);
@@ -3976,7 +3976,7 @@ int GeInvisible::connect(
   p = 0;
   db = dyn->parse_attr_name(
       attribute, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") == 0)
+  if (streq(parsed_name, ""))
     return 1;
 
   get_bit(parsed_name, attr_type, &bitmask);
@@ -4226,7 +4226,7 @@ int GeDigTextColor::connect(
   p = 0;
   db = dyn->parse_attr_name(
       attribute, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") == 0)
+  if (streq(parsed_name, ""))
     return 1;
 
   get_bit(parsed_name, attr_type, &bitmask);
@@ -4424,7 +4424,7 @@ int GeDigBorder::connect(
   p = 0;
   db = dyn->parse_attr_name(
       attribute, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") == 0)
+  if (streq(parsed_name, ""))
     return 1;
 
   get_bit(parsed_name, attr_type, &bitmask);
@@ -4676,7 +4676,7 @@ int GeDigText::connect(
   p = 0;
   db = dyn->parse_attr_name(
       attribute, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") == 0)
+  if (streq(parsed_name, ""))
     return 1;
 
   get_bit(parsed_name, attr_type, &bitmask);
@@ -4778,7 +4778,7 @@ int GeDigText::syntax_check(
     (*error_cnt)++;
   } else if (instance_mask == ge_mInstance_1) {
     grow_GetAnnotation(object, 1, high_text, sizeof(high_text));
-    if (strcmp(high_text, "") == 0 && strcmp(low_text, "") == 0) {
+    if (streq(high_text, "") && streq(low_text, "")) {
       dyn->graph->syntax_msg(
           'E', object, "DigText, low and high text is missing");
       (*error_cnt)++;
@@ -5051,7 +5051,7 @@ int GeValue::connect(grow_tObject object, glow_sTraceData* trace_data, bool now)
   p = 0;
   db = dyn->parse_attr_name(
       attribute, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") == 0)
+  if (streq(parsed_name, ""))
     return 1;
 
   size = attr_size;
@@ -5124,7 +5124,7 @@ int GeValue::connect(grow_tObject object, glow_sTraceData* trace_data, bool now)
   default:;
   }
 
-  if (strcmp(decimals_attr, "") != 0) {
+  if (!streq(decimals_attr, "")) {
     read_decimals(dyn, decimals_attr, decimals_decr, format);
   }
 
@@ -5658,7 +5658,7 @@ int GeValue::syntax_check(grow_tObject object, int* error_cnt, int* warning_cnt)
   dyn->parse_attr_name(
       attribute, parsed_name, &inverted, &attr_type, &attr_size);
 
-  if (strcmp(format, "") == 0) {
+  if (streq(format, "")) {
     char msg[200];
 
     sprintf(msg, "%s.Format, format is missing", name);
@@ -5989,7 +5989,7 @@ int GeValueInput::change_value(grow_tObject object, char* text)
     annot_typeid = a_type_id;
     annot_size = a_size;
   }
-  if (value_element->zero_blank && strcmp(text, "") == 0)
+  if (value_element->zero_blank && streq(text, ""))
     sts = graph_attr_string_to_value(
         annot_typeid, "0", (void*)&buf, sizeof(buf), sizeof(buf));
   else {
@@ -6014,7 +6014,7 @@ int GeValueInput::change_value(grow_tObject object, char* text)
     return sts;
   }
 
-  if (strcmp(minvalue_attr, "") != 0) {
+  if (!streq(minvalue_attr, "")) {
     pwr_tAName pname;
 
     dyn->parse_attr_name(
@@ -6028,7 +6028,7 @@ int GeValueInput::change_value(grow_tObject object, char* text)
       min_value = minval;
     }
   }
-  if (strcmp(maxvalue_attr, "") != 0) {
+  if (!streq(maxvalue_attr, "")) {
     pwr_tAName pname;
 
     dyn->parse_attr_name(
@@ -6188,11 +6188,11 @@ int GeValueInput::export_java(
     fp << "      ,";
   fp << "new GeDynValueInput(" << var_name << ".dd, " << min_value << ","
      << max_value << ",";
-  if (strcmp(minvalue_attr, "") == 0)
+  if (streq(minvalue_attr, ""))
     fp << "null,";
   else
     fp << "\"" << minvalue_attr << "\",";
-  if (strcmp(maxvalue_attr, "") == 0)
+  if (streq(maxvalue_attr, ""))
     fp << "null)\n";
   else
     fp << "\"" << maxvalue_attr << "\")\n";
@@ -6613,7 +6613,7 @@ int GeAnalogColor::connect(
   if (!e->common_attr || instance == ge_mInstance_1) {
     size = 4;
     db = dyn->parse_attr_name(attribute, parsed_name, &inverted, &type, &size);
-    if (strcmp(parsed_name, "") == 0)
+    if (streq(parsed_name, ""))
       return 1;
 
     switch (type) {
@@ -6947,7 +6947,7 @@ int GeRotate::connect(
   p = 0;
   db = dyn->parse_attr_name(
       attribute, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") == 0)
+  if (streq(parsed_name, ""))
     return 1;
 
   sts = dyn->graph->ref_object_info(
@@ -7278,7 +7278,7 @@ int GeMove::connect(grow_tObject object, glow_sTraceData* trace_data, bool now)
   move_x_type = pwr_eType_Float32;
   move_x_db = dyn->parse_attr_name(
       move_x_attribute, parsed_name, &inverted, &move_x_type, &move_x_size);
-  if (strcmp(parsed_name, "") != 0) {
+  if (!streq(parsed_name, "")) {
     sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
         (void**)&move_x_p, &move_x_subid, move_x_size, object, now);
     if (EVEN(sts))
@@ -7288,7 +7288,7 @@ int GeMove::connect(grow_tObject object, glow_sTraceData* trace_data, bool now)
   move_y_type = pwr_eType_Float32;
   move_y_db = dyn->parse_attr_name(
       move_y_attribute, parsed_name, &inverted, &move_y_type, &move_y_size);
-  if (strcmp(parsed_name, "") != 0) {
+  if (!streq(parsed_name, "")) {
     sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
         (void**)&move_y_p, &move_y_subid, move_y_size, object, now);
     if (EVEN(sts))
@@ -7298,7 +7298,7 @@ int GeMove::connect(grow_tObject object, glow_sTraceData* trace_data, bool now)
   scale_x_type = pwr_eType_Float32;
   scale_x_db = dyn->parse_attr_name(
       scale_x_attribute, parsed_name, &inverted, &scale_x_type, &scale_x_size);
-  if (strcmp(parsed_name, "") != 0) {
+  if (!streq(parsed_name, "")) {
     sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
         (void**)&scale_x_p, &scale_x_subid, scale_x_size, object, now);
     if (EVEN(sts))
@@ -7308,7 +7308,7 @@ int GeMove::connect(grow_tObject object, glow_sTraceData* trace_data, bool now)
   scale_y_type = pwr_eType_Float32;
   scale_y_db = dyn->parse_attr_name(
       scale_y_attribute, parsed_name, &inverted, &scale_y_type, &scale_y_size);
-  if (strcmp(parsed_name, "") != 0) {
+  if (!streq(parsed_name, "")) {
     sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
         (void**)&scale_y_p, &scale_y_subid, scale_y_size, object, now);
     if (EVEN(sts))
@@ -7585,9 +7585,9 @@ int GeMove::syntax_check(grow_tObject object, int* error_cnt, int* warning_cnt)
   dyn->syntax_check_attribute(object, "Move.ScaleYAttribute", scale_y_attribute,
       1, types, databases, error_cnt, warning_cnt);
 
-  if (strcmp(move_x_attribute, "") == 0 && strcmp(move_y_attribute, "") == 0
-      && strcmp(scale_x_attribute, "") == 0
-      && strcmp(scale_y_attribute, "") == 0) {
+  if (streq(move_x_attribute, "") && streq(move_y_attribute, "")
+      && streq(scale_x_attribute, "")
+      && streq(scale_y_attribute, "")) {
     dyn->graph->syntax_msg('E', object, "Move, no attribute");
     (*error_cnt)++;
   }
@@ -7694,7 +7694,7 @@ int GeAnalogShift::connect(
   size = 4;
   p = 0;
   db = dyn->parse_attr_name(attribute, parsed_name, &inverted, &type, &size);
-  if (strcmp(parsed_name, "") == 0)
+  if (streq(parsed_name, ""))
     return 1;
 
   switch (type) {
@@ -7897,7 +7897,7 @@ int GeDigShift::connect(
   p = 0;
   db = dyn->parse_attr_name(
       attribute, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") == 0)
+  if (streq(parsed_name, ""))
     return 1;
 
   get_bit(parsed_name, attr_type, &bitmask);
@@ -8115,7 +8115,7 @@ int GeDigFourShift::connect(
   p1 = 0;
   db1 = dyn->parse_attr_name(
       attribute1, parsed_name, &inverted1, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") != 0) {
+  if (!streq(parsed_name, "")) {
     get_bit(parsed_name, attr_type, &bitmask1);
     a_typeid1 = attr_type;
 
@@ -8139,7 +8139,7 @@ int GeDigFourShift::connect(
   p2 = 0;
   db2 = dyn->parse_attr_name(
       attribute2, parsed_name, &inverted2, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") != 0) {
+  if (!streq(parsed_name, "")) {
     get_bit(parsed_name, attr_type, &bitmask2);
     a_typeid2 = attr_type;
 
@@ -8163,7 +8163,7 @@ int GeDigFourShift::connect(
   p3 = 0;
   db3 = dyn->parse_attr_name(
       attribute3, parsed_name, &inverted3, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") != 0) {
+  if (!streq(parsed_name, "")) {
     get_bit(parsed_name, attr_type, &bitmask3);
     a_typeid3 = attr_type;
 
@@ -8281,8 +8281,8 @@ int GeDigFourShift::syntax_check(
   dyn->syntax_check_attribute(object, "DigFourShift.Attribute3", attribute3, 1,
       types, databases, error_cnt, warning_cnt);
 
-  if (strcmp(attribute1, "") == 0 && strcmp(attribute2, "") == 0
-      && strcmp(attribute3, "") == 0) {
+  if (streq(attribute1, "") && streq(attribute2, "")
+      && streq(attribute3, "")) {
     dyn->graph->syntax_msg('E', object, "DigFourShift, no attribute");
     (*error_cnt)++;
   }
@@ -8422,7 +8422,7 @@ int GeScrollingText::connect(
   p = 0;
   db = dyn->parse_attr_name(
       attribute, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") != 0) {
+  if (!streq(parsed_name, "")) {
     switch (db) {
     case graph_eDatabase_Gdh:
       sts = dyn->graph->ref_object_info(
@@ -8830,7 +8830,7 @@ int GeDigBackgroundColor::connect(
   p = 0;
   db = dyn->parse_attr_name(
       attribute, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") == 0)
+  if (streq(parsed_name, ""))
     return 1;
 
   get_bit(parsed_name, attr_type, &bitmask);
@@ -9036,7 +9036,7 @@ int GeDigSwap::connect(
   p = 0;
   db = dyn->parse_attr_name(
       attribute, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") == 0)
+  if (streq(parsed_name, ""))
     return 1;
 
   get_bit(parsed_name, attr_type, &bitmask);
@@ -9273,7 +9273,7 @@ int GeAnimation::connect(
   p = 0;
   db = dyn->parse_attr_name(
       attribute, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") == 0)
+  if (streq(parsed_name, ""))
     return 1;
 
   get_bit(parsed_name, attr_type, &bitmask);
@@ -9664,7 +9664,7 @@ int GeBar::connect(grow_tObject object, glow_sTraceData* trace_data, bool now)
   p = 0;
   db = dyn->parse_attr_name(
       attribute, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") == 0)
+  if (streq(parsed_name, ""))
     return 1;
 
   switch (db) {
@@ -9688,7 +9688,7 @@ int GeBar::connect(grow_tObject object, glow_sTraceData* trace_data, bool now)
   min_value_p = 0;
   min_value_db = dyn->parse_attr_name(
       minvalue_attr, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") != 0 && attr_type == pwr_eType_Float32) {
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
     switch (min_value_db) {
     case graph_eDatabase_Gdh:
       sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
@@ -9705,7 +9705,7 @@ int GeBar::connect(grow_tObject object, glow_sTraceData* trace_data, bool now)
   max_value_p = 0;
   max_value_db = dyn->parse_attr_name(
       maxvalue_attr, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") != 0 && attr_type == pwr_eType_Float32) {
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
     switch (min_value_db) {
     case graph_eDatabase_Gdh:
       sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
@@ -10059,7 +10059,7 @@ int GeTrend::connect(grow_tObject object, glow_sTraceData* trace_data, bool now)
   p1 = 0;
   db1 = dyn->parse_attr_name(
       attribute1, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") != 0) {
+  if (!streq(parsed_name, "")) {
     switch (db1) {
     case graph_eDatabase_Gdh:
       sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name, (void**)&p1,
@@ -10083,7 +10083,7 @@ int GeTrend::connect(grow_tObject object, glow_sTraceData* trace_data, bool now)
   p2 = 0;
   db2 = dyn->parse_attr_name(
       attribute2, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") != 0) {
+  if (!streq(parsed_name, "")) {
     switch (db2) {
     case graph_eDatabase_Gdh:
       sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name, (void**)&p2,
@@ -10111,7 +10111,7 @@ int GeTrend::connect(grow_tObject object, glow_sTraceData* trace_data, bool now)
   min_value1_p = 0;
   min_value1_db = dyn->parse_attr_name(
       minvalue_attr1, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") != 0 && attr_type == pwr_eType_Float32) {
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
     switch (min_value1_db) {
     case graph_eDatabase_Gdh:
       sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
@@ -10127,7 +10127,7 @@ int GeTrend::connect(grow_tObject object, glow_sTraceData* trace_data, bool now)
   max_value1_p = 0;
   max_value1_db = dyn->parse_attr_name(
       maxvalue_attr1, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") != 0 && attr_type == pwr_eType_Float32) {
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
     switch (max_value1_db) {
     case graph_eDatabase_Gdh:
       sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
@@ -10143,14 +10143,14 @@ int GeTrend::connect(grow_tObject object, glow_sTraceData* trace_data, bool now)
   min_value2_p = 0;
   dyn->parse_attr_name(
       minvalue_attr2, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") != 0 && attr_type == pwr_eType_Float32) {
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
     sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
         (void**)&min_value2_p, &min_value_subid2, attr_size, object, now);
   }
   max_value2_p = 0;
   dyn->parse_attr_name(
       maxvalue_attr2, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") != 0 && attr_type == pwr_eType_Float32) {
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
     sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
         (void**)&max_value2_p, &max_value_subid2, attr_size, object, now);
   }
@@ -10158,7 +10158,7 @@ int GeTrend::connect(grow_tObject object, glow_sTraceData* trace_data, bool now)
   hold_p = 0;
   hold_db = dyn->parse_attr_name(
       hold_attr, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") != 0 && attr_type == pwr_eType_Boolean) {
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Boolean) {
     switch (hold_db) {
     case graph_eDatabase_Gdh:
       sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
@@ -10177,7 +10177,7 @@ int GeTrend::connect(grow_tObject object, glow_sTraceData* trace_data, bool now)
   timerange_p = 0;
   timerange_db = dyn->parse_attr_name(
       timerange_attr, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") != 0 && attr_type == pwr_eType_Float32) {
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
     switch (timerange_db) {
     case graph_eDatabase_Gdh:
       sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
@@ -10201,7 +10201,7 @@ int GeTrend::connect(grow_tObject object, glow_sTraceData* trace_data, bool now)
   mark1_p = 0;
   dyn->parse_attr_name(
       mark1_attr, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") != 0 && attr_type == pwr_eType_Float32) {
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
     sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name, (void**)&mark1_p,
         &mark1_subid, attr_size, object, now);
   }
@@ -10209,7 +10209,7 @@ int GeTrend::connect(grow_tObject object, glow_sTraceData* trace_data, bool now)
   mark2_p = 0;
   dyn->parse_attr_name(
       mark2_attr, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") != 0 && attr_type == pwr_eType_Float32) {
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
     sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name, (void**)&mark2_p,
         &mark2_subid, attr_size, object, now);
   }
@@ -10444,7 +10444,7 @@ int GeTrend::syntax_check(grow_tObject object, int* error_cnt, int* warning_cnt)
   dyn->syntax_check_attribute(object, "Trend.Mark2Attr", mark2_attr, 1, types2,
       databases3, error_cnt, warning_cnt);
 
-  if (strcmp(attribute1, "") == 0 && strcmp(attribute2, "") == 0) {
+  if (streq(attribute1, "") && streq(attribute2, "")) {
     dyn->graph->syntax_msg('E', object, "Trend, no attribute");
     (*error_cnt)++;
   }
@@ -10939,7 +10939,7 @@ int GeXY_Curve::connect(
   update_p = 0;
   dyn->parse_attr_name(
       update_attr, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") != 0) {
+  if (!streq(parsed_name, "")) {
     sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
         (void**)&update_p, &update_subid, attr_size, object, now);
     if (EVEN(sts))
@@ -10949,7 +10949,7 @@ int GeXY_Curve::connect(
   noofpoints_p = 0;
   dyn->parse_attr_name(
       noofpoints_attr, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") != 0
+  if (!streq(parsed_name, "")
       && (attr_type == pwr_eType_Int32 || attr_type == pwr_eType_UInt32)) {
     sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
         (void**)&noofpoints_p, &noofpoints_subid, attr_size, object, now);
@@ -10958,14 +10958,14 @@ int GeXY_Curve::connect(
   x_min_value_p = 0;
   dyn->parse_attr_name(
       x_minvalue_attr, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") != 0 && attr_type == pwr_eType_Float32) {
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
     sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
         (void**)&x_min_value_p, &x_min_value_subid, attr_size, object, now);
   }
   x_max_value_p = 0;
   dyn->parse_attr_name(
       x_maxvalue_attr, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") != 0 && attr_type == pwr_eType_Float32) {
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
     sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
         (void**)&x_max_value_p, &x_max_value_subid, attr_size, object, now);
   }
@@ -10973,14 +10973,14 @@ int GeXY_Curve::connect(
   y_min_value_p = 0;
   dyn->parse_attr_name(
       y_minvalue_attr, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") != 0 && attr_type == pwr_eType_Float32) {
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
     sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
         (void**)&y_min_value_p, &y_min_value_subid, attr_size, object, now);
   }
   y_max_value_p = 0;
   dyn->parse_attr_name(
       y_maxvalue_attr, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") != 0 && attr_type == pwr_eType_Float32) {
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
     sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
         (void**)&y_max_value_p, &y_max_value_subid, attr_size, object, now);
   }
@@ -10988,7 +10988,7 @@ int GeXY_Curve::connect(
   x_mark1_p = 0;
   dyn->parse_attr_name(
       x_mark1_attr, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") != 0 && attr_type == pwr_eType_Float32) {
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
     sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
         (void**)&x_mark1_p, &x_mark1_subid, attr_size, object, now);
   }
@@ -10996,7 +10996,7 @@ int GeXY_Curve::connect(
   x_mark2_p = 0;
   dyn->parse_attr_name(
       x_mark2_attr, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") != 0 && attr_type == pwr_eType_Float32) {
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
     sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
         (void**)&x_mark2_p, &x_mark2_subid, attr_size, object, now);
   }
@@ -11004,7 +11004,7 @@ int GeXY_Curve::connect(
   y_mark1_p = 0;
   dyn->parse_attr_name(
       y_mark1_attr, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") != 0 && attr_type == pwr_eType_Float32) {
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
     sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
         (void**)&y_mark1_p, &y_mark1_subid, attr_size, object, now);
   }
@@ -11012,7 +11012,7 @@ int GeXY_Curve::connect(
   y_mark2_p = 0;
   dyn->parse_attr_name(
       y_mark2_attr, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") != 0 && attr_type == pwr_eType_Float32) {
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
     sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
         (void**)&y_mark2_p, &y_mark2_subid, attr_size, object, now);
   }
@@ -11490,7 +11490,7 @@ int GeXY_Curve::syntax_check(
     sprintf(atext, "%s.YAttr", name);
     dyn->syntax_check_attribute(
         object, atext, y_attr, 0, types, databases, error_cnt, warning_cnt);
-  } else if (strcmp(y_attr, "") != 0) {
+  } else if (!streq(y_attr, "")) {
     dyn->graph->syntax_msg(
         'W', object, "XY_Curve.YAttr not used for this DataType");
     (*warning_cnt)++;
@@ -11935,7 +11935,7 @@ int GeTable::connect(grow_tObject object, glow_sTraceData* trace_data, bool now)
     p[i] = 0;
     db[i] = dyn->parse_attr_name(attribute[i], (char*)parsed_name, &inverted,
         &attr_type, &size[i], &elements[i]);
-    if (strcmp(parsed_name, "") == 0)
+    if (streq(parsed_name, ""))
       continue;
 
     if (!elements[i])
@@ -12044,7 +12044,7 @@ int GeTable::connect(grow_tObject object, glow_sTraceData* trace_data, bool now)
     sel_p[i] = 0;
     sel_db[i] = dyn->parse_attr_name(sel_attribute[i], (char*)parsed_name,
         &inverted, &attr_type, &attr_size, &sel_elements[i]);
-    if (strcmp(parsed_name, "") == 0)
+    if (streq(parsed_name, ""))
       continue;
 
     if (sel_elements[i] > elements[i])
@@ -12689,11 +12689,11 @@ int GeTable::syntax_check(grow_tObject object, int* error_cnt, int* warning_cnt)
 
     // Check format
 
-    if (strcmp(attribute[i], "") != 0) {
+    if (!streq(attribute[i], "")) {
       dyn->parse_attr_name(
           attribute[i], parsed_name, &inverted, &attr_type, &attr_size);
 
-      if (strcmp(format[i], "") == 0) {
+      if (streq(format[i], "")) {
         char msg[200];
 
         sprintf(msg, "Column%d.Format, format is missing", i + 1);
@@ -12876,7 +12876,7 @@ int GeStatusColor::connect(
   p = 0;
   db = dyn->parse_attr_name(
       attribute, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") == 0)
+  if (streq(parsed_name, ""))
     return 1;
 
   sts = dyn->graph->ref_object_info(
@@ -13203,7 +13203,7 @@ int GePie::connect(grow_tObject object, glow_sTraceData* trace_data, bool now)
 
   for (int i = 0; i < sectors; i++) {
     dyn->parse_attr_name(attribute[i], parsed_name, &inverted, &atype, &asize);
-    if (strcmp(parsed_name, "") == 0)
+    if (streq(parsed_name, ""))
       continue;
 
     if (i == 0) {
@@ -13486,7 +13486,7 @@ int GeBarChart::connect(
   for (int i = 0; i < barsegments; i++) {
     dyn->parse_attr_name(
         attribute[i], parsed_name, &inverted, &atype, &asize, &elements);
-    if (strcmp(parsed_name, "") == 0)
+    if (streq(parsed_name, ""))
       continue;
 
     if (!elements)
@@ -13717,7 +13717,7 @@ int GeAxis::connect(grow_tObject object, glow_sTraceData* trace_data, bool now)
 
   db = dyn->parse_attr_name(
       minvalue_attr, parsed_name, &inverted, &attr_type_min, &attr_size);
-  if (strcmp(parsed_name, "") != 0) {
+  if (!streq(parsed_name, "")) {
     switch (attr_type_min) {
     case pwr_eType_Float32:
       switch (db) {
@@ -13751,7 +13751,7 @@ int GeAxis::connect(grow_tObject object, glow_sTraceData* trace_data, bool now)
   imax_value_p = 0;
   db = dyn->parse_attr_name(
       maxvalue_attr, parsed_name, &inverted, &attr_type_max, &attr_size);
-  if (strcmp(parsed_name, "") != 0) {
+  if (!streq(parsed_name, "")) {
     switch (attr_type_max) {
     case pwr_eType_Float32:
       switch (db) {
@@ -14429,7 +14429,7 @@ int GeHostObject::syntax_check(
   if (current_dyn == dyn)
     return 1;
 
-  if (strcmp(hostobject, "") == 0) {
+  if (streq(hostobject, "")) {
     dyn->graph->syntax_msg('W', object, "HostObject.Object is missing");
     (*warning_cnt)++;
     return 1;
@@ -14652,7 +14652,7 @@ int GeDigSound::connect(
   size = 4;
   db = dyn->parse_attr_name(
       attribute, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") == 0)
+  if (streq(parsed_name, ""))
     return 1;
 
   get_bit(parsed_name, attr_type, &bitmask);
@@ -14733,7 +14733,7 @@ int GeDigSound::syntax_check(
   dyn->syntax_check_attribute(object, "DigSound.Attribute", attribute, 0, types,
       databases, error_cnt, warning_cnt);
 
-  if (strcmp(soundobject, "") == 0) {
+  if (streq(soundobject, "")) {
     dyn->graph->syntax_msg('W', object, "DigSound.SoundObject is missing");
     (*warning_cnt)++;
   } else {
@@ -14936,7 +14936,7 @@ int GeFillLevel::connect(
   p = 0;
   db = dyn->parse_attr_name(
       attribute, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") == 0)
+  if (streq(parsed_name, ""))
     return 1;
 
   sts = dyn->graph->ref_object_info(
@@ -14965,7 +14965,7 @@ int GeFillLevel::connect(
   min_value_p = 0;
   dyn->parse_attr_name(
       minvalue_attr, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") != 0 && attr_type == pwr_eType_Float32) {
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
     sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
         (void**)&min_value_p, &min_value_subid, attr_size, object, now);
   }
@@ -14973,7 +14973,7 @@ int GeFillLevel::connect(
   max_value_p = 0;
   dyn->parse_attr_name(
       maxvalue_attr, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") != 0 && attr_type == pwr_eType_Float32) {
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
     sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
         (void**)&max_value_p, &max_value_subid, attr_size, object, now);
   }
@@ -15084,11 +15084,11 @@ int GeFillLevel::export_java(
   fp << "new GeDynFillLevel(" << var_name << ".dd, \"" << attribute << "\","
      << jcolor << "," << dir << "," << min_value << "," << max_value << ","
      << min_limit << "," << max_limit << ",";
-  if (strcmp(minvalue_attr, "") == 0)
+  if (streq(minvalue_attr, ""))
     fp << "null,";
   else
     fp << "\"" << minvalue_attr << "\",";
-  if (strcmp(maxvalue_attr, "") == 0)
+  if (streq(maxvalue_attr, ""))
     fp << "null)\n";
   else
     fp << "\"" << maxvalue_attr << "\")\n";
@@ -15286,7 +15286,7 @@ int GeDigCommand::connect(
   p = 0;
   db = dyn->parse_attr_name(
       attribute, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") == 0)
+  if (streq(parsed_name, ""))
     return 1;
 
   get_bit(parsed_name, attr_type, &bitmask);
@@ -15363,7 +15363,7 @@ int GeDigCommand::syntax_check(
   dyn->syntax_check_attribute(object, "DigCommand.Attribute", attribute, 0,
       types, databases, error_cnt, warning_cnt);
 
-  if (strcmp(command, "") == 0) {
+  if (streq(command, "")) {
     dyn->graph->syntax_msg('E', object, "DigCommand.Command is missing");
     (*error_cnt)++;
   }
@@ -15522,7 +15522,7 @@ int GeDigScript::connect(
   p = 0;
   db = dyn->parse_attr_name(
       attribute, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") == 0)
+  if (streq(parsed_name, ""))
     return 1;
 
   get_bit(parsed_name, attr_type, &bitmask);
@@ -15595,7 +15595,7 @@ int GeDigScript::syntax_check(
   dyn->syntax_check_attribute(object, "DigScript.Attribute", attribute, 0,
       types, databases, error_cnt, warning_cnt);
 
-  if (strcmp(script, "") == 0) {
+  if (streq(script, "")) {
     dyn->graph->syntax_msg('E', object, "DigScript.Script is missing");
     (*error_cnt)++;
   }
@@ -15714,7 +15714,7 @@ int GeRefUpdate::connect(
     idx_p[i] = 0;
   status = GE__SUCCESS;
 
-  if (strcmp(attribute, "") == 0) {
+  if (streq(attribute, "")) {
     // Find a reference attribute
     for (GeDynElem* elem = dyn->elements; elem; elem = elem->next) {
       if (elem == this)
@@ -15728,7 +15728,7 @@ int GeRefUpdate::connect(
       }
     }
   }
-  if (strcmp(attribute, "") != 0) {
+  if (!streq(attribute, "")) {
     int attr_type, attr_size;
     pwr_tAName parsed_name;
     int inverted;
@@ -15738,7 +15738,7 @@ int GeRefUpdate::connect(
 
     db = dyn->parse_attr_name(attribute, parsed_name, &inverted, &attr_type,
         &attr_size, 0, graph_mParseOpt_KeepIndex);
-    if (strcmp(parsed_name, "") == 0)
+    if (streq(parsed_name, ""))
       return 1;
 
     sts = dyn->graph->get_refupdate(parsed_name, ref_name, ref_tid, ref_size,
@@ -15767,7 +15767,7 @@ int GeRefUpdate::connect(
 
 int GeRefUpdate::connect(grow_tObject object, int level)
 {
-  if (strcmp(attribute, "") != 0) {
+  if (!streq(attribute, "")) {
     int attr_type, attr_size;
     pwr_tAName parsed_name;
     int inverted;
@@ -15779,7 +15779,7 @@ int GeRefUpdate::connect(grow_tObject object, int level)
     status = GE__SUCCESS;
     db = dyn->parse_attr_name(attribute, parsed_name, &inverted, &attr_type,
         &attr_size, 0, graph_mParseOpt_KeepIndex);
-    if (strcmp(parsed_name, "") == 0)
+    if (streq(parsed_name, ""))
       return 1;
 
     dyn->graph->get_refupdate(parsed_name, ref_name, ref_tid, ref_size,
@@ -15926,7 +15926,7 @@ int GeRefUpdate::export_java(
 int GeRefUpdate::syntax_check(
     grow_tObject object, int* error_cnt, int* warning_cnt)
 {
-  if (strcmp(attribute, "") != 0) {
+  if (!streq(attribute, "")) {
     int types[] = { pwr_eType_Objid, pwr_eType_AttrRef, 0 };
     graph_eDatabase databases[] = { graph_eDatabase_Gdh, graph_eDatabase__ };
 
@@ -16214,7 +16214,7 @@ int GePopupMenu::syntax_check(
   int attr_type, attr_size;
   pwr_eType a_type;
 
-  if (strcmp(ref_object, "") == 0) {
+  if (streq(ref_object, "")) {
     dyn->graph->syntax_msg('W', object, "PopupMenu.ReferenceObject is missing");
     (*warning_cnt)++;
   } else {
@@ -17295,7 +17295,7 @@ int GeCommand::export_java(
 int GeCommand::syntax_check(
     grow_tObject object, int* error_cnt, int* warning_cnt)
 {
-  if (strcmp(command, "") == 0) {
+  if (streq(command, "")) {
     dyn->graph->syntax_msg('E', object, "Command.Command is missing");
     (*error_cnt)++;
   }
@@ -17416,7 +17416,7 @@ int GeCommandDoubleClick::action(grow_tObject object, glow_tEvent event)
 int GeCommandDoubleClick::syntax_check(
     grow_tObject object, int* error_cnt, int* warning_cnt)
 {
-  if (strcmp(command, "") == 0) {
+  if (streq(command, "")) {
     dyn->graph->syntax_msg(
         'E', object, "CommandDoubleClick.Command is missing");
     (*error_cnt)++;
@@ -17570,7 +17570,7 @@ int GeScript::action(grow_tObject object, glow_tEvent event)
 int GeScript::syntax_check(
     grow_tObject object, int* error_cnt, int* warning_cnt)
 {
-  if (strcmp(script, "") == 0) {
+  if (streq(script, "")) {
     dyn->graph->syntax_msg('E', object, "Script.Script is missing");
     (*error_cnt)++;
   }
@@ -17744,7 +17744,7 @@ int GeConfirm::export_java(
 int GeConfirm::syntax_check(
     grow_tObject object, int* error_cnt, int* warning_cnt)
 {
-  if (strcmp(text, "") == 0) {
+  if (streq(text, "")) {
     dyn->graph->syntax_msg('E', object, "Confirm.Text is missing");
     (*error_cnt)++;
   }
@@ -18061,7 +18061,7 @@ int GeRadioButton::connect(
   p = 0;
   db = dyn->parse_attr_name(
       attribute, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") == 0)
+  if (streq(parsed_name, ""))
     return 1;
 
   switch (db) {
@@ -18306,7 +18306,7 @@ int GeTipText::action(grow_tObject object, glow_tEvent event)
 {
   switch (event->event) {
   case glow_eEvent_TipText: {
-    if (strcmp(text, "") == 0) {
+    if (streq(text, "")) {
       pwr_tAName attr;
       char value[80];
       pwr_tAName parsed_name;
@@ -18389,7 +18389,7 @@ int GeTipText::export_java(
 int GeTipText::syntax_check(
     grow_tObject object, int* error_cnt, int* warning_cnt)
 {
-  if (strcmp(text, "") == 0) {
+  if (streq(text, "")) {
     dyn->graph->syntax_msg('E', object, "ToolTip.Text is missing");
     (*error_cnt)++;
   }
@@ -18507,7 +18507,7 @@ int GeHelp::action(grow_tObject object, glow_tEvent event)
       char command[400];
       char cmd[400];
 
-      if (strcmp(bookmark, "") != 0)
+      if (!streq(bookmark, ""))
         sprintf(command, "help %s /bookmark=%s", topic, bookmark);
       else
         sprintf(command, "help %s", topic);
@@ -18525,7 +18525,7 @@ int GeHelp::export_java(
 {
   char command[200];
 
-  if (strcmp(bookmark, "") != 0)
+  if (!streq(bookmark, ""))
     sprintf(command, "help %s /bookmark=%s", topic, bookmark);
   else
     sprintf(command, "help %s", topic);
@@ -18541,7 +18541,7 @@ int GeHelp::export_java(
 
 int GeHelp::syntax_check(grow_tObject object, int* error_cnt, int* warning_cnt)
 {
-  if (strcmp(topic, "") == 0) {
+  if (streq(topic, "")) {
     dyn->graph->syntax_msg('E', object, "Help.Topic is missing");
     (*error_cnt)++;
   }
@@ -18670,7 +18670,7 @@ int GeOpenGraph::action(grow_tObject object, glow_tEvent event)
       char command[400];
       char cmd[400] = "";
 
-      if (strcmp(graph_object, "") != 0)
+      if (!streq(graph_object, ""))
         sprintf(command, "open graph/object=%s", graph_object);
       else {
         // Open classgraph for popup menu object
@@ -18692,7 +18692,7 @@ int GeOpenGraph::action(grow_tObject object, glow_tEvent event)
           }
         }
       }
-      if (strcmp(command, "") != 0) {
+      if (!streq(command, "")) {
         dyn->graph->get_command(command, cmd, dyn);
         (dyn->graph->command_cb)(dyn->graph->parent_ctx, cmd, 0);
       }
@@ -18725,7 +18725,7 @@ int GeOpenGraph::syntax_check(
   int sts;
   pwr_eType a_type;
 
-  if (strcmp(graph_object, "") != 0) {
+  if (!streq(graph_object, "")) {
     sts = dyn->graph->check_ldh_object(graph_object, &a_type);
     if (EVEN(sts)) {
       char msg[300];
@@ -18885,7 +18885,7 @@ int GeOpenURL::export_java(
 int GeOpenURL::syntax_check(
     grow_tObject object, int* error_cnt, int* warning_cnt)
 {
-  if (strcmp(url, "") == 0) {
+  if (streq(url, "")) {
     dyn->graph->syntax_msg('W', object, "OpenURL.URL is missing");
     (*warning_cnt)++;
   }
@@ -19034,7 +19034,7 @@ int GeInputFocus::action(grow_tObject object, glow_tEvent event)
       next_inputfocus = this;
       int objcnt = 0;
       while (!found) {
-        if (strcmp(next_inputfocus->next_horizontal, "") != 0) {
+        if (!streq(next_inputfocus->next_horizontal, "")) {
           sts = grow_FindObjectByName(
               dyn->graph->grow->ctx, next_inputfocus->next_horizontal, &next);
           if (EVEN(sts))
@@ -19054,7 +19054,7 @@ int GeInputFocus::action(grow_tObject object, glow_tEvent event)
             if (found && grow_GetObjectVisibility(next) != glow_eVis_Visible)
               found = 0;
           }
-        } else if (strcmp(next_inputfocus->next_tab, "") != 0) {
+        } else if (!streq(next_inputfocus->next_tab, "")) {
           sts = grow_FindObjectByName(
               dyn->graph->grow->ctx, next_inputfocus->next_tab, &next);
           if (EVEN(sts))
@@ -19146,7 +19146,7 @@ int GeInputFocus::action(grow_tObject object, glow_tEvent event)
   case glow_eEvent_Key_Down:
     if (event->object.object_type != glow_eObjectType_NoObject) {
       found = 0;
-      if (strcmp(next_vertical, "") != 0) {
+      if (!streq(next_vertical, "")) {
         sts = grow_FindObjectByName(
             dyn->graph->grow->ctx, next_vertical, &next);
         if (ODD(sts)) {
@@ -19156,7 +19156,7 @@ int GeInputFocus::action(grow_tObject object, glow_tEvent event)
           if (next_dyn->total_action_type1 & ge_mActionType1_InputFocus)
             found = 1;
         }
-      } else if (strcmp(next_tab, "") != 0) {
+      } else if (!streq(next_tab, "")) {
         sts = grow_FindObjectByName(dyn->graph->grow->ctx, next_tab, &next);
         if (ODD(sts)) {
           // Check that this object can handle input focus
@@ -19237,7 +19237,7 @@ int GeInputFocus::action(grow_tObject object, glow_tEvent event)
       next_inputfocus = this;
       int objcnt = 0;
       while (!found) {
-        if (strcmp(next_inputfocus->next_tab, "") != 0) {
+        if (!streq(next_inputfocus->next_tab, "")) {
           sts = grow_FindObjectByName(
               dyn->graph->grow->ctx, next_inputfocus->next_tab, &next);
           if (EVEN(sts))
@@ -19304,7 +19304,7 @@ int GeInputFocus::syntax_check(
   grow_tObject next;
   int sts;
 
-  if (strcmp(next_horizontal, "") != 0) {
+  if (!streq(next_horizontal, "")) {
     sts = grow_FindObjectByName(dyn->graph->grow->ctx, next_horizontal, &next);
     if (EVEN(sts)) {
       dyn->graph->syntax_msg(
@@ -19312,7 +19312,7 @@ int GeInputFocus::syntax_check(
       (*error_cnt)++;
     }
   }
-  if (strcmp(next_vertical, "") != 0) {
+  if (!streq(next_vertical, "")) {
     sts = grow_FindObjectByName(dyn->graph->grow->ctx, next_vertical, &next);
     if (EVEN(sts)) {
       dyn->graph->syntax_msg(
@@ -19320,7 +19320,7 @@ int GeInputFocus::syntax_check(
       (*error_cnt)++;
     }
   }
-  if (strcmp(next_tab, "") != 0) {
+  if (!streq(next_tab, "")) {
     sts = grow_FindObjectByName(dyn->graph->grow->ctx, next_tab, &next);
     if (EVEN(sts)) {
       dyn->graph->syntax_msg(
@@ -19328,8 +19328,8 @@ int GeInputFocus::syntax_check(
       (*error_cnt)++;
     }
   }
-  if (initial_focus == 0 && strcmp(next_horizontal, "") == 0
-      && strcmp(next_vertical, "") == 0 && strcmp(next_tab, "") == 0) {
+  if (initial_focus == 0 && streq(next_horizontal, "")
+      && streq(next_vertical, "") && streq(next_tab, "")) {
     dyn->graph->syntax_msg('E', object, "InputFocus, no action found");
     (*error_cnt)++;
   }
@@ -19578,7 +19578,7 @@ int GeSlider::connect(
   p = 0;
   db = dyn->parse_attr_name(
       attribute, parsed_name, &inverted, &attr_type, &size);
-  if (strcmp(parsed_name, "") == 0)
+  if (streq(parsed_name, ""))
     return 1;
 
   switch (attr_type) {
@@ -19648,7 +19648,7 @@ int GeSlider::connect(
   min_value_p = 0;
   min_value_db = dyn->parse_attr_name(
       minvalue_attr, parsed_name, &inverted, &a_type, &a_size);
-  if (strcmp(parsed_name, "") != 0 && a_type == pwr_eType_Float32) {
+  if (!streq(parsed_name, "") && a_type == pwr_eType_Float32) {
     switch (min_value_db) {
     case graph_eDatabase_Gdh:
       sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
@@ -19665,7 +19665,7 @@ int GeSlider::connect(
   max_value_p = 0;
   max_value_db = dyn->parse_attr_name(
       maxvalue_attr, parsed_name, &inverted, &a_type, &a_size);
-  if (strcmp(parsed_name, "") != 0 && a_type == pwr_eType_Float32) {
+  if (!streq(parsed_name, "") && a_type == pwr_eType_Float32) {
     switch (max_value_db) {
     case graph_eDatabase_Gdh:
       sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
@@ -19682,7 +19682,7 @@ int GeSlider::connect(
   insensitive_p = 0;
   insensitive_db = dyn->parse_attr_name(
       insensitive_attr, parsed_name, &insensitive_inverted, &a_type, &a_size);
-  if (strcmp(parsed_name, "") != 0 && a_type == pwr_eType_Boolean) {
+  if (!streq(parsed_name, "") && a_type == pwr_eType_Boolean) {
     switch (insensitive_db) {
     case graph_eDatabase_Gdh:
       sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
@@ -19863,7 +19863,7 @@ int GeSlider::action(grow_tObject object, glow_tEvent event)
     pwr_tBoolean val = 1;
     pwr_tStatus sts;
 
-    if (strcmp(release_attr, "") != 0) {
+    if (!streq(release_attr, "")) {
       dyn->parse_attr_name(
           release_attr, parsed_name, &inverted, &attr_type, &attr_size);
       switch (attr_type) {
@@ -20003,15 +20003,15 @@ int GeSlider::export_java(
   fp << "new GeDynSlider(" << var_name << ".dd, \"" << attribute << "\","
      << min_value << "," << max_value << "," << direction << "," << min_pos
      << "," << max_pos << ",";
-  if (strcmp(minvalue_attr, "") == 0)
+  if (streq(minvalue_attr, ""))
     fp << "null,";
   else
     fp << "\"" << minvalue_attr << "\",";
-  if (strcmp(maxvalue_attr, "") == 0)
+  if (streq(maxvalue_attr, ""))
     fp << "null,";
   else
     fp << "\"" << maxvalue_attr << "\",";
-  if (strcmp(insensitive_attr, "") == 0)
+  if (streq(insensitive_attr, ""))
     fp << "null,";
   else
     fp << "\"" << insensitive_attr << "\",";
@@ -20475,7 +20475,7 @@ int GeFastCurve::syntax_check(
   int sts;
   pwr_eType a_type;
 
-  if (strcmp(fast_object, "") == 0) {
+  if (streq(fast_object, "")) {
     dyn->graph->syntax_msg('W', object, "FastCurve.FastObject is missing");
     (*warning_cnt)++;
   } else {
@@ -21877,7 +21877,7 @@ int GeOptionMenu::connect(
   p = 0;
   db = dyn->parse_attr_name(
       attribute, parsed_name, &inverted, &attr_type, &attr_size);
-  if (strcmp(parsed_name, "") == 0)
+  if (streq(parsed_name, ""))
     return 1;
 
   size = attr_size;
@@ -21941,10 +21941,10 @@ int GeOptionMenu::connect(
 
   update_p = 0;
   if (optionmenu_type == ge_eOptionMenuType_Dynamic) {
-    if (strcmp(text_attribute, "") != 0 && strcmp(update_attribute, "") != 0) {
+    if (!streq(text_attribute, "") && !streq(update_attribute, "")) {
       db = dyn->parse_attr_name(
           update_attribute, parsed_name, &inverted, &attr_type, &attr_size);
-      if (strcmp(parsed_name, "") != 0) {
+      if (!streq(parsed_name, "")) {
         sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
             (void**)&update_p, &update_subid, attr_size, object, now);
         if (EVEN(sts))
@@ -22026,7 +22026,7 @@ int GeOptionMenu::scan(grow_tObject object)
   if ((first_scan || update_texts)
       && grow_GetTranslate(dyn->graph->grow->ctx)) {
     for (int i = 0; i < 32; i++) {
-      if (strcmp(items_text[i], "") != 0)
+      if (!streq(items_text[i], ""))
         Lng::translate(items_text[i], items_text[i]);
     }
   }
@@ -22985,7 +22985,7 @@ int GeMethodToolbar::syntax_check(
   int sts;
   pwr_eType a_type;
 
-  if (strcmp(method_object, "") == 0) {
+  if (streq(method_object, "")) {
     dyn->graph->syntax_msg('E', object, "MethodToolbar.Object is missing");
     (*warning_cnt)++;
   } else {
@@ -23229,7 +23229,7 @@ int GeMethodPulldownMenu::action(grow_tObject object, glow_tEvent event)
         if (menu_idx >= (int)(sizeof(info.item) / sizeof(info.item[0])))
           break;
 
-        if (strcmp(GeMethods::op_name[i], "") == 0)
+        if (streq(GeMethods::op_name[i], ""))
           continue;
 
         if (menu_type == ge_eMethodsMenuType_Help
@@ -23256,7 +23256,7 @@ int GeMethodPulldownMenu::action(grow_tObject object, glow_tEvent event)
         if (menu_idx >= (int)(sizeof(info.item) / sizeof(info.item[0])))
           break;
 
-        if (strcmp(GeMethods::mnt_name[i], "") == 0)
+        if (streq(GeMethods::mnt_name[i], ""))
           continue;
 
         if (menu_type == ge_eMethodsMenuType_Help
@@ -23408,7 +23408,7 @@ int GeMethodPulldownMenu::syntax_check(
   int sts;
   pwr_eType a_type;
 
-  if (strcmp(method_object, "") == 0) {
+  if (streq(method_object, "")) {
     dyn->graph->syntax_msg('E', object, "MethodPulldownMenu.Object is missing");
     (*warning_cnt)++;
   } else {
@@ -23501,7 +23501,7 @@ int GeCatchSignal::action(grow_tObject object, glow_tEvent event)
 
   switch (event->event) {
   case glow_eEvent_Signal: {
-    if (strcmp(event->signal.signal_name, signal_name) != 0)
+    if (!streq(event->signal.signal_name, signal_name))
       break;
 
     // Emit a click event
@@ -23528,7 +23528,7 @@ int GeCatchSignal::export_java(
 int GeCatchSignal::syntax_check(
     grow_tObject object, int* error_cnt, int* warning_cnt)
 {
-  if (strcmp(signal_name, "") == 0) {
+  if (streq(signal_name, "")) {
     dyn->graph->syntax_msg('E', object, "CatchSignal.SignalName is missing");
     (*warning_cnt)++;
   }
@@ -23655,7 +23655,7 @@ int GeEmitSignal::export_java(
 int GeEmitSignal::syntax_check(
     grow_tObject object, int* error_cnt, int* warning_cnt)
 {
-  if (strcmp(signal_name, "") == 0) {
+  if (streq(signal_name, "")) {
     dyn->graph->syntax_msg('E', object, "EmitSignal.SignalName is missing");
     (*warning_cnt)++;
   }

@@ -41,7 +41,6 @@
 
 #include <fcntl.h>
 #include <stdarg.h>
-#include <string.h>
 #include <termios.h>
 #include <unistd.h>
 
@@ -49,6 +48,7 @@
 #include "co_dcli.h"
 #include "co_dcli_input.h"
 #include "co_dcli_msg.h"
+#include "co_string.h"
 
 /***********************  D E F I N E ' S *******************************/
 
@@ -577,7 +577,7 @@ int dcli_qio_assign(char* s, dcli_sChannel* chn)
   int chan = -1;
   int sts;
 
-  if (strcmp(s, "stdin") == 0)
+  if (streq(s, "stdin"))
     chan = STDIN_FILENO;
   else {
     chan = open(s, O_RDWR | O_NOCTTY);

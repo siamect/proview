@@ -39,16 +39,16 @@
 
 /*_Include files_________________________________________________________*/
 
-#include <string.h>
-
 #include "pwr_version.h"
+
 #include "co_cdh.h"
 #include "co_dcli.h"
-#include "co_time.h"
-#include "pwr_version.h"
-#include "cnv_pwgtoxtthelp.h"
 #include "co_lng.h"
+#include "co_string.h"
+#include "co_time.h"
+
 #include "cnv_ctx.h"
+#include "cnv_pwgtoxtthelp.h"
 
 PwgFile::PwgFile(char* name, char* title, char* group)
 {
@@ -96,7 +96,7 @@ CnvPwgToXtthelp::CnvPwgToXtthelp(CnvCtx* cnv_ctx) : ctx(cnv_ctx)
   int idx;
 
   // Open output file
-  if (strcmp(ctx->dir, "") == 0)
+  if (streq(ctx->dir, ""))
     strcpy(outfile, "$pwr_exe/man_subgraph.dat");
   else {
     strcpy(outfile, ctx->dir);
@@ -115,7 +115,7 @@ CnvPwgToXtthelp::CnvPwgToXtthelp(CnvCtx* cnv_ctx) : ctx(cnv_ctx)
        << "Subgraph documentation\n";
 
   for (int i = 0; i < int(sizeof(filenames) / sizeof(filenames[0])); i++) {
-    if (strcmp(filenames[i], "") == 0)
+    if (streq(filenames[i], ""))
       break;
     m_fp << "<b>" << titles[i] << " <link>" << titles[i] << '\n';
   }
@@ -123,7 +123,7 @@ CnvPwgToXtthelp::CnvPwgToXtthelp(CnvCtx* cnv_ctx) : ctx(cnv_ctx)
   print_enable();
 
   for (int i = 0; i < int(sizeof(filenames) / sizeof(filenames[0])); i++) {
-    if (strcmp(filenames[i], "") == 0)
+    if (streq(filenames[i], ""))
       break;
     m_filelist.clear();
     strcpy(m_current_title, titles[i]);
@@ -138,7 +138,7 @@ CnvPwgToXtthelp::CnvPwgToXtthelp(CnvCtx* cnv_ctx) : ctx(cnv_ctx)
       // Get title for this subgraph
       if (!get_title(found_file, title, sizeof(title), group, sizeof(group)))
         strcpy(title, fname_to_topic(found_file));
-      if (strcmp(title, "") == 0)
+      if (streq(title, ""))
         strcpy(title, fname_to_topic(found_file));
 
       PwgFile pf(found_file, title, group);
@@ -154,7 +154,7 @@ CnvPwgToXtthelp::CnvPwgToXtthelp(CnvCtx* cnv_ctx) : ctx(cnv_ctx)
     headerlevel();
     for (int j = 0; j < (int)m_filelist.size(); j++) {
       if (j == 0
-          || strcmp(m_filelist[j].m_group, m_filelist[j - 1].m_group) != 0) {
+          || !streq(m_filelist[j].m_group, m_filelist[j - 1].m_group)) {
         if (j != 0) {
           headerlevel_end();
         }
@@ -182,7 +182,7 @@ int CnvPwgToXtthelp::exec_filelist(char* title)
 
   print_disable();
   for (int j = 0; j < (int)m_filelist.size(); j++) {
-    if (j == 0 || strcmp(m_filelist[j].m_group, m_filelist[idx].m_group) != 0) {
+    if (j == 0 || !streq(m_filelist[j].m_group, m_filelist[idx].m_group)) {
       idx = j;
 
       m_fp << "<b>Group " << m_filelist[j].m_group << " <link>"
@@ -215,7 +215,7 @@ int CnvPwgToXtthelp::exec_group(int idx, int* next_idx)
        << "Group " << m_filelist[idx].m_group << '\n';
 
   for (int j = idx; j < (int)m_filelist.size(); j++) {
-    if (strcmp(m_filelist[j].m_group, m_filelist[idx].m_group) != 0) {
+    if (!streq(m_filelist[j].m_group, m_filelist[idx].m_group)) {
       break;
     }
     m_fp << m_filelist[j].m_title << " <link>"
@@ -315,7 +315,7 @@ void CnvPwgToXtthelp::sort()
 {
   for (int i = m_filelist.size() - 1; i > 0; i--) {
     for (int j = 0; j < i; j++) {
-      if (strcmp(m_filelist[i].m_group, m_filelist[j].m_group) == 0) {
+      if (streq(m_filelist[i].m_group, m_filelist[j].m_group)) {
         //  Same group, sort by title
         if (strcmp(m_filelist[i].m_title, m_filelist[j].m_title) < 0) {
           PwgFile tmp = m_filelist[i];

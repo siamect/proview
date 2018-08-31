@@ -37,6 +37,7 @@
 /* wb_c_plcpgm.c -- work bench methods of the PlcPgm class. */
 
 #include "co_cdh.h"
+#include "co_string.h"
 #include "xtt_xnav.h"
 #include "rt_xnav_msg.h"
 
@@ -76,7 +77,7 @@ static pwr_tStatus SetScan(xmenu_sMenuCall* ip)
   pwr_tOName name;
   pwr_tClassId classid;
 
-  if (strcmp("Enable", ip->ItemList[ip->ChosenItem].MethodArguments[0]) == 0)
+  if (streq("Enable", ip->ItemList[ip->ChosenItem].MethodArguments[0]))
     value = 0;
   else if (strcmp("Disable", ip->ItemList[ip->ChosenItem].MethodArguments[0])
       == 0)
@@ -138,7 +139,7 @@ static pwr_tStatus SetScanFilter(xmenu_sMenuCall* ip)
   if (!(ip->Priv & pwr_mPrv_System))
     return XNAV__INSENSITIVE;
 
-  if (strcmp("Enable", ip->ItemList[ip->ChosenItem].FilterArguments[0]) == 0)
+  if (streq("Enable", ip->ItemList[ip->ChosenItem].FilterArguments[0]))
     enable = 1;
   else if (strcmp("Disable", ip->ItemList[ip->ChosenItem].FilterArguments[0])
       == 0)

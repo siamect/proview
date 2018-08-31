@@ -47,7 +47,6 @@ static char sccsid[] = "@(#)rpc_util.c 1.5 87/06/24 (C) 1987 SMI";
  * Copyright (C) 1987, Sun Microsystems, Inc.
  */
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 
 #include "pdr_scan.h"
@@ -91,14 +90,6 @@ void reinitialize()
   where = curline;
   linenum = 0;
   defined = NULL;
-}
-
-/*
- * string equality
- */
-int streq(char* a, char* b)
-{
-  return (strcmp(a, b) == 0);
 }
 
 /*

@@ -36,10 +36,11 @@
 
 /* wb_c_objid.c -- work bench methods of the Objid class. */
 
-#include <string.h>
-
 #include "pwr_baseclasses.h"
+
 #include "co_msg.h"
+#include "co_string.h"
+
 #include "wb_pwrs.h"
 #include "wb_pwrs_msg.h"
 #include "wb_wtt.h"
@@ -52,7 +53,7 @@ static int IsOkConnect(ldh_sMenuCall* ip, pwr_sMenuButton* mbp)
 {
   pwr_tStatus sts;
 
-  if (strcmp(mbp->FilterArguments[1], "") != 0) {
+  if (!streq(mbp->FilterArguments[1], "")) {
     char arg_cid_str[20][32];
     int arg_cid_cnt;
     int i;
@@ -102,7 +103,7 @@ static pwr_tStatus Connect(ldh_sMenuCall* ip)
   if (EVEN(sts))
     return sts;
 
-  if (strcmp(mb.MethodArguments[1], "") != 0) {
+  if (!streq(mb.MethodArguments[1], "")) {
     char arg_cid_str[20][32];
     int arg_cid_cnt;
     int i;
@@ -133,7 +134,7 @@ static pwr_tStatus Connect(ldh_sMenuCall* ip)
       return 0;
   }
 
-  if (strcmp(mb.MethodArguments[2], "") != 0)
+  if (!streq(mb.MethodArguments[2], ""))
     // Body in MethodArguments 2, probably DevBody
     sts = ldh_SetObjectPar(ip->PointedSession, ip->Pointed.Objid,
         mb.MethodArguments[2], mb.MethodArguments[0],

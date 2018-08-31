@@ -36,12 +36,10 @@
 
 /* cow_pn_gsdml_data.cpp -- Profinet configurator data file */
 
-//
-
 #include <stdlib.h>
-#include <string.h>
 
 #include "co_dcli.h"
+#include "co_string.h"
 
 #include "rt_pb_msg.h"
 #include "rt_pn_gsdml_data.h"
@@ -287,36 +285,36 @@ int GsdmlDeviceData::modify_value(const char* attr, const char* value)
   num = dcli_parse(attr, "-", "", (char*)attrvect,
       sizeof(attrvect) / sizeof(attrvect[0]), sizeof(attrvect[0]), 0);
 
-  if (strcmp(attrvect[0], "NetworkSettings") == 0) {
+  if (streq(attrvect[0], "NetworkSettings")) {
     if (num < 2)
       return 0;
-    if (strcmp(attrvect[1], "DeviceName") == 0)
+    if (streq(attrvect[1], "DeviceName"))
       strncpy(device_name, value, sizeof(device_name));
-    else if (strcmp(attrvect[1], "IP Address") == 0)
+    else if (streq(attrvect[1], "IP Address"))
       strncpy(ip_address, value, sizeof(ip_address));
-    else if (strcmp(attrvect[1], "Subnet Mask") == 0)
+    else if (streq(attrvect[1], "Subnet Mask"))
       strncpy(subnet_mask, value, sizeof(subnet_mask));
-    else if (strcmp(attrvect[1], "MAC Address") == 0)
+    else if (streq(attrvect[1], "MAC Address"))
       strncpy(mac_address, value, sizeof(mac_address));
-    else if (strcmp(attrvect[1], "SendClock") == 0) {
+    else if (streq(attrvect[1], "SendClock")) {
       num2 = sscanf(value, "%d", &ival);
       if (num2 != 1)
         return 0;
       for (unsigned int i = 0; i < iocr_data.size(); i++)
         iocr_data[i]->send_clock_factor = ival;
-    } else if (strcmp(attrvect[1], "ReductionRatio") == 0) {
+    } else if (streq(attrvect[1], "ReductionRatio")) {
       num2 = sscanf(value, "%d", &ival);
       if (num2 != 1)
         return 0;
       for (unsigned int i = 0; i < iocr_data.size(); i++)
         iocr_data[i]->reduction_ratio = ival;
-    } else if (strcmp(attrvect[1], "Phase") == 0) {
+    } else if (streq(attrvect[1], "Phase")) {
       num2 = sscanf(value, "%d", &ival);
       if (num2 != 1)
         return 0;
       for (unsigned int i = 0; i < iocr_data.size(); i++)
         iocr_data[i]->phase = ival;
-    } else if (strcmp(attrvect[1], "API") == 0) {
+    } else if (streq(attrvect[1], "API")) {
       num2 = sscanf(value, "%d", &ival);
       if (num2 != 1)
         return 0;
@@ -337,24 +335,24 @@ int GsdmlDeviceData::get_value(const char* attr, char* buf, int bufsize)
   num = dcli_parse(attr, "-", "", (char*)attrvect,
       sizeof(attrvect) / sizeof(attrvect[0]), sizeof(attrvect[0]), 0);
 
-  if (strcmp(attrvect[0], "NetworkSettings") == 0) {
+  if (streq(attrvect[0], "NetworkSettings")) {
     if (num < 2)
       return 0;
-    if (strcmp(attrvect[1], "DeviceName") == 0)
+    if (streq(attrvect[1], "DeviceName"))
       strncpy(buf, device_name, bufsize);
-    else if (strcmp(attrvect[1], "IP Address") == 0)
+    else if (streq(attrvect[1], "IP Address"))
       strncpy(buf, ip_address, bufsize);
-    else if (strcmp(attrvect[1], "Subnet Mask") == 0)
+    else if (streq(attrvect[1], "Subnet Mask"))
       strncpy(buf, subnet_mask, bufsize);
-    else if (strcmp(attrvect[1], "MAC Address") == 0)
+    else if (streq(attrvect[1], "MAC Address"))
       strncpy(buf, mac_address, bufsize);
-    else if (strcmp(attrvect[1], "SendClock") == 0)
+    else if (streq(attrvect[1], "SendClock"))
       snprintf(buf, bufsize, "%d", iocr_data[0]->send_clock_factor);
-    else if (strcmp(attrvect[1], "ReductionRatio") == 0)
+    else if (streq(attrvect[1], "ReductionRatio"))
       snprintf(buf, bufsize, "%d", iocr_data[0]->reduction_ratio);
-    else if (strcmp(attrvect[1], "Phase") == 0)
+    else if (streq(attrvect[1], "Phase"))
       snprintf(buf, bufsize, "%d", iocr_data[0]->phase);
-    else if (strcmp(attrvect[1], "API") == 0)
+    else if (streq(attrvect[1], "API"))
       snprintf(buf, bufsize, "%d", iocr_data[0]->api);
     else
       return 0;
@@ -365,19 +363,19 @@ int GsdmlDeviceData::get_value(const char* attr, char* buf, int bufsize)
 
 int GsdmlDataReader::tag_name_to_id(const char* name, unsigned int* id)
 {
-  if (strcmp(name, "PnDevice") == 0)
+  if (streq(name, "PnDevice"))
     *id = gsdmldata_eTag_PnDevice;
-  else if (strcmp(name, "NetworkSettings") == 0)
+  else if (streq(name, "NetworkSettings"))
     *id = gsdmldata_eTag_NetworkSettings;
-  else if (strcmp(name, "Slot") == 0)
+  else if (streq(name, "Slot"))
     *id = gsdmldata_eTag_Slot;
-  else if (strcmp(name, "Subslot") == 0)
+  else if (streq(name, "Subslot"))
     *id = gsdmldata_eTag_Subslot;
-  else if (strcmp(name, "DataRecord") == 0)
+  else if (streq(name, "DataRecord"))
     *id = gsdmldata_eTag_DataRecord;
-  else if (strcmp(name, "IOCR") == 0)
+  else if (streq(name, "IOCR"))
     *id = gsdmldata_eTag_IOCR;
-  else if (strcmp(name, "ChannelDiag") == 0)
+  else if (streq(name, "ChannelDiag"))
     *id = gsdmldata_eTag_ChannelDiag;
   else
     return 0;
@@ -492,8 +490,8 @@ int GsdmlDataReader::tag_attribute(const char* name, const char* value)
 {
   switch (current_tag) {
   case gsdmldata_eTag_PnDevice:
-    if (strcmp(name, "GsdmlFile") == 0) {
-      if (strcmp(data->gsdmlfile, "") != 0) {
+    if (streq(name, "GsdmlFile")) {
+      if (!streq(data->gsdmlfile, "")) {
         // Check that the GSDML file is not changed
         char* gsdmlfile_p;
 
@@ -503,77 +501,77 @@ int GsdmlDataReader::tag_attribute(const char* name, const char* value)
         else
           gsdmlfile_p = data->gsdmlfile;
 
-        if (strcmp(value, gsdmlfile_p) != 0 && !new_filename)
+        if (!streq(value, gsdmlfile_p) && !new_filename)
           return PB__GSDMLFILEMISMATCH;
       } else
         strncpy(data->gsdmlfile, value, sizeof(data->gsdmlfile));
-    } else if (strcmp(name, "DeviceText") == 0)
+    } else if (streq(name, "DeviceText"))
       strncpy(data->device_text, value, sizeof(data->device_text));
-    else if (strcmp(name, "DeviceNumber") == 0)
+    else if (streq(name, "DeviceNumber"))
       sscanf(value, "%d", &data->device_num);
-    else if (strcmp(name, "VendorId") == 0)
+    else if (streq(name, "VendorId"))
       sscanf(value, "%hu", &data->vendor_id);
-    else if (strcmp(name, "DeviceId") == 0)
+    else if (streq(name, "DeviceId"))
       sscanf(value, "%hu", &data->device_id);
-    else if (strcmp(name, "Version") == 0)
+    else if (streq(name, "Version"))
       strncpy(data->version, value, sizeof(data->version));
-    else if (strcmp(name, "ByteOrder") == 0)
+    else if (streq(name, "ByteOrder"))
       sscanf(value, "%d", &data->byte_order);
-    else if (strcmp(name, "Instance") == 0)
+    else if (streq(name, "Instance"))
       sscanf(value, "%hu", &data->instance);
     break;
   case gsdmldata_eTag_NetworkSettings:
-    if (strcmp(name, "DeviceName") == 0)
+    if (streq(name, "DeviceName"))
       strncpy(data->device_name, value, sizeof(data->device_name));
-    else if (strcmp(name, "IP_Address") == 0)
+    else if (streq(name, "IP_Address"))
       strncpy(data->ip_address, value, sizeof(data->ip_address));
-    else if (strcmp(name, "SubnetMask") == 0)
+    else if (streq(name, "SubnetMask"))
       strncpy(data->subnet_mask, value, sizeof(data->subnet_mask));
-    else if (strcmp(name, "MAC_Address") == 0)
+    else if (streq(name, "MAC_Address"))
       strncpy(data->mac_address, value, sizeof(data->mac_address));
     break;
   case gsdmldata_eTag_Slot: {
     GsdmlSlotData* sd = (GsdmlSlotData*)get_object_stack(current_tag);
 
-    if (strcmp(name, "ModuleEnumNumber") == 0)
+    if (streq(name, "ModuleEnumNumber"))
       sscanf(value, "%d", &sd->module_enum_number);
-    else if (strcmp(name, "ModuleIdentNumber") == 0)
+    else if (streq(name, "ModuleIdentNumber"))
       sscanf(value, "%u", &sd->module_ident_number);
-    else if (strcmp(name, "ModuleClass") == 0)
+    else if (streq(name, "ModuleClass"))
       sscanf(value, "%u", &sd->module_class);
-    else if (strcmp(name, "ModuleText") == 0)
+    else if (streq(name, "ModuleText"))
       strncpy(sd->module_text, value, sizeof(sd->module_text));
-    else if (strcmp(name, "SlotNumber") == 0)
+    else if (streq(name, "SlotNumber"))
       sscanf(value, "%u", &sd->slot_number);
     break;
   }
   case gsdmldata_eTag_Subslot: {
     GsdmlSubslotData* sd = (GsdmlSubslotData*)get_object_stack(current_tag);
 
-    if (strcmp(name, "SubslotNumber") == 0)
+    if (streq(name, "SubslotNumber"))
       sscanf(value, "%u", &sd->subslot_number);
-    else if (strcmp(name, "SubmoduleIdentNumber") == 0)
+    else if (streq(name, "SubmoduleIdentNumber"))
       sscanf(value, "%u", &sd->submodule_ident_number);
-    else if (strcmp(name, "API") == 0)
+    else if (streq(name, "API"))
       sscanf(value, "%u", &sd->api);
-    else if (strcmp(name, "SubmoduleEnumNumber") == 0)
+    else if (streq(name, "SubmoduleEnumNumber"))
       sscanf(value, "%d", &sd->submodule_enum_number);
-    else if (strcmp(name, "IOInputLength") == 0)
+    else if (streq(name, "IOInputLength"))
       sscanf(value, "%u", &sd->io_input_length);
-    else if (strcmp(name, "IOOutputLength") == 0)
+    else if (streq(name, "IOOutputLength"))
       sscanf(value, "%u", &sd->io_output_length);
     break;
   }
   case gsdmldata_eTag_DataRecord: {
     GsdmlDataRecord* dr = (GsdmlDataRecord*)get_object_stack(current_tag);
 
-    if (strcmp(name, "DataLength") == 0)
+    if (streq(name, "DataLength"))
       sscanf(value, "%u", &dr->data_length);
-    else if (strcmp(name, "Index") == 0)
+    else if (streq(name, "Index"))
       sscanf(value, "%hu", &dr->index);
-    else if (strcmp(name, "TransferSequence") == 0)
+    else if (streq(name, "TransferSequence"))
       sscanf(value, "%hu", &dr->transfer_sequence);
-    else if (strcmp(name, "Data") == 0) {
+    else if (streq(name, "Data")) {
       int len;
       co_xml_parser::ostring_to_data(&dr->data, value, dr->data_length, &len);
     }
@@ -582,28 +580,28 @@ int GsdmlDataReader::tag_attribute(const char* name, const char* value)
   case gsdmldata_eTag_IOCR: {
     GsdmlIOCRData* iod = (GsdmlIOCRData*)get_object_stack(current_tag);
 
-    if (strcmp(name, "Type") == 0)
+    if (streq(name, "Type"))
       sscanf(value, "%hu", &iod->type);
-    else if (strcmp(name, "Properties") == 0)
+    else if (streq(name, "Properties"))
       sscanf(value, "%u", &iod->properties);
-    else if (strcmp(name, "SendClockFactor") == 0)
+    else if (streq(name, "SendClockFactor"))
       sscanf(value, "%hu", &iod->send_clock_factor);
-    else if (strcmp(name, "ReductionRatio") == 0)
+    else if (streq(name, "ReductionRatio"))
       sscanf(value, "%hu", &iod->reduction_ratio);
-    else if (strcmp(name, "Phase") == 0)
+    else if (streq(name, "Phase"))
       sscanf(value, "%u", &iod->phase);
-    else if (strcmp(name, "API") == 0)
+    else if (streq(name, "API"))
       sscanf(value, "%u", &iod->api);
     break;
   }
   case gsdmldata_eTag_ChannelDiag: {
     GsdmlChannelDiag* cd = (GsdmlChannelDiag*)get_object_stack(current_tag);
 
-    if (strcmp(name, "ErrorType") == 0)
+    if (streq(name, "ErrorType"))
       sscanf(value, "%hu", &cd->error_type);
-    else if (strcmp(name, "Name") == 0)
+    else if (streq(name, "Name"))
       strncpy(cd->name, value, sizeof(cd->name));
-    else if (strcmp(name, "Help") == 0)
+    else if (streq(name, "Help"))
       strncpy(cd->help, value, sizeof(cd->help));
     break;
   }

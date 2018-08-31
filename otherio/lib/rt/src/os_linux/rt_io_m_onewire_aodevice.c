@@ -40,8 +40,11 @@
 
 #include "pwr_basecomponentclasses.h"
 #include "pwr_otherioclasses.h"
-#include "co_time.h"
+
 #include "co_cdh.h"
+#include "co_string.h"
+#include "co_time.h"
+
 #include "rt_io_base.h"
 #include "rt_io_card_init.h"
 #include "rt_io_card_close.h"
@@ -148,7 +151,7 @@ static pwr_tStatus IoCardWrite(
       else
         sop->RawValue = fvalue - 0.5;
 
-      if (strcmp(op->Format, "") == 0)
+      if (streq(op->Format, ""))
         num = snprintf(str, sizeof(str), "%f", fvalue);
       else
         num = snprintf(str, sizeof(str), op->Format, fvalue);
@@ -174,7 +177,7 @@ static pwr_tStatus IoCardWrite(
       else
         ivalue = sop->RawValue = fvalue - 0.5;
 
-      if (strcmp(op->Format, "") == 0)
+      if (streq(op->Format, ""))
         num = snprintf(str, sizeof(str), "%d", ivalue);
       else
         num = snprintf(str, sizeof(str), op->Format, ivalue);

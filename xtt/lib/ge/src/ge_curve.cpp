@@ -40,6 +40,7 @@
 #include "co_cdh.h"
 #include "co_cnf.h"
 #include "co_dcli.h"
+#include "co_string.h"
 
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
@@ -278,8 +279,8 @@ void GeCurve::update_times_markers()
     grow_SetAnnotation(mark1_annot[i], 0, str, strlen(str));
   }
 
-  if (!(strcmp(cd->x_format[0], "%10t") == 0
-          || strcmp(cd->x_format[0], "%11t") == 0)) {
+  if (!(streq(cd->x_format[0], "%10t")
+          || streq(cd->x_format[0], "%11t"))) {
     sprintf(str, "%7.2f", time);
     grow_SetAnnotation(mark1_annot[cd->cols], 0, str, strlen(str));
   } else {
@@ -303,8 +304,8 @@ void GeCurve::update_times_markers()
     grow_SetAnnotation(mark2_annot[i], 0, str, strlen(str));
   }
 
-  if (!(strcmp(cd->x_format[0], "%10t") == 0
-          || strcmp(cd->x_format[0], "%11t") == 0)) {
+  if (!(streq(cd->x_format[0], "%10t")
+          || streq(cd->x_format[0], "%11t"))) {
     sprintf(str, "%7.2f", time);
     grow_SetAnnotation(mark2_annot[cd->cols], 0, str, strlen(str));
   } else {
@@ -439,8 +440,8 @@ int GeCurve::growcurve_cb(GlowCtx* ctx, glow_tEvent event)
         grow_SetAnnotation(curve->mark1_annot[i], 0, str, strlen(str));
       }
 
-      if (!(strcmp(curve->cd->x_format[0], "%10t") == 0
-              || strcmp(curve->cd->x_format[0], "%11t") == 0)) {
+      if (!(streq(curve->cd->x_format[0], "%10t")
+              || streq(curve->cd->x_format[0], "%11t"))) {
         sprintf(str, "%7.2f", time);
         grow_SetAnnotation(
             curve->mark1_annot[curve->cd->cols], 0, str, strlen(str));
@@ -469,8 +470,8 @@ int GeCurve::growcurve_cb(GlowCtx* ctx, glow_tEvent event)
         grow_SetAnnotation(curve->mark2_annot[i], 0, str, strlen(str));
       }
 
-      if (!(strcmp(curve->cd->x_format[0], "%10t") == 0
-              || strcmp(curve->cd->x_format[0], "%11t") == 0)) {
+      if (!(streq(curve->cd->x_format[0], "%10t")
+              || streq(curve->cd->x_format[0], "%11t"))) {
         sprintf(str, "%7.2f", time);
         grow_SetAnnotation(
             curve->mark2_annot[curve->cd->cols], 0, str, strlen(str));
@@ -508,8 +509,8 @@ int GeCurve::growcurve_cb(GlowCtx* ctx, glow_tEvent event)
       grow_SetAnnotation(curve->mark2_annot[i], 0, str, strlen(str));
     }
 
-    if (!(strcmp(curve->cd->x_format[0], "%10t") == 0
-            || strcmp(curve->cd->x_format[0], "%11t") == 0)) {
+    if (!(streq(curve->cd->x_format[0], "%10t")
+            || streq(curve->cd->x_format[0], "%11t"))) {
       sprintf(str, "%7.2f", time);
       grow_SetAnnotation(
           curve->mark2_annot[curve->cd->cols], 0, str, strlen(str));
@@ -560,8 +561,8 @@ int GeCurve::growcurve_cb(GlowCtx* ctx, glow_tEvent event)
         grow_SetAnnotation(curve->mark1_annot[i], 0, str, strlen(str));
       }
 
-      if (!(strcmp(curve->cd->x_format[0], "%10t") == 0
-              || strcmp(curve->cd->x_format[0], "%11t") == 0)) {
+      if (!(streq(curve->cd->x_format[0], "%10t")
+              || streq(curve->cd->x_format[0], "%11t"))) {
         sprintf(str, "%7.2f", time);
         grow_SetAnnotation(
             curve->mark1_annot[curve->cd->cols], 0, str, strlen(str));
@@ -588,8 +589,8 @@ int GeCurve::growcurve_cb(GlowCtx* ctx, glow_tEvent event)
         grow_SetAnnotation(curve->mark2_annot[i], 0, str, strlen(str));
       }
 
-      if (!(strcmp(curve->cd->x_format[0], "%10t") == 0
-              || strcmp(curve->cd->x_format[0], "%11t") == 0)) {
+      if (!(streq(curve->cd->x_format[0], "%10t")
+              || streq(curve->cd->x_format[0], "%11t"))) {
         sprintf(str, "%7.2f", time);
         grow_SetAnnotation(
             curve->mark2_annot[curve->cd->cols], 0, str, strlen(str));
@@ -623,8 +624,8 @@ int GeCurve::growcurve_cb(GlowCtx* ctx, glow_tEvent event)
       grow_SetAnnotation(curve->cursor_annot[i], 0, str, strlen(str));
     }
 
-    if (!(strcmp(curve->cd->x_format[0], "%10t") == 0
-            || strcmp(curve->cd->x_format[0], "%11t") == 0)) {
+    if (!(streq(curve->cd->x_format[0], "%10t")
+            || streq(curve->cd->x_format[0], "%11t"))) {
       sprintf(str, "%7.2f", time);
       grow_SetAnnotation(
           curve->cursor_annot[curve->cd->cols], 0, str, strlen(str));
@@ -1004,8 +1005,8 @@ int GeCurve::config_names()
   grow_sAttributes grow_attr;
   unsigned long mask;
   char path[2][80] = { "$pwrp_exe/", "$pwr_exe/" };
-  int date = (strcmp(cd->x_format[0], "%10t") == 0
-                 || strcmp(cd->x_format[0], "%11t") == 0)
+  int date = (streq(cd->x_format[0], "%10t")
+                 || streq(cd->x_format[0], "%11t"))
       ? 1
       : 0;
 
@@ -1142,7 +1143,7 @@ int GeCurve::config_names()
         grownames_ctx, "", nc, x, y + 0.05, NULL, &mark2_annot[i]);
     // Draw unit
     x += time_size + 0.6;
-    if (strcmp(cd->y_unit[i], "") == 0)
+    if (streq(cd->y_unit[i], ""))
       strcpy(cd->y_unit[i], " ");
     grow_CreateGrowText(grownames_ctx, "", cd->y_unit[i], x, y + 0.75,
         glow_eDrawType_TextHelvetica, glow_eCtColor_BackgroundTextAndLines, 3,
@@ -1158,7 +1159,7 @@ int GeCurve::config_names()
       double w, h, descent;
 
       x += 3;
-      if (strcmp(cd->y_description[i], "") != 0) {
+      if (!streq(cd->y_description[i], "")) {
         grow_CreateGrowText(grownames_ctx, "", cd->y_description[i], x,
             y + 0.75, glow_eDrawType_TextHelvetica,
             glow_eCtColor_BackgroundTextAndLines, 3, glow_eFont_LucidaSans,
@@ -1183,7 +1184,7 @@ int GeCurve::config_names()
           glow_eDrawType_TextHelvetica, glow_eCtColor_BackgroundTextAndLines, 3,
           glow_eFont_LucidaSans, glow_mDisplayLevel_1, NULL, &t1);
 
-      if (strcmp(cd->y_description[i], "") != 0) {
+      if (!streq(cd->y_description[i], "")) {
         double w, h, descent;
 
         grow_GetTextExtent(grownames_ctx, cd->y_name[i], strlen(cd->y_name[i]),

@@ -34,15 +34,17 @@
  * General Public License plus this exception.
  */
 
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h>
-#include <string.h>
 
 #include "pwr_baseclasses.h"
-#include "co_time.h"
+
 #include "co_cdh.h"
 #include "co_cdh_msg.h"
+#include "co_string.h"
+#include "co_time.h"
+
 #include "rt_gdh.h"
 #include "rt_ini_msg.h"
 #include "rt_ini_alias.h"
@@ -169,7 +171,7 @@ pwr_tStatus ini_SetAttribute(char* filename, char* nodename, int output)
     if (EVEN(sts))
       break;
 
-    if (elements == 3 && strcmp(data_ptr[2], "") == 0)
+    if (elements == 3 && streq(data_ptr[2], ""))
       elements = 2;
     if (elements != 2) {
       if (elements > 2)

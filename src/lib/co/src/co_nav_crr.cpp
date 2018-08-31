@@ -41,7 +41,6 @@
 
 #include <ctype.h>
 #include <stdlib.h>
-#include <string.h>
 
 extern "C" {
 #include "co_cdh.h"
@@ -53,6 +52,7 @@ extern "C" {
 #include "co_nav_crr.h"
 #include "co_dcli_msg.h"
 #include "co_nav_msg.h"
+#include "co_string.h"
 
 /*** Local funktions ***************************************************/
 
@@ -190,7 +190,7 @@ int NavCrr::crr_signal(char* filename, char* signalname)
   int single_file = 0;
   pwr_tFileName file_spec;
 
-  if (filename && strcmp(filename, "*") == 0) {
+  if (filename && streq(filename, "*")) {
     strcpy(file_spec, "$pwrp_load/rtt_crr_*.dat");
     sts = dcli_search_file(file_spec, filestr, DCLI_DIR_SEARCH_INIT);
     if (EVEN(sts))
@@ -211,7 +211,7 @@ int NavCrr::crr_signal(char* filename, char* signalname)
     FILE* file;
 
     /* Open file */
-    if (filename && strcmp(filename, "*") == 0) {
+    if (filename && streq(filename, "*")) {
       file = fopen(filestr, "r");
     } else if (filename == NULL) {
       /* Open file, first get the volume id */
@@ -276,7 +276,7 @@ int NavCrr::crr_signal(char* filename, char* signalname)
           nr = dcli_parse(&line[2], " 	", "", (char*)line_part,
               sizeof(line_part) / sizeof(line_part[0]), sizeof(line_part[0]),
               0);
-          if (strcmp(line_part[nr - 1], "") == 0 && nr > 2)
+          if (streq(line_part[nr - 1], "") && nr > 2)
             nr--;
           (insert_cb)(parent_ctx, parent_node, navc_eItemType_Crossref,
               line_part[nr - 2], line_part[nr - 1], write);
@@ -308,14 +308,14 @@ int NavCrr::crr_signal(char* filename, char* signalname)
     if (single_file)
       break;
 
-    if (filename && strcmp(filename, "*") == 0) {
+    if (filename && streq(filename, "*")) {
       sts = dcli_search_file(file_spec, filestr, DCLI_DIR_SEARCH_NEXT);
       if (EVEN(sts))
         break;
     }
   }
 
-  if (filename && strcmp(filename, "*") == 0)
+  if (filename && streq(filename, "*"))
     dcli_search_file(file_spec, filestr, DCLI_DIR_SEARCH_END);
 
   if (signalcount == 0)
@@ -364,7 +364,7 @@ int NavCrr::crr_object(char* filename, char* objectname)
   pwr_tFileName file_spec;
   int signalcount = 0;
 
-  if (filename && strcmp(filename, "*") == 0) {
+  if (filename && streq(filename, "*")) {
     strcpy(file_spec, "$pwrp_load/rtt_crro_*.dat");
     sts = dcli_search_file(file_spec, filestr, DCLI_DIR_SEARCH_INIT);
     if (EVEN(sts))
@@ -384,7 +384,7 @@ int NavCrr::crr_object(char* filename, char* objectname)
     FILE* file;
 
     /* Open file */
-    if (filename && strcmp(filename, "*") == 0) {
+    if (filename && streq(filename, "*")) {
       file = fopen(filestr, "r");
     } else if (filename == NULL) {
       /* Open file, first get the volume id */
@@ -458,7 +458,7 @@ int NavCrr::crr_object(char* filename, char* objectname)
           nr = dcli_parse(&line[2], " 	", "", (char*)line_part,
               sizeof(line_part) / sizeof(line_part[0]), sizeof(line_part[0]),
               0);
-          if (strcmp(line_part[nr - 1], "") == 0 && nr > 2)
+          if (streq(line_part[nr - 1], "") && nr > 2)
             nr--;
           if (nr > 2 && line_part[nr - 3][0] == '#')
             write = 1;
@@ -497,14 +497,14 @@ int NavCrr::crr_object(char* filename, char* objectname)
     if (single_file)
       break;
 
-    if (filename && strcmp(filename, "*") == 0) {
+    if (filename && streq(filename, "*")) {
       sts = dcli_search_file(file_spec, filestr, DCLI_DIR_SEARCH_NEXT);
       if (EVEN(sts))
         break;
     }
   }
 
-  if (filename && strcmp(filename, "*") == 0)
+  if (filename && streq(filename, "*"))
     dcli_search_file(file_spec, filestr, DCLI_DIR_SEARCH_END);
 
   if (signalcount == 0)

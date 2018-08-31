@@ -36,6 +36,8 @@
 
 /* cow_pn_gsdml_attr_qt.cpp -- Display gsd attributes */
 
+#include "co_string.h"
+
 #include "cow_qt_helpers.h"
 
 #include "rt_pb_msg.h"
@@ -62,7 +64,7 @@ void GsdmlAttrQt::attr_help_text(const char* text)
 
 void GsdmlAttrQt::set_prompt(const char* prompt)
 {
-  if (strcmp(prompt, "") == 0) {
+  if (streq(prompt, "")) {
     cmd_prompt->setVisible(false);
     msg_label->setVisible(true);
   } else {

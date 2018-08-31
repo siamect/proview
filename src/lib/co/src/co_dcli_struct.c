@@ -40,11 +40,11 @@
 /*_Include files_________________________________________________________*/
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_dcli_msg.h"
+#include "co_string.h"
 
 #define READSTRUCT_CALLER_ROOT 0
 #define READSTRUCT_CALLER_UNDEFSEARCH 1
@@ -344,7 +344,7 @@ static int find_define(t_filectx filectx, char* str, int* value)
   dcli_remove_blank(def, str);
   for (define_ptr = filectx->definelist; define_ptr;
        define_ptr = define_ptr->next) {
-    if (strcmp(define_ptr->define, def) == 0) {
+    if (streq(define_ptr->define, def)) {
       *value = define_ptr->value;
       return DCLI__SUCCESS;
     }
@@ -389,14 +389,14 @@ static int add_element(t_ctx ctx, t_filectx filectx, char* line,
   memset(line_elem, 0, sizeof(line_elem));
   nr = dcli_parse(line, " 	;", "", (char*)line_elem,
       sizeof(line_elem) / sizeof(line_elem[0]), sizeof(line_elem[0]), 1);
-  if (strcmp(line_elem[nr - 1], "") == 0)
+  if (streq(line_elem[nr - 1], ""))
     nr--;
 
   struct_begin = 0;
   undefined = 0;
   unsign = 0;
   mask = 0;
-  if (strcmp(line_elem[0], "unsigned") == 0) {
+  if (streq(line_elem[0], "unsigned")) {
     unsign = 1;
     for (i = 1; i < (int)(sizeof(line_elem) / sizeof(line_elem[0])); i++)
       strcpy(line_elem[i - 1], line_elem[i]);
@@ -409,12 +409,12 @@ static int add_element(t_ctx ctx, t_filectx filectx, char* line,
   if (strncmp(line_elem[0], "/*", 2) == 0) {
     /* Assume the whole line is a comment */
     return DCLI__SUCCESS;
-  } else if (strcmp(line_elem[0], "struct") == 0) {
+  } else if (streq(line_elem[0], "struct")) {
     struct_begin = 1;
     type = 0;
     size = 0;
-  } else if (strcmp(line_elem[0], "long") == 0) {
-    if (strcmp(line_elem[1], "int") == 0) {
+  } else if (streq(line_elem[0], "long")) {
+    if (streq(line_elem[1], "int")) {
       for (i = 1; i < (int)(sizeof(line_elem) / sizeof(line_elem[0])); i++)
         strcpy(line_elem[i - 1], line_elem[i]);
       nr--;
@@ -436,8 +436,8 @@ static int add_element(t_ctx ctx, t_filectx filectx, char* line,
       size = sizeof(pwr_tInt32);
 #endif
     }
-  } else if (strcmp(line_elem[0], "short") == 0) {
-    if (strcmp(line_elem[1], "int") == 0) {
+  } else if (streq(line_elem[0], "short")) {
+    if (streq(line_elem[1], "int")) {
       for (i = 1; i < (int)(sizeof(line_elem) / sizeof(line_elem[0])); i++)
         strcpy(line_elem[i - 1], line_elem[i]);
       nr--;
@@ -447,124 +447,124 @@ static int add_element(t_ctx ctx, t_filectx filectx, char* line,
     else
       type = pwr_eType_Int16;
     size = sizeof(pwr_tInt16);
-  } else if (strcmp(line_elem[0], "char") == 0) {
+  } else if (streq(line_elem[0], "char")) {
     if (unsign)
       type = pwr_eType_UInt8;
     else
       type = pwr_eType_Int8;
     size = sizeof(pwr_tInt8);
-  } else if (strcmp(line_elem[0], "int") == 0) {
+  } else if (streq(line_elem[0], "int")) {
     if (unsign)
       type = pwr_eType_UInt32;
     else
       type = pwr_eType_Int32;
     size = sizeof(pwr_tInt32);
-  } else if (strcmp(line_elem[0], "float") == 0) {
+  } else if (streq(line_elem[0], "float")) {
     type = pwr_eType_Float32;
     size = sizeof(pwr_tFloat32);
-  } else if (strcmp(line_elem[0], "double") == 0) {
+  } else if (streq(line_elem[0], "double")) {
     type = pwr_eType_Float64;
     size = sizeof(pwr_tFloat64);
-  } else if (strcmp(line_elem[0], "pwr_tBoolean") == 0) {
+  } else if (streq(line_elem[0], "pwr_tBoolean")) {
     type = pwr_eType_Boolean;
     size = sizeof(pwr_tBoolean);
-  } else if (strcmp(line_elem[0], "pwr_tFloat32") == 0) {
+  } else if (streq(line_elem[0], "pwr_tFloat32")) {
     type = pwr_eType_Float32;
     size = sizeof(pwr_tFloat32);
-  } else if (strcmp(line_elem[0], "pwr_tFloat64") == 0) {
+  } else if (streq(line_elem[0], "pwr_tFloat64")) {
     type = pwr_eType_Float64;
     size = sizeof(pwr_tFloat64);
-  } else if (strcmp(line_elem[0], "pwr_tChar") == 0) {
+  } else if (streq(line_elem[0], "pwr_tChar")) {
     type = pwr_eType_Char;
     size = sizeof(pwr_tChar);
-  } else if (strcmp(line_elem[0], "pwr_tInt8") == 0) {
+  } else if (streq(line_elem[0], "pwr_tInt8")) {
     type = pwr_eType_Int8;
     size = sizeof(pwr_tInt8);
-  } else if (strcmp(line_elem[0], "pwr_tInt16") == 0) {
+  } else if (streq(line_elem[0], "pwr_tInt16")) {
     type = pwr_eType_Int16;
     size = sizeof(pwr_tInt16);
-  } else if (strcmp(line_elem[0], "pwr_tInt32") == 0) {
+  } else if (streq(line_elem[0], "pwr_tInt32")) {
     type = pwr_eType_Int32;
     size = sizeof(pwr_tInt32);
-  } else if (strcmp(line_elem[0], "pwr_tInt64") == 0) {
+  } else if (streq(line_elem[0], "pwr_tInt64")) {
     type = pwr_eType_Int64;
     size = sizeof(pwr_tInt64);
-  } else if (strcmp(line_elem[0], "pwr_tUInt8") == 0) {
+  } else if (streq(line_elem[0], "pwr_tUInt8")) {
     type = pwr_eType_UInt8;
     size = sizeof(pwr_tUInt8);
-  } else if (strcmp(line_elem[0], "pwr_tUInt16") == 0) {
+  } else if (streq(line_elem[0], "pwr_tUInt16")) {
     type = pwr_eType_UInt16;
     size = sizeof(pwr_tUInt16);
-  } else if (strcmp(line_elem[0], "pwr_tUInt32") == 0) {
+  } else if (streq(line_elem[0], "pwr_tUInt32")) {
     type = pwr_eType_UInt32;
     size = sizeof(pwr_tUInt32);
-  } else if (strcmp(line_elem[0], "pwr_tUInt64") == 0) {
+  } else if (streq(line_elem[0], "pwr_tUInt64")) {
     type = pwr_eType_UInt64;
     size = sizeof(pwr_tUInt64);
-  } else if (strcmp(line_elem[0], "pwr_tObjDId") == 0) {
+  } else if (streq(line_elem[0], "pwr_tObjDId")) {
     type = pwr_eType_ObjDId;
     size = sizeof(pwr_tObjDId);
-  } else if (strcmp(line_elem[0], "pwr_tObjid") == 0) {
+  } else if (streq(line_elem[0], "pwr_tObjid")) {
     type = pwr_eType_Objid;
     size = sizeof(pwr_tObjid);
-  } else if (strcmp(line_elem[0], "pwr_tString256") == 0) {
+  } else if (streq(line_elem[0], "pwr_tString256")) {
     type = pwr_eType_String;
     size = sizeof(pwr_tString256);
-  } else if (strcmp(line_elem[0], "pwr_tString132") == 0) {
+  } else if (streq(line_elem[0], "pwr_tString132")) {
     type = pwr_eType_String;
     size = sizeof(pwr_tString132);
-  } else if (strcmp(line_elem[0], "pwr_tString80") == 0) {
+  } else if (streq(line_elem[0], "pwr_tString80")) {
     type = pwr_eType_String;
     size = sizeof(pwr_tString80);
-  } else if (strcmp(line_elem[0], "pwr_tString40") == 0) {
+  } else if (streq(line_elem[0], "pwr_tString40")) {
     type = pwr_eType_String;
     size = sizeof(pwr_tString40);
-  } else if (strcmp(line_elem[0], "pwr_tString32") == 0) {
+  } else if (streq(line_elem[0], "pwr_tString32")) {
     type = pwr_eType_String;
     size = sizeof(pwr_tString32);
-  } else if (strcmp(line_elem[0], "pwr_tString16") == 0) {
+  } else if (streq(line_elem[0], "pwr_tString16")) {
     type = pwr_eType_String;
     size = sizeof(pwr_tString16);
-  } else if (strcmp(line_elem[0], "pwr_tString8") == 0) {
+  } else if (streq(line_elem[0], "pwr_tString8")) {
     type = pwr_eType_String;
     size = sizeof(pwr_tString8);
-  } else if (strcmp(line_elem[0], "pwr_tString1") == 0) {
+  } else if (streq(line_elem[0], "pwr_tString1")) {
     type = pwr_eType_String;
     size = sizeof(pwr_tString1);
-  } else if (strcmp(line_elem[0], "pwr_tText1024") == 0) {
+  } else if (streq(line_elem[0], "pwr_tText1024")) {
     type = pwr_eType_Text;
     size = sizeof(pwr_tText1024);
-  } else if (strcmp(line_elem[0], "pwr_tTime") == 0) {
+  } else if (streq(line_elem[0], "pwr_tTime")) {
     type = pwr_eType_Time;
     size = sizeof(pwr_tTime);
-  } else if (strcmp(line_elem[0], "pwr_tDeltaTime") == 0) {
+  } else if (streq(line_elem[0], "pwr_tDeltaTime")) {
     type = pwr_eType_DeltaTime;
     size = sizeof(pwr_tDeltaTime);
-  } else if (strcmp(line_elem[0], "pwr_sAttrRef") == 0) {
+  } else if (streq(line_elem[0], "pwr_sAttrRef")) {
     type = pwr_eType_AttrRef;
     size = sizeof(pwr_sAttrRef);
-  } else if (strcmp(line_elem[0], "pwr_tUInt64") == 0) {
+  } else if (streq(line_elem[0], "pwr_tUInt64")) {
     type = pwr_eType_UInt64;
     size = sizeof(pwr_tUInt64);
-  } else if (strcmp(line_elem[0], "pwr_tInt64") == 0) {
+  } else if (streq(line_elem[0], "pwr_tInt64")) {
     type = pwr_eType_Int64;
     size = sizeof(pwr_tInt64);
-  } else if (strcmp(line_elem[0], "pwr_tClassId") == 0) {
+  } else if (streq(line_elem[0], "pwr_tClassId")) {
     type = pwr_eType_ClassId;
     size = sizeof(pwr_tClassId);
-  } else if (strcmp(line_elem[0], "pwr_tTypeId") == 0) {
+  } else if (streq(line_elem[0], "pwr_tTypeId")) {
     type = pwr_eType_TypeId;
     size = sizeof(pwr_tTypeId);
-  } else if (strcmp(line_elem[0], "pwr_tVolumeId") == 0) {
+  } else if (streq(line_elem[0], "pwr_tVolumeId")) {
     type = pwr_eType_VolumeId;
     size = sizeof(pwr_tVolumeId);
-  } else if (strcmp(line_elem[0], "pwr_tObjectIx") == 0) {
+  } else if (streq(line_elem[0], "pwr_tObjectIx")) {
     type = pwr_eType_ObjectIx;
     size = sizeof(pwr_tObjectIx);
-  } else if (strcmp(line_elem[0], "pwr_tRefId") == 0) {
+  } else if (streq(line_elem[0], "pwr_tRefId")) {
     type = pwr_eType_RefId;
     size = sizeof(pwr_tRefId);
-  } else if (strcmp(line_elem[0], "net_sTime") == 0) {
+  } else if (streq(line_elem[0], "net_sTime")) {
     type = 10004; /* xnav_eType_NetTime */
     size = 2 * sizeof(pwr_tInt32);
   } else {
@@ -576,9 +576,9 @@ static int add_element(t_ctx ctx, t_filectx filectx, char* line,
   /* Third arg is alignment */
   alignment = 0;
   if (nr > 2) {
-    if (strcmp(line_elem[2], "pwr_dAlignLW") == 0)
+    if (streq(line_elem[2], "pwr_dAlignLW"))
       alignment = 8;
-    else if (strcmp(line_elem[2], "pwr_dAlignW") == 0)
+    else if (streq(line_elem[2], "pwr_dAlignW"))
       alignment = 4;
   }
 
@@ -904,7 +904,7 @@ static int find_struct(t_ctx ctx, char* filename, char* struct_name,
           cdh_ToUpper(tmp, name);
         else
           strcpy(tmp, name);
-        if (strcmp(struct_name, tmp) == 0) {
+        if (streq(struct_name, tmp)) {
           struct_found = 1;
           end_typedef = filectx->lines;
         } else
@@ -928,8 +928,8 @@ static int find_struct(t_ctx ctx, char* filename, char* struct_name,
     dcli_sStructElement* e = calloc(1, sizeof(*element_ptr));
     *e_list = e;
 
-    if (strcmp(typename, "pwr_tEnum") == 0
-        || strcmp(typename, "pwr_tMask") == 0) {
+    if (streq(typename, "pwr_tEnum")
+        || streq(typename, "pwr_tMask")) {
       e->type = pwr_eType_UInt32;
       e->size = sizeof(pwr_tUInt32);
       strcpy(e->typestr, typename);

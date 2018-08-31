@@ -34,13 +34,14 @@
  * General Public License plus this exception.
  **/
 
-#include <string.h>
-
 #include <iostream>
 
 #include "pwr_baseclasses.h"
+
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_time.h"
+
 #include "cow_msgwindow.h"
 
 #include "wb_adrep.h"
@@ -578,7 +579,7 @@ mem_object* wb_vrepmem::find(const char* name)
 void wb_vrepmem::unref()
 {
   if (--m_nRef == 0) {
-    if (strcmp(m_filename, "") != 0)
+    if (!streq(m_filename, ""))
       wb_dblock::dbunlock(m_filename);
     delete this;
   }
@@ -1855,7 +1856,7 @@ bool wb_vrepmem::importPasteObject(pwr_tOid destination, ldh_eDest destcode,
       } else {
         pwr_tOix poix = importTranslate(poid.oix);
         pmemo = findObject(poix);
-        if (strcmp(name, "Template") == 0 && pmemo->m_cid == pwr_eClass_ClassDef
+        if (streq(name, "Template") && pmemo->m_cid == pwr_eClass_ClassDef
             && !cdh_ObjidIsNull(boid)) {
         }
       }
@@ -2515,7 +2516,7 @@ bool wb_vrepmem::classeditorCheck(ldh_eDest dest_code, mem_object* dest,
       case pwr_cClass_PlcTemplate:
         break;
       default:
-        if (strcmp(name, "Template") == 0)
+        if (streq(name, "Template"))
           // Allow temporary template of other class
           break;
 
@@ -2684,7 +2685,7 @@ bool wb_vrepmem::classeditorCheck(ldh_eDest dest_code, mem_object* dest,
       }
     } else {
       // Use the name to choose oix
-      if (strcmp(name, "DevBody") == 0)
+      if (streq(name, "DevBody"))
         *oix = cdh_cixToOix(cdh_oixToCix(fth->m_oid.oix), pwr_eBix_dev, 0);
       else
         *oix = cdh_cixToOix(cdh_oixToCix(fth->m_oid.oix), pwr_eBix_rt, 0);

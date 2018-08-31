@@ -44,16 +44,18 @@
 
 #include <stdarg.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include "pwr_baseclasses.h"
 #include "pwr_privilege.h"
+
+#include "co_api_user.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
-#include "co_time.h"
-#include "co_syi.h"
 #include "co_msg.h"
-#include "co_api_user.h"
+#include "co_string.h"
+#include "co_syi.h"
+#include "co_time.h"
+
 #include "rt_gdh_msg.h"
 #include "rt_mh.h"
 #include "rt_rtt_edit.h"
@@ -254,10 +256,10 @@ int rtt_initialize(
 
   qio_assign("stdin", (int*)&rtt_chn);
 
-  if (strcmp(username, "noneth") == 0) {
+  if (streq(username, "noneth")) {
     noneth = 1;
     rtt_priv = RTT_PRV_SYS;
-  } else if (strcmp(username, "qcomonly") == 0) {
+  } else if (streq(username, "qcomonly")) {
     noneth = 1;
     qcom_only = 1;
     rtt_priv = RTT_PRV_SYS;
@@ -446,7 +448,7 @@ static int rtt_rttconfig()
       rtt_symbolfilename, conf_p->SymbolFileName, sizeof(rtt_symbolfilename));
 
   /* Execute the symbolfile */
-  if (strcmp(rtt_symbolfilename, "") != 0) {
+  if (!streq(rtt_symbolfilename, "")) {
     rtt_get_defaultfilename(rtt_symbolfilename, filename, ".rtt_com");
     sts = rtt_commandmode_start(filename, 0);
     if (sts == RTT__NOFILE)
@@ -1878,7 +1880,7 @@ static int rtt_edit_draw_item(menu_ctx ctx, int item)
   menu_ptr += item;
 
   /* if text == "%", the sign for no text written, return */
-  if (strcmp(menu_ptr->text, "%") == 0)
+  if (streq(menu_ptr->text, "%"))
     return RTT__SUCCESS;
 
   x = menu_ptr->value_x - strlen(menu_ptr->text) - 1;
@@ -2237,7 +2239,7 @@ static int rtt_get_next_item_down_e(menu_ctx ctx)
       ctx->current_item = ctx->current_page * ctx->page_len;
     menu_ptr = (rtt_t_menu_upd*)ctx->menu;
     menu_ptr += ctx->current_item;
-    if (strcmp(menu_ptr->text, "%") != 0)
+    if (!streq(menu_ptr->text, "%"))
       break;
   }
   return RTT__SUCCESS;
@@ -2269,7 +2271,7 @@ static int rtt_get_next_item_up_e(menu_ctx ctx)
       ctx->current_item = ctx->no_items - 1;
     menu_ptr = (rtt_t_menu_upd*)ctx->menu;
     menu_ptr += ctx->current_item;
-    if (strcmp(menu_ptr->text, "%") != 0)
+    if (!streq(menu_ptr->text, "%"))
       break;
   }
   return RTT__SUCCESS;
@@ -2308,7 +2310,7 @@ static int rtt_get_next_item_right_e(menu_ctx ctx)
   i = 0;
   while (menu_ptr->text[0] != '\0') {
     closer = 0;
-    if (strcmp(menu_ptr->text, "%") != 0) {
+    if (!streq(menu_ptr->text, "%")) {
       if (menu_ptr->value_y == current_y) {
         if (found_y == current_y) {
           if (menu_ptr->value_x > current_x && menu_ptr->value_x < found_x)
@@ -2380,7 +2382,7 @@ static int rtt_get_next_item_left_e(menu_ctx ctx)
   i = 0;
   while (menu_ptr->text[0] != '\0') {
     closer = 0;
-    if (strcmp(menu_ptr->text, "%") != 0) {
+    if (!streq(menu_ptr->text, "%")) {
       if (menu_ptr->value_y == current_y) {
         if (found_y == current_y) {
           if (found_x < current_x) {
@@ -4499,7 +4501,7 @@ static int rtt_print_value(char* value_ptr, int value_type, int flags, int size,
 
   if (value_ptr == 0) {
     /* This was probalby a null pointer in rtdb */
-    if (init || (strcmp(old_value, "UNDEF PTR") != 0)) {
+    if (init || (!streq(old_value, "UNDEF PTR"))) {
       rtt_cursor_abs(x, y);
       rtt_eofline_erase();
       r_print("UNDEFINED");
@@ -4514,7 +4516,7 @@ static int rtt_print_value(char* value_ptr, int value_type, int flags, int size,
     /* Check that it is a rtdb pointer */
     if (value_ptr == 0) {
       /* This is not a rtdb pointer */
-      if (init || (strcmp(old_value, "UNDEF PTR") != 0)) {
+      if (init || (!streq(old_value, "UNDEF PTR"))) {
         rtt_cursor_abs(x, y);
         rtt_eofline_erase();
         r_print("UNDEFINED POINTER");
@@ -4867,7 +4869,7 @@ static int rtt_edit_print_value(rtt_t_menu_upd* menu_ptr, unsigned long init)
 
   if (menu_ptr->value_ptr == 0) {
     /* This was probalby a null pointer in rtdb */
-    if (init || (strcmp(menu_ptr->old_value, "UNDEF PTR") != 0)) {
+    if (init || (!streq(menu_ptr->old_value, "UNDEF PTR"))) {
       rtt_cursor_abs(menu_ptr->value_x, menu_ptr->value_y);
       rtt_eofline_erase();
       r_print("UNDEFINED");
@@ -4889,7 +4891,7 @@ static int rtt_edit_print_value(rtt_t_menu_upd* menu_ptr, unsigned long init)
     /* Check that it is a rtdb pointer */
     if (menu_ptr->value_ptr == 0) {
       /* This is not a rtdb pointer */
-      if (init || (strcmp(menu_ptr->old_value, "UNDEF PTR") != 0)) {
+      if (init || (!streq(menu_ptr->old_value, "UNDEF PTR"))) {
         rtt_cursor_abs(menu_ptr->value_x, menu_ptr->value_y);
         rtt_eofline_erase();
         r_print("UNDEFINED POINTER");
@@ -6269,8 +6271,8 @@ int rtt_hierarchy(menu_ctx parent_ctx, pwr_tObjid argoi, void* arg1, void* arg2,
     if (ODD(sts))
       strcat(objname, " *");
     /* NYDATABAS
-              else if ( (strcmp( hiername, "pwrs:Class-$NodeHier") == 0) ||
-                          (strcmp( hiername, "pwrs:Class-$PlantHier") == 0))
+              else if ( (streq( hiername, "pwrs:Class-$NodeHier")) ||
+                          (streq( hiername, "pwrs:Class-$PlantHier")))
               {
                 sts = gdh_GetNextSibling ( objid, &objid);
                 continue;
@@ -6350,8 +6352,8 @@ int rtt_class_hierarchy(menu_ctx parent_ctx, pwr_tObjid argoi, void* arg1,
       if (EVEN(sts))
         return sts;
 
-      if ((strcmp(hiername, "pwrs:Class-$ClassHier") == 0)
-          || (strcmp(hiername, "pwrs_Class-$TypeHier") == 0)) {
+      if ((streq(hiername, "pwrs:Class-$ClassHier"))
+          || (streq(hiername, "pwrs_Class-$TypeHier"))) {
         /* Skip hierarchy of classname */
         for (j = strlen(objname); j < 15; j++)
           strcat(objname, " ");
@@ -6441,10 +6443,10 @@ int rtt_debug_child(menu_ctx parent_ctx, pwr_tObjid parent_objid, void* arg1,
     if (EVEN(sts))
       return sts;
 
-    if ((strcmp(classname, "pwrb:Class-WindowPlc") == 0)
-        || (strcmp(classname, "pwrb:Class-WindowOrderact") == 0)
-        || (strcmp(classname, "pwrb:Class-WindowCond") == 0)
-        || (strcmp(classname, "pwrb:Class-WindowSubstep") == 0)) {
+    if ((streq(classname, "pwrb:Class-WindowPlc"))
+        || (streq(classname, "pwrb:Class-WindowOrderact"))
+        || (streq(classname, "pwrb:Class-WindowCond"))
+        || (streq(classname, "pwrb:Class-WindowSubstep"))) {
       childs++;
       window_objid = objid;
     }
@@ -7303,7 +7305,7 @@ static int rtt_logon(
   if (EVEN(sts))
     return sts;
 
-  if (strcmp(username, "") != 0 && strcmp(password, "") != 0) {
+  if (!streq(username, "") && !streq(password, "")) {
     sts = user_CheckUser(
         systemgroup, username, user_PwCrypt(password), &privilege);
     if (ODD(sts) && privilege | pwr_mAccess_AllRt) {
@@ -7608,7 +7610,7 @@ int rtt_menu_new_upedit(menu_ctx parent_ctx, pwr_tObjid argoi,
   menu_ptr = *menu_p;
   while (menu_ptr->text[0] != 0) {
     x = menu_ptr->x;
-    if (strcmp(menu_ptr->text, "%") == 0)
+    if (streq(menu_ptr->text, "%"))
       x -= 2;
     sts = rtt_menu_new_update_add(parent_ctx, &menulist, menu_ptr->text,
         menu_ptr->func1, menu_ptr->func2, menu_ptr->parameter_name,
@@ -7699,7 +7701,7 @@ int rtt_menu_new_upeditperm(menu_ctx parent_ctx, pwr_tObjid argoi,
     menu_ptr = *menu_p;
     while (menu_ptr->text[0] != 0) {
       x = menu_ptr->x;
-      if (strcmp(menu_ptr->text, "%") == 0)
+      if (streq(menu_ptr->text, "%"))
         x -= 2;
       sts = rtt_menu_new_update_add(parent_ctx, &menulist, menu_ptr->text,
           menu_ptr->func1, menu_ptr->func2, menu_ptr->parameter_name,
@@ -7781,7 +7783,7 @@ int rtt_menu_new_sysedit(menu_ctx parent_ctx, pwr_tObjid argoi,
   menu_ptr = menu_p;
   while (menu_ptr->text[0] != 0) {
     x = menu_ptr->x;
-    if (strcmp(menu_ptr->text, "%") == 0)
+    if (streq(menu_ptr->text, "%"))
       x -= 2;
     sts = rtt_menu_new_update_add(parent_ctx, &menulist, menu_ptr->text,
         menu_ptr->func1, menu_ptr->func2, menu_ptr->parameter_name,
@@ -8465,32 +8467,32 @@ static int rtt_RefObjectInfo(char* parameter_name, char** parameter_ptr)
 {
   rtt_t_db* db_ptr;
 
-  if (strcmp(parameter_name, "RTT_TIME") == 0) {
+  if (streq(parameter_name, "RTT_TIME")) {
     *parameter_ptr = &(rtt_time[12]);
     return RTT__SUCCESS;
-  } else if (strcmp(parameter_name, "RTT_TIME_FULL") == 0) {
+  } else if (streq(parameter_name, "RTT_TIME_FULL")) {
     *parameter_ptr = rtt_time;
     return RTT__SUCCESS;
-  } else if (strcmp(parameter_name, "RTT_ALARMTEXT1") == 0) {
+  } else if (streq(parameter_name, "RTT_ALARMTEXT1")) {
     *parameter_ptr = rtt_AlarmText1;
     return RTT__SUCCESS;
-  } else if (strcmp(parameter_name, "RTT_ALARMTEXT2") == 0) {
+  } else if (streq(parameter_name, "RTT_ALARMTEXT2")) {
     *parameter_ptr = rtt_AlarmText2;
     return RTT__SUCCESS;
-  } else if (strcmp(parameter_name, "RTT_ALARMTEXT3") == 0) {
+  } else if (streq(parameter_name, "RTT_ALARMTEXT3")) {
     *parameter_ptr = rtt_AlarmText3;
     return RTT__SUCCESS;
-  } else if (strcmp(parameter_name, "RTT_ALARMTEXT4") == 0) {
+  } else if (streq(parameter_name, "RTT_ALARMTEXT4")) {
     *parameter_ptr = rtt_AlarmText4;
     return RTT__SUCCESS;
-  } else if (strcmp(parameter_name, "RTT_ALARMTEXT5") == 0) {
+  } else if (streq(parameter_name, "RTT_ALARMTEXT5")) {
     *parameter_ptr = rtt_AlarmText5;
     return RTT__SUCCESS;
   }
 
   db_ptr = &rtt_appl_db[0];
   while (db_ptr->parameter[0] != 0) {
-    if (strcmp(parameter_name, db_ptr->parameter) == 0) {
+    if (streq(parameter_name, db_ptr->parameter)) {
       *parameter_ptr = db_ptr->parameter_ptr;
       return RTT__SUCCESS;
     }
@@ -8517,7 +8519,7 @@ static int rtt_RttsysRefObjectInfo(char* parameter_name, char** parameter_ptr)
 
   db_ptr = &rtt_rttsys_db[0];
   while (db_ptr->parameter[0] != 0) {
-    if (strcmp(parameter_name, db_ptr->parameter) == 0) {
+    if (streq(parameter_name, db_ptr->parameter)) {
       *parameter_ptr = db_ptr->parameter_ptr;
       return RTT__SUCCESS;
     }
@@ -8717,7 +8719,7 @@ int rtt_get_defaultfilename(char* inname, char* outname, char* ext)
   if (strchr(inname, '/'))
     strcpy(outname, inname);
   else {
-    if (strcmp(rtt_default_directory, "") != 0) {
+    if (!streq(rtt_default_directory, "")) {
       strcpy(filename, rtt_default_directory);
       if ((filename[strlen(filename) - 1] != '/') && (inname[0] != '/'))
         strcat(filename, "/");

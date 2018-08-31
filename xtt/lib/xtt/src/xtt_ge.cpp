@@ -35,6 +35,7 @@
  */
 
 #include "co_cdh.h"
+#include "co_string.h"
 
 #include "rt_gdh_msg.h"
 
@@ -178,7 +179,7 @@ void XttGe::message_cb(void* ctx, char severity, const char* msg)
 
 void XttGe::message(char severity, const char* msg)
 {
-  if (strcmp(msg, "") != 0)
+  if (!streq(msg, ""))
     printf("** XttGe: %s\n", msg);
 }
 

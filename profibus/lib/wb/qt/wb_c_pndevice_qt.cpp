@@ -37,6 +37,7 @@
 /* wb_c_pb_dp_slave_qt.c -- work bench methods of the Pb_DP_Slave class. */
 
 #include "co_dcli.h"
+#include "co_string.h"
 
 #include "cow_xhelp_qt.h"
 
@@ -130,7 +131,7 @@ static pwr_tStatus CopyDevice(ldh_sMenuCall* ip)
   if (EVEN(sts)) {
     return sts;
   }
-  if (strcmp(gsdml, "") == 0) {
+  if (streq(gsdml, "")) {
     free(gsdml);
     return 0;
   }
@@ -182,7 +183,7 @@ static pwr_tStatus CopyDeviceFilter(ldh_sMenuCall* ip)
   if (EVEN(sts)) {
     return sts;
   }
-  if (strcmp(gsdml, "") == 0) {
+  if (streq(gsdml, "")) {
     free(gsdml);
     return 0;
   }

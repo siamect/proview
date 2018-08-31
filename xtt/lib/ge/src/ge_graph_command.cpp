@@ -37,13 +37,13 @@
 /* ge_graph_command.cpp
    This module contains routines for handling of command line in ge. */
 
-#include <string.h>
 #include <stdlib.h>
 
 #include "co_ccm.h"
 #include "co_ccm_msg.h"
 #include "co_dcli.h"
 #include "co_dcli_msg.h"
+#include "co_string.h"
 
 #include "ge.h"
 #include "ge_dyn.h"
@@ -201,7 +201,7 @@ static int graph_build_func(void* client_data, void* client_flag)
   pwr_tCmd cmd;
 
   graph->get_name(name);
-  if (strcmp(name, "") == 0 || graph->is_modified()) {
+  if (streq(name, "") || graph->is_modified()) {
     graph->message('E', "Build error, graph is not saved");
     return GE__NOTSAVED;
   }
@@ -407,7 +407,7 @@ static int graph_exit_func(void* client_data, void* client_flag)
   char name[40];
 
   graph->get_name(name);
-  if (strcmp(name, "") == 0) {
+  if (streq(name, "")) {
     graph->message('E', "Graph has no name, 'save as' or 'quit'");
     return GE__NONAME;
   }
@@ -1621,7 +1621,7 @@ static int graph_export_func(void* client_data, void* client_flag)
     if (!graph->get_java_name(name)) {
       // Set default name
       graph->get_name(graph_name);
-      if (strcmp(graph_name, "") != 0) {
+      if (!streq(graph_name, "")) {
         if (strncmp(graph_name, "pwr_c_", 6) == 0) {
           strcpy(name, "Jopc");
           strcat(name, &graph_name[6]);
@@ -3732,7 +3732,7 @@ static int graph_reload_func(void* filectx, ccm_sArg* arg_list, int arg_count,
   graph_get_stored_graph(&graph);
 
   grow_GetName(graph->grow->ctx, name);
-  if (strcmp(name, "") != 0) {
+  if (!streq(name, "")) {
     grow_New(graph->grow->ctx);
     graph->open(name);
   }

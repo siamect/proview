@@ -34,9 +34,8 @@
  * General Public License plus this exception.
  **/
 
-#include <string.h>
-
 #include "co_dcli.h"
+#include "co_string.h"
 
 #include "cow_logw_gtk.h"
 
@@ -185,7 +184,7 @@ void GeItemViewGtk::update(char* full_name, int event)
   } else if (event == G_FILE_MONITOR_EVENT_DELETED) {
     while (rv) {
       gtk_tree_model_get(store, &iter, 0, &value, -1);
-      if (strcmp(name_p, value) == 0) {
+      if (streq(name_p, value)) {
         gtk_list_store_remove(GTK_LIST_STORE(store), &iter);
         break;
       }
@@ -318,7 +317,7 @@ void* graph_list_files()
     }
     dcli_parse_filename(found_file, dev, dir, file, type, &version);
     strcpy(file_p[file_cnt - 1], file);
-    if (strcmp(file, "") == 0)
+    if (streq(file, ""))
       file_cnt--;
     sts = dcli_search_file(fname, found_file, DCLI_DIR_SEARCH_NEXT);
   }
@@ -346,7 +345,7 @@ gpointer graph_list_store(char* texts)
   name_p = texts;
   store = gtk_list_store_new(1, G_TYPE_STRING);
 
-  while (strcmp(name_p, "") != 0) {
+  while (!streq(name_p, "")) {
     nameutf8 = g_convert(name_p, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
 
     gtk_list_store_append(store, &iter);
@@ -400,7 +399,7 @@ void GeItemViewGtk::activate_tree_widget(GtkTreeView* tree_widget,
     if (ge->graph->is_modified()) {
       char name[80];
       ge->graph->get_name(name);
-      if (strcmp(name, "") == 0) {
+      if (streq(name, "")) {
         ge->wow->DisplayError("Not saved", "Save current graph first");
         return;
       }

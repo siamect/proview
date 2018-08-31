@@ -37,11 +37,11 @@
 /* wb.cpp -- graphical editor */
 
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
 
 #include "co_dcli.h"
+#include "co_string.h"
 
 int main(int argc, char* argv[])
 {
@@ -52,7 +52,7 @@ int main(int argc, char* argv[])
 
   if (argc > 1) {
     for (i = 1; i < argc; i++) {
-      if (strcmp(argv[i], "-f") == 0) {
+      if (streq(argv[i], "-f")) {
         if (i + 1 >= argc) {
           printf("sev_xtt: Syntax error\n");
           exit(0);

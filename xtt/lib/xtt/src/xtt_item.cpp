@@ -36,15 +36,18 @@
 
 #include <stdlib.h>
 
-#include "rt_gdh_msg.h"
 #include "co_cdh.h"
-#include "xtt_ssaboxclasses.h"
 #include "co_dcli.h"
+#include "co_error.h"
+#include "co_nav_msg.h"
+#include "co_string.h"
+
+#include "rt_gdh_msg.h"
+
+#include "xtt_ssaboxclasses.h"
 #include "xtt_xnav_crr.h"
 #include "xtt_item.h"
-#include "co_nav_msg.h"
 #include "xtt_url.h"
-#include "co_error.h"
 
 //
 // Definition of item classes
@@ -1396,7 +1399,7 @@ int ItemHelp::open_children(XNavBrow* brow, double x, double y)
 
   if (index) {
     sts = xnav->help_index(file_type, file_name, 1);
-  } else if (strcmp(link, "") != 0) {
+  } else if (!streq(link, "")) {
     if (strncmp(link, "$web:", 5) == 0) {
       // Open the url
       xnav_open_URL(&link[5]);
@@ -1451,7 +1454,7 @@ int ItemHelpBold::open_children(XNavBrow* brow, double x, double y)
 
   if (index) {
     sts = xnav->help_index(file_type, file_name, 1);
-  } else if (strcmp(link, "") != 0) {
+  } else if (!streq(link, "")) {
     if (strncmp(link, "$web:", 5) == 0) {
       // Open the url
       xnav_open_URL(&link[5]);
@@ -1584,7 +1587,7 @@ void ItemCollect::set_signal_flags(XNavBrow* brow)
   strcat(obj_name, attr);
 
   char* s = strrchr(obj_name, '.');
-  if (s && strcmp(s + 1, "ActualValue") == 0) {
+  if (s && streq(s + 1, "ActualValue")) {
     pwr_tAttrRef aref;
     pwr_tCid cid;
 
@@ -2151,12 +2154,12 @@ int ItemRemTrans::open_children(XNavBrow* brow, double x, double y)
   strcat(namebuf, ".StructName");
   sts = gdh_GetObjectInfo(
       namebuf, (pwr_tAddress*)structname, sizeof(structname));
-  if (ODD(sts) && (strcmp(structname, "") != 0)) {
+  if (ODD(sts) && (!streq(structname, ""))) {
     strcpy(namebuf, remtrans_name);
     strcat(namebuf, ".StructFile");
     sts = gdh_GetObjectInfo(
         namebuf, (pwr_tAddress*)structfile, sizeof(structfile));
-    if (ODD(sts) && (strcmp(structfile, "") != 0)) {
+    if (ODD(sts) && (!streq(structfile, ""))) {
       sts = gdh_GetChild(objid, &child);
       if (ODD(sts)) {
         sts = xnav->show_object_as_struct(child, structname, structfile);

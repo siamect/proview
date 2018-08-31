@@ -39,9 +39,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include "co_math.h"
+#include "co_string.h"
 
 #include "wb_foe_dataarithm.h"
 #include "wb_foe_msg.h"
@@ -215,10 +215,10 @@ static pwr_tStatus dataa_Da1(
     return GSX__SUCCESS;
   }
   if (!strncmp(pos, "->", 2) || !strncmp(pos, " ->", 3)) {
-    if (strcmp(dataactx->classdef_Da1, "") != 0)
+    if (!streq(dataactx->classdef_Da1, ""))
       sprintf(out, "((pwr_sClass_%s *)(*(%s->DataIn1P)))",
           dataactx->classdef_Da1, var);
-    else if (strcmp(dataactx->structdef_Da1, "") != 0)
+    else if (!streq(dataactx->structdef_Da1, ""))
       sprintf(out, "((%s *)(*(%s->DataIn1P)))", dataactx->structdef_Da1, var);
     else
       return GSX__DATAASYNTAX;
@@ -264,10 +264,10 @@ static pwr_tStatus dataa_Da2(
     return GSX__SUCCESS;
   }
   if (!strncmp(pos, "->", 2) || !strncmp(pos, " ->", 3)) {
-    if (strcmp(dataactx->classdef_Da2, "") != 0)
+    if (!streq(dataactx->classdef_Da2, ""))
       sprintf(out, "((pwr_sClass_%s *)(*(%s->DataIn2P)))",
           dataactx->classdef_Da2, var);
-    else if (strcmp(dataactx->structdef_Da2, "") != 0)
+    else if (!streq(dataactx->structdef_Da2, ""))
       sprintf(out, "((%s *)(*(%s->DataIn2P)))", dataactx->structdef_Da2, var);
     else
       return GSX__DATAASYNTAX;
@@ -313,10 +313,10 @@ static pwr_tStatus dataa_Da3(
     return GSX__SUCCESS;
   }
   if (!strncmp(pos, "->", 2) || !strncmp(pos, " ->", 3)) {
-    if (strcmp(dataactx->classdef_Da3, "") != 0)
+    if (!streq(dataactx->classdef_Da3, ""))
       sprintf(out, "((pwr_sClass_%s *)(*(%s->DataIn3P)))",
           dataactx->classdef_Da3, var);
-    else if (strcmp(dataactx->structdef_Da3, "") != 0)
+    else if (!streq(dataactx->structdef_Da3, ""))
       sprintf(out, "((%s *)(*(%s->DataIn3P)))", dataactx->structdef_Da3, var);
     else
       return GSX__DATAASYNTAX;
@@ -362,10 +362,10 @@ static pwr_tStatus dataa_Da4(
     return GSX__SUCCESS;
   }
   if (!strncmp(pos, "->", 2) || !strncmp(pos, " ->", 3)) {
-    if (strcmp(dataactx->classdef_Da4, "") != 0)
+    if (!streq(dataactx->classdef_Da4, ""))
       sprintf(out, "((pwr_sClass_%s *)(*(%s->DataIn4P)))",
           dataactx->classdef_Da4, var);
-    else if (strcmp(dataactx->structdef_Da4, "") != 0)
+    else if (!streq(dataactx->structdef_Da4, ""))
       sprintf(out, "((%s *)(*(%s->DataIn4P)))", dataactx->structdef_Da4, var);
     else
       return GSX__DATAASYNTAX;

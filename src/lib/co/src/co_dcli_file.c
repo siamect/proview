@@ -36,7 +36,6 @@
 
 /* co_dcli_file.c -- File handling in dcli */
 
-#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/stat.h>
@@ -44,6 +43,7 @@
 #include "co_cdh.h"
 #include "co_dcli_msg.h"
 #include "co_dcli.h"
+#include "co_string.h"
 
 typedef enum {
   dcli_eTrans_EnvVar,
@@ -75,7 +75,7 @@ int dcli_get_defaultfilename(const char* inname, char* outname, const char* ext)
     strcat(filename, s + 1);
     dcli_replace_env(filename, outname);
   } else {
-    if (strcmp(dcli_default_directory, "") == 0) {
+    if (streq(dcli_default_directory, "")) {
       char cwd[200];
 
       if (getcwd(cwd, sizeof(cwd)) != NULL) {
@@ -171,7 +171,7 @@ int dcli_replace_env(const char* str, char* newstr)
       size = (long int)s - (long int)u;
       strncpy(symbol, u, size);
       symbol[size] = 0;
-      if (strcmp(symbol, "HOME") == 0)
+      if (streq(symbol, "HOME"))
         strcpy(lower_symbol, symbol);
       else
         cdh_ToLower(lower_symbol, symbol);
@@ -203,7 +203,7 @@ int dcli_replace_env(const char* str, char* newstr)
     size = (long int)s - (long int)u;
     strncpy(symbol, u, size);
     symbol[size] = 0;
-    if (strcmp(symbol, "HOME") == 0)
+    if (streq(symbol, "HOME"))
       strcpy(lower_symbol, symbol);
     else
       cdh_ToLower(lower_symbol, symbol);

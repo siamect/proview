@@ -40,13 +40,16 @@
 #include <netdb.h>
 #include <sched.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
 
 #include "pwr_names.h"
-#include "co_tree.h"
+
 #include "co_dcli.h"
+#include "co_string.h"
+#include "co_timelog.h"
+#include "co_tree.h"
+
 #include "rt_qdb.h"
 #include "rt_net.h"
 #include "rt_qmon.h"
@@ -60,7 +63,6 @@
 #include "rt_redu.h"
 #include "rt_aproc.h"
 #include "rt_redu_msg.h"
-#include "co_timelog.h"
 
 #define RTT_RXMIN 0.0500 /* seconds */
 #define RTT_RXMAX 10.000 /* seconds */
@@ -516,7 +518,7 @@ static pwr_tStatus redu_node_init()
       errors++;
     }
 
-    if (strcmp(name, qdb->my_node->link[0].name) == 0) {
+    if (streq(name, qdb->my_node->link[0].name)) {
       local_found = 1;
       l.port = atoi(s_port);
       if (l.port == 0)

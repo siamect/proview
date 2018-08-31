@@ -38,9 +38,9 @@
    This module contains all routines to handle direct linking
    for the PLC-program.  */
 
-#include <string.h>
-
 #include "co_cdh.h"
+#include "co_string.h"
+
 #include "rt_gdh_msg.h"
 #include "rt_hash_msg.h"
 #include "rt_ini_msg.h"
@@ -68,7 +68,7 @@ static pwr_tStatus plc_RefObjidAttr(pwr_tBoolean local_object,
   pwr_tSubid subid;
   pwr_sAttrRef car;
 
-  if (strcmp(aname, "") != 0) {
+  if (!streq(aname, "")) {
     sts = gdh_ClassAttrToAttrref(class, aname, &car);
     if (EVEN(sts))
       return sts;

@@ -34,12 +34,12 @@
  * General Public License plus this exception.
  **/
 
-#include <string.h>
-
 #include <fstream>
 #include <iostream>
 
 #include "co_dcli.h"
+#include "co_string.h"
+
 #include "wb_wblnode.h"
 
 #define WS " 	"
@@ -339,10 +339,10 @@ void wb_wbl_parser::print_line()
 
 int wb_wbl_parser::check_operator(wbl_ast_node* n)
 {
-  if (strcmp(n->text, "=") == 0) {
+  if (streq(n->text, "=")) {
     n->token = wbl_eToken_Operator_eq;
     return 1;
-  } else if (strcmp(n->text, "|=") == 0) {
+  } else if (streq(n->text, "|=")) {
     n->token = wbl_eToken_Operator_oreq;
     return 1;
   }
@@ -374,7 +374,7 @@ void wb_wbl_parser::parse(const char* filename)
 
     dcli_trim(line, line);
 
-    if (strcmp(line, "") == 0)
+    if (streq(line, ""))
       continue;
 
     if (strncmp(line, "!/**", 4) == 0) {

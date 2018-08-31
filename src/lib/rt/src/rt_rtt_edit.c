@@ -42,9 +42,10 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include "co_math.h"
+#include "co_string.h"
+
 #include "rt_rtt_dir.h"
 #include "rt_rtt_global.h"
 #include "rt_rtt_edit.h"
@@ -2872,7 +2873,7 @@ static int modify_func(edit_ctx ctx, int flag)
   } else {
     /* This it a menu */
     m_ctx = (menu_ctx)ctx;
-    if (strcmp(m_ctx->title, MENU_ATTRIBUTES_TITLE) == 0) {
+    if (streq(m_ctx->title, MENU_ATTRIBUTES_TITLE)) {
       /* This is a menu attributes menu */
       menu_ptr = m_ctx->menu;
       menu_ptr += m_ctx->current_item;
@@ -3440,12 +3441,12 @@ static int dtt_edit_draw_itemlist(edit_ctx ctx)
       rtt_cursor_abs(item_ptr->x + 1, item_ptr->y + 1);
       switch (ctx->display_mode) {
       case DTT_DISPLAY_MODE_FORMAT:
-        if (item_ptr->text[0] != 0 && strcmp(item_ptr->text, "%") != 0)
+        if (item_ptr->text[0] != 0 && !streq(item_ptr->text, "%"))
           r_print("%s", &(item_ptr->text));
         if (cdh_NoCaseStrcmp(item_ptr->outflags, "NO") != 0
-            && strcmp(item_ptr->text, "%") != 0)
+            && !streq(item_ptr->text, "%"))
           r_print(" ");
-        if (strcmp(item_ptr->text, "%") == 0 && item_ptr->characters == 0)
+        if (streq(item_ptr->text, "%") && item_ptr->characters == 0)
           r_print("<");
         if (item_ptr->characters > 0)
           r_print("<");
@@ -6211,18 +6212,18 @@ int dtt_start(char* programname)
 
 /* Figure out the current opsys */
 #if defined(OS_LYNX)
-  if (strcmp(rtt_hw, "x86") == 0)
+  if (streq(rtt_hw, "x86"))
     dtt_current_opsys = pwr_mOpSys_X86_LYNX;
   else
     dtt_current_opsys = pwr_mOpSys_PPC_LYNX;
 #elif defined(OS_LINUX)
-  if (strcmp(rtt_hw, "x86") == 0)
+  if (streq(rtt_hw, "x86"))
     dtt_current_opsys = pwr_mOpSys_X86_LINUX;
-  else if (strcmp(rtt_hw, "x86_64") == 0)
+  else if (streq(rtt_hw, "x86_64"))
     dtt_current_opsys = pwr_mOpSys_X86_64_LINUX;
-  else if (strcmp(rtt_hw, "arm") == 0)
+  else if (streq(rtt_hw, "arm"))
     dtt_current_opsys = pwr_mOpSys_ARM_LINUX;
-  else if (strcmp(rtt_hw, "arm64") == 0)
+  else if (streq(rtt_hw, "arm64"))
     dtt_current_opsys = pwr_mOpSys_ARM64_LINUX;
   else
     dtt_current_opsys = pwr_mOpSys_PPC_LINUX;
@@ -6233,7 +6234,7 @@ int dtt_start(char* programname)
 #elif defined OS_OPENBSD
   dtt_current_opsys = pwr_mOpSys_X86_64_OPENBSD;
 #elif defined OS_CYGWIN
-  if (strcmp(rtt_hw, "x86_64") == 0)
+  if (streq(rtt_hw, "x86_64"))
     dtt_current_opsys = pwr_mOpSys_X86_64_CYGWIN;
   else
     dtt_current_opsys = pwr_mOpSys_X86_CYGWIN;
@@ -8554,14 +8555,14 @@ static int dtt_edit_check_items_syntax(
             item_ptr, "Number out of range", 1, &errors, &warnings);
 
       /* Check text */
-      if (strcmp(item_ptr->text, "") == 0)
+      if (streq(item_ptr->text, ""))
         dtt_edit_print_syntaxerror(
             item_ptr, "Text i missing", 1, &errors, &warnings);
-      if (strcmp(item_ptr->text, "%") == 0)
+      if (streq(item_ptr->text, "%"))
         strcpy(item_ptr->priv, "NO");
 
       /* Check Parameter */
-      if (strcmp(item_ptr->parameter, "") == 0
+      if (streq(item_ptr->parameter, "")
           && cdh_NoCaseStrcmp(item_ptr->type, "COMMAND") != 0)
         dtt_edit_print_syntaxerror(
             item_ptr, "Parameter i missing", 1, &errors, &warnings);
@@ -8571,7 +8572,7 @@ static int dtt_edit_check_items_syntax(
           || cdh_NoCaseStrcmp(item_ptr->parameter, "RTT_ALARMTEXT3") == 0
           || cdh_NoCaseStrcmp(item_ptr->parameter, "RTT_ALARMTEXT4") == 0
           || cdh_NoCaseStrcmp(item_ptr->parameter, "RTT_ALARMTEXT5") == 0) {
-        if (strcmp(item_ptr->text, "%") != 0)
+        if (!streq(item_ptr->text, "%"))
           dtt_edit_print_syntaxerror(item_ptr,
               "Text should be % in alarmtext entry", 1, &errors, &warnings);
         strcpy(item_ptr->priv, "NO");
@@ -8581,7 +8582,7 @@ static int dtt_edit_check_items_syntax(
         strcpy(item_ptr->declaration, "STRING");
       }
       if (cdh_NoCaseStrcmp(item_ptr->parameter, "RTT_TIME") == 0) {
-        if (strcmp(item_ptr->text, "%") != 0)
+        if (!streq(item_ptr->text, "%"))
           dtt_edit_print_syntaxerror(item_ptr, "Text should be % in time entry",
               1, &errors, &warnings);
         strcpy(item_ptr->priv, "NO");
@@ -8592,7 +8593,7 @@ static int dtt_edit_check_items_syntax(
         strcpy(item_ptr->outflags, "");
       }
       if (cdh_NoCaseStrcmp(item_ptr->parameter, "RTT_TIME_FULL") == 0) {
-        if (strcmp(item_ptr->text, "%") != 0)
+        if (!streq(item_ptr->text, "%"))
           dtt_edit_print_syntaxerror(item_ptr, "Text should be % in time entry",
               1, &errors, &warnings);
         strcpy(item_ptr->priv, "NO");
@@ -8605,12 +8606,12 @@ static int dtt_edit_check_items_syntax(
 
       /* Check Parameter */
       if (cdh_NoCaseStrcmp(item_ptr->outflags, "TEXT") == 0
-          && strcmp(item_ptr->dualparameter, "") == 0)
+          && streq(item_ptr->dualparameter, ""))
         dtt_edit_print_syntaxerror(
             item_ptr, "Dualparameter i missing", 1, &errors, &warnings);
 
       if (cdh_NoCaseStrcmp(item_ptr->outflags, "FLASHTEXT") == 0
-          && strcmp(item_ptr->dualparameter, "") == 0)
+          && streq(item_ptr->dualparameter, ""))
         dtt_edit_print_syntaxerror(
             item_ptr, "Dualparameter i missing", 1, &errors, &warnings);
 
@@ -8623,7 +8624,7 @@ static int dtt_edit_check_items_syntax(
         }
         if (cdh_NoCaseStrcmp(item_ptr->outflags, "NO") == 0)
           size = strlen(item_ptr->text);
-        else if (strcmp(item_ptr->text, "%") == 0)
+        else if (streq(item_ptr->text, "%"))
           size = item_ptr->characters;
         else
           size = item_ptr->characters + strlen(item_ptr->text) + 1;

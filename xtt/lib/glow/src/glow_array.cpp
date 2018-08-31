@@ -35,9 +35,10 @@
  **/
 
 #include <stdlib.h>
-#include <string.h>
 
 #include <iostream>
+
+#include "co_string.h"
 
 #include "glow_growrectrounded.h"
 #include "glow_growline.h"
@@ -1791,11 +1792,11 @@ char* GlowArray::get_last_group()
 
   for (i = 0; i < a_size; i++) {
     name = a[i]->get_last_group();
-    if (strcmp(name, "") != 0) {
+    if (!streq(name, "")) {
       // Find group and increment member count
       found = 0;
       for (j = 0; j < group_cnt; j++) {
-        if (strcmp(groups[j], name) == 0) {
+        if (streq(groups[j], name)) {
           member_cnt[j]++;
           found = 1;
           break;

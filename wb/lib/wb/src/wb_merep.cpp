@@ -38,8 +38,8 @@
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
+#include "co_string.h"
 #include "co_time.h"
 
 #include "cow_msgwindow.h"
@@ -105,7 +105,7 @@ wb_merep::wb_merep(const char* dirName, wb_erep* erep, wb_vrep* vrep)
           *rindex(dp->d_name, '.') = '\0';
           cdh_ToLower(dp->d_name, dp->d_name);
           dbs_Close(&sts, ep);
-          if (strcmp(dp->d_name, vname) == 0) {
+          if (streq(dp->d_name, vname)) {
             try {
               wb_vrepdbs* vrep = new wb_vrepdbs(
                   erep, this, fileName, vp->name, vp->vid, vp->cid);

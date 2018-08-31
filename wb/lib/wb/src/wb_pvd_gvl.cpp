@@ -34,12 +34,12 @@
  * General Public License plus this exception.
  **/
 
-#include <string.h>
-
 #include <iostream>
 
 #include "pwr_baseclasses.h"
+
 #include "co_dcli.h"
+#include "co_string.h"
 
 #include "cow_msgwindow.h"
 #include "cow_wow.h"
@@ -122,7 +122,7 @@ bool wb_pvd_gvl::check_list(pwr_tStatus* sts)
         MsgWindow::message('E', msg, msgw_ePop_No, oid);
         error_cnt++;
       }
-      if (strcmp(body->Project, "") == 0) {
+      if (streq(body->Project, "")) {
         sprintf(
             msg, "Project is missing, in object %s", longname(m_list[i].oix));
         MsgWindow::message('E', msg, msgw_ePop_No, oid);

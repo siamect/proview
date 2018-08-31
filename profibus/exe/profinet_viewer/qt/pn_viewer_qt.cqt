@@ -37,6 +37,8 @@
 /* pn_viewer_qt.cpp -- Profinet viewer */
 #ifdef PWRE_CONF_PNAK
 
+#include "co_string.h"
+
 #include "cow_qt_helpers.h"
 
 #include "rt_pb_msg.h"
@@ -201,7 +203,7 @@ void PnViewerQtWidget::valchanged_cmd_entry()
 
 void PnViewerQt::set_prompt(const char* prompt)
 {
-  if (strcmp(prompt, "") == 0) {
+  if (streq(prompt, "")) {
     cmd_prompt->setVisible(false);
     msg_label->setVisible(true);
   } else {

@@ -38,13 +38,15 @@
    Utitlites to handle loadfiles, bootfiles, volumelists etc */
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "pwr_names.h"
+
 #include "co_cnf.h"
 #include "co_dbs.h"
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_time.h"
+
 #include "rt_load.h"
 
 #include "cow_msgwindow.h"
@@ -738,7 +740,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
         for (i = 0; i < 20; i++) {
           dcli_trim(path, path_ptr[i]);
-          if (strcmp(path, "") != 0)
+          if (!streq(path, ""))
             fprintf(fpath, "%s\n", path);
         }
         fclose(fpath);
@@ -1481,7 +1483,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
               sts = ldh_GetNextSibling(ldhses, volobjid, &volobjid);
             }
             if (secondary_nodename_ptr == 0
-                || strcmp(secondary_nodename_ptr, "") == 0)
+                || streq(secondary_nodename_ptr, ""))
               break;
           }
           if (nodename_ptr != null_nodename)
@@ -1629,7 +1631,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
         if (!a)
           return sts;
 
-        if (strcmp(nc.secondary_nodename, "") != 0)
+        if (!streq(nc.secondary_nodename, ""))
           nc.has_secondary = 1;
         else {
           strcpy(nc.secondary_nodename, "-");
@@ -1849,7 +1851,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
           if (!a)
             return sts;
 
-          if (strcmp(nc.secondary_nodename, "") != 0)
+          if (!streq(nc.secondary_nodename, ""))
             nc.has_secondary = 1;
           else {
             strcpy(nc.secondary_nodename, "-");
@@ -1948,9 +1950,9 @@ pwr_tStatus lfu_SaveDirectoryVolume(
           MsgWindow::message('E', msg, msgw_ePop_Default);
           syntax_error = 1;
         }
-        if (strcmp(nodevect[i].address, "0.0.0.0") != 0
-            && strcmp(nodevect[i].address, "127.0.0.1") != 0
-            && strcmp(nodevect[i].address, nodevect[j].address) == 0) {
+        if (!streq(nodevect[i].address, "0.0.0.0")
+            && !streq(nodevect[i].address, "127.0.0.1")
+            && streq(nodevect[i].address, nodevect[j].address)) {
           char msg[200];
           pwr_tOName oname1, oname2;
           sts = ldh_ObjidToName(ldhses, nodevect[i].oid, ldh_eName_Hierarchy,
@@ -2302,7 +2304,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
             if (EVEN(sts))
               return sts;
 
-            if (strcmp(secondary_nodename_ptr, "") == 0) {
+            if (streq(secondary_nodename_ptr, "")) {
               free(secondary_nodename_ptr);
               secondary_nodename_ptr = null_nodename;
             }
@@ -2416,7 +2418,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
               if (EVEN(sts))
                 return sts;
 
-              if (strcmp(platform_p, "") != 0)
+              if (!streq(platform_p, ""))
                 strncpy(custom_platform, platform_p, sizeof(custom_platform));
               free(platform_p);
 
@@ -2490,7 +2492,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
                                       / sizeof(bop->ArchivePath[0]));
                    i++) {
                 dcli_trim(opt, bop->ArchivePath[i]);
-                if (strcmp(opt, "") != 0)
+                if (!streq(opt, ""))
                   sprintf(&str[strlen(str)], "-L%s ", opt);
               }
 
@@ -2498,7 +2500,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
                                       / sizeof(bop->ObjectModules[0]));
                    i++) {
                 dcli_trim(opt, bop->ObjectModules[i]);
-                if (strcmp(opt, "") != 0)
+                if (!streq(opt, ""))
                   sprintf(&str[strlen(str)], "%s ", opt);
               }
 
@@ -2519,7 +2521,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
                    i < (int)(sizeof(bop->Archives) / sizeof(bop->Archives[0]));
                    i++) {
                 dcli_trim(opt, bop->Archives[i]);
-                if (strcmp(opt, "") != 0) {
+                if (!streq(opt, "")) {
                   if (strncmp(opt, "lib", 3) == 0)
                     strncpy(ar, &opt[3], sizeof(ar));
                   else
@@ -2580,7 +2582,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
               // Powerlink can't be called from plc yet, always use the dummy
               sprintf(&str[strlen(str)], "-lpwr_epl_dummy ");
 
-              if (strcmp(bop->PlcProcess, "") == 0) {
+              if (streq(bop->PlcProcess, "")) {
                 char msg[200];
                 sprintf(msg, "Error in BuildOptions object '%s', PlcProcess is "
                              "missing\n",
@@ -2972,7 +2974,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
     strncpy(dir, dir_ptr, sizeof(dir));
     free(dir_ptr);
-    if (strcmp(dir, "") == 0) {
+    if (streq(dir, "")) {
       MsgWindow::message('E', "Export directory is missing", msgw_ePop_Default);
       continue;
     }
@@ -3062,7 +3064,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
     strncpy(dir, dir_ptr, sizeof(dir));
     free(dir_ptr);
-    if (strcmp(dir, "") == 0) {
+    if (streq(dir, "")) {
       MsgWindow::message('E', "Import directory is missing", msgw_ePop_Default);
       continue;
     }
@@ -3212,7 +3214,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
     strncpy(dir, dir_ptr, sizeof(dir));
     free(dir_ptr);
-    if (strcmp(dir, "") == 0) {
+    if (streq(dir, "")) {
       MsgWindow::message('E', "Build directory is missing", msgw_ePop_Default);
       continue;
     }
@@ -3399,10 +3401,10 @@ pwr_tStatus lfu_SaveDirectoryVolume(
           syntax_error = 1;
         }
 
-        if (!((strcmp(cc, "") != 0 && strcmp(cxx, "") != 0
-                  && strcmp(ar, "") != 0)
-                || (strcmp(cc, "") == 0 && strcmp(cxx, "") == 0
-                       && strcmp(ar, "") == 0))) {
+        if (!((!streq(cc, "") && !streq(cxx, "")
+                  && !streq(ar, ""))
+                || (streq(cc, "") && streq(cxx, "")
+                       && streq(ar, "")))) {
           char msg[200];
           sprintf(msg, "Error in CustomBuild object '%s', all or none of cc, "
                        "cxx and ar has to be supplied\n",
@@ -3450,17 +3452,17 @@ pwr_tStatus lfu_SaveDirectoryVolume(
           strcpy(expdir, "");
         }
 
-        if (strcmp(release, "") != 0)
+        if (!streq(release, ""))
           fprintf(fp, "source $pwra_db/pwra_env.sh set base %s %s\n\n", release,
               expdir);
 
-        if (strcmp(cc, "") != 0) {
+        if (!streq(cc, "")) {
           fprintf(fp, "export pwre_cc=%s\n", cc);
           fprintf(fp, "export pwre_cxx=%s\n", cxx);
           fprintf(fp, "export pwre_ar=%s\n\n", ar);
         }
 
-        if (strcmp(platform, "") != 0) {
+        if (!streq(platform, "")) {
           fprintf(fp, "if [ ! -e $pwrp_root/bld/%s ]; then\n", platform);
           fprintf(fp, "  mkdir $pwrp_root/bld/%s\n", platform);
           fprintf(fp, "fi\n");
@@ -3853,7 +3855,7 @@ pwr_tStatus lfu_GetVolumeCnf(
     case pwr_eClass_SharedVolume:
       *volrep = ldh_eVolRep_Db;
       if (cdh_NoCaseStrcmp(vol_array[0], name) == 0) {
-        if (nr > 4 && strcmp(vol_array[4], "1") == 0) {
+        if (nr > 4 && streq(vol_array[4], "1")) {
           *volrep = ldh_eVolRep_Dbms;
           if (nr > 5)
             strcpy(server, vol_array[5]);
@@ -3866,9 +3868,9 @@ pwr_tStatus lfu_GetVolumeCnf(
     case pwr_eClass_DetachedClassVolume:
       *volrep = ldh_eVolRep_Wbl;
       if (cdh_NoCaseStrcmp(vol_array[0], name) == 0) {
-        if (nr > 4 && strcmp(vol_array[4], "1") == 0)
+        if (nr > 4 && streq(vol_array[4], "1"))
           *volrep = ldh_eVolRep_Db;
-        else if (nr > 4 && strcmp(vol_array[4], "2") == 0) {
+        else if (nr > 4 && streq(vol_array[4], "2")) {
           *volrep = ldh_eVolRep_Dbms;
           if (nr > 5)
             strcpy(server, vol_array[5]);
@@ -3937,7 +3939,7 @@ pwr_tStatus lfu_GetVolumeCnfAll(std::vector<lfu_volume_info>& vect)
     case pwr_eClass_SubVolume:
     case pwr_eClass_SharedVolume:
       vol.volrep = ldh_eVolRep_Db;
-      if (nr > 4 && strcmp(vol_array[4], "1") == 0) {
+      if (nr > 4 && streq(vol_array[4], "1")) {
         vol.volrep = ldh_eVolRep_Dbms;
         if (nr > 5)
           strncpy(vol.server, vol_array[5], sizeof(vol.server));
@@ -3948,9 +3950,9 @@ pwr_tStatus lfu_GetVolumeCnfAll(std::vector<lfu_volume_info>& vect)
     case pwr_eClass_ClassVolume:
     case pwr_eClass_DetachedClassVolume:
       vol.volrep = ldh_eVolRep_Wbl;
-      if (nr > 4 && strcmp(vol_array[4], "1") == 0)
+      if (nr > 4 && streq(vol_array[4], "1"))
         vol.volrep = ldh_eVolRep_Db;
-      else if (nr > 4 && strcmp(vol_array[4], "2") == 0) {
+      else if (nr > 4 && streq(vol_array[4], "2")) {
         vol.volrep = ldh_eVolRep_Dbms;
         if (nr > 5)
           strncpy(vol.server, vol_array[5], sizeof(vol.server));
@@ -4012,7 +4014,7 @@ pwr_tStatus lfu_GetBootList(std::vector<lfu_boot_info>& vect, int* nodes)
 
     bool num_found = false;
     for (unsigned int j = 0; j < vect.size(); j++) {
-      if (strcmp(vect[j].node_name, boot.node_name) == 0) {
+      if (streq(vect[j].node_name, boot.node_name)) {
         boot.number = vect[j].number;
         num_found = true;
       }
@@ -4036,7 +4038,7 @@ pwr_tStatus lfu_ParseDbmsServer(
 {
   char lserver[80];
 
-  if (strcmp(server, "") == 0) {
+  if (streq(server, "")) {
     if (!cnf_get_value("mysqlServer", lserver, sizeof(lserver))) {
       printf("** mysql Server not defined\n");
       return LDH__NOSERVER;
@@ -4081,7 +4083,7 @@ pwr_tStatus lfu_ParseDbmsServer(
     strncpy(lhost, str1[1], sizeof(lhost));
   }
 
-  if (strcmp(host, "localhost") == 0)
+  if (streq(host, "localhost"))
     strcpy(lhost, "");
 
   strcpy(host, lhost);

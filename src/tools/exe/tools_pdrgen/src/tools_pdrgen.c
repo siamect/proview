@@ -52,7 +52,6 @@
 #endif
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "pdr_util.h"
 #include "pdr_parse.h"

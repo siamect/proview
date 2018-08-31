@@ -39,7 +39,10 @@
 #include <stdio.h>
 
 #include "co_cdh.h"
+#include "co_string.h"
+
 #include "rt_gdh.h"
+
 #include "ge_methods.h"
 
 pwr_tString80 GeMethods::op_name[GeMethods::opmeth_size] = { "Graph",
@@ -149,7 +152,7 @@ int GeMethods::get_xm_mask(pwr_tAttrRef* arp, char* name,
   if (mask_configure) {
     xm_mask->OpMethods = 0;
     for (int i = 0; i < opmeth_size; i++) {
-      if (strcmp(op_name[i], "") == 0)
+      if (streq(op_name[i], ""))
         continue;
 
       sprintf(
@@ -162,7 +165,7 @@ int GeMethods::get_xm_mask(pwr_tAttrRef* arp, char* name,
     xm_mask->MntMethods = 0;
 
     for (int i = 0; i < mntmeth_size; i++) {
-      if (strcmp(mnt_name[i], "") == 0)
+      if (streq(mnt_name[i], ""))
         continue;
 
       sprintf(command, "check method/filter=\"%s\"/object=%s", mnt_filter[i],

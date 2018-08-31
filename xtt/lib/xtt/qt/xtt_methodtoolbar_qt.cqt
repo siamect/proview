@@ -39,6 +39,7 @@
 #include <stdio.h>
 
 #include "co_cdh.h"
+#include "co_string.h"
 
 #include "rt_gdh.h"
 
@@ -127,7 +128,7 @@ QWidget* XttMethodToolbarQt::build()
 
   for (int i = 0; i < GeMethods::opmeth_size; i++) {
     if (m_op_method_mask & (1 << i)
-        && strcmp(GeMethods::op_image[i], "") != 0) {
+        && !streq(GeMethods::op_image[i], "")) {
       char tooltip[200];
 
       strcpy(tooltip, GeMethods::op_tooltip[i]);
@@ -140,7 +141,7 @@ QWidget* XttMethodToolbarQt::build()
   }
   for (int i = 0; i < GeMethods::mntmeth_size; i++) {
     if (m_mnt_method_mask & (1 << i)
-        && strcmp(GeMethods::mnt_image[i], "") != 0) {
+        && !streq(GeMethods::mnt_image[i], "")) {
       char tooltip[200];
 
       strcpy(tooltip, GeMethods::mnt_tooltip[i]);
@@ -183,13 +184,13 @@ void XttMethodToolbarQt::set_current_sensitive()
     // Nothing selected
     for (int i = 0; i < GeMethods::opmeth_size; i++) {
       if (m_op_method_mask & (1 << i)
-          && strcmp(GeMethods::op_image[i], "") != 0) {
+          && !streq(GeMethods::op_image[i], "")) {
         m_op_button_w[i]->setEnabled(false);
       }
     }
     for (int i = 0; i < GeMethods::mntmeth_size; i++) {
       if (m_mnt_method_mask & (1 << i)
-          && strcmp(GeMethods::mnt_image[i], "") != 0) {
+          && !streq(GeMethods::mnt_image[i], "")) {
         m_mnt_button_w[i]->setEnabled(false);
       }
     }
@@ -205,13 +206,13 @@ void XttMethodToolbarQt::set_current_sensitive()
     if (info.cid == pwr_eClass_ExternVolume) {
       for (int i = 0; i < GeMethods::opmeth_size; i++) {
         if (m_op_method_mask & (1 << i)
-            && strcmp(GeMethods::op_image[i], "") != 0) {
+            && !streq(GeMethods::op_image[i], "")) {
           m_op_button_w[i]->setEnabled(false);
         }
       }
       for (int i = 0; i < GeMethods::mntmeth_size; i++) {
         if (m_mnt_method_mask & (1 << i)
-            && strcmp(GeMethods::mnt_image[i], "") != 0) {
+            && !streq(GeMethods::mnt_image[i], "")) {
           m_mnt_button_w[i]->setEnabled(false);
         }
       }
@@ -241,7 +242,7 @@ void XttMethodToolbarQt::set_current_sensitive()
 
     for (int i = 0; i < GeMethods::opmeth_size; i++) {
       if (m_op_method_mask & (1 << i)
-          && strcmp(GeMethods::op_image[i], "") != 0) {
+          && !streq(GeMethods::op_image[i], "")) {
         if (xm_mask.OpMethods & (1 << i)) {
           m_op_button_w[i]->setEnabled(true);
         } else {
@@ -251,7 +252,7 @@ void XttMethodToolbarQt::set_current_sensitive()
     }
     for (int i = 0; i < GeMethods::mntmeth_size; i++) {
       if (m_mnt_method_mask & (1 << i)
-          && strcmp(GeMethods::mnt_image[i], "") != 0) {
+          && !streq(GeMethods::mnt_image[i], "")) {
         if (xm_mask.MntMethods & (1 << i)) {
           m_mnt_button_w[i]->setEnabled(true);
         } else {

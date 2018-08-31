@@ -39,12 +39,15 @@
 #include <unistd.h>
 #include <sys/stat.h>
 
+#include "pwr_baseclasses.h"
+
 #include "co_cdh.h"
 #include "co_dcli.h"
-#include "co_time.h"
-#include "pwr_baseclasses.h"
-#include "rt_gdh.h"
+#include "co_string.h"
 #include "co_syi.h"
+#include "co_time.h"
+
+#include "rt_gdh.h"
 
 #include "xtt_clognav.h"
 
@@ -426,7 +429,7 @@ void CLogNav::read(int* pos_list, int pos_cnt)
 
     if (i == 0) {
       strcpy(filename, file_list[0].name);
-      if (strcmp(filename, "") == 0)
+      if (streq(filename, ""))
         continue;
     } else {
       // Unzip the file
@@ -540,7 +543,7 @@ void CLogNav::draw()
       break;
     }
 
-    if (insert && strcmp(filter.str, "") != 0) {
+    if (insert && !streq(filter.str, "")) {
       if (strstr(msg_list[i].logger, filter.str) == 0
           && strstr(msg_list[i].text, filter.str) == 0)
         insert = false;

@@ -48,17 +48,22 @@
 #include "pwr_version.h"
 #include "pwr_baseclasses.h"
 #include "pwr_opcclasses.h"
+
 #include "co_cdh.h"
-#include "co_time.h"
 #include "co_cnv.h"
-#include "rt_gdh.h"
-#include "opc_utl.h"
-#include "opc_soap_H.h"
-#include "Service.nsmap"
-#include "rt_ini_event.h"
+#include "co_string.h"
+#include "co_time.h"
+
 #include "rt_aproc.h"
+#include "rt_gdh.h"
+#include "rt_ini_event.h"
 #include "rt_pwr_msg.h"
 #include "rt_qcom_msg.h"
+
+#include "opc_utl.h"
+#include "opc_soap_H.h"
+
+#include "Service.nsmap"
 
 typedef struct {
   int address;
@@ -245,7 +250,7 @@ int main()
   for (int i = 0; i < (int)(sizeof(opcsrv->m_config->ClientAccess)
                           / sizeof(opcsrv->m_config->ClientAccess[0]));
        i++) {
-    if (strcmp(opcsrv->m_config->ClientAccess[i].Address, "") != 0) {
+    if (!streq(opcsrv->m_config->ClientAccess[i].Address, "")) {
       opcsrv->m_client_access[opcsrv->m_client_access_cnt].address
           = inet_network(opcsrv->m_config->ClientAccess[i].Address);
       if (opcsrv->m_client_access[opcsrv->m_client_access_cnt].address != -1) {
@@ -1202,7 +1207,7 @@ bool opcsrv_get_properties(struct soap* soap, bool is_item, pwr_tCid pcid,
       case pwr_cClass_Ii:
       case pwr_cClass_Io:
       case pwr_cClass_Iv: {
-        if (strcmp(bd->attrName, "ActualValue") != 0)
+        if (!streq(bd->attrName, "ActualValue"))
           break;
 
         pwr_tAttrRef aaref;
@@ -1300,7 +1305,7 @@ bool opcsrv_get_properties(struct soap* soap, bool is_item, pwr_tCid pcid,
         case pwr_cClass_Ai:
         case pwr_cClass_Ao:
         case pwr_cClass_Av: {
-          if (strcmp(bd->attrName, "ActualValue") != 0)
+          if (!streq(bd->attrName, "ActualValue"))
             break;
 
           pwr_tAttrRef aaref;
@@ -1411,7 +1416,7 @@ bool opcsrv_get_properties(struct soap* soap, bool is_item, pwr_tCid pcid,
         case pwr_cClass_Ii:
         case pwr_cClass_Ao:
         case pwr_cClass_Io: {
-          if (strcmp(bd->attrName, "ActualValue") != 0)
+          if (!streq(bd->attrName, "ActualValue"))
             break;
 
           pwr_tAttrRef aaref;
@@ -1459,7 +1464,7 @@ bool opcsrv_get_properties(struct soap* soap, bool is_item, pwr_tCid pcid,
         case pwr_cClass_Ii:
         case pwr_cClass_Ao:
         case pwr_cClass_Io: {
-          if (strcmp(bd->attrName, "ActualValue") != 0)
+          if (!streq(bd->attrName, "ActualValue"))
             break;
 
           pwr_tAttrRef sigchancon;

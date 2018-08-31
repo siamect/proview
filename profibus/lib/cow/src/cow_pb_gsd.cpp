@@ -37,13 +37,16 @@
 /* cow_pb_gsd.cpp -- Parse gsd file */
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "pwr_baseclasses.h"
-#include "rt_pb_msg.h"
-#include "cow_pb_gsd.h"
-#include "co_dcli.h"
+
 #include "co_cdh.h"
+#include "co_dcli.h"
+#include "co_string.h"
+
+#include "rt_pb_msg.h"
+
+#include "cow_pb_gsd.h"
 
 typedef enum {
   gsd_M,
@@ -487,60 +490,60 @@ int pb_gsd::read(char* filename)
       else if (keyp->type == gsd_MaxUserPrmDataLen)
         max_user_prm_data_len = datap->value;
 
-      if (strcmp(keyp->group, "Module") == 0) {
+      if (streq(keyp->group, "Module")) {
         // Insert in module data
         if (!current_module) {
           printf("Module keyword outside module, line %d\n", line_cnt);
           break;
         }
-        if (strcmp(keyp->name, "Module_Reference") == 0)
+        if (streq(keyp->name, "Module_Reference"))
           current_module->Module_Reference = datap->value;
-        else if (strcmp(keyp->name, "Ext_Module_Prm_Data_Len") == 0)
+        else if (streq(keyp->name, "Ext_Module_Prm_Data_Len"))
           current_module->Ext_Module_Prm_Data_Len = datap->value;
-        else if (strcmp(keyp->name, "X_Ext_Module_Prm_Data_Len") == 0)
+        else if (streq(keyp->name, "X_Ext_Module_Prm_Data_Len"))
           current_module->X_Ext_Module_Prm_Data_Len = datap->value;
-        else if (strcmp(keyp->name, "F_Ext_Module_Prm_Data_Len") == 0)
+        else if (streq(keyp->name, "F_Ext_Module_Prm_Data_Len"))
           current_module->F_Ext_Module_Prm_Data_Len = datap->value;
-      } else if (strcmp(keyp->group, "Area") == 0) {
+      } else if (streq(keyp->group, "Area")) {
         // Insert in area data
         if (!current_area) {
           printf("Area keyword outside area, line %d\n", line_cnt);
           break;
         }
-        if (strcmp(keyp->name, "Related_CFG_Identifier") == 0)
+        if (streq(keyp->name, "Related_CFG_Identifier"))
           current_area->Related_CFG_Identifier = datap->value;
-        else if (strcmp(keyp->name, "IO_Direction") == 0)
+        else if (streq(keyp->name, "IO_Direction"))
           current_area->IO_Direction = datap->value;
-        else if (strcmp(keyp->name, "Length") == 0)
+        else if (streq(keyp->name, "Length"))
           current_area->Length = datap->value;
-        else if (strcmp(keyp->name, "Consistency") == 0)
+        else if (streq(keyp->name, "Consistency"))
           current_area->Consistency = datap->value;
-        else if (strcmp(keyp->name, "Publisher_allowed") == 0)
+        else if (streq(keyp->name, "Publisher_allowed"))
           current_area->Publisher_allowed = datap->value;
-        else if (strcmp(keyp->name, "DP_Master_allowed") == 0)
+        else if (streq(keyp->name, "DP_Master_allowed"))
           current_area->DP_Master_allowed = datap->value;
-        else if (strcmp(keyp->name, "Data_Type") == 0)
+        else if (streq(keyp->name, "Data_Type"))
           current_area->Data_Type[current_area->data_type_cnt++] = datap->value;
-      } else if (strcmp(keyp->group, "ExtUserPrmData") == 0) {
+      } else if (streq(keyp->group, "ExtUserPrmData")) {
         // Insert in area data
         if (!current_extuserprmdata) {
           printf(
               "Prm data keyword outside ExtUserPrmData, line %d\n", line_cnt);
           break;
         }
-        if (strcmp(keyp->name, "Prm_Text_Ref") == 0)
+        if (streq(keyp->name, "Prm_Text_Ref"))
           current_extuserprmdata->Prm_Text_Ref = datap->value;
-        else if (strcmp(keyp->name, "Changeable") == 0)
+        else if (streq(keyp->name, "Changeable"))
           current_extuserprmdata->Changeable = datap->value;
-        else if (strcmp(keyp->name, "Visible") == 0)
+        else if (streq(keyp->name, "Visible"))
           current_extuserprmdata->Visible = datap->value;
-      } else if (strcmp(keyp->name, "Max_Module") == 0) {
+      } else if (streq(keyp->name, "Max_Module")) {
         dptype = gsd_DpSlave;
         max_module = datap->value;
-      } else if (strcmp(keyp->name, "Modular_Station") == 0) {
+      } else if (streq(keyp->name, "Modular_Station")) {
         dptype = gsd_DpSlave;
         modular_station = datap->value;
-      } else if (strcmp(keyp->name, "Max_MPS_Length") == 0) {
+      } else if (streq(keyp->name, "Max_MPS_Length")) {
         dptype = gsd_DpMaster;
       }
       break;
@@ -551,13 +554,13 @@ int pb_gsd::read(char* filename)
       strcpy((char*)datap->data, line_part[1]);
       datap->found = 1;
 
-      if (strcmp(keyp->group, "Area") == 0) {
+      if (streq(keyp->group, "Area")) {
         // Insert in area data
         if (!current_area) {
           printf("Area keyword outside area, line %d\n", line_cnt);
           break;
         }
-        if (strcmp(keyp->name, "Area_Name") == 0)
+        if (streq(keyp->name, "Area_Name"))
           strcpy(current_area->Area_Name, (char*)datap->data);
       }
       break;
@@ -1873,7 +1876,7 @@ int pb_gsd::read_line(char* line, int lsize, FILE* fp)
       dcli_remove_blank(line, line);
       if (line[strlen(line) - 1] == '\r')
         line[strlen(line) - 1] = 0;
-      if (strcmp(line, "") == 0 || (line[0] == '\r' && line[1] == '\0'))
+      if (streq(line, "") || (line[0] == '\r' && line[1] == '\0'))
         continue;
 
       while (1) {
@@ -1937,7 +1940,7 @@ int pb_gsd::add_module_conf(
   i = 0;
   found = 0;
   for (mp = modulelist; mp; mp = mp->next) {
-    if (strcmp(module_name, mp->Mod_Name) == 0) {
+    if (streq(module_name, mp->Mod_Name)) {
       found = 1;
       break;
     }
@@ -2122,7 +2125,7 @@ int pb_gsd::configure_module(gsd_sModuleConf* m)
   }
 
   if (m->module) {
-    if (strcmp(m->name, "") == 0) {
+    if (streq(m->name, "")) {
       int idx = ((char*)m - (char*)module_conf) / sizeof(gsd_sModuleConf);
       sprintf(m->name, "M%d", idx + 1);
     }
@@ -2278,7 +2281,7 @@ int pb_gsd::syntax_check(int* idx)
   for (int i = 0; i < module_conf_cnt; i++) {
     if (module_conf[i].module) {
       // Check that name is not null
-      if (strcmp(module_conf[i].name, "") == 0) {
+      if (streq(module_conf[i].name, "")) {
         *idx = i;
         return PB__NOMODULENAME;
       }

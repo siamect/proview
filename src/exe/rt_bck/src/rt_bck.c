@@ -46,22 +46,24 @@
 #include <errno.h>
 #include <pthread.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 
 #include "pwr_baseclasses.h"
-#include "rt_gdh.h"
-#include "rt_thread.h"
-#include "rt_proc.h"
-#include "rt_gdh_msg.h"
-#include "rt_bckdef.h"
+
 #include "co_cdh.h"
-#include "co_time.h"
 #include "co_dcli.h"
-#include "rt_pwr_msg.h"
+#include "co_string.h"
+#include "co_time.h"
+
 #include "rt_aproc.h"
-#include "rt_qcom_msg.h"
+#include "rt_bckdef.h"
+#include "rt_gdh.h"
+#include "rt_gdh_msg.h"
 #include "rt_ini_event.h"
+#include "rt_proc.h"
+#include "rt_pwr_msg.h"
+#include "rt_qcom_msg.h"
+#include "rt_thread.h"
 
 pwr_tStatus bck_print(char*);
 
@@ -1342,10 +1344,10 @@ int main(int argc, char* argv[])
   qcom_sQid my_q = qcom_cNQid;
 
   for (i = 1; i < argc; i++) {
-    if (strcmp(argv[i], "-p") == 0) {
+    if (streq(argv[i], "-p")) {
       bck_print("$pwrp_load/bck.txt");
       exit(1);
-    } else if (strcmp(argv[i], "-h") == 0) {
+    } else if (streq(argv[i], "-h")) {
       printf("Usage:\nrt_bck -p\nPrint content of backuped objects to "
              "$pwrp_load/bck.txt\n");
       exit(1);

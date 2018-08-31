@@ -35,10 +35,12 @@
  */
 
 #include <stdlib.h>
-#include <string.h>
+
+#include "pwr_names.h"
+
+#include "co_string.h"
 
 #include "rt_gdb.h"
-#include "pwr_names.h"
 
 #include "ini_rc.h"
 
@@ -53,7 +55,7 @@ static pwr_tStatus setRcValue(ini_sRc* def_rc, char* name, int interval)
   ini_sRc* rc;
 
   for (rc = def_rc; rc && rc->name; rc++) {
-    if (strcmp(rc->name, name) == 0) {
+    if (streq(rc->name, name)) {
       *rc->var = interval;
       return 1;
     }

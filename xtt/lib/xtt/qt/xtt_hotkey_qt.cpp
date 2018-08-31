@@ -60,15 +60,49 @@
 #if defined OS_LINUX
 
 #include <stdio.h>
-#include <string.h>
 
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_string.h"
 
 #include "xtt_hotkey_qt.h"
 
 #include <QKeyEvent>
 #include <QKeySequence>
+
+HotkeyAction::HotkeyAction(const char* name, void (*action)(char*, void*))
+    : m_action(action)
+{
+  strcpy(m_name, name);
+}
+
+HotkeyAction::HotkeyAction(const HotkeyAction& x) : m_action(x.m_action)
+{
+  strcpy(m_name, x.m_name);
+}
+
+HotkeyKey::HotkeyKey(int mod, int key, char* action_name, char* action_arg)
+    : m_mod(mod), m_key(key), m_action(0), m_userdata(0)
+{
+  strcpy(m_action_name, action_name);
+  strcpy(m_action_arg, action_arg);
+}
+
+HotkeyKey::HotkeyKey(const HotkeyKey& x)
+    : m_mod(x.m_mod), m_key(x.m_key), m_action(x.m_action),
+      m_userdata(x.m_userdata)
+{
+  strcpy(m_action_name, x.m_action_name);
+  strcpy(m_action_arg, x.m_action_arg);
+}
+
+void HotkeyKey::set_action(HotkeyAction* action, void* userdata)
+{
+  if (streq(m_action_name, action->m_name)) {
+    m_action = action->m_action;
+    m_userdata = userdata;
+  }
+}
 
 void XttHotkey::register_action(
     const char* name, void (*action)(char*, void*), void* userdata)

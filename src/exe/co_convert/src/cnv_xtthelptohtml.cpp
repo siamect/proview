@@ -39,15 +39,15 @@
 
 /*_Include files_________________________________________________________*/
 
-#include <string.h>
 #include <stdlib.h>
 
 extern "C" {
 #include "co_cdh.h"
 #include "co_dcli.h"
 }
-
 #include "co_lng.h"
+#include "co_string.h"
+
 #include "cnv_ctx.h"
 #include "cnv_xtthelptohtml.h"
 
@@ -86,7 +86,7 @@ void* CnvXtthelpToHtml::insert(navh_eItemType item_type, const char* text1,
   int i;
   static int in_table = 0;
 
-  if ((text2 && strcmp(text2, "") != 0) || (text3 && strcmp(text3, "") != 0)) {
+  if ((text2 && !streq(text2, "")) || (text3 && !streq(text3, ""))) {
     if (!in_table && cf) {
       cf->f << "<TABLE>\n";
       in_table = 1;
@@ -94,7 +94,7 @@ void* CnvXtthelpToHtml::insert(navh_eItemType item_type, const char* text1,
   } else {
     if (in_table && cf) {
       // Close table (keep if empty line)
-      if (!(text1 && strcmp(text1, "") == 0
+      if (!(text1 && streq(text1, "")
               && (item_type == navh_eItemType_Help
                      || item_type == navh_eItemType_HelpCode
                      || item_type == navh_eItemType_HelpBold))) {
@@ -154,7 +154,7 @@ void* CnvXtthelpToHtml::insert(navh_eItemType item_type, const char* text1,
     }
 
     pwr_tFileName fname;
-    if (strcmp(link, "") != 0) {
+    if (!streq(link, "")) {
       if (strncmp(link, "$web:", 5) == 0) {
         replace_url_symbols(&link[5], fname);
         // if ( strncmp( &link[5], "$pwrp_web/", 10) == 0)
@@ -179,10 +179,10 @@ void* CnvXtthelpToHtml::insert(navh_eItemType item_type, const char* text1,
       } else {
         subject_to_fname(fname, link, 0);
 
-        if (strcmp(link_bookmark, "") != 0) {
+        if (!streq(link_bookmark, "")) {
           strcat(fname, "#");
           strcat(fname, link_bookmark);
-        } else if (file_name && strcmp(file_name, "") != 0) {
+        } else if (file_name && !streq(file_name, "")) {
           char* s = (char*)strrchr(file_name, '/');
           if (s)
             strcpy(fname, s + 1);
@@ -208,7 +208,7 @@ void* CnvXtthelpToHtml::insert(navh_eItemType item_type, const char* text1,
 
     if (!in_table) {
       cf->f << text1;
-      if (strcmp(link, "") != 0 || bookmark)
+      if (!streq(link, "") || bookmark)
         cf->f << "<BR></A>\n";
       else
         cf->f << "<BR>\n";
@@ -216,22 +216,22 @@ void* CnvXtthelpToHtml::insert(navh_eItemType item_type, const char* text1,
         cf->f << "</CODE>";
     } else {
       cf->f << "<TR><TD>";
-      if (strcmp(link, "") != 0)
+      if (!streq(link, ""))
         cf->f << "<A HREF=\"" << fname << "\">";
       else if (bookmark != 0)
         cf->f << "<A NAME=\"" << bookmark << "\">";
       cf->f << text1;
-      if (strcmp(text2, "") != 0 || strcmp(text3, "") != 0) {
+      if (!streq(text2, "") || !streq(text3, "")) {
         for (i = 0; i < (int)(CNV_TAB - strlen(text1)); i++)
           cf->f << "&nbsp;";
         cf->f << "&nbsp;&nbsp;</TD><TD>" << text2;
-        if (strcmp(text3, "") != 0) {
+        if (!streq(text3, "")) {
           for (i = 0; i < (int)(CNV_TAB - strlen(text2)); i++)
             cf->f << "&nbsp;";
           cf->f << "&nbsp;&nbsp;</TD><TD>" << text3;
         }
       }
-      if (strcmp(link, "") != 0 || bookmark)
+      if (!streq(link, "") || bookmark)
         cf->f << "</A>\n";
       else
         cf->f << '\n';
@@ -244,7 +244,7 @@ void* CnvXtthelpToHtml::insert(navh_eItemType item_type, const char* text1,
       break;
 
     pwr_tFileName fname;
-    if (strcmp(link, "") != 0) {
+    if (!streq(link, "")) {
       if (strncmp(link, "$web:", 5) == 0) {
         replace_url_symbols(&link[5], fname);
         // if ( strncmp( &link[5], "$pwrp_web/", 10) == 0)
@@ -268,7 +268,7 @@ void* CnvXtthelpToHtml::insert(navh_eItemType item_type, const char* text1,
         strcpy(fname, link);
       } else {
         subject_to_fname(fname, link, 0);
-        if (strcmp(link_bookmark, "") != 0) {
+        if (!streq(link_bookmark, "")) {
           strcat(fname, "#");
           strcat(fname, link_bookmark);
         }
@@ -282,30 +282,30 @@ void* CnvXtthelpToHtml::insert(navh_eItemType item_type, const char* text1,
 
     if (!in_table) {
       cf->f << "<B>" << text1 << "</B>";
-      if (strcmp(link, "") != 0 || bookmark)
+      if (!streq(link, "") || bookmark)
         cf->f << "<BR></A>\n";
       else
         cf->f << "<BR>\n";
     } else {
       cf->f << "<TR><TD><B>";
-      if (strcmp(link, "") != 0)
+      if (!streq(link, ""))
         cf->f << "<A HREF=\"" << fname << "\">";
       else if (bookmark != 0)
         cf->f << "<A NAME=\"" << bookmark << "\">";
       cf->f << text1;
-      if (strcmp(link, "") != 0 || bookmark)
+      if (!streq(link, "") || bookmark)
         cf->f << "</A>";
-      if (strcmp(text2, "") != 0 || strcmp(text3, "") != 0) {
+      if (!streq(text2, "") || !streq(text3, "")) {
         for (i = 0; i < (int)(CNV_TAB - strlen(text1)); i++)
           cf->f << "&nbsp;";
         cf->f << "&nbsp;&nbsp;</B></TD><TD><B>" << text2;
-        if (strcmp(text3, "") != 0) {
+        if (!streq(text3, "")) {
           for (i = 0; i < (int)(CNV_TAB - strlen(text2)); i++)
             cf->f << "&nbsp;";
           cf->f << "&nbsp;&nbsp;</B></TD><TD><B>" << text3;
         }
       }
-      if (strcmp(link, "") != 0 || bookmark)
+      if (!streq(link, "") || bookmark)
         cf->f << "</A>\n";
       else
         cf->f << '\n';

@@ -41,6 +41,7 @@
 #include "pwr_baseclasses.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_time.h"
 
 #include "flow_msg.h"
@@ -1011,7 +1012,7 @@ void TblNav::tree_add(char* name, int list_index, tblnav_eTreeItemType type)
       int found = 0;
       while (idx) {
         last = idx;
-        if (strcmp(tree[idx].sname, name_array[j]) == 0) {
+        if (streq(tree[idx].sname, name_array[j])) {
           found = 1;
           break;
         }

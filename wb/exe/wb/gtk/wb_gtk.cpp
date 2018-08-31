@@ -36,13 +36,13 @@
 
 /* wb_gtk.cpp -- work bench */
 
-#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 
 #include "co_dcli.h"
 #include "co_login_msg.h"
 #include "co_msg.h"
+#include "co_string.h"
 #include "co_user.h"
 
 #include "cow_login_gtk.h"
@@ -93,7 +93,7 @@ WVsel *WbGtk::vsel_new( pwr_tStatus *status, const char *name, ldh_tWBContext ld
 
 int main( int argc, char *argv[])
 {
-  if ( argc >= 2 && strcmp( argv[1], "-m") == 0) {
+  if ( argc >= 2 && streq( argv[1], "-m")) {
     wb_erep::printMethods();
     exit(0);
   }

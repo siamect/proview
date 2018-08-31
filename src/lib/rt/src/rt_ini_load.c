@@ -36,13 +36,10 @@
 
 #include <stdio.h>
 
-#if defined OS_LYNX
-#include <sys/wait.h>
-#elif defined OS_POSIX
+#if defined OS_POSIX
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-
 #endif
 
 #include "pwr_remoteclasses.h"
@@ -50,13 +47,16 @@
 #include "pwr_basecomponentclasses.h"
 #include "pwr_otherioclasses.h"
 #include "pwr_opcclasses.h"
+
 #include "co_dcli.h"
+#include "co_string.h"
+#include "co_syi.h"
+
 #include "rt_io_base.h"
 #include "rt_ini_load.h"
 #include "rt_ini_event.h"
 #include "rt_ini_alias.h"
 #include "rt_ini_msg.h"
-#include "co_syi.h"
 
 static pwr_tBoolean checkSect(pwr_tStatus*, ini_sContext*, int, int);
 static gdb_sObject* oidToObject(pwr_tObjid);
@@ -136,7 +136,7 @@ static gdb_sObject* reloadObject(
 
       if (op->g.oid.oix != 0) {
         flags.b.father = op->g.f.poid.oix != oh->poid.oix;
-        flags.b.name = strcmp(op->g.f.name.orig, oh->name) != 0;
+        flags.b.name = !streq(op->g.f.name.orig, oh->name);
         flags.b.server = op->g.flags.m & net_mGo_isClient
             && cdh_ObjidIsNotEqual(op->g.soid, oh->soid);
         flags.b.classid = op->g.cid != oh->cid;

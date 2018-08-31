@@ -34,7 +34,6 @@
  * General Public License plus this exception.
  */
 
-#include <string.h>
 #include <stdlib.h>
 
 #include <fstream>
@@ -45,6 +44,14 @@ extern "C" {
 }
 
 #include "cnv_ctx.h"
+#include "co_string.h"
+
+CnvCtx::CnvCtx() : generate_html(0), generate_xtthelp(0), generate_src(0), generate_struct(0), generate_ps(0), generate_cdp(0), common_structfile_only(0), hpp(0), verbose(0), first_class(1), setup(0), wblto(0), rw(0), rx(0)
+{
+  strcpy(dir, "");
+  strcpy(setup_filename, "");
+  strcpy(depend_filename, "");
+}
 
 char* CnvCtx::low(const char* in)
 {
@@ -96,16 +103,21 @@ int CnvCtx::read_line(char* line, int maxsize, FILE* file)
 
 void CnvCtx::add_depend(char* fname)
 {
-  if (strcmp(depend_filename, "") == 0)
+  if (streq(depend_filename, ""))
     return;
 
   std::string fnamestr(fname);
   depend.push_back(fnamestr);
 }
 
+void CnvCtx::set_dependfile(char* dname)
+{
+  strncpy(dependfile, dname, sizeof(dependfile));
+}
+
 void CnvCtx::print_depend()
 {
-  if (strcmp(depend_filename, "") == 0)
+  if (streq(depend_filename, ""))
     return;
 
   dcli_translate_filename(dependfile, dependfile);

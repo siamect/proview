@@ -35,13 +35,15 @@
  */
 
 #include <stdio.h>
-#include <string.h>
+
+#include "pwr_version.h"
+
+#include "co_cdh.h"
+#include "co_lng.h"
+#include "co_string.h"
 
 #include "cnv_wbltops.h"
 #include "cnv_ctx.h"
-#include "pwr_version.h"
-#include "co_cdh.h"
-#include "co_lng.h"
 
 CnvWblToPs::~CnvWblToPs()
 {
@@ -134,22 +136,22 @@ int CnvWblToPs::class_exec()
     tops.print_text(txt, tops.style[tops.ci].link);
   }
 
-  if (ctx->rw->doc_fresh && strcmp(ctx->rw->doc_author, "") != 0) {
+  if (ctx->rw->doc_fresh && !streq(ctx->rw->doc_author, "")) {
     sprintf(txt, "%s %s", Lng::translate("Author"), ctx->rw->doc_author);
     tops.print_text(txt, tops.style[tops.ci].text);
   }
 
-  if (ctx->rw->doc_fresh && strcmp(ctx->rw->doc_creator, "") != 0) {
+  if (ctx->rw->doc_fresh && !streq(ctx->rw->doc_creator, "")) {
     sprintf(txt, "%s %s", Lng::translate("Creator"), ctx->rw->doc_creator);
     tops.print_text(txt, tops.style[tops.ci].text);
   }
 
-  if (ctx->rw->doc_fresh && strcmp(ctx->rw->doc_version, "") != 0) {
+  if (ctx->rw->doc_fresh && !streq(ctx->rw->doc_version, "")) {
     sprintf(txt, "%s %s", Lng::translate("Version"), ctx->rw->doc_version);
     tops.print_text(txt, tops.style[tops.ci].text);
   }
 
-  if (ctx->rw->doc_fresh && strcmp(ctx->rw->doc_code, "") != 0) {
+  if (ctx->rw->doc_fresh && !streq(ctx->rw->doc_code, "")) {
     sprintf(txt, "%s %s", Lng::translate("Code"), ctx->rw->doc_code);
     tops.print_text(txt, tops.style[tops.ci].text);
   }
@@ -224,7 +226,7 @@ int CnvWblToPs::body_exec()
   tops.print_h2(text);
   sprintf(text, "Struct pwr_sClass_%s", ctx->rw->body_structname);
   tops.print_text(text, tops.style[tops.ci].boldtext);
-  if (strcmp(ctx->rw->body_flags, "") != 0) {
+  if (!streq(ctx->rw->body_flags, "")) {
     sprintf(text, "Flags %s", ctx->rw->body_flags);
     tops.print_text(text, tops.style[tops.ci].boldtext);
   }
@@ -245,8 +247,8 @@ int CnvWblToPs::attribute_exec()
   int page;
   int lng_sts = 1;
 
-  if (strcmp(ctx->rw->attr_typeref, "CastId") == 0
-      || strcmp(ctx->rw->attr_typeref, "DisableAttr") == 0)
+  if (streq(ctx->rw->attr_typeref, "CastId")
+      || streq(ctx->rw->attr_typeref, "DisableAttr"))
     return 1;
 
   if (Lng::current() != lng_eLanguage_en_US)
@@ -278,11 +280,11 @@ int CnvWblToPs::attribute_exec()
   sprintf(txt, "%s %s", Lng::translate("Class"), ctx->rw->attr_type);
   tops.print_text(txt, tops.style[tops.ci].boldtext);
 
-  if (strcmp(ctx->rw->attr_flags, "") != 0) {
+  if (!streq(ctx->rw->attr_flags, "")) {
     sprintf(txt, "Flags %s", ctx->rw->attr_flags);
     tops.print_text(txt, tops.style[tops.ci].boldtext);
   }
-  if (strcmp(ctx->rw->attr_pgmname, "") != 0) {
+  if (!streq(ctx->rw->attr_pgmname, "")) {
     sprintf(txt, "PmgName %s", ctx->rw->attr_pgmname);
     tops.print_text(txt, tops.style[tops.ci].boldtext);
   }
@@ -328,7 +330,7 @@ int CnvWblToPs::typedef_exec()
     tops.print_text(txt, tops.style[tops.ci].link);
   }
 
-  if (ctx->rw->doc_fresh && strcmp(ctx->rw->typedef_typeref, "") != 0) {
+  if (ctx->rw->doc_fresh && !streq(ctx->rw->typedef_typeref, "")) {
     sprintf(txt, "TypeRef %s", ctx->rw->typedef_typeref);
     tops.print_text(txt, tops.style[tops.ci].boldtext);
   }
@@ -337,23 +339,23 @@ int CnvWblToPs::typedef_exec()
     sprintf(txt, "Elements %d", ctx->rw->typedef_elements);
     tops.print_text(txt, tops.style[tops.ci].boldtext);
   }
-  if (strcmp(ctx->rw->typedef_pgmname, "") != 0) {
+  if (!streq(ctx->rw->typedef_pgmname, "")) {
     sprintf(txt, "Pgmname %s", ctx->rw->typedef_pgmname);
     tops.print_text(txt, tops.style[tops.ci].boldtext);
   }
   tops.print_text("", tops.style[tops.ci].text);
 
-  if (ctx->rw->doc_fresh && strcmp(ctx->rw->doc_author, "") != 0) {
+  if (ctx->rw->doc_fresh && !streq(ctx->rw->doc_author, "")) {
     sprintf(txt, "%s %s", Lng::translate("Author"), ctx->rw->doc_author);
     tops.print_text(txt, tops.style[tops.ci].text);
   }
 
-  if (ctx->rw->doc_fresh && strcmp(ctx->rw->doc_version, "") != 0) {
+  if (ctx->rw->doc_fresh && !streq(ctx->rw->doc_version, "")) {
     sprintf(txt, "%s %s", Lng::translate("Version"), ctx->rw->doc_version);
     tops.print_text(txt, tops.style[tops.ci].text);
   }
 
-  if (ctx->rw->doc_fresh && strcmp(ctx->rw->doc_code, "") != 0) {
+  if (ctx->rw->doc_fresh && !streq(ctx->rw->doc_code, "")) {
     sprintf(txt, "%s %s", Lng::translate("Code"), ctx->rw->doc_code);
     tops.print_text(txt, tops.style[tops.ci].text);
   }
@@ -436,7 +438,7 @@ int CnvWblToPs::bit_exec()
   sprintf(txt, "Text %s", ctx->rw->bit_text);
   tops.print_text(txt, tops.style[tops.ci].boldtext);
 
-  if (strcmp(ctx->rw->bit_pgmname, "") != 0) {
+  if (!streq(ctx->rw->bit_pgmname, "")) {
     sprintf(txt, "PmgName %s", ctx->rw->bit_pgmname);
     tops.print_text(txt, tops.style[tops.ci].boldtext);
   }

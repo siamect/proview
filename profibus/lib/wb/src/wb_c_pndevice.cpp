@@ -36,14 +36,16 @@
 
 /* wb_c_pndevice.c -- work bench methods of the PnDevice class. */
 
-#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 
 #include "pwr_baseclasses.h"
 #include "pwr_profibusclasses.h"
+
 #include "co_dcli.h"
 #include "co_msg.h"
+#include "co_string.h"
+
 #include "rt_pb_msg.h"
 
 #include "flow_api.h"
@@ -522,17 +524,17 @@ static pwr_tStatus generate_viewer_data(device_sCtx* ctx)
         if (nr != 2)
           continue;
 
-        if (strcmp(elemv[0], "DeviceText") == 0) {
+        if (streq(elemv[0], "DeviceText")) {
           strncpy(device_text, elemv[1], sizeof(device_text));
-        } else if (strcmp(elemv[0], "VendorId") == 0) {
+        } else if (streq(elemv[0], "VendorId")) {
           sscanf(elemv[1], "%d", &vendor_id);
-        } else if (strcmp(elemv[0], "DeviceId") == 0) {
+        } else if (streq(elemv[0], "DeviceId")) {
           sscanf(elemv[1], "%d", &device_id);
-        } else if (strcmp(elemv[0], "DeviceName") == 0) {
+        } else if (streq(elemv[0], "DeviceName")) {
           strncpy(device_name, elemv[1], sizeof(device_name));
-        } else if (strcmp(elemv[0], "IP_Address") == 0) {
+        } else if (streq(elemv[0], "IP_Address")) {
           strncpy(ip_address, elemv[1], sizeof(ip_address));
-        } else if (strcmp(elemv[0], "MAC_Address") == 0) {
+        } else if (streq(elemv[0], "MAC_Address")) {
           strncpy(mac_address, elemv[1], sizeof(mac_address));
           if ((s = strchr(mac_address, '/')))
             *s = 0;
@@ -880,7 +882,7 @@ pwr_tStatus pndevice_create_ctx(ldh_tSession ldhses, pwr_tAttrRef aref,
       ldhses, aref.Objid, "RtBody", "GSDMLfile", &gsdmlfile, &size);
   if (EVEN(sts))
     return sts;
-  if (strcmp(gsdmlfile, "") == 0) {
+  if (streq(gsdmlfile, "")) {
     free(gsdmlfile);
     return PB__GSDATTR;
   }

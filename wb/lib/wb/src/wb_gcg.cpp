@@ -39,32 +39,35 @@
    This module generates code for the runtime system.  */
 
 #include <stdlib.h>
-#include <string.h>
 #include <sys/stat.h>
 
 #include "pwr_systemclasses.h"
 #include "pwr_baseclasses.h"
 #include "pwr_nmpsclasses.h"
+
+#include "co_api.h"
+#include "co_msg.h"
+#include "co_string.h"
 #include "co_time.h"
 #include "co_utl_batch.h"
-#include "co_msg.h"
-#include "co_api.h"
-#include "cow_api.h"
-#include "wb_foe_msg.h"
-#include "wb_vldh_msg.h"
-#include "wb_ldh_msg.h"
-#include "rt_load.h"
-#include "wb_goen.h"
-#include "wb_trv.h"
-#include "wb_exo.h"
-#include "wb_utl_api.h"
-#include "wb_gcg.h"
-#include "wb_dir.h"
-#include "wb_log.h"
 
+#include "rt_load.h"
+
+#include "cow_api.h"
+
+#include "wb_dir.h"
+#include "wb_exo.h"
 extern "C" {
 #include "wb_foe_dataarithm.h"
 }
+#include "wb_foe_msg.h"
+#include "wb_gcg.h"
+#include "wb_goen.h"
+#include "wb_ldh_msg.h"
+#include "wb_log.h"
+#include "wb_trv.h"
+#include "wb_utl_api.h"
+#include "wb_vldh_msg.h"
 
 /*_Local procedues_______________________________________________________*/
 
@@ -1348,7 +1351,7 @@ int gcg_get_debug(vldh_t_node node, char* debug_parname, char* conn_obj,
   }
   found = 0;
   for (i = 0; i < rows; i++) {
-    if (strcmp(debug_par, bodydef[i].ParName) == 0) {
+    if (streq(debug_par, bodydef[i].ParName)) {
       found = 1;
       par_index = i;
       break;
@@ -1447,7 +1450,7 @@ int gcg_get_debug_virtual(vldh_t_node node, char* debug_parname, char* conn_obj,
 
   found = 0;
   for (i = 0; i < rows; i++) {
-    if (strcmp(debug_par, bodydef[i].ParName) == 0) {
+    if (streq(debug_par, bodydef[i].ParName)) {
       found = 1;
       par_index = i;
       break;
@@ -1530,7 +1533,7 @@ static int gcg_parname_to_pgmname(
       s += 6;
     }
 
-    if (strcmp(parname, s) == 0) {
+    if (streq(parname, s)) {
       found = 1;
       par_index = i;
       break;
@@ -1598,7 +1601,7 @@ static int gcg_pgmname_to_parname(
 
   found = 0;
   for (i = 0; i < rows; i++) {
-    if (strcmp(pname, bodydef[i].Par->Param.Info.PgmName) == 0) {
+    if (streq(pname, bodydef[i].Par->Param.Info.PgmName)) {
       found = 1;
       par_index = i;
       break;
@@ -3106,7 +3109,7 @@ static int gcg_get_outputstring_spec(gcg_ctx gcgctx, vldh_t_node output_node,
 
     strcpy(parstring, (output_bodydef->Par)->Param.Info.PgmName);
     *parattrref = *attrref;
-    if (strcmp("PulsIn", output_bodydef->ParName) == 0)
+    if (streq("PulsIn", output_bodydef->ParName))
       *parprefix = GCG_PREFIX_IOC;
     else
       *parprefix = GCG_PREFIX_REF;
@@ -9129,8 +9132,8 @@ int gcg_comp_m30(gcg_ctx gcgctx, vldh_t_node node)
       first_par = 0;
     }
     if (!output_found
-        && ((strcmp(bodydef[i].Par->Param.Info.PgmName, "Speed") == 0)
-               || (strcmp(bodydef[i].Par->Param.Info.PgmName, "ConOn") == 0))) {
+        && (streq(bodydef[i].Par->Param.Info.PgmName, "Speed")
+               || streq(bodydef[i].Par->Param.Info.PgmName, "ConOn"))) {
       /* The point is not connected and will point to its
          own object */
       IF_PR fprintf(gcgctx->files[GCGM1_REF_FILE],
@@ -9138,7 +9141,7 @@ int gcg_comp_m30(gcg_ctx gcgctx, vldh_t_node node)
           vldh_IdToStr(0, node->ln.oid), bodydef[i].Par->Param.Info.PgmName,
           GCG_PREFIX_REF, vldh_IdToStr(1, node->ln.oid));
     } else if (!output_found
-        && strcmp(bodydef[i].Par->Param.Info.PgmName, "AutoNoStop") == 0) {
+        && streq(bodydef[i].Par->Param.Info.PgmName, "AutoNoStop")) {
       /* The point AutoNoStart is not connected and will point to
          AutoStart in its own object */
       IF_PR fprintf(gcgctx->files[GCGM1_REF_FILE],
@@ -9257,7 +9260,7 @@ int gcg_comp_m31(gcg_ctx gcgctx, vldh_t_node node)
       first_par = 0;
     }
     if (!output_found
-        && (strcmp(bodydef[i].Par->Param.Info.PgmName, "ConOpen") == 0)) {
+        && streq(bodydef[i].Par->Param.Info.PgmName, "ConOpen")) {
       /* The point is not connected and will point to its
          own object */
       IF_PR fprintf(gcgctx->files[GCGM1_REF_FILE],
@@ -9265,7 +9268,7 @@ int gcg_comp_m31(gcg_ctx gcgctx, vldh_t_node node)
           vldh_IdToStr(0, node->ln.oid), bodydef[i].Par->Param.Info.PgmName,
           GCG_PREFIX_REF, vldh_IdToStr(1, node->ln.oid));
     } else if (!output_found
-        && (strcmp(bodydef[i].Par->Param.Info.PgmName, "ConClose") == 0)) {
+        && streq(bodydef[i].Par->Param.Info.PgmName, "ConClose")) {
       /* The point is not connected and will point to its
          own object */
       IF_PR fprintf(gcgctx->files[GCGM1_REF_FILE],
@@ -9388,7 +9391,7 @@ int gcg_comp_m32(gcg_ctx gcgctx, vldh_t_node node)
       first_par = 0;
     }
     if (!output_found
-        && (strcmp(bodydef[i].Par->Param.Info.PgmName, "FeedB") == 0)) {
+        && streq(bodydef[i].Par->Param.Info.PgmName, "FeedB")) {
       /* The point is not connected and will point to its
          own object */
       IF_PR fprintf(gcgctx->files[GCGM1_REF_FILE],
@@ -12621,7 +12624,7 @@ int gcg_comp_m57(gcg_ctx gcgctx, vldh_t_node node)
 
   for (i = 0, found = 0; i < rows; i++) {
     /* ML 961009. Use ParName instead of PgmName */
-    if (strcmp(bodydef[i].ParName, refattr) == 0) {
+    if (streq(bodydef[i].ParName, refattr)) {
       found = 1;
       break;
     }
@@ -13211,7 +13214,7 @@ int gcg_comp_m59(gcg_ctx gcgctx, vldh_t_node node)
 
   for (i = 0, found = 0; i < rows; i++) {
     /* ML 961009. Use ParName instead of PgmName */
-    if (strcmp(bodydef[i].ParName, refattr) == 0) {
+    if (streq(bodydef[i].ParName, refattr)) {
       found = 1;
       break;
     }
@@ -14965,7 +14968,7 @@ int gcg_comp_m71(gcg_ctx gcgctx, vldh_t_node node)
   if (EVEN(sts))
     return sts;
 
-  if (strcmp(*modelname_p, "") == 0) {
+  if (streq(*modelname_p, "")) {
     /* There is no expression */
     gcg_error_msg(gcgctx, GSX__NOEXPR, node);
     free(modelname_p);
@@ -15006,13 +15009,13 @@ int gcg_comp_m71(gcg_ctx gcgctx, vldh_t_node node)
 
   /* Print step code */
   for (i = 0; i < 8; i++) {
-    if (strcmp(ainname_p[i], "") != 0)
+    if (!streq(ainname_p[i], ""))
       IF_PR fprintf(gcgctx->files[GCGM1_CODE_FILE],
           "  rtU.%s = *%c%s->AIn%dP;\n", ainname_p[i], GCG_PREFIX_REF,
           vldh_IdToStr(0, node->ln.oid), i + 1);
   }
   for (i = 0; i < 8; i++) {
-    if (strcmp(dinname_p[i], "") != 0)
+    if (!streq(dinname_p[i], ""))
       IF_PR fprintf(gcgctx->files[GCGM1_CODE_FILE],
           "  rtU.%s = *%c%s->DIn%dP;\n", dinname_p[i], GCG_PREFIX_REF,
           vldh_IdToStr(0, node->ln.oid), i + 1);
@@ -15021,13 +15024,13 @@ int gcg_comp_m71(gcg_ctx gcgctx, vldh_t_node node)
   IF_PR fprintf(gcgctx->files[GCGM1_CODE_FILE], "  %s_step();\n", *modelname_p);
 
   for (i = 0; i < 8; i++) {
-    if (strcmp(outaname_p[i], "") != 0)
+    if (!streq(outaname_p[i], ""))
       IF_PR fprintf(gcgctx->files[GCGM1_CODE_FILE],
           "  %c%s->OutA%d = rtY.%s;\n", GCG_PREFIX_REF,
           vldh_IdToStr(0, node->ln.oid), i + 1, outaname_p[i]);
   }
   for (i = 0; i < 8; i++) {
-    if (strcmp(outdname_p[i], "") != 0)
+    if (!streq(outdname_p[i], ""))
       IF_PR fprintf(gcgctx->files[GCGM1_CODE_FILE],
           "  %c%s->OutD%d = rtY.%s;\n", GCG_PREFIX_REF,
           vldh_IdToStr(0, node->ln.oid), i + 1, outdname_p[i]);
@@ -15952,7 +15955,7 @@ int gcg_comp_plcembed(ldh_tSession ldhses, pwr_tOid oid)
       if (EVEN(sts))
         return sts;
 
-      if (strcmp(plcname, plcembed_p->Name) == 0) {
+      if (streq(plcname, plcembed_p->Name)) {
         plc_found = 1;
         break;
       }

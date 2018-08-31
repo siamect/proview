@@ -37,7 +37,8 @@
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+
+#include "co_string.h"
 
 #include "glow_growcurve.h"
 #include "glow_growapi.h"
@@ -4526,10 +4527,10 @@ static char* growapi_translate(char* transtab, const char* name)
   }
 
   name_p = transtab;
-  while (strcmp(name_p, "") != 0) {
-    if (strcmp(name_p, name) == 0) {
+  while (!streq(name_p, "")) {
+    if (streq(name_p, name)) {
       name_p += 32;
-      if (strcmp(name_p, "") == 0)
+      if (streq(name_p, ""))
         return 0;
       else {
         strcpy(return_name, name_p);

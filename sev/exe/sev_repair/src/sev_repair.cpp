@@ -40,6 +40,7 @@
 
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_string.h"
 
 #include "sev_dbms.h"
 #include "sev_repair.h"
@@ -372,50 +373,50 @@ int main(int argc, char* argv[])
   sev_repair rep;
 
   if (argc > 1
-      && (strcmp(argv[1], "-e") == 0 || strcmp(argv[1], "--engine") == 0)) {
+      && (streq(argv[1], "-e") || streq(argv[1], "--engine"))) {
     // Alter engine
     rep.init();
     rep.alter_engine();
   } else if (argc > 1
-      && (strcmp(argv[1], "-r") == 0 || strcmp(argv[1], "--repair") == 0)) {
+      && (streq(argv[1], "-r") || streq(argv[1], "--repair"))) {
     // Repair
     if (argc == 2) {
       rep.init();
       rep.check();
-    } else if (argc == 4 && strcmp(argv[2], "-t") == 0) {
+    } else if (argc == 4 && streq(argv[2], "-t")) {
       rep.init();
       rep.check(argv[3]);
     } else
       usage();
   } else if (argc > 1
-      && (strcmp(argv[1], "-c") == 0 || strcmp(argv[1], "--clean") == 0)) {
+      && (streq(argv[1], "-c") || streq(argv[1], "--clean"))) {
     // Clean
     if (argc == 2) {
       rep.init();
       rep.clean();
-    } else if (argc == 4 && strcmp(argv[2], "-t") == 0) {
+    } else if (argc == 4 && streq(argv[2], "-t")) {
       rep.init();
       rep.clean(argv[3]);
     } else
       usage();
   } else if (argc > 1
-      && (strcmp(argv[1], "-o") == 0 || strcmp(argv[1], "--optimize") == 0)) {
+      && (streq(argv[1], "-o") || streq(argv[1], "--optimize"))) {
     // Optimize
     if (argc == 2) {
       rep.init();
       rep.optimize();
-    } else if (argc == 4 && strcmp(argv[2], "-t") == 0) {
+    } else if (argc == 4 && streq(argv[2], "-t")) {
       rep.init();
       rep.optimize(argv[3]);
     } else
       usage();
   } else if (argc > 1
-      && (strcmp(argv[1], "-l") == 0 || strcmp(argv[1], "--list") == 0)) {
+      && (streq(argv[1], "-l") || streq(argv[1], "--list"))) {
     if (argc == 2) {
       // List
       rep.init();
       rep.list();
-    } else if (argc == 4 && strcmp(argv[2], "-t") == 0) {
+    } else if (argc == 4 && streq(argv[2], "-t")) {
       rep.init();
       rep.list(argv[3]);
     } else

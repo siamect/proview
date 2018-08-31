@@ -35,9 +35,9 @@
  **/
 
 #include <stdio.h>
-#include <string.h>
 
 #include "co_dcli.h"
+#include "co_string.h"
 
 #include "cow_qt_helpers.h"
 
@@ -106,7 +106,7 @@ void GeItemViewQt::update()
   textsize = 80;
   name_p = texts;
 
-  while (strcmp(name_p, "") != 0) {
+  while (!streq(name_p, "")) {
     QTreeWidgetItem* item = new QTreeWidgetItem(tree_widget);
     item->setText(0, QString::fromLatin1(name_p));
     tree_widget->addTopLevelItem(item);
@@ -242,7 +242,7 @@ pwr_tString80* graph_list_files()
     }
     dcli_parse_filename(found_file, dev, dir, file, type, &version);
     strcpy(file_p[file_cnt - 1], file);
-    if (strcmp(file, "") == 0) {
+    if (streq(file, "")) {
       file_cnt--;
     }
     sts = dcli_search_file(fname, found_file, DCLI_DIR_SEARCH_NEXT);
@@ -291,7 +291,7 @@ void GeItemViewQt::activate_tree_widget(QTreeWidgetItem* item, int idx)
     if (ge_ctx->graph->is_modified()) {
       char name[80];
       ge_ctx->graph->get_name(name);
-      if (strcmp(name, "") == 0) {
+      if (streq(name, "")) {
         ge_ctx->wow->DisplayError("Not saved", "Save current graph first");
         return;
       }

@@ -39,12 +39,15 @@
 #include <stdlib.h>
 
 #include "pwr_privilege.h"
+
 #include "co_api_user.h"
 #include "co_dcli.h"
+#include "co_error.h"
 #include "co_msg.h"
+#include "co_string.h"
 #include "co_syi.h"
 #include "co_time_msg.h"
-#include "co_error.h"
+
 #include "rt_gdb.h"
 #include "rt_gdh_msg.h"
 
@@ -249,13 +252,13 @@ int XNav::attr_string_to_value(int type_id, char* value_str, void* buffer_ptr,
     break;
   }
   case pwr_eType_Float32: {
-    if (strcmp(value_str, "FltMin") == 0)
+    if (streq(value_str, "FltMin"))
       *(float*)buffer_ptr = FLT_MIN;
-    else if (strcmp(value_str, "FltNMin") == 0)
+    else if (streq(value_str, "FltNMin"))
       *(float*)buffer_ptr = -FLT_MIN;
-    else if (strcmp(value_str, "FltMax") == 0)
+    else if (streq(value_str, "FltMax"))
       *(float*)buffer_ptr = FLT_MAX;
-    else if (strcmp(value_str, "FltNMax") == 0)
+    else if (streq(value_str, "FltNMax"))
       *(float*)buffer_ptr = -FLT_MAX;
     else if (sscanf(value_str, "%f%s", (float*)buffer_ptr, s) != 1) {
       char val[40];
@@ -311,9 +314,9 @@ int XNav::attr_string_to_value(int type_id, char* value_str, void* buffer_ptr,
   case pwr_eType_Int32:
   case pwr_eType_Status:
   case pwr_eType_NetStatus: {
-    if (strcmp(value_str, "IntMin") == 0)
+    if (streq(value_str, "IntMin"))
       *(int*)buffer_ptr = INT_MIN;
-    else if (strcmp(value_str, "IntMax") == 0)
+    else if (streq(value_str, "IntMax"))
       *(int*)buffer_ptr = INT_MAX;
     else if (sscanf(value_str, "%d%s", (int*)buffer_ptr, s) != 1)
       return XNAV__INPUT_SYNTAX;
@@ -363,7 +366,7 @@ int XNav::attr_string_to_value(int type_id, char* value_str, void* buffer_ptr,
   case pwr_eType_Objid: {
     pwr_tObjid objid;
 
-    if (strcmp(value_str, "0") == 0)
+    if (streq(value_str, "0"))
       objid = pwr_cNObjid;
     else {
       sts = gdh_NameToObjid(value_str, &objid);
@@ -426,7 +429,7 @@ int XNav::attr_string_to_value(int type_id, char* value_str, void* buffer_ptr,
   case pwr_eType_AttrRef: {
     pwr_sAttrRef attrref;
 
-    if (strcmp(value_str, "0") == 0)
+    if (streq(value_str, "0"))
       attrref = pwr_cNAttrRef;
     else {
       sts = gdh_NameToAttrref(pwr_cNObjid, value_str, &attrref);
@@ -449,9 +452,9 @@ int XNav::attr_string_to_value(int type_id, char* value_str, void* buffer_ptr,
   case pwr_eType_Time: {
     pwr_tTime time;
 
-    if (strcmp(value_str, "AtZero") == 0)
+    if (streq(value_str, "AtZero"))
       memcpy(buffer_ptr, &pwr_cAtMin, sizeof(pwr_tTime));
-    else if (strcmp(value_str, "AtMax") == 0)
+    else if (streq(value_str, "AtMax"))
       memcpy(buffer_ptr, &pwr_cAtMax, sizeof(pwr_tTime));
     else {
       sts = time_AsciiToA(value_str, &time);
@@ -464,9 +467,9 @@ int XNav::attr_string_to_value(int type_id, char* value_str, void* buffer_ptr,
   case pwr_eType_DeltaTime: {
     pwr_tDeltaTime deltatime;
 
-    if (strcmp(value_str, "DtMin") == 0)
+    if (streq(value_str, "DtMin"))
       memcpy(buffer_ptr, &pwr_cDtMin, sizeof(pwr_tDeltaTime));
-    else if (strcmp(value_str, "DtMax") == 0)
+    else if (streq(value_str, "DtMax"))
       memcpy(buffer_ptr, &pwr_cDtMax, sizeof(pwr_tDeltaTime));
     else {
       sts = time_AsciiToD(value_str, &deltatime);
@@ -2633,7 +2636,7 @@ int XNav::trace_connect_bc(
 
   /*  printf( "Connecting %s.%s\n", name, attr);  */
 
-  if (strcmp(name, "") == 0)
+  if (streq(name, ""))
     return 1;
 
   brow_GetUserData(object, (void**)&base_item);
@@ -2978,7 +2981,7 @@ int XNav::find(pwr_tObjid objid, char* attr, void** item)
     brow_GetUserData(object_list[i], (void**)&object_item);
     cdh_SuppressSuperAll(item_attr, object_item->name);
     if (cdh_ObjidIsEqual(object_item->objid, objid)
-        && strcmp(attr, item_attr) == 0) {
+        && streq(attr, item_attr)) {
       *item = (void*)object_item;
       return 1;
     }
@@ -3124,7 +3127,7 @@ int XNavGbl::setupscript_exec(XNav* xnav)
 {
   char cmd[80];
 
-  if (strcmp(setupscript, "") == 0)
+  if (streq(setupscript, ""))
     strcpy(setupscript, "$HOME/xtt_setup");
 
   strcpy(cmd, "@");
@@ -3138,7 +3141,7 @@ int XNavGbl::load_config(XNav* xnav)
 {
   int sts;
 
-  if (strcmp(xnav->opplace_name, "") == 0) {
+  if (streq(xnav->opplace_name, "")) {
     xnav->opplace_p
         = (pwr_sClass_OpPlace*)calloc(1, sizeof(pwr_sClass_OpPlace));
     return 0;
@@ -3209,7 +3212,7 @@ int XNav::brow_push()
   *brow = *brow_stack[brow_cnt - 1];
   delete brow_stack[brow_cnt];
 
-  if (strcmp(push_cmd, "") != 0)
+  if (!streq(push_cmd, ""))
     command(push_cmd);
 
   return 1;
@@ -3478,7 +3481,7 @@ int XNav::menu_tree_search_children(
   menu_p = child_list;
   while (menu_p) {
     cdh_ToUpper(up_title, menu_p->title);
-    if (strcmp(up_title, search_name) == 0) {
+    if (streq(up_title, search_name)) {
       if (final_search) {
         *menu_item = menu_p;
         return 1;
@@ -3587,7 +3590,7 @@ int XNav::init_brow_base_cb(FlowCtx* fctx, void* client_data)
       init_brow_collect_cb, (void*)xnav, flow_eCtxType_Brow);
 
   // Start operator window
-  if (strcmp(xnav->opplace_name, "") != 0) {
+  if (!streq(xnav->opplace_name, "")) {
     pwr_tCmd cmd;
 
     xnav->login_from_opplace();
@@ -3778,7 +3781,7 @@ void ApplListElem::log_new()
   switch (type) {
   case applist_eType_Graph: {
     pwr_tCmd cmd;
-    if (strcmp(instance, "") == 0)
+    if (streq(instance, ""))
       sprintf(cmd, "open graph \"%s\"", name);
     else
       sprintf(cmd, "open graph \"%s\"/inst=%s", name, instance);
@@ -3838,7 +3841,7 @@ void ApplListElem::log_delete()
   switch (type) {
   case applist_eType_Graph: {
     pwr_tCmd cmd;
-    if (strcmp(instance, "") == 0)
+    if (streq(instance, ""))
       sprintf(cmd, "close graph \"%s\"", name);
     else
       sprintf(cmd, "close graph \"%s\"/inst=%s", name, instance);
@@ -3965,7 +3968,7 @@ int ApplList::find(
 
   for (elem = root; elem; elem = elem->next) {
     if (elem->type == type && cdh_NoCaseStrcmp(name, elem->name) == 0) {
-      if (instance && strcmp(elem->instance, "") != 0) {
+      if (instance && !streq(elem->instance, "")) {
         if (cdh_NoCaseStrcmp(instance, elem->instance) == 0) {
           *ctx = elem->ctx;
           return 1;
@@ -3986,7 +3989,7 @@ int ApplList::find_graph(const char* name, const char* instance, void** ctx)
   for (elem = root; elem; elem = elem->next) {
     if (elem->type == applist_eType_Graph) {
       if (cdh_NoCaseStrcmp(name, elem->name) == 0) {
-        if (instance && strcmp(elem->instance, "") != 0) {
+        if (instance && !streq(elem->instance, "")) {
           if (cdh_NoCaseStrcmp(instance, elem->instance) == 0) {
             *ctx = elem->ctx;
             return 1;
@@ -4187,7 +4190,7 @@ int XNav::sound(pwr_tAttrRef* sound)
   if (!audio) {
     char* dp = 0;
 
-    if (strcmp(opplace_p->AudioDevice, "") != 0)
+    if (!streq(opplace_p->AudioDevice, ""))
       dp = opplace_p->AudioDevice;
 
     audio = new XttAudio(wow, 0, dp);
@@ -4208,7 +4211,7 @@ int XNav::sound_attached()
   if (!audio) {
     char* dp = 0;
 
-    if (strcmp(opplace_p->AudioDevice, "") != 0)
+    if (!streq(opplace_p->AudioDevice, ""))
       dp = opplace_p->AudioDevice;
 
     audio = new XttAudio(wow, 0, dp);
@@ -4414,7 +4417,7 @@ void XNav::refresh()
         break;
       case xnav_eItemType_AttrArray:
         if (cdh_ObjidIsEqual(open_objid[i], object_item->objid)
-            && strcmp(object_item->name, open_attr[i]) == 0) {
+            && streq(object_item->name, open_attr[i])) {
           if (open_type[i] & xnav_mOpen_Attributes)
             ((ItemAttrArray*)object_item)->open_attributes(brow, 0, 0);
           found = 1;
@@ -4422,7 +4425,7 @@ void XNav::refresh()
         break;
       case xnav_eItemType_Attr:
         if (cdh_ObjidIsEqual(open_objid[i], object_item->objid)
-            && strcmp(object_item->name, open_attr[i]) == 0) {
+            && streq(object_item->name, open_attr[i])) {
           if (open_type[i] & xnav_mOpen_Children)
             ((ItemAttr*)object_item)->open_children(brow, 0, 0);
           found = 1;
@@ -4430,7 +4433,7 @@ void XNav::refresh()
         break;
       case xnav_eItemType_AttrArrayElem:
         if (cdh_ObjidIsEqual(open_objid[i], object_item->objid)
-            && strcmp(object_item->name, open_attr[i]) == 0) {
+            && streq(object_item->name, open_attr[i])) {
           if (open_type[i] & xnav_mOpen_Children)
             ((ItemAttrArrayElem*)object_item)->open_children(brow, 0, 0);
           found = 1;
@@ -4438,7 +4441,7 @@ void XNav::refresh()
         break;
       case xnav_eItemType_AttrObject:
         if (cdh_ObjidIsEqual(open_objid[i], object_item->objid)
-            && strcmp(object_item->name, open_attr[i]) == 0) {
+            && streq(object_item->name, open_attr[i])) {
           if (open_type[i] & xnav_mOpen_Attributes)
             ((ItemAttrObject*)object_item)->open_attributes(brow, 0, 0);
           found = 1;
@@ -4467,7 +4470,7 @@ void XNav::refresh()
           case xnav_eItemType_AttrArrayElem:
           case xnav_eItemType_Enum:
           case xnav_eItemType_Mask:
-            if (strcmp(&sel_attr[i * 80], object_item->name) == 0)
+            if (streq(&sel_attr[i * 80], object_item->name))
               found = 1;
             break;
           default:

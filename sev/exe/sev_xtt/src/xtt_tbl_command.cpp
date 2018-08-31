@@ -39,7 +39,6 @@
 
 #include <ctype.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include "co_api_user.h"
 #include "co_ccm.h"
@@ -48,6 +47,7 @@
 #include "co_dcli.h"
 #include "co_dcli_msg.h"
 #include "co_error.h"
+#include "co_string.h"
 #include "co_syi.h"
 #include "co_user.h"
 
@@ -290,7 +290,7 @@ static int xtttbl_logout_func(void* client_data, void* client_flag)
   XttTbl* xtttbl = (XttTbl*)client_data;
   char msg[80];
 
-  if (strcmp(xtttbl->base_user, "") == 0) {
+  if (streq(xtttbl->base_user, "")) {
     sprintf(msg, "User %s logged out", xtttbl->user);
     xtttbl->message('I', msg);
   } else {
@@ -436,7 +436,7 @@ static int xtttbl_show_func(void* client_data, void* client_flag)
     char msg[120];
     char priv_str[80];
 
-    if (strcmp(xtttbl->user, "") == 0) {
+    if (streq(xtttbl->user, "")) {
       user_RtPrivToString(xtttbl->priv, priv_str, sizeof(priv_str));
       sprintf(msg, "Not logged in (%s)", priv_str);
       xtttbl->message('I', msg);

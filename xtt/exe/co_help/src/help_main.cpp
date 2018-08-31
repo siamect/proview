@@ -36,13 +36,13 @@
 
 /* rt_xtt.cpp -- Display plant and node hiererachy */
 
-#include <string.h>
-
 #include <iostream>
 
 #include "co_help_main.h"
 #include "co_lng.h"
 #include "co_msg.h"
+#include "co_string.h"
+
 #include "cow_xhelp.h"
 
 static void usage()
@@ -87,38 +87,38 @@ CoHelpMain::CoHelpMain(int argc, char* argv[], int* return_sts)
 
   // Set language
   for (int i = 1; i < argc; i++) {
-    if (strcmp(argv[i], "-l") == 0 && i + 1 < argc) {
+    if (streq(argv[i], "-l") && i + 1 < argc) {
       Lng::set(argv[i + 1]);
       i++;
-    } else if (strcmp(argv[i], "-t") == 0 && i + 1 < argc) {
+    } else if (streq(argv[i], "-t") && i + 1 < argc) {
       strcpy(topic, argv[i + 1]);
       i++;
-    } else if (strcmp(argv[i], "-s") == 0 && i + 1 < argc) {
+    } else if (streq(argv[i], "-s") && i + 1 < argc) {
       type = navh_eHelpFile_Other;
       strcpy(helpfile, argv[i + 1]);
       i++;
-    } else if (strcmp(argv[i], "-b") == 0 && i + 1 < argc) {
+    } else if (streq(argv[i], "-b") && i + 1 < argc) {
       strcpy(bookmark, argv[i + 1]);
       i++;
-    } else if (strcmp(argv[i], "-c") == 0) {
+    } else if (streq(argv[i], "-c")) {
       type = navh_eHelpFile_Other;
-      if (strcmp(topic, "index") == 0)
+      if (streq(topic, "index"))
         strcpy(topic, "overview");
       strcpy(helpfile, pwr_cNameBaseWttHelp);
-    } else if (strcmp(argv[i], "-d") == 0) {
+    } else if (streq(argv[i], "-d")) {
       type = navh_eHelpFile_Other;
       strcpy(helpfile, "$pwr_lang/man_dg.dat");
-    } else if (strcmp(argv[i], "-p") == 0) {
+    } else if (streq(argv[i], "-p")) {
       type = navh_eHelpFile_Project;
-    } else if (strcmp(argv[i], "-o") == 0) {
+    } else if (streq(argv[i], "-o")) {
       type = navh_eHelpFile_Other;
-      if (strcmp(topic, "index") == 0)
+      if (streq(topic, "index"))
         strcpy(topic, "overview");
       strcpy(helpfile, pwr_cNameBaseXttHelp);
-    } else if (strcmp(argv[i], "-g") == 0) {
+    } else if (streq(argv[i], "-g")) {
       type = navh_eHelpFile_Other;
       strcpy(helpfile, "$pwr_lang/man_geref.dat");
-    } else if (strcmp(argv[i], "-h") == 0) {
+    } else if (streq(argv[i], "-h")) {
       usage();
       exit(0);
     }

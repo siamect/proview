@@ -37,7 +37,6 @@
 #if defined PWRE_CONF_GST
 
 #include <math.h>
-#include <string.h>
 
 #include "xtt_xnav.h"
 
@@ -52,7 +51,9 @@
 #include <gdk/gdkx.h>
 
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_time.h"
+
 #include "rt_xnav_msg.h"
 
 #include "xtt_stream_gtk.h"
@@ -285,7 +286,7 @@ void XttStreamGtk::reconnect(void* data)
     pwr_tURL luri;
     char* s;
     if (strm->options & strm_mOptions_HttpBasicAuthentication) {
-      if (strcmp(strm->user, "") != 0 && strcmp(strm->password, "") != 0
+      if (!streq(strm->user, "") && !streq(strm->password, "")
           && (s = strstr(strm->uri, "://"))) {
         unsigned long int offs = s - (char*)strm->uri + 3;
         strncpy(luri, strm->uri, offs);
@@ -339,7 +340,7 @@ void XttStreamGtk::error_cb(GstBus* bus, GstMessage* msg, void* data)
         err->message);
     printf("Debugging information: %s\n", debug_info ? debug_info : "none");
 
-    if (strcmp(err->message, "No URI set") == 0)
+    if (streq(err->message, "No URI set"))
       strm->no_uri = 1;
 
     g_clear_error(&err);
@@ -610,7 +611,7 @@ XttStreamGtk::XttStreamGtk(GtkWidget* st_parent_wid, void* st_parent_ctx,
   pwr_tURL luri;
   char* s;
   if (options & strm_mOptions_HttpBasicAuthentication) {
-    if (strcmp(user, "") != 0 && strcmp(password, "") != 0
+    if (!streq(user, "") && !streq(password, "")
         && (s = strstr(uri, "://"))) {
       unsigned long int offs = s - (char*)uri + 3;
       strncpy(luri, uri, offs);
@@ -848,7 +849,7 @@ XttStreamGtk::XttStreamGtk(GtkWidget* st_parent_wid, void* st_parent_ctx,
     lsts = gdh_ArefANameToAref(&aref, "PresetPosition[0].Description", &aaref);
     if (ODD(lsts))
       lsts = gdh_GetObjectInfoAttrref(&aaref, tooltiptext, sizeof(tooltiptext));
-    if (ODD(lsts) && strcmp(tooltiptext, "") != 0)
+    if (ODD(lsts) && !streq(tooltiptext, ""))
       strcpy(tooltiptext, CoWowGtk::convert_utf8(tooltiptext));
     else
       strcpy(tooltiptext, CoWowGtk::translate_utf8("Preset position 1"));
@@ -864,7 +865,7 @@ XttStreamGtk::XttStreamGtk(GtkWidget* st_parent_wid, void* st_parent_ctx,
     lsts = gdh_ArefANameToAref(&aref, "PresetPosition[1].Description", &aaref);
     if (ODD(lsts))
       lsts = gdh_GetObjectInfoAttrref(&aaref, tooltiptext, sizeof(tooltiptext));
-    if (ODD(lsts) && strcmp(tooltiptext, "") != 0)
+    if (ODD(lsts) && !streq(tooltiptext, ""))
       strcpy(tooltiptext, CoWowGtk::convert_utf8(tooltiptext));
     else
       strcpy(tooltiptext, CoWowGtk::translate_utf8("Preset position 2"));
@@ -880,7 +881,7 @@ XttStreamGtk::XttStreamGtk(GtkWidget* st_parent_wid, void* st_parent_ctx,
     lsts = gdh_ArefANameToAref(&aref, "PresetPosition[2].Description", &aaref);
     if (ODD(lsts))
       lsts = gdh_GetObjectInfoAttrref(&aaref, tooltiptext, sizeof(tooltiptext));
-    if (ODD(lsts) && strcmp(tooltiptext, "") != 0)
+    if (ODD(lsts) && !streq(tooltiptext, ""))
       strcpy(tooltiptext, CoWowGtk::convert_utf8(tooltiptext));
     else
       strcpy(tooltiptext, CoWowGtk::translate_utf8("Preset position 3"));
@@ -896,7 +897,7 @@ XttStreamGtk::XttStreamGtk(GtkWidget* st_parent_wid, void* st_parent_ctx,
     lsts = gdh_ArefANameToAref(&aref, "PresetPosition[3].Description", &aaref);
     if (ODD(lsts))
       lsts = gdh_GetObjectInfoAttrref(&aaref, tooltiptext, sizeof(tooltiptext));
-    if (ODD(lsts) && strcmp(tooltiptext, "") != 0)
+    if (ODD(lsts) && !streq(tooltiptext, ""))
       strcpy(tooltiptext, CoWowGtk::convert_utf8(tooltiptext));
     else
       strcpy(tooltiptext, CoWowGtk::translate_utf8("Preset position 4"));
@@ -912,7 +913,7 @@ XttStreamGtk::XttStreamGtk(GtkWidget* st_parent_wid, void* st_parent_ctx,
     lsts = gdh_ArefANameToAref(&aref, "PresetPosition[4].Description", &aaref);
     if (ODD(lsts))
       lsts = gdh_GetObjectInfoAttrref(&aaref, tooltiptext, sizeof(tooltiptext));
-    if (ODD(lsts) && strcmp(tooltiptext, "") != 0)
+    if (ODD(lsts) && !streq(tooltiptext, ""))
       strcpy(tooltiptext, CoWowGtk::convert_utf8(tooltiptext));
     else
       strcpy(tooltiptext, CoWowGtk::translate_utf8("Preset position 5"));
@@ -928,7 +929,7 @@ XttStreamGtk::XttStreamGtk(GtkWidget* st_parent_wid, void* st_parent_ctx,
     lsts = gdh_ArefANameToAref(&aref, "PresetPosition[5].Description", &aaref);
     if (ODD(lsts))
       lsts = gdh_GetObjectInfoAttrref(&aaref, tooltiptext, sizeof(tooltiptext));
-    if (ODD(lsts) && strcmp(tooltiptext, "") != 0)
+    if (ODD(lsts) && !streq(tooltiptext, ""))
       strcpy(tooltiptext, CoWowGtk::convert_utf8(tooltiptext));
     else
       strcpy(tooltiptext, CoWowGtk::translate_utf8("Preset position 6"));
@@ -944,7 +945,7 @@ XttStreamGtk::XttStreamGtk(GtkWidget* st_parent_wid, void* st_parent_ctx,
     lsts = gdh_ArefANameToAref(&aref, "PresetPosition[6].Description", &aaref);
     if (ODD(lsts))
       lsts = gdh_GetObjectInfoAttrref(&aaref, tooltiptext, sizeof(tooltiptext));
-    if (ODD(lsts) && strcmp(tooltiptext, "") != 0)
+    if (ODD(lsts) && !streq(tooltiptext, ""))
       strcpy(tooltiptext, CoWowGtk::convert_utf8(tooltiptext));
     else
       strcpy(tooltiptext, CoWowGtk::translate_utf8("Preset position 7"));
@@ -960,7 +961,7 @@ XttStreamGtk::XttStreamGtk(GtkWidget* st_parent_wid, void* st_parent_ctx,
     lsts = gdh_ArefANameToAref(&aref, "PresetPosition[7].Description", &aaref);
     if (ODD(lsts))
       lsts = gdh_GetObjectInfoAttrref(&aaref, tooltiptext, sizeof(tooltiptext));
-    if (ODD(lsts) && strcmp(tooltiptext, "") != 0)
+    if (ODD(lsts) && !streq(tooltiptext, ""))
       strcpy(tooltiptext, CoWowGtk::convert_utf8(tooltiptext));
     else
       strcpy(tooltiptext, CoWowGtk::translate_utf8("Preset position 8"));
@@ -976,7 +977,7 @@ XttStreamGtk::XttStreamGtk(GtkWidget* st_parent_wid, void* st_parent_ctx,
     lsts = gdh_ArefANameToAref(&aref, "PresetPosition[8].Description", &aaref);
     if (ODD(lsts))
       lsts = gdh_GetObjectInfoAttrref(&aaref, tooltiptext, sizeof(tooltiptext));
-    if (ODD(lsts) && strcmp(tooltiptext, "") != 0)
+    if (ODD(lsts) && !streq(tooltiptext, ""))
       strcpy(tooltiptext, CoWowGtk::convert_utf8(tooltiptext));
     else
       strcpy(tooltiptext, CoWowGtk::translate_utf8("Preset position 9"));
@@ -992,7 +993,7 @@ XttStreamGtk::XttStreamGtk(GtkWidget* st_parent_wid, void* st_parent_ctx,
     lsts = gdh_ArefANameToAref(&aref, "PresetPosition[9].Description", &aaref);
     if (ODD(lsts))
       lsts = gdh_GetObjectInfoAttrref(&aaref, tooltiptext, sizeof(tooltiptext));
-    if (ODD(lsts) && strcmp(tooltiptext, "") != 0)
+    if (ODD(lsts) && !streq(tooltiptext, ""))
       strcpy(tooltiptext, CoWowGtk::convert_utf8(tooltiptext));
     else
       strcpy(tooltiptext, CoWowGtk::translate_utf8("Preset position 10"));

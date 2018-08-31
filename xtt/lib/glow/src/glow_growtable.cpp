@@ -35,11 +35,12 @@
  **/
 
 #include <stdlib.h>
-#include <string.h>
 
 #include <iostream>
 
 #include "co_dcli.h"
+#include "co_string.h"
+
 #include "glow_growtable.h"
 #include "glow_grownode.h"
 #include "glow_draw.h"
@@ -624,7 +625,7 @@ void GrowTable::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     y = ll_y;
 
     for (int i = header_column; i < columns; i++) {
-      if (header_text_idx >= 0 && strcmp(header_text[i], "") != 0) {
+      if (header_text_idx >= 0 && !streq(header_text[i], "")) {
         ctx->gdraw->text(w, int(x + text_offs), int(y + header_h - 4),
             header_text[i], strlen(header_text[i]), header_text_drawtype,
             header_text_color, header_text_idx, highlight, 0, font,
@@ -656,7 +657,7 @@ void GrowTable::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       // Draw header of header column header
       x = ll_x;
       y = ll_y;
-      if (header_text_idx >= 0 && strcmp(header_text[0], "") != 0)
+      if (header_text_idx >= 0 && !streq(header_text[0], ""))
         ctx->gdraw->text(w, int(x + text_offs), int(y + header_h - 4),
             header_text[0], strlen(header_text[0]), header_text_drawtype,
             header_text_color, header_text_idx, highlight, 0, font, tsize, 0);
@@ -712,7 +713,7 @@ void GrowTable::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
             w, ll_x, int(y), ll_x + header_w, int(y), drawtype, idx, 0);
 
         offs = column_size[0] * i;
-        if (text_idx >= 0 && strcmp(cell_value + offs, "") != 0) {
+        if (text_idx >= 0 && !streq(cell_value + offs, "")) {
           int text_x = int(x) + text_offs;
 
           if (column_adjustment[0] == glow_eAdjustment_Right
@@ -832,7 +833,7 @@ void GrowTable::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
 
         if (options & glow_mTableOptions_ZeroIfHeader) {
           // Don't draw the row if the value in the first column is zero
-          if (strcmp(cell_value + j * column_size[0], "") == 0)
+          if (streq(cell_value + j * column_size[0], ""))
             continue;
         }
         if (options & glow_mTableOptions_ZeroIfHeaderIs0) {
@@ -840,13 +841,13 @@ void GrowTable::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
           char* s;
           for (s = cell_value + j * column_size[0]; *s && *s == ' '; s++)
             ;
-          if (strcmp(s, "0") == 0)
+          if (streq(s, "0"))
             continue;
         }
 
         if (y > ll_y) {
           offs = column_offs + column_size[i] * j;
-          if (text_idx >= 0 && strcmp(cell_value + offs, "") != 0) {
+          if (text_idx >= 0 && !streq(cell_value + offs, "")) {
             int text_x = int(x) + text_offs;
 
             if (column_adjustment[i] == glow_eAdjustment_Right

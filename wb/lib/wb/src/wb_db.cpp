@@ -35,11 +35,12 @@
  **/
 
 #include <errno.h>
-#include <string.h>
 #include <sys/stat.h>
 
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_time.h"
+
 #include "wb_destination.h"
 #include "wb_db.h"
 #include "wb_name.h"
@@ -1383,7 +1384,7 @@ static void get_config(char* name, unsigned int* lk_max_locks,
     dcli_trim(line, line);
     if (line[0] == '#')
       continue;
-    if (strcmp(line, "") == 0)
+    if (streq(line, ""))
       continue;
 
     nr = dcli_parse(line, " 	", "", (char*)line_elem,

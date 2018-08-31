@@ -39,16 +39,19 @@
 #include <stdlib.h>
 
 #include "co_cdh.h"
+#include "co_error.h"
+#include "co_string.h"
+
 #include "rt_xatt_msg.h"
 #include "rt_mh_net.h"
+
+#include "cow_wow.h"
 
 #include "flow_msg.h"
 
 #include "xtt_xatt.h"
 #include "xtt_xattnav.h"
 #include "xtt_item.h"
-#include "cow_wow.h"
-#include "co_error.h"
 
 void XAttNav::message(char sev, const char* text)
 {
@@ -500,7 +503,7 @@ int XAttNav::trace_connect_bc(
 
   /*  printf( "Connecting %s.%s\n", name, attr);  */
 
-  if (strcmp(name, "") == 0)
+  if (streq(name, ""))
     return 1;
 
   brow_GetUserData(object, (void**)&base_item);
@@ -753,7 +756,7 @@ int XAttNav::set_attr_value(brow_tObject node, char* name, char* value_str)
     ItemAttr* item = (ItemAttr*)base_item;
 
     // Check that objid is still the same
-    if (strcmp(item->attr, name) != 0)
+    if (!streq(item->attr, name))
       return XATT__DISAPPEARD;
 
     sts = gdh_ObjidToName(
@@ -803,7 +806,7 @@ int XAttNav::select_by_name(char* name)
     case xnav_eItemType_AttrArrayElem: {
       ItemBaseAttr* item = (ItemBaseAttr*)base_item;
 
-      if (strcmp(name, item->attr) == 0) {
+      if (streq(name, item->attr)) {
         object = object_list[i];
         found = 1;
       }

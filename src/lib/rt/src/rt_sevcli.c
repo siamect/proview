@@ -34,10 +34,11 @@
  * General Public License plus this exception.
  */
 
-#include <string.h>
 #include "co_cdh.h"
-#include "co_time.h"
 #include "co_cnf.h"
+#include "co_string.h"
+#include "co_time.h"
+
 #include "rt_qcom_msg.h"
 #include "rt_sev_msg.h"
 #include "rt_sevcli.h"
@@ -111,7 +112,7 @@ int sevcli_set_servernode(pwr_tStatus* sts, sevcli_tCtx ctx, char* nodename)
   qcom_sNode node;
   pwr_tNid nid;
 
-  if (!nodename || strcmp(nodename, "") == 0) {
+  if (!nodename || streq(nodename, "")) {
     ctx->server = ctx->qid.nid;
     *sts = SEV__SUCCESS;
     return 1;

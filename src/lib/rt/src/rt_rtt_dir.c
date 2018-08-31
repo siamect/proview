@@ -41,8 +41,9 @@
 
 #include <dirent.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
+
+#include "co_string.h"
 
 #include "rt_rtt.h"
 #include "rt_rtt_dir.h"
@@ -123,7 +124,7 @@ int rtt_search_file(char* name, char* found_file, int new)
           found = 1;
         }
       } else {
-        if (strcmp(pattern, dir_entry->d_name) == 0) {
+        if (streq(pattern, dir_entry->d_name)) {
           strcpy(found_file, dir_entry->d_name);
           found = 1;
         }

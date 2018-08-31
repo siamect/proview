@@ -36,13 +36,13 @@
 
 /* cow_wow_gtk.cpp -- useful windows */
 
-#include <string.h>
 #include <stdlib.h>
 #include <gdk/gdkkeysyms.h>
 
 #include "co_api.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_string.h"
 
 #include "cow_wow_gtk.h"
 
@@ -287,7 +287,7 @@ void CoWowGtk::CreateInputDialog(void* ctx, const char* title, const char* text,
   gtk_widget_show_all(inputdialog_widget);
 
   gint pos = 0;
-  if (init_text && strcmp(init_text, "") != 0) {
+  if (init_text && !streq(init_text, "")) {
     char* textutf8
         = g_convert(init_text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
     gtk_editable_insert_text(
@@ -555,7 +555,7 @@ void* CoWowGtk::CreateList(const char* title, const char* texts, int textsize,
   store = gtk_list_store_new(1, G_TYPE_STRING);
   name_p = (char*)texts;
   i = 0;
-  while (strcmp(name_p, "") != 0) {
+  while (!streq(name_p, "")) {
     char* nameutf8
         = g_convert(name_p, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
 
@@ -1113,7 +1113,7 @@ gboolean CoWowEntryGtk::event_cb(GtkWidget* w, GdkEvent* event, gpointer data)
   }
   case GDK_Up: {
     const char *prev = en->m_re->popUp(text);
-    if (strcmp(prev, "") != 0) {
+    if (!streq(prev, "")) {
       gint pos = 0;
       gtk_editable_delete_text(GTK_EDITABLE(w), 0, -1);
       gtk_editable_insert_text(GTK_EDITABLE(w), prev, strlen(prev), &pos);
@@ -1124,7 +1124,7 @@ gboolean CoWowEntryGtk::event_cb(GtkWidget* w, GdkEvent* event, gpointer data)
   }
   case GDK_Down: {
     const char *next = en->m_re->popDown(text);
-    if (strcmp(next, "") != 0) {
+    if (!streq(next, "")) {
       gint pos = 0;
       gtk_editable_delete_text(GTK_EDITABLE(w), 0, -1);
       gtk_editable_insert_text(GTK_EDITABLE(w), next, strlen(next), &pos);
@@ -1629,7 +1629,7 @@ void CoWowGtk::CreateBrowPrintDialogGtk(const char* title, void* brow_ctx,
   GtkPrintOperationResult result;
   GtkPrintOperationAction action = GTK_PRINT_OPERATION_ACTION_PRINT_DIALOG;
 
-  if (m_printdialog_disable && strcmp(m_default_printer, "") == 0) {
+  if (m_printdialog_disable && streq(m_default_printer, "")) {
     *sts = WOW__PRINTDIALOGDISABLED;
     return;
   }
@@ -1647,7 +1647,7 @@ void CoWowGtk::CreateBrowPrintDialogGtk(const char* title, void* brow_ctx,
   else
     settings = gtk_print_settings_new();
 
-  if (strcmp(m_default_printer, "") != 0) {
+  if (!streq(m_default_printer, "")) {
     gtk_print_settings_set_printer(settings, m_default_printer);
     gtk_print_operation_set_print_settings(print, settings);
   }
@@ -1725,7 +1725,7 @@ void CoWowGtk::CreateFlowPrintDialogGtk(const char* title, void* flow_ctx,
   GtkPrintOperationResult result;
   GtkPrintOperationAction action = GTK_PRINT_OPERATION_ACTION_PRINT_DIALOG;
 
-  if (m_printdialog_disable && strcmp(m_default_printer, "") == 0) {
+  if (m_printdialog_disable && streq(m_default_printer, "")) {
     *sts = WOW__PRINTDIALOGDISABLED;
     return;
   }
@@ -1743,7 +1743,7 @@ void CoWowGtk::CreateFlowPrintDialogGtk(const char* title, void* flow_ctx,
   else
     settings = gtk_print_settings_new();
 
-  if (strcmp(m_default_printer, "") != 0) {
+  if (!streq(m_default_printer, "")) {
     gtk_print_settings_set_printer(settings, m_default_printer);
     gtk_print_operation_set_print_settings(print, settings);
   }

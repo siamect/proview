@@ -34,12 +34,12 @@
  * General Public License plus this exception.
  **/
 
-#include <string.h>
-
 #include <iostream>
 
 #include "pwr_names.h"
 #include "pwr_version.h"
+
+#include "co_string.h"
 #include "co_time.h"
 
 #include "wb_lfu.h"
@@ -651,16 +651,16 @@ void wb_revision::read_file()
     nr = dcli_parse(line, " ", "", (char*)item_array,
         sizeof(item_array) / sizeof(item_array[0]), sizeof(item_array[0]), 0);
 
-    if (nr == 3 && strcmp(item_array[0], "#!") == 0
-        && strcmp(item_array[1], "RevisionManager") == 0) {
-      if (strcmp(item_array[2], "1") == 0)
+    if (nr == 3 && streq(item_array[0], "#!")
+        && streq(item_array[1], "RevisionManager")) {
+      if (streq(item_array[2], "1"))
         m_manager_enum = pwr_eVersionManagerEnum_Git;
       else
         m_manager_enum = pwr_eVersionManagerEnum_None;
       continue;
     }
-    if (nr == 3 && strcmp(item_array[0], "#!") == 0
-        && strcmp(item_array[1], "Current") == 0) {
+    if (nr == 3 && streq(item_array[0], "#!")
+        && streq(item_array[1], "Current")) {
       int current;
       int num;
 
@@ -720,16 +720,16 @@ void wb_revision::read_file_meta()
     nr = dcli_parse(line, " ", "", (char*)item_array,
         sizeof(item_array) / sizeof(item_array[0]), sizeof(item_array[0]), 0);
 
-    if (nr == 3 && strcmp(item_array[0], "#!") == 0
-        && strcmp(item_array[1], "RevisionManager") == 0) {
-      if (strcmp(item_array[2], "1") == 0)
+    if (nr == 3 && streq(item_array[0], "#!")
+        && streq(item_array[1], "RevisionManager")) {
+      if (streq(item_array[2], "1"))
         m_manager_enum = pwr_eVersionManagerEnum_Git;
       else
         m_manager_enum = pwr_eVersionManagerEnum_None;
       continue;
     }
-    if (nr == 3 && strcmp(item_array[0], "#!") == 0
-        && strcmp(item_array[1], "Current") == 0) {
+    if (nr == 3 && streq(item_array[0], "#!")
+        && streq(item_array[1], "Current")) {
       int current;
       int num;
 
@@ -740,7 +740,7 @@ void wb_revision::read_file_meta()
         m_current_idx = -1;
       continue;
     }
-    if (strcmp(item_array[0], "#!") != 0)
+    if (!streq(item_array[0], "#!"))
       break;
   }
   fp.close();

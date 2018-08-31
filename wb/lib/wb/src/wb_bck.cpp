@@ -35,12 +35,15 @@
  **/
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "pwr_baseclasses.h"
+
+#include "co_string.h"
 #include "co_time.h"
-#include "rt_gdh.h"
+
 #include "rt_bckdef.h"
+#include "rt_gdh.h"
+
 #include "wb_bck.h"
 #include "wb_ldh_msg.h"
 
@@ -174,7 +177,7 @@ pwr_tStatus wb_bck_list::read_db(wb_bck_list* lp)
       // Read value from database
 
       strncpy(aname, anamep, sizeof(aname));
-      if ((s = strrchr(aname, '.')) && strcmp(s, ".ActualValue") == 0) {
+      if ((s = strrchr(aname, '.')) && streq(s, ".ActualValue")) {
         *s = 0;
 
         sts = ldh_NameToAttrRef(m_ldhses, aname, &aref);

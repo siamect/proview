@@ -37,8 +37,8 @@
 /* wb_wda_gtk.cpp -- spreadsheet editor */
 
 #include <stdlib.h>
-#include <string.h>
 
+#include "co_string.h"
 #include "co_time.h"
 
 #include "cow_xhelp.h"
@@ -57,7 +57,7 @@ void WdaGtk::message(char severity, const char* message)
 
 void WdaGtk::set_prompt(const char* prompt)
 {
-  if (strcmp(prompt, "") == 0) {
+  if (streq(prompt, "")) {
     g_object_set(cmd_prompt, "visible", FALSE, NULL);
     g_object_set(msg_label, "visible", TRUE, NULL);
   } else {
@@ -265,7 +265,7 @@ void WdaGtk::class_activate_ok(GtkWidget* w, gpointer data)
   wda->attrobjects = (int)gtk_toggle_button_get_active(
       GTK_TOGGLE_BUTTON(wda->wdaclass_attrobjects));
 
-  if (strcmp(hiername, "") == 0)
+  if (streq(hiername, ""))
     wda->objid = pwr_cNObjid;
   else {
     sts = ldh_NameToObjid(wda->ldhses, &wda->objid, hiername);

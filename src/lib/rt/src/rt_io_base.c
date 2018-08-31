@@ -39,11 +39,12 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+
+#include "co_cdh.h"
+#include "co_string.h"
 
 #include "rt_gdh_msg.h"
 #include "rt_io_msg.h"
-#include "co_cdh.h"
 #include "rt_io_supervise.h"
 
 #define IO_CONVMASK_ALL 0xFFFF
@@ -1987,7 +1988,7 @@ static pwr_tStatus io_FindMethods(pwr_tClassId class, io_eType type,
       if (pwr_gUser_IoUserClassMethods[i].ClassName[0] == '\0')
         break;
       {
-        if (strcmp(pwr_gUser_IoUserClassMethods[i].ClassName, classstr) == 0) {
+        if (streq(pwr_gUser_IoUserClassMethods[i].ClassName, classstr)) {
           for (j = 0;; j++) {
             found = 1;
             if ((*pwr_gUser_IoUserClassMethods[i].Methods)[j].MethodName[0]
@@ -2008,7 +2009,7 @@ static pwr_tStatus io_FindMethods(pwr_tClassId class, io_eType type,
         if (pwr_gBase_IoClassMethods[i].ClassName[0] == '\0')
           break;
 
-        if (strcmp(pwr_gBase_IoClassMethods[i].ClassName, classstr) == 0) {
+        if (streq(pwr_gBase_IoClassMethods[i].ClassName, classstr)) {
           for (j = 0;; j++) {
             found = 1;
             if ((*pwr_gBase_IoClassMethods[i].Methods)[j].MethodName[0] == '\0')

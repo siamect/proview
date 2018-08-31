@@ -40,12 +40,13 @@
 
 #include <math.h>
 #include <stdio.h>
-#include <string.h>
 
-#include "rt_hash_msg.h"
 #include "co_cdh.h"
+#include "co_string.h"
+
 #include "rt_errh.h"
 #include "rt_hash.h"
+#include "rt_hash_msg.h"
 
 static pool_sQlink* findEntry(pwr_tStatus* sts,
     pool_sQlink** bp, /* Return pointer to bucket.  */
@@ -154,13 +155,13 @@ static pool_sQlink* findEntry(pwr_tStatus* sts,
       found = (xkey->name.pack.key == ykey->name.pack.key
           && xkey->poid.oix == ykey->poid.oix
           && xkey->poid.vid == ykey->poid.vid
-          && strcmp(xkey->name.norm, ykey->name.norm) == 0);
+          && streq(xkey->name.norm, ykey->name.norm));
     } break;
     case hash_eKey_objName: {
       cdh_sObjName* xkey = (cdh_sObjName*)(ip + ghtp->key_offset);
       cdh_sObjName* ykey = (cdh_sObjName*)keyp;
       found = (xkey->pack.key == ykey->pack.key
-          && strcmp(xkey->norm, ykey->norm) == 0);
+          && streq(xkey->norm, ykey->norm));
     } break;
     case hash_eKey_memcmp:
       found = memcmp(ip + ghtp->key_offset, keyp, ghtp->key_size) == 0;

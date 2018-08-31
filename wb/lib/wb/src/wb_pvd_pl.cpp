@@ -34,10 +34,16 @@
  * General Public License plus this exception.
  **/
 
-#include <string.h>
 #include <iostream>
 
 #include "pwr_baseclasses.h"
+
+extern "C" {
+#include "co_cnf.h"
+#include "co_dcli.h"
+}
+#include "co_string.h"
+
 #include "cow_wow.h"
 #include "cow_msgwindow.h"
 
@@ -45,11 +51,6 @@
 #include "wb_ldh_msg.h"
 #include "wb_pvd_pl.h"
 #include "wb_vext.h"
-
-extern "C" {
-#include "co_dcli.h"
-#include "co_cnf.h"
-}
 
 static char* pwrp_status_to_string(int value)
 {
@@ -276,19 +277,19 @@ bool wb_pvd_pl::check_list(pwr_tStatus* sts)
       if (m_list[i].flags & procom_obj_mFlags_Deleted
           && !(m_list[i].flags & procom_obj_mFlags_Created)) {
       } else if (!(m_list[i].flags & procom_obj_mFlags_Deleted)) {
-        if (strcmp(body->Path, "") == 0) {
+        if (streq(body->Path, "")) {
           sprintf(
               msg, "Path is missing, in object %s", longname(m_list[i].oix));
           MsgWindow::message('E', msg, msgw_ePop_No, oid);
           error_cnt++;
         }
-        if (strcmp(body->Version, "") == 0) {
+        if (streq(body->Version, "")) {
           sprintf(
               msg, "Version is missing, in object %s", longname(m_list[i].oix));
           MsgWindow::message('E', msg, msgw_ePop_No, oid);
           error_cnt++;
         }
-        if (strcmp(body->Path, origbody->Path) != 0) {
+        if (!streq(body->Path, origbody->Path)) {
           // Check new path
         }
       }
@@ -312,12 +313,12 @@ bool wb_pvd_pl::check_list(pwr_tStatus* sts)
           strcat(text, msg);
         actions_found++;
       } else if (!(m_list[i].flags & procom_obj_mFlags_Deleted)) {
-        if (strcmp(body->Project, "") == 0) {
+        if (streq(body->Project, "")) {
           sprintf(
               msg, "Project is missing, in object %s", longname(m_list[i].oix));
           MsgWindow::message('E', msg, msgw_ePop_No, oid);
           error_cnt++;
-        } else if (strcmp(body->Version, "") == 0) {
+        } else if (streq(body->Version, "")) {
           sprintf(
               msg, "Version is missing, in object %s", longname(m_list[i].oix));
           MsgWindow::message('E', msg, msgw_ePop_No, oid);
@@ -342,7 +343,7 @@ bool wb_pvd_pl::check_list(pwr_tStatus* sts)
                   longname(m_list[i].oix));
               MsgWindow::message('E', msg, msgw_ePop_No, oid);
               error_cnt++;
-            } else if (strcmp(body->CopyFrom, "") == 0) {
+            } else if (streq(body->CopyFrom, "")) {
               // Create project
               // Check destination path
               sprintf(cmd, "wb_pvd_pl.sh check create %s", body->Path);
@@ -378,7 +379,7 @@ bool wb_pvd_pl::check_list(pwr_tStatus* sts)
               actions_found++;
             }
           } else if (m_list[i].flags & pl_mFlags_PathModified
-              && strcmp(body->Path, origbody->Path) != 0) {
+              && !streq(body->Path, origbody->Path)) {
             // Move project
             // Check source and destination path
             sprintf(cmd, "wb_pvd_pl.sh check move %s %s", origbody->Path,
@@ -450,7 +451,7 @@ void wb_pvd_pl::process_list(pwr_tStatus* sts)
         }
       } else if (m_list[i].flags & procom_obj_mFlags_Created
           && !(m_list[i].flags & procom_obj_mFlags_Deleted)) {
-        if (strcmp(body->CopyFrom, "") == 0) {
+        if (streq(body->CopyFrom, "")) {
           printf("-- Project created %s\n", longname(i));
 
           sprintf(cmd, "wb_pvd_pl.sh create project %s %s %s \"%s\" \"%s\"",
@@ -484,7 +485,7 @@ void wb_pvd_pl::process_list(pwr_tStatus* sts)
           printf("-- Project modified %s\n", longname(i));
         }
         if (m_list[i].flags & pl_mFlags_ProjectModified
-            && strcmp(body->Project, origbody->Project) != 0) {
+            && !streq(body->Project, origbody->Project)) {
           printf("-- Project Name modified %s\n", longname(i));
 
           sprintf(cmd, "pwrp_env.sh modify project %s -n %s", origbody->Project,
@@ -498,7 +499,7 @@ void wb_pvd_pl::process_list(pwr_tStatus* sts)
           }
         }
         if (m_list[i].flags & pl_mFlags_PathModified
-            && strcmp(body->Path, origbody->Path) != 0) {
+            && !streq(body->Path, origbody->Path)) {
           printf("-- Project Path modified %s\n", longname(i));
 
           sprintf(cmd, "pwrp_env.sh modify project %s -r %s", origbody->Project,

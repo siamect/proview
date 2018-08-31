@@ -34,9 +34,9 @@
  * General Public License plus this exception.
  **/
 
-#include <string.h>
-
 #include <iostream>
+
+#include "co_string.h"
 
 #include "glow_growtoolbar.h"
 #include "glow_draw.h"
@@ -176,7 +176,7 @@ int GrowToolbar::trace_init()
 {
   int sts;
 
-  //  if ( strcmp( trace.data[0], "") != 0)
+  //  if ( !streq( trace.data[0], ""))
   sts = ctx->trace_connect_func((void*)this, &trace);
 
   nc->a.trace_init();
@@ -456,7 +456,7 @@ void GrowToolbar::configure(char* tools1, char* tools2, int tools1_cnt,
   mask = 1;
   for (int i = 0; i < tools1_cnt; i++) {
     if (mask & show_mask1) {
-      if (strcmp(&tools1[i * 80], "") == 0) {
+      if (streq(&tools1[i * 80], "")) {
         mask = mask << 1;
         continue;
       }
@@ -494,7 +494,7 @@ void GrowToolbar::configure(char* tools1, char* tools2, int tools1_cnt,
   mask = 1;
   for (int i = 0; i < tools2_cnt; i++) {
     if (mask & show_mask2) {
-      if (strcmp(&tools2[i * 80], "") == 0) {
+      if (streq(&tools2[i * 80], "")) {
         mask = mask << 1;
         continue;
       }

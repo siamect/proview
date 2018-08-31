@@ -34,12 +34,13 @@
  * General Public License plus this exception.
  */
 
-#include <string.h>
-
 #include "pwr_version.h"
+
 #include "co_dcli.h"
 #include "co_cdh.h"
+#include "co_string.h"
 #include "co_time.h"
+
 #include "cnv_ctx.h"
 #include "cnv_wbltoh.h"
 
@@ -205,7 +206,7 @@ int CnvWblToH::body_exec()
     else
       strcpy(struct_name, "pwr_sClass_");
   }
-  if (strcmp(ctx->rw->body_structname, "") == 0)
+  if (streq(ctx->rw->body_structname, ""))
     strcat(struct_name, ctx->rw->class_name);
   else
     strcat(struct_name, ctx->rw->body_structname);
@@ -226,7 +227,7 @@ int CnvWblToH::body_exec()
     }
     cix_to_classid(cix, &cid);
   }
-  if (strcmp(ctx->rw->body_structname, "") == 0)
+  if (streq(ctx->rw->body_structname, ""))
     strcpy(cclass_name, ctx->rw->class_name);
   else
     strcpy(cclass_name, ctx->rw->body_structname);
@@ -292,7 +293,7 @@ int CnvWblToH::body_close()
     strcpy(struct_name, "pwr_sdClass_");
   else
     strcpy(struct_name, "pwr_sClass_");
-  if (strcmp(ctx->rw->body_structname, "") == 0)
+  if (streq(ctx->rw->body_structname, ""))
     strcat(struct_name, ctx->rw->class_name);
   else
     strcat(struct_name, ctx->rw->body_structname);
@@ -384,7 +385,7 @@ int CnvWblToH::attribute_exec()
       || strcmp(CnvCtx::low(ctx->rw->attr_typeref), "castid") == 0
       || strcmp(CnvCtx::low(ctx->rw->attr_typeref), "disableattr") == 0
       || strcmp(CnvCtx::low(ctx->rw->attr_typeref), "dataref") == 0
-      || strcmp(ctx->rw->attr_name, "TimerFlag") == 0)
+      || streq(ctx->rw->attr_name, "TimerFlag"))
     strcpy(alignstr, " pwr_dAlignLW");
   else
     strcpy(alignstr, " pwr_dAlignW");
@@ -406,7 +407,7 @@ int CnvWblToH::attribute_exec()
   //  if ( attr_rtvirtual)
   //    return 1;
 
-  if (strcmp(ctx->rw->attr_pgmname, "") == 0)
+  if (streq(ctx->rw->attr_pgmname, ""))
     strcpy(pgmname, ctx->rw->attr_name);
   else
     strcpy(pgmname, ctx->rw->attr_pgmname);
@@ -441,7 +442,7 @@ int CnvWblToH::attribute_exec()
     strcat(type_name, ctx->rw->attr_typeref);
   }
   // For backward compatibility...
-  if (strcmp(type_name, "pwr_tObjId") == 0)
+  if (streq(type_name, "pwr_tObjId"))
     strcpy(type_name, "pwr_tObjid");
 
   // Check type for baseclasses
@@ -454,7 +455,7 @@ int CnvWblToH::attribute_exec()
   }
 
   if (ctx->hpp && attr_count == 0) {
-    if (ctx->rw->attr_isclass && strcmp(pgmname, "Super") == 0) {
+    if (ctx->rw->attr_isclass && streq(pgmname, "Super")) {
       fp_struct << ": public " << type_name << " {\n"
                 << " public:\n";
       if (!ctx->common_structfile_only)
@@ -591,9 +592,9 @@ int CnvWblToH::attribute_exec()
 
 int CnvWblToH::typedef_exec()
 {
-  if (strcmp(ctx->rw->typedef_typeref, "Mask") == 0
-      || strcmp(ctx->rw->typedef_typeref, "Enum") == 0) {
-    if (strcmp(ctx->rw->typedef_pgmname, "") == 0)
+  if (streq(ctx->rw->typedef_typeref, "Mask")
+      || streq(ctx->rw->typedef_typeref, "Enum")) {
+    if (streq(ctx->rw->typedef_pgmname, ""))
       strcpy(ctx->rw->typedef_pgmname, ctx->rw->typedef_name);
 
     fp_struct << "/*_* " << ctx->rw->typedef_typeref << ": "
@@ -604,7 +605,7 @@ int CnvWblToH::typedef_exec()
               << "typedef pwr_t" << ctx->rw->typedef_typeref << " pwr_t"
               << ctx->rw->typedef_name << ";\n\n"
               << "typedef enum {\n";
-  } else if (strcmp(ctx->rw->typedef_typeref, "String") == 0) {
+  } else if (streq(ctx->rw->typedef_typeref, "String")) {
     if (ctx->rw->typedef_elements > 1)
       fp_struct << "typedef char pwr_t" << ctx->rw->typedef_name << "["
                 << ctx->rw->typedef_elements << "];\n\n";
@@ -626,12 +627,12 @@ int CnvWblToH::typedef_exec()
 
 int CnvWblToH::typedef_close()
 {
-  if (strcmp(ctx->rw->typedef_pgmname, "") == 0)
+  if (streq(ctx->rw->typedef_pgmname, ""))
     strcpy(ctx->rw->typedef_pgmname, ctx->rw->typedef_name);
 
-  if (strcmp(ctx->rw->typedef_typeref, "Mask") == 0)
+  if (streq(ctx->rw->typedef_typeref, "Mask"))
     fp_struct << "} pwr_m" << ctx->rw->typedef_pgmname << ";\n\n";
-  else if (strcmp(ctx->rw->typedef_typeref, "Enum") == 0)
+  else if (streq(ctx->rw->typedef_typeref, "Enum"))
     fp_struct << "} pwr_e" << ctx->rw->typedef_pgmname << ";\n\n";
 
   struct_class_open = 0;
@@ -643,21 +644,21 @@ int CnvWblToH::bit_exec()
   char pgmname[80];
   int i;
 
-  if (strcmp(ctx->rw->typedef_pgmname, "") == 0)
+  if (streq(ctx->rw->typedef_pgmname, ""))
     strcpy(ctx->rw->typedef_pgmname, ctx->rw->typedef_name);
 
-  if (strcmp(ctx->rw->bit_pgmname, "") == 0)
+  if (streq(ctx->rw->bit_pgmname, ""))
     strcpy(pgmname, ctx->rw->bit_name);
   else
     strcpy(pgmname, ctx->rw->bit_pgmname);
 
-  if (strcmp(ctx->rw->bit_type, "Bit") == 0) {
+  if (streq(ctx->rw->bit_type, "Bit")) {
     fp_struct << "  pwr_m" << ctx->rw->typedef_pgmname << "_" << pgmname;
     for (i = 0;
          i < int(30 - strlen(ctx->rw->typedef_pgmname) - strlen(pgmname)); i++)
       fp_struct << ' ';
     fp_struct << " = " << ctx->rw->bit_value << "UL,\n";
-  } else if (strcmp(ctx->rw->bit_type, "Value") == 0) {
+  } else if (streq(ctx->rw->bit_type, "Value")) {
     fp_struct << "  pwr_e" << ctx->rw->typedef_pgmname << "_" << pgmname;
     for (i = 0;
          i < int(30 - strlen(ctx->rw->typedef_pgmname) - strlen(pgmname)); i++)
@@ -699,7 +700,7 @@ int CnvWblToH::volname_to_id()
       break;
     else {
       CnvCtx::remove_spaces(line, line);
-      if (strcmp(line, "") == 0)
+      if (streq(line, ""))
         continue;
 
       if (line[0] == '!')
@@ -717,7 +718,7 @@ int CnvWblToH::volname_to_id()
   }
   fclose(fp);
 
-  if (strcmp(struct_volid, "") == 0)
+  if (streq(struct_volid, ""))
     return 0;
 
   if (sscanf(struct_volid, "%d.%d.%d.%d", &vid_3, &vid_2, &vid_1, &vid_0) != 4)
@@ -809,8 +810,8 @@ int CnvWblToH::cixstr_to_classid(char* cix_str, pwr_tClassId* cid)
     { "pwr_eCix_ReferenceList", pwr_eCix_ReferenceList }, { "", 0 } };
 
   found = 0;
-  for (cix_p = cix_array; strcmp(cix_p->name, "") != 0; cix_p++) {
-    if (strcmp(cix_str, cix_p->name) == 0) {
+  for (cix_p = cix_array; !streq(cix_p->name, ""); cix_p++) {
+    if (streq(cix_str, cix_p->name)) {
       found = 1;
       break;
     }
@@ -843,7 +844,7 @@ void CnvWblToH::get_filename(CnvReadWbl* rw, char* struct_file, int hpp)
 int CnvWblToH::check_typename(char* type_volume, char* type_name)
 {
   // Only types in pwrs can be typechecked
-  if (strcmp(type_volume, "pwrs") == 0 || strcmp(type_volume, "") == 0) {
+  if (streq(type_volume, "pwrs") || streq(type_volume, "")) {
     char* name;
     char valid_names[][40] = { "pwr_tAddress", "pwr_tBit", "pwr_tBitMask",
       "pwr_tBoolean", "pwr_tFloat32", "pwr_tFloat64", "pwr_tGeneration",
@@ -862,9 +863,9 @@ int CnvWblToH::check_typename(char* type_volume, char* type_name)
       "pwr_tOpSysEnum", "pwr_tPrivMask", "pwr_tProString40", "pwr_tDataRef",
       "pwr_tVoid", "pwr_tConfigStatusEnum", "pwr_tSafetyLevelEnum", "" };
 
-    for (name = valid_names[0]; strcmp(name, "") != 0;
+    for (name = valid_names[0]; !streq(name, "");
          name += sizeof(valid_names[0])) {
-      if (strcmp(name, type_name) == 0)
+      if (streq(name, type_name))
         return 1;
     }
     return 0;

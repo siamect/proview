@@ -37,10 +37,11 @@
 /* rt_statusmon.cpp Status Monitor */
 
 #include <stdio.h>
-#include <string.h>
 #include <unistd.h>
 
 #include "pwr.h"
+
+#include "co_string.h"
 
 static void usage()
 {
@@ -56,7 +57,7 @@ int main(int argc, char* argv[])
 
   if (argc > 1) {
     for (i = 1; i < argc; i++) {
-      if (strcmp(argv[i], "-f") == 0) {
+      if (streq(argv[i], "-f")) {
         if (i + 1 >= argc) {
           usage();
           exit(0);

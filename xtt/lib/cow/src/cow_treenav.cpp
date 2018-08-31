@@ -39,14 +39,19 @@
 #include <stdlib.h>
 
 #include "pwr_baseclasses.h"
+
 #include "co_cdh.h"
-#include "co_time.h"
 #include "co_dcli.h"
+#include "co_string.h"
+#include "co_time.h"
+
+#include "rt_gdh.h"
+
+#include "cow_tree.h"
+#include "cow_treenav.h"
+
 #include "flow_browctx.h"
 #include "flow_msg.h"
-#include "cow_treenav.h"
-#include "cow_tree.h"
-#include "rt_gdh.h"
 
 #include "xnav_bitmap_leaf8.h"
 #include "xnav_bitmap_leaf10.h"
@@ -814,7 +819,7 @@ void TreeNav::tree_add(char* name, int list_index, treenav_eTreeItemType type)
       int found = 0;
       while (idx) {
         last = idx;
-        if (strcmp(tree[idx].sname, name_array[j]) == 0) {
+        if (streq(tree[idx].sname, name_array[j])) {
           found = 1;
           break;
         }

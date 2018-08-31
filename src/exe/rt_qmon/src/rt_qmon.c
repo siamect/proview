@@ -39,11 +39,13 @@
 #include <errno.h>
 #include <sched.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
 
+#include "co_string.h"
 #include "co_tree.h"
+#include "co_timelog.h"
+
 #include "rt_qdb.h"
 #include "rt_net.h"
 #include "rt_que.h"
@@ -52,7 +54,6 @@
 #include "rt_pwr_msg.h"
 #include "rt_ini_event.h"
 #include "rt_qmon.h"
-#include "co_timelog.h"
 
 #define RTT_RXMIN 0.0500 /* seconds */
 #define RTT_RXMAX 10.000 /* seconds */
@@ -282,7 +283,7 @@ int main(int argc, char* argv[])
   /* Vänta en stund ... */
   //  sleep(5);
 
-  if (argc > 1 && strcmp(argv[1], "-n") == 0)
+  if (argc > 1 && streq(argv[1], "-n"))
     noneth = 1;
 
   /* Wait for scheduler to be set */

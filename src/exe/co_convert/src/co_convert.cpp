@@ -34,13 +34,13 @@
  * General Public License plus this exception.
  */
 
-#include <string.h>
-
 extern "C" {
 #include "co_dcli.h"
 #include "co_cdh.h"
 }
 #include "co_lng.h"
+#include "co_string.h"
+
 #include "cnv_readsrc.h"
 #include "cnv_wbltohtml.h"
 #include "cnv_wbltoh.h"
@@ -123,7 +123,7 @@ int main(int argc, char* argv[])
   ctx = new CnvCtx();
 
   for (i = 1; i < argc; i++) {
-    if (strcmp(argv[i], "-d") == 0) {
+    if (streq(argv[i], "-d")) {
       if (i + 1 >= argc) {
         usage();
         exit(0);
@@ -132,21 +132,21 @@ int main(int argc, char* argv[])
       i++;
       if (ctx->dir[strlen(ctx->dir) - 1] != '/')
         strcat(ctx->dir, "/");
-    } else if (strcmp(argv[i], "-g") == 0) {
+    } else if (streq(argv[i], "-g")) {
       if (i + 1 >= argc) {
         usage();
         exit(0);
       }
       strncpy(ctx->setup_filename, argv[i + 1], sizeof(ctx->setup_filename));
       i++;
-    } else if (strcmp(argv[i], "-l") == 0) {
+    } else if (streq(argv[i], "-l")) {
       if (i + 1 >= argc) {
         usage();
         exit(0);
       }
       Lng::set(argv[i + 1]);
       i++;
-    } else if (strcmp(argv[i], "-y") == 0) {
+    } else if (streq(argv[i], "-y")) {
       if (i + 1 >= argc) {
         usage();
         exit(0);
@@ -215,7 +215,7 @@ int main(int argc, char* argv[])
           changelog_from_git = 1;
           break;
         case '-': {
-          if (strcmp(s, "-from") == 0 && (i + 1 < argc)) {
+          if (streq(s, "-from") && (i + 1 < argc)) {
             strcpy(from, argv[i + 1]);
             next = 1;
             i++;
@@ -235,7 +235,7 @@ int main(int argc, char* argv[])
   }
 
   ctx->setup = new CnvSetup();
-  if (strcmp(ctx->setup_filename, "") != 0) {
+  if (!streq(ctx->setup_filename, "")) {
     ctx->setup->setup(ctx->setup_filename);
   }
 

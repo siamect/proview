@@ -52,9 +52,10 @@
 /*_Include files_________________________________________________________*/
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "pwr_baseclasses.h"
+
+#include "co_string.h"
 
 #include "wb_gcg.h"
 #include "wb_foe.h"
@@ -290,7 +291,7 @@ static pwr_tStatus trace_get_attr_m3(WGre* gre, vldh_t_node node,
 
   found = 0;
   for (i = 0; i < rows; i++) {
-    if (strcmp(bodydef[i].ParName, debug_par) == 0) {
+    if (streq(bodydef[i].ParName, debug_par)) {
       found = 1;
       break;
     }
@@ -654,7 +655,7 @@ static pwr_tStatus trace_get_attr_m7(WGre* gre, vldh_t_node node,
 
   found = 0;
   for (i = 0; i < rows; i++) {
-    if (strcmp(bodydef[i].ParName, array_name) == 0
+    if (streq(bodydef[i].ParName, array_name)
         && bodydef[i].Par->Param.Info.Flags & PWR_MASK_ARRAY) {
       found = 1;
       break;
@@ -734,7 +735,7 @@ pwr_tStatus trace_get_attr_con(WGre* gre, vldh_t_con con, const char* debug_par,
 
   found = 0;
   for (i = 0; i < rows; i++) {
-    if (strcmp(bodydef[i].ParName, attr_str) == 0) {
+    if (streq(bodydef[i].ParName, attr_str)) {
       found = 1;
       break;
     }
@@ -867,7 +868,7 @@ static int trace_connect_bc(
 
   printf("Connecting %s.%s\n", name, attr);
 
-  if (strcmp(name, "") == 0 || strcmp(attr, "") == 0)
+  if (streq(name, "") || streq(attr, ""))
     return 1;
 
   switch (type) {
@@ -925,7 +926,7 @@ static int trace_disconnect_bc(flow_tObject object)
       free((char*)subid_p);
     } else {
       flow_GetTraceAttr(object, name, attr, &type, &inverted);
-      if (!(strcmp(name, "") == 0 || strcmp(attr, "") == 0)) {
+      if (!(streq(name, "") || streq(attr, ""))) {
         flow_GetUserData(object, (void**)&vnode);
         sts = gdh_UnrefObjectInfo(vnode->hn.trace_subid);
       }

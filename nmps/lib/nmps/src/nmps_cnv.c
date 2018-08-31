@@ -35,11 +35,13 @@
  */
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "pwr_nmpsclasses.h"
+
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_string.h"
+
 #include "rt_gdh.h"
 
 #include "nmps_cnv.h"
@@ -436,7 +438,7 @@ static int cnv_string_to_partype(char* string, int args, char* third_arg,
     *size = 4;
   } else if (!strcmp(string, "FLOAT32")) {
     /* Format may be given as an argument */
-    if (args >= 3 && strcmp(third_arg, "-") != 0)
+    if (args >= 3 && !streq(third_arg, "-"))
       strcpy(format, third_arg);
     *type = cnv_eParType_Float32;
     *size = 4;
@@ -446,7 +448,7 @@ static int cnv_string_to_partype(char* string, int args, char* third_arg,
   } else if (!strcmp(string, "STRING")) {
     /* Size should be given as an argument */
     /* Third arg is size */
-    if (args < 3 || strcmp(third_arg, "-") == 0)
+    if (args < 3 || streq(third_arg, "-"))
       return CNV__SYNTAX;
 
     nr = sscanf(third_arg, "%d", size);
@@ -456,7 +458,7 @@ static int cnv_string_to_partype(char* string, int args, char* third_arg,
   } else if (!strcmp(string, "ASCII")) {
     /* Size should be given as an argument */
     /* Third arg is size */
-    if (args < 3 || strcmp(third_arg, "-") == 0)
+    if (args < 3 || streq(third_arg, "-"))
       return CNV__SYNTAX;
 
     nr = sscanf(third_arg, "%d", size);
@@ -465,7 +467,7 @@ static int cnv_string_to_partype(char* string, int args, char* third_arg,
     *type = cnv_eParType_Ascii;
   } else if (!strcmp(string, "BINARY")) {
     /* Size should be given as an argument */
-    if (args < 3 || strcmp(third_arg, "-") == 0)
+    if (args < 3 || streq(third_arg, "-"))
       return CNV__SYNTAX;
 
     nr = sscanf(third_arg, "%d", size);
@@ -474,7 +476,7 @@ static int cnv_string_to_partype(char* string, int args, char* third_arg,
     *type = cnv_eParType_Binary;
   } else if (!strcmp(string, "UNKNOWN")) {
     /* Size should be given as an argument */
-    if (args < 3 || strcmp(third_arg, "-") == 0)
+    if (args < 3 || streq(third_arg, "-"))
       return CNV__SYNTAX;
 
     nr = sscanf(third_arg, "%d", size);

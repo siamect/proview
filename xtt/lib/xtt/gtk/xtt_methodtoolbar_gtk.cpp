@@ -40,6 +40,7 @@
 
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_string.h"
 
 #include "cow_wow_gtk.h"
 
@@ -119,7 +120,7 @@ GtkWidget* XttMethodToolbarGtk::build()
 
   for (int i = 0; i < GeMethods::opmeth_size; i++) {
     if (m_op_method_mask & (1 << i)
-        && strcmp(GeMethods::op_image[i], "") != 0) {
+        && !streq(GeMethods::op_image[i], "")) {
       char tooltip[200];
 
       strcpy(tooltip, GeMethods::op_tooltip[i]);
@@ -138,7 +139,7 @@ GtkWidget* XttMethodToolbarGtk::build()
   }
   for (int i = 0; i < GeMethods::mntmeth_size; i++) {
     if (m_mnt_method_mask & (1 << i)
-        && strcmp(GeMethods::mnt_image[i], "") != 0) {
+        && !streq(GeMethods::mnt_image[i], "")) {
       char tooltip[200];
 
       strcpy(tooltip, GeMethods::mnt_tooltip[i]);
@@ -191,12 +192,12 @@ void XttMethodToolbarGtk::set_current_sensitive()
     // Nothing selected
     for (int i = 0; i < GeMethods::opmeth_size; i++) {
       if (m_op_method_mask & (1 << i)
-          && strcmp(GeMethods::op_image[i], "") != 0)
+          && !streq(GeMethods::op_image[i], ""))
         gtk_widget_set_sensitive(m_op_button_w[i], FALSE);
     }
     for (int i = 0; i < GeMethods::mntmeth_size; i++) {
       if (m_mnt_method_mask & (1 << i)
-          && strcmp(GeMethods::mnt_image[i], "") != 0)
+          && !streq(GeMethods::mnt_image[i], ""))
         gtk_widget_set_sensitive(m_mnt_button_w[i], FALSE);
     }
   } else {
@@ -210,12 +211,12 @@ void XttMethodToolbarGtk::set_current_sensitive()
     if (info.cid == pwr_eClass_ExternVolume) {
       for (int i = 0; i < GeMethods::opmeth_size; i++) {
         if (m_op_method_mask & (1 << i)
-            && strcmp(GeMethods::op_image[i], "") != 0)
+            && !streq(GeMethods::op_image[i], ""))
           gtk_widget_set_sensitive(m_op_button_w[i], FALSE);
       }
       for (int i = 0; i < GeMethods::mntmeth_size; i++) {
         if (m_mnt_method_mask & (1 << i)
-            && strcmp(GeMethods::mnt_image[i], "") != 0)
+            && !streq(GeMethods::mnt_image[i], ""))
           gtk_widget_set_sensitive(m_mnt_button_w[i], FALSE);
       }
       return;
@@ -242,7 +243,7 @@ void XttMethodToolbarGtk::set_current_sensitive()
 
     for (int i = 0; i < GeMethods::opmeth_size; i++) {
       if (m_op_method_mask & (1 << i)
-          && strcmp(GeMethods::op_image[i], "") != 0) {
+          && !streq(GeMethods::op_image[i], "")) {
         if (xm_mask.OpMethods & (1 << i))
           gtk_widget_set_sensitive(m_op_button_w[i], TRUE);
         else
@@ -251,7 +252,7 @@ void XttMethodToolbarGtk::set_current_sensitive()
     }
     for (int i = 0; i < GeMethods::mntmeth_size; i++) {
       if (m_mnt_method_mask & (1 << i)
-          && strcmp(GeMethods::mnt_image[i], "") != 0) {
+          && !streq(GeMethods::mnt_image[i], "")) {
         if (xm_mask.MntMethods & (1 << i))
           gtk_widget_set_sensitive(m_mnt_button_w[i], TRUE);
         else

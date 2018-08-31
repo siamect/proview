@@ -36,10 +36,10 @@
 
 /* wb_uted.cpp */
 
-#include <string.h>
-
-#include "co_time.h"
 #include "co_msg.h"
+#include "co_string.h"
+#include "co_time.h"
+
 #include "wb_foe.h"
 #include "wb_foe_msg.h"
 #include "wb_vldh_msg.h"
@@ -447,7 +447,7 @@ pwr_tStatus WUted::get_command_index(const char* label, int* index)
   found = 0;
   command_ptr = commands;
   while (command_ptr->command[0] != 0) {
-    if (strcmp(command_ptr->command, label) == 0) {
+    if (streq(command_ptr->command, label)) {
       *index = i;
       found = 1;
       break;

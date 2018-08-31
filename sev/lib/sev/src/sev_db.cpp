@@ -35,8 +35,11 @@
  **/
 
 #include "pwr_names.h"
+
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_syi.h"
+
 #include "rt_load.h"
 
 #include "sev_db.h"
@@ -332,7 +335,7 @@ int sev_db::get_systemname(char* name)
   pwr_tStatus sts;
   static char system_name[80] = "";
 
-  if (strcmp(system_name, "") == 0) {
+  if (streq(system_name, "")) {
     syi_NodeName(&sts, nodename, sizeof(nodename));
     if (EVEN(sts))
       return 0;

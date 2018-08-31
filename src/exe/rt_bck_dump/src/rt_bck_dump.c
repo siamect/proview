@@ -36,10 +36,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include "pwr_baseclasses.h"
+
+#include "co_string.h"
 #include "co_time.h"
+
 #include "rt_gdh.h"
 #include "rt_bckdef.h"
 
@@ -61,7 +63,7 @@ int main(int argc, char** argv)
    * Open file
    */
 
-  if (argc > 1 && strcmp(argv[1], "-h") == 0) {
+  if (argc > 1 && streq(argv[1], "-h")) {
     printf("\
 \n\
 	rt_bck_dump   Dump content of backupfile in hex.\n\

@@ -39,7 +39,10 @@
 #include <stdlib.h>
 
 #include "pwr_baseclasses.h"
+
+#include "co_string.h"
 #include "co_time.h"
+
 #include "rt_mh_net.h"
 
 #include "cow_msgwindow.h"
@@ -634,7 +637,7 @@ int WdaNav::get_attr()
 
   elements = bodydef[j].Par->Output.Info.Elements;
 
-  if (strcmp(search_name, "") != 0)
+  if (!streq(search_name, ""))
     cdh_ToUpper(name, search_name);
   else
     namep = 0;
@@ -804,8 +807,8 @@ int WdaNav::update(pwr_tObjid new_objid, pwr_tClassId new_classid,
   brow_tObject object;
 
   if (cdh_ObjidIsEqual(objid, new_objid) && classid == new_classid
-      && strcmp(attribute, new_attribute) == 0
-      && strcmp(search_name, new_search_name) == 0
+      && streq(attribute, new_attribute)
+      && streq(search_name, new_search_name)
       && attrobjects == new_attrobjects)
     return WDA__SUCCESS;
 
@@ -878,7 +881,7 @@ int WdaNav::set_attr_value(brow_tObject node, char* name, char* value_str)
     WItemBaseAttr* item = (WItemBaseAttr*)base_item;
 
     // Check that objid is still the same
-    if (strcmp(item->attr, name) != 0)
+    if (!streq(item->attr, name))
       return WDA__DISAPPEARD;
 
     sts = wnav_attr_string_to_value(
@@ -915,7 +918,7 @@ int WdaNav::set_attr_value(brow_tObject node, char* name, char* value_str)
     WItemAttrArrayElem* item = (WItemAttrArrayElem*)base_item;
 
     // Check that objid is still the same
-    if (strcmp(item->attr, name) != 0)
+    if (!streq(item->attr, name))
       return WDA__DISAPPEARD;
 
     sts = wnav_attr_string_to_value(
@@ -983,7 +986,7 @@ int WdaNav::select_by_name(char* name)
     case wnav_eItemType_AttrArrayElem: {
       WItemBaseAttr* item = (WItemBaseAttr*)base_item;
 
-      if (strcmp(name, item->attr) == 0) {
+      if (streq(name, item->attr)) {
         object = object_list[i];
         found = 1;
       }

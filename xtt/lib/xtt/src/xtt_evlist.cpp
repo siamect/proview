@@ -38,10 +38,14 @@
 
 #include <stdlib.h>
 
-#include "cow_wow.h"
+#include "co_string.h"
 #include "co_time.h"
 #include "co_timelog.h"
+
 #include "rt_gdh.h"
+
+#include "cow_wow.h"
+
 #include "xtt_evlist.h"
 #include "xtt_menu.h"
 #include "xtt_methodtoolbar.h"
@@ -2025,7 +2029,7 @@ void ItemAlarm::update_text(int use_treenode)
   else
     brow_SetAnnotation(n, 4, "", 0);
 
-  if (strcmp(eventmoretext, "") != 0)
+  if (!streq(eventmoretext, ""))
     brow_SetAnnotPixmap(n, 2, evlist->browbase->pixmap_info);
 
   switch (eventtype) {
@@ -2558,7 +2562,7 @@ int EvList::get_alarm_info(evlist_sAlarmInfo* info)
 
           strcpy(eventtext, object_item->eventtext);
           if (eventname_seg
-              && !(strcmp(object_item->eventname, "") == 0
+              && !(streq(object_item->eventname, "")
                      || strstr(object_item->eventname, "-W-") != 0)) {
             strcat(eventtext, ", ");
             cdh_CutNameSegments(&eventtext[strlen(eventtext)],

@@ -38,6 +38,7 @@
 
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_time.h"
 
 #include "rt_gdh.h"
@@ -112,7 +113,7 @@ int GraphJournal::open(const char* name)
   current_idx = 0;
   status = journal_eStatus_Empty;
 
-  if (fp && strcmp(filename, "") != 0) {
+  if (fp && !streq(filename, "")) {
     fp.close();
 
     // Remove file
@@ -126,7 +127,7 @@ int GraphJournal::open(const char* name)
   sprintf(fname, "$pwrp_tmp/%s.gjl", new_graphname);
   dcli_translate_filename(new_filename, fname);
 
-  if (strcmp(graphname, new_graphname) != 0) {
+  if (!streq(graphname, new_graphname)) {
     if (ODD(dcli_file_time(new_filename, &time))) {
       if (graph->create_modal_dialog_cb) {
         sts = (graph->create_modal_dialog_cb)(graph->parent_ctx, "Restore",
@@ -173,7 +174,7 @@ int GraphJournal::clear(char* name)
     pwr_tFileName fname;
 
     strcpy(g, gname(name));
-    if (strcmp(g, graphname) != 0) {
+    if (!streq(g, graphname)) {
       // Remove old file
       pwr_tCmd cmd;
       sprintf(cmd, "rm %s", filename);
@@ -675,7 +676,7 @@ int GraphJournal::undo_delete_select()
     if (!o)
       return GE__SUCCESS;
 
-    if (strcmp(name_prev, "") == 0) {
+    if (streq(name_prev, "")) {
       grow_OrderObject(graph->grow->ctx, o, 0, glow_eDest_After);
     } else {
       sts = grow_FindObjectByName(graph->grow->ctx, name_prev, &prev);
@@ -1113,7 +1114,7 @@ int GraphJournal::redo_group_select()
   if (EVEN(sts))
     grow_SetObjectName(group, group_name);
 
-  if (strcmp(last_group_name, "") != 0) {
+  if (!streq(last_group_name, "")) {
     // Try to recover dynamics
     sts = graph->recall.get(&data, last_group_name);
     if (ODD(sts)) {
@@ -1175,7 +1176,7 @@ int GraphJournal::undo_ungroup_select()
     if (EVEN(sts))
       grow_SetObjectName(group, group_name);
 
-    if (strcmp(last_group_name, "") != 0) {
+    if (!streq(last_group_name, "")) {
       // Try to recover dynamics
       sts = graph->recall.get(&data, last_group_name);
       if (ODD(sts)) {
@@ -1401,7 +1402,7 @@ int GraphJournal::undo_pop_select()
 
     sts = grow_FindObjectByName(graph->grow->ctx, name, &o);
     if (ODD(sts)) {
-      if (strcmp(name_next, "") == 0) {
+      if (streq(name_next, "")) {
         grow_OrderObject(graph->grow->ctx, o, 0, glow_eDest_After);
       } else {
         sts = grow_FindObjectByName(graph->grow->ctx, name_next, &next);
@@ -1531,7 +1532,7 @@ int GraphJournal::undo_push_select()
 
     sts = grow_FindObjectByName(graph->grow->ctx, name, &o);
     if (ODD(sts)) {
-      if (strcmp(name_next, "") == 0) {
+      if (streq(name_next, "")) {
         grow_OrderObject(graph->grow->ctx, o, 0, glow_eDest_After);
       } else {
         sts = grow_FindObjectByName(graph->grow->ctx, name_next, &next);

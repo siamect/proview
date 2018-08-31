@@ -36,9 +36,10 @@
 
 #include <math.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include <iostream>
+
+#include "co_string.h"
 
 #include "glow_growrect.h"
 #include "glow_grownode.h"
@@ -563,7 +564,7 @@ void GrowRect::set_dynamic(char* code, int size)
 
 void GrowRect::exec_dynamic()
 {
-  if (dynamicsize && strcmp(dynamic, "") != 0)
+  if (dynamicsize && !streq(dynamic, ""))
     ctx->dynamic_cb(this, dynamic, glow_eDynamicType_Object);
 }
 

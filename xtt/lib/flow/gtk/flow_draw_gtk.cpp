@@ -34,9 +34,8 @@
  * General Public License plus this exception.
  **/
 
-#include <string.h>
-
 #include "co_dcli.h"
+#include "co_string.h"
 
 #include "flow_browwidget_gtk.h"
 #include "flow_draw_gtk.h"
@@ -314,9 +313,9 @@ static GdkColor flow_allocate_color(
     draw_ctx->color_vect_cnt = 2;
   }
 
-  if (strcmp(named_color, "black") == 0)
+  if (streq(named_color, "black"))
     return draw_ctx->color_vect[0];
-  else if (strcmp(named_color, "white") == 0)
+  else if (streq(named_color, "white"))
     return draw_ctx->color_vect[1];
   else {
     if (draw_ctx->color_vect_cnt >= (int)(sizeof(draw_ctx->color_vect)
@@ -325,7 +324,7 @@ static GdkColor flow_allocate_color(
       return draw_ctx->color_vect[0];
     }
 
-    if (strcmp(named_color, "yellow") == 0) {
+    if (streq(named_color, "yellow")) {
       color.red = 61952;
       color.green = 58880;
       color.blue = 0;

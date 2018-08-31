@@ -36,6 +36,8 @@
 
 /* ge_attr.cpp -- Display object attributes */
 
+#include "co_string.h"
+
 #include "cow_qt_helpers.h"
 
 #include "ge_attr_qt.h"
@@ -54,7 +56,7 @@ void AttrQt::message(char severity, const char* message)
 {
   if (msg_label) {
     msg_label->setText(fl(message));
-    if (strcmp(message, "") != 0) {
+    if (!streq(message, "")) {
       msg_label->setVisible(true);
     }
   }
@@ -81,7 +83,7 @@ void AttrQt::message_popup(char severity, const char* message)
 
 void AttrQt::set_prompt(const char* prompt)
 {
-  if (strcmp(prompt, "") == 0) {
+  if (streq(prompt, "")) {
     cmd_prompt->setVisible(false);
     msg_label->setVisible(true);
   } else {

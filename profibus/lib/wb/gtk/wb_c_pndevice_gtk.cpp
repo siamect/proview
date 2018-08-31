@@ -36,14 +36,16 @@
 
 /* wb_c_pb_dp_slave_gtk.c -- work bench methods of the Pb_DP_Slave class. */
 
-#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 
 #include "pwr_baseclasses.h"
 #include "pwr_profibusclasses.h"
+
 #include "co_dcli.h"
 #include "co_msg.h"
+#include "co_string.h"
+
 #include "rt_pb_msg.h"
 
 #include "flow_api.h"
@@ -139,7 +141,7 @@ static pwr_tStatus CopyDevice(ldh_sMenuCall* ip)
       "GSDMLfile", &gsdml, &size);
   if (EVEN(sts))
     return sts;
-  if (strcmp(gsdml, "") == 0) {
+  if (streq(gsdml, "")) {
     free(gsdml);
     return 0;
   }
@@ -187,7 +189,7 @@ static pwr_tStatus CopyDeviceFilter(ldh_sMenuCall* ip)
       "GSDMLfile", &gsdml, &size);
   if (EVEN(sts))
     return sts;
-  if (strcmp(gsdml, "") == 0) {
+  if (streq(gsdml, "")) {
     free(gsdml);
     return 0;
   }

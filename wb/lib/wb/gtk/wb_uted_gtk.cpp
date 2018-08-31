@@ -37,10 +37,10 @@
 /* wb_uted_gtk.cpp */
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "co_dcli.h"
 #include "co_msg.h"
+#include "co_string.h"
 #include "co_time.h"
 
 #include "cow_wow_gtk.h"
@@ -372,11 +372,11 @@ WUtedGtk::WUtedGtk(void* wu_parent_ctx, GtkWidget* wu_parent_wid,
 
       if (in_submenu) {
         // Check if time to close menu
-        if (strcmp(cmd_verb[0], next_cmd_verb[0]) != 0) {
+        if (!streq(cmd_verb[0], next_cmd_verb[0])) {
           // Close submenu
           close_submenu = 1;
         }
-      } else if (strcmp(cmd_verb[0], next_cmd_verb[0]) == 0) {
+      } else if (streq(cmd_verb[0], next_cmd_verb[0])) {
         // Open submenu
         GtkWidget* submenu_item = gtk_menu_item_new_with_label(cmd_verb[0]);
         GtkMenu* submenu = (GtkMenu*)g_object_new(GTK_TYPE_MENU, NULL);

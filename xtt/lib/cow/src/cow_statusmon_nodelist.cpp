@@ -37,17 +37,18 @@
 /* co_statusmon_nodelist.cpp -- Status Monitor */
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "co_cdh.h"
-#include "co_time.h"
-#include "rt_gdh.h"
+#include "co_string.h"
 #include "co_syi.h"
-#include "cow_xhelp.h"
+#include "co_time.h"
 
-#include "cow_wow.h"
-#include "cow_statusmon_nodelist.h"
+#include "rt_gdh.h"
 #include "rt_xnav_msg.h"
+
+#include "cow_statusmon_nodelist.h"
+#include "cow_wow.h"
+#include "cow_xhelp.h"
 
 Nodelist::Nodelist(void* nodelist_parent_ctx, const char* nodelist_name,
     int nodelist_mode, int nodelist_view_node_descr, pwr_tStatus* status)
@@ -156,7 +157,7 @@ static void get_display(char* disp)
   if (val)
     strcpy(display, val);
 
-  if (strcmp(display, "") == 0) {
+  if (streq(display, "")) {
     syi_NodeName(&sts, name, sizeof(name));
     strcpy(display, name);
     strcat(display, ":0");

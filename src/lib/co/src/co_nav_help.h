@@ -45,12 +45,14 @@
 extern "C" {
 #endif
 
+#ifndef co_api_h
 typedef enum {
   navh_eHelpFile_,
   navh_eHelpFile_Base,
   navh_eHelpFile_Project,
   navh_eHelpFile_Other
 } navh_eHelpFile;
+#endif
 
 typedef enum {
   navh_eItemType_Help,

@@ -39,7 +39,9 @@
 #include <typeinfo>
 
 #include "pwr_class.h"
+
 #include "co_math.h"
+#include "co_string.h"
 #include "co_time.h"
 #include "co_time_msg.h"
 
@@ -172,7 +174,7 @@ const char* opc_resultcode_to_text(int code)
 bool opc_string_to_resultcode(char* str, int* code)
 {
   for (int ii = 0; ii < opc_eResultCode__; ii++) {
-    if (strcmp(opc_ResultCodes[ii], str) == 0) {
+    if (streq(opc_ResultCodes[ii], str)) {
       *code = ii;
       return true;
     }
@@ -1748,7 +1750,7 @@ bool opc_get_property(std::vector<s0__ItemProperty*> properties,
     else
       s = name;
 
-    if (strcmp(s, opc_PropertyNames[idx]) == 0) {
+    if (streq(s, opc_PropertyNames[idx])) {
       if (!properties[0]->Value)
         return false;
       *valp = properties[i]->Value;

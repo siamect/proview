@@ -39,22 +39,23 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 
 #include "co_cdh.h"
+#include "co_string.h"
+#include "co_syi.h"
 #include "co_time.h"
 #include "co_timelog.h"
+
+#include "rt_aproc.h"
+#include "rt_c_iohandler.h"
+#include "rt_c_node.h"
 #include "rt_ini_event.h"
 #include "rt_mh_util.h"
 #include "rt_mh_blockdb.h"
 #include "rt_mh_log.h"
-#include "rt_qcom_msg.h"
-#include "co_syi.h"
-#include "rt_aproc.h"
 #include "rt_pwr_msg.h"
-#include "rt_c_node.h"
-#include "rt_c_iohandler.h"
+#include "rt_qcom_msg.h"
 #include "rt_redu.h"
 
 /* Local defines */
@@ -2544,7 +2545,7 @@ static void handlerEvent(
 
     time_GetTime(&hp->returnTime);
     hp->returnType = mh_eEvent_Return;
-    if (strcmp(ssup->ReturnText, "") != 0) {
+    if (!streq(ssup->ReturnText, "")) {
       strncpy(hp->returnText, ssup->ReturnText, sizeof(hp->returnText) - 1);
       strncat(hp->returnText, " ", sizeof(hp->returnText) - 1);
       strncat(hp->returnText, node->name, sizeof(hp->returnText) - 1);

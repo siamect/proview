@@ -41,8 +41,10 @@
 #include <iostream>
 
 #include "pwr_systemclasses.h"
+
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_syi.h"
 
 #include "cow_wow.h"
@@ -805,7 +807,7 @@ Xtt::Xtt(int* argc, char** argv[], int* return_sts)
       if (EVEN(sts))
         exit(sts);
 
-      if (strcmp(opp->UserName, "") == 0) {
+      if (streq(opp->UserName, "")) {
         // Ignore
         printf("** No UserName supplied in default opplace, ignored\n");
         strcpy(opplace_str, "");
@@ -822,7 +824,7 @@ Xtt::Xtt(int* argc, char** argv[], int* return_sts)
     if (EVEN(sts))
       exit(sts);
 
-    if (strcmp(opp->DedicatedOpsysUser, "") != 0) {
+    if (!streq(opp->DedicatedOpsysUser, "")) {
       int duser_cnt;
       char duser_array[10][40];
       int found = 0;
@@ -837,7 +839,7 @@ Xtt::Xtt(int* argc, char** argv[], int* return_sts)
 
       for (int i = 0; i < duser_cnt; i++) {
         dcli_trim(duser_array[i], duser_array[i]);
-        if (strcmp(duser_array[i], opsys_user) == 0) {
+        if (streq(duser_array[i], opsys_user)) {
           found = 1;
           break;
         }
@@ -854,7 +856,7 @@ Xtt::Xtt(int* argc, char** argv[], int* return_sts)
     }
   }
   if (opplace_found) {
-    if (strcmp(language, "") == 0) {
+    if (streq(language, "")) {
       switch (opp->Language) {
       case pwr_eLanguageEnum_Swedish:
         strcpy(language, "sv_se");
@@ -869,7 +871,7 @@ Xtt::Xtt(int* argc, char** argv[], int* return_sts)
         strcpy(language, "");
       }
     }
-    if (strcmp(opp->Display, "") != 0) {
+    if (!streq(opp->Display, "")) {
       strncpy(display, opp->Display, sizeof(display));
       char** argv1 = (char**)calloc(*argc + 3, sizeof(*argv1));
       for (int i = 0; i < *argc; i++)
@@ -888,14 +890,14 @@ Xtt::Xtt(int* argc, char** argv[], int* return_sts)
 
     if (!(opp->Options & pwr_mOpPlaceOptionsMask_EnablePrintDialog))
       CoWow::DisablePrintDialog();
-    if (strcmp(opp->Printer, "") != 0)
+    if (!streq(opp->Printer, ""))
       CoWow::SetDefaultPrinter(opp->Printer);
   }
 
   if (quiet)
     CoWow::HideWarranty();
 
-  if (strcmp(language, "") != 0)
+  if (!streq(language, ""))
     Lng::set(language);
 }
 

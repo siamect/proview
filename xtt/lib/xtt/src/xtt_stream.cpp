@@ -34,13 +34,14 @@
  * General Public License plus this exception.
  */
 
-#include <string.h>
-
-#include "rt_gdh_msg.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
-#include "cow_wow.h"
+#include "co_string.h"
+
+#include "rt_gdh_msg.h"
 #include "rt_xnav_msg.h"
+
+#include "cow_wow.h"
 
 #include "glow_growapi.h"
 #include "glow_curveapi.h"
@@ -129,7 +130,7 @@ XttStream::XttStream(void* st_parent_ctx, const char* name, const char* st_uri,
     } else
       reconnect_time = 5;
 
-    if (strcmp(user, "") != 0 && strcmp(password, "") != 0) {
+    if (!streq(user, "") && !streq(password, "")) {
       // sprintf( &uri[strlen(uri)], "?user=%s&pwd=%s", user, password);
     }
 
@@ -370,7 +371,7 @@ XttCameraControlVapix::XttCameraControlVapix(
   else
     strcpy(outstr, "-o /dev/null");
 
-  if (strcmp(x_user, "") != 0 && strcmp(x_password, "") != 0)
+  if (!streq(x_user, "") && !streq(x_password, ""))
     sprintf(authstr, "--user %s --password %s", x_user, x_password);
   else
     strcpy(authstr, "");

@@ -39,13 +39,13 @@
 
 /*_Include files_________________________________________________________*/
 
-#include <string.h>
 #include <stdlib.h>
 
 extern "C" {
 #include "co_cdh.h"
 #include "co_dcli.h"
 }
+#include "co_string.h"
 
 #include "cnv_ctx.h"
 #include "cnv_xtthelptoxml.h"
@@ -185,7 +185,7 @@ void* CnvXtthelpToXml::insert(navh_eItemType item_type, const char* t1,
   cnv_text(text2, t2);
   cnv_text(text3, t3);
 
-  if ((t2 && strcmp(text2, "") != 0) || (t3 && strcmp(text3, "") != 0)) {
+  if ((t2 && !streq(text2, "")) || (t3 && !streq(text3, ""))) {
     if (!(status & xml_mStatus_table)) {
       fp << tags[xml_eTag_table].start << '\n';
       status |= xml_mStatus_table;
@@ -193,7 +193,7 @@ void* CnvXtthelpToXml::insert(navh_eItemType item_type, const char* t1,
   } else {
     if (status & xml_mStatus_table) {
       // Close table (keep if empty line)
-      if (!(t1 && strcmp(text1, "") == 0
+      if (!(t1 && streq(text1, "")
               && (item_type == navh_eItemType_Help
                      || item_type == navh_eItemType_HelpCode
                      || item_type == navh_eItemType_HelpBold))) {
@@ -244,7 +244,7 @@ void* CnvXtthelpToXml::insert(navh_eItemType item_type, const char* t1,
   }
   case navh_eItemType_Help:
   case navh_eItemType_HelpCode: {
-    if (strcmp(link, "") != 0) {
+    if (!streq(link, "")) {
       pwr_tFileName fname;
 
       if (strncmp(link, "$web:", 5) == 0) {
@@ -257,7 +257,7 @@ void* CnvXtthelpToXml::insert(navh_eItemType item_type, const char* t1,
       } else {
         subject_to_fname(fname, link, 0);
 
-        if (strcmp(link_bookmark, "") != 0) {
+        if (!streq(link_bookmark, "")) {
           strcat(fname, "#");
           strcat(fname, link_bookmark);
         }
@@ -269,24 +269,24 @@ void* CnvXtthelpToXml::insert(navh_eItemType item_type, const char* t1,
 
     if (!in_table) {
       fp << text1;
-      if (strcmp(link, "") != 0 || bookmark)
+      if (!streq(link, "") || bookmark)
         fp << tags[xml_eTag_break].start << tags[xml_eTag_link].end << '\n';
       else
         fp << tags[xml_eTag_break].start << '\n';
     } else {
       fp << "<TR><TD>" << text1;
-      if (strcmp(text2, "") != 0 || strcmp(text3, "") != 0) {
+      if (!streq(text2, "") || !streq(text3, "")) {
         for (i = 0; i < (int)(CNV_TAB - strlen(text1)); i++)
           fp << "&nbsp;";
         fp << "&nbsp;&nbsp;</TD><TD>" << text2;
-        if (strcmp(text3, "") != 0) {
+        if (!streq(text3, "")) {
           for (i = 0; i < (int)(CNV_TAB - strlen(text2)); i++)
             fp << "&nbsp;";
           fp << "&nbsp;&nbsp;</TD><TD>" << text3;
         }
       }
       fp << "</TD></TR>";
-      if (strcmp(link, "") != 0 || bookmark)
+      if (!streq(link, "") || bookmark)
         fp << tags[xml_eTag_link].end << '\n';
       else
         fp << '\n';
@@ -295,7 +295,7 @@ void* CnvXtthelpToXml::insert(navh_eItemType item_type, const char* t1,
   }
   case navh_eItemType_HelpBold: {
     pwr_tFileName fname;
-    if (strcmp(link, "") != 0) {
+    if (!streq(link, "")) {
       if (strncmp(link, "$web:", 5) == 0) {
         if (strncmp(&link[5], "$pwrp_web/", 10) == 0)
           strcpy(fname, &link[15]);
@@ -305,7 +305,7 @@ void* CnvXtthelpToXml::insert(navh_eItemType item_type, const char* t1,
         strcpy(fname, link);
       } else {
         subject_to_fname(fname, link, 0);
-        if (strcmp(link_bookmark, "") != 0) {
+        if (!streq(link_bookmark, "")) {
           strcat(fname, "#");
           strcat(fname, link_bookmark);
         }
@@ -319,31 +319,31 @@ void* CnvXtthelpToXml::insert(navh_eItemType item_type, const char* t1,
 
     if (!in_table) {
       fp << tags[xml_eTag_bold].start << text1 << tags[xml_eTag_bold].end;
-      if (strcmp(link, "") != 0 || bookmark)
+      if (!streq(link, "") || bookmark)
         fp << tags[xml_eTag_break].start << tags[xml_eTag_link].end << '\n';
       else
         fp << tags[xml_eTag_break].start << '\n';
     } else {
       fp << "<TR><TD><B>";
-      if (strcmp(link, "") != 0)
+      if (!streq(link, ""))
         fp << "<A HREF=\"" << fname << "\">";
       else if (bookmark != 0)
         fp << "<A NAME=\"" << bookmark << "\">";
       fp << text1;
-      if (strcmp(link, "") != 0 || bookmark)
+      if (!streq(link, "") || bookmark)
         fp << "</A>";
-      if (strcmp(text2, "") != 0 || strcmp(text3, "") != 0) {
+      if (!streq(text2, "") || !streq(text3, "")) {
         for (i = 0; i < (int)(CNV_TAB - strlen(text1)); i++)
           fp << "&nbsp;";
         fp << "&nbsp;&nbsp;</B></TD><TD><B>" << text2;
-        if (strcmp(text3, "") != 0) {
+        if (!streq(text3, "")) {
           for (i = 0; i < (int)(CNV_TAB - strlen(text2)); i++)
             fp << "&nbsp;";
           fp << "&nbsp;&nbsp;</B></TD><TD><B>" << text3;
         }
       }
       fp << "</B></TD></TR>";
-      if (strcmp(link, "") != 0 || bookmark)
+      if (!streq(link, "") || bookmark)
         fp << "</A>\n";
       else
         fp << '\n';

@@ -36,10 +36,10 @@
 
 /* wb_qt.cpp -- work bench */
 
-#include <string.h>
 #include <stdlib.h>
 
 #include "co_login_msg.h"
+#include "co_string.h"
 #include "co_user.h"
 
 #include "cow_login_qt.h"
@@ -79,7 +79,7 @@ WVsel* WbQt::vsel_new(pwr_tStatus* status, const char* name,
 
 int main(int argc, char* argv[])
 {
-  if (argc >= 2 && strcmp(argv[1], "-m") == 0) {
+  if (argc >= 2 && streq(argv[1], "-m")) {
     wb_erep::printMethods();
     debug_print("Shutting down...\n"); exit(0);
   }

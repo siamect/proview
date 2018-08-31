@@ -36,8 +36,7 @@
 
 /* wb_wda.cpp -- spreadsheet editor */
 
-#include <string.h>
-
+#include "co_string.h"
 #include "co_time.h"
 
 #include "cow_xhelp.h"
@@ -240,7 +239,7 @@ int Wda::next_attr()
   int rows;
   int get_next;
 
-  if (strcmp(attribute, "") == 0)
+  if (streq(attribute, ""))
     // Get first attribute
     get_next = 1;
   else
@@ -284,7 +283,7 @@ int Wda::prev_attr()
   char prev_attr[40];
 
   strcpy(prev_attr, "");
-  if (strcmp(attribute, "") == 0)
+  if (streq(attribute, ""))
     // Get last attribute
     get_last = 1;
   else
@@ -302,7 +301,7 @@ int Wda::prev_attr()
       continue;
     for (j = 0; j < rows; j++) {
       if (cdh_NoCaseStrcmp(attribute, bodydef[j].ParName) == 0) {
-        if (strcmp(prev_attr, "") == 0) {
+        if (streq(prev_attr, "")) {
           // get_last = 1;
           free((char*)bodydef);
           return WDA__NOPREVATTR;
@@ -320,7 +319,7 @@ int Wda::prev_attr()
     free((char*)bodydef);
   }
 
-  if (get_last && strcmp(prev_attr, "") != 0) {
+  if (get_last && !streq(prev_attr, "")) {
     strcpy(attribute, prev_attr);
     sts = ((WdaNav*)wdanav)
               ->update(objid, classid, attribute, attrobjects, search_name);

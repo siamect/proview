@@ -42,15 +42,17 @@
 
 #include <stdarg.h>
 #include <stdlib.h>
-#include <string.h>
 #include <pthread.h>
 
 #include "co_cdh.h"
 #include "co_ccm_msg.h"
-#include "rt_gdh_msg.h"
 #include "co_dcli.h"
-#include "xtt_xnav.h"
+#include "co_string.h"
+
+#include "rt_gdh_msg.h"
 #include "rt_xnav_msg.h"
+
+#include "xtt_xnav.h"
 
 static void* xtt_logproc(void* arg);
 static int log_ccm_registred = 0;
@@ -827,7 +829,7 @@ static void* xtt_logproc(void* arg)
           xnav_cut_segments(logg->shortname[i], logg->parameterstr[i], 1);
           if ((s = strchr(logg->shortname[i], '.')) != 0) {
             cdh_ToUpper(parname, s + 1);
-            if (strcmp(parname, "ACTUALVALUE") == 0)
+            if (streq(parname, "ACTUALVALUE"))
               *s = 0;
           }
           /* Check that this name is unique */
@@ -838,13 +840,13 @@ static void* xtt_logproc(void* arg)
                 xnav_cut_segments(logg->shortname[i], logg->parameterstr[i], k);
                 if ((s = strchr(logg->shortname[i], '.')) != 0) {
                   cdh_ToUpper(parname, s + 1);
-                  if (strcmp(parname, "ACTUALVALUE") == 0)
+                  if (streq(parname, "ACTUALVALUE"))
                     *s = 0;
                 }
                 xnav_cut_segments(logg->shortname[j], logg->parameterstr[j], k);
                 if ((s = strchr(logg->shortname[j], '.')) != 0) {
                   cdh_ToUpper(parname, s + 1);
-                  if (strcmp(parname, "ACTUALVALUE") == 0)
+                  if (streq(parname, "ACTUALVALUE"))
                     *s = 0;
                 }
                 if (strcmp(logg->shortname[i], logg->shortname[j]))

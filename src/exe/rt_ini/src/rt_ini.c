@@ -36,23 +36,18 @@
 
 #include <fcntl.h>
 #include <stdio.h>
-#include <string.h>
-#if defined OS_LYNX
-#include <sys/wait.h>
-#elif defined OS_POSIX
-#include <fcntl.h>
+#include <unistd.h>
+#if defined OS_POSIX
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <unistd.h>
-#else
-#include <unistd.h>
 #endif
+
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_time.h"
 #include "co_ver.h"
-#include "ini.h"
-#include "ini_rc.h"
+
 #include "rt_bck_load.h"
 #include "rt_errh.h"
 #include "rt_errh_msg.h"
@@ -68,6 +63,9 @@
 #include "rt_qcom.h"
 #include "rt_qini.h"
 #include "rt_redu.h"
+
+#include "ini.h"
+#include "ini_rc.h"
 
 #define RT_INI_PIDFILE "/run/pwr/pwr.pid\0"
 
@@ -148,7 +146,7 @@ static pwr_tStatus start(ini_sContext* cp)
 #if defined OS_POSIX
   int fd;
 
-  if (strcmp(cp->console, "") == 0)
+  if (streq(cp->console, ""))
     strcpy(console, "/dev/console");
   else
     strcpy(console, cp->console);
@@ -637,7 +635,7 @@ static ini_sContext* createContext(int argc, char** argv)
   ini_sContext* cp;
   pwr_tStatus sts;
 
-  if (argc > 1 && strcmp(argv[1], "--version") == 0)
+  if (argc > 1 && streq(argv[1], "--version"))
   {
     system("cat $pwr_exe/rt_version.dat");
     exit(1);

@@ -36,9 +36,10 @@
 
 #include <math.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include <iostream>
+
+#include "co_string.h"
 
 #include "glow_growline.h"
 #include "glow_draw.h"
@@ -493,7 +494,7 @@ void GrowLine::set_dynamic(char* code, int size)
 
 void GrowLine::exec_dynamic()
 {
-  if (dynamicsize && strcmp(dynamic, "") != 0)
+  if (dynamicsize && !streq(dynamic, ""))
     ctx->dynamic_cb(this, dynamic, glow_eDynamicType_Object);
 }
 

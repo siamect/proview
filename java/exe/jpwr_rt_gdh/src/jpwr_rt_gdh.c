@@ -34,21 +34,24 @@
  * General Public License plus this exception.
  */
 
-
-#include <string.h>
 #include <stdio.h>
-#include "jpwr_rt_gdh.h"
+
 #include "pwr.h"
-#include "rt_gdh.h"
-#include "rt_cbuf.h"
-#include "co_cdh.h"
-#include "co_dcli.h"
-#include "co_time.h"
+
 #include "co_api.h"
-#include "co_tree.h"
-#include "co_msg.h"
+#include "co_cdh.h"
 #include "co_cdh_msg.h"
+#include "co_dcli.h"
+#include "co_msg.h"
+#include "co_string.h"
+#include "co_time.h"
+#include "co_tree.h"
+
+#include "rt_cbuf.h"
+#include "rt_gdh.h"
 #include "rt_gdh_msg.h"
+
+#include "jpwr_rt_gdh.h"
 
 // Defined in ge_graph.h...
 typedef enum {
@@ -2490,7 +2493,7 @@ static void gdh_crr_insert_cb( void *ctx, void *parent_node,
     
   switch( item_type) {
     case navc_eItemType_Crossref:
-      if ( strcmp( crrctx->buf, "") != 0) {
+      if ( !streq( crrctx->buf, "")) {
         strcat( crrctx->buf, "\n");
 	crrctx->len++;
       }

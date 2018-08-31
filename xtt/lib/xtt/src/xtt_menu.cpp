@@ -34,18 +34,19 @@
  * General Public License plus this exception.
  */
 
-#include <string.h>
 #include <stdlib.h>
 
+#include "co_api.h"
+#include "co_ccm_msg.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
-#include "co_ccm_msg.h"
-
-#include "co_lng.h"
 #include "co_dcli_msg.h"
+#include "co_lng.h"
+#include "co_string.h"
+
 #include "rt_xnav_msg.h"
+
 #include "xtt_xnav.h"
-#include "co_api.h"
 
 pwr_dImport pwr_BindXttClasses(Base);
 
@@ -93,7 +94,7 @@ int XNav::getAllMenuItems(xmenu_sMenuCall* ip, xmenu_sMenuItem** Item,
       // Call any filter method
       (*Item)->CurrentObject = *CurrentObject;
       sensitive = 1;
-      if (strcmp(mbp->FilterName, "") != 0) {
+      if (!streq(mbp->FilterName, "")) {
         sts = GetMethod(mbp->FilterName, &filter);
         if (ODD(sts)) {
           sts = (filter)(ip);
@@ -109,7 +110,7 @@ int XNav::getAllMenuItems(xmenu_sMenuCall* ip, xmenu_sMenuItem** Item,
         (*Item)->MenuObject = objid;
 
         (*Item)->Flags.f.Sensitive = sensitive;
-        if (strcmp(mbp->MethodName, "") == 0)
+        if (streq(mbp->MethodName, ""))
           (*Item)->Flags.f.Sensitive = 0;
 
         strcpy((*Item)->Name, mbp->ButtonName);
@@ -134,7 +135,7 @@ int XNav::getAllMenuItems(xmenu_sMenuCall* ip, xmenu_sMenuItem** Item,
 
       // Call any filter method
       (*Item)->CurrentObject = *CurrentObject;
-      if (strcmp(mcp->FilterName, "") != 0) {
+      if (!streq(mcp->FilterName, "")) {
         sts = GetMethod(mcp->FilterName, &filter);
         if (ODD(sts)) {
           sts = (filter)(ip);
@@ -174,7 +175,7 @@ int XNav::getAllMenuItems(xmenu_sMenuCall* ip, xmenu_sMenuItem** Item,
 
       // Call any filter method
       (*Item)->CurrentObject = *CurrentObject;
-      if (strcmp(mrp->FilterName, "") != 0) {
+      if (!streq(mrp->FilterName, "")) {
         sts = GetMethod(mrp->FilterName, &filter);
         if (ODD(sts)) {
           sts = (filter)(ip);
@@ -185,7 +186,7 @@ int XNav::getAllMenuItems(xmenu_sMenuCall* ip, xmenu_sMenuItem** Item,
       if (ODD(sts)) {
         int create_object_button = 0;
 
-        if (strcmp(mrp->RefAttribute, "_SelfObject") == 0) {
+        if (streq(mrp->RefAttribute, "_SelfObject")) {
           // Object entry for attributes
           char* s;
 
@@ -456,7 +457,7 @@ int XNav::GetMethod(const char* name, pwr_tStatus (**method)(xmenu_sMenuCall*))
     if (pwr_gBase_XttClassMethods[i].ClassName[0] == '\0')
       break;
 
-    if (strcmp(pwr_gBase_XttClassMethods[i].ClassName, cname) == 0) {
+    if (streq(pwr_gBase_XttClassMethods[i].ClassName, cname)) {
       for (j = 0;; j++) {
         if ((*pwr_gBase_XttClassMethods[i].Methods)[j].MethodName[0] == '\0')
           break;
@@ -528,7 +529,7 @@ int XNav::call_method(const char* method, const char* filter,
   mcp->Selected[sel_cnt].Objid = pwr_cNObjid;
   mcp->SelectCount = sel_cnt;
 
-  if (filter && strcmp(filter, "") != 0) {
+  if (filter && !streq(filter, "")) {
     sts = GetMethod(filter, &filter_func);
     if (EVEN(sts))
       return sts;

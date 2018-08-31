@@ -34,9 +34,10 @@
  * General Public License plus this exception.
  **/
 
-#include <string.h>
-
 #include "pwr_baseclasses.h"
+
+#include "co_string.h"
+
 #include "wb_vext.h"
 #include "rt_pvd_file.h"
 #include "wb_ldh.h"
@@ -216,7 +217,7 @@ void rt_pvd_file::createObject(
     item.body = calloc(1, item.body_size);
     break;
   }
-  if (strcmp(name, "") == 0)
+  if (streq(name, ""))
     sprintf(item.name, "O%d", item.oix);
   else
     strcpy(item.name, name);
@@ -331,7 +332,7 @@ void rt_pvd_file::copyObject(
   procom_obj item = m_list[oix];
   item.oix = next_oix++;
 
-  if (strcmp(name, "") == 0)
+  if (streq(name, ""))
     sprintf(item.name, "O%d_%s", next_oix, m_list[oix].name);
   else
     strcpy(item.name, name);

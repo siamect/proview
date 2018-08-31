@@ -36,12 +36,13 @@
 
 /* xtt_localdb.h -- Local parameter database */
 
-#include <string.h>
 #include <stdlib.h>
 
 extern "C" {
 #include "pwr.h"
 }
+
+#include "co_string.h"
 
 #include "xtt_localdb.h"
 #include "rt_xnav_msg.h"
@@ -72,7 +73,7 @@ int XNavLdb::remove(char* name)
   xnav_sLdbEntry* prev_p = NULL;
 
   while (entry_p) {
-    if (strcmp(entry_p->name, name) == 0) {
+    if (streq(entry_p->name, name)) {
       if (entry_p == NULL)
         root = entry_p->next;
       else
@@ -103,7 +104,7 @@ int XNavLdb::get(char* name, xnav_eLdbType* type, void** value_p)
   xnav_sLdbEntry* entry_p = root;
 
   while (entry_p) {
-    if (strcmp(entry_p->name, name) == 0) {
+    if (streq(entry_p->name, name)) {
       *type = entry_p->type;
       *value_p = entry_p->value_p;
       return 1;

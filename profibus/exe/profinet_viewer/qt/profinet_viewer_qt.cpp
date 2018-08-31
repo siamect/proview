@@ -39,6 +39,7 @@
 #ifdef PWRE_CONF_PNAK
 
 #include "co_error.h"
+#include "co_string.h"
 
 #include "cow_qt_helpers.h"
 #include "cow_style_qt.h"
@@ -89,10 +90,10 @@ int main(int argc, char* argv[])
   CoXHelpQt::set_default(xhelp);
 
   for (i = 1; i < argc; i++) {
-    if (strcmp(argv[i], "-h") == 0) {
+    if (streq(argv[i], "-h")) {
       usage();
       debug_print("Shutting down...\n"); exit(0);
-    } else if (strcmp(argv[i], "-l") == 0) {
+    } else if (streq(argv[i], "-l")) {
       if (i + 1 >= argc) {
         usage();
         debug_print("Shutting down...\n"); exit(0);

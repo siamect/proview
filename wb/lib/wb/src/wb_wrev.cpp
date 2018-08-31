@@ -36,12 +36,12 @@
 
 /* wb_wrev.cpp -- package window */
 
-#include <string.h>
-
 #include <typeinfo>
 
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_time.h"
+
 #include "cow_xhelp.h"
 
 #include "wb_build.h"
@@ -74,11 +74,11 @@ void WRev::store_ok_cb(WRev* wrev, char* text1, char* text2)
 {
   pwr_tStatus sts;
 
-  if (strcmp(text1, "") == 0) {
+  if (streq(text1, "")) {
     wrev->wow->DisplayError("Syntax Error", "Revision name is missing");
     return;
   }
-  if (strcmp(text2, "") == 0) {
+  if (streq(text2, "")) {
     wrev->wow->DisplayError("Syntax Error", "Description is missing");
     return;
   }

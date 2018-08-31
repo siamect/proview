@@ -38,10 +38,12 @@
    This module contains routines for handling of command line in wnav. */
 
 #include "pwr_version.h"
+
 #include "co_api_user.h"
 #include "co_ccm.h"
 #include "co_ccm_msg.h"
 #include "co_dcli_msg.h"
+#include "co_string.h"
 #include "co_time.h"
 #include "co_user.h"
 
@@ -697,7 +699,7 @@ static int wnav_logout_func(void* client_data, void* client_flag)
   WNav* wnav = (WNav*)client_data;
   char msg[80];
 
-  if (strcmp(wnav->base_user, "") == 0) {
+  if (streq(wnav->base_user, "")) {
     sprintf(msg, "User %s logged out", wnav->user);
     wnav->message('I', msg);
   } else {
@@ -1463,7 +1465,7 @@ static int wnav_show_func(void* client_data, void* client_flag)
     char msg[120];
     char priv_str[80];
 
-    if (strcmp(wnav->user, "") == 0) {
+    if (streq(wnav->user, "")) {
       wnav->message('I', "Not logged in");
     } else {
       user_DevPrivToString(CoLogin::privilege(), priv_str, sizeof(priv_str));
@@ -3742,13 +3744,13 @@ static int wnav_create_func(void* client_data, void* client_flag)
     rtonly = ODD(dcli_get_qualifier("/RTONLY", 0, 0));
 
     if ((s = getenv("PWRE_CONF_LOCKDBS"))) {
-      if (strcmp(s, "1") == 0) {
+      if (streq(s, "1")) {
         wnav->message('I', "Snapshots locked");
         return WNAV__SUCCESS;
       }
     }
     if ((s = getenv("PWRE_CONF_BUILDVERSION"))) {
-      if (strcmp(s, "") == 0 || strcmp(s, "0") == 0)
+      if (streq(s, "") || streq(s, "0"))
         timep = 0;
       else {
         if (ODD(time_AsciiToA(s, &buildtime)))
@@ -5402,7 +5404,7 @@ static int wnav_clone_func(void* client_data, void* client_flag)
 
       clone_cnt = 0;
       for (int idx = 0; idx < volumecount; idx++) {
-        if (strcmp("clone", volumelist[idx].p2) == 0
+        if (streq("clone", volumelist[idx].p2)
             && cdh_NoCaseStrcmp(volumelist[idx].p3, volname) == 0) {
           strncpy(namestr, volumelist[idx].volume_name, sizeof(namestr));
           vid = volumelist[idx].volume_id;
@@ -5422,7 +5424,7 @@ static int wnav_clone_func(void* client_data, void* client_flag)
         clone_vect = (char(*)[80])calloc(clone_cnt + 1, 80);
         clone_cnt = 0;
         for (int idx = 0; idx < volumecount; idx++) {
-          if (strcmp("clone", volumelist[idx].p2) == 0
+          if (streq("clone", volumelist[idx].p2)
               && cdh_NoCaseStrcmp(volumelist[idx].p3, volname) == 0) {
             strncpy(clone_vect[clone_cnt++], volumelist[idx].volume_name,
                 sizeof(clone_vect[0]));
@@ -5625,7 +5627,7 @@ int WNav::get_rootlist()
   pwr_tClassId classid;
   PalFileMenu* menu_p;
 
-  if (gbl.all_toplevel || strcmp(layout, "") == 0) {
+  if (gbl.all_toplevel || streq(layout, "")) {
     // Display all toplevel objects
     sts = ldh_GetRootList(ldhses, &root);
     while (ODD(sts)) {
@@ -5686,7 +5688,7 @@ int WNav::check_toplevel_class(pwr_tCid cid)
   if (!menu)
     return 0;
 
-  if (gbl.all_toplevel || strcmp(layout, "") == 0)
+  if (gbl.all_toplevel || streq(layout, ""))
     // All toplevel objects are valid
     return 1;
 
@@ -6056,11 +6058,11 @@ static int wnav_confirmdialog_func(void* filectx, ccm_sArg* arg_list,
       printf("%s", arg_p2->value_string);
       printf(" (y/n/q) : ");
       scanf("%s", str);
-      if (strcmp(str, "Y") == 0 || strcmp(str, "y") == 0
-          || strcmp(str, "") == 0) {
+      if (streq(str, "Y") || streq(str, "y")
+          || streq(str, "")) {
         sts = 1;
         cancel = 0;
-      } else if (strcmp(str, "Q") == 0 || strcmp(str, "q") == 0) {
+      } else if (streq(str, "Q") || streq(str, "q")) {
         sts = 0;
         cancel = 1;
       } else {
@@ -6078,8 +6080,8 @@ static int wnav_confirmdialog_func(void* filectx, ccm_sArg* arg_list,
       printf("%s", arg_p2->value_string);
       printf(" (y/n) : ");
       scanf("%s", str);
-      if (strcmp(str, "Y") == 0 || strcmp(str, "y") == 0
-          || strcmp(str, "") == 0) {
+      if (streq(str, "Y") || streq(str, "y")
+          || streq(str, "")) {
         sts = 1;
         cancel = 0;
       } else {
@@ -6120,7 +6122,7 @@ static int wnav_continuedialog_func(void* filectx, ccm_sArg* arg_list,
     printf("%s", arg_p2->value_string);
     printf("\nDo you want to continue ? (y/n) : ");
     scanf("%s", str);
-    if (strcmp(str, "Y") == 0 || strcmp(str, "y") == 0 || strcmp(str, "") == 0)
+    if (streq(str, "Y") || streq(str, "y") || streq(str, ""))
       sts = 1;
     else
       sts = 0;
@@ -6733,7 +6735,7 @@ int WNav::search_root(char* search_str, pwr_tObjid* found_objid, int next)
   PalFileMenu* menu_p;
 
   search_sts = 0;
-  if (gbl.all_toplevel || strcmp(layout, "") == 0) {
+  if (gbl.all_toplevel || streq(layout, "")) {
     // Display all toplevel objects
     sts = ldh_GetRootList(ldhses, &root);
     while (ODD(sts)) {
@@ -6909,9 +6911,9 @@ int WNav::show_file(const char* filename, const char* intitle, int hide_dir)
   } else
     strcpy(text, found_file);
   // cdh_ToUpper( type, type);
-  if (strcmp(type, ".pwr_com") == 0)
+  if (streq(type, ".pwr_com"))
     file_type = item_eFileType_Script;
-  else if (strcmp(type, ".pwg") == 0)
+  else if (streq(type, ".pwg"))
     file_type = item_eFileType_Graph;
   else
     file_type = item_eFileType_Unknown;
@@ -6936,9 +6938,9 @@ int WNav::show_file(const char* filename, const char* intitle, int hide_dir)
       } else
         strcpy(text, found_file);
       // cdh_ToUpper( type, type);
-      if (strcmp(type, ".pwr_com") == 0)
+      if (streq(type, ".pwr_com"))
         file_type = item_eFileType_Script;
-      else if (strcmp(type, ".pwg") == 0)
+      else if (streq(type, ".pwg"))
         file_type = item_eFileType_Graph;
       else
         file_type = item_eFileType_Unknown;

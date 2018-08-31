@@ -37,12 +37,13 @@
 /* ge_attrnav.cpp -- Display object info */
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "co_cdh.h"
-#include "co_time.h"
 #include "co_dcli.h"
 #include "co_msg.h"
+#include "co_string.h"
+#include "co_time.h"
+
 #include "flow_browctx.h"
 #include "flow_msg.h"
 
@@ -1672,7 +1673,7 @@ int AttrNav::set_attr_value(
 
           // Check if name is changed
           grow_GetObjectName(oitem->id, name, sizeof(name), glow_eName_Object);
-          if (strcmp(oitem->name, name) != 0) {
+          if (!streq(oitem->name, name)) {
             strcpy(oitem->name, name);
             brow_SetAnnotation(oitem->node, 0, name, strlen(name));
           }
@@ -2562,7 +2563,7 @@ static int attrnav_trace_connect_bc(brow_tObject object, char* name, char* attr,
 
   /*  printf( "Connecting %s.%s\n", name, attr);  */
 
-  if (strcmp(name, "") == 0)
+  if (streq(name, ""))
     return 1;
 
   brow_GetUserData(object, (void**)&base_item);
@@ -3339,7 +3340,7 @@ AItemLocal::AItemLocal(AttrNav* attrnav, const char* item_name,
     brow_SetAnnotPixmap(node, 0, attrnav->brow->pixmap_attrarray);
     break;
   default: {
-    if (strcmp(name, "SubGraph") == 0) {
+    if (streq(name, "SubGraph")) {
       brow_SetAnnotPixmap(node, 0, attrnav->brow->pixmap_attrarray);
       subgraph = 1;
     } else

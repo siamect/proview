@@ -38,11 +38,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include <iostream>
 
 #include "co_dcli.h"
+#include "co_string.h"
+
 #include "rt_load.h"
 
 #include "xtt_item.h"
@@ -151,7 +152,7 @@ void XttCmd::usage()
 
 void XttCmd::message_cb(void* ctx, char severity, const char* msg)
 {
-  if (strcmp(msg, "") != 0)
+  if (!streq(msg, ""))
     printf("XNAV-'%c'-MSG, %s\n", severity, msg);
 }
 

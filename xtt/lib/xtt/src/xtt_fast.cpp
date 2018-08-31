@@ -34,11 +34,14 @@
  * General Public License plus this exception.
  */
 
-#include "rt_gdh_msg.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
-#include "cow_wow.h"
+#include "co_string.h"
+
+#include "rt_gdh_msg.h"
 #include "rt_xnav_msg.h"
+
+#include "cow_wow.h"
 
 #include "glow_curveapi.h"
 
@@ -187,7 +190,7 @@ XttFast::XttFast(void* parent_ctx, char* name, pwr_sAttrRef* fast_arp,
   fast_scan(this);
   gcd->select_color(0);
 
-  if (strcmp(fp.Title, "") != 0)
+  if (!streq(fp.Title, ""))
     strcpy(title, fp.Title);
   else
     cdh_StrncpyCutOff(title, name, sizeof(title), 1);

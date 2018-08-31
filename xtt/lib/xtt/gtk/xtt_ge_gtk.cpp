@@ -42,6 +42,7 @@ typedef void* Widget;
 
 #include "rt_gdh_msg.h"
 #include "co_cdh.h"
+#include "co_string.h"
 
 #include "glow_growapi.h"
 
@@ -524,7 +525,7 @@ XttGeGtk::XttGeGtk(GtkWidget* xg_parent_wid, void* xg_parent_ctx,
   if (borders)
     ((Graph*)graph)->set_borders(borders);
 
-  if (strcmp(filename, "_none_") == 0 && xg_width == 0 && xg_height == 0) {
+  if (streq(filename, "_none_") && xg_width == 0 && xg_height == 0) {
     // Set size from current layout
     double x0, y0, x1, y1, zoom;
     float rd = 0.05;

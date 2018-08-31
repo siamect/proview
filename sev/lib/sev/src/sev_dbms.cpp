@@ -44,15 +44,19 @@
 
 #include <mysql/mysqld_error.h>
 
-#include "co_syi.h"
-#include "co_cdh.h"
-#include "co_dcli.h"
-#include "co_time.h"
-#include "co_cnf.h"
-#include "rt_load.h"
 #include "pwr_names.h"
-#include "sev_dbms.h"
+
+#include "co_cdh.h"
+#include "co_cnf.h"
+#include "co_dcli.h"
+#include "co_string.h"
+#include "co_syi.h"
+#include "co_time.h"
+
 #include "rt_errh.h"
+#include "rt_load.h"
+
+#include "sev_dbms.h"
 
 char sev_dbms_env::m_systemName[40];
 
@@ -728,20 +732,20 @@ int sev_dbms_env::open(void)
     if (strcmp(valp, "(null)") == 0)
       valp = 0;
 
-    if (strcmp(var, "HOST") == 0) {
+    if (streq(var, "HOST")) {
       host(valp);
-    } else if (strcmp(var, "USER") == 0) {
+    } else if (streq(var, "USER")) {
       user(valp);
-    } else if (strcmp(var, "PASSWD") == 0) {
+    } else if (streq(var, "PASSWD")) {
       passwd(valp);
-    } else if (strcmp(var, "DB_NAME") == 0) {
+    } else if (streq(var, "DB_NAME")) {
       dbName(valp);
-    } else if (strcmp(var, "PORT") == 0) {
+    } else if (streq(var, "PORT")) {
       if (valp == 0)
         port(0);
       else
         port(atoi(valp));
-    } else if (strcmp(var, "SOCKET") == 0) {
+    } else if (streq(var, "SOCKET")) {
       socket(valp);
     } else {
       printf("In %s row %d:\n", __FILE__, __LINE__);
@@ -766,7 +770,7 @@ int sev_dbms_env::get_systemname()
   char line[200];
   pwr_tStatus sts;
 
-  if (strcmp(m_systemName, "") != 0)
+  if (!streq(m_systemName, ""))
     return 1;
 
   syi_NodeName(&sts, nodename, sizeof(nodename));
@@ -866,7 +870,7 @@ int sev_dbms::create_table(pwr_tStatus* sts, char* tablename, pwr_eType type,
   char readoptstr[80];
   char enginestr[100] = "";
 
-  if (strcmp(m_cnf.Engine, "") != 0)
+  if (!streq(m_cnf.Engine, ""))
     snprintf(enginestr, sizeof(enginestr), " engine=%s", m_cnf.Engine);
   if (cdh_NoCaseStrcmp(m_cnf.Engine, "innodb") == 0)
     strcat(enginestr, " row_format=compressed");
@@ -945,7 +949,7 @@ int sev_dbms::create_event_table(
   char readoptstr[80];
   char enginestr[100] = "";
 
-  if (strcmp(m_cnf.Engine, "") != 0)
+  if (!streq(m_cnf.Engine, ""))
     snprintf(enginestr, sizeof(enginestr), " engine=%s", m_cnf.Engine);
 
   if (options & pwr_mSevOptionsMask_PosixTime) {
@@ -2650,7 +2654,7 @@ int sev_dbms::check_item(pwr_tStatus* sts, pwr_tOid oid, char* oname,
             (long int)storagetime.tv_sec);
         m_items[i].storagetime = storagetime;
       }
-      if (strcmp(oname, m_items[i].oname) != 0) {
+      if (!streq(oname, m_items[i].oname)) {
         sprintf(&query[strlen(query)], "oname=\'%s\',", oname);
         strncpy(m_items[i].oname, oname, sizeof(m_items[i].oname));
       }
@@ -2670,12 +2674,12 @@ int sev_dbms::check_item(pwr_tStatus* sts, pwr_tOid oid, char* oname,
         sprintf(&query[strlen(query)], "deadband=%.4f,", deadband);
         m_items[i].deadband = deadband;
       }
-      if (strcmp(description, m_items[i].description) != 0) {
+      if (!streq(description, m_items[i].description)) {
         sprintf(&query[strlen(query)], "description=\'%s\',", description);
         strncpy(m_items[i].description, description,
             sizeof(m_items[i].description));
       }
-      if (strcmp(unit, m_items[i].attr[0].unit) != 0) {
+      if (!streq(unit, m_items[i].attr[0].unit)) {
         sprintf(&query[strlen(query)], "unit=\'%s\',", unit);
         strncpy(m_items[i].attr[0].unit, unit, sizeof(m_items[i].attr[0].unit));
       }
@@ -2720,7 +2724,7 @@ int sev_dbms::add_item(pwr_tStatus* sts, pwr_tOid oid, char* oname, char* aname,
   if (EVEN(*sts))
     return 0;
 
-  if (strcmp(aname, "Events") == 0)
+  if (streq(aname, "Events"))
     create_event_table(sts, tablename, options);
   else
     create_table(sts, tablename, type, size, options, deadband);
@@ -3097,7 +3101,7 @@ int sev_dbms::create_objecttable(
   char readoptstr[80];
   char enginestr[100] = "";
 
-  if (strcmp(m_cnf.Engine, "") != 0)
+  if (!streq(m_cnf.Engine, ""))
     snprintf(enginestr, sizeof(enginestr), " engine=%s", m_cnf.Engine);
 
   if (options & pwr_mSevOptionsMask_PosixTime) {
@@ -4723,7 +4727,7 @@ int sev_dbms::alter_engine(pwr_tStatus* sts, char* tablename)
   char query[200];
   int rc;
 
-  if (strcmp(m_cnf.Engine, "") == 0) {
+  if (streq(m_cnf.Engine, "")) {
     printf("** No engine specified in /etc/proview.cnf\n");
     return 0;
   }

@@ -39,6 +39,7 @@
 #include <stdlib.h>
 
 #include "co_cdh.h"
+#include "co_string.h"
 
 #include "rt_xatt_msg.h"
 
@@ -58,14 +59,14 @@ CoWowRecall XAttOneQt::value_recall;
 void XAttOneQt::message(char severity, const char* message)
 {
   msg_label->setText(fl(message));
-  if (strcmp(message, "") != 0) {
+  if (!streq(message, "")) {
     msg_label->setVisible(true);
   }
 }
 
 void XAttOneQt::set_prompt(char* prompt)
 {
-  if (strcmp(prompt, "") == 0) {
+  if (streq(prompt, "")) {
     cmd_prompt->setVisible(false);
     msg_label->setVisible(true);
   } else {

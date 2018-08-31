@@ -35,12 +35,12 @@
  **/
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "co_ccm.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_msg.h"
+#include "co_string.h"
 #include "co_time.h"
 
 #include "rt_gdh.h"
@@ -130,7 +130,7 @@ void Graph::message(char sev, const char* text)
   if (message_cb)
     (message_cb)(parent_ctx, sev, text);
 
-  if (scriptmode && strcmp(text, "") != 0)
+  if (scriptmode && !streq(text, ""))
     printf("GE-%c-Message, %s\n", sev, text);
 }
 
@@ -421,7 +421,7 @@ void Graph::set_java_name(const char* name)
   char current_name[80];
 
   grow_GetJavaName(grow->ctx, current_name);
-  if (strcmp(current_name, name) != 0) {
+  if (!streq(current_name, name)) {
     grow_SetJavaName(grow->ctx, name);
     grow_SetModified(grow->ctx, 1);
   }
@@ -553,14 +553,14 @@ void Graph::open(char* filename)
   grow->grow_setup();
 
   // Set temporary language translation on class graphs
-  // if ( strcmp( object_name, "") != 0)
+  // if ( !streq( object_name, ""))
   grow_EnableEvent(grow->ctx, glow_eEvent_Translate, glow_eEventType_CallBack,
       graph_grow_cb);
 
-  if (strcmp(object_name[0], "") != 0)
+  if (!streq(object_name[0], ""))
     grow_SetOwner(grow->ctx, object_name[0]);
 
-  if (strcmp(filename, "_none_.pwg") != 0) {
+  if (!streq(filename, "_none_.pwg")) {
     get_filename(filename, fname);
     sts = grow_Open(grow->ctx, fname);
     if (EVEN(sts))
@@ -715,7 +715,7 @@ int Graph::group_select(grow_tObject* object, char* last_group)
 
   grow_SetModified(grow->ctx, 1);
 
-  if (strcmp(last_group_name, "") != 0) {
+  if (!streq(last_group_name, "")) {
     // Try to recover dynamics
     sts = recall.get(&data, last_group_name);
     if (ODD(sts)) {
@@ -2071,7 +2071,7 @@ int Graph::get_subgraph_attr_items(
       items[i].type = ge_eAttrType_ActionType2;
     else
       items[i].type = grow_info_p->type;
-    if (strcmp(grow_info_p->name, "AnimSequence") == 0)
+    if (streq(grow_info_p->name, "AnimSequence"))
       items[i].type = ge_eAttrType_AnimSequence;
     items[i].size = grow_info_p->size;
     items[i].minlimit = 0;
@@ -2442,7 +2442,7 @@ static int graph_grow_cb(GlowCtx* ctx, glow_tEvent event)
     }
     dcli_parse_filename(filename, dev, dir, file, type, &version);
     cdh_ToLower(sub_name, file);
-    if (strcmp(type, ".pwsg") == 0) {
+    if (streq(type, ".pwsg")) {
       sts = grow_FindNodeClassByName(graph->grow->ctx, sub_name, &nc);
       if (EVEN(sts)) {
         // Load the subgraph
@@ -2480,8 +2480,8 @@ static int graph_grow_cb(GlowCtx* ctx, glow_tEvent event)
             = ge_mActionType1(dyn->action_type1 | ge_mActionType1_Slider);
 
       graph->journal_store(journal_eAction_CreateObject, n1);
-    } else if (strcmp(type, ".gif") == 0 || strcmp(type, ".jpg") == 0
-        || strcmp(type, ".svg") == 0 || strcmp(type, ".png") == 0) {
+    } else if (streq(type, ".gif") || streq(type, ".jpg")
+        || streq(type, ".svg") || streq(type, ".png")) {
       grow_tObject i1;
       char name[80];
 
@@ -2499,111 +2499,111 @@ static int graph_grow_cb(GlowCtx* ctx, glow_tEvent event)
           event->create_grow_object.x, event->create_grow_object.y, NULL, &i1);
 
       graph->journal_store(journal_eAction_CreateObject, i1);
-    } else if (strcmp(type, ".component") == 0) {
-      if (strcmp(sub_name, "pwr_trend") == 0) {
+    } else if (streq(type, ".component")) {
+      if (streq(sub_name, "pwr_trend")) {
         grow_tObject t1;
         graph->create_trend(&t1, event->create_grow_object.x,
             event->create_grow_object.y, (unsigned int)ge_mDynType1_Trend, 0);
 
         graph->journal_store(journal_eAction_CreateObject, t1);
 
-      } else if (strcmp(sub_name, "pwrct_trend") == 0) {
+      } else if (streq(sub_name, "pwrct_trend")) {
         grow_tObject t1;
         graph->create_trend(&t1, event->create_grow_object.x,
             event->create_grow_object.y, (unsigned int)ge_mDynType1_Trend, 1);
 
         graph->journal_store(journal_eAction_CreateObject, t1);
 
-      } else if (strcmp(sub_name, "pwr_fastcurve") == 0) {
+      } else if (streq(sub_name, "pwr_fastcurve")) {
         grow_tObject t1;
         graph->create_trend(&t1, event->create_grow_object.x,
             event->create_grow_object.y, (unsigned int)ge_mDynType1_FastCurve,
             0);
 
         graph->journal_store(journal_eAction_CreateObject, t1);
-      } else if (strcmp(sub_name, "pwr_xycurve") == 0) {
+      } else if (streq(sub_name, "pwr_xycurve")) {
         grow_tObject t1;
         graph->create_xycurve(&t1, event->create_grow_object.x,
             event->create_grow_object.y, (unsigned int)ge_mDynType1_XY_Curve);
 
         graph->journal_store(journal_eAction_CreateObject, t1);
-      } else if (strcmp(sub_name, "pwr_bar") == 0) {
+      } else if (streq(sub_name, "pwr_bar")) {
         grow_tObject t1;
         graph->create_bar(
             &t1, event->create_grow_object.x, event->create_grow_object.y, 0);
 
         graph->journal_store(journal_eAction_CreateObject, t1);
-      } else if (strcmp(sub_name, "pwrct_bar") == 0) {
+      } else if (streq(sub_name, "pwrct_bar")) {
         grow_tObject t1;
         graph->create_bar(
             &t1, event->create_grow_object.x, event->create_grow_object.y, 1);
 
         graph->journal_store(journal_eAction_CreateObject, t1);
-      } else if (strcmp(sub_name, "pwr_window") == 0) {
+      } else if (streq(sub_name, "pwr_window")) {
         grow_tObject t1;
         graph->create_window(
             &t1, event->create_grow_object.x, event->create_grow_object.y);
 
         graph->journal_store(journal_eAction_CreateObject, t1);
-      } else if (strcmp(sub_name, "pwr_table") == 0) {
+      } else if (streq(sub_name, "pwr_table")) {
         grow_tObject t1;
         graph->create_table(
             &t1, event->create_grow_object.x, event->create_grow_object.y);
 
         graph->journal_store(journal_eAction_CreateObject, t1);
-      } else if (strcmp(sub_name, "pwr_folder") == 0) {
+      } else if (streq(sub_name, "pwr_folder")) {
         grow_tObject t1;
         graph->create_folder(
             &t1, event->create_grow_object.x, event->create_grow_object.y);
 
         graph->journal_store(journal_eAction_CreateObject, t1);
-      } else if (strcmp(sub_name, "pwr_axis") == 0) {
+      } else if (streq(sub_name, "pwr_axis")) {
         grow_tObject t1;
         graph->create_axis(&t1, event->create_grow_object.x,
             event->create_grow_object.y, 0, 0);
-      } else if (strcmp(sub_name, "pwrct_axis") == 0) {
+      } else if (streq(sub_name, "pwrct_axis")) {
         grow_tObject t1;
         graph->create_axis(&t1, event->create_grow_object.x,
             event->create_grow_object.y, 0, 1);
-      } else if (strcmp(sub_name, "pwr_dynamicaxis") == 0) {
+      } else if (streq(sub_name, "pwr_dynamicaxis")) {
         grow_tObject t1;
         graph->create_axis(&t1, event->create_grow_object.x,
             event->create_grow_object.y, 1, 0);
-      } else if (strcmp(sub_name, "pwrct_dynamicaxis") == 0) {
+      } else if (streq(sub_name, "pwrct_dynamicaxis")) {
         grow_tObject t1;
         graph->create_axis(&t1, event->create_grow_object.x,
             event->create_grow_object.y, 1, 1);
-      } else if (strcmp(sub_name, "pwr_axisarc") == 0) {
+      } else if (streq(sub_name, "pwr_axisarc")) {
         grow_tObject t1;
         graph->create_axisarc(&t1, event->create_grow_object.x,
             event->create_grow_object.y, 0, 0);
-      } else if (strcmp(sub_name, "pwrct_axisarc") == 0) {
+      } else if (streq(sub_name, "pwrct_axisarc")) {
         grow_tObject t1;
         graph->create_axisarc(&t1, event->create_grow_object.x,
             event->create_grow_object.y, 0, 1);
-      } else if (strcmp(sub_name, "pwr_dynamicaxisarc") == 0) {
+      } else if (streq(sub_name, "pwr_dynamicaxisarc")) {
         grow_tObject t1;
         graph->create_axisarc(&t1, event->create_grow_object.x,
             event->create_grow_object.y, 1, 0);
-      } else if (strcmp(sub_name, "pwrct_dynamicaxisarc") == 0) {
+      } else if (streq(sub_name, "pwrct_dynamicaxisarc")) {
         grow_tObject t1;
         graph->create_axisarc(&t1, event->create_grow_object.x,
             event->create_grow_object.y, 1, 1);
-      } else if (strcmp(sub_name, "pwr_pie") == 0) {
+      } else if (streq(sub_name, "pwr_pie")) {
         grow_tObject t1;
         graph->create_pie(
             &t1, event->create_grow_object.x, event->create_grow_object.y);
-      } else if (strcmp(sub_name, "pwr_barchart") == 0) {
+      } else if (streq(sub_name, "pwr_barchart")) {
         grow_tObject t1;
         graph->create_barchart(
             &t1, event->create_grow_object.x, event->create_grow_object.y);
-      } else if (strcmp(sub_name, "pwr_methodtoolbar") == 0) {
+      } else if (streq(sub_name, "pwr_methodtoolbar")) {
         grow_tObject t1;
         graph->create_toolbar(
             &t1, event->create_grow_object.x, event->create_grow_object.y);
 
         graph->journal_store(journal_eAction_CreateObject, t1);
-      } else if (strcmp(sub_name, "pwr_conglue") == 0) {
+      } else if (streq(sub_name, "pwr_conglue")) {
         grow_tObject t1;
 
         sprintf(name, "O%d", grow_IncrNextObjectNameNumber(graph->grow->ctx));
@@ -3405,14 +3405,14 @@ int Graph::init_trace()
     grow->grow_trace_setup();
 
     // Look for object graph
-    if (strcmp(object_name[0], "") != 0)
+    if (!streq(object_name[0], ""))
       init_object_graph(0);
 
     sts = grow_TraceInit(grow->ctx, graph_trace_connect_bc,
         graph_trace_disconnect_bc, graph_trace_scan_bc, graph_trace_ctrl_bc);
 
     // Look for object graph
-    if (strcmp(object_name[0], "") != 0)
+    if (!streq(object_name[0], ""))
       init_object_graph(1);
 
     trace_started = 1;
@@ -4291,7 +4291,7 @@ void Graph::get_command(char* in, char* out, GeDyn* dyn)
   } else {
     grow_GetOwner(grow->ctx, oname[0]);
 
-    if (strcmp(object_name[0], "") != 0) {
+    if (!streq(object_name[0], "")) {
       pwr_tOName n;
       t0 = n;
       s0 = oname[0];
@@ -4310,7 +4310,7 @@ void Graph::get_command(char* in, char* out, GeDyn* dyn)
   }
   s0 = in;
   if (dyn && (dyn->total_dyn_type1 & ge_mDynType1_HostObject
-                 || strcmp(dyn->recursive_hostobject, "") != 0)) {
+                 || !streq(dyn->recursive_hostobject, ""))) {
     pwr_tAName hostobject;
 
     dyn->get_hostobject(hostobject);
@@ -4326,15 +4326,15 @@ void Graph::get_command(char* in, char* out, GeDyn* dyn)
     }
     cdh_Strcpy(t0, s0);
 
-    if (strcmp(oname[0], "") == 0) {
+    if (streq(oname[0], "")) {
       strcpy(out, str);
     }
     s0 = str;
-  } else if (strcmp(oname[0], "") == 0) {
+  } else if (streq(oname[0], "")) {
     cdh_Strcpy(out, in);
   }
 
-  if (strcmp(oname[0], "") != 0) {
+  if (!streq(oname[0], "")) {
     t0 = out;
     while ((s = strstr(s0, "$object"))) {
       int idx;
@@ -4586,7 +4586,7 @@ int Graph::get_refupdate(char* in, pwr_tAName ref[], pwr_tTid ref_tid[],
   } else {
     grow_GetOwner(grow->ctx, oname[0]);
 
-    if (strcmp(object_name[0], "") != 0) {
+    if (!streq(object_name[0], "")) {
       pwr_tOName n;
       t0 = n;
       s0 = oname[0];
@@ -4605,7 +4605,7 @@ int Graph::get_refupdate(char* in, pwr_tAName ref[], pwr_tTid ref_tid[],
   }
   s0 = in;
   if (dyn && (dyn->total_dyn_type1 & ge_mDynType1_HostObject
-                 || strcmp(dyn->recursive_hostobject, "") != 0)) {
+                 || !streq(dyn->recursive_hostobject, ""))) {
     pwr_tAName hostobject;
 
     dyn->get_hostobject(hostobject);
@@ -4621,15 +4621,15 @@ int Graph::get_refupdate(char* in, pwr_tAName ref[], pwr_tTid ref_tid[],
     }
     cdh_Strcpy(t0, s0);
 
-    if (strcmp(oname[0], "") == 0) {
+    if (streq(oname[0], "")) {
       strcpy(out, str);
     }
     s0 = str;
-  } else if (strcmp(oname[0], "") == 0) {
+  } else if (streq(oname[0], "")) {
     cdh_Strcpy(out, in);
   }
 
-  if (strcmp(oname[0], "") != 0) {
+  if (!streq(oname[0], "")) {
     t0 = out;
     while ((s = strstr(s0, "$object"))) {
       int idx;
@@ -4819,16 +4819,16 @@ graph_eDatabase Graph::parse_attr_name(char* name, char* parsed_name,
 
   if ((s = strstr(str, "$user"))) {
     if ((s = strchr(str, '#'))) {
-      if (strcmp(s, "##Float32") == 0) {
+      if (streq(s, "##Float32")) {
         *type = pwr_eType_Float32;
         *size = sizeof(pwr_tFloat32);
-      } else if (strcmp(s, "##Float64") == 0) {
+      } else if (streq(s, "##Float64")) {
         *type = pwr_eType_Float64;
         *size = sizeof(pwr_tFloat64);
-      } else if (strcmp(s, "##Int32") == 0) {
+      } else if (streq(s, "##Int32")) {
         *type = pwr_eType_Int32;
         *size = sizeof(pwr_tInt32);
-      } else if (strcmp(s, "##Boolean") == 0) {
+      } else if (streq(s, "##Boolean")) {
         *type = pwr_eType_Boolean;
         *size = sizeof(pwr_tBoolean);
       } else {
@@ -4849,16 +4849,16 @@ graph_eDatabase Graph::parse_attr_name(char* name, char* parsed_name,
   if ((s = strstr(str, "$local."))) {
     strcpy(parsed_name, s + strlen("$local."));
     if ((s = strchr(parsed_name, '#'))) {
-      if (strcmp(s, "##Float32") == 0) {
+      if (streq(s, "##Float32")) {
         *type = pwr_eType_Float32;
         *size = sizeof(pwr_tFloat32);
-      } else if (strcmp(s, "##Float64") == 0) {
+      } else if (streq(s, "##Float64")) {
         *type = pwr_eType_Float64;
         *size = sizeof(pwr_tFloat64);
-      } else if (strcmp(s, "##Int32") == 0) {
+      } else if (streq(s, "##Int32")) {
         *type = pwr_eType_Int32;
         *size = sizeof(pwr_tInt32);
-      } else if (strcmp(s, "##Boolean") == 0) {
+      } else if (streq(s, "##Boolean")) {
         *type = pwr_eType_Boolean;
         *size = sizeof(pwr_tBoolean);
       } else {
@@ -4878,7 +4878,7 @@ graph_eDatabase Graph::parse_attr_name(char* name, char* parsed_name,
       char owner[256];
 
       grow_GetOwner(grow->ctx, owner);
-      if (strcmp(owner, "") != 0) {
+      if (!streq(owner, "")) {
         strcat(parsed_name, "-");
         strcat(parsed_name, owner);
       }
@@ -4889,13 +4889,13 @@ graph_eDatabase Graph::parse_attr_name(char* name, char* parsed_name,
   if ((s = strstr(str, "$ccm."))) {
     strcpy(parsed_name, s + strlen("$ccm."));
     if ((s = strchr(parsed_name, '#'))) {
-      if (strcmp(s, "##Float32") == 0) {
+      if (streq(s, "##Float32")) {
         *type = pwr_eType_Float32;
         *size = sizeof(pwr_tFloat32);
-      } else if (strcmp(s, "##Int32") == 0) {
+      } else if (streq(s, "##Int32")) {
         *type = pwr_eType_Int32;
         *size = sizeof(pwr_tInt32);
-      } else if (strcmp(s, "##Boolean") == 0) {
+      } else if (streq(s, "##Boolean")) {
         *type = pwr_eType_Boolean;
         *size = sizeof(pwr_tBoolean);
       } else {
@@ -5023,7 +5023,7 @@ graph_eDatabase Graph::parse_attr_name(char* name, char* parsed_name,
     pwr_tOid oid;
     pwr_tStatus sts;
 
-    if (strcmp(object_name[0], "") != 0) {
+    if (!streq(object_name[0], "")) {
       sts = gdh_NameToObjid(object_name[0], &oid);
       if (ODD(sts))
         sts = gdh_GetNodeObject(oid.vid, &oid);
@@ -5117,7 +5117,7 @@ void Graph::string_to_type(
   for (i = 0; i < int(sizeof(graph_type_table) / sizeof(graph_type_table[0]));
        i++) {
     cdh_ToUpper(table_str, (char*)graph_type_table[i].TypeStr);
-    if (strcmp(table_str, str) == 0) {
+    if (streq(table_str, str)) {
       *size = graph_type_table[i].Size;
       *type = graph_type_table[i].Type;
       found = 1;
@@ -5745,7 +5745,7 @@ int Graph::create_node_floating(double x, double y)
   }
   dcli_parse_filename(filename, dev, dir, file, type, &version);
   cdh_ToLower(sub_name, file);
-  if (strcmp(type, ".pwsg") == 0) {
+  if (streq(type, ".pwsg")) {
     sts = grow_FindNodeClassByName(grow->ctx, sub_name, &nc);
     if (EVEN(sts)) {
       // Load the subgraph
@@ -6323,7 +6323,7 @@ int GraphRecallBuff::get(GeDyn** data, int idx)
 int GraphRecallBuff::get(GeDyn** data, char* k)
 {
   for (int i = 0; i < cnt; i++) {
-    if (strcmp(k, key[i]) == 0) {
+    if (streq(k, key[i])) {
       *data = new GeDyn(*buff[i]);
       return 1;
     }

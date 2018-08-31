@@ -36,14 +36,15 @@
 
 #include <math.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include <iostream>
+
+#include "co_string.h"
+#include "co_time.h"
 
 #include "glow_growaxisarc.h"
 #include "glow_grownode.h"
 #include "glow_draw.h"
-#include "co_time.h"
 
 #if defined OS_OPENBSD
 #define nearbyint rint
@@ -771,27 +772,27 @@ void GrowAxisArc::set_axis_info(glow_sAxisInfo* info)
 
 void GrowAxisArc::format_text(char* text, char* fmt, double value)
 {
-  if (strcmp(fmt, "%1t") == 0) {
+  if (streq(fmt, "%1t")) {
     // Hours, minutes and seconds, value in seconds
     int val = (int)nearbyint(value);
     int hours = val / 3600;
     int minutes = (val - hours * 3600) / 60;
     int seconds = (val - hours * 3600 - minutes * 60);
     sprintf(text, "%d:%02d:%02d", hours, minutes, seconds);
-  } else if (strcmp(fmt, "%2t") == 0) {
+  } else if (streq(fmt, "%2t")) {
     // Hours and minutes, value in seconds
     int val = (int)nearbyint(value);
     int hours = val / 3600;
     int minutes = (val - hours * 3600) / 60;
     sprintf(text, "%d:%02d", hours, minutes);
-  } else if (strcmp(fmt, "%3t") == 0) {
+  } else if (streq(fmt, "%3t")) {
     // Days, hours and minues, value in seconds
     int val = (int)nearbyint(value);
     int days = val / (24 * 3600);
     int hours = (val - days * 24 * 3600) / 3600;
     int minutes = (val - days * 24 * 3600 - hours * 3600) / 60;
     sprintf(text, "%d %02d:%02d", days, hours, minutes);
-  } else if (strcmp(fmt, "%10t") == 0) {
+  } else if (streq(fmt, "%10t")) {
     // Date
     char timstr[40];
     pwr_tTime t;
@@ -801,7 +802,7 @@ void GrowAxisArc::format_text(char* text, char* fmt, double value)
     time_AtoAscii(&t, time_eFormat_NumDateAndTime, timstr, sizeof(timstr));
     timstr[19] = 0;
     strcpy(text, timstr);
-  } else if (strcmp(fmt, "%11t") == 0) {
+  } else if (streq(fmt, "%11t")) {
     // Date, no seconds
     char timstr[40];
     pwr_tTime t;

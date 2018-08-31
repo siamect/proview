@@ -35,12 +35,13 @@
  **/
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "pwr_baseclasses.h"
 #include "pwr_systemclasses.h"
+
 #include "co_dcli.h"
 #include "co_nav_msg.h"
+#include "co_string.h"
 #include "co_time.h"
 
 #include "wb_wtt.h"
@@ -382,7 +383,7 @@ WItemObject::WItemObject(WNav* wnav, pwr_tObjid item_objid, brow_tNode dest,
         strcat(descr_str, descr);
         free(descr);
       }
-      if (strcmp(descr_str, "") != 0)
+      if (!streq(descr_str, ""))
         brow_SetAnnotation(node, next_annot++, descr_str, strlen(descr_str));
     }
     if (wnav->gbl.show_alias && classid == pwr_eClass_Alias) {
@@ -1388,7 +1389,7 @@ WItemFile::WItemFile(WNav* wnav, const char* item_name, char* text,
       (void*)this, 1, &node);
   if (file_type == item_eFileType_Script) {
     brow_SetAnnotPixmap(node, 0, wnav->brow->pixmap_script);
-    if (strcmp(script_descr, "") != 0)
+    if (!streq(script_descr, ""))
       brow_SetAnnotation(node, 1, script_descr, strlen(script_descr));
   } else if (file_type == item_eFileType_Graph)
     brow_SetAnnotPixmap(node, 0, wnav->brow->pixmap_graph);
@@ -1757,7 +1758,7 @@ int WItemAttr::open_children(double x, double y)
               for (; co; co = co.next()) {
                 strcpy(oname, co.longName().name(cdh_mName_volumeStrict));
 
-                if ((s = strrchr(oname, '-')) && strcmp(s + 1, "Template") == 0)
+                if ((s = strrchr(oname, '-')) && streq(s + 1, "Template"))
                   continue;
 
                 pwr_tOid oid = co.oid();
@@ -3964,7 +3965,7 @@ int WItemEnumObject::update()
     if (EVEN(sts))
       return sts;
 
-    if (strcmp(value, enum_string) == 0)
+    if (streq(value, enum_string))
       brow_SetRadiobutton(node, 0, 1);
     else
       brow_SetRadiobutton(node, 0, 0);

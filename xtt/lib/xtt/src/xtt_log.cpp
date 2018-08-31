@@ -34,9 +34,9 @@
  * General Public License plus this exception.
  **/
 
-#include <string.h>
-
 #include <iostream>
+
+#include "co_string.h"
 
 #include "xtt_log.h"
 #include "xtt_xnav.h"
@@ -163,27 +163,27 @@ void XttLog::category_to_string(xttlog_eCategory category, char* str)
 
 void XttLog::string_to_category(char* str, xttlog_eCategory* category)
 {
-  if (strcmp(str, "OpenGraph") == 0)
+  if (streq(str, "OpenGraph"))
     *category = xttlog_eCategory_OpenGraph;
-  else if (strcmp(str, "CloseGraph") == 0)
+  else if (streq(str, "CloseGraph"))
     *category = xttlog_eCategory_CloseGraph;
-  else if (strcmp(str, "SetObjectInfo") == 0)
+  else if (streq(str, "SetObjectInfo"))
     *category = xttlog_eCategory_SetObjectInfo;
-  else if (strcmp(str, "Command") == 0)
+  else if (streq(str, "Command"))
     *category = xttlog_eCategory_Command;
-  else if (strcmp(str, "ApplNew") == 0)
+  else if (streq(str, "ApplNew"))
     *category = xttlog_eCategory_ApplNew;
-  else if (strcmp(str, "ApplDelete") == 0)
+  else if (streq(str, "ApplDelete"))
     *category = xttlog_eCategory_ApplDelete;
-  else if (strcmp(str, "LogStart") == 0)
+  else if (streq(str, "LogStart"))
     *category = xttlog_eCategory_LogStart;
-  else if (strcmp(str, "Event") == 0)
+  else if (streq(str, "Event"))
     *category = xttlog_eCategory_Event;
-  else if (strcmp(str, "GeConfirmOk") == 0)
+  else if (streq(str, "GeConfirmOk"))
     *category = xttlog_eCategory_GeConfirmOk;
-  else if (strcmp(str, "GeConfirmCancel") == 0)
+  else if (streq(str, "GeConfirmCancel"))
     *category = xttlog_eCategory_GeConfirmCancel;
-  else if (strcmp(str, "User") == 0)
+  else if (streq(str, "User"))
     *category = xttlog_eCategory_User;
   else
     *category = xttlog_eCategory_;

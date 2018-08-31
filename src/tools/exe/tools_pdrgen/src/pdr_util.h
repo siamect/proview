@@ -48,6 +48,7 @@
 #define pdrgen_util_h
 
 #include <stdio.h>
+#include <string.h>
 
 #include "pdr_parse.h"
 
@@ -94,7 +95,7 @@ char* stringfix(char* type);
 void pvname();
 void ptype();
 int isvectordef(char* type, relation rel);
-int streq();
+#define streq(a,b) (strcmp((a),(b)) == 0)
 void error();
 void expected1();
 void expected2();

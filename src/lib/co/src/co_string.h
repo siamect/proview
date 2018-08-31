@@ -1,4 +1,4 @@
-/*
+/**
  * ProviewR   Open Source Process Control.
  * Copyright (C) 2005-2018 SSAB EMEA AB.
  *
@@ -32,54 +32,12 @@
  * the source code of ProviewR (the version used to produce the
  * combined work), being distributed under the terms of the GNU
  * General Public License plus this exception.
- */
+ **/
+#ifndef co_string_h
+#define co_string_h
 
-#ifndef co_ctx_h
-#define co_ctx_h
+#include <string.h>
 
-/* cnv_ctx.h -- Setup */
-
-#include <string>
-#include <vector>
-
-#include "cnv_setup.h"
-
-class CnvWblTo;
-class CnvReadWbl;
-class CnvReadXtthelp;
-
-class CnvCtx {
-  private:
-  std::vector<std::string> depend;
-
-  public:
-  CnvCtx();
-  pwr_tFileName dir;
-  int generate_html;
-  int generate_xtthelp;
-  int generate_src;
-  int generate_struct;
-  int generate_ps;
-  int generate_cdp;
-  int common_structfile_only;
-  int hpp;
-  int verbose;
-  pwr_tFileName setup_filename;
-  pwr_tFileName depend_filename;
-  pwr_tFileName dependfile;
-  int first_class;
-  CnvSetup* setup;
-  CnvWblTo* wblto;
-  CnvReadWbl* rw;
-  CnvReadXtthelp* rx;
-
-  void add_depend(char* dname);
-  void set_dependfile(char* dname);
-  void print_depend();
-
-  static int read_line(char* line, int maxsize, FILE* file);
-  static int remove_spaces(const char* in, char* out);
-  static char* low(const char* in);
-};
+#define streq(a,b) (strcmp((a),(b)) == 0)
 
 #endif

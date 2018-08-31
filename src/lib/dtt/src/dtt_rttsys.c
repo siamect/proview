@@ -44,8 +44,9 @@
 #if defined OS_POSIX
 #include <stdio.h>
 #include <stdlib.h>
-
 #endif
+
+#include "co_string.h"
 
 #include "rt_qdb.h"
 #include "rt_sub.h"
@@ -913,7 +914,7 @@ int RTTSYS_SHOW_NODES(menu_ctx ctx, int event, char* parameter_ptr,
             && (k < (page + 1) * SHOW_NODES_PAGESIZE)) {
           np = pool_Qitem(nl, gdb_sNode, nod_ll);
 
-          if (strcmp(np->name, "******") == 0)
+          if (streq(np->name, "******"))
             continue;
 
           /* Name */
@@ -8657,12 +8658,12 @@ static int rttsys_remtrans_buffer(menu_ctx ctx, pwr_tObjid objid, void* arg1,
   strcat(namebuf, ".StructName");
   sts = gdh_GetObjectInfo(
       namebuf, (pwr_tAddress*)structname, sizeof(structname));
-  if (ODD(sts) && (strcmp(structname, "") != 0)) {
+  if (ODD(sts) && (!streq(structname, ""))) {
     strcpy(namebuf, remtrans_name);
     strcat(namebuf, ".StructFile");
     sts = gdh_GetObjectInfo(
         namebuf, (pwr_tAddress*)structfile, sizeof(structfile));
-    if (ODD(sts) && (strcmp(structfile, "") != 0)) {
+    if (ODD(sts) && (!streq(structfile, ""))) {
       sts = rtt_show_object_as_struct(ctx, buff_objid, structname, structfile);
       if (sts == RTT__SUCCESS)
         return sts;

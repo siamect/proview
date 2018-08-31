@@ -36,9 +36,10 @@
 
 #include <math.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include <iostream>
+
+#include "co_string.h"
 
 #include "flow_con.h"
 #include "flow_conpoint.h"
@@ -3536,7 +3537,7 @@ int FlowCon::trace_init()
 {
   int sts;
 
-  if (strcmp(trace_object, "") == 0)
+  if (streq(trace_object, ""))
     return 1;
 
   sts = ctx->trace_connect_func(
@@ -3546,7 +3547,7 @@ int FlowCon::trace_init()
 
 void FlowCon::trace_close()
 {
-  if (strcmp(trace_object, "") == 0)
+  if (streq(trace_object, ""))
     return;
 
   ctx->trace_disconnect_func((void*)this);

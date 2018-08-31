@@ -39,7 +39,10 @@
 #include <stdlib.h>
 
 #include "pwr_baseclasses.h"
+
+#include "co_string.h"
 #include "co_time.h"
+
 #include "rt_mh_net.h"
 
 #include "wb_watt_msg.h"
@@ -987,7 +990,7 @@ int WAttNav::set_attr_value(brow_tObject node, char* name, char* value_str)
     WItemBaseAttr* item = (WItemBaseAttr*)base_item;
 
     // Check that objid is still the same
-    if (strcmp(item->attr, name) != 0)
+    if (!streq(item->attr, name))
       return WATT__DISAPPEARD;
 
     sts = wnav_attr_string_to_value(
@@ -1024,7 +1027,7 @@ int WAttNav::set_attr_value(brow_tObject node, char* name, char* value_str)
     WItemAttrArrayElem* item = (WItemAttrArrayElem*)base_item;
 
     // Check that objid is still the same
-    if (strcmp(item->attr, name) != 0)
+    if (!streq(item->attr, name))
       return WATT__DISAPPEARD;
 
     sts = wnav_attr_string_to_value(
@@ -1105,7 +1108,7 @@ int WAttNav::select_by_name(const char* name)
     case wnav_eItemType_AttrArrayElem: {
       WItemBaseAttr* item = (WItemBaseAttr*)base_item;
 
-      if (strcmp(name, item->attr) == 0) {
+      if (streq(name, item->attr)) {
         object = object_list[i];
         found = 1;
       }

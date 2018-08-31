@@ -36,10 +36,11 @@
 
 #include <math.h>
 #include <stdlib.h>
-#include <string.h>
 #include <sys/stat.h>
 
 #include <iostream>
+
+#include "co_string.h"
 
 #include "glow_growimage.h"
 #include "glow_grownode.h"
@@ -108,7 +109,7 @@ void GrowImage::copy_from(const GrowImage& im)
   nav_pixmap = 0;
   clip_mask = 0;
   nav_clip_mask = 0;
-  if (strcmp(image_filename, "") != 0)
+  if (!streq(image_filename, ""))
     insert_image(image_filename);
 }
 
@@ -594,7 +595,7 @@ void GrowImage::open(std::ifstream& fp)
       break;
   }
 
-  if (strcmp(image_filename, "") != 0)
+  if (!streq(image_filename, ""))
     insert_image(image_filename);
 }
 
@@ -696,7 +697,7 @@ void GrowImage::set_dynamic(char* code, int size)
 
 void GrowImage::exec_dynamic()
 {
-  if (dynamicsize && strcmp(dynamic, "") != 0)
+  if (dynamicsize && !streq(dynamic, ""))
     ((GrowCtx*)ctx)->dynamic_cb(this, dynamic, glow_eDynamicType_Object);
 }
 

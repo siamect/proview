@@ -35,12 +35,12 @@
  **/
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "pwr_baseclasses.h"
 
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_time.h"
 
 #include "ge_dyn.h"
@@ -1014,7 +1014,7 @@ void SubPalette::select_by_name(char* name)
       brow_GetObjectList(brow->ctx, &nodelist, &nodecnt);
       for (int i = 0; i < nodecnt; i++) {
         brow_GetUserData(nodelist[i], (void**)&item);
-        if (strcmp(itemname, item->name) == 0) {
+        if (streq(itemname, item->name)) {
           current = nodelist[i];
         }
       }
@@ -1084,16 +1084,16 @@ subpalette_sMenu* SubPalette::menu_tree_build_children(
     if (nr < 1)
       printf("** Syntax error in file %s, line %d", filename, *line_cnt);
 
-    if (strcmp(type, "{") == 0) {
+    if (streq(type, "{")) {
       if (nr != 1 || !menu_p)
         printf("** Syntax error in file %s, line %d", filename, *line_cnt);
       menu_p->child_list
           = menu_tree_build_children(fp, line_cnt, filename, menu_p);
-    } else if (strcmp(type, "}") == 0) {
+    } else if (streq(type, "}")) {
       if (nr != 1)
         printf("** Syntax error in file %s, line %d", filename, *line_cnt);
       return return_menu;
-    } else if (strcmp(type, "menu") == 0) {
+    } else if (streq(type, "menu")) {
       if (nr != 2)
         printf("** Syntax error in file %s, line %d", filename, *line_cnt);
 
@@ -1107,7 +1107,7 @@ subpalette_sMenu* SubPalette::menu_tree_build_children(
       } else
         prev->next = menu_p;
       prev = menu_p;
-    } else if (strcmp(type, "localsubgraphs") == 0) {
+    } else if (streq(type, "localsubgraphs")) {
       if (nr != 3)
         printf("** Syntax error in file %s, line %d", filename, *line_cnt);
 
@@ -1122,7 +1122,7 @@ subpalette_sMenu* SubPalette::menu_tree_build_children(
       } else
         prev->next = menu_p;
       prev = menu_p;
-    } else if (strcmp(type, "subgraph") == 0) {
+    } else if (streq(type, "subgraph")) {
       if (nr != 4)
         printf("** Syntax error in file %s, line %d", filename, *line_cnt);
 
@@ -1138,7 +1138,7 @@ subpalette_sMenu* SubPalette::menu_tree_build_children(
       } else
         prev->next = menu_p;
       prev = menu_p;
-    } else if (strcmp(type, "path") == 0) {
+    } else if (streq(type, "path")) {
       if (nr != 1)
         printf("** Syntax error in file %s, line %d", filename, *line_cnt);
 
@@ -1152,7 +1152,7 @@ subpalette_sMenu* SubPalette::menu_tree_build_children(
       if (nr < 1)
         printf("** Syntax error in file %s, line %d", filename, *line_cnt);
 
-      if (strcmp(type, "{") != 0)
+      if (!streq(type, "{"))
         printf("** Syntax error in file %s, line %d", filename, *line_cnt);
 
       path_cnt = 0;
@@ -1166,7 +1166,7 @@ subpalette_sMenu* SubPalette::menu_tree_build_children(
         nr = sscanf(line, "%s %s %s %d", type, name, file, &pixmap);
         if (nr < 1)
           printf("** Syntax error in file %s, line %d", filename, *line_cnt);
-        if (strcmp(type, "}") == 0) {
+        if (streq(type, "}")) {
           if (nr != 1)
             printf("** Syntax error in file %s, line %d", filename, *line_cnt);
           break;

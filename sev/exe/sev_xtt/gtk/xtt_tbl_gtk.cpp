@@ -38,6 +38,7 @@
 
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_string.h"
 
 #include "cow_login_gtk.h"
 #include "cow_xhelp_gtk.h"
@@ -251,7 +252,7 @@ void XttTblGtk::activate_command(GtkWidget* w, gpointer data)
 
 void XttTblGtk::set_prompt(const char* prompt)
 {
-  if (strcmp(prompt, "") == 0) {
+  if (streq(prompt, "")) {
     g_object_set(cmd_prompt, "visible", FALSE, NULL);
     g_object_set(msg_label, "visible", TRUE, NULL);
   } else {

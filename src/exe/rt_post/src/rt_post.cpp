@@ -36,18 +36,20 @@
 
 #include <stdlib.h>
 
-#include "rt_post.h"
-#include "co_error.h"
-#include "rt_gdh.h"
 #include "co_cdh.h"
-#include "co_time.h"
 #include "co_dcli.h"
+#include "co_error.h"
+#include "co_string.h"
 #include "co_syi.h"
-#include "rt_ini_event.h"
+#include "co_time.h"
+
 #include "rt_aproc.h"
+#include "rt_gdh.h"
+#include "rt_ini_event.h"
+#include "rt_mh_util.h"
+#include "rt_post.h"
 #include "rt_pwr_msg.h"
 #include "rt_qcom_msg.h"
-#include "rt_mh_util.h"
 
 static rt_post* post = 0;
 
@@ -267,7 +269,7 @@ pwr_tStatus rt_post::mh_alarm_bc(mh_sMessage* MsgP)
     }
 
     if (event->Info.EventFlags & pwr_mEventFlagsMask_Email
-        && strcmp(post->conf->EmailCmd, "") != 0) {
+        && !streq(post->conf->EmailCmd, "")) {
       char address[40];
       pwr_tCmd cmd;
 
@@ -283,7 +285,7 @@ pwr_tStatus rt_post::mh_alarm_bc(mh_sMessage* MsgP)
       post->conf->SentEmail++;
     }
     if (event->Info.EventFlags & pwr_mEventFlagsMask_SMS
-        && strcmp(post->conf->SMS_Cmd, "") != 0) {
+        && !streq(post->conf->SMS_Cmd, "")) {
       char sms[40];
       pwr_tCmd cmd;
 
@@ -436,7 +438,7 @@ void rt_post::replace_symbol(char* outstr, char* instr)
         for (unsigned int j = 0;
              j < sizeof(conf->Symbols) / sizeof(conf->Symbols[0]); j++) {
           dcli_trim(csymbol, conf->Symbols[j].Name);
-          if (strcmp(symbol, csymbol) == 0) {
+          if (streq(symbol, csymbol)) {
             // Found, insert the value
             strcpy(t, conf->Symbols[j].Value);
             t += strlen(conf->Symbols[j].Value);

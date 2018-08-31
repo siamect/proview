@@ -36,18 +36,22 @@
 
 #include <stddef.h>
 
+#include "pwr_nmpsclasses.h"
+
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_error.h"
+#include "co_string.h"
+
 #include "rt_aproc.h"
+#include "rt_gdh_msg.h"
 #include "rt_ini_event.h"
 #include "rt_plc_timer.h"
-#include "pwr_nmpsclasses.h"
-#include "rt_sim.h"
-#include "rt_gdh_msg.h"
-#include "rt_sim_msg.h"
 #include "rt_pwr_msg.h"
 #include "rt_qcom_msg.h"
+#include "rt_sim.h"
+#include "rt_sim_msg.h"
+
 #include "nmps.h"
 
 pwr_tCid cellclass[] = { pwr_cClass_NMpsCell, pwr_cClass_NMpsCell60,
@@ -155,7 +159,7 @@ pwr_tStatus rt_sim::load()
     line_cnt++;
 
     dcli_trim(line, line);
-    if (strcmp(line, "") == 0 || line[0] == '#'
+    if (streq(line, "") || line[0] == '#'
         || (line[0] == '/' && line[1] == '/'))
       continue;
 

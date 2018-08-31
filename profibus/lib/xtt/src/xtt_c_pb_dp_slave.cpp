@@ -37,7 +37,10 @@
 /* xtt_c_pb_db_slave.cpp -- xtt methods for Pb_DP_Slave. */
 
 #include "pwr_profibusclasses.h"
+
 #include "co_cdh.h"
+#include "co_string.h"
+
 #include "rt_pb_msg.h"
 #include "rt_xnav_msg.h"
 
@@ -201,7 +204,7 @@ pwr_tStatus xtt_pb_dp_slave_create_ctx(
   sts = gdh_GetObjectInfoAttrref(&aaref, gsdfile, sizeof(gsdfile));
   if (EVEN(sts))
     return sts;
-  if (strcmp(gsdfile, "") == 0) {
+  if (streq(gsdfile, "")) {
     return PB__GSDATTR;
   }
 

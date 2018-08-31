@@ -34,9 +34,9 @@
  * General Public License plus this exception.
  **/
 
-#include <string.h>
-
 #include <iostream>
+
+#include "co_string.h"
 
 #include "glow_draw.h"
 #include "glow_conpoint.h"
@@ -418,7 +418,7 @@ void GlowNode::set_trace_attr(GlowTraceData* attr)
 {
   memcpy(&trace, attr, sizeof(trace));
 
-  if (ctx->trace_started /* && strcmp( trace.data[0], "") != 0 */)
+  if (ctx->trace_started /* && !streq( trace.data[0], "") */)
     ctx->trace_connect_func((void*)this, &trace);
 }
 
@@ -448,7 +448,7 @@ int GlowNode::trace_init()
 {
   int sts;
 
-  // if ( strcmp( trace.data[0], "") == 0)
+  // if ( streq( trace.data[0], ""))
   //  return 1;
 
   sts = ctx->trace_connect_func((void*)this, &trace);
@@ -461,7 +461,7 @@ int GlowNode::trace_init()
 
 void GlowNode::trace_close()
 {
-  // if ( strcmp( trace.data[0], "") == 0)
+  // if ( streq( trace.data[0], ""))
   //  return;
 
   if (trace.p)

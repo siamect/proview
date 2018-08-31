@@ -35,11 +35,12 @@
  */
 
 #include <math.h>
-#include <string.h>
 
-#include "co_time.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_string.h"
+#include "co_time.h"
+
 #include "rt_plc.h"
 #include "rt_plc_arithm.h"
 
@@ -1389,7 +1390,7 @@ void StrMux_exec(plc_sThread* tp, pwr_sClass_StrMux* o)
 void StrEqual_exec(plc_sThread* tp, pwr_sClass_StrEqual* o)
 {
   if (o->CaseSensitive)
-    o->Status = (strcmp(*o->In1P, *o->In2P) == 0);
+    o->Status = (streq(*o->In1P, *o->In2P));
   else
     o->Status = (cdh_NoCaseStrcmp(*o->In1P, *o->In2P) == 0);
 }
@@ -1400,7 +1401,7 @@ void StrEqual_exec(plc_sThread* tp, pwr_sClass_StrEqual* o)
 void StrNotEqual_exec(plc_sThread* tp, pwr_sClass_StrNotEqual* o)
 {
   if (o->CaseSensitive)
-    o->Status = (strcmp(*o->In1P, *o->In2P) != 0);
+    o->Status = (!streq(*o->In1P, *o->In2P));
   else
     o->Status = (cdh_NoCaseStrcmp(*o->In1P, *o->In2P) != 0);
 }

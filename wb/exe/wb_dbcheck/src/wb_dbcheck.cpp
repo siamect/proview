@@ -208,7 +208,7 @@ static void printname(pwr_tOid poid, pwr_tObjName name, pwr_tOid oid)
     printf("Name: object not found %d.%d, %s\n", oid.vid, oid.oix, name);
   } else {
     oep->flags.b.inName = 1;
-    if (strcmp(name, oep->o.normname) != 0) {
+    if (!streq(name, oep->o.normname)) {
       printf("name: \"%s\" [%d] not same as: \"%s\"\n", oep->o.name,
           oep->o.oid.oix, name);
     }

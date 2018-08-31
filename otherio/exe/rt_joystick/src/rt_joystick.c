@@ -44,12 +44,12 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <errno.h>
-#include <string.h>
 #include <stdlib.h>
 #include <stdint.h>
 
-#include "co_time.h"
 #include "co_cdh.h"
+#include "co_string.h"
+#include "co_time.h"
 
 #include <linux/input.h>
 #include <linux/joystick.h>
@@ -97,7 +97,7 @@ int main(int argc, char** argv)
     exit(0);
   }
 
-  if (strcmp(argv[1], "-h") == 0) {
+  if (streq(argv[1], "-h")) {
     usage();
     exit(0);
   }

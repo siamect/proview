@@ -34,17 +34,19 @@
  * General Public License plus this exception.
  */
 
-#include "rt_report.h"
-#include "co_error.h"
-#include "rt_gdh.h"
 #include "co_cdh.h"
-#include "co_time.h"
 #include "co_dcli.h"
+#include "co_error.h"
+#include "co_string.h"
 #include "co_syi.h"
-#include "rt_ini_event.h"
+#include "co_time.h"
+
 #include "rt_aproc.h"
+#include "rt_gdh.h"
+#include "rt_ini_event.h"
 #include "rt_pwr_msg.h"
 #include "rt_qcom_msg.h"
+#include "rt_report.h"
 
 static rt_report* report = 0;
 
@@ -250,7 +252,7 @@ void rt_report::create_report(pwr_sClass_Report* o)
 
   while (fin.getline(line, sizeof(line))) {
     dcli_trim(newline, line);
-    if (first && strcmp(newline, "") == 0)
+    if (first && streq(newline, ""))
       continue;
 
     if (cdh_NoCaseStrncmp(newline, "<execute>", 9) == 0) {
@@ -277,7 +279,7 @@ void rt_report::create_report(pwr_sClass_Report* o)
     switch (o->DocumentFormat) {
     case pwr_eDocumentFormatEnum_PDF:
       // Convert to pdf
-      if (strcmp(display, "") != 0)
+      if (!streq(display, ""))
         sprintf(cmd, "export DISPLAY=%s;co_convert -f -d %s %s", display,
             "$pwrp_lis", tmpfile);
       else
@@ -287,7 +289,7 @@ void rt_report::create_report(pwr_sClass_Report* o)
       break;
     case pwr_eDocumentFormatEnum_Html:
       // Convert to pdf
-      if (strcmp(display, "") != 0)
+      if (!streq(display, ""))
         sprintf(cmd, "export DISPLAY=%s;co_convert -s -d %s %s", display,
             "$pwrp_lis", tmpfile);
       else
@@ -350,7 +352,7 @@ void rt_report::create_report(pwr_sClass_Report* o)
       strncpy(subject, o->Subject, sizeof(subject));
 
       dcli_trim(conf_cmd, o->EmailCmd);
-      if (strcmp(conf_cmd, "") == 0)
+      if (streq(conf_cmd, ""))
         strncpy(conf_cmd, conf->EmailCmd, sizeof(conf_cmd));
 
       format_cmd(
@@ -444,7 +446,7 @@ void rt_report::create_report(pwr_sClass_Report* o)
       strncpy(subject, o->Subject, sizeof(subject));
 
       dcli_trim(conf_cmd, o->SMS_Cmd);
-      if (strcmp(conf_cmd, "") == 0)
+      if (streq(conf_cmd, ""))
         strncpy(conf_cmd, conf->SMS_Cmd, sizeof(conf_cmd));
 
       format_cmd(
@@ -473,7 +475,7 @@ void rt_report::create_report(pwr_sClass_Report* o)
     pwr_tCmd cmd;
     pwr_tFileName target_file;
 
-    if (strcmp(display, "") != 0)
+    if (!streq(display, ""))
       sprintf(cmd, "export DISPLAY=%s;co_convert -n -d %s %s", display,
           "$pwrp_lis", tmpfile);
     else
@@ -482,7 +484,7 @@ void rt_report::create_report(pwr_sClass_Report* o)
 
     strcpy(cnvfile, "$pwrp_lis/report.ps");
 
-    if (strcmp(o->TargetFile, "") != 0) {
+    if (!streq(o->TargetFile, "")) {
       strcpy(target_file, o->TargetFile);
       snprintf(cmd, sizeof(cmd), "mv %s %s", cnvfile, target_file);
       system(cmd);
@@ -490,7 +492,7 @@ void rt_report::create_report(pwr_sClass_Report* o)
       strcpy(target_file, cnvfile);
 
     dcli_trim(conf_cmd, o->PrintCmd);
-    if (strcmp(conf_cmd, "") == 0)
+    if (streq(conf_cmd, ""))
       strncpy(conf_cmd, conf->PrintCmd, sizeof(conf_cmd));
 
     format_cmd(cmd, sizeof(cmd), conf_cmd, 0, 0, 0, target_file, 0);
@@ -510,7 +512,7 @@ void rt_report::create_report(pwr_sClass_Report* o)
     switch (o->DocumentFormat) {
     case pwr_eDocumentFormatEnum_PDF:
       // Convert to pdf
-      if (strcmp(display, "") != 0)
+      if (!streq(display, ""))
         sprintf(cmd, "export DISPLAY=%s;co_convert -f -d %s %s", display,
             "$pwrp_lis", tmpfile);
       else
@@ -520,7 +522,7 @@ void rt_report::create_report(pwr_sClass_Report* o)
       break;
     case pwr_eDocumentFormatEnum_Html:
       // Convert to pdf
-      if (strcmp(display, "") != 0)
+      if (!streq(display, ""))
         sprintf(cmd, "export DISPLAY=%s;co_convert -s -d %s %s", display,
             "$pwrp_lis", tmpfile);
       else
@@ -530,7 +532,7 @@ void rt_report::create_report(pwr_sClass_Report* o)
       break;
     case pwr_eDocumentFormatEnum_Postscript:
       // Convert to Postscript
-      if (strcmp(display, "") != 0)
+      if (!streq(display, ""))
         sprintf(cmd, "export DISPLAY=%s;co_convert -n -d %s %s", display,
             "$pwrp_lis", tmpfile);
       else
@@ -546,7 +548,7 @@ void rt_report::create_report(pwr_sClass_Report* o)
     }
 
     // Rename file to target filename
-    if (strcmp(o->TargetFile, "") != 0) {
+    if (!streq(o->TargetFile, "")) {
       snprintf(cmd, sizeof(cmd), "mv %s %s", cnvfile, o->TargetFile);
 
       if (strstr(o->TargetFile, "$date") != 0) {
@@ -788,7 +790,7 @@ void rt_report::replace_symbol(char* outstr, char* instr)
         for (unsigned int j = 0;
              j < sizeof(conf->Symbols) / sizeof(conf->Symbols[0]); j++) {
           dcli_trim(csymbol, conf->Symbols[j].Name);
-          if (strcmp(symbol, csymbol) == 0) {
+          if (streq(symbol, csymbol)) {
             // Found, insert the value
             strcpy(t, conf->Symbols[j].Value);
             t += strlen(conf->Symbols[j].Value);
@@ -945,14 +947,14 @@ int rt_report::parse(char* line)
         return 0;
 
       fout << "main()\n";
-      if (strcmp(graph_str, "") == 0)
+      if (streq(graph_str, ""))
         fout << "  open graph /" << object_str
              << '\n'; // Should be with /hide but it sometimes doesn't work...
       else
         fout << "  open graph " << graph_str << '\n';
       if (!feqf(btime, 0.0f))
         fout << "  wait " << btime << '\n';
-      if (strcmp(graph_str, "") == 0)
+      if (streq(graph_str, ""))
         fout << "  export graph /" << object_str << " /file=\"" << line_array[3]
              << "\"\n";
       else
@@ -964,7 +966,7 @@ int rt_report::parse(char* line)
       fout.close();
 
       strcpy(cmd, "rt_xtt_cmd ");
-      if (strcmp(display, "") != 0) {
+      if (!streq(display, "")) {
         strcpy(cmd, "export DISPLAY=");
         strcat(cmd, display);
         strcat(cmd, ";");
@@ -1003,7 +1005,7 @@ int main(int argc, char* argv[])
   report->init(&qid);
 
   if (argc > 1) {
-    if (strcmp(argv[1], "-d") == 0 && argc > 2)
+    if (streq(argv[1], "-d") && argc > 2)
       strcpy(report->display, argv[2]);
   }
 

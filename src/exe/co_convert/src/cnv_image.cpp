@@ -35,7 +35,8 @@
  */
 
 #include <stdlib.h>
-#include <string.h>
+
+#include "co_string.h"
 
 #include "cnv_image.h"
 
@@ -123,7 +124,7 @@ void cnv_print_image(cnv_tImImage image, char* filename)
 
   strcpy(type, s + 1);
 
-  if (strcmp(type, "jpg") == 0)
+  if (streq(type, "jpg"))
     gdk_pixbuf_save(
         (GdkPixbuf*)image, filename, "jpeg", &error, "quality", "100", NULL);
   else

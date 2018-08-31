@@ -38,6 +38,8 @@
 
 #include <locale.h>
 
+#include "co_string.h"
+
 #include "cow_msgwindow.h"
 #include "cow_qt_helpers.h"
 #include "cow_statusmon_nodelist_qt.h"
@@ -72,33 +74,33 @@ int main(int argc, char* argv[])
   debug_print("%s ", argv[0]);
   for (int i = 1; i < argc; i++) {
     fprintf(stderr, "%s ", argv[i]);
-    if (strcmp(argv[i], "-h") == 0) {
+    if (streq(argv[i], "-h")) {
       usage();
       debug_print("Shutting down...\n"); exit(0);
-    } else if (strcmp(argv[i], "-l") == 0 && i + 1 < argc) {
+    } else if (streq(argv[i], "-l") && i + 1 < argc) {
       strncpy(language, argv[i + 1], sizeof(language));
       Lng::set(language);
-    } else if (strcmp(argv[i], "-m") == 0) {
+    } else if (streq(argv[i], "-m")) {
       if (argc == i) {
         usage();
         debug_print("Shutting down...\n"); exit(0);
       }
-      if (strcmp(argv[i + 1], "1") == 0) {
+      if (streq(argv[i + 1], "1")) {
         mode = nodelist_eMode_Status1;
-      } else if (strcmp(argv[i + 1], "2") == 0) {
+      } else if (streq(argv[i + 1], "2")) {
         mode = nodelist_eMode_Status2;
-      } else if (strcmp(argv[i + 1], "3") == 0) {
+      } else if (streq(argv[i + 1], "3")) {
         mode = nodelist_eMode_Status3;
-      } else if (strcmp(argv[i + 1], "4") == 0) {
+      } else if (streq(argv[i + 1], "4")) {
         mode = nodelist_eMode_Status4;
-      } else if (strcmp(argv[i + 1], "5") == 0) {
+      } else if (streq(argv[i + 1], "5")) {
         mode = nodelist_eMode_Status5;
       } else {
         usage();
         debug_print("Shutting down...\n"); exit(0);
       }
       i++;
-    } else if (strcmp(argv[i], "-e") == 0) {
+    } else if (streq(argv[i], "-e")) {
       view_descr = 1;
     }
   }

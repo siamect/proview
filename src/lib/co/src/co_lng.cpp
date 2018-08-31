@@ -35,12 +35,12 @@
  **/
 
 #include <locale.h>
-#include <string.h>
 
 #include "co_dcli.h"
 #include "co_cdh.h"
 #include "co_lng.h"
 #include "co_lng_msg.h"
+#include "co_string.h"
 
 // Note, this is matched with lng_eLanguage
 static char lng_cLanguageStr[lng_eLanguage__][6]
@@ -296,7 +296,7 @@ bool Lng::read_files(
   dcli_translate_filename(filename2, filename2);
 
   std::ifstream fp1(filename1);
-  if (!fp1 && strcmp(fname1, "$pwr_exe/en_us/xtt_lng.dat") == 0) {
+  if (!fp1 && streq(fname1, "$pwr_exe/en_us/xtt_lng.dat")) {
     // Try $pwr_eexe
     strcpy(fname1, "$pwr_eexe/en_us/xtt_lng.dat");
     dcli_translate_filename(filename1, fname1);
@@ -311,7 +311,7 @@ bool Lng::read_files(
   }
 
   std::ifstream fp2(filename2);
-  if (!fp2 && strcmp(fname2, "$pwr_exe/%s/xtt_lng.dat") == 0) {
+  if (!fp2 && streq(fname2, "$pwr_exe/%s/xtt_lng.dat")) {
     // Try $pwr_eexe
     strcpy(fname2, "$pwr_eexe/%s/xtt_lng.dat");
     sprintf(filename2, fname2, get_language_str());

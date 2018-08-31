@@ -34,8 +34,7 @@
  * General Public License plus this exception.
  **/
 
-#include <string.h>
-
+#include "co_string.h"
 #include "co_time.h"
 
 #include "wb_rev_msg.h"
@@ -930,7 +929,7 @@ int WItemRevision::open_children(
   bool found = false;
   for (int i = 0; i < rev->size(); i++) {
     rev_item = rev->vect(i);
-    if (strcmp(rev_item->name, name) == 0) {
+    if (streq(rev_item->name, name)) {
       found = true;
       break;
     }

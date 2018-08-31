@@ -39,9 +39,12 @@
 #include <stdlib.h>
 
 #include "pwr_nmpsclasses.h"
+
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_syi.h"
+
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
 #include "rt_ini_event.h"
@@ -154,7 +157,7 @@ void XttGtk::map(void* ctx)
 
 void XttGtk::set_prompt(const char* prompt)
 {
-  if (strcmp(prompt, "") == 0) {
+  if (streq(prompt, "")) {
     g_object_set(cmd_prompt, "visible", FALSE, NULL);
     g_object_set(msg_label, "visible", TRUE, NULL);
   } else {

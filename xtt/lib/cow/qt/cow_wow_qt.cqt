@@ -37,13 +37,13 @@
 /* cow_wow_qt.cpp -- useful windows */
 
 #include <stdio.h>
-#include <string.h>
 
 #include "pwr.h"
 
 #include "co_api.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_string.h"
 
 #include "cow_qt_helpers.h"
 #include "cow_wow_qt.h"
@@ -127,7 +127,7 @@ void CoWowQt::CreateInputDialog(void* ctx, const char* title, const char* text,
     char* init_text, void* data)
 {
   QString temp_txt;
-  if (init_text && strcmp(init_text, "") != 0) {
+  if (init_text && !streq(init_text, "")) {
     temp_txt = QString::fromLatin1(init_text);
   }
 
@@ -257,7 +257,7 @@ CoWowListWidgetQt::CoWowListWidgetQt(QWidget* parent, const char* title,
   // list->setColumnCount(2);
 
   char* name_p = (char*)texts;
-  while (strcmp(name_p, "") != 0) {
+  while (!streq(name_p, "")) {
     QTreeWidgetItem* item = new QTreeWidgetItem(list);
     item->setText(0, QString::fromLatin1(name_p));
     // item->setText(1, "");
@@ -661,7 +661,7 @@ void CoWowEntryQt::keyPressEvent(QKeyEvent* event)
   }
   case Qt::Key_Up: {
     const char* prev = m_re->popUp(qPrintable(text()));
-    if (strcmp(prev, "") != 0) {
+    if (!streq(prev, "")) {
       setText(fl(prev));
     }
     end(false);
@@ -669,7 +669,7 @@ void CoWowEntryQt::keyPressEvent(QKeyEvent* event)
   }
   case Qt::Key_Down: {
     const char* next = m_re->popDown(qPrintable(text()));
-    if (strcmp(next, "") != 0) {
+    if (!streq(next, "")) {
       setText(fl(next));
     }
     end(false);
@@ -969,7 +969,7 @@ void CoWowQt::Wait(float time)
 void CoWowQt::CreateBrowPrintDialogQt(const char* title, void* brow_ctx,
     int orientation, double scale, void* parent_widget, pwr_tStatus* sts)
 {
-  if (m_printdialog_disable && strcmp(m_default_printer, "") == 0) {
+  if (m_printdialog_disable && streq(m_default_printer, "")) {
     *sts = WOW__PRINTDIALOGDISABLED;
     return;
   }
@@ -1012,7 +1012,7 @@ void CoWowQt::CreateBrowPrintDialogQt(const char* title, void* brow_ctx,
 void CoWowQt::CreateFlowPrintDialogQt(const char* title, void* flow_ctx,
     int orientation, double scale, void* parent_widget, pwr_tStatus* sts)
 {
-  if (m_printdialog_disable && strcmp(m_default_printer, "") == 0) {
+  if (m_printdialog_disable && streq(m_default_printer, "")) {
     *sts = WOW__PRINTDIALOGDISABLED;
     return;
   }

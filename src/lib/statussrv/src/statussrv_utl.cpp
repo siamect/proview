@@ -2,10 +2,13 @@
 #include "statussrv_H.h"
 #include "Service.nsmap"
 #include "statussrv_utl.h"
-#include "co_time.h"
+
 #include "co_cdh.h"
 #include "co_cnf.h"
+#include "co_string.h"
 #include "co_syi.h"
+#include "co_time.h"
+
 #include "rt_pwr_msg.h"
 
 static struct soap soap;
@@ -497,13 +500,13 @@ pwr_tStatus statussrv_XttStart(const char* nodename, const char* opplace,
   _s0__XttStartResponse xtt_start_response;
 
   xtt_start.ClientRequestHandle = new std::string("StatusSrv Client");
-  if (opplace && strcmp(opplace, "") != 0)
+  if (opplace && !streq(opplace, ""))
     xtt_start.OpPlace = new std::string(opplace);
-  if (lang && strcmp(lang, "") != 0)
+  if (lang && !streq(lang, ""))
     xtt_start.Language = new std::string(lang);
-  if (display && strcmp(display, "") != 0)
+  if (display && !streq(display, ""))
     xtt_start.Display = new std::string(display);
-  if (gui && strcmp(gui, "") != 0)
+  if (gui && !streq(gui, ""))
     xtt_start.GUI = new std::string(gui);
 
   if (soap_call___s0__XttStart(
@@ -543,11 +546,11 @@ pwr_tStatus statussrv_RtMonStart(const char* nodename, const char* lang,
   _s0__RtMonStartResponse rtmon_start_response;
 
   rtmon_start.ClientRequestHandle = new std::string("StatusSrv Client");
-  if (lang && strcmp(lang, "") != 0)
+  if (lang && !streq(lang, ""))
     rtmon_start.Language = new std::string(lang);
-  if (display && strcmp(display, "") != 0)
+  if (display && !streq(display, ""))
     rtmon_start.Display = new std::string(display);
-  if (gui && strcmp(gui, "") != 0)
+  if (gui && !streq(gui, ""))
     rtmon_start.GUI = new std::string(gui);
 
   if (soap_call___s0__RtMonStart(

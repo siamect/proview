@@ -39,11 +39,12 @@
 
 #include <stdlib.h>
 #include <stdarg.h>
-#include <string.h>
 
 #include "pwr_version.h"
 #include "pwr_systemclasses.h"
 #include "pwr_baseclasses.h"
+
+#include "co_string.h"
 #include "co_time.h"
 
 #include "wb_ldh_msg.h"
@@ -1499,21 +1500,21 @@ static int utl_list_classsort(
 
       if (type <= 2) {
         /* Put hierarchy and plcpgm objects first */
-        if (strcmp(classname1, "$PlantHier") == 0) {
+        if (streq(classname1, "$PlantHier")) {
           strcpy(dummytxt, name1);
           strcpy(name1, "000");
           strcat(name1, dummytxt);
-        } else if (strcmp(classname1, "PlcPgm") == 0) {
+        } else if (streq(classname1, "PlcPgm")) {
           strcpy(dummytxt, name1);
           strcpy(name1, "001");
           strcat(name1, dummytxt);
         }
 
-        if (strcmp(classname2, "$PlantHier") == 0) {
+        if (streq(classname2, "$PlantHier")) {
           strcpy(dummytxt, name2);
           strcpy(name2, "000");
           strcat(name2, dummytxt);
-        } else if (strcmp(classname2, "PlcPgm") == 0) {
+        } else if (streq(classname2, "PlcPgm")) {
           strcpy(dummytxt, name2);
           strcpy(name2, "001");
           strcat(name2, dummytxt);
@@ -1521,61 +1522,61 @@ static int utl_list_classsort(
       }
 
       if (type == 2) {
-        if (strcmp(classname1, "Ai") == 0) {
+        if (streq(classname1, "Ai")) {
           strcpy(dummytxt, name1);
           strcpy(name1, "002");
           strcat(name1, dummytxt);
-        } else if (strcmp(classname1, "Ao") == 0) {
+        } else if (streq(classname1, "Ao")) {
           strcpy(dummytxt, name1);
           strcpy(name1, "003");
           strcat(name1, dummytxt);
-        } else if (strcmp(classname1, "Av") == 0) {
+        } else if (streq(classname1, "Av")) {
           strcpy(dummytxt, name1);
           strcpy(name1, "004");
           strcat(name1, dummytxt);
-        } else if (strcmp(classname1, "Co") == 0) {
+        } else if (streq(classname1, "Co")) {
           strcpy(dummytxt, name1);
           strcpy(name1, "005");
           strcat(name1, dummytxt);
-        } else if (strcmp(classname1, "Di") == 0) {
+        } else if (streq(classname1, "Di")) {
           strcpy(dummytxt, name1);
           strcpy(name1, "006");
           strcat(name1, dummytxt);
-        } else if (strcmp(classname1, "Do") == 0) {
+        } else if (streq(classname1, "Do")) {
           strcpy(dummytxt, name1);
           strcpy(name1, "007");
           strcat(name1, dummytxt);
-        } else if (strcmp(classname1, "Dv") == 0) {
+        } else if (streq(classname1, "Dv")) {
           strcpy(dummytxt, name1);
           strcpy(name1, "008");
           strcat(name1, dummytxt);
         }
 
-        if (strcmp(classname2, "Ai") == 0) {
+        if (streq(classname2, "Ai")) {
           strcpy(dummytxt, name2);
           strcpy(name2, "002");
           strcat(name2, dummytxt);
-        } else if (strcmp(classname2, "Ao") == 0) {
+        } else if (streq(classname2, "Ao")) {
           strcpy(dummytxt, name2);
           strcpy(name2, "003");
           strcat(name2, dummytxt);
-        } else if (strcmp(classname2, "Av") == 0) {
+        } else if (streq(classname2, "Av")) {
           strcpy(dummytxt, name2);
           strcpy(name2, "004");
           strcat(name2, dummytxt);
-        } else if (strcmp(classname2, "Co") == 0) {
+        } else if (streq(classname2, "Co")) {
           strcpy(dummytxt, name2);
           strcpy(name2, "005");
           strcat(name2, dummytxt);
-        } else if (strcmp(classname2, "Di") == 0) {
+        } else if (streq(classname2, "Di")) {
           strcpy(dummytxt, name2);
           strcpy(name2, "006");
           strcat(name2, dummytxt);
-        } else if (strcmp(classname2, "Do") == 0) {
+        } else if (streq(classname2, "Do")) {
           strcpy(dummytxt, name2);
           strcpy(name2, "007");
           strcat(name2, dummytxt);
-        } else if (strcmp(classname2, "Dv") == 0) {
+        } else if (streq(classname2, "Dv")) {
           strcpy(dummytxt, name2);
           strcpy(name2, "008");
           strcat(name2, dummytxt);
@@ -3761,7 +3762,7 @@ static int utl_object_changed(pwr_tObjid Objdid, ldh_tSesContext ldhses,
     if (EVEN(sts))
       return sts;
 
-    if (strcmp(name, "Template") == 0)
+    if (streq(name, "Template"))
       break;
     sts = ldh_GetNextSibling(ldhses, templ, &templ);
   }
@@ -3952,7 +3953,7 @@ static int utl_print_object_full(
     if (EVEN(sts))
       return sts;
 
-    if (strcmp(name, "Template") == 0)
+    if (streq(name, "Template"))
       break;
     sts = ldh_GetNextSibling(ldhses, templ, &templ);
   }
@@ -4334,7 +4335,7 @@ static int utl_print_object_par(pwr_sAttrRef* arp, ldh_tSesContext ldhses,
 
   while (*parameter != 0) {
     /* Find the parameter */
-    if (strcmp(parameter, "WANTEDNODE") == 0) {
+    if (streq(parameter, "WANTEDNODE")) {
       u_print(utlctx, " %s", "WantedNode is obsolete");
       u_row(utlctx);
     } else {
@@ -8485,7 +8486,7 @@ int utl_create_object(ldh_tSesContext ldhses, char* object_name,
   }
 
   /* Check destination name */
-  if (strcmp(destination_name, "") == 0) {
+  if (streq(destination_name, "")) {
     /* A root object, no destination */
     destination = pwr_cNObjid;
   } else {
@@ -9187,7 +9188,7 @@ int utl_export_object(ldh_tSesContext ldhses, char* name, char* prefix,
 
     found = 0;
     for (j = 0; j < rows; j++) {
-      if (strcmp(debugpar, bodydef[j].ParName) == 0) {
+      if (streq(debugpar, bodydef[j].ParName)) {
         found = 1;
         break;
       }

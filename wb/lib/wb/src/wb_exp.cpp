@@ -38,9 +38,10 @@
    Module for exporting the plcprogram.  */
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "pwr_baseclasses.h"
+
+#include "co_string.h"
 #include "co_time.h"
 
 #include "wb_ldh_msg.h"
@@ -1834,7 +1835,7 @@ static pwr_tStatus gen_print_interns(exp_genctx genctx, vldh_t_node node)
     if (EVEN(sts))
       return sts;
 
-    if (strcmp(name, "Template") == 0)
+    if (streq(name, "Template"))
       break;
     sts = ldh_GetNextSibling(ldhses, templ, &templ);
   }

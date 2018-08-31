@@ -36,7 +36,6 @@
 
 /* wb.c -- work bench */
 
-#include <string.h>
 #include <stdlib.h>
 
 #include <iostream>
@@ -45,6 +44,7 @@
 #include "co_dcli.h"
 #include "co_login_msg.h"
 #include "co_msg.h"
+#include "co_string.h"
 
 #include "cow_login.h"
 #include "cow_msgwindow.h"
@@ -417,7 +417,7 @@ void Wb::wtt_open_volume(void* wttctx, wb_eType type, const char* filename,
           wtt->time_to_exit_cb = Wb::time_to_exit;
         }
       } else {
-        if (strcmp(filename, "ProjectList") == 0) {
+        if (streq(filename, "ProjectList")) {
           // Load ProjectList
 
           wb_erep* erep = (wb_erep*)(*(wb_env*)wb->wbctx);
@@ -436,7 +436,7 @@ void Wb::wtt_open_volume(void* wttctx, wb_eType type, const char* filename,
             wtt->open_volume_cb = Wb::wtt_open_volume;
             wtt->time_to_exit_cb = Wb::time_to_exit;
           }
-        } else if (strcmp(filename, "GlobalVolumeList") == 0) {
+        } else if (streq(filename, "GlobalVolumeList")) {
           // Load GlobalVolumeList
 
           wb_erep* erep = (wb_erep*)(*(wb_env*)wb->wbctx);
@@ -455,7 +455,7 @@ void Wb::wtt_open_volume(void* wttctx, wb_eType type, const char* filename,
             wtt->open_volume_cb = Wb::wtt_open_volume;
             wtt->time_to_exit_cb = Wb::time_to_exit;
           }
-        } else if (strcmp(filename, "UserDatabase") == 0) {
+        } else if (streq(filename, "UserDatabase")) {
           // Load UserDatabase
 
           wb_erep* erep = (wb_erep*)(*(wb_env*)wb->wbctx);

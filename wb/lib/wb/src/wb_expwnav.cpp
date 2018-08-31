@@ -37,10 +37,11 @@
 /* wb_logwnav.cpp -- Backupfile display window */
 
 #include <stdio.h>
-#include <string.h>
 
-#include "co_time.h"
 #include "pwr_names.h"
+
+#include "co_string.h"
+#include "co_time.h"
 
 #include "xnav_bitmap_export8.h"
 #include "xnav_bitmap_export10.h"
@@ -698,7 +699,7 @@ void WbExpWNav::update()
         break;
       case expwitem_eItemType_Dir:
         for (int i = 0; i < cnt; i++) {
-          if (strcmp(open_nodes[i], item->name) == 0) {
+          if (streq(open_nodes[i], item->name)) {
             item->open_children();
           }
         }
@@ -717,7 +718,7 @@ void WbExpWNav::update()
                   && strcmp(select_source, ((ItemExp*)item)->source) == 0
                   && strcmp(select_target, ((ItemExp*)item)->target) == 0)
                  || (item->type == expwitem_eItemType_Dir
-                        && strcmp(select_name, item->name) == 0))) {
+                        && streq(select_name, item->name)))) {
         brow_SelectInsert(brow->ctx, node_list[i]);
         brow_SetInverse(node_list[i], 1);
       }
@@ -996,7 +997,7 @@ void WbExpWNav::redraw(int posit_top)
 ExpWDir* WbExpWNav::dir_find(char* name)
 {
   for (ExpWDir* dir = dirlist; dir; dir = dir->next) {
-    if (strcmp(dir->name, name) == 0)
+    if (streq(dir->name, name))
       return dir;
   }
   return 0;
@@ -1192,7 +1193,7 @@ pwr_tStatus WbExpWNav::exp()
         if (!mp->update)
           continue;
 
-        if (strcmp(mp->makefile, "") == 0)
+        if (streq(mp->makefile, ""))
           sprintf(cmd, "cd %s;make", mp->dir);
         else
           sprintf(cmd, "cd %s;make -f %s", mp->dir, mp->makefile);

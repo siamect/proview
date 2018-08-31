@@ -36,9 +36,10 @@
 
 /* wb_c_sevhistthread.cpp -- work bench methods of the SevHistThread class. */
 
-#include <string.h>
-
 #include "pwr_baseclasses.h"
+
+#include "co_string.h"
+
 #include "wb_pwrs.h"
 #include "wb_pwrb_msg.h"
 #include "wb_session.h"
@@ -73,7 +74,7 @@ static pwr_tStatus SyntaxCheck(
   if (!thread_a)
     return thread_a.sts();
 
-  if (strcmp(server_name, "") == 0)
+  if (streq(server_name, ""))
     wsx_error_msg_str(Session, "Server name is missing", Object, 'E',
         ErrorCount, WarningCount);
 

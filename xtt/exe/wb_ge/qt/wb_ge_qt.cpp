@@ -38,6 +38,8 @@
 
 #include <locale.h>
 
+#include "co_string.h"
+
 #include "cow_msgwindow_qt.h"
 #include "cow_qt_helpers.h"
 #include "cow_style_qt.h"
@@ -90,7 +92,7 @@ int main(int argc, char* argv[])
   if (argc > 1) {
     for (i = 1; i < argc; i++) {
       fprintf(stderr, "%s ", argv[i]);
-      if (strcmp(argv[i], "-l") == 0) {
+      if (streq(argv[i], "-l")) {
         if (i + 1 >= argc) {
           usage();
           debug_print("Shutting down...\n"); exit(0);

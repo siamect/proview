@@ -35,8 +35,9 @@
  */
 
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+
+#include "co_string.h"
 
 #include <Xm/Xm.h>
 #include <Xm/MessageB.h>
@@ -95,7 +96,7 @@ int main(int argc, char* argv[])
 
   /* Look for user and password as arguments */
   if (argc > 1) {
-    if (strcmp(argv[1], "-h") == 0) {
+    if (streq(argv[1], "-h")) {
       usage();
       exit(0);
     }

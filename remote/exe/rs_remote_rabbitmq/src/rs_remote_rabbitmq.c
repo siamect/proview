@@ -45,19 +45,22 @@
 #include <amqp_tcp_socket.h>
 #include <stdio.h>
 #include <errno.h>
-#include <string.h>
 
+#include "pwr_baseclasses.h"
 #include "pwr_class.h"
+#include "pwr_remoteclasses.h"
 #include "pwr_systemclasses.h"
-#include "rt_gdh.h"
+
+#include "co_string.h"
 #include "co_time.h"
 #include "co_cdh.h"
+
+#include "rt_aproc.h"
 #include "rt_errh.h"
-#include "pwr_baseclasses.h"
-#include "pwr_remoteclasses.h"
+#include "rt_gdh.h"
 #include "rt_pwr_msg.h"
 #include "rs_remote_msg.h"
-#include "rt_aproc.h"
+
 #include "remote.h"
 #include "remote_remtrans_utils.h"
 
@@ -209,7 +212,7 @@ int rmq_connect()
     }
   }
 
-  if (ctx->is_producer && strcmp(ctx->op->Exchange, "") != 0)
+  if (ctx->is_producer && !streq(ctx->op->Exchange, ""))
 #if AMQP_VERSION_MAJOR == 0 && AMQP_VERSION_MINOR < 6
     amqp_exchange_declare(ctx->conn, ctx->channel,
         amqp_cstring_bytes(ctx->op->Exchange), amqp_cstring_bytes("fanout"), 0,
@@ -220,7 +223,7 @@ int rmq_connect()
         ctx->op->Durable, 0, 0, amqp_empty_table);
 #endif
 
-  if (ctx->is_producer && strcmp(ctx->op->Exchange, "") != 0)
+  if (ctx->is_producer && !streq(ctx->op->Exchange, ""))
     amqp_queue_bind(ctx->conn, ctx->channel,
         amqp_cstring_bytes(ctx->op->SendQueue),
         amqp_cstring_bytes(ctx->op->Exchange),
@@ -431,7 +434,7 @@ unsigned int rmq_send(remnode_item* remnode, pwr_sClass_RemTrans* remtrans,
   prop._flags = AMQP_BASIC_DELIVERY_MODE_FLAG;
 
   // 0 mandatory 0 immediate
-  if (strcmp(ctx->op->Exchange, "") != 0)
+  if (!streq(ctx->op->Exchange, ""))
     sts = amqp_basic_publish(ctx->conn, ctx->channel,
         amqp_cstring_bytes(ctx->op->Exchange), amqp_cstring_bytes(""), 0, 0,
         &prop, msg);
@@ -516,8 +519,8 @@ int main(int argc, char* argv[])
     exit(sts);
   }
 
-  if (strcmp(rn_rmq->ReceiveQueue, "") == 0
-      && strcmp(rn_rmq->SendQueue, "") == 0) {
+  if (streq(rn_rmq->ReceiveQueue, "")
+      && streq(rn_rmq->SendQueue, "")) {
     errh_Fatal(
         "Process terminated, neither send or receive queue configured, %s", id);
     errh_SetStatus(PWR__SRVTERM);
@@ -527,9 +530,9 @@ int main(int argc, char* argv[])
   /* Create context */
   ctx = calloc(1, sizeof(*ctx));
   ctx->op = rn_rmq;
-  if (strcmp(rn_rmq->ReceiveQueue, "") != 0)
+  if (!streq(rn_rmq->ReceiveQueue, ""))
     ctx->is_consumer = 1;
-  if (strcmp(rn_rmq->SendQueue, "") != 0)
+  if (!streq(rn_rmq->SendQueue, ""))
     ctx->is_producer = 1;
 
   /* Initialize some internal data and make standard remtrans init */

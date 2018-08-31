@@ -36,9 +36,10 @@
 
 #include <math.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include <iostream>
+
+#include "co_string.h"
 
 #include "glow_text.h"
 #include "glow_conpoint.h"
@@ -272,7 +273,7 @@ void GlowCtx::save_comment(std::ofstream& fp)
   fp << "!/**\n";
   for (int i = 0; i < (int)(sizeof(comment->text) / sizeof(comment->text[0]));
        i++) {
-    if (strcmp(comment->text[i], "") == 0) {
+    if (streq(comment->text[i], "")) {
       if (last_blank)
         continue;
       last_blank = true;

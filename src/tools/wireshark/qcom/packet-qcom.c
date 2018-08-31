@@ -31,7 +31,9 @@
 #include <stdio.h>
 #include <glib.h>
 #include <epan/packet.h>
-#include <string.h>
+
+#include "co_string.h"
+
 #include "packet-qcom.h"
 #include "pwr_def.h"
 
@@ -1355,7 +1357,7 @@ void dissect_qcom(tvbuff_t* tvb, packet_info* pinfo, proto_tree* tree)
             prev_poid_oix = poid_oix;
           }
 
-          if (strcmp(name, "") != 0)
+          if (!streq(name, ""))
             sprintf(info, "ObjectR         name %s", name);
 
           if (net_gobject_count > 10)
@@ -1735,7 +1737,7 @@ void dissect_qcom(tvbuff_t* tvb, packet_info* pinfo, proto_tree* tree)
 
   /* Clear out stuff in the info column */
   if (check_col(pinfo->cinfo, COL_INFO)) {
-    if (strcmp(info, "") != 0)
+    if (!streq(info, ""))
       col_add_fstr(pinfo->cinfo, COL_INFO, "%s", info);
     else
       col_clear(pinfo->cinfo, COL_INFO);

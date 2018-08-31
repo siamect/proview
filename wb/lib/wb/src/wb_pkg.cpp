@@ -34,11 +34,13 @@
  * General Public License plus this exception.
  **/
 
-#include <string.h>
 #include <sys/stat.h>
 
 #include "pwr_names.h"
+
+#include "co_string.h"
 #include "co_time.h"
+
 #include "rt_load.h"
 
 #include "cow_msgwindow.h"
@@ -611,7 +613,7 @@ int pkg_node::compareFiles()
         for (;;) {
           bool new_name = false;
           for (int k = 0; k < (int)m_filelist.size(); k++) {
-            if (strcmp(m_filelist[k].m_arname, f.m_arname) == 0) {
+            if (streq(m_filelist[k].m_arname, f.m_arname)) {
               strcat(f.m_arname, "x");
               new_name = true;
               break;
@@ -711,7 +713,7 @@ void pkg_node::fetchFiles(bool distribute)
         for (;;) {
           bool new_name = false;
           for (int k = 0; k < (int)m_filelist.size(); k++) {
-            if (strcmp(m_filelist[k].m_arname, f.m_arname) == 0) {
+            if (streq(m_filelist[k].m_arname, f.m_arname)) {
               strcat(f.m_arname, "x");
               new_name = true;
               break;
@@ -913,7 +915,7 @@ void pkg_node::copyPackage(char* pkg_name)
   char bootnodes[10][80];
   int bootnode_cnt;
 
-  if (strcmp(m_bootnode, "-") != 0) {
+  if (!streq(m_bootnode, "-")) {
     bootnode_cnt = dcli_parse(m_bootnode, ",", "", (char*)bootnodes,
         sizeof(bootnodes) / sizeof(bootnodes[0]), sizeof(bootnodes[0]), 0);
   } else {
@@ -1020,7 +1022,7 @@ void pkg_pattern::fetchFiles()
           dcli_parse_filename(m_target, dev, dir, file, type, &version);
           strcpy(file_target, dev);
           strcpy(file_target, dir);
-          if (strcmp(file, "") == 0 && strcmp(type, "") == 0)
+          if (streq(file, "") && streq(type, ""))
             dcli_parse_filename(found_file, dev, dir, file, type, &version);
           strcat(file_target, file);
           strcat(file_target, type);
@@ -1048,7 +1050,7 @@ void pkg_pattern::fetchFiles()
         dcli_parse_filename(m_target, dev, dir, file, type, &version);
         strcpy(file_target, dev);
         strcpy(file_target, dir);
-        if (strcmp(file, "") == 0 && strcmp(type, "") == 0)
+        if (streq(file, "") && streq(type, ""))
           dcli_parse_filename(found_file, dev, dir, file, type, &version);
         strcat(file_target, file);
         strcat(file_target, type);

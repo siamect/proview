@@ -34,14 +34,14 @@
  * General Public License plus this exception.
  **/
 
-#include <string.h>
-
 #include <iostream>
 
 #include "pwr_baseclasses.h"
 #include "pwr_basecomponentclasses.h"
 #include "pwr_remoteclasses.h"
+
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_time.h"
 
 #include "wb_adrep.h"
@@ -1664,35 +1664,35 @@ void wb_wblnode::registerNode(wb_vrepwbl* vol)
       // If $ClassDef, register class in classlist
       if (!isTemplate()) {
         if (first_child->getType() == wbl_eToken_Name
-            && (strcmp(o->cname, "$ClassDef") == 0
-                   || strcmp(o->cname, "pwr_eClass_ClassDef") == 0)) {
+            && (streq(o->cname, "$ClassDef")
+                   || streq(o->cname, "pwr_eClass_ClassDef"))) {
           node_type = wbl_eNodeType_ClassDef;
         } else if (first_child->getType() == wbl_eToken_Name
-            && (strcmp(o->cname, "$Type") == 0
-                   || strcmp(o->cname, "pwr_eClass_Type") == 0)) {
+            && (streq(o->cname, "$Type")
+                   || streq(o->cname, "pwr_eClass_Type"))) {
           node_type = wbl_eNodeType_Type;
         } else if (first_child->getType() == wbl_eToken_Name
-            && (strcmp(o->cname, "$TypeDef") == 0
-                   || strcmp(o->cname, "pwr_eClass_TypeDef") == 0)) {
+            && (streq(o->cname, "$TypeDef")
+                   || streq(o->cname, "pwr_eClass_TypeDef"))) {
           node_type = wbl_eNodeType_TypeDef;
         } else if (first_child->getType() == wbl_eToken_Name
-            && (strcmp(o->cname, "$ObjBodyDef") == 0
-                   || strcmp(o->cname, "pwr_eClass_ObjBodyDef") == 0)) {
+            && (streq(o->cname, "$ObjBodyDef")
+                   || streq(o->cname, "pwr_eClass_ObjBodyDef"))) {
           node_type = wbl_eNodeType_ObjBodyDef;
         } else if (first_child->getType() == wbl_eToken_Name
-            && (strcmp(o->cname, "$Attribute") == 0
-                   || strcmp(o->cname, "$Input") == 0
-                   || strcmp(o->cname, "$Output") == 0
-                   || strcmp(o->cname, "$Intern") == 0
-                   || strcmp(o->cname, "$ObjXRef") == 0
-                   || strcmp(o->cname, "$AttrXRef") == 0
-                   || strcmp(o->cname, "pwr_eClass_Param") == 0)) {
+            && (streq(o->cname, "$Attribute")
+                   || streq(o->cname, "$Input")
+                   || streq(o->cname, "$Output")
+                   || streq(o->cname, "$Intern")
+                   || streq(o->cname, "$ObjXRef")
+                   || streq(o->cname, "$AttrXRef")
+                   || streq(o->cname, "pwr_eClass_Param"))) {
           node_type = wbl_eNodeType_Attribute;
         } else if (first_child->getType() == wbl_eToken_Name
-            && (strcmp(o->cname, "$Buffer") == 0)) {
+            && (streq(o->cname, "$Buffer"))) {
           node_type = wbl_eNodeType_Buffer;
         } else if (first_child->getType() == wbl_eToken_Name
-            && (strcmp(o->cname, "$Param") == 0)) {
+            && (streq(o->cname, "$Param"))) {
           m_vrep->error("Obsolete attribute class, use $Attribute instead",
               getFileName(), line_number);
         }
@@ -1731,7 +1731,7 @@ void wb_wblnode::registerNode(wb_vrepwbl* vol)
             o->m_oid.oix = m_vrep->nextOix();
         }
       }
-    } else if (isTemplate() && strcmp(o->cname, "") != 0) {
+    } else if (isTemplate() && !streq(o->cname, "")) {
       // Created template object
     } else {
       // Syntax exception -- No class
@@ -2003,13 +2003,13 @@ int wb_wblnode::attrStringToValue(int type_id, char* value_str,
     break;
   }
   case pwr_eType_Float32: {
-    if (strcmp(value_str, "FLT_MIN") == 0)
+    if (streq(value_str, "FLT_MIN"))
       *(float*)buffer_ptr = FLT_MIN;
-    else if (strcmp(value_str, "FLT_NMIN") == 0)
+    else if (streq(value_str, "FLT_NMIN"))
       *(float*)buffer_ptr = -FLT_MIN;
-    else if (strcmp(value_str, "FLT_MAX") == 0)
+    else if (streq(value_str, "FLT_MAX"))
       *(float*)buffer_ptr = FLT_MAX;
-    else if (strcmp(value_str, "FLT_NMAX") == 0)
+    else if (streq(value_str, "FLT_NMAX"))
       *(float*)buffer_ptr = -FLT_MAX;
     else if (sscanf(value_str, "%f", (float*)buffer_ptr) != 1)
       return 0;
@@ -2047,9 +2047,9 @@ int wb_wblnode::attrStringToValue(int type_id, char* value_str,
   case pwr_eType_Int32:
   case pwr_eType_Status:
   case pwr_eType_NetStatus: {
-    if (strcmp(value_str, "INT_MIN") == 0) {
+    if (streq(value_str, "INT_MIN")) {
       *(int*)buffer_ptr = INT_MIN;
-    } else if (strcmp(value_str, "INT_MAX") == 0) {
+    } else if (streq(value_str, "INT_MAX")) {
       *(int*)buffer_ptr = INT_MAX;
     } else if (sscanf(value_str, "%d", (int*)buffer_ptr) != 1)
       return 0;
@@ -2196,9 +2196,9 @@ int wb_wblnode::attrStringToValue(int type_id, char* value_str,
   case pwr_eType_Time: {
     pwr_tTime time;
 
-    if (strcmp(value_str, "ATTIME_MIN") == 0)
+    if (streq(value_str, "ATTIME_MIN"))
       memcpy(buffer_ptr, &pwr_cAtMin, sizeof(pwr_tTime));
-    else if (strcmp(value_str, "ATTIME_MAX") == 0)
+    else if (streq(value_str, "ATTIME_MAX"))
       memcpy(buffer_ptr, &pwr_cAtMax, sizeof(pwr_tTime));
     else {
       sts = time_AsciiToA(value_str, &time);
@@ -2211,9 +2211,9 @@ int wb_wblnode::attrStringToValue(int type_id, char* value_str,
   case pwr_eType_DeltaTime: {
     pwr_tDeltaTime deltatime;
 
-    if (strcmp(value_str, "DTTIME_MIN") == 0)
+    if (streq(value_str, "DTTIME_MIN"))
       memcpy(buffer_ptr, &pwr_cDtMin, sizeof(pwr_tDeltaTime));
-    else if (strcmp(value_str, "DTTIME_MAX") == 0)
+    else if (streq(value_str, "DTTIME_MAX"))
       memcpy(buffer_ptr, &pwr_cDtMax, sizeof(pwr_tDeltaTime));
     else {
       sts = time_AsciiToD(value_str, &deltatime);
@@ -2299,7 +2299,7 @@ static int check_conversion_error(const char* attr)
   int nr;
 
   // subwind_oid[0] is a probably a not dumped fo window
-  if (strcmp(attr, "subwind_oid[0]") == 0)
+  if (streq(attr, "subwind_oid[0]"))
     return 1;
 
   // PlcConnect and SimConnect are ok in attribute objects
@@ -2308,10 +2308,10 @@ static int check_conversion_error(const char* attr)
   if (nr <= 1)
     return 0;
 
-  if (strcmp(seg[nr - 1], "PlcConnect") == 0
-      || strcmp(seg[nr - 1], "SimConnect") == 0) {
+  if (streq(seg[nr - 1], "PlcConnect")
+      || streq(seg[nr - 1], "SimConnect")) {
     for (int i = nr - 2; i >= 0; i--) {
-      if (strcmp(seg[i], "Super") != 0)
+      if (!streq(seg[i], "Super"))
         return 1;
     }
   }

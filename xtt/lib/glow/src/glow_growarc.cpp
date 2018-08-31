@@ -36,9 +36,10 @@
 
 #include <math.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include <iostream>
+
+#include "co_string.h"
 
 #include "glow_growarc.h"
 #include "glow_grownode.h"
@@ -544,7 +545,7 @@ void GrowArc::set_dynamic(char* code, int size)
 
 void GrowArc::exec_dynamic()
 {
-  if (dynamicsize && strcmp(dynamic, "") != 0)
+  if (dynamicsize && !streq(dynamic, ""))
     ctx->dynamic_cb(this, dynamic, glow_eDynamicType_Object);
 }
 

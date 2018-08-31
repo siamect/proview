@@ -36,9 +36,10 @@
 
 #include <math.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include <iostream>
+
+#include "co_string.h"
 
 #include "glow_growannot.h"
 #include "glow_growrect.h"
@@ -348,7 +349,7 @@ void GlowNodeClass::open(std::ifstream& fp)
       break;
   }
 
-  if (strcmp(next_nodeclass, "") != 0) {
+  if (!streq(next_nodeclass, "")) {
     next_nc = ctx->get_nodeclass_from_name(next_nodeclass);
     if (!next_nc) {
       sts = ctx->open_subgraph_from_name(
@@ -665,7 +666,7 @@ void GlowNodeClass::set_java_name(char* name)
 
 int GlowNodeClass::get_java_name(char* jname)
 {
-  if (strcmp(java_name, "") != 0) {
+  if (!streq(java_name, "")) {
     strcpy(jname, java_name);
     return 1;
   }

@@ -34,16 +34,17 @@
  * General Public License plus this exception.
  **/
 
-#include <string.h>
-
 #include "pwr_baseclasses.h"
-#include "remote_pvd_udp.h"
+
+#include "co_cdh.h"
+#include "co_dcli.h"
+#include "co_string.h"
+
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
 #include "rs_remote_msg.h"
 
-#include "co_cdh.h"
-#include "co_dcli.h"
+#include "remote_pvd_udp.h"
 
 typedef struct sSubItem {
   int rix;
@@ -293,7 +294,7 @@ static void pwrsrv_SubAdd(rpvd_sMsgSubAdd* msg)
     return;
   }
 
-  if (strcmp(msg->Attribute, "") != 0) {
+  if (!streq(msg->Attribute, "")) {
     strcat(name, ".");
     strcat(name, msg->Attribute);
 

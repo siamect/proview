@@ -36,13 +36,15 @@
 
 /* wb_c_object.c -- work bench methods of the Object class. */
 
-#include <string.h>
-
 #include "pwr_baseclasses.h"
 #include "pwr_names.h"
+
 #include "co_api.h"
 #include "co_msg.h"
+#include "co_string.h"
+
 #include "cow_login.h"
+
 #include "wb_ldh_msg.h"
 #include "wb_pwrs.h"
 #include "wb_vldh.h"
@@ -68,13 +70,13 @@ static pwr_tStatus CopyObject(ldh_sMenuCall* ip)
       sizeof(pwr_sMenuButton));
 
   if (mb.MethodArguments[0][0] != '\0') {
-    if (strcmp(mb.MethodArguments[0], "Before") == 0)
+    if (streq(mb.MethodArguments[0], "Before"))
       Dest = ldh_eDest_Before;
-    else if (strcmp(mb.MethodArguments[0], "After") == 0)
+    else if (streq(mb.MethodArguments[0], "After"))
       Dest = ldh_eDest_After;
-    else if (strcmp(mb.MethodArguments[0], "First") == 0)
+    else if (streq(mb.MethodArguments[0], "First"))
       Dest = ldh_eDest_IntoFirst;
-    else if (strcmp(mb.MethodArguments[0], "Last") == 0)
+    else if (streq(mb.MethodArguments[0], "Last"))
       Dest = ldh_eDest_IntoLast;
     else
       Dest = ldh_eDest__;
@@ -122,13 +124,13 @@ static int IsOkCopyObject(ldh_sMenuCall* ip, pwr_sMenuButton* mbp)
   pwr_tObjid DestObject;
 
   if (mbp->MethodArguments[0][0] != '\0') {
-    if (strcmp(mbp->MethodArguments[0], "Before") == 0)
+    if (streq(mbp->MethodArguments[0], "Before"))
       Dest = ldh_eDest_Before;
-    else if (strcmp(mbp->MethodArguments[0], "After") == 0)
+    else if (streq(mbp->MethodArguments[0], "After"))
       Dest = ldh_eDest_After;
-    else if (strcmp(mbp->MethodArguments[0], "First") == 0)
+    else if (streq(mbp->MethodArguments[0], "First"))
       Dest = ldh_eDest_IntoFirst;
-    else if (strcmp(mbp->MethodArguments[0], "Last") == 0)
+    else if (streq(mbp->MethodArguments[0], "Last"))
       Dest = ldh_eDest_IntoLast;
     else
       Dest = ldh_eDest__;
@@ -171,13 +173,13 @@ static pwr_tStatus CopyObjectTree(ldh_sMenuCall* ip)
       sizeof(pwr_sMenuButton));
 
   if (mb.MethodArguments[0][0] != '\0') {
-    if (strcmp(mb.MethodArguments[0], "Before") == 0)
+    if (streq(mb.MethodArguments[0], "Before"))
       Dest = ldh_eDest_Before;
-    else if (strcmp(mb.MethodArguments[0], "After") == 0)
+    else if (streq(mb.MethodArguments[0], "After"))
       Dest = ldh_eDest_After;
-    else if (strcmp(mb.MethodArguments[0], "First") == 0)
+    else if (streq(mb.MethodArguments[0], "First"))
       Dest = ldh_eDest_IntoFirst;
-    else if (strcmp(mb.MethodArguments[0], "Last") == 0)
+    else if (streq(mb.MethodArguments[0], "Last"))
       Dest = ldh_eDest_IntoLast;
     else
       Dest = ldh_eDest__;
@@ -205,13 +207,13 @@ static int IsOkCopyObjectTree(ldh_sMenuCall* ip, pwr_sMenuButton* mbp)
   pwr_tObjid DestObject;
 
   if (mbp->MethodArguments[0][0] != '\0') {
-    if (strcmp(mbp->MethodArguments[0], "Before") == 0)
+    if (streq(mbp->MethodArguments[0], "Before"))
       Dest = ldh_eDest_Before;
-    else if (strcmp(mbp->MethodArguments[0], "After") == 0)
+    else if (streq(mbp->MethodArguments[0], "After"))
       Dest = ldh_eDest_After;
-    else if (strcmp(mbp->MethodArguments[0], "First") == 0)
+    else if (streq(mbp->MethodArguments[0], "First"))
       Dest = ldh_eDest_IntoFirst;
-    else if (strcmp(mbp->MethodArguments[0], "Last") == 0)
+    else if (streq(mbp->MethodArguments[0], "Last"))
       Dest = ldh_eDest_IntoLast;
     else
       Dest = ldh_eDest__;
@@ -248,13 +250,13 @@ static int IsOkCreateObject(ldh_sMenuCall* ip, pwr_sMenuButton* mbp)
   ldh_eDest Dest = ldh_eDest__;
 
   if (mbp->MethodArguments[0][0] != '\0') {
-    if (strcmp(mbp->MethodArguments[0], "Before") == 0)
+    if (streq(mbp->MethodArguments[0], "Before"))
       Dest = ldh_eDest_Before;
-    else if (strcmp(mbp->MethodArguments[0], "After") == 0)
+    else if (streq(mbp->MethodArguments[0], "After"))
       Dest = ldh_eDest_After;
-    else if (strcmp(mbp->MethodArguments[0], "First") == 0)
+    else if (streq(mbp->MethodArguments[0], "First"))
       Dest = ldh_eDest_IntoFirst;
-    else if (strcmp(mbp->MethodArguments[0], "Last") == 0)
+    else if (streq(mbp->MethodArguments[0], "Last"))
       Dest = ldh_eDest_IntoLast;
     else
       Dest = ldh_eDest__;
@@ -279,13 +281,13 @@ static pwr_tStatus CreateObject(ldh_sMenuCall* ip)
       sizeof(pwr_sMenuButton));
 
   if (mb.MethodArguments[0][0] != '\0') {
-    if (strcmp(mb.MethodArguments[0], "Before") == 0)
+    if (streq(mb.MethodArguments[0], "Before"))
       Dest = ldh_eDest_Before;
-    else if (strcmp(mb.MethodArguments[0], "After") == 0)
+    else if (streq(mb.MethodArguments[0], "After"))
       Dest = ldh_eDest_After;
-    else if (strcmp(mb.MethodArguments[0], "First") == 0)
+    else if (streq(mb.MethodArguments[0], "First"))
       Dest = ldh_eDest_IntoFirst;
-    else if (strcmp(mb.MethodArguments[0], "Last") == 0)
+    else if (streq(mb.MethodArguments[0], "Last"))
       Dest = ldh_eDest_IntoLast;
     else
       Dest = ldh_eDest__;
@@ -403,13 +405,13 @@ static pwr_tStatus MoveObject(ldh_sMenuCall* ip)
       sizeof(pwr_sMenuButton));
 
   if (mb.MethodArguments[0][0] != '\0') {
-    if (strcmp(mb.MethodArguments[0], "Before") == 0)
+    if (streq(mb.MethodArguments[0], "Before"))
       Dest = ldh_eDest_Before;
-    else if (strcmp(mb.MethodArguments[0], "After") == 0)
+    else if (streq(mb.MethodArguments[0], "After"))
       Dest = ldh_eDest_After;
-    else if (strcmp(mb.MethodArguments[0], "First") == 0)
+    else if (streq(mb.MethodArguments[0], "First"))
       Dest = ldh_eDest_IntoFirst;
-    else if (strcmp(mb.MethodArguments[0], "Last") == 0)
+    else if (streq(mb.MethodArguments[0], "Last"))
       Dest = ldh_eDest_IntoLast;
     else
       Dest = ldh_eDest__;
@@ -446,13 +448,13 @@ static int IsOkMoveObject(ldh_sMenuCall* ip, pwr_sMenuButton* mbp)
   int i;
 
   if (mbp->MethodArguments[0][0] != '\0') {
-    if (strcmp(mbp->MethodArguments[0], "Before") == 0)
+    if (streq(mbp->MethodArguments[0], "Before"))
       Dest = ldh_eDest_Before;
-    else if (strcmp(mbp->MethodArguments[0], "After") == 0)
+    else if (streq(mbp->MethodArguments[0], "After"))
       Dest = ldh_eDest_After;
-    else if (strcmp(mbp->MethodArguments[0], "First") == 0)
+    else if (streq(mbp->MethodArguments[0], "First"))
       Dest = ldh_eDest_IntoFirst;
-    else if (strcmp(mbp->MethodArguments[0], "Last") == 0)
+    else if (streq(mbp->MethodArguments[0], "Last"))
       Dest = ldh_eDest_IntoLast;
     else
       Dest = ldh_eDest__;
@@ -633,7 +635,7 @@ static pwr_tStatus Help(ldh_sMenuCall* ip)
     if (EVEN(sts))
       return LDH__SUCCESS;
 
-    if (strcmp(topic, "") == 0) {
+    if (streq(topic, "")) {
       free(topic);
       return LDH__SUCCESS;
     }
@@ -669,7 +671,7 @@ static pwr_tStatus HelpFilter(ldh_sMenuCall* ip)
     if (EVEN(sts))
       return 0;
 
-    if (strcmp(topic, "") == 0) {
+    if (streq(topic, "")) {
       free(topic);
       return 0;
     }
@@ -1178,7 +1180,7 @@ static pwr_tStatus History(ldh_sMenuCall* ip)
     strncpy(item, oname, sizeof(item));
 
     strncpy(categories, mb.MethodArguments[0], sizeof(categories));
-    if (strcmp(mb.MethodArguments[1], "Descendants") == 0) {
+    if (streq(mb.MethodArguments[1], "Descendants")) {
       strncat(item, "*", sizeof(item) - strlen(item) - 1);
       showitem = 1;
     }

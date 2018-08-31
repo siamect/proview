@@ -36,9 +36,10 @@
 
 /* wb_c_opplace.c -- work bench methods of the OpPlace class. */
 
-#include <string.h>
-
 #include "pwr_baseclasses.h"
+
+#include "co_string.h"
+
 #include "wb_pwrb_msg.h"
 #include "wb_pwrs.h"
 #include "wb_pwrs_msg.h"
@@ -59,7 +60,7 @@ static pwr_tStatus PostCreate(
   if (EVEN(sts))
     return sts;
 
-  if (strcmp(name, "OpDefault") == 0) {
+  if (streq(name, "OpDefault")) {
     // Set OpHide in OpWindLayout
 
     sts = ldh_SetObjectPar(Session, Object, "RtBody", "OpWindLayout",
@@ -102,7 +103,7 @@ static pwr_tStatus SyntaxCheck(ldh_tSesContext Session, pwr_tAttrRef Object,
   bool empty = true;
   for (unsigned int i = 0; i < sizeof(selectlist) / sizeof(selectlist[0]);
        i++) {
-    if (strcmp(selectlist[i], "") != 0) {
+    if (!streq(selectlist[i], "")) {
       empty = false;
       break;
     }
@@ -120,7 +121,7 @@ static pwr_tStatus SyntaxCheck(ldh_tSesContext Session, pwr_tAttrRef Object,
   if (!username_a)
     return username_a.sts();
 
-  if (strcmp(username, "") == 0)
+  if (streq(username, ""))
     wsx_error_msg_str(
         Session, "UserName is empty", Object, 'W', ErrorCount, WarningCount);
 

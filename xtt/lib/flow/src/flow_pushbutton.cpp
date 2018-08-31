@@ -34,9 +34,9 @@
  * General Public License plus this exception.
  **/
 
-#include <string.h>
-
 #include <iostream>
+
+#include "co_string.h"
 
 #include "flow_draw.h"
 #include "flow_pushbutton.h"
@@ -83,25 +83,25 @@ int FlowPushButton::event_handler(flow_eEvent event, int x, int y)
     if (r.ll.z_x + pos.z_x <= x && x <= r.ur.z_x + pos.z_x
         && r.ll.z_y + pos.z_y <= y && y <= r.ur.z_y + pos.z_y) {
       sts = FLOW__NO_PROPAGATE;
-      if (strcmp(name, "Zoom in") == 0)
+      if (streq(name, "Zoom in"))
         ctx->zoom(1.25);
-      else if (strcmp(name, "Zoom out") == 0)
+      else if (streq(name, "Zoom out"))
         ctx->zoom(0.8);
-      else if (strcmp(name, "Right") == 0)
+      else if (streq(name, "Right"))
         ctx->traverse(50, 0);
-      else if (strcmp(name, "Left") == 0)
+      else if (streq(name, "Left"))
         ctx->traverse(-50, 0);
-      else if (strcmp(name, "Up") == 0)
+      else if (streq(name, "Up"))
         ctx->traverse(0, -50);
-      else if (strcmp(name, "Down") == 0)
+      else if (streq(name, "Down"))
         ctx->traverse(0, 50);
-      else if (strcmp(name, "Copy") == 0)
+      else if (streq(name, "Copy"))
         ctx->copy();
-      else if (strcmp(name, "Cut") == 0)
+      else if (streq(name, "Cut"))
         ctx->cut();
-      else if (strcmp(name, "Paste") == 0)
+      else if (streq(name, "Paste"))
         ctx->paste();
-      else if (strcmp(name, "ConType") == 0) {
+      else if (streq(name, "ConType")) {
         int i;
         for (i = 0; i < ctx->a_cc.size(); i++) {
           if (ctx->default_conclass == ctx->a_cc[i])

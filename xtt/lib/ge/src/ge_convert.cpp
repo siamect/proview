@@ -39,13 +39,12 @@
    3.4 -> 4.0
 */
 
-#include <string.h>
-
 #include "co_ccm.h"
 #include "co_ccm_msg.h"
 #include "co_dcli.h"
-
 #include "co_dcli_msg.h"
+#include "co_string.h"
+
 #include "ge_msg.h"
 #include "ge.h"
 #include "ge_dyn.h"
@@ -70,7 +69,7 @@ int Graph::convert()
   grow_GetObjectList(grow->ctx, &objectlist, &object_cnt);
   for (int i = 0; i < object_cnt; i++) {
     grow_GetObjectName(objectlist[i], name, sizeof(name), glow_eName_Object);
-    if (strcmp(name, "") == 0) {
+    if (streq(name, "")) {
       sprintf(name, "O%d", grow_IncrNextObjectNameNumber(grow->ctx));
       grow_SetObjectName(objectlist[i], name);
     }
@@ -82,7 +81,7 @@ int Graph::convert()
       grow_GetGroupObjectList(objectlist[i], &grouplist, &group_cnt);
       for (int j = 0; j < group_cnt; j++) {
         grow_GetObjectName(grouplist[j], name, sizeof(name), glow_eName_Object);
-        if (strcmp(name, "") == 0) {
+        if (streq(name, "")) {
           sprintf(name, "O%d", grow_IncrNextObjectNameNumber(grow->ctx));
           grow_SetObjectName(grouplist[j], name);
         }

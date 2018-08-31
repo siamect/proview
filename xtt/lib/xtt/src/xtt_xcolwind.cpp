@@ -40,11 +40,14 @@
 
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_time.h"
+
+#include "rt_xatt_msg.h"
+
 #include "xtt_xcolwind.h"
 #include "xtt_xattnav.h"
 #include "xtt_item.h"
-#include "rt_xatt_msg.h"
 
 void XColWind::message_cb(void* xcolwind, char severity, const char* message)
 {
@@ -77,7 +80,7 @@ void XColWind::activate_save()
   int width, height;
   double scantime, zoomfactor;
 
-  if (strcmp(filename, "") == 0)
+  if (streq(filename, ""))
     activate_saveas();
 
   dcli_translate_filename(fname, filename);
@@ -325,7 +328,7 @@ XColWind::XColWind(void* xa_parent_ctx, pwr_sAttrRef* xa_objar_list,
       call_method_cb(0), command_cb(0), get_select_cb(0), client_data(0),
       type(xa_type)
 {
-  if (xa_title && strcmp(xa_title, "") != 0) {
+  if (xa_title && !streq(xa_title, "")) {
     strcpy(title, xa_title);
     set_filename(title);
   } else {

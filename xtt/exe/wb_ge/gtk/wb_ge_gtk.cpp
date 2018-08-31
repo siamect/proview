@@ -39,9 +39,10 @@
 #include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 typedef void* ldh_tSesContext;
+
+#include "co_string.h"
 
 #include "cow_msgwindow_gtk.h"
 #include "cow_xhelp_gtk.h"
@@ -88,7 +89,7 @@ int main(int argc, char* argv[])
 
   if (argc > 1) {
     for (i = 1; i < argc; i++) {
-      if (strcmp(argv[i], "-l") == 0) {
+      if (streq(argv[i], "-l")) {
         if (i + 1 >= argc) {
           usage();
           exit(0);

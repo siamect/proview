@@ -35,9 +35,10 @@
  **/
 
 #include <stdlib.h>
-#include <string.h>
 
 #include <iostream>
+
+#include "co_string.h"
 
 #include "flow_triangle.h"
 #include "flow_con.h"
@@ -767,7 +768,7 @@ int FlowArray::find_by_name(char* name, FlowArrayElem** element)
 
   for (i = 0; i < a_size; i++) {
     a[i]->get_object_name(object_name);
-    if (strcmp(name, object_name) == 0) {
+    if (streq(name, object_name)) {
       *element = a[i];
       return 1;
     }
@@ -790,7 +791,7 @@ int FlowArray::find_by_name_no_case(char* name, FlowArrayElem** element)
     a[i]->get_object_name(object_name);
     for (s = object_name; *s; s++)
       *s = toupper(*s);
-    if (strcmp(lname, object_name) == 0) {
+    if (streq(lname, object_name)) {
       *element = a[i];
       return 1;
     }

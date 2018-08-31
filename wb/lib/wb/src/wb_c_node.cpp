@@ -37,10 +37,12 @@
 /* wb_c_node.c -- work bench methods of the Node class. */
 
 #include <stdio.h>
-#include <string.h>
 
 #include "pwr_baseclasses.h"
+
 #include "co_cnf.h"
+#include "co_string.h"
+
 #include "wb_pwrs.h"
 #include "wb_pwrs_msg.h"
 #include "wb_session.h"
@@ -63,7 +65,7 @@ static pwr_tStatus PostCreate(ldh_tSesContext Session, pwr_tObjid Object,
       Session, &oid, name, pwr_eClass_Security, Object, ldh_eDest_IntoLast);
   ival = 1;
   cnf_get_value("defaultXttPriv", name, sizeof(name));
-  if (strcmp(name, "") != 0) {
+  if (!streq(name, "")) {
     sts = sscanf(name, "%d", &ival);
     if (sts == 1) {
       sts = ldh_SetObjectPar(Session, oid, "SysBody", "DefaultXttPriv",
@@ -73,7 +75,7 @@ static pwr_tStatus PostCreate(ldh_tSesContext Session, pwr_tObjid Object,
     }
   }
   cnf_get_value("defaultWebPriv", name, sizeof(name));
-  if (strcmp(name, "") != 0) {
+  if (!streq(name, "")) {
     sts = sscanf(name, "%d", &ival);
     if (sts == 1) {
       sts = ldh_SetObjectPar(Session, oid, "SysBody", "DefaultWebPriv",
@@ -83,7 +85,7 @@ static pwr_tStatus PostCreate(ldh_tSesContext Session, pwr_tObjid Object,
     }
   }
   cnf_get_value("defaultWebSystemGroup", name, sizeof(name));
-  if (strcmp(name, "") != 0) {
+  if (!streq(name, "")) {
     sts = ldh_SetObjectPar(
         Session, oid, "SysBody", "WebSystemGroup", (char*)name, sizeof(name));
     if (EVEN(sts))
@@ -102,7 +104,7 @@ static pwr_tStatus PostCreate(ldh_tSesContext Session, pwr_tObjid Object,
   cnf_get_value("defaultOpMaintenance", name, sizeof(name));
   sts = ldh_CreateObject(Session, &oid, name, cid, opp_oid, ldh_eDest_IntoLast);
   cnf_get_value("defaultOpSystemManager", name, sizeof(name));
-  if (strcmp(name, "") != 0)
+  if (!streq(name, ""))
     sts = ldh_CreateObject(
         Session, &oid, name, cid, opp_oid, ldh_eDest_IntoLast);
   cnf_get_value("defaultOpDefault", name, sizeof(name));
@@ -119,7 +121,7 @@ static pwr_tStatus PostCreate(ldh_tSesContext Session, pwr_tObjid Object,
 
   sts = ldh_ClassNameToId(Session, &cid, "$NodeHier");
   cnf_get_value("defaultGraphHier", name, sizeof(name));
-  if (strcmp(name, "") != 0)
+  if (!streq(name, ""))
     sts = ldh_CreateObject(
         Session, &oid, name, cid, opp_oid, ldh_eDest_IntoLast);
 

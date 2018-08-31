@@ -39,10 +39,10 @@
    Handler. Those routines are callable from application level.  */
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "co_array.h"
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_time.h"
 
 #include "rt_gdh_msg.h"
@@ -3761,7 +3761,7 @@ pwr_tStatus gdh_GetObjectBodyDef(
     while (a_super[scnt - 1]) {
       adef = pool_Address(NULL, gdbroot->rtdb, a_super[scnt - 1]->u.n.body);
 
-      if (strcmp(a_super[scnt - 1]->g.f.name.orig, "Super") == 0
+      if (streq(a_super[scnt - 1]->g.f.name.orig, "Super")
           && cdh_tidIsCid(adef->TypeRef)) {
         cp = hash_Search(&sts, gdbroot->cid_ht, &adef->TypeRef);
 
@@ -3810,7 +3810,7 @@ pwr_tStatus gdh_GetObjectBodyDef(
       aop = a_super[i];
       while (aop) {
         adef = pool_Address(NULL, gdbroot->rtdb, aop->u.n.body);
-        if (!(aop == a_super[i] && strcmp(aop->g.f.name.orig, "Super") == 0)) {
+        if (!(aop == a_super[i] && streq(aop->g.f.name.orig, "Super"))) {
           for (j = 0; j < i; j++)
             strcat(bd[acnt].attrName, "Super.");
           strcat(bd[acnt].attrName, aop->g.f.name.orig);
@@ -4409,7 +4409,7 @@ pwr_tStatus gdh_FReadObject(char* filename, /**< File specification */
     dcli_trim(line, line);
     if (line[0] == '#')
       continue;
-    if (strcmp(line, "") == 0)
+    if (streq(line, ""))
       continue;
 
     nr = dcli_parse(line, " 	", "", (char*)line_elem,
@@ -4804,13 +4804,13 @@ pwr_tStatus gdh_AttrStringToValue(int type_id, /**< Attribute type */
     break;
   }
   case pwr_eType_Float32: {
-    if (strcmp(value_str, "FltMin") == 0)
+    if (streq(value_str, "FltMin"))
       *(float*)buffer_ptr = FLT_MIN;
-    else if (strcmp(value_str, "FltNMin") == 0)
+    else if (streq(value_str, "FltNMin"))
       *(float*)buffer_ptr = -FLT_MIN;
-    else if (strcmp(value_str, "FltMax") == 0)
+    else if (streq(value_str, "FltMax"))
       *(float*)buffer_ptr = FLT_MAX;
-    else if (strcmp(value_str, "FltNMax") == 0)
+    else if (streq(value_str, "FltNMax"))
       *(float*)buffer_ptr = -FLT_MAX;
     else if (sscanf(value_str, "%f", (float*)buffer_ptr) != 1)
       return GDH__CONVERT;
@@ -4848,9 +4848,9 @@ pwr_tStatus gdh_AttrStringToValue(int type_id, /**< Attribute type */
   case pwr_eType_Int32:
   case pwr_eType_Status:
   case pwr_eType_NetStatus: {
-    if (strcmp(value_str, "IntMin") == 0)
+    if (streq(value_str, "IntMin"))
       *(int*)buffer_ptr = INT_MIN;
-    else if (strcmp(value_str, "IntMax") == 0)
+    else if (streq(value_str, "IntMax"))
       *(int*)buffer_ptr = INT_MAX;
     else if (sscanf(value_str, "%d", (int*)buffer_ptr) != 1)
       return GDH__CONVERT;
@@ -4898,7 +4898,7 @@ pwr_tStatus gdh_AttrStringToValue(int type_id, /**< Attribute type */
   case pwr_eType_Objid: {
     pwr_tObjid objid;
 
-    if (strcmp(value_str, "0") == 0)
+    if (streq(value_str, "0"))
       objid = pwr_cNObjid;
     else {
       sts = gdh_NameToObjid(value_str, &objid);
@@ -4961,7 +4961,7 @@ pwr_tStatus gdh_AttrStringToValue(int type_id, /**< Attribute type */
   case pwr_eType_AttrRef: {
     pwr_sAttrRef attrref;
 
-    if (strcmp(value_str, "0") == 0)
+    if (streq(value_str, "0"))
       attrref = pwr_cNAttrRef;
     else {
       sts = gdh_NameToAttrref(pwr_cNObjid, value_str, &attrref);
@@ -4984,9 +4984,9 @@ pwr_tStatus gdh_AttrStringToValue(int type_id, /**< Attribute type */
   case pwr_eType_Time: {
     pwr_tTime time;
 
-    if (strcmp(value_str, "AtZero") == 0)
+    if (streq(value_str, "AtZero"))
       memcpy(buffer_ptr, &pwr_cAtMin, sizeof(pwr_tTime));
-    else if (strcmp(value_str, "AtMax") == 0)
+    else if (streq(value_str, "AtMax"))
       memcpy(buffer_ptr, &pwr_cAtMax, sizeof(pwr_tTime));
     else {
       sts = time_AsciiToA(value_str, &time);
@@ -4999,9 +4999,9 @@ pwr_tStatus gdh_AttrStringToValue(int type_id, /**< Attribute type */
   case pwr_eType_DeltaTime: {
     pwr_tDeltaTime deltatime;
 
-    if (strcmp(value_str, "DtMin") == 0)
+    if (streq(value_str, "DtMin"))
       memcpy(buffer_ptr, &pwr_cDtMin, sizeof(pwr_tDeltaTime));
-    else if (strcmp(value_str, "DtMax") == 0)
+    else if (streq(value_str, "DtMax"))
       memcpy(buffer_ptr, &pwr_cDtMax, sizeof(pwr_tDeltaTime));
     else {
       sts = time_AsciiToD(value_str, &deltatime);

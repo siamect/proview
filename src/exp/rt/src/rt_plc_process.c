@@ -46,6 +46,8 @@
 
 #include <pwd.h>
 
+#include "co_string.h"
+
 #include "rt_qdb.h"
 #include "rt_c_plcthread.h"
 #include "rt_proc.h"
@@ -149,7 +151,7 @@ int main(int argc, char* argv[])
     i = 1/0;
     printf("%d\n", i);
   */
-  if (argc > 1 && strcmp(argv[1], "-m") == 0) {
+  if (argc > 1 && streq(argv[1], "-m")) {
     io_methods_print();
     exit(0);
   }

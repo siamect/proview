@@ -38,11 +38,12 @@
    This module returns information about directory and files.  */
 
 #include <stdlib.h>
-#include <string.h>
 #include <sys/stat.h>
 
-#include "co_time.h"
 #include "co_dcli.h"
+#include "co_string.h"
+#include "co_time.h"
+
 #include "wb_dir.h"
 
 /*************************************************************************
@@ -121,7 +122,7 @@ pwr_tStatus dir_parse_filename(
   strcpy(lversion, t);
   *t = 0;
 
-  if (strcmp(lversion, "") == 0) {
+  if (streq(lversion, "")) {
     *version = 0;
   } else {
     sts = sscanf(lversion, "%d", version);

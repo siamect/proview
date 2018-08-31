@@ -41,12 +41,14 @@
 #include <stdlib.h>
 
 #include "co_cdh.h"
-#include "co_time.h"
 #include "co_dcli.h"
-
 #include "co_error.h"
 #include "co_lng.h"
+#include "co_string.h"
+#include "co_time.h"
+
 #include "cow_xhelp.h"
+
 #include "pn_viewer_pnac.h"
 #include "pn_viewer.h"
 
@@ -119,7 +121,7 @@ void PnViewer::filter(viewer_eFilterType filtertype)
 
     for (unsigned int i = 0; i < dev_vect.size(); i++) {
       for (unsigned int j = 0; j < conf_vect.size(); j++) {
-        if (strcmp(dev_vect[i].devname, conf_vect[j].devname) == 0
+        if (streq(dev_vect[i].devname, conf_vect[j].devname)
             && dev_vect[i].vendorid == conf_vect[j].vendorid
             && dev_vect[i].deviceid == conf_vect[j].deviceid
             && dev_vect[i].ipaddress[0] == conf_vect[j].ipaddress[0]

@@ -47,7 +47,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+
+#include "co_string.h"
 
 #include "rt_pool_msg.h"
 #include "rt_errh.h"
@@ -621,7 +622,7 @@ void* pool_AllocNamedSegment(
   for (i = 0; i < pool_cSegs; i++)
     if (gphp->seg[i].generation == 0
         || (gphp->seg[i].type == pool_eSegType_named
-               && strcmp(name, gphp->seg[i].name) == 0))
+               && streq(name, gphp->seg[i].name)))
       break;
 
   if (i >= pool_cSegs)

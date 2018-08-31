@@ -36,8 +36,6 @@
 
 /* xtt_url.cpp -- opening of URL attributes. */
 
-#include <string.h>
-
 #include "xtt_url.h"
 #include "rt_xnav_msg.h"
 extern "C" {
@@ -46,6 +44,7 @@ extern "C" {
 #include "pwr_baseclasses.h"
 }
 #include "co_lng.h"
+#include "co_string.h"
 
 static int find_symbol(
     char* name, char* value, pwr_sClass_WebBrowserConfig* config);
@@ -65,7 +64,7 @@ int xnav_open_URL(pwr_tURL url)
     sts = gdh_ObjidToPointer(config_objid, (void**)&config_p);
 
   if (ODD(sts)) {
-    if (strcmp(config_p->WebBrowser, "") != 0)
+    if (!streq(config_p->WebBrowser, ""))
       strcpy(browser, config_p->WebBrowser);
   }
 
@@ -90,7 +89,7 @@ int xnav_open_URL(pwr_tURL url)
 
   replace_symbol(url, url, config_p);
 
-  if (strcmp(browser, "mozilla") == 0 || strcmp(browser, "rt_mozilla") == 0) {
+  if (streq(browser, "mozilla") || streq(browser, "rt_mozilla")) {
     // Try remote display first
     sprintf(cmd, "%s -remote \"openurl(%s,new-window)\"", browser, url);
     sts = system(cmd);
@@ -189,12 +188,12 @@ static int find_symbol(
   int i;
 
   for (i = 0; i < 10; i++) {
-    if (strcmp(config->URL_Symbols[i], "") != 0) {
+    if (!streq(config->URL_Symbols[i], "")) {
       nr = dcli_parse(config->URL_Symbols[i], " 	", "", (char*)sym_array,
           sizeof(sym_array) / sizeof(sym_array[0]), sizeof(sym_array[0]), 0);
       if (nr != 2)
         continue;
-      if (strcmp(sym_array[0], name) == 0) {
+      if (streq(sym_array[0], name)) {
         strcpy(value, sym_array[1]);
         return 1;
       }

@@ -40,6 +40,7 @@
 #include <iostream>
 
 #include "co_dcli.h"
+#include "co_string.h"
 
 #include "cow_qt_helpers.h"
 #include "cow_style_qt.h"
@@ -186,7 +187,7 @@ GNU General Public License for more details.\n\n";
 
     //    sts = scanf( "%s", str);
 
-    if (strcmp(str, "") == 0) {
+    if (streq(str, "")) {
       continue;
     }
 

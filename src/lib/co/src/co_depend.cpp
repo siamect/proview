@@ -34,13 +34,12 @@
  * General Public License plus this exception.
  */
 
-#include <string.h>
-
 #include <fstream>
 
 #include "co_dcli.h"
 #include "co_cdh.h"
 #include "co_depend.h"
+#include "co_string.h"
 
 CoDepend::CoDepend()
 {
@@ -50,7 +49,7 @@ CoDepend::CoDepend()
 
 void CoDepend::add(const char* fname)
 {
-  if (strcmp(filename, "") == 0)
+  if (streq(filename, ""))
     return;
 
   std::string fnamestr(fname);
@@ -69,7 +68,7 @@ void CoDepend::set_filename(char* fname)
 
 void CoDepend::print()
 {
-  if (strcmp(filename, "") == 0)
+  if (streq(filename, ""))
     return;
 
   dcli_translate_filename(dependfile, dependfile);

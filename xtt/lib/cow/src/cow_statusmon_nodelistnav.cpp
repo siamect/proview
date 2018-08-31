@@ -40,14 +40,16 @@
 
 #include "co_cdh.h"
 #include "co_dcli.h"
-#include "co_time.h"
-#include "cow_wow.h"
-#include "cow_msgwindow.h"
-#include "rt_gdh.h"
 #include "co_syi.h"
+#include "co_string.h"
+#include "co_time.h"
 
-#include "cow_statusmon_nodelistnav.h"
+#include "rt_gdh.h"
 #include "rt_pwr_msg.h"
+
+#include "cow_msgwindow.h"
+#include "cow_statusmon_nodelistnav.h"
+#include "cow_wow.h"
 
 #include "xnav_bitmap_map8.h"
 #include "xnav_bitmap_map10.h"
@@ -313,7 +315,7 @@ int NodelistNav::init_brow_cb(FlowCtx* fctx, void* client_data)
   nodelistnav->brow->brow_setup();
   nodelistnav->brow->create_nodeclasses();
 
-  if (strcmp(nodelistnav->nodename, "") != 0) {
+  if (!streq(nodelistnav->nodename, "")) {
     nodelistnav->add_node(nodelistnav->nodename, "", "");
     nodelistnav->node_list[0].item->open_children(nodelistnav, 0, 0);
   } else
@@ -735,7 +737,7 @@ int NodelistNav::trace_scan_bc(brow_tObject object, void* p)
 
     if (!item->first_scan) {
       if (strcmp((char*)p, item->old_value) == 0
-          && strcmp(item->name_p, item->old_name) == 0)
+          && streq(item->name_p, item->old_name))
         // No change since last time
         return 1;
     } else
@@ -784,7 +786,7 @@ int NodelistNav::trace_connect_bc(
 {
   ItemBase* base_item;
 
-  if (strcmp(name, "") == 0)
+  if (streq(name, ""))
     return 1;
 
   brow_GetUserData(object, (void**)&base_item);
@@ -992,9 +994,9 @@ int NodelistNav::update_nodes()
         sizeof(node_list[i].item->data.SystemStatusStr));
 
     if (ODD(sts)) {
-      if (strcmp(node_list[i].item->data.Description, response.Description) != 0
+      if (!streq(node_list[i].item->data.Description, response.Description)
           && view_node_descr == 0
-          && strcmp(node_list[i].item->node_descr, "") == 0)
+          && streq(node_list[i].item->node_descr, ""))
         brow_SetAnnotation(node_list[i].item->node, 1, response.Description,
             strlen(response.Description));
 
@@ -1092,7 +1094,7 @@ int NodelistNav::get_selected_opplace(char* opplace, char* descr)
 int NodelistNav::set_node_data(char* node_name, char* opplace, char* descr)
 {
   for (int i = 0; i < (int)node_list.size(); i++) {
-    if (strcmp(node_list[i].node_name, node_name) == 0) {
+    if (streq(node_list[i].node_name, node_name)) {
       if (opplace)
         strncpy(node_list[i].opplace, opplace, sizeof(node_list[i].opplace));
       if (descr)
@@ -1127,7 +1129,7 @@ void NodelistNav::add_node(
   int idx = 0;
   bool found;
 
-  if (strcmp(name, "") == 0)
+  if (streq(name, ""))
     return;
 
   brow_GetSelectedNodes(brow->ctx, &nodelist, &node_count);
@@ -1262,7 +1264,7 @@ ItemNode::ItemNode(NodelistNav* item_nodelistnav, const char* item_name,
       dest, dest_code, (void*)this, 1, &node);
 
   brow_SetAnnotation(node, 0, name, strlen(name));
-  if (nodelistnav->view_node_descr || strcmp(node_descr, "") != 0)
+  if (nodelistnav->view_node_descr || !streq(node_descr, ""))
     brow_SetAnnotation(node, 1, node_descr, strlen(node_descr));
   else
     brow_SetAnnotation(node, 1, data.Description, strlen(data.Description));

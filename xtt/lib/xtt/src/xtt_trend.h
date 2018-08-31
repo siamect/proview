@@ -47,6 +47,8 @@
 #include "rt_cbuf.h"
 #endif
 
+#include "xtt_otree.h"
+
 #define XTT_TREND_MAX 20
 
 class CoWow;

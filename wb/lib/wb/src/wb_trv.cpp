@@ -37,9 +37,9 @@
 /* wb_trv.c -- traversing of work bench
    Traverses the workbench to get the plc's , windows ...  */
 
-#include <string.h>
-
 #include "pwr_baseclasses.h"
+
+#include "co_string.h"
 
 #include "wb_foe_msg.h"
 #include "wb_trv.h"
@@ -149,7 +149,7 @@ static int trv_wildcard(char* wildname, char* name)
   u = upper_name;
   s = strchr(t, '*');
   if (s == 0) {
-    if (strcmp(t, u) == 0)
+    if (streq(t, u))
       return 0;
     else
       return 1;
@@ -181,7 +181,7 @@ static int trv_wildcard(char* wildname, char* name)
   }
   strcpy(checkstr, t);
   u = u + strlen(u) - strlen(checkstr);
-  if (strcmp(checkstr, u) != 0)
+  if (!streq(checkstr, u))
     return 1;
 
   return 0;

@@ -38,12 +38,15 @@
 
 #include "pwr_names.h"
 #include "pwr_systemclasses.h"
+
 #include "co_dcli.h"
+#include "co_string.h"
+#include "co_timelog.h"
+
 #include "rt_gdh.h"
 #include "rt_qdb.h"
 #include "rt_redu.h"
 #include "rt_redu_msg.h"
-#include "co_timelog.h"
 
 static pwr_tStatus add_table_object(redu_tCtx ctx, pwr_tAttrRef* o);
 static pwr_tStatus add_table_attr(
@@ -571,7 +574,7 @@ pwr_tStatus redu_get_initial_state(char* nodename, int busid, int* state)
     if (n != 5)
       break;
 
-    if (strcmp(name, nodename) == 0) {
+    if (streq(name, nodename)) {
       local_found = 1;
       // *state = atoi(s_state);
       *state = pwr_eRedundancyState_Init;

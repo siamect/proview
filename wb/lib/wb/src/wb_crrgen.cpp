@@ -36,10 +36,14 @@
 
 #include "pwr_systemclasses.h"
 #include "pwr_baseclasses.h"
-#include "wb_crrgen.h"
+
 #include "co_dcli.h"
-#include "wb_utl.h"
+#include "co_string.h"
+
 #include "ge_dyn.h"
+
+#include "wb_crrgen.h"
+#include "wb_utl.h"
 
 typedef enum {
   crrgen_eType_,
@@ -847,7 +851,7 @@ void wb_crrgen::write_code(pwr_tStatus* rsts)
 
       a.value(text);
 
-      if (strcmp(text, "") != 0) {
+      if (!streq(text, "")) {
         fpc << " _Obj_ " << o.longName().name(cdh_mName_path | cdh_mName_object)
             << '\n';
         fpc << text << '\n';

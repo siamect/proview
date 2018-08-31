@@ -33,6 +33,7 @@
 #include "co_regex_def.h"
 #include "co_regex.h"
 #endif
+#include "co_string.h"
 
 #ifdef emacs
 
@@ -698,12 +699,12 @@ struct re_pattern_buffer* bufp;
           str[c1] = '\0';
           if (p == pend || c == ']' /* End of the bracket expression.  */
               || p[0] != ']' || p + 1 == pend
-              || (strcmp(str, "alpha") != 0 && strcmp(str, "upper") != 0
-                     && strcmp(str, "lower") != 0 && strcmp(str, "digit") != 0
-                     && strcmp(str, "alnum") != 0 && strcmp(str, "xdigit") != 0
-                     && strcmp(str, "space") != 0 && strcmp(str, "print") != 0
-                     && strcmp(str, "punct") != 0 && strcmp(str, "graph") != 0
-                     && strcmp(str, "cntrl") != 0)) {
+              || (!streq(str, "alpha") && !streq(str, "upper")
+                     && !streq(str, "lower") && !streq(str, "digit")
+                     && !streq(str, "alnum") && !streq(str, "xdigit")
+                     && !streq(str, "space") && !streq(str, "print")
+                     && !streq(str, "punct") && !streq(str, "graph")
+                     && !streq(str, "cntrl"))) {
             /* Undo the ending character, the letters, and leave
                the leading : and [ (but set bits for them).  */
             c1++;
@@ -717,17 +718,17 @@ struct re_pattern_buffer* bufp;
             if (c != ']')
               goto invalid_pattern;
             for (c = 0; c < (1 << BYTEWIDTH); c++) {
-              if ((strcmp(str, "alpha") == 0 && isalpha(c))
-                  || (strcmp(str, "upper") == 0 && isupper(c))
-                  || (strcmp(str, "lower") == 0 && islower(c))
-                  || (strcmp(str, "digit") == 0 && isdigit(c))
-                  || (strcmp(str, "alnum") == 0 && isalnum(c))
-                  || (strcmp(str, "xdigit") == 0 && isxdigit(c))
-                  || (strcmp(str, "space") == 0 && isspace(c))
-                  || (strcmp(str, "print") == 0 && isprint(c))
-                  || (strcmp(str, "punct") == 0 && ispunct(c))
-                  || (strcmp(str, "graph") == 0 && isgraph(c))
-                  || (strcmp(str, "cntrl") == 0 && iscntrl(c)))
+              if ((streq(str, "alpha") && isalpha(c))
+                  || (streq(str, "upper") && isupper(c))
+                  || (streq(str, "lower") && islower(c))
+                  || (streq(str, "digit") && isdigit(c))
+                  || (streq(str, "alnum") && isalnum(c))
+                  || (streq(str, "xdigit") && isxdigit(c))
+                  || (streq(str, "space") && isspace(c))
+                  || (streq(str, "print") && isprint(c))
+                  || (streq(str, "punct") && ispunct(c))
+                  || (streq(str, "graph") && isgraph(c))
+                  || (streq(str, "cntrl") && iscntrl(c)))
                 SET_LIST_BIT(c);
             }
           }

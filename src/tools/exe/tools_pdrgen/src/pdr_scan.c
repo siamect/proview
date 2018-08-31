@@ -48,7 +48,6 @@ static char sccsid[] = "@(#)rpc_scan.c 1.6 87/06/24 (C) 1987 SMI";
  */
 #include <ctype.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include "pdr_scan.h"
 #include "pdr_util.h"

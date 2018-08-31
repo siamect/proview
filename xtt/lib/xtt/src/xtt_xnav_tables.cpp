@@ -36,8 +36,12 @@
 
 #include <stdlib.h>
 
-#include "rt_gdh_msg.h"
 #include "pwr_remoteclasses.h"
+
+#include "co_string.h"
+
+#include "rt_gdh_msg.h"
+
 #include "xtt_ssaboxclasses.h"
 #include "xtt_trace.h"
 #include "xtt_item.h"
@@ -279,7 +283,7 @@ int XNav::show_nethandler()
          nl != &gdbroot->db->nod_lh; nl = pool_Qsucc(&sts, gdbroot->pool, nl)) {
       np = pool_Qitem(nl, gdb_sNode, nod_ll);
 
-      if (strcmp(np->name, "******") == 0)
+      if (streq(np->name, "******"))
         continue;
 
       t.elem_cnt = 0;

@@ -39,6 +39,7 @@
 #include <stdio.h>
 
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_syi.h"
 #include "co_time.h"
 
@@ -635,7 +636,7 @@ void OpQt::update_alarm_info()
           } else {
             aalarm_active[i]->setVisible(false);
           }
-          if (strcmp(info.a_alarm_moretext[i], "") != 0) {
+          if (!streq(info.a_alarm_moretext[i], "")) {
             aalarm_info[i]->setVisible(true);
           } else {
             aalarm_info[i]->setVisible(false);
@@ -680,7 +681,7 @@ void OpQt::update_alarm_info()
       } else {
         balarm_active->setVisible(false);
       }
-      if (strcmp(info.b_alarm_moretext[0], "") != 0) {
+      if (!streq(info.b_alarm_moretext[0], "")) {
         balarm_info->setVisible(true);
       } else {
         balarm_info->setVisible(false);
@@ -716,7 +717,7 @@ void OpQt::update_alarm_info()
       } else {
         balarm_active->setVisible(false);
       }
-      if (strcmp(info.c_alarm_moretext[0], "") != 0) {
+      if (!streq(info.c_alarm_moretext[0], "")) {
         balarm_info->setVisible(true);
       } else {
         balarm_info->setVisible(false);
@@ -752,7 +753,7 @@ void OpQt::update_alarm_info()
       } else {
         balarm_active->setVisible(false);
       }
-      if (strcmp(info.d_alarm_moretext[0], "") != 0) {
+      if (!streq(info.d_alarm_moretext[0], "")) {
         balarm_info->setVisible(true);
       } else {
         balarm_info->setVisible(false);
@@ -789,7 +790,7 @@ void OpQt::update_alarm_info()
       } else {
         balarm_active->setVisible(false);
       }
-      if (strcmp(info.i_alarm_moretext[0], "") != 0) {
+      if (!streq(info.i_alarm_moretext[0], "")) {
         balarm_info->setVisible(true);
       } else {
         balarm_info->setVisible(false);
@@ -892,7 +893,7 @@ int OpQt::configure(char* opplace_str)
       continue;
     }
 
-    if (strcmp(button_title[i], "") == 0) {
+    if (streq(button_title[i], "")) {
       // Take object name instead
       sts = gdh_AttrrefToName(&opplace_p->FastAvail[i], button_title[i],
           sizeof(button_title[0]), cdh_mName_object);

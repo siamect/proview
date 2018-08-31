@@ -38,6 +38,7 @@
 
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_time.h"
 
 #include "rt_gdh.h"
@@ -80,7 +81,7 @@ int Graph::localdb_find(const char* name, graph_sLocalDb** item)
   graph_sLocalDb* item_p;
 
   for (item_p = local_db; item_p; item_p = item_p->next) {
-    if (strcmp(item_p->name, name) == 0) {
+    if (streq(item_p->name, name)) {
       *item = item_p;
       return 1;
     }
@@ -93,7 +94,7 @@ int Graph::localdb_set_value(char* name, void* value, int size)
   graph_sLocalDb* item_p;
 
   for (item_p = local_db; item_p; item_p = item_p->next) {
-    if (strcmp(item_p->name, name) == 0) {
+    if (streq(item_p->name, name)) {
       memcpy(item_p->value, value, size);
       return 1;
     }
@@ -106,7 +107,7 @@ int Graph::localdb_toggle_value(char* name)
   graph_sLocalDb* item_p;
 
   for (item_p = local_db; item_p; item_p = item_p->next) {
-    if (strcmp(item_p->name, name) == 0) {
+    if (streq(item_p->name, name)) {
       *(pwr_tBoolean*)&item_p->value = !*(pwr_tBoolean*)&item_p->value;
       return 1;
     }
@@ -147,16 +148,16 @@ int Graph::init_object_graph(int mode)
   pwr_sAttrRef attrref;
 
   if (mode == 0) {
-    if (strcmp(filename, "_none_.pwg") == 0) {
-      if (strcmp(object_name[0], "collect") == 0) {
+    if (streq(filename, "_none_.pwg")) {
+      if (streq(object_name[0], "collect")) {
         sts = graph_object_collect_build(this, 0);
         return sts;
       }
     }
     return 1;
   }
-  if (strcmp(filename, "_none_.pwg") == 0) {
-    if (strcmp(object_name[0], "collect") == 0)
+  if (streq(filename, "_none_.pwg")) {
+    if (streq(object_name[0], "collect"))
       return 1;
   }
 
@@ -750,17 +751,17 @@ static int graph_object_collect_build(Graph* graph, pwr_sAttrRef* attrref)
             ((GeTrend*)dyn->elements)->hold_attr, "$local.TrendHold##Boolean");
         grow_info_p = grow_info;
         for (i = 0; i < grow_info_cnt; i++) {
-          if (strcmp(grow_info_p->name, "NoOfPoints") == 0)
+          if (streq(grow_info_p->name, "NoOfPoints"))
             *(int*)grow_info_p->value_p = 200;
-          else if (strcmp(grow_info_p->name, "HorizontalLines") == 0)
+          else if (streq(grow_info_p->name, "HorizontalLines"))
             *(int*)grow_info_p->value_p = 0;
-          else if (strcmp(grow_info_p->name, "VerticalLines") == 0)
+          else if (streq(grow_info_p->name, "VerticalLines"))
             *(int*)grow_info_p->value_p = 9;
-          else if (strcmp(grow_info_p->name, "CurveColor1") == 0)
+          else if (streq(grow_info_p->name, "CurveColor1"))
             *(int*)grow_info_p->value_p = glow_eDrawType_CustomColor68;
-          else if (strcmp(grow_info_p->name, "MaxValue1") == 0)
+          else if (streq(grow_info_p->name, "MaxValue1"))
             *(double*)grow_info_p->value_p = 1.2;
-          else if (strcmp(grow_info_p->name, "MinValue1") == 0)
+          else if (streq(grow_info_p->name, "MinValue1"))
             *(double*)grow_info_p->value_p = -0.1;
 
           grow_info_p++;

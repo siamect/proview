@@ -37,9 +37,11 @@
 /* wb_c_classdef.c -- work bench methods of the ClassDef class. */
 
 #undef Status
-#include <string.h>
 
 #include "pwr_baseclasses.h"
+
+#include "co_string.h"
+
 #include "wb_pwrs.h"
 #include "wb_pwrs_msg.h"
 #include "wb_wnav.h"
@@ -110,19 +112,19 @@ static pwr_tStatus ConfigFc(ldh_sMenuCall* ip)
       ip->ItemList[ip->ChosenItem].MenuObject, "SysBody", &mb,
       sizeof(pwr_sMenuButton));
 
-  if (strcmp(mb.MethodArguments[0], "PlcConnect") == 0) {
+  if (streq(mb.MethodArguments[0], "PlcConnect")) {
     plcconnect = 1;
     plctemplate = 1;
     plcfo = 1;
-  } else if (strcmp(mb.MethodArguments[0], "CCode") == 0) {
+  } else if (streq(mb.MethodArguments[0], "CCode")) {
     plcconnect = 0;
     plctemplate = 0;
     plcfo = 1;
-  } else if (strcmp(mb.MethodArguments[0], "PlcConnectCCode") == 0) {
+  } else if (streq(mb.MethodArguments[0], "PlcConnectCCode")) {
     plcconnect = 1;
     plctemplate = 0;
     plcfo = 1;
-  } else if (strcmp(mb.MethodArguments[0], "EmbeddedPlc") == 0) {
+  } else if (streq(mb.MethodArguments[0], "EmbeddedPlc")) {
     plctemplate = 1;
     plcembedded = 1;
   } else {

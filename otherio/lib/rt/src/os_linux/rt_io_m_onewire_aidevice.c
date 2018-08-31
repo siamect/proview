@@ -40,8 +40,11 @@
 
 #include "pwr_basecomponentclasses.h"
 #include "pwr_otherioclasses.h"
-#include "co_time.h"
+
 #include "co_cdh.h"
+#include "co_string.h"
+#include "co_time.h"
+
 #include "rt_io_base.h"
 #include "rt_io_card_init.h"
 #include "rt_io_card_close.h"
@@ -138,7 +141,7 @@ static pwr_tStatus IoCardRead(
     fgets(str, sizeof(str), local->value_fp);
     rewind(local->value_fp);
 
-    if (strcmp(op->ValueSearchString, "") == 0)
+    if (streq(op->ValueSearchString, ""))
       s = str;
     else
       s = strstr(str, op->ValueSearchString);

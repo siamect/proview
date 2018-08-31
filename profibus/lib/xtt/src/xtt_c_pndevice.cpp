@@ -37,7 +37,10 @@
 /* xtt_c_pndevice.cpp -- xtt methods for PnDevice. */
 
 #include "pwr_profibusclasses.h"
+
 #include "co_cdh.h"
+#include "co_string.h"
+
 #include "rt_pb_msg.h"
 #include "rt_xnav_msg.h"
 
@@ -103,7 +106,7 @@ pwr_tStatus xtt_pndevice_create_ctx(
   sts = gdh_GetObjectInfoAttrref(&aaref, gsdmlfile, sizeof(gsdmlfile));
   if (EVEN(sts))
     return sts;
-  if (strcmp(gsdmlfile, "") == 0) {
+  if (streq(gsdmlfile, "")) {
     return PB__GSDATTR;
   }
 

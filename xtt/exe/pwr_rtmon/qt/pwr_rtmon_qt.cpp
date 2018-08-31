@@ -39,6 +39,8 @@
 #include <stdlib.h>
 #include <locale.h>
 
+#include "co_string.h"
+
 #include "cow_qt_helpers.h"
 #include "cow_rtmon_qt.h"
 #include "cow_style_qt.h"
@@ -70,10 +72,10 @@ int main(int argc, char* argv[])
   debug_print("%s ", argv[0]);
   for (int i = 1; i < argc; i++) {
     fprintf(stderr, "%s ", argv[i]);
-    if (strcmp(argv[i], "-h") == 0) {
+    if (streq(argv[i], "-h")) {
       usage();
       debug_print("Shutting down...\n"); exit(0);
-    } else if (strcmp(argv[i], "--display") == 0 && i + 1 < argc) {
+    } else if (streq(argv[i], "--display") && i + 1 < argc) {
       strncpy(display, argv[i + 1], sizeof(display));
     }
   }

@@ -35,8 +35,10 @@
  */
 
 /* rt_qini.c -- Queue Communication, initiation  */
-#include <string.h>
+
 #include <stdlib.h>
+
+#include "co_string.h"
 
 #include "rt_errh.h"
 #include "rt_qini.h"
@@ -79,7 +81,7 @@ static qdb_sNode* addNode(qini_sNode* nep)
   np->link_cnt++;
 
   np->is_secondary = nep->is_secondary;
-  if (strcmp(nep->secondary_name, "") != 0) {
+  if (!streq(nep->secondary_name, "")) {
     strcpy(np->link[1].name, nep->secondary_name);
     np->link[1].sa.sin_family = AF_INET;
     if (nep->port)
@@ -220,10 +222,10 @@ int qini_ParseFile(
     if (n > 8)
       nep->is_secondary = atoi(s_is_secondary);
 
-    if (n > 9 && strcmp(secondary_name, "-") != 0)
+    if (n > 9 && !streq(secondary_name, "-"))
       strcpy(nep->secondary_name, secondary_name);
 
-    if (n > 10 && strcmp(s_secondary_naddr, "-") != 0) {
+    if (n > 10 && !streq(s_secondary_naddr, "-")) {
       sts = net_StringToAddr(s_secondary_naddr, &naddr);
       nep->secondary_naddr.s_addr = htonl(naddr.s_addr);
       if (EVEN(sts)) {

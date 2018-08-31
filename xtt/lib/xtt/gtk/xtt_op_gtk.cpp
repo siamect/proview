@@ -40,8 +40,10 @@
 
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_syi.h"
 #include "co_time.h"
+
 #include "rt_gdh.h"
 #include "rt_xnav_msg.h"
 
@@ -980,7 +982,7 @@ void OpGtk::update_alarm_info()
           } else {
             g_object_set(aalarm_active[i], "visible", FALSE, NULL);
           }
-          if (strcmp(info.a_alarm_moretext[i], "") != 0) {
+          if (!streq(info.a_alarm_moretext[i], "")) {
             g_object_set(aalarm_info[i], "visible", TRUE, NULL);
           } else {
             g_object_set(aalarm_info[i], "visible", FALSE, NULL);
@@ -1025,7 +1027,7 @@ void OpGtk::update_alarm_info()
       } else {
         g_object_set(balarm_active, "visible", FALSE, NULL);
       }
-      if (strcmp(info.b_alarm_moretext[0], "") != 0) {
+      if (!streq(info.b_alarm_moretext[0], "")) {
         g_object_set(balarm_info, "visible", TRUE, NULL);
       } else {
         g_object_set(balarm_info, "visible", FALSE, NULL);
@@ -1061,7 +1063,7 @@ void OpGtk::update_alarm_info()
       } else {
         g_object_set(balarm_active, "visible", FALSE, NULL);
       }
-      if (strcmp(info.c_alarm_moretext[0], "") != 0) {
+      if (!streq(info.c_alarm_moretext[0], "")) {
         g_object_set(balarm_info, "visible", TRUE, NULL);
       } else {
         g_object_set(balarm_info, "visible", FALSE, NULL);
@@ -1097,7 +1099,7 @@ void OpGtk::update_alarm_info()
       } else {
         g_object_set(balarm_active, "visible", FALSE, NULL);
       }
-      if (strcmp(info.d_alarm_moretext[0], "") != 0) {
+      if (!streq(info.d_alarm_moretext[0], "")) {
         g_object_set(balarm_info, "visible", TRUE, NULL);
       } else {
         g_object_set(balarm_info, "visible", FALSE, NULL);
@@ -1132,7 +1134,7 @@ void OpGtk::update_alarm_info()
       } else {
         g_object_set(balarm_active, "visible", FALSE, NULL);
       }
-      if (strcmp(info.i_alarm_moretext[0], "") != 0) {
+      if (!streq(info.i_alarm_moretext[0], "")) {
         g_object_set(balarm_info, "visible", TRUE, NULL);
       } else {
         g_object_set(balarm_info, "visible", FALSE, NULL);
@@ -1224,7 +1226,7 @@ int OpGtk::configure(char* opplace_str)
     if (EVEN(sts))
       continue;
 
-    if (strcmp(button_title[i], "") == 0) {
+    if (streq(button_title[i], "")) {
       // Take object name instead
       sts = gdh_AttrrefToName(&opplace_p->FastAvail[i], button_title[i],
           sizeof(button_title[0]), cdh_mName_object);

@@ -41,13 +41,15 @@
 
 #include <stdarg.h>
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
 #include <pthread.h>
 
 #include "pwr_baseclasses.h"
+
 #include "co_cdh.h"
+#include "co_string.h"
 #include "co_time.h"
+
 #include "rt_gdh_msg.h"
 #include "rt_rtt_edit.h"
 #include "rt_rtt_global.h"
@@ -1016,7 +1018,7 @@ int rtt_logging_delete(menu_ctx ctx, int entry, char* parameterstr)
     /* Remove this parameter only */
     found = 0;
     for (i = 0; i < RTT_LOGG_MAXPAR; i++) {
-      if (strcmp(entry_ptr->parameterstr[i], parameterstr) == 0) {
+      if (streq(entry_ptr->parameterstr[i], parameterstr)) {
         /* Parmeter is found, remove it */
         entry_ptr->parameterstr[i][0] = 0;
         rtt_message('I', "Parameter removed");
@@ -1098,7 +1100,7 @@ void* rtt_logging_logproc(void* arg)
               entry_ptr->shortname[i], entry_ptr->parameterstr[i], 1);
           if ((s = strchr(entry_ptr->shortname[i], '.')) != 0) {
             rtt_toupper(parname, s + 1);
-            if (strcmp(parname, "ACTUALVALUE") == 0)
+            if (streq(parname, "ACTUALVALUE"))
               *s = 0;
           }
           /* Check that this name is unique */
@@ -1111,14 +1113,14 @@ void* rtt_logging_logproc(void* arg)
                     entry_ptr->shortname[i], entry_ptr->parameterstr[i], k);
                 if ((s = strchr(entry_ptr->shortname[i], '.')) != 0) {
                   rtt_toupper(parname, s + 1);
-                  if (strcmp(parname, "ACTUALVALUE") == 0)
+                  if (streq(parname, "ACTUALVALUE"))
                     *s = 0;
                 }
                 rtt_cut_segments(
                     entry_ptr->shortname[j], entry_ptr->parameterstr[j], k);
                 if ((s = strchr(entry_ptr->shortname[j], '.')) != 0) {
                   rtt_toupper(parname, s + 1);
-                  if (strcmp(parname, "ACTUALVALUE") == 0)
+                  if (streq(parname, "ACTUALVALUE"))
                     *s = 0;
                 }
                 if (strcmp(entry_ptr->shortname[i], entry_ptr->shortname[j]))

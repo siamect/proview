@@ -40,9 +40,11 @@
    is not displayed by graphic connection in foe.  */
 
 #include <stdio.h>
-#include <string.h>
 
 #include "pwr_baseclasses.h"
+
+#include "co_string.h"
+
 #include "wb_foe_msg.h"
 #include "wb_gobj.h"
 #include "wb_nav.h"
@@ -145,7 +147,7 @@ static pwr_tStatus gobj_ref_replace(
 
   sts = ldh_ObjidToName(
       ldhses, attrref->Objid, ldh_eName_Object, name, sizeof(name), &size);
-  if (ODD(sts) && strcmp(name, "Template") == 0) {
+  if (ODD(sts) && streq(name, "Template")) {
     sts = ldh_GetObjectClass(ldhses, attrref->Objid, &cid);
     if (EVEN(sts))
       return sts;
@@ -2881,7 +2883,7 @@ int gobj_get_object_m32(WFoe* foe, vldh_t_node node, unsigned long index)
   if (EVEN(sts))
     return sts;
 
-  if (strcmp(bodydef[rows - 2].ParName, "ActualValue") == 0) {
+  if (streq(bodydef[rows - 2].ParName, "ActualValue")) {
     if (bodydef[rows - 2].Par->Param.Info.Flags & PWR_MASK_ARRAY) {
       if (attrref.Flags.b.Array) {
         foe->message("Select and array element");
@@ -3020,7 +3022,7 @@ int gobj_get_object_m33(WFoe* foe, vldh_t_node node, unsigned long index)
   if (EVEN(sts))
     return sts;
 
-  if (strcmp(bodydef[rows - 2].ParName, "ActualValue") == 0) {
+  if (streq(bodydef[rows - 2].ParName, "ActualValue")) {
     if (bodydef[rows - 2].Par->Param.Info.Flags & PWR_MASK_ARRAY) {
       if (attrref.Flags.b.Array) {
         foe->message("Select and array element");

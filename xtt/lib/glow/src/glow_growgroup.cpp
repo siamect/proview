@@ -173,7 +173,7 @@ int GrowGroup::trace_init()
 {
   int sts;
 
-  //  if ( strcmp( trace.data[0], "") != 0)
+  //  if ( !streq( trace.data[0], ""))
   sts = ctx->trace_connect_func((void*)this, &trace);
 
   nc->a.trace_init();

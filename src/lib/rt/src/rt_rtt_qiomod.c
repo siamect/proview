@@ -41,11 +41,13 @@
 
 #include <fcntl.h>
 #include <stdio.h>
-#include <string.h>
 #include <termios.h>
 #include <unistd.h>
 
 #include "pwr_baseclasses.h"
+
+#include "co_string.h"
+
 #include "rt_rtt_global.h"
 #include "rt_rtt_msg.h"
 
@@ -67,7 +69,7 @@ int qio_assign(char* s, int* chn)
   int chan = -1;
   int sts;
 
-  if (strcmp(s, "stdin") == 0)
+  if (streq(s, "stdin"))
     chan = STDIN_FILENO;
   else {
     chan = open(s, O_RDWR | O_NOCTTY);

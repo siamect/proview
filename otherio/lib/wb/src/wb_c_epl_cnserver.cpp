@@ -36,13 +36,14 @@
 
 /* wb_c_epl_mn.c -- work bench methods of the Epl_MN class. */
 
-#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 
 #include "pwr_baseclasses.h"
 #include "pwr_basecomponentclasses.h"
 #include "pwr_otherioclasses.h"
+
+#include "co_string.h"
 
 #include "wb_pwrs.h"
 #include "wb_ldh_msg.h"
@@ -81,7 +82,7 @@ static pwr_tStatus GenerateXddFile(ldh_sMenuCall* ip)
   while (dcli_read_line(line, sizeof(line), fin)) {
     dcli_trim(l2, line);
 
-    if (strcmp(l2, "</ObjectList>") == 0) {
+    if (streq(l2, "</ObjectList>")) {
       pwr_tEnum representation;
       pwr_tUInt16 number;
       unsigned short mv_index;

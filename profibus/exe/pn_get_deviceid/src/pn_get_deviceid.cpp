@@ -43,11 +43,11 @@
 //
 
 #include <stdlib.h>
-#include <string.h>
 
 #include <fstream>
 
 #include "co_dcli.h"
+#include "co_string.h"
 
 void parse_file(char* filename);
 
@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
 
   pwr_tStatus sts;
 
-  if (argc < 2 || strcmp(argv[1], "-h") == 0) {
+  if (argc < 2 || streq(argv[1], "-h")) {
     printf("\nUsage: pn_get_deviceid \"file-pattern\" > "
            "profinet_deviceid.dat\n\n");
     exit(0);

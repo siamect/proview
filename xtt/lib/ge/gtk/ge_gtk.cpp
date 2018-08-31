@@ -38,11 +38,11 @@
 
 #include <ctype.h>
 #include <math.h>
-#include <string.h>
 #include <gdk/gdkkeysyms.h>
 
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_time.h"
 
 #include "cow_logw_gtk.h"
@@ -403,7 +403,7 @@ void GeGtk::confirm_cb(void* ge_ctx, void* confirm_object, char* text)
 
 void GeGtk::set_prompt(const char* prompt)
 {
-  if (strcmp(prompt, "") == 0) {
+  if (streq(prompt, "")) {
     g_object_set(cmd_prompt, "visible", FALSE, NULL);
     g_object_set(msg_label, "visible", TRUE, NULL);
   } else {

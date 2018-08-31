@@ -36,18 +36,22 @@
 
 #if defined PWRE_CONF_HDF5
 
-#include "co_syi.h"
-#include "co_cdh.h"
-#include "co_dcli.h"
-#include "co_time.h"
-#include "co_cnf.h"
-#include "rt_load.h"
-#include "pwr_names.h"
-#include "sev_dbhdf5.h"
-#include "rt_errh.h"
-#include "co_dcli_msg.h"
-
 #include <cmath>
+
+#include "pwr_names.h"
+
+#include "co_cdh.h"
+#include "co_cnf.h"
+#include "co_dcli.h"
+#include "co_dcli_msg.h"
+#include "co_string.h"
+#include "co_syi.h"
+#include "co_time.h"
+
+#include "rt_errh.h"
+#include "rt_load.h"
+
+#include "sev_dbhdf5.h"
 
 using namespace std;
 
@@ -2221,7 +2225,7 @@ int sev_dbhdf5::store_value(pwr_tStatus* sts, void* thread, int item_idx,
   hid_t mdatatype;
   char gname[80], dname[80], tname[80];
 
-  if (strcmp(m_items[item_idx].attr[0].aname, "Events") == 0)
+  if (streq(m_items[item_idx].attr[0].aname, "Events"))
     return 1;
   if (m_items[item_idx].attrnum > 1) {
     return store_objectvalue(
@@ -3638,7 +3642,7 @@ int sev_dbhdf5::check_item(pwr_tStatus* sts, pwr_tOid oid, char* oname,
         m_items[i].storagetime = storagetime;
         modified = true;
       }
-      if (strcmp(oname, m_items[i].oname) != 0) {
+      if (!streq(oname, m_items[i].oname)) {
         strncpy(m_items[i].oname, oname, sizeof(m_items[i].oname));
         modified = true;
       }
@@ -3658,12 +3662,12 @@ int sev_dbhdf5::check_item(pwr_tStatus* sts, pwr_tOid oid, char* oname,
         m_items[i].deadband = deadband;
         modified = true;
       }
-      if (strcmp(description, m_items[i].description) != 0) {
+      if (!streq(description, m_items[i].description)) {
         strncpy(m_items[i].description, description,
             sizeof(m_items[i].description));
         modified = true;
       }
-      if (strcmp(unit, m_items[i].attr[0].unit) != 0) {
+      if (!streq(unit, m_items[i].attr[0].unit)) {
         strncpy(m_items[i].attr[0].unit, unit, sizeof(m_items[i].attr[0].unit));
         modified = true;
       }
@@ -3701,7 +3705,7 @@ int sev_dbhdf5::add_item(pwr_tStatus* sts, pwr_tOid oid, char* oname,
   if (EVEN(*sts))
     return 0;
 
-  if (strcmp(aname, "Events") == 0)
+  if (streq(aname, "Events"))
     create_event_table(sts, tablename, options, storagetime, scantime);
   else {
     create_table(
@@ -3787,7 +3791,7 @@ int sev_dbhdf5::check_objectitem(pwr_tStatus* sts, char* tablename,
         m_items[i].storagetime = storagetime;
         modified = true;
       }
-      if (strcmp(oname, m_items[i].oname) != 0) {
+      if (!streq(oname, m_items[i].oname)) {
         strncpy(m_items[i].oname, oname, sizeof(m_items[i].oname));
         modified = true;
       }
@@ -3799,7 +3803,7 @@ int sev_dbhdf5::check_objectitem(pwr_tStatus* sts, char* tablename,
         m_items[i].deadband = deadband;
         modified = true;
       }
-      if (strcmp(description, m_items[i].description) != 0) {
+      if (!streq(description, m_items[i].description)) {
         strncpy(m_items[i].description, description,
             sizeof(m_items[i].description));
         modified = true;
@@ -3838,7 +3842,7 @@ int sev_dbhdf5::add_objectitem(pwr_tStatus* sts, char* tname, pwr_tOid oid,
   if (EVEN(*sts))
     return 0;
 
-  if (strcmp(aname, "Events") == 0)
+  if (streq(aname, "Events"))
     create_event_table(sts, tablename, options, storagetime, scantime);
   else {
     create_objecttable(sts, tablename, options, deadband, storagetime, scantime,
@@ -4524,7 +4528,7 @@ int sev_dbhdf5::get_objectitemattributes(
     if (ritem.deleted == 1 || ritem.attributesize == 0)
       continue;
 
-    if (strcmp(ritem.tablename, tablename) == 0) {
+    if (streq(ritem.tablename, tablename)) {
       sev_attr a;
 
       strncpy(a.aname, ritem.attributename, sizeof(a.aname));

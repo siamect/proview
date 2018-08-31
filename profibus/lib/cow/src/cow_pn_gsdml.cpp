@@ -38,11 +38,12 @@
 
 #include <stddef.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include "pwr_baseclasses.h"
+
 #include "co_dcli.h"
 #include "co_math.h"
+#include "co_string.h"
 
 #include "cow_pn_gsdml.h"
 #include "rt_pb_msg.h"
@@ -1840,7 +1841,7 @@ int pn_gsdml::tag_attribute(const char* name, const char* value)
 int pn_gsdml::find_tag(const char* name, int* idx)
 {
   for (unsigned int i = 0; i < sizeof(taglist) / sizeof(taglist[0]); i++) {
-    if (strcmp(taglist[i].name, name) == 0) {
+    if (streq(taglist[i].name, name)) {
       *idx = i;
       return 1;
     }
@@ -1863,7 +1864,7 @@ int pn_gsdml::find_tag_attribute(
     const char* name, gsdml_eTag id, gsdml_eTag pid, int* idx)
 {
   for (unsigned int i = 0; i < sizeof(attrlist) / sizeof(attrlist[0]); i++) {
-    if (strcmp(attrlist[i].name, name) == 0
+    if (streq(attrlist[i].name, name)
         && (attrlist[i].id == gsdml_eTag_ || attrlist[i].id == id)
         && (attrlist[i].pid == gsdml_eTag_ || pid == attrlist[i].pid)) {
       *idx = i;
@@ -1923,7 +1924,7 @@ int pn_gsdml::string_to_value(
     sscanf(str, "%d", (int*)buf);
     break;
   case gsdml_eType_Boolean:
-    if (strcmp(str, "true") == 0)
+    if (streq(str, "true"))
       *(gsdml_tBoolean*)buf = 1;
     else
       *(gsdml_tBoolean*)buf = 0;
@@ -1979,47 +1980,47 @@ int pn_gsdml::string_to_value(
 
 int pn_gsdml::string_to_value_datatype(char* str, gsdml_eValueDataType* type)
 {
-  if (strcmp(str, "Bit") == 0)
+  if (streq(str, "Bit"))
     *type = gsdml_eValueDataType_Bit;
-  else if (strcmp(str, "BitArea") == 0)
+  else if (streq(str, "BitArea"))
     *type = gsdml_eValueDataType_BitArea;
-  else if (strcmp(str, "Integer8") == 0)
+  else if (streq(str, "Integer8"))
     *type = gsdml_eValueDataType_Integer8;
-  else if (strcmp(str, "Integer16") == 0)
+  else if (streq(str, "Integer16"))
     *type = gsdml_eValueDataType_Integer16;
-  else if (strcmp(str, "Integer32") == 0)
+  else if (streq(str, "Integer32"))
     *type = gsdml_eValueDataType_Integer32;
-  else if (strcmp(str, "Integer64") == 0)
+  else if (streq(str, "Integer64"))
     *type = gsdml_eValueDataType_Integer64;
-  else if (strcmp(str, "Unsigned8") == 0)
+  else if (streq(str, "Unsigned8"))
     *type = gsdml_eValueDataType_Unsigned8;
-  else if (strcmp(str, "Unsigned16") == 0)
+  else if (streq(str, "Unsigned16"))
     *type = gsdml_eValueDataType_Unsigned16;
-  else if (strcmp(str, "Unsigned32") == 0)
+  else if (streq(str, "Unsigned32"))
     *type = gsdml_eValueDataType_Unsigned32;
-  else if (strcmp(str, "Unsigned64") == 0)
+  else if (streq(str, "Unsigned64"))
     *type = gsdml_eValueDataType_Unsigned64;
-  else if (strcmp(str, "Float32") == 0)
+  else if (streq(str, "Float32"))
     *type = gsdml_eValueDataType_Float32;
-  else if (strcmp(str, "Float64") == 0)
+  else if (streq(str, "Float64"))
     *type = gsdml_eValueDataType_Float64;
-  else if (strcmp(str, "Date") == 0)
+  else if (streq(str, "Date"))
     *type = gsdml_eValueDataType_Date;
-  else if (strcmp(str, "TimeOfDay with date indication") == 0)
+  else if (streq(str, "TimeOfDay with date indication"))
     *type = gsdml_eValueDataType_TimeOfDayWithDate;
-  else if (strcmp(str, "TimeOfDay without date indication") == 0)
+  else if (streq(str, "TimeOfDay without date indication"))
     *type = gsdml_eValueDataType_TimeOfDayWithoutDate;
-  else if (strcmp(str, "TimeDifference with date indication") == 0)
+  else if (streq(str, "TimeDifference with date indication"))
     *type = gsdml_eValueDataType_TimeDiffWithDate;
-  else if (strcmp(str, "TimeDifference without date indication") == 0)
+  else if (streq(str, "TimeDifference without date indication"))
     *type = gsdml_eValueDataType_TimeDiffWithoutDate;
-  else if (strcmp(str, "NetworkTime") == 0)
+  else if (streq(str, "NetworkTime"))
     *type = gsdml_eValueDataType_NetworkTime;
-  else if (strcmp(str, "NetworkTimeDifference") == 0)
+  else if (streq(str, "NetworkTimeDifference"))
     *type = gsdml_eValueDataType_NetworkTimeDiff;
-  else if (strcmp(str, "VisibleString") == 0)
+  else if (streq(str, "VisibleString"))
     *type = gsdml_eValueDataType_VisibleString;
-  else if (strcmp(str, "OctetString") == 0)
+  else if (streq(str, "OctetString"))
     *type = gsdml_eValueDataType_OctetString;
   else {
     *type = gsdml_eValueDataType_;
@@ -2536,7 +2537,7 @@ int pn_gsdml::get_datavalue_length(
 int pn_gsdml::set_default_values(gsdml_eTag id, void* data, unsigned int size)
 {
   for (unsigned int i = 0; i < sizeof(attrlist) / sizeof(attrlist[0]); i++) {
-    if (attrlist[i].id == id && strcmp(attrlist[i].default_value, "") != 0) {
+    if (attrlist[i].id == id && !streq(attrlist[i].default_value, "")) {
       if (attrlist[i].offset + attrlist[i].size > size)
         continue;
 
@@ -3685,7 +3686,7 @@ void* pn_gsdml::find_value_ref(char* ref)
     return 0;
   for (unsigned int i = 0; i < ApplicationProcess->ValueList->ValueItem.size();
        i++) {
-    if (strcmp(ApplicationProcess->ValueList->ValueItem[i]->Body.ID, ref) == 0)
+    if (streq(ApplicationProcess->ValueList->ValueItem[i]->Body.ID, ref))
       return (void*)ApplicationProcess->ValueList->ValueItem[i];
   }
   return 0;
@@ -3750,7 +3751,7 @@ void* pn_gsdml::find_text_ref(char* ref)
     return noref;
 
   int lang_idx = -1;
-  if (strcmp(current_lang, "") != 0) {
+  if (!streq(current_lang, "")) {
     for (unsigned int i = 0;
          i < ApplicationProcess->ExternalTextList->Language.size(); i++) {
       if (strcmp(
@@ -3859,7 +3860,7 @@ int pn_gsdml::set_par_record_default(
   int datasize;
 
   for (unsigned int i = 0; i < par_record->Ref.size(); i++) {
-    if (strcmp(par_record->Ref[i]->Body.DefaultValue, "") == 0)
+    if (streq(par_record->Ref[i]->Body.DefaultValue, ""))
       continue;
 
     sts = string_to_value_datatype(par_record->Ref[i]->Body.DataType, &type);
@@ -3903,9 +3904,9 @@ int pn_gsdml::set_par_record_default(
       }
 
       unsigned char mask = 1 << par_record->Ref[i]->Body.BitOffset;
-      if (strcmp(par_record->Ref[i]->Body.DefaultValue, "0") == 0)
+      if (streq(par_record->Ref[i]->Body.DefaultValue, "0"))
         *(data + par_record->Ref[i]->Body.ByteOffset) &= ~mask;
-      else if (strcmp(par_record->Ref[i]->Body.DefaultValue, "1") == 0)
+      else if (streq(par_record->Ref[i]->Body.DefaultValue, "1"))
         *(data + par_record->Ref[i]->Body.ByteOffset) |= mask;
       break;
     }
@@ -4118,23 +4119,23 @@ gsdml_ModuleInfo::gsdml_ModuleInfo(pn_gsdml* g) : gsdml(g)
 
 void gsdml_ModuleInfo::build()
 {
-  if (strcmp(Body.Name.ref, "") != 0) {
+  if (!streq(Body.Name.ref, "")) {
     Body.Name.p = gsdml->find_text_ref(Body.Name.ref);
     if (Body.Name.p == noref)
       gsdml->error_message("Name not found: \"%s\"", Body.Name.ref);
   }
-  if (strcmp(Body.InfoText.ref, "") != 0) {
+  if (!streq(Body.InfoText.ref, "")) {
     Body.InfoText.p = gsdml->find_text_ref(Body.InfoText.ref);
     if (Body.InfoText.p == noref)
       gsdml->error_message("InfoText not found: \"%s\"", Body.InfoText.ref);
   }
-  if (strcmp(Body.CategoryRef.ref, "") != 0) {
+  if (!streq(Body.CategoryRef.ref, "")) {
     Body.CategoryRef.p = gsdml->find_category_ref(Body.CategoryRef.ref);
     if (!Body.CategoryRef.p)
       gsdml->error_message(
           "CategoryRef not found: \"%s\"", Body.CategoryRef.ref);
   }
-  if (strcmp(Body.SubCategory1Ref.ref, "") != 0) {
+  if (!streq(Body.SubCategory1Ref.ref, "")) {
     Body.SubCategory1Ref.p = gsdml->find_category_ref(Body.SubCategory1Ref.ref);
     if (!Body.SubCategory1Ref.p)
       gsdml->error_message(
@@ -4243,11 +4244,11 @@ void gsdml_ModuleItemRef::build()
     gsdml->error_message(
         "ModuleItemTarget not found: \"%s\"", Body.ModuleItemTarget.ref);
 
-  if (strcmp(Body.AllowedInSlots.str, "") != 0)
+  if (!streq(Body.AllowedInSlots.str, ""))
     Body.AllowedInSlots.list = new gsdml_Valuelist(Body.AllowedInSlots.str);
-  if (strcmp(Body.FixedInSlots.str, "") != 0)
+  if (!streq(Body.FixedInSlots.str, ""))
     Body.FixedInSlots.list = new gsdml_Valuelist(Body.FixedInSlots.str);
-  if (strcmp(Body.UsedInSlots.str, "") != 0)
+  if (!streq(Body.UsedInSlots.str, ""))
     Body.UsedInSlots.list = new gsdml_Valuelist(Body.UsedInSlots.str);
 }
 
@@ -5129,7 +5130,7 @@ void gsdml_Assign::print(int ind)
 
 void gsdml_Assign::build()
 {
-  if (strcmp(Body.TextId.ref, "") != 0) {
+  if (!streq(Body.TextId.ref, "")) {
     Body.TextId.p = gsdml->find_text_ref(Body.TextId.ref);
     if (Body.TextId.p == noref)
       gsdml->error_message("TextId not found: \"%s\"", Body.TextId.ref);
@@ -5414,7 +5415,7 @@ void pn_gsdml::gsdml_print()
 void gsdml_SubslotList::build()
 {
   for (unsigned int i = 0; i < SubslotItem.size(); i++)
-    if (strcmp(SubslotItem[i]->Body.TextId.ref, "") != 0) {
+    if (!streq(SubslotItem[i]->Body.TextId.ref, "")) {
       SubslotItem[i]->Body.TextId.p
           = gsdml->find_text_ref(SubslotItem[i]->Body.TextId.ref);
       if (SubslotItem[i]->Body.TextId.p == noref)
@@ -5437,7 +5438,7 @@ gsdml_UseableModules::~gsdml_UseableModules()
 
 void gsdml_BitDataItem::build()
 {
-  if (strcmp(Body.TextId.ref, "") != 0) {
+  if (!streq(Body.TextId.ref, "")) {
     Body.TextId.p = gsdml->find_text_ref(Body.TextId.ref);
     if (Body.TextId.p == noref)
       gsdml->error_message("TextId not found: \"%s\"", Body.TextId.ref);
@@ -5446,7 +5447,7 @@ void gsdml_BitDataItem::build()
 
 void gsdml_DataItem::build()
 {
-  if (strcmp(Body.TextId.ref, "") != 0) {
+  if (!streq(Body.TextId.ref, "")) {
     Body.TextId.p = gsdml->find_text_ref(Body.TextId.ref);
     if (Body.TextId.p == noref)
       gsdml->error_message("TextId not found: \"%s\"", Body.TextId.ref);
@@ -5512,7 +5513,7 @@ void gsdml_ParameterRecordDataItem::build()
     Ref[i]->Body.TextId.p = gsdml->find_text_ref(Ref[i]->Body.TextId.ref);
     if (Ref[i]->Body.TextId.p == noref)
       gsdml->error_message("TextId not found: \"%s\"", Ref[i]->Body.TextId.ref);
-    if (strcmp(Ref[i]->Body.ValueItemTarget.ref, "") != 0) {
+    if (!streq(Ref[i]->Body.ValueItemTarget.ref, "")) {
       Ref[i]->Body.ValueItemTarget.p
           = gsdml->find_value_ref(Ref[i]->Body.ValueItemTarget.ref);
       if (!Ref[i]->Body.ValueItemTarget.p)
@@ -5686,7 +5687,7 @@ gsdml_UseableSubmodules::~gsdml_UseableSubmodules()
 void gsdml_SlotList::build()
 {
   for (unsigned int i = 0; i < SlotItem.size(); i++) {
-    if (strcmp(SlotItem[i]->Body.TextId.ref, "") != 0) {
+    if (!streq(SlotItem[i]->Body.TextId.ref, "")) {
       SlotItem[i]->Body.TextId.p
           = gsdml->find_text_ref(SlotItem[i]->Body.TextId.ref);
       if (SlotItem[i]->Body.TextId.p == noref)
@@ -5853,7 +5854,7 @@ void gsdml_ValueItem::build()
     for (unsigned int i = 0; i < Assignments->Assign.size(); i++)
       Assignments->Assign[i]->build();
   }
-  if (strcmp(Body.Help.ref, "") != 0) {
+  if (!streq(Body.Help.ref, "")) {
     Body.Help.p = gsdml->find_text_ref(Body.Help.ref);
     if (Body.Help.p == noref)
       gsdml->error_message("Help not found: \"%s\"", Body.Help.ref);
@@ -5904,12 +5905,12 @@ gsdml_ChannelDiagItem::~gsdml_ChannelDiagItem()
 
 void gsdml_ChannelDiagItem::build()
 {
-  if (strcmp(Body.Name.ref, "") != 0) {
+  if (!streq(Body.Name.ref, "")) {
     Body.Name.p = gsdml->find_text_ref(Body.Name.ref);
     if (Body.Name.p == noref)
       gsdml->error_message("Name not found: \"%s\"", Body.Name.ref);
   }
-  if (strcmp(Body.Help.ref, "") != 0) {
+  if (!streq(Body.Help.ref, "")) {
     Body.Help.p = gsdml->find_text_ref(Body.Help.ref);
     if (Body.Help.p == noref)
       gsdml->error_message("Help not found: \"%s\"", Body.Help.ref);
@@ -6014,7 +6015,7 @@ gsdml_ApplicationProcess::~gsdml_ApplicationProcess()
 
 void gsdml_DeviceIdentity::build()
 {
-  if (strcmp(Body.InfoText.ref, "") != 0) {
+  if (!streq(Body.InfoText.ref, "")) {
     Body.InfoText.p = gsdml->find_text_ref(Body.InfoText.ref);
     if (Body.InfoText.p == noref)
       gsdml->error_message("InfoText not found: \"%s\"", Body.InfoText.ref);

@@ -34,8 +34,7 @@
  * General Public License plus this exception.
  **/
 
-#include <string.h>
-
+#include "co_string.h"
 #include "co_time.h"
 
 #include "wb_session.h"
@@ -145,41 +144,41 @@ void wb_log::category_to_string(wlog_eCategory category, char* str)
 
 void wb_log::string_to_category(char* str, wlog_eCategory* category)
 {
-  if (strcmp(str, "WbLogin") == 0)
+  if (streq(str, "WbLogin"))
     *category = wlog_eCategory_WbLogin;
-  else if (strcmp(str, "ConfigSave") == 0)
+  else if (streq(str, "ConfigSave"))
     *category = wlog_eCategory_ConfiguratorSave;
-  else if (strcmp(str, "PlcSave") == 0)
+  else if (streq(str, "PlcSave"))
     *category = wlog_eCategory_PlcSave;
-  else if (strcmp(str, "GeSave") == 0)
+  else if (streq(str, "GeSave"))
     *category = wlog_eCategory_GeSave;
-  else if (strcmp(str, "PlcBuild") == 0)
+  else if (streq(str, "PlcBuild"))
     *category = wlog_eCategory_PlcBuild;
-  else if (strcmp(str, "GeBuild") == 0)
+  else if (streq(str, "GeBuild"))
     *category = wlog_eCategory_GeBuild;
-  else if (strcmp(str, "VolumeBuild") == 0)
+  else if (streq(str, "VolumeBuild"))
     *category = wlog_eCategory_VolumeBuild;
-  else if (strcmp(str, "NodeBuild") == 0)
+  else if (streq(str, "NodeBuild"))
     *category = wlog_eCategory_NodeBuild;
-  else if (strcmp(str, "CreatePackage") == 0)
+  else if (streq(str, "CreatePackage"))
     *category = wlog_eCategory_CreatePackage;
-  else if (strcmp(str, "CopyPackage") == 0)
+  else if (streq(str, "CopyPackage"))
     *category = wlog_eCategory_CopyPackage;
-  else if (strcmp(str, "GeExport") == 0)
+  else if (streq(str, "GeExport"))
     *category = wlog_eCategory_GeExport;
-  else if (strcmp(str, "UpdateClasses") == 0)
+  else if (streq(str, "UpdateClasses"))
     *category = wlog_eCategory_UpdateClasses;
-  else if (strcmp(str, "WbLoad") == 0)
+  else if (streq(str, "WbLoad"))
     *category = wlog_eCategory_WbLoad;
-  else if (strcmp(str, "VolumeClone") == 0)
+  else if (streq(str, "VolumeClone"))
     *category = wlog_eCategory_VolumeClone;
-  else if (strcmp(str, "DirectoryBuild") == 0)
+  else if (streq(str, "DirectoryBuild"))
     *category = wlog_eCategory_DirectoryBuild;
-  else if (strcmp(str, "NewRevision") == 0)
+  else if (streq(str, "NewRevision"))
     *category = wlog_eCategory_NewRevision;
-  else if (strcmp(str, "RevisionRestore") == 0)
+  else if (streq(str, "RevisionRestore"))
     *category = wlog_eCategory_RevisionRestore;
-  else if (strcmp(str, "BuildAll") == 0)
+  else if (streq(str, "BuildAll"))
     *category = wlog_eCategory_BuildAll;
   else
     *category = wlog_eCategory_;
@@ -249,7 +248,7 @@ void wb_log::generate_html(char* filename, pwr_tStatus* sts)
   fprintf(fp, "</XMP>\n</BODY>\n</HTML>\n");
   fclose(fp);
 
-  if (strcmp(help_fname, "") != 0) {
+  if (!streq(help_fname, "")) {
     fp = fopen(help_fname, "w");
     if (!fp) {
       *sts = WNAV__NOFILE;
@@ -311,7 +310,7 @@ void wb_log::gen_cb(
       s4 ? s4 : "");
 
   VItem s(str);
-  if (s4 && strcmp(s4, "") != 0)
+  if (s4 && !streq(s4, ""))
     s.has_comment = true;
   cbctx->v.push_back(s);
 }

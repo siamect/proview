@@ -39,16 +39,15 @@
 
 /*_Include files_________________________________________________________*/
 
-#include <string.h>
-
 extern "C" {
 #include "co_cdh.h"
 #include "co_dcli.h"
 }
-
-#include "cnv_tops.h"
 #include "co_lng.h"
+#include "co_string.h"
+
 #include "cnv_image.h"
+#include "cnv_tops.h"
 
 #define ps_cHead                                                               \
   "%!PS-Adobe-2.0\n\
@@ -195,7 +194,7 @@ void CnvToPs::print_text(const char* text, CnvStyle& style, int mode)
 
   int pmode = mode & 31;
   if (!conf_pass) {
-    if (strcmp(text, "") != 0) {
+    if (!streq(text, "")) {
       switch (pmode) {
       case ps_mPrintMode_Pos:
       case ps_mPrintMode_KeepY: {

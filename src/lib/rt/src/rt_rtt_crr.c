@@ -41,11 +41,13 @@
 
 #include <stdio.h>
 #include <ctype.h>
-#include <string.h>
 #include <stdlib.h>
 
-#include "co_math.h"
 #include "pwr_baseclasses.h"
+
+#include "co_math.h"
+#include "co_string.h"
+
 #include "rt_rtt_msg.h"
 #include "rt_rtt_global.h"
 #include "rt_gdh_msg.h"
@@ -885,7 +887,7 @@ int rtt_show_signals(
       if (EVEN(sts))
         goto finish;
       while (spaces > window_spaces) {
-        if (strcmp(object, "Signals") == 0) {
+        if (streq(object, "Signals")) {
           /* This is the signals */
           sts = rtt_get_signal_line(
               file, line, sizeof(line), &spaces, object, &lines);

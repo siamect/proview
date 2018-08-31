@@ -39,9 +39,12 @@
 #include <stdlib.h>
 
 #include "pwr_baseclasses.h"
+
 #include "co_cdh.h"
+#include "co_string.h"
 #include "co_syi.h"
 #include "co_time.h"
+
 #include "rt_gdh.h"
 #include "rt_xnav_msg.h"
 
@@ -355,7 +358,7 @@ void CLogGtk::file_selected_cb(void* ctx, char* text, int ok_pressed)
       s++;
     else
       s = clog->clognav->file_list[i].name;
-    if (strcmp(s, &text[21]) == 0) {
+    if (streq(s, &text[21])) {
       idx = i + 1;
       break;
     }

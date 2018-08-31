@@ -38,14 +38,14 @@
    NOTE! to convert timespecs to tm's, the threadsafe version of localtime,
          localtime_r must be used, which doesn't exist on DEC.  */
 
+#include <ctype.h>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "co_string.h"
 #include "co_time.h"
 #include "co_time_msg.h"
-
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <stdlib.h>
-#include <math.h>
 
 #define assertAbs(p)                                                           \
   do {                                                                         \
@@ -1016,7 +1016,7 @@ pwr_tStatus time_AsciiToTm(const char* tstr, struct tm* tmptr)
 
   tt.tm_mon = -1;
   for (i = 0; i < 12; i++) {
-    if (strcmp(tmpMonStr, monStr[i]) == 0) {
+    if (streq(tmpMonStr, monStr[i])) {
       tt.tm_mon = i;
       break;
     }

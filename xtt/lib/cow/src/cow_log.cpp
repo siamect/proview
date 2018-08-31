@@ -34,10 +34,10 @@
  * General Public License plus this exception.
  **/
 
-#include <string.h>
-
 #include "co_cdh.h"
+#include "co_string.h"
 #include "co_time.h"
+
 #include "cow_log.h"
 
 CoLog* CoLog::m_default_log = 0;
@@ -99,7 +99,7 @@ void CoLog::log(
     fp << " ";
   fp << " ";
   fp << str;
-  if (strcmp(comment, "") != 0)
+  if (!streq(comment, ""))
     fp << " \"" << comment << "\"";
   fp << '\n';
   fp.close();
@@ -132,8 +132,8 @@ void CoLog::get(char categories[][20], char* item,
 
     int found = 0;
     if (categories) {
-      for (int i = 0; strcmp(categories[i], "") != 0; i++) {
-        if (strcmp(categories[i], line_array[4]) == 0) {
+      for (int i = 0; !streq(categories[i], ""); i++) {
+        if (streq(categories[i], line_array[4])) {
           found = 1;
           break;
         }

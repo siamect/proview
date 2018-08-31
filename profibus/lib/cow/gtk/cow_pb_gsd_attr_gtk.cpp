@@ -38,11 +38,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include "co_cdh.h"
-#include "co_time.h"
 #include "co_dcli.h"
+#include "co_string.h"
+#include "co_time.h"
+
 #include "rt_pb_msg.h"
 
 #include "flow_msg.h"
@@ -59,7 +60,7 @@ void GsdAttrGtk::message(char severity, const char* message)
 
 void GsdAttrGtk::set_prompt(const char* prompt)
 {
-  if (strcmp(prompt, "") == 0) {
+  if (streq(prompt, "")) {
     g_object_set(cmd_prompt, "visible", FALSE, NULL);
     g_object_set(msg_label, "visible", TRUE, NULL);
   } else {

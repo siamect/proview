@@ -34,12 +34,12 @@
  * General Public License plus this exception.
  */
 
-#include <string.h>
-
 extern "C" {
 #include "co_dcli.h"
 #include "co_cdh.h"
 }
+#include "co_string.h"
+
 #include "cnv_ctx.h"
 
 int CnvSetup::setup(char* filename)
@@ -62,7 +62,7 @@ int CnvSetup::setup(char* filename)
     else {
       line_cnt++;
       CnvCtx::remove_spaces(line, line);
-      if (strcmp(line, "") == 0)
+      if (streq(line, ""))
         continue;
 
       if (line[0] == '!' || line[0] == '#')

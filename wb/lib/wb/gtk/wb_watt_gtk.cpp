@@ -37,9 +37,9 @@
 /* wb_watt_gtk.cpp -- Display object attributes */
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_time.h"
 
 #include "cow_xhelp.h"
@@ -58,7 +58,7 @@ void WAttGtk::message(char severity, const char* message)
 
 void WAttGtk::set_prompt(const char* prompt)
 {
-  if (strcmp(prompt, "") == 0) {
+  if (streq(prompt, "")) {
     g_object_set(cmd_prompt, "visible", FALSE, NULL);
     g_object_set(msg_label, "visible", TRUE, NULL);
   } else {

@@ -36,10 +36,11 @@
 
 #include <math.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include <iostream>
 #include <vector>
+
+#include "co_string.h"
 
 #include "glow_curvectx.h"
 #include "glow_growrectrounded.h"
@@ -2315,9 +2316,9 @@ void GrowCtx::open_grow(std::ifstream& fp)
       mw.set_double_buffered(double_buffered);
   }
 
-  if (strcmp(color_theme, "") != 0) {
-    if (strcmp(color_theme, "$default") == 0) {
-      if (strcmp(default_color_theme, "") != 0)
+  if (!streq(color_theme, "")) {
+    if (streq(color_theme, "$default")) {
+      if (!streq(default_color_theme, ""))
         customcolors->read_colorfile(this, default_color_theme);
     } else
       customcolors->read_colorfile(this, color_theme);
@@ -2847,7 +2848,7 @@ void GrowCtx::set_background(glow_eDrawType color)
   if (background_disabled)
     return;
 
-  if (enable_bg_pixmap && strcmp(background_image, "") != 0) {
+  if (enable_bg_pixmap && !streq(background_image, "")) {
     glow_tPixmap pixmap = 0;
     glow_tImImage image = 0;
     int sts;
@@ -2879,7 +2880,7 @@ void GrowCtx::set_background(glow_eDrawType color)
 
 int GrowCtx::get_background_image_size(int* width, int* height)
 {
-  if (strcmp(background_image, "") == 0)
+  if (streq(background_image, ""))
     return 0;
 
   // Create a pixmap
@@ -2972,7 +2973,7 @@ void GrowCtx::set_default_layout()
   mw.offset_y = int(y0 * mw.zoom_factor_y);
   change_scrollbar();
   a.zoom();
-  if (enable_bg_pixmap && strcmp(background_image, "") != 0
+  if (enable_bg_pixmap && !streq(background_image, "")
       && !background_tiled)
     set_background(background_color);
   redraw();
@@ -3724,7 +3725,7 @@ void GrowCtx::set_java_name(const char* name)
 
 int GrowCtx::get_java_name(char* jname)
 {
-  if (strcmp(java_name, "") != 0) {
+  if (!streq(java_name, "")) {
     strcpy(jname, java_name);
     return 1;
   }
@@ -4575,10 +4576,10 @@ int GrowCtx::read_customcolor_file(char* name)
 {
   int sts;
 
-  if (environment == glow_eEnv_Runtime && strcmp(color_theme, "$default") != 0)
+  if (environment == glow_eEnv_Runtime && !streq(color_theme, "$default"))
     return 0;
 
-  if (name == 0 && strcmp(default_color_theme, "") != 0)
+  if (name == 0 && !streq(default_color_theme, ""))
     name = default_color_theme;
 
   if (customcolors) {

@@ -48,10 +48,8 @@ static char sccsid[] = "@(#)rpc_clntout.c 1.2 87/06/24 (C) 1987 SMI";
  */
 #ifdef WIN32
 #include <stdlib.h>
-#include <string.h>
 #include "pdr_pars.h"
 #else
-#include <string.h>
 #include "pdr_parse.h"
 #endif
 #include "pdr_util.h"

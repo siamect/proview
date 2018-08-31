@@ -39,15 +39,19 @@
 #include <sstream>
 #include <string>
 
-#include "co_syi.h"
-#include "co_cdh.h"
-#include "co_dcli.h"
-#include "co_time.h"
-#include "co_cnf.h"
-#include "rt_load.h"
 #include "pwr_names.h"
-#include "sev_dbsqlite.h"
+
+#include "co_cdh.h"
+#include "co_cnf.h"
+#include "co_dcli.h"
+#include "co_string.h"
+#include "co_syi.h"
+#include "co_time.h"
+
 #include "rt_errh.h"
+#include "rt_load.h"
+
+#include "sev_dbsqlite.h"
 
 int sev_dbsqlite::get_systemname()
 {
@@ -59,7 +63,7 @@ int sev_dbsqlite::get_systemname()
   char line[200];
   pwr_tStatus sts;
 
-  if (strcmp(m_systemName, "") != 0)
+  if (!streq(m_systemName, ""))
     return 1;
 
   syi_NodeName(&sts, nodename, sizeof(nodename));
@@ -1155,7 +1159,7 @@ int sev_dbsqlite::get_values(pwr_tStatus* sts, void* thread, pwr_tOid oid,
     if (time_Acomp(creatime, &stime) == 1)
       stime = *creatime;
 
-    if (strcmp(last_update, "") != 0 && time_Acomp(&etime, &update_time) == 1)
+    if (!streq(last_update, "") && time_Acomp(&etime, &update_time) == 1)
       etime = update_time;
 
     time_Adiff(&dt, &etime, &stime);
@@ -1166,7 +1170,7 @@ int sev_dbsqlite::get_values(pwr_tStatus* sts, void* thread, pwr_tOid oid,
     div = total_rows / maxsize + 1;
   } else if (starttime) {
     pwr_tTime update_time;
-    if (strcmp(last_update, "") != 0)
+    if (!streq(last_update, ""))
       timestr_to_time(last_update, &update_time);
     else
       time_GetTime(&update_time);
@@ -1369,7 +1373,7 @@ int sev_dbsqlite::get_values(pwr_tStatus* sts, void* thread, pwr_tOid oid,
       }
 
       const char* value_str = (const char*)sqlite3_column_text(stmt, j++);
-      if (!value_str || strcmp(value_str, "") == 0) {
+      if (!value_str || streq(value_str, "")) {
         // Null value
         switch (type) {
         case pwr_eType_Float32:
@@ -1461,7 +1465,7 @@ int sev_dbsqlite::get_values(pwr_tStatus* sts, void* thread, pwr_tOid oid,
       }
 
       const char* value_str = (const char*)sqlite3_column_text(stmt, j++);
-      if (strcmp(value_str, "") == 0) {
+      if (streq(value_str, "")) {
         // Null value
         switch (type) {
         case pwr_eType_Float32:
@@ -1630,7 +1634,7 @@ int sev_dbsqlite::check_item(pwr_tStatus* sts, pwr_tOid oid, char* oname,
             (long int)storagetime.tv_sec);
         m_items[i].storagetime = storagetime;
       }
-      if (strcmp(oname, m_items[i].oname) != 0) {
+      if (!streq(oname, m_items[i].oname)) {
         sprintf(&query[strlen(query)], "oname=\'%s\',", oname);
         strncpy(m_items[i].oname, oname, sizeof(m_items[i].oname));
       }
@@ -1650,12 +1654,12 @@ int sev_dbsqlite::check_item(pwr_tStatus* sts, pwr_tOid oid, char* oname,
         sprintf(&query[strlen(query)], "deadband=%.4f,", deadband);
         m_items[i].deadband = deadband;
       }
-      if (strcmp(description, m_items[i].description) != 0) {
+      if (!streq(description, m_items[i].description)) {
         sprintf(&query[strlen(query)], "description=\'%s\',", description);
         strncpy(m_items[i].description, description,
             sizeof(m_items[i].description));
       }
-      if (strcmp(unit, m_items[i].attr[0].unit) != 0) {
+      if (!streq(unit, m_items[i].attr[0].unit)) {
         sprintf(&query[strlen(query)], "unit=\'%s\',", unit);
         strncpy(m_items[i].attr[0].unit, unit, sizeof(m_items[i].attr[0].unit));
       }
@@ -1701,7 +1705,7 @@ int sev_dbsqlite::add_item(pwr_tStatus* sts, pwr_tOid oid, char* oname,
   if (EVEN(*sts))
     return 0;
 
-  if (strcmp(aname, "Events") == 0)
+  if (streq(aname, "Events"))
     create_event_table(sts, tablename, options);
   else
     create_table(sts, tablename, type, size, options, deadband);
@@ -2900,13 +2904,13 @@ int sev_dbsqlite::get_objectvalues(pwr_tStatus* sts, void* thread,
 
   if (starttime && endtime) {
     pwr_tTime update_time;
-    if (strcmp(last_update, "") != 0)
+    if (!streq(last_update, ""))
       timestr_to_time(last_update, &update_time);
 
     if (time_Acomp(&item->creatime, &stime) == 1)
       stime = item->creatime;
 
-    if (strcmp(last_update, "") != 0 && time_Acomp(&etime, &update_time) == 1)
+    if (!streq(last_update, "") && time_Acomp(&etime, &update_time) == 1)
       etime = update_time;
 
     time_Adiff(&dt, &etime, &stime);
@@ -2917,7 +2921,7 @@ int sev_dbsqlite::get_objectvalues(pwr_tStatus* sts, void* thread,
     div = total_rows / maxsize + 1;
   } else if (starttime) {
     pwr_tTime update_time;
-    if (strcmp(last_update, "") != 0)
+    if (!streq(last_update, ""))
       timestr_to_time(last_update, &update_time);
     else
       time_GetTime(&update_time);
@@ -3147,7 +3151,7 @@ int sev_dbsqlite::get_objectvalues(pwr_tStatus* sts, void* thread,
       int read_size = 0;
       for (size_t k = 0; k < item->attr.size(); k++) {
         const char* value_str = (const char*)sqlite3_column_text(stmt, j++);
-        if (!value_str || strcmp(value_str, "") == 0) {
+        if (!value_str || streq(value_str, "")) {
           // Null value
           switch (item->attr[k].type) {
           case pwr_eType_Float32:
@@ -3246,7 +3250,7 @@ int sev_dbsqlite::get_objectvalues(pwr_tStatus* sts, void* thread,
       int read_size = 0;
       for (size_t k = 0; k < item->attr.size(); k++) {
         const char* value_str = (const char*)sqlite3_column_text(stmt, j++);
-        if (strcmp(value_str, "") == 0) {
+        if (streq(value_str, "")) {
           // Null value
           switch (item->attr[k].type) {
           case pwr_eType_Float32:

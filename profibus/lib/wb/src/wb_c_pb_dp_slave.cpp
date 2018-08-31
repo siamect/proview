@@ -36,7 +36,6 @@
 
 /* wb_c_pb_dp_slave.c -- work bench methods of the Pb_DP_Slave class. */
 
-#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 
@@ -45,6 +44,8 @@
 
 #include "co_dcli.h"
 #include "co_msg.h"
+#include "co_string.h"
+
 #include "rt_pb_msg.h"
 
 #include "cow_xhelp.h"
@@ -312,7 +313,7 @@ int pb_dp_slave_save_cb(void* sctx)
           if (EVEN(sts))
             return sts;
 
-          if (strcmp(name, m->name) != 0) {
+          if (!streq(name, m->name)) {
             // Change name
             sts = ldh_ChangeObjectName(ctx->ldhses, m->oid, m->name);
             if (EVEN(sts))
@@ -542,7 +543,7 @@ pwr_tStatus pb_dp_slave_create_ctx(
       ldhses, aref.Objid, "RtBody", "GSDfile", &gsdfile, &size);
   if (EVEN(sts))
     return sts;
-  if (strcmp(gsdfile, "") == 0) {
+  if (streq(gsdfile, "")) {
     free(gsdfile);
     return PB__GSDATTR;
   }

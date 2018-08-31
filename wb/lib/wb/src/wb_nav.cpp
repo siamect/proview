@@ -38,7 +38,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+
+#include "co_string.h"
 
 #include "wb_ldh_msg.h"
 #include "wb_nav.h"
@@ -499,7 +500,7 @@ ItemAttrObject::ItemAttrObject(Nav* nav, pwr_tObjid item_objid, brow_tNode dest,
   else
     sprintf(name, "%s[%d]", attr_name, idx);
 
-  if (attr_aname && strcmp(attr_aname, "") != 0) {
+  if (attr_aname && !streq(attr_aname, "")) {
     strcpy(aname, attr_aname);
     if (!is_elem) {
       strcat(aname, ".");
@@ -768,7 +769,7 @@ ItemAttr::ItemAttr(Nav* nav, pwr_tObjid item_objid, brow_tNode dest,
   type = nav_eItemType_Attr;
 
   strcpy(name, attr_name);
-  if (attr_aname && strcmp(attr_aname, "") != 0) {
+  if (attr_aname && !streq(attr_aname, "")) {
     strcpy(aname, attr_aname);
     strcat(aname, ".");
     strcat(aname, name);
@@ -809,7 +810,7 @@ ItemAttrArray::ItemAttrArray(Nav* nav, pwr_tObjid item_objid, brow_tNode dest,
 
   strcpy(name, attr_name);
 
-  if (attr_aname && strcmp(attr_aname, "") != 0) {
+  if (attr_aname && !streq(attr_aname, "")) {
     strcpy(aname, attr_aname);
     strcat(aname, ".");
     strcat(aname, name);
@@ -842,7 +843,7 @@ ItemAttrArrayElem::ItemAttrArrayElem(Nav* nav, pwr_tObjid item_objid,
 
   sprintf(name, "%s[%d]", attr_name, element);
 
-  if (attr_aname && strcmp(attr_aname, "") != 0) {
+  if (attr_aname && !streq(attr_aname, "")) {
     sprintf(aname, "%s[%d]", attr_aname, element);
   } else
     strcpy(aname, name);

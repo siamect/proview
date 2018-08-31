@@ -51,11 +51,12 @@
 **************************************************************************
 **************************************************************************/
 
-/*_Include filer_________________________________________________________*/
-
 #include "pwr_nmpsclasses.h"
+
 #include "co_cdh.h"
+#include "co_string.h"
 #include "co_time.h"
+
 #include "rt_gdh_msg.h"
 #include "rt_hash_msg.h"
 #include "rs_nmps_msg.h"
@@ -175,7 +176,7 @@ static pwr_tUInt32 nmpsbck_print_cellheader(nmpsbck_t_cellheader* cellheader)
   printf("Cell header\n");
   printf("	type:  %s\n", cellheader->type);
   printf("	objid: %s\n", cdh_ObjidToString(cellheader->objid, 0));
-  if (strcmp(cellheader->type, HEADERTYPE_CELLEND) != 0) {
+  if (!streq(cellheader->type, HEADERTYPE_CELLEND)) {
     printf("	class: %x\n", cellheader->class);
     printf("	size:  %d\n", cellheader->size);
   }
@@ -187,7 +188,7 @@ static pwr_tUInt32 nmpsbck_print_dataheader(nmpsbck_t_dataheader* dataheader)
   printf("Data header\n");
   printf("	type:  %s\n", dataheader->type);
   printf("	objid: %s\n", cdh_ObjidToString(dataheader->objid, 0));
-  if (strcmp(dataheader->type, HEADERTYPE_DATAEND) != 0) {
+  if (!streq(dataheader->type, HEADERTYPE_DATAEND)) {
     printf("	class: %x\n", dataheader->class);
     printf("	name:  %s\n", dataheader->data_name);
     printf("	size:  %d\n", dataheader->size);

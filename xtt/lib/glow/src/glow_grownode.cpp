@@ -36,9 +36,10 @@
 
 #include <math.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include <iostream>
+
+#include "co_string.h"
 
 #include "glow_draw.h"
 #include "glow_conpoint.h"
@@ -732,11 +733,11 @@ void GrowNode::set_dynamic(char* code, int size)
 void GrowNode::exec_dynamic()
 {
   // Dynamic code for the node
-  if (dynamicsize && strcmp(dynamic, "") != 0)
+  if (dynamicsize && !streq(dynamic, ""))
     ctx->dynamic_cb(this, dynamic, glow_eDynamicType_Object);
 
   // Dynamic code for the nodeclass
-  if (nc->dynamicsize && strcmp(nc->dynamic, "") != 0)
+  if (nc->dynamicsize && !streq(nc->dynamic, ""))
     ctx->dynamic_cb(this, nc->dynamic, glow_eDynamicType_SubGraph);
   else
     ctx->dynamic_cb(this, (char*)NULL, glow_eDynamicType_SubGraph);
@@ -1694,7 +1695,7 @@ int GrowNode::is_click_sensitive()
 
 int GrowNode::is_refobject_sensitive()
 {
-  if (strcmp(trace.ref_object, "") == 0)
+  if (streq(trace.ref_object, ""))
     return 0;
   return 1;
 }

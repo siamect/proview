@@ -36,10 +36,10 @@
 
 /* wb_wnav.cpp -- Display plant and node hiererachy */
 
-#include <string.h>
-
 #include "pwr_baseclasses.h"
+
 #include "co_msg.h"
+#include "co_string.h"
 #include "co_time.h"
 
 #include "cow_login.h"
@@ -69,13 +69,13 @@ int wnav_attr_string_to_value(ldh_tSesContext ldhses, int type_id,
     break;
   }
   case pwr_eType_Float32: {
-    if (strcmp(value_str, "FltMin") == 0)
+    if (streq(value_str, "FltMin"))
       *(float*)buffer_ptr = FLT_MIN;
-    else if (strcmp(value_str, "FltNMin") == 0)
+    else if (streq(value_str, "FltNMin"))
       *(float*)buffer_ptr = -FLT_MIN;
-    else if (strcmp(value_str, "FltMax") == 0)
+    else if (streq(value_str, "FltMax"))
       *(float*)buffer_ptr = FLT_MAX;
-    else if (strcmp(value_str, "FltNMax") == 0)
+    else if (streq(value_str, "FltNMax"))
       *(float*)buffer_ptr = -FLT_MAX;
     else if (sscanf(value_str, "%f%s", (float*)buffer_ptr, s) != 1)
       return WNAV__INPUT_SYNTAX;
@@ -93,7 +93,7 @@ int wnav_attr_string_to_value(ldh_tSesContext ldhses, int type_id,
   }
   case pwr_eType_Char: {
     pwr_tChar c;
-    if (strcmp(value_str, "") == 0) {
+    if (streq(value_str, "")) {
       c = '\0';
       memcpy(buffer_ptr, &c, sizeof(c));
     } else if (sscanf(value_str, "%c%s", (char*)buffer_ptr, s) != 1)
@@ -115,9 +115,9 @@ int wnav_attr_string_to_value(ldh_tSesContext ldhses, int type_id,
     break;
   }
   case pwr_eType_Int32: {
-    if (strcmp(value_str, "IntMin") == 0)
+    if (streq(value_str, "IntMin"))
       *(int*)buffer_ptr = INT_MIN;
-    else if (strcmp(value_str, "IntMax") == 0)
+    else if (streq(value_str, "IntMax"))
       *(int*)buffer_ptr = INT_MAX;
     else if (sscanf(value_str, "%d%s", (int*)buffer_ptr, s) != 1)
       return WNAV__INPUT_SYNTAX;
@@ -183,7 +183,7 @@ int wnav_attr_string_to_value(ldh_tSesContext ldhses, int type_id,
   case pwr_eType_Objid: {
     pwr_tObjid objid;
 
-    if (strcmp(value_str, "0") == 0 || strcmp(value_str, "") == 0)
+    if (streq(value_str, "0") || streq(value_str, ""))
       objid = pwr_cNObjid;
     else {
       sts = ldh_NameToObjid(ldhses, &objid, value_str);
@@ -246,7 +246,7 @@ int wnav_attr_string_to_value(ldh_tSesContext ldhses, int type_id,
   case pwr_eType_AttrRef: {
     pwr_sAttrRef attrref;
 
-    if (strcmp(value_str, "0") == 0 || strcmp(value_str, "") == 0)
+    if (streq(value_str, "0") || streq(value_str, ""))
       attrref = pwr_cNAttrRef;
     else {
       sts = ldh_NameToAttrRef(ldhses, value_str, &attrref);
@@ -269,9 +269,9 @@ int wnav_attr_string_to_value(ldh_tSesContext ldhses, int type_id,
   case pwr_eType_Time: {
     pwr_tTime time;
 
-    if (strcmp(value_str, "AtZero") == 0)
+    if (streq(value_str, "AtZero"))
       memcpy(buffer_ptr, &pwr_cAtMin, sizeof(pwr_tTime));
-    else if (strcmp(value_str, "AtMax") == 0)
+    else if (streq(value_str, "AtMax"))
       memcpy(buffer_ptr, &pwr_cAtMax, sizeof(pwr_tTime));
     else {
       sts = time_AsciiToA(value_str, &time);
@@ -284,9 +284,9 @@ int wnav_attr_string_to_value(ldh_tSesContext ldhses, int type_id,
   case pwr_eType_DeltaTime: {
     pwr_tDeltaTime deltatime;
 
-    if (strcmp(value_str, "DtMin") == 0)
+    if (streq(value_str, "DtMin"))
       memcpy(buffer_ptr, &pwr_cDtMin, sizeof(pwr_tDeltaTime));
-    else if (strcmp(value_str, "DtMax") == 0)
+    else if (streq(value_str, "DtMax"))
       memcpy(buffer_ptr, &pwr_cDtMax, sizeof(pwr_tDeltaTime));
     else {
       sts = time_AsciiToD(value_str, &deltatime);
@@ -568,7 +568,7 @@ void WNav::message(char sev, const char* text)
   if (message_cb && !scriptmode)
     (message_cb)(parent_ctx, sev, text);
   else {
-    if (strcmp(text, "") == 0)
+    if (streq(text, ""))
       return;
     if (sev != ' ')
       printf("%%WNAV-%c-MSG, %s\n", sev, text);
@@ -1968,7 +1968,7 @@ int WNav::trace_connect_bc(
 {
   WItem* base_item;
 
-  if (strcmp(name, "") == 0)
+  if (streq(name, ""))
     return 1;
 
   brow_GetUserData(object, (void**)&base_item);
@@ -2224,7 +2224,7 @@ int WNavGbl::symbolfile_exec(void* wnav)
 {
   pwr_tCmd cmd;
 
-  if (strcmp(symbolfilename, "") != 0) {
+  if (!streq(symbolfilename, "")) {
     strcpy(cmd, "@");
     dcli_translate_filename(&cmd[1], symbolfilename);
   } else {
@@ -2341,7 +2341,7 @@ int WNav::save_settnings(std::ofstream& fp)
   else
     fp << "  set noshowattrxref /local\n";
 
-  if (strcmp(gbl.symbolfilename, "") != 0)
+  if (!streq(gbl.symbolfilename, ""))
     fp << "  set symbolfile /local \"" << gbl.symbolfilename << "\"\n";
 
   if (gbl.build.crossref)
@@ -2739,7 +2739,7 @@ int WNav::menu_tree_search_children(
   menu_p = child_list;
   while (menu_p) {
     cdh_ToUpper(up_title, menu_p->title);
-    if (strcmp(up_title, search_name) == 0) {
+    if (streq(up_title, search_name)) {
       if (final_search) {
         *menu_item = menu_p;
         return 1;
@@ -2967,7 +2967,7 @@ void WNav::ldh_refresh(pwr_tObjid new_open)
         break;
       case wnav_eItemType_AttrArray:
         if (cdh_ObjidIsEqual(open_objid[i], object_item->objid)
-            && strcmp(object_item->name, open_attr[i]) == 0) {
+            && streq(object_item->name, open_attr[i])) {
           if (open_type[i] & wnav_mOpen_Attributes)
             ((WItemAttrArray*)object_item)->open_attributes(0, 0);
           found = 1;
@@ -2975,7 +2975,7 @@ void WNav::ldh_refresh(pwr_tObjid new_open)
         break;
       case wnav_eItemType_AttrArrayOutput:
         if (cdh_ObjidIsEqual(open_objid[i], object_item->objid)
-            && strcmp(object_item->name, open_attr[i]) == 0) {
+            && streq(object_item->name, open_attr[i])) {
           if (open_type[i] & wnav_mOpen_Attributes)
             ((WItemAttrArrayOutput*)object_item)->open_attributes(0, 0);
           found = 1;
@@ -2983,7 +2983,7 @@ void WNav::ldh_refresh(pwr_tObjid new_open)
         break;
       case wnav_eItemType_Attr:
         if (cdh_ObjidIsEqual(open_objid[i], object_item->objid)
-            && strcmp(object_item->name, open_attr[i]) == 0) {
+            && streq(object_item->name, open_attr[i])) {
           if (open_type[i] & wnav_mOpen_Children)
             ((WItemAttr*)object_item)->open_children(0, 0);
           found = 1;
@@ -2991,7 +2991,7 @@ void WNav::ldh_refresh(pwr_tObjid new_open)
         break;
       case wnav_eItemType_AttrArrayElem:
         if (cdh_ObjidIsEqual(open_objid[i], object_item->objid)
-            && strcmp(object_item->name, open_attr[i]) == 0) {
+            && streq(object_item->name, open_attr[i])) {
           if (open_type[i] & wnav_mOpen_Children)
             ((WItemAttrArrayElem*)object_item)->open_children(0, 0);
           found = 1;
@@ -2999,7 +2999,7 @@ void WNav::ldh_refresh(pwr_tObjid new_open)
         break;
       case wnav_eItemType_AttrObject:
         if (cdh_ObjidIsEqual(open_objid[i], object_item->objid)
-            && strcmp(object_item->name, open_attr[i]) == 0) {
+            && streq(object_item->name, open_attr[i])) {
           if (open_type[i] & wnav_mOpen_Attributes)
             ((WItemAttrObject*)object_item)->open_attributes(0, 0);
           found = 1;
@@ -3041,7 +3041,7 @@ void WNav::ldh_refresh(pwr_tObjid new_open)
           case wnav_eItemType_Enum:
           case wnav_eItemType_Mask:
           case wnav_eItemType_EnumObject:
-            if (strcmp(&sel_attr[i * 80], object_item->name) == 0)
+            if (streq(&sel_attr[i * 80], object_item->name))
               found = 1;
             break;
           default:
@@ -3082,7 +3082,7 @@ void WNav::ldh_refresh(pwr_tObjid new_open)
         case wnav_eItemType_Enum:
         case wnav_eItemType_Mask:
         case wnav_eItemType_EnumObject:
-          if (strcmp(last_sel_attr, object_item->name) == 0)
+          if (streq(last_sel_attr, object_item->name))
             found = 1;
           break;
         default:
@@ -3118,7 +3118,7 @@ void WNav::ldh_refresh(pwr_tObjid new_open)
         case wnav_eItemType_Enum:
         case wnav_eItemType_Mask:
         case wnav_eItemType_EnumObject:
-          if (strcmp(prev_sel_attr, object_item->name) == 0)
+          if (streq(prev_sel_attr, object_item->name))
             found = 1;
           break;
         default:
@@ -3536,7 +3536,7 @@ int ApplList::find(applist_eType type, char* name, void** ctx)
   ApplListElem* elem;
 
   for (elem = root; elem; elem = elem->next) {
-    if (elem->type == type && strcmp(name, elem->name) == 0) {
+    if (elem->type == type && streq(name, elem->name)) {
       *ctx = elem->ctx;
       return 1;
     }

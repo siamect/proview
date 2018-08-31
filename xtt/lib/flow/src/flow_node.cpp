@@ -36,9 +36,10 @@
 
 #include <math.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include <iostream>
+
+#include "co_string.h"
 
 #include "flow_node.h"
 #include "flow_draw.h"
@@ -859,7 +860,7 @@ void FlowNode::set_trace_attr(const char* object, const char* attribute,
   trace_attr_type = type;
   trace_inverted = inverted;
 
-  if (ctx->trace_started && strcmp(trace_object, "") != 0)
+  if (ctx->trace_started && !streq(trace_object, ""))
     ctx->trace_connect_func(
         (void*)this, trace_object, trace_attribute, trace_attr_type, &trace_p);
 }
@@ -914,7 +915,7 @@ int FlowNode::trace_init()
 {
   int sts;
 
-  if (strcmp(trace_object, "") == 0)
+  if (streq(trace_object, ""))
     return 1;
 
   sts = ctx->trace_connect_func(
@@ -924,7 +925,7 @@ int FlowNode::trace_init()
 
 void FlowNode::trace_close()
 {
-  if (strcmp(trace_object, "") == 0)
+  if (streq(trace_object, ""))
     return;
 
   ctx->trace_disconnect_func((void*)this);

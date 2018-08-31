@@ -31,7 +31,9 @@
 #include <stdio.h>
 #include <glib.h>
 #include <epan/packet.h>
-#include <string.h>
+
+#include "co_string.h"
+
 #include "packet-redcom.h"
 #include "redcom_def.h"
 
@@ -419,7 +421,7 @@ void dissect_redcom(tvbuff_t* tvb, packet_info* pinfo, proto_tree* tree)
 
   /* Clear out stuff in the info column */
   if (check_col(pinfo->cinfo, COL_INFO)) {
-    if (strcmp(info, "") != 0)
+    if (!streq(info, ""))
       col_add_fstr(pinfo->cinfo, COL_INFO, "%s", info);
     else
       col_clear(pinfo->cinfo, COL_INFO);

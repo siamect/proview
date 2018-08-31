@@ -39,11 +39,11 @@
 #ifdef PWRE_CONF_PNAK
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "co_cdh.h"
-#include "co_time.h"
 #include "co_dcli.h"
+#include "co_string.h"
+#include "co_time.h"
 
 #include "xnav_bitmap_map8.h"
 #include "xnav_bitmap_map10.h"
@@ -624,7 +624,7 @@ int PnViewerNav::set_attr_value(char* value_str)
 
     item = (ItemDeviceAttr*)base_item;
 
-    if (strcmp(item->name, "IP Address") == 0) {
+    if (streq(item->name, "IP Address")) {
       unsigned char address[4];
       int num;
 
@@ -647,7 +647,7 @@ int PnViewerNav::set_attr_value(char* value_str)
 
       strcpy((char*)item->p, value_str);
       brow_SetAnnotation(item->node, 1, (char*)item->p, strlen((char*)item->p));
-    } else if (strcmp(item->name, "DeviceName") == 0) {
+    } else if (streq(item->name, "DeviceName")) {
       strcpy((char*)item->p, value_str);
       brow_SetAnnotation(item->node, 1, (char*)item->p, strlen((char*)item->p));
 
@@ -689,8 +689,8 @@ int PnViewerNav::check_attr_value()
   switch (base_item->type) {
   case viewitem_eItemType_DeviceAttr:
     if (type == viewer_eType_Network
-        && (strcmp(base_item->name, "DeviceName") == 0
-               || strcmp(base_item->name, "IP Address") == 0))
+        && (streq(base_item->name, "DeviceName")
+               || streq(base_item->name, "IP Address")))
       return 1;
     else
       return PB__ATTRNOEDIT;
@@ -910,8 +910,8 @@ ItemDeviceAttr::ItemDeviceAttr(PnViewerNav* viewernav, const char* item_name,
 
   brow_SetAnnotPixmap(node, 0, viewernav->brow->pixmap_attr);
   if (viewernav->type == viewer_eType_Network
-      && (strcmp(item_name, "DeviceName") == 0
-             || strcmp(item_name, "IP Address") == 0))
+      && (streq(item_name, "DeviceName")
+             || streq(item_name, "IP Address")))
     brow_SetAnnotPixmap(node, 1, viewernav->brow->pixmap_edit);
 }
 

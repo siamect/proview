@@ -34,11 +34,14 @@
  * General Public License plus this exception.
  */
 
-#include "rt_gdh_msg.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
-#include "cow_wow.h"
+#include "co_string.h"
+
+#include "rt_gdh_msg.h"
 #include "rt_sev_msg.h"
+
+#include "cow_wow.h"
 
 #include "glow_curveapi.h"
 
@@ -166,7 +169,7 @@ int XttSevHist::get_data(pwr_tStatus* sts, pwr_tTime from, pwr_tTime to)
   strcpy(gcd->x_format[0], "%10t");
 
   strcpy(gcd->y_name[0], onamev[0]);
-  if (strcmp(onamev[0], "") != 0)
+  if (!streq(onamev[0], ""))
     strcat(gcd->y_name[0], ".");
   strcat(gcd->y_name[0], anamev[0]);
   gcd->y_data[0] = (double*)calloc(1, 8 * rows);
@@ -313,7 +316,7 @@ int XttSevHist::get_objectdata(pwr_tStatus* sts, pwr_tTime from, pwr_tTime to)
     gcd->cols++;
 
     strcpy(gcd->y_name[gcd->cols - 1], onamev[0]);
-    if (strcmp(onamev[0], "") != 0)
+    if (!streq(onamev[0], ""))
       strcat(gcd->y_name[gcd->cols - 1], ".");
     strcat(gcd->y_name[gcd->cols - 1], histattrbuf[i].aname);
     gcd->y_data[gcd->cols - 1] = (double*)calloc(1, 8 * rows);
@@ -435,7 +438,7 @@ int XttSevHist::get_multidata(pwr_tStatus* sts, pwr_tTime from, pwr_tTime to)
         strcpy(gcd->x_format[curve_cnt], "%10t");
 
         strcpy(gcd->y_name[curve_cnt], onamev[k]);
-        if (strcmp(onamev[k], "") != 0)
+        if (!streq(onamev[k], ""))
           strcat(gcd->y_name[curve_cnt], ".");
         strcat(gcd->y_name[curve_cnt], anamev[k]);
         gcd->y_data[curve_cnt] = (double*)calloc(1, 8 * rows);
@@ -456,7 +459,7 @@ int XttSevHist::get_multidata(pwr_tStatus* sts, pwr_tTime from, pwr_tTime to)
       strcpy(gcd->x_format[curve_cnt], "%10t");
 
       strcpy(gcd->y_name[curve_cnt], onamev[k]);
-      if (strcmp(onamev[k], "") != 0)
+      if (!streq(onamev[k], ""))
         strcat(gcd->y_name[curve_cnt], ".");
       strcat(gcd->y_name[curve_cnt], anamev[k]);
       gcd->y_data[curve_cnt] = (double*)calloc(1, 8 * rows);
@@ -571,7 +574,7 @@ int XttSevHist::get_multidata(pwr_tStatus* sts, pwr_tTime from, pwr_tTime to)
         }
 
         strcpy(gcd->y_name[curve_cnt], onamev[k]);
-        if (strcmp(onamev[k], "") != 0)
+        if (!streq(onamev[k], ""))
           strcat(gcd->y_name[curve_cnt], ".");
         strcat(gcd->y_name[curve_cnt], histattrbuf[i].aname);
         gcd->y_data[curve_cnt] = (double*)calloc(1, 8 * rows);
@@ -707,7 +710,7 @@ void XttSevHist::curve_add(
   strcpy(gcd->x_format[curve_cnt], "%10t");
 
   strcpy(gcd->y_name[curve_cnt], oname);
-  if (strcmp(oname, "") != 0)
+  if (!streq(oname, ""))
     strcat(gcd->y_name[curve_cnt], ".");
   strcat(gcd->y_name[curve_cnt], aname);
   gcd->y_data[curve_cnt] = (double*)calloc(1, 8 * rows);

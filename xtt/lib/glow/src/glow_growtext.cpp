@@ -36,9 +36,10 @@
 
 #include <math.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include <iostream>
+
+#include "co_string.h"
 
 #include "glow_growtext.h"
 #include "glow_grownode.h"
@@ -487,7 +488,7 @@ void GrowText::set_dynamic(char* code, int size)
 
 void GrowText::exec_dynamic()
 {
-  if (dynamicsize && strcmp(dynamic, "") != 0)
+  if (dynamicsize && !streq(dynamic, ""))
     ctx->dynamic_cb(this, dynamic, glow_eDynamicType_Object);
 }
 
@@ -690,7 +691,7 @@ void GrowText::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     highl = ((GrowNode*)node)->highlight;
 
   if (w == &ctx->navw) {
-    if (strcmp(text, "") == 0)
+    if (streq(text, ""))
       return;
     highl = 0;
   }
@@ -921,7 +922,7 @@ void GrowText::get_borders(GlowTransform* t, double* x_right, double* x_left,
   else
     rot = 0;
 
-  if (strcmp(text, "") == 0)
+  if (streq(text, ""))
     ctx->gdraw->get_text_extent("A", 1, draw_type, text_size, font, &z_width,
         &z_height, &z_descent,
         ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (8 + 2 * text_size),

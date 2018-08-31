@@ -36,9 +36,8 @@
 
 /* ge_attr.cpp -- Display object attributes */
 
-#include <string.h>
-
 #include "co_cdh.h"
+#include "co_string.h"
 #include "co_time.h"
 
 #include "flow_browwidget_gtk.h"
@@ -77,7 +76,7 @@ void AttrGtk::message_popup(char severity, const char* message)
 
 void AttrGtk::set_prompt(const char* prompt)
 {
-  if (strcmp(prompt, "") == 0) {
+  if (streq(prompt, "")) {
     g_object_set(cmd_prompt, "visible", FALSE, NULL);
     g_object_set(msg_label, "visible", TRUE, NULL);
   } else {

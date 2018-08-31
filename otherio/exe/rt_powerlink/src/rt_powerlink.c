@@ -34,14 +34,17 @@
  * General Public License plus this exception.
  **/
 
+#include "pwr_basecomponentclasses.h"
+#include "pwr_otherioclasses.h"
+
+#include "co_string.h"
+
 #include "rt_io_msg.h"
 #include "rt_pwr_msg.h"
 #include "rt_io_base.h"
 #include "rt_aproc.h"
 #include "rt_ini_event.h"
 #include "rt_qcom_msg.h"
-#include "pwr_basecomponentclasses.h"
-#include "pwr_otherioclasses.h"
 
 pwr_tStatus io_get_plhandler_object(pwr_sClass_EplHandler** o, pwr_tObjid* roid)
 {
@@ -87,11 +90,11 @@ int main(int argc, char** argv)
   qcom_sQid qid = qcom_cNQid;
 
   if (argc > 1) {
-    if (strcmp(argv[1], "-m") == 0) {
+    if (streq(argv[1], "-m")) {
       io_methods_print();
       exit(0);
     }
-    if (strcmp(argv[1], "-h") == 0) {
+    if (streq(argv[1], "-h")) {
       usage();
       exit(0);
     }

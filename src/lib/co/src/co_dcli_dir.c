@@ -43,13 +43,13 @@
 #include <dirent.h>
 #include <errno.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
 
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_dcli_msg.h"
+#include "co_string.h"
 
 /* Search for one or several files.
 *  The file name can contain wildcard, *.
@@ -110,8 +110,8 @@ int dcli_search_file(const char* name, char* found_file, int new)
   if (new == DCLI_DIR_SEARCH_INIT || new == DCLI_DIR_SEARCH_NEXT) {
     found = 0;
     while ((dir_entry = readdir(directory)) != NULL) {
-      if (strcmp(dir_entry->d_name, ".") == 0
-          || strcmp(dir_entry->d_name, "..") == 0)
+      if (streq(dir_entry->d_name, ".")
+          || streq(dir_entry->d_name, ".."))
         continue;
 
       if (wildcard) {
@@ -121,7 +121,7 @@ int dcli_search_file(const char* name, char* found_file, int new)
           found = 1;
         }
       } else {
-        if (strcmp(pattern, dir_entry->d_name) == 0) {
+        if (streq(pattern, dir_entry->d_name)) {
           strcpy(found_file, dir);
           strcat(found_file, dir_entry->d_name);
           found = 1;
@@ -209,8 +209,8 @@ int dcli_search_directory(const char* name, char* found_file, int new)
     while ((dir_entry = readdir(directory)) != NULL) {
       struct stat st;
 
-      if (strcmp(dir_entry->d_name, ".") == 0
-          || strcmp(dir_entry->d_name, "..") == 0)
+      if (streq(dir_entry->d_name, ".")
+          || streq(dir_entry->d_name, ".."))
         continue;
 
       if (fstatat(dirfd(directory), dir_entry->d_name, &st, 0) < 0)
@@ -226,7 +226,7 @@ int dcli_search_directory(const char* name, char* found_file, int new)
           found = 1;
         }
       } else {
-        if (strcmp(pattern, dir_entry->d_name) == 0) {
+        if (streq(pattern, dir_entry->d_name)) {
           strcpy(found_file, dir);
           strcat(found_file, dir_entry->d_name);
           found = 1;

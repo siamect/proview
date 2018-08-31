@@ -40,7 +40,6 @@
 /*_Include files_________________________________________________________*/
 
 #include <stdlib.h>
-#include <string.h>
 
 extern "C" {
 #include "co_cdh.h"
@@ -51,6 +50,7 @@ extern "C" {
 #include "co_nav_help.h"
 #include "co_dcli_msg.h"
 #include "co_nav_msg.h"
+#include "co_string.h"
 
 /*** Local funktions ***************************************************/
 static int help_remove_spaces(char* in, char* out);
@@ -226,7 +226,7 @@ int NavHelp::help(const char* help_key, const char* help_bookmark,
                     && strncmp(
                            subject_part[i], key_part[i], strlen(key_part[i]))
                         == 0)
-                || (strict && strcmp(subject_part[i], key_part[i]) == 0)) {
+                || (strict && streq(subject_part[i], key_part[i]))) {
               if (i == key_nr - 1)
                 hit = 1;
             } else
@@ -374,7 +374,7 @@ int NavHelp::help(const char* help_key, const char* help_bookmark,
           *s = 0;
           cdh_ToLower(bookmark, bookmark);
           if (!bookmark_found && !print_all
-              && strcmp(search_bookmark, bookmark) == 0) {
+              && streq(search_bookmark, bookmark)) {
             bookmark_found = 1;
             register_bookmark = 1;
           }
@@ -574,7 +574,7 @@ int NavHelp::get_next_key(const char* help_key, navh_eHelpFile file_type,
           if ((!strict
                   && strncmp(subject_part[i], key_part[i], strlen(key_part[i]))
                       == 0)
-              || (strict && strcmp(subject_part[i], key_part[i]) == 0)) {
+              || (strict && streq(subject_part[i], key_part[i]))) {
             if (i == key_nr - 1)
               hit = 1;
           } else
@@ -657,7 +657,7 @@ int NavHelp::get_previous_key(const char* help_key, navh_eHelpFile file_type,
           if ((!strict
                   && strncmp(subject_part[i], key_part[i], strlen(key_part[i]))
                       == 0)
-              || (strict && strcmp(subject_part[i], key_part[i]) == 0)) {
+              || (strict && streq(subject_part[i], key_part[i]))) {
             if (i == key_nr - 1) {
               hit = 1;
               strcpy(prev_key, prev);
@@ -675,7 +675,7 @@ int NavHelp::get_previous_key(const char* help_key, navh_eHelpFile file_type,
   }
   fclose(file);
 
-  if (!hit || strcmp(prev, "") == 0)
+  if (!hit || streq(prev, ""))
     return NAV__TOPICNOTFOUND;
   return NAV__SUCCESS;
 }

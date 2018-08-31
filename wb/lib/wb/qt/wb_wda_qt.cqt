@@ -36,6 +36,8 @@
 
 /* wb_wda_qt.cpp -- spreadsheet editor */
 
+#include "co_string.h"
+
 #include "cow_qt_helpers.h"
 #include "cow_xhelp.h"
 
@@ -55,14 +57,14 @@ CoWowRecall WdaQt::value_recall;
 void WdaQt::message(char severity, const char* message)
 {
   msg_label->setText(fl(message));
-  if (strcmp(message, "") != 0) {
+  if (!streq(message, "")) {
     msg_label->setVisible(true);
   }
 }
 
 void WdaQt::set_prompt(const char* prompt)
 {
-  if (strcmp(prompt, "") == 0) {
+  if (streq(prompt, "")) {
     cmd_prompt->setVisible(false);
     msg_label->setVisible(true);
   } else {
@@ -206,7 +208,7 @@ void WdaQtWidget::class_activate_ok()
 
   wda->attrobjects = wda->wdaclass_attrobjects->isChecked();
 
-  if (strcmp(hiername, "") == 0) {
+  if (streq(hiername, "")) {
     wda->objid = pwr_cNObjid;
   } else {
     sts = ldh_NameToObjid(wda->ldhses, &wda->objid, hiername);

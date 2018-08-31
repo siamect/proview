@@ -37,11 +37,10 @@
 /* co_cnf.c
    Read global configuration file. */
 
-#include <string.h>
-
-#include "co_dcli.h"
 #include "co_cdh.h"
 #include "co_cnf.h"
+#include "co_dcli.h"
+#include "co_string.h"
 
 #define cnf_cFile "/etc/proview.cnf"
 
@@ -93,7 +92,7 @@ char* cnf_get_value(const char* name, char* value, int size)
 
   /* Find default value */
   for (i = 0; i < sizeof(default_values) / sizeof(default_values[0]); i++) {
-    if (strcmp(name, default_values[i][0]) == 0) {
+    if (streq(name, default_values[i][0])) {
       strcpy(ret_value, default_values[i][1]);
       if (value)
         strncpy(value, ret_value, size);

@@ -34,8 +34,6 @@
  * General Public License plus this exception.
  */
 
-#include <string.h>
-
 #include "cnv_classdep.h"
 extern "C" {
 #include "co_cdh.h"
@@ -43,6 +41,7 @@ extern "C" {
 #include "co_dcli.h"
 }
 #include "co_lng.h"
+#include "co_string.h"
 
 CdpItem::CdpItem() : idx(0), fth(0), fch(0), lch(0), fws(0), bws(0)
 {
@@ -96,7 +95,7 @@ int CnvClassDep::read()
   dcli_search_file(fname, found_file, DCLI_DIR_SEARCH_END);
 
   for (int i = 1; i < (int)classlist.size(); i++) {
-    if (strcmp(classlist[i].supername, "-") == 0)
+    if (streq(classlist[i].supername, "-"))
       continue;
 
     if (find(classlist[i].supername, &idx)) {

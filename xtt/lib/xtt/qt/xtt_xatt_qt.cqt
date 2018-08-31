@@ -37,6 +37,7 @@
 /* xtt_xatt.cpp -- Display object attributes */
 
 #include "co_cdh.h"
+#include "co_string.h"
 
 #include "rt_xatt_msg.h"
 
@@ -59,14 +60,14 @@ CoWowRecall XAttQt::value_recall;
 void XAttQt::message(char severity, const char* message)
 {
   msg_label->setText(fl(message));
-  if (strcmp(message, "") != 0) {
+  if (!streq(message, "")) {
     msg_label->setVisible(true);
   }
 }
 
 void XAttQt::set_prompt(const char* prompt)
 {
-  if (strcmp(prompt, "") == 0) {
+  if (streq(prompt, "")) {
     cmd_prompt->setVisible(false);
     msg_label->setVisible(true);
   } else {

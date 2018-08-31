@@ -37,16 +37,16 @@
 #include <ctype.h>
 #include <math.h>
 #include <stdlib.h>
-#include <string.h>
 
-#include "co_cdh.h"
+#include "co_api.h"
 #include "co_ccm.h"
 #include "co_ccm_msg.h"
-#include "co_time.h"
-#include "co_dcli.h"
+#include "co_cdh.h"
 #include "co_cnf.h"
+#include "co_dcli.h"
+#include "co_string.h"
 #include "co_syi.h"
-#include "co_api.h"
+#include "co_time.h"
 
 #define CCM_FLT_EPSILON 5.0e-6
 
@@ -556,8 +556,8 @@ int ccm_register_function(const char* classname, const char* name,
 
   i = 0;
   for (sysfunc_p = ccm_sysfunc; sysfunc_p->sysfunc; sysfunc_p++) {
-    if (strcmp(sysfunc_p->classname, classname) == 0
-        && strcmp(sysfunc_p->name, name) == 0)
+    if (streq(sysfunc_p->classname, classname)
+        && streq(sysfunc_p->name, name))
       return CCM__ALREADYREG;
     i++;
   }
@@ -999,7 +999,7 @@ static int operand_found(ccm_tRowCtx rowctx)
 
     /* Check if reserved word */
     rtt_toupper(upname, operand_p->name);
-    if (strcmp(upname, "INT") == 0) {
+    if (streq(upname, "INT")) {
       if (rowctx->curr_operand
           && rowctx->curr_operand->type == K_OPERAND_GLOBAL)
         operand_p->o_operator = K_ACTION_CREAGBLINT;
@@ -1010,7 +1010,7 @@ static int operand_found(ccm_tRowCtx rowctx)
         operand_p->o_operator = K_ACTION_CREALOCINT;
       operand_p->type = K_OPERAND_DECL;
       rowctx->last_type = K_TYPE_OPERATOR;
-    } else if (strcmp(upname, "FLOAT") == 0) {
+    } else if (streq(upname, "FLOAT")) {
       if (rowctx->curr_operand
           && rowctx->curr_operand->type == K_OPERAND_GLOBAL)
         operand_p->o_operator = K_ACTION_CREAGBLFLOAT;
@@ -1021,7 +1021,7 @@ static int operand_found(ccm_tRowCtx rowctx)
         operand_p->o_operator = K_ACTION_CREALOCFLOAT;
       operand_p->type = K_OPERAND_DECL;
       rowctx->last_type = K_TYPE_OPERATOR;
-    } else if (strcmp(upname, "STRING") == 0) {
+    } else if (streq(upname, "STRING")) {
       if (rowctx->curr_operand
           && rowctx->curr_operand->type == K_OPERAND_GLOBAL)
         operand_p->o_operator = K_ACTION_CREAGBLSTRING;
@@ -1032,19 +1032,19 @@ static int operand_found(ccm_tRowCtx rowctx)
         operand_p->o_operator = K_ACTION_CREALOCSTRING;
       operand_p->type = K_OPERAND_DECL;
       rowctx->last_type = K_TYPE_OPERATOR;
-    } else if (strcmp(upname, "GLOBAL") == 0) {
+    } else if (streq(upname, "GLOBAL")) {
       operand_p->type = K_OPERAND_GLOBAL;
       operand_p->o_operator = K_ACTION_NO;
       rowctx->last_type = K_TYPE_OPERATOR;
-    } else if (strcmp(upname, "EXTERN") == 0) {
+    } else if (streq(upname, "EXTERN")) {
       operand_p->type = K_OPERAND_EXTERN;
       operand_p->o_operator = K_ACTION_NO;
       rowctx->last_type = K_TYPE_OPERATOR;
-    } else if (strcmp(upname, "DELETE") == 0) {
+    } else if (streq(upname, "DELETE")) {
       operand_p->type = K_OPERAND_DELETE;
       operand_p->o_operator = K_ACTION_DELETE;
       rowctx->last_type = K_TYPE_OPERATOR;
-    } else if (strcmp(upname, "RETURN") == 0) {
+    } else if (streq(upname, "RETURN")) {
       operand_p->type = K_OPERAND_RETURN;
       operand_p->o_operator = K_ACTION_RETURN;
       rowctx->last_type = K_TYPE_OPERATOR;
@@ -2184,7 +2184,7 @@ int ccm_operate_exec(ccm_tFuncCtx funcctx, ccm_sOperand* op, ccm_sOperand* next)
       case K_DECL_STRING:
         switch (next_decl) {
         case K_DECL_STRING:
-          next->result_int = (strcmp(op->result_string, next_string) == 0);
+          next->result_int = (streq(op->result_string, next_string));
           next->result_decl = K_DECL_INT;
           break;
         default:
@@ -2232,7 +2232,7 @@ int ccm_operate_exec(ccm_tFuncCtx funcctx, ccm_sOperand* op, ccm_sOperand* next)
       case K_DECL_STRING:
         switch (next_decl) {
         case K_DECL_STRING:
-          next->result_int = !(strcmp(op->result_string, next_string) == 0);
+          next->result_int = !(streq(op->result_string, next_string));
           next->result_decl = K_DECL_INT;
           break;
         default:
@@ -2843,7 +2843,7 @@ static int ccm_getvar(ccm_tFuncCtx funcctx, const char* name, int* decl,
     }
 
     for (int_p = int_list; int_p; int_p = int_p->next) {
-      if (strcmp(int_p->name, varname) == 0) {
+      if (streq(int_p->name, varname)) {
         found = 1;
         break;
       }
@@ -2859,7 +2859,7 @@ static int ccm_getvar(ccm_tFuncCtx funcctx, const char* name, int* decl,
     } else {
       /* Search float */
       for (float_p = float_list; float_p; float_p = float_p->next) {
-        if (strcmp(float_p->name, varname) == 0) {
+        if (streq(float_p->name, varname)) {
           found = 1;
           break;
         }
@@ -2875,7 +2875,7 @@ static int ccm_getvar(ccm_tFuncCtx funcctx, const char* name, int* decl,
       } else {
         /* Search string */
         for (string_p = string_list; string_p; string_p = string_p->next) {
-          if (strcmp(string_p->name, varname) == 0) {
+          if (streq(string_p->name, varname)) {
             found = 1;
             break;
           }
@@ -2940,7 +2940,7 @@ static int ccm_setvar(ccm_tFuncCtx funcctx, const char* name, int decl,
     }
 
     for (int_p = int_list; int_p; int_p = int_p->next) {
-      if (strcmp(int_p->name, varname) == 0) {
+      if (streq(int_p->name, varname)) {
         found = 1;
         break;
       }
@@ -2970,7 +2970,7 @@ static int ccm_setvar(ccm_tFuncCtx funcctx, const char* name, int decl,
     } else {
       /* Search float */
       for (float_p = float_list; float_p; float_p = float_p->next) {
-        if (strcmp(float_p->name, varname) == 0) {
+        if (streq(float_p->name, varname)) {
           found = 1;
           break;
         }
@@ -2993,7 +2993,7 @@ static int ccm_setvar(ccm_tFuncCtx funcctx, const char* name, int decl,
       } else {
         /* Search string */
         for (string_p = string_list; string_p; string_p = string_p->next) {
-          if (strcmp(string_p->name, varname) == 0) {
+          if (streq(string_p->name, varname)) {
             found = 1;
             break;
           }
@@ -3049,7 +3049,7 @@ int ccm_set_external_var(const char* name, int decl, ccm_tFloat value_float,
     int_list = extint_list;
 
     for (int_p = int_list; int_p; int_p = int_p->next) {
-      if (strcmp(int_p->name, varname) == 0) {
+      if (streq(int_p->name, varname)) {
         found = 1;
         break;
       }
@@ -3061,7 +3061,7 @@ int ccm_set_external_var(const char* name, int decl, ccm_tFloat value_float,
     float_list = extfloat_list;
 
     for (float_p = float_list; float_p; float_p = float_p->next) {
-      if (strcmp(float_p->name, varname) == 0) {
+      if (streq(float_p->name, varname)) {
         found = 1;
         break;
       }
@@ -3073,7 +3073,7 @@ int ccm_set_external_var(const char* name, int decl, ccm_tFloat value_float,
     string_list = extstring_list;
 
     for (string_p = string_list; string_p; string_p = string_p->next) {
-      if (strcmp(string_p->name, varname) == 0) {
+      if (streq(string_p->name, varname)) {
         found = 1;
         break;
       }
@@ -3112,7 +3112,7 @@ int ccm_get_external_var(const char* name, int decl, ccm_tFloat* value_float,
     int_list = extint_list;
 
     for (int_p = int_list; int_p; int_p = int_p->next) {
-      if (strcmp(int_p->name, varname) == 0) {
+      if (streq(int_p->name, varname)) {
         found = 1;
         break;
       }
@@ -3124,7 +3124,7 @@ int ccm_get_external_var(const char* name, int decl, ccm_tFloat* value_float,
     float_list = extfloat_list;
 
     for (float_p = float_list; float_p; float_p = float_p->next) {
-      if (strcmp(float_p->name, varname) == 0) {
+      if (streq(float_p->name, varname)) {
         found = 1;
         break;
       }
@@ -3136,7 +3136,7 @@ int ccm_get_external_var(const char* name, int decl, ccm_tFloat* value_float,
     string_list = extstring_list;
 
     for (string_p = string_list; string_p; string_p = string_p->next) {
-      if (strcmp(string_p->name, varname) == 0) {
+      if (streq(string_p->name, varname)) {
         found = 1;
         break;
       }
@@ -3174,7 +3174,7 @@ int ccm_ref_external_var(const char* name, int decl, void** valuep)
     int_list = extint_list;
 
     for (int_p = int_list; int_p; int_p = int_p->next) {
-      if (strcmp(int_p->name, varname) == 0) {
+      if (streq(int_p->name, varname)) {
         found = 1;
         break;
       }
@@ -3186,7 +3186,7 @@ int ccm_ref_external_var(const char* name, int decl, void** valuep)
     float_list = extfloat_list;
 
     for (float_p = float_list; float_p; float_p = float_p->next) {
-      if (strcmp(float_p->name, varname) == 0) {
+      if (streq(float_p->name, varname)) {
         found = 1;
         break;
       }
@@ -3198,7 +3198,7 @@ int ccm_ref_external_var(const char* name, int decl, void** valuep)
     string_list = extstring_list;
 
     for (string_p = string_list; string_p; string_p = string_p->next) {
-      if (strcmp(string_p->name, varname) == 0) {
+      if (streq(string_p->name, varname)) {
         found = 1;
         break;
       }
@@ -3230,7 +3230,7 @@ static int ccm_createvar(const char* name, int decl, ccm_tFloat value_float,
 
   if (decl == K_DECL_INT) {
     for (int_p = *int_list; int_p; int_p = int_p->next) {
-      if (strcmp(int_p->name, varname) == 0)
+      if (streq(int_p->name, varname))
         return CCM__VARALREXIST;
     }
 
@@ -3245,7 +3245,7 @@ static int ccm_createvar(const char* name, int decl, ccm_tFloat value_float,
     *int_list = int_p;
   } else if (decl == K_DECL_FLOAT) {
     for (float_p = *float_list; float_p; float_p = float_p->next) {
-      if (strcmp(float_p->name, varname) == 0)
+      if (streq(float_p->name, varname))
         return CCM__VARALREXIST;
     }
 
@@ -3260,7 +3260,7 @@ static int ccm_createvar(const char* name, int decl, ccm_tFloat value_float,
     *float_list = float_p;
   } else if (decl == K_DECL_STRING) {
     for (string_p = *string_list; string_p; string_p = string_p->next) {
-      if (strcmp(string_p->name, varname) == 0)
+      if (streq(string_p->name, varname))
         return CCM__VARALREXIST;
     }
 
@@ -3297,7 +3297,7 @@ static int ccm_deletevar(const char* name, ccm_sIntvar** int_list,
   int_prev = 0;
   found = 0;
   for (int_p = *int_list; int_p; int_p = int_p->next) {
-    if (strcmp(int_p->name, varname) == 0) {
+    if (streq(int_p->name, varname)) {
       found = 1;
 
       if (!int_prev)
@@ -3316,7 +3316,7 @@ static int ccm_deletevar(const char* name, ccm_sIntvar** int_list,
 
   float_prev = 0;
   for (float_p = *float_list; float_p; float_p = float_p->next) {
-    if (strcmp(float_p->name, varname) == 0) {
+    if (streq(float_p->name, varname)) {
       found = 1;
 
       if (!float_prev)
@@ -3334,7 +3334,7 @@ static int ccm_deletevar(const char* name, ccm_sIntvar** int_list,
 
   string_prev = 0;
   for (string_p = *string_list; string_p; string_p = string_p->next) {
-    if (strcmp(string_p->name, varname) == 0) {
+    if (streq(string_p->name, varname)) {
       found = 1;
 
       if (!string_prev)
@@ -3605,11 +3605,11 @@ static int ccm_init_filectx(ccm_tFileCtx filectx)
       func_p = calloc(1, sizeof(ccm_sFunc));
       strcpy(func_p->name, out_str[2]);
       func_p->start_line = line_p;
-      if (strcmp(out_str[1], "int") == 0)
+      if (streq(out_str[1], "int"))
         func_p->decl = K_DECL_INT;
-      else if (strcmp(out_str[1], "float") == 0)
+      else if (streq(out_str[1], "float"))
         func_p->decl = K_DECL_FLOAT;
-      else if (strcmp(out_str[1], "string") == 0)
+      else if (streq(out_str[1], "string"))
         func_p->decl = K_DECL_STRING;
       else {
         filectx->error_row = line_p->row;
@@ -3642,7 +3642,7 @@ static int ccm_init_filectx(ccm_tFileCtx filectx)
         return CCM__SYNTAX;
       }
 
-      if (strcmp(out_str[0], "main") == 0) {
+      if (streq(out_str[0], "main")) {
         if (main_start_found) {
           filectx->error_row = line_p->row;
           strcpy(filectx->error_line, line_p->line);
@@ -4674,7 +4674,7 @@ static int ccm_function_exec(ccm_tFileCtx filectx, char* name, ccm_tFunc* func,
       sts = (*func)((void*)filectx, arg_list, arg_count, return_decl,
           return_float, return_int, return_string);
       return sts;
-    } else if (strcmp(name, "main") == 0) {
+    } else if (streq(name, "main")) {
       start_line = filectx->main_start_line->next;
       end_line = filectx->main_end_line;
       main_found = 1;
@@ -4696,7 +4696,7 @@ static int ccm_function_exec(ccm_tFileCtx filectx, char* name, ccm_tFunc* func,
       /* Search i system function list */
       for (sysfunc_p = ccm_sysfunc; sysfunc_p->sysfunc; sysfunc_p++) {
         if (!fclass_found) {
-          if (strcmp(name, sysfunc_p->name) == 0) {
+          if (streq(name, sysfunc_p->name)) {
             if (func)
               *func = sysfunc_p->sysfunc;
             sts = (sysfunc_p->sysfunc)((void*)filectx, arg_list, arg_count,
@@ -4704,8 +4704,8 @@ static int ccm_function_exec(ccm_tFileCtx filectx, char* name, ccm_tFunc* func,
             return sts;
           }
         } else {
-          if (strcmp(fclass, sysfunc_p->classname) == 0
-              && strcmp(fname, sysfunc_p->name) == 0) {
+          if (streq(fclass, sysfunc_p->classname)
+              && streq(fname, sysfunc_p->name)) {
             if (func)
               *func = sysfunc_p->sysfunc;
             sts = (sysfunc_p->sysfunc)((void*)filectx, arg_list, arg_count,
@@ -4718,7 +4718,7 @@ static int ccm_function_exec(ccm_tFileCtx filectx, char* name, ccm_tFunc* func,
       /* Search for an application function */
       found = 0;
       for (func_p = filectx->func_list; func_p; func_p = func_p->next) {
-        if (strcmp(func_p->name, name) == 0) {
+        if (streq(func_p->name, name)) {
           start_line = func_p->start_line->next;
           end_line = func_p->end_line;
           found = 1;
@@ -4752,7 +4752,7 @@ static int ccm_function_exec(ccm_tFileCtx filectx, char* name, ccm_tFunc* func,
             sizeof(elm_str) / sizeof(elm_str[0]), sizeof(elm_str[0]), 0);
         if (nr != 2)
           return CCM__SYNTAX;
-        if (strcmp(elm_str[0], "float") == 0) {
+        if (streq(elm_str[0], "float")) {
           sts = ccm_createvar(elm_str[1], K_DECL_FLOAT, 0, 0, NULL,
               &funcctx->locint_list, &funcctx->locfloat_list,
               &funcctx->locstring_list);
@@ -4764,7 +4764,7 @@ static int ccm_function_exec(ccm_tFileCtx filectx, char* name, ccm_tFunc* func,
             return sts;
           strcpy(arg_p->var_name, elm_str[1]);
           arg_p->var_decl = K_DECL_FLOAT;
-        } else if (strcmp(elm_str[0], "int") == 0) {
+        } else if (streq(elm_str[0], "int")) {
           sts = ccm_createvar(elm_str[1], K_DECL_INT, 0, 0, NULL,
               &funcctx->locint_list, &funcctx->locfloat_list,
               &funcctx->locstring_list);
@@ -4776,7 +4776,7 @@ static int ccm_function_exec(ccm_tFileCtx filectx, char* name, ccm_tFunc* func,
             return sts;
           strcpy(arg_p->var_name, elm_str[1]);
           arg_p->var_decl = K_DECL_INT;
-        } else if (strcmp(elm_str[0], "string") == 0) {
+        } else if (streq(elm_str[0], "string")) {
           sts = ccm_createvar(elm_str[1], K_DECL_STRING, 0, 0, NULL,
               &funcctx->locint_list, &funcctx->locfloat_list,
               &funcctx->locstring_list);
@@ -4992,7 +4992,7 @@ static int ccm_function_exec(ccm_tFileCtx filectx, char* name, ccm_tFunc* func,
         return sts;
       funcctx->for_init = 1;
       ccm_remove_blank(elm_str[1], elm_str[1]);
-      if (strcmp(elm_str[1], "") == 0) {
+      if (streq(elm_str[1], "")) {
         /* Null-string is always true */
         decl = K_DECL_INT;
         int_val = 1;
@@ -5122,7 +5122,7 @@ static int ccm_function_exec(ccm_tFileCtx filectx, char* name, ccm_tFunc* func,
           strcpy(label, l_p->line);
           label[strlen(label) - 1] = 0;
           ccm_remove_blank(label, label);
-          if (strcmp(label, goto_label) == 0) {
+          if (streq(label, goto_label)) {
             found = 1;
             break;
           }
@@ -5135,7 +5135,7 @@ static int ccm_function_exec(ccm_tFileCtx filectx, char* name, ccm_tFunc* func,
     default:
 
       ccm_remove_blank(line_p->line, line_p->line);
-      if (strcmp(line_p->line, "") == 0)
+      if (streq(line_p->line, ""))
         break;
       else if (line_p->line[strlen(line_p->line) - 1] != ';') {
         /* This is an external command */

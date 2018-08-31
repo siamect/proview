@@ -36,10 +36,11 @@
 
 /* wb_c_nodeconfig.c -- work bench methods of the NodeConfig class. */
 
-#include <string.h>
-
 #include "pwr_baseclasses.h"
+
 #include "co_dcli.h"
+#include "co_string.h"
+
 #include "wb_pwrs.h"
 #include "wb_pwrs_msg.h"
 #include "wb_session.h"
@@ -101,7 +102,7 @@ static pwr_tStatus SyntaxCheck(
     return a.sts();
 
   dcli_trim(str, str);
-  if (strcmp(str, "") == 0)
+  if (streq(str, ""))
     wsx_error_msg_str(
         Session, "NodeName is missing", Object, 'E', ErrorCount, WarningCount);
 

@@ -38,12 +38,13 @@
    The main program of pwrc.  */
 
 #include <stdlib.h>
-#include <string.h>
 
 #include <iostream>
 
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_syi.h"
+
 #include "rt_load.h"
 
 #include "cow_xhelp_gtk.h"
@@ -181,7 +182,7 @@ GNU General Public License for more details.\n\n";
 
     //    sts = scanf( "%s", str);
 
-    if (strcmp(str, "") == 0)
+    if (streq(str, ""))
       continue;
 
     dcli_remove_blank(str, str);

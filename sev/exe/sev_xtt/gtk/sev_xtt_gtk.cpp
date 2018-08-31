@@ -40,6 +40,8 @@
 #include <fstream>
 
 #include "co_error.h"
+#include "co_string.h"
+
 #include "rt_errh.h"
 
 #include "xtt_tbl_gtk.h"
@@ -63,7 +65,7 @@ int main(int argc, char* argv[])
 
   // Get options
   for (int i = 1; i < argc; i++) {
-    if (strcmp(argv[i], "-s") == 0 && i + 1 < argc) {
+    if (streq(argv[i], "-s") && i + 1 < argc) {
       strncpy(servername, argv[i + 1], sizeof(servername));
       i++;
     }
@@ -79,7 +81,7 @@ int main(int argc, char* argv[])
     exit(0);
   }
 
-  if (strcmp(servername, "") != 0)
+  if (!streq(servername, ""))
     sevcli_set_servernode(&sts, sevcli, servername);
 
   sevcli_get_itemlist(&sts, sevcli, &items, &itemcnt);

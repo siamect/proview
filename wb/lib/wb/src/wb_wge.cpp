@@ -36,8 +36,10 @@
 
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
+
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_time.h"
 
 #include "ge_graph.h"
@@ -99,7 +101,7 @@ int WGe::wge_is_authorized_cb(void* ge_ctx, unsigned int access)
 
 void WGe::message(void* ctx, char severity, const char* message)
 {
-  if (strcmp(message, "") != 0)
+  if (!streq(message, ""))
     printf("** WGe: %s\n", message);
 }
 

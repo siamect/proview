@@ -35,7 +35,8 @@
  **/
 
 #include <math.h>
-#include <string.h>
+
+#include "co_string.h"
 
 #include "glow_grownode.h"
 #include "glow_growpie.h"
@@ -3877,7 +3878,7 @@ void GlowExportJBean::window(double x1, double y1, double x2, double y2,
   case glow_eExportPass_Attributes: {
     ((GrowCtx*)ctx)->measure_javabean(&dim_x1, &dim_x0, &dim_y1, &dim_y0);
 
-    if (strcmp(owner, "") == 0)
+    if (streq(owner, ""))
       fp << "    " << class_fname << " " << var_fname << " = new "
          << class_fname << "(session, null, false);\n";
     else
@@ -3950,7 +3951,7 @@ void GlowExportJBean::folder(double x1, double y1, double x2, double y2,
       class_fname[0] = _toupper(class_fname[0]);
 
       own = owner + i * 256;
-      if (strcmp(own, "") == 0)
+      if (streq(own, ""))
         fp << "    " << class_fname << " " << var_fname << " = new "
            << class_fname << "(session, null, false);\n";
       else

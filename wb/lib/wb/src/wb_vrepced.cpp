@@ -34,12 +34,11 @@
  * General Public License plus this exception.
  **/
 
-#include <string.h>
-
 #include "pwr_baseclasses.h"
 #include "pwr_version.h"
 
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_time.h"
 
 #include "cow_msgwindow.h"
@@ -514,7 +513,7 @@ bool wb_vrepced::setPgmName(pwr_tStatus* sts, wb_orep* o)
     if (EVEN(*sts))
       return false;
 
-    if (strcmp(pgmname, "") == 0) {
+    if (streq(pgmname, "")) {
       strcpy(pgmname, o->name());
       m_vrep->writeAttribute(sts, o, pwr_eBix_sys,
           offsetof(pwr_sParInfo, PgmName), sizeof(pgmname), pgmname);
@@ -636,7 +635,7 @@ bool wb_vrepced::importPasteObject(pwr_tOid destination, ldh_eDest destcode,
     po = m_vrep->object(&sts, poidl);
     po->ref();
 
-    if (strcmp(name, "Template") == 0 && po && po->cid() == pwr_eClass_ClassDef
+    if (streq(name, "Template") && po && po->cid() == pwr_eClass_ClassDef
         && !cdh_ObjidIsNull(boid)) {
       // Unable to paste a template object correctly, remove it
 
@@ -940,7 +939,7 @@ bool wb_vrepced::classeditorCheck(ldh_eDest dest_code, wb_orep* dest,
       }
     } else {
       // Use the name to choose oix
-      if (strcmp(name, "DevBody") == 0)
+      if (streq(name, "DevBody"))
         *oix = cdh_cixToOix(cdh_oixToCix(fth->oid().oix), pwr_eBix_dev, 0);
       else
         *oix = cdh_cixToOix(cdh_oixToCix(fth->oid().oix), pwr_eBix_rt, 0);
@@ -2375,7 +2374,7 @@ char* wb_vrepced::typeRefToName(pwr_tStatus* sts, pwr_tTid typeref, bool hpp)
       if (EVEN(*sts))
         return str;
 
-      if (strcmp(typeref_body.StructName, "") != 0)
+      if (!streq(typeref_body.StructName, ""))
         strcpy(pgmname, typeref_body.StructName);
       else
         strcpy(pgmname, o_typeref->name());
@@ -2390,7 +2389,7 @@ char* wb_vrepced::typeRefToName(pwr_tStatus* sts, pwr_tTid typeref, bool hpp)
       if (EVEN(*sts))
         return str;
 
-      if (strcmp(typeref_body.PgmName, "") != 0)
+      if (!streq(typeref_body.PgmName, ""))
         strcpy(pgmname, typeref_body.PgmName);
       else
         strcpy(pgmname, o_typeref->name());
@@ -2411,7 +2410,7 @@ char* wb_vrepced::typeRefToName(pwr_tStatus* sts, pwr_tTid typeref, bool hpp)
         return str;
 
       strcpy(pgmname, bdrep->structName());
-      if (strcmp(pgmname, "") == 0)
+      if (streq(pgmname, ""))
         strcpy(pgmname, cdrep->name());
       delete bdrep;
       delete cdrep;
@@ -2424,7 +2423,7 @@ char* wb_vrepced::typeRefToName(pwr_tStatus* sts, pwr_tTid typeref, bool hpp)
         return str;
 
       strcpy(pgmname, tdrep->pgmName());
-      if (strcmp(pgmname, "") == 0)
+      if (streq(pgmname, ""))
         strcpy(pgmname, tdrep->name());
       delete tdrep;
     }
@@ -2519,7 +2518,7 @@ void wb_vrepced::printStructFile(bool hpp)
             throw wb_error(sts);
           }
 
-          if (strcmp(tdef_body.PgmName, "") != 0)
+          if (!streq(tdef_body.PgmName, ""))
             strcpy(tdef_pgmname, tdef_body.PgmName);
           else
             strcpy(tdef_pgmname, o_tdef->name());
@@ -2617,7 +2616,7 @@ void wb_vrepced::printStructFile(bool hpp)
               if (EVEN(sts))
                 throw wb_error(sts);
 
-              if (strcmp(bdef_body.StructName, "") != 0)
+              if (!streq(bdef_body.StructName, ""))
                 strcpy(pgmname, bdef_body.StructName);
               else
                 strcpy(pgmname, o_cdef->name());
@@ -2684,7 +2683,7 @@ void wb_vrepced::printStructFile(bool hpp)
                   if (EVEN(sts))
                     throw wb_error(sts);
 
-                  if (strcmp(adef_body.Info.PgmName, "") != 0)
+                  if (!streq(adef_body.Info.PgmName, ""))
                     strcpy(attr_pgmname, adef_body.Info.PgmName);
                   else
                     strcpy(attr_pgmname, o_adef->name());
@@ -2772,7 +2771,7 @@ void wb_vrepced::printStructFile(bool hpp)
                   if (EVEN(sts))
                     throw wb_error(sts);
 
-                  if (strcmp(adef_body.Info.PgmName, "") != 0)
+                  if (!streq(adef_body.Info.PgmName, ""))
                     strcpy(attr_pgmname, adef_body.Info.PgmName);
                   else
                     strcpy(attr_pgmname, o_adef->name());
@@ -2819,7 +2818,7 @@ void wb_vrepced::printStructFile(bool hpp)
                     fp << " {\n"
                        << " public:\n";
 
-                  if (strcmp(adef_body.Info.PgmName, "") != 0)
+                  if (!streq(adef_body.Info.PgmName, ""))
                     strcpy(attr_pgmname, adef_body.Info.PgmName);
                   else
                     strcpy(attr_pgmname, o_adef->name());
@@ -2854,7 +2853,7 @@ void wb_vrepced::printStructFile(bool hpp)
                     fp << " {\n"
                        << " public:\n";
 
-                  if (strcmp(adef_body.Info.PgmName, "") != 0)
+                  if (!streq(adef_body.Info.PgmName, ""))
                     strcpy(attr_pgmname, adef_body.Info.PgmName);
                   else
                     strcpy(attr_pgmname, o_adef->name());

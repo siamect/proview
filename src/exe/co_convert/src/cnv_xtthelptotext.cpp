@@ -39,15 +39,15 @@
 
 /*_Include files_________________________________________________________*/
 
-#include <string.h>
 #include <stdlib.h>
 
 extern "C" {
 #include "co_cdh.h"
 #include "co_dcli.h"
 }
-
 #include "co_lng.h"
+#include "co_string.h"
+
 #include "cnv_ctx.h"
 #include "cnv_xtthelptotext.h"
 #include "cnv_image.h"
@@ -148,9 +148,9 @@ void* CnvXtthelpToText::insert(navh_eItemType item_type, const char* text1,
     return NULL;
   }
   case navh_eItemType_Option: {
-    if (strcmp(text1, "printdisable") == 0)
+    if (streq(text1, "printdisable"))
       print_disable = 1;
-    else if (strcmp(text1, "printenable") == 0)
+    else if (streq(text1, "printenable"))
       print_disable = 0;
     return NULL;
   }

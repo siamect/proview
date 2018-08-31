@@ -36,9 +36,10 @@
 
 /* wb_c_classdef.c -- work bench methods of the ClassDef class. */
 
-#include <string.h>
-
 #include "pwr_baseclasses.h"
+
+#include "co_string.h"
+
 #include "wb_pwrs.h"
 #include "wb_pwrs_msg.h"
 
@@ -56,7 +57,7 @@ static pwr_tStatus AnteCreate(
     if (EVEN(sts))
       return sts;
 
-    if (strcmp(name, "Class") != 0)
+    if (!streq(name, "Class"))
       return PWRS__POSCLASSHIER;
   }
   return PWRS__SUCCESS;

@@ -34,13 +34,14 @@
  * General Public License plus this exception.
  **/
 
-#include <string.h>
-
 #include "pwr_names.h"
+
 #include "co_dcli.h"
 #include "co_msg.h"
+#include "co_string.h"
 #include "co_syi.h"
 #include "co_time.h"
+
 #include "rt_load.h"
 
 #include "cow_msgwindow.h"
@@ -1130,7 +1131,7 @@ void wb_build::xttgraph(pwr_tOid oid)
       m_sts = fsts;
       return;
     }
-    if ((is_frame || is_applet) && strcmp(java_name, "") == 0) {
+    if ((is_frame || is_applet) && streq(java_name, "")) {
       // Java name is not yet set, use the default java name
       strcpy(java_name, action);
       if ((s = strchr(java_name, '.')) != 0)
@@ -1258,7 +1259,7 @@ void wb_build::webgraph(pwr_tOid oid)
         if (EVEN(fsts))
           continue;
 
-        if (is_frame && strcmp(jname, java_name) == 0) {
+        if (is_frame && streq(jname, java_name)) {
           dcli_parse_filename(found_file, dev, dir, graph_name, type, &version);
           strcpy(name, found_file);
           found = 1;
@@ -1316,7 +1317,7 @@ void wb_build::webgraph(pwr_tOid oid)
         }
 
         Ge* gectx = m_wnav->ge_new(graph_name, 1);
-        if (strcmp(appletsignature, "") == 0)
+        if (streq(appletsignature, ""))
           strcpy(cmd, "export java");
         else
           sprintf(cmd, "export java /signature=\"%s\"", appletsignature);
@@ -1669,7 +1670,7 @@ void wb_build::application(pwr_tOid oid)
     return;
   }
 
-  if (strcmp(buildcmd, "") == 0) {
+  if (streq(buildcmd, "")) {
     m_sts = PWRB__NOBUILT;
     return;
   }
@@ -2004,7 +2005,7 @@ void wb_build::directories(char* dir, bld_ePass pass)
         continue;
 
       int update = 0;
-      if (strcmp(line_item[3], "") == 0)
+      if (streq(line_item[3], ""))
         sprintf(cmd, "cd %s;make -q", line_item[2]);
       else
         sprintf(cmd, "cd %s;make -q -f %s", line_item[2], line_item[3]);
@@ -2019,12 +2020,12 @@ void wb_build::directories(char* dir, bld_ePass pass)
       // Needs update
       if (opt.force) {
         // Execute make with -B, unconditionally make all targets
-        if (strcmp(line_item[3], "") == 0)
+        if (streq(line_item[3], ""))
           sprintf(cmd, "cd %s;make -B", line_item[2]);
         else
           sprintf(cmd, "cd %s;make -B -f %s", line_item[2], line_item[3]);
       } else {
-        if (strcmp(line_item[3], "") == 0)
+        if (streq(line_item[3], ""))
           sprintf(cmd, "cd %s;make", line_item[2]);
         else
           sprintf(cmd, "cd %s;make -f %s", line_item[2], line_item[3]);

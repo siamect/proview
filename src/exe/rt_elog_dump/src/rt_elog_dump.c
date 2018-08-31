@@ -43,7 +43,8 @@
    */
 
 #include <stdarg.h>
-#include <string.h>
+
+#include "co_string.h"
 
 #include "rt_elog.h"
 
@@ -128,7 +129,7 @@ int main(int argc, char* argv[])
   pwr_tInt32 ret;
 
   if (argc > 1
-      && (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0)) {
+      && (streq(argv[1], "-h") || streq(argv[1], "--help"))) {
     usage();
     exit(0);
   }

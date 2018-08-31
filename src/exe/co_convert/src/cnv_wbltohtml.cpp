@@ -34,17 +34,17 @@
  * General Public License plus this exception.
  */
 
-#include <string.h>
-
-#include "cnv_wbltohtml.h"
-#include "cnv_wbltoh.h"
-#include "cnv_readsrc.h"
 extern "C" {
 #include "co_cdh.h"
 #include "co_time.h"
 #include "co_dcli.h"
 }
 #include "co_lng.h"
+#include "co_string.h"
+
+#include "cnv_wbltohtml.h"
+#include "cnv_wbltoh.h"
+#include "cnv_readsrc.h"
 
 int CnvWblToHtml::init(char* first)
 {
@@ -246,7 +246,7 @@ int CnvWblToHtml::init(char* first)
          << "<FRAME src=\"" << gname << "\" name=\"groupFrame\">\n"
          << "<FRAME src=\"" << fname << "\" name=\"menuFrame\">\n"
          << "</FRAMESET>\n";
-      if (strcmp(ctx->setup->groups_startpage[i], "") == 0)
+      if (streq(ctx->setup->groups_startpage[i], ""))
         fp << "<FRAME name=\"classFrame\">\n";
       else
         fp << "<FRAME src=\"" << ctx->setup->groups_startpage[i]
@@ -517,7 +517,7 @@ int CnvWblToHtml::class_exec()
       << "&nbsp;|&nbsp<A HREF=\"" << hpp_file << "#" << ctx->rw->class_name
       << "\">Class</A>\n";
 
-  if (ctx->rw->doc_fresh && strcmp(ctx->rw->doc_code, "") != 0) {
+  if (ctx->rw->doc_fresh && !streq(ctx->rw->doc_code, "")) {
     if (strstr(ctx->rw->doc_code, ".pdf") != 0) {
       strcpy(ref_name, ctx->rw->doc_code);
       html_clf->f << "&nbsp;|&nbsp;<A HREF=\"" << ref_name << "\">Code</A>\n";
@@ -547,28 +547,28 @@ int CnvWblToHtml::class_exec()
       << "Class " << ctx->rw->class_name << "</H2>\n"
       << "<HR>\n"
       << "<DL>\n";
-  if (ctx->rw->doc_fresh && strcmp(ctx->rw->doc_author, "") != 0) {
+  if (ctx->rw->doc_fresh && !streq(ctx->rw->doc_author, "")) {
     html_clf->f << "<DT><B>" << Lng::translate("Author")
                 << "</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
                 << ctx->rw->doc_author << "<DT>\n";
   }
-  if (ctx->rw->doc_fresh && strcmp(ctx->rw->doc_creator, "") != 0) {
+  if (ctx->rw->doc_fresh && !streq(ctx->rw->doc_creator, "")) {
     html_clf->f << "<DT><B>" << Lng::translate("Creator")
                 << "</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << ctx->rw->doc_creator
                 << "<DT>\n";
   }
 
-  if (ctx->rw->doc_fresh && (strcmp(ctx->rw->doc_version, "") != 0
-                                || strcmp(ctx->rw->class_version, "") != 0)) {
+  if (ctx->rw->doc_fresh && (!streq(ctx->rw->doc_version, "")
+                                || !streq(ctx->rw->class_version, ""))) {
     html_clf->f << "<DT><B>" << Lng::translate("Version")
                 << "</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-    if (strcmp(ctx->rw->doc_version, "") != 0)
+    if (!streq(ctx->rw->doc_version, ""))
       html_clf->f << ctx->rw->doc_version << "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-    if (strcmp(ctx->rw->class_version, "") != 0)
+    if (!streq(ctx->rw->class_version, ""))
       html_clf->f << ctx->rw->class_version;
     html_clf->f << "<DT>\n";
   }
-  if (ctx->rw->doc_fresh && strcmp(ctx->rw->doc_code, "") != 0) {
+  if (ctx->rw->doc_fresh && !streq(ctx->rw->doc_code, "")) {
     if (strstr(ctx->rw->doc_code, ".pdf") != 0) {
       html_clf->f
           << "<DT><B>" << Lng::translate("Code")
@@ -645,7 +645,7 @@ int CnvWblToHtml::body_exec()
     strcpy(struct_name, "");
   else {
     strcpy(struct_name, "pwr_sClass_");
-    if (strcmp(ctx->rw->body_structname, "") == 0)
+    if (streq(ctx->rw->body_structname, ""))
       strcat(struct_name, ctx->rw->class_name);
     else
       strcat(struct_name, ctx->rw->body_structname);
@@ -806,8 +806,8 @@ int CnvWblToHtml::attribute_exec()
     cdp_created = true;
   }
 
-  if (strcmp(ctx->rw->attr_typeref, "CastId") == 0
-      || strcmp(ctx->rw->attr_typeref, "DisableAttr") == 0)
+  if (streq(ctx->rw->attr_typeref, "CastId")
+      || streq(ctx->rw->attr_typeref, "DisableAttr"))
     return 1;
 
   if (Lng::current() != lng_eLanguage_en_US)
@@ -823,7 +823,7 @@ int CnvWblToHtml::attribute_exec()
     strcpy(typeref_href, &ctx->rw->attr_typeref[13]);
     strcpy(ctx->rw->attr_typeref, typeref_href);
   }
-  if (strcmp(ctx->rw->attr_typeref_volume, "") != 0) {
+  if (!streq(ctx->rw->attr_typeref_volume, "")) {
     char low_volname[80];
     strcpy(low_volname, CnvCtx::low(ctx->rw->attr_typeref_volume));
     sprintf(typeref_href, "%s_%s.html", low_volname,
@@ -855,13 +855,13 @@ int CnvWblToHtml::attribute_exec()
 
   html_clf->f << "</A><TD><A HREF=\"#" << ctx->rw->attr_name << "\"><CODE><B>"
               << ctx->rw->attr_name << "</B></CODE></A></TD>\n";
-  if (strcmp(ctx->rw->attr_graphname, "") != 0)
+  if (!streq(ctx->rw->attr_graphname, ""))
     html_clf->f << "<TD WIDTH=\"1%\">" << ctx->rw->attr_graphname << "</TD>\n";
   else
     html_clf->f << "<TD WIDTH=\"1%\">&nbsp;</TD>\n";
   html_clf->f << "<TD>";
   if (ctx->rw->doc_fresh) {
-    if (strcmp(ctx->rw->doc_summary, "") == 0) {
+    if (streq(ctx->rw->doc_summary, "")) {
       for (i = 0; i < ctx->rw->doc_cnt; i++) {
         ctx->remove_spaces(ctx->rw->doc_text[i], txt);
         if (strncmp(CnvCtx::low(txt), "@image", 6) == 0) {
@@ -924,7 +924,7 @@ int CnvWblToHtml::attribute_exec()
     fp_tmp << "<DT><CODE><B>Elements</B>&nbsp;&nbsp;" << ctx->rw->attr_elements
            << "</CODE><DT>\n";
 
-  if (strcmp(ctx->rw->attr_graphname, "") != 0)
+  if (!streq(ctx->rw->attr_graphname, ""))
     fp_tmp << "<DT><CODE><B>GraphName</B>&nbsp;" << ctx->rw->attr_graphname
            << "</CODE><DT>\n";
 
@@ -986,7 +986,7 @@ int CnvWblToHtml::bit_exec()
               << "</B></CODE></A></TD>\n"
               << "<TD>";
   if (ctx->rw->doc_fresh) {
-    if (strcmp(ctx->rw->doc_summary, "") == 0) {
+    if (streq(ctx->rw->doc_summary, "")) {
       for (i = 0; i < ctx->rw->doc_cnt; i++) {
         ctx->remove_spaces(ctx->rw->doc_text[i], txt);
         if (strncmp(CnvCtx::low(txt), "@image", 6) == 0) {
@@ -1159,13 +1159,13 @@ int CnvWblToHtml::typedef_exec()
       << "<TR>\n"
       << "<TD BGCOLOR=\"white\" CLASS=\"NavBarCell2\"><FONT SIZE=\"-2\">\n";
 
-  if ((strcmp(ctx->rw->typedef_typeref, "Mask") == 0
-          || strcmp(ctx->rw->typedef_typeref, "Enum") == 0)
-      && strcmp(low_volume_name, "pwrs") != 0) {
+  if ((streq(ctx->rw->typedef_typeref, "Mask")
+          || streq(ctx->rw->typedef_typeref, "Enum"))
+      && !streq(low_volume_name, "pwrs")) {
     sprintf(code_aref, "%s#%s", struct_file, ctx->rw->typedef_name);
     html_clf->f << " C Binding: &nbsp;<A HREF=\"" << code_aref
                 << "\">Typedef</A>\n";
-  } else if (ctx->rw->doc_fresh && strcmp(ctx->rw->doc_code, "") != 0) {
+  } else if (ctx->rw->doc_fresh && !streq(ctx->rw->doc_code, "")) {
     CnvReadSrc::filename_to_html(ref_name, ctx->rw->doc_code);
     sprintf(code_aref, "%s#%s", ref_name, low_class_name);
     html_clf->f << " C Binding: &nbsp;<A HREF=\"" << code_aref
@@ -1190,16 +1190,16 @@ int CnvWblToHtml::typedef_exec()
       << "Type " << ctx->rw->class_name << "</H2>\n"
       << "<HR>\n"
       << "<DL>\n";
-  if (ctx->rw->doc_fresh && strcmp(ctx->rw->doc_author, "") != 0) {
+  if (ctx->rw->doc_fresh && !streq(ctx->rw->doc_author, "")) {
     html_clf->f << "<DT><B>Author</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
                 << ctx->rw->doc_author << "<DT>\n";
   }
 
-  if (ctx->rw->doc_fresh && strcmp(ctx->rw->doc_version, "") != 0) {
+  if (ctx->rw->doc_fresh && !streq(ctx->rw->doc_version, "")) {
     html_clf->f << "<DT><B>Version</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
                 << ctx->rw->doc_version << "<DT>\n";
   }
-  if (ctx->rw->doc_fresh && strcmp(ctx->rw->doc_code, "") != 0) {
+  if (ctx->rw->doc_fresh && !streq(ctx->rw->doc_code, "")) {
     html_clf->f
         << "<DT><B>Code</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
         << ctx->rw->doc_code << "<DT>\n";
@@ -1243,8 +1243,8 @@ int CnvWblToHtml::typedef_exec()
   }
   html_clf->f << "</FONT>\n";
 
-  if (strcmp(ctx->rw->typedef_typeref, "Mask") == 0
-      || strcmp(ctx->rw->typedef_typeref, "Enum") == 0) {
+  if (streq(ctx->rw->typedef_typeref, "Mask")
+      || streq(ctx->rw->typedef_typeref, "Enum")) {
     char bitchar = _tolower(ctx->rw->typedef_typeref[0]);
 
     html_clf->f << "<HR><BR>\n"
@@ -1264,8 +1264,8 @@ int CnvWblToHtml::typedef_exec()
 
 int CnvWblToHtml::typedef_close()
 {
-  if (strcmp(ctx->rw->typedef_typeref, "Mask") == 0
-      || strcmp(ctx->rw->typedef_typeref, "Enum") == 0) {
+  if (streq(ctx->rw->typedef_typeref, "Mask")
+      || streq(ctx->rw->typedef_typeref, "Enum")) {
     html_clf->f << "</TABLE>\n";
   }
 

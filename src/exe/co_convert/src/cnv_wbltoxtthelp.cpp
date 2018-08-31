@@ -35,14 +35,15 @@
  */
 
 #include <stdio.h>
-#include <string.h>
 
-#include "cnv_wbltoxtthelp.h"
-#include "cnv_ctx.h"
 extern "C" {
 #include "co_cdh.h"
 }
 #include "co_lng.h"
+#include "co_string.h"
+
+#include "cnv_wbltoxtthelp.h"
+#include "cnv_ctx.h"
 
 static int get_class_link(char* typeref, char* volume, char* file)
 {
@@ -51,18 +52,18 @@ static int get_class_link(char* typeref, char* volume, char* file)
 
   cdh_ToLower(v, volume);
 
-  if (strcmp(v, "pwrs") == 0 || strcmp(v, "pwrb") == 0
-      || strcmp(v, "basecomponent") == 0 || strcmp(v, "miscellaneous") == 0
-      || strcmp(v, "nmps") == 0 || strcmp(v, "opc") == 0
-      || strcmp(v, "otherio") == 0 || strcmp(v, "othermanufacturer") == 0
-      || strcmp(v, "profibus") == 0 || strcmp(v, "remote") == 0
-      || strcmp(v, "siemens") == 0 || strcmp(v, "abb") == 0)
+  if (streq(v, "pwrs") || streq(v, "pwrb")
+      || streq(v, "basecomponent") || streq(v, "miscellaneous")
+      || streq(v, "nmps") || streq(v, "opc")
+      || streq(v, "otherio") || streq(v, "othermanufacturer")
+      || streq(v, "profibus") || streq(v, "remote")
+      || streq(v, "siemens") || streq(v, "abb"))
     sprintf(file, "$pwr_lang/%s_xtthelp.dat", v);
   else
     sprintf(file, "$pwrp_exe/%s_xtthelp.dat", v);
 
   cdh_ToLower(tr, typeref);
-  if (strcmp(tr, "pwrs:class-$plcnode") == 0)
+  if (streq(tr, "pwrs:class-$plcnode"))
     return 0;
   if (strstr(tr, "enum") != 0)
     return 0;
@@ -72,24 +73,24 @@ static int get_class_link(char* typeref, char* volume, char* file)
     return 0;
   if (strncmp(tr, "text", 4) == 0)
     return 0;
-  if (strcmp(tr, "boolean") == 0 || strcmp(tr, "float32") == 0
-      || strcmp(tr, "float64") == 0 || strcmp(tr, "char") == 0
-      || strcmp(tr, "int8") == 0 || strcmp(tr, "int16") == 0
-      || strcmp(tr, "int32") == 0 || strcmp(tr, "uint8") == 0
-      || strcmp(tr, "uint16") == 0 || strcmp(tr, "uint32") == 0
-      || strcmp(tr, "objid") == 0 || strcmp(tr, "buffer") == 0
-      || strcmp(tr, "string") == 0 || strcmp(tr, "enum") == 0
-      || strcmp(tr, "struct") == 0 || strcmp(tr, "mask") == 0
-      || strcmp(tr, "array") == 0 || strcmp(tr, "time") == 0
-      || strcmp(tr, "text") == 0 || strcmp(tr, "attrref") == 0
-      || strcmp(tr, "uint64") == 0 || strcmp(tr, "int64") == 0
-      || strcmp(tr, "classid") == 0 || strcmp(tr, "typeid") == 0
-      || strcmp(tr, "volumeid") == 0 || strcmp(tr, "objectix") == 0
-      || strcmp(tr, "refid") == 0 || strcmp(tr, "deltatime") == 0
-      || strcmp(tr, "status") == 0 || strcmp(tr, "netstatus") == 0
-      || strcmp(tr, "castid") == 0 || strcmp(tr, "prostring") == 0
-      || strcmp(tr, "disableattr") == 0 || strcmp(tr, "dataref") == 0
-      || strcmp(tr, "void") == 0)
+  if (streq(tr, "boolean") || streq(tr, "float32")
+      || streq(tr, "float64") || streq(tr, "char")
+      || streq(tr, "int8") || streq(tr, "int16")
+      || streq(tr, "int32") || streq(tr, "uint8")
+      || streq(tr, "uint16") || streq(tr, "uint32")
+      || streq(tr, "objid") || streq(tr, "buffer")
+      || streq(tr, "string") || streq(tr, "enum")
+      || streq(tr, "struct") || streq(tr, "mask")
+      || streq(tr, "array") || streq(tr, "time")
+      || streq(tr, "text") || streq(tr, "attrref")
+      || streq(tr, "uint64") || streq(tr, "int64")
+      || streq(tr, "classid") || streq(tr, "typeid")
+      || streq(tr, "volumeid") || streq(tr, "objectix")
+      || streq(tr, "refid") || streq(tr, "deltatime")
+      || streq(tr, "status") || streq(tr, "netstatus")
+      || streq(tr, "castid") || streq(tr, "prostring")
+      || streq(tr, "disableattr") || streq(tr, "dataref")
+      || streq(tr, "void"))
     return 0;
 
   return 1;
@@ -167,17 +168,17 @@ int CnvWblToXtthelp::class_exec()
   if (!lng_sts)
     fp_tmp << "(" << Lng::translate("English text not available") << ")\n\n";
 
-  if (ctx->rw->doc_fresh && strcmp(ctx->rw->doc_author, "") != 0) {
+  if (ctx->rw->doc_fresh && !streq(ctx->rw->doc_author, "")) {
     fp_tmp << "<B>" << Lng::translate("Author") << "<T>" << ctx->rw->doc_author
            << '\n';
   }
 
-  if (ctx->rw->doc_fresh && strcmp(ctx->rw->doc_creator, "") != 0) {
+  if (ctx->rw->doc_fresh && !streq(ctx->rw->doc_creator, "")) {
     fp_tmp << "<B>" << Lng::translate("Creator") << "<T>"
            << ctx->rw->doc_creator << '\n';
   }
 
-  if (ctx->rw->doc_fresh && strcmp(ctx->rw->doc_version, "") != 0) {
+  if (ctx->rw->doc_fresh && !streq(ctx->rw->doc_version, "")) {
     fp_tmp << "<B>" << Lng::translate("Version") << "<T>"
            << ctx->rw->doc_version << '\n';
   }
@@ -349,14 +350,14 @@ int CnvWblToXtthelp::attribute_exec()
   int lng_sts = 1;
   pwr_tFileName link_file;
 
-  if (strcmp(ctx->rw->attr_typeref, "CastId") == 0
-      || strcmp(ctx->rw->attr_typeref, "DisableAttr") == 0)
+  if (streq(ctx->rw->attr_typeref, "CastId")
+      || streq(ctx->rw->attr_typeref, "DisableAttr"))
     return 1;
 
   if (Lng::current() != lng_eLanguage_en_US)
     lng_sts = ctx->rw->read_lng(ctx->rw->class_name, ctx->rw->attr_name);
 
-  if (strcmp(ctx->rw->attr_graphname, "") == 0)
+  if (streq(ctx->rw->attr_graphname, ""))
     fp_tmp << '\n'
            << "<H2>" << ctx->rw->attr_name << "<BOOKMARK>" << ctx->rw->attr_name
            << '\n';
@@ -378,7 +379,7 @@ int CnvWblToXtthelp::attribute_exec()
 
   fp_tmp << "$" << ctx->rw->attr_type << "   ";
 
-  if (strcmp(ctx->rw->attr_flags, "") != 0)
+  if (!streq(ctx->rw->attr_flags, ""))
     fp_tmp << "Flags[" << ctx->rw->attr_flags << "]";
 
   if (get_class_link(
@@ -437,17 +438,17 @@ int CnvWblToXtthelp::typedef_exec()
   if (!lng_sts)
     fp_tmp << "(" << Lng::translate("English text not available") << ")\n\n";
 
-  if (ctx->rw->doc_fresh && strcmp(ctx->rw->doc_author, "") != 0) {
+  if (ctx->rw->doc_fresh && !streq(ctx->rw->doc_author, "")) {
     fp_tmp << "<B>" << Lng::translate("Author") << "<T>" << ctx->rw->doc_author
            << '\n';
   }
 
-  if (ctx->rw->doc_fresh && strcmp(ctx->rw->doc_creator, "") != 0) {
+  if (ctx->rw->doc_fresh && !streq(ctx->rw->doc_creator, "")) {
     fp_tmp << "<B>" << Lng::translate("Creator") << "<T>"
            << ctx->rw->doc_creator << '\n';
   }
 
-  if (ctx->rw->doc_fresh && strcmp(ctx->rw->doc_version, "") != 0) {
+  if (ctx->rw->doc_fresh && !streq(ctx->rw->doc_version, "")) {
     fp_tmp << "<B>" << Lng::translate("Version") << "<T>"
            << ctx->rw->doc_version << '\n';
   }

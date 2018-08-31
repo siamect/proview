@@ -34,14 +34,14 @@
  * General Public License plus this exception.
  */
 
-#include <string.h>
-
 extern "C" {
 #include "co_time.h"
 #include "co_dcli.h"
 #include "co_cdh.h"
 }
 #include "co_lng.h"
+#include "co_string.h"
+
 #include "cnv_ctx.h"
 #include "cnv_wblto.h"
 #include "cnv_ctx.h"
@@ -92,7 +92,7 @@ int CnvReadWbl::read_wbl(char* filename)
     else {
       line_cnt++;
       CnvCtx::remove_spaces(line, line);
-      if (strcmp(line, "") == 0)
+      if (streq(line, ""))
         continue;
 
       if (line[0] == '!' && strncmp(line, "!/**", 4) != 0
@@ -465,7 +465,7 @@ int CnvReadWbl::read_wbl(char* filename)
         char attr_value[100];
         int oreq = 0;
 
-        if (strcmp(line_part[2], "|") == 0) {
+        if (streq(line_part[2], "|")) {
           strcpy(line_part[2], line_part[3]);
           oreq = 1;
         }
@@ -525,7 +525,7 @@ int CnvReadWbl::read_wbl(char* filename)
         char attr_value[100];
         int oreq = 0;
 
-        if (strcmp(line_part[3], "|") == 0) {
+        if (streq(line_part[3], "|")) {
           strcpy(line_part[3], line_part[4]);
           oreq = 1;
         }
@@ -679,17 +679,17 @@ int CnvReadWbl::attribute_attr(char* name, char* value)
       strcpy(attr_typeref, value);
   } else if (strcmp(low(name), "flags") == 0) {
     if (strncmp(value, "PWR_MASK_", 9) == 0) {
-      if (strcmp(attr_flags, "") != 0)
+      if (!streq(attr_flags, ""))
         strcat(attr_flags, " | ");
       strcat(attr_flags, &value[9]);
 
-      if (strcmp(value, "PWR_MASK_POINTER") == 0)
+      if (streq(value, "PWR_MASK_POINTER"))
         attr_pointer = 1;
-      if (strcmp(value, "PWR_MASK_ARRAY") == 0)
+      if (streq(value, "PWR_MASK_ARRAY"))
         attr_array = 1;
-      if (strcmp(value, "PWR_MASK_RTVIRTUAL") == 0)
+      if (streq(value, "PWR_MASK_RTVIRTUAL"))
         attr_rtvirtual = 1;
-      if (strcmp(value, "PWR_MASK_CLASS") == 0)
+      if (streq(value, "PWR_MASK_CLASS"))
         attr_isclass = 1;
     } else {
       int flags_value;
@@ -698,7 +698,7 @@ int CnvReadWbl::attribute_attr(char* name, char* value)
       if (nr != 1) {
         return 1;
       }
-      if (strcmp(attr_flags, "") != 0)
+      if (!streq(attr_flags, ""))
         strcat(attr_flags, " | ");
       strcat(attr_flags, flags_to_string(flags_value));
 
@@ -773,14 +773,14 @@ int CnvReadWbl::class_attr(char* name, char* value)
   } else if (strcmp(low(name), "popeditor") == 0) {
     strcpy(class_method, value);
   } else if (strcmp(low(name), "flags") == 0) {
-    if (strcmp(class_flags, "") != 0)
+    if (!streq(class_flags, ""))
       strcat(class_flags, " | ");
     if (strncmp(value, "pwr_mClassDef_", 14) == 0)
       strcat(body_flags, &value[14]);
     else
       strcat(body_flags, value);
 
-    if (strcmp(value, "pwr_mClassDef_DevOnly") == 0)
+    if (streq(value, "pwr_mClassDef_DevOnly"))
       class_devonly = 1;
   }
   return 1;
@@ -813,14 +813,14 @@ int CnvReadWbl::body_attr(char* name, char* value)
   if (strcmp(low(name), "structname") == 0) {
     strcpy(body_structname, value);
   } else if (strcmp(low(name), "flags") == 0) {
-    if (strcmp(body_flags, "") != 0)
+    if (!streq(body_flags, ""))
       strcat(body_flags, " | ");
     if (strncmp(value, "pwr_mObjBodyDef_", 16) == 0)
       strcat(body_flags, &value[9]);
     else
       strcat(body_flags, value);
 
-    if (strcmp(value, "pwr_mObjBodyDef_RtVirtual") == 0)
+    if (streq(value, "pwr_mObjBodyDef_RtVirtual"))
       body_rtvirtual = 1;
   }
   return 1;
@@ -853,21 +853,21 @@ int CnvReadWbl::graphplcnode_attr(char* name, char* value)
 
   // Description of methods
   if (strcmp(low(name), "graphmethod") == 0) {
-    if (strcmp(value, "0") == 0)
+    if (streq(value, "0"))
       strcat(doc_text[doc_cnt - 1], " (standard, individual attributes)");
-    else if (strcmp(value, "1") == 0)
+    else if (streq(value, "1"))
       strcat(doc_text[doc_cnt - 1], " (standard, common attributes)");
-    else if (strcmp(value, "2") == 0)
+    else if (streq(value, "2"))
       strcat(doc_text[doc_cnt - 1], " (standard, two textfield)");
-    else if (strcmp(value, "3") == 0)
+    else if (streq(value, "3"))
       strcat(doc_text[doc_cnt - 1], " (text)");
-    else if (strcmp(value, "4") == 0)
+    else if (streq(value, "4"))
       strcat(doc_text[doc_cnt - 1], " (special)");
-    else if (strcmp(value, "5") == 0)
+    else if (streq(value, "5"))
       strcat(doc_text[doc_cnt - 1], " (grafcet order)");
-    else if (strcmp(value, "6") == 0)
+    else if (streq(value, "6"))
       strcat(doc_text[doc_cnt - 1], " (document)");
-    else if (strcmp(value, "7") == 0)
+    else if (streq(value, "7"))
       strcat(doc_text[doc_cnt - 1], " (Get,Set)");
   } else if (strcmp(low(name), "compmethod") == 0)
     ;
@@ -1307,7 +1307,7 @@ int CnvReadWbl::read_lng(char* cname, char* aname)
       Lng::get_language_str());
 
   strcpy(key, cname);
-  if (aname && strcmp(aname, "") != 0) {
+  if (aname && !streq(aname, "")) {
     strcat(key, "-");
     strcat(key, aname);
   }
@@ -1337,7 +1337,7 @@ int CnvReadWbl::read_lng(char* cname, char* aname)
     if (len) {
       CnvCtx::remove_spaces(&str[len], found_key);
       if (cdh_NoCaseStrcmp(cname, found_key) == 0) {
-        if (aname && strcmp(aname, "") != 0) {
+        if (aname && !streq(aname, "")) {
           in_class = 1;
         } else {
           in_doc = 1;

@@ -38,8 +38,9 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-#include "co_ver.h"
 #include "co_dcli.h"
+#include "co_string.h"
+#include "co_ver.h"
 
 #include "rt_errh_msg.h"
 #include "rt_ini_event.h"
@@ -87,7 +88,7 @@ static pwr_tStatus start(ini_sContext* cp)
 
   int fd;
 
-  if (strcmp(cp->console, "") == 0)
+  if (streq(cp->console, ""))
     strcpy(console, "/dev/console");
   else
     strcpy(console, cp->console);
@@ -110,7 +111,7 @@ static pwr_tStatus start(ini_sContext* cp)
 
   for (nep = tree_Minimum(&sts, cp->nid_t); nep != NULL;
        nep = tree_Successor(&sts, cp->nid_t, nep)) {
-    if (strcmp(cp->nodename, nep->name) == 0) {
+    if (streq(cp->nodename, nep->name)) {
       cp->me = nep;
       break;
     }
@@ -274,7 +275,7 @@ static ini_sContext* createContext(int argc, char** argv)
   ini_sContext* cp;
   pwr_tStatus sts;
 
-  if (argc > 1 && strcmp(argv[1], "--version") == 0) {
+  if (argc > 1 && streq(argv[1], "--version")) {
     system("cat $pwr_exe/rt_version.dat");
     exit(1);
   }

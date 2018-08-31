@@ -41,6 +41,8 @@
 #include "rt_gdh.h"
 #include "rt_load.h"
 #include "rt_gdh_msg.h"
+
+#include "co_string.h"
 #include "co_time.h"
 
 #include "cow_xhelp.h"
@@ -86,7 +88,7 @@ void Ge::prevtable_insert(char* name, char* prev)
 
   // Check if alread inserted
   for (int i = 0; i < prev_count; i++) {
-    if (strcmp(name, prev_table[i].name) == 0) {
+    if (streq(name, prev_table[i].name)) {
       strcpy(prev_table[i].prev, prev);
       return;
     }
@@ -100,7 +102,7 @@ void Ge::prevtable_insert(char* name, char* prev)
 int Ge::prevtable_get(char* name, char* prev)
 {
   for (int i = 0; i < prev_count; i++) {
-    if (strcmp(name, prev_table[i].name) == 0) {
+    if (streq(name, prev_table[i].name)) {
       strcpy(prev, prev_table[i].prev);
       return 1;
     }
@@ -118,7 +120,7 @@ void Ge::save_and_close()
   char name[40];
 
   graph->get_name(name);
-  if (strcmp(name, "") == 0) {
+  if (streq(name, "")) {
     if (!graph->is_subgraph())
       open_input_dialog(
           "Graph name", "Save Graph", "", Ge::save_graph_and_close);
@@ -192,7 +194,7 @@ void Ge::save_graph(Ge* gectx, char* name)
     if ((s = strrchr(graphname, '.')))
       *s = 0;
     gectx->graph->get_name(oldname);
-    if (strcmp(graphname, oldname) != 0 && strcmp(oldname, "") != 0)
+    if (!streq(graphname, oldname) && !streq(oldname, ""))
       // Name changed
       gectx->graph->set_java_name("");
 
@@ -216,7 +218,7 @@ void Ge::save_graph(Ge* gectx, char* name)
       *s = 0;
 
     gectx->graph->get_name(oldname);
-    if (strcmp(graphname, oldname) != 0 && strcmp(oldname, "") != 0)
+    if (!streq(graphname, oldname) && !streq(oldname, ""))
       // Name changed
       gectx->graph->set_java_name("");
 
@@ -242,7 +244,7 @@ void Ge::save_graph(Ge* gectx, char* name)
 
     // Store this to enable previous page later
     gectx->graph->get_next_subgraph(next);
-    if (strcmp(next, "") == 0)
+    if (streq(next, ""))
       gectx->prevtable_insert(next, name);
 
     gectx->set_title();
@@ -1143,7 +1145,7 @@ void Ge::activate_save()
   }
 
   graph->get_name(name);
-  if (strcmp(name, "") == 0) {
+  if (streq(name, "")) {
     if (!graph->is_subgraph())
       open_input_dialog("Graph name", "Save Graph", "", Ge::save_graph);
     else
@@ -1175,7 +1177,7 @@ void Ge::activate_build()
   pwr_tFileName fname;
 
   graph->get_name(name);
-  if (strcmp(name, "") == 0 || graph->is_modified()) {
+  if (streq(name, "") || graph->is_modified()) {
     wow->DisplayError("Build error", "Graph is not saved");
     return;
   }
@@ -1203,7 +1205,7 @@ void Ge::activate_export_javabean()
 
   if (!graph->get_java_name(name)) {
     graph->get_name(name);
-    if (strcmp(name, "") != 0) {
+    if (!streq(name, "")) {
       if (strncmp(name, "pwr_", 4) == 0) {
         strcpy(default_name, "Jop");
         strcat(default_name, &name[4]);
@@ -1232,7 +1234,7 @@ void Ge::activate_export_javabean_as()
 
   if (!graph->get_java_name(name)) {
     graph->get_name(name);
-    if (strcmp(name, "") != 0) {
+    if (!streq(name, "")) {
       if (strncmp(name, "pwr_", 4) == 0) {
         strcpy(default_name, "Jop");
         strcat(default_name, &name[4]);
@@ -1261,7 +1263,7 @@ void Ge::activate_export_gejava()
 
   if (!graph->get_java_name(name)) {
     graph->get_name(name);
-    if (strcmp(name, "") != 0) {
+    if (!streq(name, "")) {
       if (strncmp(name, "pwr_c_", 6) == 0) {
         strcpy(default_name, "Jopc");
         strcat(default_name, &name[6]);
@@ -1289,7 +1291,7 @@ void Ge::activate_export_gejava_as()
 
   if (!graph->get_java_name(name)) {
     graph->get_name(name);
-    if (strcmp(name, "") != 0) {
+    if (!streq(name, "")) {
       if (strncmp(name, "pwr_c_", 6) == 0) {
         strcpy(default_name, "Jopc");
         strcat(default_name, &name[6]);
@@ -1332,7 +1334,7 @@ void Ge::activate_export_plcfo()
 
   graph->get_name(name);
 
-  if (strcmp(name, "") != 0)
+  if (!streq(name, ""))
     export_plcfo(this, name);
   else
     open_input_dialog("PlcFo name", "Export PlcFo", "", Ge::export_plcfo);
@@ -1388,7 +1390,7 @@ void Ge::activate_creanextpage()
 
   // Store next name in graph
   graph->get_next_subgraph(next_name);
-  if (strcmp(next_name, name) == 0) {
+  if (streq(next_name, name)) {
     // Next subgraph is already created, check file...
     message('E', "Subgraph is already created");
     return;
@@ -1422,7 +1424,7 @@ void Ge::activate_nextpage()
   }
 
   graph->get_next_subgraph(next);
-  if (strcmp(next, "") == 0) {
+  if (streq(next, "")) {
     message('E', "No next page is found");
     return;
   }
@@ -1540,7 +1542,7 @@ void Ge::activate_open()
     }
     dcli_parse_filename(found_file, dev, dir, file, type, &version);
     strcpy(file_p[file_cnt - 1], file);
-    if (strcmp(file, "") == 0)
+    if (streq(file, ""))
       file_cnt--;
     sts = dcli_search_file(fname, found_file, DCLI_DIR_SEARCH_NEXT);
   }
@@ -1580,7 +1582,7 @@ static void ge_colortheme_selector_ok_cb(void* ctx, char* text, int ok_pressed)
   int idx = -1;
 
   for (unsigned int i = 0; i < sizeof(themes) / sizeof(themes[0]); i++) {
-    if (strcmp(text, themes[i].name) == 0) {
+    if (streq(text, themes[i].name)) {
       idx = themes[i].idx;
       break;
     }

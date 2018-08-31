@@ -41,6 +41,7 @@
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_lng.h"
+#include "co_string.h"
 #include "xtt_xatt.h"
 #include "xtt_xattnav.h"
 #include "xtt_item.h"
@@ -227,7 +228,7 @@ int XAtt::object_attr()
     else
       strcpy(attr_name, bd[i].attrName);
 
-    if (strcmp(aname, "") == 0)
+    if (streq(aname, ""))
       strcpy(name, attr_name);
     else {
       strcpy(name, aname);

@@ -36,12 +36,12 @@
 
 #if defined PWRE_CONF_MYSQL
 #include <assert.h>
-#include <string.h>
 #include <sys/stat.h>
 
 #include <iostream>
 
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_syi.h"
 #include "co_time.h"
 
@@ -976,20 +976,20 @@ int wb_dbms_env::open(void)
     if (strcmp(valp, "(null)") == 0)
       valp = 0;
 
-    if (strcmp(var, "HOST") == 0) {
+    if (streq(var, "HOST")) {
       host(valp);
-    } else if (strcmp(var, "USER") == 0) {
+    } else if (streq(var, "USER")) {
       user(valp);
-    } else if (strcmp(var, "PASSWD") == 0) {
+    } else if (streq(var, "PASSWD")) {
       passwd(valp);
-    } else if (strcmp(var, "DB_NAME") == 0) {
+    } else if (streq(var, "DB_NAME")) {
       dbName(valp);
-    } else if (strcmp(var, "PORT") == 0) {
+    } else if (streq(var, "PORT")) {
       if (valp == 0)
         port(0);
       else
         port(atoi(valp));
-    } else if (strcmp(var, "SOCKET") == 0) {
+    } else if (streq(var, "SOCKET")) {
       socket(valp);
     } else {
       printf("Unknown connection parameter! : %s\n", var);

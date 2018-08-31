@@ -36,9 +36,10 @@
 
 /* wb_c_xttgraph.c -- work bench methods of the XttGraph class. */
 
-#include <string.h>
-
 #include "pwr_baseclasses.h"
+
+#include "co_string.h"
+
 #include "wb_build.h"
 #include "wb_pwrs.h"
 #include "wb_pwrb_msg.h"
@@ -93,7 +94,7 @@ static pwr_tStatus PostRename(ldh_tSesContext Session, pwr_tOid Object)
   if (EVEN(sts))
     return sts;
 
-  if (strcmp(action, "") == 0) {
+  if (streq(action, "")) {
     sts = ldh_ObjidToName(
         Session, Object, ldh_eName_Object, name, sizeof(name), &size);
     if (EVEN(sts))

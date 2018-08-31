@@ -34,12 +34,12 @@
  * General Public License plus this exception.
  */
 
-#include <string.h>
-
 extern "C" {
 #include "co_dcli.h"
 #include "co_cdh.h"
 }
+#include "co_string.h"
+
 #include "cnv_readsrc.h"
 #include "cnv_wblto.h"
 
@@ -67,7 +67,7 @@ int CnvReadSrc::read_src(char* filename)
       linetype = cread_eLine_EOF;
     else {
       CnvCtx::remove_spaces(orig_line, line);
-      if (strcmp(line, "") == 0)
+      if (streq(line, ""))
         continue;
 
       if (strncmp(line, "/*_*", 4) != 0 && !(state & cread_mState_Doc)) {

@@ -34,7 +34,7 @@
  * General Public License plus this exception.
  **/
 
-#include <string.h>
+#include "co_string.h"
 
 #include "wb_adrep.h"
 #include "wb_merep.h"
@@ -129,7 +129,7 @@ void wb_tdrep::init()
     m_type = body.Type;
     m_elements = body.Elements;
     m_typeref = body.TypeRef;
-    if (strcmp(body.PgmName, "") == 0) {
+    if (streq(body.PgmName, "")) {
       strcpy(m_pgmname, name());
       if (m_pgmname[0] == '$') {
         pwr_tObjName tmp;

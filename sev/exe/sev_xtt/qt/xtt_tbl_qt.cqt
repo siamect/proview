@@ -36,6 +36,7 @@
 
 /* xtt_tbl.cpp -- Sev Table Viewer */
 
+#include "co_string.h"
 #include "co_time.h"
 
 #include "cow_login_qt.h"
@@ -213,7 +214,7 @@ void XttTblQtWidget::activate_command()
 
 void XttTblQt::set_prompt(const char* prompt)
 {
-  if (strcmp(prompt, "") == 0) {
+  if (streq(prompt, "")) {
     cmd_prompt->setVisible(false);
     msg_label->setVisible(true);
   } else {

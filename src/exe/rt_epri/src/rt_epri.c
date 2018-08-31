@@ -38,15 +38,17 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <descrip.h>
 
 #include "pwr_baseclasses.h"
-#include "rt_mh_outunit.h"
-#include "rt_mh_msg.h"
+
+#include "co_string.h"
+#include "co_time.h"
+
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
-#include "co_time.h"
+#include "rt_mh_msg.h"
+#include "rt_mh_outunit.h"
 
 #ifndef PWR_LANG
 #define PWR_LANG_SWE
@@ -117,7 +119,7 @@ static char* StripActualValue(char* FullName)
   Text[sizeof(Text) - 1] = '\0';
 
   if ((sp = strchr(Text, '.')) != NULL)
-    if (strcmp(sp + 1, ACTUALVALUENAME) == 0)
+    if (streq(sp + 1, ACTUALVALUENAME))
       *sp = '\0';
 
   return Text;
@@ -379,7 +381,7 @@ int main(int argc, char* argv[])
   }
 
   if (argc > 1) {
-    if (strcmp(argv[1], "-t") == 0) {
+    if (streq(argv[1], "-t")) {
       /* test mode */
       Object = pwr_cNObjid;
       Type = mh_eOutunitType_Logger;

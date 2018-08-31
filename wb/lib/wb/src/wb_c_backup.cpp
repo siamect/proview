@@ -36,11 +36,12 @@
 
 /* wb_c_backup.c -- work bench methods of the Backup class. */
 
-
 #undef Status
-#include <string.h>
 
 #include "pwr_baseclasses.h"
+
+#include "co_string.h"
+
 #include "wb_pwrs.h"
 #include "wb_pwrb_msg.h"
 #include "wb_session.h"
@@ -50,7 +51,6 @@
 //
 //  PostCreate
 //
-
 static pwr_tStatus PostCreate(ldh_tSesContext Session, pwr_tObjid Object,
     pwr_tObjid Father, pwr_tClassId Class)
 {
@@ -192,7 +192,7 @@ static pwr_tStatus SyntaxCheck(
     case pwr_cClass_Iv:
     case pwr_cClass_Po:
     case pwr_cClass_Co: {
-      if (strcmp(s + 1, "ActualValue") != 0)
+      if (!streq(s + 1, "ActualValue"))
         wsx_error_msg(
             Session, WSX__BCKINVALID, Object, ErrorCount, WarningCount);
       break;

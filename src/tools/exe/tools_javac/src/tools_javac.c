@@ -39,6 +39,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define streq(a,b) (strcmp((a),(b)) == 0)
+
 char prefix[][10] = { "gdhr", "gdh", "cdhr", "cdh", "pwrb", "pwrt", "pwr", "rt",
   "co", "jop", "ge", "qcomr", "qcom", "cli" };
 
@@ -51,7 +53,7 @@ int main(int argc, char* argv[])
   int i;
   int sts;
 
-  if (argc > 3 && strcmp(argv[1], "-d") == 0) {
+  if (argc > 3 && streq(argv[1], "-d")) {
     strncpy(destination, argv[2], sizeof(destination));
 
     /* Cut last to segments in directory (package name) */
@@ -79,41 +81,41 @@ int main(int argc, char* argv[])
   else
     s = filename;
   /* Special cases */
-  if (strcmp(s, "cdhrclassid.java") == 0)
+  if (streq(s, "cdhrclassid.java"))
     strcpy(s, "CdhrClassId.java");
-  else if (strcmp(s, "gdhrrefobjectinfo.java") == 0)
+  else if (streq(s, "gdhrrefobjectinfo.java"))
     strcpy(s, "GdhrRefObjectInfo.java");
-  else if (strcmp(s, "pwrtrefid.java") == 0)
+  else if (streq(s, "pwrtrefid.java"))
     strcpy(s, "PwrtRefId.java");
-  else if (strcmp(s, "qcomrcreateq.java") == 0)
+  else if (streq(s, "qcomrcreateq.java"))
     strcpy(s, "QcomrCreateQ.java");
-  else if (strcmp(s, "gecformat.java") == 0)
+  else if (streq(s, "gecformat.java"))
     strcpy(s, "GeCFormat.java");
-  else if (strcmp(s, "jopspiderframe.java") == 0)
+  else if (streq(s, "jopspiderframe.java"))
     strcpy(s, "JopSpiderFrame.java");
-  else if (strcmp(s, "gecoloreditor.java") == 0)
+  else if (streq(s, "gecoloreditor.java"))
     strcpy(s, "GeColorEditor.java");
-  else if (strcmp(s, "gecolorbrightnesseditor.java") == 0)
+  else if (streq(s, "gecolorbrightnesseditor.java"))
     strcpy(s, "GeColorBrightnessEditor.java");
-  else if (strcmp(s, "gecolortoneeditor.java") == 0)
+  else if (streq(s, "gecolortoneeditor.java"))
     strcpy(s, "GeColorToneEditor.java");
-  else if (strcmp(s, "gecolorintensityeditor.java") == 0)
+  else if (streq(s, "gecolorintensityeditor.java"))
     strcpy(s, "GeColorIntensityEditor.java");
-  else if (strcmp(s, "gecolorshifteditor.java") == 0)
+  else if (streq(s, "gecolorshifteditor.java"))
     strcpy(s, "GeColorShiftEditor.java");
-  else if (strcmp(s, "clickactioneditor.java") == 0)
+  else if (streq(s, "clickactioneditor.java"))
     strcpy(s, "ClickActionEditor.java");
-  else if (strcmp(s, "jopconfirmdialog.java") == 0)
+  else if (streq(s, "jopconfirmdialog.java"))
     strcpy(s, "JopConfirmDialog.java");
-  else if (strcmp(s, "getextfield.java") == 0)
+  else if (streq(s, "getextfield.java"))
     strcpy(s, "GeTextField.java");
-  else if (strcmp(s, "joptextfield.java") == 0)
+  else if (streq(s, "joptextfield.java"))
     strcpy(s, "JopTextField.java");
-  else if (strcmp(s, "joptextfieldbeaninfo.java") == 0)
+  else if (streq(s, "joptextfieldbeaninfo.java"))
     strcpy(s, "JopTextFieldBeanInfo.java");
-  else if (strcmp(s, "joploginapplet.java") == 0)
+  else if (streq(s, "joploginapplet.java"))
     strcpy(s, "JopLoginApplet.java");
-  else if (strcmp(s, "joploginframe.java") == 0)
+  else if (streq(s, "joploginframe.java"))
     strcpy(s, "JopLoginFrame.java");
   else {
     for (i = 0; i < sizeof(prefix) / sizeof(prefix[0]); i++) {
@@ -132,7 +134,7 @@ int main(int argc, char* argv[])
   if ((t = strstr(s, "beaninfo.java")))
     strcpy(t, "BeanInfo.java");
 
-  if (strcmp(destination, "") == 0)
+  if (streq(destination, ""))
     snprintf(cmd, sizeof(cmd), "javac %s", filename);
   else
     snprintf(cmd, sizeof(cmd), "javac -d %s %s", destination, filename);

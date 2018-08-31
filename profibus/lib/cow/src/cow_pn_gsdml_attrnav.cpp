@@ -37,11 +37,12 @@
 /* cow_pn_gsdml_attrnav.cpp -- Display gsd attributes */
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_time.h"
+
 #include "rt_pb_msg.h"
 
 #include "cow_wow.h"
@@ -1133,7 +1134,7 @@ int GsdmlAttrNav::trace_connect_bc(
 
   /*  printf( "Connecting %s.%s\n", name, attr);  */
 
-  if (strcmp(name, "") == 0)
+  if (streq(name, ""))
     return 1;
 
   brow_GetCtxUserData(brow_GetCtx(object), (void**)&attrnav);
@@ -1882,7 +1883,7 @@ int GsdmlAttrNav::search_class(
     }
 
     if (in_model) {
-      if (strcmp(itemv[0], "{") == 0)
+      if (streq(itemv[0], "{"))
         in_par = 1;
     }
 
@@ -1890,10 +1891,10 @@ int GsdmlAttrNav::search_class(
       if (num < 2)
         continue;
 
-      if (strcmp(itemv[0], "}") == 0)
+      if (streq(itemv[0], "}"))
         break;
 
-      if (strcmp(itemv[1], "-") == 0 || strcmp(itemv[1], "") == 0)
+      if (streq(itemv[1], "-") || streq(itemv[1], ""))
         continue;
 
       if (cdh_NoCaseStrcmp(itemv[0], lmodule) == 0) {
@@ -2381,7 +2382,7 @@ int ItemPnSlot::open_children(GsdmlAttrNav* attrnav, double x, double y)
           }
         }
         if (mi->UseableSubmodules
-            && strcmp(mi->Body.PhysicalSubslots.str, "") != 0) {
+            && !streq(mi->Body.PhysicalSubslots.str, "")) {
           gsdml_Valuelist* vl
               = new gsdml_Valuelist(mi->Body.PhysicalSubslots.str);
           gsdml_ValuelistIterator iter(vl);
@@ -3403,17 +3404,17 @@ int ItemPnModuleInfo::open_children(GsdmlAttrNav* attrnav, double x, double y)
         0, info->Body.Name.p, 1, node, flow_eDest_IntoLast);
     new ItemPnBase(attrnav, "Text", "LocalGsdmlAttr", pwr_eType_String, 32, 0,
         0, info->Body.InfoText.p, 1, node, flow_eDest_IntoLast);
-    if (strcmp(info->Body.VendorName, "") != 0)
+    if (!streq(info->Body.VendorName, ""))
       new ItemPnBase(attrnav, "VendorName", "LocalGsdmlAttr", pwr_eType_String,
           32, 0, 0, info->Body.VendorName, 1, node, flow_eDest_IntoLast);
-    if (strcmp(info->Body.OrderNumber, "") != 0)
+    if (!streq(info->Body.OrderNumber, ""))
       new ItemPnBase(attrnav, "OrderNumber", "LocalGsdmlAttr", pwr_eType_String,
           32, 0, 0, info->Body.OrderNumber, 1, node, flow_eDest_IntoLast);
-    if (strcmp(info->Body.HardwareRelease, "") != 0)
+    if (!streq(info->Body.HardwareRelease, ""))
       new ItemPnBase(attrnav, "HardwareRelease", "LocalGsdmlAttr",
           pwr_eType_String, 32, 0, 0, info->Body.HardwareRelease, 1, node,
           flow_eDest_IntoLast);
-    if (strcmp(info->Body.SoftwareRelease, "") != 0)
+    if (!streq(info->Body.SoftwareRelease, ""))
       new ItemPnBase(attrnav, "SoftwareRelease", "LocalGsdmlAttr",
           pwr_eType_String, 32, 0, 0, info->Body.SoftwareRelease, 1, node,
           flow_eDest_IntoLast);
@@ -3907,7 +3908,7 @@ int ItemPnParRecord::open_children(GsdmlAttrNav* attrnav, double x, double y)
         break;
       case gsdml_eValueDataType_Integer8:
       case gsdml_eValueDataType_Unsigned8:
-        if (strcmp(par_record->Ref[i]->Body.ValueItemTarget.ref, "") == 0)
+        if (streq(par_record->Ref[i]->Body.ValueItemTarget.ref, ""))
           new ItemPnParValue(attrnav, "", par_record->Ref[i], datatype,
               datarecord->data, node, flow_eDest_IntoLast);
         else
@@ -4019,7 +4020,7 @@ void ItemPnParValue::value_changed(GsdmlAttrNav* attrnav, const char* value_str)
   switch (datatype) {
   case gsdml_eValueDataType_Integer8: {
     char val = *(char*)buf;
-    if (strcmp(value_ref->Body.AllowedValues, "") != 0) {
+    if (!streq(value_ref->Body.AllowedValues, "")) {
       gsdml_SValuelist* vl
           = new gsdml_SValuelist(value_ref->Body.AllowedValues);
       if (ODD(vl->sts())) {
@@ -4034,7 +4035,7 @@ void ItemPnParValue::value_changed(GsdmlAttrNav* attrnav, const char* value_str)
   }
   case gsdml_eValueDataType_Integer16: {
     short val = *(short*)buf;
-    if (strcmp(value_ref->Body.AllowedValues, "") != 0) {
+    if (!streq(value_ref->Body.AllowedValues, "")) {
       gsdml_SValuelist* vl
           = new gsdml_SValuelist(value_ref->Body.AllowedValues);
       if (ODD(vl->sts())) {
@@ -4049,7 +4050,7 @@ void ItemPnParValue::value_changed(GsdmlAttrNav* attrnav, const char* value_str)
   }
   case gsdml_eValueDataType_Integer32: {
     int val = *(int*)buf;
-    if (strcmp(value_ref->Body.AllowedValues, "") != 0) {
+    if (!streq(value_ref->Body.AllowedValues, "")) {
       gsdml_SValuelist* vl
           = new gsdml_SValuelist(value_ref->Body.AllowedValues);
       if (ODD(vl->sts())) {
@@ -4064,7 +4065,7 @@ void ItemPnParValue::value_changed(GsdmlAttrNav* attrnav, const char* value_str)
   }
   case gsdml_eValueDataType_Integer64: {
     pwr_tInt64 val = *(pwr_tInt64*)buf;
-    if (strcmp(value_ref->Body.AllowedValues, "") != 0) {
+    if (!streq(value_ref->Body.AllowedValues, "")) {
       gsdml_SValuelist* vl
           = new gsdml_SValuelist(value_ref->Body.AllowedValues);
       if (ODD(vl->sts())) {
@@ -4079,7 +4080,7 @@ void ItemPnParValue::value_changed(GsdmlAttrNav* attrnav, const char* value_str)
   }
   case gsdml_eValueDataType_Unsigned8: {
     unsigned char val = *(unsigned char*)buf;
-    if (strcmp(value_ref->Body.AllowedValues, "") != 0) {
+    if (!streq(value_ref->Body.AllowedValues, "")) {
       gsdml_Valuelist* vl = new gsdml_Valuelist(value_ref->Body.AllowedValues);
       if (ODD(vl->sts())) {
         if (!vl->in_list(val)) {
@@ -4093,7 +4094,7 @@ void ItemPnParValue::value_changed(GsdmlAttrNav* attrnav, const char* value_str)
   }
   case gsdml_eValueDataType_Unsigned16: {
     unsigned short val = *(unsigned short*)buf;
-    if (strcmp(value_ref->Body.AllowedValues, "") != 0) {
+    if (!streq(value_ref->Body.AllowedValues, "")) {
       gsdml_Valuelist* vl = new gsdml_Valuelist(value_ref->Body.AllowedValues);
       if (ODD(vl->sts())) {
         if (!vl->in_list(val)) {
@@ -4107,7 +4108,7 @@ void ItemPnParValue::value_changed(GsdmlAttrNav* attrnav, const char* value_str)
   }
   case gsdml_eValueDataType_Unsigned32: {
     unsigned int val = *(unsigned int*)buf;
-    if (strcmp(value_ref->Body.AllowedValues, "") != 0) {
+    if (!streq(value_ref->Body.AllowedValues, "")) {
       gsdml_Valuelist* vl = new gsdml_Valuelist(value_ref->Body.AllowedValues);
       if (ODD(vl->sts())) {
         if (!vl->in_list(val)) {
@@ -4121,7 +4122,7 @@ void ItemPnParValue::value_changed(GsdmlAttrNav* attrnav, const char* value_str)
   }
   case gsdml_eValueDataType_Unsigned64: {
     pwr_tUInt64 val = *(pwr_tUInt64*)buf;
-    if (strcmp(value_ref->Body.AllowedValues, "") != 0) {
+    if (!streq(value_ref->Body.AllowedValues, "")) {
       gsdml_Valuelist* vl = new gsdml_Valuelist(value_ref->Body.AllowedValues);
       if (ODD(vl->sts())) {
         if (!vl->in_list(val)) {
@@ -4135,7 +4136,7 @@ void ItemPnParValue::value_changed(GsdmlAttrNav* attrnav, const char* value_str)
   }
   case gsdml_eValueDataType_Float32: {
     float val = *(float*)buf;
-    if (strcmp(value_ref->Body.AllowedValues, "") != 0) {
+    if (!streq(value_ref->Body.AllowedValues, "")) {
       gsdml_FValuelist* vl
           = new gsdml_FValuelist(value_ref->Body.AllowedValues);
       if (ODD(vl->sts())) {
@@ -4150,7 +4151,7 @@ void ItemPnParValue::value_changed(GsdmlAttrNav* attrnav, const char* value_str)
   }
   case gsdml_eValueDataType_Float64: {
     double val = *(double*)buf;
-    if (strcmp(value_ref->Body.AllowedValues, "") != 0) {
+    if (!streq(value_ref->Body.AllowedValues, "")) {
       gsdml_FValuelist* vl
           = new gsdml_FValuelist(value_ref->Body.AllowedValues);
       if (ODD(vl->sts())) {
@@ -4204,7 +4205,7 @@ ItemPnParEnum::ItemPnParEnum(GsdmlAttrNav* attrnav, const char* item_name,
   gsdml_ValueItem* vi = (gsdml_ValueItem*)value_ref->Body.ValueItemTarget.p;
 
   gsdml_Valuelist* allowed_values = 0;
-  if (strcmp(value_ref->Body.AllowedValues, "") != 0)
+  if (!streq(value_ref->Body.AllowedValues, ""))
     allowed_values = new gsdml_Valuelist(value_ref->Body.AllowedValues);
 
   if (vi && vi->Assignments) {
@@ -4679,8 +4680,8 @@ int ItemPnDataItem::open_children(GsdmlAttrNav* attrnav, double x, double y)
     brow_SetNodraw(attrnav->brow->ctx);
 
     void* p;
-    if (strcmp(dataitem->Body.DataType, "OctetString") == 0
-        || strcmp(dataitem->Body.DataType, "VisibleString") == 0) {
+    if (streq(dataitem->Body.DataType, "OctetString")
+        || streq(dataitem->Body.DataType, "VisibleString")) {
       p = (void*)&dataitem->Body.Length;
       new ItemPnBase(attrnav, "Length", "LocalGsdmlAttr", pwr_eType_UInt16,
           sizeof(dataitem->Body.Length), 0, 0, p, 1, node, flow_eDest_IntoLast);

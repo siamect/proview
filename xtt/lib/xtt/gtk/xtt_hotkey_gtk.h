@@ -46,15 +46,8 @@ class HotkeyAction {
 public:
   char m_name[80];
   void (*m_action)(char*, void*);
-  HotkeyAction(const char* name, void (*action)(char*, void*))
-      : m_action(action)
-  {
-    strcpy(m_name, name);
-  }
-  HotkeyAction(const HotkeyAction& x) : m_action(x.m_action)
-  {
-    strcpy(m_name, x.m_name);
-  }
+  HotkeyAction(const char* name, void (*action)(char*, void*));
+  HotkeyAction(const HotkeyAction& x);
 };
 
 class HotkeyKey {
@@ -66,26 +59,9 @@ public:
   void (*m_action)(char*, void*);
   void* m_userdata;
 
-  HotkeyKey(int mod, int keysym, char* action_name, char* action_arg)
-      : m_mod(mod), m_keysym(keysym), m_action(0), m_userdata(0)
-  {
-    strcpy(m_action_name, action_name);
-    strcpy(m_action_arg, action_arg);
-  }
-  HotkeyKey(const HotkeyKey& x)
-      : m_mod(x.m_mod), m_keysym(x.m_keysym), m_action(x.m_action),
-        m_userdata(x.m_userdata)
-  {
-    strcpy(m_action_name, x.m_action_name);
-    strcpy(m_action_arg, x.m_action_arg);
-  }
-  void set_action(HotkeyAction* action, void* userdata)
-  {
-    if (strcmp(m_action_name, action->m_name) == 0) {
-      m_action = action->m_action;
-      m_userdata = userdata;
-    }
-  }
+  HotkeyKey(int mod, int keysym, char* action_name, char* action_arg);
+  HotkeyKey(const HotkeyKey& x);
+  void set_action(HotkeyAction* action, void* userdata);
 };
 
 class XttHotkey {

@@ -42,15 +42,19 @@
 
 #include "pwr_version.h"
 #include "pwr_baseclasses.h"
+
 #include "co_cdh.h"
-#include "co_time.h"
-#include "co_msg.h"
 #include "co_dcli.h"
+#include "co_msg.h"
+#include "co_string.h"
+#include "co_time.h"
+
+#include "rt_aproc.h"
 #include "rt_gdh.h"
 #include "rt_ini_event.h"
-#include "rt_aproc.h"
 #include "rt_pwr_msg.h"
 #include "rt_qcom_msg.h"
+
 #include "statussrv_Stub.h"
 #include "Service.nsmap"
 
@@ -89,7 +93,7 @@ int main(int argc, char* argv[])
   int ignore_config = 0;
 
   for (int i = 1; i < argc; i++) {
-    if (strcmp(argv[i], "-i") == 0)
+    if (streq(argv[i], "-i"))
       ignore_config = 1;
   }
 
@@ -290,7 +294,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__GetStatus(struct soap* soap,
         *s0__GetStatus->ClientRequestHandle);
   }
 
-  if (strcmp(statussrv->version, "") != 0)
+  if (!streq(statussrv->version, ""))
     s0__GetStatusResponse->Version.assign(statussrv->version);
   else
     s0__GetStatusResponse->Version.assign(pwrv_cPwrVersionStr);
@@ -601,23 +605,23 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__XttStart(struct soap* soap,
   if (s0__XttStart->GUI)
     strncpy(gui, s0__XttStart->GUI->c_str(), sizeof(gui));
 
-  if (strcmp(gui, "motif") == 0)
+  if (streq(gui, "motif"))
     strcpy(sw_d, "-d");
 
   int i = 1;
-  if (strcmp(opplace, "") != 0)
+  if (!streq(opplace, ""))
     argv[i++] = opplace;
   argv[i++] = sw_q;
   argv[i++] = sw_c;
-  if (strcmp(display, "") != 0) {
+  if (!streq(display, "")) {
     argv[i++] = sw_d;
     argv[i++] = display;
   }
-  if (strcmp(lang, "") != 0) {
+  if (!streq(lang, "")) {
     argv[i++] = sw_l;
     argv[i++] = lang;
   }
-  if (strcmp(gui, "") != 0) {
+  if (!streq(gui, "")) {
     argv[i++] = sw_f;
     argv[i++] = gui;
   }
@@ -670,15 +674,15 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__RtMonStart(struct soap* soap,
     strncpy(gui, s0__RtMonStart->GUI->c_str(), sizeof(gui));
 
   int i = 1;
-  if (strcmp(display, "") != 0) {
+  if (!streq(display, "")) {
     argv[i++] = sw_d;
     argv[i++] = display;
   }
-  if (strcmp(lang, "") != 0) {
+  if (!streq(lang, "")) {
     argv[i++] = sw_l;
     argv[i++] = lang;
   }
-  if (strcmp(gui, "") != 0) {
+  if (!streq(gui, "")) {
     argv[i++] = sw_f;
     argv[i++] = gui;
   }

@@ -36,9 +36,10 @@
 
 #include <math.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include <iostream>
+
+#include "co_string.h"
 
 #include "glow_conpoint.h"
 #include "glow_draw.h"
@@ -3592,7 +3593,7 @@ int GlowCon::trace_scan()
 
 int GlowCon::trace_init()
 {
-  if (strcmp(trace_object, "") == 0)
+  if (streq(trace_object, ""))
     return 1;
 
   //  sts = ctx->trace_connect_func( (void *) this, trace_object,
@@ -3603,7 +3604,7 @@ int GlowCon::trace_init()
 
 void GlowCon::trace_close()
 {
-  if (strcmp(trace_object, "") == 0)
+  if (streq(trace_object, ""))
     return;
 
   //  ctx->trace_disconnect_func( (void *) this);

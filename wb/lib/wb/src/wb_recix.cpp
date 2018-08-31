@@ -37,9 +37,9 @@
 /* wb_recix.cpp    Recycle objid. Stores name and oix of deleted tree
                    to recycle the oix when a similar tree is copied.*/
 
-#include <string.h>
-
 #include <iostream>
+
+#include "co_string.h"
 
 #include "wb_name.h"
 #include "wb_recix.h"
@@ -98,7 +98,7 @@ bool wb_recix::get(char* str, pwr_tOix* ix)
   if ((int)strlen(str) <= m_destroot_len)
     return false;
 
-  if (strcmp(m_srcroot, "") != 0) {
+  if (!streq(m_srcroot, "")) {
     strcpy(keystr, m_srcroot);
     if (m_destroot_len)
       strcat(keystr, &str[m_destroot_len]);

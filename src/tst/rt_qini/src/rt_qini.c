@@ -34,6 +34,8 @@
  * General Public License plus this exception.
  */
 
+#include "co_string.h"
+
 #include "rt_qini.h"
 
 main()
@@ -73,7 +75,7 @@ main()
        nep = tree_Successor(nodes, nep)) {
     printf("%s %d %d %d %d\n", nep->name, nep->nid, nep->naddr, nep->port,
         nep->connect);
-    if (strcmp(my_name, nep->name) == 0) {
+    if (streq(my_name, nep->name)) {
       printf("-- My nid is: %d\n", nep->nid);
       me = nep;
     }

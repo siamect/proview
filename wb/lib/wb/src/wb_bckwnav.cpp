@@ -36,8 +36,7 @@
 
 /* wb_logwnav.cpp -- Backupfile display window */
 
-#include <string.h>
-
+#include "co_string.h"
 #include "co_time.h"
 
 #include "xnav_bitmap_save12.h"
@@ -457,7 +456,7 @@ pwr_tStatus WbBckWNav::transfer_wb()
         return sts;
 
       strncpy(aname, anamep, sizeof(aname));
-      if ((s = strrchr(aname, '.')) && strcmp(s, ".ActualValue") == 0) {
+      if ((s = strrchr(aname, '.')) && streq(s, ".ActualValue")) {
         *s = 0;
 
         sts = ldh_NameToAttrRef(ldhses, aname, &aref);

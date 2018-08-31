@@ -37,13 +37,14 @@
 /* wb_cmd.c -- command file processing
    The main program of pwrc.  */
 
-#include <string.h>
-
 #include <iostream>
 
 #include "pwr.h"
 #include "pwr_class.h"
+
 #include "co_dcli.h"
+#include "co_string.h"
+
 #include "rt_load.h"
 
 #include "cow_login.h"
@@ -148,7 +149,7 @@ int Cmd::attach_volume_cb(void* ctx, pwr_tVolumeId volid, int pop)
     }
   }
 
-  if (strcmp(Cmd::cmd_classvolume, "") != 0) {
+  if (!streq(Cmd::cmd_classvolume, "")) {
     // Load volume as extern
     pwr_tFileName filename;
     wb_erep* erep = (wb_erep*)(*(wb_env*)cmd->wbctx);
@@ -469,7 +470,7 @@ GNU General Public License for more details.\n\n";
 
     //    sts = scanf( "%s", str);
 
-    if (strcmp(str, "") == 0)
+    if (streq(str, ""))
       continue;
 
     dcli_remove_blank(str, str);

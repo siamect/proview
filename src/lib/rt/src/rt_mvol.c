@@ -36,9 +36,10 @@
 
 /* rt_mvol.c -- Meta Volumes */
 
-#include <string.h>
-
 #include "pwr_class.h"
+
+#include "co_string.h"
+
 #include "rt_gdh_msg.h"
 #include "rt_mvol_msg.h"
 #include "rt_vol.h"
@@ -687,7 +688,7 @@ gdb_sClass* mvol_LinkObject(
   }
 
   if (cdh_isClassVolumeClass(vp->g.cid)
-      && strcmp(op->g.f.name.norm, "TEMPLATE") == 0)
+      && streq(op->g.f.name.norm, "TEMPLATE"))
     return cp; /* We don't want the 'Template' object.  */
 
   pwr_Assert(!op->u.n.flags.b.inCidList);
@@ -714,7 +715,7 @@ gdb_sClass* mvol_LinkObject(
 
     case pwr_eClass_ObjBodyDef:
       /* Link the body definition object to the class.  */
-      if (strcmp(op->g.f.name.norm, "DEVBODY") == 0)
+      if (streq(op->g.f.name.norm, "DEVBODY"))
         break;
 
       scp = gdb_AddClass(sts, cdh_ClassObjidToId(op->g.oid), gdb_mAdd__);

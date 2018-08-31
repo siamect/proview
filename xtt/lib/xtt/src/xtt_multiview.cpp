@@ -34,12 +34,15 @@
  * General Public License plus this exception.
  */
 
-#include "xtt_xnav.h"
-#include "rt_gdh_msg.h"
 #include "co_cdh.h"
+#include "co_string.h"
+
+#include "rt_gdh_msg.h"
+
 #include "xtt_ge.h"
-#include "xtt_trend.h"
 #include "xtt_log.h"
+#include "xtt_trend.h"
+#include "xtt_xnav.h"
 
 void MVRecall::insert(char* str, char* obj)
 {
@@ -243,7 +246,7 @@ void XttMultiView::message_cb(void* ctx, char severity, const char* msg)
 
 void XttMultiView::message(char severity, const char* msg)
 {
-  if (strcmp(msg, "") != 0)
+  if (!streq(msg, ""))
     printf("** XttMultiView: %s\n", msg);
 }
 
@@ -299,7 +302,7 @@ int XttMultiView::set_subwindow_next(const char* name)
     return 0;
 
   char* op = 0;
-  if (strcmp(recall_buffer[i].object[next], "") != 0)
+  if (!streq(recall_buffer[i].object[next], ""))
     op = recall_buffer[i].object[next];
   return set_subwindow_source(name, (char*)recall_buffer[i].buff[next], op, 0);
 }
@@ -315,7 +318,7 @@ int XttMultiView::set_subwindow_prev(const char* name)
     return 0;
 
   char* op = 0;
-  if (strcmp(recall_buffer[i].object[prev], "") != 0)
+  if (!streq(recall_buffer[i].object[prev], ""))
     op = recall_buffer[i].object[prev];
   return set_subwindow_source(name, (char*)recall_buffer[i].buff[prev], op, 0);
 }

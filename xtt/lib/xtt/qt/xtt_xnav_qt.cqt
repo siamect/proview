@@ -39,6 +39,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "co_string.h"
+
 #include "cow_login_qt.h"
 #include "cow_wow_qt.h"
 
@@ -82,7 +84,7 @@ XNavQt::XNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid, const char* xn_name,
   debug_print("creating a scrolledbrowwidgetqt\n");
   form_widget = scrolledbrowwidgetqt_new(init_brow_base_cb, this, &brow_widget);
 
-  showNow(brow_widget);
+  //showNow(brow_widget);
 
   displayed = 1;
 
@@ -96,9 +98,16 @@ XNavQt::XNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid, const char* xn_name,
     logg[i].init(i, (void*)this);
   }
 
+  debug_print("creating a scrolledbrowwidgetqt\n");
+
   wow = new CoWowQt(parent_wid);
+  debug_print("creating a scrolledbrowwidgetqt\n");
   trace_timerid = wow->timer_new();
+  debug_print("creating a scrolledbrowwidgetqt\n");
   autoack_timerid = wow->timer_new();
+
+  debug_print("creating a scrolledbrowwidgetqt\n");
+
   *status = 1;
 
   popup_obj = new XNavQtPopupObject(this);

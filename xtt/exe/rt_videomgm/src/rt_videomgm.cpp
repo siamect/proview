@@ -35,11 +35,12 @@
  */
 
 #include <iconv.h>
-#include <string.h>
 
 #include "co_error.h"
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_time.h"
+
 #include "rt_gdh.h"
 #include "rt_aproc.h"
 #include "rt_ini_event.h"
@@ -678,7 +679,7 @@ int XttVideoMgmAimetis::create_panel(char* name)
     // Find camera name for this cell
     cix = 0;
     for (unsigned int j = 0; j < m_camera.size(); j++) {
-      if (strcmp(m_panel[pix].cell[i].cameraid, m_camera[j].id) == 0) {
+      if (streq(m_panel[pix].cell[i].cameraid, m_camera[j].id)) {
         cix = j;
         break;
       }
@@ -741,7 +742,7 @@ int XttVideoMgmAimetis::delete_panel(char* name)
 
   // Get panel index
   for (unsigned int i = 0; i < m_panel.size(); i++) {
-    if (strcmp(name, m_panel[i].name) == 0) {
+    if (streq(name, m_panel[i].name)) {
       pix = i;
       break;
     }
@@ -916,13 +917,13 @@ int Json::get_attribute_value(
       }
       break;
     case json_eState_Value:
-      if (c == '{' && strcmp(current_value, "") == 0) {
+      if (c == '{' && streq(current_value, "")) {
         state[state_level] = json_eState_ExpectEndPar;
         state_level++;
         attr_level++;
         state[state_level] = json_eState_ExpectAttr;
         strcpy(current_attr[attr_level], "");
-      } else if (c == '[' && strcmp(current_value, "") == 0) {
+      } else if (c == '[' && streq(current_value, "")) {
         state[state_level] = json_eState_ExpectEndVector;
         state_level++;
         vector_level++;
@@ -952,7 +953,7 @@ int Json::get_attribute_value(
         if (input_attr_num == attr_level + 1) {
           int match = 1;
           for (int j = 0; j < input_attr_num; j++) {
-            if (strcmp(current_attr[j], input_attr[j]) != 0) {
+            if (!streq(current_attr[j], input_attr[j])) {
               match = 0;
               break;
             }
@@ -1127,14 +1128,14 @@ void XttVideoMgm::cscan()
   }
 
   if (m_op->CreatePanel) {
-    if (strcmp(m_op->PanelName, "") != 0) {
+    if (!streq(m_op->PanelName, "")) {
       create_panel(m_op->PanelName);
       strcpy(m_op->PanelName, "");
       m_op->CreatePanel = 0;
     }
   }
   if (m_op->DeletePanel) {
-    if (strcmp(m_op->PanelName, "") != 0) {
+    if (!streq(m_op->PanelName, "")) {
       delete_panel(m_op->PanelName);
       strcpy(m_op->PanelName, "");
       m_op->DeletePanel = 0;

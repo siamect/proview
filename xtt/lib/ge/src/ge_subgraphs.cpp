@@ -37,12 +37,12 @@
 /* ge_subgraphs.cpp -- Display object info */
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "pwr_baseclasses.h"
 
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_time.h"
 
 #include "flow_browctx.h"
@@ -474,7 +474,7 @@ int SubGraphs::object_attr()
     grow_info_p = grow_info;
     extern_p = 0;
     for (j = 0; j < grow_info_cnt; j++) {
-      if (strcmp("Extern", grow_info_p->name) == 0) {
+      if (streq("Extern", grow_info_p->name)) {
         extern_p = (int*)grow_info_p->value_p;
         break;
       }
@@ -617,7 +617,7 @@ int SubGraphs::edit_attributes(void* object)
     items[i].size = grow_info_p->size;
     items[i].minlimit = 0;
     items[i].maxlimit = 0;
-    if (strcmp(grow_info_p->name, "Extern") == 0)
+    if (streq(grow_info_p->name, "Extern"))
       items[i].noedit = 0;
     else
       items[i].noedit = 1;
@@ -711,7 +711,7 @@ static int subgraphs_trace_connect_bc(brow_tObject object, char* name,
 {
   SubGraphBaseItem* base_item;
 
-  if (strcmp(name, "") == 0)
+  if (streq(name, ""))
     return 1;
 
   brow_GetUserData(object, (void**)&base_item);

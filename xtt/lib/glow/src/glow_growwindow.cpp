@@ -35,11 +35,12 @@
  **/
 
 #include <stdlib.h>
-#include <string.h>
 
 #include <iostream>
 
 #include "co_dcli.h"
+#include "co_string.h"
+
 #include "glow_growwindow.h"
 #include "glow_grownode.h"
 #include "glow_draw.h"
@@ -172,7 +173,7 @@ void GrowWindow::open(std::ifstream& fp)
       break;
   }
 
-  if (strcmp(file_name, "") != 0)
+  if (!streq(file_name, ""))
     new_ctx();
   configure_scrollbars();
 }
@@ -777,8 +778,8 @@ int GrowWindow::update_attributes()
 {
   int sts = 0;
 
-  if (strcmp(input_file_name, file_name) != 0
-      || (window_ctx && strcmp(window_ctx->owner, owner) != 0)) {
+  if (!streq(input_file_name, file_name)
+      || (window_ctx && !streq(window_ctx->owner, owner))) {
     int ur_x = int(x_right * ctx->mw.zoom_factor_x) - ctx->mw.offset_x;
     int ll_x = int(x_left * ctx->mw.zoom_factor_x) - ctx->mw.offset_x;
     int ur_y = int(y_high * ctx->mw.zoom_factor_y) - ctx->mw.offset_y;
@@ -929,7 +930,7 @@ void GrowWindow::new_ctx()
   int sts;
   char* s;
   bool copied;
-  int no_file = strcmp(file_name, "_no_") == 0 ? 1 : 0; // No initial graph
+  int no_file = streq(file_name, "_no_") ? 1 : 0; // No initial graph
 
   if (strchr(file_name, '/') == 0) {
     strcpy(fname, "$pwrp_exe/");
@@ -962,7 +963,7 @@ void GrowWindow::new_ctx()
   copied = false;
   for (int i = 0; i < 4; i++) {
     if ((s = strstr(owner, "$object"))) {
-      if (strcmp(ctx->owner, "") != 0) {
+      if (!streq(ctx->owner, "")) {
         int len = s - owner;
         strncpy(window_ctx->owner, owner, len);
         window_ctx->owner[len] = 0;

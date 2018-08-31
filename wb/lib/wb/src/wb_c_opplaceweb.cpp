@@ -36,9 +36,10 @@
 
 /* wb_c_opplaceweb.cpp -- work bench methods of the OpPlaceWeb class. */
 
-#include <string.h>
-
 #include "pwr_baseclasses.h"
+
+#include "co_string.h"
+
 #include "wb_pwrs.h"
 #include "wb_pwrb_msg.h"
 #include "wb_build.h"
@@ -75,7 +76,7 @@ static pwr_tStatus PostCreate(
       return ca.sts();
 
     ca.value(filename);
-    if ((strcmp(filename, "index.html") == 0) && idx < 1)
+    if ((streq(filename, "index.html")) && idx < 1)
       idx = 2;
     else if (sscanf(filename, "index%d.html", &i) != 0) {
       if (idx <= i)

@@ -40,6 +40,8 @@
 
 #include "pwr_names.h"
 
+#include "co_string.h"
+
 #include "cow_login.h"
 #include "cow_logw_qt.h"
 #include "cow_qt_helpers.h"
@@ -709,14 +711,14 @@ void WttQt::set_twowindows(int two, int display_wnav, int display_wnavnode)
 void WttQt::message(char severity, const char* message)
 {
   msg_label->setText(QString::fromLatin1(message));
-  if (strcmp(message, "") != 0) {
+  if (!streq(message, "")) {
     msg_label->setVisible(true);
   }
 }
 
 void WttQt::set_prompt(const char* prompt)
 {
-  if (strcmp(prompt, "") == 0) {
+  if (streq(prompt, "")) {
     cmd_prompt->setVisible(false);
     msg_label->setVisible(true);
   } else {
@@ -1604,7 +1606,7 @@ void BootDialog::boot_ok_cb()
     pwr_tString40 nodeconfigname;
     strcpy(nodeconfigname, "");
     for (int j = 0; j < wtt->boot_volumecount; j++) {
-      if (strcmp(volumelist_ptr->p1, nodeconfigname) != 0) {
+      if (!streq(volumelist_ptr->p1, nodeconfigname)) {
         nodecount++;
 
         strcpy(nodeconfigname, volumelist_ptr->p1);

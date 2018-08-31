@@ -41,19 +41,22 @@
 
 #include <ctype.h>
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
 
 #include "pwr_privilege.h"
 #include "pwr_baseclasses.h"
-#include "co_time.h"
-#include "co_cdh.h"
+
 #include "co_api_user.h"
+#include "co_ccm_msg.h"
+#include "co_cdh.h"
+#include "co_string.h"
+#include "co_time.h"
+
 #include "rt_ini_alias.h"
 #include "rt_rtt_global.h"
 #include "rt_rtt_msg.h"
 #include "dtt_rttsys_functions.h"
-#include "co_ccm_msg.h"
+
 #include "rt_gdh_msg.h"
 #include "rt_rtt_helptext.h"
 #include "rt_load.h"
@@ -182,7 +185,7 @@ int rtt_wildcard(char* wildname, char* name)
   u = upper_name;
   s = strchr(t, '*');
   if (s == 0) {
-    if (strcmp(t, u) == 0)
+    if (streq(t, u))
       return 0;
     else
       return 1;
@@ -214,7 +217,7 @@ int rtt_wildcard(char* wildname, char* name)
   }
   strcpy(checkstr, t);
   u = u + strlen(u) - strlen(checkstr);
-  if (strcmp(checkstr, u) != 0)
+  if (!streq(checkstr, u))
     return 1;
 
   return 0;
@@ -335,7 +338,7 @@ static int monitor_func(menu_ctx ctx, int* flag)
       if (EVEN(sts))
         return sts;
       /* Check that this is a or a plc */
-      if (strcmp(classname, "pwrb:Class-PlcPgm") == 0) {
+      if (streq(classname, "pwrb:Class-PlcPgm")) {
         found = 1;
         break;
       }
@@ -699,13 +702,13 @@ static int show_func(menu_ctx ctx, int* flag)
       if (EVEN(sts))
         return sts;
       /* Check that this is a or a plc */
-      if (strcmp(classname, "pwrb:Class-PlcPgm") == 0) {
+      if (streq(classname, "pwrb:Class-PlcPgm")) {
         /* Get all the windows in the plc */
         strcat(name_str, "-W*");
-      } else if (!((strcmp(classname, "pwrb:Class-WindowPlc") == 0)
-                     || (strcmp(classname, "pwrb:Class-WindowOrderact") == 0)
-                     || (strcmp(classname, "pwrb:Class-WindowCond") == 0)
-                     || (strcmp(classname, "pwrb:Class-WindowSubstep") == 0))) {
+      } else if (!((streq(classname, "pwrb:Class-WindowPlc"))
+                     || (streq(classname, "pwrb:Class-WindowOrderact"))
+                     || (streq(classname, "pwrb:Class-WindowCond"))
+                     || (streq(classname, "pwrb:Class-WindowSubstep")))) {
         /* Try with the parent */
         sts = gdh_GetParent(objid, &parentobjid);
         if (EVEN(sts))
@@ -718,10 +721,10 @@ static int show_func(menu_ctx ctx, int* flag)
         if (EVEN(sts))
           return sts;
 
-        if (!((strcmp(classname, "pwrb:Class-WindowPlc") == 0)
-                || (strcmp(classname, "pwrb:Class-WindowOrderact") == 0)
-                || (strcmp(classname, "pwrb:Class-WindowCond") == 0)
-                || (strcmp(classname, "pwrb:Class-WindowSubstep") == 0))) {
+        if (!((streq(classname, "pwrb:Class-WindowPlc"))
+                || (streq(classname, "pwrb:Class-WindowOrderact"))
+                || (streq(classname, "pwrb:Class-WindowCond"))
+                || (streq(classname, "pwrb:Class-WindowSubstep")))) {
           rtt_message('E', "Selected object has to be in a plcpgm or a plcpgm");
           return RTT__HOLDCOMMAND;
         } else {
@@ -782,12 +785,12 @@ static int show_func(menu_ctx ctx, int* flag)
         if (EVEN(sts))
           return sts;
         /* Check that this is a or a plc */
-        if ((strcmp(classname, "pwrb:Class-PlcPgm") == 0)
-            || (strcmp(classname, "pwrs:Class-$PlantHier") == 0)) {
+        if ((streq(classname, "pwrb:Class-PlcPgm"))
+            || (streq(classname, "pwrs:Class-$PlantHier"))) {
           /* This is ok */
-        } else if (!((strcmp(classname, "pwrb:Class-WindowPlc") == 0)
-                       || (strcmp(classname, "pwrb:Class-WindowOrderact") == 0)
-                       || (strcmp(classname, "pwrb:Class-WindowCond") == 0)
+        } else if (!((streq(classname, "pwrb:Class-WindowPlc"))
+                       || (streq(classname, "pwrb:Class-WindowOrderact"))
+                       || (streq(classname, "pwrb:Class-WindowCond"))
                        || (strcmp(classname, "pwrb:Class-WindowSubstep")
                               == 0))) {
           /* Try with the parent */
@@ -802,10 +805,10 @@ static int show_func(menu_ctx ctx, int* flag)
           if (EVEN(sts))
             return sts;
 
-          if (!((strcmp(classname, "pwrb:Class-WindowPlc") == 0)
-                  || (strcmp(classname, "pwrb:Class-WindowOrderact") == 0)
-                  || (strcmp(classname, "pwrb:Class-WindowCond") == 0)
-                  || (strcmp(classname, "pwrb:Class-WindowSubstep") == 0))) {
+          if (!((streq(classname, "pwrb:Class-WindowPlc"))
+                  || (streq(classname, "pwrb:Class-WindowOrderact"))
+                  || (streq(classname, "pwrb:Class-WindowCond"))
+                  || (streq(classname, "pwrb:Class-WindowSubstep")))) {
             rtt_message('E',
                 "Selected object has to be a planthier, plcpgm or in a plcpgm");
             return RTT__NOPICTURE;
@@ -1203,13 +1206,13 @@ static int debug_func(menu_ctx ctx, int* flag)
       if (EVEN(sts))
         return sts;
       /* Check that this is a or a plc */
-      if (strcmp(classname, "pwrb:Class-PlcPgm") == 0) {
+      if (streq(classname, "pwrb:Class-PlcPgm")) {
         /* Get all the windows in the plc */
         strcat(name_str, "-W*");
-      } else if (!((strcmp(classname, "pwrb:Class-WindowPlc") == 0)
-                     || (strcmp(classname, "pwrb:Class-WindowOrderact") == 0)
-                     || (strcmp(classname, "pwrb:Class-WindowCond") == 0)
-                     || (strcmp(classname, "pwrb:Class-WindowSubstep") == 0))) {
+      } else if (!((streq(classname, "pwrb:Class-WindowPlc"))
+                     || (streq(classname, "pwrb:Class-WindowOrderact"))
+                     || (streq(classname, "pwrb:Class-WindowCond"))
+                     || (streq(classname, "pwrb:Class-WindowSubstep")))) {
         /* Try with the parent */
         sts = gdh_GetParent(objid, &parentobjid);
         if (EVEN(sts))
@@ -1222,10 +1225,10 @@ static int debug_func(menu_ctx ctx, int* flag)
         if (EVEN(sts))
           return sts;
 
-        if (!((strcmp(classname, "pwrb:Class-WindowPlc") == 0)
-                || (strcmp(classname, "pwrb:Class-WindowOrderact") == 0)
-                || (strcmp(classname, "pwrb:Class-WindowCond") == 0)
-                || (strcmp(classname, "pwrb:Class-WindowSubstep") == 0))) {
+        if (!((streq(classname, "pwrb:Class-WindowPlc"))
+                || (streq(classname, "pwrb:Class-WindowOrderact"))
+                || (streq(classname, "pwrb:Class-WindowCond"))
+                || (streq(classname, "pwrb:Class-WindowSubstep")))) {
           rtt_message('E', "Selected object has to be in a plcpgm or a plcpgm");
           return RTT__HOLDCOMMAND;
         } else {
@@ -2458,7 +2461,7 @@ static int rtt_set_func(menu_ctx ctx, int* flag)
     /* Command is "SET CLOCK" */
   } else if (cdh_NoCaseStrncmp(arg1_str, "DEFAULT", strlen(arg1_str)) == 0) {
     if (ODD(rtt_get_qualifier("rtt_arg2", arg2_str))) {
-      if (strcmp(arg2_str, "") != 0) {
+      if (!streq(arg2_str, "")) {
 #if defined OS_POSIX
         cdh_ToLower(arg2_str, arg2_str);
 #endif
@@ -3014,15 +3017,15 @@ static int alarm_func(menu_ctx ctx, int* flag)
 
     if (ODD(rtt_get_qualifier("/PRIORITY", prio_str))) {
       rtt_toupper(prio_str, prio_str);
-      if (strcmp(prio_str, "A") == 0)
+      if (streq(prio_str, "A"))
         priority = 'A';
-      else if (strcmp(prio_str, "B") == 0)
+      else if (streq(prio_str, "B"))
         priority = 'B';
-      else if (strcmp(prio_str, "C") == 0)
+      else if (streq(prio_str, "C"))
         priority = 'C';
-      else if (strcmp(prio_str, "D") == 0)
+      else if (streq(prio_str, "D"))
         priority = 'D';
-      else if (strcmp(prio_str, "I") == 0)
+      else if (streq(prio_str, "I"))
         priority = 'I';
       else {
         rtt_message('E', "Unknown priority");
@@ -5965,9 +5968,9 @@ int rtt_get_objects_hier_class_name(menu_ctx ctx, pwr_tObjid hierobjid,
         return sts;
 
       /* Check that the class of the node object is correct */
-      if ((strcmp(hiername, "pwrs:Class-$NodeHier") == 0)
-          || (strcmp(hiername, "pwrs:Class-$PlantHier") == 0)
-          || (strcmp(hiername, "pwrs:Class-$System") == 0)) {
+      if ((streq(hiername, "pwrs:Class-$NodeHier"))
+          || (streq(hiername, "pwrs:Class-$PlantHier"))
+          || (streq(hiername, "pwrs:Class-$System"))) {
         /* Check if the children */
         sts = rtt_get_child_object_hi_cl_na(ctx, class, name, objid,
             &obj_counter, max_count, global, backcall, arg1, arg2, arg3, arg4,
@@ -6097,7 +6100,7 @@ int rtt_menu_classort(rtt_t_menu* menulist, int redo)
     if (EVEN(sts))
       return sts;
 
-    if (strcmp(classname, "pwrs:Class-$PlantHier") == 0) {
+    if (streq(classname, "pwrs:Class-$PlantHier")) {
       if (!redo) {
         strcpy(dummytxt, menu_ptr->text);
         strcpy(menu_ptr->text, "000");
@@ -6105,7 +6108,7 @@ int rtt_menu_classort(rtt_t_menu* menulist, int redo)
       } else {
         strcpy(menu_ptr->text, &menu_ptr->text[3]);
       }
-    } else if (strcmp(classname, "pwrb:Class-PlcPgm") == 0) {
+    } else if (streq(classname, "pwrb:Class-PlcPgm")) {
       if (!redo) {
         strcpy(dummytxt, menu_ptr->text);
         strcpy(menu_ptr->text, "001");

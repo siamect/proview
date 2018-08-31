@@ -40,16 +40,16 @@
 /*_Include files_________________________________________________________*/
 
 #include <iomanip>
-#include <string.h>
 
 extern "C" {
 #include "co_cdh.h"
 #include "co_dcli.h"
 }
-
-#include "cnv_topdf.h"
 #include "co_lng.h"
+#include "co_string.h"
+
 #include "cnv_image.h"
+#include "cnv_topdf.h"
 
 #define pdf_cHead "%PDF-1.4"
 
@@ -377,7 +377,7 @@ void CnvToPdf::print_text(const char* text, CnvStyle& style, int mode)
 
   int pmode = mode & 31;
 
-  if (strcmp(text, "") != 0) {
+  if (!streq(text, "")) {
     switch (pmode) {
     case pdf_mPrintMode_Pos:
     case pdf_mPrintMode_KeepY: {

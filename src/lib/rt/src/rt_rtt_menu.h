@@ -37,6 +37,8 @@
 #ifndef rt_rtt_menu_h
 #define rt_rtt_menu_h
 
+#include "co_string.h"
+
 #include "rt_rtt_global.h"
 #include "rt_rtt_msg.h"
 
@@ -328,11 +330,11 @@
       strncpy(rtt_arg[i], argv[i + 1], sizeof(rtt_arg[i]));                    \
       rtt_toupper(rtt_arg[i], rtt_arg[i]);                                     \
     }                                                                          \
-    if (argc >= 2 && strcmp(argv[1], "qcomonly") == 0)                         \
+    if (argc >= 2 && streq(argv[1], "qcomonly"))                         \
       strcpy(username, argv[1]);                                               \
-    else if (argc >= 2 && strcmp(argv[1], "noneth") == 0)                      \
+    else if (argc >= 2 && streq(argv[1], "noneth"))                      \
       strcpy(username, argv[1]);                                               \
-    else if (argc >= 2 && strcmp(argv[1], "-h") == 0) {                        \
+    else if (argc >= 2 && streq(argv[1], "-h")) {                        \
       rtt_usage();                                                             \
       exit(0);                                                                 \
     } else if (argc >= 3) {                                                    \
