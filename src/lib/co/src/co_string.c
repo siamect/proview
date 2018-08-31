@@ -41,23 +41,14 @@
 char* str_ToLower(char* dst, const char* src)
 {
   char* rs = dst;
-  static const char cvttab[] = "\
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
-!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!\
-!abcdefghijklmnopqrstuvwxyz!!!!!\
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
-^^^^^^^^^^^^^^^^!^^^^^^^^^^^^^!!\
-àáâãäåæçèéêëìíîï!ñòóôõö÷øùúûüý!!";
 
   if (dst == NULL)
     return NULL;
   if (src == NULL)
     src = dst;
-
+  
   while (*src)
-    if (cvttab[(unsigned char)*src] == '^')
+    if ((*src >= 65 && *src <= 90) || (((unsigned char) *src) >= 192 && ((unsigned char) *src) <= 222))
       *dst++ = (*src++) + 32;
     else
       *dst++ = *src++;
@@ -70,15 +61,6 @@ char* str_ToLower(char* dst, const char* src)
 char* str_ToUpper(char* dst, const char* src)
 {
   char* rs = dst;
-  static const char cvttab[] = "\
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
-!ABCDEFGHIJKLMNOPQRSTUVWXYZ!!!!!\
-!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!\
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
-ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏ!ÑÒÓÔÕÖ×ØÙÚÛÜÝ!!\
-^^^^^^^^^^^^^^^^!^^^^^^^^^^^^^!!";
 
   if (dst == NULL)
     return NULL;
@@ -86,7 +68,7 @@ char* str_ToUpper(char* dst, const char* src)
     src = dst;
 
   while (*src)
-    if (cvttab[(unsigned char)*src] == '^')
+    if ((*src >= 97 && *src <= 122) || (((unsigned char) *src) >= 224 && ((unsigned char) *src) <= 254))
       *dst++ = (*src++) - 32;
     else
       *dst++ = *src++;

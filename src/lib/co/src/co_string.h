@@ -38,8 +38,15 @@
 
 #include <string.h>
 
+/*!
+  Checks if two strings a and b are equal
+  strcmp returns 0 (i.e. false) if the strings are equal, which is not that obvious
+ */
 #define streq(a,b) (strcmp((a),(b)) == 0)
 
+/*!
+  Checks if the string 'str' starts with the substring 'prefix'
+ */
 #define str_StartsWith(str, prefix) (strncmp(str, prefix, strlen(prefix)) == 0)
 
 #ifdef __cplusplus
@@ -48,21 +55,23 @@ extern "C" {
 
 //! Convert string to lower case.
 /*!
-  If s is NULL, t is used also as input string.
+  Handles all ISO 8859-1 characters, not only ASCII.
+  If src is NULL, dst is used also as input string.
 
-  \param t	Output string.
-  \param s	Input string.
-  \return 	Returns t.
+  \param dst	Output string.
+  \param src	Input string.
+  \return 	Returns dst.
 */
 char* str_ToLower(char* dst, const char* src);
 
 //! Convert string to upper case.
 /*!
-  If s is NULL, t is used also as input string.
+  Handles all ISO 8859-1 characters, not only ASCII.
+  If src is NULL, dst is used also as input string.
 
-  \param t	Output string.
-  \param s	Input string.
-  \return 	Returns t.
+  \param dst	Output string.
+  \param src	Input string.
+  \return 	Returns dst.
 */
 char* str_ToUpper(char* dst, const char* src);
 
