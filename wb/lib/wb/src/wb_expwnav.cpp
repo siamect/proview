@@ -715,8 +715,8 @@ void WbExpWNav::update()
       brow_GetUserData(node_list[i], (void**)&item);
       if (select_type == item->type
           && ((item->type == expwitem_eItemType_Exp
-                  && strcmp(select_source, ((ItemExp*)item)->source) == 0
-                  && strcmp(select_target, ((ItemExp*)item)->target) == 0)
+                  && streq(select_source, ((ItemExp*)item)->source)
+                  && streq(select_target, ((ItemExp*)item)->target))
                  || (item->type == expwitem_eItemType_Dir
                         && streq(select_name, item->name)))) {
         brow_SelectInsert(brow->ctx, node_list[i]);
@@ -762,7 +762,7 @@ void WbExpWNav::show_export_import()
     else
       strcpy(tag, "import");
 
-    if (strcmp(cdh_Low(line_item[0]), tag) == 0) {
+    if (streq(cdh_Low(line_item[0]), tag)) {
       if (num != 4) {
         printf("File corrupt " pwr_cNameDistribute);
         continue;
@@ -846,7 +846,7 @@ void WbExpWNav::show_builddir()
     if (!num)
       continue;
 
-    if (strcmp(cdh_Low(line_item[0]), "builddir") == 0) {
+    if (streq(cdh_Low(line_item[0]), "builddir")) {
       if (num != 4) {
         printf("File corrupt " pwr_cNameDistribute);
         continue;
@@ -857,7 +857,7 @@ void WbExpWNav::show_builddir()
         dir = dir_insert(line_item[1], line_item[2], line_item[3]);
     }
 
-    else if (strcmp(cdh_Low(line_item[0]), "buildcopy") == 0) {
+    else if (streq(cdh_Low(line_item[0]), "buildcopy")) {
       int dir_update = 0;
       if (num != 4) {
         printf("File corrupt " pwr_cNameDistribute);
@@ -913,7 +913,7 @@ void WbExpWNav::show_builddir()
       if (dir_update)
         brow_SetRadiobutton(item->node, 0, 1);
 
-    } else if (strcmp(cdh_Low(line_item[0]), "buildmake") == 0) {
+    } else if (streq(cdh_Low(line_item[0]), "buildmake")) {
       int update = 1;
 
       if (num != 4) {
@@ -930,7 +930,7 @@ void WbExpWNav::show_builddir()
       dir->make_insert(line_item[2], line_item[3], update);
       if (update)
         dir->update = 1;
-    } else if (strcmp(cdh_Low(line_item[0]), "buildexec") == 0) {
+    } else if (streq(cdh_Low(line_item[0]), "buildexec")) {
       int update = 1;
 
       if (num != 4) {

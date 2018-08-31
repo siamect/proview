@@ -460,7 +460,7 @@ int wb_wblnode::convconst(int* val, char* str)
     return (TRUE);
   if (wb_wblnode::lookup(val, str, attr_flags))
     return (TRUE);
-  if (strncmp(str, "\"_X", 2) == 0) {
+  if (strStartsWith(str, "\"_X")) {
     if (sscanf(&str[3], "%d", val) == 1)
       return (TRUE);
   }
@@ -978,7 +978,7 @@ void wb_wblnode::buildAttribute(
       || o->a.tid == pwr_eType_Int64 || o->a.tid == pwr_eType_UInt64
       || o->a.tid == pwr_eType_Float64 || o->a.tid == pwr_eType_CastId
       || o->a.tid == pwr_eType_DisableAttr || o->a.tid == pwr_eType_DataRef
-      || strcmp(name(), "TimerFlag") == 0) {
+      || streq(name(), "TimerFlag")) {
     // Align on longword
     *boffset = pwr_AlignLW(*boffset);
   }
@@ -1032,10 +1032,10 @@ void wb_wblnode::buildAttribute(
 
   // Do some syntax check of flags and typeref
   if (((pwr_sParam*)o->rbody)->Info.Flags & PWR_MASK_SUPERCLASS
-      && strcmp(name(), "Super") != 0)
+      && !streq(name(), "Super"))
     m_vrep->error(
         "Super class attribute not named Super", getFileName(), line_number);
-  if (strcmp(name(), "Super") == 0) {
+  if (streq(name(), "Super")) {
     if (*bindex != 1)
       m_vrep->error(
           "Super has to be first attribute", getFileName(), line_number);
@@ -1422,49 +1422,49 @@ void wb_wblnode::buildBuffAttr(ref_wblnode object, pwr_eBix bix,
     // This section can be removed in later versions
     switch (cdrep->cid()) {
     case pwr_eClass_PlcProgram:
-      if (strcmp(name(), "objdid") == 0)
+      if (streq(name(), "objdid"))
         adrep = cdrep->adrep(&sts, "oid");
-      else if (strcmp(name(), "classid") == 0)
+      else if (streq(name(), "classid"))
         adrep = cdrep->adrep(&sts, "cid");
-      else if (strcmp(name(), "window_did") == 0)
+      else if (streq(name(), "window_did"))
         adrep = cdrep->adrep(&sts, "woid");
       else
         adrep = cdrep->adrep(&sts, aname.attribute());
       break;
     case pwr_eClass_PlcWindow:
-      if (strcmp(name(), "objdid") == 0)
+      if (streq(name(), "objdid"))
         adrep = cdrep->adrep(&sts, "oid");
-      else if (strcmp(name(), "classid") == 0)
+      else if (streq(name(), "classid"))
         adrep = cdrep->adrep(&sts, "cid");
-      else if (strcmp(name(), "parent_node_did") == 0)
+      else if (streq(name(), "parent_node_did"))
         adrep = cdrep->adrep(&sts, "poid");
       else
         adrep = cdrep->adrep(&sts, aname.attribute());
       break;
     case pwr_eClass_PlcNode:
-      if (strcmp(name(), "classid") == 0)
+      if (streq(name(), "classid"))
         adrep = cdrep->adrep(&sts, "cid");
-      else if (strcmp(name(), "object_did") == 0)
+      else if (streq(name(), "object_did"))
         adrep = cdrep->adrep(&sts, "oid");
-      else if (strcmp(name(), "window_did") == 0)
+      else if (streq(name(), "window_did"))
         adrep = cdrep->adrep(&sts, "woid");
-      else if (strcmp(name(), "subwindow_objdid[0]") == 0)
+      else if (streq(name(), "subwindow_objdid[0]"))
         adrep = cdrep->adrep(&sts, "subwind_oid[0]");
-      else if (strcmp(name(), "subwindow_objdid[1]") == 0)
+      else if (streq(name(), "subwindow_objdid[1]"))
         adrep = cdrep->adrep(&sts, "subwind_oid[1]");
       else
         adrep = cdrep->adrep(&sts, aname.attribute());
       break;
     case pwr_eClass_PlcConnection:
-      if (strcmp(name(), "objdid") == 0)
+      if (streq(name(), "objdid"))
         adrep = cdrep->adrep(&sts, "oid");
-      else if (strcmp(name(), "classid") == 0)
+      else if (streq(name(), "classid"))
         adrep = cdrep->adrep(&sts, "cid");
-      else if (strcmp(name(), "source_node_did") == 0)
+      else if (streq(name(), "source_node_did"))
         adrep = cdrep->adrep(&sts, "source_oid");
-      else if (strcmp(name(), "dest_node_did") == 0)
+      else if (streq(name(), "dest_node_did"))
         adrep = cdrep->adrep(&sts, "dest_oid");
-      else if (strcmp(name(), "window_did") == 0)
+      else if (streq(name(), "window_did"))
         adrep = cdrep->adrep(&sts, "woid");
       else
         adrep = cdrep->adrep(&sts, aname.attribute());
@@ -1748,7 +1748,7 @@ void wb_wblnode::registerNode(wb_vrepwbl* vol)
       ref_wblnode last_child = child;
       while (child) {
         if (child->getType() == wbl_eToken_Object) {
-          if (strcmp(child->getText(), "Template") == 0) {
+          if (streq(child->getText(), "Template")) {
             ref_wblnode fc = child->getFirstChild();
             if (fc->getText() == name()) {
               o->c.templ = child;
@@ -1762,7 +1762,7 @@ void wb_wblnode::registerNode(wb_vrepwbl* vol)
               o->c.templ->node_type = wbl_eNodeType_Template;
               fc->setText((char*)name());
             }
-          } else if (strcmp(child->getText(), "Code") == 0) {
+          } else if (streq(child->getText(), "Code")) {
             o->c.code = child;
             o->c.code->node_type = wbl_eNodeType_Code;
           }

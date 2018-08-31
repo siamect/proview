@@ -1622,11 +1622,11 @@ static int graph_export_func(void* client_data, void* client_flag)
       // Set default name
       graph->get_name(graph_name);
       if (!streq(graph_name, "")) {
-        if (strncmp(graph_name, "pwr_c_", 6) == 0) {
+        if (strStartsWith(graph_name, "pwr_c_")) {
           strcpy(name, "Jopc");
           strcat(name, &graph_name[6]);
           name[4] = _toupper(name[4]);
-        } else if (strncmp(graph_name, "pwr_", 4) == 0) {
+        } else if (strStartsWith(graph_name, "pwr_")) {
           strcpy(name, "Jop");
           strcat(name, &graph_name[4]);
           name[3] = _toupper(name[3]);

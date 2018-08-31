@@ -70,7 +70,7 @@ int CnvReadSrc::read_src(char* filename)
       if (streq(line, ""))
         continue;
 
-      if (strncmp(line, "/*_*", 4) != 0 && !(state & cread_mState_Doc)) {
+      if (!strStartsWith(line, "/*_*") && !(state & cread_mState_Doc)) {
         html_line(orig_line);
         continue;
       }
@@ -78,9 +78,9 @@ int CnvReadSrc::read_src(char* filename)
       nr = dcli_parse(line, " 	=", "", (char*)line_part,
           sizeof(line_part) / sizeof(line_part[0]), sizeof(line_part[0]), 0);
 
-      if (strcmp(low(line_part[0]), "/*_*") == 0)
+      if (streq(low(line_part[0]), "/*_*"))
         linetype = cread_eLine_Doc;
-      else if (strcmp(low(line_part[0]), "*/") == 0)
+      else if (streq(low(line_part[0]), "*/"))
         linetype = cread_eLine_DocEnd;
 
       switch (linetype) {
@@ -100,7 +100,7 @@ int CnvReadSrc::read_src(char* filename)
       }
     }
     if (state & cread_mState_Doc) {
-      if (strcmp(low(line_part[0]), "@aref") == 0) {
+      if (streq(low(line_part[0]), "@aref")) {
         if (nr > 1)
           strcpy(src_aref, line_part[1]);
         if (nr > 2)

@@ -136,7 +136,7 @@ wb_orep* wb_vrepced::copyObject(pwr_tStatus* sts, const wb_orep* orep,
     return 0;
   }
 
-  if (strcmp(orep->name(), "Template") == 0) {
+  if (streq(orep->name(), "Template")) {
     *sts = LDH__CLASSMISPLACED;
     return 0;
   }
@@ -1762,7 +1762,7 @@ bool wb_vrepced::buildClass(pwr_tStatus* sts, wb_orep* co)
             if (!(flags & PWR_MASK_CLASS))
               flags |= PWR_MASK_CLASS;
 
-            if (paramindex == 0 && strcmp(ao->name(), "Super") == 0
+            if (paramindex == 0 && streq(ao->name(), "Super")
                 && !(flags & PWR_MASK_SUPERCLASS))
               flags |= PWR_MASK_SUPERCLASS;
 
@@ -1857,7 +1857,7 @@ bool wb_vrepced::buildClass(pwr_tStatus* sts, wb_orep* co)
               || typeref == pwr_eType_Int64 || typeref == pwr_eType_UInt64
               || typeref == pwr_eType_Float64 || typeref == pwr_eType_CastId
               || typeref == pwr_eType_DisableAttr
-              || strcmp(ao->name(), "TimerFlag") == 0)
+              || streq(ao->name(), "TimerFlag"))
             offset = pwr_AlignLW(offset);
 
           // Store data in Attribute object
@@ -2709,7 +2709,7 @@ void wb_vrepced::printStructFile(bool hpp)
                       || adef_body.TypeRef == pwr_eType_CastId
                       || adef_body.TypeRef == pwr_eType_DisableAttr
                       || adef_body.TypeRef == pwr_eType_Int64
-                      || strcmp(o_adef->name(), "TimerFlag") == 0)
+                      || streq(o_adef->name(), "TimerFlag"))
                     strcpy(alignstr, " pwr_dAlignLW");
                   else
                     strcpy(alignstr, " pwr_dAlignW");

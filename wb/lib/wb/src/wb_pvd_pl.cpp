@@ -637,7 +637,7 @@ void wb_pvd_pl::load(pwr_tStatus* rsts)
   while (is.getline(line, sizeof(line))) {
     line_cnt++;
     if (line[0] == '!') {
-      if (strncmp(line, "!**Menu", 7) == 0) {
+      if (strStartsWith(line, "!**Menu")) {
         // Add Hier
         char* s = strstr(line, "// ");
         if (s) {
@@ -675,7 +675,7 @@ void wb_pvd_pl::load(pwr_tStatus* rsts)
 
         menu_stack[menu_cnt] = hieritem.oix;
         menu_cnt++;
-      } else if (strncmp(line, "!**}", 4) == 0) {
+      } else if (strStartsWith(line, "!**}")) {
         if (menu_cnt == 0) {
           std::cout << "Syntax error " << fname << " row " << line_cnt << '\n';
           continue;
@@ -688,7 +688,7 @@ void wb_pvd_pl::load(pwr_tStatus* rsts)
 
     num = dcli_parse(line, " 	", "", (char*)line_item,
         sizeof(line_item) / sizeof(line_item[0]), sizeof(line_item[0]), 0);
-    if (strncmp(line, "%base", 5) == 0) {
+    if (strStartsWith(line, "%base")) {
       // Insert BaseReg under baseroot
       if (num != 3) {
         std::cout << "Syntax error " << fname << " row " << line_cnt << '\n';

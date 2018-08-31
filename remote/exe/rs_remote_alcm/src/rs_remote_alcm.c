@@ -77,12 +77,16 @@
 #include <fcntl.h>
 #include <netinet/in.h>
 
-#include "co_time.h"
-#include "rt_pwr_msg.h"
-#include "rt_aproc.h"
-#include "pwr_systemclasses.h"
 #include "pwr_baseclasses.h"
 #include "pwr_remoteclasses.h"
+#include "pwr_systemclasses.h"
+
+#include "co_string.h"
+#include "co_time.h"
+
+#include "rt_aproc.h"
+#include "rt_pwr_msg.h"
+
 #include "remote.h"
 #include "remote_utils.h"
 #include "remote_remtrans_utils.h"
@@ -491,7 +495,7 @@ unsigned short int Receive()
               ((remnode_alcm*)(remnode->local))->ref->RemoteHostname);
         } else {
           // Skicka alltid kvittens på DUMMY0 (om APLACK)
-          if (strncmp(name, "DUMMY0", 6) == 0
+          if (strStartsWith(name, "DUMMY0")
               && rcv.apl.trans_code == ALCM_TRACO_APLACK)
             send_response = true;
         }

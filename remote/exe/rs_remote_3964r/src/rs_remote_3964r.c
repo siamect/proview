@@ -65,13 +65,11 @@
 #include <time.h>
 #include <stdio.h>
 #include <math.h>
-#include <string.h>
 #include <stdlib.h>
 #include <signal.h>
 #include <stdarg.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <string.h>
 #include <errno.h>
 #include <time.h>
 #include <unistd.h>
@@ -90,8 +88,11 @@
 
 #include "pwr_baseclasses.h"
 #include "pwr_remoteclasses.h"
+
 #include "co_cdh.h"
+#include "co_string.h"
 #include "co_time.h"
+
 #include "rt_aproc.h"
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
@@ -555,7 +556,7 @@ static unsigned int ReceiveHandler(int fd)
   for (i = 0; i < 4; i++) {
     type_name[i] = name[i + 3];
   }
-  if ((strncmp(type_name, "COM", 3)) == 0) {
+  if (strStartsWith(type_name, "COM")) {
     search_remtrans = true;
     remtrans = rn.remtrans;
     while (remtrans && search_remtrans) {

@@ -195,11 +195,11 @@ int main(int argc, char* argv[])
 
     while (dcli_read_line(line, sizeof(line), fp)) {
       dcli_trim(line, line);
-      if (strncmp(line, "#if", 3) == 0) {
+      if (strStartsWith(line, "#if")) {
         in_if = !check_os(&line[4], os);
         continue;
       } else if (in_if) {
-        if (strncmp(line, "#endif", 6) == 0) {
+        if (strStartsWith(line, "#endif")) {
           if (in_if)
             in_if = 0;
           continue;

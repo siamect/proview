@@ -2487,7 +2487,7 @@ static int graph_grow_cb(GlowCtx* ctx, glow_tEvent event)
 
       sprintf(name, "O%d", grow_IncrNextObjectNameNumber(graph->grow->ctx));
 
-      if (strncmp(dir, "jpwr/", 5) == 0) {
+      if (strStartsWith(dir, "jpwr/")) {
         strcpy(filename, dir);
         strcat(filename, file);
         strcat(filename, type);
@@ -5125,19 +5125,19 @@ void Graph::string_to_type(
     }
   }
 
-  if (!found && strncmp("STRING", str, 6) == 0) {
+  if (!found && strStartsWith(str, "STRING")) {
     *type = pwr_eType_String;
     if (*(str + 6) == 0)
       *size = 80;
     else
       *size = atoi(str + 6);
-  } else if (!found && strncmp("TEXT", str, 4) == 0) {
+  } else if (!found && strStartsWith(str, "TEXT")) {
     *type = pwr_eType_Text;
     if (*(str + 4) == 0)
       *size = 80;
     else
       *size = atoi(str + 4);
-  } else if (!found && strncmp("BIT", str, 3) == 0) {
+  } else if (!found && strStartsWith(str, "BIT")) {
     *type = (pwr_eType)graph_eType_Bit;
     *size = 4;
   }

@@ -582,8 +582,7 @@ char* Ev::name_to_alias(char* name)
     if (alias_list[i].Alias[0] == 0)
       break;
     if (!streq(alias_list[i].Object, "")
-        && strncmp(oname, alias_list[i].Object, strlen(alias_list[i].Object))
-            == 0) {
+        && strStartsWith(oname, alias_list[i].Object)) {
       strcpy(alias, alias_list[i].Alias);
       return alias;
     }

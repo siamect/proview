@@ -535,10 +535,10 @@ static pwr_tStatus terminate()
   /*
     for (pp = lst_Succ(NULL, &cp->proc_lh, &pl); pp != NULL; pp = lst_Succ(NULL,
     pl, &pl)) {
-      if (strncmp("pwr_webmonmh", pp->proc.name, 12) == 0) {
+      if (strStartsWith(pp->proc.name, "pwr_webmonmh")) {
         kill(pp->proc.pid, SIGKILL);
       }
-      else if (strncmp("pwr_webmon", pp->proc.name, 10) == 0) {
+      else if (strStartsWith(pp->proc.name, "pwr_webmon")) {
         kill(pp->proc.pid, SIGKILL);
       }
     }

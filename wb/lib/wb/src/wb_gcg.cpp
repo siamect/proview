@@ -1528,7 +1528,7 @@ static int gcg_parname_to_pgmname(
   for (i = 0; i < rows; i++) {
     s = bodydef[i].ParName;
     strcpy(superstr, "");
-    while (strncmp(s, "Super.", 6) == 0) {
+    while (strStartsWith(s, "Super.")) {
       strcat(superstr, "Super.");
       s += 6;
     }
@@ -4516,7 +4516,7 @@ pwr_tStatus gcg_read_volume_plclist(pwr_tVolumeId volid,
     return GSX__NOLOADFILE;
 
   while (ODD(sts = utl_read_line(line, sizeof(line), file, &line_count))) {
-    if (strncmp(line, "PlcProcess", 10) == 0) {
+    if (strStartsWith(line, "PlcProcess")) {
       if (plcproclist) {
         sscanf(line, "%s %s %s", type, objid_str, name);
         sts = utl_realloc((char**)plcproclist,
@@ -4530,7 +4530,7 @@ pwr_tStatus gcg_read_volume_plclist(pwr_tVolumeId volid,
         strcpy((plcproclist_pointer + *plcproc_count)->name, name);
         (*plcproc_count)++;
       }
-    } else if (strncmp(line, "PlcThread", 9) == 0) {
+    } else if (strStartsWith(line, "PlcThread")) {
       if (threadlist) {
         sscanf(line, "%s %s %s %f %d %s", type, objid_str, plcproc_objid_str,
             &scantime, &prio, name);
@@ -4552,7 +4552,7 @@ pwr_tStatus gcg_read_volume_plclist(pwr_tVolumeId volid,
         (threadlist_pointer + *thread_count)->prio = prio;
         (*thread_count)++;
       }
-    } else if (strncmp(line, "PlcPgm", 6) == 0) {
+    } else if (strStartsWith(line, "PlcPgm")) {
       if (plclist) {
         sscanf(line, "%s %s %s %d %s", type, objid_str, thread_str,
             &executeorder, name);
@@ -12850,7 +12850,7 @@ int gcg_comp_m58(gcg_ctx gcgctx, vldh_t_node node)
     if (EVEN(sts))
       return sts;
 
-    if (strlen(cname) > 3 && strcmp(&cname[strlen(cname) - 3], "Sim") == 0)
+    if (strlen(cname) > 3 && streq(&cname[strlen(cname) - 3], "Sim"))
       sts = ldh_ArefANameToAref(ldhses, &aref, "SimConnect", &caref);
     else
       sts = ldh_ArefANameToAref(ldhses, &aref, "PlcConnect", &caref);

@@ -36,9 +36,10 @@
 
 /* wb_c_objxref.c -- work bench methods of the ObjXRef class. */
 
-#include <string.h>
-
 #include "pwr_baseclasses.h"
+
+#include "co_string.h"
+
 #include "wb_ldh_msg.h"
 #include "wb_pwrs.h"
 #include "wb_pwrs_msg.h"
@@ -73,14 +74,13 @@ static int IsOkConnect(ldh_sMenuCall* ip, pwr_sMenuButton* mbp)
   if (EVEN(sts))
     return 0;
 
-  if (strncmp(PobjXDef.Identity, SobjXDef.Identity, sizeof(SobjXDef.Identity))
-      != 0)
+  if (!strStartsWith(PobjXDef.Identity, SobjXDef.Identity))
     return 0;
 
-  if (strncmp(PobjXDef.Source, SobjXDef.Target, sizeof(PobjXDef.Source)) != 0)
+  if (!strStartsWith(SobjXDef.Target, PobjXDef.Source))
     return 0;
 
-  if (strncmp(PobjXDef.Target, SobjXDef.Source, sizeof(SobjXDef.Source)) != 0)
+  if (!strStartsWith(PobjXDef.Target, SobjXDef.Source))
     return 0;
 
   return 1;
@@ -125,14 +125,13 @@ static pwr_tStatus Connect(ldh_sMenuCall* ip)
   if (EVEN(sts))
     return sts;
 
-  if (strncmp(PobjXDef.Identity, SobjXDef.Identity, sizeof(SobjXDef.Identity))
-      != 0)
+  if (!strStartsWith(PobjXDef.Identity, SobjXDef.Identity))
     return PWRS__IDXREF;
 
-  if (strncmp(PobjXDef.Source, SobjXDef.Target, sizeof(PobjXDef.Source)) != 0)
+  if (!strStartsWith(SobjXDef.Target, PobjXDef.Source))
     return PWRS__STXREF;
 
-  if (strncmp(PobjXDef.Target, SobjXDef.Source, sizeof(SobjXDef.Source)) != 0)
+  if (!strStartsWith(PobjXDef.Target, SobjXDef.Source))
     return PWRS__STXREF;
 
   sts = ldh_ReadAttribute(
@@ -218,14 +217,13 @@ static pwr_tStatus Disconnect(ldh_sMenuCall* ip)
   if (EVEN(sts))
     return sts;
 
-  if (strncmp(PobjXDef.Identity, SobjXDef.Identity, sizeof(SobjXDef.Identity))
-      != 0)
+  if (!strStartsWith(PobjXDef.Identity, SobjXDef.Identity))
     return PWRS__IDXREF;
 
-  if (strncmp(PobjXDef.Source, SobjXDef.Target, sizeof(PobjXDef.Source)) != 0)
+  if (!strStartsWith(SobjXDef.Target, PobjXDef.Source))
     return PWRS__STXREF;
 
-  if (strncmp(PobjXDef.Target, SobjXDef.Source, sizeof(SobjXDef.Source)) != 0)
+  if (!strStartsWith(PobjXDef.Target, SobjXDef.Source))
     return PWRS__STXREF;
 
   sts = ldh_ReadAttribute(
@@ -338,14 +336,13 @@ static pwr_tStatus DisconnectSingle(ldh_sMenuCall* ip)
     if (EVEN(sts))
       break;
 
-    if (strncmp(PobjXDef.Identity, SobjXDef.Identity, sizeof(SobjXDef.Identity))
-        != 0)
+    if (!strStartsWith(PobjXDef.Identity, SobjXDef.Identity))
       break;
 
-    if (strncmp(PobjXDef.Source, SobjXDef.Target, sizeof(PobjXDef.Source)) != 0)
+    if (!strStartsWith(SobjXDef.Target, PobjXDef.Source))
       break;
 
-    if (strncmp(PobjXDef.Target, SobjXDef.Source, sizeof(SobjXDef.Source)) != 0)
+    if (!strStartsWith(PobjXDef.Target, SobjXDef.Source))
       break;
 
     sts = ldh_ReadAttribute(

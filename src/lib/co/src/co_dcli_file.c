@@ -177,7 +177,7 @@ int dcli_replace_env(const char* str, char* newstr)
         cdh_ToLower(lower_symbol, symbol);
       if ((value = getenv(lower_symbol)) == NULL) {
         /* It was no symbol */
-        if (strncmp(str, "$pwr", 4) == 0) {
+        if (strStartsWith(str, "$pwr")) {
           fprintf(stderr, "Warning! Could not resolve environment variable $%s\n", lower_symbol);
         }
         *t = *s;
@@ -209,7 +209,7 @@ int dcli_replace_env(const char* str, char* newstr)
       cdh_ToLower(lower_symbol, symbol);
     if ((value = getenv(lower_symbol)) == NULL) {
       /* It was no symbol */
-      if (strncmp(str, "$pwr", 4) == 0) {
+      if (strStartsWith(str, "$pwr")) {
         fprintf(stderr, "Warning! Could not resolve environment variable $%s\n", lower_symbol);
       }
       *t = 0;

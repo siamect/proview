@@ -590,19 +590,19 @@ int CnvWblToHtml::class_exec()
   if (ctx->rw->doc_fresh) {
     for (i = 0; i < ctx->rw->doc_cnt; i++) {
       ctx->remove_spaces(ctx->rw->doc_text[i], txt);
-      if (strncmp(CnvCtx::low(txt), "@image", 6) == 0) {
+      if (strStartsWith(CnvCtx::low(txt), "@image")) {
         char imagefile[80];
 
         ctx->remove_spaces(txt + 6, imagefile);
         html_clf->f << "</PRE><IMG SRC=\"" << imagefile << "\"><PRE>\n";
-      } else if (strncmp(CnvCtx::low(txt), "@b", 2) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@b")) {
         html_clf->f << "</PRE><B><FONT SIZE=\"3\">" << txt + 2
                     << "</FONT></B><BR><PRE>\n";
-      } else if (strncmp(CnvCtx::low(txt), "@h1", 3) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@h1")) {
         html_clf->f << "</PRE><H3>" << txt + 3 << "</H3><BR><PRE>\n";
-      } else if (strncmp(CnvCtx::low(txt), "@h2", 3) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@h2")) {
         html_clf->f << "</PRE><H4>" << txt + 3 << "</H4><BR><PRE>\n";
-      } else if (strncmp(CnvCtx::low(txt), "@i", 2) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@i")) {
         html_clf->f << txt + 2 << '\n';
       } else
         html_clf->f << ctx->rw->doc_text[i] << '\n';
@@ -641,7 +641,7 @@ int CnvWblToHtml::body_exec()
   CnvWblToH::get_filename(ctx->rw, fname, 0);
   CnvReadSrc::filename_to_html(struct_file, fname);
 
-  if (strcmp(CnvCtx::low(ctx->rw->body_name), "devbody") == 0)
+  if (streq(CnvCtx::low(ctx->rw->body_name), "devbody"))
     strcpy(struct_name, "");
   else {
     strcpy(struct_name, "pwr_sClass_");
@@ -800,7 +800,7 @@ int CnvWblToHtml::attribute_exec()
   char attrtype_href[80];
   int lng_sts = 1;
 
-  if (strcmp(CnvCtx::low(ctx->rw->attr_name), "super") == 0) {
+  if (streq(CnvCtx::low(ctx->rw->attr_name), "super")) {
     create_cdp_file(
         ctx->rw->volume_name, ctx->rw->class_name, ctx->rw->attr_typeref);
     cdp_created = true;
@@ -813,13 +813,13 @@ int CnvWblToHtml::attribute_exec()
   if (Lng::current() != lng_eLanguage_en_US)
     lng_sts = ctx->rw->read_lng(ctx->rw->class_name, ctx->rw->attr_name);
 
-  if (strncmp(ctx->rw->attr_typeref, "pwr_eClass_", 11) == 0) {
+  if (strStartsWith(ctx->rw->attr_typeref, "pwr_eClass_")) {
     strcpy(typeref_href, &ctx->rw->attr_typeref[11]);
     strcpy(ctx->rw->attr_typeref, typeref_href);
-  } else if (strncmp(ctx->rw->attr_typeref, "pwr_eType_", 10) == 0) {
+  } else if (strStartsWith(ctx->rw->attr_typeref, "pwr_eType_")) {
     strcpy(typeref_href, &ctx->rw->attr_typeref[10]);
     strcpy(ctx->rw->attr_typeref, typeref_href);
-  } else if (strncmp(ctx->rw->attr_typeref, "pwr_eTypeDef_", 13) == 0) {
+  } else if (strStartsWith(ctx->rw->attr_typeref, "pwr_eTypeDef_")) {
     strcpy(typeref_href, &ctx->rw->attr_typeref[13]);
     strcpy(ctx->rw->attr_typeref, typeref_href);
   }
@@ -864,14 +864,14 @@ int CnvWblToHtml::attribute_exec()
     if (streq(ctx->rw->doc_summary, "")) {
       for (i = 0; i < ctx->rw->doc_cnt; i++) {
         ctx->remove_spaces(ctx->rw->doc_text[i], txt);
-        if (strncmp(CnvCtx::low(txt), "@image", 6) == 0) {
+        if (strStartsWith(CnvCtx::low(txt), "@image")) {
           continue;
-        } else if (strncmp(CnvCtx::low(txt), "@b", 2) == 0) {
+        } else if (strStartsWith(CnvCtx::low(txt), "@b")) {
           html_clf->f << "</PRE><B><FONT SIZE=\"3\">" << txt + 2
                       << "</FONT></B><PRE><BR>\n";
-        } else if (strncmp(CnvCtx::low(txt), "@h1", 3) == 0) {
+        } else if (strStartsWith(CnvCtx::low(txt), "@h1")) {
           html_clf->f << "<H3>" << txt + 3 << "</H3><BR>\n";
-        } else if (strncmp(CnvCtx::low(txt), "@h2", 3) == 0) {
+        } else if (strStartsWith(CnvCtx::low(txt), "@h2")) {
           html_clf->f << "<H4>" << txt + 3 << "</H4><BR>\n";
         } else {
           html_clf->f << ctx->rw->doc_text[i];
@@ -943,17 +943,17 @@ int CnvWblToHtml::attribute_exec()
   if (ctx->rw->doc_fresh) {
     for (i = 0; i < ctx->rw->doc_cnt; i++) {
       ctx->remove_spaces(ctx->rw->doc_text[i], txt);
-      if (strncmp(CnvCtx::low(txt), "@image", 6) == 0) {
+      if (strStartsWith(CnvCtx::low(txt), "@image")) {
         char imagefile[80];
 
         ctx->remove_spaces(txt + 6, imagefile);
         fp_tmp << "</PRE><IMG SRC=\"" << imagefile << "\"><PRE>\n";
-      } else if (strncmp(CnvCtx::low(txt), "@b", 2) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@b")) {
         fp_tmp << "</PRE><B><FONT SIZE=\"3\">" << txt + 2
                << "</FONT></B><BR><PRE>\n";
-      } else if (strncmp(CnvCtx::low(txt), "@h1", 3) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@h1")) {
         fp_tmp << "</PRE><H3>" << txt + 3 << "</H3><BR><PRE>\n";
-      } else if (strncmp(CnvCtx::low(txt), "@h2", 3) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@h2")) {
         fp_tmp << "</PRE><H4>" << txt + 3 << "</H4><BR><PRE>\n";
       } else
         fp_tmp << ctx->rw->doc_text[i] << '\n';
@@ -989,14 +989,14 @@ int CnvWblToHtml::bit_exec()
     if (streq(ctx->rw->doc_summary, "")) {
       for (i = 0; i < ctx->rw->doc_cnt; i++) {
         ctx->remove_spaces(ctx->rw->doc_text[i], txt);
-        if (strncmp(CnvCtx::low(txt), "@image", 6) == 0) {
+        if (strStartsWith(CnvCtx::low(txt), "@image")) {
           continue;
-        } else if (strncmp(CnvCtx::low(txt), "@b", 2) == 0) {
+        } else if (strStartsWith(CnvCtx::low(txt), "@b")) {
           html_clf->f << "</PRE><B><FONT SIZE=\"3\">" << txt + 2
                       << "</FONT></B><PRE><BR>\n";
-        } else if (strncmp(CnvCtx::low(txt), "@h1", 3) == 0) {
+        } else if (strStartsWith(CnvCtx::low(txt), "@h1")) {
           html_clf->f << "<H3>" << txt + 3 << "</H3><BR>\n";
-        } else if (strncmp(CnvCtx::low(txt), "@h2", 3) == 0) {
+        } else if (strStartsWith(CnvCtx::low(txt), "@h2")) {
           html_clf->f << "<H4>" << txt + 3 << "</H4><BR>\n";
         } else {
           html_clf->f << ctx->rw->doc_text[i];
@@ -1029,17 +1029,17 @@ int CnvWblToHtml::bit_exec()
   if (ctx->rw->doc_fresh) {
     for (i = 0; i < ctx->rw->doc_cnt; i++) {
       ctx->remove_spaces(ctx->rw->doc_text[i], txt);
-      if (strncmp(CnvCtx::low(txt), "@image", 6) == 0) {
+      if (strStartsWith(CnvCtx::low(txt), "@image")) {
         char imagefile[80];
 
         ctx->remove_spaces(txt + 6, imagefile);
         fp_tmp << "</PRE><IMG SRC=\"" << imagefile << "\"><PRE>\n";
-      } else if (strncmp(CnvCtx::low(txt), "@b", 2) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@b")) {
         fp_tmp << "</PRE><B><FONT SIZE=\"3\">" << txt + 2
                << "</FONT></B><BR><PRE>\n";
-      } else if (strncmp(CnvCtx::low(txt), "@h1", 3) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@h1")) {
         fp_tmp << "</PRE><H3>" << txt + 3 << "</H3><BR><PRE>\n";
-      } else if (strncmp(CnvCtx::low(txt), "@h2", 3) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@h2")) {
         fp_tmp << "</PRE><H4>" << txt + 3 << "</H4><BR><PRE>\n";
       } else
         fp_tmp << ctx->rw->doc_text[i] << '\n';
@@ -1211,17 +1211,17 @@ int CnvWblToHtml::typedef_exec()
   if (ctx->rw->doc_fresh) {
     for (i = 0; i < ctx->rw->doc_cnt; i++) {
       ctx->remove_spaces(ctx->rw->doc_text[i], txt);
-      if (strncmp(CnvCtx::low(txt), "@image", 6) == 0) {
+      if (strStartsWith(CnvCtx::low(txt), "@image")) {
         char imagefile[80];
 
         ctx->remove_spaces(txt + 6, imagefile);
         html_clf->f << "</PRE><IMG SRC=\"" << imagefile << "\"><PRE>\n";
-      } else if (strncmp(CnvCtx::low(txt), "@b", 2) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@b")) {
         html_clf->f << "</PRE><B><FONT SIZE=\"3\">" << txt + 2
                     << "</FONT></B><BR><PRE>\n";
-      } else if (strncmp(CnvCtx::low(txt), "@h1", 3) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@h1")) {
         html_clf->f << "</PRE><H3>" << txt + 3 << "</H3><BR><PRE>\n";
-      } else if (strncmp(CnvCtx::low(txt), "@h2", 3) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@h2")) {
         html_clf->f << "</PRE><H4>" << txt + 3 << "</H4><BR><PRE>\n";
       } else
         html_clf->f << ctx->rw->doc_text[i] << '\n';

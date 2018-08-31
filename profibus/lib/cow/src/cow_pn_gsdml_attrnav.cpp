@@ -1945,7 +1945,7 @@ int ItemPnBase::scan(GsdmlAttrNav* attrnav, void* p)
   if (!first_scan) {
     if (size > (int)sizeof(old_value) && type_id == glow_eType_String
         && strlen((char*)p) < sizeof(old_value)
-        && strcmp((char*)p, old_value) == 0)
+        && streq((char*)p, old_value))
       // No change since last time
       return 1;
     else if (memcmp(old_value, p, size) == 0)

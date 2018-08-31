@@ -1942,7 +1942,7 @@ int WNav::trace_scan_bc(brow_tObject object, void* p)
       if (item->size > (int)sizeof(item->old_value)
           && item->type_id == pwr_eType_String
           && strlen((char*)p) < sizeof(item->old_value)
-          && strcmp((char*)p, item->old_value) == 0)
+          && streq((char*)p, item->old_value))
         // No change since last time
         return 1;
       else if (memcmp(item->old_value, p, item->size) == 0)

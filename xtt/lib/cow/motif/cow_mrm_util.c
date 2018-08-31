@@ -182,7 +182,7 @@ int mrm_TextInput(Widget w, XEvent* event, char* recall, int line_size,
   case XK_Return:
   case XK_Linefeed:
     // Insert in recall buffer
-    if (strcmp(text, "") != 0) {
+    if (!streq(text, "")) {
       for (i = recall_size - 2; i >= 0; i--)
         strcpy(recall + (i + 1) * line_size, recall + i * line_size);
       strncpy(recall, text, line_size);

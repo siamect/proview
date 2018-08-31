@@ -589,7 +589,7 @@ int NavCrr::crr_code(
           case_sensitive = 1;
       }
 
-    while (strncmp(line, " _Obj_ ", 7) != 0) {
+    while (!strStartsWith(line, " _Obj_ ")) {
       sts = nav_get_signal_line(
           file, line, sizeof(line), &spaces, object, &lines);
       if (EVEN(sts)) {
@@ -611,7 +611,7 @@ int NavCrr::crr_code(
       sts = nav_get_signal_line(
           file, line, sizeof(line), &spaces, object, &lines);
       objname_written = 0;
-      while (strncmp(line, " _Obj_ ", 7) != 0) {
+      while (!strStartsWith(line, " _Obj_ ")) {
         if (!case_sensitive)
           cdh_ToUpper(tst_line, line);
         else
@@ -663,7 +663,7 @@ int NavCrr::crr_code(
               parent_ctx, parent_node, navc_eItemType_Text, tst_line, NULL, 0);
 
           if (brief) {
-            while (strncmp(line, " _Obj_ ", 7) != 0) {
+            while (!strStartsWith(line, " _Obj_ ")) {
               sts = nav_get_signal_line(
                   file, line, sizeof(line), &spaces, object, &lines);
               if (EVEN(sts)) {
@@ -779,7 +779,7 @@ int NavCrr::get_signals(char* filename, char* objectname)
 
       cdh_ToUpper(objname, objname);
 
-      if (strncmp(objectname, objname, strlen(objectname)) == 0
+      if (strStartsWith(objname, objectname)
           && (objname[strlen(objectname)] == 0
                  || objname[strlen(objectname)] == '.'
                  || objname[strlen(objectname)] == '-')) {

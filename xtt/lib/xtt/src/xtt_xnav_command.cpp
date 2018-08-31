@@ -2637,7 +2637,7 @@ static int xnav_eventlist_func(void* client_data, void* client_flag)
           xnav->ev->ack_last_prio(evlist_eEventType_Alarm, mh_eEventPrio_C);
         else if (streq(prio_str, "D"))
           xnav->ev->ack_last_prio(evlist_eEventType_Alarm, mh_eEventPrio_D);
-        else if (strncmp(prio_str, "I", 1) == 0)
+        else if (strStartsWith(prio_str, "I"))
           xnav->ev->ack_last_prio(evlist_eEventType_Info, 0);
         else if (streq(prio_str, "NOA")) {
           if (ODD(xnav->ev->get_last_not_acked_prio(
@@ -3862,7 +3862,7 @@ static int xnav_open_func(void* client_data, void* client_flag)
         sizeof(name_array) / sizeof(name_array[0]), sizeof(name_array[0]), 0);
 
     for (i = 0; i < names; i++) {
-      if (strncmp(name_array[i], "*-", 2) == 0) {
+      if (strStartsWith(name_array[i], "*-")) {
         // Replace * by the node object
         sts = gdh_GetNodeObject(0, &node_objid);
         if (EVEN(sts))
@@ -4264,7 +4264,7 @@ static int xnav_open_func(void* client_data, void* client_flag)
         sizeof(name_array) / sizeof(name_array[0]), sizeof(name_array[0]), 0);
 
     for (i = 0; i < names; i++) {
-      if (strncmp(name_array[i], "*-", 2) == 0) {
+      if (strStartsWith(name_array[i], "*-")) {
         // Replace * by the node object
         sts = gdh_GetNodeObject(0, &node_objid);
         if (EVEN(sts))
@@ -5382,7 +5382,7 @@ static int xnav_close_func(void* client_data, void* client_flag)
       }
     }
 
-    if (strncmp(name_str, "*-", 2) == 0) {
+    if (strStartsWith(name_str, "*-")) {
       // Replace * by the node object
       sts = gdh_GetNodeObject(0, &node_objid);
       if (EVEN(sts))
@@ -10375,7 +10375,7 @@ void XNav::close_keyboard(int action)
 
 static int xnav_replace_node_str(char* out, char* object_str)
 {
-  if (strncmp(object_str, "*-", 2) == 0
+  if (strStartsWith(object_str, "*-")
       || cdh_NoCaseStrncmp(object_str, "$node-", 6) == 0) {
     // Replace * by the node object
     pwr_tObjid node_objid;

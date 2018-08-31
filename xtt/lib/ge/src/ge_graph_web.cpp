@@ -255,7 +255,7 @@ int Graph::generate_web(ldh_tSesContext ldhses, pwr_tOid opplaceweb_oid)
   if (EVEN(sts))
     return sts;
 
-  if (strncmp(nodeobject_name, opplaceweb_name, strlen(nodeobject_name)) == 0) {
+  if (strStartsWith(opplaceweb_name, nodeobject_name)) {
     pwr_tAName tmp;
     strcpy(tmp, &opplaceweb_name[strlen(nodeobject_name)]);
     strcpy(opplaceweb_name, "$node");

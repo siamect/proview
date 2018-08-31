@@ -37,12 +37,13 @@
 /* rt_io_bus.c -- general io bus routines. */
 
 #include <math.h>
-#include <string.h>
+
+#include "co_cdh.h"
+#include "co_string.h"
 
 #include "rt_gdh_msg.h"
-#include "rt_io_msg.h"
-#include "co_cdh.h"
 #include "rt_io_bus.h"
+#include "rt_io_msg.h"
 
 #define PB_UDATA_DIAG 1
 
@@ -64,9 +65,9 @@ int is_diag(pwr_tAttrRef* aref)
     return 0;
 
   if ((s = strrchr(name, '.'))) {
-    if (strncmp(s + 1, "Diag_", 5) == 0)
+    if (strStartsWith(s + 1, "Diag_"))
       return 1;
-  } else if (strncmp(name, "Diag_", 5) == 0)
+  } else if (strStartsWith(name, "Diag_"))
     return 1;
 
   return 0;

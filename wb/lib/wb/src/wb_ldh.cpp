@@ -38,15 +38,16 @@
   This module contains the API-routines to the Local Data Handler, LDH.  */
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "pwr_baseclasses.h"
-#include "rt_gdh.h"
-#include "rt_load.h"
 
 #include "co_cnf.h"
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_ver.h"
+
+#include "rt_gdh.h"
+#include "rt_load.h"
 
 #include "wb_adrep.h"
 #include "wb_bdef.h"
@@ -1304,7 +1305,7 @@ pwr_tStatus ldh_NameToObjid(
   wb_session* sp = (wb_session*)session;
   pwr_tStatus sts;
 
-  if (strncmp(name, "_O", 2) == 0) {
+  if (strStartsWith(name, "_O")) {
     sts = cdh_StringToObjid(name, oid);
     if (ODD(sts))
       return sts;

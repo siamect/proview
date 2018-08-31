@@ -311,7 +311,7 @@ static int xtttbl_open_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (strncmp(arg1_str, "GRAPH", strlen(arg1_str)) == 0) {
+  if (strStartsWith(arg1_str, "GRAPH")) {
   } else if (cdh_NoCaseStrncmp(arg1_str, "HISTORY", strlen(arg1_str)) == 0) {
     pwr_tAName name_str;
     char* name_ptr;
@@ -399,7 +399,7 @@ static int xtttbl_create_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (strncmp(arg1_str, "ITEM", strlen(arg1_str)) == 0) {
+  if (strStartsWith(arg1_str, "ITEM")) {
     pwr_tOName name_str;
     pwr_tCmd command_str;
 
@@ -432,7 +432,7 @@ static int xtttbl_show_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (strncmp(arg1_str, "USER", strlen(arg1_str)) == 0) {
+  if (strStartsWith(arg1_str, "USER")) {
     char msg[120];
     char priv_str[80];
 

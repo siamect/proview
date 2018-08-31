@@ -160,18 +160,18 @@ int CnvWblToPs::class_exec()
   if (ctx->rw->doc_fresh) {
     for (i = 0; i < ctx->rw->doc_cnt; i++) {
       CnvCtx::remove_spaces(ctx->rw->doc_text[i], txt);
-      if (strncmp(CnvCtx::low(txt), "@image", 6) == 0) {
+      if (strStartsWith(CnvCtx::low(txt), "@image")) {
         char imagefile[80];
 
         CnvCtx::remove_spaces(txt + 6, imagefile);
         tops.print_image(imagefile);
-      } else if (strncmp(CnvCtx::low(txt), "@b", 2) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@b")) {
         tops.print_text(txt + 2, tops.style[tops.ci].boldtext);
-      } else if (strncmp(CnvCtx::low(txt), "@h1", 3) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@h1")) {
         tops.print_h2(txt + 3);
-      } else if (strncmp(CnvCtx::low(txt), "@h2", 3) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@h2")) {
         tops.print_h3(txt + 3);
-      } else if (strncmp(CnvCtx::low(txt), "@i", 2) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@i")) {
         tops.print_text(txt + 2, tops.style[tops.ci].text);
       } else
         tops.print_text(ctx->rw->doc_text[i], tops.style[tops.ci].text);
@@ -183,13 +183,13 @@ int CnvWblToPs::class_exec()
       char str[200];
       char text[200];
 
-      if (strncmp(ctx->rw->doc_clink_ref[i], "pwrb_", 5) == 0)
+      if (strStartsWith(ctx->rw->doc_clink_ref[i], "pwrb_"))
         strcpy(link_ref, &ctx->rw->doc_clink_ref[i][5]);
-      else if (strncmp(ctx->rw->doc_clink_ref[i], "pwrs_", 5) == 0)
+      else if (strStartsWith(ctx->rw->doc_clink_ref[i], "pwrs_"))
         strcpy(link_ref, &ctx->rw->doc_clink_ref[i][5]);
-      else if (strncmp(ctx->rw->doc_clink_ref[i], "nmps_", 5) == 0)
+      else if (strStartsWith(ctx->rw->doc_clink_ref[i], "nmps_"))
         strcpy(link_ref, &ctx->rw->doc_clink_ref[i][5]);
-      else if (strncmp(ctx->rw->doc_clink_ref[i], "ssab_", 5) == 0)
+      else if (strStartsWith(ctx->rw->doc_clink_ref[i], "ssab_"))
         strcpy(link_ref, &ctx->rw->doc_clink_ref[i][5]);
       else
         strcpy(link_ref, ctx->rw->doc_clink_ref[i]);
@@ -364,16 +364,16 @@ int CnvWblToPs::typedef_exec()
   if (ctx->rw->doc_fresh) {
     for (i = 0; i < ctx->rw->doc_cnt; i++) {
       CnvCtx::remove_spaces(ctx->rw->doc_text[i], txt);
-      if (strncmp(CnvCtx::low(txt), "@image", 6) == 0) {
+      if (strStartsWith(CnvCtx::low(txt), "@image")) {
         char imagefile[80];
 
         CnvCtx::remove_spaces(txt + 6, imagefile);
         tops.print_image(imagefile);
-      } else if (strncmp(CnvCtx::low(txt), "@b", 2) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@b")) {
         tops.print_text(txt + 2, tops.style[tops.ci].boldtext);
-      } else if (strncmp(CnvCtx::low(txt), "@h1", 3) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@h1")) {
         tops.print_h2(txt + 3);
-      } else if (strncmp(CnvCtx::low(txt), "@h2", 3) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@h2")) {
         tops.print_h3(txt + 3);
       } else
         tops.print_text(ctx->rw->doc_text[i], tops.style[tops.ci].text);
@@ -385,13 +385,13 @@ int CnvWblToPs::typedef_exec()
       char str[200];
       char text[200];
 
-      if (strncmp(ctx->rw->doc_clink_ref[i], "pwrb_", 5) == 0)
+      if (strStartsWith(ctx->rw->doc_clink_ref[i], "pwrb_"))
         strcpy(link_ref, &ctx->rw->doc_clink_ref[i][5]);
-      else if (strncmp(ctx->rw->doc_clink_ref[i], "pwrs_", 5) == 0)
+      else if (strStartsWith(ctx->rw->doc_clink_ref[i], "pwrs_"))
         strcpy(link_ref, &ctx->rw->doc_clink_ref[i][5]);
-      else if (strncmp(ctx->rw->doc_clink_ref[i], "nmps_", 5) == 0)
+      else if (strStartsWith(ctx->rw->doc_clink_ref[i], "nmps_"))
         strcpy(link_ref, &ctx->rw->doc_clink_ref[i][5]);
-      else if (strncmp(ctx->rw->doc_clink_ref[i], "ssab_", 5) == 0)
+      else if (strStartsWith(ctx->rw->doc_clink_ref[i], "ssab_"))
         strcpy(link_ref, &ctx->rw->doc_clink_ref[i][5]);
       else
         strcpy(link_ref, ctx->rw->doc_clink_ref[i]);

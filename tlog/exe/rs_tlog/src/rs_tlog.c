@@ -52,13 +52,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
-#include <string.h>
 #endif
 
 #include "pwr_baseclasses.h"
 #include "pwr_tlogclasses.h"
+
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_string.h"
+#include "co_time.h"
+
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
 #ifndef rt_mh_outunit_h
@@ -66,7 +69,6 @@
 #endif
 #include "rt_mh_appl.h"
 #include "rs_tlog_msg.h"
-#include "co_time.h"
 
 #define	LogAndExit( status) \
 {\
@@ -524,8 +526,7 @@ static pwr_tUInt32 tlog_selectlist_check( tlog_t_filectx *filectx,
 	i = selectlist_current - 1;
 	while( j < 10 && selectlists[i].TLogSelectList[j][0] != 0)
 	{
-	  if ( strncmp( selectlists[i].TLogSelectList[j], name, 
-			strlen( selectlists[i].TLogSelectList[j])) ==0)
+	  if ( strStartsWith(name, selectlists[i].TLogSelectList[j]))
 	  return TLOG__SUCCESS;
 	  j++;
 	}
@@ -558,8 +559,7 @@ static pwr_tUInt32 tlog_extselectlist_check( tlog_t_filectx *filectx,
 	    j = 0;
 	    while( j < 10 && selectlists[i].TLogSelectList[j][0] != 0)
 	    {
-	      if ( strncmp( selectlists[i].TLogSelectList[j], name, 
-			strlen( selectlists[i].TLogSelectList[j])) ==0)
+	      if ( strStartsWith(name, selectlists[i].TLogSelectList[j]))
 	        return TLOG__SUCCESS;
 	      j++;
 	    }

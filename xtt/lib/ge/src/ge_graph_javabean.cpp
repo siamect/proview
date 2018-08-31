@@ -101,7 +101,7 @@ int Graph::export_javabean(char* filename, char* bean_name)
   case graph_eTrace_Command:
   case graph_eTrace_DigWithCommand:
   case graph_eTrace_DigToneWithCommand: {
-    if (strncmp(bean_name, "Jop", 3) == 0)
+    if (strStartsWith(bean_name, "Jop"))
       fp << "package jpwr.beans;\n";
 
     fp << "import jpwr.rt.*;\n"
@@ -461,7 +461,7 @@ int Graph::export_javabean(char* filename, char* bean_name)
   case graph_eTrace_DigBorder:
   case graph_eTrace_Invisible:
   case graph_eTrace_AnnotWithTone: {
-    if (strncmp(bean_name, "Jop", 3) == 0)
+    if (strStartsWith(bean_name, "Jop"))
       fp << "package jpwr.beans;\n";
 
     fp << "import jpwr.rt.*;\n"
@@ -858,7 +858,7 @@ int Graph::export_javabean(char* filename, char* bean_name)
     break;
   }
   case graph_eTrace_Slider: {
-    if (strncmp(bean_name, "Jop", 3) == 0)
+    if (strStartsWith(bean_name, "Jop"))
       fp << "package jpwr.beans;\n";
 
     fp << "import jpwr.rt.*;\n"
@@ -898,7 +898,7 @@ int Graph::export_javabean(char* filename, char* bean_name)
   default: {
     // Component without dynamics
 
-    if (strncmp(bean_name, "Jop", 3) == 0)
+    if (strStartsWith(bean_name, "Jop"))
       fp << "package jpwr.beans;\n";
 
     fp << "import jpwr.rt.*;\n"
@@ -943,7 +943,7 @@ int Graph::export_javabean(char* filename, char* bean_name)
 
   fp.open(beaninfo_filename);
 
-  if (strncmp(bean_name, "Jop", 3) == 0)
+  if (strStartsWith(bean_name, "Jop"))
     fp << "package jpwr.beans;\n";
 
   fp << "import jpwr.jop.*;\n"
@@ -1879,7 +1879,7 @@ int Graph::export_gejava(char* filename, char* bean_name, int applet, int html)
   int sts;
   int baseclass;
 
-  baseclass = (strncmp(filename, "Jopc", 4) == 0);
+  baseclass = strStartsWith(filename, "Jopc");
 
   grow_GetBackgroundImage(grow->ctx, background_image, &background_tiled);
   if (!streq(background_image, "")) {
@@ -2405,13 +2405,13 @@ int Graph::export_BarTraceAttr(std::ofstream& fp, grow_tObject object, int cnt)
   GeDynElem* elem = dyn->elements;
   // for (GeDynElem* elem = dyn->elements; elem; elem = elem->next) {
   if (elem->dyn_type1 == ge_mDynType1_Bar) {
-    if (strcmp(((GeBar*)elem)->attribute, "") != 0)
+    if (!streq(((GeBar*)elem)->attribute, ""))
       fp << "    " << var_name << ".setPwrAttribute(\""
          << ((GeBar*)elem)->attribute << "\");\n";
-    if (strcmp(((GeBar*)elem)->minvalue_attr, "") != 0)
+    if (!streq(((GeBar*)elem)->minvalue_attr, ""))
       fp << "    " << var_name << ".setMinValueAttr(\""
          << ((GeBar*)elem)->minvalue_attr << "\");\n";
-    if (strcmp(((GeBar*)elem)->maxvalue_attr, "") != 0)
+    if (!streq(((GeBar*)elem)->maxvalue_attr, ""))
       fp << "    " << var_name << ".setMaxValueAttr(\""
          << ((GeBar*)elem)->maxvalue_attr << "\");\n";
   }
@@ -2445,22 +2445,22 @@ int Graph::export_TrendTraceAttr(
   GeDynElem* elem = dyn->elements;
   // for (GeDynElem* elem = dyn->elements; elem; elem = elem->next) {
   if (elem->dyn_type1 == ge_mDynType1_Trend) {
-    if (strcmp(((GeTrend*)elem)->attribute1, "") != 0)
+    if (!streq(((GeTrend*)elem)->attribute1, ""))
       fp << "    " << var_name << ".setPwrAttribute1(\""
          << ((GeTrend*)elem)->attribute1 << "\");\n";
-    if (strcmp(((GeTrend*)elem)->attribute2, "") != 0)
+    if (!streq(((GeTrend*)elem)->attribute2, ""))
       fp << "    " << var_name << ".setPwrAttribute2(\""
          << ((GeTrend*)elem)->attribute2 << "\");\n";
-    if (strcmp(((GeTrend*)elem)->minvalue_attr1, "") != 0)
+    if (!streq(((GeTrend*)elem)->minvalue_attr1, ""))
       fp << "    " << var_name << ".setMinValueAttr1(\""
          << ((GeTrend*)elem)->minvalue_attr1 << "\");\n";
-    if (strcmp(((GeTrend*)elem)->maxvalue_attr1, "") != 0)
+    if (!streq(((GeTrend*)elem)->maxvalue_attr1, ""))
       fp << "    " << var_name << ".setMaxValueAttr1(\""
          << ((GeTrend*)elem)->maxvalue_attr1 << "\");\n";
-    if (strcmp(((GeTrend*)elem)->minvalue_attr2, "") != 0)
+    if (!streq(((GeTrend*)elem)->minvalue_attr2, ""))
       fp << "    " << var_name << ".setMinValueAttr2(\""
          << ((GeTrend*)elem)->minvalue_attr2 << "\");\n";
-    if (strcmp(((GeTrend*)elem)->maxvalue_attr2, "") != 0)
+    if (!streq(((GeTrend*)elem)->maxvalue_attr2, ""))
       fp << "    " << var_name << ".setMaxValueAttr2(\""
          << ((GeTrend*)elem)->maxvalue_attr2 << "\");\n";
   }
@@ -2496,7 +2496,7 @@ int Graph::export_PieTraceAttr(std::ofstream& fp, grow_tObject object, int cnt)
     fp << "    " << var_name << ".setPwrAttribute(new String[]{";
 
     for (int i = 0; i < PIE_MAX_SECTORS; i++) {
-      if (strcmp(((GePie*)elem)->attribute[i], "") != 0)
+      if (!streq(((GePie*)elem)->attribute[i], ""))
         fp << "\"" << ((GePie*)elem)->attribute[i] << "\"";
       else
         fp << "null";
@@ -2540,7 +2540,7 @@ int Graph::export_BarChartTraceAttr(
     fp << "    " << var_name << ".setPwrAttribute(new String[]{";
 
     for (int i = 0; i < BARCHART_MAX_BARSEGMENTS; i++) {
-      if (strcmp(((GeBarChart*)elem)->attribute[i], "") != 0)
+      if (!streq(((GeBarChart*)elem)->attribute[i], ""))
         fp << "\"" << ((GeBarChart*)elem)->attribute[i] << "\"";
       else
         fp << "null";

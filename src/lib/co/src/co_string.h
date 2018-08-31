@@ -40,4 +40,6 @@
 
 #define streq(a,b) (strcmp((a),(b)) == 0)
 
+#define strStartsWith(str, prefix) (strncmp(str, prefix, strlen(prefix)) == 0)
+
 #endif

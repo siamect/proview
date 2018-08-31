@@ -590,7 +590,7 @@ Xtt::Xtt(int* argc, char** argv[], int* return_sts)
   static char display[80];
   static char display_opt[20] = "--display";
 
-  if (*argc > 1 && strcmp((*argv)[1], "-m") == 0) {
+  if (*argc > 1 && streq((*argv)[1], "-m")) {
     XNav::print_methods();
     exit(0);
   }
@@ -698,11 +698,11 @@ Xtt::Xtt(int* argc, char** argv[], int* return_sts)
         }
         case '-':
           // Possible arg to gtk
-          if (strcmp((*argv)[i], "--display") == 0) {
+          if (streq((*argv)[i], "--display")) {
             // Gtk arg with parameter
             i++;
             i_incr = 1;
-          } else if (strcmp((*argv)[i], "--sync") == 0) {
+          } else if (streq((*argv)[i], "--sync")) {
             // Gtk arg without parameter
             i_incr = 1;
           }

@@ -237,10 +237,10 @@ int CnvPwgToXtthelp::exec_file(char* fname)
     return 0;
 
   ifp.getline(line, sizeof(line));
-  while (strncmp(line, "0!", 2) == 0)
+  while (strStartsWith(line, "0!"))
     ifp.getline(line, sizeof(line));
 
-  if (strncmp(line, "199", 3) != 0)
+  if (!strStartsWith(line, "199"))
     return 0;
 
   m_fp << "<topic> " << fname_to_topic(fname) << " <style> function\n";
@@ -277,10 +277,10 @@ int CnvPwgToXtthelp::get_title(
     return found;
 
   ifp.getline(line, sizeof(line));
-  while (strncmp(line, "0!", 2) == 0)
+  while (strStartsWith(line, "0!"))
     ifp.getline(line, sizeof(line));
 
-  if (strncmp(line, "199", 3) != 0)
+  if (!strStartsWith(line, "199"))
     return 0;
 
   for (;;) {

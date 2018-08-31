@@ -831,7 +831,7 @@ static pwr_tStatus configure_object_reset(
     if (mb) {
       // Remove leading Super.
       s = bodydef[i].ParName;
-      while (strncmp(s, "Super.", 6) == 0)
+      while (strStartsWith(s, "Super."))
         s += 6;
       for (j = 0; j < vect_cnt; j++) {
         if (cdh_NoCaseStrcmp(vect[j], s) == 0) {

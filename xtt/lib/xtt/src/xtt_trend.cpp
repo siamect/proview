@@ -34,10 +34,13 @@
  * General Public License plus this exception.
  */
 
-#include "rt_gdh_msg.h"
 #include "co_cdh.h"
-#include "cow_wow.h"
+#include "co_string.h"
+
+#include "rt_gdh_msg.h"
 #include "rt_xnav_msg.h"
+
+#include "cow_wow.h"
 
 #include "glow_curveapi.h"
 
@@ -848,7 +851,7 @@ void XttTrend::curve_add(
                 if (EVEN(*sts))
                   return;
 
-                if (strncmp(attr_name, vname, strlen(attr_name)) == 0) {
+                if (strStartsWith(vname, attr_name)) {
                   trend_aref = plot.YObjectName[i];
                   trend_found = 1;
                   attr_aref = *arp;
@@ -879,7 +882,7 @@ void XttTrend::curve_add(
                   if (EVEN(*sts))
                     return;
 
-                  if (strncmp(attr_name, vname, strlen(attr_name)) == 0) {
+                  if (strStartsWith(vname, attr_name)) {
                     trend_aref = plot.YObjectName[i];
                     trend_found = 1;
                     attr_aref = *arp;
@@ -960,7 +963,7 @@ void XttTrend::curve_add(
       if (EVEN(*sts))
         return;
 
-      if (strncmp(attr_name, vname, strlen(attr_name)) == 0) {
+      if (strStartsWith(vname, attr_name)) {
         trend_idx[trend_idx_cnt] = j;
         trend_idx_cnt++;
       }

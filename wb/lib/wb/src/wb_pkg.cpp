@@ -118,7 +118,7 @@ void wb_pkg::readConfig()
     if (!num)
       continue;
 
-    if (strcmp(cdh_Low(line_item[0]), "node") == 0) {
+    if (streq(cdh_Low(line_item[0]), "node")) {
       pwr_mOpSys opsys;
       int bus;
       pwr_tMask dstatus;
@@ -150,7 +150,7 @@ void wb_pkg::readConfig()
       } else {
         bool found = false;
         for (int i = 0; i < (int)m_nodelist.size(); i++) {
-          if (strcmp(m_nodelist[i].name(), cdh_Low(line_item[1])) == 0) {
+          if (streq(m_nodelist[i].name(), cdh_Low(line_item[1]))) {
             found = true;
             m_nodelist[i].setOpsys(opsys);
             m_nodelist[i].setBus(bus);
@@ -162,7 +162,7 @@ void wb_pkg::readConfig()
           }
         }
       }
-    } else if (strcmp(cdh_Low(line_item[0]), "appl") == 0) {
+    } else if (streq(cdh_Low(line_item[0]), "appl")) {
       if (!(num == 4 || num == 5))
         throw wb_error_str("File corrupt " pwr_cNameDistribute);
 
@@ -179,7 +179,7 @@ void wb_pkg::readConfig()
       } catch (wb_error&) {
         continue;
       }
-    } else if (strcmp(cdh_Low(line_item[0]), "depnode") == 0) {
+    } else if (streq(cdh_Low(line_item[0]), "depnode")) {
       if (num != 4)
         throw wb_error_str("File corrupt " pwr_cNameDistribute);
 
@@ -190,7 +190,7 @@ void wb_pkg::readConfig()
       } catch (wb_error&) {
         continue;
       }
-    } else if (strcmp(cdh_Low(line_item[0]), "load") == 0) {
+    } else if (streq(cdh_Low(line_item[0]), "load")) {
       pwr_tVolumeId* vollist;
       pwr_tString40* volnamelist;
       int volcount;
@@ -232,7 +232,7 @@ void wb_pkg::readConfig()
           pwr_tFileName dir;
 
           if (n.opsys() == pwr_mOpSys_CustomBuild
-              && strcmp(n.customPlatform(), "-") != 0)
+              && !streq(n.customPlatform(), "-"))
             sprintf(dir, "$pwrp_root/bld/%s/exe/", n.customPlatform());
           else
             sprintf(dir, "$pwrp_root/bld/%s/exe/", cdh_OpSysToStr(n.opsys()));
@@ -302,7 +302,7 @@ void wb_pkg::readConfig()
           continue;
         throw wb_error_str(e.what());
       }
-    } else if (strcmp(cdh_Low(line_item[0]), "boot") == 0) {
+    } else if (streq(cdh_Low(line_item[0]), "boot")) {
       // A Sev node, only node and bootfile
       try {
         if (!(num == 2))
@@ -338,7 +338,7 @@ void wb_pkg::readConfig()
 pkg_node& wb_pkg::getNode(char* name)
 {
   for (int i = 0; i < (int)m_nodelist.size(); i++) {
-    if (strcmp(m_nodelist[i].name(), cdh_Low(name)) == 0)
+    if (streq(m_nodelist[i].name(), cdh_Low(name)))
       return m_nodelist[i];
   }
   throw wb_error_str("No such node");
@@ -568,7 +568,7 @@ int pkg_node::compareFiles()
     if (num != 6)
       continue;
 
-    if (strncmp(line_item[5], "pkg_build/", 10) != 0)
+    if (!strStartsWith(line_item[5], "pkg_build/"))
       continue;
 
     // Add file to list
@@ -1092,7 +1092,7 @@ pkg_volume::pkg_volume(char* name, char* filename, pwr_tVid vid, pwr_tTime time)
 {
   strcpy(m_name, name);
   strcpy(m_filename, filename);
-  if (strncmp(m_filename, "$pwr_load/", 10) == 0)
+  if (strStartsWith(m_filename, "$pwr_load/"))
     m_isSystem = true;
 }
 

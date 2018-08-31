@@ -10486,7 +10486,7 @@ int RTTSYS_QCOM_LINKS(menu_ctx ctx, int event, char* parameter_ptr,
               && (k < (page + 1) * QCOM_LINKS_PAGESIZE)) {
             np = pool_Qitem(nl, qdb_sNode, node_ll);
 
-            if (strncmp(np->link[m].name, "***", 3) == 0) {
+            if (strStartsWith(np->link[m].name, "***")) {
               m++;
               continue;
             }
@@ -10635,7 +10635,7 @@ int RTTSYS_QCOM_LINKS(menu_ctx ctx, int event, char* parameter_ptr,
               && (k < (page + 1) * QCOM_LINKS_PAGESIZE)) {
             np = pool_Qitem(nl, qdb_sNode, node_ll);
 
-            if (strncmp(np->link[m].name, "***", 3) == 0) {
+            if (strStartsWith(np->link[m].name, "***")) {
               m++;
               continue;
             }
@@ -10793,7 +10793,7 @@ int RTTSYS_QCOM_NODES(menu_ctx ctx, int event, char* parameter_ptr,
               && (k < (page + 1) * QCOM_NODES_PAGESIZE)) {
             np = pool_Qitem(nl, qdb_sNode, node_ll);
 
-            if (strncmp(np->link[m].name, "***", 3) == 0) {
+            if (strStartsWith(np->link[m].name, "***")) {
               m++;
               continue;
             }
@@ -10980,7 +10980,7 @@ int RTTSYS_QCOM_NODES(menu_ctx ctx, int event, char* parameter_ptr,
               && (k < (page + 1) * QCOM_NODES_PAGESIZE)) {
             np = pool_Qitem(nl, qdb_sNode, node_ll);
 
-            if (strncmp(np->link[m].name, "***", 3) == 0) {
+            if (strStartsWith(np->link[m].name, "***")) {
               m++;
               continue;
             }

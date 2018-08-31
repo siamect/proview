@@ -251,8 +251,8 @@ void* CnvXtthelpToPdf::insert(navh_eItemType item_type, const char* text1,
       char str[200];
       int page;
 
-      if (strncmp(link, "$web:", 5) == 0) {
-        if (strncmp(&link[5], "$pwrp_web/", 10) == 0)
+      if (strStartsWith(link, "$web:")) {
+        if (strStartsWith(&link[5], "$pwrp_web/"))
           strcpy(fname, &link[15]);
         else
           strcpy(fname, &link[5]);

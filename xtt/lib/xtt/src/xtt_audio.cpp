@@ -8,17 +8,22 @@
 #include <sys/ioctl.h>
 #include <sys/soundcard.h>
 
-#include <rt_errh.h>
-#define ALSA_PCM_NEW_HW_PARAMS_API
+#include "pwr_baseclasses.h"
 
-#include "rt_gdh.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_time.h"
-#include "pwr_baseclasses.h"
+
+#include "rt_errh.h"
+#include "rt_gdh.h"
 #include "rt_xnav_msg.h"
+
 #include "cow_wow.h"
+
 #include "xtt_audio.h"
+
+#define ALSA_PCM_NEW_HW_PARAMS_API
 
 #define OSS_BUFFER_SIZE 65536
 #define AUDIO_BUFFER_SIZE (65536 * 4)
@@ -220,8 +225,8 @@ int XttAudio::beep(pwr_tAttrRef* arp)
         if (EVEN(sts))
           break;
 
-        if (strncmp(sound.Source, "Sine", 4) == 0
-            || strncmp(sound.Source, "Square", 6) == 0) {
+        if (strStartsWith(sound.Source, "Sine")
+            || strStartsWith(sound.Source, "Square")) {
           asize = size = 2 * int(sound.Length * srate);
           size = ((size - 1) / (hw_buff_size) + 1) * hw_buff_size;
           buffer = (short*)calloc(sizeof(short), size);
@@ -232,14 +237,14 @@ int XttAudio::beep(pwr_tAttrRef* arp)
                i < int(sizeof(sound.ToneTable) / sizeof(sound.ToneTable[0]));
                i++) {
             if (sound.VolumeTable[i] > 0) {
-              if (strncmp(sound.Source, "Sine", 4) == 0) {
+              if (strStartsWith(sound.Source, "Sine")) {
                 MakeSine(buffer, asize, 0, 0, sound.Length,
                     sound.BaseTone + sound.ToneTable[i],
                     sound.Volume / 100 * sound.VolumeTable[i],
                     sound.Volume / 100 * sound.VolumeTable[i], sound.Attack,
                     sound.Decay, sound.Sustain / 100, sound.Release,
                     sound.Tremolo / 100);
-              } else if (strncmp(sound.Source, "Square", 6) == 0) {
+              } else if (strStartsWith(sound.Source, "Square")) {
                 MakeSquare(buffer, asize, 0, 0, sound.Length,
                     sound.BaseTone + sound.ToneTable[i],
                     sound.Volume / 100 * sound.VolumeTable[i],
@@ -395,9 +400,8 @@ int XttAudio::beep(pwr_tAttrRef* arp)
                                   / sizeof(sound[0].ToneTable[0]));
                j++) {
             if (sound[seq.SequenceTable[i].SoundIdx].VolumeTable[j] > 0) {
-              if (strncmp(
-                      sound[seq.SequenceTable[i].SoundIdx].Source, "Sine", 4)
-                  == 0) {
+              if (strStartsWith(
+                    sound[seq.SequenceTable[i].SoundIdx].Source, "Sine")) {
                 MakeSine(buffer, size, 0, seq.SequenceTable[i].StartTime,
                     seq.SequenceTable[i].EndTime, seq.SequenceTable[i].Tone
                         + sound[seq.SequenceTable[i].SoundIdx].ToneTable[j],
@@ -410,9 +414,8 @@ int XttAudio::beep(pwr_tAttrRef* arp)
                     sound[seq.SequenceTable[i].SoundIdx].Sustain / 100,
                     sound[seq.SequenceTable[i].SoundIdx].Release,
                     sound[seq.SequenceTable[i].SoundIdx].Tremolo / 100);
-              } else if (strncmp(sound[seq.SequenceTable[i].SoundIdx].Source,
-                             "Square", 6)
-                  == 0) {
+              } else if (strStartsWith(
+                    sound[seq.SequenceTable[i].SoundIdx].Source, "Square")) {
                 MakeSquare(buffer, size, 0, seq.SequenceTable[i].StartTime,
                     seq.SequenceTable[i].EndTime, seq.SequenceTable[i].Tone
                         + sound[seq.SequenceTable[i].SoundIdx].ToneTable[j],

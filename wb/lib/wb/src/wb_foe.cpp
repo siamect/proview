@@ -39,14 +39,15 @@
 //   the graphical editor.
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "pwr_baseclasses.h"
 
 #include "co_dcli.h"
-#include "cow_login.h"
 #include "co_login_msg.h"
 #include "co_msg.h"
+#include "co_string.h"
+
+#include "cow_login.h"
 #include "cow_xhelp.h"
 
 #include "wb_foe_msg.h"
@@ -3458,7 +3459,7 @@ int WFoe::search_string_next()
 
     if (len1 >= len2) {
       for (i = 0; i <= (len1 - len2); i++) {
-        if (strncmp(&annotations[i], searchstr, strlen(searchstr)) == 0) {
+        if (strStartsWith(&annotations[i], searchstr)) {
           /* the string matches */
           searchindex = j + 1;
           node = *node_ptr;

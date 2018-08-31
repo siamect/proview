@@ -165,7 +165,7 @@ void wb_print_wbl::printObject(wb_volume& v, wb_object& o, bool recursive)
     return;
   }
 
-  if (v.cid() == pwr_eClass_ClassVolume && strcmp(o.name(), "Template") == 0)
+  if (v.cid() == pwr_eClass_ClassVolume && streq(o.name(), "Template"))
     m_isTemplateObject = true;
   else
     m_isTemplateObject = false;

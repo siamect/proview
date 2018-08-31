@@ -2522,13 +2522,13 @@ pwr_tStatus lfu_SaveDirectoryVolume(
                    i++) {
                 dcli_trim(opt, bop->Archives[i]);
                 if (!streq(opt, "")) {
-                  if (strncmp(opt, "lib", 3) == 0)
+                  if (strStartsWith(opt, "lib"))
                     strncpy(ar, &opt[3], sizeof(ar));
                   else
                     strncpy(ar, opt, sizeof(ar));
-                  if (strcmp(&ar[strlen(ar) - 2], ".a") == 0)
+                  if (streq(&ar[strlen(ar) - 2], ".a"))
                     ar[strlen(ar) - 2] = 0;
-                  else if (strcmp(&ar[strlen(ar) - 3], ".so") == 0)
+                  else if (streq(&ar[strlen(ar) - 3], ".so"))
                     ar[strlen(ar) - 3] = 0;
                   sprintf(&str[strlen(str)], "-l%s ", ar);
                 }

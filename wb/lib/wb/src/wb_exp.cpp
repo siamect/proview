@@ -1779,7 +1779,7 @@ static pwr_tStatus exp_ObjdidToName(
   if (EVEN(sts))
     return sts;
 
-  if (strncmp(wind_name, object_name, strlen(wind_name)) == 0) {
+  if (strStartsWith(object_name, wind_name)) {
     s = object_name + strlen(wind_name) + 1;
     strcpy(output_name, s);
   } else

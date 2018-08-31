@@ -5168,7 +5168,7 @@ static int utl_set_parameter(pwr_sAttrRef* arp, ldh_tSesContext ldhses,
         objdid_name[0] = '\0';
       }
       sprintf(logstrptr + strlen(logstr), "( %s ) ", objdid_name);
-      if (strncmp(valuestr, "_O", 2) == 0)
+      if (strStartsWith(valuestr, "_O"))
         sts = cdh_StringToObjid(valuestr, p_ObjDId);
       else
         sts = ldh_NameToObjid(ldhses, p_ObjDId, valuestr);
@@ -6437,12 +6437,12 @@ int utl_list(ldh_tSesContext ldhses, char* list_str, char* hier_str,
   /* If object is specified, this has priority over name */
   if (object_str != NULL)
     name = object_str;
-  else if (strcmp((listbody_ptr->Name), "") == 0)
+  else if (streq((listbody_ptr->Name), ""))
     name = NULL;
   else
     name = listbody_ptr->Name;
 
-  if (strcmp((listbody_ptr->Class), "") == 0)
+  if (streq((listbody_ptr->Class), ""))
     classname = NULL;
   else
     classname = listbody_ptr->Class;
@@ -6450,11 +6450,11 @@ int utl_list(ldh_tSesContext ldhses, char* list_str, char* hier_str,
   /* If hierarchy is defined in cli, take this as hierarchy object */
   if (hier_str != NULL)
     hiername = hier_str;
-  else if (strcmp((listbody_ptr->Hierarchyobject), "") == 0)
+  else if (streq((listbody_ptr->Hierarchyobject), ""))
     hiername = NULL;
   else
     hiername = listbody_ptr->Hierarchyobject;
-  if (strcmp((listbody_ptr->Parameter), "") == 0)
+  if (streq((listbody_ptr->Parameter), ""))
     parameter = NULL;
   else
     parameter = listbody_ptr->Parameter;
@@ -6898,19 +6898,19 @@ static int utl_list_sublist(utl_ctx utlctx, pwr_tObjid listobjdid,
   if (EVEN(sts))
     return sts;
 
-  if (strcmp((listbody_ptr->Name), "") == 0)
+  if (streq((listbody_ptr->Name), ""))
     name = NULL;
   else
     name = listbody_ptr->Name;
-  if (strcmp((listbody_ptr->Class), "") == 0)
+  if (streq((listbody_ptr->Class), ""))
     classname = NULL;
   else
     classname = listbody_ptr->Class;
-  if (strcmp((listbody_ptr->Hierarchyobject), "") == 0)
+  if (streq((listbody_ptr->Hierarchyobject), ""))
     hiername = NULL;
   else
     hiername = listbody_ptr->Hierarchyobject;
-  if (strcmp((listbody_ptr->Parameter), "") == 0)
+  if (streq((listbody_ptr->Parameter), ""))
     parameter = NULL;
   else
     parameter = listbody_ptr->Parameter;
@@ -7080,7 +7080,7 @@ static int utl_list_sublist_print(utl_ctx utlctx, pwr_tObjid listobjdid,
   if (EVEN(sts))
     return sts;
 
-  if (strcmp((listbody_ptr->Parameter), "") == 0)
+  if (streq((listbody_ptr->Parameter), ""))
     parameter = NULL;
   else
     parameter = listbody_ptr->Parameter;
@@ -7332,7 +7332,7 @@ static int utl_list_print_par(utl_ctx utlctx, pwr_sAttrRef* o,
   else
     strcpy(text, "");
 
-  if (strcmp((list_pardesc->Parameter), "PrintObjName") == 0) {
+  if (streq((list_pardesc->Parameter), "PrintObjName")) {
     /* If crossreference list, print read or write */
     if ((listbody_ptr->Crossreference)
         || (listbody_ptr->Externreference == 3)) {
@@ -7360,7 +7360,7 @@ static int utl_list_print_par(utl_ctx utlctx, pwr_sAttrRef* o,
 
       strcat(text, hier_name);
     }
-  } else if (strcmp((list_pardesc->Parameter), "PrintObjClass") == 0) {
+  } else if (streq((list_pardesc->Parameter), "PrintObjClass")) {
     /* Print the name of the object */
     sts = ldh_GetAttrRefTid(utlctx->ldhses, o, &cid);
     if (ODD(sts))
@@ -7371,10 +7371,10 @@ static int utl_list_print_par(utl_ctx utlctx, pwr_sAttrRef* o,
     if (list_pardesc->PrintParName)
       strcat(text, "Class = ");
     strcat(text, hier_name);
-  } else if (strcmp((list_pardesc->Parameter), "PrintNode") == 0) {
+  } else if (streq((list_pardesc->Parameter), "PrintNode")) {
     /* Print the name of the object */
     strcat(text, "* Obsolete * ");
-  } else if (strcmp((list_pardesc->Parameter), "PrintVolume") == 0) {
+  } else if (streq((list_pardesc->Parameter), "PrintVolume")) {
     /* Print the name of the volume */
     if (list_pardesc->PrintParName)
       strcat(text, "Volume = ");
@@ -7385,7 +7385,7 @@ static int utl_list_print_par(utl_ctx utlctx, pwr_sAttrRef* o,
       strcat(text, "-");
     else
       strcat(text, hier_name);
-  } else if (strcmp((list_pardesc->Parameter), "PrintObjRefPar") == 0) {
+  } else if (streq((list_pardesc->Parameter), "PrintObjRefPar")) {
     /* Print the name of the object and the referenced parameter */
     if (cdh_ObjidIsNull(o->Objid))
       strcat(text, "-");
@@ -7408,7 +7408,7 @@ static int utl_list_print_par(utl_ctx utlctx, pwr_sAttrRef* o,
         free((char*)parameter);
       }
     }
-  } else if (strcmp((list_pardesc->Parameter), "PrintRefObjPar") == 0) {
+  } else if (streq((list_pardesc->Parameter), "PrintRefObjPar")) {
     /* Print the name of the referenced object */
     if (cdh_ObjidIsNull(refo->Objid))
       strcat(text, "-");
@@ -7431,7 +7431,7 @@ static int utl_list_print_par(utl_ctx utlctx, pwr_sAttrRef* o,
         free((char*)parameter);
       }
     }
-  } else if (strcmp((list_pardesc->Parameter), "PrintRefObj") == 0) {
+  } else if (streq((list_pardesc->Parameter), "PrintRefObj")) {
     /* Print the name of the referenced object */
     if (cdh_ObjidIsNull(refo->Objid))
       strcat(text, "-");
@@ -7447,7 +7447,7 @@ static int utl_list_print_par(utl_ctx utlctx, pwr_sAttrRef* o,
 
       strcat(text, hier_name);
     }
-  } else if (strcmp((list_pardesc->Parameter), "PrintRefClass") == 0) {
+  } else if (streq((list_pardesc->Parameter), "PrintRefClass")) {
     /* Print the name of the object */
     sts = ldh_GetAttrRefTid(utlctx->ldhses, refo, &cid);
     if (ODD(sts))
@@ -7458,7 +7458,7 @@ static int utl_list_print_par(utl_ctx utlctx, pwr_sAttrRef* o,
     if (list_pardesc->PrintParName)
       strcat(text, "RefClass = ");
     strcat(text, hier_name);
-  } else if (strcmp((list_pardesc->Parameter), "PrintSigChan") == 0) {
+  } else if (streq((list_pardesc->Parameter), "PrintSigChan")) {
     /* Print the name of the referenced object */
     sts = ldh_GetAttrObjectPar(
         utlctx->ldhses, o, "RtBody", "SigChanCon", (char**)&conobj_ptr, &size);
@@ -7493,7 +7493,7 @@ static int utl_list_print_par(utl_ctx utlctx, pwr_sAttrRef* o,
         strcat(text, "Class = ");
       strcat(text, hier_name);
     }
-  } else if (strcmp((list_pardesc->Parameter), "PrintSigChanId") == 0) {
+  } else if (streq((list_pardesc->Parameter), "PrintSigChanId")) {
     /* Print the Id of the referenced object */
     sts = ldh_GetAttrObjectPar(
         utlctx->ldhses, o, "RtBody", "SigChanCon", (char**)&conobj_ptr, &size);
@@ -7509,7 +7509,7 @@ static int utl_list_print_par(utl_ctx utlctx, pwr_sAttrRef* o,
         free((char*)parameter);
       }
     }
-  } else if (strcmp((list_pardesc->Parameter), "PrintWrite") == 0) {
+  } else if (streq((list_pardesc->Parameter), "PrintWrite")) {
     /* Print read or write, defined in the parameter Write.
        Used for ExternRef objects */
     sts = ldh_GetAttrObjectPar(
@@ -7520,7 +7520,7 @@ static int utl_list_print_par(utl_ctx utlctx, pwr_sAttrRef* o,
       else
         strcat(text, "  ");
     }
-  } else if (strcmp((list_pardesc->Parameter), "PrintObjPage") == 0) {
+  } else if (streq((list_pardesc->Parameter), "PrintObjPage")) {
     /* Print the page of the object */
     sts = cross_get_object_page(utlctx->ldhses, o->Objid, page);
     strcat(text, page);

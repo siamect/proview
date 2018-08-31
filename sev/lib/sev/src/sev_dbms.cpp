@@ -676,7 +676,7 @@ int sev_dbms_env::create()
 
     fprintf(fp, "HOST...: %s\n", m_host);
     fprintf(fp, "USER...: %s\n", user());
-    if (!passwd() || strcmp(passwd(), "") == 0)
+    if (!passwd() || streq(passwd(), ""))
       fprintf(fp, "PASSWD.: (null)\n");
     else
       fprintf(fp, "PASSWD.: %s\n", passwd());
@@ -729,7 +729,7 @@ int sev_dbms_env::open(void)
     else
       valp = value;
 
-    if (strcmp(valp, "(null)") == 0)
+    if (streq(valp, "(null)"))
       valp = 0;
 
     if (streq(var, "HOST")) {

@@ -266,7 +266,7 @@ pwr_tStatus wb_bck_list::diff(wb_bck_list* lp, char* outfile)
         switch (atype) {
         case pwr_eType_String:
         case pwr_eType_Text:
-          is_equal = strcmp((const char*)value2p, (const char*)ip->valuep) == 0
+          is_equal = streq((const char*)value2p, (const char*)ip->valuep)
               ? 1
               : 0;
           break;
@@ -339,7 +339,7 @@ pwr_tStatus wb_bck_list::diff(wb_bck_list* lp, wb_bck_list* outlp)
         switch (atype) {
         case pwr_eType_String:
         case pwr_eType_Text:
-          is_equal = strcmp((const char*)value2p, (const char*)ip->valuep) == 0
+          is_equal = streq((const char*)value2p, (const char*)ip->valuep)
               ? 1
               : 0;
           break;

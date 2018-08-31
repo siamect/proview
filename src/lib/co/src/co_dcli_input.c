@@ -304,7 +304,7 @@ static int dcli_recall_insert(dcli_sRecall* recall, char* command)
 {
   if (*command == 0)
     return DCLI__SUCCESS;
-  if (strcmp((char*)recall->command[recall->last_command], command) == 0)
+  if (streq((char*)recall->command[recall->last_command], command))
     return DCLI__SUCCESS;
 
   recall->last_command++;

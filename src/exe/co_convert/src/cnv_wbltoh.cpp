@@ -67,16 +67,16 @@ int CnvWblToH::init(char* first)
   ctx->set_dependfile(fname);
 
   if (ctx->hpp) {
-    if (strcmp(CnvCtx::low(ctx->rw->volume_name), "pwrb") == 0)
+    if (streq(CnvCtx::low(ctx->rw->volume_name), "pwrb"))
       sprintf(fname, "pwr_%sclasses_hpp", "base");
-    else if (strcmp(CnvCtx::low(ctx->rw->volume_name), "pwrs") == 0)
+    else if (streq(CnvCtx::low(ctx->rw->volume_name), "pwrs"))
       sprintf(fname, "pwr_%sclasses_hpp", "system");
     else
       sprintf(fname, "pwr_%sclasses_hpp", CnvCtx::low(ctx->rw->volume_name));
   } else {
-    if (strcmp(CnvCtx::low(ctx->rw->volume_name), "pwrb") == 0)
+    if (streq(CnvCtx::low(ctx->rw->volume_name), "pwrb"))
       sprintf(fname, "pwr_%sclasses_h", "base");
-    else if (strcmp(CnvCtx::low(ctx->rw->volume_name), "pwrs") == 0)
+    else if (streq(CnvCtx::low(ctx->rw->volume_name), "pwrs"))
       sprintf(fname, "pwr_%sclasses_h", "system");
     else
       sprintf(fname, "pwr_%sclasses_h", CnvCtx::low(ctx->rw->volume_name));
@@ -195,7 +195,7 @@ int CnvWblToH::body_exec()
   attr_count = 0;
   attr_next_alignlw = 1; // Align first attribute on longword
 
-  if (strcmp(CnvCtx::low(ctx->rw->body_name), "devbody") == 0) {
+  if (streq(CnvCtx::low(ctx->rw->body_name), "devbody")) {
     if (ctx->hpp)
       strcpy(struct_name, "pwr_dClass_");
     else
@@ -212,7 +212,7 @@ int CnvWblToH::body_exec()
     strcat(struct_name, ctx->rw->body_structname);
 
   // For systemclasses classindex is defined as a pwr_eCix...
-  if (strncmp(ctx->rw->class_id, "pwr_eCix_", strlen("pwr_eCix_")) == 0) {
+  if (strStartsWith(ctx->rw->class_id, "pwr_eCix_")) {
     sts = cixstr_to_classid(ctx->rw->class_id, &cid);
     if (EVEN(sts)) {
       printf("Error, unknown classid %s", ctx->rw->class_id);
@@ -245,7 +245,7 @@ int CnvWblToH::body_exec()
     struct_cclass_written = 1;
   }
 
-  if (strcmp(CnvCtx::low(ctx->rw->body_name), "rtbody") == 0
+  if (streq(CnvCtx::low(ctx->rw->body_name), "rtbody")
       && ctx->rw->class_devonly) {
     fp_struct << "/*  Class: " << ctx->rw->class_name << '\n'
               << "    Body:  " << ctx->rw->body_name << '\n'
@@ -278,7 +278,7 @@ int CnvWblToH::body_close()
 {
   char struct_name[80];
 
-  if (strcmp(CnvCtx::low(ctx->rw->body_name), "rtbody") == 0
+  if (streq(CnvCtx::low(ctx->rw->body_name), "rtbody")
       && ctx->rw->class_devonly)
     return 1;
 
@@ -289,7 +289,7 @@ int CnvWblToH::body_close()
       cstruc->f << "  int dummy;\n";
   }
 
-  if (strcmp(CnvCtx::low(ctx->rw->body_name), "devbody") == 0)
+  if (streq(CnvCtx::low(ctx->rw->body_name), "devbody"))
     strcpy(struct_name, "pwr_sdClass_");
   else
     strcpy(struct_name, "pwr_sClass_");
@@ -375,32 +375,32 @@ int CnvWblToH::attribute_exec()
   char alignstr[40];
 
   if (attr_next_alignlw || ctx->rw->attr_pointer || ctx->rw->attr_isclass
-      || strcmp(CnvCtx::low(ctx->rw->attr_type), "input") == 0
-      || strcmp(CnvCtx::low(ctx->rw->attr_type), "buffer") == 0
-      || strcmp(CnvCtx::low(ctx->rw->attr_typeref), "int64") == 0
-      || strcmp(CnvCtx::low(ctx->rw->attr_typeref), "uint64") == 0
-      || strcmp(CnvCtx::low(ctx->rw->attr_typeref), "float64") == 0
-      || strcmp(CnvCtx::low(ctx->rw->attr_typeref), "time") == 0
-      || strcmp(CnvCtx::low(ctx->rw->attr_typeref), "deltatime") == 0
-      || strcmp(CnvCtx::low(ctx->rw->attr_typeref), "castid") == 0
-      || strcmp(CnvCtx::low(ctx->rw->attr_typeref), "disableattr") == 0
-      || strcmp(CnvCtx::low(ctx->rw->attr_typeref), "dataref") == 0
+      || streq(CnvCtx::low(ctx->rw->attr_type), "input")
+      || streq(CnvCtx::low(ctx->rw->attr_type), "buffer")
+      || streq(CnvCtx::low(ctx->rw->attr_typeref), "int64")
+      || streq(CnvCtx::low(ctx->rw->attr_typeref), "uint64")
+      || streq(CnvCtx::low(ctx->rw->attr_typeref), "float64")
+      || streq(CnvCtx::low(ctx->rw->attr_typeref), "time")
+      || streq(CnvCtx::low(ctx->rw->attr_typeref), "deltatime")
+      || streq(CnvCtx::low(ctx->rw->attr_typeref), "castid")
+      || streq(CnvCtx::low(ctx->rw->attr_typeref), "disableattr")
+      || streq(CnvCtx::low(ctx->rw->attr_typeref), "dataref")
       || streq(ctx->rw->attr_name, "TimerFlag"))
     strcpy(alignstr, " pwr_dAlignLW");
   else
     strcpy(alignstr, " pwr_dAlignW");
 
   if (ctx->rw->attr_isclass
-      || strcmp(CnvCtx::low(ctx->rw->attr_type), "buffer") == 0
+      || streq(CnvCtx::low(ctx->rw->attr_type), "buffer")
       || ctx->rw->attr_pointer
-      || strcmp(CnvCtx::low(ctx->rw->attr_typeref), "castid") == 0
-      || strcmp(CnvCtx::low(ctx->rw->attr_typeref), "disableattr") == 0)
+      || streq(CnvCtx::low(ctx->rw->attr_typeref), "castid")
+      || streq(CnvCtx::low(ctx->rw->attr_typeref), "disableattr"))
     // Align next attribute on longword
     attr_next_alignlw = 1;
   else
     attr_next_alignlw = 0;
 
-  if (strcmp(CnvCtx::low(ctx->rw->body_name), "rtbody") == 0
+  if (streq(CnvCtx::low(ctx->rw->body_name), "rtbody")
       && ctx->rw->class_devonly)
     return 1;
 
@@ -412,23 +412,19 @@ int CnvWblToH::attribute_exec()
   else
     strcpy(pgmname, ctx->rw->attr_pgmname);
 
-  if (strncmp(CnvCtx::low(ctx->rw->attr_typeref), "pwr_etype_",
-          strlen("pwr_etype_"))
-      == 0)
+  if (strStartsWith(CnvCtx::low(ctx->rw->attr_typeref), "pwr_etype_"))
     strcpy(ctx->rw->attr_typeref, &ctx->rw->attr_typeref[strlen("pwr_etype_")]);
-  else if (strncmp(CnvCtx::low(ctx->rw->attr_typeref), "pwr_etypedef_",
-               strlen("pwr_etypedef_"))
-      == 0)
+  else if (strStartsWith(CnvCtx::low(ctx->rw->attr_typeref), "pwr_etypedef_"))
     strcpy(
         ctx->rw->attr_typeref, &ctx->rw->attr_typeref[strlen("pwr_etypedef_")]);
 
-  if (strcmp(CnvCtx::low(ctx->rw->attr_type), "buffer") == 0) {
+  if (streq(CnvCtx::low(ctx->rw->attr_type), "buffer")) {
     strcpy(type_name, "pwr_s");
     if (ctx->rw->attr_typeref[11] == '$')
       strcat(type_name, &ctx->rw->attr_typeref[12]);
     else
       strcat(type_name, &ctx->rw->attr_typeref[11]);
-  } else if (strcmp(CnvCtx::low(ctx->rw->attr_typeref), "attrref") == 0) {
+  } else if (streq(CnvCtx::low(ctx->rw->attr_typeref), "attrref")) {
     strcpy(type_name, "pwr_s");
     strcat(type_name, ctx->rw->attr_typeref);
   } else if (ctx->rw->attr_isclass) {
@@ -446,7 +442,7 @@ int CnvWblToH::attribute_exec()
     strcpy(type_name, "pwr_tObjid");
 
   // Check type for baseclasses
-  if (strcmp(CnvCtx::low(ctx->rw->volume_name), "pwrb") == 0) {
+  if (streq(CnvCtx::low(ctx->rw->volume_name), "pwrb")) {
     sts = check_typename(ctx->rw->attr_typeref_volume, type_name);
     if (EVEN(sts)) {
       printf("Error, unknown attribute type '%s'", type_name);
@@ -472,7 +468,7 @@ int CnvWblToH::attribute_exec()
     }
   }
 
-  if (strcmp(CnvCtx::low(ctx->rw->attr_type), "input") == 0) {
+  if (streq(CnvCtx::low(ctx->rw->attr_type), "input")) {
     if (ctx->rw->attr_array && ctx->rw->attr_pointer) {
       fp_struct << "  " << type_name;
       if (!ctx->common_structfile_only)
@@ -708,7 +704,7 @@ int CnvWblToH::volname_to_id()
 
       nr = dcli_parse(line, " 	=", "", (char*)line_part,
           sizeof(line_part) / sizeof(line_part[0]), sizeof(line_part[0]), 0);
-      if (strcmp(CnvCtx::low(line_part[0]), "volume") == 0) {
+      if (streq(CnvCtx::low(line_part[0]), "volume")) {
         if (nr > 3) {
           strcpy(struct_volid, line_part[3]);
           break;
@@ -827,9 +823,9 @@ void CnvWblToH::get_filename(CnvReadWbl* rw, char* struct_file, int hpp)
 {
   strcpy(struct_file, "pwr_");
 
-  if (strcmp(CnvCtx::low(rw->volume_name), "pwrb") == 0)
+  if (streq(CnvCtx::low(rw->volume_name), "pwrb"))
     strcat(struct_file, "base");
-  else if (strcmp(CnvCtx::low(rw->volume_name), "pwrs") == 0)
+  else if (streq(CnvCtx::low(rw->volume_name), "pwrs"))
     // To separate from pwr_systemclasses.h
     strcat(struct_file, "system");
   else

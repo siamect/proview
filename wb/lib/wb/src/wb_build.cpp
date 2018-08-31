@@ -1902,7 +1902,7 @@ void wb_build::directories(char* dir, bld_ePass pass)
     if (dir && cdh_NoCaseStrcmp(dir, line_item[1]) != 0)
       continue;
 
-    if (strcmp(cdh_Low(line_item[0]), "builddir") == 0) {
+    if (streq(cdh_Low(line_item[0]), "builddir")) {
       if (num != 4) {
         printf("File corrupt " pwr_cNameDistribute);
         continue;
@@ -1918,7 +1918,7 @@ void wb_build::directories(char* dir, bld_ePass pass)
                      && !(current_options
                             & pwr_mBuildDirectoryMask_BuildAfterNode))))
         wb_log::log(wlog_eCategory_DirectoryBuild, line_item[1], 0);
-    } else if (strcmp(cdh_Low(line_item[0]), "buildcopy") == 0) {
+    } else if (streq(cdh_Low(line_item[0]), "buildcopy")) {
       if (num != 4) {
         printf("File corrupt " pwr_cNameDistribute);
         continue;
@@ -1991,7 +1991,7 @@ void wb_build::directories(char* dir, bld_ePass pass)
       }
 
       dcli_search_file(line_item[1], found_file, DCLI_DIR_SEARCH_END);
-    } else if (strcmp(cdh_Low(line_item[0]), "buildmake") == 0) {
+    } else if (streq(cdh_Low(line_item[0]), "buildmake")) {
       if (num != 4) {
         printf("File corrupt " pwr_cNameDistribute);
         continue;
@@ -2041,7 +2041,7 @@ void wb_build::directories(char* dir, bld_ePass pass)
         m_sts = PWRB__MAKEUPDATED;
       }
       // wb_log::log( wlog_eCategory_GeBuild, name, 0);
-    } else if (strcmp(cdh_Low(line_item[0]), "buildexec") == 0) {
+    } else if (streq(cdh_Low(line_item[0]), "buildexec")) {
       if (num != 4) {
         printf("File corrupt " pwr_cNameDistribute);
         continue;
@@ -2100,7 +2100,7 @@ void wb_build::export_import_files(int type, bld_ePass pass)
     if (!num)
       continue;
 
-    if (strcmp(cdh_Low(line_item[0]), tag) == 0) {
+    if (streq(cdh_Low(line_item[0]), tag)) {
       if (num != 4) {
         printf("File corrupt " pwr_cNameDistribute);
         continue;

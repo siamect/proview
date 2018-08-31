@@ -68,7 +68,7 @@ int xnav_open_URL(pwr_tURL url)
       strcpy(browser, config_p->WebBrowser);
   }
 
-  if (strncmp(url, "$pwr_lang/", 10) == 0) {
+  if (strStartsWith(url, "$pwr_lang/")) {
     // If file in $pwr_lang, check if file exist, else take en_us
 
     if (Lng::current() != lng_eLanguage_en_US) {
@@ -116,7 +116,7 @@ static int replace_symbol(
   int skip_sym = 0;
   pwr_tURL url;
 
-  if (strncmp(in, "$pwr_lang/", 10) == 0) {
+  if (strStartsWith(in, "$pwr_lang/")) {
     strcpy(url, "$pwr_doc/");
     strcat(url, Lng::get_language_str());
     strcat(url, &in[9]);

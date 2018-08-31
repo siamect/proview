@@ -222,10 +222,7 @@ int NavHelp::help(const char* help_key, const char* help_bookmark,
       if (!print_all) {
         if (key_nr == subject_nr) {
           for (i = 0; i < key_nr; i++) {
-            if ((!strict
-                    && strncmp(
-                           subject_part[i], key_part[i], strlen(key_part[i]))
-                        == 0)
+            if ((!strict && strStartsWith(subject_part[i], key_part[i]))
                 || (strict && streq(subject_part[i], key_part[i]))) {
               if (i == key_nr - 1)
                 hit = 1;
@@ -257,8 +254,7 @@ int NavHelp::help(const char* help_key, const char* help_bookmark,
       while (ODD(sts)) {
         bookmark_p = 0;
 
-        if (strncmp(line, "</topic>", 8) == 0
-            || strncmp(line, "</TOPIC>", 8) == 0) {
+        if (strStartsWith(line, "</topic>") || strStartsWith(line, "</TOPIC>")) {
           if (print_all)
             (insert_cb)(parent_ctx, navh_eItemType_EndTopic, subject, NULL,
                 NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL, coding);
@@ -538,7 +534,7 @@ int NavHelp::get_next_key(const char* help_key, navh_eHelpFile file_type,
     if (cdh_NoCaseStrncmp(line, "<include>", 9) == 0) {
       help_remove_spaces(&line[9], include_file);
       // Replace symbol for language
-      if (strncmp(include_file, "$pwr_lang/", 10) == 0) {
+      if (strStartsWith(include_file, "$pwr_lang/")) {
         sts = get_lang_file(include_file, include_file);
         if (EVEN(sts))
           continue;
@@ -571,9 +567,7 @@ int NavHelp::get_next_key(const char* help_key, navh_eHelpFile file_type,
           sizeof(subject_part[0]), 0);
       if (key_nr == subject_nr) {
         for (i = 0; i < key_nr; i++) {
-          if ((!strict
-                  && strncmp(subject_part[i], key_part[i], strlen(key_part[i]))
-                      == 0)
+          if ((!strict && strStartsWith(subject_part[i], key_part[i]))
               || (strict && streq(subject_part[i], key_part[i]))) {
             if (i == key_nr - 1)
               hit = 1;
@@ -626,7 +620,7 @@ int NavHelp::get_previous_key(const char* help_key, navh_eHelpFile file_type,
     if (cdh_NoCaseStrncmp(line, "<include>", 9) == 0) {
       help_remove_spaces(&line[9], include_file);
       // Replace symbol for language
-      if (strncmp(include_file, "$pwr_lang/", 10) == 0) {
+      if (strStartsWith(include_file, "$pwr_lang/")) {
         sts = get_lang_file(include_file, include_file);
         if (EVEN(sts))
           continue;
@@ -654,9 +648,7 @@ int NavHelp::get_previous_key(const char* help_key, navh_eHelpFile file_type,
           sizeof(subject_part[0]), 0);
       if (key_nr == subject_nr) {
         for (i = 0; i < key_nr; i++) {
-          if ((!strict
-                  && strncmp(subject_part[i], key_part[i], strlen(key_part[i]))
-                      == 0)
+          if ((!strict && strStartsWith(subject_part[i], key_part[i]))
               || (strict && streq(subject_part[i], key_part[i]))) {
             if (i == key_nr - 1) {
               hit = 1;
@@ -740,7 +732,7 @@ static FILE* navhelp_open_file(
     dcli_get_defaultfilename(navhelp->base_file, filestr, NULL);
 
   // Replace symbol for language
-  if (strncmp(filestr, "$pwr_lang/", 10) == 0) {
+  if (strStartsWith(filestr, "$pwr_lang/")) {
     pwr_tFileName lng_filestr;
 
     sprintf(
@@ -782,7 +774,7 @@ static pwr_tStatus get_lang_file(char* file, char* found_file)
   pwr_tTime t;
   pwr_tStatus sts;
 
-  if (strncmp(file, "$pwr_lang/", 10) != 0)
+  if (!strStartsWith(file, "$pwr_lang/"))
     return NAV__NOFILE;
 
   // Try pwr_exe/xx_xx/

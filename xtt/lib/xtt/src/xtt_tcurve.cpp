@@ -34,17 +34,20 @@
  * General Public License plus this exception.
  */
 
-#include "rt_gdh_msg.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
-#include "cow_wow.h"
-#include "rt_xnav_msg.h"
+#include "co_string.h"
+
+#include "rt_gdh_msg.h"
 #include "rt_sev_msg.h"
+#include "rt_xnav_msg.h"
+
+#include "cow_wow.h"
 
 #include "glow_curveapi.h"
 
-#include "xtt_xnav.h"
 #include "xtt_tcurve.h"
+#include "xtt_xnav.h"
 
 XttTCurve::XttTCurve(void* parent_ctx, const char* name, pwr_tAttrRef* xn_arefv,
     int xn_color_theme, int* sts)
@@ -824,7 +827,7 @@ void XttTCurve::save(char* filename)
 
   strncat(fname, filename, sizeof(fname) - strlen(fname) - 1);
   if (!(strlen(filename) < 9
-          && strcmp(&filename[strlen(filename) - 9], ".rtt_trd") == 0))
+          && streq(&filename[strlen(filename) - 9], ".rtt_trd")))
     strncat(fname, ".rtt_trd", sizeof(fname) - strlen(fname) - 1);
 
   dcli_translate_filename(fname, fname);
@@ -854,7 +857,7 @@ void XttTCurve::open(char* filename)
   strcpy(fname, "$pwrp_load/");
   strncat(fname, filename, sizeof(fname) - strlen(fname) - 1);
   if (!(strlen(filename) < 9
-          && strcmp(&filename[strlen(filename) - 9], ".rtt_trd") == 0))
+          && streq(&filename[strlen(filename) - 9], ".rtt_trd")))
     strncat(fname, ".rtt_trd", sizeof(fname) - strlen(fname) - 1);
 
   dcli_translate_filename(fname, fname);

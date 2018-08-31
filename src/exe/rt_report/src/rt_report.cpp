@@ -981,7 +981,7 @@ int rt_report::parse(char* line)
       system(cmd);
     } else
       return 0;
-  } else if (strncmp(aline, "system(", 7) == 0
+  } else if (strStartsWith(aline, "system(")
       && aline[strlen(aline) - 1] == ')') {
     aline[strlen(aline) - 1] = 0;
     system(&aline[7]);

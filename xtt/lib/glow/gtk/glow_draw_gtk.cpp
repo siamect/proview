@@ -3009,7 +3009,7 @@ int GlowDrawGtk::image_load(char* imagefile, glow_tImImage* orig_im,
   if (*orig_im)
     gdk_pixbuf_unref((GdkPixbuf*)*orig_im);
 #if defined PWRE_CONF_RSVG
-  if (im_data && strcmp(strchr(imagefile, '.'), ".svg") == 0) {
+  if (im_data && streq(strchr(imagefile, '.'), ".svg")) {
     RsvgHandle* handle;
 
     handle = rsvg_handle_new_from_file(imagefile, NULL);

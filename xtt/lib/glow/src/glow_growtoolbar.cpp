@@ -199,7 +199,7 @@ GlowArrayElem* GrowToolbar::get_node_from_name(char* name)
     if ((nc->a.a[i]->type() == glow_eObjectType_Node
             || nc->a.a[i]->type() == glow_eObjectType_GrowNode
             || nc->a.a[i]->type() == glow_eObjectType_GrowConGlue)
-        && strcmp(((GlowNode*)nc->a.a[i])->n_name, name) == 0)
+        && streq(((GlowNode*)nc->a.a[i])->n_name, name))
       return nc->a.a[i];
     else if (nc->a.a[i]->type() == glow_eObjectType_GrowToolbar) {
       GlowArrayElem* n = ((GrowToolbar*)nc->a.a[i])->get_node_from_name(name);

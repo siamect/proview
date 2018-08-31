@@ -406,7 +406,7 @@ static int add_element(t_ctx ctx, t_filectx filectx, char* line,
     return DCLI__SUCCESS;
 
   undefined = 0;
-  if (strncmp(line_elem[0], "/*", 2) == 0) {
+  if (strStartsWith(line_elem[0], "/*")) {
     /* Assume the whole line is a comment */
     return DCLI__SUCCESS;
   } else if (streq(line_elem[0], "struct")) {

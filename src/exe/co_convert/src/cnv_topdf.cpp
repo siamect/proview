@@ -1083,17 +1083,17 @@ char* CnvToPdf::fontname(CnvStyle& style)
   char name[80];
 
   strcpy(name, style.font.c_str());
-  if (strncmp(name, "Helvetica-Bold", 14) == 0)
+  if (strStartsWith(name, "Helvetica-Bold"))
     strcpy(str, "/F2");
-  else if (strncmp(name, "Helvetica-Oblique", 17) == 0)
+  else if (strStartsWith(name, "Helvetica-Oblique"))
     strcpy(str, "/F3");
-  else if (strncmp(name, "Helvetica", 9) == 0)
+  else if (strStartsWith(name, "Helvetica"))
     strcpy(str, "/F1");
-  else if (strncmp(name, "TimesNewRoman-Bold", 18) == 0)
+  else if (strStartsWith(name, "TimesNewRoman-Bold"))
     strcpy(str, "/F5");
-  else if (strncmp(name, "TimesNewRoman", 13) == 0)
+  else if (strStartsWith(name, "TimesNewRoman"))
     strcpy(str, "/F4");
-  else if (strncmp(name, "Courier", 7) == 0)
+  else if (strStartsWith(name, "Courier"))
     strcpy(str, "/F6");
   else
     strcpy(str, "/F1");

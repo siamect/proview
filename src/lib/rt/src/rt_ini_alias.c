@@ -667,7 +667,7 @@ static int ini_set_plcscan(char* value_str)
 
   /* Get all window classes */
   classname_p = (pwr_tString40*)&classname;
-  while (strcmp((char*)classname_p, "") != 0) {
+  while (!streq((char*)classname_p, "")) {
     sts = gdh_ClassNameToNumber((char*)classname_p, &class);
     if (EVEN(sts))
       return sts;

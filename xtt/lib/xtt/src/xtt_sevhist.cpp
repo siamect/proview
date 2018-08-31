@@ -1182,7 +1182,7 @@ int XttSevHist::read_export(char* filename)
       break;
 
     if (line[0] == '#') {
-      if (strncmp(&line[2], "Attribute", 9) == 0) {
+      if (strStartsWith(&line[2], "Attribute")) {
         // New attribute
         idx++;
         strncpy(onamev[idx], &line[12], sizeof(onamev[0]));
@@ -1200,7 +1200,7 @@ int XttSevHist::read_export(char* filename)
         strcpy(gcd->y_name[idx], onamev[idx]);
         strcat(gcd->y_name[idx], ".");
         strcat(gcd->y_name[idx], anamev[idx]);
-      } else if (strncmp(&line[2], "Rows", 4) == 0) {
+      } else if (strStartsWith(&line[2], "Rows")) {
         if (idx < 0)
           continue;
 

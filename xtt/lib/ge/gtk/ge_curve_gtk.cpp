@@ -39,6 +39,8 @@
 
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_string.h"
+
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
 #include "rt_load.h"
@@ -461,11 +463,11 @@ void GeCurveGtk::activate_export_ok(GtkWidget* w, gpointer data)
   if (!value)
     return;
 
-  if (strcmp(value, CoWowGtk::translate_utf8("All Attributes")) == 0)
+  if (streq(value, CoWowGtk::translate_utf8("All Attributes")))
     idx = -1;
   else {
     for (int i = 0; i < curve->cd->cols; i++) {
-      if (strcmp(value, CoWowGtk::convert_utf8(curve->cd->y_name[i])) == 0) {
+      if (streq(value, CoWowGtk::convert_utf8(curve->cd->y_name[i]))) {
         idx = i;
         break;
       }

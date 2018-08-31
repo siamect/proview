@@ -36,9 +36,10 @@
 
 /* wb_c_chandi.c -- work bench methods of the ChanDi class. */
 
-#include <string.h>
-
 #include "pwr_baseclasses.h"
+
+#include "co_string.h"
+
 #include "wb_pwrs.h"
 #include "wb_pwrb_msg.h"
 #include "wb_session.h"
@@ -141,9 +142,9 @@ static pwr_tStatus PostCreate(ldh_tSesContext Session, pwr_tObjid Object,
 
   if (!repr_set) {
     wb_cdef father_cdef = sp->cdef(Class);
-    if (strcmp(father_cdef.name(), "Modbus_TCP_ServerModule") == 0
-        || strcmp(father_cdef.name(), "Modbus_Module") == 0
-        || strcmp(father_cdef.name(), "Modbus_ModuleReadWrite") == 0) {
+    if (streq(father_cdef.name(), "Modbus_TCP_ServerModule")
+        || streq(father_cdef.name(), "Modbus_Module")
+        || streq(father_cdef.name(), "Modbus_ModuleReadWrite")) {
       wb_attribute a = sp->attribute(Object, "RtBody", "Representation");
       if (!a)
         return a.sts();

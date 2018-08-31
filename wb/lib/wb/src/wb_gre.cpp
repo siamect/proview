@@ -2963,7 +2963,7 @@ int WGre::set_trace_attributes(char* host)
     sts = trace_get_attributes(
         this, *node_ptr, object_str, attr_str, &trace_type, &inverted);
     if (ODD(sts) && sts != TRA__DISCARD) {
-      if (host && strncmp(object_str, host, strlen(host)) == 0) {
+      if (host && strStartsWith(object_str, host)) {
         char tmp[120];
         strcpy(tmp, "$host");
         strcat(tmp, &object_str[strlen(host)]);
@@ -3147,7 +3147,7 @@ int WGre::set_trace_attributes(char* host)
       default:;
       }
 
-      if (host && strncmp(object_str, host, strlen(host)) == 0) {
+      if (host && strStartsWith(object_str, host)) {
         char tmp[120];
         strcpy(tmp, "$host");
         strcat(tmp, &object_str[strlen(host)]);

@@ -36,10 +36,11 @@
 
 #include <math.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include <iostream>
 #include <vector>
+
+#include "co_string.h"
 
 #include "flow_conpoint.h"
 #include "flow_con.h"
@@ -1601,7 +1602,7 @@ FlowArrayElem* FlowCtx::get_node_from_name(char* name)
 
   for (i = 0; i < a.a_size; i++) {
     if (a.a[i]->type() == flow_eObjectType_Node
-        && strcmp(((FlowNode*)a.a[i])->n_name, name) == 0)
+        && streq(((FlowNode*)a.a[i])->n_name, name))
       return a.a[i];
   }
   return 0;
@@ -1612,7 +1613,7 @@ FlowArrayElem* FlowCtx::get_nodeclass_from_name(char* name)
   int i;
 
   for (i = 0; i < a_nc.a_size; i++) {
-    if (strcmp(((FlowNodeClass*)a_nc.a[i])->nc_name, name) == 0)
+    if (streq(((FlowNodeClass*)a_nc.a[i])->nc_name, name))
       return a_nc.a[i];
   }
   return 0;
@@ -1623,7 +1624,7 @@ FlowArrayElem* FlowCtx::get_conclass_from_name(char* name)
   int i;
 
   for (i = 0; i < a_cc.a_size; i++) {
-    if (strcmp(((FlowConClass*)a_cc.a[i])->cc_name, name) == 0)
+    if (streq(((FlowConClass*)a_cc.a[i])->cc_name, name))
       return a_cc.a[i];
   }
   return 0;

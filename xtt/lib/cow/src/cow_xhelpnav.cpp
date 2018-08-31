@@ -800,7 +800,7 @@ HItemHelpImage::HItemHelpImage(CoXHelpNavBrow* brow, const char* item_name,
 
   brow_CreateNode(
       brow->ctx, "image", nc, dest, dest_code, (void*)this, 1, &node);
-  if (strncmp(link, "$web", 4) == 0)
+  if (strStartsWith(link, "$web"))
     brow_SetAnnotPixmap(node, 0, brow->pixmap_weblink);
   else if (link[0] != 0)
     brow_SetAnnotPixmap(node, 0, brow->pixmap_morehelp);
@@ -812,7 +812,7 @@ int HItemHelpImage::doubleclick_action(
   int sts;
 
   if (!streq(link, "")) {
-    if (strncmp(link, "$web:", 5) == 0) {
+    if (strStartsWith(link, "$web:")) {
       // Open the url
       xhelpnav_open_URL(xhelpnav, &link[5]);
     } else if ((strstr(link, ".htm") != 0) || (strstr(link, ".pdf") != 0)) {
@@ -910,7 +910,7 @@ HItemHelp::HItemHelp(CoXHelpNavBrow* brow, const char* item_name,
     brow_SetAnnotation(node, 1, text2, strlen(text2));
   if (text3[0] != 0)
     brow_SetAnnotation(node, 2, text3, strlen(text3));
-  if (strncmp(link, "$web", 4) == 0)
+  if (strStartsWith(link, "$web"))
     brow_SetAnnotPixmap(node, 0, brow->pixmap_weblink);
   else if (link[0] != 0 || index)
     brow_SetAnnotPixmap(node, 0, brow->pixmap_morehelp);
@@ -940,7 +940,7 @@ int HItemHelp::doubleclick_action(
   if (index) {
     sts = xhelpnav->help_index(file_type, file_name, 1);
   } else if (!streq(link, "")) {
-    if (strncmp(link, "$web:", 5) == 0) {
+    if (strStartsWith(link, "$web:")) {
       // Open the url
       xhelpnav_open_URL(xhelpnav, &link[5]);
     } else if ((strstr(link, ".htm") != 0) || (strstr(link, ".pdf") != 0)) {
@@ -982,7 +982,7 @@ HItemHelpBold::HItemHelpBold(CoXHelpNavBrow* brow, const char* item_name,
     brow_SetAnnotation(node, 1, text2, strlen(text2));
   if (text3[0] != 0)
     brow_SetAnnotation(node, 2, text3, strlen(text3));
-  if (strncmp(link, "$web", 4) == 0)
+  if (strStartsWith(link, "$web"))
     brow_SetAnnotPixmap(node, 0, brow->pixmap_weblink);
   else if (link[0] != 0 || index)
     brow_SetAnnotPixmap(node, 0, brow->pixmap_morehelp);
@@ -1012,7 +1012,7 @@ int HItemHelpBold::doubleclick_action(
   if (index) {
     sts = xhelpnav->help_index(file_type, file_name, 1);
   } else if (!streq(link, "")) {
-    if (strncmp(link, "$web:", 5) == 0) {
+    if (strStartsWith(link, "$web:")) {
       // Open the url
       xhelpnav_open_URL(xhelpnav, &link[5]);
     } else if ((strstr(link, ".htm") != 0) || (strstr(link, ".pdf") != 0)) {
@@ -1063,7 +1063,7 @@ static void* xhelpnav_help_insert_cb(void* ctx, navh_eItemType item_type,
   char* t2 = 0;
   char* t3 = 0;
 
-  if (link && strncmp(link, "$class:", 7) == 0)
+  if (link && strStartsWith(link, "$class:"))
     llink = (char*)link + 7;
   else if (link)
     llink = (char*)link;

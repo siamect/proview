@@ -1641,7 +1641,7 @@ GlowArrayElem* GlowCtx::get_node_from_name(char* name)
     if ((a.a[i]->type() == glow_eObjectType_Node
             || a.a[i]->type() == glow_eObjectType_GrowNode
             || a.a[i]->type() == glow_eObjectType_GrowConGlue)
-        && strcmp(((GlowNode*)a.a[i])->n_name, name) == 0)
+        && streq(((GlowNode*)a.a[i])->n_name, name))
       return a.a[i];
     else if (a.a[i]->type() == glow_eObjectType_GrowGroup) {
       GlowArrayElem* n = ((GrowGroup*)a.a[i])->get_node_from_name(name);
@@ -1657,7 +1657,7 @@ GlowArrayElem* GlowCtx::get_nodeclass_from_name(const char* name)
   int i;
 
   for (i = 0; i < a_nc.a_size; i++) {
-    if (strcmp(((GlowNodeClass*)a_nc.a[i])->n_name, name) == 0)
+    if (streq(((GlowNodeClass*)a_nc.a[i])->n_name, name))
       return a_nc.a[i];
   }
   return 0;
@@ -1668,7 +1668,7 @@ GlowArrayElem* GlowCtx::get_conclass_from_name(char* name)
   int i;
 
   for (i = 0; i < a_cc.a_size; i++) {
-    if (strcmp(((GlowConClass*)a_cc.a[i])->n_name, name) == 0)
+    if (streq(((GlowConClass*)a_cc.a[i])->n_name, name))
       return a_cc.a[i];
   }
   return 0;

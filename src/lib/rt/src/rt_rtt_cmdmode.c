@@ -41,15 +41,18 @@
 
 #include <math.h>
 #include <stdio.h>
-#include <string.h>
 
 #include "pwr_baseclasses.h"
-#include "co_time.h"
+
 #include "co_math.h"
+#include "co_string.h"
+#include "co_time.h"
+
+#include "rt_gdh_msg.h"
 #include "rt_rtt_global.h"
 #include "rt_rtt_msg.h"
+
 #include "dtt_rttsys_functions.h"
-#include "rt_gdh_msg.h"
 
 #define IF_NOGDH_RETURN                                                        \
   if (!rtt_gdh_started) {                                                      \
@@ -349,7 +352,7 @@ int rtt_get_symbol_cmd(char* key, char* value)
       /* Perfect match */
       strcpy(value, rtt_symboltable[i].value);
       return RTT__SUCCESS;
-    } else if (!strncmp(rtt_symboltable[i].key, key, strlen(key))) {
+    } else if (!strStartsWith(rtt_symboltable[i].key, key)) {
       if (found)
         return RTT__SYMBOL_AMBIG;
       strcpy(value, rtt_symboltable[i].value);

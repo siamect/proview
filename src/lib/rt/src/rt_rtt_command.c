@@ -7848,7 +7848,7 @@ static int rtt_plcscan(
   if (all && !global) {
     /* Get all window classes */
     classname_p = classname;
-    while (strcmp((char*)classname_p, "") != 0) {
+    while (!streq((char*)classname_p, "")) {
       sts = gdh_ClassNameToNumber((char*)classname_p, &class);
       if (EVEN(sts))
         return sts;
@@ -8068,7 +8068,7 @@ static int rtt_show_step(menu_ctx parent_ctx, char* hiername, int initstep)
   /* Get all step classes */
   abort = 0;
   classname_p = classname;
-  while (strcmp((char*)classname_p, "") != 0) {
+  while (!streq((char*)classname_p, "")) {
     sts = gdh_ClassNameToNumber((char*)classname_p, &class);
     if (EVEN(sts))
       return sts;

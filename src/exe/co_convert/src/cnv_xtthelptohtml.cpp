@@ -155,13 +155,13 @@ void* CnvXtthelpToHtml::insert(navh_eItemType item_type, const char* text1,
 
     pwr_tFileName fname;
     if (!streq(link, "")) {
-      if (strncmp(link, "$web:", 5) == 0) {
+      if (strStartsWith(link, "$web:")) {
         replace_url_symbols(&link[5], fname);
-        // if ( strncmp( &link[5], "$pwrp_web/", 10) == 0)
+        // if ( strStartsWith( &link[5], "$pwrp_web/"))
         //   strcpy( fname, &link[15]);
         // else
         //   strcpy( fname, &link[5]);
-      } else if (strncmp(link, "$class:", 7) == 0) {
+      } else if (strStartsWith(link, "$class:")) {
         char* s;
 
         // Get prefix from file
@@ -245,13 +245,13 @@ void* CnvXtthelpToHtml::insert(navh_eItemType item_type, const char* text1,
 
     pwr_tFileName fname;
     if (!streq(link, "")) {
-      if (strncmp(link, "$web:", 5) == 0) {
+      if (strStartsWith(link, "$web:")) {
         replace_url_symbols(&link[5], fname);
-        // if ( strncmp( &link[5], "$pwrp_web/", 10) == 0)
+        // if ( strStartsWith( &link[5], "$pwrp_web/"))
         //  strcpy( fname, &link[15]);
         // else
         //  strcpy( fname, &link[5]);
-      } else if (strncmp(link, "$class:", 7) == 0) {
+      } else if (strStartsWith(link, "$class:")) {
         char* s;
 
         // Get prefix from file

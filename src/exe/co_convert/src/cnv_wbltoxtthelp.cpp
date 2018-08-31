@@ -69,9 +69,9 @@ static int get_class_link(char* typeref, char* volume, char* file)
     return 0;
   if (strstr(tr, "mask") != 0)
     return 0;
-  if (strncmp(tr, "string", 6) == 0)
+  if (strStartsWith(tr, "string"))
     return 0;
-  if (strncmp(tr, "text", 4) == 0)
+  if (strStartsWith(tr, "text"))
     return 0;
   if (streq(tr, "boolean") || streq(tr, "float32")
       || streq(tr, "float64") || streq(tr, "char")
@@ -188,27 +188,25 @@ int CnvWblToXtthelp::class_exec()
   if (ctx->rw->doc_fresh) {
     for (i = 0; i < ctx->rw->doc_cnt; i++) {
       CnvCtx::remove_spaces(ctx->rw->doc_text[i], txt);
-      if (strncmp(CnvCtx::low(txt), "@image", 6) == 0) {
+      if (strStartsWith(CnvCtx::low(txt), "@image")) {
         char imagefile[80];
 
         CnvCtx::remove_spaces(txt + 6, imagefile);
         fp_tmp << "<IMAGE> " << imagefile << '\n';
-      } else if (strncmp(CnvCtx::low(txt), "@b", 2) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@b")) {
         fp_tmp << "<B> " << txt + 2 << '\n';
-      } else if (strncmp(CnvCtx::low(txt), "@h1", 3) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@h1")) {
         fp_tmp << "<H1> " << txt + 3 << '\n';
-      } else if (strncmp(CnvCtx::low(txt), "@h2", 3) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@h2")) {
         fp_tmp << "<H2> " << txt + 3 << '\n';
-      } else if (strncmp(CnvCtx::low(txt), "@i", 2) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@i")) {
         fp_tmp << "<i>" << txt + 2 << '\n';
       } else
         fp_tmp << ctx->rw->doc_text[i] << '\n';
     }
   }
   for (i = 0; i < ctx->rw->doc_xlink_cnt; i++) {
-    if (strncmp(ctx->rw->doc_xlink_ref[i], "../../en_us/man_exlib_",
-            strlen("../../en_us/man_exlib_"))
-        == 0)
+    if (strStartsWith(ctx->rw->doc_xlink_ref[i], "../../en_us/man_exlib_"))
       strncpy(link_ref,
           &ctx->rw->doc_xlink_ref[i][0] + strlen("../../en_us/man_exlib_"),
           sizeof(link_ref));
@@ -224,7 +222,7 @@ int CnvWblToXtthelp::class_exec()
   for (i = 0; i < ctx->rw->doc_clink_cnt; i++) {
     strcpy(prefix, CnvCtx::low(ctx->rw->volume_name));
     strcat(prefix, "_");
-    if (strncmp(ctx->rw->doc_clink_ref[i], prefix, strlen(prefix)) == 0) {
+    if (strStartsWith(ctx->rw->doc_clink_ref[i], prefix)) {
       strcpy(link_ref, &ctx->rw->doc_clink_ref[i][strlen(prefix)]);
       if ((s = strrchr(link_ref, '.')))
         *s = 0;
@@ -295,18 +293,18 @@ int CnvWblToXtthelp::bit_exec()
   if (ctx->rw->doc_fresh) {
     for (i = 0; i < ctx->rw->doc_cnt; i++) {
       CnvCtx::remove_spaces(ctx->rw->doc_text[i], txt);
-      if (strncmp(CnvCtx::low(txt), "@image", 6) == 0) {
+      if (strStartsWith(CnvCtx::low(txt), "@image")) {
         char imagefile[80];
 
         CnvCtx::remove_spaces(txt + 6, imagefile);
         fp_tmp << "<IMAGE> " << imagefile << '\n';
-      } else if (strncmp(CnvCtx::low(txt), "@b", 2) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@b")) {
         fp_tmp << "<B> " << txt + 2 << '\n';
-      } else if (strncmp(CnvCtx::low(txt), "@h1", 3) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@h1")) {
         fp_tmp << "<H1> " << txt + 3 << '\n';
-      } else if (strncmp(CnvCtx::low(txt), "@h2", 3) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@h2")) {
         fp_tmp << "<H2> " << txt + 3 << '\n';
-      } else if (strncmp(CnvCtx::low(txt), "@i", 2) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@i")) {
         fp_tmp << "<i>" << txt + 2 << '\n';
       } else
         fp_tmp << ctx->rw->doc_text[i] << '\n';
@@ -315,7 +313,7 @@ int CnvWblToXtthelp::bit_exec()
   for (i = 0; i < ctx->rw->doc_clink_cnt; i++) {
     strcpy(prefix, CnvCtx::low(ctx->rw->volume_name));
     strcat(prefix, "_");
-    if (strncmp(ctx->rw->doc_clink_ref[i], prefix, strlen(prefix)) == 0) {
+    if (strStartsWith(ctx->rw->doc_clink_ref[i], prefix)) {
       strcpy(link_ref, &ctx->rw->doc_clink_ref[i][strlen(prefix)]);
       if ((s = strrchr(link_ref, '.')))
         *s = 0;
@@ -458,18 +456,18 @@ int CnvWblToXtthelp::typedef_exec()
   if (ctx->rw->doc_fresh) {
     for (i = 0; i < ctx->rw->doc_cnt; i++) {
       CnvCtx::remove_spaces(ctx->rw->doc_text[i], txt);
-      if (strncmp(CnvCtx::low(txt), "@image", 6) == 0) {
+      if (strStartsWith(CnvCtx::low(txt), "@image")) {
         char imagefile[80];
 
         CnvCtx::remove_spaces(txt + 6, imagefile);
         fp_tmp << "<IMAGE> " << imagefile << '\n';
-      } else if (strncmp(CnvCtx::low(txt), "@b", 2) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@b")) {
         fp_tmp << "<B> " << txt + 2 << '\n';
-      } else if (strncmp(CnvCtx::low(txt), "@h1", 3) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@h1")) {
         fp_tmp << "<H1> " << txt + 3 << '\n';
-      } else if (strncmp(CnvCtx::low(txt), "@h2", 3) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@h2")) {
         fp_tmp << "<H2> " << txt + 3 << '\n';
-      } else if (strncmp(CnvCtx::low(txt), "@i", 2) == 0) {
+      } else if (strStartsWith(CnvCtx::low(txt), "@i")) {
         fp_tmp << "<i>" << txt + 2 << '\n';
       } else
         fp_tmp << ctx->rw->doc_text[i] << '\n';
@@ -478,7 +476,7 @@ int CnvWblToXtthelp::typedef_exec()
   for (i = 0; i < ctx->rw->doc_clink_cnt; i++) {
     strcpy(prefix, CnvCtx::low(ctx->rw->volume_name));
     strcat(prefix, "_");
-    if (strncmp(ctx->rw->doc_clink_ref[i], prefix, strlen(prefix)) == 0) {
+    if (strStartsWith(ctx->rw->doc_clink_ref[i], prefix)) {
       strcpy(link_ref, &ctx->rw->doc_clink_ref[i][strlen(prefix)]);
       if ((s = strrchr(link_ref, '.')))
         *s = 0;

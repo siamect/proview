@@ -506,7 +506,7 @@ mem_object* wb_vrepmem::findObject(pwr_tOix oix)
 
 int wb_vrepmem::nameToOid(const char* name, pwr_tOid* oid)
 {
-  if (strncmp(name, "_O", 2) == 0) {
+  if (strStartsWith(name, "_O")) {
     cdh_StringToObjid(name, oid);
     return 1;
   }
@@ -1200,7 +1200,7 @@ wb_orep* wb_vrepmem::copyObject(pwr_tStatus* sts, const wb_orep* orep,
     else
       strcpy(name_str, name.object());
   } else {
-    if (strcmp(orep->name(), "Template") == 0) {
+    if (streq(orep->name(), "Template")) {
       *sts = LDH__CLASSMISPLACED;
       return 0;
     }
@@ -2367,8 +2367,8 @@ void wb_vrepmem::classeditorCheckCommit()
     for (mem_object* o2 = o1->fch; o2; o2 = o2->fws) {
       switch (o2->m_cid) {
       case pwr_eClass_ObjBodyDef:
-        if (strcmp(o2->name(), "RtBody") == 0) {
-          if (strcmp(((pwr_sObjBodyDef*)o2->rbody)->StructName, "") != 0) {
+        if (streq(o2->name(), "RtBody")) {
+          if (!streq(((pwr_sObjBodyDef*)o2->rbody)->StructName, "")) {
             int found = 0;
             for (unsigned int i = 0; i < rtbody_vect.size(); i++) {
               if (strcmp(rtbody_vect[i].c_str(),
@@ -2388,8 +2388,8 @@ void wb_vrepmem::classeditorCheckCommit()
               rtbody_vect.push_back(str);
             }
           }
-        } else if (strcmp(o2->name(), "DevBody") == 0) {
-          if (strcmp(((pwr_sObjBodyDef*)o2->rbody)->StructName, "") != 0) {
+        } else if (streq(o2->name(), "DevBody")) {
+          if (!streq(((pwr_sObjBodyDef*)o2->rbody)->StructName, "")) {
             int found = 0;
             for (unsigned int i = 0; i < devbody_vect.size(); i++) {
               if (strcmp(devbody_vect[i].c_str(),
@@ -2430,7 +2430,7 @@ void wb_vrepmem::classeditorCheckCommit()
           case pwr_eClass_Buffer:
           case pwr_eClass_ObjXRef:
           case pwr_eClass_AttrXRef: {
-            if (strcmp(((pwr_sParam*)o3->rbody)->Info.PgmName, "") != 0) {
+            if (!streq(((pwr_sParam*)o3->rbody)->Info.PgmName, "")) {
               int found = 0;
               for (unsigned int i = 0; i < pgmname_vect.size(); i++) {
                 if (strcmp(pgmname_vect[i].c_str(),
@@ -2570,7 +2570,7 @@ bool wb_vrepmem::classeditorCheck(ldh_eDest dest_code, mem_object* dest,
         }
       }
     } else {
-      if (strcmp(fth->name(), "Class") != 0) {
+      if (!streq(fth->name(), "Class")) {
         *sts = LDH__CLASSMISPLACED;
         return false;
       }

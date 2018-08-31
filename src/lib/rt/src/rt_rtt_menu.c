@@ -725,7 +725,7 @@ int rtt_cli(
     }
     if (hitnr == 0 || is_arg) {
       /* This might be a argument, look for a argument */
-      if (strncmp(current_comtbl->qualifier[arg_count], "rtt_arg", 7) == 0) {
+      if (strStartsWith(current_comtbl->qualifier[arg_count], "rtt_arg")) {
         sprintf(rtt_qual_str[i - 1][0], "rtt_arg%d", arg_count + 1);
         strcpy(rtt_qual_str[i - 1][1], value_str[0]);
         arg_count++;
@@ -834,7 +834,7 @@ static int rtt_recall_insert(rtt_t_recall* recall, char* command)
 {
   if (*command == 0)
     return RTT__SUCCESS;
-  if (strcmp((char*)recall->command[recall->last_command], command) == 0)
+  if (streq((char*)recall->command[recall->last_command], command))
     return RTT__SUCCESS;
 
   recall->last_command++;

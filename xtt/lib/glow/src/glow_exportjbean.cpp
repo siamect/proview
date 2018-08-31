@@ -213,7 +213,7 @@ void GlowExportJBean::growctx(glow_eExportPass pass, std::ofstream& fp)
             "scaleHeight)); // scaletest"
          << '\n'
          << "    AffineTransform save_tmp;\n";
-    if (strcmp(((GrowCtx*)ctx)->background_image, "") != 0) {
+    if (!streq(((GrowCtx*)ctx)->background_image, "")) {
       fp << "    if ( backgroundImage.mImage == null)\n"
          << "      backgroundImage.paintComponent( g);\n"
          << "    TexturePaint imagePaint = new TexturePaint( "
@@ -3856,7 +3856,7 @@ void GlowExportJBean::window(double x1, double y1, double x2, double y2,
     strcpy(class_fname, s + 1);
   else
     strcpy(class_fname, filename);
-  if (strncmp(class_fname, "pwr_c_", 6) == 0) {
+  if (strStartsWith(class_fname, "pwr_c_")) {
     char str[80];
     strcpy(str, "Jopc");
     strcat(str, &class_fname[6]);
@@ -3938,7 +3938,7 @@ void GlowExportJBean::folder(double x1, double y1, double x2, double y2,
         strcpy(class_fname, s + 1);
       else
         strcpy(class_fname, fname_p);
-      if (strncmp(class_fname, "pwr_c_", 6) == 0) {
+      if (strStartsWith(class_fname, "pwr_c_")) {
         char str[80];
         strcpy(str, "Jopc");
         strcat(str, &class_fname[6]);

@@ -98,7 +98,7 @@ int main(int argc, char* argv[])
       }
       Lng::set(argv[i + 1]);
       i++;
-    } else if (strncmp(argv[i], "eth", 3) == 0) {
+    } else if (strStartsWith(argv[i], "eth")) {
       snprintf(dev_name, sizeof(dev_name), "%s", argv[i]);
     }
   }

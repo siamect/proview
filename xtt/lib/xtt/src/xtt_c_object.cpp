@@ -1501,7 +1501,7 @@ static pwr_tStatus DataSheet(xmenu_sMenuCall* ip)
   if (EVEN(sts))
     return sts;
 
-  if (strcmp((char*)datasheet, "") == 0)
+  if (streq((char*)datasheet, ""))
     return 0;
 
   xnav_open_URL(datasheet);
@@ -1560,7 +1560,7 @@ static pwr_tStatus Photo(xmenu_sMenuCall* ip)
   if (EVEN(sts))
     return sts;
 
-  if (strcmp((char*)photo, "") == 0)
+  if (streq((char*)photo, ""))
     return 0;
 
   if (strchr(photo, '.'))

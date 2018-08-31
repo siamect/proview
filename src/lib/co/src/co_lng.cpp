@@ -131,8 +131,7 @@ static int compKey(tree_sTable* tp, tree_sNode* x, tree_sNode* y)
     return strcmp(xKey->text, yKey->text);
   }
   case 'C': {
-    int len = strlen(yKey->text);
-    return strncmp(xKey->text, yKey->text, len);
+    return strncmp(xKey->text, yKey->text, strlen(yKey->text));
   }
   }
   return 0;
@@ -519,12 +518,12 @@ void Lng::read_metadata(std::ifstream& fp2, bool first_set, pwr_tStatus* sts)
       break;
   }
 
-  if (strncmp(line, "Coding:UTF-8", 12) == 0) {
+  if (strStartsWith(line, "Coding:UTF-8")) {
     if (first_set)
       translfile_coding = lng_eCoding_UTF_8;
     else if (translfile_coding != lng_eCoding_UTF_8)
       *sts = LNG__DIFFCODING;
-  } else if (strncmp(line, "Coding:ISO8859-1", 16) == 0) {
+  } else if (strStartsWith(line, "Coding:ISO8859-1")) {
     if (first_set)
       translfile_coding = lng_eCoding_ISO8859_1;
     else if (translfile_coding != lng_eCoding_ISO8859_1)
@@ -558,7 +557,7 @@ void Lng::read_include(
         break;
     }
 
-    if (strncmp(line1, "Include:", 8) == 0) {
+    if (strStartsWith(line1, "Include:")) {
       for (;;) {
         if (!fp2.getline(line2, sizeof(line2))) {
           *sts = LNG__EOF;
@@ -568,7 +567,7 @@ void Lng::read_include(
           break;
       }
 
-      if (strncmp(line2, "Include:", 8) != 0) {
+      if (!strStartsWith(line2, "Include:")) {
         *sts = LNG__INCLUDEMISMATCH;
         return;
       }

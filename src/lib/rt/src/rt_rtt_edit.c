@@ -7119,7 +7119,7 @@ static int dtt_edit_read_items(edit_ctx ctx, char* filename)
     row = 0;
     while (ODD(sts = dtt_read_line(line, sizeof(line), infile))) {
       row++;
-      if (strncmp(line, "Number", 6))
+      if (!strStartsWith(line, "Number"))
         /* Read next line */
         continue;
 
@@ -7361,7 +7361,7 @@ static int dtt_edit_read_picture_items(edit_ctx ctx, FILE* infile)
   row = 0;
   while (ODD(sts = dtt_read_line(line, sizeof(line), infile))) {
     row++;
-    if (strncmp(line, "Number", 6))
+    if (!strStartsWith(line, "Number"))
       /* Read next line */
       continue;
 

@@ -34,14 +34,15 @@
  * General Public License plus this exception.
  **/
 
-#include <string.h>
 #include <sys/stat.h>
 
 #include <fstream>
 
-#include "wb_dblock.h"
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_syi.h"
+
+#include "wb_dblock.h"
 
 std::vector<wb_lockfile> wb_dblock::m_lockfiles;
 
@@ -113,7 +114,7 @@ bool wb_dblock::check(char* name)
   pwr_tTime t;
 
   for (int i = 0; i < (int)m_lockfiles.size(); i++) {
-    if (strcmp(m_lockfiles[i].fname, lockname(name)) == 0) {
+    if (streq(m_lockfiles[i].fname, lockname(name))) {
       if (EVEN(dcli_file_time(lockname(name), &t)))
         return false;
 
@@ -130,7 +131,7 @@ void wb_dblock::dbunlock(char* name)
   sprintf(cmd, "rm %s", lockname(name));
 
   for (int i = 0; i < (int)m_lockfiles.size(); i++) {
-    if (strcmp(m_lockfiles[i].fname, lockname(name)) == 0) {
+    if (streq(m_lockfiles[i].fname, lockname(name))) {
       if (check(name)) {
         system(cmd);
         m_lockfiles[i].removed = true;

@@ -2489,7 +2489,7 @@ static int attrnav_trace_scan_bc(brow_tObject object, void* p)
       if (item->size > (int)sizeof(item->old_value)
           && item->type_id == glow_eType_String
           && strlen((char*)p) < sizeof(item->old_value)
-          && strcmp((char*)p, item->old_value) == 0)
+          && streq((char*)p, item->old_value))
         // No change since last time
         return 1;
       else if (memcmp(item->old_value, p, item->size) == 0)
@@ -2940,7 +2940,7 @@ void AttrNav::refresh_objects(unsigned int type)
             continue;
 
           if (select_list[i] == pitem->id
-              && strcmp(select_name[i], ((AItemLocal*)item)->name) == 0) {
+              && streq(select_name[i], ((AItemLocal*)item)->name)) {
             brow_SetInverse(blist[j], 1);
             brow_SelectInsert(brow->ctx, blist[j]);
             break;

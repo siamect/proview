@@ -46,12 +46,11 @@
 
 /*_Include filer_________________________________________________________*/
 
-#if defined OS_POSIX
-#include <string.h>
-#endif
-
 #include "pwr_nmpsclasses.h"
+
 #include "co_cdh.h"
+#include "co_string.h"
+
 #include "rt_lck.h"
 #include "rt_gdh_msg.h"
 #include "rt_hash_msg.h"
@@ -288,14 +287,14 @@ pwr_tStatus nmpsappl_MirrorInit(pwr_tString80*
 
   /* Add cells to cellist */
   cellname = cell_array;
-  while (strcmp((char*)cellname, "") != 0) {
+  while (!streq((char*)cellname, "")) {
     cdh_ToUpper((char*)cellname, (char*)cellname);
 
     /* Check if cell already is inserted */
     cellist_ptr = basectx->cellist;
     found = 0;
     while (cellist_ptr) {
-      if (strcmp((char*)cellname, cellist_ptr->name) == 0) {
+      if (streq((char*)cellname, cellist_ptr->name)) {
         found = 1;
         break;
       }

@@ -334,7 +334,7 @@ int WPkgNav::root_objects()
     if (!num)
       continue;
 
-    if (strcmp(cdh_Low(line_item[0]), "node") == 0) {
+    if (streq(cdh_Low(line_item[0]), "node")) {
       pwr_mOpSys opsys;
       int bus;
       int dstatus;

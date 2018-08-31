@@ -67,13 +67,11 @@
 #include <time.h>
 #include <stdio.h>
 #include <math.h>
-#include <string.h>
 #include <stdlib.h>
 #include <signal.h>
 #include <stdarg.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <string.h>
 #include <errno.h>
 #include <time.h>
 #include <unistd.h>
@@ -91,22 +89,24 @@
 
 /*PWR includes*/
 
-#include "pwr_systemclasses.h"
-#include "remote_mq.h"
-#include "co_cdh.h"
-#include "rt_gdh.h"
-#include "rt_aproc.h"
-#include "rt_pwr_msg.h"
 #include "pwr_baseclasses.h"
 #include "pwr_remoteclasses.h"
-#include "remote.h"
-#include "remote_utils.h"
-#include "remote_remtrans_utils.h"
+#include "pwr_systemclasses.h"
 
+#include "co_cdh.h"
+#include "co_string.h"
+#include "co_time.h"
+
+#include "rt_aproc.h"
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
 #include "rt_plc_utl.h"
-#include "co_time.h"
+#include "rt_pwr_msg.h"
+
+#include "remote.h"
+#include "remote_mq.h"
+#include "remote_remtrans_utils.h"
+#include "remote_utils.h"
 
 /*_variables_______________________________________________________________*/
 
@@ -287,7 +287,7 @@ int main(int argc, char* argv[])
 
   debug = 0;
   if (argc >= 4) {
-    if (!strncmp(argv[3], "debug", 5))
+    if (!strStartsWith(argv[3], "debug"))
       debug = 1;
   }
 

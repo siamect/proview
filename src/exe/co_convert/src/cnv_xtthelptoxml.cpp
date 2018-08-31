@@ -247,8 +247,8 @@ void* CnvXtthelpToXml::insert(navh_eItemType item_type, const char* t1,
     if (!streq(link, "")) {
       pwr_tFileName fname;
 
-      if (strncmp(link, "$web:", 5) == 0) {
-        if (strncmp(&link[5], "$pwrp_web/", 10) == 0)
+      if (strStartsWith(link, "$web:")) {
+        if (strStartsWith(&link[5], "$pwrp_web/"))
           strcpy(fname, &link[15]);
         else
           strcpy(fname, &link[5]);
@@ -296,8 +296,8 @@ void* CnvXtthelpToXml::insert(navh_eItemType item_type, const char* t1,
   case navh_eItemType_HelpBold: {
     pwr_tFileName fname;
     if (!streq(link, "")) {
-      if (strncmp(link, "$web:", 5) == 0) {
-        if (strncmp(&link[5], "$pwrp_web/", 10) == 0)
+      if (strStartsWith(link, "$web:")) {
+        if (strStartsWith(&link[5], "$pwrp_web/"))
           strcpy(fname, &link[15]);
         else
           strcpy(fname, &link[5]);

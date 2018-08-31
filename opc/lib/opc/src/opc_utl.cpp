@@ -1569,7 +1569,7 @@ bool opc_string_to_opctype(const char* str, int* type)
   int ii;
 
   for (ii = 0; ii < opc_cDataTypeSize; ii++) {
-    if (strncmp(str_dt[ii], str, sizeof(str_dt[ii])) == 0) {
+    if (strStartsWith(str, str_dt[ii])) {
       *type = ii;
       return true;
     }

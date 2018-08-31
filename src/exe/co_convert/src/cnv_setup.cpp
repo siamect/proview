@@ -71,7 +71,7 @@ int CnvSetup::setup(char* filename)
       nr = dcli_parse(line, " 	=", "", (char*)line_part,
           sizeof(line_part) / sizeof(line_part[0]), sizeof(line_part[0]), 0);
 
-      if (strcmp(CnvCtx::low(line_part[0]), "group") == 0) {
+      if (streq(CnvCtx::low(line_part[0]), "group")) {
         if (nr < 2) {
           printf("** Setup syntax error in file %s, line %d\n", filename,
               line_cnt);

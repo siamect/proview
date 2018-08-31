@@ -509,7 +509,7 @@ void CLogNav::draw()
   brow_DeleteAll(brow->ctx);
 
   for (int i = 0; i < (int)msg_list.size(); i++) {
-    if (strncmp(msg_list[i].text, "Setting log file to:", 20) == 0) {
+    if (strStartsWith(msg_list[i].text, "Setting log file to:")) {
       item = new ItemMsgRestart(
           this, "Restart", msg_list[i].time, dest, flow_eDest_After);
       dest = item->node;

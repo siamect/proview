@@ -3471,10 +3471,10 @@ void grow_UpdateObject(grow_tCtx ctx, grow_tObject object, grow_sAttrInfo* info)
         int dynsize;
 
         ((GrowRect*)object)->get_dynamic(&dynamic, &dynsize);
-        if (strcmp((char*)info_p->value_p, "") == 0 && !dynsize)
+        if (streq((char*)info_p->value_p, "") && !dynsize)
           break;
 
-        if (dynsize && strcmp(dynamic, (char*)info_p->value_p) != 0)
+        if (dynsize && !streq(dynamic, (char*)info_p->value_p))
           ((GrowRect*)object)
               ->set_dynamic(
                   (char*)info_p->value_p, strlen((char*)info_p->value_p));
@@ -3504,10 +3504,10 @@ void grow_UpdateObject(grow_tCtx ctx, grow_tObject object, grow_sAttrInfo* info)
         int dynsize;
 
         ((GrowPolyLine*)object)->get_dynamic(&dynamic, &dynsize);
-        if (strcmp((char*)info_p->value_p, "") == 0 && !dynsize)
+        if (streq((char*)info_p->value_p, "") && !dynsize)
           break;
 
-        if (dynsize && strcmp(dynamic, (char*)info_p->value_p) != 0)
+        if (dynsize && !streq(dynamic, (char*)info_p->value_p))
           ((GrowPolyLine*)object)
               ->set_dynamic(
                   (char*)info_p->value_p, strlen((char*)info_p->value_p));
@@ -3536,10 +3536,10 @@ void grow_UpdateObject(grow_tCtx ctx, grow_tObject object, grow_sAttrInfo* info)
         int dynsize;
 
         ((GrowLine*)object)->get_dynamic(&dynamic, &dynsize);
-        if (strcmp((char*)info_p->value_p, "") == 0 && !dynsize)
+        if (streq((char*)info_p->value_p, "") && !dynsize)
           break;
 
-        if (dynsize && strcmp(dynamic, (char*)info_p->value_p) != 0)
+        if (dynsize && !streq(dynamic, (char*)info_p->value_p))
           ((GrowLine*)object)
               ->set_dynamic(
                   (char*)info_p->value_p, strlen((char*)info_p->value_p));
@@ -3567,10 +3567,10 @@ void grow_UpdateObject(grow_tCtx ctx, grow_tObject object, grow_sAttrInfo* info)
         int dynsize;
 
         ((GrowArc*)object)->get_dynamic(&dynamic, &dynsize);
-        if (strcmp((char*)info_p->value_p, "") == 0 && !dynsize)
+        if (streq((char*)info_p->value_p, "") && !dynsize)
           break;
 
-        if (dynsize && strcmp(dynamic, (char*)info_p->value_p) != 0)
+        if (dynsize && !streq(dynamic, (char*)info_p->value_p))
           ((GrowArc*)object)
               ->set_dynamic(
                   (char*)info_p->value_p, strlen((char*)info_p->value_p));
@@ -3614,7 +3614,7 @@ void grow_UpdateObject(grow_tCtx ctx, grow_tObject object, grow_sAttrInfo* info)
     while (info_p->info_type != grow_eInfoType_End) {
       switch (info_p->info_type) {
       case grow_eInfoType_DynamicText:
-        if (strcmp(((GrowText*)object)->text, (char*)info_p->value_p) != 0)
+        if (!streq(((GrowText*)object)->text, (char*)info_p->value_p))
           ((GrowText*)object)->set_text((char*)info_p->value_p);
         break;
       case grow_eInfoType_Dynamic: {
@@ -3622,10 +3622,10 @@ void grow_UpdateObject(grow_tCtx ctx, grow_tObject object, grow_sAttrInfo* info)
         int dynsize;
 
         ((GrowText*)object)->get_dynamic(&dynamic, &dynsize);
-        if (strcmp((char*)info_p->value_p, "") == 0 && !dynsize)
+        if (streq((char*)info_p->value_p, "") && !dynsize)
           break;
 
-        if (dynsize && strcmp(dynamic, (char*)info_p->value_p) != 0)
+        if (dynsize && !streq(dynamic, (char*)info_p->value_p))
           ((GrowText*)object)
               ->set_dynamic(
                   (char*)info_p->value_p, strlen((char*)info_p->value_p));
@@ -3655,10 +3655,10 @@ void grow_UpdateObject(grow_tCtx ctx, grow_tObject object, grow_sAttrInfo* info)
         int dynsize;
 
         ((GrowImage*)object)->get_dynamic(&dynamic, &dynsize);
-        if (strcmp((char*)info_p->value_p, "") == 0 && !dynsize)
+        if (streq((char*)info_p->value_p, "") && !dynsize)
           break;
 
-        if (dynsize && strcmp(dynamic, (char*)info_p->value_p) != 0)
+        if (dynsize && !streq(dynamic, (char*)info_p->value_p))
           ((GrowImage*)object)
               ->set_dynamic(
                   (char*)info_p->value_p, strlen((char*)info_p->value_p));
@@ -3692,10 +3692,10 @@ void grow_UpdateObject(grow_tCtx ctx, grow_tObject object, grow_sAttrInfo* info)
         int dynsize;
 
         ((GrowBar*)object)->get_dynamic(&dynamic, &dynsize);
-        if (strcmp((char*)info_p->value_p, "") == 0 && !dynsize)
+        if (streq((char*)info_p->value_p, "") && !dynsize)
           break;
 
-        if (dynsize && strcmp(dynamic, (char*)info_p->value_p) != 0)
+        if (dynsize && !streq(dynamic, (char*)info_p->value_p))
           ((GrowBar*)object)
               ->set_dynamic(
                   (char*)info_p->value_p, strlen((char*)info_p->value_p));
@@ -3726,10 +3726,10 @@ void grow_UpdateObject(grow_tCtx ctx, grow_tObject object, grow_sAttrInfo* info)
         int dynsize;
 
         ((GrowTrend*)object)->get_dynamic(&dynamic, &dynsize);
-        if (strcmp((char*)info_p->value_p, "") == 0 && !dynsize)
+        if (streq((char*)info_p->value_p, "") && !dynsize)
           break;
 
-        if (dynsize && strcmp(dynamic, (char*)info_p->value_p) != 0)
+        if (dynsize && !streq(dynamic, (char*)info_p->value_p))
           ((GrowTrend*)object)
               ->set_dynamic(
                   (char*)info_p->value_p, strlen((char*)info_p->value_p));
@@ -3769,10 +3769,10 @@ void grow_UpdateObject(grow_tCtx ctx, grow_tObject object, grow_sAttrInfo* info)
         int dynsize;
 
         ((GrowAxis*)object)->get_dynamic(&dynamic, &dynsize);
-        if (strcmp((char*)info_p->value_p, "") == 0 && !dynsize)
+        if (streq((char*)info_p->value_p, "") && !dynsize)
           break;
 
-        if (dynsize && strcmp(dynamic, (char*)info_p->value_p) != 0)
+        if (dynsize && !streq(dynamic, (char*)info_p->value_p))
           ((GrowAxis*)object)
               ->set_dynamic(
                   (char*)info_p->value_p, strlen((char*)info_p->value_p));
@@ -3803,10 +3803,10 @@ void grow_UpdateObject(grow_tCtx ctx, grow_tObject object, grow_sAttrInfo* info)
         int dynsize;
 
         ((GrowAxisArc*)object)->get_dynamic(&dynamic, &dynsize);
-        if (strcmp((char*)info_p->value_p, "") == 0 && !dynsize)
+        if (streq((char*)info_p->value_p, "") && !dynsize)
           break;
 
-        if (dynsize && strcmp(dynamic, (char*)info_p->value_p) != 0)
+        if (dynsize && !streq(dynamic, (char*)info_p->value_p))
           ((GrowAxisArc*)object)
               ->set_dynamic(
                   (char*)info_p->value_p, strlen((char*)info_p->value_p));
@@ -3837,10 +3837,10 @@ void grow_UpdateObject(grow_tCtx ctx, grow_tObject object, grow_sAttrInfo* info)
         int dynsize;
 
         ((GrowAxisArc*)object)->get_dynamic(&dynamic, &dynsize);
-        if (strcmp((char*)info_p->value_p, "") == 0 && !dynsize)
+        if (streq((char*)info_p->value_p, "") && !dynsize)
           break;
 
-        if (dynsize && strcmp(dynamic, (char*)info_p->value_p) != 0)
+        if (dynsize && !streq(dynamic, (char*)info_p->value_p))
           ((GrowAxisArc*)object)
               ->set_dynamic(
                   (char*)info_p->value_p, strlen((char*)info_p->value_p));
@@ -3870,7 +3870,7 @@ void grow_UpdateObject(grow_tCtx ctx, grow_tObject object, grow_sAttrInfo* info)
         char annot_value[80];
         ((GrowNode*)object)
             ->get_annotation(info_p->number, annot_value, sizeof(annot_value));
-        if (strcmp(annot_value, (char*)info_p->value_p) != 0)
+        if (!streq(annot_value, (char*)info_p->value_p))
           ((GrowNode*)object)
               ->set_annotation(info_p->number, (char*)info_p->value_p,
                   strlen((char*)info_p->value_p), 0);
@@ -3887,10 +3887,10 @@ void grow_UpdateObject(grow_tCtx ctx, grow_tObject object, grow_sAttrInfo* info)
         int dynsize;
 
         ((GrowNode*)object)->get_dynamic(&dynamic, &dynsize);
-        if (strcmp((char*)info_p->value_p, "") == 0 && !dynsize)
+        if (streq((char*)info_p->value_p, "") && !dynsize)
           break;
 
-        if (dynsize && strcmp(dynamic, (char*)info_p->value_p) != 0)
+        if (dynsize && !streq(dynamic, (char*)info_p->value_p))
           ((GrowNode*)object)
               ->set_dynamic(
                   (char*)info_p->value_p, strlen((char*)info_p->value_p));
@@ -3920,7 +3920,7 @@ void grow_UpdateObject(grow_tCtx ctx, grow_tObject object, grow_sAttrInfo* info)
         char annot_value[80];
         ((GrowSlider*)object)
             ->get_annotation(info_p->number, annot_value, sizeof(annot_value));
-        if (strcmp(annot_value, (char*)info_p->value_p) != 0)
+        if (!streq(annot_value, (char*)info_p->value_p))
           ((GrowSlider*)object)
               ->set_annotation(info_p->number, (char*)info_p->value_p,
                   strlen((char*)info_p->value_p), 0);
@@ -3937,10 +3937,10 @@ void grow_UpdateObject(grow_tCtx ctx, grow_tObject object, grow_sAttrInfo* info)
         int dynsize;
 
         ((GrowSlider*)object)->get_dynamic(&dynamic, &dynsize);
-        if (strcmp((char*)info_p->value_p, "") == 0 && !dynsize)
+        if (streq((char*)info_p->value_p, "") && !dynsize)
           break;
 
-        if (dynsize && strcmp(dynamic, (char*)info_p->value_p) != 0)
+        if (dynsize && !streq(dynamic, (char*)info_p->value_p))
           ((GrowSlider*)object)
               ->set_dynamic(
                   (char*)info_p->value_p, strlen((char*)info_p->value_p));
@@ -3979,10 +3979,10 @@ void grow_UpdateSubGraph(grow_tCtx ctx, grow_sAttrInfo* info)
       int dynsize;
 
       ctx->get_dynamic(&dynamic, &dynsize);
-      if (strcmp((char*)info_p->value_p, "") == 0 && !dynsize)
+      if (streq((char*)info_p->value_p, "") && !dynsize)
         break;
 
-      if (dynsize && strcmp(dynamic, (char*)info_p->value_p) != 0)
+      if (dynsize && !streq(dynamic, (char*)info_p->value_p))
         ctx->set_dynamic(
             (char*)info_p->value_p, strlen((char*)info_p->value_p));
       else if (!dynsize)

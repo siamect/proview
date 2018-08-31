@@ -164,10 +164,10 @@ int Graph::init_object_graph(int mode)
   // Get class from filename
   if ((s = strrchr(filename, '/')) || (s = strrchr(filename, '>'))
       || (s = strrchr(filename, ']')) || (s = strrchr(filename, ':'))) {
-    if (strncmp(s + 1, "pwr_t_", 6) == 0) {
+    if (strStartsWith(s + 1, "pwr_t_")) {
       is_type = 1;
       strcpy(classname, s + 7);
-    } else if (strncmp(s + 1, "pwr_c_", 6) == 0)
+    } else if (strStartsWith(s + 1, "pwr_c_"))
       strcpy(classname, s + 7);
     else
       strcpy(classname, s + 1);

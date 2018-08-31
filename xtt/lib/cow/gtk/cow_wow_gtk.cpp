@@ -689,7 +689,7 @@ int CoWowGtk::DisplayWarranty()
   text[i] = 0;
   fclose(fp);
 
-  if (strncmp(text, "Coding:UTF-8", 12) == 0)
+  if (strStartsWith(text, "Coding:UTF-8"))
     cdh_Strcpy(text, &text[13]);
   else {
     gchar* s = g_convert(text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
@@ -775,7 +775,7 @@ void CoWowGtk::DisplayLicense()
   fclose(fp);
   text[i] = 0;
 
-  if (strncmp(text, "Coding:UTF-8", 12) == 0)
+  if (strStartsWith(text, "Coding:UTF-8"))
     cdh_Strcpy(text, &text[13]);
   else {
     gchar* s = g_convert(text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
@@ -1778,13 +1778,13 @@ void CoWowGtk::update_title(GtkWidget* w, int editmode)
 
   g_object_get(w, "title", &title, NULL);
   if (editmode) {
-    if (strncmp(title, "*** ", 4) != 0) {
+    if (!strStartsWith(title, "*** ")) {
       strcpy(new_title, "*** ");
       strcat(new_title, title);
       g_object_set(w, "title", new_title, NULL);
     }
   } else {
-    if (strncmp(title, "*** ", 4) == 0) {
+    if (strStartsWith(title, "*** ")) {
       strcpy(new_title, &title[4]);
       g_object_set(w, "title", new_title, NULL);
     }

@@ -224,8 +224,8 @@ static int check_format(char* format, int type)
     break;
   case pwr_eType_Status:
   case pwr_eType_NetStatus:
-    if (*s == 'm' || *s == 'd' || *s == 'u' || strncmp(s, "hd", 2) == 0
-        || strncmp(s, "hu", 2) == 0)
+    if (*s == 'm' || *s == 'd' || *s == 'u' || strStartsWith(s, "hd")
+        || strStartsWith(s, "hu"))
       return 1;
     break;
   case pwr_eType_Enum:
@@ -5550,7 +5550,7 @@ int GeValue::scan(grow_tObject object)
 
     switch (format[strlen(format) - 1]) {
     case 'b':
-      if (strncmp(&format[1], "16", 2) == 0)
+      if (strStartsWith(&format[1], "16"))
         cdh_MaskToBinaryString(val, 16, buf);
       else
         cdh_MaskToBinaryString(val, 32, buf);
@@ -11949,7 +11949,7 @@ int GeTable::connect(grow_tObject object, glow_sTraceData* trace_data, bool now)
 
     elements[i] = MIN(elements[i], rows);
 
-    if (strncmp(parsed_name, "$header.", 8) != 0) {
+    if (!strStartsWith(parsed_name, "$header.")) {
       switch (db[i]) {
       case graph_eDatabase_Gdh:
         sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
@@ -19113,7 +19113,7 @@ int GeInputFocus::action(grow_tObject object, glow_tEvent event)
           if (gm_dyn->total_action_type1 & ge_mActionType1_InputFocus) {
             for (GeDynElem* elem = gm_dyn->elements; elem; elem = elem->next) {
               if (elem->action_type1 == ge_mActionType1_InputFocus) {
-                if (strcmp(((GeInputFocus*)elem)->next_horizontal, name) == 0) {
+                if (streq(((GeInputFocus*)elem)->next_horizontal, name)) {
                   found = 1;
                   prev = *object_p;
                   break;
@@ -19201,7 +19201,7 @@ int GeInputFocus::action(grow_tObject object, glow_tEvent event)
           if (gm_dyn->total_action_type1 & ge_mActionType1_InputFocus) {
             for (GeDynElem* elem = gm_dyn->elements; elem; elem = elem->next) {
               if (elem->action_type1 == ge_mActionType1_InputFocus) {
-                if (strcmp(((GeInputFocus*)elem)->next_vertical, name) == 0) {
+                if (streq(((GeInputFocus*)elem)->next_vertical, name)) {
                   found = 1;
                   prev = *object_p;
                   break;

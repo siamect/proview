@@ -214,7 +214,7 @@ static pwr_tStatus dataa_Da1(
     *incr = strlen(out);
     return GSX__SUCCESS;
   }
-  if (!strncmp(pos, "->", 2) || !strncmp(pos, " ->", 3)) {
+  if (strStartsWith(pos, "->") || strStartsWith(pos, " ->")) {
     if (!streq(dataactx->classdef_Da1, ""))
       sprintf(out, "((pwr_sClass_%s *)(*(%s->DataIn1P)))",
           dataactx->classdef_Da1, var);
@@ -263,7 +263,7 @@ static pwr_tStatus dataa_Da2(
     *incr = strlen(out);
     return GSX__SUCCESS;
   }
-  if (!strncmp(pos, "->", 2) || !strncmp(pos, " ->", 3)) {
+  if (strStartsWith(pos, "->") || strStartsWith(pos, " ->")) {
     if (!streq(dataactx->classdef_Da2, ""))
       sprintf(out, "((pwr_sClass_%s *)(*(%s->DataIn2P)))",
           dataactx->classdef_Da2, var);
@@ -312,7 +312,7 @@ static pwr_tStatus dataa_Da3(
     *incr = strlen(out);
     return GSX__SUCCESS;
   }
-  if (!strncmp(pos, "->", 2) || !strncmp(pos, " ->", 3)) {
+  if (strStartsWith(pos, "->") || strStartsWith(pos, " ->")) {
     if (!streq(dataactx->classdef_Da3, ""))
       sprintf(out, "((pwr_sClass_%s *)(*(%s->DataIn3P)))",
           dataactx->classdef_Da3, var);
@@ -361,7 +361,7 @@ static pwr_tStatus dataa_Da4(
     *incr = strlen(out);
     return GSX__SUCCESS;
   }
-  if (!strncmp(pos, "->", 2) || !strncmp(pos, " ->", 3)) {
+  if (strStartsWith(pos, "->") || strStartsWith(pos, " ->")) {
     if (!streq(dataactx->classdef_Da4, ""))
       sprintf(out, "((pwr_sClass_%s *)(*(%s->DataIn4P)))",
           dataactx->classdef_Da4, var);

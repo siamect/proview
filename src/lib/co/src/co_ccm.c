@@ -3399,7 +3399,7 @@ static int ccm_read_file(
     row++;
     ccm_remove_blank(str, str);
     if (str[0] == '!' || str[0] == 0
-        || (str[0] == '#' && strncmp(str, "#include", 8) != 0))
+        || (str[0] == '#' && !strStartsWith(str, "#include")))
       continue;
 
     /* Remove any trailing \r */
@@ -3433,7 +3433,7 @@ static int ccm_read_file(
       strcpy(filectx->error_line, str);
       return CCM__LONGLINE;
     }
-    if (strncmp(str, "#include", 8) == 0) {
+    if (strStartsWith(str, "#include")) {
       /* Read the include file */
       s = strchr(str, '<');
       if (s == 0) {
@@ -3523,7 +3523,7 @@ static int ccm_read_buffer(
     row++;
     ccm_remove_blank(str, str);
     if (str[0] == '!' || str[0] == 0
-        || (str[0] == '#' && strncmp(str, "#include", 8) != 0)) {
+        || (str[0] == '#' && !strStartsWith(str, "#include"))) {
       s++;
       continue;
     }
@@ -3544,7 +3544,7 @@ static int ccm_read_buffer(
       strcpy(filectx->error_line, str);
       return CCM__LONGLINE;
     }
-    if (strncmp(str, "#include", 8) == 0) {
+    if (strStartsWith(str, "#include")) {
       filectx->error_row = row;
       strcpy(filectx->error_line, str);
       return CCM__OPENFILE;
@@ -3584,7 +3584,7 @@ static int ccm_init_filectx(ccm_tFileCtx filectx)
   main_start_found = 0;
   main_end_found = 0;
   for (line_p = filectx->line_list; line_p; line_p = line_p->next) {
-    if (strncmp(line_p->line, "function", 8) == 0
+    if (strStartsWith(line_p->line, "function")
         && (line_p->line[8] == ' ' || line_p->line[8] == '	')) {
       if (in_function) {
         filectx->error_row = line_p->row;
@@ -3621,7 +3621,7 @@ static int ccm_init_filectx(ccm_tFileCtx filectx)
       filectx->func_list = func_p;
       in_function = 1;
       line_p->type = K_LINE_FUNCTION;
-    } else if (strncmp(line_p->line, "endfunction", 11) == 0) {
+    } else if (strStartsWith(line_p->line, "endfunction")) {
       if (!in_function) {
         filectx->error_row = line_p->row;
         strcpy(filectx->error_line, line_p->line);
@@ -3632,7 +3632,7 @@ static int ccm_init_filectx(ccm_tFileCtx filectx)
       func_p->end_line = line_p;
       in_function = 0;
       line_p->type = K_LINE_ENDFUNCTION;
-    } else if (strncmp(line_p->line, "main", 4) == 0) {
+    } else if (strStartsWith(line_p->line, "main")) {
       /* Parse the command string */
       nr = rtt_parse(line_p->line, " 	(", "", (char*)out_str,
           sizeof(out_str) / sizeof(out_str[0]), sizeof(out_str[0]), 0);
@@ -3653,7 +3653,7 @@ static int ccm_init_filectx(ccm_tFileCtx filectx)
         main_start_found = 1;
         line_p->type = K_LINE_MAIN;
       }
-    } else if (strncmp(line_p->line, "endmain", 7) == 0) {
+    } else if (strStartsWith(line_p->line, "endmain")) {
       if (!main_start_found) {
         filectx->error_row = line_p->row;
         strcpy(filectx->error_line, line_p->line);
@@ -3663,48 +3663,48 @@ static int ccm_init_filectx(ccm_tFileCtx filectx)
       filectx->main_end_line = line_p;
       main_end_found = 1;
       line_p->type = K_LINE_ENDMAIN;
-    } else if (strncmp(line_p->line, "if", 2) == 0
+    } else if (strStartsWith(line_p->line, "if")
         && (line_p->line[2] == ' ' || line_p->line[2] == '	'
                || line_p->line[2] == '(')) {
       line_p->type = K_LINE_IF;
-    } else if (strncmp(line_p->line, "else", 4) == 0
+    } else if (strStartsWith(line_p->line, "else")
         && (line_p->line[4] == ' ' || line_p->line[4] == '	'
                || line_p->line[4] == 10 || line_p->line[4] == 0)) {
       line_p->type = K_LINE_ELSE;
-    } else if (strncmp(line_p->line, "endif", 5) == 0
+    } else if (strStartsWith(line_p->line, "endif")
         && (line_p->line[5] == ' ' || line_p->line[5] == '	'
                || line_p->line[5] == 10 || line_p->line[5] == 0
                || line_p->line[5] == ';')) {
       line_p->type = K_LINE_ENDIF;
-    } else if (strncmp(line_p->line, "while", 5) == 0
+    } else if (strStartsWith(line_p->line, "while")
         && (line_p->line[5] == ' ' || line_p->line[5] == '	'
                || line_p->line[5] == '(')) {
       line_p->type = K_LINE_WHILE;
-    } else if (strncmp(line_p->line, "endwhile", 8) == 0
+    } else if (strStartsWith(line_p->line, "endwhile")
         && (line_p->line[8] == ' ' || line_p->line[8] == '	'
                || line_p->line[8] == 10 || line_p->line[8] == 0
                || line_p->line[8] == ';')) {
       line_p->type = K_LINE_ENDWHILE;
-    } else if (strncmp(line_p->line, "for", 3) == 0
+    } else if (strStartsWith(line_p->line, "for")
         && (line_p->line[3] == ' ' || line_p->line[3] == '	'
                || line_p->line[3] == '(')) {
       line_p->type = K_LINE_FOR;
-    } else if (strncmp(line_p->line, "endfor", 6) == 0
+    } else if (strStartsWith(line_p->line, "endfor")
         && (line_p->line[6] == ' ' || line_p->line[6] == '	'
                || line_p->line[6] == 10 || line_p->line[6] == 0
                || line_p->line[6] == ';')) {
       line_p->type = K_LINE_ENDFOR;
-    } else if (strncmp(line_p->line, "break", 5) == 0
+    } else if (strStartsWith(line_p->line, "break")
         && (line_p->line[5] == ' ' || line_p->line[5] == '	'
                || line_p->line[5] == 10 || line_p->line[5] == 0
                || line_p->line[5] == ';')) {
       line_p->type = K_LINE_BREAK;
-    } else if (strncmp(line_p->line, "continue", 8) == 0
+    } else if (strStartsWith(line_p->line, "continue")
         && (line_p->line[8] == ' ' || line_p->line[8] == '	'
                || line_p->line[8] == 10 || line_p->line[8] == 0
                || line_p->line[8] == ';')) {
       line_p->type = K_LINE_CONTINUE;
-    } else if (strncmp(line_p->line, "goto", 4) == 0
+    } else if (strStartsWith(line_p->line, "goto")
         && (line_p->line[4] == ' ' || line_p->line[4] == '	')) {
       line_p->type = K_LINE_GOTO;
     } else if (strlen(line_p->line) != 0
@@ -5182,7 +5182,7 @@ static int ccm_function_exec(ccm_tFileCtx filectx, char* name, ccm_tFunc* func,
           *return_int = int_val;
           *return_decl = decl;
           return_found = 1;
-        } else if (strncmp(line_p->line, "return", 6) == 0
+        } else if (strStartsWith(line_p->line, "return")
             && (line_p->line[6] == ' ' || line_p->line[6] == '	')) {
           /* Return statement, set return value and exit function */
           if (func_p->decl == K_DECL_INT && decl == K_DECL_INT)

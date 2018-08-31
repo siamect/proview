@@ -44,10 +44,10 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include "co_cdh_msg.h"
 #include "co_cdh.h"
+#include "co_string.h"
 #include "co_time.h"
 
 /*! \file co_cdh.c
@@ -2666,7 +2666,7 @@ pwr_sAttrRef cdh_ArefAdd(pwr_sAttrRef* arp1, pwr_sAttrRef* arp2)
 void cdh_SuppressSuper(char* out, char* in)
 {
   char* s = in;
-  while (strncmp(s, "Super.", 6) == 0)
+  while (strStartsWith(s, "Super."))
     s += 6;
   strcpy(out, s);
 }
@@ -2676,7 +2676,7 @@ void cdh_SuppressSuperAll(char* out, char* in)
   char *s, *t;
 
   for (s = in, t = out; *s;) {
-    if (strncmp(s, "Super.", 6) == 0)
+    if (strStartsWith(s, "Super."))
       s += 6;
     else {
       *t = *s;

@@ -1206,7 +1206,7 @@ void Ge::activate_export_javabean()
   if (!graph->get_java_name(name)) {
     graph->get_name(name);
     if (!streq(name, "")) {
-      if (strncmp(name, "pwr_", 4) == 0) {
+      if (strStartsWith(name, "pwr_")) {
         strcpy(default_name, "Jop");
         strcat(default_name, &name[4]);
         default_name[3] = _toupper(default_name[3]);
@@ -1235,7 +1235,7 @@ void Ge::activate_export_javabean_as()
   if (!graph->get_java_name(name)) {
     graph->get_name(name);
     if (!streq(name, "")) {
-      if (strncmp(name, "pwr_", 4) == 0) {
+      if (strStartsWith(name, "pwr_")) {
         strcpy(default_name, "Jop");
         strcat(default_name, &name[4]);
         default_name[3] = _toupper(default_name[3]);
@@ -1264,11 +1264,11 @@ void Ge::activate_export_gejava()
   if (!graph->get_java_name(name)) {
     graph->get_name(name);
     if (!streq(name, "")) {
-      if (strncmp(name, "pwr_c_", 6) == 0) {
+      if (strStartsWith(name, "pwr_c_")) {
         strcpy(default_name, "Jopc");
         strcat(default_name, &name[6]);
         default_name[4] = _toupper(default_name[4]);
-      } else if (strncmp(name, "pwr_", 4) == 0) {
+      } else if (strStartsWith(name, "pwr_")) {
         strcpy(default_name, "Jop");
         strcat(default_name, &name[4]);
         default_name[3] = _toupper(default_name[3]);
@@ -1292,11 +1292,11 @@ void Ge::activate_export_gejava_as()
   if (!graph->get_java_name(name)) {
     graph->get_name(name);
     if (!streq(name, "")) {
-      if (strncmp(name, "pwr_c_", 6) == 0) {
+      if (strStartsWith(name, "pwr_c_")) {
         strcpy(default_name, "Jopc");
         strcat(default_name, &name[6]);
         default_name[4] = _toupper(default_name[4]);
-      } else if (strncmp(name, "pwr_", 4) == 0) {
+      } else if (strStartsWith(name, "pwr_")) {
         strcpy(default_name, "Jop");
         strcat(default_name, &name[4]);
         default_name[3] = _toupper(default_name[3]);

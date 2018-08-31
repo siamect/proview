@@ -54,11 +54,15 @@
 
 /*_Include files_________________________________________________________*/
 
-#include "pwr_systemclasses.h"
-#include "co_time.h"
-#include "rt_gdh.h"
 #include "pwr_baseclasses.h"
 #include "pwr_ssabclasses.h"
+#include "pwr_systemclasses.h"
+
+#include "co_string.h"
+#include "co_time.h"
+
+#include "rt_gdh.h"
+
 #include "rs_remote_msg.h"
 #include "rs_remote.h"
 #include "rs_remtrans_utils.h"
@@ -574,7 +578,7 @@ static unsigned int ReceiveHandler()
     for (i = 0; i < 4; i++) {
       type_name[i] = name[i + 3];
     }
-    if ((strncmp(type_name, "COM", 3)) == 0) {
+    if (strStartsWith(type_name, "COM")) {
       search_remtrans = true;
       remtrans = remnode->remtrans;
       while (remtrans && search_remtrans) {
