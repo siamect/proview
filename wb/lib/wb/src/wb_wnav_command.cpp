@@ -444,13 +444,13 @@ static int wnav_display_func(void* client_data, void* client_flag)
     return WNAV__SYNTAX;
   }
 
-  if (cdh_NoCaseStrncmp(arg1_str, "W1", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "W1", strlen(arg1_str)) == 0) {
     if (wnav->set_twowindows_cb)
       wnav->set_twowindows_cb(wnav->parent_ctx, 0, 1, 0);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "W2", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "W2", strlen(arg1_str)) == 0) {
     if (wnav->set_twowindows_cb)
       wnav->set_twowindows_cb(wnav->parent_ctx, 0, 0, 1);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "ATTRIBUTE", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "ATTRIBUTE", strlen(arg1_str)) == 0) {
     char classstr[80];
     pwr_tOName hierstr;
     pwr_tObjName attributestr;
@@ -486,7 +486,7 @@ static int wnav_display_func(void* client_data, void* client_flag)
     wnav->wda_new(hier_objid, classid, attributestr, wnav->editmode,
         wnav->gbl.advanced_user, 1);
 
-  } else if (cdh_NoCaseStrncmp(arg1_str, "OBJECTS", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "OBJECTS", strlen(arg1_str)) == 0) {
     char class_str[80];
     pwr_tOName name_str;
     pwr_tOName root_str;
@@ -542,11 +542,11 @@ static int wnav_display_func(void* client_data, void* client_flag)
       name_p = 0;
 
     if (ODD(dcli_get_qualifier("/DEPTH", depth_str, sizeof(depth_str)))) {
-      if (cdh_NoCaseStrcmp(depth_str, "self") == 0)
+      if (str_NoCaseStrcmp(depth_str, "self") == 0)
         depth = trv_eDepth_Self;
-      else if (cdh_NoCaseStrcmp(depth_str, "children") == 0)
+      else if (str_NoCaseStrcmp(depth_str, "children") == 0)
         depth = trv_eDepth_Children;
-      else if (cdh_NoCaseStrcmp(depth_str, "deep") == 0)
+      else if (str_NoCaseStrcmp(depth_str, "deep") == 0)
         depth = trv_eDepth_Deep;
       else {
         wnav->message('E', "Depth should be Self, Children or Deep");
@@ -647,8 +647,8 @@ static int wnav_login_func(void* client_data, void* client_flag)
         wnav->message('E', "Password required");
         return WNAV__SYNTAX;
       }
-      cdh_ToLower(arg1_str, arg1_str);
-      cdh_ToLower(arg2_str, arg2_str);
+      str_ToLower(arg1_str, arg1_str);
+      str_ToLower(arg2_str, arg2_str);
       strcpy(arg2_str, UserList::pwcrypt(arg2_str));
       sts = user_CheckUser("administrator", arg1_str, arg2_str, &priv);
       if (EVEN(sts))
@@ -678,8 +678,8 @@ static int wnav_login_func(void* client_data, void* client_flag)
     wnav->message('E', "Syntax error");
     return WNAV__SYNTAX;
   }
-  cdh_ToLower(arg1_str, arg1_str);
-  cdh_ToLower(arg2_str, arg2_str);
+  str_ToLower(arg1_str, arg1_str);
+  str_ToLower(arg2_str, arg2_str);
   strcpy(arg2_str, UserList::pwcrypt(arg2_str));
   sts = user_CheckUser(systemgroup, arg1_str, arg2_str, &priv);
   if (EVEN(sts))
@@ -722,20 +722,20 @@ static int wnav_set_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (cdh_NoCaseStrncmp(arg1_str, "ADVANCEDUSER", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "ADVANCEDUSER", strlen(arg1_str)) == 0) {
     if (EVEN(dcli_get_qualifier("/LOCAL", 0, 0)))
       // Global command to all windows
       (wnav->gbl_command_cb)(wnav->parent_ctx, "SET ADVANCEDUSER");
     else
       wnav->gbl.advanced_user = 1;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "NOADVANCEDUSER", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "NOADVANCEDUSER", strlen(arg1_str))
       == 0) {
     if (EVEN(dcli_get_qualifier("/LOCAL", 0, 0)))
       // Global command to all windows
       (wnav->gbl_command_cb)(wnav->parent_ctx, "SET NOADVANCEDUSER");
     else
       wnav->gbl.advanced_user = 0;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "ALLTOPLEVEL", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "ALLTOPLEVEL", strlen(arg1_str))
       == 0) {
     if (wnav->window_type == wnav_eWindowType_No)
       return WNAV__CMDMODE;
@@ -747,7 +747,7 @@ static int wnav_set_func(void* client_data, void* client_flag)
       wnav->gbl.all_toplevel = 1;
       wnav->ldh_refresh(pwr_cNObjid);
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "NOALLTOPLEVEL", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "NOALLTOPLEVEL", strlen(arg1_str))
       == 0) {
     if (wnav->window_type == wnav_eWindowType_No)
       return WNAV__CMDMODE;
@@ -759,7 +759,7 @@ static int wnav_set_func(void* client_data, void* client_flag)
       wnav->gbl.all_toplevel = 0;
       wnav->ldh_refresh(pwr_cNObjid);
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "SHOWCLASS", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "SHOWCLASS", strlen(arg1_str)) == 0) {
     if (wnav->window_type == wnav_eWindowType_No)
       return WNAV__CMDMODE;
 
@@ -770,7 +770,7 @@ static int wnav_set_func(void* client_data, void* client_flag)
       wnav->gbl.show_class = 1;
       wnav->ldh_refresh(pwr_cNObjid);
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "NOSHOWCLASS", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "NOSHOWCLASS", strlen(arg1_str))
       == 0) {
     if (wnav->window_type == wnav_eWindowType_No)
       return WNAV__CMDMODE;
@@ -782,7 +782,7 @@ static int wnav_set_func(void* client_data, void* client_flag)
       wnav->gbl.show_class = 0;
       wnav->ldh_refresh(pwr_cNObjid);
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "SHOWALIAS", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "SHOWALIAS", strlen(arg1_str)) == 0) {
     if (wnav->window_type == wnav_eWindowType_No)
       return WNAV__CMDMODE;
 
@@ -793,7 +793,7 @@ static int wnav_set_func(void* client_data, void* client_flag)
       wnav->gbl.show_alias = 1;
       wnav->ldh_refresh(pwr_cNObjid);
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "NOSHOWALIAS", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "NOSHOWALIAS", strlen(arg1_str))
       == 0) {
     if (wnav->window_type == wnav_eWindowType_No)
       return WNAV__CMDMODE;
@@ -805,7 +805,7 @@ static int wnav_set_func(void* client_data, void* client_flag)
       wnav->gbl.show_alias = 0;
       wnav->ldh_refresh(pwr_cNObjid);
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "SHOWDESCRIPTION", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "SHOWDESCRIPTION", strlen(arg1_str))
       == 0) {
     if (wnav->window_type == wnav_eWindowType_No)
       return WNAV__CMDMODE;
@@ -817,7 +817,7 @@ static int wnav_set_func(void* client_data, void* client_flag)
       wnav->gbl.show_descrip = 1;
       wnav->ldh_refresh(pwr_cNObjid);
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "NOSHOWDESCRIPTION", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "NOSHOWDESCRIPTION", strlen(arg1_str))
       == 0) {
     if (wnav->window_type == wnav_eWindowType_No)
       return WNAV__CMDMODE;
@@ -829,7 +829,7 @@ static int wnav_set_func(void* client_data, void* client_flag)
       wnav->gbl.show_descrip = 0;
       wnav->ldh_refresh(pwr_cNObjid);
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "SHOWOBJREF", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "SHOWOBJREF", strlen(arg1_str)) == 0) {
     if (wnav->window_type == wnav_eWindowType_No)
       return WNAV__CMDMODE;
 
@@ -840,7 +840,7 @@ static int wnav_set_func(void* client_data, void* client_flag)
       wnav->gbl.show_objref = 1;
       wnav->ldh_refresh(pwr_cNObjid);
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "NOSHOWOBJREF", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "NOSHOWOBJREF", strlen(arg1_str))
       == 0) {
     if (wnav->window_type == wnav_eWindowType_No)
       return WNAV__CMDMODE;
@@ -852,7 +852,7 @@ static int wnav_set_func(void* client_data, void* client_flag)
       wnav->gbl.show_objref = 0;
       wnav->ldh_refresh(pwr_cNObjid);
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "SHOWOBJXREF", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "SHOWOBJXREF", strlen(arg1_str))
       == 0) {
     if (wnav->window_type == wnav_eWindowType_No)
       return WNAV__CMDMODE;
@@ -864,7 +864,7 @@ static int wnav_set_func(void* client_data, void* client_flag)
       wnav->gbl.show_objxref = 1;
       wnav->ldh_refresh(pwr_cNObjid);
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "NOSHOWOBJXREF", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "NOSHOWOBJXREF", strlen(arg1_str))
       == 0) {
     if (wnav->window_type == wnav_eWindowType_No)
       return WNAV__CMDMODE;
@@ -876,7 +876,7 @@ static int wnav_set_func(void* client_data, void* client_flag)
       wnav->gbl.show_objxref = 0;
       wnav->ldh_refresh(pwr_cNObjid);
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "SHOWATTRREF", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "SHOWATTRREF", strlen(arg1_str))
       == 0) {
     if (wnav->window_type == wnav_eWindowType_No)
       return WNAV__CMDMODE;
@@ -888,7 +888,7 @@ static int wnav_set_func(void* client_data, void* client_flag)
       wnav->gbl.show_attrref = 1;
       wnav->ldh_refresh(pwr_cNObjid);
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "NOSHOWATTRREF", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "NOSHOWATTRREF", strlen(arg1_str))
       == 0) {
     if (wnav->window_type == wnav_eWindowType_No)
       return WNAV__CMDMODE;
@@ -900,7 +900,7 @@ static int wnav_set_func(void* client_data, void* client_flag)
       wnav->gbl.show_attrref = 0;
       wnav->ldh_refresh(pwr_cNObjid);
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "SHOWATTRXREF", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "SHOWATTRXREF", strlen(arg1_str))
       == 0) {
     if (wnav->window_type == wnav_eWindowType_No)
       return WNAV__CMDMODE;
@@ -912,7 +912,7 @@ static int wnav_set_func(void* client_data, void* client_flag)
       wnav->gbl.show_attrxref = 1;
       wnav->ldh_refresh(pwr_cNObjid);
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "NOSHOWATTRXREF", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "NOSHOWATTRXREF", strlen(arg1_str))
       == 0) {
     if (wnav->window_type == wnav_eWindowType_No)
       return WNAV__CMDMODE;
@@ -924,7 +924,7 @@ static int wnav_set_func(void* client_data, void* client_flag)
       wnav->gbl.show_attrxref = 0;
       wnav->ldh_refresh(pwr_cNObjid);
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "SHOWTRUEDB", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "SHOWTRUEDB", strlen(arg1_str)) == 0) {
     if (wnav->window_type == wnav_eWindowType_No)
       return WNAV__CMDMODE;
 
@@ -935,7 +935,7 @@ static int wnav_set_func(void* client_data, void* client_flag)
       wnav->gbl.show_truedb = 1;
       wnav->ldh_refresh(pwr_cNObjid);
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "NOSHOWTRUEDB", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "NOSHOWTRUEDB", strlen(arg1_str))
       == 0) {
     if (wnav->window_type == wnav_eWindowType_No)
       return WNAV__CMDMODE;
@@ -947,114 +947,114 @@ static int wnav_set_func(void* client_data, void* client_flag)
       wnav->gbl.show_truedb = 0;
       wnav->ldh_refresh(pwr_cNObjid);
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "BUILDFORCE", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "BUILDFORCE", strlen(arg1_str)) == 0) {
     if (EVEN(dcli_get_qualifier("/LOCAL", 0, 0)))
       (wnav->gbl_command_cb)(wnav->parent_ctx, "SET BUILDFORCE");
     else
       wnav->gbl.build.force = 1;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "NOBUILDFORCE", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "NOBUILDFORCE", strlen(arg1_str))
       == 0) {
     if (EVEN(dcli_get_qualifier("/LOCAL", 0, 0)))
       (wnav->gbl_command_cb)(wnav->parent_ctx, "SET NOBUILDFORCE");
     else
       wnav->gbl.build.force = 0;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "BUILDDEBUG", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "BUILDDEBUG", strlen(arg1_str)) == 0) {
     if (EVEN(dcli_get_qualifier("/LOCAL", 0, 0)))
       (wnav->gbl_command_cb)(wnav->parent_ctx, "SET BUILDDEBUG");
     else
       wnav->gbl.build.debug = 1;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "NOBUILDDEBUG", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "NOBUILDDEBUG", strlen(arg1_str))
       == 0) {
     if (EVEN(dcli_get_qualifier("/LOCAL", 0, 0)))
       (wnav->gbl_command_cb)(wnav->parent_ctx, "SET NOBUILDDEBUG");
     else
       wnav->gbl.build.debug = 0;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "BUILDCROSSREF", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "BUILDCROSSREF", strlen(arg1_str))
       == 0) {
     if (EVEN(dcli_get_qualifier("/LOCAL", 0, 0)))
       (wnav->gbl_command_cb)(wnav->parent_ctx, "SET BUILDCROSSREF");
     else
       wnav->gbl.build.crossref = 1;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "NOBUILDCROSSREF", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "NOBUILDCROSSREF", strlen(arg1_str))
       == 0) {
     if (EVEN(dcli_get_qualifier("/LOCAL", 0, 0)))
       (wnav->gbl_command_cb)(wnav->parent_ctx, "SET NOBUILDCROSSREF");
     else
       wnav->gbl.build.crossref = 0;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "BUILDCROSSREFSIM", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "BUILDCROSSREFSIM", strlen(arg1_str))
       == 0) {
     if (EVEN(dcli_get_qualifier("/LOCAL", 0, 0)))
       (wnav->gbl_command_cb)(wnav->parent_ctx, "SET BUILDCROSSREFSIM");
     else
       wnav->gbl.build.crossref_sim = 1;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "NOBUILDCROSSREFSIM", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "NOBUILDCROSSREFSIM", strlen(arg1_str))
       == 0) {
     if (EVEN(dcli_get_qualifier("/LOCAL", 0, 0)))
       (wnav->gbl_command_cb)(wnav->parent_ctx, "SET NOBUILDCROSSREFSIM");
     else
       wnav->gbl.build.crossref_sim = 0;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "BUILDCROSSREFGRAPH", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "BUILDCROSSREFGRAPH", strlen(arg1_str))
       == 0) {
     if (EVEN(dcli_get_qualifier("/LOCAL", 0, 0)))
       (wnav->gbl_command_cb)(wnav->parent_ctx, "SET BUILDCROSSREFGRAPH");
     else
       wnav->gbl.build.crossref_graph = 1;
-  } else if (cdh_NoCaseStrncmp(
+  } else if (str_NoCaseStrncmp(
                  arg1_str, "NOBUILDCROSSREFGRAPH", strlen(arg1_str))
       == 0) {
     if (EVEN(dcli_get_qualifier("/LOCAL", 0, 0)))
       (wnav->gbl_command_cb)(wnav->parent_ctx, "SET NOBUILDCROSSREFGRAPH");
     else
       wnav->gbl.build.crossref_graph = 0;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "BUILDMANUAL", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "BUILDMANUAL", strlen(arg1_str))
       == 0) {
     if (EVEN(dcli_get_qualifier("/LOCAL", 0, 0)))
       (wnav->gbl_command_cb)(wnav->parent_ctx, "SET BUILDMANUAL");
     else
       wnav->gbl.build.manual = 1;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "NOBUILDMANUAL", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "NOBUILDMANUAL", strlen(arg1_str))
       == 0) {
     if (EVEN(dcli_get_qualifier("/LOCAL", 0, 0)))
       (wnav->gbl_command_cb)(wnav->parent_ctx, "SET NOBUILDMANUAL");
     else
       wnav->gbl.build.manual = 0;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "BUILDNOCOPY", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "BUILDNOCOPY", strlen(arg1_str))
       == 0) {
     if (EVEN(dcli_get_qualifier("/LOCAL", 0, 0)))
       (wnav->gbl_command_cb)(wnav->parent_ctx, "SET BUILDNOCOPY");
     else
       wnav->gbl.build.nocopy = 1;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "NOBUILDNOCOPY", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "NOBUILDNOCOPY", strlen(arg1_str))
       == 0) {
     if (EVEN(dcli_get_qualifier("/LOCAL", 0, 0)))
       (wnav->gbl_command_cb)(wnav->parent_ctx, "SET NOBUILDNOCOPY");
     else
       wnav->gbl.build.nocopy = 0;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "ENABLECOMMENT", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "ENABLECOMMENT", strlen(arg1_str))
       == 0) {
     if (EVEN(dcli_get_qualifier("/LOCAL", 0, 0)))
       (wnav->gbl_command_cb)(wnav->parent_ctx, "SET ENABLECOMMENT");
     else
       wnav->gbl.enable_comment = 1;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "NOENABLECOMMENT", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "NOENABLECOMMENT", strlen(arg1_str))
       == 0) {
     if (EVEN(dcli_get_qualifier("/LOCAL", 0, 0)))
       (wnav->gbl_command_cb)(wnav->parent_ctx, "SET NOENABLECOMMENT");
     else
       wnav->gbl.enable_comment = 0;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "ENABLEREVISIONS", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "ENABLEREVISIONS", strlen(arg1_str))
       == 0) {
     if (EVEN(dcli_get_qualifier("/LOCAL", 0, 0)))
       (wnav->gbl_command_cb)(wnav->parent_ctx, "SET ENABLEREVISIONS");
     else
       wnav->gbl.enable_revisions = 1;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "NOENABLEREVISIONS", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "NOENABLEREVISIONS", strlen(arg1_str))
       == 0) {
     if (EVEN(dcli_get_qualifier("/LOCAL", 0, 0)))
       (wnav->gbl_command_cb)(wnav->parent_ctx, "SET NOENABLEREVISIONS");
     else
       wnav->gbl.enable_revisions = 0;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "VERIFY", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "VERIFY", strlen(arg1_str)) == 0) {
     if (wnav->window_type == wnav_eWindowType_No) {
       wnav->gbl.verify = 1;
       return WNAV__SUCCESS;
@@ -1065,7 +1065,7 @@ static int wnav_set_func(void* client_data, void* client_flag)
       (wnav->gbl_command_cb)(wnav->parent_ctx, "SET VERIFY");
     else
       wnav->gbl.verify = 1;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "NOVERIFY", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "NOVERIFY", strlen(arg1_str)) == 0) {
     if (wnav->window_type == wnav_eWindowType_No) {
       wnav->gbl.verify = 0;
       return WNAV__SUCCESS;
@@ -1076,7 +1076,7 @@ static int wnav_set_func(void* client_data, void* client_flag)
       (wnav->gbl_command_cb)(wnav->parent_ctx, "SET NOVERIFY");
     else
       wnav->gbl.verify = 0;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "REFRESH", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "REFRESH", strlen(arg1_str)) == 0) {
     if (wnav->window_type == wnav_eWindowType_No)
       return WNAV__CMDMODE;
 
@@ -1085,7 +1085,7 @@ static int wnav_set_func(void* client_data, void* client_flag)
       (wnav->gbl_command_cb)(wnav->parent_ctx, "SET REFRESH");
     else
       wnav->ldh_refresh(pwr_cNObjid);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "SYMBOLFILE", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "SYMBOLFILE", strlen(arg1_str)) == 0) {
     pwr_tFileName filename_str;
     pwr_tCmd cmd;
 
@@ -1106,12 +1106,12 @@ static int wnav_set_func(void* client_data, void* client_flag)
       (wnav->gbl_command_cb)(wnav->parent_ctx, cmd);
     } else
       strcpy(wnav->gbl.symbolfilename, filename_str);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "INPUTFOCUS", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "INPUTFOCUS", strlen(arg1_str)) == 0) {
     if (wnav->window_type == wnav_eWindowType_No)
       return WNAV__CMDMODE;
 
     arg2_sts = dcli_get_qualifier("dcli_arg2", arg2_str, sizeof(arg2_str));
-    if (cdh_NoCaseStrncmp(arg2_str, "W1", strlen(arg2_str)) == 0) {
+    if (str_NoCaseStrncmp(arg2_str, "W1", strlen(arg2_str)) == 0) {
       if (EVEN(dcli_get_qualifier("/LOCAL", 0, 0))) {
         // Global command to all windows
         (wnav->gbl_command_cb)(wnav->parent_ctx, "SET INPUTFOCUS W1");
@@ -1120,7 +1120,7 @@ static int wnav_set_func(void* client_data, void* client_flag)
           if (wnav->set_focus_cb)
             (wnav->set_focus_cb)(wnav->parent_ctx, wnav);
       }
-    } else if (cdh_NoCaseStrncmp(arg2_str, "W2", strlen(arg2_str)) == 0) {
+    } else if (str_NoCaseStrncmp(arg2_str, "W2", strlen(arg2_str)) == 0) {
       if (EVEN(dcli_get_qualifier("/LOCAL", 0, 0))) {
         // Global command to all windows
         (wnav->gbl_command_cb)(wnav->parent_ctx, "SET INPUTFOCUS W2");
@@ -1130,7 +1130,7 @@ static int wnav_set_func(void* client_data, void* client_flag)
             (wnav->set_focus_cb)(wnav->parent_ctx, wnav);
       }
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "WINDOW", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "WINDOW", strlen(arg1_str)) == 0) {
     int width = 0;
     int height = 0;
     int nr;
@@ -1156,7 +1156,7 @@ static int wnav_set_func(void* client_data, void* client_flag)
 
     if (wnav->set_window_char_cb)
       (wnav->set_window_char_cb)(wnav->parent_ctx, width, height);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "ATTRIBUTE", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "ATTRIBUTE", strlen(arg1_str)) == 0) {
     char file[80];
     int termflg;
     pwr_tOName parameterstr;
@@ -1229,7 +1229,7 @@ static int wnav_set_func(void* client_data, void* client_flag)
       wnav->message('E', "Qualifier required");
       return WNAV__QUAL;
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "TEMPLATE", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "TEMPLATE", strlen(arg1_str)) == 0) {
     char str[80];
     int signalobjectsegments;
     int sigchanconsegments;
@@ -1284,7 +1284,7 @@ static int wnav_set_func(void* client_data, void* client_flag)
     if (EVEN(sts))
       wnav->message(' ', wnav_get_message(sts));
     return sts;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "VOLUME", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "VOLUME", strlen(arg1_str)) == 0) {
     pwr_tVolumeId volid;
     char volumename[80];
     int sts;
@@ -1341,9 +1341,9 @@ static int wnav_set_func(void* client_data, void* client_flag)
     if (EVEN(sts))
       wnav->message(' ', wnav_get_message(sts));
     return sts;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "DB", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "DB", strlen(arg1_str)) == 0) {
     wnav->message('E', "command \"set db\" is obsolete");
-  } else if (cdh_NoCaseStrncmp(arg1_str, "SUBWINDOW", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "SUBWINDOW", strlen(arg1_str)) == 0) {
     char filenamestr[80];
     char sourcestr[80];
     char objectstr[80];
@@ -1369,8 +1369,8 @@ static int wnav_set_func(void* client_data, void* client_flag)
       wnav->message('E', "Syntax error");
       return WNAV__SYNTAX;
     }
-    cdh_ToLower(filenamestr, filenamestr);
-    cdh_ToLower(sourcestr, sourcestr);
+    str_ToLower(filenamestr, filenamestr);
+    str_ToLower(sourcestr, sourcestr);
 
     if (wnav->window_type == wnav_eWindowType_No)
       return WNAV__CMDMODE;
@@ -1400,7 +1400,7 @@ static int wnav_show_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (cdh_NoCaseStrncmp(arg1_str, "VERSION", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "VERSION", strlen(arg1_str)) == 0) {
     // Command is "SHOW VERSION"
     char message_str[80];
 
@@ -1408,14 +1408,14 @@ static int wnav_show_func(void* client_data, void* client_flag)
     strcat(message_str, wtt_version);
     wnav->message('I', message_str);
     return WNAV__SUCCESS;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "LICENSE", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "LICENSE", strlen(arg1_str)) == 0) {
     // Command is "SHOW LICENSE"
     if (wnav->window_type == wnav_eWindowType_No)
       system("cat $pwr_exe/en_us/license.txt");
     else
       wnav->wow->DisplayLicense();
     return WNAV__SUCCESS;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "SYMBOL", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "SYMBOL", strlen(arg1_str)) == 0) {
     /* Command is "SHOW SYMBOL" */
     char arg2_str[80];
     char message_str[400];
@@ -1438,7 +1438,7 @@ static int wnav_show_func(void* client_data, void* client_flag)
       wnav->message('I', message_str);
       return WNAV__SUCCESS;
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "VOLUMES", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "VOLUMES", strlen(arg1_str)) == 0) {
     /* Command is "SHOW VOLUMES" */
     sts = wnav_wccm_get_ldhsession_cb(wnav, &wnav->ldhses);
     if (EVEN(sts))
@@ -1454,14 +1454,14 @@ static int wnav_show_func(void* client_data, void* client_flag)
     } else
       wnav->show_database();
     return 1;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "DEFAULT", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "DEFAULT", strlen(arg1_str)) == 0) {
     /* Command is "SHOW DEFAULT" */
     char message_str[80];
 
     sprintf(message_str, "Default directory: %s", wnav->gbl.default_directory);
     wnav->message('I', message_str);
     return WNAV__SUCCESS;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "USER", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "USER", strlen(arg1_str)) == 0) {
     char msg[120];
     char priv_str[80];
 
@@ -1472,7 +1472,7 @@ static int wnav_show_func(void* client_data, void* client_flag)
       sprintf(msg, "User %s (%s)", CoLogin::username(), priv_str);
       wnav->message('I', msg);
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "CHILDREN", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "CHILDREN", strlen(arg1_str)) == 0) {
     // Command is "SHOW CHILDREN"
     pwr_tOName name_str;
     pwr_tObjid objid;
@@ -1534,7 +1534,7 @@ static int wnav_show_func(void* client_data, void* client_flag)
     brow_CenterObject(wnav->brow->ctx, item->node, 0.0);
     wnav->last_selected = item->node;
     return WNAV__SUCCESS;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "OBJECTS", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "OBJECTS", strlen(arg1_str)) == 0) {
     char objid_str[80];
     char file[80];
     int termflg;
@@ -1631,7 +1631,7 @@ static int wnav_show_func(void* client_data, void* client_flag)
         return WNAV__QUAL;
       }
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "OBJID", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "OBJID", strlen(arg1_str)) == 0) {
     // Command is "SHOW OBJID"
     pwr_tOName name_str;
     pwr_tObjid objid;
@@ -1665,7 +1665,7 @@ static int wnav_show_func(void* client_data, void* client_flag)
     sprintf(msg, "Objid %s, Name %s", cdh_ObjidToString(objid, 0), name_str);
     wnav->message('I', msg);
     return WNAV__SUCCESS;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "MODULES", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "MODULES", strlen(arg1_str)) == 0) {
     // command is "show modules"
     pwr_tOName namestr;
     pwr_tOName hierstr;
@@ -1714,7 +1714,7 @@ static int wnav_show_func(void* client_data, void* client_flag)
       wnav->message(' ', wnav_get_message(sts));
       return sts;
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "SCRIPT", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "SCRIPT", strlen(arg1_str)) == 0) {
     // Command is "SHOW SCRIPT"
     char arg2_str[80];
     char title[80];
@@ -1735,15 +1735,15 @@ static int wnav_show_func(void* client_data, void* client_flag)
       int nr = dcli_parse(option_str, ",", "", (char*)ovect,
           sizeof(ovect) / sizeof(ovect[0]), sizeof(ovect[0]), 0);
       for (int i = 0; i < nr; i++) {
-        if (cdh_NoCaseStrcmp(ovect[i], "HIDE_DIR") == 0)
+        if (str_NoCaseStrcmp(ovect[i], "HIDE_DIR") == 0)
           hide_dir = 1;
-        else if (cdh_NoCaseStrcmp(ovect[i], "PROJECT") == 0) {
+        else if (str_NoCaseStrcmp(ovect[i], "PROJECT") == 0) {
           dcli_translate_filename(filename, "pwrp_login:*.pwr_com");
           sts = wnav->show_file(filename, "Project scripts", 1);
           if (EVEN(sts))
             wnav->message('E', "No files found");
           return sts;
-        } else if (cdh_NoCaseStrcmp(ovect[i], "BASE") == 0) {
+        } else if (str_NoCaseStrcmp(ovect[i], "BASE") == 0) {
           dcli_translate_filename(filename, "pwr_exe:*.pwr_com");
           sts = wnav->show_file(filename, "Base scripts", 1);
           if (EVEN(sts))
@@ -1758,10 +1758,10 @@ static int wnav_show_func(void* client_data, void* client_flag)
       return sts;
     }
     return sts;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "METHODS", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "METHODS", strlen(arg1_str)) == 0) {
     // Command is "SHOW METHODS"
     wb_erep::printMethods();
-  } else if (cdh_NoCaseStrncmp(arg1_str, "NEXT_FREE_USER_VID", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "NEXT_FREE_USER_VID", strlen(arg1_str))
       == 0) {
     // Command is "SHOW NEXT_FREE_USER_VID"
     pwr_tVid next_vid;
@@ -1777,7 +1777,7 @@ static int wnav_show_func(void* client_data, void* client_flag)
           cdh_VolumeIdToString(0, 0, next_vid, 0, 0));
       wnav->message('I', msg);
     }
-  } else if (cdh_NoCaseStrncmp(
+  } else if (str_NoCaseStrncmp(
                  arg1_str, "NEXT_FREE_USERCLASS_VID", strlen(arg1_str))
       == 0) {
     // Command is "SHOW NEXT_FREE_CLASSUSER_VID"
@@ -2220,10 +2220,10 @@ static int wnav_generate_func(void* client_data, void* client_flag)
     return WNAV__SYNTAX;
   }
 
-  if (cdh_NoCaseStrncmp(arg1_str, "WEB", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "WEB", strlen(arg1_str)) == 0) {
     wnav->message('E', "Generate web is obsolete");
     return WNAV__SUCCESS;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "HISTORY", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "HISTORY", strlen(arg1_str)) == 0) {
     pwr_tFileName filestr;
     pwr_tStatus sts;
 
@@ -2271,7 +2271,7 @@ static int wnav_list_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (cdh_NoCaseStrncmp(arg1_str, "DESCRIPTOR", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "DESCRIPTOR", strlen(arg1_str)) == 0) {
     char descstr[80];
 
     // command is "LIST DESCRIPTOR"
@@ -2320,7 +2320,7 @@ static int wnav_list_func(void* client_data, void* client_flag)
         return sts;
       }
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "SIGNALS", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "SIGNALS", strlen(arg1_str)) == 0) {
     int shortname;
 
     // command is "LIST SIGNALS"
@@ -2397,7 +2397,7 @@ static int wnav_list_func(void* client_data, void* client_flag)
         }
       }
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "CHANNELS", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "CHANNELS", strlen(arg1_str)) == 0) {
     // command is "LIST CHANNELS"
 
     if (ODD(dcli_get_qualifier("/OUTPUT", file, sizeof(file))))
@@ -2449,7 +2449,7 @@ static int wnav_list_func(void* client_data, void* client_flag)
         return sts;
       }
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "HIERARCHY", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "HIERARCHY", strlen(arg1_str)) == 0) {
     // command is "LIST HIERARCHY"
 
     if (ODD(dcli_get_qualifier("/OUTPUT", file, sizeof(file))))
@@ -2520,7 +2520,7 @@ static int wnav_list_func(void* client_data, void* client_flag)
         return sts;
       }
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "PLCPGM", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "PLCPGM", strlen(arg1_str)) == 0) {
     // command is "LIST PLCPGM"
 
     if (ODD(dcli_get_qualifier("/OUTPUT", file, sizeof(file))))
@@ -2572,7 +2572,7 @@ static int wnav_list_func(void* client_data, void* client_flag)
         return sts;
       }
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "RTTLISTS", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "RTTLISTS", strlen(arg1_str)) == 0) {
     ldh_sVolumeInfo info;
 
     // command is "LIST RTTLISTS"
@@ -2710,7 +2710,7 @@ static int wnav_configure_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (cdh_NoCaseStrncmp(arg1_str, "CARD", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "CARD", strlen(arg1_str)) == 0) {
     char rack[80];
     char cardname[80];
     char cardclass[80];
@@ -2881,7 +2881,7 @@ static int wnav_copy_func(void* client_data, void* client_flag)
       wnav->message(' ', wnav_get_message(sts));
       return sts;
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "OBJECT", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "OBJECT", strlen(arg1_str)) == 0) {
     pwr_tOName sourcestr;
     pwr_tOName destinationstr;
     pwr_tObjName namestr;
@@ -3075,7 +3075,7 @@ static int wnav_rename_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (cdh_NoCaseStrncmp(arg1_str, "OBJECT", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "OBJECT", strlen(arg1_str)) == 0) {
     pwr_tOName sourcestr;
     pwr_tObjName namestr;
     pwr_tStatus sts;
@@ -3118,7 +3118,7 @@ static int wnav_move_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (cdh_NoCaseStrncmp(arg1_str, "OBJECT", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "OBJECT", strlen(arg1_str)) == 0) {
     pwr_tOName sourcestr;
     pwr_tOName destinationstr;
     pwr_tObjName renamestr;
@@ -3186,14 +3186,14 @@ static int wnav_open_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (cdh_NoCaseStrncmp(arg1_str, "BUFFERS", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "BUFFERS", strlen(arg1_str)) == 0) {
     if (wnav->window_type == wnav_eWindowType_No)
       return WNAV__CMDMODE;
 
     if (wnav->open_vsel_cb)
       (wnav->open_vsel_cb)(
           wnav->parent_ctx, wb_eType_Buffer, NULL, wow_eFileSelType_All);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "DATABASE", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "DATABASE", strlen(arg1_str)) == 0) {
     char volumestr[80];
     pwr_tFileName filename;
     pwr_tCmd cmd;
@@ -3213,14 +3213,14 @@ static int wnav_open_func(void* client_data, void* client_flag)
       wnav->message('E', "Error when creating process");
       return sts;
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "CLASSEDITOR", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "CLASSEDITOR", strlen(arg1_str))
       == 0) {
     pwr_tFileName filenamestr;
 
     // Command is "OPEN CLASSEDITOR"
 
     if (ODD(dcli_get_qualifier("/FILE", filenamestr, sizeof(filenamestr)))) {
-      // cdh_ToLower( filenamestr, filenamestr);
+      // str_ToLower( filenamestr, filenamestr);
     } else {
       wnav->message('E', "File is missing");
       return WNAV__SYNTAX;
@@ -3232,7 +3232,7 @@ static int wnav_open_func(void* client_data, void* client_flag)
     if (wnav->open_vsel_cb)
       (wnav->open_vsel_cb)(wnav->parent_ctx, wb_eType_ClassEditor, filenamestr,
           wow_eFileSelType_WblClass);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "GRAPH", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "GRAPH", strlen(arg1_str)) == 0) {
     pwr_tFileName filenamestr;
     char titlestr[80];
     pwr_tAName instancestr;
@@ -3251,7 +3251,7 @@ static int wnav_open_func(void* client_data, void* client_flag)
         return WNAV__SYNTAX;
       }
     }
-    // cdh_ToLower( filenamestr, filenamestr);
+    // str_ToLower( filenamestr, filenamestr);
 
     if (ODD(dcli_get_qualifier("/INSTANCE", instancestr, sizeof(instancestr))))
       instance_p = instancestr;
@@ -3281,7 +3281,7 @@ static int wnav_open_func(void* client_data, void* client_flag)
     } else {
       wge->close_cb = wnav_wge_close_cb;
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "HISTORY", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "HISTORY", strlen(arg1_str)) == 0) {
     char categoriesstr[80];
     pwr_tAName itemstr;
     char* itemp = itemstr;
@@ -3319,7 +3319,7 @@ static int wnav_open_func(void* client_data, void* client_flag)
     }
 
     wnav->logw_new(itemp, catp, showitem);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "ATTRIBUTE", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "ATTRIBUTE", strlen(arg1_str)) == 0) {
     pwr_tAName namestr;
     pwr_tAttrRef aref;
     pwr_tStatus sts;
@@ -3345,7 +3345,7 @@ static int wnav_open_func(void* client_data, void* client_flag)
       delete watttext;
       return WNAV__SUCCESS;
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "REVISIONS", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "REVISIONS", strlen(arg1_str)) == 0) {
     // Command is "OPEN REVISIONS"
 
     if (wnav->rev)
@@ -3370,7 +3370,7 @@ static int wnav_close_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (cdh_NoCaseStrncmp(arg1_str, "GRAPH", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "GRAPH", strlen(arg1_str)) == 0) {
     pwr_tFileName filenamestr;
     pwr_tOName instancestr;
     WGe* wge;
@@ -3384,7 +3384,7 @@ static int wnav_close_func(void* client_data, void* client_flag)
         return WNAV__SYNTAX;
       }
     }
-    // cdh_ToLower( filenamestr, filenamestr);
+    // str_ToLower( filenamestr, filenamestr);
     if (ODD(dcli_get_qualifier(
             "/INSTANCE", instancestr, sizeof(instancestr)))) {
     }
@@ -3413,7 +3413,7 @@ static int wnav_create_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (cdh_NoCaseStrncmp(arg1_str, "ITEM", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "ITEM", strlen(arg1_str)) == 0) {
     char text_str[80];
     char destination_str[80];
     char command_str[80];
@@ -3460,7 +3460,7 @@ static int wnav_create_func(void* client_data, void* client_flag)
       wnav->message('E', "Destination not found");
 
     return sts;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "STRUCTFILES", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "STRUCTFILES", strlen(arg1_str))
       == 0) {
     pwr_tFileName filenamestr;
     pwr_tStatus sts;
@@ -3474,7 +3474,7 @@ static int wnav_create_func(void* client_data, void* client_flag)
     }
 
     if (ODD(dcli_get_qualifier("/FILES", filenamestr, sizeof(filenamestr)))) {
-      // cdh_ToLower( filenamestr, filenamestr);
+      // str_ToLower( filenamestr, filenamestr);
     } else
       // userclasses.wb_load is default filename
       strcpy(filenamestr, "$pwrp_db/userclasses.wb_load");
@@ -3516,7 +3516,7 @@ static int wnav_create_func(void* client_data, void* client_flag)
     }
 
     return WNAV__SUCCESS;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "LOADFILES", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "LOADFILES", strlen(arg1_str)) == 0) {
     char volumestr[160];
     char* volumestr_p;
     pwr_tStatus sts;
@@ -3544,7 +3544,7 @@ static int wnav_create_func(void* client_data, void* client_flag)
     if (EVEN(sts))
       wnav->message(' ', wnav_get_message(sts));
     return sts;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "BOOTFILES", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "BOOTFILES", strlen(arg1_str)) == 0) {
     int debug;
     char nodestr[160];
     char* nodestr_p;
@@ -3567,7 +3567,7 @@ static int wnav_create_func(void* client_data, void* client_flag)
     if (EVEN(sts))
       wnav->message(' ', wnav_get_message(sts));
     return sts;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "OBJECT", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "OBJECT", strlen(arg1_str)) == 0) {
     pwr_tOName namestr;
     pwr_tObjName classtr;
     pwr_tOName destinationstr;
@@ -3609,7 +3609,7 @@ static int wnav_create_func(void* client_data, void* client_flag)
       wnav->message(' ', wnav_get_message(sts));
     return sts;
 
-  } else if (cdh_NoCaseStrncmp(arg1_str, "VOLUME", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "VOLUME", strlen(arg1_str)) == 0) {
     pwr_tObjName namestr;
     pwr_tObjName classtr;
     pwr_tString40 serverstr;
@@ -3624,9 +3624,9 @@ static int wnav_create_func(void* client_data, void* client_flag)
 
     if (ODD(dcli_get_qualifier(
             "/DATABASE", databasestr, sizeof(databasestr)))) {
-      if (cdh_NoCaseStrcmp(databasestr, "BERKELEYDB") == 0)
+      if (str_NoCaseStrcmp(databasestr, "BERKELEYDB") == 0)
         volrep = ldh_eVolRep_Db;
-      else if (cdh_NoCaseStrcmp(databasestr, "MYSQL") == 0)
+      else if (str_NoCaseStrcmp(databasestr, "MYSQL") == 0)
         volrep = ldh_eVolRep_Dbms;
       else {
         wnav->message('E', "Syntax error in database");
@@ -3693,12 +3693,12 @@ static int wnav_create_func(void* client_data, void* client_flag)
     if (EVEN(sts))
       wnav->message(' ', wnav_get_message(sts));
     return sts;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "RTTFILES", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "RTTFILES", strlen(arg1_str)) == 0) {
     char cmd[80] = "CREATE CROSSREFERENCEFILES";
     sts = wnav->command(cmd);
     if (EVEN(sts))
       return sts;
-  } else if (cdh_NoCaseStrncmp(
+  } else if (str_NoCaseStrncmp(
                  arg1_str, "CROSSREFERENCEFILES", strlen(arg1_str))
       == 0) {
     pwr_tStatus sts;
@@ -3714,7 +3714,7 @@ static int wnav_create_func(void* client_data, void* client_flag)
     crrgen.load(&sts, simulate, graph);
     crrgen.write(&sts);
     crrgen.write_code(&sts);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "SNAPSHOT", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "SNAPSHOT", strlen(arg1_str)) == 0) {
     pwr_tFileName filestr;
     pwr_tFileName outstr;
     pwr_tFileName dependencystr;
@@ -3791,7 +3791,7 @@ static int wnav_create_func(void* client_data, void* client_flag)
     if (EVEN(sts))
       wnav->message(' ', wnav_get_message(sts));
     return sts;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "REVISION", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "REVISION", strlen(arg1_str)) == 0) {
     // Command is "CREATE REVISION"
     int all;
     char namestr[80];
@@ -3816,7 +3816,7 @@ static int wnav_create_func(void* client_data, void* client_flag)
       wnav->message(' ', wnav_get_message(sts));
 
     return sts;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "FLOWFILES", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "FLOWFILES", strlen(arg1_str)) == 0) {
     char plcpgm_str[120];
     char hier_str[120];
     char from_str[120];
@@ -3950,7 +3950,7 @@ static int wnav_new_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (cdh_NoCaseStrncmp(arg1_str, "BUFFER", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "BUFFER", strlen(arg1_str)) == 0) {
     char name_str[80];
     char* name_ptr = 0;
 
@@ -3998,7 +3998,7 @@ static int wnav_delete_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (cdh_NoCaseStrncmp(arg1_str, "ITEM", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "ITEM", strlen(arg1_str)) == 0) {
     char name_str[80];
 
     // Command is "DELETE ITEM"
@@ -4017,7 +4017,7 @@ static int wnav_delete_func(void* client_data, void* client_flag)
       wnav->message('E', "WItem not found");
 
     return sts;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "OBJECT", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "OBJECT", strlen(arg1_str)) == 0) {
     pwr_tOName namestr;
     pwr_tObjName classtr;
     pwr_tOName hierstr;
@@ -4057,7 +4057,7 @@ static int wnav_delete_func(void* client_data, void* client_flag)
     if (EVEN(sts))
       wnav->message(' ', wnav_get_message(sts));
     return sts;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "TREE", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "TREE", strlen(arg1_str)) == 0) {
     pwr_tOName namestr;
     char* namestr_ptr;
     int confirm;
@@ -4084,7 +4084,7 @@ static int wnav_delete_func(void* client_data, void* client_flag)
     if (EVEN(sts))
       wnav->message(' ', wnav_get_message(sts));
     return sts;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "VOLUME", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "VOLUME", strlen(arg1_str)) == 0) {
     pwr_tObjName namestr;
     char* namestr_ptr;
     int confirm;
@@ -4179,7 +4179,7 @@ static int wnav_wb_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (cdh_NoCaseStrncmp(arg1_str, "DUMP", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "DUMP", strlen(arg1_str)) == 0) {
     char hierarchystr[80];
     char outputstr[200];
     char* hierarchystr_p;
@@ -4210,7 +4210,7 @@ static int wnav_wb_func(void* client_data, void* client_flag)
     if (EVEN(sts))
       wnav->message(' ', wnav_get_message(sts));
     return sts;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "LOAD", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "LOAD", strlen(arg1_str)) == 0) {
     pwr_tStatus sts;
     char loadfilestr[80];
     int noindex;
@@ -4319,7 +4319,7 @@ static int wnav_revision_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (cdh_NoCaseStrncmp(arg1_str, "RESTORE", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "RESTORE", strlen(arg1_str)) == 0) {
     // Command is "REVISION RESTORE"
     char namestr[80];
     pwr_tStatus sts;
@@ -4337,7 +4337,7 @@ static int wnav_revision_func(void* client_data, void* client_flag)
       wnav->message(' ', wnav_get_message(sts));
 
     return WNAV__SUCCESS;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "LIST", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "LIST", strlen(arg1_str)) == 0) {
     // Command is "REVISION LIST"
     wb_revision rev(wnav, (wb_session*)wnav->ldhses);
     rev.list();
@@ -4576,7 +4576,7 @@ static int wnav_release_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (cdh_NoCaseStrncmp(arg1_str, "SUBWINDOW", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "SUBWINDOW", strlen(arg1_str)) == 0) {
     WGe* wge;
     char filenamestr[80];
 
@@ -4585,7 +4585,7 @@ static int wnav_release_func(void* client_data, void* client_flag)
       wnav->message('E', "Syntax error");
       return WNAV__SYNTAX;
     }
-    // cdh_ToLower( filenamestr, filenamestr);
+    // str_ToLower( filenamestr, filenamestr);
 
     if (wnav->window_type == wnav_eWindowType_No)
       return WNAV__CMDMODE;
@@ -4619,7 +4619,7 @@ static int wnav_build_func(void* client_data, void* client_flag)
     strcpy(arg1_str, "OBJECT");
   }
 
-  if (cdh_NoCaseStrncmp(arg1_str, "NODE", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "NODE", strlen(arg1_str)) == 0) {
     char namestr[80];
     void* volumelist;
     int volumecount;
@@ -4645,7 +4645,7 @@ static int wnav_build_func(void* client_data, void* client_flag)
     found = 0;
     vp = (lfu_t_volumelist*)volumelist;
     for (int i = 0; i < volumecount; i++) {
-      if (cdh_NoCaseStrcmp(vp[i].p1, namestr) == 0) {
+      if (str_NoCaseStrcmp(vp[i].p1, namestr) == 0) {
         found = 1;
         node_type = atoi(vp[i].p6);
         break;
@@ -4668,7 +4668,7 @@ static int wnav_build_func(void* client_data, void* client_flag)
     command_sts = build.sts();
 
     free((char*)volumelist);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "CONFIG", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "CONFIG", strlen(arg1_str)) == 0) {
     char nodestr[80];
     void* volumelist;
     int volumecount;
@@ -4699,7 +4699,7 @@ static int wnav_build_func(void* client_data, void* client_flag)
     command_sts = build.sts();
 
     free((char*)volumelist);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "VOLUME", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "VOLUME", strlen(arg1_str)) == 0) {
     // Build current volume
     char namestr[80];
 
@@ -4719,7 +4719,7 @@ static int wnav_build_func(void* client_data, void* client_flag)
     build.volume();
     wnav->message(' ', wnav_get_message(build.sts()));
     command_sts = build.sts();
-  } else if (cdh_NoCaseStrncmp(arg1_str, "OBJECT", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "OBJECT", strlen(arg1_str)) == 0) {
     char namestr[80];
     pwr_tCid cid;
     pwr_tAttrRef aref;
@@ -4815,7 +4815,7 @@ static int wnav_build_func(void* client_data, void* client_flag)
     }
     free(sel_list);
     free(sel_is_attr);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "DIRECTORIES", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "DIRECTORIES", strlen(arg1_str))
       == 0) {
     if (!(CoLogin::privilege() & pwr_mPrv_DevConfig)) {
       wnav->message('E', "User is not authorized to build");
@@ -4854,7 +4854,7 @@ static int wnav_build_func(void* client_data, void* client_flag)
       wnav->message(' ', wnav_get_message(build.sts()));
       command_sts = build.sts();
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "EXPORT", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "EXPORT", strlen(arg1_str)) == 0) {
     // command  is "BUILD EXPORT"
 
     if (!(CoLogin::privilege() & pwr_mPrv_DevConfig)) {
@@ -4883,7 +4883,7 @@ static int wnav_build_func(void* client_data, void* client_flag)
       wnav->message(' ', wnav_get_message(build.sts()));
       command_sts = build.sts();
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "IMPORT", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "IMPORT", strlen(arg1_str)) == 0) {
     // command  is "BUILD IMPORT"
 
     if (!(CoLogin::privilege() & pwr_mPrv_DevConfig)) {
@@ -4912,7 +4912,7 @@ static int wnav_build_func(void* client_data, void* client_flag)
       wnav->message(' ', wnav_get_message(build.sts()));
       command_sts = build.sts();
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "ALL", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "ALL", strlen(arg1_str)) == 0) {
     // command  is "BUILD ALL"
     int exp, noclassvolumes, flowfiles;
 
@@ -4959,12 +4959,12 @@ static int wnav_check_func(void* client_data, void* client_flag)
     return WNAV__SYNTAX;
   }
 
-  if (cdh_NoCaseStrncmp(arg1_str, "CLASSES", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "CLASSES", strlen(arg1_str)) == 0) {
     wb_volume* v = (wb_volume*)ldh_SessionToVol(wnav->ldhses);
     wb_vrepdb* vrep = (wb_vrepdb*)((wb_vrep*)*v);
     vrep->checkMeta();
   }
-  if (cdh_NoCaseStrncmp(arg1_str, "SYNTAX", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "SYNTAX", strlen(arg1_str)) == 0) {
     int errorcount = 0;
     int warningcount = 0;
     pwr_tOName namestr;
@@ -5011,7 +5011,7 @@ static int wnav_check_func(void* client_data, void* client_flag)
         wnav->message(
             'I', "Successful syntax check, no errors or warnings found");
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "BOOTFILE", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "BOOTFILE", strlen(arg1_str)) == 0) {
     char nodestr[80];
     wb_erep* erep = *(wb_env*)wnav->wbctx;
 
@@ -5048,7 +5048,7 @@ static int wnav_update_func(void* client_data, void* client_flag)
     return WNAV__SYNTAX;
   }
 
-  if (cdh_NoCaseStrncmp(arg1_str, "CLASSES", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "CLASSES", strlen(arg1_str)) == 0) {
     if (!wnav->editmode) {
       wnav->message('E', "Not in edit mode");
       return WNAV__NOEDIT;
@@ -5077,7 +5077,7 @@ static int wnav_backup_func(void* client_data, void* client_flag)
     return WNAV__SYNTAX;
   }
 
-  if (cdh_NoCaseStrncmp(arg1_str, "DUMP", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "DUMP", strlen(arg1_str)) == 0) {
     pwr_tFileName filestr;
     pwr_tFileName outstr;
     pwr_tStatus sts;
@@ -5105,7 +5105,7 @@ static int wnav_backup_func(void* client_data, void* client_flag)
     sts = bck_dump(wnav->ldhses, filestr, outstr);
     if (EVEN(sts))
       wnav->message(' ', wnav_get_message(sts));
-  } else if (cdh_NoCaseStrncmp(arg1_str, "SHOW", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "SHOW", strlen(arg1_str)) == 0) {
     pwr_tFileName filestr;
     char* filep = filestr;
     pwr_tFileName outstr;
@@ -5157,7 +5157,7 @@ static int wnav_backup_func(void* client_data, void* client_flag)
       if (EVEN(sts))
         wnav->message(' ', wnav_get_message(sts));
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "DIFFERENCE", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "DIFFERENCE", strlen(arg1_str)) == 0) {
     pwr_tFileName file1str;
     pwr_tFileName file2str;
     char* file2p = file2str;
@@ -5311,7 +5311,7 @@ static void wnav_clone_volume_cb(void* ctx, char* text, int ok_pressed)
 
   int found = 0;
   for (int idx = 0; idx < volumecount; idx++) {
-    if (cdh_NoCaseStrcmp(volumelist[idx].volume_name, text) == 0) {
+    if (str_NoCaseStrcmp(volumelist[idx].volume_name, text) == 0) {
       found = 1;
       strncpy(vname, volumelist[idx].volume_name, sizeof(vname));
       vid = volumelist[idx].volume_id;
@@ -5340,7 +5340,7 @@ static int wnav_clone_func(void* client_data, void* client_flag)
     return WNAV__SYNTAX;
   }
 
-  if (cdh_NoCaseStrncmp(arg1_str, "VOLUME", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "VOLUME", strlen(arg1_str)) == 0) {
     pwr_tObjName namestr;
     pwr_tStatus sts;
     pwr_tVid vid = 0;
@@ -5375,7 +5375,7 @@ static int wnav_clone_func(void* client_data, void* client_flag)
     if (ODD(dcli_get_qualifier("/NAME", namestr, sizeof(namestr)))) {
       int found = 0;
       for (int idx = 0; idx < volumecount; idx++) {
-        if (cdh_NoCaseStrcmp(volumelist[idx].volume_name, namestr) == 0) {
+        if (str_NoCaseStrcmp(volumelist[idx].volume_name, namestr) == 0) {
           found = 1;
           strncpy(namestr, volumelist[idx].volume_name, sizeof(namestr));
           vid = volumelist[idx].volume_id;
@@ -5405,7 +5405,7 @@ static int wnav_clone_func(void* client_data, void* client_flag)
       clone_cnt = 0;
       for (int idx = 0; idx < volumecount; idx++) {
         if (streq("clone", volumelist[idx].p2)
-            && cdh_NoCaseStrcmp(volumelist[idx].p3, volname) == 0) {
+            && str_NoCaseStrcmp(volumelist[idx].p3, volname) == 0) {
           strncpy(namestr, volumelist[idx].volume_name, sizeof(namestr));
           vid = volumelist[idx].volume_id;
           clone_cnt++;
@@ -5425,7 +5425,7 @@ static int wnav_clone_func(void* client_data, void* client_flag)
         clone_cnt = 0;
         for (int idx = 0; idx < volumecount; idx++) {
           if (streq("clone", volumelist[idx].p2)
-              && cdh_NoCaseStrcmp(volumelist[idx].p3, volname) == 0) {
+              && str_NoCaseStrcmp(volumelist[idx].p3, volname) == 0) {
             strncpy(clone_vect[clone_cnt++], volumelist[idx].volume_name,
                 sizeof(clone_vect[0]));
           }
@@ -5724,7 +5724,7 @@ int WNav::command(char* input_str)
   if (input_str[0] == '@') {
     /* Read command file */
 
-    // cdh_ToLower( filename, &command[1]);
+    // str_ToLower( filename, &command[1]);
     strcpy(filename, &command[1]);
     sts = readcmdfile(filename);
     if (sts == DCLI__NOFILE) {
@@ -6691,7 +6691,7 @@ int WNav::search(char* search_str, int regexp)
   } else
     search_type = wnav_eSearchType_Name;
 
-  cdh_ToUpper(str, search_str);
+  str_ToUpper(str, search_str);
   sts = search_root(str, &found_objid, 0);
   if (EVEN(sts))
     return sts;
@@ -6796,8 +6796,8 @@ int WNav::search_object(
       return sts;
 
     if (search_type == wnav_eSearchType_Name) {
-      cdh_ToUpper(name, name);
-      if (cdh_NoCaseStrcmp(name, search_str) == 0) {
+      str_ToUpper(name, name);
+      if (str_NoCaseStrcmp(name, search_str) == 0) {
         *found_objid = objid;
         return WNAV__SUCCESS;
       }
@@ -6906,11 +6906,11 @@ int WNav::show_file(const char* filename, const char* intitle, int hide_dir)
   dcli_parse_filename(found_file, dev, dir, file, type, &version);
   if (hide_dir) {
     strcpy(text, file);
-    // cdh_ToLower( text, text);
+    // str_ToLower( text, text);
     // text[0] = toupper( text[0]);
   } else
     strcpy(text, found_file);
-  // cdh_ToUpper( type, type);
+  // str_ToUpper( type, type);
   if (streq(type, ".pwr_com"))
     file_type = item_eFileType_Script;
   else if (streq(type, ".pwg"))
@@ -6933,11 +6933,11 @@ int WNav::show_file(const char* filename, const char* intitle, int hide_dir)
       dcli_parse_filename(found_file, dev, dir, file, type, &version);
       if (hide_dir) {
         strcpy(text, file);
-        // cdh_ToLower( text, text);
+        // str_ToLower( text, text);
         // text[0] = toupper( text[0]);
       } else
         strcpy(text, found_file);
-      // cdh_ToUpper( type, type);
+      // str_ToUpper( type, type);
       if (streq(type, ".pwr_com"))
         file_type = item_eFileType_Script;
       else if (streq(type, ".pwg"))
@@ -7077,7 +7077,7 @@ int WNav::check_new_volumename(char* vname)
     return sts;
 
   for (int i = 0; i < volumecount; i++) {
-    if (cdh_NoCaseStrcmp(vname, volumelist[i].volume_name) == 0) {
+    if (str_NoCaseStrcmp(vname, volumelist[i].volume_name) == 0) {
       found = 1;
       break;
     }

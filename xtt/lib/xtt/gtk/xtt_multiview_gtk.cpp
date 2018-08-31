@@ -41,6 +41,8 @@ typedef void* Widget;
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_msg.h"
+#include "co_string.h"
+
 #include "rt_gdh_msg.h"
 #include "rt_xnav_msg.h"
 
@@ -998,7 +1000,7 @@ int XttMultiViewGtk::set_subwindow_source(const char* name, char* source,
 
   for (int i = 0; i < cols; i++) {
     for (int j = 0; j < rows; j++) {
-      if (cdh_NoCaseStrcmp(comp_name, mv.Action[i * rows + j].Name) == 0) {
+      if (str_NoCaseStrcmp(comp_name, mv.Action[i * rows + j].Name) == 0) {
         if (!sub_name) {
           // Replace component
           x = 0;

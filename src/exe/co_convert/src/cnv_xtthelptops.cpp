@@ -152,11 +152,11 @@ void* CnvXtthelpToPs::insert(navh_eItemType item_type, const char* text1,
     return NULL;
   }
   case navh_eItemType_Style: {
-    if (cdh_NoCaseStrcmp(text1, "function") == 0) {
+    if (str_NoCaseStrcmp(text1, "function") == 0) {
       base_ci = tops.ci;
       tops.set_ci(ps_eId_Function);
       user_style = 1;
-    } else if (cdh_NoCaseStrcmp(text1, "report") == 0) {
+    } else if (str_NoCaseStrcmp(text1, "report") == 0) {
       base_ci = tops.ci;
       tops.set_ci(ps_eId_Report);
     }
@@ -248,8 +248,8 @@ void* CnvXtthelpToPs::insert(navh_eItemType item_type, const char* text1,
       char str[200];
       int page;
 
-      if (strStartsWith(link, "$web:")) {
-        if (strStartsWith(&link[5], "$pwrp_web/"))
+      if (str_StartsWith(link, "$web:")) {
+        if (str_StartsWith(&link[5], "$pwrp_web/"))
           strcpy(fname, &link[15]);
         else
           strcpy(fname, &link[5]);

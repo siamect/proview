@@ -1847,7 +1847,7 @@ void Wtt::activate_openge()
       if (EVEN(sts))
         break;
 
-      cdh_ToLower(graph_name, action);
+      str_ToLower(graph_name, action);
       free((char*)action);
     } else if (classid == pwr_cClass_WebGraph) {
       sts = ldh_GetObjectPar(
@@ -1855,7 +1855,7 @@ void Wtt::activate_openge()
       if (EVEN(sts))
         break;
 
-      cdh_ToLower(graph_name, action);
+      str_ToLower(graph_name, action);
       if (!streq(graph_name, "") && strstr(graph_name, ".pwg") == 0)
         strcat(graph_name, ".pwg");
       free((char*)action);
@@ -1923,7 +1923,7 @@ void Wtt::activate_openclasseditor()
 
     switch (*dbenum) {
     case pwr_eClassVolumeDatabaseEnum_WbLoad:
-      cdh_ToLower(name, name);
+      str_ToLower(name, name);
       sprintf(fname, "$pwrp_db/%s.wb_load", name);
       dcli_translate_filename(fname, fname);
 
@@ -1939,7 +1939,7 @@ void Wtt::activate_openclasseditor()
     case pwr_eClassVolumeDatabaseEnum_MySql: {
       pwr_tFileName filename;
 
-      cdh_ToLower(name, name);
+      str_ToLower(name, name);
       dcli_translate_filename(filename, "$pwr_exe/wb_open_db.sh");
       sprintf(cmd, "%s \"%s\" \"%s\" \"%s\" \"%s\" &", filename,
           CoLogin::username(), CoLogin::ucpassword(), name, name);

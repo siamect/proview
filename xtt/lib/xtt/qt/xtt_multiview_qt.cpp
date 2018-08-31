@@ -36,10 +36,9 @@
 
 #include <stdlib.h>
 
-//#include "pwr_baseclasses.h"
-
 #include "co_cdh.h"
 #include "co_msg.h"
+#include "co_string.h"
 #include "co_time.h"
 
 #include "rt_gdh.h"
@@ -1006,7 +1005,7 @@ int XttMultiViewQt::set_subwindow_source(const char* name, char* source,
 
   for (int i = 0; i < cols; i++) {
     for (int j = 0; j < rows; j++) {
-      if (cdh_NoCaseStrcmp(comp_name, mv.Action[i * rows + j].Name) == 0) {
+      if (str_NoCaseStrcmp(comp_name, mv.Action[i * rows + j].Name) == 0) {
         if (!sub_name) {
           // Replace component
           x = 0;

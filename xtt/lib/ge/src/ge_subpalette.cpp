@@ -1024,7 +1024,7 @@ void SubPalette::select_by_name(char* name)
       for (sts = brow_GetChild(brow->ctx, item->node, &child); ODD(sts);
            sts = brow_GetNextSibling(brow->ctx, child, &child)) {
         brow_GetUserData(child, (void**)&item);
-        if (cdh_NoCaseStrcmp(itemname, item->name) == 0) {
+        if (str_NoCaseStrcmp(itemname, item->name) == 0) {
           current = child;
           break;
         }
@@ -1390,7 +1390,7 @@ int ItemLocalSubGraphs::open_children(
 
     for (i = 0; i < (int)fvect.size(); i++) {
       dcli_parse_filename(fvect[i].name, dev, dir, file, type, &version);
-      cdh_ToLower(text, file);
+      str_ToLower(text, file);
       text[0] = toupper(text[0]);
 
       // Skip next pages in animations

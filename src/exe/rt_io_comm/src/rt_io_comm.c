@@ -109,15 +109,15 @@ int main(int argc, char** argv)
         usage();
         exit(0);
       }
-      if (cdh_NoCaseStrcmp(argv[i + 1], "iocomm") == 0)
+      if (str_NoCaseStrcmp(argv[i + 1], "iocomm") == 0)
         process = io_mProcess_IoComm;
-      else if (cdh_NoCaseStrcmp(argv[i + 1], "user") == 0)
+      else if (str_NoCaseStrcmp(argv[i + 1], "user") == 0)
         process = io_mProcess_User;
-      else if (cdh_NoCaseStrcmp(argv[i + 1], "user2") == 0)
+      else if (str_NoCaseStrcmp(argv[i + 1], "user2") == 0)
         process = io_mProcess_User2;
-      else if (cdh_NoCaseStrcmp(argv[i + 1], "user3") == 0)
+      else if (str_NoCaseStrcmp(argv[i + 1], "user3") == 0)
         process = io_mProcess_User3;
-      else if (cdh_NoCaseStrcmp(argv[i + 1], "user4") == 0)
+      else if (str_NoCaseStrcmp(argv[i + 1], "user4") == 0)
         process = io_mProcess_User4;
       else {
         usage();

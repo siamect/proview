@@ -189,7 +189,7 @@ bool wb_revision::set_current(char* name)
   bool found = false;
 
   for (unsigned int i = 0; i < m_vect.size(); i++) {
-    if (cdh_NoCaseStrcmp(name, m_vect[i].name) == 0) {
+    if (str_NoCaseStrcmp(name, m_vect[i].name) == 0) {
       m_current_idx = m_vect[i].idx;
       m_current_main_idx = i;
       m_current_sub_idx = -1;
@@ -198,7 +198,7 @@ bool wb_revision::set_current(char* name)
       break;
     }
     for (unsigned int j = 0; j < m_vect[i].vect.size(); j++) {
-      if (cdh_NoCaseStrcmp(name, m_vect[i].vect[j].name) == 0) {
+      if (str_NoCaseStrcmp(name, m_vect[i].vect[j].name) == 0) {
         m_current_idx = m_vect[i].vect[j].idx;
         m_current_main_idx = i;
         m_current_sub_idx = j;
@@ -376,14 +376,14 @@ pwr_tStatus wb_revision::restore(char* name)
   // Find revision in table
   bool found = false;
   for (unsigned int i = 0; i < m_vect.size(); i++) {
-    if (cdh_NoCaseStrcmp(m_vect[i].name, name) == 0) {
+    if (str_NoCaseStrcmp(m_vect[i].name, name) == 0) {
       main_idx = i;
       sub_idx = -1;
       found = true;
       break;
     }
     for (unsigned int j = 0; j < m_vect[i].vect.size(); j++) {
-      if (cdh_NoCaseStrcmp(m_vect[i].vect[j].name, name) == 0) {
+      if (str_NoCaseStrcmp(m_vect[i].vect[j].name, name) == 0) {
         main_idx = i;
         sub_idx = j;
         found = true;
@@ -616,7 +616,7 @@ pwr_tStatus wb_revision::remove(char* name)
 
   bool found = false;
   for (unsigned int i = 0; i < m_vect.size(); i++) {
-    if (cdh_NoCaseStrcmp(m_vect[i].name, name) == 0) {
+    if (str_NoCaseStrcmp(m_vect[i].name, name) == 0) {
       m_vect.erase(m_vect.begin() + i);
       found = true;
       break;
@@ -794,7 +794,7 @@ int wb_revision::add(char* name, char* description, char* version,
 
   // Check that the name is unique
   for (unsigned int i = 0; i < m_vect.size(); i++) {
-    if (cdh_NoCaseStrcmp(name, m_vect[i].name) == 0) {
+    if (str_NoCaseStrcmp(name, m_vect[i].name) == 0) {
       return 0;
     }
   }
@@ -1227,12 +1227,12 @@ int wb_version_manager_git::check(std::vector<wb_rev_item>& v)
 
   while (fp.getline(line, sizeof(line))) {
     for (unsigned int i = 0; i < v.size(); i++) {
-      if (cdh_NoCaseStrcmp(v[i].name, line) == 0) {
+      if (str_NoCaseStrcmp(v[i].name, line) == 0) {
         v[i].in_manager = true;
         break;
       }
       for (unsigned int j = 0; j < v[i].vect.size(); j++) {
-        if (cdh_NoCaseStrcmp(v[i].vect[j].name, line) == 0) {
+        if (str_NoCaseStrcmp(v[i].vect[j].name, line) == 0) {
           v[i].vect[j].in_manager = true;
           break;
         }

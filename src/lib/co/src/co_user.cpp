@@ -394,7 +394,7 @@ SystemList* GeUser::find_system(SystemName* name)
   SystemList* sl;
 
   for (sl = root; sl; sl = sl->next) {
-    if (cdh_NoCaseStrcmp(sl->name, name->segment(0)) == 0) {
+    if (str_NoCaseStrcmp(sl->name, name->segment(0)) == 0) {
       if (name->segments == sl->level + 1)
         return sl;
       return sl->find_system(name);
@@ -442,8 +442,8 @@ int GeUser::get_user(const char* gu_system, const char* gu_user,
   char password[80];
   char user[80];
 
-  cdh_ToLower(system, gu_system);
-  cdh_ToLower(user, gu_user);
+  str_ToLower(system, gu_system);
+  str_ToLower(user, gu_user);
   strcpy(password, gu_password);
 
   // Find system
@@ -487,8 +487,8 @@ int GeUser::get_user_priv(
   char system[80];
   char user[80];
 
-  cdh_ToLower(system, gu_system);
-  cdh_ToLower(user, gu_user);
+  str_ToLower(system, gu_system);
+  str_ToLower(user, gu_user);
 
   // Find system
   sn = new SystemName(system);
@@ -710,7 +710,7 @@ SystemList* SystemList::find_system(SystemName* name)
   SystemList* sl;
 
   for (sl = childlist; sl; sl = sl->next) {
-    if (cdh_NoCaseStrcmp(sl->name, name->segment(sl->level)) == 0) {
+    if (str_NoCaseStrcmp(sl->name, name->segment(sl->level)) == 0) {
       if (name->segments == sl->level + 1)
         return sl;
       return sl->find_system(name);
@@ -724,7 +724,7 @@ void* SystemList::find_user(char* name)
   UserList* ul;
 
   for (ul = (UserList*)userlist; ul != NULL; ul = ul->next) {
-    if (cdh_NoCaseStrcmp(ul->name, name) == 0)
+    if (str_NoCaseStrcmp(ul->name, name) == 0)
       return ul;
   }
   return NULL;

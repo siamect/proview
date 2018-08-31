@@ -34,7 +34,7 @@
  * General Public License plus this exception.
  **/
 
-#include <string.h>
+#include "co_string.h"
 
 #include "wb_adrep.h"
 #include "wb_bdrep.h"
@@ -109,7 +109,7 @@ wb_adrep* wb_bdrep::adrep(pwr_tStatus* sts, const char* aname)
         return 0;
       }
 
-      if (cdh_NoCaseStrcmp(orep->name(), "Super") == 0) {
+      if (str_NoCaseStrcmp(orep->name(), "Super") == 0) {
         if (adrep)
           old = adrep;
 
@@ -204,7 +204,7 @@ wb_adrep* wb_bdrep::super(pwr_tStatus* sts)
   if (EVEN(*sts))
     return 0;
 
-  if (cdh_NoCaseStrcmp(orep->name(), "Super") != 0) {
+  if (str_NoCaseStrcmp(orep->name(), "Super") != 0) {
     *sts = LDH__NOSUCHATTR;
     orep->ref();
     orep->unref();

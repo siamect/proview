@@ -171,7 +171,7 @@ Graph::Graph(void* xn_parent_ctx, const char* xn_name,
       was_subgraph(0), disable_log(1), pending_borders(0),
       color_theme(xn_color_theme), syntax_instance(0)
 {
-  cdh_StrncpyCutOff(name, xn_name, sizeof(name), 1);
+  str_StrncpyCutOff(name, xn_name, sizeof(name), 1);
   strcpy(default_path, xn_default_path);
   memset(arglist_stack, 0, sizeof(arglist_stack));
   for (unsigned int i = 0; i < sizeof(object_name) / sizeof(object_name[0]);
@@ -2441,7 +2441,7 @@ static int graph_grow_cb(GlowCtx* ctx, glow_tEvent event)
       break;
     }
     dcli_parse_filename(filename, dev, dir, file, type, &version);
-    cdh_ToLower(sub_name, file);
+    str_ToLower(sub_name, file);
     if (streq(type, ".pwsg")) {
       sts = grow_FindNodeClassByName(graph->grow->ctx, sub_name, &nc);
       if (EVEN(sts)) {
@@ -2487,7 +2487,7 @@ static int graph_grow_cb(GlowCtx* ctx, glow_tEvent event)
 
       sprintf(name, "O%d", grow_IncrNextObjectNameNumber(graph->grow->ctx));
 
-      if (strStartsWith(dir, "jpwr/")) {
+      if (str_StartsWith(dir, "jpwr/")) {
         strcpy(filename, dir);
         strcat(filename, file);
         strcat(filename, type);
@@ -4264,7 +4264,7 @@ static void graph_remove_space(char* out_str, char* in_str)
       break;
     s++;
   }
-  cdh_Strcpy(out_str, s);
+  str_Strcpy(out_str, s);
   //
   s = out_str + strlen(out_str);
   s--;
@@ -4302,7 +4302,7 @@ void Graph::get_command(char* in, char* out, GeDyn* dyn)
         t0 += strlen(object_name[0]);
         s0 = s + strlen("$object");
       }
-      cdh_Strcpy(t0, s0);
+      str_Strcpy(t0, s0);
       strcpy(oname[0], n);
     }
     for (int i = 1; i < 4; i++)
@@ -4318,20 +4318,20 @@ void Graph::get_command(char* in, char* out, GeDyn* dyn)
     t0 = str;
     s0 = in;
     while ((s = strstr(s0, "$hostobject"))) {
-      cdh_Strncpy(t0, s0, s - s0);
+      str_Strncpy(t0, s0, s - s0);
       t0 += s - s0;
       strcpy(t0, hostobject);
       t0 += strlen(hostobject);
       s0 = s + strlen("$hostobject");
     }
-    cdh_Strcpy(t0, s0);
+    str_Strcpy(t0, s0);
 
     if (streq(oname[0], "")) {
       strcpy(out, str);
     }
     s0 = str;
   } else if (streq(oname[0], "")) {
-    cdh_Strcpy(out, in);
+    str_Strcpy(out, in);
   }
 
   if (!streq(oname[0], "")) {
@@ -4354,13 +4354,13 @@ void Graph::get_command(char* in, char* out, GeDyn* dyn)
         idx = 0;
       }
 
-      cdh_Strncpy(t0, s0, s - s0);
+      str_Strncpy(t0, s0, s - s0);
       t0 += s - s0;
       strcpy(t0, oname[idx]);
       t0 += strlen(oname[idx]);
       s0 = s + strlen("$object") + (idx > 0 ? 1 : 0);
     }
-    cdh_Strcpy(t0, s0);
+    str_Strcpy(t0, s0);
 
     t0 = out;
   }
@@ -4597,7 +4597,7 @@ int Graph::get_refupdate(char* in, pwr_tAName ref[], pwr_tTid ref_tid[],
         t0 += strlen(object_name[0]);
         s0 = s + strlen("$object");
       }
-      cdh_Strcpy(t0, s0);
+      str_Strcpy(t0, s0);
       strcpy(oname[0], n);
     }
     for (int i = 1; i < 4; i++)
@@ -4613,20 +4613,20 @@ int Graph::get_refupdate(char* in, pwr_tAName ref[], pwr_tTid ref_tid[],
     t0 = str;
     s0 = in;
     while ((s = strstr(s0, "$hostobject"))) {
-      cdh_Strncpy(t0, s0, s - s0);
+      str_Strncpy(t0, s0, s - s0);
       t0 += s - s0;
       strcpy(t0, hostobject);
       t0 += strlen(hostobject);
       s0 = s + strlen("$hostobject");
     }
-    cdh_Strcpy(t0, s0);
+    str_Strcpy(t0, s0);
 
     if (streq(oname[0], "")) {
       strcpy(out, str);
     }
     s0 = str;
   } else if (streq(oname[0], "")) {
-    cdh_Strcpy(out, in);
+    str_Strcpy(out, in);
   }
 
   if (!streq(oname[0], "")) {
@@ -4649,13 +4649,13 @@ int Graph::get_refupdate(char* in, pwr_tAName ref[], pwr_tTid ref_tid[],
         idx = 0;
       }
 
-      cdh_Strncpy(t0, s0, s - s0);
+      str_Strncpy(t0, s0, s - s0);
       t0 += s - s0;
       strcpy(t0, oname[idx]);
       t0 += strlen(oname[idx]);
       s0 = s + strlen("$object") + (idx > 0 ? 1 : 0);
     }
-    cdh_Strcpy(t0, s0);
+    str_Strcpy(t0, s0);
 
     t0 = out;
   }
@@ -5097,7 +5097,7 @@ void Graph::string_to_type(
   char str[80];
   char table_str[20];
   char *s, *s1;
-  cdh_ToUpper(str, type_str);
+  str_ToUpper(str, type_str);
 
   // Check if there is a array size
   if ((s = strchr(str, '#'))) {
@@ -5116,7 +5116,7 @@ void Graph::string_to_type(
   found = 0;
   for (i = 0; i < int(sizeof(graph_type_table) / sizeof(graph_type_table[0]));
        i++) {
-    cdh_ToUpper(table_str, (char*)graph_type_table[i].TypeStr);
+    str_ToUpper(table_str, (char*)graph_type_table[i].TypeStr);
     if (streq(table_str, str)) {
       *size = graph_type_table[i].Size;
       *type = graph_type_table[i].Type;
@@ -5125,19 +5125,19 @@ void Graph::string_to_type(
     }
   }
 
-  if (!found && strStartsWith(str, "STRING")) {
+  if (!found && str_StartsWith(str, "STRING")) {
     *type = pwr_eType_String;
     if (*(str + 6) == 0)
       *size = 80;
     else
       *size = atoi(str + 6);
-  } else if (!found && strStartsWith(str, "TEXT")) {
+  } else if (!found && str_StartsWith(str, "TEXT")) {
     *type = pwr_eType_Text;
     if (*(str + 4) == 0)
       *size = 80;
     else
       *size = atoi(str + 4);
-  } else if (!found && strStartsWith(str, "BIT")) {
+  } else if (!found && str_StartsWith(str, "BIT")) {
     *type = (pwr_eType)graph_eType_Bit;
     *size = 4;
   }
@@ -5744,7 +5744,7 @@ int Graph::create_node_floating(double x, double y)
     return sts;
   }
   dcli_parse_filename(filename, dev, dir, file, type, &version);
-  cdh_ToLower(sub_name, file);
+  str_ToLower(sub_name, file);
   if (streq(type, ".pwsg")) {
     sts = grow_FindNodeClassByName(grow->ctx, sub_name, &nc);
     if (EVEN(sts)) {

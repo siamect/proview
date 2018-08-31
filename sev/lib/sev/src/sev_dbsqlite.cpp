@@ -101,7 +101,7 @@ char* sev_dbsqlite::dbName(void)
   get_systemname();
   strcpy(dbname, "pwrp__");
   strcat(dbname, m_systemName);
-  cdh_ToLower(dbname, dbname);
+  str_ToLower(dbname, dbname);
 
   return dbname;
 }
@@ -1619,7 +1619,7 @@ int sev_dbsqlite::check_item(pwr_tStatus* sts, pwr_tOid oid, char* oname,
       continue;
 
     if (cdh_ObjidIsEqual(oid, m_items[i].oid)
-        && cdh_NoCaseStrcmp(aname, m_items[i].attr[0].aname) == 0) {
+        && str_NoCaseStrcmp(aname, m_items[i].attr[0].aname) == 0) {
       char query[600];
       char* errmsg;
 
@@ -1760,7 +1760,7 @@ int sev_dbsqlite::delete_item(pwr_tStatus* sts, pwr_tOid oid, char* aname)
       if (m_items[i].deleted)
         continue;
       if (cdh_ObjidIsEqual(m_items[i].oid, oid)
-          && cdh_NoCaseStrcmp(m_items[i].attr[0].aname, aname) == 0) {
+          && str_NoCaseStrcmp(m_items[i].attr[0].aname, aname) == 0) {
         m_items[i].deleted = 1;
         break;
       }
@@ -1935,7 +1935,7 @@ int sev_dbsqlite::check_objectitem(pwr_tStatus* sts, char* tablename,
       continue;
 
     if (cdh_ObjidIsEqual(oid, m_items[i].oid)
-        && cdh_NoCaseStrcmp(oname, m_items[i].oname) == 0) {
+        && str_NoCaseStrcmp(oname, m_items[i].oname) == 0) {
       char query[400];
       char* errmsg;
       sprintf(query, "update objectitems set ");
@@ -2147,7 +2147,7 @@ int sev_dbsqlite::check_objectitemattr(pwr_tStatus* sts, char* tablename,
 {
   sev_item* item = &m_items[*idx];
   for (size_t j = 0; j < item->attr.size(); j++) {
-    if (cdh_NoCaseStrcmp(aname, item->attr[j].aname) == 0) {
+    if (str_NoCaseStrcmp(aname, item->attr[j].aname) == 0) {
       if (type != item->attr[j].type || size != item->attr[j].size) {
         *sts = SEV__NOSUCHITEM;
         return 0;

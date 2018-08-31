@@ -356,7 +356,7 @@ XAttQt::XAttQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
     return;
   }
 
-  cdh_StrncpyCutOff(title, title, 100, 1);
+  str_StrncpyCutOff(title, title, 100, 1);
 
   toplevel = new XAttQtWidget(this, xa_parent_wid);
   toplevel->setToolTip(fl("xtt_xatt widget"));

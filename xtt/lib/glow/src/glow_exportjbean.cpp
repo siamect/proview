@@ -3856,7 +3856,7 @@ void GlowExportJBean::window(double x1, double y1, double x2, double y2,
     strcpy(class_fname, s + 1);
   else
     strcpy(class_fname, filename);
-  if (strStartsWith(class_fname, "pwr_c_")) {
+  if (str_StartsWith(class_fname, "pwr_c_")) {
     char str[80];
     strcpy(str, "Jopc");
     strcat(str, &class_fname[6]);
@@ -3938,7 +3938,7 @@ void GlowExportJBean::folder(double x1, double y1, double x2, double y2,
         strcpy(class_fname, s + 1);
       else
         strcpy(class_fname, fname_p);
-      if (strStartsWith(class_fname, "pwr_c_")) {
+      if (str_StartsWith(class_fname, "pwr_c_")) {
         char str[80];
         strcpy(str, "Jopc");
         strcat(str, &class_fname[6]);

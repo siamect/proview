@@ -255,7 +255,7 @@ int Graph::generate_web(ldh_tSesContext ldhses, pwr_tOid opplaceweb_oid)
   if (EVEN(sts))
     return sts;
 
-  if (strStartsWith(opplaceweb_name, nodeobject_name)) {
+  if (str_StartsWith(opplaceweb_name, nodeobject_name)) {
     pwr_tAName tmp;
     strcpy(tmp, &opplaceweb_name[strlen(nodeobject_name)]);
     strcpy(opplaceweb_name, "$node");
@@ -369,7 +369,7 @@ int Graph::generate_web(ldh_tSesContext ldhses, pwr_tOid opplaceweb_oid)
           ldhses, webgraph_objid, "RtBody", "Name", &value_p, &size);
       if (EVEN(sts))
         return sts;
-      cdh_ToLower(graph_name, value_p);
+      str_ToLower(graph_name, value_p);
       free(value_p);
 
       // Attribute WebTarget

@@ -985,7 +985,7 @@ int wb_vrepwbl::getAttrInfoRec(wb_attrname* attr, pwr_eBix bix, pwr_tCid cid,
 
 int wb_vrepwbl::nameToOid(const char* name, pwr_tOid* oid)
 {
-  if (strStartsWith(name, "_O")) {
+  if (str_StartsWith(name, "_O")) {
     cdh_StringToObjid(name, oid);
     return 1;
   }
@@ -1030,7 +1030,7 @@ int wb_vrepwbl::nameToAttrRef(const char* name, pwr_sAttrRef* attrref)
   pwr_eBix bix;
   pwr_tCid cid;
 
-  if (strStartsWith(name, "_A")) {
+  if (str_StartsWith(name, "_A")) {
     // Fix
     sts = cdh_StringToAref(name, attrref);
     if (EVEN(sts))
@@ -1039,7 +1039,7 @@ int wb_vrepwbl::nameToAttrRef(const char* name, pwr_sAttrRef* attrref)
     if (attrref->Objid.vid == m_vid)
       return LDH__NUMAREF;
     return sts;
-  } else if (strStartsWith(name, "_O")) {
+  } else if (str_StartsWith(name, "_O")) {
     pwr_tOid oid;
 
     sts = cdh_StringToObjid(name, &oid);
@@ -1056,7 +1056,7 @@ int wb_vrepwbl::nameToAttrRef(const char* name, pwr_sAttrRef* attrref)
   if (aname.evenSts())
     return 0;
 
-  if (strStartsWith(aname.volume(), "$") && aname.segmentIsEqual(volume_name)) {
+  if (str_StartsWith(aname.volume(), "$") && aname.segmentIsEqual(volume_name)) {
     char cname[120];
     pwr_sAttrRef aref;
     pwr_tCid cid;

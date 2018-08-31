@@ -371,7 +371,7 @@ void sev_db::get_item_idx(
 {
   for (unsigned int i = 0; i < m_items.size(); i++) {
     if (m_items[i].oid.oix == oid.oix && m_items[i].oid.vid == oid.vid
-        && (cdh_NoCaseStrcmp(attributename, m_items[i].attr[0].aname) == 0)) {
+        && (str_NoCaseStrcmp(attributename, m_items[i].attr[0].aname) == 0)) {
       *item_idx = i;
       *sts = SEV__SUCCESS;
       return;

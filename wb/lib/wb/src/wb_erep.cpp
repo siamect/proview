@@ -157,19 +157,19 @@ wb_vrep* wb_erep::volume(pwr_tStatus* sts, const char* name)
 {
   vrep_iterator it;
   for (it = m_vrepdb.begin(); it != m_vrepdb.end(); it++) {
-    if (cdh_NoCaseStrcmp(it->second->name(), name) == 0) {
+    if (str_NoCaseStrcmp(it->second->name(), name) == 0) {
       *sts = LDH__SUCCESS;
       return it->second;
     }
   }
   for (it = m_vrepdbs.begin(); it != m_vrepdbs.end(); it++) {
-    if (cdh_NoCaseStrcmp(it->second->name(), name) == 0) {
+    if (str_NoCaseStrcmp(it->second->name(), name) == 0) {
       *sts = LDH__SUCCESS;
       return it->second;
     }
   }
   for (it = m_vrepextern.begin(); it != m_vrepextern.end(); it++) {
-    if (cdh_NoCaseStrcmp(it->second->name(), name) == 0) {
+    if (str_NoCaseStrcmp(it->second->name(), name) == 0) {
       *sts = LDH__SUCCESS;
       return it->second;
     }
@@ -177,7 +177,7 @@ wb_vrep* wb_erep::volume(pwr_tStatus* sts, const char* name)
 
   for (buffer_iterator itb = m_vrepbuffer.begin(); itb != m_vrepbuffer.end();
        itb++) {
-    if (cdh_NoCaseStrcmp((*itb)->name(), name) == 0) {
+    if (str_NoCaseStrcmp((*itb)->name(), name) == 0) {
       *sts = LDH__SUCCESS;
       return *itb;
     }
@@ -212,7 +212,7 @@ wb_vrep* wb_erep::bufferVolume(pwr_tStatus* sts, char* name)
 {
   for (buffer_iterator it = m_vrepbuffer.begin(); it != m_vrepbuffer.end();
        it++) {
-    if (cdh_NoCaseStrcmp(name, (*it)->name()) == 0) {
+    if (str_NoCaseStrcmp(name, (*it)->name()) == 0) {
       *sts = LDH__SUCCESS;
       return *it;
     }
@@ -508,7 +508,7 @@ void wb_erep::loadCommonMeta(pwr_tStatus* status)
         MsgWindow::message('E', "Syntax error in file:", fname);
 
       // Load this volume
-      cdh_ToLower(vol_array[0], vol_array[0]);
+      str_ToLower(vol_array[0], vol_array[0]);
       strcpy(vname, fdir);
       strcat(vname, vol_array[0]);
       strcat(vname, ".dbs");
@@ -601,17 +601,17 @@ void wb_erep::loadMeta(pwr_tStatus* status, char* db)
       load_externvolume = 0;
       load_dbs = 0;
       load_db = 0;
-      if (cdh_NoCaseStrcmp(vol_array[2], "ExternVolume") == 0 && j == 1)
+      if (str_NoCaseStrcmp(vol_array[2], "ExternVolume") == 0 && j == 1)
         load_externvolume = 1;
-      else if (cdh_NoCaseStrcmp(vol_array[2], "ClassVolume") == 0
-          || cdh_NoCaseStrcmp(vol_array[2], "DetachedClassVolume") == 0
+      else if (str_NoCaseStrcmp(vol_array[2], "ClassVolume") == 0
+          || str_NoCaseStrcmp(vol_array[2], "DetachedClassVolume") == 0
           || streq(vol_array[3], "load")) {
         if (j == 0)
           load_dbs = 1;
-        if (((cdh_NoCaseStrcmp(vol_array[2], "ClassVolume") == 0
-                 || cdh_NoCaseStrcmp(vol_array[2], "DetachedClassVolume") == 0)
+        if (((str_NoCaseStrcmp(vol_array[2], "ClassVolume") == 0
+                 || str_NoCaseStrcmp(vol_array[2], "DetachedClassVolume") == 0)
                 && (streq(vol_array[3], "cnf") && db
-                       && cdh_NoCaseStrcmp(db, vol_array[0]) == 0))) {
+                       && str_NoCaseStrcmp(db, vol_array[0]) == 0))) {
           if (j == 1)
             load_db = 1;
         }
@@ -623,7 +623,7 @@ void wb_erep::loadMeta(pwr_tStatus* status, char* db)
           std::cout << "Syntax error in file: " << fname << '\n';
 
         // Load extern volume for this volume
-        cdh_ToLower(vol_array[0], vol_array[0]);
+        str_ToLower(vol_array[0], vol_array[0]);
 
         try {
           wb_vrepext* vrepext
@@ -642,7 +642,7 @@ void wb_erep::loadMeta(pwr_tStatus* status, char* db)
           std::cout << "Syntax error in file: " << fname << '\n';
 
         // Load dbs for this volume
-        cdh_ToLower(vol_array[0], vol_array[0]);
+        str_ToLower(vol_array[0], vol_array[0]);
 
         if (streq(vol_array[3], "cnf")) {
           // Configured in this project, load from pwrp_load
@@ -709,8 +709,8 @@ void wb_erep::loadMeta(pwr_tStatus* status, char* db)
 
         if (db) {
           // If db is specified, load only specified db, load as dbs instead
-          if (cdh_NoCaseStrcmp(vol_array[0], db) != 0) {
-            cdh_ToLower(vol_array[0], vol_array[0]);
+          if (str_NoCaseStrcmp(vol_array[0], db) != 0) {
+            str_ToLower(vol_array[0], vol_array[0]);
             strcpy(vname, "$pwrp_load/");
             strcat(vname, vol_array[0]);
             strcat(vname, ".dbs");
@@ -739,9 +739,9 @@ void wb_erep::loadMeta(pwr_tStatus* status, char* db)
         }
         strcpy(vname, "$pwrp_db/");
         strcat(vname, vol_array[0]);
-        cdh_ToLower(vname, vname);
-        if (cdh_NoCaseStrcmp(vol_array[2], "ClassVolume") == 0
-            || cdh_NoCaseStrcmp(vol_array[2], "DetchedClassVolume") == 0) {
+        str_ToLower(vname, vname);
+        if (str_NoCaseStrcmp(vol_array[2], "ClassVolume") == 0
+            || str_NoCaseStrcmp(vol_array[2], "DetchedClassVolume") == 0) {
           is_classvolume = 1;
           if (nr >= 5 && vol_array[4][0] == '2')
             db_type = eDbType_dbms;
@@ -812,7 +812,7 @@ void wb_erep::loadMeta(pwr_tStatus* status, char* db)
 
           if (open_loadfile) {
             // Open dbs
-            cdh_ToLower(vol_array[0], vol_array[0]);
+            str_ToLower(vol_array[0], vol_array[0]);
             strcpy(vname, "$pwrp_load/");
             strcat(vname, vol_array[0]);
             strcat(vname, ".dbs");
@@ -891,7 +891,7 @@ void wb_erep::loadMeta(pwr_tStatus* status, char* db)
 
   // Load directory volume
 
-  if (!db || (db && cdh_NoCaseStrcmp("directory", db) == 0)) {
+  if (!db || (db && str_NoCaseStrcmp("directory", db) == 0)) {
     char uname[80];
 
     strcpy(vname, "$pwrp_db/directory.wb_load");
@@ -1246,7 +1246,7 @@ void wb_erep::volumeNameToFilename(pwr_tStatus* sts, char* name, char* filename)
 
   for (int i = 0; i < dir_cnt; i++) {
     strcpy(vname, dir_list[i]);
-    cdh_ToLower(&vname[strlen(vname)], name);
+    str_ToLower(&vname[strlen(vname)], name);
     strcat(vname, ".dbs");
     fsts = dcli_search_file(vname, found_file, DCLI_DIR_SEARCH_INIT);
     dcli_search_file(vname, found_file, DCLI_DIR_SEARCH_END);
@@ -1442,7 +1442,7 @@ void wb_erep::checkVolumes(pwr_tStatus* sts, char* nodeconfigname)
 
   bool found = false;
   for (int i = 0; i < volcnt; i++) {
-    if (cdh_NoCaseStrcmp(vollist[i].p1, nodeconfigname) == 0) {
+    if (str_NoCaseStrcmp(vollist[i].p1, nodeconfigname) == 0) {
       found = true;
       checkVolume(sts, vollist[i].volume_id, carray, &err_cnt);
     }

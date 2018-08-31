@@ -225,8 +225,8 @@ int XttAudio::beep(pwr_tAttrRef* arp)
         if (EVEN(sts))
           break;
 
-        if (strStartsWith(sound.Source, "Sine")
-            || strStartsWith(sound.Source, "Square")) {
+        if (str_StartsWith(sound.Source, "Sine")
+            || str_StartsWith(sound.Source, "Square")) {
           asize = size = 2 * int(sound.Length * srate);
           size = ((size - 1) / (hw_buff_size) + 1) * hw_buff_size;
           buffer = (short*)calloc(sizeof(short), size);
@@ -237,14 +237,14 @@ int XttAudio::beep(pwr_tAttrRef* arp)
                i < int(sizeof(sound.ToneTable) / sizeof(sound.ToneTable[0]));
                i++) {
             if (sound.VolumeTable[i] > 0) {
-              if (strStartsWith(sound.Source, "Sine")) {
+              if (str_StartsWith(sound.Source, "Sine")) {
                 MakeSine(buffer, asize, 0, 0, sound.Length,
                     sound.BaseTone + sound.ToneTable[i],
                     sound.Volume / 100 * sound.VolumeTable[i],
                     sound.Volume / 100 * sound.VolumeTable[i], sound.Attack,
                     sound.Decay, sound.Sustain / 100, sound.Release,
                     sound.Tremolo / 100);
-              } else if (strStartsWith(sound.Source, "Square")) {
+              } else if (str_StartsWith(sound.Source, "Square")) {
                 MakeSquare(buffer, asize, 0, 0, sound.Length,
                     sound.BaseTone + sound.ToneTable[i],
                     sound.Volume / 100 * sound.VolumeTable[i],
@@ -400,7 +400,7 @@ int XttAudio::beep(pwr_tAttrRef* arp)
                                   / sizeof(sound[0].ToneTable[0]));
                j++) {
             if (sound[seq.SequenceTable[i].SoundIdx].VolumeTable[j] > 0) {
-              if (strStartsWith(
+              if (str_StartsWith(
                     sound[seq.SequenceTable[i].SoundIdx].Source, "Sine")) {
                 MakeSine(buffer, size, 0, seq.SequenceTable[i].StartTime,
                     seq.SequenceTable[i].EndTime, seq.SequenceTable[i].Tone
@@ -414,7 +414,7 @@ int XttAudio::beep(pwr_tAttrRef* arp)
                     sound[seq.SequenceTable[i].SoundIdx].Sustain / 100,
                     sound[seq.SequenceTable[i].SoundIdx].Release,
                     sound[seq.SequenceTable[i].SoundIdx].Tremolo / 100);
-              } else if (strStartsWith(
+              } else if (str_StartsWith(
                     sound[seq.SequenceTable[i].SoundIdx].Source, "Square")) {
                 MakeSquare(buffer, size, 0, seq.SequenceTable[i].StartTime,
                     seq.SequenceTable[i].EndTime, seq.SequenceTable[i].Tone

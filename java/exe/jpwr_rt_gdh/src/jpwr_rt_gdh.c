@@ -1785,7 +1785,7 @@ static void  gdh_TranslateSuffixToClassData (
   *PwrSize = 4;
 
   for (Index = 0, Found = FALSE; Index < XlationTblLen; Index++)
-    if (!cdh_NoCaseStrcmp(XlationTbl[Index].TypeStr,SuffixPtr))
+    if (!str_NoCaseStrcmp(XlationTbl[Index].TypeStr,SuffixPtr))
     {
       *PwrSize = XlationTbl[Index].Size;
       *PwrType = XlationTbl[Index].Type;
@@ -1793,7 +1793,7 @@ static void  gdh_TranslateSuffixToClassData (
       break;
     }
 
-  if (!Found && !cdh_NoCaseStrncmp("STRING", SuffixPtr, 6))
+  if (!Found && !str_NoCaseStrncmp("STRING", SuffixPtr, 6))
   {
     *PwrSize = atoi(SuffixPtr + 6);
     *PwrType = pwr_eType_String;
@@ -1825,7 +1825,7 @@ static int gdh_ExtractNameSuffix(	char   *Name,
 
   if (Suffix != NULL)
   {
-    cdh_ToUpper(Str,TempPtr);
+    str_ToUpper(Str,TempPtr);
     *Suffix = Str;
   }
 

@@ -2936,7 +2936,7 @@ int WItemAttrObject::open_attributes(double x, double y)
           // Remove any leading 'super.' in parname
           strcpy(parname, name);
           strcat(parname, ".");
-          if (strStartsWith(bodydef[j].ParName, "Super."))
+          if (str_StartsWith(bodydef[j].ParName, "Super."))
             strcat(parname, &bodydef[j].ParName[6]);
           else
             strcat(parname, bodydef[j].ParName);

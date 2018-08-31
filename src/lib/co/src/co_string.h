@@ -40,6 +40,84 @@
 
 #define streq(a,b) (strcmp((a),(b)) == 0)
 
-#define strStartsWith(str, prefix) (strncmp(str, prefix, strlen(prefix)) == 0)
+#define str_StartsWith(str, prefix) (strncmp(str, prefix, strlen(prefix)) == 0)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+//! Convert string to lower case.
+/*!
+  If s is NULL, t is used also as input string.
+
+  \param t	Output string.
+  \param s	Input string.
+  \return 	Returns t.
+*/
+char* str_ToLower(char* dst, const char* src);
+
+//! Convert string to upper case.
+/*!
+  If s is NULL, t is used also as input string.
+
+  \param t	Output string.
+  \param s	Input string.
+  \return 	Returns t.
+*/
+char* str_ToUpper(char* dst, const char* src);
+
+//! Compare two strings not regarding their casing.
+/*!
+   This routine works only on alphabetic characters.
+   It works on the standard ascii a-z and on the
+   DEC multinational extensions.
+
+   The function exploits the fact that only bit 5 changes
+   when you change the case of a character.
+
+   The function returns the uppercase offset between
+   the two first differing characters.
+*/
+int str_NoCaseStrcmp(const char* s, const char* t);
+
+//! Compare the n (at most) first charachters of two strings not regarding their
+//! casing.
+/*!
+   This routine works only on alphabetic characters.
+   It works on the standard ascii a-z and on the
+   DEC multinational extensions.
+
+   The function exploits the fact that only bit 5 changes
+   when you change the case of a character.
+
+   The function returns the uppercase offset between
+   the two first differing characters.
+*/
+int str_NoCaseStrncmp(const char* s, const char* t, size_t n);
+
+//! Copy string char by char to allow overlapping source and target buffers
+char* str_Strcpy(char* dest, const char* src);
+
+//! Copy string char by char to allow overlapping source and target buffers
+char* str_Strncpy(char* dest, const char* src, size_t n);
+
+//! Copy string, and cut of if the string is to long with ending '...'
+/*!
+  For example the string '0123456789' will return the string '0123...' when
+  the size of the returned string is 8.
+
+  If the string is cut off, the return value is 1, else 0.
+
+  \param t	Out string.
+  \param s	In string.
+  \param n	Size of out string.
+  \param cutleft The first characters of the string is cut.
+  \return 	1 if the string is cut off, else 0.
+*/
+int str_StrncpyCutOff(char* t, const char* s, size_t n, int cutleft);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

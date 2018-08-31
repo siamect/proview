@@ -280,7 +280,7 @@ static plc_sProcess* init_process(char* name)
       if (EVEN(sts))
         return 0;
 
-      if (cdh_NoCaseStrcmp(pp_name, oname) == 0) {
+      if (str_NoCaseStrcmp(pp_name, oname) == 0) {
         found = 1;
         break;
       }

@@ -57,11 +57,11 @@ int CnvWblToHtml::init(char* first)
   strcpy(html_first, ctx->rw->volume_name);
   strcat(html_first, "_");
   strcat(html_first, first);
-  cdh_ToLower(html_first, html_first);
+  str_ToLower(html_first, html_first);
 
   strcpy(allclasses_name, ctx->rw->volume_name);
   strcat(allclasses_name, "_allclasses.html");
-  cdh_ToLower(allclasses_name, allclasses_name);
+  str_ToLower(allclasses_name, allclasses_name);
 
   // Create index file
   {
@@ -406,8 +406,8 @@ int CnvWblToHtml::class_exec()
 
   time_AtoAscii(0, time_eFormat_DateAndTime, timestr, sizeof(timestr));
 
-  cdh_ToLower(low_volume_name, ctx->rw->volume_name);
-  cdh_ToLower(low_class_name, ctx->rw->class_name);
+  str_ToLower(low_volume_name, ctx->rw->volume_name);
+  str_ToLower(low_class_name, ctx->rw->class_name);
 
   CnvWblToH::get_filename(ctx->rw, fname, 0);
   CnvReadSrc::filename_to_html(struct_file, fname);
@@ -445,7 +445,7 @@ int CnvWblToHtml::class_exec()
   // Add into group file
   for (int i = 0; i < ctx->rw->doc_group_cnt; i++) {
     for (int j = 0; j < ctx->setup->group_cnt; j++) {
-      if (cdh_NoCaseStrcmp(ctx->rw->doc_groups[i], ctx->setup->groups[j])
+      if (str_NoCaseStrcmp(ctx->rw->doc_groups[i], ctx->setup->groups[j])
           == 0) {
         fp_html_group[j] << "<A HREF=\"" << html_file_name
                          << ".html\" TARGET=\"classFrame\">"
@@ -590,19 +590,19 @@ int CnvWblToHtml::class_exec()
   if (ctx->rw->doc_fresh) {
     for (i = 0; i < ctx->rw->doc_cnt; i++) {
       ctx->remove_spaces(ctx->rw->doc_text[i], txt);
-      if (strStartsWith(CnvCtx::low(txt), "@image")) {
+      if (str_StartsWith(CnvCtx::low(txt), "@image")) {
         char imagefile[80];
 
         ctx->remove_spaces(txt + 6, imagefile);
         html_clf->f << "</PRE><IMG SRC=\"" << imagefile << "\"><PRE>\n";
-      } else if (strStartsWith(CnvCtx::low(txt), "@b")) {
+      } else if (str_StartsWith(CnvCtx::low(txt), "@b")) {
         html_clf->f << "</PRE><B><FONT SIZE=\"3\">" << txt + 2
                     << "</FONT></B><BR><PRE>\n";
-      } else if (strStartsWith(CnvCtx::low(txt), "@h1")) {
+      } else if (str_StartsWith(CnvCtx::low(txt), "@h1")) {
         html_clf->f << "</PRE><H3>" << txt + 3 << "</H3><BR><PRE>\n";
-      } else if (strStartsWith(CnvCtx::low(txt), "@h2")) {
+      } else if (str_StartsWith(CnvCtx::low(txt), "@h2")) {
         html_clf->f << "</PRE><H4>" << txt + 3 << "</H4><BR><PRE>\n";
-      } else if (strStartsWith(CnvCtx::low(txt), "@i")) {
+      } else if (str_StartsWith(CnvCtx::low(txt), "@i")) {
         html_clf->f << txt + 2 << '\n';
       } else
         html_clf->f << ctx->rw->doc_text[i] << '\n';
@@ -813,13 +813,13 @@ int CnvWblToHtml::attribute_exec()
   if (Lng::current() != lng_eLanguage_en_US)
     lng_sts = ctx->rw->read_lng(ctx->rw->class_name, ctx->rw->attr_name);
 
-  if (strStartsWith(ctx->rw->attr_typeref, "pwr_eClass_")) {
+  if (str_StartsWith(ctx->rw->attr_typeref, "pwr_eClass_")) {
     strcpy(typeref_href, &ctx->rw->attr_typeref[11]);
     strcpy(ctx->rw->attr_typeref, typeref_href);
-  } else if (strStartsWith(ctx->rw->attr_typeref, "pwr_eType_")) {
+  } else if (str_StartsWith(ctx->rw->attr_typeref, "pwr_eType_")) {
     strcpy(typeref_href, &ctx->rw->attr_typeref[10]);
     strcpy(ctx->rw->attr_typeref, typeref_href);
-  } else if (strStartsWith(ctx->rw->attr_typeref, "pwr_eTypeDef_")) {
+  } else if (str_StartsWith(ctx->rw->attr_typeref, "pwr_eTypeDef_")) {
     strcpy(typeref_href, &ctx->rw->attr_typeref[13]);
     strcpy(ctx->rw->attr_typeref, typeref_href);
   }
@@ -864,14 +864,14 @@ int CnvWblToHtml::attribute_exec()
     if (streq(ctx->rw->doc_summary, "")) {
       for (i = 0; i < ctx->rw->doc_cnt; i++) {
         ctx->remove_spaces(ctx->rw->doc_text[i], txt);
-        if (strStartsWith(CnvCtx::low(txt), "@image")) {
+        if (str_StartsWith(CnvCtx::low(txt), "@image")) {
           continue;
-        } else if (strStartsWith(CnvCtx::low(txt), "@b")) {
+        } else if (str_StartsWith(CnvCtx::low(txt), "@b")) {
           html_clf->f << "</PRE><B><FONT SIZE=\"3\">" << txt + 2
                       << "</FONT></B><PRE><BR>\n";
-        } else if (strStartsWith(CnvCtx::low(txt), "@h1")) {
+        } else if (str_StartsWith(CnvCtx::low(txt), "@h1")) {
           html_clf->f << "<H3>" << txt + 3 << "</H3><BR>\n";
-        } else if (strStartsWith(CnvCtx::low(txt), "@h2")) {
+        } else if (str_StartsWith(CnvCtx::low(txt), "@h2")) {
           html_clf->f << "<H4>" << txt + 3 << "</H4><BR>\n";
         } else {
           html_clf->f << ctx->rw->doc_text[i];
@@ -943,17 +943,17 @@ int CnvWblToHtml::attribute_exec()
   if (ctx->rw->doc_fresh) {
     for (i = 0; i < ctx->rw->doc_cnt; i++) {
       ctx->remove_spaces(ctx->rw->doc_text[i], txt);
-      if (strStartsWith(CnvCtx::low(txt), "@image")) {
+      if (str_StartsWith(CnvCtx::low(txt), "@image")) {
         char imagefile[80];
 
         ctx->remove_spaces(txt + 6, imagefile);
         fp_tmp << "</PRE><IMG SRC=\"" << imagefile << "\"><PRE>\n";
-      } else if (strStartsWith(CnvCtx::low(txt), "@b")) {
+      } else if (str_StartsWith(CnvCtx::low(txt), "@b")) {
         fp_tmp << "</PRE><B><FONT SIZE=\"3\">" << txt + 2
                << "</FONT></B><BR><PRE>\n";
-      } else if (strStartsWith(CnvCtx::low(txt), "@h1")) {
+      } else if (str_StartsWith(CnvCtx::low(txt), "@h1")) {
         fp_tmp << "</PRE><H3>" << txt + 3 << "</H3><BR><PRE>\n";
-      } else if (strStartsWith(CnvCtx::low(txt), "@h2")) {
+      } else if (str_StartsWith(CnvCtx::low(txt), "@h2")) {
         fp_tmp << "</PRE><H4>" << txt + 3 << "</H4><BR><PRE>\n";
       } else
         fp_tmp << ctx->rw->doc_text[i] << '\n';
@@ -989,14 +989,14 @@ int CnvWblToHtml::bit_exec()
     if (streq(ctx->rw->doc_summary, "")) {
       for (i = 0; i < ctx->rw->doc_cnt; i++) {
         ctx->remove_spaces(ctx->rw->doc_text[i], txt);
-        if (strStartsWith(CnvCtx::low(txt), "@image")) {
+        if (str_StartsWith(CnvCtx::low(txt), "@image")) {
           continue;
-        } else if (strStartsWith(CnvCtx::low(txt), "@b")) {
+        } else if (str_StartsWith(CnvCtx::low(txt), "@b")) {
           html_clf->f << "</PRE><B><FONT SIZE=\"3\">" << txt + 2
                       << "</FONT></B><PRE><BR>\n";
-        } else if (strStartsWith(CnvCtx::low(txt), "@h1")) {
+        } else if (str_StartsWith(CnvCtx::low(txt), "@h1")) {
           html_clf->f << "<H3>" << txt + 3 << "</H3><BR>\n";
-        } else if (strStartsWith(CnvCtx::low(txt), "@h2")) {
+        } else if (str_StartsWith(CnvCtx::low(txt), "@h2")) {
           html_clf->f << "<H4>" << txt + 3 << "</H4><BR>\n";
         } else {
           html_clf->f << ctx->rw->doc_text[i];
@@ -1029,17 +1029,17 @@ int CnvWblToHtml::bit_exec()
   if (ctx->rw->doc_fresh) {
     for (i = 0; i < ctx->rw->doc_cnt; i++) {
       ctx->remove_spaces(ctx->rw->doc_text[i], txt);
-      if (strStartsWith(CnvCtx::low(txt), "@image")) {
+      if (str_StartsWith(CnvCtx::low(txt), "@image")) {
         char imagefile[80];
 
         ctx->remove_spaces(txt + 6, imagefile);
         fp_tmp << "</PRE><IMG SRC=\"" << imagefile << "\"><PRE>\n";
-      } else if (strStartsWith(CnvCtx::low(txt), "@b")) {
+      } else if (str_StartsWith(CnvCtx::low(txt), "@b")) {
         fp_tmp << "</PRE><B><FONT SIZE=\"3\">" << txt + 2
                << "</FONT></B><BR><PRE>\n";
-      } else if (strStartsWith(CnvCtx::low(txt), "@h1")) {
+      } else if (str_StartsWith(CnvCtx::low(txt), "@h1")) {
         fp_tmp << "</PRE><H3>" << txt + 3 << "</H3><BR><PRE>\n";
-      } else if (strStartsWith(CnvCtx::low(txt), "@h2")) {
+      } else if (str_StartsWith(CnvCtx::low(txt), "@h2")) {
         fp_tmp << "</PRE><H4>" << txt + 3 << "</H4><BR><PRE>\n";
       } else
         fp_tmp << ctx->rw->doc_text[i] << '\n';
@@ -1069,8 +1069,8 @@ int CnvWblToHtml::typedef_exec()
 
   strcpy(ctx->rw->class_name, ctx->rw->typedef_name);
 
-  cdh_ToLower(low_volume_name, ctx->rw->volume_name);
-  cdh_ToLower(low_class_name, ctx->rw->class_name);
+  str_ToLower(low_volume_name, ctx->rw->volume_name);
+  str_ToLower(low_class_name, ctx->rw->class_name);
 
   CnvWblToH::get_filename(ctx->rw, fname, 0);
   CnvReadSrc::filename_to_html(struct_file, fname);
@@ -1099,7 +1099,7 @@ int CnvWblToHtml::typedef_exec()
   // Add into group file
   for (int i = 0; i < ctx->rw->doc_group_cnt; i++) {
     for (int j = 0; j < ctx->setup->group_cnt; j++) {
-      if (cdh_NoCaseStrcmp(ctx->rw->doc_groups[i], ctx->setup->groups[j])
+      if (str_NoCaseStrcmp(ctx->rw->doc_groups[i], ctx->setup->groups[j])
           == 0) {
         fp_html_group[j] << "<A HREF=\"" << html_file_name
                          << ".html\" TARGET=\"classFrame\">"
@@ -1211,17 +1211,17 @@ int CnvWblToHtml::typedef_exec()
   if (ctx->rw->doc_fresh) {
     for (i = 0; i < ctx->rw->doc_cnt; i++) {
       ctx->remove_spaces(ctx->rw->doc_text[i], txt);
-      if (strStartsWith(CnvCtx::low(txt), "@image")) {
+      if (str_StartsWith(CnvCtx::low(txt), "@image")) {
         char imagefile[80];
 
         ctx->remove_spaces(txt + 6, imagefile);
         html_clf->f << "</PRE><IMG SRC=\"" << imagefile << "\"><PRE>\n";
-      } else if (strStartsWith(CnvCtx::low(txt), "@b")) {
+      } else if (str_StartsWith(CnvCtx::low(txt), "@b")) {
         html_clf->f << "</PRE><B><FONT SIZE=\"3\">" << txt + 2
                     << "</FONT></B><BR><PRE>\n";
-      } else if (strStartsWith(CnvCtx::low(txt), "@h1")) {
+      } else if (str_StartsWith(CnvCtx::low(txt), "@h1")) {
         html_clf->f << "</PRE><H3>" << txt + 3 << "</H3><BR><PRE>\n";
-      } else if (strStartsWith(CnvCtx::low(txt), "@h2")) {
+      } else if (str_StartsWith(CnvCtx::low(txt), "@h2")) {
         html_clf->f << "</PRE><H4>" << txt + 3 << "</H4><BR><PRE>\n";
       } else
         html_clf->f << ctx->rw->doc_text[i] << '\n';

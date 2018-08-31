@@ -976,14 +976,14 @@ static pwr_tStatus tlog_qual_to_time(char* in_str, pwr_tTime* time)
   char str[64];
   char timstr[64];
 
-  if (!strcmp(in_str, "") || strStartsWith(in_str, "TODAY")) {
+  if (!strcmp(in_str, "") || str_StartsWith(in_str, "TODAY")) {
     time_GetTime(&current_time);
     time_AtoAscii(
         &current_time, time_eFormat_DateAndTime, timstr, sizeof(timstr));
     timstr[12] = 0;
     strcat(timstr, " 00:00:00.00");
     sts = time_AsciiToA(timstr, time);
-  } else if (strStartsWith(in_str, "YESTERDAY")) {
+  } else if (str_StartsWith(in_str, "YESTERDAY")) {
     time_GetTime(&current_time);
     time_AtoAscii(
         &current_time, time_eFormat_DateAndTime, timstr, sizeof(timstr));

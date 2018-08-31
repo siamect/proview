@@ -1871,14 +1871,14 @@ int GsdmlAttrNav::search_class(
     if (num >= 2)
       dcli_trim(itemv[1], itemv[1]);
 
-    if (cdh_NoCaseStrcmp(itemv[0], "Device") == 0) {
+    if (str_NoCaseStrcmp(itemv[0], "Device") == 0) {
       if (num < 2)
         continue;
 
       if (in_model)
         continue;
 
-      if (cdh_NoCaseStrcmp(itemv[1], lmodel) == 0)
+      if (str_NoCaseStrcmp(itemv[1], lmodel) == 0)
         in_model = 1;
     }
 
@@ -1897,7 +1897,7 @@ int GsdmlAttrNav::search_class(
       if (streq(itemv[1], "-") || streq(itemv[1], ""))
         continue;
 
-      if (cdh_NoCaseStrcmp(itemv[0], lmodule) == 0) {
+      if (str_NoCaseStrcmp(itemv[0], lmodule) == 0) {
         strncpy(mclass, itemv[1], sizeof(pwr_tObjName));
         fp.close();
         return 1;
@@ -3631,7 +3631,7 @@ int ItemPnModuleType::scan(GsdmlAttrNav* attrnav, void* p)
     sts = attrnav->search_class(pn_cModuleClassFile, devname, buf, mclass);
     if (ODD(sts)) {
       for (int i = 0; attrnav->gsdml->module_classlist[i].cid; i++) {
-        if (cdh_NoCaseStrcmp(mclass, attrnav->gsdml->module_classlist[i].name)
+        if (str_NoCaseStrcmp(mclass, attrnav->gsdml->module_classlist[i].name)
             == 0) {
           mcid = attrnav->gsdml->module_classlist[i].cid;
           break;

@@ -57,7 +57,7 @@ char* CnvCtx::low(const char* in)
 {
   static char str[400];
 
-  cdh_ToLower(str, in);
+  str_ToLower(str, in);
   return str;
 }
 

@@ -34,6 +34,8 @@
  * General Public License plus this exception.
  */
 
+#include "co_string.h"
+
 #include "cow_qt_helpers.h"
 
 #include "ge_graph_qt.h"
@@ -129,7 +131,7 @@ void WGeQtWidget::activate_help()
 {
   if (ge->help_cb) {
     char key[80];
-    cdh_ToLower(key, ge->name);
+    str_ToLower(key, ge->name);
     (ge->help_cb)(ge, key);
   }
 }
@@ -210,7 +212,7 @@ WGeQt::WGeQt(QWidget* wge_parent_wid, void* wge_parent_ctx, char* wge_name,
     window_width = wge_width;
     window_height = wge_height;
   }
-  cdh_StrncpyCutOff(title, name, sizeof(title), 1);
+  str_StrncpyCutOff(title, name, sizeof(title), 1);
 
   // Qt
   toplevel = new WGeQtWidget(this, wge_parent_wid);

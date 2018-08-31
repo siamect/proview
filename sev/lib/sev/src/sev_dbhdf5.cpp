@@ -3631,7 +3631,7 @@ int sev_dbhdf5::check_item(pwr_tStatus* sts, pwr_tOid oid, char* oname,
       continue;
 
     if (cdh_ObjidIsEqual(oid, m_items[i].oid)
-        && cdh_NoCaseStrcmp(aname, m_items[i].attr[0].aname) == 0) {
+        && str_NoCaseStrcmp(aname, m_items[i].attr[0].aname) == 0) {
       bool itemdefchange = false;
       bool modified = false;
       if (type != m_items[i].attr[0].type || size != m_items[i].attr[0].size) {
@@ -3783,7 +3783,7 @@ int sev_dbhdf5::check_objectitem(pwr_tStatus* sts, char* tablename,
       continue;
 
     if (cdh_ObjidIsEqual(oid, m_items[i].oid)
-        && cdh_NoCaseStrcmp(oname, m_items[i].oname) == 0) {
+        && str_NoCaseStrcmp(oname, m_items[i].oname) == 0) {
       bool itemdefchange = false;
       bool modified = false;
 
@@ -4143,7 +4143,7 @@ int sev_dbhdf5::check_objectitemattr(pwr_tStatus* sts, char* tablename,
 {
   sev_item* item = &m_items[*idx];
   for (size_t j = 0; j < item->attr.size(); j++) {
-    if (cdh_NoCaseStrcmp(aname, item->attr[j].aname) == 0) {
+    if (str_NoCaseStrcmp(aname, item->attr[j].aname) == 0) {
       if (type != item->attr[j].type || size != item->attr[j].size) {
         *sts = SEV__NOSUCHITEM;
         return 0;
@@ -4371,7 +4371,7 @@ int sev_dbhdf5::get_item(
       continue;
 
     if (cdh_ObjidIsEqual(oid, m_items[i].oid)
-        && cdh_NoCaseStrcmp(attributename, m_items[i].attr[0].aname) == 0) {
+        && str_NoCaseStrcmp(attributename, m_items[i].attr[0].aname) == 0) {
       *idx = i;
       *sts = SEV__SUCCESS;
       return 1;
@@ -4411,7 +4411,7 @@ int sev_dbhdf5::get_objectitem(pwr_tStatus* sts, void* thread, sev_item* item,
       continue;
 
     if (ritem.oix == oid.oix && ritem.vid == oid.vid
-        && cdh_NoCaseStrcmp(attributename, ritem.aname) == 0) {
+        && str_NoCaseStrcmp(attributename, ritem.aname) == 0) {
       item->id = ritem.id;
       strncpy(item->tablename, ritem.tablename, sizeof(item->tablename));
       item->oid.vid = ritem.vid;

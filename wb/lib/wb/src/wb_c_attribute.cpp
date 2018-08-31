@@ -141,7 +141,7 @@ static pwr_tStatus HelpClass(ldh_sMenuCall* ip)
     if (EVEN(sts))
       return sts;
 
-    cdh_ToLower(vname, vname);
+    str_ToLower(vname, vname);
     if (streq(attr, ""))
       sprintf(cmd, "help %s /helpfile=\"$pwr_exe/%s/%s_xtthelp.dat\"/strict",
           cname, lng_get_language_str(), vname);

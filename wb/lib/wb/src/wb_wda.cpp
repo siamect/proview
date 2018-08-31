@@ -256,7 +256,7 @@ int Wda::next_attr()
     if (EVEN(sts))
       continue;
     for (j = 0; j < rows; j++) {
-      if (cdh_NoCaseStrcmp(attribute, bodydef[j].ParName) == 0)
+      if (str_NoCaseStrcmp(attribute, bodydef[j].ParName) == 0)
         get_next = 1;
       else if (get_next) {
         strcpy(attribute, bodydef[j].ParName);
@@ -300,7 +300,7 @@ int Wda::prev_attr()
     if (EVEN(sts))
       continue;
     for (j = 0; j < rows; j++) {
-      if (cdh_NoCaseStrcmp(attribute, bodydef[j].ParName) == 0) {
+      if (str_NoCaseStrcmp(attribute, bodydef[j].ParName) == 0) {
         if (streq(prev_attr, "")) {
           // get_last = 1;
           free((char*)bodydef);

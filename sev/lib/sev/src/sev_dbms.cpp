@@ -158,7 +158,7 @@ char* sev_dbms_env::dbName(void)
   get_systemname();
   strcpy(dbname, "pwrp__");
   strcat(dbname, m_systemName);
-  cdh_ToLower(dbname, dbname);
+  str_ToLower(dbname, dbname);
 
   return dbname;
 }
@@ -170,7 +170,7 @@ char* sev_dbms_env::host(void)
   static char host[80];
 
   syi_NodeName(&sts, nodename, sizeof(nodename));
-  if (ODD(sts) && cdh_NoCaseStrcmp(nodename, m_host) == 0)
+  if (ODD(sts) && str_NoCaseStrcmp(nodename, m_host) == 0)
     strcpy(host, "localhost");
   else
     strcpy(host, m_host);
@@ -650,7 +650,7 @@ int sev_dbms_env::create()
   struct stat sb;
   char name[512];
 
-  cdh_ToLower(m_fileName, m_fileName);
+  str_ToLower(m_fileName, m_fileName);
 
   printf("sev_dbms_env::create: %s\n", m_fileName);
   /* Create the directory, read/write/access owner and group. */
@@ -706,7 +706,7 @@ int sev_dbms_env::open(void)
   char* valp;
   int rc;
 
-  cdh_ToLower(m_fileName, m_fileName);
+  str_ToLower(m_fileName, m_fileName);
 
   sprintf(buf, "%s/%s", m_fileName, "connection.dmsql");
 
@@ -872,7 +872,7 @@ int sev_dbms::create_table(pwr_tStatus* sts, char* tablename, pwr_eType type,
 
   if (!streq(m_cnf.Engine, ""))
     snprintf(enginestr, sizeof(enginestr), " engine=%s", m_cnf.Engine);
-  if (cdh_NoCaseStrcmp(m_cnf.Engine, "innodb") == 0)
+  if (str_NoCaseStrcmp(m_cnf.Engine, "innodb") == 0)
     strcat(enginestr, " row_format=compressed");
 
   if (options & pwr_mSevOptionsMask_PosixTime) {
@@ -2640,7 +2640,7 @@ int sev_dbms::check_item(pwr_tStatus* sts, pwr_tOid oid, char* oname,
       continue;
 
     if (cdh_ObjidIsEqual(oid, m_items[i].oid)
-        && cdh_NoCaseStrcmp(aname, m_items[i].attr[0].aname) == 0) {
+        && str_NoCaseStrcmp(aname, m_items[i].attr[0].aname) == 0) {
       char query[600];
 
       bool itemdefchange = false;
@@ -2785,7 +2785,7 @@ int sev_dbms::delete_item(pwr_tStatus* sts, pwr_tOid oid, char* aname)
       if (m_items[i].deleted)
         continue;
       if (cdh_ObjidIsEqual(m_items[i].oid, oid)
-          && cdh_NoCaseStrcmp(m_items[i].attr[0].aname, aname) == 0) {
+          && str_NoCaseStrcmp(m_items[i].attr[0].aname, aname) == 0) {
         m_items[i].deleted = 1;
         break;
       }
@@ -2968,7 +2968,7 @@ int sev_dbms::check_objectitem(pwr_tStatus* sts, char* tablename, pwr_tOid oid,
       continue;
 
     if (cdh_ObjidIsEqual(oid, m_items[i].oid)
-        && cdh_NoCaseStrcmp(oname, m_items[i].oname) == 0) {
+        && str_NoCaseStrcmp(oname, m_items[i].oname) == 0) {
       char query[400];
       sprintf(query, "update objectitems set ");
       sprintf(&query[strlen(query)], "storagetime=%ld,",
@@ -3159,7 +3159,7 @@ int sev_dbms::check_objectitemattr(pwr_tStatus* sts, char* tablename,
 {
   sev_item* item = &m_items[*idx];
   for (size_t j = 0; j < item->attr.size(); j++) {
-    if (cdh_NoCaseStrcmp(aname, item->attr[j].aname) == 0) {
+    if (str_NoCaseStrcmp(aname, item->attr[j].aname) == 0) {
       if (type != item->attr[j].type || size != item->attr[j].size) {
         *sts = SEV__NOSUCHITEM;
         return 0;
@@ -4661,7 +4661,7 @@ int sev_dbms::repair_table(pwr_tStatus* sts, char* tablename)
 
       printf("-- Check result '%s %s %s %s'\n", row[0], row[1], row[2], row[3]);
     }
-    if (cdh_NoCaseStrcmp(row[3], "ok") == 0)
+    if (str_NoCaseStrcmp(row[3], "ok") == 0)
       repair_table = 0;
     else
       repair_table = 1;
@@ -4705,7 +4705,7 @@ int sev_dbms::repair_table(pwr_tStatus* sts, char* tablename)
       printf(
           "-- Repair result '%s %s %s %s'\n", row[0], row[1], row[2], row[3]);
     }
-    if (cdh_NoCaseStrcmp(row[3], "ok") != 0) {
+    if (str_NoCaseStrcmp(row[3], "ok") != 0) {
       printf("** Error, repair failure %s\n", row[0]);
       repair_failed = 1;
     } else

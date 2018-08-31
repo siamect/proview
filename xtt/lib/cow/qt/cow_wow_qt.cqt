@@ -361,8 +361,8 @@ QString loadText(std::string filename)
   text[i] = 0;
   fclose(fp);
 
-  if (strStartsWith(text, "Coding:UTF-8")) {
-    cdh_Strcpy(text, &text[13]);
+  if (str_StartsWith(text, "Coding:UTF-8")) {
+    str_Strcpy(text, &text[13]);
     return QString::fromUtf8(text).trimmed();
   } else {
     return QString::fromLatin1(text).trimmed();

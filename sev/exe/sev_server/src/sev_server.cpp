@@ -132,11 +132,11 @@ int sev_server::init(int noneth)
     m_config->GarbageInterval = sev_cGarbageInterval;
 
     if (cnf_get_value("sevDatabaseType", str, sizeof(str))) {
-      if (cdh_NoCaseStrcmp(str, "sqlite") == 0)
+      if (str_NoCaseStrcmp(str, "sqlite") == 0)
         m_config->Database = sev_eDbType_Sqlite;
-      else if (cdh_NoCaseStrcmp(str, "mysql") == 0)
+      else if (str_NoCaseStrcmp(str, "mysql") == 0)
         m_config->Database = sev_eDbType_Mysql;
-      else if (cdh_NoCaseStrcmp(str, "hdf5") == 0)
+      else if (str_NoCaseStrcmp(str, "hdf5") == 0)
         m_config->Database = sev_eDbType_HDF5;
       else
         m_config->Database = sev_eDbType_Mysql;
@@ -144,15 +144,15 @@ int sev_server::init(int noneth)
       m_config->Database = sev_eDbType_Mysql;
 
     if (cnf_get_value("sevUseServerThreads", str, sizeof(str))) {
-      if (cdh_NoCaseStrcmp(str, "1") == 0)
+      if (str_NoCaseStrcmp(str, "1") == 0)
         m_config->UseServerThreads = 1;
     }
     if (cnf_get_value("sevLinearRegrAll", str, sizeof(str))) {
-      if (cdh_NoCaseStrcmp(str, "1") == 0)
+      if (str_NoCaseStrcmp(str, "1") == 0)
         m_config->LinearRegrAll = 1;
     }
     if (cnf_get_value("sevMeanValueAll", str, sizeof(str))) {
-      if (cdh_NoCaseStrcmp(str, "1") == 0)
+      if (str_NoCaseStrcmp(str, "1") == 0)
         m_config->MeanValueAll = 1;
     }
     if (cnf_get_value("sevMeanValueInterval1", str, sizeof(str))) {
@@ -170,7 +170,7 @@ int sev_server::init(int noneth)
   }
 
   if (cnf_get_value("sevThreadKeyNode", str, sizeof(str))) {
-    if (cdh_NoCaseStrcmp(str, "1") == 0)
+    if (str_NoCaseStrcmp(str, "1") == 0)
       m_thread_key_node = 1;
   }
 

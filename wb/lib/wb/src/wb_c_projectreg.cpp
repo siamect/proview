@@ -147,7 +147,7 @@ static pwr_tStatus PostRename(ldh_tSesContext Session, pwr_tOid Object)
     if (EVEN(sts))
       return sts;
 
-    cdh_ToLower(name, name);
+    str_ToLower(name, name);
 
     sts = ldh_SetObjectPar(
         Session, Object, "RtBody", "Project", name, sizeof(name));

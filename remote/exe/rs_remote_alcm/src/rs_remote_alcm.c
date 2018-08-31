@@ -495,7 +495,7 @@ unsigned short int Receive()
               ((remnode_alcm*)(remnode->local))->ref->RemoteHostname);
         } else {
           // Skicka alltid kvittens på DUMMY0 (om APLACK)
-          if (strStartsWith(name, "DUMMY0")
+          if (str_StartsWith(name, "DUMMY0")
               && rcv.apl.trans_code == ALCM_TRACO_APLACK)
             send_response = true;
         }

@@ -41,7 +41,7 @@ static char* nname(const char* nodename)
   pwr_tStatus sts;
 
   syi_NodeName(&sts, name, sizeof(name));
-  if (cdh_NoCaseStrcmp(name, nodename) == 0)
+  if (str_NoCaseStrcmp(name, nodename) == 0)
     strcpy(n, "127.0.0.1");
   else
     strcpy(n, nodename);

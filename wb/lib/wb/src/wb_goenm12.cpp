@@ -35,6 +35,8 @@
  **/
 
 #include "co_dcli.h"
+#include "co_string.h"
+
 #include "wb_foe_msg.h"
 #include "wb_goenm12.h"
 
@@ -93,7 +95,7 @@ int goen_create_nodetype_m12(pwr_sGraphPlcNode* graphbody, pwr_tClassId cid,
   bool loaded = false;
   if (subwindowmark != 0) {
     sprintf(fname, "$pwrp_exe/%s_sw.flwn", name);
-    cdh_ToLower(fname, fname);
+    str_ToLower(fname, fname);
     dcli_translate_filename(fname, fname);
 
     sts = flow_LoadNodeClass(ctx, fname, &nc);
@@ -102,7 +104,7 @@ int goen_create_nodetype_m12(pwr_sGraphPlcNode* graphbody, pwr_tClassId cid,
     else {
       // Try base
       sprintf(fname, "$pwr_exe/pwr_c_%s_sw.flwn", name);
-      cdh_ToLower(fname, fname);
+      str_ToLower(fname, fname);
       dcli_translate_filename(fname, fname);
 
       sts = flow_LoadNodeClass(ctx, fname, &nc);
@@ -112,14 +114,14 @@ int goen_create_nodetype_m12(pwr_sGraphPlcNode* graphbody, pwr_tClassId cid,
   }
   if (!loaded) {
     sprintf(fname, "$pwrp_exe/%s.flwn", name);
-    cdh_ToLower(fname, fname);
+    str_ToLower(fname, fname);
     dcli_translate_filename(fname, fname);
 
     sts = flow_LoadNodeClass(ctx, fname, &nc);
     if (EVEN(sts)) {
       // Try base
       sprintf(fname, "$pwr_exe/pwr_c_%s.flwn", name);
-      cdh_ToLower(fname, fname);
+      str_ToLower(fname, fname);
       dcli_translate_filename(fname, fname);
 
       sts = flow_LoadNodeClass(ctx, fname, &nc);

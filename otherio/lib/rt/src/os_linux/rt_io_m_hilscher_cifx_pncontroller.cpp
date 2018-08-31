@@ -213,7 +213,7 @@ static pwr_tStatus IoAgentInit(io_tCtx ctx, io_sAgent* ap)
 
   while (xDriverEnumBoards(driver, board, sizeof(boardinfo), &boardinfo)
       == CIFX_NO_ERROR) {
-    if (cdh_NoCaseStrcmp(boardinfo.abBoardAlias, op->Alias) == 0) {
+    if (str_NoCaseStrcmp(boardinfo.abBoardAlias, op->Alias) == 0) {
       found = 1;
       break;
     }

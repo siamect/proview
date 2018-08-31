@@ -193,7 +193,7 @@ XttFast::XttFast(void* parent_ctx, char* name, pwr_sAttrRef* fast_arp,
   if (!streq(fp.Title, ""))
     strcpy(title, fp.Title);
   else
-    cdh_StrncpyCutOff(title, name, sizeof(title), 1);
+    str_StrncpyCutOff(title, name, sizeof(title), 1);
 
   // timerid = XtAppAddTimeOut(
   //	XtWidgetToApplicationContext(parent_widget), 1000,
@@ -570,17 +570,17 @@ int XttFast::read_export(char* filename)
       break;
 
     if (line[0] == '#') {
-      if (strStartsWith(&line[2], "Attribute")) {
+      if (str_StartsWith(&line[2], "Attribute")) {
         // New attribute
         idx++;
         strncpy(gcd->y_name[idx], &line[12], sizeof(gcd->y_name[idx]));
         gcd->y_data[idx] = (double*)calloc(1, 8 * max_points);
         gcd->y_axis_type[idx] = curve_eAxis_y;
-      } else if (strStartsWith(&line[2], "Rows")) {
+      } else if (str_StartsWith(&line[2], "Rows")) {
         sscanf(&line[7], "%d", &max_points);
         gcd->rows[0] = max_points;
         gcd->x_data[0] = (double*)calloc(1, 8 * max_points);
-      } else if (strStartsWith(&line[2], "Columns")) {
+      } else if (str_StartsWith(&line[2], "Columns")) {
         sscanf(&line[10], "%d", &fast_cnt);
       }
     } else {

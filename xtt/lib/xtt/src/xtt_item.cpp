@@ -483,7 +483,7 @@ int ItemBaseObject::open_attribute(
                && bd[i].attr->Param.Info.Flags & PWR_MASK_POINTER))
       continue;
 
-    if (cdh_NoCaseStrcmp(attr_name, bd[i].attrName) == 0) {
+    if (str_NoCaseStrcmp(attr_name, bd[i].attrName) == 0) {
       if (bd[i].attr->Param.Info.Flags & PWR_MASK_RTVIRTUAL
           || (bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE
                  && bd[i].attr->Param.Info.Flags & PWR_MASK_POINTER)) {
@@ -1400,7 +1400,7 @@ int ItemHelp::open_children(XNavBrow* brow, double x, double y)
   if (index) {
     sts = xnav->help_index(file_type, file_name, 1);
   } else if (!streq(link, "")) {
-    if (strStartsWith(link, "$web:")) {
+    if (str_StartsWith(link, "$web:")) {
       // Open the url
       xnav_open_URL(&link[5]);
     } else if ((strstr(link, ".htm") != 0) || (strstr(link, ".pdf") != 0)) {
@@ -1455,7 +1455,7 @@ int ItemHelpBold::open_children(XNavBrow* brow, double x, double y)
   if (index) {
     sts = xnav->help_index(file_type, file_name, 1);
   } else if (!streq(link, "")) {
-    if (strStartsWith(link, "$web:")) {
+    if (str_StartsWith(link, "$web:")) {
       // Open the url
       xnav_open_URL(&link[5]);
     } else if ((strstr(link, ".htm") != 0) || (strstr(link, ".pdf") != 0)) {

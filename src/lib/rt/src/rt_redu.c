@@ -171,7 +171,7 @@ static pwr_tStatus add_table_object(redu_tCtx ctx, pwr_tAttrRef* o)
 
     if (bd[i].attr->Param.Info.Flags & PWR_MASK_CLASS) {
       if (elements == 1) {
-        if (strStartsWith(bd[i].attrName, "Super."))
+        if (str_StartsWith(bd[i].attrName, "Super."))
           strcpy(aname, &bd[i].attrName[6]);
         else
           strcpy(aname, bd[i].attrName);
@@ -185,7 +185,7 @@ static pwr_tStatus add_table_object(redu_tCtx ctx, pwr_tAttrRef* o)
           return sts;
       } else {
         for (j = 0; j < elements; j++) {
-          if (strStartsWith(bd[i].attrName, "Super."))
+          if (str_StartsWith(bd[i].attrName, "Super."))
             sprintf(aname, "%s[%d]", &bd[i].attrName[6], j);
           else
             sprintf(aname, "%s[%d]", bd[i].attrName, j);
@@ -200,7 +200,7 @@ static pwr_tStatus add_table_object(redu_tCtx ctx, pwr_tAttrRef* o)
         }
       }
     } else {
-      if (strStartsWith(bd[i].attrName, "Super."))
+      if (str_StartsWith(bd[i].attrName, "Super."))
         strcpy(aname, &bd[i].attrName[6]);
       else
         strcpy(aname, bd[i].attrName);

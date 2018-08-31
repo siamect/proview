@@ -65,7 +65,7 @@ int dcli_get_defaultfilename(const char* inname, char* outname, const char* ext)
 
 #if defined OS_POSIX
   if (strchr(inname, '/'))
-    cdh_Strcpy(outname, inname);
+    str_Strcpy(outname, inname);
   else if ((s = strchr(inname, ':'))) {
     /* Replace VMS disp to env variable */
     strcpy(filename, "$");
@@ -174,10 +174,10 @@ int dcli_replace_env(const char* str, char* newstr)
       if (streq(symbol, "HOME"))
         strcpy(lower_symbol, symbol);
       else
-        cdh_ToLower(lower_symbol, symbol);
+        str_ToLower(lower_symbol, symbol);
       if ((value = getenv(lower_symbol)) == NULL) {
         /* It was no symbol */
-        if (strStartsWith(str, "$pwr")) {
+        if (str_StartsWith(str, "$pwr")) {
           fprintf(stderr, "Warning! Could not resolve environment variable $%s\n", lower_symbol);
         }
         *t = *s;
@@ -206,10 +206,10 @@ int dcli_replace_env(const char* str, char* newstr)
     if (streq(symbol, "HOME"))
       strcpy(lower_symbol, symbol);
     else
-      cdh_ToLower(lower_symbol, symbol);
+      str_ToLower(lower_symbol, symbol);
     if ((value = getenv(lower_symbol)) == NULL) {
       /* It was no symbol */
-      if (strStartsWith(str, "$pwr")) {
+      if (str_StartsWith(str, "$pwr")) {
         fprintf(stderr, "Warning! Could not resolve environment variable $%s\n", lower_symbol);
       }
       *t = 0;

@@ -359,7 +359,7 @@ bool wb_vrepced::commit(pwr_tStatus* sts)
   strcpy(vname, "$pwrp_load/");
   strcat(vname, m_vrep->name());
   strcat(vname, ".dbs");
-  cdh_ToLower(vname, vname);
+  str_ToLower(vname, vname);
   dcli_translate_filename(vname, vname);
 
   try {
@@ -412,7 +412,7 @@ bool wb_vrepced::commit(pwr_tStatus* sts)
   strcpy(vname, "$pwrp_load/");
   strcat(vname, m_vrep->name());
   strcat(vname, ".dbs");
-  cdh_ToLower(vname, vname);
+  str_ToLower(vname, vname);
   dcli_translate_filename(vname, vname);
 
   try {
@@ -2220,13 +2220,13 @@ void wb_vrepced::printPaletteFile()
   // Add menu "NavigatorPalette-AllClasses-'volumename' if not found
   for (mp = menu; mp; mp = mp->next) {
     if (mp->item_type == pal_eMenuType_Palette
-        && cdh_NoCaseStrcmp(mp->title, "NavigatorPalette") == 0) {
+        && str_NoCaseStrcmp(mp->title, "NavigatorPalette") == 0) {
       for (mp2 = mp->child_list; mp2; mp2 = mp2->next) {
         if (mp2->item_type == pal_eMenuType_Menu
-            && cdh_NoCaseStrcmp(mp2->title, "AllClasses") == 0) {
+            && str_NoCaseStrcmp(mp2->title, "AllClasses") == 0) {
           for (mp3 = mp2->child_list; mp3; mp3 = mp3->next) {
             if (mp3->item_type == pal_eMenuType_ClassVolume
-                && cdh_NoCaseStrcmp(mp3->title, m_name) == 0) {
+                && str_NoCaseStrcmp(mp3->title, m_name) == 0) {
               menu_found = 1;
               break;
             }
@@ -2264,10 +2264,10 @@ void wb_vrepced::printPaletteFile()
   palette_found = 0;
   for (mp = menu; mp; mp = mp->next) {
     if (mp->item_type == pal_eMenuType_Palette
-        && cdh_NoCaseStrcmp(mp->title, "PlcEditorPalette") == 0) {
+        && str_NoCaseStrcmp(mp->title, "PlcEditorPalette") == 0) {
       for (mp2 = mp->child_list; mp2; mp2 = mp2->next) {
         if (mp2->item_type == pal_eMenuType_Menu
-            && cdh_NoCaseStrcmp(mp2->title, m_name) == 0) {
+            && str_NoCaseStrcmp(mp2->title, m_name) == 0) {
           // Remove
           PalFile::config_tree_free(mp2->child_list);
           mp2->child_list = 0;
@@ -2460,7 +2460,7 @@ void wb_vrepced::printStructFile(bool hpp)
     sprintf(filename, "$pwrp_inc/pwr_%sclasses.hpp", m_vrep->name());
   else
     sprintf(filename, "$pwrp_inc/pwr_%sclasses.h", m_vrep->name());
-  cdh_ToLower(filename, filename);
+  str_ToLower(filename, filename);
   dcli_translate_filename(fname, filename);
 
   fp.open(fname);

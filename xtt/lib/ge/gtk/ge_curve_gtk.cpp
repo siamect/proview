@@ -839,7 +839,7 @@ GeCurveGtk::GeCurveGtk(void* gc_parent_ctx, GtkWidget* parent_widget,
     window_height = gc_height;
   }
 
-  cdh_StrncpyCutOff(title, curve_name, sizeof(title), 1);
+  str_StrncpyCutOff(title, curve_name, sizeof(title), 1);
 
   // Gtk
   if (!(options & curve_mOptions_Embedded)) {

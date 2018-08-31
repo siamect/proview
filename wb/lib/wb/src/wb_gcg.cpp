@@ -1528,7 +1528,7 @@ static int gcg_parname_to_pgmname(
   for (i = 0; i < rows; i++) {
     s = bodydef[i].ParName;
     strcpy(superstr, "");
-    while (strStartsWith(s, "Super.")) {
+    while (str_StartsWith(s, "Super.")) {
       strcat(superstr, "Super.");
       s += 6;
     }
@@ -4516,7 +4516,7 @@ pwr_tStatus gcg_read_volume_plclist(pwr_tVolumeId volid,
     return GSX__NOLOADFILE;
 
   while (ODD(sts = utl_read_line(line, sizeof(line), file, &line_count))) {
-    if (strStartsWith(line, "PlcProcess")) {
+    if (str_StartsWith(line, "PlcProcess")) {
       if (plcproclist) {
         sscanf(line, "%s %s %s", type, objid_str, name);
         sts = utl_realloc((char**)plcproclist,
@@ -4530,7 +4530,7 @@ pwr_tStatus gcg_read_volume_plclist(pwr_tVolumeId volid,
         strcpy((plcproclist_pointer + *plcproc_count)->name, name);
         (*plcproc_count)++;
       }
-    } else if (strStartsWith(line, "PlcThread")) {
+    } else if (str_StartsWith(line, "PlcThread")) {
       if (threadlist) {
         sscanf(line, "%s %s %s %f %d %s", type, objid_str, plcproc_objid_str,
             &scantime, &prio, name);
@@ -4552,7 +4552,7 @@ pwr_tStatus gcg_read_volume_plclist(pwr_tVolumeId volid,
         (threadlist_pointer + *thread_count)->prio = prio;
         (*thread_count)++;
       }
-    } else if (strStartsWith(line, "PlcPgm")) {
+    } else if (str_StartsWith(line, "PlcPgm")) {
       if (plclist) {
         sscanf(line, "%s %s %s %d %s", type, objid_str, thread_str,
             &executeorder, name);
@@ -13012,7 +13012,7 @@ int gcg_comp_m58(gcg_ctx gcgctx, vldh_t_node node)
     if ((s = strchr(oname, ':')))
       *s = 0;
     sprintf(fname, "$pwrp_inc/pwr_%sclasses.h", oname);
-    cdh_ToLower(fname, fname);
+    str_ToLower(fname, fname);
     dcli_translate_filename(fname, fname);
 
     sts = stat(fname, &info);

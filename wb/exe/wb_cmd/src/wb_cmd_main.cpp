@@ -288,24 +288,24 @@ int Cmd::utilities(char* str)
 {
   pwr_tCmd cmd;
 
-  if (cdh_NoCaseStrcmp(str, "ge") == 0
-      || cdh_NoCaseStrncmp(str, "ge ", 3) == 0) {
+  if (str_NoCaseStrcmp(str, "ge") == 0
+      || str_NoCaseStrncmp(str, "ge ", 3) == 0) {
     strcpy(cmd, "wb_ge");
     strcat(cmd, &str[2]);
     system(cmd);
     return 1;
-  } else if (cdh_NoCaseStrcmp(str, "s") == 0
-      || cdh_NoCaseStrncmp(str, "s ", 2) == 0) {
+  } else if (str_NoCaseStrcmp(str, "s") == 0
+      || str_NoCaseStrncmp(str, "s ", 2) == 0) {
     strcpy(cmd, "pwrs");
     strcat(cmd, &str[1]);
     system(cmd);
     return 1;
-  } else if (cdh_NoCaseStrcmp(str, "a") == 0) {
+  } else if (str_NoCaseStrcmp(str, "a") == 0) {
     strcpy(cmd, "pwra");
     system(cmd);
     return 1;
-  } else if (cdh_NoCaseStrcmp(str, "xhelp") == 0
-      || cdh_NoCaseStrncmp(str, "xhelp ", 6) == 0) {
+  } else if (str_NoCaseStrcmp(str, "xhelp") == 0
+      || str_NoCaseStrncmp(str, "xhelp ", 6) == 0) {
     char cmd_array[3][40];
     int nr;
 
@@ -315,19 +315,19 @@ int Cmd::utilities(char* str)
     if (nr == 1)
       strcpy(cmd, "co_help");
     else if (nr > 1) {
-      if (cdh_NoCaseStrncmp(cmd_array[1], "configurator", strlen(cmd_array[1]))
+      if (str_NoCaseStrncmp(cmd_array[1], "configurator", strlen(cmd_array[1]))
           == 0)
         strcpy(cmd, "co_help -c");
-      else if (cdh_NoCaseStrncmp(
+      else if (str_NoCaseStrncmp(
                    cmd_array[1], "designer's", strlen(cmd_array[1]))
           == 0)
         strcpy(cmd, "co_help -d");
-      else if (cdh_NoCaseStrncmp(cmd_array[1], "ge", strlen(cmd_array[1])) == 0)
+      else if (str_NoCaseStrncmp(cmd_array[1], "ge", strlen(cmd_array[1])) == 0)
         strcpy(cmd, "co_help -g");
-      else if (cdh_NoCaseStrncmp(cmd_array[1], "operator", strlen(cmd_array[1]))
+      else if (str_NoCaseStrncmp(cmd_array[1], "operator", strlen(cmd_array[1]))
           == 0)
         strcpy(cmd, "co_help -o");
-      else if (cdh_NoCaseStrncmp(cmd_array[1], "project", strlen(cmd_array[1]))
+      else if (str_NoCaseStrncmp(cmd_array[1], "project", strlen(cmd_array[1]))
           == 0)
         strcpy(cmd, "co_help");
       else {
@@ -337,7 +337,7 @@ int Cmd::utilities(char* str)
     }
     system(cmd);
     return 1;
-  } else if (cdh_NoCaseStrcmp(str, "rtmon") == 0) {
+  } else if (str_NoCaseStrcmp(str, "rtmon") == 0) {
     strcpy(cmd, "pwr_rtmon");
     system(cmd);
     return 1;

@@ -526,7 +526,7 @@ static pwr_tUInt32 tlog_selectlist_check( tlog_t_filectx *filectx,
 	i = selectlist_current - 1;
 	while( j < 10 && selectlists[i].TLogSelectList[j][0] != 0)
 	{
-	  if ( strStartsWith(name, selectlists[i].TLogSelectList[j]))
+	  if ( str_StartsWith(name, selectlists[i].TLogSelectList[j]))
 	  return TLOG__SUCCESS;
 	  j++;
 	}
@@ -559,7 +559,7 @@ static pwr_tUInt32 tlog_extselectlist_check( tlog_t_filectx *filectx,
 	    j = 0;
 	    while( j < 10 && selectlists[i].TLogSelectList[j][0] != 0)
 	    {
-	      if ( strStartsWith(name, selectlists[i].TLogSelectList[j]))
+	      if ( str_StartsWith(name, selectlists[i].TLogSelectList[j]))
 	        return TLOG__SUCCESS;
 	      j++;
 	    }

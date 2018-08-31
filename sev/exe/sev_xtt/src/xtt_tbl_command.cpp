@@ -270,8 +270,8 @@ static int xtttbl_login_func(void* client_data, void* client_flag)
     return 1;
   }
 
-  cdh_ToLower(arg1_str, arg1_str);
-  cdh_ToLower(arg2_str, arg2_str);
+  str_ToLower(arg1_str, arg1_str);
+  str_ToLower(arg2_str, arg2_str);
   sts = user_CheckUser(
       systemgroup, arg1_str, UserList::pwcrypt(arg2_str), &priv);
   if (EVEN(sts))
@@ -311,8 +311,8 @@ static int xtttbl_open_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (strStartsWith(arg1_str, "GRAPH")) {
-  } else if (cdh_NoCaseStrncmp(arg1_str, "HISTORY", strlen(arg1_str)) == 0) {
+  if (str_StartsWith(arg1_str, "GRAPH")) {
+  } else if (str_NoCaseStrncmp(arg1_str, "HISTORY", strlen(arg1_str)) == 0) {
     pwr_tAName name_str;
     char* name_ptr;
     pwr_tAName name_array[10];
@@ -399,7 +399,7 @@ static int xtttbl_create_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (strStartsWith(arg1_str, "ITEM")) {
+  if (str_StartsWith(arg1_str, "ITEM")) {
     pwr_tOName name_str;
     pwr_tCmd command_str;
 
@@ -432,7 +432,7 @@ static int xtttbl_show_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (strStartsWith(arg1_str, "USER")) {
+  if (str_StartsWith(arg1_str, "USER")) {
     char msg[120];
     char priv_str[80];
 

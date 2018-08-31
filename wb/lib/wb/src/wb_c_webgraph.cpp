@@ -38,6 +38,9 @@
 
 #undef Status
 #include "pwr_baseclasses.h"
+
+#include "co_string.h"
+
 #include "wb_build.h"
 #include "wb_pwrb_msg.h"
 #include "wb_pwrs.h"
@@ -59,7 +62,7 @@ static pwr_tStatus OpenGraph(ldh_sMenuCall* ip)
   if (EVEN(sts))
     return sts;
 
-  cdh_ToLower(graph_name, action);
+  str_ToLower(graph_name, action);
   free((char*)action);
 
   ip->wtt->ge_new(graph_name);

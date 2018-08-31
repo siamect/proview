@@ -2055,13 +2055,13 @@ int GrowCtx::get_dimension(char* filename, int* width, int* height)
     return GLOW__FILEOPEN;
 
   while (fp.getline(line, sizeof(line))) {
-    if (!strStartsWith(line, "0! "))
+    if (!str_StartsWith(line, "0! "))
       break;
-    if (strStartsWith(&line[3], "DefaultWidth")) {
+    if (str_StartsWith(&line[3], "DefaultWidth")) {
       num = sscanf(&line[16], "%d", width);
       if (num == 1)
         width_found = true;
-    } else if (strStartsWith(&line[3], "DefaultHeight")) {
+    } else if (str_StartsWith(&line[3], "DefaultHeight")) {
       sscanf(&line[17], "%d", height);
       if (num == 1)
         height_found = true;

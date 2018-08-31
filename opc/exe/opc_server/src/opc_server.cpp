@@ -1737,7 +1737,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap* soap,
 
       int bd_idx = -1;
       for (int i = 0; i < rows; i++) {
-        if (cdh_NoCaseStrcmp(attrname, bd[i].attrName) == 0) {
+        if (str_NoCaseStrcmp(attrname, bd[i].attrName) == 0) {
           bd_idx = i;
           break;
         }
@@ -2072,7 +2072,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__GetProperties(struct soap* soap,
       }
       int bd_idx = -1;
       for (int i = 0; i < rows; i++) {
-        if (cdh_NoCaseStrcmp(aname, bd[i].attrName) == 0) {
+        if (str_NoCaseStrcmp(aname, bd[i].attrName) == 0) {
           bd_idx = i;
           break;
         }

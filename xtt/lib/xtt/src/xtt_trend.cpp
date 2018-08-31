@@ -851,7 +851,7 @@ void XttTrend::curve_add(
                 if (EVEN(*sts))
                   return;
 
-                if (strStartsWith(vname, attr_name)) {
+                if (str_StartsWith(vname, attr_name)) {
                   trend_aref = plot.YObjectName[i];
                   trend_found = 1;
                   attr_aref = *arp;
@@ -882,7 +882,7 @@ void XttTrend::curve_add(
                   if (EVEN(*sts))
                     return;
 
-                  if (strStartsWith(vname, attr_name)) {
+                  if (str_StartsWith(vname, attr_name)) {
                     trend_aref = plot.YObjectName[i];
                     trend_found = 1;
                     attr_aref = *arp;
@@ -963,7 +963,7 @@ void XttTrend::curve_add(
       if (EVEN(*sts))
         return;
 
-      if (strStartsWith(vname, attr_name)) {
+      if (str_StartsWith(vname, attr_name)) {
         trend_idx[trend_idx_cnt] = j;
         trend_idx_cnt++;
       }

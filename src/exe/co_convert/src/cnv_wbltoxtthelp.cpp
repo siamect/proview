@@ -50,7 +50,7 @@ static int get_class_link(char* typeref, char* volume, char* file)
   char tr[80];
   char v[80];
 
-  cdh_ToLower(v, volume);
+  str_ToLower(v, volume);
 
   if (streq(v, "pwrs") || streq(v, "pwrb")
       || streq(v, "basecomponent") || streq(v, "miscellaneous")
@@ -62,16 +62,16 @@ static int get_class_link(char* typeref, char* volume, char* file)
   else
     sprintf(file, "$pwrp_exe/%s_xtthelp.dat", v);
 
-  cdh_ToLower(tr, typeref);
+  str_ToLower(tr, typeref);
   if (streq(tr, "pwrs:class-$plcnode"))
     return 0;
   if (strstr(tr, "enum") != 0)
     return 0;
   if (strstr(tr, "mask") != 0)
     return 0;
-  if (strStartsWith(tr, "string"))
+  if (str_StartsWith(tr, "string"))
     return 0;
-  if (strStartsWith(tr, "text"))
+  if (str_StartsWith(tr, "text"))
     return 0;
   if (streq(tr, "boolean") || streq(tr, "float32")
       || streq(tr, "float64") || streq(tr, "char")
@@ -188,25 +188,25 @@ int CnvWblToXtthelp::class_exec()
   if (ctx->rw->doc_fresh) {
     for (i = 0; i < ctx->rw->doc_cnt; i++) {
       CnvCtx::remove_spaces(ctx->rw->doc_text[i], txt);
-      if (strStartsWith(CnvCtx::low(txt), "@image")) {
+      if (str_StartsWith(CnvCtx::low(txt), "@image")) {
         char imagefile[80];
 
         CnvCtx::remove_spaces(txt + 6, imagefile);
         fp_tmp << "<IMAGE> " << imagefile << '\n';
-      } else if (strStartsWith(CnvCtx::low(txt), "@b")) {
+      } else if (str_StartsWith(CnvCtx::low(txt), "@b")) {
         fp_tmp << "<B> " << txt + 2 << '\n';
-      } else if (strStartsWith(CnvCtx::low(txt), "@h1")) {
+      } else if (str_StartsWith(CnvCtx::low(txt), "@h1")) {
         fp_tmp << "<H1> " << txt + 3 << '\n';
-      } else if (strStartsWith(CnvCtx::low(txt), "@h2")) {
+      } else if (str_StartsWith(CnvCtx::low(txt), "@h2")) {
         fp_tmp << "<H2> " << txt + 3 << '\n';
-      } else if (strStartsWith(CnvCtx::low(txt), "@i")) {
+      } else if (str_StartsWith(CnvCtx::low(txt), "@i")) {
         fp_tmp << "<i>" << txt + 2 << '\n';
       } else
         fp_tmp << ctx->rw->doc_text[i] << '\n';
     }
   }
   for (i = 0; i < ctx->rw->doc_xlink_cnt; i++) {
-    if (strStartsWith(ctx->rw->doc_xlink_ref[i], "../../en_us/man_exlib_"))
+    if (str_StartsWith(ctx->rw->doc_xlink_ref[i], "../../en_us/man_exlib_"))
       strncpy(link_ref,
           &ctx->rw->doc_xlink_ref[i][0] + strlen("../../en_us/man_exlib_"),
           sizeof(link_ref));
@@ -222,7 +222,7 @@ int CnvWblToXtthelp::class_exec()
   for (i = 0; i < ctx->rw->doc_clink_cnt; i++) {
     strcpy(prefix, CnvCtx::low(ctx->rw->volume_name));
     strcat(prefix, "_");
-    if (strStartsWith(ctx->rw->doc_clink_ref[i], prefix)) {
+    if (str_StartsWith(ctx->rw->doc_clink_ref[i], prefix)) {
       strcpy(link_ref, &ctx->rw->doc_clink_ref[i][strlen(prefix)]);
       if ((s = strrchr(link_ref, '.')))
         *s = 0;
@@ -293,18 +293,18 @@ int CnvWblToXtthelp::bit_exec()
   if (ctx->rw->doc_fresh) {
     for (i = 0; i < ctx->rw->doc_cnt; i++) {
       CnvCtx::remove_spaces(ctx->rw->doc_text[i], txt);
-      if (strStartsWith(CnvCtx::low(txt), "@image")) {
+      if (str_StartsWith(CnvCtx::low(txt), "@image")) {
         char imagefile[80];
 
         CnvCtx::remove_spaces(txt + 6, imagefile);
         fp_tmp << "<IMAGE> " << imagefile << '\n';
-      } else if (strStartsWith(CnvCtx::low(txt), "@b")) {
+      } else if (str_StartsWith(CnvCtx::low(txt), "@b")) {
         fp_tmp << "<B> " << txt + 2 << '\n';
-      } else if (strStartsWith(CnvCtx::low(txt), "@h1")) {
+      } else if (str_StartsWith(CnvCtx::low(txt), "@h1")) {
         fp_tmp << "<H1> " << txt + 3 << '\n';
-      } else if (strStartsWith(CnvCtx::low(txt), "@h2")) {
+      } else if (str_StartsWith(CnvCtx::low(txt), "@h2")) {
         fp_tmp << "<H2> " << txt + 3 << '\n';
-      } else if (strStartsWith(CnvCtx::low(txt), "@i")) {
+      } else if (str_StartsWith(CnvCtx::low(txt), "@i")) {
         fp_tmp << "<i>" << txt + 2 << '\n';
       } else
         fp_tmp << ctx->rw->doc_text[i] << '\n';
@@ -313,7 +313,7 @@ int CnvWblToXtthelp::bit_exec()
   for (i = 0; i < ctx->rw->doc_clink_cnt; i++) {
     strcpy(prefix, CnvCtx::low(ctx->rw->volume_name));
     strcat(prefix, "_");
-    if (strStartsWith(ctx->rw->doc_clink_ref[i], prefix)) {
+    if (str_StartsWith(ctx->rw->doc_clink_ref[i], prefix)) {
       strcpy(link_ref, &ctx->rw->doc_clink_ref[i][strlen(prefix)]);
       if ((s = strrchr(link_ref, '.')))
         *s = 0;
@@ -456,18 +456,18 @@ int CnvWblToXtthelp::typedef_exec()
   if (ctx->rw->doc_fresh) {
     for (i = 0; i < ctx->rw->doc_cnt; i++) {
       CnvCtx::remove_spaces(ctx->rw->doc_text[i], txt);
-      if (strStartsWith(CnvCtx::low(txt), "@image")) {
+      if (str_StartsWith(CnvCtx::low(txt), "@image")) {
         char imagefile[80];
 
         CnvCtx::remove_spaces(txt + 6, imagefile);
         fp_tmp << "<IMAGE> " << imagefile << '\n';
-      } else if (strStartsWith(CnvCtx::low(txt), "@b")) {
+      } else if (str_StartsWith(CnvCtx::low(txt), "@b")) {
         fp_tmp << "<B> " << txt + 2 << '\n';
-      } else if (strStartsWith(CnvCtx::low(txt), "@h1")) {
+      } else if (str_StartsWith(CnvCtx::low(txt), "@h1")) {
         fp_tmp << "<H1> " << txt + 3 << '\n';
-      } else if (strStartsWith(CnvCtx::low(txt), "@h2")) {
+      } else if (str_StartsWith(CnvCtx::low(txt), "@h2")) {
         fp_tmp << "<H2> " << txt + 3 << '\n';
-      } else if (strStartsWith(CnvCtx::low(txt), "@i")) {
+      } else if (str_StartsWith(CnvCtx::low(txt), "@i")) {
         fp_tmp << "<i>" << txt + 2 << '\n';
       } else
         fp_tmp << ctx->rw->doc_text[i] << '\n';
@@ -476,7 +476,7 @@ int CnvWblToXtthelp::typedef_exec()
   for (i = 0; i < ctx->rw->doc_clink_cnt; i++) {
     strcpy(prefix, CnvCtx::low(ctx->rw->volume_name));
     strcat(prefix, "_");
-    if (strStartsWith(ctx->rw->doc_clink_ref[i], prefix)) {
+    if (str_StartsWith(ctx->rw->doc_clink_ref[i], prefix)) {
       strcpy(link_ref, &ctx->rw->doc_clink_ref[i][strlen(prefix)]);
       if ((s = strrchr(link_ref, '.')))
         *s = 0;

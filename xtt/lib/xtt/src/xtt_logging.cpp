@@ -220,7 +220,7 @@ int XttLogging::logging_set(float a_logg_time, char* filename, char* parameter,
   }
 
   if (condition != NULL) {
-    if (cdh_NoCaseStrncmp(condition, "EXPR(", 5) == 0)
+    if (str_NoCaseStrncmp(condition, "EXPR(", 5) == 0)
       strcpy(conditionstr, condition);
     else {
       /* Attribute, Check that parameter exists */
@@ -568,7 +568,7 @@ int XttLogging::start()
 
   /* Get the condition */
   if (conditionstr[0] != 0) {
-    if (cdh_NoCaseStrncmp(conditionstr, "EXPR(", 5) == 0) {
+    if (str_NoCaseStrncmp(conditionstr, "EXPR(", 5) == 0) {
       pwr_tCmd expr;
 
       strncpy(expr, &conditionstr[5], sizeof(expr));
@@ -747,7 +747,7 @@ int XttLogging::remove(char* parameter)
     /* Remove this parameter */
     found = 0;
     for (i = 0; i < RTT_LOGG_MAXPAR; i++) {
-      if (cdh_NoCaseStrcmp(parameterstr[i], parameter) == 0) {
+      if (str_NoCaseStrcmp(parameterstr[i], parameter) == 0) {
         /* Parmeter is found, remove it */
         parameterstr[i][0] = 0;
         message('I', "Parameter removed");
@@ -828,7 +828,7 @@ static void* xtt_logproc(void* arg)
           /* Print only last segment and not ActualValue */
           xnav_cut_segments(logg->shortname[i], logg->parameterstr[i], 1);
           if ((s = strchr(logg->shortname[i], '.')) != 0) {
-            cdh_ToUpper(parname, s + 1);
+            str_ToUpper(parname, s + 1);
             if (streq(parname, "ACTUALVALUE"))
               *s = 0;
           }
@@ -839,13 +839,13 @@ static void* xtt_logproc(void* arg)
                 /* Increase number of segments */
                 xnav_cut_segments(logg->shortname[i], logg->parameterstr[i], k);
                 if ((s = strchr(logg->shortname[i], '.')) != 0) {
-                  cdh_ToUpper(parname, s + 1);
+                  str_ToUpper(parname, s + 1);
                   if (streq(parname, "ACTUALVALUE"))
                     *s = 0;
                 }
                 xnav_cut_segments(logg->shortname[j], logg->parameterstr[j], k);
                 if ((s = strchr(logg->shortname[j], '.')) != 0) {
-                  cdh_ToUpper(parname, s + 1);
+                  str_ToUpper(parname, s + 1);
                   if (streq(parname, "ACTUALVALUE"))
                     *s = 0;
                 }

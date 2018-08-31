@@ -619,7 +619,7 @@ int rtt_crr_code(
   }
 
   /* Get the hierarchy */
-  while (!strStartsWith(line, " _Obj_ ")) {
+  while (!str_StartsWith(line, " _Obj_ ")) {
     sts = rtt_get_signal_line(
         file, line, sizeof(line), &spaces, object, &lines);
     if (EVEN(sts))
@@ -636,7 +636,7 @@ int rtt_crr_code(
     sts = rtt_get_signal_line(
         file, line, sizeof(line), &spaces, object, &lines);
     objname_written = 0;
-    while (!strStartsWith(line, " _Obj_ ")) {
+    while (!str_StartsWith(line, " _Obj_ ")) {
       if (!case_sensitive)
         rtt_toupper(tst_line, line);
       else
@@ -693,7 +693,7 @@ int rtt_crr_code(
         buffcnt += sprintf(buff + buffcnt, " \"%s\"\n", line);
 
         if (brief) {
-          while (!strStartsWith(line, " _Obj_ ")) {
+          while (!str_StartsWith(line, " _Obj_ ")) {
             sts = rtt_get_signal_line(
                 file, line, sizeof(line), &spaces, object, &lines);
             if (EVEN(sts))

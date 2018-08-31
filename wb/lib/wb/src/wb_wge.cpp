@@ -54,7 +54,7 @@ void WGe::graph_init_cb(void* client_data)
   int default_height;
   int sts;
 
-  cdh_ToLower(fname, ge->filename);
+  str_ToLower(fname, ge->filename);
   if (!strrchr(fname, '.'))
     strcat(fname, ".pwg");
   ((Graph*)ge->graph)->open(fname);

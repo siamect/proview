@@ -65,7 +65,7 @@ void RtTrace::get_trace_attr(flow_tObject object, char* object_str,
   flow_GetTraceAttr(object, name, attr_str, type, inverted);
   if (m_has_host) {
     /* Replace "$host" with hostname */
-    if (strStartsWith(name, "$host")) {
+    if (str_StartsWith(name, "$host")) {
       strcpy(object_str, m_hostname);
       strcat(object_str, &name[5]);
     } else
@@ -152,7 +152,7 @@ int RtTrace::get_filename(pwr_tObjid window_objid, char* filename,
     if (EVEN(sts))
       return sts;
 
-    cdh_ToLower(cname, cname);
+    str_ToLower(cname, cname);
     sprintf(fname, "$pwrp_load/pwr_%s.flw", cname);
     dcli_translate_filename(fname, fname);
     fp = fopen(fname, "r");
@@ -219,11 +219,11 @@ int RtTrace::connect_bc(
   }
 
   if (tractx->m_has_host) {
-    if (strStartsWith(name, "$host")) {
+    if (str_StartsWith(name, "$host")) {
       /* Replace "$host" with hostname */
       strcpy(attr_str, tractx->m_hostname);
       strcat(attr_str, &name[5]);
-    } else if (strStartsWith(name, "$PlcFo:")) {
+    } else if (str_StartsWith(name, "$PlcFo:")) {
       /* Replace "$PlcFo:" with fo name */
       s = strchr(name, '.');
       if (!s)
@@ -232,7 +232,7 @@ int RtTrace::connect_bc(
         strcpy(attr_str, tractx->m_hostname);
         strcat(attr_str, s);
       }
-    } else if (strStartsWith(name, "$PlcMain:")) {
+    } else if (str_StartsWith(name, "$PlcMain:")) {
       /* Replace "$PlcMain:" with plcconnect name */
       s = strchr(name, '.');
       if (!s)
@@ -996,11 +996,11 @@ int RtTrace::flow_cb(FlowCtx* ctx, flow_tEvent event)
         &trace_type, &inverted, &options);
 
     if (tractx->m_has_host) {
-      if (strStartsWith(object_str, "$host")) {
+      if (str_StartsWith(object_str, "$host")) {
         /* Replace "$host" with hostname */
         strcpy(name, tractx->m_hostname);
         strcat(name, &object_str[5]);
-      } else if (strStartsWith(object_str, "$PlcFo:")) {
+      } else if (str_StartsWith(object_str, "$PlcFo:")) {
         /* Replace "$PlcFo:" with fo name */
         s = strchr(object_str, '.');
         if (!s)
@@ -1010,7 +1010,7 @@ int RtTrace::flow_cb(FlowCtx* ctx, flow_tEvent event)
           strcat(name, s);
         }
         is_plcfo = true;
-      } else if (strStartsWith(object_str, "$PlcMain:")) {
+      } else if (str_StartsWith(object_str, "$PlcMain:")) {
         /* Replace "$PlcMain:" with plcconnect name */
         s = strchr(object_str, '.');
         if (!s)
@@ -1199,11 +1199,11 @@ int RtTrace::get_attrref(flow_tObject node, pwr_tAttrRef* aref)
   get_trace_attr(node, object_str, attr_str, &trace_type, &inverted, &options);
 
   if (m_has_host) {
-    if (strStartsWith(object_str, "$host")) {
+    if (str_StartsWith(object_str, "$host")) {
       /* Replace "$host" with hostname */
       strcpy(name, m_hostname);
       strcat(name, &object_str[5]);
-    } else if (strStartsWith(object_str, "$PlcFo:")) {
+    } else if (str_StartsWith(object_str, "$PlcFo:")) {
       /* Replace "$PlcFo:" with fo name */
       s = strchr(object_str, '.');
       if (!s)
@@ -1212,7 +1212,7 @@ int RtTrace::get_attrref(flow_tObject node, pwr_tAttrRef* aref)
         strcpy(name, m_hostname);
         strcat(name, s);
       }
-    } else if (strStartsWith(object_str, "$PlcMain:")) {
+    } else if (str_StartsWith(object_str, "$PlcMain:")) {
       /* Replace "$PlcMain:" with plcconnect name */
       s = strchr(object_str, '.');
       if (!s)

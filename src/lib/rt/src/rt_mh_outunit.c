@@ -40,11 +40,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "co_time.h"
 #include "co_cdh.h"
+#include "co_string.h"
+#include "co_time.h"
+
+#include "rt_mh_log.h"
 #include "rt_mh_util.h"
 #include "rt_qcom_msg.h"
-#include "rt_mh_log.h"
 
 typedef struct s_Ack sAck;
 typedef struct s_Block sBlock;
@@ -807,7 +809,7 @@ static void getSelectList()
     l.selL[j].len = len;
     strncpy(l.selL[j].objName, (*l.pSelL)[i], len);
     l.selL[j].objName[sizeof(pwr_tString80) - 1] = '\0';
-    cdh_ToUpper(l.selL[j].objName, l.selL[j].objName);
+    str_ToUpper(l.selL[j].objName, l.selL[j].objName);
     j++;
   }
   l.selSize = j;

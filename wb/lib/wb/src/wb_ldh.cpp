@@ -756,7 +756,7 @@ pwr_tStatus ldh_GetObjectBodyDef(ldh_tSession session, pwr_tCid cid,
           s2 = (*bdef)[i].ParName;
         else
           s2++;
-        if (cdh_NoCaseStrcmp(s1, s2) == 0) {
+        if (str_NoCaseStrcmp(s1, s2) == 0) {
           (*bdef)[j].Flags |= ldh_mParDef_Shadowed;
           break;
         }
@@ -1305,7 +1305,7 @@ pwr_tStatus ldh_NameToObjid(
   wb_session* sp = (wb_session*)session;
   pwr_tStatus sts;
 
-  if (strStartsWith(name, "_O")) {
+  if (str_StartsWith(name, "_O")) {
     sts = cdh_StringToObjid(name, oid);
     if (ODD(sts))
       return sts;
@@ -1929,7 +1929,7 @@ pwr_tStatus ldh_WbLoad(ldh_tSession session, char* loadfile, int ignore_oix)
       wb_vrepdbs* vdbs = new wb_vrepdbs(erep, fname);
       vdbs->load();
 
-      cdh_ToLower(vname, vdbs->name());
+      str_ToLower(vname, vdbs->name());
       strcpy(db_name, "$pwrp_db/");
       strcat(db_name, vname);
       strcat(db_name, ".db");
@@ -1964,7 +1964,7 @@ pwr_tStatus ldh_WbLoad(ldh_tSession session, char* loadfile, int ignore_oix)
       char server[80];
       pwr_tStatus sts;
 
-      if (cdh_NoCaseStrcmp(vwbl->name(), "directory") == 0)
+      if (str_NoCaseStrcmp(vwbl->name(), "directory") == 0)
         volrep = ldh_eVolRep_Db;
       else {
         sts = lfu_GetVolumeCnf(
@@ -1973,7 +1973,7 @@ pwr_tStatus ldh_WbLoad(ldh_tSession session, char* loadfile, int ignore_oix)
           return sts;
       }
       if (volrep == ldh_eVolRep_Db) {
-        cdh_ToLower(vname, vwbl->name());
+        str_ToLower(vname, vwbl->name());
         strcpy(db_name, "$pwrp_db/");
         strcat(db_name, vname);
         strcat(db_name, ".db");
@@ -1994,7 +1994,7 @@ pwr_tStatus ldh_WbLoad(ldh_tSession session, char* loadfile, int ignore_oix)
         char host[80];
         unsigned int port;
 
-        cdh_ToLower(vname, vwbl->name());
+        str_ToLower(vname, vwbl->name());
         strcpy(db_name, "$pwrp_db/");
         strcat(db_name, vname);
         strcat(db_name, ".dbms");

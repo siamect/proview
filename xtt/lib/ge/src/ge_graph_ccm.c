@@ -3017,7 +3017,7 @@ static int gccm_read_file(
       strcpy(filectx->error_line, str);
       return CCM__LONGLINE;
     }
-    if (strStartsWith(str, "#include")) {
+    if (str_StartsWith(str, "#include")) {
       /* Read the include file */
       s = strchr(str, '<');
       if (s == 0) {
@@ -3103,7 +3103,7 @@ static int gccm_read_buff(
       strcpy(filectx->error_line, str);
       return CCM__LONGLINE;
     }
-    if (strStartsWith(str, "#include")) {
+    if (str_StartsWith(str, "#include")) {
       /* Read the include file */
       s = strchr(str, '<');
       if (s == 0) {
@@ -3279,7 +3279,7 @@ int gccm_get_pwr_argnames(char* inbuff,
     if (str[0] == '!')
       continue;
 
-    if (strStartsWith(str, "argument")) {
+    if (str_StartsWith(str, "argument")) {
       if (*pwr_argcnt >= K_PWRARG_MAX) {
         sts = CCM__ARGEXCEED;
         goto get_pwrarg_error_exit;
@@ -3342,7 +3342,7 @@ static int gccm_init_filectx(gccm_t_file_ctx filectx)
   main_start_found = 0;
   main_end_found = 0;
   for (line_p = filectx->line_list; line_p; line_p = line_p->next) {
-    if (strStartsWith(line_p->line, "function")
+    if (str_StartsWith(line_p->line, "function")
         && (line_p->line[8] == ' ' || line_p->line[8] == '	')) {
       if (in_function) {
         filectx->error_row = line_p->row;
@@ -3379,7 +3379,7 @@ static int gccm_init_filectx(gccm_t_file_ctx filectx)
       filectx->func_list = func_p;
       in_function = 1;
       line_p->type = K_LINE_FUNCTION;
-    } else if (strStartsWith(line_p->line, "endfunction")) {
+    } else if (str_StartsWith(line_p->line, "endfunction")) {
       if (!in_function) {
         filectx->error_row = line_p->row;
         strcpy(filectx->error_line, line_p->line);
@@ -3390,7 +3390,7 @@ static int gccm_init_filectx(gccm_t_file_ctx filectx)
       func_p->end_line = line_p;
       in_function = 0;
       line_p->type = K_LINE_ENDFUNCTION;
-    } else if (strStartsWith(line_p->line, "main")) {
+    } else if (str_StartsWith(line_p->line, "main")) {
       /* Parse the command string */
       nr = rtt_parse(line_p->line, " 	(", "", (char*)out_str,
           sizeof(out_str) / sizeof(out_str[0]), sizeof(out_str[0]), 0);
@@ -3411,7 +3411,7 @@ static int gccm_init_filectx(gccm_t_file_ctx filectx)
         main_start_found = 1;
         line_p->type = K_LINE_MAIN;
       }
-    } else if (strStartsWith(line_p->line, "endmain")) {
+    } else if (str_StartsWith(line_p->line, "endmain")) {
       if (!main_start_found) {
         filectx->error_row = line_p->row;
         strcpy(filectx->error_line, line_p->line);
@@ -3421,48 +3421,48 @@ static int gccm_init_filectx(gccm_t_file_ctx filectx)
       filectx->main_end_line = line_p;
       main_end_found = 1;
       line_p->type = K_LINE_ENDMAIN;
-    } else if (strStartsWith(line_p->line, "if")
+    } else if (str_StartsWith(line_p->line, "if")
         && (line_p->line[2] == ' ' || line_p->line[2] == '	'
                || line_p->line[2] == '(')) {
       line_p->type = K_LINE_IF;
-    } else if (strStartsWith(line_p->line, "else")
+    } else if (str_StartsWith(line_p->line, "else")
         && (line_p->line[4] == ' ' || line_p->line[4] == '	'
                || line_p->line[4] == 10 || line_p->line[4] == 0)) {
       line_p->type = K_LINE_ELSE;
-    } else if (strStartsWith(line_p->line, "endif")
+    } else if (str_StartsWith(line_p->line, "endif")
         && (line_p->line[5] == ' ' || line_p->line[5] == '	'
                || line_p->line[5] == 10 || line_p->line[5] == 0
                || line_p->line[5] == ';')) {
       line_p->type = K_LINE_ENDIF;
-    } else if (strStartsWith(line_p->line, "while")
+    } else if (str_StartsWith(line_p->line, "while")
         && (line_p->line[5] == ' ' || line_p->line[5] == '	'
                || line_p->line[5] == '(')) {
       line_p->type = K_LINE_WHILE;
-    } else if (strStartsWith(line_p->line, "endwhile")
+    } else if (str_StartsWith(line_p->line, "endwhile")
         && (line_p->line[8] == ' ' || line_p->line[8] == '	'
                || line_p->line[8] == 10 || line_p->line[8] == 0
                || line_p->line[8] == ';')) {
       line_p->type = K_LINE_ENDWHILE;
-    } else if (strStartsWith(line_p->line, "for")
+    } else if (str_StartsWith(line_p->line, "for")
         && (line_p->line[3] == ' ' || line_p->line[3] == '	'
                || line_p->line[3] == '(')) {
       line_p->type = K_LINE_FOR;
-    } else if (strStartsWith(line_p->line, "endfor")
+    } else if (str_StartsWith(line_p->line, "endfor")
         && (line_p->line[6] == ' ' || line_p->line[6] == '	'
                || line_p->line[6] == 10 || line_p->line[6] == 0
                || line_p->line[6] == ';')) {
       line_p->type = K_LINE_ENDFOR;
-    } else if (strStartsWith(line_p->line, "break")
+    } else if (str_StartsWith(line_p->line, "break")
         && (line_p->line[5] == ' ' || line_p->line[5] == '	'
                || line_p->line[5] == 10 || line_p->line[5] == 0
                || line_p->line[5] == ';')) {
       line_p->type = K_LINE_BREAK;
-    } else if (strStartsWith(line_p->line, "continue")
+    } else if (str_StartsWith(line_p->line, "continue")
         && (line_p->line[8] == ' ' || line_p->line[8] == '	'
                || line_p->line[8] == 10 || line_p->line[8] == 0
                || line_p->line[8] == ';')) {
       line_p->type = K_LINE_CONTINUE;
-    } else if (strStartsWith(line_p->line, "goto")
+    } else if (str_StartsWith(line_p->line, "goto")
         && (line_p->line[4] == ' ' || line_p->line[4] == '	')) {
       line_p->type = K_LINE_GOTO;
     } else if (strlen(line_p->line) != 0
@@ -4764,7 +4764,7 @@ static int gccm_function_exec(gccm_t_file_ctx filectx, char* name,
           *return_int = int_val;
           *return_decl = decl;
           return_found = 1;
-        } else if (strStartsWith(line_p->line, "return")
+        } else if (str_StartsWith(line_p->line, "return")
             && (line_p->line[6] == ' ' || line_p->line[6] == '	')) {
           /* Return statement, set return value and exit function */
           if (func_p->decl == K_DECL_INT && decl == K_DECL_INT)

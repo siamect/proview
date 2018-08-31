@@ -38,9 +38,9 @@
 
 #include <stdlib.h>
 
-#include "co_cdh.h"
 #include "co_cnf.h"
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_time.h"
 
 #include "cow_wow.h"
@@ -70,11 +70,11 @@ XttTbl::XttTbl(void* xn_parent_ctx, sevcli_tCtx xn_sevcli)
 
   // Get default privilete from proview.cnf
   if (cnf_get_value("sevXttDefaultPriv", default_priv, sizeof(default_priv))) {
-    if (cdh_NoCaseStrcmp(default_priv, "READ") == 0)
+    if (str_NoCaseStrcmp(default_priv, "READ") == 0)
       priv = pwr_mPrv_SevRead;
-    else if (cdh_NoCaseStrcmp(default_priv, "ADMIN") == 0)
+    else if (str_NoCaseStrcmp(default_priv, "ADMIN") == 0)
       priv = pwr_mPrv_SevAdmin;
-    else if (cdh_NoCaseStrcmp(default_priv, "NONE") == 0)
+    else if (str_NoCaseStrcmp(default_priv, "NONE") == 0)
       priv = 0;
     else
       priv = 0;

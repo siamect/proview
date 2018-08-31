@@ -40,17 +40,20 @@
 
 #include <stdio.h>
 #include <errno.h>
-#include <string.h>
 
-#include "pwr_systemclasses.h"
-#include "rt_gdh.h"
-#include "co_time.h"
-#include "co_cdh.h"
 #include "pwr_baseclasses.h"
 #include "pwr_remoteclasses.h"
+#include "pwr_systemclasses.h"
+
+#include "co_cdh.h"
+#include "co_string.h"
+#include "co_time.h"
+
+#include "rt_aproc.h"
+#include "rt_gdh.h"
 #include "rt_pwr_msg.h"
 #include "rt_qcom_msg.h"
-#include "rt_aproc.h"
+
 #include "remote.h"
 #include "remote_remtrans_utils.h"
 
@@ -323,12 +326,12 @@ int main(int argc, char* argv[])
   /* Get remote queue */
   if (rn_qcom->TargetQueue != 0) {
     qcom_MyNode(&sts, &node);
-    if (cdh_NoCaseStrcmp(node.name, rn_qcom->TargetNode) == 0) {
+    if (str_NoCaseStrcmp(node.name, rn_qcom->TargetNode) == 0) {
       found = 1;
       nid = node.nid;
     } else {
       for (nid = qcom_cNNid; qcom_NextNode(&sts, &node, nid); nid = node.nid) {
-        if (cdh_NoCaseStrcmp(node.name, rn_qcom->TargetNode) == 0) {
+        if (str_NoCaseStrcmp(node.name, rn_qcom->TargetNode) == 0) {
           found = 1;
           break;
         }

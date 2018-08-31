@@ -65,9 +65,9 @@ int is_diag(pwr_tAttrRef* aref)
     return 0;
 
   if ((s = strrchr(name, '.'))) {
-    if (strStartsWith(s + 1, "Diag_"))
+    if (str_StartsWith(s + 1, "Diag_"))
       return 1;
-  } else if (strStartsWith(name, "Diag_"))
+  } else if (str_StartsWith(name, "Diag_"))
     return 1;
 
   return 0;

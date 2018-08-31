@@ -141,7 +141,7 @@ static int nav_remove_spaces(char* in, char* out)
   for (s = in; !((*s == 0) || ((*s != ' ') && (*s != 9))); s++)
     ;
 
-  cdh_Strcpy(out, s);
+  str_Strcpy(out, s);
 
   if (strlen(s) != 0) {
     for (s += strlen(s) - 1; !((s == in) || ((*s != ' ') && (*s != 9))); s--)
@@ -197,7 +197,7 @@ int NavCrr::crr_signal(char* filename, char* signalname)
       return sts;
   }
 
-  cdh_ToUpper(signalname, signalname);
+  str_ToUpper(signalname, signalname);
 
   /* Check if wildcard */
   s = strchr(signalname, '*');
@@ -254,7 +254,7 @@ int NavCrr::crr_signal(char* filename, char* signalname)
       else
         strcpy(objname, object);
 
-      cdh_ToUpper(objname, objname);
+      str_ToUpper(objname, objname);
 
       sts = dcli_wildcard(signalname, objname);
       if (!sts) {
@@ -371,7 +371,7 @@ int NavCrr::crr_object(char* filename, char* objectname)
       return sts;
   }
 
-  cdh_ToUpper(objectname, objectname);
+  str_ToUpper(objectname, objectname);
 
   /* Check if wildcard */
   s = strchr(objectname, '*');
@@ -427,7 +427,7 @@ int NavCrr::crr_object(char* filename, char* objectname)
       else
         strcpy(objname, object);
 
-      cdh_ToUpper(objname, objname);
+      str_ToUpper(objname, objname);
 
       sts = dcli_wildcard(objectname, objname);
       if (sts) {
@@ -589,7 +589,7 @@ int NavCrr::crr_code(
           case_sensitive = 1;
       }
 
-    while (!strStartsWith(line, " _Obj_ ")) {
+    while (!str_StartsWith(line, " _Obj_ ")) {
       sts = nav_get_signal_line(
           file, line, sizeof(line), &spaces, object, &lines);
       if (EVEN(sts)) {
@@ -611,9 +611,9 @@ int NavCrr::crr_code(
       sts = nav_get_signal_line(
           file, line, sizeof(line), &spaces, object, &lines);
       objname_written = 0;
-      while (!strStartsWith(line, " _Obj_ ")) {
+      while (!str_StartsWith(line, " _Obj_ ")) {
         if (!case_sensitive)
-          cdh_ToUpper(tst_line, line);
+          str_ToUpper(tst_line, line);
         else
           strcpy(tst_line, line);
 
@@ -663,7 +663,7 @@ int NavCrr::crr_code(
               parent_ctx, parent_node, navc_eItemType_Text, tst_line, NULL, 0);
 
           if (brief) {
-            while (!strStartsWith(line, " _Obj_ ")) {
+            while (!str_StartsWith(line, " _Obj_ ")) {
               sts = nav_get_signal_line(
                   file, line, sizeof(line), &spaces, object, &lines);
               if (EVEN(sts)) {
@@ -738,7 +738,7 @@ int NavCrr::get_signals(char* filename, char* objectname)
   pwr_tVolumeId volid;
   pwr_tObjid objid;
 
-  cdh_ToUpper(objectname, objectname);
+  str_ToUpper(objectname, objectname);
 
   /* Open file */
   while (1) {
@@ -777,9 +777,9 @@ int NavCrr::get_signals(char* filename, char* objectname)
       else
         strcpy(objname, object);
 
-      cdh_ToUpper(objname, objname);
+      str_ToUpper(objname, objname);
 
-      if (strStartsWith(objname, objectname)
+      if (str_StartsWith(objname, objectname)
           && (objname[strlen(objectname)] == 0
                  || objname[strlen(objectname)] == '.'
                  || objname[strlen(objectname)] == '-')) {

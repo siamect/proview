@@ -164,7 +164,7 @@ void wb_pvd_pl::writeAttribute(co_procom* pcom, pwr_tOix oix,
 
     if (offset == (unsigned int)((char*)&body.Project - (char*)&body)) {
       m_list[oix].flags |= pl_mFlags_ProjectModified;
-      cdh_ToLower(buffer, buffer);
+      str_ToLower(buffer, buffer);
 
       // Set path
       char path[80];
@@ -208,7 +208,7 @@ void wb_pvd_pl::createObject(
 
     // Set default values to project, version and path
     cnf_get_value("defaultProjectRoot", defaultpath, sizeof(defaultpath));
-    cdh_ToLower(lowname, m_list[oix].name);
+    str_ToLower(lowname, m_list[oix].name);
     strcat(defaultpath, "/");
     strcat(defaultpath, lowname);
 
@@ -637,7 +637,7 @@ void wb_pvd_pl::load(pwr_tStatus* rsts)
   while (is.getline(line, sizeof(line))) {
     line_cnt++;
     if (line[0] == '!') {
-      if (strStartsWith(line, "!**Menu")) {
+      if (str_StartsWith(line, "!**Menu")) {
         // Add Hier
         char* s = strstr(line, "// ");
         if (s) {
@@ -675,7 +675,7 @@ void wb_pvd_pl::load(pwr_tStatus* rsts)
 
         menu_stack[menu_cnt] = hieritem.oix;
         menu_cnt++;
-      } else if (strStartsWith(line, "!**}")) {
+      } else if (str_StartsWith(line, "!**}")) {
         if (menu_cnt == 0) {
           std::cout << "Syntax error " << fname << " row " << line_cnt << '\n';
           continue;
@@ -688,7 +688,7 @@ void wb_pvd_pl::load(pwr_tStatus* rsts)
 
     num = dcli_parse(line, " 	", "", (char*)line_item,
         sizeof(line_item) / sizeof(line_item[0]), sizeof(line_item[0]), 0);
-    if (strStartsWith(line, "%base")) {
+    if (str_StartsWith(line, "%base")) {
       // Insert BaseReg under baseroot
       if (num != 3) {
         std::cout << "Syntax error " << fname << " row " << line_cnt << '\n';

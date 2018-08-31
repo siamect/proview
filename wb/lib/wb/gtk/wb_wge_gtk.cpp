@@ -38,7 +38,9 @@
 
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_string.h"
 #include "co_time.h"
+
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
 
@@ -183,7 +185,7 @@ void WGeGtk::activate_help(GtkWidget* w, gpointer data)
   char key[80];
 
   if (ge->help_cb) {
-    cdh_ToLower(key, ge->name);
+    str_ToLower(key, ge->name);
     (ge->help_cb)(ge, key);
   }
 }
@@ -276,7 +278,7 @@ WGeGtk::WGeGtk(GtkWidget* wge_parent_wid, void* wge_parent_ctx, char* wge_name,
     window_width = wge_width;
     window_height = wge_height;
   }
-  cdh_StrncpyCutOff(title, name, sizeof(title), 1);
+  str_StrncpyCutOff(title, name, sizeof(title), 1);
 
   // Gtk
   toplevel = (GtkWidget*)g_object_new(GTK_TYPE_WINDOW, "default-height",

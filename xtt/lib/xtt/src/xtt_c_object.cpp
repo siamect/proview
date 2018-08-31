@@ -1060,7 +1060,7 @@ static pwr_tStatus OpenObjectGraphFilter(xmenu_sMenuCall* ip)
         sizeof(classname), cdh_mName_object);
     if (EVEN(sts))
       return sts;
-    cdh_ToLower(classname, classname);
+    str_ToLower(classname, classname);
 
     if (classname[0] == '$')
       sprintf(fname, "$pwr_exe/pwr_c_%s.pwg", &classname[1]);
@@ -1151,7 +1151,7 @@ static pwr_tStatus OpenParentObjectGraphFilter(xmenu_sMenuCall* ip)
         sizeof(classname), cdh_mName_object);
     if (EVEN(sts))
       return sts;
-    cdh_ToLower(classname, classname);
+    str_ToLower(classname, classname);
 
     if (classname[0] == '$')
       sprintf(fname, "$pwr_exe/pwr_c_%s.pwg", &classname[1]);
@@ -1317,7 +1317,7 @@ static pwr_tStatus OpenGraphFilter(xmenu_sMenuCall* ip)
 
           if ((s = strrchr(action, '.')))
             *s = 0;
-          if (cdh_NoCaseStrcmp(action, ip->Arg) == 0)
+          if (str_NoCaseStrcmp(action, ip->Arg) == 0)
             return XNAV__INVISIBLE;
         }
         return XNAV__SUCCESS;
@@ -1629,7 +1629,7 @@ static pwr_tStatus CircuitDiagram(xmenu_sMenuCall* ip)
     strcat(name, ".CircuitDiagram");
     sts = gdh_GetObjectInfo(
         name, (void*)circuitdiagram, sizeof(circuitdiagram));
-    if (ODD(sts) && cdh_NoCaseStrcmp(circuitdiagram, "disabled") == 0)
+    if (ODD(sts) && str_NoCaseStrcmp(circuitdiagram, "disabled") == 0)
       break;
     if (ODD(sts) && !streq(circuitdiagram, "")) {
       // CircuitDiagram found
@@ -1672,7 +1672,7 @@ static pwr_tStatus CircuitDiagramFilter(xmenu_sMenuCall* ip)
     strcat(name, ".CircuitDiagram");
     sts = gdh_GetObjectInfo(
         name, (void*)circuitdiagram, sizeof(circuitdiagram));
-    if (ODD(sts) && cdh_NoCaseStrcmp(circuitdiagram, "disabled") == 0)
+    if (ODD(sts) && str_NoCaseStrcmp(circuitdiagram, "disabled") == 0)
       break;
     if (ODD(sts) && !streq(circuitdiagram, "")) {
       // CircuitDiagram found
@@ -1799,7 +1799,7 @@ static pwr_tStatus HelpClass(xmenu_sMenuCall* ip)
     if (EVEN(sts))
       return sts;
 
-    cdh_ToLower(vname, vname);
+    str_ToLower(vname, vname);
     sprintf(cmd, "help %s /helpfile=\"$pwr_exe/%s/%s_xtthelp.dat\"", classname,
         Lng::get_language_str(), vname);
 
@@ -1876,7 +1876,7 @@ static pwr_tStatus Simulate(xmenu_sMenuCall* ip)
           sizeof(classname), cdh_mName_object);
       if (EVEN(sts))
         return sts;
-      cdh_ToLower(classname, classname);
+      str_ToLower(classname, classname);
 
       if (classname[0] == '$')
         sprintf(fname, "$pwr_exe/pwr_c_%ssim.pwg", &classname[1]);
@@ -1977,7 +1977,7 @@ static pwr_tStatus SimulateFilter(xmenu_sMenuCall* ip)
           sizeof(classname), cdh_mName_object);
       if (EVEN(sts))
         return sts;
-      cdh_ToLower(classname, classname);
+      str_ToLower(classname, classname);
 
       if (classname[0] == '$')
         sprintf(fname, "$pwr_exe/pwr_c_%ssim.pwg", &classname[1]);
@@ -2006,7 +2006,7 @@ static pwr_tStatus SimulateFilter(xmenu_sMenuCall* ip)
       sizeof(classname), cdh_mName_object);
   if (EVEN(sts))
     return sts;
-  cdh_ToLower(classname, classname);
+  str_ToLower(classname, classname);
 
   if (classname[0] == '$')
     sprintf(fname, "$pwr_exe/pwr_c_%s.pwg", &classname[1]);

@@ -287,7 +287,7 @@ int main(int argc, char* argv[])
 
   debug = 0;
   if (argc >= 4) {
-    if (!strStartsWith(argv[3], "debug"))
+    if (!str_StartsWith(argv[3], "debug"))
       debug = 1;
   }
 

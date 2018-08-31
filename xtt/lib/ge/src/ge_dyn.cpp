@@ -224,8 +224,8 @@ static int check_format(char* format, int type)
     break;
   case pwr_eType_Status:
   case pwr_eType_NetStatus:
-    if (*s == 'm' || *s == 'd' || *s == 'u' || strStartsWith(s, "hd")
-        || strStartsWith(s, "hu"))
+    if (*s == 'm' || *s == 'd' || *s == 'u' || str_StartsWith(s, "hd")
+        || str_StartsWith(s, "hu"))
       return 1;
     break;
   case pwr_eType_Enum:
@@ -377,7 +377,7 @@ void GeDyn::replace_attribute(
 
   strncpy(str, attribute, sizeof(str));
   if (!strict)
-    cdh_ToLower(str, str);
+    str_ToLower(str, str);
   s = strstr(str, from);
   if (s) {
     offs = (int)(s - str);
@@ -3981,7 +3981,7 @@ int GeInvisible::connect(
 
   get_bit(parsed_name, attr_type, &bitmask);
 
-  if (cdh_NoCaseStrncmp(parsed_name, "$cmd(", 5) == 0) {
+  if (str_NoCaseStrncmp(parsed_name, "$cmd(", 5) == 0) {
     char cmd[400], command[400];
     char* s;
     pwr_tStatus sts;
@@ -5550,7 +5550,7 @@ int GeValue::scan(grow_tObject object)
 
     switch (format[strlen(format) - 1]) {
     case 'b':
-      if (strStartsWith(&format[1], "16"))
+      if (str_StartsWith(&format[1], "16"))
         cdh_MaskToBinaryString(val, 16, buf);
       else
         cdh_MaskToBinaryString(val, 32, buf);
@@ -11949,7 +11949,7 @@ int GeTable::connect(grow_tObject object, glow_sTraceData* trace_data, bool now)
 
     elements[i] = MIN(elements[i], rows);
 
-    if (!strStartsWith(parsed_name, "$header.")) {
+    if (!str_StartsWith(parsed_name, "$header.")) {
       switch (db[i]) {
       case graph_eDatabase_Gdh:
         sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
@@ -21199,7 +21199,7 @@ int GePulldownMenu::action(grow_tObject object, glow_tEvent event)
                   dyn->parse_attr_name(invis_element->attribute, parsed_name,
                       &inverted, &attr_type, &attr_size);
 
-                  if (cdh_NoCaseStrncmp(parsed_name, "$cmd(", 5) == 0) {
+                  if (str_NoCaseStrncmp(parsed_name, "$cmd(", 5) == 0) {
                     strcpy(command, &parsed_name[5]);
 
                     if ((s = strrchr(command, ')')))

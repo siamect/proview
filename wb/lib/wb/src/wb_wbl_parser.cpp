@@ -377,7 +377,7 @@ void wb_wbl_parser::parse(const char* filename)
     if (streq(line, ""))
       continue;
 
-    if (strStartsWith(line, "!/**")) {
+    if (str_StartsWith(line, "!/**")) {
       if (m_state & wbl_mState_InDocBlock)
         throw wb_error_str("Already in documentation block");
       m_state |= wbl_mState_InDocBlock;
@@ -388,7 +388,7 @@ void wb_wbl_parser::parse(const char* filename)
     } else if (line[0] == '!') {
       // Comment
       continue;
-    } else if (strStartsWith(line, "Volume")) {
+    } else if (str_StartsWith(line, "Volume")) {
       if (m_state & wbl_mState_InVolume)
         throw wb_error_str("Volume already defined");
       if (m_tree)
@@ -418,7 +418,7 @@ void wb_wbl_parser::parse(const char* filename)
         throw wb_error_str("Volume id is missing");
       t3 = new_ast_node(wbl_eToken_Index, token, len, m_line_cnt, 0);
       ast_node_insert_lch(m_current, t3);
-    } else if (strStartsWith(line, "EndVolume")) {
+    } else if (str_StartsWith(line, "EndVolume")) {
       if (!(m_state & wbl_mState_InVolume))
         throw wb_error_str("Volume - EndVolume mismatch");
       if (m_state & wbl_mState_InBody)
@@ -426,7 +426,7 @@ void wb_wbl_parser::parse(const char* filename)
       if (m_state & wbl_mState_InObject)
         throw wb_error_str("Body not terminated");
       m_state &= ~wbl_mState_InVolume;
-    } else if (strStartsWith(line, "SObject")) {
+    } else if (str_StartsWith(line, "SObject")) {
       if (m_state & wbl_mState_InSObject)
         throw wb_error_str("SObject already defined");
       m_state |= wbl_mState_InSObject;
@@ -446,7 +446,7 @@ void wb_wbl_parser::parse(const char* filename)
         n->fws = t1;
         m_current = t1;
       }
-    } else if (strStartsWith(line, "EndSObject")) {
+    } else if (str_StartsWith(line, "EndSObject")) {
       if (!(m_state & wbl_mState_InSObject))
         throw wb_error_str("SObject - EndSObject mismatch");
       if (m_state & wbl_mState_InBody)
@@ -456,7 +456,7 @@ void wb_wbl_parser::parse(const char* filename)
       if (m_state & wbl_mState_InBuffer)
         throw wb_error_str("Buffer not terminated");
       m_state &= ~wbl_mState_InSObject;
-    } else if (strStartsWith(line, "Object")) {
+    } else if (str_StartsWith(line, "Object")) {
       if (!(m_state & wbl_mState_InVolume || m_state & wbl_mState_InSObject))
         throw wb_error_str("Object defined outside volume");
       m_object_level++;
@@ -494,7 +494,7 @@ void wb_wbl_parser::parse(const char* filename)
         t4 = new_ast_node(wbl_eToken_Date, token, len, m_line_cnt, 0);
         ast_node_insert_lch(m_current, t4);
       }
-    } else if (strStartsWith(line, "EndObject")) {
+    } else if (str_StartsWith(line, "EndObject")) {
       if (!(m_state & wbl_mState_InObject))
         throw wb_error_str("Object - EndObject mismatch");
       if (m_state & wbl_mState_InBody)
@@ -507,7 +507,7 @@ void wb_wbl_parser::parse(const char* filename)
       if (m_object_level == 0)
         m_state &= ~wbl_mState_InObject;
       m_current = m_current->fth;
-    } else if (strStartsWith(line, "Body")) {
+    } else if (str_StartsWith(line, "Body")) {
       if (m_state & wbl_mState_InBody)
         throw wb_error_str("Body already defined");
       if (!(m_state & wbl_mState_InVolume || m_state & wbl_mState_InObject))
@@ -530,12 +530,12 @@ void wb_wbl_parser::parse(const char* filename)
         t2 = new_ast_node(wbl_eToken_Date, token, len, m_line_cnt, 0);
         ast_node_insert_lch(m_current, t2);
       }
-    } else if (strStartsWith(line, "EndBody")) {
+    } else if (str_StartsWith(line, "EndBody")) {
       if (!(m_state & wbl_mState_InBody))
         throw wb_error_str("Body - EndBody mismatch");
       m_state &= ~wbl_mState_InBody;
       m_current = m_current->fth;
-    } else if (strStartsWith(line, "Buffer")) {
+    } else if (str_StartsWith(line, "Buffer")) {
       if (!(m_state & wbl_mState_InBody))
         throw wb_error_str("Attr defined outside body");
       if (!(m_state & wbl_mState_InVolume || m_state & wbl_mState_InObject))
@@ -559,14 +559,14 @@ void wb_wbl_parser::parse(const char* filename)
         t2 = new_ast_node(wbl_eToken_Date, token, len, m_line_cnt, 0);
         ast_node_insert_lch(m_current, t2);
       }
-    } else if (strStartsWith(line, "EndBuffer")) {
+    } else if (str_StartsWith(line, "EndBuffer")) {
       if (!(m_state & wbl_mState_InBuffer))
         throw wb_error_str("Buffer - EndBuffer mismatch");
       m_buffer_level--;
       if (m_buffer_level == 0)
         m_state &= ~wbl_mState_InBuffer;
       m_current = m_current->fth;
-    } else if (strStartsWith(line, "Attr")) {
+    } else if (str_StartsWith(line, "Attr")) {
       if (!(m_state & wbl_mState_InBody))
         throw wb_error_str("Attr defined outside body");
 

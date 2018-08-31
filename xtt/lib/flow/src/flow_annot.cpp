@@ -34,11 +34,10 @@
  * General Public License plus this exception.
  **/
 
-#include <string.h>
-
 #include <iostream>
 
-#include "co_cdh.h"
+#include "co_string.h"
+
 #include "flow_annot.h"
 #include "flow_node.h"
 #include "flow_draw.h"
@@ -150,7 +149,7 @@ void FlowAnnot::print(void* pos, void* node, int highlight)
       if (*s == 10 || last) {
         if (len) {
           *s = 0;
-          if (cdh_NoCaseStrncmp(line, "<h1>", 4) == 0) {
+          if (str_NoCaseStrncmp(line, "<h1>", 4) == 0) {
             int h1_size = text_size + 4;
             switch (ctx->current_print->type()) {
             case print_eType_Pdf: {
@@ -180,7 +179,7 @@ void FlowAnnot::print(void* pos, void* node, int highlight)
               y_offs += z_height / 3;
             ctx->current_print->text(z_x, z_y + y_offs, &line[4], len - 4,
                 flow_eDrawType_TextHelveticaBold, size, line_cnt);
-          } else if (cdh_NoCaseStrncmp(line, "<h2>", 4) == 0) {
+          } else if (str_NoCaseStrncmp(line, "<h2>", 4) == 0) {
             int h2_size = text_size + 2;
             switch (ctx->current_print->type()) {
             case print_eType_Pdf: {
@@ -212,7 +211,7 @@ void FlowAnnot::print(void* pos, void* node, int highlight)
               y_offs += z_height / 3;
             ctx->current_print->text(z_x, z_y + y_offs, &line[4], len - 4,
                 flow_eDrawType_TextHelveticaBold, size, line_cnt);
-          } else if (cdh_NoCaseStrncmp(line, "<b>", 3) == 0) {
+          } else if (str_NoCaseStrncmp(line, "<b>", 3) == 0) {
             switch (ctx->current_print->type()) {
             case print_eType_Pdf: {
               ctx->fdraw->get_text_extent(ctx, "Ag", 2,
@@ -242,9 +241,9 @@ void FlowAnnot::print(void* pos, void* node, int highlight)
             ctx->current_print->text(z_x, z_y + y_offs, &line[3], len - 3,
                 flow_eDrawType_TextHelveticaBold, size, line_cnt);
 
-          } else if (cdh_NoCaseStrncmp(line, "<image>", 7) == 0) {
+          } else if (str_NoCaseStrncmp(line, "<image>", 7) == 0) {
           } else {
-            if (cdh_NoCaseStrncmp(line, "<c>", 3) == 0)
+            if (str_NoCaseStrncmp(line, "<c>", 3) == 0)
               lix = 3;
             else
               lix = 0;
@@ -438,7 +437,7 @@ void FlowAnnot::draw(void* pos, int highlight, int dimmed, int hot, void* node)
       if (*s == 10 || last) {
         if (len) {
           *s = 0;
-          if (cdh_NoCaseStrncmp(line, "<h1>", 4) == 0) {
+          if (str_NoCaseStrncmp(line, "<h1>", 4) == 0) {
             int h1_size = text_size + 4;
             ctx->fdraw->get_text_extent(ctx, "Ag", 2, draw_type,
                 flow_eDrawType_TextHelveticaBold, &z_width, &z_height,
@@ -450,7 +449,7 @@ void FlowAnnot::draw(void* pos, int highlight, int dimmed, int hot, void* node)
             ctx->fdraw->text(ctx, z_x, z_y + y_offs, &line[4], len - 4,
                 flow_eDrawType_TextHelveticaBold, idx, highlight, dimmed, 0,
                 tsize(h1_size));
-          } else if (cdh_NoCaseStrncmp(line, "<h2>", 4) == 0) {
+          } else if (str_NoCaseStrncmp(line, "<h2>", 4) == 0) {
             int h2_size = text_size + 2;
             ctx->fdraw->get_text_extent(ctx, "Ag", 2, draw_type,
                 flow_eDrawType_TextHelveticaBold, &z_width, &z_height,
@@ -462,7 +461,7 @@ void FlowAnnot::draw(void* pos, int highlight, int dimmed, int hot, void* node)
             ctx->fdraw->text(ctx, z_x, z_y + y_offs, &line[4], len - 4,
                 flow_eDrawType_TextHelveticaBold, idx, highlight, dimmed, 0,
                 tsize(h2_size));
-          } else if (cdh_NoCaseStrncmp(line, "<b>", 3) == 0) {
+          } else if (str_NoCaseStrncmp(line, "<b>", 3) == 0) {
             ctx->fdraw->get_text_extent(ctx, "Ag", 2, draw_type,
                 flow_eDrawType_TextHelveticaBold, &z_width, &z_height,
                 tsize(text_size));
@@ -473,9 +472,9 @@ void FlowAnnot::draw(void* pos, int highlight, int dimmed, int hot, void* node)
             ctx->fdraw->text(ctx, z_x, z_y + y_offs, &line[3], len - 3,
                 flow_eDrawType_TextHelveticaBold, idx, highlight, dimmed, 0,
                 tsize(text_size));
-          } else if (cdh_NoCaseStrncmp(line, "<image>", 7) == 0) {
+          } else if (str_NoCaseStrncmp(line, "<image>", 7) == 0) {
           } else {
-            if (cdh_NoCaseStrncmp(line, "<c>", 3) == 0)
+            if (str_NoCaseStrncmp(line, "<c>", 3) == 0)
               lix = 3;
             else
               lix = 0;
@@ -589,7 +588,7 @@ void FlowAnnot::erase(void* pos, int hot, void* node)
       if (*s == 10 || last) {
         if (len) {
           *s = 0;
-          if (cdh_NoCaseStrncmp(line, "<h1>", 4) == 0) {
+          if (str_NoCaseStrncmp(line, "<h1>", 4) == 0) {
             int h1_size = text_size + 4;
             ctx->fdraw->get_text_extent(ctx, "Ag", 2, draw_type,
                 flow_eDrawType_TextHelveticaBold, &z_width, &z_height,
@@ -600,7 +599,7 @@ void FlowAnnot::erase(void* pos, int hot, void* node)
               y_offs += z_height / 3;
             ctx->fdraw->text_erase(ctx, z_x, z_y + y_offs, &line[4], len - 4,
                 flow_eDrawType_TextHelveticaBold, idx, 0, tsize(h1_size));
-          } else if (cdh_NoCaseStrncmp(line, "<h2>", 4) == 0) {
+          } else if (str_NoCaseStrncmp(line, "<h2>", 4) == 0) {
             int h2_size = text_size + 2;
             ctx->fdraw->get_text_extent(ctx, "Ag", 2, draw_type,
                 flow_eDrawType_TextHelveticaBold, &z_width, &z_height,
@@ -611,7 +610,7 @@ void FlowAnnot::erase(void* pos, int hot, void* node)
               y_offs += z_height / 3;
             ctx->fdraw->text_erase(ctx, z_x, z_y + y_offs, &line[4], len - 4,
                 flow_eDrawType_TextHelveticaBold, idx, 0, tsize(h2_size));
-          } else if (cdh_NoCaseStrncmp(line, "<b>", 3) == 0) {
+          } else if (str_NoCaseStrncmp(line, "<b>", 3) == 0) {
             ctx->fdraw->get_text_extent(ctx, "Ag", 2, draw_type,
                 flow_eDrawType_TextHelveticaBold, &z_width, &z_height,
                 tsize(text_size));
@@ -621,9 +620,9 @@ void FlowAnnot::erase(void* pos, int hot, void* node)
               y_offs += z_height / 3;
             ctx->fdraw->text_erase(ctx, z_x, z_y + y_offs, &line[3], len - 3,
                 flow_eDrawType_TextHelveticaBold, idx, 0, tsize(text_size));
-          } else if (cdh_NoCaseStrncmp(line, "<image>", 7) == 0) {
+          } else if (str_NoCaseStrncmp(line, "<image>", 7) == 0) {
           } else {
-            if (cdh_NoCaseStrncmp(line, "<c>", 3) == 0)
+            if (str_NoCaseStrncmp(line, "<c>", 3) == 0)
               lix = 3;
             else
               lix = 0;
@@ -736,7 +735,7 @@ void FlowAnnot::draw_inverse(void* pos, int hot, void* node)
       if (*s == 10 || last) {
         if (len) {
           *s = 0;
-          if (cdh_NoCaseStrncmp(line, "<h1>", 4) == 0) {
+          if (str_NoCaseStrncmp(line, "<h1>", 4) == 0) {
             int h1_size = text_size + 4;
             ctx->fdraw->get_text_extent(ctx, "Ag", 2, draw_type,
                 flow_eDrawType_TextHelveticaBold, &z_width, &z_height,
@@ -747,7 +746,7 @@ void FlowAnnot::draw_inverse(void* pos, int hot, void* node)
               y_offs += z_height / 3;
             ctx->fdraw->text_inverse(ctx, z_x, z_y + y_offs, &line[4], len - 4,
                 flow_eDrawType_TextHelveticaBold, idx, 0, tsize(h1_size));
-          } else if (cdh_NoCaseStrncmp(line, "<h2>", 4) == 0) {
+          } else if (str_NoCaseStrncmp(line, "<h2>", 4) == 0) {
             int h2_size = text_size + 2;
             ctx->fdraw->get_text_extent(ctx, "Ag", 2, draw_type,
                 flow_eDrawType_TextHelveticaBold, &z_width, &z_height,
@@ -758,7 +757,7 @@ void FlowAnnot::draw_inverse(void* pos, int hot, void* node)
               y_offs += z_height / 3;
             ctx->fdraw->text_inverse(ctx, z_x, z_y + y_offs, &line[4], len - 4,
                 flow_eDrawType_TextHelveticaBold, idx, 0, tsize(h2_size));
-          } else if (cdh_NoCaseStrncmp(line, "<b>", 3) == 0) {
+          } else if (str_NoCaseStrncmp(line, "<b>", 3) == 0) {
             ctx->fdraw->get_text_extent(ctx, "Ag", 2, draw_type,
                 flow_eDrawType_TextHelveticaBold, &z_width, &z_height,
                 tsize(text_size));
@@ -768,9 +767,9 @@ void FlowAnnot::draw_inverse(void* pos, int hot, void* node)
               y_offs += z_height / 3;
             ctx->fdraw->text_inverse(ctx, z_x, z_y + y_offs, &line[3], len - 3,
                 flow_eDrawType_TextHelveticaBold, idx, 0, tsize(text_size));
-          } else if (cdh_NoCaseStrncmp(line, "<image>", 7) == 0) {
+          } else if (str_NoCaseStrncmp(line, "<image>", 7) == 0) {
           } else {
-            if (cdh_NoCaseStrncmp(line, "<c>", 3) == 0)
+            if (str_NoCaseStrncmp(line, "<c>", 3) == 0)
               lix = 3;
             else
               lix = 0;
@@ -1027,29 +1026,29 @@ void FlowAnnot::measure_annot(char* text, double* width, double* height)
       if (*s == 10 || last) {
         if (len) {
           *s = 0;
-          if (cdh_NoCaseStrncmp(line, "<h1>", 4) == 0) {
+          if (str_NoCaseStrncmp(line, "<h1>", 4) == 0) {
             int h1_size = text_size + 4;
             ctx->fdraw->get_text_extent(ctx, &line[4], len - 4,
                 flow_eDrawType_TextHelveticaBold, idx, &l_width, &l_height,
                 tsize(h1_size));
             z_height += l_height;
             z_width = MAX(z_width, l_width);
-          } else if (cdh_NoCaseStrncmp(line, "<h2>", 4) == 0) {
+          } else if (str_NoCaseStrncmp(line, "<h2>", 4) == 0) {
             int h2_size = text_size + 2;
             ctx->fdraw->get_text_extent(ctx, &line[4], len - 4,
                 flow_eDrawType_TextHelveticaBold, idx, &l_width, &l_height,
                 tsize(h2_size));
             z_height += l_height;
             z_width = MAX(z_width, l_width);
-          } else if (cdh_NoCaseStrncmp(line, "<b>", 3) == 0) {
+          } else if (str_NoCaseStrncmp(line, "<b>", 3) == 0) {
             ctx->fdraw->get_text_extent(ctx, &line[3], len - 3,
                 flow_eDrawType_TextHelveticaBold, idx, &l_width, &l_height,
                 tsize(text_size));
             z_height += l_height;
             z_width = MAX(z_width, l_width);
-          } else if (cdh_NoCaseStrncmp(line, "<image>", 7) == 0) {
+          } else if (str_NoCaseStrncmp(line, "<image>", 7) == 0) {
           } else {
-            if (cdh_NoCaseStrncmp(line, "<c>", 3) == 0)
+            if (str_NoCaseStrncmp(line, "<c>", 3) == 0)
               lix = 3;
             else
               lix = 0;
@@ -1233,29 +1232,29 @@ void flow_measure_annot_text(FlowCtx* ctx, char* text, flow_eDrawType draw_type,
       if (*s == 10 || last) {
         if (len) {
           *s = 0;
-          if (cdh_NoCaseStrncmp(line, "<h1>", 4) == 0) {
+          if (str_NoCaseStrncmp(line, "<h1>", 4) == 0) {
             int h1_size = text_size + 4;
             ctx->fdraw->get_text_extent(ctx, &line[4], len - 4,
                 flow_eDrawType_TextHelveticaBold, text_size, &l_width,
                 &l_height, (8 + 2 * h1_size));
             z_height += l_height;
             z_width = MAX(z_width, l_width);
-          } else if (cdh_NoCaseStrncmp(line, "<h2>", 4) == 0) {
+          } else if (str_NoCaseStrncmp(line, "<h2>", 4) == 0) {
             int h2_size = text_size + 2;
             ctx->fdraw->get_text_extent(ctx, &line[4], len - 4,
                 flow_eDrawType_TextHelveticaBold, text_size, &l_width,
                 &l_height, (8 + 2 * h2_size));
             z_height += l_height;
             z_width = MAX(z_width, l_width);
-          } else if (cdh_NoCaseStrncmp(line, "<b>", 3) == 0) {
+          } else if (str_NoCaseStrncmp(line, "<b>", 3) == 0) {
             ctx->fdraw->get_text_extent(ctx, &line[3], len - 3,
                 flow_eDrawType_TextHelveticaBold, text_size, &l_width,
                 &l_height, (8 + 2 * text_size));
             z_height += l_height;
             z_width = MAX(z_width, l_width);
-          } else if (cdh_NoCaseStrncmp(line, "<image>", 7) == 0) {
+          } else if (str_NoCaseStrncmp(line, "<image>", 7) == 0) {
           } else {
-            if (cdh_NoCaseStrncmp(line, "<c>", 3) == 0)
+            if (str_NoCaseStrncmp(line, "<c>", 3) == 0)
               lix = 3;
             else
               lix = 0;

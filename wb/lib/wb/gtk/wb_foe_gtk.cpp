@@ -39,11 +39,12 @@
 //   the graphical editor.
 
 #include <stdlib.h>
-#include <string.h>
 
 #include <gdk/gdkkeysyms.h>
 
 #include "pwr_baseclasses.h"
+
+#include "co_string.h"
 
 #include "cow_login.h"
 #include "cow_logw_gtk.h"
@@ -993,7 +994,7 @@ void WFoeGtk::set_title()
     pwr_tOName new_title;
 
     strcpy(new_title, "*** ");
-    cdh_StrncpyCutOff(&new_title[4], name, sizeof(new_title) - 4, 0);
+    str_StrncpyCutOff(&new_title[4], name, sizeof(new_title) - 4, 0);
 
     char* titleutf8
         = g_convert(new_title, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);

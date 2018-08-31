@@ -3843,7 +3843,7 @@ pwr_tStatus gdh_GetObjectBodyDef(
             s2 = bd[i].attrName;
           else
             s2++;
-          if (cdh_NoCaseStrcmp(s1, s2) == 0) {
+          if (str_NoCaseStrcmp(s1, s2) == 0) {
             bd[j].flags |= gdh_mAttrDef_Shadowed;
             break;
           }

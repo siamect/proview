@@ -1392,19 +1392,19 @@ static void get_config(char* name, unsigned int* lk_max_locks,
     if (nr != 2)
       continue;
 
-    if (cdh_NoCaseStrcmp(line_elem[0], "lk_max_locks") == 0) {
+    if (str_NoCaseStrcmp(line_elem[0], "lk_max_locks") == 0) {
       nr = sscanf(line_elem[1], "%d", &value);
       if (nr == 1) {
         max_locks = value;
         printf("lk_max_locks.........%d\n", max_locks);
       }
-    } else if (cdh_NoCaseStrcmp(line_elem[0], "lk_max_objects") == 0) {
+    } else if (str_NoCaseStrcmp(line_elem[0], "lk_max_objects") == 0) {
       nr = sscanf(line_elem[1], "%d", &value);
       if (nr == 1) {
         max_objects = value;
         printf("lk_max_objects.......%d\n", max_objects);
       }
-    } else if (cdh_NoCaseStrcmp(line_elem[0], "db_log_autoremove") == 0) {
+    } else if (str_NoCaseStrcmp(line_elem[0], "db_log_autoremove") == 0) {
       nr = sscanf(line_elem[1], "%d", &value);
       if (nr == 1) {
         autoremove = value;

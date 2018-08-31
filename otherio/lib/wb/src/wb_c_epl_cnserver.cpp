@@ -73,7 +73,7 @@ static pwr_tStatus GenerateXddFile(ldh_sMenuCall* ip)
     return 0;
 
   sprintf(foutname, "$pwrp_cnf/%s.xdd", o.name());
-  cdh_ToLower(foutname, foutname);
+  str_ToLower(foutname, foutname);
   dcli_translate_filename(foutname, foutname);
   fout = fopen(foutname, "w");
   if (!fout)

@@ -73,7 +73,7 @@ int Graph::export_javabean(char* filename, char* bean_name)
   int annot_cnt;
   int i;
 
-  cdh_ToLower(low_bean_name, bean_name);
+  str_ToLower(low_bean_name, bean_name);
 
   grow_GetSubGraphDynType(grow->ctx, &trace_type1, &trace_type2,
       &dyn_action_type1, &dyn_action_type2);
@@ -101,7 +101,7 @@ int Graph::export_javabean(char* filename, char* bean_name)
   case graph_eTrace_Command:
   case graph_eTrace_DigWithCommand:
   case graph_eTrace_DigToneWithCommand: {
-    if (strStartsWith(bean_name, "Jop"))
+    if (str_StartsWith(bean_name, "Jop"))
       fp << "package jpwr.beans;\n";
 
     fp << "import jpwr.rt.*;\n"
@@ -461,7 +461,7 @@ int Graph::export_javabean(char* filename, char* bean_name)
   case graph_eTrace_DigBorder:
   case graph_eTrace_Invisible:
   case graph_eTrace_AnnotWithTone: {
-    if (strStartsWith(bean_name, "Jop"))
+    if (str_StartsWith(bean_name, "Jop"))
       fp << "package jpwr.beans;\n";
 
     fp << "import jpwr.rt.*;\n"
@@ -858,7 +858,7 @@ int Graph::export_javabean(char* filename, char* bean_name)
     break;
   }
   case graph_eTrace_Slider: {
-    if (strStartsWith(bean_name, "Jop"))
+    if (str_StartsWith(bean_name, "Jop"))
       fp << "package jpwr.beans;\n";
 
     fp << "import jpwr.rt.*;\n"
@@ -898,7 +898,7 @@ int Graph::export_javabean(char* filename, char* bean_name)
   default: {
     // Component without dynamics
 
-    if (strStartsWith(bean_name, "Jop"))
+    if (str_StartsWith(bean_name, "Jop"))
       fp << "package jpwr.beans;\n";
 
     fp << "import jpwr.rt.*;\n"
@@ -943,7 +943,7 @@ int Graph::export_javabean(char* filename, char* bean_name)
 
   fp.open(beaninfo_filename);
 
-  if (strStartsWith(bean_name, "Jop"))
+  if (str_StartsWith(bean_name, "Jop"))
     fp << "package jpwr.beans;\n";
 
   fp << "import jpwr.jop.*;\n"
@@ -1879,7 +1879,7 @@ int Graph::export_gejava(char* filename, char* bean_name, int applet, int html)
   int sts;
   int baseclass;
 
-  baseclass = strStartsWith(filename, "Jopc");
+  baseclass = str_StartsWith(filename, "Jopc");
 
   grow_GetBackgroundImage(grow->ctx, background_image, &background_tiled);
   if (!streq(background_image, "")) {

@@ -592,7 +592,7 @@ int TreeNav::get_select(TrItemBase** item)
 int TreeNav::get_item(char* name, TreeNav_object** hi)
 {
   for (int i = 0; i < (int)objectlist.size(); i++) {
-    if (cdh_NoCaseStrcmp(objectlist[i].name, name) == 0) {
+    if (str_NoCaseStrcmp(objectlist[i].name, name) == 0) {
       *hi = &objectlist[i];
       return 1;
     }

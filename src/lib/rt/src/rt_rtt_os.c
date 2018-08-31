@@ -40,10 +40,11 @@
 /*_Include files_________________________________________________________*/
 
 #include <stdlib.h>
-#include <string.h>
 #include <sys/utsname.h>
 
 #include "co_math.h"
+#include "co_string.h"
+
 #include "rt_rtt_global.h"
 #include "rt_rtt_msg.h"
 
@@ -237,7 +238,7 @@ int rtt_replace_env(char* str, char* newstr)
       size = (long int)s - (long int)u;
       strncpy(symbol, u, size);
       symbol[size] = 0;
-      cdh_ToLower(lower_symbol, symbol);
+      str_ToLower(lower_symbol, symbol);
       if ((value = getenv(lower_symbol)) == NULL) {
         /* It was no symbol */
         *t = *s;

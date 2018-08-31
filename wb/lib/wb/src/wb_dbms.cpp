@@ -739,7 +739,7 @@ char* wb_dbms_env::dbName(void)
   strcat(dbname, pname);
   strcat(dbname, "__");
   strcat(dbname, m_dbName);
-  cdh_ToLower(dbname, dbname);
+  str_ToLower(dbname, dbname);
 
   return dbname;
 }
@@ -751,7 +751,7 @@ char* wb_dbms_env::host(void)
   static char host[80];
 
   syi_NodeName(&sts, nodename, sizeof(nodename));
-  if (ODD(sts) && cdh_NoCaseStrcmp(nodename, m_host) == 0)
+  if (ODD(sts) && str_NoCaseStrcmp(nodename, m_host) == 0)
     strcpy(host, "localhost");
   else
     strcpy(host, m_host);
@@ -896,7 +896,7 @@ int wb_dbms_env::create()
   struct stat sb;
   char name[512];
 
-  cdh_ToLower(m_fileName, m_fileName);
+  str_ToLower(m_fileName, m_fileName);
 
   printf("wb_dbms_env::create: %s\n", m_fileName);
   /* Create the directory, read/write/access owner and group. */
@@ -951,7 +951,7 @@ int wb_dbms_env::open(void)
   char* valp;
   int rc;
 
-  cdh_ToLower(m_fileName, m_fileName);
+  str_ToLower(m_fileName, m_fileName);
 
   sprintf(buf, "%s/%s", m_fileName, "connection.dmsql");
 

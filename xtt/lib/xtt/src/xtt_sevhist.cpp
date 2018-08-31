@@ -115,7 +115,7 @@ XttSevHist::XttSevHist(void* parent_ctx, const char* name, pwr_tOid* xn_oidv,
       return;
     initial_period = time_range;
   }
-  cdh_StrncpyCutOff(title, name, sizeof(title), 1);
+  str_StrncpyCutOff(title, name, sizeof(title), 1);
 }
 
 XttSevHist::XttSevHist(void* parent_ctx, const char* name, char* filename,
@@ -1182,7 +1182,7 @@ int XttSevHist::read_export(char* filename)
       break;
 
     if (line[0] == '#') {
-      if (strStartsWith(&line[2], "Attribute")) {
+      if (str_StartsWith(&line[2], "Attribute")) {
         // New attribute
         idx++;
         strncpy(onamev[idx], &line[12], sizeof(onamev[0]));
@@ -1200,7 +1200,7 @@ int XttSevHist::read_export(char* filename)
         strcpy(gcd->y_name[idx], onamev[idx]);
         strcat(gcd->y_name[idx], ".");
         strcat(gcd->y_name[idx], anamev[idx]);
-      } else if (strStartsWith(&line[2], "Rows")) {
+      } else if (str_StartsWith(&line[2], "Rows")) {
         if (idx < 0)
           continue;
 

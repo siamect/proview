@@ -61,7 +61,7 @@ static pwr_tStatus OpenGraph(ldh_sMenuCall* ip)
   if (EVEN(sts))
     return sts;
 
-  cdh_ToLower(graph_name, action);
+  str_ToLower(graph_name, action);
   free((char*)action);
   if (strstr(graph_name, ".pwg")) {
     Ge* gectx = ip->wtt->ge_new(graph_name);
@@ -100,7 +100,7 @@ static pwr_tStatus PostRename(ldh_tSesContext Session, pwr_tOid Object)
     if (EVEN(sts))
       return sts;
 
-    cdh_ToLower(name, name);
+    str_ToLower(name, name);
     strcat(name, ".pwg");
 
     sts = ldh_SetObjectPar(

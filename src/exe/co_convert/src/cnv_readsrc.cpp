@@ -70,7 +70,7 @@ int CnvReadSrc::read_src(char* filename)
       if (streq(line, ""))
         continue;
 
-      if (!strStartsWith(line, "/*_*") && !(state & cread_mState_Doc)) {
+      if (!str_StartsWith(line, "/*_*") && !(state & cread_mState_Doc)) {
         html_line(orig_line);
         continue;
       }
@@ -244,6 +244,6 @@ char* CnvReadSrc::low(char* in)
 {
   static char str[400];
 
-  cdh_ToLower(str, in);
+  str_ToLower(str, in);
   return str;
 }

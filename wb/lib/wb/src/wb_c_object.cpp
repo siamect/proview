@@ -579,7 +579,7 @@ static pwr_tStatus HelpClass(ldh_sMenuCall* ip)
     if (EVEN(sts))
       return sts;
 
-    cdh_ToLower(vname, vname);
+    str_ToLower(vname, vname);
     snprintf(cmd, sizeof(cmd),
         "help %s /helpfile=\"$pwr_exe/%s/%s_xtthelp.dat\"/strict", cname,
         lng_get_language_str(), vname);
@@ -831,10 +831,10 @@ static pwr_tStatus configure_object_reset(
     if (mb) {
       // Remove leading Super.
       s = bodydef[i].ParName;
-      while (strStartsWith(s, "Super."))
+      while (str_StartsWith(s, "Super."))
         s += 6;
       for (j = 0; j < vect_cnt; j++) {
-        if (cdh_NoCaseStrcmp(vect[j], s) == 0) {
+        if (str_NoCaseStrcmp(vect[j], s) == 0) {
           // This object should not be reset
           skip = 1;
           break;

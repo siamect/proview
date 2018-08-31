@@ -155,13 +155,13 @@ void* CnvXtthelpToHtml::insert(navh_eItemType item_type, const char* text1,
 
     pwr_tFileName fname;
     if (!streq(link, "")) {
-      if (strStartsWith(link, "$web:")) {
+      if (str_StartsWith(link, "$web:")) {
         replace_url_symbols(&link[5], fname);
-        // if ( strStartsWith( &link[5], "$pwrp_web/"))
+        // if ( str_StartsWith( &link[5], "$pwrp_web/"))
         //   strcpy( fname, &link[15]);
         // else
         //   strcpy( fname, &link[5]);
-      } else if (strStartsWith(link, "$class:")) {
+      } else if (str_StartsWith(link, "$class:")) {
         char* s;
 
         // Get prefix from file
@@ -245,13 +245,13 @@ void* CnvXtthelpToHtml::insert(navh_eItemType item_type, const char* text1,
 
     pwr_tFileName fname;
     if (!streq(link, "")) {
-      if (strStartsWith(link, "$web:")) {
+      if (str_StartsWith(link, "$web:")) {
         replace_url_symbols(&link[5], fname);
-        // if ( strStartsWith( &link[5], "$pwrp_web/"))
+        // if ( str_StartsWith( &link[5], "$pwrp_web/"))
         //  strcpy( fname, &link[15]);
         // else
         //  strcpy( fname, &link[5]);
-      } else if (strStartsWith(link, "$class:")) {
+      } else if (str_StartsWith(link, "$class:")) {
         char* s;
 
         // Get prefix from file
@@ -473,7 +473,7 @@ static int find_symbol(char* name, char* value)
     return 0;
 
   for (j = 0; j < vect_cnt; j++) {
-    if (cdh_NoCaseStrcmp(name, sym_vect[j]) == 0) {
+    if (str_NoCaseStrcmp(name, sym_vect[j]) == 0) {
       strcpy(value, value_vect[j]);
       found = 1;
       break;

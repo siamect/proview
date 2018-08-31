@@ -1020,7 +1020,7 @@ int GsdAttrNav::trace_scan_bc(brow_tObject object, void* p)
             pb_cModuleClassFile, attrnav->modelname, mp->Mod_Name, mclass);
         if (ODD(sts)) {
           for (int i = 0; attrnav->gsd->module_classlist[i].cid; i++) {
-            if (cdh_NoCaseStrcmp(mclass, attrnav->gsd->module_classlist[i].name)
+            if (str_NoCaseStrcmp(mclass, attrnav->gsd->module_classlist[i].name)
                 == 0) {
               mcid = attrnav->gsd->module_classlist[i].cid;
               break;
@@ -1504,14 +1504,14 @@ int GsdAttrNav::search_class(
     if (num >= 2)
       dcli_trim(itemv[1], itemv[1]);
 
-    if (cdh_NoCaseStrcmp(itemv[0], "Model") == 0) {
+    if (str_NoCaseStrcmp(itemv[0], "Model") == 0) {
       if (num < 2)
         continue;
 
       if (in_model)
         continue;
 
-      if (cdh_NoCaseStrcmp(itemv[1], lmodel) == 0)
+      if (str_NoCaseStrcmp(itemv[1], lmodel) == 0)
         in_model = 1;
     }
 
@@ -1530,7 +1530,7 @@ int GsdAttrNav::search_class(
       if (streq(itemv[1], "-") || streq(itemv[1], ""))
         continue;
 
-      if (cdh_NoCaseStrcmp(itemv[0], lmodule) == 0) {
+      if (str_NoCaseStrcmp(itemv[0], lmodule) == 0) {
         strncpy(mclass, itemv[1], sizeof(pwr_tObjName));
         fp.close();
         return 1;

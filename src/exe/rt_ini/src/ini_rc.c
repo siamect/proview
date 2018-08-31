@@ -88,7 +88,7 @@ pwr_tStatus ini_RcReadAndSet(const char* dir, const char* nodename, int busid)
 
   sprintf(filename, pwr_cNameRc, dir, nodename, busid);
 
-  cdh_ToLower(filename, filename);
+  str_ToLower(filename, filename);
   fp = fopen(filename, "r");
   if (fp == NULL)
     return 1;

@@ -79,7 +79,7 @@ char* cnf_get_value(const char* name, char* value, int size)
       if (nr < 2)
         continue;
 
-      if (cdh_NoCaseStrcmp(name, item_str[0]) == 0) {
+      if (str_NoCaseStrcmp(name, item_str[0]) == 0) {
         strcpy(ret_value, item_str[1]);
         if (value)
           strncpy(value, ret_value, size);

@@ -39,9 +39,12 @@
 #include <iostream>
 
 #include "pwr_baseclasses.h"
+
 #include "co_cdh.h"
-#include "co_time.h"
 #include "co_error.h"
+#include "co_string.h"
+#include "co_time.h"
+
 #include "rt_gdh.h"
 #include "rt_qcom_msg.h"
 #include "rt_ini_event.h"
@@ -192,7 +195,7 @@ int rt_sevhistmon::init_objects()
 
     bool found = false;
     for (unsigned int i = 0; i < m_nodes.size(); i++) {
-      if (cdh_NoCaseStrcmp(hs.nodename, m_nodes[i].name) == 0) {
+      if (str_NoCaseStrcmp(hs.nodename, m_nodes[i].name) == 0) {
         hs.nid = m_nodes[i].nid;
         found = true;
         break;
@@ -813,7 +816,7 @@ int rt_sevhistmon::connect()
     for (unsigned int j = 0; j < m_hs.size(); j++) {
       if (m_hs[j].configerror)
         continue;
-      if (cdh_NoCaseStrcmp(m_nodes[i].name, m_hs[j].nodename) == 0) {
+      if (str_NoCaseStrcmp(m_nodes[i].name, m_hs[j].nodename) == 0) {
         found = true;
         break;
       }

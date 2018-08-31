@@ -71,13 +71,13 @@ static int IsOkConnect(ldh_sMenuCall* ip, pwr_sMenuButton* mbp)
   if (EVEN(sts))
     return 0;
 
-  if (!strStartsWith(PattrDef.Identity, SattrDef.Identity))
+  if (!str_StartsWith(PattrDef.Identity, SattrDef.Identity))
     return 0;
 
-  if (!strStartsWith(PattrDef.Source, SattrDef.Target))
+  if (!str_StartsWith(PattrDef.Source, SattrDef.Target))
     return 0;
 
-  if (!strStartsWith(PattrDef.Target, SattrDef.Source))
+  if (!str_StartsWith(PattrDef.Target, SattrDef.Source))
     return 0;
 
   return 1;
@@ -124,13 +124,13 @@ static pwr_tStatus Connect(ldh_sMenuCall* ip)
   if (EVEN(sts))
     return sts;
 
-  if (!strStartsWith(PattrDef.Identity, SattrDef.Identity))
+  if (!str_StartsWith(PattrDef.Identity, SattrDef.Identity))
     return PWRS__IDXREF;
 
-  if (!strStartsWith(PattrDef.Source, SattrDef.Target))
+  if (!str_StartsWith(PattrDef.Source, SattrDef.Target))
     return PWRS__STXREF;
 
-  if (!strStartsWith(PattrDef.Target, SattrDef.Source))
+  if (!str_StartsWith(PattrDef.Target, SattrDef.Source))
     return PWRS__STXREF;
 
   Pdim = PattrRef.Size / sizeof(pwr_sAttrRef);
@@ -223,13 +223,13 @@ static int IsOkDisconnect(ldh_sMenuCall* ip, pwr_sMenuButton* mbp)
   if (EVEN(sts))
     return 0;
 
-  if (!strStartsWith(PattrDef.Identity, SattrDef.Identity))
+  if (!str_StartsWith(PattrDef.Identity, SattrDef.Identity))
     return 0;
 
-  if (!strStartsWith(PattrDef.Source, SattrDef.Target))
+  if (!str_StartsWith(PattrDef.Source, SattrDef.Target))
     return 0;
 
-  if (!strStartsWith(PattrDef.Target, SattrDef.Source))
+  if (!str_StartsWith(PattrDef.Target, SattrDef.Source))
     return 0;
 
   return 1;
@@ -277,13 +277,13 @@ static pwr_tStatus Disconnect(ldh_sMenuCall* ip)
   if (EVEN(sts))
     return sts;
 
-  if (!strStartsWith(PattrDef.Identity, SattrDef.Identity))
+  if (!str_StartsWith(PattrDef.Identity, SattrDef.Identity))
     return PWRS__IDXREF;
 
-  if (!strStartsWith(PattrDef.Source, SattrDef.Target))
+  if (!str_StartsWith(PattrDef.Source, SattrDef.Target))
     return PWRS__STXREF;
 
-  if (!strStartsWith(PattrDef.Target, SattrDef.Source))
+  if (!str_StartsWith(PattrDef.Target, SattrDef.Source))
     return PWRS__STXREF;
 
   Pdim = PattrRef.Size / sizeof(pwr_sAttrRef);

@@ -500,7 +500,7 @@ static pwr_tStatus generate_viewer_data(device_sCtx* ctx)
       return sts;
 
     dcli_trim(ethernet_device, ethernet_device);
-    cdh_ToLower(ethernet_device, ethernet_device);
+    str_ToLower(ethernet_device, ethernet_device);
     sprintf(fname, "$pwrp_load/pwr_pnviewer_%s.dat", ethernet_device);
     free(ethernet_device);
     dcli_translate_filename(fname, fname);

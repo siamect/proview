@@ -552,7 +552,7 @@ void Ev::create_aliaslist(void* up)
     if (nr < 2)
       continue;
 
-    cdh_ToUpper(alias_list[j].Object, alias_array[0]);
+    str_ToUpper(alias_list[j].Object, alias_array[0]);
     strncpy(alias_list[j].Alias, alias_array[1], sizeof(alias_list[j].Alias));
     alias_list[j].Alias[sizeof(alias_list[j].Alias) - 1] = 0;
     j++;
@@ -576,13 +576,13 @@ char* Ev::name_to_alias(char* name)
   char oname[120];
   static char alias[40];
 
-  cdh_ToUpper(oname, name);
+  str_ToUpper(oname, name);
 
   for (int i = 0; i < (int)(sizeof(alias_list) / sizeof(alias_list[0])); i++) {
     if (alias_list[i].Alias[0] == 0)
       break;
     if (!streq(alias_list[i].Object, "")
-        && strStartsWith(oname, alias_list[i].Object)) {
+        && str_StartsWith(oname, alias_list[i].Object)) {
       strcpy(alias, alias_list[i].Alias);
       return alias;
     }

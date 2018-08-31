@@ -383,15 +383,15 @@ int ColPalCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 
         text = (GrowText*)callback_object;
         text->get_object_name(name, sizeof(name), glow_eName_Object);
-        if (strStartsWith(name, "FillText") && event == glow_eEvent_MB1Click) {
+        if (str_StartsWith(name, "FillText") && event == glow_eEvent_MB1Click) {
           set_active(colpal_eActive_FillColor);
-        } else if (strStartsWith(name, "BorderText")
+        } else if (str_StartsWith(name, "BorderText")
             && event == glow_eEvent_MB1Click) {
           set_active(colpal_eActive_BorderColor);
-        } else if (strStartsWith(name, "TextText")
+        } else if (str_StartsWith(name, "TextText")
             && event == glow_eEvent_MB1Click) {
           set_active(colpal_eActive_TextColor);
-        } else if (strStartsWith(name, "ToneEntry")
+        } else if (str_StartsWith(name, "ToneEntry")
             && event == glow_eEvent_MB1Click) {
           glow_eDrawTone tone;
 
@@ -430,15 +430,15 @@ int ColPalCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 
         rect = (GrowRect*)callback_object;
         rect->get_object_name(name, sizeof(name), glow_eName_Object);
-        if (strStartsWith(name, "FillRect") && event == glow_eEvent_MB1Click) {
+        if (str_StartsWith(name, "FillRect") && event == glow_eEvent_MB1Click) {
           set_active(colpal_eActive_FillColor);
-        } else if (strStartsWith(name, "BorderRect")
+        } else if (str_StartsWith(name, "BorderRect")
             && event == glow_eEvent_MB1Click) {
           set_active(colpal_eActive_BorderColor);
-        } else if (strStartsWith(name, "TextRect")
+        } else if (str_StartsWith(name, "TextRect")
             && event == glow_eEvent_MB1Click) {
           set_active(colpal_eActive_TextColor);
-        } else if (strStartsWith(name, "ToneEntry")
+        } else if (str_StartsWith(name, "ToneEntry")
             && event == glow_eEvent_MB1Click) {
           glow_eDrawTone tone;
 
@@ -460,7 +460,7 @@ int ColPalCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
               ->set_fill_color((glow_eDrawType)tone_color_match((int)tone));
           break;
         }
-        if (!strStartsWith(name, "ColorEntry"))
+        if (!str_StartsWith(name, "ColorEntry"))
           break;
         if (streq(name, "ColorEntryBg")) {
           if (event == glow_eEvent_MB1Click) {

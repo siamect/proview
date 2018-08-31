@@ -107,9 +107,9 @@ int cnv_CreateConvTable(pwr_sClass_ConvDef* to_convdef,
     }
 
     /* First arg is type */
-    cdh_ToUpper(type_str, out_str[0]);
+    str_ToUpper(type_str, out_str[0]);
     /* Second arg i parameter name */
-    cdh_ToUpper(from_param[from_convdef_count], out_str[1]);
+    str_ToUpper(from_param[from_convdef_count], out_str[1]);
     strcpy(from_format[from_convdef_count], "");
     sts = cnv_string_to_partype(type_str, nr, out_str[2],
         &from_type[from_convdef_count], &from_size[from_convdef_count],
@@ -151,7 +151,7 @@ int cnv_CreateConvTable(pwr_sClass_ConvDef* to_convdef,
       return CNV__SYNTAX;
     }
 
-    cdh_ToUpper(type_str, out_str[0]);
+    str_ToUpper(type_str, out_str[0]);
     strcpy(to_format[from_convdef_count], "");
     sts = cnv_string_to_partype(type_str, nr, out_str[2],
         &to_type[to_convdef_count], &to_size[to_convdef_count],
@@ -160,7 +160,7 @@ int cnv_CreateConvTable(pwr_sClass_ConvDef* to_convdef,
       errh_CErrLog(sts, errh_ErrArgAF(to_convdef->Param[i]), NULL);
       return sts;
     }
-    cdh_ToUpper(to_param[to_convdef_count], out_str[1]);
+    str_ToUpper(to_param[to_convdef_count], out_str[1]);
     if (to_convdef_count == 0)
       to_offset[to_convdef_count] = 0;
     else {

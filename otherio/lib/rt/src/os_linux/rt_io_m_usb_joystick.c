@@ -44,14 +44,16 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <errno.h>
-#include <string.h>
 #include <stdlib.h>
 #include <stdint.h>
 
 #include "pwr_basecomponentclasses.h"
 #include "pwr_otherioclasses.h"
-#include "co_time.h"
+
 #include "co_cdh.h"
+#include "co_string.h"
+#include "co_time.h"
+
 #include "rt_io_base.h"
 #include "rt_io_card_init.h"
 #include "rt_io_card_close.h"
@@ -129,7 +131,7 @@ static pwr_tStatus IoCardInit(
         for (j = 0; j < ABS_MAX; j++) {
           if (axis_names[j] == 0)
             break;
-          if (cdh_NoCaseStrcmp(axis_names[j], cop->Identity) == 0) {
+          if (str_NoCaseStrcmp(axis_names[j], cop->Identity) == 0) {
             for (k = 0; k < axes; k++) {
               if (axmap[k] == j) {
                 local->axis_map[k] = i;
@@ -162,7 +164,7 @@ static pwr_tStatus IoCardInit(
 
         /* Map channel */
         for (j = 0; j < ABS_MAX; j++) {
-          if (cdh_NoCaseStrcmp(axis_names[j], cop->Identity) == 0) {
+          if (str_NoCaseStrcmp(axis_names[j], cop->Identity) == 0) {
             for (k = 0; k < axes; k++) {
               if (axmap[k] == j) {
                 local->axis_map[k] = i;
@@ -196,7 +198,7 @@ static pwr_tStatus IoCardInit(
         for (j = 0; j < KEY_MAX - BTN_MISC; j++) {
           if (button_names[j] == 0)
             break;
-          if (cdh_NoCaseStrcmp(button_names[j], cop->Identity) == 0) {
+          if (str_NoCaseStrcmp(button_names[j], cop->Identity) == 0) {
             for (k = 0; k < buttons; k++) {
               if (btnmap[k] - BTN_MISC == j) {
                 local->button_map[k] = i;

@@ -689,8 +689,8 @@ int CoWowGtk::DisplayWarranty()
   text[i] = 0;
   fclose(fp);
 
-  if (strStartsWith(text, "Coding:UTF-8"))
-    cdh_Strcpy(text, &text[13]);
+  if (str_StartsWith(text, "Coding:UTF-8"))
+    str_Strcpy(text, &text[13]);
   else {
     gchar* s = g_convert(text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
     if (s) {
@@ -775,8 +775,8 @@ void CoWowGtk::DisplayLicense()
   fclose(fp);
   text[i] = 0;
 
-  if (strStartsWith(text, "Coding:UTF-8"))
-    cdh_Strcpy(text, &text[13]);
+  if (str_StartsWith(text, "Coding:UTF-8"))
+    str_Strcpy(text, &text[13]);
   else {
     gchar* s = g_convert(text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
     if (s) {
@@ -1471,7 +1471,7 @@ pwr_tStatus CoWowGtk::CreateMenuItem(
             label, (char*)gtk_label_get_text(GTK_LABEL(labelw)), sizeof(label));
         char* label_iso
             = g_convert(label, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
-        if (cdh_NoCaseStrcmp(label_iso, name_array[i]) == 0) {
+        if (str_NoCaseStrcmp(label_iso, name_array[i]) == 0) {
           child = GTK_WIDGET(ch->data);
           found = 1;
           g_free(label_iso);
@@ -1546,7 +1546,7 @@ pwr_tStatus CoWowGtk::DeleteMenuItem(const char* name, void* menu)
       GtkWidget* labelw = gtk_bin_get_child(GTK_BIN(ch->data));
       strncpy(
           label, (char*)gtk_label_get_text(GTK_LABEL(labelw)), sizeof(label));
-      if (cdh_NoCaseStrcmp(label, name_array[i]) == 0) {
+      if (str_NoCaseStrcmp(label, name_array[i]) == 0) {
         child = GTK_WIDGET(ch->data);
         found = 1;
         break;
@@ -1778,13 +1778,13 @@ void CoWowGtk::update_title(GtkWidget* w, int editmode)
 
   g_object_get(w, "title", &title, NULL);
   if (editmode) {
-    if (!strStartsWith(title, "*** ")) {
+    if (!str_StartsWith(title, "*** ")) {
       strcpy(new_title, "*** ");
       strcat(new_title, title);
       g_object_set(w, "title", new_title, NULL);
     }
   } else {
-    if (strStartsWith(title, "*** ")) {
+    if (str_StartsWith(title, "*** ")) {
       strcpy(new_title, &title[4]);
       g_object_set(w, "title", new_title, NULL);
     }

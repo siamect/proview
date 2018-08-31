@@ -673,7 +673,7 @@ pwr_tStatus CoXHelpNav::search(char* str, bool strict)
 
   strncpy(search_str, str, sizeof(search_str));
   if (!strict)
-    cdh_ToUpper(search_str, search_str);
+    str_ToUpper(search_str, search_str);
 
   return search_exec(false);
 }
@@ -800,7 +800,7 @@ HItemHelpImage::HItemHelpImage(CoXHelpNavBrow* brow, const char* item_name,
 
   brow_CreateNode(
       brow->ctx, "image", nc, dest, dest_code, (void*)this, 1, &node);
-  if (strStartsWith(link, "$web"))
+  if (str_StartsWith(link, "$web"))
     brow_SetAnnotPixmap(node, 0, brow->pixmap_weblink);
   else if (link[0] != 0)
     brow_SetAnnotPixmap(node, 0, brow->pixmap_morehelp);
@@ -812,7 +812,7 @@ int HItemHelpImage::doubleclick_action(
   int sts;
 
   if (!streq(link, "")) {
-    if (strStartsWith(link, "$web:")) {
+    if (str_StartsWith(link, "$web:")) {
       // Open the url
       xhelpnav_open_URL(xhelpnav, &link[5]);
     } else if ((strstr(link, ".htm") != 0) || (strstr(link, ".pdf") != 0)) {
@@ -850,7 +850,7 @@ bool HItemHeaderLarge::search(char* str, bool strict)
   if (text[0] == 0)
     return false;
   if (!strict)
-    cdh_ToUpper(text, text);
+    str_ToUpper(text, text);
   if (strstr(text, str) != 0)
     return true;
   return false;
@@ -875,7 +875,7 @@ bool HItemHelpHeader::search(char* str, bool strict)
   if (text[0] == 0)
     return false;
   if (!strict)
-    cdh_ToUpper(text, text);
+    str_ToUpper(text, text);
   if (strstr(text, str) != 0)
     return true;
   return false;
@@ -910,7 +910,7 @@ HItemHelp::HItemHelp(CoXHelpNavBrow* brow, const char* item_name,
     brow_SetAnnotation(node, 1, text2, strlen(text2));
   if (text3[0] != 0)
     brow_SetAnnotation(node, 2, text3, strlen(text3));
-  if (strStartsWith(link, "$web"))
+  if (str_StartsWith(link, "$web"))
     brow_SetAnnotPixmap(node, 0, brow->pixmap_weblink);
   else if (link[0] != 0 || index)
     brow_SetAnnotPixmap(node, 0, brow->pixmap_morehelp);
@@ -925,7 +925,7 @@ bool HItemHelp::search(char* str, bool strict)
     if (text[0] == 0)
       continue;
     if (!strict)
-      cdh_ToUpper(text, text);
+      str_ToUpper(text, text);
     if (strstr(text, str) != 0)
       return true;
   }
@@ -940,7 +940,7 @@ int HItemHelp::doubleclick_action(
   if (index) {
     sts = xhelpnav->help_index(file_type, file_name, 1);
   } else if (!streq(link, "")) {
-    if (strStartsWith(link, "$web:")) {
+    if (str_StartsWith(link, "$web:")) {
       // Open the url
       xhelpnav_open_URL(xhelpnav, &link[5]);
     } else if ((strstr(link, ".htm") != 0) || (strstr(link, ".pdf") != 0)) {
@@ -982,7 +982,7 @@ HItemHelpBold::HItemHelpBold(CoXHelpNavBrow* brow, const char* item_name,
     brow_SetAnnotation(node, 1, text2, strlen(text2));
   if (text3[0] != 0)
     brow_SetAnnotation(node, 2, text3, strlen(text3));
-  if (strStartsWith(link, "$web"))
+  if (str_StartsWith(link, "$web"))
     brow_SetAnnotPixmap(node, 0, brow->pixmap_weblink);
   else if (link[0] != 0 || index)
     brow_SetAnnotPixmap(node, 0, brow->pixmap_morehelp);
@@ -997,7 +997,7 @@ bool HItemHelpBold::search(char* str, bool strict)
     if (text[0] == 0)
       continue;
     if (!strict)
-      cdh_ToUpper(text, text);
+      str_ToUpper(text, text);
     if (strstr(text, str) != 0)
       return true;
   }
@@ -1012,7 +1012,7 @@ int HItemHelpBold::doubleclick_action(
   if (index) {
     sts = xhelpnav->help_index(file_type, file_name, 1);
   } else if (!streq(link, "")) {
-    if (strStartsWith(link, "$web:")) {
+    if (str_StartsWith(link, "$web:")) {
       // Open the url
       xhelpnav_open_URL(xhelpnav, &link[5]);
     } else if ((strstr(link, ".htm") != 0) || (strstr(link, ".pdf") != 0)) {
@@ -1063,7 +1063,7 @@ static void* xhelpnav_help_insert_cb(void* ctx, navh_eItemType item_type,
   char* t2 = 0;
   char* t3 = 0;
 
-  if (link && strStartsWith(link, "$class:"))
+  if (link && str_StartsWith(link, "$class:"))
     llink = (char*)link + 7;
   else if (link)
     llink = (char*)link;
@@ -1414,8 +1414,8 @@ static int help_cmp_items(const void* node1, const void* node2)
 
   brow_GetAnnotation(*(brow_tNode*)node1, 0, text1, sizeof(text1));
   brow_GetAnnotation(*(brow_tNode*)node2, 0, text2, sizeof(text2));
-  cdh_ToLower(text1, text1);
-  cdh_ToLower(text2, text2);
+  str_ToLower(text1, text1);
+  str_ToLower(text2, text2);
 
   return (strcmp(text1, text2));
 }

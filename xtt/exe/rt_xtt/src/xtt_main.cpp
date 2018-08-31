@@ -680,7 +680,7 @@ Xtt::Xtt(int* argc, char** argv[], int* return_sts)
           while (ODD(sts)) {
             sts = gdh_ObjidToName(
                 op_objid, oname, sizeof(oname), cdh_mName_object);
-            if (ODD(sts) && cdh_NoCaseStrcmp(oname, opplace_str) == 0) {
+            if (ODD(sts) && str_NoCaseStrcmp(oname, opplace_str) == 0) {
               sts = gdh_ObjidToName(op_objid, opplace_str, sizeof(opplace_str),
                   cdh_mName_volumeStrict);
               opplace_found = 1;
@@ -725,7 +725,7 @@ Xtt::Xtt(int* argc, char** argv[], int* return_sts)
         while (ODD(sts)) {
           sts = gdh_ObjidToName(
               op_objid, oname, sizeof(oname), cdh_mName_object);
-          if (ODD(sts) && cdh_NoCaseStrcmp(oname, opplace_str) == 0) {
+          if (ODD(sts) && str_NoCaseStrcmp(oname, opplace_str) == 0) {
             sts = gdh_ObjidToName(op_objid, opplace_str, sizeof(opplace_str),
                 cdh_mName_volumeStrict);
             opplace_found = 1;

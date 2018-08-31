@@ -163,7 +163,7 @@ pwr_tStatus rt_sim::load()
         || (line[0] == '/' && line[1] == '/'))
       continue;
 
-    if (strStartsWith(line, "<oid> ")) {
+    if (str_StartsWith(line, "<oid> ")) {
       sts = cdh_StringToObjid(&line[6], &oid);
       if (EVEN(sts)) {
         printf("** Objid syntax error, line %d\n", line_cnt);
@@ -195,7 +195,7 @@ pwr_tStatus rt_sim::load()
         ap = 0;
         continue;
       }
-    } else if (strStartsWith(line, "<oname> ")) {
+    } else if (str_StartsWith(line, "<oname> ")) {
       sts = gdh_NameToObjid(&line[8], &oid);
       if (EVEN(sts)) {
         printf("** Object not found, line %d\n", line_cnt);
@@ -227,7 +227,7 @@ pwr_tStatus rt_sim::load()
         ap = 0;
         continue;
       }
-    } else if (strStartsWith(line, "<dynamicname> ")) {
+    } else if (str_StartsWith(line, "<dynamicname> ")) {
       nr = dcli_parse(line, " 	", "", (char*)line_elem,
           sizeof(line_elem) / sizeof(line_elem[0]), sizeof(line_elem[0]), 1);
       if (nr != 3)

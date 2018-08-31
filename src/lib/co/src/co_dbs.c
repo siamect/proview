@@ -36,15 +36,15 @@
 
 #include <errno.h>
 #include <fcntl.h>
-#include <string.h>
 #include <unistd.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
 
 #include "co_dbs.h"
-#include "co_time.h"
 #include "co_dbs_msg.h"
 #include "co_errno.h"
+#include "co_string.h"
+#include "co_time.h"
 
 pwr_tBoolean dbs_AlignedRead(
     pwr_tStatus* sts, void* buf, pwr_tUInt32 size, const dbs_sEnv* ep)
@@ -539,7 +539,7 @@ void dbs_Split(pwr_tStatus* sts, dbs_sMenv* mep, char* dirName)
     size = offset = vep->size;
 
     sprintf(fileName, "%s/%s.dbs", dirName, vep->vp->name);
-    cdh_ToLower(fileName, fileName);
+    str_ToLower(fileName, fileName);
 
     fp = fopen(fileName, "w+b");
     if (fp == NULL) {

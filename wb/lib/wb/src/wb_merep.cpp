@@ -101,9 +101,9 @@ wb_merep::wb_merep(const char* dirName, wb_erep* erep, wb_vrep* vrep)
           sprintf(fileName, "%s/%s", dirName, dp->d_name);
           dbs_sEnv* ep = dbs_Open(&sts, &env, fileName);
           dbs_sVolume* vp = dbs_Volume(&sts, &volume, ep);
-          cdh_ToLower(vname, vp->name);
+          str_ToLower(vname, vp->name);
           *rindex(dp->d_name, '.') = '\0';
-          cdh_ToLower(dp->d_name, dp->d_name);
+          str_ToLower(dp->d_name, dp->d_name);
           dbs_Close(&sts, ep);
           if (streq(dp->d_name, vname)) {
             try {
@@ -161,7 +161,7 @@ wb_mvrep* wb_merep::volume(pwr_tStatus* sts, const char* name)
 {
   mvrep_iterator it;
   for (it = m_mvrepdbs.begin(); it != m_mvrepdbs.end(); it++) {
-    if (cdh_NoCaseStrcmp(it->second->name(), name) == 0) {
+    if (str_NoCaseStrcmp(it->second->name(), name) == 0) {
       *sts = LDH__SUCCESS;
       return it->second;
     }

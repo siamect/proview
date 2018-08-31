@@ -1234,7 +1234,7 @@ int AttrNav::string_to_mask(int type_id, char* str, pwr_tMask* mask)
     found = 0;
     elem_p = enum_p->elements;
     for (; elem_p->name[0] != 0; elem_p++) {
-      if (cdh_NoCaseStrcmp(elem_p->name, vect[i]) == 0) {
+      if (str_NoCaseStrcmp(elem_p->name, vect[i]) == 0) {
         m |= elem_p->num;
         found = 1;
         break;
@@ -1264,7 +1264,7 @@ int AttrNav::string_to_enum(int type_id, char* str, pwr_tEnum* enumval)
 
   elem_p = enum_p->elements;
   for (; elem_p->name[0] != 0; elem_p++) {
-    if (cdh_NoCaseStrcmp(elem_p->name, str) == 0) {
+    if (str_NoCaseStrcmp(elem_p->name, str) == 0) {
       *enumval = elem_p->num;
       return 1;
     }
@@ -1649,8 +1649,8 @@ int AttrNav::set_attr_value(
     }
     memcpy(item->value_p, buffer, item->size);
 
-    if ((cdh_NoCaseStrcmp(item->name, "Subgraph") == 0
-            || cdh_NoCaseStrcmp(item->name, "AnalogColor.CommonAttribute") == 0)
+    if ((str_NoCaseStrcmp(item->name, "Subgraph") == 0
+            || str_NoCaseStrcmp(item->name, "AnalogColor.CommonAttribute") == 0)
         && reconfigure_attr_cb) {
       if (type == attr_eType_Attributes)
         (reconfigure_attr_cb)(parent_ctx);

@@ -74,7 +74,7 @@ static int check_os(char* str, char* os)
 
   for (i = 0; i < nr; i++) {
     dcli_trim(os_element, os_vect[i]);
-    if (cdh_NoCaseStrcmp(os, os_element) == 0)
+    if (str_NoCaseStrcmp(os, os_element) == 0)
       return 1;
   }
 
@@ -195,11 +195,11 @@ int main(int argc, char* argv[])
 
     while (dcli_read_line(line, sizeof(line), fp)) {
       dcli_trim(line, line);
-      if (strStartsWith(line, "#if")) {
+      if (str_StartsWith(line, "#if")) {
         in_if = !check_os(&line[4], os);
         continue;
       } else if (in_if) {
-        if (strStartsWith(line, "#endif")) {
+        if (str_StartsWith(line, "#endif")) {
           if (in_if)
             in_if = 0;
           continue;

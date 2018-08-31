@@ -388,7 +388,7 @@ void wb_build::node(
   if (!opt.manual) {
     // Check if there is any new dbsfile
     for (int i = 0; i < volumecnt; i++) {
-      if (cdh_NoCaseStrcmp(nodename, vlist[i].p1) == 0) {
+      if (str_NoCaseStrcmp(nodename, vlist[i].p1) == 0) {
         if (bussid == -1) {
           char systemname[80], systemgroup[80];
           pwr_tVid* vl;
@@ -402,7 +402,7 @@ void wb_build::node(
           }
 
           sprintf(fname, pwr_cNameBoot, load_cDirectory, vlist[i].p2, bussid);
-          cdh_ToLower(fname, fname);
+          str_ToLower(fname, fname);
           dcli_translate_filename(fname, fname);
           status = lfu_ReadBootFile(
               fname, &btime, systemname, systemgroup, &vl, &vnl, &vcnt, 0, 0);
@@ -421,7 +421,7 @@ void wb_build::node(
           }
         }
 
-        cdh_ToLower(vname, vlist[i].volume_name);
+        str_ToLower(vname, vlist[i].volume_name);
         if (vlist[i].volume_id >= cdh_cUserVolMin
             && vlist[i].volume_id <= cdh_cUserVolMax) {
           sprintf(fname, "$pwrp_load/%s.dbs", vname);
@@ -511,7 +511,7 @@ void wb_build::cnf(char* nodename, void* volumelist, int volumecnt)
 
   found = 0;
   for (int i = 0; i < volumecnt; i++) {
-    if (cdh_NoCaseStrcmp(nodename, vlist[i].p1) == 0) {
+    if (str_NoCaseStrcmp(nodename, vlist[i].p1) == 0) {
       found = 1;
       strncpy(node, vlist[i].p2, sizeof(node));
       status = sscanf(vlist[i].p3, "%d", &bussid);
@@ -769,7 +769,7 @@ void wb_build::rootvolume(pwr_tVid vid)
     return;
   }
 
-  cdh_ToLower(vname, m_session.name());
+  str_ToLower(vname, m_session.name());
   sprintf(fname, "$pwrp_load/%s.dbs", vname);
   dcli_translate_filename(fname, fname);
   m_sts = dcli_file_time(fname, &dbs_time);
@@ -852,7 +852,7 @@ void wb_build::classvolume(pwr_tVid vid)
 
   if (vid == 0) {
     // Build current volume
-    cdh_ToLower(name, m_session.name());
+    str_ToLower(name, m_session.name());
   } else {
     wb_env env = m_session.env();
     wb_volume v = env.volume(vid);
@@ -1239,7 +1239,7 @@ void wb_build::webgraph(pwr_tOid oid)
   }
 
   if (isupper(java_name[0])) {
-    cdh_ToLower(java_name, java_name);
+    str_ToLower(java_name, java_name);
     java_name[0] = toupper(java_name[0]);
 
     // Get the .pwg file for this javaname
@@ -1342,7 +1342,7 @@ void wb_build::webgraph(pwr_tOid oid)
 
     strcpy(graph_name, cdh_Low(java_name));
 
-    cdh_ToLower(graph_name, graph_name);
+    str_ToLower(graph_name, graph_name);
 
     strcpy(src_fname, "$pwrp_pop/");
     strcat(src_fname, graph_name);
@@ -1433,7 +1433,7 @@ void wb_build::appgraph(pwr_tOid oid)
     return;
   }
 
-  cdh_ToLower(graph_name, graph_name);
+  str_ToLower(graph_name, graph_name);
 
   strcpy(src_fname, "$pwrp_pop/");
   strcat(src_fname, graph_name);
@@ -1587,9 +1587,9 @@ void wb_build::opplaceweb(pwr_tOid oid)
     nr = dcli_parse(line, " ", "", (char*)vol_array,
         sizeof(vol_array) / sizeof(vol_array[0]), sizeof(vol_array[0]), 0);
 
-    if (cdh_NoCaseStrcmp(vol_array[2], "RootVolume") == 0
-        || cdh_NoCaseStrcmp(vol_array[2], "SubVolume") == 0
-        || cdh_NoCaseStrcmp(vol_array[2], "SharedVolume") == 0) {
+    if (str_NoCaseStrcmp(vol_array[2], "RootVolume") == 0
+        || str_NoCaseStrcmp(vol_array[2], "SubVolume") == 0
+        || str_NoCaseStrcmp(vol_array[2], "SharedVolume") == 0) {
       sts = cdh_StringToVolumeId(vol_array[1], &vid);
       if (EVEN(sts)) {
         m_sts = 0;
@@ -1753,7 +1753,7 @@ void wb_build::webbrowserconfig(pwr_tOid oid)
           continue;
 
         // Skip old symbols from this volume
-        if (cdh_NoCaseStrcmp(vname, elemv[0]) == 0)
+        if (str_NoCaseStrcmp(vname, elemv[0]) == 0)
           continue;
 
         strcpy(volume_vect[vect_cnt], elemv[0]);
@@ -1772,7 +1772,7 @@ void wb_build::webbrowserconfig(pwr_tOid oid)
 
       found = 0;
       for (j = 0; j < vect_cnt; j++) {
-        if (cdh_NoCaseStrcmp(elemv[0], sym_vect[j]) == 0) {
+        if (str_NoCaseStrcmp(elemv[0], sym_vect[j]) == 0) {
           strcpy(value_vect[j], elemv[1]);
           found = 1;
           break;
@@ -1899,7 +1899,7 @@ void wb_build::directories(char* dir, bld_ePass pass)
     if (!num)
       continue;
 
-    if (dir && cdh_NoCaseStrcmp(dir, line_item[1]) != 0)
+    if (dir && str_NoCaseStrcmp(dir, line_item[1]) != 0)
       continue;
 
     if (streq(cdh_Low(line_item[0]), "builddir")) {

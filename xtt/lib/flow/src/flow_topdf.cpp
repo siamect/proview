@@ -79,7 +79,7 @@ int CnvContent::find_link(char* subject, char* text, int* page)
         sizeof(key_part) / sizeof(key_part[0]), sizeof(key_part[0]), 0);
     if (key_nr == subject_nr) {
       for (i = 0; i < key_nr; i++) {
-        if (cdh_NoCaseStrcmp(subject_part[i], key_part[i]) == 0) {
+        if (str_NoCaseStrcmp(subject_part[i], key_part[i]) == 0) {
           if (i == key_nr - 1) {
             hit = 1;
             break;
@@ -1012,17 +1012,17 @@ char* CnvToPdf::fontname(CnvStyle& style)
   char name[80];
 
   strcpy(name, style.font.c_str());
-  if (strStartsWith(name, "Helvetica-Bold"))
+  if (str_StartsWith(name, "Helvetica-Bold"))
     strcpy(str, "/F2");
-  else if (strStartsWith(name, "Helvetica-Oblique"))
+  else if (str_StartsWith(name, "Helvetica-Oblique"))
     strcpy(str, "/F3");
-  else if (strStartsWith(name, "Helvetica"))
+  else if (str_StartsWith(name, "Helvetica"))
     strcpy(str, "/F1");
-  else if (strStartsWith(name, "TimesNewRoman-Bold"))
+  else if (str_StartsWith(name, "TimesNewRoman-Bold"))
     strcpy(str, "/F5");
-  else if (strStartsWith(name, "TimesNewRoman"))
+  else if (str_StartsWith(name, "TimesNewRoman"))
     strcpy(str, "/F4");
-  else if (strStartsWith(name, "Courier"))
+  else if (str_StartsWith(name, "Courier"))
     strcpy(str, "/F6");
   else
     strcpy(str, "/F1");

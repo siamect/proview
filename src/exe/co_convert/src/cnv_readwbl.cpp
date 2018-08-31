@@ -95,7 +95,7 @@ int CnvReadWbl::read_wbl(char* filename)
       if (streq(line, ""))
         continue;
 
-      if (line[0] == '!' && !strStartsWith(line, "!/**")
+      if (line[0] == '!' && !str_StartsWith(line, "!/**")
           && !(state & cread_mState_Doc))
         continue;
 
@@ -678,7 +678,7 @@ int CnvReadWbl::attribute_attr(char* name, char* value)
     } else
       strcpy(attr_typeref, value);
   } else if (streq(low(name), "flags")) {
-    if (strStartsWith(value, "PWR_MASK_")) {
+    if (str_StartsWith(value, "PWR_MASK_")) {
       if (!streq(attr_flags, ""))
         strcat(attr_flags, " | ");
       strcat(attr_flags, &value[9]);
@@ -759,13 +759,13 @@ void CnvReadWbl::class_init()
 int CnvReadWbl::class_attr(char* name, char* value)
 {
   if (streq(low(name), "editor")) {
-    if (strStartsWith(value, "pwr_eEditor_"))
+    if (str_StartsWith(value, "pwr_eEditor_"))
       strcpy(class_editor, &value[12]);
     else
       strcpy(class_editor, value);
 
   } else if (streq(low(name), "method")) {
-    if (strStartsWith(value, "pwr_eMethod_"))
+    if (str_StartsWith(value, "pwr_eMethod_"))
       strcpy(class_method, &value[12]);
     else
       strcpy(class_method, value);
@@ -775,7 +775,7 @@ int CnvReadWbl::class_attr(char* name, char* value)
   } else if (streq(low(name), "flags")) {
     if (!streq(class_flags, ""))
       strcat(class_flags, " | ");
-    if (strStartsWith(value, "pwr_mClassDef_"))
+    if (str_StartsWith(value, "pwr_mClassDef_"))
       strcat(body_flags, &value[14]);
     else
       strcat(body_flags, value);
@@ -815,7 +815,7 @@ int CnvReadWbl::body_attr(char* name, char* value)
   } else if (streq(low(name), "flags")) {
     if (!streq(body_flags, ""))
       strcat(body_flags, " | ");
-    if (strStartsWith(value, "pwr_mObjBodyDef_"))
+    if (str_StartsWith(value, "pwr_mObjBodyDef_"))
       strcat(body_flags, &value[9]);
     else
       strcat(body_flags, value);
@@ -1070,7 +1070,7 @@ int CnvReadWbl::doc_add(char* line)
     char low_line[400];
     char* s;
 
-    cdh_ToLower(low_line, line);
+    str_ToLower(low_line, line);
     s = strstr(low_line, "@summary");
     if (!s)
       return 0;
@@ -1160,7 +1160,7 @@ void CnvReadWbl::bit_init()
 int CnvReadWbl::typedef_attr(char* name, char* value)
 {
   if (streq(low(name), "typeref")) {
-    if (strStartsWith(value, "pwrs:Type-$"))
+    if (str_StartsWith(value, "pwrs:Type-$"))
       strcpy(typedef_typeref, &value[11]);
     else
       strcpy(typedef_typeref, value);
@@ -1207,7 +1207,7 @@ char* CnvReadWbl::low(char* in)
 {
   static char str[400];
 
-  cdh_ToLower(str, in);
+  str_ToLower(str, in);
   return str;
 }
 
@@ -1325,18 +1325,18 @@ int CnvReadWbl::read_lng(char* cname, char* aname)
       break;
 
     CnvCtx::remove_spaces(line, str);
-    if (cdh_NoCaseStrncmp(str, "<class>", 7) == 0)
+    if (str_NoCaseStrncmp(str, "<class>", 7) == 0)
       len = 7;
-    else if (cdh_NoCaseStrncmp(str, "<type>", 6) == 0)
+    else if (str_NoCaseStrncmp(str, "<type>", 6) == 0)
       len = 6;
-    else if (cdh_NoCaseStrncmp(str, "<typedef>", 9) == 0)
+    else if (str_NoCaseStrncmp(str, "<typedef>", 9) == 0)
       len = 9;
     else
       len = 0;
 
     if (len) {
       CnvCtx::remove_spaces(&str[len], found_key);
-      if (cdh_NoCaseStrcmp(cname, found_key) == 0) {
+      if (str_NoCaseStrcmp(cname, found_key) == 0) {
         if (aname && !streq(aname, "")) {
           in_class = 1;
         } else {
@@ -1347,13 +1347,13 @@ int CnvReadWbl::read_lng(char* cname, char* aname)
       }
       continue;
     } else if (in_class
-        && (cdh_NoCaseStrncmp(str, "</class>", 8) == 0
-               || cdh_NoCaseStrncmp(str, "</type>", 7) == 0
-               || cdh_NoCaseStrncmp(str, "</typedef>", 10) == 0))
+        && (str_NoCaseStrncmp(str, "</class>", 8) == 0
+               || str_NoCaseStrncmp(str, "</type>", 7) == 0
+               || str_NoCaseStrncmp(str, "</typedef>", 10) == 0))
       break;
-    else if (in_class && (cdh_NoCaseStrncmp(str, "<attr>", 6) == 0
-                             || cdh_NoCaseStrncmp(str, "<value>", 7) == 0)) {
-      if (cdh_NoCaseStrncmp(str, "<attr>", 6) == 0)
+    else if (in_class && (str_NoCaseStrncmp(str, "<attr>", 6) == 0
+                             || str_NoCaseStrncmp(str, "<value>", 7) == 0)) {
+      if (str_NoCaseStrncmp(str, "<attr>", 6) == 0)
         len = 6;
       else
         len = 7;
@@ -1364,12 +1364,12 @@ int CnvReadWbl::read_lng(char* cname, char* aname)
         break;
 
       CnvCtx::remove_spaces(&str[len], found_key);
-      if (cdh_NoCaseStrcmp(aname, found_key) == 0) {
+      if (str_NoCaseStrcmp(aname, found_key) == 0) {
         in_doc = 1;
         doc_init_keep();
       }
-    } else if (in_doc && (cdh_NoCaseStrncmp(str, "</attr>", 8) == 0
-                             || cdh_NoCaseStrncmp(str, "</value>", 9) == 0)) {
+    } else if (in_doc && (str_NoCaseStrncmp(str, "</attr>", 8) == 0
+                             || str_NoCaseStrncmp(str, "</value>", 9) == 0)) {
       if (!in_class)
         continue;
       break;

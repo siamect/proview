@@ -537,7 +537,7 @@ void wb_crrgen::load(pwr_tStatus* rsts, int sim, int graph)
 
             int len = strlen(linep[1]);
             if (len > 12
-                && cdh_NoCaseStrcmp(&linep[1][len - 12], ".ActualValue") == 0) {
+                && str_NoCaseStrcmp(&linep[1][len - 12], ".ActualValue") == 0) {
               linep[1][len - 12] = 0;
               al = m_sp->attribute(linep[1]);
               if (!al)
@@ -598,7 +598,7 @@ void wb_crrgen::load(pwr_tStatus* rsts, int sim, int graph)
 
             int len = strlen(linep[1]);
             if (len > 12
-                && cdh_NoCaseStrcmp(&linep[1][len - 12], ".ActualValue") == 0) {
+                && str_NoCaseStrcmp(&linep[1][len - 12], ".ActualValue") == 0) {
               linep[1][len - 12] = 0;
               al = m_sp->attribute(linep[1]);
               if (!al)

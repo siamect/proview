@@ -152,7 +152,7 @@ int PnViewer::fetch_config(std::vector<PnDevice>& vect)
   int nr;
   int sts;
 
-  cdh_ToLower(edev, device);
+  str_ToLower(edev, device);
   sprintf(fname, "$pwrp_load/pwr_pnviewer_%s.dat", edev);
   dcli_translate_filename(fname, fname);
 

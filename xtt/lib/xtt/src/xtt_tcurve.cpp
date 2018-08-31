@@ -85,7 +85,7 @@ XttTCurve::XttTCurve(void* parent_ctx, const char* name, pwr_tAttrRef* xn_arefv,
     if (EVEN(*sts))
       return;
   }
-  cdh_StrncpyCutOff(title, name, sizeof(title), 1);
+  str_StrncpyCutOff(title, name, sizeof(title), 1);
 }
 
 XttTCurve::~XttTCurve()

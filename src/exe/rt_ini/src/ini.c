@@ -41,13 +41,17 @@
 #include "pwr_basecomponentclasses.h"
 #include "pwr_otherioclasses.h"
 #include "pwr_opcclasses.h"
+
 #include "co_dcli.h"
-#include "rt_io_base.h"
-#include "ini.h"
+#include "co_string.h"
+#include "co_syi.h"
+
 #include "rt_ini_event.h"
 #include "rt_ini_alias.h"
 #include "rt_ini_msg.h"
-#include "co_syi.h"
+#include "rt_io_base.h"
+
+#include "ini.h"
 
 #define cPrio_base 0
 #define cPrio_neth (cPrio_base + 18)
@@ -252,7 +256,7 @@ void ini_ProcTable(pwr_tStatus* status, ini_sContext* cp)
           if ((s = strchr(name, '.')))
             *s = 0;
 
-          if (cdh_NoCaseStrcmp(ppname, name) == 0) {
+          if (str_NoCaseStrcmp(ppname, name) == 0) {
             found = 1;
             break;
           }

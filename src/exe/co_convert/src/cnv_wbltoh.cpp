@@ -212,7 +212,7 @@ int CnvWblToH::body_exec()
     strcat(struct_name, ctx->rw->body_structname);
 
   // For systemclasses classindex is defined as a pwr_eCix...
-  if (strStartsWith(ctx->rw->class_id, "pwr_eCix_")) {
+  if (str_StartsWith(ctx->rw->class_id, "pwr_eCix_")) {
     sts = cixstr_to_classid(ctx->rw->class_id, &cid);
     if (EVEN(sts)) {
       printf("Error, unknown classid %s", ctx->rw->class_id);
@@ -412,9 +412,9 @@ int CnvWblToH::attribute_exec()
   else
     strcpy(pgmname, ctx->rw->attr_pgmname);
 
-  if (strStartsWith(CnvCtx::low(ctx->rw->attr_typeref), "pwr_etype_"))
+  if (str_StartsWith(CnvCtx::low(ctx->rw->attr_typeref), "pwr_etype_"))
     strcpy(ctx->rw->attr_typeref, &ctx->rw->attr_typeref[strlen("pwr_etype_")]);
-  else if (strStartsWith(CnvCtx::low(ctx->rw->attr_typeref), "pwr_etypedef_"))
+  else if (str_StartsWith(CnvCtx::low(ctx->rw->attr_typeref), "pwr_etypedef_"))
     strcpy(
         ctx->rw->attr_typeref, &ctx->rw->attr_typeref[strlen("pwr_etypedef_")]);
 

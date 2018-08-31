@@ -2709,7 +2709,7 @@ int WNav::menu_tree_insert(char* title, int item_type, char* command,
 int WNav::menu_tree_search(char* name, wnav_sMenu** menu_item)
 {
   char upname[80];
-  cdh_ToUpper(upname, name);
+  str_ToUpper(upname, name);
   return menu_tree_search_children(upname, menu_tree, menu_item);
 }
 
@@ -2738,7 +2738,7 @@ int WNav::menu_tree_search_children(
 
   menu_p = child_list;
   while (menu_p) {
-    cdh_ToUpper(up_title, menu_p->title);
+    str_ToUpper(up_title, menu_p->title);
     if (streq(up_title, search_name)) {
       if (final_search) {
         *menu_item = menu_p;

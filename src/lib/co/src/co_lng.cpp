@@ -80,7 +80,7 @@ char* Lng::get_language_str()
 lng_eLanguage Lng::str_to_lang(char* str)
 {
   for (int i = 1; i < lng_eLanguage__; i++) {
-    if (cdh_NoCaseStrcmp(lng_cLanguageStr[i], str) == 0)
+    if (str_NoCaseStrcmp(lng_cLanguageStr[i], str) == 0)
       return (lng_eLanguage)i;
   }
 
@@ -518,12 +518,12 @@ void Lng::read_metadata(std::ifstream& fp2, bool first_set, pwr_tStatus* sts)
       break;
   }
 
-  if (strStartsWith(line, "Coding:UTF-8")) {
+  if (str_StartsWith(line, "Coding:UTF-8")) {
     if (first_set)
       translfile_coding = lng_eCoding_UTF_8;
     else if (translfile_coding != lng_eCoding_UTF_8)
       *sts = LNG__DIFFCODING;
-  } else if (strStartsWith(line, "Coding:ISO8859-1")) {
+  } else if (str_StartsWith(line, "Coding:ISO8859-1")) {
     if (first_set)
       translfile_coding = lng_eCoding_ISO8859_1;
     else if (translfile_coding != lng_eCoding_ISO8859_1)
@@ -557,7 +557,7 @@ void Lng::read_include(
         break;
     }
 
-    if (strStartsWith(line1, "Include:")) {
+    if (str_StartsWith(line1, "Include:")) {
       for (;;) {
         if (!fp2.getline(line2, sizeof(line2))) {
           *sts = LNG__EOF;
@@ -567,7 +567,7 @@ void Lng::read_include(
           break;
       }
 
-      if (!strStartsWith(line2, "Include:")) {
+      if (!str_StartsWith(line2, "Include:")) {
         *sts = LNG__INCLUDEMISMATCH;
         return;
       }

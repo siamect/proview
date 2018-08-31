@@ -126,8 +126,8 @@ void CoLog::get(char categories[][20], char* item,
 
     if (item
         && !(item[strlen(item) - 1] == '*'
-               && cdh_NoCaseStrncmp(line_array[6], item, strlen(item) - 1) == 0)
-        && cdh_NoCaseStrcmp(line_array[6], item) != 0)
+               && str_NoCaseStrncmp(line_array[6], item, strlen(item) - 1) == 0)
+        && str_NoCaseStrcmp(line_array[6], item) != 0)
       continue;
 
     int found = 0;

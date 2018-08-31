@@ -139,7 +139,7 @@ static int graph_show_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (cdh_NoCaseStrncmp(arg1_str, "VERSION", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "VERSION", strlen(arg1_str)) == 0) {
     // Command is "SHOW VERSION"
     char message_str[80];
     int grow_version, graph_version;
@@ -222,7 +222,7 @@ static int graph_customcolor_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (cdh_NoCaseStrncmp(arg1_str, "WRITE", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "WRITE", strlen(arg1_str)) == 0) {
     // Command is "CUSTOMCOLOR WRITE"
 
     if (EVEN(dcli_get_qualifier("/FILE", file_str, sizeof(file_str)))) {
@@ -235,7 +235,7 @@ static int graph_customcolor_func(void* client_data, void* client_flag)
       return GE__SYNTAX;
     }
     graph->message('I', "Custom color file created");
-  } else if (cdh_NoCaseStrncmp(arg1_str, "READ", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "READ", strlen(arg1_str)) == 0) {
     // Command is "CUSTOMCOLOR READ"
 
     if (EVEN(dcli_get_qualifier("/FILE", file_str, sizeof(file_str)))) {
@@ -251,11 +251,11 @@ static int graph_customcolor_func(void* client_data, void* client_flag)
       (graph->update_colorpalette_cb)(graph->parent_ctx);
 
     graph->message('I', "Custom color file read");
-  } else if (cdh_NoCaseStrncmp(arg1_str, "PRINT", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "PRINT", strlen(arg1_str)) == 0) {
     // Command is "CUSTOMCOLOR PRINT"
 
     grow_PrintRgbColors(graph->grow->ctx);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "SET", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "SET", strlen(arg1_str)) == 0) {
     // Command is "CUSTOMCOLOR SET"
     char str[80];
 
@@ -301,7 +301,7 @@ static int graph_search_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (cdh_NoCaseStrncmp(arg1_str, "OBJECT", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "OBJECT", strlen(arg1_str)) == 0) {
     // Command is "SEARCH OBJECT"
     char name_str[80];
 
@@ -332,7 +332,7 @@ static int graph_filter_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (cdh_NoCaseStrncmp(arg1_str, "NAVIGATOR", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "NAVIGATOR", strlen(arg1_str)) == 0) {
     // Command is "FILTER NAVIGATOR"
     char type_str[80];
     char pattern_str[80];
@@ -349,9 +349,9 @@ static int graph_filter_func(void* client_data, void* client_flag)
       return GE__SYNTAX;
     }
 
-    if (cdh_NoCaseStrcmp(type_str, "name") == 0)
+    if (str_NoCaseStrcmp(type_str, "name") == 0)
       type = 1;
-    else if (cdh_NoCaseStrcmp(type_str, "class") == 0)
+    else if (str_NoCaseStrcmp(type_str, "class") == 0)
       type = 2;
     else {
       graph->message('E', "Syntax error in filter type");
@@ -381,7 +381,7 @@ static int graph_check_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (cdh_NoCaseStrncmp(arg1_str, "SYNTAX", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "SYNTAX", strlen(arg1_str)) == 0) {
     // Command is "CHECK SYNTAX"
     pwr_tAName instance_str;
     char* instance_p;
@@ -457,27 +457,27 @@ static int graph_set_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (cdh_NoCaseStrncmp(arg1_str, "VERIFY", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "VERIFY", strlen(arg1_str)) == 0) {
     graph->verify = 1;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "NOVERIFY", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "NOVERIFY", strlen(arg1_str)) == 0) {
     graph->verify = 0;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "FILL", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "FILL", strlen(arg1_str)) == 0) {
     graph->set_fill(1);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "NOFILL", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "NOFILL", strlen(arg1_str)) == 0) {
     graph->set_fill(0);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "BORDER", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "BORDER", strlen(arg1_str)) == 0) {
     graph->set_border(1);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "NOBORDER", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "NOBORDER", strlen(arg1_str)) == 0) {
     graph->set_border(0);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "SHADOW", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "SHADOW", strlen(arg1_str)) == 0) {
     graph->set_shadow(1);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "NOSHADOW", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "NOSHADOW", strlen(arg1_str)) == 0) {
     graph->set_shadow(0);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "GRID", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "GRID", strlen(arg1_str)) == 0) {
     graph->set_grid(1);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "NOGRID", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "NOGRID", strlen(arg1_str)) == 0) {
     graph->set_grid(0);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "LINEWIDTH", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "LINEWIDTH", strlen(arg1_str)) == 0) {
     char arg2_str[80];
     int line_width;
     int sts;
@@ -497,7 +497,7 @@ static int graph_set_func(void* client_data, void* client_flag)
     }
 
     graph->set_linewidth(line_width);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "GRIDSIZE", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "GRIDSIZE", strlen(arg1_str)) == 0) {
     char arg2_str[80];
     float grid_size;
     int sts;
@@ -513,7 +513,7 @@ static int graph_set_func(void* client_data, void* client_flag)
     }
 
     graph->set_gridsize(double(grid_size));
-  } else if (cdh_NoCaseStrncmp(arg1_str, "TEXTSIZE", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "TEXTSIZE", strlen(arg1_str)) == 0) {
     char arg2_str[80];
     int text_size, size;
     int sts;
@@ -551,7 +551,7 @@ static int graph_set_func(void* client_data, void* client_flag)
       return GE__SYNTAX;
     }
     graph->set_textsize(size);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "TEXTFONT", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "TEXTFONT", strlen(arg1_str)) == 0) {
     char arg2_str[80];
     int sts;
     int value;
@@ -569,11 +569,11 @@ static int graph_set_func(void* client_data, void* client_flag)
       }
     }
     graph->textfont = (glow_eFont)value;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "BOLD", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "BOLD", strlen(arg1_str)) == 0) {
     graph->set_textbold(1);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "NOBOLD", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "NOBOLD", strlen(arg1_str)) == 0) {
     graph->set_textbold(0);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "BACKGROUNDCOLOR", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "BACKGROUNDCOLOR", strlen(arg1_str))
       == 0) {
     char arg2_str[80];
     int value;
@@ -596,7 +596,7 @@ static int graph_set_func(void* client_data, void* client_flag)
       }
       grow_SetBackgroundColor(graph->grow->ctx, (glow_eDrawType)value);
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "FILLCOLOR", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "FILLCOLOR", strlen(arg1_str)) == 0) {
     char arg2_str[80];
     glow_eDrawType fill_color, border_color, text_color;
     int value;
@@ -624,7 +624,7 @@ static int graph_set_func(void* client_data, void* client_flag)
     fill_color = (glow_eDrawType)value;
     (graph->set_current_colors_cb)(
         graph->parent_ctx, fill_color, border_color, text_color);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "BORDERCOLOR", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "BORDERCOLOR", strlen(arg1_str))
       == 0) {
     char arg2_str[80];
     glow_eDrawType fill_color, border_color, text_color;
@@ -653,7 +653,7 @@ static int graph_set_func(void* client_data, void* client_flag)
     border_color = (glow_eDrawType)value;
     (graph->set_current_colors_cb)(
         graph->parent_ctx, fill_color, border_color, text_color);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "TEXTCOLOR", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "TEXTCOLOR", strlen(arg1_str)) == 0) {
     char arg2_str[80];
     glow_eDrawType fill_color, border_color, text_color;
     int value;
@@ -681,14 +681,14 @@ static int graph_set_func(void* client_data, void* client_flag)
     text_color = (glow_eDrawType)value;
     (graph->set_current_colors_cb)(
         graph->parent_ctx, fill_color, border_color, text_color);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "CURRENTOBJECT", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "CURRENTOBJECT", strlen(arg1_str))
       == 0) {
     char arg2_str[80];
     int arg2_sts;
 
     arg2_sts = dcli_get_qualifier("dcli_arg2", arg2_str, sizeof(arg2_str));
 
-    if (cdh_NoCaseStrncmp(arg2_str, "FILLCOLOR", strlen(arg2_str)) == 0) {
+    if (str_NoCaseStrncmp(arg2_str, "FILLCOLOR", strlen(arg2_str)) == 0) {
       char arg3_str[80];
       int sts;
       int value;
@@ -726,7 +726,7 @@ static int graph_set_func(void* client_data, void* client_flag)
       grow_SetSelectOrigFillColor(graph->grow->ctx, (glow_eDrawType)value);
 
       grow_SelectRemove(graph->grow->ctx, graph->current_cmd_object);
-    } else if (cdh_NoCaseStrncmp(arg2_str, "SHADOW", strlen(arg2_str)) == 0) {
+    } else if (str_NoCaseStrncmp(arg2_str, "SHADOW", strlen(arg2_str)) == 0) {
       char arg3_str[80];
       int sts;
       int value;
@@ -755,7 +755,7 @@ static int graph_set_func(void* client_data, void* client_flag)
       grow_SetSelectShadow(graph->grow->ctx, value);
 
       grow_SelectRemove(graph->grow->ctx, graph->current_cmd_object);
-    } else if (cdh_NoCaseStrncmp(arg2_str, "COLORTONE", strlen(arg2_str))
+    } else if (str_NoCaseStrncmp(arg2_str, "COLORTONE", strlen(arg2_str))
         == 0) {
       char arg3_str[80];
       int sts;
@@ -794,7 +794,7 @@ static int graph_set_func(void* client_data, void* client_flag)
       grow_SetSelectOrigColorTone(graph->grow->ctx, (glow_eDrawTone)value);
 
       grow_SelectRemove(graph->grow->ctx, graph->current_cmd_object);
-    } else if (cdh_NoCaseStrncmp(arg2_str, "COLORLIGHTNESS", strlen(arg2_str))
+    } else if (str_NoCaseStrncmp(arg2_str, "COLORLIGHTNESS", strlen(arg2_str))
         == 0) {
       char arg3_str[80];
       int sts;
@@ -826,7 +826,7 @@ static int graph_set_func(void* client_data, void* client_flag)
       grow_SetSelectOrigColLightness(graph->grow->ctx, value);
 
       grow_SelectRemove(graph->grow->ctx, graph->current_cmd_object);
-    } else if (cdh_NoCaseStrncmp(arg2_str, "COLORINTENSITY", strlen(arg2_str))
+    } else if (str_NoCaseStrncmp(arg2_str, "COLORINTENSITY", strlen(arg2_str))
         == 0) {
       char arg3_str[80];
       int sts;
@@ -858,7 +858,7 @@ static int graph_set_func(void* client_data, void* client_flag)
       grow_SetSelectOrigColIntensity(graph->grow->ctx, value);
 
       grow_SelectRemove(graph->grow->ctx, graph->current_cmd_object);
-    } else if (cdh_NoCaseStrncmp(arg2_str, "COLORSHIFT", strlen(arg2_str))
+    } else if (str_NoCaseStrncmp(arg2_str, "COLORSHIFT", strlen(arg2_str))
         == 0) {
       char arg3_str[80];
       int sts;
@@ -890,7 +890,7 @@ static int graph_set_func(void* client_data, void* client_flag)
       grow_SetSelectOrigColorShift(graph->grow->ctx, value);
 
       grow_SelectRemove(graph->grow->ctx, graph->current_cmd_object);
-    } else if (cdh_NoCaseStrncmp(arg2_str, "GRADIENT", strlen(arg2_str)) == 0) {
+    } else if (str_NoCaseStrncmp(arg2_str, "GRADIENT", strlen(arg2_str)) == 0) {
       char arg3_str[80];
       int sts;
       int value;
@@ -918,7 +918,7 @@ static int graph_set_func(void* client_data, void* client_flag)
       grow_SetSelectGradient(graph->grow->ctx, (glow_eGradient)value);
 
       grow_SelectRemove(graph->grow->ctx, graph->current_cmd_object);
-    } else if (cdh_NoCaseStrncmp(arg2_str, "ATTRIBUTES", strlen(arg2_str))
+    } else if (str_NoCaseStrncmp(arg2_str, "ATTRIBUTES", strlen(arg2_str))
         == 0) {
       char arg3_str[80];
       char arg4_str[80];
@@ -952,9 +952,9 @@ static int graph_set_func(void* client_data, void* client_flag)
       found = 0;
       item_p = itemlist;
       for (i = 0; i < item_cnt; i++) {
-        // cdh_ToUpper( attr_name, item_p->name);
+        // str_ToUpper( attr_name, item_p->name);
         strcpy(attr_name, item_p->name);
-        if (cdh_NoCaseStrcmp(arg3_str, attr_name) == 0) {
+        if (str_NoCaseStrcmp(arg3_str, attr_name) == 0) {
           found = 1;
           break;
         }
@@ -1061,7 +1061,7 @@ static int graph_set_func(void* client_data, void* client_flag)
       grow_UpdateObject(graph->grow->ctx, graph->current_cmd_object,
           (grow_sAttrInfo*)client_data);
 
-    } else if (cdh_NoCaseStrncmp(arg2_str, "ATTR1", strlen(arg2_str)) == 0) {
+    } else if (str_NoCaseStrncmp(arg2_str, "ATTR1", strlen(arg2_str)) == 0) {
       char arg3_str[80];
 
       if (!graph->current_cmd_object) {
@@ -1079,7 +1079,7 @@ static int graph_set_func(void* client_data, void* client_flag)
         return GE__SYNTAX;
       }
       graph->connect(graph->current_cmd_object, arg3_str, 0);
-    } else if (cdh_NoCaseStrncmp(arg2_str, "ATTR2", strlen(arg2_str)) == 0) {
+    } else if (str_NoCaseStrncmp(arg2_str, "ATTR2", strlen(arg2_str)) == 0) {
       char arg3_str[80];
 
       if (!graph->current_cmd_object) {
@@ -1097,7 +1097,7 @@ static int graph_set_func(void* client_data, void* client_flag)
         return GE__SYNTAX;
       }
       graph->connect(graph->current_cmd_object, arg3_str, 1);
-    } else if (cdh_NoCaseStrncmp(arg2_str, "ANNOTATION", strlen(arg2_str))
+    } else if (str_NoCaseStrncmp(arg2_str, "ANNOTATION", strlen(arg2_str))
         == 0) {
       char arg3_str[80];
 
@@ -1121,7 +1121,7 @@ static int graph_set_func(void* client_data, void* client_flag)
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "GRAPHATTRIBUTES", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "GRAPHATTRIBUTES", strlen(arg1_str))
       == 0) {
     char arg2_str[80];
     char arg3_str[80];
@@ -1162,9 +1162,9 @@ static int graph_set_func(void* client_data, void* client_flag)
         grow_info_p = grow_info;
       }
       for (i = 0; i < grow_info_cnt; i++) {
-        // cdh_ToUpper( attr_name, grow_info_p->name);
+        // str_ToUpper( attr_name, grow_info_p->name);
         strcpy(attr_name, grow_info_p->name);
-        if (cdh_NoCaseStrcmp(arg2_str, attr_name) == 0) {
+        if (str_NoCaseStrcmp(arg2_str, attr_name) == 0) {
           found = 1;
           break;
         }
@@ -1283,7 +1283,7 @@ static int graph_set_func(void* client_data, void* client_flag)
     grow_FreeSubGraphAttrInfo(grow_info_sub);
     if (grow_info)
       grow_FreeGraphAttrInfo(grow_info);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "EXTERN", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "EXTERN", strlen(arg1_str)) == 0) {
     char arg2_str[80];
     int sts;
     grow_tObject nodeclass;
@@ -1292,7 +1292,7 @@ static int graph_set_func(void* client_data, void* client_flag)
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
     }
-    // cdh_ToLower( arg2_str, arg2_str);
+    // str_ToLower( arg2_str, arg2_str);
     sts = grow_FindNodeClassByName(graph->grow->ctx, arg2_str, &nodeclass);
     if (EVEN(sts)) {
       graph->message('E', "Subgraph not found");
@@ -1300,7 +1300,7 @@ static int graph_set_func(void* client_data, void* client_flag)
     }
 
     grow_SetNodeClassExtern(nodeclass, 1);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "INTERN", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "INTERN", strlen(arg1_str)) == 0) {
     char arg2_str[80];
     int sts;
     grow_tObject nodeclass;
@@ -1309,7 +1309,7 @@ static int graph_set_func(void* client_data, void* client_flag)
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
     }
-    // cdh_ToLower( arg2_str, arg2_str);
+    // str_ToLower( arg2_str, arg2_str);
     sts = grow_FindNodeClassByName(graph->grow->ctx, arg2_str, &nodeclass);
     if (EVEN(sts)) {
       graph->message('E', "Subgraph not found");
@@ -1317,17 +1317,17 @@ static int graph_set_func(void* client_data, void* client_flag)
     }
 
     grow_SetNodeClassExtern(nodeclass, 0);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "JAVAPATH", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "JAVAPATH", strlen(arg1_str)) == 0) {
     char arg2_str[80];
 
     if (EVEN(dcli_get_qualifier("dcli_arg2", arg2_str, sizeof(arg2_str)))) {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
     }
-    // cdh_ToLower( arg2_str, arg2_str);
+    // str_ToLower( arg2_str, arg2_str);
 
     strcpy(graph->java_path, arg2_str);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "JAVAPACKAGE", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "JAVAPACKAGE", strlen(arg1_str))
       == 0) {
     char arg2_str[80];
 
@@ -1335,48 +1335,48 @@ static int graph_set_func(void* client_data, void* client_flag)
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
     }
-    // cdh_ToLower( arg2_str, arg2_str);
+    // str_ToLower( arg2_str, arg2_str);
 
     strcpy(graph->java_package, arg2_str);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "ZOOM", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "ZOOM", strlen(arg1_str)) == 0) {
     if (ODD(dcli_get_qualifier("/RESET", 0, 0))) {
       grow_UnZoom(graph->grow->ctx);
     } else {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
     }
-  } else if (cdh_NoCaseStrcmp(arg1_str, "ADVANCEDUSER") == 0
-      || cdh_NoCaseStrcmp(arg1_str, "NOADVANCEDUSER") == 0
-      || cdh_NoCaseStrcmp(arg1_str, "ALLTOPLEVEL") == 0
-      || cdh_NoCaseStrcmp(arg1_str, "NOALLTOPLEVEL") == 0
-      || cdh_NoCaseStrcmp(arg1_str, "SHOWCLASS") == 0
-      || cdh_NoCaseStrcmp(arg1_str, "NOSHOWCLASS") == 0
-      || cdh_NoCaseStrcmp(arg1_str, "SHOWALIAS") == 0
-      || cdh_NoCaseStrcmp(arg1_str, "NOSHOWALIAS") == 0
-      || cdh_NoCaseStrcmp(arg1_str, "SHOWDESCRIPTION") == 0
-      || cdh_NoCaseStrcmp(arg1_str, "NOSHOWDESCRIPTION") == 0
-      || cdh_NoCaseStrcmp(arg1_str, "SHOWOBJREF") == 0
-      || cdh_NoCaseStrcmp(arg1_str, "NOSHOWOBJREF") == 0
-      || cdh_NoCaseStrcmp(arg1_str, "SHOWOBJXREF") == 0
-      || cdh_NoCaseStrcmp(arg1_str, "NOSHOWOBJXREF") == 0
-      || cdh_NoCaseStrcmp(arg1_str, "SHOWATTRREF") == 0
-      || cdh_NoCaseStrcmp(arg1_str, "NOSHOWATTRREF") == 0
-      || cdh_NoCaseStrcmp(arg1_str, "SHOWATTRXREF") == 0
-      || cdh_NoCaseStrcmp(arg1_str, "NOSHOWATTRXREF") == 0
-      || cdh_NoCaseStrcmp(arg1_str, "BUILDCROSSREF") == 0
-      || cdh_NoCaseStrcmp(arg1_str, "NOBUILDCROSSREF") == 0
-      || cdh_NoCaseStrcmp(arg1_str, "BUILDMANUAL") == 0
-      || cdh_NoCaseStrcmp(arg1_str, "NOBUILDMANUAL") == 0
-      || cdh_NoCaseStrcmp(arg1_str, "WINDOW") == 0
-      || cdh_NoCaseStrcmp(arg1_str, "INPUTFOCUS") == 0) {
+  } else if (str_NoCaseStrcmp(arg1_str, "ADVANCEDUSER") == 0
+      || str_NoCaseStrcmp(arg1_str, "NOADVANCEDUSER") == 0
+      || str_NoCaseStrcmp(arg1_str, "ALLTOPLEVEL") == 0
+      || str_NoCaseStrcmp(arg1_str, "NOALLTOPLEVEL") == 0
+      || str_NoCaseStrcmp(arg1_str, "SHOWCLASS") == 0
+      || str_NoCaseStrcmp(arg1_str, "NOSHOWCLASS") == 0
+      || str_NoCaseStrcmp(arg1_str, "SHOWALIAS") == 0
+      || str_NoCaseStrcmp(arg1_str, "NOSHOWALIAS") == 0
+      || str_NoCaseStrcmp(arg1_str, "SHOWDESCRIPTION") == 0
+      || str_NoCaseStrcmp(arg1_str, "NOSHOWDESCRIPTION") == 0
+      || str_NoCaseStrcmp(arg1_str, "SHOWOBJREF") == 0
+      || str_NoCaseStrcmp(arg1_str, "NOSHOWOBJREF") == 0
+      || str_NoCaseStrcmp(arg1_str, "SHOWOBJXREF") == 0
+      || str_NoCaseStrcmp(arg1_str, "NOSHOWOBJXREF") == 0
+      || str_NoCaseStrcmp(arg1_str, "SHOWATTRREF") == 0
+      || str_NoCaseStrcmp(arg1_str, "NOSHOWATTRREF") == 0
+      || str_NoCaseStrcmp(arg1_str, "SHOWATTRXREF") == 0
+      || str_NoCaseStrcmp(arg1_str, "NOSHOWATTRXREF") == 0
+      || str_NoCaseStrcmp(arg1_str, "BUILDCROSSREF") == 0
+      || str_NoCaseStrcmp(arg1_str, "NOBUILDCROSSREF") == 0
+      || str_NoCaseStrcmp(arg1_str, "BUILDMANUAL") == 0
+      || str_NoCaseStrcmp(arg1_str, "NOBUILDMANUAL") == 0
+      || str_NoCaseStrcmp(arg1_str, "WINDOW") == 0
+      || str_NoCaseStrcmp(arg1_str, "INPUTFOCUS") == 0) {
     // Compatible with xnav init file
-  } else if (cdh_NoCaseStrncmp(arg1_str, "ENABLECOMMENT", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "ENABLECOMMENT", strlen(arg1_str))
       == 0) {
     graph->disable_log = 0;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "NOENABLECOMMENT", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "NOENABLECOMMENT", strlen(arg1_str))
       == 0) {
     graph->disable_log = 1;
-  } else if (cdh_NoCaseStrncmp(arg1_str, "EDITSETMODE", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "EDITSETMODE", strlen(arg1_str))
       == 0) {
     char arg2_str[80];
 
@@ -1385,25 +1385,25 @@ static int graph_set_func(void* client_data, void* client_flag)
       return GE__SYNTAX;
     }
 
-    if (cdh_NoCaseStrcmp(arg2_str, "none") == 0) {
+    if (str_NoCaseStrcmp(arg2_str, "none") == 0) {
       grow_SetEditSetMode(graph->grow->ctx, glow_eEditSetMode_None);
       graph->message('E', "Mode set to None");
-    } else if (cdh_NoCaseStrcmp(arg2_str, "x0") == 0) {
+    } else if (str_NoCaseStrcmp(arg2_str, "x0") == 0) {
       grow_SetEditSetMode(graph->grow->ctx, glow_eEditSetMode_X0);
       graph->message('E', "Mode set to X0");
-    } else if (cdh_NoCaseStrcmp(arg2_str, "y0") == 0) {
+    } else if (str_NoCaseStrcmp(arg2_str, "y0") == 0) {
       grow_SetEditSetMode(graph->grow->ctx, glow_eEditSetMode_Y0);
       graph->message('E', "Mode set to Y0");
-    } else if (cdh_NoCaseStrcmp(arg2_str, "x0y0") == 0) {
+    } else if (str_NoCaseStrcmp(arg2_str, "x0y0") == 0) {
       grow_SetEditSetMode(graph->grow->ctx, glow_eEditSetMode_X0Y0);
       graph->message('E', "Mode set to X0Y0");
-    } else if (cdh_NoCaseStrcmp(arg2_str, "x1") == 0) {
+    } else if (str_NoCaseStrcmp(arg2_str, "x1") == 0) {
       grow_SetEditSetMode(graph->grow->ctx, glow_eEditSetMode_X1);
       graph->message('E', "Mode set to X1");
-    } else if (cdh_NoCaseStrcmp(arg2_str, "y1") == 0) {
+    } else if (str_NoCaseStrcmp(arg2_str, "y1") == 0) {
       grow_SetEditSetMode(graph->grow->ctx, glow_eEditSetMode_Y1);
       graph->message('E', "Mode set to Y1");
-    } else if (cdh_NoCaseStrcmp(arg2_str, "x1y1") == 0) {
+    } else if (str_NoCaseStrcmp(arg2_str, "x1y1") == 0) {
       grow_SetEditSetMode(graph->grow->ctx, glow_eEditSetMode_X1Y1);
       graph->message('E', "Mode set to X1Y1");
     } else {
@@ -1431,7 +1431,7 @@ static int graph_add_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (cdh_NoCaseStrncmp(arg1_str, "POLYLINE", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "POLYLINE", strlen(arg1_str)) == 0) {
     char str[80];
     int sts;
     float value;
@@ -1496,12 +1496,12 @@ static int graph_rotate_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (cdh_NoCaseStrncmp(arg1_str, "CURRENTOBJECT", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "CURRENTOBJECT", strlen(arg1_str)) == 0) {
     if (!graph->current_cmd_object) {
       graph->message('E', "No current object");
       return GE__NOCURRENT;
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "SELECTEDOBJECT", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "SELECTEDOBJECT", strlen(arg1_str))
       == 0) {
     grow_tObject* sel_list;
     int sel_count;
@@ -1545,10 +1545,10 @@ static int graph_flip_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (cdh_NoCaseStrncmp(arg1_str, "HORIZONTAL", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "HORIZONTAL", strlen(arg1_str)) == 0) {
     grow_FlipSelectedObjects(graph->grow->ctx, glow_eFlipDirection_Horizontal);
     grow_SetModified(graph->grow->ctx, 1);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "VERTICAL", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "VERTICAL", strlen(arg1_str)) == 0) {
     grow_FlipSelectedObjects(graph->grow->ctx, glow_eFlipDirection_Vertical);
     grow_SetModified(graph->grow->ctx, 1);
   } else {
@@ -1580,12 +1580,12 @@ static int graph_select_func(void* client_data, void* client_flag)
   } else {
     arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-    if (cdh_NoCaseStrncmp(arg1_str, "CURRENTOBJECT", strlen(arg1_str)) == 0) {
+    if (str_NoCaseStrncmp(arg1_str, "CURRENTOBJECT", strlen(arg1_str)) == 0) {
       grow_SetHighlight(graph->current_cmd_object, 1);
       grow_SelectInsert(graph->grow->ctx, graph->current_cmd_object);
-    } else if (cdh_NoCaseStrncmp(arg1_str, "ALL", strlen(arg1_str)) == 0) {
+    } else if (str_NoCaseStrncmp(arg1_str, "ALL", strlen(arg1_str)) == 0) {
       graph->select_all_objects();
-    } else if (cdh_NoCaseStrncmp(arg1_str, "CLEAR", strlen(arg1_str)) == 0) {
+    } else if (str_NoCaseStrncmp(arg1_str, "CLEAR", strlen(arg1_str)) == 0) {
       grow_SelectClear(graph->grow->ctx);
     } else {
       graph->message('E', "Syntax error");
@@ -1604,7 +1604,7 @@ static int graph_export_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (cdh_NoCaseStrncmp(arg1_str, "JAVA", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "JAVA", strlen(arg1_str)) == 0) {
     char filename[120];
     char name[80];
     char graph_name[80];
@@ -1622,11 +1622,11 @@ static int graph_export_func(void* client_data, void* client_flag)
       // Set default name
       graph->get_name(graph_name);
       if (!streq(graph_name, "")) {
-        if (strStartsWith(graph_name, "pwr_c_")) {
+        if (str_StartsWith(graph_name, "pwr_c_")) {
           strcpy(name, "Jopc");
           strcat(name, &graph_name[6]);
           name[4] = _toupper(name[4]);
-        } else if (strStartsWith(graph_name, "pwr_")) {
+        } else if (str_StartsWith(graph_name, "pwr_")) {
           strcpy(name, "Jop");
           strcat(name, &graph_name[4]);
           name[3] = _toupper(name[3]);
@@ -1716,7 +1716,7 @@ static int graph_export_func(void* client_data, void* client_flag)
           strcpy(filename, "$pwrp_web/");
           strcat(filename, framename);
           strcat(filename, ".html");
-          // cdh_ToLower( filename, filename);
+          // str_ToLower( filename, filename);
 
           sts = graph->export_gejava(filename, framename, 0, 1);
           if (EVEN(sts)) {
@@ -1734,7 +1734,7 @@ static int graph_export_func(void* client_data, void* client_flag)
       else
         graph->message('I', "This graph is not java frame or applet");
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "IMAGE", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "IMAGE", strlen(arg1_str)) == 0) {
     char file_str[120];
     int sts;
 
@@ -1788,12 +1788,12 @@ static int graph_scale_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (cdh_NoCaseStrncmp(arg1_str, "CURRENTOBJECT", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "CURRENTOBJECT", strlen(arg1_str)) == 0) {
     if (!graph->current_cmd_object) {
       graph->message('E', "No current object");
       return GE__NOCURRENT;
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "SELECTEDOBJECT", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "SELECTEDOBJECT", strlen(arg1_str))
       == 0) {
     grow_tObject* sel_list;
     int sel_count;
@@ -1877,12 +1877,12 @@ static int graph_move_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (cdh_NoCaseStrncmp(arg1_str, "CURRENTOBJECT", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "CURRENTOBJECT", strlen(arg1_str)) == 0) {
     if (!graph->current_cmd_object) {
       graph->message('E', "No current object");
       return GE__NOCURRENT;
     }
-  } else if (cdh_NoCaseStrncmp(arg1_str, "SELECTEDOBJECT", strlen(arg1_str))
+  } else if (str_NoCaseStrncmp(arg1_str, "SELECTEDOBJECT", strlen(arg1_str))
       == 0) {
     grow_tObject* sel_list;
     int sel_count;
@@ -1955,7 +1955,7 @@ static int graph_create_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (cdh_NoCaseStrncmp(arg1_str, "RECTANGLE", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "RECTANGLE", strlen(arg1_str)) == 0) {
     char str[80];
     int sts;
     float value;
@@ -2010,7 +2010,7 @@ static int graph_create_func(void* client_data, void* client_flag)
         graph->fill, graph->border, graph->shadow, graph->get_fill_drawtype(),
         NULL, &graph->current_cmd_object);
     grow_SetModified(graph->grow->ctx, 1);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "ARC", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "ARC", strlen(arg1_str)) == 0) {
     char str[80];
     int sts;
     float value;
@@ -2084,7 +2084,7 @@ static int graph_create_func(void* client_data, void* client_flag)
         graph->border, graph->shadow, graph->get_fill_drawtype(), NULL,
         &graph->current_cmd_object);
     grow_SetModified(graph->grow->ctx, 1);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "LINE", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "LINE", strlen(arg1_str)) == 0) {
     char str[80];
     int sts;
     float value;
@@ -2138,7 +2138,7 @@ static int graph_create_func(void* client_data, void* client_flag)
         graph->get_border_drawtype(), graph->linewidth, 0, NULL,
         &graph->current_cmd_object);
     grow_SetModified(graph->grow->ctx, 1);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "POLYLINE", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "POLYLINE", strlen(arg1_str)) == 0) {
     char str[80];
     int sts;
     float value;
@@ -2207,7 +2207,7 @@ static int graph_create_func(void* client_data, void* client_flag)
           0, NULL, &graph->current_cmd_object);
 
     grow_SetModified(graph->grow->ctx, 1);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "TEXT", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "TEXT", strlen(arg1_str)) == 0) {
     char str[80];
     char text_str[80];
     int sts;
@@ -2278,7 +2278,7 @@ static int graph_create_func(void* client_data, void* client_flag)
         text_color, textsize, graph->textfont, glow_mDisplayLevel_1, NULL,
         &graph->current_cmd_object);
     grow_SetModified(graph->grow->ctx, 1);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "OBJECT", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "OBJECT", strlen(arg1_str)) == 0) {
     char str[80];
     int sts;
     float value;
@@ -2348,7 +2348,7 @@ static int graph_create_func(void* client_data, void* client_flag)
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
     }
-    // cdh_ToLower( subgraph_str, subgraph_str);
+    // str_ToLower( subgraph_str, subgraph_str);
 
     sts = grow_FindNodeClassByName(graph->grow->ctx, subgraph_str, &nc);
     if (EVEN(sts)) {
@@ -2387,7 +2387,7 @@ static int graph_create_func(void* client_data, void* client_flag)
     }
     graph->current_cmd_object = n1;
     grow_SetModified(graph->grow->ctx, 1);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "BAR", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "BAR", strlen(arg1_str)) == 0) {
     char str[80];
     int sts;
     float value;
@@ -2467,7 +2467,7 @@ static int graph_create_func(void* client_data, void* client_flag)
     }
     graph->current_cmd_object = n1;
     grow_SetModified(graph->grow->ctx, 1);
-  } else if (cdh_NoCaseStrncmp(arg1_str, "IMAGE", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "IMAGE", strlen(arg1_str)) == 0) {
     char str[80];
     int sts;
     float value;
@@ -2564,7 +2564,7 @@ static int graph_convert_func(void* client_data, void* client_flag)
   int arg1_sts;
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
-  if (cdh_NoCaseStrncmp(arg1_str, "V45", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "V45", strlen(arg1_str)) == 0) {
     char name[40];
     char msg[80];
     int sts;
@@ -2598,7 +2598,7 @@ static int graph_disable_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (cdh_NoCaseStrncmp(arg1_str, "LOG", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "LOG", strlen(arg1_str)) == 0) {
     graph->disable_log = 1;
     graph->message('I', "Log disabled");
   } else {
@@ -2617,7 +2617,7 @@ static int graph_replace_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (cdh_NoCaseStrncmp(arg1_str, "ATTRIBUTE", strlen(arg1_str)) == 0) {
+  if (str_NoCaseStrncmp(arg1_str, "ATTRIBUTE", strlen(arg1_str)) == 0) {
     grow_tObject* sel_list;
     int sel_count;
     char from_str[120];
@@ -2637,7 +2637,7 @@ static int graph_replace_func(void* client_data, void* client_flag)
 
     strict = ODD(dcli_get_qualifier("/STRICT", 0, 0));
     if (!strict)
-      cdh_ToLower(from_str, from_str);
+      str_ToLower(from_str, from_str);
 
     grow_GetSelectList(graph->grow->ctx, &sel_list, &sel_count);
     for (int i = 0; i < sel_count; i++) {
@@ -3790,7 +3790,7 @@ static int graph_setobjectattribute_func(void* filectx, ccm_sArg* arg_list,
     item_p = itemlist;
     for (i = 0; i < item_cnt; i++) {
       strcpy(attr_name, item_p->name);
-      if (cdh_NoCaseStrcmp(arg_p2->value_string, attr_name) == 0) {
+      if (str_NoCaseStrcmp(arg_p2->value_string, attr_name) == 0) {
         found = 1;
         break;
       }
@@ -3977,7 +3977,7 @@ static int graph_getobjectattribute_func(void* filectx, ccm_sArg* arg_list,
     item_p = itemlist;
     for (i = 0; i < item_cnt; i++) {
       strcpy(attr_name, item_p->name);
-      if (cdh_NoCaseStrcmp(arg_p2->value_string, attr_name) == 0) {
+      if (str_NoCaseStrcmp(arg_p2->value_string, attr_name) == 0) {
         found = 1;
         break;
       }

@@ -547,7 +547,7 @@ int TblNav::get_select(ItemBase** item)
 int TblNav::get_item(char* oname, TblNav_sevhistobject** hi)
 {
   for (int i = 0; i < (int)sevhistobjectlist.size(); i++) {
-    if (cdh_NoCaseStrcmp(sevhistobjectlist[i].oname, oname) == 0) {
+    if (str_NoCaseStrcmp(sevhistobjectlist[i].oname, oname) == 0) {
       *hi = &sevhistobjectlist[i];
       return 1;
     }

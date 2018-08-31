@@ -2231,7 +2231,7 @@ int WGre::print_pdf_rectangle(
       sprintf(filename, "$pwrp_web/%s_%s.pdf", vname, name);
     else
       sprintf(filename, "./%s_%s.pdf", vname, name);
-    cdh_ToLower(filename, filename);
+    str_ToLower(filename, filename);
   } else {
     sprintf(filename, "$pwrp_doc/pssdoc%s.pdf", file_id);
   }
@@ -2854,7 +2854,7 @@ int WGre::init_docobjects()
       if (EVEN(sts))
         annot_str[0] = '\0';
 
-      cdh_StrncpyCutOff(plcname, objname, sizeof(plcname), 1);
+      str_StrncpyCutOff(plcname, objname, sizeof(plcname), 1);
       flow_SetAnnotation(doc_obj->hn.node_id, 1, plcname, strlen(plcname));
 
       /* Windowname in annot 2 */
@@ -2963,7 +2963,7 @@ int WGre::set_trace_attributes(char* host)
     sts = trace_get_attributes(
         this, *node_ptr, object_str, attr_str, &trace_type, &inverted);
     if (ODD(sts) && sts != TRA__DISCARD) {
-      if (host && strStartsWith(object_str, host)) {
+      if (host && str_StartsWith(object_str, host)) {
         char tmp[120];
         strcpy(tmp, "$host");
         strcat(tmp, &object_str[strlen(host)]);
@@ -3147,7 +3147,7 @@ int WGre::set_trace_attributes(char* host)
       default:;
       }
 
-      if (host && strStartsWith(object_str, host)) {
+      if (host && str_StartsWith(object_str, host)) {
         char tmp[120];
         strcpy(tmp, "$host");
         strcat(tmp, &object_str[strlen(host)]);

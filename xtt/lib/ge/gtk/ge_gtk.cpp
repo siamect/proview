@@ -1712,7 +1712,7 @@ GeGtk::GeGtk(void* x_parent_ctx, GtkWidget* x_parent_widget,
   strcpy(title, "PwR Ge");
 
   if (graph_name) {
-    cdh_ToLower(tmp_name, graph_name);
+    str_ToLower(tmp_name, graph_name);
     tmp_name[0] = toupper(tmp_name[0]);
     if ((s = strrchr(tmp_name, '.')))
       *s = 0;

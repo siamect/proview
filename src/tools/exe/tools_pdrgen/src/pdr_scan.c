@@ -52,7 +52,7 @@ static char sccsid[] = "@(#)rpc_scan.c 1.6 87/06/24 (C) 1987 SMI";
 #include "pdr_scan.h"
 #include "pdr_util.h"
 
-#define strStartsWith(str, prefix) (strncmp(str, prefix, strlen(prefix)) == 0)
+#define str_StartsWith(str, prefix) (strncmp(str, prefix, strlen(prefix)) == 0)
 
 #define startcomment(where) (where[0] == '/' && where[1] == '*')
 #define endcomment(where) (where[-1] == '*' && where[0] == '/')
@@ -361,7 +361,7 @@ static void findkind(char** mark, token* tokp)
   str = *mark;
   for (s = symbols; s->kind != TOK_EOF; s++) {
     len = strlen(s->str);
-    if (strStartsWith(str, s->str)) {
+    if (str_StartsWith(str, s->str)) {
       if (!isalnum(str[len]) && str[len] != '_') {
         tokp->kind = s->kind;
         tokp->str = s->str;

@@ -460,7 +460,7 @@ int wb_wblnode::convconst(int* val, char* str)
     return (TRUE);
   if (wb_wblnode::lookup(val, str, attr_flags))
     return (TRUE);
-  if (strStartsWith(str, "\"_X")) {
+  if (str_StartsWith(str, "\"_X")) {
     if (sscanf(&str[3], "%d", val) == 1)
       return (TRUE);
   }
@@ -623,7 +623,7 @@ void wb_wblnode::build(bool recursive)
 
             attr = attr->o->fws;
           }
-        } else if (cdh_NoCaseStrcmp(child->o->cname, "$DbCallBack") == 0
+        } else if (str_NoCaseStrcmp(child->o->cname, "$DbCallBack") == 0
             && !child->isTemplate()) {
           ((pwr_sClassDef*)o->rbody)->Flags.b.HasCallBack = 1;
         }
@@ -930,9 +930,9 @@ void wb_wblnode::buildAttribute(
   //  ((pwr_sParam *)o->rbody)->Info->Type = (pwr_eType)((pwr_sParam
   //  *)o->rbody)->TypeRef;
 
-  if (cdh_NoCaseStrcmp(o->cname, "$ObjXRef") == 0)
+  if (str_NoCaseStrcmp(o->cname, "$ObjXRef") == 0)
     o->a.tid = pwr_eType_Objid;
-  else if (cdh_NoCaseStrcmp(o->cname, "$AttrXRef") == 0)
+  else if (str_NoCaseStrcmp(o->cname, "$AttrXRef") == 0)
     o->a.tid = pwr_eType_AttrRef;
   else
     o->a.tid = ((pwr_sParam*)o->rbody)->TypeRef;
@@ -997,10 +997,10 @@ void wb_wblnode::buildAttribute(
     strncpy(((pwr_sParam*)o->rbody)->Info.PgmName, wb_name::unatName(name()),
         sizeof(((pwr_sParam*)o->rbody)->Info.PgmName));
   }
-  if (cdh_NoCaseStrcmp(o->cname, "$Buffer") == 0) {
+  if (str_NoCaseStrcmp(o->cname, "$Buffer") == 0) {
     *boffset = pwr_AlignLW(*boffset);
   }
-  if (cdh_NoCaseStrcmp(o->cname, "$Input") == 0) {
+  if (str_NoCaseStrcmp(o->cname, "$Input") == 0) {
     o->a.size = ((pwr_sParam*)o->rbody)->Info.Size = size;
     *boffset = pwr_AlignLW(*boffset) + pwr_cAlignLW;
     o->a.offset = ((pwr_sParam*)o->rbody)->Info.Offset = *boffset;
@@ -1154,11 +1154,11 @@ void wb_wblnode::buildBody(ref_wblnode object)
   ref_wblnode next_sibling;
 
   if (getType() == wbl_eToken_Body) {
-    if (cdh_NoCaseStrcmp(name(), "SysBody") == 0)
+    if (str_NoCaseStrcmp(name(), "SysBody") == 0)
       bix = pwr_eBix_sys;
-    else if (cdh_NoCaseStrcmp(name(), "RtBody") == 0)
+    else if (str_NoCaseStrcmp(name(), "RtBody") == 0)
       bix = pwr_eBix_rt;
-    else if (cdh_NoCaseStrcmp(name(), "DevBody") == 0)
+    else if (str_NoCaseStrcmp(name(), "DevBody") == 0)
       bix = pwr_eBix_dev;
     else {
       // Body exception

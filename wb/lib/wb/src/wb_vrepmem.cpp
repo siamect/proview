@@ -506,7 +506,7 @@ mem_object* wb_vrepmem::findObject(pwr_tOix oix)
 
 int wb_vrepmem::nameToOid(const char* name, pwr_tOid* oid)
 {
-  if (strStartsWith(name, "_O")) {
+  if (str_StartsWith(name, "_O")) {
     cdh_StringToObjid(name, oid);
     return 1;
   }
@@ -2022,7 +2022,7 @@ bool wb_vrepmem::nameCheck(mem_object* memo)
     o = o->bws;
 
   while (o) {
-    if (o != memo && cdh_NoCaseStrcmp(memo->name(), o->name()) == 0)
+    if (o != memo && str_NoCaseStrcmp(memo->name(), o->name()) == 0)
       return false;
     o = o->fws;
   }
@@ -2050,7 +2050,7 @@ bool wb_vrepmem::nameCheck(mem_object* dest, char* name, ldh_eDest code)
     return false;
   }
   while (o) {
-    if (cdh_NoCaseStrcmp(name, o->name()) == 0)
+    if (str_NoCaseStrcmp(name, o->name()) == 0)
       return false;
     o = o->fws;
   }
@@ -2959,13 +2959,13 @@ void wb_vrepmem::printPaletteFile()
   // Add menu "NavigatorPalette-AllClasses-'volumename' if not found
   for (mp = menu; mp; mp = mp->next) {
     if (mp->item_type == pal_eMenuType_Palette
-        && cdh_NoCaseStrcmp(mp->title, "NavigatorPalette") == 0) {
+        && str_NoCaseStrcmp(mp->title, "NavigatorPalette") == 0) {
       for (mp2 = mp->child_list; mp2; mp2 = mp2->next) {
         if (mp2->item_type == pal_eMenuType_Menu
-            && cdh_NoCaseStrcmp(mp2->title, "AllClasses") == 0) {
+            && str_NoCaseStrcmp(mp2->title, "AllClasses") == 0) {
           for (mp3 = mp2->child_list; mp3; mp3 = mp3->next) {
             if (mp3->item_type == pal_eMenuType_ClassVolume
-                && cdh_NoCaseStrcmp(mp3->title, volume_name) == 0) {
+                && str_NoCaseStrcmp(mp3->title, volume_name) == 0) {
               menu_found = 1;
               break;
             }
@@ -3003,10 +3003,10 @@ void wb_vrepmem::printPaletteFile()
   palette_found = 0;
   for (mp = menu; mp; mp = mp->next) {
     if (mp->item_type == pal_eMenuType_Palette
-        && cdh_NoCaseStrcmp(mp->title, "PlcEditorPalette") == 0) {
+        && str_NoCaseStrcmp(mp->title, "PlcEditorPalette") == 0) {
       for (mp2 = mp->child_list; mp2; mp2 = mp2->next) {
         if (mp2->item_type == pal_eMenuType_Menu
-            && cdh_NoCaseStrcmp(mp2->title, volume_name) == 0) {
+            && str_NoCaseStrcmp(mp2->title, volume_name) == 0) {
           // Remove
           PalFile::config_tree_free(mp2->child_list);
           mp2->child_list = 0;

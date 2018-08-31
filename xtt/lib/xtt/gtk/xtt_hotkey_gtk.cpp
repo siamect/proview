@@ -172,13 +172,13 @@ int XttHotkey::read_file()
       continue;
     }
     for (i = 0; i < n; i++) {
-      if (cdh_NoCaseStrcmp(p2[i], "Control") == 0)
+      if (str_NoCaseStrcmp(p2[i], "Control") == 0)
         mod |= ControlMask;
-      else if (cdh_NoCaseStrcmp(p2[i], "Shift") == 0)
+      else if (str_NoCaseStrcmp(p2[i], "Shift") == 0)
         mod |= ShiftMask;
-      else if (cdh_NoCaseStrcmp(p2[i], "Alt") == 0)
+      else if (str_NoCaseStrcmp(p2[i], "Alt") == 0)
         mod |= Mod1Mask;
-      else if (cdh_NoCaseStrncmp(p2[i], "<key>", 5) == 0) {
+      else if (str_NoCaseStrncmp(p2[i], "<key>", 5) == 0) {
         strcpy(keystr, &p2[i][5]);
         dcli_trim(keystr, keystr);
       } else {

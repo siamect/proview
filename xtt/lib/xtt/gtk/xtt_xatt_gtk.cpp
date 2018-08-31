@@ -458,7 +458,7 @@ XAttGtk::XAttGtk(GtkWidget* xa_parent_wid, void* xa_parent_ctx,
   if (EVEN(*xa_sts))
     return;
 
-  cdh_StrncpyCutOff(title, title, 100, 1);
+  str_StrncpyCutOff(title, title, 100, 1);
 
   toplevel = (GtkWidget*)g_object_new(GTK_TYPE_WINDOW, "default-height", 600,
       "default-width", 420, "title", CoWowGtk::convert_utf8(title), NULL);

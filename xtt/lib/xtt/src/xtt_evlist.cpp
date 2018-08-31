@@ -1682,7 +1682,7 @@ int EvList::brow_cb(FlowCtx* ctx, flow_tEvent event)
             sts = gdh_ObjidToName(cdh_ClassIdToObjid(cid), cname, sizeof(cname),
                 cdh_mName_object);
             if (ODD(sts)) {
-              if (strStartsWith(cname, "CompMode")) {
+              if (str_StartsWith(cname, "CompMode")) {
                 // Take parent object level
                 sts = gdh_AttrArefToObjectAref(&item->object, &aref);
                 if (EVEN(sts))
@@ -2113,7 +2113,7 @@ void ItemCategory::configure(EvList* evlist)
           if (select_eventtype != 0 && !(select_eventtype & item->eventtype))
             continue;
 
-          if (strStartsWith(item->eventname, members[j])) {
+          if (str_StartsWith(item->eventname, members[j])) {
             // Presupmtive child
             if (item->event_type == evlist_eEventType_Info
                 || item->event_type == evlist_eEventType_InfoSuccess) {
@@ -2180,7 +2180,7 @@ void ItemCategory::alarm(EvList* evlist, ItemAlarm* item)
   switch (item->type) {
   case evlist_eItemType_Alarm: {
     for (int j = 0; j < member_cnt; j++) {
-      if (strStartsWith(item->eventname, members[j])) {
+      if (str_StartsWith(item->eventname, members[j])) {
         // Insert item
         switch (item->event_type) {
         case evlist_eEventType_Alarm:
@@ -2280,7 +2280,7 @@ int ItemCategory::open_children(EvList* evlist, double x, double y)
           continue;
 
         for (int j = 0; j < member_cnt; j++) {
-          if (strStartsWith(item->eventname, members[j])) {
+          if (str_StartsWith(item->eventname, members[j])) {
             // Insert item
             switch (item->event_type) {
             case evlist_eEventType_Alarm:
@@ -2364,7 +2364,7 @@ void ItemCategory::flash(EvList* evlist)
         if (select_eventtype != 0 && !(select_eventtype & item->eventtype))
           continue;
         for (int j = 0; j < member_cnt; j++) {
-          if (strStartsWith(item->eventname, members[j])) {
+          if (str_StartsWith(item->eventname, members[j])) {
             // Presupmtive child
             if (item->status & mh_mEventStatus_NotAck) {
               notacked++;
@@ -3107,7 +3107,7 @@ void EvList::fill_alarm_tables()
         if (alarm_table_member_cnt[j] > 0) {
           skip = 1;
           for (int i = 0; i < alarm_table_member_cnt[j]; i++) {
-            if (strStartsWith(item->eventname, (char*)(*alarm_table_members[j])[i])) {
+            if (str_StartsWith(item->eventname, (char*)(*alarm_table_members[j])[i])) {
               skip = 0;
               break;
             }

@@ -201,7 +201,7 @@ void XttGeQtWidget::activate_help()
 {
   if (ge->help_cb) {
     char key[80];
-    cdh_ToLower(key, ge->name);
+    str_ToLower(key, ge->name);
     (ge->help_cb)(ge->parent_ctx, key);
   }
 }
@@ -280,7 +280,7 @@ XttGeQt::XttGeQt(QWidget* xg_parent_wid, void* xg_parent_ctx,
       window_height = 500;
     }
   }
-  cdh_StrncpyCutOff(title, name, sizeof(title), 1);
+  str_StrncpyCutOff(title, name, sizeof(title), 1);
 
   // Qt
   if (!(options & ge_mOptions_Embedded)) {

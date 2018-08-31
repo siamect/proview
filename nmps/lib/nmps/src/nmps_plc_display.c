@@ -36,11 +36,13 @@
 
 #if defined OS_POSIX
 #include <stdio.h>
-#include <string.h>
 #endif
 
 #include "pwr_nmpsclasses.h"
+
 #include "co_cdh.h"
+#include "co_string.h"
+
 #include "nmps.h"
 #include "rs_nmps_msg.h"
 
@@ -139,7 +141,7 @@ void CellDisp_init(pwr_sClass_CellDisp* object)
       strcpy(attr_str, ".");
       strcat(attr_str, object->IntAttr[i]);
       if ((s = strchr(attr_str, '#'))) {
-        if (cdh_NoCaseStrcmp(s, "##int16") == 0)
+        if (str_NoCaseStrcmp(s, "##int16") == 0)
           b16 = 1;
         *s = 0;
       }

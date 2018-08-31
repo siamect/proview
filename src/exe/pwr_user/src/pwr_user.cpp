@@ -125,19 +125,19 @@ static int user_help_func(void* client_data, void* client_flag)
         << "get			Get user data.\n"
         << "login			Login as administrator.\n\n"
         << "print   \"help 'command'\" to get help for a specific command.\n\n";
-  } else if (strStartsWith(arg1_str, "load")) {
+  } else if (str_StartsWith(arg1_str, "load")) {
     std::cout << "pwr_user help\n\n"
               << "load			Reload user database.\n\n";
-  } else if (strStartsWith(arg1_str, "save")) {
+  } else if (str_StartsWith(arg1_str, "save")) {
     std::cout << "pwr_user help\n\n"
               << "save			Save user database.\n\n";
-  } else if (strStartsWith(arg1_str, "list")) {
+  } else if (str_StartsWith(arg1_str, "list")) {
     std::cout << "pwr_user help\n\n"
               << "list			List user database.\n\n";
-  } else if (strStartsWith(arg1_str, "quit")) {
+  } else if (str_StartsWith(arg1_str, "quit")) {
     std::cout << "pwr_user help\n\n"
               << "quit			Exit program.\n\n";
-  } else if (strStartsWith(arg1_str, "add")) {
+  } else if (str_StartsWith(arg1_str, "add")) {
     std::cout
         << "pwr_user help\n\n"
         << "add group 'systemgroup' /userinherit		Add system "
@@ -152,11 +152,11 @@ static int user_help_func(void* client_data, void* client_flag)
         << "	/operator7 /operator8 /operator9 /oper10\n"
         << "	/devread /devplc /devconfig /devclass /sevread /sevadmin\n"
         << "	[/privilge=] \n\n";
-  } else if (strStartsWith(arg1_str, "remove")) {
+  } else if (str_StartsWith(arg1_str, "remove")) {
     std::cout << "pwr_user help\n\n"
               << "remove group 'systemgroup' 		Remove system group.\n"
               << "remove user 'user' /group= 		Remove user.\n\n";
-  } else if (strStartsWith(arg1_str, "modify")) {
+  } else if (str_StartsWith(arg1_str, "modify")) {
     std::cout
         << "pwr_user help\n\n"
         << "modify user 'user' /group= /password= 		Modify user.\n"
@@ -169,10 +169,10 @@ static int user_help_func(void* client_data, void* client_flag)
         << "	/operator7 /operator8 /operator9 /oper10\n"
         << "	/devread /devplc /devconfig /devclass /sevread /sevadmin\n"
         << "	[/privilge=] \n\n";
-  } else if (strStartsWith(arg1_str, "get")) {
+  } else if (str_StartsWith(arg1_str, "get")) {
     std::cout << "pwr_user help\n\n"
               << "get 'user' /group= /password= 	Get user data.\n\n";
-  } else if (strStartsWith(arg1_str, "login")) {
+  } else if (str_StartsWith(arg1_str, "login")) {
     std::cout << "pwr_user help\n\n"
               << "login	'username' 'password'	    Login as "
                  "administrator.\n\n";
@@ -249,7 +249,7 @@ static int user_add_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (strStartsWith(arg1_str, "user")) {
+  if (str_StartsWith(arg1_str, "user")) {
     // Command is "add user"
     char user_str[80];
     char system_str[80];
@@ -386,13 +386,13 @@ static int user_add_func(void* client_data, void* client_flag)
         return 1;
       }
     }
-    cdh_ToLower(user_str, user_str);
-    cdh_ToLower(system_str, system_str);
-    cdh_ToLower(password_str, password_str);
+    str_ToLower(user_str, user_str);
+    str_ToLower(system_str, system_str);
+    str_ToLower(password_str, password_str);
     sts = gu->add_user(system_str, user_str, UserList::pwcrypt(password_str),
         privilege, fullname_p, description_p, email_p, phone_p, sms_p);
     std::cout << gu->get_status(sts) << '\n';
-  } else if (strStartsWith(arg1_str, "group")) {
+  } else if (str_StartsWith(arg1_str, "group")) {
     // Command is "add group"
     char system_str[80];
     char dummy_str[80];
@@ -415,7 +415,7 @@ static int user_add_func(void* client_data, void* client_flag)
             "/description", description_str, sizeof(description_str))))
       description_p = 0;
 
-    cdh_ToLower(system_str, system_str);
+    str_ToLower(system_str, system_str);
     sts = gu->add_system(system_str, attributes, description_p);
     std::cout << gu->get_status(sts) << '\n';
   } else
@@ -436,7 +436,7 @@ static int user_remove_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (strStartsWith(arg1_str, "user")) {
+  if (str_StartsWith(arg1_str, "user")) {
     // Command is "remove user"
     char user_str[80];
     char system_str[80];
@@ -453,7 +453,7 @@ static int user_remove_func(void* client_data, void* client_flag)
     }
     sts = gu->remove_user(system_str, user_str);
     std::cout << gu->get_status(sts) << '\n';
-  } else if (strStartsWith(arg1_str, "group")) {
+  } else if (str_StartsWith(arg1_str, "group")) {
     // Command is "remove group"
     char system_str[80];
 
@@ -484,7 +484,7 @@ static int user_modify_func(void* client_data, void* client_flag)
 
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if (strStartsWith(arg1_str, "user")) {
+  if (str_StartsWith(arg1_str, "user")) {
     // Command is "modify user"
     char user_str[80];
     char system_str[80];
@@ -516,8 +516,8 @@ static int user_modify_func(void* client_data, void* client_flag)
       return 1;
     }
 
-    cdh_ToLower(user_str, user_str);
-    cdh_ToLower(system_str, system_str);
+    str_ToLower(user_str, user_str);
+    str_ToLower(system_str, system_str);
 
     sts = gu->get_user_data(system_str, user_str, password_str, &privilege, &id,
         fullname_str, description_str, email_str, phone_str, sms_str);
@@ -527,7 +527,7 @@ static int user_modify_func(void* client_data, void* client_flag)
     }
     if (ODD(dcli_get_qualifier("/password", p_str, sizeof(p_str)))) {
       strcpy(password_str, p_str);
-      cdh_ToLower(password_str, password_str);
+      str_ToLower(password_str, password_str);
       strcpy(password_str, UserList::pwcrypt(password_str));
     }
     if (EVEN(dcli_get_qualifier(
@@ -716,7 +716,7 @@ static int user_modify_func(void* client_data, void* client_flag)
     sts = gu->modify_user(system_str, user_str, password_str, privilege,
         fullname_p, description_p, email_p, phone_p, sms_p);
     std::cout << gu->get_status(sts) << '\n';
-  } else if (strStartsWith(arg1_str, "group")) {
+  } else if (str_StartsWith(arg1_str, "group")) {
     // Command is "modify group"
     char system_str[80];
     char dummy_str[80];
@@ -732,7 +732,7 @@ static int user_modify_func(void* client_data, void* client_flag)
         return 1;
       }
     }
-    cdh_ToLower(system_str, system_str);
+    str_ToLower(system_str, system_str);
 
     sts = gu->get_system_data(system_str, &attributes, &id, description_str);
     if (EVEN(sts)) {
@@ -778,9 +778,9 @@ static int user_get_func(void* client_data, void* client_flag)
     return 1;
   }
 
-  cdh_ToLower(user_str, user_str);
-  cdh_ToLower(system_str, system_str);
-  cdh_ToLower(password_str, password_str);
+  str_ToLower(user_str, user_str);
+  str_ToLower(system_str, system_str);
+  str_ToLower(password_str, password_str);
 
   sts = gu->get_user(
       system_str, user_str, UserList::pwcrypt(password_str), &privilege);
@@ -824,8 +824,8 @@ static int user_login_func(void* client_data, void* client_flag)
       return 1;
     }
 
-    cdh_ToLower(username_str, username_str);
-    cdh_ToLower(password_str, password_str);
+    str_ToLower(username_str, username_str);
+    str_ToLower(password_str, password_str);
     strcpy(password_str, UserList::pwcrypt(password_str));
     sts = user_CheckUser("administrator", username_str, password_str, &priv);
     if (EVEN(sts))
@@ -873,7 +873,7 @@ int main()
     if (streq(line, ""))
       continue;
 
-    // cdh_ToLower( line, line);
+    // str_ToLower( line, line);
     sts = dcli_cli((dcli_tCmdTable*)&user_command_table, line, 0, 0);
     if (EVEN(sts))
       std::cout << "%USER-E-MSG, Syntax error\n";

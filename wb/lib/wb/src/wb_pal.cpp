@@ -38,10 +38,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+
+#include "pwr_baseclasses.h"
 
 #include "co_dcli.h"
-#include "pwr_baseclasses.h"
+#include "co_string.h"
 
 #include "glow_growctx.h"
 
@@ -186,7 +187,7 @@ int PalItemClassVolume::open(Pal* pal, double x, double y)
         if (EVEN(sts))
           return sts;
 
-        if (!cdh_NoCaseStrcmp(volume_name, name)) {
+        if (!str_NoCaseStrcmp(volume_name, name)) {
           strcat(volume_name, ":Class");
           sts = ldh_NameToObjid(pal->ldhses, &ref_objid, volume_name);
           if (EVEN(sts))

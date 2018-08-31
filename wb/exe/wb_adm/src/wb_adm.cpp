@@ -84,9 +84,9 @@ int main(int argc, char* argv[])
   strcpy(login_prv.username, "-");
   strcpy(login_prv.password, "-");
   if (argc > 0)
-    cdh_ToLower(login_prv.username, argv[1]);
+    str_ToLower(login_prv.username, argv[1]);
   if (argc > 1)
-    cdh_ToLower(login_prv.password, argv[2]);
+    str_ToLower(login_prv.password, argv[2]);
 
   MrmInitialize();
 

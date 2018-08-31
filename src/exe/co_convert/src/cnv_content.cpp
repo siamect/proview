@@ -39,12 +39,10 @@
 
 /*_Include files_________________________________________________________*/
 
-#include <string.h>
-
 extern "C" {
-#include "co_cdh.h"
 #include "co_dcli.h"
 }
+#include "co_string.h"
 
 #include "cnv_content.h"
 
@@ -66,7 +64,7 @@ int CnvContent::find_link(const char* subject, char* text, int* page)
         sizeof(key_part) / sizeof(key_part[0]), sizeof(key_part[0]), 0);
     if (key_nr == subject_nr) {
       for (i = 0; i < key_nr; i++) {
-        if (cdh_NoCaseStrcmp(subject_part[i], key_part[i]) == 0) {
+        if (str_NoCaseStrcmp(subject_part[i], key_part[i]) == 0) {
           if (i == key_nr - 1) {
             hit = 1;
             break;

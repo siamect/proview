@@ -690,22 +690,22 @@ int KeyboardCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       callback_object->get_object_name(name, sizeof(name), glow_eName_Object);
 
       if (callback_object->type() == glow_eObjectType_GrowText) {
-        if (strStartsWith(name, "KeyText")) {
+        if (str_StartsWith(name, "KeyText")) {
           sscanf(&name[7], "%d", &idx);
           idx_found = 1;
         }
       } else if (callback_object->type() == glow_eObjectType_GrowPolyLine) {
-        if (strStartsWith(name, "KeyPLine")) {
+        if (str_StartsWith(name, "KeyPLine")) {
           sscanf(&name[8], "%d", &idx);
           idx_found = 1;
         }
       } else if (callback_object->type() == glow_eObjectType_GrowLine) {
-        if (strStartsWith(name, "KeyLine")) {
+        if (str_StartsWith(name, "KeyLine")) {
           sscanf(&name[7], "%d", &idx);
           idx_found = 1;
         }
       } else if (callback_object->type() == glow_eObjectType_GrowRect) {
-        if (strStartsWith(name, "Key")) {
+        if (str_StartsWith(name, "Key")) {
           sscanf(&name[3], "%d", &idx);
           idx_found = 1;
         }
@@ -733,22 +733,22 @@ int KeyboardCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       callback_object->get_object_name(name, sizeof(name), glow_eName_Object);
 
       if (callback_object->type() == glow_eObjectType_GrowText) {
-        if (strStartsWith(name, "KeyText")) {
+        if (str_StartsWith(name, "KeyText")) {
           sscanf(&name[7], "%d", &idx);
           idx_found = 1;
         }
       } else if (callback_object->type() == glow_eObjectType_GrowPolyLine) {
-        if (strStartsWith(name, "KeyPLine")) {
+        if (str_StartsWith(name, "KeyPLine")) {
           sscanf(&name[8], "%d", &idx);
           idx_found = 1;
         }
       } else if (callback_object->type() == glow_eObjectType_GrowLine) {
-        if (strStartsWith(name, "KeyLine")) {
+        if (str_StartsWith(name, "KeyLine")) {
           sscanf(&name[7], "%d", &idx);
           idx_found = 1;
         }
       } else if (callback_object->type() == glow_eObjectType_GrowRect) {
-        if (strStartsWith(name, "Key")) {
+        if (str_StartsWith(name, "Key")) {
           sscanf(&name[3], "%d", &idx);
           idx_found = 1;
         }
@@ -775,22 +775,22 @@ int KeyboardCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       int idx_found = 0;
       callback_object->get_object_name(name, sizeof(name), glow_eName_Object);
       if (callback_object->type() == glow_eObjectType_GrowText) {
-        if (strStartsWith(name, "KeyText")) {
+        if (str_StartsWith(name, "KeyText")) {
           sscanf(&name[7], "%d", &idx);
           idx_found = 1;
         }
       } else if (callback_object->type() == glow_eObjectType_GrowPolyLine) {
-        if (strStartsWith(name, "KeyPLine")) {
+        if (str_StartsWith(name, "KeyPLine")) {
           sscanf(&name[8], "%d", &idx);
           idx_found = 1;
         }
       } else if (callback_object->type() == glow_eObjectType_GrowLine) {
-        if (strStartsWith(name, "KeyLine")) {
+        if (str_StartsWith(name, "KeyLine")) {
           sscanf(&name[7], "%d", &idx);
           idx_found = 1;
         }
       } else if (callback_object->type() == glow_eObjectType_GrowRect) {
-        if (strStartsWith(name, "Key")) {
+        if (str_StartsWith(name, "Key")) {
           sscanf(&name[3], "%d", &idx);
           idx_found = 1;
         }

@@ -605,7 +605,7 @@ int WdaNav::get_attr()
     if (EVEN(sts))
       continue;
     for (j = 0; j < rows; j++) {
-      if (cdh_NoCaseStrcmp(attribute, bodydef[j].ParName) == 0) {
+      if (str_NoCaseStrcmp(attribute, bodydef[j].ParName) == 0) {
         found = 1;
         break;
       }
@@ -638,7 +638,7 @@ int WdaNav::get_attr()
   elements = bodydef[j].Par->Output.Info.Elements;
 
   if (!streq(search_name, ""))
-    cdh_ToUpper(name, search_name);
+    str_ToUpper(name, search_name);
   else
     namep = 0;
 
@@ -1167,7 +1167,7 @@ int WdaNav::import_textfile(char* filename)
         WItemBaseAttr* item = (WItemBaseAttr*)base_item;
 
         if (cdh_ObjidIsEqual(item->objid, aref.Objid)
-            && cdh_NoCaseStrcmp(item->attr, attr) == 0) {
+            && str_NoCaseStrcmp(item->attr, attr) == 0) {
           // Item found
           found = 1;
           switch (item->type_id) {

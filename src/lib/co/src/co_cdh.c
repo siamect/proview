@@ -1482,7 +1482,7 @@ cdh_sObjName* cdh_ObjName(cdh_sObjName* on, const char* name)
 {
   strncpy(on->orig, name, sizeof(pwr_tObjName));
   on->orig[sizeof(pwr_tObjName) - 1] = '\0';
-  cdh_ToUpper(on->norm, on->orig);
+  str_ToUpper(on->norm, on->orig);
   on->pack.key = cdh_PackName(on->norm);
 
   return on;
@@ -2320,199 +2320,7 @@ char* cdh_Low(const char* s)
 {
   static char buf[500];
 
-  return cdh_ToLower(buf, s);
-}
-
-//! Convert string to lower case.
-/*!
-  If s is NULL, t is used also as input string.
-
-  \param t	Output string.
-  \param s	Input string.
-  \return 	Returns t.
-*/
-char* cdh_ToLower(char* t, const char* s)
-{
-  char* rs = t;
-  static const char cvttab[] = "\
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
-!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!\
-!abcdefghijklmnopqrstuvwxyz!!!!!\
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
-^^^^^^^^^^^^^^^^!^^^^^^^^^^^^^!!\
-àáâãäåæçèéêëìíîï!ñòóôõö÷øùúûüı!!";
-
-  if (t == NULL)
-    return NULL;
-  if (s == NULL)
-    s = t;
-
-  while (*s)
-    if (cvttab[(unsigned char)*s] == '^')
-      *t++ = (*s++) + 32;
-    else
-      *t++ = *s++;
-
-  *t = *s; /* Copy the null byte.  */
-
-  return rs;
-}
-
-//! Convert string to upper case.
-/*!
-  If s is NULL, t is used also as input string.
-
-  \param t	Output string.
-  \param s	Input string.
-  \return 	Returns t.
-*/
-char* cdh_ToUpper(char* t, const char* s)
-{
-  char* rs = t;
-  static const char cvttab[] = "\
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
-!ABCDEFGHIJKLMNOPQRSTUVWXYZ!!!!!\
-!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!\
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
-ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏ!ÑÒÓÔÕÖ×ØÙÚÛÜİ!!\
-^^^^^^^^^^^^^^^^!^^^^^^^^^^^^^!!";
-
-  if (t == NULL)
-    return NULL;
-  if (s == NULL)
-    s = t;
-
-  while (*s)
-    if (cvttab[(unsigned char)*s] == '^')
-      *t++ = (*s++) - 32;
-    else
-      *t++ = *s++;
-
-  *t = *s; /* Copy the null byte.  */
-
-  return rs;
-}
-
-//! Compare two strings not regarding their casing.
-/*!
-   This routine works only on alphabetic characters.
-   It works on the standard ascii a-z and on the
-   DEC multinational extensions.
-
-   The function exploits the fact that only bit 5 changes
-   when you change the case of a character.
-
-   The function returns the uppercase offset between
-   the two first differing characters.
-*/
-
-int cdh_NoCaseStrcmp(const char* s, const char* t)
-{
-  while (*s && *t && !(((*s) ^ (*t)) & ~(1 << 5)))
-    s++, t++;
-
-  // return ((*s) & ~(1<<5)) -  ((*t) & ~(1<<5));
-  return (isalpha(*s) ? ((*s) & ~(1 << 5)) : *s)
-      - (isalpha(*t) ? ((*t) & ~(1 << 5)) : *t);
-}
-
-//! Compare the n (at most) first charachters of two strings not regarding their
-//! casing.
-/*!
-   This routine works only on alphabetic characters.
-   It works on the standard ascii a-z and on the
-   DEC multinational extensions.
-
-   The function exploits the fact that only bit 5 changes
-   when you change the case of a character.
-
-   The function returns the uppercase offset between
-   the two first differing characters.
-*/
-
-int cdh_NoCaseStrncmp(const char* s, const char* t, size_t n)
-{
-  int i;
-
-  for (i = 0; i < n && *s && *t && !(((*s) ^ (*t)) & ~(1 << 5)); i++)
-    s++, t++;
-
-  if (n == i)
-    return 0;
-  // return ((*s) & ~(1<<5)) - ((*t) & ~(1<<5));
-  return (isalpha(*s) ? ((*s) & ~(1 << 5)) : *s)
-      - (isalpha(*t) ? ((*t) & ~(1 << 5)) : *t);
-}
-
-//! Copy string char by char to allow overlapping source and target buffers
-char* cdh_Strcpy(char* dest, const char* src)
-{
-  const char* s;
-  char* t;
-
-  for (s = src, t = dest; *s; s++, t++)
-    *t = *s;
-  *t = 0;
-
-  return dest;
-}
-
-//! Copy string char by char to allow overlapping source and target buffers
-char* cdh_Strncpy(char* dest, const char* src, size_t n)
-{
-  const char* s;
-  char* t;
-  unsigned int i;
-
-  for (s = src, t = dest, i = 0; *s && i < n; s++, t++, i++)
-    *t = *s;
-  if (i < n)
-    *t = 0;
-
-  return dest;
-}
-
-//! Copy string, and cut of if the string is to long with ending '...'
-/*!
-  For example the string '0123456789' will return the string '0123...' when
-  the size of the returned string is 8.
-
-  If the string is cut off, the return value is 1, else 0.
-
-  \param t	Out string.
-  \param s	In string.
-  \param n	Size of out string.
-  \param cutleft The first characters of the string is cut.
-  \return 	1 if the string is cut off, else 0.
-*/
-int cdh_StrncpyCutOff(char* t, const char* s, size_t n, int cutleft)
-{
-  if (strlen(s) < n) {
-    cdh_Strcpy(t, s);
-    return 0;
-  }
-
-  if (cutleft) {
-    cdh_Strcpy(t, s + strlen(s) - n + 1);
-    if (n > 5) {
-      t[0] = '.';
-      t[1] = '.';
-      t[2] = '.';
-    }
-  } else {
-    cdh_Strncpy(t, s, n);
-    t[n - 1] = 0;
-    if (n > 5) {
-      t[n - 2] = '.';
-      t[n - 3] = '.';
-      t[n - 4] = '.';
-    }
-  }
-  return 1;
+  return str_ToLower(buf, s);
 }
 
 //! Convert operating system to string
@@ -2666,7 +2474,7 @@ pwr_sAttrRef cdh_ArefAdd(pwr_sAttrRef* arp1, pwr_sAttrRef* arp2)
 void cdh_SuppressSuper(char* out, char* in)
 {
   char* s = in;
-  while (strStartsWith(s, "Super."))
+  while (str_StartsWith(s, "Super."))
     s += 6;
   strcpy(out, s);
 }
@@ -2676,7 +2484,7 @@ void cdh_SuppressSuperAll(char* out, char* in)
   char *s, *t;
 
   for (s = in, t = out; *s;) {
-    if (strStartsWith(s, "Super."))
+    if (str_StartsWith(s, "Super."))
       s += 6;
     else {
       *t = *s;

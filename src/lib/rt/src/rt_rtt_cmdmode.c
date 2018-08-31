@@ -352,7 +352,7 @@ int rtt_get_symbol_cmd(char* key, char* value)
       /* Perfect match */
       strcpy(value, rtt_symboltable[i].value);
       return RTT__SUCCESS;
-    } else if (!strStartsWith(rtt_symboltable[i].key, key)) {
+    } else if (!str_StartsWith(rtt_symboltable[i].key, key)) {
       if (found)
         return RTT__SYMBOL_AMBIG;
       strcpy(value, rtt_symboltable[i].value);

@@ -288,7 +288,7 @@ pwr_tStatus nmpsappl_MirrorInit(pwr_tString80*
   /* Add cells to cellist */
   cellname = cell_array;
   while (!streq((char*)cellname, "")) {
-    cdh_ToUpper((char*)cellname, (char*)cellname);
+    str_ToUpper((char*)cellname, (char*)cellname);
 
     /* Check if cell already is inserted */
     cellist_ptr = basectx->cellist;

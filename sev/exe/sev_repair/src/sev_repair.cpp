@@ -120,7 +120,7 @@ int sev_repair::check(char* table)
   int found = 0;
 
   for (unsigned int i = 0; i < m_db->m_items.size(); i++) {
-    if (cdh_NoCaseStrcmp(table, m_db->m_items[i].tablename) == 0) {
+    if (str_NoCaseStrcmp(table, m_db->m_items[i].tablename) == 0) {
       printf("\n-- Processing %s\n", m_db->m_items[i].tablename);
       m_db->repair_table(&sts, m_db->m_items[i].tablename);
       if (EVEN(sts))
@@ -187,7 +187,7 @@ int sev_repair::optimize(char* table)
   int found = 0;
 
   for (unsigned int i = 0; i < m_db->m_items.size(); i++) {
-    if (cdh_NoCaseStrcmp(table, m_db->m_items[i].tablename) == 0) {
+    if (str_NoCaseStrcmp(table, m_db->m_items[i].tablename) == 0) {
       printf("-- Processing %s\n", m_db->m_items[i].tablename);
       m_db->optimize(&sts, m_db->m_items[i].tablename);
       if (EVEN(sts))
@@ -221,7 +221,7 @@ void sev_repair::clean(char* table)
   int found = 0;
 
   for (unsigned int i = 0; i < m_db->m_items.size(); i++) {
-    if (cdh_NoCaseStrcmp(table, m_db->m_items[i].tablename) == 0) {
+    if (str_NoCaseStrcmp(table, m_db->m_items[i].tablename) == 0) {
       clean_item(i, 0);
       found = 1;
       break;
@@ -285,7 +285,7 @@ int sev_repair::list(char* table)
   char timstr[40];
 
   for (unsigned int i = 0; i < m_db->m_items.size(); i++) {
-    if (cdh_NoCaseStrcmp(table, m_db->m_items[i].tablename) == 0) {
+    if (str_NoCaseStrcmp(table, m_db->m_items[i].tablename) == 0) {
       printf("-- %s\n", m_db->m_items[i].tablename);
       printf("    Object:            %s\n", m_db->m_items[i].oname);
       for (int j = 0; j < (int)m_db->m_items[i].attr.size(); j++) {

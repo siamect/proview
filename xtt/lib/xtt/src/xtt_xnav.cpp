@@ -3451,7 +3451,7 @@ int XNav::menu_tree_insert(char* title, int item_type, char* command,
 int XNav::menu_tree_search(char* name, xnav_sMenu** menu_item)
 {
   char upname[80];
-  cdh_ToUpper(upname, name);
+  str_ToUpper(upname, name);
   return menu_tree_search_children(upname, menu_tree, menu_item);
 }
 
@@ -3480,7 +3480,7 @@ int XNav::menu_tree_search_children(
 
   menu_p = child_list;
   while (menu_p) {
-    cdh_ToUpper(up_title, menu_p->title);
+    str_ToUpper(up_title, menu_p->title);
     if (streq(up_title, search_name)) {
       if (final_search) {
         *menu_item = menu_p;
@@ -3967,9 +3967,9 @@ int ApplList::find(
   ApplListElem* elem;
 
   for (elem = root; elem; elem = elem->next) {
-    if (elem->type == type && cdh_NoCaseStrcmp(name, elem->name) == 0) {
+    if (elem->type == type && str_NoCaseStrcmp(name, elem->name) == 0) {
       if (instance && !streq(elem->instance, "")) {
-        if (cdh_NoCaseStrcmp(instance, elem->instance) == 0) {
+        if (str_NoCaseStrcmp(instance, elem->instance) == 0) {
           *ctx = elem->ctx;
           return 1;
         }
@@ -3988,9 +3988,9 @@ int ApplList::find_graph(const char* name, const char* instance, void** ctx)
 
   for (elem = root; elem; elem = elem->next) {
     if (elem->type == applist_eType_Graph) {
-      if (cdh_NoCaseStrcmp(name, elem->name) == 0) {
+      if (str_NoCaseStrcmp(name, elem->name) == 0) {
         if (instance && !streq(elem->instance, "")) {
-          if (cdh_NoCaseStrcmp(instance, elem->instance) == 0) {
+          if (str_NoCaseStrcmp(instance, elem->instance) == 0) {
             *ctx = elem->ctx;
             return 1;
           }
@@ -4013,7 +4013,7 @@ int ApplList::find_graph_first(const char* name, void** ctx)
 
   for (elem = root; elem; elem = elem->next) {
     if (elem->type == applist_eType_Graph) {
-      if (cdh_NoCaseStrcmp(name, elem->name) == 0) {
+      if (str_NoCaseStrcmp(name, elem->name) == 0) {
         *ctx = elem->ctx;
         return 1;
       }
@@ -4029,12 +4029,12 @@ int ApplList::find_graph_next(const char* name, char* instance, void** ctx)
   int found = 0;
   for (elem = root; elem; elem = elem->next) {
     if (elem->type == applist_eType_Graph) {
-      if (cdh_NoCaseStrcmp(name, elem->name) == 0) {
+      if (str_NoCaseStrcmp(name, elem->name) == 0) {
         if (found) {
           *ctx = elem->ctx;
           return 1;
         } else {
-          if (cdh_NoCaseStrcmp(instance, elem->instance) == 0)
+          if (str_NoCaseStrcmp(instance, elem->instance) == 0)
             found = 1;
         }
       }

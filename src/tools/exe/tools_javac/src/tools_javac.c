@@ -40,7 +40,7 @@
 #include <string.h>
 
 #define streq(a,b) (strcmp((a),(b)) == 0)
-#define strStartsWith(str, prefix) (strncmp(str, prefix, strlen(prefix)) == 0)
+#define str_StartsWith(str, prefix) (strncmp(str, prefix, strlen(prefix)) == 0)
 
 char prefix[][10] = { "gdhr", "gdh", "cdhr", "cdh", "pwrb", "pwrt", "pwr", "rt",
   "co", "jop", "ge", "qcomr", "qcom", "cli" };
@@ -120,7 +120,7 @@ int main(int argc, char* argv[])
     strcpy(s, "JopLoginFrame.java");
   else {
     for (i = 0; i < sizeof(prefix) / sizeof(prefix[0]); i++) {
-      if (strStartsWith(s, prefix[i])) {
+      if (str_StartsWith(s, prefix[i])) {
         *s = _toupper(*s);
         if (strlen(s) > strlen(prefix[i]))
           *(s + strlen(prefix[i])) = _toupper(*(s + strlen(prefix[i])));

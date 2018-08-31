@@ -252,7 +252,7 @@ void XttGeGtk::activate_help(GtkWidget* w, gpointer data)
   char key[80];
 
   if (ge->help_cb) {
-    cdh_ToLower(key, ge->name);
+    str_ToLower(key, ge->name);
     (ge->help_cb)(ge->parent_ctx, key);
   }
 }
@@ -340,7 +340,7 @@ XttGeGtk::XttGeGtk(GtkWidget* xg_parent_wid, void* xg_parent_ctx,
       window_height = 500;
     }
   }
-  cdh_StrncpyCutOff(title, name, sizeof(title), 1);
+  str_StrncpyCutOff(title, name, sizeof(title), 1);
   char* titleutf8
       = g_convert(title, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
 

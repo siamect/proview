@@ -92,11 +92,11 @@ PalFileMenu* PalFile::config_tree_build(ldh_tSession ldhses,
 
     if (keytype != pal_eNameType_All) {
       if ((keytype == pal_eNameType_TopObjects
-              && cdh_NoCaseStrcmp(type, "topobjects") == 0
-              && cdh_NoCaseStrcmp(name, keyname) == 0)
+              && str_NoCaseStrcmp(type, "topobjects") == 0
+              && str_NoCaseStrcmp(name, keyname) == 0)
           || (keytype == pal_eNameType_Palette
-                 && cdh_NoCaseStrcmp(type, "palette") == 0
-                 && cdh_NoCaseStrcmp(name, keyname) == 0)) {
+                 && str_NoCaseStrcmp(type, "palette") == 0
+                 && str_NoCaseStrcmp(name, keyname) == 0)) {
         if (nr != 2)
           printf("** Syntax error in file %s, line %d\n", filename, line_cnt);
 
@@ -121,9 +121,9 @@ PalFileMenu* PalFile::config_tree_build(ldh_tSession ldhses,
       if (nr != 2)
         printf("** Syntax error in file %s, line %d\n", filename, line_cnt);
 
-      if (cdh_NoCaseStrcmp(type, "topobjects") == 0)
+      if (str_NoCaseStrcmp(type, "topobjects") == 0)
         menu_p = new PalFileMenu(name, pal_eMenuType_TopObjects, NULL);
-      else if (cdh_NoCaseStrcmp(type, "palette") == 0)
+      else if (str_NoCaseStrcmp(type, "palette") == 0)
         menu_p = new PalFileMenu(name, pal_eMenuType_Palette, NULL);
 
       if (!menu_tree)
@@ -200,7 +200,7 @@ PalFileMenu* PalFile::config_tree_build_children(ldh_tSession ldhses,
       if (nr != 1)
         printf("** Syntax error in file %s, line %d\n", filename, *line_cnt);
       return return_menu;
-    } else if (cdh_NoCaseStrcmp(type, "menu") == 0) {
+    } else if (str_NoCaseStrcmp(type, "menu") == 0) {
       if (!(nr == 2 || nr == 3))
         printf("** Syntax error in file %s, line %d\n", filename, *line_cnt);
 
@@ -227,7 +227,7 @@ PalFileMenu* PalFile::config_tree_build_children(ldh_tSession ldhses,
           prev->next = menu_p;
         prev = menu_p;
       }
-    } else if (cdh_NoCaseStrcmp(type, "class") == 0) {
+    } else if (str_NoCaseStrcmp(type, "class") == 0) {
       if (!(nr == 2 || nr == 3))
         printf("** Syntax error in file %s, line %d\n", filename, *line_cnt);
 
@@ -240,7 +240,7 @@ PalFileMenu* PalFile::config_tree_build_children(ldh_tSession ldhses,
           prev->next = menu_p;
         prev = menu_p;
       }
-    } else if (cdh_NoCaseStrcmp(type, "classvolume") == 0) {
+    } else if (str_NoCaseStrcmp(type, "classvolume") == 0) {
       if (!(nr == 2 || nr == 3))
         printf("** Syntax error in file %s, line %d\n", filename, *line_cnt);
 
@@ -280,7 +280,7 @@ int PalFile::check_volume(ldh_tSession ldhses, char* name)
       if (EVEN(sts))
         return 0;
 
-      if (!cdh_NoCaseStrcmp(volume_name, name))
+      if (!str_NoCaseStrcmp(volume_name, name))
         return 1;
     }
     sts = ldh_GetNextVolume(ldh_SessionToWB(ldhses), volume, &volume);

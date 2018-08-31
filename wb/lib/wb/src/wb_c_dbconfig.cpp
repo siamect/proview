@@ -37,8 +37,12 @@
 /* wb_c_plcpgm.c -- work bench methods of the PlcPgm class. */
 
 #include "pwr_baseclasses.h"
+
 #include "co_dcli.h"
+#include "co_string.h"
+
 #include "cow_login.h"
+
 #include "wb_pwrs.h"
 
 /*----------------------------------------------------------------------------*\
@@ -66,7 +70,7 @@ static pwr_tStatus OpenDb(ldh_sMenuCall* ip)
     return sts;
 
   dcli_translate_filename(filename, "$pwr_exe/wb_open_db.sh");
-  cdh_ToLower(db_id, db_id_p);
+  str_ToLower(db_id, db_id_p);
   sprintf(cmd, "%s \"%s\" \"%s\" \"%s\" \"\" \"%s\" &", filename, db_id,
       CoLogin::username(), CoLogin::ucpassword(), name);
   free(db_id_p);

@@ -664,7 +664,7 @@ int rtt_cli(
   hitnr = 0;
   while (comtbl_ptr->command[0] != '\0') {
     strcpy(command, comtbl_ptr->command);
-    if (cdh_NoCaseStrcmp(out_str[0], command) == 0) {
+    if (str_NoCaseStrcmp(out_str[0], command) == 0) {
       /* Perfect hit */
       func = comtbl_ptr->func;
       hitnr = 1;
@@ -672,7 +672,7 @@ int rtt_cli(
       break;
     } else {
       command[strlen(out_str[0])] = '\0';
-      if (cdh_NoCaseStrcmp(out_str[0], command) == 0) {
+      if (str_NoCaseStrcmp(out_str[0], command) == 0) {
         /* Hit */
         func = comtbl_ptr->func;
         hitnr++;
@@ -715,7 +715,7 @@ int rtt_cli(
       while (current_comtbl->qualifier[j][0] != 0) {
         strcpy(qual, current_comtbl->qualifier[j]);
         qual[strlen(value_str[0])] = '\0';
-        if (cdh_NoCaseStrcmp(qual, value_str[0]) == 0) {
+        if (str_NoCaseStrcmp(qual, value_str[0]) == 0) {
           /* Hit */
           strcpy(rtt_qual_str[i - 1][0], current_comtbl->qualifier[j]);
           hitnr++;
@@ -725,7 +725,7 @@ int rtt_cli(
     }
     if (hitnr == 0 || is_arg) {
       /* This might be a argument, look for a argument */
-      if (strStartsWith(current_comtbl->qualifier[arg_count], "rtt_arg")) {
+      if (str_StartsWith(current_comtbl->qualifier[arg_count], "rtt_arg")) {
         sprintf(rtt_qual_str[i - 1][0], "rtt_arg%d", arg_count + 1);
         strcpy(rtt_qual_str[i - 1][1], value_str[0]);
         arg_count++;
@@ -776,7 +776,7 @@ int rtt_get_qualifier(char* qualifier, char* value)
   i = 0;
   found = 0;
   while (rtt_qual_str[i][0][0] != '\0') {
-    if (cdh_NoCaseStrcmp(qualifier, (char*)rtt_qual_str[i]) == 0) {
+    if (str_NoCaseStrcmp(qualifier, (char*)rtt_qual_str[i]) == 0) {
       /* Hit */
       strcpy(value, (char*)&rtt_qual_str[i][1]);
       found = 1;
@@ -1560,7 +1560,7 @@ int rtt_menu_create_ctx(menu_ctx* ctx, menu_ctx parent_ctx, rtt_t_menu* menu,
   (*ctx)->parent_ctx = (void*)parent_ctx;
   (*ctx)->menu = menu;
   (*ctx)->menutype = menutype;
-  cdh_StrncpyCutOff((*ctx)->title, title, 80, 1);
+  str_StrncpyCutOff((*ctx)->title, title, 80, 1);
 
   if (rtt_collectionmenulist
       && (rtt_t_menu_upd*)((*ctx)->menu) == rtt_collectionmenulist) {
@@ -6837,7 +6837,7 @@ static int rtt_set_value(menu_ctx ctx, char* value_str)
               }
               else
     */
-    if (cdh_NoCaseStrncmp(menu_ptr->parameter_name, "_A_ ", 4) == 0) {
+    if (str_NoCaseStrncmp(menu_ptr->parameter_name, "_A_ ", 4) == 0) {
       /* Parameter is given as an attref */
       sscanf(&menu_ptr->parameter_name[4], "%d %d %d %d", &attrref.Objid.vid,
           &attrref.Objid.oix, &attrref.Offset, &attrref.Size);
@@ -7014,12 +7014,12 @@ int rtt_help(menu_ctx parent_ctx, char* subject, rtt_t_helptext* helptext)
   char title[100];
 
   if (*subject == '\0'
-      || cdh_NoCaseStrncmp(subject, "HELP", strlen(subject)) == 0) {
+      || str_NoCaseStrncmp(subject, "HELP", strlen(subject)) == 0) {
     /* No subject is given take help as default */
     sts = rtt_help_show_all(parent_ctx, helptext);
     return sts;
   } else if (*subject == '\0'
-      || cdh_NoCaseStrncmp(subject, "SCRIPT", strlen(subject)) == 0) {
+      || str_NoCaseStrncmp(subject, "SCRIPT", strlen(subject)) == 0) {
     /* No subject is given take help as default */
     sts = rtt_help_show_all(parent_ctx, rtt_script_helptext);
     return sts;
@@ -7042,7 +7042,7 @@ int rtt_help(menu_ctx parent_ctx, char* subject, rtt_t_helptext* helptext)
       no_match = 0;
       for (i = 0; i < subjectnr; i++) {
         rtt_toupper(ht_subj_array[i], ht_subj_array[i]);
-        if (cdh_NoCaseStrncmp(
+        if (str_NoCaseStrncmp(
                 subj_array[i], ht_subj_array[i], strlen(subj_array[i]))
             != 0) {
           no_match = 1;
@@ -7127,7 +7127,7 @@ static int rtt_help_getinfoline(
       no_match = 0;
       for (i = 0; i < subjectnr; i++) {
         rtt_toupper(ht_subj_array[i], ht_subj_array[i]);
-        if (cdh_NoCaseStrncmp(
+        if (str_NoCaseStrncmp(
                 subj_array[i], ht_subj_array[i], strlen(subj_array[i]))
             != 0) {
           no_match = 1;
@@ -7423,7 +7423,7 @@ int rtt_logon_pict(unsigned long* chn, unsigned long* priv)
       option = RTT_OPT_NOSCROLL | RTT_OPT_NORECALL | RTT_OPT_NOECHO;
       rtt_get_input_string((char*)chn, passw_str, &terminator, maxlen, 0,
           option, 0, 0, 0, "Password: ");
-      cdh_ToLower(passw_str, passw_str);
+      str_ToLower(passw_str, passw_str);
       rtt_message('S', "");
       if (terminator >= RTT_K_RETURN) {
         sts = user_CheckUser(
@@ -8751,7 +8751,7 @@ int rtt_get_defaultfilename(char* inname, char* outname, char* ext)
   }
 
 #if defined OS_POSIX
-  cdh_ToLower(outname, outname);
+  str_ToLower(outname, outname);
 #endif
   return RTT__SUCCESS;
 }
@@ -8922,7 +8922,7 @@ int rtt_get_fastkey_type()
   if ((fastkey_menu_ptr + key)->func == &rtt_menu_command) {
     strcpy(command, (char*)((fastkey_menu_ptr + key)->arg1));
     // rtt_toupper( command, command);
-    if (!cdh_NoCaseStrncmp(command, "SET", 3))
+    if (!str_NoCaseStrncmp(command, "SET", 3))
       return RTT__NOPICTURE;
   } else if ((fastkey_menu_ptr + key)->func == &rtt_menu_commandhold) {
     return RTT__NOPICTURE;

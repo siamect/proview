@@ -255,7 +255,7 @@ void rt_report::create_report(pwr_sClass_Report* o)
     if (first && streq(newline, ""))
       continue;
 
-    if (cdh_NoCaseStrncmp(newline, "<execute>", 9) == 0) {
+    if (str_NoCaseStrncmp(newline, "<execute>", 9) == 0) {
       parse(&line[9]);
     } else {
       first = 0;
@@ -616,7 +616,7 @@ int rt_report::replace_value(char* out, unsigned int size, char* in)
     int format_found = 0;
     int value_found = 0;
     for (int i = 0; i < nr; i++) {
-      if (cdh_NoCaseStrcmp(vvect[i], "attr") == 0 && nr > i + 1) {
+      if (str_NoCaseStrcmp(vvect[i], "attr") == 0 && nr > i + 1) {
         sts = gdh_GetAttributeCharacteristics(
             vvect[i + 1], &a_tid, &a_size, &a_offs, &a_elem);
 
@@ -627,7 +627,7 @@ int rt_report::replace_value(char* out, unsigned int size, char* in)
         i++;
         value_found = 1;
       }
-      if (cdh_NoCaseStrcmp(vvect[i], "format") == 0 && nr > i + 1) {
+      if (str_NoCaseStrcmp(vvect[i], "format") == 0 && nr > i + 1) {
         strncpy(format, vvect[i + 1], sizeof(format));
 
         i++;
@@ -673,7 +673,7 @@ int rt_report::replace_value(char* out, unsigned int size, char* in)
         sizeof(vvect) / sizeof(vvect[0]), sizeof(vvect[0]), 0);
     int format_found = 0;
     for (int i = 0; i < nr; i++) {
-      if (cdh_NoCaseStrcmp(vvect[i], "format") == 0 && nr > i + 1) {
+      if (str_NoCaseStrcmp(vvect[i], "format") == 0 && nr > i + 1) {
         strncpy(format, vvect[i + 1], sizeof(format));
 
         i++;
@@ -902,8 +902,8 @@ int rt_report::parse(char* line)
   num = dcli_parse(line, " 	", "", (char*)line_array,
       sizeof(line_array) / sizeof(line_array[0]), sizeof(line_array[0]), 0);
 
-  if (num > 0 && cdh_NoCaseStrcmp(line_array[0], "print") == 0) {
-    if (num > 1 && cdh_NoCaseStrcmp(line_array[1], "graph") == 0) {
+  if (num > 0 && str_NoCaseStrcmp(line_array[0], "print") == 0) {
+    if (num > 1 && str_NoCaseStrcmp(line_array[1], "graph") == 0) {
       std::ofstream fout;
       pwr_tFileName fname;
       pwr_tFileName tmpfile = "$pwrp_lis/report_print.rtt_com";
@@ -921,15 +921,15 @@ int rt_report::parse(char* line)
 
       argcnt = 0;
       for (int i = 2; i < num; i++) {
-        if (cdh_NoCaseStrncmp(line_array[i], "btime=", 6) == 0) {
+        if (str_NoCaseStrncmp(line_array[i], "btime=", 6) == 0) {
           sts = sscanf(&line_array[i][6], "%f", &btime);
           if (sts != 1)
             btime = 2;
-        } else if (cdh_NoCaseStrncmp(line_array[i], "atime=", 6) == 0) {
+        } else if (str_NoCaseStrncmp(line_array[i], "atime=", 6) == 0) {
           sts = sscanf(&line_array[i][6], "%f", &atime);
           if (sts != 1)
             atime = 2;
-        } else if (cdh_NoCaseStrncmp(line_array[i], "object=", 6) == 0) {
+        } else if (str_NoCaseStrncmp(line_array[i], "object=", 6) == 0) {
           strncpy(object_str, line_array[i], sizeof(object_str));
           argcnt++; // Replaces graph
         } else {
@@ -981,7 +981,7 @@ int rt_report::parse(char* line)
       system(cmd);
     } else
       return 0;
-  } else if (strStartsWith(aline, "system(")
+  } else if (str_StartsWith(aline, "system(")
       && aline[strlen(aline) - 1] == ')') {
     aline[strlen(aline) - 1] = 0;
     system(&aline[7]);

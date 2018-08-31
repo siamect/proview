@@ -284,7 +284,7 @@ int XttMultiView::name_to_idx(const char* name)
 
   for (int i = 0; i < cols; i++) {
     for (int j = 0; j < rows; j++) {
-      if (cdh_NoCaseStrcmp(name, mv.Action[i * rows + j].Name) == 0)
+      if (str_NoCaseStrcmp(name, mv.Action[i * rows + j].Name) == 0)
         return i * rows + j;
     }
   }

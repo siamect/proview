@@ -1109,7 +1109,7 @@ int NodelistNav::set_node_data(char* node_name, char* opplace, char* descr)
 void NodelistNav::remove_node(char* name)
 {
   for (int i = 0; i < (int)node_list.size(); i++) {
-    if (cdh_NoCaseStrcmp(name, node_list[i].node_name) == 0) {
+    if (str_NoCaseStrcmp(name, node_list[i].node_name) == 0) {
       brow_DeleteNode(brow->ctx, node_list[i].item->node);
 
       for (int j = i; j < (int)node_list.size() - 1; j++)

@@ -963,7 +963,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
               // Check parent volume
               int parent_found = 0;
               for (int j = 0; j < volumecount; j++) {
-                if (cdh_NoCaseStrcmp(parentvolume, volumelist[j].volume_name)
+                if (str_NoCaseStrcmp(parentvolume, volumelist[j].volume_name)
                     == 0) {
                   parent_found = 1;
                   break;
@@ -1042,7 +1042,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
             if (volrep == ldh_eVolRep_Db) {
               sprintf(filename, "$pwrp_db/%s.db/info", volume_name);
-              cdh_ToLower(filename, filename);
+              str_ToLower(filename, filename);
               dcli_translate_filename(filename, filename);
               sts = dcli_search_file(
                   filename, found_file, DCLI_DIR_SEARCH_INIT);
@@ -1085,7 +1085,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
               sprintf(
                   filename, "$pwrp_db/%s.dbms/connection.dmsql", volume_name);
-              cdh_ToLower(filename, filename);
+              str_ToLower(filename, filename);
               dcli_translate_filename(filename, filename);
               sts = dcli_search_file(
                   filename, found_file, DCLI_DIR_SEARCH_INIT);
@@ -1146,7 +1146,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
             if (volrep == ldh_eVolRep_Db) {
               /* Check if the databas is created */
               sprintf(filename, "$pwrp_db/%s.db/info", volume_name);
-              cdh_ToLower(filename, filename);
+              str_ToLower(filename, filename);
               dcli_translate_filename(filename, filename);
               sts = dcli_search_file(
                   filename, found_file, DCLI_DIR_SEARCH_INIT);
@@ -1187,7 +1187,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
               sprintf(
                   filename, "$pwrp_db/%s.dbms/connection.dmsql", volume_name);
-              cdh_ToLower(filename, filename);
+              str_ToLower(filename, filename);
               dcli_translate_filename(filename, filename);
               sts = dcli_search_file(
                   filename, found_file, DCLI_DIR_SEARCH_INIT);
@@ -1221,7 +1221,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
               FILE* wblfile;
 
               sprintf(fname, "$pwrp_db/%s.wb_load", volume_name);
-              cdh_ToLower(fname, fname);
+              str_ToLower(fname, fname);
               dcli_translate_filename(fname, fname);
               wblfile = fopen(fname, "r");
               if (wblfile == 0) {
@@ -1726,7 +1726,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
             found = 0;
             volumelist_ptr = volumelist;
             for (i = 0; i < volumecount; i++) {
-              if (cdh_NoCaseStrcmp(volstr, volumelist_ptr->volume_name) == 0) {
+              if (str_NoCaseStrcmp(volstr, volumelist_ptr->volume_name) == 0) {
                 nc.vid = volumelist_ptr->volume_id;
                 found = 1;
                 break;
@@ -1888,7 +1888,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
         found = 0;
         volumelist_ptr = volumelist;
         for (i = 0; i < volumecount; i++) {
-          if (cdh_NoCaseStrcmp(volstr, volumelist_ptr->volume_name) == 0) {
+          if (str_NoCaseStrcmp(volstr, volumelist_ptr->volume_name) == 0) {
             nc.vid = volumelist_ptr->volume_id;
             found = 1;
             break;
@@ -2142,7 +2142,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
               found = 0;
               volumelist_ptr = volumelist;
               for (int j = 0; j < volumecount; j++) {
-                if (cdh_NoCaseStrcmp(volstr, volumelist_ptr->volume_name)
+                if (str_NoCaseStrcmp(volstr, volumelist_ptr->volume_name)
                     == 0) {
                   nc.vid = volumelist_ptr->volume_id;
                   found = 1;
@@ -2522,7 +2522,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
                    i++) {
                 dcli_trim(opt, bop->Archives[i]);
                 if (!streq(opt, "")) {
-                  if (strStartsWith(opt, "lib"))
+                  if (str_StartsWith(opt, "lib"))
                     strncpy(ar, &opt[3], sizeof(ar));
                   else
                     strncpy(ar, opt, sizeof(ar));
@@ -2600,7 +2600,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
                 else
                   sprintf(dir, "$pwrp_root/bld/%s/exe/",
                       cdh_OpSysToStr((pwr_mOpSys)os));
-                cdh_ToLower(nodename, nodename_ptr);
+                str_ToLower(nodename, nodename_ptr);
                 sprintf(fname, pwr_cNameOpt, dir, nodename, *bus_number_ptr,
                     cdh_Low(plcproc));
                 dcli_translate_filename(fname, fname);
@@ -2621,7 +2621,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
                   else
                     sprintf(dir, "$pwrp_root/bld/%s/exe/",
                         cdh_OpSysToStr((pwr_mOpSys)os));
-                  cdh_ToLower(nodename, secondary_nodename_ptr);
+                  str_ToLower(nodename, secondary_nodename_ptr);
                   sprintf(fname, pwr_cNameOpt, dir, nodename, *bus_number_ptr,
                       cdh_Low(plcproc));
                   dcli_translate_filename(fname, fname);
@@ -3829,7 +3829,7 @@ pwr_tStatus lfu_GetVolumeCnf(
     nr = dcli_parse(line, " ", "", (char*)vol_array,
         sizeof(vol_array) / sizeof(vol_array[0]), sizeof(vol_array[0]), 0);
 
-    if (cdh_NoCaseStrcmp(vol_array[0], name) != 0)
+    if (str_NoCaseStrcmp(vol_array[0], name) != 0)
       continue;
 
     found = 1;
@@ -3838,15 +3838,15 @@ pwr_tStatus lfu_GetVolumeCnf(
     if (EVEN(sts))
       return sts;
 
-    if (cdh_NoCaseStrcmp(vol_array[2], "RootVolume") == 0)
+    if (str_NoCaseStrcmp(vol_array[2], "RootVolume") == 0)
       *cid = pwr_eClass_RootVolume;
-    else if (cdh_NoCaseStrcmp(vol_array[2], "SubVolume") == 0)
+    else if (str_NoCaseStrcmp(vol_array[2], "SubVolume") == 0)
       *cid = pwr_eClass_SubVolume;
-    else if (cdh_NoCaseStrcmp(vol_array[2], "SharedVolume") == 0)
+    else if (str_NoCaseStrcmp(vol_array[2], "SharedVolume") == 0)
       *cid = pwr_eClass_SharedVolume;
-    else if (cdh_NoCaseStrcmp(vol_array[2], "ClassVolume") == 0)
+    else if (str_NoCaseStrcmp(vol_array[2], "ClassVolume") == 0)
       *cid = pwr_eClass_ClassVolume;
-    else if (cdh_NoCaseStrcmp(vol_array[2], "DetachedClassVolume") == 0)
+    else if (str_NoCaseStrcmp(vol_array[2], "DetachedClassVolume") == 0)
       *cid = pwr_eClass_DetachedClassVolume;
 
     switch (*cid) {
@@ -3854,7 +3854,7 @@ pwr_tStatus lfu_GetVolumeCnf(
     case pwr_eClass_SubVolume:
     case pwr_eClass_SharedVolume:
       *volrep = ldh_eVolRep_Db;
-      if (cdh_NoCaseStrcmp(vol_array[0], name) == 0) {
+      if (str_NoCaseStrcmp(vol_array[0], name) == 0) {
         if (nr > 4 && streq(vol_array[4], "1")) {
           *volrep = ldh_eVolRep_Dbms;
           if (nr > 5)
@@ -3867,7 +3867,7 @@ pwr_tStatus lfu_GetVolumeCnf(
     case pwr_eClass_ClassVolume:
     case pwr_eClass_DetachedClassVolume:
       *volrep = ldh_eVolRep_Wbl;
-      if (cdh_NoCaseStrcmp(vol_array[0], name) == 0) {
+      if (str_NoCaseStrcmp(vol_array[0], name) == 0) {
         if (nr > 4 && streq(vol_array[4], "1"))
           *volrep = ldh_eVolRep_Db;
         else if (nr > 4 && streq(vol_array[4], "2")) {
@@ -3923,15 +3923,15 @@ pwr_tStatus lfu_GetVolumeCnfAll(std::vector<lfu_volume_info>& vect)
     if (EVEN(sts))
       return sts;
 
-    if (cdh_NoCaseStrcmp(vol_array[2], "RootVolume") == 0)
+    if (str_NoCaseStrcmp(vol_array[2], "RootVolume") == 0)
       vol.cid = pwr_eClass_RootVolume;
-    else if (cdh_NoCaseStrcmp(vol_array[2], "SubVolume") == 0)
+    else if (str_NoCaseStrcmp(vol_array[2], "SubVolume") == 0)
       vol.cid = pwr_eClass_SubVolume;
-    else if (cdh_NoCaseStrcmp(vol_array[2], "SharedVolume") == 0)
+    else if (str_NoCaseStrcmp(vol_array[2], "SharedVolume") == 0)
       vol.cid = pwr_eClass_SharedVolume;
-    else if (cdh_NoCaseStrcmp(vol_array[2], "ClassVolume") == 0)
+    else if (str_NoCaseStrcmp(vol_array[2], "ClassVolume") == 0)
       vol.cid = pwr_eClass_ClassVolume;
-    else if (cdh_NoCaseStrcmp(vol_array[2], "DetachedClassVolume") == 0)
+    else if (str_NoCaseStrcmp(vol_array[2], "DetachedClassVolume") == 0)
       vol.cid = pwr_eClass_DetachedClassVolume;
 
     switch (vol.cid) {

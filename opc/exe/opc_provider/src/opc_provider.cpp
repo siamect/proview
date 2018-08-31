@@ -40,8 +40,11 @@
 #include <fstream>
 
 #include "pwr_baseclasses.h"
+
 #include "co_cnv.h"
 #include "co_dcli.h"
+#include "co_string.h"
+
 #include "rt_gdh_msg.h"
 #include "rt_procom.h"
 
@@ -746,7 +749,7 @@ void opc_provider::objectName(co_procom* pcom, char* name, pwr_tOix poix)
     }
 
     for (coix = m_list[oix]->po.fchoix;; coix = m_list[coix]->po.fwsoix) {
-      if (cdh_NoCaseStrcmp(m_list[coix]->po.name, pn.object[i].name.norm)
+      if (str_NoCaseStrcmp(m_list[coix]->po.name, pn.object[i].name.norm)
           == 0) {
         oix = coix;
         found = true;
@@ -1276,7 +1279,7 @@ bool opc_provider::find(pwr_tOix fthoix, char* name, pwr_tOix* oix)
   for (int i = 0; i < (int)m_list.size(); i++) {
     if (!(m_list[i]->po.flags & procom_obj_mFlags_Deleted)) {
       if (m_list[i]->po.fthoix == fthoix
-          && cdh_NoCaseStrcmp(name, m_list[i]->po.name) == 0) {
+          && str_NoCaseStrcmp(name, m_list[i]->po.name) == 0) {
         *oix = m_list[i]->po.oix;
         return true;
       }

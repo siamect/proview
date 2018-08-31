@@ -1392,7 +1392,7 @@ void StrEqual_exec(plc_sThread* tp, pwr_sClass_StrEqual* o)
   if (o->CaseSensitive)
     o->Status = (streq(*o->In1P, *o->In2P));
   else
-    o->Status = (cdh_NoCaseStrcmp(*o->In1P, *o->In2P) == 0);
+    o->Status = (str_NoCaseStrcmp(*o->In1P, *o->In2P) == 0);
 }
 
 /*_*
@@ -1403,7 +1403,7 @@ void StrNotEqual_exec(plc_sThread* tp, pwr_sClass_StrNotEqual* o)
   if (o->CaseSensitive)
     o->Status = (!streq(*o->In1P, *o->In2P));
   else
-    o->Status = (cdh_NoCaseStrcmp(*o->In1P, *o->In2P) != 0);
+    o->Status = (str_NoCaseStrcmp(*o->In1P, *o->In2P) != 0);
 }
 
 /*_*

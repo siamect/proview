@@ -394,7 +394,7 @@ char* GeCurve::minmax_filename(char* aname)
   pwr_tAName attrname;
 
   strcpy(attrname, aname);
-  cdh_ToLower(attrname, attrname);
+  str_ToLower(attrname, attrname);
   for (char* s = attrname; *s; s++) {
     if (*s == '-')
       *s = '_';

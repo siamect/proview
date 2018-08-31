@@ -68,7 +68,7 @@ wb_pkg::wb_pkg(char* nodelist, bool distribute, bool config_only, bool check,
     char node_str[32][20];
     int num;
 
-    cdh_ToLower(nodelist, nodelist);
+    str_ToLower(nodelist, nodelist);
     num = dcli_parse(nodelist, " 	,", "", (char*)node_str,
         sizeof(node_str) / sizeof(node_str[0]), sizeof(node_str[0]), 0);
     m_allnodes = false;
@@ -568,7 +568,7 @@ int pkg_node::compareFiles()
     if (num != 6)
       continue;
 
-    if (!strStartsWith(line_item[5], "pkg_build/"))
+    if (!str_StartsWith(line_item[5], "pkg_build/"))
       continue;
 
     // Add file to list
@@ -1092,7 +1092,7 @@ pkg_volume::pkg_volume(char* name, char* filename, pwr_tVid vid, pwr_tTime time)
 {
   strcpy(m_name, name);
   strcpy(m_filename, filename);
-  if (strStartsWith(m_filename, "$pwr_load/"))
+  if (str_StartsWith(m_filename, "$pwr_load/"))
     m_isSystem = true;
 }
 

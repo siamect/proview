@@ -38,7 +38,11 @@
  * class. */
 
 #include "pwr_baseclasses.h"
+
+#include "co_string.h"
+
 #include "cow_login.h"
+
 #include "wb_pwrs.h"
 #include "wb_wnav.h"
 
@@ -67,7 +71,7 @@ static pwr_tStatus EditClassVolume(ldh_sMenuCall* ip)
 
   switch (*dbenum) {
   case pwr_eClassVolumeDatabaseEnum_WbLoad:
-    cdh_ToLower(name, name);
+    str_ToLower(name, name);
     sprintf(fname, "$pwrp_db/%s.wb_load", name);
     dcli_translate_filename(fname, fname);
 
@@ -78,7 +82,7 @@ static pwr_tStatus EditClassVolume(ldh_sMenuCall* ip)
   case pwr_eClassVolumeDatabaseEnum_MySql: {
     pwr_tFileName filename;
 
-    cdh_ToLower(name, name);
+    str_ToLower(name, name);
     dcli_translate_filename(filename, "$pwr_exe/wb_open_db.sh");
     sprintf(cmd, "%s \"%s\" \"%s\" \"%s\" \"%s\" &", filename,
         CoLogin::username(), CoLogin::ucpassword(), name, name);

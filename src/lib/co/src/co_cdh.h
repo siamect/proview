@@ -831,19 +831,6 @@ cdh_sParseName* cdh_ParseName(pwr_tStatus* sts, cdh_sParseName* pn,
 
 char* cdh_Low(const char* s);
 
-char* cdh_ToLower(char* t, const char* s);
-
-char* cdh_ToUpper(char* t, const char* s);
-
-int cdh_NoCaseStrcmp(const char* s, const char* t);
-
-int cdh_NoCaseStrncmp(const char* s, const char* t, size_t n);
-
-char* cdh_Strcpy(char* dest, const char* src);
-char* cdh_Strncpy(char* dest, const char* src, size_t n);
-
-int cdh_StrncpyCutOff(char* s, const char* t, size_t n, int cutleft);
-
 char* cdh_OpSysToStr(pwr_mOpSys opsys);
 
 char* cdh_OpSysToDirStr(pwr_mOpSys opsys);

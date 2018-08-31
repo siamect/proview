@@ -190,7 +190,7 @@ pwr_tStatus ini_SetAttribute(char* filename, char* nodename, int output)
     value_ptr = data_ptr;
     value_ptr++;
 
-    if (cdh_NoCaseStrcmp((char*)attribute_ptr, "PLCSCAN") == 0) {
+    if (str_NoCaseStrcmp((char*)attribute_ptr, "PLCSCAN") == 0) {
       sts = ini_set_plcscan((char*)value_ptr);
       if (EVEN(sts))
         if (output)
@@ -204,9 +204,9 @@ pwr_tStatus ini_SetAttribute(char* filename, char* nodename, int output)
       else
         errh_Info("attribute '%s' set to '%s'", (char*)attribute_ptr,
             (char*)value_ptr);
-    } else if (cdh_NoCaseStrcmp((char*)attribute_ptr, "PLCSIM") == 0
-        || cdh_NoCaseStrcmp((char*)attribute_ptr, "ERRLOGFILE") == 0
-        || cdh_NoCaseStrcmp((char*)attribute_ptr, "ERRLOGTERM") == 0)
+    } else if (str_NoCaseStrcmp((char*)attribute_ptr, "PLCSIM") == 0
+        || str_NoCaseStrcmp((char*)attribute_ptr, "ERRLOGFILE") == 0
+        || str_NoCaseStrcmp((char*)attribute_ptr, "ERRLOGTERM") == 0)
 
     {
       sts = ini_set_nodeattribute((char*)attribute_ptr, (char*)value_ptr);
@@ -304,7 +304,7 @@ static int ini_datafile_get_next(char* parameter, char** data, int* elements)
   if (ini_datafile == 0)
     return 0;
 
-  cdh_ToUpper(param, parameter);
+  str_ToUpper(param, parameter);
   found = 0;
   while (1) {
     /* Read one line */
@@ -321,7 +321,7 @@ static int ini_datafile_get_next(char* parameter, char** data, int* elements)
     if (nr == 0)
       continue;
 
-    if (cdh_NoCaseStrcmp(data_array[0], param) == 0) {
+    if (str_NoCaseStrcmp(data_array[0], param) == 0) {
       found = 1;
       break;
     }
@@ -396,7 +396,7 @@ static int ini_parse(char* instring, char* parse_char, char* inc_parse_char,
             *(outstr + row * max_cols + col) = '\0';
             row++;
             if (row >= max_rows) {
-              cdh_ToUpper(outstr, outstr);
+              str_ToUpper(outstr, outstr);
               return row;
             }
             col = 0;
@@ -416,7 +416,7 @@ static int ini_parse(char* instring, char* parse_char, char* inc_parse_char,
             *(outstr + row * max_cols + col) = '\0';
             row++;
             if (row >= max_rows) {
-              cdh_ToUpper(outstr, outstr);
+              str_ToUpper(outstr, outstr);
               return row;
             }
             col = 0;
@@ -446,7 +446,7 @@ static int ini_parse(char* instring, char* parse_char, char* inc_parse_char,
   if (char_found == 0)
     return 0;
 
-  cdh_ToUpper(outstr, outstr);
+  str_ToUpper(outstr, outstr);
   return row;
 }
 
@@ -581,7 +581,7 @@ static int ini_set_nodeattribute(char* attribute_str, char* value_str)
   if (EVEN(sts))
     return sts;
 
-  if (cdh_NoCaseStrcmp(attribute_str, "PLCSIM") == 0) {
+  if (str_NoCaseStrcmp(attribute_str, "PLCSIM") == 0) {
     /* Moved to IOHandler object */
     sts = gdh_GetClassList(pwr_cClass_IOHandler, &objid);
     if (EVEN(sts))
@@ -590,7 +590,7 @@ static int ini_set_nodeattribute(char* attribute_str, char* value_str)
     if (EVEN(sts))
       return sts;
 
-    if (cdh_NoCaseStrcmp(value_str, "YES") == 0) {
+    if (str_NoCaseStrcmp(value_str, "YES") == 0) {
       strcpy(attributename, nodename);
       strcat(attributename, ".IOReadWriteFlag");
       value = 0;
@@ -603,7 +603,7 @@ static int ini_set_nodeattribute(char* attribute_str, char* value_str)
       sts = gdh_SetObjectInfo(attributename, &value, sizeof(value));
       if (EVEN(sts))
         return sts;
-    } else if (cdh_NoCaseStrcmp(value_str, "NO") == 0) {
+    } else if (str_NoCaseStrcmp(value_str, "NO") == 0) {
       strcpy(attributename, nodename);
       strcat(attributename, ".IOReadWriteFlag");
       value = 1;
@@ -618,14 +618,14 @@ static int ini_set_nodeattribute(char* attribute_str, char* value_str)
         return sts;
     } else
       return 0;
-  } else if (cdh_NoCaseStrcmp(attribute_str, "ERRLOGFILE") == 0) {
+  } else if (str_NoCaseStrcmp(attribute_str, "ERRLOGFILE") == 0) {
     strcpy(attributename, nodename);
     strcat(attributename, ".ErrLogFile");
     sts = gdh_SetObjectInfo(
         attributename, value_str, sizeof(nodeobjp->ErrLogFile));
     if (EVEN(sts))
       return sts;
-  } else if (cdh_NoCaseStrcmp(attribute_str, "ERRLOGTERM") == 0) {
+  } else if (str_NoCaseStrcmp(attribute_str, "ERRLOGTERM") == 0) {
     strcpy(attributename, nodename);
     strcat(attributename, ".ErrLogTerm");
     sts = gdh_SetObjectInfo(
@@ -662,7 +662,7 @@ static int ini_set_plcscan(char* value_str)
   int sts;
   pwr_tBoolean value;
 
-  if (cdh_NoCaseStrcmp(value_str, "OFF") != 0)
+  if (str_NoCaseStrcmp(value_str, "OFF") != 0)
     return 0;
 
   /* Get all window classes */

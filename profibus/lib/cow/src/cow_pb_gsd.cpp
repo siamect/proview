@@ -457,7 +457,7 @@ int pb_gsd::read(char* filename)
     found = 0;
     idx = 0;
     for (keyp = keywordlist; keyp->type != gsd_End; keyp++) {
-      if (cdh_NoCaseStrcmp(line_part[0], keyp->name) == 0) {
+      if (str_NoCaseStrcmp(line_part[0], keyp->name) == 0) {
         found = 1;
         break;
       }
@@ -722,8 +722,8 @@ int pb_gsd::read(char* filename)
       part_cnt = dcli_parse(line, " 	=", "", (char*)line_part,
           sizeof(line_part) / sizeof(line_part[0]), sizeof(line_part[0]), 0);
 
-      if ((cdh_NoCaseStrcmp(line_part[0], "Bit") == 0
-              || cdh_NoCaseStrcmp(line_part[0], "BitArea") == 0)
+      if ((str_NoCaseStrcmp(line_part[0], "Bit") == 0
+              || str_NoCaseStrcmp(line_part[0], "BitArea") == 0)
           && line_part[1][0] == '(') {
         // Space befor index part, concatenate part 0 and 1
         strcat(line_part[0], line_part[1]);
@@ -741,11 +741,11 @@ int pb_gsd::read(char* filename)
           strcpy(idx_str, idxline_part[1]);
         }
 
-        if (cdh_NoCaseStrcmp(line_part[0], "Bit") == 0) {
+        if (str_NoCaseStrcmp(line_part[0], "Bit") == 0) {
           sts = sscanf(idx_str, "%d", &e->bit_num);
           if (sts != 1)
             printf("Syntax error, line %d (%s)\n", line_cnt, line);
-        } else if (cdh_NoCaseStrcmp(line_part[0], "BitArea") == 0) {
+        } else if (str_NoCaseStrcmp(line_part[0], "BitArea") == 0) {
           if ((t = strrchr(idx_str, '-')) && t != idx_str) {
             strncpy(minval, idx_str, (int)(t - idx_str));
             minval[t - idx_str] = 0;
@@ -1029,21 +1029,21 @@ int pb_gsd::build()
 
   // Translate ExtUserPrmData Data_Type_Name
   for (gsd_sExtUserPrmData* dp = extuserprmdatalist; dp; dp = dp->next) {
-    if (cdh_NoCaseStrcmp(dp->Data_Type_Name, "Bit") == 0)
+    if (str_NoCaseStrcmp(dp->Data_Type_Name, "Bit") == 0)
       dp->data_type = gsd_Bit;
-    else if (cdh_NoCaseStrcmp(dp->Data_Type_Name, "BitArea") == 0)
+    else if (str_NoCaseStrcmp(dp->Data_Type_Name, "BitArea") == 0)
       dp->data_type = gsd_BitArea;
-    else if (cdh_NoCaseStrcmp(dp->Data_Type_Name, "Unsigned8") == 0)
+    else if (str_NoCaseStrcmp(dp->Data_Type_Name, "Unsigned8") == 0)
       dp->data_type = gsd_Unsigned8;
-    else if (cdh_NoCaseStrcmp(dp->Data_Type_Name, "Unsigned16") == 0)
+    else if (str_NoCaseStrcmp(dp->Data_Type_Name, "Unsigned16") == 0)
       dp->data_type = gsd_Unsigned16;
-    else if (cdh_NoCaseStrcmp(dp->Data_Type_Name, "Unsigned32") == 0)
+    else if (str_NoCaseStrcmp(dp->Data_Type_Name, "Unsigned32") == 0)
       dp->data_type = gsd_Unsigned32;
-    else if (cdh_NoCaseStrcmp(dp->Data_Type_Name, "Signed8") == 0)
+    else if (str_NoCaseStrcmp(dp->Data_Type_Name, "Signed8") == 0)
       dp->data_type = gsd_Signed8;
-    else if (cdh_NoCaseStrcmp(dp->Data_Type_Name, "Signed16") == 0)
+    else if (str_NoCaseStrcmp(dp->Data_Type_Name, "Signed16") == 0)
       dp->data_type = gsd_Signed16;
-    else if (cdh_NoCaseStrcmp(dp->Data_Type_Name, "Signed32") == 0)
+    else if (str_NoCaseStrcmp(dp->Data_Type_Name, "Signed32") == 0)
       dp->data_type = gsd_Signed32;
     else
       printf("** Unknown Data_Type_Name \"%s\" in ExtUserPrmData %s\n",
@@ -1612,7 +1612,7 @@ int pb_gsd::get_svalue(const char* key, char* value, int size)
 
   for (keyp = keywordlist, datap = datalist; keyp->type != gsd_End;
        keyp++, datap++) {
-    if (cdh_NoCaseStrcmp(key, keyp->name) == 0) {
+    if (str_NoCaseStrcmp(key, keyp->name) == 0) {
       if (!datap->found)
         return 0;
 
@@ -1643,7 +1643,7 @@ int pb_gsd::get_ivalue(const char* key, int* value)
 
   for (keyp = keywordlist, datap = datalist; keyp->type != gsd_End;
        keyp++, datap++) {
-    if (cdh_NoCaseStrcmp(key, keyp->name) == 0) {
+    if (str_NoCaseStrcmp(key, keyp->name) == 0) {
       if (!datap->found)
         return 0;
 
@@ -1775,9 +1775,9 @@ int pb_gsd::print()
     printf("ExtPrmUserData %d \"%s\"\n", ep->Reference_Number,
         ep->Ext_User_Prm_Data_Name);
     printf("  Data_Type_Name %s", ep->Data_Type_Name);
-    if (cdh_NoCaseStrcmp(ep->Data_Type_Name, "Bit") == 0)
+    if (str_NoCaseStrcmp(ep->Data_Type_Name, "Bit") == 0)
       printf(" %d\n", ep->bit_num);
-    else if (cdh_NoCaseStrcmp(ep->Data_Type_Name, "BitArea") == 0)
+    else if (str_NoCaseStrcmp(ep->Data_Type_Name, "BitArea") == 0)
       printf(" %d-%d\n", ep->bitarea_min, ep->bitarea_max);
     else
       printf("\n");
@@ -2288,7 +2288,7 @@ int pb_gsd::syntax_check(int* idx)
       // Check that name is unique
       for (int j = 0; j < module_conf_cnt; j++) {
         if (i != j
-            && cdh_NoCaseStrcmp(module_conf[i].name, module_conf[j].name)
+            && str_NoCaseStrcmp(module_conf[i].name, module_conf[j].name)
                 == 0) {
           *idx = i;
           return PB__DUPLMODULENAME;

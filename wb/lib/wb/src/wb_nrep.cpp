@@ -35,7 +35,8 @@
  **/
 
 #include <stdio.h>
-#include <string.h>
+
+#include "co_string.h"
 
 #include "wb_nrep.h"
 #include "wb_ldh_msg.h"
@@ -514,7 +515,7 @@ void wb_nrep::parse() throw(wb_error)
           attr[num_attr].len
               = attr[num_attr + 1].offs - attr[num_attr].offs - 1;
           if (attr[num_attr].len == 5
-              && cdh_NoCaseStrncmp(oname + attr[num_attr].offs, "Super", 5)
+              && str_NoCaseStrncmp(oname + attr[num_attr].offs, "Super", 5)
                   == 0) {
             attr[num_attr].isSuper = true;
             m_hasSuper = true;

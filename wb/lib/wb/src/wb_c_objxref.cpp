@@ -74,13 +74,13 @@ static int IsOkConnect(ldh_sMenuCall* ip, pwr_sMenuButton* mbp)
   if (EVEN(sts))
     return 0;
 
-  if (!strStartsWith(PobjXDef.Identity, SobjXDef.Identity))
+  if (!str_StartsWith(PobjXDef.Identity, SobjXDef.Identity))
     return 0;
 
-  if (!strStartsWith(SobjXDef.Target, PobjXDef.Source))
+  if (!str_StartsWith(SobjXDef.Target, PobjXDef.Source))
     return 0;
 
-  if (!strStartsWith(PobjXDef.Target, SobjXDef.Source))
+  if (!str_StartsWith(PobjXDef.Target, SobjXDef.Source))
     return 0;
 
   return 1;
@@ -125,13 +125,13 @@ static pwr_tStatus Connect(ldh_sMenuCall* ip)
   if (EVEN(sts))
     return sts;
 
-  if (!strStartsWith(PobjXDef.Identity, SobjXDef.Identity))
+  if (!str_StartsWith(PobjXDef.Identity, SobjXDef.Identity))
     return PWRS__IDXREF;
 
-  if (!strStartsWith(SobjXDef.Target, PobjXDef.Source))
+  if (!str_StartsWith(SobjXDef.Target, PobjXDef.Source))
     return PWRS__STXREF;
 
-  if (!strStartsWith(PobjXDef.Target, SobjXDef.Source))
+  if (!str_StartsWith(PobjXDef.Target, SobjXDef.Source))
     return PWRS__STXREF;
 
   sts = ldh_ReadAttribute(
@@ -217,13 +217,13 @@ static pwr_tStatus Disconnect(ldh_sMenuCall* ip)
   if (EVEN(sts))
     return sts;
 
-  if (!strStartsWith(PobjXDef.Identity, SobjXDef.Identity))
+  if (!str_StartsWith(PobjXDef.Identity, SobjXDef.Identity))
     return PWRS__IDXREF;
 
-  if (!strStartsWith(SobjXDef.Target, PobjXDef.Source))
+  if (!str_StartsWith(SobjXDef.Target, PobjXDef.Source))
     return PWRS__STXREF;
 
-  if (!strStartsWith(PobjXDef.Target, SobjXDef.Source))
+  if (!str_StartsWith(PobjXDef.Target, SobjXDef.Source))
     return PWRS__STXREF;
 
   sts = ldh_ReadAttribute(
@@ -336,13 +336,13 @@ static pwr_tStatus DisconnectSingle(ldh_sMenuCall* ip)
     if (EVEN(sts))
       break;
 
-    if (!strStartsWith(PobjXDef.Identity, SobjXDef.Identity))
+    if (!str_StartsWith(PobjXDef.Identity, SobjXDef.Identity))
       break;
 
-    if (!strStartsWith(SobjXDef.Target, PobjXDef.Source))
+    if (!str_StartsWith(SobjXDef.Target, PobjXDef.Source))
       break;
 
-    if (!strStartsWith(PobjXDef.Target, SobjXDef.Source))
+    if (!str_StartsWith(PobjXDef.Target, SobjXDef.Source))
       break;
 
     sts = ldh_ReadAttribute(

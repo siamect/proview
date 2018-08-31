@@ -1214,7 +1214,7 @@ int GlowArray::find_by_name(const char* name, GlowArrayElem** element)
     for (i = 0; i < a_size; i++) {
       a[i]->get_object_name(
           object_name, sizeof(object_name), glow_eName_Object);
-      if (cdh_NoCaseStrcmp(gname, object_name) == 0) {
+      if (str_NoCaseStrcmp(gname, object_name) == 0) {
         group = a[i];
         found = 1;
         break;
@@ -1228,7 +1228,7 @@ int GlowArray::find_by_name(const char* name, GlowArrayElem** element)
     for (i = 0; i < a_size; i++) {
       a[i]->get_object_name(
           object_name, sizeof(object_name), glow_eName_Object);
-      if (cdh_NoCaseStrcmp(name, object_name) == 0) {
+      if (str_NoCaseStrcmp(name, object_name) == 0) {
         *element = a[i];
         return 1;
       }

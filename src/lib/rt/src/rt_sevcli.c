@@ -123,7 +123,7 @@ int sevcli_set_servernode(pwr_tStatus* sts, sevcli_tCtx ctx, char* nodename)
   if (EVEN(*sts))
     return 0;
 
-  if (cdh_NoCaseStrcmp(node.name, nodename) == 0) {
+  if (str_NoCaseStrcmp(node.name, nodename) == 0) {
     ctx->server = node.nid;
     *sts = SEV__SUCCESS;
     return 1;
@@ -131,7 +131,7 @@ int sevcli_set_servernode(pwr_tStatus* sts, sevcli_tCtx ctx, char* nodename)
 
   // Try other qcom nodes
   for (nid = qcom_cNNid; qcom_NextNode(sts, &node, nid); nid = node.nid) {
-    if (cdh_NoCaseStrcmp(nodename, node.name) == 0) {
+    if (str_NoCaseStrcmp(nodename, node.name) == 0) {
       ctx->server = node.nid;
       *sts = SEV__SUCCESS;
       return 1;
@@ -423,7 +423,7 @@ int sevcli_get_itemdata(pwr_tStatus* sts, sevcli_tCtx ctx, pwr_tOid oid,
     if (get.type.b == sev_cMsgClass
         && get.type.s == (qcom_eStype)sev_eMsgType_HistDataGet
         && cdh_ObjidIsEqual(oid, rmsg->Oid)
-        && cdh_NoCaseStrcmp(aname, rmsg->AName) == 0)
+        && str_NoCaseStrcmp(aname, rmsg->AName) == 0)
       break;
 
     qcom_Free(sts, rmsg);
@@ -528,7 +528,7 @@ int sevcli_get_objectitemdata(pwr_tStatus* sts, sevcli_tCtx ctx, pwr_tOid oid,
     if (get.type.b == sev_cMsgClass
         && get.type.s == (qcom_eStype)sev_eMsgType_HistObjectDataGet
         && cdh_ObjidIsEqual(oid, rmsg->Oid)
-        && cdh_NoCaseStrcmp(aname, rmsg->AName) == 0)
+        && str_NoCaseStrcmp(aname, rmsg->AName) == 0)
       break;
 
     qcom_Free(sts, rmsg);
@@ -627,7 +627,7 @@ int sevcli_delete_item(
     if (get.type.b == sev_cMsgClass
         && get.type.s == (qcom_eStype)sev_eMsgType_HistItemStatus
         && cdh_ObjidIsEqual(oid, rmsg->Oid)
-        && cdh_NoCaseStrcmp(aname, rmsg->AName) == 0)
+        && str_NoCaseStrcmp(aname, rmsg->AName) == 0)
       break;
 
     qcom_Free(sts, rmsg);

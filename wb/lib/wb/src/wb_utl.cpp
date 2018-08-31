@@ -1129,7 +1129,7 @@ int wb_utl::plc_redraw_cb(void* utl, void* foe)
 
 int utl_toupper(char* str_upper, char* str)
 {
-  cdh_ToUpper(str_upper, str);
+  str_ToUpper(str_upper, str);
   return FOE__SUCCESS;
 }
 
@@ -1408,7 +1408,7 @@ static int utl_list_sort(
         }
       }
 
-      if (cdh_NoCaseStrcmp(name1, name2) > 0) {
+      if (str_NoCaseStrcmp(name1, name2) > 0) {
         /* Change order */
         *prev = next_ptr;
         list_ptr->next = next_ptr->next;
@@ -4354,7 +4354,7 @@ static int utl_print_object_par(pwr_sAttrRef* arp, ldh_tSesContext ldhses,
           continue;
 
         for (j = 0; j < rows; j++) {
-          if (cdh_NoCaseStrcmp(parameter, bodydef[j].ParName) == 0) {
+          if (str_NoCaseStrcmp(parameter, bodydef[j].ParName) == 0) {
             found = 1;
             break;
           }
@@ -5168,7 +5168,7 @@ static int utl_set_parameter(pwr_sAttrRef* arp, ldh_tSesContext ldhses,
         objdid_name[0] = '\0';
       }
       sprintf(logstrptr + strlen(logstr), "( %s ) ", objdid_name);
-      if (strStartsWith(valuestr, "_O"))
+      if (str_StartsWith(valuestr, "_O"))
         sts = cdh_StringToObjid(valuestr, p_ObjDId);
       else
         sts = ldh_NameToObjid(ldhses, p_ObjDId, valuestr);
@@ -7640,7 +7640,7 @@ static int utl_list_get_parvalue(
     for (j = 0; j < rows; j++) {
       cdh_SuppressSuper(parname, bodydef[j].ParName);
 
-      if (cdh_NoCaseStrcmp(parameter, parname) == 0) {
+      if (str_NoCaseStrcmp(parameter, parname) == 0) {
         found = 1;
         break;
       }

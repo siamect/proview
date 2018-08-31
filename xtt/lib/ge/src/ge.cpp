@@ -190,7 +190,7 @@ void Ge::save_graph(Ge* gectx, char* name)
   int sts;
 
   if (!gectx->graph->is_subgraph()) {
-    cdh_ToLower(graphname, name);
+    str_ToLower(graphname, name);
     if ((s = strrchr(graphname, '.')))
       *s = 0;
     gectx->graph->get_name(oldname);
@@ -200,7 +200,7 @@ void Ge::save_graph(Ge* gectx, char* name)
 
     gectx->graph->set_name(graphname);
 
-    cdh_ToLower(filename, name);
+    str_ToLower(filename, name);
     if (!strrchr(filename, '.'))
       strcat(filename, ".pwg");
 
@@ -213,7 +213,7 @@ void Ge::save_graph(Ge* gectx, char* name)
 
     gectx->set_title();
   } else {
-    cdh_ToLower(graphname, name);
+    str_ToLower(graphname, name);
     if ((s = strrchr(graphname, '.')))
       *s = 0;
 
@@ -224,7 +224,7 @@ void Ge::save_graph(Ge* gectx, char* name)
 
     gectx->graph->set_name(graphname);
 
-    cdh_ToLower(filename, name);
+    str_ToLower(filename, name);
     if (!strrchr(filename, '.'))
       strcat(filename, ".pwsg");
     sts = gectx->graph->save_subgraph(filename);
@@ -233,7 +233,7 @@ void Ge::save_graph(Ge* gectx, char* name)
       return;
     }
 
-    cdh_ToLower(filename, name);
+    str_ToLower(filename, name);
     if (!strrchr(filename, '.'))
       strcat(filename, ".pwg");
     sts = gectx->graph->save(filename);
@@ -295,12 +295,12 @@ void Ge::save_graph_and_close(Ge* gectx, char* name)
   int sts;
 
   if (!gectx->graph->is_subgraph()) {
-    cdh_ToLower(graphname, name);
+    str_ToLower(graphname, name);
     if ((s = strrchr(graphname, '.')))
       *s = 0;
     gectx->graph->set_name(graphname);
 
-    cdh_ToLower(filename, name);
+    str_ToLower(filename, name);
     if (!strrchr(filename, '.'))
       strcat(filename, ".pwg");
 
@@ -316,12 +316,12 @@ void Ge::save_graph_and_close(Ge* gectx, char* name)
     char* s;
     int sts;
 
-    cdh_ToLower(graphname, name);
+    str_ToLower(graphname, name);
     if ((s = strrchr(graphname, '.')))
       *s = 0;
     gectx->graph->set_name(graphname);
 
-    cdh_ToLower(filename, name);
+    str_ToLower(filename, name);
     if (!strrchr(filename, '.'))
       strcat(filename, ".pwsg");
     sts = gectx->graph->save_subgraph(filename);
@@ -330,7 +330,7 @@ void Ge::save_graph_and_close(Ge* gectx, char* name)
       return;
     }
 
-    cdh_ToLower(filename, name);
+    str_ToLower(filename, name);
     if (!strrchr(filename, '.'))
       strcat(filename, ".pwg");
     sts = gectx->graph->save(filename);
@@ -365,7 +365,7 @@ void Ge::export_javabean(Ge* gectx, char* name)
       *s = 0;
 
     gectx->graph->set_java_name(beanname);
-    cdh_ToLower(filename, name);
+    str_ToLower(filename, name);
     if (!strrchr(filename, '.'))
       strcat(filename, ".java");
 
@@ -418,7 +418,7 @@ void Ge::export_javabean(Ge* gectx, char* name)
     strcpy(filename, "$pwrp_web/");
     strcpy(filename, framename);
     strcat(filename, ".html");
-    cdh_ToLower(filename, filename);
+    str_ToLower(filename, filename);
 
     sts = gectx->graph->export_javaframe(filename, appletname, 0, 1);
     if (EVEN(sts)) {
@@ -509,7 +509,7 @@ void Ge::export_gejava(Ge* gectx, char* name)
       strcpy(filename, "$pwrp_web/");
       strcat(filename, framename);
       strcat(filename, ".html");
-      cdh_ToLower(filename, filename);
+      str_ToLower(filename, filename);
 
       sts = gectx->graph->export_gejava(filename, framename, 0, 1);
       if (EVEN(sts)) {
@@ -547,7 +547,7 @@ void Ge::open_graph(const char* name)
   graph->clear_all();
   graph->set_show_grid(0);
 
-  cdh_ToLower(filename, name);
+  str_ToLower(filename, name);
   if ((s = strrchr(filename, '/')))
     strncpy(graphname, s + 1, sizeof(graphname));
   else
@@ -1206,7 +1206,7 @@ void Ge::activate_export_javabean()
   if (!graph->get_java_name(name)) {
     graph->get_name(name);
     if (!streq(name, "")) {
-      if (strStartsWith(name, "pwr_")) {
+      if (str_StartsWith(name, "pwr_")) {
         strcpy(default_name, "Jop");
         strcat(default_name, &name[4]);
         default_name[3] = _toupper(default_name[3]);
@@ -1235,7 +1235,7 @@ void Ge::activate_export_javabean_as()
   if (!graph->get_java_name(name)) {
     graph->get_name(name);
     if (!streq(name, "")) {
-      if (strStartsWith(name, "pwr_")) {
+      if (str_StartsWith(name, "pwr_")) {
         strcpy(default_name, "Jop");
         strcat(default_name, &name[4]);
         default_name[3] = _toupper(default_name[3]);
@@ -1264,11 +1264,11 @@ void Ge::activate_export_gejava()
   if (!graph->get_java_name(name)) {
     graph->get_name(name);
     if (!streq(name, "")) {
-      if (strStartsWith(name, "pwr_c_")) {
+      if (str_StartsWith(name, "pwr_c_")) {
         strcpy(default_name, "Jopc");
         strcat(default_name, &name[6]);
         default_name[4] = _toupper(default_name[4]);
-      } else if (strStartsWith(name, "pwr_")) {
+      } else if (str_StartsWith(name, "pwr_")) {
         strcpy(default_name, "Jop");
         strcat(default_name, &name[4]);
         default_name[3] = _toupper(default_name[3]);
@@ -1292,11 +1292,11 @@ void Ge::activate_export_gejava_as()
   if (!graph->get_java_name(name)) {
     graph->get_name(name);
     if (!streq(name, "")) {
-      if (strStartsWith(name, "pwr_c_")) {
+      if (str_StartsWith(name, "pwr_c_")) {
         strcpy(default_name, "Jopc");
         strcat(default_name, &name[6]);
         default_name[4] = _toupper(default_name[4]);
-      } else if (strStartsWith(name, "pwr_")) {
+      } else if (str_StartsWith(name, "pwr_")) {
         strcpy(default_name, "Jop");
         strcat(default_name, &name[4]);
         default_name[3] = _toupper(default_name[3]);
@@ -2157,7 +2157,7 @@ int Ge::check_ldh_object_cb(void* ctx, char* name, pwr_eType* type)
       t0 += strlen(gectx->graph->syntax_instance);
       s0 = s + strlen("$object");
     }
-    cdh_Strcpy(t0, s0);
+    str_Strcpy(t0, s0);
   } else
     strcpy(n, name);
 

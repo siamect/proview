@@ -36,7 +36,7 @@
 
 #include <stdio.h>
 
-#include "co_cdh.h"
+#include "co_string.h"
 
 #include "cow_qt_helpers.h"
 
@@ -669,7 +669,7 @@ GeCurveQt::GeCurveQt(void* gc_parent_ctx, QWidget* parent_widget,
     window_height = gc_height;
   }
 
-  cdh_StrncpyCutOff(title, curve_name, sizeof(title), 1);
+  str_StrncpyCutOff(title, curve_name, sizeof(title), 1);
 
   // Qt
   toplevel = new GeCurveQtWidget(this, parent_widget);

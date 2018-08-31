@@ -3459,7 +3459,7 @@ int WFoe::search_string_next()
 
     if (len1 >= len2) {
       for (i = 0; i <= (len1 - len2); i++) {
-        if (strStartsWith(&annotations[i], searchstr)) {
+        if (str_StartsWith(&annotations[i], searchstr)) {
           /* the string matches */
           searchindex = j + 1;
           node = *node_ptr;
@@ -4287,7 +4287,7 @@ int WFoe::create_flow()
         classname, sizeof(classname), &size);
     if (EVEN(sts))
       return sts;
-    cdh_ToLower(classname, classname);
+    str_ToLower(classname, classname);
     sprintf(fname, "$pwrp_load/pwr_%s.flw", classname);
     sts = gre->set_trace_attributes(name);
     sts = gre->save(fname);
@@ -4646,7 +4646,7 @@ int WFoe::cmd_create_con(pwr_tOid srcoid, char* srcattr, pwr_tOid destoid,
         src_point++;
       outputmask = outputmask << 1;
     }
-    if (cdh_NoCaseStrcmp(srcattr, bodydef[i].ParName) == 0) {
+    if (str_NoCaseStrcmp(srcattr, bodydef[i].ParName) == 0) {
       src_found = 1;
       break;
     }
@@ -4676,7 +4676,7 @@ int WFoe::cmd_create_con(pwr_tOid srcoid, char* srcattr, pwr_tOid destoid,
         dest_point++;
       outputmask = outputmask << 1;
     }
-    if (cdh_NoCaseStrcmp(destattr, bodydef[i].ParName) == 0) {
+    if (str_NoCaseStrcmp(destattr, bodydef[i].ParName) == 0) {
       dest_found = 1;
       break;
     }

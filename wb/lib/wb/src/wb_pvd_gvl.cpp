@@ -177,7 +177,7 @@ void wb_pvd_gvl::load(pwr_tStatus* rsts)
   while (is.getline(line, sizeof(line))) {
     line_cnt++;
     if (line[0] == '!') {
-      if (strStartsWith(line, "!**Menu")) {
+      if (str_StartsWith(line, "!**Menu")) {
         // Add Hier
         char* s = strstr(line, "// ");
         if (s) {
@@ -215,7 +215,7 @@ void wb_pvd_gvl::load(pwr_tStatus* rsts)
 
         menu_stack[menu_cnt] = plantitem.oix;
         menu_cnt++;
-      } else if (strStartsWith(line, "!**}")) {
+      } else if (str_StartsWith(line, "!**}")) {
         if (menu_cnt == 0) {
           std::cout << "Syntax error " << fname << " row " << line_cnt << '\n';
           continue;

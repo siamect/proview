@@ -41,23 +41,27 @@
 
 #include <iostream>
 
-#include "wb_orepext.h"
-#include "wb_dbs.h"
-#include "wb_bdrep.h"
-#include "wb_cdrep.h"
-#include "wb_merep.h"
-#include "wb_tdrep.h"
-#include "wb_vrepwbl.h"
-#include "wb_vrepref.h"
-#include "wb_print_wbl.h"
-#include "wb_volume.h"
 #include "pwr_baseclasses.h"
-#include "wb_pvd_gvl.h"
-#include "rt_pvd_udb.h"
-#include "wb_pvd_pl.h"
+
 extern "C" {
 #include "co_dcli.h"
 }
+#include "co_string.h"
+
+#include "rt_pvd_udb.h"
+
+#include "wb_bdrep.h"
+#include "wb_cdrep.h"
+#include "wb_dbs.h"
+#include "wb_merep.h"
+#include "wb_orepext.h"
+#include "wb_print_wbl.h"
+#include "wb_pvd_gvl.h"
+#include "wb_pvd_pl.h"
+#include "wb_tdrep.h"
+#include "wb_volume.h"
+#include "wb_vrepwbl.h"
+#include "wb_vrepref.h"
 
 wb_vrepext::wb_vrepext(wb_erep* erep, pwr_tVid vid)
     : wb_vrep(vid), m_erep(erep), m_merep(erep->merep()), m_nRef(0),
@@ -82,15 +86,15 @@ wb_vrepext::wb_vrepext(
   createVolumeObject(name);
   strcpy(m_name, name);
 
-  if (cdh_NoCaseStrcmp(provider, "ProjectList") == 0) {
+  if (str_NoCaseStrcmp(provider, "ProjectList") == 0) {
     m_ptype = procom_eType_Local;
     m_provider = new wb_pvd_pl();
     m_procom = new wb_procom(provider, m_provider, procom_eType_Local);
-  } else if (cdh_NoCaseStrcmp(provider, "GlobalVolumeList") == 0) {
+  } else if (str_NoCaseStrcmp(provider, "GlobalVolumeList") == 0) {
     m_ptype = procom_eType_Local;
     m_provider = new wb_pvd_gvl();
     m_procom = new wb_procom(provider, m_provider, procom_eType_Local);
-  } else if (cdh_NoCaseStrcmp(provider, "UserDatabase") == 0) {
+  } else if (str_NoCaseStrcmp(provider, "UserDatabase") == 0) {
     m_ptype = procom_eType_Local;
     m_provider = new rt_pvd_udb();
     m_procom = new wb_procom(provider, m_provider, procom_eType_Local);

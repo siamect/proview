@@ -156,7 +156,7 @@ int GrowImage::insert_image(const char* imagefile)
     strcpy(image_filename, imagefile);
 
   // Find file
-  if (strStartsWith(image_filename, "jpwr/")) {
+  if (str_StartsWith(image_filename, "jpwr/")) {
     if ((s = strchr(&image_filename[5], '/')))
       strcpy(imagename, s + 1);
     else
@@ -1750,7 +1750,7 @@ int grow_image_to_pixmap(GrowCtx* ctx, char* imagefile, int width, int height,
   char* s;
 
   // Find file
-  if (strStartsWith(imagefile, "jpwr/")) {
+  if (str_StartsWith(imagefile, "jpwr/")) {
     if ((s = strchr(&imagefile[5], '/')))
       strcpy(imagename, s + 1);
     else

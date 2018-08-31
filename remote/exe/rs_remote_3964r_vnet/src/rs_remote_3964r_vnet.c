@@ -578,7 +578,7 @@ static unsigned int ReceiveHandler()
     for (i = 0; i < 4; i++) {
       type_name[i] = name[i + 3];
     }
-    if (strStartsWith(type_name, "COM")) {
+    if (str_StartsWith(type_name, "COM")) {
       search_remtrans = true;
       remtrans = remnode->remtrans;
       while (remtrans && search_remtrans) {

@@ -406,7 +406,7 @@ static int add_element(t_ctx ctx, t_filectx filectx, char* line,
     return DCLI__SUCCESS;
 
   undefined = 0;
-  if (strStartsWith(line_elem[0], "/*")) {
+  if (str_StartsWith(line_elem[0], "/*")) {
     /* Assume the whole line is a comment */
     return DCLI__SUCCESS;
   } else if (streq(line_elem[0], "struct")) {
@@ -760,7 +760,7 @@ static int find_struct(t_ctx ctx, char* filename, char* struct_name,
 
   if (caller == READSTRUCT_CALLER_ROOT) {
     /* Not case sensitive */
-    cdh_ToUpper(struct_name, struct_name);
+    str_ToUpper(struct_name, struct_name);
 
     /* Create an universal context */
     ctx = calloc(1, sizeof(*ctx));
@@ -901,7 +901,7 @@ static int find_struct(t_ctx ctx, char* filename, char* struct_name,
       if (name_found) {
         if (caller == READSTRUCT_CALLER_ROOT)
           /* Not case sensitive */
-          cdh_ToUpper(tmp, name);
+          str_ToUpper(tmp, name);
         else
           strcpy(tmp, name);
         if (streq(struct_name, tmp)) {

@@ -919,7 +919,7 @@ static void applMessage(mh_sHead* hp, sAppl* ap, mh_uApplReply* reply)
   aap->link.supObject = cdh_ObjidToAref(ip->SupObject);
   aap->link.outunit = ip->Outunit;
   strncpy(aap->link.objName, ObjName, sizeof(aap->link.objName));
-  cdh_ToUpper(aap->link.objName, NULL);
+  str_ToUpper(aap->link.objName, NULL);
   strncpy(aap->link.eventName, ip->EventName, sizeof(aap->link.eventName));
   aap->link.eventFlags = ip->EventFlags;
   aap->link.eventSound = ip->EventSound;
@@ -2510,7 +2510,7 @@ static void handlerEvent(
       hp->link.source = mh_eSource_Handler;
       hp->link.object = cdh_ObjidToAref(ip->Object);
       strncpy(hp->link.objName, ip->EventName, sizeof(hp->link.objName));
-      cdh_ToUpper(hp->link.objName, NULL);
+      str_ToUpper(hp->link.objName, NULL);
       strncpy(hp->link.eventName, ip->EventName, sizeof(hp->link.eventName));
       hp->link.eventFlags = ip->EventFlags;
       hp->link.event = ip->EventType;
@@ -2680,7 +2680,7 @@ static void initBlockList()
       continue;
     }
     strncpy(bp->link.eventName, bp->link.objName, sizeof(bp->link.eventName));
-    cdh_ToUpper(bp->link.objName, NULL);
+    str_ToUpper(bp->link.objName, NULL);
     bp->outunitBlock = sp->outunitBlock;
     bp->targetId = sp->targetId;
     bp->link.status.Event.Prio = (pwr_tUInt8)sp->outunitBlock.prio;
@@ -2812,7 +2812,7 @@ static pwr_tStatus initSupActiveCB(pwr_tAttrRef* SupObject, pwr_tClassId cid,
     errh_Error("Couldn't get name for supervised object, %s\n%m",
         cdh_ObjidToString(SupObject->Objid, 0), sts);
   strncpy(sp->link.eventName, sp->link.objName, sizeof(sp->link.eventName));
-  cdh_ToUpper(sp->link.objName, NULL);
+  str_ToUpper(sp->link.objName, NULL);
 
   switch (cid) {
   case pwr_cClass_ASup:
@@ -3387,7 +3387,7 @@ static void outunitBlock(mh_sHead* hp, sOutunit* op)
       return;
     }
     strncpy(bp->link.eventName, bp->link.objName, sizeof(bp->link.eventName));
-    cdh_ToUpper(bp->link.objName, NULL);
+    str_ToUpper(bp->link.objName, NULL);
   } else if (bp->outunitBlock.prio != ip->prio) { /* new block level */
     if (bp->link.idx >= l.event_l->oldIdx) {
       /* Block message still in event list, update status */

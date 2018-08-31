@@ -593,7 +593,7 @@ int XNav::call_object_method(pwr_sAttrRef attrref, xmenu_eItemType item_type,
   for (i = 0; i <= (int)mcp->ItemCount; i++) {
     if (cdh_ObjidIsNull(mcp->ItemList[i].CurrentObject.Objid)
         && mcp->ItemList[i].Flags.f.Sensitive
-        && cdh_NoCaseStrcmp(mcp->ItemList[i].Name, method_name) == 0) {
+        && str_NoCaseStrcmp(mcp->ItemList[i].Name, method_name) == 0) {
       idx = i;
       break;
     }
@@ -647,7 +647,7 @@ int XNav::check_object_methodfilter(pwr_sAttrRef attrref,
   for (i = 0; i <= (int)mcp->ItemCount; i++) {
     if (cdh_ObjidIsNull(mcp->ItemList[i].CurrentObject.Objid)
         && mcp->ItemList[i].Flags.f.Sensitive
-        && cdh_NoCaseStrcmp(mcp->ItemList[i].Name, method_name) == 0) {
+        && str_NoCaseStrcmp(mcp->ItemList[i].Name, method_name) == 0) {
       idx = i;
       break;
     }

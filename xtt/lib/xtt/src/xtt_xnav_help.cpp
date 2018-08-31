@@ -39,17 +39,19 @@
 
 /*_Include files_________________________________________________________*/
 
-#include <string.h>
 #include <stdlib.h>
 
-#include "co_cdh.h"
-#include "co_dcli.h"
 #include "pwr_names.h"
-#include "xtt_trace.h"
-#include "flow_utils.h"
-#include "xtt_item.h"
-#include "xtt_xnav_crr.h"
+
+#include "co_dcli.h"
 #include "co_dcli_msg.h"
+#include "co_string.h"
+
+#include "flow_utils.h"
+
+#include "xtt_item.h"
+#include "xtt_trace.h"
+#include "xtt_xnav_crr.h"
 
 static int help_cmp_items(const void* node1, const void* node2);
 
@@ -195,8 +197,8 @@ static int help_cmp_items(const void* node1, const void* node2)
 
   brow_GetAnnotation(*(brow_tNode*)node1, 0, text1, sizeof(text1));
   brow_GetAnnotation(*(brow_tNode*)node2, 0, text2, sizeof(text2));
-  cdh_ToLower(text1, text1);
-  cdh_ToLower(text2, text2);
+  str_ToLower(text1, text1);
+  str_ToLower(text2, text2);
 
   return (strcmp(text1, text2));
 }

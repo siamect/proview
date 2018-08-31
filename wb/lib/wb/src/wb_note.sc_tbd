@@ -77,7 +77,7 @@ pwr_tStatus note_dump(
       strcpy(Name, "! Nonexisting object !");
       nowrite = 1;
     }
-    if (strStartsWith( Name, "_O"))
+    if (str_StartsWith( Name, "_O"))
       nowrite = 1;
 
     if ( nowrite)
