@@ -32,7 +32,7 @@
  * the source code of ProviewR (the version used to produce the
  * combined work), being distributed under the terms of the GNU
  * General Public License plus this exception.
- **/
+ */
 
 /* wb_c_do_hvdo32.c -- work bench methods of the Do_HVDO32 class. */
 

@@ -1,4 +1,4 @@
-/**
+/*
  * ProviewR   Open Source Process Control.
  * Copyright (C) 2005-2018 SSAB EMEA AB.
  *
@@ -32,7 +32,7 @@
  * the source code of ProviewR (the version used to produce the
  * combined work), being distributed under the terms of the GNU
  * General Public License plus this exception.
- **/
+ */
 
 #ifndef co_xdr_h
 #define co_xdr_h

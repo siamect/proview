@@ -32,7 +32,7 @@
  * the source code of ProviewR (the version used to produce the
  * combined work), being distributed under the terms of the GNU
  * General Public License plus this exception.
- **/
+ */
 
 #ifndef wb_goen_h
 #define wb_goen_h

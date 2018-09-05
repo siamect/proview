@@ -32,7 +32,7 @@
  * the source code of ProviewR (the version used to produce the
  * combined work), being distributed under the terms of the GNU
  * General Public License plus this exception.
- **/
+ */
 
 // Fix ...
 pwr_tStatus ldh_wbload(ldh_tWBContext wbctx, ldh_tSesContext sess, int i_flag,

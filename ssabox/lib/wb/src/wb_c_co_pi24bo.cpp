@@ -32,7 +32,7 @@
  * the source code of ProviewR (the version used to produce the
  * combined work), being distributed under the terms of the GNU
  * General Public License plus this exception.
- **/
+ */
 
 /* wb_c_co_pi24bo.c -- work bench methods of the Co_PI24BO class. */
 

@@ -1,4 +1,4 @@
-/**
+/*
    Proview   $Id: co_regex_def.h,v 1.2 2005-09-01 14:57:52 claes Exp $
    Definitions for data structures callers pass the regex library.
 
