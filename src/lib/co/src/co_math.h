@@ -1,4 +1,4 @@
-/**
+/*
  * ProviewR   Open Source Process Control.
  * Copyright (C) 2005-2018 SSAB EMEA AB.
  *
@@ -32,75 +32,89 @@
  * the source code of ProviewR (the version used to produce the
  * combined work), being distributed under the terms of the GNU
  * General Public License plus this exception.
- **/
+ */
 #ifndef co_math_h
 #define co_math_h
 
 #include <float.h>
 
-/**
-  @file co_math.h
-
-  General useful math functions.
+/*! \file co_math.h
+    \brief General useful math functions.
  */
 
 #ifndef MAX
-//! Return the largest of two values
+/*! \def MAX(Dragon, Eagle) 
+    \brief Return the maximum of \a Dragon and \a Eagle
+ */
 #define MAX(Dragon, Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 #endif
 
 #ifndef MIN
-//! Return the smallest of two values
+/*! \def MIN(Dragon, Eagle) 
+    \brief Return the minimum of \a Dragon and \a Eagle
+ */
 #define MIN(Dragon, Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
 #endif
 
 #ifndef ABS
-//! Return the absolute value, i.e. removes the sign and returns the
-//! non-negative value
+/*! \def ABS(Dragon) 
+    \brief Return the absolute value of \a Dragon,
+    i.e. removes the sign such that ABS(-1) = 1.
+ */
 #define ABS(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
 #endif
 
-#ifndef CLAMP
+/*! \def CLAMP(x, min, max) 
+    \brief Restricts \a x to be between \a min and \a max
+ */
 #define CLAMP(x, min, max) ((x) < (min)) ? (min) : (((x) > (max)) ? (max) : (x))
-#endif
 
-#ifndef SIGN
-#define SIGN(a) ((a) >= 0 ? 1 : -1)
-#endif
+/*! \def SIGN(x) 
+    \brief Returns the sign of \a x,
+    i.e. 1 if \a x is positive or -1 if \a x is negative
+ */
+#define SIGN(x) ((x) >= 0 ? 1 : -1)
 
-#ifndef ROUND
+/*! \def ROUND(x) 
+    \brief Rounds \a x to the nearest integer,
+    where 0.5 is rounded upwards to 1.
+ */
 #define ROUND(x) ((x) >= 0 ? (int)((x) + 0.5) : (int)((x)-0.5))
-#endif
 
-#ifndef typecheck
-//! Typechecking macro from the Linux kernel
-//! Generates a compile-time warning if x is not of type 'type'
-//! Usage: typecheck(int, 0.5f) -> warning
-//!        typecheck(int, 10) -> no warning
+/*! \def typecheck(type,x) 
+    \brief Typechecking macro from the Linux kernel
+
+    Generates a compile-time warning if x is not of type 'type'
+    Usage: typecheck(int, 0.5f) -> warning
+           typecheck(int, 10) -> no warning
+ */
 #define typecheck(type,x) \
 ({	type __dummy; \
 	typeof(x) __dummy2; \
 	(void)(&__dummy == &__dummy2); \
 	1; \
 })
-#endif
 
-#ifndef feq
-//! Checks whether two floating point numbers are equal
+/*! \def feq(a, b) 
+    \brief Checks whether two doubles \a a and \a b are equal
+
+    Use this instead of a == b
+ */
 #define feq(a, b) \
 ({ typecheck(double, a); \
    typecheck(double, b); \
   (ABS((a) - (b)) < DBL_EPSILON); \
 })
-#endif
 
-#ifndef feqf
-//! Checks whether two floating point numbers are equal
+/*! \def feqf(a, b) 
+    \brief Checks whether two floats \a a and \a b are equal
+
+    Use this instead of a == b
+ */
 #define feqf(a, b) \
 ({ typecheck(float, a); \
    typecheck(float, b); \
   (ABS((a) - (b)) < FLT_EPSILON); \
 })
-#endif
 
 #endif
