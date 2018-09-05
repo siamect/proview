@@ -701,7 +701,15 @@ sub build_all_modules ()
   merge();
 
   method_build( $flavour);
-}  
+
+  build_documentation();
+}
+
+sub build_documentation()
+{
+  _module("rt");
+  _build("doc", "prm", "src", "all");
+}
 
 #
 # clean_exe_all()
@@ -1063,7 +1071,6 @@ sub build_module ()
       _build("doc", "web", "src", "all");
       _build("doc", "dweb", "src", "all");
       _build("doc", "orm", "src", "all");
-      _build("doc", "prm", "src", "all");
       _build("doc", "man", "src", "all");
       _build("doc", "dox", "src", "all");
       _build("wbl", "pwrs", "src", "exe");
