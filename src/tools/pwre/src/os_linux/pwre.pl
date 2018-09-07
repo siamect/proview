@@ -1460,7 +1460,7 @@ sub _build () # args: branch, subbranch, flavour, phase
           if ($hw eq "x86" && $real_hw eq "x86_64") {
             $ENV{"cross_compile"} = "-m32";
           }
-          if ($branch eq "lib" || ($branch eq "exe" && $flavour ne "src")) {
+          if ($branch eq "lib" || $branch eq "wbl" || ($branch eq "exe" && $flavour ne "src")) {
             # All libraries and GUI-exe files can be compiled in parallel
             system("make -j @_") && exit 1;
           } else {
