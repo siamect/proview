@@ -99,6 +99,8 @@ source_dependencies := $(addsuffix $(d_ext), $(source_dependencies))
 lib_name   = libpwr_$(comp_name)
 export_lib = $(lib_dir)/$(lib_name)$(lib_ext)
 
+.NOTPARALLEL:
+
 .PHONY : all init copy lib exe $(clean realclean \
 	 dirs $(clean_h_includes) $(clean_hpp_includes) \
 	 clean_bld clean_dirs clean_lib export_stuff

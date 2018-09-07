@@ -102,21 +102,22 @@ endif
 	@ $(log_c_obj)
 	@ $(cxx) $(cxxflags) $(csetos) $(cinc) $(cobj) $(source)
 
+$(bld_dir)/%_moc.o : %.cqt
+	@ echo "Generating ../../$(sname)_moc.cpp from ../../$(sname).h using moc"
+	@ moc $(csetos) $(cinc) ../../$(sname).h \
+	  -o $(bld_dir)/$(sname)_moc.cpp
+	@ echo "Compiling ../../$(sname)_moc.cpp"
+	@ $(cxx) $(cxxflags) $(csetos) $(cinc) -o $(bld_dir)/$(sname)_moc.o  $(bld_dir)/$(sname)_moc.cpp
+
 $(bld_dir)/%.o : %.cqt
 ifeq ($(nodep),)
 	@ $(log_c_d)
 	@ $(SHELL) -ec '$(cxx) -x c++ -MM $(csetos) $(cinc) $(source) \
 	  | sed '\''s|$*\.o[ ]*|$(bld_dir)/&|g'\'' > $(bld_dir)/$(sname).d'
 endif
-	@ echo "Generating ../../$(sname)_moc.cpp from ../../$(sname).h using moc"
-	@ moc $(csetos) $(cinc) ../../$(sname).h \
-	  -o $(bld_dir)/$(sname)_moc.cpp
-	@ echo "Compiling ../../$(sname)_moc.cpp"
-	@ $(cxx) $(cxxflags) $(csetos) $(cinc) -o $(bld_dir)/$(sname)_moc.o  $(bld_dir)/$(sname)_moc.cpp
 	@ $(cp) $(cpflags) $(source) $(bld_dir)/$(sname).cpp
 	@ $(log_c_obj)
 	@ $(cxx) $(cxxflags) $(csetos) $(cinc) $(cobj) $(bld_dir)/$(sname).cpp
-
 
 $(bld_dir)/%.o : $(tmp_dir)/%.cpp
 ifeq ($(nodep),)
