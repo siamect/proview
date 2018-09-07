@@ -37,9 +37,7 @@
 #ifndef wb_wpkgnav_gtk_h
 #define wb_wpkgnav_gtk_h
 
-#ifndef wb_wpkgnav_h
 #include "wb_wpkgnav.h"
-#endif
 
 class WPkgNavGtk : public WPkgNav {
 public:

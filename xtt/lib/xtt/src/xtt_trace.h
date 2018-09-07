@@ -37,11 +37,8 @@
 #ifndef xtt_trace_h
 #define xtt_trace_h
 
-#include "flow_ctx.h"
-
-#ifndef flow_api_h
 #include "flow_api.h"
-#endif
+#include "flow_ctx.h"
 
 class RtTrace;
 class CoWow;

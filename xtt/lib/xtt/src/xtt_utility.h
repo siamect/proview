@@ -37,9 +37,7 @@
 #ifndef xtt_utility_h
 #define xtt_utility_h
 
-#ifndef pwr_h
 #include "pwr.h"
-#endif
 
 typedef enum {
   xtt_eUtility_,

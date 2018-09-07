@@ -37,9 +37,7 @@
 #ifndef wb_pal_gtk_h
 #define wb_pal_gtk_h
 
-#ifndef wb_pal_h
 #include "wb_pal.h"
-#endif
 
 class PalGtk : public Pal {
 public:

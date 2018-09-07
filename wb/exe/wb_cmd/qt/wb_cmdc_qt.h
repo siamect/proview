@@ -37,9 +37,7 @@
 #ifndef wb_cmdc_qt_h
 #define wb_cmdc_qt_h
 
-#ifndef wb_cmdc_h
 #include "wb_cmdc.h"
-#endif
 
 class CmdQt : public Cmd {
   public:

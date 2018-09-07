@@ -39,9 +39,9 @@
 
 /* xtt_op_gtk.h -- Operator window in xtt */
 
-#include "cow_wow_gtk.h"
-
 #include "xtt_op.h"
+
+#include "cow_wow_gtk.h"
 
 class OpCmd {
 public:

@@ -43,9 +43,7 @@
 extern "C" {
 #endif
 
-#ifndef rt_io_supervise_h
 #include "rt_io_supervise.h"
-#endif
 
 #ifndef NULL
 #define NULL (void*)0

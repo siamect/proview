@@ -39,9 +39,7 @@
 
 /* xtt_tcurve_qt.h -- TCurve curves */
 
-#ifndef xtt_tcurve_h
 #include "xtt_tcurve.h"
-#endif
 
 class XttTCurveQt : public XttTCurve {
 public:

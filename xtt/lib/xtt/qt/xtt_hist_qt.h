@@ -41,9 +41,7 @@
 
 #if defined OS_POSIX && defined PWRE_CONF_LIBDB
 
-#ifndef xtt_hist_h
 #include "xtt_hist.h"
-#endif
 
 #include <QCheckBox>
 #include <QLabel>
@@ -140,9 +138,7 @@ private:
 
 #else
 // Dummy for other platforms then OS_LINUX
-#ifndef xtt_hist_h
 #include "xtt_hist.h"
-#endif
 
 class HistQt : public Hist {
 public:

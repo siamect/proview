@@ -39,9 +39,7 @@
 
 /* xtt_block_qt.h -- Alarm blocking window */
 
-#ifndef xtt_block_h
 #include "xtt_block.h"
-#endif
 
 #include <QRadioButton>
 #include <QWidget>

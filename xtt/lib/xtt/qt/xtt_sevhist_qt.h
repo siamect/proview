@@ -39,9 +39,7 @@
 
 /* xtt_sevhist_qt.h -- SevHist curves */
 
-#ifndef xtt_sevhist_h
 #include "xtt_sevhist.h"
-#endif
 
 class XttSevHistQt : public XttSevHist {
 public:

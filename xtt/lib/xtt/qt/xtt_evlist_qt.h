@@ -39,9 +39,7 @@
 
 /* xtt_evlist_qt.h -- Alarm and event windows in xtt */
 
-#ifndef xtt_evlist_h
 #include "xtt_evlist.h"
-#endif
 
 class EvListQt : public EvList {
 public:

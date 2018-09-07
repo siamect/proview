@@ -37,9 +37,7 @@
 #ifndef cow_xhelp_qt_h
 #define cow_xhelp_qt_h
 
-#ifndef cow_xhelp_h
 #include "cow_xhelp.h"
-#endif
 
 #include "cow_wow_qt.h"
 

@@ -37,9 +37,7 @@
 #ifndef ge_subpalette_h
 #define ge_subpalette_h
 
-#ifndef flow_browapi_h
 #include "flow_browapi.h"
-#endif
 
 /*! \file ge_subpalette.h
     \brief Contains the SubPalette class and related classes. */

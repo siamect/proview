@@ -37,9 +37,7 @@
 #ifndef wb_wnav_brow_h
 #define wb_wnav_brow_h
 
-#ifndef flow_browapi_h
 #include "flow_browapi.h"
-#endif
 
 typedef enum {
   wnav_eBrowType_Volume,

@@ -39,9 +39,7 @@
 
 /* wb_wcast_qt.h -- Attribute object casting window. */
 
-#ifndef wb_wcast_h
 #include "wb_wcast.h"
-#endif
 
 #include <QWidget>
 

@@ -39,9 +39,7 @@
 
 /* xtt_xnav_gtk.h -- Simple navigator */
 
-#ifndef xtt_xnav_h
 #include "xtt_xnav.h"
-#endif
 
 class XNavGtk : public XNav {
 public:

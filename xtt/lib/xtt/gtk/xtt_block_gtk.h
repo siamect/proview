@@ -39,9 +39,7 @@
 
 /* xtt_block_gtk.h -- Alarm blocking window */
 
-#ifndef xtt_block_h
 #include "xtt_block.h"
-#endif
 
 class BlockGtk : public Block {
 public:

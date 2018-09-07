@@ -37,9 +37,7 @@
 #ifndef cow_login_qt_h
 #define cow_login_qt_h
 
-#ifndef cow_login_h
 #include "cow_login.h"
-#endif
 
 #include <QDialog>
 #include <QDialogButtonBox>

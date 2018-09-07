@@ -39,9 +39,7 @@
 
 /* wb_expwnav_gtk.h -- Backup display window */
 
-#ifndef wb_expwnav_h
 #include "wb_expwnav.h"
-#endif
 
 class WbExpWNavGtk : public WbExpWNav {
 public:

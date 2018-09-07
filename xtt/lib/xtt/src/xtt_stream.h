@@ -37,9 +37,7 @@
 #ifndef xtt_stream_h
 #define xtt_stream_h
 
-#ifndef pwr_h
 #include "pwr.h"
-#endif
 
 class CoWow;
 class CoWowTimer;

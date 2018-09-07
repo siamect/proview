@@ -41,9 +41,7 @@
 
 #include "cow_wow_qt.h"
 
-#ifndef wb_watt_h
 #include "wb_watt.h"
-#endif
 
 #include <QLabel>
 #include <QSplitter>

@@ -39,9 +39,7 @@
 
 /* wb_xattnav_qt.h -- */
 
-#ifndef xtt_xattnav_h
 #include "xtt_xattnav.h"
-#endif
 
 #include <QWidget>
 

@@ -38,11 +38,9 @@
 #define xtt_multiview_h
 
 #include "glow.h"
-#include "xtt_utility.h"
 
-#ifndef xtt_applist_h
 #include "xtt_applist.h"
-#endif
+#include "xtt_utility.h"
 
 #define MV_SIZE 25
 #define MV_RECALL_SIZE 10

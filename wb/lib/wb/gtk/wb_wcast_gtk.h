@@ -39,9 +39,7 @@
 
 /* wb_wcast_gtk.h -- Attribute object casting window. */
 
-#ifndef wb_wcast_h
 #include "wb_wcast.h"
-#endif
 
 class WCastGtk : public WCast {
 public:

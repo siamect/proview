@@ -39,9 +39,7 @@
 
 /* xtt_eveve_gtk.h -- Alarm window in xtt */
 
-#ifndef xtt_eveve_h
 #include "xtt_eveve.h"
-#endif
 
 class EvEveGtk : public EvEve {
 public:

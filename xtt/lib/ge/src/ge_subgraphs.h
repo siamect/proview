@@ -37,9 +37,7 @@
 #ifndef ge_subgraphs_h
 #define ge_subgraphs_h
 
-#ifndef ge_attr_h
 #include "ge_attr.h"
-#endif
 
 /*! \file ge_subgraphs.h
     \brief Contains the SubGraphs class and related classes. */

@@ -37,9 +37,7 @@
 #ifndef rt_io_tabdi_h
 #define rt_io_tabdi_h
 
-#ifndef rt_io_filter_di_h
 #include "rt_io_filter_di.h"
-#endif
 
 pwr_sClass_di_value_base* io_IniDIvalueP; /* Pointer DI-value	*/
 pwr_tInt32 io_IniDIcsr[128]; /* Device adress	*/

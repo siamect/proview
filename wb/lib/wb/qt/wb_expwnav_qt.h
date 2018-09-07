@@ -39,9 +39,7 @@
 
 /* wb_expwnav_qt.h -- Backup display window */
 
-#ifndef wb_expwnav_h
 #include "wb_expwnav.h"
-#endif
 
 #include <QWidget>
 

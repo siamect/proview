@@ -40,9 +40,7 @@
 /* pwr_class.h -- system classes
 */
 
-#ifndef pwr_h
 #include "pwr.h"
-#endif
 
 #ifdef __cplusplus
 extern "C" {

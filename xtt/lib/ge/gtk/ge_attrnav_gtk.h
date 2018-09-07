@@ -41,9 +41,7 @@
 
 #include <gtk/gtk.h>
 
-#ifndef ge_attrnav_h
 #include "ge_attrnav.h"
-#endif
 
 //! The navigation area of the attribute editor.
 class AttrNavGtk : public AttrNav {

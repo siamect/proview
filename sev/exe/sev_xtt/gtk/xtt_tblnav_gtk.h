@@ -41,9 +41,7 @@
 
 #include <gtk/gtk.h>
 
-#ifndef xtt_tblnav_h
 #include "../src/xtt_tblnav.h"
-#endif
 
 //! The navigation area of the attribute editor.
 class TblNavGtk : public TblNav {

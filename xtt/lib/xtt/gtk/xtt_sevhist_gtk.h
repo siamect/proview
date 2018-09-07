@@ -39,9 +39,8 @@
 
 /* xtt_sevhist_gtk.h -- SevHist curves */
 
-#ifndef xtt_sevhist_h
 #include "xtt_sevhist.h"
-#endif
+
 #include "xtt_otree_gtk.h"
 
 class XttSevHistGtk : public XttSevHist {

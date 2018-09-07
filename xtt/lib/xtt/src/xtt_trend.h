@@ -39,13 +39,9 @@
 
 /* xtt_trend.h -- DsTrend curves */
 
-#ifndef ge_curve_h
-#include "ge_curve.h"
-#endif
-
-#ifndef rt_cbuf_h
 #include "rt_cbuf.h"
-#endif
+
+#include "ge_curve.h"
 
 #include "xtt_otree.h"
 

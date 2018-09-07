@@ -39,13 +39,9 @@
 
 /* wb_wrev_gtk.h -- Package window */
 
-#ifndef wb_wrev_h
 #include "wb_wrev.h"
-#endif
 
-#ifndef cow_wow_gtk_h
 #include "cow_wow_gtk.h"
-#endif
 
 class WRevGtk : public WRev {
 public:

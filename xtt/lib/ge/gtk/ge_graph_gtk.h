@@ -41,9 +41,7 @@
 
 #include <gtk/gtk.h>
 
-#ifndef ge_graph_h
 #include "ge_graph.h"
-#endif
 
 class GraphGtk : public Graph {
 public:

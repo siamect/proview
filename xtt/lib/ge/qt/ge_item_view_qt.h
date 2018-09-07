@@ -37,9 +37,7 @@
 #ifndef ge_item_view_qt_h
 #define ge_item_view_qt_h
 
-#ifndef ge_h
 #include "ge.h"
-#endif
 
 #include <QCheckBox>
 #include <QFileSystemWatcher>

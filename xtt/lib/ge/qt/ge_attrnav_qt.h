@@ -39,9 +39,7 @@
 
 /* xtt_attrnav_qt.h -- Simple navigator */
 
-#ifndef ge_attrnav_h
 #include "ge_attrnav.h"
-#endif
 
 #include <QObject>
 #include <QWidget>

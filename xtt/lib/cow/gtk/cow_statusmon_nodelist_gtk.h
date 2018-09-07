@@ -39,13 +39,9 @@
 
 /* cow_statusmon_nodelist_gtk.h -- Status Monitor */
 
-#ifndef cow_statusmon_nodelist_h
 #include "cow_statusmon_nodelist.h"
-#endif
 
-#ifndef cow_wow_gtk_h
 #include "cow_wow_gtk.h"
-#endif
 
 class NodelistGtk : public Nodelist {
 public:

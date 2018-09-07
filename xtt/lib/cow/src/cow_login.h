@@ -37,13 +37,8 @@
 #ifndef cow_login_h
 #define cow_login_h
 
-#ifndef pwr_h
 #include "pwr.h"
-#endif
-
-#ifndef pwr_privilege_h
 #include "pwr_privilege.h"
-#endif
 
 typedef enum { login_mAttr_Navigator = 1 << 0 } login_mAttr;
 

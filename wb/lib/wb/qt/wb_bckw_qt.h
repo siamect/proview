@@ -41,9 +41,7 @@
 
 #include "cow_wow_qt.h"
 
-#ifndef wb_bckw_h
 #include "wb_bckw.h"
-#endif
 
 class WbBckWQtWidget;
 

@@ -41,15 +41,9 @@
 extern "C" {
 #endif
 
-#ifndef wb_ldh_h
 #include "wb_ldh.h"
-#endif
-
 #include "wb_utility.h"
-
-#ifndef wb_wnav_brow_h
 #include "wb_wnav_brow.h"
-#endif
 
 #define wdanav_cVersion "X3.3b"
 #define WDANAV_BROW_MAX 25

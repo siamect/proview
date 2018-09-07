@@ -39,9 +39,7 @@
 
 /* cow_xhelpnav_qt.h -- Helptext navigator */
 
-#ifndef cow_xhelpnav_h
 #include "cow_xhelpnav.h"
-#endif
 
 #include <QWidget>
 

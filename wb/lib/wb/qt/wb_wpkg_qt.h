@@ -41,9 +41,7 @@
 
 #include "cow_wow_qt.h"
 
-#ifndef wb_wpkg_h
 #include "wb_wpkg.h"
-#endif
 
 #include <QLabel>
 

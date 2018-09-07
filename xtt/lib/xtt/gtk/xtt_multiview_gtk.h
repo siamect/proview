@@ -37,13 +37,9 @@
 #ifndef xtt_multiview_gtk_h
 #define xtt_multiview_gtk_h
 
-#ifndef xtt_multiview_h
 #include "xtt_multiview.h"
-#endif
 
-#ifndef cow_wow_gtk_h
 #include "cow_wow_gtk.h"
-#endif
 
 class EvAlaGtk;
 class EvEveGtk;

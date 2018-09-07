@@ -37,9 +37,7 @@
 #ifndef cow_xhelp_h
 #define cow_xhelp_h
 
-#ifndef cow_xhelpnav_h
 #include "cow_xhelpnav.h"
-#endif
 
 class CoXHelp {
 public:

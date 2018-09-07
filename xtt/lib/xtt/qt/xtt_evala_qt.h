@@ -39,9 +39,7 @@
 
 /* xtt_evala_qt.h -- Alarm window in xtt */
 
-#ifndef xtt_evala_h
 #include "xtt_evala.h"
-#endif
 
 #include <QVBoxLayout>
 #include <QWidget>

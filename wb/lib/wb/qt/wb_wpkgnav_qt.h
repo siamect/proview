@@ -37,10 +37,7 @@
 #ifndef wb_wpkgnav_qt_h
 #define wb_wpkgnav_qt_h
 
-// #include "wb_utility.h"
-#ifndef wb_wpkgnav_h
 #include "wb_wpkgnav.h"
-#endif
 
 class WPkgNavQt : public WPkgNav {
 public:

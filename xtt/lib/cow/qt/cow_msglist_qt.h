@@ -39,9 +39,7 @@
 
 /* cow_msglist_qt.h -- Message list */
 
-#ifndef cow_msglist_h
 #include "cow_msglist.h"
-#endif
 
 #include <QWidget>
 

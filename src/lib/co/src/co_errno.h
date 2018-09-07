@@ -43,15 +43,10 @@ extern "C" {
 
 /* co_errno.h -- Translate UNIX errno error codes. */
 
-#ifndef pwr_h
 #include "pwr.h"
-#endif
-#ifndef pwr_msg_h
 #include "pwr_msg.h"
-#endif
-#ifndef co_errno_msg_h
+
 #include "co_errno_msg.h"
-#endif
 
 #define ERRNO_BADBIT 16384
 #define EBADCODE 65534

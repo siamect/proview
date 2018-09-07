@@ -39,9 +39,7 @@
 
 /* cow_logw_qt.h -- History log window */
 
-#ifndef cow_logw_h
 #include "cow_logw.h"
-#endif
 
 #include "cow_wow_qt.h"
 

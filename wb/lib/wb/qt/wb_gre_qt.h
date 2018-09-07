@@ -37,9 +37,7 @@
 #ifndef wb_gre_qt_h
 #define wb_gre_qt_h
 
-#ifndef wb_gre_h
 #include "wb_gre.h"
-#endif
 
 #include <QWidget>
 

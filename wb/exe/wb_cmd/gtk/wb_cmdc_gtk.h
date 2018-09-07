@@ -37,9 +37,7 @@
 #ifndef wb_cmdc_gtk_h
 #define wb_cmdc_gtk_h
 
-#ifndef wb_cmdc_h
-# include "wb_cmdc.h"
-#endif
+#include "wb_cmdc.h"
 
 class CmdGtk : public Cmd {
   public:

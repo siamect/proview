@@ -39,13 +39,9 @@
 
 /* ge_dyn.h -- Ge predefined dynamics and actions */
 
-#ifndef ge_graph_h
-#include "ge_graph.h"
-#endif
-
-#ifndef glow_keyboard_api_h
 #include "glow_keyboardapi.h"
-#endif
+
+#include "ge_graph.h"
 
 /*! \file ge_dyn.h
     \brief Contains the Graph class and some related classes GraphApplList,

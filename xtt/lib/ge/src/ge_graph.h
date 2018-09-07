@@ -39,17 +39,10 @@
 
 /* ge_graph.h -- Simple graphic editor */
 
-#ifndef co_lng_h
 #include "co_lng.h"
-#endif
 
-#ifndef ge_graph_ccm_h
 #include "ge_graph_ccm.h"
-#endif
-
-#ifndef ge_graph_journal_h
 #include "ge_graph_journal.h"
-#endif
 
 #include "ge_attr.h"
 
@@ -58,9 +51,7 @@
 #endif
 
 #if LDH
-#ifndef wb_ldh_h
 #include "wb_ldh.h"
-#endif
 #else
 typedef void* ldh_tSesContext;
 typedef void* ldh_tWBContext;

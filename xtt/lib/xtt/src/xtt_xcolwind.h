@@ -39,10 +39,9 @@
 
 /* xtt_xcolwind.h -- Object attribute editor */
 
-#include "cow_wow.h"
-#ifndef co_nav_crr_h
 #include "co_nav_crr.h"
-#endif
+
+#include "cow_wow.h"
 
 #include "flow_browapi.h"
 

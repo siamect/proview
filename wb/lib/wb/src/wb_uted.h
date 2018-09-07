@@ -37,9 +37,7 @@
 #ifndef wb_uted_h
 #define wb_uted_h
 
-#ifndef wb_ldh_h
 #include "wb_ldh.h"
-#endif
 
 #define UTED_MODE_EDIT 0
 #define UTED_MODE_VIEW 1

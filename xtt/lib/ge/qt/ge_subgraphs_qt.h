@@ -37,9 +37,7 @@
 #ifndef ge_subgraphs_qt_h
 #define ge_subgraphs_qt_h
 
-#ifndef ge_subgraphs_h
 #include "ge_subgraphs.h"
-#endif
 
 #include <QWidget>
 

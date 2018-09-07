@@ -37,9 +37,7 @@
 #ifndef rt_xtt_cmd_qt_h
 #define rt_xtt_cmd_qt_h
 
-#ifndef rt_xtt_cmd_h
 #include "rt_xtt_cmd.h"
-#endif
 
 class XttCmdQt : public XttCmd {
 public:

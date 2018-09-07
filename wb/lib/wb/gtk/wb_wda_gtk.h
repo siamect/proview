@@ -39,13 +39,9 @@
 
 /* wb_wda_gtk.h -- Spreadsheet editor */
 
-#ifndef wb_wda_h
 #include "wb_wda.h"
-#endif
 
-#ifndef cow_wow_gtk_h
 #include "cow_wow_gtk.h"
-#endif
 
 class WdaGtk : public Wda {
 public:

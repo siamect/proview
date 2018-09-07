@@ -40,9 +40,7 @@
 /* wb_ldhld.h
    This module contains functions to create load data files.  */
 
-#ifndef wb_ldh_h
 #include "wb_ldh.h"
-#endif
 
 /*============================================================================*\
   Exported functions.

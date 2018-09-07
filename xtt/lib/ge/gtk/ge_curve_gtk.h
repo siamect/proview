@@ -39,9 +39,7 @@
 
 /* ge_curve_gtk.h -- Curve widget */
 
-#ifndef ge_curve_h
 #include "ge_curve.h"
-#endif
 
 #include "cow_wow_gtk.h"
 

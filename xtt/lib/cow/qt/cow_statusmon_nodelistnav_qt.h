@@ -41,9 +41,7 @@
 
 // Status is defined as int i xlib...
 
-#ifndef cow_statusmon_nodelistnav_h
 #include "cow_statusmon_nodelistnav.h"
-#endif
 
 #include <QWidget>
 

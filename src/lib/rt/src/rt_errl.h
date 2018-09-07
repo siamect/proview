@@ -37,9 +37,7 @@
 #ifndef rt_errl_h
 #define rt_errl_h
 
-#ifndef pwr_h
 #include "pwr.h"
-#endif
 
 #if defined OS_LYNX
 #define LOG_QUEUE_NAME "/pwrlogqueue"

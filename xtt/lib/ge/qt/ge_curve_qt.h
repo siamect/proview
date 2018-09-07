@@ -41,9 +41,7 @@
 
 #include "cow_wow_qt.h"
 
-#ifndef ge_curve_h
 #include "ge_curve.h"
-#endif
 
 #include <QComboBox>
 

@@ -37,12 +37,8 @@
 #ifndef rt_rtt_h
 #define rt_rtt_h
 
-#ifndef rt_gdh_h
 #include "rt_gdh.h"
-#endif
-#ifndef rt_mh_outunit_h
 #include "rt_mh_outunit.h"
-#endif
 
 #define RTT_CTXTYPE_MENU 0
 #define RTT_CTXTYPE_VIEW 1
@@ -429,8 +425,6 @@ typedef struct {
   char* buffer_ptr;
 } rtt_t_loggtable;
 
-#ifndef rt_rtt_functions_h
 #include "rt_rtt_functions.h"
-#endif
 
 #endif

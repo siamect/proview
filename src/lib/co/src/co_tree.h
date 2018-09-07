@@ -41,15 +41,11 @@
 extern "C" {
 #endif
 
-#ifndef __STDDEF_LOADED
 #include <stddef.h>
-#endif
 
 #include "pwr.h"
 
-#ifndef co_tree_msg_h
 #include "co_tree_msg.h"
-#endif
 
 typedef struct tree_s_Table tree_sTable;
 typedef struct tree_s_Alloc tree_sAlloc;

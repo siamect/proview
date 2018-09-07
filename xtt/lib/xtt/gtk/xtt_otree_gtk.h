@@ -39,9 +39,7 @@
 
 #include <gtk/gtk.h>
 
-#ifndef xtt_otree_h
 #include "xtt_otree.h"
-#endif
 
 /* xtt_otree.h -- Object tree viewer */
 

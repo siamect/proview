@@ -37,9 +37,7 @@
 #ifndef wb_uted_qt_h
 #define wb_uted_qt_h
 
-#ifndef wb_uted_h
 #include "wb_uted.h"
-#endif
 
 #include <QCheckBox>
 #include <QLabel>

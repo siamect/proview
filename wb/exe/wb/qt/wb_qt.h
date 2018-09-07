@@ -37,9 +37,7 @@
 #ifndef wb_qt_h
 #define wb_qt_h
 
-#ifndef wb_main_h
 #include "wb_main.h"
-#endif
 
 #include <QWidget>
 

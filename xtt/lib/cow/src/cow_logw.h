@@ -39,9 +39,7 @@
 
 /* co_glow.h -- History logfile window */
 
-#ifndef co_logwnav_h
 #include "cow_logwnav.h"
-#endif
 
 class CoWow;
 class CoWowFocusTimer;

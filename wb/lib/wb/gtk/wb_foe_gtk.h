@@ -39,13 +39,9 @@
 
 /* wb_foe_gtk.h -- function block object editor */
 
-#ifndef wb_foe_h
 #include "wb_foe.h"
-#endif
 
-#ifndef cow_wow_gtk_h
 #include "cow_wow_gtk.h"
-#endif
 
 struct s_widgets {
   GtkWidget* label;

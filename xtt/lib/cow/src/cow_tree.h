@@ -37,9 +37,7 @@
 #ifndef cow_tree_h
 #define cow_tree_h
 
-#ifndef pwr_privilege_h
 #include "pwr_privilege.h"
-#endif
 
 #include "glow.h"
 

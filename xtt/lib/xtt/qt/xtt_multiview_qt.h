@@ -37,9 +37,7 @@
 #ifndef xtt_multiview_qt_h
 #define xtt_multiview_qt_h
 
-#ifndef xtt_multiview_h
 #include "xtt_multiview.h"
-#endif
 
 #include "cow_wow_qt.h"
 

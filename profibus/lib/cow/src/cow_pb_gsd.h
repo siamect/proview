@@ -39,9 +39,7 @@
 
 #include <stdio.h>
 
-#ifndef pwr_h
 #include "pwr.h"
-#endif
 
 typedef enum { gsd_DpSlave, gsd_DpMaster } gsd_eDpType;
 

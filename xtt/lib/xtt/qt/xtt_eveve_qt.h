@@ -39,9 +39,7 @@
 
 /* xtt_eveve_qt.h -- Alarm window in xtt */
 
-#ifndef xtt_eveve_h
 #include "xtt_eveve.h"
-#endif
 
 #include <QVBoxLayout>
 #include <QWidget>

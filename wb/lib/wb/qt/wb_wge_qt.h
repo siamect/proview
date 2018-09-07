@@ -39,9 +39,7 @@
 
 #include "cow_wow_qt.h"
 
-#ifndef wb_wge_h
 #include "wb_wge.h"
-#endif
 
 #include <QLabel>
 

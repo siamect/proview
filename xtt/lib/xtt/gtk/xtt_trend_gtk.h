@@ -39,9 +39,7 @@
 
 /* xtt_trend_gtk.h -- DsTrend curves */
 
-#ifndef xtt_trend_h
 #include "xtt_trend.h"
-#endif
 
 class XttTrendGtk : public XttTrend {
 public:

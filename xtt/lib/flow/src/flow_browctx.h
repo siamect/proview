@@ -37,9 +37,7 @@
 #ifndef flow_browctx_h
 #define flow_browctx_h
 
-#ifndef flow_ctx_h
 #include "flow_ctx.h"
-#endif
 
 class BrowCtx : public FlowCtx {
 public:

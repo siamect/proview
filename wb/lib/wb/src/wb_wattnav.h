@@ -37,13 +37,8 @@
 #ifndef wb_wattnav_h
 #define wb_wattnav_h
 
-#ifndef wb_ldh_h
 #include "wb_ldh.h"
-#endif
-
-#ifndef wb_wnav_brow_h
 #include "wb_wnav_brow.h"
-#endif
 
 #define wattnav_cVersion "X3.3b"
 #define WATTNAV_BROW_MAX 25

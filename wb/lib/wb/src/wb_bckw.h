@@ -39,11 +39,9 @@
 
 /* wb_bckw.h -- Backupfile display window */
 
-#ifndef wb_bckwnav_h
-#include "wb_bckwnav.h"
-#endif
-
 #include "cow_wow.h"
+
+#include "wb_bckwnav.h"
 
 class WbBckW {
 public:

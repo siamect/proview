@@ -37,9 +37,7 @@
 #ifndef wb_wrevnav_h
 #define wb_wrevnav_h
 
-#ifndef wb_revision_h
 #include "wb_revision.h"
-#endif
 
 #define WREVNAV_BROW_MAX 25
 

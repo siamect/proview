@@ -39,17 +39,11 @@
 #ifndef rt_pn_iface_h
 #define rt_pn_iface_h
 
-#ifndef pwr_h
 #include "pwr.h"
-#endif
 
-#ifndef rt_pn_gsdml_data_h
 #include "rt_pn_gsdml_data.h"
-#endif
 
-#ifndef rt_io_pn_locals_h
 #include "rt_io_pn_locals.h"
-#endif
 
 #define PN_MAX_MANU_SPEC_DIAGS 200
 

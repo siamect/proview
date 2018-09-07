@@ -39,11 +39,9 @@
 
 /* rt_xtt_qt.h -- Simple navigator */
 
-#ifndef rt_xtt_main_h
-#include "rt_xtt_main.h"
-#endif
-
 #include "cow_wow_qt.h"
+
+#include "rt_xtt_main.h"
 
 #include <QLabel>
 

@@ -41,9 +41,7 @@
 
 #include "cow_qt_helpers.h"
 
-#ifndef xtt_trace_h
 #include "xtt_trace.h"
-#endif
 
 #include <QWidget>
 

@@ -39,9 +39,7 @@
 
 /* co_help_gtk.h -- Help window */
 
-#ifndef co_help_main_h
 #include "co_help_main.h"
-#endif
 
 class CoHelpGtk : public CoHelpMain {
 public:

@@ -37,9 +37,7 @@
 #ifndef statussrv_utl_h
 #define statussrv_utl_h
 
-#ifndef pwr_h
 #include "pwr.h"
-#endif
 
 #ifdef __cplusplus
 extern "C" {

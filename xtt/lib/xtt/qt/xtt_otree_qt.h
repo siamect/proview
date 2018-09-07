@@ -37,9 +37,7 @@
 #ifndef xtt_otree_qt_h
 #define xtt_otree_qt_h
 
-#ifndef xtt_otree_h
 #include "xtt_otree.h"
-#endif
 
 #include <QWidget>
 

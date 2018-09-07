@@ -41,11 +41,9 @@
 
 #include <vector>
 
-#include "flow_browapi.h"
-
-#ifndef rt_qcom_h
 #include "rt_qcom.h"
-#endif
+
+#include "flow_browapi.h"
 
 class TrItemBase;
 

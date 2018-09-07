@@ -39,9 +39,7 @@
 
 /* cow_msgwindow_qt.h -- Message window */
 
-#ifndef cow_msgwindow_h
 #include "cow_msgwindow.h"
-#endif
 
 #include "cow_wow_qt.h"
 

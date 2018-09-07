@@ -39,9 +39,7 @@
 
 /* rt_io_methods.h -- includefile for io methods. */
 
-#ifndef pwr_h
 #include "pwr.h"
-#endif
 
 typedef struct {
   pwr_tObjName MethodName;

@@ -37,9 +37,7 @@
 #ifndef xtt_stream_qt_h
 #define xtt_stream_qt_h
 
-#ifndef xtt_stream_h
 #include "xtt_stream.h"
-#endif
 
 #include "cow_wow_qt.h"
 

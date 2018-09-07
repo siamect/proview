@@ -37,13 +37,9 @@
 #ifndef wb_tra_h
 #define wb_tra_h
 
-#ifndef rt_gdh_h
 #include "rt_gdh.h"
-#endif
 
-#ifndef wb_gre_h
 #include "wb_gre.h"
-#endif
 
 class WFoe;
 

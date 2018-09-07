@@ -37,13 +37,9 @@
 #ifndef wb_wge_gtk_h
 #define wb_wge_gtk_h
 
-#ifndef wb_wge_h
 #include "wb_wge.h"
-#endif
 
-#ifndef cow_wow_gtk_h
 #include "cow_wow_gtk.h"
-#endif
 
 class WGeGtk : public WGe {
 public:

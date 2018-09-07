@@ -39,9 +39,7 @@
 
 #include <stdio.h>
 
-#ifndef wb_ldh_h
 #include "wb_ldh.h"
-#endif
 
 #ifdef __cplusplus
 extern "C" {

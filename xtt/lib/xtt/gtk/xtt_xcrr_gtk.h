@@ -39,13 +39,9 @@
 
 /* xtt_xcrr_gtk.h -- Object crossreferences */
 
-#ifndef xtt_xcrr_h
 #include "xtt_xcrr.h"
-#endif
 
-#ifndef cow_wow_gtk_h
 #include "cow_wow_gtk.h"
-#endif
 
 class XCrrGtk : public XCrr {
 public:

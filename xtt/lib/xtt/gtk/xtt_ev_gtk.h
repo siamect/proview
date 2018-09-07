@@ -39,9 +39,7 @@
 
 /* xtt_ev_gtk.h -- Alarm and event windows in xtt */
 
-#ifndef xtt_ev_h
 #include "xtt_ev.h"
-#endif
 
 class EvGtk : public Ev {
 public:

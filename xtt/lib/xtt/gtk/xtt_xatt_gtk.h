@@ -39,13 +39,9 @@
 
 /* xtt_xatt_gtk.h -- Object attribute editor */
 
-#ifndef xtt_xatt_h
 #include "xtt_xatt.h"
-#endif
 
-#ifndef cow_wow_gtk_h
 #include "cow_wow_gtk.h"
-#endif
 
 class XAttGtk : public XAtt {
 public:

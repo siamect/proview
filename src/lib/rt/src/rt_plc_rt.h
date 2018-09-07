@@ -34,13 +34,11 @@
  * General Public License plus this exception.
  */
 
-#ifndef rt_plc_h
-#include "rt_plc.h"
-#endif
+#ifndef rt_plc_rt_h
+#define rt_plc_rt_h
 
-#ifndef rt_plc_proc_h
+#include "rt_plc.h"
 #include "rt_plc_proc.h"
-#endif
 
 /* Direct link table */
 struct plc_rtdbref {
@@ -56,3 +54,5 @@ struct plc_rtdbref {
 #define UC_WRITE 2
 #define UC_READ2 3
 #define UC_WRITE2 4
+
+#endif

@@ -39,9 +39,7 @@
 
 /* cow_logwnav_qt.h -- History log window */
 
-#ifndef co_logwnav_h
 #include "cow_logwnav.h"
-#endif
 
 #include <QWidget>
 

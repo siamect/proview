@@ -41,9 +41,7 @@
 
 // Status is defined as int i xlib...
 
-#ifndef xtt_clognav_h
 #include "xtt_clognav.h"
-#endif
 
 class CLogNavQt : public CLogNav {
 public:

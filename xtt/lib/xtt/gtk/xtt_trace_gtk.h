@@ -37,9 +37,7 @@
 #ifndef xtt_trace_gtk_h
 #define xtt_trace_gtk_h
 
-#ifndef xtt_trace_h
 #include "xtt_trace.h"
-#endif
 
 class RtTraceGtk : public RtTrace {
 public:

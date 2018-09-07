@@ -39,13 +39,9 @@
 
 /* wb_watt_gtk.h -- Object attribute editor */
 
-#ifndef wb_watt_h
 #include "wb_watt.h"
-#endif
 
-#ifndef cow_wow_gtk_h
 #include "cow_wow_gtk.h"
-#endif
 
 class WAttGtk : public WAtt {
 public:

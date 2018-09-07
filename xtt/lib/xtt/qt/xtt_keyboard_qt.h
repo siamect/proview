@@ -39,9 +39,7 @@
 
 /* xtt_keyboard_qt.h -- Virtual keyboard */
 
-#ifndef xtt_keyboard_h
 #include "xtt_keyboard.h"
-#endif
 
 #include <QDialog>
 #include <QWidget>

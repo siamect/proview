@@ -41,9 +41,7 @@
 
 #include <vector>
 
-#ifndef xtt_op_h
 #include "xtt_op.h"
-#endif
 
 #include "cow_wow_qt.h"
 

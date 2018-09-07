@@ -39,9 +39,7 @@
 
 /* wb_watttext_qt.h -- Object attribute editor */
 
-#ifndef wb_watttext_h
 #include "wb_watttext.h"
-#endif
 
 #include <QLabel>
 #include <QTextEdit>

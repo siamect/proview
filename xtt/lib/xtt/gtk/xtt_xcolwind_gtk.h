@@ -39,13 +39,9 @@
 
 /* xtt_xcolwind_gtk.h -- Collect window */
 
-#ifndef xtt_xcolwind_h
 #include "xtt_xcolwind.h"
-#endif
 
-#ifndef cow_wow_gtk_h
 #include "cow_wow_gtk.h"
-#endif
 
 class XColWindGtk : public XColWind {
 public:

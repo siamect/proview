@@ -39,9 +39,7 @@
 
 #include <gtk/gtk.h>
 
-#ifndef ge_subgraphs_h
 #include "ge_subgraphs.h"
-#endif
 
 /*! \file ge_subgraphs_gtk.h
     \brief Contains the SubGraphs class and related classes. */

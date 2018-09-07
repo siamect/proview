@@ -39,9 +39,7 @@
 
 /* wb_bckwnav_qt.h -- Backup display window */
 
-#ifndef wb_bckwnav_h
 #include "wb_bckwnav.h"
-#endif
 
 #include <QWidget>
 

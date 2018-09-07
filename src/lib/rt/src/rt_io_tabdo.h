@@ -37,9 +37,7 @@
 #ifndef rt_io_tabdo_h
 #define rt_io_tabdo_h
 
-#ifndef rt_io_filter_po_h
 #include "rt_io_filter_po.h"
-#endif
 
 pwr_sClass_do_value_base* io_IniDOvalueP; /* Pointer to DO-value */
 pwr_tUInt16 io_IniDOold[128]; /* Old/saved value bitdata */

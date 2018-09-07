@@ -39,9 +39,7 @@
 
 /* wb_wrev.h -- Revision window */
 
-#ifndef wb_revision_h
 #include "wb_wrevnav.h"
-#endif
 
 class WRevNav;
 class CoWow;

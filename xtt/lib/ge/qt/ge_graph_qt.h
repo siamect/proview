@@ -39,12 +39,7 @@
 
 /* ge_graph_qt.h -- Simple graphic editor */
 
-// #include "glow_growctx.h"
-// #include "glow_growapi.h"
-
-#ifndef ge_graph_h
 #include "ge_graph.h"
-#endif
 
 #include <QWidget>
 

@@ -37,9 +37,7 @@
 #ifndef xtt_otree_h
 #define xtt_otree_h
 
-#ifndef cow_tree_h
 #include "cow_tree.h"
-#endif
 
 /* xtt_otree.h -- Object tree viewer */
 

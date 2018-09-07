@@ -39,21 +39,10 @@
 
 /* wb_foe.h -- function block object editor */
 
-#ifndef wb_utility_h
-#include "wb_utility.h"
-#endif
-
-#ifndef wb_h
 #include "wb.h"
-#endif
-
-#ifndef wb_goen_h
 #include "wb_goen.h"
-#endif
-
-#ifndef wb_tra_h
 #include "wb_tra.h"
-#endif
+#include "wb_utility.h"
 
 #define TRACE 0
 #define SIMULATE 1

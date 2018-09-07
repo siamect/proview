@@ -37,13 +37,9 @@
 #ifndef xtt_stream_gtk_h
 #define xtt_stream_gtk_h
 
-#ifndef xtt_stream_h
 #include "xtt_stream.h"
-#endif
 
-#ifndef cow_wow_gtk_h
 #include "cow_wow_gtk.h"
-#endif
 
 #if defined PWRE_CONF_GST
 

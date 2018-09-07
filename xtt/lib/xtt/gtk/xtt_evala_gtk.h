@@ -39,9 +39,7 @@
 
 /* xtt_evala_gtk.h -- Alarm window in xtt */
 
-#ifndef xtt_evala_h
 #include "xtt_evala.h"
-#endif
 
 class EvAlaGtk : public EvAla {
 public:

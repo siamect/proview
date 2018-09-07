@@ -39,9 +39,7 @@
 
 /* rt_cvolc.h -- Cached volumes, client calls.  */
 
-#ifndef rt_cvol_h
 #include "rt_cvol.h"
-#endif
 
 /* Callable functions.  */
 

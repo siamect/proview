@@ -39,13 +39,9 @@
 
 /* wb_wpkg_gtk.h -- Package window */
 
-#ifndef wb_wpkg_h
 #include "wb_wpkg.h"
-#endif
 
-#ifndef cow_wow_gtk_h
 #include "cow_wow_gtk.h"
-#endif
 
 class WPkgGtk : public WPkg {
 public:

@@ -44,9 +44,7 @@
     Defines version varibles to use in messages to user.
 */
 
-#ifndef pwr_h
 #include "pwr.h"
-#endif
 
 #if defined OS_LYNX
 #define pwrv_cOpSys "LynxOS"

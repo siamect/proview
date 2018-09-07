@@ -64,10 +64,12 @@
 #define ABS(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
 #endif
 
+#ifndef CLAMP
 /*! \def CLAMP(x, min, max) 
     \brief Restricts \a x to be between \a min and \a max
  */
 #define CLAMP(x, min, max) ((x) < (min)) ? (min) : (((x) > (max)) ? (max) : (x))
+#endif
 
 /*! \def SIGN(x) 
     \brief Returns the sign of \a x,

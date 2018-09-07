@@ -45,9 +45,7 @@
 extern "C" {
 #endif
 
-#ifndef pwr_h
 #include "pwr.h"
-#endif
 
 #define LASTUNSIGNED ((u_int)0 - 1)
 

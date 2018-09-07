@@ -37,9 +37,7 @@
 #ifndef wb_wattnav_qt_h
 #define wb_wattnav_qt_h
 
-#ifndef wb_wattnav_h
 #include "wb_wattnav.h"
-#endif
 
 #include <QWidget>
 

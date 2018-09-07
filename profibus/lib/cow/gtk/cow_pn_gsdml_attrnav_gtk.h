@@ -39,9 +39,7 @@
 
 /* cow_pn_gsdml_attrnav_gtk.h -- Profibus gsd configurator navigator */
 
-#ifndef cow_pn_gsdml_attrnav_h
 #include "cow_pn_gsdml_attrnav.h"
-#endif
 
 //! The navigation area of the attribute editor.
 class GsdmlAttrNavGtk : public GsdmlAttrNav {

@@ -39,15 +39,11 @@
 
 /* xtt_attrnav.h -- Simple navigator */
 
-#ifndef ge_cmn_h
-#include "ge_cmn.h"
-#endif
-
 #include "flow_browapi.h"
 
-#ifndef glow_growapi_h
 #include "glow_growapi.h"
-#endif
+
+#include "ge_cmn.h"
 
 /*! \file ge_attrnav.h
     \brief Contains the AttrNav class and related classes. */

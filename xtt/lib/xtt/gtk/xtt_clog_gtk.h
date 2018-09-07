@@ -39,9 +39,7 @@
 
 /* xtt_clog_gtk.h -- Alarm and event windows in xtt */
 
-#ifndef xtt_clog_h
 #include "xtt_clog.h"
-#endif
 
 class CLogGtk : public CLog {
 public:

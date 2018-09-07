@@ -37,9 +37,7 @@
 #ifndef rt_sim_h
 #define rt_sim_h
 
-#ifndef pwr_h
 #include "pwr.h"
-#endif
 #include "pwr_baseclasses.h"
 
 /*! \file rt_sim.h

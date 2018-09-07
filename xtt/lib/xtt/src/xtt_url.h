@@ -43,9 +43,7 @@
 extern "C" {
 #endif
 
-#ifndef pwr_h
 #include "pwr.h"
-#endif
 
 int xnav_open_URL(pwr_tURL url);
 

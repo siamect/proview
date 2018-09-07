@@ -37,9 +37,7 @@
 #ifndef wb_utl_h
 #define wb_utl_h
 
-#ifndef wb_foe_h
 #include "wb_foe.h"
-#endif
 
 class wb_utl {
 public:

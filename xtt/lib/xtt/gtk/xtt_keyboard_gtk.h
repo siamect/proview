@@ -39,9 +39,7 @@
 
 /* xtt_keyboard_gtk.h -- Virtual keyboard */
 
-#ifndef xtt_keyboard_h
 #include "xtt_keyboard.h"
-#endif
 
 class XttKeyboardGtk : public XttKeyboard {
 public:

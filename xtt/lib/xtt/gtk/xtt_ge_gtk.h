@@ -37,13 +37,9 @@
 #ifndef xtt_ge_gtk_h
 #define xtt_ge_gtk_h
 
-#ifndef xtt_ge_h
 #include "xtt_ge.h"
-#endif
 
-#ifndef cow_wow_gtk_h
 #include "cow_wow_gtk.h"
-#endif
 
 class XttGeGtk : public XttGe {
 public:

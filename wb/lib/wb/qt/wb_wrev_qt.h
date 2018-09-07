@@ -41,9 +41,7 @@
 
 #include "cow_wow_qt.h"
 
-#ifndef wb_wrev_h
 #include "wb_wrev.h"
-#endif
 
 #include <QLabel>
 

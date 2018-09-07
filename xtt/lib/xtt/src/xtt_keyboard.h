@@ -39,13 +39,8 @@
 
 /* xtt_keyboard.h -- Virtual keyboard */
 
-#ifndef glow_keyboardctx_h
-#include "glow_keyboardctx.h"
-#endif
-
-#ifndef glow_keyboardapi_h
 #include "glow_keyboardapi.h"
-#endif
+#include "glow_keyboardctx.h"
 
 class XttKeyboard {
 public:

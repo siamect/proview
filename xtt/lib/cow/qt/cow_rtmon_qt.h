@@ -39,9 +39,7 @@
 
 /* cow_rtmon_qt.h -- Status Monitor */
 
-#ifndef cow_rtmon_h
 #include "cow_rtmon.h"
-#endif
 
 #include <QAction>
 #include <QLabel>

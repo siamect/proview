@@ -37,9 +37,7 @@
 #ifndef co_msg_h
 #define co_msg_h
 
-#ifndef pwr_h
 #include "pwr.h"
-#endif
 
 #if defined __cplusplus
 extern "C" {

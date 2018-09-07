@@ -37,9 +37,7 @@
 #ifndef wb_trv_h
 #define wb_trv_h
 
-#ifndef wb_ldh_h
 #include "wb_ldh.h"
-#endif
 
 typedef enum {
   trv_eDepth_Deep,

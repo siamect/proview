@@ -39,17 +39,11 @@
 
 /* xtt_xattnav.h -- */
 
-#ifndef flow_browapi_h
-#include "flow_browapi.h"
-#endif
-
-#ifndef xtt_xnav_brow_h
-#include "xtt_xnav_brow.h"
-#endif
-
-#ifndef co_nav_crr_h
 #include "co_nav_crr.h"
-#endif
+
+#include "flow_browapi.h"
+
+#include "xtt_xnav_brow.h"
 
 #define xattnav_cVersion "X3.3b"
 #define XATTNAV_BROW_MAX 25

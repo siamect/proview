@@ -37,9 +37,7 @@
 #ifndef wb_uted_gtk_h
 #define wb_uted_gtk_h
 
-#ifndef wb_uted_h
 #include "wb_uted.h"
-#endif
 
 struct uted_s_widgets {
   GtkWidget* uted_window;

@@ -38,9 +38,7 @@
 #define remote_ndc_h
 /* remote_ndc.h -- Network data conversion. */
 
-#ifndef rt_ndc_h
 #include "rt_ndc.h"
-#endif
 
 pwr_tBoolean rndc_ConvertData(pwr_tStatus* sts, const gdb_sNode* np,
     gdb_sClass* cp, void* tp, /* Address of target.  */

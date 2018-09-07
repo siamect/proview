@@ -37,9 +37,7 @@
 #ifndef wb_ldhdb_h
 #define wb_ldhdb_h
 
-#ifndef wb_ldhi_h
 #include "wb_ldhi.h"
-#endif
 
 pwr_tStatus ldhdb_LoadObjectHeaders(ldhi_sWorkbench* wb);
 

@@ -39,9 +39,7 @@
 
 /* wb_xattnav_gtk.h -- */
 
-#ifndef xtt_xattnav_h
 #include "xtt_xattnav.h"
-#endif
 
 class XAttNavGtk : public XAttNav {
 public:

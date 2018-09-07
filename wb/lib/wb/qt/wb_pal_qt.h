@@ -37,9 +37,7 @@
 #ifndef wb_pal_qt_h
 #define wb_pal_qt_h
 
-#ifndef wb_pal_h
 #include "wb_pal.h"
-#endif
 
 #include <QWidget>
 

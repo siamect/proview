@@ -37,9 +37,7 @@
 #ifndef wb_gobj_h
 #define wb_gobj_h
 
-#ifndef wb_foe_h
 #include "wb_foe.h"
-#endif
 
 int gobj_get_object(WFoe* foe, vldh_t_node node, unsigned long index);
 

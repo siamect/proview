@@ -39,13 +39,9 @@
 
 /* cow_msgwindow.h -- Message window */
 
-#ifndef cow_msglist_h
-#include "cow_msglist.h"
-#endif
-
-#ifndef co_error_h
 #include "co_error.h"
-#endif
+
+#include "cow_msglist.h"
 
 typedef enum { msgw_ePop_No, msgw_ePop_Yes, msgw_ePop_Default } msgw_ePop;
 

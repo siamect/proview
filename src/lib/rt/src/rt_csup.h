@@ -39,9 +39,7 @@
 
 /* rt_csup.h -- Cycle supervision */
 
-#ifndef rt_lst_h
 #include "rt_lst.h"
-#endif
 
 typedef struct {
   lst_sEntry le;

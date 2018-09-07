@@ -37,31 +37,21 @@
 #ifndef ge_h
 #define ge_h
 
-#ifndef wb_ldh_h
-#include "wb_ldh.h"
-#endif
+#include "cow_wow.h"
 
-#ifndef ge_subpalette_h
-#include "ge_subpalette.h"
-#endif
-
-#ifndef ge_subgraphs_h
-class SubGraphs;
-#endif
-
-#ifndef ge_cmn_h
-#include "ge_cmn.h"
-#endif
-#ifndef glow_h
 #include "glow.h"
-#endif
 #ifndef glow_growapi_h
 typedef void* grow_tObject;
 class GlowCtx;
 #endif
-#ifndef cow_wow_h
-#include "cow_wow.h"
+
+#include "ge_cmn.h"
+#include "ge_subpalette.h"
+#ifndef ge_subgraphs_h
+class SubGraphs;
 #endif
+
+#include "wb_ldh.h"
 
 /* ge.h -- Simple graphic editor */
 

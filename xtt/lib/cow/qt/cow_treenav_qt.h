@@ -39,9 +39,7 @@
 
 /* cow_treenav_qt.h -- Tree viewer */
 
-#ifndef cow_treenav_h
 #include "cow_treenav.h"
-#endif
 
 #include <QWidget>
 

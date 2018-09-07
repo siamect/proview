@@ -39,9 +39,7 @@
 #ifndef wb_gtk_h
 #define wb_gtk_h
 
-#ifndef wb_main_h
 #include "wb_main.h"
-#endif
 
 class WbGtk : public Wb {
  public:

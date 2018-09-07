@@ -37,9 +37,7 @@
 #ifndef wb_goec_h
 #define wb_goec_h
 
-#ifndef wb_gre_h
 #include "wb_gre.h"
-#endif
 
 int goec_con_draw(
     WGre* gre, vldh_t_con con_object, int create_flag, vldh_t_node node);

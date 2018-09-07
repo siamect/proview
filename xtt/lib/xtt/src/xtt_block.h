@@ -39,9 +39,7 @@
 
 /* xtt_block.h -- Alarm blocking window */
 
-#ifndef pwr_h
 #include "pwr.h"
-#endif
 
 class CoWow;
 

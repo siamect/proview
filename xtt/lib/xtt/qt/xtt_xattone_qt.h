@@ -41,9 +41,7 @@
 
 #include "cow_wow_qt.h"
 
-#ifndef xtt_xattone_h
 #include "xtt_xattone.h"
-#endif
 
 #include <QLabel>
 #include <QTextEdit>

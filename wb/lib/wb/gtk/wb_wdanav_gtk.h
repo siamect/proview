@@ -37,9 +37,7 @@
 #ifndef wb_wattnav_gtk_h
 #define wb_wattnav_gtk_h
 
-#ifndef wb_wdanav_h
 #include "wb_wdanav.h"
-#endif
 
 class WdaNavGtk : public WdaNav {
 public:

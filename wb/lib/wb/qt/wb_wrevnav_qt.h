@@ -37,9 +37,7 @@
 #ifndef wb_wrevnav_qt_h
 #define wb_wrevnav_qt_h
 
-#ifndef wb_wrevnav_h
 #include "wb_wrevnav.h"
-#endif
 
 class WRevNavQt : public WRevNav {
 public:

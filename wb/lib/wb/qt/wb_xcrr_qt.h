@@ -41,9 +41,7 @@
 
 #include "cow_wow_qt.h"
 
-#ifndef wb_xcrr_h
 #include "wb_xcrr.h"
-#endif
 
 class WCrrQtWidget;
 

@@ -37,10 +37,7 @@
 #ifndef xtt_ge_qt_h
 #define xtt_ge_qt_h
 
-// #include "co_lng.h"
-#ifndef xtt_ge_h
 #include "xtt_ge.h"
-#endif
 
 #include "cow_wow_qt.h"
 

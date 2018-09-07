@@ -41,13 +41,8 @@
 
 #include <vector>
 
-#ifndef xtt_jop_h
-#include "xtt_jop.h"
-#endif
-
-#ifndef xtt_evlist_h
 #include "xtt_evlist.h"
-#endif
+#include "xtt_jop.h"
 
 class CoWow;
 class CoWowTimer;

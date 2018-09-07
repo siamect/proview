@@ -39,9 +39,7 @@
 
 /* xtt_clog_qt.h -- Alarm and event windows in xtt */
 
-#ifndef xtt_clog_h
 #include "xtt_clog.h"
-#endif
 
 #include <QCheckBox>
 #include <QLineEdit>

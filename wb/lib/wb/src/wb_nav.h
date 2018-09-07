@@ -39,9 +39,7 @@
 
 /* wb_nav.h -- Simple navigator */
 
-#ifndef wb_pal_h
 #include "wb_pal.h"
-#endif
 
 class Nav {
 public:

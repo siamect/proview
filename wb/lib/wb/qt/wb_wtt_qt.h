@@ -41,9 +41,7 @@
 
 #include "cow_wow_qt.h"
 
-#ifndef wb_wtt_h
 #include "wb_wtt.h"
-#endif
 
 #include <QCheckBox>
 #include <QLabel>

@@ -37,9 +37,7 @@
 #ifndef rt_io_tabai_h
 #define rt_io_tabai_h
 
-#ifndef rt_io_filter_ai_h
 #include "rt_io_filter_ai.h"
-#endif
 
 pwr_sClass_ai_value_base* io_IniAIvalP; /* Pointer to AI-value 	*/
 pwr_sClass_Ai_7436* io_IniAIcon[64]; /* Pointer to Card obj  */

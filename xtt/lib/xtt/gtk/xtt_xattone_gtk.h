@@ -39,13 +39,9 @@
 
 /* xtt_xattone_gtk.h -- Single attribute editor */
 
-#ifndef xtt_xattone_h
 #include "xtt_xattone.h"
-#endif
 
-#ifndef cow_wow_gtk_h
 #include "cow_wow_gtk.h"
-#endif
 
 class XAttOneGtk : public XAttOne {
 public:

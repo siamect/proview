@@ -37,9 +37,7 @@
 #ifndef wb_wrevnav_gtk_h
 #define wb_wrevnav_gtk_h
 
-#ifndef wb_wrevnav_h
 #include "wb_wrevnav.h"
-#endif
 
 class WRevNavGtk : public WRevNav {
 public:

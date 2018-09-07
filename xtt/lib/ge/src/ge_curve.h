@@ -43,9 +43,7 @@
 
 #include "co_time.h"
 
-#ifndef glow_growapi_h
 #include "glow_growapi.h"
-#endif
 
 /*! \file ge_curve.h
     \brief Contains the GeCurve class. */

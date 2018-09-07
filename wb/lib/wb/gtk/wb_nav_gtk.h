@@ -39,9 +39,7 @@
 
 /* wb_nav_gtk.h -- Simple navigator */
 
-#ifndef wb_nav_h
 #include "wb_nav.h"
-#endif
 
 class NavGtk : public Nav {
 public:

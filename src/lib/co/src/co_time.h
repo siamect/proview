@@ -37,9 +37,7 @@
 #ifndef co_time_h
 #define co_time_h
 
-#ifndef pwr_h
 #include "pwr.h"
-#endif
 
 #ifdef __cplusplus
 extern "C" {

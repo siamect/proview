@@ -39,9 +39,7 @@
 
 /* cow_statusmon_nodelist_qt.h -- Status Monitor */
 
-#ifndef cow_statusmon_nodelist_h
 #include "cow_statusmon_nodelist.h"
-#endif
 
 #include "cow_wow_qt.h"
 

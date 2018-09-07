@@ -41,9 +41,7 @@
 
 #include "cow_wow_qt.h"
 
-#ifndef xtt_xcrr_h
 #include "xtt_xcrr.h"
-#endif
 
 class XCrrQtWidget;
 

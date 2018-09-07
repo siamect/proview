@@ -41,9 +41,7 @@
 
 #include "cow_wow_qt.h"
 
-#ifndef xtt_xatt_h
 #include "xtt_xatt.h"
-#endif
 
 #include <QLabel>
 #include <QSplitter>

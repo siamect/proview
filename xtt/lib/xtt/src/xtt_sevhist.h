@@ -39,13 +39,9 @@
 
 /* xtt_sevhist.h -- Sevhist curves */
 
-#ifndef ge_curve_h
-#include "ge_curve.h"
-#endif
-
-#ifndef rt_sevcli_h
 #include "rt_sevcli.h"
-#endif
+
+#include "ge_curve.h"
 
 /*! \file xtt_sevhist.h
     \brief Contains the XttSevHist class. */

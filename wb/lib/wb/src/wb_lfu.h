@@ -39,13 +39,9 @@
 #ifndef wb_lfu_h
 #define wb_lfu_h
 
-#ifndef wb_ldh_h
-#include "wb_ldh.h"
-#endif
-
-#ifndef cow_wow_h
 #include "cow_wow.h"
-#endif
+
+#include "wb_ldh.h"
 
 #ifdef __cplusplus
 extern "C" {

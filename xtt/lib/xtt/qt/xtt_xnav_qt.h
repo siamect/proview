@@ -39,9 +39,7 @@
 
 /* xtt_xnav_qt.h -- Simple navigator */
 
-#ifndef xtt_xnav_h
 #include "xtt_xnav.h"
-#endif
 
 #include <QMenu>
 #include <QObject>

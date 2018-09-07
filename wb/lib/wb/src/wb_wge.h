@@ -37,9 +37,7 @@
 #ifndef wb_wge_h
 #define wb_wge_h
 
-#ifndef pwr_h
 #include "pwr.h"
-#endif
 
 class Graph;
 

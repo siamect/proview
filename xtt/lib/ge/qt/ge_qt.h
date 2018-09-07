@@ -39,9 +39,7 @@
 
 #include "cow_wow_qt.h"
 
-#ifndef ge_h
 #include "ge.h"
-#endif
 
 #include <QAction>
 #include <QLabel>

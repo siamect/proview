@@ -39,13 +39,9 @@
 
 /* xtt_fast.h -- Fast curves */
 
-#ifndef ge_curve_h
-#include "ge_curve.h"
-#endif
-
-#ifndef rt_fast_h
 #include "rt_fast.h"
-#endif
+
+#include "ge_curve.h"
 
 /*! \file xtt_fast.h
     \brief Contains the XttFast class. */

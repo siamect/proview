@@ -39,9 +39,7 @@
 
 /* xtt_fast_qt.h -- Fast curves */
 
-#ifndef xtt_fast_h
 #include "xtt_fast.h"
-#endif
 
 class XttFastQt : public XttFast {
 public:

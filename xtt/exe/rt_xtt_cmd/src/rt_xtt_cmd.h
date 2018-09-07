@@ -37,13 +37,9 @@
 #ifndef rt_xtt_cmd_h
 #define rt_xtt_cmd_h
 
-#ifndef xtt_xnav_h
-#include "xtt_xnav.h"
-#endif
-
-#ifndef co_dcli_input_h
 #include "co_dcli_input.h"
-#endif
+
+#include "xtt_xnav.h"
 
 class XttCmd {
 public:

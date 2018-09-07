@@ -39,13 +39,9 @@
 
 /* co_help_main.h -- Help window */
 
-#ifndef flow_browctx_h
-#include "flow_browapi.h"
-#endif
-
-#ifndef co_nav_help_h
 #include "co_nav_help.h"
-#endif
+
+#include "flow_browapi.h"
 
 class CoHelpMain {
 public:

@@ -37,12 +37,11 @@
 #ifndef xtt_tbl_h
 #define xtt_tbl_h
 
-#ifndef pwr_privilege_h
 #include "pwr_privilege.h"
-#endif
+
+#include "rt_sevcli.h"
 
 #include "glow.h"
-#include "rt_sevcli.h"
 
 /* xtt_tbl.h -- Sev Table Viewer */
 

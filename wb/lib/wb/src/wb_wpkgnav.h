@@ -37,15 +37,9 @@
 #ifndef wb_wpkgnav_h
 #define wb_wpkgnav_h
 
-#ifndef wb_ldh_h
 #include "wb_ldh.h"
-#endif
-
 #include "wb_utility.h"
-
-#ifndef wb_wnav_brow_h
 #include "wb_wnav_brow.h"
-#endif
 
 #define wpkgnav_cVersion "X3.3b"
 #define WPKGNAV_BROW_MAX 25

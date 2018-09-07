@@ -41,9 +41,7 @@
 
 #include <gtk/gtk.h>
 
-#ifndef cow_treenav_h
 #include "cow_treenav.h"
-#endif
 
 //! The navigation area of the attribute editor.
 class TreeNavGtk : public TreeNav {

@@ -39,9 +39,7 @@
 
 /* xtt_fast_gtk.h -- Fast curves */
 
-#ifndef xtt_fast_h
 #include "xtt_fast.h"
-#endif
 
 class XttFastGtk : public XttFast {
 public:

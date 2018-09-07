@@ -37,9 +37,7 @@
 #ifndef flow_browapi_h
 #define flow_browapi_h
 
-#ifndef flow_h
 #include "flow.h"
-#endif
 
 #include "flow_browctx.h"
 

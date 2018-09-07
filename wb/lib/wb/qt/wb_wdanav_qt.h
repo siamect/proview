@@ -37,10 +37,7 @@
 #ifndef wb_wattnav_qt_h
 #define wb_wattnav_qt_h
 
-// #include "wb_utility.h"
-#ifndef wb_wdanav_h
 #include "wb_wdanav.h"
-#endif
 
 class WdaNavQt : public WdaNav {
 public:

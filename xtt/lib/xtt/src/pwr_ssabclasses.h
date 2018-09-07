@@ -1,9 +1,7 @@
 #ifndef pwr_ssabclasses_h
 #define pwr_ssabclasses_h
 
-#ifndef pwr_class_h
 #include "pwr_class.h"
-#endif
 
 #ifndef pwr_cClass_Buff1440
 #define pwr_cClass_Buff1440 16973984

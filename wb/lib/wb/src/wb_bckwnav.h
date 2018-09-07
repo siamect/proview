@@ -39,13 +39,9 @@
 
 /* wb_bckwnav.h -- Backupfile display window */
 
-#ifndef flow_browapi_h
 #include "flow_browapi.h"
-#endif
 
-#ifndef wb_bck_h
 #include "wb_bck.h"
-#endif
 
 typedef enum { bckwitem_eItemType_Bck } bckwitem_eItemType;
 

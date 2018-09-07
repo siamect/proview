@@ -95,9 +95,7 @@ extern pthread_mutex_t timer_mutex;
     }                                                                          \
   }
 
-#ifndef rt_plc_h
 #include "rt_plc.h"
-#endif
 
 void plc_inittimer(plc_sThread* tp);
 void plc_timerhandler(plc_sThread* tp);

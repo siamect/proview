@@ -39,21 +39,10 @@
 
 /* wb_wtt.h -- Simple navigator */
 
-#ifndef wb_pal
 #include "wb_pal.h"
-#endif
-
-#ifndef wb_wnav_h
-#include "wb_wnav.h"
-#endif
-
-#ifndef wb_uted_h
 #include "wb_uted.h"
-#endif
-
-#ifndef wb_wda_h
 #include "wb_wda.h"
-#endif
+#include "wb_wnav.h"
 
 class WPkg;
 

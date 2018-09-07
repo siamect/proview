@@ -45,13 +45,8 @@ extern "C" {
 
 typedef struct io_sCtx* io_tCtx;
 
-#ifndef rt_io_supervise_h
-#include "rt_io_supervise.h"
-#endif
-
-#ifndef rt_io_methods_h
 #include "rt_io_methods.h"
-#endif
+#include "rt_io_supervise.h"
 
 #ifndef NULL
 #define NULL (void*)0

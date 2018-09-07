@@ -39,11 +39,9 @@
 
 /* wb_expw.h -- Backupfile display window */
 
-#ifndef wb_expwnav_h
-#include "wb_expwnav.h"
-#endif
-
 #include "cow_wow.h"
+
+#include "wb_expwnav.h"
 
 class WbExpW {
 public:

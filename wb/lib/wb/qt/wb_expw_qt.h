@@ -41,9 +41,7 @@
 
 #include "cow_wow_qt.h"
 
-#ifndef wb_expw_h
 #include "wb_expw.h"
-#endif
 
 class WbExpWQtWidget;
 

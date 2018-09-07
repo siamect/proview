@@ -39,13 +39,9 @@
 
 /* xtt_logging.h -- Logging in xtt */
 
-#ifndef co_ccm_h
 #include "co_ccm.h"
-#endif
 
-#ifndef rt_gdh_h
 #include "rt_gdh.h"
-#endif
 
 #define RTT_LOGG_MAXENTRY 10
 #define RTT_LOGG_MAXPAR 100

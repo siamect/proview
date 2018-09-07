@@ -39,9 +39,7 @@
 
 /* wb_foe_qt.h -- function block object editor */
 
-#ifndef wb_foe_h
 #include "wb_foe.h"
-#endif
 
 #include "cow_wow_qt.h"
 

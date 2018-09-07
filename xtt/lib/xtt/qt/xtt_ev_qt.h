@@ -39,9 +39,7 @@
 
 /* xtt_ev_qt.h -- Alarm and event windows in xtt */
 
-#ifndef xtt_ev_h
 #include "xtt_ev.h"
-#endif
 
 #include <QDialog>
 #include <QWidget>

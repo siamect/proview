@@ -39,9 +39,7 @@
 
 /* wb_vsel_qt.h -- select volume */
 
-#ifndef wb_vsel_h
 #include "wb_vsel.h"
-#endif
 
 #include <QTreeWidget>
 

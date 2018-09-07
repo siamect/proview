@@ -41,9 +41,7 @@
    This include file contains definitions and function prototypes
    needed to use ds_ldh_genstruct.  */
 
-#ifndef wb_ldh_h
 #include "wb_ldh.h"
-#endif
 
 int genstr_process_top(ldh_tSesContext sesctx, char* volname);
 int genstr_psts(unsigned long int sts, FILE* logfile);

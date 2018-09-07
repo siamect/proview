@@ -39,12 +39,10 @@
 
 /* wb_vldh.h -- very local datahandler */
 
-#ifndef wb_ldh_h
-#include "wb_ldh.h"
-#endif
-
-#include "flow_ctx.h"
 #include "flow_api.h"
+#include "flow_ctx.h"
+
+#include "wb_ldh.h"
 
 #ifdef __cplusplus
 extern "C" {

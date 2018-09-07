@@ -39,37 +39,15 @@
 
 /* wtt_wnav.h -- Simple navigator */
 
-#ifndef co_regex_h
 #include "co_regex.h"
-#endif
 
-#ifndef wb_bckw_h
 #include "wb_bckw.h"
-#endif
-
-#ifndef wb_build_opt_h
 #include "wb_build_opt.h"
-#endif
-
-#ifndef wb_expw_h
 #include "wb_expw.h"
-#endif
-
-#ifndef wb_log_h
 #include "wb_log.h"
-#endif
-
-#ifndef wb_palfile_h
 #include "wb_palfile.h"
-#endif
-
-#ifndef wb_wnav_brow_h
-#include "wb_wnav_brow.h"
-#endif
-
-#ifndef wb_watttext_h
 #include "wb_watttext.h"
-#endif
+#include "wb_wnav_brow.h"
 
 #define wnav_cVersion "X3.3a"
 #define wnav_cScriptDescKey "!** Description"
