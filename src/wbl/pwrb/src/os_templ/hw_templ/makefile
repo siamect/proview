@@ -54,6 +54,8 @@ exe : $(doc_dir)/en_us/orm/pwrb_allclasses.html \
       $(doc_dir)/sv_se/orm/rt_csup_c.html \
       $(doc_dir)/en_us/pwrb.ps \
       $(doc_dir)/sv_se/pwrb.ps \
+      $(doc_dir)/en_us/pwrb.pdf \
+      $(doc_dir)/sv_se/pwrb.pdf \
       $(exe_dir)/en_us/pwrb_xtthelp.dat \
       $(exe_dir)/sv_se/pwrb_xtthelp.dat \
       | silent
@@ -143,6 +145,14 @@ $(doc_dir)/en_us/pwrb.ps :
 $(doc_dir)/sv_se/pwrb.ps :
 	@ echo "Generating postscript file for pwrb classes..."
 	@ $(co_convert) -q -l sv_se -d $(doc_dir)/sv_se "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
+
+$(doc_dir)/en_us/pwrb.pdf :
+	@ echo "Generating pdf file for pwrb classes..."
+	@ $(co_convert) -Q -d $(doc_dir)/en_us "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
+
+$(doc_dir)/sv_se/pwrb.pdf :
+	@ echo "Generating pdf file for pwrb classes..."
+	@ $(co_convert) -Q -l sv_se -d $(doc_dir)/sv_se "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
 
 $(exe_dir)/en_us/pwrb_xtthelp.dat :
 	@ echo "Generating xtt help files for pwrb classes en_us"

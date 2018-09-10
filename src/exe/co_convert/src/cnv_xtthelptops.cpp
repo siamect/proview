@@ -63,7 +63,11 @@ void CnvXtthelpToPs::subject_to_fname(
     strcat(fname, ctx->rx->name);
   } else
     strcpy(fname, ctx->rx->name);
-  strcat(fname, ".ps");
+  if (ctx->generate_pdf) {
+    strcat(fname, ".pdf");
+  } else {
+    strcat(fname, ".ps");
+  }
 }
 
 CnvXtthelpToPs::~CnvXtthelpToPs()
@@ -73,14 +77,19 @@ CnvXtthelpToPs::~CnvXtthelpToPs()
       status &= ~ps_mStatus_xtthelp;
     }
   }
-  tops.close();
+  tops->close();
+  delete tops;
 }
 
 void* CnvXtthelpToPs::insert(navh_eItemType item_type, const char* text1,
-    const char* text2, const char* text3, const char* link,
+    const char* text2, const char* text3, const char* alink,
     const char* link_bookmark, const char* file_name, navh_eHelpFile file_type,
     int help_index, const char* bookmark, int coding)
 {
+  char link[80];
+  if (alink)
+    strcpy(link, alink);
+  
   if (option & ps_mOption_printDisable && item_type != navh_eItemType_Option)
     return NULL;
 
@@ -104,33 +113,40 @@ void* CnvXtthelpToPs::insert(navh_eItemType item_type, const char* text1,
     strcpy(current_subject, text1);
 
     if (item_type == navh_eItemType_DocTitlePage) {
-      tops.set_cf(ps_eFile_Info);
-      tops.set_ci(ps_eId_TitlePage);
+      tops->set_cf(ps_eFile_Info);
+      tops->set_ci(ps_eId_TitlePage);
     } else if (item_type == navh_eItemType_DocInfoPage) {
-      tops.set_cf(ps_eFile_Info);
-      tops.set_ci(ps_eId_InfoPage);
-      tops.print_pagebreak(0);
+      tops->set_cf(ps_eFile_Info);
+      tops->set_ci(ps_eId_InfoPage);
+      tops->print_pagebreak(0);
     } else {
-      if (tops.ci == ps_eId_Chapter) {
+      if (tops->ci == ps_eId_Chapter) {
         if (!first_chaptertopic)
-          tops.set_ci(ps_eId_TopicL1);
-        else
+          tops->set_ci(ps_eId_TopicL1);
+        else {
           first_chaptertopic = 0;
-      } else
-        tops.set_ci(ps_eId_TopicL1);
+          if (ctx->generate_pdf) tops->y = ps_cPageHeight - ps_cTopMargin;
+        }
+      } else {
+        if (!ctx->generate_pdf) tops->set_ci(ps_eId_TopicL1);
+      }
 
-      if (tops.cf == ps_eFile_Info)
-        tops.y = ps_cPageHeight - ps_cTopMargin;
-      tops.set_cf(ps_eFile_Body);
+      if (!ctx->generate_pdf && tops->cf == ps_eFile_Info)
+        tops->y = ps_cPageHeight - ps_cTopMargin;
+      tops->set_cf(ps_eFile_Body);
     }
 
     if (first_topic) {
       pwr_tFileName fname;
 
       subject_to_fname(fname, text1, 1);
-      tops.set_filename(ps_eFile_Info, fname);
-      tops.set_filename(ps_eFile_Body, ps_cTmpFile);
-      tops.open();
+      if (ctx->generate_pdf) {
+        tops->set_filename(ps_eFile_Body, fname);
+      } else {
+        tops->set_filename(ps_eFile_Info, fname);
+        tops->set_filename(ps_eFile_Body, ps_cTmpFile);
+      }
+      tops->open();
 
       status |= ps_mStatus_xtthelp;
       first_topic = 0;
@@ -147,18 +163,18 @@ void* CnvXtthelpToPs::insert(navh_eItemType item_type, const char* text1,
       status &= ~ps_mStatus_topic;
     if (user_style) {
       user_style = 0;
-      tops.set_ci(base_ci);
+      tops->set_ci(base_ci);
     }
     return NULL;
   }
   case navh_eItemType_Style: {
     if (str_NoCaseStrcmp(text1, "function") == 0) {
-      base_ci = tops.ci;
-      tops.set_ci(ps_eId_Function);
+      base_ci = tops->ci;
+      tops->set_ci(ps_eId_Function);
       user_style = 1;
     } else if (str_NoCaseStrcmp(text1, "report") == 0) {
-      base_ci = tops.ci;
-      tops.set_ci(ps_eId_Report);
+      base_ci = tops->ci;
+      tops->set_ci(ps_eId_Report);
     }
     return NULL;
   }
@@ -170,7 +186,7 @@ void* CnvXtthelpToPs::insert(navh_eItemType item_type, const char* text1,
     if (status & ps_mStatus_topic)
       status &= ~ps_mStatus_topic;
 
-    tops.set_ci(ps_eId_TopicL1);
+    tops->set_ci(ps_eId_TopicL1);
     user_style = 0;
     return NULL;
   }
@@ -182,31 +198,31 @@ void* CnvXtthelpToPs::insert(navh_eItemType item_type, const char* text1,
     if (status & ps_mStatus_topic)
       status &= ~ps_mStatus_topic;
 
-    tops.set_ci(ps_eId_Chapter);
+    tops->set_ci(ps_eId_Chapter);
     first_chaptertopic = 1;
     user_style = 0;
 
-    tops.reset_headernumbers(1);
+    tops->reset_headernumbers(1);
     return NULL;
   }
   case navh_eItemType_HeaderLevel: {
     if (user_style) {
       user_style = 0;
-      tops.set_ci(base_ci);
+      tops->set_ci(base_ci);
     }
-    tops.incr_headerlevel();
+    tops->incr_headerlevel();
     return NULL;
   }
   case navh_eItemType_EndHeaderLevel: {
     if (user_style) {
       user_style = 0;
-      tops.set_ci(base_ci);
+      tops->set_ci(base_ci);
     }
-    tops.decr_headerlevel();
+    tops->decr_headerlevel();
     return NULL;
   }
   case navh_eItemType_PageBreak: {
-    tops.print_pagebreak(1);
+    tops->print_pagebreak(1);
     return NULL;
   }
   case navh_eItemType_Help:
@@ -215,31 +231,34 @@ void* CnvXtthelpToPs::insert(navh_eItemType item_type, const char* text1,
     int printmode;
     CnvStyle* hstyle = NULL;
 
+    // Unable to calculate lenght because link i not known in confpass
+    if (ctx->generate_pdf) strcpy(link, "");
+
     if (item_type == navh_eItemType_Help)
-      hstyle = &tops.style[tops.ci].text;
+      hstyle = &tops->style[tops->ci].text;
     else if (item_type == navh_eItemType_HelpBold)
-      hstyle = &tops.style[tops.ci].boldtext;
+      hstyle = &tops->style[tops->ci].boldtext;
     else if (item_type == navh_eItemType_HelpCode)
-      hstyle = &tops.style[tops.ci].code;
+      hstyle = &tops->style[tops->ci].code;
 
     if (!streq(link, ""))
       printmode = ps_mPrintMode_Start;
     else
       printmode = ps_mPrintMode_Pos;
     if (!(status & ps_mStatus_table)) {
-      tops.x = ps_cLeftMargin;
-      tops.print_text(text1, *hstyle, printmode);
+      tops->x = ps_cLeftMargin;
+      tops->print_text(text1, *hstyle, printmode);
     } else {
-      tops.x = ps_cLeftMargin;
-      tops.print_text(text1, *hstyle);
+      tops->x = ps_cLeftMargin;
+      tops->print_text(text1, *hstyle);
       if (text2 && !streq(text2, "")) {
-        tops.x = ps_cLeftMargin + ps_cCellSize;
-        tops.print_text(
+        tops->x = ps_cLeftMargin + ps_cCellSize;
+        tops->print_text(
             text2, *hstyle, ps_mPrintMode_KeepY | ps_mPrintMode_FixX);
       }
       if (text3 && !streq(text3, "")) {
-        tops.x = ps_cLeftMargin + 2 * ps_cCellSize;
-        tops.print_text(
+        tops->x = ps_cLeftMargin + 2 * ps_cCellSize;
+        tops->print_text(
             text3, *hstyle, ps_mPrintMode_KeepY | ps_mPrintMode_FixX);
       }
     }
@@ -255,46 +274,48 @@ void* CnvXtthelpToPs::insert(navh_eItemType item_type, const char* text1,
           strcpy(fname, &link[5]);
         sprintf(str, " (%s %s)", Lng::translate("See"), fname);
         if (!(status & ps_mStatus_table))
-          tops.print_text(str, tops.style[tops.ci].link,
+          tops->print_text(str, tops->style[tops->ci].link,
               ps_mPrintMode_End | ps_mPrintMode_FixX);
         else {
-          tops.x = ps_cLeftMargin + 3 * ps_cCellSize;
+          tops->x = ps_cLeftMargin + 3 * ps_cCellSize;
           if (ps_cLeftMargin + 2 * ps_cCellSize
                   + strlen(text3) * hstyle->font_size * 0.65
-              > tops.x)
-            tops.x = ps_cLeftMargin + 2 * ps_cCellSize
+              > tops->x)
+            tops->x = ps_cLeftMargin + 2 * ps_cCellSize
                 + strlen(text3) * hstyle->font_size * 0.65;
-          tops.print_text(str, tops.style[tops.ci].link,
+          tops->print_text(str, tops->style[tops->ci].link,
               ps_mPrintMode_End | ps_mPrintMode_FixX);
         }
       } else if ((strstr(link, ".htm") != 0) || (strstr(link, ".pdf") != 0)) {
         strcpy(fname, link);
         sprintf(str, " (%s %s)", Lng::translate("See"), fname);
         if (!(status & ps_mStatus_table))
-          tops.print_text(str, tops.style[tops.ci].link,
+          tops->print_text(str, tops->style[tops->ci].link,
               ps_mPrintMode_End | ps_mPrintMode_FixX);
         else {
-          tops.x = ps_cLeftMargin + 3 * ps_cCellSize;
+          tops->x = ps_cLeftMargin + 3 * ps_cCellSize;
           if (ps_cLeftMargin + 2 * ps_cCellSize
                   + strlen(text3) * hstyle->font_size * 0.65
-              > tops.x)
-            tops.x = ps_cLeftMargin + 2 * ps_cCellSize
+              > tops->x)
+            tops->x = ps_cLeftMargin + 2 * ps_cCellSize
                 + strlen(text3) * hstyle->font_size * 0.65;
-          tops.print_text(str, tops.style[tops.ci].link,
+          tops->print_text(str, tops->style[tops->ci].link,
               ps_mPrintMode_End | ps_mPrintMode_FixX);
         }
       } else {
         char text[80];
-        int sts = tops.content.find_link(link, text, &page);
+        int sts = tops->content.find_link(link, text, &page);
         if (ODD(sts)) {
           sprintf(str, " (%s %s ", Lng::translate("See"), text);
           sprintf(&str[strlen(str)], "%s %d)", Lng::translate("page"), page);
           if (!(status & ps_mStatus_table))
-            tops.print_text(str, tops.style[tops.ci].link,
+            tops->print_text(str, tops->style[tops->ci].link,
                 ps_mPrintMode_End | ps_mPrintMode_FixX);
           else {
           }
-        }
+        } else if (ctx->generate_pdf && !(status & ps_mStatus_table))
+          tops->print_text("", tops->style[tops->ci].link,
+              ps_mPrintMode_End | ps_mPrintMode_FixX);
       }
     } else if (bookmark) {
       // fp[cf] << tags[ps_eTag_link].start << " name=\"" << bookmark << "\">";
@@ -306,26 +327,26 @@ void* CnvXtthelpToPs::insert(navh_eItemType item_type, const char* text1,
     int hlevel;
 
     if (!user_style)
-      hlevel = tops.ci - (int)ps_eId_Chapter;
+      hlevel = tops->ci - (int)ps_eId_Chapter;
     else
       hlevel = base_ci - (int)ps_eId_Chapter;
-    tops.print_h1(text1, hlevel, current_subject);
+    tops->print_h1(text1, hlevel, current_subject);
     return NULL;
   }
   case navh_eItemType_Header: {
-    tops.print_h3(text1);
+    tops->print_h3(text1);
     return NULL;
   }
   case navh_eItemType_HeaderLarge: {
-    tops.print_h2(text1);
+    tops->print_h2(text1);
     return NULL;
   }
   case navh_eItemType_HorizontalLine: {
-    tops.print_horizontal_line();
+    tops->print_horizontal_line();
     return NULL;
   }
   case navh_eItemType_Image: {
-    int sts = tops.print_image(text1);
+    int sts = tops->print_image(text1);
     if (EVEN(sts))
       printf("Image: %s not found\n", text1);
     return NULL;

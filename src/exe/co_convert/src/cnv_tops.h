@@ -131,18 +131,18 @@ class CnvToPs {
     style[ps_eId_Report].h1 = CnvStyle("Helvetica-Bold-ISOLatin1", 24, 0, 24,
         20, cnv_eAlignment_Left, 0, 0, 0);
   }
-  ~CnvToPs();
+  virtual ~CnvToPs();
 
-  void close();
-  void print_text(
+  virtual void close();
+  virtual void print_text(
       const char* text, CnvStyle& style, int mode = ps_mPrintMode_Pos);
-  void print_pagebreak(int print_num);
-  void print_content();
+  virtual void print_pagebreak(int print_num);
+  virtual void print_content();
   void print_h1(const char* text, int hlevel, char* subject);
   void print_h2(const char* text);
   void print_h3(const char* text);
-  void print_horizontal_line();
-  int print_image(const char* filename);
+  virtual void print_horizontal_line();
+  virtual int print_image(const char* filename);
   void cnv_text(char* to, const char* from);
   void set_confpass(bool conf)
   {
@@ -157,11 +157,11 @@ class CnvToPs {
       ci = 0;
     }
   }
-  void set_ci(int val)
+  virtual void set_ci(int val)
   {
     ci = val;
   }
-  void set_cf(int val)
+  virtual void set_cf(int val)
   {
     cf = val;
   }
@@ -169,7 +169,7 @@ class CnvToPs {
   {
     strcpy(filename[idx], name);
   }
-  void open();
+  virtual void open();
   void incr_headerlevel();
   void decr_headerlevel();
   void reset_headernumbers(int level);

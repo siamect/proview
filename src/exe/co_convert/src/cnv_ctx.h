@@ -60,6 +60,7 @@ class CnvCtx {
   int generate_src;
   int generate_struct;
   int generate_ps;
+  int generate_pdf;
   int generate_cdp;
   int common_structfile_only;
   int hpp;

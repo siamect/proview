@@ -72,6 +72,8 @@ export_wbl_html_en_us := $(patsubst %.wb_load,$(doc_dir)/en_us/orm/%_allclasses.
 export_wbl_html_sv_se := $(patsubst %.wb_load,$(doc_dir)/sv_se/orm/%_allclasses.html,$(wbl_sources))
 export_wbl_ps_en_us := $(patsubst %.wb_load,$(doc_dir)/en_us/%.ps,$(wbl_sources))
 export_wbl_ps_sv_se := $(patsubst %.wb_load,$(doc_dir)/sv_se/%.ps,$(wbl_sources))
+export_wbl_pdf_en_us := $(patsubst %.wb_load,$(doc_dir)/en_us/%.pdf,$(wbl_sources))
+export_wbl_pdf_sv_se := $(patsubst %.wb_load,$(doc_dir)/sv_se/%.pdf,$(wbl_sources))
 bld_dir := $(addprefix $(release_root)/bld/$(type_name)/, $(patsubst %.wb_load,%,$(wbl_sources)))
 dbs_dependencies := $(bld_dir)/mcomp.d_wbl
 
@@ -134,6 +136,14 @@ $(doc_dir)/sv_se/%.ps : ../../%.wb_load
 	@ echo "Generating postscript file for $(source) classes sv_se..."
 	@ $(co_convert) -q -l sv_se -d $(doc_dir)/sv_se "$(source)"
 
+$(doc_dir)/en_us/%.pdf : ../../%.wb_load
+	@ echo "Generating pdf file for $(source) classes en_us..."
+	@ $(co_convert) -Q -l en_us -d $(doc_dir)/en_us "$(source)"
+
+$(doc_dir)/sv_se/%.pdf : ../../%.wb_load
+	@ echo "Generating pdf file for $(source) classes sv_se..."
+	@ $(co_convert) -Q -l sv_se -d $(doc_dir)/sv_se "$(source)"
+
 $(exe_dir)/en_us/%_xtthelp.dat : ../../%.wb_load
 	@ echo "Generating xtt help files for $(source) classes en_us"
 	@ $(co_convert) -x -d $(exe_dir)/en_us "$(source)"
@@ -176,6 +186,8 @@ exe:   $(export_wbl_xtthelp_en_us) \
        $(export_wbl_html_sv_se) \
        $(export_wbl_ps_en_us) \
        $(export_wbl_ps_sv_se) \
+       $(export_wbl_pdf_en_us) \
+       $(export_wbl_pdf_sv_se) \
        $(export_pdf_en_us) \
        $(export_pdf_sv_se) \
        | silent

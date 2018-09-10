@@ -49,7 +49,6 @@ extern "C" {
 #include "cnv_xtthelptohtml.h"
 #include "cnv_xtthelptoxml.h"
 #include "cnv_xtthelptops.h"
-#include "cnv_xtthelptopdf.h"
 #include "cnv_xtthelptotext.h"
 #include "cnv_pwgtoxtthelp.h"
 #include "cnv_classdep.h"
@@ -108,7 +107,6 @@ int main(int argc, char* argv[])
   int xtthelp_to_html = 0;
   int xtthelp_to_xml = 0;
   int xtthelp_to_ps = 0;
-  int xtthelp_to_pdf = 0;
   int xtthelp_to_text = 0;
   int pwg_to_xtthelp = 0;
   int changelog = 0;
@@ -177,6 +175,10 @@ int main(int argc, char* argv[])
           ctx->generate_ps = 1;
           ctx->common_structfile_only = 1;
           break;
+        case 'Q':
+          ctx->generate_pdf = 1;
+          ctx->common_structfile_only = 1;
+          break;
         case 'p':
           ctx->generate_struct = 1;
           ctx->hpp = 1;
@@ -198,9 +200,11 @@ int main(int argc, char* argv[])
           break;
         case 'n':
           xtthelp_to_ps = 1;
+          ctx->generate_ps = 1;
           break;
         case 'f':
-          xtthelp_to_pdf = 1;
+          xtthelp_to_ps = 1;
+          ctx->generate_pdf = 1;
           break;
         case 'j':
           xtthelp_to_text = 1;
@@ -272,14 +276,6 @@ int main(int argc, char* argv[])
     delete xtthelpto;
     exit(0);
   }
-  if (xtthelp_to_pdf) {
-    CnvXtthelpToPdf* xtthelpto = new CnvXtthelpToPdf(ctx);
-    ctx->rx = new CnvReadXtthelp(files, ctx->dir, xtthelpto);
-    ctx->rx->read_xtthelp();
-    delete ctx->rx;
-    delete xtthelpto;
-    exit(0);
-  }
   if (xtthelp_to_text) {
     CnvXtthelpToText* xtthelpto = new CnvXtthelpToText(ctx);
     ctx->rx = new CnvReadXtthelp(files, ctx->dir, xtthelpto);
@@ -341,7 +337,7 @@ int main(int argc, char* argv[])
       ctx->wblto = new CnvWblToH(ctx);
     else if (ctx->generate_xtthelp)
       ctx->wblto = new CnvWblToXtthelp(ctx);
-    else if (ctx->generate_ps)
+    else if (ctx->generate_ps || ctx->generate_pdf)
       ctx->wblto = new CnvWblToPs(ctx);
 
     ctx->rw = new CnvReadWbl(ctx, ctx->wblto);

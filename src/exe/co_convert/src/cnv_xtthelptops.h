@@ -38,6 +38,7 @@
 #define cnv_xtthelptops_h
 
 #include "cnv_xtthelpto.h"
+#include "cnv_topdf.h"
 #include "cnv_tops.h"
 
 class CnvCtx;
@@ -58,6 +59,11 @@ class CnvXtthelpToPs : public CnvXtthelpTo {
         conf_pass(false), option(0)
   {
     strcpy(current_subject, "");
+    if (ctx->generate_pdf) {
+      tops = new CnvToPdf();
+    } else {
+      tops = new CnvToPs();
+    }
   }
   virtual ~CnvXtthelpToPs();
 
@@ -69,14 +75,14 @@ class CnvXtthelpToPs : public CnvXtthelpTo {
       const char* text3, const char* link, const char* link_bookmark,
       const char* file_name, navh_eHelpFile file_type, int help_index,
       const char* bookmark, int coding);
-  void subject_to_fname(char* fname, const char* subject, int path);
+  virtual void subject_to_fname(char* fname, const char* subject, int path);
   bool confpass()
   {
     return true;
   }
   void set_confpass(bool conf)
   {
-    tops.set_confpass(conf);
+    tops->set_confpass(conf);
     conf_pass = conf;
     if (!conf) {
       // Reset
@@ -88,7 +94,7 @@ class CnvXtthelpToPs : public CnvXtthelpTo {
   }
 
   CnvCtx* ctx;
-  CnvToPs tops;
+  CnvToPs *tops;
   int base_ci;
   int first_topic;
   int first_chaptertopic;

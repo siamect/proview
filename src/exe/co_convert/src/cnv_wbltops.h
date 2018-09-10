@@ -38,6 +38,7 @@
 #define cnv_wbltops_h
 
 #include "cnv_wblto.h"
+#include "cnv_topdf.h"
 #include "cnv_tops.h"
 
 class CnvReadWbl;
@@ -46,11 +47,16 @@ class CnvWblToPs : public CnvWblTo {
   public:
   CnvWblToPs(CnvCtx* cnv_ctx) : ctx(cnv_ctx), conf_pass(false)
   {
+    if (ctx->generate_pdf) {
+      tops = new CnvToPdf();
+    } else {
+      tops = new CnvToPs();
+    }
   }
   virtual ~CnvWblToPs();
 
   CnvCtx* ctx;
-  CnvToPs tops;
+  CnvToPs *tops;
   bool conf_pass;
 
   int init(char* first);
@@ -71,7 +77,7 @@ class CnvWblToPs : public CnvWblTo {
   }
   void set_confpass(bool conf)
   {
-    tops.set_confpass(conf);
+    tops->set_confpass(conf);
     conf_pass = conf;
   }
   bool confpass()

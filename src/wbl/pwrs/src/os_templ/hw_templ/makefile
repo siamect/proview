@@ -46,6 +46,8 @@ exe : $(doc_dir)/en_us/orm/pwrs_allclasses.html \
       $(doc_dir)/sv_se/orm/pwr_class_h.html \
       $(doc_dir)/en_us/pwrs.ps \
       $(doc_dir)/sv_se/pwrs.ps \
+      $(doc_dir)/en_us/pwrs.pdf \
+      $(doc_dir)/sv_se/pwrs.pdf \
       $(exe_dir)/en_us/pwrs_xtthelp.dat \
       $(exe_dir)/sv_se/pwrs_xtthelp.dat \
       | silent
@@ -111,6 +113,14 @@ $(doc_dir)/en_us/pwrs.ps :
 $(doc_dir)/sv_se/pwrs.ps :
 	@ echo "Generating postscript file for pwrs classes..."
 	@ $(co_convert) -q -l sv_se -d $(doc_dir)/sv_se "$(pwre_sroot)/wbl/pwrs/src/pwrs_*.wb_load"
+
+$(doc_dir)/en_us/pwrs.pdf :
+	@ echo "Generating pdf file for pwrs classes..."
+	@ $(co_convert) -Q -d $(doc_dir)/en_us "$(pwre_sroot)/wbl/pwrs/src/pwrs_*.wb_load"
+
+$(doc_dir)/sv_se/pwrs.pdf :
+	@ echo "Generating pdf file for pwrs classes..."
+	@ $(co_convert) -Q -l sv_se -d $(doc_dir)/sv_se "$(pwre_sroot)/wbl/pwrs/src/pwrs_*.wb_load"
 
 $(exe_dir)/en_us/pwrs_xtthelp.dat :
 	@ echo "Generating xtt help files for pwrs classes en_us"

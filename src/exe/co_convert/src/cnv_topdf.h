@@ -41,43 +41,12 @@
 
 #include <fstream>
 
-#include "cnv_content.h"
+#include "cnv_tops.h"
 
-#define pdf_cMaxLevel 4
-#define pdf_cPageHeight 842
-#define pdf_cPageWidth 595
-#define pdf_cPageNumX (pdf_cPageWidth - 10)
-#define pdf_cPageNumY (pdf_cPageHeight - 13)
-#define pdf_cLeftMargin 100
-#define pdf_cTopMargin 100
-#define pdf_cBottomMargin 50
-#define pdf_cCellSize 110
-#define pdf_cTmpFile "/tmp/ptmp.ps"
-
-typedef enum {
-  pdf_mPrintMode_Pos = 1 << 0,
-  pdf_mPrintMode_Start = 1 << 1,
-  pdf_mPrintMode_Continue = 1 << 2,
-  pdf_mPrintMode_End = 1 << 3,
-  pdf_mPrintMode_KeepY = 1 << 4,
-  pdf_mPrintMode_FixX = 1 << 5
-} pdf_mPrintMode;
-
-typedef enum { pdf_eFile_Body, pdf_eFile__ } pdf_eFile;
-
-typedef enum {
-  pdf_eId_TitlePage,
-  pdf_eId_InfoPage,
-  pdf_eId_Content,
-  pdf_eId_Chapter,
-  pdf_eId_TopicL1,
-  pdf_eId_TopicL2,
-  pdf_eId_TopicL3,
-  pdf_eId_Function,
-  pdf_eId_Class,
-  pdf_eId_Report,
-  pdf_eId__
-} pdf_eId;
+#undef ps_cPageHeight
+#define ps_cPageHeight 842
+#undef ps_cPageWidth
+#define ps_cPageWidth 595
 
 typedef enum {
   pdf_eObjType_Catalog,
@@ -129,67 +98,14 @@ class CnvPdfObj {
   int xobject[40];
 };
 
-class CnvToPdf {
+class CnvToPdf : public CnvToPs {
   public:
-  CnvToPdf()
-      : cf(0), ci(0), prev_ci(0), conf_pass(false), xref_offset(0), im_cnt(0),
-        use_outlines(1)
-  {
-    for (int i = 0; i < pdf_cMaxLevel; i++)
-      header_number[i] = 0;
-    for (int i = 0; i < pdf_eFile__; i++)
-      page_number[i] = 0;
-    strcpy(previous_chapter, "");
-    strcpy(current_chapter, "");
-
-    style[pdf_eId_TitlePage].h1 = CnvStyle("Helvetica-Bold-ISOLatin1", 35, 0, 0,
-        0, cnv_eAlignment_Center, 0, 0, 0);
-    style[pdf_eId_TitlePage].h2 = CnvStyle("Helvetica-Bold-ISOLatin1", 25, 0,
-        50, 20, cnv_eAlignment_Center, 0, 0, 0);
-    style[pdf_eId_TitlePage].h3 = CnvStyle("Helvetica-Bold-ISOLatin1", 15, 0,
-        25, 10, cnv_eAlignment_Center, 0, 0, 0);
-    style[pdf_eId_TitlePage].text = CnvStyle(
-        "Helvetica-ISOLatin1", 8, 0, 9, 1, cnv_eAlignment_Center, 0, 0, 0);
-    style[pdf_eId_TitlePage].boldtext = CnvStyle(
-        "Helvetica-Bold-ISOLatin1", 8, 0, 9, 1, cnv_eAlignment_Center, 0, 0, 0);
-    style[pdf_eId_InfoPage].h1 = CnvStyle("Helvetica-Bold-ISOLatin1", 24, 0,
-        100, 20, cnv_eAlignment_Left, 0, 0, 0);
-    style[pdf_eId_Chapter].h1 = CnvStyle("Helvetica-Bold-ISOLatin1", 24, 0, 24,
-        40, cnv_eAlignment_Left, 0, 1, 1);
-    style[pdf_eId_TopicL2].h1 = CnvStyle("Helvetica-Bold-ISOLatin1", 12, 0, 20,
-        10, cnv_eAlignment_Left, 0, 0, 1);
-    style[pdf_eId_TopicL2].h2 = CnvStyle(
-        "Helvetica-Bold-ISOLatin1", 10, 0, 16, 8, cnv_eAlignment_Left, 0, 0, 0);
-    style[pdf_eId_TopicL3].h1 = CnvStyle(
-        "Helvetica-Bold-ISOLatin1", 10, 0, 16, 8, cnv_eAlignment_Left, 0, 0, 1);
-    style[pdf_eId_TopicL3].h2 = CnvStyle(
-        "Helvetica-Bold-ISOLatin1", 8, 0, 16, 5, cnv_eAlignment_Left, 0, 0, 0);
-    style[pdf_eId_Function].h1 = CnvStyle("Helvetica-Bold-ISOLatin1", 24, 0, 24,
-        20, cnv_eAlignment_Left, 1, 0, 1);
-    style[pdf_eId_Class].h1 = CnvStyle("Helvetica-Bold-ISOLatin1", 24, 0, 24,
-        20, cnv_eAlignment_Left, 1, 0, 1);
-    style[pdf_eId_Class].h2 = CnvStyle(
-        "Helvetica-Bold-ISOLatin1", 20, 0, 24, 8, cnv_eAlignment_Left, 0, 0, 0);
-    style[pdf_eId_Class].h3 = CnvStyle("Helvetica-Bold-ISOLatin1", 16, -40, 24,
-        6, cnv_eAlignment_Left, 0, 0, 0);
-    style[pdf_eId_Content].boldtext = CnvStyle(
-        "Helvetica-Bold-ISOLatin1", 10, 0, 11, 1, cnv_eAlignment_Left, 0, 0, 0);
-    style[pdf_eId_Chapter].text = CnvStyle(
-        "TimesNewRoman-ISOLatin1", 10, 0, 11, 1, cnv_eAlignment_Left, 0, 0, 0);
-    style[pdf_eId_TopicL1].text = CnvStyle(
-        "TimesNewRoman-ISOLatin1", 10, 0, 11, 1, cnv_eAlignment_Left, 0, 0, 0);
-    style[pdf_eId_TopicL2].text = CnvStyle(
-        "TimesNewRoman-ISOLatin1", 10, 0, 11, 1, cnv_eAlignment_Left, 0, 0, 0);
-    style[pdf_eId_TopicL3].text = CnvStyle(
-        "TimesNewRoman-ISOLatin1", 10, 0, 11, 1, cnv_eAlignment_Left, 0, 0, 0);
-    style[pdf_eId_Report].h1 = CnvStyle("Helvetica-Bold-ISOLatin1", 20, 0, 14,
-        20, cnv_eAlignment_Left, 0, 0, 0);
-  }
+  CnvToPdf() : CnvToPs(), prev_ci(0), xref_offset(0), im_cnt(0), use_outlines(1) {}
   ~CnvToPdf();
 
   void close();
   void print_text(
-      const char* text, CnvStyle& style, int mode = pdf_mPrintMode_Pos);
+      const char* text, CnvStyle& style, int mode = ps_mPrintMode_Pos);
   void draw_rect(double lw, double x, double y, double w, double h);
   void draw_arc(double lw, double x, double y, double w, double h, int angle1,
       int angle2);
@@ -200,44 +116,18 @@ class CnvToPdf {
       double y3, int gray);
   void print_pagebreak(int print_num);
   void print_content();
-  void print_h1(const char* text, int hlevel, char* subject);
-  void print_h2(const char* text);
-  void print_h3(const char* text);
   void print_horizontal_line();
   int print_image(const char* filename);
   int print_image_inline(const char* filename);
-  void cnv_text(char* to, const char* from);
-  void set_confpass(bool conf)
+  void set_cf(int val)
   {
-    conf_pass = conf;
-    if (!conf) {
-      // Reset
-      for (int i = 0; i < pdf_cMaxLevel; i++)
-        header_number[i] = 0;
-      for (int i = 0; i < pdf_eFile__; i++)
-        page_number[i] = 0;
-      cf = 0;
-      ci = 0;
-    }
   }
   void set_ci(int val)
   {
     prev_ci = ci;
     ci = val;
   }
-  void set_cf(int val)
-  {
-    cf = val;
-  }
-  void set_filename(int idx, char* name)
-  {
-    strcpy(filename[idx], name);
-  }
   void open();
-  void incr_headerlevel();
-  void decr_headerlevel();
-  void reset_headernumbers(int level);
-  void set_pageheader(const char* text);
   void set_useoutlines(int u)
   {
     use_outlines = u;
@@ -250,20 +140,7 @@ class CnvToPdf {
   std::vector<CnvPdfObj> v_font;
   std::vector<CnvPdfObj> v_resource;
   std::vector<CnvPdfObj> v_image;
-  CnvContent content;
-  CnvIdStyle style[pdf_eId__];
-  std::ofstream fp[pdf_eFile__];
-  pwr_tFileName filename[pdf_eFile__];
-  int cf;
-  int ci;
   int prev_ci;
-  double x;
-  double y;
-  int page_number[pdf_eFile__];
-  int header_number[pdf_cMaxLevel];
-  bool conf_pass;
-  char current_chapter[160];
-  char previous_chapter[160];
   int start_offset;
   int xref_offset;
   int im_cnt;

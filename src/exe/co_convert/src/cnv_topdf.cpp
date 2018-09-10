@@ -103,8 +103,8 @@ void CnvPdfObj::print_begin()
                          << "  << /Type /Page\n"
                          << "     /Parent " << topdf->v_outline.size() + 1
                          << " 0 R\n"
-                         << "     /Mediabox [0 0 " << pdf_cPageWidth << " "
-                         << pdf_cPageHeight << "]\n"
+                         << "     /Mediabox [0 0 " << ps_cPageWidth << " "
+                         << ps_cPageHeight << "]\n"
                          << "     /Contents "
                          << number - 1 + topdf->v_outline.size()
             + topdf->v_pages.size()
@@ -309,78 +309,48 @@ int CnvPdfObj::print_image()
   return 1;
 }
 
-void CnvToPdf::cnv_text(char* to, const char* from)
-{
-  if (!from) {
-    strcpy(to, "");
-    return;
-  }
-
-  char* t = to;
-  char* s = (char*)from;
-
-  for (; *s; s++) {
-    switch (*s) {
-    case '(':
-      *t++ = '\\';
-      *t++ = '(';
-      break;
-    case ')':
-      *t++ = '\\';
-      *t++ = ')';
-      break;
-    case '\\':
-      *t++ = '\\';
-      *t++ = '\\';
-    default:
-      *t++ = *s;
-    }
-  }
-  *t = 0;
-}
-
 void CnvToPdf::print_text(const char* text, CnvStyle& style, int mode)
 {
   char str[1000];
 
   cnv_text(str, text);
 
-  if (style.sidebreak && mode & pdf_mPrintMode_Pos) {
+  if (style.sidebreak && mode & ps_mPrintMode_Pos) {
     if (page_number[cf] == 0) {
       // First header, no pagebreak
       page_number[cf] = 1;
     } else {
       print_pagebreak(0);
     }
-  } else if (style.pagebreak && mode & pdf_mPrintMode_Pos) {
+  } else if (style.pagebreak && mode & ps_mPrintMode_Pos) {
     print_pagebreak(0);
   }
 
-  if (mode & pdf_mPrintMode_Pos || mode & pdf_mPrintMode_Start) {
+  if (mode & ps_mPrintMode_Pos || mode & ps_mPrintMode_Start) {
     y -= style.top_offset;
 
-    if (y - style.bottom_offset < pdf_cBottomMargin) {
+    if (y - style.bottom_offset < ps_cBottomMargin) {
       print_pagebreak(0);
     }
   } else
     y += style.bottom_offset;
 
-  if (!(mode & pdf_mPrintMode_FixX)) {
+  if (!(mode & ps_mPrintMode_FixX)) {
     if (style.alignment == cnv_eAlignment_Center) {
-      x = pdf_cLeftMargin / 2 + (pdf_cPageWidth - pdf_cLeftMargin / 2) / 2
+      x = ps_cLeftMargin / 2 + (ps_cPageWidth - ps_cLeftMargin / 2) / 2
           - 0.50 * strlen(text) * style.font_size / 2;
-      if (x < pdf_cLeftMargin / 2)
-        x = pdf_cLeftMargin / 2;
+      if (x < ps_cLeftMargin / 2)
+        x = ps_cLeftMargin / 2;
     } else
-      x = pdf_cLeftMargin + style.indentation;
+      x = ps_cLeftMargin + style.indentation;
   }
 
   int pmode = mode & 31;
 
   if (!streq(text, "")) {
     switch (pmode) {
-    case pdf_mPrintMode_Pos:
-    case pdf_mPrintMode_KeepY: {
+    case ps_mPrintMode_Pos:
+    case ps_mPrintMode_KeepY: {
       // Full path with beginning and end
       fp[cf] << "  BT\n"
              << "    " << fontname(style) << " " << style.font_size << " Tf\n"
@@ -389,7 +359,7 @@ void CnvToPdf::print_text(const char* text, CnvStyle& style, int mode)
              << "  ET" << '\n';
       break;
     }
-    case pdf_mPrintMode_Start: {
+    case ps_mPrintMode_Start: {
       // Start new path
       fp[cf] << "  BT\n"
              << "    " << fontname(style) << " " << style.font_size << " Tf\n"
@@ -397,14 +367,14 @@ void CnvToPdf::print_text(const char* text, CnvStyle& style, int mode)
              << "    (" << str << ") Tj\n";
       break;
     }
-    case pdf_mPrintMode_Continue: {
+    case ps_mPrintMode_Continue: {
       // Continue current path
       fp[cf] << "    " << fontname(style) << " " << style.font_size << " Tf\n"
              << "    " << x << " " << y << " Td\n"
              << "    (" << str << ") Tj\n";
       break;
     }
-    case pdf_mPrintMode_End: {
+    case ps_mPrintMode_End: {
       // Continue and close current path
       fp[cf] << "    " << fontname(style) << " " << style.font_size << " Tf\n"
              << "    (" << str << ") Tj\n"
@@ -415,13 +385,13 @@ void CnvToPdf::print_text(const char* text, CnvStyle& style, int mode)
     }
   } else {
     switch (pmode) {
-    case pdf_mPrintMode_Start: {
+    case ps_mPrintMode_Start: {
       // Start new path
       fp[cf] << "  BT\n"
              << "    " << x << " " << y << " Td\n";
       break;
     }
-    case pdf_mPrintMode_End: {
+    case ps_mPrintMode_End: {
       // Continue and close current path
       fp[cf] << "  ET" << '\n';
       break;
@@ -523,32 +493,33 @@ void CnvToPdf::print_pagebreak(int last)
   if (page_number[cf] != 1 || last) {
     double page_x;
 
-    page_x = pdf_cPageNumX;
+    page_x = ps_cPageNumX;
 
-    if (!(prev_ci == pdf_eId_TitlePage || prev_ci == pdf_eId_InfoPage)) {
+    if (!(prev_ci == ps_eId_TitlePage || prev_ci == ps_eId_InfoPage)) {
       prev_ci = ci;
 
       fp[cf] << "  1 w\n"
-             << "  " << 10 << " " << pdf_cPageHeight - 20 << " m\n"
-             << "  " << pdf_cPageWidth + 65 << " " << pdf_cPageHeight - 20
+             << "  " << 10 << " " << ps_cPageHeight - 20 << " m\n"
+             << "  " << ps_cPageWidth + 65 << " " << ps_cPageHeight - 20
              << " l\n"
              << "  S\n"
              << "  BT\n"
              << "    /F1 10 Tf\n"
              << "    "
-             << pdf_cPageWidth / 2 - 10 * 0.5 * strlen(previous_chapter) << " "
-             << pdf_cPageNumY << " Td\n"
+             << ps_cPageWidth / 2 - 10 * 0.5 * strlen(previous_chapter) << " "
+             << ps_cPageNumY << " Td\n"
              << "    (" << previous_chapter << ") Tj\n"
              << "  ET\n"
              << "  BT\n"
              << "    /F1 10 Tf\n"
-             << "    " << page_x << " " << pdf_cPageNumY << " Td\n"
+             << "    " << page_x << " " << ps_cPageNumY << " Td\n"
              << "    (" << page_number[cf] - 1 << ") Tj\n"
              << "  ET\n";
     }
 
-    if (page_number[cf] > 1 && v_content.size() > 0)
+    if (page_number[cf] > 1 && v_content.size() > 0) {
       v_content[page_number[cf] - 2].print_end();
+    }
   }
 
   if (last)
@@ -567,7 +538,7 @@ void CnvToPdf::print_pagebreak(int last)
 
   page_number[cf]++;
 
-  y = pdf_cPageHeight - pdf_cTopMargin;
+  y = ps_cPageHeight - ps_cTopMargin;
 }
 
 void CnvToPdf::print_content()
@@ -634,7 +605,7 @@ CnvToPdf::~CnvToPdf()
 
 void CnvToPdf::close()
 {
-  cf = pdf_eFile_Body;
+  cf = ps_eFile_Body;
   print_pagebreak(1);
   // print_content();
 
@@ -704,7 +675,7 @@ void CnvToPdf::close()
          << xref_offset - start_offset << '\n'
          << "%%EOF\n";
 
-  fp[pdf_eFile_Body].close();
+  fp[ps_eFile_Body].close();
 }
 
 static void image_pixel(void* userdata, std::ofstream& fp, unsigned char* rgb)
@@ -724,8 +695,8 @@ void CnvToPdf::print_horizontal_line()
 {
   y -= 3;
   fp[cf] << "  1 w\n"
-         << "  " << pdf_cLeftMargin - 50 << " " << y << " m\n"
-         << "  " << pdf_cPageWidth << " " << y << " l\n"
+         << "  " << ps_cLeftMargin - 50 << " " << y << " m\n"
+         << "  " << ps_cPageWidth << " " << y << " l\n"
          << "  S\n";
 
   y -= 3;
@@ -741,7 +712,7 @@ int CnvToPdf::print_image_inline(const char* filename)
   double scalex = 0.71;
   double scaley = 0.78;
 
-  x = pdf_cLeftMargin;
+  x = ps_cLeftMargin;
 
   // Try $pwr_doc/help/
   strcpy(fname, "$pwr_doc/help/");
@@ -771,17 +742,17 @@ int CnvToPdf::print_image_inline(const char* filename)
   width = cnv_image_width(image);
   height = cnv_image_height(image);
 
-  if (width * scalex > pdf_cPageWidth - pdf_cLeftMargin) {
-    x = pdf_cPageWidth - width * scalex;
+  if (width * scalex > ps_cPageWidth - ps_cLeftMargin) {
+    x = ps_cPageWidth - width * scalex;
     if (x < 50) {
-      double scale_factor = (pdf_cPageWidth - 50) / (width * scalex);
+      double scale_factor = (ps_cPageWidth - 50) / (width * scalex);
       x = 50;
       scalex = scalex * scale_factor;
       scaley = scaley * scale_factor;
     }
   }
 
-  if (y - height * scaley + 20 < pdf_cBottomMargin)
+  if (y - height * scaley + 20 < ps_cBottomMargin)
     print_pagebreak(0);
 
   fp[cf] << "  q\n"
@@ -820,7 +791,7 @@ int CnvToPdf::print_image(const char* filename)
   double scaley = 0.78;
 
   im_cnt++;
-  x = pdf_cLeftMargin;
+  x = ps_cLeftMargin;
 
   if (strchr(filename, '/') != 0)
     dcli_translate_filename(fname, filename);
@@ -853,17 +824,17 @@ int CnvToPdf::print_image(const char* filename)
   width = cnv_image_width(image);
   height = cnv_image_height(image);
 
-  if (width * scalex > pdf_cPageWidth - pdf_cLeftMargin) {
-    x = pdf_cPageWidth - width * scalex;
+  if (width * scalex > ps_cPageWidth - ps_cLeftMargin) {
+    x = ps_cPageWidth - width * scalex;
     if (x < 50) {
-      double scale_factor = (pdf_cPageWidth - 50) / (width * scalex);
+      double scale_factor = (ps_cPageWidth - 50) / (width * scalex);
       x = 50;
       scalex = scalex * scale_factor;
       scaley = scaley * scale_factor;
     }
   }
 
-  if (y - height * scaley + 20 < pdf_cBottomMargin)
+  if (y - height * scaley + 20 < ps_cBottomMargin)
     print_pagebreak(0);
 
   fp[cf] << "  q\n"
@@ -896,86 +867,15 @@ int CnvToPdf::print_image(const char* filename)
   return 1;
 }
 
-void CnvToPdf::set_pageheader(const char* text)
-{
-  strcpy(previous_chapter, current_chapter);
-  strcpy(current_chapter, text);
-}
-
-void CnvToPdf::print_h1(const char* text, int hlevel, char* subject)
-{
-  char hnum[40];
-
-  if (ci == pdf_eId_Chapter) {
-    set_pageheader(text);
-  }
-
-  if (style[ci].h1.display_number) {
-    if (hlevel < 0)
-      hlevel = 0;
-    if (hlevel > pdf_cMaxLevel - 1)
-      hlevel = pdf_cMaxLevel - 1;
-    header_number[hlevel]++;
-    switch (hlevel) {
-    case 0:
-      sprintf(hnum, "%d", header_number[0]);
-      break;
-    case 1:
-      sprintf(hnum, "%d.%d", header_number[0], header_number[1]);
-      break;
-    case 2:
-      sprintf(hnum, "%d.%d.%d", header_number[0], header_number[1],
-          header_number[2]);
-      break;
-    case 3:
-      sprintf(hnum, "%d.%d.%d.%d", header_number[0], header_number[1],
-          header_number[2], header_number[3]);
-      break;
-    default:;
-    }
-    x = pdf_cLeftMargin - 50;
-    print_text(hnum, style[ci].h1, pdf_mPrintMode_Pos | pdf_mPrintMode_FixX);
-
-    double x0 = x + 12.0 * (strlen(hnum) + 1) * style[ci].h1.font_size / 24;
-    x = pdf_cLeftMargin;
-    if (x0 > x)
-      x = x0;
-
-    print_text(text, style[ci].h1, pdf_mPrintMode_KeepY | pdf_mPrintMode_FixX);
-  } else
-    print_text(text, style[ci].h1);
-
-  if (conf_pass && !(ci == pdf_eId_TitlePage || ci == pdf_eId_InfoPage)) {
-    CnvContentElem cnt;
-    cnt.page_number = page_number[cf];
-    cnt.header_level = hlevel;
-    strcpy(cnt.header_number, hnum);
-    strcpy(cnt.text, text);
-    strcpy(cnt.subject, subject);
-    content.add(cnt);
-  }
-  strcpy(previous_chapter, current_chapter);
-}
-
-void CnvToPdf::print_h2(const char* text)
-{
-  print_text(text, style[ci].h2);
-}
-
-void CnvToPdf::print_h3(const char* text)
-{
-  print_text(text, style[ci].h3);
-}
-
 void CnvToPdf::open()
 {
-  y = pdf_cPageHeight - pdf_cTopMargin;
+  y = ps_cPageHeight - ps_cTopMargin;
   im_cnt = 0;
 
   if (conf_pass) {
-    fp[pdf_eFile_Body].open(filename[pdf_eFile_Body]);
-    fp[pdf_eFile_Body] << setiosflags(std::ios::fixed) << std::setprecision(6);
-    start_offset = fp[pdf_eFile_Body].tellp();
+    fp[ps_eFile_Body].open(filename[ps_eFile_Body]);
+    fp[ps_eFile_Body] << setiosflags(std::ios::fixed) << std::setprecision(6);
+    start_offset = fp[ps_eFile_Body].tellp();
   } else {
     print_content();
 
@@ -988,14 +888,14 @@ void CnvToPdf::open()
       v_image[i].print_end();
     }
     // if ( v_content.size() > 0 && v_content[v_content.size()-1].length == 0)
-    //  v_content[v_content.size()-1].length = (int) fp[pdf_eFile_Body].tellp()
+    //  v_content[v_content.size()-1].length = (int) fp[ps_eFile_Body].tellp()
     //  -
     //	v_content[v_content.size()-1].start;
-    fp[pdf_eFile_Body].seekp(start_offset);
+    fp[ps_eFile_Body].seekp(start_offset);
     strcpy(previous_chapter, "");
     strcpy(current_chapter, "");
   }
-  cf = pdf_eFile_Body;
+  cf = ps_eFile_Body;
   page_number[cf] = 0;
 
   if (conf_pass) {
@@ -1049,31 +949,7 @@ void CnvToPdf::open()
 
   print_pagebreak(0);
 
-  for (int i = 1; i < pdf_cMaxLevel; i++)
-    header_number[i] = 0;
-}
-
-void CnvToPdf::incr_headerlevel()
-{
-  ci++;
-  if (ci > pdf_eId_TopicL3)
-    ci = pdf_eId_TopicL3;
-  if (ci < pdf_eId_TopicL1)
-    ci = pdf_eId_TopicL1;
-
-  header_number[ci - (int)pdf_eId_Chapter] = 0;
-}
-
-void CnvToPdf::decr_headerlevel()
-{
-  ci--;
-  if (ci < pdf_eId_Chapter)
-    ci = pdf_eId_Chapter;
-}
-
-void CnvToPdf::reset_headernumbers(int level)
-{
-  for (int i = level; i < pdf_cMaxLevel; i++)
+  for (int i = 1; i < ps_cMaxLevel; i++)
     header_number[i] = 0;
 }
 
