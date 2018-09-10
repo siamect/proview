@@ -78,27 +78,6 @@ void GrowBar::save(std::ofstream& fp, glow_eSaveMode mode)
      << int(bar_bordercolor) << '\n';
   fp << int(glow_eSave_GrowBar_bar_borderwidth) << FSPACE << bar_borderwidth
      << '\n';
-  fp << int(glow_eSave_GrowBar_trace_data1) << FSPACE << trace.data[0] << '\n';
-  fp << int(glow_eSave_GrowBar_trace_data2) << FSPACE << trace.data[1] << '\n';
-  fp << int(glow_eSave_GrowBar_trace_data3) << FSPACE << trace.data[2] << '\n';
-  fp << int(glow_eSave_GrowBar_trace_data4) << FSPACE << trace.data[3] << '\n';
-  fp << int(glow_eSave_GrowBar_trace_data5) << FSPACE << trace.data[4] << '\n';
-  fp << int(glow_eSave_GrowBar_trace_data6) << FSPACE << trace.data[5] << '\n';
-  fp << int(glow_eSave_GrowBar_trace_data7) << FSPACE << trace.data[6] << '\n';
-  fp << int(glow_eSave_GrowBar_trace_data8) << FSPACE << trace.data[7] << '\n';
-  fp << int(glow_eSave_GrowBar_trace_data9) << FSPACE << trace.data[8] << '\n';
-  fp << int(glow_eSave_GrowBar_trace_data10) << FSPACE << trace.data[9] << '\n';
-  fp << int(glow_eSave_GrowBar_trace_attr_type) << FSPACE
-     << int(trace.attr_type) << '\n';
-  fp << int(glow_eSave_GrowBar_trace_color) << FSPACE << int(trace.color)
-     << '\n';
-  fp << int(glow_eSave_GrowBar_trace_color) << FSPACE << int(trace.color)
-     << '\n';
-  fp << int(glow_eSave_GrowBar_access) << FSPACE << (unsigned int)(trace.access)
-     << '\n';
-  fp << int(glow_eSave_GrowBar_cycle) << FSPACE << int(trace.cycle) << '\n';
-  fp << int(glow_eSave_GrowBar_ref_object) << FSPACE << trace.ref_object
-     << '\n';
   fp << int(glow_eSave_GrowBar_rect_part) << '\n';
   GrowRect::save(fp, mode);
   if (user_data && ctx->userdata_save_callback) {
@@ -151,65 +130,23 @@ void GrowBar::open(std::ifstream& fp)
       GrowRect::open(fp);
       break;
     case glow_eSave_GrowBar_trace_data1:
-      fp.get();
-      fp.getline(trace.data[0], sizeof(trace.data[0]));
-      break;
     case glow_eSave_GrowBar_trace_data2:
-      fp.get();
-      fp.getline(trace.data[1], sizeof(trace.data[0]));
-      break;
     case glow_eSave_GrowBar_trace_data3:
-      fp.get();
-      fp.getline(trace.data[2], sizeof(trace.data[0]));
-      break;
     case glow_eSave_GrowBar_trace_data4:
-      fp.get();
-      fp.getline(trace.data[3], sizeof(trace.data[0]));
-      break;
     case glow_eSave_GrowBar_trace_data5:
-      fp.get();
-      fp.getline(trace.data[4], sizeof(trace.data[0]));
-      break;
     case glow_eSave_GrowBar_trace_data6:
-      fp.get();
-      fp.getline(trace.data[5], sizeof(trace.data[0]));
-      break;
     case glow_eSave_GrowBar_trace_data7:
-      fp.get();
-      fp.getline(trace.data[6], sizeof(trace.data[0]));
-      break;
     case glow_eSave_GrowBar_trace_data8:
-      fp.get();
-      fp.getline(trace.data[7], sizeof(trace.data[0]));
-      break;
     case glow_eSave_GrowBar_trace_data9:
-      fp.get();
-      fp.getline(trace.data[8], sizeof(trace.data[0]));
-      break;
     case glow_eSave_GrowBar_trace_data10:
-      fp.get();
-      fp.getline(trace.data[9], sizeof(trace.data[0]));
-      break;
-    case glow_eSave_GrowBar_trace_attr_type:
-      fp >> tmp;
-      trace.attr_type = (glow_eTraceType)tmp;
-      break;
-    case glow_eSave_GrowBar_trace_color:
-      fp >> tmp;
-      trace.color = (glow_eDrawType)tmp;
-      break;
-    case glow_eSave_GrowBar_access:
-      fp >> utmp;
-      trace.access = (glow_mAccess)utmp;
-      break;
-    case glow_eSave_GrowBar_cycle:
-      fp >> tmp;
-      trace.cycle = (glow_eCycle)tmp;
-      break;
     case glow_eSave_GrowBar_ref_object:
       fp.get();
-      fp.getline(trace.ref_object, sizeof(trace.ref_object));
+      fp.getline( dummy, sizeof(dummy));
       break;
+    case glow_eSave_GrowBar_trace_attr_type: fp >> tmp; break;
+    case glow_eSave_GrowBar_trace_color: fp >> tmp; break;
+    case glow_eSave_GrowBar_access: fp >> utmp; break;
+    case glow_eSave_GrowBar_cycle: fp >> tmp; break;
     case glow_eSave_GrowBar_userdata_cb:
       if (ctx->userdata_open_callback)
         (ctx->userdata_open_callback)(&fp, this, glow_eUserdataCbType_Node);
