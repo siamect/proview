@@ -37,8 +37,9 @@
 #ifndef cnv_readwbl_h
 #define cnv_readwbl_h
 
+#include <fstream>
+
 #include "pwr.h"
-#include "cnv_file.h"
 
 class CnvCtx;
 class CnvWblTo;

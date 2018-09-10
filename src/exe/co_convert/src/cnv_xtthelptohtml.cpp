@@ -87,18 +87,18 @@ void* CnvXtthelpToHtml::insert(navh_eItemType item_type, const char* text1,
   static int in_table = 0;
 
   if ((text2 && !streq(text2, "")) || (text3 && !streq(text3, ""))) {
-    if (!in_table && cf) {
-      cf->f << "<TABLE>\n";
+    if (!in_table) {
+      fp << "<TABLE>\n";
       in_table = 1;
     }
   } else {
-    if (in_table && cf) {
+    if (in_table) {
       // Close table (keep if empty line)
       if (!(text1 && streq(text1, "")
               && (item_type == navh_eItemType_Help
                      || item_type == navh_eItemType_HelpCode
                      || item_type == navh_eItemType_HelpBold))) {
-        cf->f << "</TABLE>\n";
+        fp << "</TABLE>\n";
         in_table = 0;
       }
     }
@@ -112,9 +112,8 @@ void* CnvXtthelpToHtml::insert(navh_eItemType item_type, const char* text1,
       strcpy(codingstr, "UTF-8");
 
     subject_to_fname(fname, text1, 1);
-    cf = new CnvFile();
-    cf->f.open(fname);
-    cf->f << "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 "
+    fp.open(fname);
+    fp << "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 "
              "Transitional//EN\"\"http://www.w3.org/TR/REC-html40/loose.dtd>\n"
           << "<!--NewPage-->\n"
           << "<HTML>\n"
@@ -134,23 +133,18 @@ void* CnvXtthelpToHtml::insert(navh_eItemType item_type, const char* text1,
     return NULL;
   }
   case navh_eItemType_EndTopic: {
-    if (!cf)
+    if (!fp.is_open())
       break;
 
-    cf->f.close();
-    delete cf;
-    cf = 0;
+    fp.close();
     return NULL;
   }
   case navh_eItemType_Help:
   case navh_eItemType_HelpCode: {
-    if (!cf)
-      break;
-
     if (item_type == navh_eItemType_HelpCode && !in_table) {
-      cf->f << "<CODE>";
+      fp << "<CODE>";
       for (const char* s = text1; s && *s == ' '; s++)
-        cf->f << "&nbsp;";
+        fp << "&nbsp;";
     }
 
     pwr_tFileName fname;
@@ -197,52 +191,49 @@ void* CnvXtthelpToHtml::insert(navh_eItemType item_type, const char* text1,
         }
       }
       if (!in_table)
-        cf->f << "<A HREF=\"" << fname << "\">";
+        fp << "<A HREF=\"" << fname << "\">";
     } else if (bookmark) {
       if (in_table) {
-        cf->f << "</TABLE>\n";
+        fp << "</TABLE>\n";
         in_table = 0;
       }
-      cf->f << "<A NAME=\"" << bookmark << "\">";
+      fp << "<A NAME=\"" << bookmark << "\">";
     }
 
     if (!in_table) {
-      cf->f << text1;
+      fp << text1;
       if (!streq(link, "") || bookmark)
-        cf->f << "<BR></A>\n";
+        fp << "<BR></A>\n";
       else
-        cf->f << "<BR>\n";
+        fp << "<BR>\n";
       if (item_type == navh_eItemType_HelpCode)
-        cf->f << "</CODE>";
+        fp << "</CODE>";
     } else {
-      cf->f << "<TR><TD>";
+      fp << "<TR><TD>";
       if (!streq(link, ""))
-        cf->f << "<A HREF=\"" << fname << "\">";
+        fp << "<A HREF=\"" << fname << "\">";
       else if (bookmark != 0)
-        cf->f << "<A NAME=\"" << bookmark << "\">";
-      cf->f << text1;
+        fp << "<A NAME=\"" << bookmark << "\">";
+      fp << text1;
       if (!streq(text2, "") || !streq(text3, "")) {
         for (i = 0; i < (int)(CNV_TAB - strlen(text1)); i++)
-          cf->f << "&nbsp;";
-        cf->f << "&nbsp;&nbsp;</TD><TD>" << text2;
+          fp << "&nbsp;";
+        fp << "&nbsp;&nbsp;</TD><TD>" << text2;
         if (!streq(text3, "")) {
           for (i = 0; i < (int)(CNV_TAB - strlen(text2)); i++)
-            cf->f << "&nbsp;";
-          cf->f << "&nbsp;&nbsp;</TD><TD>" << text3;
+            fp << "&nbsp;";
+          fp << "&nbsp;&nbsp;</TD><TD>" << text3;
         }
       }
       if (!streq(link, "") || bookmark)
-        cf->f << "</A>\n";
+        fp << "</A>\n";
       else
-        cf->f << '\n';
-      cf->f << "</TD></TR>";
+        fp << '\n';
+      fp << "</TD></TR>";
     }
     return NULL;
   }
   case navh_eItemType_HelpBold: {
-    if (!cf)
-      break;
-
     pwr_tFileName fname;
     if (!streq(link, "")) {
       if (str_StartsWith(link, "$web:")) {
@@ -274,88 +265,73 @@ void* CnvXtthelpToHtml::insert(navh_eItemType item_type, const char* text1,
         }
       }
       if (!in_table)
-        cf->f << "<A HREF=\"" << fname << "\">";
+        fp << "<A HREF=\"" << fname << "\">";
     } else if (bookmark) {
       if (!in_table)
-        cf->f << "<A NAME=\"" << bookmark << "\">";
+        fp << "<A NAME=\"" << bookmark << "\">";
     }
 
     if (!in_table) {
-      cf->f << "<B>" << text1 << "</B>";
+      fp << "<B>" << text1 << "</B>";
       if (!streq(link, "") || bookmark)
-        cf->f << "<BR></A>\n";
+        fp << "<BR></A>\n";
       else
-        cf->f << "<BR>\n";
+        fp << "<BR>\n";
     } else {
-      cf->f << "<TR><TD><B>";
+      fp << "<TR><TD><B>";
       if (!streq(link, ""))
-        cf->f << "<A HREF=\"" << fname << "\">";
+        fp << "<A HREF=\"" << fname << "\">";
       else if (bookmark != 0)
-        cf->f << "<A NAME=\"" << bookmark << "\">";
-      cf->f << text1;
+        fp << "<A NAME=\"" << bookmark << "\">";
+      fp << text1;
       if (!streq(link, "") || bookmark)
-        cf->f << "</A>";
+        fp << "</A>";
       if (!streq(text2, "") || !streq(text3, "")) {
         for (i = 0; i < (int)(CNV_TAB - strlen(text1)); i++)
-          cf->f << "&nbsp;";
-        cf->f << "&nbsp;&nbsp;</B></TD><TD><B>" << text2;
+          fp << "&nbsp;";
+        fp << "&nbsp;&nbsp;</B></TD><TD><B>" << text2;
         if (!streq(text3, "")) {
           for (i = 0; i < (int)(CNV_TAB - strlen(text2)); i++)
-            cf->f << "&nbsp;";
-          cf->f << "&nbsp;&nbsp;</B></TD><TD><B>" << text3;
+            fp << "&nbsp;";
+          fp << "&nbsp;&nbsp;</B></TD><TD><B>" << text3;
         }
       }
       if (!streq(link, "") || bookmark)
-        cf->f << "</A>\n";
+        fp << "</A>\n";
       else
-        cf->f << '\n';
-      cf->f << "</B></TD></TR>";
+        fp << '\n';
+      fp << "</B></TD></TR>";
     }
     return NULL;
   }
   case navh_eItemType_HelpHeader: {
-    if (!cf)
-      break;
-
-    cf->f << "<H1>" << text1 << "</H1>\n";
+    fp << "<H1>" << text1 << "</H1>\n";
     return NULL;
   }
   case navh_eItemType_Header: {
-    if (!cf)
-      break;
-
     if (bookmark != 0)
-      cf->f << "<A NAME=\"" << bookmark << "\">";
-    cf->f << "<H3>" << text1 << "</H3>";
+      fp << "<A NAME=\"" << bookmark << "\">";
+    fp << "<H3>" << text1 << "</H3>";
     if (bookmark != 0)
-      cf->f << "</A>";
-    cf->f << '\n';
+      fp << "</A>";
+    fp << '\n';
     return NULL;
   }
   case navh_eItemType_HeaderLarge: {
-    if (!cf)
-      break;
-
     if (bookmark != 0)
-      cf->f << "<A NAME=\"" << bookmark << "\">";
-    cf->f << "<H2>" << text1 << "</H2>";
+      fp << "<A NAME=\"" << bookmark << "\">";
+    fp << "<H2>" << text1 << "</H2>";
     if (bookmark != 0)
-      cf->f << "</A>";
-    cf->f << '\n';
+      fp << "</A>";
+    fp << '\n';
     return NULL;
   }
   case navh_eItemType_HorizontalLine: {
-    if (!cf)
-      break;
-
-    cf->f << "<HR>\n";
+    fp << "<HR>\n";
     return NULL;
   }
   case navh_eItemType_Image: {
-    if (!cf)
-      break;
-
-    cf->f << "<IMG SRC=\"" << text1 << "\"><BR>\n";
+    fp << "<IMG SRC=\"" << text1 << "\"><BR>\n";
     return NULL;
   }
   default:

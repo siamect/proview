@@ -37,6 +37,8 @@
 #ifndef cnv_readsrc_h
 #define cnv_readsrc_h
 
+#include <fstream>
+
 /* cnv_readsrc.h -- Read source files */
 
 #include "cnv_ctx.h"

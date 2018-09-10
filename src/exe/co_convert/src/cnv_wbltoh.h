@@ -55,7 +55,7 @@ class CnvWblToH : public CnvWblTo {
   CnvCtx* ctx;
   int struct_class_open;
   std::ofstream fp_struct;
-  CnvFile* cstruc;
+  std::ofstream fp_cstruc;
   int struct_cclass_written;
   int struct_cclass_endwritten;
   int struct_filler_cnt;

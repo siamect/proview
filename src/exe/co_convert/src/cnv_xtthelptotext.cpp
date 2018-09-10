@@ -67,9 +67,8 @@ void CnvXtthelpToText::subject_to_fname(
 
 CnvXtthelpToText::~CnvXtthelpToText()
 {
-  if (cf) {
-    cf->f.close();
-    delete cf;
+  if (fp.is_open()) {
+    fp.close();
   }
 }
 
@@ -99,8 +98,7 @@ void* CnvXtthelpToText::insert(navh_eItemType item_type, const char* text1,
       pwr_tFileName fname;
 
       subject_to_fname(fname, text1, 1);
-      cf = new CnvFile();
-      cf->f.open(fname);
+      fp.open(fname);
 
       first_topic = 0;
     }
@@ -112,7 +110,7 @@ void* CnvXtthelpToText::insert(navh_eItemType item_type, const char* text1,
     in_topic = 0;
     break;
   case navh_eItemType_PageBreak: {
-    cf->f << "\f";
+    fp << "\f";
     return NULL;
   }
   case navh_eItemType_Help:
@@ -121,29 +119,29 @@ void* CnvXtthelpToText::insert(navh_eItemType item_type, const char* text1,
   case navh_eItemType_Header:
   case navh_eItemType_HeaderLarge:
   case navh_eItemType_HelpHeader: {
-    cf->f << text1;
+    fp << text1;
 
     if (text2) {
-      cf->f << " ";
+      fp << " ";
       for (int i = 0; i < (int)(CNV_TAB - strlen(text1) - 1); i++)
-        cf->f << " ";
-      cf->f << text2;
+        fp << " ";
+      fp << text2;
 
       if (text3) {
-        cf->f << " ";
+        fp << " ";
         for (int i = 0; i < (int)(CNV_TAB - strlen(text2) - 1); i++)
-          cf->f << " ";
-        cf->f << text3;
+          fp << " ";
+        fp << text3;
       }
     }
-    cf->f << '\n';
+    fp << '\n';
 
     break;
   }
   case navh_eItemType_HorizontalLine: {
     for (int i = 0; i < 80; i++)
-      cf->f << "-";
-    cf->f << '\n';
+      fp << "-";
+    fp << '\n';
 
     return NULL;
   }

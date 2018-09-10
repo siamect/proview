@@ -41,14 +41,13 @@
 extern "C" {
 #endif
 
-#include "cnv_file.h"
 #include "cnv_xtthelpto.h"
 
 class CnvCtx;
 
 class CnvXtthelpToHtml : public CnvXtthelpTo {
   public:
-  CnvXtthelpToHtml(CnvCtx* cnv_ctx) : ctx(cnv_ctx), cf(0)
+  CnvXtthelpToHtml(CnvCtx* cnv_ctx) : ctx(cnv_ctx)
   {
   }
   virtual ~CnvXtthelpToHtml()
@@ -66,8 +65,7 @@ class CnvXtthelpToHtml : public CnvXtthelpTo {
   void subject_to_fname(char* fname, const char* subject, int path);
 
   CnvCtx* ctx;
-  CnvFile* cf;
-  // std::ofstream fp;
+  std::ofstream fp;
 };
 
 #if defined __cplusplus

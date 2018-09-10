@@ -68,7 +68,7 @@ class CnvWblToHtml : public CnvWblTo {
   }
 
   CnvCtx* ctx;
-  CnvFile* html_clf;
+  std::ofstream fp_html_clf;
   std::ofstream fp_html_index;
   std::ofstream fp_js_all;
   std::ofstream fp_tmp;
@@ -103,11 +103,11 @@ class CnvWblToHtml : public CnvWblTo {
   }
   int class_open()
   {
-    return html_class_open;
+    return fp_html_clf.is_open();
   }
   int index_open()
   {
-    return html_index_open;
+    return fp_html_index.is_open();
   }
   void create_cdp_file(const char* volume_name, const char* class_name,
       const char* attr_typeref);

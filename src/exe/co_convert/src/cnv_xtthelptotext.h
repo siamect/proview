@@ -39,14 +39,13 @@
 
 #include "cnv_xtthelpto.h"
 #include "cnv_content.h"
-#include "cnv_file.h"
 
 class CnvCtx;
 
 class CnvXtthelpToText : public CnvXtthelpTo {
   public:
   CnvXtthelpToText(CnvCtx* cnv_ctx)
-      : ctx(cnv_ctx), cf(0), first_topic(1), in_topic(0), print_disable(0)
+      : ctx(cnv_ctx), first_topic(1), in_topic(0), print_disable(0)
   {
   }
   virtual ~CnvXtthelpToText();
@@ -62,7 +61,7 @@ class CnvXtthelpToText : public CnvXtthelpTo {
   void subject_to_fname(char* fname, const char* subject, int path);
 
   CnvCtx* ctx;
-  CnvFile* cf;
+  std::ofstream fp;
   int first_topic;
   int in_topic;
   int print_disable;
