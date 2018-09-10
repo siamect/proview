@@ -358,8 +358,7 @@ unsigned int rmq_receive()
     while (remtrans && search_remtrans) {
       if (remtrans->objp->Address[0] == header.msg_id[0]
           && remtrans->objp->Address[1] == header.msg_id[1]
-          && remtrans->objp->Direction == REMTRANS_IN
-          && remtrans->objp->DataValid == 0) {
+          && remtrans->objp->Direction == REMTRANS_IN) {
         search_remtrans = false;
         sts = RemTrans_Receive(remtrans,
             (char*)envelope.message.body.bytes + sizeof(rabbit_header),
@@ -430,7 +429,10 @@ unsigned int rmq_send(remnode_item* remnode, pwr_sClass_RemTrans* remtrans,
     msg.len = tmpbuf_size;
   }
 
-  prop.delivery_mode = 2;
+  if ( remtrans->Address[3] == 2)
+    prop.delivery_mode = 2;
+  else
+    prop.delivery_mode = 1;
   prop._flags = AMQP_BASIC_DELIVERY_MODE_FLAG;
 
   // 0 mandatory 0 immediate
@@ -445,7 +447,7 @@ unsigned int rmq_send(remnode_item* remnode, pwr_sClass_RemTrans* remtrans,
   if (sts) {
     remtrans->ErrCount++;
     errh_Error("Send failed, queue %s, RabbitMQ status %d",
-        rn_rmq->ReceiveQueue, sts, 0);
+        rn_rmq->SendQueue, sts, 0);
     if (debug)
       printf("Send failed sts:%d\n", (int)sts);
   }
