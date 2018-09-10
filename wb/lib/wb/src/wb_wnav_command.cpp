@@ -6543,7 +6543,7 @@ int WNav::readcmdfile(char* incommand)
   }
 
   strcpy(input_str, incommand);
-  dcli_remove_blank(input_str, input_str);
+  str_trim(input_str, input_str);
   wnav_store_wnav(this);
   if (ldhses)
     wccm_store_ldhses(this, ldhses);

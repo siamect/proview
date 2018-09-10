@@ -66,7 +66,7 @@ int CnvReadSrc::read_src(char* filename)
     if (!sts)
       linetype = cread_eLine_EOF;
     else {
-      CnvCtx::remove_spaces(orig_line, line);
+      str_trim(line, orig_line);
       if (streq(line, ""))
         continue;
 

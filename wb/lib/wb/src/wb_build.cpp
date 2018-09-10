@@ -1311,7 +1311,7 @@ void wb_build::webgraph(pwr_tOid oid)
               m_sts = a.sts();
               return;
             }
-            dcli_trim(appletsignature, appletsignature);
+            str_trim(appletsignature, appletsignature);
             break;
           }
         }
@@ -1890,7 +1890,7 @@ void wb_build::directories(char* dir, bld_ePass pass)
   m_sts = PWRB__NOBUILT;
 
   while (is.getline(line, sizeof(line))) {
-    dcli_trim(line, line);
+    str_trim(line, line);
     if (line[0] == '#' || line[0] == '!')
       continue;
 
@@ -2091,7 +2091,7 @@ void wb_build::export_import_files(int type, bld_ePass pass)
   m_sts = PWRB__NOBUILT;
 
   while (is.getline(line, sizeof(line))) {
-    dcli_trim(line, line);
+    str_trim(line, line);
     if (line[0] == '#' || line[0] == '!')
       continue;
 

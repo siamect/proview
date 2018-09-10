@@ -693,7 +693,7 @@ int CnvWblToH::volname_to_id()
     if (!sts)
       break;
     else {
-      CnvCtx::remove_spaces(line, line);
+      str_trim(line, line);
       if (streq(line, ""))
         continue;
 

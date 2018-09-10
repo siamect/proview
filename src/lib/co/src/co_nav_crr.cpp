@@ -58,7 +58,6 @@ extern "C" {
 
 static int nav_get_signal_line(
     FILE* file, char* line, int size, int* spaces, char* text, int* lines);
-static int nav_remove_spaces(char* in, char* out);
 static char* nav_VolumeIdToStr(pwr_tVolumeId volumeid);
 
 /*************************************************************************
@@ -118,38 +117,6 @@ static int nav_get_signal_line(
     }
     break;
   }
-  return NAV__SUCCESS;
-}
-
-/*************************************************************************
-*
-* Name:		nav_remove_spaces()
-*
-* Type		int
-*
-* Type		Parameter	IOGF	Description
-*
-* Description:
-*	Removes spaces and tabs at the begining and at the end of a string.
-*
-**************************************************************************/
-
-static int nav_remove_spaces(char* in, char* out)
-{
-  char* s;
-
-  for (s = in; !((*s == 0) || ((*s != ' ') && (*s != 9))); s++)
-    ;
-
-  str_Strcpy(out, s);
-
-  if (strlen(s) != 0) {
-    for (s += strlen(s) - 1; !((s == in) || ((*s != ' ') && (*s != 9))); s--)
-      ;
-    s++;
-    *s = 0;
-  }
-
   return NAV__SUCCESS;
 }
 
@@ -266,7 +233,7 @@ int NavCrr::crr_signal(char* filename, char* signalname)
         if (EVEN(sts))
           goto finish;
         while (spaces > object_spaces) {
-          nav_remove_spaces(line, line);
+          str_trim(line, line);
 
           if (line[0] == 'W' || line[0] == '>')
             write = 1;
@@ -446,7 +413,7 @@ int NavCrr::crr_object(char* filename, char* objectname)
         if (EVEN(sts))
           goto finish;
         while (spaces > object_spaces) {
-          nav_remove_spaces(line, line);
+          str_trim(line, line);
 
           if (line[0] == 'W') {
             write = 1;

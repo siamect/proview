@@ -61,7 +61,7 @@ int CnvSetup::setup(char* filename)
       break;
     else {
       line_cnt++;
-      CnvCtx::remove_spaces(line, line);
+      str_trim(line, line);
       if (streq(line, ""))
         continue;
 

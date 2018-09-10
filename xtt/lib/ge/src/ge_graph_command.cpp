@@ -4917,8 +4917,7 @@ int Graph::readcmdfile(char* incommand)
     }
   }
 
-  strcpy(input_str, incommand);
-  dcli_remove_blank(input_str, input_str);
+  str_trim(input_str, incommand);
   graph_store_graph(this);
 #if LDH
   if (ldhses)

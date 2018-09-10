@@ -103,7 +103,7 @@ static pwr_tStatus SyntaxCheck(
   if (!a)
     return a.sts();
 
-  dcli_trim(str, str);
+  str_trim(str, str);
   if (streq(str, ""))
     wsx_error_msg_str(
         Session, "NodeName is missing", Object, 'E', ErrorCount, WarningCount);
@@ -150,7 +150,7 @@ static pwr_tStatus SyntaxCheck(
   if (!a)
     return a.sts();
 
-  dcli_trim(str, str);
+  str_trim(str, str);
   if (streq(str, ""))
     wsx_error_msg_str(
         Session, "Volume is missing", Object, 'E', ErrorCount, WarningCount);

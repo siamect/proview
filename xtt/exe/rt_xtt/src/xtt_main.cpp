@@ -170,7 +170,7 @@ void Xtt::hotkey_activate_toggledig(char* namep)
   pwr_tAName name;
   int sts;
 
-  dcli_remove_blank(name, namep);
+  str_trim(name, namep);
   if (!strchr(name, '.'))
     strcat(name, ".ActualValue");
 
@@ -192,7 +192,7 @@ void Xtt::hotkey_activate_setdig(char* namep)
   pwr_tAName name;
   int sts;
 
-  dcli_remove_blank(name, namep);
+  str_trim(name, namep);
   if (!strchr(name, '.'))
     strcat(name, ".ActualValue");
 
@@ -207,7 +207,7 @@ void Xtt::hotkey_activate_resetdig(char* namep)
   pwr_tAName name;
   int sts;
 
-  dcli_remove_blank(name, namep);
+  str_trim(name, namep);
   if (!strchr(name, '.'))
     strcat(name, ".ActualValue");
 
@@ -838,7 +838,7 @@ Xtt::Xtt(int* argc, char** argv[], int* return_sts)
           sizeof(duser_array[0]), 0);
 
       for (int i = 0; i < duser_cnt; i++) {
-        dcli_trim(duser_array[i], duser_array[i]);
+        str_trim(duser_array[i], duser_array[i]);
         if (streq(duser_array[i], opsys_user)) {
           found = 1;
           break;

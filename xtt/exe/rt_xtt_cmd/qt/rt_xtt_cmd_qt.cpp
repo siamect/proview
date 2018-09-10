@@ -159,7 +159,7 @@ GNU General Public License for more details.\n\n";
   }
 
   if (str[0] != 0) {
-    dcli_remove_blank(str, str);
+    str_trim(str, str);
     sts = cmd->xnav->command(str);
     if (ODD(sts)) {
       return 0;
@@ -191,7 +191,7 @@ GNU General Public License for more details.\n\n";
       continue;
     }
 
-    dcli_remove_blank(str, str);
+    str_trim(str, str);
     sts = cmd->xnav->command(str);
 
     while (QApplication::hasPendingEvents()) {

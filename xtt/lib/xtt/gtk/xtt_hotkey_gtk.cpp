@@ -152,7 +152,7 @@ int XttHotkey::read_file()
 
     row++;
 
-    dcli_trim(line, line);
+    str_trim(line, line);
     if (line[0] == 0 || line[0] == '#')
       continue;
 
@@ -162,8 +162,8 @@ int XttHotkey::read_file()
       printf("Syntax error, %s, row %d\n", m_filename, row);
       continue;
     }
-    dcli_trim(p1[0], p1[0]);
-    dcli_trim(p1[1], p1[1]);
+    str_trim(p1[0], p1[0]);
+    str_trim(p1[1], p1[1]);
 
     n = dcli_parse(p1[0], " 	", "", (char*)p2, sizeof(p2) / sizeof(p2[0]),
         sizeof(p2[0]), 0);
@@ -180,7 +180,7 @@ int XttHotkey::read_file()
         mod |= Mod1Mask;
       else if (str_NoCaseStrncmp(p2[i], "<key>", 5) == 0) {
         strcpy(keystr, &p2[i][5]);
-        dcli_trim(keystr, keystr);
+        str_trim(keystr, keystr);
       } else {
         printf("Syntax error, %s, row %d\n", m_filename, row);
         break;
@@ -194,7 +194,7 @@ int XttHotkey::read_file()
       continue;
     }
     strcpy(action_name, p2[0]);
-    dcli_trim(action_name, action_name);
+    str_trim(action_name, action_name);
     strcpy(action_arg, p2[1]);
     if ((s = strrchr(action_arg, ')')))
       *s = 0;

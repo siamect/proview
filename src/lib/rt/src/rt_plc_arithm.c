@@ -1432,7 +1432,7 @@ void StrAdd_exec(plc_sThread* tp, pwr_sClass_StrAdd* o)
 */
 void StrTrim_exec(plc_sThread* tp, pwr_sClass_StrTrim* o)
 {
-  dcli_trim(o->ActVal, *o->InP);
+  str_trim(o->ActVal, *o->InP);
 }
 
 /*_*

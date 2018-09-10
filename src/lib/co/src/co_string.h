@@ -142,6 +142,16 @@ char* str_Strncpy(char* dst, const char* src, size_t n);
 */
 int str_StrncpyCutOff(char* dst, const char* src, size_t n, int cutleft);
 
+/*! \fn int str_trim(char* dst, const char* src)
+    \brief Copies \a src to \a dst trimming leading and trailing whitespace
+
+    For example: after str_trim(dst, '  test  '), dst will be 'test'.
+
+    \param src Input string.
+    \param dst Output string.
+*/
+void str_trim(char *dst, const char *src);
+
 #ifdef __cplusplus
 }
 #endif

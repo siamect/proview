@@ -168,11 +168,11 @@ int CnvWblToPs::class_exec()
   tops->print_h2(Lng::translate("Description"));
   if (ctx->rw->doc_fresh) {
     for (i = 0; i < ctx->rw->doc_cnt; i++) {
-      CnvCtx::remove_spaces(ctx->rw->doc_text[i], txt);
+      str_trim(txt, ctx->rw->doc_text[i]);
       if (str_StartsWith(CnvCtx::low(txt), "@image")) {
         char imagefile[80];
 
-        CnvCtx::remove_spaces(txt + 6, imagefile);
+        str_trim(imagefile, txt + 6);
         tops->print_image(imagefile);
       } else if (str_StartsWith(CnvCtx::low(txt), "@b")) {
         tops->print_text(txt + 2, tops->style[tops->ci].boldtext);
@@ -304,7 +304,7 @@ int CnvWblToPs::attribute_exec()
       if ((s = strstr(CnvCtx::low(ctx->rw->doc_text[i]), "@image")) != 0) {
         char imagefile[80];
 
-        CnvCtx::remove_spaces(s + 6, imagefile);
+        str_trim(imagefile, s + 6);
         tops->print_image(imagefile);
       } else
         tops->print_text(ctx->rw->doc_text[i], tops->style[tops->ci].text);
@@ -372,11 +372,11 @@ int CnvWblToPs::typedef_exec()
   tops->print_h2(Lng::translate("Description"));
   if (ctx->rw->doc_fresh) {
     for (i = 0; i < ctx->rw->doc_cnt; i++) {
-      CnvCtx::remove_spaces(ctx->rw->doc_text[i], txt);
+      str_trim(txt, ctx->rw->doc_text[i]);
       if (str_StartsWith(CnvCtx::low(txt), "@image")) {
         char imagefile[80];
 
-        CnvCtx::remove_spaces(txt + 6, imagefile);
+        str_trim(imagefile, txt + 6);
         tops->print_image(imagefile);
       } else if (str_StartsWith(CnvCtx::low(txt), "@b")) {
         tops->print_text(txt + 2, tops->style[tops->ci].boldtext);
@@ -458,7 +458,7 @@ int CnvWblToPs::bit_exec()
       if ((s = strstr(CnvCtx::low(ctx->rw->doc_text[i]), "@image")) != 0) {
         char imagefile[80];
 
-        CnvCtx::remove_spaces(s + 6, imagefile);
+        str_trim(imagefile, s + 6);
         tops->print_image(imagefile);
       } else
         tops->print_text(ctx->rw->doc_text[i], tops->style[tops->ci].text);

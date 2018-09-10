@@ -437,7 +437,7 @@ int pb_gsd::read(char* filename)
     } else
       read_line_done = 0;
 
-    dcli_trim(line, line);
+    str_trim(line, line);
     compress(line);
     part_cnt = dcli_parse(line, " 	=", "", (char*)line_part,
         sizeof(line_part) / sizeof(line_part[0]), sizeof(line_part[0]), 0);
@@ -680,7 +680,7 @@ int pb_gsd::read(char* filename)
         printf("Syntax error, line %d (%s)\n", line_cnt, line_part[0]);
         break;
       }
-      dcli_remove_blank(idx_str, idx_str);
+      str_trim(idx_str, idx_str);
       if (idx_str[0] == '0' && idx_str[1] == 'x')
         sts = sscanf(idx_str, "%x", &t->Prm_Data_Value);
       else
@@ -825,7 +825,7 @@ int pb_gsd::read(char* filename)
       if (sts != 1)
         printf("Syntax error, line %d (%s)\n", line_cnt, line);
 
-      dcli_remove_blank(idx_str, idx_str);
+      str_trim(idx_str, idx_str);
       if (idx_str[0] == '0' && idx_str[1] == 'x')
         sts = sscanf(idx_str, "%x", &e->Reference_Offset);
       else
@@ -880,7 +880,7 @@ int pb_gsd::read(char* filename)
         e = (gsd_sExtUserPrmDataConst*)calloc(
             1, sizeof(gsd_sExtUserPrmDataConst));
 
-      dcli_remove_blank(idx_str, idx_str);
+      str_trim(idx_str, idx_str);
       if (idx_str[0] == '0' && idx_str[1] == 'x')
         sts = sscanf(idx_str, "%x", &const_offset);
       else
@@ -1830,7 +1830,7 @@ int pb_gsd::str_to_ostring(
     if (*s == ',' || *s == 0) {
       strncpy(valstr, t, s - t);
       valstr[s - t] = 0;
-      dcli_remove_blank(valstr, valstr);
+      str_trim(valstr, valstr);
       if (valstr[0] == '0' && valstr[1] == 'x')
         sts = sscanf(&valstr[2], "%x", &val);
       else
@@ -1873,7 +1873,7 @@ int pb_gsd::read_line(char* line, int lsize, FILE* fp)
         }
       }
 
-      dcli_remove_blank(line, line);
+      str_trim(line, line);
       if (line[strlen(line) - 1] == '\r')
         line[strlen(line) - 1] = 0;
       if (streq(line, "") || (line[0] == '\r' && line[1] == '\0'))
@@ -1898,7 +1898,7 @@ int pb_gsd::read_line(char* line, int lsize, FILE* fp)
               *s = 0;
           }
           if (!in_string)
-            dcli_remove_blank(line2, line2);
+            str_trim(line2, line2);
           if (strlen(line) + strlen(line2) > (unsigned int)lsize) {
             printf("** Line to long, line %d\n", line_cnt);
             return 0;

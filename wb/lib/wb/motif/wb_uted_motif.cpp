@@ -251,7 +251,7 @@ void WUtedMotif::commandchanged(
   display_sts = 1;
   commandfile = 0;
 
-  dcli_remove_blank(str, str);
+  str_trim(str, str);
 
   sts = ((Wtt*)uted->parent_ctx)->wnav->command(str);
   if (EVEN(sts)) {

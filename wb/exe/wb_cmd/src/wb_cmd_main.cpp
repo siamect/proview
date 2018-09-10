@@ -430,7 +430,7 @@ GNU General Public License for more details.\n\n";
     int nr;
     char cmd_array[10][400];
 
-    dcli_remove_blank(str, str);
+    str_trim(str, str);
     nr = dcli_parse(str, ";", "", (char*)cmd_array,
         sizeof(cmd_array) / sizeof(cmd_array[0]), sizeof(cmd_array[0]), 1);
 
@@ -441,7 +441,7 @@ GNU General Public License for more details.\n\n";
     }
 
     for (int i = 0; i < nr; i++) {
-      dcli_remove_blank(cmd_array[i], cmd_array[i]);
+      str_trim(cmd_array[i], cmd_array[i]);
       // printf( "-- Executing \"%s\"\n", cmd_array[i]);
 
       sts = wnav->command(cmd_array[i]);
@@ -473,7 +473,7 @@ GNU General Public License for more details.\n\n";
     if (streq(str, ""))
       continue;
 
-    dcli_remove_blank(str, str);
+    str_trim(str, str);
     sts = wnav->command(str);
   }
 }

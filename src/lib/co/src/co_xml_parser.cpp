@@ -36,10 +36,10 @@
 
 /* co_xml_parser.cpp -- Parse xml file */
 
-#include <string.h>
+#include "pwr.h"
 
-#include "co_dcli.h"
 #include "co_dcli_msg.h"
+#include "co_string.h"
 #include "co_xml_parser.h"
 
 typedef enum {
@@ -674,7 +674,7 @@ int co_xml_parser::ostring_to_data(
     if (*s == ',' || *s == 0) {
       strncpy(valstr, t, s - t);
       valstr[s - t] = 0;
-      dcli_remove_blank(valstr, valstr);
+      str_trim(valstr, valstr);
       if (valstr[0] == '0' && valstr[1] == 'x')
         sts = sscanf(&valstr[2], "%x", &val);
       else

@@ -80,7 +80,7 @@ PalFileMenu* PalFile::config_tree_build(ldh_tSession ldhses,
   while (1) {
     if (!fp.getline(line, sizeof(line)))
       break;
-    dcli_remove_blank(line, line);
+    str_trim(line, line);
     line_cnt++;
     if (line[0] == 0)
       continue;
@@ -175,7 +175,7 @@ PalFileMenu* PalFile::config_tree_build_children(ldh_tSession ldhses,
   while (1) {
     if (!fp->getline(line, sizeof(line)))
       break;
-    dcli_remove_blank(line, line);
+    str_trim(line, line);
     (*line_cnt)++;
     if (line[0] == 0)
       continue;

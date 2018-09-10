@@ -251,7 +251,7 @@ void rt_report::create_report(pwr_sClass_Report* o)
   fout << "<topic> index <style> report\n";
 
   while (fin.getline(line, sizeof(line))) {
-    dcli_trim(newline, line);
+    str_trim(newline, line);
     if (first && streq(newline, ""))
       continue;
 
@@ -310,7 +310,7 @@ void rt_report::create_report(pwr_sClass_Report* o)
         sizeof(rcv_array) / sizeof(rcv_array[0]), sizeof(rcv_array[0]), 0);
 
     for (int i = 0; i < rcvnum; i++) {
-      dcli_trim(str, rcv_array[i]);
+      str_trim(str, rcv_array[i]);
 
       s = strrchr(str, '.');
       if (s) {
@@ -351,7 +351,7 @@ void rt_report::create_report(pwr_sClass_Report* o)
       strcpy(text, "Proview report");
       strncpy(subject, o->Subject, sizeof(subject));
 
-      dcli_trim(conf_cmd, o->EmailCmd);
+      str_trim(conf_cmd, o->EmailCmd);
       if (streq(conf_cmd, ""))
         strncpy(conf_cmd, conf->EmailCmd, sizeof(conf_cmd));
 
@@ -385,7 +385,7 @@ void rt_report::create_report(pwr_sClass_Report* o)
         sizeof(rcv_array) / sizeof(rcv_array[0]), sizeof(rcv_array[0]), 0);
 
     for (int i = 0; i < rcvnum; i++) {
-      dcli_trim(str, rcv_array[i]);
+      str_trim(str, rcv_array[i]);
 
       s = strrchr(str, '.');
       if (s) {
@@ -445,7 +445,7 @@ void rt_report::create_report(pwr_sClass_Report* o)
       // strcpy( text, "Proview report");
       strncpy(subject, o->Subject, sizeof(subject));
 
-      dcli_trim(conf_cmd, o->SMS_Cmd);
+      str_trim(conf_cmd, o->SMS_Cmd);
       if (streq(conf_cmd, ""))
         strncpy(conf_cmd, conf->SMS_Cmd, sizeof(conf_cmd));
 
@@ -491,7 +491,7 @@ void rt_report::create_report(pwr_sClass_Report* o)
     } else
       strcpy(target_file, cnvfile);
 
-    dcli_trim(conf_cmd, o->PrintCmd);
+    str_trim(conf_cmd, o->PrintCmd);
     if (streq(conf_cmd, ""))
       strncpy(conf_cmd, conf->PrintCmd, sizeof(conf_cmd));
 
@@ -789,7 +789,7 @@ void rt_report::replace_symbol(char* outstr, char* instr)
         found = 0;
         for (unsigned int j = 0;
              j < sizeof(conf->Symbols) / sizeof(conf->Symbols[0]); j++) {
-          dcli_trim(csymbol, conf->Symbols[j].Name);
+          str_trim(csymbol, conf->Symbols[j].Name);
           if (streq(symbol, csymbol)) {
             // Found, insert the value
             strcpy(t, conf->Symbols[j].Value);
@@ -897,7 +897,7 @@ int rt_report::parse(char* line)
   char rline[200];
 
   replace_value(rline, sizeof(rline), line);
-  dcli_trim(aline, rline);
+  str_trim(aline, rline);
 
   num = dcli_parse(line, " 	", "", (char*)line_array,
       sizeof(line_array) / sizeof(line_array[0]), sizeof(line_array[0]), 0);

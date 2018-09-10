@@ -4406,7 +4406,7 @@ pwr_tStatus gdh_FReadObject(char* filename, /**< File specification */
     return GDH__FILE;
 
   while (dcli_read_line(line, sizeof(line), fp)) {
-    dcli_trim(line, line);
+    str_trim(line, line);
     if (line[0] == '#')
       continue;
     if (streq(line, ""))

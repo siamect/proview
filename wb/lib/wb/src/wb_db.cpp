@@ -1381,7 +1381,7 @@ static void get_config(char* name, unsigned int* lk_max_locks,
     goto go_back;
 
   while (dcli_read_line(line, sizeof(line), fp)) {
-    dcli_trim(line, line);
+    str_trim(line, line);
     if (line[0] == '#')
       continue;
     if (streq(line, ""))

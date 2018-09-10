@@ -72,8 +72,6 @@ int dcli_get_symbol_by_index(int index, char* key, char* value);
 int dcli_get_symbol_cmd(char* key, char* value);
 int dcli_define_symbol(char* key, char* arg1, char* arg2, char* arg3);
 int dcli_toupper(char* str_upper, char* str);
-int dcli_trim(char* out_str, char* in_str);
-int dcli_remove_blank(char* out_str, char* in_str);
 char* dcli_pwr_dir(const char* dir);
 int dcli_wildcard(char* wildname, char* name);
 int dcli_read_line(char* line, int maxsize, FILE* file);

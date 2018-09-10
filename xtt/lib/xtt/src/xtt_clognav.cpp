@@ -487,7 +487,7 @@ void CLogNav::read(int* pos_list, int pos_cnt)
         msg_list.push_back(*msg);
         delete msg;
       } else {
-        dcli_trim(line, line);
+        str_trim(line, line);
         msg = new CLogMsg(errh_eSeverity_Null, "", 0, ztime, line);
         msg_list.push_back(*msg);
         delete msg;

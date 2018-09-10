@@ -584,11 +584,11 @@ int CnvWblToHtml::class_exec()
 
   if (ctx->rw->doc_fresh) {
     for (i = 0; i < ctx->rw->doc_cnt; i++) {
-      ctx->remove_spaces(ctx->rw->doc_text[i], txt);
+      str_trim(txt, ctx->rw->doc_text[i]);
       if (str_StartsWith(CnvCtx::low(txt), "@image")) {
         char imagefile[80];
 
-        ctx->remove_spaces(txt + 6, imagefile);
+        str_trim(imagefile, txt + 6);
         fp_html_clf << "</PRE><IMG SRC=\"" << imagefile << "\"><PRE>\n";
       } else if (str_StartsWith(CnvCtx::low(txt), "@b")) {
         fp_html_clf << "</PRE><B><FONT SIZE=\"3\">" << txt + 2
@@ -855,7 +855,7 @@ int CnvWblToHtml::attribute_exec()
   if (ctx->rw->doc_fresh) {
     if (streq(ctx->rw->doc_summary, "")) {
       for (i = 0; i < ctx->rw->doc_cnt; i++) {
-        ctx->remove_spaces(ctx->rw->doc_text[i], txt);
+        str_trim(txt, ctx->rw->doc_text[i]);
         if (str_StartsWith(CnvCtx::low(txt), "@image")) {
           continue;
         } else if (str_StartsWith(CnvCtx::low(txt), "@b")) {
@@ -934,11 +934,11 @@ int CnvWblToHtml::attribute_exec()
 
   if (ctx->rw->doc_fresh) {
     for (i = 0; i < ctx->rw->doc_cnt; i++) {
-      ctx->remove_spaces(ctx->rw->doc_text[i], txt);
+      str_trim(txt, ctx->rw->doc_text[i]);
       if (str_StartsWith(CnvCtx::low(txt), "@image")) {
         char imagefile[80];
 
-        ctx->remove_spaces(txt + 6, imagefile);
+        str_trim(imagefile, txt + 6);
         fp_tmp << "</PRE><IMG SRC=\"" << imagefile << "\"><PRE>\n";
       } else if (str_StartsWith(CnvCtx::low(txt), "@b")) {
         fp_tmp << "</PRE><B><FONT SIZE=\"3\">" << txt + 2
@@ -980,7 +980,7 @@ int CnvWblToHtml::bit_exec()
   if (ctx->rw->doc_fresh) {
     if (streq(ctx->rw->doc_summary, "")) {
       for (i = 0; i < ctx->rw->doc_cnt; i++) {
-        ctx->remove_spaces(ctx->rw->doc_text[i], txt);
+        str_trim(txt, ctx->rw->doc_text[i]);
         if (str_StartsWith(CnvCtx::low(txt), "@image")) {
           continue;
         } else if (str_StartsWith(CnvCtx::low(txt), "@b")) {
@@ -1020,11 +1020,11 @@ int CnvWblToHtml::bit_exec()
 
   if (ctx->rw->doc_fresh) {
     for (i = 0; i < ctx->rw->doc_cnt; i++) {
-      ctx->remove_spaces(ctx->rw->doc_text[i], txt);
+      str_trim(txt, ctx->rw->doc_text[i]);
       if (str_StartsWith(CnvCtx::low(txt), "@image")) {
         char imagefile[80];
 
-        ctx->remove_spaces(txt + 6, imagefile);
+        str_trim(imagefile, txt + 6);
         fp_tmp << "</PRE><IMG SRC=\"" << imagefile << "\"><PRE>\n";
       } else if (str_StartsWith(CnvCtx::low(txt), "@b")) {
         fp_tmp << "</PRE><B><FONT SIZE=\"3\">" << txt + 2
@@ -1199,11 +1199,11 @@ int CnvWblToHtml::typedef_exec()
 
   if (ctx->rw->doc_fresh) {
     for (i = 0; i < ctx->rw->doc_cnt; i++) {
-      ctx->remove_spaces(ctx->rw->doc_text[i], txt);
+      str_trim(txt, ctx->rw->doc_text[i]);
       if (str_StartsWith(CnvCtx::low(txt), "@image")) {
         char imagefile[80];
 
-        ctx->remove_spaces(txt + 6, imagefile);
+        str_trim(imagefile, txt + 6);
         fp_html_clf << "</PRE><IMG SRC=\"" << imagefile << "\"><PRE>\n";
       } else if (str_StartsWith(CnvCtx::low(txt), "@b")) {
         fp_html_clf << "</PRE><B><FONT SIZE=\"3\">" << txt + 2

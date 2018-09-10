@@ -572,8 +572,8 @@ void Lng::read_include(
         return;
       }
 
-      dcli_trim(fname1, &line1[8]);
-      dcli_trim(fname2, &line2[8]);
+      str_trim(fname1, &line1[8]);
+      str_trim(fname2, &line2[8]);
       if (!read_files(fname1, fname2, first_set, sts))
         return;
     } else {

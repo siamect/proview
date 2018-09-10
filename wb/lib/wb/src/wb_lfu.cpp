@@ -739,7 +739,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
         path_file_created = 1;
 
         for (i = 0; i < 20; i++) {
-          dcli_trim(path, path_ptr[i]);
+          str_trim(path, path_ptr[i]);
           if (!streq(path, ""))
             fprintf(fpath, "%s\n", path);
         }
@@ -2491,7 +2491,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
               for (int i = 0; i < (int)(sizeof(bop->ArchivePath)
                                       / sizeof(bop->ArchivePath[0]));
                    i++) {
-                dcli_trim(opt, bop->ArchivePath[i]);
+                str_trim(opt, bop->ArchivePath[i]);
                 if (!streq(opt, ""))
                   sprintf(&str[strlen(str)], "-L%s ", opt);
               }
@@ -2499,7 +2499,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
               for (int i = 0; i < (int)(sizeof(bop->ObjectModules)
                                       / sizeof(bop->ObjectModules[0]));
                    i++) {
-                dcli_trim(opt, bop->ObjectModules[i]);
+                str_trim(opt, bop->ObjectModules[i]);
                 if (!streq(opt, ""))
                   sprintf(&str[strlen(str)], "%s ", opt);
               }
@@ -2520,7 +2520,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
               for (int i = 0;
                    i < (int)(sizeof(bop->Archives) / sizeof(bop->Archives[0]));
                    i++) {
-                dcli_trim(opt, bop->Archives[i]);
+                str_trim(opt, bop->Archives[i]);
                 if (!streq(opt, "")) {
                   if (str_StartsWith(opt, "lib"))
                     strncpy(ar, &opt[3], sizeof(ar));
@@ -3131,7 +3131,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
             sizeof(target_array) / sizeof(target_array[0]),
             sizeof(target_array[0]), 0);
         for (int i = 0; i < target_cnt; i++) {
-          dcli_trim(target_array[i], target_array[i]);
+          str_trim(target_array[i], target_array[i]);
           fprintf(file, "import %d %s%s %s\n", current_options, dir, source_ptr,
               target_array[i]);
         }
@@ -3262,7 +3262,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
             sizeof(target_array) / sizeof(target_array[0]),
             sizeof(target_array[0]), 0);
         for (int i = 0; i < target_cnt; i++) {
-          dcli_trim(target_array[i], target_array[i]);
+          str_trim(target_array[i], target_array[i]);
           fprintf(file, "buildcopy %s %s%s %s\n", cdh_Low(fullname), dir,
               source_ptr, target_array[i]);
         }

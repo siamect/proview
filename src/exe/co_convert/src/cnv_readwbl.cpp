@@ -91,7 +91,7 @@ int CnvReadWbl::read_wbl(char* filename)
       linetype = cread_eLine_EOF;
     else {
       line_cnt++;
-      CnvCtx::remove_spaces(line, line);
+      str_trim(line, line);
       if (streq(line, ""))
         continue;
 
@@ -1003,8 +1003,8 @@ int CnvReadWbl::doc_add(char* line)
   } else if (streq(low(line_part[1]), "@group")) {
     char str[400];
 
-    CnvCtx::remove_spaces(line, str);
-    CnvCtx::remove_spaces(&str[6], str);
+    str_trim(str, line);
+    str_trim(str, &str[6]);
     doc_group_cnt = dcli_parse(str, " 	,", "", (char*)doc_groups,
         sizeof(doc_groups) / sizeof(doc_groups[0]), sizeof(doc_groups[0]), 0);
   } else if (streq(low(line_part[1]), "@link")) {
@@ -1324,7 +1324,7 @@ int CnvReadWbl::read_lng(char* cname, char* aname)
     if (!sts)
       break;
 
-    CnvCtx::remove_spaces(line, str);
+    str_trim(str, line);
     if (str_NoCaseStrncmp(str, "<class>", 7) == 0)
       len = 7;
     else if (str_NoCaseStrncmp(str, "<type>", 6) == 0)
@@ -1335,7 +1335,7 @@ int CnvReadWbl::read_lng(char* cname, char* aname)
       len = 0;
 
     if (len) {
-      CnvCtx::remove_spaces(&str[len], found_key);
+      str_trim(found_key, &str[len]);
       if (str_NoCaseStrcmp(cname, found_key) == 0) {
         if (aname && !streq(aname, "")) {
           in_class = 1;
@@ -1363,7 +1363,7 @@ int CnvReadWbl::read_lng(char* cname, char* aname)
       if (in_doc)
         break;
 
-      CnvCtx::remove_spaces(&str[len], found_key);
+      str_trim(found_key, &str[len]);
       if (str_NoCaseStrcmp(aname, found_key) == 0) {
         in_doc = 1;
         doc_init_keep();

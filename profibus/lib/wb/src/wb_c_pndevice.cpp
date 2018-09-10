@@ -499,7 +499,7 @@ static pwr_tStatus generate_viewer_data(device_sCtx* ctx)
     if (EVEN(sts))
       return sts;
 
-    dcli_trim(ethernet_device, ethernet_device);
+    str_trim(ethernet_device, ethernet_device);
     str_ToLower(ethernet_device, ethernet_device);
     sprintf(fname, "$pwrp_load/pwr_pnviewer_%s.dat", ethernet_device);
     free(ethernet_device);
@@ -518,7 +518,7 @@ static pwr_tStatus generate_viewer_data(device_sCtx* ctx)
         return 0;
 
       while (dcli_read_line(line, sizeof(line), fp)) {
-        dcli_trim(line, line);
+        str_trim(line, line);
         nr = dcli_parse(line, "=", "", (char*)elemv,
             sizeof(elemv) / sizeof(elemv[0]), sizeof(elemv[0]), 0);
         if (nr != 2)
@@ -538,7 +538,7 @@ static pwr_tStatus generate_viewer_data(device_sCtx* ctx)
           strncpy(mac_address, elemv[1], sizeof(mac_address));
           if ((s = strchr(mac_address, '/')))
             *s = 0;
-          dcli_trim(mac_address, mac_address);
+          str_trim(mac_address, mac_address);
           break;
         }
       }

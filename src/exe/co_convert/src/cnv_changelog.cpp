@@ -160,7 +160,7 @@ int CnvChangeLog::read(const char* module)
         entries.push_back(p);
       } else {
         // Continuation of log entry
-        CnvCtx::remove_spaces(orig_line, line);
+        str_trim(line, orig_line);
         if (streq(line, ""))
           continue;
 

@@ -812,7 +812,7 @@ static pwr_tStatus configure_object_reset(
     vect_cnt = dcli_parse(mb->MethodArguments[2], ",", "", (char*)vect,
         sizeof(vect) / sizeof(vect[0]), sizeof(vect[0]), 0);
     for (j = 0; j < vect_cnt; j++)
-      dcli_trim(vect[j], vect[j]);
+      str_trim(vect[j], vect[j]);
   } else
     vect_cnt = 0;
 
@@ -918,7 +918,7 @@ static pwr_tStatus configure_attrmask(
     vect_cnt++;
   }
   for (i = 0; i < vect_cnt; i++) {
-    dcli_trim(vect[i], vect[i]);
+    str_trim(vect[i], vect[i]);
 
     sts = configure_parse_attr(ip, parent, vect[i]);
     if (EVEN(sts))
@@ -1024,7 +1024,7 @@ static pwr_tStatus ConfigureComponent(ldh_sMenuCall* ip)
 
     *s = 0;
 
-    dcli_trim(str1, str1);
+    str_trim(str1, str1);
     nr = sscanf(str1, "%d", &disable_mask);
     if (nr != 1)
       return LDH__COMPSYNTAX;

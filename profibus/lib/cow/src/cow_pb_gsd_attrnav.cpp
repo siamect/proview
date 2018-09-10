@@ -1482,8 +1482,8 @@ int GsdAttrNav::search_class(
   char lmodel[200];
   char lmodule[200];
 
-  dcli_trim(lmodel, (char*)model);
-  dcli_trim(lmodule, (char*)module);
+  str_trim(lmodel, (char*)model);
+  str_trim(lmodule, (char*)module);
 
   dcli_translate_filename(fname, filename);
 
@@ -1500,9 +1500,9 @@ int GsdAttrNav::search_class(
     if (num < 1)
       continue;
 
-    dcli_trim(itemv[0], itemv[0]);
+    str_trim(itemv[0], itemv[0]);
     if (num >= 2)
-      dcli_trim(itemv[1], itemv[1]);
+      str_trim(itemv[1], itemv[1]);
 
     if (str_NoCaseStrcmp(itemv[0], "Model") == 0) {
       if (num < 2)

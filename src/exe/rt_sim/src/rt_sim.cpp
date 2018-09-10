@@ -149,7 +149,7 @@ pwr_tStatus rt_sim::load()
   pwr_tOid oid;
   FILE* fp;
 
-  dcli_trim(fname, conf->LoadFile);
+  str_trim(fname, conf->LoadFile);
   dcli_translate_filename(fname, fname);
   fp = fopen(fname, "r");
   if (!fp)
@@ -158,7 +158,7 @@ pwr_tStatus rt_sim::load()
   while (dcli_read_line(line, sizeof(line), fp)) {
     line_cnt++;
 
-    dcli_trim(line, line);
+    str_trim(line, line);
     if (streq(line, "") || line[0] == '#'
         || (line[0] == '/' && line[1] == '/'))
       continue;
@@ -328,7 +328,7 @@ pwr_tStatus rt_sim::store()
   pwr_tOid oid;
   FILE* fp;
 
-  dcli_trim(conf->LoadFile, conf->LoadFile);
+  str_trim(conf->LoadFile, conf->LoadFile);
   if (strchr(conf->LoadFile, '.') == 0)
     strcat(conf->LoadFile, ".rtdbs");
   dcli_translate_filename(fname, conf->LoadFile);

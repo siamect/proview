@@ -154,7 +154,7 @@ int Graph::generate_web(ldh_tSesContext ldhses, pwr_tOid opplaceweb_oid)
     return sts;
   strcpy(pwrhost, value_p);
   free(value_p);
-  dcli_trim(pwrhost, pwrhost);
+  str_trim(pwrhost, pwrhost);
 
   // Attribute EnableLogin
   sts = ldh_GetObjectPar(
@@ -214,7 +214,7 @@ int Graph::generate_web(ldh_tSesContext ldhses, pwr_tOid opplaceweb_oid)
 
   strcpy(arlist, "pwr_rt_client.jar,pwr_jop.jar,pwr_jopg.jar");
   // strcat( arlist ",pwr_bcomp.jar,pwr_bcompfc.jar,pwr_abb.jar");
-  dcli_trim(load_archives, load_archives);
+  str_trim(load_archives, load_archives);
   if (!streq(load_archives, "")) {
     strcat(arlist, ",");
     strcat(arlist, load_archives);

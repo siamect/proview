@@ -224,7 +224,7 @@ void wb_pvd_gvl::load(pwr_tStatus* rsts)
       }
       continue;
     }
-    dcli_trim(line, line);
+    str_trim(line, line);
 
     num = dcli_parse(line, " 	", "", (char*)line_item,
         sizeof(line_item) / sizeof(line_item[0]), sizeof(line_item[0]), 0);

@@ -3832,7 +3832,7 @@ int pn_gsdml::ostring_to_data(
     if (*s == ',' || *s == 0) {
       strncpy(valstr, t, s - t);
       valstr[s - t] = 0;
-      dcli_remove_blank(valstr, valstr);
+      str_trim(valstr, valstr);
       if (valstr[0] == '0' && valstr[1] == 'x')
         sts = sscanf(&valstr[2], "%x", &val);
       else

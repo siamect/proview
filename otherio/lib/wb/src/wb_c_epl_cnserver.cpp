@@ -80,7 +80,7 @@ static pwr_tStatus GenerateXddFile(ldh_sMenuCall* ip)
     return 0;
 
   while (dcli_read_line(line, sizeof(line), fin)) {
-    dcli_trim(l2, line);
+    str_trim(l2, line);
 
     if (streq(l2, "</ObjectList>")) {
       pwr_tEnum representation;

@@ -748,7 +748,7 @@ void WbExpWNav::show_export_import()
   std::ifstream is(fname);
 
   while (is.getline(line, sizeof(line))) {
-    dcli_trim(line, line);
+    str_trim(line, line);
     if (line[0] == '#' || line[0] == '!')
       continue;
 
@@ -837,7 +837,7 @@ void WbExpWNav::show_builddir()
   std::ifstream is(fname);
 
   while (is.getline(line, sizeof(line))) {
-    dcli_trim(line, line);
+    str_trim(line, line);
     if (line[0] == '#' || line[0] == '!')
       continue;
 

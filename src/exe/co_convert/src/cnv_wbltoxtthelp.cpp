@@ -187,11 +187,11 @@ int CnvWblToXtthelp::class_exec()
 
   if (ctx->rw->doc_fresh) {
     for (i = 0; i < ctx->rw->doc_cnt; i++) {
-      CnvCtx::remove_spaces(ctx->rw->doc_text[i], txt);
+      str_trim(txt, ctx->rw->doc_text[i]);
       if (str_StartsWith(CnvCtx::low(txt), "@image")) {
         char imagefile[80];
 
-        CnvCtx::remove_spaces(txt + 6, imagefile);
+        str_trim(imagefile, txt + 6);
         fp_tmp << "<IMAGE> " << imagefile << '\n';
       } else if (str_StartsWith(CnvCtx::low(txt), "@b")) {
         fp_tmp << "<B> " << txt + 2 << '\n';
@@ -292,11 +292,11 @@ int CnvWblToXtthelp::bit_exec()
 
   if (ctx->rw->doc_fresh) {
     for (i = 0; i < ctx->rw->doc_cnt; i++) {
-      CnvCtx::remove_spaces(ctx->rw->doc_text[i], txt);
+      str_trim(txt, ctx->rw->doc_text[i]);
       if (str_StartsWith(CnvCtx::low(txt), "@image")) {
         char imagefile[80];
 
-        CnvCtx::remove_spaces(txt + 6, imagefile);
+        str_trim(imagefile, txt + 6);
         fp_tmp << "<IMAGE> " << imagefile << '\n';
       } else if (str_StartsWith(CnvCtx::low(txt), "@b")) {
         fp_tmp << "<B> " << txt + 2 << '\n';
@@ -390,7 +390,7 @@ int CnvWblToXtthelp::attribute_exec()
       if ((s = strstr(CnvCtx::low(ctx->rw->doc_text[i]), "@image")) != 0) {
         char imagefile[80];
 
-        CnvCtx::remove_spaces(s + 6, imagefile);
+        str_trim(imagefile, s + 6);
         fp_tmp << "<IMAGE> " << imagefile << '\n';
       } else
         fp_tmp << ctx->rw->doc_text[i] << '\n';
@@ -455,11 +455,11 @@ int CnvWblToXtthelp::typedef_exec()
 
   if (ctx->rw->doc_fresh) {
     for (i = 0; i < ctx->rw->doc_cnt; i++) {
-      CnvCtx::remove_spaces(ctx->rw->doc_text[i], txt);
+      str_trim(txt, ctx->rw->doc_text[i]);
       if (str_StartsWith(CnvCtx::low(txt), "@image")) {
         char imagefile[80];
 
-        CnvCtx::remove_spaces(txt + 6, imagefile);
+        str_trim(imagefile, txt + 6);
         fp_tmp << "<IMAGE> " << imagefile << '\n';
       } else if (str_StartsWith(CnvCtx::low(txt), "@b")) {
         fp_tmp << "<B> " << txt + 2 << '\n';

@@ -60,7 +60,6 @@ static int one = 1;
 
 static int rtt_get_signal_line(
     FILE* file, char* line, int size, int* spaces, char* text, int* lines);
-static int rtt_remove_spaces(char* in, char* out);
 static char* rtt_VolumeIdToStr(pwr_tVolumeId volumeid);
 
 /*************************************************************************
@@ -120,38 +119,6 @@ static int rtt_get_signal_line(
     }
     break;
   }
-  return RTT__SUCCESS;
-}
-
-/*************************************************************************
-*
-* Name:		rtt_remove_spaces()
-*
-* Type		int
-*
-* Type		Parameter	IOGF	Description
-*
-* Description:
-*	Removes spaces and tabs at the begining and at the end of a string.
-*
-**************************************************************************/
-
-static int rtt_remove_spaces(char* in, char* out)
-{
-  char* s;
-
-  for (s = in; !((*s == 0) || ((*s != ' ') && (*s != 9))); s++)
-    ;
-
-  strcpy(out, s);
-
-  if (strlen(s) != 0) {
-    for (s += strlen(s) - 1; !((s == in) || ((*s != ' ') && (*s != 9))); s--)
-      ;
-    s++;
-    *s = 0;
-  }
-
   return RTT__SUCCESS;
 }
 
@@ -334,7 +301,7 @@ int rtt_crr_signal(char* filename, char* signalname)
       if (EVEN(sts))
         goto finish;
       while (spaces > object_spaces) {
-        rtt_remove_spaces(line, line);
+        str_trim(line, line);
 
         if (buffcnt > CRR_BUFF_SIZE - 100) {
           buffcnt += sprintf(
@@ -498,7 +465,7 @@ int rtt_crr_object(char* filename, char* objectname)
       if (EVEN(sts))
         goto finish;
       while (spaces > object_spaces) {
-        rtt_remove_spaces(line, line);
+        str_trim(line, line);
 
         if (buffcnt > CRR_BUFF_SIZE - 100) {
           buffcnt += sprintf(

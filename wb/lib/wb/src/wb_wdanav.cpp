@@ -1111,7 +1111,7 @@ int WdaNav::import_textfile(char* filename)
   while (dcli_read_line(line, sizeof(line), fp)) {
     row++;
 
-    dcli_trim(line, line);
+    str_trim(line, line);
 
     if (line[0] == '#' || line[0] == 0)
       continue;
@@ -1134,7 +1134,7 @@ int WdaNav::import_textfile(char* filename)
     name[len] = 0;
 
     strcpy(value, s);
-    dcli_trim(value, value);
+    str_trim(value, value);
 
     sts = ldh_NameToAttrRef(ldhses, name, &aref);
     if (EVEN(sts)) {

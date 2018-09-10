@@ -341,7 +341,7 @@ static int find_define(t_filectx filectx, char* str, int* value)
   t_define* define_ptr;
 
   /* Remove tabs and spaces */
-  dcli_remove_blank(def, str);
+  str_trim(def, str);
   for (define_ptr = filectx->definelist; define_ptr;
        define_ptr = define_ptr->next) {
     if (streq(define_ptr->define, def)) {

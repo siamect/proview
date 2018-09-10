@@ -233,7 +233,7 @@ pwr_tStatus rt_post::mh_alarm_bc(mh_sMessage* MsgP)
       sizeof(rcv_array) / sizeof(rcv_array[0]), sizeof(rcv_array[0]), 0);
 
   for (int i = 0; i < rcvnum; i++) {
-    dcli_trim(str, rcv_array[i]);
+    str_trim(str, rcv_array[i]);
 
     s = strrchr(str, '.');
     if (s) {
@@ -437,7 +437,7 @@ void rt_post::replace_symbol(char* outstr, char* instr)
         found = 0;
         for (unsigned int j = 0;
              j < sizeof(conf->Symbols) / sizeof(conf->Symbols[0]); j++) {
-          dcli_trim(csymbol, conf->Symbols[j].Name);
+          str_trim(csymbol, conf->Symbols[j].Name);
           if (streq(symbol, csymbol)) {
             // Found, insert the value
             strcpy(t, conf->Symbols[j].Value);

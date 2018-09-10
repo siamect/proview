@@ -292,12 +292,12 @@ int CnvPwgToXtthelp::get_title(
 
     if (incomment) {
       strncpy(title, (char*)&line[1], tsize);
-      dcli_trim(title, title);
+      str_trim(title, title);
 
       ifp.getline(line, sizeof(line));
       if ((s = strstr(line, "Group"))) {
         strncpy(group, s + 6, gsize);
-        dcli_trim(group, group);
+        str_trim(group, group);
       } else
         strcpy(group, "");
 

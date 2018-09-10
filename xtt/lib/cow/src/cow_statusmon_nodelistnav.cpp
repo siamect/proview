@@ -377,7 +377,7 @@ void NodelistNav::read()
     if (!sts)
       break;
 
-    dcli_trim(line, line);
+    str_trim(line, line);
 
     if (line[0] == 0 || line[0] == '#' || line[0] == '!')
       continue;

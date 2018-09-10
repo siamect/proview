@@ -325,7 +325,7 @@ int WPkgNav::root_objects()
   std::ifstream is(fname);
 
   while (is.getline(line, sizeof(line))) {
-    dcli_trim(line, line);
+    str_trim(line, line);
     if (line[0] == '#' || line[0] == '!')
       continue;
 
@@ -788,7 +788,7 @@ int WItemPkgFileHier::open_children(
   }
 
   while (is.getline(line, sizeof(line))) {
-    dcli_trim(line, line);
+    str_trim(line, line);
     if (line[0] == '-')
       continue;
 

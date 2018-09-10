@@ -152,3 +152,19 @@ int str_StrncpyCutOff(char* t, const char* s, size_t n, int cutleft)
   }
   return 1;
 }
+
+void str_trim(char *out, const char *in)
+{
+  // skip leading whitespace
+  while (isspace((unsigned char) *in))
+    in++;
+  
+  // Skip trailing whitespace
+  const char *end = in + strlen(in) - 1;
+  while (end > in && isspace((unsigned char) *end)) end--;
+  end++;
+
+  int length = end - in;
+  str_Strncpy(out, in, length);
+  out[length] = 0;
+}

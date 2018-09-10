@@ -53,43 +53,9 @@ extern "C" {
 #include "co_string.h"
 
 /*** Local funktions ***************************************************/
-static int help_remove_spaces(char* in, char* out);
 static FILE* navhelp_open_file(
     NavHelp* navhelp, navh_eHelpFile file_type, const char* file_name);
 static pwr_tStatus get_lang_file(char* file, char* found_file);
-
-/*************************************************************************
-*
-* Name:		help_remove_spaces()
-*
-* Type		int
-*
-* Type		Parameter	IOGF	Description
-*
-* Description:
-*	Removes spaces and tabs at the begining and at the end of a string.
-*
-**************************************************************************/
-
-static int help_remove_spaces(char* in, char* out)
-{
-  char* s;
-
-  for (s = in; !((*s == 0) || ((*s != ' ') && (*s != 9))); s++)
-    ;
-
-  strcpy(out, s);
-
-  s = out;
-  if (strlen(s) != 0) {
-    for (s += strlen(s) - 1; !((s == out) || ((*s != ' ') && (*s != 9))); s--)
-      ;
-    s++;
-    *s = 0;
-  }
-
-  return NAV__SUCCESS;
-}
 
 NavHelp::NavHelp(
     void* h_parent_ctx, const char* h_base_file, const char* h_project_file)
@@ -165,14 +131,14 @@ int NavHelp::help(const char* help_key, const char* help_bookmark,
     if (str_NoCaseStrncmp(line, "<coding>", 8) == 0) {
       char codingstr[40];
 
-      help_remove_spaces(&line[8], codingstr);
+      str_trim(codingstr, &line[8]);
       if (str_NoCaseStrcmp(codingstr, "ISO8859-1") == 0) {
         coding = lng_eCoding_ISO8859_1;
       } else if (str_NoCaseStrcmp(codingstr, "UTF-8") == 0) {
         coding = lng_eCoding_UTF_8;
       }
     } else if (str_NoCaseStrncmp(line, "<include>", 9) == 0) {
-      help_remove_spaces(&line[9], include_file);
+      str_trim(include_file, &line[9]);
 
       if (!noprop || strstr(include_file, "$pwr_lang") == 0) {
         sts = help(help_key, help_bookmark, navh_eHelpFile_Other, include_file,
@@ -202,18 +168,18 @@ int NavHelp::help(const char* help_key, const char* help_bookmark,
     } else if (str_NoCaseStrncmp(line, "<option>", 8) == 0) {
       char option[80];
 
-      help_remove_spaces(&line[8], option);
+      str_trim(option, &line[8]);
       str_ToLower(option, option);
       (insert_cb)(parent_ctx, navh_eItemType_Option, option, NULL, NULL, NULL,
           NULL, NULL, navh_eHelpFile_, 0, NULL, coding);
     } else if (str_NoCaseStrncmp(line, "<topic>", 7) == 0) {
       if ((s = strstr(line, "<style>")) || (s = strstr(line, "<STYLE>"))) {
         style = 1;
-        help_remove_spaces(s + 7, style_str);
+        str_trim(style_str, s + 7);
         *s = 0;
       }
 
-      help_remove_spaces(&line[7], subject);
+      str_trim(subject, &line[7]);
       str_ToLower(subject, subject);
       subject_nr = dcli_parse(subject, " 	", "", (char*)subject_part,
           sizeof(subject_part) / sizeof(subject_part[0]),
@@ -279,7 +245,7 @@ int NavHelp::help(const char* help_key, const char* help_bookmark,
         if (str_NoCaseStrncmp(line, "<option>", 8) == 0) {
           char option[80];
 
-          help_remove_spaces(&line[8], option);
+          str_trim(option, &line[8]);
           str_ToLower(option, option);
           (insert_cb)(parent_ctx, navh_eItemType_Option, option, NULL, NULL,
               NULL, NULL, NULL, navh_eHelpFile_, 0, NULL, coding);
@@ -288,29 +254,29 @@ int NavHelp::help(const char* help_key, const char* help_bookmark,
         }
 
         if ((s = strstr(line, "<link>")) || (s = strstr(line, "<LINK>"))) {
-          help_remove_spaces(s + 6, link);
+          str_trim(link, s + 6);
           *s = 0;
 
           link_nr = dcli_parse(link, ",", "", (char*)link_part,
               sizeof(link_part) / sizeof(link_part[0]), sizeof(link_part[0]),
               0);
           if (link_nr == 1) {
-            help_remove_spaces(link_part[0], link);
+            str_trim(link, link_part[0]);
             strcpy(link_bookmark, "");
             link_filename_p = (char*)file_name;
           } else if (link_nr == 2) {
-            help_remove_spaces(link_part[0], link);
-            help_remove_spaces(link_part[1], link_bookmark);
+            str_trim(link, link_part[0]);
+            str_trim(link_bookmark, link_part[1]);
             link_filename_p = (char*)file_name;
           } else if (link_nr > 2) {
-            help_remove_spaces(link_part[0], link);
-            help_remove_spaces(link_part[1], link_bookmark);
-            help_remove_spaces(link_part[2], link_filename);
+            str_trim(link, link_part[0]);
+            str_trim(link_bookmark, link_part[1]);
+            str_trim(link_filename, link_part[2]);
             link_filename_p = link_filename;
           }
         } else if ((s = strstr(line, "<weblink>"))
             || (s = strstr(line, "<WEBLINK>"))) {
-          help_remove_spaces(s + 9, link);
+          str_trim(link, s + 9);
           *s = 0;
 
           link_nr = dcli_parse(link, ",", "", (char*)link_part,
@@ -318,24 +284,24 @@ int NavHelp::help(const char* help_key, const char* help_bookmark,
               0);
           if (link_nr == 1) {
             strcpy(link, "$web:");
-            help_remove_spaces(link_part[0], &link[5]);
+            str_trim(&link[5], link_part[0]);
             strcpy(link_bookmark, "");
             link_filename_p = (char*)file_name;
           } else if (link_nr == 2) {
             strcpy(link, "$web:");
-            help_remove_spaces(link_part[0], &link[5]);
-            help_remove_spaces(link_part[1], link_bookmark);
+            str_trim(&link[5], link_part[0]);
+            str_trim(link_bookmark, link_part[1]);
             link_filename_p = (char*)file_name;
           } else if (link_nr > 2) {
             strcpy(link, "$web:");
-            help_remove_spaces(link_part[0], &link[5]);
-            help_remove_spaces(link_part[1], link_bookmark);
-            help_remove_spaces(link_part[2], link_filename);
+            str_trim(&link[5], link_part[0]);
+            str_trim(link_bookmark, link_part[1]);
+            str_trim(link_filename, link_part[2]);
             link_filename_p = link_filename;
           }
         } else if ((s = strstr(line, "<classlink>"))
             || (s = strstr(line, "<CLASSLINK>"))) {
-          help_remove_spaces(s + 11, link);
+          str_trim(link, s + 11);
           *s = 0;
 
           link_nr = dcli_parse(link, ",", "", (char*)link_part,
@@ -343,19 +309,19 @@ int NavHelp::help(const char* help_key, const char* help_bookmark,
               0);
           if (link_nr == 1) {
             strcpy(link, "$class:");
-            help_remove_spaces(link_part[0], &link[7]);
+            str_trim(&link[7], link_part[0]);
             strcpy(link_bookmark, "");
             link_filename_p = (char*)file_name;
           } else if (link_nr == 2) {
             strcpy(link, "$class:");
-            help_remove_spaces(link_part[0], &link[7]);
-            help_remove_spaces(link_part[1], link_bookmark);
+            str_trim(&link[7], link_part[0]);
+            str_trim(link_bookmark, link_part[1]);
             link_filename_p = (char*)file_name;
           } else if (link_nr > 2) {
             strcpy(link, "$class:");
-            help_remove_spaces(link_part[0], &link[7]);
-            help_remove_spaces(link_part[1], link_bookmark);
-            help_remove_spaces(link_part[2], link_filename);
+            str_trim(&link[7], link_part[0]);
+            str_trim(link_bookmark, link_part[1]);
+            str_trim(link_filename, link_part[2]);
             link_filename_p = link_filename;
           }
         } else {
@@ -366,7 +332,7 @@ int NavHelp::help(const char* help_key, const char* help_bookmark,
 
         if ((s = strstr(line, "<bookmark>"))
             || (s = strstr(line, "<BOOKMARK>"))) {
-          help_remove_spaces(s + 10, bookmark);
+          str_trim(bookmark, s + 10);
           *s = 0;
           str_ToLower(bookmark, bookmark);
           if (!bookmark_found && !print_all
@@ -407,7 +373,7 @@ int NavHelp::help(const char* help_key, const char* help_bookmark,
           horizontal_line = 1;
         } else if ((s = strstr(line, "<image>"))
             || (s = strstr(line, "<IMAGE>"))) {
-          help_remove_spaces(s + 7, imagefile);
+          str_trim(imagefile, s + 7);
           image = 1;
         }
 
@@ -532,7 +498,7 @@ int NavHelp::get_next_key(const char* help_key, navh_eHelpFile file_type,
   sts = dcli_read_line(line, sizeof(line), file);
   while (ODD(sts)) {
     if (str_NoCaseStrncmp(line, "<include>", 9) == 0) {
-      help_remove_spaces(&line[9], include_file);
+      str_trim(include_file, &line[9]);
       // Replace symbol for language
       if (str_StartsWith(include_file, "$pwr_lang/")) {
         sts = get_lang_file(include_file, include_file);
@@ -555,7 +521,7 @@ int NavHelp::get_next_key(const char* help_key, navh_eHelpFile file_type,
         *s = 0;
       }
 
-      help_remove_spaces(&line[7], subject);
+      str_trim(subject, &line[7]);
       if (hit) {
         strcpy(next_key, subject);
         next_hit = 1;
@@ -618,7 +584,7 @@ int NavHelp::get_previous_key(const char* help_key, navh_eHelpFile file_type,
   sts = dcli_read_line(line, sizeof(line), file);
   while (ODD(sts)) {
     if (str_NoCaseStrncmp(line, "<include>", 9) == 0) {
-      help_remove_spaces(&line[9], include_file);
+      str_trim(include_file, &line[9]);
       // Replace symbol for language
       if (str_StartsWith(include_file, "$pwr_lang/")) {
         sts = get_lang_file(include_file, include_file);
@@ -641,7 +607,7 @@ int NavHelp::get_previous_key(const char* help_key, navh_eHelpFile file_type,
         *s = 0;
       }
 
-      help_remove_spaces(&line[7], subject);
+      str_trim(subject, &line[7]);
       str_ToLower(subject, subject);
       subject_nr = dcli_parse(subject, " 	", "", (char*)subject_part,
           sizeof(subject_part) / sizeof(subject_part[0]),
@@ -692,19 +658,19 @@ int NavHelp::help_index(navh_eHelpFile file_type, const char* file_name)
     if (str_NoCaseStrncmp(line, "<coding>", 8) == 0) {
       char codingstr[40];
 
-      help_remove_spaces(&line[8], codingstr);
+      str_trim(codingstr, &line[8]);
       if (str_NoCaseStrcmp(codingstr, "ISO8859-1") == 0) {
         coding = lng_eCoding_ISO8859_1;
       } else if (str_NoCaseStrcmp(codingstr, "UTF-8") == 0) {
         coding = lng_eCoding_UTF_8;
       }
     } else if (str_NoCaseStrncmp(line, "<include>", 9) == 0) {
-      help_remove_spaces(&line[9], include_file);
+      str_trim(include_file, &line[9]);
       sts = help_index(navh_eHelpFile_Other, include_file);
     } else if (str_NoCaseStrncmp(line, "<topic>", 7) == 0) {
       if ((s = strstr(line, "<style>")) || (s = strstr(line, "<STYLE>")))
         *s = 0;
-      help_remove_spaces(&line[7], subject);
+      str_trim(subject, &line[7]);
 
       (insert_cb)(parent_ctx, navh_eItemType_HelpBold, subject, "", "", subject,
           "", file_name, file_type, 0, NULL, coding);

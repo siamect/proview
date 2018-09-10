@@ -87,7 +87,6 @@ static const graph_sTypeStr graph_type_table[]
 
 static char null_str[] = "";
 
-static void graph_remove_space(char* out_str, char* in_str);
 // static int graph_init_grow_cb( GrowCtx *ctx, void *client_data);
 // static void graph_attr_redraw_cb( Attr *attrctx);
 // static void graph_attr_close_cb( Attr *attrctx);
@@ -4253,30 +4252,6 @@ int Graph::export_plcfo(char* filename)
   return grow_ExportFlow(grow->ctx, filename);
 }
 
-static void graph_remove_space(char* out_str, char* in_str)
-{
-  char* s;
-
-  s = in_str;
-  // Find first character not space or tab
-  while (*s) {
-    if (!(*s == 9 || *s == 32))
-      break;
-    s++;
-  }
-  str_Strcpy(out_str, s);
-  //
-  s = out_str + strlen(out_str);
-  s--;
-  while (s >= out_str) {
-    if (!(*s == 9 || *s == 32))
-      break;
-    s--;
-  }
-  s++;
-  *s = 0;
-}
-
 void Graph::get_command(char* in, char* out, GeDyn* dyn)
 {
   char *s, *t0;
@@ -4815,7 +4790,7 @@ graph_eDatabase Graph::parse_attr_name(char* name, char* parsed_name,
   char *s, *s1;
   int elements = 0;
 
-  graph_remove_space(str, name);
+  str_trim(str, name);
 
   if ((s = strstr(str, "$user"))) {
     if ((s = strchr(str, '#'))) {
@@ -4839,7 +4814,7 @@ graph_eDatabase Graph::parse_attr_name(char* name, char* parsed_name,
     }
     if (str[0] == '!') {
       *inverted = 1;
-      graph_remove_space(str, &str[1]);
+      str_trim(str, &str[1]);
     } else
       *inverted = 0;
     strcpy(parsed_name, str);
@@ -4869,7 +4844,7 @@ graph_eDatabase Graph::parse_attr_name(char* name, char* parsed_name,
     }
     if (str[0] == '!') {
       *inverted = 1;
-      graph_remove_space(str, &str[1]);
+      str_trim(str, &str[1]);
     } else
       *inverted = 0;
 
@@ -4906,7 +4881,7 @@ graph_eDatabase Graph::parse_attr_name(char* name, char* parsed_name,
     }
     if (str[0] == '!') {
       *inverted = 1;
-      graph_remove_space(str, &str[1]);
+      str_trim(str, &str[1]);
     } else
       *inverted = 0;
 
@@ -5055,7 +5030,7 @@ graph_eDatabase Graph::parse_attr_name(char* name, char* parsed_name,
 
   if (str[0] == '!') {
     *inverted = 1;
-    graph_remove_space(str, &str[1]);
+    str_trim(str, &str[1]);
     strcpy(parsed_name, str);
   } else {
     *inverted = 0;

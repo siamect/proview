@@ -849,40 +849,6 @@ static void dcli_message(char s, char* text)
   printf("%%DCLI-%c-MSG, %s\n", s, text);
 }
 
-int dcli_trim(char* out_str, char* in_str)
-{
-  return dcli_remove_blank(out_str, in_str);
-}
-
-int dcli_remove_blank(char* out_str, char* in_str)
-{
-  char *s, *s1;
-
-  s = in_str;
-  /* Find first not blank */
-  while (*s) {
-    if (!(*s == 9 || *s == 32))
-      break;
-    s++;
-  }
-  /* strcpy( out_str, s); */
-  for (s1 = out_str; *s; s++, s1++)
-    *s1 = *s;
-  *s1 = 0;
-
-  /* Remove at end */
-  s = out_str + strlen(out_str);
-  s--;
-  while (s >= out_str) {
-    if (!(*s == 9 || *s == 32))
-      break;
-    s--;
-  }
-  s++;
-  *s = 0;
-  return 1;
-}
-
 char* dcli_pwr_dir(const char* dir)
 {
   static char pwr_dir[120];

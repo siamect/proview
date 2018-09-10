@@ -79,7 +79,6 @@ class CnvCtx {
   void print_depend();
 
   static int read_line(char* line, int maxsize, FILE* file);
-  static int remove_spaces(const char* in, char* out);
   static char* low(const char* in);
 };
 

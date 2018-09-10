@@ -372,7 +372,7 @@ void wb_wbl_parser::parse(const char* filename)
       last = m_line_cnt;
     }
 
-    dcli_trim(line, line);
+    str_trim(line, line);
 
     if (streq(line, ""))
       continue;
