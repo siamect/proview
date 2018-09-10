@@ -5093,7 +5093,8 @@ static int utl_set_parameter(pwr_sAttrRef* arp, ldh_tSesContext ldhses,
     case pwr_eType_TypeId:
     case pwr_eType_CastId:
     case pwr_eType_VolumeId:
-    case pwr_eType_ObjectIx: {
+    case pwr_eType_ObjectIx:
+    case pwr_eType_DisableAttr: {
       p_UInt32 = (pwr_tUInt32*)object_element;
       sprintf(logstrptr + strlen(logstr), "( %u ) ", *p_UInt32);
       sscanf(valuestr, "%d", p_UInt32);
