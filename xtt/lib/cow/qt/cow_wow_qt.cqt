@@ -656,22 +656,20 @@ void CoWowEntryQt::keyPressEvent(QKeyEvent* event)
   case Qt::Key_Return:
   case Qt::Key_Enter: {
     // Insert in recall buffer
-    m_re->push(qPrintable(text()));
+    if (!text().isEmpty()) {
+      m_re->push(qPrintable(text()));
+    }
     break;
   }
   case Qt::Key_Up: {
     const char* prev = m_re->popUp(qPrintable(text()));
-    if (!streq(prev, "")) {
-      setText(fl(prev));
-    }
+    setText(fl(prev));
     end(false);
     break;
   }
   case Qt::Key_Down: {
     const char* next = m_re->popDown(qPrintable(text()));
-    if (!streq(next, "")) {
-      setText(fl(next));
-    }
+    setText(fl(next));
     end(false);
     break;
   }
