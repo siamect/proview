@@ -1461,7 +1461,7 @@ sub _build () # args: branch, subbranch, flavour, phase
             $ENV{"cross_compile"} = "-m32";
           }
           if (($branch eq "lib" && $subbranch ne "dtt") || $branch eq "wbl") {
-            # All libraries and GUI-exe files can be compiled in parallel
+            # All libraries and wbl files can be compiled in parallel
             system("make -j @_") && exit 1;
           } else {
             system("make @_") && exit 1;
