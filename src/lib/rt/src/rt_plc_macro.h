@@ -41,6 +41,7 @@
 #include "pwr_systemclasses.h"
 #include "pwr_baseclasses.h"
 #include "co_time.h"
+#include "co_math.h"
 #include "rt_lck.h"
 #include "rt_plc.h"
 #include "rt_plc_rt.h"

@@ -46,6 +46,7 @@
 #include <rsvg.h>
 #endif
 
+#include "co_string.h"
 #include "glow_browctx.h"
 #include "glow_colpalctx.h"
 #include "glow_curvectx.h"
