@@ -1366,8 +1366,8 @@ static void get_config(char* name, unsigned int* lk_max_locks,
   FILE* fp;
   char line[200];
   char line_elem[2][100];
-  unsigned int max_locks = 50000;
-  unsigned int max_objects = 20000;
+  unsigned int max_locks = 200000;
+  unsigned int max_objects = 100000;
   unsigned int autoremove = 1;
   unsigned int value;
   int nr;
