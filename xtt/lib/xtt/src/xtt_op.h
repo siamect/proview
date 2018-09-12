@@ -97,8 +97,8 @@ public:
   void (*map_cb)(void*);
   void (*help_cb)(void*, const char*);
   void (*close_cb)(void*);
-  int (*get_alarm_info_cb)(void*, evlist_sAlarmInfo*);
-  void (*ack_last_cb)(void*, unsigned long, unsigned long);
+  int (*get_alarm_info_cb)(void*, evlist_sAlarmInfo*, int, int);
+  void (*ack_last_cb)(void*, unsigned long, unsigned long, int, int);
   int (*is_authorized_cb)(void*, unsigned int);
   CoWow* wow;
   pwr_tMask layout_mask;

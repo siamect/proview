@@ -1841,7 +1841,7 @@ ItemAlarm::ItemAlarm(EvList* item_evlist, const char* item_name,
     : event_type(item_event_type), evlist(item_evlist), tree_node(0),
       time(item_time), eventtype(item_eventtype), eventflags(item_eventflags),
       eventprio(item_eventprio), eventid(item_eventid), object(*item_object),
-      status(item_status), supobject(*item_supobject), check(0)
+      status(item_status), supobject(*item_supobject), check(0), display_time(pwr_cNTime)
 {
   type = evlist_eItemType_Alarm;
   brow_tNodeClass nc;
@@ -2493,17 +2493,24 @@ int EvList::get_last_not_acked_beep(mh_sEventId** id)
   return found;
 }
 
-int EvList::get_last_not_acked_prio(
-    mh_sEventId** id, unsigned long type, unsigned long prio)
+int EvList::get_last_not_acked_prio(mh_sEventId** id, unsigned long type, 
+				    unsigned long prio, int backward, int timecheck)
 {
-  int i;
+  int i, j;
   brow_tObject* object_list;
   int object_cnt;
   ItemAlarm* object_item;
+  pwr_tTime current;
+
+
 
   brow_GetObjectList(browbase->ctx, &object_list, &object_cnt);
   for (i = 0; i < object_cnt; i++) {
-    brow_GetUserData(object_list[i], (void**)&object_item);
+    if ( backward)
+      j = object_cnt - i - 1;
+    else
+      j = i;
+    brow_GetUserData(object_list[j], (void**)&object_item);
     switch (object_item->type) {
     case evlist_eItemType_Alarm:
       switch (object_item->event_type) {
@@ -2512,6 +2519,16 @@ int EvList::get_last_not_acked_prio(
             && object_item->event_type == (evlist_eEventType)type
             && object_item->eventprio == prio) {
           *id = &object_item->eventid;
+	  if ( timecheck) {
+	    pwr_tDeltaTime diff;
+	    pwr_tFloat32 fdiff;
+
+	    time_GetTime( &current);
+	    time_Adiff( &diff, &current, &object_item->display_time);
+	    time_DToFloat( &fdiff, &diff);
+	    if ( fdiff < 1)
+	      return 0;
+	  }
           return 1;
         }
         break;
@@ -2520,6 +2537,16 @@ int EvList::get_last_not_acked_prio(
         if (object_item->status & mh_mEventStatus_NotAck
             && object_item->event_type == (evlist_eEventType)type) {
           *id = &object_item->eventid;
+	  if ( timecheck) {
+	    pwr_tDeltaTime diff;
+	    pwr_tFloat32 fdiff;
+
+	    time_GetTime( &current);
+	    time_Adiff( &diff, &current, &object_item->display_time);
+	    time_DToFloat( &fdiff, &diff);
+	    if ( fdiff < 1)
+	      return 0;
+	  }
           return 1;
         }
         break;
@@ -2532,9 +2559,9 @@ int EvList::get_last_not_acked_prio(
   return 0;
 }
 
-int EvList::get_alarm_info(evlist_sAlarmInfo* info)
+int EvList::get_alarm_info(evlist_sAlarmInfo* info, int backward, int alarmsize)
 {
-  int i;
+  int i, j;
   brow_tObject* object_list;
   int object_cnt;
   ItemAlarm* object_item;
@@ -2548,7 +2575,11 @@ int EvList::get_alarm_info(evlist_sAlarmInfo* info)
 
   brow_GetObjectList(browbase->ctx, &object_list, &object_cnt);
   for (i = 0; i < object_cnt; i++) {
-    brow_GetUserData(object_list[i], (void**)&object_item);
+    if ( backward)
+      j = object_cnt - i - 1;
+    else
+      j = i;
+    brow_GetUserData(object_list[j], (void**)&object_item);
     switch (object_item->type) {
     case evlist_eItemType_Alarm:
       switch (object_item->event_type) {
@@ -2585,6 +2616,8 @@ int EvList::get_alarm_info(evlist_sAlarmInfo* info)
             info->a_alarm_active[a_cnt]
                 = object_item->status & mh_mEventStatus_NotRet;
             info->a_alarm_exist[a_cnt] = 1;
+	    if ( object_item->display_time.tv_sec == 0 && a_cnt < alarmsize)
+	      time_GetTime( &object_item->display_time);
             a_cnt++;
             break;
           case mh_eEventPrio_B:
@@ -2601,6 +2634,8 @@ int EvList::get_alarm_info(evlist_sAlarmInfo* info)
             info->b_alarm_active[b_cnt]
                 = object_item->status & mh_mEventStatus_NotRet;
             info->b_alarm_exist[b_cnt] = 1;
+	    if ( object_item->display_time.tv_sec == 0)
+	      time_GetTime( &object_item->display_time);
             b_cnt++;
             break;
           case mh_eEventPrio_C:
@@ -2617,6 +2652,8 @@ int EvList::get_alarm_info(evlist_sAlarmInfo* info)
             info->c_alarm_active[c_cnt]
                 = object_item->status & mh_mEventStatus_NotRet;
             info->c_alarm_exist[c_cnt] = 1;
+	    if ( object_item->display_time.tv_sec == 0)
+	      time_GetTime( &object_item->display_time);
             c_cnt++;
             break;
           case mh_eEventPrio_D:
@@ -2633,6 +2670,8 @@ int EvList::get_alarm_info(evlist_sAlarmInfo* info)
             info->d_alarm_active[d_cnt]
                 = object_item->status & mh_mEventStatus_NotRet;
             info->d_alarm_exist[d_cnt] = 1;
+	    if ( object_item->display_time.tv_sec == 0)
+	      time_GetTime( &object_item->display_time);
             d_cnt++;
             break;
           default:;
@@ -2656,6 +2695,8 @@ int EvList::get_alarm_info(evlist_sAlarmInfo* info)
               = object_item->status & mh_mEventStatus_NotRet;
           info->i_alarm_exist[i_cnt] = 1;
           info->i_alarm_eventtype[i_cnt] = object_item->event_type;
+	  if ( object_item->display_time.tv_sec == 0)
+	    time_GetTime( &object_item->display_time);
           i_cnt++;
         }
         break;

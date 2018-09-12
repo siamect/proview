@@ -399,9 +399,9 @@ void Ev::blk_activate_help()
     (help_cb)(parent_ctx, "opg_blocklist");
 }
 
-int Ev::get_alarm_info(evlist_sAlarmInfo* info)
+int Ev::get_alarm_info(evlist_sAlarmInfo* info, int backward, int alarmsize)
 {
-  return ala->get_alarm_info(info);
+  return ala->get_alarm_info(info, backward, alarmsize);
 }
 
 int Ev::outunit_connect(pwr_tObjid user)
@@ -454,7 +454,7 @@ void Ev::update(double scantime)
     ala->beep(scantime);
 }
 
-void Ev::ack_last_prio(unsigned long type, unsigned long prio)
+void Ev::ack_last_prio(unsigned long type, unsigned long prio, int backward, int timecheck)
 {
   mh_sEventId* id;
   int sts;
@@ -464,7 +464,7 @@ void Ev::ack_last_prio(unsigned long type, unsigned long prio)
              parent_ctx, pwr_mAccess_RtEventsAck | pwr_mAccess_System))
     return;
 
-  sts = ala->get_last_not_acked_prio(&id, type, prio);
+  sts = ala->get_last_not_acked_prio(&id, type, prio, backward, timecheck);
   if (ODD(sts)) {
     mh_sEventId lid = *id;
 
@@ -526,7 +526,7 @@ void Ev::ack_all()
 int Ev::get_last_not_acked_prio(
     mh_sEventId** id, unsigned long type, unsigned long prio)
 {
-  return ala->get_last_not_acked_prio(id, type, prio);
+  return ala->get_last_not_acked_prio(id, type, prio, 0, 0);
 }
 
 void Ev::create_aliaslist(void* up)
