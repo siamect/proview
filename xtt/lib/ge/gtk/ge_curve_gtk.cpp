@@ -296,10 +296,12 @@ void GeCurveGtk::activate_filledcurves(GtkWidget* w, gpointer data)
   GeCurve* curve = (GeCurve*)data;
   int set;
 
-  if (w == ((GeCurveGtk*)curve)->tools_curve_fill)
-    set = curve->fill_curves = !curve->fill_curves;
-  else
+  if (w == ((GeCurveGtk*)curve)->tools_curve_fill) {
+    curve->fill_curves = !curve->fill_curves;
+    set = curve->fill_curves;
+  } else {
     set = (int)gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(w));
+  }
 
   curve->activate_filledcurves(set);
 }
