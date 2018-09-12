@@ -1262,25 +1262,25 @@ const AS_shaper* AS_SetupIST(int mode)
 
   /* AS_ISTMAX = 5 currently */
 
-  const static AS_shaper no_antisway
+  static const AS_shaper no_antisway
       = { AS_NO_AS, 1, { 1.0, 0.0, 0.0, 0.0, 0.0 }, 1.0, 1.0, 1.0,
           { 0.0, 0.0, 0.0, 0.0, 0.0 }, M_PI };
-  const static AS_shaper d_pulse = { AS_DPULSE, 2, { 1.0, 1.0, 0.0, 0.0, 0.0 },
+  static const AS_shaper d_pulse = { AS_DPULSE, 2, { 1.0, 1.0, 0.0, 0.0, 0.0 },
     2.0, 1.0, 1.0, { 0.0, -M_PI, 0.0, 0.0, 0.0 }, M_PI };
-  const static AS_shaper dd_pulse
+  static const AS_shaper dd_pulse
       = { AS_DDPULSE, 3, { 0.5, 1.0, 0.5, 0.0, 0.0 }, 2.0, 0.5, 1.0,
           { 0.0, -M_PI, -2.0 * M_PI, 0.0, 0.0 }, M_PI };
-  const static AS_shaper um_zv = { AS_UMZV, 3, { 1.0, -1.0, 1.0, 0.0, 0.0 },
+  static const AS_shaper um_zv = { AS_UMZV, 3, { 1.0, -1.0, 1.0, 0.0, 0.0 },
     1.0, 1.0, 1.0, { 0.0, -M_PI / 3.0, -M_PI / 1.5, 0.0, 0.0 }, M_PI / 3.0 };
-  const static AS_shaper um_zvd = { AS_UMZVD, 5, { 1.0, -1.0, 1.0, -1.0, 1.0 },
+  static const AS_shaper um_zvd = { AS_UMZVD, 5, { 1.0, -1.0, 1.0, -1.0, 1.0 },
     1.0, 1.0, 1.0, { 0.0, -0.56242392468373, -2.30111498488178,
                        -4.03980604507982, -4.60222996976355 },
     0.56242392468373 };
-  const static AS_shaper zv_122 = {
+  static const AS_shaper zv_122 = {
     AS_ZV122, 3, { 1.0, -2.0, 2.0, 0.0, 0.0 }, 1.0, 1.0, 2.0,
     { 0.0, -1.31811607165282, -1.82347658193698, 0.0, 0.0 }, 0.505360510284160
   }; /* angles are 0, -M_PI/2+asin(1/4), -M_PI/2-asin(1/4) */
-  const static AS_shaper zvd_122
+  static const AS_shaper zvd_122
       = { AS_ZVD122, 5, { 1.0, -2.0, 2.0, -2.0, 2.0 }, 1.0, 1.0, 2.0,
           { 0.0, -0.95759740098188, -1.74292794797482, -3.96664437406570,
               -4.26595739903213 },

@@ -69,16 +69,18 @@ CoWowRecall::CoWowRecall() : m_current_recall_line(0), m_current_size(0)
 
 void CoWowRecall::push(const char* src)
 {
-  if (!streq(src, "") && !streq(src, m_recall[0])) {
-    for (int i = m_recall_size - 2; i >= 0; i--) {
-      strcpy(m_recall[i + 1], m_recall[i]);
+  if (!streq(src, m_recall[0])) {
+    if (m_current_size == 0 || !streq(m_recall[0], "")) {
+      for (int i = m_recall_size - 2; i >= 0; i--) {
+        strcpy(m_recall[i + 1], m_recall[i]);
+      }
+      m_current_size++;
+      if (m_current_size > m_recall_size) {
+        m_current_size = m_recall_size;
+      }
     }
     strncpy(m_recall[0], src, m_line_size);
     m_recall[0][m_line_size - 1] = 0;
-    m_current_size++;
-    if (m_current_size > m_recall_size) {
-      m_current_size = m_recall_size;
-    }
   }
   resetTmp();
 }
