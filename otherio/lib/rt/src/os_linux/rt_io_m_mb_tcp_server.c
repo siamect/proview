@@ -986,7 +986,8 @@ static void mb_shift_write(
 
   for (i = 0; i < (quant + sh) / 8; i++) {
     if (i == 0) {
-      unsigned char mask = ~0 << sh;
+      unsigned char mask = ~0;
+      mask = mask << sh;
 
       out[0] &= ~mask;
       out[0] |= mask & (in[0] << sh);
@@ -996,7 +997,8 @@ static void mb_shift_write(
     }
   }
   if ((quant + sh) % 8 != 0) {
-    unsigned char mask = ~0 << ((quant + sh) % 8);
+    unsigned char mask = ~0;
+    mask = mask << ((quant + sh) % 8);
     mask = ~mask;
 
     out[i] &= ~mask;

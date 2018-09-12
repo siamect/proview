@@ -48,7 +48,7 @@
 */
 #define PWR_XDR_BYTES(xdrs, addr, len)                                         \
   {                                                                            \
-    if (((xdrs)->x_handy -= len) < 0)                                          \
+    if (((int) ((xdrs)->x_handy -= len)) < 0)                                  \
       return (FALSE);                                                          \
                                                                                \
     if ((xdrs)->x_op == XDR_DECODE)                                            \
@@ -65,7 +65,7 @@
 */
 #define PWR_XDR_STRING(xdrs, addr, len)                                        \
   {                                                                            \
-    if (((xdrs)->x_handy -= len) < 0)                                          \
+    if (((int) ((xdrs)->x_handy -= len)) < 0)                                  \
       return (FALSE);                                                          \
                                                                                \
     if ((xdrs)->x_op == XDR_DECODE)                                            \
@@ -82,7 +82,7 @@
 */
 #define PWR_XDR_INT(xdrs, objp, objtype)                                       \
   {                                                                            \
-    if (((xdrs)->x_handy -= sizeof(int)) < 0)                                  \
+    if (((int) ((xdrs)->x_handy -= sizeof(int))) < 0)                          \
       return (FALSE);                                                          \
                                                                                \
     if ((xdrs)->x_op == XDR_DECODE)                                            \
