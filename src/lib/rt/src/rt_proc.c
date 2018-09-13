@@ -34,61 +34,74 @@
  * General Public License plus this exception.
  */
 
-/* rt_futex.c -- Futex operations
-
-   PROVIEW/R
-   Contains functions that are heavily os-dependant.
-
-   Author: Robert Karlsson 21 Apr 2004
-
-   Description:
-   This module provides an interface to futexes - "fast user level
-   locking in Linux". This is achieved through the multiplexing
-   system call sys_futex(). As implemented below this interface provides
-   a synchronization mechanism that can be used both between threads
-   in one process as well as between threads in different processes */
-
-#if !defined(OS_LINUX)
-#error "This file is valid only for OS_LINUX"
-#endif
-
 #include <errno.h>
-#include <stdlib.h>
+#include <sched.h>
+#include <string.h>
 #include <unistd.h>
-#include <sys/syscall.h>
 
-#define FUTEX_WAIT (0)
-#define FUTEX_WAKE (1)
+#include "co_cdh.h"
+#include "co_strtoargv.h"
+#include "rt_proc.h"
+#include "rt_proc_msg.h"
+#include "rt_errh.h"
 
-int futex_wait(int* futex, int val)
+pwr_tStatus proc_Load(proc_sProcess* p)
 {
-  int ok;
-  ok = syscall(SYS_futex, futex, FUTEX_WAIT, val, NULL);
-  if (ok == -1) {
-    return errno;
-  } else {
-    return ok;
-  }
+  pwr_tStatus sts = PROC__SUCCESS;
+
+  return sts;
 }
 
-int futex_timed_wait(int* futex, int val, const struct timespec* timespec)
+pwr_tStatus proc_Start(proc_sProcess* p)
 {
-  int ok;
-  ok = syscall(SYS_futex, futex, FUTEX_WAIT, val, timespec);
-  if (ok == -1) {
-    return errno;
+  pwr_tStatus sts = PROC__SUCCESS;
+  char** argv;
+
+  p->pid = fork();
+  if (p->pid) {
+    if (p->pid == -1) {
+      errh_Error("Could not start %s, %m\nfile: %s", p->name, errno_GetStatus(),
+          p->file);
+    } else {
+      errh_Info("Started %s, prio: %d, pid: %d\nfile: %s", p->name, p->p_prio,
+          (int)p->pid, p->file);
+    }
   } else {
-    return ok;
+    sts = PROC__SUCCESS;
+    if (EVEN(sts))
+      errh_Warning("%s: error setprio, %m\nfile: %s", p->name, sts, p->file);
+    argv = co_StrToArgv(p->file, p->arg);
+    execvp(p->file, argv);
+    errh_Error(
+        "%s: error execvp, %m\nfile: %s", p->name, errno_GetStatus(), p->file);
+    exit(EXIT_FAILURE);
   }
+
+  return sts;
 }
 
-int futex_wake(int* futex, int nr)
+pwr_tStatus proc_UnloadProgram(proc_sProcess* p)
 {
-  int ok;
-  ok = syscall(SYS_futex, futex, FUTEX_WAKE, nr, NULL);
-  if (ok == -1) {
-    return errno;
-  } else {
-    return ok;
+  pwr_tStatus sts = PROC__SUCCESS;
+
+  return sts;
+}
+
+pwr_tStatus proc_SchedWait()
+{
+#if defined(OS_LINUX)
+  pid_t pid;
+  int count = 0;
+  int sched;
+
+  pid = getpid();
+
+  while (((sched = sched_getscheduler(pid)) == SCHED_OTHER) && (count < 5)) {
+    sleep(1);
+    count++;
   }
+  if (sched == SCHED_OTHER)
+    return PROC__NOSCHED;
+#endif
+  return PROC__SUCCESS;
 }
