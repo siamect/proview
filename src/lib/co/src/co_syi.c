@@ -115,7 +115,11 @@ pwr_tStatus syi_UserName(char* user, int len)
 {
   char* p;
 
+#if defined(OS_CYGWIN) || defined(OS_LINUX)
+  p = cuserid(0);
+#else
   p = getlogin();
+#endif
   if (!p)
     return 0;
   strncpy(user, p, len);
@@ -126,6 +130,8 @@ const char* syi_Hardware()
 {
 #if defined HW_X86_64
   static const char hw[] = "x86_64";
+#elif defined HW_ARM
+  static const char hw[] = "ARM";
 #else
   static const char hw[] = "x86";
 #endif
@@ -135,15 +141,18 @@ const char* syi_Hardware()
 const char* syi_OpSys()
 {
 #if defined OS_LINUX
-  static const char opsys[] = "Linux";
+  return "Linux";
 #elif defined OS_MACOS
-  static const char opsys[] = "MacOS";
+  return "MacOS";
 #elif defined OS_FREEBSD
-  static const char opsys[] = "FreeBSD";
+  return "FreeBSD";
+#elif defined OS_OPENBSD
+  return "OpenBSD";
+#elif defined OS_CYGWIN
+  return "Cygwin";
 #else
-  static const char opsys[] = "Unknown";
+  return "Unknown";
 #endif
-  return opsys;
 }
 
 char* syi_ProcessId()

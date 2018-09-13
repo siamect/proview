@@ -169,8 +169,6 @@ chown -R pwrp /usr/pwrsev
 chgrp -R pwrp /usr/pwrsev
 
 chmod u+s /usr/pwrsev/exe/sev_ini
-chown root /usr/pwrsev/exe/rt_prio
-chmod u+s /usr/pwrsev/exe/rt_prio
 
 # Copy configuration files
 new_cnf=0

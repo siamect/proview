@@ -1629,8 +1629,8 @@ struct register_info {
       if (stack_last_malloced != NULL)                                         \
         free(stack_last_malloced);                                             \
       stack_last_malloced = stackx;                                            \
-      if (stackx == NULL)                                                      \
-        ; /* left to do */                                                     \
+      /* if (stackx == NULL)                                                   \
+        ; // left to do */                                                     \
       /* end of change */                                                      \
       /* Only copy what is in use.  */                                         \
       bcopy(stackb, stackx, len * sizeof(char*));                              \

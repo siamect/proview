@@ -253,7 +253,8 @@ void GeCurveQtWidget::activate_showname()
 void GeCurveQtWidget::activate_filledcurves(bool set)
 {
   if (sender() == ((GeCurveQt*)curve)->tools_curve_fill) {
-    set = curve->fill_curves = !curve->fill_curves;
+    curve->fill_curves = !curve->fill_curves;
+    set = curve->fill_curves;
   } else {
     set = ((QAction*)sender())->isChecked();
   }

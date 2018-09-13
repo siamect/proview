@@ -273,9 +273,13 @@ static pwr_tStatus IoCardRead(
       /* Buttons */
       idx = js.number;
 
+      /*
+      // TODO:
+      // js.number is an unsigned 8-bit, which has a maximum value of 256.
+      // KEY_MAX - BTN_MISC = 511, so this is always false.
       if (js.number < KEY_MAX - BTN_MISC)
         idx = local->button_map[js.number];
-      else
+      else */
         break;
 
       *(pwr_tBoolean*)cp->chanlist[idx].vbp = (js.value != 0);

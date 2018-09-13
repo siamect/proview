@@ -4,17 +4,17 @@
  *
  * This file is part of ProviewR.
  *
- * Distribution terms
- * Permission is hereby granted, free of charge, to any person
- * obtaining a copy of this software and associated documentation
- * files (the Software), to deal in the Software without
- * restriction, including without limitation the rights to use,
- * copy, modify, merge, publish, distribute, sublicense, and/or
- * sell copies of the Software, and to permit persons to whom
- * the Software is furnished to do so, subject to the following
- * conditions:
-
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
  * along with ProviewR. If not, see <http://www.gnu.org/licenses/>
  *
  * Linking ProviewR statically or dynamically with other modules is
@@ -32,12 +32,6 @@
  * the source code of ProviewR (the version used to produce the
  * combined work), being distributed under the terms of the GNU
  * General Public License plus this exception.
- * NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHOR OF THIS SOFTWARE BE LIABLE FOR ANY
- * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
- * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
  */
 
 /*-< SEMAPHORE.C >--------------------------------------------------*--------*/
@@ -60,6 +54,14 @@
 #include <sys/sem.h>
 
 #include "rt_semaphore.h"
+
+#if !defined(OS_MACOS) && !defined(OS_FREEBSD) && !defined(OS_OPENBSD)
+union semun {
+  int val;
+  struct semid_ds* buf;
+  u_short* array;
+};
+#endif
 
 sem_t* posix_sem_open(const char* name, int oflag, ...)
 {
@@ -84,7 +86,11 @@ sem_t* posix_sem_open(const char* name, int oflag, ...)
     int init_value;
     va_list ap;
     va_start(ap, oflag);
+#if defined(OS_MACOS) || defined(OS_FREEBSD) || defined (OS_OPENBSD)
     mode = va_arg(ap, int);
+#else
+    mode = va_arg(ap, mode_t);
+#endif
     init_value = va_arg(ap, unsigned int);
     if (init_value < 0) {
       errno = EINVAL;

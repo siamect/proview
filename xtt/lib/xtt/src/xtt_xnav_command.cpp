@@ -4991,7 +4991,7 @@ static int xnav_open_func(void* client_data, void* client_flag)
       xao->pop();
     } else {
       xao = xnav->xattone_new(
-          &aref, title_str, bypass ? pwr_mPrv_RtWrite : xnav->priv, &sts);
+          &aref, title_str, bypass ? pwr_mPrv_RtWrite : ((pwr_mPrv) xnav->priv), &sts);
       if (EVEN(sts))
         xnav->message('E', "Unable to open attribute");
       else {

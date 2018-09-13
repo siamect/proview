@@ -121,7 +121,7 @@ void pwrs_Node_Exec(void (*handler_event_cb)(int, int))
 
       if (!reboot_done) {
         errh_Fatal("Emergency break action: reboot");
-        sts = system("rt_prio --reboot");
+        sts = system("/sbin/reboot");
         if (sts != 0)
           errh_Fatal("Unable to reboot, sts %d", sts);
         reboot_done = 1;

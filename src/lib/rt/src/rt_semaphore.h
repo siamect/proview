@@ -34,61 +34,52 @@
  * General Public License plus this exception.
  */
 
-/* rt_futex.c -- Futex operations
+/*-< SEMAPHORE.H >--------------------------------------------------*--------*/
+/* POSIX.1b                   Version 1.0        (c) 1998  GARRET   *     ?  */
+/* (POSIX.1b implementation for Linux)                              *   /\|  */
+/*                                                                  *  /  \  */
+/*                          Created:     25-Aug-98    K.A. Knizhnik * / [] \ */
+/*                          Last update: 27-Aug-98    K.A. Knizhnik * GARRET */
+/*------------------------------------------------------------------*--------*/
+/* Semaphore interface                                              *        */
+/*------------------------------------------------------------------*--------*/
 
-   PROVIEW/R
-   Contains functions that are heavily os-dependant.
+#ifndef rt_semaphore_h
+#define rt_semaphore_h
 
-   Author: Robert Karlsson 21 Apr 2004
-
-   Description:
-   This module provides an interface to futexes - "fast user level
-   locking in Linux". This is achieved through the multiplexing
-   system call sys_futex(). As implemented below this interface provides
-   a synchronization mechanism that can be used both between threads
-   in one process as well as between threads in different processes */
-
-#if !defined(OS_LINUX)
-#error "This file is valid only for OS_LINUX"
+#ifdef __cplusplus
+extern "C" {
 #endif
 
-#include <errno.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/syscall.h>
+typedef struct {
+  long semkey;
+  int semid;
+  int initialized;
+} sem_t;
 
-#define FUTEX_WAIT (0)
-#define FUTEX_WAKE (1)
+// Not POSIX. The caller generates the key
+int posix_sem_init_shared(sem_t* sem, int key, unsigned int value);
 
-int futex_wait(int* futex, int val)
-{
-  int ok;
-  ok = syscall(SYS_futex, futex, FUTEX_WAIT, val, NULL);
-  if (ok == -1) {
-    return errno;
-  } else {
-    return ok;
-  }
+int posix_sem_init(sem_t* sem, int pshared, unsigned int value);
+
+sem_t* posix_sem_open(const char* name, int oflag, ...);
+
+int posix_sem_post(sem_t* sem);
+
+int posix_sem_getvalue(sem_t* sem, int* sval);
+
+int posix_sem_wait(sem_t* sem);
+
+int posix_sem_trywait(sem_t* sem);
+
+int posix_sem_unlink(const char* name);
+
+int posix_sem_close(sem_t* sem);
+
+int posix_sem_destroy(sem_t* sem);
+
+#ifdef __cplusplus
 }
+#endif
 
-int futex_timed_wait(int* futex, int val, const struct timespec* timespec)
-{
-  int ok;
-  ok = syscall(SYS_futex, futex, FUTEX_WAIT, val, timespec);
-  if (ok == -1) {
-    return errno;
-  } else {
-    return ok;
-  }
-}
-
-int futex_wake(int* futex, int nr)
-{
-  int ok;
-  ok = syscall(SYS_futex, futex, FUTEX_WAKE, nr, NULL);
-  if (ok == -1) {
-    return errno;
-  } else {
-    return ok;
-  }
-}
+#endif

@@ -869,12 +869,12 @@ int CnvReadWbl::graphplcnode_attr(char* name, char* value)
       strcat(doc_text[doc_cnt - 1], " (document)");
     else if (streq(value, "7"))
       strcat(doc_text[doc_cnt - 1], " (Get,Set)");
-  } else if (streq(low(name), "compmethod"))
+  } /* else if (streq(low(name), "compmethod"))
     ;
   else if (streq(low(name), "tracemethod"))
     ;
   else if (streq(low(name), "executeordermethod"))
-    ;
+    ; */
   return 1;
 }
 
@@ -896,6 +896,7 @@ int CnvReadWbl::graphplccon_attr(char* name, char* value)
   strcpy(doc_text[doc_cnt++], value);
 
   // Description
+  /*
   if (streq(low(name), "curvature"))
     ;
   else if (streq(low(name), "corners"))
@@ -904,6 +905,7 @@ int CnvReadWbl::graphplccon_attr(char* name, char* value)
     ;
   else if (streq(low(name), "attributes"))
     ;
+  */
   return 1;
 }
 

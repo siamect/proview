@@ -1323,8 +1323,8 @@ int sev_dbms::write_value(pwr_tStatus* sts, int item_idx, int attr_idx,
           if ((feqf(m_items[item_idx].deadband, 0.0f)
                   && !memcmp(
                          buf, m_items[item_idx].old_value, sizeof(pwr_tUInt64)))
-              || (ABS(*(pwr_tUInt64*)buf
-                      - *(pwr_tUInt64*)m_items[item_idx].old_value)
+              || (ABS(((pwr_tInt64)(*(pwr_tUInt64*)buf
+                      - *(pwr_tUInt64*)m_items[item_idx].old_value)))
                      < m_items[item_idx].deadband)) {
             update_time_only = 1;
           } else {
@@ -1337,8 +1337,8 @@ int sev_dbms::write_value(pwr_tStatus* sts, int item_idx, int attr_idx,
           if ((feqf(m_items[item_idx].deadband, 0.0f)
                   && !memcmp(
                          buf, m_items[item_idx].old_value, sizeof(pwr_tUInt32)))
-              || (ABS(*(pwr_tUInt32*)buf
-                      - *(pwr_tUInt32*)m_items[item_idx].old_value)
+              || (ABS(((pwr_tInt32)(*(pwr_tUInt32*)buf
+                      - *(pwr_tUInt32*)m_items[item_idx].old_value)))
                      < m_items[item_idx].deadband)) {
             update_time_only = 1;
           } else {
@@ -1350,8 +1350,8 @@ int sev_dbms::write_value(pwr_tStatus* sts, int item_idx, int attr_idx,
           if ((feqf(m_items[item_idx].deadband, 0.0f)
                   && !memcmp(
                          buf, m_items[item_idx].old_value, sizeof(pwr_tUInt16)))
-              || (ABS(*(pwr_tUInt16*)buf
-                      - *(pwr_tUInt16*)m_items[item_idx].old_value)
+              || (ABS(((pwr_tInt16)(*(pwr_tUInt16*)buf
+                      - *(pwr_tUInt16*)m_items[item_idx].old_value)))
                      < m_items[item_idx].deadband)) {
             update_time_only = 1;
           } else {
@@ -1363,8 +1363,8 @@ int sev_dbms::write_value(pwr_tStatus* sts, int item_idx, int attr_idx,
           if ((feqf(m_items[item_idx].deadband, 0.0f)
                   && !memcmp(
                          buf, m_items[item_idx].old_value, sizeof(pwr_tUInt8)))
-              || (ABS(*(pwr_tUInt8*)buf
-                      - *(pwr_tUInt8*)m_items[item_idx].old_value)
+              || (ABS(((pwr_tInt8)(*(pwr_tUInt8*)buf
+                      - *(pwr_tUInt8*)m_items[item_idx].old_value)))
                      < m_items[item_idx].deadband)) {
             update_time_only = 1;
           } else {
@@ -1464,8 +1464,8 @@ int sev_dbms::write_value(pwr_tStatus* sts, int item_idx, int attr_idx,
           if ((feqf(m_items[item_idx].deadband, 0.0f)
                   && !memcmp(
                          buf, m_items[item_idx].old_value, sizeof(pwr_tUInt64)))
-              || (ABS(*(pwr_tUInt64*)buf
-                      - *(pwr_tUInt64*)m_items[item_idx].old_value)
+              || (ABS(((pwr_tInt64)(*(pwr_tUInt64*)buf
+                      - *(pwr_tUInt64*)m_items[item_idx].old_value)))
                      < m_items[item_idx].deadband)) {
             m_items[item_idx].deadband_active = 1;
             set_jump = 1;
@@ -1477,8 +1477,8 @@ int sev_dbms::write_value(pwr_tStatus* sts, int item_idx, int attr_idx,
           if ((feqf(m_items[item_idx].deadband, 0.0f)
                   && !memcmp(
                          buf, m_items[item_idx].old_value, sizeof(pwr_tUInt32)))
-              || (ABS(*(pwr_tUInt32*)buf
-                      - *(pwr_tUInt32*)m_items[item_idx].old_value)
+              || (ABS(((pwr_tInt32)(*(pwr_tUInt32*)buf
+                      - *(pwr_tUInt32*)m_items[item_idx].old_value)))
                      < m_items[item_idx].deadband)) {
             m_items[item_idx].deadband_active = 1;
             set_jump = 1;
@@ -1489,8 +1489,8 @@ int sev_dbms::write_value(pwr_tStatus* sts, int item_idx, int attr_idx,
           if ((feqf(m_items[item_idx].deadband, 0.0f)
                   && !memcmp(
                          buf, m_items[item_idx].old_value, sizeof(pwr_tUInt16)))
-              || (ABS(*(pwr_tUInt16*)buf
-                      - *(pwr_tUInt16*)m_items[item_idx].old_value)
+              || (ABS(((pwr_tInt16)(*(pwr_tUInt16*)buf
+                      - *(pwr_tUInt16*)m_items[item_idx].old_value)))
                      < m_items[item_idx].deadband)) {
             m_items[item_idx].deadband_active = 1;
             set_jump = 1;
@@ -1501,8 +1501,8 @@ int sev_dbms::write_value(pwr_tStatus* sts, int item_idx, int attr_idx,
           if ((feqf(m_items[item_idx].deadband, 0.0f)
                   && !memcmp(
                          buf, m_items[item_idx].old_value, sizeof(pwr_tUInt8)))
-              || (ABS(*(pwr_tUInt8*)buf
-                      - *(pwr_tUInt8*)m_items[item_idx].old_value)
+              || (ABS(((pwr_tInt8)(*(pwr_tUInt8*)buf
+                      - *(pwr_tUInt8*)m_items[item_idx].old_value)))
                      < m_items[item_idx].deadband)) {
             m_items[item_idx].deadband_active = 1;
             set_jump = 1;
@@ -3893,23 +3893,27 @@ int sev_dbms::check_deadband(pwr_eType type, unsigned int size,
     }
     break;
   case pwr_eType_UInt64:
-    if (ABS(*(pwr_tUInt64*)value - *(pwr_tUInt64*)oldvalue) < deadband) {
+    if (ABS(((pwr_tInt64)(*(pwr_tUInt64*)value - *(pwr_tUInt64*)oldvalue)))
+        < deadband) {
       deadband_active = 1;
     }
     break;
   case pwr_eType_UInt32:
   case pwr_eType_Boolean:
-    if (ABS(*(pwr_tUInt32*)value - *(pwr_tUInt32*)oldvalue) < deadband) {
+    if (ABS(((pwr_tInt32)(*(pwr_tUInt32*)value - *(pwr_tUInt32*)oldvalue)))
+        < deadband) {
       deadband_active = 1;
     }
     break;
   case pwr_eType_UInt16:
-    if (ABS(*(pwr_tUInt16*)value - *(pwr_tUInt16*)oldvalue) < deadband) {
+    if (ABS(((pwr_tInt16)(*(pwr_tUInt16*)value - *(pwr_tUInt16*)oldvalue)))
+        < deadband) {
       deadband_active = 1;
     }
     break;
   case pwr_eType_UInt8:
-    if (ABS(*(pwr_tUInt8*)value - *(pwr_tUInt8*)oldvalue) < deadband) {
+    if (ABS(((pwr_tInt8)(*(pwr_tUInt8*)value - *(pwr_tUInt8*)oldvalue)))
+        < deadband) {
       deadband_active = 1;
     }
     break;
