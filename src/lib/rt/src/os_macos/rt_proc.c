@@ -72,7 +72,7 @@ pwr_tStatus proc_Start(proc_sProcess* p)
           (int)p->pid, p->file);
     }
   } else {
-    sts = proc_SetPriority(p->p_prio);
+    sts = PROC__SUCCESS;
     if (EVEN(sts))
       errh_Warning("%s: error setprio, %m\nfile: %s", p->name, sts, p->file);
     argv = co_StrToArgv(p->file, p->arg);
@@ -82,29 +82,6 @@ pwr_tStatus proc_Start(proc_sProcess* p)
     exit(EXIT_FAILURE);
   }
 
-  return sts;
-}
-
-pwr_tStatus proc_SetPriority(int prio)
-{
-  //  struct sched_param param;
-  //  int rc;
-  int pid;
-  char set[100];
-  pwr_tStatus sts = PROC__SUCCESS;
-
-  pid = getpid();
-  //  rc = sched_getparam((pid_t)0, &param);
-  //  if (rc != 0)
-  //    return errno_GetStatus();
-  //  param.sched_priority = prio;
-  //  rc = sched_setscheduler((pid_t)0, SCHED_RR, &param);
-  //  if (rc != 0)
-  //    return errno_GetStatus();
-
-  // Priorities set from rt_ini after start of all processes
-  sprintf(set, "rt_prio -rp %d %d", prio, pid);
-  //  system(set);
   return sts;
 }
 
