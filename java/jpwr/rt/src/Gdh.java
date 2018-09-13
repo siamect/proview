@@ -200,8 +200,7 @@ public class Gdh {
     }
 
     //public Vector getAllClassAttributes( int classid, PwrtObjid objid_obj )
-    public Vector<CdhrObjAttr> getAllClassAttributes( int classid, PwrtObjid objid_obj )
-    {
+    public Vector<CdhrObjAttr> getAllClassAttributes( int classid, PwrtObjid objid_obj) {
 	//System.out.println("getAllClassAttributes" + classid + " " + objid_obj.oix + " " + objid_obj.vid);
 
 	String name = this.objidToName(objid_obj, Cdh.mName_pathStrict).str;
@@ -212,36 +211,38 @@ public class Gdh {
 
 	Vector<CdhrObjAttr> v = new Vector<CdhrObjAttr>();
 	//Vector v = new Vector();
-	for(int i = 0;i<gdhrsAttrDefArr.length;i++)
-	    {
-		if(gdhrsAttrDefArr[i] == null)
-		    break;
-		//System.out.println("getAllClassAttributesFor:" + i + gdhrsAttrDefArr[i].attrName);
 
-		while(gdhrsAttrDefArr[i].attrName.startsWith("Super."))
-		    gdhrsAttrDefArr[i].attrName = gdhrsAttrDefArr[i].attrName.substring(6);
-		CdhrObjAttr oa;
-		if((gdhrsAttrDefArr[i].info.Flags & Pwr.mAdef_class) > 0)
-		    {
-			oa = new CdhrObjAttr(this.nameToObjid(name + "." + gdhrsAttrDefArr[i].attrName).objid,
-					     gdhrsAttrDefArr[i].attrName,
-					     gdhrsAttrDefArr[i].typeRef,
-					     gdhrsAttrDefArr[i].info.Size,
-					     gdhrsAttrDefArr[i].info.Flags,
-					     gdhrsAttrDefArr[i].info.Elements);
-		    }
-		else
-		    {
-			//System.out.println("getAllClassAttr:" + name + "." + gdhrsAttrDefArr[i].attrName);
-			oa = new CdhrObjAttr(this.nameToObjid(name + "." + gdhrsAttrDefArr[i].attrName).objid,
-					     gdhrsAttrDefArr[i].attrName,
-					     gdhrsAttrDefArr[i].info.Type,
-					     gdhrsAttrDefArr[i].info.Size,
-					     gdhrsAttrDefArr[i].info.Flags,
-					     gdhrsAttrDefArr[i].info.Elements);
-		    }
-		v.add(oa);
+	for( int i = 0;i<gdhrsAttrDefArr.length;i++) {
+	    if ( gdhrsAttrDefArr[i] == null)
+		break;
+	    //System.out.println("getAllClassAttributesFor:" + i + gdhrsAttrDefArr[i].attrName);
+
+	    while ( gdhrsAttrDefArr[i].attrName.startsWith("Super."))
+		gdhrsAttrDefArr[i].attrName = gdhrsAttrDefArr[i].attrName.substring(6);
+	    CdhrObjAttr oa;
+	    if ( (gdhrsAttrDefArr[i].info.Flags & Pwr.mAdef_class) > 0) {
+		oa = new CdhrObjAttr(this.nameToObjid(name + "." + gdhrsAttrDefArr[i].attrName).objid,
+				     gdhrsAttrDefArr[i].attrName,
+				     gdhrsAttrDefArr[i].typeRef,
+				     gdhrsAttrDefArr[i].info.Size,
+				     gdhrsAttrDefArr[i].info.Flags,
+				     gdhrsAttrDefArr[i].info.Elements);
+		CdhrObjid classObj = this.classIdToObjid( gdhrsAttrDefArr[i].info.Type);
+		if ( classObj.oddSts())
+		    oa.className = this.objidToName(classObj.objid, Cdh.mName_object).str;
+            }
+	    else {
+		//System.out.println("getAllClassAttr:" + name + "." + gdhrsAttrDefArr[i].attrName);
+		oa = new CdhrObjAttr(this.nameToObjid(name + "." + gdhrsAttrDefArr[i].attrName).objid,
+				     gdhrsAttrDefArr[i].attrName,
+				     gdhrsAttrDefArr[i].info.Type,
+				     gdhrsAttrDefArr[i].info.Size,
+				     gdhrsAttrDefArr[i].info.Flags,
+				     gdhrsAttrDefArr[i].info.Elements);
 	    }
+	    v.add(oa);
+	}
+
 	return v;
     }
 

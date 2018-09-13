@@ -69,16 +69,16 @@ public class GlowConPoint extends GlowArrayElem {
 		case Glow.eSave_ConPoint: 
 		    break;
 		case Glow.eSave_ConPoint_number:
-		    number =Integer.valueOf(token.nextToken());
+		    number = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_ConPoint_direction:
-		    number =Integer.valueOf(token.nextToken());
+		    direction = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_ConPoint_p:
 		    p.open(reader);
 		    break;
 		case Glow.eSave_ConPoint_trace_attr_type:
-		    trace_attr_type =Integer.valueOf(token.nextToken());
+		    trace_attr_type = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_ConPoint_trace_attribute:
 		    if ( token.hasMoreTokens())

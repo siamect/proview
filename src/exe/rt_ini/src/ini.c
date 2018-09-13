@@ -36,6 +36,7 @@
 
 #include <ctype.h>
 
+#include "pwr_baseclasses.h"
 #include "pwr_remoteclasses.h"
 #include "pwr_nmpsclasses.h"
 #include "pwr_basecomponentclasses.h"
@@ -68,6 +69,7 @@
 #define cPrio_webmon (cPrio_base + 15)
 #define cPrio_webmonmh (cPrio_base + 15)
 #define cPrio_webmonelog (cPrio_base + 15)
+#define cPrio_websocketserver (cPrio_base + 15)
 #define cPrio_elog (cPrio_base + 15)
 #define cPrio_sysmon (cPrio_base + 16)
 #define cPrio_opc_server (cPrio_base + 15)
@@ -170,6 +172,10 @@ void ini_ProcTable(pwr_tStatus* status, ini_sContext* cp)
 
   pp = ini_ProcInsert(sts, cp, "pwr_webmonelog", "pwr_webmonelog_%d", 0, 1,
       "rt_webmonelog.sh", cPrio_webmonelog, 0, pwr_cClass_WebHandler, "", 0);
+  pp->proc.flags.b.system = 1;
+
+  pp = ini_ProcInsert(sts, cp, "pwr_websocketserver", "pwr_websocketserver_%d", 0, 1,
+      "rt_websocketserver.sh", cPrio_websocketserver, 0, pwr_cClass_WebSocketServer, "", 0);
   pp->proc.flags.b.system = 1;
 
   pp = ini_ProcInsert(sts, cp, "pwr_opc_server", "pwr_opc_server_%d", 0, 1,

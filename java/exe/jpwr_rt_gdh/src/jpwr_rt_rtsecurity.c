@@ -80,7 +80,10 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_RtSecurity_checkUser
     aref = cdh_ObjidToAref( oid);
     sts = gdh_GetObjectInfoAttrref( &aref, &sec, sizeof(sec));
     if ( ODD(sts)){
-      sts = user_CheckUser( sec.WebSystemGroup, cuser, cpassword, &priv);
+      if ( strcmp( cuser, "") == 0)
+	priv = sec.DefaultWebPriv;
+      else
+	sts = user_CheckUser( sec.WebSystemGroup, cuser, cpassword, &priv);
     }
   }
   (*env)->ReleaseStringUTFChars( env, jsystemgroup, csystemgroup);
