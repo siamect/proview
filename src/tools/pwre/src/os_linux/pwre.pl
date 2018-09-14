@@ -1001,6 +1001,8 @@ sub build_module ()
       _build("lib", "co", "src", "copy");
       _build("lib", "dtt", "src", "init");
       _build("lib", "dtt", "src", "copy");
+      _build("lib", "msg_dummy", "src", "init");
+      _build("lib", "msg_dummy", "src", "copy");
       _build("lib", "statussrv", "src", "init");
       _build("lib", "statussrv", "src", "copy");
       _build("lib", "co", "src", "all");
