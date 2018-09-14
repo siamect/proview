@@ -61,7 +61,6 @@ public:
   QAction* menubutton_cut;
   QAction* menubutton_paste;
   QAction* menubutton_changevalue;
-  QAction* menubutton_viewio;
   CoWowFocusTimerQt focustimer;
   static CoWowRecall value_recall;
   CoWowEntryQt* cmd_entry;

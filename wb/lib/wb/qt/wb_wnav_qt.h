@@ -61,7 +61,6 @@ public:
 
   QWidget* brow_widget;
   QWidget* form_widget;
-  QWidget* selection_widget;
 
   QLocalServer* serverString;
   QLocalServer* serverGraph;

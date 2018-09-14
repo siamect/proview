@@ -54,7 +54,6 @@ public:
   SubGraphsQt(void* xn_parent_ctx, QWidget* xn_parent_wid, const char* xn_name,
       void* grow_ctx, QWidget** w, pwr_tStatus* status);
 
-  QWidget* subgraphs_form;
   QWidget* brow_widget;
   QWidget* form_widget;
 

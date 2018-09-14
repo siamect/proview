@@ -57,6 +57,8 @@ public:
   QWidget* widget();
   void update();
   void update(const char*, int);
+  QString selected_text();
+  QString selected_text(QTreeWidget*);
 
 protected:
   void focusOutEvent(QFocusEvent* event);
@@ -68,8 +70,6 @@ private:
 
 public slots:
   void directory_changed(const QString& path);
-  QString selected_text();
-  QString selected_text(QTreeWidget*);
   void activate_menu_open();
   void activate_menu_delete();
   void activate_tree_widget(QTreeWidgetItem* item, int idx);

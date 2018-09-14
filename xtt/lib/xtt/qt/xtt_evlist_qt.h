@@ -50,7 +50,6 @@ public:
 
   QWidget* brow_widget;
   QWidget* form_widget;
-  char print_title[120];
 
   void set_input_focus();
   void bell();

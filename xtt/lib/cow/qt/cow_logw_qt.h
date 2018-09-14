@@ -52,7 +52,6 @@ public:
 
   QWidget* nav_widget;
   CoWowFocusTimerQt focustimer;
-  CoWowFocusTimerQt maptimer;
 
   void print();
 

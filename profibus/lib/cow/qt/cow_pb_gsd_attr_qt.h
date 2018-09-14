@@ -54,7 +54,6 @@ public:
   QLabel* msg_label;
   QLabel* cmd_prompt;
   QLineEdit* cmd_input;
-  QWidget* attrnav_form;
   QAction* menubutton_copy;
   QAction* menubutton_cut;
   QAction* menubutton_paste;

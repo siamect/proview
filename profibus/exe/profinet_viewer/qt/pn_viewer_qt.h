@@ -57,7 +57,6 @@ public:
   QLabel* msg_label;
   QLabel* cmd_prompt;
   CoWowFocusTimerQt focustimer;
-  CoWowFocusTimerQt maptimer;
   CoWowRecall* value_recall;
   CoWowEntryQt* cmd_entry;
 

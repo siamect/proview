@@ -51,7 +51,6 @@ public:
       pwr_sAttrRef* xa_objar, int xa_advanced_user, int* xa_sts);
   QWidget* brow_widget;
   QWidget* form_widget;
-  QWidget* xcrrnav_form;
   CoWowFocusTimerQt focustimer;
 
   void pop();

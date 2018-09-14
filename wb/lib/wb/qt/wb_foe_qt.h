@@ -55,11 +55,8 @@ public:
   QSplitter* pane;
   QSplitter* subpane;
   QWidget* caution;
-  QWidget* caution_label;
-  QWidget* adb;
   QWidget* foe_window;
   QWidget* popupmenu;
-  QWidget* file_entry;
   QAction* save;
   QAction* exit;
   QAction* savetrace;
@@ -84,8 +81,6 @@ public:
   QAction* expand;
   QAction* compress;
   QMenu* edit; /* entry of the menu */
-  QWidget* search_entry; /* entry of the menu */
-  QWidget* customize_entry; /* entry of the menu */
   QAction* trace_togg; /* togg under the function entry of the menu */
   QAction* simulate_togg; /* togg under the function entry of the menu */
   QAction* view_togg; /* togg under the function entry of the menu */
@@ -157,11 +152,6 @@ public:
   virtual int get_selection(char* str, int len);
   virtual void popupmsg(const char* new_label, void (*yes_procedure)(WFoe*),
       void (*no_procedure)(WFoe*), void (*cancel_procedure)(WFoe*));
-
-  int register_callbacks();
-
-  static void reset_current_node(WFoe* foe);
-  static void delete_subwindow_ok_cb(void* ctx, void* data);
 
 private:
   WFoeQtWidget* toplevel;

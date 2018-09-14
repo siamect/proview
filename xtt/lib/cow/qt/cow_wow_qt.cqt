@@ -777,7 +777,7 @@ void CoWowModalDialogQt::destroy(bool destroyWindow, bool destroySubWindows)
   QDialog::destroy(destroyWindow, destroySubWindows);
 }
 
-void CoWowModalDialogQt::modaldia_activate_cb(QKeyEvent* e)
+void CoWowModalDialogQt::modaldia_activate_cb()
 {
   done(wow_eModalDialogReturn_ReturnPressed);
 }

@@ -80,7 +80,7 @@ protected:
   void destroy(bool destroyWindow = true, bool destroySubWindows = true);
 
 public slots:
-  void modaldia_activate_cb(QKeyEvent* e);
+  void modaldia_activate_cb();
   void modaldia_button1_cb();
   void modaldia_button2_cb();
   void modaldia_button3_cb();

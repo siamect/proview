@@ -56,12 +56,6 @@ public:
   ~GeCurveQt();
 
   GeCurveQtWidget* toplevel;
-  QWidget* grow_widget;
-  QWidget* curve_widget;
-  QWidget* axisform_widget;
-  QWidget* nameform_widget;
-  QWidget* curveform_widget;
-  QWidget* pane_widget;
   QWidget* vbox;
   QWidget* growcurve_main_widget;
   QWidget* growaxis_main_widget;
@@ -75,7 +69,6 @@ public:
   QWidget* menu_open;
   QWidget* menu_snapshot;
   QWidget* menu_export;
-  QWidget* menu_add;
   QAction* tools_snapshot;
   QAction* tools_add;
   QAction* tools_curvetype_line;

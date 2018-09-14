@@ -49,8 +49,5 @@ protected:
 
 QWidget* curvewidgetqt_new(
     int (*init_proc)(GlowCtx* ctx, void* client_data), void* client_data);
-QWidget* scrolledcurvewidgetqt_new(
-    int (*init_proc)(GlowCtx* ctx, void* client_data), void* client_data,
-    QWidget** curvewidget);
 
 QWidget* curvenavwidgetqt_new(QWidget* main_curve);

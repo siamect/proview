@@ -52,13 +52,7 @@ public:
 
   QWidget* form;
   QWidget* nav_widget;
-  QWidget* edit_check_all;
-  QWidget* edit_check_clear;
-  QWidget* edit_check_reset;
-  QWidget* edit_show_all;
-  QWidget* file_export;
   CoWowFocusTimerQt focustimer;
-  CoWowFocusTimerQt maptimer;
 
   void print();
   void set_title(char* title);
