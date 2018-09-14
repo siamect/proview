@@ -12,4 +12,4 @@ Priority: optional
 Architecture: armel
 Replaces: pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46,pwr47,pwr48
 Description: Proview runtime environment
- 5.6.0-1 Base release
+ 5.6.1-1 Base release

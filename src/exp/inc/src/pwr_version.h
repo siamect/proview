@@ -80,10 +80,10 @@
   ((pwr_tVersion)((a << 24) + (b << 16) + (c << 8) + d))
 #endif
 
-#define pwrv_cBuildTimeStr "12-APR-2018 12:00:00"
+#define pwrv_cBuildTimeStr "14-SEP-2018 12:00:00"
 
-#define pwrv_cPwrVersionStr "V5.6.0"
-#define pwrv_cPwrVersion SET_VERSION('V', 5, 6, 0)
+#define pwrv_cPwrVersionStr "V5.6.1"
+#define pwrv_cPwrVersion SET_VERSION('V', 5, 6, 1)
 
 #define pwrv_cWbdbVersionShortStr "V56"
 #define pwrv_cPwrCopyright "Copyright (C) 2005-2018 SSAB EMEA AB"

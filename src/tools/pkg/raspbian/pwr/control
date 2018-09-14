@@ -1,5 +1,5 @@
 Package: pwr55
-Version: 5.6.0-1
+Version: 5.6.1-1
 Section: base
 Priority: optional
 Architecture: armhf
@@ -7,4 +7,4 @@ Depends: libc6 (>= 2.19-18+deb8u3), libgtk2.0-0 (>= 2.24.25-3), libasound2 (>= 1
 Replaces: pwrrt,pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46,pwr47,pwr48,pwr50,pwr51,pwr52,pwr53,pwr54
 Maintainer: Proview <postmaster@proview.se>
 Description: Proview development and runtime environment package
- 5.6.0-1 Base release
+ 5.6.1-1 Base release
