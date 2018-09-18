@@ -866,6 +866,10 @@ pwr_tStatus time_AsciiToD(const char* tstr, pwr_tDeltaTime* ts)
   int day, hour = 0, min, sec, hun = 0;
   int useday = 1;
 
+  if ( streq( tstr, "NotADeltaTime")) {
+    *ts = pwr_cNotADeltaTime;
+    return TIME__SUCCESS;
+  }
   strncpy(buf, tstr, sizeof(buf) - 1);
   buf[sizeof(buf) - 1] = '\0';
   sp = buf;
@@ -924,6 +928,10 @@ pwr_tStatus time_AsciiToA(const char* tstr, pwr_tTime* ts)
   char buf[64];
   pwr_tStatus sts;
 
+  if ( streq( tstr, "NotATime")) {
+    *ts = pwr_cNotATime;
+    return TIME__SUCCESS;
+  }
   strncpy(buf, tstr, sizeof(buf) - 1);
   buf[sizeof(buf) - 1] = '\0';
 
