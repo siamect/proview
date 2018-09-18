@@ -114,7 +114,7 @@ void QtScrollWidgetGlow::scroll_callback_cb()
   glow_sScroll* data = &this->scroll_data;
   widget_sScroll* scroll_data = (widget_sScroll*)data->scroll_data;
 
-  scroll_timerid = 0;
+  scroll_timerid->stop();
 
   if (data->total_width <= data->window_width) {
     if (data->offset_x == 0) {
@@ -227,9 +227,6 @@ void QtScrollWidgetGlow::closeEvent(QCloseEvent* event)
   debug_print("QtScrollWidgetGlow::closeEvent\n");
   if (!destroyed) {
     destroyed = 1;
-    if (scroll_timerid) {
-      delete scroll_timerid;
-    }
     if (is_navigator && parent_ctx) {
       if (!((QtScrollWidgetGlow*)main_widget)->destroyed) {
         ((GlowCtx*)parent_ctx)->no_nav = 1;
