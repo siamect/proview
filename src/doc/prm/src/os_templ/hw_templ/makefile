@@ -40,8 +40,8 @@ silent :
 $(clean_html) : clean_%.html : %.html
 	@ $(rm) $(rmflags) $(doc_dir)/prm/$*.html
 
-$(doc_dir)/prm/index.html : ../../doxygen.dx
-	@ echo "doxygen documentation $(source) $(target)"
+$(doc_dir)/prm/index.html : ../../doxygen.c
+	@ echo "Generating Programmer documentation: doxygen $(source) $(target)"
 	@ doxygen
 #	@ if [ "`eval which pdflatex`" != "" ]; then \
 #	    ./repl.sh latex/*.tex; \
@@ -55,8 +55,3 @@ $(doc_dir)/prm/index.html : ../../doxygen.dx
 #	    rm -f repl.tmp; \
 #	  fi; \
 #	  rm -r -f latex;
-
-
-
-
-

@@ -75,7 +75,6 @@ class CnvWblToHtml : public CnvWblTo {
   std::ofstream fp_html_group[MAX_GROUPS];
   std::ofstream fp_js_group[MAX_GROUPS];
   char html_first[80];
-  char html_tmp_name[80];
   int html_class_open;
   int html_index_open;
   bool js_all_first;
