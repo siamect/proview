@@ -37,10 +37,6 @@
 /* co_time_os.c -- OS specific time routines.
 */
 
-#ifndef OS_FREEBSD
-#error This file is only for FreeBSD
-#endif
-
 #include <string.h>
 #include <unistd.h>
 #include <sys/times.h>

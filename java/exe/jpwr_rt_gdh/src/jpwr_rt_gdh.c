@@ -493,7 +493,7 @@ JNIEXPORT jobjectArray JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoStringArray
 JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_refObjectInfo
   (JNIEnv *env, jclass obj, jstring name)
 {
-  int sts;
+  int sts = GDH__SUCCESS;
   const char *str;
   char *cstr;
   void *attr_p;
@@ -557,12 +557,12 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_refObjectInfo
   }
   else
   {
-    typeid = pwr_eType_Boolean;
-    size = sizeof(pwr_tBoolean);
-    elements = 1;
+    sts = gdh_GetAttributeCharacteristics( cstr, &typeid, (pwr_tUInt32 *)&size, 0, 
+					   (pwr_tUInt32 *)&elements);
   }
 
-  sts = gdh_RefObjectInfo( cstr, &attr_p, &subid, size);
+  if ( ODD(sts))
+    sts = gdh_RefObjectInfo( cstr, &attr_p, &subid, size);
 
   if ( ODD(sts))
   {

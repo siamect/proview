@@ -654,7 +654,6 @@ void CnvReadWbl::attribute_init()
   strcpy(attr_elements, "");
   attr_pointer = 0;
   attr_array = 0;
-  attr_rtvirtual = 0;
   attr_elem = 0;
   attr_isclass = 0;
 }
@@ -687,8 +686,6 @@ int CnvReadWbl::attribute_attr(char* name, char* value)
         attr_pointer = 1;
       if (streq(value, "PWR_MASK_ARRAY"))
         attr_array = 1;
-      if (streq(value, "PWR_MASK_RTVIRTUAL"))
-        attr_rtvirtual = 1;
       if (streq(value, "PWR_MASK_CLASS"))
         attr_isclass = 1;
     } else {
@@ -706,8 +703,6 @@ int CnvReadWbl::attribute_attr(char* name, char* value)
         attr_pointer = 1;
       if (flags_value & pwr_mAdef_array)
         attr_array = 1;
-      if (flags_value & pwr_mAdef_rtvirtual)
-        attr_rtvirtual = 1;
       if (flags_value & pwr_mAdef_class)
         attr_isclass = 1;
     }
@@ -805,7 +800,6 @@ void CnvReadWbl::body_init()
   strcpy(body_name, "");
   strcpy(body_structname, "");
   strcpy(body_flags, "");
-  body_rtvirtual = 0;
 }
 
 int CnvReadWbl::body_attr(char* name, char* value)
@@ -819,9 +813,6 @@ int CnvReadWbl::body_attr(char* name, char* value)
       strcat(body_flags, &value[9]);
     else
       strcat(body_flags, value);
-
-    if (streq(value, "pwr_mObjBodyDef_RtVirtual"))
-      body_rtvirtual = 1;
   }
   return 1;
 }
@@ -869,12 +860,12 @@ int CnvReadWbl::graphplcnode_attr(char* name, char* value)
       strcat(doc_text[doc_cnt - 1], " (document)");
     else if (streq(value, "7"))
       strcat(doc_text[doc_cnt - 1], " (Get,Set)");
-  } else if (streq(low(name), "compmethod"))
+  } /* else if (streq(low(name), "compmethod"))
     ;
   else if (streq(low(name), "tracemethod"))
     ;
   else if (streq(low(name), "executeordermethod"))
-    ;
+    ; */
   return 1;
 }
 
@@ -896,6 +887,7 @@ int CnvReadWbl::graphplccon_attr(char* name, char* value)
   strcpy(doc_text[doc_cnt++], value);
 
   // Description
+  /*
   if (streq(low(name), "curvature"))
     ;
   else if (streq(low(name), "corners"))
@@ -904,6 +896,7 @@ int CnvReadWbl::graphplccon_attr(char* name, char* value)
     ;
   else if (streq(low(name), "attributes"))
     ;
+  */
   return 1;
 }
 

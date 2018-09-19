@@ -1108,28 +1108,26 @@ gboolean CoWowEntryGtk::event_cb(GtkWidget* w, GdkEvent* event, gpointer data)
   case GDK_KP_Enter:
   case GDK_Linefeed: {
     // Insert in recall buffer
-    en->m_re->push(text);
+    if (!streq(text, "")) {
+      en->m_re->push(text);
+    }
     break;
   }
   case GDK_Up: {
     const char *prev = en->m_re->popUp(text);
-    if (!streq(prev, "")) {
-      gint pos = 0;
-      gtk_editable_delete_text(GTK_EDITABLE(w), 0, -1);
-      gtk_editable_insert_text(GTK_EDITABLE(w), prev, strlen(prev), &pos);
-      gtk_editable_set_position(GTK_EDITABLE(w), -1);
-    }
+    gint pos = 0;
+    gtk_editable_delete_text(GTK_EDITABLE(w), 0, -1);
+    gtk_editable_insert_text(GTK_EDITABLE(w), prev, strlen(prev), &pos);
+    gtk_editable_set_position(GTK_EDITABLE(w), -1);
     sts = TRUE;
     break;
   }
   case GDK_Down: {
     const char *next = en->m_re->popDown(text);
-    if (!streq(next, "")) {
-      gint pos = 0;
-      gtk_editable_delete_text(GTK_EDITABLE(w), 0, -1);
-      gtk_editable_insert_text(GTK_EDITABLE(w), next, strlen(next), &pos);
-      gtk_editable_set_position(GTK_EDITABLE(w), -1);
-    }
+    gint pos = 0;
+    gtk_editable_delete_text(GTK_EDITABLE(w), 0, -1);
+    gtk_editable_insert_text(GTK_EDITABLE(w), next, strlen(next), &pos);
+    gtk_editable_set_position(GTK_EDITABLE(w), -1);
     sts = TRUE;
     break;
   }

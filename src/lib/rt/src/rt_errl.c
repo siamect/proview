@@ -41,7 +41,9 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
+#if !defined(OS_MACOS) && !defined(OS_OPENBSD)
 #include <mqueue.h>
+#endif
 #include <pthread.h>
 #include <stdio.h>
 #include <string.h>
@@ -54,7 +56,11 @@
 
 static pthread_mutex_t fileMutex;
 static pthread_mutex_t termMutex;
+#if defined(OS_MACOS) || defined(OS_FREEBSD) || defined(OS_OPENBSD)
 static int mqid = -1;
+#else
+static mqd_t mqid = (mqd_t)-1;
+#endif
 static int logFile = -1;
 static int newLogFile = 1;
 static int term = -1;
@@ -72,15 +78,22 @@ void errl_Init(const char* termName,
 {
   pthread_mutexattr_t mutexattr;
   pthread_attr_t pthreadattr;
+#if !defined(OS_MACOS) && !defined(OS_FREEBSD) && !defined(OS_OPENBSD)
+  struct mq_attr mqattr;
+  mode_t mode;
+  int oflags;
+#endif
   char name[64];
   char* busid = getenv(pwr_dEnvBusId);
   static int initDone = 0;
   int policy;
   struct sched_param param;
+#if defined(OS_MACOS) || defined(OS_FREEBSD) || defined(OS_OPENBSD)
   key_t key;
   int fd;
   int flags = O_RDWR | O_CREAT;
   mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP;
+#endif
 
   errl_log_cb = log_cb;
   errl_log_userdata = userdata;
@@ -105,19 +118,43 @@ void errl_Init(const char* termName,
   }
   pthread_mutexattr_destroy(&mutexattr);
 
+#if !defined(OS_MACOS) && !defined(OS_FREEBSD) && !defined(OS_OPENBSD) 
+  mqattr.mq_msgsize = LOG_MAX_MSG_SIZE; /* max mess size */
+  mqattr.mq_maxmsg = MAX_NO_MSG; /* max no of msg in this queue */
+  mqattr.mq_flags = 0; // O_NONBLOCK;
+  oflags = O_CREAT | O_RDWR;
+  mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
+#endif
+
   sprintf(name, "%s_%s", LOG_QUEUE_NAME, busid ? busid : "");
+#if defined(OS_MACOS) || defined(OS_FREEBSD) || defined(OS_OPENBSD)
   fd = open(name, flags, mode);
   if (fd == -1) {
     printf("Message Queue, open failed on %s, errno: %d\n", name, errno);
   }
   key = ftok(name, 'm');
   close(fd);
-
   mqid = msgget(key, IPC_CREAT | 0660);
   if (mqid == -1) {
     perror("Open message queue: msgget ");
     return;
   }
+#else
+  mqid = mq_open(name, oflags, mode, &mqattr);
+  if (mqid == (mqd_t)-1) {
+    if (errno == EINVAL) {
+      mqattr.mq_maxmsg = DEF_MAX_NO_MSG; /* Try with smaller queue */
+      mqid = mq_open(name, oflags, mode, &mqattr);
+      if (mqid == (mqd_t)-1) {
+        perror("rt_logmod: mq_open ");
+        return;
+      }
+    } else {
+      perror("rt_logmod: mq_open ");
+      return;
+    }
+  }
+#endif
 
   pthread_attr_init(&pthreadattr);
   if (pthread_create(&tid, &pthreadattr, log_thread, NULL) == -1) {
@@ -141,10 +178,21 @@ void errl_Init(const char* termName,
 }
 void errl_Unlink()
 {
+#if !defined(OS_MACOS) && !defined(OS_FREEBSD) && !defined(OS_OPENBSD) 
+  char name[64];
+  char* busid = getenv(pwr_dEnvBusId);
+#endif
+
   pthread_cancel(tid);
 
-  /* Remove the message queue */
+#if defined(OS_MACOS) || defined(OS_FREEBSD) || defined(OS_OPENBSD)
   msgctl(mqid, IPC_RMID, 0);
+#else
+  sprintf(name, "%s_%s", LOG_QUEUE_NAME, busid ? busid : "");
+
+  /* We don't care about return status */
+  mq_unlink(name);
+#endif
 }
 void errl_SetFile(const char* logFileName)
 {
@@ -220,12 +268,14 @@ static void* log_thread(void* arg)
   errh_sMsg buf;
 
   while (1) {
-    len = msgrcv(mqid, (char*)&buf, LOG_MAX_MSG_SIZE, 0, 0);
+#if defined(OS_MACOS) || defined(OS_FREEBSD) || defined(OS_OPENBSD)
+  len = msgrcv(mqid, (char*)&buf, LOG_MAX_MSG_SIZE, 0, 0);
+#else
+    len = mq_receive(mqid, (char*)&buf, LOG_MAX_MSG_SIZE, NULL);
+#endif
     if (len == -1) {
-      if (errno != EINTR) {
+      if (errno != EINTR)
         perror("rt_logmod.c: mq_receive ");
-        sleep(1);
-      }
     } else {
       switch (buf.message_type) {
       case errh_eMsgType_Log:

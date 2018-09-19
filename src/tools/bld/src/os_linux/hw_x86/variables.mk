@@ -199,26 +199,23 @@ mkdir		:= mkdir
 #   Set to /buildversion for frozen dbs versions
 wblflags	:= 
 
+warnings := -Wall -Wextra -Wno-unused-parameter -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-sign-compare -Wno-missing-field-initializers
+
 ifeq ($(pwre_btype),rls)			 
-  cflags	:= $(cross_compile) -c -O3 -D_GNU_SOURCE -DPWR_NDEBUG -D_REENTRANT -fPIC -Wno-deprecated-declarations -Wno-unused-but-set-variable 
+  cflags	:= $(cross_compile) -c -O3 -D_GNU_SOURCE -DPWR_NDEBUG -D_REENTRANT -fPIC $(warnings)
   linkflags	:= $(cross_compile) -O3 -L$(lib_dir)
   elinkflags	:= $(cross_compile) -O3 -L$(lib_dir) -L$(elib_dir)
-  explinkflags	:= $(cross_compile) -g -L$(elib_dir)
-  cxxflags	:= $(cflags)
-  clis		= /lis=$(list)
-  dolist	= /lis=$(list)
-  domap		= -Xlinker -Map -Xlinker $(map)
 else
-  cflags	:= $(cross_compile) -c -g -Wall -D_GNU_SOURCE -D_REENTRANT -fPIC -Wno-deprecated-declarations -Wno-unused-but-set-variable 
-  mmflags	:= -Wno-deprecated
+  cflags	:= $(cross_compile) -c -g -D_GNU_SOURCE -D_REENTRANT -fPIC $(warnings)
   linkflags	:= $(cross_compile) -g -L$(lib_dir)
   elinkflags	:= $(cross_compile) -g -L$(lib_dir) -L$(elib_dir)
-  explinkflags	:= $(cross_compile) -g -L$(elib_dir)
-  cxxflags	:= $(cflags) -Wno-deprecated
-  dolist	= /lis=$(list)
-  clis		:= 
-  domap		= -Xlinker -Map -Xlinker $(map)
 endif
+
+explinkflags	:= $(cross_compile) -g -L$(elib_dir)
+cxxflags	:= $(cflags)
+clis		= /lis=$(list)
+dolist	= /lis=$(list)
+domap		= -Xlinker -Map -Xlinker $(map)
 
 log_h_h		= echo "Exporting $<"
 log_x_h		= echo "Exporting $< to $(notdir $@)"

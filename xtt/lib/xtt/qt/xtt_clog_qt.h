@@ -52,8 +52,6 @@ public:
       pwr_tStatus* status);
 
   QWidget* parent_wid;
-  QWidget* parent_wid_clog;
-  QWidget* form_clog;
   QWidget* clognav_widget;
   QWidget* filter_form;
   QCheckBox* show_success_w;
@@ -63,8 +61,6 @@ public:
   QCheckBox* show_fatal_w;
   QCheckBox* show_text_w;
   QLineEdit* filter_string_w;
-  QWidget* filesel_form;
-  QWidget* filesel_list_w;
 
   void pop();
   void set_clock_cursor();

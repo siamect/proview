@@ -231,7 +231,7 @@ void OpMotif::update_alarm_info()
   char text[120];
 
   if (get_alarm_info_cb) {
-    sts = (get_alarm_info_cb)(parent_ctx, &info);
+    sts = (get_alarm_info_cb)(parent_ctx, &info, 0, 5);
     if (EVEN(sts))
       return;
 

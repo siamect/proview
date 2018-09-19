@@ -153,9 +153,9 @@ static int xnav_op_command_cb(void* xnav, char* command);
 static void xnav_op_close_cb(void* ctx);
 static void xnav_op_help_cb(void* ctx, const char* key);
 static void xnav_op_map_cb(void* ctx);
-static int xnav_op_get_alarm_info_cb(void* xnav, evlist_sAlarmInfo* info);
-static void xnav_op_ack_last_cb(
-    void* xnav, unsigned long type, unsigned long prio);
+static int xnav_op_get_alarm_info_cb(void* xnav, evlist_sAlarmInfo* info, int backward, int alarmsize);
+static void xnav_op_ack_last_cb(void* xnav, unsigned long type, unsigned long prio, int backward, 
+				int timecheck);
 static void xnav_trend_close_cb(void* ctx, XttTrend* trend);
 static void xnav_trend_command_cb(void* ctx, const char* key);
 static void xnav_trend_help_cb(void* ctx, const char* key);
@@ -279,7 +279,8 @@ dcli_tCmdTable xnav_command_table[] = {
       { "dcli_arg1", "/REGULAREXPRESSION", "/NEXT", "" } },
   { "EVENTLIST", &xnav_eventlist_func,
       {
-          "dcli_arg1", "/PRIORITY", "/NAME", "/ALL", "/AUTOACKNOWLEDGE", "",
+	"dcli_arg1", "/PRIORITY", "/NAME", "/ALL", "/AUTOACKNOWLEDGE", "/OLDEST", 
+	"/TIMECHECK", "",
       } },
   { "TEST", &xnav_test_func, { "dcli_arg1", "dcli_arg2", "" } },
   { "LOGGING", &xnav_logging_func,
@@ -2594,6 +2595,11 @@ static int xnav_eventlist_func(void* client_data, void* client_flag)
     char autoack_str[80];
     mh_sEventId* id;
     int all;
+    int oldest;
+    int timecheck;
+
+    oldest = ODD(dcli_get_qualifier("/OLDEST", 0, 0));
+    timecheck = ODD(dcli_get_qualifier("/TIMECHECK", 0, 0));
 
     all = ODD(dcli_get_qualifier("/ALL", 0, 0));
     if (all) {
@@ -2630,28 +2636,28 @@ static int xnav_eventlist_func(void* client_data, void* client_flag)
       if (ODD(dcli_get_qualifier("/PRIORITY", prio_str, sizeof(prio_str)))) {
         str_ToUpper(prio_str, prio_str);
         if (streq(prio_str, "A"))
-          xnav->ev->ack_last_prio(evlist_eEventType_Alarm, mh_eEventPrio_A);
+          xnav->ev->ack_last_prio(evlist_eEventType_Alarm, mh_eEventPrio_A, oldest, timecheck);
         else if (streq(prio_str, "B"))
-          xnav->ev->ack_last_prio(evlist_eEventType_Alarm, mh_eEventPrio_B);
+          xnav->ev->ack_last_prio(evlist_eEventType_Alarm, mh_eEventPrio_B, oldest, timecheck);
         else if (streq(prio_str, "C"))
-          xnav->ev->ack_last_prio(evlist_eEventType_Alarm, mh_eEventPrio_C);
+          xnav->ev->ack_last_prio(evlist_eEventType_Alarm, mh_eEventPrio_C, oldest, timecheck);
         else if (streq(prio_str, "D"))
-          xnav->ev->ack_last_prio(evlist_eEventType_Alarm, mh_eEventPrio_D);
+          xnav->ev->ack_last_prio(evlist_eEventType_Alarm, mh_eEventPrio_D, oldest, timecheck);
         else if (str_StartsWith(prio_str, "I"))
-          xnav->ev->ack_last_prio(evlist_eEventType_Info, 0);
+          xnav->ev->ack_last_prio(evlist_eEventType_Info, 0, oldest, timecheck);
         else if (streq(prio_str, "NOA")) {
           if (ODD(xnav->ev->get_last_not_acked_prio(
                   &id, evlist_eEventType_Alarm, mh_eEventPrio_B)))
-            xnav->ev->ack_last_prio(evlist_eEventType_Alarm, mh_eEventPrio_B);
+            xnav->ev->ack_last_prio(evlist_eEventType_Alarm, mh_eEventPrio_B, oldest, timecheck);
           else if (ODD(xnav->ev->get_last_not_acked_prio(
                        &id, evlist_eEventType_Alarm, mh_eEventPrio_C)))
-            xnav->ev->ack_last_prio(evlist_eEventType_Alarm, mh_eEventPrio_C);
+            xnav->ev->ack_last_prio(evlist_eEventType_Alarm, mh_eEventPrio_C, oldest, timecheck);
           else if (ODD(xnav->ev->get_last_not_acked_prio(
                        &id, evlist_eEventType_Alarm, mh_eEventPrio_D)))
-            xnav->ev->ack_last_prio(evlist_eEventType_Alarm, mh_eEventPrio_D);
+            xnav->ev->ack_last_prio(evlist_eEventType_Alarm, mh_eEventPrio_D, oldest, timecheck);
           else if (ODD(xnav->ev->get_last_not_acked_prio(
                        &id, evlist_eEventType_Info, 0)))
-            xnav->ev->ack_last_prio(evlist_eEventType_Info, 0);
+            xnav->ev->ack_last_prio(evlist_eEventType_Info, 0, oldest, timecheck);
         } else
           xnav->message('E', "Unknown priority");
       } else
@@ -4985,7 +4991,7 @@ static int xnav_open_func(void* client_data, void* client_flag)
       xao->pop();
     } else {
       xao = xnav->xattone_new(
-          &aref, title_str, bypass ? pwr_mPrv_RtWrite : xnav->priv, &sts);
+          &aref, title_str, bypass ? pwr_mPrv_RtWrite : ((pwr_mPrv) xnav->priv), &sts);
       if (EVEN(sts))
         xnav->message('E', "Unable to open attribute");
       else {
@@ -9718,19 +9724,19 @@ void XNav::ge_event_exec(
   }
 }
 
-static int xnav_op_get_alarm_info_cb(void* xnav, evlist_sAlarmInfo* info)
+static int xnav_op_get_alarm_info_cb(void* xnav, evlist_sAlarmInfo* info, int backward, int alarmsize)
 {
   if (((XNav*)xnav)->ev)
-    return ((XNav*)xnav)->ev->get_alarm_info(info);
+    return ((XNav*)xnav)->ev->get_alarm_info(info, backward, alarmsize);
   else
     return 0;
 }
 
-static void xnav_op_ack_last_cb(
-    void* xnav, unsigned long type, unsigned long prio)
+static void xnav_op_ack_last_cb(void* xnav, unsigned long type, unsigned long prio, int backward,
+				int timecheck)
 {
   if (((XNav*)xnav)->ev)
-    ((XNav*)xnav)->ev->ack_last_prio(type, prio);
+    ((XNav*)xnav)->ev->ack_last_prio(type, prio, backward, timecheck);
 }
 
 static int xnav_op_command_cb(void* xnav, char* command)

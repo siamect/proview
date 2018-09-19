@@ -34,12 +34,6 @@
  * General Public License plus this exception.
  */
 
-#if !defined(OS_LYNX) && !defined(OS_LINUX) && !defined(OS_MACOS)              \
-    && !defined OS_FREEBSD && !defined OS_OPENBSD
-#error                                                                         \
-    "This file is valid only for OS_LYNX and OS_LINUX and OS_MACOS and OS_FREEBSD and OS_OPENBSD"
-#endif
-
 #include <errno.h>
 #include <sched.h>
 #include <string.h>
@@ -73,7 +67,7 @@ pwr_tStatus proc_Start(proc_sProcess* p)
           (int)p->pid, p->file);
     }
   } else {
-    sts = proc_SetPriority(p->p_prio);
+    sts = PROC__SUCCESS;
     if (EVEN(sts))
       errh_Warning("%s: error setprio, %m\nfile: %s", p->name, sts, p->file);
     argv = co_StrToArgv(p->file, p->arg);
@@ -86,29 +80,6 @@ pwr_tStatus proc_Start(proc_sProcess* p)
   return sts;
 }
 
-pwr_tStatus proc_SetPriority(int prio)
-{
-  //  struct sched_param param;
-  //  int rc;
-  int pid;
-  char set[100];
-  pwr_tStatus sts = PROC__SUCCESS;
-
-  pid = getpid();
-  //  rc = sched_getparam((pid_t)0, &param);
-  //  if (rc != 0)
-  //    return errno_GetStatus();
-  //  param.sched_priority = prio;
-  //  rc = sched_setscheduler((pid_t)0, SCHED_RR, &param);
-  //  if (rc != 0)
-  //    return errno_GetStatus();
-
-  // Priorities set from rt_ini after start of all processes
-  sprintf(set, "rt_prio -rp %d %d", prio, pid);
-  //  system(set);
-  return sts;
-}
-
 pwr_tStatus proc_UnloadProgram(proc_sProcess* p)
 {
   pwr_tStatus sts = PROC__SUCCESS;
@@ -118,5 +89,19 @@ pwr_tStatus proc_UnloadProgram(proc_sProcess* p)
 
 pwr_tStatus proc_SchedWait()
 {
+#if defined(OS_LINUX)
+  pid_t pid;
+  int count = 0;
+  int sched;
+
+  pid = getpid();
+
+  while (((sched = sched_getscheduler(pid)) == SCHED_OTHER) && (count < 5)) {
+    sleep(1);
+    count++;
+  }
+  if (sched == SCHED_OTHER)
+    return PROC__NOSCHED;
+#endif
   return PROC__SUCCESS;
 }

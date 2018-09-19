@@ -1,4 +1,4 @@
-/*! \file doxygen.dx
+/*! \file doxygen.c
   \brief Contains group definitions for doxygen. 
 */
 

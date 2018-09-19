@@ -4595,23 +4595,27 @@ int sev_dbhdf5::check_deadband(pwr_eType type, unsigned int size,
     }
     break;
   case pwr_eType_UInt64:
-    if (ABS(*(pwr_tUInt64*)value - *(pwr_tUInt64*)oldvalue) < deadband) {
+    if (ABS(((pwr_tInt64)(*(pwr_tUInt64*)value - *(pwr_tUInt64*)oldvalue)))
+        < deadband) {
       deadband_active = 1;
     }
     break;
   case pwr_eType_UInt32:
   case pwr_eType_Boolean:
-    if (ABS(*(pwr_tUInt32*)value - *(pwr_tUInt32*)oldvalue) < deadband) {
+    if (ABS(((pwr_tInt32)(*(pwr_tUInt32*)value - *(pwr_tUInt32*)oldvalue)))
+        < deadband) {
       deadband_active = 1;
     }
     break;
   case pwr_eType_UInt16:
-    if (ABS(*(pwr_tUInt16*)value - *(pwr_tUInt16*)oldvalue) < deadband) {
+    if (ABS(((pwr_tInt16)(*(pwr_tUInt16*)value - *(pwr_tUInt16*)oldvalue)))
+        < deadband) {
       deadband_active = 1;
     }
     break;
   case pwr_eType_UInt8:
-    if (ABS(*(pwr_tUInt8*)value - *(pwr_tUInt8*)oldvalue) < deadband) {
+    if (ABS(((pwr_tInt8)(*(pwr_tUInt8*)value - *(pwr_tUInt8*)oldvalue)))
+        < deadband) {
       deadband_active = 1;
     }
     break;

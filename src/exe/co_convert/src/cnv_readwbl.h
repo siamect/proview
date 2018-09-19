@@ -131,7 +131,6 @@ class CnvReadWbl {
   CnvWblTo* wblto;
   FILE* fp;
   cread_eLine linetype;
-  int verbose;
   int state;
   int object_state;
   char source_dir[200];
@@ -143,7 +142,6 @@ class CnvReadWbl {
   char attr_typeref_volume[80];
   int attr_pointer;
   int attr_array;
-  int attr_rtvirtual;
   int attr_isclass;
   char attr_elements[80];
   int attr_elem;
@@ -161,7 +159,6 @@ class CnvReadWbl {
   char body_name[80];
   char body_structname[80];
   char body_flags[200];
-  int body_rtvirtual;
   char graphplcnode_name[80];
   char graphplccon_name[20];
   char typedef_name[80];
@@ -195,15 +192,11 @@ class CnvReadWbl {
   char sobject_name[80];
   char dir[120];
 
-  char ClassDef[80];
   char ObjBodyDef[80];
   char GraphPlcNode[80];
-  char GraphPlcCon[80];
   char Attribute[80];
 
   int read_wbl(char* filename);
-  int read_line(char* line, int maxsize, FILE* file);
-  int remove_spaces(char* in, char* out);
   void attribute_init();
   int attribute_attr(char* name, char* value);
   int attribute_close();

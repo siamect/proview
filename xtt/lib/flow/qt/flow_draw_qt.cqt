@@ -57,17 +57,6 @@
 #define DRAW_PRESS_PIX 9
 
 typedef struct {
-  QWidget* w;
-  int x;
-  int y;
-  int width;
-  int height;
-  FlowArrayElem* node;
-  int number;
-  FlowCtx* ctx;
-} draw_sAnnotData;
-
-typedef struct {
   QPixmap pixmap[DRAW_PIXMAP_SIZE];
 } draw_sPixmap;
 

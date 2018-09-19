@@ -70,7 +70,6 @@ public:
   void pop();
   void set_clock_cursor();
   void reset_cursor();
-  void create_input_dialog();
   void open_input_dialog(
       char* text, char* title, char* init_text, void (*ok_cb)(RtMon*, char*));
 

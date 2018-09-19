@@ -56,6 +56,7 @@ public class CdhrObjAttr implements Serializable
   public GdhrRefObjectInfo refObj;
   public String name;
   public String fullName = null;
+  public String className = null;
   public int type;
   public int size;
   public int flags;

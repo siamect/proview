@@ -317,7 +317,6 @@ while [ $i -lt $lib_cnt ]; do
     i=$((i+1))
 done
 
-rm $pwre_croot/src/exe/rt_prio/src/.${pwre_os}/.${pwre_hw}/makefile
 #rm $pwre_croot/otherio/exp/rt/src/.${pwre_os}/.${pwre_hw}/makefile
 rm $pwre_croot/remote/exe/rs_remote_alcm/src/.${pwre_os}/.${pwre_hw}/makefile
 #rm $pwre_croot/profibus/lib/rt/src/.${pwre_os}/.${pwre_hw}/makefile

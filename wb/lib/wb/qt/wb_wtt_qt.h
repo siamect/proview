@@ -105,7 +105,6 @@ public:
   QWidget* palette_widget;
   QLabel* msg_label;
   QLabel* cmd_prompt;
-  QWidget* wnav_form;
   QSplitter* palette_paned;
   QWidget* boot_dia;
   QAction* cm_normal_syntax;
@@ -170,7 +169,6 @@ public:
   QTimer* disfocus_timerid;
   QTimer* selection_timerid;
   int avoid_deadlock;
-  QTimer* deadlock_timerid;
   int popupmenu_x;
   int popupmenu_y;
   static CoWowRecall cmd_recall;
@@ -316,6 +314,4 @@ private:
   WttQt* wtt;
 };
 
-QWidget* wtt_create_popup_menu(Wtt* wtt, pwr_sAttrRef aref, pwr_tCid cid,
-    void (*message_cb)(void*, char, char*));
 #endif

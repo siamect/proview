@@ -75,7 +75,6 @@ public:
   QWidget* brow_widget;
   QWidget* form_widget;
   QLabel* msg_label;
-  QWidget* wrevnav_form;
   QWidget* india_widget;
   CoWowFocusTimerQt focustimer;
 
@@ -84,7 +83,6 @@ public:
   void set_clock_cursor();
   void reset_cursor();
   void flush();
-  void create_input_dialog();
   void open_input_dialog(const char* text1, const char* text2,
       const char* title, const char* init_text1, const char* init_text2,
       void (*ok_cb)(WRev*, char*, char*));

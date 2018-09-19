@@ -42,6 +42,7 @@ package jpwr.rt;
 public class Errh {
   public static final int eAnix_webmon 		= 14;
   public static final int eAnix_webmonmh       	= 15;
+  public static final int eAnix_websocketserver = 28;
 
   public static final int PWR__SRVSTARTUP       = 134512720;
   public static final int PWR__SRUN             = 134512731;

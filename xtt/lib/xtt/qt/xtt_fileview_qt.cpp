@@ -175,7 +175,7 @@ XttFileviewQt::XttFileviewQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
   }
 
   QObject::connect(toplevel, SIGNAL(fileSelected(const QString&)), toplevel,
-      SLOT(list_ok_cb(const QString&)));
+      SLOT(XttFileviewQtWidget::list_ok_cb(const QString&)));
 
   toplevel->exec();
 }

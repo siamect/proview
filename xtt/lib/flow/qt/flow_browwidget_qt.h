@@ -41,22 +41,10 @@
 
 #include <QWidget>
 
-#if defined __cplusplus
-extern "C" {
-#endif
-
-QWidget* browwidgetqt_new(
-    int (*init_proc)(FlowCtx* ctx, void* client_data), void* client_data);
 QWidget* scrolledbrowwidgetqt_new(
     int (*init_proc)(FlowCtx* ctx, void* client_data), void* client_data,
     QWidget** browwidget);
 
-QWidget* brownavwidgetqt_new(QWidget* main_brow);
-
-void browwidgetqt_get_ctx(QWidget* w, void** ctx);
 void browwidgetqt_modify_ctx(QWidget* w, void* ctx);
 
-#if defined __cplusplus
-}
-#endif
 #endif

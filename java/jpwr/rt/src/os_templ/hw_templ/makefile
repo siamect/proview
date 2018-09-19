@@ -42,6 +42,7 @@ local_java_sources = \
 	SubElement.java \
 	GdhServer.java \
         GdhServerMonitor.java \
+	GdhWebSocketServer.java \
 	HistQuery.java \
 	MhrsEventId.java \
 	MhrEvent.java \

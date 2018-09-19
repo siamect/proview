@@ -176,8 +176,6 @@ XttMultiViewQt::XttMultiViewQt(QWidget* mv_parent_wid, void* mv_parent_ctx,
     window_width = 600;
     window_height = 500;
   }
-  orig_width = window_width;
-  orig_height = window_height;
 
   // Qt
   if (!(options & ge_mOptions_Embedded)) {

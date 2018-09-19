@@ -924,9 +924,10 @@ void OpGtk::update_alarm_info()
   int show_time = 0;
   time_eFormat time_format = time_eFormat_Time;
   char* s;
+  int backward = layout_mask & pwr_mOpWindLayoutMask_ShowOldestNotAckedAlarm ? 1 : 0;
 
   if (get_alarm_info_cb) {
-    sts = (get_alarm_info_cb)(parent_ctx, &info);
+    sts = (get_alarm_info_cb)(parent_ctx, &info, backward, a_height);
     if (EVEN(sts))
       return;
 

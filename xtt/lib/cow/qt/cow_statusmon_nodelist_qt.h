@@ -76,8 +76,6 @@ public:
       const char* nodelist_name, int nodelist_mode,
       int nodelist_view_node_descr, int msgw_pop, pwr_tStatus* status);
 
-  QWidget* parent_wid_nodelist;
-  QWidget* form_nodelist;
   QWidget* nodelistnav_widget;
 
   NodelistInputDialogQt* add_india_widget;

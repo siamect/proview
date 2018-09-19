@@ -38,10 +38,6 @@
 
    Contains functions that are heavily os-dependant.  */
 
-#if !defined(OS_LINUX)
-#error "This file is valid only for OS_LINUX"
-#endif
-
 #include <errno.h>
 #include <signal.h>
 #include <string.h>
@@ -51,74 +47,62 @@
 #include "rt_hash_msg.h"
 #include "rt_errh.h"
 #include "rt_qdb.h"
-#include "rt_futex.h"
-
-pwr_tBoolean qos_WaitQueOld(pwr_tStatus* status, qdb_sQue* qp, int tmo)
-{
-  pwr_tDeltaTime dtime;
-  struct timespec dtime_ts;
-  sigset_t newset;
-  siginfo_t info;
-  int ok;
-  pwr_tBoolean signal = FALSE;
-  pwr_dStatus(sts, status, QCOM__SUCCESS);
-
-  qdb_AssumeLocked;
-
-  if (tmo == qcom_cTmoNone)
-    return FALSE;
-
-  qp->lock.waiting = TRUE;
-
-  sigemptyset(&newset);
-  sigaddset(&newset, qdb_cSigMsg);
-
-  //  qp->lock.pid = BUILDPID(getpid(), pthread_self());
-  // I think that each thread has it's own pid in Linux. ML
-  qp->lock.pid = getpid();
-
-  qdb_Unlock;
-
-  if (tmo != qcom_cTmoEternal) {
-    time_MsToD(&dtime, tmo);
-    dtime_ts.tv_sec = dtime.tv_sec;
-    dtime_ts.tv_nsec = dtime.tv_nsec;
-
-    ok = sigtimedwait(&newset, &info, &dtime_ts);
-  } else {
-    for (;;) {
-      ok = sigwaitinfo(&newset, &info);
-      if (ok == -1 && errno == EINTR)
-        continue;
-      break;
-    }
-  }
-
-  if (ok == -1 && errno != EAGAIN) {
-    errh_Error("waitQue (%d) %s", errno, strerror(errno));
-  } else if (!(ok == -1 || ok == qdb_cSigMsg)) {
-    errh_Error("qos waitQue signr %d", ok);
-  }
-
-  qdb_Lock;
-
-  if (qp->lock.waiting) {
-    *sts = QCOM__TMO;
-    qp->lock.waiting = FALSE;
-  } else {
-    signal = TRUE;
-  }
-
-  return signal;
-}
 
 pwr_tBoolean qos_WaitQue(pwr_tStatus* status, qdb_sQue* qp, int tmo)
 {
+#if defined(OS_MACOS) || defined(OS_FREEBSD) || defined(OS_OPENBSD)
+  struct timespec ts;
+  int remaining_time = tmo;
+  int delta = 100;
+
+  ts.tv_sec = 0;
+
+  qdb_AssumeLocked;
+
+  qp->lock.waiting = TRUE;
+
+  qdb_Unlock;
+
+  if (tmo == -1) {
+    ts.tv_nsec = delta * 1000000;
+
+    while (1) {
+      if (!qp->lock.waiting) {
+        *status = QCOM__SUCCESS;
+        qdb_Lock;
+        return 1;
+      }
+      nanosleep(&ts, 0);
+    }
+  } else {
+    while (1) {
+      if (!qp->lock.waiting) {
+        *status = QCOM__SUCCESS;
+        qdb_Lock;
+        return 1;
+      }
+
+      if (!remaining_time) {
+        /* Timeout */
+        *status = QCOM__TMO;
+        qdb_Lock;
+        return 0;
+      }
+      if (remaining_time <= delta) {
+        ts.tv_nsec = remaining_time * 1000000;
+        remaining_time = 0;
+      } else {
+        ts.tv_nsec = delta * 1000000;
+        remaining_time -= delta;
+      }
+      nanosleep(&ts, 0);
+    }
+  }
+#else
   pwr_tDeltaTime dtime;
   pwr_tTime atime;
   struct timespec atime_ts;
   int ok;
-  pwr_tBoolean signal = FALSE;
   pwr_dStatus(sts, status, QCOM__SUCCESS);
 
   qdb_AssumeLocked;
@@ -134,7 +118,11 @@ pwr_tBoolean qos_WaitQue(pwr_tStatus* status, qdb_sQue* qp, int tmo)
   qdb_Unlock;
 
   if (tmo != qcom_cTmoEternal) {
+    #if defined(OS_CYGWIN)
     time_GetTime(&atime);
+    #else
+    time_GetTimeMonotonic(&atime);
+    #endif
     time_MsToD(&dtime, tmo);
     time_Aadd(&atime, &atime, &dtime);
     atime_ts.tv_sec = atime.tv_sec;
@@ -153,48 +141,29 @@ pwr_tBoolean qos_WaitQue(pwr_tStatus* status, qdb_sQue* qp, int tmo)
     *sts = QCOM__TMO;
     qp->lock.waiting = FALSE;
   } else {
-    signal = TRUE;
+    return TRUE;
   }
-
-  return signal;
-}
-
-pwr_tStatus qos_SignalQueOld(pwr_tStatus* status, qdb_sQue* qp)
-{
-  union sigval value;
-  int ok;
-  pwr_dStatus(sts, status, QCOM__SUCCESS);
-
-  qdb_AssumeLocked;
-
-  if (qp->lock.waiting) {
-    //    value.sival_int = BUILDPID(getpid(), pthread_self());
-    value.sival_int = getpid();
-    qp->lock.waiting = FALSE;
-
-    ok = sigqueue(qp->lock.pid, qdb_cSigMsg, value);
-
-    if (ok == -1) {
-      *sts = errno_Status(errno);
-    }
-  }
-
-  return TRUE;
+#endif
+  return 0;
 }
 
 pwr_tStatus qos_SignalQue(pwr_tStatus* status, qdb_sQue* qp)
 {
   pwr_dStatus(sts, status, QCOM__SUCCESS);
 
+#if !defined(OS_MACOS) && !defined(OS_FREEBSD) && !defined(OS_OPENBSD)
   qdb_AssumeLocked;
 
   pthread_mutex_lock(&qp->lock.mutex);
+#endif
 
   qp->lock.waiting = FALSE;
 
+#if !defined(OS_MACOS) && !defined(OS_FREEBSD) && !defined(OS_OPENBSD)
   pthread_cond_signal(&qp->lock.cond);
 
   pthread_mutex_unlock(&qp->lock.mutex);
+#endif
 
   return TRUE;
 }

@@ -207,7 +207,6 @@ public:
 
   void set_image_clip_mask(
       QPainter* painter, flow_tPixmap pixmap, int x, int y);
-  void reset_image_clip_mask();
 
   void set_white_background(FlowCtx* ctx);
 

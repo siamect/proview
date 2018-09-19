@@ -167,8 +167,8 @@ public:
   {
     return blk_displayed;
   }
-  int get_alarm_info(evlist_sAlarmInfo* info);
-  void ack_last_prio(unsigned long type, unsigned long prio);
+  int get_alarm_info(evlist_sAlarmInfo* info, int backward, int alarmsize);
+  void ack_last_prio(unsigned long type, unsigned long prio, int backward, int timecheck);
   void ack_all();
   int get_last_not_acked_prio(
       mh_sEventId** id, unsigned long type, unsigned long prio);

@@ -82,7 +82,6 @@ typedef struct {
 
 pwr_tStatus proc_Load(proc_sProcess*);
 pwr_tStatus proc_Start(proc_sProcess*);
-pwr_tStatus proc_SetPriority(int);
 pwr_tStatus proc_UnloadProgram(proc_sProcess*);
 
 pwr_tStatus proc_RegisterObject(pwr_tOid);

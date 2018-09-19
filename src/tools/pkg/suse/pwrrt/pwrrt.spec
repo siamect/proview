@@ -203,8 +203,6 @@ chmod u+s /usr/pwrrt/exe/rt_rtt
 chmod u+s /usr/pwrrt/exe/rt_bck
 chown root /usr/pwrrt/exe/rs_remote_alcm
 chmod u+s /usr/pwrrt/exe/rs_remote_alcm
-chown root /usr/pwrrt/exe/rt_prio
-chmod u+s /usr/pwrrt/exe/rt_prio
 chown root /usr/pwrrt/exe/rt_mozilla
 chmod u+s /usr/pwrrt/exe/rt_mozilla
 

@@ -121,5 +121,27 @@ SObject pwrb:Type
        Attr Value = 64
      EndBody
     EndObject
+    !/**
+    !  Show the oldest not acknowledged alarm in the operator window.
+    !  Otherwise the most recent not acknowledged alarm is shown.
+    !*/
+    Object ShowOldestNotAckedAlarm $Bit
+     Body SysBody
+       Attr PgmName = "ShowOldestNotAckedAlarm"
+       Attr Text = "ShowOldestNotAckedAlarm"
+       Attr Value = 128
+     EndBody
+    EndObject
+    !/**
+    !  Check that an alarm has been visible in the operator window
+    !  for some time before it can be acknowledged.
+    !*/
+    Object CheckAckAlarmTime $Bit
+     Body SysBody
+       Attr PgmName = "CheckAckAlarmTime"
+       Attr Text = "CheckAckAlarmTime"
+       Attr Value = 256
+     EndBody
+    EndObject
   EndObject
 EndSObject

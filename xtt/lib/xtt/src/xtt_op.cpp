@@ -134,14 +134,20 @@ void Op::activate_exit()
 
 void Op::activate_aalarm_ack()
 {
+  int backward = layout_mask & pwr_mOpWindLayoutMask_ShowOldestNotAckedAlarm ? 1 : 0;
+  int timecheck = layout_mask & pwr_mOpWindLayoutMask_CheckAckAlarmTime ? 1 : 0;
+
   if (ack_last_cb)
-    (ack_last_cb)(parent_ctx, evlist_eEventType_Alarm, mh_eEventPrio_A);
+    (ack_last_cb)(parent_ctx, evlist_eEventType_Alarm, mh_eEventPrio_A, backward, timecheck);
 }
 
 void Op::activate_balarm_ack()
 {
+  int backward = layout_mask & pwr_mOpWindLayoutMask_ShowOldestNotAckedAlarm ? 1 : 0;
+  int timecheck = layout_mask & pwr_mOpWindLayoutMask_CheckAckAlarmTime ? 1 : 0;
+
   if (ack_last_cb)
-    (ack_last_cb)(parent_ctx, balarm_type, balarm_prio);
+    (ack_last_cb)(parent_ctx, balarm_type, balarm_prio, backward, timecheck);
 }
 
 void Op::activate_alarmlist()

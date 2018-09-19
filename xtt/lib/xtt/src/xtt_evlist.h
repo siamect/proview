@@ -245,9 +245,9 @@ public:
   void set_display_hundredth(int value);
   void set_hide_object(int value);
   void set_hide_text(int value);
-  int get_alarm_info(evlist_sAlarmInfo* info);
-  int get_last_not_acked_prio(
-      mh_sEventId** id, unsigned long type, unsigned long prio);
+  int get_alarm_info(evlist_sAlarmInfo* info, int backward, int alarmsize);
+  int get_last_not_acked_prio(mh_sEventId** id, unsigned long type, 
+			      unsigned long prio, int backward, int timecheck);
   int get_selected_event(char* eventname, ItemAlarm** item);
   int get_destination(pwr_tTime time, void** dest);
   void block_remove();
@@ -304,6 +304,7 @@ public:
   pwr_tText256 eventmoretext;
   pwr_tAttrRef supobject;
   int check;
+  pwr_tTime display_time;
 
   void update_text(int tree_node);
 };

@@ -69,7 +69,6 @@ typedef struct {
   unsigned int bfb_item;
   pwr_tFloat32 OldValue[IO_MAXCHAN];
   pwr_tBoolean OldTestOn[IO_MAXCHAN];
-  int WriteFirst;
   unsigned int ErrReset;
   unsigned int ErrScanCnt;
   int FirstScan;
@@ -139,8 +138,6 @@ static pwr_tStatus IoCardInit(
 
   errh_Info("Init of ao card '%s'", cp->Name);
 
-  /* Write the first 50 loops */
-  local->WriteFirst = 50;
   cp->Local = local;
 
   /* Caluclate polycoeff */
@@ -254,79 +251,74 @@ static pwr_tStatus IoCardWrite(
     }
 
     /* Convert and write */
-    if (!feqf(*(pwr_tFloat32*)chanp->vbp, local->OldValue[i])
-        || local->WriteFirst > 0 || cop->CalculateNewCoef || fixout
-        || cop->TestOn || local->OldTestOn[i] != cop->TestOn) {
-      if (fixout)
-        value = cop->FixedOutValue;
-      else if (cop->TestOn)
-        value = cop->TestValue;
-      else
-        value = *(pwr_tFloat32*)chanp->vbp;
+    if (fixout)
+      value = cop->FixedOutValue;
+    else if (cop->TestOn)
+      value = cop->TestValue;
+    else
+      value = *(pwr_tFloat32*)chanp->vbp;
 
-      if (cop->CalculateNewCoef)
-        AoRangeToCoef(chanp);
+    if (cop->CalculateNewCoef)
+      AoRangeToCoef(chanp);
 
-      /* Convert to rawvalue */
-      if (value > cop->ActValRangeHigh)
-        value = cop->ActValRangeHigh;
-      else if (value < cop->ActValRangeLow)
-        value = cop->ActValRangeLow;
+    /* Convert to rawvalue */
+    if (value > cop->ActValRangeHigh)
+      value = cop->ActValRangeHigh;
+    else if (value < cop->ActValRangeLow)
+      value = cop->ActValRangeLow;
 
-      rawvalue = cop->OutPolyCoef1 * value + cop->OutPolyCoef0;
-      if (rawvalue > 0)
-        sop->RawValue = rawvalue + 0.5;
-      else
-        sop->RawValue = rawvalue - 0.5;
-      data = sop->RawValue;
+    rawvalue = cop->OutPolyCoef1 * value + cop->OutPolyCoef0;
+    if (rawvalue > 0)
+      sop->RawValue = rawvalue + 0.5;
+    else
+      sop->RawValue = rawvalue - 0.5;
+    data = sop->RawValue;
 
-      if (!remote) {
-        wb.Data = data;
-        wb.Address = local->Address + 2 * i;
-        sts = write(local->Qbus_fp, &wb, sizeof(wb));
-      } else {
-        /* Ethernet I/O, Request a write to current address */
-        bfbeth_set_write_req(
-            r_local, (pwr_tUInt16)(local->Address + 2 * i), data);
-        local->CheckWrite[i] = 1;
+    if (!remote) {
+      wb.Data = data;
+      wb.Address = local->Address + 2 * i;
+      sts = write(local->Qbus_fp, &wb, sizeof(wb));
+    } else {
+      /* Ethernet I/O, Request a write to current address */
+      bfbeth_set_write_req(
+			   r_local, (pwr_tUInt16)(local->Address + 2 * i), data);
+      local->CheckWrite[i] = 1;
 
-        if (sts == 1) {
-          op->ErrorCount = 0;
-          local->OldValue[i] = value;
-          local->OldTestOn[i] = cop->TestOn;
-        }
-        chanp++;
-        continue;
+      if (sts == 1) {
+	op->ErrorCount = 0;
+	local->OldValue[i] = value;
+	local->OldTestOn[i] = cop->TestOn;
       }
-
-      /* Error handling for local rack */
-      if (sts == -1) {
-        /* Increase error count and check error limits */
-        op->ErrorCount++;
-
-        if (op->ErrorCount == op->ErrorSoftLimit) {
-          errh_Error("IO Error soft limit reached on card '%s'", cp->Name);
-          ctx->IOHandler->CardErrorSoftLimit = 1;
-          ctx->IOHandler->ErrorSoftLimitObject = cdh_ObjidToAref(cp->Objid);
-        }
-        if (op->ErrorCount >= op->ErrorHardLimit) {
-          errh_Error(
-              "IO Error hard limit reached on card '%s', IO stopped", cp->Name);
-          ctx->Node->EmergBreakTrue = 1;
-          ctx->IOHandler->CardErrorHardLimit = 1;
-          ctx->IOHandler->ErrorHardLimitObject = cdh_ObjidToAref(cp->Objid);
-          return IO__ERRDEVICE;
-        }
-        chanp++;
-        continue;
-      } else
-        local->OldValue[i] = value;
+      chanp++;
+      continue;
     }
+
+    /* Error handling for local rack */
+    if (sts == -1) {
+      /* Increase error count and check error limits */
+      op->ErrorCount++;
+
+      if (op->ErrorCount == op->ErrorSoftLimit) {
+	errh_Error("IO Error soft limit reached on card '%s'", cp->Name);
+	ctx->IOHandler->CardErrorSoftLimit = 1;
+	ctx->IOHandler->ErrorSoftLimitObject = cdh_ObjidToAref(cp->Objid);
+      }
+      if (op->ErrorCount >= op->ErrorHardLimit) {
+	errh_Error(
+		   "IO Error hard limit reached on card '%s', IO stopped", cp->Name);
+	ctx->Node->EmergBreakTrue = 1;
+	ctx->IOHandler->CardErrorHardLimit = 1;
+	ctx->IOHandler->ErrorHardLimitObject = cdh_ObjidToAref(cp->Objid);
+	return IO__ERRDEVICE;
+      }
+      chanp++;
+      continue;
+    } else
+      local->OldValue[i] = value;
+
     local->OldTestOn[i] = cop->TestOn;
     chanp++;
   }
-  if (local->WriteFirst)
-    local->WriteFirst--;
   if (local->FirstScan)
     local->FirstScan = 0;
 

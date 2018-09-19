@@ -64,7 +64,6 @@ public:
   void beep();
 
 private:
-  NodelistNav* nodelistnav;
   NodelistNavQtTraceObject* trace_obj;
 };
 

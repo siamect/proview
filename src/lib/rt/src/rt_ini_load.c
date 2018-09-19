@@ -1697,11 +1697,14 @@ void ini_ProcPrio(pwr_tStatus* status, ini_sContext* cp, ini_sProc* pp)
 
   if (pp->flags.b.run) {
 #if defined(OS_LINUX)
-    char set[100];
-
     if (!(pp->flags.b.plc)) {
-      sprintf(set, "rt_prio -rp %d %d", pp->proc.p_prio, pp->proc.pid);
-      system(set);
+      struct sched_param sp;
+      sp.sched_priority = pp->proc.p_prio;
+      if (sched_setscheduler(pp->proc.pid, SCHED_RR, &sp) == -1) {
+        perror("sched_setscheduler");
+        fprintf(stderr, "failed to set pid %d's policy\n", pp->proc.pid);
+        return;
+      }
     }
 #endif
   }

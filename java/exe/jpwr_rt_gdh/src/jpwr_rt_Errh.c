@@ -51,6 +51,7 @@ JNIEXPORT jint JNICALL Java_jpwr_rt_Errh_init
   name = (*env)->GetStringUTFChars( env, jname, 0);
   cstr = (char *)name;
 
+  printf( "Init errh %s %d", cstr, anix);
   sts = errh_Init( cstr, anix);
   (*env)->ReleaseStringUTFChars( env, jname, cstr);
 

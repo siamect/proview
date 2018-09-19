@@ -53,7 +53,6 @@ public:
   QWidget* brow_widget;
   QWidget* form_widget;
   QLabel* msg_label;
-  QWidget* wpkgnav_form;
   CoWowFocusTimerQt focustimer;
 
   void message(char severity, const char* message);

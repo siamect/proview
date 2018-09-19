@@ -1001,6 +1001,8 @@ sub build_module ()
       _build("lib", "co", "src", "copy");
       _build("lib", "dtt", "src", "init");
       _build("lib", "dtt", "src", "copy");
+      _build("lib", "msg_dummy", "src", "init");
+      _build("lib", "msg_dummy", "src", "copy");
       _build("lib", "statussrv", "src", "init");
       _build("lib", "statussrv", "src", "copy");
       _build("lib", "co", "src", "all");
@@ -1460,8 +1462,8 @@ sub _build () # args: branch, subbranch, flavour, phase
           if ($hw eq "x86" && $real_hw eq "x86_64") {
             $ENV{"cross_compile"} = "-m32";
           }
-          if ($branch eq "lib" || $branch eq "wbl" || ($branch eq "exe" && $flavour ne "src")) {
-            # All libraries and GUI-exe files can be compiled in parallel
+          if (($branch eq "lib" && $subbranch ne "dtt") || $branch eq "wbl") {
+            # All libraries and wbl files can be compiled in parallel
             system("make -j @_") && exit 1;
           } else {
             system("make @_") && exit 1;

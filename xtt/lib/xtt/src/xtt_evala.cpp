@@ -245,7 +245,7 @@ void EvAla::ack_last_prio(unsigned long type, unsigned long prio)
              parent_ctx, pwr_mAccess_RtEventsAck | pwr_mAccess_System))
     return;
 
-  sts = ala->get_last_not_acked_prio(&id, type, prio);
+  sts = ala->get_last_not_acked_prio(&id, type, prio, 0, 0);
   if (ODD(sts)) {
     mh_sEventId lid = *id;
 
@@ -277,7 +277,7 @@ void EvAla::ack_all()
 int EvAla::get_last_not_acked_prio(
     mh_sEventId** id, unsigned long type, unsigned long prio)
 {
-  return ala->get_last_not_acked_prio(id, type, prio);
+  return ala->get_last_not_acked_prio(id, type, prio, 0, 0);
 }
 
 pwr_tStatus EvAla::mh_ack(mh_sAck* MsgP)

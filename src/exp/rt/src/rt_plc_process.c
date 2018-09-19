@@ -174,7 +174,6 @@ int main(int argc, char* argv[])
   qcom_WaitAnd(
       &sts, &pp->eventQ, &qcom_cQini, ini_mEvent_newPlcStart, qcom_cTmoEternal);
 
-  //  proc_SetPriority(pp->PlcProcess->Prio);
   set_values(pp);
   start_threads(pp);
   run_threads(pp);
