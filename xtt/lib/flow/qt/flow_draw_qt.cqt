@@ -741,6 +741,7 @@ int FlowDrawQt::event_handler(QEvent* event, QWidget* target)
       } else if (wheelEvent->delta() < 0) {
         sts = basectx->event_handler(flow_eEvent_ScrollDown, 0, 0, 0, 0);
       }
+      basectx->clear(); // For some reason, flow does not redraw after scrolling
       break;
     }
     default:

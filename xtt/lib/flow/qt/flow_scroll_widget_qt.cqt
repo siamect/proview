@@ -86,10 +86,13 @@ QWidget* QtScrollWidgetFlow::initScroll(unsigned int eCtxType,
   QScrollArea* form = new QScrollArea();
   scroll_h = form->horizontalScrollBar();
   scroll_v = form->verticalScrollBar();
+  /*
+  TODO: this callback resets the scrollbar to 0.
   QObject::connect(
       scroll_h, SIGNAL(valueChanged(int)), this, SLOT(scroll_h_action(int)));
   QObject::connect(
       scroll_v, SIGNAL(valueChanged(int)), this, SLOT(scroll_v_action(int)));
+  */
 
   form->setWidget(this);
   form->setWidgetResizable(true);
@@ -162,28 +165,28 @@ void QtScrollWidgetFlow::scroll_callback_cb()
 
   if (scroll_data->scroll_h_managed) {
     scroll_h_ignore = 1;
-    scroll_h_value = (double)data->offset_x;
-    scroll_h_pagesize = data->window_width;
-    scroll_h_upper = data->total_width;
     if (data->window_width != scroll_h_pagesize
         || data->total_width != scroll_h_upper || scroll_configure) {
-      scroll_data->scroll_h->setMaximum(scroll_h_upper);
-      scroll_data->scroll_h->setPageStep(scroll_h_pagesize);
+      scroll_data->scroll_h->setMaximum(data->total_width);
+      scroll_data->scroll_h->setPageStep(data->window_width);
     }
-    scroll_data->scroll_h->setSliderPosition(scroll_h_value);
+    scroll_data->scroll_h->setSliderPosition(data->offset_x);
+    scroll_h_value = data->offset_x;
+    scroll_h_pagesize = data->window_width;
+    scroll_h_upper = data->total_width;
   }
 
   if (scroll_data->scroll_v_managed) {
     scroll_v_ignore = 1;
-    scroll_v_value = (double)data->offset_y;
-    scroll_v_pagesize = data->window_height;
-    scroll_v_upper = data->total_height;
     if (data->window_height != scroll_v_pagesize
         || data->total_height != scroll_v_upper || scroll_configure) {
-      scroll_data->scroll_v->setMaximum(scroll_v_upper);
-      scroll_data->scroll_v->setPageStep(scroll_v_pagesize);
+      scroll_data->scroll_v->setMaximum(data->total_height);
+      scroll_data->scroll_v->setPageStep(data->window_height);
     }
-    scroll_data->scroll_v->setSliderPosition(scroll_v_value);
+    scroll_data->scroll_v->setSliderPosition(data->offset_y);
+    scroll_v_value = data->offset_y;
+    scroll_v_pagesize = data->window_height;
+    scroll_v_upper = data->total_height;
   }
   scroll_configure = 0;
 }
