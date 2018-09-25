@@ -623,6 +623,7 @@ int FlowDrawQt::event_handler(QEvent* event, QWidget* target)
     case QEvent::Paint:
     case QEvent::UpdateRequest: {
       QPaintEvent* paintEvent = ((QPaintEvent*)event);
+      basectx->clear();
       sts = basectx->event_handler(flow_eEvent_Exposure, paintEvent->rect().x(),
           paintEvent->rect().y(), paintEvent->rect().width(),
           paintEvent->rect().height());
