@@ -71,6 +71,11 @@ void QtScrollWidgetFlow::init(unsigned int eCtxType,
   this->scroll_timerid = new QTimer(this);
 }
 
+bool QtScrollWidgetFlow::eventFilter(QObject *object, QEvent *event)
+{
+  return (event->type() == QEvent::KeyPress);
+}
+
 QWidget* QtScrollWidgetFlow::initScroll(unsigned int eCtxType,
     int (*init_proc)(FlowCtx* ctx, void* client_data), void* client_data,
     int (*init_proc2)(QWidget* w, FlowCtx* ctx, void* client_data))
@@ -83,16 +88,22 @@ QWidget* QtScrollWidgetFlow::initScroll(unsigned int eCtxType,
   this->init_widget_proc = init_proc2;
   this->client_data = client_data;
   this->scroll_timerid = new QTimer(this);
-  QScrollArea* form = new QScrollArea();
+  form = new QScrollArea();
+  form->installEventFilter(this);
   scroll_h = form->horizontalScrollBar();
   scroll_v = form->verticalScrollBar();
-  /*
-  TODO: this callback resets the scrollbar to 0.
+  scroll_h->setTracking(false);
+  scroll_v->setTracking(false);
   QObject::connect(
-      scroll_h, SIGNAL(valueChanged(int)), this, SLOT(scroll_h_action(int)));
+      scroll_h, SIGNAL(sliderMoved(int)), this, SLOT(scroll_h_action(int)));
   QObject::connect(
-      scroll_v, SIGNAL(valueChanged(int)), this, SLOT(scroll_v_action(int)));
-  */
+      scroll_v, SIGNAL(sliderMoved(int)), this, SLOT(scroll_v_action(int)));
+
+  // These are needed to prevent QT from scrolling the ScrollArea.
+  QObject::connect(
+      scroll_h, SIGNAL(valueChanged(int)), this, SLOT(scroll_h_released(int)));
+  QObject::connect(
+      scroll_v, SIGNAL(valueChanged(int)), this, SLOT(scroll_v_released(int)));
 
   form->setWidget(this);
   form->setWidgetResizable(true);
@@ -117,31 +128,28 @@ void QtScrollWidgetFlow::scroll_callback_cb()
 
   scroll_timerid->stop();
 
-  if (data->total_width <= data->window_width) {
-    if (data->offset_x == 0) {
-      data->total_width = data->window_width;
-    }
+  if (data->offset_x == 0 && data->total_width <= data->window_width) {
+    data->total_width = data->window_width;
     if (scroll_data->scroll_h_managed) {
-      // Remove horizontal scrollbar
+      form->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     }
   } else {
-    if (!scroll_data->scroll_h_managed) {
-      // Insert horizontal scrollbar
+    if (scroll_data->scroll_h_managed) {
+      form->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     }
   }
 
-  if (data->total_height <= data->window_height) {
-    if (data->offset_y == 0) {
-      data->total_height = data->window_height;
-    }
+  if (data->offset_y == 0 && data->total_height <= data->window_height) {
+    data->total_height = data->window_height;
     if (scroll_data->scroll_v_managed) {
-      // Remove vertical scrollbar
+      form->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     }
   } else {
-    if (!scroll_data->scroll_v_managed) {
-      // Insert vertical scrollbar
+    if (scroll_data->scroll_v_managed) {
+      form->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     }
   }
+
   if (data->offset_x < 0) {
     data->total_width += -data->offset_x;
     data->offset_x = 0;
@@ -164,55 +172,49 @@ void QtScrollWidgetFlow::scroll_callback_cb()
   }
 
   if (scroll_data->scroll_h_managed) {
-    scroll_h_ignore = 1;
-    if (data->window_width != scroll_h_pagesize
-        || data->total_width != scroll_h_upper || scroll_configure) {
-      scroll_data->scroll_h->setMaximum(data->total_width);
-      scroll_data->scroll_h->setPageStep(data->window_width);
+    if (data->window_width != scroll_h->pageStep()
+        || data->total_width != scroll_h->maximum() || scroll_configure) {
+      scroll_h->setMaximum(data->total_width - data->window_width);
+      scroll_h->setPageStep(data->window_width);
     }
-    scroll_data->scroll_h->setSliderPosition(data->offset_x);
-    scroll_h_value = data->offset_x;
-    scroll_h_pagesize = data->window_width;
-    scroll_h_upper = data->total_width;
+    scroll_h->setSliderPosition(data->offset_x);
   }
 
   if (scroll_data->scroll_v_managed) {
-    scroll_v_ignore = 1;
-    if (data->window_height != scroll_v_pagesize
-        || data->total_height != scroll_v_upper || scroll_configure) {
-      scroll_data->scroll_v->setMaximum(data->total_height);
-      scroll_data->scroll_v->setPageStep(data->window_height);
+    if (data->window_height != scroll_v->pageStep()
+        || data->total_height != scroll_v->maximum() || scroll_configure) {
+      scroll_v->setMaximum(data->total_height - data->window_height);
+      scroll_v->setPageStep(data->window_height);
     }
-    scroll_data->scroll_v->setSliderPosition(data->offset_y);
-    scroll_v_value = data->offset_y;
-    scroll_v_pagesize = data->window_height;
-    scroll_v_upper = data->total_height;
+    scroll_v->setSliderPosition(data->offset_y);
   }
   scroll_configure = 0;
 }
 
 void QtScrollWidgetFlow::scroll_h_action(int value)
 {
-  if (scroll_h_ignore) {
-    scroll_h_ignore = 0;
-    return;
-  }
-
-  scroll_h_value = value;
   FlowCtx* ctx = (FlowCtx*)parent_ctx;
   flow_scroll_horizontal(ctx, value, 0);
 }
 
+void QtScrollWidgetFlow::scroll_h_released(int value)
+{
+  // Prevent QT from scrolling the ScrollArea by setting the value to 0.
+  scroll_h->setValue(0);
+  scroll_h->setSliderPosition(value);
+}
+
 void QtScrollWidgetFlow::scroll_v_action(int value)
 {
-  if (scroll_v_ignore) {
-    scroll_v_ignore = 0;
-    return;
-  }
-
-  scroll_v_value = value;
   FlowCtx* ctx = (FlowCtx*)parent_ctx;
   flow_scroll_vertical(ctx, value, 0);
+}
+
+void QtScrollWidgetFlow::scroll_v_released(int value)
+{
+  // Prevent QT from scrolling the ScrollArea by setting the value to 0.
+  scroll_v->setValue(0);
+  scroll_v->setSliderPosition(value);
 }
 
 void QtScrollWidgetFlow::paintEvent(QPaintEvent* event)
