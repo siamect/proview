@@ -44,7 +44,6 @@
 #include "cow_xhelpnav_gtk.h"
 
 #include "flow_browwidget_gtk.h"
-#include "flow_utils.h"
 
 extern "C" {
 #include "co_api.h"

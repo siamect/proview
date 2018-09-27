@@ -44,8 +44,6 @@
 
 #include "cow_xhelpnav.h"
 
-#include "flow_utils.h"
-
 #include "xnav_bitmap_morehelp8.h"
 #include "xnav_bitmap_morehelp10.h"
 #include "xnav_bitmap_morehelp12.h"
@@ -1399,8 +1397,7 @@ int CoXHelpNav::help_index(
 
   brow_GetObjectList(brow->ctx, &object_list, &object_cnt);
 
-  flow_qsort(
-      &object_list[2], object_cnt - 2, sizeof(object_list[0]), help_cmp_items);
+  qsort(&object_list[2], object_cnt - 2, sizeof(object_list[0]), help_cmp_items);
 
   brow_ResetNodraw(brow->ctx);
   brow_Redraw(brow->ctx, 0);

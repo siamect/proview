@@ -44,7 +44,6 @@
 #include "glow_conpoint.h"
 #include "glow_draw.h"
 #include "glow_text.h"
-#include "glow_utils.h"
 #include "glow_growgroup.h"
 #include "glow_growconglue.h"
 #include "glow_msg.h"
@@ -119,12 +118,12 @@ GlowCon::GlowCon( GrowCtx *glow_ctx, const char *name, GlowConClass *con_class,
 	GlowNode *source, GlowNode *dest, int source_cp, int dest_cp) :
 	ctx(glow_ctx), cc(con_class),
 	source_node(source), dest_node(dest), source_conpoint(source_cp),
-	dest_conpoint(dest_cp), p_num(0), l_num(0), a_num(0), line_a(10,10), 
+	dest_conpoint(dest_cp), p_num(0), l_num(0), a_num(0), line_a(10,10),
         arc_a(10,10), hot(0), highlight(0), arrow_num(0), arrow_a(1,1),
 	ref_num(0), ref_a(4,4), temporary_ref(0), trace_p(NULL), border(0), shadow(0)
 {
   double x1, y1, x2, y2;
-  GlowLine *l1;  
+  GlowLine *l1;
 
   if ( !cc)
     return;
@@ -2078,33 +2077,33 @@ int GlowCon::sort_lines(double dest_x, double dest_y, glow_eDirection dest_dir,
   sort_dest = dest_node;
   if (dest_dir == glow_eDirection_Right && src_dir == glow_eDirection_Left
       && src_x > dest_x) {
-    glow_qsort(vert_line, vert_line_cnt, sizeof(vert_line[0]), con_cmp_v1);
-    glow_qsort(horiz_line, horiz_line_cnt, sizeof(horiz_line[0]), con_cmp_h1);
+    qsort(vert_line, vert_line_cnt, sizeof(vert_line[0]), con_cmp_v1);
+    qsort(horiz_line, horiz_line_cnt, sizeof(horiz_line[0]), con_cmp_h1);
     ideal_line_cnt = 3;
   } else if (dest_dir == glow_eDirection_Right
       && src_dir == glow_eDirection_Left && src_x <= dest_x) {
-    glow_qsort(vert_line, vert_line_cnt, sizeof(vert_line[0]), con_cmp_v1);
-    glow_qsort(horiz_line, horiz_line_cnt, sizeof(horiz_line[0]), con_cmp_h3);
+    qsort(vert_line, vert_line_cnt, sizeof(vert_line[0]), con_cmp_v1);
+    qsort(horiz_line, horiz_line_cnt, sizeof(horiz_line[0]), con_cmp_h3);
     ideal_line_cnt = 5;
   } else if (dest_dir == glow_eDirection_Left
       && src_dir == glow_eDirection_Right && src_x < dest_x) {
-    glow_qsort(vert_line, vert_line_cnt, sizeof(vert_line[0]), con_cmp_v2);
-    glow_qsort(horiz_line, horiz_line_cnt, sizeof(horiz_line[0]), con_cmp_h1);
+    qsort(vert_line, vert_line_cnt, sizeof(vert_line[0]), con_cmp_v2);
+    qsort(horiz_line, horiz_line_cnt, sizeof(horiz_line[0]), con_cmp_h1);
     ideal_line_cnt = 3;
   } else if (dest_dir == glow_eDirection_Left
       && src_dir == glow_eDirection_Right && src_x > dest_x) {
-    glow_qsort(vert_line, vert_line_cnt, sizeof(vert_line[0]), con_cmp_v2);
-    glow_qsort(horiz_line, horiz_line_cnt, sizeof(horiz_line[0]), con_cmp_h2);
+    qsort(vert_line, vert_line_cnt, sizeof(vert_line[0]), con_cmp_v2);
+    qsort(horiz_line, horiz_line_cnt, sizeof(horiz_line[0]), con_cmp_h2);
     ideal_line_cnt = 5;
   } else if (dest_dir == glow_eDirection_Right
       && src_dir == glow_eDirection_Right) {
-    glow_qsort(vert_line, vert_line_cnt, sizeof(vert_line[0]), con_cmp_v1);
-    glow_qsort(horiz_line, horiz_line_cnt, sizeof(horiz_line[0]), con_cmp_h1);
+    qsort(vert_line, vert_line_cnt, sizeof(vert_line[0]), con_cmp_v1);
+    qsort(horiz_line, horiz_line_cnt, sizeof(horiz_line[0]), con_cmp_h1);
     ideal_line_cnt = 3;
   } else if (dest_dir == glow_eDirection_Left
       && src_dir == glow_eDirection_Left) {
-    glow_qsort(vert_line, vert_line_cnt, sizeof(vert_line[0]), con_cmp_v2);
-    glow_qsort(horiz_line, horiz_line_cnt, sizeof(horiz_line[0]), con_cmp_h1);
+    qsort(vert_line, vert_line_cnt, sizeof(vert_line[0]), con_cmp_v2);
+    qsort(horiz_line, horiz_line_cnt, sizeof(horiz_line[0]), con_cmp_h1);
     ideal_line_cnt = 3;
   }
 

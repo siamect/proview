@@ -47,8 +47,6 @@
 #include "co_dcli_msg.h"
 #include "co_string.h"
 
-#include "flow_utils.h"
-
 #include "xtt_item.h"
 #include "xtt_trace.h"
 #include "xtt_xnav_crr.h"
@@ -182,7 +180,7 @@ int XNav::help_index(navh_eHelpFile file_type, char* file_name, int pop)
   sts = navhelp->help_index(file_type, file_name);
 
   brow_GetObjectList(brow->ctx, &object_list, &object_cnt);
-  flow_qsort(
+  qsort(
       &object_list[2], object_cnt - 2, sizeof(object_list[0]), help_cmp_items);
 
   brow_ResetNodraw(brow->ctx);

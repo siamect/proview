@@ -36,6 +36,8 @@
 
 #include <stdlib.h>
 
+#include <algorithm>
+
 #include "pwr_baseclasses.h"
 
 #include "co_cdh.h"
@@ -309,17 +311,9 @@ public:
   pwr_tFileName name;
 };
 
-void subpalette_sort(std::vector<LocalFile>& fvect)
+int subpalette_cmp(LocalFile p1, LocalFile p2)
 {
-  for (int i = fvect.size() - 1; i > 0; i--) {
-    for (int j = 0; j < i; j++) {
-      if (strcmp(fvect[i].name, fvect[j].name) < 0) {
-        LocalFile tmp = fvect[i];
-        fvect[i] = fvect[j];
-        fvect[j] = tmp;
-      }
-    }
-  }
+  return strcmp(p1.name, p2.name);
 }
 
 //
@@ -1386,7 +1380,7 @@ int ItemLocalSubGraphs::open_children(
       dcli_search_file(fname, found_file, DCLI_DIR_SEARCH_END);
     }
 
-    subpalette_sort(fvect);
+    std::sort(fvect.begin(), fvect.end(), subpalette_cmp);
 
     for (i = 0; i < (int)fvect.size(); i++) {
       dcli_parse_filename(fvect[i].name, dev, dir, file, type, &version);
