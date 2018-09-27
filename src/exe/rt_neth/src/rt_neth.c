@@ -1225,7 +1225,6 @@ static void classList(qcom_sGet* get)
   int i;
   pwr_tOid oid;
   int listcnt;
-  array_tCtx arr;
   pwr_tAttrRef aref;
 
   gdb_ScopeLock
@@ -1239,14 +1238,14 @@ static void classList(qcom_sGet* get)
         cdh_NodeIdToString(NULL, np->nid, 0, 0));
   }
 
-  array_Init(&arr, sizeof(pwr_tAttrRef), 20);
+  array_tCtx arr = array_New(sizeof(pwr_tAttrRef), 20);
 
   listcnt = 0;
   if (mp->attrobjects) {
     for (i = 0; i < mp->cidcnt; i++) {
       for (sts = gdh_GetClassListAttrRef(mp->cid[i], &aref); ODD(sts);
            sts = gdh_GetNextAttrRef(mp->cid[i], &aref, &aref)) {
-        array_Add(arr, &aref);
+        array_Push(arr, &aref);
         listcnt++;
       }
     }
@@ -1255,7 +1254,7 @@ static void classList(qcom_sGet* get)
       for (sts = gdh_GetClassList(mp->cid[i], &oid); ODD(sts);
            sts = gdh_GetNextObject(oid, &oid)) {
         aref = cdh_ObjidToAref(oid);
-        array_Add(arr, &aref);
+        array_Push(arr, &aref);
         listcnt++;
       }
     }
@@ -1279,10 +1278,10 @@ static void classList(qcom_sGet* get)
     rmp->listcnt = 0;
   } else {
     rmp->listcnt = listcnt;
-    memcpy(rmp->classlist, arr->a, listcnt * sizeof(pwr_tAttrRef));
+    memcpy(rmp->classlist, arr->data, listcnt * sizeof(pwr_tAttrRef));
   }
 
-  array_Close(arr);
+  array_Delete(arr);
 
   net_Reply(&sts, get, &put, 0);
 }
