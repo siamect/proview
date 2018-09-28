@@ -5153,21 +5153,20 @@ pwr_tStatus gdh_GetGlobalClassList(int cidcnt, pwr_tCid* cid, int attrobjects,
   pwr_tStatus sts;
   qcom_sNode mynode, node;
   pwr_tNid nid;
-  array_tCtx arr;
   pwr_tAttrRef* clist;
   int ccnt;
   int i;
   pwr_tObjid oid;
   pwr_tAttrRef aref;
 
-  array_Init(&arr, sizeof(pwr_tAttrRef), 20);
+  array_tCtx arr = array_New(sizeof(pwr_tAttrRef), 20);
 
   /* Add local objects */
   if (attrobjects) {
     for (i = 0; i < cidcnt; i++) {
       for (sts = gdh_GetClassListAttrRef(cid[i], &aref); ODD(sts);
            sts = gdh_GetNextAttrRef(cid[i], &aref, &aref)) {
-        array_Add(arr, &aref);
+        array_Push(arr, &aref);
       }
     }
   } else {
@@ -5175,7 +5174,7 @@ pwr_tStatus gdh_GetGlobalClassList(int cidcnt, pwr_tCid* cid, int attrobjects,
       for (sts = gdh_GetClassList(cid[i], &oid); ODD(sts);
            sts = gdh_GetNextObject(oid, &oid)) {
         aref = cdh_ObjidToAref(oid);
-        array_Add(arr, &aref);
+        array_Push(arr, &aref);
       }
     }
   }
@@ -5189,18 +5188,18 @@ pwr_tStatus gdh_GetGlobalClassList(int cidcnt, pwr_tCid* cid, int attrobjects,
     if (EVEN(sts))
       continue;
 
-    array_MAdd(arr, clist, ccnt);
+    array_Concat(arr, clist, ccnt);
   }
 
-  if (array_Size(arr))
-    *classlist = array_CopyArray(arr);
+  if (arr->size)
+    *classlist = array_Copy(arr);
   else {
     *classlist = 0;
     sts = GDH__NOSUCHOBJ;
   }
-  *listcnt = array_Size(arr);
+  *listcnt = arr->size;
 
-  array_Close(arr);
+  array_Delete(arr);
   return GDH__SUCCESS;
 }
 
@@ -5208,19 +5207,18 @@ pwr_tStatus gdh_GetLocalClassList(int cidcnt, pwr_tCid* cid, int attrobjects,
     pwr_tAttrRef* classlist[], int* listcnt)
 {
   pwr_tStatus sts;
-  array_tCtx arr;
   int i;
   pwr_tObjid oid;
   pwr_tAttrRef aref;
 
-  array_Init(&arr, sizeof(pwr_tAttrRef), 20);
+  array_tCtx arr = array_New(sizeof(pwr_tAttrRef), 20);
 
   /* Add local objects */
   if (attrobjects) {
     for (i = 0; i < cidcnt; i++) {
       for (sts = gdh_GetClassListAttrRef(cid[i], &aref); ODD(sts);
            sts = gdh_GetNextAttrRef(cid[i], &aref, &aref)) {
-        array_Add(arr, &aref);
+        array_Push(arr, &aref);
       }
     }
   } else {
@@ -5228,20 +5226,20 @@ pwr_tStatus gdh_GetLocalClassList(int cidcnt, pwr_tCid* cid, int attrobjects,
       for (sts = gdh_GetClassList(cid[i], &oid); ODD(sts);
            sts = gdh_GetNextObject(oid, &oid)) {
         aref = cdh_ObjidToAref(oid);
-        array_Add(arr, &aref);
+        array_Push(arr, &aref);
       }
     }
   }
 
-  if (array_Size(arr))
-    *classlist = array_CopyArray(arr);
+  if (arr->size)
+    *classlist = array_Copy(arr);
   else {
     *classlist = 0;
     sts = GDH__NOSUCHOBJ;
   }
-  *listcnt = array_Size(arr);
+  *listcnt = arr->size;
 
-  array_Close(arr);
+  array_Delete(arr);
   return GDH__SUCCESS;
 }
 

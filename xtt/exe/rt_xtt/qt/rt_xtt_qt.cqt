@@ -729,6 +729,8 @@ XttQt::XttQt(int argc, char* argv[], int* return_sts)
 
   statusbar->show();
 
+  wow = new CoWowQt(toplevel);
+
   xnav = new XNavQt(this, xnav_form, "Plant", &brow_widget,
       (xnav_sStartMenu*)root_menu, opplace_str, op_close_button, &sts);
   xnav->message_cb = &xtt_message_cb;

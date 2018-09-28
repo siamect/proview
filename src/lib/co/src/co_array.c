@@ -38,90 +38,51 @@
 
 #include "pwr.h"
 #include "co_array.h"
+#include "co_math.h"
 
-int array_Init(array_tCtx* ctx, int elemsize, int alloc_incr)
+array_tCtx array_New(int elemsize, int alloc_incr)
 {
-  *ctx = calloc(1, sizeof(array_sCtx));
-  if (!*ctx)
-    return 0;
-  (*ctx)->elemsize = elemsize;
-  (*ctx)->alloc_incr = alloc_incr;
-  (*ctx)->a = calloc(1, elemsize * alloc_incr);
-  if (!(*ctx)->a)
-    return 0;
-  (*ctx)->allocated = alloc_incr;
-  return 1;
+  array_tCtx arr = calloc(1, sizeof(array_sCtx));
+  if (!arr)
+    return NULL;
+  arr->data = calloc(1, elemsize * alloc_incr);
+  if (!arr->data)
+    return NULL;
+  arr->elemsize = elemsize;
+  arr->alloc_incr = alloc_incr;
+  arr->capacity = alloc_incr;
+  return arr;
 }
 
-void array_Close(array_tCtx ctx)
+void array_Delete(array_tCtx arr)
 {
-  free((char*)ctx->a);
-  free((char*)ctx);
+  free((char*)arr->data);
+  free((char*)arr);
 }
 
-int array_Add(array_tCtx ctx, void* elem)
+int array_Push(array_tCtx arr, void* elem)
 {
-  if (ctx->allocated <= ctx->a_size) {
-    void* a_tmp;
+  return array_Concat(arr, elem, 1);
+}
 
-    ctx->allocated += ctx->alloc_incr;
-    a_tmp = calloc(ctx->allocated, ctx->elemsize);
+int array_Concat(array_tCtx arr, void* elems, int number)
+{
+  if (arr->capacity <= arr->size + number - 1) {
+    void* a_tmp = realloc(arr->data, arr->elemsize * MAX(arr->capacity + arr->alloc_incr, arr->size + number));
     if (!a_tmp)
       return 0;
-    memcpy(a_tmp, ctx->a, ctx->a_size * ctx->elemsize);
-    free((char*)ctx->a);
-    ctx->a = a_tmp;
+    arr->data = a_tmp;
+    arr->capacity = number;
   }
-  memcpy((char*)ctx->a + ctx->a_size * ctx->elemsize, elem, ctx->elemsize);
-  ctx->a_size++;
+  memcpy((char*)arr->data + arr->size * arr->elemsize, elems,
+      arr->elemsize * number);
+  arr->size += number;
   return 1;
 }
 
-int array_MAdd(array_tCtx ctx, void* elem, int elements)
+void* array_Copy(array_tCtx arr)
 {
-  if (ctx->allocated <= ctx->a_size + elements - 1) {
-    void* a_tmp;
-
-    ctx->allocated += ctx->alloc_incr;
-    if (ctx->allocated < ctx->a_size + elements)
-      ctx->allocated = ctx->a_size + elements;
-    a_tmp = calloc(ctx->allocated, ctx->elemsize);
-    if (!a_tmp)
-      return 0;
-    memcpy(a_tmp, ctx->a, ctx->a_size * ctx->elemsize);
-    free((char*)ctx->a);
-    ctx->a = a_tmp;
-  }
-  memcpy((char*)ctx->a + ctx->a_size * ctx->elemsize, elem,
-      ctx->elemsize * elements);
-  ctx->a_size += elements;
-  return 1;
-}
-
-int array_Get(array_tCtx ctx, int idx, void** elem)
-{
-  if (idx >= ctx->a_size)
-    return 0;
-
-  memcpy(elem, (char*)ctx->a + idx * ctx->elemsize, ctx->elemsize);
-  return 1;
-}
-
-int array_Size(array_tCtx ctx)
-{
-  return ctx->a_size;
-}
-
-void* array_Array(array_tCtx ctx)
-{
-  return ctx->a;
-}
-
-void* array_CopyArray(array_tCtx ctx)
-{
-  void* buf;
-
-  buf = malloc(ctx->elemsize * ctx->a_size);
-  memcpy(buf, ctx->a, ctx->a_size * ctx->elemsize);
+  void* buf = malloc(arr->elemsize * arr->size);
+  memcpy(buf, arr->data, arr->size * arr->elemsize);
   return buf;
 }
