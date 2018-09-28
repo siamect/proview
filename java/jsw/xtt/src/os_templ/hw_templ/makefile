@@ -13,7 +13,3 @@ endif
 -include ../../special.mk
 -include ../special.mk
 -include special.mk
-
-copy : $(web_dir)/pwr_logohalf.png
-
-$(web_dir)/pwr_logohalf.png : ../../pwr_logohalf.png

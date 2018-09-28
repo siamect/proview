@@ -246,6 +246,7 @@ copy : \
        $(doc_dir)/en_us/man_exlib_index.html \
        $(doc_dir)/en_us/man_exlib.pdf \
        $(doc_dir)/en_us/man_exlib.ps \
+       $(web_dir)/pwr_logga.png \
        $(mediatargets) $(csstargets) \
        $(export_html) $(export_html_en_us) $(export_html_sv_se) \
        $(doc_dir)/en_us/changelog.html | silent
@@ -464,6 +465,10 @@ $(doc_dir)/en_us/changelog.html : $(pwre_croot)/src/changelog.txt \
 	@ $(co_convert) -e
 	@ mv $(pwre_croot)/src/doc/man/en_us/changelog.html $(target)
 
+$(web_dir)/pwr_logga.png : $(pwre_sroot)/doc/man/src/pwr_logga.png
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
 # implicit rules, docbook-related, added by jonas_h 2006-04-nn
 
 #%.fo :: %.xml
@@ -493,6 +498,8 @@ $(doc_dir)/sv_se/%.css $(doc_dir)/en_us/%.css :: $(pwre_sroot)/doc/man/src/%.css
 $(doc_dir)/% :: $(pwre_sroot)/doc/man/src/%
 	@ echo "copy $(source)"	
 	@ cp $(source) $(target)
+
+
 
 # Rule for creating titlepage xsl templates
 #$(pwre_sroot)/doc/man/src/pwrtitlepages.xsl :: $(pwre_sroot)/doc/man/src/pwrtitlepage.spec.xml
