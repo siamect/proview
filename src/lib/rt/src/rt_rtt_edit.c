@@ -584,11 +584,7 @@ static int save_func(edit_ctx ctx, int flag)
     if (EVEN(rtt_get_qualifier("rtt_arg1", arg1_str))) {
       sts = dtt_edit_save_all(0, nocompile, dtt_opsys);
     } else {
-      if (str_NoCaseStrncmp(arg1_str, "PPC_LYNX", strlen(arg1_str)) == 0)
-        opsys = pwr_mOpSys_PPC_LYNX;
-      else if (str_NoCaseStrncmp(arg1_str, "X86_LYNX", strlen(arg1_str)) == 0)
-        opsys = pwr_mOpSys_X86_LYNX;
-      else if (str_NoCaseStrncmp(arg1_str, "PPC_LINUX", strlen(arg1_str)) == 0)
+      if (str_NoCaseStrncmp(arg1_str, "PPC_LINUX", strlen(arg1_str)) == 0)
         opsys = pwr_mOpSys_PPC_LINUX;
       else if (str_NoCaseStrncmp(arg1_str, "X86_LINUX", strlen(arg1_str)) == 0)
         opsys = pwr_mOpSys_X86_LINUX;
@@ -636,11 +632,7 @@ static int save_func(edit_ctx ctx, int flag)
         sts = dtt_edit_write(ctx, filename, menu_filename, 0, nocompile, 0,
             dtt_opsys, 1, &messages);
       } else {
-        if (str_NoCaseStrncmp(arg1_str, "PPC_LYNX", strlen(arg1_str)) == 0)
-          opsys = pwr_mOpSys_PPC_LYNX;
-        else if (str_NoCaseStrncmp(arg1_str, "X86_LYNX", strlen(arg1_str)) == 0)
-          opsys = pwr_mOpSys_X86_LYNX;
-        else if (str_NoCaseStrncmp(arg1_str, "PPC_LINUX", strlen(arg1_str))
+        if (str_NoCaseStrncmp(arg1_str, "PPC_LINUX", strlen(arg1_str))
             == 0)
           opsys = pwr_mOpSys_PPC_LINUX;
         else if (str_NoCaseStrncmp(arg1_str, "X86_LINUX", strlen(arg1_str))
@@ -732,11 +724,7 @@ static int generate_func(edit_ctx ctx, int flag)
   if (EVEN(rtt_get_qualifier("rtt_arg1", arg1_str))) {
     opsys = dtt_opsys;
   } else {
-    if (str_NoCaseStrncmp(arg1_str, "PPC_LYNX", strlen(arg1_str)) == 0)
-      opsys = pwr_mOpSys_PPC_LYNX;
-    else if (str_NoCaseStrncmp(arg1_str, "X86_LYNX", strlen(arg1_str)) == 0)
-      opsys = pwr_mOpSys_X86_LYNX;
-    else if (str_NoCaseStrncmp(arg1_str, "PPC_LINUX", strlen(arg1_str)) == 0)
+    if (str_NoCaseStrncmp(arg1_str, "PPC_LINUX", strlen(arg1_str)) == 0)
       opsys = pwr_mOpSys_PPC_LINUX;
     else if (str_NoCaseStrncmp(arg1_str, "X86_LINUX", strlen(arg1_str)) == 0)
       opsys = pwr_mOpSys_X86_LINUX;
@@ -1361,11 +1349,7 @@ static int dtt_link_func(edit_ctx ctx, int flag)
       rtt_message('I', msg);
     }
   } else {
-    if (str_NoCaseStrncmp(arg1_str, "PPC_LYNX", strlen(arg1_str)) == 0)
-      opsys = pwr_mOpSys_PPC_LYNX;
-    else if (str_NoCaseStrncmp(arg1_str, "X86_LYNX", strlen(arg1_str)) == 0)
-      opsys = pwr_mOpSys_X86_LYNX;
-    else if (str_NoCaseStrncmp(arg1_str, "PPC_LINUX", strlen(arg1_str)) == 0)
+    if (str_NoCaseStrncmp(arg1_str, "PPC_LINUX", strlen(arg1_str)) == 0)
       opsys = pwr_mOpSys_PPC_LINUX;
     else if (str_NoCaseStrncmp(arg1_str, "X86_LINUX", strlen(arg1_str)) == 0)
       opsys = pwr_mOpSys_X86_LINUX;
@@ -1454,11 +1438,7 @@ static int dtt_compile_func(edit_ctx ctx, int flag)
       rtt_message('I', msg);
     }
   } else {
-    if (str_NoCaseStrncmp(arg1_str, "PPC_LYNX", strlen(arg1_str)) == 0)
-      opsys = pwr_mOpSys_PPC_LYNX;
-    else if (str_NoCaseStrncmp(arg1_str, "X86_LYNX", strlen(arg1_str)) == 0)
-      opsys = pwr_mOpSys_X86_LYNX;
-    else if (str_NoCaseStrncmp(arg1_str, "PPC_LINUX", strlen(arg1_str)) == 0)
+    if (str_NoCaseStrncmp(arg1_str, "PPC_LINUX", strlen(arg1_str)) == 0)
       opsys = pwr_mOpSys_PPC_LINUX;
     else if (str_NoCaseStrncmp(arg1_str, "X86_LINUX", strlen(arg1_str)) == 0)
       opsys = pwr_mOpSys_X86_LINUX;
@@ -1517,23 +1497,17 @@ static int dtt_edit_func(edit_ctx ctx, int flag)
     /* Edit help is default */
 
     sprintf(filename, "%s%s.rhlp", dtt_source_dir, menuname);
-#if defined OS_POSIX
     sprintf(cmd, "vi %s", filename);
-#endif
     system(cmd);
   } else if (str_NoCaseStrncmp(arg1_str, "HELP", strlen(arg1_str)) == 0) {
     /* Edit the help file */
     dtt_get_menufilename(menuname);
     sprintf(filename, "%s%s.rhlp", dtt_source_dir, menuname);
-#if defined OS_POSIX
     sprintf(cmd, "vi %s", filename);
-#endif
     system(cmd);
   } else if (str_NoCaseStrncmp(arg1_str, "FUNCTIONS", strlen(arg1_str)) == 0) {
 /* Edit the function file */
-#if defined OS_POSIX
     sprintf(cmd, "vi %sra_rtt_%s.c", dtt_source_dir, dtt_programname);
-#endif
     system(cmd);
   } else {
     /* syntax error */
@@ -5552,11 +5526,7 @@ static int dtt_edit_save_menues(char* filename, int generate_only)
 
   if (!nocompile) {
 /* Export help file */
-#if defined(OS_LYNX)
-    sprintf(cmd, "cp %s.rhlp %s.rhlp", fname_noext, fnamebld_noext);
-#elif defined OS_POSIX
     sprintf(cmd, "cp -f %s.rhlp %s.rhlp", fname_noext, fnamebld_noext);
-#endif
     system(cmd);
 
     /* Create a c file */
@@ -6211,12 +6181,7 @@ int dtt_start(char* programname)
   dtt_is_rttsys = (str_NoCaseStrcmp(dtt_programname, "RTTSYS") == 0);
 
 /* Figure out the current opsys */
-#if defined(OS_LYNX)
-  if (streq(rtt_hw, "x86"))
-    dtt_current_opsys = pwr_mOpSys_X86_LYNX;
-  else
-    dtt_current_opsys = pwr_mOpSys_PPC_LYNX;
-#elif defined(OS_LINUX)
+#if defined(OS_LINUX)
   if (streq(rtt_hw, "x86"))
     dtt_current_opsys = pwr_mOpSys_X86_LINUX;
   else if (streq(rtt_hw, "x86_64"))
@@ -6241,7 +6206,6 @@ int dtt_start(char* programname)
 #endif
 
 /* Create path for source and build directories */
-#if defined OS_POSIX
   if (dtt_is_rttsys) {
     pwr_tFileName dir;
     char* s1;
@@ -6282,7 +6246,6 @@ int dtt_start(char* programname)
     }
     sprintf(dtt_exe_dir, "%s/", s);
   }
-#endif
 
   dtt_get_menufilename(filename);
   sts = dtt_edit_read_menues(filename);
@@ -6411,10 +6374,8 @@ static int dtt_cc(int opsys, int action, int debug)
 {
   char cmd[100];
 
-#if defined OS_POSIX
   sprintf(cmd, "%s/wb_rtt_appl.sh %s %d %d %d", dtt_exe_dir, dtt_programname,
       action, dtt_is_rttsys, opsys);
-#endif
   system(cmd);
   return RTT__SUCCESS;
 }
@@ -6444,12 +6405,10 @@ static int dtt_compile_picture(char* filename, int opsys)
     rtt_message('I', msg);
     rtt_cursor_abs(0, 21);
     r_print_buffer();
-#if defined OS_POSIX
     sprintf(cmd, "%swb_rtt_comppicture.sh %s %s %d %d", dtt_exe_dir, filename,
         dtt_programname, dtt_is_rttsys, dtt_current_opsys);
 
     system(cmd);
-#endif
   } else {
     for (os = 1; os < pwr_mOpSys_; os = os << 1) {
       if (opsys & os) {
@@ -6457,12 +6416,10 @@ static int dtt_compile_picture(char* filename, int opsys)
         rtt_message('I', msg);
         rtt_cursor_abs(0, 21);
         r_print_buffer();
-#if defined OS_POSIX
         sprintf(cmd, "%swb_rtt_comppicture.sh %s %s %d %d", dtt_exe_dir,
             filename, dtt_programname, dtt_is_rttsys, os);
 
         system(cmd);
-#endif
       }
     }
   }
@@ -8779,25 +8736,17 @@ static int dtt_setup(menu_ctx parent_ctx)
 static void dtt_exit_now(pwr_tStatus exit_sts)
 {
   qio_reset((int*)rtt_chn);
-#if defined OS_POSIX
   /* Returnstatus 0 is OK for UNIX commands */
   if (EVEN(exit_sts))
     exit(exit_sts);
   else
     exit(0);
-#endif
 }
 
 static char* dtt_opsys_to_name(int opsys)
 {
   static char name[20];
   switch (opsys) {
-  case pwr_mOpSys_PPC_LYNX:
-    strcpy(name, "PPC_LYNX");
-    break;
-  case pwr_mOpSys_X86_LYNX:
-    strcpy(name, "X86_LYNX");
-    break;
   case pwr_mOpSys_PPC_LINUX:
     strcpy(name, "PPC_LINUX");
     break;

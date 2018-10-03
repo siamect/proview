@@ -145,7 +145,6 @@ void ini_ProcTable(pwr_tStatus* status, ini_sContext* cp)
       cPrio_fast, 0, pwr_cClass_DsFastConf, "", 0);
   pp->proc.flags.b.system = 1;
 
-#if defined OS_POSIX
   pp = ini_ProcInsert(sts, cp, "pwr_remh", "pwr_remh_%d", 0, 1,
       "rs_remotehandler", cPrio_remh, 0, pwr_cClass_RemoteConfig, "", 0);
   pp->proc.flags.b.system = 1;
@@ -217,7 +216,6 @@ void ini_ProcTable(pwr_tStatus* status, ini_sContext* cp)
   pp = ini_ProcInsert(sts, cp, "pwr_sim", "pwr_sim_%d", 0, 1, "rt_sim",
       cPrio_sim, 0, pwr_cClass_SimulateConfig, "", 0);
   pp->proc.flags.b.system = 1;
-#endif
 
   if (!cp->plcfile_cnt) {
     plc_idx = 0;

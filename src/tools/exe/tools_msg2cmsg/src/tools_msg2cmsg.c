@@ -149,9 +149,7 @@ int main(int argc, char** argv)
   fclose(cfp);
   fclose(hfp);
 
-#if defined OS_POSIX
   exit(EXIT_SUCCESS);
-#endif
 }
 
 /*

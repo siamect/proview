@@ -151,11 +151,7 @@
 #define RTT_K_COMMAND 286
 #define RTT_K_SHIFT_ARROW_RIGHT 287
 #define RTT_K_SHIFT_ARROW_LEFT 288
-#if defined OS_POSIX
 #define RTT_K_RETURN 10
-#else
-#define RTT_K_RETURN 13
-#endif
 #define RTT_K_DELETE 127
 #define RTT_K_BACKSPACE 8
 #define RTT_K_CTRLA 1
@@ -414,9 +410,7 @@ typedef struct {
   void* logg_file;
   char old_value[RTT_LOGG_MAXPAR][8];
   pwr_tTime starttime;
-#if defined OS_POSIX
   pthread_t thread;
-#endif
   int line_size;
   int parameter_count;
   int print_shortname;

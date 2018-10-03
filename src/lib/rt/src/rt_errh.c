@@ -77,7 +77,7 @@ typedef struct {
   } u;
 } sArg;
 
-#if defined OS_LYNX || defined OS_LINUX || defined OS_CYGWIN
+#if defined OS_LINUX || defined OS_CYGWIN
 typedef pid_t sPid;
 
 static mqd_t mqid = (mqd_t)-1;
@@ -107,11 +107,7 @@ static void errh_send(char*, char, pwr_tStatus, errh_eMsgType);
 static void log_message(errh_sLog*, char, const char*, va_list);
 static int msg_vsprintf(char*, const char*, aa_list, va_list);
 
-#if defined OS_POSIX
 static size_t errh_strnlen(const char*, size_t);
-#else
-#define errh_strnlen strnlen
-#endif
 
 static unsigned int do_div(int*, unsigned int);
 static int skip_atoi(const char**);
@@ -501,7 +497,7 @@ static void set_name(const char* name)
 
 static void openLog()
 {
-#if defined OS_LYNX || defined OS_LINUX || defined OS_CYGWIN
+#if defined OS_LINUX || defined OS_CYGWIN
   if (mqid == (mqd_t)-1) {
     char name[64];
     char* busid = getenv(pwr_dEnvBusId);
@@ -549,7 +545,6 @@ static void openLog()
 #endif
 }
 
-#if defined OS_POSIX
 static char* get_name(char* name, int size)
 {
   int len = strlen(UNKNOWN_PROGRAM_NAME);
@@ -566,7 +561,6 @@ static sPid* get_pid(sPid* pid)
 
   return pid;
 }
-#endif
 
 static char* get_header(char severity, char* s)
 {
@@ -589,16 +583,10 @@ static char* get_header(char severity, char* s)
   s += sprintf(s, "%c %-*.*s", severity, (int)sizeof(programName),
       (int)sizeof(programName), programName);
 
-#if defined OS_LYNX
-  localtime_r(&tp, &time.tv_sec);
-  t = &tp;
-  s += sprintf(s, " % 4d,% 4d ", (int)PIDGET(pid), (int)pthread_self());
-#elif defined OS_POSIX
   time_t sec = time.tv_sec;
   localtime_r(&sec, &tp);
   t = &tp;
   s += sprintf(s, " %8d ", pid);
-#endif
 
   s += sprintf(s, "%02d-%02d-%02d %02d:%02d:%02d.%02d ", t->tm_year % 100,
       t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec,
@@ -855,10 +843,8 @@ static int msg_vsprintf(char* buf, const char* fmt, aa_list ap, va_list vap)
   return str - buf;
 }
 
-#if defined OS_POSIX
 /* Different strlen function, returns len OR count,
    whatever comes true first.  */
-
 static size_t errh_strnlen(const char* s, size_t count)
 {
   const char* sc;
@@ -867,7 +853,6 @@ static size_t errh_strnlen(const char* s, size_t count)
     /* nothing */;
   return sc - s;
 }
-#endif
 
 static int skip_atoi(const char** s)
 {
@@ -962,7 +947,7 @@ static char* number(
 static void errh_send(
     char* s, char severity, pwr_tStatus sts, errh_eMsgType message_type)
 {
-#if defined OS_LYNX || defined OS_LINUX || defined OS_CYGWIN
+#if defined OS_LINUX || defined OS_CYGWIN
 
   int len;
   if (mqid != (mqd_t)-1) {

@@ -822,44 +822,25 @@
   Int64toI
   @aref int64toi Int64toI
 */
-#if defined OS_POSIX
 #define Int64toI_exec(obj, in) obj->ActVal = in;
-#else
-#define Int64toI_exec(obj, in)                                                 \
-  obj->ActVal = (0x80000000 & in.high) | (0xEFFFFFFF & in.low);
-#endif
 
 /*_*
   ItoInt64t
   @aref itoint64 ItoInt64
 */
-#if defined OS_POSIX
 #define ItoInt64_exec(obj, in) obj->ActVal = in;
-#else
-#define ItoInt64_exec(obj, in) obj->ActVal.high = in & 0x80000000;
-obj->ActVal.low = in & 0xEFFFFFFF;
-#endif
 
 /*_*
   UInt64toI
   @aref uint64toi UInt64toI
 */
-#if defined OS_POSIX
 #define UInt64toI_exec(obj, in) obj->ActVal = in;
-#else
-#define UInt64toI_exec(obj, in) obj->ActVal = in.low;
-#endif
 
 /*_*
   ItoUInt64
   @aref itouint64toi ItoUInt64
 */
-#if defined OS_POSIX
 #define ItoUInt64_exec(obj, in) obj->ActVal = in;
-#else
-#define ItoUInt64_exec(obj, in) obj->ActVal.low = in;
-obj->ActVal.high = 0;
-#endif
 
 /*_*
   StoDataRefv

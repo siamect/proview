@@ -251,8 +251,6 @@ static pwr_tBoolean decode_null(
   return FALSE;
 }
 
-#if (defined OS_POSIX)                                                         \
-    && (defined(HW_X86) || defined(HW_X86_64) || defined(HW_ARM))
 static pwr_tBoolean encode_sfloat(
     int count, int asize, char* tp, char* sp, int* size)
 {
@@ -265,10 +263,7 @@ static pwr_tBoolean encode_sfloat(
 
   return TRUE;
 }
-#endif
 
-#if (defined OS_POSIX)                                                         \
-    && (defined(HW_X86) || defined(HW_X86_64) || defined(HW_ARM))
 static pwr_tBoolean decode_sfloat(
     int count, int asize, char* tp, char* sp, int* size)
 {
@@ -281,7 +276,6 @@ static pwr_tBoolean decode_sfloat(
 
   return TRUE;
 }
-#endif
 
 #ifndef __powerpc__
 /* .  */

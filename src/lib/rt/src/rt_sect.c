@@ -55,7 +55,6 @@ static void segName(sect_sHead* shp, char* name);
 
 static void segName(sect_sHead* shp, char* name)
 {
-#if defined OS_POSIX
   static int doinit = 1;
   static char buf[4];
   if (doinit) {
@@ -64,7 +63,6 @@ static void segName(sect_sHead* shp, char* name)
     buf[3] = '\0';
   }
   sprintf(shp->name, "%.*s_%.3s", (int)sizeof(shp->name) - 4 - 1, name, buf);
-#endif
 }
 
 /* Map (and optionally create) a shared memory section.
@@ -91,78 +89,6 @@ sect_sHead* sect_Alloc(pwr_tStatus* sts, pwr_tBoolean* created, sect_sHead* shp,
     shp->base = NULL;
     segName(shp, name);
 
-#if defined(OS_LYNX)
-    {
-      int shm_fd;
-      int shMemFlags = O_RDWR;
-      mode_t shMemMode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP;
-
-      *created = 0;
-      /* This is the only way I know to find out if the memory is created */
-      shm_fd = shm_open(shp->name, shMemFlags, shMemMode);
-
-      if (sect_must_create && shm_fd != -1) { /* Do we need to check errno ? */
-        // printf("sect_Alloc: %s already exists. It will be unlinked and
-        // created\n", shp->name);
-        if (shm_unlink(shp->name) == -1) {
-          lsts = 2;
-          perror("sect_Alloc: shm_unlink");
-          break;
-        }
-
-        shMemFlags |= O_CREAT | O_EXCL;
-        shm_fd = shm_open(shp->name, shMemFlags, shMemMode);
-        if (shm_fd == -1) {
-          lsts = 2;
-          perror("sect_Alloc: shm_open, O_CREATE");
-          break;
-        }
-        *created = 1;
-      } else if (shm_fd == -1) {
-        if (errno == ENOENT) { /* It didn't exist */
-          shMemFlags |= O_CREAT | O_EXCL;
-          shm_fd = shm_open(shp->name, shMemFlags, shMemMode);
-
-          if (shm_fd == -1) {
-            lsts = 2;
-            perror("sect_Alloc: shm_open, O_CREATE ");
-            break;
-          } else
-            *created = 1;
-        } else {
-          lsts = 2;
-          perror("sect_Alloc: shm_open ");
-          break;
-        }
-      }
-
-      /* Set size */
-      if (ftruncate(shm_fd, size) != 0) {
-        close(shm_fd);
-        if (*created)
-          shm_unlink(shp->name);
-        lsts = 2;
-        perror("sect_Alloc: ftruncate ");
-        break;
-      }
-
-      shp->base = mmap(0, size, PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
-      if (shp->base == MAP_FAILED) {
-        close(shm_fd);
-        if (*created)
-          shm_unlink(shp->name);
-        lsts = 2;
-        perror("sect_Alloc: mmap ");
-        break;
-      }
-
-      close(shm_fd);
-
-      shp->size = size;
-      shp->flags.b.mapped = 1;
-      lsts = 1;
-    }
-#elif defined OS_POSIX
     {
       int shm_fd;
       int shMemFlags = O_RDWR;
@@ -243,7 +169,6 @@ sect_sHead* sect_Alloc(pwr_tStatus* sts, pwr_tBoolean* created, sect_sHead* shp,
       shp->flags.b.mapped = 1;
       lsts = 1;
     }
-#endif
 
     if (*created)
       errh_Info(
@@ -268,9 +193,7 @@ pwr_tBoolean sect_Free(pwr_tStatus* sts, sect_sHead* shp)
   if (!shp->flags.b.mapped)
     pwr_Return(FALSE, sts, 4 /*SECT__NOTMAPPED*/);
 
-#if defined OS_POSIX
   lsts = 1; /* TODO ? */
-#endif
 
   if (ODD(lsts))
     shp->flags.b.mapped = 0;
@@ -284,17 +207,10 @@ pwr_tBoolean sect_InitLock(pwr_tStatus* sts, sect_sHead* shp, sect_sMutex* mp)
 {
   pwr_tStatus lsts = 1;
 
-#if defined(OS_LYNX)
-  if (sem_init(mp, 1, 1) != 0) {
-    errh_Error("sect_InitLock: sem_init, errno: %d", errno);
-    lsts = 2;
-  }
-#elif defined OS_POSIX
   if (posix_sem_init_shared(mp, ftok(shp->name, 'P'), 1) != 0) {
     errh_Error("sect_InitLock: sem_init(%s), errno: %d", shp->name, errno);
     lsts = 2;
   }
-#endif
 
   errh_ReturnOrBugcheck(ODD(lsts), sts, lsts, "");
 }
@@ -305,15 +221,6 @@ pwr_tBoolean sect_Lock(pwr_tStatus* sts, sect_sHead* shp, sect_sMutex* mp)
 {
   pwr_tStatus lsts = 1;
 
-#if defined(OS_LYNX)
-  while (sem_wait(mp) != 0) {
-    if (errno != EINTR) {
-      perror("sect_Lock: sem_wait ");
-      lsts = 2;
-      break;
-    }
-  }
-#elif defined OS_POSIX
   while (posix_sem_wait(mp) != 0) {
     if (errno != EINTR) {
       if (errno == EINVAL) {
@@ -324,7 +231,6 @@ pwr_tBoolean sect_Lock(pwr_tStatus* sts, sect_sHead* shp, sect_sMutex* mp)
       break;
     }
   }
-#endif
 
   errh_ReturnOrBugcheck(ODD(lsts), sts, lsts, "");
 }
@@ -335,17 +241,10 @@ pwr_tBoolean sect_Unlock(pwr_tStatus* sts, sect_sHead* shp, sect_sMutex* mp)
 {
   pwr_tStatus lsts = 1;
 
-#if defined(OS_LYNX)
-  if (sem_post(mp) != 0) {
-    perror("sect_Unlock: sem_signal ");
-    lsts = 2;
-  }
-#elif defined OS_POSIX
   if (posix_sem_post(mp) != 0) {
     perror("sect_Unlock: sem_signal ");
     lsts = 2;
   }
-#endif
 
   errh_ReturnOrBugcheck(ODD(lsts), sts, lsts, "");
 }

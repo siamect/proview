@@ -1947,9 +1947,7 @@ static void fromApplication(qcom_sGet* get)
     break;
   }
 
-#if defined OS_POSIX
   nanosleep(&hold, NULL);
-#endif
 
   applLogState(ap);
   applReply(get, &reply, sizeof(reply));
@@ -2626,12 +2624,8 @@ static void initBlockList()
   pwr_tNodeIndex nix;
   int i;
 
-#if defined OS_POSIX
   char* env = getenv("pwrp_load");
   hostspec[0] = '\0'; /* Prevent warnings from gcc */
-#else
-#error "Block Db not implemented for this platform."
-#endif
 
   sprintf(
       l.blockDbName, "%s/ld_bdb_%06x.dat", env != NULL ? env : "", l.head.nix);

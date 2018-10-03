@@ -174,28 +174,18 @@ static void evaluateInit(gdb_sInit* ip)
 
 static gdb_sLocal* mapLocalDb(pwr_tStatus* sts)
 {
-#if defined OS_POSIX
   pthread_mutexattr_t mattr;
-#endif
 
   gdb_AssumeLocked;
 
   if (gdbroot->db->version != gdb_cVersion)
     pwr_Return(NULL, sts, GDH__REVLEVEL);
 
-#if defined OS_LYNX && defined PWR_LYNX_30
-  pthread_mutexattr_create(&mattr);
-  if (pthread_mutex_init(&gdbroot->thread_lock, mattr) == -1) {
-    perror("mapLocalDb: pthread_mutex_init, ");
-    pwr_Return(NULL, sts, GDB__MUTEXINIT);
-  }
-#elif defined OS_POSIX
   pthread_mutexattr_init(&mattr);
   if (pthread_mutex_init(&gdbroot->thread_lock, &mattr) == -1) {
     perror("mapLocalDb: pthread_mutex_init, ");
     pwr_Return(NULL, sts, GDB__MUTEXINIT);
   }
-#endif
 
   /* Map hash tables.  */
 
@@ -298,7 +288,6 @@ static gdb_sLocal* mapLocalDb(pwr_tStatus* sts)
   return gdbroot;
 }
 
-#if defined OS_POSIX
 /*
  * A fix which unlinks all segments for the given name.
  * I don't know where to put this routine, maybe it fits better in rt_pool.c.
@@ -323,51 +312,33 @@ static void unlinkPool(const char* name)
   sprintf(segname, "%s_%.3s", name, busid);
 
 /* This is the only way I know to find out if the memory is created, ML */
-#if defined OS_LYNX
-  fd = shm_open(segname, flags, mode);
-#else
   fd = open(segname, flags, mode);
-#endif
   if (fd != -1) {
     close(fd);
 
-#if defined OS_LYNX
-    shm_unlink(segname);
-#else
     key = ftok(segname, 'P');
     shm_id = shmget(key, 0, 0660);
     shmctl(shm_id, IPC_RMID, &ds);
 
     unlink(segname);
-#endif
 
     for (i = 1; TRUE; i++) {
       sprintf(segname, "%.11s%4.4x_%.3s", name, i, busid);
-#if defined OS_LYNX
-      fd = shm_open(segname, flags, mode);
-#else
       fd = open(segname, flags, mode);
-#endif
 
       if (fd == -1)
         break;
 
       close(fd);
 
-#if defined OS_LYNX
-      shm_unlink(segname);
-#else
       key = ftok(segname, 'P');
       shm_id = shmget(key, 0, 0660);
       shmctl(shm_id, IPC_RMID, &ds);
 
       unlink(segname);
-#endif
     }
   }
 }
-
-#endif
 
 gdb_sAliasServer* gdb_AddAliasServer(
     pwr_tStatus* sts, pwr_tObjid soid, pwr_tBitMask flags)
@@ -624,10 +595,8 @@ gdb_sLocal* gdb_CreateDb(pwr_tStatus* sts, gdb_sInit* ip)
 
   evaluateInit(ip);
 
-#if defined OS_POSIX
   unlinkPool(gdb_cNamePool);
   unlinkPool(gdb_cNameRtdb);
-#endif
 
   gdbroot->pool = pool_Create(
       sts, &gdbroot->h.pool, gdb_cNamePool, ip->pool_isize, ip->pool_esize);
@@ -849,8 +818,6 @@ void gdb_UnlinkDb()
   int shm_id;
   struct shmid_ds ds;
 
-#if defined OS_POSIX
-
   /* Unlink pool. */
 
   unlinkPool(gdb_cNamePool);
@@ -863,17 +830,11 @@ void gdb_UnlinkDb()
 
   sprintf(segname, "%s_%.3s", gdb_cNameDbLock, busid);
 
-#if defined OS_LYNX
-  shm_unlink(segname);
-#else
   key = ftok(segname, 'P');
   shm_id = shmget(key, 0, 0660);
   shmctl(shm_id, IPC_RMID, &ds);
   posix_sem_unlink(segname);
   unlink(segname);
-#endif
-
-#endif
 }
 
 /* Allocate an object header and initiate

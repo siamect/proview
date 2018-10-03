@@ -403,33 +403,23 @@ static ini_sContext* createContext(int argc, char** argv)
 }
 static void usage(char* name)
 {
-#if defined OS_POSIX
   fprintf(stderr, "usage: %s -a arg -b arg -d arg -efg arg -hip arg -q arg -ru "
                   "arg -s arg -vwA arg -H arg\n",
       name);
-#else
-  fprintf(stderr,
-      "usage: %s -a arg -b arg -d arg -efhip arg -q arg -rvwA arg -H arg\n",
-      name);
-#endif
   fprintf(stderr, "  -?    : give help\n");
   fprintf(stderr, "  -a arg: use 'arg' as application file\n");
   fprintf(stderr, "  -b arg: use 'arg' as boot file\n");
   fprintf(stderr, "  -d arg: use files from directory 'arg'\n");
   fprintf(stderr, "  -e    : ignore errors\n");
   fprintf(stderr, "  -f    : ignore fatal errors\n");
-#if defined OS_POSIX
   fprintf(stderr, "  -g arg: setgid to 'arg' before starting\n");
-#endif
   fprintf(stderr, "  -h    : give help\n");
   fprintf(stderr, "  -i    : interactive, log to stdout\n");
   fprintf(stderr, "  -p arg: use 'arg' as PLC\n");
   fprintf(stderr, "  -q arg: use 'arg' as qcom bus id\n");
   fprintf(stderr, "  -r    : restart with new versions of loadfiles and PLC\n");
-#if defined OS_POSIX
   fprintf(stderr, "  -s    : stop of Proview/R\n");
   fprintf(stderr, "  -u arg: setuid to 'arg' before starting\n");
-#endif
   fprintf(stderr, "  -v    : verbose\n");
   fprintf(stderr, "  -w    : ignore warnings\n");
   fprintf(stderr, "  -A arg: use 'arg' as alias file\n");
@@ -442,11 +432,7 @@ static pwr_tStatus events(ini_sContext* cp)
 {
   pwr_tStatus sts = INI__SUCCESS;
   qcom_sGet get;
-#if defined OS_POSIX
   int tmo_ms = 1000;
-#else
-  int tmo_ms = qcom_cTmoEternal;
-#endif
 
   cp->myQ.qix = 550715;
   cp->myQ.nid = 0;

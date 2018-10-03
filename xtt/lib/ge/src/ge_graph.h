@@ -46,17 +46,9 @@
 
 #include "ge_attr.h"
 
-#if defined OS_POSIX
 #define LDH 1
-#endif
 
-#if LDH
 #include "wb_ldh.h"
-#else
-typedef void* ldh_tSesContext;
-typedef void* ldh_tWBContext;
-typedef void* ldh_tVolContext;
-#endif
 
 class GeDyn;
 

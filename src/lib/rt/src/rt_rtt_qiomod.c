@@ -64,7 +64,6 @@
 * Description:	Gör en assign av s till kanalnummer chn
 *************************************************************************/
 int qio_assign(char* s, int* chn)
-#if defined OS_POSIX
 {
   int chan = -1;
   int sts;
@@ -82,7 +81,6 @@ int qio_assign(char* s, int* chn)
   *chn = chan;
   return 1;
 }
-#endif
 
 /************************************************************************
 *
@@ -97,7 +95,6 @@ int qio_assign(char* s, int* chn)
 * Description:	Set rtt attributes to a tty
 *************************************************************************/
 int qio_set_attr(int* chn)
-#if defined OS_POSIX
 {
   int chan;
   int sts;
@@ -119,7 +116,6 @@ int qio_set_attr(int* chn)
 
   return 1;
 }
-#endif
 
 /************************************************************************
 *
@@ -134,7 +130,6 @@ int qio_set_attr(int* chn)
 * Description:	Reset the channel before exit
 *************************************************************************/
 int qio_reset(int* chn)
-#if defined OS_POSIX
 {
   int chan;
   int sts;
@@ -156,7 +151,6 @@ int qio_reset(int* chn)
 
   return 1;
 }
-#endif
 
 /************************************************************************
 *
@@ -172,7 +166,6 @@ int qio_reset(int* chn)
 * Description:	Läser med qiow från chn till buf
 *************************************************************************/
 int qio_readw(int* chn, char* buf, int len)
-#if defined OS_POSIX
 {
   int n = 0;
 
@@ -180,7 +173,6 @@ int qio_readw(int* chn, char* buf, int len)
     n = read(*chn, buf, len);
   return 1;
 }
-#endif
 
 /************************************************************************
 *
@@ -197,7 +189,6 @@ int qio_readw(int* chn, char* buf, int len)
 * Description:	Läser med qio från chn till buf med timout-tid tmo (ms)
 *************************************************************************/
 int qio_read(int* chn, int tmo, char* buf, int len)
-#if defined OS_POSIX
 {
   int n;
 
@@ -207,7 +198,6 @@ int qio_read(int* chn, int tmo, char* buf, int len)
     return 0;
   return 1;
 }
-#endif
 
 /************************************************************************
 *
@@ -223,7 +213,6 @@ int qio_read(int* chn, int tmo, char* buf, int len)
 * Description:	Skriver med qiow från buf till chn
 *************************************************************************/
 int qio_writew(int* chn, char* buf, int len)
-#if defined OS_POSIX
 {
   if (*chn == STDIN_FILENO)
     write(STDOUT_FILENO, buf, len);
@@ -231,7 +220,6 @@ int qio_writew(int* chn, char* buf, int len)
     write(*chn, buf, len);
   return 1;
 }
-#endif
 
 /************************************************************************
 *
@@ -248,7 +236,6 @@ int qio_writew(int* chn, char* buf, int len)
 * Description:	Skriver med qio från buf till chn med timout-tid tmo (ms)
 *************************************************************************/
 int qio_write(int* chn, int tmo, char* buf, int len)
-#if defined OS_POSIX
 {
   if (*chn == STDIN_FILENO)
     write(STDOUT_FILENO, buf, len);
@@ -256,4 +243,3 @@ int qio_write(int* chn, int tmo, char* buf, int len)
     write(*chn, buf, len);
   return 1;
 }
-#endif

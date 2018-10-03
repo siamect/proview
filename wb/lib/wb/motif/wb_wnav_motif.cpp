@@ -240,10 +240,8 @@ void WNavMotif::print(const char* title)
   dcli_translate_filename(filename, filename);
   brow_Print(brow->ctx, filename);
 
-#if defined OS_POSIX
   sprintf(cmd, "wb_gre_print.sh %s", filename);
   sts = system(cmd);
-#endif
 }
 
 void WNavMotif::create_popup_menu(pwr_tAttrRef aref, int x, int y)

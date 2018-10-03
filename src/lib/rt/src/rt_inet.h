@@ -41,25 +41,17 @@
 
 #include "pwr.h"
 
-#if defined OS_CYGWIN
 #include <sys/ioctl.h>
 #include <sys/socket.h>
 #include <net/if.h>
 
+#if defined OS_CYGWIN
 struct arpreq {
   struct sockaddr arp_pa; /* protocol address */
   struct sockaddr arp_ha; /* hardware address */
   int arp_flags; /* flags */
 };
-
 #else
-#include <sys/ioctl.h>
-#if defined OS_POSIX
-#include <sys/socket.h>
-#else
-#include <socket.h>
-#endif
-#include <net/if.h>
 #include <net/if_arp.h>
 #endif
 

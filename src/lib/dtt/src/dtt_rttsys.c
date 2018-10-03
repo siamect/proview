@@ -41,10 +41,8 @@
 
 /*_Include files_________________________________________________________*/
 
-#if defined OS_POSIX
 #include <stdio.h>
 #include <stdlib.h>
-#endif
 
 #include "co_string.h"
 
@@ -3964,11 +3962,9 @@ int RTTSYS_LOGGING(menu_ctx ctx, int event, char* parameter_ptr,
 *					has been changed.
 *
 * Description:
-*	Show proview LYNX processes.
+*	Show proview processes.
 *
 **************************************************************************/
-
-#if defined OS_POSIX
 
 int RTTSYS_SHOW_SYS(menu_ctx ctx, int event, char* parameter_ptr,
     char* objectname, char** picture)
@@ -3976,7 +3972,6 @@ int RTTSYS_SHOW_SYS(menu_ctx ctx, int event, char* parameter_ptr,
   rtt_message('E', "Not yet implemented");
   return RTT__NOPICTURE;
 }
-#endif
 
 /*************************************************************************
 *
@@ -3998,10 +3993,8 @@ int RTTSYS_SHOW_SYS(menu_ctx ctx, int event, char* parameter_ptr,
 int RTTSYS_ELNPROC(menu_ctx ctx, int event, char* parameter_ptr,
     char* objectname, char** picture)
 {
-#if defined OS_POSIX
   rtt_message('E', "Picture is not implemented for this platform");
   return RTT__NOPICTURE;
-#endif
 }
 
 /*************************************************************************

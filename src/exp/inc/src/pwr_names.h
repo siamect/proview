@@ -48,7 +48,6 @@
 #define pwr_cNameNode "%sld_node_%s_%04d.dat"
 #define pwr_cNameRc "%sld_rc_%s_%04d.dat"
 
-#if defined OS_POSIX
 #define pwr_cNamePlc "%splc_%s_%04d_%s"
 #define pwr_cNameBootList "$pwrp_root/src/db/pwrp_cnf_bootlist.dat"
 #define pwr_cNameVolumeList "$pwrp_root/src/db/pwrp_cnf_volumelist.dat"
@@ -70,6 +69,5 @@
 #define pwr_cNameProjectXttHelp "$pwrp_load/xtt_help.dat"
 #define pwr_cNamePlcXttHelp "$pwrp_load/xtthelp_%s_plc.dat"
 #define pwr_cNameRedcom "%sld_redcom_%s_%04d.dat"
-#endif
 
 #endif

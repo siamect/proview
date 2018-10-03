@@ -67,8 +67,6 @@
 
 int dcli_search_file(const char* name, char* found_file, int new)
 {
-#if defined OS_POSIX
-
   static DIR* directory;
   static char pattern[200];
   static char dir[200];
@@ -142,10 +140,6 @@ int dcli_search_file(const char* name, char* found_file, int new)
   }
 
   return DCLI__SUCCESS;
-#else
-  return 0;
-#endif
-  return DCLI__SUCCESS;
 }
 
 /* Search for one or several directories.
@@ -164,8 +158,6 @@ int dcli_search_file(const char* name, char* found_file, int new)
 
 int dcli_search_directory(const char* name, char* found_file, int new)
 {
-#if defined OS_POSIX
-
   static DIR* directory;
   static char pattern[200];
   static char dir[200];
@@ -247,10 +239,6 @@ int dcli_search_directory(const char* name, char* found_file, int new)
   }
 
   return DCLI__SUCCESS;
-#else
-  return 0;
-#endif
-  return DCLI__SUCCESS;
 }
 
 /*************************************************************************
@@ -330,8 +318,6 @@ int dcli_get_files(
 int dcli_parse_filename(const char* filename, char* dev, char* dir, char* file,
     char* type, int* version)
 {
-#if defined OS_POSIX
-
   char* s;
   char ldev[200];
   char ldir[200];
@@ -372,9 +358,6 @@ int dcli_parse_filename(const char* filename, char* dev, char* dir, char* file,
   strcpy(file, lfile);
   strcpy(type, ltype);
   return 1;
-#else
-  return 0;
-#endif
 }
 
 int dcli_create_directory(char* path)

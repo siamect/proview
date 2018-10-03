@@ -2462,9 +2462,7 @@ static int rtt_set_func(menu_ctx ctx, int* flag)
   } else if (str_NoCaseStrncmp(arg1_str, "DEFAULT", strlen(arg1_str)) == 0) {
     if (ODD(rtt_get_qualifier("rtt_arg2", arg2_str))) {
       if (!streq(arg2_str, "")) {
-#if defined OS_POSIX
         str_ToLower(arg2_str, arg2_str);
-#endif
       }
       strcpy(rtt_default_directory, arg2_str);
       return RTT__HOLDCOMMAND;

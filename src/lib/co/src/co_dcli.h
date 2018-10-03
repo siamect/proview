@@ -82,9 +82,7 @@ unsigned int dcli_random();
 void dcli_set_default_directory(char* dir);
 int dcli_get_defaultfilename(
     const char* inname, char* outname, const char* ext);
-#if defined OS_POSIX
 int dcli_replace_env(const char* str, char* newstr);
-#endif
 char* dcli_fgetname(FILE* fp, char* name, char* def_name);
 int dcli_translate_filename(char* out, const char* in);
 pwr_tStatus dcli_file_time(char* filename, pwr_tTime* time);

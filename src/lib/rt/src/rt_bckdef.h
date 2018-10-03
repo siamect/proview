@@ -146,7 +146,5 @@ typedef struct {
   pwr_tUInt32 size; /* Size of data */
 } bck_t_writeheader;
 
-#if defined OS_POSIX
 #define SIG_BCK_FORCE (SIGRTMIN + 1) /* forced activation sig  */
 #define SIG_BCK_WRITE_DONE (SIGRTMIN + 2) /* backup done            */
-#endif

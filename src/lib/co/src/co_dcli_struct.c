@@ -420,7 +420,7 @@ static int add_element(t_ctx ctx, t_filectx filectx, char* line,
       nr--;
     }
     if (unsign) {
-#if (defined OS_POSIX) && defined HW_X86_64
+#if defined HW_X86_64
       type = pwr_eType_UInt64;
       size = sizeof(pwr_tInt64);
 #else
@@ -428,7 +428,7 @@ static int add_element(t_ctx ctx, t_filectx filectx, char* line,
       size = sizeof(pwr_tInt32);
 #endif
     } else {
-#if (defined OS_POSIX) && defined HW_X86_64
+#if defined HW_X86_64
       type = pwr_eType_Int64;
       size = sizeof(pwr_tInt64);
 #else

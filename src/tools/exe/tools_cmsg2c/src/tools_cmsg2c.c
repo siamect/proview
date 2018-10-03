@@ -143,9 +143,7 @@ int main(int argc, char** argv)
   fclose(yyin);
   fclose(cfp);
 
-#if defined OS_POSIX
   exit(EXIT_SUCCESS);
-#endif
 }
 
 /*

@@ -37,11 +37,8 @@
 #ifndef rt_proc_h
 #define rt_proc_h
 
-#if defined OS_POSIX
 #include <sys/types.h>
-#else
-#include <types.h>
-#endif
+
 #include "co_errno.h"
 #include "rt_errh.h"
 

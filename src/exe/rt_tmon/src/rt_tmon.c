@@ -142,7 +142,6 @@ int main(int argc, char** argv)
       tmo_ms = 0;
     }
 
-#if defined OS_POSIX
     aproc_TimeStamp(((float)tmo_ms) / 1000, 5);
 
     get.data = NULL;
@@ -153,7 +152,6 @@ int main(int argc, char** argv)
       }
       qcom_Free(&sts, get.data);
     }
-#endif
 
     now_clock = time_Clock(NULL, NULL);
     if (now_clock < last_clock) {
@@ -470,7 +468,6 @@ static time_tClock msToClock(time_tClock* ic, int ms)
 
 static void waitClock(time_tClock diff, int* tmo_ms)
 {
-#if defined OS_POSIX
   //    pwr_tTime  rmt;
   //    pwr_tTime  wait;
   static int tics_per_sec = 0;
@@ -483,7 +480,6 @@ static void waitClock(time_tClock diff, int* tmo_ms)
   *tmo_ms = diff * 1000 / tics_per_sec;
 //    *tmo_ms = wait.tv_sec * 1000 + wait.tv_nsec / 1000000;
 //    nanosleep(&wait, &rmt);
-#endif
 }
 
 /* .  */

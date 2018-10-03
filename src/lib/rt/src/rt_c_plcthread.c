@@ -39,9 +39,7 @@
 
 #include <string.h>
 
-#if defined OS_POSIX
 #include <pthread.h>
-#endif
 
 #include "co_time.h"
 #include "rt_gdh_msg.h"

@@ -5044,7 +5044,7 @@ static int rtt_edit_print_value(rtt_t_menu_upd* menu_ptr, unsigned long init)
     }
     case pwr_eType_Int64: {
       if (menu_ptr->characters > 0)
-#if defined OS_POSIX && defined HW_X86_64
+#if defined HW_X86_64
         r_print(
             "%*ld", menu_ptr->characters, *(pwr_tInt64*)menu_ptr->value_ptr);
 #else
@@ -5083,7 +5083,7 @@ static int rtt_edit_print_value(rtt_t_menu_upd* menu_ptr, unsigned long init)
     }
     case pwr_eType_UInt64: {
       if (menu_ptr->characters > 0)
-#if defined OS_POSIX && defined HW_X86_64
+#if defined HW_X86_64
         r_print(
             "%*lu", menu_ptr->characters, *(pwr_tUInt64*)menu_ptr->value_ptr);
 #else
@@ -8678,7 +8678,6 @@ int rtt_scan(menu_ctx ctx)
 
 int rtt_sleep(menu_ctx ctx, int time)
 {
-#if defined OS_POSIX
   int i;
   int num;
   pwr_tDeltaTime p_time;
@@ -8692,8 +8691,6 @@ int rtt_sleep(menu_ctx ctx, int time)
     nanosleep(&ts, NULL);
     rtt_scan(ctx);
   }
-
-#endif
 
   return RTT__SUCCESS;
 }
@@ -8715,7 +8712,6 @@ int rtt_get_defaultfilename(char* inname, char* outname, char* ext)
   pwr_tFileName filename;
   char *s, *s2;
 
-#if defined OS_POSIX
   if (strchr(inname, '/'))
     strcpy(outname, inname);
   else {
@@ -8728,7 +8724,6 @@ int rtt_get_defaultfilename(char* inname, char* outname, char* ext)
       strcpy(filename, inname);
     rtt_replace_env(filename, outname);
   }
-#endif
 
   /* Look for extention in filename */
   if (ext != NULL) {
@@ -8750,9 +8745,7 @@ int rtt_get_defaultfilename(char* inname, char* outname, char* ext)
     }
   }
 
-#if defined OS_POSIX
   str_ToLower(outname, outname);
-#endif
   return RTT__SUCCESS;
 }
 
@@ -8783,13 +8776,11 @@ void rtt_exit_now(int disconnected, pwr_tStatus exit_sts)
   rtt_logging_close_files();
   qio_reset((int*)rtt_chn);
 
-#if defined OS_POSIX
   /* Returnstatus 0 is OK for UNIX commands */
   if (EVEN(exit_sts))
     exit(exit_sts);
   else
     exit(0);
-#endif
 }
 
 /*************************************************************************
@@ -9362,14 +9353,12 @@ char* rtt_pwr_dir(char* dir)
   static char pwr_dir[120];
   char* s;
 
-#if defined OS_POSIX
   if ((s = getenv(dir)) == NULL)
     strcpy(pwr_dir, "");
   else {
     strcpy(pwr_dir, s);
     strcat(pwr_dir, "/");
   }
-#endif
   return pwr_dir;
 }
 

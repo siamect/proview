@@ -36,11 +36,9 @@
 
 #include <stdio.h>
 
-#if defined OS_POSIX
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#endif
 
 #include "pwr_remoteclasses.h"
 #include "pwr_nmpsclasses.h"
@@ -792,7 +790,6 @@ char* ini_LoadDirectory(pwr_tStatus* status, ini_sContext* cp)
   syi_HostSpec(sts, cp->hostspec, sizeof(cp->hostspec));
   syi_BootDisk(sts, cp->bootdisk, sizeof(cp->bootdisk));
 
-#if defined OS_POSIX
   {
     char* s;
 
@@ -815,9 +812,6 @@ char* ini_LoadDirectory(pwr_tStatus* status, ini_sContext* cp)
         cp->busid = atoi(s);
     }
   }
-#else
-#error "NYI for this OS"
-#endif
 
   *sts = ini_GetAlias(cp->aliasfile.name, cp->nodename, cp->alias);
   if (ODD(*sts)) {
@@ -941,13 +935,8 @@ void ini_ReadBootFile(pwr_tStatus* status, ini_sContext* cp)
         cp->plcfile_cnt = progs;
 
         for (j = 0; j < progs; j++) {
-#if defined OS_POSIX
           snprintf(cp->plcfile[j].name, sizeof(cp->plcfile[0].name), "%s",
               prog_array[j]);
-#else
-          snprintf(cp->plcfile[j].name, sizeof(cp->plcfile[0].name), "%s%s",
-              cp->dir, prog_array[j]);
-#endif
           errh_LogInfo(
               &cp->log, "This node vill run PLC file: %s", cp->plcfile[j].name);
           cp->plcfile[j].logOpenFail = errh_LogInfo;
@@ -1627,7 +1616,6 @@ ini_sProc* ini_ProcInsert(pwr_tStatus* status, ini_sContext* cp, char* id,
     if (pp->proc.file != NULL)
       free(pp->proc.file);
     pp->proc.file = strsav(file);
-#if defined OS_POSIX
     s = getenv("pwr_exe");
     sprintf(buf, "%s/%s", s, file);
     ret = stat(buf, &f_stat);
@@ -1640,7 +1628,6 @@ ini_sProc* ini_ProcInsert(pwr_tStatus* status, ini_sContext* cp, char* id,
         pp->proc.flags.b.load = 0;
       }
     }
-#endif
   }
   if (confcid && EVEN(gdh_GetClassList(confcid, &oid)))
     pp->flags.b.run = 0;
@@ -1738,7 +1725,6 @@ void ini_ProcWait(pwr_tStatus* status, ini_sContext* cp)
 
   pwr_dStatus(sts, status, INI__SUCCESS);
 
-#if defined OS_POSIX
   for (;;) {
     int status;
 
@@ -1768,9 +1754,6 @@ void ini_ProcWait(pwr_tStatus* status, ini_sContext* cp)
       }
     }
   }
-#else
-  sleep(100000);
-#endif
   errh_Info("Ich sterbe!!");
 }
 

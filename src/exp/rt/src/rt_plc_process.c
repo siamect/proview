@@ -88,51 +88,6 @@ extern void plc_thread();
  */
 #define USE_RT_TIMER 0
 
-#if defined OS_LYNX && USE_RT_TIMER
-static void signal_handler(int sig, siginfo_t* info, void* v)
-{
-  int i;
-  plc_sThread* tp;
-  plc_sProcess* pp = (plc_sProcess*)info->si_value.sival_ptr;
-
-  if (sig != SIGRTMIN + 1)
-    return;
-
-  for (i = 0, tp = pp->thread; i < pp->thread_count; i++, tp++) {
-    if (--(tp->IntervalCount) == 0) {
-      sem_post(&tp->ScanSem);
-      tp->IntervalCount = tp->ScanMultiple;
-    }
-  }
-}
-
-static int create_timer(plc_sProcess* pp)
-{
-  struct itimerspec tmr_interval;
-  struct sigaction act;
-  struct sigevent notification;
-  timer_t timer;
-
-  act.sa_sigaction = signal_handler;
-  act.sa_flags = SA_SIGINFO;
-  sigemptyset(&act.sa_mask);
-
-  sigaction(SIGRTMIN + 1, &act, NULL);
-
-  notification.sigev_notify = SIGEV_SIGNAL;
-  notification.sigev_signo = SIGRTMIN + 1;
-  notification.sigev_value.sival_ptr = (void*)pp;
-  timer_create(CLOCK_REALTIME, &notification, &timer);
-
-  tmr_interval.it_interval.tv_sec = (time_t)0;
-  tmr_interval.it_interval.tv_nsec = 1000000000 / CLK_TCK;
-  tmr_interval.it_value = tmr_interval.it_interval;
-  timer_settime(timer, 0, &tmr_interval, NULL);
-
-  return 0;
-}
-#endif
-
 int main(int argc, char* argv[])
 {
   pwr_tStatus sts = 0;
@@ -444,10 +399,6 @@ static void start_threads(plc_sProcess* pp)
   pwr_tStatus sts;
   long int phase;
 
-#if defined OS_LYNX && USE_RT_TIMER
-  create_timer(pp);
-#endif
-
   for (i = 0, tp = pp->thread; i < pp->thread_count; i++, tp++) {
     /* Tell thread it is time for phase 3, start.  */
     que_Put(&sts, &tp->q_in, &tp->event, (void*)3);
@@ -462,10 +413,6 @@ static void run_threads(plc_sProcess* pp)
   plc_sThread* tp;
   pwr_tStatus sts;
   long int phase;
-
-#if defined OS_LYNX && USE_RT_TIMER
-  create_timer(pp);
-#endif
 
   for (i = 0, tp = pp->thread; i < pp->thread_count; i++, tp++) {
     /* Tell thread it is time for phase 4, run.  */
@@ -493,11 +440,7 @@ static void stop_threads(plc_sProcess* pp)
     tp->exit = TRUE;
 /* Tell thread it is time for phase 4, stop.  */
 
-#if defined OS_LYNX && USE_RT_TIMER
-    sem_post(&tp->ScanSem);
-#else
     que_Put(&sts, &tp->q_in, &tp->event, (void*)4);
-#endif
   }
 }
 
@@ -716,12 +659,6 @@ static void create_thread(plc_sThread* tp, plc_sProctbl* ptp, plc_sProcess* pp)
     errh_Error("Direct link to thread object \"%s\", %m", tp->name, sts);
     return;
   }
-
-#if defined OS_LYNX && USE_RT_TIMER
-  sem_init(&tp->ScanSem, 0, 0);
-  tp->ScanMultiple = tp->i_scan_time / (CLK_TCK / 1000);
-  tp->IntervalCount = tp->ScanMultiple;
-#endif
 
   sts = thread_Create(&tp->tid, tp->name, (void* (*)()) & plc_thread, tp);
   if (EVEN(sts)) {

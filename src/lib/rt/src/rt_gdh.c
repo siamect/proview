@@ -58,7 +58,7 @@
 #include "rt_dl.h"
 #include "rt_lck.h"
 
-#if defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS
+#if defined(OS_LINUX) || defined OS_MACOS
 #define gdh_Lock                                                               \
   pthread_mutex_lock(&gdbroot->thread_lock);                                   \
   gdb_Lock

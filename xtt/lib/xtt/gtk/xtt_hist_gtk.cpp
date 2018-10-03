@@ -40,7 +40,7 @@
    Last modification: 030217
 */
 
-#if defined OS_POSIX && defined PWRE_CONF_LIBDB
+#if defined PWRE_CONF_LIBDB
 
 #include <stdio.h>
 #include <stdlib.h>

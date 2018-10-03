@@ -51,13 +51,11 @@
 
 /*_Include filer_________________________________________________________*/
 
-#if defined OS_POSIX
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
-#endif
 
 #include "pwr_baseclasses.h"
 #include "pwr_remoteclasses.h"
@@ -260,7 +258,6 @@ static int logg_get_filename(char* inname, char* outname, char* ext)
     strcat(outname, ext);
   }
 
-#if defined OS_POSIX
   /* Get current time to use as "version number" */
 
   time_GetTime(&time);
@@ -274,8 +271,6 @@ static int logg_get_filename(char* inname, char* outname, char* ext)
   memcpy(&comp_timestr[11], &timestr[15], 2);
   comp_timestr[13] = 0;
 //	  strcat(outname, comp_timestr);
-
-#endif
 
   return REM__SUCCESS;
 }
@@ -312,11 +307,7 @@ static pwr_tStatus logg_open_file(
   /* Open file */
   logg_get_filename(conflist_ptr->loggconf->LoggFile, filename, LOGG_FILE_EXT);
 
-#if defined OS_POSIX
   conflist_ptr->outfile = fopen(filename, "a+");
-#else
-  conflist_ptr->outfile = fopen(filename, "w+", "shr=get");
-#endif
   if (conflist_ptr->outfile != NULL) {
     /* Write a file header */
     time_GetTime(&time);
@@ -537,14 +528,10 @@ int main()
   logg_t_loggconf_list* conflist_ptr;
   int i;
 
-#if defined OS_POSIX
-
   /* Exit handler */
 
   atexit(&exit_hdlr);
   signal(SIGINT, interrupt_hdlr);
-
-#endif
 
   sts = gdh_Init("rs_remote_logg");
   if (EVEN(sts))

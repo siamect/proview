@@ -116,23 +116,23 @@ int main(int argc, char* argv[])
   int in_if = 0;
 #if defined OS_LINUX
   char os[] = "OS_LINUX";
-  char dos[] = "-DOS_LINUX -DOS_POSIX";
+  char dos[] = "-DOS_LINUX";
   char cflags[] = "";
 #elif defined OS_MACOS
   char os[] = "OS_MACOS";
-  char dos[] = "-DOS_MACOS -DOS_POSIX";
+  char dos[] = "-DOS_MACOS";
   char cflags[] = "";
 #elif defined OS_FREEBSD
   char os[] = "OS_FREEBSD";
-  char dos[] = "-DOS_FREEBSD -DOS_POSIX";
+  char dos[] = "-DOS_FREEBSD";
   char cflags[] = "";
 #elif defined OS_OPENBSD
   char os[] = "OS_OPENBSD";
-  char dos[] = "-DOS_OPENBSD -DOS_POSIX";
+  char dos[] = "-DOS_OPENBSD";
   char cflags[] = "";
 #elif defined OS_CYGWIN
   char os[] = "OS_CYGWIN";
-  char dos[] = "-DOS_CYGWIN -DOS_POSIX";
+  char dos[] = "-DOS_CYGWIN";
   char cflags[] = "-I/usr/include/tirpc";
 #endif
   if (argc < 4) {

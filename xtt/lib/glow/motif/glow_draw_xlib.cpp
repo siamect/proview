@@ -70,14 +70,8 @@ using namespace std;
 #include "glow_msg.h"
 
 #if defined IMLIB
-#if defined OS_LYNX
-#define __NO_INCLUDE_WARN__ 1
-#endif
 #include <X11/extensions/shape.h>
 #include <Imlib.h>
-#if defined OS_LYNX
-#undef __NO_INCLUDE_WARN__
-#endif
 #else
 typedef void* ImlibData;
 typedef void* ImlibImage;

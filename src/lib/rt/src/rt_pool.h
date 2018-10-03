@@ -43,7 +43,7 @@
    and a maximum segment size of (1<<24) which is 16 Mb. Hence, the max
    size of any pool is 256*16 Mbyte = 4 Gbyte!  */
 
-#if (defined OS_POSIX) && defined HW_X86_64
+#if defined HW_X86_64
 typedef pwr_tInt64 pool_tRef;
 
 #define pool_cSegBits 10 /* Bits in segidx field */
@@ -87,7 +87,7 @@ typedef struct {
 #define pool_QisUnlinked(a) ((a)->self == (a)->flink && (a)->self == (a)->blink)
 
 /* Internal interpretation of a pool_tRef */
-#if (defined OS_POSIX) && defined HW_X86_64
+#if defined HW_X86_64
 typedef union {
   struct {
     pwr_Endian_4(unsigned long int offs

@@ -42,14 +42,11 @@
 /** @addtogroup QCOM */
 /*@{*/
 
+#include <pthread.h>
 #include <rpc/rpc.h>
 
 #include "pwr_class.h"
 #include "co_platform.h"
-
-#if defined OS_POSIX
-#include <pthread.h>
-#endif
 
 #include "rt_gdb_msg.h"
 

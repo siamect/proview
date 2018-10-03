@@ -43,10 +43,8 @@
 /* pwr.h -- basic definitions for PROVIEW/R
  */
 
-#if defined OS_POSIX
 #include <stdlib.h> /* EXIT_FAILURE */
 #include <limits.h>
-#endif
 
 /*! \file pwr.h
     \brief Basic type definitions.
@@ -91,7 +89,6 @@ extern "C" {
 #define pwr_Bit(b) (1 << b)
 #define pwr_SetByte(byte, val) (val << (byte << 3))
 
-#if defined OS_POSIX
 #if defined(HW_X86_64)
 #define pwr_cAlignW 4
 #define pwr_cAlignLW 8
@@ -101,12 +98,6 @@ extern "C" {
 #endif
 #define pwr_dAlignW __attribute__((aligned(4)))
 #define pwr_dAlignLW __attribute__((aligned(8)))
-#else
-#define pwr_cAlignW 4
-#define pwr_cAlignLW 4
-#define pwr_dAlignW
-#define pwr_dAlignLW
-#endif
 #define pwr_AlignW(offs) (((offs) + (pwr_cAlignW - 1)) & ~(pwr_cAlignW - 1))
 #define pwr_AlignLW(offs) (((offs) + (pwr_cAlignLW - 1)) & ~(pwr_cAlignLW - 1))
 #define pwr_Align(offs, align) ((offs + (align - 1)) & ~(align - 1))
@@ -174,7 +165,6 @@ typedef struct {
   unsigned int low;
   int high;
 } __pwr_tInt64;
-#if defined OS_POSIX
 #if defined HW_X86_64
 typedef long int pwr_tInt64;
 #define PWR_INT64MAX LONG_MAX
@@ -183,11 +173,6 @@ typedef long int pwr_tInt64;
 typedef long long int pwr_tInt64;
 #define PWR_INT64MAX LLONG_MAX
 #define PWR_INT64MIN LLONG_MIN
-#endif
-#else
-typedef __pwr_tInt64 pwr_tInt64;
-#define PWR_INT64MAX LONG_MAX
-#define PWR_INT64MIN LONG_MIN
 #endif
 
 //! 64-bit unsigned integer type.
@@ -199,17 +184,12 @@ typedef struct {
   unsigned int high;
 } __pwr_tUInt64;
 
-#if defined OS_POSIX
 #if defined HW_X86_64
 typedef unsigned long int pwr_tUInt64;
 #define PWR_UINT64MAX ULONG_MAX
 #else
 typedef unsigned long long int pwr_tUInt64;
 #define PWR_UINT64MAX ULLONG_MAX
-#endif
-#else
-typedef __pwr_tUInt64 pwr_tUInt64;
-#define PWR_UINT64MAX ULONG_MAX
 #endif
 
 #define PWR_INT8_MAX SCHAR_MAX
@@ -766,7 +746,7 @@ static const pwr_tDeltaTime pwr_cDtMin = PWR_DTTIME_MIN;
                        exit(EXIT_FAILURE)))
 #endif
 
-#if (defined OS_POSIX) && defined HW_X86_64
+#if defined HW_X86_64
 #define pwr_dFormatUInt64 "%lu"
 #define pwr_dFormatInt64 "%ld"
 #define pwr_dFormatHexInt64 "%lx"

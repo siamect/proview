@@ -34,9 +34,7 @@
  * General Public License plus this exception.
  */
 
-#if defined OS_POSIX
 #include <string.h>
-#endif
 
 #include "rt_gdh.h"
 #include "rt_ini_msg.h"
@@ -56,11 +54,9 @@ void ini_StartApplications()
     if (ODD(gdh_ObjidToPointer(objid, (pwr_tAddress*)&applp))) {
 /* Found an object on this node, load the program */
 
-#if defined OS_POSIX
       errh_Error("NYI. start %s \"%s\" %d %d \"%s\"", applp->FileName,
           applp->ProgramName, applp->StartWithDebug, applp->JobPriority,
           applp->Arg);
-#endif
 
     } /* Local appl object */
 

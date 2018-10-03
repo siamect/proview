@@ -335,9 +335,7 @@ int rtt_get_nodename(char* nodename, int size);
 char* rtt_fgetname(FILE* fp, char* name, char* def_name);
 int rtt_set_prio(int prio);
 int rtt_set_default_prio();
-#if defined OS_POSIX
 int rtt_replace_env(char* str, char* newstr);
-#endif
 
 int rtt_get_platform(char* platform);
 int rtt_get_hw(char* hw);

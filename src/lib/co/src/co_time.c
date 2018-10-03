@@ -1317,7 +1317,6 @@ pwr_tDeltaTime* time_ZeroD(pwr_tDeltaTime* tp)
 
 void time_Sleep(float time)
 {
-#if defined OS_POSIX
   pwr_tDeltaTime p_time;
   struct timespec ts;
 
@@ -1325,7 +1324,6 @@ void time_Sleep(float time)
   ts.tv_sec = p_time.tv_sec;
   ts.tv_nsec = p_time.tv_nsec;
   nanosleep(&ts, NULL);
-#endif
 }
 
 int time_GetTime(pwr_tTime* ts)

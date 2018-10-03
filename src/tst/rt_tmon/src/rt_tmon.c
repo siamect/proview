@@ -126,10 +126,6 @@ static pwr_tTime* subTime(pwr_tTime* t1, pwr_tTime* t2)
 
 static pwr_tTime* nowTime(pwr_tTime* tp)
 {
-#if defined OS_LYNX
-  clock_gettime(CLOCK_REALTIME, tp);
-#endif
-
   return tp;
 }
 
@@ -145,12 +141,4 @@ static void waitTime(pwr_tTime* t)
   struct dsc$descriptor_s tims_desc = {
     sizeof(tims) - 1, DSC$K_DTYPE_T, DSC$K_CLASS_S,
   };
-
-  if ((int)then.tv_sec > 0 || ((int)then.tv_sec == 0 && then.tv_nsec > 0)) {
-#if defined OS_LYNX
-    pwr_tTime rmt;
-
-    nanosleep(&then, &rmt);
-#endif
-  }
 }
