@@ -39,6 +39,9 @@
          localtime_r must be used, which doesn't exist on DEC.  */
 
 #include <ctype.h>
+#ifdef OS_MACOS
+#include <errno.h>
+#endif
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -72,6 +75,33 @@
 
 static const char* monStr[] = { "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL",
   "AUG", "SEP", "OCT", "NOV", "DEC" };
+
+#ifdef OS_MACOS
+int clock_gettime(clockid_t clockid, struct timespec* pt)
+{
+  if (clockid == CLOCK_REALTIME) {
+    struct timeval tv;
+
+    gettimeofday(&tv, 0);
+
+    pt->tv_sec = tv.tv_sec;
+    pt->tv_nsec = tv.tv_usec * 1000;
+  } else if (clockid == CLOCK_MONOTONIC) {
+    // TODO
+    struct timeval tv;
+
+    gettimeofday(&tv, 0);
+
+    pt->tv_sec = tv.tv_sec;
+    pt->tv_nsec = tv.tv_usec * 1000;
+  } else {
+    errno = EINVAL;
+    return -1;
+  }
+
+  return 0;
+}
+#endif
 
 static pwr_tStatus validateTm(struct tm* tms);
 
