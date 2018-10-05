@@ -61,18 +61,15 @@
 typedef struct s_FacilityCB sFacilityCB;
 typedef struct s_MsgCB sMsgCB;
 
-LstType(sFacilityCB);
-LstType(sMsgCB);
-
 struct s_MsgCB {
-  LstLink(sMsgCB) MsgL;
+  struct LstHead MsgL;
   msg_sMsg m;
   msg_eSeverity Severity;
 };
 
 struct s_FacilityCB {
-  LstLink(sFacilityCB) FacL;
-  LstHead(sMsgCB) MsgH;
+  struct LstHead FacL;
+  struct LstHead MsgH;
   msg_sFacility f;
 };
 
@@ -81,7 +78,7 @@ extern int lineno;
 
 static int SyntaxError;
 
-static LstHead(sFacilityCB) lFacH;
+static struct LstHead lFacH;
 
 /*
  * Local functions
@@ -125,7 +122,7 @@ int main(int argc, char** argv)
     exit(2);
   }
 
-  LstIni(&lFacH);
+  LstInit(&lFacH);
   SyntaxError = 0;
   lineno = 1;
   yylex();
@@ -160,20 +157,20 @@ void lex_FacName(const char* FacName)
 {
   sFacilityCB* facp = (sFacilityCB*)calloc(1, sizeof(sFacilityCB));
 
-  LstIni(&facp->MsgH);
+  LstInit(&facp->MsgH);
   facp->f.FacName = MSG_NEW_STRING(FacName);
 
-  LstIns(&lFacH, facp, FacL);
+  LstInsert(&lFacH, &facp->FacL);
 }
 
 void lex_FacNum(int FacNum)
 {
-  LstObj(LstLas(&lFacH))->f.FacNum = FacNum;
+  LstEntry(lFacH.prev, sFacilityCB, FacL)->f.FacNum = FacNum;
 }
 
 void lex_FacPrefix(const char* Prefix)
 {
-  LstObj(LstLas(&lFacH))->f.Prefix = MSG_NEW_STRING(Prefix);
+  LstEntry(lFacH.prev, sFacilityCB, FacL)->f.Prefix = MSG_NEW_STRING(Prefix);
 }
 
 void lex_MsgName(const char* MsgName)
@@ -187,21 +184,21 @@ void lex_MsgName(const char* MsgName)
     msgp->m.MsgName[i] = toupper(MsgName[i]);
   msgp->m.MsgName[i] = '\0';
 
-  (void)LstIns(&LstObj(LstLas(&lFacH))->MsgH, msgp, MsgL);
+  LstInsert(&LstEntry(lFacH.prev, sFacilityCB, FacL)->MsgH, &msgp->MsgL);
 }
 
 void lex_MsgText(const char* Text)
 {
-  LstLink(sMsgCB)* ml = LstLas(&LstObj(LstLas(&lFacH))->MsgH);
+  struct LstHead* ml = LstEntry(lFacH.prev, sFacilityCB, FacL)->MsgH.prev;
 
   TranslateFormatSpec(
-      Text, &LstObj(ml)->m.MsgTxt); /* convert any VMS-style form spec */
+      Text, &LstEntry(ml, sMsgCB, MsgL)->m.MsgTxt); /* convert any VMS-style form spec */
 }
 
 void lex_MsgSeverity(msg_eSeverity Severity)
 {
-  LstLink(sMsgCB)* ml = LstLas(&LstObj(LstLas(&lFacH))->MsgH);
-  LstObj(ml)->Severity = Severity;
+  struct LstHead* ml = LstEntry(lFacH.prev, sFacilityCB, FacL)->MsgH.prev;
+  LstEntry(ml, sMsgCB, MsgL)->Severity = Severity;
 }
 
 void lex_LexError(int Lineno, char* Str)
@@ -215,8 +212,8 @@ void lex_LexError(int Lineno, char* Str)
  */
 static void WriteFiles(char* fname, FILE* cfp, FILE* hfp)
 {
-  LstLink(sFacilityCB) * fl;
-  LstLink(sMsgCB) * ml;
+  struct LstHead * fl;
+  struct LstHead * ml;
   int idx;
   int facid;
   char prefix[32];
@@ -227,37 +224,38 @@ static void WriteFiles(char* fname, FILE* cfp, FILE* hfp)
   fprintf(hfp, "#ifndef %s_h\n", fname);
   fprintf(hfp, "#define %s_h\n\n", fname);
 
-  for (fl = LstFir(&lFacH); fl != LstEnd(&lFacH); fl = LstNex(fl)) {
-    facid = 0x800 + LstObj(fl)->f.FacNum;
-    snprintf(name, sizeof(name), "%s_FACILITY", LstObj(fl)->f.FacName);
+  LstForEach(fl, &lFacH) {
+    facid = 0x800 + LstEntry(fl, sFacilityCB, FacL)->f.FacNum;
+    snprintf(name, sizeof(name), "%s_FACILITY", LstEntry(fl, sFacilityCB, FacL)->f.FacName);
     fprintf(hfp, "#define %-29s %9d /* x%08x */\n", name, facid, facid);
     facid = facid << 16;
 
-    if (LstObj(fl)->f.Prefix)
-      strncpy(prefix, LstObj(fl)->f.Prefix, sizeof(prefix));
+    if (LstEntry(fl, sFacilityCB, FacL)->f.Prefix)
+      strncpy(prefix, LstEntry(fl, sFacilityCB, FacL)->f.Prefix, sizeof(prefix));
     else
-      snprintf(prefix, sizeof(prefix), "%s_", LstObj(fl)->f.FacName);
+      snprintf(prefix, sizeof(prefix), "%s_", LstEntry(fl, sFacilityCB, FacL)->f.FacName);
 
-    snprintf(msgName, sizeof(msgName), "%smsg", LstObj(fl)->f.FacName);
+    snprintf(msgName, sizeof(msgName), "%smsg", LstEntry(fl, sFacilityCB, FacL)->f.FacName);
     fprintf(cfp, "static msg_sMsg %s[] = {\n", msgName);
 
-    for (idx = 1, ml = LstFir(&LstObj(fl)->MsgH);
-         ml != LstEnd(&LstObj(fl)->MsgH); ml = LstNex(ml), idx++) {
+    idx = 1;
+    LstForEach(ml, &LstEntry(fl, sFacilityCB, FacL)->MsgH) {
       if (idx != 1)
         fprintf(cfp, ",\n");
 
-      msg = facid + 0x8000 + (idx << 3) + LstObj(ml)->Severity;
-      snprintf(name, sizeof(name), "%s%s", prefix, LstObj(ml)->m.MsgName);
+      msg = facid + 0x8000 + (idx << 3) + LstEntry(ml, sMsgCB, MsgL)->Severity;
+      snprintf(name, sizeof(name), "%s%s", prefix, LstEntry(ml, sMsgCB, MsgL)->m.MsgName);
       fprintf(hfp, "#define %-29s %9.9d /* x%08x */\n", name, msg, msg);
-      fprintf(cfp, "\t{\"%s\", \"%s\"}", LstObj(ml)->m.MsgName,
-          LstObj(ml)->m.MsgTxt);
+      fprintf(cfp, "\t{\"%s\", \"%s\"}", LstEntry(ml, sMsgCB, MsgL)->m.MsgName,
+          LstEntry(ml, sMsgCB, MsgL)->m.MsgTxt);
+      idx++;
     }
     fprintf(cfp, "\n};\n\n");
 
     fprintf(cfp, "static msg_sFacility %sfacility[] = {\n\t",
-        LstObj(fl)->f.FacName);
+        LstEntry(fl, sFacilityCB, FacL)->f.FacName);
     fprintf(cfp, "{%d, \"%s\", \"%s\", MSG_NOF(%s), %s}\n",
-        LstObj(fl)->f.FacNum, LstObj(fl)->f.FacName, prefix, msgName, msgName);
+        LstEntry(fl, sFacilityCB, FacL)->f.FacNum, LstEntry(fl, sFacilityCB, FacL)->f.FacName, prefix, msgName, msgName);
     fprintf(cfp, "};\n\n");
   }
 

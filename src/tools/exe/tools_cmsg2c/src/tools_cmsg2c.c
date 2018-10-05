@@ -64,10 +64,8 @@
 
 typedef struct s_FacilityCB sFacilityCB;
 
-LstType(sFacilityCB);
-
 struct s_FacilityCB {
-  LstLink(sFacilityCB) FacL;
+  struct LstHead FacL;
   char* facnam;
   int facnum;
 };
@@ -76,7 +74,7 @@ extern int lineno;
 
 static int SyntaxError;
 
-static LstHead(sFacilityCB) lFacH;
+static struct LstHead lFacH;
 static sFacilityCB* CurrFac = NULL;
 
 static void CopyFile(FILE* ifp, FILE* ofp);
@@ -122,7 +120,7 @@ int main(int argc, char** argv)
     exit(1);
   }
 
-  LstIni(&lFacH);
+  LstInit(&lFacH);
   SyntaxError = 0;
   lineno = 1;
 
@@ -159,7 +157,7 @@ void lex_FacName(char* facnam)
 
 void lex_FacNum(int facnum)
 {
-  LstLink(sFacilityCB) * fl;
+  struct LstHead * fl;
 
   /*
    * To do: Check that the facility number is within the valid range
@@ -167,14 +165,14 @@ void lex_FacNum(int facnum)
    */
 
   /* Insert in ascending order */
-  for (fl = LstFir(&lFacH); fl != LstEnd(&lFacH); fl = LstNex(fl)) {
-    if (LstObj(fl)->facnum > facnum) {
+  LstForEach(fl, &lFacH) {
+    if (LstEntry(fl, sFacilityCB, FacL)->facnum > facnum) {
       break;
     }
   }
 
   CurrFac->facnum = facnum;
-  LstIns(fl, CurrFac, FacL);
+  LstInsert(fl, &CurrFac->FacL);
   CurrFac = NULL;
 }
 
@@ -192,20 +190,20 @@ static void CopyFile(FILE* ifp, FILE* ofp)
 
 static void WriteFacility(FILE* cfp, char* branch)
 {
-  LstLink(sFacilityCB) * fl;
+  struct LstHead * fl;
   int i = 0;
 
   fprintf(cfp, "static msg_sFacility *Facilities[] = {\n");
 
-  for (fl = LstFir(&lFacH); fl != LstEnd(&lFacH); fl = LstNex(fl)) {
+  LstForEach(fl, &lFacH) {
     if (i++)
       fprintf(cfp, ",\n");
 
-    fprintf(cfp, "\t%-20s /* %4d */", LstObj(fl)->facnam, LstObj(fl)->facnum);
+    fprintf(cfp, "\t%-20s /* %4d */", LstEntry(fl, sFacilityCB, FacL)->facnam, LstEntry(fl, sFacilityCB, FacL)->facnum);
   }
 
   fprintf(cfp, "};\n\n");
-  if (LstFir(&lFacH) == LstEnd(&lFacH))
+  if (LstEmpty(&lFacH))
     fprintf(cfp, "msg_sHead %sMsgHead = {0, 0};\n", branch ? branch : "pwrp");
   else
     fprintf(cfp, "msg_sHead %sMsgHead = {MSG_NOF(Facilities), Facilities};\n",
