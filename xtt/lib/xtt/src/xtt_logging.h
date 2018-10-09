@@ -76,9 +76,7 @@ public:
   FILE* logg_file;
   char old_value[RTT_LOGG_MAXPAR][80];
   pwr_tTime starttime;
-#if defined OS_POSIX
   pthread_t thread;
-#endif
   int line_size;
   int parameter_count;
   int print_shortname;

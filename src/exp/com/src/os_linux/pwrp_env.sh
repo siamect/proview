@@ -641,7 +641,7 @@ EOF
 #
 <topic> index
 
-<image> pwr_logga.gif
+<image> pwr_logga.png
 
 <h1>Welcome to $pname
 <h2>Description

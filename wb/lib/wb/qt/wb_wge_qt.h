@@ -51,7 +51,6 @@ public:
   QWidget* form_widget;
   QWidget* nav_shell;
   QWidget* nav_widget;
-  QWidget* menu_widget;
   QLineEdit* value_input;
   QWidget* value_dialog;
   QWidget* message_dia_widget;

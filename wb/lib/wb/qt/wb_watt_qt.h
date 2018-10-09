@@ -59,8 +59,6 @@ public:
   QLabel* msg_label;
   QLabel* cmd_prompt;
   QWidget* cmd_scrolledinput;
-  QWidget* cmd_scrolled_ok;
-  QWidget* cmd_scrolled_ca;
   QTextEdit* cmd_scrolled_buffer;
   QSplitter* pane;
   static CoWowRecall value_recall;

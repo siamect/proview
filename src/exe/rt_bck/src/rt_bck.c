@@ -71,14 +71,10 @@ pwr_tStatus bck_print(char*);
   if ((sts) == -1)                                                             \
   perror(str)
 
-#if defined OS_POSIX
 #define A_MODE
 #define FGETNAME backup_confp->BackupFile
 #define LOCK
 #define UNLOCK
-#else
-#define A_MODE
-#endif
 
 /* Interface between the collector and the file writer  */
 
@@ -1121,13 +1117,8 @@ void* bck_coll_process(void* arg)
     delta.tv_sec = cycletime / 10;
     delta.tv_nsec = (cycletime % 10) * 100000000;
 
-#if defined OS_LYNX && defined(PWR_LYNX_30)
-    abstime.tv_sec = delta.tv_sec;
-    abstime.tv_nsec = delta.tv_nsec;
-#else
     time_GetTime(&abstime);
     time_Aadd(&abstime, &abstime, &delta);
-#endif
 
     sts4a = pthread_mutex_lock(&frcactmtx);
     check4a(sts4a, "pthread_mutex_lock(&frcactmtx)");

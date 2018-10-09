@@ -3849,9 +3849,7 @@ static int ccm_func_printf(void* filectx, ccm_sArg* arg_list, int arg_count,
       arg_p = arg_p->next;
     }
   }
-#if defined OS_POSIX
   fflush(stdout);
-#endif
   *return_decl = K_DECL_INT;
   *return_int = sts;
   return 1;
@@ -3923,9 +3921,7 @@ static int ccm_func_ask(void* filectx, ccm_sArg* arg_list, int arg_count,
     return CCM__VARTYPE;
 
   printf("%s", arg_list->value_string);
-#if defined OS_POSIX
   fflush(stdout);
-#endif
 
   arg_p = arg_list->next;
   if (arg_p->value_decl == K_DECL_FLOAT)

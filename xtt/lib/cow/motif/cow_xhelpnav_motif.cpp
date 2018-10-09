@@ -56,7 +56,6 @@
 #include "flow_browctx.h"
 #include "flow_browapi.h"
 #include "flow_browwidget_motif.h"
-#include "flow_utils.h"
 
 #include "cow_xhelpnav_motif.h"
 

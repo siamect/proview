@@ -39,6 +39,9 @@
          localtime_r must be used, which doesn't exist on DEC.  */
 
 #include <ctype.h>
+#ifdef OS_MACOS
+#include <errno.h>
+#endif
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -72,6 +75,33 @@
 
 static const char* monStr[] = { "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL",
   "AUG", "SEP", "OCT", "NOV", "DEC" };
+
+#ifdef OS_MACOS
+int clock_gettime(clockid_t clockid, struct timespec* pt)
+{
+  if (clockid == CLOCK_REALTIME) {
+    struct timeval tv;
+
+    gettimeofday(&tv, 0);
+
+    pt->tv_sec = tv.tv_sec;
+    pt->tv_nsec = tv.tv_usec * 1000;
+  } else if (clockid == CLOCK_MONOTONIC) {
+    // TODO
+    struct timeval tv;
+
+    gettimeofday(&tv, 0);
+
+    pt->tv_sec = tv.tv_sec;
+    pt->tv_nsec = tv.tv_usec * 1000;
+  } else {
+    errno = EINVAL;
+    return -1;
+  }
+
+  return 0;
+}
+#endif
 
 static pwr_tStatus validateTm(struct tm* tms);
 
@@ -866,6 +896,10 @@ pwr_tStatus time_AsciiToD(const char* tstr, pwr_tDeltaTime* ts)
   int day, hour = 0, min, sec, hun = 0;
   int useday = 1;
 
+  if ( streq( tstr, "NotADeltaTime")) {
+    *ts = pwr_cNotADeltaTime;
+    return TIME__SUCCESS;
+  }
   strncpy(buf, tstr, sizeof(buf) - 1);
   buf[sizeof(buf) - 1] = '\0';
   sp = buf;
@@ -924,6 +958,10 @@ pwr_tStatus time_AsciiToA(const char* tstr, pwr_tTime* ts)
   char buf[64];
   pwr_tStatus sts;
 
+  if ( streq( tstr, "NotATime")) {
+    *ts = pwr_cNotATime;
+    return TIME__SUCCESS;
+  }
   strncpy(buf, tstr, sizeof(buf) - 1);
   buf[sizeof(buf) - 1] = '\0';
 
@@ -1309,7 +1347,6 @@ pwr_tDeltaTime* time_ZeroD(pwr_tDeltaTime* tp)
 
 void time_Sleep(float time)
 {
-#if defined OS_POSIX
   pwr_tDeltaTime p_time;
   struct timespec ts;
 
@@ -1317,7 +1354,6 @@ void time_Sleep(float time)
   ts.tv_sec = p_time.tv_sec;
   ts.tv_nsec = p_time.tv_nsec;
   nanosleep(&ts, NULL);
-#endif
 }
 
 int time_GetTime(pwr_tTime* ts)

@@ -61,11 +61,7 @@
 #define DCLI_K_ARROW_RIGHT 276
 #define DCLI_K_ARROW_LEFT 277
 #define DCLI_K_TIMEOUT 282
-#if defined OS_POSIX
 #define DCLI_K_RETURN 10
-#else
-#define DCLI_K_RETURN 13
-#endif
 #define DCLI_K_BACKSPACE 8
 #define DCLI_K_CTRLC 3
 #define DCLI_K_ESCAPE 27
@@ -572,7 +568,6 @@ int dcli_get_input_string(dcli_sChannel* chn, char* out_string,
 * Description:	Gör en assign av s till kanalnummer chn
 *************************************************************************/
 int dcli_qio_assign(char* s, dcli_sChannel* chn)
-#if defined OS_POSIX
 {
   int chan = -1;
   int sts;
@@ -590,7 +585,6 @@ int dcli_qio_assign(char* s, dcli_sChannel* chn)
   *chn = (dcli_sChannel)chan;
   return 1;
 }
-#endif
 
 /************************************************************************
 *
@@ -605,7 +599,6 @@ int dcli_qio_assign(char* s, dcli_sChannel* chn)
 * Description:	Set attributes to a tty
 *************************************************************************/
 int dcli_qio_set_attr(dcli_sChannel* chn, int tmo)
-#if defined OS_POSIX
 {
   int chan;
   int sts;
@@ -627,7 +620,6 @@ int dcli_qio_set_attr(dcli_sChannel* chn, int tmo)
 
   return 1;
 }
-#endif
 
 /************************************************************************
 *
@@ -642,7 +634,6 @@ int dcli_qio_set_attr(dcli_sChannel* chn, int tmo)
 * Description:	Reset the channel before exit
 *************************************************************************/
 int dcli_qio_reset(dcli_sChannel* chn)
-#if defined OS_POSIX
 {
   int chan;
   int sts;
@@ -664,7 +655,6 @@ int dcli_qio_reset(dcli_sChannel* chn)
 
   return 1;
 }
-#endif
 
 /************************************************************************
 *
@@ -680,7 +670,6 @@ int dcli_qio_reset(dcli_sChannel* chn)
 * Description:	Läser med qiow från chn till buf
 *************************************************************************/
 int dcli_qio_readw(dcli_sChannel* chn, char* buf, int len)
-#if defined OS_POSIX
 {
   int n = 0;
 
@@ -688,7 +677,6 @@ int dcli_qio_readw(dcli_sChannel* chn, char* buf, int len)
     n = read(*chn, buf, len);
   return 1;
 }
-#endif
 
 /************************************************************************
 *
@@ -705,7 +693,6 @@ int dcli_qio_readw(dcli_sChannel* chn, char* buf, int len)
 * Description:	Läser med qio från chn till buf med timout-tid tmo (ms)
 *************************************************************************/
 int dcli_qio_read(dcli_sChannel* chn, int tmo, char* buf, int len)
-#if defined OS_POSIX
 {
   int n;
 
@@ -715,7 +702,6 @@ int dcli_qio_read(dcli_sChannel* chn, int tmo, char* buf, int len)
     return 0;
   return 1;
 }
-#endif
 
 /************************************************************************
 *
@@ -731,7 +717,6 @@ int dcli_qio_read(dcli_sChannel* chn, int tmo, char* buf, int len)
 * Description:	Skriver med qiow från buf till chn
 *************************************************************************/
 int dcli_qio_writew(dcli_sChannel* chn, char* buf, int len)
-#if defined OS_POSIX
 {
   if (*(int*)chn == STDIN_FILENO)
     write(STDOUT_FILENO, buf, len);
@@ -739,7 +724,6 @@ int dcli_qio_writew(dcli_sChannel* chn, char* buf, int len)
     write(*(int*)chn, buf, len);
   return 1;
 }
-#endif
 
 /************************************************************************
 *
@@ -756,7 +740,6 @@ int dcli_qio_writew(dcli_sChannel* chn, char* buf, int len)
 * Description:	Skriver med qio från buf till chn med timout-tid tmo (ms)
 *************************************************************************/
 int dcli_qio_write(dcli_sChannel* chn, int tmo, char* buf, int len)
-#if defined OS_POSIX
 {
   if (*(int*)chn == STDIN_FILENO)
     write(STDOUT_FILENO, buf, len);
@@ -764,4 +747,3 @@ int dcli_qio_write(dcli_sChannel* chn, int tmo, char* buf, int len)
     write(*(int*)chn, buf, len);
   return 1;
 }
-#endif

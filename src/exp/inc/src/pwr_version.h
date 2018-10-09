@@ -46,9 +46,7 @@
 
 #include "pwr.h"
 
-#if defined OS_LYNX
-#define pwrv_cOpSys "LynxOS"
-#elif defined OS_LINUX
+#if defined OS_LINUX
 #define pwrv_cOpSys "Linux"
 #elif defined OS_MACOS
 #define pwrv_cOpSys "Mac OS"
@@ -58,8 +56,6 @@
 #define pwrv_cOpSys "OpenBSD"
 #elif defined OS_CYGWIN
 #define pwrv_cOpSys "Cygwin"
-#elif defined OS_WNT
-#define pwrv_cOpSys "Windows NT"
 #else
 #define pwrv_cOpSys "Unknown Operating System"
 #endif
@@ -80,10 +76,10 @@
   ((pwr_tVersion)((a << 24) + (b << 16) + (c << 8) + d))
 #endif
 
-#define pwrv_cBuildTimeStr "12-APR-2018 12:00:00"
+#define pwrv_cBuildTimeStr "14-SEP-2018 12:00:00"
 
-#define pwrv_cPwrVersionStr "V5.6.0"
-#define pwrv_cPwrVersion SET_VERSION('V', 5, 6, 0)
+#define pwrv_cPwrVersionStr "V5.6.1"
+#define pwrv_cPwrVersion SET_VERSION('V', 5, 6, 1)
 
 #define pwrv_cWbdbVersionShortStr "V56"
 #define pwrv_cPwrCopyright "Copyright (C) 2005-2018 SSAB EMEA AB"

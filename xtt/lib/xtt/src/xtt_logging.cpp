@@ -640,19 +640,11 @@ int XttLogging::start()
   stop_logg = 0;
 
 /* Create a subprocess */
-#if defined OS_LYNX && defined PWR_LYNX_30
-  sts = pthread_create(&thread, pthread_attr_default, /* attr */
-      xtt_logproc, /* start_routine */
-      (void*)this); /* arg */
-  if (sts != 0)
-    return sts;
-#elif defined OS_POSIX
   sts = pthread_create(&thread, NULL, /* attr */
       xtt_logproc, /* start_routine */
       (void*)this); /* arg */
   if (sts != 0)
     return sts;
-#endif
 
   strcpy(msg, "Logg start ");
   dcli_fgetname(logg_file, msg + strlen(msg), logg_filename);
@@ -911,7 +903,6 @@ static void* xtt_logproc(void* arg)
 
         if (!cond) {
 /*  Don't log, wait until next scan */
-#if defined OS_POSIX
           time_GetTime(&time);
           time_Adiff(&wait_time, &nextime, &time);
 
@@ -919,7 +910,6 @@ static void* xtt_logproc(void* arg)
           wait_time_ts.tv_sec = wait_time.tv_sec;
           wait_time_ts.tv_nsec = wait_time.tv_nsec;
           nanosleep(&wait_time_ts, NULL);
-#endif
           continue;
         }
       }
@@ -1285,14 +1275,12 @@ static void* xtt_logproc(void* arg)
       time_Aadd(&restime, &nextime, &deltatime);
       nextime = restime;
     }
-#if defined OS_POSIX
     time_Adiff(&wait_time, &nextime, &time);
 
     struct timespec wait_time_ts;
     wait_time_ts.tv_sec = wait_time.tv_sec;
     wait_time_ts.tv_nsec = wait_time.tv_nsec;
     nanosleep(&wait_time_ts, NULL);
-#endif
   }
   // pthread_exit(0);
 

@@ -40,7 +40,6 @@
    Last modification: 030217
 */
 
-#if defined OS_POSIX
 #if defined PWRE_CONF_LIBDB
 
 #include <db.h>
@@ -1055,5 +1054,4 @@ void Hist::hist_init_cb(void* ctx)
     }
   }
 }
-#endif
 #endif

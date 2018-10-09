@@ -1544,7 +1544,7 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
       "zoom-out");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "",
-      "zoom-reset");
+      "zoom-original");
   view_plant_w = addCheckableMenuItem(
       toplevel, view, "Vi&ew Plant", SLOT(activate_view_plant(bool)), "CTRL+P");
   view_graphlist_w = addCheckableMenuItem(
@@ -1675,7 +1675,7 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
 
   // Line type option menu
   QMenu* tools_linetype = addToolMenu(toplevel, tools3, "Line Type");
-  for (int i = 0; i < 7; i++) {
+  for (int i = 1; i <= 7; i++) {
     std::ostringstream txt;
     txt << "Linetype " << i;
     std::ostringstream fname;
@@ -1705,20 +1705,22 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
       toplevel, tools_textfont, "Helvetica", SLOT(activate_textfont()));
   tools_textfont_1->setFont(QFont(fl("Helvetica")));
   tools_textfont_1->setData(glow_eFont_Helvetica);
+
   QAction* tools_textfont_2 = addMenuItem(
       toplevel, tools_textfont, "Times", SLOT(activate_textfont()));
-
   tools_textfont_2->setFont(QFont(fl("Times")));
   tools_textfont_2->setData(glow_eFont_Times);
+
   QAction* tools_textfont_3 = addMenuItem(toplevel, tools_textfont,
       "New Century Schoolbook", SLOT(activate_textfont()));
   tools_textfont_3->setFont(QFont(fl("New Century Schoolbook")));
   tools_textfont_3->setData(glow_eFont_NewCenturySchoolbook);
+
   QAction* tools_textfont_4 = addMenuItem(
       toplevel, tools_textfont, "Courier", SLOT(activate_textfont()));
-
   tools_textfont_4->setFont(QFont(fl("Courier")));
   tools_textfont_4->setData(glow_eFont_Courier);
+
   QAction* tools_textfont_5 = addMenuItem(
       toplevel, tools_textfont, "Lucida Sans", SLOT(activate_textfont()));
   tools_textfont_5->setFont(QFont(fl("Lucida Sans")));

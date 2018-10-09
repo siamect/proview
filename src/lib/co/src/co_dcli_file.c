@@ -63,7 +63,6 @@ int dcli_get_defaultfilename(const char* inname, char* outname, const char* ext)
   char filename[80];
   char *s, *s2;
 
-#if defined OS_POSIX
   if (strchr(inname, '/'))
     str_Strcpy(outname, inname);
   else if ((s = strchr(inname, ':'))) {
@@ -93,7 +92,6 @@ int dcli_get_defaultfilename(const char* inname, char* outname, const char* ext)
       dcli_replace_env(filename, outname);
     }
   }
-#endif
 
   /* Look for extention in filename */
   if (ext != NULL) {
@@ -117,8 +115,6 @@ int dcli_get_defaultfilename(const char* inname, char* outname, const char* ext)
 
   return DCLI__SUCCESS;
 }
-
-#if defined OS_POSIX
 
 /*************************************************************************
 *
@@ -177,9 +173,11 @@ int dcli_replace_env(const char* str, char* newstr)
         str_ToLower(lower_symbol, symbol);
       if ((value = getenv(lower_symbol)) == NULL) {
         /* It was no symbol */
+        #ifdef DEBUG
         if (str_StartsWith(str, "$pwr")) {
           fprintf(stderr, "Warning! Could not resolve environment variable $%s\n", lower_symbol);
         }
+        #endif
         *t = *s;
         t++;
       } else {
@@ -209,9 +207,11 @@ int dcli_replace_env(const char* str, char* newstr)
       str_ToLower(lower_symbol, symbol);
     if ((value = getenv(lower_symbol)) == NULL) {
       /* It was no symbol */
+      #ifdef DEBUG
       if (str_StartsWith(str, "$pwr")) {
         fprintf(stderr, "Warning! Could not resolve environment variable $%s\n", lower_symbol);
       }
+      #endif
       *t = 0;
     } else {
       /* Symbol found */
@@ -226,7 +226,6 @@ int dcli_replace_env(const char* str, char* newstr)
   strcpy(newstr, new);
   return 1;
 }
-#endif
 
 /*************************************************************************
 *

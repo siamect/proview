@@ -100,8 +100,6 @@ extern "C" {
 #define DATDIR "$pwrp_load/"
 #define DATEXT ".dat"
 
-#define IS_LYNX(os) ((os & pwr_mOpSys_PPC_LYNX) || (os & pwr_mOpSys_X86_LYNX))
-
 #define IS_MACOS(os) (os & pwr_mOpSys_X86_64_MACOS)
 
 #define IS_FREEBSD(os) (os & pwr_mOpSys_X86_64_FREEBSD)
@@ -116,7 +114,7 @@ extern "C" {
       || (os & pwr_mOpSys_ARM64_LINUX) || (os & pwr_mOpSys_CustomBuild))
 
 #define IS_UNIX(os)                                                            \
-  (IS_LINUX(os) || IS_LYNX(os) || IS_MACOS(os) || IS_FREEBSD(os)               \
+  (IS_LINUX(os) || IS_MACOS(os) || IS_FREEBSD(os)               \
       || IS_OPENBSD(os) || IS_CYGWIN(os))
 
 #define IS_NOT_VALID_OS(os) (!IS_UNIX(os))
@@ -530,11 +528,7 @@ static pwr_tStatus gcg_get_build_host(pwr_mOpSys os, char* buf, int bufsize)
   int sts = GSX__SUCCESS;
   char logname[32];
 
-  if (os & pwr_mOpSys_PPC_LYNX)
-    strcpy(logname, "pwr_build_host_ppc_lynx");
-  else if (os & pwr_mOpSys_X86_LYNX)
-    strcpy(logname, "pwr_build_host_x86_lynx");
-  else if (os & pwr_mOpSys_PPC_LINUX)
+  if (os & pwr_mOpSys_PPC_LINUX)
     strcpy(logname, "pwr_build_host_ppc_linux");
   else if (os & pwr_mOpSys_X86_LINUX)
     strcpy(logname, "pwr_build_host_x86_linux");
@@ -4162,13 +4156,7 @@ static int gcg_get_child_plcthread(gcg_ctx gcgctx, pwr_tObjid objdid,
 
       /* Check the scantime */
       timebase = (int)((*scantime_ptr) * 1000 + 0.5);
-      if ((IS_LINUX(os) && *scantime_ptr < 0.0000001)
-          || (IS_MACOS(os) && *scantime_ptr < 0.0000001)
-          || (IS_FREEBSD(os) && *scantime_ptr < 0.0000001)
-          || (IS_OPENBSD(os) && *scantime_ptr < 0.0000001)
-          || (IS_CYGWIN(os) && *scantime_ptr < 0.0000001)
-          || (IS_LYNX(os)
-                 && ((timebase <= 0) || ((timebase / 10) * 10) != timebase))) {
+      if ((IS_LINUX(os) || IS_MACOS(os) || IS_FREEBSD(os) || IS_OPENBSD(os) || IS_CYGWIN(os)) && (*scantime_ptr < 0.0000001)) {
         gcg_plc_msg(gcgctx, GSX__BADSCANTIME, objdid);
       } else {
         /* Get plcprocess, should be parent */
@@ -4641,16 +4629,6 @@ int gcg_comp_rtnode(char* nodename, pwr_mOpSys os, pwr_tUInt32 bus,
   strncpy(nodename_low, cdh_Low(nodename), sizeof(nodename_low));
 
   switch (os) {
-  case pwr_mOpSys_PPC_LYNX:
-    strcpy(objdir, "xxx"); /* Not used */
-    strcpy(os_str, "PPC_LYNX");
-    max_no_timebase = GCG_MAX_NO_TIMEBASE_LYNX;
-    break;
-  case pwr_mOpSys_X86_LYNX:
-    strcpy(objdir, "xxx");
-    strcpy(os_str, "X86_LYNX"); /* Not used */
-    max_no_timebase = GCG_MAX_NO_TIMEBASE_LYNX;
-    break;
   case pwr_mOpSys_PPC_LINUX:
     strcpy(objdir, "xxx"); /* Not used */
     strcpy(os_str, "PPC_LINUX");
@@ -4893,8 +4871,6 @@ int gcg_comp_rtnode(char* nodename, pwr_mOpSys os, pwr_tUInt32 bus,
           case pwr_mOpSys_X86_64_FREEBSD:
           case pwr_mOpSys_X86_64_OPENBSD:
           case pwr_mOpSys_X86_CYGWIN:
-          case pwr_mOpSys_X86_LYNX:
-          case pwr_mOpSys_PPC_LYNX:
           case pwr_mOpSys_CustomBuild:
             l += sprintf(&plclib_frozen[l], "%s%s ", PLCLIB_FROZEN_LINK_UNIX,
                 vldh_VolumeIdToStr(*volumelist_ptr));

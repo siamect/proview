@@ -41,6 +41,7 @@
 #include "co_msg.h"
 #include "co_string.h"
 #include "co_time.h"
+#include "co_time_msg.h"
 
 #include "cow_login.h"
 
@@ -318,18 +319,18 @@ void wnav_attrvalue_to_string(
     break;
   }
   case pwr_eType_Float32: {
-    if (feqf(*(float*)value_ptr, FLT_MIN)) {
-      strcpy(str, "FltMin");
-      *len = strlen(str);
-    } else if (feqf(*(float*)value_ptr, -FLT_MIN)) {
-      strcpy(str, "FltNMin");
-      *len = strlen(str);
-    } else if (feqf(*(float*)value_ptr, FLT_MAX)) {
-      strcpy(str, "FltMax");
-      *len = strlen(str);
-    } else if (feqf(*(float*)value_ptr, -FLT_MAX)) {
-      strcpy(str, "FltNMax");
-      *len = strlen(str);
+    if ( *(float *)value_ptr == FLT_MIN) {
+      strcpy( str, "FltMin");
+      *len = strlen( str);
+    } else if ( *(float *)value_ptr == -FLT_MIN) {
+      strcpy( str, "FltNMin");
+      *len = strlen( str);
+    } else if ( *(float *)value_ptr == FLT_MAX) {
+      strcpy( str, "FltMax");
+      *len = strlen( str);
+    } else if ( *(float *)value_ptr == -FLT_MAX) {
+      strcpy( str, "FltNMax");
+      *len = strlen( str);
     } else
       *len = sprintf(str, "%f", *(pwr_tFloat32*)value_ptr);
     *buff = str;
@@ -494,7 +495,7 @@ void wnav_attrvalue_to_string(
     else {
       sts = time_AtoAscii(
           (pwr_tTime*)value_ptr, time_eFormat_DateAndTime, str, sizeof(str));
-      if (EVEN(sts))
+      if (EVEN(sts) && sts != TIME__NAT)
         strcpy(str, "-");
     }
     *len = strlen(str);
@@ -508,7 +509,7 @@ void wnav_attrvalue_to_string(
       strcpy(str, "DtMax");
     else {
       sts = time_DtoAscii((pwr_tDeltaTime*)value_ptr, 1, str, sizeof(str));
-      if (EVEN(sts))
+      if (EVEN(sts) && sts != TIME__NADT)
         strcpy(str, "Undefined time");
     }
     *len = strlen(str);

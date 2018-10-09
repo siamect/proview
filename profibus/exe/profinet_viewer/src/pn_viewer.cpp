@@ -80,7 +80,7 @@ void PnViewer::update_devices()
     pnet->fetch_devices(dev_vect);
 
     conf_vect.clear();
-    sts = fetch_config(dev_vect);
+    sts = fetch_config(conf_vect);
     if (EVEN(sts))
       printf("Error reading configuration file\n");
 
@@ -168,8 +168,8 @@ int PnViewer::fetch_config(std::vector<PnDevice>& vect)
 
     strncpy(pndevice.devname, elemv[1], sizeof(pndevice.devname));
 
-    sts = sscanf(elemv[2], "%hhu.%hhu.%hhu.%hhu", &pndevice.ipaddress[0],
-        &pndevice.ipaddress[1], &pndevice.ipaddress[2], &pndevice.ipaddress[3]);
+    sts = sscanf(elemv[2], "%hhu.%hhu.%hhu.%hhu", &pndevice.ipaddress[3],
+        &pndevice.ipaddress[2], &pndevice.ipaddress[1], &pndevice.ipaddress[0]);
     if (sts != 4) {
       printf("Not a valid IP address: %s\n", elemv[2]);
       pndevice.ipaddress[0] = 0;
@@ -179,9 +179,9 @@ int PnViewer::fetch_config(std::vector<PnDevice>& vect)
     }
 
     sts = sscanf(elemv[3], "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx",
-        &pndevice.macaddress[0], &pndevice.macaddress[1],
-        &pndevice.macaddress[2], &pndevice.macaddress[3],
-        &pndevice.macaddress[4], &pndevice.macaddress[5]);
+        &pndevice.macaddress[5], &pndevice.macaddress[4],
+        &pndevice.macaddress[3], &pndevice.macaddress[2],
+        &pndevice.macaddress[1], &pndevice.macaddress[0]);
     if (sts != 6) {
       printf("Not a valid MAC address: %s\n", elemv[3]);
       pndevice.macaddress[0] = 0;

@@ -43,17 +43,9 @@
 
 typedef enum { sect_mFlags_Create = 1 << 0 } sect_mFlags;
 
-#if defined OS_LYNX
-#include <semaphore.h>
-
-typedef sem_t sect_sMutex;
-
-#elif defined OS_POSIX
 #include "rt_semaphore.h"
 
 typedef sem_t sect_sMutex;
-
-#endif
 
 typedef union {
   pwr_tBitMask m;
@@ -67,14 +59,12 @@ typedef union {
 #define sect_mHead_ (~sect_mHead__)
 } sect_mHead;
 
-#if defined OS_POSIX
 typedef struct {
   void* base; /* Virtual address of section.  */
   size_t size;
   char name[32]; /* Name of section.  */
   sect_mHead flags;
 } sect_sHead;
-#endif
 
 /* Function prototypes */
 

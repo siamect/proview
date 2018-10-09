@@ -51,31 +51,28 @@
 typedef struct s_Ack sAck;
 typedef struct s_Block sBlock;
 typedef struct s_Handler sHandler;
-LstType(sAck);
-LstType(sBlock);
-LstType(sHandler);
 
 struct s_Ack {
-  LstLink(sAck) ack_l;
+  struct LstHead ack_l;
   mh_sOutunitAck ack;
 };
 
 struct s_Block {
-  LstLink(sBlock) block_l;
+  struct LstHead block_l;
   mh_sOutunitBlock block;
 };
 
 struct s_Handler {
-  LstLink(sHandler) handler_l;
-  LstLink(sHandler) sync_l;
+  struct LstHead handler_l;
+  struct LstHead sync_l;
   pwr_tTime birthTime; /* Time when handler started */
   qcom_sQid qid; /* Qcom queue of handler */
   qcom_sAid aid; /* Qcom application id */
   co_sPlatform platform; /* Platform identity */
   pwr_tNodeIndex nix; /* Node index of handler */
-  LstHead(sAck) ack_l; /* Head to ack list */
+  struct LstHead ack_l; /* Head to ack list */
   pwr_tUInt32 ackGen; /* Ack generation */
-  LstHead(sBlock) block_l; /* Head to block list */
+  struct LstHead block_l; /* Head to block list */
   pwr_tUInt32 blockGen; /* Block generation */
   pwr_tBoolean isDummy;
   pwr_tBoolean linkUp;
@@ -100,8 +97,8 @@ typedef struct {
   pwr_tStatus (*cbInfo)(mh_sMessage*);
   pwr_tStatus (*cbReturn)(mh_sReturn*);
   pwr_tStatus (*cbAlarmStatus)(mh_sAlarmStatus*);
-  LstHead(sHandler) handler_l;
-  LstHead(sHandler) sync_l;
+  struct LstHead handler_l;
+  struct LstHead sync_l;
   pwr_tUInt32 selGen;
   pwr_tUInt32 selSize;
   pwr_tString80 (*pSelL)[];
@@ -153,18 +150,18 @@ pwr_tStatus mh_OutunitAck(mh_sEventId* targetId /**< The identity of an alarm.*/
 {
   pwr_tStatus sts = MH__SUCCESS;
   sHandler* hp;
-  LstLink(sHandler) * hl;
+  struct LstHead * hl;
 
   /* Find originating handler */
 
-  for (hl = LstFir(&l.handler_l); hl != LstEnd(&l.handler_l); hl = LstNex(hl))
-    if (LstObj(hl)->nix == targetId->Nix)
+  LstForEach(hl, &l.handler_l)
+    if (LstEntry(hl, sHandler, handler_l)->nix == targetId->Nix)
       break;
 
-  if (hl == LstEnd(&l.handler_l)) {
+  if (hl == &l.handler_l) {
     return MH__HANDLERDOWN;
   } else {
-    hp = LstObj(hl);
+    hp = LstEntry(hl, sHandler, handler_l);
   }
 
   ackListInsert(hp, targetId->Idx);
@@ -183,7 +180,7 @@ pwr_tStatus mh_OutunitBlock(
 {
   pwr_tStatus sts;
   sHandler* hp;
-  LstLink(sHandler) * hl;
+  struct LstHead * hl;
   pwr_tNodeIndex nix;
   pwr_tBoolean is_mount_clean;
 
@@ -193,18 +190,18 @@ pwr_tStatus mh_OutunitBlock(
   if (EVEN(sts))
     return sts;
 
-  for (hl = LstFir(&l.handler_l); hl != LstEnd(&l.handler_l); hl = LstNex(hl)) {
+  LstForEach(hl, &l.handler_l) {
     if (!hl)
       return MH__HANDLERDOWN;
 
-    if (LstObj(hl)->nix == nix)
+    if (LstEntry(hl, sHandler, handler_l)->nix == nix)
       break;
   }
 
-  if (hl == LstEnd(&l.handler_l)) {
+  if (hl == &l.handler_l) {
     return MH__HANDLERDOWN;
   } else {
-    hp = LstObj(hl);
+    hp = LstEntry(hl, sHandler, handler_l);
   }
 
   blockListInsert(hp, &object, prio);
@@ -359,13 +356,13 @@ pwr_tStatus mh_OutunitConnect(
   l.cbReturn = cbReturn;
   l.cbAlarmStatus = cbAlarmStatus;
 
-  LstIni(&l.handler_l);
-  LstIni(&l.sync_l);
+  LstInit(&l.handler_l);
+  LstInit(&l.sync_l);
 
   for (i = 0; i < 5; i++) {
     hp = (sHandler*)calloc(1, sizeof(*hp));
     hp->isDummy = TRUE;
-    LstIns(&l.sync_l, hp, sync_l);
+    LstInsert(&l.sync_l, &hp->sync_l);
   }
 
   getSelectList();
@@ -397,18 +394,17 @@ pwr_tStatus mh_OutunitConnect(
 pwr_tStatus mh_OutunitDisconnect()
 {
   sHandler* hp;
-  LstLink(sHandler) * hl;
+  struct LstHead * hl;
 
   /* Disconnect all handlers and free memory */
 
-  for (hl = LstFir(&l.handler_l); hl != LstEnd(&l.handler_l);
-       hl = LstFir(&l.handler_l)) {
-    hp = LstObj(hl);
+  LstForEach(hl, &l.handler_l) {
+    hp = LstEntry(hl, sHandler, handler_l);
     sendToHandler(hp, mh_eMsg_OutunitDisconnect, 0, NULL);
     ackListDestroy(hp);
     blockListDestroy(hp);
-    LstRem(hl);
-    LstNul(hl);
+    LstRemove(hl);
+    LstNull(hl);
     free(hp);
   }
 
@@ -494,12 +490,12 @@ pwr_tStatus mh_OutunitSetTimeout(int timeout /**< The timeout in ms. */
 
 pwr_tStatus mh_OutunitUpdate()
 {
-  LstLink(sHandler) * hl;
+  struct LstHead * hl;
 
   getSelectList();
 
-  for (hl = LstFir(&l.handler_l); hl != LstEnd(&l.handler_l); hl = LstNex(hl))
-    sendInfo(LstObj(hl));
+  LstForEach(hl, &l.handler_l)
+    sendInfo(LstEntry(hl, sHandler, handler_l));
 
   return MH__SUCCESS;
 }
@@ -512,18 +508,18 @@ pwr_tStatus mh_OutunitUpdate()
 pwr_tStatus mh_OutunitAlarmRequest(mh_sOutunitAlarmReq* msg)
 {
   sHandler* hp;
-  LstLink(sHandler) * hl;
+  struct LstHead * hl;
 
   /* Find originating handler */
 
-  for (hl = LstFir(&l.handler_l); hl != LstEnd(&l.handler_l); hl = LstNex(hl))
-    if (LstObj(hl)->nix == msg->Nix)
+  LstForEach(hl, &l.handler_l)
+    if (LstEntry(hl, sHandler, handler_l)->nix == msg->Nix)
       break;
 
-  if (hl == LstEnd(&l.handler_l)) {
+  if (hl == &l.handler_l) {
     return MH__HANDLERDOWN;
   } else {
-    hp = LstObj(hl);
+    hp = LstEntry(hl, sHandler, handler_l);
   }
 
   sendToHandler(hp, mh_eMsg_OutunitAlarmReq, sizeof(*msg), (void*)msg);
@@ -533,10 +529,8 @@ pwr_tStatus mh_OutunitAlarmRequest(mh_sOutunitAlarmReq* msg)
 
 static void ackListDelete(sHandler* hp, sAck* ap)
 {
-  LstLink(sAck) * al;
-
-  al = LstRem(&ap->ack_l);
-  LstNul(&ap->ack_l);
+  LstRemove(&ap->ack_l);
+  LstNull(&ap->ack_l);
   free(ap);
 
   checkSyncListDelete(hp);
@@ -545,13 +539,12 @@ static void ackListDelete(sHandler* hp, sAck* ap)
 static void ackListDestroy(sHandler* hp)
 {
   sAck* ap;
-  LstLink(sAck) * al;
+  struct LstHead * al;
 
-  for (al = LstFir(&hp->ack_l); al != LstEnd(&hp->ack_l);
-       al = LstFir(&hp->ack_l)) {
-    ap = LstObj(al);
-    LstRem(al);
-    LstNul(al);
+  LstForEach(al, &hp->ack_l) {
+    ap = LstEntry(al, sAck, ack_l);
+    LstRemove(al);
+    LstNull(al);
     free(ap);
   }
 
@@ -562,34 +555,32 @@ static void ackListDestroy(sHandler* hp)
 static void ackListInsert(sHandler* hp, pwr_tUInt32 targetIdx)
 {
   sAck* ap;
-  LstLink(sAck) * al;
+  struct LstHead * al;
 
   /* Don't insert if already present */
-  for (al = LstFir(&hp->ack_l); al != LstEnd(&hp->ack_l); al = LstNex(al))
-    if (LstObj(al)->ack.targetIdx == targetIdx)
+  LstForEach(al, &hp->ack_l)
+    if (LstEntry(al, sAck, ack_l)->ack.targetIdx == targetIdx)
       return;
 
   ap = (sAck*)calloc(1, sizeof(*ap));
   ap->ack.ackGen = ++hp->ackGen;
   ap->ack.targetIdx = targetIdx;
-  al = LstEnd(&hp->ack_l);
-  LstIns(al, ap, ack_l);
+  al = &hp->ack_l;
+  LstInsert(al, &ap->ack_l);
 
-  if (!LstInl(&hp->sync_l)) {
-    LstIns(LstEnd(&l.sync_l), hp, sync_l);
+  if (LstIsNull(&hp->sync_l)) {
+    LstInsert(&l.sync_l, &hp->sync_l);
   }
 
-  if (ap == LstObj(LstFir(&hp->ack_l))) {
+  if (ap == LstEntry(hp->ack_l.next, sAck, ack_l)) {
     sendToHandler(hp, mh_eMsg_OutunitAck, sizeof(ap->ack), (void*)&ap->ack);
   }
 }
 
 static void blockListDelete(sHandler* hp, sBlock* bp)
 {
-  LstLink(sBlock) * bl;
-
-  bl = LstRem(&bp->block_l);
-  LstNul(&bp->block_l);
+  LstRemove(&bp->block_l);
+  LstNull(&bp->block_l);
   free(bp);
 
   checkSyncListDelete(hp);
@@ -598,13 +589,12 @@ static void blockListDelete(sHandler* hp, sBlock* bp)
 static void blockListDestroy(sHandler* hp)
 {
   sBlock* bp;
-  LstLink(sBlock) * bl;
+  struct LstHead * bl;
 
-  for (bl = LstFir(&hp->block_l); bl != LstEnd(&hp->block_l);
-       bl = LstFir(&hp->block_l)) {
-    bp = LstObj(bl);
-    LstRem(bl);
-    LstNul(bl);
+  LstForEach(bl, &hp->block_l) {
+    bp = LstEntry(bl, sBlock, block_l);
+    LstRemove(bl);
+    LstNull(bl);
     free(bp);
   }
 
@@ -615,21 +605,21 @@ static void blockListDestroy(sHandler* hp)
 static void blockListInsert(sHandler* hp, pwr_tObjid* op, pwr_tUInt32 prio)
 {
   sBlock* bp;
-  LstLink(sBlock) * bl;
+  struct LstHead * bl;
 
   bp = (sBlock*)calloc(1, sizeof(*bp));
   bp->block.blockGen = ++hp->blockGen;
   bp->block.object = *op;
   bp->block.outunit = l.head.outunit;
   bp->block.prio = prio;
-  bl = LstEnd(&hp->block_l);
-  LstIns(bl, bp, block_l);
+  bl = &hp->block_l;
+  LstInsert(bl, &bp->block_l);
 
-  if (!LstInl(&hp->sync_l)) {
-    LstIns(LstEnd(&l.sync_l), hp, sync_l);
+  if (LstIsNull(&hp->sync_l)) {
+    LstInsert(&l.sync_l, &hp->sync_l);
   }
 
-  if (bp == LstObj(LstFir(&hp->block_l))) {
+  if (bp == LstEntry(hp->block_l.next, sBlock, block_l)) {
     sendToHandler(
         hp, mh_eMsg_OutunitBlock, sizeof(bp->block), (void*)&bp->block);
   }
@@ -637,14 +627,13 @@ static void blockListInsert(sHandler* hp, pwr_tObjid* op, pwr_tUInt32 prio)
 
 static void checkSync()
 {
-  LstLink(sHandler) * sl;
+  struct LstHead * sl;
   sHandler* hp;
 
-  for (sl = LstFir(&l.sync_l); sl != LstEnd(&l.sync_l);
-       sl = LstFir(&l.sync_l)) {
-    hp = LstObj(sl);
-    LstRem(sl);
-    LstIns(LstEnd(&l.sync_l), hp, sync_l);
+  LstForEach(sl, &l.sync_l) {
+    hp = LstEntry(sl, sHandler, sync_l);
+    LstRemove(sl);
+    LstInsert(&l.sync_l, &hp->sync_l);
     if (hp->isDummy)
       return;
     if (!hp->linkUp)
@@ -656,39 +645,39 @@ static void checkSync()
 
 static void checkSyncListDelete(sHandler* hp)
 {
-  if (!LstInl(&hp->sync_l))
+  if (LstIsNull(&hp->sync_l))
     return;
-  if (!LstEmp(&hp->ack_l))
+  if (!LstEmpty(&hp->ack_l))
     return;
-  if (!LstEmp(&hp->block_l))
+  if (!LstEmpty(&hp->block_l))
     return;
   if (hp->selGen != l.selGen)
     return;
 
-  LstRem(&hp->sync_l);
-  LstNul(&hp->sync_l);
+  LstRemove(&hp->sync_l);
+  LstNull(&hp->sync_l);
 }
 
 static void checkSyncReply(sHandler* hp)
 {
   if (hp->selGen != l.selGen) {
     sendInfo(hp);
-  } else if (!LstEmp(&hp->block_l)) {
+  } else if (!LstEmpty(&hp->block_l)) {
     sBlock* bp;
 
-    bp = LstObj(LstNex(&hp->block_l));
+    bp = LstEntry(hp->block_l.next, sBlock, block_l);
     sendToHandler(
         hp, mh_eMsg_OutunitBlock, sizeof(bp->block), (void*)&bp->block);
-  } else if (!LstEmp(&hp->ack_l)) {
+  } else if (!LstEmpty(&hp->ack_l)) {
     sAck* ap;
 
-    ap = LstObj(LstNex(&hp->ack_l));
+    ap = LstEntry(hp->ack_l.next, sAck, ack_l);
     sendToHandler(hp, mh_eMsg_OutunitAck, sizeof(ap->ack), (void*)&ap->ack);
   }
 
-  if (LstInl(&hp->sync_l)) {
-    LstRem(&hp->sync_l);
-    LstIns(LstEnd(&l.sync_l), hp, sync_l);
+  if (!LstIsNull(&hp->sync_l)) {
+    LstRemove(&hp->sync_l);
+    LstInsert(&l.sync_l, &hp->sync_l);
   }
 }
 
@@ -823,7 +812,7 @@ static void handlerEvent(sHandler* hp, mh_sHead* p)
 {
   pwr_tStatus sts;
   mh_sMsgInfo* mp = (mh_sMsgInfo*)(p + 1);
-  LstLink(sAck) * al;
+  struct LstHead * al;
   mh_sAck* ap;
   mh_sReturn* cp;
 
@@ -852,9 +841,9 @@ static void handlerEvent(sHandler* hp, mh_sHead* p)
 
     ap = (mh_sAck*)mp;
 
-    for (al = LstFir(&hp->ack_l); al != LstEnd(&hp->ack_l); al = LstNex(al))
-      if (LstObj(al)->ack.targetIdx == ap->TargetId.Idx) {
-        ackListDelete(hp, LstObj(al));
+    LstForEach(al, &hp->ack_l)
+      if (LstEntry(al, sAck, ack_l)->ack.targetIdx == ap->TargetId.Idx) {
+        ackListDelete(hp, LstEntry(al, sAck, ack_l));
         break;
       }
 
@@ -883,9 +872,9 @@ static void handlerEvent(sHandler* hp, mh_sHead* p)
 
     cp = (mh_sReturn*)mp;
 
-    for (al = LstFir(&hp->ack_l); al != LstEnd(&hp->ack_l); al = LstNex(al))
-      if (LstObj(al)->ack.targetIdx == cp->TargetId.Idx) {
-        ackListDelete(hp, LstObj(al));
+    LstForEach(al, &hp->ack_l)
+      if (LstEntry(al, sAck, ack_l)->ack.targetIdx == cp->TargetId.Idx) {
+        ackListDelete(hp, LstEntry(al, sAck, ack_l));
         break;
       }
 
@@ -915,18 +904,18 @@ static void handlerLog(sHandler* hp, char* s)
 
 static void handlerSync(sHandler* hp, mh_sHead* p)
 {
-  if (!LstEmp(&hp->ack_l)) {
+  if (!LstEmpty(&hp->ack_l)) {
     sAck* ap;
 
-    ap = LstObj(LstNex(&hp->ack_l));
+    ap = LstEntry(hp->ack_l.next, sAck, ack_l);
     if (ap->ack.ackGen == p->ackGen)
       ackListDelete(hp, ap);
   }
 
-  if (!LstEmp(&hp->block_l)) {
+  if (!LstEmpty(&hp->block_l)) {
     sBlock* bp;
 
-    bp = LstObj(LstNex(&hp->block_l));
+    bp = LstEntry(hp->block_l.next, sBlock, block_l);
     if (bp->block.blockGen == p->blockGen)
       blockListDelete(hp, bp);
   }
@@ -953,7 +942,7 @@ static void handlerAlarmStatus(sHandler* hp, mh_sHead* p)
 static pwr_tBoolean isValidHandler(mh_sHead* p, qcom_sAid* aid, sHandler** h)
 {
   sHandler* hp;
-  LstLink(sHandler) * hl;
+  struct LstHead * hl;
 
   if (!(p->ver == mh_cVersion
           || (mh_cVersion == 5
@@ -969,11 +958,11 @@ static pwr_tBoolean isValidHandler(mh_sHead* p, qcom_sAid* aid, sHandler** h)
 
   /* Find handler in handler list */
 
-  for (hl = LstFir(&l.handler_l); hl != LstEnd(&l.handler_l); hl = LstNex(hl))
-    if (LstObj(hl)->qid.qix == p->qid.qix && LstObj(hl)->qid.nid == p->qid.nid)
+  LstForEach(hl, &l.handler_l)
+    if (LstEntry(hl, sHandler, handler_l)->qid.qix == p->qid.qix && LstEntry(hl, sHandler, handler_l)->qid.nid == p->qid.nid)
       break;
 
-  if (hl == LstEnd(&l.handler_l)) {
+  if (hl == &l.handler_l) {
     /* Handler not known, make it known */
     hp = (sHandler*)calloc(1, sizeof(*hp));
     hp->birthTime = net_NetTimeToTime(&p->birthTime);
@@ -982,12 +971,12 @@ static pwr_tBoolean isValidHandler(mh_sHead* p, qcom_sAid* aid, sHandler** h)
     hp->platform = p->platform;
     hp->nix = p->nix;
     hp->linkUp = TRUE;
-    LstIns(&l.handler_l, hp, handler_l);
-    LstIni(&hp->ack_l);
-    LstIni(&hp->block_l);
+    LstInsert(&l.handler_l, &hp->handler_l);
+    LstInit(&hp->ack_l);
+    LstInit(&hp->block_l);
     handlerLog(hp, "New handler");
   } else {
-    hp = LstObj(hl);
+    hp = LstEntry(hl, sHandler, handler_l);
 
     if (hp->birthTime.tv_sec != p->birthTime.tv_sec) {
       /* Different times, i.e. the handler is restarted */
@@ -1010,12 +999,12 @@ static pwr_tBoolean isValidHandler(mh_sHead* p, qcom_sAid* aid, sHandler** h)
 
 static void linkDown(qcom_sNode* nodep)
 {
-  LstLink(sHandler) * hl;
+  struct LstHead * hl;
   sHandler* hp;
 
-  for (hl = LstFir(&l.handler_l); hl != LstEnd(&l.handler_l); hl = LstNex(hl))
-    if (LstObj(hl)->qid.nid == nodep->nid) {
-      hp = LstObj(hl);
+  LstForEach(hl, &l.handler_l)
+    if (LstEntry(hl, sHandler, handler_l)->qid.nid == nodep->nid) {
+      hp = LstEntry(hl, sHandler, handler_l);
       hp->linkUp = FALSE;
       handlerLog(hp, "Link down");
       return;
@@ -1024,12 +1013,12 @@ static void linkDown(qcom_sNode* nodep)
 
 static void linkUp(qcom_sNode* nodep)
 {
-  LstLink(sHandler) * hl;
+  struct LstHead * hl;
   sHandler* hp;
 
-  for (hl = LstFir(&l.handler_l); hl != LstEnd(&l.handler_l); hl = LstNex(hl))
-    if (LstObj(hl)->qid.nid == nodep->nid) {
-      hp = LstObj(hl);
+  LstForEach(hl, &l.handler_l)
+    if (LstEntry(hl, sHandler, handler_l)->qid.nid == nodep->nid) {
+      hp = LstEntry(hl, sHandler, handler_l);
       hp->linkUp = TRUE;
       handlerLog(hp, "Link up");
       return;
@@ -1039,20 +1028,21 @@ static void linkUp(qcom_sNode* nodep)
 static void procDown(qcom_sAid* aid)
 {
   sHandler* hp;
-  LstLink(sHandler) * hl;
+  struct LstHead * hl;
 
-  for (hl = LstFir(&l.handler_l); hl != LstEnd(&l.handler_l); hl = LstNex(hl))
-    if (LstObj(hl)->aid.aix == aid->aix && LstObj(hl)->aid.nid == aid->nid) {
+  LstForEach(hl, &l.handler_l) {
+    hp = LstEntry(hl, sHandler, handler_l);
+    if (hp->aid.aix == aid->aix && hp->aid.nid == aid->nid) {
       /* Delete this handler from handler list */
-      hp = LstObj(hl);
       handlerLog(hp, "Handler aborted");
       ackListDestroy(hp);
       blockListDestroy(hp);
-      LstRem(hl);
-      LstNul(hl);
+      LstRemove(hl);
+      LstNull(hl);
       free(hp);
       return;
     }
+  }
 }
 
 static void sendInfo(sHandler* hp)
@@ -1081,8 +1071,8 @@ static void sendInfo(sHandler* hp)
 
   free(mp);
 
-  if (!LstInl(&hp->sync_l)) {
-    LstIns(LstEnd(&l.sync_l), hp, sync_l);
+  if (LstIsNull(&hp->sync_l)) {
+    LstInsert(&l.sync_l, &hp->sync_l);
   }
 }
 

@@ -61,10 +61,3 @@ QWidget* keyboardwidgetqt_new(
   w->init(glow_eCtxType_Keyboard, init_proc, client_data, keyboard_init_proc);
   return (QWidget*)w;
 }
-
-QWidget* keyboardnavwidgetqt_new(QWidget* main_keyboard)
-{
-  QtScrollWidgetGlow* w = new QtScrollWidgetGlow();
-  w->init(glow_eCtxType_Keyboard, main_keyboard);
-  return (QWidget*)w;
-}

@@ -52,13 +52,10 @@ static void exitHandler()
   qcom_Exit(NULL);
 }
 
-#if defined OS_POSIX
-
 static void sigHandler()
 {
   exit(0);
 }
-#endif
 
 static qdb_sBuffer* inPool(pwr_tStatus* sts, void* p)
 {
@@ -546,10 +543,8 @@ pwr_tBoolean qcom_Init(pwr_tStatus* status, qcom_sAid* aid, const char* aname)
   pwr_tStatus lsts;
   qcom_sAid laid;
   pwr_tBoolean added = 0;
-#if defined OS_POSIX
   struct sigaction sa;
   sigset_t ss;
-#endif
   pwr_dStatus(sts, status, QCOM__SUCCESS);
 
   if (aid == NULL) {
@@ -603,7 +598,6 @@ pwr_tBoolean qcom_Init(pwr_tStatus* status, qcom_sAid* aid, const char* aname)
   *aid = ap->aid;
 
   errh_Info("Adding application. aix: %d", ap->aid.aix);
-#if defined OS_POSIX
   atexit(exitHandler);
   sa.sa_handler = sigHandler;
   sa.sa_flags = 0;
@@ -613,7 +607,6 @@ pwr_tBoolean qcom_Init(pwr_tStatus* status, qcom_sAid* aid, const char* aname)
   sigemptyset(&ss);
   sigaddset(&ss, qdb_cSigMsg);
   sigprocmask(SIG_BLOCK, &ss, NULL);
-#endif
 
   qdb_ScopeLock
   {

@@ -678,7 +678,6 @@ qdb_sLocal* qdb_CreateDb(pwr_tStatus* status, qdb_sInit* ip)
   return qdb;
 }
 
-#if defined OS_POSIX
 /*
  * A fix which unlinks all segments for the given name.
  */
@@ -701,49 +700,31 @@ static void unlinkPool(const char* name)
 
   sprintf(segname, "%s_%.3s", name, busid);
 
-#if defined OS_LYNX
-  fd = shm_open(segname, flags, mode);
-#else
   fd = open(segname, flags, mode);
-#endif
   if (fd != -1) {
     close(fd);
 
-#if defined OS_LYNX
-    shm_unlink(segname);
-#else
     key = ftok(segname, 'P');
     shm_id = shmget(key, 0, 0660);
     shmctl(shm_id, IPC_RMID, &ds);
     unlink(segname);
-#endif
 
     for (i = 1; TRUE; i++) {
       sprintf(segname, "%.11s%4.4x_%.3s", name, i, busid);
-#if defined OS_LYNX
-      fd = shm_open(segname, flags, mode);
-#else
       fd = open(segname, flags, mode);
-#endif
 
       if (fd == -1)
         break;
 
       close(fd);
 
-#if defined OS_LYNX
-      shm_unlink(segname);
-#else
       key = ftok(segname, 'P');
       shm_id = shmget(key, 0, 0660);
       shmctl(shm_id, IPC_RMID, &ds);
       unlink(segname);
-#endif
     }
   }
 }
-
-#endif
 
 /* This routine unlinks QCOM database and
    removes database lock.
@@ -758,8 +739,6 @@ void qdb_UnlinkDb()
   int shm_id;
   struct shmid_ds ds;
 
-#if defined OS_POSIX
-
   /* Unlink pool. */
 
   unlinkPool(qdb_cNamePool);
@@ -771,17 +750,11 @@ void qdb_UnlinkDb()
 
   sprintf(segname, "%s_%.3s", qdb_cNameDbLock, busid);
 
-#if defined OS_LYNX
-  shm_unlink(segname);
-#else
   key = ftok(segname, 'P');
   shm_id = shmget(key, 0, 0660);
   shmctl(shm_id, IPC_RMID, &ds);
   posix_sem_unlink(segname);
   unlink(segname);
-#endif
-
-#endif
 }
 
 qdb_sLocal* qdb_MapDb(pwr_tStatus* status)

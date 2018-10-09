@@ -178,8 +178,6 @@ dbs_sEnv* dbs_Open(pwr_tStatus* sts, dbs_sEnv* ep, const char* filename)
   return ep;
 }
 
-#if defined OS_POSIX
-
 static pwr_tBoolean checkQ(const dbs_sVenv* vep, dbs_sQlink* item)
 {
   dbs_sQlink* link;
@@ -949,5 +947,3 @@ dbs_sBody* dbs_NextDbody(pwr_tStatus* sts, const dbs_sVenv* vep, dbs_sBody* bp)
 
   return bp;
 }
-
-#endif

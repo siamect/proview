@@ -256,6 +256,10 @@ $(exe_dir)/%.pwgc : %.pwgc
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
 
+$(web_dir)/%.pwgc : %.pwgc
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
 $(bld_dir)/%.png : %.png
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
@@ -264,11 +268,23 @@ $(exe_dir)/%.png : %.png
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
 
+$(web_dir)/%.png : %.png
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
 $(exe_dir)/%.html : ../../%.html
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(doc_dir)/%.html : ../../%.html
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
+$(web_dir)/%.html : ../../%.html
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
+$(web_dir)/%.js : ../../%.js
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
 

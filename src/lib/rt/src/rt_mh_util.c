@@ -41,35 +41,24 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#if defined OS_LYNX
-#include <semaphore.h>
-#elif defined OS_POSIX
-#include "rt_semaphore.h"
-#endif
-
 #include "co_time.h"
 #include "co_errno.h"
 #include "co_xdr.h"
 #include "rt_mh_def.h"
 #include "rt_mh_util.h"
+#include "rt_semaphore.h"
 
 /* Local defines */
 
 /* Local definitions */
 
-#if defined OS_LYNX
-#define SEM_NAME "/pwr_mh_sem_"
-static sem_t* sem = (sem_t*)-1;
-#elif defined OS_POSIX
 #define SEM_NAME "/tmp/pwr_mh_sem_"
 static sem_t* sem = (sem_t*)-1;
-#endif
 
 /* Local function prototypes */
 
 static pwr_tStatus sendMessage(qcom_sQid*, mh_sHead*);
 
-#if defined OS_POSIX
 static char* SemName()
 {
   static char id[32];
@@ -94,11 +83,7 @@ static pwr_tUInt32 map()
     return 1;
   if ((name = SemName()) == NULL)
     return 2;
-#if defined OS_LYNX
-  sem = sem_open(name, oflags);
-#elif defined OS_POSIX
   sem = posix_sem_open(name, oflags);
-#endif
   if (sem == (sem_t*)-1) {
     errh_Error(
         "rt_mh_utl: map. sem_open(\"%s\") failed, %m", name, errno_GetStatus());
@@ -111,11 +96,7 @@ static pwr_tUInt32 unmap()
 {
   if (sem == (sem_t*)-1)
     return 1;
-#if defined OS_LYNX
-  if (sem_close(sem) == -1) {
-#elif defined OS_POSIX
   if (posix_sem_close(sem) == -1) {
-#endif
     perror("rt_mh_utl: unmap. sem_close failed, ");
     sem = (sem_t*)-1; /* If you can't close it, it cannot be valid" */
     return 2;
@@ -124,7 +105,6 @@ static pwr_tUInt32 unmap()
 
   return 1;
 }
-#endif
 
 static pwr_tStatus sendMessage(qcom_sQid* target, mh_sHead* head)
 {
@@ -148,7 +128,6 @@ static pwr_tStatus sendMessage(qcom_sQid* target, mh_sHead* head)
 
 pwr_tStatus mh_UtilCreateEvent()
 {
-#if defined OS_POSIX
   char* name;
   int oflags = O_CREAT | O_EXCL;
   mode_t mode = S_IRWXU | S_IRWXG;
@@ -160,15 +139,6 @@ pwr_tStatus mh_UtilCreateEvent()
   if (name == NULL)
     return 2;
 
-#if defined OS_LYNX
-  sem_unlink(name); /* Don't care about status */
-  sem = sem_open(name, oflags, mode, 0);
-  if (sem == (sem_t*)-1)
-    return 2;
-
-  sem_close(sem);
-
-#elif defined OS_POSIX
   posix_sem_unlink(name); /* Don't care about status */
   sem = posix_sem_open(name, oflags, mode, 0);
 
@@ -176,10 +146,8 @@ pwr_tStatus mh_UtilCreateEvent()
     return 2;
 
   posix_sem_close(sem);
-#endif
 
   sem = (sem_t*)-1;
-#endif
 
   return 1;
 }
@@ -188,35 +156,19 @@ pwr_tStatus mh_UtilCreateEvent()
 
 pwr_tStatus mh_UtilDestroyEvent()
 {
-#if defined OS_POSIX
-
   char* name = SemName();
 
   if (name == NULL)
     return 2;
 
   if (sem != (sem_t*)-1)
-#if defined OS_LYNX
-    sem_close(sem);
-#elif defined OS_POSIX
-    posix_sem_close(sem);
-#endif
+  posix_sem_close(sem);
   sem = (sem_t*)-1;
 
-#if 1
-#if defined OS_LYNX
-  if (sem_unlink(name) == -1) {
-    perror("mh_UtilDestroyEvent: sem_unlink");
-    return 2;
-  }
-#elif defined OS_POSIX
   if (posix_sem_unlink(name) == -1) {
     perror("mh_UtilDestroyEvent: sem_unlink");
     return 2;
   }
-#endif
-#endif
-#endif
   return 1;
 }
 /* Is the event monitor to started. */
@@ -227,17 +179,6 @@ pwr_tBoolean mh_UtilIsStartedMh()
 
   sts = map();
 
-#if defined OS_LYNX
-  if (EVEN(sts))
-    return FALSE;
-  sts = sem_trywait(sem);
-  if (sts == 0) {
-    sem_post(sem);
-    unmap();
-  }
-
-  return (sts == 0);
-#elif defined OS_POSIX
   if (EVEN(sts))
     return FALSE;
   sts = posix_sem_trywait(sem);
@@ -247,7 +188,6 @@ pwr_tBoolean mh_UtilIsStartedMh()
   }
 
   return (sts == 0);
-#endif
 }
 
 /* Inform Handler on local node that the list with supevise objects should be
@@ -319,15 +259,9 @@ pwr_tStatus mh_UtilWaitForMh()
   if (EVEN(sts))
     return sts;
 
-#if defined OS_LYNX
-  sem_wait(sem);
-  sem_post(sem);
-  unmap();
-#elif defined OS_POSIX
   posix_sem_wait(sem);
   posix_sem_post(sem);
   unmap();
-#endif
 
   return 1;
 }
@@ -342,13 +276,8 @@ pwr_tStatus mh_UtilWake()
   if (EVEN(sts))
     return (sts);
 
-#if defined OS_LYNX
-  sem_post(sem);
-  unmap();
-#elif defined OS_POSIX
   posix_sem_post(sem);
   unmap();
-#endif
 
   return 1;
 }

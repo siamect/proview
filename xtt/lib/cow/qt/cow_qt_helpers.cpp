@@ -175,21 +175,6 @@ QAction* addMenuItem(QObject* parent, QMenu* menu, const char* text,
   return action;
 }
 
-QAction* addMenuItemMapped(QObject* parent, QMenu* menu, const char* text,
-    const char* callback, const char* signal, const char* shortcut,
-    const char* iconName)
-{
-  QAction* action
-      = new QAction(get_icon(iconName), translate_utf8(text), parent);
-  if (strcmp(shortcut, "")) {
-    action->setShortcut(fl(shortcut));
-  }
-  QObject::connect(action, signal, parent, callback);
-
-  menu->addAction(action);
-  return action;
-}
-
 QAction* addCheckableMenuItem(QObject* parent, QMenu* menu, const char* text,
     const char* callback, const char* shortcut, const char* iconName)
 {
@@ -226,28 +211,6 @@ QAction* addToolItem(QObject* parent, QToolBar* tools, const char* text,
       = new QAction(get_icon(iconName), translate_utf8(text), parent);
   QObject::connect(action, SIGNAL(triggered()), parent, callback);
 
-  tools->addAction(action);
-  return action;
-}
-
-QAction* addToolItemMapped(QObject* parent, QToolBar* tools, const char* text,
-    const char* callback, const char* signal, const char* iconName)
-{
-  QAction* action
-      = new QAction(get_icon(iconName), translate_utf8(text), parent);
-  QObject::connect(action, signal, parent, callback);
-
-  tools->addAction(action);
-  return action;
-}
-
-QAction* addToolRadioItem(QObject* parent, QToolBar* tools, const char* text,
-    const char* callback, QActionGroup* group)
-{
-  QAction* action = new QAction(translate_utf8(text), parent);
-  QObject::connect(action, SIGNAL(triggered()), parent, callback);
-  action->setCheckable(true);
-  action->setActionGroup(group);
   tools->addAction(action);
   return action;
 }

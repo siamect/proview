@@ -104,16 +104,6 @@ QWidget* curvewidgetqt_new(
   return (QWidget*)w;
 }
 
-QWidget* scrolledcurvewidgetqt_new(
-    int (*init_proc)(GlowCtx* ctx, void* client_data), void* client_data,
-    QWidget** curvewidget)
-{
-  CurveWidgetQt* w = new CurveWidgetQt();
-  *curvewidget = w;
-  return w->initScroll(
-      glow_eCtxType_Curve, init_proc, client_data, curve_init_proc);
-}
-
 QWidget* curvenavwidgetqt_new(QWidget* main_curve)
 {
   CurveWidgetQt* w = new CurveWidgetQt();

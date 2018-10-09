@@ -48,14 +48,10 @@ extern "C" {
 /*@{*/
 
 #ifndef errh_Bugcheck
-#if defined OS_POSIX
 #define errh_Bugcheck(sts, str)                                                \
   (errh_Fatal("pwr bugcheck: <%s>, in file %s, at line %d\n%m", (str),         \
        __FILE__, __LINE__, sts),                                               \
       (exit(sts)))
-#else
-#error Platform not defined
-#endif
 #endif
 
 #ifndef errh_ReturnOrBugcheck

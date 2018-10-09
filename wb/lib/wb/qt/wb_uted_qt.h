@@ -47,24 +47,14 @@ class WUtedQtWidget;
 
 class WUtedQt : public WUted {
 public:
-  QWidget* uted_window;
   QLabel* label;
-  QWidget* adb;
-  QWidget* file_entry;
   QWidget* quit;
-  QWidget* batchoptmenu;
   QLabel* commandlabel;
-  QWidget* batch;
-  QWidget* currsess;
   QWidget* help;
-  QWidget* timelabel;
-  QWidget* timevalue;
   QLabel* qualifier[UTED_QUALS];
   QLineEdit* value[UTED_QUALS];
   QCheckBox* present[UTED_QUALS];
   QAction* optmenubuttons[UTED_MAX_COMMANDS];
-  QWidget* command_window;
-  QWidget* commandwind_button;
 
   WUtedQt(void* wu_parent_ctx, QWidget* wu_parent_wid, const char* wu_name,
       const char* wu_iconname, ldh_tWBContext wu_ldhwb,

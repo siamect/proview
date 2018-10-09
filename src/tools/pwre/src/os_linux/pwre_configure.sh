@@ -45,11 +45,11 @@ pwre_config_check_include()
         if test -e $file; then
             echo "...Checking   Yes   $1"
             echo "export PWRE_CONF_$2=1" >> $cfile
-            
+
             if test $3 == "1"; then
                 conf_cc_define=$conf_cc_define" -DPWRE_CONF_$2=1"
             fi
-            
+
             incdir=${file%/*}
             if test $incdir == "/usr/include"; then
                 incfound=1
@@ -61,17 +61,17 @@ pwre_config_check_include()
                     i=$((i+1))
                 done
             fi
-            
+
             if test $incfound -eq 0; then
                 inc_array[$inc_cnt]=$incdir
                 inc_cnt=$((inc_cnt+1))
             fi
-            
+
             found=1
             break
         fi
     done
-    
+
     if test $found -eq 0; then
         echo "...Checking   No    $1"
     fi
@@ -88,12 +88,12 @@ pwre_config_check_tool()
         if test -e $file; then
             echo "...Checking   Yes   $1"
             echo "export PWRE_CONF_$2=1" >> $cfile
-            
+
             found=1
             break
         fi
     done
-    
+
     if test $found -eq 0; then
         echo "...Checking   No    $1"
     fi
@@ -121,15 +121,15 @@ pwre_config_check_lib()
     IFS=:
     for file in $6
     do
-        
+
         if test -e $file; then
             echo "...Checking   Yes   $1"
             echo "export PWRE_CONF_$2=1" >> $cfile
-            
+
             if test $5 == "1"; then
                 conf_cc_define=$conf_cc_define" -DPWRE_CONF_$2=1"
             fi
-            
+
             if test $3 == "lib"; then
                 libdir=${file%/*}
                 if test $libdir == "/usr/lib"; then
@@ -142,7 +142,7 @@ pwre_config_check_lib()
                         i=$((i+1))
                     done
                 fi
-                
+
                 if test $libfound -eq 0; then
                     if test $4 == "powerlink"; then
                         lib_path=$libdir
@@ -153,7 +153,7 @@ pwre_config_check_lib()
                         lib_cnt=$((lib_cnt+1))
                     fi
                 fi
-                
+
                 lib=${file##/*/lib}
                 if test $4 == "gtk"; then
                     conf_libgtk=$conf_libgtk" -l${lib%.*}"
@@ -197,12 +197,12 @@ pwre_config_check_lib()
             else
                 echo "Unknown type"
             fi
-            
+
             found=1
             break
         fi
     done
-    
+
     if test $found -eq 0; then
         echo "...Checking   No    $1"
         echo "export PWRE_CONF_$2=0" >> $cfile
@@ -232,7 +232,7 @@ pwre_create_makedir()
                 if test -e $newdir/hw_templ; then
                     mv $newdir/hw_templ $newdir/.$pwre_hw
                 fi
-                
+
             else
                 # os directory .os_ already exist
                 # Copy new and modified files
@@ -274,7 +274,7 @@ let ebuild=0
 cfile="$pwre_broot/pwre_${pwre_hw:3}_${pwre_os:3}.cnf"
 dos=`eval echo ${pwre_os} | tr '[:lower:]' '[:upper:]'`
 dhw=`eval echo ${pwre_hw} | tr '[:lower:]' '[:upper:]'`
-conf_cc_define="-D$dos=1 -DOS_POSIX -D$dhw=1 -DOS=${pwre_os:3} -DHW=${pwre_hw:3} -D_${dos:3}"
+conf_cc_define="-D$dos=1 -D$dhw=1 -DOS=${pwre_os:3} -DHW=${pwre_hw:3} -D_${dos:3}"
 conf_lib=""
 conf_libwb=""
 conf_libmq=""
@@ -391,7 +391,7 @@ echo "export PWRE_CONF_LOCKDBS=$lockdbs" >> $cfile
 
 if [ $pwre_hw == "hw_arm" ] && [ $ebuild -eq 1 ]; then
     echo "Arm ebuild"
-    
+
     if [ $pwre_conf_qt -eq 1 ]; then
         pwre_config_check_lib qt        QT      qt qt 0 "/usr/lib/libQtGui.so:/usr/lib/$hwpl-linux-$gnu/libQtGui.so"
         pwre_config_check_include qt    QT   1 "/usr/include/qt4/QtGui"
@@ -403,10 +403,10 @@ if [ $pwre_hw == "hw_arm" ] && [ $ebuild -eq 1 ]; then
         pwre_config_check_lib gtk       GTK      gtk gtk 0 "/usr/lib/libgtk-x11-2.0.so:/usr/lib/$hwpl-linux-$gnu/libgtk-x11-2.0.so"
         pwre_config_check_include gtk   GTK   1 "/usr/local/include/gtk-2.0/gtk.h:/usr/local/include/gtk-2.0/gtk/gtk.h:/usr/include/gtk-2.0/gtk/gtk.h"
     fi
-    
+
     pwre_config_check_include jni   JNI   1 $jdk/include/jni.h
     pwre_config_check_include jni   JNI   0 $jdk/include/linux/jni_md.h
-    
+
     rm $pwre_sroot/tools/exe/tools_cmsg2c/src/.os_linux/.hw_arm/makefile
     rm $pwre_sroot/tools/exe/tools_msg2cmsg/src/.os_linux/.hw_arm/makefile
     rm $pwre_sroot/tools/exe/tools_pdrgen/src/.os_linux/.hw_arm/makefile
@@ -416,13 +416,13 @@ if [ $pwre_hw == "hw_arm" ] && [ $ebuild -eq 1 ]; then
     rm $pwre_sroot/exe/rt_elog/src/.os_linux/.hw_arm/makefile
     rm $pwre_sroot/exe/rt_elog_dump/src/.os_linux/.hw_arm/makefile
     rm $pwre_croot/remote/exe/rs_remote_mq/src/.os_linux/.hw_arm/makefile
-    
+
     let i=0
     while [ $i -lt $inc_cnt ]; do
         conf_incdir=$conf_incdir" -I${inc_array[$i]}"
         i=$((i+1))
     done
-    
+
     echo "export pwre_conf_cc_define=\"$conf_cc_define\"" >> $cfile
     echo "export pwre_conf_libpwrco=\"-lpwr_co\"" >> $cfile
     echo "export pwre_conf_libpwrrt=\"-lpwr_rt -lpwr_statussrv -lpwr_co -lpwr_msg_dummy\"" >> $cfile
@@ -457,13 +457,13 @@ if [ $pwre_hw == "hw_arm" ] && [ $ebuild -eq 1 ]; then
     echo "export pwre_conf_incdirqt=\"$conf_incdirqt\"" >> $cfile
     echo "export pwre_conf_dtt_platform=\"arm_linux\"" >> $cfile
 else
-    
+
     if [ $pwre_hw == "hw_arm" ]; then
         gnu=gnueabihf
     else
         gnu=gnu
     fi
-    
+
     #Gtk
     echo "Mandatory :"
     if [ ! -z $pwre_conf_qt ]; then
@@ -471,7 +471,7 @@ else
         elif [ ! -z $pwre_conf_gtk ]; then
         pwre_config_check_lib gtk       GTK      gtk gtk 0 "/usr/lib/libgtk-x11-2.0.so:/usr/lib/$hwpl-linux-$gnu/libgtk-x11-2.0.so"
     fi
-    
+
     pwre_config_check_lib librpcsvc LIBRPCSVC lib lib 0 "/usr/lib/librpcsvc.so:/usr/lib/librpcsvc.a:/usr/lib/$hwpl-linux-$gnu/librpcsvc.a"
     pwre_config_check_lib libasound LIBASOUND lib lib 0 "/usr/lib/libasound.so:/usr/lib/libasound.a:/usr/lib/$hwpl-linux-$gnu/libasound.so"
     pwre_config_check_lib libpthread LIBPTHREAD lib lib 0 "/usr/lib/libpthread.so:/usr/lib/libpthread.a:/usr/lib/$hwpl-linux-$gnu/libpthread.so"
@@ -483,7 +483,7 @@ else
     pwre_config_check_lib librt     LIBRT    lib lib 0 "/usr/lib/librt.so:/usr/lib/librt.a:/usr/lib/$hwpl-linux-$gnu/librt.so"
     pwre_config_check_lib libfl     LIBFL    lib lib 0 "/usr/lib/libfl.so:/usr/lib/libfl.a:/usr/lib/$hwpl-linux-$gnu/libfl.so"
     pwre_config_check_lib libX11    LIBX11   lib lib 0 "/usr/lib/libX11.so:/usr/lib/$hwpl-linux-$gnu/libX11.so"
-    
+
     if [ ! -z $pwre_conf_qt ]; then
         pwre_config_check_include qt    QT   1 "/usr/include/qt4/QtGui"
         pwre_config_check_include qt    QT   1 "/usr/include/qt4/QtCore/QtCore"
@@ -493,7 +493,7 @@ else
         pwre_config_check_include gtk   GTK   1 "/usr/local/include/gtk-2.0/gtk.h:/usr/local/include/gtk-2.0/gtk/gtk.h:/usr/include/gtk-2.0/gtk/gtk.h"
     fi
     pwre_config_check_include alsa  ALSA  1 "/usr/include/alsa/asoundlib.h"
-    
+
     echo ""
     echo "Optional :"
     pwre_config_check_include jni   JNI   1 "$jdk/include/jni.h"
@@ -521,7 +521,7 @@ else
         pwre_config_check_lib libpiface LIBPIFACE lib libpiface 1 "/usr/local/lib/libpiface-1.0.a"
         pwre_config_check_include piface  PIFACE  1 "/usr/local/include/libpiface-1.0/pfio.h"
     fi
-    
+
     pwre_config_check_include mq    MQ    0 "/usr/local/dmq/include/p_entry.h:/usr/local/include/p_entry.h"
     pwre_config_check_include wmq   WMQ   1 "/opt/mqm/inc/cmqc.h"
     pwre_config_check_include cifx  CIFX  1 "/usr/local/include/cifx/cifxlinux.h"
@@ -530,23 +530,23 @@ else
     pwre_config_check_include powerlinkuser EPLU 0 "$epl/Examples/X86/Generic/powerlink_user_lib/EplCfg.h"
     pwre_config_check_include rsvg  RSVG  1 "/usr/include/librsvg-2/librsvg/rsvg.h:/usr/include/librsvg-2.0/librsvg/rsvg.h"
     pwre_config_check_tool android ANDROID "/usr/local/android-sdk-linux/tools/android"
-    
-    
+
+
     export pwre_conf_alsa=1
-    
-    
+
+
     let i=0
     while [ $i -lt $inc_cnt ]; do
         conf_incdir=$conf_incdir" -I${inc_array[$i]}"
         i=$((i+1))
     done
-    
+
     let i=0
     while [ $i -lt $lib_cnt ]; do
         conf_libdir=$conf_libdir" -L${lib_array[$i]}"
         i=$((i+1))
     done
-    
+
     echo "export pwre_conf_cc_define=\"$conf_cc_define\"" >> $cfile
     echo "export pwre_conf_libpwrco=\"-lpwr_co\"" >> $cfile
     echo "export pwre_conf_libpwrrt=\"-lpwr_rt -lpwr_statussrv -lpwr_co -lpwr_msg_dummy\"" >> $cfile
@@ -582,5 +582,5 @@ else
     echo "export pwre_conf_incdirgtk=\"$conf_incdirgtk\"" >> $cfile
     echo "export pwre_conf_incdirqt=\"$conf_incdirqt\"" >> $cfile
     echo "export pwre_conf_incdirgst=\"$conf_incdirgst\"" >> $cfile
-    
+
 fi

@@ -1,20 +1,20 @@
 #ifdef PDR_HDR
-%/** 
+%/**
 % * Proview   $Id: co_dbs.pdr,v 1.26 2008-10-16 11:12:33 claes Exp $
 % * Copyright (C) 2005 SSAB Oxelösund AB.
 % *
-% * This program is free software; you can redistribute it and/or 
-% * modify it under the terms of the GNU General Public License as 
-% * published by the Free Software Foundation, either version 2 of 
+% * This program is free software; you can redistribute it and/or
+% * modify it under the terms of the GNU General Public License as
+% * published by the Free Software Foundation, either version 2 of
 % * the License, or (at your option) any later version.
 % *
-% * This program is distributed in the hope that it will be useful 
-% * but WITHOUT ANY WARRANTY; without even the implied warranty of 
-% * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+% * This program is distributed in the hope that it will be useful
+% * but WITHOUT ANY WARRANTY; without even the implied warranty of
+% * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 % * GNU General Public License for more details.
 % *
-% * You should have received a copy of the GNU General Public License 
-% * along with the program, if not, write to the Free Software 
+% * You should have received a copy of the GNU General Public License
+% * along with the program, if not, write to the Free Software
 % * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 % **/
 %
@@ -29,13 +29,13 @@
 %   This file defines the data structures needed to create and read
 %   dbs data files.
 %
-%   Note ! 
+%   Note !
 %   The data sturctures has to be equally align on different platforms.
-%   To ensure this filler elements has to be inserted (the pdr compiler doesn't 
+%   To ensure this filler elements has to be inserted (the pdr compiler doesn't
 %   accept __attribute__((aligned(())).
-%   For example 
+%   For example
 %   - 64 bit words has to be aligned on 8 byte boundary.
-%   - data structure containing a 64 bit word has to be aligned on 8 byte boundary. 
+%   - data structure containing a 64 bit word has to be aligned on 8 byte boundary.
 %   - element after data structure containing 64 bit word has to be aligned on 8 byte boundary.
 %   Note that pwr_tTime is a data structure with 64 bit words.
 %
@@ -123,8 +123,6 @@
 %
 %
 %
-%#if defined OS_POSIX
-%
 %# define dbs_cNameBaseDirectory "pwr_load"
 %# define dbs_cNameDirectory     "pwrp_load"
 %# define dbs_cDirectory         "$pwrp_load/"
@@ -140,8 +138,6 @@
 %# define dbs_cNameRttCrrObj     "rtt_crro_%03.3d_%03.3d_%03.3d_%03.3d.dat"
 %# define dbs_cNameRttCrrCode    "rtt_crrc_%03.3d_%03.3d_%03.3d_%03.3d.dat"
 %# define dbs_cNameRttPlc        "rtt_plc_%03.3d_%03.3d_%03.3d_%03.3d.dat"
-%
-%#endif
 %
 %#define dbs_cNameVolume         "%s%s.dbs" /* <volume name>.dbs  */
 %#define dbs_cNameAlias          "%spwrp_alias.dat"
@@ -203,7 +199,7 @@ enum dbs_eSect {
     dbs_eSect_name     = 6,
     dbs_eSect_dbody    = 8,
     dbs_eSect_class    = 10,
-    dbs_eSect_scobject = 13, /**< Sub class object */ 
+    dbs_eSect_scobject = 13, /**< Sub class object */
     dbs_eSect_fixup    = 14,
     dbs_eSect_
 };
@@ -338,14 +334,14 @@ struct dbs_sFile {
 %
 #endif
 
-    
+
 
 struct dbs_sSect {
     pwr_tVersion version;    /**< section structure version  */
     dbs_eSect    type;       /**< section type  */
     pwr_tUInt32  size;       /**< section size  */
     pwr_tUInt32  offset;     /**< offset, in bytes, from start of file. */
-    
+
 };
 
 
@@ -361,7 +357,7 @@ struct dbs_sVolume {
     pwr_tObjName name;           /**< name of this volume */
     pwr_tCid     cid;            /**< class of this volume */
     pwr_tObjName className;      /**< name of class of this volume */
-    
+
     pwr_tTime    time;           /**< time at which this load file was created */
     pwr_tUInt32  cardinality;    /**< number objects in this volume */
     pwr_tUInt32  rbodySize;
@@ -442,7 +438,7 @@ struct dbs_sObject {
     pwr_tOid        aoid;       /**< object identifier of sibling object after this object. */
     pwr_tOid        foid;       /**< object identifier of first child object. */
     pwr_tOid        loid;       /**< object identifier of last child object. */
-        
+
     pwr_mClassDef   ohFlags;    /**< object header flags */
     dbs_mFlags      flags;
     dbs_sBodyRef    rbody;      /**< runtime body */
@@ -457,7 +453,7 @@ struct dbs_sObject {
                                      Object references are stored as offsets
                                      in the object section. */
     dbs_sQlink      o_ll;       /**< Link in list of objects of same class */
-	
+
     dbs_sBintab     name_bt;    /**< search for named child  */
 };
 
@@ -479,7 +475,7 @@ struct dbs_sClass {
 /**
  * Body Section.
  *
- * The 
+ * The
  *
  */
 
@@ -560,7 +556,7 @@ struct dbs_sScObject {
 %    dbs_sFile    file;
 %    pwr_tUInt32  nSect;
 %    dbs_sSect    *sect;
-%    
+%
 %    /* the rest is used only if mapped */
 %    pwr_tUInt32  size;    /**< size of mapped file */
 %    char         *base;
@@ -575,7 +571,7 @@ struct dbs_sScObject {
 %    pwr_tUInt32  index;
 %    pwr_tUInt32  nSect;
 %    dbs_sSect    *sect;
-%    
+%
 %    /* the rest is used only if mapped */
 %    pwr_tUInt32  size;    /**< size of mapped file */
 %    char         *base;
@@ -590,7 +586,7 @@ struct dbs_sScObject {
 %    dbs_sFile    file;
 %    dbs_mEnv     flags;
 %    pwr_tUInt32  nVolRef;
-%    
+%
 %    /* the rest is used only if mapped */
 %    pwr_tUInt32  size;    /**< size of mapped file */
 %    char         *base;
@@ -606,7 +602,6 @@ struct dbs_sScObject {
 %pwr_tBoolean    dbs_AlignedRead(pwr_tStatus *sts, void *buf, pwr_tUInt32 size, const dbs_sEnv *ep);
 %pwr_tBoolean    dbs_Close(pwr_tStatus *sts, dbs_sEnv *ep);
 %dbs_sEnv       *dbs_Open(pwr_tStatus *sts, dbs_sEnv *ep, const char *filename);
-%#if defined OS_POSIX
 %dbs_sVolRef    *dbs_VolRef(pwr_tStatus *sts, pwr_tUInt32 index, dbs_sVolRef *vp, const dbs_sEnv *ep);
 %dbs_sVolume 	*dbs_Volume(pwr_tStatus *sts, dbs_sVolume *vp, const dbs_sEnv *ep);
 %void           *dbs_Address(pwr_tStatus*, const dbs_sVenv*, dbs_tRef);
@@ -649,7 +644,6 @@ struct dbs_sScObject {
 %dbs_sObject    *dbs_NextHead(pwr_tStatus *sts, const dbs_sVenv *vep, dbs_sObject *op);
 %dbs_sBody      *dbs_NextRbody(pwr_tStatus *sts, const dbs_sVenv *vep, dbs_sBody *bp);
 %dbs_sBody      *dbs_NextDbody(pwr_tStatus *sts, const dbs_sVenv *vep, dbs_sBody *bp);
-%#endif
 %
 %#ifdef __cplusplus
 %}

@@ -79,7 +79,7 @@ void XttQt::hotkey_ResetDig(char* arg, void* userdata)
   hotkey_activate_resetdig(arg);
 }
 
-bool eventFilter(QObject* obj, QEvent* event)
+bool XttQtWidget::eventFilter(QObject* obj, QEvent* event)
 {
   return XttHotkey::event_handler(event, obj);
 }
@@ -728,6 +728,8 @@ XttQt::XttQt(int argc, char* argv[], int* return_sts)
   statusbar->setFixedHeight(25);
 
   statusbar->show();
+
+  wow = new CoWowQt(toplevel);
 
   xnav = new XNavQt(this, xnav_form, "Plant", &brow_widget,
       (xnav_sStartMenu*)root_menu, opplace_str, op_close_button, &sts);

@@ -69,14 +69,12 @@ public:
       pwr_tStatus* status);
   ~OpQt();
 
-  QWidget* parent_wid_op;
   QLabel* alarmcnt_label;
   QWidget* aalarm_mark;
   QLabel* aalarm_label[5];
   QWidget* aalarm_active[5];
   QWidget* aalarm_active_box[5];
   QWidget* aalarm_info[5];
-  QWidget* aalarm_filler[5];
   QWidget* aalarm_box[5];
   QLabel* balarm_label;
   QWidget* balarm_active;

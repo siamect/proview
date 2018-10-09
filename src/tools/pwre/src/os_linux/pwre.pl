@@ -1001,6 +1001,8 @@ sub build_module ()
       _build("lib", "co", "src", "copy");
       _build("lib", "dtt", "src", "init");
       _build("lib", "dtt", "src", "copy");
+      _build("lib", "msg_dummy", "src", "init");
+      _build("lib", "msg_dummy", "src", "copy");
       _build("lib", "statussrv", "src", "init");
       _build("lib", "statussrv", "src", "copy");
       _build("lib", "co", "src", "all");
@@ -1078,6 +1080,9 @@ sub build_module ()
     }
   }
   elsif ( $module eq "java") {
+    if ( $copy == 1) {
+      _build("jsw", "*", "src", "all");
+    }
     if ( $lib == 1) {
       _build("jpwr", "rt", "src", "all");
       _build("jpwr", "jopg", "src", "all");
@@ -1620,6 +1625,7 @@ sub create_base()
   create_dir($newdir . "/doc/sv_se/dsh");
   create_dir($newdir . "/doc/en_us/dsh");
   create_dir($newdir . "/doc/help");
+  create_dir($newdir . "/web");
 }
 
 sub create_dir()

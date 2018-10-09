@@ -76,8 +76,6 @@
 
 int rtt_search_file(char* name, char* found_file, int new)
 {
-#if defined OS_POSIX
-
   static DIR* directory;
   static char pattern[80];
   char dev[2], dir[200], dir2[200], file[80], type[80];
@@ -142,10 +140,6 @@ int rtt_search_file(char* name, char* found_file, int new)
     closedir(directory);
 
   return RTT__SUCCESS;
-#else
-  return 0;
-#endif
-  return RTT__SUCCESS;
 }
 
 /*************************************************************************
@@ -172,8 +166,6 @@ int rtt_search_file(char* name, char* found_file, int new)
 int rtt_parse_filename(
     char* filename, char* dev, char* dir, char* file, char* type, int* version)
 {
-#if defined OS_POSIX
-
   char* s;
   char ldev[200];
   char ldir[200];
@@ -214,7 +206,4 @@ int rtt_parse_filename(
   strcpy(file, lfile);
   strcpy(type, ltype);
   return 1;
-#else
-  return 0;
-#endif
 }

@@ -185,7 +185,7 @@ pwr_tInt32 ssabutil_chksum_calculate(
 
 pwr_tStatus sutl_sleep(float time)
 {
-#if defined(OS_LYNX) || defined(OS_LINUX)
+#if defined(OS_LINUX)
   pwr_tDeltaTime p_time;
   struct timespec p_time_ts;
 

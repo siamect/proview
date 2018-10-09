@@ -68,14 +68,6 @@ static int brow_init_proc(QWidget* w, FlowCtx* fctx, void* client_data)
   return (brow->init_proc)(ctx, client_data);
 }
 
-QWidget* browwidgetqt_new(
-    int (*init_proc)(FlowCtx* ctx, void* client_data), void* client_data)
-{
-  QtScrollWidgetFlow* w = new QtScrollWidgetFlow();
-  w->init(flow_eCtxType_Brow, init_proc, client_data, brow_init_proc);
-  return w;
-}
-
 QWidget* scrolledbrowwidgetqt_new(
     int (*init_proc)(FlowCtx* ctx, void* client_data), void* client_data,
     QWidget** browwidget)
@@ -85,13 +77,6 @@ QWidget* scrolledbrowwidgetqt_new(
       flow_eCtxType_Brow, init_proc, client_data, brow_init_proc);
   *browwidget = w;
   return form;
-}
-
-QWidget* brownavwidgetqt_new(QWidget* main_brow)
-{
-  QtScrollWidgetFlow* w = new QtScrollWidgetFlow();
-  w->init(flow_eCtxType_Brow, main_brow);
-  return w;
 }
 
 void browwidgetqt_modify_ctx(QWidget* w, void* ctx)

@@ -79,6 +79,7 @@ set_env()
 	export pwr_lib="$pwre_broot/$pwre_os/$pwre_hw/$pwre_bmodule/lib"
 	export pwr_lis="$pwre_broot/$pwre_os/$pwre_hw/$pwre_bmodule/lis"
 	export pwr_obj="$pwre_broot/$pwre_os/$pwre_hw/$pwre_bmodule/obj"
+	export pwr_web="$pwre_broot/$pwre_os/$pwre_hw/$pwre_bmodule/web"
 	# Common doc
 	export pwr_doc="$pwre_broot/$pwre_os/$pwre_hw/exp/doc"
 
@@ -88,6 +89,7 @@ set_env()
 	export pwr_elib="$pwre_broot/$pwre_os/$pwre_hw/exp/lib"
 	export pwr_elis="$pwre_broot/$pwre_os/$pwre_hw/exp/lis"
 	export pwr_eobj="$pwre_broot/$pwre_os/$pwre_hw/exp/obj"
+	export pwr_eweb="$pwre_broot/$pwre_os/$pwre_hw/exp/web"
 	export pwr_edoc="$pwre_broot/$pwre_os/$pwre_hw/exp/doc"
 
 	export pwrp_load="./"

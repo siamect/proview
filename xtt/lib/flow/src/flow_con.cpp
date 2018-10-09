@@ -45,7 +45,6 @@
 #include "flow_conpoint.h"
 #include "flow_draw.h"
 #include "flow_text.h"
-#include "flow_utils.h"
 #include "flow_msg.h"
 
 #define LINE_TABLE_SIZE 500
@@ -2033,33 +2032,33 @@ int FlowCon::sort_lines(double dest_x, double dest_y, flow_eDirection dest_dir,
   sort_dest = dest_node;
   if (dest_dir == flow_eDirection_Right && src_dir == flow_eDirection_Left
       && src_x > dest_x) {
-    flow_qsort(vert_line, vert_line_cnt, sizeof(vert_line[0]), con_cmp_v1);
-    flow_qsort(horiz_line, horiz_line_cnt, sizeof(horiz_line[0]), con_cmp_h1);
+    qsort(vert_line, vert_line_cnt, sizeof(vert_line[0]), con_cmp_v1);
+    qsort(horiz_line, horiz_line_cnt, sizeof(horiz_line[0]), con_cmp_h1);
     ideal_line_cnt = 3;
   } else if (dest_dir == flow_eDirection_Right
       && src_dir == flow_eDirection_Left && src_x <= dest_x) {
-    flow_qsort(vert_line, vert_line_cnt, sizeof(vert_line[0]), con_cmp_v1);
-    flow_qsort(horiz_line, horiz_line_cnt, sizeof(horiz_line[0]), con_cmp_h3);
+    qsort(vert_line, vert_line_cnt, sizeof(vert_line[0]), con_cmp_v1);
+    qsort(horiz_line, horiz_line_cnt, sizeof(horiz_line[0]), con_cmp_h3);
     ideal_line_cnt = 5;
   } else if (dest_dir == flow_eDirection_Left
       && src_dir == flow_eDirection_Right && src_x < dest_x) {
-    flow_qsort(vert_line, vert_line_cnt, sizeof(vert_line[0]), con_cmp_v2);
-    flow_qsort(horiz_line, horiz_line_cnt, sizeof(horiz_line[0]), con_cmp_h1);
+    qsort(vert_line, vert_line_cnt, sizeof(vert_line[0]), con_cmp_v2);
+    qsort(horiz_line, horiz_line_cnt, sizeof(horiz_line[0]), con_cmp_h1);
     ideal_line_cnt = 3;
   } else if (dest_dir == flow_eDirection_Left
       && src_dir == flow_eDirection_Right && src_x > dest_x) {
-    flow_qsort(vert_line, vert_line_cnt, sizeof(vert_line[0]), con_cmp_v2);
-    flow_qsort(horiz_line, horiz_line_cnt, sizeof(horiz_line[0]), con_cmp_h2);
+    qsort(vert_line, vert_line_cnt, sizeof(vert_line[0]), con_cmp_v2);
+    qsort(horiz_line, horiz_line_cnt, sizeof(horiz_line[0]), con_cmp_h2);
     ideal_line_cnt = 5;
   } else if (dest_dir == flow_eDirection_Right
       && src_dir == flow_eDirection_Right) {
-    flow_qsort(vert_line, vert_line_cnt, sizeof(vert_line[0]), con_cmp_v1);
-    flow_qsort(horiz_line, horiz_line_cnt, sizeof(horiz_line[0]), con_cmp_h1);
+    qsort(vert_line, vert_line_cnt, sizeof(vert_line[0]), con_cmp_v1);
+    qsort(horiz_line, horiz_line_cnt, sizeof(horiz_line[0]), con_cmp_h1);
     ideal_line_cnt = 3;
   } else if (dest_dir == flow_eDirection_Left
       && src_dir == flow_eDirection_Left) {
-    flow_qsort(vert_line, vert_line_cnt, sizeof(vert_line[0]), con_cmp_v2);
-    flow_qsort(horiz_line, horiz_line_cnt, sizeof(horiz_line[0]), con_cmp_h1);
+    qsort(vert_line, vert_line_cnt, sizeof(vert_line[0]), con_cmp_v2);
+    qsort(horiz_line, horiz_line_cnt, sizeof(horiz_line[0]), con_cmp_h1);
     ideal_line_cnt = 3;
   }
 

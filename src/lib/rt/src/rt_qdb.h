@@ -70,27 +70,15 @@ static const qcom_sQid qdb_cQimport = { qdb_cIimport, 0 };
 static const qcom_sQid qdb_cQexport = { qdb_cIexport, 0 };
 static const qcom_sQid qdb_cQmonitor = { qdb_cImonitor, 0 };
 
-#if defined OS_LYNX
-#define qdb_cNameDatabase "/pwr_qdb"
-
-#define qdb_cNamePool "/pwr_qpool"
-#define qdb_cNameDbLock "/pwr_qdb_lock"
-
-#define qdb_cSigMsg SIGRTMIN
-#elif defined OS_LINUX
 #define qdb_cNameDatabase "/tmp/pwr_qdb"
 
 #define qdb_cNamePool "/tmp/pwr_qpool"
 #define qdb_cNameDbLock "/tmp/pwr_qdb_lock"
 
+#if defined OS_LINUX
 #define qdb_cSigMsg SIGRTMIN
 #elif defined OS_MACOS || defined OS_FREEBSD || defined OS_OPENBSD             \
     || defined OS_CYGWIN
-#define qdb_cNameDatabase "/tmp/pwr_qdb"
-
-#define qdb_cNamePool "/tmp/pwr_qpool"
-#define qdb_cNameDbLock "/tmp/pwr_qdb_lock"
-
 #define qdb_cSigMsg SIGUSR1
 #endif
 
@@ -372,14 +360,12 @@ typedef struct {
   int (*cond_wait)(thread_sCond*, thread_sMutex*);
 } qdb_sLock;
 
-#if defined OS_POSIX
 typedef struct {
   int pid;
   int waiting;
   pthread_mutex_t mutex;
   pthread_cond_t cond;
 } qdb_sQlock;
-#endif
 
 typedef struct {
   qcom_sAid aid;

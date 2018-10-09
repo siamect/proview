@@ -40,8 +40,3 @@
 
 QWidget* keyboardwidgetqt_new(
     int (*init_proc)(GlowCtx* ctx, void* client_data), void* client_data);
-QWidget* scrolledkeyboardwidgetqt_new(
-    int (*init_proc)(GlowCtx* ctx, void* client_data), void* client_data,
-    QWidget** growwidget);
-
-QWidget* keyboardnavwidgetqt_new(QWidget* main_grow);

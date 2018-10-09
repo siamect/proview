@@ -139,7 +139,6 @@ extern "C" {
 #define dbs_cMagicCookie 0x012a51fb
 #define dbs_cVersionStr "V3.4.0"
 
-#if defined OS_POSIX
 #define dbs_cNameBaseDirectory "pwr_load"
 #define dbs_cNameDirectory "pwrp_load"
 #define dbs_cDirectory "$pwrp_load/"
@@ -155,7 +154,6 @@ extern "C" {
 #define dbs_cNameRttCrrObj "rtt_crro_%03.3d_%03.3d_%03.3d_%03.3d.dat"
 #define dbs_cNameRttCrrCode "rtt_crrc_%03.3d_%03.3d_%03.3d_%03.3d.dat"
 #define dbs_cNameRttPlc "rtt_plc_%03.3d_%03.3d_%03.3d_%03.3d.dat"
-#endif
 
 #define dbs_cNameVolume "%s%s.dbs" /* <volume name>.dbs  */
 #define dbs_cNameAlias "%spwrp_alias.dat"
@@ -540,7 +538,6 @@ pwr_tBoolean dbs_AlignedRead(
     pwr_tStatus* sts, void* buf, pwr_tUInt32 size, const dbs_sEnv* ep);
 pwr_tBoolean dbs_Close(pwr_tStatus* sts, dbs_sEnv* ep);
 dbs_sEnv* dbs_Open(pwr_tStatus* sts, dbs_sEnv* ep, const char* filename);
-#if defined OS_POSIX
 dbs_sVolRef* dbs_VolRef(
     pwr_tStatus* sts, pwr_tUInt32 index, dbs_sVolRef* vp, const dbs_sEnv* ep);
 dbs_sVolume* dbs_Volume(pwr_tStatus* sts, dbs_sVolume* vp, const dbs_sEnv* ep);
@@ -595,7 +592,6 @@ dbs_sObject* dbs_NextHead(
     pwr_tStatus* sts, const dbs_sVenv* vep, dbs_sObject* op);
 dbs_sBody* dbs_NextRbody(pwr_tStatus* sts, const dbs_sVenv* vep, dbs_sBody* bp);
 dbs_sBody* dbs_NextDbody(pwr_tStatus* sts, const dbs_sVenv* vep, dbs_sBody* bp);
-#endif
 
 #ifdef __cplusplus
 }
