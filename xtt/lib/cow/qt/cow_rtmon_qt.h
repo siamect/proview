@@ -42,6 +42,7 @@
 #include "cow_rtmon.h"
 
 #include <QAction>
+#include <QHBoxLayout>
 #include <QLabel>
 #include <QWidget>
 
@@ -60,6 +61,7 @@ public:
   QWidget* bbox_stop;
   QLabel* bbox_image;
   QLabel* bbox_image_gray;
+  QHBoxLayout *bbox_vbox;
   QAction* tools_xtt;
   QAction* tools_op;
   QAction* file_xtt;
