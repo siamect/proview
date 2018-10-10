@@ -241,7 +241,7 @@ static crrgen_tRefList reflist[]
         { pwr_cClass_stoii, "DevBody", "IiObject", crrgen_eType_Write,
             crrgen_eTable_SimSignal, 0 },
         { pwr_cClass_MountObject, "SysBody", "Object", crrgen_eType_Ref,
-            crrgen_eTable_Object, 0 } };
+            crrgen_eTable_Object, 1 } };
 
 static crrgen_tRefList codelist[] = { { pwr_cClass_dataarithm, "DevBody",
                                           "Code", crrgen_eType_, crrgen_eTable_,
