@@ -65,12 +65,18 @@ int main(int argc, char* argv[])
   if (!found) {
     struct stat st;
 
-    strcpy(file, "$pwr_exe/rt_xtt_gtk");
+    strcpy(file, "$pwr_exe/rt_xtt_qt");
     dcli_translate_filename(file, file);
     if (stat(file, &st) == 0)
-      strcpy(wmg, "gtk");
-    else
-      strcpy(wmg, "motif");
+      strcpy(wmg, "qt");
+    else {
+      strcpy(file, "$pwr_exe/rt_xtt_gtk");
+      dcli_translate_filename(file, file);
+      if (stat(file, &st) == 0)
+        strcpy(wmg, "gtk");
+      else
+        strcpy(wmg, "motif");
+    }
   }
 
   strcpy(file, argv[0]);
