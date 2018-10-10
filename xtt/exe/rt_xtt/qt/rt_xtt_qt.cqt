@@ -603,7 +603,7 @@ XttQt::XttQt(int argc, char* argv[], int* return_sts)
 
   // Qt
   toplevel = new XttQtWidget(this);
-  toplevel->setFixedSize(window_width, window_height);
+  toplevel->setMinimumSize(window_width, window_height);
   toplevel->setWindowTitle(fl(title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -728,8 +728,6 @@ XttQt::XttQt(int argc, char* argv[], int* return_sts)
   statusbar->setFixedHeight(25);
 
   statusbar->show();
-
-  wow = new CoWowQt(toplevel);
 
   xnav = new XNavQt(this, xnav_form, "Plant", &brow_widget,
       (xnav_sStartMenu*)root_menu, opplace_str, op_close_button, &sts);

@@ -45,7 +45,6 @@
 #include "cow_statusmon_nodelistnav_qt.h"
 #include "cow_wow_qt.h"
 
-#include <QHBoxLayout>
 #include <QMenu>
 #include <QMenuBar>
 #include <QPalette>
@@ -90,7 +89,7 @@ RtMonQt::RtMonQt(void* rtmon_parent_ctx, QWidget* rtmon_parent_wid,
 
   toplevel = new RtMonQtWidget(this, rtmon_parent_wid);
   toplevel->setToolTip(fl("cow_rtmon widget"));
-  toplevel->setMinimumSize(480, 340);
+  toplevel->setMinimumHeight(340);
   toplevel->setWindowTitle(fl(title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -144,6 +143,7 @@ RtMonQt::RtMonQt(void* rtmon_parent_ctx, QWidget* rtmon_parent_wid,
   pwr_tFileName fname;
   dcli_translate_filename(fname, "$pwr_exe/pwr_logofully.png");
   bbox_image = new_image_label(toplevel, fname);
+  bbox_image->setVisible(false);
 
   dcli_translate_filename(fname, "$pwr_exe/pwr_logofullg.png");
   bbox_image_gray = new_image_label(toplevel, fname);
@@ -164,8 +164,7 @@ RtMonQt::RtMonQt(void* rtmon_parent_ctx, QWidget* rtmon_parent_wid,
   lbox->addWidget(bbox_label);
   addButton(toplevel, lbox, "Reset Runtime", SLOT(activate_reset()));
 
-  QHBoxLayout* bbox_vbox = new QHBoxLayout();
-  bbox_vbox->addWidget(bbox_image);
+  bbox_vbox = new QHBoxLayout();
   bbox_vbox->addWidget(bbox_image_gray);
   bbox_vbox->addLayout(bbox);
   bbox_vbox->addLayout(lbox);
@@ -177,8 +176,6 @@ RtMonQt::RtMonQt(void* rtmon_parent_ctx, QWidget* rtmon_parent_wid,
 
   toplevel->setLayout(vbox);
   toplevel->show();
-
-  bbox_image->setVisible(false);
 
   wow = new CoWowQt(toplevel);
 
@@ -209,8 +206,11 @@ void RtMonQtWidget::rtmon_scan()
       rtmon->file_xtt->setEnabled(false);
       rtmon->file_op->setEnabled(false);
 
+      rtmon->bbox_vbox->insertWidget(0, rtmon->bbox_image_gray);
+      rtmon->bbox_vbox->removeWidget(rtmon->bbox_image);
       rtmon->bbox_image->setVisible(false);
       rtmon->bbox_image_gray->setVisible(true);
+      rtmon->bbox_vbox->update();
     } else {
       if (((sts & 7) == 2) || ((sts & 7) == 4)) {
         strcpy(color_name, "Red");
@@ -229,8 +229,12 @@ void RtMonQtWidget::rtmon_scan()
       rtmon->tools_op->setEnabled(true);
       rtmon->file_xtt->setEnabled(true);
       rtmon->file_op->setEnabled(true);
+
+      rtmon->bbox_vbox->insertWidget(0, rtmon->bbox_image);
+      rtmon->bbox_vbox->removeWidget(rtmon->bbox_image_gray);
       rtmon->bbox_image->setVisible(true);
       rtmon->bbox_image_gray->setVisible(false);
+      rtmon->bbox_vbox->update();
     }
 
     QPalette pal;
