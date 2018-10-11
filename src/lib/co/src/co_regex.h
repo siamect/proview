@@ -44,13 +44,26 @@ extern "C" {
 #endif
 
 typedef struct regex {
-  char* buffer;
-  long allocated;
-  long used;
-  char* fastmap;
-  char* translate;
+  char* buffer; /* Space holding the compiled pattern commands.  */
+  long allocated; /* Size of space that `buffer' points to. */
+  long used; /* Length of portion of buffer actually occupied  */
+  char* fastmap; /* Pointer to fastmap, if any, or zero if none.  */
+  /* re_search uses the fastmap, if there is one,
+     to skip over totally implausible characters.  */
+  char* translate; /* Translate table to apply to all characters before
+                      comparing, or zero for no translation.
+                      The translation is applied to a pattern when it is
+                      compiled and to data when it is matched.  */
   char fastmap_accurate;
-  char can_be_null;
+  /* Set to zero when a new pattern is stored,
+     set to one when the fastmap is updated from it.  */
+  char can_be_null; /* Set to one by compiling fastmap
+                       if this pattern might match the null string.
+                       It does not necessarily match the null string
+                       in that case, but if this is zero, it cannot.
+                       2 as value means can match null string
+                       but at end of range or before a character
+                       listed in the fastmap.  */
 } regex_t;
 
 typedef struct regmatch {
@@ -115,8 +128,6 @@ int regexec(regex_t* preg, char* string, size_t nmatch, regmatch_t pmatch[],
     int eflags);
 
 void regfree(regex_t* preg);
-
-char* regerror(int errcode);
 
 #if defined __cplusplus
 }

@@ -103,8 +103,6 @@ int clock_gettime(clockid_t clockid, struct timespec* pt)
 }
 #endif
 
-static pwr_tStatus validateTm(struct tm* tms);
-
 /* Validate data in struct tm.  */
 
 static pwr_tStatus validateTm(struct tm* tms)
