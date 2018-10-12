@@ -116,7 +116,7 @@ GlowCtx::~GlowCtx()
     i--;
   }
   if (comment)
-    free(comment);
+    delete comment;
 }
 
 void GlowCtx::delete_all()

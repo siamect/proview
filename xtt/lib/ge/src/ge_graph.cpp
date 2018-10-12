@@ -4214,6 +4214,7 @@ int Graph::set_subwindow_source(const char* name, char* source, char* owner)
   int sts;
   grow_tObject object;
   GrowCtx* ctx;
+  bool remove_self = false;
 
   ctx = grow->ctx;
   grow->push(); // If command executed from a subwindow
@@ -4225,6 +4226,9 @@ int Graph::set_subwindow_source(const char* name, char* source, char* owner)
   if (grow_GetObjectType(object) != glow_eObjectType_GrowWindow)
     return 0;
 
+  if ( grow_GetWindowCtx(object) == ctx)
+    remove_self = true;
+  
   grow_EnableEvent(grow->ctx, glow_eEvent_Translate, glow_eEventType_CallBack,
       graph_grow_cb);
 
@@ -4232,10 +4236,13 @@ int Graph::set_subwindow_source(const char* name, char* source, char* owner)
 
   grow_DisableEvent(grow->ctx, glow_eEvent_Translate);
 
-  if (ctx != grow->ctx)
+  if (ctx != grow->ctx) {
+    if ( remove_self)
+      ctx = 0; // Should not be used!!
     grow->pop(ctx);
+  }
 
-  if (sts)
+  if (remove_self)
     return GLOW__SUBTERMINATED;
   return 1;
 }
