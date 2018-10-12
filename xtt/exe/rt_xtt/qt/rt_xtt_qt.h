@@ -71,7 +71,6 @@ public:
       const char* init_text, void (*ok_cb)(Xtt*, char*));
   void set_prompt(const char* prompt);
   void open_change_value();
-  void create_input_dialog();
   void print();
 
   static void close(void* ctx, int terminate);
@@ -91,6 +90,7 @@ public:
   XttQtWidget(XttQt* parent_ctx) : QWidget(), xtt(parent_ctx)
   {
   }
+  bool eventFilter(QObject* obj, QEvent* event);
 
 protected:
   void focusInEvent(QFocusEvent* event);

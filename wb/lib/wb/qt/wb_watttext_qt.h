@@ -52,9 +52,6 @@ public:
       ldh_tSesContext wa_ldhses, pwr_sAttrRef wa_aref, int wa_editmode,
       pwr_tStatus* status);
   QLabel* msg_label;
-  QWidget* button_ok;
-  QWidget* button_apply;
-  QWidget* button_cancel;
   QTextEdit* textbuffer;
   int input_max_length;
   int init;

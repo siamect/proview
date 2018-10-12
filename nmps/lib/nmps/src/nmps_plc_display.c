@@ -34,9 +34,7 @@
  * General Public License plus this exception.
  */
 
-#if defined OS_POSIX
 #include <stdio.h>
-#endif
 
 #include "pwr_nmpsclasses.h"
 

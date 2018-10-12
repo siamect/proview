@@ -39,10 +39,8 @@
 
 /* rt_qini.h -- Initiate the Qcom database. */
 
-#if defined OS_POSIX
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#endif
 
 #include "rt_qdb.h"
 

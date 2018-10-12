@@ -45,22 +45,47 @@ extern "C" {
 #include <stddef.h>
 #endif
 
+/*! \file co_array.h
+    \brief Dynamic-size array, like std::vector from C++ or ArrayList from Java.
+*/
 typedef struct {
-  void* a;
+  void* data;
   int elemsize;
-  int allocated;
+  int capacity;
   int alloc_incr;
-  int a_size;
+  int size;
 } array_sCtx, *array_tCtx;
 
-int array_Init(array_tCtx* ctx, int elemsize, int alloc_incr);
-void array_Close(array_tCtx ctx);
-int array_Add(array_tCtx ctx, void* elem);
-int array_MAdd(array_tCtx ctx, void* elem, int elements);
-int array_Get(array_tCtx ctx, int idx, void** elem);
-int array_Size(array_tCtx ctx);
-void* array_Array(array_tCtx ctx);
-void* array_CopyArray(array_tCtx ctx);
+/*! \fn array_tCtx array_New(int elemsize, int alloc_incr)
+    \brief Allocates a new dynamic array containing elements of size \a elemsize
+
+    \param elemsize	The sizeof() an element.
+    \param alloc_incr	How much the dynamic array should grow when it is full.
+    \return 	Returns a new dynamic array.
+*/
+array_tCtx array_New(int elemsize, int alloc_incr);
+
+/*! \fn void array_Delete(array_tCtx arr)
+    \brief Frees the memory held by \a arr
+*/
+void array_Delete(array_tCtx arr);
+
+/*! \fn int array_Push(array_tCtx arr, void* elem)
+    \brief Appends \a elem to the end of the array.
+*/
+int array_Push(array_tCtx arr, void* elem);
+
+/*! \fn int array_Push(array_tCtx arr, void* elem)
+    \brief Concatenates \a number of elements from the fixed-size array
+    \a elems to the end of the dynamic array \a arr.
+*/
+int array_Concat(array_tCtx arr, void* elems, int number);
+
+/*! \fn void* array_Copy(array_tCtx arr)
+    \brief Creates and returns a copy of \a arr.
+    Warning! The returned array must be free() explicitly.
+*/
+void* array_Copy(array_tCtx arr);
 
 #ifdef __cplusplus
 }

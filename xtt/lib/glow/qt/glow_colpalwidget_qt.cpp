@@ -75,14 +75,6 @@ static int colpal_init_proc(QWidget* w, GlowCtx* fctx, void* client_data)
   }
 }
 
-QWidget* colpalwidgetqt_new(
-    int (*init_proc)(GlowCtx* ctx, void* client_data), void* client_data)
-{
-  QtScrollWidgetGlow* w = new QtScrollWidgetGlow();
-  w->init(glow_eCtxType_ColPal, init_proc, client_data, colpal_init_proc);
-  return w;
-}
-
 QWidget* scrolledcolpalwidgetqt_new(
     int (*init_proc)(GlowCtx* ctx, void* client_data), void* client_data,
     QWidget** colpalwidget)
@@ -91,11 +83,4 @@ QWidget* scrolledcolpalwidgetqt_new(
   *colpalwidget = w;
   return w->initScroll(
       glow_eCtxType_ColPal, init_proc, client_data, colpal_init_proc);
-}
-
-QWidget* colpalnavwidgetqt_new(QWidget* main_colpal)
-{
-  QtScrollWidgetGlow* w = new QtScrollWidgetGlow();
-  w->init(glow_eCtxType_ColPal, main_colpal);
-  return w;
 }

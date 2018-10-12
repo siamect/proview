@@ -41,22 +41,12 @@
 
 #include <QWidget>
 
-#if defined __cplusplus
-extern "C" {
-#endif
-
-QWidget* flowwidgetqt_new(
-    int (*init_proc)(FlowCtx* ctx, void* client_data), void* client_data);
 QWidget* scrolledflowwidgetqt_new(
     int (*init_proc)(FlowCtx* ctx, void* client_data), void* client_data,
     QWidget** flowwidget);
 
 QWidget* flownavwidgetqt_new(QWidget* main_flow);
 
-void flowwidgetqt_get_ctx(QWidget* w, void** ctx);
 void flowwidgetqt_modify_ctx(QWidget* w, void* ctx);
 
-#if defined __cplusplus
-}
-#endif
 #endif

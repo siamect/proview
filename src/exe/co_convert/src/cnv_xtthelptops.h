@@ -69,7 +69,11 @@ class CnvXtthelpToPs : public CnvXtthelpTo {
 
   Cnv_eXtthelpToType type()
   {
-    return Cnv_eXtthelpToType_Ps;
+    if (ctx->generate_pdf) {
+      return Cnv_eXtthelpToType_Pdf;
+    } else {
+      return Cnv_eXtthelpToType_Ps;
+    }
   }
   void* insert(navh_eItemType item_type, const char* text1, const char* text2,
       const char* text3, const char* link, const char* link_bookmark,

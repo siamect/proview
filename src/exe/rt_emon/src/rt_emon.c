@@ -92,16 +92,8 @@ typedef struct s_DSup sDSup;
 typedef struct s_DSupComp sDSupComp;
 typedef union u_Event uEvent;
 
-LstType(sActive);
-LstType(sApplActive);
-LstType(sAppl);
-LstType(sBlock);
-LstType(sOutunit);
-LstType(sProcLink);
-LstType(sSupActive);
-
 struct s_ProcLink {
-  LstLink(sProcLink) proc_l;
+  struct LstHead proc_l;
   mh_eSource source;
   pwr_tNodeIndex nix;
   qcom_sQid qid;
@@ -111,8 +103,8 @@ struct s_ProcLink {
 
 struct s_Appl {
   sProcLink link; /* Link in process list */
-  LstLink(sAppl) appl_l; /* Link in application list */
-  LstHead(sApplActive) active_l; /* Head of application alarm list */
+  struct LstHead appl_l; /* Link in application list */
+  struct LstHead active_l; /* Head of application alarm list */
   pwr_tUInt32 activeMessages; /* Active messages */
   mh_eApplState state;
   mh_eApplState oldState;
@@ -121,7 +113,7 @@ struct s_Appl {
 };
 
 struct s_Active {
-  LstLink(sActive) active_l; /* Link in active list */
+  struct LstHead active_l; /* Link in active list */
   pwr_tUInt32 idx; /* Event index of alarm */
   pwr_tUInt32 returnIdx; /* Event index of return message */
   pwr_tUInt32 ackIdx; /* Event index of ack message */
@@ -161,7 +153,7 @@ struct s_NodeInfo {
 
 struct s_Block {
   sActive link;
-  LstLink(sBlock) block_l;
+  struct LstHead block_l;
   mh_sOutunitBlock outunitBlock;
   mh_sOutunitBlock outunitUnblock;
   mh_sEventId targetId;
@@ -254,9 +246,9 @@ struct s_Sup {
 
 struct s_SupActive {
   sActive link;
-  LstLink(sSupActive) sup_l;
-  LstLink(sSupActive) detect_l;
-  LstLink(sSupActive) timer_l;
+  struct LstHead sup_l;
+  struct LstHead detect_l;
+  struct LstHead timer_l;
   mh_eAgent agent;
   mh_uEventInfo alarmVisibility;
   mh_eSupType supType;
@@ -304,7 +296,7 @@ struct s_DSupComp {
 
 struct s_ApplActive {
   sActive link;
-  LstLink(sApplActive) active_l;
+  struct LstHead active_l;
   mh_sApplMessage message;
   pwr_tTime ackTime;
   pwr_tObjid ackOutunit;
@@ -316,7 +308,7 @@ struct s_ApplActive {
 
 struct s_Outunit {
   sProcLink link; /* Link in process list */
-  LstLink(sOutunit) outunit_l; /* Link in outunit list */
+  struct LstHead outunit_l; /* Link in outunit list */
   pwr_tTime birthTime; /* Time when outunit was started */
   pwr_tObjid outunit; /* Object id of outunit object */
   mh_eOutunitType type; /* Type of outunit */
@@ -376,18 +368,18 @@ struct sLocal {
   pwr_sClass_MessageHandler* emon;
   pwr_tOName emonName;
   pwr_tObjid emonObject;
-  LstHead(sOutunit) outunit_l;
+  struct LstHead outunit_l;
   mh_sHead head;
-  LstHead(sActive) active_l;
+  struct LstHead active_l;
   sEventList* event_l;
-  LstHead(sProcLink) proc_l;
-  LstHead(sAppl) appl_l;
-  LstHead(sSupActive) sup_l;
-  LstHead(sBlock) block_l;
-  LstHead(sBlock) blockFree_l;
-  LstHead(sSupActive) detect_l;
-  LstHead(sSupActive) timer_l;
-  LstHead(sApplActive) handlerFree_l;
+  struct LstHead proc_l;
+  struct LstHead appl_l;
+  struct LstHead sup_l;
+  struct LstHead block_l;
+  struct LstHead blockFree_l;
+  struct LstHead detect_l;
+  struct LstHead timer_l;
+  struct LstHead handlerFree_l;
   eSupListState supListState;
   tree_sTable* eventTab;
   pwr_tBoolean newBlock;
@@ -603,16 +595,16 @@ int main()
 
   eventListInit();
 
-  LstIni(&l.outunit_l);
-  LstIni(&l.active_l);
-  LstIni(&l.proc_l);
-  LstIni(&l.appl_l);
-  LstIni(&l.sup_l);
-  LstIni(&l.block_l);
-  LstIni(&l.blockFree_l);
-  LstIni(&l.detect_l);
-  LstIni(&l.timer_l);
-  LstIni(&l.handlerFree_l);
+  LstInit(&l.outunit_l);
+  LstInit(&l.active_l);
+  LstInit(&l.proc_l);
+  LstInit(&l.appl_l);
+  LstInit(&l.sup_l);
+  LstInit(&l.block_l);
+  LstInit(&l.blockFree_l);
+  LstInit(&l.detect_l);
+  LstInit(&l.timer_l);
+  LstInit(&l.handlerFree_l);
 
   l.supListState = eSupListState_Init;
 
@@ -659,13 +651,13 @@ static sActive* activeListGet(pwr_tUInt32 idx)
 static void activeListInsert(sActive* ap, sEvent* ep, mh_eSource source)
 {
   int inserted;
-  LstLink(sActive) * al;
-  LstLink(sBlock) * bl;
+  struct LstHead * al;
+  struct LstHead * bl;
 
   /* Check that not already inserted */
   inserted = 0;
-  for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l); al = LstNex(al)) {
-    if (ap == LstObj(al)) {
+  LstForEach(al, &l.active_l) {
+    if (ap == LstEntry(al, sActive, active_l)) {
       inserted = 1;
       break;
     }
@@ -675,8 +667,8 @@ static void activeListInsert(sActive* ap, sEvent* ep, mh_eSource source)
   ap->source = source;
 
   if (!inserted) {
-    al = LstEnd(&l.active_l);
-    LstIns(al, ap, active_l);
+    al = &l.active_l;
+    LstInsert(al, &ap->active_l);
   }
 
   switch (ap->event) {
@@ -691,8 +683,8 @@ static void activeListInsert(sActive* ap, sEvent* ep, mh_eSource source)
     break;
   case mh_eEvent_Block:
   case mh_eEvent_Reblock:
-    bl = LstEnd(&l.block_l);
-    LstIns(bl, (sBlock*)ap, block_l);
+    bl = &l.block_l;
+    LstInsert(bl, &((sBlock*)ap)->block_l);
     ++l.emon->BlockCount;
     break;
   case mh_eEvent_Info:
@@ -712,11 +704,11 @@ static void activeListRemove(sActive* ap)
   sApplActive* aap;
   sBlock* bp;
 
-  if (LstIsNul(&ap->active_l))
+  if (LstIsNull(&ap->active_l))
     return;
 
-  LstRem(&ap->active_l);
-  LstNul(&ap->active_l);
+  LstRemove(&ap->active_l);
+  LstNull(&ap->active_l);
   ap->idx = 0;
   ap->ackIdx = 0;
   ap->returnIdx = 0;
@@ -736,8 +728,8 @@ static void activeListRemove(sActive* ap)
   case mh_eEvent_Reblock:
   case mh_eEvent_CancelBlock:
     bp = (sBlock*)ap;
-    LstRem(&bp->block_l);
-    LstNul(&bp->block_l);
+    LstRemove(&bp->block_l);
+    LstNull(&bp->block_l);
     --l.emon->BlockCount;
     break;
   case mh_eEvent_Info:
@@ -773,8 +765,8 @@ static void activeListRemove(sActive* ap)
       || ap->source == mh_eSource_Handler) {
     aap = (sApplActive*)ap;
 
-    LstRem(&aap->active_l); /* Remove from application alarm list */
-    LstNul(&aap->active_l);
+    LstRemove(&aap->active_l); /* Remove from application alarm list */
+    LstNull(&aap->active_l);
     if (aap->ap->activeMessages > 0)
       --aap->ap->activeMessages;
     if (ap->source == mh_eSource_Application)
@@ -814,10 +806,10 @@ static void applDisconnect(mh_sHead* hp, sAppl* ap, mh_uApplReply* Reply)
 
   /* Cancel all active messages */
 
-  LstRem(&ap->appl_l); /* Remove from application list */
-  LstNul(&ap->appl_l);
-  LstRem(&ap->link.proc_l); /* Remove from process link */
-  LstNul(&ap->link.proc_l);
+  LstRemove(&ap->appl_l); /* Remove from application list */
+  LstNull(&ap->appl_l);
+  LstRemove(&ap->link.proc_l); /* Remove from process link */
+  LstNull(&ap->link.proc_l);
   free(ap); /* Free control block */
   Reply->Sts = MH__SUCCESS;
 }
@@ -844,7 +836,7 @@ static void applGetMsgInfo(mh_sHead* hp, sAppl* ap, mh_uApplReply* Reply)
 {
   pwr_tUInt32* TargetIdxP = (pwr_tUInt32*)(hp + 1);
   sApplActive* aap;
-  LstLink(sApplActive) * al;
+  struct LstHead * al;
 
   switch (ap->state) {
   case mh_eApplState_Connected:
@@ -861,12 +853,12 @@ static void applGetMsgInfo(mh_sHead* hp, sAppl* ap, mh_uApplReply* Reply)
     return;
   }
 
-  for (al = LstFir(&ap->active_l); al != LstEnd(&ap->active_l); al = LstNex(al))
-    if (LstObj(al)->link.idx >= *TargetIdxP)
+  LstForEach(al, &l.active_l)
+    if (LstEntry(al, sApplActive, active_l)->link.idx >= *TargetIdxP)
       break;
 
-  if (al != LstEnd(&ap->active_l)) {
-    aap = LstObj(al);
+  if (al != &ap->active_l) {
+    aap = LstEntry(al, sApplActive, active_l);
     Reply->Info.Sts = MH__SUCCESS;
     Reply->Info.Message = aap->message;
   } else
@@ -947,7 +939,7 @@ static void applMessage(mh_sHead* hp, sAppl* ap, mh_uApplReply* reply)
     }
 
     /* Insert in application alarm list */
-    (void)LstIns(&ap->active_l, aap, active_l);
+    LstInsert(&ap->active_l, &aap->active_l);
     aap->ap = ap;
 
     ++ap->activeMessages;
@@ -1070,35 +1062,35 @@ static void applReturn(mh_sHead* hp, sAppl* ApplP, mh_uApplReply* reply)
 
 static sBlock* blockListAlloc()
 {
-  LstLink(sBlock) * bl;
-  LstHead(sBlock) * ll;
+  struct LstHead * bl;
+  struct LstHead * ll;
   sBlock* bp;
   const int alloc = 100;
   int i;
 
   ll = &l.blockFree_l;
 
-  if (LstEmp(ll)) {
+  if (LstEmpty(ll)) {
     bp = (sBlock*)calloc(alloc, sizeof(sBlock));
     if (bp != NULL) {
       for (i = 0; i < alloc; i++, bp++)
-        LstIns(ll, bp, link.active_l);
+        LstInsert(ll, &bp->link.active_l);
       l.emon->FreeCount += alloc;
     } else {
       return NULL;
     }
   }
 
-  bl = LstFir(ll);
-  LstRem(bl);
+  bl = ll->next;
+  LstRemove(bl);
   --l.emon->FreeCount;
-  return LstObj(bl);
+  return LstEntry(bl, sBlock, block_l);
 }
 
 static void blockListFree(sBlock* bp)
 {
   memset(bp, 0, sizeof(*bp));
-  LstIns(&l.blockFree_l, bp, link.active_l);
+  LstInsert(&l.blockFree_l, &bp->link.active_l);
   ++l.emon->FreeCount;
   return;
 }
@@ -1189,7 +1181,7 @@ static void cancelAlarm(sActive* ap, char* text)
 
 static void sendAlarmStatus(sOutunit* op)
 {
-  LstLink(sActive) * al;
+  struct LstHead * al;
   sEvent* ep;
   sActive* ap;
   mh_sAlarmStatus* msg;
@@ -1199,8 +1191,8 @@ static void sendAlarmStatus(sOutunit* op)
 
   /* Count alarms */
   int count = 0;
-  for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l); al = LstNex(al)) {
-    ap = LstObj(al);
+  LstForEach(al, &l.active_l) {
+    ap = LstEntry(al, sActive, active_l);
 
     if (!ap->detect_etp)
       continue;
@@ -1247,8 +1239,8 @@ static void sendAlarmStatus(sOutunit* op)
   msg->Count = count;
 
   count = 0;
-  for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l); al = LstNex(al)) {
-    ap = LstObj(al);
+  LstForEach(al, &l.active_l) {
+    ap = LstEntry(al, sActive, active_l);
 
     if (!ap->detect_etp)
       continue;
@@ -1299,10 +1291,10 @@ static void sendAlarmStatus(sOutunit* op)
 static void checkOutunits()
 {
   sOutunit* op;
-  LstLink(sOutunit) * ol;
+  struct LstHead * ol;
 
-  for (ol = LstFir(&l.outunit_l); ol != LstEnd(&l.outunit_l); ol = LstNex(ol)) {
-    op = LstObj(ol);
+  LstForEach(ol, &l.outunit_l) {
+    op = LstEntry(ol, sOutunit, outunit_l);
 
     if (op->linkUp && op->type == mh_eOutunitType_Operator && op->ver >= 5)
       /* Set alarm status to operator */
@@ -1578,11 +1570,11 @@ static sEvent* eventListInsert(mh_eEvent event, char* text, sActive* ap)
 
 static void eventToOutunits(sEvent* ep)
 {
-  LstLink(sOutunit) * ol;
+  struct LstHead * ol;
   sOutunit* op;
 
-  for (ol = LstFir(&l.outunit_l); ol != LstEnd(&l.outunit_l); ol = LstNex(ol)) {
-    op = LstObj(ol);
+  LstForEach(ol, &l.outunit_l) {
+    op = LstEntry(ol, sOutunit, outunit_l);
     if (op->syncedIdx == op->eventIdx)
       sendEventListToOutunit(op);
   }
@@ -1947,9 +1939,7 @@ static void fromApplication(qcom_sGet* get)
     break;
   }
 
-#if defined OS_POSIX
   nanosleep(&hold, NULL);
-#endif
 
   applLogState(ap);
   applReply(get, &reply, sizeof(reply));
@@ -2087,7 +2077,7 @@ static void fromEvent(qcom_sGet* get)
   new_event.m = ep->mask;
 
   if (new_event.b.swapDone & !cur_event.b.swapDone) {
-    LstLink(sOutunit) * ol;
+    struct LstHead * ol;
     sOutunit* op;
 
     errh_Info("Warm restart completed.");
@@ -2095,10 +2085,10 @@ static void fromEvent(qcom_sGet* get)
     handlerEvent(pwr_eSystemEventTypeEnum_NodeRestart, l.head.nix, 0);
     reInitSupList();
 
-    if (!LstEmp(&l.sup_l)) {
+    if (!LstEmpty(&l.sup_l)) {
       l.supListState = eSupListState_Scan;
       setTimerActive(cMessageIdx, TRUE);
-      if (!LstEmp(&l.detect_l)) {
+      if (!LstEmpty(&l.detect_l)) {
         scanTimerList();
         scanDetectList();
         setTimerActive(cDetectIdx, TRUE);
@@ -2109,14 +2099,12 @@ static void fromEvent(qcom_sGet* get)
       setTimerActive(cMessageIdx, FALSE);
       errh_Info("No supervise objects.");
     }
-    for (ol = LstFir(&l.outunit_l); ol != LstEnd(&l.outunit_l);
-         ol = LstNex(ol)) {
-      op = LstObj(ol);
+    LstForEach(ol, &l.outunit_l) {
+      op = LstEntry(ol, sOutunit, outunit_l);
       sendToOutunit(op, mh_eMsg_OutunitClear, 0, 0, NULL, 0);
     }
-    for (ol = LstFir(&l.outunit_l); ol != LstEnd(&l.outunit_l);
-         ol = LstNex(ol)) {
-      op = LstObj(ol);
+    LstForEach(ol, &l.outunit_l) {
+      op = LstEntry(ol, sOutunit, outunit_l);
       sendEventListToOutunit(op);
     }
     pwrb_IOHandler_Exec(handlerEvent_cb, 1);
@@ -2126,15 +2114,14 @@ static void fromEvent(qcom_sGet* get)
     errh_Info("Warm restart initiated.");
     handlerEvent(pwr_eSystemEventTypeEnum_NodeRestart, l.head.nix, 1);
   } else if (new_event.b.simLoadStart & !cur_event.b.simLoadStart) {
-    LstLink(sOutunit) * ol;
+    struct LstHead * ol;
     sOutunit* op;
 
     l.supListState = eSupListState_Wait;
     handlerEvent(pwr_eSystemEventTypeEnum_SimulateLoad, l.head.nix, 1);
 
-    for (ol = LstFir(&l.outunit_l); ol != LstEnd(&l.outunit_l);
-         ol = LstNex(ol)) {
-      op = LstObj(ol);
+    LstForEach(ol, &l.outunit_l) {
+      op = LstEntry(ol, sOutunit, outunit_l);
       if (op->syncedIdx == op->eventIdx)
         sendToOutunit(op, mh_eMsg_OutunitClear, 0, 0, NULL, 0);
     }
@@ -2144,10 +2131,10 @@ static void fromEvent(qcom_sGet* get)
     handlerEvent(pwr_eSystemEventTypeEnum_SimulateLoad, l.head.nix, 0);
     reInitSupList();
 
-    if (!LstEmp(&l.sup_l)) {
+    if (!LstEmpty(&l.sup_l)) {
       l.supListState = eSupListState_Scan;
       setTimerActive(cMessageIdx, TRUE);
-      if (!LstEmp(&l.detect_l)) {
+      if (!LstEmpty(&l.detect_l)) {
         scanTimerList();
         scanDetectList();
         setTimerActive(cDetectIdx, TRUE);
@@ -2523,7 +2510,7 @@ static void handlerEvent(
       gdh_ArefANameToAref(&aref, attr, &hp->link.supObject);
 
       /* Insert in application alarm list */
-      (void)LstIns(&node->appl.active_l, hp, active_l);
+      LstInsert(&node->appl.active_l, &hp->active_l);
       hp->ap = (sAppl*)&node->appl;
       ++hp->ap->activeMessages;
       ep = eventListInsert(ssup->EventType, NULL, (sActive*)hp);
@@ -2566,8 +2553,8 @@ static void handlerEvent_cb(int event, int status)
 
 static sApplActive* handlerListAlloc(pwr_eSystemEventTypeEnum event)
 {
-  LstLink(sApplActive) * hl;
-  LstHead(sApplActive) * ll;
+  struct LstHead * hl;
+  struct LstHead * ll;
   sApplActive* hp;
   const int Alloc = 50;
   int i;
@@ -2583,31 +2570,31 @@ static sApplActive* handlerListAlloc(pwr_eSystemEventTypeEnum event)
 
   ll = &l.handlerFree_l;
 
-  if (LstEmp(ll)) {
+  if (LstEmpty(ll)) {
     hp = (sApplActive*)calloc(Alloc, sizeof(sApplActive));
     if (hp != NULL) {
       for (i = 0; i < Alloc; i++, hp++)
-        LstIns(ll, hp, link.active_l);
+        LstInsert(ll, &hp->link.active_l);
       l.emon->AlarmMaxCount += Alloc;
     } else {
       return NULL;
     }
   }
 
-  hl = LstFir(ll);
-  LstRem(hl);
-  LstNul(hl);
+  hl = ll->next;
+  LstRemove(hl);
+  LstNull(hl);
   --l.emon->AlarmMaxCount;
   l.handlerListCount++;
 
-  return LstObj(hl);
+  return LstEntry(hl, sApplActive, active_l);
 }
 
 static void handlerListFree(sApplActive* hp)
 {
   // return;
   memset(hp, 0, sizeof(*hp));
-  LstIns(&l.handlerFree_l, hp, link.active_l);
+  LstInsert(&l.handlerFree_l, &hp->link.active_l);
   ++l.emon->AlarmMaxCount;
   l.handlerListCount--;
   return;
@@ -2626,12 +2613,8 @@ static void initBlockList()
   pwr_tNodeIndex nix;
   int i;
 
-#if defined OS_POSIX
   char* env = getenv("pwrp_load");
   hostspec[0] = '\0'; /* Prevent warnings from gcc */
-#else
-#error "Block Db not implemented for this platform."
-#endif
 
   sprintf(
       l.blockDbName, "%s/ld_bdb_%06x.dat", env != NULL ? env : "", l.head.nix);
@@ -2713,7 +2696,7 @@ static void initNodeDb()
   strncpy(np->name, qnode.name, sizeof(np->name));
 
   for (i = 0; i < cNodes; i++) {
-    LstIni(&l.nodeDb[i].appl.active_l);
+    LstInit(&l.nodeDb[i].appl.active_l);
   }
 }
 
@@ -2974,7 +2957,7 @@ static pwr_tStatus initSupList()
   if (EVEN(sts))
     errh_Error("Initialize list of CycleSup's\n%m", sts);
 
-  if (LstEmp(&l.sup_l))
+  if (LstEmpty(&l.sup_l))
     errh_Info("No sup objects");
 
   return (sts);
@@ -2983,13 +2966,13 @@ static pwr_tStatus initSupList()
 static pwr_tStatus initSupListClass(pwr_tClassId cid)
 {
   pwr_tStatus sts;
-  LstLink(sSupActive) * sl;
-  LstLink(sSupActive) * dl;
+  struct LstHead * sl;
+  struct LstHead * dl;
   sSupActive* sp;
   pwr_tAttrRef aref;
 
-  sl = LstEnd(&l.sup_l);
-  dl = LstEnd(&l.detect_l);
+  sl = &l.sup_l;
+  dl = &l.detect_l;
 
   /* Loop trough objects in class list.  */
 
@@ -3000,10 +2983,12 @@ static pwr_tStatus initSupListClass(pwr_tClassId cid)
 
     sts = initSupActiveCB(&aref, cid, &sp, 1, 1);
     if (ODD(sts)) {
-      sl = LstIns(sl, sp, sup_l);
+      LstInsert(sl, &sp->sup_l);
+      sl = &sp->sup_l;
       l.emon->BlockMaxCount++;
       if (sp->agent == mh_eAgent_MH) {
-        dl = LstIns(dl, sp, detect_l);
+        LstInsert(dl, &sp->detect_l);
+        dl = &sp->detect_l;
         l.emon->EventFirstIdx++;
       }
     }
@@ -3055,7 +3040,7 @@ static pwr_tBoolean isValidApplication(
     mh_sHead* hp, qcom_sAid* aid, sAppl** appl, mh_uApplReply* Reply)
 {
   sAppl* ap;
-  LstLink(sAppl) * al;
+  struct LstHead * al;
 
   if (!(hp->ver == mh_cVersion
           || (mh_cVersion == 5
@@ -3070,11 +3055,11 @@ static pwr_tBoolean isValidApplication(
 
   /* Find outunit in outunit list */
 
-  for (al = LstFir(&l.appl_l); al != LstEnd(&l.appl_l); al = LstNex(al))
-    if (cdh_ObjidIsEqual(LstObj(al)->aid, hp->aid))
+  LstForEach(al, &l.appl_l)
+    if (cdh_ObjidIsEqual(LstEntry(al, sAppl, appl_l)->aid, hp->aid))
       break;
 
-  if (al == LstEnd(&l.appl_l)) {
+  if (al == &l.appl_l) {
     /* Application not known, make it known */
     ap = (sAppl*)calloc(1, sizeof(*ap));
     if (ap == NULL) {
@@ -3090,12 +3075,12 @@ static pwr_tBoolean isValidApplication(
     ap->aid = hp->aid;
     ap->state = mh_eApplState_New;
     /* Insert in application list */
-    LstIns(&l.appl_l, ap, appl_l);
+    LstInsert(&l.appl_l, &ap->appl_l);
     /* Insert in process list */
-    LstIns(&l.proc_l, ap, link.proc_l);
-    LstIni(&ap->active_l); /* Init application alarm list */
+    LstInsert(&l.proc_l, &ap->link.proc_l);
+    LstInit(&ap->active_l); /* Init application alarm list */
   } else {
-    ap = LstObj(al);
+    ap = LstEntry(al, sAppl, appl_l);
 
     if (ap->birthTime.tv_sec != hp->birthTime.tv_sec) {
       /* Different times, i.e. the application is restarted */
@@ -3119,7 +3104,7 @@ static pwr_tBoolean isValidOutunit(
     mh_sHead* hp, qcom_sAid* aid, sOutunit** outunit)
 {
   sOutunit* op;
-  LstLink(sOutunit) * ol;
+  struct LstHead * ol;
 
   if (!(hp->ver == mh_cVersion
           || (mh_cVersion == 5
@@ -3133,11 +3118,11 @@ static pwr_tBoolean isValidOutunit(
 
   /* Find outunit in outunit list */
 
-  for (ol = LstFir(&l.outunit_l); ol != LstEnd(&l.outunit_l); ol = LstNex(ol))
-    if (cdh_ObjidIsEqual(LstObj(ol)->outunit, hp->outunit))
+  LstForEach(ol, &l.outunit_l)
+    if (cdh_ObjidIsEqual(LstEntry(ol, sOutunit, outunit_l)->outunit, hp->outunit))
       break;
 
-  if (ol == LstEnd(&l.outunit_l)) {
+  if (ol == &l.outunit_l) {
     /* Outunit not known, make it known */
     op = (sOutunit*)calloc(1, sizeof(*op));
     if (op == NULL) {
@@ -3153,13 +3138,13 @@ static pwr_tBoolean isValidOutunit(
     op->ver = hp->ver;
     op->outunit = hp->outunit;
     /* Insert in outunit list */
-    LstIns(&l.outunit_l, op, outunit_l);
+    LstInsert(&l.outunit_l, &op->outunit_l);
     /* Insert in process list */
-    LstIns(&l.proc_l, op, link.proc_l);
+    LstInsert(&l.proc_l, &op->link.proc_l);
     op->linkUp = TRUE;
     outunitLog(op, "New outunit");
   } else {
-    op = LstObj(ol);
+    op = LstEntry(ol, sOutunit, outunit_l);
 
     if (op->birthTime.tv_sec != hp->birthTime.tv_sec) {
       if (hp->type == mh_eMsg_OutunitInfo) {
@@ -3204,7 +3189,7 @@ static void linkActive(qcom_sGet* msg)
 static void linkConnect(qcom_sGet* msg)
 {
   pwr_tStatus sts;
-  LstLink(sOutunit) * ol;
+  struct LstHead * ol;
   qcom_sNode* qnode = (qcom_sNode*)msg->data;
   int nix = qnode->nid;
 
@@ -3221,9 +3206,9 @@ static void linkConnect(qcom_sGet* msg)
   node->newLinkState = gdh_eLinkState_Up;
   node->check = TRUE;
 
-  for (ol = LstFir(&l.outunit_l); ol != LstEnd(&l.outunit_l); ol = LstNex(ol))
-    if (nix == LstObj(ol)->link.qid.nid) {
-      LstObj(ol)->linkUp = TRUE;
+  LstForEach(ol, &l.outunit_l)
+    if (nix == LstEntry(ol, sOutunit, outunit_l)->link.qid.nid) {
+      LstEntry(ol, sOutunit, outunit_l)->linkUp = TRUE;
     }
 
   sts = sendMessage(mh_eMsg_HandlerHello, NULL, NULL, NULL,
@@ -3232,7 +3217,7 @@ static void linkConnect(qcom_sGet* msg)
 
 static void linkDisconnect(qcom_sGet* msg)
 {
-  LstLink(sOutunit) * ol;
+  struct LstHead * ol;
   qcom_sNode* qnode = (qcom_sNode*)msg->data;
   int nix = qnode->nid;
 
@@ -3249,9 +3234,9 @@ static void linkDisconnect(qcom_sGet* msg)
     node->check = TRUE;
   }
 
-  for (ol = LstFir(&l.outunit_l); ol != LstEnd(&l.outunit_l); ol = LstNex(ol))
-    if (nix == LstObj(ol)->link.qid.nid) {
-      LstObj(ol)->linkUp = FALSE;
+  LstForEach(ol, &l.outunit_l)
+    if (nix == LstEntry(ol, sOutunit, outunit_l)->link.qid.nid) {
+      LstEntry(ol, sOutunit, outunit_l)->linkUp = FALSE;
     }
 }
 
@@ -3270,10 +3255,10 @@ static void outunitAborted(sOutunit* op)
 {
   outunitLog(op, "Outunit aborted");
 
-  LstRem(&op->outunit_l); /* Remove from outunit list */
-  LstNul(&op->outunit_l);
-  LstRem(&op->link.proc_l); /* Remove from process link */
-  LstNul(&op->link.proc_l);
+  LstRemove(&op->outunit_l); /* Remove from outunit list */
+  LstNull(&op->outunit_l);
+  LstRemove(&op->link.proc_l); /* Remove from process link */
+  LstNull(&op->link.proc_l);
   free(op); /* Free control block */
 }
 
@@ -3346,15 +3331,15 @@ static void outunitBlock(mh_sHead* hp, sOutunit* op)
   sBlock* bp = NULL;
   mh_sOutunitBlock* ip = (mh_sOutunitBlock*)(hp + 1);
   sEvent* ep;
-  LstLink(sBlock) * bl;
+  struct LstHead * bl;
   pwr_tNodeIndex nix;
 
   op->blockGen = ip->blockGen;
   sendToOutunit(op, mh_eMsg_Sync, 0, 0, NULL, 0);
 
-  for (bl = LstFir(&l.block_l); bl != LstEnd(&l.block_l); bl = LstNex(bl))
-    if (cdh_ObjidIsEqual(ip->object, LstObj(bl)->link.object.Objid))
-      bp = LstObj(bl);
+  LstForEach(bl, &l.block_l)
+    if (cdh_ObjidIsEqual(ip->object, LstEntry(bl, sBlock, block_l)->link.object.Objid))
+      bp = LstEntry(bl, sBlock, block_l);
 
   if (bp == NULL) {
     sts = gdh_GetObjectNodeIndex(ip->object, &nix);
@@ -3479,10 +3464,10 @@ static void outunitDisconnect(mh_sHead* hp, sOutunit* op)
 {
   outunitLog(op, "Outunit disconnected");
 
-  LstRem(&op->outunit_l); /* Remove from outunit list */
-  LstNul(&op->outunit_l);
-  LstRem(&op->link.proc_l); /* Remove from process link */
-  LstNul(&op->link.proc_l);
+  LstRemove(&op->outunit_l); /* Remove from outunit list */
+  LstNull(&op->outunit_l);
+  LstRemove(&op->link.proc_l); /* Remove from process link */
+  LstNull(&op->link.proc_l);
   free(op); /* Free control block */
 }
 
@@ -3517,14 +3502,14 @@ static void outunitAlarmReq(mh_sHead* hp, sOutunit* op)
 {
   mh_sOutunitAlarmReq* msg = (mh_sOutunitAlarmReq*)(hp + 1);
   int i;
-  LstLink(sActive) * al;
+  struct LstHead * al;
   sActive* ap;
   int ok;
 
   /* Find events in active list */
   for (i = 0; i < msg->Count; i++) {
-    for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l); al = LstNex(al)) {
-      ap = LstObj(al);
+    LstForEach(al, &l.active_l) {
+      ap = LstEntry(al, sActive, active_l);
 
       if (ap->idx == msg->Idx[i]) {
         if (!ap->detect_etp->ap)
@@ -3549,19 +3534,19 @@ static void outunitAlarmReq(mh_sHead* hp, sOutunit* op)
 
 static void procDown(qcom_sAid* aid)
 {
-  LstLink(sProcLink) * pl;
+  struct LstHead * pl;
 
-  for (pl = LstFir(&l.proc_l); pl != LstEnd(&l.proc_l); pl = LstNex(pl))
-    if (LstObj(pl)->aid.nid == aid->nid && LstObj(pl)->aid.aix == aid->aix) {
-      switch (LstObj(pl)->source) {
+  LstForEach(pl, &l.proc_l)
+    if (LstEntry(pl, sProcLink, proc_l)->aid.nid == aid->nid && LstEntry(pl, sProcLink, proc_l)->aid.aix == aid->aix) {
+      switch (LstEntry(pl, sProcLink, proc_l)->source) {
       case mh_eSource_Outunit:
-        outunitAborted((sOutunit*)LstObj(pl));
+        outunitAborted((sOutunit*)LstEntry(pl, sProcLink, proc_l));
         break;
       case mh_eSource_Application:
         break;
       default:
         errh_Error(
-            "procDown, programming error, source: %d", LstObj(pl)->source);
+            "procDown, programming error, source: %d", LstEntry(pl, sProcLink, proc_l)->source);
         break;
       }
       return;
@@ -3591,7 +3576,7 @@ static void receive(qcom_sQid myQ)
     if (l.redu && l.nodep->RedundancyState == pwr_eRedundancyState_Passive) {
       if (l.supListState == eSupListState_Init) {
         initSupList();
-        if (!LstEmp(&l.sup_l))
+        if (!LstEmpty(&l.sup_l))
           l.supListState = eSupListState_Scan;
         else
           l.supListState = eSupListState_NoSup;
@@ -3651,12 +3636,12 @@ static void receive(qcom_sQid myQ)
 static void reInitSupList()
 {
   pwr_tStatus sts;
-  LstLink(sSupActive) * sl;
+  struct LstHead * sl;
   sSupActive* sp;
   sActive* ap;
 
-  for (sl = LstFir(&l.sup_l); sl != LstEnd(&l.sup_l); sl = LstNex(sl))
-    LstObj(sl)->found = FALSE;
+  LstForEach(sl, &l.sup_l)
+    LstEntry(sl, sSupActive, sup_l)->found = FALSE;
 
   sts = reInitSupListClass(pwr_cClass_ASup);
   if (EVEN(sts))
@@ -3674,26 +3659,26 @@ static void reInitSupList()
   if (EVEN(sts))
     errh_Error("Reinitialize list of CycleSup's\n%m", sts);
 
-  for (sl = LstFir(&l.sup_l); sl != LstEnd(&l.sup_l); sl = LstNex(sl)) {
-    sp = LstObj(sl);
+  LstForEach(sl, &l.sup_l) {
+    sp = LstEntry(sl, sSupActive, sup_l);
     if (!sp->found) {
       if ((ap = activeListGet(sp->link.idx)) != NULL)
         cancelAlarm(ap, cText_Restart);
 
-      sl = LstPre(&sp->sup_l);
-      LstRem(&sp->sup_l);
-      LstNul(&sp->sup_l);
+      sl = sp->sup_l.prev;
+      LstRemove(&sp->sup_l);
+      LstNull(&sp->sup_l);
       l.emon->BlockMaxCount--;
       gdh_DLUnrefObjectInfo(sp->supDlid);
       if (sp->agent == mh_eAgent_MH) {
         gdh_DLUnrefObjectInfo(sp->attrDlid);
-        if (LstInl(&sp->timer_l)) {
-          LstRem(&sp->timer_l);
-          LstNul(&sp->timer_l);
+        if (!LstIsNull(&sp->timer_l)) {
+          LstRemove(&sp->timer_l);
+          LstNull(&sp->timer_l);
           l.emon->EventLastIdx--;
         }
-        LstRem(&sp->detect_l);
-        LstNul(&sp->detect_l);
+        LstRemove(&sp->detect_l);
+        LstNull(&sp->detect_l);
         l.emon->EventFirstIdx--;
       }
       free(sp);
@@ -3704,13 +3689,13 @@ static void reInitSupList()
 static pwr_tStatus reInitSupListClass(pwr_tClassId cid)
 {
   pwr_tStatus sts;
-  LstLink(sSupActive) * sl;
-  LstLink(sSupActive) * dl;
+  struct LstHead * sl;
+  struct LstHead * dl;
   sSupActive* sp;
   pwr_tAttrRef aref;
 
-  dl = LstEnd(&l.detect_l);
-  sl = LstEnd(&l.sup_l);
+  dl = &l.detect_l;
+  sl = &l.sup_l;
 
   /* Loop through objects in class list.  */
 
@@ -3722,11 +3707,13 @@ static pwr_tStatus reInitSupListClass(pwr_tClassId cid)
     if ((sp = supListGet(&aref)) == NULL) {
       sts = initSupActiveCB(&aref, cid, &sp, 1, 1);
       if (ODD(sts)) {
-        sl = LstIns(sl, sp, sup_l);
+        LstInsert(sl, &sp->sup_l);
+        sl = &sp->sup_l;
         l.emon->BlockMaxCount++;
         sp->found = TRUE;
         if (sp->agent == mh_eAgent_MH) {
-          dl = LstIns(dl, sp, detect_l);
+          LstInsert(dl, &sp->detect_l);
+          dl = &sp->detect_l;
           l.emon->EventFirstIdx++;
         }
       }
@@ -3806,7 +3793,7 @@ static void saveBlockList()
 {
   unsigned long size;
   sSaveBlock* sp;
-  LstLink(sBlock) * bl;
+  struct LstHead * bl;
   sBlock* bp;
 
   if (l.blockDb == NULL)
@@ -3822,12 +3809,14 @@ static void saveBlockList()
     }
   }
 
-  for (bl = LstFir(&l.block_l), sp = l.blockSave, size = 0;
-       bl != LstEnd(&l.block_l);
-       bl = LstNex(bl), sp++, size += sizeof(sSaveBlock)) {
-    bp = LstObj(bl);
+  sp = l.blockSave;
+  size = 0;
+  LstForEach(bl, &l.block_l) {
+    bp = LstEntry(bl, sBlock, block_l);
     sp->outunitBlock = bp->outunitBlock;
     sp->targetId = bp->targetId;
+    sp++;
+    size += sizeof(sSaveBlock);
   }
 
   l.blockDb = mh_BlockDbPut(l.blockDb, size, (char*)l.blockSave);
@@ -3835,10 +3824,10 @@ static void saveBlockList()
 
 static void scanDetectList()
 {
-  LstLink(sSupActive) * dl;
+  struct LstHead * dl;
 
-  for (dl = LstFir(&l.detect_l); dl != LstEnd(&l.detect_l); dl = LstNex(dl)) {
-    sSupActive* sp = LstObj(dl);
+  LstForEach(dl, &l.detect_l) {
+    sSupActive* sp = LstEntry(dl, sSupActive, detect_l);
     if (sp->detect_exec != NULL)
       sp->detect_exec(sp);
   }
@@ -3849,10 +3838,10 @@ static void scanSupList()
   pwr_tStatus sts;
   mh_uEventInfo AlarmVisibility;
   sSupActive* sp;
-  LstLink(sSupActive) * sl;
+  struct LstHead * sl;
 
-  for (sl = LstFir(&l.sup_l); sl != LstEnd(&l.sup_l); sl = LstNex(sl)) {
-    sp = LstObj(sl);
+  LstForEach(sl, &l.sup_l) {
+    sp = LstEntry(sl, sSupActive, sup_l);
     if (l.newBlock) {
       sts = gdh_GetAlarmInfo(
           sp->link.object.Objid, NULL, NULL, NULL, NULL, &AlarmVisibility.All);
@@ -3900,17 +3889,17 @@ static void scanSupList()
 
 static void scanTimerList()
 {
-  LstLink(sSupActive) * sl, *nsl;
+  struct LstHead * sl, *nsl;
   sTimer* tp;
 
-  for (sl = LstFir(&l.timer_l); sl != LstEnd(&l.timer_l); sl = nsl) {
-    tp = LstObj(sl)->timer;
-    nsl = LstNex(sl);
+  for (sl = l.timer_l.next; sl != &l.timer_l; sl = nsl) {
+    tp = LstEntry(sl, sSupActive, timer_l)->timer;
+    nsl = sl->next;
     if (tp->TimerCount <= 1 || !tp->TimerFlag) {
       tp->TimerCount = 0;
       tp->TimerFlag = FALSE;
-      LstRem(sl);
-      LstNul(sl);
+      LstRemove(sl);
+      LstNull(sl);
       l.emon->EventLastIdx--;
     } else {
       tp->TimerCount--;
@@ -4108,10 +4097,10 @@ static void setTimerActive(int timerIdx, pwr_tBoolean active)
 
 static sSupActive* supListGet(pwr_tAttrRef* arp)
 {
-  LstLink(sSupActive) * sl;
+  struct LstHead * sl;
 
-  for (sl = LstFir(&l.sup_l); sl != LstEnd(&l.sup_l); sl = LstNex(sl)) {
-    sSupActive* sp = LstObj(sl);
+  LstForEach(sl, &l.sup_l) {
+    sSupActive* sp = LstEntry(sl, sSupActive, sup_l);
 
     if (cdh_ArefIsEqual(&sp->link.supObject, arp))
       return sp;
@@ -4141,9 +4130,9 @@ static void timeOut()
     } else if (l.supListState == eSupListState_Init) {
       if (qcom_EventMask(NULL, &qcom_cQini) & ini_mEvent_newPlcStartDone) {
         initSupList();
-        if (!LstEmp(&l.sup_l)) {
+        if (!LstEmpty(&l.sup_l)) {
           l.supListState = eSupListState_Scan;
-          if (!LstEmp(&l.detect_l)) {
+          if (!LstEmpty(&l.detect_l)) {
             scanTimerList();
             scanDetectList();
             setTimerActive(cDetectIdx, TRUE);
@@ -4182,8 +4171,8 @@ static void timerIn(sSupActive* s, sTimer* t)
 {
   t->TimerCount = t->TimerTime / l.detectTimerTime;
   if (!t->TimerFlag && t->TimerCount > 0) {
-    if (!LstInl(&s->timer_l)) {
-      LstIns(&l.timer_l, s, timer_l);
+    if (LstIsNull(&s->timer_l)) {
+      LstInsert(&l.timer_l, &s->timer_l);
       l.emon->EventLastIdx++;
     }
     t->TimerFlag = TRUE;
@@ -4284,7 +4273,7 @@ static void updateAlarm(sActive* ap, sEvent* ep)
 static void updateAlarmInfo(sActive* iap)
 {
   sActive* ap;
-  LstLink(sActive) * al;
+  struct LstHead * al;
   mh_uEventInfo maxAlarm;
 
   if (cdh_ObjidIsEqual(iap->object.Objid,
@@ -4293,8 +4282,8 @@ static void updateAlarmInfo(sActive* iap)
 
   /* Search alarm list for ocurrence of object */
   maxAlarm.All = 0;
-  for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l); al = LstNex(al)) {
-    ap = LstObj(al);
+  LstForEach(al, &l.active_l) {
+    ap = LstEntry(al, sActive, active_l);
     if (cdh_ArefIsEqual(&iap->object, &ap->object))
       if (ap->event == mh_eEvent_Alarm
           || ap->event == mh_eEvent_MaintenanceAlarm
@@ -4321,7 +4310,7 @@ static void updateSupActive(sSupActive* sp)
   mh_eAgent agent;
   pwr_tClassId cid = 0;
   pwr_tBoolean newAttribute;
-  LstLink(sSupActive)* dl = LstEnd(&l.detect_l);
+  struct LstHead* dl = &l.detect_l;
 
   /* Get pointer to supervisory object */
 
@@ -4379,15 +4368,15 @@ static void updateSupActive(sSupActive* sp)
   sp->found = TRUE;
   if (sp->agent != agent) {
     if (sp->agent == mh_eAgent_MH) {
-      LstIns(dl, sp, detect_l);
+      LstInsert(dl, &sp->detect_l);
       l.emon->EventFirstIdx++;
     } else {
-      LstRem(&sp->detect_l);
-      LstNul(&sp->detect_l);
+      LstRemove(&sp->detect_l);
+      LstNull(&sp->detect_l);
       l.emon->EventFirstIdx--;
-      if (LstInl(&sp->timer_l)) {
-        LstRem(&sp->timer_l);
-        LstNul(&sp->timer_l);
+      if (!LstIsNull(&sp->timer_l)) {
+        LstRemove(&sp->timer_l);
+        LstNull(&sp->timer_l);
         l.emon->EventLastIdx--;
       }
     }
@@ -4576,7 +4565,7 @@ static pwr_tStatus emon_redu_send()
 {
   pwr_tStatus sts;
   void* msg;
-  LstLink(sActive) * al;
+  struct LstHead * al;
   sActive* ap;
   sSupActive* sp;
   int size;
@@ -4588,19 +4577,19 @@ static pwr_tStatus emon_redu_send()
   redu_sEvEventList* eventlistp;
   redu_sEvEvent* eventp;
   sOutunit* op;
-  LstLink(sOutunit) * ol;
+  struct LstHead * ol;
   sEvent* ep;
   int i;
 
   // Count active
   active_cnt = 0;
-  for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l); al = LstNex(al))
+  LstForEach(al, &l.active_l)
     active_cnt++;
 
   // Count outunits
   outunit_cnt = 0;
-  for (ol = LstFir(&l.outunit_l); ol != LstEnd(&l.outunit_l); ol = LstNex(ol)) {
-    op = LstObj(ol);
+  LstForEach(ol, &l.outunit_l) {
+    op = LstEntry(ol, sOutunit, outunit_l);
 
     if (op->outunit.vid != l.nodeObject.vid)
       outunit_cnt++;
@@ -4621,8 +4610,8 @@ static pwr_tStatus emon_redu_send()
   ((redu_sEvMsgHeader*)msg)->events = event_cnt;
 
   activep = (redu_sEvActive*)((char*)msg + sizeof(redu_sEvMsgHeader));
-  for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l); al = LstNex(al)) {
-    ap = LstObj(al);
+  LstForEach(al, &l.active_l) {
+    ap = LstEntry(al, sActive, active_l);
 
     activep->idx = ap->idx;
     activep->returnIdx = ap->returnIdx;
@@ -4662,8 +4651,8 @@ static pwr_tStatus emon_redu_send()
 
   /* Outunits, only remote */
   outunitp = (redu_sEvOutunit*)activep;
-  for (ol = LstFir(&l.outunit_l); ol != LstEnd(&l.outunit_l); ol = LstNex(ol)) {
-    op = LstObj(ol);
+  LstForEach(ol, &l.outunit_l) {
+    op = LstEntry(ol, sOutunit, outunit_l);
 
     if (op->outunit.vid != l.nodeObject.vid) {
       outunitp->outunit = op->outunit;
@@ -4754,12 +4743,12 @@ static pwr_tStatus emon_redu_receive()
   int outunits;
   int events;
   int i;
-  LstLink(sActive) * al;
+  struct LstHead * al;
   sActive *ap = NULL, *tp;
   sSupActive* sp;
   sEvent* ep;
   sOutunit* op;
-  LstLink(sOutunit) * ol;
+  struct LstHead * ol;
   int found;
 
   sts = redu_receive(l.redu, timeout, &size, &msg);
@@ -4825,8 +4814,8 @@ static pwr_tStatus emon_redu_receive()
 
     /* Active list */
     /* Find removed elements in active list */
-    for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l); al = LstNex(al)) {
-      ap = LstObj(al);
+    LstForEach(al, &l.active_l) {
+      ap = LstEntry(al, sActive, active_l);
       if (ap->source == mh_eSource_Scanner
           || ap->source == mh_eSource_Handler) {
         sp = (sSupActive*)ap;
@@ -4838,9 +4827,8 @@ static pwr_tStatus emon_redu_receive()
     for (i = 0; i < actives; i++) {
       if (activep->source == mh_eSource_Scanner
           || activep->source == mh_eSource_Handler) {
-        for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l);
-             al = LstNex(al)) {
-          ap = LstObj(al);
+        LstForEach(al, &l.active_l) {
+          ap = LstEntry(al, sActive, active_l);
           if ((activep->source == mh_eSource_Scanner
                   || activep->source == mh_eSource_Handler)
               && cdh_ArefIsEqual(&activep->supObject, &ap->supObject)) {
@@ -4853,9 +4841,9 @@ static pwr_tStatus emon_redu_receive()
       activep++;
     }
 
-    for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l);) {
-      ap = LstObj(al);
-      al = LstNex(al);
+    for (al = l.active_l.next; al != &l.active_l;) {
+      ap = LstEntry(al, sActive, active_l);
+      al = al->next;
       if (ap->source == mh_eSource_Scanner
           || ap->source == mh_eSource_Handler) {
         sp = (sSupActive*)ap;
@@ -4881,9 +4869,8 @@ static pwr_tStatus emon_redu_receive()
       found = 0;
       if (activep->source == mh_eSource_Scanner
           || activep->source == mh_eSource_Handler) {
-        for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l);
-             al = LstNex(al)) {
-          ap = LstObj(al);
+        LstForEach(al, &l.active_l) {
+          ap = LstEntry(al, sActive, active_l);
           if ((activep->source == mh_eSource_Scanner
                   || activep->source == mh_eSource_Handler)
               && cdh_ArefIsEqual(&activep->supObject, &ap->supObject)) {
@@ -4902,9 +4889,8 @@ static pwr_tStatus emon_redu_receive()
           activep++;
           continue;
         }
-        for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l);
-             al = LstNex(al)) {
-          tp = LstObj(al);
+        LstForEach(al, &l.active_l) {
+          tp = LstEntry(al, sActive, active_l);
           if (ap == tp)
             /* Already in active list */
             found = 1;
@@ -4962,8 +4948,8 @@ static pwr_tStatus emon_redu_receive()
         continue;
       }
       if (!found) {
-        LstLink(sActive) * al;
-        LstLink(sBlock) * bl;
+        struct LstHead * al;
+        struct LstHead * bl;
 
         // printf( "Active add, idx %d %s\n", ap->detect_etp->idx,
         // ap->detect_etp->ep ? ap->detect_etp->ep->objName : "");
@@ -4978,8 +4964,8 @@ static pwr_tStatus emon_redu_receive()
         //}
         /* Insert in active list */
 
-        al = LstEnd(&l.active_l);
-        LstIns(al, ap, active_l);
+        al = &l.active_l;
+        LstInsert(al, &ap->active_l);
 
         switch (ap->event) {
         case mh_eEvent_Alarm:
@@ -4993,8 +4979,8 @@ static pwr_tStatus emon_redu_receive()
           break;
         case mh_eEvent_Block:
         case mh_eEvent_Reblock:
-          bl = LstEnd(&l.block_l);
-          LstIns(bl, (sBlock*)ap, block_l);
+          bl = &l.block_l;
+          LstInsert(bl, &((sBlock*)ap)->block_l);
           ++l.emon->BlockCount;
           break;
         case mh_eEvent_Info:
@@ -5018,9 +5004,9 @@ static pwr_tStatus emon_redu_receive()
     outunit_start = (redu_sEvOutunit*)activep;
 
     /* Remove outunits */
-    for (ol = LstFir(&l.outunit_l); ol != LstEnd(&l.outunit_l);) {
-      op = LstObj(ol);
-      ol = LstNex(ol);
+    for (ol = l.outunit_l.next; ol != &l.outunit_l;) {
+      op = LstEntry(ol, sOutunit, outunit_l);
+      ol = ol->next;
 
       if (op->outunit.vid == l.nodeObject.vid)
         continue;
@@ -5044,9 +5030,9 @@ static pwr_tStatus emon_redu_receive()
     outunitp = outunit_start;
     for (i = 0; i < outunits; i++) {
       found = 0;
-      for (ol = LstFir(&l.outunit_l); ol != LstEnd(&l.outunit_l);) {
-        op = LstObj(ol);
-        ol = LstNex(ol);
+      for (ol = l.outunit_l.next; ol != &l.outunit_l;) {
+        op = LstEntry(ol, sOutunit, outunit_l);
+        ol = ol->next;
 
         if (cdh_ObjidIsEqual(outunitp->outunit, op->outunit)) {
           found = 1;
@@ -5093,9 +5079,9 @@ static pwr_tStatus emon_redu_receive()
         op->selSize = outunitp->selSize;
         memcpy(op->sel_l, outunitp->sel_l, sizeof(op->sel_l));
         /* Insert in outunit list */
-        LstIns(&l.outunit_l, op, outunit_l);
+        LstInsert(&l.outunit_l, &op->outunit_l);
         /* Insert in process list */
-        LstIns(&l.proc_l, op, link.proc_l);
+        LstInsert(&l.proc_l, &op->link.proc_l);
         op->linkUp = TRUE;
         outunitLog(op, "New outunit");
         printf("Outunit added,  (%d,%d)\n", op->outunit.oix, op->outunit.vid);

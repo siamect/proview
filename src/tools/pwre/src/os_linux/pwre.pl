@@ -1080,6 +1080,9 @@ sub build_module ()
     }
   }
   elsif ( $module eq "java") {
+    if ( $copy == 1) {
+      _build("jsw", "*", "src", "all");
+    }
     if ( $lib == 1) {
       _build("jpwr", "rt", "src", "all");
       _build("jpwr", "jopg", "src", "all");
@@ -1622,6 +1625,7 @@ sub create_base()
   create_dir($newdir . "/doc/sv_se/dsh");
   create_dir($newdir . "/doc/en_us/dsh");
   create_dir($newdir . "/doc/help");
+  create_dir($newdir . "/web");
 }
 
 sub create_dir()

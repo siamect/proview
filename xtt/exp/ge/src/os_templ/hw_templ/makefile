@@ -69,6 +69,7 @@ html_sources := $(sort \
 export_pwg := $(addprefix $(exe_dir)/,$(pwg_c_sources)) $(addprefix $(exe_dir)/,$(pwg_t_sources))
 export_pwsg := $(addprefix $(exe_dir)/,$(pwsg_sources))
 export_pwgc := $(addprefix $(exe_dir)/,$(pwgc_sources))
+export_web_pwgc := $(addprefix $(web_dir)/,$(pwgc_sources))
 export_html := $(addprefix $(exe_dir)/,$(html_sources))
 clean_pwsg := $(patsubst %.pwg,clean_%.pwsg,$(sources))
 clean_pwg := $(patsubst %.pwg,clean_%.pwg,$(sources))
@@ -76,17 +77,20 @@ clean_pwgc := $(patsubst %.pwgc,clean_%.pwgc,$(sources))
 clean_html := $(patsubst %.html,clean_%.html,$(sources))
 export_ge := $(export_pwg) $(export_pwsg) $(export_pwgc) $(export_html)
 clean_ge := $(clean_pwg) $(clean_pwsg) $(clean_pwgc) $(clean_html)
+export_web := $(export_web_pwgc)
+clean_web := $(patsubst %.pwgc,clean_%.pwgc,$(sources))
 .SUFFIXES:
 
 
 .PHONY : all init copy lib exe clean realclean \
-         $(clean_ge)
+         $(clean_ge) $(clean_web)
 
 all : init copy lib exe | silent
 
 init : silent
 
 copy : $(export_ge)\
+       $(export_web)\
        $(exe_dir)/pwr_css.css \
        | silent
 
@@ -96,7 +100,7 @@ exe : silent
 
 clean :
 
-realclean : $(clean_ge)
+realclean : $(clean_ge) $(clean_web)
 
 silent :
 	@ :
@@ -112,6 +116,9 @@ $(clean_pwgc) : clean_%.pwgc : %.pwgc
 
 $(clean_html) : clean_%.html : %.html
 	@ $(rm) $(rmflags) $(exe_dir)/$*.html
+
+$(clean_web) : clean_%.pwgc : %.pwgc
+	@ $(rm) $(rmflags) $(web_dir)/$*.pwgc
 
 $(exe_dir)/pwr_css.css : ../../pwr_css.css
 	@ echo "copy $(source) $(target)"

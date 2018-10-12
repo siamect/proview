@@ -70,6 +70,7 @@ else
   merge_dir_func $toroot/inc $fromroot/inc
   merge_dir_func $toroot/load $fromroot/load
   merge_dir_func $toroot/obj $fromroot/obj
+  merge_dir_func $toroot/web $fromroot/web
 
   # Merge archives
   cd ${toroot%/*}/tmp

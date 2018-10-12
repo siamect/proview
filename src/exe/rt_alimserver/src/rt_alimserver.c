@@ -59,27 +59,24 @@ typedef struct sAttribute sAttribute;
 typedef struct sObject sObject;
 typedef struct sSupObject sSupObject;
 
-LstType(sAttribute);
-LstType(sSupObject);
-
 struct sObject {
   tree_sNode tn;
   pwr_tObjid oid;
   int sup_c;
   int attr_c;
-  LstHead(sAttribute) attr_l;
+  struct LstHead attr_l;
 };
 
 struct sAttribute {
-  LstLink(sAttribute) attr_l;
+  struct LstHead attr_l;
   pwr_sAttrRef aref;
   pwr_tClassId cid;
   int sup_c;
-  LstHead(sSupObject) sup_l;
+  struct LstHead sup_l;
 };
 
 struct sSupObject {
-  LstLink(sSupObject) sup_l;
+  struct LstHead sup_l;
   pwr_tObjid oid;
   void* p;
 };
@@ -100,8 +97,8 @@ static alimsrv_sSupDataBuf* buildBuffer(
   sObject* op;
   sAttribute* ap;
   sSupObject* sp;
-  LstLink(sAttribute) * al;
-  LstLink(sSupObject) * sl;
+  struct LstHead * al;
+  struct LstHead * sl;
   pwr_tStatus sts;
 
   *size = 0;
@@ -123,15 +120,15 @@ static alimsrv_sSupDataBuf* buildBuffer(
   bp->NoOfSupAttr = op->attr_c;
   bap = bp->AttrSupList;
 
-  for (al = LstFir(&op->attr_l); al != LstEnd(&op->attr_l); al = LstNex(al)) {
-    ap = LstObj(al);
+  LstForEach(al, &op->attr_l) {
+    ap = LstEntry(al, sAttribute, attr_l);
     bap->SupAttr = ap->aref;
     bap->NoOfSupObjs = ap->sup_c;
     bap->SupClass = ap->cid;
     bsp = bap->SupList;
 
-    for (sl = LstFir(&ap->sup_l); sl != LstEnd(&ap->sup_l); sl = LstNex(sl)) {
-      sp = LstObj(sl);
+    LstForEach(sl, &ap->sup_l) {
+      sp = LstEntry(sl, sSupObject, sup_l);
       bsp->SupObjid = sp->oid;
       if (ap->cid == pwr_cClass_ASup) {
         pwr_sClass_ASup* asup = (pwr_sClass_ASup*)sp->p;
@@ -160,12 +157,12 @@ static alimsrv_sSupDataBuf* buildBuffer(
 static sAttribute* findAttribute(
     sObject* op, pwr_sAttrRef* aref, pwr_tClassId cid)
 {
-  LstLink(sAttribute) * al;
+  struct LstHead * al;
   sAttribute* ap = NULL;
 
-  for (al = LstFir(&op->attr_l); al != LstEnd(&op->attr_l); al = LstNex(al)) {
-    if (aref->Offset == LstObj(al)->aref.Offset) {
-      ap = LstObj(al);
+  LstForEach(al, &op->attr_l) {
+    if (aref->Offset == LstEntry(al, sAttribute, attr_l)->aref.Offset) {
+      ap = LstEntry(al, sAttribute, attr_l);
       break;
     }
   }
@@ -175,9 +172,9 @@ static sAttribute* findAttribute(
     if (ap == NULL)
       exit(2);
 
-    LstIni(&ap->attr_l);
-    LstIni(&ap->sup_l);
-    (void)LstIns(&op->attr_l, ap, attr_l);
+    LstInit(&ap->attr_l);
+    LstInit(&ap->sup_l);
+    LstInsert(&op->attr_l, &ap->attr_l);
     op->attr_c++;
     ap->cid = cid;
     ap->aref = *aref;
@@ -204,13 +201,13 @@ static void init()
     op = tree_Find(&sts, ltp, &asp->Attribute.Objid);
     if (op == NULL) {
       op = tree_Insert(&sts, ltp, &asp->Attribute.Objid);
-      LstIni(&op->attr_l);
+      LstInit(&op->attr_l);
     }
 
     ap = findAttribute(op, &asp->Attribute, pwr_cClass_ASup);
 
     sp = calloc(1, sizeof(*sp));
-    (void)LstIns(LstEnd(&ap->sup_l), sp, sup_l);
+    LstInsert(&ap->sup_l, &sp->sup_l);
     sp->oid = oid;
     sp->p = asp;
     op->sup_c++;
@@ -225,13 +222,13 @@ static void init()
     op = tree_Find(&sts, ltp, &dsp->Attribute.Objid);
     if (op == NULL) {
       op = tree_Insert(&sts, ltp, &dsp->Attribute.Objid);
-      LstIni(&op->attr_l);
+      LstInit(&op->attr_l);
     }
 
     ap = findAttribute(op, &dsp->Attribute, pwr_cClass_DSup);
 
     sp = calloc(1, sizeof(*sp));
-    (void)LstIns(LstEnd(&ap->sup_l), sp, sup_l);
+    LstInsert(&ap->sup_l, &sp->sup_l);
     sp->oid = oid;
     sp->p = dsp;
     op->sup_c++;

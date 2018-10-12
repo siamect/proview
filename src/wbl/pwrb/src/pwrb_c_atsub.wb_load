@@ -44,7 +44,7 @@ SObject pwrb:Class
 !  Subtract two absolute times.
 !  @image orm_atsub_fo.gif
 !
-!  AtAdd subtracts the second absolute time input from the first absolute time
+!  AtSub subtracts the second absolute time input from the first absolute time
 !  input.
 !
 !  The inputs has to be connected to absolute times.

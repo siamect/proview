@@ -68,7 +68,6 @@ public:
   void message(char severity, const char* message);
   void set_prompt(const char* prompt);
   void change_value(int set_focus);
-  int open_changevalue(char* name);
   void change_value_close();
   void pop();
   void print();

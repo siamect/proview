@@ -70,8 +70,6 @@ public:
   int comp_height[MV_SIZE];
   int comp_x[MV_SIZE];
   int comp_y[MV_SIZE];
-  int orig_width;
-  int orig_height;
   CoWowFocusTimerQt focustimer;
 
   XttMultiViewQt(QWidget* parent_wid, void* parent_ctx, const char* name,
@@ -85,8 +83,6 @@ public:
 
   void pop();
   void set_size(int width, int height);
-  void create_confirm_dialog();
-  void confirm_reply(int ok);
   void* get_widget();
   int set_subwindow_source(const char* name, char* source, char* object,
       double* borders, int insert = 1, int more = 0);

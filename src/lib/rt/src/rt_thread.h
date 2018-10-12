@@ -39,7 +39,6 @@
 
 #include "pwr.h"
 
-#if defined OS_POSIX
 #include <pthread.h>
 
 #if defined __cplusplus
@@ -54,9 +53,6 @@ typedef struct {
 } thread_sCond;
 
 typedef pthread_mutex_t thread_sMutex;
-#else
-#error Not defined for this platform !
-#endif
 
 typedef enum {
   thread_ePrio__,

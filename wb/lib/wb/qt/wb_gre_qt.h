@@ -45,7 +45,6 @@ class WGreQtTraceObject;
 
 class WGreQt : public WGre {
 public:
-  QWidget* gre_window;
   QWidget* flow_widget;
   QWidget* form_widget;
   QWidget* nav_shell;

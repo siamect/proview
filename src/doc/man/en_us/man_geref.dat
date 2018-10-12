@@ -3405,7 +3405,7 @@ Animation <t>Boolean    <t>Different types of animation. <link>GeDynAnimation
 Video     <t>-          <t>Display a continuously updated image file. <link>GeDynVideo
 SliderBackground <t>-   <t>Indicates that the subgraph is background to a slider component. <link>GeDynSliderBackground
 DigCommand <t>Boolean   <t>Executes a command when signal gets high. <link>GeDynDigCommand
-DigCommand <t>Boolean   <t>Executes a script when signal gets high. <link>GeDynDigScript
+DigScript <t>Boolean   <t>Executes a script when signal gets high. <link>GeDynDigScript
 ScrollingText <t>Boolean <t>Display a scrolling text. <link>GeDynScrollingText
 
 <h2>Inherit

@@ -65,10 +65,8 @@ public:
   void message(char severity, const char* message);
   void set_prompt(char* prompt);
   int change_value(int set_focus);
-  int open_changevalue(char* name);
   void change_value_close();
   void pop();
-  void swap(int mode);
   int set_value();
 
 private:

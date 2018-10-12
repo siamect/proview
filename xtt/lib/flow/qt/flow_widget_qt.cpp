@@ -67,15 +67,6 @@ static int flow_init_proc(QWidget* w, FlowCtx* fctx, void* client_data)
   return (flow->init_proc)(ctx, client_data);
 }
 
-QWidget* flowwidgetqt_new(
-    int (*init_proc)(FlowCtx* ctx, void* client_data), void* client_data)
-{
-  QtScrollWidgetFlow* w = new QtScrollWidgetFlow();
-  debug_print("creating a new flow scroll widget\n");
-  w->init(flow_eCtxType_Flow, init_proc, client_data, flow_init_proc);
-  return w;
-}
-
 QWidget* scrolledflowwidgetqt_new(
     int (*init_proc)(FlowCtx* ctx, void* client_data), void* client_data,
     QWidget** flowwidget)

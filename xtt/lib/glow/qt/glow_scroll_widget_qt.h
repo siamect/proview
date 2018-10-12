@@ -68,6 +68,8 @@ public:
       int (*init_proc2)(QWidget* w, GlowCtx* ctx, void* client_data));
   void init(unsigned int eCtxType, QWidget* main);
 
+  bool eventFilter(QObject *object, QEvent *event);
+
   void* parent_ctx;
   GlowDrawQt* draw_ctx;
   int (*init_proc)(GlowCtx* ctx, void* clien_data);
@@ -77,18 +79,11 @@ public:
   QWidget* main_widget;
   QScrollBar* scroll_h;
   QScrollBar* scroll_v;
-  int scroll_h_ignore;
-  int scroll_v_ignore;
-  double scroll_h_value;
-  double scroll_v_value;
-  int scroll_h_pagesize;
-  int scroll_v_pagesize;
-  int scroll_h_upper;
-  int scroll_v_upper;
   QTimer* scroll_timerid;
   glow_sScroll scroll_data;
   int scroll_configure;
   int destroyed;
+  QScrollArea* form;
 
   QImage image;
 
@@ -111,6 +106,8 @@ private:
 public slots:
   void scroll_h_action(int value);
   void scroll_v_action(int value);
+  void scroll_h_released(int value);
+  void scroll_v_released(int value);
   void scroll_callback_cb();
 
 signals:

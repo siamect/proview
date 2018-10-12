@@ -854,14 +854,12 @@ char* dcli_pwr_dir(const char* dir)
   static char pwr_dir[120];
   char* s;
 
-#if defined OS_POSIX
   if ((s = getenv(dir)) == NULL)
     strcpy(pwr_dir, "");
   else {
     strcpy(pwr_dir, s);
     strcat(pwr_dir, "/");
   }
-#endif
   return pwr_dir;
 }
 

@@ -60,8 +60,6 @@ public:
   QLabel* msg_label;
   QLabel* cmd_prompt;
   QWidget* cmd_scrolledinput;
-  QWidget* cmd_scrolled_ok;
-  QWidget* cmd_scrolled_ca;
   QTextEdit* cmd_scrolled_buffer;
   QSplitter* pane;
   QWidget* wdaclass_dia;
@@ -69,7 +67,6 @@ public:
   QLineEdit* wdaclass_namevalue;
   QLineEdit* wdaclass_classvalue;
   QCheckBox* wdaclass_attrobjects;
-  QWidget* wdaattr_dia;
   static CoWowRecall value_recall;
   CoWowEntryQt* cmd_entry;
   CoWowFocusTimerQt focustimer;

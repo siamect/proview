@@ -128,7 +128,7 @@ enum cs_modes { TCP_CLIENT, TCP_SERVER } cs_mode;
 
 void RemoteSleep(float time)
 {
-#if defined(OS_LYNX) || defined(OS_LINUX)
+#if defined(OS_LINUX)
   struct timespec rqtp, rmtp;
 
   rqtp.tv_sec = 0;

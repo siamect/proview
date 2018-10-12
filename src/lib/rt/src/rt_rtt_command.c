@@ -2462,9 +2462,7 @@ static int rtt_set_func(menu_ctx ctx, int* flag)
   } else if (str_NoCaseStrncmp(arg1_str, "DEFAULT", strlen(arg1_str)) == 0) {
     if (ODD(rtt_get_qualifier("rtt_arg2", arg2_str))) {
       if (!streq(arg2_str, "")) {
-#if defined OS_POSIX
         str_ToLower(arg2_str, arg2_str);
-#endif
       }
       strcpy(rtt_default_directory, arg2_str);
       return RTT__HOLDCOMMAND;
@@ -6138,36 +6136,25 @@ int rtt_menu_classort(rtt_t_menu* menulist, int redo)
 *
 **************************************************************************/
 
+static int rtt_menu_cmp(const void* p1, const void* p2)
+{
+  char* str1 = ((rtt_t_menu*) p1)->text;
+  char* str2 = ((rtt_t_menu*) p2)->text;
+  if (*str2 == 0)
+    return 0;
+  return strcmp(str1, str2);
+}
+
 int rtt_menu_bubblesort(rtt_t_menu* menulist)
 {
-  int i, j, size;
-  char *str1, *str2;
-  rtt_t_menu dum;
-  rtt_t_menu* menu_ptr;
-
   /* Get the size of the menu */
-  menu_ptr = menulist;
-  size = 0;
+  rtt_t_menu* menu_ptr = menulist;
+  int size = 0;
   while (menu_ptr->text[0] != 0) {
     menu_ptr++;
     size++;
   }
-  for (i = size - 1; i > 0; i--) {
-    menu_ptr = menulist;
-    for (j = 0; j < i; j++) {
-      str1 = menu_ptr->text;
-      str2 = (menu_ptr + 1)->text;
-      if (*str2 == 0)
-        break;
-      if (strcmp(str1, str2) > 0) {
-        memcpy(&dum, menu_ptr + 1, sizeof(rtt_t_menu));
-        memcpy(menu_ptr + 1, menu_ptr, sizeof(rtt_t_menu));
-        memcpy(menu_ptr, &dum, sizeof(rtt_t_menu));
-      }
-      menu_ptr++;
-    }
-  }
-
+  qsort(menulist, size, sizeof(rtt_t_menu), rtt_menu_cmp);
   return RTT__SUCCESS;
 }
 
@@ -6186,35 +6173,25 @@ int rtt_menu_bubblesort(rtt_t_menu* menulist)
 *
 **************************************************************************/
 
+static int rtt_menu_upd_cmp(const void* p1, const void* p2)
+{
+  char* str1 = ((rtt_t_menu_upd*) p1)->text;
+  char* str2 = ((rtt_t_menu_upd*) p2)->text;
+  if (*str2 == 0)
+    return 0;
+  return strcmp(str1, str2);
+}
+
 int rtt_menu_upd_bubblesort(rtt_t_menu_upd* menulist)
 {
-  int i, j, size;
-  char *str1, *str2;
-  rtt_t_menu_upd dum;
-  rtt_t_menu_upd* menu_ptr;
-
   /* Get the size of the menu */
-  menu_ptr = menulist;
-  size = 0;
+  rtt_t_menu_upd* menu_ptr = menulist;
+  int size = 0;
   while (menu_ptr->text[0] != 0) {
     menu_ptr++;
     size++;
   }
-  for (i = size - 1; i > 0; i--) {
-    menu_ptr = menulist;
-    for (j = 0; j < i; j++) {
-      str1 = menu_ptr->text;
-      str2 = (menu_ptr + 1)->text;
-      if (*str2 == 0)
-        break;
-      if (strcmp(str1, str2) > 0) {
-        memcpy(&dum, menu_ptr + 1, sizeof(rtt_t_menu_upd));
-        memcpy(menu_ptr + 1, menu_ptr, sizeof(rtt_t_menu_upd));
-        memcpy(menu_ptr, &dum, sizeof(rtt_t_menu_upd));
-      }
-      menu_ptr++;
-    }
-  }
+  qsort(menulist, size, sizeof(rtt_t_menu_upd), rtt_menu_upd_cmp);
 
   return RTT__SUCCESS;
 }

@@ -36,17 +36,13 @@
 
 #include <stdio.h>
 
-#if defined OS_POSIX
 #include <string.h>
-#endif
 
 #include "co_msg.h"
 #include "pwr_msg.h"
 
 #define FACNUM(sts) (((sts >> 16) & 0x0fff) - 0x800)
 #define MSGIDX(sts) ((sts & 0x7fff) >> 3)
-
-#if defined OS_POSIX
 
 /* The heads of the message lists.  */
 
@@ -69,7 +65,6 @@ static msg_sFacility* facility(int facNum, int idx);
 static msg_sFacility* IsRightHead(const msg_sHead* h, int facNum, int idx,
     int* invalidIdx /* Only valid if NULL is returned */
     );
-#endif
 
 /* Check if a given messagenumber exists,
    return string representation if valid.  */
@@ -86,8 +81,6 @@ char* msg_GetText(const int sts, char* buf, int bufSize)
 {
   return msg_GetMessage(sts, 1, buf, bufSize);
 }
-
-#if defined OS_POSIX
 
 /* Return the address to the Facility which contains the
    FacNum and MsgIdx.  */
@@ -133,7 +126,6 @@ static msg_sFacility* IsRightHead(
 
   return NULL;
 }
-#endif
 
 static char get_severity(pwr_tStatus sts)
 {

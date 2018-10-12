@@ -994,7 +994,7 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
       "$pwr_exe/foe_redraw.png");
 
   // Feedback connection checkbutton
-  tools_confeedback = addCheckableToolItem(toplevel, tools, "Redraw",
+  tools_confeedback = addCheckableToolItem(toplevel, tools, "Feedback connection",
       SLOT(activate_confeedback(bool)), "$pwr_exe/foe_confeedback.png");
 
   // Singlelinetext button

@@ -125,7 +125,7 @@ pwre_config_check_lib()
 	else
            echo "Unknown type"
 	fi
-	
+
         found=1
         break
       fi
@@ -152,21 +152,21 @@ pwre_create_makedir()
   dirlist=`eval find $pwre_croot -name "os_templ"`
   for dir in $dirlist; do
     newdir=${dir%/*}/$pwre_os
-    if test ! -e $newdir; then 
+    if test ! -e $newdir; then
       newdir=${dir%/*}/.$pwre_os
-      if test ! -e $newdir; then 
+      if test ! -e $newdir; then
         echo "Creating $newdir"
         cp -pr $dir $newdir
         if test -e $newdir/hw_templ; then
           mv $newdir/hw_templ $newdir/.$pwre_hw
         fi
-    
+
       else
         # os directory .os_ already exist
         # Copy new and modified files
         filelist=`eval ls $dir/`
         for file in $filelist; do
-          if test ! -d $dir/$file; then 
+          if test ! -d $dir/$file; then
             cp -p $dir/$file $newdir/
           fi
         done
@@ -200,10 +200,10 @@ pwre_create_makedir()
 cfile="$pwre_broot/pwre_${pwre_hw:3}_${pwre_os:3}.cnf"
 dos=`eval echo ${pwre_os} | tr '[:lower:]' '[:upper:]'`
 dhw=`eval echo ${pwre_hw} | tr '[:lower:]' '[:upper:]'`
-conf_cc_define="-D$dos=1 -DOS_POSIX -D$dhw=1 -DOS=${pwre_os:3} -DHW=${pwre_hw:3} -D_${dos:3}"
+conf_cc_define="-D$dos=1 -D$dhw=1 -DOS=${pwre_os:3} -DHW=${pwre_hw:3} -D_${dos:3}"
 conf_lib=""
-conf_libgtk="" 
-conf_libmotif="" 
+conf_libgtk=""
+conf_libmotif=""
 conf_libdir=""
 conf_incdirgtk=""
 let inc_cnt=0
@@ -274,7 +274,7 @@ if [ "$buildversion" != "" ]; then
 else
   echo "export PWRE_CONF_BUILDVERSION=\"0\"" >> $cfile
 fi
-      
+
 #Gtk
   echo ""
   echo "Mandatory :"
@@ -348,5 +348,3 @@ echo "export pwre_conf_libmotif=\"$conf_libmotif\"" >> $cfile
 echo "export pwre_conf_libdir=\"$conf_libdir\"" >> $cfile
 echo "export pwre_conf_incdir=\"$conf_incdir\"" >> $cfile
 echo "export pwre_conf_incdirgtk=\"$conf_incdirgtk\"" >> $cfile
-
-

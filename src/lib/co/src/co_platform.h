@@ -101,11 +101,7 @@ typedef enum {
   co_eOS_
 } co_eOS;
 
-#if defined(OS_LYNX)
-#define co_dHostOS co_eOS_Lynx
-#elif defined(OS_WNT)
-#define co_dHostOS co_eOS_WNT
-#elif defined(OS_LINUX)
+#if defined(OS_LINUX)
 #define co_dHostOS co_eOS_Linux
 #elif defined(OS_MACOS)
 #define co_dHostOS co_eOS_MacOS

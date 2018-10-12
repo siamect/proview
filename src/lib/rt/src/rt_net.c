@@ -38,7 +38,6 @@
    This module contains routines to handle Qcom calls.
    It is common to both application code and nethandler code.  */
 
-#if defined OS_POSIX
 #include <netdb.h>
 #include <pthread.h>
 #include <stddef.h>
@@ -46,7 +45,6 @@
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <sys/socket.h>
-#endif
 
 #include "rt_gdh_msg.h"
 #include "rt_gdb.h"
@@ -65,15 +63,10 @@
    before reading the result from the variables. Finally, the
    l_mutex should be released.  */
 
-#if defined OS_POSIX
 #define NET_LOCK pthread_mutex_lock(&l_mutex)
 #define NET_UNLOCK pthread_mutex_unlock(&l_mutex)
 
 static pthread_mutex_t l_mutex;
-#else
-#define NET_LOCK
-#define NET_UNLOCK
-#endif
 
 void Count(pwr_tBoolean receive, pwr_tNodeId nid, qcom_sType* type);
 
@@ -543,26 +536,15 @@ pwr_tBoolean net_Connect(pwr_tStatus* status, qcom_sAid* aid, qcom_sQid* qid,
 
 /* Initialize. This routine should be called exactly once... */
 
-#if defined OS_POSIX
   {
     pthread_mutexattr_t mattr;
 
-#if defined OS_LYNX && defined PWR_LYNX_30
-    pthread_mutexattr_create(&mattr);
-    if (pthread_mutex_init(&l_mutex, mattr) == -1)
-#else
     pthread_mutexattr_init(&mattr);
     if (pthread_mutex_init(&l_mutex, &mattr) == -1)
-#endif
       pwr_Return(FALSE, sts, NET__MUTEXINIT);
 
-#if defined OS_LYNX && defined PWR_LYNX_30
-    pthread_mutexattr_delete(&mattr);
-#else
     pthread_mutexattr_destroy(&mattr);
-#endif
   }
-#endif
 
   NET_LOCK;
   if (!qcom_Init(sts, aid, name))

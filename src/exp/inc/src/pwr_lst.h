@@ -40,33 +40,96 @@
 /* pwr_lst.h -- list macros
 */
 
-#define LstType(a)                                                             \
-  typedef struct s_LstLink_##a sLstLink_##a;                                   \
-  struct s_LstLink_##a {                                                       \
-    sLstLink_##a* nex;                                                         \
-    sLstLink_##a* pre;                                                         \
-    a* obj;                                                                    \
-  }
+struct LstHead {
+  struct LstHead *next, *prev;
+};
 
-#define LstLink(a) sLstLink_##a
+/*
+ * LstInsert(s_LstLink_T* next, s_LstLink_T elem) inserts the element \a into
+ * the linked list before the element \a next.
+ *
+ * Before:
+ * a <-> c
+ *
+ * Calling LstInsert(c, b)
+ * a <- b   (a <- b)
+ * b -> c   (a <- b -> c)
+ * a -> b   (a <-> b -> c)
+ * b <- c   (a <-> b <-> c)
+ */
+static inline void LstInsert(struct LstHead *p, struct LstHead *e)
+{
+    e->prev = p->prev;
+    e->next = p;
+    p->prev->next = e;
+    p->prev = e;
+}
 
-#define LstHead(a) sLstLink_##a
+/*
+ * LstRemove(s_LstLink_T) removes the element from the linked list, which is
+ * done by modifying the next element to point at the previous and vice versa.
+ */
+static inline void LstRemove(struct LstHead *p)
+{
+    p->next->prev = p->prev;
+    p->prev->next = p->next;
+}
 
-#define LstNex(p) ((p)->nex)
-#define LstPre(p) ((p)->pre)
-#define LstLas(h) ((h)->pre)
-#define LstFir(h) ((h)->nex)
-#define LstEnd(h) (h)
-#define LstIns(p, o, e)                                                        \
-  ((o)->e.obj = (void*)o, (o)->e.pre = (void*)((p)->pre),                      \
-      (o)->e.nex = (void*)(p), (p)->pre->nex = (void*)(&(o)->e),               \
-      (p)->pre = (void*)(&(o)->e))
-#define LstRem(p) ((p)->nex->pre = (p)->pre, (p)->pre->nex = (p)->nex)
-#define LstNul(p) ((p)->nex = (p)->pre = NULL)
-#define LstIsNul(p) ((p)->nex == NULL && (p)->pre == NULL)
-#define LstInl(p) ((p)->nex != NULL && (p)->pre != NULL)
-#define LstIni(h) ((h)->nex = (h)->pre = (h))
-#define LstObj(p) ((p)->obj)
-#define LstEmp(h) ((h) == (h)->nex)
+/*
+ * LstNull(s_LstLink_T) sets the linked list to NULL.
+ */
+static inline void LstNull(struct LstHead *p)
+{
+    p->next = p->prev = NULL;
+}
+
+/*
+ * LstIsNull(s_LstLink_T) checks if the linked list is NULL.
+ */
+static inline int LstIsNull(struct LstHead *p)
+{
+    return (p->next == NULL && p->prev == NULL);
+}
+
+/*
+ * LstInit(s_LstLink_T) initializes the linked list.
+ */
+static inline void LstInit(struct LstHead *h)
+{
+    h->next = h->prev = h;
+}
+
+/*
+ * LstEntry(s_LstLink_T*, sTimer, ll) fetches the struct sTimer corresponding to
+ * the list pointer \a ptr.
+ * It does this by calculating the offset of a list pointers \a ll within the
+ * struct sTimer, and then subtracts that from the list pointer \a ptr.
+ */
+#ifndef offsetof
+#define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
+#endif
+
+#ifndef container_of
+#define container_of(ptr, type, member) ({			          \
+    const typeof( ((type *)0)->member ) *__mptr = (ptr);	\
+    (type *)( (char *)__mptr - offsetof(type,member) );})
+#endif
+
+#define LstEntry(ptr, type, member) container_of(ptr, type, member)
+
+/*
+ * LstEmpty(s_LstLink_T) checks if the linked list is empty.
+ */
+static inline int LstEmpty(struct LstHead *h)
+{
+    return h->next == h;
+}
+
+/*
+ * LstForEach(i, listHead) is a convenience macro for:
+ * for (i = listHead->next; i != listHead, i = i->next)
+ */
+#define LstForEach(pos, head) \
+    for (pos = (head)->next; pos != (head); pos = pos->next)
 
 #endif

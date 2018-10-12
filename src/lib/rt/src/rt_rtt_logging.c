@@ -882,19 +882,11 @@ int rtt_logging_start(menu_ctx ctx, int entry)
   entry_ptr->stop = 0;
 
 /* Create a subprocess */
-#if defined OS_LYNX && defined PWR_LYNX_30
-  sts = pthread_create(&entry_ptr->thread, pthread_attr_default, /* attr */
-      rtt_logging_logproc, /* start_routine */
-      entry_ptr); /* arg */
-  if (sts != 0)
-    return sts;
-#elif defined OS_POSIX
   sts = pthread_create(&entry_ptr->thread, NULL, /* attr */
       rtt_logging_logproc, /* start_routine */
       entry_ptr); /* arg */
   if (sts != 0)
     return sts;
-#endif
 
   strcpy(message, "Logg start ");
   rtt_fgetname(entry_ptr->logg_file, message + strlen(message),
@@ -1070,11 +1062,7 @@ void* rtt_logging_logproc(void* arg)
   pwr_tTime restime;
   pwr_tDeltaTime deltatime;
   pwr_tDeltaTime wait_time;
-#if defined OS_POSIX
-  rtt_t_loggtable* entry_ptr;
-
-  entry_ptr = (rtt_t_loggtable*)arg;
-#endif
+  rtt_t_loggtable* entry_ptr = (rtt_t_loggtable*)arg;
 
   char_cnt = 0;
   first_scan = 1;
@@ -1178,7 +1166,6 @@ void* rtt_logging_logproc(void* arg)
       if (entry_ptr->active && !entry_ptr->stop) {
         if (!*(entry_ptr->condition_ptr)) {
 /*  Don't log, wait until next scan */
-#if defined OS_POSIX
           time_GetTime(&time);
           time_Adiff(&wait_time, &nextime, &time);
 
@@ -1186,7 +1173,6 @@ void* rtt_logging_logproc(void* arg)
           wait_time_ts.tv_sec = wait_time.tv_sec;
           wait_time_ts.tv_nsec = wait_time.tv_nsec;
           nanosleep(&wait_time_ts, NULL);
-#endif
           continue;
         }
       }
@@ -1541,10 +1527,8 @@ void* rtt_logging_logproc(void* arg)
 
       if (entry_ptr->logg_priority != 0)
         sts = rtt_set_default_prio();
-#if defined OS_POSIX
       /*	    sts = pthread_detach( &entry_ptr->thread); */
       pthread_exit((void*)1);
-#endif
     }
     time_GetTime(&time);
     while (time_Acomp(&time, &nextime) > 0) {
@@ -1552,14 +1536,12 @@ void* rtt_logging_logproc(void* arg)
       time_Aadd(&restime, &nextime, &deltatime);
       nextime = restime;
     }
-#if defined OS_POSIX
     time_Adiff(&wait_time, &nextime, &time);
 
     struct timespec wait_time_ts;
     wait_time_ts.tv_sec = wait_time.tv_sec;
     wait_time_ts.tv_nsec = wait_time.tv_nsec;
     nanosleep(&wait_time_ts, NULL);
-#endif
   }
 }
 

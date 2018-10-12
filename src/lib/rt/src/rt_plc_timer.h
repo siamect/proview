@@ -37,9 +37,7 @@
 #ifndef rt_plc_timer_h
 #define rt_plc_timer_h
 
-#if defined OS_POSIX
 #include <pthread.h>
-#endif
 
 #include "rt_gdh.h"
 
@@ -62,11 +60,9 @@ typedef struct {
   ((unsigned long)r == 0) ? NULL : gdh_TranslateRtdbPointer((unsigned long)r)
 
 /*	Insert timer into timer-queue	*/
-#if defined OS_POSIX
 extern pthread_mutex_t timer_mutex;
 #define PLC_LOCK_MUTEX(m) pthread_mutex_lock(&m)
 #define PLC_UNLOCK_MUTEX(m) pthread_mutex_unlock(&m)
-#endif
 
 /* Local timer handing in object without timer list */
 #define timer2_in(tp, o)                                                       \

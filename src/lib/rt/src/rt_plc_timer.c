@@ -41,9 +41,7 @@
 
 #include "rt_plc_timer.h"
 
-#if defined OS_POSIX
 pthread_mutex_t timer_mutex;
-#endif
 
 void plc_inittimer(plc_sThread* tp)
 {

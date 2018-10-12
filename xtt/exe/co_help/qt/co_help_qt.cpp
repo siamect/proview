@@ -53,6 +53,11 @@ void CoHelpQt::close_cb(void* ctx, void* xhelp)
   exit(0);
 }
 
+void CoHelpQt::cohelp_mainloop()
+{
+  QApplication::exec();
+}
+
 int main(int argc, char* argv[])
 {
   int sts;
@@ -92,4 +97,6 @@ CoHelpQt::CoHelpQt(int argc, char* argv[], int* return_sts)
   xhelp->close_cb = close_cb;
 
   exec_help();
+
+  cohelp_mainloop();
 }

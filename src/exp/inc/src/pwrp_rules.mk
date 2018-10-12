@@ -12,9 +12,9 @@ ldxx		:= g++
 linkflags	:= $(cross_compile) -g -L/usr/local/lib -L$(pwr_obj) -L$(pwrp_obj) -lm -lrt
 cflags		:= $(cross_compile) -c -g -Wall -D_GNU_SOURCE -D_REENTRANT
 cxxflags 	:= $(cflags) -Wno-deprecated
-f77flags	:= 
+f77flags	:=
 linkflags	:= $(cross_compile) -g -L/usr/local/lib -L$(pwr_lib) -L$(pwrp_lib) -lrt
-csetos		:= -DOS_LINUX=1 -DOS_POSIX=1 -DOS=linux -DHW_X86=1 -DHW=x86
+csetos		:= -DOS_LINUX=1 -DOS=linux -DHW_X86=1 -DHW=x86
 cinc		:= -I$(pwr_inc) -I$(pwrp_inc) $(PWR_EXT_INC) -I/usr/local/include -I/usr/X11R6/include -I$(jdk)/include -I$(jdk)/include/linux
 f77inc		:= -I$(pwr_inc) -I$(pwrp_inc)
 
@@ -109,10 +109,3 @@ $(pwrp_exe)/%.xml : %.xml
 $(pwrp_exe)/%.dat : %.dat
 	@ echo "Copy $(notdir $(source))"
 	@ cp $(source) $(target)
-
-
-
-
-
-
-

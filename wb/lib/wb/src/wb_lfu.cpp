@@ -1354,8 +1354,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
             return sts;
 
           os = *os_ptr;
-          if (!(os == pwr_mOpSys_CustomBuild || os == pwr_mOpSys_PPC_LYNX
-                  || os == pwr_mOpSys_X86_LYNX || os == pwr_mOpSys_PPC_LINUX
+          if (!(os == pwr_mOpSys_CustomBuild || os == pwr_mOpSys_PPC_LINUX
                   || os == pwr_mOpSys_X86_LINUX || os == pwr_mOpSys_X86_64_LINUX
                   || os == pwr_mOpSys_ARM_LINUX || os == pwr_mOpSys_X86_64_MACOS
                   || os == pwr_mOpSys_X86_64_FREEBSD
@@ -4193,8 +4192,6 @@ pwr_tStatus lfu_check_opt_file(
       return LFU__SUCCESS;
 
     switch (opsys) {
-    case pwr_mOpSys_PPC_LYNX:
-    case pwr_mOpSys_X86_LYNX:
     case pwr_mOpSys_PPC_LINUX:
     case pwr_mOpSys_X86_LINUX:
     case pwr_mOpSys_X86_64_LINUX:

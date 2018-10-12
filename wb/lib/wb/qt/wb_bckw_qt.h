@@ -56,7 +56,6 @@ public:
   QWidget* edit_check_all;
   QWidget* edit_check_clear;
   CoWowFocusTimerQt focustimer;
-  CoWowFocusTimerQt maptimer;
 
   void print();
   void set_title(char* title);

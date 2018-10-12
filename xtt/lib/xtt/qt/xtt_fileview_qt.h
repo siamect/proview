@@ -56,7 +56,6 @@ public:
   }
 
   QWidget* list;
-  QWidget* input_text;
   pwr_tFileName dir;
   pwr_tString40 pattern;
   pwr_tAName target_attr;

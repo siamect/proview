@@ -41,9 +41,7 @@
    This include file contains the internal datastructures and
    data entities in GDH.  */
 
-#if defined OS_POSIX
 #include <pthread.h>
-#endif
 
 #include "co_dbs.h"
 #include "rt_errh.h"
@@ -57,17 +55,10 @@
 
 #define gdb_cVersion 7
 
-#if defined OS_LYNX
-#define gdb_cNameDatabase "/pwr_gdb"
-#define gdb_cNamePool "/pwr_pool"
-#define gdb_cNameRtdb "/pwr_rtdb"
-#define gdb_cNameDbLock "/pwr_db_lock"
-#elif defined OS_POSIX
 #define gdb_cNameDatabase "/tmp/pwr_gdb"
 #define gdb_cNamePool "/tmp/pwr_pool"
 #define gdb_cNameRtdb "/tmp/pwr_rtdb"
 #define gdb_cNameDbLock "/tmp/pwr_db_lock"
-#endif
 
 #define gdb_cMin_objects 3000
 #define gdb_cMin_volumes 30
@@ -81,19 +72,11 @@
 #define gdb_cMin_cclasses 300
 #define gdb_cMin_scObjects 300
 
-#if defined(OS_LYNX)
-#define gdb_cMin_cvol_max 500
-#define gdb_cMin_cvol_min 400
-#define gdb_cMin_subServers 500
-#define gdb_cMin_subClients 100
-#define gdb_cMin_sanServers 200
-#elif defined OS_POSIX
 #define gdb_cMin_cvol_max 2000
 #define gdb_cMin_cvol_min 1900
 #define gdb_cMin_subServers 500
 #define gdb_cMin_subClients 2000
 #define gdb_cMin_sanServers 200
-#endif
 
 #define gdb_cMin_pool_isize 600000
 #define gdb_cMin_rtdb_isize 600000
@@ -957,9 +940,7 @@ typedef struct {
 /* Job local GDH data, pointed to by gdhi_gLocal, the root of all tables.  */
 
 typedef struct {
-#if defined OS_POSIX
-  pthread_mutex_t thread_lock; /**< LYNX and LINUX lock only */
-#endif
+  pthread_mutex_t thread_lock; /**< LINUX lock only */
   struct {
     sect_sHead sect; /**< Section header for global database.  */
     sect_sHead lock; /**< Section header for .  */

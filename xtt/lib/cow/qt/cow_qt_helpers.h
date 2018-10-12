@@ -81,19 +81,12 @@ void showNow(QWidget* w);
 QIcon get_icon(const char* iconName);
 QAction* addMenuItem(QObject* parent, QMenu* menu, const char* text,
     const char* callback, const char* shortcut = "", const char* iconName = "");
-QAction* addMenuItemMapped(QObject* parent, QMenu* menu, const char* text,
-    const char* callback, const char* signal, const char* shortcut = "",
-    const char* iconName = "");
 QAction* addCheckableMenuItem(QObject* parent, QMenu* menu, const char* text,
     const char* callback, const char* shortcut = "", const char* iconName = "");
 QAction* addMenuRadioItem(QObject* parent, QMenu* menu, const char* text,
     const char* callback, QActionGroup* group, const char* shortcut = "");
 QAction* addToolItem(QObject* parent, QToolBar* tools, const char* text,
     const char* callback, const char* iconName);
-QAction* addToolItemMapped(QObject* parent, QToolBar* tools, const char* text,
-    const char* callback, const char* signal, const char* iconName = "");
-QAction* addToolRadioItem(QObject* parent, QToolBar* tools, const char* text,
-    const char* callback, QActionGroup* group);
 QAction* addCheckableToolItem(QObject* parent, QToolBar* tools,
     const char* text, const char* callback, const char* iconName);
 QMenu* addToolMenu(QWidget* parent, QToolBar* tools, const char* text);

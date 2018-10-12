@@ -39,16 +39,11 @@
 
 #include <pthread.h>
 
-#if defined OS_LYNX
-#include <semaphore.h>
-#elif defined OS_POSIX
-#include "rt_semaphore.h"
-#endif
-
 #include "pwr_systemclasses.h"
 
 #include "rt_que.h"
 #include "rt_redu.h"
+#include "rt_semaphore.h"
 
 static const unsigned int pwr_cInputOffset
     = pwr_AlignLW(sizeof(void*)) + pwr_AlignLW(sizeof(pwr_tBoolean));
@@ -120,7 +115,7 @@ typedef struct {
 struct plc_sThread {
   thread_s tid;
   pwr_tOName name;
-#if defined OS_LYNX || defined OS_LINUX
+#if defined OS_LINUX
   sem_t ScanSem;
   pwr_tUInt32 ScanMultiple;
   pwr_tUInt32 IntervalCount;
@@ -197,7 +192,7 @@ struct plc_sProcess {
   pwr_tTime* system_time;
 };
 
-#if defined OS_LYNX || defined OS_LINUX
+#if defined OS_LINUX
 typedef struct {
   pwr_tUInt32 AreaIndex;
   pwr_tUInt32 Prio;

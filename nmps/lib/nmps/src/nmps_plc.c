@@ -34,10 +34,8 @@
  * General Public License plus this exception.
  */
 
-#if defined OS_POSIX
 #include <stdio.h>
 #include <string.h>
-#endif
 
 #include "pwr_nmpsclasses.h"
 #include "co_cdh.h"

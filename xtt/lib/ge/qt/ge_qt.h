@@ -62,7 +62,7 @@ public:
   QLabel* msg_label;
   QLabel* cmd_prompt;
   QAction* grid_on_w;
-  QAction** grid_sizes;
+  QAction* grid_sizes[4];
   QAction* show_grid_w;
   QAction* view_plant_w;
   QAction* view_graphlist_w;

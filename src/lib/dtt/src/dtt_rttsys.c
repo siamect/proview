@@ -41,10 +41,8 @@
 
 /*_Include files_________________________________________________________*/
 
-#if defined OS_POSIX
 #include <stdio.h>
 #include <stdlib.h>
-#endif
 
 #include "co_string.h"
 
@@ -192,8 +190,6 @@ static int logging_page = 0;
  * prototypes____________________________________________________*/
 
 static int rttsys_get_nodename(pwr_tNodeId nid, char* nodename);
-static int rttsys_plclist_bubblesort(rttsys_t_plcpgm_list* plclist, int size);
-static int rttsys_steplist_bubblesort(rttsys_t_step_list* steplist, int size);
 static int rttsys_get_plcpgm(pwr_tObjid initstep_objid, pwr_tObjid* plc_objid);
 static int rttsys_plclist_add(pwr_tObjid plc_objid,
     rttsys_t_plcpgm_list** plclist, int* plclist_count, int* alloc);
@@ -2096,71 +2092,22 @@ int RTTSYS_OBJECT_AV(menu_ctx ctx, int event, char* parameter_ptr,
 
 #define GRAFCET_PAGESIZE 20
 
-/*************************************************************************
-*
-* Name:		rtt_menu_bubblesort()
-*
-* Type		int
-*
-* Type		Parameter	IOGF	Description
-* rtt_t_menu	*menulist	I	menulist.
-*
-* Description:
-*	This function sorts the items in a plclist in
-*	aphabetic order.
-*
-**************************************************************************/
-
-static int rttsys_plclist_bubblesort(rttsys_t_plcpgm_list* plclist, int size)
+static int rttsys_plclist_cmp(const void* p1, const void* p2)
 {
-  int i, j;
-  char *str1, *str2;
-  rttsys_t_plcpgm_list dum;
-  rttsys_t_plcpgm_list* plclist_ptr;
-
-  for (i = size - 1; i > 0; i--) {
-    plclist_ptr = plclist;
-    for (j = 0; j < i; j++) {
-      str1 = plclist_ptr->name;
-      str2 = (plclist_ptr + 1)->name;
-      if (*str2 == 0)
-        break;
-      if (strcmp(str1, str2) > 0) {
-        /* Change order */
-        memcpy(&dum, plclist_ptr + 1, sizeof(rttsys_t_plcpgm_list));
-        memcpy(plclist_ptr + 1, plclist_ptr, sizeof(rttsys_t_plcpgm_list));
-        memcpy(plclist_ptr, &dum, sizeof(rttsys_t_plcpgm_list));
-      }
-      plclist_ptr++;
-    }
-  }
-  return RTT__SUCCESS;
+  char* str1 = ((rttsys_t_plcpgm_list*) p1)->name;
+  char* str2 = ((rttsys_t_plcpgm_list*) p2)->name;
+  if (*str2 == 0)
+    return 0;
+  return strcmp(str1, str2);
 }
 
-static int rttsys_steplist_bubblesort(rttsys_t_step_list* steplist, int size)
+static int rttsys_steplist_cmp(const void* p1, const void* p2)
 {
-  int i, j;
-  char *str1, *str2;
-  rttsys_t_step_list dum;
-  rttsys_t_step_list* steplist_ptr;
-
-  for (i = size - 1; i > 0; i--) {
-    steplist_ptr = steplist;
-    for (j = 0; j < i; j++) {
-      str1 = steplist_ptr->name;
-      str2 = (steplist_ptr + 1)->name;
-      if (*str2 == 0)
-        break;
-      if (strcmp(str1, str2) > 0) {
-        /* Change order */
-        memcpy(&dum, steplist_ptr + 1, sizeof(rttsys_t_step_list));
-        memcpy(steplist_ptr + 1, steplist_ptr, sizeof(rttsys_t_step_list));
-        memcpy(steplist_ptr, &dum, sizeof(rttsys_t_step_list));
-      }
-      steplist_ptr++;
-    }
-  }
-  return RTT__SUCCESS;
+  char* str1 = ((rttsys_t_step_list*) p1)->name;
+  char* str2 = ((rttsys_t_step_list*) p2)->name;
+  if (*str2 == 0)
+    return 0;
+  return strcmp(str1, str2);
 }
 
 static int rttsys_get_plcpgm(pwr_tObjid initstep_objid, pwr_tObjid* plc_objid)
@@ -2428,7 +2375,7 @@ int RTTSYS_GRAFCET(menu_ctx ctx, int event, char* parameter_ptr,
       sts = gdh_GetNextObject(initstep_objid, &initstep_objid);
     }
 
-    rttsys_plclist_bubblesort(plclist, plclist_count);
+    qsort(plclist, plclist_count, sizeof(rttsys_t_plcpgm_list), rttsys_plclist_cmp);
     menulist = (rtt_t_menu_upd*)ctx->menu;
     menu_ptr = menulist;
     for (i = grafcet_page * GRAFCET_PAGESIZE;
@@ -2761,8 +2708,8 @@ int RTTSYS_GRAFCET_PLC(menu_ctx ctx, int event, char* parameter_ptr,
           &plclist_ptr->order_alloc, (void*)pwr_cClass_order, 0);
       if (EVEN(sts))
         return sts;
-      rttsys_steplist_bubblesort(plclist_ptr->steps, plclist_ptr->step_count);
-      rttsys_steplist_bubblesort(plclist_ptr->orders, plclist_ptr->order_count);
+      qsort(plclist_ptr->steps, plclist_ptr->step_count, sizeof(rttsys_t_step_list), rttsys_steplist_cmp);
+      qsort(plclist_ptr->orders, plclist_ptr->order_count, sizeof(rttsys_t_step_list), rttsys_steplist_cmp);
 
       i = 0;
       /* Print the plcname in line 1, just show the segment name */
@@ -2999,7 +2946,7 @@ int RTTSYS_PLCPGM(menu_ctx ctx, int event, char* parameter_ptr,
     if (EVEN(sts))
       return sts;
 
-    rttsys_steplist_bubblesort(plclist, plclist_count);
+    qsort(plclist, plclist_count, sizeof(rttsys_t_step_list), rttsys_steplist_cmp);
     menulist = (rtt_t_menu_upd*)ctx->menu;
     menu_ptr = menulist;
     plclist_ptr = plclist;
@@ -3362,7 +3309,7 @@ int RTTSYS_PLCTHREAD(menu_ctx ctx, int event, char* parameter_ptr,
       return sts;
     rttsys_objectlist_modname(objectlist, objectlist_count);
 
-    rttsys_steplist_bubblesort(objectlist, objectlist_count);
+    qsort(objectlist, objectlist_count, sizeof(rttsys_t_step_list), rttsys_steplist_cmp);
 
     rttsys_thread_update(ctx, objectlist, objectlist_count, page);
     THREAD_MAXPAGE = MAX(1, (objectlist_count - 1) / THREAD_PAGESIZE + 1);
@@ -3624,8 +3571,6 @@ int RTTSYS_PID(menu_ctx ctx, int event, char* parameter_ptr, char* objectname,
     objectlist_count /= 2;
     rttsys_objectlist_modname_plc(objectlist, objectlist_count);
 
-    /*    rttsys_steplist_bubblesort( objectlist, objectlist_count);
-    */
     rttsys_pid_update(ctx, objectlist, objectlist_count, page);
     PID_MAXPAGE = MAX(1, (objectlist_count - 1) / PID_PAGESIZE + 1);
   }
@@ -4017,11 +3962,9 @@ int RTTSYS_LOGGING(menu_ctx ctx, int event, char* parameter_ptr,
 *					has been changed.
 *
 * Description:
-*	Show proview LYNX processes.
+*	Show proview processes.
 *
 **************************************************************************/
-
-#if defined OS_POSIX
 
 int RTTSYS_SHOW_SYS(menu_ctx ctx, int event, char* parameter_ptr,
     char* objectname, char** picture)
@@ -4029,7 +3972,6 @@ int RTTSYS_SHOW_SYS(menu_ctx ctx, int event, char* parameter_ptr,
   rtt_message('E', "Not yet implemented");
   return RTT__NOPICTURE;
 }
-#endif
 
 /*************************************************************************
 *
@@ -4051,10 +3993,8 @@ int RTTSYS_SHOW_SYS(menu_ctx ctx, int event, char* parameter_ptr,
 int RTTSYS_ELNPROC(menu_ctx ctx, int event, char* parameter_ptr,
     char* objectname, char** picture)
 {
-#if defined OS_POSIX
   rtt_message('E', "Picture is not implemented for this platform");
   return RTT__NOPICTURE;
-#endif
 }
 
 /*************************************************************************
@@ -4718,30 +4658,13 @@ static int rttsys_cell_dataobject(menu_ctx ctx, pwr_tObjid cell_objid,
   return RTT__SUCCESS;
 }
 
-static int rttsys_cellist_bubblesort(rttsys_t_cell_list* cellist, int size)
+static int rttsys_cellist_cmp(const void* p1, const void* p2)
 {
-  int i, j;
-  char *str1, *str2;
-  rttsys_t_cell_list dum;
-  rttsys_t_cell_list* cellist_ptr;
-
-  for (i = size - 1; i > 0; i--) {
-    cellist_ptr = cellist;
-    for (j = 0; j < i; j++) {
-      str1 = cellist_ptr->name;
-      str2 = (cellist_ptr + 1)->name;
-      if (*str2 == 0)
-        break;
-      if (strcmp(str1, str2) > 0) {
-        /* Change order */
-        memcpy(&dum, cellist_ptr + 1, sizeof(rttsys_t_cell_list));
-        memcpy(cellist_ptr + 1, cellist_ptr, sizeof(rttsys_t_cell_list));
-        memcpy(cellist_ptr, &dum, sizeof(rttsys_t_cell_list));
-      }
-      cellist_ptr++;
-    }
-  }
-  return RTT__SUCCESS;
+  char* str1 = ((rttsys_t_cell_list*) p1)->name;
+  char* str2 = ((rttsys_t_cell_list*) p2)->name;
+  if (*str2 == 0)
+    return 0;
+  return strcmp(str1, str2);
 }
 
 #define NMPSCELL_PAGESIZE 19
@@ -4815,8 +4738,7 @@ int RTTSYS_NMPSCELL(menu_ctx ctx, int event, char* parameter_ptr,
     if (EVEN(sts))
       return sts;
 
-    rttsys_cellist_bubblesort(cellist, cellist_count);
-
+    qsort(cellist, cellist_count, sizeof(rttsys_t_cell_list), rttsys_cellist_cmp);
   }
   /**********************************************************
   *	Exit of the picture

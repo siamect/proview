@@ -46,11 +46,9 @@
 
 /*_Include filer_________________________________________________________*/
 
-#if defined OS_POSIX
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#endif
 
 #include "pwr_nmpsclasses.h"
 

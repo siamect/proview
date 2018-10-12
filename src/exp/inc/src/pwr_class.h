@@ -646,8 +646,6 @@ typedef pwr_tMask pwr_tOpSys;
 typedef enum {
   pwr_mOpSys__ = 0,
   pwr_mOpSys_CustomBuild = 1 << 0,
-  pwr_mOpSys_PPC_LYNX = 1 << 3,
-  pwr_mOpSys_X86_LYNX = 1 << 4,
   pwr_mOpSys_PPC_LINUX = 1 << 5,
   pwr_mOpSys_X86_LINUX = 1 << 6,
   pwr_mOpSys_X86_64_LINUX = 1 << 7,

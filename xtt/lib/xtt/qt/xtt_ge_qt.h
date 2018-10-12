@@ -52,7 +52,6 @@ public:
   QWidget* form_widget;
   QWidget* nav_shell;
   QWidget* nav_widget;
-  QWidget* menu_widget;
   QWidget* graph_form;
   QLineEdit* value_input;
   QWidget* value_dialog;
@@ -107,7 +106,6 @@ protected:
   void resize(int width, int height);
   void focusInEvent(QFocusEvent* event);
   void closeEvent(QCloseEvent* event);
-  void action_resize(QResizeEvent* event);
 
 public slots:
   void activate_confirm_ok();
@@ -116,6 +114,7 @@ public slots:
   void activate_zoom_out();
   void activate_zoom_reset();
   void activate_help();
+  void action_resize(QResizeEvent* event);
 
 private:
   XttGeQt* ge;

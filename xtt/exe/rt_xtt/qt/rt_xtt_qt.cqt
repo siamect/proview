@@ -79,7 +79,7 @@ void XttQt::hotkey_ResetDig(char* arg, void* userdata)
   hotkey_activate_resetdig(arg);
 }
 
-bool eventFilter(QObject* obj, QEvent* event)
+bool XttQtWidget::eventFilter(QObject* obj, QEvent* event)
 {
   return XttHotkey::event_handler(event, obj);
 }
@@ -603,7 +603,7 @@ XttQt::XttQt(int argc, char* argv[], int* return_sts)
 
   // Qt
   toplevel = new XttQtWidget(this);
-  toplevel->setFixedSize(window_width, window_height);
+  toplevel->setMinimumSize(window_width, window_height);
   toplevel->setWindowTitle(fl(title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 

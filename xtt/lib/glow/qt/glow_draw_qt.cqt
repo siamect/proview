@@ -690,6 +690,7 @@ int GlowDrawQt::event_handler(QEvent* event, QWidget* target)
     case QEvent::Paint:
     case QEvent::UpdateRequest: {
       QPaintEvent* paintEvent = ((QPaintEvent*)event);
+      ctx->clear(&ctx->mw);
       sts = ctx->event_handler(glow_eEvent_Exposure, paintEvent->rect().x(),
           paintEvent->rect().y(), paintEvent->rect().width(),
           paintEvent->rect().height());

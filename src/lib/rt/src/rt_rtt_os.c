@@ -62,14 +62,12 @@
 **************************************************************************/
 int rtt_get_nodename(char* nodename, int size)
 {
-#if defined OS_POSIX
   struct utsname buf;
 
   if (uname(&buf) == -1)
     return 0;
   strncpy(nodename, buf.nodename, size);
   return 1;
-#endif
 }
 
 /*************************************************************************
@@ -142,7 +140,6 @@ int rtt_set_default_prio()
 **************************************************************************/
 int rtt_get_platform(char* platform)
 {
-#if defined OS_POSIX
   struct utsname buf;
 
   if (uname(&buf) == -1)
@@ -150,7 +147,6 @@ int rtt_get_platform(char* platform)
   if (strstr(buf.machine, "86") != 0)
     strcpy(platform, "X86_LNX");
   return 1;
-#endif
 }
 
 /*************************************************************************
@@ -167,7 +163,7 @@ int rtt_get_platform(char* platform)
 **************************************************************************/
 int rtt_get_hw(char* hw)
 {
-#if defined(OS_LYNX) || defined(OS_LINUX)
+#if defined(OS_LINUX)
   struct utsname buf;
 
   if (uname(&buf) == -1)
@@ -195,7 +191,6 @@ int rtt_get_hw(char* hw)
 #endif
 }
 
-#if defined OS_POSIX
 /*************************************************************************
 *
 * Name:		rtt_replace_env()
@@ -267,4 +262,3 @@ int rtt_replace_env(char* str, char* newstr)
   strcpy(newstr, new);
   return 1;
 }
-#endif

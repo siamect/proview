@@ -37,11 +37,9 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <unistd.h>
-#if defined OS_POSIX
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#endif
 
 #include "co_dcli.h"
 #include "co_string.h"
@@ -143,7 +141,6 @@ static pwr_tStatus start(ini_sContext* cp)
   char console[80];
   int state;
 
-#if defined OS_POSIX
   int fd;
 
   if (streq(cp->console, ""))
@@ -157,9 +154,6 @@ static pwr_tStatus start(ini_sContext* cp)
     close(fd);
     errl_Init(console, ini_errl_cb, cp);
   }
-#else
-  errl_Init("CONSOLE:", ini_errl_cb, cp);
-#endif
 
   errh_Init("pwr_ini", errh_eAnix_ini);
 
@@ -557,10 +551,8 @@ static pwr_tStatus terminate()
 
   mh_UtilDestroyEvent();
 
-#if defined OS_POSIX
   /* Unlink errlog message queue */
   errl_Unlink();
-#endif
 
   exit(EXIT_SUCCESS);
 }
@@ -815,33 +807,23 @@ static ini_sContext* createContext(int argc, char** argv)
 }
 static void usage(char* name)
 {
-#if defined OS_POSIX
   fprintf(stderr, "usage: %s -a arg -b arg -d arg -efg arg -hip arg -q arg -ru "
                   "arg -s arg -vwA arg -H arg\n",
           name);
-#else
-  fprintf(stderr,
-          "usage: %s -a arg -b arg -d arg -efhip arg -q arg -rvwA arg -H arg\n",
-          name);
-#endif
   fprintf(stderr, "  -?    : give help\n");
   fprintf(stderr, "  -a arg: use 'arg' as application file\n");
   fprintf(stderr, "  -b arg: use 'arg' as boot file\n");
   fprintf(stderr, "  -d arg: use files from directory 'arg'\n");
   fprintf(stderr, "  -e    : ignore errors\n");
   fprintf(stderr, "  -f    : ignore fatal errors\n");
-#if defined OS_POSIX
   fprintf(stderr, "  -g arg: setgid to 'arg' before starting\n");
-#endif
   fprintf(stderr, "  -h    : give help\n");
   fprintf(stderr, "  -i    : interactive, log to stdout\n");
   fprintf(stderr, "  -p arg: use 'arg' as PLC\n");
   fprintf(stderr, "  -q arg: use 'arg' as qcom bus id\n");
   fprintf(stderr, "  -r    : restart with new versions of loadfiles and PLC\n");
-#if defined OS_POSIX
   fprintf(stderr, "  -s    : stop of Proview/R\n");
   fprintf(stderr, "  -u arg: setuid to 'arg' before starting\n");
-#endif
   fprintf(stderr, "  -v    : verbose\n");
   fprintf(stderr, "  -w    : ignore warnings\n");
   fprintf(stderr, "  -A arg: use 'arg' as alias file\n");
@@ -940,11 +922,7 @@ static pwr_tStatus events(ini_sContext* cp)
   pid_t last_pid = 1;
   pwr_tStatus sts = INI__SUCCESS;
   qcom_sGet get;
-#if defined OS_POSIX
   int tmo_ms = 1000;
-#else
-  int tmo_ms = qcom_cTmoEternal;
-#endif
 
   cp->myQ.qix = 550715;
   cp->myQ.nid = 0;
@@ -1007,7 +985,6 @@ static pwr_tStatus events(ini_sContext* cp)
       qcom_Free(NULL, get.data);
     }
 
-#if defined OS_POSIX
     if (lst_Succ(NULL, &cp->proc_lh, &pl) == NULL)
       break;
     pid = waitpid(-1, &status, WNOHANG | WUNTRACED);
@@ -1026,7 +1003,6 @@ static pwr_tStatus events(ini_sContext* cp)
         break;
       }
     }
-#endif
   }
 
   return INI__SUCCESS;

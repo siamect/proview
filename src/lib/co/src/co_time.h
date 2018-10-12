@@ -51,17 +51,11 @@ extern "C" {
    time_AtoFormAscii replaces co_TimeToAsc and
    time_FormAsciiToA replaces co_AscToTime from Comator Lib. */
 
-#if defined OS_POSIX
 #include <time.h>
-#endif
 
 typedef unsigned int time_tClock;
-#if defined OS_POSIX
 typedef pwr_tTime time_tOs;
 typedef pwr_tDeltaTime time_tOsDelta;
-#else
-#error Not defined for this platform
-#endif
 
 /*! \file co_time.h
     \brief Time function.

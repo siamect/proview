@@ -46,9 +46,7 @@
 
 #include "pwr.h"
 
-#if defined OS_LYNX
-#define pwrv_cOpSys "LynxOS"
-#elif defined OS_LINUX
+#if defined OS_LINUX
 #define pwrv_cOpSys "Linux"
 #elif defined OS_MACOS
 #define pwrv_cOpSys "Mac OS"
@@ -58,8 +56,6 @@
 #define pwrv_cOpSys "OpenBSD"
 #elif defined OS_CYGWIN
 #define pwrv_cOpSys "Cygwin"
-#elif defined OS_WNT
-#define pwrv_cOpSys "Windows NT"
 #else
 #define pwrv_cOpSys "Unknown Operating System"
 #endif

@@ -39,7 +39,7 @@
 
 /* xtt_hist_qt.h -- Historical event window in xtt */
 
-#if defined OS_POSIX && defined PWRE_CONF_LIBDB
+#if defined PWRE_CONF_LIBDB
 
 #include "xtt_hist.h"
 

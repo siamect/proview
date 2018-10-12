@@ -351,7 +351,6 @@ void plc_thread(plc_sThread* tp)
 
 /* Once thread's has set it's priority don't run as root */
 
-#if defined OS_POSIX
   struct passwd* pwd;
 
   ruid = getuid();
@@ -363,7 +362,6 @@ void plc_thread(plc_sThread* tp)
     }
   } else
     setreuid(ruid, ruid);
-#endif
 
   tp->init(0, tp);
 
@@ -550,9 +548,7 @@ static void scan(plc_sThread* tp)
         time_Aadd(NULL, &tp->sync_time, &tp->scan_time);
         time_Adiff(&delta, &tp->sync_time, &tp->after_scan);
         if (time_Dcomp(&delta, NULL) > 0) {
-#if defined OS_LYNX && USE_RT_TIMER
-          sem_wait(&tp->ScanSem);
-#elif defined OS_MACOS || defined OS_FREEBSD || OS_OPENBSD || OS_CYGWIN
+#if defined OS_MACOS || defined OS_FREEBSD || OS_OPENBSD || OS_CYGWIN
           struct timespec ts;
           ts.tv_sec = delta.tv_sec;
           ts.tv_nsec = delta.tv_nsec;
@@ -732,9 +728,7 @@ static void scan(plc_sThread* tp)
         }
       }
 
-#if defined OS_LYNX && USE_RT_TIMER
-      sem_wait(&tp->ScanSem);
-#elif defined OS_MACOS || defined OS_FREEBSD || OS_OPENBSD || OS_CYGWIN
+#if defined OS_MACOS || defined OS_FREEBSD || OS_OPENBSD || OS_CYGWIN
       struct timespec ts;
       ts.tv_sec = delta.tv_sec;
       ts.tv_nsec = delta.tv_nsec;

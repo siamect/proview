@@ -57,19 +57,17 @@
 
 typedef struct s_Timer sTimer;
 
-LstType(sTimer);
-
 struct s_Timer {
-  LstLink(sTimer) ll;
+  struct LstHead ll;
   time_tClock clock;
   pwr_tBoolean wrapped;
   void* data;
   void (*exec)();
 };
 
-static LstHead(sTimer) timer_lh;
-static LstHead(sTimer) wrap_lh;
-static LstHead(sTimer) free_lh;
+static struct LstHead timer_lh;
+static struct LstHead wrap_lh;
+static struct LstHead free_lh;
 
 static time_tClock now_clock;
 static time_tClock last_clock;
@@ -104,7 +102,7 @@ static void waitClock(time_tClock c, int* tmo_ms);
 
 static void setInterval(time_tClock* c, pwr_tUInt32 i);
 
-static void executeExpired(LstHead(sTimer) * lh, pwr_tBoolean force);
+static void executeExpired(struct LstHead * lh, pwr_tBoolean force);
 
 static void getNewTimers();
 
@@ -142,7 +140,6 @@ int main(int argc, char** argv)
       tmo_ms = 0;
     }
 
-#if defined OS_POSIX
     aproc_TimeStamp(((float)tmo_ms) / 1000, 5);
 
     get.data = NULL;
@@ -153,7 +150,6 @@ int main(int argc, char** argv)
       }
       qcom_Free(&sts, get.data);
     }
-#endif
 
     now_clock = time_Clock(NULL, NULL);
     if (now_clock < last_clock) {
@@ -372,16 +368,16 @@ static void cacheTrim(sTimer* tp)
 
 static void insertTimer(sTimer* tp)
 {
-  LstLink(sTimer) * tl;
+  struct LstHead * tl;
   sTimer* tip;
 
-  if (LstEmp(&timer_lh)) {
-    (void)LstIns(LstEnd(&timer_lh), tp, ll);
+  if (LstEmpty(&timer_lh)) {
+    LstInsert(&timer_lh, &tp->ll);
     return;
   }
 
-  for (tl = LstLas(&timer_lh); tl != LstEnd(&timer_lh); tl = LstPre(tl)) {
-    tip = LstObj(tl);
+  for (tl = timer_lh.prev; tl != &timer_lh; tl = tl->prev) {
+    tip = LstEntry(tl, sTimer, ll);
 
     if (tp->wrapped) {
       if (!tip->wrapped || tip->clock < tp->clock)
@@ -390,8 +386,8 @@ static void insertTimer(sTimer* tp)
       break;
   }
 
-  tl = LstNex(tl);
-  (void)LstIns(tl, tp, ll);
+  tl = tl->next;
+  LstInsert(tl, &tp->ll);
 }
 
 /* .  */
@@ -418,7 +414,7 @@ static sTimer* newTimer(time_tClock* clock, void* data, void (*exec)())
 static void freeTimer(sTimer* tp)
 {
   memset(tp, 0, sizeof(*tp));
-  LstIns(&LstEnd(free_lh), tp, ll);
+  LstInsert(&free_lh, &tp->ll);
 }
 
 /* .  */
@@ -427,19 +423,19 @@ static sTimer* allocTimer()
 {
   const int cAllocCount = 100;
   sTimer* ftp;
-  LstLink(sTimer) * ftl;
+  struct LstHead * ftl;
   int i;
 
-  if (LstEmp(&free_lh)) {
+  if (LstEmpty(&free_lh)) {
     ftp = (sTimer*)calloc(cAllocCount, sizeof(sTimer));
     for (i = 0; i < cAllocCount; i++, ftp++) {
-      LstIns(&LstEnd(free_lh), ftp, ll);
+      LstInsert(&free_lh, &ftp->ll);
     }
   }
 
-  ftl = LstFir(&free_lh);
-  LstRem(ftl);
-  return LstObj(ftl);
+  ftl = free_lh.next;
+  LstRemove(ftl);
+  return LstEntry(ftl, sTimer, ll);
 }
 
 static void setTimer(sTimer* tp, time_tClock offs)
@@ -470,7 +466,6 @@ static time_tClock msToClock(time_tClock* ic, int ms)
 
 static void waitClock(time_tClock diff, int* tmo_ms)
 {
-#if defined OS_POSIX
   //    pwr_tTime  rmt;
   //    pwr_tTime  wait;
   static int tics_per_sec = 0;
@@ -483,7 +478,6 @@ static void waitClock(time_tClock diff, int* tmo_ms)
   *tmo_ms = diff * 1000 / tics_per_sec;
 //    *tmo_ms = wait.tv_sec * 1000 + wait.tv_nsec / 1000000;
 //    nanosleep(&wait, &rmt);
-#endif
 }
 
 /* .  */
@@ -502,21 +496,21 @@ static void setInterval(time_tClock* c,
 #endif
 }
 
-static void executeExpired(LstHead(sTimer) * lh, pwr_tBoolean force)
+static void executeExpired(struct LstHead * lh, pwr_tBoolean force)
 {
-  LstLink(sTimer) * tl;
+  struct LstHead * tl;
   sTimer* tp;
 
   gdb_AssumeUnlocked;
 
   gdb_ScopeLock
   {
-    for (tl = LstFir(lh); tl != LstEnd(lh); tl = LstFir(lh)) {
-      tp = LstObj(tl);
+    LstForEach(tl, lh) {
+      tp = LstEntry(tl, sTimer, ll);
 
       if (force || (!tp->wrapped && tp->clock <= now_clock)) {
-        LstRem(tl);
-        LstNul(tl);
+        LstRemove(tl);
+        LstNull(tl);
         tp->exec(tp);
       } else
         break;
@@ -564,11 +558,11 @@ static void getNewTimers()
 static void getWaitClock(time_tClock* wait_clock, time_tClock last_clock)
 {
   int diff;
-  LstLink(sTimer) * tl;
+  struct LstHead * tl;
   sTimer* tp;
 
-  tl = LstFir(&timer_lh);
-  tp = LstObj(tl);
+  tl = timer_lh.next;
+  tp = LstEntry(tl, sTimer, ll);
 
   if (now_clock < last_clock) {
     if (tp->wrapped) {
@@ -614,9 +608,9 @@ static void init()
   gdbroot->db->tmon = gdbroot->my_qid;
   gdbroot->is_tmon = 1;
 
-  LstIni(&timer_lh);
-  LstIni(&wrap_lh);
-  LstIni(&free_lh);
+  LstInit(&timer_lh);
+  LstInit(&wrap_lh);
+  LstInit(&free_lh);
 
   last_clock = now_clock = time_Clock(NULL, NULL);
 
@@ -635,18 +629,18 @@ static void init()
 
 static void toggleWrapped()
 {
-  LstLink(sTimer) * tl;
-  LstLink(sTimer) * ntl;
+  struct LstHead * tl;
+  struct LstHead * ntl;
   sTimer* tp;
-  LstHead(sTimer)* tlh = &timer_lh;
+  struct LstHead* tlh = &timer_lh;
 
-  for (tl = LstFir(tlh); tl != LstEnd(tlh); tl = ntl) {
-    tp = LstObj(tl);
-    ntl = LstNex(tl);
+  for (tl = tlh->next; tl != tlh; tl = ntl) {
+    tp = LstEntry(tl, sTimer, ll);
+    ntl = tl->next;
 
     if (!tp->wrapped) {
-      LstRem(tl);
-      (void)LstIns(LstEnd(&wrap_lh), tp, ll);
+      LstRemove(tl);
+      LstInsert(&wrap_lh, &tp->ll);
     } else
       tp->wrapped = 0;
   }

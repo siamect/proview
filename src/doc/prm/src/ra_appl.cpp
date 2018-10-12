@@ -36,7 +36,7 @@
  * Link the program with
  * g++ -o $pwrp_exe/ra_appl ra_appl.cpp $pwr_obj/pwr_msg_rt.o
  * $pwr_obj/pwr_msg_co.o
- * -DOS_POSIX -I$pwr_inc -L$pwr_lib -lpwr_rt -lpwr_co -lpwr_msg_dummy -lrt
+ * -I$pwr_inc -L$pwr_lib -lpwr_rt -lpwr_co -lpwr_msg_dummy -lrt
  *
  * @see ra_appl.cpp
  */
