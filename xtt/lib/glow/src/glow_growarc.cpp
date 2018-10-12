@@ -825,6 +825,9 @@ void GrowArc::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
         && !disable_gradient)
       grad = ((GrowNode*)node)->gradient;
 
+    if ( ur_x - ll_x <= 4)
+      grad = glow_eGradient_No;
+
     if (!display_shadow || feq(shadow_width, 0.0) || angle2 != 360) {
       if (grad == glow_eGradient_No || fillcolor == glow_eDrawType_ColorRed) {
         if (chot)
