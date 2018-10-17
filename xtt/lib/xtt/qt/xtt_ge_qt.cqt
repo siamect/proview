@@ -332,7 +332,7 @@ XttGeQt::XttGeQt(QWidget* xg_parent_wid, void* xg_parent_ctx,
 
   QObject::connect(((GraphQt*)graph)->grow_widget,
       SIGNAL(resize_signal(QResizeEvent*)), toplevel,
-      SLOT(XttGeQtWidget::action_resize(QResizeEvent*)));
+      SLOT(action_resize(QResizeEvent*)));
   // TODO: grow_widget must emit a resize_signal signal in resizeEvent()
 
   if (xg_menu) {

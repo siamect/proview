@@ -56,7 +56,7 @@ public:
   QWidget* form_widget;
   QLabel* msg_label;
   QLabel* cmd_prompt;
-  QWidget* xnav_form;
+  //QWidget* xnav_form;
   CoWowFocusTimerQt focustimer;
   CoWowRecall* cmd_recall;
   CoWowRecall* value_recall;

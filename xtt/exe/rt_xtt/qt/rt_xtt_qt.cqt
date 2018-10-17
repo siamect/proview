@@ -221,7 +221,7 @@ void XttQtWidget::activate_print()
     return;
   }
 
-  activate_print();
+  xtt->activate_print();
 }
 
 void XttQt::print()
@@ -265,7 +265,7 @@ void XttQtWidget::activate_find()
     return;
   }
 
-  activate_find();
+  xtt->activate_find();
 }
 
 void XttQtWidget::activate_findregex()
@@ -274,7 +274,7 @@ void XttQtWidget::activate_findregex()
     return;
   }
 
-  activate_findregex();
+  xtt->activate_findregex();
 }
 
 void XttQtWidget::activate_findnext()
@@ -283,7 +283,7 @@ void XttQtWidget::activate_findnext()
     return;
   }
 
-  activate_findnext();
+  xtt->activate_findnext();
 }
 
 void XttQtWidget::activate_collapse()
@@ -292,7 +292,7 @@ void XttQtWidget::activate_collapse()
     return;
   }
 
-  activate_collapse();
+  xtt->activate_collapse();
 }
 
 void XttQtWidget::activate_openobject()
@@ -301,7 +301,7 @@ void XttQtWidget::activate_openobject()
     return;
   }
 
-  activate_openobject();
+  xtt->activate_openobject();
 }
 
 void XttQtWidget::activate_openplc()
@@ -310,7 +310,7 @@ void XttQtWidget::activate_openplc()
     return;
   }
 
-  activate_openplc();
+  xtt->activate_openplc();
 }
 
 void XttQtWidget::activate_showcrossref()
@@ -328,7 +328,7 @@ void XttQtWidget::activate_opengraph()
     return;
   }
 
-  activate_opengraph();
+  xtt->activate_opengraph();
 }
 
 void XttQtWidget::activate_collect_insert()
@@ -337,7 +337,7 @@ void XttQtWidget::activate_collect_insert()
     return;
   }
 
-  activate_collect_insert();
+  xtt->activate_collect_insert();
 }
 
 void XttQtWidget::activate_collect_show()
@@ -442,7 +442,7 @@ void XttQtWidget::activate_advanceduser()
     return;
   }
 
-  activate_advanceduser();
+  xtt->activate_advanceduser();
 }
 
 void XttQtWidget::activate_zoom_in()
@@ -466,7 +466,7 @@ void XttQtWidget::activate_help()
     return;
   }
 
-  activate_help();
+  xtt->activate_help();
 }
 
 void XttQtWidget::activate_help_project()
@@ -475,7 +475,7 @@ void XttQtWidget::activate_help_project()
     return;
   }
 
-  activate_help_project();
+  xtt->activate_help_project();
 }
 
 void XttQtWidget::activate_help_navigator()
@@ -484,7 +484,7 @@ void XttQtWidget::activate_help_navigator()
     return;
   }
 
-  activate_help_navigator();
+  xtt->activate_help_navigator();
 }
 
 void XttQtWidget::activate_help_proview()
@@ -493,7 +493,7 @@ void XttQtWidget::activate_help_proview()
     return;
   }
 
-  activate_help_proview();
+  xtt->activate_help_proview();
 }
 
 void XttQtWidget::activate_back()
@@ -729,7 +729,7 @@ XttQt::XttQt(int argc, char* argv[], int* return_sts)
 
   statusbar->show();
 
-  xnav = new XNavQt(this, xnav_form, "Plant", &brow_widget,
+  xnav = new XNavQt(this, NULL, "Plant", &brow_widget,
       (xnav_sStartMenu*)root_menu, opplace_str, op_close_button, &sts);
   xnav->message_cb = &xtt_message_cb;
   xnav->close_cb = &close;

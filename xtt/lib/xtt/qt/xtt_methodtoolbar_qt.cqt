@@ -125,6 +125,7 @@ QWidget* XttMethodToolbarQt::build()
 {
   // Toolbar
   m_toolbar_w = new QToolBar();
+  m_toolbar_w->setIconSize(QSize(16, 16));
 
   for (int i = 0; i < GeMethods::opmeth_size; i++) {
     if (m_op_method_mask & (1 << i)

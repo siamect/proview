@@ -380,7 +380,7 @@ XAttQt::XAttQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
   addMenuItem(toplevel, functions, "Change &Value",
       SLOT(activate_change_value()), "CTRL+Q");
   addMenuItem(toplevel, functions, "C&lose Change Value",
-      SLOT(change_value_close()), "CTRL+T");
+      SLOT(activate_close_changeval()), "CTRL+T");
   addMenuItem(toplevel, functions, "Open &Program", SLOT(activate_open_plc()),
       "CTRL+L");
   addMenuItem(toplevel, functions, "&Display object in Navigator",
