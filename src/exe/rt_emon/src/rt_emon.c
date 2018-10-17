@@ -4184,8 +4184,6 @@ static void updateAlarm(sActive* ap, sEvent* ep)
   sSupActive* sp;
   sApplActive* aap;
 
-  LstCheck(&l.active_l);
-
   sp = (sSupActive*)ap;
   aap = (sApplActive*)ap;
 
@@ -4251,7 +4249,6 @@ static void updateAlarm(sActive* ap, sEvent* ep)
           == 0)) { /* The alarm is acked and unactive, remove it from alarm list
                       */
     ap->status.All = 0;
-  LstCheck(&l.active_l);
     updateAlarmInfo(ap);
     if (ap->source == mh_eSource_Scanner) {
       sp->sup->DetectCheck = TRUE; /* Activate detection */
