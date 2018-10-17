@@ -2806,7 +2806,7 @@ int GlowDrawGtk::print(char* filename, double x0, double x1, int end)
     ps->fp.flags(((ps->fp.flags() & ~ios_base::hex) & ~ios_base::uppercase)
         | ios_base::dec);
   }
-  gdk_pixbuf_unref(image);
+  g_object_unref(image);
 
   return 1;
 }
@@ -2900,7 +2900,7 @@ unsigned char* GlowDrawGtk::image_get_data(glow_tImImage image)
 void GlowDrawGtk::image_copy(glow_tImImage orig_image, glow_tImImage* image)
 {
   if (*image)
-    gdk_pixbuf_unref((GdkPixbuf*)*image);
+    g_object_unref((GdkPixbuf*)*image);
 
   *(GdkPixbuf**)image = gdk_pixbuf_copy((GdkPixbuf*)orig_image);
 }
@@ -2929,7 +2929,7 @@ void GlowDrawGtk::image_rotate(
   }
   GdkPixbuf* im
       = gdk_pixbuf_rotate_simple((GdkPixbuf*)*image, (GdkPixbufRotation)grot);
-  gdk_pixbuf_unref((GdkPixbuf*)*image);
+  g_object_unref((GdkPixbuf*)*image);
   *image = (glow_tImImage)im;
 #endif
 }
@@ -2940,7 +2940,7 @@ void GlowDrawGtk::image_flip_vertical(glow_tImImage* image)
   return;
 #else
   GdkPixbuf* im = gdk_pixbuf_flip((GdkPixbuf*)*image, TRUE);
-  gdk_pixbuf_unref((GdkPixbuf*)*image);
+  g_object_unref((GdkPixbuf*)*image);
   *image = (glow_tImImage)im;
 #endif
 }
@@ -2951,7 +2951,7 @@ void GlowDrawGtk::image_flip_horizontal(glow_tImImage* image)
   return;
 #else
   GdkPixbuf* im = gdk_pixbuf_flip((GdkPixbuf*)*image, FALSE);
-  gdk_pixbuf_unref((GdkPixbuf*)*image);
+  g_object_unref((GdkPixbuf*)*image);
   *image = (glow_tImImage)im;
 #endif
 }
@@ -2976,7 +2976,7 @@ int GlowDrawGtk::image_scale(int width, int height, glow_tImImage orig_im,
     GdkPixbuf* im_old = (GdkPixbuf*)*im;
     *im = gdk_pixbuf_scale_simple(
         (GdkPixbuf*)*im, width, height, GDK_INTERP_NEAREST);
-    gdk_pixbuf_unref((GdkPixbuf*)im_old);
+    g_object_unref((GdkPixbuf*)im_old);
   } else {
 // Scale from orig_im
 
@@ -2985,7 +2985,7 @@ int GlowDrawGtk::image_scale(int width, int height, glow_tImImage orig_im,
       RsvgHandle* handle;
       const char* imagefile;
 
-      gdk_pixbuf_unref((GdkPixbuf*)*im);
+      g_object_unref((GdkPixbuf*)*im);
 
       handle = (RsvgHandle*)*im_data;
       imagefile = rsvg_handle_get_base_uri(handle);
@@ -2994,7 +2994,7 @@ int GlowDrawGtk::image_scale(int width, int height, glow_tImImage orig_im,
 #endif
     {
       if (*im)
-        gdk_pixbuf_unref((GdkPixbuf*)*im);
+        g_object_unref((GdkPixbuf*)*im);
       *im = gdk_pixbuf_scale_simple(
           (GdkPixbuf*)orig_im, width, height, GDK_INTERP_NEAREST);
     }
@@ -3006,9 +3006,9 @@ int GlowDrawGtk::image_load(char* imagefile, glow_tImImage* orig_im,
     glow_tImImage* im, glow_tImData* im_data)
 {
   if (im && *im)
-    gdk_pixbuf_unref((GdkPixbuf*)*im);
+    g_object_unref((GdkPixbuf*)*im);
   if (*orig_im)
-    gdk_pixbuf_unref((GdkPixbuf*)*orig_im);
+    g_object_unref((GdkPixbuf*)*orig_im);
 #if defined PWRE_CONF_RSVG
   if (im_data && streq(strchr(imagefile, '.'), ".svg")) {
     RsvgHandle* handle;
@@ -3040,7 +3040,7 @@ int GlowDrawGtk::image_render(int width, int height, glow_tImImage orig_im,
 
 void GlowDrawGtk::image_free(glow_tImImage image)
 {
-  gdk_pixbuf_unref((GdkPixbuf*)image);
+  g_object_unref((GdkPixbuf*)image);
 }
 
 void GlowDrawGtk::pixmap_free(glow_tPixmap pixmap)
@@ -3059,7 +3059,7 @@ void GlowDrawGtk::image_pixel_iter(glow_tImImage orig_image,
 
   if (orig_image) {
     if (image && *image != orig_image)
-      gdk_pixbuf_unref((GdkPixbuf*)*image);
+      g_object_unref((GdkPixbuf*)*image);
     *image = (glow_tImImage*)gdk_pixbuf_copy((GdkPixbuf*)orig_image);
   } else if (!*image)
     return;
