@@ -725,10 +725,10 @@ int main(int argc, char* argv[])
     usage();
     exit(0);
   }
-  strcpy(remote_address, argv[1]);
-  strcpy(remote_host_name, argv[2]);
-  strcpy(remote_vid, argv[3]);
-  strcpy(remote_volume_name, argv[4]);
+  strncpy(remote_address, argv[1], sizeof(remote_address));
+  strncpy(remote_host_name, argv[2], sizeof(remote_host_name));
+  strncpy(remote_vid, argv[3], sizeof(remote_vid));
+  strncpy(remote_volume_name, argv[4], sizeof(remote_volume_name));
 
   if (argc >= 6) {
     sts = sscanf(argv[5], "%d", &server_id);

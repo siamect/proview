@@ -76,8 +76,10 @@ static pwr_tStatus GenerateXddFile(ldh_sMenuCall* ip)
   str_ToLower(foutname, foutname);
   dcli_translate_filename(foutname, foutname);
   fout = fopen(foutname, "w");
-  if (!fout)
+  if (!fout) {
+    fclose(fin);
     return 0;
+  }
 
   while (dcli_read_line(line, sizeof(line), fin)) {
     str_trim(l2, line);
@@ -108,20 +110,32 @@ static pwr_tStatus GenerateXddFile(ldh_sMenuCall* ip)
           case pwr_cClass_ChanDi: {
             wb_attribute a
                 = sp->attribute(grandchild.oid(), "RtBody", "Representation");
-            if (!a)
+            if (!a) {
+              fclose(fin);
+              fclose(fout);
               return a.sts();
+            }
 
             a.value(&representation);
-            if (!a)
+            if (!a) {
+              fclose(fin);
+              fclose(fout);
               return a.sts();
+            }
 
             a = sp->attribute(grandchild.oid(), "RtBody", "Number");
-            if (!a)
+            if (!a) {
+              fclose(fin);
+              fclose(fout);
               return a.sts();
+            }
 
             a.value(&number);
-            if (!a)
+            if (!a) {
+              fclose(fin);
+              fclose(fout);
               return a.sts();
+            }
 
             if (number == 0) {
               switch (representation) {
@@ -144,20 +158,32 @@ static pwr_tStatus GenerateXddFile(ldh_sMenuCall* ip)
           case pwr_cClass_ChanDo: {
             wb_attribute a
                 = sp->attribute(grandchild.oid(), "RtBody", "Representation");
-            if (!a)
+            if (!a) {
+              fclose(fin);
+              fclose(fout);
               return a.sts();
+            }
 
             a.value(&representation);
-            if (!a)
+            if (!a) {
+              fclose(fin);
+              fclose(fout);
               return a.sts();
+            }
 
             a = sp->attribute(grandchild.oid(), "RtBody", "Number");
-            if (!a)
+            if (!a) {
+              fclose(fin);
+              fclose(fout);
               return a.sts();
+            }
 
             a.value(&number);
-            if (!a)
+            if (!a) {
+              fclose(fin);
+              fclose(fout);
               return a.sts();
+            }
 
             if (number == 0) {
               switch (representation) {
@@ -181,12 +207,18 @@ static pwr_tStatus GenerateXddFile(ldh_sMenuCall* ip)
           case pwr_cClass_ChanIi: {
             wb_attribute a
                 = sp->attribute(grandchild.oid(), "RtBody", "Representation");
-            if (!a)
+            if (!a) {
+              fclose(fin);
+              fclose(fout);
               return a.sts();
+            }
 
             a.value(&representation);
-            if (!a)
+            if (!a) {
+              fclose(fin);
+              fclose(fout);
               return a.sts();
+            }
 
             switch (representation) {
             case pwr_eDataRepEnum_Int8:
@@ -209,12 +241,18 @@ static pwr_tStatus GenerateXddFile(ldh_sMenuCall* ip)
           case pwr_cClass_ChanAo: {
             wb_attribute a
                 = sp->attribute(grandchild.oid(), "RtBody", "Representation");
-            if (!a)
+            if (!a) {
+              fclose(fin);
+              fclose(fout);
               return a.sts();
+            }
 
             a.value(&representation);
-            if (!a)
+            if (!a) {
+              fclose(fin);
+              fclose(fout);
               return a.sts();
+            }
 
             switch (representation) {
             case pwr_eDataRepEnum_Int8:
@@ -266,20 +304,32 @@ static pwr_tStatus GenerateXddFile(ldh_sMenuCall* ip)
             case pwr_cClass_ChanDi: {
               wb_attribute a
                   = sp->attribute(grandchild.oid(), "RtBody", "Representation");
-              if (!a)
+              if (!a) {
+                fclose(fin);
+                fclose(fout);
                 return a.sts();
+              }
 
               a.value(&representation);
-              if (!a)
+              if (!a) {
+                fclose(fin);
+                fclose(fout);
                 return a.sts();
+              }
 
               a = sp->attribute(grandchild.oid(), "RtBody", "Number");
-              if (!a)
+              if (!a) {
+                fclose(fin);
+                fclose(fout);
                 return a.sts();
+              }
 
               a.value(&number);
-              if (!a)
+              if (!a) {
+                fclose(fin);
+                fclose(fout);
                 return a.sts();
+              }
 
               if (number == 0) {
                 switch (representation) {
@@ -318,12 +368,18 @@ static pwr_tStatus GenerateXddFile(ldh_sMenuCall* ip)
             case pwr_cClass_ChanIi: {
               wb_attribute a
                   = sp->attribute(grandchild.oid(), "RtBody", "Representation");
-              if (!a)
+              if (!a) {
+                fclose(fin);
+                fclose(fout);
                 return a.sts();
+              }
 
               a.value(&representation);
-              if (!a)
+              if (!a) {
+                fclose(fin);
+                fclose(fout);
                 return a.sts();
+              }
 
               switch (representation) {
               case pwr_eDataRepEnum_Int8:
@@ -411,20 +467,32 @@ static pwr_tStatus GenerateXddFile(ldh_sMenuCall* ip)
             case pwr_cClass_ChanDo: {
               wb_attribute a
                   = sp->attribute(grandchild.oid(), "RtBody", "Representation");
-              if (!a)
+              if (!a) {
+                fclose(fin);
+                fclose(fout);
                 return a.sts();
+              }
 
               a.value(&representation);
-              if (!a)
+              if (!a) {
+                fclose(fin);
+                fclose(fout);
                 return a.sts();
+              }
 
               a = sp->attribute(grandchild.oid(), "RtBody", "Number");
-              if (!a)
+              if (!a) {
+                fclose(fin);
+                fclose(fout);
                 return a.sts();
+              }
 
               a.value(&number);
-              if (!a)
+              if (!a) {
+                fclose(fin);
+                fclose(fout);
                 return a.sts();
+              }
 
               if (number == 0) {
                 switch (representation) {
@@ -464,12 +532,18 @@ static pwr_tStatus GenerateXddFile(ldh_sMenuCall* ip)
             case pwr_cClass_ChanAo: {
               wb_attribute a
                   = sp->attribute(grandchild.oid(), "RtBody", "Representation");
-              if (!a)
+              if (!a) {
+                fclose(fin);
+                fclose(fout);
                 return a.sts();
+              }
 
               a.value(&representation);
-              if (!a)
+              if (!a) {
+                fclose(fin);
+                fclose(fout);
                 return a.sts();
+              }
 
               switch (representation) {
               case pwr_eDataRepEnum_Int8:

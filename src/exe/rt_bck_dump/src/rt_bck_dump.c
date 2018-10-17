@@ -98,6 +98,7 @@ int main(int argc, char** argv)
   printf("Layout version:       %d\n", fh.version);
   if (fh.version != BCK_FILE_VERSION) {
     printf("This program is built with header version %d\n", BCK_FILE_VERSION);
+    fclose(f);
     return 1;
   }
 

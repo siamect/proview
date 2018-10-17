@@ -85,20 +85,26 @@ pwr_tStatus WCast::open_castlist()
   for (int i = 0; i < (int)cidlist.size(); i++) {
     // Check size
     wb_cdef c = sp->cdef(cidlist[i]);
-    if (!c)
+    if (!c) {
+      free(class_vect);
       return c.sts();
+    }
 
     if (c.size(pwr_eBix_rt) > a.size())
       continue;
 
     sts = ldh_ClassIdToName(ldhses, cidlist[i], class_vect[class_cnt++],
         sizeof(class_vect[0]), &size);
-    if (EVEN(sts))
+    if (EVEN(sts)) {
+      free(class_vect);
       return sts;
+    }
   }
   strcpy(class_vect[class_cnt], "");
 
   wow->CreateList(name, (char*)class_vect, 80, selected_cb, 0, (void*)this);
+
+  free(class_vect);
 
   return 1;
 }

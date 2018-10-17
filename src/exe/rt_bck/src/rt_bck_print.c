@@ -440,8 +440,10 @@ pwr_tStatus bck_print(char* filename)
   }
 
   sts = gdh_Init("pwr_bck_print");
-  if (EVEN(sts))
+  if (EVEN(sts)) {
+    if (fp) fclose(fp);
     return sts;
+  }
 
   sts = gdh_GetClassListAttrRef(pwr_cClass_Backup, &aref);
   while (ODD(sts)) {
@@ -453,8 +455,10 @@ pwr_tStatus bck_print(char* filename)
 
     sts = gdh_AttrrefToName(
         &aref, objname, sizeof(objname), cdh_mName_volumeStrict);
-    if (EVEN(sts))
+    if (EVEN(sts)) {
+      if (fp) fclose(fp);
       return sts;
+    }
 
     if (fp)
       fprintf(fp, "// %s\n", objname);

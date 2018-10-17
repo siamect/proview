@@ -692,7 +692,7 @@ static int ccm_replace_symbol(
   char value[K_STRING_SIZE];
   char symbol[80];
   int sts;
-  char new[160];
+  char news[160];
   int ignore_symbolmode;
   int value_decl;
   ccm_tInt value_int;
@@ -702,7 +702,7 @@ static int ccm_replace_symbol(
   symbolmode = 0;
   ignore_symbolmode = 0;
   s = command;
-  t = new;
+  t = news;
 
   while (*s != 0) {
     if ((unsigned char)*s == '\\' && (unsigned char)*(s + 1) == '\'') {
@@ -765,7 +765,7 @@ static int ccm_replace_symbol(
   } else
     *t = 0;
 
-  strcpy(newcommand, new);
+  strcpy(newcommand, news);
   return 1;
 }
 
@@ -3614,6 +3614,7 @@ static int ccm_init_filectx(ccm_tFileCtx filectx)
       else {
         filectx->error_row = line_p->row;
         strcpy(filectx->error_line, line_p->line);
+        free(func_p);
         return CCM__UNKNVARTYPE;
       }
 

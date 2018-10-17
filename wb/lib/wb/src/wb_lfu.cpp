@@ -524,8 +524,10 @@ pwr_tStatus lfu_IncrementAndGetVersion(
   } else {
     fgetpos(file, &pos);
     nr = fscanf(file, "%ld", &version);
-    if (nr != 1)
+    if (nr != 1) {
+      fclose(file);
       return LFU__PLCVERSION;
+    }
 
     version++;
     fsetpos(file, &pos);
@@ -561,8 +563,10 @@ pwr_tStatus lfu_ReadSysObjectFile(char* SystemName, char* SystemGroup)
     return LFU__NOFILE;
   } else {
     nr = fscanf(file, "%s", SystemName);
-    if (nr != 1)
+    if (nr != 1) {
+      fclose(file);
       return LFU__FILECRP;
+    }
 
     nr = fscanf(file, "%s", SystemGroup);
     //	  if ( nr != 1) return LFU__FILECRP;
@@ -1282,24 +1286,32 @@ pwr_tStatus lfu_SaveDirectoryVolume(
   sts = ldh_GetRootList(ldhses, &busobjid);
   while (ODD(sts)) {
     sts = ldh_GetObjectClass(ldhses, busobjid, &cid);
-    if (EVEN(sts))
+    if (EVEN(sts)) {
+      fclose(file);
       return sts;
+    }
 
     if (cid == pwr_cClass_BusConfig) {
       /* Check Bus attribute */
       sts = ldh_GetObjectPar(ldhses, busobjid, "RtBody", "BusNumber",
           (char**)&bus_number_ptr, &size);
-      if (EVEN(sts))
+      if (EVEN(sts)) {
+        fclose(file);
         return sts;
+      }
       sts = ldh_GetObjectPar(ldhses, busobjid, "RtBody", "BusNumber",
           (char**)&bus_number_ptr, &size);
-      if (EVEN(sts))
+      if (EVEN(sts)) {
+        fclose(file);
         return sts;
+      }
 
       sts = ldh_ObjidToName(ldhses, busobjid, ldh_eName_Object, bus_name,
           sizeof(bus_name), &size);
-      if (EVEN(sts))
+      if (EVEN(sts)) {
+        fclose(file);
         return sts;
+      }
 
       if (*bus_number_ptr == 0) {
         char msg[200];
@@ -1312,20 +1324,26 @@ pwr_tStatus lfu_SaveDirectoryVolume(
       sts = ldh_GetChild(ldhses, busobjid, &nodeobjid);
       while (ODD(sts)) {
         sts = ldh_GetObjectClass(ldhses, nodeobjid, &cid);
-        if (EVEN(sts))
+        if (EVEN(sts)) {
+          fclose(file);
           return sts;
+        }
 
         if (cid == pwr_cClass_NodeConfig || cid == pwr_cClass_SevNodeConfig) {
           sts = ldh_ObjidToName(ldhses, nodeobjid, ldh_eName_Object,
               nodeconfig_name, sizeof(nodeconfig_name), &size);
-          if (EVEN(sts))
+          if (EVEN(sts)) {
+            fclose(file);
             return sts;
+          }
 
           /* Check NodeName attribute */
           sts = ldh_GetObjectPar(
               ldhses, nodeobjid, "RtBody", "NodeName", &nodename_ptr, &size);
-          if (EVEN(sts))
+          if (EVEN(sts)) {
+            fclose(file);
             return sts;
+          }
 
           if (!strcmp(nodename_ptr, "")) {
             char msg[200];
@@ -1342,16 +1360,20 @@ pwr_tStatus lfu_SaveDirectoryVolume(
           if (cid == pwr_cClass_NodeConfig) {
             sts = ldh_GetObjectPar(ldhses, nodeobjid, "RtBody",
                 "SecondaryNode.NodeName", &secondary_nodename_ptr, &size);
-            if (EVEN(sts))
+            if (EVEN(sts)) {
+              fclose(file);
               return sts;
+            }
           } else
             secondary_nodename_ptr = 0;
 
           /* Check OperatingSystem attribute */
           sts = ldh_GetObjectPar(ldhses, nodeobjid, "RtBody", "OperatingSystem",
               (char**)&os_ptr, &size);
-          if (EVEN(sts))
+          if (EVEN(sts)) {
+            fclose(file);
             return sts;
+          }
 
           os = *os_ptr;
           if (!(os == pwr_mOpSys_CustomBuild || os == pwr_mOpSys_PPC_LINUX
@@ -1373,14 +1395,18 @@ pwr_tStatus lfu_SaveDirectoryVolume(
           if (cid == pwr_cClass_NodeConfig) {
             sts = ldh_GetObjectPar(ldhses, nodeobjid, "RtBody",
                 "SimulateSingleProcess", (char**)&single_scan_ptr, &size);
-            if (EVEN(sts))
+            if (EVEN(sts)) {
+              fclose(file);
               return sts;
+            }
 
             if (*single_scan_ptr != 0) {
               sts = ldh_GetObjectPar(ldhses, nodeobjid, "RtBody",
                   "SimulateSingleScanTime", (char**)&scantime_ptr, &size);
-              if (EVEN(sts))
+              if (EVEN(sts)) {
+                fclose(file);
                 return sts;
+              }
 
               if (feqf(*scantime_ptr, 0.0f)) {
                 char msg[200];
@@ -1409,8 +1435,10 @@ pwr_tStatus lfu_SaveDirectoryVolume(
             sts = ldh_GetChild(ldhses, nodeobjid, &volobjid);
             while (ODD(sts)) {
               sts = ldh_GetObjectClass(ldhses, volobjid, &vcid);
-              if (EVEN(sts))
+              if (EVEN(sts)) {
+                fclose(file);
                 return sts;
+              }
 
               if (vcid == pwr_cClass_RootVolumeLoad
                   || vcid == pwr_cClass_SubVolumeLoad
@@ -1419,8 +1447,10 @@ pwr_tStatus lfu_SaveDirectoryVolume(
                   || vcid == pwr_cClass_SharedVolumeLoad) {
                 sts = ldh_ObjidToName(ldhses, volobjid, ldh_eName_Object,
                     volume_name, sizeof(volume_name), &size);
-                if (EVEN(sts))
+                if (EVEN(sts)) {
+                  fclose(file);
                   return sts;
+                }
                 utl_toupper(name, volume_name);
 
                 /* Check that the name is in the global volume list */
@@ -2005,7 +2035,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
           dcli_translate_filename(fname, filename);
           fp = fopen(fname, "w");
-          if (fp == 0) {
+          if (!fp) {
             char msg[200];
             sprintf(msg, "Error, Unable to open file %s\n", fname);
             MsgWindow::message('E', msg, msgw_ePop_Default);
@@ -2058,84 +2088,120 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
               // Get attribute NodeName
               a = sp->attribute(fnodeo.oid(), "RtBody", "NodeName");
-              if (!a)
+              if (!a) {
+                fclose(fp);
                 return a.sts();
+              }
 
               a.value(nc.nodename);
-              if (!a)
+              if (!a) {
+                fclose(fp);
                 return sts;
+              }
 
               // Get attribute Address
               a = sp->attribute(fnodeo.oid(), "RtBody", "Address");
-              if (!a)
+              if (!a) {
+                fclose(fp);
                 return a.sts();
+              }
 
               a.value(nc.address);
-              if (!a)
+              if (!a) {
+                fclose(fp);
                 return sts;
+              }
 
               // Get attribute Port
               a = sp->attribute(fnodeo.oid(), "RtBody", "Port");
-              if (!a)
+              if (!a) {
+                fclose(fp);
                 return a.sts();
+              }
 
               a.value(&nc.port);
-              if (!a)
+              if (!a) {
+                fclose(fp);
                 return sts;
+              }
 
               // Get attribute Connection
               a = sp->attribute(fnodeo.oid(), "RtBody", "Connection");
-              if (!a)
+              if (!a) {
+                fclose(fp);
                 return a.sts();
+              }
 
               a.value(&nc.connection);
-              if (!a)
+              if (!a) {
+                fclose(fp);
                 return sts;
+              }
 
               // Get attribute Volume
               a = sp->attribute(fnodeo.oid(), "RtBody", "Volume");
-              if (!a)
+              if (!a) {
+                fclose(fp);
                 return a.sts();
+              }
 
               a.value(volstr);
-              if (!a)
+              if (!a) {
+                fclose(fp);
                 return sts;
+              }
 
               // Get attribute QComMaxResendTime
               a = sp->attribute(fnodeo.oid(), "RtBody", "QComMinResendTime");
-              if (!a)
+              if (!a) {
+                fclose(fp);
                 return a.sts();
+              }
 
               a.value(&nc.qcom_min_resend_time);
-              if (!a)
+              if (!a) {
+                fclose(fp);
                 return sts;
+              }
 
               // Get attribute QComMaxResendTime
               a = sp->attribute(fnodeo.oid(), "RtBody", "QComMaxResendTime");
-              if (!a)
+              if (!a) {
+                fclose(fp);
                 return a.sts();
+              }
 
               a.value(&nc.qcom_max_resend_time);
-              if (!a)
+              if (!a) {
+                fclose(fp);
                 return sts;
+              }
 
               // Get attribute QComExportBufSize
               a = sp->attribute(nodeo.oid(), "RtBody", "QComExportBufQuota");
-              if (!a)
+              if (!a) {
+                fclose(fp);
                 return a.sts();
+              }
 
               a.value(&nc.qcom_export_buf_quota);
-              if (!a)
+              if (!a) {
+                fclose(fp);
                 return sts;
+              }
 
               // Get attribute QComAckDelay
               a = sp->attribute(nodeo.oid(), "RtBody", "QComAckDelay");
-              if (!a)
+              if (!a) {
+                fclose(fp);
                 return a.sts();
+              }
 
               a.value(&nc.qcom_ack_delay);
-              if (!a)
+              if (!a) {
+                fclose(fp);
                 return sts;
+              }
 
               /* Check that the name is in the global volume list */
               found = 0;
@@ -3421,7 +3487,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
         sprintf(fname, pwr_cNameCustomBuild);
         dcli_translate_filename(fname, fname);
         fp = fopen(fname, "w");
-        if (file == 0) {
+        if (!fp) {
           char msg[200];
           sprintf(msg, "Error, Unable to open file %s", fname);
           MsgWindow::message('E', msg, msgw_ePop_Default);

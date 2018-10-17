@@ -122,15 +122,19 @@ pwr_tStatus xtt_pndevice_create_ctx(
   ctx->mc[0].cid = pwr_cClass_PnModule;
   sts = gdh_ObjidToName(cdh_ClassIdToObjid(ctx->mc[0].cid), ctx->mc[0].name,
       sizeof(ctx->mc[0].name), cdh_mName_object);
-  if (EVEN(sts))
+  if (EVEN(sts)) {
+    free(ctx);
     return sts;
+  }
 
   for (int i = 1; i <= (int)mcv.size(); i++) {
     ctx->mc[i].cid = mcv[i - 1];
     sts = gdh_ObjidToName(cdh_ClassIdToObjid(ctx->mc[i].cid), ctx->mc[i].name,
         sizeof(ctx->mc[0].name), cdh_mName_object);
-    if (EVEN(sts))
+    if (EVEN(sts)) {
+      free(ctx);
       return sts;
+    }
   }
 
   if (strchr(gsdmlfile, '/') == 0) {
@@ -141,8 +145,10 @@ pwr_tStatus xtt_pndevice_create_ctx(
 
   ctx->gsdml = new pn_gsdml();
   sts = ctx->gsdml->read(fname);
-  if (EVEN(sts))
+  if (EVEN(sts)) {
+    free(ctx);
     return sts;
+  }
   ctx->gsdml->build();
   ctx->gsdml->set_classes(ctx->mc);
 

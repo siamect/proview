@@ -1535,8 +1535,10 @@ bool wb_vrepmem::importTree(bool keepref, bool keepsym)
   pwr_tStatus sts;
 
   wb_orep* o = object(&sts);
-  if (EVEN(sts))
+  if (EVEN(sts)) {
+    if (o) delete o;
     return false;
+  }
 
   while (ODD(sts)) {
     o->ref();

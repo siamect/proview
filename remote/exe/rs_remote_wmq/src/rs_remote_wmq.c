@@ -206,7 +206,7 @@ unsigned int wmq_receive()
 
   MQLONG BufferLength = sizeof(Buffer);
 
-  unsigned int sts;
+  unsigned int sts = 0;
 
   char search_remtrans;
   remtrans_item* remtrans;
@@ -256,7 +256,7 @@ unsigned int wmq_receive()
     }
   }
 
-  return (sts);
+  return sts;
 }
 
 /*************************************************************************
@@ -353,7 +353,7 @@ int main(int argc, char* argv[])
    * number */
 
   if (argc >= 2)
-    strcpy((char*)id, argv[1]);
+    strncpy((char*)id, argv[1], sizeof(id));
   else
     strcpy((char*)id, "0");
 

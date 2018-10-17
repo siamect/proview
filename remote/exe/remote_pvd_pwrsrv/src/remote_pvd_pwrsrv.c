@@ -459,8 +459,8 @@ int main(int argc, char* argv[])
     usage();
     exit(0);
   }
-  strcpy(remote_address, argv[1]);
-  strcpy(remote_host_name, argv[2]);
+  strncpy(remote_address, argv[1], sizeof(remote_address));
+  strncpy(remote_host_name, argv[2], sizeof(remote_host_name));
 
   if (argc >= 4) {
     sts = sscanf(argv[3], "%d", &udp_port);

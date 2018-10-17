@@ -1217,7 +1217,7 @@ int GlowDrawQt::polyline_helper(GlowWind* wind, int painter_type, int size,
   // painter_type, fill, point_cnt);
   painter->drawPolygon(qpoints, point_cnt);
 
-  delete qpoints;
+  delete[] qpoints;
   delete painter;
 
   return 1;
@@ -1522,6 +1522,7 @@ bool GlowDrawQt::draw_timer_cb()
   (timer_cb->callback_func)(timer_cb->ctx);
 
   draw_ctx->m_wind->window->update();
+  delete timer_cb->timer_id;
   delete timer_cb;
   return FALSE;
 }
@@ -1535,7 +1536,9 @@ bool GlowDrawQt::event_timer_cb()
 
 void GlowDrawQt::cancel_event_timer()
 {
-  timer_id->stop();
+  if (timer_id) {
+    timer_id->stop();
+  }
 }
 
 void GlowDrawQt::event_timer(QMouseEvent* event, QWidget *target)
@@ -1553,10 +1556,6 @@ void GlowDrawQt::event_timer(QMouseEvent* event, QWidget *target)
 void GlowDrawQt::set_timer(GlowCtx* paintertx, int time_ms,
     void (*callback_func)(GlowCtx* ctx), void** id)
 {
-  if (timer_cb) {
-    delete timer_cb->timer_id;
-    delete timer_cb;
-  }
   timer_cb = new glow_draw_sTimerCb();
   timer_cb->ctx = paintertx;
   timer_cb->callback_func = callback_func;
@@ -1806,7 +1805,7 @@ void GlowDrawQt::set_background(GlowWind* wind, glow_eDrawType drawtype,
 
     // debug_print("set_background\n");
 
-    *(w->background_pixmap) = QPixmap::fromImage(*((QImage*)image));
+    w->background_pixmap = new QPixmap(QPixmap::fromImage(*((QImage*)image)));
     w->background_pixmap_width = pixmap_width;
     w->background_pixmap_height = pixmap_height;
     QPalette pal;
@@ -1946,13 +1945,12 @@ int GlowDrawQt::draw_points(GlowWind* wind, glow_sPointX* points, int point_num,
       painter->fillRect(points[i].x - idx / 2, points[i].y - idx / 2, idx, idx,
           painter->brush());
     }
-    return 1;
+  } else {
+    painter->drawPoints(qpoints, point_num);
   }
 
-  painter->drawPoints(qpoints, point_num);
-
   delete painter;
-  delete qpoints;
+  delete[] qpoints;
 
   return 1;
 }

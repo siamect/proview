@@ -131,7 +131,7 @@ int main(int argc, char* argv[])
   setlocale(LC_TIME, "en_US");
   setlocale(LC_NUMERIC, "POSIX");
 
-  strcat(title, "Xtt Cmd");
+  strcpy(title, "Xtt Cmd");
 
   // Qt
   QMainWindow* toplevel = new QMainWindow();

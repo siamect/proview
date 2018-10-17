@@ -561,15 +561,19 @@ pwr_tStatus pb_dp_slave_create_ctx(
   ctx->mc[0].cid = pwr_cClass_Pb_Module;
   sts = ldh_ObjidToName(ctx->ldhses, cdh_ClassIdToObjid(ctx->mc[0].cid),
       cdh_mName_object, ctx->mc[0].name, sizeof(ctx->mc[0].name), &size);
-  if (EVEN(sts))
+  if (EVEN(sts)) {
+    free(ctx);
     return sts;
+  }
 
   for (int i = 1; i <= (int)mcv.size(); i++) {
     ctx->mc[i].cid = mcv[i - 1];
     sts = ldh_ObjidToName(ctx->ldhses, cdh_ClassIdToObjid(ctx->mc[i].cid),
         cdh_mName_object, ctx->mc[i].name, sizeof(ctx->mc[0].name), &size);
-    if (EVEN(sts))
+    if (EVEN(sts)) {
+      free(ctx);
       return sts;
+    }
   }
 
   if (strchr(gsdfile, '/') == 0) {
@@ -581,14 +585,18 @@ pwr_tStatus pb_dp_slave_create_ctx(
 
   ctx->gsd = new pb_gsd();
   sts = ctx->gsd->read(fname);
-  if (EVEN(sts))
+  if (EVEN(sts)) {
+    free(ctx);
     return sts;
+  }
 
   ctx->gsd->set_classes(ctx->mc);
 
   lsts = load_modules(ctx);
-  if (lsts != PB__USERPRMDATALEN && EVEN(lsts))
+  if (lsts != PB__USERPRMDATALEN && EVEN(lsts)) {
+    free(ctx);
     return lsts;
+  }
 
   *ctxp = ctx;
   return 1;

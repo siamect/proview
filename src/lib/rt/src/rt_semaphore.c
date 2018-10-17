@@ -94,6 +94,7 @@ sem_t* posix_sem_open(const char* name, int oflag, ...)
     init_value = va_arg(ap, unsigned int);
     if (init_value < 0) {
       errno = EINVAL;
+      va_end(ap);
       return (sem_t*)-1;
     }
     va_end(ap);

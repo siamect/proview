@@ -334,7 +334,7 @@ int main(int argc, char* argv[])
   /* Read arg number 2, should be id for this instance */
 
   if (argc >= 2)
-    strcpy(id, argv[1]);
+    strncpy(id, argv[1], sizeof(id));
   else
     strcpy(id, "0");
 

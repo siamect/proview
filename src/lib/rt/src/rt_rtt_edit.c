@@ -4056,16 +4056,21 @@ static int dtt_edit_write(edit_ctx ctx, char* filename, char* menu_filename,
   *s = 0;
   strcat(fnamebld, ".rdb1");
   fout_db1 = fopen(fnamebld, "w");
-  if (fout_db1 == 0)
+  if (fout_db1 == 0) {
+    fclose(fout);
     return 0;
+  }
 
   /* Write an rtt database file */
   s = strrchr(fnamebld, '.');
   *s = 0;
   strcat(fnamebld, ".rdb2");
   fout_db2 = fopen(fnamebld, "w");
-  if (fout_db2 == 0)
+  if (fout_db2 == 0) {
+    fclose(fout);
+    fclose(fout_db1);
     return 0;
+  }
 
   dtt_get_picturename(ctx->index, picture_name);
   fprintf(fout, "/* c file for picture %s */\n", picture_name);
@@ -4270,8 +4275,10 @@ static int dtt_edit_read(edit_ctx ctx, char* name, int userspec_name)
          j < (int)(sizeof(ctx->chartable[0]) / sizeof(ctx->chartable[0][0]));
          j++) {
       sts = dtt_read_line(line, sizeof(line), fin);
-      if (EVEN(sts))
+      if (EVEN(sts)) {
+        fclose(fin);
         return sts;
+      }
       sscanf(line, "%d %d %d %d %d %d %d %d %d %d \
 			%d %d %d %d %d %d %d %d %d %d %d %d",
           &ctx->chartable[i][j][0], &ctx->chartable[i][j][1],
@@ -4337,8 +4344,10 @@ static int dtt_edit_read_v27(edit_ctx ctx, char* name, int userspec_name)
   if (fin == 0)
     return 0;
 
-  if (fread(&(ctx->chartable), sizeof(ctx->chartable), 1, fin) == 0)
+  if (fread(&(ctx->chartable), sizeof(ctx->chartable), 1, fin) == 0) {
+    fclose(fin);
     return 0;
+  }
 
   /* Read update items */
   while (1) {
@@ -5928,21 +5937,29 @@ static int dtt_edit_read_menues(char* filename)
 
   /* Start to read the current index and maintitle*/
   sts = dtt_read_line(line, sizeof(line), fin);
-  if (EVEN(sts))
+  if (EVEN(sts)) {
+    fclose(fin);
     return sts;
+  }
   sts = sscanf(line, "%ld", &dtt_current_index);
-  if (sts != 1)
+  if (sts != 1) {
+    fclose(fin);
     return 0;
+  }
   sts = dtt_read_line(line, sizeof(line), fin);
-  if (EVEN(sts))
+  if (EVEN(sts)) {
+    fclose(fin);
     return sts;
+  }
   sts = sscanf(line, "%d", &dtt_opsys);
   if (sts != 1) {
     /* Not converted to V3.0 */
   } else {
     sts = dtt_read_line(dtt_maintitle, sizeof(dtt_maintitle), fin);
-    if (EVEN(sts))
+    if (EVEN(sts)) {
+      fclose(fin);
       return sts;
+    }
   }
   if ((s = strchr(dtt_maintitle, '/'))) {
     *s = 0;
@@ -5954,10 +5971,11 @@ static int dtt_edit_read_menues(char* filename)
   }
   /* Read the root menu */
   sts = dtt_edit_read_one_menu(fin, 0, 0);
-  if (EVEN(sts))
-    return sts;
-
   fclose(fin);
+  if (EVEN(sts)) {
+    return sts;
+  }
+
   return RTT__SUCCESS;
 }
 
@@ -7516,7 +7534,6 @@ error:
   return RTT__NOPICTURE;
 
 collision_error:
-  fclose(infile);
   sprintf(message, "Field collision in line %d, %s", row, line);
   rtt_message('E', message);
   return RTT__NOPICTURE;
@@ -7782,8 +7799,10 @@ static int dtt_edit_write_menue(menu_ctx ctx, char* filename, int all)
         fprintf(fout, "down\n");
         /* Write this menu */
         sts = dtt_edit_write_one_menu(fout, childctx, menu_ptr->index);
-        if (EVEN(sts))
+        if (EVEN(sts)) {
+          fclose(fout);
           return sts;
+        }
         fprintf(fout, "up\n");
       }
       menu_ptr++;
@@ -7816,8 +7835,10 @@ static int dtt_edit_write_menue(menu_ctx ctx, char* filename, int all)
       fprintf(fout, "down\n");
       /* Write this menu */
       sts = dtt_edit_write_one_menu(fout, childctx, menu_ptr->index);
-      if (EVEN(sts))
+      if (EVEN(sts)) {
+        fclose(fout);
         return sts;
+      }
       fprintf(fout, "up\n");
     }
   }

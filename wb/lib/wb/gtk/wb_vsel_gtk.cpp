@@ -201,7 +201,7 @@ WVselGtk::WVselGtk(pwr_tStatus* status, void* wv_parent_ctx,
       parent_wid(wv_parent_wid)
 {
   int sts;
-  pwr_tVolumeId volid, *volume_ptr;
+  pwr_tVolumeId volid;
   pwr_tVolumeId volume;
   pwr_tClassId classid;
   char volname[80];
@@ -255,9 +255,7 @@ WVselGtk::WVselGtk(pwr_tStatus* status, void* wv_parent_ctx,
     sts = ldh_VolumeNameToId(wbctx, volname, &volid);
     WFoe::error_msg(sts);
     if (ODD(sts)) {
-      volume_ptr = (pwr_tVolumeId*)calloc(1, sizeof(pwr_tVolumeId));
-      *volume_ptr = volid;
-      (vsel_bc_success)((void*)this, volume_ptr, 1);
+      (vsel_bc_success)((void*)this, &volid, 1);
       if (vsel_bc_cancel != NULL)
         (vsel_bc_cancel)();
 

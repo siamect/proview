@@ -1051,8 +1051,12 @@ int XttSevHist::sevhist_export_cb(void* ctx, pwr_tTime* from, pwr_tTime* to,
           sevhist->anamev[j], *from, *to, rows, &tbuf, &vbuf, &rrows, &vtype,
           &vsize);
       sevhist->curve->reset_cursor();
-      if (EVEN(sts))
+      if (EVEN(sts)) {
+        free(tbuf);
+        free(vbuf);
+        fclose(fp);
         return sts;
+      }
 
       if (rrows == 0)
         continue;
@@ -1100,16 +1104,24 @@ int XttSevHist::sevhist_export_cb(void* ctx, pwr_tTime* from, pwr_tTime* to,
         sevhist->anamev[idx], *from, *to, rows, &tbuf, &vbuf, &rrows, &vtype,
         &vsize);
     sevhist->curve->reset_cursor();
-    if (EVEN(sts))
+    if (EVEN(sts)) {
+      free(tbuf);
+      free(vbuf);
       return sts;
+    }
 
     if (rrows == 0) {
+      free(tbuf);
+      free(vbuf);
       return SEV__NODATATIME;
     }
 
     fp = fopen(fname, "w");
-    if (!fp)
+    if (!fp) {
+      free(tbuf);
+      free(vbuf);
       return SEV__EXPORTFILE;
+    }
 
     for (int i = 0; i < rrows; i++) {
       time_AtoAscii(

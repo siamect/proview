@@ -590,12 +590,16 @@ int XttTbl::read_bootfile(char* systemname, char* systemgroup)
     return 0;
 
   s = fgets(buffer, sizeof(buffer) - 1, fp);
-  if (!s)
+  if (!s) {
+    fclose(fp);
     return 0;
+  }
 
   s = fgets(buffer, sizeof(buffer) - 1, fp);
-  if (!s)
+  if (!s) {
+    fclose(fp);
     return 0;
+  }
 
   if (systemname) {
     if (buffer[strlen(buffer) - 1] == '\n')
@@ -603,8 +607,10 @@ int XttTbl::read_bootfile(char* systemname, char* systemgroup)
     strcpy(systemname, buffer);
   }
   s = fgets(buffer, sizeof(buffer) - 1, fp);
-  if (!s)
+  if (!s) {
+    fclose(fp);
     return 0;
+  }
 
   if (systemgroup) {
     if (buffer[strlen(buffer) - 1] == '\n')

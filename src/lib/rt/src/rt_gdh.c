@@ -3279,8 +3279,13 @@ pwr_tStatus gdh_RefObjectInfoList(
 
     for (i = 0; i < nsub; i++) {
       objrefp = &objref[xrefarr[i]];
-      if (objrefp->bufsize == 0)
+      if (objrefp->bufsize == 0) {
+        free(subidarr);
+        free(xrefarr);
+        free(isattrref);
+        free(object);
         return GDH__BADARG;
+      }
       gdh_SubAssociateBuffer(subidarr[i], &objrefp->adrs, objrefp->bufsize);
       if (sid != NULL)
         sid[xrefarr[i]] = subidarr[i];

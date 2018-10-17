@@ -470,6 +470,7 @@ static pwr_tStatus nmpsbck_read(bck_ctx bckctx)
   bckfile1_sts
       = nmpsbck_check_file(bckctx, bckfile1, &record_count, record_start,
           cellarea_start, dataarea_start, &bckfile1_time, &last_record_time, 0);
+  fclose(bckfile1);
   return bckfile1_sts;
 }
 

@@ -225,15 +225,19 @@ pwr_tStatus xtt_pb_dp_slave_create_ctx(
   ctx->mc[0].cid = pwr_cClass_Pb_Module;
   sts = gdh_ObjidToName(cdh_ClassIdToObjid(ctx->mc[0].cid), ctx->mc[0].name,
       sizeof(ctx->mc[0].name), cdh_mName_object);
-  if (EVEN(sts))
+  if (EVEN(sts)) {
+    free(ctx);
     return sts;
+  }
   mc_cnt++;
 
   for (sts = gdh_GetChild(aref.Objid, &oid); ODD(sts);
        sts = gdh_GetNextSibling(oid, &oid)) {
     sts = gdh_GetObjectClass(oid, &cid);
-    if (EVEN(sts))
+    if (EVEN(sts)) {
+      free(ctx);
       return sts;
+    }
 
     found = 0;
     for (int i = 0; i < mc_cnt; i++) {
@@ -248,8 +252,10 @@ pwr_tStatus xtt_pb_dp_slave_create_ctx(
     ctx->mc[mc_cnt].cid = cid;
     sts = gdh_ObjidToName(cdh_ClassIdToObjid(cid), ctx->mc[mc_cnt].name,
         sizeof(ctx->mc[0].name), cdh_mName_object);
-    if (EVEN(sts))
+    if (EVEN(sts)) {
+      free(ctx);
       return sts;
+    }
     mc_cnt++;
   }
 
@@ -261,14 +267,18 @@ pwr_tStatus xtt_pb_dp_slave_create_ctx(
 
   ctx->gsd = new pb_gsd();
   sts = ctx->gsd->read(fname);
-  if (EVEN(sts))
+  if (EVEN(sts)) {
+    free(ctx);
     return sts;
+  }
 
   ctx->gsd->set_classes(ctx->mc);
 
   sts = xtt_pb_dp_slave_load_modules(ctx);
-  if (EVEN(sts))
+  if (EVEN(sts)) {
+    free(ctx);
     return sts;
+  }
 
   *ctxp = ctx;
   return 1;

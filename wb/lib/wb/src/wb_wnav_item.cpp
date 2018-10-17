@@ -1377,6 +1377,7 @@ WItemFile::WItemFile(WNav* wnav, const char* item_name, char* text,
           if (script_descr[strlen(script_descr) - 1] == '\n')
             script_descr[strlen(script_descr) - 1] = 0;
         } else if ((s = strstr(line, wnav_cScriptInvisKey))) {
+          fclose(file);
           delete this;
           return;
         }

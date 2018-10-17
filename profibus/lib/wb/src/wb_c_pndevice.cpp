@@ -514,8 +514,10 @@ static pwr_tStatus generate_viewer_data(device_sCtx* ctx)
       dcli_translate_filename(fname, fname);
 
       fp = fopen(fname, "r");
-      if (!fp)
+      if (!fp) {
+        fclose(ofp);
         return 0;
+      }
 
       while (dcli_read_line(line, sizeof(line), fp)) {
         str_trim(line, line);
@@ -901,15 +903,19 @@ pwr_tStatus pndevice_create_ctx(ldh_tSession ldhses, pwr_tAttrRef aref,
   ctx->mc[0].cid = pwr_cClass_PnModule;
   sts = ldh_ObjidToName(ctx->ldhses, cdh_ClassIdToObjid(ctx->mc[0].cid),
       cdh_mName_object, ctx->mc[0].name, sizeof(ctx->mc[0].name), &size);
-  if (EVEN(sts))
+  if (EVEN(sts)) {
+    free(ctx);
     return sts;
+  }
 
   for (int i = 1; i <= (int)mcv.size(); i++) {
     ctx->mc[i].cid = mcv[i - 1];
     sts = ldh_ObjidToName(ctx->ldhses, cdh_ClassIdToObjid(ctx->mc[i].cid),
         cdh_mName_object, ctx->mc[i].name, sizeof(ctx->mc[0].name), &size);
-    if (EVEN(sts))
+    if (EVEN(sts)) {
+      free(ctx);
       return sts;
+    }
   }
 
   if (strchr(gsdmlfile, '/') == 0) {
@@ -921,8 +927,10 @@ pwr_tStatus pndevice_create_ctx(ldh_tSession ldhses, pwr_tAttrRef aref,
 
   ctx->gsdml = new pn_gsdml();
   sts = ctx->gsdml->read(fname);
-  if (EVEN(sts))
+  if (EVEN(sts)) {
+    free(ctx);
     return sts;
+  }
   ctx->gsdml->build();
   ctx->gsdml->set_classes(ctx->mc);
 

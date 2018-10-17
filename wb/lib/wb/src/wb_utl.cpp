@@ -475,7 +475,6 @@ int wb_utl::print_plc_hier(ldh_tSesContext ldhses, ldh_tWBContext ldhwb,
   int from;
   int from_found;
   FILE* plclink = NULL;
-  int plclink_open = 0;
 
   /* Get class */
   class_vect[0] = pwr_cClass_plc;
@@ -518,7 +517,6 @@ int wb_utl::print_plc_hier(ldh_tSesContext ldhses, ldh_tWBContext ldhwb,
     dcli_translate_filename(fname, fname);
 
     plclink = fopen(fname, "w");
-    plclink_open = 1;
     fprintf(plclink,
         "<html>\n  <head>\n    <title>Plc code</title>\n  <style type=\"text/css\">\n\
 h2 {font-family: sans-serif; font-size: 16pt; font-weight: bold; color: #5263aa; text-align: left; text-decoration: none;}\n\
@@ -534,8 +532,10 @@ a:hover {font-family: sans-serif; font-size: 11pt; font-weight: bold; color: #35
   plcpgmlist = 0;
   sts = trv_get_objects_hier_class_name(ldhses, hierobjdid, classp, NULL,
       &utl_objidlist_insert, &plcpgmlist, &plcpgmcount, 0, 0, 0);
-  if (EVEN(sts))
+  if (EVEN(sts)) {
+    if (plclink) fclose(plclink);
     return sts;
+  }
 
   list_ptr = plcpgmlist;
   from_found = 0;
@@ -554,20 +554,24 @@ a:hover {font-family: sans-serif; font-size: 11pt; font-weight: bold; color: #35
 
     sts = ldh_ObjidToName(ldhses, list_ptr->objid, ldh_eName_Hierarchy, plcname,
         sizeof(plcname), &size);
-    if (EVEN(sts))
+    if (EVEN(sts)) {
+      if (plclink) fclose(plclink);
       return sts;
+    }
     printf("Plcpgm  %s\n", plcname);
 
     sts = print_document(
         list_ptr->objid, ldhses, ldhwb, document, overview, pdf, plclink);
-    if (EVEN(sts))
+    if (EVEN(sts)) {
+      if (plclink) fclose(plclink);
       return sts;
+    }
 
     list_ptr = list_ptr->next;
   }
   utl_objidlist_free(plcpgmlist);
 
-  if (plclink_open) {
+  if (plclink) {
     fprintf(plclink, "  </body>\n</html>\n");
     fclose(plclink);
   }

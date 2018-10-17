@@ -141,11 +141,11 @@ int dcli_replace_env(const char* str, char* newstr)
   char* value;
   char symbol[80];
   char lower_symbol[80];
-  char new[160];
+  char news[160];
 
   symbolmode = 0;
   s = (char*)str;
-  t = new;
+  t = news;
 
   while (*s != 0) {
     if (*s == '$') {
@@ -223,7 +223,7 @@ int dcli_replace_env(const char* str, char* newstr)
   } else
     *t = 0;
 
-  strcpy(newstr, new);
+  strcpy(newstr, news);
   return 1;
 }
 

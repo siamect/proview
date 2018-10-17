@@ -4308,7 +4308,7 @@ int WFoe::create_xtthelpfile()
   pwr_tFileName fname;
   int objcnt = 0;
   pwr_tOid* objlist;
-  FILE* fp;
+  FILE* fp = NULL;
   vldh_t_wind wind = gre->wind;
   char* textp;
   vldh_t_node* nodelist;
@@ -4347,14 +4347,17 @@ int WFoe::create_xtthelpfile()
   sts = ldh_ObjidToName(wind->hw.ldhses, wind->lw.oid, ldh_eName_Hierarchy,
       name, sizeof(name), &size);
   if (EVEN(sts))
-    return sts;
+    goto error;
 
   sprintf(fname, "$pwrp_obj/xtthelp_%s.dat", vldh_IdToStr(0, wind->lw.oid));
   dcli_translate_filename(fname, fname);
 
   fp = fopen(fname, "w");
-  if (!fp)
+  if (!fp) {
+    free(nodelist);
+    free(objlist);
     return FOE__NOFILE;
+  }
 
   fprintf(fp, "<topic> plcw_%s\n", vldh_IdToStr(0, wind->lw.oid));
   fprintf(fp, "%s\n", name);
@@ -4375,7 +4378,7 @@ int WFoe::create_xtthelpfile()
         sts = ldh_ObjidToName(wind->hw.ldhses, nodelist[i]->ln.subwind_oid[0],
             ldh_eName_Hierarchy, subw_name, sizeof(subw_name), &size);
         if (EVEN(sts))
-          return sts;
+          goto error;
 
         fprintf(fp, "%s <link>plcw_%s,," pwr_cNamePlcXttHelp "\n",
             &subw_name[strlen(name) + 1],
@@ -4386,7 +4389,7 @@ int WFoe::create_xtthelpfile()
         sts = ldh_ObjidToName(wind->hw.ldhses, nodelist[i]->ln.subwind_oid[1],
             ldh_eName_Hierarchy, subw_name, sizeof(subw_name), &size);
         if (EVEN(sts))
-          return sts;
+          goto error;
 
         fprintf(fp, "%s <link>plcw_%s,," pwr_cNamePlcXttHelp "\n",
             &subw_name[strlen(name) + 1],
@@ -4400,14 +4403,16 @@ int WFoe::create_xtthelpfile()
     sts = ldh_GetObjectPar(
         wind->hw.ldhses, objlist[i], "DevBody", "Text", &textp, &size);
     if (EVEN(sts))
-      return sts;
+      goto error;
 
     fprintf(fp, "%s", textp);
     fprintf(fp, "\n");
   }
 
   fprintf(fp, "</topic>\n");
-  fclose(fp);
+
+error:
+  if (fp) fclose(fp);
 
   free(nodelist);
   free(objlist);
@@ -4453,12 +4458,16 @@ int WFoe::create_volume_xtthelpfile(ldh_tSession ldhses, pwr_tVid vid)
        sts = ldh_GetNextObject(ldhses, oid, &oid)) {
     sts = ldh_ObjidToName(
         ldhses, oid, ldh_eName_Hierarchy, name, sizeof(name), &size);
-    if (EVEN(sts))
+    if (EVEN(sts)) {
+      fclose(fp);
       return sts;
+    }
 
     sts = ldh_GetObjectPar(ldhses, oid, "RtBody", "Description", &desc, &size);
-    if (EVEN(sts))
+    if (EVEN(sts)) {
+      fclose(fp);
       return sts;
+    }
 
     sts = ldh_GetChild(ldhses, oid, &woid);
     if (EVEN(sts))

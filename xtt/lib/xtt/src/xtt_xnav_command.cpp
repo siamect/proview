@@ -154,7 +154,7 @@ static void xnav_op_close_cb(void* ctx);
 static void xnav_op_help_cb(void* ctx, const char* key);
 static void xnav_op_map_cb(void* ctx);
 static int xnav_op_get_alarm_info_cb(void* xnav, evlist_sAlarmInfo* info, int backward, int alarmsize);
-static void xnav_op_ack_last_cb(void* xnav, unsigned long type, unsigned long prio, int backward, 
+static void xnav_op_ack_last_cb(void* xnav, unsigned long type, unsigned long prio, int backward,
 				int timecheck);
 static void xnav_trend_close_cb(void* ctx, XttTrend* trend);
 static void xnav_trend_command_cb(void* ctx, const char* key);
@@ -279,7 +279,7 @@ dcli_tCmdTable xnav_command_table[] = {
       { "dcli_arg1", "/REGULAREXPRESSION", "/NEXT", "" } },
   { "EVENTLIST", &xnav_eventlist_func,
       {
-	"dcli_arg1", "/PRIORITY", "/NAME", "/ALL", "/AUTOACKNOWLEDGE", "/OLDEST", 
+	"dcli_arg1", "/PRIORITY", "/NAME", "/ALL", "/AUTOACKNOWLEDGE", "/OLDEST",
 	"/TIMECHECK", "",
       } },
   { "TEST", &xnav_test_func, { "dcli_arg1", "dcli_arg2", "" } },

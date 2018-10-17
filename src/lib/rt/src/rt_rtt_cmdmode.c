@@ -191,13 +191,13 @@ int rtt_replace_symbol(char* command, char* newcommand)
   char symbol[80];
   char upper_symbol[80];
   int sts;
-  char new[160];
+  char news[160];
   int ignore_symbolmode;
 
   symbolmode = 0;
   ignore_symbolmode = 0;
   s = command;
-  t = new;
+  t = news;
 
   while (*s != 0) {
     if ((unsigned char)*s == '#') {
@@ -258,7 +258,7 @@ int rtt_replace_symbol(char* command, char* newcommand)
   } else
     *t = 0;
 
-  strcpy(newcommand, new);
+  strcpy(newcommand, news);
   return RTT__SUCCESS;
 }
 

@@ -1696,7 +1696,7 @@ int gcg_wind_comp_all(ldh_tWBContext ldhwb, ldh_tSesContext ldhses,
       windlist_ptr++;
       continue;
     } else if (EVEN(sts))
-      return sts;
+      goto error;
 
     /* Check if this window is modified */
     if (modified && !force) {
@@ -1707,7 +1707,7 @@ int gcg_wind_comp_all(ldh_tWBContext ldhwb, ldh_tSesContext ldhses,
 
         sts = ldh_GetParent(ldhses, parent, &parent_window);
         if (EVEN(sts))
-          return sts;
+          goto error;
 
         for (int k = 0; k < j; k++) {
           if (cdh_ObjidIsEqual(windlist[k], parent_window)) {
@@ -1728,7 +1728,7 @@ int gcg_wind_comp_all(ldh_tWBContext ldhwb, ldh_tSesContext ldhses,
     /* Get the parentlist for this window */
     sts = trv_get_parentlist(ldhses, *windlist_ptr, &parent_count, &parentlist);
     if (EVEN(sts))
-      return sts;
+      goto error;
 
     /* Check if the plcpgm is loaded in vldh */
     sts = vldh_get_plc_objdid(*(parentlist + parent_count - 1), &plc);
@@ -1737,7 +1737,7 @@ int gcg_wind_comp_all(ldh_tWBContext ldhwb, ldh_tSesContext ldhses,
       sts = vldh_plc_load(
           *(parentlist + parent_count - 1), ldhwb, ldhses, &plc);
     } else if (EVEN(sts))
-      return sts;
+      goto error;
 
     for (i = parent_count - 2; i >= 0; i -= 2) {
       /* Check if this window is loaded */
@@ -1751,30 +1751,30 @@ int gcg_wind_comp_all(ldh_tWBContext ldhwb, ldh_tSesContext ldhses,
             sts = vldh_wind_load(plc, 0, *(parentlist + i), 0, &wind,
                 ldh_eAccess_SharedReadWrite);
             if (EVEN(sts))
-              return sts;
+              goto error;
             plc->hp.wind = wind;
           } else {
             /* Get the parent vldhnode */
             sts = vldh_get_node_objdid(
                 *(parentlist + i + 1), parentwind, &node);
             if (EVEN(sts))
-              return sts;
+              goto error;
 
             sts = vldh_wind_load(plc, node, *(parentlist + i), 0, &wind,
                 ldh_eAccess_SharedReadWrite);
             if (EVEN(sts))
-              return sts;
+              goto error;
           }
           sts = vldh_wind_load_all(wind);
           if (EVEN(sts))
-            return sts;
+            goto error;
 
           *(loaded_windlist + loaded_windcount) = wind;
           *(loaded_list + loaded_windcount) = 1;
           loaded_windcount++;
         }
       } else if (EVEN(sts))
-        return sts;
+        goto error;
 
       parentwind = wind;
     }
@@ -1789,7 +1789,7 @@ int gcg_wind_comp_all(ldh_tWBContext ldhwb, ldh_tSesContext ldhses,
           sts = vldh_wind_load(
               plc, 0, *windlist_ptr, 0, &wind, ldh_eAccess_SharedReadWrite);
           if (EVEN(sts))
-            return sts;
+            goto error;
           plc->hp.wind = wind;
 
           sts = vldh_wind_load_all(wind);
@@ -1799,27 +1799,27 @@ int gcg_wind_comp_all(ldh_tWBContext ldhwb, ldh_tSesContext ldhses,
 
           sts = ldh_GetSessionInfo(wind->hw.ldhses, &info);
           if (EVEN(sts))
-            return sts;
+            goto error;
 
           if (info.Access != ldh_eAccess_ReadOnly)
             return LDH__OTHERSESS;
 
           sts = ldh_SetSession(wind->hw.ldhses, ldh_eAccess_SharedReadWrite);
           if (EVEN(sts))
-            return sts;
+            goto error;
         }
       } else {
         /* Get the parent vldhnode */
         sts = vldh_get_node_objdid(*parentlist, parentwind, &node);
         if (EVEN(sts))
-          return sts;
+          goto error;
 
         sts = vldh_get_wind_objdid(*windlist_ptr, &wind);
         if (sts == VLDH__OBJNOTFOUND) {
           sts = vldh_wind_load(
               plc, node, *windlist_ptr, 0, &wind, ldh_eAccess_SharedReadWrite);
           if (EVEN(sts))
-            return sts;
+            goto error;
           *(loaded_list + loaded_windcount) = 1;
 
           sts = vldh_wind_load_all(wind);
@@ -1828,18 +1828,18 @@ int gcg_wind_comp_all(ldh_tWBContext ldhwb, ldh_tSesContext ldhses,
 
           sts = ldh_GetSessionInfo(wind->hw.ldhses, &info);
           if (EVEN(sts))
-            return sts;
+            goto error;
 
           if (info.Access != ldh_eAccess_ReadOnly)
             return LDH__OTHERSESS;
 
           sts = ldh_SetSession(wind->hw.ldhses, ldh_eAccess_SharedReadWrite);
           if (EVEN(sts))
-            return sts;
+            goto error;
         }
       }
       if (EVEN(sts))
-        return sts;
+        goto error;
 
       *(loaded_windlist + loaded_windcount) = wind;
       loaded_windcount++;
@@ -1852,7 +1852,7 @@ int gcg_wind_comp_all(ldh_tWBContext ldhwb, ldh_tSesContext ldhses,
       /* continue */
       sumsts = sts;
     } else if (EVEN(sts))
-      return sts;
+      goto error;
     else
       wind_compiled = 1;
 
@@ -1870,7 +1870,7 @@ int gcg_wind_comp_all(ldh_tWBContext ldhwb, ldh_tSesContext ldhses,
       sts = vldh_plc_load(
           *(parentlist + parent_count - 1), ldhwb, ldhses, &plc);
     } else if (EVEN(sts))
-      return sts;
+      goto error;
   }
   /* End of FIX */
 
@@ -1880,7 +1880,7 @@ int gcg_wind_comp_all(ldh_tWBContext ldhwb, ldh_tSesContext ldhses,
       /* continue */
       sumsts = sts;
     } else if (EVEN(sts))
-      return sts;
+      goto error;
   }
 
   /* Unload the loaded windows */
@@ -1888,7 +1888,7 @@ int gcg_wind_comp_all(ldh_tWBContext ldhwb, ldh_tSesContext ldhses,
     if (*(loaded_list + loaded_windcount - i - 1)) {
       sts = vldh_wind_quit_all(*(loaded_windlist + loaded_windcount - i - 1));
       if (EVEN(sts))
-        return sts;
+        goto error;
     } else {
       ldh_sSessInfo info;
 
@@ -1896,17 +1896,17 @@ int gcg_wind_comp_all(ldh_tWBContext ldhwb, ldh_tSesContext ldhses,
 
       sts = ldh_GetSessionInfo(wind->hw.ldhses, &info);
       if (EVEN(sts))
-        return sts;
+        goto error;
 
       if (!info.Empty) {
         sts = ldh_RevertSession(wind->hw.ldhses);
         if (EVEN(sts))
-          return sts;
+          goto error;
       }
 
       sts = ldh_SetSession(wind->hw.ldhses, ldh_eAccess_ReadOnly);
       if (EVEN(sts))
-        return sts;
+        goto error;
     }
   }
   free((char*)loaded_windlist);
@@ -1916,6 +1916,11 @@ int gcg_wind_comp_all(ldh_tWBContext ldhwb, ldh_tSesContext ldhses,
     return GSX__NOMODIF;
 
   return sumsts;
+
+error:
+  free(loaded_windlist);
+  free(loaded_list);
+  return sts;
 }
 
 /*************************************************************************
@@ -4772,6 +4777,7 @@ int gcg_comp_rtnode(char* nodename, pwr_mOpSys os, pwr_tUInt32 bus,
   if (timebase_count > max_no_timebase) {
     printf("** Error, %d frequencies is supported on %s, %d is found\n",
         max_no_timebase, os_str, timebase_count);
+    free(timebase);
     return GSX__NONODE;
   }
 
@@ -13965,7 +13971,6 @@ int gcg_comp_m66(gcg_ctx gcgctx, vldh_t_node node)
   sts = ldh_GetAttrRefInfo((node->hn.wind)->hw.ldhses, &refattrref, &info);
   if (EVEN(sts)) {
     gcg_error_msg(gcgctx, GSX__REFOBJ, node);
-    free((char*)bodydef);
     return GSX__NEXTNODE;
   }
 

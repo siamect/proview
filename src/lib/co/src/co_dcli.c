@@ -475,13 +475,13 @@ int dcli_replace_symbol(char* command, char* newcommand, int newsize)
   char symbol[80];
   char upper_symbol[80];
   int sts;
-  char new[1000];
+  char news[1000];
   int ignore_symbolmode;
 
   symbolmode = 0;
   ignore_symbolmode = 0;
   s = command;
-  t = new;
+  t = news;
 
   while (*s != 0) {
     if ((unsigned char)*s == '#') {
@@ -543,9 +543,9 @@ int dcli_replace_symbol(char* command, char* newcommand, int newsize)
   } else
     *t = 0;
 
-  if (strlen(new) >= newsize)
+  if (strlen(news) >= newsize)
     return DCLI__STRLONG;
-  strcpy(newcommand, new);
+  strcpy(newcommand, news);
   return DCLI__SUCCESS;
 }
 

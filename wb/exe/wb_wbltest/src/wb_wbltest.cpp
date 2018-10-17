@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
 
   if (argc <= 1)
     exit(0);
-  strcpy(fname, argv[1]);
+  strncpy(fname, argv[1], sizeof(fname));
 
   try {
     // Create wb env

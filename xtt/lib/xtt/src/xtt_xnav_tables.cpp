@@ -1313,16 +1313,22 @@ int XNav::show_channels(pwr_tObjid card_objid)
       }
       sts = gdh_GetAttributeCharacteristics(
           attr_name, &attrtype, &attrsize, &attroffs, &attrelem);
-      if (EVEN(sts))
+      if (EVEN(sts)) {
+        free(t.user);
         return sts;
+      }
 
       sts = gdh_NameToAttrref(pwr_cNObjid, attr_name, &attrref);
-      if (EVEN(sts))
+      if (EVEN(sts)) {
+        free(t.user);
         return sts;
+      }
 
       sts = gdh_DLRefObjectInfoAttrref(&attrref, &attr_ptr, &subid);
-      if (EVEN(sts))
+      if (EVEN(sts)) {
+        free(t.user);
         return sts;
+      }
 
       t.elem[t.elem_cnt].value_p = attr_ptr;
       t.elem[t.elem_cnt].type_id = attrtype;
@@ -1373,8 +1379,10 @@ int XNav::show_channels(pwr_tObjid card_objid)
       strcpy(attr_name, object_name);
     strcat(attr_name, ".Description");
     sts = gdh_GetObjectInfo(attr_name, (void*)&descr, sizeof(descr));
-    if (EVEN(sts))
+    if (EVEN(sts)) {
+      free(t.user);
       return sts;
+    }
 
     strcpy(t.elem[t.elem_cnt].fix_str, descr);
     t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
@@ -1554,16 +1562,22 @@ int XNav::show_attr_channels(pwr_tAttrRef* mod_aref, void* cardp,
         }
         sts = gdh_GetAttributeCharacteristics(
             attr_name, &attrtype, &attrsize, &attroffs, &attrelem);
-        if (EVEN(sts))
+        if (EVEN(sts)) {
+          free(t.user);
           return sts;
+        }
 
         sts = gdh_NameToAttrref(pwr_cNObjid, attr_name, &attrref);
-        if (EVEN(sts))
+        if (EVEN(sts)) {
+          free(t.user);
           return sts;
+        }
 
         sts = gdh_DLRefObjectInfoAttrref(&attrref, &attr_ptr, &subid);
-        if (EVEN(sts))
+        if (EVEN(sts)) {
+          free(t.user);
           return sts;
+        }
 
         t.elem[t.elem_cnt].value_p = attr_ptr;
         t.elem[t.elem_cnt].type_id = attrtype;
@@ -1611,8 +1625,10 @@ int XNav::show_attr_channels(pwr_tAttrRef* mod_aref, void* cardp,
         strcpy(attr_name, object_name);
       strcat(attr_name, ".Description");
       sts = gdh_GetObjectInfo(attr_name, (void*)&descr, sizeof(descr));
-      if (EVEN(sts))
+      if (EVEN(sts)) {
+        free(t.user);
         return sts;
+      }
 
       strcpy(t.elem[t.elem_cnt].fix_str, descr);
       t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;

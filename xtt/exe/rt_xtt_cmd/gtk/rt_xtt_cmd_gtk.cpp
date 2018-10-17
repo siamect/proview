@@ -133,7 +133,7 @@ int main(int argc, char* argv[])
   setlocale(LC_TIME, "en_US");
   setlocale(LC_NUMERIC, "POSIX");
 
-  strcat(title, "Xtt Cmd");
+  strcpy(title, "Xtt Cmd");
 
   // Gtk
   toplevel = (GtkWidget*)g_object_new(GTK_TYPE_WINDOW, "default-height",

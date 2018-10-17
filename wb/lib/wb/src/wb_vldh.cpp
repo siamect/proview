@@ -533,12 +533,16 @@ static int vldh_node_load(vldh_t_wind wind, pwr_tObjid objdid)
   /* Get the object i ldh */
   sts = ldh_GetObjectBuffer(wind->hw.ldhses, objdid, "DevBody", "PlcNode",
       &eclass, (char**)&nodebuffer, &size);
-  if (EVEN(sts))
+  if (EVEN(sts)) {
+    free(node);
     return sts;
+  }
 
   sts = ldh_GetObjectClass(wind->hw.ldhses, objdid, &cid);
-  if (EVEN(sts))
+  if (EVEN(sts)) {
+    free(node);
     return sts;
+  }
 
   memcpy(&(node->ln), nodebuffer, sizeof(*nodebuffer));
   free((char*)nodebuffer);
@@ -546,8 +550,10 @@ static int vldh_node_load(vldh_t_wind wind, pwr_tObjid objdid)
   /* Get the object name from ldh */
   sts = ldh_ObjidToName(wind->hw.ldhses, objdid, ldh_eName_Object,
       node->hn.name, sizeof(node->hn.name), &size);
-  if (EVEN(sts))
+  if (EVEN(sts)) {
+    free(node);
     return sts;
+  }
 
   node->hn.status = VLDH_LOAD;
   node->hn.vldhtype = VLDH_NODE;
@@ -725,12 +731,16 @@ int vldh_con_load(vldh_t_wind wind, pwr_tObjid objdid)
   /* Get the object i ldh */
   sts = ldh_GetObjectBuffer(wind->hw.ldhses, objdid, "DevBody", "PlcConnection",
       &eclass, (char**)&conbuffer, &size);
-  if (EVEN(sts))
+  if (EVEN(sts)) {
+    free(con);
     return sts;
+  }
 
   sts = ldh_GetObjectClass(wind->hw.ldhses, objdid, &cid);
-  if (EVEN(sts))
+  if (EVEN(sts)) {
+    free(con);
     return sts;
+  }
 
   memcpy(&(con->lc), conbuffer, sizeof(*conbuffer));
   free((char*)conbuffer);

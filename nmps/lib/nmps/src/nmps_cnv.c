@@ -697,16 +697,20 @@ static int cnv_ReadConvTable(char* filename, pwr_sClass_ConvDef** convdef)
   }
 
   *convdef = calloc(1, sizeof(**convdef));
-  if (*convdef == 0)
+  if (*convdef == 0) {
+    fclose(infile);
     return CNV__NOMEMORY;
+  }
 
   i = 0;
   while (ODD(sts = cnv_read_line(line, sizeof(line), infile))) {
     cnv_remove_blank(line, line);
     if (line[0] == '!')
       continue;
-    if (i >= CNV_CONVDEF_SIZE)
+    if (i >= CNV_CONVDEF_SIZE) {
+      fclose(infile);
       return CNV__FILESIZE;
+    }
 
     strcpy((*convdef)->Param[i], line);
     i++;

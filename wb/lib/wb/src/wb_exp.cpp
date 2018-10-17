@@ -242,22 +242,22 @@ pwr_tStatus exp_plcpgm(ldh_tSesContext ldhses, char* plcpgm_str, char* output)
   sts = ldh_ObjidToName(
       ldhses, plcpgm, ldh_eName_Hierarchy, hiername, sizeof(hiername), &size);
   if (EVEN(sts))
-    return sts;
+    goto error;
 
   fprintf(file, "!\n!	Proview/R Export\n");
   fprintf(file, "!	PlcPgm %s\n!\n", hiername);
 
   sts = ldh_GetParent(ldhses, plcpgm, &parent);
   if (EVEN(sts))
-    return sts;
+    goto error;
   sts = ldh_ObjidToName(ldhses, parent, ldh_eName_Hierarchy, parent_name,
       sizeof(parent_name), &size);
   if (EVEN(sts))
-    return sts;
+    goto error;
   sts = ldh_ObjidToName(ldhses, plcpgm, ldh_eName_Object, plcpgm_name,
       sizeof(plcpgm_name), &size);
   if (EVEN(sts))
-    return sts;
+    goto error;
 
   fprintf(file, "object PlcPgm /name=%s /parent=%s", plcpgm_name, parent_name);
 
@@ -269,15 +269,15 @@ pwr_tStatus exp_plcpgm(ldh_tSesContext ldhses, char* plcpgm_str, char* output)
       free(windbuffer);
       sts = ldh_GetObjectClass(ldhses, window, &cid);
       if (EVEN(sts))
-        return sts;
+        goto error;
       sts = ldh_ObjidToName(ldhses, cdh_ClassIdToObjid(cid), ldh_eName_Object,
           class_name, sizeof(class_name), &size);
       if (EVEN(sts))
-        return sts;
+        goto error;
       sts = ldh_ObjidToName(ldhses, window, ldh_eName_Hierarchy, hiername,
           sizeof(hiername), &size);
       if (EVEN(sts))
-        return sts;
+        goto error;
 
       fprintf(file, "/%s=%s", class_name, hiername);
     }
@@ -288,7 +288,7 @@ pwr_tStatus exp_plcpgm(ldh_tSesContext ldhses, char* plcpgm_str, char* output)
   sts = ldh_GetObjectPar(
       ldhses, plcpgm, "DevBody", "ResetObject", (char**)&resobjdid_ptr, &size);
   if (EVEN(sts))
-    return sts;
+    goto error;
 
   sts = ldh_ObjidToName(ldhses, *resobjdid_ptr, ldh_eName_Hierarchy, hiername,
       sizeof(hiername), &size);
@@ -300,7 +300,7 @@ pwr_tStatus exp_plcpgm(ldh_tSesContext ldhses, char* plcpgm_str, char* output)
   sts = ldh_GetObjectPar(
       ldhses, plcpgm, "DevBody", "ScanTime", (char**)&scantime_ptr, &size);
   if (EVEN(sts))
-    return sts;
+    goto error;
   fprintf(file, " /ScanTime=%g", *scantime_ptr);
   free((char*)scantime_ptr);
 
@@ -310,6 +310,10 @@ pwr_tStatus exp_plcpgm(ldh_tSesContext ldhses, char* plcpgm_str, char* output)
   sprintf(cmd, "PWR_EXPORT PLCPGM %s", filename);
   system(cmd);
   return FOE__SUCCESS;
+
+error:
+  fclose(file);
+  return sts;
 }
 
 /*************************************************************************
@@ -337,7 +341,6 @@ pwr_tStatus exp_window(ldh_tWBContext ldhwb, ldh_tSesContext ldhses,
   vldh_t_node node;
   int j;
   char filename[80];
-  exp_genctx genctx;
   pwr_tString80 hiername;
   pwr_tString80 cmd;
   pwr_tString80 class_name;
@@ -364,28 +367,28 @@ pwr_tStatus exp_window(ldh_tWBContext ldhwb, ldh_tSesContext ldhses,
     return sts;
 
   /* Create a context for the window */
-  genctx = (exp_genctx)calloc(1, sizeof(exp_t_genctx));
-  genctx->ldhses = wind->hw.ldhses;
-  genctx->wind = wind;
+  exp_t_genctx genctx;
+  genctx.ldhses = wind->hw.ldhses;
+  genctx.wind = wind;
 
   if (!output) {
-    sts = gen_filename(genctx->ldhses, wind->lw.oid, filename);
+    sts = gen_filename(genctx.ldhses, wind->lw.oid, filename);
     if (EVEN(sts))
       return sts;
   } else
     strcpy(filename, output);
 
-  genctx->file = fopen(filename, "w");
-  if (genctx->file == 0)
+  genctx.file = fopen(filename, "w");
+  if (genctx.file == 0)
     return FOE__NOFILE;
 
-  sts = ldh_ObjidToName(genctx->ldhses, wind->lw.oid, ldh_eName_Hierarchy,
+  sts = ldh_ObjidToName(genctx.ldhses, wind->lw.oid, ldh_eName_Hierarchy,
       hiername, sizeof(hiername), &size);
   if (EVEN(sts))
     return sts;
 
-  fprintf(genctx->file, "!\n!	Proview/R Export\n");
-  fprintf(genctx->file, "!	Window %s\n!\n", hiername);
+  fprintf(genctx.file, "!\n!	Proview/R Export\n");
+  fprintf(genctx.file, "!	Window %s\n!\n", hiername);
 
   sts = ldh_GetParent(ldhses, window, &parent);
   if (EVEN(sts))
@@ -410,7 +413,7 @@ pwr_tStatus exp_window(ldh_tWBContext ldhwb, ldh_tSesContext ldhses,
   if (EVEN(sts))
     return sts;
 
-  fprintf(genctx->file, "object %s /name=%s /parent=%s /plcpgm=%s\n",
+  fprintf(genctx.file, "object %s /name=%s /parent=%s /plcpgm=%s\n",
       class_name, hiername, parent_name, plcpgm_name);
 
   /* Get all nodes this window */
@@ -426,16 +429,14 @@ pwr_tStatus exp_window(ldh_tWBContext ldhwb, ldh_tSesContext ldhses,
 
   for (j = 0; j < (int)node_count; j++) {
     node = *(nodelist + j);
-    sts = exp_node_gen(genctx, node);
+    sts = exp_node_gen(&genctx, node);
     if (EVEN(sts))
       return sts;
   }
   if (node_count > 0)
     free((char*)nodelist);
 
-  fclose(genctx->file);
-
-  free((char*)genctx);
+  fclose(genctx.file);
 
   /* A system call to allow the user to do something */
   sprintf(cmd, "PWR_EXPORT WINDOW %s", filename);

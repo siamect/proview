@@ -223,7 +223,7 @@ int main(int argc, char* argv[])
    * number */
 
   if (argc >= 2)
-    strcpy((char*)id, argv[1]);
+    strncpy((char*)id, argv[1], sizeof(id));
   else
     strcpy((char*)id, "0");
 

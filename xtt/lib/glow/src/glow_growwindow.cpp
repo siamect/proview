@@ -798,8 +798,7 @@ int GrowWindow::update_attributes()
     sts = 1;
 
     ctx->gdraw->reset_clip_rectangle(&ctx->mw);
-  }
-  if (window_ctx) {
+  } else if (window_ctx) {
     window_ctx->mw.subwindow_scale = window_scale;
     window_ctx->mw.zoom_factor_x = window_ctx->mw.zoom_factor_y
         = window_ctx->mw.subwindow_scale * ctx->mw.zoom_factor_x;

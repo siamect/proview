@@ -120,8 +120,10 @@ pwr_tStatus wb_bck_list::print(char* outfile)
 
     sts = ldh_AttrRefToName(
         m_ldhses, &ip->aref, cdh_mName_volumeStrict, &anamep, &size);
-    if (EVEN(sts))
+    if (EVEN(sts)) {
+      fclose(fout);
       return sts;
+    }
 
     fprintf(fout, "%s", anamep);
 
@@ -251,8 +253,10 @@ pwr_tStatus wb_bck_list::diff(wb_bck_list* lp, char* outfile)
 
     sts = ldh_AttrRefToName(
         m_ldhses, &ip->aref, cdh_mName_volumeStrict, &anamep, &size);
-    if (EVEN(sts))
+    if (EVEN(sts)) {
+      fclose(fout);
       return sts;
+    }
 
     sts = ldh_GetAttrRefType(m_ldhses, &ip->aref, &atype);
     if (ODD(sts)) {
@@ -402,6 +406,7 @@ pwr_tStatus wb_bck_list::read()
   fread(&fh, sizeof fh, 1, f);
   if (fh.version != BCK_FILE_VERSION) {
     printf("This program is built with header version %d\n", BCK_FILE_VERSION);
+    fclose(f);
     return LDH__BCKVERSION;
   }
 
@@ -481,8 +486,10 @@ pwr_tStatus bck_dump(ldh_tSession ldhses, char* filename, char* out)
 
   dcli_translate_filename(fname, out);
   fout = fopen(fname, "w");
-  if (!fout)
+  if (!fout) {
+    fclose(f);
     return LDH__NOSUCHFILE;
+  }
 
   // Read header and print it
 
@@ -491,6 +498,8 @@ pwr_tStatus bck_dump(ldh_tSession ldhses, char* filename, char* out)
   fprintf(fout, "Layout version:       %d\n", fh.version);
   if (fh.version != BCK_FILE_VERSION) {
     printf("This program is built with header version %d\n", BCK_FILE_VERSION);
+    fclose(f);
+    fclose(fout);
     return LDH__BCKVERSION;
   }
 

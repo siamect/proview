@@ -558,8 +558,10 @@ void dbs_Split(pwr_tStatus* sts, dbs_sMenv* mep, char* dirName)
       }
       size -= bytes;
 
-      if (fwrite(p, bytes, 1, fp) < 1)
+      if (fwrite(p, bytes, 1, fp) < 1) {
+        fclose(fp);
         return;
+      }
       p += bytes;
     }
 

@@ -269,13 +269,16 @@ int XttAudio::beep(pwr_tAttrRef* arp)
           }
 
           sts = fread(&chunk, sizeof(chunk), 1, fp);
-          if (sts == 0)
+          if (sts == 0) {
+            fclose(fp);
             return XNAV__FILECORRUPT;
+          }
 
           if (!(chunk.wFormatTag == 1
                   && (chunk.wBitsPerSample == 16 || chunk.wBitsPerSample == 8)
                   && (chunk.wChannels == 2 || chunk.wChannels == 1))) {
             printf("Unsupported wavefile format %s\n", fname);
+            fclose(fp);
             return XNAV__WAVEFORMAT;
           }
 
@@ -283,12 +286,16 @@ int XttAudio::beep(pwr_tAttrRef* arp)
             printf("Wavefile BitPerSample %d Channels %d\n",
                 chunk.wBitsPerSample, chunk.wChannels);
 
-          if (chunk.dataSize == 0 || chunk.dataSize > 10000000)
+          if (chunk.dataSize == 0 || chunk.dataSize > 10000000) {
+            fclose(fp);
             return XNAV__FILECORRUPT;
+          }
           if (chunk.wBitsPerSample == 8) {
             unsigned char* buf8 = (unsigned char*)malloc(chunk.dataSize);
-            if (!buf8)
+            if (!buf8) {
+              fclose(fp);
               return XNAV__NOMEMORY;
+            }
 
             sts = fread(buf8, chunk.dataSize, 1, fp);
             fclose(fp);
@@ -297,8 +304,10 @@ int XttAudio::beep(pwr_tAttrRef* arp)
               size = chunk.dataSize * 2;
               size = ((size - 1) / (hw_buff_size) + 1) * hw_buff_size;
               buffer = (short*)calloc(sizeof(short), size);
-              if (!buffer)
+              if (!buffer) {
+                free(buf8);
                 return XNAV__NOMEMORY;
+              }
 
               for (int i = 0; i < chunk.dataSize; i++) {
                 buffer[2 * i] = buffer[2 * i + 1]
@@ -310,8 +319,10 @@ int XttAudio::beep(pwr_tAttrRef* arp)
               size = chunk.dataSize;
               size = ((size - 1) / (hw_buff_size) + 1) * hw_buff_size;
               buffer = (short*)calloc(sizeof(short), size);
-              if (!buffer)
+              if (!buffer) {
+                free(buf8);
                 return XNAV__NOMEMORY;
+              }
 
               for (int i = 0; i < chunk.dataSize; i++) {
                 buffer[i] = 255 * ((short)buf8[i] - 127);
@@ -324,8 +335,10 @@ int XttAudio::beep(pwr_tAttrRef* arp)
 
             if (chunk.wChannels == 1) {
               short* buf16 = (short*)malloc(chunk.dataSize * 2);
-              if (!buf16)
+              if (!buf16) {
+                fclose(fp);
                 return XNAV__NOMEMORY;
+              }
 
               sts = fread(buf16, chunk.dataSize, 1, fp);
               fclose(fp);
@@ -333,8 +346,10 @@ int XttAudio::beep(pwr_tAttrRef* arp)
               size = chunk.dataSize * 2;
               size = ((size - 1) / (hw_buff_size) + 1) * hw_buff_size;
               buffer = (short*)calloc(sizeof(short), size);
-              if (!buffer)
+              if (!buffer) {
+                free(buf16);
                 return XNAV__NOMEMORY;
+              }
 
               for (int i = 0; i < chunk.dataSize; i++) {
                 buffer[2 * i] = buffer[2 * i + 1] = buf16[i];

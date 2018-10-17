@@ -1040,21 +1040,27 @@ int WdaNav::print_textfile(char* filename)
 
       sts = ldh_ObjidToName(ldhses, item->objid, cdh_mName_volumeStrict, oname,
           sizeof(oname), &size);
-      if (EVEN(sts))
+      if (EVEN(sts)) {
+        fclose(fp);
         return sts;
+      }
 
       switch (item->type_id) {
       case pwr_eType_Text:
         sts = item->get_value(&value);
-        if (EVEN(sts))
+        if (EVEN(sts)) {
+          fclose(fp);
           return sts;
+        }
 
         fprintf(fp, "%s.%s \"%s\"\n", oname, item->attr, value);
         break;
       case pwr_eType_String:
         sts = item->get_value(&value);
-        if (EVEN(sts))
+        if (EVEN(sts)) {
+          fclose(fp);
           return sts;
+        }
 
         fprintf(fp, "%s.%s \"%s\"\n", oname, item->attr, value);
         break;

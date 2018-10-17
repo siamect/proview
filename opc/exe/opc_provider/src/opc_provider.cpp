@@ -1368,9 +1368,9 @@ int main(int argc, char* argv[])
     usage();
     exit(0);
   }
-  strcpy(server_url, argv[1]);
-  strcpy(extern_vid, argv[2]);
-  strcpy(extern_volume_name, argv[3]);
+  strncpy(server_url, argv[1], sizeof(server_url));
+  strncpy(extern_vid, argv[2], sizeof(extern_vid));
+  strncpy(extern_volume_name, argv[3], sizeof(extern_volume_name));
 
   if (argc >= 5) {
     sts = sscanf(argv[4], "%d", &server_id);

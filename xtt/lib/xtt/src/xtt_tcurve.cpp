@@ -670,7 +670,6 @@ int XttTCurve::load_data(pwr_tStatus* sts, pwr_tAttrRef* aref)
       int first_idx;
       int last_idx;
       int size;
-      char* tb;
       char* vb[XTT_TCURVE_MAX];
       int header_size = pwr_AlignLW(sizeof(pwr_sClass_CircBuffHeader));
 
@@ -728,7 +727,7 @@ int XttTCurve::load_data(pwr_tStatus* sts, pwr_tAttrRef* aref)
       tc.timebuf_size = head.Size;
       tc.timeelement_size = head.ElementSize;
       tc.timebuf_bsize = tc.timebuf_size * head.ElementSize + header_size;
-      tb = (char*)calloc(1, tc.timebuf_bsize);
+      char tb[tc.timebuf_bsize];
 
       // Get buffer data
       for (int j = 0; j < tc.bufcnt; j++) {
@@ -800,7 +799,6 @@ int XttTCurve::load_data(pwr_tStatus* sts, pwr_tAttrRef* aref)
         }
         tc.buf_samples[j] = size;
       }
-      free(tb);
       for (int j = 0; j < tc.bufcnt; j++)
         free(vb[j]);
 
@@ -852,7 +850,6 @@ void XttTCurve::open(char* filename)
 {
   pwr_tFileName fname;
   pwr_tStatus sts;
-  tcurve_sTc* tcp;
 
   strcpy(fname, "$pwrp_load/");
   strncat(fname, filename, sizeof(fname) - strlen(fname) - 1);
@@ -871,27 +868,30 @@ void XttTCurve::open(char* filename)
   fp.read((char*)&aref_cnt, sizeof(aref_cnt));
   if (aref_cnt > XTT_TCURVE_MAX) {
     printf("Read error\n");
+    fp.close();
     return;
   }
   fp.read((char*)arefv, aref_cnt * sizeof(arefv[0]));
-  tcp = (tcurve_sTc*)calloc(1, sizeof(tcurve_sTc));
-  fp.read((char*)tcp, sizeof(*tcp));
+  tcurve_sTc tcp;
+  fp.read((char*)(&tcp), sizeof(tcp));
 
-  if (tcp->bufcnt > XTT_TCURVE_MAX || tcp->timebuf_bsize > 20000000) {
+  if (tcp.bufcnt > XTT_TCURVE_MAX || tcp.timebuf_bsize > 20000000) {
     printf("Read error\n");
+    fp.close();
     return;
   }
-  for (int i = 0; i < tcp->bufcnt; i++) {
-    if (tcp->buf_bsize[i] > 20000000) {
+  for (int i = 0; i < tcp.bufcnt; i++) {
+    if (tcp.buf_bsize[i] > 20000000) {
       printf("Read error\n");
+      fp.close();
       return;
     }
   }
-  tcp->tbuf = (char*)calloc(1, tcp->timebuf_bsize);
-  fp.read(tcp->tbuf, tcp->timebuf_bsize);
-  for (int i = 0; i < tcp->bufcnt; i++) {
-    tcp->vbuf[i] = (char*)calloc(1, tcp->buf_bsize[i]);
-    fp.read(tcp->vbuf[i], tcp->buf_bsize[i]);
+  tcp.tbuf = (char*)calloc(1, tcp.timebuf_bsize);
+  fp.read(tcp.tbuf, tcp.timebuf_bsize);
+  for (int i = 0; i < tcp.bufcnt; i++) {
+    tcp.vbuf[i] = (char*)calloc(1, tcp.buf_bsize[i]);
+    fp.read(tcp.vbuf[i], tcp.buf_bsize[i]);
   }
 
   fp.close();
@@ -901,8 +901,7 @@ void XttTCurve::open(char* filename)
   for (int i = 0; i < tc.bufcnt; i++)
     free(tc.vbuf[i]);
 
-  memcpy(&tc, tcp, sizeof(tc));
-  free(tcp);
+  memcpy(&tc, &tcp, sizeof(tc));
 
   pwr_tTime from = pwr_cNTime;
   pwr_tTime to = { 0xEFFFFFFF, 0 };
