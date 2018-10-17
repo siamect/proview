@@ -15,7 +15,7 @@ ifndef variables_mk
  include $(pwre_sroot)/tools/bld/src/$(os_name)/variables.mk
 endif
 
-.SUFFIXES: 
+.SUFFIXES:
 
 $(bld_dir)/%.cmsg $(inc_dir)/%.h: %.msg
 	@ $(log_msg_h)
@@ -29,7 +29,7 @@ $(obj_dir)/%.cmsg $(inc_dir)/%.h : %.msg
 
 $(obj_dir)/%.o : $(obj_dir)/%.cmsg
 	@ $(log_cmsg_obj)
-	@ $(tools_cmsg2c) -b $(comp_name) $(source) $(tmp_dir)/$(sname).c 
+	@ $(tools_cmsg2c) -b $(comp_name) $(source) $(tmp_dir)/$(sname).c
 	@ $(cc) $(cflags) $(csetos) $(cinc) $(cobj) $(tmp_dir)/$(sname).c
 
 
@@ -184,8 +184,8 @@ $(inc_dir)/%.hpp : %.hpp
 
 $(bld_dir)/%.class : %.java
 	@ $(log_java_class)
-	@ $(javac) -encoding Latin1 -d $(pwre_broot)/$(pwre_target)/bld $(source)
-#	@ $(javac) -Xlint:unchecked,deprecation -d $(pwre_broot)/$(pwre_target)/bld $(source)
+#	@ $(javac) -encoding Latin1 -d $(pwre_broot)/$(pwre_target)/bld $(source)
+	@ $(javac) -Xlint:unchecked,deprecation -d $(pwre_broot)/$(pwre_target)/bld $(source)
 
 
 $(bld_dir)/%.gif : %.gif
