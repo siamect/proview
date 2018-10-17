@@ -1084,7 +1084,7 @@ static sBlock* blockListAlloc()
   bl = ll->next;
   LstRemove(bl);
   --l.emon->FreeCount;
-  return LstEntry(bl, sBlock, block_l);
+  return LstEntry(bl, sBlock, link.active_l);
 }
 
 static void blockListFree(sBlock* bp)
@@ -2587,7 +2587,7 @@ static sApplActive* handlerListAlloc(pwr_eSystemEventTypeEnum event)
   --l.emon->AlarmMaxCount;
   l.handlerListCount++;
 
-  return LstEntry(hl, sApplActive, active_l);
+  return LstEntry(hl, sApplActive, link.active_l);
 }
 
 static void handlerListFree(sApplActive* hp)
@@ -4184,6 +4184,8 @@ static void updateAlarm(sActive* ap, sEvent* ep)
   sSupActive* sp;
   sApplActive* aap;
 
+  LstCheck(&l.active_l);
+
   sp = (sSupActive*)ap;
   aap = (sApplActive*)ap;
 
@@ -4249,6 +4251,7 @@ static void updateAlarm(sActive* ap, sEvent* ep)
           == 0)) { /* The alarm is acked and unactive, remove it from alarm list
                       */
     ap->status.All = 0;
+  LstCheck(&l.active_l);
     updateAlarmInfo(ap);
     if (ap->source == mh_eSource_Scanner) {
       sp->sup->DetectCheck = TRUE; /* Activate detection */
