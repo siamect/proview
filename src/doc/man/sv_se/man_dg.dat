@@ -9600,6 +9600,9 @@ Objekt väljs med name, class och hierarchy kvalifierarna.
 /nolog		<t>Operationen loggas inte.
 /output		<t>Ut fil.
 /noterminal	<t>Operationen loggas inte i terminal fönster.
+
+<b>Exempel
+<c>wtt> set attribute /name=H1-Pump /attr=Description /value="Water pump" /noconf
 </TOPIC>
 
 <TOPIC> set db <style> function

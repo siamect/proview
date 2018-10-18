@@ -9706,6 +9706,7 @@ Objects are selected by the name, class and hierarchy qualifiers.
 <B>		<t>[/noconfirm] [/nolog] [/output] [/noterminal]
 
 /attribute	<t>Name of attribute.
+/name		<t>Name of object.
 /value		<t>Value to insert in the attribute. If no value is given
 		<t>a question will be asked for each object.
 /class		<t>Select object of this class.
@@ -9714,6 +9715,9 @@ Objects are selected by the name, class and hierarchy qualifiers.
 /nolog		<t>Operation is not logged to output device.
 /output		<t>Output file.
 /noterminal	<t>Operations will not be logged in terminal.
+
+<b>Example
+<c>wtt> set attribute /name=H1-Pump /attr=Description /value="Water pump" /noconf
 </TOPIC>
 
 <TOPIC> set db <style> function
