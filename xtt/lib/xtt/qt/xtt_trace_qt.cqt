@@ -340,7 +340,6 @@ RtTraceQt::RtTraceQt(void* tr_parent_ctx, QWidget* tr_parent_wid,
   QAction* a = addMenuRadioItem(
       toplevel, view_sc, "0.50 s", SLOT(activate_scantime()), view_sc_group);
   a->setData(500);
-  a->setChecked(true);
   a = addMenuRadioItem(
       toplevel, view_sc, "0.20 s", SLOT(activate_scantime()), view_sc_group);
   a->setData(200);
@@ -362,7 +361,6 @@ RtTraceQt::RtTraceQt(void* tr_parent_ctx, QWidget* tr_parent_wid,
   addMenuRadioItem(toplevel, mode, "V&iew", SLOT(activate_view()), mode_group);
   QAction* mode_trace = addMenuRadioItem(
       toplevel, mode, "&Trace", SLOT(activate_trace()), mode_group);
-  mode_trace->setChecked(true);
   addMenuRadioItem(
       toplevel, mode, "&Simulate", SLOT(activate_simulate()), mode_group);
 
@@ -427,6 +425,11 @@ RtTraceQt::RtTraceQt(void* tr_parent_ctx, QWidget* tr_parent_wid,
 
   viewsetup();
   flow_Open(flow_ctx, filename);
+
+  mode_trace->setChecked(true);
+  mode_trace->trigger();
+  view_sc_group->actions()[0]->setChecked(true);
+  view_sc_group->actions()[0]->trigger();
 
 #if defined OS_LINUX
   {

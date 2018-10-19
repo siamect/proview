@@ -228,7 +228,7 @@ int XttHotkey::event_handler(QEvent* event, QObject* data)
       }
     }
   }
-  return 1;
+  return 0;
 }
 
 #endif

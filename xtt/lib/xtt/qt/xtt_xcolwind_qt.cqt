@@ -489,7 +489,6 @@ XColWindQt::XColWindQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
   QAction* a = addMenuRadioItem(
       toplevel, view_sc, "0.50 s", SLOT(activate_scantime()), view_sc_group);
   a->setData(500);
-  a->setChecked(true);
   a = addMenuRadioItem(
       toplevel, view_sc, "0.20 s", SLOT(activate_scantime()), view_sc_group);
   a->setData(200);
