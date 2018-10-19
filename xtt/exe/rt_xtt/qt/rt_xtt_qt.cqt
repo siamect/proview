@@ -580,6 +580,10 @@ void XttQtWidget::closeEvent(QCloseEvent* event)
 XttQt::XttQt(int argc, char* argv[], int* return_sts)
     : Xtt(&argc, &argv, return_sts)
 {
+  if (EVEN(*return_sts)) { // Set by the Xtt() constructor
+    exit(*return_sts);
+  }
+
   const int window_width = 400;
   const int window_height = 700;
   pwr_tStatus sts;
