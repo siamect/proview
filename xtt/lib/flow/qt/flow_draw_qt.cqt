@@ -60,6 +60,7 @@ typedef struct {
   QPixmap pixmap[DRAW_PIXMAP_SIZE];
 } draw_sPixmap;
 
+static FlowCtx* last_ctx;
 static QMouseEvent* last_event;
 static QWidget* last_target;
 
@@ -269,7 +270,7 @@ int FlowDrawQt::init_nav(QWidget* nav_widget, void* flow_ctx)
   return 1;
 }
 
-int FlowDrawQt::event_handler(QEvent* event, QWidget* target)
+int FlowDrawQt::event_handler(FlowCtx* ctx, QEvent* event, QWidget* target)
 {
   static int button_pressed = 0;
   static int button_clicked = 0;
@@ -294,59 +295,59 @@ int FlowDrawQt::event_handler(QEvent* event, QWidget* target)
 
       switch (keyEvent->key()) {
       case Qt::Key_Return:
-        sts = basectx->event_handler(flow_eEvent_Key_Return, 0, 0, 0, 0);
+        sts = ctx->event_handler(flow_eEvent_Key_Return, 0, 0, 0, 0);
         break;
       case Qt::Key_Up:
         if (keyEvent->modifiers() & Qt::ShiftModifier) {
-          sts = basectx->event_handler(flow_eEvent_Key_ShiftUp, 0, 0, 0, 0);
+          sts = ctx->event_handler(flow_eEvent_Key_ShiftUp, 0, 0, 0, 0);
         } else {
-          sts = basectx->event_handler(flow_eEvent_Key_Up, 0, 0, 0, 0);
+          sts = ctx->event_handler(flow_eEvent_Key_Up, 0, 0, 0, 0);
         }
         break;
       case Qt::Key_Down:
         if (keyEvent->modifiers() & Qt::ShiftModifier) {
-          sts = basectx->event_handler(flow_eEvent_Key_ShiftDown, 0, 0, 0, 0);
+          sts = ctx->event_handler(flow_eEvent_Key_ShiftDown, 0, 0, 0, 0);
         } else {
-          sts = basectx->event_handler(flow_eEvent_Key_Down, 0, 0, 0, 0);
+          sts = ctx->event_handler(flow_eEvent_Key_Down, 0, 0, 0, 0);
         }
         break;
       case Qt::Key_Right:
         if (keyEvent->modifiers() & Qt::ShiftModifier) {
-          sts = basectx->event_handler(flow_eEvent_Key_ShiftRight, 0, 0, 0, 0);
+          sts = ctx->event_handler(flow_eEvent_Key_ShiftRight, 0, 0, 0, 0);
         } else {
-          sts = basectx->event_handler(flow_eEvent_Key_Right, 0, 0, 0, 0);
+          sts = ctx->event_handler(flow_eEvent_Key_Right, 0, 0, 0, 0);
         }
         break;
       case Qt::Key_Left:
         if (keyEvent->modifiers() & Qt::ShiftModifier) {
-          sts = basectx->event_handler(flow_eEvent_Key_ShiftLeft, 0, 0, 0, 0);
+          sts = ctx->event_handler(flow_eEvent_Key_ShiftLeft, 0, 0, 0, 0);
         } else {
-          sts = basectx->event_handler(flow_eEvent_Key_Left, 0, 0, 0, 0);
+          sts = ctx->event_handler(flow_eEvent_Key_Left, 0, 0, 0, 0);
         }
         break;
       case Qt::Key_PageUp:
-        sts = basectx->event_handler(flow_eEvent_Key_PageUp, 0, 0, 0, 0);
+        sts = ctx->event_handler(flow_eEvent_Key_PageUp, 0, 0, 0, 0);
         break;
       case Qt::Key_PageDown:
-        sts = basectx->event_handler(flow_eEvent_Key_PageDown, 0, 0, 0, 0);
+        sts = ctx->event_handler(flow_eEvent_Key_PageDown, 0, 0, 0, 0);
         break;
       case Qt::Key_Backspace:
-        sts = basectx->event_handler(flow_eEvent_Key_BackSpace, 0, 0, 0, 0);
+        sts = ctx->event_handler(flow_eEvent_Key_BackSpace, 0, 0, 0, 0);
         break;
       case Qt::Key_F1:
-        sts = basectx->event_handler(flow_eEvent_Key_PF1, 0, 0, 0, 0);
+        sts = ctx->event_handler(flow_eEvent_Key_PF1, 0, 0, 0, 0);
         break;
       case Qt::Key_F2:
-        sts = basectx->event_handler(flow_eEvent_Key_PF2, 0, 0, 0, 0);
+        sts = ctx->event_handler(flow_eEvent_Key_PF2, 0, 0, 0, 0);
         break;
       case Qt::Key_F3:
-        sts = basectx->event_handler(flow_eEvent_Key_PF3, 0, 0, 0, 0);
+        sts = ctx->event_handler(flow_eEvent_Key_PF3, 0, 0, 0, 0);
         break;
       case Qt::Key_F4:
-        sts = basectx->event_handler(flow_eEvent_Key_PF4, 0, 0, 0, 0);
+        sts = ctx->event_handler(flow_eEvent_Key_PF4, 0, 0, 0, 0);
         break;
       case Qt::Key_Tab:
-        sts = basectx->event_handler(flow_eEvent_Key_Tab, 0, 0, 0, 0);
+        sts = ctx->event_handler(flow_eEvent_Key_Tab, 0, 0, 0, 0);
         break;
       default:;
       }
@@ -354,12 +355,12 @@ int FlowDrawQt::event_handler(QEvent* event, QWidget* target)
     }
     case QEvent::MouseButtonPress: {
       QMouseEvent* mouseEvent = ((QMouseEvent*)event);
-      // debug_print("event_handler: MouseButtonPress button=%d, x=%d, y=%d,
-      // globalX=%d, globalY=%d\n", mouseEvent->button(), mouseEvent->x(),
-      // mouseEvent->y(), mouseEvent->globalX(), mouseEvent->globalY());
+      /* debug_print("event_handler: MouseButtonPress button=%d, x=%d, y=%d,
+      globalX=%d, globalY=%d\n", mouseEvent->button(), mouseEvent->x(),
+      mouseEvent->y(), mouseEvent->globalX(), mouseEvent->globalY()); */
       switch (mouseEvent->button()) {
       case Qt::LeftButton:
-        basectx->event_handler(
+        ctx->event_handler(
             flow_eEvent_MB1Down, mouseEvent->x(), mouseEvent->y(), 0, 0);
         if (click_sensitivity & flow_mSensitivity_MB1Click
             && !(click_sensitivity & flow_mSensitivity_MB1DoubleClick)
@@ -379,7 +380,7 @@ int FlowDrawQt::event_handler(QEvent* event, QWidget* target)
         }
         break;
       case Qt::MidButton:
-        basectx->event_handler(
+        ctx->event_handler(
             flow_eEvent_MB2Down, mouseEvent->x(), mouseEvent->y(), 0, 0);
         if (click_sensitivity & flow_mSensitivity_MB2Click
             && !(click_sensitivity & flow_mSensitivity_MB2DoubleClick)
@@ -399,12 +400,12 @@ int FlowDrawQt::event_handler(QEvent* event, QWidget* target)
         }
         break;
       case Qt::RightButton:
-        basectx->event_handler(
+        ctx->event_handler(
             flow_eEvent_MB3Down, mouseEvent->x(), mouseEvent->y(), 0, 0);
         if (click_sensitivity & flow_mSensitivity_MB3Press
             && !(click_sensitivity & flow_mSensitivity_MB3DoubleClick)
             && !(click_sensitivity & flow_mSensitivity_MB3Click)) {
-          basectx->event_handler(
+          ctx->event_handler(
               flow_eEvent_MB3Press, mouseEvent->x(), mouseEvent->y(), 0, 0);
           click_sensitivity = 0;
           return 1;
@@ -421,14 +422,14 @@ int FlowDrawQt::event_handler(QEvent* event, QWidget* target)
         button_pressed = mouseEvent->button();
         last_press_x = mouseEvent->x();
         last_press_y = mouseEvent->y();
-        event_timer(mouseEvent, target);
+        event_timer(ctx, mouseEvent, target);
         return 1;
       }
       if (!button_pressed) {
         button_pressed = mouseEvent->button();
         last_press_x = mouseEvent->x();
         last_press_y = mouseEvent->y();
-        event_timer(mouseEvent, target);
+        event_timer(ctx, mouseEvent, target);
         return 1;
       } else {
         // debug_print("event_handler: MouseButtonPress from timer\n");
@@ -440,18 +441,18 @@ int FlowDrawQt::event_handler(QEvent* event, QWidget* target)
           button1_pressed = 1;
           if ((mouseEvent->modifiers() & Qt::ShiftModifier)
               && !(mouseEvent->modifiers() & Qt::ControlModifier)) {
-            sts = basectx->event_handler(flow_eEvent_MB1PressShift,
+            sts = ctx->event_handler(flow_eEvent_MB1PressShift,
                 mouseEvent->x(), mouseEvent->y(), 0, 0);
           } else if (!(mouseEvent->modifiers() & Qt::ShiftModifier)
               && (mouseEvent->modifiers() & Qt::ControlModifier)) {
-            sts = basectx->event_handler(flow_eEvent_MB1PressCtrl,
+            sts = ctx->event_handler(flow_eEvent_MB1PressCtrl,
                 mouseEvent->x(), mouseEvent->y(), 0, 0);
           } else if ((mouseEvent->modifiers() & Qt::ShiftModifier)
               && (mouseEvent->modifiers() & Qt::ControlModifier)) {
-            sts = basectx->event_handler(flow_eEvent_MB1PressShiftCtrl,
+            sts = ctx->event_handler(flow_eEvent_MB1PressShiftCtrl,
                 mouseEvent->x(), mouseEvent->y(), 0, 0);
           } else {
-            basectx->event_handler(
+            ctx->event_handler(
                 flow_eEvent_MB1Press, mouseEvent->x(), mouseEvent->y(), 0, 0);
           }
           click_sensitivity = 0;
@@ -460,25 +461,25 @@ int FlowDrawQt::event_handler(QEvent* event, QWidget* target)
           button2_pressed = 1;
           if ((mouseEvent->modifiers() & Qt::ShiftModifier)
               && !(mouseEvent->modifiers() & Qt::ControlModifier)) {
-            sts = basectx->event_handler(flow_eEvent_MB2PressShift,
+            sts = ctx->event_handler(flow_eEvent_MB2PressShift,
                 mouseEvent->x(), mouseEvent->y(), 0, 0);
           } else if (!(mouseEvent->modifiers() & Qt::ShiftModifier)
               && (mouseEvent->modifiers() & Qt::ControlModifier)) {
-            sts = basectx->event_handler(flow_eEvent_MB2PressShift,
+            sts = ctx->event_handler(flow_eEvent_MB2PressShift,
                 mouseEvent->x(), mouseEvent->y(), 0, 0);
           } else if ((mouseEvent->modifiers() & Qt::ShiftModifier)
               && (mouseEvent->modifiers() & Qt::ControlModifier)) {
-            sts = basectx->event_handler(flow_eEvent_MB2PressShiftCtrl,
+            sts = ctx->event_handler(flow_eEvent_MB2PressShiftCtrl,
                 mouseEvent->x(), mouseEvent->y(), 0, 0);
           } else {
-            sts = basectx->event_handler(
+            sts = ctx->event_handler(
                 flow_eEvent_MB2Press, mouseEvent->x(), mouseEvent->y(), 0, 0);
           }
           click_sensitivity = 0;
           break;
         case Qt::RightButton: // Button3
           button3_pressed = 1;
-          sts = basectx->event_handler(
+          sts = ctx->event_handler(
               flow_eEvent_MB3Press, mouseEvent->x(), mouseEvent->y(), 0, 0);
           click_sensitivity = 0;
           break;
@@ -504,18 +505,18 @@ int FlowDrawQt::event_handler(QEvent* event, QWidget* target)
           case Qt::LeftButton: // Button1
             if ((mouseEvent->modifiers() & Qt::ShiftModifier)
                 && !(mouseEvent->modifiers() & Qt::ControlModifier)) {
-              sts = basectx->event_handler(flow_eEvent_MB1ClickShift,
+              sts = ctx->event_handler(flow_eEvent_MB1ClickShift,
                   mouseEvent->x(), mouseEvent->y(), 0, 0);
             } else if (!(mouseEvent->modifiers() & Qt::ShiftModifier)
                 && (mouseEvent->modifiers() & Qt::ControlModifier)) {
-              sts = basectx->event_handler(flow_eEvent_MB1ClickCtrl,
+              sts = ctx->event_handler(flow_eEvent_MB1ClickCtrl,
                   mouseEvent->x(), mouseEvent->y(), 0, 0);
             } else if ((mouseEvent->modifiers() & Qt::ShiftModifier)
                 && (mouseEvent->modifiers() & Qt::ControlModifier)) {
-              sts = basectx->event_handler(flow_eEvent_MB1ClickShiftCtrl,
+              sts = ctx->event_handler(flow_eEvent_MB1ClickShiftCtrl,
                   mouseEvent->x(), mouseEvent->y(), 0, 0);
             } else {
-              sts = basectx->event_handler(
+              sts = ctx->event_handler(
                   flow_eEvent_MB1Click, mouseEvent->x(), mouseEvent->y(), 0, 0);
             }
             click_sensitivity = 0;
@@ -523,24 +524,24 @@ int FlowDrawQt::event_handler(QEvent* event, QWidget* target)
           case Qt::MidButton: // Button2
             if ((mouseEvent->modifiers() & Qt::ShiftModifier)
                 && !(mouseEvent->modifiers() & Qt::ControlModifier)) {
-              sts = basectx->event_handler(flow_eEvent_MB2ClickShift,
+              sts = ctx->event_handler(flow_eEvent_MB2ClickShift,
                   mouseEvent->x(), mouseEvent->y(), 0, 0);
             } else if (!(mouseEvent->modifiers() & Qt::ShiftModifier)
                 && (mouseEvent->modifiers() & Qt::ControlModifier)) {
-              sts = basectx->event_handler(flow_eEvent_MB2ClickCtrl,
+              sts = ctx->event_handler(flow_eEvent_MB2ClickCtrl,
                   mouseEvent->x(), mouseEvent->y(), 0, 0);
             } else if ((mouseEvent->modifiers() & Qt::ShiftModifier)
                 && (mouseEvent->modifiers() & Qt::ControlModifier)) {
-              sts = basectx->event_handler(flow_eEvent_MB2ClickShiftCtrl,
+              sts = ctx->event_handler(flow_eEvent_MB2ClickShiftCtrl,
                   mouseEvent->x(), mouseEvent->y(), 0, 0);
             } else {
-              sts = basectx->event_handler(
+              sts = ctx->event_handler(
                   flow_eEvent_MB2Click, mouseEvent->x(), mouseEvent->y(), 0, 0);
             }
             click_sensitivity = 0;
             break;
           case Qt::RightButton: // Button3
-            sts = basectx->event_handler(
+            sts = ctx->event_handler(
                 flow_eEvent_MB3Click, mouseEvent->x(), mouseEvent->y(), 0, 0);
             click_sensitivity = 0;
             break;
@@ -549,7 +550,7 @@ int FlowDrawQt::event_handler(QEvent* event, QWidget* target)
           }
         } else {
           /* Button release */
-          sts = basectx->event_handler(flow_eEvent_ButtonRelease,
+          sts = ctx->event_handler(flow_eEvent_ButtonRelease,
               mouseEvent->x(), mouseEvent->y(), 0, 0);
         }
       } else {
@@ -558,7 +559,7 @@ int FlowDrawQt::event_handler(QEvent* event, QWidget* target)
         if (!button_clicked_and_pressed) {
           /* wait for button double click */
           button_clicked = 1;
-          event_timer(mouseEvent, target);
+          event_timer(ctx, mouseEvent, target);
           button_pressed = 0;
           return 1;
         } else {
@@ -571,18 +572,18 @@ int FlowDrawQt::event_handler(QEvent* event, QWidget* target)
           case Qt::LeftButton: // Button1
             if ((mouseEvent->modifiers() & Qt::ShiftModifier)
                 && !(mouseEvent->modifiers() & Qt::ControlModifier)) {
-              sts = basectx->event_handler(flow_eEvent_MB1DoubleClickShift,
+              sts = ctx->event_handler(flow_eEvent_MB1DoubleClickShift,
                   mouseEvent->x(), mouseEvent->y(), 0, 0);
             } else if (!(mouseEvent->modifiers() & Qt::ShiftModifier)
                 && (mouseEvent->modifiers() & Qt::ControlModifier)) {
-              sts = basectx->event_handler(flow_eEvent_MB1DoubleClickCtrl,
+              sts = ctx->event_handler(flow_eEvent_MB1DoubleClickCtrl,
                   mouseEvent->x(), mouseEvent->y(), 0, 0);
             } else if ((mouseEvent->modifiers() & Qt::ShiftModifier)
                 && (mouseEvent->modifiers() & Qt::ControlModifier)) {
-              sts = basectx->event_handler(flow_eEvent_MB1DoubleClickShiftCtrl,
+              sts = ctx->event_handler(flow_eEvent_MB1DoubleClickShiftCtrl,
                   mouseEvent->x(), mouseEvent->y(), 0, 0);
             } else {
-              sts = basectx->event_handler(flow_eEvent_MB1DoubleClick,
+              sts = ctx->event_handler(flow_eEvent_MB1DoubleClick,
                   mouseEvent->x(), mouseEvent->y(), 0, 0);
             }
             if (sts == FLOW__TERMINATED) {
@@ -594,18 +595,18 @@ int FlowDrawQt::event_handler(QEvent* event, QWidget* target)
           case Qt::MidButton: // Button2
             if ((mouseEvent->modifiers() & Qt::ShiftModifier)
                 && !(mouseEvent->modifiers() & Qt::ControlModifier)) {
-              sts = basectx->event_handler(flow_eEvent_MB2DoubleClickShift,
+              sts = ctx->event_handler(flow_eEvent_MB2DoubleClickShift,
                   mouseEvent->x(), mouseEvent->y(), 0, 0);
             } else if (!(mouseEvent->modifiers() & Qt::ShiftModifier)
                 && (mouseEvent->modifiers() & Qt::ControlModifier)) {
-              sts = basectx->event_handler(flow_eEvent_MB2DoubleClickCtrl,
+              sts = ctx->event_handler(flow_eEvent_MB2DoubleClickCtrl,
                   mouseEvent->x(), mouseEvent->y(), 0, 0);
             } else if ((mouseEvent->modifiers() & Qt::ShiftModifier)
                 && (mouseEvent->modifiers() & Qt::ControlModifier)) {
-              sts = basectx->event_handler(flow_eEvent_MB2DoubleClickShiftCtrl,
+              sts = ctx->event_handler(flow_eEvent_MB2DoubleClickShiftCtrl,
                   mouseEvent->x(), mouseEvent->y(), 0, 0);
             } else {
-              sts = basectx->event_handler(flow_eEvent_MB2DoubleClick,
+              sts = ctx->event_handler(flow_eEvent_MB2DoubleClick,
                   mouseEvent->x(), mouseEvent->y(), 0, 0);
             }
             click_sensitivity = 0;
@@ -623,19 +624,19 @@ int FlowDrawQt::event_handler(QEvent* event, QWidget* target)
     case QEvent::Paint:
     case QEvent::UpdateRequest: {
       QPaintEvent* paintEvent = ((QPaintEvent*)event);
-      basectx->clear();
-      sts = basectx->event_handler(flow_eEvent_Exposure, paintEvent->rect().x(),
+      ctx->clear();
+      sts = ctx->event_handler(flow_eEvent_Exposure, paintEvent->rect().x(),
           paintEvent->rect().y(), paintEvent->rect().width(),
           paintEvent->rect().height());
       break;
     }
     case QEvent::WindowUnblocked: {
-      sts = basectx->event_handler(
+      sts = ctx->event_handler(
           flow_eEvent_VisibilityUnobscured, 0, 0, 0, 0);
       break;
     }
     case QEvent::WindowBlocked: {
-      sts = basectx->event_handler(flow_eEvent_VisibilityObscured, 0, 0, 0, 0);
+      sts = ctx->event_handler(flow_eEvent_VisibilityObscured, 0, 0, 0, 0);
       break;
     }
     case QEvent::MouseMove: {
@@ -661,18 +662,18 @@ int FlowDrawQt::event_handler(QEvent* event, QWidget* target)
           button1_pressed = 1;
           if ((mouseEvent->modifiers() & Qt::ShiftModifier)
               && !(mouseEvent->modifiers() & Qt::ControlModifier)) {
-            sts = basectx->event_handler(
+            sts = ctx->event_handler(
                 flow_eEvent_MB1PressShift, pos.x(), pos.y(), 0, 0);
           } else if (!(mouseEvent->modifiers() & Qt::ShiftModifier)
               && (mouseEvent->modifiers() & Qt::ControlModifier)) {
-            sts = basectx->event_handler(
+            sts = ctx->event_handler(
                 flow_eEvent_MB1PressCtrl, pos.x(), pos.y(), 0, 0);
           } else if ((mouseEvent->modifiers() & Qt::ShiftModifier)
               && (mouseEvent->modifiers() & Qt::ControlModifier)) {
-            sts = basectx->event_handler(
+            sts = ctx->event_handler(
                 flow_eEvent_MB1PressShiftCtrl, pos.x(), pos.y(), 0, 0);
           } else {
-            basectx->event_handler(
+            ctx->event_handler(
                 flow_eEvent_MB1Press, pos.x(), pos.y(), 0, 0);
           }
           break;
@@ -680,24 +681,24 @@ int FlowDrawQt::event_handler(QEvent* event, QWidget* target)
           button2_pressed = 1;
           if ((mouseEvent->modifiers() & Qt::ShiftModifier)
               && !(mouseEvent->modifiers() & Qt::ControlModifier)) {
-            sts = basectx->event_handler(
+            sts = ctx->event_handler(
                 flow_eEvent_MB2PressShift, pos.x(), pos.y(), 0, 0);
           } else if (!(mouseEvent->modifiers() & Qt::ShiftModifier)
               && (mouseEvent->modifiers() & Qt::ControlModifier)) {
-            sts = basectx->event_handler(
+            sts = ctx->event_handler(
                 flow_eEvent_MB2PressShift, pos.x(), pos.y(), 0, 0);
           } else if ((mouseEvent->modifiers() & Qt::ShiftModifier)
               && (mouseEvent->modifiers() & Qt::ControlModifier)) {
-            sts = basectx->event_handler(
+            sts = ctx->event_handler(
                 flow_eEvent_MB2PressShiftCtrl, pos.x(), pos.y(), 0, 0);
           } else {
-            sts = basectx->event_handler(
+            sts = ctx->event_handler(
                 flow_eEvent_MB2Press, pos.x(), pos.y(), 0, 0);
           }
           break;
         case Qt::RightButton: // Button3
           button3_pressed = 1;
-          sts = basectx->event_handler(
+          sts = ctx->event_handler(
               flow_eEvent_MB3Press, pos.x(), pos.y(), 0, 0);
           break;
         }
@@ -705,30 +706,30 @@ int FlowDrawQt::event_handler(QEvent* event, QWidget* target)
         button_clicked_and_pressed = 0;
       }
       if (button1_pressed || button2_pressed || button3_pressed) {
-        sts = basectx->event_handler(
+        sts = ctx->event_handler(
             flow_eEvent_ButtonMotion, pos.x(), pos.y(), 0, 0);
       } else {
-        sts = basectx->event_handler(
+        sts = ctx->event_handler(
             flow_eEvent_CursorMotion, pos.x(), pos.y(), 0, 0);
       }
       break;
     }
     case QEvent::Enter: {
       QPoint pos = QCursor::pos();
-      sts = basectx->event_handler(flow_eEvent_Enter, pos.x(), pos.y(), 0, 0);
+      sts = ctx->event_handler(flow_eEvent_Enter, pos.x(), pos.y(), 0, 0);
       break;
     }
     case QEvent::Leave: {
       QPoint pos = QCursor::pos();
-      sts = basectx->event_handler(flow_eEvent_Leave, pos.x(), pos.y(), 0, 0);
+      sts = ctx->event_handler(flow_eEvent_Leave, pos.x(), pos.y(), 0, 0);
       break;
     }
     case QEvent::Show: {
-      sts = basectx->event_handler(flow_eEvent_Map, 0, 0, 0, 0);
+      sts = ctx->event_handler(flow_eEvent_Map, 0, 0, 0, 0);
       break;
     }
     case QEvent::Hide: {
-      sts = basectx->event_handler(flow_eEvent_Unmap, 0, 0, 0, 0);
+      sts = ctx->event_handler(flow_eEvent_Unmap, 0, 0, 0, 0);
       break;
     }
     case QEvent::FocusIn:
@@ -738,9 +739,9 @@ int FlowDrawQt::event_handler(QEvent* event, QWidget* target)
       // debug_print("event_handler: Wheel\n");
       QWheelEvent* wheelEvent = ((QWheelEvent*)event);
       if (wheelEvent->delta() > 0) {
-        sts = basectx->event_handler(flow_eEvent_ScrollUp, 0, 0, 0, 0);
+        sts = ctx->event_handler(flow_eEvent_ScrollUp, 0, 0, 0, 0);
       } else if (wheelEvent->delta() < 0) {
-        sts = basectx->event_handler(flow_eEvent_ScrollDown, 0, 0, 0, 0);
+        sts = ctx->event_handler(flow_eEvent_ScrollDown, 0, 0, 0, 0);
       }
       break;
     }
@@ -756,12 +757,12 @@ int FlowDrawQt::event_handler(QEvent* event, QWidget* target)
       switch (mouseEvent->button()) {
       case Qt::LeftButton: // Button1
         button1_pressed = 1;
-        sts = basectx->event_handler_nav(
+        sts = ctx->event_handler_nav(
             flow_eEvent_MB1Press, mouseEvent->x(), mouseEvent->y());
         break;
       case Qt::MidButton: // Button2
         button2_pressed = 1;
-        sts = basectx->event_handler_nav(
+        sts = ctx->event_handler_nav(
             flow_eEvent_MB2Press, mouseEvent->x(), mouseEvent->y());
         break;
       case Qt::RightButton: // Button3
@@ -792,26 +793,26 @@ int FlowDrawQt::event_handler(QEvent* event, QWidget* target)
       if (mouseEvent->button() == Qt::LeftButton
           && (mouseEvent->modifiers() & Qt::ShiftModifier)
           && !(mouseEvent->modifiers() & Qt::ControlModifier)) {
-        sts = basectx->event_handler_nav(
+        sts = ctx->event_handler_nav(
             flow_eEvent_MB1ClickShift, mouseEvent->x(), mouseEvent->y());
       } else {
-        sts = basectx->event_handler_nav(
+        sts = ctx->event_handler_nav(
             flow_eEvent_ButtonRelease, mouseEvent->x(), mouseEvent->y());
       }
       break;
     }
     case QEvent::Show: {
-      sts = basectx->event_handler_nav(flow_eEvent_Map, 0, 0);
+      sts = ctx->event_handler_nav(flow_eEvent_Map, 0, 0);
       break;
     }
     case QEvent::MouseMove: {
       // debug_print("event_handler: MouseMove\n");
       QPoint pos = QCursor::pos();
       if (button1_pressed || button2_pressed || button3_pressed) {
-        sts = basectx->event_handler_nav(
+        sts = ctx->event_handler_nav(
             flow_eEvent_ButtonMotion, pos.x(), pos.y());
       } else {
-        sts = basectx->event_handler_nav(
+        sts = ctx->event_handler_nav(
             flow_eEvent_CursorMotion, pos.x(), pos.y());
       }
       break;
@@ -1556,7 +1557,7 @@ bool FlowDrawQt::draw_timer_cb()
 bool FlowDrawQt::event_timer_cb()
 {
   timer_id->stop();
-  event_handler(last_event, last_target);
+  event_handler(last_ctx, last_event, last_target);
   return FALSE;
 }
 
@@ -1567,7 +1568,7 @@ void FlowDrawQt::cancel_event_timer()
   }
 }
 
-void FlowDrawQt::event_timer(QMouseEvent* event, QWidget *target)
+void FlowDrawQt::event_timer(FlowCtx* ctx, QMouseEvent* event, QWidget *target)
 {
   if (last_event) {
     delete last_event;
@@ -1575,6 +1576,7 @@ void FlowDrawQt::event_timer(QMouseEvent* event, QWidget *target)
   last_event = new QMouseEvent(event->type(), event->pos(), event->globalPos(),
       event->button(), event->buttons(), event->modifiers());
   last_target = target;
+  last_ctx = ctx;
 
   initOneShotTimer(timer_id, SLOT(event_timer_cb()), 200);
 }

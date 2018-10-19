@@ -72,7 +72,7 @@ public:
 
   int init_nav(QWidget* nav_widget, void* flow_ctx);
 
-  int event_handler(QEvent* event, QWidget *target);
+  int event_handler(FlowCtx* ctx, QEvent* event, QWidget *target);
   void enable_event(FlowCtx* ctx, flow_eEvent event, flow_eEventType event_type,
       int (*event_cb)(FlowCtx* ctx, flow_tEvent event));
 
@@ -252,7 +252,7 @@ private:
       int x, int y, char* text, int len);
   void cursor_helper(FlowCtx* ctx, draw_eCursor cursor, bool nav = false);
 
-  void event_timer(QMouseEvent *event, QWidget *target);
+  void event_timer(FlowCtx* ctx, QMouseEvent *event, QWidget *target);
   void cancel_event_timer();
 
   flow_draw_sTimerCb* timer_cb;
