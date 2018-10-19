@@ -1071,9 +1071,8 @@ int FlowDrawQt::arc_helper(FlowCtx* ctx, int painter_type, int size, int x,
 
   QPainter* painter = get_painter(painter_type, size, nav);
   painter->setBrush(Qt::NoBrush);
-  // debug_print("arrow [%d, %d, %d, %d], %d, %d\n", x, y, width, height, angle1
-  // * 64, angle2 * 64);
-  painter->drawArc(x, y, width, height, angle1 * 64, angle2 * 64);
+  // debug_print("arrow [%d, %d, %d, %d], %d, %d\n", x, y, width, height, angle1, angle2);
+  painter->drawArc(x, y, width, height, angle1 * 16, angle2 * 16);
   delete painter;
 
   return 1;

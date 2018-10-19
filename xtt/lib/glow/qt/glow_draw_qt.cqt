@@ -1009,14 +1009,12 @@ int GlowDrawQt::arc_helper(GlowWind* wind, int painter_type, int size, int x,
   }
 
   if (fill) {
-    // debug_print("pie [%d, %d, %d, %d], %d, %d\n", x, y, width, height, angle1
-    // * 64, angle2 * 64);
-    painter->drawPie(x, y, width, height, angle1 * 64, angle2 * 64);
+    // debug_print("pie [%d, %d, %d, %d], %d, %d\n", x, y, width, height, angle1, angle2);
+    painter->drawPie(x, y, width, height, angle1 * 16, angle2 * 16);
   } else {
-    // debug_print("arc [%d, %d, %d, %d], %d, %d\n", x, y, width, height, angle1
-    // * 64, angle2 * 64);
+    // debug_print("arc [%d, %d, %d, %d], %d, %d\n", x, y, width, height, angle1, angle2);
     painter->setBrush(Qt::NoBrush);
-    painter->drawArc(x, y, width, height, angle1 * 64, angle2 * 64);
+    painter->drawArc(x, y, width, height, angle1 * 16, angle2 * 16);
   }
 
   delete painter;
