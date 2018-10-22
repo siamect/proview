@@ -39,6 +39,7 @@
 
 #include <stack>
 
+#include "glow_customcolors.h"
 #include "glow_draw.h"
 
 #include <QColor>
@@ -72,8 +73,6 @@ public:
   QPixmap* background_pixmap;
   int background_pixmap_width;
   int background_pixmap_height;
-  /*int buffer_width;
-  int buffer_height;*/
 };
 
 typedef struct {
@@ -81,6 +80,8 @@ typedef struct {
   void (*callback_func)(GlowCtx* ctx);
   QTimer* timer_id;
 } glow_draw_sTimerCb;
+
+class GlowCustomColorsQt;
 
 class GlowDrawQt : private QObject, public GlowDraw {
   Q_OBJECT
@@ -99,7 +100,8 @@ public:
   QTimer* timer_id;
   int click_sensitivity;
   int closing_down;
-  std::stack<GlowCustomColors> customcolors;
+  GlowCustomColorsQt* customcolors[10];
+  int customcolors_cnt;
 
   int event_handler(QEvent* event, QWidget *target);
   virtual void enable_event(glow_eEvent event, glow_eEventType event_type,
@@ -250,7 +252,7 @@ public:
   void set_customcolors(GlowCustomColors* cc);
   void pop_customcolors();
   GlowCustomColors* create_customcolors();
-  GlowCustomColors* get_customcolors();
+  GlowCustomColorsQt* get_customcolors();
   void reset_customcolors(GlowCustomColors* cc);
 
 private:
@@ -291,6 +293,21 @@ public:
   std::ofstream fp;
   double x;
   double y;
+};
+
+class GlowCustomColorsQt : public GlowCustomColors {
+public:
+  GlowCustomColorsQt() : color_vect_cnt(0)
+  {
+    memset(color_vect, 0, sizeof(color_vect));
+  }
+  ~GlowCustomColorsQt()
+  {
+  }
+
+  QColor
+      color_vect[glow_eDrawType_CustomColor__ - glow_eDrawType_CustomColor1];
+  int color_vect_cnt;
 };
 
 #endif

@@ -37,6 +37,8 @@
 #ifndef glow_customcolors_h
 #define glow_customcolors_h
 
+#include <fstream>
+
 #include "glow.h"
 
 /*! \file glow_customcolors.h

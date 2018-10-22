@@ -232,7 +232,11 @@ static QColor glow_allocate_custom_color(GlowDrawQt* draw_ctx,
     return QColor();
   }
 
-  return QColor(rgb_red, rgb_green, rgb_blue);
+  QColor color(rgb_red, rgb_green, rgb_blue);
+
+  draw_ctx->get_customcolors()->color_vect[drawtype - glow_eDrawType_CustomColor1] = color;
+
+  return color;
 }
 
 GlowDrawQt::~GlowDrawQt()
@@ -274,12 +278,14 @@ int GlowDrawQt::init_nav(QWidget* nav_widget)
 GlowDrawQt::GlowDrawQt(QWidget* toplevel, void** glow_ctx,
     int (*init_proc)(QWidget* w, GlowCtx* ctx, void* client_data),
     void* client_data, glow_eCtxType type)
-    : click_sensitivity(0), closing_down(0)
+    : click_sensitivity(0), closing_down(0), customcolors_cnt(0)
 {
   timer_id = new QTimer(this);
   m_wind = new DrawWindQt();
   nav_wind = new DrawWindQt();
   nav_wind->is_nav = 1;
+
+  memset(customcolors, 0, sizeof(customcolors));
 
   if (type == glow_eCtxType_Brow) {
     ctx = (GlowCtx*)new BrowCtx("Claes context", 20);
@@ -1211,8 +1217,7 @@ int GlowDrawQt::polyline_helper(GlowWind* wind, int painter_type, int size,
   if (!fill) {
     painter->setBrush(Qt::NoBrush);
   }
-  // debug_print("polyline painter_type=%d, fill=%d, point_cnt=%d\n",
-  // painter_type, fill, point_cnt);
+  // debug_print("polyline painter_type=%d, fill=%d, point_cnt=%d\n", painter_type, fill, point_cnt);
   painter->drawPolygon(qpoints, point_cnt);
 
   delete[] qpoints;
@@ -1285,6 +1290,7 @@ int GlowDrawQt::text(GlowWind* wind, int x, int y, char* text, int len,
 
   QRect rect
       = painter->fontMetrics().boundingRect(QString::fromLocal8Bit(text, len));
+  // debug_print("text %s on %d,%d\n", text, x, y);
   painter->drawText(x, y, rect.width(), rect.height(), Qt::TextDontClip,
       QString::fromLocal8Bit(text, len));
 
@@ -1318,6 +1324,7 @@ int GlowDrawQt::text_cursor(GlowWind* wind, int x, int y, char* text, int len,
     set_clip(w, get_painter(this, painter_type, idx));
   }
 
+  // debug_print("cursor %d,%d to %d,%d\n", x + width, y + descent, x + width, y - height + descent);
   painter->drawLine(x + width, y + descent, x + width, y - height + descent);
 
   delete painter;
@@ -1361,6 +1368,7 @@ int GlowDrawQt::text_erase(GlowWind* wind, int x, int y, char* text, int len,
 
   QRect rect
       = painter->fontMetrics().boundingRect(QString::fromLocal8Bit(text, len));
+  // debug_print("textErase %s on %d,%d\n", text, x, y);
   painter->drawText(x, y, rect.width(), rect.height(), Qt::TextDontClip,
       QString::fromLocal8Bit(text, len));
 
@@ -1977,40 +1985,12 @@ int GlowDrawQt::create_buffer(GlowWind* wind)
     window_height = ctx->navw.window_height;
   }
 
-  /*
-  if (!w->double_buffer_on || !window_width) {
-    return 0;
-  }
-
-  if (window_width == w->buffer->width() &&
-      window_height == w->buffer->height()) {
-    return 0;
-  }
-
-  if (w->buffer) {
-    delete w->buffer;
-  }
-
-  w->buffer = new QImage(window_width, window_height, QImage::Format_RGB32);
-  w->buffer_width = window_width;
-  w->buffer_height = window_height;
-  */
-
   buffer_background(w, 0);
   return 1;
 }
 
 void GlowDrawQt::delete_buffer(GlowWind* wind)
 {
-  /*
-  DrawWindQt *w = (DrawWindQt *) wind->window;
-
-  if (w->buffer) {
-    delete w->buffer;
-  }
-  w->buffer_width = 0;
-  w->buffer_height = 0;
-   */
 }
 
 void GlowDrawQt::buffer_background(DrawWind* wind, GlowCtx* cctx)
@@ -2904,6 +2884,7 @@ int GlowDrawQt::gradient_fill_rect(GlowWind* wind, int x, int y, int w, int h,
   if (!gradient_create_pattern(x, y, w, h, d0, d1, d2, gradient, &pat)) {
     return 0;
   }
+  // debug_print("gradient fillRect [%d,%d,%d,%d]\n", x, y, w, h);
   painter->fillRect(QRect(x, y, w, h), *pat);
 
   delete pat;
@@ -2932,6 +2913,7 @@ int GlowDrawQt::gradient_fill_rectrounded(GlowWind* wind, int x, int y, int w,
     return 0;
   }
 
+  // debug_print("gradient fillRect rounded [%d,%d,%d,%d]\n", x, y, w, h);
   if (roundamount >= 0) {
     QPainterPath path;
     path.addRoundedRect(QRect(x, y, w, h), roundamount, roundamount);
@@ -3107,6 +3089,7 @@ int GlowDrawQt::text_qt(GlowWind* wind, int x, int y, char* text, int len,
     px = x;
     py = (int)(y - (1.0 - FONT_DESCENT) * height);
   }
+  // debug_print("textQt %s on %d,%d with color %s, painter_type=%d, color=%d\n", text, px, py, qPrintable(painter->pen().color().name()), painter_type, color);
   painter->drawText(px, py, rect.width(), rect.height(), Qt::TextDontClip, str);
 
   delete painter;
@@ -3179,6 +3162,7 @@ int GlowDrawQt::text_erase_qt(GlowWind* wind, int x, int y, char* text, int len,
     set_clip(w, painter);
   }
 
+  // debug_print("textEraseQt %s on %d,%d\n", text, px, py);
   painter->fillRect(px, py, pw, ph, painter->brush());
 
   delete painter;
@@ -3318,38 +3302,47 @@ void GlowDrawQt::update_color(glow_eDrawType color)
 
 void GlowDrawQt::push_customcolors(GlowCustomColors* cc)
 {
-  customcolors.push(*cc);
+  if (customcolors_cnt > 10) {
+    printf("** Max number custom colors exceede\n");
+    return;
+  }
+
+  for (int i = customcolors_cnt; i > 0; i--)
+    customcolors[i] = customcolors[i - 1];
+  customcolors[0] = (GlowCustomColorsQt*)cc;
+  customcolors_cnt++;
 }
 
 void GlowDrawQt::set_customcolors(GlowCustomColors* cc)
 {
-  while (!customcolors.empty()) {
-    customcolors.pop();
-  }
-  customcolors.push(*cc);
+  customcolors[0] = (GlowCustomColorsQt*)cc;
+  customcolors_cnt = 1;
 }
 
 void GlowDrawQt::pop_customcolors()
 {
-  if (customcolors.empty()) {
+  if (customcolors_cnt <= 0) {
     printf("** Customcolor stack disorder\n");
   }
-  customcolors.pop();
+  for (int i = 0; i < customcolors_cnt - 1; i++)
+    customcolors[i] = customcolors[i + 1];
+  customcolors_cnt--;
 }
 
-GlowCustomColors* GlowDrawQt::get_customcolors()
+GlowCustomColorsQt* GlowDrawQt::get_customcolors()
 {
-  if (customcolors.empty()) {
+  if (customcolors_cnt == 0)
     return 0;
-  }
-  return &customcolors.top();
+  return customcolors[0];
 }
 
 GlowCustomColors* GlowDrawQt::create_customcolors()
 {
-  return new GlowCustomColors();
+  return new GlowCustomColorsQt();
 }
 
 void GlowDrawQt::reset_customcolors(GlowCustomColors* cc)
 {
+  memset(((GlowCustomColorsQt*)cc)->color_vect, 0,
+      sizeof(((GlowCustomColorsQt*)cc)->color_vect));
 }
