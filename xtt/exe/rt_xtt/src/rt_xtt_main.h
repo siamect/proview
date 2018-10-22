@@ -56,7 +56,7 @@ public:
   void (*india_ok_cb)(Xtt*, char*);
   qcom_sQid queid;
   CoWowTimer* timerid;
-  CoWow* wow;
+  CoWow* wow = NULL;
   pwr_tOName opplace_str;
   int quiet;
   int attach_audio;
