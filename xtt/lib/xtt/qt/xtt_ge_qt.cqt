@@ -225,6 +225,7 @@ XttGeQt::~XttGeQt()
   if (nav_shell) {
     nav_shell->close();
   }
+  delete graph;
 }
 
 void XttGeQt::pop()
@@ -285,7 +286,6 @@ XttGeQt::XttGeQt(QWidget* xg_parent_wid, void* xg_parent_ctx,
   // Qt
   if (!(options & ge_mOptions_Embedded)) {
     toplevel = new XttGeQtWidget(this, xg_parent_wid);
-    toplevel->setToolTip(fl("xtt_ge widget"));
     toplevel->setMinimumSize(window_width, window_height);
     toplevel->setWindowTitle(QString::fromLatin1(title));
     toplevel->setAttribute(Qt::WA_DeleteOnClose);

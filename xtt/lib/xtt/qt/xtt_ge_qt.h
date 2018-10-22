@@ -55,7 +55,7 @@ public:
   QWidget* graph_form;
   QLineEdit* value_input;
   QWidget* value_dialog;
-  QMessageBox* confirm_widget;
+  QMessageBox* confirm_widget = NULL;
   CoWowFocusTimerQt focustimer;
 
   XttGeQt(QWidget* parent_wid, void* parent_ctx, const char* name,
