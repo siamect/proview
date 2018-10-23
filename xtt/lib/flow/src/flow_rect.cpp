@@ -264,13 +264,12 @@ void FlowRect::nav_erase(void* pos, void* node)
 int FlowRect::event_handler(
     void* pos, flow_eEvent event, int x, int y, void* node)
 {
-  FlowPoint* p;
+  FlowPoint* p = (FlowPoint*)pos;
 
-  p = (FlowPoint*)pos;
-  if (ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x <= x
-      && x <= ur.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x
-      && ll.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y <= y
-      && y <= ur.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y) {
+  if (ll.z_x + p->z_x - ctx->offset_x <= x
+      && x <= ur.z_x + p->z_x - ctx->offset_x
+      && ll.z_y + p->z_y - ctx->offset_y <= y
+      && y <= ur.z_y + p->z_y - ctx->offset_y) {
     //    std::cout << "Event handler: Hit in rect\n";
     return 1;
   } else

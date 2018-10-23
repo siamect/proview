@@ -158,7 +158,7 @@ void RtTraceQtWidget::activate_zoomreset()
 
 void RtTraceQtWidget::activate_scantime()
 {
-  rt->scan_time = ((QAction*)sender())->data().toInt();
+  rt->scan_time = ((QAction*)sender())->data().toFloat();
 }
 
 void RtTraceQtWidget::activate_help()
@@ -339,19 +339,19 @@ RtTraceQt::RtTraceQt(void* tr_parent_ctx, QWidget* tr_parent_wid,
   QActionGroup* view_sc_group = new QActionGroup(toplevel);
   QAction* a = addMenuRadioItem(
       toplevel, view_sc, "0.50 s", SLOT(activate_scantime()), view_sc_group);
-  a->setData(500);
+  a->setData(0.5f);
   a = addMenuRadioItem(
       toplevel, view_sc, "0.20 s", SLOT(activate_scantime()), view_sc_group);
-  a->setData(200);
+  a->setData(0.2f);
   a = addMenuRadioItem(
       toplevel, view_sc, "0.10 s", SLOT(activate_scantime()), view_sc_group);
-  a->setData(100);
+  a->setData(0.1f);
   a = addMenuRadioItem(
       toplevel, view_sc, "0.05 s", SLOT(activate_scantime()), view_sc_group);
-  a->setData(50);
+  a->setData(0.05f);
   a = addMenuRadioItem(
       toplevel, view_sc, "0.02 s", SLOT(activate_scantime()), view_sc_group);
-  a->setData(20);
+  a->setData(0.02f);
   // End submenu
   // End View entry
 
@@ -426,10 +426,10 @@ RtTraceQt::RtTraceQt(void* tr_parent_ctx, QWidget* tr_parent_wid,
   viewsetup();
   flow_Open(flow_ctx, filename);
 
-  mode_trace->setChecked(true);
-  mode_trace->trigger();
   view_sc_group->actions()[0]->setChecked(true);
   view_sc_group->actions()[0]->trigger();
+  mode_trace->setChecked(true);
+  mode_trace->trigger();
 
 #if defined OS_LINUX
   {
