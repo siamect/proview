@@ -1211,16 +1211,19 @@ int GlowDrawQt::polyline_helper(GlowWind* wind, int painter_type, int size,
     set_clip(w, painter);
   }
 
-  int cnt;
-  QPoint* qpoints = points_to_qt_points_curve(wind, points, point_cnt, &cnt);
-
-  if (!fill) {
+  if (fill) {
+    int cnt;
+    QPoint* qpoints = points_to_qt_points_curve(wind, points, point_cnt, &cnt);
+    painter->drawPolygon(qpoints, cnt);
+    delete[] qpoints;
+  } else {
+    QPoint* qpoints = points_to_qt_points(points, point_cnt);
     painter->setBrush(Qt::NoBrush);
+    debug_print("polyline painter_type=%d, fill=%d, point_cnt=%d\n", painter_type, fill, point_cnt);
+    painter->drawPolyline(qpoints, point_cnt);
+    delete[] qpoints;
   }
-  // debug_print("polyline painter_type=%d, fill=%d, point_cnt=%d\n", painter_type, fill, point_cnt);
-  painter->drawPolygon(qpoints, point_cnt);
 
-  delete[] qpoints;
   delete painter;
 
   return 1;
@@ -1252,7 +1255,7 @@ int GlowDrawQt::polyline_erase(
     GlowWind* wind, glow_sPointX* points, int point_cnt, int idx)
 {
   return polyline_helper(
-      wind, glow_eDrawType_LineErase, idx, points, point_cnt, true);
+      wind, glow_eDrawType_LineErase, idx, points, point_cnt);
 }
 
 int GlowDrawQt::text(GlowWind* wind, int x, int y, char* text, int len,
