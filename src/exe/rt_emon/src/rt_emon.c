@@ -1084,7 +1084,7 @@ static sBlock* blockListAlloc()
   bl = ll->next;
   LstRemove(bl);
   --l.emon->FreeCount;
-  return LstEntry(bl, sBlock, block_l);
+  return LstEntry(bl, sBlock, link.active_l);
 }
 
 static void blockListFree(sBlock* bp)
@@ -2587,7 +2587,7 @@ static sApplActive* handlerListAlloc(pwr_eSystemEventTypeEnum event)
   --l.emon->AlarmMaxCount;
   l.handlerListCount++;
 
-  return LstEntry(hl, sApplActive, active_l);
+  return LstEntry(hl, sApplActive, link.active_l);
 }
 
 static void handlerListFree(sApplActive* hp)

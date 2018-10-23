@@ -5407,6 +5407,11 @@ int grow_SetWindowSource(grow_tObject window, char* source, char* owner)
   return ((GrowWindow*)window)->set_source(source, owner);
 }
 
+grow_tCtx grow_GetWindowCtx( grow_tObject window)
+{
+  return ((GrowWindow *)window)->window_ctx;
+}
+
 void grow_GetWindowSize(grow_tCtx ctx, int* width, int* height)
 {
   *width = ctx->mw.window_width;
@@ -5751,5 +5756,7 @@ void grow_NavRedraw(grow_tCtx ctx)
 {
   ((GrowCtx*)ctx)->nav_zoom();
 }
+
+
 
 /*@}*/

@@ -312,4 +312,5 @@ static void* log_thread(void* arg)
       }
     }
   }
+  return NULL;
 }

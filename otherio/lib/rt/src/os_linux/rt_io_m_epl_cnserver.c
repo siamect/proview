@@ -57,6 +57,7 @@
 #include "Epl.h"
 #include <errno.h>
 #include <math.h>
+#include <unistd.h>
 #include <rt_pwr_msg.h>
 
 /***************************************************************************/

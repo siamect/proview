@@ -66,7 +66,7 @@ public:
   GlowArray(int allocate, int incr);
 
   //! Noargs constructor.
-  GlowArray(){}
+  GlowArray(): allocated(0),alloc_incr(0),a_size(0),a(NULL) {}
 
   //! Initiates an array to be a copy of another array.
   /*!
