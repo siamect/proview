@@ -42,6 +42,7 @@
 #include "ge.h"
 
 #include <QAction>
+#include <QComboBox>
 #include <QLabel>
 #include <QSplitter>
 
@@ -62,7 +63,9 @@ public:
   QLabel* msg_label;
   QLabel* cmd_prompt;
   QAction* grid_on_w;
-  QAction* grid_sizes[4];
+  QComboBox* tools_gridsize;
+  QComboBox* tools_gradient;
+  QComboBox* tools_textfont;
   QAction* show_grid_w;
   QAction* view_plant_w;
   QAction* view_graphlist_w;
@@ -217,17 +220,18 @@ public slots:
   void activate_decr_intensity();
   void activate_incr_shift();
   void activate_decr_shift();
+  void activate_gradient(int idx);
   void activate_gradient();
   void activate_reset_mode();
   void activate_scale();
   void activate_scale_double();
   void activate_scale_half();
   void activate_grid(bool set);
-  void activate_linewidth();
-  void activate_linetype();
-  void activate_gridsize();
-  void activate_textsize();
-  void activate_textfont();
+  void activate_linewidth(int idx);
+  void activate_linetype(int idx);
+  void activate_gridsize(int idx);
+  void activate_textsize(int idx);
+  void activate_textfont(int idx);
   void activate_textbold(bool set);
   void activate_zoom_in();
   void activate_zoom_out();

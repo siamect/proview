@@ -63,11 +63,63 @@
 #include "wb_wnav_selformat.h"
 
 #include <QApplication>
+#include <QFontDatabase>
 #include <QHBoxLayout>
 #include <QInputDialog>
 #include <QMenuBar>
 #include <QMessageBox>
+#include <QPainter>
 #include <QPushButton>
+
+// For some reason the QFontComboBox in QT is broken and do not support fonts
+// such as "Helvetica" despite QFont supporting them.
+// So we implement our own QFontComboBox using a standard QComboBox,
+// and let this QFontDelegate class do the rendering.
+// This QFontDelegate is more or less a copy of the one in QFontComboBox.
+class QFontDelegate : public QAbstractItemDelegate
+{
+public:
+  explicit QFontDelegate(QObject *parent) : QAbstractItemDelegate(parent) {}
+  void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+  QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
+};
+
+void QFontDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const {
+    QString text = index.data(Qt::DisplayRole).toString();
+    QFont font(text);
+
+    QRect r = option.rect;
+
+    if (option.state & QStyle::State_Selected) {
+        painter->save();
+        painter->setBrush(option.palette.highlight());
+        painter->setPen(Qt::NoPen);
+        painter->drawRect(option.rect);
+        painter->setPen(QPen(option.palette.highlightedText(), 0));
+    }
+
+    if (option.direction == Qt::RightToLeft)
+        r.setRight(r.right() - 4);
+    else
+        r.setLeft(r.left() + 4);
+
+    QFont old = painter->font();
+    painter->setFont(font);
+    painter->drawText(r, Qt::AlignVCenter|Qt::AlignLeading|Qt::TextSingleLine, text);
+
+    painter->setFont(old);
+
+    if (option.state & QStyle::State_Selected)
+        painter->restore();
+}
+
+QSize QFontDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    QString text = index.data(Qt::DisplayRole).toString();
+    QFont font(option.font);
+    QFontMetrics fontMetrics(font);
+    return QSize(fontMetrics.width(text), 22);
+}
 
 int GeQt::create_modal_dialog(const char* title, const char* text,
     const char* button1, const char* button2, const char* button3,
@@ -893,10 +945,17 @@ void GeQtWidget::activate_decr_shift()
   ge->activate_decr_shift();
 }
 
+void GeQtWidget::activate_gradient(int idx)
+{
+  int data = ((QComboBox*)sender())->itemData(idx).toInt();
+  ge->activate_gradient(static_cast<glow_eGradient>(data));
+}
+
 void GeQtWidget::activate_gradient()
 {
-  QAction* a = ((QAction*)sender());
-  ge->activate_gradient(static_cast<glow_eGradient>(a->data().toInt()));
+  int data = ((QAction*)sender())->data().toInt();
+  ge->tools_gradient->setCurrentIndex(ge->tools_gradient->findData(data));
+  ge->activate_gradient(static_cast<glow_eGradient>(data));
 }
 
 void GeQtWidget::activate_reset_mode()
@@ -924,36 +983,36 @@ void GeQtWidget::activate_grid(bool set)
   ge->activate_grid(set);
 }
 
-void GeQtWidget::activate_linewidth()
+void GeQtWidget::activate_linewidth(int idx)
 {
-  QAction* a = ((QAction*)sender());
-  ge->activate_linewidth(a->data().toInt());
+  int data = ((QComboBox*)sender())->itemData(idx).toInt();
+  ge->activate_linewidth(data);
 }
 
-void GeQtWidget::activate_linetype()
+void GeQtWidget::activate_linetype(int idx)
 {
-  QAction* a = ((QAction*)sender());
-  ge->graph->set_linetype(static_cast<glow_eLineType>(a->data().toInt()));
-  ge->graph->set_select_linetype(
-      static_cast<glow_eLineType>(a->data().toInt()));
+  int data = ((QComboBox*)sender())->itemData(idx).toInt();
+  ge->graph->set_linetype(static_cast<glow_eLineType>(data));
+  ge->graph->set_select_linetype(static_cast<glow_eLineType>(data));
 }
 
-void GeQtWidget::activate_gridsize()
+void GeQtWidget::activate_gridsize(int idx)
 {
-  QAction* a = ((QAction*)sender());
-  ge->activate_gridsize(a->data().toDouble());
+  double data = ((QComboBox*)sender())->itemData(idx).toDouble();
+  ge->activate_gridsize(data);
 }
 
-void GeQtWidget::activate_textsize()
+void GeQtWidget::activate_textsize(int idx)
 {
-  QAction* a = ((QAction*)sender());
-  ge->activate_textsize(a->data().toInt());
+  int data = ((QComboBox*)sender())->itemData(idx).toInt();
+  ge->activate_textsize(data);
 }
 
-void GeQtWidget::activate_textfont()
+void GeQtWidget::activate_textfont(int idx)
 {
-  QAction* a = ((QAction*)sender());
-  ge->activate_textfont(static_cast<glow_eFont>(a->data().toInt()));
+  int data = ((QComboBox*)sender())->itemData(idx).toInt();
+  ge->activate_textfont(static_cast<glow_eFont>(data));
+  ge->tools_textfont->setFont(QFont(ge->tools_textfont->itemText(idx)));
 }
 
 void GeQtWidget::activate_textbold(bool set)
@@ -1143,13 +1202,16 @@ void GeQtWidget::activate_help_subgraph()
 void GeQtWidget::valchanged_cmd_entry()
 {
   if (ge->text_input_open) {
-    ge->graph->change_text(ge->current_text_object, qPrintableLatin1(ge->recall_entry->text()));
+    ge->graph->change_text(
+        ge->current_text_object, qPrintableLatin1(ge->recall_entry->text()));
     ge->text_input_open = 0;
   } else if (ge->name_input_open) {
-    ge->graph->change_name(ge->current_text_object, qPrintableLatin1(ge->recall_entry->text()));
+    ge->graph->change_name(
+        ge->current_text_object, qPrintableLatin1(ge->recall_entry->text()));
     ge->name_input_open = 0;
   } else if (ge->value_input_open) {
-    ge->graph->change_value(ge->current_value_object, qPrintableLatin1(ge->recall_entry->text()));
+    ge->graph->change_value(
+        ge->current_value_object, qPrintableLatin1(ge->recall_entry->text()));
     ge->value_input_open = 0;
   } else if (ge->objectnav_input_open) {
     ge->objectnav->set_attr_value(qPrintableLatin1(ge->recall_entry->text()));
@@ -1171,13 +1233,13 @@ void GeQt::update()
   show_grid_w->setChecked(graph->get_show_grid() ? true : false);
 
   if (fabs(graph->grid_size_x - 0.1) < DBL_EPSILON) {
-    grid_sizes[3]->setChecked(true);
+    tools_gridsize->setCurrentIndex(3);
   } else if (fabs(graph->grid_size_x - 0.2) < DBL_EPSILON) {
-    grid_sizes[2]->setChecked(true);
+    tools_gridsize->setCurrentIndex(2);
   } else if (fabs(graph->grid_size_x - 0.5) < DBL_EPSILON) {
-    grid_sizes[1]->setChecked(true);
+    tools_gridsize->setCurrentIndex(1);
   } else {
-    grid_sizes[0]->setChecked(true);
+    tools_gridsize->setCurrentIndex(0);
   }
 }
 
@@ -1662,69 +1724,51 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
       toplevel, tools3, "Redo", SLOT(activate_redo()), "$pwr_exe/ge_redo.png");
 
   // Line width option menu
-  QMenu* tools_linewidth = addToolMenu(toplevel, tools3, "Line Width");
+  QComboBox* tools_linewidth
+      = addToolMenu(toplevel, tools3, SLOT(activate_linewidth(int)));
   for (int i = 1; i <= 8; i++) {
     std::ostringstream txt;
     txt << "Linewidth " << i;
     std::ostringstream fname;
     fname << "$pwr_exe/ge_linewidth_" << i << ".png";
-    QAction* action = addMenuItem(toplevel, tools_linewidth, txt.str().c_str(),
-        SLOT(activate_linewidth()), "", fname.str().c_str());
-    action->setData(i);
+    tools_linewidth->addItem(
+        get_icon(fname.str().c_str()), txt.str().c_str(), i);
   }
 
   // Line type option menu
-  QMenu* tools_linetype = addToolMenu(toplevel, tools3, "Line Type");
+  QComboBox* tools_linetype
+      = addToolMenu(toplevel, tools3, SLOT(activate_linetype(int)));
   for (int i = 1; i <= 7; i++) {
     std::ostringstream txt;
     txt << "Linetype " << i;
     std::ostringstream fname;
     fname << "$pwr_exe/ge_linetype_" << i << ".png";
-    QAction* action = addMenuItem(toplevel, tools_linetype, txt.str().c_str(),
-        SLOT(activate_linetype()), "", fname.str().c_str());
-    action->setData(i);
+    tools_linetype->addItem(
+        get_icon(fname.str().c_str()), txt.str().c_str(), i);
   }
 
   // Text size options menu
-  QMenu* tools_textsize = addToolMenu(toplevel, tools3, "Text Size");
+  QComboBox* tools_textsize
+      = addToolMenu(toplevel, tools3, SLOT(activate_textsize(int)));
   int sizes[] = { 8, 10, 12, 14, 18, 24 };
   for (int i = 0; i <= 5; i++) {
     std::ostringstream txt;
     txt << "Textsize " << sizes[i];
     std::ostringstream fname;
     fname << "$pwr_exe/ge_textsize_" << sizes[i] << ".png";
-    QAction* action = addMenuItem(toplevel, tools_textsize, txt.str().c_str(),
-        SLOT(activate_textsize()), "", fname.str().c_str());
-    action->setData(i);
+    tools_textsize->addItem(
+        get_icon(fname.str().c_str()), txt.str().c_str(), i);
   }
 
   // Text font options menu
-  QMenu* tools_textfont = addToolMenu(toplevel, tools3, "Font");
-
-  QAction* tools_textfont_1 = addMenuItem(
-      toplevel, tools_textfont, "Helvetica", SLOT(activate_textfont()));
-  tools_textfont_1->setFont(QFont(fl("Helvetica")));
-  tools_textfont_1->setData(glow_eFont_Helvetica);
-
-  QAction* tools_textfont_2 = addMenuItem(
-      toplevel, tools_textfont, "Times", SLOT(activate_textfont()));
-  tools_textfont_2->setFont(QFont(fl("Times")));
-  tools_textfont_2->setData(glow_eFont_Times);
-
-  QAction* tools_textfont_3 = addMenuItem(toplevel, tools_textfont,
-      "New Century Schoolbook", SLOT(activate_textfont()));
-  tools_textfont_3->setFont(QFont(fl("New Century Schoolbook")));
-  tools_textfont_3->setData(glow_eFont_NewCenturySchoolbook);
-
-  QAction* tools_textfont_4 = addMenuItem(
-      toplevel, tools_textfont, "Courier", SLOT(activate_textfont()));
-  tools_textfont_4->setFont(QFont(fl("Courier")));
-  tools_textfont_4->setData(glow_eFont_Courier);
-
-  QAction* tools_textfont_5 = addMenuItem(
-      toplevel, tools_textfont, "Lucida Sans", SLOT(activate_textfont()));
-  tools_textfont_5->setFont(QFont(fl("Lucida Sans")));
-  tools_textfont_5->setData(glow_eFont_LucidaSans);
+  tools_textfont = addToolMenu(toplevel, tools3, SLOT(activate_textfont(int)));
+  tools_textfont->setItemDelegate(new QFontDelegate(tools_textfont));
+  tools_textfont->addItem("Helvetica", glow_eFont_Helvetica);
+  tools_textfont->addItem("Times", glow_eFont_Times);
+  tools_textfont->addItem("New Century Schoolbook", glow_eFont_NewCenturySchoolbook);
+  tools_textfont->addItem("Courier", glow_eFont_Courier);
+  tools_textfont->addItem("Lucida Sans", glow_eFont_LucidaSans);
+  tools_textfont->setFont(QFont("Courier"));
 
   // Bold checkbutton
   addCheckableToolItem(toplevel, tools3,
@@ -1734,14 +1778,12 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
   // Toolbar 2 (again)
 
   // Grid size options menu
-  QMenu* tools_gridsize = addToolMenu(toplevel, tools2, "Grid Size");
+  tools_gridsize = addToolMenu(toplevel, tools2, SLOT(activate_gridsize(int)));
   double sizes2[] = { 1.0, 0.5, 0.25, 0.1 };
   for (int i = 0; i < 4; i++) {
     std::ostringstream txt;
     txt << "Gridsize " << sizes2[i];
-    grid_sizes[i] = addMenuItem(
-        toplevel, tools_gridsize, txt.str().c_str(), SLOT(activate_gridsize()));
-    grid_sizes[i]->setData(sizes2[i]);
+    tools_gridsize->addItem(txt.str().c_str(), sizes2[i]);
   }
 
   // Show grid checkbutton
@@ -1777,111 +1819,49 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
       "$pwr_exe/ge_arrowright.png");
 
   // Gradient option menu
-  QMenu* tools_gradient = addToolMenu(toplevel, tools2, "Gradient");
-  QAction* tools_gradient_no
-      = addMenuItem(toplevel, tools_gradient, "Gradient No",
-          SLOT(activate_gradient()), "", "$pwr_exe/ge_gradient_no.png");
-  tools_gradient_no->setData(glow_eGradient_No);
-
-  QAction* tools_gradient_horizup
-      = addMenuItem(toplevel, tools_gradient, "Gradient HorizontalUp",
-          SLOT(activate_gradient()), "", "$pwr_exe/ge_gradient_horizup.png");
-  tools_gradient_horizup->setData(glow_eGradient_HorizontalUp);
-
-  QAction* tools_gradient_horizdown
-      = addMenuItem(toplevel, tools_gradient, "Gradient HorizontalDown",
-          SLOT(activate_gradient()), "", "$pwr_exe/ge_gradient_horizdown.png");
-  tools_gradient_horizdown->setData(glow_eGradient_HorizontalDown);
-
-  QAction* tools_gradient_horiztube1
-      = addMenuItem(toplevel, tools_gradient, "Gradient HorizontalTube1",
-          SLOT(activate_gradient()), "", "$pwr_exe/ge_gradient_horiztube1.png");
-  tools_gradient_horiztube1->setData(glow_eGradient_HorizontalTube1);
-
-  QAction* tools_gradient_horiztube2
-      = addMenuItem(toplevel, tools_gradient, "Gradient HorizontalTube2",
-          SLOT(activate_gradient()), "", "$pwr_exe/ge_gradient_horiztube2.png");
-  tools_gradient_horiztube2->setData(glow_eGradient_HorizontalTube2);
-
-  QAction* tools_gradient_vertleft
-      = addMenuItem(toplevel, tools_gradient, "Gradient VerticalLeft",
-          SLOT(activate_gradient()), "", "$pwr_exe/ge_gradient_vertleft.png");
-  tools_gradient_vertleft->setData(glow_eGradient_VerticalLeft);
-
-  QAction* tools_gradient_vertright
-      = addMenuItem(toplevel, tools_gradient, "Gradient VerticalRight",
-          SLOT(activate_gradient()), "", "$pwr_exe/ge_gradient_vertright.png");
-  tools_gradient_vertright->setData(glow_eGradient_VerticalRight);
-
-  QAction* tools_gradient_verttube1
-      = addMenuItem(toplevel, tools_gradient, "Gradient VerticalTube1",
-          SLOT(activate_gradient()), "", "$pwr_exe/ge_gradient_verttube1.png");
-  tools_gradient_verttube1->setData(glow_eGradient_VerticalTube1);
-
-  QAction* tools_gradient_verttube2
-      = addMenuItem(toplevel, tools_gradient, "Gradient VerticalTube2",
-          SLOT(activate_gradient()), "", "$pwr_exe/ge_gradient_verttube2.png");
-  tools_gradient_verttube2->setData(glow_eGradient_VerticalTube2);
-
-  QAction* tools_gradient_diagupperleft = addMenuItem(toplevel, tools_gradient,
-      "Gradient DiagonalUpperLeft", SLOT(activate_gradient()), "",
-      "$pwr_exe/ge_gradient_diagupperleft.png");
-  tools_gradient_diagupperleft->setData(glow_eGradient_DiagonalUpperLeft);
-
-  QAction* tools_gradient_diaglowerleft = addMenuItem(toplevel, tools_gradient,
-      "Gradient DiagonalLowerLeft", SLOT(activate_gradient()), "",
-      "$pwr_exe/ge_gradient_diaglowerleft.png");
-  tools_gradient_diaglowerleft->setData(glow_eGradient_DiagonalLowerLeft);
-
-  QAction* tools_gradient_diagupperright = addMenuItem(toplevel, tools_gradient,
-      "Gradient DiagonalUpperRight", SLOT(activate_gradient()), "",
-      "$pwr_exe/ge_gradient_diagupperright.png");
-  tools_gradient_diagupperright->setData(glow_eGradient_DiagonalUpperRight);
-
-  QAction* tools_gradient_diaglowerright = addMenuItem(toplevel, tools_gradient,
-      "Gradient DiagonalLowerRight", SLOT(activate_gradient()), "",
-      "$pwr_exe/ge_gradient_diaglowerright.png");
-  tools_gradient_diaglowerright->setData(glow_eGradient_DiagonalLowerRight);
-
-  QAction* tools_gradient_diaguptube
-      = addMenuItem(toplevel, tools_gradient, "Gradient DiagonalUpTube",
-          SLOT(activate_gradient()), "", "$pwr_exe/ge_gradient_diaguptube.png");
-  tools_gradient_diaguptube->setData(glow_eGradient_DiagonalUpTube);
-
-  QAction* tools_gradient_diagdowntube = addMenuItem(toplevel, tools_gradient,
-      "Gradient DiagonalDownTube", SLOT(activate_gradient()), "",
-      "$pwr_exe/ge_gradient_diagdowntube.png");
-  tools_gradient_diagdowntube->setData(glow_eGradient_DiagonalDownTube);
-
-  QAction* tools_gradient_globe
-      = addMenuItem(toplevel, tools_gradient, "Gradient Globe",
-          SLOT(activate_gradient()), "", "$pwr_exe/ge_gradient_globe.png");
-  tools_gradient_globe->setData(glow_eGradient_Globe);
-
-  QAction* tools_gradient_radcenter
-      = addMenuItem(toplevel, tools_gradient, "Gradient RadialCenter",
-          SLOT(activate_gradient()), "", "$pwr_exe/ge_gradient_radcenter.png");
-  tools_gradient_radcenter->setData(glow_eGradient_RadialCenter);
-
-  QAction* tools_gradient_radupperleft = addMenuItem(toplevel, tools_gradient,
-      "Gradient RadialUpperLeft", SLOT(activate_gradient()), "",
-      "$pwr_exe/ge_gradient_radupperleft.png");
-  tools_gradient_radupperleft->setData(glow_eGradient_RadialUpperLeft);
-
-  QAction* tools_gradient_radlowerleft = addMenuItem(toplevel, tools_gradient,
-      "Gradient RadialLowerLeft", SLOT(activate_gradient()), "",
-      "$pwr_exe/ge_gradient_radlowerleft.png");
-  tools_gradient_radlowerleft->setData(glow_eGradient_RadialLowerLeft);
-
-  QAction* tools_gradient_radupperright = addMenuItem(toplevel, tools_gradient,
-      "Gradient RadialUpperRight", SLOT(activate_gradient()), "",
-      "$pwr_exe/ge_gradient_radupperright.png");
-  tools_gradient_radupperright->setData(glow_eGradient_RadialUpperRight);
-
-  QAction* tools_gradient_radlowerright = addMenuItem(toplevel, tools_gradient,
-      "Gradient RadialLowerRight", SLOT(activate_gradient()), "",
-      "$pwr_exe/ge_gradient_radlowerright.png");
-  tools_gradient_radlowerright->setData(glow_eGradient_RadialLowerRight);
+  tools_gradient = addToolMenu(toplevel, tools2, SLOT(activate_gradient(int)));
+  tools_gradient->addItem(get_icon("$pwr_exe/ge_gradient_no.png"),
+      "Gradient No", glow_eGradient_No);
+  tools_gradient->addItem(get_icon("$pwr_exe/ge_gradient_horizup.png"),
+      "Gradient HorizontalUp", glow_eGradient_HorizontalUp);
+  tools_gradient->addItem(get_icon("$pwr_exe/ge_gradient_horizdown.png"),
+      "Gradient HorizontalDown", glow_eGradient_HorizontalDown);
+  tools_gradient->addItem(get_icon("$pwr_exe/ge_gradient_horiztube1.png"),
+      "Gradient HorizontalTube1", glow_eGradient_HorizontalTube1);
+  tools_gradient->addItem(get_icon("$pwr_exe/ge_gradient_horiztube2.png"),
+      "Gradient HorizontalTube2", glow_eGradient_HorizontalTube2);
+  tools_gradient->addItem(get_icon("$pwr_exe/ge_gradient_vertleft.png"),
+      "Gradient VerticalLeft", glow_eGradient_VerticalLeft);
+  tools_gradient->addItem(get_icon("$pwr_exe/ge_gradient_vertright.png"),
+      "Gradient VerticalRight", glow_eGradient_VerticalRight);
+  tools_gradient->addItem(get_icon("$pwr_exe/ge_gradient_verttube1.png"),
+      "Gradient VerticalTube1", glow_eGradient_VerticalTube1);
+  tools_gradient->addItem(get_icon("$pwr_exe/ge_gradient_verttube2.png"),
+      "Gradient VerticalTube2", glow_eGradient_VerticalTube2);
+  tools_gradient->addItem(get_icon("$pwr_exe/ge_gradient_diagupperleft.png"),
+      "Gradient DiagonalUpperLeft", glow_eGradient_DiagonalUpperLeft);
+  tools_gradient->addItem(get_icon("$pwr_exe/ge_gradient_diaglowerleft.png"),
+      "Gradient DiagonalLowerLeft", glow_eGradient_DiagonalLowerLeft);
+  tools_gradient->addItem(get_icon("$pwr_exe/ge_gradient_diagupperright.png"),
+      "Gradient DiagonalUpperRight", glow_eGradient_DiagonalUpperRight);
+  tools_gradient->addItem(get_icon("$pwr_exe/ge_gradient_diaglowerright.png"),
+      "Gradient DiagonalLowerRight", glow_eGradient_DiagonalLowerRight);
+  tools_gradient->addItem(get_icon("$pwr_exe/ge_gradient_diaguptube.png"),
+      "Gradient DiagonalUpTube", glow_eGradient_DiagonalUpTube);
+  tools_gradient->addItem(get_icon("$pwr_exe/ge_gradient_diagdowntube.png"),
+      "Gradient DiagonalDownTube", glow_eGradient_DiagonalDownTube);
+  tools_gradient->addItem(get_icon("$pwr_exe/ge_gradient_globe.png"),
+      "Gradient Globe", glow_eGradient_Globe);
+  tools_gradient->addItem(get_icon("$pwr_exe/ge_gradient_radcenter.png"),
+      "Gradient RadialCenter", glow_eGradient_RadialCenter);
+  tools_gradient->addItem(get_icon("$pwr_exe/ge_gradient_radupperleft.png"),
+      "Gradient RadialUpperLeft", glow_eGradient_RadialUpperLeft);
+  tools_gradient->addItem(get_icon("$pwr_exe/ge_gradient_radlowerleft.png"),
+      "Gradient RadialLowerLeft", glow_eGradient_RadialLowerLeft);
+  tools_gradient->addItem(get_icon("$pwr_exe/ge_gradient_radupperright.png"),
+      "Gradient RadialUpperRight", glow_eGradient_RadialUpperRight);
+  tools_gradient->addItem(get_icon("$pwr_exe/ge_gradient_radlowerright.png"),
+      "Gradient RadialLowerRight", glow_eGradient_RadialLowerRight);
 
   // Gradient buttons
   QAction* tools_button_gradient_no
@@ -2044,6 +2024,10 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
   toplevel->setLayout(vbox);
 
   toplevel->show();
+
+  tools_textfont->setFixedHeight(tools_textsize->height());
+  tools_textfont->setFixedWidth(tools_textfont->width());
+  tools_textfont->setFont(QFont("Helvetica"));
 
   graph_list->setVisible(false);
   objectnav_w->setVisible(false);

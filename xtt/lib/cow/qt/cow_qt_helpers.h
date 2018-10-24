@@ -38,6 +38,7 @@
 #define QT_HELPERS_H
 
 #include <QAction>
+#include <QComboBox>
 #include <QLabel>
 #include <QSplitter>
 #include <QStatusBar>
@@ -89,7 +90,7 @@ QAction* addToolItem(QObject* parent, QToolBar* tools, const char* text,
     const char* callback, const char* iconName);
 QAction* addCheckableToolItem(QObject* parent, QToolBar* tools,
     const char* text, const char* callback, const char* iconName);
-QMenu* addToolMenu(QWidget* parent, QToolBar* tools, const char* text);
+QComboBox* addToolMenu(QWidget* parent, QToolBar* tools, const char* callback);
 QWidget* layout_to_widget(QLayout* layout);
 void set_pane_position(QSplitter* pane, int right);
 QFrame* separator(QFrame::Shape shape);

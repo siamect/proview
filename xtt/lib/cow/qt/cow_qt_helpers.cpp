@@ -227,14 +227,11 @@ QAction* addCheckableToolItem(QObject* parent, QToolBar* tools,
   return action;
 }
 
-QMenu* addToolMenu(QWidget* parent, QToolBar* tools, const char* text)
+QComboBox* addToolMenu(QWidget* parent, QToolBar* tools, const char* callback)
 {
-  QToolButton* button = new QToolButton(parent);
-  button->setText(translate_utf8(text));
-  button->setPopupMode(QToolButton::InstantPopup);
-  QMenu* menu = new QMenu(button);
-  button->setMenu(menu);
-  tools->addWidget(button);
+  QComboBox* menu = new QComboBox(parent);
+  QObject::connect(menu, SIGNAL(activated(int)), parent, callback);
+  tools->addWidget(menu);
   return menu;
 }
 
