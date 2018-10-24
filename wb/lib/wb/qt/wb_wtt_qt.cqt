@@ -578,10 +578,10 @@ int WttQt::create_popup_menu(pwr_sAttrRef aref, int x, int y)
   int sts;
 
   // Calculate position
-  if (((WNavQt*)wnavnode)->brow_widget->window()->isActiveWindow()) {
+  if (((WNavQt*)wnavnode)->brow_widget->hasFocus()) {
     CoWowQt::PopupPosition(
         ((WNavQt*)wnavnode)->brow_widget, x, y, &popupmenu_x, &popupmenu_y);
-  } else if (((WNavQt*)wnav)->brow_widget->window()->isActiveWindow()) {
+  } else if (((WNavQt*)wnav)->brow_widget->hasFocus()) {
     CoWowQt::PopupPosition(
         ((WNavQt*)wnav)->brow_widget, x, y, &popupmenu_x, &popupmenu_y);
   } else {
