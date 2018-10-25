@@ -107,7 +107,6 @@ GraphQt::~GraphQt()
 
 void GraphQt::trace_timer_remove()
 {
-  delete trace_obj;
   trace_timerid->stop();
 }
 

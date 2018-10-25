@@ -442,4 +442,5 @@ AttrQt::~AttrQt()
   if (original_data) {
     delete original_data;
   }
+  delete (AttrNavQt*)attrnav;
 }

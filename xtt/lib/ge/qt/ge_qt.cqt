@@ -1914,7 +1914,6 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
 
   graph = new GraphQt(this, toplevel, "GraphQt", &grow_widget, &sts,
       "pwrp_pop:", graph_eMode_Development, 1, 0, 0, 0, 0, opt);
-  /**/ showNow(grow_widget);
   graph->message_cb = &Ge::message_cb;
   graph->get_current_subgraph_cb = &Ge::subpalette_get_select;
   graph->get_current_colors_cb = &Ge::colorpalette_get_current;
@@ -1950,14 +1949,12 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
   subpalette->traverse_focus_cb = &Ge::traverse_focus;
   subpalette->help_cb = help_cb;
   add_expanding(palbox, subpalette_widget);
-  showNow(subpalette_widget);
   subpalette_mapped = 1;
 
   // Color palette
   debug_print("creating a scrolledcolpalwidgetqt\n");
   colpal_main_widget = scrolledcolpalwidgetqt_new(
       Ge::init_colorpalette_cb, this, &colorpalette_widget);
-  showNow(colpal_main_widget);
 
   if (ldhses) {
     plantctx = new NavQt(
@@ -1997,7 +1994,6 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
   ((GraphQt*)graph)->create_navigator(vpaned1);
   add_expanding(vpaned2, vpaned1);
   vpaned1->addWidget(((GraphQt*)graph)->nav_widget);
-  showNow(((GraphQt*)graph)->nav_widget);
 
   // Horizontal pane
   QSplitter* hpaned = new QSplitter(Qt::Horizontal);

@@ -1219,7 +1219,7 @@ int GlowDrawQt::polyline_helper(GlowWind* wind, int painter_type, int size,
   } else {
     QPoint* qpoints = points_to_qt_points(points, point_cnt);
     painter->setBrush(Qt::NoBrush);
-    debug_print("polyline painter_type=%d, fill=%d, point_cnt=%d\n", painter_type, fill, point_cnt);
+    // debug_print("polyline painter_type=%d, fill=%d, point_cnt=%d\n", painter_type, fill, point_cnt);
     painter->drawPolyline(qpoints, point_cnt);
     delete[] qpoints;
   }
@@ -1722,7 +1722,7 @@ void GlowDrawQt::clear_area(
   QPainter* painter = new QPainter(w->buffer);
   painter->setBackground(QBrush(background));
 
-  // debug_print("clear_area [%d, %d, %d, %d], color=%s\n", ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, painter->background().color().name().toAscii().data());
+  // debug_print("clear_area [%d, %d, %d, %d], color=%s\n", ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, qPrintable(painter->background().color().name()));
 
   painter->eraseRect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y);
 
