@@ -236,23 +236,23 @@ CoWowListWidgetQt::CoWowListWidgetQt(QWidget* parent, const char* title,
       parent_ctx(parent_ctx)
 {
   QVBoxLayout* vbox = new QVBoxLayout(this);
-  QHBoxLayout* hbox = new QHBoxLayout(this);
+  QHBoxLayout* hbox = new QHBoxLayout();
 
-  QPushButton* ok_button = new QPushButton("OK", this);
+  QPushButton* ok_button = new QPushButton("OK");
   connect(ok_button, SIGNAL(clicked()), this, SLOT(list_ok_cb()));
   hbox->addWidget(ok_button, 1, Qt::AlignRight);
 
   if (show_apply_button) {
-    QPushButton* apply_button = new QPushButton(translate_utf8("Apply"), this);
+    QPushButton* apply_button = new QPushButton(translate_utf8("Apply"));
     connect(apply_button, SIGNAL(clicked()), this, SLOT(list_apply_cb()));
     hbox->addWidget(apply_button, 0);
   }
 
-  QPushButton* cancel_button = new QPushButton("Cancel", this);
+  QPushButton* cancel_button = new QPushButton("Cancel");
   connect(cancel_button, SIGNAL(clicked()), this, SLOT(list_cancel_cb()));
   hbox->addWidget(cancel_button, 0);
 
-  QTreeWidget* list = new QTreeWidget(this);
+  list = new QTreeWidget();
 
   // list->setColumnCount(2);
 
@@ -264,7 +264,6 @@ CoWowListWidgetQt::CoWowListWidgetQt(QWidget* parent, const char* title,
     list->addTopLevelItem(item);
     name_p += textsize;
   }
-  delete texts;
 
   connect(list, SIGNAL(itemActivated(QTreeWidgetItem*, int)), this,
       SLOT(list_row_activated_cb(QTreeWidgetItem*, int)));
