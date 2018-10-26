@@ -1469,11 +1469,7 @@ void GlowDrawQt::clear(GlowWind* wind)
   }
   DrawWindQt* w = (DrawWindQt*)wind->window;
 
-  if (!w->double_buffer_on) {
-    QPainter(w->buffer).eraseRect(w->buffer->rect());
-  } else {
-    buffer_background(w, 0);
-  }
+  buffer_background(w, 0);
 }
 
 void GlowDrawQt::copy_buffer(
@@ -2013,7 +2009,7 @@ void GlowDrawQt::buffer_background(DrawWind* wind, GlowCtx* cctx)
     subwindow_y = ctx->navw.subwindow_y;
   }
 
-  if (!w->double_buffer_on || !window_width) {
+  if (!window_width) {
     return;
   }
 
@@ -2064,18 +2060,12 @@ void GlowDrawQt::buffer_background(DrawWind* wind, GlowCtx* cctx)
 int GlowDrawQt::export_image(char* filename)
 {
   DrawWindQt* w = m_wind;
-  QImage image;
-
-  if (w->double_buffer_on) {
-    image = *(w->buffer);
-  } else {
-    image = QPixmap::grabWidget(w->window).toImage();
-  }
-  if (image.isNull()) {
+  QImage* image = w->buffer;
+  if (image->isNull()) {
     return 0;
   }
 
-  bool sts = image.save(filename, "PNG", 0);
+  bool sts = image->save(filename, "PNG", 0);
   if (sts) {
     return 0;
   }
@@ -2105,15 +2095,8 @@ int GlowDrawQt::print(char* filename, double x0, double x1, int end)
   x = ps_cLeftMargin;
   y = ps_cPageHeight - ps_cTopMargin;
 
-  QImage image;
-
-  if (w->double_buffer_on) {
-    image = *(w->buffer);
-  } else {
-    image = QPixmap::grabWidget(w->window).toImage();
-  }
-
-  if (image.isNull()) {
+  QImage* image = w->buffer;
+  if (image->isNull()) {
     return 0;
   }
 
@@ -2125,8 +2108,8 @@ int GlowDrawQt::print(char* filename, double x0, double x1, int end)
     y = ps->y;
   }
 
-  width = image.width();
-  height = image.height();
+  width = image->width();
+  height = image->height();
 
   if (!feq(x0, 0.0) || !feq(x1, 0.0)) {
     double total_width = width / (x1 - x0);
@@ -2188,7 +2171,7 @@ int GlowDrawQt::print(char* filename, double x0, double x1, int end)
   j = 0;
   for (k = 0; k < height; k++) {
     for (i = 0; i < width; i++) {
-      QColor pixel = QColor(image.pixel(i, k));
+      QColor pixel = QColor(image->pixel(i, k));
       if (!colorimage) {
         if (!pixel.alpha()) {
           grey = 255;
