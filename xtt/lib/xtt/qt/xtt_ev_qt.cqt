@@ -53,7 +53,7 @@
 
 class CallbackWidget : public QDialog {
 public:
-  CallbackWidget(EvQt* parent, void (EvQt::*close)(), void (EvQt::*focus)())
+  CallbackWidget(EvQtObject* parent, void (EvQtObject::*close)(), void (EvQtObject::*focus)())
       : QDialog(), ev(parent), close_cb(close), focus_cb(focus){}
 
 protected:
@@ -61,9 +61,9 @@ protected:
   void focusInEvent(QFocusEvent* event);
 
 private:
-  EvQt* ev;
-  void (EvQt::*close_cb)();
-  void (EvQt::*focus_cb)();
+  EvQtObject* ev;
+  void (EvQtObject::*close_cb)();
+  void (EvQtObject::*focus_cb)();
 };
 
 void CallbackWidget::closeEvent(QCloseEvent* event)
@@ -122,7 +122,7 @@ EvQt::EvQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* eve_name,
   // Eve Window
   {
     parent_wid_eve = new CallbackWidget(
-        this, &EvQt::eve_activate_exit, &EvQt::eve_action_inputfocus);
+        object, &EvQtObject::eve_activate_exit, &EvQtObject::eve_action_inputfocus);
     parent_wid_eve->setMinimumSize(eve_width, eve_height);
     parent_wid_eve->setToolTip(fl("xtt_ev eve widget"));
     parent_wid_eve->setWindowTitle(translate_utf8(eve_name));
@@ -140,7 +140,7 @@ EvQt::EvQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* eve_name,
     addMenuItem(object, file, "&Print", SLOT(eve_activate_print()), "",
         "document-print");
     addMenuItem(
-        object, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+        object, file, "&Close", SLOT(eve_activate_exit()), "CTRL+W", "window-close");
 
     // Functions entry
     QMenu* functions = menu_bar->addMenu(translate_utf8("&Functions"));
@@ -156,13 +156,13 @@ EvQt::EvQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* eve_name,
     addMenuItem(object, view, "Zoom &Out", SLOT(eve_activate_zoom_out()),
         "CTRL+O", "zoom-out");
     addMenuItem(object, view, "Zoom &Reset", SLOT(eve_activate_zoom_reset()),
-        "CTRL+B", "zoom-reset");
+        "CTRL+B", "zoom-original");
     addCheckableMenuItem(object, view, "&Display hundredth",
-        SLOT(eve_activate_disp_hundredth()));
+        SLOT(eve_activate_disp_hundredth(bool)));
     addCheckableMenuItem(
-        object, view, "&Hide Event Name", SLOT(eve_activate_hide_object()));
+        object, view, "&Hide Event Name", SLOT(eve_activate_hide_object(bool)));
     addCheckableMenuItem(
-        object, view, "Hide &Event Text", SLOT(eve_activate_hide_text()));
+        object, view, "Hide &Event Text", SLOT(eve_activate_hide_text(bool)));
 
     // Help entry
     QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
@@ -227,7 +227,7 @@ EvQt::EvQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* eve_name,
   // Ala Window
   {
     parent_wid_ala = new CallbackWidget(
-        this, &EvQt::ala_activate_exit, &EvQt::ala_action_inputfocus);
+        object, &EvQtObject::ala_activate_exit, &EvQtObject::ala_action_inputfocus);
     parent_wid_eve->setToolTip(fl("xtt_ev ala widget"));
     parent_wid_ala->setMinimumSize(ala_width, ala_height);
     parent_wid_ala->setWindowTitle(translate_utf8(ala_name));
@@ -245,7 +245,7 @@ EvQt::EvQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* eve_name,
     addMenuItem(object, file, "&Print", SLOT(ala_activate_print()), "",
         "document-print");
     addMenuItem(
-        object, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+        object, file, "&Close", SLOT(ala_activate_exit()), "CTRL+W", "window-close");
 
     // Functions entry
     QMenu* functions = menu_bar->addMenu(translate_utf8("&Functions"));
@@ -289,13 +289,13 @@ EvQt::EvQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* eve_name,
     addMenuItem(object, view, "Zoom &Out", SLOT(ala_activate_zoom_out()),
         "CTRL+O", "zoom-out");
     addMenuItem(object, view, "Zoom &Reset", SLOT(ala_activate_zoom_reset()),
-        "CTRL+B", "zoom-reset");
+        "CTRL+B", "zoom-original");
     addCheckableMenuItem(object, view, "&Display hundredth",
-        SLOT(ala_activate_disp_hundredth()));
+        SLOT(ala_activate_disp_hundredth(bool)));
     addCheckableMenuItem(
-        object, view, "&Hide Event Name", SLOT(ala_activate_hide_object()));
+        object, view, "&Hide Event Name", SLOT(ala_activate_hide_object(bool)));
     addCheckableMenuItem(
-        object, view, "Hide &Event Text", SLOT(ala_activate_hide_text()));
+        object, view, "Hide &Event Text", SLOT(ala_activate_hide_text(bool)));
 
     // Help entry
     QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
@@ -365,7 +365,7 @@ EvQt::EvQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* eve_name,
   // Blk Window
   {
     parent_wid_blk = new CallbackWidget(
-        this, &EvQt::blk_activate_exit, &EvQt::blk_action_inputfocus);
+        object, &EvQtObject::blk_activate_exit, &EvQtObject::blk_action_inputfocus);
     parent_wid_eve->setToolTip(fl("xtt_ev blk widget"));
     parent_wid_blk->setMinimumSize(blk_width, blk_height);
     parent_wid_blk->setWindowTitle(translate_utf8(blk_name));
@@ -383,7 +383,7 @@ EvQt::EvQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* eve_name,
     addMenuItem(object, file, "&Print", SLOT(blk_activate_print()), "",
         "document-print");
     addMenuItem(
-        object, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+        object, file, "&Close", SLOT(blk_activate_exit()), "CTRL+W", "window-close");
 
     // Functions entry
     QMenu* functions = menu_bar->addMenu(translate_utf8("&Functions"));
@@ -401,7 +401,7 @@ EvQt::EvQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* eve_name,
     addMenuItem(object, view, "Zoom &Out", SLOT(blk_activate_zoom_out()),
         "CTRL+O", "zoom-out");
     addMenuItem(object, view, "Zoom &Reset", SLOT(blk_activate_zoom_reset()),
-        "CTRL+B", "zoom-reset");
+        "CTRL+B", "zoom-original");
 
     // Help entry
     QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
@@ -620,43 +620,43 @@ void EvQt::set_title_ala(char* title)
   parent_wid_ala->setWindowTitle(fl(title));
 }
 
-void EvQt::eve_action_inputfocus()
+void EvQtObject::eve_action_inputfocus()
 {
-  if (eve_displayed) {
-    eve->set_input_focus();
+  if (ev->eve_displayed) {
+    ev->eve->set_input_focus();
   }
 }
 
-void EvQt::ala_action_inputfocus()
+void EvQtObject::ala_action_inputfocus()
 {
-  if (ala_displayed) {
-    ala->set_input_focus();
+  if (ev->ala_displayed) {
+    ev->ala->set_input_focus();
   }
 }
 
-void EvQt::blk_action_inputfocus()
+void EvQtObject::blk_action_inputfocus()
 {
-  if (blk_displayed) {
-    blk->set_input_focus();
+  if (ev->blk_displayed) {
+    ev->blk->set_input_focus();
   }
 }
 
-void EvQt::eve_activate_exit()
+void EvQtObject::eve_activate_exit()
 {
-  unmap_eve();
-  eve_displayed = 0;
+  ev->unmap_eve();
+  ev->eve_displayed = 0;
 }
 
-void EvQt::ala_activate_exit()
+void EvQtObject::ala_activate_exit()
 {
-  unmap_ala();
-  ala_displayed = 0;
+  ev->unmap_ala();
+  ev->ala_displayed = 0;
 }
 
-void EvQt::blk_activate_exit()
+void EvQtObject::blk_activate_exit()
 {
-  unmap_blk();
-  blk_displayed = 0;
+  ev->unmap_blk();
+  ev->blk_displayed = 0;
 }
 
 void EvQtObject::eve_activate_print()

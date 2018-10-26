@@ -96,8 +96,8 @@ static void modifyBackground(QWidget* widget, QColor& color)
   QPalette pal;
 
   pal.setColor(QPalette::Background, color);
-  widget->setAutoFillBackground(true);
   widget->setPalette(pal);
+  widget->setAutoFillBackground(true);
 }
 
 static void modifyForeground(QWidget* widget, QColor& color)
@@ -314,7 +314,7 @@ OpQt::OpQt(void* op_parent_ctx, QWidget* op_parent_wid, char* opplace,
       SLOT(activate_help_proview()));
   // End Help submenu
 
-  addMenuItem(
+  functions_close = addMenuItem(
       toplevel, functions, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
   // Toolbar
@@ -327,7 +327,7 @@ OpQt::OpQt(void* op_parent_ctx, QWidget* op_parent_wid, char* opplace,
       "$pwr_exe/xtt_zoom_out.png");
   addToolItem(
       toplevel, tools, "Help", SLOT(activate_help()), "$pwr_exe/xtt_help.png");
-  addToolItem(
+  tools_close = addToolItem(
       toplevel, tools, "Close", SLOT(close()), "$pwr_exe/xtt_close.png");
 
   addToolItem(toplevel, tools2, "Alarm List", SLOT(activate_alarmlist()),
@@ -395,6 +395,7 @@ OpQt::OpQt(void* op_parent_ctx, QWidget* op_parent_wid, char* opplace,
           sup_vect[i].node_name);
       node_label->setText(convert_utf8(text));
 
+      QPushButton* node_button = new QPushButton();
       QHBoxLayout* node_hbox = new QHBoxLayout();
 
       QWidget* node_ind = new QWidget();
@@ -418,20 +419,19 @@ OpQt::OpQt(void* op_parent_ctx, QWidget* op_parent_wid, char* opplace,
       modifyBackground(node_ind_frame, black_color);
       node_ind_frame->setFixedSize(20, 20);
 
-      QWidget* node_image = layout_to_widget(node_image_layout);
       if (buttonwidth) {
-        node_image->setFixedWidth(buttonwidth);
+        node_button->setFixedWidth(buttonwidth);
       }
       sup_vect[i].indw = (void*)node_ind;
       sup_vect[i].indfiller1w = (void*)node_ind_filler1;
       sup_vect[i].indfiller2w = (void*)node_ind_filler2;
       sup_vect[i].textw = (void*)node_label;
       sup_vect[i].textbgw = (void*)node_label;
-      sup_vect[i].buttonw = (void*)node_image;
+      sup_vect[i].buttonw = (void*)node_button;
       QObject::connect(
-          node_image, SIGNAL(clicked()), toplevel, SLOT(activate_sup_node()));
+          node_button, SIGNAL(clicked()), toplevel, SLOT(activate_sup_node()));
       status_bar->setContentsMargins(padding2, padding2, padding2, padding2);
-      status_bar->addWidget(node_image);
+      status_bar->addWidget(node_button);
     }
     if (buttonwidth) {
       status_bar->setFixedWidth(xtt_monitor_geometry.width());
@@ -925,15 +925,17 @@ int OpQt::configure(char* opplace_str)
   for (i = 0;
        i < sizeof(opplace_p->FastAvail) / sizeof(opplace_p->FastAvail[0]);
        i++) {
-    if ((i + 1) % 5 == 0) {
+    if ((i == 0) || ((i + 1) % 5 == 0)) {
       funcbox[(i + 1) / 5] = layout_to_widget(new QHBoxLayout());
       appl_form->addWidget(funcbox[(i + 1) / 5]);
     }
 
-    int i2 = ((int)(i / 5));
-    add_expanding(funcbox[i2]->layout(), appl_buttons[i]);
-    if (i >= 15) {
-      a_height = i2 + 1;
+    if (cdh_ObjidIsNotNull(button_aref[i].Objid)) {
+      int i2 = (int)(i / 5);
+      add_expanding(funcbox[i2]->layout(), appl_buttons[i]);
+      if (i >= 15) {
+        a_height = i2 + 1;
+      }
     }
   }
 
@@ -1410,9 +1412,9 @@ void OpQt::set_color_theme(int idx)
   modifyForeground(aalarm_mark, bg_text);
   modifyBackground(balarm_mark, bg);
   modifyForeground(balarm_mark, bg_text);
-  modifyBackground(balarm_active_box, bg);
+  modifyBackground(balarm_active, bg);
   for (int i = 0; i < 5; i++) {
-    modifyBackground(aalarm_active_box[i], bg);
+    modifyBackground(aalarm_active[i], bg);
   }
 
   modifyBackground(menu_bar, menu);

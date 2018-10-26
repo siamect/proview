@@ -81,13 +81,6 @@ public:
       int width, int height, int x, int y, pwr_tObjid view,
       unsigned int options = 0, void* widget = 0);
 
-  void eve_action_inputfocus();
-  void ala_action_inputfocus();
-  void blk_action_inputfocus();
-  void eve_activate_exit();
-  void ala_activate_exit();
-  void blk_activate_exit();
-
 private:
   EvQtObject* object;
 };
@@ -101,6 +94,12 @@ public:
   }
 
 public slots:
+  void eve_action_inputfocus();
+  void ala_action_inputfocus();
+  void blk_action_inputfocus();
+  void eve_activate_exit();
+  void ala_activate_exit();
+  void blk_activate_exit();
   void eve_activate_print();
   void ala_activate_print();
   void blk_activate_print();
