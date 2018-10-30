@@ -64,13 +64,24 @@ png_sources := $(sort \
              ) \
            )
 
+css_sources := $(sort \
+             $(foreach file, \
+               $(foreach dir, \
+                 $(source_dirs), \
+                 $(wildcard $(dir)/*.css) \
+               ), $(notdir $(file)) \
+             ) \
+           )
+
 
 export_js := $(addprefix $(web_dir)/,$(js_sources))
 export_html := $(addprefix $(web_dir)/,$(html_sources))
 export_png := $(addprefix $(web_dir)/,$(png_sources))
+export_css := $(addprefix $(web_dir)/,$(css_sources))
 clean_js := $(patsubst %.js,clean_%.js, $(js_sources))
 clean_html := $(patsubst %.html,clean_%.html, $(html_sources))
 clean_png := $(patsubst %.png,clean_%.png, $(png_sources))
+clean_css := $(patsubst %.css,clean_%.css, $(css_sources))
 
 .PHONY : all init copy lib exe clean realclean
 
@@ -78,13 +89,13 @@ all : init copy lib exe | silent
 
 init :
 
-copy : $(export_js) $(export_html) $(export_png) | silent
+copy : $(export_js) $(export_html) $(export_png) $(export_css) | silent
 
 lib :
 
 exe :
 
-clean : $(clean_js) $(clean_html) $(clean_png)
+clean : $(clean_js) $(clean_html) $(clean_png) $(clean_css)
 
 clean_copy: $(clean)
 
@@ -105,6 +116,10 @@ $(clean_html) : clean_%.html : %.html
 $(clean_png) : clean_%.png : %.png
 	@ echo "Removing png: $(web_dir)/$*.png"
 	@ $(rm) $(rmflags) $(web_dir)/$*.png  
+
+$(clean_css) : clean_%.css : %.css
+	@ echo "Removing png: $(web_dir)/$*.css"
+	@ $(rm) $(rmflags) $(web_dir)/$*.css  
 
 
 -include $(source_dependencies)

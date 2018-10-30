@@ -138,6 +138,10 @@ typedef struct {
   int output_size;
   thread_sMutex mutex;
   io_sServerConnection connections[MB_MAX_CONNECTIONS];
+  void *inputs;
+  void *outputs;
+  unsigned int inputs_size;
+  unsigned int outputs_size;
 } io_sServerLocal;
 
 typedef struct {
