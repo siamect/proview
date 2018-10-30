@@ -43,7 +43,7 @@
 /* 1 redcom connect */
 /* 2 redcom tables */
 /* 4 alarms and events */
-unsigned int tmlog = 1;
+unsigned int tmlog = 0;
 
 void tm_log(unsigned int level, const char* func, const char* str)
 {
