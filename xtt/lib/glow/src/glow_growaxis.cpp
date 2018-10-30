@@ -952,6 +952,16 @@ void GrowAxis::set_axis_info(glow_sAxisInfo* info)
     strcpy(format, info->format);
 }
 
+void GrowAxis::get_axis_info(glow_sAxisInfo* info)
+{
+  info->max_value = max_value;
+  info->min_value = min_value;
+  info->lines = lines;
+  info->longquotient = longquotient;
+  info->valuequotient = valuequotient;
+  strcpy(info->format, format);
+}
+
 void GrowAxis::format_text(char* text, char* fmt, double value)
 {
   if (streq(fmt, "%1t")) {

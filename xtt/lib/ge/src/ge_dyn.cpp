@@ -9746,13 +9746,32 @@ int GeBar::scan(grow_tObject object)
   if (!p)
     return 1;
 
-  if (max_value_p && min_value_p) {
-    pwr_tFloat32 maxval = *max_value_p;
-    pwr_tFloat32 minval = *min_value_p;
+  if (max_value_p || min_value_p) {    
+    bool update = false;
+			
+    pwr_tFloat32 maxval;
+    pwr_tFloat32 minval;
+    if (max_value_p) {
+      maxval = *max_value_p;
+      if (!feqf(maxval, old_max_value))
+	update = true;
+    }
+    if (min_value_p) {
+      minval = *min_value_p;
+      if (!feqf(minval, old_min_value))
+	update = true;
+    }
+    if (update) {
+      double minvald, maxvald;
+      grow_GetBarRange(object, &minvald, &maxvald);
 
-    if (!feqf(maxval, old_max_value) || !feqf(minval, old_min_value)) {
+      if (!min_value_p)
+	minval = minvald;
+      if (!max_value_p)
+	maxval = maxvald;
+
       if (fabsf(maxval - minval) > FLT_EPSILON) {
-        grow_SetBarRange(object, double(minval), double(maxval));
+        grow_SetBarRange(object, minval, maxval);
       }
       old_min_value = minval;
       old_max_value = maxval;
@@ -10275,24 +10294,64 @@ int GeTrend::scan(grow_tObject object)
   if (trend_hold)
     return 1;
 
-  if (max_value1_p && min_value1_p) {
-    pwr_tFloat32 maxval = *max_value1_p;
-    pwr_tFloat32 minval = *min_value1_p;
-    if (!feqf(maxval, old_max_value1) || !feqf(minval, old_min_value1)) {
+  if (max_value1_p || min_value1_p) {    
+    bool update = false;
+			
+    pwr_tFloat32 maxval;
+    pwr_tFloat32 minval;
+    if (max_value1_p) {
+      maxval = *max_value1_p;
+      if (!feqf(maxval, old_max_value1))
+	update = true;
+    }
+    if (min_value1_p) {
+      minval = *min_value1_p;
+      if (!feqf(minval, old_min_value1))
+	update = true;
+    }
+    if (update) {
+      double minvald, maxvald;
+      grow_GetTrendRangeY(object, 0, &minvald, &maxvald);
+
+      if (!min_value1_p)
+	minval = minvald;
+      if (!max_value1_p)
+	maxval = maxvald;
+
       if (fabsf(maxval - minval) > FLT_EPSILON) {
-        grow_SetTrendRangeY(object, 0, double(minval), double(maxval));
+        grow_SetTrendRangeY(object, 0, minval, maxval);
       }
       old_min_value1 = minval;
       old_max_value1 = maxval;
     }
   }
-  if (max_value2_p && min_value2_p) {
-    pwr_tFloat32 maxval = *max_value2_p;
-    pwr_tFloat32 minval = *min_value2_p;
 
-    if (!feqf(maxval, old_max_value2) || !feqf(minval, old_min_value2)) {
+  if (max_value2_p || min_value2_p) {    
+    bool update = false;
+			
+    pwr_tFloat32 maxval;
+    pwr_tFloat32 minval;
+    if (max_value2_p) {
+      maxval = *max_value2_p;
+      if (!feqf(maxval, old_max_value2))
+	update = true;
+    }
+    if (min_value2_p) {
+      minval = *min_value2_p;
+      if (!feqf(minval, old_min_value2))
+	update = true;
+    }
+    if (update) {
+      double minvald, maxvald;
+      grow_GetTrendRangeY(object, 1, &minvald, &maxvald);
+
+      if (!min_value2_p)
+	minval = minvald;
+      if (!max_value2_p)
+	maxval = maxvald;
+
       if (fabsf(maxval - minval) > FLT_EPSILON) {
-        grow_SetTrendRangeY(object, 1, double(minval), double(maxval));
+        grow_SetTrendRangeY(object, 1, minval, maxval);
       }
       old_min_value2 = minval;
       old_max_value2 = maxval;
@@ -13709,6 +13768,11 @@ int GeAxis::connect(grow_tObject object, glow_sTraceData* trace_data, bool now)
   int min_found = 0;
   int max_found = 0;
   int db;
+  glow_sAxisInfo info;
+
+  grow_GetAxisInfo( object, &info);
+  min_value = info.min_value;
+  max_value = info.max_value;
 
   imin_value = (int)(min_value + (min_value >= 0 ? 1 : -1) * 0.5);
   imax_value = (int)(max_value + (max_value >= 0 ? 1 : -1) * 0.5);
@@ -15002,9 +15066,11 @@ int GeFillLevel::scan(grow_tObject object)
   if (!p)
     return 1;
 
-  if (max_value_p && min_value_p
-      && (!feqf(*max_value_p, max_value) || !feqf(*min_value_p, min_value))) {
+  if (min_value_p && !feqf(*min_value_p, min_value)) {
     min_value = *min_value_p;
+    first_scan = 1;
+  }
+  if (max_value_p && !feqf(*max_value_p, max_value)) {
     max_value = *max_value_p;
     first_scan = 1;
   }

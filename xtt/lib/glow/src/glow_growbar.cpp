@@ -559,6 +559,12 @@ void GrowBar::get_trace_attr(GlowTraceData** attr)
   *attr = &trace;
 }
 
+void GrowBar::get_range(double *min, double *max)
+{
+  *max = max_value;
+  *min = min_value;
+}
+
 void GrowBar::set_range(double min, double max)
 {
   max_value = max;

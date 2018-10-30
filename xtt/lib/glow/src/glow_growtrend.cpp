@@ -949,6 +949,18 @@ void GrowTrend::set_scan_time(double time)
   configure_curves();
 }
 
+//! Get the range for the specified trend in y direction.
+/*!
+  \param curve	Number of curve.
+  \param min		Min value.
+  \param max		Max value.
+*/
+void GrowTrend::get_range_y(int curve, double *min, double *max)
+{
+  *max = y_max_value[curve];
+  *min = y_min_value[curve];
+}
+
 //! Set the range for the specified trend in y direction.
 /*!
   \param curve	Number of curve.

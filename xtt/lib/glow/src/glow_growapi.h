@@ -2311,6 +2311,14 @@ int grow_IsSubGraph(grow_tCtx ctx);
 */
 void grow_SetSliderRange(grow_tObject object, double min, double max);
 
+//! Get the range of a bar object.
+/*!
+  \param object	Bar object.
+  \param min		Minimum value of range.
+  \param max		Maximum value of range.
+*/
+void grow_GetBarRange(grow_tObject object, double *min, double *max);
+
 //! Set the range of a bar object.
 /*!
   \param object	Bar object.
@@ -2325,6 +2333,16 @@ void grow_SetBarRange(grow_tObject object, double min, double max);
   \param fill		Trend curves are drawn filled.
 */
 void grow_SetTrendFillCurve(grow_tObject object, int fill);
+
+//! Get the range of a trend object.
+/*!
+  \param object	Trend object.
+  \param curve	Curve number.
+  \param min		Minimum value of range.
+  \param max		Maximum value of range.
+*/
+void grow_GetTrendRangeY(
+    grow_tObject object, int curve, double *min, double *max);
 
 //! Set the range of a trend object.
 /*!
@@ -3058,6 +3076,13 @@ void grow_GetBarInfo(grow_tObject object, glow_sBarInfo* info);
   \param info		Info struct.
 */
 void grow_SetAxisInfo(grow_tObject object, glow_sAxisInfo* info);
+
+//! Get parameters for an axis object.
+/*!
+  \param object	Axis object.
+  \param info		Info struct.
+*/
+void grow_GetAxisInfo(grow_tObject object, glow_sAxisInfo* info);
 
 //! Conversion between different versions of Glow
 /*!
