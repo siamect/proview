@@ -59,9 +59,9 @@
 #include <QDesktopWidget>
 #include <QPushButton>
 
-#define OP_HEIGHT_MIN 75
+#define OP_HEIGHT_MIN 105
 #define OP_HEIGHT_INC 20
-#define OP_HEIGHT_STATUSBAR 30
+#define OP_HEIGHT_STATUSBAR 20
 
 static QPushButton* image_button(QWidget* parent, const char* filename)
 {
@@ -93,8 +93,7 @@ static void cnv_qt_text(char* in, char* out, int size)
 
 static void modifyBackground(QWidget* widget, QColor& color)
 {
-  QPalette pal;
-
+  QPalette pal = widget->palette();
   pal.setColor(QPalette::Background, color);
   widget->setPalette(pal);
   widget->setAutoFillBackground(true);
@@ -102,9 +101,9 @@ static void modifyBackground(QWidget* widget, QColor& color)
 
 static void modifyForeground(QWidget* widget, QColor& color)
 {
-  QPalette pal;
-
+  QPalette pal = widget->palette();
   pal.setColor(QPalette::Foreground, color);
+  pal.setColor(QPalette::ButtonText, color);
   widget->setPalette(pal);
 }
 
@@ -127,11 +126,19 @@ void OpQt::alarm_box_helper(int i)
       aalarm_info[i], SIGNAL(clicked()), toplevel, SLOT(activate_info()));
 }
 
+ClickableFrame::ClickableFrame() : QFrame() {}
+ClickableFrame::~ClickableFrame() {}
+
+void ClickableFrame::mousePressEvent(QMouseEvent* event) {
+    emit clicked();
+}
+
 OpQt::OpQt(void* op_parent_ctx, QWidget* op_parent_wid, char* opplace,
     pwr_tStatus* status)
     : Op(op_parent_ctx, opplace, status), title_label(0), a_height(2),
       text_size(12)
 {
+  debug_print("\n");
   pwr_tStatus sts;
 
   memset(a_exist, 0, sizeof(a_exist));
@@ -142,12 +149,10 @@ OpQt::OpQt(void* op_parent_ctx, QWidget* op_parent_wid, char* opplace,
   yellow_color = QColor("yellow");
   green_color = QColor("green");
   gray_color = QColor("gray");
-  QColor black_color = QColor("black");
-  white_color = QColor("white");
 
   toplevel = new OpQtWidget(this, op_parent_wid);
   toplevel->setToolTip(fl("xtt_op widget"));
-  toplevel->setMinimumSize(1100, OP_HEIGHT_MIN);
+  toplevel->setMinimumSize(1100, OP_HEIGHT_MIN + OP_HEIGHT_STATUSBAR);
   toplevel->setWindowFlags(Qt::CustomizeWindowHint);
 
   CoWowQt::SetWindowIcon(toplevel);
@@ -355,7 +360,7 @@ OpQt::OpQt(void* op_parent_ctx, QWidget* op_parent_wid, char* opplace,
   }
 
   // Status bar
-  QStatusBar* status_bar = NULL;
+  QHBoxLayout* status_bar = NULL;
   if (!(layout_mask & pwr_mOpWindLayoutMask_HideStatusBar)) {
     char text[80];
     pwr_tTime time;
@@ -368,7 +373,7 @@ OpQt::OpQt(void* op_parent_ctx, QWidget* op_parent_wid, char* opplace,
 
     title_label = new QLabel("");
 
-    status_bar = new QStatusBar();
+    status_bar = new QHBoxLayout();
     status_bar->addWidget(icon_image);
     status_bar->addWidget(title_label);
 
@@ -395,46 +400,33 @@ OpQt::OpQt(void* op_parent_ctx, QWidget* op_parent_wid, char* opplace,
           sup_vect[i].node_name);
       node_label->setText(convert_utf8(text));
 
-      QPushButton* node_button = new QPushButton();
+      ClickableFrame* node_button = new ClickableFrame();
       QHBoxLayout* node_hbox = new QHBoxLayout();
 
-      QWidget* node_ind = new QWidget();
-      QWidget* node_ind_frame = new QWidget();
-      QWidget* node_ind_frame_box = new QWidget();
-      fixed_put(node_ind_frame_box, node_ind_frame, 0, 0);
-      fixed_put(node_ind_frame_box, node_ind, 1, 1);
-      node_hbox->setContentsMargins(padding1, padding1, padding1, padding1);
-      node_hbox->addWidget(node_ind_frame_box);
-      add_expanding(node_hbox, node_label);
-
-      QVBoxLayout* node_image_layout = new QVBoxLayout();
-      QWidget* node_ind_filler1 = new QWidget();
-      QWidget* node_ind_filler2 = new QWidget();
-      add_expanding(node_image_layout, node_ind_filler1);
-      node_image_layout->addLayout(node_hbox);
-      add_expanding(node_image_layout, node_ind_filler2);
-
+      QFrame* node_ind = new QFrame();
       modifyBackground(node_ind, gray_color);
-      node_ind->setFixedSize(18, 18);
-      modifyBackground(node_ind_frame, black_color);
-      node_ind_frame->setFixedSize(20, 20);
+      node_ind->setFixedSize(20, 20);
+      QColor black = QColor("black");
+      modifyForeground(node_ind, black);
+      node_ind->setFrameStyle(QFrame::Box | QFrame::Plain);
+      node_ind->setLineWidth(1);
+
+      node_hbox->setSpacing(padding1);
+      node_hbox->addWidget(node_ind);
+      add_expanding(node_hbox, node_label);
 
       if (buttonwidth) {
         node_button->setFixedWidth(buttonwidth);
       }
+      node_button->setLayout(node_hbox);
       sup_vect[i].indw = (void*)node_ind;
-      sup_vect[i].indfiller1w = (void*)node_ind_filler1;
-      sup_vect[i].indfiller2w = (void*)node_ind_filler2;
       sup_vect[i].textw = (void*)node_label;
       sup_vect[i].textbgw = (void*)node_label;
       sup_vect[i].buttonw = (void*)node_button;
       QObject::connect(
           node_button, SIGNAL(clicked()), toplevel, SLOT(activate_sup_node()));
-      status_bar->setContentsMargins(padding2, padding2, padding2, padding2);
+      status_bar->setSpacing(padding2);
       status_bar->addWidget(node_button);
-    }
-    if (buttonwidth) {
-      status_bar->setFixedWidth(xtt_monitor_geometry.width());
     }
   }
 
@@ -447,18 +439,16 @@ OpQt::OpQt(void* op_parent_ctx, QWidget* op_parent_wid, char* opplace,
 
   QSplitter* pane = new QSplitter(Qt::Horizontal);
   add_expanding(pane, vbox_ala);
-  pane->addWidget(layout_to_widget(vbox_ala));
   pane->addWidget(layout_to_widget(hbox_conf));
 
   QVBoxLayout* vbox_conf = new QVBoxLayout();
   if (!(layout_mask & pwr_mOpWindLayoutMask_HideStatusBar)) {
-    vbox_conf->addWidget(status_bar);
+    QWidget *status_bar_widget = layout_to_widget(status_bar);
+    status_bar_widget->setFixedHeight(OP_HEIGHT_STATUSBAR);
+    vbox_conf->addWidget(status_bar_widget);
     vbox_conf->addWidget(separator(QFrame::HLine));
   }
   vbox_conf->addWidget(pane);
-
-  QColor background("black");
-  modifyBackground(toplevel, background);
 
   toplevel->setLayout(vbox_conf);
   toplevel->setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
@@ -490,7 +480,7 @@ OpQt::OpQt(void* op_parent_ctx, QWidget* op_parent_wid, char* opplace,
     toplevel->activate_aalarm_decr();
   }
 
-  toplevel->resize(xtt_monitor_geometry.width(), OP_HEIGHT_MIN);
+  toplevel->resize(xtt_monitor_geometry.width(), OP_HEIGHT_MIN + OP_HEIGHT_STATUSBAR);
   toplevel->move(0, 0);
 
   wow = new CoWowQt(toplevel);
@@ -780,7 +770,8 @@ void OpQt::update_alarm_info()
       if (balarm_type == evlist_eEventType_InfoSuccess) {
         modifyBackground(balarm_ebox, green_color);
       } else {
-        modifyBackground(balarm_ebox, white_color);
+        QColor white = QColor("white");
+        modifyBackground(balarm_ebox, white);
       }
       balarm_box->setVisible(true);
 
@@ -915,10 +906,9 @@ int OpQt::configure(char* opplace_str)
     }
 
     appl_buttons[i] = new QPushButton(QString::fromLatin1(button_title[i]));
-    appl_buttons[i]->setEnabled(false);
     appl_buttons[i]->setFixedHeight(28);
     QObject::connect(
-        appl_buttons[i], SIGNAL(pressed()), toplevel, SLOT(activate_appl()));
+        appl_buttons[i], SIGNAL(clicked()), toplevel, SLOT(activate_appl()));
   }
 
   appl_form = new QVBoxLayout();
@@ -938,6 +928,7 @@ int OpQt::configure(char* opplace_str)
       }
     }
   }
+  appl_form->addStretch(1);
 
   return XNAV__SUCCESS;
 }
@@ -1143,7 +1134,7 @@ void OpQtWidget::activate_cmd_menu_item()
 
 void OpQtWidget::activate_sup_node()
 {
-  op->activate_sup_node(((QAction*)sender())->parentWidget());
+  op->activate_sup_node((QAction*)sender());
 }
 
 void OpQtWidget::activate_appl()
@@ -1213,7 +1204,9 @@ void OpQt::change_sup_color(void* imagew, op_eSupColor color)
   default:
     col = &gray_color;
   }
-  modifyBackground(((QMenu*)imagew), *col);
+  QColor black = QColor("black");
+  modifyBackground((QWidget*)imagew, *col);
+  modifyForeground((QWidget*)imagew, black);
 }
 
 void OpQt::set_title(char* user)
@@ -1240,206 +1233,9 @@ void OpQt::set_title(char* user)
   title_label->setText(text);
 }
 
-static void setColorHelper(void* t, const char* name, QColor& color1,
-    const char* state2, QColor& color2, const char* state3, QColor& color3)
-{
-  QWidget* target = ((QWidget*)t);
-  QString str;
-  str += name;
-  str += " { background-color: ";
-  str += color1.name();
-  str += "; }\n";
-  str += name;
-  str += ":";
-  str += state2;
-  str += " { background-color: ";
-  str += color2.name();
-  str += "; }\n";
-  str += name;
-  str += ":";
-  str += state3;
-  str += " { background-color: ";
-  str += color3.name();
-  str += "; }\n";
-  target->setStyleSheet(str);
-}
-
 void OpQt::set_color_theme(int idx)
 {
-  pwr_tFileName fname;
-  int sts;
-  double* colors;
-  int csize;
-
-  sprintf(fname, "$pwr_exe/pwr_colortheme%d.pwgc", idx);
-
-  sts = Graph::get_colortheme_colors(fname, &colors, &csize);
-  if (EVEN(sts)) {
-    return;
-  }
-
-  QColor bg, bg_text, button_bg, button_text, button_prelight, button_active,
-      menu, menu_text;
-
-  red_color.setRedF(
-      colors[(glow_eCtColor_RedIndicator - glow_eDrawType_CustomColor1) * 3]);
-  red_color.setGreenF(
-      colors[(glow_eCtColor_RedIndicator - glow_eDrawType_CustomColor1) * 3
-          + 1]);
-  red_color.setBlueF(
-      colors[(glow_eCtColor_RedIndicator - glow_eDrawType_CustomColor1) * 3
-          + 2]);
-
-  green_color.setRedF(
-      colors[(glow_eCtColor_GreenIndicator - glow_eDrawType_CustomColor1) * 3]);
-  green_color.setGreenF(
-      colors[(glow_eCtColor_GreenIndicator - glow_eDrawType_CustomColor1) * 3
-          + 1]);
-  green_color.setBlueF(
-      colors[(glow_eCtColor_GreenIndicator - glow_eDrawType_CustomColor1) * 3
-          + 2]);
-
-  yellow_color.setRedF(
-      colors[(glow_eCtColor_YellowIndicator - glow_eDrawType_CustomColor1)
-          * 3]);
-  yellow_color.setGreenF(
-      colors[(glow_eCtColor_YellowIndicator - glow_eDrawType_CustomColor1) * 3
-          + 1]);
-  yellow_color.setBlueF(
-      colors[(glow_eCtColor_YellowIndicator - glow_eDrawType_CustomColor1) * 3
-          + 2]);
-
-  gray_color.setRedF(
-      colors[(glow_eCtColor_IndicatorLowColor - glow_eDrawType_CustomColor1)
-          * 3]);
-  gray_color.setGreenF(
-      colors[(glow_eCtColor_IndicatorLowColor - glow_eDrawType_CustomColor1) * 3
-          + 1]);
-  gray_color.setBlueF(
-      colors[(glow_eCtColor_IndicatorLowColor - glow_eDrawType_CustomColor1) * 3
-          + 2]);
-
-  bg.setRedF(
-      colors[(glow_eCtColor_Background - glow_eDrawType_CustomColor1) * 3]);
-  bg.setGreenF(
-      colors[(glow_eCtColor_Background - glow_eDrawType_CustomColor1) * 3 + 1]);
-  bg.setBlueF(
-      colors[(glow_eCtColor_Background - glow_eDrawType_CustomColor1) * 3 + 2]);
-
-  bg_text.setRedF(colors[(glow_eCtColor_BackgroundTextAndLines
-                             - glow_eDrawType_CustomColor1)
-      * 3]);
-  bg_text.setGreenF(colors[(glow_eCtColor_BackgroundTextAndLines
-                               - glow_eDrawType_CustomColor1)
-          * 3
-      + 1]);
-  bg_text.setBlueF(colors[(glow_eCtColor_BackgroundTextAndLines
-                              - glow_eDrawType_CustomColor1)
-          * 3
-      + 2]);
-
-  button_bg.setRedF(
-      colors[(glow_eCtColor_ButtonFillcolor - glow_eDrawType_CustomColor1)
-          * 3]);
-  button_bg.setGreenF(
-      colors[(glow_eCtColor_ButtonFillcolor - glow_eDrawType_CustomColor1) * 3
-          + 1]);
-  button_bg.setBlueF(
-      colors[(glow_eCtColor_ButtonFillcolor - glow_eDrawType_CustomColor1) * 3
-          + 2]);
-
-  button_text.setRedF(
-      colors[(glow_eCtColor_ButtonTextcolor - glow_eDrawType_CustomColor1)
-          * 3]);
-  button_text.setGreenF(
-      colors[(glow_eCtColor_ButtonTextcolor - glow_eDrawType_CustomColor1) * 3
-          + 1]);
-  button_text.setBlueF(
-      colors[(glow_eCtColor_ButtonTextcolor - glow_eDrawType_CustomColor1) * 3
-          + 2]);
-
-  button_prelight.setRedF(
-      colors[(glow_eCtColor_ButtonFillcolor - glow_eDrawType_CustomColor1 + 3)
-          * 3]);
-  button_prelight.setGreenF(
-      colors[(glow_eCtColor_ButtonFillcolor - glow_eDrawType_CustomColor1 + 3)
-              * 3
-          + 1]);
-  button_prelight.setBlueF(
-      colors[(glow_eCtColor_ButtonFillcolor - glow_eDrawType_CustomColor1 + 3)
-              * 3
-          + 2]);
-
-  button_active.setRedF(
-      colors[(glow_eCtColor_ButtonFillcolor - glow_eDrawType_CustomColor1 + 2)
-          * 3]);
-  button_active.setGreenF(
-      colors[(glow_eCtColor_ButtonFillcolor - glow_eDrawType_CustomColor1 + 2)
-              * 3
-          + 1]);
-  button_active.setBlueF(
-      colors[(glow_eCtColor_ButtonFillcolor - glow_eDrawType_CustomColor1 + 2)
-              * 3
-          + 2]);
-
-  menu.setRedF(
-      colors[(glow_eCtColor_MenuFillcolor - glow_eDrawType_CustomColor1) * 3]);
-  menu.setGreenF(
-      colors[(glow_eCtColor_MenuFillcolor - glow_eDrawType_CustomColor1) * 3
-          + 1]);
-  menu.setBlueF(
-      colors[(glow_eCtColor_MenuFillcolor - glow_eDrawType_CustomColor1) * 3
-          + 2]);
-
-  menu_text.setRedF(
-      colors[(glow_eCtColor_MenuTextcolor - glow_eDrawType_CustomColor1) * 3]);
-  menu_text.setGreenF(
-      colors[(glow_eCtColor_MenuTextcolor - glow_eDrawType_CustomColor1) * 3
-          + 1]);
-  menu_text.setBlueF(
-      colors[(glow_eCtColor_MenuTextcolor - glow_eDrawType_CustomColor1) * 3
-          + 2]);
-
-  modifyBackground(toplevel, bg);
-  modifyForeground(title_label, bg_text);
-
-  modifyBackground(tools, bg);
-  modifyBackground(tools2, bg);
-
-  modifyBackground(alarmcnt_label, bg);
-  modifyForeground(alarmcnt_label, bg_text);
-  modifyBackground(aalarm_mark, bg);
-  modifyForeground(aalarm_mark, bg_text);
-  modifyBackground(balarm_mark, bg);
-  modifyForeground(balarm_mark, bg_text);
-  modifyBackground(balarm_active, bg);
-  for (int i = 0; i < 5; i++) {
-    modifyBackground(aalarm_active[i], bg);
-  }
-
-  modifyBackground(menu_bar, menu);
-  modifyForeground(menu_bar, menu_text);
-
-  for (unsigned int i = 0; i < sup_vect.size(); i++) {
-    setColorHelper(sup_vect[i].buttonw, "QPushButton", button_bg, "hover",
-        button_prelight, "pressed", button_active);
-    setColorHelper(sup_vect[i].indfiller1w, "QPushButton", button_bg, "hover",
-        button_prelight, "pressed", button_active);
-    setColorHelper(sup_vect[i].indfiller2w, "QPushButton", button_bg, "hover",
-        button_prelight, "pressed", button_active);
-    modifyForeground((QWidget*)sup_vect[i].textw, button_text);
-    setColorHelper(sup_vect[i].textbgw, "QPushButton", button_bg, "hover",
-        button_prelight, "pressed", button_active);
-    sup_vect[i].old_color = op_eSupColor_;
-  }
-
-  for (unsigned int i = 0; i < 25; i++) {
-    if (appl_buttons[i]) {
-      setColorHelper(appl_buttons[i], "QPushButton", button_bg, "hover",
-          button_prelight, "pressed", button_active);
-      modifyForeground(appl_buttons[i], button_text);
-    }
-  }
+  // Don't, use the desktop theme instead.
 }
 
 #define FONT_SCALE 0.7

@@ -88,7 +88,7 @@ public:
   QWidget* funcbox[5];
   QMenuBar* menu_bar;
   QLabel* title_label;
-  QWidget* appl_buttons[25];
+  QPushButton* appl_buttons[25];
   QToolBar* tools;
   QToolBar* tools2;
   QColor red_color;
@@ -167,6 +167,20 @@ public slots:
 
 private:
   OpQt* op;
+};
+
+class ClickableFrame : public QFrame {
+  Q_OBJECT
+
+public:
+  ClickableFrame();
+  ~ClickableFrame();
+
+signals:
+  void clicked();
+
+protected:
+  void mousePressEvent(QMouseEvent* event);
 };
 
 #endif
