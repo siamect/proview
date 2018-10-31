@@ -16,6 +16,8 @@ Arguments
 --reset-version  Reset previous version
 --lock-dbs       Lock dbs-files. Dbs-files will not be rebuilt.
 --unlock-dbs     Unlock dbs-files
+--parallel       Build with parallel execution.
+--not-parallel   Don't build with parallel execution
 
 EOF
 }
@@ -157,42 +159,42 @@ pwre_config_check_lib()
                 lib=${file##/*/lib}
                 if test $4 == "gtk"; then
                     conf_libgtk=$conf_libgtk" -l${lib%.*}"
-                    elif test $4 == "motif"; then
+		elif test $4 == "motif"; then
                     conf_libmotif=$conf_libmotif" -l${lib%.*}"
-                    elif test $4 == "qt"; then
+		elif test $4 == "qt"; then
                     conf_libqt=$conf_libqt" -l${lib%.*}"
-                    elif test $4 == "wb"; then
+		elif test $4 == "wb"; then
                     conf_libwb=$conf_libwb" -l${lib%.*}"
-                    elif test $4 == "mq"; then
+		elif test $4 == "mq"; then
                     conf_libmq=$conf_libmq" -l${lib%.*}"
                     elif test $4 == "wmq"; then
                     conf_libwmq=$conf_libwmq" -l${lib%.*}"
-                    elif test $4 == "pnak"; then
+		elif test $4 == "pnak"; then
                     conf_libpnak=$conf_libpnak" -l${lib%.*}"
-                    elif test $4 == "libusb"; then
+		elif test $4 == "libusb"; then
                     conf_lib=$conf_lib" -lusb-1.0"
-                    elif test $4 == "libpiface"; then
+		elif test $4 == "libpiface"; then
                     conf_lib=$conf_lib" -lpiface-1.0"
-                    elif test $4 == "powerlink"; then
+		elif test $4 == "powerlink"; then
                     conf_libpowerlink=$conf_libpowerlink" -L$lib_path -l${lib%.*}"
-                    elif test $4 == "powerlinkcn"; then
+		elif test $4 == "powerlinkcn"; then
                     conf_libpowerlinkcn=$conf_libpowerlinkcn" -L$lib_path -l${lib%.*}"
-                    elif test $4 == "libpcap"; then
+		elif test $4 == "libpcap"; then
                     conf_libpowerlink=$conf_libpowerlink" -l${lib%.*}"
                     conf_libpowerlinkcn=$conf_libpowerlinkcn" -l${lib%.*}"
                 else
                     conf_lib=$conf_lib" -l${lib%%.*}"
                 fi
-                elif test $3 == "gtk"; then
+	    elif test $3 == "gtk"; then
                 conf_libgtk=$conf_libgtk" \\\`pkg-config --libs gtk+-2.0\\\`"
                 conf_incdirgtk=$conf_incdirgtk" \\\`pkg-config --cflags gtk+-2.0\\\`"
-                elif test $3 == "qt"; then
+	    elif test $3 == "qt"; then
                 conf_libqt=$conf_libqt" \\\`pkg-config --libs QtCore QtGui QtNetwork phonon\\\`"
                 conf_incdirqt=$conf_incdirqt" \\\`pkg-config --cflags QtCore QtGui QtNetwork phonon\\\`"
-                elif test $3 == "gst"; then
+	    elif test $3 == "gst"; then
                 conf_libgst=$conf_libgst" \\\`pkg-config --libs gstreamer-video-1.0 gstreamer-1.0\\\`"
                 conf_incdirgst=$conf_incdirgst" \\\`pkg-config --cflags gstreamer-video-1.0 gstreamer-1.0\\\`"
-                elif test $3 == "motif"; then
+	    elif test $3 == "motif"; then
                 conf_libmotif=$conf_libmotif" -lImlib -lMrm -lXm -lXpm -lXt -lX11 -lXext -lXp -lSM -lICE"
             else
                 echo "Unknown type"
@@ -214,7 +216,7 @@ pwre_create_blddir()
     if test ! -e $pwre_croot/src/tools/bld/src/$pwre_os; then
         cp -r $pwre_croot/src/tools/bld/src/os_templ $pwre_croot/src/tools/bld/src/$pwre_os
         mv $pwre_croot/src/tools/bld/src/$pwre_os/hw_templ $pwre_croot/src/tools/bld/src/$pwre_os/$pwre_hw
-        elif test ! -e $pwre_croot/src/tools/bld/src/$pwre_os/$pwre_hw; then
+    elif test ! -e $pwre_croot/src/tools/bld/src/$pwre_os/$pwre_hw; then
         cp -r $pwre_croot/src/tools/bld/src/os_templ/hw_templ $pwre_croot/src/tools/bld/src/$pwre_os/$pwre_hw
     fi
 }
@@ -244,7 +246,7 @@ pwre_create_makedir()
                 done
                 if test -e $newdir/.$pwre_hw; then
                     cp -p $dir/hw_templ/* $newdir/.$pwre_hw/
-                    elif test -e $dir/hw_templ; then
+		elif test -e $dir/hw_templ; then
                     # Create hw dir
                     echo "Creating $newdir/$pwre_hw"
                     cp -pr $dir/hw_templ $newdir/.$pwre_hw
@@ -255,7 +257,7 @@ pwre_create_makedir()
             if test ! -e $newdir/$pwre_hw; then
                 if test -e $newdir/.$pwre_hw; then
                     cp -p $dir/hw_templ/* $newdir/.$pwre_hw/
-                    elif test -e $dir/hw_templ; then
+		elif test -e $dir/hw_templ; then
                     # Create hw dir
                     echo "Creating $newdir/.$pwre_hw"
                     cp -pr $dir/hw_templ $newdir/.$pwre_hw
@@ -336,24 +338,32 @@ fi
 declare -i buildversion_set=0
 declare -i lockdbs_set=0
 declare -i lockdbs=0
+declare -i parallel_set=0
+declare -i parallel=0
 if [ "$1" = "--help" ]; then
     pwre_help
     exit
-    elif [ "$1" = "--version" ] && [ "$2" != "" ] && [ "$3" != "" ]; then
+elif [ "$1" = "--version" ] && [ "$2" != "" ] && [ "$3" != "" ]; then
     buildversion=$2" "$3
     buildversion_set=1
-    elif [ "$1" = "--reset-version" ]; then
+elif [ "$1" = "--reset-version" ]; then
     buildversion=""
     buildversion_set=1
-    elif [ "$1" = "--lock-dbs" ]; then
+elif [ "$1" = "--lock-dbs" ]; then
     lockdbs=1
     lockdbs_set=1
-    elif [ "$1" = "--unlock-dbs" ]; then
+elif [ "$1" = "--unlock-dbs" ]; then
     lockdbs=0
     lockdbs_set=1
-    elif [ "$1" = "--ebuild" ]; then
+elif [ "$1" = "--parallel" ]; then
+    parallel=1
+    parallel_set=1
+elif [ "$1" = "--not-parallel" ]; then
+    parallel=0
+    parallel_set=1
+elif [ "$1" = "--ebuild" ]; then
     ebuild=1
-    elif [ "$1" != "" ]; then
+elif [ "$1" != "" ]; then
     echo "Unknown option \"$1\""
     exit
 fi
@@ -375,6 +385,14 @@ if [ $lockdbs_set -eq 0 ]; then
         lockdbs=$ver
     fi
 fi
+if [ $parallel_set -eq 0 ]; then
+    # Catch current value
+    if [ -e $cfile ]; then
+        ver=`eval cat $cfile | grep "\bexport PWRE_CONF_PARALLEL"`
+        ver=${ver#*=}
+        parallel=$ver
+    fi
+fi
 
 
 pwre_create_blddir
@@ -388,6 +406,7 @@ else
     echo "export PWRE_CONF_BUILDVERSION=\"0\"" >> $cfile
 fi
 echo "export PWRE_CONF_LOCKDBS=$lockdbs" >> $cfile
+echo "export PWRE_CONF_PARALLEL=$parallel" >> $cfile
 
 if [ $pwre_hw == "hw_arm" ] && [ $ebuild -eq 1 ]; then
     echo "Arm ebuild"

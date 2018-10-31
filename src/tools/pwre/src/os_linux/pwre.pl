@@ -67,6 +67,8 @@ if (($dbname = $ENV{"pwre_env_db"}) eq "") {
 $os = substr( $ENV{"pwre_os"}, 3, 100);
 $hw = substr( $ENV{"pwre_hw"}, 3, 100);
 $configfile = $ENV{"pwre_broot"} . "/pwre_" . $hw . "_" . $os . ".cnf";
+$parallel = $ENV{"PWRE_CONF_PARALLEL"};
+printf( "Parallel %s\n", $parallel);
 
 
 $arg1 = $ARGV[0];
@@ -1465,8 +1467,10 @@ sub _build () # args: branch, subbranch, flavour, phase
           if ($hw eq "x86" && $real_hw eq "x86_64") {
             $ENV{"cross_compile"} = "-m32";
           }
-          if (($branch eq "lib" && $subbranch ne "dtt") || $branch eq "wbl") {
+
+          if (($parallel eq "1" && $branch eq "lib" && $subbranch ne "dtt") || $branch eq "wbl") {
             # All libraries and wbl files can be compiled in parallel
+	    printf( "Parallel %s", $parallel);
             system("make -j @_") && exit 1;
           } else {
             system("make @_") && exit 1;
