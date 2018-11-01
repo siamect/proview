@@ -201,11 +201,6 @@ static QPainter* get_painter(
   }
 }
 
-static QPainter* get_painter(GlowDrawQt* draw_ctx, int painter_type, int size)
-{
-  return get_painter(draw_ctx->m_wind->buffer, draw_ctx, painter_type, size);
-}
-
 static QColor glow_allocate_named_color(
     GlowDrawQt* draw_ctx, const char* named_color)
 {
@@ -1324,7 +1319,7 @@ int GlowDrawQt::text_cursor(GlowWind* wind, int x, int y, char* text, int len,
   QPainter* painter = get_painter(w->buffer, this, color, 1);
 
   if (w->clip_on) {
-    set_clip(w, get_painter(this, painter_type, idx));
+    set_clip(w, painter);
   }
 
   // debug_print("cursor %d,%d to %d,%d\n", x + width, y + descent, x + width, y - height + descent);
