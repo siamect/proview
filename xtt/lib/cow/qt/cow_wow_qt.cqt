@@ -55,6 +55,7 @@
 #include <QDialogButtonBox>
 #include <QFileDialog>
 #include <QHBoxLayout>
+#include <QHeaderView>
 #include <QInputDialog>
 #include <QKeyEvent>
 #include <QMenu>
@@ -265,6 +266,8 @@ CoWowListWidgetQt::CoWowListWidgetQt(QWidget* parent, const char* title,
     name_p += textsize;
   }
 
+  list->header()->hide();
+
   connect(list, SIGNAL(itemActivated(QTreeWidgetItem*, int)), this,
       SLOT(list_row_activated_cb(QTreeWidgetItem*, int)));
 
@@ -273,11 +276,11 @@ CoWowListWidgetQt::CoWowListWidgetQt(QWidget* parent, const char* title,
 
   setLayout(vbox);
 
-  setFixedSize(200, 400);
   setWindowTitle(translate_utf8(title));
-  debug_print("Created a CoWowListWidgetQt\n");
+  setAttribute(Qt::WA_ShowWithoutActivating);
   setAttribute(Qt::WA_DeleteOnClose);
 
+  list->resizeColumnToContents(0);
   show();
 
   list->setFocus();
@@ -291,7 +294,6 @@ void CoWowListWidgetQt::focusInEvent(QFocusEvent* event)
 
 void CoWowListWidgetQt::closeEvent(QCloseEvent* event)
 {
-  debug_print("CoWowListWidgetQt::closeEvent\n");
   QWidget::closeEvent(event);
   list_cancel_cb();
 }
