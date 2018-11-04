@@ -36,8 +36,8 @@ g++
 libgtk2.0-dev
 cpp
 libasound2-dev
-libdb5.1-dev
-libdb5.1++-dev
+libdb5.3-dev
+libdb5.3++-dev
 doxygen
 
 qt4-dev-tools
@@ -52,8 +52,8 @@ libsqlite3-dev              History database with sqlite
 libhdf5-openmpi-dev         History database with hdf5
 libusb-1.0.0-dev            USB I/O cards (Velleman)
 librsvg2-dev                SVG image support in Ge
-libgstreamer0.10-dev        Network video camera
-libgstreamer-plugins-base0.10-dev Network video camera
+libgstreamer1.0-dev        Network video camera
+libgstreamer-plugins-base1.0-dev Network video camera
 openPOWERLINK-V1.08.2       Ethernet Powerlink zip-file. Build from sources.
 libpcap-dev                 Ethernet Powerlink
 

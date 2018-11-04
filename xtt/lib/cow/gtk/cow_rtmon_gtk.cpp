@@ -338,7 +338,7 @@ static gboolean rtmon_scan(void* data)
         strcpy(color_name, "Yellow");
         strcpy(text, "Running");
       } else {
-        strcpy(color_name, "Green");
+        strcpy(color_name, "Lightgreen");
         strcpy(text, "Running");
       }
       gtk_widget_set_sensitive(rtmon->bbox_start, FALSE);

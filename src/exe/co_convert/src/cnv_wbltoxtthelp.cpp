@@ -103,6 +103,7 @@ int CnvWblToXtthelp::init(char* first)
   strcpy(fname, ctx->dir);
   strcat(fname, ctx->rw->volume_name);
   strcat(fname, "_xtthelp.dat");
+  str_ToLower(fname, fname);
 
   fp_xtthelp_index.open(fname);
 

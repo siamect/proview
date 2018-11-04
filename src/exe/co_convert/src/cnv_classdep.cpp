@@ -63,6 +63,7 @@ int CnvClassDep::read()
   int currentidx = 0;
 
   sprintf(fname, "$pwre_broot/$pwre_target/bld/wbl/*.cdp");
+  str_ToLower(fname, fname);
   // dcli_translate_filename( fname, fname);
 
   // Create root;
