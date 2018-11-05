@@ -93,6 +93,7 @@ public:
   char m_recall[m_recall_size][m_line_size];
   int m_current_recall_line;
   int m_current_size;
+  int m_tmp_size;
   char tmp[m_recall_size][m_line_size];
 
   void push(const char* src);
