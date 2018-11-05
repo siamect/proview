@@ -311,9 +311,9 @@ public:
   pwr_tFileName name;
 };
 
-int subpalette_cmp(LocalFile p1, LocalFile p2)
+bool subpalette_cmp(LocalFile p1, LocalFile p2)
 {
-  return strcmp(p1.name, p2.name);
+  return strcmp(p1.name, p2.name) < 0;
 }
 
 //
