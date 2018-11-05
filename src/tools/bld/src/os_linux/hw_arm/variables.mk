@@ -22,6 +22,7 @@ lis_dir	:= $(module_root)/lis
 kit_dir	:= $(module_root)/kit
 src_dir	:= $(module_root)/src
 load_dir := $(module_root)/load
+web_dir := $(module_root)/web
 
 doc_dir	:= $(release_root)/exp/doc
 elib_dir := $(release_root)/exp/lib
