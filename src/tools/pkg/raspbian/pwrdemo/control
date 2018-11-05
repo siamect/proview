@@ -1,9 +1,9 @@
-Package: pwrdemo55
+Package: pwrdemo56
 Version: 5.6.1-1
 Section: base
 Priority: optional
 Architecture: armhf
-Depends: pwr55 (>= 5.5.0-1)
+Depends: pwr56 (>= 5.6.1-1)
 Maintainer: Proview <postmaster@proview.se>
 Description: Proview Demo Project package
  5.6.1-1 Base release
