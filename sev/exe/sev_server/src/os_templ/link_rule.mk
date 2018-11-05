@@ -1,10 +1,14 @@
 ifndef link_rule_mk
 link_rule_mk := 1
 
-ifeq ($(PWRE_CONF_LIBHDF5),1)
-  ldsev = mpic++
+ifndef pwre_cxx
+  ifeq ($(PWRE_CONF_LIBHDF5),1)
+    ldsev = mpic++
+  else
+    ldsev = $(ldxx)
+  endif
 else
-  ldsev = $(ldxx)
+  ldsev = $(pwre_cxx)
 endif
 
 link = $(ldsev) $(elinkflags) $(domap) -o $(export_exe) \

@@ -62,7 +62,7 @@ then
     cinc="-I$pwr_inc -I$pwrp_rttbld"
     cflags="-DOS_LINUX -DOS=linux -DHW_ARM=1 -DPOSIX_SOURCE -DWall"
     ${cc} -c -o $pwrp_obj/${name}.o $pwrp_rttbld/${name}.c ${cinc} ${cflags}
-    ar rc ${ar_name_pict} $pwrp_obj/${name}.o
+    ar rcU ${ar_name_pict} $pwrp_obj/${name}.o
   else
 #   echo "Is rttsys"
     ar_name_pict=${pwr_lib}/libpwr_dtt.a
@@ -78,7 +78,7 @@ then
     cflags="-DOS_LINUX -DOS=linux -DHW_ARM=1 -DPOSIX_SOURCE -DWall"
     ${cc} -c -o ${bld_dir}/${name}.o \
        ${bld_dir}/${name}.c ${cinc} ${cflags}
-    ar rc ${ar_name_pict} ${bld_dir}/${name}.o
+    ar rcU ${ar_name_pict} ${bld_dir}/${name}.o
   fi
 else
   echo "Opsys ($opsys) is not linux, not yet supported"

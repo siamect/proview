@@ -1189,6 +1189,10 @@ sub copy ()
 
     my $flavour = $_[1];
 
+    if ( $flavour eq "") {
+      $flavour = "gtk";
+    }
+
     my($cmd) = "make -f $bindir/import_files.mk" . " " . $_[0] . "_" . $flavour; 
     system("$cmd");
   }
