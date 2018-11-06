@@ -40,10 +40,10 @@ lib  : $(load_dir)/pwrb.dbs | silent
 
 exe : $(doc_dir)/en_us/orm/pwrb_allclasses.html \
       $(doc_dir)/sv_se/orm/pwrb_allclasses.html \
-      $(doc_dir)/en_us/orm/pwrb_baseclasses_h.html \
-      $(doc_dir)/sv_se/orm/pwrb_baseclasses_h.html \
-      $(doc_dir)/en_us/orm/pwrb_baseclasses_hpp.html \
-      $(doc_dir)/sv_se/orm/pwrb_baseclasses_hpp.html \
+      $(doc_dir)/en_us/orm/pwr_baseclasses_h.html \
+      $(doc_dir)/sv_se/orm/pwr_baseclasses_h.html \
+      $(doc_dir)/en_us/orm/pwr_baseclasses_hpp.html \
+      $(doc_dir)/sv_se/orm/pwr_baseclasses_hpp.html \
       $(doc_dir)/en_us/orm/rt_plc_macro_%_h.html \
       $(doc_dir)/sv_se/orm/rt_plc_macro_%_h.html \
       $(doc_dir)/en_us/orm/rt_plc_%_c.html \
@@ -86,11 +86,11 @@ $(doc_dir)/en_us/orm/pwrb_allclasses.html :
 	@ echo "Generating html files for pwrb classes en_us..."
 	@ $(co_convert) -w -d $(doc_dir)/en_us/orm -y $(bld_dir)/pwrb.d_html_wbl -g $(pwre_sroot)/wbl/pwrb/src/cnv_setup.dat "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
 
-$(doc_dir)/en_us/orm/pwrb_baseclasses_h.html :
+$(doc_dir)/en_us/orm/pwr_baseclasses_h.html :
 	@ echo "Generating html files for pwrb structs en_us..."
 	@ $(co_convert) -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr_baseclasses.h
 
-$(doc_dir)/en_us/orm/pwrb_baseclasses_hpp.html :
+$(doc_dir)/en_us/orm/pwr_baseclasses_hpp.html :
 	@ echo "Generating html files for pwrb structs en_us..."
 	@ $(co_convert) -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr_baseclasses.hpp
 
@@ -104,7 +104,7 @@ $(doc_dir)/en_us/orm/rt_plc_%_c.html :
 
 $(doc_dir)/en_us/orm/rt_c_%_c.html :
 	@ echo "Generating html files for pwrb code en_us..."
-	@ $(co_convert) -c -d $(doc_dir)/en_us/orm "$(pwre_sroot)/lib/rt/src/rt_c_*.c"
+	@ $(co_convert) -c -d $(doc_dir)/en_us/orm "$(source)"
 
 $(doc_dir)/en_us/orm/rt_csup_c.html :
 	@ echo "Generating html files for pwrb code en_us..."
@@ -114,11 +114,11 @@ $(doc_dir)/sv_se/orm/pwrb_allclasses.html :
 	@ echo "Generating html files for pwrb classes sv_se..."
 	@ $(co_convert) -w -l sv_se -d $(doc_dir)/sv_se/orm -g $(pwre_sroot)/wbl/pwrb/src/cnv_setup.dat "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
 
-$(doc_dir)/sv_se/orm/pwrb_baseclasses_h.html :
+$(doc_dir)/sv_se/orm/pwr_baseclasses_h.html :
 	@ echo "Generating html files for pwrb structs sv_se..."
 	@ $(co_convert) -c -d $(doc_dir)/sv_se/orm $(inc_dir)/pwr_baseclasses.h
 
-$(doc_dir)/sv_se/orm/pwrb_baseclasses_hpp.html :
+$(doc_dir)/sv_se/orm/pwr_baseclasses_hpp.html :
 	@ echo "Generating html files for pwrb structs sv_se..."
 	@ $(co_convert) -c -d $(doc_dir)/sv_se/orm $(inc_dir)/pwr_baseclasses.hpp
 
