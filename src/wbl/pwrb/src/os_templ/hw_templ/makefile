@@ -22,7 +22,33 @@ ifndef rules_mk
  include $(pwre_sroot)/tools/bld/src/$(os_name)/rules.mk
 endif
 
+code_sources := $(wildcard $(pwre_sroot)/lib/rt/src/rt_plc_macro_*.h) \
+                $(wildcard $(pwre_sroot)/lib/rt/src/rt_plc_c_*.c) \
+                $(wildcard $(pwre_sroot)/lib/rt/src/rt_c_*.c) \
+		$(pwre_sroot)/lib/rt/src/rt_csup.c
+code_sources := $(notdir $(code_sources))
+export_code_en_us := $(patsubst %.c,$(doc_dir)/en_us/orm/%_c.html,$(code_sources))
+export_code_en_us := $(patsubst %.h,$(doc_dir)/en_us/orm/%_h.html,$(export_code_en_us))
+export_code_sv_se := $(patsubst %.c,$(doc_dir)/sv_se/orm/%_c.html,$(code_sources))
+export_code_sv_se := $(patsubst %.h,$(doc_dir)/sv_se/orm/%_h.html,$(export_code_sv_se))
 
+.SUFFIXES:
+
+$(doc_dir)/en_us/orm/%_c.html : $(pwre_sroot)/lib/rt/src/%.c
+	@ echo "Generating html files sv_se $(notdir $(source))"
+	@ $(co_convert) -c -d $(doc_dir)/en_us/orm "$(source)"
+
+$(doc_dir)/en_us/orm/%_h.html : $(pwre_sroot)/lib/rt/src/%.h
+	@ echo "Generating html files sv_se $(notdir $(source))"
+	@ $(co_convert) -c -d $(doc_dir)/en_us/orm "$(source)"
+
+$(doc_dir)/sv_se/orm/%_c.html : $(pwre_sroot)/lib/rt/src/%.c
+	@ echo "Generating html files sv_se $(notdir $(source))"
+	@ $(co_convert) -c -d $(doc_dir)/sv_se/orm "$(source)"
+
+$(doc_dir)/sv_se/orm/%_h.html : $(pwre_sroot)/lib/rt/src/%.h
+	@ echo "Generating html files sv_se $(notdir $(source))"
+	@ $(co_convert) -c -d $(doc_dir)/sv_se/orm "$(source)"
 
 .PHONY : all init copy lib exe dirs clean realclean\
          $(clean_wbl)
@@ -44,20 +70,14 @@ exe : $(doc_dir)/en_us/orm/pwrb_allclasses.html \
       $(doc_dir)/sv_se/orm/pwr_baseclasses_h.html \
       $(doc_dir)/en_us/orm/pwr_baseclasses_hpp.html \
       $(doc_dir)/sv_se/orm/pwr_baseclasses_hpp.html \
-      $(doc_dir)/en_us/orm/rt_plc_macro_%_h.html \
-      $(doc_dir)/sv_se/orm/rt_plc_macro_%_h.html \
-      $(doc_dir)/en_us/orm/rt_plc_%_c.html \
-      $(doc_dir)/sv_se/orm/rt_plc_%_c.html \
-      $(doc_dir)/en_us/orm/rt_c_%_c.html \
-      $(doc_dir)/sv_se/orm/rt_c_%_c.html \
-      $(doc_dir)/en_us/orm/rt_csup_c.html \
-      $(doc_dir)/sv_se/orm/rt_csup_c.html \
       $(doc_dir)/en_us/pwrb.ps \
       $(doc_dir)/sv_se/pwrb.ps \
       $(doc_dir)/en_us/pwrb.pdf \
       $(doc_dir)/sv_se/pwrb.pdf \
       $(exe_dir)/en_us/pwrb_xtthelp.dat \
       $(exe_dir)/sv_se/pwrb_xtthelp.dat \
+      $(export_code_en_us) \
+      $(export_code_sv_se) \
       | silent
 
 dirs : $(bld_dir)$(dir_ext)
@@ -94,22 +114,6 @@ $(doc_dir)/en_us/orm/pwr_baseclasses_hpp.html :
 	@ echo "Generating html files for pwrb structs en_us..."
 	@ $(co_convert) -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr_baseclasses.hpp
 
-$(doc_dir)/en_us/orm/rt_plc_macro_%_h.html :
-	@ echo "Generating html files for pwrb code en_us..."
-	@ $(co_convert) -c -d $(doc_dir)/en_us/orm "$(pwre_sroot)/lib/rt/src/rt_plc_macro_*.h"
-
-$(doc_dir)/en_us/orm/rt_plc_%_c.html :
-	@ echo "Generating html files for pwrb code en_us..."
-	@ $(co_convert) -c -d $(doc_dir)/en_us/orm "$(pwre_sroot)/lib/rt/src/rt_plc_*.c"
-
-$(doc_dir)/en_us/orm/rt_c_%_c.html :
-	@ echo "Generating html files for pwrb code en_us..."
-	@ $(co_convert) -c -d $(doc_dir)/en_us/orm "$(source)"
-
-$(doc_dir)/en_us/orm/rt_csup_c.html :
-	@ echo "Generating html files for pwrb code en_us..."
-	@ $(co_convert) -c -d $(doc_dir)/en_us/orm "$(pwre_sroot)/lib/rt/src/rt_csup.c"
-
 $(doc_dir)/sv_se/orm/pwrb_allclasses.html :
 	@ echo "Generating html files for pwrb classes sv_se..."
 	@ $(co_convert) -w -l sv_se -d $(doc_dir)/sv_se/orm -g $(pwre_sroot)/wbl/pwrb/src/cnv_setup.dat "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
@@ -121,22 +125,6 @@ $(doc_dir)/sv_se/orm/pwr_baseclasses_h.html :
 $(doc_dir)/sv_se/orm/pwr_baseclasses_hpp.html :
 	@ echo "Generating html files for pwrb structs sv_se..."
 	@ $(co_convert) -c -d $(doc_dir)/sv_se/orm $(inc_dir)/pwr_baseclasses.hpp
-
-$(doc_dir)/sv_se/orm/rt_plc_macro_%_h.html :
-	@ echo "Generating html files for pwrb code sv_se..."
-	@ $(co_convert) -c -d $(doc_dir)/sv_se/orm "$(pwre_sroot)/lib/rt/src/rt_plc_macro_*.h"
-
-$(doc_dir)/sv_se/orm/rt_plc_%_c.html :
-	@ echo "Generating html files for pwrb code sv_se..."
-	@ $(co_convert) -c -d $(doc_dir)/sv_se/orm "$(pwre_sroot)/lib/rt/src/rt_plc_*.c"
-
-$(doc_dir)/sv_se/orm/rt_c_%_c.html :
-	@ echo "Generating html files for pwrb code sv_se..."
-	@ $(co_convert) -c -d $(doc_dir)/sv_se/orm "$(pwre_sroot)/lib/rt/src/rt_c_*.c"
-
-$(doc_dir)/sv_se/orm/rt_csup_c.html :
-	@ echo "Generating html files for pwrb code sv_se..."
-	@ $(co_convert) -c -d $(doc_dir)/sv_se/orm "$(pwre_sroot)/lib/rt/src/rt_csup.c"
 
 $(doc_dir)/en_us/pwrb.ps :
 	@ echo "Generating postscript file for pwrb classes..."
