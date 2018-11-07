@@ -80,12 +80,12 @@
 
 // Message Q include files
 
-#include <p_entry.h> /* PAMS function declarations     */
-#include <p_proces.h> /* Known Queue number definitions */
-#include <p_group.h> /* Known Group ID definitions     */
-#include <p_typecl.h> /* Generic Type/Class definitions */
-#include <p_return.h> /* PAMS return status definitions */
-#include <p_symbol.h> /* Generic PSEL/PSYM definitions  */
+#include "p_entry.h" /* PAMS function declarations     */
+#include "p_proces.h" /* Known Queue number definitions */
+#include "p_group.h" /* Known Group ID definitions     */
+#include "p_typecl.h" /* Generic Type/Class definitions */
+#include "p_return.h" /* PAMS return status definitions */
+#include "p_symbol.h" /* Generic PSEL/PSYM definitions  */
 
 #define TIME_INCR 0.02
 #define debug 0
