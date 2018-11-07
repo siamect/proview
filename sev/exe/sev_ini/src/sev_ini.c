@@ -34,6 +34,8 @@
  * General Public License plus this exception.
  */
 
+// TODO: Den här filen är i princip identisk med rt_ini.
+
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/wait.h>
@@ -219,12 +221,12 @@ static pwr_tStatus terminate(ini_sContext* cp)
   exit(1);
 }
 
-static int ask_yes_no(ini_sContext* cp, char* text)
+static int ask_yes_no(char* text)
 {
-  printf("%s ? (y|n) [n]: ", text);
-  printf("n\n");
-
-  return 0;
+  char ans;
+  printf("%s ? [Y/n]: ", text);
+  scanf("%c", &ans);
+  return (ans == 'y' || ans == 'Y');
 }
 
 static int checkErrors(ini_sContext* cp)
@@ -241,7 +243,7 @@ static int checkErrors(ini_sContext* cp)
           &cp->log, "Ignoring fatal errors, errors and warnings, continued...");
       return 1;
     } else {
-      return ask_yes_no(cp, "Do you want to continue");
+      return ask_yes_no("Do you want to continue");
     }
   }
   if (cp->errors > 0) {
@@ -252,7 +254,7 @@ static int checkErrors(ini_sContext* cp)
       errh_LogInfo(&cp->log, "Ignoring errors and warnings, continued...");
       return 1;
     } else {
-      return ask_yes_no(cp, "Do you want to continue");
+      return ask_yes_no("Do you want to continue");
     }
   }
   if (cp->warnings > 0) {
@@ -263,7 +265,7 @@ static int checkErrors(ini_sContext* cp)
       errh_LogInfo(&cp->log, "Ignoring warnings, continued...");
       return 1;
     } else {
-      return ask_yes_no(cp, "Do you want to continue");
+      return ask_yes_no("Do you want to continue");
     }
   }
   return 1;
