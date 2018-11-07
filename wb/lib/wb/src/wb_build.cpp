@@ -1797,9 +1797,9 @@ void wb_build::webbrowserconfig(pwr_tOid oid)
     // Write the file
     fp = fopen(fname, "w");
     if (!fp) {
-      char msg[200];
-      sprintf(msg, "Build:    Unable to open file %s", fname);
-      MsgWindow::message('E', msg, msgw_ePop_No, oid);
+      char tmp[200];
+      sprintf(tmp, "Build:    Unable to open file \"%s\"", fname);
+      MsgWindow::message('E', tmp, msgw_ePop_No, oid);
       return;
     }
 

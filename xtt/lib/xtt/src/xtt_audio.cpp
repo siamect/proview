@@ -264,7 +264,7 @@ int XttAudio::beep(pwr_tAttrRef* arp)
           dcli_translate_filename(fname, sound.Source);
           fp = fopen(fname, "r");
           if (!fp) {
-            printf("Unable to open file %s\n", fname);
+            printf("Unable to open file \"%s\"\n", fname);
             return XNAV__NOFILE;
           }
 

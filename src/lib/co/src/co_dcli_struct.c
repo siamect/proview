@@ -1151,7 +1151,7 @@ readstruct_error_return:
 
   /* Send an error message */
   if (return_sts == DCLI__NOFILE)
-    sprintf(dcli_message, "Unable to open file %s", normfilename);
+    sprintf(dcli_message, "Unable to open file \"%s\"", normfilename);
   else if (return_sts == DCLI__STRUCTNOTFOUND)
     sprintf(dcli_message, "Struct not found, file: %s", normfilename);
   else if (return_sts == DCLI__EOF)

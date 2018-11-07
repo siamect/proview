@@ -7796,7 +7796,9 @@ int XNav::command(char* input_str)
     /* Read command file */
     sts = readcmdfile(&command[1], 0);
     if (sts == DCLI__NOFILE) {
-      message('E', "Unable to open file");
+      char tmp[200];
+      snprintf(tmp, 200, "Unable to open file \"%s\"", &command[1]);
+      message('E', tmp);
       return DCLI__SUCCESS;
     } else if (EVEN(sts))
       return sts;
@@ -7820,7 +7822,9 @@ int XNav::command(char* input_str)
         /* Read command file */
         sts = readcmdfile(&symbol_value[1], 0);
         if (sts == DCLI__NOFILE) {
-          message('E', "Unable to open file");
+          char tmp[200];
+          snprintf(tmp, 200, "Unable to open file \"%s\"", &symbol_value[1]);
+          message('E', tmp);
           return DCLI__SUCCESS;
         } else if (EVEN(sts))
           return sts;
@@ -9245,7 +9249,9 @@ int XNav::store(char* filename, int collect)
   /* Open the file */
   outfile = fopen(filename_str, "w");
   if (outfile == 0) {
-    message('E', "Unable to open file");
+    char tmp[200];
+    snprintf(tmp, 200, "Unable to open file \"%s\"", filename_str);
+    message('E', tmp);
     return XNAV__HOLDCOMMAND;
   }
 

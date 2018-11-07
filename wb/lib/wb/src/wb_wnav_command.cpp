@@ -5728,7 +5728,9 @@ int WNav::command(char* input_str)
     strcpy(filename, &command[1]);
     sts = readcmdfile(filename);
     if (sts == DCLI__NOFILE) {
-      message('E', "Unable to open file");
+      char tmp[200];
+      snprintf(tmp, 200, "Unable to open file \"%s\"", filename);
+      message('E', tmp);
       return DCLI__SUCCESS;
     } else if (EVEN(sts))
       return sts;
@@ -5744,7 +5746,9 @@ int WNav::command(char* input_str)
         /* Read command file */
         sts = readcmdfile(&symbol_value[1]);
         if (sts == DCLI__NOFILE) {
-          message('E', "Unable to open file");
+          char tmp[200];
+          snprintf(tmp, 200, "Unable to open file \"%s\"", &symbol_value[1]);
+          message('E', tmp);
           return DCLI__SUCCESS;
         } else if (EVEN(sts))
           return sts;

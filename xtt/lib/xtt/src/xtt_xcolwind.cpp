@@ -86,7 +86,9 @@ void XColWind::activate_save()
   dcli_translate_filename(fname, filename);
   std::ofstream fp(fname);
   if (!fp) {
-    message('E', "Unable to open file");
+    char tmp[200];
+    snprintf(tmp, 200, "Unable to open file \"%s\"", fname);
+    message('E', tmp);
     return;
   }
 

@@ -2334,7 +2334,9 @@ static int rtt_set_func(menu_ctx ctx, int* flag)
       rtt_get_defaultfilename(str, str, ".lis");
       rtt_outfile = fopen(str, "w");
       if (rtt_outfile == 0) {
-        rtt_message('E', "Unable to open file");
+        char tmp[200];
+        snprintf(tmp, 200, "Unable to open file \"%s\"", str);
+        rtt_message('E', tmp);
         return RTT__HOLDCOMMAND;
       }
       if (ODD(rtt_get_qualifier("/MESSAGE", str)))
@@ -2860,7 +2862,6 @@ int rttcmd_learn_func(menu_ctx ctx, int* flag)
   int sts;
   char arg1_str[80];
   int arg1_sts;
-  char msg[120];
 
   arg1_sts = rtt_get_qualifier("rtt_arg1", arg1_str);
 
@@ -2875,8 +2876,9 @@ int rttcmd_learn_func(menu_ctx ctx, int* flag)
     rtt_get_defaultfilename(file_str, file_str, ".rtt_com");
     sts = rtt_learn_start(file_str);
     if (EVEN(sts)) {
-      sprintf(msg, "Unable to open file %s", file_str);
-      rtt_message('E', msg);
+      char tmp[200];
+      snprintf(tmp, 200, "Unable to open file \"%s\"", file_str);
+      rtt_message('E', tmp);
       return RTT__HOLDCOMMAND;
     }
     rtt_message('I', "Enter key sequence to learn");
@@ -4048,7 +4050,9 @@ int rtt_get_command(menu_ctx ctx, char* chn, rtt_t_recall* recall, int timeout,
       /* Read command file */
       sts = rtt_commandmode_start(&command[1], 0);
       if (sts == RTT__NOFILE) {
-        rtt_message('E', "Unable to open file");
+        char tmp[200];
+        snprintf(tmp, 200, "Unable to open file \"%s\"", &command[1]);
+        rtt_message('E', tmp);
         continue;
       } else if (EVEN(sts))
         return sts;
@@ -4064,7 +4068,9 @@ int rtt_get_command(menu_ctx ctx, char* chn, rtt_t_recall* recall, int timeout,
           /* Read command file */
           sts = rtt_commandmode_start(&symbol_value[1], 0);
           if (sts == RTT__NOFILE) {
-            rtt_message('E', "Unable to open file");
+            char tmp[200];
+            snprintf(tmp, 200, "Unable to open file \"%s\"", &symbol_value[1]);
+            rtt_message('E', tmp);
             continue;
           } else if (EVEN(sts))
             return sts;
@@ -4163,7 +4169,9 @@ int rtt_menu_command(menu_ctx ctx, pwr_tObjid argoi, char* incommand,
     file = command + 1;
     sts = rtt_commandmode_start(file, 0);
     if (sts == RTT__NOFILE) {
-      rtt_message('E', "Unable to open file");
+      char tmp[200];
+      snprintf(tmp, 200, "Unable to open file \"%s\"", file);
+      rtt_message('E', tmp);
       return RTT__NOPICTURE;
     } else if (EVEN(sts))
       return sts;
@@ -7386,7 +7394,9 @@ static int rtt_store(menu_ctx ctx, char* filename, int collect)
   /* Open the file */
   outfile = fopen(filename_str, "w");
   if (outfile == 0) {
-    rtt_message('E', "Unable to open file");
+    char tmp[200];
+    snprintf(tmp, 200, "Unable to open file \"%s\"", filename_str);
+    rtt_message('E', tmp);
     return RTT__HOLDCOMMAND;
   }
 
@@ -8145,7 +8155,9 @@ static int rtt_print_picture(
     else
       outfile = fopen(filename_str, "w");
     if (outfile == 0) {
-      rtt_message('E', "Unable to open file");
+      char tmp[200];
+      snprintf(tmp, 200, "Unable to open file \"%s\"", filename_str);
+      rtt_message('E', tmp);
       return RTT__HOLDCOMMAND;
     }
   } else
@@ -8233,7 +8245,9 @@ static int rtt_print_picture_restore(menu_ctx ctx, char* filename)
   rtt_get_defaultfilename(filename, filename_str, ".rtt_com");
   outfile = fopen(filename_str, "w");
   if (outfile == 0) {
-    rtt_message('E', "Unable to open file");
+    char tmp[200];
+    snprintf(tmp, 200, "Unable to open file \"%s\"", filename_str);
+    rtt_message('E', tmp);
     return RTT__HOLDCOMMAND;
   }
 
@@ -8289,7 +8303,9 @@ static int rtt_print_text(char* filename, char* str, int append)
     else
       outfile = fopen(filename_str, "w");
     if (outfile == 0) {
-      rtt_message('E', "Unable to open file");
+      char tmp[200];
+      snprintf(tmp, 200, "Unable to open file \"%s\"", filename_str);
+      rtt_message('E', tmp);
       return RTT__HOLDCOMMAND;
     }
   } else

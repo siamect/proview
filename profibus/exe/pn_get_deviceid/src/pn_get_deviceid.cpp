@@ -90,7 +90,7 @@ void parse_file(char* filename)
 
   fp.open(fname);
   if (!fp) {
-    printf("# Unable to open file\n");
+    printf("# Unable to open file \"%s\"\n", fname);
     exit(0);
   }
 

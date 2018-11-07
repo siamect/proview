@@ -832,7 +832,7 @@ void XttTCurve::save(char* filename)
 
   std::ofstream fp(fname);
   if (!fp) {
-    printf("Unable to open file\n");
+    printf("Unable to open file \"%s\"\n", fname);
     return;
   }
 
@@ -861,7 +861,7 @@ void XttTCurve::open(char* filename)
 
   std::ifstream fp(fname);
   if (!fp) {
-    printf("Unable to open file\n");
+    printf("Unable to open file \"%s\"\n", fname);
     return;
   }
 

@@ -335,7 +335,7 @@ pwr_tStatus rt_sim::store()
 
   fp = fopen(fname, "w");
   if (!fp) {
-    printf("Unable to open file %s\n", fname);
+    printf("Unable to open file \"%s\"\n", fname);
     return SIM__FILE;
   }
 

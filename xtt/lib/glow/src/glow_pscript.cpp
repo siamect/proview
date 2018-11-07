@@ -45,7 +45,7 @@ GlowPscript::GlowPscript(char* filename, void* glow_ctx, int page_border)
   strcpy(fname, filename);
   file = fopen(fname, "w");
   if (!file) {
-    printf("** Unable to open file\n");
+    printf("** Unable to open file \"%s\"\n", fname);
     return;
   }
   fprintf(file, "%%!\n\n");

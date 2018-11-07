@@ -562,8 +562,11 @@ void Graph::open(char* filename)
   if (!streq(filename, "_none_.pwg")) {
     get_filename(filename, fname);
     sts = grow_Open(grow->ctx, fname);
-    if (EVEN(sts))
-      message('E', "Unable to open file");
+    if (EVEN(sts)) {
+      char tmp[200];
+      snprintf(tmp, 200, "Unable to open file \"%s\"", fname);
+      message('E', tmp);
+    }
   }
 
   grow_SetModified(grow->ctx, 0);
@@ -4228,7 +4231,7 @@ int Graph::set_subwindow_source(const char* name, char* source, char* owner)
 
   if ( grow_GetWindowCtx(object) == ctx)
     remove_self = true;
-  
+
   grow_EnableEvent(grow->ctx, glow_eEvent_Translate, glow_eEventType_CallBack,
       graph_grow_cb);
 

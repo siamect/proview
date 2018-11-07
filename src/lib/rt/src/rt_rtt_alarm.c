@@ -1465,7 +1465,9 @@ int rtt_event_print(char* filename, int notext, int noname)
 
   file = fopen(filename, "w");
   if (file == 0) {
-    rtt_message('E', "Unable to open file");
+    char tmp[200];
+    snprintf(tmp, 200, "Unable to open file \"%s\"", filename);
+    rtt_message('E', tmp);
     return RTT__HOLDCOMMAND;
   }
 
@@ -1766,7 +1768,9 @@ int rtt_alarmlog_start(char* filename)
 
   rtt_alarmlog_file = fopen(filename, "w");
   if (rtt_alarmlog_file == 0) {
-    rtt_message('E', "Unable to open file");
+    char tmp[200];
+    snprintf(tmp, 200, "Unable to open file \"%s\"", filename);
+    rtt_message('E', tmp);
     return RTT__HOLDCOMMAND;
   }
 

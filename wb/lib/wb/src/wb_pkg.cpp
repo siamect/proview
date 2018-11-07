@@ -794,7 +794,7 @@ void pkg_node::fetchFiles(bool distribute)
   dcli_translate_filename(fname, fname);
   std::ofstream ofu(fname);
   if (!ofu)
-    throw wb_error_str("Unable to open file");
+    throw wb_error_str(std::string("Unable to open file \"") + fname + "\"");
 
   ofu << "dir=$HOME\n"
       << "cd /tmp\n"
@@ -863,7 +863,7 @@ void pkg_node::fetchFiles(bool distribute)
   dcli_translate_filename(fname, fname);
   std::ofstream ofd(fname);
   if (!ofd)
-    throw wb_error_str("Unable to open file");
+    throw wb_error_str(std::string("Unable to open file \"") + fname + "\"");
 
   pwr_tTime time;
   char time_str[32];

@@ -455,7 +455,9 @@ int XttLogging::store(char* filename)
 
   outfile = fopen(filename_str, "w");
   if (outfile == 0) {
-    message('E', "Unable to open file");
+    char tmp[200];
+    snprintf(tmp, 200, "Unable to open file \"%s\"", filename_str);
+    message('E', tmp);
     return XNAV__HOLDCOMMAND;
   }
 
@@ -618,7 +620,9 @@ int XttLogging::start()
   if (logg_filename[0] != 0) {
     logg_file = fopen(logg_filename, "w");
     if (logg_file == 0) {
-      message('E', "Unable to open file");
+      char tmp[200];
+      snprintf(tmp, 200, "Unable to open file \"%s\"", logg_filename);
+      message('E', tmp);
       return XNAV__HOLDCOMMAND;
     }
   } else {

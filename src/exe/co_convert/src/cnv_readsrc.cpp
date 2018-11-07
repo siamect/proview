@@ -138,7 +138,7 @@ int CnvReadSrc::html_init(char* filename)
   fp_src_html.open(dir_fname);
 #if defined OS_LINUX
   if (!fp_src_html.good()) {
-    printf("Unable to open file %s\n", dir_fname);
+    printf("Unable to open file \"%s\"\n", dir_fname);
     return 0;
   }
 #endif

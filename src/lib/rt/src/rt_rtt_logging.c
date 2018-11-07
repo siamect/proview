@@ -663,7 +663,9 @@ int rtt_logging_store_entry(int entry, char* filename)
 
   outfile = fopen(filename_str, "w");
   if (outfile == 0) {
-    rtt_message('E', "Unable to open file");
+    char tmp[200];
+    snprintf(tmp, 200, "Unable to open file \"%s\"", filename_str);
+    rtt_message('E', tmp);
     return RTT__HOLDCOMMAND;
   }
 
@@ -735,7 +737,9 @@ int rtt_logging_store_all(char* filename)
 
   outfile = fopen(filename_str, "w");
   if (outfile == 0) {
-    rtt_message('E', "Unable to open file");
+    char tmp[200];
+    snprintf(tmp, 200, "Unable to open file \"%s\"", filename_str);
+    rtt_message('E', tmp);
     return RTT__HOLDCOMMAND;
   }
 
@@ -860,7 +864,9 @@ int rtt_logging_start(menu_ctx ctx, int entry)
   if (entry_ptr->logg_filename[0] != 0) {
     entry_ptr->logg_file = fopen(entry_ptr->logg_filename, "w");
     if (entry_ptr->logg_file == 0) {
-      rtt_message('E', "Unable to open file");
+      char tmp[200];
+      snprintf(tmp, 200, "Unable to open file \"%s\"", entry_ptr->logg_filename);
+      rtt_message('E', tmp);
       return RTT__HOLDCOMMAND;
     }
   } else {

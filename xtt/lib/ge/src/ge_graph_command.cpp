@@ -2521,7 +2521,7 @@ static int graph_create_func(void* client_data, void* client_flag)
     }
     else
       scale_x = 0;
-    
+
     if ( ODD( dcli_get_qualifier( "/Y2", str, sizeof(str))))
     {
       sts = sscanf( str, "%f", &value);
@@ -2724,7 +2724,9 @@ int Graph::command(char* input_str)
 
     sts = readcmdfile(&command[1]);
     if (sts == DCLI__NOFILE) {
-      message('E', "Unable to open file");
+      char tmp[200];
+      snprintf(tmp, 200, "Unable to open file \"%s\"", &command[1]);
+      message('E', tmp);
       return DCLI__SUCCESS;
     } else if (EVEN(sts))
       return sts;
@@ -2746,7 +2748,9 @@ int Graph::command(char* input_str)
         /* Read command file */
         sts = readcmdfile(&symbol_value[1]);
         if (sts == DCLI__NOFILE) {
-          message('E', "Unable to open file");
+          char tmp[200];
+          snprintf(tmp, 200, "Unable to open file \"%s\"", &symbol_value[1]);
+          message('E', tmp);
           return DCLI__SUCCESS;
         } else if (EVEN(sts))
           return sts;

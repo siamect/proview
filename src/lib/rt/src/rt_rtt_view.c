@@ -368,7 +368,9 @@ int rtt_view(
   if (type == RTT_VIEWTYPE_FILE) {
     infile = fopen(filename, "r");
     if (!infile) {
-      rtt_message('E', "Unable to open file");
+      char tmp[200];
+      snprintf(tmp, 200, "Unable to open file \"%s\"", filename);
+      rtt_message('E', tmp);
       return RTT__NOPICTURE;
     }
     rtt_fgetname(infile, title, filename);

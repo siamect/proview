@@ -46,7 +46,7 @@ FlowPscript::FlowPscript(
   strcpy(fname, filename);
   file = fopen(fname, "w");
   if (!file) {
-    printf("** Unable to open file\n");
+    printf("** Unable to open file \"%s\"\n", fname);
     *sts = 0;
     return;
   }

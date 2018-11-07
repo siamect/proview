@@ -189,7 +189,7 @@ int main(int argc, char* argv[])
   while (ODD(sts)) {
     fp = fopen(found_file, "r");
     if (!fp) {
-      printf("Unable to open file %s\n", found_file);
+      printf("Unable to open file \"%s\"\n", found_file);
       exit(1);
     }
 
@@ -224,7 +224,7 @@ int main(int argc, char* argv[])
 
     outfp = fopen(cfile, "w");
     if (!outfp) {
-      printf("Unable to open file %s\n", outfile);
+      printf("Unable to open file \"%s\"\n", outfile);
       exit(1);
     }
 
@@ -247,7 +247,7 @@ int main(int argc, char* argv[])
 
     outfp = fopen(cfile, "w");
     if (!outfp) {
-      printf("Unable to open file %s\n", outfile);
+      printf("Unable to open file \"%s\"\n", outfile);
       exit(1);
     }
 
@@ -270,7 +270,7 @@ int main(int argc, char* argv[])
 
     outfp = fopen(cfile, "w");
     if (!outfp) {
-      printf("Unable to open file %s\n", outfile);
+      printf("Unable to open file \"%s\"\n", outfile);
       exit(1);
     }
 

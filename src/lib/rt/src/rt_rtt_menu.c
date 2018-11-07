@@ -314,7 +314,9 @@ int rtt_initialize(
       sts = rtt_commandmode_start(commandfile, 0);
 
     if (sts == RTT__NOFILE) {
-      rtt_message('E', "Unable to open file");
+      char tmp[200];
+      snprintf(tmp, 200, "Unable to open file \"%s\"", commandfile);
+      rtt_message('E', tmp);
     }
   }
 

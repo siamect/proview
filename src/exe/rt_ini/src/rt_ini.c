@@ -106,8 +106,6 @@ int main(int argc, char** argv)
 
   ver_WriteVersionInfo("ProviewR Runtime Environment");
 
-  printf("test\n");
-
   if (cp->flags.b.restart) {
     sts = interactive(argc, argv, cp);
   } else if (cp->flags.b.stop) {
