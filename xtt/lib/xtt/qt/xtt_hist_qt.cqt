@@ -122,10 +122,9 @@ HistQt::HistQt(void* hist_parent_ctx, QWidget* hist_parent_wid, char* hist_name,
 
   // Help entry
   QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
-  addCheckableMenuItem(toplevel, help, "&Help", SLOT(activate_help(bool)),
+  addMenuItem(toplevel, help, "&Help", SLOT(activate_help()),
       "CTRL+H", "system-help");
-  addCheckableMenuItem(
-      toplevel, help, "Help Selected Event", SLOT(activate_helpevent(bool)));
+  addMenuItem(toplevel, help, "Help Selected Event", SLOT(activate_helpevent()));
 
   // Search dialog
   // Time box
@@ -374,11 +373,6 @@ void HistQtWidget::ok_btn()
   hist->eventName_str = qPrintableLatin1(hist->event_name_entry_w->text());
 
   hist->get_hist_list();
-
-  free(hist->minTime_str);
-  free(hist->maxTime_str);
-  free(hist->eventText_str);
-  free(hist->eventName_str);
 }
 
 void HistQtWidget::activate_print()
