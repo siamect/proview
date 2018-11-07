@@ -6037,7 +6037,6 @@ static int wnav_confirmdialog_func(void* filectx, ccm_sArg* arg_list,
   ccm_sArg *arg_p2, *arg_p3;
   int sts;
   int cancel;
-  char str[80];
 
   if (!(arg_count == 2 || arg_count == 3))
     return CCM__ARGMISM;
@@ -6056,13 +6055,13 @@ static int wnav_confirmdialog_func(void* filectx, ccm_sArg* arg_list,
     wnav_get_stored_wnav(&wnav);
     if (wnav->window_type == wnav_eWindowType_No) {
       printf("%s", arg_p2->value_string);
-      printf(" (y/n/q) : ");
-      scanf("%s", str);
-      if (streq(str, "Y") || streq(str, "y")
-          || streq(str, "")) {
+      printf(" [Y/n/q]: ");
+      char ans;
+      scanf("%c", &ans);
+      if (ans == 'Y' || ans == 'y' || ans == '\n') {
         sts = 1;
         cancel = 0;
-      } else if (streq(str, "Q") || streq(str, "q")) {
+      } else if (ans == 'Q' || ans == 'q') {
         sts = 0;
         cancel = 1;
       } else {
@@ -6078,10 +6077,10 @@ static int wnav_confirmdialog_func(void* filectx, ccm_sArg* arg_list,
     wnav_get_stored_wnav(&wnav);
     if (wnav->window_type == wnav_eWindowType_No) {
       printf("%s", arg_p2->value_string);
-      printf(" (y/n) : ");
-      scanf("%s", str);
-      if (streq(str, "Y") || streq(str, "y")
-          || streq(str, "")) {
+      printf(" [Y/n]: ");
+      char ans;
+      scanf("%c", &ans);
+      if (ans == 'Y' || ans == 'y' || ans == '\n') {
         sts = 1;
         cancel = 0;
       } else {
@@ -6106,7 +6105,6 @@ static int wnav_continuedialog_func(void* filectx, ccm_sArg* arg_list,
   WNav* wnav;
   ccm_sArg* arg_p2;
   int sts;
-  char str[80];
 
   if (arg_count != 2)
     return CCM__ARGMISM;
@@ -6120,9 +6118,10 @@ static int wnav_continuedialog_func(void* filectx, ccm_sArg* arg_list,
   wnav_get_stored_wnav(&wnav);
   if (wnav->window_type == wnav_eWindowType_No) {
     printf("%s", arg_p2->value_string);
-    printf("\nDo you want to continue ? (y/n) : ");
-    scanf("%s", str);
-    if (streq(str, "Y") || streq(str, "y") || streq(str, ""))
+    printf("\nDo you want to continue ? [Y/n]: ");
+    char ans;
+    scanf("%c", &ans);
+    if (ans == 'Y' || ans == 'y' || ans == '\n')
       sts = 1;
     else
       sts = 0;

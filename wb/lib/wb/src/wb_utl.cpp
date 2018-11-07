@@ -2835,15 +2835,15 @@ int utl_show_object(ldh_tSesContext ldhses, char* windowstring,
 
 int utl_revert(ldh_tSesContext ldhses, int confirm)
 {
-  static char yes_or_no[200];
+  char ans;
   int sts;
 
   if (confirm) {
     // TODO
-    printf("(Y/N: ");
-    sts = scanf("%s", yes_or_no);
+    printf("[Y/n]: ");
+    scanf("%c", &ans);
 
-    if (!((yes_or_no[0] == 'Y') || (yes_or_no[0] == 'y')))
+    if (!(ans == 'Y' || ans == 'y'))
       return FOE__SUCCESS;
   }
 
@@ -4906,7 +4906,6 @@ static int utl_set_parameter(pwr_sAttrRef* arp, ldh_tSesContext ldhses,
     char* parameter, char* invaluestr, int element, utl_ctx utlctx)
 {
   char* valuestr;
-  static char yes_or_no[200];
   int sts, size, k;
   int parsize;
   char* object_par = NULL;
@@ -5229,13 +5228,14 @@ static int utl_set_parameter(pwr_sAttrRef* arp, ldh_tSesContext ldhses,
     if (utlctx->confirm) {
       printf("%s ", logstr);
       // TODO
-      printf("(Y/N/Q/A): ");
-      sts = scanf("%s", yes_or_no);
-      if (((yes_or_no[0] == 'Q') || (yes_or_no[0] == 'q')))
+      printf("[Y/n/q/a]: ");
+      char ans;
+      sts = scanf("%c", &ans);
+      if ((ans == 'Q' || ans == 'q'))
         return FOE__ABORTSEARCH;
-      else if (((yes_or_no[0] == 'A') || (yes_or_no[0] == 'a')))
+      else if ((ans == 'A' || ans == 'a'))
         utlctx->confirm = 0;
-      else if (!((yes_or_no[0] == 'Y') || (yes_or_no[0] == 'y')))
+      else if (!(ans == 'Y' || ans == 'y'))
         continue;
     }
     if (utlctx->log)
@@ -8809,7 +8809,6 @@ int utl_disconnect(ldh_tSesContext ldhses, char* object_name)
 static int utl_object_delete(pwr_tObjid Objdid, ldh_tSesContext ldhses,
     utl_ctx utlctx, unsigned long dum1, unsigned long dum2, unsigned long dum3)
 {
-  static char yes_or_no[200];
   pwr_tOName hier_name;
   int sts, size;
 
@@ -8821,13 +8820,14 @@ static int utl_object_delete(pwr_tObjid Objdid, ldh_tSesContext ldhses,
   if (utlctx->confirm) {
     printf("Delete object %s ", hier_name);
     // TODO
-    printf("(Y/N/Q/A): ");
-    sts = scanf("%s", yes_or_no);
-    if (((yes_or_no[0] == 'Q') || (yes_or_no[0] == 'q')))
+    printf("[Y/n/q/a]: ");
+    char ans;
+    scanf("%c", &ans);
+    if ((ans == 'Q' || ans == 'q'))
       return FOE__ABORTSEARCH;
-    else if (((yes_or_no[0] == 'A') || (yes_or_no[0] == 'a')))
+    else if ((ans == 'A' || ans == 'a'))
       utlctx->confirm = 0;
-    else if (!((yes_or_no[0] == 'Y') || (yes_or_no[0] == 'y')))
+    else if (!(ans == 'Y' || ans == 'y'))
       return FOE__SUCCESS;
   }
 
@@ -8863,7 +8863,6 @@ static int utl_object_delete(pwr_tObjid Objdid, ldh_tSesContext ldhses,
 static int utl_tree_delete(pwr_tObjid Objdid, ldh_tSesContext ldhses,
     utl_ctx utlctx, unsigned long dum1, unsigned long dum2, unsigned long dum3)
 {
-  static char yes_or_no[200];
   pwr_tOName hier_name;
   int sts, size;
 
@@ -8875,9 +8874,10 @@ static int utl_tree_delete(pwr_tObjid Objdid, ldh_tSesContext ldhses,
   if (utlctx->confirm) {
     printf("Delete tree %s ", hier_name);
     // TODO
-    printf("(Y/N/Q): ");
-    sts = scanf("%s", yes_or_no);
-    if (!((yes_or_no[0] == 'Y') || (yes_or_no[0] == 'y')))
+    printf("[Y/n]: ");
+    char ans;
+    scanf("%c", &ans);
+    if (!(ans == 'Y' || ans == 'y'))
       return FOE__SUCCESS;
   }
 
@@ -9077,7 +9077,6 @@ int utl_delete_volume(ldh_tWBContext ldhwb, char* name, int confirm, int log)
 {
   utl_ctx utlctx;
   int sts;
-  static char yes_or_no[200];
   pwr_tVolumeId volid;
 
   /* Get volid for the volume */
@@ -9092,9 +9091,10 @@ int utl_delete_volume(ldh_tWBContext ldhwb, char* name, int confirm, int log)
   if (utlctx->confirm) {
     printf("Delete volume %s ", name);
     // TODO
-    printf("(Y/N/Q): ");
-    sts = scanf("%s", yes_or_no);
-    if (!((yes_or_no[0] == 'Y') || (yes_or_no[0] == 'y')))
+    printf("[Y/n]: ");
+    char ans;
+    scanf("%c", &ans);
+    if (!(ans == 'Y' || ans == 'y'))
       return FOE__SUCCESS;
   }
 
