@@ -67,7 +67,7 @@ HistQt::HistQt(void* hist_parent_ctx, QWidget* hist_parent_wid, char* hist_name,
     pwr_tAttrRef* arp, pwr_tStatus* status)
     : Hist(hist_parent_ctx, hist_name, arp, status)
 {
-  const int hist_width = 800;
+  const int hist_width = 1335;
   const int hist_height = 700;
 
   // shall be MessageHandler.EventLogSize
@@ -160,29 +160,29 @@ HistQt::HistQt(void* hist_parent_ctx, QWidget* hist_parent_wid, char* hist_name,
   sea_type_label->setFixedWidth(120);
 
   info_toggle_w = new QCheckBox(translate_utf8("Info"));
-  info_toggle_w->setFixedWidth(120);
+  info_toggle_w->setFixedWidth(110);
   infosuccess_toggle_w = new QCheckBox(translate_utf8("InfoSuccess"));
-  infosuccess_toggle_w->setFixedWidth(120);
+  infosuccess_toggle_w->setFixedWidth(110);
   alarm_toggle_w = new QCheckBox(translate_utf8("Alarm"));
-  alarm_toggle_w->setFixedWidth(120);
+  alarm_toggle_w->setFixedWidth(110);
   mnt_alarm_toggle_w = new QCheckBox(translate_utf8("MaintenanceAlarm"));
-  mnt_alarm_toggle_w->setFixedWidth(120);
+  mnt_alarm_toggle_w->setFixedWidth(110);
   sys_alarm_toggle_w = new QCheckBox(translate_utf8("SystemAlarm"));
-  sys_alarm_toggle_w->setFixedWidth(120);
+  sys_alarm_toggle_w->setFixedWidth(110);
   user_alarm1_toggle_w = new QCheckBox(translate_utf8("UserAlarm1"));
-  user_alarm1_toggle_w->setFixedWidth(120);
+  user_alarm1_toggle_w->setFixedWidth(110);
   user_alarm2_toggle_w = new QCheckBox(translate_utf8("UserAlarm2"));
-  user_alarm2_toggle_w->setFixedWidth(120);
+  user_alarm2_toggle_w->setFixedWidth(110);
   user_alarm3_toggle_w = new QCheckBox(translate_utf8("UserAlarm3"));
-  user_alarm3_toggle_w->setFixedWidth(120);
+  user_alarm3_toggle_w->setFixedWidth(110);
   user_alarm4_toggle_w = new QCheckBox(translate_utf8("UserAlarm4"));
-  user_alarm4_toggle_w->setFixedWidth(120);
+  user_alarm4_toggle_w->setFixedWidth(110);
   ret_toggle_w = new QCheckBox(translate_utf8("Return"));
-  ret_toggle_w->setFixedWidth(120);
+  ret_toggle_w->setFixedWidth(110);
   ack_toggle_w = new QCheckBox(translate_utf8("Ack"));
-  ack_toggle_w->setFixedWidth(120);
+  ack_toggle_w->setFixedWidth(110);
 
-  QHBoxLayout* sea_typebox = new QHBoxLayout();
+  QToolBar* sea_typebox = new QToolBar();
   sea_typebox->addWidget(sea_type_label);
   sea_typebox->addWidget(info_toggle_w);
   sea_typebox->addWidget(infosuccess_toggle_w);
@@ -201,15 +201,15 @@ HistQt::HistQt(void* hist_parent_ctx, QWidget* hist_parent_wid, char* hist_name,
   sea_prio_label->setFixedWidth(120);
 
   prioA_toggle_w = new QCheckBox(translate_utf8("A-Alarm"));
-  prioA_toggle_w->setFixedWidth(120);
+  prioA_toggle_w->setFixedWidth(110);
   prioB_toggle_w = new QCheckBox(translate_utf8("B-Alarm"));
-  prioB_toggle_w->setFixedWidth(120);
+  prioB_toggle_w->setFixedWidth(110);
   prioC_toggle_w = new QCheckBox(translate_utf8("C-Alarm"));
-  prioC_toggle_w->setFixedWidth(120);
+  prioC_toggle_w->setFixedWidth(110);
   prioD_toggle_w = new QCheckBox(translate_utf8("D-Alarm"));
-  prioD_toggle_w->setFixedWidth(120);
+  prioD_toggle_w->setFixedWidth(110);
 
-  QHBoxLayout* sea_priobox = new QHBoxLayout();
+  QToolBar* sea_priobox = new QToolBar();
   sea_priobox->addWidget(sea_prio_label);
   sea_priobox->addWidget(prioA_toggle_w);
   sea_priobox->addWidget(prioB_toggle_w);
@@ -221,32 +221,33 @@ HistQt::HistQt(void* hist_parent_ctx, QWidget* hist_parent_wid, char* hist_name,
   sea_eventname_label->setFixedWidth(120);
   event_name_entry_w = new QLineEdit();
 
-  QHBoxLayout* sea_eventnamebox = new QHBoxLayout();
+  QToolBar* sea_eventnamebox = new QToolBar();
   sea_eventnamebox->addWidget(sea_eventname_label);
-  add_expanding(sea_eventnamebox, event_name_entry_w);
+  event_name_entry_w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+  sea_eventnamebox->addWidget(event_name_entry_w);
 
   // Event text box
   QLabel* sea_eventtext_label = new QLabel(translate_utf8("Event text"));
   sea_eventtext_label->setFixedWidth(120);
   event_text_entry_w = new QLineEdit();
 
-  QHBoxLayout* sea_eventtextbox = new QHBoxLayout();
+  QToolBar* sea_eventtextbox = new QToolBar();
   sea_eventtextbox->addWidget(sea_eventtext_label);
-  add_expanding(sea_eventtextbox, event_text_entry_w);
+  event_text_entry_w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+  sea_eventtextbox->addWidget(event_text_entry_w);
 
   // Number of events box
-  QLabel* sea_numevents_label = new QLabel(translate_utf8("Number of Events:"));
-  sea_numevents_label->setFixedWidth(140);
+  QLabel* sea_numevents_label = new QLabel(translate_utf8("Number of Events: "));
   nrofevents_string_lbl_w = new QLabel("");
 
   QPushButton* sea_search_button = new QPushButton(translate_utf8("Search"));
-  sea_search_button->setFixedSize(80, 25);
   QObject::connect(
       sea_search_button, SIGNAL(clicked()), toplevel, SLOT(ok_btn()));
 
-  QHBoxLayout* sea_numeventsbox = new QHBoxLayout();
+  QToolBar* sea_numeventsbox = new QToolBar();
   sea_numeventsbox->addWidget(sea_numevents_label);
-  add_expanding(sea_numeventsbox, nrofevents_string_lbl_w);
+  nrofevents_string_lbl_w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+  sea_numeventsbox->addWidget(nrofevents_string_lbl_w);
   sea_numeventsbox->addWidget(sea_search_button);
 
   // Searchcondition box 1
@@ -267,12 +268,12 @@ HistQt::HistQt(void* hist_parent_ctx, QWidget* hist_parent_wid, char* hist_name,
 
   QVBoxLayout* search_vbox_layout = new QVBoxLayout();
   search_vbox_layout->addWidget(sea_timebox);
-  search_vbox_layout->addLayout(sea_typebox);
-  search_vbox_layout->addLayout(sea_priobox);
-  search_vbox_layout->addLayout(sea_eventnamebox);
-  search_vbox_layout->addLayout(sea_eventtextbox);
+  search_vbox_layout->addWidget(sea_typebox);
+  search_vbox_layout->addWidget(sea_priobox);
+  search_vbox_layout->addWidget(sea_eventnamebox);
+  search_vbox_layout->addWidget(sea_eventtextbox);
   search_vbox_layout->addWidget(separator(QFrame::HLine));
-  search_vbox_layout->addLayout(sea_numeventsbox);
+  search_vbox_layout->addWidget(sea_numeventsbox);
   search_vbox_layout->addWidget(sea_stringframe);
   search_vbox = layout_to_widget(search_vbox_layout);
 
