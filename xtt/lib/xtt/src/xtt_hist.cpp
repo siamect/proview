@@ -168,84 +168,18 @@ void Hist::activate_helpevent()
   }
 }
 
-void Hist::today_cb()
+void Hist::time_cb(time_ePeriod period)
 {
   pwr_tTime StartTime;
   pwr_tTime StopTime;
 
-  time_Period(time_ePeriod_Today, &StartTime, &StopTime, 0, 1);
+  int daybreak = 0;
+  if (period == time_ePeriod_Today || period == time_ePeriod_ThisWeek || period == time_ePeriod_ThisMonth || period == time_ePeriod_AllTime)
+    daybreak = 1;
 
-  SetListTime(StartTime, StopTime, INSENS);
-}
+  time_Period(period == time_ePeriod_UserDefined ? time_ePeriod_AllTime : period, &StartTime, &StopTime, 0, daybreak);
 
-void Hist::yesterday_cb()
-{
-  pwr_tTime StartTime;
-  pwr_tTime StopTime;
-
-  time_Period(time_ePeriod_Yesterday, &StartTime, &StopTime, 0, 0);
-
-  SetListTime(StartTime, StopTime, INSENS);
-}
-
-void Hist::thisw_cb()
-{
-  pwr_tTime StartTime;
-  pwr_tTime StopTime;
-
-  time_Period(time_ePeriod_ThisWeek, &StartTime, &StopTime, 0, 1);
-
-  SetListTime(StartTime, StopTime, INSENS);
-}
-
-void Hist::lastw_cb()
-{
-  pwr_tTime StartTime;
-  pwr_tTime StopTime;
-
-  time_Period(time_ePeriod_LastWeek, &StartTime, &StopTime, 0, 0);
-
-  SetListTime(StartTime, StopTime, INSENS);
-}
-
-void Hist::thism_cb()
-{
-  pwr_tTime StartTime;
-  pwr_tTime StopTime;
-
-  time_Period(time_ePeriod_ThisMonth, &StartTime, &StopTime, 0, 1);
-
-  SetListTime(StartTime, StopTime, INSENS);
-}
-
-void Hist::lastm_cb()
-{
-  pwr_tTime StartTime;
-  pwr_tTime StopTime;
-
-  time_Period(time_ePeriod_LastMonth, &StartTime, &StopTime, 0, 0);
-
-  SetListTime(StartTime, StopTime, INSENS);
-}
-
-void Hist::all_cb()
-{
-  pwr_tTime StartTime;
-  pwr_tTime StopTime;
-
-  time_Period(time_ePeriod_AllTime, &StartTime, &StopTime, 0, 1);
-
-  SetListTime(StartTime, StopTime, INSENS);
-}
-
-void Hist::time_cb()
-{
-  pwr_tTime StartTime;
-  pwr_tTime StopTime;
-
-  time_Period(time_ePeriod_AllTime, &StartTime, &StopTime, 0, 0);
-
-  SetListTime(StartTime, StopTime, SENS);
+  SetListTime(StartTime, StopTime, period == time_ePeriod_UserDefined ? SENS : INSENS);
 }
 
 pwr_tStatus Hist::hist_add_ack_mess(mh_sAck* MsgP)

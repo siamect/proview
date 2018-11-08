@@ -600,7 +600,7 @@ HistGtk::HistGtk(void* hist_parent_ctx, GtkWidget* hist_parent_wid,
 
   // Init start and stop time
 
-  ((Hist*)this)->all_cb();
+  ((Hist*)this)->time_cb(time_ePeriod_AllTime);
 
   wow = new CoWowGtk(parent_wid_hist);
 
@@ -829,56 +829,56 @@ void HistGtk::today_cb(GtkWidget* w, gpointer data)
 {
   Hist* histOP = (Hist*)data;
 
-  histOP->today_cb();
+  histOP->time_cb(time_ePeriod_Today);
 }
 
 void HistGtk::yesterday_cb(GtkWidget* w, gpointer data)
 {
   Hist* histOP = (Hist*)data;
 
-  histOP->yesterday_cb();
+  histOP->time_cb(time_ePeriod_Yesterday);
 }
 
 void HistGtk::thisw_cb(GtkWidget* w, gpointer data)
 {
   Hist* histOP = (Hist*)data;
 
-  histOP->thisw_cb();
+  histOP->time_cb(time_ePeriod_ThisWeek);
 }
 
 void HistGtk::lastw_cb(GtkWidget* w, gpointer data)
 {
   Hist* histOP = (Hist*)data;
 
-  histOP->lastw_cb();
+  histOP->time_cb(time_ePeriod_LastWeek);
 }
 
 void HistGtk::thism_cb(GtkWidget* w, gpointer data)
 {
   Hist* histOP = (Hist*)data;
 
-  histOP->thism_cb();
+  histOP->time_cb(time_ePeriod_ThisMonth);
 }
 
 void HistGtk::lastm_cb(GtkWidget* w, gpointer data)
 {
   Hist* histOP = (Hist*)data;
 
-  histOP->lastm_cb();
+  histOP->time_cb(time_ePeriod_LastMonth);
 }
 
 void HistGtk::all_cb(GtkWidget* w, gpointer data)
 {
   Hist* histOP = (Hist*)data;
 
-  histOP->all_cb();
+  histOP->time_cb(time_ePeriod_AllTime);
 }
 
 void HistGtk::time_cb(GtkWidget* w, gpointer data)
 {
   Hist* histOP = (Hist*)data;
 
-  histOP->time_cb();
+  histOP->time_cb(time_ePeriod_UserDefined);
 }
 
 void HistGtk::set_num_of_events(int nrOfEvents)

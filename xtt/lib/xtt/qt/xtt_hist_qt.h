@@ -123,14 +123,7 @@ public slots:
   void ok_btn();
   // callbackfunctions from the searchdialog
   void cancel_cb();
-  void today_cb();
-  void yesterday_cb();
-  void thisw_cb();
-  void lastw_cb();
-  void thism_cb();
-  void lastm_cb();
-  void all_cb();
-  void time_cb();
+  void time_cb(int);
 
 private:
   HistQt* hist;

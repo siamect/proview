@@ -135,14 +135,7 @@ public:
   void activate_print();
   void activate_help();
   void activate_helpevent();
-  void today_cb();
-  void yesterday_cb();
-  void lastw_cb();
-  void thism_cb();
-  void lastm_cb();
-  void thisw_cb();
-  void all_cb();
-  void time_cb();
+  void time_cb(time_ePeriod period);
   void stat();
 
   static int GoBackMonth(
