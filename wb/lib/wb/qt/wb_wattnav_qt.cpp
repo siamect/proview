@@ -52,7 +52,6 @@ WAttNavQt::WAttNavQt(void* wa_parent_ctx, wattnav_eType wa_type,
     : WAttNav(wa_parent_ctx, wa_type, wa_name, wa_ldhses, wa_aref, wa_editmode,
           wa_advanced_user, wa_display_objectname, wa_utility, status)
 {
-  debug_print("creating a scrolledbrowwidgetqt\n");
   form_widget
       = scrolledbrowwidgetqt_new(WAttNav::init_brow_cb, this, &brow_widget);
 
@@ -64,7 +63,6 @@ WAttNavQt::WAttNavQt(void* wa_parent_ctx, wattnav_eType wa_type,
 
 WAttNavQt::~WAttNavQt()
 {
-  debug_print("WAttNavQt::~WAttNavQt\n");
   delete brow;
   form_widget->close();
 }

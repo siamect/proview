@@ -158,7 +158,6 @@ void CoXHelpQt::print()
 
 void CoXHelpQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("CoXHelpQtWidget::closeEvent\n");
   if (xhelp->close_cb) {
     (xhelp->close_cb)(xhelp->parent_ctx, xhelp);
   } else {
@@ -175,6 +174,12 @@ void CoXHelpQt::pop()
   displayed = 1;
 }
 
+CoXHelpQt::~CoXHelpQt()
+{
+  debug_print("~CoXHelpQt()\n");
+  delete xhelpnav;
+}
+
 CoXHelpQt::CoXHelpQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
     xhelp_eUtility utility, int* xa_sts)
     : CoXHelp(xa_parent_ctx, utility, xa_sts), parent_wid(xa_parent_wid)
@@ -185,7 +190,6 @@ CoXHelpQt::CoXHelpQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
   strcpy(title, Lng::translate("Help"));
 
   toplevel = new CoXHelpQtWidget(this, xa_parent_wid);
-  toplevel->setToolTip(fl("cow_xhelp widget"));
   toplevel->setFixedSize(700, 600);
   toplevel->setWindowTitle(fl(title));
 

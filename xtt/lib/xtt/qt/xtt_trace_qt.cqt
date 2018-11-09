@@ -43,8 +43,6 @@
 #include <sys/stat.h>
 #endif
 
-//#include "pwr_baseclasses.h"
-
 #include "co_cdh.h"
 #include "co_time.h"
 
@@ -290,7 +288,6 @@ RtTraceQt::RtTraceQt(void* tr_parent_ctx, QWidget* tr_parent_wid,
 
   // Qt
   toplevel = new RtTraceQtWidget(this, tr_parent_wid);
-  toplevel->setToolTip(fl("xtt_trace widget"));
   toplevel->setMinimumSize(window_width, window_height);
   toplevel->setWindowTitle(QString::fromLatin1(title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);

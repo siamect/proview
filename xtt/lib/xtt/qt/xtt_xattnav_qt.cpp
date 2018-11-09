@@ -49,11 +49,7 @@ XAttNavQt::XAttNavQt(void* xa_parent_ctx, QWidget* xa_parent_wid,
     : XAttNav(xa_parent_ctx, xa_type, xa_name, xa_objar, xa_advanced_user,
           xa_userdata, status)
 {
-  debug_print("\n");
-  debug_print("creating a scrolledbrowwidgetqt\n");
   form_widget = scrolledbrowwidgetqt_new(init_brow_cb, this, &brow_widget);
-
-  //showNow(brow_widget);
 
   // Create the root item
   *w = form_widget;
@@ -65,7 +61,6 @@ XAttNavQt::XAttNavQt(void* xa_parent_ctx, QWidget* xa_parent_wid,
 
 XAttNavQt::~XAttNavQt()
 {
-  debug_print("XAttNavQt::~XAttNavQt\n");
   if (trace_started) {
     trace_timerid->remove();
   }

@@ -82,7 +82,7 @@ public:
       unsigned int options = 0, void* widget = 0);
 
 private:
-  EvQtObject* object;
+  EvQtObject* object = NULL;
 };
 
 class EvQtObject : public QObject {

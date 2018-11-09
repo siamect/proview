@@ -55,7 +55,6 @@ PalQt::PalQt(void* pal_parent_ctx, QWidget* pal_parent_wid,
 
   debug_print("creating a scrolledbrowwidgetqt\n");
   QScrollArea* scrolledbrow = ((QScrollArea*) scrolledbrowwidgetqt_new(Pal::init_brow_cb, this, &brow_widget));
-  brow_widget->setToolTip(fl("PalQt"));
 
   form_widget = wrapInFrame(scrolledbrow);
 
@@ -111,6 +110,7 @@ void PalQt::set_inputfocus(int focus)
 void PalQt::set_selection_owner()
 {
   selection_owner = 1;
+  debug_print("PalQt::set_selection_owner\n");
   brow_SetInverseColor(brow_ctx, flow_eDrawType_Line);
 }
 

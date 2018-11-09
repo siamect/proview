@@ -335,13 +335,17 @@ void XAttQt::print()
 
 void XAttQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("XAttQtWidget::closeEvent\n");
   if (xatt->close_cb) {
     (xatt->close_cb)(xatt->parent_ctx, xatt);
   } else {
     delete xatt;
   }
   QWidget::closeEvent(event);
+}
+
+XAttQt::~XAttQt()
+{
+  delete xattnav;
 }
 
 XAttQt::XAttQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
@@ -359,7 +363,6 @@ XAttQt::XAttQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
   str_StrncpyCutOff(title, title, 100, 1);
 
   toplevel = new XAttQtWidget(this, xa_parent_wid);
-  toplevel->setToolTip(fl("xtt_xatt widget"));
   toplevel->setFixedSize(420, 600);
   toplevel->setWindowTitle(convert_utf8(title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
@@ -385,7 +388,7 @@ XAttQt::XAttQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
       "CTRL+L");
   addMenuItem(toplevel, functions, "&Display object in Navigator",
       SLOT(activate_display_object()), "CTRL+D");
-  addMenuItem(toplevel, functions, "&Show C_rossreferences",
+  addMenuItem(toplevel, functions, "Show C&rossreferences",
       SLOT(activate_show_cross()), "CTRL+R");
   addMenuItem(toplevel, functions, "Open &ClassGraph",
       SLOT(activate_open_classgraph()), "CTRL+G");

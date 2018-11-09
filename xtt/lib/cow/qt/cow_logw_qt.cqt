@@ -49,7 +49,6 @@ CoLogWQt::CoLogWQt(void* logw_parent_ctx, QWidget* logw_parent_wid,
     : CoLogW(logw_parent_ctx, logw_name, l_show_item, status)
 {
   toplevel = new CoLogWQtWidget(this, logw_parent_wid);
-  toplevel->setToolTip(fl("cow_logw widget"));
   toplevel->setMinimumSize(800, 600);
   toplevel->setWindowTitle(fl(logw_name));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);

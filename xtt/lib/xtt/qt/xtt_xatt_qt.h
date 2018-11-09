@@ -53,6 +53,7 @@ class XAttQt : public XAtt {
 public:
   XAttQt(QWidget* xa_parent_wid, void* xa_parent_ctx, pwr_sAttrRef* xa_objar,
       int xa_advanced_user, int* xa_sts);
+  ~XAttQt();
   QWidget* brow_widget;
   QWidget* form_widget;
   QLabel* msg_label;

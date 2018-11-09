@@ -360,13 +360,17 @@ void WAttQt::update_title()
 
 void WAttQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("WAttQtWidget::closeEvent\n");
   if (watt->close_cb) {
     (watt->close_cb)(watt);
   } else {
     delete watt;
   }
   QWidget::closeEvent(event);
+}
+
+WAttQt::~WAttQt()
+{
+  delete wattnav;
 }
 
 WAttQt::WAttQt(QWidget* wa_parent_wid, void* wa_parent_ctx,
@@ -385,7 +389,6 @@ WAttQt::WAttQt(QWidget* wa_parent_wid, void* wa_parent_ctx,
   }
 
   toplevel = new WAttQtWidget(this, wa_parent_wid);
-  toplevel->setToolTip(fl("wb_watt widget"));
   toplevel->setFixedSize(410, 570);
   toplevel->setWindowTitle(fl(namep));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);

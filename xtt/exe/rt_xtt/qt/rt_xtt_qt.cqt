@@ -562,16 +562,15 @@ int main(int argc, char* argv[])
 
 XttQt::~XttQt()
 {
-  debug_print("XttQt::~XttQt\n");
   delete cmd_recall;
   delete value_recall;
   delete hotkey;
   delete methodtoolbar;
+  delete xnav;
 }
 
 void XttQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("XttQtWidget::closeEvent\n");
   xtt->close(xtt,
       xtt->xnav->op || xtt->xnav->ge_main || xtt->xnav->multiview_main ? 0 : 1);
   QWidget::closeEvent(event);

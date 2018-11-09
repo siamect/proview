@@ -64,8 +64,7 @@ NodelistQt::NodelistQt(void* nodelist_parent_ctx, QWidget* nodelist_parent_wid,
     const char* nodelist_name, int nodelist_mode, int nodelist_view_node_descr,
     int msgw_pop, pwr_tStatus* status)
     : Nodelist(nodelist_parent_ctx, nodelist_name, nodelist_mode,
-          nodelist_view_node_descr, status),
-      add_india_widget(0), mod_india_widget(0)
+          nodelist_view_node_descr, status)
 {
   pwr_tStatus sts;
 
@@ -119,18 +118,24 @@ NodelistQt::NodelistQt(void* nodelist_parent_ctx, QWidget* nodelist_parent_wid,
   // Submenu Mode
   QMenu* view_mode = view->addMenu(fl("&Mode"));
   QActionGroup* mode_group = new QActionGroup(toplevel);
-  addMenuRadioItem(toplevel, view_mode, "&SystemStatus",
-      SLOT(activate_mode_systemstatus()), mode_group);
-  addMenuRadioItem(toplevel, view_mode, "UserStatus&1",
-      SLOT(activate_mode_userstatus1()), mode_group);
-  addMenuRadioItem(toplevel, view_mode, "UserStatus&2",
-      SLOT(activate_mode_userstatus2()), mode_group);
-  addMenuRadioItem(toplevel, view_mode, "UserStatus&3",
-      SLOT(activate_mode_userstatus3()), mode_group);
-  addMenuRadioItem(toplevel, view_mode, "UserStatus&4",
-      SLOT(activate_mode_userstatus4()), mode_group);
-  addMenuRadioItem(toplevel, view_mode, "UserStatus&5",
-      SLOT(activate_mode_userstatus5()), mode_group);
+  QAction *a = addMenuRadioItem(toplevel, view_mode, "&SystemStatus",
+      SLOT(activate_mode()), mode_group);
+  a->setData(nodelist_eMode_SystemStatus);
+  a = addMenuRadioItem(toplevel, view_mode, "UserStatus&1",
+      SLOT(activate_mode()), mode_group);
+  a->setData(nodelist_eMode_Status1);
+  a = addMenuRadioItem(toplevel, view_mode, "UserStatus&2",
+      SLOT(activate_mode()), mode_group);
+  a->setData(nodelist_eMode_Status2);
+  a = addMenuRadioItem(toplevel, view_mode, "UserStatus&3",
+      SLOT(activate_mode()), mode_group);
+  a->setData(nodelist_eMode_Status3);
+  a = addMenuRadioItem(toplevel, view_mode, "UserStatus&4",
+      SLOT(activate_mode()), mode_group);
+  a->setData(nodelist_eMode_Status4);
+  a = addMenuRadioItem(toplevel, view_mode, "UserStatus&5",
+      SLOT(activate_mode()), mode_group);
+  a->setData(nodelist_eMode_Status5);
 
   addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoom_in()), "CTRL+I",
       "zoom-in");
@@ -183,6 +188,11 @@ NodelistQt::NodelistQt(void* nodelist_parent_ctx, QWidget* nodelist_parent_wid,
   wow = new CoWowQt(toplevel);
 
   *status = 1;
+}
+
+NodelistQt::~NodelistQt()
+{
+  delete nodelistnav;
 }
 
 void NodelistQt::pop()
@@ -274,34 +284,10 @@ void NodelistQtWidget::activate_gui_qt()
   strcpy(nodelist->remote_gui, "qt");
 }
 
-void NodelistQtWidget::activate_mode_systemstatus()
+void NodelistQtWidget::activate_mode()
 {
-  nodelist->nodelistnav->set_mode(nodelist_eMode_SystemStatus);
-}
-
-void NodelistQtWidget::activate_mode_userstatus1()
-{
-  nodelist->nodelistnav->set_mode(nodelist_eMode_Status1);
-}
-
-void NodelistQtWidget::activate_mode_userstatus2()
-{
-  nodelist->nodelistnav->set_mode(nodelist_eMode_Status2);
-}
-
-void NodelistQtWidget::activate_mode_userstatus3()
-{
-  nodelist->nodelistnav->set_mode(nodelist_eMode_Status3);
-}
-
-void NodelistQtWidget::activate_mode_userstatus4()
-{
-  nodelist->nodelistnav->set_mode(nodelist_eMode_Status4);
-}
-
-void NodelistQtWidget::activate_mode_userstatus5()
-{
-  nodelist->nodelistnav->set_mode(nodelist_eMode_Status5);
+  int data = ((QAction*)sender())->data().toInt();
+  nodelist->nodelistnav->set_mode(data);
 }
 
 void NodelistQtWidget::activate_zoom_in()
@@ -328,25 +314,26 @@ void NodelistQt::open_add_input_dialog(const char* text, const char* text2,
     const char* text3, const char* title, const char* init_text,
     void (*ok_cb)(Nodelist*, char*, char*, char*))
 {
-  create_add_input_dialog();
+  NodelistInputDialogQt *w = new NodelistInputDialogQt(
+    this, toplevel, title, text, text2, text3, init_text);
+  w->ok_cb = ok_cb;
+}
 
-  add_india_widget->setWindowTitle(fl(title));
-  add_india_widget->setAttribute(Qt::WA_DeleteOnClose);
-  add_india_widget->setVisible(true);
-
-  add_india_widget->label->setText(fl(text));
-  add_india_widget->label2->setText(fl(text2));
-  add_india_widget->label3->setText(fl(text3));
-
-  add_india_widget->text->setText(fl(init_text));
-
-  add_india_ok_cb = ok_cb;
+void NodelistQt::open_mod_input_dialog(const char* text, const char* text2,
+    const char* text3, const char* title, const char* init_text,
+    const char* init_text2, const char* init_text3,
+    void (*ok_cb)(Nodelist*, char*, char*, char*))
+{
+  NodelistInputDialogQt *w = new NodelistInputDialogQt(
+    this, toplevel, title, text, text2, text3,
+    init_text, init_text2, init_text3, false);
+  w->ok_cb = ok_cb;
 }
 
 void NodelistInputDialogQt::activate_ok()
 {
-  (nodelist->add_india_ok_cb)(nodelist, qPrintableLatin1(text->text()),
-      qPrintableLatin1(text2->text()), qPrintableLatin1(text3->text()));
+  (ok_cb)(nodelist, qPrintableLatin1(text->text()),
+          qPrintableLatin1(text2->text()), qPrintableLatin1(text3->text()));
 
   accept();
 }
@@ -357,25 +344,27 @@ void NodelistInputDialogQt::activate_cancel()
 }
 
 NodelistInputDialogQt::NodelistInputDialogQt(
-    NodelistQt* parent_ctx, QWidget* parent, bool input_callback)
+    NodelistQt* parent_ctx, QWidget* parent, const char* title,
+    const char* l1, const char* l2, const char* l3,
+    const char* txt1, const char* txt2, const char* txt3, bool input_callback)
     : QDialog(parent), nodelist(parent_ctx)
 {
   setFixedSize(600, 150);
-  setWindowTitle(fl("Input Dialog"));
+  setWindowTitle(fl(title));
   setAttribute(Qt::WA_DeleteOnClose);
 
-  text = new QLineEdit();
-  text2 = new QLineEdit();
-  text3 = new QLineEdit();
+  text = new QLineEdit(txt1);
+  text2 = new QLineEdit(txt2);
+  text3 = new QLineEdit(txt3);
   if (input_callback) {
     connect(text, SIGNAL(returnPressed()), this, SLOT(activate_ok()));
     connect(text2, SIGNAL(returnPressed()), this, SLOT(activate_ok()));
     connect(text3, SIGNAL(returnPressed()), this, SLOT(activate_ok()));
   }
 
-  label = new QLabel();
-  label2 = new QLabel();
-  label3 = new QLabel();
+  label = new QLabel(l1);
+  label2 = new QLabel(l2);
+  label3 = new QLabel(l3);
 
   QLabel* image = new QLabel();
   image->setPixmap(QApplication::style()
@@ -383,11 +372,9 @@ NodelistInputDialogQt::NodelistInputDialogQt(
                        .pixmap(48));
 
   QPushButton* ok = new QPushButton(fl("Ok"));
-  ok->setFixedSize(70, 25);
   connect(ok, SIGNAL(clicked()), this, SLOT(activate_ok()));
 
   QPushButton* cancel = new QPushButton(fl("Cancel"));
-  cancel->setFixedSize(70, 25);
   connect(cancel, SIGNAL(clicked()), this, SLOT(activate_cancel()));
 
   QVBoxLayout* vboxtext = new QVBoxLayout();
@@ -415,48 +402,5 @@ NodelistInputDialogQt::NodelistInputDialogQt(
   vbox->addLayout(hboxbuttons);
 
   setLayout(vbox);
-  setVisible(false);
-}
-
-void NodelistQt::create_add_input_dialog()
-{
-  if (add_india_widget) {
-    add_india_widget->setVisible(true);
-    return;
-  }
-
-  add_india_widget = new NodelistInputDialogQt(this, toplevel);
-}
-
-void NodelistQt::open_mod_input_dialog(const char* text, const char* text2,
-    const char* text3, const char* title, const char* init_text,
-    const char* init_text2, const char* init_text3,
-    void (*ok_cb)(Nodelist*, char*, char*, char*))
-{
-  create_mod_input_dialog();
-
-  mod_india_widget->setWindowTitle(fl(title));
-  mod_india_widget->setAttribute(Qt::WA_DeleteOnClose);
-  mod_india_widget->setVisible(true);
-
-  mod_india_widget->label->setText(translate_utf8(text));
-  mod_india_widget->label2->setText(translate_utf8(text2));
-  mod_india_widget->label3->setText(translate_utf8(text3));
-
-  mod_india_widget->text->setText(translate_utf8(init_text));
-  mod_india_widget->text2->setText(translate_utf8(init_text2));
-  mod_india_widget->text3->setText(translate_utf8(init_text3));
-
-  mod_india_ok_cb = ok_cb;
-}
-
-void NodelistQt::create_mod_input_dialog()
-{
-  if (mod_india_widget) {
-    mod_india_widget->setVisible(true);
-    return;
-  }
-
-  // Create an input dialog
-  mod_india_widget = new NodelistInputDialogQt(this, toplevel, false);
+  setVisible(true);
 }

@@ -76,7 +76,7 @@ void CoLoginQtWidget::activate_cancel()
 
 void CoLoginQtWidget::valchanged_password()
 {
-  if (!login->password->text().isEmpty()) {
+  if (del && !login->password->text().isEmpty()) {
     activate_ok();
   }
 }
@@ -90,7 +90,6 @@ void CoLoginQtWidget::valchanged_username()
 
 void CoLoginQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("CoLoginQtWidget::closeEvent\n");
   if (del) {
     login->activate_cancel();
     del = false;
@@ -106,7 +105,6 @@ CoLoginQt::CoLoginQt(void* wl_parent_ctx, QWidget* wl_parent_wid,
 {
   // Create an input dialog
   toplevel = new CoLoginQtWidget(this, wl_parent_wid);
-  toplevel->setToolTip(fl("cow_login widget"));
   toplevel->setWindowTitle(fl("Proview Login"));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 

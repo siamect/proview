@@ -227,7 +227,6 @@ void QtScrollWidgetFlow::paintEvent(QPaintEvent* event)
 
 void QtScrollWidgetFlow::closeEvent(QCloseEvent* event)
 {
-  debug_print("QtScrollWidgetFlow::closeEvent\n");
   if (!destroyed) {
     destroyed = 1;
     if (is_navigator && parent_ctx) {

@@ -528,7 +528,8 @@ EvQt::~EvQt()
       ((EvAlaQt*)sala[i])->toplevel->close();
     }
   }
-  delete object;
+  if (object)
+    delete object;
 }
 
 void EvQt::map_eve(unsigned int options)

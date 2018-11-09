@@ -36,8 +36,6 @@
 
 /* xtt_ev_qt.cpp -- Alarm and event window in xtt */
 
-//#include "pwr_baseclasses.h"
-
 #include "rt_gdh.h"
 #include "rt_xnav_msg.h"
 

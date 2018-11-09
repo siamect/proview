@@ -53,6 +53,7 @@ class HistQt : public Hist {
 public:
   HistQt(void* hist_parent_ctx, QWidget* hist_parent_wid, char* hist_name,
       pwr_tAttrRef* arp, pwr_tStatus* status);
+  ~HistQt();
 
   QWidget* form_hist;
   QWidget* hist_widget;

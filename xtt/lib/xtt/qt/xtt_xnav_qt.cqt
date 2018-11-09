@@ -81,7 +81,6 @@ XNavQt::XNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid, const char* xn_name,
           xn_op_close_button, status),
       parent_wid(xn_parent_wid)
 {
-  debug_print("creating a scrolledbrowwidgetqt\n");
   form_widget = scrolledbrowwidgetqt_new(init_brow_base_cb, this, &brow_widget);
 
   displayed = 1;
@@ -100,7 +99,6 @@ XNavQt::XNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid, const char* xn_name,
   trace_timerid = wow->timer_new();
   autoack_timerid = wow->timer_new();
 
-  form_widget->setToolTip(fl("xtt_xnav widget"));
   *status = 1;
 
   popup_obj = new XNavQtPopupObject(this);
@@ -108,7 +106,6 @@ XNavQt::XNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid, const char* xn_name,
 
 XNavQt::~XNavQt()
 {
-  debug_print("XNavQt::~XNavQt\n");
   closing_down = 1;
 
   delete autoack_timerid;

@@ -53,7 +53,10 @@ class NodelistInputDialogQt : public QDialog {
 
 public:
   NodelistInputDialogQt(
-      NodelistQt* parent_ctx, QWidget* parent, bool input_callback = true);
+      NodelistQt* parent_ctx, QWidget* parent, const char* title,
+      const char* label1, const char* label2, const char* label3,
+      const char* txt1, const char* txt2 = "", const char* txt3 = "",
+      bool input_callback = true);
 
   QLabel* label;
   QLabel* label2;
@@ -61,6 +64,7 @@ public:
   QLineEdit* text;
   QLineEdit* text2;
   QLineEdit* text3;
+  void (*ok_cb)(Nodelist*, char*, char*, char*);
 
 public slots:
   void activate_ok();
@@ -75,19 +79,15 @@ public:
   NodelistQt(void* nodelist_parent_ctx, QWidget* nodelist_parent_wid,
       const char* nodelist_name, int nodelist_mode,
       int nodelist_view_node_descr, int msgw_pop, pwr_tStatus* status);
+  ~NodelistQt();
 
   QWidget* nodelistnav_widget;
-
-  NodelistInputDialogQt* add_india_widget;
-  NodelistInputDialogQt* mod_india_widget;
 
   CoWowFocusTimerQt focustimer;
 
   void pop();
   void set_clock_cursor();
   void reset_cursor();
-  void create_add_input_dialog();
-  void create_mod_input_dialog();
   void open_add_input_dialog(const char* text, const char* text2,
       const char* text3, const char* title, const char* init_text,
       void (*ok_cb)(Nodelist*, char*, char*, char*));
@@ -126,12 +126,7 @@ public slots:
   void activate_gui_motif();
   void activate_gui_gtk();
   void activate_gui_qt();
-  void activate_mode_systemstatus();
-  void activate_mode_userstatus1();
-  void activate_mode_userstatus2();
-  void activate_mode_userstatus3();
-  void activate_mode_userstatus4();
-  void activate_mode_userstatus5();
+  void activate_mode();
   void activate_zoom_in();
   void activate_zoom_out();
   void activate_zoom_reset();

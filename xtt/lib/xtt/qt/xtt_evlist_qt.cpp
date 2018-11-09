@@ -36,8 +36,6 @@
 
 /* xtt_evlist_qt.cpp -- Alarm or event list in xtt */
 
-//#include "pwr_baseclasses.h"
-
 #include "co_dcli.h"
 #include "co_syi.h"
 

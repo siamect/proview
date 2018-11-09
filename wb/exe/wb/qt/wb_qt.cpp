@@ -72,7 +72,6 @@ WVsel* WbQt::vsel_new(pwr_tStatus* status, const char* name,
     int (*bc_success)(void*, pwr_tVolumeId*, int), void (*bc_cancel)(),
     int (*bc_time_to_exit)(void*), int show_volumes, wb_eType wb_type)
 {
-  debug_print("Creating a WVselQt\n");
   return new WVselQt(status, NULL, mainwindow, name, ldhwbctx, volumename,
       bc_success, bc_cancel, bc_time_to_exit, show_volumes, wb_type);
 }
@@ -133,7 +132,7 @@ WbQt::WbQt(int argc, char* argv[]) : mainwindow(0)
       switch (argv[i][1]) {
       case 'h':
         usage();
-        debug_print("Shutting down...\n"); exit(0);
+        exit(0);
       case 'a':
         // Load all volumes
         sw_projectvolume = 0;
@@ -150,7 +149,7 @@ WbQt::WbQt(int argc, char* argv[]) : mainwindow(0)
       case 'l':
         if (i + 1 >= argc) {
           usage();
-          debug_print("Shutting down...\n"); exit(0);
+          exit(0);
         }
         Lng::set(argv[i + 1]);
         i++;
@@ -158,14 +157,14 @@ WbQt::WbQt(int argc, char* argv[]) : mainwindow(0)
       case 'f':
         if (i + 1 >= argc) {
           usage();
-          debug_print("Shutting down...\n"); exit(0);
+          exit(0);
         }
         i++;
         break;
       case 'c':
         if (i + 1 >= argc) {
           usage();
-          debug_print("Shutting down...\n"); exit(0);
+          exit(0);
         }
         sw_classeditor = 1;
         strcpy(filename, argv[i + 1]);
@@ -201,7 +200,6 @@ WbQt::WbQt(int argc, char* argv[]) : mainwindow(0)
   fprintf(stderr, "\n");
 
   toplevel = new QWidget();
-  toplevel->setToolTip(fl("WbQt widget"));
   toplevel->setMinimumSize(100, 100);
   toplevel->setWindowTitle(fl("Pwr wb"));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
@@ -210,7 +208,6 @@ WbQt::WbQt(int argc, char* argv[]) : mainwindow(0)
   new wb_log_qt(toplevel);
 
   // Create message window
-  debug_print("Creating a MsgWindowQt\n");
   MsgWindowQt* msg_window
       = new MsgWindowQt(0, mainwindow, "Workbench messages", &sts);
   msg_window->find_wnav_cb = Wb::find_wnav_cb;
@@ -219,7 +216,6 @@ WbQt::WbQt(int argc, char* argv[]) : mainwindow(0)
   MsgWindow::message('I', "Development environment started");
 
   // Create help window
-  debug_print("Creating a CoXHelpQt\n");
   CoXHelpQt* xhelp = new CoXHelpQt(mainwindow, 0, xhelp_eUtility_Wtt, &sts);
   CoXHelp::set_default(xhelp);
 
@@ -278,9 +274,7 @@ WbQt::WbQt(int argc, char* argv[]) : mainwindow(0)
     strcpy(title, CoLogin::username());
     strcat(title, " on ");
     strcat(title, projectname);
-    debug_print("Opening project volume %s\n", projectname);
     Wtt* wtt = wtt_new(title, "Navigator", wbctx, volume, 0, 0, &sts);
-    debug_print("Opening project volume sts=%d\n", sts);
     if (ODD(sts)) {
       appl_count++;
       wtt->close_cb = Wb::wtt_close;
@@ -291,14 +285,11 @@ WbQt::WbQt(int argc, char* argv[]) : mainwindow(0)
       psts(sts, NULL);
     }
   } else if (sw_classeditor) {
-    debug_print("Opening class editor\n");
     wtt_open_volume(
         0, wb_eType_ClassEditor, filename, wow_eFileSelType_WblClass);
   } else if (sw_projectlist) {
-    debug_print("Opening project list\n");
     wtt_open_volume(0, wb_eType_ExternVolume, "ProjectList", wow_eFileSelType_);
   } else if (nav_display && !login_display) {
-    debug_print("Opening navigator\n");
     if (CoLogin::privilege() & pwr_mPrv_DevRead) {
       strcpy(title, "PwR Navigator: ");
       strcat(title, CoLogin::username());
@@ -311,7 +302,6 @@ WbQt::WbQt(int argc, char* argv[]) : mainwindow(0)
       exit(LOGIN__NOPRIV);
     }
   } else if (login_display) {
-    debug_print("Opening a CoLoginQt\n");
     new CoLoginQt(NULL, mainwindow, "PwR Login", systemgroup,
         &Wb::login_success, &Wb::login_cancel, 0, &sts);
   }
@@ -324,7 +314,6 @@ WbQt::WbQt(int argc, char* argv[]) : mainwindow(0)
   toplevel->hide();
 
   if (!quiet) {
-    debug_print("Creating a CoWowQt\n");
     CoWowQt* wow = new CoWowQt(toplevel);
     // Use timeout to get in on the top of the display
     QTimer::singleShot(100, wow->object, SLOT(DisplayWarranty()));

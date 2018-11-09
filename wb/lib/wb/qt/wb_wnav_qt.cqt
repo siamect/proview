@@ -89,7 +89,6 @@ WNavQt::WNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid, const char* xn_name,
   debug_print("creating a scrolledbrowwidgetqt\n");
   QScrollArea* scrolledbrow = ((QScrollArea*)scrolledbrowwidgetqt_new(
       WNav::init_brow_base_cb, this, &brow_widget));
-  brow_widget->setToolTip(fl("WNavQt"));
 
   form_widget = wrapInFrame(scrolledbrow);
 
@@ -114,7 +113,7 @@ WNavQt::WNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid, const char* xn_name,
   serverAttrRef->listen("PWR_ATTRREF");
   QObject::connect(serverAttrRef, SIGNAL(newConnection()), trace_obj,
       SLOT(sel_convert_cb()));
-  
+
   gbl.load_config(this);
 
   if (root_menu && !ldhses) {
@@ -123,7 +122,6 @@ WNavQt::WNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid, const char* xn_name,
 
   wow = new CoWowQt(parent_wid);
 
-  form_widget->setToolTip(fl("wb_wnav widget"));
   *status = 1;
 }
 

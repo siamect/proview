@@ -245,7 +245,6 @@ WVselQt::WVselQt(pwr_tStatus* status, void* wv_parent_ctx,
 
   // Create the window
   toplevel = new WVselQtWidget(this, wv_parent_wid);
-  toplevel->setToolTip(fl("wb_vsel widget"));
   toplevel->setMinimumSize(500, 400);
   toplevel->setWindowTitle(fl(name));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);

@@ -47,6 +47,7 @@ class CoXHelpQt : public CoXHelp {
 public:
   CoXHelpQt(QWidget* xa_parent_wid, void* xa_parent_ctx, xhelp_eUtility utility,
       int* xa_sts);
+  ~CoXHelpQt();
 
   CoXHelpQtWidget* toplevel;
   QWidget* brow_widget;
