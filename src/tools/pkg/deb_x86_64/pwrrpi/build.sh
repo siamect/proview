@@ -18,7 +18,7 @@ if [ "$1" == "-v" ]; then
 fi
 
 pkgroot=$pwre_broot/$pwre_target/bld/pkg/pwrrpi$ver
-pkgsrc=$pwre_sroot/tools/pkg/deb/pwrrpi
+pkgsrc=$pwre_sroot/tools/pkg/deb_x86_64/pwrrpi
 rpi_target=os_linux/hw_arm
 
 echo "-- Building pwrrpi$ver"
