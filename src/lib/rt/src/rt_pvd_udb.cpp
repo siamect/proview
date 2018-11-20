@@ -167,10 +167,8 @@ void rt_pvd_udb::load_systemgroup(SystemList* systemgroup)
     strcpy(item.name, sname);
 
   gu->get_system_data(sname, &body->Attributes, &item.oix, body->Description);
-  item.oix++;
+  item.oix = next_oix++;
 
-  if (next_oix <= item.oix)
-    next_oix = item.oix + 1;
   item.cid = pwr_cClass_SystemGroupReg;
   item.fthoix = menu_stack[menu_cnt - 1];
   item.bwsoix = m_list[item.fthoix].lchoix;
@@ -211,10 +209,7 @@ void rt_pvd_udb::load_user(UserList* user, SystemList* sg)
   body = (pwr_sClass_UserReg*)calloc(1, sizeof(pwr_sClass_UserReg));
   user->get_data(body->Password, &body->Privileges, &item.oix, body->FullName,
       body->Description, body->Email, body->Phone, body->Sms);
-  item.oix++;
-
-  if (next_oix <= item.oix)
-    next_oix = item.oix + 1;
+  item.oix = next_oix++;
 
   item.cid = pwr_cClass_UserReg;
   item.fthoix = menu_stack[menu_cnt - 1];
