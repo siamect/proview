@@ -2845,7 +2845,7 @@ Volume Remote $ClassVolume 0.0.1.4
         !  Send messages will not removed from the queue unless an aknowlege is received
         !  from the receiver.
         !  For received messages an acknowlege messages is send to the broker.
-        !  If Acknowlege is not sent, messages will be removed from the queue when they are sent.
+        !  If Acknowlege is not set, messages will be removed from the queue when they are sent.
         !*/
         Object Acknowledge $Attribute 11 23-JAN-2018 17:01:41.00
           Body SysBody 01-JAN-1970 01:00:00.00

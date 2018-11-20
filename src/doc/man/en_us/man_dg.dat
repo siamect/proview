@@ -5443,7 +5443,7 @@ representations of volumes:
 
 - wbl, a textfile with extension .wb_load. The classvolumes are stored as wbl, and root and
   sub volumes can be dumped in a wbl-file, for example when upgrading, and later reloaded. The
-  wbl representation is node editable. When editing a class volume you import the wbl
+  wbl representation is not editable. When editing a class volume you import the wbl
   representation to a mem-represention, and then save it as wbl again.
 
 - dbs, a loadfile. From rootvolumes, subvolumes and classvolumes, in db and wbl representation,
