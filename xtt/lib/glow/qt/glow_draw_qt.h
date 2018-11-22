@@ -37,7 +37,7 @@
 #ifndef glow_draw_qt_h
 #define glow_draw_qt_h
 
-#include <stack>
+#include "co_smart_ptr.h"
 
 #include "glow_customcolors.h"
 #include "glow_draw.h"
@@ -175,7 +175,7 @@ public:
       int pixmap_height);
   virtual void reset_background(GlowWind* w);
   virtual void set_image_clip_mask(
-      QPainter* painter, glow_tPixmap pixmap, int x, int y);
+      unique_ptr<QPainter>& painter, glow_tPixmap pixmap, int x, int y);
 
   virtual int set_clip_rectangle(
       GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
@@ -192,13 +192,13 @@ public:
   virtual void buffer_background(DrawWind* w, GlowCtx* cctx);
   virtual int print(char* filename, double x0, double x1, int end);
   virtual int export_image(char* filename);
-  void set_clip(DrawWind* w, QPainter* painter);
+  void set_clip(DrawWind* w, unique_ptr<QPainter>& painter);
   virtual void set_timer(GlowCtx* ctx, int time_ms,
       void (*callback_func)(GlowCtx* ctx), void** id);
   virtual void remove_timer(void* id);
   int init_nav(QWidget* nav_widget);
-  QPoint* points_to_qt_points(glow_sPointX* points, int point_cnt);
-  QPoint* points_to_qt_points_curve(
+  unique_ptr<QPoint[]> points_to_qt_points(glow_sPointX* points, int point_cnt);
+  unique_ptr<QPoint[]> points_to_qt_points_curve(
       GlowWind* w, glow_sPointX* points, int point_cnt, int* cnt);
   int image_get_width(glow_tImImage image);
   int image_get_height(glow_tImImage image);

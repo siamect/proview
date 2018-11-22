@@ -465,7 +465,9 @@ int XttTbl::command(char* input_str)
     /* Read command file */
     sts = readcmdfile(&command[1]);
     if (sts == DCLI__NOFILE) {
-      message('E', "Unable to open file");
+      char tmp[200];
+      snprintf(tmp, 200, "Unable to open file \"%s\"", &command[1]);
+      message('E', tmp);
       return DCLI__SUCCESS;
     } else if (EVEN(sts))
       return sts;
@@ -486,7 +488,9 @@ int XttTbl::command(char* input_str)
         /* Read command file */
         sts = readcmdfile(&symbol_value[1]);
         if (sts == DCLI__NOFILE) {
-          message('E', "Unable to open file");
+          char tmp[200];
+          snprintf(tmp, 200, "Unable to open file \"%s\"", &symbol_value[1]);
+          message('E', tmp);
           return DCLI__SUCCESS;
         } else if (EVEN(sts))
           return sts;

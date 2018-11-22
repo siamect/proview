@@ -108,10 +108,10 @@ static QFont get_font(int painter_type, double size, const char* fontstr = "Luci
   return res;
 }
 
-static QPainter* get_painter(
+static unique_ptr<QPainter> get_painter(
     QPaintDevice* window, FlowDrawQt* draw_ctx, int painter_type, int size)
 {
-  QPainter* painter = new QPainter(window);
+  unique_ptr<QPainter> painter(new QPainter(window));
   switch (painter_type) {
   case flow_eDrawType_LineDashed:
   case flow_eDrawType_LineDashedRed: {
@@ -836,7 +836,7 @@ void FlowDrawQt::enable_event(FlowCtx* ctx, flow_eEvent event,
   ctx->enable_event(event, event_type, event_cb);
 }
 
-QPainter* FlowDrawQt::get_painter(int painter_type, int size, bool nav)
+unique_ptr<QPainter> FlowDrawQt::get_painter(int painter_type, int size, bool nav)
 {
   if (nav) {
     return ::get_painter(nav_window_canvas, this, painter_type, size);
@@ -856,7 +856,7 @@ int FlowDrawQt::rect_helper(FlowCtx* ctx, int painter_type, int size, int x,
     return 1;
   }
 
-  QPainter* painter = get_painter(painter_type, size, nav);
+  unique_ptr<QPainter> painter = get_painter(painter_type, size, nav);
 
   if (fill) {
     // debug_print("fillRect [%d, %d, %d, %d] painter_type=%d, with color %s\n", x, y, width, height, painter_type, qPrintable(painter->brush().color().name()));
@@ -866,8 +866,6 @@ int FlowDrawQt::rect_helper(FlowCtx* ctx, int painter_type, int size, int x,
     painter->setBrush(Qt::NoBrush);
     painter->drawRect(x, y, width, height);
   }
-
-  delete painter;
 
   return 1;
 }
@@ -921,7 +919,7 @@ int FlowDrawQt::triangle_helper(FlowCtx* ctx, int painter_type, int size, int x,
     return 1;
   }
 
-  QPainter* painter = get_painter(painter_type, size, nav);
+  unique_ptr<QPainter> painter = get_painter(painter_type, size, nav);
 
   QPolygon poly(4);
   poly[0] = QPoint(x, y + height);
@@ -941,8 +939,6 @@ int FlowDrawQt::triangle_helper(FlowCtx* ctx, int painter_type, int size, int x,
     painter->setBrush(Qt::NoBrush);
     painter->drawPolygon(poly);
   }
-
-  delete painter;
 
   return 1;
 }
@@ -1004,7 +1000,7 @@ int FlowDrawQt::arrow_helper(FlowCtx* ctx, int painter_type, int size, int x1,
     return 1;
   }
 
-  QPainter* painter = get_painter(painter_type, size, nav);
+  unique_ptr<QPainter> painter = get_painter(painter_type, size, nav);
 
   QPolygon poly(4);
   poly[0] = QPoint(x1, y1);
@@ -1016,8 +1012,6 @@ int FlowDrawQt::arrow_helper(FlowCtx* ctx, int painter_type, int size, int x1,
   path.addPolygon(poly);
   // debug_print("arrow (%d, %d) (%d, %d) (%d, %d)\n", x1, y1, x2, y2, x3, y3);
   painter->fillPath(path, painter->brush());
-
-  delete painter;
 
   return 1;
 }
@@ -1069,11 +1063,10 @@ int FlowDrawQt::arc_helper(FlowCtx* ctx, int painter_type, int size, int x,
     return 1;
   }
 
-  QPainter* painter = get_painter(painter_type, size, nav);
+  unique_ptr<QPainter> painter = get_painter(painter_type, size, nav);
   painter->setBrush(Qt::NoBrush);
   // debug_print("arc [%d, %d, %d, %d], %d, %d\n", x, y, width, height, angle1, angle2);
   painter->drawArc(x, y, width, height, angle1 * 16, angle2 * 16);
-  delete painter;
 
   return 1;
 }
@@ -1130,10 +1123,9 @@ int FlowDrawQt::line_helper(FlowCtx* ctx, int painter_type, int size, int x1,
     return 1;
   }
 
-  QPainter* painter = get_painter(painter_type, size, nav);
+  unique_ptr<QPainter> painter = get_painter(painter_type, size, nav);
   // debug_print("line (%d, %d) (%d, %d)\n", x1, y1, x2, y2);
   painter->drawLine(x1, y1, x2, y2);
-  delete painter;
 
   return 1;
 }
@@ -1182,7 +1174,7 @@ int FlowDrawQt::text_pango_helper(FlowCtx* ctx, int x, int y, char* text,
     return 1;
   }
 
-  QPainter* painter = get_painter(painter_type, idx);
+  unique_ptr<QPainter> painter = get_painter(painter_type, idx);
   if (dimmed) {
     painter->setBrush(QBrush(flow_allocate_color(this, "gray")));
     painter->setPen(QPen(painter->brush(), size + 1));
@@ -1209,8 +1201,6 @@ int FlowDrawQt::text_pango_helper(FlowCtx* ctx, int x, int y, char* text,
     // debug_print("drawText %s at [%d,%d,%d,%d]\n", text, x, ROUND(y - 0.8 * height), rect.width(), height);
     painter->drawText(x, ROUND(y - 0.8 * height), rect.width(), height, Qt::TextDontClip, str, &rect);
   }
-
-  delete painter;
 
   return 1;
 }
@@ -1275,11 +1265,9 @@ int FlowDrawQt::nav_text_helper(FlowCtx* ctx, flow_eDrawType painter_type,
     return 1;
   }
 
-  QPainter* painter = get_painter(painter_type, size, true);
+  unique_ptr<QPainter> painter = get_painter(painter_type, size, true);
   // debug_print("drawText %s at (%d, %d)\n", text, x, y);
   painter->drawText(x, y, QString::fromLocal8Bit(text, len));
-
-  delete painter;
 
   return 1;
 }
@@ -1343,20 +1331,18 @@ int FlowDrawQt::pixmap(FlowCtx* ctx, int x, int y,
 
   pms = (draw_sPixmap*)pixmaps;
 
-  QPainter* painter = get_painter(painter_type, idx);
+  {
+    unique_ptr<QPainter> painter = get_painter(painter_type, idx);
+    painter->fillRect(x, y, pdata->width, pdata->height, painter->brush());
+  }
 
-  painter->fillRect(x, y, pdata->width, pdata->height, painter->brush());
-  delete painter;
-
-  painter = get_painter(flow_eDrawType_LineErase, idx);
+  unique_ptr<QPainter> painter = get_painter(flow_eDrawType_LineErase, idx);
 
   QRegion clipRegion = QRegion(pms->pixmap[idx].createMaskFromColor(Qt::black));
   painter->setClipRegion(clipRegion.translated(x, y));
   painter->setClipping(true);
 
   painter->fillRect(x, y, pdata->width, pdata->height, painter->brush());
-
-  delete painter;
 
   return 1;
 }
@@ -1374,14 +1360,15 @@ int FlowDrawQt::pixmap_inverse(FlowCtx* ctx, int x, int y,
 
   pms = (draw_sPixmap*)pixmaps;
 
-  QPainter* painter = get_painter(flow_eDrawType_LineErase, idx);
-  // debug_print("pixmap_inverse fillRect [%d, %d, %d, %d] with color %s\n", x,
-  // y, pdata->width, pdata->height,
-  // painter->brush().color().name().toAscii().data());
-  painter->fillRect(x, y, pdata->width, pdata->height, painter->brush());
-  delete painter;
+  {
+    unique_ptr<QPainter> painter = get_painter(flow_eDrawType_LineErase, idx);
+    // debug_print("pixmap_inverse fillRect [%d, %d, %d, %d] with color %s\n", x,
+    // y, pdata->width, pdata->height,
+    // painter->brush().color().name().toAscii().data());
+    painter->fillRect(x, y, pdata->width, pdata->height, painter->brush());
+  }
 
-  painter = get_painter(painter_type, idx);
+  unique_ptr<QPainter> painter = get_painter(painter_type, idx);
 
   QRegion clipRegion = QRegion(pms->pixmap[idx].createMaskFromColor(Qt::black));
   painter->setClipRegion(clipRegion.translated(x, y));
@@ -1391,8 +1378,6 @@ int FlowDrawQt::pixmap_inverse(FlowCtx* ctx, int x, int y,
   // mask\n", x, y, pdata->width, pdata->height,
   // painter->brush().color().name().toAscii().data());
   painter->fillRect(x, y, pdata->width, pdata->height, painter->brush());
-
-  delete painter;
 
   return 1;
 }
@@ -1406,11 +1391,10 @@ int FlowDrawQt::pixmap_erase(FlowCtx* ctx, int x, int y,
     return 1;
   }
 
-  QPainter* painter = get_painter(painter_type, idx);
+  unique_ptr<QPainter> painter = get_painter(painter_type, idx);
   // debug_print("pixmap_erase [%d, %d, %d, %d]\n", x, y, pdata->width,
   // pdata->height);
   painter->eraseRect(x, y, pdata->width, pdata->height);
-  delete painter;
 
   return 1;
 }
@@ -1428,11 +1412,10 @@ int FlowDrawQt::nav_pixmap(FlowCtx* ctx, int x, int y,
 
   pms = (draw_sPixmap*)pixmaps;
 
-  QPainter* painter = get_painter(painter_type, idx);
+  unique_ptr<QPainter> painter = get_painter(painter_type, idx);
   // debug_print("nav_pixmap [%d, %d, %d, %d]\n", x, y, pdata->width,
   // pdata->height);
   painter->drawPixmap(x, y, pdata->width, pdata->height, pms->pixmap[idx]);
-  delete painter;
 
   return 1;
 }
@@ -1446,11 +1429,10 @@ int FlowDrawQt::nav_pixmap_erase(FlowCtx* ctx, int x, int y,
     return 1;
   }
 
-  QPainter* painter = get_painter(painter_type, idx);
+  unique_ptr<QPainter> painter = get_painter(painter_type, idx);
   // debug_print("nav_pixmap_erase [%d, %d, %d, %d]\n", x, y, pdata->width,
   // pdata->height);
   painter->eraseRect(x, y, pdata->width, pdata->height);
-  delete painter;
 
   return 1;
 }
@@ -1478,16 +1460,17 @@ int FlowDrawQt::image(FlowCtx* ctx, int x, int y, int width, int height,
     return 1;
   }
 
-  QPainter* painter = get_painter(flow_eDrawType_Line, 0);
+  unique_ptr<QPainter> painter = get_painter(flow_eDrawType_Line, 0);
 
   if (clip_mask) {
-    set_image_clip_mask(painter, clip_mask, x, y);
+    QRegion clipRegion
+      = QRegion(((QPixmap*)clip_mask)->createMaskFromColor(Qt::black));
+    painter->setClipRegion(clipRegion.translated(x, y));
+    painter->setClipping(true);
   }
 
   // debug_print("image [%d, %d, %d, %d]\n", x, y, width, height);
   painter->drawImage(QRect(x, y, width, height), *((QImage*)image));
-
-  delete painter;
 
   return 1;
 }
@@ -1498,13 +1481,11 @@ void FlowDrawQt::clear(FlowCtx* ctx)
     return;
   }
 
-  QPainter* painter = new QPainter(window_canvas);
+  unique_ptr<QPainter> painter = new QPainter(window_canvas);
   painter->setBackground(QBrush(background));
 
   // debug_print("clear color=%s\n", painter->background().color().name().toAscii().data());
   painter->eraseRect(window_canvas->rect());
-
-  delete painter;
 }
 
 void FlowDrawQt::nav_clear(FlowCtx* ctx)
@@ -1513,13 +1494,11 @@ void FlowDrawQt::nav_clear(FlowCtx* ctx)
     return;
   }
 
-  QPainter* painter = new QPainter(nav_window_canvas);
+  unique_ptr<QPainter> painter = new QPainter(nav_window_canvas);
   painter->setBackground(QBrush(background));
 
   // debug_print("nav_clear color=%s\n\n", painter->background().color().name().toAscii().data());
   painter->eraseRect(nav_window_canvas->rect());
-
-  delete painter;
 }
 
 void FlowDrawQt::get_window_size(FlowCtx* ctx, int* width, int* height)
@@ -1652,7 +1631,7 @@ int FlowDrawQt::get_text_extent(FlowCtx* ctx, const char* text, int len,
 int FlowDrawQt::get_text_extent_pango(FlowCtx* ctx, const char* text, int len,
     flow_eDrawType painter_type, int idx, double size, int* width, int* height)
 {
-  QPainter* painter = get_painter(painter_type, idx);
+  unique_ptr<QPainter> painter = get_painter(painter_type, idx);
 
   QString str;
   if (ctx->text_coding != flow_eTextCoding_UTF_8) {
@@ -1668,8 +1647,6 @@ int FlowDrawQt::get_text_extent_pango(FlowCtx* ctx, const char* text, int len,
   *width = boundingRect.width();
   *height = boundingRect.height();
 
-  delete painter;
-
   return 1;
 }
 
@@ -1682,7 +1659,7 @@ void FlowDrawQt::copy_area(FlowCtx* ctx, int x, int y)
   // debug_print("copy_area: x=%d, y=%d\n", x, y);
 
   QPixmap screenShot = QPixmap::grabWidget(window);
-  QPainter* painter = get_painter(flow_eDrawType_Line, 3);
+  unique_ptr<QPainter> painter = get_painter(flow_eDrawType_Line, 3);
   if (x >= 0 && y >= 0) {
     painter->drawPixmap(
         x, y, screenShot, 0, 0, ctx->window_width - x, ctx->window_height - y);
@@ -1724,7 +1701,6 @@ void FlowDrawQt::copy_area(FlowCtx* ctx, int x, int y)
           x, ctx->window_height + y, ctx->window_width, ctx->window_height);
     }
   }
-  delete painter;
 }
 
 void FlowDrawQt::clear_area(
@@ -1734,13 +1710,11 @@ void FlowDrawQt::clear_area(
     return;
   }
 
-  QPainter* painter = new QPainter(window_canvas);
+  unique_ptr<QPainter> painter = new QPainter(window_canvas);
   painter->setBackground(QBrush(background));
 
   // debug_print("clear_area [%d, %d, %d, %d], color=%s\n", ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, painter->background().color().name().toAscii().data());
   painter->eraseRect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y);
-
-  delete painter;
 }
 
 void FlowDrawQt::set_inputfocus(FlowCtx* ctx)
@@ -1752,15 +1726,6 @@ void FlowDrawQt::set_inputfocus(FlowCtx* ctx)
 void FlowDrawQt::set_click_sensitivity(FlowCtx* ctx, int value)
 {
   click_sensitivity = value;
-}
-
-void FlowDrawQt::set_image_clip_mask(
-    QPainter* painter, flow_tPixmap pixmap, int x, int y)
-{
-  QRegion clipRegion
-      = QRegion(((QPixmap*)pixmap)->createMaskFromColor(Qt::black));
-  painter->setClipRegion(clipRegion.translated(x, y));
-  painter->setClipping(true);
 }
 
 void FlowDrawQt::set_white_background(FlowCtx* ctx)

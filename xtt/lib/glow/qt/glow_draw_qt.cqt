@@ -77,8 +77,8 @@ static QColor glow_allocate_color(
 static QColor glow_allocate_custom_color(GlowDrawQt* draw_ctx,
     glow_eDrawType drawtype, int rgb_red, int rgb_green, int rgb_blue);
 
-static int glow_read_color_file(
-    const char* filename, QColor** color_array, int* size);
+static unique_ptr<QColor[]> glow_read_color_file(
+    const char* filename, int* size, int* sts);
 
 static QColor draw_type_to_color(
     GlowDrawQt* draw_ctx, int painter_type, int size)
@@ -101,14 +101,13 @@ static QColor draw_type_to_color(
   default: {
     if (painter_type >= glow_eDrawType_Color4
         && painter_type <= glow_eDrawType_Color300) {
-      QColor* color_array;
-      int sts = glow_read_color_file(
-          "/home/claes/test/ge_colors.dat", &color_array, &size);
+      int sts = 0;
+      unique_ptr<QColor[]> color_array = glow_read_color_file(
+          "/home/claes/test/ge_colors.dat", &size, &sts);
       if (ODD(sts)) {
         QColor color_p = color_array[painter_type - glow_eDrawType_Color4];
         QColor color = glow_allocate_color(
             draw_ctx, color_p.red(), color_p.green(), color_p.blue());
-        delete color_array;
         return color;
       }
     }
@@ -160,10 +159,10 @@ static QFont get_font(int font_idx, int painter_type, double size)
   return res;
 }
 
-static QPainter* get_painter(
+static unique_ptr<QPainter> get_painter(
     QPaintDevice* window, GlowDrawQt* draw_ctx, int painter_type, int size)
 {
-  QPainter* painter = new QPainter(window);
+  unique_ptr<QPainter> painter = new QPainter(window);
   switch (painter_type) {
   case glow_eDrawType_LineDashed:
   case glow_eDrawType_LineDashedRed: {
@@ -898,7 +897,7 @@ int GlowDrawQt::rect_helper(GlowWind* wind, int painter_type, int size, int x,
   }
   DrawWindQt* w = (DrawWindQt*)wind->window;
 
-  QPainter* painter = get_painter(w->buffer, this, painter_type, size);
+  unique_ptr<QPainter> painter = get_painter(w->buffer, this, painter_type, size);
 
   if (w->clip_on) {
     set_clip(w, painter);
@@ -912,8 +911,6 @@ int GlowDrawQt::rect_helper(GlowWind* wind, int painter_type, int size, int x,
     painter->setBrush(Qt::NoBrush);
     painter->drawRect(x, y, width, height);
   }
-
-  delete painter;
 
   return 1;
 }
@@ -948,7 +945,7 @@ int GlowDrawQt::arrow_helper(GlowWind* wind, int painter_type, int size, int x1,
   poly[2] = QPoint(x3, y3);
   poly[3] = QPoint(x1, y1);
 
-  QPainter* painter = get_painter(w->buffer, this, painter_type, size);
+  unique_ptr<QPainter> painter = get_painter(w->buffer, this, painter_type, size);
 
   if (w->clip_on) {
     set_clip(w, painter);
@@ -958,7 +955,6 @@ int GlowDrawQt::arrow_helper(GlowWind* wind, int painter_type, int size, int x1,
   path.addPolygon(poly);
   // debug_print("arrow (%d, %d) (%d, %d) (%d, %d)\n", x1, y1, x2, y2, x3, y3);
   painter->fillPath(path, painter->brush());
-  delete painter;
 
   return 1;
 }
@@ -1003,7 +999,7 @@ int GlowDrawQt::arc_helper(GlowWind* wind, int painter_type, int size, int x,
     }
   }
 
-  QPainter* painter = get_painter(w->buffer, this, painter_type, size);
+  unique_ptr<QPainter> painter = get_painter(w->buffer, this, painter_type, size);
 
   if (w->clip_on) {
     set_clip(w, painter);
@@ -1017,8 +1013,6 @@ int GlowDrawQt::arc_helper(GlowWind* wind, int painter_type, int size, int x,
     painter->setBrush(Qt::NoBrush);
     painter->drawArc(x, y, width, height, angle1 * 16, angle2 * 16);
   }
-
-  delete painter;
 
   return 1;
 }
@@ -1095,7 +1089,7 @@ int GlowDrawQt::line_helper(GlowWind* wind, int painter_type, int size, int x1,
     return 1;
   }
 
-  QPainter* painter = get_painter(w->buffer, this, painter_type, size);
+  unique_ptr<QPainter> painter = get_painter(w->buffer, this, painter_type, size);
 
   if (w->clip_on) {
     set_clip(w, painter);
@@ -1149,8 +1143,6 @@ int GlowDrawQt::line_helper(GlowWind* wind, int painter_type, int size, int x1,
   // debug_print("line (%d, %d) (%d, %d)\n", x1, y1, x2, y2);
   painter->drawLine(x1, y1, x2, y2);
 
-  delete painter;
-
   return 1;
 }
 
@@ -1200,7 +1192,7 @@ int GlowDrawQt::polyline_helper(GlowWind* wind, int painter_type, int size,
   }
   DrawWindQt* w = (DrawWindQt*)wind->window;
 
-  QPainter* painter = get_painter(w->buffer, this, painter_type, size);
+  unique_ptr<QPainter> painter = get_painter(w->buffer, this, painter_type, size);
 
   if (w->clip_on) {
     set_clip(w, painter);
@@ -1208,18 +1200,14 @@ int GlowDrawQt::polyline_helper(GlowWind* wind, int painter_type, int size,
 
   if (fill) {
     int cnt;
-    QPoint* qpoints = points_to_qt_points_curve(wind, points, point_cnt, &cnt);
-    painter->drawPolygon(qpoints, cnt);
-    delete[] qpoints;
+    unique_ptr<QPoint[]> qpoints = points_to_qt_points_curve(wind, points, point_cnt, &cnt);
+    painter->drawPolygon(qpoints.get(), cnt);
   } else {
-    QPoint* qpoints = points_to_qt_points(points, point_cnt);
+    unique_ptr<QPoint[]> qpoints = points_to_qt_points(points, point_cnt);
     painter->setBrush(Qt::NoBrush);
     // debug_print("polyline painter_type=%d, fill=%d, point_cnt=%d\n", painter_type, fill, point_cnt);
-    painter->drawPolyline(qpoints, point_cnt);
-    delete[] qpoints;
+    painter->drawPolyline(qpoints.get(), point_cnt);
   }
-
-  delete painter;
 
   return 1;
 }
@@ -1271,7 +1259,7 @@ int GlowDrawQt::text(GlowWind* wind, int x, int y, char* text, int len,
     font_idx = glow_eFont_Helvetica;
   }
 
-  QPainter* painter = get_painter(w->buffer, this, painter_type, idx);
+  unique_ptr<QPainter> painter = get_painter(w->buffer, this, painter_type, idx);
 
   if (w->clip_on) {
     set_clip(w, painter);
@@ -1291,8 +1279,6 @@ int GlowDrawQt::text(GlowWind* wind, int x, int y, char* text, int len,
   // debug_print("text %s on %d,%d\n", text, x, y);
   painter->drawText(x, y, rect.width(), rect.height(), Qt::TextDontClip,
       QString::fromLocal8Bit(text, len));
-
-  delete painter;
 
   return 1;
 }
@@ -1316,7 +1302,7 @@ int GlowDrawQt::text_cursor(GlowWind* wind, int x, int y, char* text, int len,
     width = 0;
   }
 
-  QPainter* painter = get_painter(w->buffer, this, color, 1);
+  unique_ptr<QPainter> painter = get_painter(w->buffer, this, color, 1);
 
   if (w->clip_on) {
     set_clip(w, painter);
@@ -1324,8 +1310,6 @@ int GlowDrawQt::text_cursor(GlowWind* wind, int x, int y, char* text, int len,
 
   // debug_print("cursor %d,%d to %d,%d\n", x + width, y + descent, x + width, y - height + descent);
   painter->drawLine(x + width, y + descent, x + width, y - height + descent);
-
-  delete painter;
 
   return 1;
 }
@@ -1354,7 +1338,7 @@ int GlowDrawQt::text_erase(GlowWind* wind, int x, int y, char* text, int len,
     painter_type = glow_eDrawType_TextHelveticaEraseBold;
   }
 
-  QPainter* painter = get_painter(w->buffer, this, painter_type, idx);
+  unique_ptr<QPainter> painter = get_painter(w->buffer, this, painter_type, idx);
 
   if (font_idx != glow_eFont_Helvetica) {
     painter->setFont(get_font(font_idx, painter_type, idx));
@@ -1369,8 +1353,6 @@ int GlowDrawQt::text_erase(GlowWind* wind, int x, int y, char* text, int len,
   // debug_print("textErase %s on %d,%d\n", text, x, y);
   painter->drawText(x, y, rect.width(), rect.height(), Qt::TextDontClip,
       QString::fromLocal8Bit(text, len));
-
-  delete painter;
 
   return 1;
 }
@@ -1418,7 +1400,7 @@ int GlowDrawQt::image_helper(GlowWind* wind, int x, int y, int width,
     return 1;
   }
 
-  QPainter* painter = get_painter(w->buffer, this, glow_eDrawType_Line, 0);
+  unique_ptr<QPainter> painter = get_painter(w->buffer, this, glow_eDrawType_Line, 0);
 
   if (clip_mask) {
     set_image_clip_mask(painter, clip_mask, x, y);
@@ -1432,8 +1414,6 @@ int GlowDrawQt::image_helper(GlowWind* wind, int x, int y, int width,
   } else {
     painter->drawImage(QRect(x, y, width, height), *((QImage*)image));
   }
-
-  delete painter;
 
   return 1;
 }
@@ -1489,11 +1469,9 @@ void GlowDrawQt::copy_buffer(
             + w->clip_rectangle[w->clip_cnt - 1].height());
   }
 
-  QPainter* painter = get_painter(w->buffer, this, glow_eDrawType_Line, 0);
+  unique_ptr<QPainter> painter = get_painter(w->buffer, this, glow_eDrawType_Line, 0);
 
   painter->drawImage(x0, y0, *(w->buffer), x0, y0, x1 - x0, y1 - y0);
-
-  delete painter;
 }
 
 void GlowDrawQt::get_window_size(GlowWind* wind, int* width, int* height)
@@ -1659,7 +1637,7 @@ void GlowDrawQt::copy_area(GlowWind* wind, int x, int y)
 
   // debug_print("copy_area [%d, %d, %d, %d]\n", x, y, window_width, window_height);
 
-  QPainter* painterBuffer
+  unique_ptr<QPainter> painterBuffer
       = get_painter(w->buffer, this, glow_eDrawType_Line, 3);
   if (x >= 0 && y >= 0) {
     painterBuffer->drawImage(
@@ -1698,8 +1676,6 @@ void GlowDrawQt::copy_area(GlowWind* wind, int x, int y)
       painterBuffer->eraseRect(x, window_height + y, window_width - x, -y);
     }
   }
-
-  delete painterBuffer;
 }
 
 void GlowDrawQt::clear_area(
@@ -1710,14 +1686,12 @@ void GlowDrawQt::clear_area(
   }
   DrawWindQt* w = (DrawWindQt*)wind->window;
 
-  QPainter* painter = new QPainter(w->buffer);
+  unique_ptr<QPainter> painter = new QPainter(w->buffer);
   painter->setBackground(QBrush(background));
 
   // debug_print("clear_area [%d, %d, %d, %d], color=%s\n", ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, qPrintable(painter->background().color().name()));
 
   painter->eraseRect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y);
-
-  delete painter;
 }
 
 void GlowDrawQt::set_inputfocus(GlowWind* wind)
@@ -1726,30 +1700,31 @@ void GlowDrawQt::set_inputfocus(GlowWind* wind)
   w->window->setFocus(Qt::OtherFocusReason);
 }
 
-static int glow_read_color_file(
-    const char* filename, QColor** color_array, int* size)
+static unique_ptr<QColor[]> glow_read_color_file(
+    const char* filename, int* size, int* sts)
 {
   char line[80];
-  QColor* color_p;
   std::ifstream fp;
   int nr;
   int line_cnt;
   float f_red, f_green, f_blue;
 
+  unique_ptr<QColor[]> color_array(new QColor[300]);
+
   if (!check_file(filename)) {
-    return 0;
+    *sts = 0;
+    return color_array;
   } else {
     printf("** Opening color file %s\n", filename);
 
     fp.open(filename);
     if (!fp) {
-      return GLOW__FILEOPEN;
+      *sts = GLOW__FILEOPEN;
+      return color_array;
     }
 
-    *color_array = new QColor[300];
     *size = 0;
     line_cnt = 0;
-    color_p = *color_array;
     while (*size < 300) {
       fp.getline(line, sizeof(line));
       if (line[0] == 0) {
@@ -1763,16 +1738,16 @@ static int glow_read_color_file(
       if (nr != 3) {
         printf("** Syntax error in file %s, line %d", filename, line_cnt);
       } else {
-        color_p->setRgb(
+        color_array[*size].setRgb(
             int(f_red * 255), int(f_green * 255), int(f_blue * 255));
-        color_p++;
         (*size)++;
       }
     }
     fp.close();
   }
 
-  return 1;
+  *sts = 1;
+  return color_array;
 }
 
 void GlowDrawQt::set_background(GlowWind* wind, glow_eDrawType drawtype,
@@ -1827,7 +1802,7 @@ void GlowDrawQt::reset_background(GlowWind* wind)
   m_wind->window->setPalette(pal);
 }
 
-void GlowDrawQt::set_clip(DrawWind* wind, QPainter* painter)
+void GlowDrawQt::set_clip(DrawWind* wind, unique_ptr<QPainter>& painter)
 {
   DrawWindQt* w = (DrawWindQt*)wind;
   painter->setClipRect(w->clip_rectangle[w->clip_cnt - 1]);
@@ -1835,7 +1810,7 @@ void GlowDrawQt::set_clip(DrawWind* wind, QPainter* painter)
 }
 
 void GlowDrawQt::set_image_clip_mask(
-    QPainter* painter, glow_tPixmap pixmap, int x, int y)
+    unique_ptr<QPainter>& painter, glow_tPixmap pixmap, int x, int y)
 {
   QRegion clipRegion
       = QRegion(((QPixmap*)pixmap)->createMaskFromColor(Qt::black));
@@ -1912,15 +1887,13 @@ int GlowDrawQt::draw_point(
     return 1;
   }
 
-  QPainter* painter = get_painter(w->buffer, this, painter_type, 0);
+  unique_ptr<QPainter> painter = get_painter(w->buffer, this, painter_type, 0);
 
   if (w->clip_on) {
     set_clip(w, painter);
   }
 
   painter->drawPoint(x1, y1);
-
-  delete painter;
 
   return 1;
 }
@@ -1933,8 +1906,8 @@ int GlowDrawQt::draw_points(GlowWind* wind, glow_sPointX* points, int point_num,
   }
   DrawWindQt* w = (DrawWindQt*)wind->window;
 
-  QPoint* qpoints = points_to_qt_points(points, point_num);
-  QPainter* painter = get_painter(w->buffer, this, painter_type, 0);
+  unique_ptr<QPoint[]> qpoints = points_to_qt_points(points, point_num);
+  unique_ptr<QPainter> painter = get_painter(w->buffer, this, painter_type, 0);
 
   if (w->clip_on) {
     set_clip(w, painter);
@@ -1946,11 +1919,8 @@ int GlowDrawQt::draw_points(GlowWind* wind, glow_sPointX* points, int point_num,
           painter->brush());
     }
   } else {
-    painter->drawPoints(qpoints, point_num);
+    painter->drawPoints(qpoints.get(), point_num);
   }
-
-  delete painter;
-  delete[] qpoints;
 
   return 1;
 }
@@ -2009,7 +1979,7 @@ void GlowDrawQt::buffer_background(DrawWind* wind, GlowCtx* cctx)
   }
 
   if (w->background_pixmap) {
-    QPainter* painterBg
+    unique_ptr<QPainter> painterBg
         = get_painter(w->background_pixmap, this, glow_eDrawType_Line, 0);
 
     if (w->clip_on) {
@@ -2029,8 +1999,6 @@ void GlowDrawQt::buffer_background(DrawWind* wind, GlowCtx* cctx)
         }
       }
     }
-
-    delete painterBg;
   } else {
     glow_eDrawType bg;
     if (cctx) {
@@ -2039,7 +2007,7 @@ void GlowDrawQt::buffer_background(DrawWind* wind, GlowCtx* cctx)
       bg = ((GrowCtx*)ctx)->background_color;
     }
 
-    QPainter* painter = get_painter(w->buffer, this, bg, 0);
+    unique_ptr<QPainter> painter = get_painter(w->buffer, this, bg, 0);
 
     if (w->clip_on) {
       set_clip(w, painter);
@@ -2047,8 +2015,6 @@ void GlowDrawQt::buffer_background(DrawWind* wind, GlowCtx* cctx)
 
     painter->fillRect(subwindow_x, subwindow_y, window_width, window_height,
         painter->brush());
-
-    delete painter;
   }
 }
 
@@ -2218,9 +2184,9 @@ int GlowDrawQt::print(char* filename, double x0, double x1, int end)
   return 1;
 }
 
-QPoint* GlowDrawQt::points_to_qt_points(glow_sPointX* points, int point_cnt)
+unique_ptr<QPoint[]> GlowDrawQt::points_to_qt_points(glow_sPointX* points, int point_cnt)
 {
-  QPoint* qpoints = new QPoint[point_cnt];
+  unique_ptr<QPoint[]> qpoints(new QPoint[point_cnt]);
   for (int i = 0; i < point_cnt; i++) {
     qpoints[i].setX(points[i].x);
     qpoints[i].setY(points[i].y);
@@ -2231,10 +2197,10 @@ QPoint* GlowDrawQt::points_to_qt_points(glow_sPointX* points, int point_cnt)
 //
 // Points outside window in x direction excluded
 //
-QPoint* GlowDrawQt::points_to_qt_points_curve(
+unique_ptr<QPoint[]> GlowDrawQt::points_to_qt_points_curve(
     GlowWind* w, glow_sPointX* points, int point_cnt, int* cnt)
 {
-  QPoint* qpoints = new QPoint[point_cnt];
+  unique_ptr<QPoint[]> qpoints(new QPoint[point_cnt]);
   int idx = 0;
   int last_idx = 0;
   for (int i = 0; i < point_cnt; i++) {
@@ -2855,7 +2821,7 @@ int GlowDrawQt::gradient_fill_rect(GlowWind* wind, int x, int y, int w, int h,
     return 1;
   }
 
-  QPainter* painter = new QPainter(ww->buffer);
+  unique_ptr<QPainter> painter = new QPainter(ww->buffer);
 
   if (ww->clip_on) {
     set_clip(ww, painter);
@@ -2869,7 +2835,6 @@ int GlowDrawQt::gradient_fill_rect(GlowWind* wind, int x, int y, int w, int h,
   painter->fillRect(QRect(x, y, w, h), *pat);
 
   delete pat;
-  delete painter;
 
   return 1;
 }
@@ -2883,7 +2848,7 @@ int GlowDrawQt::gradient_fill_rectrounded(GlowWind* wind, int x, int y, int w,
     return 1;
   }
 
-  QPainter* painter = new QPainter(ww->buffer);
+  unique_ptr<QPainter> painter = new QPainter(ww->buffer);
 
   if (ww->clip_on) {
     set_clip(ww, painter);
@@ -2905,8 +2870,6 @@ int GlowDrawQt::gradient_fill_rectrounded(GlowWind* wind, int x, int y, int w,
 
   delete pat;
 
-  delete painter;
-
   return 1;
 }
 
@@ -2925,7 +2888,7 @@ int GlowDrawQt::gradient_fill_arc(GlowWind* wind, int x, int y, int w, int h,
     angle1 = angle1 + (-angle1 / 360 + 1) * 360;
   }
 
-  QPainter* painter = new QPainter(ww->buffer);
+  unique_ptr<QPainter> painter = new QPainter(ww->buffer);
 
   if (ww->clip_on) {
     set_clip(ww, painter);
@@ -2954,8 +2917,6 @@ int GlowDrawQt::gradient_fill_arc(GlowWind* wind, int x, int y, int w, int h,
 
   delete pat;
 
-  delete painter;
-
   return 1;
 }
 
@@ -2968,7 +2929,7 @@ int GlowDrawQt::gradient_fill_polyline(GlowWind* wind, glow_sPointX* points,
     return 1;
   }
 
-  QPainter* painter = new QPainter(ww->buffer);
+  unique_ptr<QPainter> painter = new QPainter(ww->buffer);
   QPainterPath path;
   double x0, y0, x1, y1;
 
@@ -3008,8 +2969,6 @@ int GlowDrawQt::gradient_fill_polyline(GlowWind* wind, glow_sPointX* points,
 
   delete pat;
 
-  delete painter;
-
   return 1;
 }
 
@@ -3026,7 +2985,7 @@ int GlowDrawQt::text_qt(GlowWind* wind, int x, int y, char* text, int len,
     font_idx = glow_eFont_Helvetica;
   }
 
-  QPainter* painter = get_painter(w->buffer, this, painter_type, idx);
+  unique_ptr<QPainter> painter = get_painter(w->buffer, this, painter_type, idx);
 
   if (w->clip_on) {
     set_clip(w, painter);
@@ -3073,8 +3032,6 @@ int GlowDrawQt::text_qt(GlowWind* wind, int x, int y, char* text, int len,
   // debug_print("textQt %s on %d,%d with color %s, painter_type=%d, color=%d\n", text, px, py, qPrintable(painter->pen().color().name()), painter_type, color);
   painter->drawText(px, py, rect.width(), rect.height(), Qt::TextDontClip, str);
 
-  delete painter;
-
   return 1;
 }
 
@@ -3101,7 +3058,7 @@ int GlowDrawQt::text_erase_qt(GlowWind* wind, int x, int y, char* text, int len,
   int width, height;
 
   {
-    QPainter* painter = get_painter(w->buffer, this, painter_type, 0);
+    unique_ptr<QPainter> painter = get_painter(w->buffer, this, painter_type, 0);
 
     QString str;
     if (((GrowCtx*)ctx)->text_coding != glow_eTextCoding_UTF_8) {
@@ -3116,8 +3073,6 @@ int GlowDrawQt::text_erase_qt(GlowWind* wind, int x, int y, char* text, int len,
     width = rect.width();
     height = rect.height();
     height = (int)(height * 0.9);
-
-    delete painter;
   }
 
   if (rot == 90) {
@@ -3137,7 +3092,7 @@ int GlowDrawQt::text_erase_qt(GlowWind* wind, int x, int y, char* text, int len,
     ph = height;
   }
 
-  QPainter* painter = get_painter(w->buffer, this, painter_type, idx);
+  unique_ptr<QPainter> painter = get_painter(w->buffer, this, painter_type, idx);
 
   if (w->clip_on) {
     set_clip(w, painter);
@@ -3145,8 +3100,6 @@ int GlowDrawQt::text_erase_qt(GlowWind* wind, int x, int y, char* text, int len,
 
   // debug_print("textEraseQt %s on %d,%d\n", text, px, py);
   painter->fillRect(px, py, pw, ph, painter->brush());
-
-  delete painter;
 
   return 1;
 }
@@ -3167,7 +3120,7 @@ int GlowDrawQt::get_text_extent_qt(const char* text, int len,
     painter_type = glow_eDrawType_TextHelveticaEraseBold;
   }
 
-  QPainter* painter = get_painter(w->buffer, this, painter_type, 0);
+  unique_ptr<QPainter> painter = get_painter(w->buffer, this, painter_type, 0);
   painter->setFont(get_font(font_idx, painter_type, size));
 
   QString str;
@@ -3190,8 +3143,6 @@ int GlowDrawQt::get_text_extent_qt(const char* text, int len,
     *height = lheight;
   }
   *descent = (int)(FONT_DESCENT * lheight);
-
-  delete painter;
 
   return 1;
 }

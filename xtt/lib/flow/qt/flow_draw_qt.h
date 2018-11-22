@@ -37,6 +37,8 @@
 #ifndef flow_draw_qt_h
 #define flow_draw_qt_h
 
+#include "co_smart_ptr.h"
+
 #include "flow_draw.h"
 
 #include <QColor>
@@ -205,9 +207,6 @@ public:
 
   void set_click_sensitivity(FlowCtx* ctx, int value);
 
-  void set_image_clip_mask(
-      QPainter* painter, flow_tPixmap pixmap, int x, int y);
-
   void set_white_background(FlowCtx* ctx);
 
   int image_get_width(flow_tImImage image);
@@ -233,7 +232,7 @@ public:
       void* flow_ctx, int page_border, int* sts);
 
 private:
-  QPainter* get_painter(int painter_type, int size, bool nav = false);
+  unique_ptr<QPainter> get_painter(int painter_type, int size, bool nav = false);
 
   int rect_helper(FlowCtx* ctx, int painter_type, int size, int x, int y,
       int width, int height, bool nav = false, bool fill = false);
