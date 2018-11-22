@@ -95,7 +95,6 @@ GsdAttrNavMotif::~GsdAttrNavMotif()
 {
   delete trace_timerid;
   delete wow;
-  delete brow;
   XtDestroyWidget(form_widget);
 }
 

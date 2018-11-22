@@ -290,6 +290,7 @@ CoXHelpNav::CoXHelpNav(void* xn_parent_ctx, char* xn_name,
 //
 CoXHelpNav::~CoXHelpNav()
 {
+  delete brow;
 }
 
 //

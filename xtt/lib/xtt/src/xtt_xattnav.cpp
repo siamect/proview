@@ -80,6 +80,7 @@ XAttNav::XAttNav(void* xa_parent_ctx, xattnav_eType xa_type,
 //
 XAttNav::~XAttNav()
 {
+  delete brow;
 }
 
 //

@@ -65,7 +65,6 @@ WdaNavQt::WdaNavQt(void* wa_parent_ctx, QWidget* wa_parent_wid,
 WdaNavQt::~WdaNavQt()
 {
   debug_print("WdaNavQt::~WdaNavQt\n");
-  delete brow;
   form_widget->close();
 }
 

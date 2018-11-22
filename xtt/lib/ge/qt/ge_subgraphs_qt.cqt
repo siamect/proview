@@ -177,8 +177,6 @@ SubGraphsQt::~SubGraphsQt()
     free((char*)attrlist_p);
     attrlist_p = next_p;
   }
-
-  delete brow;
 }
 
 void SubGraphsQt::trace_start()

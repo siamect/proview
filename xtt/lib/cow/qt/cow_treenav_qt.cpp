@@ -65,7 +65,6 @@ TreeNavQt::TreeNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
 TreeNavQt::~TreeNavQt()
 {
   debug_print("TreeNavQt::~TreeNavQt\n");
-  delete brow;
   form_widget->close();
 }
 

@@ -80,7 +80,6 @@ WAttNavGtk::WAttNavGtk(void* wa_parent_ctx, wattnav_eType wa_type,
 //
 WAttNavGtk::~WAttNavGtk()
 {
-  delete brow;
   gtk_widget_destroy(form_widget);
 }
 

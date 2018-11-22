@@ -99,7 +99,6 @@ WAttNavMotif::~WAttNavMotif()
   if (trace_started)
     XtRemoveTimeOut(trace_timerid);
 
-  delete brow;
   XtDestroyWidget(form_widget);
 }
 

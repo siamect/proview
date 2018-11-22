@@ -59,7 +59,6 @@ PnViewerNavQt::PnViewerNavQt(
 
 PnViewerNavQt::~PnViewerNavQt()
 {
-  delete brow;
   form_widget->close();
 }
 

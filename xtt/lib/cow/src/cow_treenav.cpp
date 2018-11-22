@@ -223,6 +223,7 @@ TreeNav::TreeNav(void* xn_parent_ctx, pwr_tAttrRef* xn_itemlist,
 //
 TreeNav::~TreeNav()
 {
+  delete brow;
 }
 
 TreeNavBrow::~TreeNavBrow()

@@ -465,6 +465,7 @@ GsdmlAttrNav::GsdmlAttrNav(void* xn_parent_ctx, const char* xn_name,
 //
 GsdmlAttrNav::~GsdmlAttrNav()
 {
+  delete brow;
 }
 
 GsdmlAttrNavBrow::~GsdmlAttrNavBrow()

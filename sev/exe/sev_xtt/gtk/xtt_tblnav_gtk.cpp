@@ -72,7 +72,6 @@ TblNavGtk::TblNavGtk(void* xn_parent_ctx, GtkWidget* xn_parent_wid,
 
 TblNavGtk::~TblNavGtk()
 {
-  delete brow;
   gtk_widget_destroy(form_widget);
 }
 

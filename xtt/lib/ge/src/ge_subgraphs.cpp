@@ -143,6 +143,7 @@ SubGraphs::SubGraphs(void* xn_parent_ctx, const char* xn_name, void* xn_growctx,
 //
 SubGraphs::~SubGraphs()
 {
+  delete brow;
 }
 
 SubGraphsBrow::~SubGraphsBrow()

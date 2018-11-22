@@ -70,7 +70,6 @@ WRevNavGtk::WRevNavGtk(void* wa_parent_ctx, GtkWidget* wa_parent_wid,
 //
 WRevNavGtk::~WRevNavGtk()
 {
-  delete brow;
   gtk_widget_destroy(form_widget);
 }
 

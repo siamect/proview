@@ -144,14 +144,6 @@ WNavGtk::~WNavGtk()
   if (trace_started)
     g_source_remove(trace_timerid);
 
-  menu_tree_free();
-  PalFile::config_tree_free(menu);
-  for (int i = 1; i < brow_cnt; i++) {
-    brow_DeleteSecondaryCtx(brow_stack[brow_cnt]->ctx);
-    brow_stack[brow_cnt]->free_pixmaps();
-    delete brow_stack[i];
-  }
-  delete brow;
   delete wow;
   gtk_widget_destroy(form_widget);
 }

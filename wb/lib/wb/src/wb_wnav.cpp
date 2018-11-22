@@ -647,6 +647,14 @@ WNav::WNav(void* xn_parent_ctx, const char* xn_name, const char* xn_layout,
 //
 WNav::~WNav()
 {
+  menu_tree_free();
+  PalFile::config_tree_free(menu);
+  for (int i = 1; i < brow_cnt; i++) {
+    brow_DeleteSecondaryCtx(brow_stack[brow_cnt]->ctx);
+    brow_stack[brow_cnt]->free_pixmaps();
+    delete brow_stack[i];
+  }
+  delete brow;
 }
 
 //

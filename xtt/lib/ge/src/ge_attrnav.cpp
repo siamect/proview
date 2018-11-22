@@ -1580,6 +1580,7 @@ AttrNav::AttrNav(void* xn_parent_ctx, attr_eType xn_type, const char* xn_name,
 //
 AttrNav::~AttrNav()
 {
+  delete brow;
 }
 
 AttrNavBrow::~AttrNavBrow()

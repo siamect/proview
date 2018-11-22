@@ -86,7 +86,6 @@ EvListMotif::EvListMotif(void* ev_parent_ctx, Widget ev_parent_wid,
 //
 EvListMotif::~EvListMotif()
 {
-  delete brow;
   XtDestroyWidget(form_widget);
 }
 

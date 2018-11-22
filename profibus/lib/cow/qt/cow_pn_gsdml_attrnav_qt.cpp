@@ -62,7 +62,6 @@ GsdmlAttrNavQt::GsdmlAttrNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
 GsdmlAttrNavQt::~GsdmlAttrNavQt()
 {
   delete trace_timerid;
-  delete brow;
   form_widget->close();
 }
 

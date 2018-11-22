@@ -74,7 +74,6 @@ NodelistNavGtk::~NodelistNavGtk()
   if (trace_started)
     g_source_remove(trace_timerid);
 
-  delete brow;
   gtk_widget_destroy(form_widget);
 }
 

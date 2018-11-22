@@ -82,7 +82,6 @@ XAttNavGtk::~XAttNavGtk()
 
   delete trace_timerid;
   delete wow;
-  delete brow;
   gtk_widget_destroy(form_widget);
 }
 

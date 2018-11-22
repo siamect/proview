@@ -77,7 +77,6 @@ TreeNavGtk::TreeNavGtk(void* xn_parent_ctx, GtkWidget* xn_parent_wid,
 
 TreeNavGtk::~TreeNavGtk()
 {
-  delete brow;
   gtk_widget_destroy(form_widget);
 }
 

@@ -61,7 +61,6 @@ WbBckWNavGtk::WbBckWNavGtk(void* l_parent_ctx, GtkWidget* l_parent_wid,
 //
 WbBckWNavGtk::~WbBckWNavGtk()
 {
-  delete brow;
   gtk_widget_destroy(form_widget);
 }
 

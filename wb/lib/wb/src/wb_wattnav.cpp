@@ -77,6 +77,7 @@ WAttNav::WAttNav(void* wa_parent_ctx, wattnav_eType wa_type,
 //
 WAttNav::~WAttNav()
 {
+  delete brow;
 }
 
 //

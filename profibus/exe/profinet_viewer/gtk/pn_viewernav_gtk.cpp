@@ -67,7 +67,6 @@ PnViewerNavGtk::PnViewerNavGtk(void* l_parent_ctx, GtkWidget* l_parent_wid,
 //
 PnViewerNavGtk::~PnViewerNavGtk()
 {
-  delete brow;
   gtk_widget_destroy(form_widget);
 }
 

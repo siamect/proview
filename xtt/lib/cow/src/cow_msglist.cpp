@@ -228,6 +228,7 @@ MsgList::MsgList(void* ev_parent_ctx)
 //
 MsgList::~MsgList()
 {
+  delete brow;
 }
 
 MsgListBrow::~MsgListBrow()

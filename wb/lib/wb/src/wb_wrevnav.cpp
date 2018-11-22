@@ -445,6 +445,7 @@ WRevNav::WRevNav(void* wa_parent_ctx, ldh_tSession wa_ldhses,
 //
 WRevNav::~WRevNav()
 {
+  delete brow;
 }
 
 //

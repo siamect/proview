@@ -120,7 +120,6 @@ CoXHelpNavMotif::~CoXHelpNavMotif()
     brow_stack[i]->free_pixmaps();
     delete brow_stack[i];
   }
-  delete brow;
   XtDestroyWidget(form_widget);
 }
 

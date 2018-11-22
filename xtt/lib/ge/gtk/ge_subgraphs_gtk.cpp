@@ -254,8 +254,6 @@ SubGraphsGtk::~SubGraphsGtk()
     attrlist_p = next_p;
   }
 
-  delete brow;
-
   gtk_widget_destroy(toplevel);
 }
 

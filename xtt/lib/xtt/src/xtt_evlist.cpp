@@ -837,6 +837,7 @@ EvList::EvList(void* ev_parent_ctx, ev_eType ev_type, int ev_size,
 //
 EvList::~EvList()
 {
+  delete brow;
   for (unsigned int i = 0; i < alarm_table_cnt; i++) {
     gdh_DLUnrefObjectInfo(alarm_tables_refid[i]);
     if (alarm_table_member_cnt[i] > 0)
@@ -2493,7 +2494,7 @@ int EvList::get_last_not_acked_beep(mh_sEventId** id)
   return found;
 }
 
-int EvList::get_last_not_acked_prio(mh_sEventId** id, unsigned long type, 
+int EvList::get_last_not_acked_prio(mh_sEventId** id, unsigned long type,
 				    unsigned long prio, int backward, int timecheck)
 {
   int i, j;

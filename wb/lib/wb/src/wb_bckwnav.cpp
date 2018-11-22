@@ -225,6 +225,7 @@ WbBckWNav::WbBckWNav(void* l_parent_ctx, ldh_tSesContext l_ldhses,
 //
 WbBckWNav::~WbBckWNav()
 {
+  delete brow;
 }
 
 WbBckWNavBrow::~WbBckWNavBrow()

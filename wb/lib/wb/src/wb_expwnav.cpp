@@ -335,6 +335,7 @@ WbExpWNav::WbExpWNav(
 //
 WbExpWNav::~WbExpWNav()
 {
+  delete brow;
   list_free();
 }
 

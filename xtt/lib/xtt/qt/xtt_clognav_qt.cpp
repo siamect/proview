@@ -57,7 +57,6 @@ CLogNavQt::CLogNavQt(
 CLogNavQt::~CLogNavQt()
 {
   debug_print("CLogNavQt::~CLogNavQt\n");
-  delete brow;
   form_widget->close();
 }
 

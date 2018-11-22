@@ -86,7 +86,6 @@ CoXHelpNavGtk::~CoXHelpNavGtk()
     brow_stack[i]->free_pixmaps();
     delete brow_stack[i];
   }
-  delete brow;
   gtk_widget_destroy(form_widget);
 }
 

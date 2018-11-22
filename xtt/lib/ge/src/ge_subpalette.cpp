@@ -658,6 +658,7 @@ SubPalette::SubPalette(
 //
 SubPalette::~SubPalette()
 {
+  delete brow;
 }
 
 SubPaletteBrow::~SubPaletteBrow()

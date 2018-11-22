@@ -88,7 +88,6 @@ SubPaletteMotif::SubPaletteMotif(void* xn_parent_ctx, Widget xn_parent_wid,
 //
 SubPaletteMotif::~SubPaletteMotif()
 {
-  delete brow;
   XtDestroyWidget(form_widget);
 }
 

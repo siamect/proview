@@ -72,7 +72,6 @@ CoXHelpNavQt::~CoXHelpNavQt()
     brow_stack[i]->free_pixmaps();
     delete brow_stack[i];
   }
-  delete brow;
   form_widget->close();
 }
 

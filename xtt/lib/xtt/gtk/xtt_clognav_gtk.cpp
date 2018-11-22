@@ -66,7 +66,6 @@ CLogNavGtk::CLogNavGtk(
 //
 CLogNavGtk::~CLogNavGtk()
 {
-  delete brow;
   gtk_widget_destroy(form_widget);
 }
 

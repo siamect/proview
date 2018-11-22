@@ -73,7 +73,6 @@ EvListQt::~EvListQt()
   if (browbase && browbase != brow) {
     delete browbase;
   }
-  delete brow;
 
   form_widget->close();
 }
