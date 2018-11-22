@@ -41,8 +41,9 @@
 #include <sys/stat.h>
 
 #include "co_cdh.h"
-#include "co_dcli_msg.h"
 #include "co_dcli.h"
+#include "co_dcli_msg.h"
+#include "co_debug.h"
 #include "co_string.h"
 
 typedef enum {
@@ -61,7 +62,7 @@ void dcli_set_default_directory(char* dir)
 int dcli_get_defaultfilename(const char* inname, char* outname, const char* ext)
 {
   char filename[80];
-  char *s, *s2;
+  const char *s, *s2;
 
   if (strchr(inname, '/'))
     str_Strcpy(outname, inname);
@@ -173,11 +174,9 @@ int dcli_replace_env(const char* str, char* newstr)
         str_ToLower(lower_symbol, symbol);
       if ((value = getenv(lower_symbol)) == NULL) {
         /* It was no symbol */
-        #ifdef DEBUG
         if (str_StartsWith(str, "$pwr")) {
-          fprintf(stderr, "Warning! Could not resolve environment variable $%s\n", lower_symbol);
+          debug_print("Warning! Could not resolve environment variable $%s\n", lower_symbol);
         }
-        #endif
         *t = *s;
         t++;
       } else {
@@ -207,11 +206,9 @@ int dcli_replace_env(const char* str, char* newstr)
       str_ToLower(lower_symbol, symbol);
     if ((value = getenv(lower_symbol)) == NULL) {
       /* It was no symbol */
-      #ifdef DEBUG
       if (str_StartsWith(str, "$pwr")) {
-        fprintf(stderr, "Warning! Could not resolve environment variable $%s\n", lower_symbol);
+        debug_print("Warning! Could not resolve environment variable $%s\n", lower_symbol);
       }
-      #endif
       *t = 0;
     } else {
       /* Symbol found */

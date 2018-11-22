@@ -37,6 +37,8 @@
 #ifndef QT_HELPERS_H
 #define QT_HELPERS_H
 
+#include "co_debug.h"
+
 #include <QAction>
 #include <QComboBox>
 #include <QLabel>
@@ -44,28 +46,6 @@
 #include <QStatusBar>
 #include <QString>
 #include <QToolBar>
-
-void print_time(FILE* stream, int fulldate = 0);
-
-#define DEBUG 1
-
-void dbg_print(const char* file, int line, const char* fmt, ...);
-
-void dbg_print(const char* file, int line, QString str);
-
-#define debug_print(fmt, args...)                                              \
-  do {                                                                         \
-    if (DEBUG) {                                                               \
-      dbg_print(__FILE__, __LINE__, fmt, ##args);                              \
-    }                                                                          \
-  } while (0)
-
-#define debug_print2(qstr)                                                     \
-  do {                                                                         \
-    if (DEBUG) {                                                               \
-      dbg_print(__FILE__, __LINE__, qstr);                                     \
-    }                                                                          \
-  } while (0)
 
 /*
  * Qt Helper functions
