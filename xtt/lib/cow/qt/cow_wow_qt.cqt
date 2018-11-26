@@ -486,40 +486,39 @@ void CoWowQt::CreateFileSelDia(const char* title, void* parent_ctx,
     void (*file_selected_cb)(void*, char*, wow_eFileSelType),
     wow_eFileSelType file_type)
 {
-  pwr_tFileName fname;
-
-  QFileDialog dialog(object->parent_wid);
-
   pwr_tFileName folder;
   QString filter;
   if (file_type == wow_eFileSelType_Dbs) {
     dcli_translate_filename(folder, "$pwrp_load");
-    filter = "*.dbs";
+    filter = "Database files (*.dbs)";
   } else if (file_type == wow_eFileSelType_Wbl) {
     dcli_translate_filename(folder, "$pwrp_db");
-    filter = "*.wb_load, *.wb_dmp;;All Files (*)";
+    filter = "Workbench loadfiles(*.wb_load, *.wb_dmp);;All Files (*)";
   } else if (file_type == wow_eFileSelType_Graph) {
     dcli_translate_filename(folder, "$pwrp_pop");
-    filter = "*.pwg";
+    filter = "Graphs (*.pwg)";
   } else if (file_type == wow_eFileSelType_ColorTheme) {
     dcli_translate_filename(folder, "$pwrp_pop");
-    filter = "*.pwgc";
+    filter = "Color themes (*.pwgc)";
   } else if (file_type == wow_eFileSelType_Image) {
     dcli_translate_filename(folder, "$pwrp_pop");
-    filter = "*.png,*.jpg,*.gif,*.svg;;All Files (*)";
+    filter = "Images (*.png,*.jpg,*.gif,*.svg);;All Files (*)";
   } else if (file_type == wow_eFileSelType_History) {
     dcli_translate_filename(folder, "~");
-    filter = "*.txt,*.csv,*.skv;;All Files (*)";
+    filter = "History files (*.txt,*.csv,*.skv);;All Files (*)";
   } else if (file_type == wow_eFileSelType_Backup) {
     dcli_translate_filename(folder, "$pwrp_load");
-    filter = "*.bck;;All Files (*)";
+    filter = "Backup files (*.bck);;All Files (*)";
   }
 
-  QString filename = QFileDialog::getOpenFileName(
-      object->parent_wid, fl(title), fl(folder), filter);
+  // QFileDialog::getOpenFileName() is broken
+  QFileDialog dialog(object->parent_wid, fl(title), fl(folder), filter);
+  dialog.setFileMode(QFileDialog::ExistingFile);
+  int sts = dialog.exec();
 
-  if (!filename.isEmpty()) {
-    strcpy(fname, qPrintable(filename));
+  if (sts == QDialog::Accepted && dialog.selectedFiles().length() > 0) {
+    pwr_tFileName fname;
+    strcpy(fname, qPrintable(dialog.selectedFiles().first()));
 
     if (file_selected_cb) {
       (file_selected_cb)(parent_ctx, fname, file_type);
