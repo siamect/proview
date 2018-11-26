@@ -72,6 +72,8 @@ class WRevQtWidget;
 class WRevQt : public WRev {
 public:
   WRevQt(QWidget* wa_parent_wid, void* wa_parent_ctx, ldh_tSession wb_ldhses);
+  ~WRevQt();
+
   QWidget* brow_widget;
   QWidget* form_widget;
   QLabel* msg_label;

@@ -45,18 +45,13 @@ WRevNavQt::WRevNavQt(void* wa_parent_ctx, QWidget* wa_parent_wid,
     QWidget** w, pwr_tStatus* status)
     : WRevNav(wa_parent_ctx, wa_ldhses, wa_name, wa_utility, status)
 {
-  debug_print("creating a scrolledbrowwidgetqt\n");
   form_widget = scrolledbrowwidgetqt_new(init_brow_cb, this, &brow_widget);
-
-  showNow(brow_widget);
-
   *w = form_widget;
   *status = 1;
 }
 
 WRevNavQt::~WRevNavQt()
 {
-  debug_print("WRevNavQt::~WRevNavQt\n");
   form_widget->close();
 }
 

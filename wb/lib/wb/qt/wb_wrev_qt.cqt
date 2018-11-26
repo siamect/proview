@@ -147,13 +147,18 @@ void WRevQt::reset_cursor()
 
 void WRevQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("WRevQtWidget::closeEvent\n");
   if (rev->close_cb) {
     (rev->close_cb)(rev->parent_ctx);
   } else {
     delete rev;
   }
   QWidget::closeEvent(event);
+}
+
+WRevQt::~WRevQt()
+{
+  delete wow;
+  delete wrevnav;
 }
 
 WRevQt::WRevQt(
@@ -230,15 +235,14 @@ WRevQt::WRevQt(
   add_expanding(vbox, brow_widget);
   vbox->addWidget(statusbar);
 
-  tools->setLayout(vbox);
-  tools->show();
+  toplevel->setLayout(vbox);
+  toplevel->show();
 
   wow = new CoWowQt(toplevel);
 }
 
 void WRevInputDialog::closeEvent(QCloseEvent* event)
 {
-  debug_print("WRevInputDialog::closeEvent\n");
   QWidget::closeEvent(event);
   rev->dialog_count--;
   rev->india_widget = 0;
