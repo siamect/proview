@@ -59,6 +59,8 @@
 #include <QApplication>
 #include <QTimer>
 
+extern int DEBUG;
+
 Wtt* WbQt::wtt_new(const char* name, const char* iconname,
     ldh_tWBContext ldhwbctx, pwr_tVolumeId volid, ldh_tVolume volctx,
     wnav_sStartMenu* root_menu, pwr_tStatus* status)
@@ -91,6 +93,7 @@ int main(int argc, char* argv[])
 
 WbQt::WbQt(int argc, char* argv[]) : mainwindow(0)
 {
+  DEBUG=1;
   pwr_tStatus sts;
   int login_display = 0;
   int nav_display = 0;

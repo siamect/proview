@@ -46,11 +46,8 @@ WbBckWNavQt::WbBckWNavQt(void* l_parent_ctx, QWidget* l_parent_wid,
     ldh_tSession l_ldhses, wb_bck_list* l_list, int l_editmode, QWidget** w)
     : WbBckWNav(l_parent_ctx, l_ldhses, l_list, l_editmode)
 {
-  debug_print("creating a scrolledbrowwidgetqt\n");
   form_widget
       = scrolledbrowwidgetqt_new(WbBckWNav::init_brow_cb, this, &brow_widget);
-
-  showNow(brow_widget);
 
   // Create the root item
   *w = form_widget;
@@ -58,7 +55,6 @@ WbBckWNavQt::WbBckWNavQt(void* l_parent_ctx, QWidget* l_parent_wid,
 
 WbBckWNavQt::~WbBckWNavQt()
 {
-  debug_print("WbBckWNavQt::~WbBckWNavQt\n");
   form_widget->close();
 }
 

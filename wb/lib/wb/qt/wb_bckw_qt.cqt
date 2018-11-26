@@ -136,9 +136,14 @@ void WbBckWQtWidget::focusInEvent(QFocusEvent* event)
 
 void WbBckWQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("WbBckWQtWidget::closeEvent\n");
   delete bck;
   QWidget::closeEvent(event);
+}
+
+WbBckWQt::~WbBckWQt()
+{
+  if (bckwnav)
+    delete bckwnav;
 }
 
 void WbBckWQt::set_title(char* title)

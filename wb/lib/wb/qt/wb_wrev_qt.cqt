@@ -280,7 +280,7 @@ WRevInputDialog::WRevInputDialog(WRevQt* parent_ctx, QWidget* parent,
     const char* init_text2)
     : QDialog(parent), rev(parent_ctx)
 {
-  setMinimumSize(350, 150);
+  setMinimumWidth(350);
   setWindowTitle(fl("New Revision"));
   setAttribute(Qt::WA_DeleteOnClose);
 
@@ -301,15 +301,15 @@ WRevInputDialog::WRevInputDialog(WRevQt* parent_ctx, QWidget* parent,
 
   QHBoxLayout* hboxtext1 = new QHBoxLayout();
   hboxtext1->addWidget(india_label1);
-  add_expanding(hboxtext1, india_text1);
+  hboxtext1->addWidget(india_text1);
 
   QHBoxLayout* hboxtext2 = new QHBoxLayout();
   hboxtext2->addWidget(india_label2);
-  add_expanding(hboxtext2, india_text2);
+  hboxtext2->addWidget(india_text2);
 
   QVBoxLayout* vbox = new QVBoxLayout();
-  add_expanding(vbox, hboxtext1);
-  add_expanding(vbox, hboxtext2);
+  vbox->addLayout(hboxtext1);
+  vbox->addLayout(hboxtext2);
   vbox->addWidget(separator(QFrame::HLine));
   vbox->addWidget(buttons);
   setLayout(vbox);
