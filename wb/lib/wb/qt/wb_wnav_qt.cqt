@@ -176,7 +176,7 @@ void WNavQt::print(const char* title)
   pwr_tStatus sts;
 
   wow->CreateBrowPrintDialog(
-      title, brow->ctx, flow_eOrientation_Portrait, 1.0, (void*)0, &sts);
+      title, brow->ctx, flow_eOrientation_Portrait, 1.0, NULL, &sts);
 }
 
 int WNavQt::get_selection(char* str, int len)

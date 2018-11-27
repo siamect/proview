@@ -354,7 +354,7 @@ void CLogQt::print()
   }
 
   wow->CreateBrowPrintDialog(title, clognav->brow->ctx,
-      flow_eOrientation_Landscape, 1.0, parent_wid, &sts);
+      flow_eOrientation_Landscape, 1.0, toplevel, &sts);
   if (sts == WOW__PRINTDIALOGDISABLED) {
     wow->DisplayError("Disabled", "Print Dialog is disabled");
   }
