@@ -50,3 +50,8 @@ WCastQt::WCastQt(void* wc_parent_ctx, QWidget* wc_parent_wid,
   open_castlist();
   *status = 1;
 }
+
+WCastQt::~WCastQt()
+{
+  delete wow;
+}

@@ -36,6 +36,8 @@
 
 /* wb_watttext_qt.cpp -- Display object attributes */
 
+#include "co_string.h"
+
 #include "cow_qt_helpers.h"
 #include "cow_wow_qt.h"
 #include "cow_xhelp.h"
@@ -77,19 +79,6 @@ void WAttTextQtWidget::action_text_inserted()
 //
 //  Callbackfunctions from menu entries
 //
-void WAttTextQtWidget::activate_save()
-{
-  atxt->set_attr_value();
-  atxt->modified = 0;
-}
-
-void WAttTextQtWidget::activate_saveandclose()
-{
-  atxt->set_attr_value();
-  atxt->modified = 0;
-  atxt->activate_exit();
-}
-
 void WAttTextQtWidget::activate_copy()
 {
   QApplication::clipboard()->setText(atxt->textbuffer->toPlainText());
@@ -109,7 +98,7 @@ void WAttTextQtWidget::activate_paste()
 void WAttTextQtWidget::activate_ok()
 {
   atxt->set_attr_value();
-
+  atxt->modified = 0;
   close();
 }
 
@@ -152,9 +141,10 @@ void WAttTextQt::set_editmode(int editmode, ldh_tSesContext ldhses)
 void WAttTextQt::set_attr_value()
 {
   if (editmode) {
-    char* text = qPrintableLatin1(textbuffer->toPlainText());
+    char text[input_max_length];
+    strncpy(text, qPrintableLatin1(textbuffer->toPlainText()), input_max_length);
 
-    if (text) {
+    if (!streq(text, "")) {
       // Replace ctrl characters with space
       for (unsigned char* s = (unsigned char*)text; *s; s++) {
         if (*s < ' ' && *s != 10 && *s != 13) {
@@ -172,7 +162,6 @@ void WAttTextQt::set_attr_value()
 
 void WAttTextQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("WAttTextQtWidget::closeEvent\n");
   if (atxt->close_cb) {
     (atxt->close_cb)(atxt);
   } else {
@@ -180,6 +169,13 @@ void WAttTextQtWidget::closeEvent(QCloseEvent* event)
   }
 
   QWidget::closeEvent(event);
+}
+
+WAttTextQt::~WAttTextQt()
+{
+  if (wow) {
+    delete wow;
+  }
 }
 
 WAttTextQt::WAttTextQt(QWidget* wa_parent_wid, void* wa_parent_ctx,
@@ -214,9 +210,9 @@ WAttTextQt::WAttTextQt(QWidget* wa_parent_wid, void* wa_parent_ctx,
 
   // File entry
   QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
-  addMenuItem(toplevel, file, "&Save", SLOT(activate_save()), "CTRL+S",
+  addMenuItem(toplevel, file, "&Save", SLOT(activate_apply()), "CTRL+S",
       "document-save");
-  addMenuItem(toplevel, file, "S&ave and close", SLOT(activate_saveandclose()),
+  addMenuItem(toplevel, file, "S&ave and close", SLOT(activate_ok()),
       "CTRL+T");
   addMenuItem(
       toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");

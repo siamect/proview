@@ -51,6 +51,7 @@ public:
   WAttTextQt(QWidget* wa_parent_wid, void* wa_parent_ctx,
       ldh_tSesContext wa_ldhses, pwr_sAttrRef wa_aref, int wa_editmode,
       pwr_tStatus* status);
+  ~WAttTextQt();
   QLabel* msg_label;
   QTextEdit* textbuffer;
   int input_max_length;
@@ -79,8 +80,6 @@ protected:
   void closeEvent(QCloseEvent* event);
 
 public slots:
-  void activate_save();
-  void activate_saveandclose();
   void activate_copy();
   void activate_cut();
   void activate_paste();
