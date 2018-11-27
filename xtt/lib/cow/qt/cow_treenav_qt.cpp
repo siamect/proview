@@ -54,8 +54,6 @@ TreeNavQt::TreeNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
   form_widget
       = scrolledbrowwidgetqt_new(TreeNav::init_brow_cb, this, &brow_widget);
 
-  showNow(brow_widget);
-
   // Create the root item
   *w = form_widget;
 

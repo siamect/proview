@@ -142,8 +142,7 @@ void WbBckWQtWidget::closeEvent(QCloseEvent* event)
 
 WbBckWQt::~WbBckWQt()
 {
-  if (bckwnav)
-    delete bckwnav;
+  delete bckwnav;
 }
 
 void WbBckWQt::set_title(char* title)

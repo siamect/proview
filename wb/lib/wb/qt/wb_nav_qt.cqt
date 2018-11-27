@@ -53,7 +53,6 @@ NavQt::NavQt(void* nav_parent_ctx, QWidget* nav_parent_wid,
 {
   trace_obj = new NavQtTraceObject(this);
 
-  debug_print("creating a scrolledbrowwidgetqt\n");
   QScrollArea* scrolledbrow = ((QScrollArea*) scrolledbrowwidgetqt_new(Nav::init_brow_cb, this, &brow_widget));
 
   form_widget = wrapInFrame(scrolledbrow);
@@ -63,8 +62,6 @@ NavQt::NavQt(void* nav_parent_ctx, QWidget* nav_parent_wid,
   QObject::connect(
       server, SIGNAL(newConnection()), trace_obj, SLOT(sel_convert_cb()));
 
-  showNow(brow_widget);
-
   set_inputfocus(0);
 
   *w = form_widget;
@@ -73,7 +70,6 @@ NavQt::NavQt(void* nav_parent_ctx, QWidget* nav_parent_wid,
 
 NavQt::~NavQt()
 {
-  debug_print("NavQt::~NavQt\n");
   PalFile::config_tree_free(menu);
   free_pixmaps();
   delete trace_obj;

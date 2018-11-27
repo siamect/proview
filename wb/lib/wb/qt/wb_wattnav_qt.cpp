@@ -55,8 +55,6 @@ WAttNavQt::WAttNavQt(void* wa_parent_ctx, wattnav_eType wa_type,
   form_widget
       = scrolledbrowwidgetqt_new(WAttNav::init_brow_cb, this, &brow_widget);
 
-  showNow(brow_widget);
-
   *w = form_widget;
   *status = 1;
 }

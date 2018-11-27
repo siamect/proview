@@ -172,7 +172,6 @@ int AttrQt::reconfigure_attr()
   }
   brow_widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   pane->insertWidget(0, brow_widget);
-  showNow(brow_widget);
 
   attrnav->message_cb = &Attr::message;
   attrnav->change_value_cb = &Attr::change_value_c;

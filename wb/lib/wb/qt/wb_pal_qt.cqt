@@ -53,12 +53,9 @@ PalQt::PalQt(void* pal_parent_ctx, QWidget* pal_parent_wid,
 {
   trace_obj = new PalQtTraceObject(this);
 
-  debug_print("creating a scrolledbrowwidgetqt\n");
   QScrollArea* scrolledbrow = ((QScrollArea*) scrolledbrowwidgetqt_new(Pal::init_brow_cb, this, &brow_widget));
 
   form_widget = wrapInFrame(scrolledbrow);
-
-  showNow(brow_widget);
 
   server = new QLocalServer(trace_obj);
   server->listen("STRING");
@@ -73,10 +70,9 @@ PalQt::PalQt(void* pal_parent_ctx, QWidget* pal_parent_wid,
 
 PalQt::~PalQt()
 {
-  debug_print("PalQt::~PalQt\n");
+  delete trace_obj;
   PalFile::config_tree_free(menu);
   free_pixmaps();
-  delete trace_obj;
   form_widget->close();
 }
 
@@ -110,7 +106,6 @@ void PalQt::set_inputfocus(int focus)
 void PalQt::set_selection_owner()
 {
   selection_owner = 1;
-  debug_print("PalQt::set_selection_owner\n");
   brow_SetInverseColor(brow_ctx, flow_eDrawType_Line);
 }
 

@@ -49,6 +49,7 @@ class WbExpWQt : public WbExpW {
 public:
   WbExpWQt(void* l_parent_ctx, QWidget* l_parent_wid, ldh_tSession l_ldhses,
       const char* l_name, int type, int l_editmode, pwr_tStatus* status);
+  ~WbExpWQt();
 
   QWidget* form;
   QWidget* nav_widget;

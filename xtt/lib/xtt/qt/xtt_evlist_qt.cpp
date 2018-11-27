@@ -56,8 +56,6 @@ EvListQt::EvListQt(void* ev_parent_ctx, QWidget* ev_parent_wid,
   debug_print("creating a scrolledbrowwidgetqt\n");
   form_widget = scrolledbrowwidgetqt_new(init_brow_cb, this, &brow_widget);
 
-  showNow(brow_widget);
-
   *w = form_widget;
 }
 

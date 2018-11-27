@@ -1573,7 +1573,6 @@ void BootDialog::boot_cancel_cb()
 // Destroy callback
 void BootDialog::closeEvent(QCloseEvent* event)
 {
-  debug_print("BootDialog::closeEvent\n");
   if (wtt->boot_volumelist && wtt->boot_volumecount) {
     free((char*)wtt->boot_volumelist);
     wtt->boot_volumelist = 0;
@@ -1711,7 +1710,6 @@ void WttQt::set_options()
 
 void WttQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("WttQtWidget::closeEvent\n");
   Wtt::close(wtt);
   event->ignore();
 }
@@ -2305,7 +2303,6 @@ WttQt::WttQt(void* wt_parent_ctx, QWidget* wt_parent_wid, const char* wt_name,
 
 WttQt::~WttQt()
 {
-  debug_print("WttQt::~WttQt\n");
   if (close_cb) {
     (close_cb)(this);
   }
@@ -2342,7 +2339,6 @@ void WttQt::pop()
 
 void OptionsDialog::closeEvent(QCloseEvent* event)
 {
-  debug_print("OptionsDialog::closeEvent\n");
   wtt->update_options_form();
   QWidget::closeEvent(event);
 }

@@ -49,6 +49,7 @@ class WCrrQt : public WCrr {
 public:
   WCrrQt(QWidget* xa_parent_wid, void* xa_parent_ctx, ldh_tSesContext xa_ldhses,
       pwr_sAttrRef* xa_objar, int xa_advanced_user, int* xa_sts);
+  ~WCrrQt();
   QWidget* brow_widget;
   QWidget* form_widget;
   CoWowFocusTimerQt focustimer;

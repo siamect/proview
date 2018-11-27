@@ -262,6 +262,7 @@ CoXHelpQt::CoXHelpQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
   vbox->addWidget(brow_widget);
 
   toplevel->setLayout(vbox);
+  toplevel->show(); // The xhelpnav must be realized.
   toplevel->hide();
 
   *xa_sts = 1;

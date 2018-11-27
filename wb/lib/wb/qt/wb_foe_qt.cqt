@@ -575,8 +575,16 @@ void WFoeQt::destroy()
 {
   gre->wind->hw.foe = 0;
 
+  delete gre;
+  delete node_palctx;
+  delete con_palctx;
+  delete navctx;
+
   /* Destroy the widget */
   toplevel->close();
+
+  // Yes, this is intentional, we want to call the destructor here.
+  delete this;
 }
 
 void WFoeQt::set_title()

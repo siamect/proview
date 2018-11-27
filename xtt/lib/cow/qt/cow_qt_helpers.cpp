@@ -72,11 +72,6 @@ void pop(QWidget* w)
   w->activateWindow();
 }
 
-void showNow(QWidget* w)
-{
-  QApplication::sendEvent(w, new QShowEvent());
-}
-
 QIcon get_icon(const char* iconName)
 {
   if (strcmp(iconName, "")) {

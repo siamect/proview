@@ -123,6 +123,11 @@ WbExpWQt::WbExpWQt(void* expw_parent_ctx, QWidget* expw_parent_wid,
   // expwnav->check_all();
 }
 
+WbExpWQt::~WbExpWQt()
+{
+  delete expwnav;
+}
+
 void WbExpWQt::print()
 {
   pwr_tStatus sts;
@@ -143,7 +148,6 @@ void WbExpWQtWidget::focusInEvent(QFocusEvent* event)
 
 void WbExpWQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("WbExpWQtWidget::closeEvent\n");
   delete expw;
   QWidget::closeEvent(event);
 }

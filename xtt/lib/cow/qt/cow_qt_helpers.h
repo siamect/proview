@@ -58,7 +58,6 @@ QString fl(const char* text);
 QString convert_utf8(const char* str);
 QString translate_utf8(const char* str);
 void pop(QWidget* w);
-void showNow(QWidget* w);
 QIcon get_icon(const char* iconName);
 QAction* addMenuItem(QObject* parent, QMenu* menu, const char* text,
     const char* callback, const char* shortcut = "", const char* iconName = "");

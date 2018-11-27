@@ -48,7 +48,7 @@ public:
   QWidget* flow_widget;
   QWidget* form_widget;
   QWidget* nav_shell;
-  QWidget* nav_widget;
+  QWidget* nav_widget = NULL;
 
   QTimer* trace_timerid;
 

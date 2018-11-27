@@ -397,7 +397,6 @@ RtTraceQt::RtTraceQt(void* tr_parent_ctx, QWidget* tr_parent_wid,
   debug_print("creating a scrolledflowwidgetqt\n");
   QWidget* flow_scrolled
       = scrolledflowwidgetqt_new(init_flow, this, &flow_widget);
-  showNow(flow_widget);
   debug_print("creating a flownavwidgetqt\n");
   nav_widget = flownavwidgetqt_new(flow_widget);
 

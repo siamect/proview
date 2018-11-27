@@ -93,6 +93,7 @@ MsgWindowQt::MsgWindowQt(void* msg_parent_ctx, QWidget* msg_parent_wid,
   add_expanding(form, nav_widget);
 
   toplevel->setLayout(form);
+  toplevel->show(); // The MsgList must be realized.
   toplevel->hide();
 
   wow = new CoWowQt(toplevel);

@@ -47,8 +47,6 @@ MsgListQt::MsgListQt(void* ev_parent_ctx, QWidget* ev_parent_wid, QWidget** w)
   form_widget
       = scrolledbrowwidgetqt_new(MsgList::init_brow_cb, this, &brow_widget);
 
-  showNow(brow_widget);
-
   // Create the root item
   *w = form_widget;
 }

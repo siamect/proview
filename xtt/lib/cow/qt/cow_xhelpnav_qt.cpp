@@ -52,8 +52,6 @@ CoXHelpNavQt::CoXHelpNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
   form_widget = scrolledbrowwidgetqt_new(
       CoXHelpNav::init_brow_base_cb, this, &brow_widget);
 
-  showNow(brow_widget);
-
   displayed = 1;
 
   *w = form_widget;
