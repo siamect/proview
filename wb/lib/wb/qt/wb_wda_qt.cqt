@@ -197,37 +197,30 @@ void WdaQtWidget::activate_help()
       "$pwr_lang/man_dg.dat", true);
 }
 
-void WdaQtWidget::class_activate_ok()
+void WdaQtWidget::class_activate_ok(char* hiername, char* searchname,
+    char* classname, bool attrobjects)
 {
-  int sts;
-  pwr_tClassId new_classid;
-
-  char* hiername = qPrintableLatin1(wda->wdaclass_hiervalue->text());
-  char* searchname = qPrintableLatin1(wda->wdaclass_namevalue->text());
-  char* classname = qPrintableLatin1(wda->wdaclass_classvalue->text());
-
-  wda->attrobjects = wda->wdaclass_attrobjects->isChecked();
+  wda->attrobjects = attrobjects;
 
   if (streq(hiername, "")) {
     wda->objid = pwr_cNObjid;
   } else {
-    sts = ldh_NameToObjid(wda->ldhses, &wda->objid, hiername);
+    int sts = ldh_NameToObjid(wda->ldhses, &wda->objid, hiername);
     if (EVEN(sts)) {
-      CoWowQt ww(wda->wdaclass_dia);
+      CoWowQt ww(this);
       ww.DisplayError("Hierarchy object error", wnav_get_message(sts));
       return;
     }
   }
   strncpy(wda->search_name, searchname, sizeof(wda->search_name));
 
-  sts = ldh_ClassNameToId(wda->ldhses, &new_classid, classname);
+  pwr_tClassId new_classid;
+  int sts = ldh_ClassNameToId(wda->ldhses, &new_classid, classname);
   if (EVEN(sts)) {
-    CoWowQt ww(wda->wdaclass_dia);
+    CoWowQt ww(this);
     ww.DisplayError("Class error", wnav_get_message(sts));
     return;
   }
-
-  wda->wdaclass_dia->setVisible(false);
 
   if (wda->classid != new_classid) {
     // Enter attribute
@@ -235,11 +228,11 @@ void WdaQtWidget::class_activate_ok()
     wda->open_attr_dialog();
   } else {
     // Find new attributes
-    sts = ((WdaNav*)wda->wdanav)
+    int sts = ((WdaNav*)wda->wdanav)
               ->update(wda->objid, wda->classid, wda->attribute,
                   wda->attrobjects, wda->search_name);
     if (EVEN(sts)) {
-      CoWowQt ww(wda->wdaclass_dia);
+      CoWowQt ww(this);
       ww.DisplayError("Spreadsheet error", wnav_get_message(sts));
     }
   }
@@ -385,11 +378,70 @@ void WdaQt::pop()
 
 void WdaQt::open_class_dialog(char* hierstr, char* classstr, char* namestr)
 {
-  wdaclass_hiervalue->setText(fl(hierstr));
-  wdaclass_classvalue->setText(fl(classstr));
-  wdaclass_namevalue->setText(fl(namestr));
+  // Create an input dialog
+  QDialog* wdaclass_dia = new QDialog();
+  wdaclass_dia->setMinimumSize(500, 150);
+  wdaclass_dia->setWindowTitle(fl("Select Class"));
+  //Do not set the "DeleteOnClose" attribute,
+  //we need to access the dialog fields after exec()
+
+  QLineEdit* wdaclass_classvalue = new QLineEdit(fl(classstr));
+  QLabel* class_label = new QLabel("Class");
+  class_label->setFixedWidth(95);
+  QLineEdit* wdaclass_hiervalue = new QLineEdit(fl(hierstr));
+  QLabel* hier_label = new QLabel("Hierarchy");
+  hier_label->setFixedWidth(95);
+  QLineEdit* wdaclass_namevalue = new QLineEdit(fl(namestr));
+  QLabel* name_label = new QLabel("Name");
+  name_label->setFixedWidth(95);
+  QCheckBox* wdaclass_attrobjects = new QCheckBox("Attribute Objects");
   wdaclass_attrobjects->setChecked(attrobjects ? true : false);
-  wdaclass_dia->setVisible(true);
+
+  QHBoxLayout* india_hboxclass = new QHBoxLayout();
+  india_hboxclass->addWidget(class_label);
+  add_expanding(india_hboxclass, wdaclass_classvalue);
+
+  QHBoxLayout* india_hboxhier = new QHBoxLayout();
+  india_hboxhier->addWidget(hier_label);
+  add_expanding(india_hboxhier, wdaclass_hiervalue);
+
+  QHBoxLayout* india_hboxname = new QHBoxLayout();
+  india_hboxname->addWidget(name_label);
+  add_expanding(india_hboxname, wdaclass_namevalue);
+
+  QHBoxLayout* india_hboxattrobj = new QHBoxLayout();
+  india_hboxattrobj->addWidget(wdaclass_attrobjects);
+
+  QDialogButtonBox* buttons = new QDialogButtonBox();
+  buttons->addButton(QDialogButtonBox::Ok);
+  buttons->addButton(QDialogButtonBox::Cancel);
+  buttons->button(QDialogButtonBox::Ok)->setFixedSize(70, 25);
+  buttons->button(QDialogButtonBox::Cancel)->setFixedSize(70, 25);
+  QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
+      wdaclass_dia, SLOT(accept()));
+  QObject::connect(buttons->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
+      wdaclass_dia, SLOT(reject()));
+
+  QVBoxLayout* india_vbox = new QVBoxLayout(wdaclass_dia);
+  india_vbox->addLayout(india_hboxclass);
+  india_vbox->addLayout(india_hboxhier);
+  india_vbox->addLayout(india_hboxname);
+  add_expanding(india_vbox, india_hboxattrobj);
+  india_vbox->addWidget(separator(QFrame::HLine));
+  india_vbox->addWidget(buttons);
+  wdaclass_dia->setLayout(india_vbox);
+  int res = wdaclass_dia->exec();
+
+  if (res == QDialog::Accepted) {
+    char* hiername = qPrintableLatin1(wdaclass_hiervalue->text());
+    char* searchname = qPrintableLatin1(wdaclass_namevalue->text());
+    char* classname = qPrintableLatin1(wdaclass_classvalue->text());
+    bool attrobjects = wdaclass_attrobjects->isChecked();
+
+    toplevel->class_activate_ok(hiername, searchname, classname, attrobjects);
+  }
+
+  delete wdaclass_dia;
 }
 
 void WdaQt::update_title()
@@ -397,9 +449,16 @@ void WdaQt::update_title()
   CoWowQt::update_title(toplevel, editmode);
 }
 
+WdaQt::~WdaQt()
+{
+  if (wow)
+    delete wow;
+  delete cmd_entry;
+  delete (WdaNav*)wdanav;
+}
+
 void WdaQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("WdaQtWidget::closeEvent\n");
   if (wda->close_cb) {
     (wda->close_cb)(wda);
   } else {
@@ -413,8 +472,7 @@ WdaQt::WdaQt(QWidget* wa_parent_wid, void* wa_parent_ctx,
     const char* wa_attribute, int wa_editmode, int wa_advanced_user,
     int wa_display_objectname)
     : Wda(wa_parent_ctx, wa_ldhses, wa_objid, wa_classid, wa_attribute,
-          wa_editmode, wa_advanced_user, wa_display_objectname),
-      wdaclass_dia(0)
+          wa_editmode, wa_advanced_user, wa_display_objectname)
 {
   int sts;
 
@@ -518,7 +576,6 @@ WdaQt::WdaQt(QWidget* wa_parent_wid, void* wa_parent_ctx,
 
   set_pane_position(pane, -50);
 
-  create_class_dialog();
   wow = new CoWowQt(toplevel);
 
   update_title();
@@ -527,61 +584,4 @@ WdaQt::WdaQt(QWidget* wa_parent_wid, void* wa_parent_ctx,
     ((Wtt*)parent_ctx)->register_utility(this, wb_eUtility_SpreadsheetEditor);
   }
   Wda::open_class_dialog();
-}
-
-void WdaQt::create_class_dialog()
-{
-  if (wdaclass_dia) {
-    return;
-  }
-
-  // Create an input dialog
-  wdaclass_dia = new QDialog();
-  wdaclass_dia->setMinimumSize(500, 150);
-  wdaclass_dia->setWindowTitle(fl("Select Class"));
-  wdaclass_dia->setAttribute(Qt::WA_DeleteOnClose);
-
-  wdaclass_classvalue = new QLineEdit();
-  QLabel* class_label = new QLabel("Class");
-  class_label->setFixedWidth(95);
-  wdaclass_hiervalue = new QLineEdit();
-  QLabel* hier_label = new QLabel("Hierarchy");
-  hier_label->setFixedWidth(95);
-  wdaclass_namevalue = new QLineEdit();
-  QLabel* name_label = new QLabel("Name");
-  name_label->setFixedWidth(95);
-  wdaclass_attrobjects = new QCheckBox("Attribute Objects");
-
-  QHBoxLayout* india_hboxclass = new QHBoxLayout();
-  india_hboxclass->addWidget(class_label);
-  add_expanding(india_hboxclass, wdaclass_classvalue);
-
-  QHBoxLayout* india_hboxhier = new QHBoxLayout();
-  india_hboxhier->addWidget(hier_label);
-  add_expanding(india_hboxhier, wdaclass_hiervalue);
-
-  QHBoxLayout* india_hboxname = new QHBoxLayout();
-  india_hboxname->addWidget(name_label);
-  add_expanding(india_hboxname, wdaclass_namevalue);
-
-  QHBoxLayout* india_hboxattrobj = new QHBoxLayout();
-  india_hboxattrobj->addWidget(wdaclass_attrobjects);
-
-  QDialogButtonBox* buttons = new QDialogButtonBox();
-  buttons->addButton(QDialogButtonBox::Ok);
-  buttons->addButton(QDialogButtonBox::Cancel);
-  buttons->button(QDialogButtonBox::Ok)->setFixedSize(70, 25);
-  buttons->button(QDialogButtonBox::Cancel)->setFixedSize(70, 25);
-  QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
-      toplevel, SLOT(class_activate_ok()));
-
-  QVBoxLayout* india_vbox = new QVBoxLayout(wdaclass_dia);
-  india_vbox->addLayout(india_hboxclass);
-  india_vbox->addLayout(india_hboxhier);
-  india_vbox->addLayout(india_hboxname);
-  add_expanding(india_vbox, india_hboxattrobj);
-  india_vbox->addWidget(separator(QFrame::HLine));
-  india_vbox->addWidget(buttons);
-  wdaclass_dia->setLayout(india_vbox);
-  wdaclass_dia->setVisible(false);
 }

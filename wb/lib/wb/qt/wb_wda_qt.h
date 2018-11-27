@@ -55,6 +55,7 @@ public:
   WdaQt(QWidget* wa_parent_wid, void* wa_parent_ctx, ldh_tSesContext wa_ldhses,
       pwr_tObjid wa_objid, pwr_tClassId wa_classid, const char* wa_attribute,
       int wa_editmode, int wa_advanced_user, int wa_display_objectname);
+  ~WdaQt();
   QWidget* brow_widget;
   QWidget* form_widget;
   QLabel* msg_label;
@@ -62,11 +63,6 @@ public:
   QWidget* cmd_scrolledinput;
   QTextEdit* cmd_scrolled_buffer;
   QSplitter* pane;
-  QWidget* wdaclass_dia;
-  QLineEdit* wdaclass_hiervalue;
-  QLineEdit* wdaclass_namevalue;
-  QLineEdit* wdaclass_classvalue;
-  QCheckBox* wdaclass_attrobjects;
   static CoWowRecall value_recall;
   CoWowEntryQt* cmd_entry;
   CoWowFocusTimerQt focustimer;
@@ -112,7 +108,8 @@ public slots:
   void activate_cmd_entry();
   void activate_cmd_scrolled_ok();
   void activate_cmd_scrolled_ca();
-  void class_activate_ok();
+  void class_activate_ok(char* hiername, char* searchname, char* classname,
+                         bool attrobjects);
 
 private:
   WdaQt* wda;
