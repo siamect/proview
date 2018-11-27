@@ -221,8 +221,8 @@ XttGeQt::~XttGeQt()
   if (confirm_widget) {
     confirm_widget->close();
   }
-  if (nav_shell) {
-    nav_shell->close();
+  if (nav_widget) {
+    nav_widget->close();
   }
   delete graph;
 }
@@ -261,7 +261,7 @@ XttGeQt::XttGeQt(QWidget* xg_parent_wid, void* xg_parent_ctx,
           xg_navigator, xg_width, xg_height, x, y, scan_time, object_name,
           use_default_access, access, options, color_theme, xg_command_cb,
           xg_get_current_objects_cb, xg_is_authorized_cb, xg_keyboard_cb),
-      nav_shell(0), value_dialog(0)
+      value_dialog(0)
 {
   int window_width = 600;
   int window_height = 500;
@@ -365,16 +365,14 @@ XttGeQt::XttGeQt(QWidget* xg_parent_wid, void* xg_parent_ctx,
 
     if (navigator) {
       // Create navigator popup
-      nav_shell = new QWidget();
-      nav_shell->setFixedSize(200, 200);
-      nav_shell->setWindowTitle(fl("Navigator"));
-      nav_shell->setAttribute(Qt::WA_DeleteOnClose);
+      nav_widget = ((GraphQt*)graph)->create_navigator();
+      nav_widget->setFixedSize(200, 200);
+      nav_widget->setWindowTitle(fl("Navigator"));
+      nav_widget->setAttribute(Qt::WA_DeleteOnClose);
 
-      ((GraphQt*)graph)->create_navigator(nav_shell);
-      nav_shell->layout()->addWidget(((GraphQt*)graph)->nav_widget);
+      nav_widget->show();
 
-      nav_shell->show();
-      ((Graph*)graph)->set_nav_background_color();
+      graph->set_nav_background_color();
     }
 
     if (!(x == 0 && y == 0)) {

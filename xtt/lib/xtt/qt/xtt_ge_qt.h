@@ -50,8 +50,7 @@ public:
   XttGeQtWidget* toplevel;
   QWidget* grow_widget;
   QWidget* form_widget;
-  QWidget* nav_shell;
-  QWidget* nav_widget;
+  QWidget* nav_widget = NULL;
   QWidget* graph_form;
   QLineEdit* value_input;
   QWidget* value_dialog;

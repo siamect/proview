@@ -1990,7 +1990,7 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
   add_expanding(vpaned1, palbox);
   vpaned1->addWidget(colpal_main_widget);
 
-  ((GraphQt*)graph)->create_navigator(vpaned1);
+  ((GraphQt*)graph)->create_navigator();
   add_expanding(vpaned2, vpaned1);
   vpaned1->addWidget(((GraphQt*)graph)->nav_widget);
 

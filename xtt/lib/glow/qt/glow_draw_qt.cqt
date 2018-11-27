@@ -860,14 +860,21 @@ int GlowDrawQt::event_handler(QEvent* event, QWidget* target)
       sts = ctx->event_handler_nav(glow_eEvent_Exposure, 0, 0);
       break;
     }
+    case QEvent::Paint:
+    case QEvent::UpdateRequest: {
+      ctx->nav_clear();
+      sts = ctx->event_handler_nav(glow_eEvent_Exposure, 0, 0);
+      nav_wind->window->update();
+      break;
+    }
     case QEvent::MouseMove: {
-      QPoint pos = QCursor::pos();
+      QMouseEvent* mouseEvent = ((QMouseEvent*)event);
       if (button1_pressed || button2_pressed || button3_pressed) {
         sts = ctx->event_handler_nav(
-            glow_eEvent_ButtonMotion, pos.x(), pos.y());
+            glow_eEvent_ButtonMotion, mouseEvent->x(), mouseEvent->y());
       } else {
         sts = ctx->event_handler_nav(
-            glow_eEvent_CursorMotion, pos.x(), pos.y());
+            glow_eEvent_CursorMotion, mouseEvent->x(), mouseEvent->y());
       }
       break;
     }

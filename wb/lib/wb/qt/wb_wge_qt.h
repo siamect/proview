@@ -49,8 +49,7 @@ class WGeQt : public WGe {
 public:
   QWidget* grow_widget;
   QWidget* form_widget;
-  QWidget* nav_shell;
-  QWidget* nav_widget;
+  QWidget* nav_widget = NULL;
   QLineEdit* value_input;
   QWidget* value_dialog;
   QWidget* message_dia_widget;

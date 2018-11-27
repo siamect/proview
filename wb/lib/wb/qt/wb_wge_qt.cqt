@@ -145,9 +145,8 @@ void WGeQtWidget::action_resize(QResizeEvent* event)
 
 WGeQt::~WGeQt()
 {
-  debug_print("WGeQt::~WGeQt\n");
-  if (nav_shell) {
-    nav_shell->close();
+  if (nav_widget) {
+    nav_widget->close();
   }
 }
 
@@ -184,7 +183,6 @@ void WGeQt::pop()
 
 void WGeQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("WGeQtWidget::closeEvent\n");
   if (ge->modal) {
     ge->terminated = 1;
     debug_print("Shutting down...\n");
@@ -201,7 +199,7 @@ WGeQt::WGeQt(QWidget* wge_parent_wid, void* wge_parent_ctx, char* wge_name,
     int wge_modal = 0)
     : WGe(wge_parent_ctx, wge_name, wge_filename, wge_scrollbar, wge_menu,
           wge_navigator, wge_width, wge_height, x, y, object_name, wge_modal),
-      nav_shell(0), value_dialog(0)
+      value_dialog(0)
 {
   int window_width = 600;
   int window_height = 500;
@@ -273,21 +271,14 @@ WGeQt::WGeQt(QWidget* wge_parent_wid, void* wge_parent_ctx, char* wge_name,
   toplevel->setLayout(graph_form);
   toplevel->show();
 
-  debug_print("Should be visible now...\n");
-
   if (navigator) {
     // Create navigator popup
-    nav_shell = new QWidget();
-    nav_shell->setMinimumSize(200, 200);
-    nav_shell->setWindowTitle(fl("Navigator"));
-    nav_shell->setAttribute(Qt::WA_DeleteOnClose);
+    nav_widget = ((GraphQt*)graph)->create_navigator();
+    nav_widget->setFixedSize(200, 200);
+    nav_widget->setWindowTitle(fl("Navigator"));
+    nav_widget->setAttribute(Qt::WA_DeleteOnClose);
 
-    ((GraphQt*)graph)->create_navigator(nav_shell);
-    QVBoxLayout* l = new QVBoxLayout(nav_shell);
-    l->addWidget(((GraphQt*)graph)->nav_widget);
-    nav_shell->setLayout(l);
-
-    nav_shell->show();
+    nav_widget->show();
 
     graph->set_nav_background_color();
   }

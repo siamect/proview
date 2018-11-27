@@ -117,10 +117,10 @@ void GraphQt::trace_timer_add(int time)
   initOneShotTimer(trace_timerid, SLOT(trace_scan()),time);
 }
 
-int GraphQt::create_navigator(QWidget* parent)
+QWidget* GraphQt::create_navigator()
 {
   nav_widget = grownavwidgetqt_new(grow_widget);
-  return 1;
+  return nav_widget;
 }
 
 Attr* GraphQt::attr_new(void* parent_ctx, attr_eType type, void* object,

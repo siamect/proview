@@ -76,7 +76,7 @@ public:
 
   void trace_timer_remove();
   void trace_timer_add(int time);
-  int create_navigator(QWidget* parent);
+  QWidget* create_navigator();
   Attr* attr_new(void* parent_ctx, attr_eType type, void* object,
       attr_sItem* itemlist, int item_cnt);
   void set_inputfocus(int focus);
