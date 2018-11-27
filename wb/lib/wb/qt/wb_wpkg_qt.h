@@ -50,6 +50,8 @@ class WPkgQtWidget;
 class WPkgQt : public WPkg {
 public:
   WPkgQt(QWidget* wa_parent_wid, void* wa_parent_ctx);
+  ~WPkgQt();
+
   QWidget* brow_widget;
   QWidget* form_widget;
   QLabel* msg_label;

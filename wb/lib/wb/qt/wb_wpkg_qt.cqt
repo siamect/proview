@@ -154,9 +154,14 @@ void WPkgQt::reset_cursor()
   toplevel->window()->unsetCursor();
 }
 
+WPkgQt::~WPkgQt()
+{
+  delete wow;
+  delete wpkgnav;
+}
+
 void WPkgQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("WPkgQtWidget::closeEvent\n");
   if (pkg->close_cb) {
     (pkg->close_cb)(pkg->parent_ctx);
   } else {
@@ -171,7 +176,6 @@ WPkgQt::WPkgQt(QWidget* wa_parent_wid, void* wa_parent_ctx)
   int sts;
 
   toplevel = new WPkgQtWidget(this, wa_parent_wid);
-  toplevel->setToolTip(fl("wb_wpkg widget"));
   toplevel->setMinimumSize(600, 600);
   toplevel->setWindowTitle(fl("Distributor"));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
