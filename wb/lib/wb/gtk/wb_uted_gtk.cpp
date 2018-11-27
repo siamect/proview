@@ -155,85 +155,11 @@ void WUtedGtk::commandchanged(GtkWidget* w, gpointer data)
 {
 }
 
-void WUtedGtk::activate_present1(GtkWidget* w, gpointer data)
+void WUtedGtk::activate_present(GtkWidget* w, gpointer data)
 {
   WUted* uted = (WUted*)data;
 
   uted->message("");
-  uted->present_sts[0]
-      = (int)gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w));
-}
-void WUtedGtk::activate_present2(GtkWidget* w, gpointer data)
-{
-  WUted* uted = (WUted*)data;
-
-  uted->message("");
-  uted->present_sts[1]
-      = (int)gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w));
-}
-void WUtedGtk::activate_present3(GtkWidget* w, gpointer data)
-{
-  WUted* uted = (WUted*)data;
-
-  uted->message("");
-  uted->present_sts[2]
-      = (int)gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w));
-}
-void WUtedGtk::activate_present4(GtkWidget* w, gpointer data)
-{
-  WUted* uted = (WUted*)data;
-
-  uted->message("");
-  uted->present_sts[3]
-      = (int)gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w));
-}
-void WUtedGtk::activate_present5(GtkWidget* w, gpointer data)
-{
-  WUted* uted = (WUted*)data;
-
-  uted->message("");
-  uted->present_sts[4]
-      = (int)gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w));
-}
-void WUtedGtk::activate_present6(GtkWidget* w, gpointer data)
-{
-  WUted* uted = (WUted*)data;
-
-  uted->message("");
-  uted->present_sts[5]
-      = (int)gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w));
-}
-void WUtedGtk::activate_present7(GtkWidget* w, gpointer data)
-{
-  WUted* uted = (WUted*)data;
-
-  uted->message("");
-  uted->present_sts[6]
-      = (int)gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w));
-}
-void WUtedGtk::activate_present8(GtkWidget* w, gpointer data)
-{
-  WUted* uted = (WUted*)data;
-
-  uted->message("");
-  uted->present_sts[7]
-      = (int)gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w));
-}
-void WUtedGtk::activate_present9(GtkWidget* w, gpointer data)
-{
-  WUted* uted = (WUted*)data;
-
-  uted->message("");
-  uted->present_sts[8]
-      = (int)gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w));
-}
-void WUtedGtk::activate_present10(GtkWidget* w, gpointer data)
-{
-  WUted* uted = (WUted*)data;
-
-  uted->message("");
-  uted->present_sts[9]
-      = (int)gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w));
 }
 
 //
@@ -455,25 +381,25 @@ WUtedGtk::WUtedGtk(void* wu_parent_ctx, GtkWidget* wu_parent_wid,
   }
 
   g_signal_connect(
-      widgets.present[0], "toggled", G_CALLBACK(activate_present1), this);
+      widgets.present[0], "toggled", G_CALLBACK(activate_present), this);
   g_signal_connect(
-      widgets.present[1], "toggled", G_CALLBACK(activate_present2), this);
+      widgets.present[1], "toggled", G_CALLBACK(activate_present), this);
   g_signal_connect(
-      widgets.present[2], "toggled", G_CALLBACK(activate_present3), this);
+      widgets.present[2], "toggled", G_CALLBACK(activate_present), this);
   g_signal_connect(
-      widgets.present[3], "toggled", G_CALLBACK(activate_present4), this);
+      widgets.present[3], "toggled", G_CALLBACK(activate_present), this);
   g_signal_connect(
-      widgets.present[4], "toggled", G_CALLBACK(activate_present5), this);
+      widgets.present[4], "toggled", G_CALLBACK(activate_present), this);
   g_signal_connect(
-      widgets.present[5], "toggled", G_CALLBACK(activate_present6), this);
+      widgets.present[5], "toggled", G_CALLBACK(activate_present), this);
   g_signal_connect(
-      widgets.present[6], "toggled", G_CALLBACK(activate_present7), this);
+      widgets.present[6], "toggled", G_CALLBACK(activate_present), this);
   g_signal_connect(
-      widgets.present[7], "toggled", G_CALLBACK(activate_present8), this);
+      widgets.present[7], "toggled", G_CALLBACK(activate_present), this);
   g_signal_connect(
-      widgets.present[8], "toggled", G_CALLBACK(activate_present9), this);
+      widgets.present[8], "toggled", G_CALLBACK(activate_present), this);
   g_signal_connect(
-      widgets.present[9], "toggled", G_CALLBACK(activate_present10), this);
+      widgets.present[9], "toggled", G_CALLBACK(activate_present), this);
 
   // Command label
   GtkWidget* cmdlabel = gtk_label_new("Command");
@@ -555,6 +481,11 @@ void WUtedGtk::get_value(int idx, char* str, int len)
   g_free(value);
 }
 
+bool WUtedGtk::get_present(int idx)
+{
+  return gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widgets.present[idx]));
+}
+
 //
 //	 Hide all qualifiers.
 //
@@ -566,7 +497,6 @@ void WUtedGtk::reset_qual()
     g_object_set(widgets.qualifier[i], "visible", FALSE, NULL);
     g_object_set(widgets.value[i], "visible", FALSE, NULL);
     g_object_set(widgets.present[i], "visible", FALSE, NULL);
-    present_sts[i] = 0;
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widgets.present[i]), FALSE);
     gtk_editable_delete_text(GTK_EDITABLE(widgets.value[i]), 0, -1);
   }

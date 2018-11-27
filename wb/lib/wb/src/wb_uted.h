@@ -83,7 +83,6 @@ public:
   void* parent_ctx;
   char name[80];
   int current_index;
-  int present_sts[UTED_QUALS];
   int batch_sts;
   ldh_tWBContext ldhwb;
   ldh_tSesContext ldhses;
@@ -131,9 +130,8 @@ public:
   virtual void enable_entries(int enable)
   {
   }
-  virtual void get_value(int idx, char* str, int len)
-  {
-  }
+  virtual void get_value(int idx, char* str, int len) = 0;
+  virtual bool get_present(int idx) = 0;
   virtual void questionbox(char* question_title, char* question_text,
       void (*yes_procedure)(WUted*), void (*no_procedure)(WUted*),
       void (*cancel_procedure)(WUted*), pwr_tBoolean cancel)

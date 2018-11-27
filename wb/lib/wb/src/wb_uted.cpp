@@ -373,7 +373,7 @@ int WUted::execute(int show)
   qual_ptr = &commands[index].qualifier[0];
   while (qual_ptr->qual[0] != 0) {
     if (qual_ptr->present) {
-      if (present_sts[i]) {
+      if (get_present(i)) {
         if (qual_ptr->type == UTED_QUAL_QUAL) {
           strcat(cmd, "/");
           strcat(cmd, qual_ptr->qual);

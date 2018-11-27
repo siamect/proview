@@ -214,7 +214,6 @@ WGeQt::WGeQt(QWidget* wge_parent_wid, void* wge_parent_ctx, char* wge_name,
 
   // Qt
   toplevel = new WGeQtWidget(this, wge_parent_wid);
-  toplevel->setToolTip(fl("wb_wge widget"));
   toplevel->setMinimumSize(window_width, window_height);
   toplevel->setWindowTitle(fl(title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);

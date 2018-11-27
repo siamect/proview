@@ -84,6 +84,7 @@ public:
   void configure_quals(const char* label);
   void enable_entries(int enable);
   void get_value(int idx, char* str, int len);
+  bool get_present(int idx);
   void questionbox(char* question_title, char* question_text,
       void (*yes_procedure)(WUted*), void (*no_procedure)(WUted*),
       void (*cancel_procedure)(WUted*), pwr_tBoolean cancel);
@@ -113,25 +114,7 @@ public:
       Widget w, WUted* utedctx, XmToggleButtonCallbackStruct* data);
   static void commandchanged(
       Widget w, WUted* utedctx, XmCommandCallbackStruct* data);
-  static void activate_present1(
-      Widget w, WUted* utedctx, XmToggleButtonCallbackStruct* data);
-  static void activate_present2(
-      Widget w, WUted* utedctx, XmToggleButtonCallbackStruct* data);
-  static void activate_present3(
-      Widget w, WUted* utedctx, XmToggleButtonCallbackStruct* data);
-  static void activate_present4(
-      Widget w, WUted* utedctx, XmToggleButtonCallbackStruct* data);
-  static void activate_present5(
-      Widget w, WUted* utedctx, XmToggleButtonCallbackStruct* data);
-  static void activate_present6(
-      Widget w, WUted* utedctx, XmToggleButtonCallbackStruct* data);
-  static void activate_present7(
-      Widget w, WUted* utedctx, XmToggleButtonCallbackStruct* data);
-  static void activate_present8(
-      Widget w, WUted* utedctx, XmToggleButtonCallbackStruct* data);
-  static void activate_present9(
-      Widget w, WUted* utedctx, XmToggleButtonCallbackStruct* data);
-  static void activate_present10(
+  static void activate_present(
       Widget w, WUted* utedctx, XmToggleButtonCallbackStruct* data);
   static void create_label(Widget w, WUted* utedctx, XmAnyCallbackStruct* data);
   static void create_adb(Widget w, WUted* utedctx, XmAnyCallbackStruct* data);

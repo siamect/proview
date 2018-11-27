@@ -477,7 +477,6 @@ WdaQt::WdaQt(QWidget* wa_parent_wid, void* wa_parent_ctx,
   int sts;
 
   toplevel = new WdaQtWidget(this, wa_parent_wid);
-  toplevel->setToolTip(fl("wb_wda widget"));
   toplevel->setFixedSize(700, 700);
   toplevel->setWindowTitle(fl("Spreadsheet Editor"));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);

@@ -72,7 +72,6 @@ void WUtedQt::remove_command_window()
 
 void WUtedQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("WUtedQtWidget::closeEvent\n");
   delete uted;
   QWidget::closeEvent(event);
 }
@@ -137,8 +136,6 @@ void WUtedQtWidget::commandchanged()
 void WUtedQtWidget::activate_present(bool set)
 {
   uted->message("");
-  int idx = ((QAction*)sender())->data().toInt();
-  uted->present_sts[idx] = set;
 }
 
 void WUtedQt::update_title(int editmode)
@@ -154,7 +151,6 @@ WUtedQt::WUtedQt(void* wu_parent_ctx, QWidget* wu_parent_wid,
           wu_editmode, wu_quit_cb, status)
 {
   toplevel = new WUtedQtWidget(this, wu_parent_wid);
-  toplevel->setToolTip(fl("wb_uted widget"));
   toplevel->setMinimumSize(800, 400);
   toplevel->setWindowTitle(fl("Wb Utilities"));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
@@ -305,7 +301,6 @@ WUtedQt::WUtedQt(void* wu_parent_ctx, QWidget* wu_parent_wid,
 // Destroys the widget and frees allocated memory for the context.
 WUtedQt::~WUtedQt()
 {
-  debug_print("WUtedQt::~WUtedQt\n");
   if (quit_cb) {
     (quit_cb)(parent_ctx);
   }
@@ -317,6 +312,11 @@ void WUtedQt::get_value(int idx, char* str, int len)
   strncpy(str, qPrintableLatin1(value[idx]->text()), len);
 }
 
+bool WUtedQt::get_present(int idx)
+{
+  return present[idx]->isChecked();
+}
+
 // Hide all qualifiers.
 void WUtedQt::reset_qual()
 {
@@ -326,7 +326,6 @@ void WUtedQt::reset_qual()
     qualifier[i]->setVisible(false);
     value[i]->setVisible(false);
     present[i]->setVisible(false);
-    present_sts[i] = 0;
     present[i]->setChecked(false);
     value[i]->setText("");
   }

@@ -84,6 +84,7 @@ public:
   void configure_quals(const char* label);
   void enable_entries(int enable);
   void get_value(int idx, char* str, int len);
+  bool get_present(int idx);
   void questionbox(char* question_title, char* question_text,
       void (*yes_procedure)(WUted*), void (*no_procedure)(WUted*),
       void (*cancel_procedure)(WUted*), pwr_tBoolean cancel);
@@ -101,16 +102,7 @@ public:
   static void activate_show_cmd(GtkWidget* w, gpointer data);
   static void activate_cmd_wind(GtkWidget* w, gpointer data);
   static void commandchanged(GtkWidget* w, gpointer data);
-  static void activate_present1(GtkWidget* w, gpointer data);
-  static void activate_present2(GtkWidget* w, gpointer data);
-  static void activate_present3(GtkWidget* w, gpointer data);
-  static void activate_present4(GtkWidget* w, gpointer data);
-  static void activate_present5(GtkWidget* w, gpointer data);
-  static void activate_present6(GtkWidget* w, gpointer data);
-  static void activate_present7(GtkWidget* w, gpointer data);
-  static void activate_present8(GtkWidget* w, gpointer data);
-  static void activate_present9(GtkWidget* w, gpointer data);
-  static void activate_present10(GtkWidget* w, gpointer data);
+  static void activate_present(GtkWidget* w, gpointer data);
   static void qbox_cr(GtkWidget* w, gpointer data);
   static void qbox_yes_cb(GtkWidget* w, gpointer data);
   static void qbox_no_cb(GtkWidget* w, gpointer data);

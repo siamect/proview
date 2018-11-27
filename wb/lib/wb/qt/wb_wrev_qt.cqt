@@ -168,7 +168,6 @@ WRevQt::WRevQt(
   int sts;
 
   toplevel = new WRevQtWidget(this, wa_parent_wid);
-  toplevel->setToolTip(fl("wb_wrev widget"));
   toplevel->setMinimumSize(700, 300);
   toplevel->setWindowTitle(fl("Revisions"));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);

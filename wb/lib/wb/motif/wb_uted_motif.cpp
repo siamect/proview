@@ -263,65 +263,10 @@ void WUtedMotif::commandchanged(
   }
 }
 
-void WUtedMotif::activate_present1(
+void WUtedMotif::activate_present(
     Widget w, WUted* uted, XmToggleButtonCallbackStruct* data)
 {
   uted->message("");
-  uted->present_sts[0] = data->set;
-}
-void WUtedMotif::activate_present2(
-    Widget w, WUted* uted, XmToggleButtonCallbackStruct* data)
-{
-  uted->message("");
-  uted->present_sts[1] = data->set;
-}
-void WUtedMotif::activate_present3(
-    Widget w, WUted* uted, XmToggleButtonCallbackStruct* data)
-{
-  uted->message("");
-  uted->present_sts[2] = data->set;
-}
-void WUtedMotif::activate_present4(
-    Widget w, WUted* uted, XmToggleButtonCallbackStruct* data)
-{
-  uted->message("");
-  uted->present_sts[3] = data->set;
-}
-void WUtedMotif::activate_present5(
-    Widget w, WUted* uted, XmToggleButtonCallbackStruct* data)
-{
-  uted->message("");
-  uted->present_sts[4] = data->set;
-}
-void WUtedMotif::activate_present6(
-    Widget w, WUted* uted, XmToggleButtonCallbackStruct* data)
-{
-  uted->message("");
-  uted->present_sts[5] = data->set;
-}
-void WUtedMotif::activate_present7(
-    Widget w, WUted* uted, XmToggleButtonCallbackStruct* data)
-{
-  uted->message("");
-  uted->present_sts[6] = data->set;
-}
-void WUtedMotif::activate_present8(
-    Widget w, WUted* uted, XmToggleButtonCallbackStruct* data)
-{
-  uted->message("");
-  uted->present_sts[7] = data->set;
-}
-void WUtedMotif::activate_present9(
-    Widget w, WUted* uted, XmToggleButtonCallbackStruct* data)
-{
-  uted->message("");
-  uted->present_sts[8] = data->set;
-}
-void WUtedMotif::activate_present10(
-    Widget w, WUted* uted, XmToggleButtonCallbackStruct* data)
-{
-  uted->message("");
-  uted->present_sts[9] = data->set;
 }
 
 void WUtedMotif::create_label(Widget w, WUted* uted, XmAnyCallbackStruct* data)
@@ -656,43 +601,43 @@ WUtedMotif::WUtedMotif(void* wu_parent_ctx, Widget wu_parent_wid,
     { (char*)"uted_create_timevalue", (caddr_t)create_timevalue },
     { (char*)"uted_create_qualifier1", (caddr_t)create_qualifier1 },
     { (char*)"uted_create_value1", (caddr_t)create_value1 },
-    { (char*)"uted_activate_present1", (caddr_t)activate_present1 },
+    { (char*)"uted_activate_present1", (caddr_t)activate_present },
     { (char*)"uted_create_present1", (caddr_t)create_present1 },
     { (char*)"uted_create_qualifier2", (caddr_t)create_qualifier2 },
     { (char*)"uted_create_value2", (caddr_t)create_value2 },
-    { (char*)"uted_activate_present2", (caddr_t)activate_present2 },
+    { (char*)"uted_activate_present2", (caddr_t)activate_present },
     { (char*)"uted_create_present2", (caddr_t)create_present2 },
     { (char*)"uted_create_qualifier3", (caddr_t)create_qualifier3 },
     { (char*)"uted_create_value3", (caddr_t)create_value3 },
-    { (char*)"uted_activate_present3", (caddr_t)activate_present3 },
+    { (char*)"uted_activate_present3", (caddr_t)activate_present },
     { (char*)"uted_create_present3", (caddr_t)create_present3 },
     { (char*)"uted_create_qualifier4", (caddr_t)create_qualifier4 },
     { (char*)"uted_create_value4", (caddr_t)create_value4 },
-    { (char*)"uted_activate_present4", (caddr_t)activate_present4 },
+    { (char*)"uted_activate_present4", (caddr_t)activate_present },
     { (char*)"uted_create_present4", (caddr_t)create_present4 },
     { (char*)"uted_create_qualifier5", (caddr_t)create_qualifier5 },
     { (char*)"uted_create_value5", (caddr_t)create_value5 },
-    { (char*)"uted_activate_present5", (caddr_t)activate_present5 },
+    { (char*)"uted_activate_present5", (caddr_t)activate_present },
     { (char*)"uted_create_present5", (caddr_t)create_present5 },
     { (char*)"uted_create_qualifier6", (caddr_t)create_qualifier6 },
     { (char*)"uted_create_value6", (caddr_t)create_value6 },
-    { (char*)"uted_activate_present6", (caddr_t)activate_present6 },
+    { (char*)"uted_activate_present6", (caddr_t)activate_present },
     { (char*)"uted_create_present6", (caddr_t)create_present6 },
     { (char*)"uted_create_qualifier7", (caddr_t)create_qualifier7 },
     { (char*)"uted_create_value7", (caddr_t)create_value7 },
-    { (char*)"uted_activate_present7", (caddr_t)activate_present7 },
+    { (char*)"uted_activate_present7", (caddr_t)activate_present },
     { (char*)"uted_create_present7", (caddr_t)create_present7 },
     { (char*)"uted_create_qualifier8", (caddr_t)create_qualifier8 },
     { (char*)"uted_create_value8", (caddr_t)create_value8 },
-    { (char*)"uted_activate_present8", (caddr_t)activate_present8 },
+    { (char*)"uted_activate_present8", (caddr_t)activate_present },
     { (char*)"uted_create_present8", (caddr_t)create_present8 },
     { (char*)"uted_create_qualifier9", (caddr_t)create_qualifier9 },
     { (char*)"uted_create_value9", (caddr_t)create_value9 },
-    { (char*)"uted_activate_present9", (caddr_t)activate_present9 },
+    { (char*)"uted_activate_present9", (caddr_t)activate_present },
     { (char*)"uted_create_present9", (caddr_t)create_present9 },
     { (char*)"uted_create_qualifier10", (caddr_t)create_qualifier10 },
     { (char*)"uted_create_value10", (caddr_t)create_value10 },
-    { (char*)"uted_activate_present10", (caddr_t)activate_present10 },
+    { (char*)"uted_activate_present10", (caddr_t)activate_present },
     { (char*)"uted_create_present10", (caddr_t)create_present10 },
     { (char*)"uted_activate_helputils", (caddr_t)activate_helputils },
     { (char*)"uted_activate_helppwr_plc", (caddr_t)activate_helppwr_plc },
@@ -832,6 +777,11 @@ void WUtedMotif::get_value(int idx, char* str, int len)
   XtFree(value);
 }
 
+bool WUtedMotif::get_present(int idx)
+{
+  return XmToggleButtonGetState(widgets.present[idx]);
+}
+
 //
 //	 Hide all qualifiers.
 //
@@ -844,7 +794,6 @@ void WUtedMotif::reset_qual()
     XtUnmanageChild(widgets.qualifier[i]);
     XtUnmanageChild(widgets.value[i]);
     XtUnmanageChild(widgets.present[i]);
-    present_sts[i] = 0;
     XmToggleButtonSetState(widgets.present[i], 0, 0);
     XmTextSetString(widgets.value[i], (char*)"");
   }

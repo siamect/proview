@@ -71,6 +71,7 @@ public:
   void configure_quals(const char* label);
   void enable_entries(int enable);
   void get_value(int idx, char* str, int len);
+  bool get_present(int idx);
   void questionbox(char* question_title, char* question_text,
       void (*yes_procedure)(WUted*), void (*no_procedure)(WUted*),
       void (*cancel_procedure)(WUted*), pwr_tBoolean cancel);
