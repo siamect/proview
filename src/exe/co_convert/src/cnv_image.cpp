@@ -96,7 +96,7 @@ int cnv_get_image(char* fname, cnv_tImImage* image, cnv_tPixmap* pixmap)
 void cnv_free_image(cnv_tImImage image, cnv_tPixmap pixmap)
 {
 #if defined PWRE_CONF_GTK
-  gdk_pixbuf_unref((GdkPixbuf*)image);
+  g_object_unref((GdkPixbuf*)image);
 
 #elif defined PWRE_IMLIB
 

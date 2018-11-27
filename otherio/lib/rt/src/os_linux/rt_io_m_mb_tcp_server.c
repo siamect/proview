@@ -785,6 +785,7 @@ static void* mb_connect(void* arg)
       continue;
     }
   }
+  return NULL;
 }
 
 /*----------------------------------------------------------------------------*\
@@ -800,6 +801,7 @@ static pwr_tStatus IoRackInit(io_tCtx ctx, io_sAgent* ap, io_sRack* rp)
   pwr_sClass_Modbus_TCP_Server* op;
   int i;
   unsigned short port;
+  io_sCard 	*cardp;
 
   // Ignore SIGPIPE signal
   signal(SIGPIPE, signal_callback_handler);
@@ -817,6 +819,12 @@ static pwr_tStatus IoRackInit(io_tCtx ctx, io_sAgent* ap, io_sRack* rp)
 
   if (op->DisableServer)
     return IO__SUCCESS;
+
+  for ( cardp = rp->cardlist; cardp; cardp = cardp->next)
+    io_bus_card_area_size( ctx, cardp, &local->inputs_size, &local->outputs_size);
+
+  local->inputs = calloc(1, local->inputs_size);
+  local->outputs = calloc(1, local->output_size);
 
   /* Create socket, store in local struct */
   uid_t ruid;
@@ -892,80 +900,83 @@ static pwr_tStatus mb_init_channels(io_tCtx ctx, io_sAgent* ap, io_sRack* rp)
 
   cardp = rp->cardlist;
 
-  unsigned int prev_input_area_offset = 0;
-  unsigned int prev_output_area_offset = 0;
   unsigned int input_area_offset = 0;
   unsigned int output_area_offset = 0;
   unsigned int input_area_chansize = 0;
   unsigned int output_area_chansize = 0;
+  unsigned int card_input_area_offset = 0;
+  unsigned int card_output_area_offset = 0;
 
-  while (cardp) {
+  while(cardp) {
     local_card = calloc(1, sizeof(*local_card));
     cardp->Local = local_card;
 
-    local_card->input_area
-        = (void*)&(op->Inputs) + input_area_offset + input_area_chansize;
-    local_card->output_area
-        = (void*)&(op->Outputs) + output_area_offset + output_area_chansize;
+    card_input_area_offset += input_area_offset + input_area_chansize;
+    card_output_area_offset += output_area_offset + output_area_chansize;
+    input_area_offset = 0;
+    output_area_offset = 0;
+    input_area_chansize = 0;
+    output_area_chansize = 0;
 
-    io_bus_card_init(ctx, cardp, &input_area_offset, &input_area_chansize,
-        &output_area_offset, &output_area_chansize,
-        pwr_eByteOrderingEnum_BigEndian, io_eAlignment_Packed);
+    local_card->input_area = (char *)local->inputs + card_input_area_offset;
+    local_card->output_area = (char *)local->outputs + card_output_area_offset;
+    
+
+    io_bus_card_init( ctx, cardp, &input_area_offset, &input_area_chansize,
+		      &output_area_offset, &output_area_chansize, 
+		      pwr_eByteOrderingEnum_BigEndian, io_eAlignment_Packed);
 
     for (i = 0; i < cardp->ChanListSize; i++) {
       chanp = &cardp->chanlist[i];
-      switch (chanp->ChanClass) {
+      switch (chanp->ChanClass) {      
       case pwr_cClass_ChanDi: {
-        pwr_sClass_ChanDi* chan_di = (pwr_sClass_ChanDi*)chanp->cop;
+	pwr_sClass_ChanDi *chan_di = (pwr_sClass_ChanDi *) chanp->cop;
 
-        if (local_card->di_size == 0)
-          local_card->di_offset = chanp->offset;
-        if (chan_di->Number == 0 || local_card->di_size == 0)
-          local_card->di_size += GetChanSize(chan_di->Representation);
+	if (local_card->di_size == 0)
+	  local_card->di_offset = chanp->offset;
+	if (chan_di->Number == 0 || local_card->di_size == 0)
+	  local_card->di_size += GetChanSize(chan_di->Representation);
 
-        break;
+	break;
       }
       case pwr_cClass_ChanDo: {
-        pwr_sClass_ChanDo* chan_do = (pwr_sClass_ChanDo*)chanp->cop;
+	pwr_sClass_ChanDo *chan_do = (pwr_sClass_ChanDo *) chanp->cop;
 
-        if (local_card->do_size == 0)
-          local_card->do_offset = chanp->offset;
-        if (chan_do->Number == 0 || local_card->do_size == 0)
-          local_card->do_size += GetChanSize(chan_do->Representation);
+	if (local_card->do_size == 0)
+	  local_card->do_offset = chanp->offset;
+	if (chan_do->Number == 0 || local_card->do_size == 0)
+	  local_card->do_size += GetChanSize(chan_do->Representation);
 
-        break;
+	break;
       }
       case pwr_cClass_ChanD: {
-        pwr_sClass_ChanD* chan_d = (pwr_sClass_ChanD*)chanp->cop;
-        if (chan_d->Type == pwr_eDChanTypeEnum_Di) {
-          if (local_card->di_size == 0)
-            local_card->di_offset = chanp->offset;
-          if (chan_d->Number == 0 || local_card->di_size == 0)
-            local_card->di_size += GetChanSize(chan_d->Representation);
-        } else {
-          if (local_card->do_size == 0)
-            local_card->do_offset = chanp->offset;
-          if (chan_d->Number == 0 || local_card->do_size == 0)
-            local_card->do_size += GetChanSize(chan_d->Representation);
-        }
-        break;
+	pwr_sClass_ChanD *chan_d = (pwr_sClass_ChanD *) chanp->cop;
+	if ( chan_d->Type == pwr_eDChanTypeEnum_Di) {
+	  if (local_card->di_size == 0)
+	    local_card->di_offset = chanp->offset;
+	  if (chan_d->Number == 0 || local_card->di_size == 0)
+	    local_card->di_size += GetChanSize(chan_d->Representation);
+	}
+	else {
+	  if (local_card->do_size == 0)
+	    local_card->do_offset = chanp->offset;
+	  if (chan_d->Number == 0 || local_card->do_size == 0)
+	    local_card->do_size += GetChanSize(chan_d->Representation);
+	}
+	break;
       }
       }
-    }
+    }	   
 
-    local_card->input_size
-        = input_area_offset + input_area_chansize - prev_input_area_offset;
-    local_card->output_size
-        = output_area_offset + output_area_chansize - prev_output_area_offset;
-
-    prev_input_area_offset = input_area_offset + input_area_chansize;
-    prev_output_area_offset = output_area_offset + output_area_chansize;
+    local_card->input_size = input_area_offset + input_area_chansize;
+    local_card->output_size = output_area_offset + output_area_chansize;
 
     cardp = cardp->next;
   }
 
-  local->input_size = input_area_offset + input_area_chansize;
-  local->output_size = output_area_offset + output_area_chansize;
+  local->input_size = card_input_area_offset + input_area_offset + input_area_chansize;
+  local->output_size = card_output_area_offset + output_area_offset + output_area_chansize;
+
 
   return IO__SUCCESS;
 }
@@ -1040,6 +1051,11 @@ void mb_shift_read(unsigned char* in, unsigned char* out, int sh, int quant)
 \*----------------------------------------------------------------------------*/
 static pwr_tStatus IoRackRead(io_tCtx ctx, io_sAgent* ap, io_sRack* rp)
 {
+  io_sServerLocal *local = rp->Local;
+  pwr_sClass_Modbus_TCP_Server *op = (pwr_sClass_Modbus_TCP_Server *) rp->op;
+
+  /* For display */
+  memcpy( op->Inputs, local->inputs, MIN(sizeof(op->Inputs), local->inputs_size));
   return IO__SUCCESS;
 }
 
@@ -1048,6 +1064,11 @@ static pwr_tStatus IoRackRead(io_tCtx ctx, io_sAgent* ap, io_sRack* rp)
 \*----------------------------------------------------------------------------*/
 static pwr_tStatus IoRackWrite(io_tCtx ctx, io_sAgent* ap, io_sRack* rp)
 {
+  io_sServerLocal *local = rp->Local;
+  pwr_sClass_Modbus_TCP_Server *op = (pwr_sClass_Modbus_TCP_Server *) rp->op;
+
+  /* For display */
+  memcpy( op->Outputs, local->outputs, MIN(sizeof(op->Outputs), local->outputs_size));
   return IO__SUCCESS;
 }
 

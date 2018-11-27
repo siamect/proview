@@ -67,6 +67,7 @@ if (($dbname = $ENV{"pwre_env_db"}) eq "") {
 $os = substr( $ENV{"pwre_os"}, 3, 100);
 $hw = substr( $ENV{"pwre_hw"}, 3, 100);
 $configfile = $ENV{"pwre_broot"} . "/pwre_" . $hw . "_" . $os . ".cnf";
+$parallel = $ENV{"PWRE_CONF_PARALLEL"};
 
 
 $arg1 = $ARGV[0];
@@ -1188,6 +1189,10 @@ sub copy ()
 
     my $flavour = $_[1];
 
+    if ( $flavour eq "") {
+      $flavour = "gtk";
+    }
+
     my($cmd) = "make -f $bindir/import_files.mk" . " " . $_[0] . "_" . $flavour; 
     system("$cmd");
   }
@@ -1465,7 +1470,8 @@ sub _build () # args: branch, subbranch, flavour, phase
           if ($hw eq "x86" && $real_hw eq "x86_64") {
             $ENV{"cross_compile"} = "-m32";
           }
-          if (($branch eq "lib" && $subbranch ne "dtt") || $branch eq "wbl") {
+
+          if (($parallel eq "1" && $branch eq "lib" && $subbranch ne "dtt") || $branch eq "wbl") {
             # All libraries and wbl files can be compiled in parallel
             system("make -j @_") && exit 1;
           } else {

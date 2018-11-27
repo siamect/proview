@@ -1,9 +1,10 @@
-Package: pwrdemo56
+Package: pwrrpi56
 Version: 5.6.1-1
 Section: base
 Priority: optional
-Architecture: armhf
+Architecture: amd64
 Depends: pwr56 (>= 5.6.1-1)
+Replaces: pwr56
 Maintainer: Proview <postmaster@proview.se>
-Description: Proview Demo Project package
+Description: Proview RPI development package
  5.6.1-1 Base release

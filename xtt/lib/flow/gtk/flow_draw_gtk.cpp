@@ -1993,7 +1993,7 @@ void FlowDrawGtk::image_scale(float scale, flow_tImImage orig_im,
   int current_height = int(scale * gdk_pixbuf_get_height((GdkPixbuf*)orig_im));
 
   if (*im)
-    gdk_pixbuf_unref((GdkPixbuf*)*im);
+    g_object_unref((GdkPixbuf*)*im);
   *im = gdk_pixbuf_scale_simple(
       (GdkPixbuf*)orig_im, current_width, current_height, GDK_INTERP_NEAREST);
 }
@@ -2034,7 +2034,7 @@ int FlowDrawGtk::image_load(const char* imagefile, float scale, float nav_scale,
     return 0;
 
   if (*im)
-    gdk_pixbuf_unref((GdkPixbuf*)*im);
+    g_object_unref((GdkPixbuf*)*im);
   *orig_im = (flow_tImImage*)gdk_pixbuf_new_from_file(filename, 0);
 
   int width = int(scale * gdk_pixbuf_get_width((GdkPixbuf*)*orig_im));

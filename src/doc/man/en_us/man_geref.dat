@@ -3704,7 +3704,7 @@ DigText.LowText   <t><t>Text to write when the signal is low.
 <topic>GeDynAnalogText <style>function
 AnalogText
 
-Shift between several texts depening on the value of an analog signal.
+Shift between several texts depending on the value of an analog signal.
 
 The object is connected to a database attribute of type float or int. To each text you specify
 an Enum value. The text which Enum value matches the value of the database attribute, is 

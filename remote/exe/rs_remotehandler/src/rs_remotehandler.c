@@ -152,7 +152,8 @@ static void AddTransports()
     tp[tpcount].cpid = -1;
     tp[tpcount].first = true;
 
-    remcfgp->RemNodeObjects[tpcount] = objid;
+    if ( tpcount < sizeof(remcfgp->RemNodeObjects)/sizeof(remcfgp->RemNodeObjects[0]))
+      remcfgp->RemNodeObjects[tpcount] = objid;
 
     tpcount++;
     sts = gdh_GetNextObject(objid, &objid);
@@ -175,7 +176,8 @@ static void AddTransports()
     tp[tpcount].cpid = -1;
     tp[tpcount].first = true;
 
-    remcfgp->RemNodeObjects[tpcount] = objid;
+    if ( tpcount < sizeof(remcfgp->RemNodeObjects)/sizeof(remcfgp->RemNodeObjects[0]))
+      remcfgp->RemNodeObjects[tpcount] = objid;
 
     tpcount++;
     sts = gdh_GetNextObject(objid, &objid);
@@ -199,7 +201,8 @@ static void AddTransports()
     tp[tpcount].cpid = -1;
     tp[tpcount].first = true;
 
-    remcfgp->RemNodeObjects[tpcount] = objid;
+    if ( tpcount < sizeof(remcfgp->RemNodeObjects)/sizeof(remcfgp->RemNodeObjects[0]))
+      remcfgp->RemNodeObjects[tpcount] = objid;
 
     tpcount++;
     sts = gdh_GetNextObject(objid, &objid);
@@ -223,7 +226,8 @@ static void AddTransports()
     tp[tpcount].cpid = -1;
     tp[tpcount].first = true;
 
-    remcfgp->RemNodeObjects[tpcount] = objid;
+    if ( tpcount < sizeof(remcfgp->RemNodeObjects)/sizeof(remcfgp->RemNodeObjects[0]))
+      remcfgp->RemNodeObjects[tpcount] = objid;
 
     tpcount++;
     sts = gdh_GetNextObject(objid, &objid);
@@ -246,7 +250,8 @@ static void AddTransports()
     tp[tpcount].cpid = -1;
     tp[tpcount].first = true;
 
-    remcfgp->RemNodeObjects[tpcount] = objid;
+    if ( tpcount < sizeof(remcfgp->RemNodeObjects)/sizeof(remcfgp->RemNodeObjects[0]))
+      remcfgp->RemNodeObjects[tpcount] = objid;
 
     tpcount++;
     sts = gdh_GetNextObject(objid, &objid);
@@ -269,7 +274,8 @@ static void AddTransports()
     tp[tpcount].cpid = -1;
     tp[tpcount].first = true;
 
-    remcfgp->RemNodeObjects[tpcount] = objid;
+    if ( tpcount < sizeof(remcfgp->RemNodeObjects)/sizeof(remcfgp->RemNodeObjects[0]))
+      remcfgp->RemNodeObjects[tpcount] = objid;
 
     tpcount++;
     sts = gdh_GetNextObject(objid, &objid);
@@ -296,7 +302,8 @@ static void AddTransports()
     tp[tpcount].cpid = -1;
     tp[tpcount].first = true;
 
-    remcfgp->RemNodeObjects[tpcount] = objid;
+    if ( tpcount < sizeof(remcfgp->RemNodeObjects)/sizeof(remcfgp->RemNodeObjects[0]))
+      remcfgp->RemNodeObjects[tpcount] = objid;
 
     tpcount++;
   }
@@ -319,7 +326,8 @@ static void AddTransports()
     tp[tpcount].cpid = -1;
     tp[tpcount].first = true;
 
-    remcfgp->RemNodeObjects[tpcount] = objid;
+    if ( tpcount < sizeof(remcfgp->RemNodeObjects)/sizeof(remcfgp->RemNodeObjects[0]))
+      remcfgp->RemNodeObjects[tpcount] = objid;
 
     tpcount++;
     sts = gdh_GetNextObject(objid, &objid);
@@ -343,7 +351,8 @@ static void AddTransports()
     tp[tpcount].cpid = -1;
     tp[tpcount].first = true;
 
-    remcfgp->RemNodeObjects[tpcount] = objid;
+    if ( tpcount < sizeof(remcfgp->RemNodeObjects)/sizeof(remcfgp->RemNodeObjects[0]))
+      remcfgp->RemNodeObjects[tpcount] = objid;
 
     tpcount++;
     sts = gdh_GetNextObject(objid, &objid);
@@ -367,7 +376,8 @@ static void AddTransports()
     tp[tpcount].cpid = -1;
     tp[tpcount].first = true;
 
-    remcfgp->RemNodeObjects[tpcount] = objid;
+    if ( tpcount < sizeof(remcfgp->RemNodeObjects)/sizeof(remcfgp->RemNodeObjects[0]))
+      remcfgp->RemNodeObjects[tpcount] = objid;
 
     tpcount++;
     sts = gdh_GetNextObject(objid, &objid);
@@ -389,7 +399,8 @@ static void AddTransports()
     tp[tpcount].cpid = -1;
     tp[tpcount].first = true;
 
-    remcfgp->RemNodeObjects[tpcount] = objid;
+    if ( tpcount < sizeof(remcfgp->RemNodeObjects)/sizeof(remcfgp->RemNodeObjects[0]))
+      remcfgp->RemNodeObjects[tpcount] = objid;
 
     tpcount++;
     sts = gdh_GetNextObject(objid, &objid);
@@ -527,7 +538,7 @@ int main()
         errh_SetStatus(0);
         exit(1);
       }
-      for (i = 0; i < tpmax; i++)
+      for (i = 0; i < sizeof(remcfgp->RemNodeObjects)/sizeof(remcfgp->RemNodeObjects[0]); i++)
         remcfgp->RemNodeObjects[i] = pwr_cNObjid;
     } else {
       errh_Info("No RemoteConfig object found, rs_remotehandler will not run");

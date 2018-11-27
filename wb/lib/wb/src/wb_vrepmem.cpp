@@ -1328,9 +1328,26 @@ bool wb_vrepmem::moveObject(pwr_tStatus* sts, wb_orep* orep, wb_destination& d)
   mem_object* memo = ((wb_orepmem*)orep)->memobject();
 
   // Check that name is unique
-  if (!nameCheck(dest, memo->name(), code)) {
-    *sts = LDH__NAMALREXI;
-    return false;
+  switch ( code) {
+  case ldh_eDest_After:
+  case ldh_eDest_Before:
+    if (memo->fth != dest->fth) {
+      if (!nameCheck(dest, memo->name(), code)) {
+	*sts = LDH__NAMALREXI;
+	return false;
+      }
+    }    
+    break;
+  case ldh_eDest_IntoLast:
+  case ldh_eDest_IntoFirst:
+    if (memo->fth != dest) {
+      if (!nameCheck(dest, memo->name(), code)) {
+	*sts = LDH__NAMALREXI;
+	return false;
+      }
+    }    
+    break;
+  default: ;
   }
 
   if (m_classeditor && !classeditorCheckMove(memo, code, dest, sts))
@@ -2228,6 +2245,7 @@ bool wb_vrepmem::commit(pwr_tStatus* sts)
           wprint.getErrCnt(), (wprint.getErrCnt() == 1) ? "" : "s");
       MsgWindow::message('E', str);
     }
+    fp.close();
   } catch (wb_error& e) {
     *sts = e.sts();
     return false;

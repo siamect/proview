@@ -52,3 +52,14 @@
 .leftmenu-button { 
   width:100%;
 }
+
+.login-frame {
+  background-color: #ddeeff;
+  padding: 10px;
+  display: block;
+  overflow: hidden;
+}
+
+.login-field { 
+  width:100%;
+}

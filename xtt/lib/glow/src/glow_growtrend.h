@@ -167,6 +167,7 @@ public:
     *time = scan_time;
   }
 
+  void get_range_y(int curve, double *min, double *max);
   void set_range_y(int curve, double min, double max);
 
   //! Set fill for curves.

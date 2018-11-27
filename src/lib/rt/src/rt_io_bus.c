@@ -506,6 +506,72 @@ pwr_tStatus io_bus_card_init(io_tCtx ctx, io_sCard* cp,
 }
 
 /*----------------------------------------------------------------------------*\
+  Get channel area size for a bus card.
+\*----------------------------------------------------------------------------*/
+void io_bus_card_area_size( io_tCtx ctx,
+			    io_sCard *cp, 
+			    unsigned int *input_area_size, 
+			    unsigned int *output_area_size)
+{
+  int i;
+
+  for ( i = 0; i < cp->ChanListSize; i++) {
+    io_sChannel *chanp = &cp->chanlist[i];
+
+    switch (chanp->ChanClass) {
+      
+    case pwr_cClass_ChanDi:
+      if ( ((pwr_sClass_ChanDi *)chanp->cop)->Number == 0)
+	*input_area_size += GetChanSize( ((pwr_sClass_ChanDi *)chanp->cop)->Representation);
+      break;
+    case pwr_cClass_ChanAi:
+      *input_area_size += GetChanSize(((pwr_sClass_ChanAi *)chanp->cop)->Representation);
+      break;
+    case pwr_cClass_ChanAit:
+      *input_area_size += GetChanSize(((pwr_sClass_ChanAit *)chanp->cop)->Representation);
+      break;
+    case pwr_cClass_ChanIi:
+      *input_area_size += GetChanSize(((pwr_sClass_ChanIi *)chanp->cop)->Representation);
+      break;
+    case pwr_cClass_ChanBi:
+      *input_area_size += ((pwr_sClass_ChanBi *)chanp->cop)->Size;
+      break;
+    case pwr_cClass_ChanBo:
+      *output_area_size += ((pwr_sClass_ChanBo *)chanp->cop)->Size;
+      break;
+    case pwr_cClass_ChanBiBlob:
+      *input_area_size += ((pwr_sClass_ChanBiBlob *)chanp->cop)->Size;
+      break;
+    case pwr_cClass_ChanBoBlob:
+      *output_area_size += ((pwr_sClass_ChanBoBlob *)chanp->cop)->Size;
+      break;
+    case pwr_cClass_ChanDo:
+      if (((pwr_sClass_ChanDo *)chanp->cop)->Number == 0)
+	*output_area_size += GetChanSize( ((pwr_sClass_ChanDo *)chanp->cop)->Representation);
+      break;
+    case pwr_cClass_ChanAo:
+      *output_area_size += GetChanSize(((pwr_sClass_ChanAo *)chanp->cop)->Representation);
+      break;
+    case pwr_cClass_ChanIo:
+      *output_area_size += GetChanSize(((pwr_sClass_ChanIo *)chanp->cop)->Representation);
+      break;
+    case pwr_cClass_ChanD: {
+      pwr_sClass_ChanD *chan_d = (pwr_sClass_ChanD *) chanp->cop;
+      if ( chan_d->Type == pwr_eDChanTypeEnum_Di) {
+	if (chan_d->Number == 0)
+	  *input_area_size += GetChanSize( chan_d->Representation);
+      }
+      else {
+	if (chan_d->Number == 0)
+	  *output_area_size += GetChanSize( chan_d->Representation);
+      }
+      break;
+    }
+    }
+  }
+}
+
+/*----------------------------------------------------------------------------*\
   Read method for bus-card
 \*----------------------------------------------------------------------------*/
 

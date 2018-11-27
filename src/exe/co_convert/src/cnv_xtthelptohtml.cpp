@@ -173,10 +173,7 @@ void* CnvXtthelpToHtml::insert(navh_eItemType item_type, const char* text1,
       } else {
         subject_to_fname(fname, link, 0);
 
-        if (!streq(link_bookmark, "")) {
-          strcat(fname, "#");
-          strcat(fname, link_bookmark);
-        } else if (file_name && !streq(file_name, "")) {
+        if (file_name && !streq(file_name, "")) {
           char* s = (char*)strrchr(file_name, '/');
           if (s)
             strcpy(fname, s + 1);
@@ -189,6 +186,10 @@ void* CnvXtthelpToHtml::insert(navh_eItemType item_type, const char* text1,
           strcat(fname, link);
           strcat(fname, ".html");
         }
+        if (!streq(link_bookmark, "")) {
+          strcat(fname, "#");
+          strcat(fname, link_bookmark);
+	}
       }
       if (!in_table)
         fp << "<A HREF=\"" << fname << "\">";
@@ -259,10 +260,23 @@ void* CnvXtthelpToHtml::insert(navh_eItemType item_type, const char* text1,
         strcpy(fname, link);
       } else {
         subject_to_fname(fname, link, 0);
+        if (file_name && !streq(file_name, "")) {
+          char* s = (char*)strrchr(file_name, '/');
+          if (s)
+            strcpy(fname, s + 1);
+          else
+            strcpy(fname, file_name);
+          s = strchr(fname, '.');
+          if (s)
+            *s = 0;
+          strcat(fname, "_");
+          strcat(fname, link);
+          strcat(fname, ".html");
+        }
         if (!streq(link_bookmark, "")) {
           strcat(fname, "#");
           strcat(fname, link_bookmark);
-        }
+	}
       }
       if (!in_table)
         fp << "<A HREF=\"" << fname << "\">";

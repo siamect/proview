@@ -30,6 +30,7 @@ copy :
 lib :
 
 exe : $(bld_dir)/control_pwrrt $(bld_dir)/control_pwr $(bld_dir)/control_pwrdemo $(bld_dir)/control_pwrsev
+rpi : $(bld_dir)/control_pwrrpi
 
 clean :
 
@@ -60,5 +61,9 @@ $(bld_dir)/control_pwrsev : ../../../pwrsev/control
 	@ ../../../pwrsev/build.sh
 	@ cp $(source) $(target)
 
+$(bld_dir)/control_pwrrpi : ../../../pwrrpi/control
+	@ echo "build $(target)"
+	@ ../../../pwrrpi/build.sh
+	@ cp $(source) $(target)
 
 

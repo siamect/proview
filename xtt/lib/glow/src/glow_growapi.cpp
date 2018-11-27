@@ -4693,9 +4693,19 @@ void grow_SetSliderRange(grow_tObject object, double min, double max)
   ((GrowSlider*)object)->set_range(min, max);
 }
 
+void grow_GetBarRange(grow_tObject object, double *min, double *max)
+{
+  ((GrowBar*)object)->get_range(min, max);
+}
+
 void grow_SetBarRange(grow_tObject object, double min, double max)
 {
   ((GrowBar*)object)->set_range(min, max);
+}
+
+void grow_GetTrendRangeY(grow_tObject object, int curve, double *min, double *max)
+{
+  ((GrowTrend*)object)->get_range_y(curve, min, max);
 }
 
 void grow_SetTrendRangeY(grow_tObject object, int curve, double min, double max)
@@ -5207,6 +5217,14 @@ void grow_SetAxisInfo(grow_tObject object, glow_sAxisInfo* info)
     ((GrowAxis*)object)->set_axis_info(info);
   else if (((GlowArrayElem*)object)->type() == glow_eObjectType_GrowAxisArc)
     ((GrowAxisArc*)object)->set_axis_info(info);
+}
+
+void grow_GetAxisInfo(grow_tObject object, glow_sAxisInfo* info)
+{
+  if (((GlowArrayElem*)object)->type() == glow_eObjectType_GrowAxis)
+    ((GrowAxis*)object)->get_axis_info(info);
+  else if (((GlowArrayElem*)object)->type() == glow_eObjectType_GrowAxisArc)
+    ((GrowAxisArc*)object)->get_axis_info(info);
 }
 
 void grow_SetTableInfo(grow_tObject object, glow_sTableInfo* info)

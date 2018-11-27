@@ -215,6 +215,12 @@ public:
   */
   void set_axis_info(glow_sAxisInfo* info);
 
+  //! Get parameters for the axis.
+  /*!
+    \param info		Info struct.
+  */
+  void get_axis_info(glow_sAxisInfo* info);
+
   //! Export the object as a javabean.
   /*!
     \param t		Transform of parent node. Can be zero.

@@ -217,6 +217,13 @@ public:
   */
   void align(double x, double y, glow_eAlignDirection direction);
 
+  //! Get the range for the bar value
+  /*!
+    \param min		Min value.
+    \param max		Max value.
+  */
+  void get_range(double *min, double *max);
+
   //! Set the range for the bar value
   /*!
     \param min		Min value.

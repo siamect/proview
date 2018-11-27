@@ -1135,7 +1135,7 @@ void EvList::event_ack(mh_sAck* msg)
       // Check that this id not already inserted
       if (id_to_item(&event->Info.Id, (void**)&item))
         return;
-      timelog_sii(3, "Ev, new ack", event->Info.Id.Nix, event->Info.Id.Idx);
+      timelog_sii(4, "Ev, new ack", event->Info.Id.Nix, event->Info.Id.Idx);
 
       sts = get_destination(
           net_NetTimeToTime(&event->Info.EventTime), (void**)&dest);

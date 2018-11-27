@@ -22,6 +22,7 @@ lis_dir	:= $(module_root)/lis
 kit_dir	:= $(module_root)/kit
 src_dir	:= $(module_root)/src
 load_dir := $(module_root)/load
+web_dir := $(module_root)/web
 
 doc_dir	:= $(release_root)/exp/doc
 elib_dir := $(release_root)/exp/lib
@@ -116,10 +117,10 @@ log_done	=
 #csetos		:= -DOS_LINUX=1 -DOS=linux -D_LINUX -DHW_ARM=1 -DHW=ARM
 #cinc		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) -I$(jdk)/include -I$(jdk)/include/linux
 csetos 		:= $(pwre_conf_cc_define)
-ifeq ($(flavour),gtk)
-  cinc          := -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) $(pwre_conf_incdir) $(pwre_conf_incdirgtk) $(pwre_conf_incdirgst)
+ifeq ($(flavour),qt)
+  cinc          := -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) $(pwre_conf_incdir) $(pwre_conf_incdirqt) $(pwre_conf_incdirgtk) $(pwre_conf_incdirgst)
 else
-  cinc          := -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) $(pwre_conf_incdir) $(pwre_conf_incdirqt)
+  cinc          := -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) $(pwre_conf_incdir) $(pwre_conf_incdirgtk) $(pwre_conf_incdirgst)
 endif
 rm		:= rm
 cp		:= cp

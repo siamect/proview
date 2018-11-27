@@ -77,6 +77,11 @@ pwr_tStatus io_bus_card_init(io_tCtx ctx, io_sCard* cp,
     unsigned int* output_area_offset, unsigned int* output_area_chansize,
     pwr_tByteOrderingEnum byte_order, io_eAlignment alignment);
 
+void io_bus_card_area_size( io_tCtx ctx,
+    io_sCard *cp, 
+    unsigned int *input_area_size, 
+    unsigned int *output_area_size);
+
 void io_bus_card_read(io_tCtx ctx, io_sRack* rp, io_sCard* cp, void* input_area,
     void* diag_area, pwr_tByteOrderingEnum byte_order,
     pwr_tFloatRepEnum float_rep);

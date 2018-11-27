@@ -49,7 +49,7 @@ SObject pwrb:Class
 !    VAL = a * In + (1 - a) * X = X + a * (In - X) , where
 !
 !      X =  FeedB, if FeedB is connected, 
-!           ActValt - 1, otherwise
+!           ActVal[t-1] otherwise
 !  
 !    a = 1 - 1 / (1 + ScanTime / FiltCon)
 !

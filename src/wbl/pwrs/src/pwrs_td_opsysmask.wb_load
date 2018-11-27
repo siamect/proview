@@ -51,6 +51,16 @@ SObject pwrs:Type
       Attr PgmName = "OpSysMask"
     EndBody
     !/**
+    !  Operating system is defined in CustomBuild
+    !*/
+    Object CustomBuild $Bit
+     Body SysBody
+       Attr PgmName = "CustomBuild"
+       Attr Text = "CustomBuild"
+       Attr Value = 1
+     EndBody
+    EndObject
+    !/**
     !  Operating system is Linux on PowerPC
     !*/
     Object PPC_LINUX $Bit

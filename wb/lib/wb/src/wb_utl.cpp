@@ -1094,8 +1094,13 @@ int wb_utl::create_flow_plc(ldh_tSesContext ldhses, ldh_tWBContext ldhwb,
 
 int wb_utl::create_flow_cb(void* utl, void* foe)
 {
-  return ((WFoe*)foe)->create_flow();
+  pwr_tStatus sts;
+
+  sts = ((WFoe*)foe)->create_xtthelpfile();
+  sts = ((WFoe*)foe)->create_flow();
+  return sts;
 }
+
 
 int wb_utl::redraw_plc_hier(ldh_tSesContext ldhses, ldh_tWBContext ldhwb,
     char* hiername, char* fromname, int all, int templ)

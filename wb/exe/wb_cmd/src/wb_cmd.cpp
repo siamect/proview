@@ -62,39 +62,33 @@ int main(int argc, char* argv[])
         i++;
       }
     }
+    strcpy(file, argv[0]);
+    strcat(file, "_");
+    strcat(file, wmg);
   }
 
   if (!found) {
     struct stat st;
 
-    char* s;
-    if ((s = getenv("pwre_conf_qt"))) {
-      strcpy(file, "$pwr_exe/wb_cmd_qt");
+    strcpy(file, "$pwr_exe/wb_cmd_qt");
+    dcli_translate_filename(file, file);
+    if (stat(file, &st) != 0) {
+      strcpy(file, "$pwr_eexe/wb_cmd_qt");
       dcli_translate_filename(file, file);
       if (stat(file, &st) != 0) {
-        strcpy(file, "$pwr_eexe/wb_cmd_qt");
-        dcli_translate_filename(file, file);
-      }
-      strcpy(wmg, "qt");
-    } else {
-      strcpy(file, "$pwr_exe/wb_cmd_gtk");
-      dcli_translate_filename(file, file);
-      if (stat(file, &st) == 0) {
-        strcpy(wmg, "gtk");
-      } else {
-        strcpy(file, "$pwr_eexe/wb_cmd_gtk");
-        dcli_translate_filename(file, file);
-        if (stat(file, &st) == 0) {
-          strcpy(wmg, "gtk");
-        } else {
-          strcpy(wmg, "motif");
-        }
+	strcpy(file, "$pwr_exe/wb_cmd_gtk");
+	dcli_translate_filename(file, file);
+	if (stat(file, &st) != 0) {
+	  strcpy(file, "$pwr_eexe/wb_cmd_gtk");
+	  dcli_translate_filename(file, file);
+	  if (stat(file, &st) != 0) {
+	    printf("** wb_cmd not found %s\n", file);
+	    exit(0);
+	  }
+	}
       }
     }
   }
-  strcpy(file, argv[0]);
-  strcat(file, "_");
-  strcat(file, wmg);
 
   execvp(file, argv);
 }

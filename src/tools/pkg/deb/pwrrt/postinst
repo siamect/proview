@@ -324,6 +324,54 @@ EOF
   fi
 fi
 
+# Add directories to nginx
+if [ -e /etc/nginx/sites-enabled/default ]; then
+  if ! egrep -q "location /pwrp_web/" /etc/nginx/sites-enabled/default; then
+    awk '
+BEGIN {
+  inserver = 0;
+  done = 0;
+}
+{
+  if ( !done) {
+    if ( substr( $0, 1, 1) != "#") {
+      if ( $0 == "server {") {
+        inserver = 1;
+      }
+      if ( inserver) {
+        if ( $0 == "}") {
+          printf("        # ProviewR directories\n");
+          printf("        location /pwrp_web/ {\n");
+          printf("          alias /pwrp/common/web/;\n");
+          printf("        }\n");
+          printf("        location /pwrp_log/ {\n");
+          printf("          alias /pwrp/common/log/;\n");
+          printf("        }\n");
+          printf("        location /pwr_doc/ {\n");
+          printf("          alias /usr/pwrrt/doc/;\n");
+          printf("        }\n");
+          printf("}\n");
+
+          inserver = 0;
+          done = 1;
+        }
+        else 
+          printf( "%s\n", $0);
+      } 
+      else
+        printf( "%s\n", $0);
+    }
+    else
+      printf( "%s\n", $0);
+  }
+  else
+    printf( "%s\n", $0);
+}' /etc/nginx/sites-enabled/default > /etc/nginx/sites-enabled/default.new
+
+    mv /etc/nginx/sites-enabled/default.new /etc/nginx/sites-enabled/default
+  fi
+fi
+
 #
 # Set owner on preinstalled I/O systems
 #

@@ -1975,23 +1975,64 @@ function OpWindMenu() {
     console.log( "Menu received", sts, data, result.buttons.length);
     var context = document.getElementById("opwindmenu");
 
-    var header = document.createElement("H1");
-    var title =  document.createTextNode( result.title);
-    header.appendChild( title);
-    context.appendChild( header);
+    document.getElementById("opwind_title").innerHTML = result.title;
+    document.getElementById("opwind_text").innerHTML = result.text;
 
-    var text =  document.createTextNode( result.text);
-    context.appendChild( text);
-    context.appendChild( document.createElement( "hr"));
+    if ( result.enable_login) {
+      self.user_text = document.createTextNode( self.user + " on " + self.host);
+      context.appendChild( self.user_text);
+      context.appendChild( document.createElement( "hr"));
 
-    self.user_text = document.createTextNode( self.user + " on " + self.host);
-    context.appendChild( self.user_text);
-    context.appendChild( document.createElement( "hr"));
+      document.getElementById("login_button").addEventListener( "click", function( event) {
+           if ( document.getElementById("login_frame").style.visibility == 'hidden') {
+             document.getElementById("login_user").value = "";
+             document.getElementById("login_passw").value = "";
+             document.getElementById("login_frame").style.visibility='visible';
+             document.getElementById("login_frame").style.height='120px';
+	     document.getElementById("login_user").focus();
+           }
+           else {
+             document.getElementById("login_frame").style.visibility='hidden';
+             document.getElementById("login_frame").style.height='0px';
+           }
+      });
+      document.getElementById("apply_button").addEventListener( "click", function( event) {
+           var user = document.getElementById("login_user").value;
+           var passwd = document.getElementById("login_passw").value;
+	   if ( user.trim() == "")
+	     return;
+           document.getElementById("login_frame").style.visibility='hidden';
+           document.getElementById("login_frame").style.height='0px';
+           var c = new JopCrypt();
+           passwd = c.crypt( "aa", passwd);
 
+           self.user = user;
+           self.gdh.login( user, passwd, self.login_cb, self);
+      });
+      document.getElementById("cancel_button").addEventListener( "click", function( event) {
+	   document.getElementById("login_frame").style.visibility='hidden';
+           document.getElementById("login_frame").style.height='0px';
+      });
+      document.getElementById("logout_button").addEventListener( "click", function( event) {
+           document.getElementById("login_frame").style.visibility='hidden';
+           document.getElementById("login_frame").style.height='0px';
+	   self.priv = 0;
+	   self.user = "Default";
+	   self.gdh.login( "", "", self.login_cb, self);
+      });
+
+      document.getElementById("login_user").value = "";
+      document.getElementById("login_passw").value = "";
+      //document.getElementById("login_frame").setAttribute("style", "visibility:hidden;height:10px";
+      document.getElementById("login_frame").style.visibility='hidden';
+      document.getElementById("login_frame").style.height='0px';
+    }
+    else {
+      document.getElementById("login_button").remove();
+      document.getElementById("login_frame").remove();
+    }
     if ( result.enable_language)
       self.add_menu_button( context, "Language");
-    if ( result.enable_login)
-      self.add_menu_button( context, "Login");
     if ( result.enable_alarmlist)
       self.add_menu_button( context, "AlarmList");
     if ( result.enable_eventlog)
@@ -2008,8 +2049,6 @@ function OpWindMenu() {
 
     var button;
     for ( var i = 0; i < result.buttons.length; i++) {
-      console.log( "Child", result.buttons[i].name);
-
       self.add_menu_button( context, result.buttons[i].text);
     }
   };
@@ -2018,18 +2057,6 @@ function OpWindMenu() {
 
     if ( self.info.enable_language && text == "Language") {
       console.log("Language activated");
-    }
-    else if ( self.info.enable_login && text == "Login") {
-      console.log("Login activated");
-      var user = prompt( "Username");
-      var passwd = prompt( "Password");
-
-      var c = new JopCrypt();
-      passwd = c.crypt( "aa", passwd);
-
-      console.log( "Login", user, passwd);
-      self.user = user;
-      self.gdh.login( user, passwd, self.login_cb, self);
     }
     else if ( self.info.enable_alarmlist && text == "AlarmList") {
       console.log("AlarmList activated");
@@ -2101,14 +2128,15 @@ function OpWindMenu() {
       if ( self.user_text != null)
 	self.user_text.textContent = self.user + " on " + self.host;
       
-      console.log( "sessionStorage set");
+      console.log( "Login", self.user, "Priv", self.priv);
     }
     else {
       self.priv = 0;
       self.user = "none";
-      console.log("user_text", self.user_text);
+      sessionStorage.setItem("pwr_privilege", self.priv);
       if ( self.user_text != null)
 	self.user_text.textContent = "None on " + self.host;
+      console.log( "Login failure", "Priv", self.priv);
     }
   };
 }

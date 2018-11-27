@@ -284,6 +284,10 @@ $(web_dir)/%.html : ../../%.html
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
 
+$(web_dir)/%.css : ../../%.css
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
 $(web_dir)/%.js : ../../%.js
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)

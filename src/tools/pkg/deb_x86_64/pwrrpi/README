@@ -7,7 +7,7 @@
 	                     gcc-6-arm-linux-gnueabihf
                              g++-6-arm-linux-gnueabihf
 
-	2. Define pwre links to the cross compiler
+	2. Define pwre links to the compiler tools
 
 	export pwre_cc=arm-linux-gnueabihf-gcc-6
 	export pwre_cxx=arm-linux-gnueabihf-g++-6

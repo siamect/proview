@@ -1161,6 +1161,7 @@ static void* import_thread()
     que_Put(NULL, &sp->lp->q_in, &sp->c.le, sp);
     sp = iseg_alloc();
   }
+  return NULL;
 }
 
 static void ini_link_info(qdb_sLinkInfo* lp)

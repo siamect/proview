@@ -63,6 +63,7 @@ int CnvWblToPs::init(char* first)
   } else {
     strcat(fname, ".ps");
   }
+  str_ToLower(fname, fname);
 
   if (ctx->generate_pdf) {
     tops->set_filename(ps_eFile_Body, fname);

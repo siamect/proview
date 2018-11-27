@@ -48,6 +48,16 @@ SObject pwrs:Type
       Attr PgmName = "OpSysEnum"
     EndBody
     !/**
+    !  Operating is defined in CustomBuild
+    !*/
+    Object CustomBuild $Value
+     Body SysBody
+       Attr PgmName = "CustomBuild"
+       Attr Text = "CustomBuild"
+       Attr Value = 1
+     EndBody
+    EndObject
+    !/**
     !  Operating system is Linux on PowerPC
     !*/
     Object PPC_LINUX $Value

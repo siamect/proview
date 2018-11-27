@@ -210,7 +210,14 @@ reload_classvolumes()
       fi
       if [ "$volume" != "" ]; then
         echo "-- Creating structfile and loadfile for $volume"
-        if co_convert -sv -d $pwrp_inc $file
+        if co_convert -so -d $pwrp_inc $file
+        then
+          reload_status=$reload__success
+        else
+          reload_status=$reload__userclasses
+          return
+        fi
+        if co_convert -po -d $pwrp_inc $file
         then
           reload_status=$reload__success
         else
