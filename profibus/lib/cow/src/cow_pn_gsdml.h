@@ -43,7 +43,8 @@
 class pn_gsdml;
 class gsdml_Valuelist;
 
-typedef struct {
+typedef struct
+{
   char name[32];
   pwr_tCid cid;
 } gsdml_sModuleClass;
@@ -56,18 +57,21 @@ typedef char* gsdml_tAllocatedString;
 typedef char gsdml_tNormalizedString[80];
 typedef char gsdml_tToken[80];
 typedef char gsdml_tTokenList[80];
-typedef struct {
+typedef struct
+{
   char str[160];
   gsdml_Valuelist* list;
 } gsdml_tValueList;
 typedef char gsdml_tEnum[80];
 typedef char gsdml_tId[80];
 typedef char gsdml_tIdT[256];
-typedef struct {
+typedef struct
+{
   gsdml_tIdT ref;
   void* p;
 } gsdml_tRefIdT;
-typedef struct {
+typedef struct
+{
   char ref[80];
   void* p;
 } gsdml_tRefId;
@@ -233,16 +237,19 @@ typedef enum {
   gsdml_eTag_Language,
   gsdml_eTag_Text,
   gsdml_eTag_CertificationInfo,
+  gsdml_eTag_ParameterRef,
+  gsdml_eTag_MenuList,
+  gsdml_eTag_MenuItem,
+  gsdml_eTag_MenuRef,
   gsdml_eTag__
 } gsdml_eTag;
 
 #define VL_END 0xffffffff
 
-class gsdml_ValuelistValue {
+class gsdml_ValuelistValue
+{
 public:
-  gsdml_ValuelistValue(unsigned int v) : value1(v), is_range(false)
-  {
-  }
+  gsdml_ValuelistValue(unsigned int v) : value1(v), is_range(false) {}
   gsdml_ValuelistValue(unsigned int v1, unsigned int v2)
       : value1(v1), value2(v2), is_range(true)
   {
@@ -252,7 +259,8 @@ public:
   bool is_range;
 };
 
-class gsdml_Valuelist {
+class gsdml_Valuelist
+{
 public:
   gsdml_Valuelist(char* str);
   std::vector<gsdml_ValuelistValue> value;
@@ -261,13 +269,11 @@ public:
   void sort();
   int parse(char* str);
   bool in_list(unsigned int);
-  unsigned int sts()
-  {
-    return status;
-  }
+  unsigned int sts() { return status; }
 };
 
-class gsdml_ValuelistIterator {
+class gsdml_ValuelistIterator
+{
 public:
   gsdml_ValuelistIterator(gsdml_Valuelist* vl)
       : valuelist(vl), current_value(0), initiated(false)
@@ -276,10 +282,7 @@ public:
   gsdml_Valuelist* valuelist;
   unsigned int next();
   unsigned int begin();
-  unsigned int end()
-  {
-    return VL_END;
-  }
+  unsigned int end() { return VL_END; }
   unsigned int current_value;
   unsigned int current_idx;
   bool initiated;
@@ -287,11 +290,10 @@ public:
 
 #define VLS_END 0xefffffff
 
-class gsdml_SValuelistValue {
+class gsdml_SValuelistValue
+{
 public:
-  gsdml_SValuelistValue(int v) : value1(v), is_range(false)
-  {
-  }
+  gsdml_SValuelistValue(int v) : value1(v), is_range(false) {}
   gsdml_SValuelistValue(int v1, int v2) : value1(v1), value2(v2), is_range(true)
   {
   }
@@ -300,7 +302,8 @@ public:
   bool is_range;
 };
 
-class gsdml_SValuelist {
+class gsdml_SValuelist
+{
 public:
   gsdml_SValuelist(char* str);
   std::vector<gsdml_SValuelistValue> value;
@@ -309,13 +312,11 @@ public:
   void sort();
   int parse(char* str);
   bool in_list(int);
-  unsigned int sts()
-  {
-    return status;
-  }
+  unsigned int sts() { return status; }
 };
 
-class gsdml_SValuelistIterator {
+class gsdml_SValuelistIterator
+{
 public:
   gsdml_SValuelistIterator(gsdml_SValuelist* vl)
       : valuelist(vl), current_value(0), initiated(false)
@@ -324,20 +325,16 @@ public:
   gsdml_SValuelist* valuelist;
   int next();
   int begin();
-  int end()
-  {
-    return VL_END;
-  }
+  int end() { return VL_END; }
   int current_value;
   unsigned int current_idx;
   bool initiated;
 };
 
-class gsdml_FValuelistValue {
+class gsdml_FValuelistValue
+{
 public:
-  gsdml_FValuelistValue(double v) : value1(v), is_range(false)
-  {
-  }
+  gsdml_FValuelistValue(double v) : value1(v), is_range(false) {}
   gsdml_FValuelistValue(double v1, double v2)
       : value1(v1), value2(v2), is_range(true)
   {
@@ -347,7 +344,8 @@ public:
   bool is_range;
 };
 
-class gsdml_FValuelist {
+class gsdml_FValuelist
+{
 public:
   gsdml_FValuelist(char* str);
   std::vector<gsdml_FValuelistValue> value;
@@ -356,25 +354,25 @@ public:
   void sort();
   int parse(char* str);
   bool in_list(double val);
-  unsigned int sts()
-  {
-    return status;
-  }
+  unsigned int sts() { return status; }
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tString80 Version;
   gsdml_tString80 Encoding;
 } gsdml_sXml;
 
-class gsdml_Xml {
+class gsdml_Xml
+{
 public:
   gsdml_Xml(pn_gsdml* g);
   gsdml_sXml Body;
   pn_gsdml* gsdml;
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tString80 ProfileIdentification;
   gsdml_tString80 ProfileRevision;
   gsdml_tString80 ProfileName;
@@ -385,7 +383,8 @@ typedef struct {
   gsdml_tString80 ProfileTechnology;
 } gsdml_sProfileHeader;
 
-class gsdml_ProfileHeader {
+class gsdml_ProfileHeader
+{
 public:
   gsdml_ProfileHeader(pn_gsdml* g);
   gsdml_sProfileHeader Body;
@@ -393,14 +392,16 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tUnsigned16hex VendorID;
   gsdml_tUnsigned16hex DeviceID;
   gsdml_tRefIdT InfoText;
   gsdml_tToken VendorName;
 } gsdml_sDeviceIdentity;
 
-class gsdml_DeviceIdentity {
+class gsdml_DeviceIdentity
+{
 public:
   gsdml_DeviceIdentity(pn_gsdml* g);
   gsdml_sDeviceIdentity Body;
@@ -409,12 +410,14 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tString80 MainFamily;
   gsdml_tString80 ProductFamily;
 } gsdml_sDeviceFunction;
 
-class gsdml_DeviceFunction {
+class gsdml_DeviceFunction
+{
 public:
   gsdml_DeviceFunction(pn_gsdml* g);
   gsdml_sDeviceFunction Body;
@@ -422,7 +425,8 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tRefIdT CategoryRef;
   gsdml_tRefIdT SubCategory1Ref;
   gsdml_tRefIdT Name;
@@ -435,7 +439,8 @@ typedef struct {
   gsdml_tString ProductFamily;
 } gsdml_sModuleInfo;
 
-class gsdml_ModuleInfo {
+class gsdml_ModuleInfo
+{
 public:
   gsdml_ModuleInfo(pn_gsdml* g);
   gsdml_sModuleInfo Body;
@@ -444,30 +449,35 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tUnsigned16 Value;
   gsdml_tBoolean AdjustSupported;
 } gsdml_sMAUTypeItem;
 
-typedef struct {
+typedef struct
+{
   gsdml_tString ConformanceClass;
   gsdml_tString ApplicationClass;
   gsdml_tString NetloadClass;
 } gsdml_sCertificationInfo;
 
-class gsdml_CertificationInfo {
+class gsdml_CertificationInfo
+{
 public:
   gsdml_CertificationInfo(pn_gsdml* g);
   gsdml_sCertificationInfo Body;
   pn_gsdml* gsdml;
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tUnsigned16 SubslotNumber;
   gsdml_tRefId TextId;
 } gsdml_sSubslotItem;
 
-class gsdml_SubslotItem {
+class gsdml_SubslotItem
+{
 public:
   gsdml_SubslotItem(pn_gsdml* g);
   gsdml_sSubslotItem Body;
@@ -475,11 +485,10 @@ public:
   void print(int ind);
 };
 
-class gsdml_SubslotList {
+class gsdml_SubslotList
+{
 public:
-  gsdml_SubslotList(pn_gsdml* g) : gsdml(g)
-  {
-  }
+  gsdml_SubslotList(pn_gsdml* g) : gsdml(g) {}
   ~gsdml_SubslotList();
   std::vector<gsdml_SubslotItem*> SubslotItem;
   pn_gsdml* gsdml;
@@ -487,13 +496,15 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tUnsigned16 MaxInputLength;
   gsdml_tUnsigned16 MaxOutputLength;
   gsdml_tUnsigned16 MaxDataLength;
 } gsdml_sIOConfigData;
 
-class gsdml_IOConfigData {
+class gsdml_IOConfigData
+{
 public:
   gsdml_IOConfigData(pn_gsdml* g);
   gsdml_sIOConfigData Body;
@@ -501,14 +512,16 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tRefId ModuleItemTarget;
   gsdml_tValueList AllowedInSlots;
   gsdml_tValueList UsedInSlots;
   gsdml_tValueList FixedInSlots;
 } gsdml_sModuleItemRef;
 
-class gsdml_ModuleItemRef {
+class gsdml_ModuleItemRef
+{
 public:
   gsdml_ModuleItemRef(pn_gsdml* g);
   gsdml_sModuleItemRef Body;
@@ -518,11 +531,10 @@ public:
   void print(int ind);
 };
 
-class gsdml_UseableModules {
+class gsdml_UseableModules
+{
 public:
-  gsdml_UseableModules(pn_gsdml* g) : gsdml(g)
-  {
-  }
+  gsdml_UseableModules(pn_gsdml* g) : gsdml(g) {}
   std::vector<gsdml_ModuleItemRef*> ModuleItemRef;
   pn_gsdml* gsdml;
   ~gsdml_UseableModules();
@@ -530,12 +542,14 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tUnsigned8 BitOffset;
   gsdml_tRefIdT TextId;
 } gsdml_sBitDataItem;
 
-class gsdml_BitDataItem {
+class gsdml_BitDataItem
+{
 public:
   gsdml_BitDataItem(pn_gsdml* g);
   gsdml_sBitDataItem Body;
@@ -544,14 +558,16 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tEnum DataType;
   gsdml_tUnsigned16 Length;
   gsdml_tBoolean UseAsBits;
   gsdml_tRefIdT TextId;
 } gsdml_sDataItem;
 
-class gsdml_DataItem {
+class gsdml_DataItem
+{
 public:
   gsdml_DataItem(pn_gsdml* g);
   gsdml_sDataItem Body;
@@ -562,11 +578,13 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tEnum Consistency;
 } gsdml_sInput;
 
-class gsdml_Input {
+class gsdml_Input
+{
 public:
   gsdml_Input(pn_gsdml* g);
   gsdml_sInput Body;
@@ -577,11 +595,13 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tEnum Consistency;
 } gsdml_sOutput;
 
-class gsdml_Output {
+class gsdml_Output
+{
 public:
   gsdml_Output(pn_gsdml* g);
   gsdml_sOutput Body;
@@ -592,14 +612,16 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tUnsigned8 IOPS_Length;
   gsdml_tUnsigned8 IOCS_Length;
   gsdml_tUnsigned8 F_IO_StructureDescVersion;
   gsdml_tUnsigned32 F_IO_StructureDescCRC;
 } gsdml_sIOData;
 
-class gsdml_IOData {
+class gsdml_IOData
+{
 public:
   gsdml_IOData(pn_gsdml* g);
   gsdml_sIOData Body;
@@ -611,7 +633,8 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tRefId ValueItemTarget;
   gsdml_tUnsigned32 ByteOffset;
   gsdml_tInteger BitOffset;
@@ -623,9 +646,11 @@ typedef struct {
   gsdml_tBoolean Visible;
   gsdml_tRefIdT TextId;
   gsdml_tUnsigned16 Length;
+  gsdml_tId ID;
 } gsdml_sRef;
 
-class gsdml_Ref {
+class gsdml_Ref
+{
 public:
   gsdml_Ref(pn_gsdml* g);
   gsdml_sRef Body;
@@ -633,12 +658,14 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tUnsigned32 ByteOffset;
   gsdml_tString1024 Data;
 } gsdml_sConst;
 
-class gsdml_Const {
+class gsdml_Const
+{
 public:
   gsdml_Const(pn_gsdml* g);
   gsdml_sConst Body;
@@ -646,14 +673,16 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tUnsigned16 Index;
   gsdml_tUnsigned32 Length;
   gsdml_tUnsigned16 TransferSequence;
   gsdml_tRefIdT Name;
 } gsdml_sParameterRecordDataItem;
 
-class gsdml_ParameterRecordDataItem {
+class gsdml_ParameterRecordDataItem
+{
 public:
   gsdml_ParameterRecordDataItem(pn_gsdml* g);
   gsdml_sParameterRecordDataItem Body;
@@ -665,7 +694,8 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tUnsigned16 F_ParamDescCRC;
   gsdml_tUnsigned16 Index;
   gsdml_tUnsigned16 TransferSequence;
@@ -711,7 +741,8 @@ typedef struct {
   gsdml_tBoolean F_iPar_CRC_Changeable;
 } gsdml_sF_ParameterRecordDataItem;
 
-class gsdml_F_ParameterRecordDataItem {
+class gsdml_F_ParameterRecordDataItem
+{
 public:
   gsdml_F_ParameterRecordDataItem(pn_gsdml* g);
   gsdml_sF_ParameterRecordDataItem Body;
@@ -719,11 +750,10 @@ public:
   void print(int ind);
 };
 
-class gsdml_RecordDataList {
+class gsdml_RecordDataList
+{
 public:
-  gsdml_RecordDataList(pn_gsdml* g) : F_ParameterRecordDataItem(0), gsdml(g)
-  {
-  }
+  gsdml_RecordDataList(pn_gsdml* g) : F_ParameterRecordDataItem(0), gsdml(g) {}
   std::vector<gsdml_ParameterRecordDataItem*> ParameterRecordDataItem;
   gsdml_F_ParameterRecordDataItem* F_ParameterRecordDataItem;
   pn_gsdml* gsdml;
@@ -732,12 +762,14 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tEnum Type;
   gsdml_tRefId GraphicItemTarget;
 } gsdml_sGraphicItemRef;
 
-class gsdml_GraphicItemRef {
+class gsdml_GraphicItemRef
+{
 public:
   gsdml_GraphicItemRef(pn_gsdml* g);
   gsdml_sGraphicItemRef Body;
@@ -745,11 +777,10 @@ public:
   void print(int ind);
 };
 
-class gsdml_Graphics {
+class gsdml_Graphics
+{
 public:
-  gsdml_Graphics(pn_gsdml* g) : gsdml(g)
-  {
-  }
+  gsdml_Graphics(pn_gsdml* g) : gsdml(g) {}
   std::vector<gsdml_GraphicItemRef*> GraphicItemRef;
   pn_gsdml* gsdml;
   ~gsdml_Graphics();
@@ -757,7 +788,8 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tUnsigned16 T_DC_Base;
   gsdml_tUnsigned16 T_DC_Min;
   gsdml_tUnsigned16 T_DC_Max;
@@ -767,7 +799,8 @@ typedef struct {
   gsdml_tBoolean IsochroneModeRequired;
 } gsdml_sIsochroneMode;
 
-class gsdml_IsochroneMode {
+class gsdml_IsochroneMode
+{
 public:
   gsdml_IsochroneMode(pn_gsdml* g);
   gsdml_sIsochroneMode Body;
@@ -775,7 +808,8 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tId ID;
   gsdml_tUnsigned32hex SubmoduleIdentNumber;
   gsdml_tUnsigned32 API;
@@ -787,7 +821,8 @@ typedef struct {
   gsdml_tUnsigned16 MayIssueProcessAlarm;
 } gsdml_sVirtualSubmoduleItem;
 
-class gsdml_VirtualSubmoduleItem {
+class gsdml_VirtualSubmoduleItem
+{
 public:
   gsdml_VirtualSubmoduleItem(pn_gsdml* g);
   gsdml_sVirtualSubmoduleItem Body;
@@ -802,11 +837,10 @@ public:
   void print(int ind);
 };
 
-class gsdml_VirtualSubmoduleList {
+class gsdml_VirtualSubmoduleList
+{
 public:
-  gsdml_VirtualSubmoduleList(pn_gsdml* g) : gsdml(g)
-  {
-  }
+  gsdml_VirtualSubmoduleList(pn_gsdml* g) : gsdml(g) {}
   std::vector<gsdml_VirtualSubmoduleItem*> VirtualSubmoduleItem;
   pn_gsdml* gsdml;
   ~gsdml_VirtualSubmoduleList();
@@ -814,11 +848,13 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tRefIdT TextId;
 } gsdml_sDCP_FlashOnceSignalUnit;
 
-class gsdml_DCP_FlashOnceSignalUnit {
+class gsdml_DCP_FlashOnceSignalUnit
+{
 public:
   gsdml_DCP_FlashOnceSignalUnit(pn_gsdml* g);
   gsdml_sDCP_FlashOnceSignalUnit Body;
@@ -826,25 +862,26 @@ public:
   void print(int ind);
 };
 
-class gsdml_General {
+class gsdml_General
+{
 public:
-  gsdml_General(pn_gsdml* g) : DCP_FlashOnceSignalUnit(0), gsdml(g)
-  {
-  }
+  gsdml_General(pn_gsdml* g) : DCP_FlashOnceSignalUnit(0), gsdml(g) {}
   gsdml_DCP_FlashOnceSignalUnit* DCP_FlashOnceSignalUnit;
   pn_gsdml* gsdml;
   ~gsdml_General();
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tUnsigned16 MaxBridgeDelay;
   gsdml_tUnsigned16 MaxNumberIR_FrameData;
   gsdml_tString StartupMode;
   gsdml_tString ForwardingMode;
 } gsdml_sRT_Class3Properties;
 
-class gsdml_RT_Class3Properties {
+class gsdml_RT_Class3Properties
+{
 public:
   gsdml_RT_Class3Properties(pn_gsdml* g);
   gsdml_sRT_Class3Properties Body;
@@ -852,14 +889,16 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tEnum SupportedRole;
   gsdml_tUnsigned16 MaxLocalJitter;
   gsdml_tUnsigned16 T_PLL_MAX;
   gsdml_tTokenList SupportedSyncProtocols;
 } gsdml_sSynchronisationMode;
 
-class gsdml_SynchronisationMode {
+class gsdml_SynchronisationMode
+{
 public:
   gsdml_SynchronisationMode(pn_gsdml* g);
   gsdml_sSynchronisationMode Body;
@@ -867,14 +906,16 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tValueList SendClock;
   gsdml_tValueList ReductionRatio;
   gsdml_tValueList ReductionRatioPow2;
   gsdml_tValueList ReductionRatioNonPow2;
 } gsdml_sTimingProperties;
 
-class gsdml_TimingProperties {
+class gsdml_TimingProperties
+{
 public:
   gsdml_TimingProperties(pn_gsdml* g);
   gsdml_sTimingProperties Body;
@@ -882,14 +923,16 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tValueList SendClock;
   gsdml_tValueList ReductionRatio;
   gsdml_tValueList ReductionRatioPow2;
   gsdml_tValueList ReductionRatioNonPow2;
 } gsdml_sRT_Class3TimingProperties;
 
-class gsdml_RT_Class3TimingProperties {
+class gsdml_RT_Class3TimingProperties
+{
 public:
   gsdml_RT_Class3TimingProperties(pn_gsdml* g);
   gsdml_sRT_Class3TimingProperties Body;
@@ -897,16 +940,19 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tUnsigned16 NumberOfAdditionalInputCR;
   gsdml_tUnsigned16 NumberOfAdditionalOutputCR;
   gsdml_tUnsigned16 NumberOfAdditionalMulticastProviderCR;
   gsdml_tUnsigned16 NumberOfMulticastConsumerCR;
   gsdml_tUnsigned16 NumberOfAR;
   gsdml_tBoolean PullModuleAlarmSupported;
+  gsdml_tTokenList StartupMode;
 } gsdml_sInterfaceSubmoduleItem_ApplicationRelations;
 
-class gsdml_InterfaceSubmoduleItem_ApplicationRelations {
+class gsdml_InterfaceSubmoduleItem_ApplicationRelations
+{
 public:
   gsdml_InterfaceSubmoduleItem_ApplicationRelations(pn_gsdml* g);
   gsdml_sInterfaceSubmoduleItem_ApplicationRelations Body;
@@ -917,7 +963,8 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tBoolean RT_MediaRedundancySupported;
   gsdml_tTokenList SupportedRole;
   gsdml_tBoolean AdditionalProtocolsSupported;
@@ -925,7 +972,8 @@ typedef struct {
   gsdml_tInteger MaxMRP_Instances;
 } gsdml_sMediaRedundancy;
 
-class gsdml_MediaRedundancy {
+class gsdml_MediaRedundancy
+{
 public:
   gsdml_MediaRedundancy(pn_gsdml* g);
   gsdml_sMediaRedundancy Body;
@@ -933,7 +981,8 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tId ID;
   gsdml_tUnsigned16 SubslotNumber;
   gsdml_tRefId TextId;
@@ -951,7 +1000,8 @@ typedef struct {
   gsdml_tBoolean DelayMeasurementSupported;
 } gsdml_sInterfaceSubmoduleItem;
 
-class gsdml_InterfaceSubmoduleItem {
+class gsdml_InterfaceSubmoduleItem
+{
 public:
   gsdml_InterfaceSubmoduleItem(pn_gsdml* g);
   gsdml_sInterfaceSubmoduleItem Body;
@@ -967,7 +1017,8 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tId ID;
   gsdml_tUnsigned16 SubslotNumber;
   gsdml_tRefId TextId;
@@ -984,9 +1035,11 @@ typedef struct {
   gsdml_tBoolean IsDefaultRingport;
   gsdml_tBoolean CheckMAUTypeSupported;
   gsdml_tBoolean CheckMAUTypeDifferenceSupported;
+  gsdml_tValueList Writeable_IM_Records;
 } gsdml_sPortSubmoduleItem;
 
-class gsdml_PortSubmoduleItem {
+class gsdml_PortSubmoduleItem
+{
 public:
   gsdml_PortSubmoduleItem(pn_gsdml* g);
   gsdml_sPortSubmoduleItem Body;
@@ -997,11 +1050,10 @@ public:
   void print(int ind);
 };
 
-class gsdml_SystemDefinedSubmoduleList {
+class gsdml_SystemDefinedSubmoduleList
+{
 public:
-  gsdml_SystemDefinedSubmoduleList(pn_gsdml* g) : gsdml(g)
-  {
-  }
+  gsdml_SystemDefinedSubmoduleList(pn_gsdml* g) : gsdml(g) {}
   gsdml_InterfaceSubmoduleItem* InterfaceSubmoduleItem;
   std::vector<gsdml_PortSubmoduleItem*> PortSubmoduleItem;
   pn_gsdml* gsdml;
@@ -1010,14 +1062,16 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tUnsigned16 AR_BlockVersion;
   gsdml_tUnsigned16 IOCR_BlockVersion;
   gsdml_tUnsigned16 AlarmCR_BlockVersion;
   gsdml_tUnsigned16 SubmoduleDataBlockVersion;
 } gsdml_sDeviceAccessPointItem_ApplicationRelations;
 
-class gsdml_DeviceAccessPointItem_ApplicationRelations {
+class gsdml_DeviceAccessPointItem_ApplicationRelations
+{
 public:
   gsdml_DeviceAccessPointItem_ApplicationRelations(pn_gsdml* g);
   gsdml_sDeviceAccessPointItem_ApplicationRelations Body;
@@ -1027,14 +1081,16 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tRefId SubmoduleItemTarget;
   gsdml_tValueList AllowedInSubslots;
   gsdml_tValueList UsedInSubslots;
   gsdml_tValueList FixedInSubslots;
 } gsdml_sSubmoduleItemRef;
 
-class gsdml_SubmoduleItemRef {
+class gsdml_SubmoduleItemRef
+{
 public:
   gsdml_SubmoduleItemRef(pn_gsdml* g);
   gsdml_sSubmoduleItemRef Body;
@@ -1043,11 +1099,10 @@ public:
   void print(int ind);
 };
 
-class gsdml_UseableSubmodules {
+class gsdml_UseableSubmodules
+{
 public:
-  gsdml_UseableSubmodules(pn_gsdml* g) : gsdml(g)
-  {
-  }
+  gsdml_UseableSubmodules(pn_gsdml* g) : gsdml(g) {}
   std::vector<gsdml_SubmoduleItemRef*> SubmoduleItemRef;
   pn_gsdml* gsdml;
   ~gsdml_UseableSubmodules();
@@ -1055,12 +1110,14 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tUnsigned16 SlotNumber;
   gsdml_tRefId TextId;
 } gsdml_sSlotItem;
 
-class gsdml_SlotItem {
+class gsdml_SlotItem
+{
 public:
   gsdml_SlotItem(pn_gsdml* g);
   gsdml_sSlotItem Body;
@@ -1068,11 +1125,10 @@ public:
   void print(int ind);
 };
 
-class gsdml_SlotList {
+class gsdml_SlotList
+{
 public:
-  gsdml_SlotList(pn_gsdml* g) : gsdml(g)
-  {
-  }
+  gsdml_SlotList(pn_gsdml* g) : gsdml(g) {}
   std::vector<gsdml_SlotItem*> SlotItem;
   pn_gsdml* gsdml;
   ~gsdml_SlotList();
@@ -1080,13 +1136,15 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tValueList SlotList;
   gsdml_tRefId Name;
   gsdml_tRefId InfoText;
 } gsdml_sSlotGroup;
 
-class gsdml_SlotGroup {
+class gsdml_SlotGroup
+{
 public:
   gsdml_SlotGroup(pn_gsdml* g);
   gsdml_sSlotGroup Body;
@@ -1094,18 +1152,18 @@ public:
   void print(int ind);
 };
 
-class gsdml_SlotGroups {
+class gsdml_SlotGroups
+{
 public:
-  gsdml_SlotGroups(pn_gsdml* g) : gsdml(g)
-  {
-  }
+  gsdml_SlotGroups(pn_gsdml* g) : gsdml(g) {}
   std::vector<gsdml_SlotGroup*> SlotGroup;
   pn_gsdml* gsdml;
   ~gsdml_SlotGroups();
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tId ID;
   gsdml_tValueList PhysicalSlots;
   gsdml_tUnsigned32hex ModuleIdentNumber;
@@ -1136,7 +1194,8 @@ typedef struct {
   gsdml_tUnsigned16 NumberOfDeviceAccessAR;
 } gsdml_sDeviceAccessPointItem;
 
-class gsdml_DeviceAccessPointItem {
+class gsdml_DeviceAccessPointItem
+{
 public:
   gsdml_DeviceAccessPointItem(pn_gsdml* g);
   gsdml_sDeviceAccessPointItem Body;
@@ -1158,11 +1217,10 @@ public:
   void print(int ind);
 };
 
-class gsdml_DeviceAccessPointList {
+class gsdml_DeviceAccessPointList
+{
 public:
-  gsdml_DeviceAccessPointList(pn_gsdml* g) : gsdml(g)
-  {
-  }
+  gsdml_DeviceAccessPointList(pn_gsdml* g) : gsdml(g) {}
   std::vector<gsdml_DeviceAccessPointItem*> DeviceAccessPointItem;
   pn_gsdml* gsdml;
   ~gsdml_DeviceAccessPointList();
@@ -1170,14 +1228,16 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tId ID;
   gsdml_tUnsigned32hex ModuleIdentNumber;
   gsdml_tString RequiredSchemaVersion;
   gsdml_tValueList PhysicalSubslots;
 } gsdml_sModuleItem;
 
-class gsdml_ModuleItem {
+class gsdml_ModuleItem
+{
 public:
   gsdml_ModuleItem(pn_gsdml* g);
   gsdml_sModuleItem Body;
@@ -1193,11 +1253,10 @@ public:
   void print(int ind);
 };
 
-class gsdml_ModuleList {
+class gsdml_ModuleList
+{
 public:
-  gsdml_ModuleList(pn_gsdml* g) : gsdml(g)
-  {
-  }
+  gsdml_ModuleList(pn_gsdml* g) : gsdml(g) {}
   std::vector<gsdml_ModuleItem*> ModuleItem;
   pn_gsdml* gsdml;
   ~gsdml_ModuleList();
@@ -1205,11 +1264,10 @@ public:
   void print(int ind);
 };
 
-class gsdml_SubmoduleList {
+class gsdml_SubmoduleList
+{
 public:
-  gsdml_SubmoduleList(pn_gsdml* g) : gsdml(g)
-  {
-  }
+  gsdml_SubmoduleList(pn_gsdml* g) : gsdml(g) {}
   std::vector<gsdml_VirtualSubmoduleItem*> SubmoduleItem;
   pn_gsdml* gsdml;
   ~gsdml_SubmoduleList();
@@ -1217,12 +1275,14 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tString Content;
   gsdml_tRefIdT TextId;
 } gsdml_sAssign;
 
-class gsdml_Assign {
+class gsdml_Assign
+{
 public:
   gsdml_Assign(pn_gsdml* g);
   gsdml_sAssign Body;
@@ -1231,23 +1291,24 @@ public:
   void print(int ind);
 };
 
-class gsdml_Assignments {
+class gsdml_Assignments
+{
 public:
-  gsdml_Assignments(pn_gsdml* g) : gsdml(g)
-  {
-  }
+  gsdml_Assignments(pn_gsdml* g) : gsdml(g) {}
   std::vector<gsdml_Assign*> Assign;
   pn_gsdml* gsdml;
   ~gsdml_Assignments();
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tId ID;
   gsdml_tRefIdT Help;
 } gsdml_sValueItem;
 
-class gsdml_ValueItem {
+class gsdml_ValueItem
+{
 public:
   gsdml_ValueItem(pn_gsdml* g);
   gsdml_sValueItem Body;
@@ -1258,11 +1319,10 @@ public:
   void print(int ind);
 };
 
-class gsdml_ValueList {
+class gsdml_ValueList
+{
 public:
-  gsdml_ValueList(pn_gsdml* g) : gsdml(g)
-  {
-  }
+  gsdml_ValueList(pn_gsdml* g) : gsdml(g) {}
   std::vector<gsdml_ValueItem*> ValueItem;
   pn_gsdml* gsdml;
   ~gsdml_ValueList();
@@ -1270,13 +1330,15 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tUnsigned8 Id;
   gsdml_tEnum DataType;
   gsdml_tUnsigned16 Length;
 } gsdml_sExtChannelAddValue_DataItem;
 
-class gsdml_ExtChannelAddValue_DataItem {
+class gsdml_ExtChannelAddValue_DataItem
+{
 public:
   gsdml_ExtChannelAddValue_DataItem(pn_gsdml* g);
   gsdml_sExtChannelAddValue_DataItem Body;
@@ -1284,18 +1346,18 @@ public:
   void print(int ind);
 };
 
-class gsdml_ExtChannelAddValue {
+class gsdml_ExtChannelAddValue
+{
 public:
-  gsdml_ExtChannelAddValue(pn_gsdml* g) : gsdml(g)
-  {
-  }
+  gsdml_ExtChannelAddValue(pn_gsdml* g) : gsdml(g) {}
   std::vector<gsdml_ExtChannelAddValue_DataItem*> DataItem;
   pn_gsdml* gsdml;
   ~gsdml_ExtChannelAddValue();
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tUnsigned16 ErrorType;
   gsdml_tTokenList MaintenanceAlarmState;
   gsdml_tUnsigned32 API;
@@ -1303,7 +1365,8 @@ typedef struct {
   gsdml_tRefId Help;
 } gsdml_sExtChannelDiagItem;
 
-class gsdml_ExtChannelDiagItem {
+class gsdml_ExtChannelDiagItem
+{
 public:
   gsdml_ExtChannelDiagItem(pn_gsdml* g);
   gsdml_sExtChannelDiagItem Body;
@@ -1313,18 +1376,18 @@ public:
   void print(int ind);
 };
 
-class gsdml_ExtChannelDiagList {
+class gsdml_ExtChannelDiagList
+{
 public:
-  gsdml_ExtChannelDiagList(pn_gsdml* g) : gsdml(g)
-  {
-  }
+  gsdml_ExtChannelDiagList(pn_gsdml* g) : gsdml(g) {}
   std::vector<gsdml_ExtChannelDiagItem*> ExtChannelDiagItem;
   pn_gsdml* gsdml;
   ~gsdml_ExtChannelDiagList();
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tUnsigned16 ErrorType;
   gsdml_tTokenList MaintenanceAlarmState;
   gsdml_tUnsigned32 API;
@@ -1332,7 +1395,8 @@ typedef struct {
   gsdml_tRefId Help;
 } gsdml_sChannelDiagItem;
 
-class gsdml_ChannelDiagItem {
+class gsdml_ChannelDiagItem
+{
 public:
   gsdml_ChannelDiagItem(pn_gsdml* g);
   gsdml_sChannelDiagItem Body;
@@ -1343,11 +1407,10 @@ public:
   void print(int ind);
 };
 
-class gsdml_ChannelDiagList {
+class gsdml_ChannelDiagList
+{
 public:
-  gsdml_ChannelDiagList(pn_gsdml* g) : gsdml(g)
-  {
-  }
+  gsdml_ChannelDiagList(pn_gsdml* g) : gsdml(g) {}
   std::vector<gsdml_ChannelDiagItem*> ChannelDiagItem;
   pn_gsdml* gsdml;
   ~gsdml_ChannelDiagList();
@@ -1355,12 +1418,14 @@ public:
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tUnsigned16 UserStructureIdentifier;
   gsdml_tUnsigned32 API;
 } gsdml_sUnitDiagTypeItem;
 
-class gsdml_UnitDiagTypeItem {
+class gsdml_UnitDiagTypeItem
+{
 public:
   gsdml_UnitDiagTypeItem(pn_gsdml* g);
   gsdml_sUnitDiagTypeItem Body;
@@ -1370,24 +1435,25 @@ public:
   void print(int ind);
 };
 
-class gsdml_UnitDiagTypeList {
+class gsdml_UnitDiagTypeList
+{
 public:
-  gsdml_UnitDiagTypeList(pn_gsdml* g) : gsdml(g)
-  {
-  }
+  gsdml_UnitDiagTypeList(pn_gsdml* g) : gsdml(g) {}
   std::vector<gsdml_UnitDiagTypeItem*> UnitDiagTypeItem;
   pn_gsdml* gsdml;
   ~gsdml_UnitDiagTypeList();
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tId ID;
   gsdml_tString GraphicFile;
   gsdml_tString Embedded;
 } gsdml_sGraphicItem;
 
-class gsdml_GraphicItem {
+class gsdml_GraphicItem
+{
 public:
   gsdml_GraphicItem(pn_gsdml* g);
   gsdml_sGraphicItem Body;
@@ -1395,24 +1461,25 @@ public:
   void print(int ind);
 };
 
-class gsdml_GraphicsList {
+class gsdml_GraphicsList
+{
 public:
-  gsdml_GraphicsList(pn_gsdml* g) : gsdml(g)
-  {
-  }
+  gsdml_GraphicsList(pn_gsdml* g) : gsdml(g) {}
   std::vector<gsdml_GraphicItem*> GraphicItem;
   pn_gsdml* gsdml;
   ~gsdml_GraphicsList();
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tId ID;
   gsdml_tRefIdT TextId;
   gsdml_tRefId InfoText;
 } gsdml_sCategoryItem;
 
-class gsdml_CategoryItem {
+class gsdml_CategoryItem
+{
 public:
   gsdml_CategoryItem(pn_gsdml* g);
   gsdml_sCategoryItem Body;
@@ -1420,23 +1487,24 @@ public:
   void print(int ind);
 };
 
-class gsdml_CategoryList {
+class gsdml_CategoryList
+{
 public:
-  gsdml_CategoryList(pn_gsdml* g) : gsdml(g)
-  {
-  }
+  gsdml_CategoryList(pn_gsdml* g) : gsdml(g) {}
   std::vector<gsdml_CategoryItem*> CategoryItem;
   pn_gsdml* gsdml;
   ~gsdml_CategoryList();
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tIdT TextId;
   gsdml_tAllocatedString Value;
 } gsdml_sText;
 
-class gsdml_Text {
+class gsdml_Text
+{
 public:
   gsdml_Text(pn_gsdml* g);
   gsdml_sText Body;
@@ -1445,22 +1513,23 @@ public:
   void print(int ind);
 };
 
-class gsdml_PrimaryLanguage {
+class gsdml_PrimaryLanguage
+{
 public:
-  gsdml_PrimaryLanguage(pn_gsdml* g) : gsdml(g)
-  {
-  }
+  gsdml_PrimaryLanguage(pn_gsdml* g) : gsdml(g) {}
   std::vector<gsdml_Text*> Text;
   pn_gsdml* gsdml;
   ~gsdml_PrimaryLanguage();
   void print(int ind);
 };
 
-typedef struct {
+typedef struct
+{
   gsdml_tEnum xml_lang;
 } gsdml_sLanguage;
 
-class gsdml_Language {
+class gsdml_Language
+{
 public:
   gsdml_Language(pn_gsdml* g);
   gsdml_sLanguage Body;
@@ -1470,11 +1539,10 @@ public:
   void print(int ind);
 };
 
-class gsdml_ExternalTextList {
+class gsdml_ExternalTextList
+{
 public:
-  gsdml_ExternalTextList(pn_gsdml* g) : gsdml(g)
-  {
-  }
+  gsdml_ExternalTextList(pn_gsdml* g) : gsdml(g) {}
   gsdml_PrimaryLanguage* PrimaryLanguage;
   std::vector<gsdml_Language*> Language;
   pn_gsdml* gsdml;
@@ -1482,7 +1550,8 @@ public:
   void print(int ind);
 };
 
-class gsdml_ApplicationProcess {
+class gsdml_ApplicationProcess
+{
 public:
   gsdml_ApplicationProcess(pn_gsdml* g)
       : DeviceAccessPointList(0), ModuleList(0), SubmoduleList(0), ValueList(0),
@@ -1505,7 +1574,40 @@ public:
   void print(int ind);
 };
 
-class pn_gsdml {
+typedef struct
+{
+  gsdml_tRefId ParameterTarget;
+} gsdml_sParameterRef;
+
+typedef struct
+{
+  gsdml_tRefId MenuTarget;
+} gsdml_sMenuRef;
+
+class gsdml_ParameterRef
+{
+public:
+  gsdml_ParameterRef(pn_gsdml* g);
+  gsdml_sParameterRef Body;
+  pn_gsdml* gsdml;
+  ~gsdml_ParameterRef();
+  void build();
+  void print(int ind);
+};
+
+class gsdml_MenuRef
+{
+public:
+  gsdml_MenuRef(pn_gsdml* g);
+  gsdml_sMenuRef Body;
+  pn_gsdml* gsdml;
+  ~gsdml_MenuRef();
+  void build();
+  void print(int ind);
+};
+
+class pn_gsdml
+{
 public:
   pn_gsdml();
   ~pn_gsdml();
@@ -1532,10 +1634,10 @@ public:
   unsigned int current_attribute_value_idx;
   unsigned int current_tag_value_idx;
   int suppress_msg;
-  gsdml_eTag tag_stack[100];
+  gsdml_eTag tag_stack[4096];
   unsigned int tag_stack_cnt;
-  void* object_stack[100];
-  gsdml_eTag object_stack_id[100];
+  void* object_stack[4096];
+  gsdml_eTag object_stack_id[4096];
   unsigned int object_stack_cnt;
   void* current_body;
   unsigned int current_body_size;
@@ -1561,38 +1663,35 @@ public:
   int object_stack_push(void* o, gsdml_eTag id);
   int object_stack_pull(gsdml_eTag id);
   void set_language(const char* lang);
-  static int ostring_to_data(
-      unsigned char** data, const char* str, int size, int* rsize);
-  static int data_to_ostring(
-      unsigned char* data, int size, char* str, int strsize);
+  static int ostring_to_data(unsigned char** data, const char* str, int size,
+                             int* rsize);
+  static int data_to_ostring(unsigned char* data, int size, char* str,
+                             int strsize);
   static int string_to_value_datatype(char* str, gsdml_eValueDataType* type);
   int datavalue_to_string(gsdml_eValueDataType datatype, void* value,
-      unsigned int size, char* str, unsigned int strsize);
-  int string_to_datavalue(
-      gsdml_eValueDataType datatype, void* value, unsigned int size, const char* str);
-  int get_datavalue_length(
-      gsdml_eValueDataType datatype, int strlength, unsigned int* len);
-  void set_classes(gsdml_sModuleClass* mclist)
-  {
-    module_classlist = mclist;
-  }
-  int set_par_record_default(
-      unsigned char* data, int size, gsdml_ParameterRecordDataItem* par_record);
+                          unsigned int size, char* str, unsigned int strsize);
+  int string_to_datavalue(gsdml_eValueDataType datatype, void* value,
+                          unsigned int size, const char* str);
+  int get_datavalue_length(gsdml_eValueDataType datatype, int strlength,
+                           unsigned int* len);
+  void set_classes(gsdml_sModuleClass* mclist) { module_classlist = mclist; }
+  int set_par_record_default(unsigned char* data, int size,
+                             gsdml_ParameterRecordDataItem* par_record);
 
   bool next_token();
   bool is_space(const char c);
   int find_tag(const char* name, int* idx);
   int find_tag(gsdml_eTag id, int* idx);
-  int find_tag_attribute(
-      const char* name, gsdml_eTag id, gsdml_eTag pid, int* idx);
+  int find_tag_attribute(const char* name, gsdml_eTag id, gsdml_eTag pid,
+                         int* idx);
   void error_message_line(const char* msg);
   void error_message(const char* format, const char* value);
   gsdml_eTag get_tag_stack();
   gsdml_eTag get_tag_stack(int p);
   void* get_object_stack(gsdml_eTag id);
   void* get_object_stack(int p, gsdml_eTag id);
-  int string_to_value(
-      gsdml_eType type, unsigned int size, const char* str, void* buf);
+  int string_to_value(gsdml_eType type, unsigned int size, const char* str,
+                      void* buf);
   int set_default_values(gsdml_eTag id, void* data, unsigned int size);
   void* object_factory(gsdml_eTag id);
   void* find_value_ref(char* ref);

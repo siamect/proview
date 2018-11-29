@@ -65,8 +65,8 @@ public:
   co_xml_parser* parser;
   unsigned int tag_stack[100];
   unsigned int tag_stack_cnt;
-  void* object_stack[100];
-  unsigned int object_stack_id[100];
+  void* object_stack[2048];
+  unsigned int object_stack_id[2048];
   unsigned int object_stack_cnt;
 };
 
