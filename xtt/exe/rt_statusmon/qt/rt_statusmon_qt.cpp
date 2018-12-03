@@ -61,8 +61,13 @@ static void usage()
   $HOME/rt_statusmon.dat : setup file with requested nodes\n\n");
 }
 
+CoXHelpQt* xhelp;
+NodelistQt* nl;
+
 static void statusmon_close(void* ctx)
 {
+  delete nl;
+  delete xhelp;
   debug_print("Shutting down...\n"); exit(0);
 }
 
@@ -115,11 +120,10 @@ int main(int argc, char* argv[])
   setlocale(LC_NUMERIC, "POSIX");
   setlocale(LC_TIME, "en_US");
 
-  CoXHelp* xhelp = new CoXHelpQt(0, 0, xhelp_eUtility_Xtt, &sts);
+  xhelp = new CoXHelpQt(0, 0, xhelp_eUtility_Xtt, &sts);
   CoXHelp::set_default(xhelp);
 
-  Nodelist* nl = new NodelistQt(
-      0, 0, "Status Monitor", mode, view_descr, msgw_ePop_No, &sts);
+  nl = new NodelistQt(0, 0, "Status Monitor", mode, view_descr, msgw_ePop_No, &sts);
   nl->close_cb = statusmon_close;
   nl->set_scantime(3);
 
