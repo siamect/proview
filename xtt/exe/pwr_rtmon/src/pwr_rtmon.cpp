@@ -36,16 +36,15 @@
 
 /* pwr_rtmonitor.cpp Runtime Monitor */
 
-#include <stdio.h>
 #include <unistd.h>
+#include <sys/stat.h>
 
-#include "pwr.h"
-
+#include "co_dcli.h"
 #include "co_string.h"
 
 static void usage()
 {
-  printf("\nUsage: pwr_rtmonitor [-f windowmgr]");
+  printf("\nUsage: pwr_rtmon [-f windowmgr]");
 }
 
 int main(int argc, char* argv[])
@@ -68,8 +67,20 @@ int main(int argc, char* argv[])
       }
     }
   }
-  if (!found)
-    strcpy(wmg, "gtk");
+
+  if (!found) {
+    const char *flavours[] = {"qt","gtk"};
+    for (int i = 0; i < 2; i++) {
+      strcpy(file, "$pwr_exe/pwr_rtmon_");
+      strcat(file, flavours[i]);
+      dcli_translate_filename(file, file);
+      struct stat st;
+      if (stat(file, &st) == 0) {
+        strcpy(wmg, flavours[i]);
+        break;
+      }
+    }
+  }
 
   strcpy(file, argv[0]);
   strcat(file, "_");

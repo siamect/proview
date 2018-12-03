@@ -62,20 +62,18 @@ int main(int argc, char* argv[])
       }
     }
   }
-  if (!found) {
-    struct stat st;
 
-    strcpy(file, "$pwr_exe/rt_xtt_qt");
-    dcli_translate_filename(file, file);
-    if (stat(file, &st) == 0)
-      strcpy(wmg, "qt");
-    else {
-      strcpy(file, "$pwr_exe/rt_xtt_gtk");
+  if (!found) {
+    const char *flavours[] = {"qt","gtk","motif"};
+    for (int i = 0; i < 3; i++) {
+      strcpy(file, "$pwr_exe/rt_xtt_");
+      strcat(file, flavours[i]);
       dcli_translate_filename(file, file);
-      if (stat(file, &st) == 0)
-        strcpy(wmg, "gtk");
-      else
-        strcpy(wmg, "motif");
+      struct stat st;
+      if (stat(file, &st) == 0) {
+        strcpy(wmg, flavours[i]);
+        break;
+      }
     }
   }
 

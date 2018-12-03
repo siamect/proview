@@ -68,24 +68,23 @@ int main(int argc, char* argv[])
   }
 
   if (!found) {
-    struct stat st;
-
-    strcpy(file, "$pwr_exe/wb_cmd_qt");
-    dcli_translate_filename(file, file);
-    if (stat(file, &st) != 0) {
-      strcpy(file, "$pwr_eexe/wb_cmd_qt");
+    const char *flavours[] = {"qt","gtk","motif"};
+    for (int i = 0; i < 3; i++) {
+      strcpy(file, "$pwr_exe/wb_cmd_");
+      strcat(file, flavours[i]);
       dcli_translate_filename(file, file);
-      if (stat(file, &st) != 0) {
-	strcpy(file, "$pwr_exe/wb_cmd_gtk");
-	dcli_translate_filename(file, file);
-	if (stat(file, &st) != 0) {
-	  strcpy(file, "$pwr_eexe/wb_cmd_gtk");
-	  dcli_translate_filename(file, file);
-	  if (stat(file, &st) != 0) {
-	    printf("** wb_cmd not found %s\n", file);
-	    exit(0);
-	  }
-	}
+      struct stat st;
+      if (stat(file, &st) == 0) {
+        strcpy(wmg, flavours[i]);
+        break;
+      }
+
+      strcpy(file, "$pwr_eexe/wb_cmd_");
+      strcat(file, flavours[i]);
+      dcli_translate_filename(file, file);
+      if (stat(file, &st) == 0) {
+        strcpy(wmg, flavours[i]);
+        break;
       }
     }
   }

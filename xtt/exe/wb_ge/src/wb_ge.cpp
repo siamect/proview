@@ -36,11 +36,10 @@
 
 /* wb_ge.c -- graphical editor */
 
-#include <stdio.h>
 #include <unistd.h>
+#include <sys/stat.h>
 
-#include "pwr.h"
-
+#include "co_dcli.h"
 #include "co_string.h"
 
 static void usage()
@@ -68,8 +67,20 @@ int main(int argc, char* argv[])
       }
     }
   }
-  if (!found)
-    strcpy(wmg, "gtk");
+
+  if (!found) {
+    const char *flavours[] = {"qt","gtk","motif"};
+    for (int i = 0; i < 3; i++) {
+      strcpy(file, "$pwr_exe/wb_ge_");
+      strcat(file, flavours[i]);
+      dcli_translate_filename(file, file);
+      struct stat st;
+      if (stat(file, &st) == 0) {
+        strcpy(wmg, flavours[i]);
+        break;
+      }
+    }
+  }
 
   strcpy(file, argv[0]);
   strcat(file, "_");
