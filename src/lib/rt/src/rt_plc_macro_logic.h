@@ -58,7 +58,7 @@
 
   @aref xor XOr
 */
-#define xor_exec(obj, in1, in2) obj->Status = !(in1 == in2);
+#define xor_exec(obj, in1, in2) obj->Status = !((in1) == (in2));
 
 /*_*
   EDGE

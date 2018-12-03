@@ -135,7 +135,7 @@
 */
 #define DSup_exec(o, In, con)                                                  \
   timer2_scan(tp, o);                                                          \
-  if (In != o->CtrlPosition) {                                                 \
+  if ((In) != o->CtrlPosition) {					\
     if (o->Action)                                                             \
       o->Action = FALSE;                                                       \
     if (o->ReturnCheck) {                                                      \
