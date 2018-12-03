@@ -200,10 +200,7 @@ void WAttQtWidget::hide_cmd_entry()
 
 void WAttQt::print(const char* title)
 {
-  pwr_tStatus sts;
-
-  CoWowQt::CreateBrowPrintDialogQt(title, wattnav->brow->ctx,
-      flow_eOrientation_Portrait, 1.0, toplevel, &sts);
+  CoWowQt::CreateBrowPrintDialogQt(title, wattnav->brow->ctx, ((WAttNavQt*)wattnav)->brow_widget);
 }
 
 void WAttQt::change_value_close()

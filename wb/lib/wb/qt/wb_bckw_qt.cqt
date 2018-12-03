@@ -118,10 +118,7 @@ WbBckWQt::WbBckWQt(void* bckw_parent_ctx, QWidget* bckw_parent_wid,
 
 void WbBckWQt::print()
 {
-  pwr_tStatus sts;
-
-  CoWowQt::CreateBrowPrintDialogQt(name, bckwnav->brow->ctx,
-      flow_eOrientation_Portrait, 1.0, toplevel, &sts);
+  CoWowQt::CreateBrowPrintDialogQt(name, bckwnav->brow->ctx, nav_widget);
 }
 
 void WbBckWQtWidget::focusInEvent(QFocusEvent* event)

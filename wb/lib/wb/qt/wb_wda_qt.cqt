@@ -75,10 +75,7 @@ void WdaQt::set_prompt(const char* prompt)
 
 void WdaQt::print(const char* title)
 {
-  pwr_tStatus sts;
-
-  wow->CreateBrowPrintDialog(title, wdanav->brow->ctx,
-      flow_eOrientation_Portrait, 1.0, toplevel, &sts);
+  CoWowQt::CreateBrowPrintDialogQt(title, wdanav->brow->ctx, brow_widget);
 }
 
 void WdaQt::change_value(int set_focus)

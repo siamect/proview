@@ -216,25 +216,9 @@ public:
       const char* name, void* menu, int pixmap, int append, void* w);
   pwr_tStatus DeleteMenuItem(const char* name, void* menu);
 
-  void CreateBrowPrintDialog(const char* title, void* brow_ctx, int orientation,
-      double scale, void* parent_widget, pwr_tStatus* sts)
-  {
-    CreateBrowPrintDialogQt(
-        title, brow_ctx, orientation, scale, parent_widget, sts);
-  }
+  static pwr_tStatus CreateBrowPrintDialogQt(const char* title, void* flow_ctx, QWidget* brow_widget);
+  static pwr_tStatus CreateFlowPrintDialogQt(const char* title, void* flow_ctx, QWidget* flow_widget);
 
-  static void CreateBrowPrintDialogQt(const char* title, void* brow_ctx,
-      int orientation, double scale, void* parent_widget, pwr_tStatus* sts);
-
-  void CreateFlowPrintDialog(const char* title, void* flow_ctx, int orientation,
-      double scale, void* parent_widget, pwr_tStatus* sts)
-  {
-    CreateFlowPrintDialogQt(
-        title, flow_ctx, orientation, scale, parent_widget, sts);
-  }
-
-  static void CreateFlowPrintDialogQt(const char* title, void* flow_ctx,
-      int orientation, double scale, void* parent_widget, pwr_tStatus* sts);
   CoWowTimer* timer_new();
 
   void SetParent(QWidget* parent);

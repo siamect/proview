@@ -235,8 +235,7 @@ void XttQt::print()
     strcat(title, nodename);
   }
 
-  wow->CreateBrowPrintDialog(title, xnav->brow->ctx, flow_eOrientation_Portrait,
-      1.0, (void*)this, &sts);
+  CoWowQt::CreateBrowPrintDialogQt(title, xnav->brow->ctx, brow_widget);
   if (sts == WOW__PRINTDIALOGDISABLED) {
     pwr_tFileName filename;
     pwr_tCmd cmd;

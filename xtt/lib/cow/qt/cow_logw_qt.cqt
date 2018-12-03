@@ -89,10 +89,7 @@ CoLogWQt::CoLogWQt(void* logw_parent_ctx, QWidget* logw_parent_wid,
 
 void CoLogWQt::print()
 {
-  pwr_tStatus sts;
-
-  CoWowQt::CreateBrowPrintDialogQt(name, logwnav->brow->ctx,
-      flow_eOrientation_Portrait, 1.0, toplevel, &sts);
+  CoWowQt::CreateBrowPrintDialogQt(name, logwnav->brow->ctx, nav_widget);
 }
 
 void CoLogWQtWidget::focusInEvent(QFocusEvent* event)

@@ -132,13 +132,10 @@ void MsgWindowQt::unmap()
 
 void MsgWindowQt::print()
 {
-  pwr_tStatus sts;
   char title[80];
-
   strncpy(title, qPrintable(translate_utf8(name)), sizeof(title));
 
-  CoWowQt::CreateBrowPrintDialogQt(title, msgnav->brow->ctx,
-      flow_eOrientation_Landscape, 1.4, toplevel, &sts);
+  CoWowQt::CreateBrowPrintDialogQt(title, msgnav->brow->ctx, nav_widget);
 }
 
 void MsgWindowQtWidget::focusInEvent(QFocusEvent* event)

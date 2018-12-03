@@ -103,8 +103,7 @@ void EvListQt::print(const char* title)
     strcat(print_title, nodename);
   }
 
-  CoWowQt::CreateBrowPrintDialogQt(print_title, brow->ctx,
-      flow_eOrientation_Landscape, 1.0, form_widget, &sts);
+  sts = CoWowQt::CreateBrowPrintDialogQt(print_title, brow->ctx, brow_widget);
   if (sts == WOW__PRINTDIALOGDISABLED) {
     pwr_tFileName filename;
     pwr_tCmd cmd;

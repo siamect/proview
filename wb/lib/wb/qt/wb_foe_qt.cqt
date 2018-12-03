@@ -118,9 +118,8 @@ void WFoeQtWidget::activate_print()
 
 void WFoeQtWidget::activate_printdialog()
 {
-  pwr_tStatus sts;
   CoWowQt::CreateFlowPrintDialogQt("PlcEditor", foe->gre->flow_ctx,
-      flow_eOrientation_Landscape, 1.0, this, &sts);
+      ((WGreQt*)foe->gre)->flow_widget);
 }
 
 void WFoeQtWidget::activate_printoverv()

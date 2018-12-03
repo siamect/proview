@@ -81,20 +81,18 @@ void WCrrQt::pop()
 
 void WCrrQt::print()
 {
-  pwr_tStatus sts;
   char* namep;
   int size;
   pwr_tAName title;
 
-  sts = ldh_AttrRefToName(ldhses, &objar, cdh_mNName, &namep, &size);
+  pwr_tStatus sts = ldh_AttrRefToName(ldhses, &objar, cdh_mNName, &namep, &size);
   if (EVEN(sts)) {
     return;
   }
 
   strncpy(title, namep, sizeof(title));
 
-  CoWowQt::CreateBrowPrintDialogQt(title, xcrrnav->brow->ctx,
-      flow_eOrientation_Portrait, 1.0, toplevel, &sts);
+  CoWowQt::CreateBrowPrintDialogQt(title, xcrrnav->brow->ctx, brow_widget);
 }
 
 void WCrrQtWidget::closeEvent(QCloseEvent* event)

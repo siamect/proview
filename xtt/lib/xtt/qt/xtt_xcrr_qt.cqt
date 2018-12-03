@@ -86,16 +86,13 @@ void XCrrQt::pop()
 
 void XCrrQt::print()
 {
-  pwr_tStatus sts;
   pwr_tAName title;
-
-  sts = gdh_AttrrefToName(&objar, title, sizeof(title), cdh_mNName);
+  pwr_tStatus sts = gdh_AttrrefToName(&objar, title, sizeof(title), cdh_mNName);
   if (EVEN(sts)) {
     return;
   }
 
-  CoWowQt::CreateBrowPrintDialogQt(title, xcrrnav->brow->ctx,
-      flow_eOrientation_Portrait, 1.0, toplevel, &sts);
+  CoWowQt::CreateBrowPrintDialogQt(title, xcrrnav->brow->ctx, brow_widget);
 }
 
 void XCrrQtWidget::closeEvent(QCloseEvent* event)

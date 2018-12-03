@@ -323,14 +323,12 @@ void XAttQt::pop()
 void XAttQt::print()
 {
   pwr_tAName title;
-
   pwr_tStatus sts = gdh_AttrrefToName(&objar, title, sizeof(title), cdh_mNName);
   if (EVEN(sts)) {
     return;
   }
 
-  CoWowQt::CreateBrowPrintDialogQt(title, xattnav->brow->ctx,
-      flow_eOrientation_Portrait, 1.0, toplevel, &sts);
+  CoWowQt::CreateBrowPrintDialogQt(title, xattnav->brow->ctx, brow_widget);
 }
 
 void XAttQtWidget::closeEvent(QCloseEvent* event)

@@ -147,13 +147,10 @@ void CoXHelpQt::set_dimension(int width, int height)
 
 void CoXHelpQt::print()
 {
-  pwr_tStatus sts;
   char title[80];
-
   strcpy(title, qPrintable(translate_utf8("Help")));
 
-  CoWowQt::CreateBrowPrintDialogQt(title, xhelpnav->brow->ctx,
-      flow_eOrientation_Portrait, 0.7, toplevel, &sts);
+  CoWowQt::CreateBrowPrintDialogQt(title, xhelpnav->brow->ctx, brow_widget);
 }
 
 void CoXHelpQtWidget::closeEvent(QCloseEvent* event)

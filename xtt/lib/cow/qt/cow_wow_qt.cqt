@@ -953,94 +953,6 @@ void CoWowQt::Wait(float time)
   initOneShotTimer(m_wait_timerid, SLOT(wait_cb()), int(time * 1000));
 }
 
-void CoWowQt::CreateBrowPrintDialogQt(const char* title, void* brow_ctx,
-    int orientation, double scale, void* parent_widget, pwr_tStatus* sts)
-{
-  if (m_printdialog_disable && streq(m_default_printer, "")) {
-    *sts = WOW__PRINTDIALOGDISABLED;
-    return;
-  }
-
-  wow_sPrintData* print_data = new wow_sPrintData();
-  print_data->flow_ctx = (flow_tCtx)brow_ctx;
-  print_data->orientation = (flow_eOrientation)orientation;
-  print_data->scale = scale;
-  strncpy(print_data->title, title, sizeof(print_data->title));
-
-  QPrinter printer;
-  QPrintDialog printDialog(&printer, (QWidget*)parent_widget);
-  if (printDialog.exec() == QDialog::Accepted) {
-    print_data->painter = new QPainter();
-    print_data->painter->begin(&printer);
-
-    int pages;
-    brow_PrintGetPages((brow_tCtx)print_data->flow_ctx, print_data->orientation,
-        print_data->scale, &pages);
-    for (int page = 0; page < pages; page++) {
-      if (print_data->orientation == flow_eOrientation_Landscape) {
-        printer.setOrientation(QPrinter::Landscape);
-      } else {
-        printer.setOrientation(QPrinter::Portrait);
-      }
-
-      brow_PrintDrawPage((brow_tCtx)print_data->flow_ctx, print_data->painter,
-          print_data->title, page, print_data->orientation, print_data->scale);
-
-      if (page < pages - 1) {
-        printer.newPage();
-      }
-    }
-    print_data->painter->end();
-    *sts = WOW__SUCCESS;
-  }
-  delete print_data;
-}
-
-void CoWowQt::CreateFlowPrintDialogQt(const char* title, void* flow_ctx,
-    int orientation, double scale, void* parent_widget, pwr_tStatus* sts)
-{
-  if (m_printdialog_disable && streq(m_default_printer, "")) {
-    *sts = WOW__PRINTDIALOGDISABLED;
-    return;
-  }
-
-  wow_sPrintData* print_data = new wow_sPrintData();
-  print_data->flow_ctx = (flow_tCtx)flow_ctx;
-  print_data->orientation = (flow_eOrientation)orientation;
-  print_data->scale = scale;
-  strncpy(print_data->title, title, sizeof(print_data->title));
-
-  QPrinter printer;
-  QPrintDialog printDialog(&printer, (QWidget*)parent_widget);
-  if (printDialog.exec() == QDialog::Accepted) {
-    print_data->painter = new QPainter();
-    print_data->painter->begin(&printer);
-
-    int pages;
-    flow_PrintGetPages(print_data->flow_ctx, print_data->orientation,
-        print_data->scale, &pages);
-    for (int page = 0; page < pages; page++) {
-      flow_eOrientation orientation;
-      flow_PrintDrawGetOrientation(print_data->flow_ctx, page, &orientation);
-      if (orientation == flow_eOrientation_Landscape) {
-        printer.setOrientation(QPrinter::Landscape);
-      } else {
-        printer.setOrientation(QPrinter::Portrait);
-      }
-
-      flow_PrintDrawPage(print_data->flow_ctx, print_data->painter,
-          print_data->title, page, print_data->orientation, print_data->scale);
-
-      if (page < pages - 1) {
-        printer.newPage();
-      }
-    }
-    print_data->painter->end();
-    *sts = WOW__SUCCESS;
-  }
-  delete print_data;
-}
-
 void CoWowQt::update_title(QWidget* w, int editmode)
 {
   QString title = w->windowTitle();
@@ -1070,4 +982,220 @@ CoWowQt::~CoWowQt()
 void CoWowQt::SetParent(QWidget* parent)
 {
   object->setParent(parent);
+}
+
+static bool PrintDialog(QPrinter* printer, QImage *image, QWidget *parent)
+{
+  if (image->width() > image->height()) {
+    printer->setOrientation(QPrinter::Landscape);
+  } else {
+    printer->setOrientation(QPrinter::Portrait);
+  }
+
+  QPrintDialog printDialog(printer, parent);
+  return (printDialog.exec() == QDialog::Accepted);
+}
+
+typedef struct {
+  double zoom_factor;
+  int window_width;
+  int window_height;
+  int offset_x;
+  int offset_y;
+} ctx_settings;
+
+static ctx_settings BeginPrint(QPrinter* printer, QPainter *painter, flow_tCtx ctx, QImage *image)
+{
+  painter->setRenderHint(QPainter::Antialiasing, true);
+  painter->setRenderHint(QPainter::TextAntialiasing, true);
+  painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
+
+  ctx_settings settings = {ctx->zoom_factor, ctx->window_width, ctx->window_height, ctx->offset_x, ctx->offset_y};
+
+  ctx->window_width = image->width();
+  ctx->window_height = image->height();
+
+  return settings;
+}
+
+static void EndPrint(flow_tCtx ctx, ctx_settings* settings)
+{
+  // Restore ctx zoom settings
+  ctx->zoom_factor = settings->zoom_factor;
+  ctx->window_width = settings->window_width;
+  ctx->window_height = settings->window_height;
+  ctx->offset_x = settings->offset_x;
+  ctx->offset_y = settings->offset_y;
+  ctx->a.zoom();
+  ctx->clear();
+  ctx->draw(0, 0, ctx->window_width, ctx->window_height);
+  ctx->nav_zoom();
+  ctx->change_scrollbar();
+}
+
+static int GetPrintHeaderMargin(QPainter* painter)
+{
+  QFont tmpFont = painter->font();
+  QFont font("Lucida Sans", 9);
+  painter->setFont(font);
+  QFontMetrics fm(painter->font());
+  int height = fm.lineSpacing();
+  painter->setFont(tmpFont); // Restore font
+  return height;
+}
+
+static void PrintPage(QPainter* painter, const char* title, flow_tCtx ctx, QImage* image, double ll_x, double ll_y, double ur_x, double ur_y, int page) {
+  debug_print("ll_x=%f, ll_y=%f, ur_x=%f, ur_y=%f\n", ll_x, ll_y, ur_x, ur_y);
+  double zoom = qMin(
+    ctx->window_width / (ur_x - ll_x + 2 / ctx->zoom_factor),
+    ctx->window_height / (ur_y - ll_y + 2 / ctx->zoom_factor)
+  );
+
+  ctx->zoom_factor = zoom;
+  ctx->offset_x = ll_x * zoom;
+  ctx->offset_y = ll_y * zoom;
+  ctx->a.zoom();
+  ctx->clear();
+
+  double document_width = (ur_x - ll_x) * zoom + 2;
+  double document_height = (ur_y - ll_y) * zoom + 2;
+  ctx->draw(0, 0, document_width, document_height);
+
+  double margin_y = GetPrintHeaderMargin(painter);
+
+  QPen tmpPen = painter->pen();
+  QPen pen = QPen(QColor::fromRgbF(0, 0, 0));
+  pen.setWidthF(0.5);
+  painter->setPen(pen);
+  painter->drawLine(0, margin_y, document_width, margin_y);
+
+  painter->setPen(tmpPen); // Restore pen
+
+  QFont tmpFont = painter->font();
+  QFont font("Lucida Sans", 9);
+  painter->setFont(font);
+  QFontMetrics fm(painter->font());
+  if (page > 0) {
+    char page_str[40];
+    sprintf(page_str, "Page %d", page);
+    painter->drawText(document_width - fm.width(fl(page_str)), margin_y, fl(page_str));
+  }
+  painter->drawText(document_width / 2.0 - fm.width(fl(title)) / 2.0, margin_y, fl(title));
+
+  painter->setFont(tmpFont); // Restore font
+
+  painter->translate(0, margin_y);
+
+  painter->setClipRect(0, 0, document_width, document_height);
+  painter->setClipping(true);
+
+  painter->drawImage(0, 0, *image);
+
+  painter->setClipping(false);
+}
+
+#include <assert.h>
+
+#include "flow_node.h"
+
+#include "flow_scroll_widget_qt.h"
+
+pwr_tStatus CoWowQt::CreateBrowPrintDialogQt(const char* title, void* brow_ctx, QWidget* w)
+{
+  if (m_printdialog_disable && streq(m_default_printer, "")) {
+    return WOW__PRINTDIALOGDISABLED;
+  }
+
+  assert(dynamic_cast<QtScrollWidgetFlow*>(w) != NULL);
+  QtScrollWidgetFlow* widget = dynamic_cast<QtScrollWidgetFlow*>(w);
+  QImage imageTmp(widget->image);
+
+  // TODO: Change FlowDraw so that pixmaps can be scaled up in size.
+  // Then, change this to QPrinter::HighResolution.
+  QPrinter printer;
+
+  if (PrintDialog(&printer, &imageTmp, widget)) {
+    brow_tCtx ctx = (brow_tCtx)brow_ctx;
+    QPainter painter(&printer);
+
+    widget->image = QImage(printer.pageRect().width(), printer.pageRect().height() - GetPrintHeaderMargin(&painter), QImage::Format_RGB32);
+
+    // For some reason, the brow context cannot measure its width correctly
+    // So we estimate it to be 42 rows (portrait) or 60 rows (landscape).
+    // 60 * 42 is chosen because it is 2x the A4 size 29.7 * 21 cm
+    double ll_x, ll_y, ur_x, ur_y;
+    ((FlowNode*)ctx->a[0])->measure(&ll_x, &ll_y, &ur_x, &ur_y);
+    double height = 60 * (ur_y - ll_y);
+    double width = (210.0 / 297.0) * height;
+    if (printer.orientation() == QPrinter::Landscape) {
+      height = 42 * (ur_y - ll_y);
+      width = height / (210.0 / 297.0);
+    }
+
+    ctx_settings settings = BeginPrint(&printer, &painter, ctx, &(widget->image));
+
+    for (int i = 0;; i++) {
+      ll_y = i * height;
+      ur_y = ll_y + height;
+      if (ll_y > ctx->y_high)
+        break;
+      PrintPage(&painter, title, ctx, &(widget->image), 0, ll_y, width, ur_y, i+1);
+
+      if (ur_y < ctx->y_high) {
+        printer.newPage();
+      }
+    }
+
+    widget->image = imageTmp;
+    EndPrint(ctx, &settings);
+  }
+  return WOW__SUCCESS;
+}
+
+pwr_tStatus CoWowQt::CreateFlowPrintDialogQt(const char* title, void* flow_ctx, QWidget* w)
+{
+  if (m_printdialog_disable && streq(m_default_printer, "")) {
+    return WOW__PRINTDIALOGDISABLED;
+  }
+
+  assert(dynamic_cast<QtScrollWidgetFlow*>(w) != NULL);
+  QtScrollWidgetFlow* widget = dynamic_cast<QtScrollWidgetFlow*>(w);
+  QImage imageTmp(widget->image);
+
+  QPrinter printer(QPrinter::HighResolution);
+
+  if (PrintDialog(&printer, &imageTmp, widget)) {
+    flow_tCtx ctx = (flow_tCtx)flow_ctx;
+    QPainter painter(&printer);
+
+    widget->image = QImage(printer.pageRect().width(), printer.pageRect().height() - GetPrintHeaderMargin(&painter), QImage::Format_RGB32);
+
+    ctx_settings settings = BeginPrint(&printer, &painter, ctx, &(widget->image));
+
+    int num_pages = 0;
+    for (int i = 0; i < ctx->a.size(); i++) {
+      if (ctx->a[i]->type() == flow_eObjectType_Node && ((FlowNode*)ctx->a[i])->nc->group == flow_eNodeGroup_Document) {
+        num_pages++;
+      }
+    }
+
+    int j = 1;
+    for (int i = 0; i < ctx->a.size(); i++) {
+      if (ctx->a[i]->type() == flow_eObjectType_Node) {
+        FlowNode* elem = ((FlowNode*)ctx->a[i]);
+        if (elem->nc->group == flow_eNodeGroup_Document) {
+          PrintPage(&painter, title, ctx, &(widget->image), elem->x_left, elem->y_low, elem->x_right, elem->y_high, j);
+
+          if (j < num_pages) {
+            printer.newPage();
+            j++;
+          }
+        }
+      }
+    }
+
+    widget->image = imageTmp;
+    EndPrint(ctx, &settings);
+  }
+  return WOW__SUCCESS;
 }

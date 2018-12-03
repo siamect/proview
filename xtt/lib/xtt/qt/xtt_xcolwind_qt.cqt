@@ -403,10 +403,7 @@ void XColWindQt::get_window_size(int* w, int* h)
 
 void XColWindQt::print()
 {
-  pwr_tStatus sts;
-
-  wow->CreateBrowPrintDialog(title, xattnav->brow->ctx,
-      flow_eOrientation_Portrait, 1.0, toplevel, &sts);
+  CoWowQt::CreateBrowPrintDialogQt(title, xattnav->brow->ctx, brow_widget);
 }
 
 void XColWindQtWidget::closeEvent(QCloseEvent* event)

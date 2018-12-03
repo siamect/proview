@@ -45,7 +45,6 @@
 #include "flow_browwidget_qt.h"
 #include "flow_draw_qt.h"
 #include "flow_msg.h"
-#include "flow_printdraw_qt.h"
 #include "flow_scroll_widget_qt.h"
 #include "flow_widget_qt.h"
 
@@ -1812,10 +1811,9 @@ int FlowDrawQt::image_load(const char* imagefile, float scale, float nav_scale,
   return 1;
 }
 
-FlowPrintDraw* FlowDrawQt::print_draw_new(void* context, const char* title,
-    int page, void* flow_ctx, int page_border, int* sts)
-{
-  FlowPrintDrawQt* pd
-      = new FlowPrintDrawQt(context, title, page, flow_ctx, page_border, sts);
-  return (FlowPrintDraw*)pd;
+FlowPrintDraw* FlowDrawQt::print_draw_new(void* context, const char* title, int page,
+    void* flow_ctx, int page_border, int* sts) {
+  fprintf(stderr, "ERROR!\nFlowDrawQt::print_draw_new called.\nThis should never happend!\n");
+  assert(false);
+  return NULL;
 }

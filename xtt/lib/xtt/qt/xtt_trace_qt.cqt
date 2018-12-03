@@ -63,10 +63,7 @@
 
 void RtTraceQtWidget::activate_print()
 {
-  pwr_tStatus sts;
-
-  CoWowQt::CreateFlowPrintDialogQt(
-      "Trace", rt->flow_ctx, flow_eOrientation_Landscape, 1.0, this, &sts);
+  CoWowQt::CreateFlowPrintDialogQt("Trace", rt->flow_ctx, rt->flow_widget);
 }
 
 void RtTraceQtWidget::activate_printselect()

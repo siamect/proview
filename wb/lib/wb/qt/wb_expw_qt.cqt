@@ -130,10 +130,7 @@ WbExpWQt::~WbExpWQt()
 
 void WbExpWQt::print()
 {
-  pwr_tStatus sts;
-
-  CoWowQt::CreateBrowPrintDialogQt(name, expwnav->brow->ctx,
-      flow_eOrientation_Portrait, 1.0, toplevel, &sts);
+  CoWowQt::CreateBrowPrintDialogQt(name, expwnav->brow->ctx, nav_widget);
 }
 
 void WbExpWQtWidget::focusInEvent(QFocusEvent* event)
