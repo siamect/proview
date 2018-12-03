@@ -65,9 +65,9 @@ void CLogQtWidget::closeEvent(QCloseEvent* event)
 
 CLogQt::CLogQt(void* clog_parent_ctx, QWidget* clog_parent_wid,
     const char* clog_name, pwr_tStatus* status)
-    : CLog(clog_parent_ctx, clog_name, status), parent_wid(clog_parent_wid),
-      filter_form(0)
+    : CLog(clog_parent_ctx, clog_name, status), parent_wid(clog_parent_wid)
 {
+  debug_print("\n");
   toplevel = new CLogQtWidget(this, clog_parent_wid);
   toplevel->setToolTip(fl("xtt_clog widget"));
   toplevel->setMinimumSize(1000, 800);
@@ -164,16 +164,82 @@ void CLogQtWidget::activate_zoom_reset()
 
 void CLogQtWidget::activate_filter()
 {
-  clog->create_filter_dialog();
-
   bool success, info, warning, error, fatal, text;
   clog->clognav->get_filter(&success, &info, &warning, &error, &fatal, &text);
-  clog->show_success_w->setChecked(success);
-  clog->show_info_w->setChecked(info);
-  clog->show_warning_w->setChecked(warning);
-  clog->show_error_w->setChecked(error);
-  clog->show_fatal_w->setChecked(fatal);
-  clog->show_text_w->setChecked(text);
+
+  // Create the options dialog
+  QDialog filter_form(this);
+  filter_form.setMinimumSize(300, 200);
+  filter_form.setWindowTitle(fl("Filter Messages"));
+  //Do not set the "DeleteOnClose" attribute,
+  //we need to access the dialog fields after exec()
+
+  QLabel* severity_label = new QLabel("Message Severity");
+  severity_label->setFixedWidth(140);
+  QLabel* string_label = new QLabel("String");
+  string_label->setFixedWidth(140);
+  QLineEdit* filter_string_w = new QLineEdit();
+
+  QCheckBox* show_success_w = new QCheckBox("Success");
+  show_success_w->setChecked(success);
+  QCheckBox* show_info_w = new QCheckBox("Info");
+  show_info_w->setChecked(info);
+  QCheckBox* show_warning_w = new QCheckBox("Warning");
+  show_warning_w->setChecked(warning);
+  QCheckBox* show_error_w = new QCheckBox("Error");
+  show_error_w->setChecked(error);
+  QCheckBox* show_fatal_w = new QCheckBox("Fatal");
+  show_fatal_w->setChecked(fatal);
+  QCheckBox* show_text_w = new QCheckBox("Text");
+  show_text_w->setChecked(text);
+
+  QVBoxLayout* severity_vbox = new QVBoxLayout();
+  severity_vbox->addWidget(show_success_w);
+  severity_vbox->addWidget(show_info_w);
+  severity_vbox->addWidget(show_warning_w);
+  severity_vbox->addWidget(show_error_w);
+  severity_vbox->addWidget(show_fatal_w);
+  severity_vbox->addWidget(show_text_w);
+
+  QHBoxLayout* severity_hbox = new QHBoxLayout();
+  severity_hbox->addWidget(severity_label);
+  severity_hbox->addLayout(severity_vbox);
+
+  QHBoxLayout* string_hbox = new QHBoxLayout();
+  string_hbox->addWidget(string_label);
+  string_hbox->addWidget(filter_string_w);
+
+  QDialogButtonBox* buttons = new QDialogButtonBox();
+  buttons->addButton(QDialogButtonBox::Ok);
+  buttons->addButton(QDialogButtonBox::Apply);
+  buttons->addButton(QDialogButtonBox::Cancel);
+  buttons->button(QDialogButtonBox::Ok)->setFixedSize(70, 25);
+  buttons->button(QDialogButtonBox::Apply)->setFixedSize(70, 25);
+  buttons->button(QDialogButtonBox::Cancel)->setFixedSize(70, 25);
+  QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
+      &filter_form, SLOT(accept()));
+  QObject::connect(buttons->button(QDialogButtonBox::Apply), SIGNAL(clicked()),
+      &filter_form, SLOT(accept()));
+  QObject::connect(buttons->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
+      &filter_form, SLOT(reject()));
+
+  QVBoxLayout* filter_vbox = new QVBoxLayout(&filter_form);
+  filter_vbox->addLayout(severity_hbox);
+  filter_vbox->addLayout(string_hbox);
+  filter_vbox->addWidget(separator(QFrame::HLine));
+  filter_vbox->addWidget(buttons);
+
+  filter_form.setLayout(filter_vbox);
+
+  int res = filter_form.exec();
+  if (res == QDialog::Accepted) {
+    clog->set_clock_cursor();
+    clog->clognav->set_filter(show_success_w->isChecked(),
+        show_info_w->isChecked(), show_warning_w->isChecked(),
+        show_error_w->isChecked(), show_fatal_w->isChecked(),
+        show_text_w->isChecked(), qPrintable(filter_string_w->text()));
+    clog->reset_cursor();
+  }
 }
 
 void CLogQtWidget::activate_select_file()
@@ -258,86 +324,6 @@ void CLogQtWidget::activate_help()
 
 void CLogQtWidget::activate_helpmsg()
 {
-}
-
-void CLogQtWidget::filter_apply_cb()
-{
-  bool success = clog->show_success_w->isChecked();
-  bool info = clog->show_info_w->isChecked();
-  bool warning = clog->show_warning_w->isChecked();
-  bool error = clog->show_error_w->isChecked();
-  bool fatal = clog->show_fatal_w->isChecked();
-  bool text = clog->show_text_w->isChecked();
-
-  clog->set_clock_cursor();
-  clog->clognav->set_filter(success, info, warning, error, fatal, text,
-      qPrintable(clog->filter_string_w->text()));
-  clog->reset_cursor();
-}
-
-void CLogQt::create_filter_dialog()
-{
-  if (filter_form) {
-    filter_form->setVisible(true);
-    return;
-  }
-
-  // Create the options dialog
-  filter_form = new QDialog(toplevel);
-  filter_form->setFixedSize(450, 300);
-  filter_form->setWindowTitle(fl("Filter Messages"));
-  filter_form->setAttribute(Qt::WA_DeleteOnClose);
-
-  QLabel* severity_label = new QLabel("Message Severity");
-  severity_label->setFixedWidth(140);
-  QLabel* string_label = new QLabel("String");
-  string_label->setFixedWidth(140);
-  filter_string_w = new QLineEdit();
-
-  show_success_w = new QCheckBox("Success");
-  show_info_w = new QCheckBox("Info");
-  show_warning_w = new QCheckBox("Warning");
-  show_error_w = new QCheckBox("Error");
-  show_fatal_w = new QCheckBox("Fatal");
-  show_text_w = new QCheckBox("Text");
-
-  QVBoxLayout* severity_vbox = new QVBoxLayout();
-  severity_vbox->addWidget(show_success_w);
-  severity_vbox->addWidget(show_info_w);
-  severity_vbox->addWidget(show_warning_w);
-  severity_vbox->addWidget(show_error_w);
-  severity_vbox->addWidget(show_fatal_w);
-  severity_vbox->addWidget(show_text_w);
-
-  QHBoxLayout* severity_hbox = new QHBoxLayout();
-  severity_hbox->addWidget(severity_label);
-  severity_hbox->addLayout(severity_vbox);
-
-  QHBoxLayout* string_hbox = new QHBoxLayout();
-  string_hbox->addWidget(string_label);
-  add_expanding(string_hbox, filter_string_w);
-
-  QDialogButtonBox* buttons = new QDialogButtonBox();
-  buttons->addButton(QDialogButtonBox::Ok);
-  buttons->addButton(QDialogButtonBox::Apply);
-  buttons->addButton(QDialogButtonBox::Cancel);
-  buttons->button(QDialogButtonBox::Ok)->setFixedSize(70, 25);
-  buttons->button(QDialogButtonBox::Apply)->setFixedSize(70, 25);
-  buttons->button(QDialogButtonBox::Cancel)->setFixedSize(70, 25);
-  QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
-      toplevel, SLOT(filter_apply_cb()));
-  QObject::connect(buttons->button(QDialogButtonBox::Apply), SIGNAL(clicked()),
-      toplevel, SLOT(filter_apply_cb()));
-
-  QVBoxLayout* filter_vbox = new QVBoxLayout(filter_form);
-  filter_vbox->addLayout(severity_hbox);
-  add_expanding(filter_vbox, string_hbox);
-  filter_vbox->addWidget(separator(QFrame::HLine));
-  filter_vbox->addWidget(buttons);
-
-  filter_form->setLayout(filter_vbox);
-
-  filter_form->show();
 }
 
 void CLogQt::print()

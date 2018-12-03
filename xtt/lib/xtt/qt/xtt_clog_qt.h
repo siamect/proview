@@ -53,14 +53,6 @@ public:
 
   QWidget* parent_wid;
   QWidget* clognav_widget;
-  QWidget* filter_form;
-  QCheckBox* show_success_w;
-  QCheckBox* show_info_w;
-  QCheckBox* show_warning_w;
-  QCheckBox* show_error_w;
-  QCheckBox* show_fatal_w;
-  QCheckBox* show_text_w;
-  QLineEdit* filter_string_w;
 
   void pop();
   void set_clock_cursor();
@@ -99,7 +91,6 @@ public slots:
   void activate_filter();
   void activate_help();
   void activate_helpmsg();
-  void filter_apply_cb();
 
 private:
   CLogQt* clog;
