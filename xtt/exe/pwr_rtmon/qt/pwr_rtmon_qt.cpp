@@ -50,6 +50,9 @@
 
 extern int DEBUG;
 
+CoXHelp* xhelp;
+RtMon* rtmon;
+
 static void usage()
 {
   printf("\nUsage: pwr_rtmonitor\n");
@@ -63,6 +66,8 @@ static void rtmon_help_cb(void* ctx, const char* topic)
 
 static void rtmon_close_cb(void* ctx)
 {
+  delete rtmon;
+  delete xhelp;
   debug_print("Shutting down...\n"); exit(0);
 }
 
@@ -91,10 +96,10 @@ int main(int argc, char* argv[])
   setlocale(LC_TIME, "en_US");
 
   // Create help window
-  CoXHelp* xhelp = new CoXHelpQt(0, 0, xhelp_eUtility_Xtt, &sts);
+  xhelp = new CoXHelpQt(0, 0, xhelp_eUtility_Xtt, &sts);
   CoXHelp::set_default(xhelp);
 
-  RtMon* rtmon = new RtMonQt(NULL, NULL, "Runtime Monitor", display, &sts);
+  rtmon = new RtMonQt(NULL, NULL, "Runtime Monitor", display, &sts);
   rtmon->help_cb = rtmon_help_cb;
   rtmon->close_cb = rtmon_close_cb;
 
