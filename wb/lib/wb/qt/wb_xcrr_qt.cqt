@@ -92,7 +92,7 @@ void WCrrQt::print()
 
   strncpy(title, namep, sizeof(title));
 
-  CoWowQt::CreateBrowPrintDialogQt(title, xcrrnav->brow->ctx, brow_widget);
+  CoWowQt::CreateBrowPrintDialogQt(title, xcrrnav->brow->ctx, ((WAttNavQt*)xcrrnav)->brow_widget);
 }
 
 void WCrrQtWidget::closeEvent(QCloseEvent* event)

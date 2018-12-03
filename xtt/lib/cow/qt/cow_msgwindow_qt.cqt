@@ -135,7 +135,7 @@ void MsgWindowQt::print()
   char title[80];
   strncpy(title, qPrintable(translate_utf8(name)), sizeof(title));
 
-  CoWowQt::CreateBrowPrintDialogQt(title, msgnav->brow->ctx, nav_widget);
+  CoWowQt::CreateBrowPrintDialogQt(title, msgnav->brow->ctx, ((MsgListQt*)msgnav)->brow_widget);
 }
 
 void MsgWindowQtWidget::focusInEvent(QFocusEvent* event)

@@ -328,7 +328,7 @@ void XAttQt::print()
     return;
   }
 
-  CoWowQt::CreateBrowPrintDialogQt(title, xattnav->brow->ctx, brow_widget);
+  CoWowQt::CreateBrowPrintDialogQt(title, xattnav->brow->ctx, ((XAttNavQt*)xattnav)->brow_widget);
 }
 
 void XAttQtWidget::closeEvent(QCloseEvent* event)

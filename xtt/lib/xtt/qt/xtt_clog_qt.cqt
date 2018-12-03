@@ -339,7 +339,7 @@ void CLogQt::print()
     strcat(title, nodename);
   }
 
-  sts = CoWowQt::CreateBrowPrintDialogQt(title, clognav->brow->ctx, clognav_widget);
+  sts = CoWowQt::CreateBrowPrintDialogQt(title, clognav->brow->ctx, ((CLogNavQt*)clognav)->brow_widget);
   if (sts == WOW__PRINTDIALOGDISABLED) {
     wow->DisplayError("Disabled", "Print Dialog is disabled");
   }

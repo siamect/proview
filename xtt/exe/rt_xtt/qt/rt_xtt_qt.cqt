@@ -237,7 +237,7 @@ void XttQt::print()
     strcat(title, nodename);
   }
 
-  CoWowQt::CreateBrowPrintDialogQt(title, xnav->brow->ctx, brow_widget);
+  CoWowQt::CreateBrowPrintDialogQt(title, xnav->brow->ctx, ((XNavQt*)xnav)->brow_widget);
   if (sts == WOW__PRINTDIALOGDISABLED) {
     pwr_tFileName filename;
     pwr_tCmd cmd;

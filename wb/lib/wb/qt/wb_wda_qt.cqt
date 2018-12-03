@@ -75,7 +75,7 @@ void WdaQt::set_prompt(const char* prompt)
 
 void WdaQt::print(const char* title)
 {
-  CoWowQt::CreateBrowPrintDialogQt(title, wdanav->brow->ctx, brow_widget);
+  CoWowQt::CreateBrowPrintDialogQt(title, wdanav->brow->ctx, ((WdaNavQt*)wdanav)->brow_widget);
 }
 
 void WdaQt::change_value(int set_focus)

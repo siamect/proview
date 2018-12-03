@@ -89,7 +89,7 @@ CoLogWQt::CoLogWQt(void* logw_parent_ctx, QWidget* logw_parent_wid,
 
 void CoLogWQt::print()
 {
-  CoWowQt::CreateBrowPrintDialogQt(name, logwnav->brow->ctx, nav_widget);
+  CoWowQt::CreateBrowPrintDialogQt(name, logwnav->brow->ctx, ((CoLogWNavQt*)logwnav)->brow_widget);
 }
 
 void CoLogWQtWidget::focusInEvent(QFocusEvent* event)
