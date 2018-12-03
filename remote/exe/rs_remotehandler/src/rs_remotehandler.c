@@ -106,9 +106,9 @@ typedef struct {
   int id;
 } Transport;
 
-Transport tp[25];
+Transport tp[50];
 int tpcount;
-int tpmax = 25;
+int tpmax = 50;
 
 pwr_tObjid remcfg_objid;
 pwr_sClass_RemoteConfig* remcfgp;
