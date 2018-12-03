@@ -359,7 +359,7 @@ pwr_tStatus nmpsappl_MirrorInit(pwr_tString80*
 
   /* Allocate memory for the data objects array in applctx */
   if (options & nmpsappl_mOption_Remove)
-    /* Remove requires the dubbel size */
+    /* Remove requires the double size */
     applctx->datainfo = (nmpsappl_t_datainfo*)calloc(
         applctx->total_cellsize * 2, sizeof(nmpsappl_t_datainfo));
   else
@@ -379,16 +379,12 @@ pwr_tStatus nmpsappl_MirrorInit(pwr_tString80*
  *@brief Update mirroring.
  *
  * nmpsappl_Mirror mirrors the content of one or several cells into an
- *application
- * program.
+ * application program.
  *
  * The function handles direct link of cells and dataobjects, and returns a list
- *of
- * data objects to the application together with information about front, back,
- *select
- * properties, and which data objects are new or has disappeard. The application
- *also
- * receives a pointer to each data object.
+ * of data objects to the application together with information about front, back,
+ * select properties, and which data objects are new or has disappeard. The 
+ * application also receives a pointer to each data object.
  *
  * The mirroring is initiated by calling nmpsappl_MirrorInit. The cells are
  * mirrored are specified in this call. Then nmpsappl_Mirror is called cyclic
@@ -399,7 +395,7 @@ pwr_tStatus nmpsappl_MirrorInit(pwr_tString80*
  * Several mirroring can be handled in the same application (max 32), and each
  * mirroring can handle maximum 32 cells.
  *
- * Exempel
+ * Example
  * @code
  * #include "pwr_inc:pwr.h"
  * #include "ssab_inc:rs_nmps_appl.h"

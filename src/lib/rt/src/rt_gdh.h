@@ -435,6 +435,8 @@ pwr_tStatus gdh_GetGlobalClassList(int cidcnt, pwr_tCid* cid, int attrobjects,
 pwr_tStatus gdh_GetLocalClassList(int cidcnt, pwr_tCid* cid, int attrobjects,
     pwr_tAttrRef* classlist[], int* listcnt);
 
+pwr_tStatus gdh_CheckLocalObject(pwr_tOid oid);
+
 /* Thread safe functions for times and strings */
 void gdh_GetTimeDL(pwr_tTime* atp, pwr_tTime* time);
 void gdh_SetTimeDL(pwr_tTime* atp, pwr_tTime* time);

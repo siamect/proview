@@ -5243,6 +5243,20 @@ pwr_tStatus gdh_GetLocalClassList(int cidcnt, pwr_tCid* cid, int attrobjects,
   return GDH__SUCCESS;
 }
 
+pwr_tStatus gdh_CheckLocalObject(pwr_tOid oid) 
+{
+  pwr_tStatus sts;
+  gdb_sObject *op;
+
+  gdh_ScopeLock {
+    op = vol_OidToObject(&sts, oid, gdb_mLo_local, vol_mTrans_none, cvol_eHint_none);
+  } gdh_ScopeUnlock;
+
+  if (op == NULL)
+    return sts;
+  return GDH__SUCCESS;
+}
+
 /**
  * @brief Thread save function to fetch a direct linked absolute time value.
  * Sets the time lock to ensure that the time is not modified during
@@ -5477,3 +5491,4 @@ pwr_tStatus gdh_SetObjectInfoStr(char* name, /**< Attribute name */
   lck_Unlock(lck_eLock_Str);
   return sts;
 }
+

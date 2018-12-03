@@ -165,6 +165,44 @@ void NMpsCell_exec(plc_sThread* tp, pwr_sClass_NMpsCell* object)
         object->BackupNow = 1;
     }
   }
+  if ( object->Function & NMPS_CELLFUNC_CHECKOBJECTS) {
+    data_index = (plc_t_DataInfo*)&object->Data1P;
+    for ( i = 0; i < object->LastIndex; i++) {
+      sts = gdh_CheckLocalObject(data_index->DataP.Aref.Objid);
+      if ( EVEN(sts)) {
+	/* Remove object */
+	sts = gdh_DLUnrefObjectInfo(data_index->Data_Dlid);
+	if (i < object->LastIndex) {
+	  size = (object->LastIndex - i) * sizeof(*data_max);
+#if defined OS_LINUX
+	  tmp_buf = malloc(size);
+	  memcpy(tmp_buf, (char*)data_index + sizeof(*data_max), size);
+	  memcpy(data_index, tmp_buf, size);
+	  free(tmp_buf);
+#else
+	  memcpy(data_index, (char*)data_index + sizeof(*data_max), size);
+#endif
+	}
+	data_last = (plc_t_DataInfo*)&object->Data1P;
+	data_last += object->LastIndex - 1;
+	memset(data_last, 0, sizeof(*data_last));
+	object->CellFull = 0;
+	object->LastIndex--;
+	if (object->LastIndex > 0) {
+	  data_last--;
+	  memcpy(&object->DataLP, data_last, sizeof(*data_last));
+	  memcpy(&object->DataLastP, data_last, sizeof(*data_last));
+	} else {
+	  memset(&object->DataLP, 0, sizeof(*data_last));
+	  memset(&object->DataLastP, 0, sizeof(*data_last));
+	}
+	i--;
+      }
+      else
+	data_index++;
+    }
+  }
+
   if (object->ExternFlag) {
     /* Insert new object in Front position */
 
@@ -180,6 +218,19 @@ void NMpsCell_exec(plc_sThread* tp, pwr_sClass_NMpsCell* object)
       else if (object->ExternIndex > object->LastIndex + 1)
         object->ExternStatus = 2; /* Felkod !!! */
       else {
+	data_index = (plc_t_DataInfo*)&object->Data1P;
+	for ( i = 0; i < object->LastIndex; i++) {
+	  if ( cdh_ObjidIsEqual(data_index->DataP.Aref.Objid, object->ExternObjId)) {
+	    object->ExternStatus = 2;
+	    object->ExternFlag = 0;
+	    data_index = 0;
+	    break;
+	  }
+	  data_index++;
+	}
+	if ( !data_index)
+	  break;
+
         extern_attrref.Objid = object->ExternObjId;
         extern_attrref.Offset = 0;
         extern_attrref.Size = 4;
@@ -694,6 +745,40 @@ void NMpsStoreCell_exec(plc_sThread* tp, pwr_sClass_NMpsStoreCell* object)
         object->BackupNow = 1;
     }
   }
+
+  if ( object->Function & NMPS_CELLFUNC_CHECKOBJECTS) {
+    data_index = (plc_t_DataInfo*)&object->Data1P;
+    for ( i = 0; i < object->LastIndex; i++) {
+      sts = gdh_CheckLocalObject(data_index->DataP.Aref.Objid);
+      if ( EVEN(sts)) {
+	/* Remove object */
+	sts = gdh_DLUnrefObjectInfo(data_index->Data_Dlid);
+	if (i < object->LastIndex) {
+	  size = (object->LastIndex - i) * sizeof(*data_max);
+#if defined OS_LINUX
+	  tmp_buf = malloc(size);
+	  memcpy(tmp_buf, (char*)data_index + sizeof(*data_max), size);
+	  memcpy(data_index, tmp_buf, size);
+	  free(tmp_buf);
+#else
+	  memcpy(data_index, (char*)data_index + sizeof(*data_max), size);
+#endif
+	}
+	data_last = (plc_t_DataInfo*)&object->Data1P;
+	data_last += object->LastIndex - 1;
+	memset(data_last, 0, sizeof(*data_last));
+	object->CellFull = 0;
+	object->LastIndex--;
+	if ((object->SelectIndex != 0)
+	    && (object->SelectIndex > i))
+	  object->SelectIndex--;
+	i--;
+      }
+      else
+	data_index++;
+    }
+  }
+
   if (object->ExternFlag) {
     /* Insert new object in Front position */
 
@@ -710,6 +795,19 @@ void NMpsStoreCell_exec(plc_sThread* tp, pwr_sClass_NMpsStoreCell* object)
       else if (object->ExternIndex > object->LastIndex + 1)
         object->ExternStatus = 2; /* Felkod !!! */
       else {
+	data_index = (plc_t_DataInfo*)&object->Data1P;
+	for ( i = 0; i < object->LastIndex; i++) {
+	  if ( cdh_ObjidIsEqual(data_index->DataP.Aref.Objid, object->ExternObjId)) {
+	    object->ExternStatus = 2;
+	    object->ExternFlag = 0;
+	    data_index = 0;
+	    break;
+	  }
+	  data_index++;
+	}
+	if ( !data_index)
+	  break;
+
         extern_attrref.Objid = object->ExternObjId;
         extern_attrref.Offset = 0;
         extern_attrref.Size = 4;

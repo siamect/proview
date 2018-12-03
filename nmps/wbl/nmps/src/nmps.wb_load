@@ -1,6 +1,6 @@
 Volume NMps $ClassVolume 0.0.1.1 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X89"
+    Attr NextOix = "_X91"
   EndBody
   Object Type $TypeHier 2 07-JUL-2017 13:58:14.00
     Object CellFunctionMask $TypeDef 1 07-JUL-2017 13:58:14.00
@@ -28,6 +28,13 @@ Volume NMps $ClassVolume 0.0.1.1
           Attr Text = "Backup"
           Attr PgmName = "Backup"
           Attr Value = 16
+        EndBody
+      EndObject
+      Object CheckObjects $Bit 90 03-DEC-2018 16:17:11.48
+        Body SysBody 03-DEC-2018 16:17:19.07
+          Attr Text = "CheckObjects"
+          Attr PgmName = "CheckObjects"
+          Attr Value = 32
         EndBody
       EndObject
     EndObject
@@ -84,6 +91,13 @@ Volume NMps $ClassVolume 0.0.1.1
           Attr Text = "Backup"
           Attr PgmName = "Backup"
           Attr Value = 16
+        EndBody
+      EndObject
+      Object CheckObjects $Bit 91 03-DEC-2018 16:17:24.71
+        Body SysBody 03-DEC-2018 16:17:24.71
+          Attr Text = "CheckObjects"
+          Attr PgmName = "CheckObjects"
+          Attr Value = 32
         EndBody
       EndObject
     EndObject
@@ -5869,7 +5883,7 @@ Volume NMps $ClassVolume 0.0.1.1
     !/**
     !  @Group MaterialPlanning,Plc
     ! 
-    !  Note! Obsolete since V5.2
+    !  NoteObsolete since V5.2
     !  Replaced by GetDataRefp.
     !*/
     Object GetDap $ClassDef 19 07-JUL-2017 13:58:14.00
