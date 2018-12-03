@@ -123,6 +123,11 @@ CLogQt::CLogQt(void* clog_parent_ctx, QWidget* clog_parent_wid,
   *status = 1;
 }
 
+CLogQt::~CLogQt()
+{
+  delete clognav;
+}
+
 void CLogQt::pop()
 {
   ::pop(toplevel);
