@@ -80,6 +80,7 @@ WVsel* WbQt::vsel_new(pwr_tStatus* status, const char* name,
 
 int main(int argc, char* argv[])
 {
+  DEBUG=1;
   if (argc >= 2 && streq(argv[1], "-m")) {
     wb_erep::printMethods();
     debug_print("Shutting down...\n"); exit(0);
@@ -93,7 +94,6 @@ int main(int argc, char* argv[])
 
 WbQt::WbQt(int argc, char* argv[]) : mainwindow(0)
 {
-  DEBUG=1;
   pwr_tStatus sts;
   int login_display = 0;
   int nav_display = 0;

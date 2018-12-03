@@ -42,24 +42,24 @@
 
 #include "cow_qt_helpers.h"
 #include "cow_style_qt.h"
-#include "cow_xhelp_qt.h"
 
 #include <QApplication>
 
-void CoHelpQt::close_cb(void* ctx, void* xhelp)
-{
-  debug_print("Shutting down...\n");
-  ((CoXHelpQt*)xhelp)->toplevel->close();
-  exit(0);
-}
+extern int DEBUG;
 
-void CoHelpQt::cohelp_mainloop()
+CoHelpQt* help;
+
+void close_cb(void* ctx, void* xhelp)
 {
-  QApplication::exec();
+  ((CoXHelpQt*)xhelp)->toplevel->close();
+  delete help;
+  debug_print("Shutting down...\n");
+  exit(0);
 }
 
 int main(int argc, char* argv[])
 {
+  DEBUG=1;
   int sts;
 
   QApplication app(argc, argv);
@@ -68,14 +68,14 @@ int main(int argc, char* argv[])
   setlocale(LC_NUMERIC, "POSIX");
   setlocale(LC_TIME, "en_US");
 
-  new CoHelpQt(argc, argv, &sts);
+  help = new CoHelpQt(argc, argv, &sts);
 
   return app.exec();
 }
 
 CoHelpQt::~CoHelpQt()
 {
-  debug_print("CoHelpQt::~CoHelpQt\n");
+  delete xhelp;
 }
 
 CoHelpQt::CoHelpQt(int argc, char* argv[], int* return_sts)
@@ -90,13 +90,10 @@ CoHelpQt::CoHelpQt(int argc, char* argv[], int* return_sts)
   fprintf(stderr, "\n");
 
   // Create help window
-  CoXHelp* xhelp
-      = new CoXHelpQt(0 /*toplevel*/, this, xhelp_eUtility_Xtt, &sts);
+  xhelp = new CoXHelpQt(0 /*toplevel*/, this, xhelp_eUtility_Xtt, &sts);
   // xhelp->open_URL_cb = open_URL_cb;
   CoXHelp::set_default(xhelp);
   xhelp->close_cb = close_cb;
 
   exec_help();
-
-  cohelp_mainloop();
 }

@@ -150,7 +150,7 @@ void CoXHelpQt::print()
   char title[80];
   strcpy(title, qPrintable(translate_utf8("Help")));
 
-  CoWowQt::CreateBrowPrintDialogQt(title, xhelpnav->brow->ctx, brow_widget);
+  CoWowQt::CreateBrowPrintDialogQt(title, xhelpnav->brow->ctx, ((CoXHelpNavQt*)xhelpnav)->brow_widget);
 }
 
 void CoXHelpQtWidget::closeEvent(QCloseEvent* event)

@@ -49,6 +49,8 @@
 
 #include <QApplication>
 
+extern int DEBUG;
+
 CmdQt::CmdQt(int argc, char* argv[])
 {
   QWidget* w;
@@ -77,6 +79,7 @@ CmdQt::CmdQt(int argc, char* argv[])
 
 int main(int argc, char* argv[])
 {
+  DEBUG=1;
   QApplication app(argc, argv);
   QApplication::setStyle(new PwrStyle());
   new CmdQt(argc, argv);

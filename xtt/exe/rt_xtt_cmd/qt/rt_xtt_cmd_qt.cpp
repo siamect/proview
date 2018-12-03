@@ -52,6 +52,8 @@
 #include <QApplication>
 #include <QMainWindow>
 
+extern int DEBUG;
+
 XttCmdQt::XttCmdQt(QWidget* w)
 {
   pwr_tStatus sts;
@@ -75,6 +77,7 @@ static int timeout_func()
 
 int main(int argc, char* argv[])
 {
+  DEBUG=1;
   pwr_tStatus sts;
   int i;
   char str[256];

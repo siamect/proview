@@ -58,6 +58,8 @@
 static QWidget* toplevel;
 static QWidget* mainwindow;
 
+extern int DEBUG;
+
 static void usage()
 {
   printf("\nUsage: wb_ge [-l language] [graphname]\n");
@@ -65,6 +67,7 @@ static void usage()
 
 int main(int argc, char* argv[])
 {
+  DEBUG=1;
   int i;
   pwr_tFileName file;
   char graph_name[80];

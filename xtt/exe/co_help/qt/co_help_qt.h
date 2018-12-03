@@ -39,15 +39,16 @@
 
 /* co_help_qt.h -- Help window */
 
+#include "cow_xhelp_qt.h"
+
 #include "co_help_main.h"
 
 class CoHelpQt : public CoHelpMain {
 public:
   CoHelpQt(int argc, char* argv[], int* sts);
   ~CoHelpQt();
-
-  void cohelp_mainloop();
-  static void close_cb(void* ctx, void* xhelp);
+private:
+  CoXHelp* xhelp;
 };
 
 #endif

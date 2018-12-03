@@ -48,6 +48,8 @@
 
 #include <QApplication>
 
+extern int DEBUG;
+
 static void usage()
 {
   printf("\nUsage: pwr_rtmonitor\n");
@@ -66,6 +68,7 @@ static void rtmon_close_cb(void* ctx)
 
 int main(int argc, char* argv[])
 {
+  DEBUG=1;
   int sts;
   char display[80] = "";
 
@@ -74,7 +77,7 @@ int main(int argc, char* argv[])
     fprintf(stderr, "%s ", argv[i]);
     if (streq(argv[i], "-h")) {
       usage();
-      debug_print("Shutting down...\n"); exit(0);
+      debug_print("\nShutting down...\n"); exit(0);
     } else if (streq(argv[i], "--display") && i + 1 < argc) {
       strncpy(display, argv[i + 1], sizeof(display));
     }

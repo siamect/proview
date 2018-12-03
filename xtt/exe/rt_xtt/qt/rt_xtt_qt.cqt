@@ -58,6 +58,8 @@
 #include <QMenuBar>
 #include <QVBoxLayout>
 
+extern int DEBUG;
+
 void XttQt::hotkey_Command(char* arg, void* userdata)
 {
   Xtt* xtt = (Xtt*)userdata;
@@ -550,6 +552,7 @@ void XttQtWidget::valchanged_cmd_entry()
 
 int main(int argc, char* argv[])
 {
+  DEBUG=1;
   int sts;
 
   QApplication app(argc, argv);
