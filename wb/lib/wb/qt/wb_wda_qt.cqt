@@ -376,9 +376,9 @@ void WdaQt::pop()
 void WdaQt::open_class_dialog(char* hierstr, char* classstr, char* namestr)
 {
   // Create an input dialog
-  QDialog* wdaclass_dia = new QDialog();
-  wdaclass_dia->setMinimumSize(500, 150);
-  wdaclass_dia->setWindowTitle(fl("Select Class"));
+  QDialog wdaclass_dia(toplevel);
+  wdaclass_dia.setMinimumSize(500, 150);
+  wdaclass_dia.setWindowTitle(fl("Select Class"));
   //Do not set the "DeleteOnClose" attribute,
   //we need to access the dialog fields after exec()
 
@@ -415,20 +415,20 @@ void WdaQt::open_class_dialog(char* hierstr, char* classstr, char* namestr)
   buttons->button(QDialogButtonBox::Ok)->setFixedSize(70, 25);
   buttons->button(QDialogButtonBox::Cancel)->setFixedSize(70, 25);
   QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
-      wdaclass_dia, SLOT(accept()));
+      &wdaclass_dia, SLOT(accept()));
   QObject::connect(buttons->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
-      wdaclass_dia, SLOT(reject()));
+      &wdaclass_dia, SLOT(reject()));
 
-  QVBoxLayout* india_vbox = new QVBoxLayout(wdaclass_dia);
+  QVBoxLayout* india_vbox = new QVBoxLayout(&wdaclass_dia);
   india_vbox->addLayout(india_hboxclass);
   india_vbox->addLayout(india_hboxhier);
   india_vbox->addLayout(india_hboxname);
   add_expanding(india_vbox, india_hboxattrobj);
   india_vbox->addWidget(separator(QFrame::HLine));
   india_vbox->addWidget(buttons);
-  wdaclass_dia->setLayout(india_vbox);
-  int res = wdaclass_dia->exec();
+  wdaclass_dia.setLayout(india_vbox);
 
+  int res = wdaclass_dia.exec();
   if (res == QDialog::Accepted) {
     char* hiername = qPrintableLatin1(wdaclass_hiervalue->text());
     char* searchname = qPrintableLatin1(wdaclass_namevalue->text());
@@ -437,8 +437,6 @@ void WdaQt::open_class_dialog(char* hierstr, char* classstr, char* namestr)
 
     toplevel->class_activate_ok(hiername, searchname, classname, attrobjects);
   }
-
-  delete wdaclass_dia;
 }
 
 void WdaQt::update_title()
