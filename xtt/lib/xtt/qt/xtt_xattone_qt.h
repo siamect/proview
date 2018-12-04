@@ -52,6 +52,7 @@ class XAttOneQt : public XAttOne {
 public:
   XAttOneQt(QWidget* xa_parent_wid, void* xa_parent_ctx, pwr_sAttrRef* xa_objar,
       char* xa_title, unsigned int xa_priv, int* xa_sts);
+  ~XAttOneQt();
 
   QWidget* form_widget;
   QLabel* msg_label;

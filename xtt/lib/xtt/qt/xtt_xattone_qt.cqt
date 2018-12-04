@@ -183,6 +183,7 @@ int XAttOneQt::change_value(int set_focus)
     set_prompt(Lng::translate("value >"));
     input_open = 1;
   }
+  toplevel->update();
   return XATT__SUCCESS;
 }
 
@@ -232,9 +233,13 @@ void XAttOneQt::pop()
   ::pop(toplevel);
 }
 
+XAttOneQt::~XAttOneQt()
+{
+  delete cmd_entry;
+}
+
 void XAttOneQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("XAttOneQtWidget::closeEvent\n");
   if (attone->close_cb) {
     (attone->close_cb)(attone->parent_ctx, attone);
   } else {
@@ -288,11 +293,8 @@ XAttOneQt::XAttOneQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
   // Buttons
   QDialogButtonBox* buttons = new QDialogButtonBox();
   buttons->addButton(QDialogButtonBox::Ok);
-  buttons->button(QDialogButtonBox::Ok)->setFixedSize(70, 25);
   buttons->addButton(QDialogButtonBox::Apply);
-  buttons->button(QDialogButtonBox::Apply)->setFixedSize(70, 25);
   buttons->addButton(QDialogButtonBox::Cancel);
-  buttons->button(QDialogButtonBox::Cancel)->setFixedSize(70, 25);
   QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
       toplevel, SLOT(activate_cmd_scrolled_ok()));
   QObject::connect(buttons->button(QDialogButtonBox::Apply), SIGNAL(clicked()),
@@ -322,11 +324,7 @@ XAttOneQt::XAttOneQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
   toplevel->setLayout(vbox);
   toplevel->show();
 
-  if (priv & pwr_mPrv_RtWrite || priv & pwr_mPrv_System) {
-    access_rw = 1;
-  } else {
-    access_rw = 0;
-  }
+  access_rw = ((priv & pwr_mPrv_RtWrite) || (priv & pwr_mPrv_System));
 
   msg_label->setVisible(false);
   if (access_rw) {
