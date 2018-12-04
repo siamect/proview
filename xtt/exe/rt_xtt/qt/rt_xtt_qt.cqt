@@ -53,6 +53,7 @@
 #include "rt_xtt_qt.h"
 
 #include <QApplication>
+#include <QCloseEvent>
 #include <QDesktopWidget>
 #include <QInputDialog>
 #include <QMenuBar>
@@ -575,7 +576,7 @@ void XttQtWidget::closeEvent(QCloseEvent* event)
 {
   xtt->close(xtt,
       xtt->xnav->op || xtt->xnav->ge_main || xtt->xnav->multiview_main ? 0 : 1);
-  QWidget::closeEvent(event);
+  event->ignore();
 }
 
 XttQt::XttQt(int argc, char* argv[], int* return_sts)
