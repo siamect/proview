@@ -152,13 +152,12 @@ private:
   void (*action_cb)(void*, char*, int);
   void (*cancel_cb)(void*);
   void* parent_ctx;
-  int ok_pressed;
+  int button_pressed = -1;
 
 public slots:
   void list_row_activated_cb(QTreeWidgetItem* item, int i);
   void list_apply_cb();
   void list_ok_cb();
-  void list_cancel_cb();
 };
 
 class CoWowQtObject;

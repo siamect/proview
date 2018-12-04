@@ -205,6 +205,8 @@ void CoWowListWidgetQt::list_row_activated_cb(QTreeWidgetItem* item, int i)
 
 void CoWowListWidgetQt::list_apply_cb()
 {
+  button_pressed = 0;
+
   QString selected_text;
 
   QList<QTreeWidgetItem*> selected_items = list->selectedItems();
@@ -213,21 +215,16 @@ void CoWowListWidgetQt::list_apply_cb()
     selected_text = item->text(0);
   }
   if (action_cb) {
-    (action_cb)(parent_ctx, qPrintableLatin1(selected_text), ok_pressed);
+    (action_cb)(parent_ctx, qPrintableLatin1(selected_text), button_pressed);
   }
+  close();
 }
 
 void CoWowListWidgetQt::list_ok_cb()
 {
-  ok_pressed = 1;
+  button_pressed = 1;
   list_apply_cb();
-}
-
-void CoWowListWidgetQt::list_cancel_cb()
-{
-  if (cancel_cb) {
-    (cancel_cb)(parent_ctx);
-  }
+  close();
 }
 
 CoWowListWidgetQt::CoWowListWidgetQt(QWidget* parent, const char* title,
@@ -236,22 +233,18 @@ CoWowListWidgetQt::CoWowListWidgetQt(QWidget* parent, const char* title,
     : QWidget(), action_cb(action_cb), cancel_cb(cancel_cb),
       parent_ctx(parent_ctx)
 {
-  QVBoxLayout* vbox = new QVBoxLayout(this);
-  QHBoxLayout* hbox = new QHBoxLayout();
+  QDialogButtonBox* buttons = new QDialogButtonBox();
 
-  QPushButton* ok_button = new QPushButton("OK");
-  connect(ok_button, SIGNAL(clicked()), this, SLOT(list_ok_cb()));
-  hbox->addWidget(ok_button, 1, Qt::AlignRight);
+  buttons->addButton(QDialogButtonBox::Ok);
+  connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()), this, SLOT(list_ok_cb()));
 
   if (show_apply_button) {
-    QPushButton* apply_button = new QPushButton(translate_utf8("Apply"));
-    connect(apply_button, SIGNAL(clicked()), this, SLOT(list_apply_cb()));
-    hbox->addWidget(apply_button, 0);
+    buttons->addButton(QDialogButtonBox::Apply);
+    connect(buttons->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(list_apply_cb()));
   }
 
-  QPushButton* cancel_button = new QPushButton("Cancel");
-  connect(cancel_button, SIGNAL(clicked()), this, SLOT(list_cancel_cb()));
-  hbox->addWidget(cancel_button, 0);
+  buttons->addButton(QDialogButtonBox::Cancel);
+  connect(buttons->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), this, SLOT(close()));
 
   list = new QTreeWidget();
 
@@ -271,8 +264,9 @@ CoWowListWidgetQt::CoWowListWidgetQt(QWidget* parent, const char* title,
   connect(list, SIGNAL(itemActivated(QTreeWidgetItem*, int)), this,
       SLOT(list_row_activated_cb(QTreeWidgetItem*, int)));
 
+  QVBoxLayout* vbox = new QVBoxLayout(this);
   vbox->addWidget(list, 1, Qt::AlignTop);
-  vbox->addLayout(hbox);
+  vbox->addWidget(buttons);
 
   setLayout(vbox);
 
@@ -288,14 +282,16 @@ CoWowListWidgetQt::CoWowListWidgetQt(QWidget* parent, const char* title,
 
 void CoWowListWidgetQt::focusInEvent(QFocusEvent* event)
 {
-  QWidget::focusInEvent(event);
   pop(this);
+  QWidget::focusInEvent(event);
 }
 
 void CoWowListWidgetQt::closeEvent(QCloseEvent* event)
 {
+  if (button_pressed < 0 && cancel_cb) {
+    (cancel_cb)(parent_ctx);
+  }
   QWidget::closeEvent(event);
-  list_cancel_cb();
 }
 
 void* CoWowQt::CreateList(const char* title, const char* texts, int textsize,
