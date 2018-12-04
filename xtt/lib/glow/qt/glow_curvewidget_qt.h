@@ -38,15 +38,6 @@
 
 class GlowDrawQt;
 
-class CurveWidgetQt : public QtScrollWidgetGlow {
-public:
-  int realize_navigator;
-  QWidget* navigator_widget;
-
-protected:
-  void realize();
-};
-
 QWidget* curvewidgetqt_new(
     int (*init_proc)(GlowCtx* ctx, void* client_data), void* client_data);
 

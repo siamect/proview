@@ -42,7 +42,7 @@
 static void scroll_callback(glow_sScroll* data)
 {
   widget_sScroll* scroll_data = (widget_sScroll*)data->scroll_data;
-  CurveWidgetQt* curve = ((CurveWidgetQt*)scroll_data->parent);
+  QtScrollWidgetGlow* curve = ((QtScrollWidgetGlow*)scroll_data->parent);
 
   initOneShotTimer(curve->scroll_timerid, SLOT(scroll_callback_cb()), 200);
 
@@ -51,7 +51,7 @@ static void scroll_callback(glow_sScroll* data)
 
 static int curve_init_proc(QWidget* w, GlowCtx* fctx, void* client_data)
 {
-  CurveWidgetQt* curve = ((CurveWidgetQt*)w);
+  QtScrollWidgetGlow* curve = ((QtScrollWidgetGlow*)w);
   CurveCtx* ctx = (CurveCtx*)curve->parent_ctx;
 
   if (curve->scroll_h) {
@@ -67,46 +67,17 @@ static int curve_init_proc(QWidget* w, GlowCtx* fctx, void* client_data)
   return (curve->init_proc)(ctx, client_data);
 }
 
-void CurveWidgetQt::realize()
-{
-  if (is_navigator) {
-    if (!parent_ctx) {
-      CurveWidgetQt* main_curve = (CurveWidgetQt*)main_widget;
-
-      if (!main_curve->is_realized) {
-        main_curve->realize_navigator = 1;
-        main_curve->navigator_widget = this;
-      } else {
-        parent_ctx = main_curve->parent_ctx;
-        draw_ctx = main_curve->draw_ctx;
-        ((GlowDrawQt*)draw_ctx)->init_nav(this);
-      }
-    }
-  } else {
-    if (!parent_ctx) {
-      draw_ctx = new GlowDrawQt(
-          this, &parent_ctx, curve_init_proc, client_data, glow_eCtxType_Curve);
-    }
-    if (realize_navigator) {
-      CurveWidgetQt* nav_curve = (CurveWidgetQt*)navigator_widget;
-      nav_curve->parent_ctx = parent_ctx;
-      nav_curve->draw_ctx = draw_ctx;
-      ((GlowDrawQt*)nav_curve->draw_ctx)->init_nav(nav_curve);
-    }
-  }
-}
-
 QWidget* curvewidgetqt_new(
     int (*init_proc)(GlowCtx* ctx, void* client_data), void* client_data)
 {
-  CurveWidgetQt* w = new CurveWidgetQt();
+  QtScrollWidgetGlow* w = new QtScrollWidgetGlow();
   w->init(glow_eCtxType_Curve, init_proc, client_data, curve_init_proc);
   return (QWidget*)w;
 }
 
 QWidget* curvenavwidgetqt_new(QWidget* main_curve)
 {
-  CurveWidgetQt* w = new CurveWidgetQt();
+  QtScrollWidgetGlow* w = new QtScrollWidgetGlow();
   w->init(glow_eCtxType_Curve, main_curve);
   return (QWidget*)w;
 }
