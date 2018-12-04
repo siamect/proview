@@ -228,6 +228,7 @@ SubGraphsMotif::~SubGraphsMotif()
     attrlist_p = next_p;
   }
 
+  delete brow;
   XtDestroyWidget(parent_wid);
 }
 

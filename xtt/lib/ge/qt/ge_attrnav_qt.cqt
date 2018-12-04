@@ -66,6 +66,7 @@ AttrNavQt::~AttrNavQt()
   debug_print("AttrNavQt::~AttrNavQt\n");
   delete trace_obj;
 
+  delete brow;
   form_widget->close();
 }
 

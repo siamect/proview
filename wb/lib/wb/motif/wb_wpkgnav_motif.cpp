@@ -86,6 +86,7 @@ WPkgNavMotif::WPkgNavMotif(void* wa_parent_ctx, Widget wa_parent_wid,
 //
 WPkgNavMotif::~WPkgNavMotif()
 {
+  delete brow;
   XtDestroyWidget(form_widget);
 }
 

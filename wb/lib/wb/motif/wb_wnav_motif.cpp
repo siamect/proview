@@ -154,6 +154,14 @@ WNavMotif::~WNavMotif()
   if (avoid_deadlock)
     XtRemoveTimeOut(deadlock_timerid);
 
+  menu_tree_free();
+  PalFile::config_tree_free(menu);
+  for (int i = 1; i < brow_cnt; i++) {
+    brow_DeleteSecondaryCtx(brow_stack[brow_cnt]->ctx);
+    brow_stack[brow_cnt]->free_pixmaps();
+    delete brow_stack[i];
+  }
+  delete brow;
   delete wow;
   XtDestroyWidget(form_widget);
 }

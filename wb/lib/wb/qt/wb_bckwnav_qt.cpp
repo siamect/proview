@@ -57,6 +57,7 @@ WbBckWNavQt::WbBckWNavQt(void* l_parent_ctx, QWidget* l_parent_wid,
 WbBckWNavQt::~WbBckWNavQt()
 {
   debug_print("WbBckWNavQt::~WbBckWNavQt\n");
+  delete brow;
   form_widget->close();
 }
 

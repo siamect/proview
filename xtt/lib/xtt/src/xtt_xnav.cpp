@@ -1352,25 +1352,6 @@ XNav::XNav(void* xn_parent_ctx, const char* xn_name, xnav_sStartMenu* root_menu,
 //
 XNav::~XNav()
 {
-  if (mcp) {
-    free(mcp);
-    mcp = 0;
-  }
-  menu_tree_free();
-  delete (ItemMenu*)root_item;
-
-  for (int i = 0; i < brow_cnt; i++) {
-    brow_stack[i]->free_pixmaps();
-    if (i != 0)
-      brow_DeleteSecondaryCtx(brow_stack[i]->ctx);
-    delete brow_stack[i];
-  }
-  collect_brow->free_pixmaps();
-  brow_DeleteSecondaryCtx(collect_brow->ctx);
-  delete collect_brow;
-  delete brow;
-  if (op)
-    delete op;
 }
 
 //

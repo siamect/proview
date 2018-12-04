@@ -94,7 +94,7 @@ public:
       char* item_catogory, char* item_user, char* item_comment, brow_tNode dest,
       flow_eDest dest_code);
   virtual ~ItemLog();
-
+  
   logwitem_eItemType type;
   CoLogWNav* logwnav;
   brow_tNode node;

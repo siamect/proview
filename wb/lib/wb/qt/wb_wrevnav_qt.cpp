@@ -52,6 +52,7 @@ WRevNavQt::WRevNavQt(void* wa_parent_ctx, QWidget* wa_parent_wid,
 
 WRevNavQt::~WRevNavQt()
 {
+  delete brow;
   form_widget->close();
 }
 

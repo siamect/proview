@@ -246,7 +246,7 @@ public:
   void set_hide_object(int value);
   void set_hide_text(int value);
   int get_alarm_info(evlist_sAlarmInfo* info, int backward, int alarmsize);
-  int get_last_not_acked_prio(mh_sEventId** id, unsigned long type,
+  int get_last_not_acked_prio(mh_sEventId** id, unsigned long type, 
 			      unsigned long prio, int backward, int timecheck);
   int get_selected_event(char* eventname, ItemAlarm** item);
   int get_destination(pwr_tTime time, void** dest);

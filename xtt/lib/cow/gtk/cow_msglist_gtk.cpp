@@ -63,6 +63,7 @@ MsgListGtk::MsgListGtk(
 //
 MsgListGtk::~MsgListGtk()
 {
+  delete brow;
   gtk_widget_destroy(form_widget);
 }
 

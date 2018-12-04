@@ -149,7 +149,6 @@ TblNav::TblNav(void* xn_parent_ctx, sevcli_sHistItem* xn_itemlist,
 //
 TblNav::~TblNav()
 {
-  delete brow;
 }
 
 TblNavBrow::~TblNavBrow()

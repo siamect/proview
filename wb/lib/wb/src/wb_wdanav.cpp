@@ -91,7 +91,6 @@ WdaNav::WdaNav(void* wa_parent_ctx, const char* wa_name,
 //
 WdaNav::~WdaNav()
 {
-  delete brow;
 }
 
 //

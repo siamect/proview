@@ -67,6 +67,7 @@ NodelistNavQt::~NodelistNavQt()
   debug_print("NodelistNavQt::~NodelistNavQt\n");
   delete trace_obj;
 
+  delete brow;
   form_widget->close();
 }
 

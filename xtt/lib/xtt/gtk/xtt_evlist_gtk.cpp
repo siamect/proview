@@ -72,6 +72,7 @@ EvListGtk::~EvListGtk()
     delete browtree;
   if (browbase && browbase != brow)
     delete browbase;
+  delete brow;
 
   gtk_widget_destroy(form_widget);
 }

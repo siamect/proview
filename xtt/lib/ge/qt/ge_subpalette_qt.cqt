@@ -64,6 +64,7 @@ SubPaletteQt::SubPaletteQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
 SubPaletteQt::~SubPaletteQt()
 {
   debug_print("SubPaletteQt::~SubPaletteQt\n");
+  delete brow;
 }
 
 void SubPaletteQt::set_inputfocus(int focus)

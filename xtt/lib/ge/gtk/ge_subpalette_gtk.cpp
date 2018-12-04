@@ -74,6 +74,8 @@ SubPaletteGtk::SubPaletteGtk(void* xn_parent_ctx, GtkWidget* xn_parent_wid,
 //
 SubPaletteGtk::~SubPaletteGtk()
 {
+  delete brow;
+  // XtDestroyWidget( form_widget);
 }
 
 void SubPaletteGtk::set_inputfocus(int focus)

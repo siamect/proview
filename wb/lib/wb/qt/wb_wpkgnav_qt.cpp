@@ -53,6 +53,7 @@ WPkgNavQt::WPkgNavQt(void* wa_parent_ctx, QWidget* wa_parent_wid,
 
 WPkgNavQt::~WPkgNavQt()
 {
+  delete brow;
   form_widget->close();
 }
 

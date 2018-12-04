@@ -341,7 +341,6 @@ PnViewerNav::PnViewerNav(void* l_parent_ctx, viewer_eType l_type)
 //
 PnViewerNav::~PnViewerNav()
 {
-  delete brow;
 }
 
 PnViewerNavBrow::~PnViewerNavBrow()

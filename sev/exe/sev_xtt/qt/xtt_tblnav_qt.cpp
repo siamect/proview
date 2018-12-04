@@ -59,6 +59,7 @@ TblNavQt::TblNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
 
 TblNavQt::~TblNavQt()
 {
+  delete brow;
   form_widget->close();
 }
 

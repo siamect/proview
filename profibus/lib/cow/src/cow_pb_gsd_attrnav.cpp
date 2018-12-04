@@ -433,7 +433,6 @@ GsdAttrNav::GsdAttrNav(void* xn_parent_ctx, const char* xn_name, pb_gsd* xn_gsd,
 //
 GsdAttrNav::~GsdAttrNav()
 {
-  delete brow;
 }
 
 GsdAttrNavBrow::~GsdAttrNavBrow()

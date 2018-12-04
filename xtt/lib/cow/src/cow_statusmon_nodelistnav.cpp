@@ -350,7 +350,6 @@ NodelistNav::NodelistNav(void* nodelist_parent_ctx,
 //
 NodelistNav::~NodelistNav()
 {
-  delete brow;
 }
 
 NodelistNavBrow::~NodelistNavBrow()

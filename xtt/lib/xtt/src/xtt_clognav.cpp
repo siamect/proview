@@ -290,7 +290,6 @@ CLogNav::CLogNav(void* clog_parent_ctx)
 //
 CLogNav::~CLogNav()
 {
-  delete brow;
 }
 
 CLogNavBrow::~CLogNavBrow()

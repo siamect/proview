@@ -128,7 +128,7 @@ public:
       char* item_devname, int vendorid, int deviceid, brow_tNode dest,
       flow_eDest dest_code);
   virtual ~ItemDevice();
-
+  
   viewitem_eItemType type;
   PnViewerNav* viewernav;
   brow_tNode node;

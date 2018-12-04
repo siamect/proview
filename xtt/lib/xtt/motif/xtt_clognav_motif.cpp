@@ -85,6 +85,7 @@ CLogNavMotif::CLogNavMotif(
 //
 CLogNavMotif::~CLogNavMotif()
 {
+  delete brow;
   XtDestroyWidget(form_widget);
 }
 

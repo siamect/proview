@@ -92,7 +92,6 @@ WPkgNav::WPkgNav(void* wa_parent_ctx, const char* wa_name,
 //
 WPkgNav::~WPkgNav()
 {
-  delete brow;
 }
 
 //

@@ -213,7 +213,6 @@ CoLogWNav::CoLogWNav(void* l_parent_ctx, int l_show_item)
 //
 CoLogWNav::~CoLogWNav()
 {
-  delete brow;
 }
 
 CoLogWNavBrow::~CoLogWNavBrow()

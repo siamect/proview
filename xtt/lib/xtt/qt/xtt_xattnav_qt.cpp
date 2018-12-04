@@ -66,6 +66,7 @@ XAttNavQt::~XAttNavQt()
   }
 
   delete trace_timerid;
+  delete brow;
   form_widget->close();
 }
 

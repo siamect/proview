@@ -70,6 +70,7 @@ WPkgNavGtk::WPkgNavGtk(void* wa_parent_ctx, GtkWidget* wa_parent_wid,
 //
 WPkgNavGtk::~WPkgNavGtk()
 {
+  delete brow;
   gtk_widget_destroy(form_widget);
 }
 
