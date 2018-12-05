@@ -44,6 +44,7 @@
 #include "ge_curve.h"
 
 #include <QComboBox>
+#include <QToolBar>
 
 class GeCurveQtWidget;
 
@@ -61,14 +62,13 @@ public:
   QWidget* growaxis_main_widget;
   QWidget* grownames_main_widget;
   QWidget* nav_widget;
-  QWidget* minmax_widget;
-  QLineEdit* minmax_textmin_widget;
-  QLineEdit* minmax_textmax_widget;
-  QWidget* menu_new;
-  QWidget* menu_save;
-  QWidget* menu_open;
-  QWidget* menu_snapshot;
-  QWidget* menu_export;
+  QLineEdit* export_filename_widget;
+  QAction* menu_add;
+  QAction* menu_new;
+  QAction* menu_save;
+  QAction* menu_open;
+  QAction* menu_snapshot;
+  QAction* menu_export;
   QAction* tools_snapshot;
   QAction* tools_add;
   QAction* tools_curvetype_line;
@@ -77,13 +77,7 @@ public:
   QAction* tools_curvetype_square;
   QAction* tools_curve_fill;
   QAction* tools_curve_digsplit;
-  QWidget* export_widget;
-  QComboBox* export_attrcombo_widget;
-  QLineEdit* export_fromtime_widget;
-  QLineEdit* export_totime_widget;
-  QLineEdit* export_rows_widget;
-  QLineEdit* export_filename_widget;
-  QWidget* sea_timebox;
+  QToolBar* timetools;
   QLineEdit* timebox_start_time;
   QLineEdit* timebox_stop_time;
   QComboBox* timebox_timecombo;
@@ -96,8 +90,6 @@ public:
   void open_minmax(int idx);
   void open_export(pwr_tTime* from, pwr_tTime* to, int rows, char* filename);
   void axis_set_width(int width);
-  void create_minmax_dialog();
-  void create_export_dialog();
   void set_inputfocus();
   void enable(unsigned int mask);
   void setup(unsigned int mask);
@@ -109,9 +101,6 @@ public:
   void set_clock_cursor();
   void reset_cursor();
   void* get_widget();
-
-  static void export_file_selected_cb(
-      void* ctx, char* filename, wow_eFileSelType file_type);
 };
 
 class GeCurveQtWidget : public QDialog {
@@ -158,11 +147,6 @@ public slots:
   void activate_digsplit();
   void activate_xlimits();
   void activate_help();
-  void activate_minmax_ok();
-  void activate_minmax_cancel();
-  void activate_minmax_save();
-  void activate_export_ok();
-  void activate_export_cancel();
   void activate_export_browse();
 
 private:

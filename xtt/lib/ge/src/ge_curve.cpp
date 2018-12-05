@@ -1615,18 +1615,22 @@ int GeCurve::read_file(char* filename)
   dcli_translate_filename(fname, filename);
 
   fp = fopen(fname, "r");
-  if (!fp)
+  if (!fp) {
+    fprintf(stderr, "Error! Cannot open curve file: '%s'!\n", fname);
     return 0;
+  }
 
   // Attribute names in first line
   if (!dcli_read_line(line, sizeof(line), fp)) {
     fclose(fp);
+    fprintf(stderr, "Error! Cannot read curve file: '%s'!\n", fname);
     return 0;
   }
   nr = dcli_parse(line, " 	", "", (char*)item_str,
       sizeof(item_str) / sizeof(item_str[0]), sizeof(item_str[0]), 0);
   if (nr == 0) {
     fclose(fp);
+    fprintf(stderr, "Error! Cannot parse curve file: '%s'!\n", fname);
     return 0;
   }
 

@@ -36,6 +36,7 @@
 
 #include <stdio.h>
 
+#include "co_dcli.h"
 #include "co_string.h"
 
 #include "cow_qt_helpers.h"
@@ -47,6 +48,7 @@
 #include "ge_curve_qt.h"
 
 #include <QDialogButtonBox>
+#include <QFileDialog>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QMenuBar>
@@ -307,126 +309,18 @@ void GeCurveQtWidget::activate_help()
   curve->activate_help();
 }
 
-void GeCurveQtWidget::activate_minmax_ok()
-{
-  bool ok = true;
-  double min_value = curve->minmax_textmin_widget->text().toDouble(&ok);
-  if (!ok) {
-    return;
-  }
-
-  double max_value = curve->minmax_textmax_widget->text().toDouble(&ok);
-  if (!ok) {
-    return;
-  }
-
-  curve->activate_minmax_ok(min_value, max_value);
-  curve->minmax_widget->setVisible(false);
-}
-
-void GeCurveQtWidget::activate_minmax_save()
-{
-  bool ok = true;
-  double min_value = curve->minmax_textmin_widget->text().toDouble(&ok);
-  if (!ok) {
-    return;
-  }
-
-  double max_value = curve->minmax_textmax_widget->text().toDouble(&ok);
-  if (!ok) {
-    return;
-  }
-
-  curve->activate_minmax_save(min_value, max_value);
-}
-
-void GeCurveQtWidget::activate_minmax_cancel()
-{
-  curve->minmax_widget->setVisible(false);
-}
-
-void GeCurveQtWidget::activate_export_ok()
-{
-  pwr_tTime from, to;
-  int rows = 5000;
-  pwr_tFileName filename;
-  pwr_tStatus sts;
-  int idx = 0;
-
-  from = pwr_cNTime;
-  time_GetTime(&to);
-
-  QString value = curve->export_attrcombo_widget->currentText();
-  if (value.isNull()) {
-    return;
-  }
-
-  if (value.compare(translate_utf8("All Attributes")) == 0) {
-    idx = -1;
-  } else {
-    for (int i = 0; i < curve->cd->cols; i++) {
-      if (value.compare(convert_utf8(curve->cd->y_name[i])) == 0) {
-        idx = i;
-        break;
-      }
-    }
-  }
-
-  if (curve->layout_mask & curve_mEnable_ExportTime) {
-    sts = time_AsciiToA(
-        qPrintable(curve->export_fromtime_widget->text()), &from);
-
-    if (EVEN(sts)) {
-      curve->wow->DisplayError("Syntax Error", "From time syntax error");
-      return;
-    }
-
-    sts = time_AsciiToA(qPrintable(curve->export_totime_widget->text()), &to);
-    if (EVEN(sts)) {
-      curve->wow->DisplayError("Syntax Error", "To time syntax error");
-      return;
-    }
-
-    bool ok = true;
-    value = curve->export_rows_widget->text();
-    rows = value.toInt(&ok);
-    if (!ok) {
-      return;
-    }
-  }
-
-  strcpy(filename, qPrintable(curve->export_filename_widget->text()));
-
-  curve->export_widget->setVisible(false);
-
-  if (curve->export_cb) {
-    sts = (curve->export_cb)(
-        curve->parent_ctx, &from, &to, rows, idx, filename);
-    if (EVEN(sts)) {
-      curve->wow->DisplayError("Export error", "Export error");
-      return;
-    }
-  }
-}
-
-void GeCurveQtWidget::activate_export_cancel()
-{
-  curve->export_widget->setVisible(false);
-}
-
 void GeCurveQtWidget::activate_export_browse()
 {
-  curve->wow->CreateFileSelDia(qPrintable(translate_utf8("File Selection")),
-      (void*)this, GeCurveQt::export_file_selected_cb,
-      wow_eFileSelType_History);
-}
+  pwr_tFileName folder;
+  dcli_translate_filename(folder, "~");
 
-void GeCurveQt::export_file_selected_cb(
-    void* ctx, char* filename, wow_eFileSelType file_type)
-{
-  GeCurveQt* curve = (GeCurveQt*)ctx;
+  // QFileDialog::getOpenFileName() is broken
+  QFileDialog dialog(this, translate_utf8("File Selection"), fl(folder), "History files (*.txt,*.csv,*.skv);;All Files (*)");
 
-  curve->export_filename_widget->setText(fl(filename));
+  int sts = dialog.exec();
+  if (sts == QDialog::Accepted && dialog.selectedFiles().length() > 0) {
+    curve->export_filename_widget->setText(dialog.selectedFiles().first());
+  }
 }
 
 void GeCurveQt::enable(unsigned int mask)
@@ -448,7 +342,7 @@ void GeCurveQt::enable(unsigned int mask)
     menu_export->setVisible(true);
   }
   if (mask & curve_mEnable_Timebox) {
-    sea_timebox->setVisible(true);
+    timetools->setVisible(true);
   }
   if (mask & curve_mEnable_Add) {
     tools_add->setVisible(true);
@@ -478,7 +372,7 @@ void GeCurveQt::setup(unsigned int mask)
   menu_snapshot->setVisible(mask & curve_mEnable_Snapshot ? TRUE : FALSE);
   tools_snapshot->setVisible(mask & curve_mEnable_Snapshot ? TRUE : FALSE);
   menu_export->setVisible(mask & curve_mEnable_Export ? TRUE : FALSE);
-  sea_timebox->setVisible(mask & curve_mEnable_Timebox ? TRUE : FALSE);
+  timetools->setVisible(mask & curve_mEnable_Timebox ? TRUE : FALSE);
   tools_add->setVisible(mask & curve_mEnable_Add ? TRUE : FALSE);
   tools_curvetype_line->setVisible(
       mask & curve_mEnable_CurveType ? TRUE : FALSE);
@@ -506,15 +400,11 @@ void GeCurveQt::write_title(char* str)
 
 void GeCurveQt::resize()
 {
-  QSize size = growaxis_main_widget->window()->size();
-
   double zoom_y;
-  curve_GetPreferedZoomY(growcurve_ctx, size.height(), &zoom_y);
+  curve_GetPreferedZoomY(growcurve_ctx, growaxis_main_widget->height(), &zoom_y);
   grow_ZoomY(growaxis_ctx, zoom_y);
   grow_ZoomX(growaxis_ctx, zoom_y);
-
-  int width = int(zoom_y * axis_window_width);
-  growaxis_main_widget->setMinimumSize(width + 4, size.height());
+  growaxis_main_widget->setMinimumWidth(zoom_y * axis_window_width + 4);
 }
 
 void GeCurveQt::axis_set_width(int width)
@@ -526,9 +416,6 @@ void GeCurveQt::open_minmax(int idx)
 {
   char min_value_str[80];
   char max_value_str[80];
-
-  create_minmax_dialog();
-
   if (idx < cd->cols) {
     sprintf(min_value_str, "%f", cd->y_min_value_axis[idx]);
     sprintf(max_value_str, "%f", cd->y_max_value_axis[idx]);
@@ -536,32 +423,225 @@ void GeCurveQt::open_minmax(int idx)
     sprintf(min_value_str, "%f", cd->x_min_value_axis[idx - cd->cols]);
     sprintf(max_value_str, "%f", cd->x_max_value_axis[idx - cd->cols]);
   }
-  minmax_textmin_widget->setText(fl(min_value_str));
-  minmax_textmax_widget->setText(fl(max_value_str));
+
+  // Create an input dialog
+  QDialog minmax_widget(toplevel);
+  minmax_widget.setWindowTitle(fl("Axis Limits"));
+  //Do not set the "DeleteOnClose" attribute,
+  //we need to access the dialog fields after exec()
+
+  QLineEdit* minmax_textmin_widget = new QLineEdit(fl(min_value_str));
+  QLabel* min_label = new QLabel(translate_utf8("MinValue"));
+  min_label->setFixedWidth(100);
+  QLineEdit* minmax_textmax_widget = new QLineEdit(fl(max_value_str));
+  QObject::connect(minmax_textmax_widget, SIGNAL(returnPressed()), &minmax_widget,
+      SLOT(accept()));
+  QLabel* max_label = new QLabel(translate_utf8("MaxValue"));
+  max_label->setFixedWidth(100);
+
+  QDialogButtonBox* buttons = new QDialogButtonBox();
+  buttons->addButton(QDialogButtonBox::Ok);
+  buttons->addButton(QDialogButtonBox::Cancel);
+
+  QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
+      &minmax_widget, SLOT(accept()));
+  QObject::connect(buttons->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
+      &minmax_widget, SLOT(reject()));
+
+  QHBoxLayout* minmax_hbox1 = new QHBoxLayout();
+  minmax_hbox1->addWidget(min_label);
+  add_expanding(minmax_hbox1, minmax_textmin_widget);
+
+  QHBoxLayout* minmax_hbox2 = new QHBoxLayout();
+  minmax_hbox2->addWidget(max_label);
+  add_expanding(minmax_hbox2, minmax_textmax_widget);
+
+  QVBoxLayout* minmax_vbox = new QVBoxLayout(&minmax_widget);
+  minmax_vbox->addLayout(minmax_hbox1);
+  add_expanding(minmax_vbox, minmax_hbox2);
+  minmax_vbox->addWidget(separator(QFrame::HLine));
+  minmax_vbox->addWidget(buttons);
+
+  minmax_widget.setLayout(minmax_vbox);
 
   minmax_idx = idx;
+
+  int res = minmax_widget.exec();
+  if (res == QDialog::Accepted) {
+    bool ok = true;
+    double min_value = minmax_textmin_widget->text().toDouble(&ok);
+    if (!ok) {
+      return;
+    }
+
+    double max_value = minmax_textmax_widget->text().toDouble(&ok);
+    if (!ok) {
+      return;
+    }
+
+    activate_minmax_ok(min_value, max_value);
+  }
 }
 
 void GeCurveQt::open_export(
     pwr_tTime* from, pwr_tTime* to, int rows, char* filename)
 {
-  char fromtime_str[40];
-  char totime_str[40];
-  char rows_str[40];
+  if (!cd) {
+    return;
+  }
 
-  create_export_dialog();
+  // Create an input dialog
+  QDialog export_widget(toplevel);
+  export_widget.setWindowTitle(fl("Export"));
+  //Do not set the "DeleteOnClose" attribute,
+  //we need to access the dialog fields after exec()
 
+  QLabel* attr_label = new QLabel(translate_utf8("Attribute"));
+  attr_label->setFixedWidth(90);
+  QComboBox* export_attrcombo_widget = new QComboBox();
+  export_attrcombo_widget->addItem(translate_utf8("All Attributes"));
+  for (int i = 0; i < cd->cols; i++) {
+    export_attrcombo_widget->addItem(convert_utf8(cd->y_name[i]));
+  }
+  export_attrcombo_widget->setCurrentIndex(0);
+
+  export_filename_widget = new QLineEdit(fl(filename));
+  QLabel* filename_label = new QLabel(translate_utf8("Filename"));
+  filename_label->setFixedWidth(90);
+  QPushButton* export_browse = new QPushButton(translate_utf8("Browse"));
+  QObject::connect(export_browse, SIGNAL(clicked()), toplevel, SLOT(activate_export_browse()));
+
+  QDialogButtonBox* buttons = new QDialogButtonBox();
+  buttons->addButton(QDialogButtonBox::Ok);
+  buttons->addButton(QDialogButtonBox::Cancel);
+
+  QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
+      &export_widget, SLOT(accept()));
+  QObject::connect(buttons->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
+      &export_widget, SLOT(reject()));
+
+  QVBoxLayout* export_vbox = new QVBoxLayout(&export_widget);
+
+  QHBoxLayout* export_hbox1 = new QHBoxLayout();
+  export_hbox1->addWidget(attr_label);
+  add_expanding(export_hbox1, export_attrcombo_widget);
+  export_vbox->addLayout(export_hbox1);
+
+  QLineEdit* export_fromtime_widget;
+  QLineEdit* export_totime_widget;
   if (layout_mask & curve_mEnable_ExportTime) {
+    char fromtime_str[40];
+    char totime_str[40];
     time_AtoAscii(
         from, time_eFormat_DateAndTime, fromtime_str, sizeof(fromtime_str));
     time_AtoAscii(to, time_eFormat_DateAndTime, totime_str, sizeof(totime_str));
+
+    export_fromtime_widget = new QLineEdit(fl(fromtime_str));
+    export_fromtime_widget->setFixedWidth(200);
+    QLabel* fromtime_label = new QLabel(translate_utf8("From"));
+    fromtime_label->setFixedWidth(90);
+
+    export_totime_widget = new QLineEdit(fl(totime_str));
+    export_totime_widget->setFixedWidth(200);
+    QLabel* totime_label = new QLabel(translate_utf8("To"));
+    totime_label->setFixedWidth(90);
+
+    QHBoxLayout* export_hbox2 = new QHBoxLayout();
+    export_hbox2->addWidget(fromtime_label);
+    export_hbox2->addWidget(export_fromtime_widget);
+    export_hbox2->addWidget(totime_label);
+    export_hbox2->addWidget(export_totime_widget);
+
+    export_vbox->addLayout(export_hbox2);
+  }
+
+  QLineEdit* export_rows_widget;
+  if (layout_mask & curve_mEnable_ExportTime) {
+    char rows_str[40];
     sprintf(rows_str, "%d", rows);
 
-    export_fromtime_widget->setText(fl(fromtime_str));
-    export_totime_widget->setText(fl(totime_str));
-    export_rows_widget->setText(fl(rows_str));
+    export_rows_widget = new QLineEdit(fl(rows_str));
+    export_rows_widget->setFixedWidth(80);
+    QLabel* rows_label = new QLabel(translate_utf8("Max number of rows"));
+    rows_label->setFixedWidth(150);
+
+    QHBoxLayout* export_hbox4 = new QHBoxLayout();
+    export_hbox4->addWidget(rows_label);
+    export_hbox4->addWidget(export_rows_widget);
+    add_expanding(export_vbox, export_hbox4);
   }
-  export_filename_widget->setText(fl(filename));
+
+  QHBoxLayout* export_hbox5 = new QHBoxLayout();
+  export_hbox5->addWidget(filename_label);
+  add_expanding(export_hbox5, export_filename_widget);
+  export_hbox5->addWidget(export_browse);
+  add_expanding(export_vbox, export_hbox5);
+
+  export_vbox->addWidget(separator(QFrame::HLine));
+  export_vbox->addWidget(buttons);
+
+  export_widget.setLayout(export_vbox);
+
+  int res = export_widget.exec();
+  if (res == QDialog::Accepted) {
+    pwr_tTime from, to;
+    int rows = 5000;
+    pwr_tFileName filename;
+    pwr_tStatus sts;
+    int idx = 0;
+
+    from = pwr_cNTime;
+    time_GetTime(&to);
+
+    QString value = export_attrcombo_widget->currentText();
+    if (value.isNull()) {
+      return;
+    }
+
+    if (value.compare(translate_utf8("All Attributes")) == 0) {
+      idx = -1;
+    } else {
+      for (int i = 0; i < cd->cols; i++) {
+        if (value.compare(convert_utf8(cd->y_name[i])) == 0) {
+          idx = i;
+          break;
+        }
+      }
+    }
+
+    if (layout_mask & curve_mEnable_ExportTime) {
+      sts = time_AsciiToA(
+          qPrintable(export_fromtime_widget->text()), &from);
+
+      if (EVEN(sts)) {
+        wow->DisplayError("Syntax Error", "From time syntax error");
+        return;
+      }
+
+      sts = time_AsciiToA(qPrintable(export_totime_widget->text()), &to);
+      if (EVEN(sts)) {
+        wow->DisplayError("Syntax Error", "To time syntax error");
+        return;
+      }
+
+      bool ok = true;
+      value = export_rows_widget->text();
+      rows = value.toInt(&ok);
+      if (!ok) {
+        return;
+      }
+    }
+
+    strcpy(filename, qPrintable(export_filename_widget->text()));
+
+    if (export_cb) {
+      sts = (export_cb)(parent_ctx, &from, &to, rows, idx, filename);
+      if (EVEN(sts)) {
+        wow->DisplayError("Export error", "Export error");
+        return;
+      }
+    }
+  }
 }
 
 void GeCurveQt::set_times(pwr_tTime* from, pwr_tTime* to)
@@ -622,16 +702,11 @@ void* GeCurveQt::get_widget()
 
 GeCurveQt::~GeCurveQt()
 {
-  debug_print("GeCurveQt::~GeCurveQt\n");
   delete wow;
-  if (minmax_widget) {
-    minmax_widget->close();
-  }
 }
 
 void GeCurveQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("GeCurveQtWidget::closeEvent\n");
   if (!(curve->options & curve_mOptions_Embedded)) {
     curve->activate_exit();
   }
@@ -654,7 +729,7 @@ GeCurveQt::GeCurveQt(void* gc_parent_ctx, QWidget* parent_widget,
     void* basewidget)
     : GeCurve(gc_parent_ctx, curve_name, filename, curve_data, pos_right,
           gc_width, gc_height, gc_options, gc_color_theme),
-      minmax_widget(0), export_widget(0), disable_timecombo_callback(0)
+      disable_timecombo_callback(0)
 {
   int window_width = 900;
   int window_height = 700;
@@ -687,15 +762,15 @@ GeCurveQt::GeCurveQt(void* gc_parent_ctx, QWidget* parent_widget,
 
   // File Entry
   QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
-  addMenuItem(toplevel, file, "&Add", SLOT(activate_madd()));
+  menu_add = addMenuItem(toplevel, file, "&Add", SLOT(activate_madd()));
   addMenuItem(toplevel, file, "&Refresh", SLOT(activate_configure()), "CTRL+R");
   addMenuItem(
       toplevel, file, "&Print", SLOT(activate_print()), "", "document-print");
-  addMenuItem(toplevel, file, "&New", SLOT(activate_new()));
-  addMenuItem(toplevel, file, "&Open", SLOT(activate_open()));
-  addMenuItem(toplevel, file, "S&ave", SLOT(activate_save()), "CTRL+S");
-  addMenuItem(toplevel, file, "&Snapshot", SLOT(activate_snapshot()), "CTRL+N");
-  addMenuItem(toplevel, file, "&Export", SLOT(activate_export()));
+  menu_new = addMenuItem(toplevel, file, "&New", SLOT(activate_new()));
+  menu_open = addMenuItem(toplevel, file, "&Open", SLOT(activate_open()));
+  menu_save = addMenuItem(toplevel, file, "S&ave", SLOT(activate_save()), "CTRL+S");
+  menu_snapshot = addMenuItem(toplevel, file, "&Snapshot", SLOT(activate_snapshot()), "CTRL+N");
+  menu_export = addMenuItem(toplevel, file, "&Export", SLOT(activate_export()));
   addMenuItem(
       toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
@@ -755,10 +830,10 @@ GeCurveQt::GeCurveQt(void* gc_parent_ctx, QWidget* parent_widget,
   tools_curve_digsplit = addToolItem(toplevel, tools, "Split digital curves",
       SLOT(activate_digsplit()), "$pwr_exe/xtt_curve_digsplit.png");
   tools_snapshot = addToolItem(toplevel, tools, "Snapshot",
-      SLOT(activate_shapshot()), "$pwr_exe/xtt_snapshot.png");
+      SLOT(activate_snapshot()), "$pwr_exe/xtt_snapshot.png");
 
   // Time box
-  QToolBar* timetools = new QToolBar();
+  timetools = new QToolBar();
 
   QLabel* sea_time_start_label = new QLabel(translate_utf8("Time"));
   sea_time_start_label->setFixedWidth(70);
@@ -805,34 +880,30 @@ GeCurveQt::GeCurveQt(void* gc_parent_ctx, QWidget* parent_widget,
   addToolItem(toplevel, timetools, "Remove selected curve",
       SLOT(activate_remove()), "$pwr_exe/xtt_remove.png");
 
-  debug_print("creating a scrolledgrowwidgetqt\n");
   QWidget* w;
   grownames_main_widget = scrolledgrowwidgetqt_new(init_grownames_cb, this, &w);
-  debug_print("creating a curvewidgetqt\n");
+  // grownames_main_widget must be realized _before_ growcurve_main_widget,
+  // Otherwise growcurve_main_widget crashes :(
+  grownames_main_widget->show();
   growcurve_main_widget = curvewidgetqt_new(init_growcurve_cb, this);
-  debug_print("creating a growwidgetqt\n");
   growaxis_main_widget = growwidgetqt_new(init_growaxis_cb, this);
-  debug_print("creating a curvenavwidgetqt\n");
   nav_widget = curvenavwidgetqt_new(growcurve_main_widget);
 
   QHBoxLayout* hbox = new QHBoxLayout();
   hbox->addWidget(growaxis_main_widget);
   add_expanding(hbox, growcurve_main_widget);
 
-  QSplitter* vpaned1 = new QSplitter(Qt::Vertical);
-  QSplitter* vpaned2 = new QSplitter(Qt::Vertical);
+  QSplitter* vpaned = new QSplitter(Qt::Vertical);
 
-  vpaned1->addWidget(grownames_main_widget);
-  vpaned1->addWidget(vpaned2);
-
-  add_expanding(vpaned2, hbox);
-  vpaned2->addWidget(nav_widget);
+  vpaned->addWidget(grownames_main_widget);
+  add_expanding(vpaned, hbox);
+  vpaned->addWidget(nav_widget);
 
   QVBoxLayout* vbox_layout = new QVBoxLayout(toplevel);
   vbox_layout->setMenuBar(menu_bar);
   vbox_layout->addWidget(tools);
   vbox_layout->addWidget(timetools);
-  add_expanding(vbox_layout, vpaned1);
+  add_expanding(vbox_layout, vpaned);
 
   if (!(options & curve_mOptions_Embedded)) {
     toplevel->setLayout(vbox_layout);
@@ -843,9 +914,11 @@ GeCurveQt::GeCurveQt(void* gc_parent_ctx, QWidget* parent_widget,
     vbox->setMinimumSize(window_width, window_height);
   }
 
-  set_pane_position(vpaned1, names_height * height_scale);
-  set_pane_position(
-      vpaned2, (window_height - names_height - nav_height - 50) * height_scale);
+  QList<int> sizes;
+  sizes << names_height * height_scale;
+  sizes << (window_height - names_height - nav_height) * height_scale;
+  sizes << nav_height * height_scale;
+  vpaned->setSizes(sizes);
 
   timetools->setVisible(false);
   menu_new->setVisible(false);
@@ -882,154 +955,4 @@ GeCurveQt::GeCurveQt(void* gc_parent_ctx, QWidget* parent_widget,
       toplevel->setModal(true);
     }
   }
-}
-
-void GeCurveQt::create_minmax_dialog()
-{
-  if (minmax_widget) {
-    minmax_widget->setVisible(true);
-    return;
-  }
-
-  // Create an input dialog
-  minmax_widget = new QDialog(toplevel);
-  minmax_widget->setMinimumSize(350, 150);
-  minmax_widget->setWindowTitle(fl("Axis Limits"));
-  minmax_widget->setAttribute(Qt::WA_DeleteOnClose);
-
-  minmax_textmin_widget = new QLineEdit();
-  QLabel* min_label = new QLabel(translate_utf8("MinValue"));
-  min_label->setFixedWidth(100);
-  minmax_textmax_widget = new QLineEdit();
-  QObject::connect(minmax_textmax_widget, SIGNAL(returnPressed()), toplevel,
-      SLOT(activate_minmax_ok()));
-  QLabel* max_label = new QLabel(translate_utf8("MaxValue"));
-  max_label->setFixedWidth(100);
-
-  QDialogButtonBox* buttons = new QDialogButtonBox();
-  buttons->addButton(QDialogButtonBox::Ok);
-  buttons->addButton(QDialogButtonBox::Cancel);
-  buttons->addButton(QDialogButtonBox::Save);
-
-  QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
-      toplevel, SLOT(activate_minmax_ok()));
-  QObject::connect(buttons->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
-      toplevel, SLOT(activate_minmax_cancel()));
-  QObject::connect(buttons->button(QDialogButtonBox::Save), SIGNAL(clicked()),
-      toplevel, SLOT(activate_minmax_save()));
-
-  QHBoxLayout* minmax_hbox1 = new QHBoxLayout();
-  minmax_hbox1->addWidget(min_label);
-  add_expanding(minmax_hbox1, minmax_textmin_widget);
-
-  QHBoxLayout* minmax_hbox2 = new QHBoxLayout();
-  minmax_hbox2->addWidget(max_label);
-  add_expanding(minmax_hbox2, minmax_textmax_widget);
-
-  QVBoxLayout* minmax_vbox = new QVBoxLayout(minmax_widget);
-  minmax_vbox->addLayout(minmax_hbox1);
-  add_expanding(minmax_vbox, minmax_hbox2);
-  minmax_vbox->addWidget(separator(QFrame::HLine));
-  minmax_vbox->addWidget(buttons);
-
-  minmax_widget->setLayout(minmax_vbox);
-
-  minmax_widget->show();
-}
-
-void GeCurveQt::create_export_dialog()
-{
-  if (!cd) {
-    return;
-  }
-
-  if (export_widget) {
-    export_widget->setVisible(true);
-    return;
-  }
-
-  // Create an input dialog
-  export_widget = new QDialog(toplevel);
-  export_widget->setMinimumSize(600, 300);
-  export_widget->setWindowTitle(fl("Export"));
-  export_widget->setAttribute(Qt::WA_DeleteOnClose);
-
-  QLabel* attr_label = new QLabel(translate_utf8("Attribute"));
-  attr_label->setFixedWidth(90);
-  export_attrcombo_widget = new QComboBox();
-  export_attrcombo_widget->addItem(translate_utf8("All Attributes"));
-  for (int i = 0; i < cd->cols; i++) {
-    export_attrcombo_widget->addItem(convert_utf8(cd->y_name[i]));
-  }
-  export_attrcombo_widget->setCurrentIndex(0);
-
-  QLabel* fromtime_label = NULL;
-  QLabel* totime_label = NULL;
-  QLabel* rows_label = NULL;
-  if (layout_mask & curve_mEnable_ExportTime) {
-    export_fromtime_widget = new QLineEdit();
-    export_fromtime_widget->setFixedWidth(200);
-    fromtime_label = new QLabel(translate_utf8("From"));
-    fromtime_label->setFixedWidth(90);
-
-    export_totime_widget = new QLineEdit();
-    export_totime_widget->setFixedWidth(200);
-    totime_label = new QLabel(translate_utf8("To"));
-    totime_label->setFixedWidth(90);
-
-    export_rows_widget = new QLineEdit();
-    export_rows_widget->setFixedWidth(80);
-    rows_label = new QLabel(translate_utf8("Max number of rows"));
-    rows_label->setFixedWidth(150);
-  }
-
-  export_filename_widget = new QLineEdit();
-  QLabel* filename_label = new QLabel(translate_utf8("Filename"));
-  filename_label->setFixedWidth(90);
-  QPushButton* export_browse = new QPushButton(translate_utf8("Browse"));
-  export_browse->setFixedSize(70, 25);
-
-  QDialogButtonBox* buttons = new QDialogButtonBox();
-  buttons->addButton(QDialogButtonBox::Ok);
-  buttons->addButton(QDialogButtonBox::Cancel);
-
-  QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
-      toplevel, SLOT(activate_export_ok()));
-  QObject::connect(buttons->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
-      toplevel, SLOT(activate_export_cancel()));
-
-  QHBoxLayout* export_hbox1 = new QHBoxLayout();
-  export_hbox1->addWidget(attr_label);
-  add_expanding(export_hbox1, export_attrcombo_widget);
-
-  QHBoxLayout* export_hbox2 = new QHBoxLayout();
-  if (layout_mask & curve_mEnable_ExportTime) {
-    export_hbox2->addWidget(fromtime_label);
-    export_hbox2->addWidget(export_fromtime_widget);
-    export_hbox2->addWidget(totime_label);
-    export_hbox2->addWidget(export_totime_widget);
-  }
-
-  QHBoxLayout* export_hbox4 = new QHBoxLayout();
-  if (layout_mask & curve_mEnable_ExportTime) {
-    export_hbox4->addWidget(rows_label);
-    export_hbox4->addWidget(export_rows_widget);
-  }
-
-  QHBoxLayout* export_hbox5 = new QHBoxLayout();
-  export_hbox5->addWidget(filename_label);
-  add_expanding(export_hbox5, export_filename_widget);
-  export_hbox5->addWidget(export_browse);
-
-  QVBoxLayout* export_vbox = new QVBoxLayout(export_widget);
-  export_vbox->addLayout(export_hbox1);
-  export_vbox->addLayout(export_hbox2);
-  add_expanding(export_vbox, export_hbox4);
-  add_expanding(export_vbox, export_hbox5);
-  export_vbox->addWidget(separator(QFrame::HLine));
-  export_vbox->addWidget(buttons);
-
-  export_widget->setLayout(export_vbox);
-
-  export_widget->show();
 }
