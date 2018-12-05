@@ -2838,7 +2838,6 @@ int GlowDrawQt::gradient_fill_rect(GlowWind* wind, int x, int y, int w, int h,
   if (!gradient_create_pattern(x, y, w, h, d0, d1, d2, gradient, &pat)) {
     return 0;
   }
-  // debug_print("gradient fillRect [%d,%d,%d,%d]\n", x, y, w, h);
   painter->fillRect(QRect(x, y, w, h), *pat);
 
   delete pat;
@@ -2866,7 +2865,6 @@ int GlowDrawQt::gradient_fill_rectrounded(GlowWind* wind, int x, int y, int w,
     return 0;
   }
 
-  // debug_print("gradient fillRect rounded [%d,%d,%d,%d]\n", x, y, w, h);
   if (roundamount >= 0) {
     QPainterPath path;
     path.addRoundedRect(QRect(x, y, w, h), roundamount, roundamount);
@@ -2889,12 +2887,6 @@ int GlowDrawQt::gradient_fill_arc(GlowWind* wind, int x, int y, int w, int h,
     return 1;
   }
 
-  if (angle1 >= 360) {
-    angle1 = angle1 - angle1 / 360 * 360;
-  } else if (angle1 < 0) {
-    angle1 = angle1 + (-angle1 / 360 + 1) * 360;
-  }
-
   unique_ptr<QPainter> painter = new QPainter(ww->buffer);
 
   if (ww->clip_on) {
@@ -2906,20 +2898,14 @@ int GlowDrawQt::gradient_fill_arc(GlowWind* wind, int x, int y, int w, int h,
     return 0;
   }
 
-  painter->save();
-  painter->translate(double(x) + double(w) / 2, double(y) + double(h) / 2);
-  painter->scale(double(w) / 2, double(h) / 2);
+  painter->translate(x + w / 2.0, y + h / 2.0);
+  painter->scale(w / 2.0, h / 2.0);
   QPainterPath path;
-  if (!(angle2 == 360 || angle2 == 180)) {
+  if (!(angle2 == 360 || angle2 == 180))
     path.moveTo(0, 0);
-  }
-  QRectF rect(0 - 1, 0 - 1, 0 + 1, 0 + 1);
-  path.arcTo(-1, -1, 2, 2, -double(angle1 + angle2) / 180 * M_PI,
-      -double(angle1) / 180 * M_PI);
-  if (!(angle2 == 360 || angle2 == 180)) {
+  path.arcTo(-1, -1, 2, 2, angle1, angle2);
+  if (!(angle2 == 360 || angle2 == 180))
     path.moveTo(0, 0);
-  }
-  painter->restore();
   painter->fillPath(path, *pat);
 
   delete pat;
