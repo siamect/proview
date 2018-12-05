@@ -1206,14 +1206,14 @@ int GlowDrawQt::polyline_helper(GlowWind* wind, int painter_type, int size,
   }
 
   if (fill) {
+    unique_ptr<QPoint[]> qpoints = points_to_qt_points(points, point_cnt);
+    painter->drawPolygon(qpoints.get(), point_cnt);
+  } else {
     int cnt;
     unique_ptr<QPoint[]> qpoints = points_to_qt_points_curve(wind, points, point_cnt, &cnt);
-    painter->drawPolygon(qpoints.get(), cnt);
-  } else {
-    unique_ptr<QPoint[]> qpoints = points_to_qt_points(points, point_cnt);
     painter->setBrush(Qt::NoBrush);
     // debug_print("polyline painter_type=%d, fill=%d, point_cnt=%d\n", painter_type, fill, point_cnt);
-    painter->drawPolyline(qpoints.get(), point_cnt);
+    painter->drawPolyline(qpoints.get(), cnt);
   }
 
   return 1;
@@ -1484,7 +1484,7 @@ void GlowDrawQt::copy_buffer(
 void GlowDrawQt::get_window_size(GlowWind* wind, int* width, int* height)
 {
   DrawWindQt* w = (DrawWindQt*)wind->window;
-  QSize size = w->window->size();
+  QSize size = w->buffer->size();
   *width = size.width();
   *height = size.height();
 }
@@ -1792,7 +1792,7 @@ void GlowDrawQt::set_background(GlowWind* wind, glow_eDrawType drawtype,
     w->background_pixmap_height = pixmap_height;
     QPalette pal;
     pal.setBrush(QPalette::Background,
-        w->background_pixmap->scaled(w->window->size(), Qt::IgnoreAspectRatio));
+        w->background_pixmap->scaled(w->buffer->size(), Qt::IgnoreAspectRatio));
     w->window->setPalette(pal);
     if (w->buffer) {
       buffer_background(w, 0);
