@@ -46,7 +46,7 @@
 /*! \addtogroup Ge */
 /*@{*/
 
-class SubPaletteQtWidget;
+class SubPaletteQtObject;
 
 class SubPaletteQt : public SubPalette {
 public:
@@ -54,21 +54,24 @@ public:
       QWidget** w, pwr_tStatus* status);
   ~SubPaletteQt();
 
-  SubPaletteQtWidget* toplevel;
+  SubPaletteQtObject* object;
   QWidget* brow_widget;
   QWidget* form_widget;
   char popup_help_filename[200];
 
   void set_inputfocus(int focus);
   void create_popup_menu(char* filename, int x, int y);
+
+private:
+  QWidget* parent_widget;
 };
 
-class SubPaletteQtWidget : public QWidget {
+class SubPaletteQtObject : public QObject {
   Q_OBJECT
 
 public:
-  SubPaletteQtWidget(SubPaletteQt* parent_ctx, QWidget* parent)
-      : QWidget(parent), subpalette(parent_ctx)
+  SubPaletteQtObject(SubPaletteQt* parent_ctx)
+      : QObject(), subpalette(parent_ctx)
   {
   }
 

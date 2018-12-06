@@ -47,24 +47,24 @@
 
 SubPaletteQt::SubPaletteQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
     const char* xn_name, QWidget** w, pwr_tStatus* status)
-    : SubPalette(xn_parent_ctx, xn_name, status)
+    : SubPalette(xn_parent_ctx, xn_name, status), parent_widget(xn_parent_wid)
 {
-  debug_print("creating a scrolledbrowwidgetqt\n");
+  object = new SubPaletteQtObject(this);
+
   form_widget
       = scrolledbrowwidgetqt_new(SubPalette::init_brow_cb, this, &brow_widget);
 
   // Create the root item
   *w = form_widget;
 
-  toplevel = new SubPaletteQtWidget(this, xn_parent_wid);
-
   *status = 1;
 }
 
 SubPaletteQt::~SubPaletteQt()
 {
-  debug_print("SubPaletteQt::~SubPaletteQt\n");
+  delete object;
   delete brow;
+  form_widget->close();
 }
 
 void SubPaletteQt::set_inputfocus(int focus)
@@ -83,14 +83,14 @@ void SubPaletteQt::create_popup_menu(char* filename, int x, int y)
 
   CoWowQt::PopupPosition(form_widget, x, y, &wind_x, &wind_y);
 
-  QMenu* menu = new QMenu(toplevel);
-  addMenuItem(toplevel, menu, "Help", SLOT(activate_help()));
+  QMenu* menu = new QMenu(parent_widget);
+  addMenuItem(object, menu, "Help", SLOT(activate_help()));
 
   menu->popup(QPoint(wind_x, wind_y));
 }
 
 //	Callback from the menu.
-void SubPaletteQtWidget::activate_help()
+void SubPaletteQtObject::activate_help()
 {
   char helpfile[80] = "$pwr_exe/man_subgraph.dat";
   char topic[200];

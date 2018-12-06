@@ -1265,6 +1265,7 @@ GeQt::~GeQt()
   if (subgraphs) {
     delete subgraphs;
   }
+  delete subpalette;
   delete recall_entry;
   delete text_recall;
   delete name_recall;
