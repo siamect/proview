@@ -139,13 +139,10 @@ RtMonQt::RtMonQt(void* rtmon_parent_ctx, QWidget* rtmon_parent_wid,
       SLOT(activate_op()), "$pwr_exe/xtt_op.png");
 
   // Button box
-  pwr_tFileName fname;
-  dcli_translate_filename(fname, "$pwr_exe/pwr_logofully.png");
-  bbox_image = new_image_label(toplevel, fname);
+  bbox_image = new_image_label(toplevel, "$pwr_exe/pwr_logofully.png");
   bbox_image->setVisible(false);
 
-  dcli_translate_filename(fname, "$pwr_exe/pwr_logofullg.png");
-  bbox_image_gray = new_image_label(toplevel, fname);
+  bbox_image_gray = new_image_label(toplevel, "$pwr_exe/pwr_logofullg.png");
 
   bbox_label = new QLabel("Down");
   bbox_label->setFixedSize(170, 25);

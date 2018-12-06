@@ -589,7 +589,6 @@ XttQt::XttQt(int argc, char* argv[], int* return_sts)
   const int window_width = 400;
   const int window_height = 700;
   pwr_tStatus sts;
-  pwr_tFileName fname;
   char title[120] = "Xtt ";
   char nodename[80];
 
@@ -753,8 +752,7 @@ XttQt::XttQt(int argc, char* argv[], int* return_sts)
   vbox1->addWidget(menu_bar);
   vbox1->addWidget(tools);
 
-  dcli_translate_filename(fname, "$pwr_exe/pwr_logohalf2y.png");
-  QLabel* xtt_image = new_image_label(toplevel, fname);
+  QLabel* xtt_image = new_image_label(toplevel, "$pwr_exe/pwr_logohalf2y.png");
 
   QHBoxLayout* hbox1 = new QHBoxLayout();
   hbox1->addLayout(vbox1);

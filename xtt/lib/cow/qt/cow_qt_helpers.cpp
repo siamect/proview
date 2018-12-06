@@ -218,8 +218,10 @@ QFrame* separator(QFrame::Shape shape)
   return line;
 }
 
-QLabel* new_image_label(QWidget* parent, const char* fname)
+QLabel* new_image_label(QWidget* parent, const char* filename)
 {
+  pwr_tFileName fname;
+  dcli_translate_filename(fname, filename);
   QLabel* label = new QLabel(parent);
   label->setPixmap(QPixmap(fl(fname)));
   return label;

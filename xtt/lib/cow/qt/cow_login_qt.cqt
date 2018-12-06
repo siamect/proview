@@ -125,9 +125,7 @@ CoLoginQt::CoLoginQt(void* wl_parent_ctx, QWidget* wl_parent_wid,
   passwordlabel->setFixedHeight(20);
   password->setEchoMode(QLineEdit::Password);
 
-  pwr_tFileName fname;
-  dcli_translate_filename(fname, "$pwr_exe/pwr_logofull.png");
-  QLabel* image = new_image_label(toplevel, fname);
+  QLabel* image = new_image_label(toplevel, "$pwr_exe/pwr_logofull.png");
 
   buttons = new QDialogButtonBox();
   buttons->addButton(QDialogButtonBox::Ok);

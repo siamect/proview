@@ -1732,7 +1732,6 @@ WttQt::WttQt(void* wt_parent_ctx, QWidget* wt_parent_wid, const char* wt_name,
   char layout_palette[80];
   char title_w1[40];
   char title_w2[40];
-  pwr_tFileName fname;
   wb_rev_info rev_info;
   char version[80];
 
@@ -2216,8 +2215,7 @@ WttQt::WttQt(void* wt_parent_ctx, QWidget* wt_parent_wid, const char* wt_name,
   vbox1->addWidget(menu_bar);
   vbox1->addWidget(tools);
 
-  dcli_translate_filename(fname, "$pwr_exe/pwr_logohalf2.png");
-  QLabel* wb_image = new_image_label(toplevel, fname);
+  QLabel* wb_image = new_image_label(toplevel, "$pwr_exe/pwr_logohalf2.png");
 
   QHBoxLayout* hbox1 = new QHBoxLayout();
   hbox1->addLayout(vbox1);

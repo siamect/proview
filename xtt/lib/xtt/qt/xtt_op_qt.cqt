@@ -158,18 +158,15 @@ OpQt::OpQt(void* op_parent_ctx, QWidget* op_parent_wid, char* opplace,
   CoWowQt::SetWindowIcon(toplevel);
   QRect xtt_monitor_geometry = QApplication::desktop()->screenGeometry();
 
-  pwr_tFileName fname;
-  dcli_translate_filename(fname, "$pwr_exe/xtt_alarm_active.png");
   for (int i = 0; i < 5; i++) {
-    aalarm_active[i] = new_image_label(toplevel, fname);
+    aalarm_active[i] = new_image_label(toplevel, "$pwr_exe/xtt_alarm_active.png");
     aalarm_label[i] = new QLabel("");
   }
 
   alarmcnt_label = new QLabel("");
   aalarm_mark = new QLabel("A");
 
-  dcli_translate_filename(fname, "$pwr_exe/xtt_alarm_active.png");
-  balarm_active = new_image_label(toplevel, fname);
+  balarm_active = new_image_label(toplevel, "$pwr_exe/xtt_alarm_active.png");
   balarm_mark = new QLabel("");
   balarm_label = new QLabel("");
 
@@ -365,6 +362,7 @@ OpQt::OpQt(void* op_parent_ctx, QWidget* op_parent_wid, char* opplace,
     char text[80];
     pwr_tTime time;
 
+    pwr_tFileName fname;
     dcli_translate_filename(fname, "$pwrp_exe/pwrp_logotype.png");
     if (EVEN(dcli_file_time(fname, &time))) {
       dcli_translate_filename(fname, "$pwr_exe/proview_icon17.png");

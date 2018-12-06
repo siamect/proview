@@ -371,9 +371,7 @@ CoWowWarrantQt::CoWowWarrantQt(CoWowQtObject* parent)
 
   QHBoxLayout* inner_layout = new QHBoxLayout();
 
-  pwr_tFileName fname;
-  dcli_translate_filename(fname, "$pwr_exe/pwr_logofull.png");
-  QLabel* image = new_image_label(this, fname);
+  QLabel* image = new_image_label(this, "$pwr_exe/pwr_logofull.png");
   inner_layout->addWidget(image);
   inner_layout->setAlignment(image, Qt::AlignTop);
 

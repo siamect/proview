@@ -73,7 +73,7 @@ QComboBox* addToolMenu(QWidget* parent, QToolBar* tools, const char* callback);
 QWidget* layout_to_widget(QLayout* layout);
 void set_pane_position(QSplitter* pane, int right);
 QFrame* separator(QFrame::Shape shape);
-QLabel* new_image_label(QWidget* parent, const char* fname);
+QLabel* new_image_label(QWidget* parent, const char* filename);
 void fixed_put(QWidget* parent, QWidget* widget, int x, int y);
 void add_expanding(QStatusBar* statusbar, QWidget* widget);
 void add_expanding(QSplitter* splitter, QWidget* widget);
