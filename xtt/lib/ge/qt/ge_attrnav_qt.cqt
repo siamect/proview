@@ -51,7 +51,6 @@ AttrNavQt::AttrNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
 {
   trace_obj = new AttrNavQtTraceObject(this);
 
-  debug_print("creating a scrolledbrowwidgetqt\n");
   form_widget
       = scrolledbrowwidgetqt_new(AttrNav::init_brow_cb, this, &brow_widget);
 
@@ -63,7 +62,6 @@ AttrNavQt::AttrNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
 
 AttrNavQt::~AttrNavQt()
 {
-  debug_print("AttrNavQt::~AttrNavQt\n");
   delete trace_obj;
 
   delete brow;
@@ -78,11 +76,6 @@ void AttrNavQt::trace_start()
 AttrNavQtTraceObject::AttrNavQtTraceObject(AttrNavQt* parent) : QObject(), attrnav(parent)
 {
   trace_timerid = new QTimer(this);
-}
-
-AttrNavQtTraceObject::~AttrNavQtTraceObject()
-{
-  debug_print("AttrNavQtTraceObject::~AttrNavQtTraceObject\n");
 }
 
 void AttrNavQtTraceObject::trace_scan()

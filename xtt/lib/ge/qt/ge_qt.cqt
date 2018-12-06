@@ -1268,30 +1268,6 @@ void GeQtWidget::focusInEvent(QFocusEvent* event)
   QWidget::focusInEvent(event);
 }
 
-// Reimplemented from Ge, but replaced 'delete this' with 'close()' to avoid
-// segmentation fault when Qt tries to use the (deleted) object
-/*
-void GeQt::save_and_close()
-{
-  char name[40];
-
-  graph->get_name( name);
-  if ( streq( name, "")) {
-    if ( ! graph->is_subgraph())
-      open_input_dialog( "Graph name", "Save Graph", "",
-                         Ge::save_graph_and_close);
-    else
-      open_input_dialog( "SubGraph name", "Save SubGraph", "",
-                         Ge::save_graph_and_close);
-  }
-  else {
-    save_graph( this, name);
-
-    QWidget::close();
-  }
-}
-*/
-
 GeQt::~GeQt()
 {
   debug_print("GeQt::~GeQt\n");
@@ -1304,16 +1280,25 @@ GeQt::~GeQt()
     wow->DeleteList(open_dialog);
   }
 
-  if (plantctx) {
-    delete plantctx;
+  if (subgraphs) {
+    delete subgraphs;
   }
-
-  toplevel->close();
-
+  delete recall_entry;
   delete text_recall;
   delete name_recall;
   delete value_recall;
   delete cmd_recall;
+  delete graph;
+  delete wow;
+
+  if (plantctx) {
+    delete plantctx;
+  }
+  if (objectnav) {
+    delete objectnav;
+  }
+
+  toplevel->close();
 
   if (exit_when_close) {
     exit(0);

@@ -70,7 +70,6 @@ class AttrNavQtTraceObject : public QObject {
 
 public:
   AttrNavQtTraceObject(AttrNavQt* parent);
-  ~AttrNavQtTraceObject();
 
 public slots:
   void trace_scan();
