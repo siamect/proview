@@ -72,7 +72,6 @@ public:
   QAction* view_objectnav_w;
   QWidget* graph_list;
   QWidget* objectnav_w;
-  QSplitter* hpaned3;
   CoWowRecall* text_recall;
   CoWowRecall* name_recall;
   CoWowRecall* value_recall;

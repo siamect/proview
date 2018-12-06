@@ -1061,48 +1061,30 @@ void GeQtWidget::activate_view_plant(bool set)
 
 void GeQtWidget::activate_view_graphlist(bool set)
 {
-  bool pane_visible = ge->hpaned3->isVisible();
-  bool objectnav_visible = ge->objectnav_w->isVisible();
-
   if (sender() != ge->view_graphlist_w) {
     ge->view_graphlist_w->setChecked(set);
   }
 
   if (set) {
-    if (!pane_visible) {
-      ge->hpaned3->setVisible(true);
-    }
     ge->graph_list->setVisible(true);
   } else {
     ge->graph_list->setVisible(false);
-    if (!objectnav_visible && pane_visible) {
-      ge->hpaned3->setVisible(false);
-    }
   }
   ge->set_focus(0);
 }
 
 void GeQtWidget::activate_view_objectnav(bool set)
 {
-  bool pane_visible = ge->hpaned3->isVisible();
-  bool graph_list_visible = ge->graph_list->isVisible();
-
   if (sender() != ge->view_objectnav_w) {
     ge->view_objectnav_w->setChecked(set);
   }
 
   if (set) {
-    if (!pane_visible) {
-      ge->hpaned3->setVisible(true);
-    }
     ge->objectnav_w->setVisible(true);
     ge->set_focus(ge->objectnav);
     ge->objectnav_mapped = 1;
   } else {
     ge->objectnav_w->setVisible(false);
-    if (!graph_list_visible && pane_visible) {
-      ge->hpaned3->setVisible(false);
-    }
     ge->set_focus(0);
     ge->objectnav_mapped = 0;
   }
@@ -1527,7 +1509,7 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
   // Submenu Conpoint Direction
   QActionGroup* condir_group = new QActionGroup(toplevel);
   QMenu* cons_condir = cons->addMenu(translate_utf8("Conpoint &Direction"));
-  addMenuRadioItem(toplevel, cons_condir, "&Center",
+  QAction* cons_condir_center = addMenuRadioItem(toplevel, cons_condir, "&Center",
       SLOT(activate_condir_center()), condir_group);
   addMenuRadioItem(toplevel, cons_condir, "&Left", SLOT(activate_condir_left()),
       condir_group);
@@ -1537,6 +1519,7 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
       toplevel, cons_condir, "&Up", SLOT(activate_condir_up()), condir_group);
   addMenuRadioItem(toplevel, cons_condir, "&Down", SLOT(activate_condir_down()),
       condir_group);
+  cons_condir_center->setChecked(true);
 
   // Submenu Corners
   QActionGroup* corners_group = new QActionGroup(toplevel);
@@ -1755,9 +1738,10 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
   tools_textfont->setFont(QFont("Courier"));
 
   // Bold checkbutton
-  addCheckableToolItem(toplevel, tools3,
-      "Set bold on selected text, and as default",
-      SLOT(activate_textbold(bool)), "");
+  QCheckBox* bold = new QCheckBox("Bold");
+  bold->setToolTip(fl("Set bold on selected text, and as default"));
+  QObject::connect(bold, SIGNAL(toggled(bool)), toplevel, SLOT(activate_textbold(bool)));
+  tools3->addWidget(bold);
 
   // Toolbar 2 (again)
 
@@ -1784,6 +1768,8 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
   addToolItem(toplevel, tools2, "Increase brightness",
       SLOT(activate_incr_lightness()), "$pwr_exe/ge_brightness.png");
 
+  tools2->addWidget(new_image_label(tools2, "$pwr_exe/ge_brightness.png"));
+
   // Separator
   tools2->addSeparator();
 
@@ -1793,6 +1779,8 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
   addToolItem(toplevel, tools2, "Increase color intensity",
       SLOT(activate_incr_intensity()), "$pwr_exe/ge_arrowright.png");
 
+  tools2->addWidget(new_image_label(tools2, "$pwr_exe/ge_color.png"));
+
   // Separator
   tools2->addSeparator();
 
@@ -1801,6 +1789,8 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
       "$pwr_exe/ge_arrowleft.png");
   addToolItem(toplevel, tools2, "Shift color", SLOT(activate_incr_shift()),
       "$pwr_exe/ge_arrowright.png");
+
+  tools2->addWidget(new_image_label(tools2, "$pwr_exe/ge_colorshift.png"));
 
   // Gradient option menu
   tools_gradient = addToolMenu(toplevel, tools2, SLOT(activate_gradient(int)));
@@ -1920,19 +1910,18 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
   graph->refresh_objects_cb = &Ge::refresh_objects_cb;
 
   // Vertical palette pane
-  QSplitter* vpaned1 = new QSplitter(Qt::Vertical);
-  QSplitter* vpaned2 = new QSplitter(Qt::Vertical);
+  QSplitter* vpaned = new QSplitter(Qt::Vertical);
 
   QHBoxLayout* palbox = new QHBoxLayout();
 
   // SubGraphs palette
   subpalette
-      = new SubPaletteQt(this, vpaned1, "SubGraphs", &subpalette_widget, &sts);
+      = new SubPaletteQt(this, toplevel, "SubGraphs", &subpalette_widget, &sts);
   subpalette->message_cb = &Ge::message_cb;
   subpalette->set_focus_cb = &Ge::set_focus_cb;
   subpalette->traverse_focus_cb = &Ge::traverse_focus;
   subpalette->help_cb = help_cb;
-  add_expanding(palbox, subpalette_widget);
+  palbox->addWidget(subpalette_widget);
   subpalette_mapped = 1;
 
   // Color palette
@@ -1942,17 +1931,14 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
 
   if (ldhses) {
     plantctx = new NavQt(
-        this, vpaned1, "Plant", ldhses, "NavigatorW1", &plant_widget, &sts);
+        this, toplevel, "Plant", ldhses, "NavigatorW1", &plant_widget, &sts);
     ((NavQt*)plantctx)->get_plant_select_cb = Ge::get_plant_select_cb;
     ((NavQt*)plantctx)->set_focus_cb = Ge::set_focus_cb;
     ((NavQt*)plantctx)->traverse_focus_cb = Ge::traverse_focus;
-    add_expanding(palbox, plant_widget);
+    palbox->addWidget(plant_widget);
   }
 
-  QSplitter* hpaned2 = new QSplitter(Qt::Horizontal);
-  hpaned3 = new QSplitter(Qt::Horizontal);
-
-  objectnav = new AttrQt(hpaned3, this, attr_eType_ObjectTree, 0, 0, 0);
+  objectnav = new AttrQt(toplevel, this, attr_eType_ObjectTree, 0, 0, 0);
   objectnav_w = ((AttrQt*)objectnav)->brow_widget;
   assert(objectnav_w != NULL);
   objectnav->set_graph(graph);
@@ -1972,37 +1958,31 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
   objectnav->set_inputfocus_cb = set_focus_cb;
   objectnav->traverse_inputfocus_cb = traverse_focus;
 
-  add_expanding(vpaned1, palbox);
-  vpaned1->addWidget(colpal_main_widget);
+  add_expanding(vpaned, palbox);
+  vpaned->addWidget(colpal_main_widget);
 
   ((GraphQt*)graph)->create_navigator();
-  add_expanding(vpaned2, vpaned1);
-  vpaned1->addWidget(((GraphQt*)graph)->nav_widget);
-
-  // Horizontal pane
-  QSplitter* hpaned = new QSplitter(Qt::Horizontal);
-  add_expanding(hpaned, grow_widget);
-  hpaned->addWidget(vpaned2);
+  vpaned->addWidget(((GraphQt*)graph)->nav_widget);
 
   GeItemViewQt* item_view = new GeItemViewQt(this);
   graph_list = item_view->widget();
 
-  hpaned3->addWidget(graph_list);
-  add_expanding(hpaned3, objectnav_w);
-
-  hpaned2->addWidget(hpaned3);
-  add_expanding(hpaned2, hpaned);
+  // Horizontal pane
+  QSplitter* hpaned = new QSplitter(Qt::Horizontal);
+  hpaned->addWidget(graph_list);
+  hpaned->addWidget(objectnav_w);
+  add_expanding(hpaned, grow_widget);
+  hpaned->addWidget(vpaned);
 
   QVBoxLayout* vbox = new QVBoxLayout(toplevel);
   vbox->setMenuBar(menu_bar);
   vbox->addWidget(tools3);
   vbox->addWidget(tools2);
   vbox->addWidget(tools);
-  add_expanding(vbox, hpaned2);
+  add_expanding(vbox, hpaned);
   vbox->addWidget(statusbar);
 
   toplevel->setLayout(vbox);
-
   toplevel->show();
 
   tools_textfont->setFixedHeight(tools_textsize->height());
@@ -2011,12 +1991,14 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
 
   graph_list->setVisible(false);
   objectnav_w->setVisible(false);
-  hpaned3->setVisible(false);
 
-  set_pane_position(hpaned2, 150);
-  set_pane_position(hpaned, -palette_width - 175);
-  set_pane_position(vpaned1, -380);
-  set_pane_position(vpaned2, -290);
+  QList<int> pane_sizes;
+  pane_sizes << 150 << 150 << window_width - palette_width - 325 << palette_width + 25;
+  hpaned->setSizes(pane_sizes);
+
+  pane_sizes.clear();
+  pane_sizes << window_height - 380 << 90 << 290;
+  vpaned->setSizes(pane_sizes);
 
   if (ldhses) {
     plant_widget->setVisible(false);
