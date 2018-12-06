@@ -51,10 +51,10 @@
 
 void SubGraphsQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("SubGraphsQtWidget::closeEvent\n");
   if (subgraphs->close_cb) {
     (subgraphs->close_cb)(subgraphs);
   } else {
+    trace_timerid->stop();
     delete subgraphs;
   }
   QWidget::closeEvent(event);
@@ -118,8 +118,6 @@ SubGraphsQt::SubGraphsQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
       parent_wid(xn_parent_wid)
 {
   toplevel = new SubGraphsQtWidget(this, xn_parent_wid);
-  toplevel->setToolTip(fl("ge_subgraphs widget"));
-
   toplevel->setMinimumSize(300, 500);
   toplevel->setWindowTitle(fl(name));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
@@ -147,7 +145,6 @@ SubGraphsQt::SubGraphsQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
   addMenuItem(
       toplevel, help, "&Help", SLOT(subgraphs_activate_help()), "CTRL+H");
 
-  debug_print("creating a scrolledbrowwidgetqt\n");
   form_widget
       = scrolledbrowwidgetqt_new(SubGraphs::init_brow_cb, this, &brow_widget);
 
@@ -165,14 +162,10 @@ SubGraphsQt::SubGraphsQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
 
 SubGraphsQt::~SubGraphsQt()
 {
-  debug_print("SubGraphsQt::~SubGraphsQt\n");
-  subgraphs_tAttr attrlist_p, next_p;
-
   // Delete all attr-widgets in attrlist
-  attrlist_p = attrlist;
-  next_p = NULL;
+  subgraphs_tAttr attrlist_p = attrlist;
   while (attrlist_p) {
-    next_p = attrlist_p->next;
+    subgraphs_tAttr next_p = attrlist_p->next;
     delete attrlist_p->attrctx;
     free((char*)attrlist_p);
     attrlist_p = next_p;

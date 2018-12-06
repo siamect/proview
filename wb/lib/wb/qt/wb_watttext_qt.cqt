@@ -198,7 +198,6 @@ WAttTextQt::WAttTextQt(QWidget* wa_parent_wid, void* wa_parent_ctx,
   }
 
   toplevel = new WAttTextQtWidget(this, wa_parent_wid);
-  toplevel->setToolTip(fl("wb_watttext widget"));
   toplevel->setMinimumSize(800, 700);
   toplevel->setWindowTitle(fl(namep));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
