@@ -58,7 +58,7 @@ MsgWindowQt::MsgWindowQt(void* msg_parent_ctx, QWidget* msg_parent_wid,
     : MsgWindow(msg_parent_ctx, msg_name, status)
 {
   toplevel = new MsgWindowQtWidget(this, msg_parent_wid);
-  toplevel->setFixedSize(800, 600);
+  toplevel->setMinimumSize(800, 600);
   toplevel->setWindowTitle(translate_utf8(msg_name));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 

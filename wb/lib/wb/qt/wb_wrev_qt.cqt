@@ -291,8 +291,6 @@ WRevInputDialog::WRevInputDialog(WRevQt* parent_ctx, QWidget* parent,
   QDialogButtonBox* buttons = new QDialogButtonBox();
   buttons->addButton(QDialogButtonBox::Ok);
   buttons->addButton(QDialogButtonBox::Cancel);
-  buttons->button(QDialogButtonBox::Ok)->setFixedSize(70, 25);
-  buttons->button(QDialogButtonBox::Cancel)->setFixedSize(70, 25);
   connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()), this,
       SLOT(activate_ok()));
   connect(buttons->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), this,

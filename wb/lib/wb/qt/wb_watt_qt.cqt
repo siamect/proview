@@ -386,7 +386,7 @@ WAttQt::WAttQt(QWidget* wa_parent_wid, void* wa_parent_ctx,
   }
 
   toplevel = new WAttQtWidget(this, wa_parent_wid);
-  toplevel->setFixedSize(410, 570);
+  toplevel->setMinimumSize(410, 570);
   toplevel->setWindowTitle(fl(namep));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -457,9 +457,7 @@ WAttQt::WAttQt(QWidget* wa_parent_wid, void* wa_parent_ctx,
 
   QDialogButtonBox* buttons = new QDialogButtonBox();
   buttons->addButton(QDialogButtonBox::Ok);
-  buttons->button(QDialogButtonBox::Ok)->setFixedSize(70, 25);
   buttons->addButton(QDialogButtonBox::Cancel);
-  buttons->button(QDialogButtonBox::Cancel)->setFixedSize(70, 25);
   QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
       toplevel, SLOT(activate_cmd_scrolled_ok()));
   QObject::connect(buttons->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),

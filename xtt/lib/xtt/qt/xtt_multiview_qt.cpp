@@ -102,7 +102,7 @@ void XttMultiViewQtWidget::resize(int width, int height)
 
 void XttMultiViewQt::set_size(int width, int height)
 {
-  toplevel->setFixedSize(width, height);
+  toplevel->resize(width, height);
 }
 
 XttMultiViewQt::~XttMultiViewQt()
@@ -191,12 +191,12 @@ XttMultiViewQt::XttMultiViewQt(QWidget* mv_parent_wid, void* mv_parent_ctx,
 
     if (mv.Layout == pwr_eMultiViewLayoutEnum_Fix
         || mv.Layout == pwr_eMultiViewLayoutEnum_Table) {
-      toplevel->setFixedSize(window_width, window_height);
+      toplevel->setMinimumSize(window_width, window_height);
     }
 
     if (mv.Options & pwr_mMultiViewOptionsMask_Dialog) {
       toplevel->setWindowFlags(Qt::Dialog);
-      toplevel->setFixedSize(window_width, window_height);
+      toplevel->setMinimumSize(window_width, window_height);
     }
 
     CoWowQt::SetWindowIcon(toplevel);
@@ -961,7 +961,7 @@ XttMultiViewQt::XttMultiViewQt(QWidget* mv_parent_wid, void* mv_parent_ctx,
       toplevel->setModal(true);
     }
   } else {
-    box_widget->setFixedSize(window_width, window_height);
+    box_widget->setMinimumSize(window_width, window_height);
   }
 
   *sts = XNAV__SUCCESS;

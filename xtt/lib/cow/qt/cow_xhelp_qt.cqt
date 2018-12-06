@@ -142,7 +142,7 @@ void CoXHelpQtWidget::focusInEvent(QFocusEvent* event)
 
 void CoXHelpQt::set_dimension(int width, int height)
 {
-  toplevel->setFixedSize(width, height);
+  toplevel->resize(width, height);
 }
 
 void CoXHelpQt::print()
@@ -187,7 +187,7 @@ CoXHelpQt::CoXHelpQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
   strcpy(title, Lng::translate("Help"));
 
   toplevel = new CoXHelpQtWidget(this, xa_parent_wid);
-  toplevel->setFixedSize(700, 600);
+  toplevel->setMinimumSize(700, 600);
   toplevel->setWindowTitle(fl(title));
 
   CoWowQt::SetWindowIcon(toplevel);

@@ -166,7 +166,7 @@ void WGeQtWidget::resize(int width, int height)
 
 void WGeQt::set_size(int width, int height)
 {
-  toplevel->setFixedSize(width, height);
+  toplevel->resize(width, height);
 }
 
 void WGeQt::set_subwindow_release()

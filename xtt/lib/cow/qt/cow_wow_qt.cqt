@@ -499,9 +499,6 @@ void CoWowQt::CreateFileSelDia(const char* title, void* parent_ctx,
   } else if (file_type == wow_eFileSelType_Image) {
     dcli_translate_filename(folder, "$pwrp_pop");
     filter = "Images (*.png,*.jpg,*.gif,*.svg);;All Files (*)";
-  } else if (file_type == wow_eFileSelType_History) {
-    dcli_translate_filename(folder, "~");
-    filter = "History files (*.txt,*.csv,*.skv);;All Files (*)";
   } else if (file_type == wow_eFileSelType_Backup) {
     dcli_translate_filename(folder, "$pwrp_load");
     filter = "Backup files (*.bck);;All Files (*)";
@@ -510,8 +507,8 @@ void CoWowQt::CreateFileSelDia(const char* title, void* parent_ctx,
   // QFileDialog::getOpenFileName() is broken
   QFileDialog dialog(object->parent_wid, fl(title), fl(folder), filter);
   dialog.setFileMode(QFileDialog::ExistingFile);
-  int sts = dialog.exec();
 
+  int sts = dialog.exec();
   if (sts == QDialog::Accepted && dialog.selectedFiles().length() > 0) {
     pwr_tFileName fname;
     strcpy(fname, qPrintable(dialog.selectedFiles().first()));
@@ -683,7 +680,7 @@ CoWowModalDialogQt::CoWowModalDialogQt(QWidget* parent, const char* title,
   QPixmap* image_w;
   pwr_tFileName fname;
 
-  setFixedSize(400, 150);
+  setMinimumSize(400, 150);
   setWindowTitle(fl(title));
   setAttribute(Qt::WA_DeleteOnClose);
 
@@ -729,19 +726,16 @@ CoWowModalDialogQt::CoWowModalDialogQt(QWidget* parent, const char* title,
 
   if (button1) {
     QWidget* button1_w = new QPushButton(translate_utf8(button1), this);
-    button1_w->setFixedSize(90, 28);
     connect(button1_w, SIGNAL(clicked()), this, SLOT(modaldia_button1_cb()));
     hboxbuttons->addWidget(button1_w);
   }
   if (button2) {
     QWidget* button2_w = new QPushButton(translate_utf8(button2), this);
-    button2_w->setFixedSize(90, 28);
     connect(button2_w, SIGNAL(clicked()), this, SLOT(modaldia_button2_cb()));
     hboxbuttons->addWidget(button2_w);
   }
   if (button3) {
     QWidget* button3_w = new QPushButton(translate_utf8(button3), this);
-    button3_w->setFixedSize(90, 28);
     connect(button3_w, SIGNAL(clicked()), this, SLOT(modaldia_button3_cb()));
     hboxbuttons->addWidget(button3_w);
   }

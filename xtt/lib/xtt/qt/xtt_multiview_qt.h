@@ -102,9 +102,10 @@ public:
   {
   }
 
+  void resize(int width, int height);
+
 protected:
   void focusInEvent(QFocusEvent* event);
-  void resize(int width, int height);
   void closeEvent(QCloseEvent* event);
 
 private:

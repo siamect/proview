@@ -274,8 +274,6 @@ WVselQt::WVselQt(pwr_tStatus* status, void* wv_parent_ctx,
   QDialogButtonBox* buttons = new QDialogButtonBox();
   buttons->addButton(QDialogButtonBox::Ok);
   buttons->addButton(QDialogButtonBox::Cancel);
-  buttons->button(QDialogButtonBox::Ok)->setFixedSize(70, 25);
-  buttons->button(QDialogButtonBox::Cancel)->setFixedSize(70, 25);
   QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
       toplevel, SLOT(activate_ok()));
   QObject::connect(buttons->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),

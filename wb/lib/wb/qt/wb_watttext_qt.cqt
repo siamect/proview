@@ -199,7 +199,7 @@ WAttTextQt::WAttTextQt(QWidget* wa_parent_wid, void* wa_parent_ctx,
 
   toplevel = new WAttTextQtWidget(this, wa_parent_wid);
   toplevel->setToolTip(fl("wb_watttext widget"));
-  toplevel->setFixedSize(800, 700);
+  toplevel->setMinimumSize(800, 700);
   toplevel->setWindowTitle(fl(namep));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -244,9 +244,6 @@ WAttTextQt::WAttTextQt(QWidget* wa_parent_wid, void* wa_parent_ctx,
   buttons->addButton(QDialogButtonBox::Ok);
   buttons->addButton(QDialogButtonBox::Apply);
   buttons->addButton(QDialogButtonBox::Cancel);
-  buttons->button(QDialogButtonBox::Ok)->setFixedSize(70, 25);
-  buttons->button(QDialogButtonBox::Apply)->setFixedSize(70, 25);
-  buttons->button(QDialogButtonBox::Cancel)->setFixedSize(70, 25);
   QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
       toplevel, SLOT(activate_ok()));
   QObject::connect(buttons->button(QDialogButtonBox::Apply), SIGNAL(clicked()),

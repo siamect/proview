@@ -119,7 +119,7 @@ XCrrQt::XCrrQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
   }
 
   toplevel = new XCrrQtWidget(this, xa_parent_wid);
-  toplevel->setFixedSize(600, 420);
+  toplevel->setMinimumSize(600, 420);
   toplevel->setWindowTitle(convert_utf8(title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 

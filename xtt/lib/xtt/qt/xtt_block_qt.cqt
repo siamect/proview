@@ -177,9 +177,6 @@ BlockQt::BlockQt(void* b_parent_ctx, QWidget* b_parent_wid, pwr_sAttrRef* b_oar,
   buttons->addButton(QDialogButtonBox::Ok);
   buttons->addButton(QDialogButtonBox::Apply);
   buttons->addButton(QDialogButtonBox::Cancel);
-  buttons->button(QDialogButtonBox::Ok)->setFixedSize(70, 25);
-  buttons->button(QDialogButtonBox::Apply)->setFixedSize(70, 25);
-  buttons->button(QDialogButtonBox::Cancel)->setFixedSize(70, 25);
   QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
       toplevel, SLOT(activate_ok()));
   QObject::connect(buttons->button(QDialogButtonBox::Apply), SIGNAL(clicked()),

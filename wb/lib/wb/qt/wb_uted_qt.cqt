@@ -258,7 +258,6 @@ WUtedQt::WUtedQt(void* wu_parent_ctx, QWidget* wu_parent_wid,
 
   // Apply button
   QPushButton* applybutton = new QPushButton("Apply");
-  applybutton->setFixedSize(70, 25);
   QObject::connect(
       applybutton, SIGNAL(clicked()), toplevel, SLOT(activate_ok()));
 

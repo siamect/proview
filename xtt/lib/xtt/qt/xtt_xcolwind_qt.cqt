@@ -392,7 +392,7 @@ void XColWindQt::set_title(char* t)
 
 void XColWindQt::set_window_size(int w, int h)
 {
-  toplevel->setFixedSize(w, h);
+  toplevel->resize(w, h);
 }
 
 void XColWindQt::get_window_size(int* w, int* h)
@@ -434,7 +434,7 @@ XColWindQt::XColWindQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
 
   toplevel = new XColWindQtWidget(this, xa_parent_wid);
   toplevel->setToolTip(fl("xtt_xcolwind widget"));
-  toplevel->setFixedSize(420, 600);
+  toplevel->setMinimumSize(420, 600);
   toplevel->setWindowTitle(convert_utf8(title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -562,9 +562,7 @@ XColWindQt::XColWindQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
 
   QDialogButtonBox* buttons = new QDialogButtonBox();
   buttons->addButton(QDialogButtonBox::Ok);
-  buttons->button(QDialogButtonBox::Ok)->setFixedSize(70, 25);
   buttons->addButton(QDialogButtonBox::Cancel);
-  buttons->button(QDialogButtonBox::Cancel)->setFixedSize(70, 25);
   QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
       toplevel, SLOT(activate_cmd_scrolled_ok()));
   QObject::connect(buttons->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),

@@ -1521,9 +1521,7 @@ BootDialog::BootDialog(WttQt* parent_ctx, QWidget* parent)
 
   QDialogButtonBox* buttons = new QDialogButtonBox();
   buttons->addButton(QDialogButtonBox::Ok);
-  buttons->button(QDialogButtonBox::Ok)->setFixedSize(70, 25);
   buttons->addButton(QDialogButtonBox::Cancel);
-  buttons->button(QDialogButtonBox::Cancel)->setFixedSize(70, 25);
   connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()), this,
       SLOT(boot_ok_cb()));
   connect(buttons->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), this,
@@ -2439,9 +2437,6 @@ OptionsDialog::OptionsDialog(WttQt* parent_ctx, QWidget* parent)
   buttons->addButton(QDialogButtonBox::Ok);
   buttons->addButton(QDialogButtonBox::Apply);
   buttons->addButton(QDialogButtonBox::Cancel);
-  buttons->button(QDialogButtonBox::Ok)->setFixedSize(70, 25);
-  buttons->button(QDialogButtonBox::Apply)->setFixedSize(70, 25);
-  buttons->button(QDialogButtonBox::Cancel)->setFixedSize(70, 25);
   connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()), this,
       SLOT(activate_options_ok()));
   connect(buttons->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this,

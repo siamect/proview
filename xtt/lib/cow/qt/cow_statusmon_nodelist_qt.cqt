@@ -70,7 +70,7 @@ NodelistQt::NodelistQt(void* nodelist_parent_ctx, QWidget* nodelist_parent_wid,
 
   toplevel = new NodelistQtWidget(this, nodelist_parent_wid);
   toplevel->setToolTip(fl("cow_statusmon_nodelist widget"));
-  toplevel->setFixedSize(850, 300);
+  toplevel->setMinimumSize(850, 300);
   toplevel->setWindowTitle(fl(nodelist_name));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -349,7 +349,7 @@ NodelistInputDialogQt::NodelistInputDialogQt(
     const char* txt1, const char* txt2, const char* txt3, bool input_callback)
     : QDialog(parent), nodelist(parent_ctx)
 {
-  setFixedSize(600, 150);
+  setMinimumSize(600, 150);
   setWindowTitle(fl(title));
   setAttribute(Qt::WA_DeleteOnClose);
 
