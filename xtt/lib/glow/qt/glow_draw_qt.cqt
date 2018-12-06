@@ -2516,7 +2516,6 @@ int GlowDrawQt::gradient_create_pattern(int x, int y, int w, int h,
   }
   case glow_eGradient_DiagonalLowerLeft: {
     double x0, x1, y0, y1;
-    // *pat = QLinearGradient(x, y, x+w, y+h);
     if (w > h) {
       x0 = x + w / 2 - h / 2;
       y0 = y + h + (w - h) / a;
@@ -2535,7 +2534,6 @@ int GlowDrawQt::gradient_create_pattern(int x, int y, int w, int h,
   }
   case glow_eGradient_DiagonalUpperRight: {
     double x0, x1, y0, y1;
-    // *pat = QLinearGradient(x, y, x+w, y+h);
     if (w > h) {
       x0 = x + w / 2 - h / 2;
       y0 = y + h + (w - h) / a;
@@ -2593,7 +2591,6 @@ int GlowDrawQt::gradient_create_pattern(int x, int y, int w, int h,
   }
   case glow_eGradient_DiagonalDownTube: {
     double x0, x1, y0, y1;
-    // *pat = QLinearGradient(x, y, x+w, y+h);
     if (w > h) {
       x0 = x + w / 2 - h / 2;
       y0 = y + h + (w - h) / a;
@@ -2887,6 +2884,13 @@ int GlowDrawQt::gradient_fill_arc(GlowWind* wind, int x, int y, int w, int h,
     return 1;
   }
 
+  while (angle1 >= 360) {
+    angle1 -= 360;
+  }
+  while (angle1 < 360) {
+    angle1 += 360;
+  }
+
   unique_ptr<QPainter> painter = new QPainter(ww->buffer);
 
   if (ww->clip_on) {
@@ -2894,7 +2898,7 @@ int GlowDrawQt::gradient_fill_arc(GlowWind* wind, int x, int y, int w, int h,
   }
 
   QGradient* pat;
-  if (!gradient_create_pattern(x, y, w, h, d0, d1, d2, gradient, &pat)) {
+  if (!gradient_create_pattern(-1, -1, 2, 2, d0, d1, d2, gradient, &pat)) {
     return 0;
   }
 
@@ -2918,7 +2922,7 @@ int GlowDrawQt::gradient_fill_polyline(GlowWind* wind, glow_sPointX* points,
     glow_eGradient gradient)
 {
   DrawWindQt* ww = (DrawWindQt*)wind->window;
-  if (ctx->nodraw) {
+  if (ctx->nodraw || point_cnt < 1) {
     return 1;
   }
 
@@ -2930,27 +2934,16 @@ int GlowDrawQt::gradient_fill_polyline(GlowWind* wind, glow_sPointX* points,
     set_clip(ww, painter);
   }
 
-  x0 = y0 = 1e37;
-  x1 = y1 = 1e-37;
+  x0 = x1 = points[0].x;
+  y0 = y1 = points[0].y;
+  path.moveTo(points[0].x, points[0].y);
   for (int j = 0; j < point_cnt; j++) {
-    if (points[j].x < x0) {
-      x0 = points[j].x;
-    }
-    if (points[j].y < y0) {
-      y0 = points[j].y;
-    }
-    if (points[j].x > x1) {
-      x1 = points[j].x;
-    }
-    if (points[j].y > y1) {
-      y1 = points[j].y;
-    }
+    x0 = MIN(x0, points[j].x);
+    y0 = MIN(y0, points[j].y);
+    x1 = MAX(x1, points[j].x);
+    y1 = MAX(y1, points[j].y);
 
-    if (j == 0) {
-      path.moveTo(points[j].x, points[j].y);
-    } else {
-      path.lineTo(points[j].x, points[j].y);
-    }
+    path.lineTo(points[j].x, points[j].y);
   }
 
   QGradient* pat;
