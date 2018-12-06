@@ -54,15 +54,13 @@ private:
 public:
   GeItemViewQt(Ge* gectx);
 
-  QWidget* widget();
   void update();
   void update(const char*, int);
   QString selected_text();
   QString selected_text(QTreeWidget*);
 
 protected:
-  void focusOutEvent(QFocusEvent* event);
-  void mousePressEvent(QMouseEvent* event);
+  void contextMenuEvent(QContextMenuEvent* event);
 
 private:
   QStringList files;

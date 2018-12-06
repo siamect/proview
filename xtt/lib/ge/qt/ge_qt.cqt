@@ -1965,8 +1965,7 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
   ((GraphQt*)graph)->create_navigator();
   vpaned->addWidget(((GraphQt*)graph)->nav_widget);
 
-  GeItemViewQt* item_view = new GeItemViewQt(this);
-  graph_list = item_view->widget();
+  graph_list = new GeItemViewQt(this);
 
   // Horizontal pane
   QSplitter* hpaned = new QSplitter(Qt::Horizontal);

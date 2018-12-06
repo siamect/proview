@@ -46,6 +46,7 @@
 #include "ge_item_view_qt.h"
 #include "ge_graph.h"
 
+#include <QHeaderView>
 #include <QMenu>
 #include <QMouseEvent>
 #include <QScrollArea>
@@ -53,7 +54,7 @@
 
 static pwr_tString80* graph_list_files();
 
-GeItemViewQt::GeItemViewQt(Ge* gectx) : ge_ctx(gectx), tree_widget(0)
+GeItemViewQt::GeItemViewQt(Ge* gectx) : QWidget(), ge_ctx(gectx), tree_widget(0)
 {
   char full_path[256];
 
@@ -64,6 +65,7 @@ GeItemViewQt::GeItemViewQt(Ge* gectx) : ge_ctx(gectx), tree_widget(0)
       SLOT(activate_tree_widget(QTreeWidgetItem*, int)));
 
   tree_widget->setColumnCount(1);
+  tree_widget->header()->hide();
 
   autosave_button = new QCheckBox("Autosave", this);
   connect(autosave_button, SIGNAL(stateChanged(int)), this,
@@ -86,11 +88,6 @@ GeItemViewQt::GeItemViewQt(Ge* gectx) : ge_ctx(gectx), tree_widget(0)
   watcher->addPath(full_path);
   connect(watcher, SIGNAL(directoryChanged(const QString&)), this,
       SLOT(directory_changed(const QString&)));
-}
-
-QWidget* GeItemViewQt::widget()
-{
-  return this;
 }
 
 void GeItemViewQt::update()
@@ -327,47 +324,25 @@ void GeItemViewQt::activate_tree_widget(QTreeWidgetItem* item, int idx)
   }
 }
 
-void GeItemViewQt::focusOutEvent(QFocusEvent* event)
+void GeItemViewQt::contextMenuEvent(QContextMenuEvent *mouseEvent)
 {
-  tree_widget->clearSelection();
-
-  QWidget::focusOutEvent(event);
-}
-
-void GeItemViewQt::mousePressEvent(QMouseEvent* event)
-{
-  static const char* item_text[] = { "Open", " ", "Delete", "" };
-
-  if (event->button() != Qt::RightButton) {
-    return;
-  }
-
   QMenu* menu = new QMenu(this);
-  for (int i = 0; item_text[i][0]; i++) {
-    if (item_text[i][0] == ' ') {
-      menu->addSeparator();
-    } else {
-      QAction* a = menu->addAction(item_text[i]);
-      if (i == 0) {
-        connect(a, SIGNAL(triggered()), this, SLOT(activate_menu_open()));
-      } else if (i == 2) {
-        connect(a, SIGNAL(triggered()), this, SLOT(activate_menu_delete()));
-      }
-    }
-  }
+  QAction* a = menu->addAction("Open");
+  connect(a, SIGNAL(triggered()), this, SLOT(activate_menu_open()));
+  menu->addSeparator();
+  a = menu->addAction("Delete");
+  connect(a, SIGNAL(triggered()), this, SLOT(activate_menu_delete()));
 
-  QList<QTreeWidgetItem*> selection = tree_widget->selectedItems();
-  int sel_count = selection.size();
-  if (sel_count <= 1) {
+  if (tree_widget->selectedItems().size() == 1) {
     /* Get tree path for row that was clicked */
-    QTreeWidgetItem* path = tree_widget->itemAt(event->x(), event->y());
+    QTreeWidgetItem* path = tree_widget->itemAt(tree_widget->mapFromGlobal(mouseEvent->globalPos()));
     tree_widget->clearSelection();
     tree_widget->setCurrentItem(path);
   }
 
-  menu->popup(QPoint());
+  menu->popup(mouseEvent->globalPos());
 
-  QWidget::mousePressEvent(event);
+  QWidget::contextMenuEvent(mouseEvent);
 }
 
 void GeItemViewQt::autosave_toggled(int set)
