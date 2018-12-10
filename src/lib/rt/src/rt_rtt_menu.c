@@ -6344,34 +6344,32 @@ int rtt_class_hierarchy(menu_ctx parent_ctx, pwr_tObjid argoi, void* arg1,
     sts = gdh_ObjidToName(objid, objname, sizeof(objname), cdh_mNName);
     if (EVEN(sts))
       return sts;
-    if (1 /* Should be if the object is on this node */) {
-      /* Get class name */
-      sts = gdh_GetObjectClass(objid, &class);
-      if (EVEN(sts))
-        return sts;
-      sts = gdh_ObjidToName(cdh_ClassIdToObjid(class), hiername,
-          sizeof(hiername), cdh_mName_volumeStrict);
-      if (EVEN(sts))
-        return sts;
+    /* Get class name */
+    sts = gdh_GetObjectClass(objid, &class);
+    if (EVEN(sts))
+      return sts;
+    sts = gdh_ObjidToName(cdh_ClassIdToObjid(class), hiername,
+        sizeof(hiername), cdh_mName_volumeStrict);
+    if (EVEN(sts))
+      return sts;
 
-      if ((streq(hiername, "pwrs:Class-$ClassHier"))
-          || (streq(hiername, "pwrs_Class-$TypeHier"))) {
-        /* Skip hierarchy of classname */
-        for (j = strlen(objname); j < 15; j++)
-          strcat(objname, " ");
+    if ((streq(hiername, "pwrs:Class-$ClassHier"))
+        || (streq(hiername, "pwrs_Class-$TypeHier"))) {
+      /* Skip hierarchy of classname */
+      for (j = strlen(objname); j < 15; j++)
         strcat(objname, " ");
-        s = strrchr(hiername, '-');
-        if (s == 0)
-          strcat(objname, hiername);
-        else
-          strcat(objname, s + 1);
+      strcat(objname, " ");
+      s = strrchr(hiername, '-');
+      if (s == 0)
+        strcat(objname, hiername);
+      else
+        strcat(objname, s + 1);
 
-        sts = rtt_menu_list_add(&menulist, i, 0, objname, &rtt_hierarchy_child,
-            &rtt_object_parameters, 0, objid, 0, 0, 0, 0);
-        if (EVEN(sts))
-          return sts;
-        i++;
-      }
+      sts = rtt_menu_list_add(&menulist, i, 0, objname, &rtt_hierarchy_child,
+          &rtt_object_parameters, 0, objid, 0, 0, 0, 0);
+      if (EVEN(sts))
+        return sts;
+      i++;
     }
     sts = gdh_GetNextSibling(objid, &objid);
   }

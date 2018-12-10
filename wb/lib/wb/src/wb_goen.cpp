@@ -214,8 +214,6 @@ int goen_create_contype(flow_tCtx ctx, pwr_tClassId conclass,
     con_type = flow_eConType_StepDiv;
   else if (graphbody->curvature == GOEN_STEPCONV)
     con_type = flow_eConType_StepConv;
-  else if (graphbody->curvature == GOEN_JAGGED)
-    con_type = flow_eConType_Straight;
   else
     con_type = flow_eConType_Straight;
 

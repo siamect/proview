@@ -568,7 +568,6 @@ void wb_print_wbl::printBody(
   char *body, *tbody;
   char timestr[40] = " ";
   char* svalp;
-  bool print_all = false;
 
   switch (bix) {
   case pwr_eBix_rt:
@@ -658,7 +657,7 @@ void wb_print_wbl::printBody(
     case pwr_eClass_ObjXRef:
       if (bd[i].Par->Param.Info.Flags & PWR_MASK_ARRAY) {
         for (unsigned int j = 0; j < bd[i].Par->Param.Info.Elements; j++) {
-          if (print_all || bd[i].Par->Param.Info.Flags & PWR_MASK_ALWAYSWBL
+          if (bd[i].Par->Param.Info.Flags & PWR_MASK_ALWAYSWBL
               || attrCmp(&body[bd[i].Par->Param.Info.Offset
                              + bd[i].Par->Param.Info.Size
                                  / bd[i].Par->Param.Info.Elements * j],
@@ -680,7 +679,7 @@ void wb_print_wbl::printBody(
           }
         }
       } else {
-        if (print_all || bd[i].Par->Param.Info.Flags & PWR_MASK_ALWAYSWBL
+        if (bd[i].Par->Param.Info.Flags & PWR_MASK_ALWAYSWBL
             || attrCmp(&body[bd[i].Par->Param.Info.Offset],
                    &tbody[bd[i].Par->Param.Info.Offset],
                    bd[i].Par->Param.Info.Size, bd[i].Par->Param.Info.Type)
@@ -715,7 +714,6 @@ void wb_print_wbl::printBuffer(wb_volume& vol, ldh_sParDef* par_bd, char* body)
   char* tbody;
   ldh_sParDef* bd;
   char* svalp;
-  bool print_all = false;
 
   if (m_isTemplateObject)
     return;
@@ -745,7 +743,7 @@ void wb_print_wbl::printBuffer(wb_volume& vol, ldh_sParDef* par_bd, char* body)
       case pwr_eClass_ObjXRef:
         if (bd[i].Par->Param.Info.Flags & PWR_MASK_ARRAY) {
           for (unsigned int j = 0; j < bd[i].Par->Param.Info.Elements; j++) {
-            if (print_all || bd[i].Par->Param.Info.Flags & PWR_MASK_ALWAYSWBL
+            if (bd[i].Par->Param.Info.Flags & PWR_MASK_ALWAYSWBL
                 || attrCmp(&body[bd[i].Par->Param.Info.Offset
                                + bd[i].Par->Param.Info.Size
                                    / bd[i].Par->Param.Info.Elements * j],
@@ -766,7 +764,7 @@ void wb_print_wbl::printBuffer(wb_volume& vol, ldh_sParDef* par_bd, char* body)
             }
           }
         } else {
-          if (print_all || bd[i].Par->Param.Info.Flags & PWR_MASK_ALWAYSWBL
+          if (bd[i].Par->Param.Info.Flags & PWR_MASK_ALWAYSWBL
               || attrCmp(&body[bd[i].Par->Param.Info.Offset],
                      &tbody[bd[i].Par->Param.Info.Offset],
                      bd[i].Par->Param.Info.Size, bd[i].Par->Param.Info.Type)
@@ -804,7 +802,6 @@ void wb_print_wbl::printClass(wb_volume& vol, ldh_sParDef* par_bd, char* body,
   int rows;
   ldh_sParDef* bd;
   char* svalp;
-  bool print_all = false;
   char* tb;
 
   sts = getBody(vol, par_bd->Par->Param.TypeRef, "RtBody",
@@ -848,7 +845,7 @@ void wb_print_wbl::printClass(wb_volume& vol, ldh_sParDef* par_bd, char* body,
     case pwr_eClass_ObjXRef:
       if (bd[i].Par->Param.Info.Flags & PWR_MASK_ARRAY) {
         for (unsigned int j = 0; j < bd[i].Par->Param.Info.Elements; j++) {
-          if (print_all || bd[i].Par->Param.Info.Flags & PWR_MASK_ALWAYSWBL
+          if (bd[i].Par->Param.Info.Flags & PWR_MASK_ALWAYSWBL
               || attrCmp(&body[bd[i].Par->Param.Info.Offset
                              + bd[i].Par->Param.Info.Size
                                  / bd[i].Par->Param.Info.Elements * j],
@@ -870,7 +867,7 @@ void wb_print_wbl::printClass(wb_volume& vol, ldh_sParDef* par_bd, char* body,
           }
         }
       } else {
-        if (print_all || bd[i].Par->Param.Info.Flags & PWR_MASK_ALWAYSWBL
+        if (bd[i].Par->Param.Info.Flags & PWR_MASK_ALWAYSWBL
             || attrCmp(&body[bd[i].Par->Param.Info.Offset],
                    &tbody[bd[i].Par->Param.Info.Offset],
                    bd[i].Par->Param.Info.Size, bd[i].Par->Param.Info.Type)

@@ -197,37 +197,35 @@ void subcm_Data(qcom_sGet* get)
         cp->subdata = dr;
         refcount++;
 
-        if (1/* || mp->msg.hdr.xdr*/) {
-          if (cp->cclass == pool_cNRef) {
-            gdb_sClass* classp;
-            cdh_uTypeId cid;
+        if (cp->cclass == pool_cNRef) {
+          gdb_sClass* classp;
+          cdh_uTypeId cid;
 
-            cid.pwr = cp->aref.Body;
-            cid.c.bix = 0; /* To get the class id.  */
-            classp = hash_Search(&sts, gdbroot->cid_ht, &cid.pwr);
-            rsize = dp->size;
+          cid.pwr = cp->aref.Body;
+          cid.c.bix = 0; /* To get the class id.  */
+          classp = hash_Search(&sts, gdbroot->cid_ht, &cid.pwr);
+          rsize = dp->size;
 
-            if (classp != NULL)
-              ndc_ConvertData(&sts, np, classp, &cp->aref, dp->data, dp->data,
-                  (pwr_tUInt32*)&rsize, ndc_eOp_decode, cp->aref.Offset, 0);
-          } else {
-            cp->old = TRUE;
-            ccp = pool_Address(&cp->sts, gdbroot->pool, cp->cclass);
-            if (ccp != NULL) {
-              tbl = pool_Address(&cp->sts, gdbroot->pool, ccp->rnConv);
-              if (tbl != NULL) {
-                rsize = dp->size;
-                ndc_ConvertRemoteData(&cp->sts, np, ccp, &cp->raref, dp->data,
-                    dp->data, (pwr_tUInt32*)&rsize, ndc_eOp_decode,
-                    cp->raref.Offset, 0);
-                if (ODD(cp->sts))
-                  cp->old = FALSE;
-              }
+          if (classp != NULL)
+            ndc_ConvertData(&sts, np, classp, &cp->aref, dp->data, dp->data,
+                (pwr_tUInt32*)&rsize, ndc_eOp_decode, cp->aref.Offset, 0);
+        } else {
+          cp->old = TRUE;
+          ccp = pool_Address(&cp->sts, gdbroot->pool, cp->cclass);
+          if (ccp != NULL) {
+            tbl = pool_Address(&cp->sts, gdbroot->pool, ccp->rnConv);
+            if (tbl != NULL) {
+              rsize = dp->size;
+              ndc_ConvertRemoteData(&cp->sts, np, ccp, &cp->raref, dp->data,
+                  dp->data, (pwr_tUInt32*)&rsize, ndc_eOp_decode,
+                  cp->raref.Offset, 0);
+              if (ODD(cp->sts))
+                cp->old = FALSE;
             }
           }
-
-          /* !!! Todo !!! Error handling. */
         }
+
+        /* !!! Todo !!! Error handling. */
 
         /* If the userdata field contains a valid pool_tRef, then
            copy the data. This poolref is resolved in RTDB!  */

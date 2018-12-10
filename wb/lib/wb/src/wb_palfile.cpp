@@ -161,7 +161,6 @@ PalFileMenu* PalFile::config_tree_build_children(ldh_tSession ldhses,
   char p1[120];
   char p2[120];
   int found;
-  int hide_children = 0;
 
   // Children might already exist
   if (parent) {
@@ -186,16 +185,12 @@ PalFileMenu* PalFile::config_tree_build_children(ldh_tSession ldhses,
       printf("** Syntax error in file %s, line %d\n", filename, *line_cnt);
 
     if (streq(type, "{")) {
-      if (!hide_children) {
-        if (nr != 1 || !menu_p)
-          printf("** Syntax error in file %s, line %d\n", filename, *line_cnt);
-        else
-          mp = config_tree_build_children(
-              ldhses, fp, line_cnt, filename, menu_p);
-        if (!menu_p->child_list)
-          menu_p->child_list = mp;
-      } else
-        hide_children = 0;
+      if (nr != 1 || !menu_p)
+        printf("** Syntax error in file %s, line %d\n", filename, *line_cnt);
+      else
+        mp = config_tree_build_children(ldhses, fp, line_cnt, filename, menu_p);
+      if (!menu_p->child_list)
+        menu_p->child_list = mp;
     } else if (streq(type, "}")) {
       if (nr != 1)
         printf("** Syntax error in file %s, line %d\n", filename, *line_cnt);
@@ -205,7 +200,6 @@ PalFileMenu* PalFile::config_tree_build_children(ldh_tSession ldhses,
         printf("** Syntax error in file %s, line %d\n", filename, *line_cnt);
 
       if (nr == 3 && (ldhses && !check_volume(ldhses, p1))) {
-        hide_children = 1;
         break;
       }
 

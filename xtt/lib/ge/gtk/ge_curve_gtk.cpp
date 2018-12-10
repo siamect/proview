@@ -585,33 +585,33 @@ void GeCurveGtk::enable(unsigned int mask)
 void GeCurveGtk::setup(unsigned int mask)
 {
   g_object_set(
-      menu_new, "visible", mask & curve_mEnable_New ? TRUE : FALSE, NULL);
+      menu_new, "visible", mask & curve_mEnable_New, NULL);
   g_object_set(
-      menu_save, "visible", mask & curve_mEnable_Save ? TRUE : FALSE, NULL);
+      menu_save, "visible", mask & curve_mEnable_Save, NULL);
   g_object_set(
-      menu_open, "visible", mask & curve_mEnable_Open ? TRUE : FALSE, NULL);
+      menu_open, "visible", mask & curve_mEnable_Open, NULL);
   g_object_set(menu_snapshot, "visible",
-      mask & curve_mEnable_Snapshot ? TRUE : FALSE, NULL);
+      mask & curve_mEnable_Snapshot, NULL);
   g_object_set(tools_snapshot, "visible",
-      mask & curve_mEnable_Snapshot ? TRUE : FALSE, NULL);
+      mask & curve_mEnable_Snapshot, NULL);
   g_object_set(
-      menu_export, "visible", mask & curve_mEnable_Export ? TRUE : FALSE, NULL);
+      menu_export, "visible", mask & curve_mEnable_Export, NULL);
   g_object_set(sea_timebox, "visible",
-      mask & curve_mEnable_Timebox ? TRUE : FALSE, NULL);
+      mask & curve_mEnable_Timebox, NULL);
   g_object_set(
-      tools_add, "visible", mask & curve_mEnable_Add ? TRUE : FALSE, NULL);
+      tools_add, "visible", mask & curve_mEnable_Add, NULL);
   g_object_set(tools_curvetype_line, "visible",
-      mask & curve_mEnable_CurveType ? TRUE : FALSE, NULL);
+      mask & curve_mEnable_CurveType, NULL);
   g_object_set(tools_curvetype_points, "visible",
-      mask & curve_mEnable_CurveType ? TRUE : FALSE, NULL);
+      mask & curve_mEnable_CurveType, NULL);
   g_object_set(tools_curvetype_linepoints, "visible",
-      mask & curve_mEnable_CurveType ? TRUE : FALSE, NULL);
+      mask & curve_mEnable_CurveType, NULL);
   g_object_set(tools_curvetype_square, "visible",
-      mask & curve_mEnable_CurveType ? TRUE : FALSE, NULL);
+      mask & curve_mEnable_CurveType, NULL);
   g_object_set(tools_curve_fill, "visible",
-      mask & curve_mEnable_CurveType ? TRUE : FALSE, NULL);
+      mask & curve_mEnable_CurveType, NULL);
   g_object_set(tools_curve_digsplit, "visible",
-      mask & curve_mEnable_DigitalSplit ? TRUE : FALSE, NULL);
+      mask & curve_mEnable_DigitalSplit, NULL);
   layout_mask = mask;
 }
 
@@ -724,8 +724,8 @@ void GeCurveGtk::set_times(pwr_tTime* from, pwr_tTime* to)
 
 void GeCurveGtk::set_times_sensitivity(int sensitive)
 {
-  gtk_widget_set_sensitive(timebox_start_time, sensitive ? TRUE : FALSE);
-  gtk_widget_set_sensitive(timebox_stop_time, sensitive ? TRUE : FALSE);
+  gtk_widget_set_sensitive(timebox_start_time, sensitive);
+  gtk_widget_set_sensitive(timebox_stop_time, sensitive);
 }
 
 pwr_tStatus GeCurveGtk::get_times(pwr_tTime* from, pwr_tTime* to)

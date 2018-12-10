@@ -392,7 +392,7 @@ void WdaQt::open_class_dialog(char* hierstr, char* classstr, char* namestr)
   QLabel* name_label = new QLabel("Name");
   name_label->setFixedWidth(95);
   QCheckBox* wdaclass_attrobjects = new QCheckBox("Attribute Objects");
-  wdaclass_attrobjects->setChecked(attrobjects ? true : false);
+  wdaclass_attrobjects->setChecked(attrobjects);
 
   QHBoxLayout* india_hboxclass = new QHBoxLayout();
   india_hboxclass->addWidget(class_label);

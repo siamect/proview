@@ -4656,17 +4656,6 @@ static int xnav_open_func(void* client_data, void* client_flag)
         xnav->appl.insert(
             applist_eType_SevHist, (void*)hist, oidv[0], "", NULL);
       }
-    } else if (sevHistObjectFound) {
-      hist = xnav->xttsevhist_new(title_str, oidv, anamev, onamev,
-          sevhistobjectv, xnav->scctx, 0, width, height, options,
-          xnav->gbl.color_theme, time_ePeriod_, basewidget, &sts);
-      if (ODD(sts)) {
-        hist->help_cb = xnav_sevhist_help_cb;
-        hist->close_cb = xnav_sevhist_close_cb;
-        // hist->get_select_cb = xnav_sevhist_get_select_cb;
-        xnav->appl.insert(
-            applist_eType_SevHist, (void*)hist, oidv[0], "", NULL);
-      }
     } else {
       hist = xnav->xttsevhist_new(title_str, oidv, anamev, onamev,
           sevhistobjectv, xnav->scctx, 0, width, height, options,
@@ -9156,7 +9145,7 @@ int XNav::show_par_hier_class_name(char* parametername, char* hiername,
     return XNAV__HOLDCOMMAND;
   }
 
-  if (!(add == XNAV_MENU_ADD))
+  if (add != XNAV_MENU_ADD)
     brow_pop();
 
   try {

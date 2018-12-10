@@ -624,50 +624,48 @@ static int gcg_cc(unsigned long filetype, const char* p1, const char* p2,
       sprintf(cmd, "%s %d %ld %s %d %s %s %s 2> %s", fname, gcg_debug, filetype,
           p1, os, p2, p3, systemname, CC_OUTPUT_FILE);
       sts = system(cmd);
-      if (1 /* sts != 0 */) {
-        pwr_tFileName efile;
-        char line[50][200];
-        char* s;
+      pwr_tFileName efile;
+      char line[50][200];
+      char* s;
 
-        dcli_translate_filename(efile, CC_OUTPUT_FILE);
-        FILE* fp = fopen(efile, "r");
-        if (!fp) {
-          if (sts != 0)
-            return GSX__CCERROR;
-          else
-            return GSX__SUCCESS;
-        }
-        int i = 0;
-        while (dcli_read_line(line[i], sizeof(line[0]), fp)) {
-          i++;
-          if (i >= 50) {
-            sprintf(line[i - 1],
-                "** Truncated, see all errors in terminal window **");
-            break;
-          }
-        }
-        fclose(fp);
-        sprintf(cmd, "cat %s", CC_OUTPUT_FILE);
-        system(cmd);
-        sprintf(cmd, "rm -f %s", CC_OUTPUT_FILE);
-        system(cmd);
-        for (int j = i - 1; j >= 0; j--) {
-          msgw_ePop pop;
-          if (j == 0)
-            pop = msgw_ePop_Yes;
-          else
-            pop = msgw_ePop_No;
-          if (line[j][0] == '/' && (s = strstr(line[j], "/common/tmp/"))) {
-            strncpy(s + 2, "$pwrp_tmp", 9);
-            msgw_message(0, s + 2, pop);
-          } else
-            msgw_message(0, line[j], pop);
-        }
+      dcli_translate_filename(efile, CC_OUTPUT_FILE);
+      FILE* fp = fopen(efile, "r");
+      if (!fp) {
         if (sts != 0)
           return GSX__CCERROR;
-        else if (i > 0)
-          return GSX__CCWARNING;
+        else
+          return GSX__SUCCESS;
       }
+      int i = 0;
+      while (dcli_read_line(line[i], sizeof(line[0]), fp)) {
+        i++;
+        if (i >= 50) {
+          sprintf(line[i - 1],
+              "** Truncated, see all errors in terminal window **");
+          break;
+        }
+      }
+      fclose(fp);
+      sprintf(cmd, "cat %s", CC_OUTPUT_FILE);
+      system(cmd);
+      sprintf(cmd, "rm -f %s", CC_OUTPUT_FILE);
+      system(cmd);
+      for (int j = i - 1; j >= 0; j--) {
+        msgw_ePop pop;
+        if (j == 0)
+          pop = msgw_ePop_Yes;
+        else
+          pop = msgw_ePop_No;
+        if (line[j][0] == '/' && (s = strstr(line[j], "/common/tmp/"))) {
+          strncpy(s + 2, "$pwrp_tmp", 9);
+          msgw_message(0, s + 2, pop);
+        } else
+          msgw_message(0, line[j], pop);
+      }
+      if (sts != 0)
+        return GSX__CCERROR;
+      else if (i > 0)
+        return GSX__CCWARNING;
     }
   /*} else {
     printf("NYI...\n");

@@ -44,7 +44,7 @@
 
 /*! \def streq(a,b)
     \brief Checks if two strings \a a and \a b are equal
-  
+
     strcmp returns 0 (i.e. false) if the strings are equal, which is not obvious
     streq(a,b) is more readable and easier to understand than strcmp(a,b) == 0
  */
@@ -58,7 +58,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
- 
+
 /*! \fn char* str_ToLower(char* dst, const char* src)
     \brief Converts the string \a src to lower case,
     puts the result in \a dst and returns \a dst

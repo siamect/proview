@@ -133,7 +133,7 @@ main(int argc, char* argv[])
     if (res_len == 0)
       continue;
 
-    if (!(sts && 1))
+    if (!sts)
       lib$signal(sts);
     str[res_len] = 0;
 

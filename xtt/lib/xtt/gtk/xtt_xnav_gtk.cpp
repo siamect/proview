@@ -503,7 +503,7 @@ GtkWidget* XNavGtk::build_menu(GtkWidget* Parent, int MenuType,
       // Pushbutton
       W = gtk_menu_item_new_with_label(
           CoWowGtk::translate_utf8(Items[*idx].Name));
-      gtk_widget_set_sensitive(W, Items[*idx].Flags.f.Sensitive ? TRUE : FALSE);
+      gtk_widget_set_sensitive(W, Items[*idx].Flags.f.Sensitive);
       g_object_set_data((GObject*)W, "userdata", (gpointer)((long int)*idx));
       if (Callback)
         g_signal_connect(W, "activate", G_CALLBACK(Callback), CallbackData);

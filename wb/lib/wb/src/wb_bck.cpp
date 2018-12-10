@@ -475,7 +475,6 @@ pwr_tStatus bck_dump(ldh_tSession ldhses, char* filename, char* out)
   char* namep = NULL;
   pwr_tAName aname;
   int size;
-  int dump = 0;
 
   // Open file
 
@@ -531,9 +530,32 @@ pwr_tStatus bck_dump(ldh_tSession ldhses, char* filename, char* out)
       }
 
       if (dh.valid) {
-        if (dump) {
-          fprintf(fout, "%s%s", cdh_ObjidToString(dh.objid, 1), namep);
+        sts = ldh_ObjidToName(ldhses, dh.objid, cdh_mName_volumeStrict, aname,
+            sizeof(aname), &size);
+        if (EVEN(sts))
+          strcpy(aname, cdh_ObjidToString(dh.objid, 1));
+        strncat(aname, namep, sizeof(aname) - strlen(aname) - 1);
 
+        fprintf(fout, "%s", aname);
+
+        char str[1024];
+        pwr_tAttrRef aref;
+        pwr_eType atype;
+        int printed = 0;
+        sts = ldh_NameToAttrRef(ldhses, aname, &aref);
+        if (ODD(sts)) {
+          sts = ldh_GetAttrRefType(ldhses, &aref, &atype);
+          if (ODD(sts)) {
+            sts = cdh_AttrValueToString(atype, datap, str, sizeof(str));
+            if (ODD(sts)) {
+              fprintf(fout, "\n	%s\n", str);
+              printed = 1;
+            }
+          }
+        }
+
+        if (!printed) {
+          // Print as hex code
           p = datap;
           for (i = 0; i < (int)dh.size; i++, p++) {
             if ((i % 16) == 0)
@@ -541,41 +563,6 @@ pwr_tStatus bck_dump(ldh_tSession ldhses, char* filename, char* out)
             fprintf(fout, "%02x ", *p);
           }
           fprintf(fout, "\n");
-        } else {
-          sts = ldh_ObjidToName(ldhses, dh.objid, cdh_mName_volumeStrict, aname,
-              sizeof(aname), &size);
-          if (EVEN(sts))
-            strcpy(aname, cdh_ObjidToString(dh.objid, 1));
-          strncat(aname, namep, sizeof(aname) - strlen(aname) - 1);
-
-          fprintf(fout, "%s", aname);
-
-          char str[1024];
-          pwr_tAttrRef aref;
-          pwr_eType atype;
-          int printed = 0;
-          sts = ldh_NameToAttrRef(ldhses, aname, &aref);
-          if (ODD(sts)) {
-            sts = ldh_GetAttrRefType(ldhses, &aref, &atype);
-            if (ODD(sts)) {
-              sts = cdh_AttrValueToString(atype, datap, str, sizeof(str));
-              if (ODD(sts)) {
-                fprintf(fout, "\n	%s\n", str);
-                printed = 1;
-              }
-            }
-          }
-
-          if (!printed) {
-            // Print as hex code
-            p = datap;
-            for (i = 0; i < (int)dh.size; i++, p++) {
-              if ((i % 16) == 0)
-                fprintf(fout, "\n	");
-              fprintf(fout, "%02x ", *p);
-            }
-            fprintf(fout, "\n");
-          }
         }
       }
 

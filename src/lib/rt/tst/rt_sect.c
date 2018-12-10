@@ -44,7 +44,6 @@
 
 void* mapit(char* poolName, int memorySize, char fill)
 {
-  int created = 0;
   void* myData = NULL;
   int sts = 0;
 
@@ -80,26 +79,6 @@ void* mapit(char* poolName, int memorySize, char fill)
 
   sts = close(shm_fd);
   memset(myData, fill, memorySize);
-
-  if (created) {
-    sts = munmap(myData, memorySize);
-    if (sts == -1) {
-      perror(" Error : ");
-      return NULL;
-    }
-
-    shm_fd = shm_open(poolName, O_RDWR, shMemMode);
-    if (shm_fd == -1) {
-      perror(" Error : ");
-      return NULL;
-    }
-    myData = mmap(0, memorySize, PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
-    printf("myData = %x\n", myData);
-    if (myData == MAP_FAILED) {
-      perror(" Error : ");
-      return NULL;
-    }
-  }
 
   sts = close(shm_fd);
 

@@ -200,7 +200,7 @@ void wb_pkg::readConfig()
       char systemgroup[80];
       pwr_tTime date;
 
-      if (!(num == 2))
+      if (num != 2)
         throw wb_error_str("File corrupt " pwr_cNameDistribute);
 
       try {
@@ -305,7 +305,7 @@ void wb_pkg::readConfig()
     } else if (streq(cdh_Low(line_item[0]), "boot")) {
       // A Sev node, only node and bootfile
       try {
-        if (!(num == 2))
+        if (num != 2)
           throw wb_error_str("File corrupt " pwr_cNameDistribute);
 
         pkg_node& n = getNode(line_item[1]);

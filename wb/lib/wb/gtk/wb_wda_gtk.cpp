@@ -502,7 +502,7 @@ void WdaGtk::open_class_dialog(char* hierstr, char* classstr, char* namestr)
   gtk_editable_insert_text(
       GTK_EDITABLE(wdaclass_namevalue), namestr, strlen(namestr), &pos);
   gtk_toggle_button_set_active(
-      GTK_TOGGLE_BUTTON(wdaclass_attrobjects), attrobjects ? TRUE : FALSE);
+      GTK_TOGGLE_BUTTON(wdaclass_attrobjects), attrobjects);
   g_object_set(wdaclass_dia, "visible", TRUE, NULL);
 }
 

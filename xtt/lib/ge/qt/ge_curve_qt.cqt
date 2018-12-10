@@ -366,25 +366,25 @@ void GeCurveQt::enable(unsigned int mask)
 
 void GeCurveQt::setup(unsigned int mask)
 {
-  menu_new->setVisible(mask & curve_mEnable_New ? TRUE : FALSE);
-  menu_save->setVisible(mask & curve_mEnable_Save ? TRUE : FALSE);
-  menu_open->setVisible(mask & curve_mEnable_Open ? TRUE : FALSE);
-  menu_snapshot->setVisible(mask & curve_mEnable_Snapshot ? TRUE : FALSE);
-  tools_snapshot->setVisible(mask & curve_mEnable_Snapshot ? TRUE : FALSE);
-  menu_export->setVisible(mask & curve_mEnable_Export ? TRUE : FALSE);
-  timetools->setVisible(mask & curve_mEnable_Timebox ? TRUE : FALSE);
-  tools_add->setVisible(mask & curve_mEnable_Add ? TRUE : FALSE);
+  menu_new->setVisible(mask & curve_mEnable_New);
+  menu_save->setVisible(mask & curve_mEnable_Save);
+  menu_open->setVisible(mask & curve_mEnable_Open);
+  menu_snapshot->setVisible(mask & curve_mEnable_Snapshot);
+  tools_snapshot->setVisible(mask & curve_mEnable_Snapshot);
+  menu_export->setVisible(mask & curve_mEnable_Export);
+  timetools->setVisible(mask & curve_mEnable_Timebox);
+  tools_add->setVisible(mask & curve_mEnable_Add);
   tools_curvetype_line->setVisible(
-      mask & curve_mEnable_CurveType ? TRUE : FALSE);
+      mask & curve_mEnable_CurveType);
   tools_curvetype_points->setVisible(
-      mask & curve_mEnable_CurveType ? TRUE : FALSE);
+      mask & curve_mEnable_CurveType);
   tools_curvetype_linepoints->setVisible(
-      mask & curve_mEnable_CurveType ? TRUE : FALSE);
+      mask & curve_mEnable_CurveType);
   tools_curvetype_square->setVisible(
-      mask & curve_mEnable_CurveType ? TRUE : FALSE);
-  tools_curve_fill->setVisible(mask & curve_mEnable_FillCurve ? TRUE : FALSE);
+      mask & curve_mEnable_CurveType);
+  tools_curve_fill->setVisible(mask & curve_mEnable_FillCurve);
   tools_curve_digsplit->setVisible(
-      mask & curve_mEnable_DigitalSplit ? TRUE : FALSE);
+      mask & curve_mEnable_DigitalSplit);
   layout_mask = mask;
 }
 
@@ -657,8 +657,8 @@ void GeCurveQt::set_times(pwr_tTime* from, pwr_tTime* to)
 
 void GeCurveQt::set_times_sensitivity(int sensitive)
 {
-  timebox_start_time->setEnabled(sensitive ? TRUE : FALSE);
-  timebox_stop_time->setEnabled(sensitive ? TRUE : FALSE);
+  timebox_start_time->setEnabled(sensitive);
+  timebox_stop_time->setEnabled(sensitive);
 }
 
 pwr_tStatus GeCurveQt::get_times(pwr_tTime* from, pwr_tTime* to)

@@ -2233,13 +2233,6 @@ static int graph_grow_cb(GlowCtx* ctx, glow_tEvent event)
           event->con_create.dest_conpoint = 1;
         else
           event->con_create.dest_conpoint = 2;
-      } else if (event->con_create.y > y + margin) {
-        if (event->con_create.x > x + margin)
-          event->con_create.dest_conpoint = 3;
-        else if (event->con_create.x < x - margin)
-          event->con_create.dest_conpoint = 1;
-        else
-          event->con_create.dest_conpoint = 0;
       } else {
         if (event->con_create.x > x + margin)
           event->con_create.dest_conpoint = 3;

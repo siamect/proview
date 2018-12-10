@@ -200,8 +200,7 @@ int main(int argc, char* argv[])
         continue;
       } else if (in_if) {
         if (str_StartsWith(line, "#endif")) {
-          if (in_if)
-            in_if = 0;
+          in_if = 0;
           continue;
         }
         continue;

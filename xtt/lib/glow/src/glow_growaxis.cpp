@@ -735,51 +735,27 @@ void GrowAxis::set_range(double minval, double maxval, int keep_settings)
     }
 
     double m = MAX(fabs(maxval), fabs(minval));
-    switch (lix) {
-    case 0: {
-      if (m < 0.01)
-        strcpy(format, "%g");
-      else if (m < 0.1)
-        strcpy(format, "%5.3f");
-      else if (m < 1)
-        strcpy(format, "%4.2f");
-      else if (m < 3)
-        strcpy(format, "%3.1f");
-      else if (m <= 20)
-        strcpy(format, "%2.0f");
-      else if (m <= 200)
-        strcpy(format, "%3.0f");
-      else if (m < 2000)
-        strcpy(format, "%4.0f");
-      else if (m < 20000)
-        strcpy(format, "%5.0f");
-      else
-        strcpy(format, "%g");
-      break;
-    }
-    case 1: {
-      if (m < 0.01)
-        strcpy(format, "%g");
-      else if (m < 0.1)
-        strcpy(format, "%5.3f");
-      else if (m < 1)
-        strcpy(format, "%4.2f");
-      else if (m <= 4)
-        strcpy(format, "%3.1f");
-      else if (m <= 20)
-        strcpy(format, "%2.0f");
-      else if (m <= 200)
-        strcpy(format, "%3.0f");
-      else if (m < 2000)
-        strcpy(format, "%4.0f");
-      else if (m < 20000)
-        strcpy(format, "%5.0f");
-      else
-        strcpy(format, "%g");
-      break;
-    }
-    default:;
-    }
+
+    if (m < 0.01)
+      strcpy(format, "%g");
+    else if (m < 0.1)
+      strcpy(format, "%5.3f");
+    else if (m < 1)
+      strcpy(format, "%4.2f");
+    else if (!lix && m < 3)
+      strcpy(format, "%3.1f");
+    else if (lix && m <= 4)
+      strcpy(format, "%3.1f");
+    else if (m <= 20)
+      strcpy(format, "%2.0f");
+    else if (m <= 200)
+      strcpy(format, "%3.0f");
+    else if (m < 2000)
+      strcpy(format, "%4.0f");
+    else if (m < 20000)
+      strcpy(format, "%5.0f");
+    else
+      strcpy(format, "%g");
   }
   configure();
   draw();

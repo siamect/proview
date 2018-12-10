@@ -287,11 +287,8 @@ GsdAttrQt::GsdAttrQt(QWidget* a_parent_wid, void* a_parent_ctx, void* a_object,
   // Apply and Ok buttons
   QDialogButtonBox* buttons = new QDialogButtonBox();
   buttons->addButton(QDialogButtonBox::Ok);
-  buttons->button(QDialogButtonBox::Ok)->setFixedSize(70, 25);
   buttons->addButton(QDialogButtonBox::Apply);
-  buttons->button(QDialogButtonBox::Apply)->setFixedSize(70, 25);
   buttons->addButton(QDialogButtonBox::Cancel);
-  buttons->button(QDialogButtonBox::Cancel)->setFixedSize(70, 25);
   QObject::connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
       toplevel, SLOT(activate_cmd_ok()));
   QObject::connect(buttons->button(QDialogButtonBox::Apply), SIGNAL(clicked()),

@@ -116,7 +116,7 @@ pwr_tBoolean wnav_format_selection(ldh_tSesContext ldhses, pwr_sAttrRef attrref,
 
     strcpy(buff, name);
     return TRUE;
-  } else if (select_syntax == wnav_eSelectionMode_Extern && select_attr) {
+  } else if (select_syntax == wnav_eSelectionMode_Extern) {
     sts = ldh_ObjidToName(
         lses, object, ldh_eName_Default, name, sizeof(name), &ret_len);
     if (EVEN(sts))
@@ -172,7 +172,7 @@ pwr_tBoolean wnav_format_selection(ldh_tSesContext ldhses, pwr_sAttrRef attrref,
         if (EVEN(sts))
           return FALSE;
 
-        if (select_syntax == wnav_eSelectionMode_Extern && select_attr) {
+        if (select_syntax == wnav_eSelectionMode_Extern) {
           sts = ldh_AttrRefToName(
               lses, &aref, ldh_eName_ArefExport, &name_ptr, &ret_len);
           if (EVEN(sts))

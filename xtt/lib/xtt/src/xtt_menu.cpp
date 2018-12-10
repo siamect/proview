@@ -184,8 +184,6 @@ int XNav::getAllMenuItems(xmenu_sMenuCall* ip, xmenu_sMenuItem** Item,
         sts = XNAV__SUCCESS;
 
       if (ODD(sts)) {
-        int create_object_button = 0;
-
         if (streq(mrp->RefAttribute, "_SelfObject")) {
           // Object entry for attributes
           char* s;
@@ -227,7 +225,6 @@ int XNav::getAllMenuItems(xmenu_sMenuCall* ip, xmenu_sMenuItem** Item,
               sts = 0;
             }
           }
-          create_object_button = 0;
         }
         if (ODD(sts) && cdh_ObjidIsNotNull(currentar.Objid)) {
           (*Item)->Level = Level;
@@ -240,19 +237,6 @@ int XNav::getAllMenuItems(xmenu_sMenuCall* ip, xmenu_sMenuItem** Item,
 
           // Create a label with current object name
           sts = gdh_AttrrefToName(&currentar, aname, sizeof(aname), cdh_mNName);
-          if (ODD(sts) && create_object_button) {
-            (*Item)->Level = Level;
-            (*Item)->Item = xmenu_eMenuItem_Button;
-            (*Item)->MenuObject = pwr_cNObjid;
-            strncpy((*Item)->Name, aname, sizeof((*Item)->Name));
-            (*Item)->Name[sizeof((*Item)->Name) - 1] = 0;
-            (*Item)->MenuObject = pwr_cNObjid;
-            (*Item)->CurrentObject = currentar;
-            (*Item)->Flags.f.Sensitive = 1;
-            strcpy((*Item)->Method, "$Object-OpenObject");
-            (*Item)++;
-            (*nItems)++;
-          }
 
           sts = gdh_GetAttrRefTid(&currentar, &current_cid);
           if (EVEN(sts))

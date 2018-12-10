@@ -89,8 +89,7 @@ void opc_provider::fault()
   server_state->LastError = code;
   server_state->ErrorRequestCnt = server_state->RequestCnt;
 
-  if (1)
-    soap_print_fault(&soap, stderr);
+  soap_print_fault(&soap, stderr);
 }
 
 void opc_provider::insert_object(pwr_tOix fth, pwr_tOix bws,

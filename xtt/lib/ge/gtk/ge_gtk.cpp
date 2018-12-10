@@ -900,7 +900,7 @@ void GeGtk::activate_subgraphs(GtkWidget* w, gpointer gectx)
 void GeGtk::activate_rect(GtkWidget* w, gpointer gectx)
 {
   GdkEvent* e = gtk_get_current_event();
-  bool keep = (e->button.state & GDK_SHIFT_MASK) ? true : false;
+  bool keep = (e->button.state & GDK_SHIFT_MASK);
 
   ((Ge*)gectx)->activate_rect(keep);
 }
@@ -908,7 +908,7 @@ void GeGtk::activate_rect(GtkWidget* w, gpointer gectx)
 void GeGtk::activate_rectrounded(GtkWidget* w, gpointer gectx)
 {
   GdkEvent* e = gtk_get_current_event();
-  bool keep = (e->button.state & GDK_SHIFT_MASK) ? true : false;
+  bool keep = (e->button.state & GDK_SHIFT_MASK);
 
   ((Ge*)gectx)->activate_rectrounded(keep);
 }
@@ -916,7 +916,7 @@ void GeGtk::activate_rectrounded(GtkWidget* w, gpointer gectx)
 void GeGtk::activate_line(GtkWidget* w, gpointer gectx)
 {
   GdkEvent* e = gtk_get_current_event();
-  bool keep = (e->button.state & GDK_SHIFT_MASK) ? true : false;
+  bool keep = (e->button.state & GDK_SHIFT_MASK);
 
   ((Ge*)gectx)->activate_line(keep);
 }
@@ -924,7 +924,7 @@ void GeGtk::activate_line(GtkWidget* w, gpointer gectx)
 void GeGtk::activate_polyline(GtkWidget* w, gpointer gectx)
 {
   GdkEvent* e = gtk_get_current_event();
-  bool keep = (e->button.state & GDK_SHIFT_MASK) ? true : false;
+  bool keep = (e->button.state & GDK_SHIFT_MASK);
 
   ((Ge*)gectx)->activate_polyline(keep);
 }
@@ -932,7 +932,7 @@ void GeGtk::activate_polyline(GtkWidget* w, gpointer gectx)
 void GeGtk::activate_circle(GtkWidget* w, gpointer gectx)
 {
   GdkEvent* e = gtk_get_current_event();
-  bool keep = (e->button.state & GDK_SHIFT_MASK) ? true : false;
+  bool keep = (e->button.state & GDK_SHIFT_MASK);
 
   ((Ge*)gectx)->activate_circle(keep);
 }
@@ -940,7 +940,7 @@ void GeGtk::activate_circle(GtkWidget* w, gpointer gectx)
 void GeGtk::activate_text(GtkWidget* w, gpointer gectx)
 {
   GdkEvent* e = gtk_get_current_event();
-  bool keep = (e->button.state & GDK_SHIFT_MASK) ? true : false;
+  bool keep = (e->button.state & GDK_SHIFT_MASK);
 
   ((Ge*)gectx)->activate_text(keep);
 }
@@ -948,7 +948,7 @@ void GeGtk::activate_text(GtkWidget* w, gpointer gectx)
 void GeGtk::activate_annot(GtkWidget* w, gpointer gectx)
 {
   GdkEvent* e = gtk_get_current_event();
-  bool keep = (e->button.state & GDK_SHIFT_MASK) ? true : false;
+  bool keep = (e->button.state & GDK_SHIFT_MASK);
 
   ((Ge*)gectx)->activate_annot(keep);
 }
@@ -956,7 +956,7 @@ void GeGtk::activate_annot(GtkWidget* w, gpointer gectx)
 void GeGtk::activate_conpoint(GtkWidget* w, gpointer gectx)
 {
   GdkEvent* e = gtk_get_current_event();
-  bool keep = (e->button.state & GDK_SHIFT_MASK) ? true : false;
+  bool keep = (e->button.state & GDK_SHIFT_MASK);
 
   ((Ge*)gectx)->activate_conpoint(keep);
 }
@@ -1317,7 +1317,7 @@ void GeGtk::activate_view_plant(GtkWidget* w, gpointer data)
   if (w != ((GeGtk*)ge)->view_plant_w) {
     set = !set;
     gtk_check_menu_item_set_active(
-        GTK_CHECK_MENU_ITEM(((GeGtk*)ge)->view_plant_w), set ? TRUE : FALSE);
+        GTK_CHECK_MENU_ITEM(((GeGtk*)ge)->view_plant_w), set);
   }
 
   if (set) {
@@ -1347,8 +1347,7 @@ void GeGtk::activate_view_graphlist(GtkWidget* w, gpointer data)
   if (w != ((GeGtk*)ge)->view_graphlist_w) {
     set = !set;
     gtk_check_menu_item_set_active(
-        GTK_CHECK_MENU_ITEM(((GeGtk*)ge)->view_graphlist_w),
-        set ? TRUE : FALSE);
+        GTK_CHECK_MENU_ITEM(((GeGtk*)ge)->view_graphlist_w), set);
   }
 
   if (set) {
@@ -1376,8 +1375,7 @@ void GeGtk::activate_view_objectnav(GtkWidget* w, gpointer data)
   if (w != ((GeGtk*)ge)->view_objectnav_w) {
     set = !set;
     gtk_check_menu_item_set_active(
-        GTK_CHECK_MENU_ITEM(((GeGtk*)ge)->view_objectnav_w),
-        set ? TRUE : FALSE);
+        GTK_CHECK_MENU_ITEM(((GeGtk*)ge)->view_objectnav_w), set);
   }
 
   if (set) {
@@ -1595,13 +1593,8 @@ void GeGtk::valchanged_cmd_input(GtkWidget* w, gpointer data)
 
 void GeGtk::update()
 {
-  gboolean set;
-
-  set = graph->grid ? TRUE : FALSE;
-  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(grid_on_w), set);
-
-  set = graph->get_show_grid() ? TRUE : FALSE;
-  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(show_grid_w), set);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(grid_on_w), graph->grid);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(show_grid_w), graph->get_show_grid());
 
   if (fabs(graph->grid_size_x - 0.1) < DBL_EPSILON)
     gtk_option_menu_set_history(GTK_OPTION_MENU(grid_size_w), 3);

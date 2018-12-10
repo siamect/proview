@@ -2195,16 +2195,10 @@ static int graph_create_func(void* client_data, void* client_flag)
     points[1].x = x2;
     points[1].y = y2;
     point_cnt = 2;
-    if (graph->fill)
-      grow_CreateGrowPolyLine(graph->grow->ctx, "", (glow_sPoint*)&points,
-          point_cnt, graph->get_border_drawtype(), graph->linewidth, 0,
-          graph->fill, graph->border, graph->shadow, graph->get_fill_drawtype(),
-          0, NULL, &graph->current_cmd_object);
-    else
-      grow_CreateGrowPolyLine(graph->grow->ctx, "", (glow_sPoint*)&points,
-          point_cnt, graph->get_border_drawtype(), graph->linewidth, 0,
-          graph->fill, graph->border, graph->shadow, graph->get_fill_drawtype(),
-          0, NULL, &graph->current_cmd_object);
+    grow_CreateGrowPolyLine(graph->grow->ctx, "", (glow_sPoint*)&points,
+        point_cnt, graph->get_border_drawtype(), graph->linewidth, 0,
+        graph->fill, graph->border, graph->shadow, graph->get_fill_drawtype(),
+        0, NULL, &graph->current_cmd_object);
 
     grow_SetModified(graph->grow->ctx, 1);
   } else if (str_NoCaseStrncmp(arg1_str, "TEXT", strlen(arg1_str)) == 0) {

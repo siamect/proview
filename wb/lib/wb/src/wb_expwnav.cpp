@@ -914,8 +914,6 @@ void WbExpWNav::show_builddir()
         brow_SetRadiobutton(item->node, 0, 1);
 
     } else if (streq(cdh_Low(line_item[0]), "buildmake")) {
-      int update = 1;
-
       if (num != 4) {
         printf("File corrupt " pwr_cNameDistribute);
         continue;
@@ -927,12 +925,9 @@ void WbExpWNav::show_builddir()
         continue;
       }
 
-      dir->make_insert(line_item[2], line_item[3], update);
-      if (update)
-        dir->update = 1;
+      dir->make_insert(line_item[2], line_item[3], 1);
+      dir->update = 1;
     } else if (streq(cdh_Low(line_item[0]), "buildexec")) {
-      int update = 1;
-
       if (num != 4) {
         printf("File corrupt " pwr_cNameDistribute);
         continue;
@@ -944,9 +939,8 @@ void WbExpWNav::show_builddir()
         continue;
       }
 
-      dir->exec_insert(line_item[2], line_item[3], update);
-      if (update)
-        dir->update = 1;
+      dir->exec_insert(line_item[2], line_item[3], 1);
+      dir->update = 1;
     }
   }
 

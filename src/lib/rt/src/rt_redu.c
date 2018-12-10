@@ -312,7 +312,7 @@ pwr_tStatus redu_unpack_message(redu_tCtx ctx, void* msg)
     if (tsts == -2)
       return 0;
     else
-      // Request new table...
+      // TODO: Request new table...
       return 0;
   }
 

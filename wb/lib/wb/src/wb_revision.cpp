@@ -1003,7 +1003,7 @@ bool wb_version_manager_git::git_found()
     int sts;
 
     sts = system("git --version > /dev/null 2> /dev/null");
-    m_found = sts == 0 ? true : false;
+    m_found = (sts == 0);
     m_found_tested = true;
     if (!m_found)
       m_sts = REV__NOGIT;

@@ -315,70 +315,68 @@ void GrowAxisArc::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
   drawtype = ctx->get_drawtype(draw_type, glow_eDrawType_LineHighlight,
       highlight, (GrowNode*)colornode, 0);
 
-  if (1) {
-    // Lines inwards
-    ctx->gdraw->arc(w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-        angle1 - (int)rotation, angle2, drawtype, idx, 0);
+  // Lines inwards
+  ctx->gdraw->arc(w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+      angle1 - (int)rotation, angle2, drawtype, idx, 0);
 
-    if (lines == 1)
-      return;
+  if (lines == 1)
+    return;
 
-    if (increment > 0)
-      format_text(text, format, min_value + (lines - 2) * increment);
-    else
-      format_text(text, format, min_value + increment);
-    ctx->gdraw->get_text_extent(text, strlen(text), text_drawtype,
-        MAX(0, text_idx), glow_eFont_Helvetica, &z_width, &z_height, &z_descent,
-        tsize, 0);
+  if (increment > 0)
+    format_text(text, format, min_value + (lines - 2) * increment);
+  else
+    format_text(text, format, min_value + increment);
+  ctx->gdraw->get_text_extent(text, strlen(text), text_drawtype,
+      MAX(0, text_idx), glow_eFont_Helvetica, &z_width, &z_height, &z_descent,
+      tsize, 0);
 
-    // z_descent=0;
-    double line_angle = (double)angle2 / (lines - 1);
-    for (i = 0; i < lines; i++) {
-      double sin1 = sin(((double)angle1 + i * line_angle) / 180 * M_PI);
-      double cos1 = cos(((double)angle1 + i * line_angle) / 180 * M_PI);
-      y1 = int(((double)ur_y - ll_y) / 2 * (-sin1 + 1) + ll_y);
-      x1 = int(((double)ur_x - ll_x) / 2 * (cos1 + 1) + ll_x);
-      if (i % longquotient == 0) {
-        y2 = int(((double)ur_y - ll_y) / 2 * (-sin1 * (1.0 - linelength) + 1)
-            + ll_y);
-        x2 = int(
-            ((double)ur_x - ll_x) / 2 * (cos1 * (1.0 - linelength) + 1) + ll_x);
-      } else {
-        y2 = int(
-            ((double)ur_y - ll_y) / 2 * (-sin1 * (1.0 - linelength / 2) + 1)
-            + ll_y);
-        x2 = int(((double)ur_x - ll_x) / 2 * (cos1 * (1.0 - linelength / 2) + 1)
-            + ll_x);
-      }
-      yt = int(((double)ur_y - ll_y) / 2 * (-sin1 * (1.0 - linelength) + 1)
-          + ll_y + sin1 * (z_height - z_descent) / 2);
-      xt = int(((double)ur_x - ll_x) / 2 * (cos1 * (1.0 - linelength) + 1)
-          + ll_x - cos1 * z_width / 2);
+  // z_descent=0;
+  double line_angle = (double)angle2 / (lines - 1);
+  for (i = 0; i < lines; i++) {
+    double sin1 = sin(((double)angle1 + i * line_angle) / 180 * M_PI);
+    double cos1 = cos(((double)angle1 + i * line_angle) / 180 * M_PI);
+    y1 = int(((double)ur_y - ll_y) / 2 * (-sin1 + 1) + ll_y);
+    x1 = int(((double)ur_x - ll_x) / 2 * (cos1 + 1) + ll_x);
+    if (i % longquotient == 0) {
+      y2 = int(((double)ur_y - ll_y) / 2 * (-sin1 * (1.0 - linelength) + 1)
+               + ll_y);
+      x2 = int(
+          ((double)ur_x - ll_x) / 2 * (cos1 * (1.0 - linelength) + 1) + ll_x);
+    } else {
+      y2 = int(
+          ((double)ur_y - ll_y) / 2 * (-sin1 * (1.0 - linelength / 2) + 1)
+          + ll_y);
+      x2 = int(((double)ur_x - ll_x) / 2 * (cos1 * (1.0 - linelength / 2) + 1)
+          + ll_x);
+    }
+    yt = int(((double)ur_y - ll_y) / 2 * (-sin1 * (1.0 - linelength) + 1)
+        + ll_y + sin1 * (z_height - z_descent) / 2);
+    xt = int(((double)ur_x - ll_x) / 2 * (cos1 * (1.0 - linelength) + 1)
+        + ll_x - cos1 * z_width / 2);
 
-      ctx->gdraw->line(w, x1, y1, x2, y2, drawtype, idx, 0);
-      if (draw_text) {
-        if (text_idx >= 0 && i % valuequotient == 0
-            && !(angle2 == 360 && ((increment > 0 && i == lines - 1)
-                                      || (increment < 0 && i == 0)))) {
-          format_text(text, format, min_value + i * increment);
-          ctx->gdraw->get_text_extent(text, strlen(text), text_drawtype,
-              MAX(0, text_idx), glow_eFont_Helvetica, &z_width, &z_height,
-              &z_descent, tsize, 0);
+    ctx->gdraw->line(w, x1, y1, x2, y2, drawtype, idx, 0);
+    if (draw_text) {
+      if (text_idx >= 0 && i % valuequotient == 0
+          && !(angle2 == 360 && ((increment > 0 && i == lines - 1)
+                                    || (increment < 0 && i == 0)))) {
+        format_text(text, format, min_value + i * increment);
+        ctx->gdraw->get_text_extent(text, strlen(text), text_drawtype,
+            MAX(0, text_idx), glow_eFont_Helvetica, &z_width, &z_height,
+            &z_descent, tsize, 0);
 
-          if (i == lines - 1 && angle1 == 0 && angle2 == 180) {
-            // yt = yt - (z_height-z_descent)/2;
-            xt = xt - z_width / 2;
-          } else if (i == 0 && angle1 == 0 && angle2 != 360) {
-            // yt = yt - (z_height-z_descent)/2;
-            xt = xt - z_width / 2;
-          } else {
-            yt = yt + (z_height - z_descent) / 2;
-            xt = xt - z_width / 2;
-          }
-          ctx->gdraw->text(w, xt, yt, text, strlen(text), text_drawtype,
-              text_color_drawtype, text_idx, highlight, 0, glow_eFont_Helvetica,
-              tsize, 0);
+        if (i == lines - 1 && angle1 == 0 && angle2 == 180) {
+          // yt = yt - (z_height-z_descent)/2;
+          xt = xt - z_width / 2;
+        } else if (i == 0 && angle1 == 0 && angle2 != 360) {
+          // yt = yt - (z_height-z_descent)/2;
+          xt = xt - z_width / 2;
+        } else {
+          yt = yt + (z_height - z_descent) / 2;
+          xt = xt - z_width / 2;
         }
+        ctx->gdraw->text(w, xt, yt, text, strlen(text), text_drawtype,
+            text_color_drawtype, text_idx, highlight, 0, glow_eFont_Helvetica,
+            tsize, 0);
       }
     }
   }
@@ -626,51 +624,26 @@ void GrowAxisArc::set_range(double minval, double maxval, int keep_settings)
     }
 
     double m = MAX(fabs(maxval), fabs(minval));
-    switch (lix) {
-    case 0: {
-      if (m < 0.01)
-        strcpy(format, "%g");
-      else if (m < 0.1)
-        strcpy(format, "%5.3f");
-      else if (m < 1)
-        strcpy(format, "%4.2f");
-      else if (m < 3)
-        strcpy(format, "%3.1f");
-      else if (m <= 20)
-        strcpy(format, "%2.0f");
-      else if (m <= 200)
-        strcpy(format, "%3.0f");
-      else if (m < 2000)
-        strcpy(format, "%4.0f");
-      else if (m < 20000)
-        strcpy(format, "%5.0f");
-      else
-        strcpy(format, "%g");
-      break;
-    }
-    case 1: {
-      if (m < 0.01)
-        strcpy(format, "%g");
-      else if (m < 0.1)
-        strcpy(format, "%5.3f");
-      else if (m < 1)
-        strcpy(format, "%4.2f");
-      else if (m <= 4)
-        strcpy(format, "%3.1f");
-      else if (m <= 20)
-        strcpy(format, "%2.0f");
-      else if (m <= 200)
-        strcpy(format, "%3.0f");
-      else if (m < 2000)
-        strcpy(format, "%4.0f");
-      else if (m < 20000)
-        strcpy(format, "%5.0f");
-      else
-        strcpy(format, "%g");
-      break;
-    }
-    default:;
-    }
+    if (m < 0.01)
+      strcpy(format, "%g");
+    else if (m < 0.1)
+      strcpy(format, "%5.3f");
+    else if (m < 1)
+      strcpy(format, "%4.2f");
+    else if (!lix && m < 3)
+      strcpy(format, "%3.1f");
+    else if (lix && m <= 4)
+      strcpy(format, "%3.1f");
+    else if (m <= 20)
+      strcpy(format, "%2.0f");
+    else if (m <= 200)
+      strcpy(format, "%3.0f");
+    else if (m < 2000)
+      strcpy(format, "%4.0f");
+    else if (m < 20000)
+      strcpy(format, "%5.0f");
+    else
+      strcpy(format, "%g");
   }
 
   configure();

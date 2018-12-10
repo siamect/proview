@@ -1297,7 +1297,7 @@ void WttQtWidget::activate_set_alltoplevel()
   int set = ((int)((WttQt*)wtt)->view_alltoplevel_w->isChecked());
   if (sender() != ((WttQt*)wtt)->view_alltoplevel_w) {
     set = !set;
-    ((WttQt*)wtt)->view_alltoplevel_w->setChecked(set ? true : false);
+    ((WttQt*)wtt)->view_alltoplevel_w->setChecked(set);
   }
   wtt->activate_set_alltoplevel(set);
 }
@@ -1649,26 +1649,26 @@ void BootDialog::boot_ok_cb()
 void WttQt::update_options_form()
 {
   // Hierarchies
-  enable_comment_w->setChecked(enable_comment ? true : false);
-  enable_revisions_w->setChecked(enable_revisions ? true : false);
-  show_plant_w->setChecked(wnav_mapped ? true : false);
-  show_node_w->setChecked(wnavnode_mapped ? true : false);
+  enable_comment_w->setChecked(enable_comment);
+  enable_revisions_w->setChecked(enable_revisions);
+  show_plant_w->setChecked(wnav_mapped);
+  show_node_w->setChecked(wnavnode_mapped);
 
   // entry components
-  show_class_w->setChecked(show_class ? true : false);
-  show_alias_w->setChecked(show_alias ? true : false);
-  show_descrip_w->setChecked(show_descrip ? true : false);
-  show_objref_w->setChecked(show_objref ? true : false);
-  show_objxref_w->setChecked(show_objxref ? true : false);
-  show_attrref_w->setChecked(show_attrref ? true : false);
-  show_attrxref_w->setChecked(show_attrxref ? true : false);
-  build_force_w->setChecked(build_force ? true : false);
-  build_debug_w->setChecked(build_debug ? true : false);
-  build_crossref_w->setChecked(build_crossref ? true : false);
-  build_crossrefsim_w->setChecked(build_crossref_sim ? true : false);
-  build_crossrefgraph_w->setChecked(build_crossref_graph ? true : false);
-  build_manual_w->setChecked(build_manual ? true : false);
-  build_nocopy_w->setChecked(build_nocopy ? true : false);
+  show_class_w->setChecked(show_class);
+  show_alias_w->setChecked(show_alias);
+  show_descrip_w->setChecked(show_descrip);
+  show_objref_w->setChecked(show_objref);
+  show_objxref_w->setChecked(show_objxref);
+  show_attrref_w->setChecked(show_attrref);
+  show_attrxref_w->setChecked(show_attrxref);
+  build_force_w->setChecked(build_force);
+  build_debug_w->setChecked(build_debug);
+  build_crossref_w->setChecked(build_crossref);
+  build_crossrefsim_w->setChecked(build_crossref_sim);
+  build_crossrefgraph_w->setChecked(build_crossref_graph);
+  build_manual_w->setChecked(build_manual);
+  build_nocopy_w->setChecked(build_nocopy);
 }
 
 /************************************************************************
@@ -2503,7 +2503,7 @@ QMenu* WttQt::build_submenu(
       } else {
         // Pushbutton
         QAction* w = menu->addAction(fl(Items[*idx].Name));
-        w->setEnabled(Items[*idx].Flags.f.Sensitive ? true : false);
+        w->setEnabled(Items[*idx].Flags.f.Sensitive);
         w->setData(*idx);
         if (Callback) {
           QObject::connect(w, SIGNAL(triggered()), toplevel, Callback);

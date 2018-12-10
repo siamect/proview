@@ -89,7 +89,7 @@
 #define INT_TO_BOOL(STYPE)                                                     \
   for (; tcount > 0 && *tsize >= sizeof(pwr_tBoolean); tcount--, scount--) {   \
     if (scount > 0) {                                                          \
-      *(pwr_tBoolean*)tp = (*(STYPE*)sp) ? TRUE : FALSE;                       \
+      *(pwr_tBoolean*)tp = (*(STYPE*)sp);                       \
       sp += sizeof(STYPE);                                                     \
     } else                                                                     \
       *(pwr_tBoolean*)tp = 0;                                                  \

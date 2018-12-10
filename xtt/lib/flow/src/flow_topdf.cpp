@@ -500,20 +500,12 @@ void CnvToPdf::draw_triangle(double lw, double x, double y, double w, double h)
 void CnvToPdf::draw_filled_triangle(
     flow_eDrawType color, double x, double y, double w, double h)
 {
-  float r = 0.0, g = 0.0, b = 0.0;
-
-  if (color == flow_eDrawType_LineRed || color == flow_eDrawType_Yellow) {
-    if (color == flow_eDrawType_LineRed) {
-      r = 1;
-      g = 0.2;
-      b = 0.2;
-    } else if (color == flow_eDrawType_Yellow) {
-      r = 1;
-      g = 1;
-      b = 0;
-    }
+  if (color == flow_eDrawType_LineRed) {
     fp[cf] << "  /DeviceRGB cs\n"
-           << "  " << r << " " << g << " " << b << " sc\n";
+           << "  " << 1.0 << " " << 0.2 << " " << 0.2 << " sc\n";
+  } else if (color == flow_eDrawType_Yellow) {
+    fp[cf] << "  /DeviceRGB cs\n"
+           << "  " << 1.0 << " " << 1.0 << " " << 0.0 << " sc\n";
   }
 
   fp[cf] << "  " << x << " " << y << " m\n"
@@ -523,10 +515,7 @@ void CnvToPdf::draw_filled_triangle(
          << "  f\n";
 
   if (color == flow_eDrawType_LineRed || color == flow_eDrawType_Yellow) {
-    r = 0;
-    g = 0;
-    b = 0;
-    fp[cf] << "  " << r << " " << g << " " << b << " sc\n";
+    fp[cf] << "  " << 0.0 << " " << 0.0 << " " << 0.0 << " sc\n";
   }
 }
 

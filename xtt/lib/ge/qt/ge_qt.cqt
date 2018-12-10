@@ -1214,9 +1214,9 @@ void GeQtWidget::valchanged_cmd_entry()
 
 void GeQt::update()
 {
-  grid_on_w->setChecked(graph->grid ? true : false);
+  grid_on_w->setChecked(graph->grid);
 
-  show_grid_w->setChecked(graph->get_show_grid() ? true : false);
+  show_grid_w->setChecked(graph->get_show_grid());
 
   if (fabs(graph->grid_size_x - 0.1) < DBL_EPSILON) {
     tools_gridsize->setCurrentIndex(3);

@@ -1614,7 +1614,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap* soap,
       element->ItemName->assign(itemname);
       element->IsItem = false;
       if (cid == pwr_eClass_PlantHier || cid == pwr_eClass_NodeHier)
-        element->HasChildren = ODD(gdh_GetChild(child, &ch)) ? true : false;
+        element->HasChildren = ODD(gdh_GetChild(child, &ch));
       else
         element->HasChildren = true;
 
@@ -1663,7 +1663,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap* soap,
       element->ItemName = element->Name;
       element->IsItem = false;
       if (cid == pwr_eClass_PlantHier || cid == pwr_eClass_NodeHier)
-        element->HasChildren = ODD(gdh_GetChild(child, &ch)) ? true : false;
+        element->HasChildren = ODD(gdh_GetChild(child, &ch));
       else
         element->HasChildren = true;
 
@@ -1914,7 +1914,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap* soap,
         element->ItemName->assign(itemname);
         element->IsItem = false;
         if (cid == pwr_eClass_PlantHier || cid == pwr_eClass_NodeHier)
-          element->HasChildren = ODD(gdh_GetChild(child, &ch)) ? true : false;
+          element->HasChildren = ODD(gdh_GetChild(child, &ch));
         else
           element->HasChildren = true;
 

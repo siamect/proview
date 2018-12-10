@@ -170,7 +170,7 @@ void errl_Init(const char* termName,
   if (termName && *termName)
     errl_SetTerm(termName);
 
-  logToStdout = getenv("PWR_LOG_TO_STDOUT") != NULL ? TRUE : FALSE;
+  logToStdout = getenv("PWR_LOG_TO_STDOUT") != NULL;
 
   initDone = 1;
 

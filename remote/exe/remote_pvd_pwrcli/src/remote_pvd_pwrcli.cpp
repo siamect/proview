@@ -110,15 +110,6 @@ static char rpvd_vname[32];
 static int rpvd_opsys;
 static std::map<int, subitem> rpvd_sublist;
 static int rpvd_id = 1;
-const bool pvd_cLog = false;
-
-static void logg(const char* logger, pwr_tOix oix, const char* text)
-{
-  char nowstr[40];
-
-  time_AtoAscii(0, time_eFormat_Time, nowstr, sizeof(nowstr));
-  printf("%15s %30s %10d %s\n", nowstr, logger, oix, text);
-}
 
 void remote_pvd_pwrcli::objectOid(co_procom* pcom, pwr_tOix oix)
 {
@@ -131,12 +122,7 @@ void remote_pvd_pwrcli::objectOid(co_procom* pcom, pwr_tOix oix)
   msg.Oid.oix = oix;
   msg.Oid.vid = rpvd_vid;
 
-  if (pvd_cLog)
-    logg("ObjOid", oix, "");
-
   sts = udp_Request((char*)&msg, sizeof(msg), (char**)&rmsg);
-  if (pvd_cLog)
-    logg("Reply", sts, "");
   if (EVEN(sts)) {
     pcom->provideStatus(sts);
     return;
@@ -191,9 +177,6 @@ void remote_pvd_pwrcli::objectName(co_procom* pcom, char* name, pwr_tOix poix)
   strcpy(msg.Name, name);
   msg.POid.vid = rpvd_vid;
   msg.POid.oix = poix;
-
-  if (pvd_cLog)
-    logg("ObjName", poix, name);
 
   sts = udp_Request((char*)&msg, sizeof(msg), (char**)&rmsg);
   if (EVEN(sts)) {
@@ -292,9 +275,6 @@ void remote_pvd_pwrcli::writeAttribute(co_procom* pcom, pwr_tOix oix,
     }
   }
 
-  if (pvd_cLog)
-    logg("Write", aref.Objid.oix, aname);
-
   sts = udp_Request((char*)&msg, sizeof(msg), (char**)&rmsg);
   if (EVEN(sts)) {
     pcom->provideStatus(sts);
@@ -355,12 +335,7 @@ void remote_pvd_pwrcli::readAttribute(
 
   strcpy(msg.Attribute, aname);
 
-  if (pvd_cLog)
-    logg("Read", aref.Objid.oix, aname);
-
   sts = udp_Request((char*)&msg, sizeof(msg), (char**)&rmsg);
-  if (pvd_cLog)
-    logg("Reply", sts, "");
   if (EVEN(sts)) {
     pcom->provideStatus(sts);
     return;
@@ -523,9 +498,6 @@ void remote_pvd_pwrcli::subAssociateBuffer(co_procom* pcom, void** buff,
   msg.Rix = subid.rix;
   msg.Size = size;
 
-  if (pvd_cLog)
-    logg("AssoBuff", msg.Oid.oix, aname);
-
   sts = udp_Request((char*)&msg, sizeof(msg), (char**)&rmsg);
   if (EVEN(sts)) {
     pcom->provideStatus(sts);
@@ -577,9 +549,6 @@ void remote_pvd_pwrcli::subDisassociateBuffer(co_procom* pcom, pwr_tSubid subid)
   msg.Type = rpvd_eMsg_SubRemove;
   msg.Id = rpvd_id++;
   msg.Rix = subid.rix;
-
-  if (pvd_cLog)
-    logg("DisoBuff", subid.rix, "(rix)");
 
   sts = udp_Request((char*)&msg, sizeof(msg), (char**)&rmsg);
   if (EVEN(sts)) {

@@ -294,7 +294,7 @@ pwr_tTypeId cdh_TypeObjidToId(pwr_tObjid Objid)
     tid.t.vid_0 = oid.t.vid_0;
     tid.t.vid_1 = oid.t.vid_1;
   } else {
-    /* We have an error.  !!! To do !!!  */
+    // TODO: We have an error.
     tid.t.tix = oid.t.tix;
     tid.t.tyg = oid.t.tyg;
     tid.t.must_be_one = 1;

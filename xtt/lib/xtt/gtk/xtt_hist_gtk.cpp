@@ -942,8 +942,8 @@ void HistGtk::SetListTime(
       GTK_EDITABLE(start_time_entry_w), timestr, strlen(timestr), &pos);
 
   if (Sensitive != DONT_SET_SENS) {
-    gtk_widget_set_sensitive(start_time_entry_w, Sensitive ? TRUE : FALSE);
-    gtk_widget_set_sensitive(stop_time_entry_w, Sensitive ? TRUE : FALSE);
+    gtk_widget_set_sensitive(start_time_entry_w, Sensitive);
+    gtk_widget_set_sensitive(stop_time_entry_w, Sensitive);
   }
 
 } /* SetListTime */

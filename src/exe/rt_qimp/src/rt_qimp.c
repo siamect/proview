@@ -499,7 +499,6 @@ static void stateUp(qdb_sPort* pp, qdb_sNode* np, qdb_sBuffer* bp)
     putUser(pp, np, bp);
     return; /* NOTA BENE, you must return, we dont want this buffer to be freed!
                */
-    break;
   case qdb_eEvent_connect:
     qnet_S '\n' inkEvent(&sts, pp, np, qdb_eEvent_up);
     break;

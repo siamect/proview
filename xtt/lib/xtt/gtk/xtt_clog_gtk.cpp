@@ -305,19 +305,17 @@ void CLogGtk::activate_filter(GtkWidget* w, gpointer data)
 
   clog->clognav->get_filter(&success, &info, &warning, &error, &fatal, &text);
   gtk_toggle_button_set_active(
-      GTK_TOGGLE_BUTTON(((CLogGtk*)clog)->show_success_w),
-      success ? TRUE : FALSE);
+      GTK_TOGGLE_BUTTON(((CLogGtk*)clog)->show_success_w), success);
   gtk_toggle_button_set_active(
-      GTK_TOGGLE_BUTTON(((CLogGtk*)clog)->show_info_w), info ? TRUE : FALSE);
+      GTK_TOGGLE_BUTTON(((CLogGtk*)clog)->show_info_w), info);
   gtk_toggle_button_set_active(
-      GTK_TOGGLE_BUTTON(((CLogGtk*)clog)->show_warning_w),
-      warning ? TRUE : FALSE);
+      GTK_TOGGLE_BUTTON(((CLogGtk*)clog)->show_warning_w), warning);
   gtk_toggle_button_set_active(
-      GTK_TOGGLE_BUTTON(((CLogGtk*)clog)->show_error_w), error ? TRUE : FALSE);
+      GTK_TOGGLE_BUTTON(((CLogGtk*)clog)->show_error_w), error);
   gtk_toggle_button_set_active(
-      GTK_TOGGLE_BUTTON(((CLogGtk*)clog)->show_fatal_w), fatal ? TRUE : FALSE);
+      GTK_TOGGLE_BUTTON(((CLogGtk*)clog)->show_fatal_w), fatal);
   gtk_toggle_button_set_active(
-      GTK_TOGGLE_BUTTON(((CLogGtk*)clog)->show_text_w), text ? TRUE : FALSE);
+      GTK_TOGGLE_BUTTON(((CLogGtk*)clog)->show_text_w), text);
 }
 
 void CLogGtk::activate_select_file(GtkWidget* w, gpointer data)

@@ -635,7 +635,7 @@ gdb_sClass* mvol_LinkClass(pwr_tStatus* sts, gdb_sClass* cp, pwr_tBitMask ilink)
     cp->attr[i].aix = coid.t.aix;
     pwr_Assert(i == count);
     if (count > 0) {
-      if (!(cp->attr[i - 1].moffset < cp->attr[i].moffset))
+      if (cp->attr[i - 1].moffset >= cp->attr[i].moffset)
         printf("---   Class: %s, Attribute: %s\n", cop->g.f.name.orig,
             aop->g.f.name.orig);
       pwr_Assert(cp->attr[i - 1].moffset < cp->attr[i].moffset);

@@ -506,8 +506,8 @@ void HistQt::SetListTime(pwr_tTime StartTime, pwr_tTime StopTime, int Sensitive)
   start_time_entry_w->setText(fl(timestr));
 
   if (Sensitive != DONT_SET_SENS) {
-    start_time_entry_w->setEnabled(Sensitive ? TRUE : FALSE);
-    stop_time_entry_w->setEnabled(Sensitive ? TRUE : FALSE);
+    start_time_entry_w->setEnabled(Sensitive);
+    stop_time_entry_w->setEnabled(Sensitive);
   }
 }
 

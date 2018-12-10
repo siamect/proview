@@ -410,8 +410,8 @@ void CreateSocket()
   /* If none or invalid ip-address is given, use hostname to get hostent struct,
      otherwise use the given ip address directly */
 
-  if ((iadr[0] < 0 || iadr[0] > 255) || (iadr[0] < 0 || iadr[0] > 255)
-      || (iadr[0] < 0 || iadr[0] > 255) || (iadr[0] < 0 || iadr[0] > 255)) {
+  if ((iadr[0] < 0 || iadr[0] > 255) || (iadr[1] < 0 || iadr[1] > 255)
+      || (iadr[2] < 0 || iadr[2] > 255) || (iadr[3] < 0 || iadr[3] > 255)) {
     he = gethostbyname(rn_udp->RemoteHostname);
     if (he) {
       memcpy(&their_addr.sin_addr, he->h_addr, 4);

@@ -1247,7 +1247,7 @@ int GrowImage::set_image_color(glow_tImImage om, void* n)
   }
 
   if (c_color_intensity > 0)
-    factor_intens = 1 + 0.1 * c_color_intensity;
+    factor_intens = 1 - 0.1 * c_color_intensity;
   else
     factor_intens = 1 + 0.1 * c_color_intensity;
 

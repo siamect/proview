@@ -4494,8 +4494,6 @@ static int wnav_distribute_func(void* client_data, void* client_flag)
   char* node_ptr;
   char node_str[80];
   pwr_tFileName file_str, file;
-  int package;
-  bool distribute;
   char* s;
 
   if (ODD(dcli_get_qualifier("/NODE", node_str, sizeof(node_str))))
@@ -4528,8 +4526,7 @@ static int wnav_distribute_func(void* client_data, void* client_flag)
     return WNAV__SUCCESS;
   }
 
-  package = ODD(dcli_get_qualifier("/PACKAGE", 0, 0));
-  distribute = package ? false : true;
+  int package = ODD(dcli_get_qualifier("/PACKAGE", 0, 0));
 
   if (ODD(dcli_get_qualifier("/FILE", file_str, sizeof(file_str)))) {
     if (!node_ptr) {
@@ -4555,7 +4552,7 @@ static int wnav_distribute_func(void* client_data, void* client_flag)
   } else {
     sts = WNAV__SUCCESS;
     try {
-      wb_pkg* pkg = new wb_pkg(node_ptr, distribute);
+      wb_pkg* pkg = new wb_pkg(node_ptr, (package == 0));
       delete pkg;
     } catch (wb_error& e) {
       wnav->message(' ', (char*)e.what().c_str());

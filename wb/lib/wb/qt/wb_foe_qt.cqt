@@ -1088,19 +1088,18 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
 
 void WFoeQt::set_mode_button_state(int mode, int state)
 {
-  bool active = state ? TRUE : FALSE;
   switch (mode) {
   case VIEW:
-    view_togg->setChecked(active);
+    view_togg->setChecked(state);
     break;
   case EDIT:
-    edit_togg->setChecked(active);
+    edit_togg->setChecked(state);
     break;
   case TRACE:
-    trace_togg->setChecked(active);
+    trace_togg->setChecked(state);
     break;
   case SIMULATE:
-    simulate_togg->setChecked(active);
+    simulate_togg->setChecked(state);
     break;
   }
 }

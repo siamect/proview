@@ -2075,23 +2075,22 @@ pwr_tStatus WFoeGtk::create_window(int x_top, int y_top, int width_adb,
 
 void WFoeGtk::set_mode_button_state(int mode, int state)
 {
-  gboolean active = state ? TRUE : FALSE;
   switch (mode) {
   case VIEW:
     gtk_check_menu_item_set_active(
-        GTK_CHECK_MENU_ITEM(widgets.view_togg), active);
+        GTK_CHECK_MENU_ITEM(widgets.view_togg), state);
     break;
   case EDIT:
     gtk_check_menu_item_set_active(
-        GTK_CHECK_MENU_ITEM(widgets.edit_togg), active);
+        GTK_CHECK_MENU_ITEM(widgets.edit_togg), state);
     break;
   case TRACE:
     gtk_check_menu_item_set_active(
-        GTK_CHECK_MENU_ITEM(widgets.trace_togg), active);
+        GTK_CHECK_MENU_ITEM(widgets.trace_togg), state);
     break;
   case SIMULATE:
     gtk_check_menu_item_set_active(
-        GTK_CHECK_MENU_ITEM(widgets.simulate_togg), active);
+        GTK_CHECK_MENU_ITEM(widgets.simulate_togg), state);
     break;
   }
 }

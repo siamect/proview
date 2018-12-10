@@ -423,7 +423,7 @@ QMenu* XNavQt::build_menu(const char* Callback, xmenu_sMenuItem* Items, int* idx
     case xmenu_eMenuItem_Button: {
       // Pushbutton
       QAction* w = menu->addAction(translate_utf8(Items[*idx].Name));
-      w->setEnabled(Items[*idx].Flags.f.Sensitive ? true : false);
+      w->setEnabled(Items[*idx].Flags.f.Sensitive);
       w->setData(*idx);
       if (Callback) {
         QObject::connect(w, SIGNAL(triggered()), popup_obj, Callback);

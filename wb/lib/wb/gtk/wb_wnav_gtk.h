@@ -85,7 +85,7 @@ public:
   void wge_modal_loop(WGe* wge);
   bool has_window()
   {
-    return parent_wid ? true : false;
+    return parent_wid;
   }
   wb_utl* utl_new();
   WRev* rev_new();

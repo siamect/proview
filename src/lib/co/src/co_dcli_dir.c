@@ -379,7 +379,7 @@ int dcli_delete_directory(char* path, int force)
   if (rmdir(fname) != 0) {
     if (!force)
       return 0;
-    if (force && errno == ENOTEMPTY) {
+    if (errno == ENOTEMPTY) {
       pwr_tCmd cmd;
       sprintf(cmd, "rm -r %s", path);
       system(cmd);
