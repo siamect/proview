@@ -49,7 +49,7 @@ class wb_procom : public co_procom {
   vext_sAMsg m_msg;
   procom_eType m_type;
 
-  public:
+public:
   wb_procom(const char* key, co_provider* p, procom_eType type)
       : co_procom(p), m_connected(0), m_type(type)
   {

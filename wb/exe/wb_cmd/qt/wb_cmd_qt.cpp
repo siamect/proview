@@ -79,7 +79,7 @@ CmdQt::CmdQt(int argc, char* argv[])
 
 int main(int argc, char* argv[])
 {
-  DEBUG=1;
+  DEBUG = 1;
   QApplication app(argc, argv);
   QApplication::setStyle(new PwrStyle());
   new CmdQt(argc, argv);

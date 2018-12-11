@@ -41,14 +41,14 @@
  * @see ra_appl.cpp
  */
 class ra_appl : public rt_appl {
-  private:
+private:
   pwr_tSubid subid[20]; //! Array to store subscription identities
   int subid_cnt; //! Number of stored subid's
   pwr_tBoolean* dv1_p; //! Pointer to database value Dv1
   pwr_tBoolean* dv2_p; //! Pointer to database value Dv2
   pwr_tBoolean dv2_old; //! Old value of Dv2 for edge detection
   pwr_tFloat32* av1_p; //! Pointer to database value Av1
-  public:
+public:
   ra_appl() : rt_appl("ra_appl", errh_eAnix_appl1), subid_cnt(0)
   {
   }

@@ -85,14 +85,16 @@ void WCrrQt::print()
   int size;
   pwr_tAName title;
 
-  pwr_tStatus sts = ldh_AttrRefToName(ldhses, &objar, cdh_mNName, &namep, &size);
+  pwr_tStatus sts
+      = ldh_AttrRefToName(ldhses, &objar, cdh_mNName, &namep, &size);
   if (EVEN(sts)) {
     return;
   }
 
   strncpy(title, namep, sizeof(title));
 
-  CoWowQt::CreateBrowPrintDialogQt(title, xcrrnav->brow->ctx, ((WAttNavQt*)xcrrnav)->brow_widget);
+  CoWowQt::CreateBrowPrintDialogQt(
+      title, xcrrnav->brow->ctx, ((WAttNavQt*)xcrrnav)->brow_widget);
 }
 
 void WCrrQtWidget::closeEvent(QCloseEvent* event)

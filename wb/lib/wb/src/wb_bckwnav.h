@@ -47,8 +47,9 @@ typedef enum { bckwitem_eItemType_Bck } bckwitem_eItemType;
 
 class WbBckWNavBrow {
 public:
-  WbBckWNavBrow(BrowCtx* brow_ctx, void* lwnav)
-      : ctx(brow_ctx), bckwnav(lwnav){}
+  WbBckWNavBrow(BrowCtx* brow_ctx, void* lwnav) : ctx(brow_ctx), bckwnav(lwnav)
+  {
+  }
   ~WbBckWNavBrow();
 
   BrowCtx* ctx;
@@ -102,7 +103,7 @@ public:
   ItemBck(WbBckWNav* bckwnav, bck_sItem* item_bck_item, brow_tNode dest,
       flow_eDest dest_code);
   virtual ~ItemBck();
-  
+
   bckwitem_eItemType type;
   WbBckWNav* bckwnav;
   brow_tNode node;

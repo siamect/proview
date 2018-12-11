@@ -501,7 +501,8 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Read(
       strncpy(itempath, path, sizeof(itempath));
 
     strncpy(itemname, itempath, sizeof(itemname));
-    strncat(itemname, item->ItemName->c_str(), sizeof(itemname) - strlen(itemname) - 1);
+    strncat(itemname, item->ItemName->c_str(),
+        sizeof(itemname) - strlen(itemname) - 1);
 
     if (options & opc_mRequestOption_ReturnItemPath) {
       iv->ItemPath = soap_new_std__string(soap, -1);
@@ -645,7 +646,8 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Write(struct soap* soap, _s0__Write* s0__Write,
       strncpy(itempath, path, sizeof(itempath));
 
     strncpy(itemname, itempath, sizeof(itemname));
-    strncat(itemname, item->ItemName->c_str(), sizeof(itemname) - strlen(itemname) - 1);
+    strncat(itemname, item->ItemName->c_str(),
+        sizeof(itemname) - strlen(itemname) - 1);
 
     if (options & opc_mRequestOption_ReturnItemPath) {
       iv->ItemPath = soap_new_std__string(soap, -1);
@@ -832,7 +834,8 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Subscribe(struct soap* soap,
               sts = gdh_GetObjectInfoAttrref(
                   &aaref, &range_low, sizeof(range_low));
 
-            if (ODD(sts) && !(feqf(range_high, 0.0f) && feqf(range_low, 0.0f))) {
+            if (ODD(sts)
+                && !(feqf(range_high, 0.0f) && feqf(range_low, 0.0f))) {
               sub.deadband = (range_high - range_low) * deadband / 100;
               break;
             }

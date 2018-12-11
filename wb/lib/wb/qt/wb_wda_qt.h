@@ -85,8 +85,7 @@ class WdaQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  WdaQtWidget(WdaQt* parent_ctx, QWidget* parent)
-      : QWidget(), wda(parent_ctx)
+  WdaQtWidget(WdaQt* parent_ctx, QWidget* parent) : QWidget(), wda(parent_ctx)
   {
   }
 
@@ -108,8 +107,8 @@ public slots:
   void activate_cmd_entry();
   void activate_cmd_scrolled_ok();
   void activate_cmd_scrolled_ca();
-  void class_activate_ok(char* hiername, char* searchname, char* classname,
-                         bool attrobjects);
+  void class_activate_ok(
+      char* hiername, char* searchname, char* classname, bool attrobjects);
 
 private:
   WdaQt* wda;

@@ -77,7 +77,9 @@ public:
 
 class WttApplList {
 public:
-  WttApplList() : root(NULL){}
+  WttApplList() : root(NULL)
+  {
+  }
   ~WttApplList();
 
   WttApplListElem* root;
@@ -94,7 +96,9 @@ public:
   Wtt(void* wt_parent_ctx, const char* wt_name, const char* iconname,
       ldh_tWBContext wt_wbctx, pwr_tVolumeId wt_volid, ldh_tVolume wt_volctx,
       wnav_sStartMenu* root_menu, pwr_tStatus* status);
-  Wtt() : WUtility(wb_eUtility_Wtt){}
+  Wtt() : WUtility(wb_eUtility_Wtt)
+  {
+  }
 
   void* parent_ctx;
   char name[80];

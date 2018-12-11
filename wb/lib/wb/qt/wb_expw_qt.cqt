@@ -130,7 +130,8 @@ WbExpWQt::~WbExpWQt()
 
 void WbExpWQt::print()
 {
-  CoWowQt::CreateBrowPrintDialogQt(name, expwnav->brow->ctx, ((WbExpWNavQt*)expwnav)->brow_widget);
+  CoWowQt::CreateBrowPrintDialogQt(
+      name, expwnav->brow->ctx, ((WbExpWNavQt*)expwnav)->brow_widget);
 }
 
 void WbExpWQtWidget::focusInEvent(QFocusEvent* event)

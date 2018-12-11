@@ -120,7 +120,9 @@ public:
 //! Class for handling of brow.
 class TblNavBrow {
 public:
-  TblNavBrow(BrowCtx* brow_ctx, void* xn) : ctx(brow_ctx), tblnav(xn){}
+  TblNavBrow(BrowCtx* brow_ctx, void* xn) : ctx(brow_ctx), tblnav(xn)
+  {
+  }
   ~TblNavBrow();
 
   BrowCtx* ctx;

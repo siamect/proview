@@ -97,8 +97,7 @@ class WRevQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  WRevQtWidget(WRevQt* parent_ctx, QWidget* parent)
-      : QWidget(), rev(parent_ctx)
+  WRevQtWidget(WRevQt* parent_ctx, QWidget* parent) : QWidget(), rev(parent_ctx)
   {
   }
 

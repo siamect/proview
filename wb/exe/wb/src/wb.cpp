@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
   }
 
   if (!found) {
-    const char *flavours[] = {"qt","gtk","motif"};
+    const char* flavours[] = { "qt", "gtk", "motif" };
     for (int i = 0; i < 3; i++) {
       strcpy(file, "$pwr_exe/wb_");
       strcat(file, flavours[i]);

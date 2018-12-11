@@ -200,7 +200,8 @@ void WAttQtWidget::hide_cmd_entry()
 
 void WAttQt::print(const char* title)
 {
-  CoWowQt::CreateBrowPrintDialogQt(title, wattnav->brow->ctx, ((WAttNavQt*)wattnav)->brow_widget);
+  CoWowQt::CreateBrowPrintDialogQt(
+      title, wattnav->brow->ctx, ((WAttNavQt*)wattnav)->brow_widget);
 }
 
 void WAttQt::change_value_close()
@@ -431,10 +432,10 @@ WAttQt::WAttQt(QWidget* wa_parent_wid, void* wa_parent_ctx,
   cmd_prompt = new QLabel("value > ");
   cmd_entry = new CoWowEntryQt(&value_recall);
   cmd_entry->set_hide_on_esc(true);
-  QObject::connect(cmd_entry, SIGNAL(returnPressed()), toplevel,
-      SLOT(activate_cmd_entry()));
-  QObject::connect(cmd_entry, SIGNAL(editingFinished()), toplevel,
-      SLOT(hide_cmd_entry()));
+  QObject::connect(
+      cmd_entry, SIGNAL(returnPressed()), toplevel, SLOT(activate_cmd_entry()));
+  QObject::connect(
+      cmd_entry, SIGNAL(editingFinished()), toplevel, SLOT(hide_cmd_entry()));
 
   statusbar->addWidget(msg_label);
   statusbar->addWidget(cmd_prompt);

@@ -61,44 +61,43 @@ public:
 static void wnav_crr_insert_cb(void* ctx, void* parent_node,
     navc_eItemType item_type, char* text1, char* text2, int write)
 {
-  //if (1) {
-    CrrCtx* cctx = (CrrCtx*)ctx;
+  // if (1) {
+  CrrCtx* cctx = (CrrCtx*)ctx;
 
-    switch (item_type) {
-    case navc_eItemType_Crossref:
-      new WItemCrossref(cctx->brow, cctx->ldhses, text1, text2, write,
-          parent_node, flow_eDest_IntoLast);
-      break;
-    case navc_eItemType_Header:
-      new WItemHeader(
-          cctx->brow, "crr", text1, parent_node, flow_eDest_IntoLast);
-      break;
-    case navc_eItemType_Text:
-      new WItemText(cctx->brow, "crr", text1, parent_node, flow_eDest_IntoLast);
-      break;
-    }
-    /*
-  } else { // TODO from pwrc ???
-    // Print out crossref info
-    switch (item_type) {
-    case navc_eItemType_Crossref:
-      if (write)
-        printf("# ");
-      else
-        printf("  ");
-      printf("%s", text1);
-      for (int i = 0; i < (int)(28 - strlen(text1)); i++)
-        printf(" ");
-      printf("  ");
-      printf("%s\n", text2);
-      break;
-    case navc_eItemType_Header:
-    case navc_eItemType_Text:
-      printf("%s\n", text1);
-      break;
-    }
+  switch (item_type) {
+  case navc_eItemType_Crossref:
+    new WItemCrossref(cctx->brow, cctx->ldhses, text1, text2, write,
+        parent_node, flow_eDest_IntoLast);
+    break;
+  case navc_eItemType_Header:
+    new WItemHeader(cctx->brow, "crr", text1, parent_node, flow_eDest_IntoLast);
+    break;
+  case navc_eItemType_Text:
+    new WItemText(cctx->brow, "crr", text1, parent_node, flow_eDest_IntoLast);
+    break;
   }
-  */
+  /*
+} else { // TODO from pwrc ???
+  // Print out crossref info
+  switch (item_type) {
+  case navc_eItemType_Crossref:
+    if (write)
+      printf("# ");
+    else
+      printf("  ");
+    printf("%s", text1);
+    for (int i = 0; i < (int)(28 - strlen(text1)); i++)
+      printf(" ");
+    printf("  ");
+    printf("%s\n", text2);
+    break;
+  case navc_eItemType_Header:
+  case navc_eItemType_Text:
+    printf("%s\n", text1);
+    break;
+  }
+}
+*/
 }
 
 int wnav_crr_name_to_objid_cb(void* ctx, char* name, pwr_tObjid* objid)

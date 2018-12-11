@@ -80,10 +80,11 @@ WVsel* WbQt::vsel_new(pwr_tStatus* status, const char* name,
 
 int main(int argc, char* argv[])
 {
-  DEBUG=1;
+  DEBUG = 1;
   if (argc >= 2 && streq(argv[1], "-m")) {
     wb_erep::printMethods();
-    debug_print("Shutting down...\n"); exit(0);
+    debug_print("Shutting down...\n");
+    exit(0);
   }
 
   QApplication app(argc, argv);
@@ -323,6 +324,7 @@ WbQt::WbQt(int argc, char* argv[]) : mainwindow(0)
   }
 }
 
-WbQt::~WbQt(){
+WbQt::~WbQt()
+{
   debug_print("Shutting down...\n");
 }

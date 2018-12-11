@@ -161,8 +161,7 @@ class WFoeQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  WFoeQtWidget(WFoeQt* parent_ctx, QWidget* parent)
-      : QWidget(), foe(parent_ctx)
+  WFoeQtWidget(WFoeQt* parent_ctx, QWidget* parent) : QWidget(), foe(parent_ctx)
   {
   }
 

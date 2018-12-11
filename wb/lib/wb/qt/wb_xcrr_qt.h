@@ -65,8 +65,7 @@ class WCrrQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  WCrrQtWidget(WCrrQt* parent_ctx, QWidget* parent)
-      : QWidget(), crr(parent_ctx)
+  WCrrQtWidget(WCrrQt* parent_ctx, QWidget* parent) : QWidget(), crr(parent_ctx)
   {
   }
 

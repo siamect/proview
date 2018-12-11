@@ -550,7 +550,8 @@ void WttQt::set_selection_owner()
 
 void WttQt::set_palette_selection_owner()
 {
-  initOneShotTimer(selection_timerid, SLOT(set_palette_selection_owner_proc()), 200);
+  initOneShotTimer(
+      selection_timerid, SLOT(set_palette_selection_owner_proc()), 200);
 }
 
 void WttQtWidget::set_selection_owner_proc()

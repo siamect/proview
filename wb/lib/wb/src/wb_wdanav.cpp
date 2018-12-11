@@ -807,8 +807,7 @@ int WdaNav::update(pwr_tObjid new_objid, pwr_tClassId new_classid,
   brow_tObject object;
 
   if (cdh_ObjidIsEqual(objid, new_objid) && classid == new_classid
-      && streq(attribute, new_attribute)
-      && streq(search_name, new_search_name)
+      && streq(attribute, new_attribute) && streq(search_name, new_search_name)
       && attrobjects == new_attrobjects)
     return WDA__SUCCESS;
 

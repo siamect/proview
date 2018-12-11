@@ -148,7 +148,8 @@ public:
       pwr_tObjid plcprogram, ldh_tWBContext ldhwbctx, ldh_tSesContext ldhsesctx,
       vldh_t_node nodeobject, unsigned long windowindex,
       unsigned long new_window, int f_map_window, ldh_eAccess f_access,
-      foe_eFuncAccess function_access, unsigned int f_options, pwr_tStatus* sts);
+      foe_eFuncAccess function_access, unsigned int f_options,
+      pwr_tStatus* sts);
   virtual void destroy();
   virtual void set_title();
   virtual void message(const char* new_label);

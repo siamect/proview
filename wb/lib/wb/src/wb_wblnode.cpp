@@ -1680,10 +1680,8 @@ void wb_wblnode::registerNode(wb_vrepwbl* vol)
                    || streq(o->cname, "pwr_eClass_ObjBodyDef"))) {
           node_type = wbl_eNodeType_ObjBodyDef;
         } else if (first_child->getType() == wbl_eToken_Name
-            && (streq(o->cname, "$Attribute")
-                   || streq(o->cname, "$Input")
-                   || streq(o->cname, "$Output")
-                   || streq(o->cname, "$Intern")
+            && (streq(o->cname, "$Attribute") || streq(o->cname, "$Input")
+                   || streq(o->cname, "$Output") || streq(o->cname, "$Intern")
                    || streq(o->cname, "$ObjXRef")
                    || streq(o->cname, "$AttrXRef")
                    || streq(o->cname, "pwr_eClass_Param"))) {
@@ -2308,8 +2306,7 @@ static int check_conversion_error(const char* attr)
   if (nr <= 1)
     return 0;
 
-  if (streq(seg[nr - 1], "PlcConnect")
-      || streq(seg[nr - 1], "SimConnect")) {
+  if (streq(seg[nr - 1], "PlcConnect") || streq(seg[nr - 1], "SimConnect")) {
     for (int i = nr - 2; i >= 0; i--) {
       if (!streq(seg[i], "Super"))
         return 1;

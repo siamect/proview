@@ -30,7 +30,7 @@
 #include "co_error.h"
 
 class MyAppl {
-  public:
+public:
   MyAppl()
   {
   }

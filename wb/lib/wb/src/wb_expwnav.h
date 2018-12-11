@@ -134,8 +134,9 @@ public:
 
 class WbExpWNavBrow {
 public:
-  WbExpWNavBrow(BrowCtx* brow_ctx, void* lwnav)
-      : ctx(brow_ctx), expwnav(lwnav){}
+  WbExpWNavBrow(BrowCtx* brow_ctx, void* lwnav) : ctx(brow_ctx), expwnav(lwnav)
+  {
+  }
   ~WbExpWNavBrow();
 
   BrowCtx* ctx;

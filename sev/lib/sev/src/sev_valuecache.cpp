@@ -284,8 +284,8 @@ void sev_valuecache_double::calculate_epsilon(int index)
   if (m_k >= 1E32) {
     m_val[ii].epsilon = ABS(m_val[ii].time - m_wval.time);
   } else {
-    m_val[ii].epsilon = ABS(m_val[ii].val - m_k * m_val[ii].time - m_m)
-        / sqrt(1 + m_k * m_k);
+    m_val[ii].epsilon
+        = ABS(m_val[ii].val - m_k * m_val[ii].time - m_m) / sqrt(1 + m_k * m_k);
   }
 }
 

@@ -118,8 +118,8 @@ void WFoeQtWidget::activate_print()
 
 void WFoeQtWidget::activate_printdialog()
 {
-  CoWowQt::CreateFlowPrintDialogQt("PlcEditor", foe->gre->flow_ctx,
-      ((WGreQt*)foe->gre)->flow_widget);
+  CoWowQt::CreateFlowPrintDialogQt(
+      "PlcEditor", foe->gre->flow_ctx, ((WGreQt*)foe->gre)->flow_widget);
 }
 
 void WFoeQtWidget::activate_printoverv()
@@ -975,10 +975,10 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
       toplevel, tools, "Save", SLOT(activate_save()), "document-save");
   addToolItem(toplevel, tools, "Print documents", SLOT(activate_print()),
       "document-print");
-  addCheckableToolItem(toplevel, tools, "Set edit mode", SLOT(activate_edit_togg(bool)),
-      "$pwr_exe/foe_edit.png");
-  addCheckableToolItem(toplevel, tools, "Set view mode", SLOT(activate_view_togg(bool)),
-      "$pwr_exe/foe_view.png");
+  addCheckableToolItem(toplevel, tools, "Set edit mode",
+      SLOT(activate_edit_togg(bool)), "$pwr_exe/foe_edit.png");
+  addCheckableToolItem(toplevel, tools, "Set view mode",
+      SLOT(activate_view_togg(bool)), "$pwr_exe/foe_view.png");
   tools_build = addToolItem(
       toplevel, tools, "Build Program", SLOT(activate_compile()), "system-run");
   addToolItem(toplevel, tools, "Zoom in", SLOT(activate_zoomin()),
@@ -999,8 +999,9 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
       "$pwr_exe/foe_redraw.png");
 
   // Feedback connection checkbutton
-  tools_confeedback = addCheckableToolItem(toplevel, tools, "Feedback connection",
-      SLOT(activate_confeedback(bool)), "$pwr_exe/foe_confeedback.png");
+  tools_confeedback
+      = addCheckableToolItem(toplevel, tools, "Feedback connection",
+          SLOT(activate_confeedback(bool)), "$pwr_exe/foe_confeedback.png");
 
   // Singlelinetext button
   tools_singlelinetext = addToolItem(toplevel, tools, "Single line text",

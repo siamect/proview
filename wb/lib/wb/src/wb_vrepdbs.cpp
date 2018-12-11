@@ -70,7 +70,7 @@ wb_vrepdbs::wb_vrepdbs(wb_erep* erep, wb_merep* merep, const char* fileName,
     m_merep = m_erep->merep();
   else
   */
-    m_merep = new wb_merep(m_erep, (wb_mvrep*)this);
+  m_merep = new wb_merep(m_erep, (wb_mvrep*)this);
 }
 
 wb_vrepdbs::wb_vrepdbs(wb_erep* erep, const char* fileName)
@@ -84,7 +84,7 @@ wb_vrepdbs::wb_vrepdbs(wb_erep* erep, const char* fileName)
     m_merep = m_erep->merep();
   else
   */
-    m_merep = new wb_merep(m_erep, (wb_mvrep*)this);
+  m_merep = new wb_merep(m_erep, (wb_mvrep*)this);
 }
 
 wb_vrepdbs::wb_vrepdbs(wb_erep* erep, wb_merep* merep, const char* fileName,

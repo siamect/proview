@@ -533,7 +533,8 @@ a:hover {font-family: sans-serif; font-size: 11pt; font-weight: bold; color: #35
   sts = trv_get_objects_hier_class_name(ldhses, hierobjdid, classp, NULL,
       &utl_objidlist_insert, &plcpgmlist, &plcpgmcount, 0, 0, 0);
   if (EVEN(sts)) {
-    if (plclink) fclose(plclink);
+    if (plclink)
+      fclose(plclink);
     return sts;
   }
 
@@ -555,7 +556,8 @@ a:hover {font-family: sans-serif; font-size: 11pt; font-weight: bold; color: #35
     sts = ldh_ObjidToName(ldhses, list_ptr->objid, ldh_eName_Hierarchy, plcname,
         sizeof(plcname), &size);
     if (EVEN(sts)) {
-      if (plclink) fclose(plclink);
+      if (plclink)
+        fclose(plclink);
       return sts;
     }
     printf("Plcpgm  %s\n", plcname);
@@ -563,7 +565,8 @@ a:hover {font-family: sans-serif; font-size: 11pt; font-weight: bold; color: #35
     sts = print_document(
         list_ptr->objid, ldhses, ldhwb, document, overview, pdf, plclink);
     if (EVEN(sts)) {
-      if (plclink) fclose(plclink);
+      if (plclink)
+        fclose(plclink);
       return sts;
     }
 
@@ -1104,7 +1107,6 @@ int wb_utl::create_flow_cb(void* utl, void* foe)
   sts = ((WFoe*)foe)->create_flow();
   return sts;
 }
-
 
 int wb_utl::redraw_plc_hier(ldh_tSesContext ldhses, ldh_tWBContext ldhwb,
     char* hiername, char* fromname, int all, int templ)
@@ -5991,8 +5993,7 @@ static int utl_externref(
           { pwr_cClass_CStoIp, "DevBody", "Object", CRR_WRITE, 0 },
           { pwr_cClass_GetIp, "DevBody", "IpObject", CRR_READ, 0 },
           { pwr_cClass_StoIp, "DevBody", "Object", CRR_WRITE, 0 },
-          { 0, "", "", 0, 0 }
-        };
+          { 0, "", "", 0, 0 } };
 
   /* get all the children to the object */
   childlistcount = 0;
@@ -6090,8 +6091,7 @@ static int utl_signalref(
           { pwr_cClass_inc3p, "DevBody", "DoOpen", CRR_WRITE, 0 },
           { pwr_cClass_inc3p, "DevBody", "DoClose", CRR_WRITE, 0 },
           { pwr_cClass_GetPi, "DevBody", "CoObject", CRR_READ, 0 },
-          { 0, "", "", 0, 0 }
-        };
+          { 0, "", "", 0, 0 } };
 
   /* get all the children to the object */
   childcount = 0;

@@ -76,49 +76,56 @@
 // So we implement our own QFontComboBox using a standard QComboBox,
 // and let this QFontDelegate class do the rendering.
 // This QFontDelegate is more or less a copy of the one in QFontComboBox.
-class QFontDelegate : public QAbstractItemDelegate
-{
+class QFontDelegate : public QAbstractItemDelegate {
 public:
-  explicit QFontDelegate(QObject *parent) : QAbstractItemDelegate(parent) {}
-  void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-  QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
+  explicit QFontDelegate(QObject* parent) : QAbstractItemDelegate(parent)
+  {
+  }
+  void paint(QPainter* painter, const QStyleOptionViewItem& option,
+      const QModelIndex& index) const;
+  QSize sizeHint(
+      const QStyleOptionViewItem& option, const QModelIndex& index) const;
 };
 
-void QFontDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const {
-    QString text = index.data(Qt::DisplayRole).toString();
-    QFont font(text);
+void QFontDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option,
+    const QModelIndex& index) const
+{
+  QString text = index.data(Qt::DisplayRole).toString();
+  QFont font(text);
 
-    QRect r = option.rect;
+  QRect r = option.rect;
 
-    if (option.state & QStyle::State_Selected) {
-        painter->save();
-        painter->setBrush(option.palette.highlight());
-        painter->setPen(Qt::NoPen);
-        painter->drawRect(option.rect);
-        painter->setPen(QPen(option.palette.highlightedText(), 0));
-    }
+  if (option.state & QStyle::State_Selected) {
+    painter->save();
+    painter->setBrush(option.palette.highlight());
+    painter->setPen(Qt::NoPen);
+    painter->drawRect(option.rect);
+    painter->setPen(QPen(option.palette.highlightedText(), 0));
+  }
 
-    if (option.direction == Qt::RightToLeft)
-        r.setRight(r.right() - 4);
-    else
-        r.setLeft(r.left() + 4);
+  if (option.direction == Qt::RightToLeft)
+    r.setRight(r.right() - 4);
+  else
+    r.setLeft(r.left() + 4);
 
-    QFont old = painter->font();
-    painter->setFont(font);
-    painter->drawText(r, Qt::AlignVCenter|Qt::AlignLeading|Qt::TextSingleLine, text);
+  QFont old = painter->font();
+  painter->setFont(font);
+  painter->drawText(
+      r, Qt::AlignVCenter | Qt::AlignLeading | Qt::TextSingleLine, text);
 
-    painter->setFont(old);
+  painter->setFont(old);
 
-    if (option.state & QStyle::State_Selected)
-        painter->restore();
+  if (option.state & QStyle::State_Selected)
+    painter->restore();
 }
 
-QSize QFontDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
+QSize QFontDelegate::sizeHint(
+    const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    QString text = index.data(Qt::DisplayRole).toString();
-    QFont font(option.font);
-    QFontMetrics fontMetrics(font);
-    return QSize(fontMetrics.width(text), 22);
+  QString text = index.data(Qt::DisplayRole).toString();
+  QFont font(option.font);
+  QFontMetrics fontMetrics(font);
+  return QSize(fontMetrics.width(text), 22);
 }
 
 int GeQt::create_modal_dialog(const char* title, const char* text,
@@ -1514,8 +1521,8 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
   // Submenu Conpoint Direction
   QActionGroup* condir_group = new QActionGroup(toplevel);
   QMenu* cons_condir = cons->addMenu(translate_utf8("Conpoint &Direction"));
-  QAction* cons_condir_center = addMenuRadioItem(toplevel, cons_condir, "&Center",
-      SLOT(activate_condir_center()), condir_group);
+  QAction* cons_condir_center = addMenuRadioItem(toplevel, cons_condir,
+      "&Center", SLOT(activate_condir_center()), condir_group);
   addMenuRadioItem(toplevel, cons_condir, "&Left", SLOT(activate_condir_left()),
       condir_group);
   addMenuRadioItem(toplevel, cons_condir, "&Right",
@@ -1737,7 +1744,8 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
   tools_textfont->setItemDelegate(new QFontDelegate(tools_textfont));
   tools_textfont->addItem("Helvetica", glow_eFont_Helvetica);
   tools_textfont->addItem("Times", glow_eFont_Times);
-  tools_textfont->addItem("New Century Schoolbook", glow_eFont_NewCenturySchoolbook);
+  tools_textfont->addItem(
+      "New Century Schoolbook", glow_eFont_NewCenturySchoolbook);
   tools_textfont->addItem("Courier", glow_eFont_Courier);
   tools_textfont->addItem("Lucida Sans", glow_eFont_LucidaSans);
   tools_textfont->setFont(QFont("Courier"));
@@ -1745,7 +1753,8 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
   // Bold checkbutton
   QCheckBox* bold = new QCheckBox("Bold");
   bold->setToolTip(fl("Set bold on selected text, and as default"));
-  QObject::connect(bold, SIGNAL(toggled(bool)), toplevel, SLOT(activate_textbold(bool)));
+  QObject::connect(
+      bold, SIGNAL(toggled(bool)), toplevel, SLOT(activate_textbold(bool)));
   tools3->addWidget(bold);
 
   // Toolbar 2 (again)
@@ -1997,7 +2006,8 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
   objectnav_w->setVisible(false);
 
   QList<int> pane_sizes;
-  pane_sizes << 150 << 150 << window_width - palette_width - 325 << palette_width + 25;
+  pane_sizes << 150 << 150 << window_width - palette_width - 325
+             << palette_width + 25;
   hpaned->setSizes(pane_sizes);
 
   pane_sizes.clear();

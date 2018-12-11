@@ -252,7 +252,8 @@ void WRevInputDialog::activate_ok()
   rev->dialog_count--;
   rev->india_widget = 0;
 
-  (rev->india_ok_cb)(rev, qPrintableLatin1(india_text1->text()), qPrintableLatin1(india_text2->text()));
+  (rev->india_ok_cb)(rev, qPrintableLatin1(india_text1->text()),
+      qPrintableLatin1(india_text2->text()));
   close();
 }
 

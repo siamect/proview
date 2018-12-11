@@ -118,7 +118,8 @@ WbBckWQt::WbBckWQt(void* bckw_parent_ctx, QWidget* bckw_parent_wid,
 
 void WbBckWQt::print()
 {
-  CoWowQt::CreateBrowPrintDialogQt(name, bckwnav->brow->ctx, ((WbBckWNavQt*)bckwnav)->brow_widget);
+  CoWowQt::CreateBrowPrintDialogQt(
+      name, bckwnav->brow->ctx, ((WbBckWNavQt*)bckwnav)->brow_widget);
 }
 
 void WbBckWQtWidget::focusInEvent(QFocusEvent* event)

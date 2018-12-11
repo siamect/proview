@@ -75,7 +75,8 @@ void WdaQt::set_prompt(const char* prompt)
 
 void WdaQt::print(const char* title)
 {
-  CoWowQt::CreateBrowPrintDialogQt(title, wdanav->brow->ctx, ((WdaNavQt*)wdanav)->brow_widget);
+  CoWowQt::CreateBrowPrintDialogQt(
+      title, wdanav->brow->ctx, ((WdaNavQt*)wdanav)->brow_widget);
 }
 
 void WdaQt::change_value(int set_focus)
@@ -194,8 +195,8 @@ void WdaQtWidget::activate_help()
       "$pwr_lang/man_dg.dat", true);
 }
 
-void WdaQtWidget::class_activate_ok(char* hiername, char* searchname,
-    char* classname, bool attrobjects)
+void WdaQtWidget::class_activate_ok(
+    char* hiername, char* searchname, char* classname, bool attrobjects)
 {
   wda->attrobjects = attrobjects;
 
@@ -226,8 +227,8 @@ void WdaQtWidget::class_activate_ok(char* hiername, char* searchname,
   } else {
     // Find new attributes
     int sts = ((WdaNav*)wda->wdanav)
-              ->update(wda->objid, wda->classid, wda->attribute,
-                  wda->attrobjects, wda->search_name);
+                  ->update(wda->objid, wda->classid, wda->attribute,
+                      wda->attrobjects, wda->search_name);
     if (EVEN(sts)) {
       CoWowQt ww(this);
       ww.DisplayError("Spreadsheet error", wnav_get_message(sts));
@@ -379,8 +380,8 @@ void WdaQt::open_class_dialog(char* hierstr, char* classstr, char* namestr)
   QDialog wdaclass_dia(toplevel);
   wdaclass_dia.setMinimumSize(500, 150);
   wdaclass_dia.setWindowTitle(fl("Select Class"));
-  //Do not set the "DeleteOnClose" attribute,
-  //we need to access the dialog fields after exec()
+  // Do not set the "DeleteOnClose" attribute,
+  // we need to access the dialog fields after exec()
 
   QLineEdit* wdaclass_classvalue = new QLineEdit(fl(classstr));
   QLabel* class_label = new QLabel("Class");
@@ -522,8 +523,8 @@ WdaQt::WdaQt(QWidget* wa_parent_wid, void* wa_parent_ctx,
   msg_label = new QLabel("");
   cmd_prompt = new QLabel("value > ");
   cmd_entry = new CoWowEntryQt(&value_recall);
-  QObject::connect(cmd_entry, SIGNAL(returnPressed()), toplevel,
-      SLOT(activate_cmd_entry()));
+  QObject::connect(
+      cmd_entry, SIGNAL(returnPressed()), toplevel, SLOT(activate_cmd_entry()));
 
   statusbar->addWidget(msg_label);
   statusbar->addWidget(cmd_prompt);

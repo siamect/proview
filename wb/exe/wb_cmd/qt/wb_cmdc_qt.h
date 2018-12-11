@@ -40,7 +40,7 @@
 #include "wb_cmdc.h"
 
 class CmdQt : public Cmd {
-  public:
+public:
   CmdQt(int argc, char* argv[]);
 };
 

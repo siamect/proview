@@ -372,13 +372,11 @@ int main(int argc, char* argv[])
 {
   sev_repair rep;
 
-  if (argc > 1
-      && (streq(argv[1], "-e") || streq(argv[1], "--engine"))) {
+  if (argc > 1 && (streq(argv[1], "-e") || streq(argv[1], "--engine"))) {
     // Alter engine
     rep.init();
     rep.alter_engine();
-  } else if (argc > 1
-      && (streq(argv[1], "-r") || streq(argv[1], "--repair"))) {
+  } else if (argc > 1 && (streq(argv[1], "-r") || streq(argv[1], "--repair"))) {
     // Repair
     if (argc == 2) {
       rep.init();
@@ -388,8 +386,7 @@ int main(int argc, char* argv[])
       rep.check(argv[3]);
     } else
       usage();
-  } else if (argc > 1
-      && (streq(argv[1], "-c") || streq(argv[1], "--clean"))) {
+  } else if (argc > 1 && (streq(argv[1], "-c") || streq(argv[1], "--clean"))) {
     // Clean
     if (argc == 2) {
       rep.init();
@@ -410,8 +407,7 @@ int main(int argc, char* argv[])
       rep.optimize(argv[3]);
     } else
       usage();
-  } else if (argc > 1
-      && (streq(argv[1], "-l") || streq(argv[1], "--list"))) {
+  } else if (argc > 1 && (streq(argv[1], "-l") || streq(argv[1], "--list"))) {
     if (argc == 2) {
       // List
       rep.init();

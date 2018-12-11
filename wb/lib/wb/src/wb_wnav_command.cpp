@@ -230,9 +230,7 @@ dcli_tCmdTable wnav_command_table[] = {
       { "dcli_arg1", "dcli_arg2", "dcli_arg13", "/FILE", "/FILE1", "/FILE2",
           "/OUT", "/WINDOW", "" },
   },
-  {
-      "", NULL, { "" }
-  }
+  { "", NULL, { "" } }
 };
 
 static void wnav_store_wnav(WNav* wnav)

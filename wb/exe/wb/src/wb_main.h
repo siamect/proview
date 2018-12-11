@@ -43,7 +43,7 @@
 #include "wb_wtt.h"
 
 class Wb {
-  public:
+public:
   typedef std::map<pwr_tVid, Wtt*>::iterator wttlist_iterator;
 
   static Wb* main_wb;

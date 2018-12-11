@@ -270,9 +270,8 @@ pwr_tStatus wb_bck_list::diff(wb_bck_list* lp, char* outfile)
         switch (atype) {
         case pwr_eType_String:
         case pwr_eType_Text:
-          is_equal = streq((const char*)value2p, (const char*)ip->valuep)
-              ? 1
-              : 0;
+          is_equal
+              = streq((const char*)value2p, (const char*)ip->valuep) ? 1 : 0;
           break;
         default:
           is_equal = memcmp(value2p, ip->valuep, ip->size) == 0 ? 1 : 0;
@@ -343,9 +342,8 @@ pwr_tStatus wb_bck_list::diff(wb_bck_list* lp, wb_bck_list* outlp)
         switch (atype) {
         case pwr_eType_String:
         case pwr_eType_Text:
-          is_equal = streq((const char*)value2p, (const char*)ip->valuep)
-              ? 1
-              : 0;
+          is_equal
+              = streq((const char*)value2p, (const char*)ip->valuep) ? 1 : 0;
           break;
         default:
           is_equal = memcmp(value2p, ip->valuep, ip->size) == 0 ? 1 : 0;

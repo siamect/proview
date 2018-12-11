@@ -53,7 +53,8 @@ NavQt::NavQt(void* nav_parent_ctx, QWidget* nav_parent_wid,
 {
   trace_obj = new NavQtTraceObject(this);
 
-  QScrollArea* scrolledbrow = ((QScrollArea*) scrolledbrowwidgetqt_new(Nav::init_brow_cb, this, &brow_widget));
+  QScrollArea* scrolledbrow = ((QScrollArea*)scrolledbrowwidgetqt_new(
+      Nav::init_brow_cb, this, &brow_widget));
 
   form_widget = wrapInFrame(scrolledbrow);
 

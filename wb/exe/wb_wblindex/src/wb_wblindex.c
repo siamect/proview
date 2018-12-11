@@ -826,8 +826,7 @@ pwr_tStatus convwbl_convert(char* str, char* newstr, char* object, int bufsize,
           item_ptr++;
         }
         if (hit) {
-          if (convwblctx->comment
-              && (item_ptr->func != &convwbl_comment_end)) {
+          if (convwblctx->comment && (item_ptr->func != &convwbl_comment_end)) {
             /* Reset all except the comment_end (first item)*/
             hit = 0;
             item_ptr = convwblctx->items;

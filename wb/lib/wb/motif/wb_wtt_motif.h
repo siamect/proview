@@ -48,7 +48,9 @@ public:
   WttMotif(void* wt_parent_ctx, Widget wt_parent_wid, const char* wt_name,
       const char* iconname, ldh_tWBContext wt_wbctx, pwr_tVolumeId wt_volid,
       ldh_tVolume wt_volctx, wnav_sStartMenu* root_menu, pwr_tStatus* status);
-  WttMotif(){}
+  WttMotif()
+  {
+  }
 
   Widget parent_wid;
   Widget wnav_brow_widget;

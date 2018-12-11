@@ -319,18 +319,18 @@ void wnav_attrvalue_to_string(
     break;
   }
   case pwr_eType_Float32: {
-    if ( *(float *)value_ptr == FLT_MIN) {
-      strcpy( str, "FltMin");
-      *len = strlen( str);
-    } else if ( *(float *)value_ptr == -FLT_MIN) {
-      strcpy( str, "FltNMin");
-      *len = strlen( str);
-    } else if ( *(float *)value_ptr == FLT_MAX) {
-      strcpy( str, "FltMax");
-      *len = strlen( str);
-    } else if ( *(float *)value_ptr == -FLT_MAX) {
-      strcpy( str, "FltNMax");
-      *len = strlen( str);
+    if (*(float*)value_ptr == FLT_MIN) {
+      strcpy(str, "FltMin");
+      *len = strlen(str);
+    } else if (*(float*)value_ptr == -FLT_MIN) {
+      strcpy(str, "FltNMin");
+      *len = strlen(str);
+    } else if (*(float*)value_ptr == FLT_MAX) {
+      strcpy(str, "FltMax");
+      *len = strlen(str);
+    } else if (*(float*)value_ptr == -FLT_MAX) {
+      strcpy(str, "FltNMax");
+      *len = strlen(str);
     } else
       *len = sprintf(str, "%f", *(pwr_tFloat32*)value_ptr);
     *buff = str;

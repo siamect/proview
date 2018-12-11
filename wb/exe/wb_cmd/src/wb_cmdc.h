@@ -42,7 +42,7 @@
 #include "wb_wnav.h"
 
 class Cmd {
-  public:
+public:
   Cmd();
   void parse(int argc, char* argv[]);
   int utilities(char* str);

@@ -53,7 +53,8 @@ PalQt::PalQt(void* pal_parent_ctx, QWidget* pal_parent_wid,
 {
   trace_obj = new PalQtTraceObject(this);
 
-  QScrollArea* scrolledbrow = ((QScrollArea*) scrolledbrowwidgetqt_new(Pal::init_brow_cb, this, &brow_widget));
+  QScrollArea* scrolledbrow = ((QScrollArea*)scrolledbrowwidgetqt_new(
+      Pal::init_brow_cb, this, &brow_widget));
 
   form_widget = wrapInFrame(scrolledbrow);
 

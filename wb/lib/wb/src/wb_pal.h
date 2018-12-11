@@ -162,7 +162,9 @@ class PalItem {
 public:
   PalItem(pwr_tObjid item_objid, int item_is_root)
       : type(pal_ePalItemType_Object), objid(item_objid), is_root(item_is_root),
-        node(NULL){}
+        node(NULL)
+  {
+  }
   pal_ePalItemType type;
   pwr_tObjid objid;
   int is_root;

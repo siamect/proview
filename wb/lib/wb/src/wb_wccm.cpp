@@ -1401,7 +1401,8 @@ static int wccm_createplcobject_func(void* filectx, ccm_sArg* arg_list,
     int arg_count, int* return_decl, ccm_tFloat* return_float,
     ccm_tInt* return_int, char* return_string)
 {
-  ccm_sArg *arg_p2, *arg_p3, *arg_p4, *arg_p5 = NULL, *arg_p6 = NULL, *arg_p7 = NULL, *arg_p8;
+  ccm_sArg *arg_p2, *arg_p3, *arg_p4, *arg_p5 = NULL, *arg_p6 = NULL,
+                                      *arg_p7 = NULL, *arg_p8;
   int sts;
   pwr_tObjName dest;
   pwr_tObjName classname, name;
@@ -1651,11 +1652,13 @@ static int wccm_createplcconnection_func(void* filectx, ccm_sArg* arg_list,
 
   strcpy(srcname, stored_foe_window);
   strcat(srcname, "-");
-  strncat(srcname, arg_list->value_string, sizeof(srcname) - strlen(srcname) - 1);
+  strncat(
+      srcname, arg_list->value_string, sizeof(srcname) - strlen(srcname) - 1);
   strncpy(srcattr, arg_p2->value_string, sizeof(srcattr));
   strcpy(destname, stored_foe_window);
   strcat(destname, "-");
-  strncat(destname, arg_p3->value_string, sizeof(destname) - strlen(destname) - 1);
+  strncat(
+      destname, arg_p3->value_string, sizeof(destname) - strlen(destname) - 1);
   strncpy(destattr, arg_p4->value_string, sizeof(destattr));
 
   sts = ldh_NameToObjid(ldhses, &srcoid, srcname);
@@ -1723,7 +1726,8 @@ static int wccm_plcconnect_func(void* filectx, ccm_sArg* arg_list,
 
   strcpy(nodename, stored_foe_window);
   strcat(nodename, "-");
-  strncat(nodename, arg_list->value_string, sizeof(nodename) - strlen(nodename) - 1);
+  strncat(nodename, arg_list->value_string,
+      sizeof(nodename) - strlen(nodename) - 1);
   strncpy(attrname, arg_p2->value_string, sizeof(attrname));
 
   sts = ldh_NameToObjid(ldhses, &nodeoid, nodename);

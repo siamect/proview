@@ -221,10 +221,10 @@ void wb_vrepref::objectName(const wb_orep* o, char* str)
 }
 
 bool wb_vrepref::isOffspringOf(
-      pwr_tStatus* sts, const wb_orep* child, const wb_orep* parent)
-  {
-    return false;
-  }
+    pwr_tStatus* sts, const wb_orep* child, const wb_orep* parent)
+{
+  return false;
+}
 
 wb_orep* wb_vrepref::object(pwr_tStatus* sts)
 {

@@ -77,8 +77,7 @@ class WGeQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  WGeQtWidget(WGeQt* parent_ctx, QWidget* parent)
-      : QWidget(), ge(parent_ctx)
+  WGeQtWidget(WGeQt* parent_ctx, QWidget* parent) : QWidget(), ge(parent_ctx)
   {
   }
 

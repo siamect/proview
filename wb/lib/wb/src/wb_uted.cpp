@@ -60,41 +60,31 @@ uted_sCommand WUted::commands[UTED_MAX_COMMANDS]
                 { "Volumes", 0, 0, 1, 0, UTED_QUAL_QUAL },
                 { "AllVolumes", 0, 0, 0, 1, UTED_QUAL_QUAL },
                 { "Output", 0, 0, 1, 0, UTED_QUAL_QUAL },
-                { "", 0, 0, 0, 0, UTED_QUAL_QUAL }
-            }
-        },
+                { "", 0, 0, 0, 0, UTED_QUAL_QUAL } } },
         { "List Signals", UTED_PROC_PWRPLC, 1, 3,
             { { "Hierarchy", 1, UTED_INS_PLANT, 1, 0, UTED_QUAL_QUAL },
                 { "Volumes", 0, 0, 1, 0, UTED_QUAL_QUAL },
                 { "AllVolumes", 0, 0, 0, 1, UTED_QUAL_QUAL },
                 { "Output", 0, 0, 1, 0, UTED_QUAL_QUAL },
                 { "Shortname", 0, 0, 0, 1, UTED_QUAL_QUAL },
-                { "", 0, 0, 0, 0, UTED_QUAL_QUAL }
-            }
-        },
+                { "", 0, 0, 0, 0, UTED_QUAL_QUAL } } },
         { "List Channels", UTED_PROC_PWRPLC, 1, 3,
             { { "Node", 1, UTED_INS_NODE, 1, 0, UTED_QUAL_QUAL },
                 { "Output", 0, 0, 1, 0, UTED_QUAL_QUAL },
-                { "", 0, 0, 0, 0, UTED_QUAL_QUAL }
-            }
-        },
+                { "", 0, 0, 0, 0, UTED_QUAL_QUAL } } },
         { "List Hierarchy", UTED_PROC_PWRPLC, 1, 3,
             { { "Hierarchy", 1, UTED_INS_PLANT, 1, 0, UTED_QUAL_QUAL },
                 { "Volumes", 0, 0, 1, 0, UTED_QUAL_QUAL },
                 { "AllVolumes", 0, 0, 0, 1, UTED_QUAL_QUAL },
                 { "Output", 0, 0, 1, 0, UTED_QUAL_QUAL },
-                { "", 0, 0, 0, 0, UTED_QUAL_QUAL }
-            }
-        },
+                { "", 0, 0, 0, 0, UTED_QUAL_QUAL } } },
         { "List Plcpgm", UTED_PROC_PWRPLC, 1, 3,
             { { "Plcpgm", 1, UTED_INS_PLANT, 1, 0, UTED_QUAL_QUAL },
                 { "Hierarchy", 1, UTED_INS_PLANT, 1, 0, UTED_QUAL_QUAL },
                 { "Volumes", 0, 0, 1, 0, UTED_QUAL_QUAL },
                 { "AllVolumes", 0, 0, 0, 1, UTED_QUAL_QUAL },
                 { "Output", 0, 0, 1, 0, UTED_QUAL_QUAL },
-                { "", 0, 0, 0, 0, UTED_QUAL_QUAL }
-            }
-        },
+                { "", 0, 0, 0, 0, UTED_QUAL_QUAL } } },
         { "Show Class", UTED_PROC_PWRPLC, 1, 3,
             { { "Classhier", 0, 0, 1, 0, UTED_QUAL_QUAL },
                 { "Name", 0, 0, 1, 0, UTED_QUAL_QUAL },
@@ -102,9 +92,7 @@ uted_sCommand WUted::commands[UTED_MAX_COMMANDS]
                 { "All", 0, 0, 0, 1, UTED_QUAL_QUAL },
                 { "Contents", 0, 0, 0, 1, UTED_QUAL_QUAL },
                 { "Output", 0, 0, 1, 0, UTED_QUAL_QUAL },
-                { "", 0, 0, 0, 0, UTED_QUAL_QUAL }
-            }
-        },
+                { "", 0, 0, 0, 0, UTED_QUAL_QUAL } } },
         { "Show Objects", UTED_PROC_PWRPLC, 1, 3,
             { { "Hierarchy", 1, UTED_INS_PLNO, 1, 0, UTED_QUAL_QUAL },
                 { "Class", 0, 0, 1, 0, UTED_QUAL_QUAL },
@@ -115,21 +103,15 @@ uted_sCommand WUted::commands[UTED_MAX_COMMANDS]
                 { "Objid", 0, 0, 1, 0, UTED_QUAL_QUAL },
                 { "Full", 0, 0, 0, 1, UTED_QUAL_QUAL },
                 { "Output", 0, 0, 1, 0, UTED_QUAL_QUAL },
-                { "", 0, 0, 0, 0, UTED_QUAL_QUAL }
-            }
-        },
+                { "", 0, 0, 0, 0, UTED_QUAL_QUAL } } },
         { "Show Modules", UTED_PROC_PWRPLC, 1, 1,
             { { "Name", 1, UTED_INS_PLNO, 1, 0, UTED_QUAL_QUAL },
                 { "Hierarchy", 1, UTED_INS_PLNO, 1, 0, UTED_QUAL_QUAL },
                 { "Objid", 0, 0, 1, 0, UTED_QUAL_QUAL },
                 { "Output", 0, 0, 1, 0, UTED_QUAL_QUAL },
-                { "", 0, 0, 0, 0, UTED_QUAL_QUAL }
-            }
-        },
+                { "", 0, 0, 0, 0, UTED_QUAL_QUAL } } },
         { "Show Security", UTED_PROC_PWRPLC, 1, 1,
-            { { "", 0, 0, 0, 0, UTED_QUAL_QUAL }
-            }
-        },
+            { { "", 0, 0, 0, 0, UTED_QUAL_QUAL } } },
         { "Compile", UTED_PROC_PWRPLC, 0, 3,
             { { "Window", 1, UTED_INS_PLANT, 1, 0, UTED_QUAL_QUAL },
                 { "Plcpgm", 1, UTED_INS_PLANT, 1, 0, UTED_QUAL_QUAL },
@@ -139,23 +121,17 @@ uted_sCommand WUted::commands[UTED_MAX_COMMANDS]
                 { "Modified", 0, 0, 0, 1, UTED_QUAL_QUAL },
                 { "Debug", 0, 0, 0, 1, UTED_QUAL_QUAL },
                 { "From_plcpgm", 1, UTED_INS_PLANT, 1, 0, UTED_QUAL_QUAL },
-                { "", 0, 0, 0, 0, UTED_QUAL_QUAL }
-            }
-        },
+                { "", 0, 0, 0, 0, UTED_QUAL_QUAL } } },
         { "Crossreference", UTED_PROC_PWRPLC, 1, 3,
             { { "Hierarchy", 1, UTED_INS_PLNO, 1, 0, UTED_QUAL_QUAL },
                 { "Class", 0, 0, 1, 0, UTED_QUAL_QUAL },
                 { "Name", 1, UTED_INS_PLNO, 1, 0, UTED_QUAL_QUAL },
-                { "", 0, 0, 0, 0, UTED_QUAL_QUAL }
-            }
-        },
+                { "", 0, 0, 0, 0, UTED_QUAL_QUAL } } },
         { "Sort", UTED_PROC_PWRPLC, 0, 1,
             { { "Parent", 1, UTED_INS_PLNO, 1, 0, UTED_QUAL_QUAL },
                 { "Class", 0, 0, 0, 1, UTED_QUAL_QUAL },
                 { "Signals", 0, 0, 0, 1, UTED_QUAL_QUAL },
-                { "", 0, 0, 0, 0, UTED_QUAL_QUAL }
-            }
-        },
+                { "", 0, 0, 0, 0, UTED_QUAL_QUAL } } },
         { "Print", UTED_PROC_PWRPLC, 1, 3,
             { { "Hierarchy", 1, UTED_INS_PLANT, 1, 0, UTED_QUAL_QUAL },
                 { "Plcpgm", 1, UTED_INS_PLANT, 1, 0, UTED_QUAL_QUAL },
@@ -163,9 +139,7 @@ uted_sCommand WUted::commands[UTED_MAX_COMMANDS]
                 { "Nodocument", 0, 0, 0, 1, UTED_QUAL_QUAL },
                 { "Nooverview", 0, 0, 0, 1, UTED_QUAL_QUAL },
                 { "From_plcpgm", 1, UTED_INS_PLANT, 1, 0, UTED_QUAL_QUAL },
-                { "", 0, 0, 0, 0, UTED_QUAL_QUAL }
-            }
-        },
+                { "", 0, 0, 0, 0, UTED_QUAL_QUAL } } },
         { "Copy Objects", UTED_PROC_PWRPLC, 0, 1,
             { { "Source", 1, UTED_INS_PLNO, 1, 0, UTED_QUAL_QUAL },
                 { "Destination", 1, UTED_INS_PLNO, 1, 0, UTED_QUAL_QUAL },
@@ -175,9 +149,7 @@ uted_sCommand WUted::commands[UTED_MAX_COMMANDS]
                 { "Last", 0, 0, 0, 1, UTED_QUAL_QUAL },
                 { "Before", 0, 0, 0, 1, UTED_QUAL_QUAL },
                 { "After", 0, 0, 0, 1, UTED_QUAL_QUAL },
-                { "", 0, 0, 0, 0, UTED_QUAL_QUAL }
-            }
-        },
+                { "", 0, 0, 0, 0, UTED_QUAL_QUAL } } },
         { "Set Attribute", UTED_PROC_PWRPLC, 0, 1,
             { { "Hierarchy", 1, UTED_INS_PLNO, 1, 0, UTED_QUAL_QUAL },
                 { "Class", 0, 0, 1, 0, UTED_QUAL_QUAL },
@@ -188,17 +160,13 @@ uted_sCommand WUted::commands[UTED_MAX_COMMANDS]
                 { "IgnoreMissing", 0, 0, 0, 1, UTED_QUAL_QUAL },
                 { "Log", 0, 0, 0, 1, UTED_QUAL_QUAL },
                 { "Output", 0, 0, 1, 0, UTED_QUAL_QUAL },
-                { "", 0, 0, 0, 0, UTED_QUAL_QUAL }
-            }
-        },
+                { "", 0, 0, 0, 0, UTED_QUAL_QUAL } } },
         { "Set Template", UTED_PROC_PWRPLC, 0, 1,
             { { "SignalObjectSeg", 0, 0, 1, 0, UTED_QUAL_QUAL },
                 { "ShoSigChanCon", 0, 0, 1, 0, UTED_QUAL_QUAL },
                 { "SigChanConSeg", 0, 0, 1, 0, UTED_QUAL_QUAL },
                 { "ShoDetectText", 0, 0, 1, 0, UTED_QUAL_QUAL },
-                { "", 0, 0, 0, 0, UTED_QUAL_QUAL }
-            }
-        },
+                { "", 0, 0, 0, 0, UTED_QUAL_QUAL } } },
         { "Configure Card", UTED_PROC_PWRPLC, 0, 1,
             { { "Rack", 1, UTED_INS_NODE, 1, 0, UTED_QUAL_QUAL },
                 { "Cardname", 0, 0, 1, 0, UTED_QUAL_QUAL },
@@ -207,24 +175,18 @@ uted_sCommand WUted::commands[UTED_MAX_COMMANDS]
                 { "Chanidentity", 0, 0, 1, 0, UTED_QUAL_QUAL },
                 { "Chandescription", 0, 0, 1, 0, UTED_QUAL_QUAL },
                 { "Table", 0, 0, 1, 0, UTED_QUAL_QUAL },
-                { "", 0, 0, 0, 0, UTED_QUAL_QUAL }
-            }
-        },
+                { "", 0, 0, 0, 0, UTED_QUAL_QUAL } } },
         { "Export PlcPgm", UTED_PROC_PWRPLC, 1, 1,
             { { "PlcPgm", 1, UTED_INS_PLNO, 1, 0, UTED_QUAL_QUAL },
                 { "Window", 1, UTED_INS_PLNO, 1, 0, UTED_QUAL_QUAL },
                 { "Output", 0, 0, 1, 0, UTED_QUAL_QUAL },
-                { "", 0, 0, 0, 0, UTED_QUAL_QUAL }
-            }
-        },
+                { "", 0, 0, 0, 0, UTED_QUAL_QUAL } } },
         { "Redraw", UTED_PROC_PWRPLC, 0, 3,
             { { "Hierarchy", 1, UTED_INS_PLANT, 1, 0, UTED_QUAL_QUAL },
                 { "Plcpgm", 1, UTED_INS_PLANT, 1, 0, UTED_QUAL_QUAL },
                 { "All", 0, 0, 0, 1, UTED_QUAL_QUAL },
                 { "From_plcpgm", 1, UTED_INS_PLANT, 1, 0, UTED_QUAL_QUAL },
-                { "", 0, 0, 0, 0, UTED_QUAL_QUAL }
-            }
-        },
+                { "", 0, 0, 0, 0, UTED_QUAL_QUAL } } },
         { "Move Object", UTED_PROC_PWRPLC, 0, 1,
             { { "Source", 1, UTED_INS_PLNO, 1, 0, UTED_QUAL_QUAL },
                 { "Destination", 1, UTED_INS_PLNO, 1, 0, UTED_QUAL_QUAL },
@@ -233,9 +195,7 @@ uted_sCommand WUted::commands[UTED_MAX_COMMANDS]
                 { "Last", 0, 0, 0, 1, UTED_QUAL_QUAL },
                 { "Before", 0, 0, 0, 1, UTED_QUAL_QUAL },
                 { "After", 0, 0, 0, 1, UTED_QUAL_QUAL },
-                { "", 0, 0, 0, 0, UTED_QUAL_QUAL }
-            }
-        },
+                { "", 0, 0, 0, 0, UTED_QUAL_QUAL } } },
         { "Create Object", UTED_PROC_PWRPLC, 0, 1,
             { { "Destination", 1, UTED_INS_PLNO, 1, 0, UTED_QUAL_QUAL },
                 { "Name", 0, 0, 1, 0, UTED_QUAL_QUAL },
@@ -244,67 +204,47 @@ uted_sCommand WUted::commands[UTED_MAX_COMMANDS]
                 { "Last", 0, 0, 0, 1, UTED_QUAL_QUAL },
                 { "Before", 0, 0, 0, 1, UTED_QUAL_QUAL },
                 { "After", 0, 0, 0, 1, UTED_QUAL_QUAL },
-                { "", 0, 0, 0, 0, UTED_QUAL_QUAL }
-            }
-        },
+                { "", 0, 0, 0, 0, UTED_QUAL_QUAL } } },
         { "Create StructFiles", UTED_PROC_PWRPLC, 0, 1,
             { { "Files", 0, 0, 1, 0, UTED_QUAL_QUAL },
-                { "", 0, 0, 0, 0, UTED_QUAL_QUAL }
-            }
-        },
+                { "", 0, 0, 0, 0, UTED_QUAL_QUAL } } },
         { "Create LoadFiles", UTED_PROC_PWRPLC, 0, 1,
             { { "Volume", 0, 0, 1, 0, UTED_QUAL_QUAL },
                 { "All", 0, 0, 0, 1, UTED_QUAL_QUAL },
-                { "", 0, 0, 0, 0, UTED_QUAL_QUAL }
-            }
-        },
+                { "", 0, 0, 0, 0, UTED_QUAL_QUAL } } },
         { "Create BootFiles", UTED_PROC_PWRPLC, 0, 1,
             { { "NodeConfig", 0, 0, 1, 0, UTED_QUAL_QUAL },
                 { "All", 0, 0, 0, 1, UTED_QUAL_QUAL },
                 { "Debug", 0, 0, 0, 1, UTED_QUAL_QUAL },
-                { "", 0, 0, 0, 0, UTED_QUAL_QUAL }
-            }
-        },
+                { "", 0, 0, 0, 0, UTED_QUAL_QUAL } } },
         { "Create RttFiles", UTED_PROC_PWRPLC, 0, 1,
-            { { "", 0, 0, 0, 0, UTED_QUAL_QUAL }
-            }
-        },
+            { { "", 0, 0, 0, 0, UTED_QUAL_QUAL } } },
         { "Delete Object", UTED_PROC_PWRPLC, 0, 1,
             { { "Hierarchy", 1, UTED_INS_PLNO, 1, 0, UTED_QUAL_QUAL },
                 { "Class", 0, 0, 1, 0, UTED_QUAL_QUAL },
                 { "Name", 1, UTED_INS_PLNO, 1, 0, UTED_QUAL_QUAL },
                 { "Noconfirm", 0, 0, 0, 1, UTED_QUAL_QUAL },
                 { "Log", 0, 0, 0, 1, UTED_QUAL_QUAL },
-                { "", 0, 0, 0, 0, UTED_QUAL_QUAL }
-            }
-        },
+                { "", 0, 0, 0, 0, UTED_QUAL_QUAL } } },
         { "Delete Tree", UTED_PROC_PWRPLC, 0, 1,
             { { "Name", 1, UTED_INS_PLNO, 1, 0, UTED_QUAL_QUAL },
                 { "Noconfirm", 0, 0, 0, 1, UTED_QUAL_QUAL },
                 { "Log", 0, 0, 0, 1, UTED_QUAL_QUAL },
-                { "", 0, 0, 0, 0, UTED_QUAL_QUAL }
-            }
-        },
+                { "", 0, 0, 0, 0, UTED_QUAL_QUAL } } },
         { "Wb Dump", UTED_PROC_PWRPLC, 0, 1,
             { { "Output", 0, 0, 1, 0, UTED_QUAL_QUAL },
                 { "Hierarchy", 1, UTED_INS_PLNO, 1, 0, UTED_QUAL_QUAL },
                 { "Keepname", 0, 0, 0, 1, UTED_QUAL_QUAL },
-                { "", 0, 0, 0, 0, UTED_QUAL_QUAL }
-            }
-        },
+                { "", 0, 0, 0, 0, UTED_QUAL_QUAL } } },
         { "Wb Load", UTED_PROC_PWRPLC, 0, 1,
             { { "Loadfile", 0, 0, 1, 0, UTED_QUAL_QUAL },
                 { "NoIndex", 0, 0, 0, 1, UTED_QUAL_QUAL },
                 { "Output", 0, 0, 1, 0, UTED_QUAL_QUAL },
-                { "", 0, 0, 0, 0, UTED_QUAL_QUAL }
-            }
-        },
+                { "", 0, 0, 0, 0, UTED_QUAL_QUAL } } },
         { "Wb Export", UTED_PROC_PWRPLC, 0, 1,
             { { "Output", 0, 0, 1, 0, UTED_QUAL_QUAL },
                 { "Hierarchy", 1, UTED_INS_PLNO, 1, 0, UTED_QUAL_QUAL },
-                { "", 0, 0, 0, 0, UTED_QUAL_QUAL }
-            }
-        },
+                { "", 0, 0, 0, 0, UTED_QUAL_QUAL } } },
         { "Wb Import", UTED_PROC_PWRPLC, 0, 1,
             { { "Loadfile", 0, 0, 1, 0, UTED_QUAL_QUAL },
                 { "Root", 0, 0, 1, 0, UTED_QUAL_QUAL },
@@ -312,11 +252,8 @@ uted_sCommand WUted::commands[UTED_MAX_COMMANDS]
                 { "Output", 0, 0, 1, 0, UTED_QUAL_QUAL },
                 { "Full", 0, 0, 0, 1, UTED_QUAL_QUAL },
                 { "Announce", 0, 0, 0, 1, UTED_QUAL_QUAL },
-                { "", 0, 0, 0, 0, UTED_QUAL_QUAL }
-            }
-        },
-        { "", UTED_PROC_PWRPLC, 0, 0, {} }
-    };
+                { "", 0, 0, 0, 0, UTED_QUAL_QUAL } } },
+        { "", UTED_PROC_PWRPLC, 0, 0, {} } };
 
 void WUted::set_editmode(int edit, ldh_tSesContext ldhses)
 {

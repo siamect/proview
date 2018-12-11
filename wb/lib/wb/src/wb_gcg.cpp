@@ -114,8 +114,8 @@ extern "C" {
       || (os & pwr_mOpSys_ARM64_LINUX) || (os & pwr_mOpSys_CustomBuild))
 
 #define IS_UNIX(os)                                                            \
-  (IS_LINUX(os) || IS_MACOS(os) || IS_FREEBSD(os)               \
-      || IS_OPENBSD(os) || IS_CYGWIN(os))
+  (IS_LINUX(os) || IS_MACOS(os) || IS_FREEBSD(os) || IS_OPENBSD(os)            \
+      || IS_CYGWIN(os))
 
 #define IS_NOT_VALID_OS(os) (!IS_UNIX(os))
 
@@ -238,7 +238,7 @@ gcg_tMethod gcg_comp_m[80]
         gcg_comp_m63, gcg_comp_m64, gcg_comp_m65, gcg_comp_m66, gcg_comp_m67,
         gcg_comp_m68, gcg_comp_m69, gcg_comp_m70, gcg_comp_m71 };
 
-//static pwr_tStatus gcg_get_build_host(pwr_mOpSys os, char* buf, int bufsize);
+// static pwr_tStatus gcg_get_build_host(pwr_mOpSys os, char* buf, int bufsize);
 
 static int gcg_cc(unsigned long filetype, const char* p1, const char* p2,
     const char* p3, pwr_mOpSys os, unsigned long spawn);
@@ -599,74 +599,74 @@ static pwr_tStatus gcg_get_build_host(pwr_mOpSys os, char* buf, int bufsize)
 static int gcg_cc(unsigned long filetype, const char* p1, const char* p2,
     const char* p3, pwr_mOpSys os, unsigned long spawn)
 {
-  //char build_host[32];
+  // char build_host[32];
   char systemname[80];
   int sts;
   static pwr_tCmd cmd;
   pwr_tFileName fname;
 
   // TODO
-  //if (1 /* os & pwr_mOpSys_X86_LINUX */) {
-    if (p2 == NULL)
-      p2 = "-";
-    if (p3 == NULL)
-      p3 = "-";
+  // if (1 /* os & pwr_mOpSys_X86_LINUX */) {
+  if (p2 == NULL)
+    p2 = "-";
+  if (p3 == NULL)
+    p3 = "-";
 
-    utl_get_projectname(systemname);
+  utl_get_projectname(systemname);
 
-    dcli_translate_filename(fname, CC_COMMAND_UNIX);
-    if (!msgw_has_default()) {
-      // pwrc: don't redirect output
-      sprintf(cmd, "%s %d %ld %s %d %s %s %s", fname, gcg_debug, filetype, p1,
-          os, p2, p3, systemname);
-      sts = system(cmd);
-    } else {
-      sprintf(cmd, "%s %d %ld %s %d %s %s %s 2> %s", fname, gcg_debug, filetype,
-          p1, os, p2, p3, systemname, CC_OUTPUT_FILE);
-      sts = system(cmd);
-      pwr_tFileName efile;
-      char line[50][200];
-      char* s;
+  dcli_translate_filename(fname, CC_COMMAND_UNIX);
+  if (!msgw_has_default()) {
+    // pwrc: don't redirect output
+    sprintf(cmd, "%s %d %ld %s %d %s %s %s", fname, gcg_debug, filetype, p1, os,
+        p2, p3, systemname);
+    sts = system(cmd);
+  } else {
+    sprintf(cmd, "%s %d %ld %s %d %s %s %s 2> %s", fname, gcg_debug, filetype,
+        p1, os, p2, p3, systemname, CC_OUTPUT_FILE);
+    sts = system(cmd);
+    pwr_tFileName efile;
+    char line[50][200];
+    char* s;
 
-      dcli_translate_filename(efile, CC_OUTPUT_FILE);
-      FILE* fp = fopen(efile, "r");
-      if (!fp) {
-        if (sts != 0)
-          return GSX__CCERROR;
-        else
-          return GSX__SUCCESS;
-      }
-      int i = 0;
-      while (dcli_read_line(line[i], sizeof(line[0]), fp)) {
-        i++;
-        if (i >= 50) {
-          sprintf(line[i - 1],
-              "** Truncated, see all errors in terminal window **");
-          break;
-        }
-      }
-      fclose(fp);
-      sprintf(cmd, "cat %s", CC_OUTPUT_FILE);
-      system(cmd);
-      sprintf(cmd, "rm -f %s", CC_OUTPUT_FILE);
-      system(cmd);
-      for (int j = i - 1; j >= 0; j--) {
-        msgw_ePop pop;
-        if (j == 0)
-          pop = msgw_ePop_Yes;
-        else
-          pop = msgw_ePop_No;
-        if (line[j][0] == '/' && (s = strstr(line[j], "/common/tmp/"))) {
-          strncpy(s + 2, "$pwrp_tmp", 9);
-          msgw_message(0, s + 2, pop);
-        } else
-          msgw_message(0, line[j], pop);
-      }
+    dcli_translate_filename(efile, CC_OUTPUT_FILE);
+    FILE* fp = fopen(efile, "r");
+    if (!fp) {
       if (sts != 0)
         return GSX__CCERROR;
-      else if (i > 0)
-        return GSX__CCWARNING;
+      else
+        return GSX__SUCCESS;
     }
+    int i = 0;
+    while (dcli_read_line(line[i], sizeof(line[0]), fp)) {
+      i++;
+      if (i >= 50) {
+        sprintf(
+            line[i - 1], "** Truncated, see all errors in terminal window **");
+        break;
+      }
+    }
+    fclose(fp);
+    sprintf(cmd, "cat %s", CC_OUTPUT_FILE);
+    system(cmd);
+    sprintf(cmd, "rm -f %s", CC_OUTPUT_FILE);
+    system(cmd);
+    for (int j = i - 1; j >= 0; j--) {
+      msgw_ePop pop;
+      if (j == 0)
+        pop = msgw_ePop_Yes;
+      else
+        pop = msgw_ePop_No;
+      if (line[j][0] == '/' && (s = strstr(line[j], "/common/tmp/"))) {
+        strncpy(s + 2, "$pwrp_tmp", 9);
+        msgw_message(0, s + 2, pop);
+      } else
+        msgw_message(0, line[j], pop);
+    }
+    if (sts != 0)
+      return GSX__CCERROR;
+    else if (i > 0)
+      return GSX__CCWARNING;
+  }
   /*} else {
     printf("NYI...\n");
     gcg_get_build_host(os, build_host, sizeof(build_host));
@@ -4159,7 +4159,9 @@ static int gcg_get_child_plcthread(gcg_ctx gcgctx, pwr_tObjid objdid,
 
       /* Check the scantime */
       timebase = (int)((*scantime_ptr) * 1000 + 0.5);
-      if ((IS_LINUX(os) || IS_MACOS(os) || IS_FREEBSD(os) || IS_OPENBSD(os) || IS_CYGWIN(os)) && (*scantime_ptr < 0.0000001)) {
+      if ((IS_LINUX(os) || IS_MACOS(os) || IS_FREEBSD(os) || IS_OPENBSD(os)
+              || IS_CYGWIN(os))
+          && (*scantime_ptr < 0.0000001)) {
         gcg_plc_msg(gcgctx, GSX__BADSCANTIME, objdid);
       } else {
         /* Get plcprocess, should be parent */
@@ -9239,8 +9241,7 @@ int gcg_comp_m31(gcg_ctx gcgctx, vldh_t_node node)
       }
       first_par = 0;
     }
-    if (!output_found
-        && streq(bodydef[i].Par->Param.Info.PgmName, "ConOpen")) {
+    if (!output_found && streq(bodydef[i].Par->Param.Info.PgmName, "ConOpen")) {
       /* The point is not connected and will point to its
          own object */
       IF_PR fprintf(gcgctx->files[GCGM1_REF_FILE],
@@ -9370,8 +9371,7 @@ int gcg_comp_m32(gcg_ctx gcgctx, vldh_t_node node)
       }
       first_par = 0;
     }
-    if (!output_found
-        && streq(bodydef[i].Par->Param.Info.PgmName, "FeedB")) {
+    if (!output_found && streq(bodydef[i].Par->Param.Info.PgmName, "FeedB")) {
       /* The point is not connected and will point to its
          own object */
       IF_PR fprintf(gcgctx->files[GCGM1_REF_FILE],

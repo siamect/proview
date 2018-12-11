@@ -71,8 +71,7 @@ class WPkgQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  WPkgQtWidget(WPkgQt* parent_ctx, QWidget* parent)
-      : QWidget(), pkg(parent_ctx)
+  WPkgQtWidget(WPkgQt* parent_ctx, QWidget* parent) : QWidget(), pkg(parent_ctx)
   {
   }
 

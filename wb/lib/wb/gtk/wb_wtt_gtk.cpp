@@ -1934,40 +1934,28 @@ void WttGtk::update_options_form()
       GTK_TOGGLE_BUTTON(enable_comment_w), enable_comment);
   gtk_toggle_button_set_active(
       GTK_TOGGLE_BUTTON(enable_revisions_w), enable_revisions);
-  gtk_toggle_button_set_active(
-      GTK_TOGGLE_BUTTON(show_plant_w), wnav_mapped);
-  gtk_toggle_button_set_active(
-      GTK_TOGGLE_BUTTON(show_node_w), wnavnode_mapped);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(show_plant_w), wnav_mapped);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(show_node_w), wnavnode_mapped);
 
   // entry components
-  gtk_toggle_button_set_active(
-      GTK_TOGGLE_BUTTON(show_class_w), show_class);
-  gtk_toggle_button_set_active(
-      GTK_TOGGLE_BUTTON(show_alias_w), show_alias);
-  gtk_toggle_button_set_active(
-      GTK_TOGGLE_BUTTON(show_descrip_w), show_descrip);
-  gtk_toggle_button_set_active(
-      GTK_TOGGLE_BUTTON(show_objref_w), show_objref);
-  gtk_toggle_button_set_active(
-      GTK_TOGGLE_BUTTON(show_objxref_w), show_objxref);
-  gtk_toggle_button_set_active(
-      GTK_TOGGLE_BUTTON(show_attrref_w), show_attrref);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(show_class_w), show_class);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(show_alias_w), show_alias);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(show_descrip_w), show_descrip);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(show_objref_w), show_objref);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(show_objxref_w), show_objxref);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(show_attrref_w), show_attrref);
   gtk_toggle_button_set_active(
       GTK_TOGGLE_BUTTON(show_attrxref_w), show_attrxref);
-  gtk_toggle_button_set_active(
-      GTK_TOGGLE_BUTTON(build_force_w), build_force);
-  gtk_toggle_button_set_active(
-      GTK_TOGGLE_BUTTON(build_debug_w), build_debug);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(build_force_w), build_force);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(build_debug_w), build_debug);
   gtk_toggle_button_set_active(
       GTK_TOGGLE_BUTTON(build_crossref_w), build_crossref);
-  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(build_crossrefsim_w),
-      build_crossref_sim);
-  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(build_crossrefgraph_w),
-      build_crossref_graph);
   gtk_toggle_button_set_active(
-      GTK_TOGGLE_BUTTON(build_manual_w), build_manual);
+      GTK_TOGGLE_BUTTON(build_crossrefsim_w), build_crossref_sim);
   gtk_toggle_button_set_active(
-      GTK_TOGGLE_BUTTON(build_nocopy_w), build_nocopy);
+      GTK_TOGGLE_BUTTON(build_crossrefgraph_w), build_crossref_graph);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(build_manual_w), build_manual);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(build_nocopy_w), build_nocopy);
 }
 
 /************************************************************************
@@ -3478,8 +3466,7 @@ GtkWidget* WttGtk::build_submenu(GtkWidget* Parent, int MenuType,
       } else {
         // Pushbutton
         W = gtk_menu_item_new_with_label(Items[*idx].Name);
-        gtk_widget_set_sensitive(
-            W, Items[*idx].Flags.f.Sensitive);
+        gtk_widget_set_sensitive(W, Items[*idx].Flags.f.Sensitive);
         g_object_set_data((GObject*)W, "userdata", (gpointer)((long int)*idx));
         if (Callback)
           g_signal_connect(W, "activate", G_CALLBACK(Callback), CallbackData);

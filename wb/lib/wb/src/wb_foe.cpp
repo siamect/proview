@@ -4412,7 +4412,8 @@ int WFoe::create_xtthelpfile()
   fprintf(fp, "</topic>\n");
 
 error:
-  if (fp) fclose(fp);
+  if (fp)
+    fclose(fp);
 
   free(nodelist);
   free(objlist);

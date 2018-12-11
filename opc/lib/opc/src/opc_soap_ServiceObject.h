@@ -30,8 +30,7 @@ public:
           "http://www.w3.org/*/XMLSchema", NULL },
       { "s0", "http://opcfoundation.org/webservices/XMLDA/1.0/", NULL, NULL },
       { NULL, NULL, NULL, NULL }
-    }
-    soap_init(this);
+    } soap_init(this);
     if (!this->namespaces)
       this->namespaces = namespaces;
   }

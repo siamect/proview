@@ -65,7 +65,9 @@ class WNavBrow {
 public:
   WNavBrow(BrowCtx* brow_ctx, void* brow_userdata)
       : type(wnav_eBrowType_Other), ldh_cb_used(1), ctx(brow_ctx),
-        userdata(brow_userdata){}
+        userdata(brow_userdata)
+  {
+  }
 
   wnav_eBrowType type;
   int ldh_cb_used;

@@ -413,8 +413,8 @@ pwr_tStatus exp_window(ldh_tWBContext ldhwb, ldh_tSesContext ldhses,
   if (EVEN(sts))
     return sts;
 
-  fprintf(genctx.file, "object %s /name=%s /parent=%s /plcpgm=%s\n",
-      class_name, hiername, parent_name, plcpgm_name);
+  fprintf(genctx.file, "object %s /name=%s /parent=%s /plcpgm=%s\n", class_name,
+      hiername, parent_name, plcpgm_name);
 
   /* Get all nodes this window */
   sts = vldh_get_nodes(wind, &node_count, &nodelist);

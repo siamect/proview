@@ -46,7 +46,9 @@ class WItemRevision;
 
 class WRevNavBrow {
 public:
-  WRevNavBrow(BrowCtx* brow_ctx, void* lwnav) : ctx(brow_ctx), wrevnav(lwnav){}
+  WRevNavBrow(BrowCtx* brow_ctx, void* lwnav) : ctx(brow_ctx), wrevnav(lwnav)
+  {
+  }
 
   BrowCtx* ctx;
   void* wrevnav;

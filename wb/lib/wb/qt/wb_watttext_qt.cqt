@@ -142,7 +142,8 @@ void WAttTextQt::set_attr_value()
 {
   if (editmode) {
     char text[input_max_length];
-    strncpy(text, qPrintableLatin1(textbuffer->toPlainText()), input_max_length);
+    strncpy(
+        text, qPrintableLatin1(textbuffer->toPlainText()), input_max_length);
 
     if (!streq(text, "")) {
       // Replace ctrl characters with space
@@ -211,8 +212,7 @@ WAttTextQt::WAttTextQt(QWidget* wa_parent_wid, void* wa_parent_ctx,
   QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
   addMenuItem(toplevel, file, "&Save", SLOT(activate_apply()), "CTRL+S",
       "document-save");
-  addMenuItem(toplevel, file, "S&ave and close", SLOT(activate_ok()),
-      "CTRL+T");
+  addMenuItem(toplevel, file, "S&ave and close", SLOT(activate_ok()), "CTRL+T");
   addMenuItem(
       toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
