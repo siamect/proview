@@ -59,8 +59,6 @@
 #include <QApplication>
 #include <QTimer>
 
-extern int DEBUG;
-
 Wtt* WbQt::wtt_new(const char* name, const char* iconname,
     ldh_tWBContext ldhwbctx, pwr_tVolumeId volid, ldh_tVolume volctx,
     wnav_sStartMenu* root_menu, pwr_tStatus* status)
@@ -80,7 +78,7 @@ WVsel* WbQt::vsel_new(pwr_tStatus* status, const char* name,
 
 int main(int argc, char* argv[])
 {
-  DEBUG = 1;
+  setDebug(1);
   if (argc >= 2 && streq(argv[1], "-m")) {
     wb_erep::printMethods();
     debug_print("Shutting down...\n");

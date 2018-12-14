@@ -40,6 +40,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "co_debug.h"
+
 #include "cow_style_qt.h"
 
 #include "wb_log_qt.h"
@@ -48,8 +50,6 @@
 #include "wb_cmdc_qt.h"
 
 #include <QApplication>
-
-extern int DEBUG;
 
 CmdQt::CmdQt(int argc, char* argv[])
 {
@@ -79,7 +79,7 @@ CmdQt::CmdQt(int argc, char* argv[])
 
 int main(int argc, char* argv[])
 {
-  DEBUG = 1;
+  setDebug(1);
   QApplication app(argc, argv);
   QApplication::setStyle(new PwrStyle());
   new CmdQt(argc, argv);

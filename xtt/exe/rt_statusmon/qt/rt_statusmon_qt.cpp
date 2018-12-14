@@ -48,8 +48,6 @@
 
 #include <QApplication>
 
-extern int DEBUG;
-
 static void usage()
 {
   printf("\n\
@@ -73,7 +71,7 @@ static void statusmon_close(void* ctx)
 
 int main(int argc, char* argv[])
 {
-  DEBUG=1;
+  setDebug(1);
   int sts;
   int mode = nodelist_eMode_SystemStatus;
   int view_descr = 0;

@@ -48,8 +48,6 @@
 
 #include <QApplication>
 
-extern int DEBUG;
-
 CoXHelp* xhelp;
 RtMon* rtmon;
 
@@ -73,7 +71,7 @@ static void rtmon_close_cb(void* ctx)
 
 int main(int argc, char* argv[])
 {
-  DEBUG=1;
+  setDebug(1);
   int sts;
   char display[80] = "";
 

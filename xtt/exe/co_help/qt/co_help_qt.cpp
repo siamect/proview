@@ -45,8 +45,6 @@
 
 #include <QApplication>
 
-extern int DEBUG;
-
 CoHelpQt* help;
 
 void close_cb(void* ctx, void* xhelp)
@@ -59,7 +57,7 @@ void close_cb(void* ctx, void* xhelp)
 
 int main(int argc, char* argv[])
 {
-  DEBUG=1;
+  setDebug(1);
   int sts;
 
   QApplication app(argc, argv);
