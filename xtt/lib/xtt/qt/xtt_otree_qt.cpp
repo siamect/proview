@@ -54,5 +54,5 @@ XttOTreeQt::XttOTreeQt(QWidget* parent_wid, void* xn_parent_ctx,
 
 XttOTreeQt::~XttOTreeQt()
 {
-  debug_print("XttOTreeQt::~XttOTreeQt\n");
+  delete cowtree;
 }

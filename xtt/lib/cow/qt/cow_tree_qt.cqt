@@ -53,7 +53,6 @@ void CowTreeQt::message(char severity, const char* message)
 
 void CowTreeQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("CowTreeQtWidget::closeEvent\n");
   if (tree->close_cb) {
     (tree->close_cb)(tree->parent_ctx);
   } else {
@@ -131,7 +130,6 @@ CowTreeQt::CowTreeQt(QWidget* a_parent_wid, void* a_parent_ctx,
   int sts;
 
   toplevel = new CowTreeQtWidget(this, a_parent_wid);
-  toplevel->setToolTip(fl("cow_tree widget"));
   toplevel->setMinimumSize(600, 400);
   toplevel->setWindowTitle(fl(title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);

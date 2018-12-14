@@ -502,6 +502,9 @@ OpQt::~OpQt()
     sup_timerid->remove();
     delete sup_timerid;
   }
+  if (wow) {
+    delete wow;
+  }
 }
 
 void OpQtWidget::closeEvent(QCloseEvent* event)
