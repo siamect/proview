@@ -936,6 +936,7 @@ GeCurveQt::GeCurveQt(void* gc_parent_ctx, QWidget* parent_widget,
   wow = new CoWowQt(toplevel);
 
   timebox_timecombo->setCurrentIndex(2);
+  toplevel->activate_timecombo(2);
 
   if (!(options & curve_mOptions_Embedded)) {
     if (options & curve_mOptions_FullScreen) {

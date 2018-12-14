@@ -87,10 +87,11 @@ XttTCurveQt::XttTCurveQt(void* parent_ctx, QWidget* parent_wid,
 
 XttTCurveQt::~XttTCurveQt()
 {
-  debug_print("XttTCurveQt::~XttTCurveQt\n");
   timerid->remove();
 
+  delete curve;
   if (gcd) {
     delete gcd;
   }
+  delete wow;
 }
