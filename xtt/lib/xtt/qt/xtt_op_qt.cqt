@@ -660,7 +660,7 @@ void OpQt::update_alarm_info()
       }
 
       balarm_label->setText(convert_utf8(text));
-      modifyBackground(balarm_ebox, yellow_color);
+      modifyBackground(balarm_box, yellow_color);
       balarm_box->setVisible(true);
 
       balarm_mark->setText(fl("B"));
@@ -696,7 +696,7 @@ void OpQt::update_alarm_info()
             info.c_alarm_alias[0], ctext);
       }
       balarm_label->setText(convert_utf8(text));
-      modifyBackground(balarm_ebox, blue_color);
+      modifyBackground(balarm_box, blue_color);
       balarm_box->setVisible(true);
 
       balarm_mark->setText(fl("C"));
@@ -732,7 +732,7 @@ void OpQt::update_alarm_info()
             info.d_alarm_alias[0], ctext);
       }
       balarm_label->setText(convert_utf8(text));
-      modifyBackground(balarm_ebox, violet_color);
+      modifyBackground(balarm_box, violet_color);
       balarm_box->setVisible(true);
 
       balarm_mark->setText(fl("D"));
@@ -766,10 +766,10 @@ void OpQt::update_alarm_info()
       }
       balarm_label->setText(convert_utf8(text));
       if (balarm_type == evlist_eEventType_InfoSuccess) {
-        modifyBackground(balarm_ebox, green_color);
+        modifyBackground(balarm_box, green_color);
       } else {
         QColor white = QColor("white");
-        modifyBackground(balarm_ebox, white);
+        modifyBackground(balarm_box, white);
       }
       balarm_box->setVisible(true);
 
@@ -787,7 +787,7 @@ void OpQt::update_alarm_info()
       }
     } else {
       balarm_label->setText("");
-      modifyBackground(balarm_ebox, bg_color);
+      modifyBackground(balarm_box, bg_color);
       balarm_mark->setText("");
       balarm_box->setVisible(false);
 

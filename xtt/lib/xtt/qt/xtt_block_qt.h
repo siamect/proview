@@ -50,6 +50,7 @@ class BlockQt : public Block {
 public:
   BlockQt(void* b_parent_ctx, QWidget* b_parent_wid, pwr_sAttrRef* b_oar,
       char* name, unsigned int priv, pwr_tStatus* status);
+  ~BlockQt();
   int execute();
   void update();
 

@@ -79,7 +79,6 @@ public:
   QWidget* balarm_active;
   QWidget* balarm_info;
   QWidget* balarm_box;
-  QWidget* balarm_ebox;
   QLabel* balarm_mark;
   QVBoxLayout* appl_form;
   QWidget* decr_button;

@@ -123,9 +123,13 @@ void BlockQtWidget::activate_ok()
   }
 }
 
+BlockQt::~BlockQt()
+{
+  delete wow;
+}
+
 void BlockQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("BlockQtWidget::closeEvent\n");
   delete block;
   QWidget::closeEvent(event);
 }
@@ -148,7 +152,6 @@ BlockQt::BlockQt(void* b_parent_ctx, QWidget* b_parent_wid, pwr_sAttrRef* b_oar,
   strcat(title, aname);
 
   toplevel->setToolTip(fl("xtt_block widget"));
-  toplevel->setMinimumSize(500, 300);
   toplevel->setWindowTitle(fl(title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
