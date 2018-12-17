@@ -142,13 +142,13 @@ EvEveQt::EvEveQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* eve_name,
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(eve_activate_zoom_out()),
       "CTRL+O", "zoom-out");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(eve_activate_zoom_reset()),
-      "CTRL+B", "zoom-reset");
+      "CTRL+B", "zoom-original");
   addCheckableMenuItem(toplevel, view, "&Display hundredth",
-      SLOT(eve_activate_disp_hundredth()));
+      SLOT(eve_activate_disp_hundredth(bool)));
   addCheckableMenuItem(
-      toplevel, view, "&Hide Event Name", SLOT(eve_activate_hide_object()));
+      toplevel, view, "&Hide Event Name", SLOT(eve_activate_hide_object(bool)));
   addCheckableMenuItem(
-      toplevel, view, "Hide &Event Text", SLOT(eve_activate_hide_text()));
+      toplevel, view, "Hide &Event Text", SLOT(eve_activate_hide_text(bool)));
 
   // Help entry
   QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
@@ -232,7 +232,11 @@ EvEveQt::EvEveQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* eve_name,
 
 EvEveQt::~EvEveQt()
 {
-  debug_print("EvEveQt::~EvEveQt\n");
+  if (ala) {
+    delete ala;
+  }
+  ala = NULL;
+
   delete eve_methodtoolbar;
   delete eve_sup_methodtoolbar;
 }
@@ -269,7 +273,6 @@ void EvEveQtWidget::focusInEvent(QFocusEvent* event)
 
 void EvEveQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("EvEveQtWidget::closeEvent\n");
   if (!(eve->options & ev_mAlaOptions_Embedded)) {
     delete eve;
   }

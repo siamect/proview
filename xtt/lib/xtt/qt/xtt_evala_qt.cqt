@@ -151,13 +151,13 @@ EvAlaQt::EvAlaQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* ala_name,
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(ala_activate_zoom_out()),
       "CTRL+O", "zoom-out");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(ala_activate_zoom_reset()),
-      "CTRL+B", "zoom-reset");
+      "CTRL+B", "zoom-original");
   addCheckableMenuItem(toplevel, view, "&Display hundredth",
-      SLOT(ala_activate_disp_hundredth()));
+      SLOT(ala_activate_disp_hundredth(bool)));
   addCheckableMenuItem(
-      toplevel, view, "&Hide Event Name", SLOT(ala_activate_hide_object()));
+      toplevel, view, "&Hide Event Name", SLOT(ala_activate_hide_object(bool)));
   addCheckableMenuItem(
-      toplevel, view, "Hide &Event Text", SLOT(ala_activate_hide_text()));
+      toplevel, view, "Hide &Event Text", SLOT(ala_activate_hide_text(bool)));
 
   // Help entry
   QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
@@ -244,7 +244,11 @@ EvAlaQt::EvAlaQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* ala_name,
 
 EvAlaQt::~EvAlaQt()
 {
-  debug_print("EvAlaQt::~EvAlaQt\n");
+  if (ala) {
+    delete ala;
+  }
+  ala = NULL;
+
   delete ala_methodtoolbar;
   delete ala_sup_methodtoolbar;
 }
@@ -281,7 +285,6 @@ void EvAlaQtWidget::focusInEvent(QFocusEvent* event)
 
 void EvAlaQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("EvAlaQtWidget::closeEvent\n");
   if (!(ala->options & ev_mAlaOptions_Embedded)) {
     delete ala;
   }
