@@ -56,6 +56,7 @@
 #include "xtt_op_qt.h"
 
 #include <QApplication>
+#include <QCloseEvent>
 #include <QDesktopWidget>
 #include <QPushButton>
 
@@ -138,7 +139,6 @@ OpQt::OpQt(void* op_parent_ctx, QWidget* op_parent_wid, char* opplace,
     : Op(op_parent_ctx, opplace, status), title_label(0), a_height(2),
       text_size(12)
 {
-  debug_print("\n");
   pwr_tStatus sts;
 
   memset(a_exist, 0, sizeof(a_exist));
@@ -494,7 +494,6 @@ OpQt::OpQt(void* op_parent_ctx, QWidget* op_parent_wid, char* opplace,
 
 OpQt::~OpQt()
 {
-  debug_print("OpQt::~OpQt\n");
   if (jop) {
     delete jop;
   }
@@ -505,15 +504,13 @@ OpQt::~OpQt()
   if (wow) {
     delete wow;
   }
+  delete toplevel;
 }
 
 void OpQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("OpQtWidget::closeEvent\n");
-  if (op->close_cb) {
-    (op->close_cb)(op->parent_ctx);
-  }
-  QWidget::closeEvent(event);
+  op->activate_exit();
+  event->ignore();
 }
 
 void OpQt::map()

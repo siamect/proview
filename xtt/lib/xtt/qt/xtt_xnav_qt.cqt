@@ -129,6 +129,12 @@ XNavQt::~XNavQt()
   brow_DeleteSecondaryCtx(collect_brow->ctx);
   delete collect_brow;
   delete brow;
+  if (ev) {
+    delete ev;
+  }
+  if (op) {
+    delete op;
+  }
   form_widget->close();
 }
 

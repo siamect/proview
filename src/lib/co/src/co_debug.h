@@ -41,6 +41,8 @@
 
 #include <stdio.h>
 
+void setDebug(int debug);
+
 void print_time(FILE* stream, int fulldate = 0);
 void dbg_print(const char* file, int line, const char* fmt, ...);
 

@@ -54,7 +54,7 @@
 class CallbackWidget : public QDialog {
 public:
   CallbackWidget(EvQtObject* parent, void (EvQtObject::*close)(), void (EvQtObject::*focus)())
-      : QDialog(), ev(parent), close_cb(close), focus_cb(focus){}
+      : QDialog(), ev(parent), close_cb(close), focus_cb(focus) {}
 
 protected:
   void closeEvent(QCloseEvent* event);
@@ -68,7 +68,6 @@ private:
 
 void CallbackWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("CallbackWidget::closeEvent\n");
   ((ev)->*(close_cb))();
   QDialog::closeEvent(event);
 }
@@ -126,7 +125,7 @@ EvQt::EvQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* eve_name,
     parent_wid_eve->setMinimumSize(eve_width, eve_height);
     parent_wid_eve->setToolTip(fl("xtt_ev eve widget"));
     parent_wid_eve->setWindowTitle(translate_utf8(eve_name));
-    parent_wid_eve->setAttribute(Qt::WA_DeleteOnClose);
+    // Do not set the DeleteOnClose attribute.
 
     CoWowQt::SetWindowIcon(parent_wid_eve);
 
@@ -228,10 +227,10 @@ EvQt::EvQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* eve_name,
   {
     parent_wid_ala = new CallbackWidget(
         object, &EvQtObject::ala_activate_exit, &EvQtObject::ala_action_inputfocus);
-    parent_wid_eve->setToolTip(fl("xtt_ev ala widget"));
+    parent_wid_ala->setToolTip(fl("xtt_ev ala widget"));
     parent_wid_ala->setMinimumSize(ala_width, ala_height);
     parent_wid_ala->setWindowTitle(translate_utf8(ala_name));
-    parent_wid_ala->setAttribute(Qt::WA_DeleteOnClose);
+    // Do not set the DeleteOnClose attribute.
 
     CoWowQt::SetWindowIcon(parent_wid_ala);
 
@@ -366,10 +365,10 @@ EvQt::EvQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* eve_name,
   {
     parent_wid_blk = new CallbackWidget(
         object, &EvQtObject::blk_activate_exit, &EvQtObject::blk_action_inputfocus);
-    parent_wid_eve->setToolTip(fl("xtt_ev blk widget"));
+    parent_wid_blk->setToolTip(fl("xtt_ev blk widget"));
     parent_wid_blk->setMinimumSize(blk_width, blk_height);
     parent_wid_blk->setWindowTitle(translate_utf8(blk_name));
-    parent_wid_blk->setAttribute(Qt::WA_DeleteOnClose);
+    // Do not set the DeleteOnClose attribute.
 
     CoWowQt::SetWindowIcon(parent_wid_blk);
 
@@ -514,7 +513,6 @@ EvEve* EvQt::open_eventlist_satellite(const char* title, pwr_tStatus* sts,
 
 EvQt::~EvQt()
 {
-  debug_print("EvQt::~EvQt\n");
   if (connected) {
     mh_OutunitDisconnect();
   }
@@ -527,6 +525,25 @@ EvQt::~EvQt()
     if (sala[i]) {
       ((EvAlaQt*)sala[i])->toplevel->close();
     }
+  }
+  if (eve) {
+    delete eve;
+  }
+  if (ala) {
+    delete ala;
+  }
+  if (blk) {
+    delete blk;
+  }
+  ala = eve = blk = NULL;
+  if (parent_wid_eve) {
+    delete parent_wid_eve;
+  }
+  if (parent_wid_ala) {
+    delete parent_wid_ala;
+  }
+  if (parent_wid_blk) {
+    delete parent_wid_blk;
   }
   if (object)
     delete object;

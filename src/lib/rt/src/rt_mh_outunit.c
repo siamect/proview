@@ -398,7 +398,7 @@ pwr_tStatus mh_OutunitDisconnect()
 
   /* Disconnect all handlers and free memory */
 
-  LstForEach(hl, &l.handler_l) {
+  for (hl = l.handler_l.next; hl != &l.handler_l; hl = l.handler_l.next) {
     hp = LstEntry(hl, sHandler, handler_l);
     sendToHandler(hp, mh_eMsg_OutunitDisconnect, 0, NULL);
     ackListDestroy(hp);
@@ -541,7 +541,7 @@ static void ackListDestroy(sHandler* hp)
   sAck* ap;
   struct LstHead * al;
 
-  LstForEach(al, &hp->ack_l) {
+  for (al = hp->ack_l.next; al != &(hp->ack_l); al = hp->ack_l.next) {
     ap = LstEntry(al, sAck, ack_l);
     LstRemove(al);
     LstNull(al);

@@ -40,7 +40,12 @@
 #include <string.h>
 #include <time.h>
 
-int DEBUG = 0;
+static int DEBUG = 0;
+
+void setDebug(int debug)
+{
+  DEBUG = debug;
+}
 
 void print_time(FILE* stream, int fulldate)
 {
