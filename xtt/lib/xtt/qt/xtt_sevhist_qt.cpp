@@ -58,10 +58,9 @@ XttSevHistQt::XttSevHistQt(void* parent_ctx, QWidget* x_parent_wid,
   strncpy(title, name, sizeof(title));
 
   if (EVEN(*sts)) {
-    // Error from XttSevHist
+    // Error from XttSevHist constructor
     return;
   }
-
   *sts = XNAV__SUCCESS;
 
   curve = new GeCurveQt(this, parent_wid, title, NULL, gcd, 1, xn_width,
@@ -104,10 +103,9 @@ XttSevHistQt::XttSevHistQt(void* parent_ctx, QWidget* x_parent_wid,
   strncpy(title, name, sizeof(title));
 
   if (EVEN(*sts)) {
-    // Error from XttSevHist
+    // Error from XttSevHist constructor
     return;
   }
-
   *sts = XNAV__SUCCESS;
 
   curve = new GeCurveQt(
@@ -124,15 +122,20 @@ XttSevHistQt::XttSevHistQt(void* parent_ctx, QWidget* x_parent_wid,
 
 XttSevHistQt::~XttSevHistQt()
 {
-  debug_print("XttSevHistQt::~XttSevHistQt\n");
   if (otree) {
     delete otree;
   }
   if (timerid) {
     timerid->remove();
   }
+  if (curve) {
+    delete curve;
+  }
   if (gcd) {
     delete gcd;
+  }
+  if (wow) {
+    delete wow;
   }
 }
 

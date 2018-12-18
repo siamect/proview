@@ -182,7 +182,7 @@ public:
   grow_tObject curve_axisobject;
   grow_tObject curve_markobject1;
   grow_tObject curve_markobject2;
-  GeCurveData* cd;
+  GeCurveData* cd = NULL;
   grow_tObject mark1_text;
   grow_tObject mark2_text;
   grow_tObject mark1_rect;

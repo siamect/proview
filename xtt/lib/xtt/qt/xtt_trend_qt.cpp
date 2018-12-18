@@ -58,6 +58,7 @@ XttTrendQt::XttTrendQt(void* parent_ctx, QWidget* x_parent_wid, char* name,
       parent_wid(x_parent_wid)
 {
   if (EVEN(*sts)) {
+    // Error from XttTrend constructor
     return;
   }
   *sts = XNAV__SUCCESS;
@@ -88,7 +89,6 @@ XttTrendQt::XttTrendQt(void* parent_ctx, QWidget* x_parent_wid, char* name,
 
 XttTrendQt::~XttTrendQt()
 {
-  debug_print("XttTrendQt::~XttTrendQt\n");
   if (timerid) {
     timerid->remove();
   }
@@ -96,12 +96,14 @@ XttTrendQt::~XttTrendQt()
   for (int i = 0; i < trend_cnt; i++) {
     gdh_UnrefObjectInfo(subid[i]);
   }
+  delete curve;
   if (gcd) {
     delete gcd;
   }
   if (otree) {
     delete otree;
   }
+  delete wow;
 }
 
 XttOTree* XttTrendQt::tree_new(const char* title, pwr_tAttrRef* itemlist,

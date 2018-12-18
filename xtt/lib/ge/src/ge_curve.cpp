@@ -1358,9 +1358,7 @@ int GeCurve::configure_axes()
   grow_ResetNodraw(growaxis_ctx);
   grow_Redraw(growaxis_ctx);
 
-  if (cd->x_data[0]) {
-    update_times_markers();
-  }
+  update_times_markers();
   return 1;
 }
 

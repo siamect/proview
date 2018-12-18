@@ -53,14 +53,13 @@ XttFastQt::XttFastQt(void* parent_ctx, QWidget* parent_wid, char* name,
     unsigned int options, int xn_color_theme, void* basewidget, int* sts)
     : XttFast(parent_ctx, name, fast_arp, xn_color_theme, sts)
 {
-  char title[250];
-
   if (EVEN(*sts)) {
+    // Error from XttFast constructor
     return;
   }
-
   *sts = XNAV__SUCCESS;
 
+  char title[250];
   if (!streq(name, "")) {
     strncpy(title, name, sizeof(title));
   } else {
@@ -88,10 +87,9 @@ XttFastQt::XttFastQt(void* parent_ctx, QWidget* parent_wid, const char* name,
   strncpy(title, filename, sizeof(title));
 
   if (EVEN(*sts)) {
-    // Error from XttFast
+    // Error from XttFast constructor
     return;
   }
-
   *sts = XNAV__SUCCESS;
 
   curve = new GeCurveQt(
@@ -108,15 +106,17 @@ XttFastQt::XttFastQt(void* parent_ctx, QWidget* parent_wid, const char* name,
 
 XttFastQt::~XttFastQt()
 {
-  debug_print("XttFastQt::~XttFastQt\n");
   if (timerid) {
     timerid->remove();
   }
-
   for (int i = 0; i < fast_cnt; i++) {
     gdh_UnrefObjectInfo(new_subid);
+  }
+  if (curve) {
+    delete curve;
   }
   if (gcd) {
     delete gcd;
   }
+  delete wow;
 }
