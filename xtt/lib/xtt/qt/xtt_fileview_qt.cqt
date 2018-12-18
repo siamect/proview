@@ -84,13 +84,11 @@ void XttFileviewQtWidget::list_ok_cb(const QString& file)
 
     strncpy(input_text, qPrintableLatin1(file), sizeof(input_text));
 
-    /*
-    if (!streq(filetype, "")) {
+    if (!streq(fileview->filetype, "")) {
       if (file.indexOf('.') == 0) {
-        strcat(input_text, filetype);
+        strcat(input_text, fileview->filetype);
       }
     }
-    */
 
     for (int i = 0; i < fileview->filecnt; i++) {
       if (streq(fileview->filelist[i], input_text)) {
@@ -117,7 +115,6 @@ void XttFileviewQtWidget::list_ok_cb(const QString& file)
 
 void XttFileviewQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("XttFileviewQtWidget::closeEvent\n");
   free(fileview->filelist);
   delete fileview;
   QWidget::closeEvent(event);
@@ -157,7 +154,6 @@ XttFileviewQt::XttFileviewQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
   }
 
   toplevel = new XttFileviewQtWidget(this, xn_parent_wid);
-  toplevel->setToolTip(fl("xtt_fileview widget"));
   toplevel->setMinimumSize(500, 500);
   toplevel->setWindowTitle(translate_utf8(xn_title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
@@ -175,7 +171,7 @@ XttFileviewQt::XttFileviewQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
   }
 
   QObject::connect(toplevel, SIGNAL(fileSelected(const QString&)), toplevel,
-      SLOT(XttFileviewQtWidget::list_ok_cb(const QString&)));
+      SLOT(list_ok_cb(const QString&)));
 
   toplevel->exec();
 }

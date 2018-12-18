@@ -37,6 +37,8 @@
 #ifndef xtt_fileview_qt_h
 #define xtt_fileview_qt_h
 
+#include "pwr.h"
+
 #include "xtt_fileview.h"
 
 #include <QFileDialog>
@@ -77,6 +79,8 @@ private:
 };
 
 class XttFileviewQtWidget : public QFileDialog {
+  Q_OBJECT
+
 public:
   XttFileviewQtWidget(XttFileviewQt* parent_ctx, QWidget* parent)
       : QFileDialog(parent), fileview(parent_ctx)
