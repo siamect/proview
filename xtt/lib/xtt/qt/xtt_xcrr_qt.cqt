@@ -97,13 +97,17 @@ void XCrrQt::print()
 
 void XCrrQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("XCrrQtWidget::closeEvent\n");
   if (xcrr->close_cb) {
     (xcrr->close_cb)(xcrr->parent_ctx, xcrr);
   } else {
     delete xcrr;
   }
   QWidget::closeEvent(event);
+}
+
+XCrrQt::~XCrrQt()
+{
+  delete xcrrnav;
 }
 
 XCrrQt::XCrrQt(QWidget* xa_parent_wid, void* xa_parent_ctx,

@@ -49,6 +49,7 @@ class XCrrQt : public XCrr {
 public:
   XCrrQt(QWidget* xa_parent_wid, void* xa_parent_ctx, pwr_sAttrRef* xa_objar,
       int xa_advanced_user, int* xa_sts);
+  ~XCrrQt();
   QWidget* brow_widget;
   QWidget* form_widget;
   CoWowFocusTimerQt focustimer;
