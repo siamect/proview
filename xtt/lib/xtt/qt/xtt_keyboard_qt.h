@@ -49,7 +49,6 @@ public:
   XttKeyboardQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
       const char* xn_name, QWidget** w, keyboard_eKeymap keymap,
       keyboard_eType type, int xn_color_theme, pwr_tStatus* status);
-  ~XttKeyboardQt();
 
   void set_inputfocus();
   void pop();
@@ -57,8 +56,7 @@ public:
 
   QWidget* keyboard_widget;
   QWidget* form_widget;
-  int displayed;
-  int closing_down;
+  double aspectRatio = 0;
 
 private:
   QDialog* toplevel;
@@ -74,9 +72,11 @@ public:
 protected:
   void focusInEvent(QFocusEvent* event);
   void closeEvent(QCloseEvent* event);
+  void resizeEvent(QResizeEvent *event);
 
 private:
   XttKeyboardQt* kb;
+  int prevWidth;
 };
 
 #endif
