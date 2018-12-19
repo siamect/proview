@@ -203,6 +203,13 @@ void XttStreamQtWidget::resizeEvent(QResizeEvent* event)
   }
 }
 
+void XttStreamQt::hidePtz()
+{
+  if (ptz_box != NULL) {
+    ptz_box->setVisible(false);
+  }
+}
+
 void XttStreamQtWidget::mousePressEvent(QMouseEvent* event)
 {
   switch (event->button()) {
@@ -215,7 +222,7 @@ void XttStreamQtWidget::mousePressEvent(QMouseEvent* event)
     int x = event->globalPos().x() + 8;
     int y = event->globalPos().y();
     stream->action_mb3click(x, y);
-    stream->ptz_box->setVisible(false);
+    stream->hidePtz();
     break;
   }
   default:
@@ -259,7 +266,7 @@ void XttStreamQtWidget::mouseReleaseEvent(QMouseEvent* event)
         && ABS(event->pos().y() - stream->mb_press_y) < 10) {
       stream->action_click(
           event->pos().x() - offset_x, event->pos().y() - offset_y);
-      stream->ptz_box->setVisible(false);
+      stream->hidePtz();
     } else if (ABS(event->pos().x() - stream->mb_press_x) > 20
         && abs(event->pos().y() - stream->mb_press_y) > 20) {
       int x = MIN(event->pos().x(), stream->mb_press_x) - offset_x;
@@ -268,7 +275,7 @@ void XttStreamQtWidget::mouseReleaseEvent(QMouseEvent* event)
       int h = ABS(event->pos().y() - stream->mb_press_y);
       printf("Mb zoom (%d,%d) rect %d,%d\n", x, y, w, h);
       stream->action_areaselect(x, y, w, h);
-      stream->ptz_box->setVisible(false);
+      stream->hidePtz();
     }
     break;
   }
@@ -318,12 +325,12 @@ void XttStreamQtWidget::wheelEvent(QWheelEvent* event)
 
 void XttStreamQt::scroll_cb(void* data)
 {
-  XttStreamQt* strm = (XttStreamQt*)data;
+  XttStreamQt* stream = (XttStreamQt*)data;
 
-  strm->action_scroll(
-      strm->scroll_direction, strm->scroll_x, strm->scroll_y, strm->scroll_cnt);
-  strm->scroll_cnt = 0;
-  strm->ptz_box->setVisible(false);
+  stream->action_scroll(
+      stream->scroll_direction, stream->scroll_x, stream->scroll_y, stream->scroll_cnt);
+  stream->scroll_cnt = 0;
+  stream->hidePtz();
 }
 
 XttStreamQt::XttStreamQt(QWidget* st_parent_wid, void* st_parent_ctx,
@@ -519,8 +526,8 @@ XttStreamQt::XttStreamQt(QWidget* st_parent_wid, void* st_parent_ctx,
   }
 
   toplevel->setLayout(main_layout);
-  toplevel->setMinimumSize(width, height);
   if (!embedded) {
+    toplevel->setMinimumSize(width, height);
     toplevel->show();
 
     if (options & strm_mOptions_FullScreen) {
@@ -604,7 +611,7 @@ void XttStreamQtWidget::zoom_helper()
   } else {
     stream->camera_control->zoom_relative(value);
   }
-  stream->ptz_box->setVisible(false);
+  stream->hidePtz();
 }
 
 void XttStreamQtWidget::pan_helper()
@@ -616,7 +623,7 @@ void XttStreamQtWidget::pan_helper()
   int value = ((QAction *) sender())->data().toInt();
 
   stream->camera_control->pan_relative(value);
-  stream->ptz_box->setVisible(false);
+  stream->hidePtz();
 }
 
 void XttStreamQtWidget::tilt_helper()
@@ -628,21 +635,21 @@ void XttStreamQtWidget::tilt_helper()
   int value = ((QAction *) sender())->data().toInt();
 
   stream->camera_control->tilt_relative(value);
-  stream->ptz_box->setVisible(false);
+  stream->hidePtz();
 }
 
 void XttStreamQtWidget::activate_preset_position()
 {
   int idx = ((QAction*)sender())->data().toInt();
   stream->activate_preset_position(idx);
-  stream->ptz_box->setVisible(false);
+  stream->hidePtz();
 }
 
 void XttStreamQtWidget::activate_preset_store_pos()
 {
   int idx = ((QAction*)sender())->data().toInt();
   stream->activate_preset_store_pos(idx);
-  stream->ptz_box->setVisible(false);
+  stream->hidePtz();
 }
 
 void XttStreamQtWidget::activate_get_position()
@@ -664,5 +671,5 @@ void XttStreamQtWidget::activate_get_position()
   stream->ptz_pan->setText(pan_str);
   stream->ptz_tilt->setText(tilt_str);
   stream->ptz_zoom->setText(zoom_str);
-  stream->ptz_box->setVisible(false);
+  stream->hidePtz();
 }

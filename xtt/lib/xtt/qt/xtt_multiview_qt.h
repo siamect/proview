@@ -57,8 +57,6 @@ public:
   QWidget* comp_widget[MV_SIZE];
   QWidget* exchange_widget[MV_SIZE];
   QHBoxLayout* exchange_widget_layout[MV_SIZE];
-  QWidget* box_widget;
-  QWidget* col_widget;
   XttGeQt* gectx[MV_SIZE];
   XttMultiViewQt* mvctx[MV_SIZE];
   EvAlaQt* sala[MV_SIZE];
@@ -95,14 +93,12 @@ private:
   XttMultiViewQtWidget* toplevel;
 };
 
-class XttMultiViewQtWidget : public QDialog {
+class XttMultiViewQtWidget : public QWidget {
 public:
   XttMultiViewQtWidget(XttMultiViewQt* parent_ctx, QWidget* parent)
-      : QDialog(parent), multiview(parent_ctx)
+      : QWidget(parent), multiview(parent_ctx)
   {
   }
-
-  void resize(int width, int height);
 
 protected:
   void focusInEvent(QFocusEvent* event);

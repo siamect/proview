@@ -79,6 +79,7 @@ public:
 
   void pop();
   void set_size(int width, int height);
+  void hidePtz();
 
   void* get_widget()
   {
