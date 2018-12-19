@@ -59,7 +59,6 @@
 /* This function is called when the main window is closed */
 void XttStreamQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("XttStreamQtWidget::closeEvent\n");
   stream->playbin2->stop();
 
   if (stream->close_cb) {
@@ -87,26 +86,26 @@ static void refresh_ui(XttStreamQt* strm)
 
   /* We do not want to update anything unless we are in the PAUSED or PLAYING
    * states */
-  if (strm->state != Phonon::PausedState) {
+  if (!(strm->state == Phonon::PausedState || strm->state == Phonon::PlayingState)) {
     return;
   }
 
   qint64 current = strm->playbin2->totalTime();
   strm->slider->setRange(0, current / 1000);
+  strm->toplevel->update();
 }
 
 void XttStreamQt::erase_window()
 {
-  QWidget* window = video_form->window();
-  QPainter painter(window);
-  painter.eraseRect(0, 0, toplevel->width(), toplevel->height());
+  QPainter painter(toplevel->window());
+  painter.eraseRect(0, 0, toplevel->window()->width(), toplevel->window()->height());
 }
 
 void XttStreamQt::reconnect(void* data)
 {
   XttStreamQt* strm = (XttStreamQt*)data;
 
-  printf("Try to reconnect %d\n", strm->playbin2->mediaObject()->state());
+  printf("Try to reconnect %d 1\n", strm->playbin2->mediaObject()->state());
 
   if (strm->playbin2->mediaObject()->state() == Phonon::PlayingState) {
     return;
@@ -158,38 +157,32 @@ static void refresh(void* data)
   strm->timerid->add(strm->scan_time, refresh, data);
 }
 
-/* This function is called when an error message is posted on the bus */
-void XttStreamQtWidget::error_cb(Phonon::ErrorType error)
-{
-  printf("Message %d\n", error);
-  /* Print error details on the screen */
-  printf("Error received from element: %s\n",
-      qPrintable(stream->playbin2->mediaObject()->errorString()));
-
-  if (error == Phonon::FatalError) {
-    stream->no_uri = 1;
-  }
-
-  stream->playbin2->stop();
-
-  // Erase window
-  stream->erase_window();
-
-  // Try to reconnect
-  stream->reconnect_timerid->remove();
-  stream->reconnect_timerid->add(
-      int(stream->reconnect_time * 1000), stream->reconnect, stream);
-}
-
 /* This function is called when the pipeline changes states. We use it to
  * keep track of the current state. */
-void XttStreamQtWidget::state_changed_cb(Phonon::State new_state)
+void XttStreamQtWidget::state_changed_cb(Phonon::State new_state, Phonon::State old_state)
 {
+  if (new_state == Phonon::ErrorState) {
+    printf("Error: %s\n", qPrintable(stream->playbin2->mediaObject()->errorString()));
+
+    if (stream->playbin2->mediaObject()->errorType() == Phonon::FatalError) {
+      stream->no_uri = 1;
+    }
+
+    stream->playbin2->stop();
+
+    // Erase window
+    stream->erase_window();
+
+    // Try to reconnect
+    stream->reconnect_timerid->remove();
+    stream->reconnect_timerid->add(
+        int(stream->reconnect_time * 1000), stream->reconnect, stream);
+  }
   if (stream->state == Phonon::StoppedState
       && new_state == Phonon::PausedState) {
     /* For extra responsiveness, we refresh the GUI as soon as we reach the
      * PAUSED state */
-    update();
+    refresh_ui(stream);
   }
   stream->state = new_state;
 }
@@ -210,14 +203,6 @@ void XttStreamQtWidget::resizeEvent(QResizeEvent* event)
   }
 }
 
-void XttStreamQt::togglePtzBoxVisible()
-{
-  if (ptz_box_displayed) {
-    ptz_box->setVisible(false);
-    ptz_box_displayed = 0;
-  }
-}
-
 void XttStreamQtWidget::mousePressEvent(QMouseEvent* event)
 {
   switch (event->button()) {
@@ -227,12 +212,10 @@ void XttStreamQtWidget::mousePressEvent(QMouseEvent* event)
     stream->mb_press_y = event->pos().y();
     break;
   case Qt::RightButton: {
-    int x1, y1;
-    int x = event->pos().x() + 8;
-    int y = event->pos().y();
-    CoWowQt::PopupPosition(stream->video_form, x, y, &x1, &y1);
-    stream->action_mb3click(x1, y1);
-    stream->togglePtzBoxVisible();
+    int x = event->globalPos().x() + 8;
+    int y = event->globalPos().y();
+    stream->action_mb3click(x, y);
+    stream->ptz_box->setVisible(false);
     break;
   }
   default:
@@ -276,7 +259,7 @@ void XttStreamQtWidget::mouseReleaseEvent(QMouseEvent* event)
         && ABS(event->pos().y() - stream->mb_press_y) < 10) {
       stream->action_click(
           event->pos().x() - offset_x, event->pos().y() - offset_y);
-      stream->togglePtzBoxVisible();
+      stream->ptz_box->setVisible(false);
     } else if (ABS(event->pos().x() - stream->mb_press_x) > 20
         && abs(event->pos().y() - stream->mb_press_y) > 20) {
       int x = MIN(event->pos().x(), stream->mb_press_x) - offset_x;
@@ -285,7 +268,7 @@ void XttStreamQtWidget::mouseReleaseEvent(QMouseEvent* event)
       int h = ABS(event->pos().y() - stream->mb_press_y);
       printf("Mb zoom (%d,%d) rect %d,%d\n", x, y, w, h);
       stream->action_areaselect(x, y, w, h);
-      stream->togglePtzBoxVisible();
+      stream->ptz_box->setVisible(false);
     }
     break;
   }
@@ -340,47 +323,7 @@ void XttStreamQt::scroll_cb(void* data)
   strm->action_scroll(
       strm->scroll_direction, strm->scroll_x, strm->scroll_y, strm->scroll_cnt);
   strm->scroll_cnt = 0;
-  strm->togglePtzBoxVisible();
-}
-
-static QAction* addToolItemSpecial(QObject* parent, QToolBar* tools,
-    QString& tooltip, const char* callback, const char* iconName)
-{
-  QIcon icon = QIcon::fromTheme(fl(iconName));
-  if (icon.isNull()) { // iconName is a path to a local icon
-    pwr_tFileName fname;
-    dcli_translate_filename(fname, iconName);
-    icon = QIcon(fl(fname));
-  }
-  QAction* action = new QAction(icon, "", parent);
-
-  action->setToolTip(tooltip);
-
-  QObject::connect(action, SIGNAL(triggered()), parent, callback);
-
-  tools->addAction(action);
-
-  return action;
-}
-
-QAction* XttStreamQt::addToolItemSpecial(QToolBar* tools, const char* objName,
-    const char* tooltip, const char* callback, const char* iconName)
-{
-  pwr_tAttrRef aaref;
-  pwr_tStatus lsts;
-  lsts = gdh_ArefANameToAref(&aref, objName, &aaref);
-  char tooltiptext[80];
-  if (ODD(lsts)) {
-    lsts = gdh_GetObjectInfoAttrref(&aaref, tooltiptext, sizeof(tooltiptext));
-  }
-
-  QString text;
-  if (ODD(lsts) && !streq(tooltiptext, "")) {
-    text = convert_utf8(tooltiptext);
-  } else {
-    text = translate_utf8(tooltip);
-  }
-  return ::addToolItemSpecial(toplevel, tools, text, callback, iconName);
+  strm->ptz_box->setVisible(false);
 }
 
 XttStreamQt::XttStreamQt(QWidget* st_parent_wid, void* st_parent_ctx,
@@ -389,8 +332,7 @@ XttStreamQt::XttStreamQt(QWidget* st_parent_wid, void* st_parent_ctx,
     pwr_tAttrRef* st_arp, pwr_tStatus* sts)
     : XttStream(st_parent_ctx, name, st_uri, width, height, x, y, scan_time,
           st_options, st_embedded, st_arp),
-      scroll_cnt(0), ptz_box_displayed(0), is_live(0), buftime(pwr_cNTime),
-      ptz_box(0), reconnect_timerid(0), no_uri(0)
+      scroll_cnt(0), no_uri(0)
 {
   if (width == 0 || height == 0) {
     width = 640;
@@ -401,6 +343,8 @@ XttStreamQt::XttStreamQt(QWidget* st_parent_wid, void* st_parent_ctx,
 
   /* Create the elements */
   playbin2 = new Phonon::VideoPlayer(toplevel);
+  QObject::connect(playbin2->mediaObject(), SIGNAL(stateChanged(Phonon::State, Phonon::State)),
+      toplevel, SLOT(state_changed_cb(Phonon::State, Phonon::State)));
 
   /* Set the URI to play, eg "http://192.168.67.248/mjpg/video.mjpg" */
   pwr_tURL luri;
@@ -427,103 +371,86 @@ XttStreamQt::XttStreamQt(QWidget* st_parent_wid, void* st_parent_ctx,
 
   playbin2->load(Phonon::MediaSource(QUrl(fl(luri))));
 
-  // Set timeout for connection
-  /*
-  int tmo = (int) (connection_timeout + 0.5);
-
-  QNetworkConfiguration *source = playbin2->currentNetworkConfiguration();
-  source->setConnectTimeout(tmo);
-  */
-
   if (!embedded) {
-    toplevel->setToolTip(fl("xtt_stream widget"));
     toplevel->setWindowTitle(QString::fromLatin1(name));
     toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
     CoWowQt::SetWindowIcon(toplevel);
   }
 
-  video_form = new Phonon::VideoWidget(toplevel);
-
-  QHBoxLayout* hbox = new QHBoxLayout();
-  if (options & strm_mOptions_VideoControlPanel) {
-    QToolBar* controlbuttons = new QToolBar();
-
-    addToolItem(playbin2, controlbuttons, "Play",
-        SLOT(Phonon::VideoPlayer::play()), "$pwr_exe/xtt_play.png");
-    addToolItem(playbin2, controlbuttons, "Pause",
-        SLOT(Phonon::VideoPlayer::pause()), "$pwr_exe/xtt_pause.png");
-    addToolItem(playbin2, controlbuttons, "Stop",
-        SLOT(Phonon::VideoPlayer::stop()), "$pwr_exe/xtt_stop.png");
-
-    hbox->addWidget(controlbuttons);
-
-    if (options & strm_mOptions_VideoProgressBar) {
-      slider = new QSlider(Qt::Horizontal);
-      slider->setRange(0, 100);
-      slider->setSliderPosition(0);
-      QObject::connect(
-          slider, SIGNAL(sliderMoved(int)), toplevel, SLOT(slider_cb(int)));
-      add_expanding(hbox, slider);
-    }
-  }
-
-  tools = new QToolBar();
-
-  QHBoxLayout* tools_box = new QHBoxLayout();
+  QVBoxLayout* main_layout = new QVBoxLayout(toplevel);
   if (control_protocol != pwr_eCameraControlEnum_No) {
-    addToolItem(toplevel, tools, "Zoom in", SLOT(activate_zoomin()),
+    QToolBar* tools = new QToolBar();
+    QAction* a = addToolItem(toplevel, tools, "Zoom in", SLOT(zoom_helper()),
         "$pwr_exe/xtt_zoom_in.png");
-    addToolItem(toplevel, tools, "Zoom out", SLOT(activate_zoomout()),
+    a->setData(5);
+    a = addToolItem(toplevel, tools, "Zoom out", SLOT(zoom_helper()),
         "$pwr_exe/xtt_zoom_out.png");
-    addToolItem(toplevel, tools, "Zoom reset", SLOT(activate_zoomreset()),
+    a->setData(-5);
+    a = addToolItem(toplevel, tools, "Zoom reset", SLOT(zoom_helper()),
         "$pwr_exe/xtt_zoom_reset.png");
+    a->setData(0);
 
     tools->addSeparator();
 
-    addToolItem(toplevel, tools, "Page left", SLOT(activate_page_left()),
+    a = addToolItem(toplevel, tools, "Page left", SLOT(pan_helper()),
         "$pwr_exe/ge_page_left.png");
-    addToolItem(toplevel, tools, "Left", SLOT(activate_scroll_left()),
+    a->setData(-15);
+    a = addToolItem(toplevel, tools, "Left", SLOT(pan_helper()),
         "$pwr_exe/ge_scroll_left.png");
-    addToolItem(toplevel, tools, "Right", SLOT(activate_scroll_right()),
+    a->setData(-3);
+    a = addToolItem(toplevel, tools, "Right", SLOT(pan_helper()),
         "$pwr_exe/ge_scroll_right.png");
-    addToolItem(toplevel, tools, "Page right", SLOT(activate_page_right()),
+    a->setData(3);
+    a = addToolItem(toplevel, tools, "Page right", SLOT(pan_helper()),
         "$pwr_exe/ge_page_right.png");
+    a->setData(15);
 
     tools->addSeparator();
 
-    addToolItem(toplevel, tools, "Page down", SLOT(activate_page_down()),
+    a = addToolItem(toplevel, tools, "Page down", SLOT(tilt_helper()),
         "$pwr_exe/ge_page_down.png");
-    addToolItem(toplevel, tools, "Down", SLOT(activate_scroll_down()),
+    a->setData(-15);
+    a = addToolItem(toplevel, tools, "Down", SLOT(tilt_helper()),
         "$pwr_exe/ge_scroll_down.png");
-    addToolItem(toplevel, tools, "Up", SLOT(activate_scroll_up()),
+    a->setData(-3);
+    a = addToolItem(toplevel, tools, "Up", SLOT(tilt_helper()),
         "$pwr_exe/ge_scroll_up.png");
-    addToolItem(toplevel, tools, "Page up", SLOT(activate_page_up()),
+    a->setData(3);
+    a = addToolItem(toplevel, tools, "Page up", SLOT(tilt_helper()),
         "$pwr_exe/ge_page_up.png");
+    a->setData(15);
 
     tools->addSeparator();
 
     for (int i = 0; i < 10; i++) {
-      QString text1, text2, text3;
-      text1 = "PresetPosition[";
-      text1 += QString::number(i);
-      text1 += "].Description";
-      text2 = "Preset position ";
-      text2 += QString::number(i + 1);
-      text3 = "$pwr_exe/xtt_pos";
-      text3 += QString::number(i + 1);
-      text3 += ".png";
+      QString text1 = "PresetPosition[" + QString::number(i) + "].Description";
+      pwr_tAttrRef aaref;
+      pwr_tStatus lsts = gdh_ArefANameToAref(&aref, qPrintable(text1), &aaref);
+      char tooltiptext[80];
+      if (ODD(lsts)) {
+        lsts = gdh_GetObjectInfoAttrref(&aaref, tooltiptext, sizeof(tooltiptext));
+      }
+
+      QString text3 = "$pwr_exe/xtt_pos" + QString::number(i + 1) + ".png";
       QAction* a
-          = addToolItemSpecial(tools, qPrintable(text1), qPrintable(text2),
-              SLOT(activate_preset_position()), qPrintable(text3));
+          = addToolItem(toplevel, tools, "", SLOT(activate_preset_position()), qPrintable(text3));
       a->setData(i);
+
+      if (ODD(lsts) && !streq(tooltiptext, "")) {
+        a->setToolTip(convert_utf8(tooltiptext));
+      } else {
+        QString text2 = "Preset position " + QString::number(i + 1);
+        a->setToolTip(text2);
+      }
     }
 
     tools->addSeparator();
 
     QString txt = translate_utf8("Get position");
-    ::addToolItemSpecial(toplevel, tools, txt, SLOT(activate_get_position()),
+    a = addToolItem(toplevel, tools, "", SLOT(activate_get_position()),
         "$pwr_exe/xtt_get_pos.png");
+    a->setToolTip(txt);
 
     QWidget* ptz_pan_label = new QLabel("Pan");
     ptz_pan = new QLabel("0");
@@ -544,27 +471,57 @@ XttStreamQt::XttStreamQt(QWidget* st_parent_wid, void* st_parent_ctx,
 
     ptz_box = layout_to_widget(ptz_box_layout);
 
-    add_expanding(tools_box, tools);
+    QHBoxLayout* tools_box = new QHBoxLayout();
+    tools_box->addWidget(tools);
     tools_box->addWidget(ptz_box);
+    main_layout->addLayout(tools_box);
+
+    ptz_box->setVisible(false);
+    if (!(options & strm_mOptions_CameraControlPanel)) {
+      tools->setVisible(false);
+    }
   } else {
     // Empty toolbar
+    QToolBar* tools = new QToolBar();
     tools->setFixedHeight(32);
-    add_expanding(tools_box, tools);
+    main_layout->addWidget(tools);
+
+    if (!(options & strm_mOptions_CameraControlPanel)) {
+      tools->setVisible(false);
+    }
   }
 
-  QVBoxLayout* main_box_layout = new QVBoxLayout(toplevel);
-  main_box_layout->addLayout(tools_box);
-  add_expanding(main_box_layout, video_form);
+  add_expanding(main_layout, playbin2);
+
   if (options & strm_mOptions_VideoControlPanel) {
-    main_box_layout->addLayout(hbox);
+    QToolBar* controlbuttons = new QToolBar();
+
+    addToolItem(playbin2, controlbuttons, "Play",
+        SLOT(Phonon::VideoPlayer::play()), "$pwr_exe/xtt_play.png");
+    addToolItem(playbin2, controlbuttons, "Pause",
+        SLOT(Phonon::VideoPlayer::pause()), "$pwr_exe/xtt_pause.png");
+    addToolItem(playbin2, controlbuttons, "Stop",
+        SLOT(Phonon::VideoPlayer::stop()), "$pwr_exe/xtt_stop.png");
+
+    if (options & strm_mOptions_VideoProgressBar) {
+      slider = new QSlider(Qt::Horizontal);
+      slider->setRange(0, 100);
+      slider->setSliderPosition(0);
+      QObject::connect(
+          slider, SIGNAL(sliderMoved(int)), toplevel, SLOT(slider_cb(int)));
+      QHBoxLayout* hbox = new QHBoxLayout();
+      hbox->addWidget(controlbuttons);
+      add_expanding(hbox, slider);
+      main_layout->addLayout(hbox);
+    } else {
+      main_layout->addWidget(controlbuttons);
+    }
   }
 
+  toplevel->setLayout(main_layout);
+  toplevel->setMinimumSize(width, height);
   if (!embedded) {
-    toplevel->setLayout(main_box_layout);
-    toplevel->setMinimumSize(width, height);
     toplevel->show();
-
-    setup();
 
     if (options & strm_mOptions_FullScreen) {
       toplevel->showFullScreen();
@@ -575,27 +532,10 @@ XttStreamQt::XttStreamQt(QWidget* st_parent_wid, void* st_parent_ctx,
     } else if (options & strm_mOptions_Iconify) {
       toplevel->showMinimized();
     }
-  } else {
-    main_box = layout_to_widget(main_box_layout);
-    main_box->setMinimumSize(width, height);
-    setup();
   }
-
-  /* Connect to the interesting signals */
-  QObject::connect(playbin2, SIGNAL(error(QMediaPlayer::Error)), toplevel,
-      SLOT(error_cb(QMediaPlayer::Error)));
-  QObject::connect(playbin2, SIGNAL(stateChanged(QMediaPlayer::State)),
-      toplevel, SLOT(state_changed_cb(QMediaPlayer::State)));
 
   /* Start playing */
   playbin2->play();
-  if (playbin2->mediaObject()->state() != Phonon::PlayingState) {
-    fprintf(stderr, "Unable to set the pipeline to the playing state.\n");
-    *sts = 0;
-    return;
-  } else {
-    is_live = 1;
-  }
 
   wow = new CoWowQt(toplevel);
   timerid = wow->timer_new();
@@ -608,7 +548,6 @@ XttStreamQt::XttStreamQt(QWidget* st_parent_wid, void* st_parent_ctx,
 
 XttStreamQt::~XttStreamQt()
 {
-  debug_print("XttStreamQt::~XttStreamQt\n");
   if (timerid) {
     timerid->remove();
   }
@@ -630,164 +569,100 @@ void XttStreamQt::set_size(int width, int height)
   toplevel->resize(width, height);
 }
 
-void XttStreamQt::setup()
-{
-  if (ptz_box) {
-    ptz_box->setVisible(false);
-  }
-  if (!(options & strm_mOptions_CameraControlPanel)) {
-    tools->setVisible(false);
-  }
-}
-
 void XttStreamQt::create_popup_menu(int x, int y)
 {
   QMenu* menu = new QMenu(toplevel);
 
-  addMenuItem(toplevel, menu, "Zoom in", SLOT(activate_zoomin()));
-  addMenuItem(toplevel, menu, "Zoom out", SLOT(activate_zoomout()));
-  addMenuItem(toplevel, menu, "Zoom reset", SLOT(activate_zoomreset()));
+  QAction* a = addMenuItem(toplevel, menu, "Zoom in", SLOT(zoom_helper()));
+  a->setData(5);
+  a = addMenuItem(toplevel, menu, "Zoom out", SLOT(zoom_helper()));
+  a->setData(-5);
+  a = addMenuItem(toplevel, menu, "Zoom reset", SLOT(zoom_helper()));
+  a->setData(0);
 
   QMenu* menu_preset_store = menu->addMenu("Preset store");
   for (int i = 0; i < 10; i++) {
-    QString text;
-    text += "Position ";
-    text += QString::number(i + 1);
+    QString text = "Position " + QString::number(i + 1);
     QAction* a = addMenuItem(toplevel, menu_preset_store, qPrintable(text),
         SLOT(activate_preset_store_pos()));
     a->setData(i);
   }
 
-  popupmenu_x = x + 5;
-  popupmenu_y = y;
-  menu->popup(toplevel->mapToGlobal(
-      QPoint(toplevel->width() / 2, toplevel->height() / 2)));
+  menu->popup(QPoint(x, y));
 }
 
-void XttStreamQtWidget::zoom_helper(int value)
+void XttStreamQtWidget::zoom_helper()
 {
   if (!stream->camera_control) {
     return;
   }
+
+  int value = ((QAction *) sender())->data().toInt();
 
   if (value == 0) {
     stream->camera_control->zoom_absolute(value);
   } else {
     stream->camera_control->zoom_relative(value);
   }
-  stream->togglePtzBoxVisible();
+  stream->ptz_box->setVisible(false);
 }
 
-void XttStreamQtWidget::activate_zoomreset()
-{
-  zoom_helper(0);
-}
-
-void XttStreamQtWidget::activate_zoomin()
-{
-  zoom_helper(5);
-}
-
-void XttStreamQtWidget::activate_zoomout()
-{
-  zoom_helper(-5);
-}
-
-void XttStreamQtWidget::pan_helper(int value)
+void XttStreamQtWidget::pan_helper()
 {
   if (!stream->camera_control) {
     return;
   }
+
+  int value = ((QAction *) sender())->data().toInt();
 
   stream->camera_control->pan_relative(value);
-  stream->togglePtzBoxVisible();
+  stream->ptz_box->setVisible(false);
 }
 
-void XttStreamQtWidget::activate_scroll_left()
-{
-  pan_helper(-3);
-}
-
-void XttStreamQtWidget::activate_scroll_right()
-{
-  pan_helper(3);
-}
-
-void XttStreamQtWidget::activate_page_left()
-{
-  pan_helper(-15);
-}
-
-void XttStreamQtWidget::activate_page_right()
-{
-  pan_helper(15);
-}
-
-void XttStreamQtWidget::tilt_helper(int value)
+void XttStreamQtWidget::tilt_helper()
 {
   if (!stream->camera_control) {
     return;
   }
 
+  int value = ((QAction *) sender())->data().toInt();
+
   stream->camera_control->tilt_relative(value);
-  stream->togglePtzBoxVisible();
-}
-
-void XttStreamQtWidget::activate_scroll_down()
-{
-  tilt_helper(-3);
-}
-
-void XttStreamQtWidget::activate_scroll_up()
-{
-  tilt_helper(3);
-}
-
-void XttStreamQtWidget::activate_page_down()
-{
-  tilt_helper(-15);
-}
-
-void XttStreamQtWidget::activate_page_up()
-{
-  tilt_helper(15);
+  stream->ptz_box->setVisible(false);
 }
 
 void XttStreamQtWidget::activate_preset_position()
 {
   int idx = ((QAction*)sender())->data().toInt();
   stream->activate_preset_position(idx);
-  stream->togglePtzBoxVisible();
+  stream->ptz_box->setVisible(false);
 }
 
 void XttStreamQtWidget::activate_preset_store_pos()
 {
   int idx = ((QAction*)sender())->data().toInt();
   stream->activate_preset_store_pos(idx);
-  stream->togglePtzBoxVisible();
+  stream->ptz_box->setVisible(false);
 }
 
 void XttStreamQtWidget::activate_get_position()
 {
-  double pan, tilt, zoom;
-  int sts;
-  char pan_str[20], tilt_str[20], zoom_str[20];
-
   if (!stream->camera_control) {
     return;
   }
 
-  sts = stream->camera_control->get_position(&pan, &tilt, &zoom);
+  double pan, tilt, zoom;
+  int sts = stream->camera_control->get_position(&pan, &tilt, &zoom);
   if (EVEN(sts)) {
     return;
   }
 
+  char pan_str[20], tilt_str[20], zoom_str[20];
   sprintf(pan_str, "%6.2f", pan);
   sprintf(tilt_str, "%6.2f", tilt);
   sprintf(zoom_str, "%6.2f", zoom);
   stream->ptz_pan->setText(pan_str);
   stream->ptz_tilt->setText(tilt_str);
   stream->ptz_zoom->setText(zoom_str);
-
-  stream->togglePtzBoxVisible();
+  stream->ptz_box->setVisible(false);
 }

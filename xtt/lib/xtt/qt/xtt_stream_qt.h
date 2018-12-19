@@ -48,7 +48,6 @@
 #include <QWheelEvent>
 
 #include <phonon/VideoPlayer>
-#include <phonon/VideoWidget>
 
 class XttStreamQtWidget;
 
@@ -63,22 +62,13 @@ public:
   int scroll_y;
   int scroll_direction;
   int scroll_cnt;
-  int popupmenu_x;
-  int popupmenu_y;
-  int ptz_box_displayed;
-  int is_live;
-  pwr_tTime buftime;
 
   QSlider* slider; /* Slider widget to keep track of current position */
-  Phonon::VideoWidget* video_form;
-  QWidget* main_box;
   QWidget* ptz_box;
   QLabel* ptz_pan;
   QLabel* ptz_tilt;
   QLabel* ptz_zoom;
-  QToolBar* tools;
 
-  void* overlay;
   CoWowTimer* reconnect_timerid;
   int no_uri;
 
@@ -89,11 +79,10 @@ public:
 
   void pop();
   void set_size(int width, int height);
-  void setup();
 
   void* get_widget()
   {
-    return main_box;
+    return toplevel;
   }
 
   void create_popup_menu(int x, int y);
@@ -101,12 +90,6 @@ public:
 
   static void scroll_cb(void* data);
   static void reconnect(void* data);
-
-  void togglePtzBoxVisible();
-
-private:
-  QAction* addToolItemSpecial(QToolBar* tools, const char* objName,
-      const char* tooltip, const char* callback, const char* iconName);
 
   XttStreamQtWidget* toplevel;
 };
@@ -129,30 +112,17 @@ protected:
 
 public slots:
   void slider_cb(int value);
-  void error_cb(Phonon::ErrorType error);
-  void state_changed_cb(Phonon::State new_state);
+  void state_changed_cb(Phonon::State new_state, Phonon::State old_state);
 
-  void activate_zoomreset();
-  void activate_zoomin();
-  void activate_zoomout();
-
-  void activate_scroll_left();
-  void activate_scroll_right();
-  void activate_page_left();
-  void activate_page_right();
-  void activate_scroll_down();
-  void activate_scroll_up();
-  void activate_page_down();
-  void activate_page_up();
   void activate_preset_position();
   void activate_preset_store_pos();
   void activate_get_position();
 
-private:
-  void zoom_helper(int value);
-  void pan_helper(int value);
-  void tilt_helper(int value);
+  void zoom_helper();
+  void pan_helper();
+  void tilt_helper();
 
+private:
   XttStreamQt* stream;
 };
 
