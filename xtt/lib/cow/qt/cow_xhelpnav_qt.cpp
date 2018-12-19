@@ -60,7 +60,6 @@ CoXHelpNavQt::CoXHelpNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
 
 CoXHelpNavQt::~CoXHelpNavQt()
 {
-  debug_print("CoXHelpNavQt::~CoXHelpNavQt\n");
   closing_down = 1;
 
   for (int i = 0; i < brow_cnt; i++) {

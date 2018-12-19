@@ -173,7 +173,6 @@ void RtTraceQtWidget::activate_helpplclist()
 
 RtTraceQt::~RtTraceQt()
 {
-  debug_print("RtTraceQt::~RtTraceQt\n");
   trace_tNode *node, *fnode;
 
   trace_stop();
@@ -211,7 +210,6 @@ RtTrace* RtTraceQt::subwindow_new(void* ctx, pwr_tObjid oid, pwr_tStatus* sts)
 
 void RtTraceQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("RtTraceQtWidget::closeEvent\n");
   rt->activate_close();
   QWidget::closeEvent(event);
 }
@@ -391,10 +389,8 @@ RtTraceQt::RtTraceQt(void* tr_parent_ctx, QWidget* tr_parent_wid,
       "$pwr_exe/xtt_zoom_reset.png");
 
   // Flow widget
-  debug_print("creating a scrolledflowwidgetqt\n");
   QWidget* flow_scrolled
       = scrolledflowwidgetqt_new(init_flow, this, &flow_widget);
-  debug_print("creating a flownavwidgetqt\n");
   nav_widget = flownavwidgetqt_new(flow_widget);
 
   QSplitter* paned = new QSplitter(toplevel);

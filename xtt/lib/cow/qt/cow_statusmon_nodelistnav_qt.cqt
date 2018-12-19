@@ -54,7 +54,6 @@ NodelistNavQt::NodelistNavQt(void* nodelist_parent_ctx,
 {
   trace_obj = new NodelistNavQtTraceObject(this);
 
-  debug_print("creating a scrolledbrowwidgetqt\n");
   form_widget = scrolledbrowwidgetqt_new(init_brow_cb, this, &brow_widget);
 
   *w = form_widget;
@@ -64,7 +63,6 @@ NodelistNavQt::NodelistNavQt(void* nodelist_parent_ctx,
 
 NodelistNavQt::~NodelistNavQt()
 {
-  debug_print("NodelistNavQt::~NodelistNavQt\n");
   delete trace_obj;
 
   delete brow;

@@ -235,7 +235,6 @@ static QColor glow_allocate_custom_color(GlowDrawQt* draw_ctx,
 
 GlowDrawQt::~GlowDrawQt()
 {
-  debug_print("GlowDrawQt::~GlowDrawQt\n");
   closing_down = 1;
 
   ctx->set_nodraw();

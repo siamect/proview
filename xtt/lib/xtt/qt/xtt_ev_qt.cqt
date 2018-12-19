@@ -123,7 +123,6 @@ EvQt::EvQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* eve_name,
     parent_wid_eve = new CallbackWidget(
         object, &EvQtObject::eve_activate_exit, &EvQtObject::eve_action_inputfocus);
     parent_wid_eve->setMinimumSize(eve_width, eve_height);
-    parent_wid_eve->setToolTip(fl("xtt_ev eve widget"));
     parent_wid_eve->setWindowTitle(translate_utf8(eve_name));
     // Do not set the DeleteOnClose attribute.
 
@@ -227,7 +226,6 @@ EvQt::EvQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* eve_name,
   {
     parent_wid_ala = new CallbackWidget(
         object, &EvQtObject::ala_activate_exit, &EvQtObject::ala_action_inputfocus);
-    parent_wid_ala->setToolTip(fl("xtt_ev ala widget"));
     parent_wid_ala->setMinimumSize(ala_width, ala_height);
     parent_wid_ala->setWindowTitle(translate_utf8(ala_name));
     // Do not set the DeleteOnClose attribute.
@@ -365,7 +363,6 @@ EvQt::EvQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* eve_name,
   {
     parent_wid_blk = new CallbackWidget(
         object, &EvQtObject::blk_activate_exit, &EvQtObject::blk_action_inputfocus);
-    parent_wid_blk->setToolTip(fl("xtt_ev blk widget"));
     parent_wid_blk->setMinimumSize(blk_width, blk_height);
     parent_wid_blk->setWindowTitle(translate_utf8(blk_name));
     // Do not set the DeleteOnClose attribute.

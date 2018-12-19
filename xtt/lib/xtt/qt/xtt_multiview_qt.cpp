@@ -62,6 +62,8 @@
 #include "xtt_xnav.h"
 
 // TODO: Clean up this mess
+// TODO: The Box layout is identical to the Table layout
+//       => Use the Table layout for both Box+Table.
 
 QWidget* XttMultiViewQt::error_msg(const char* msg, pwr_tStatus sts)
 {

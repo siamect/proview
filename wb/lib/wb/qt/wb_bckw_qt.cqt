@@ -52,7 +52,6 @@ WbBckWQt::WbBckWQt(void* bckw_parent_ctx, QWidget* bckw_parent_wid,
           bckw_parent_ctx, bckw_ldhses, bckw_name, l_list, l_editmode, status)
 {
   toplevel = new WbBckWQtWidget(this, bckw_parent_wid);
-  toplevel->setToolTip(fl("wb_bckw widget"));
   toplevel->setMinimumSize(1100, 600);
   toplevel->setWindowTitle(fl(bckw_name));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);

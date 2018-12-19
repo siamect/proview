@@ -433,7 +433,6 @@ XColWindQt::XColWindQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
   xattnav_eType xattnav_type;
 
   toplevel = new XColWindQtWidget(this, xa_parent_wid);
-  toplevel->setToolTip(fl("xtt_xcolwind widget"));
   toplevel->setMinimumSize(420, 600);
   toplevel->setWindowTitle(convert_utf8(title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);

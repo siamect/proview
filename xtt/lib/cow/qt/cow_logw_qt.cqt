@@ -87,6 +87,11 @@ CoLogWQt::CoLogWQt(void* logw_parent_ctx, QWidget* logw_parent_wid,
   wow = new CoWowQt(toplevel);
 }
 
+CoLogWQt::~CoLogWQt()
+{
+  delete logwnav;
+}
+
 void CoLogWQt::print()
 {
   CoWowQt::CreateBrowPrintDialogQt(name, logwnav->brow->ctx, ((CoLogWNavQt*)logwnav)->brow_widget);
@@ -104,7 +109,6 @@ void CoLogWQtWidget::focusInEvent(QFocusEvent* event)
 
 void CoLogWQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("CoLogWQtWidget::closeEvent\n");
   delete logw;
   QWidget::closeEvent(event);
 }

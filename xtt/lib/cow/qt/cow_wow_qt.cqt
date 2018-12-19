@@ -963,7 +963,6 @@ CoWowQt::CoWowQt(QWidget* parent)
 
 CoWowQt::~CoWowQt()
 {
-  debug_print("CoWowQt::~CoWowQt\n");
   delete object;
 }
 
@@ -1033,7 +1032,6 @@ static int GetPrintHeaderMargin(QPainter* painter)
 }
 
 static void PrintPage(QPainter* painter, const char* title, flow_tCtx ctx, QImage* image, double ll_x, double ll_y, double ur_x, double ur_y, int page) {
-  debug_print("ll_x=%f, ll_y=%f, ur_x=%f, ur_y=%f\n", ll_x, ll_y, ur_x, ur_y);
   double zoom = qMin(
     ctx->window_width / (ur_x - ll_x + 2 / ctx->zoom_factor),
     ctx->window_height / (ur_y - ll_y + 2 / ctx->zoom_factor)

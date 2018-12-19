@@ -52,7 +52,6 @@ WbExpWQt::WbExpWQt(void* expw_parent_ctx, QWidget* expw_parent_wid,
           expw_parent_ctx, expw_ldhses, expw_name, l_type, l_editmode, status)
 {
   toplevel = new WbExpWQtWidget(this, expw_parent_wid);
-  toplevel->setToolTip(fl("wb_expw widget"));
   toplevel->setMinimumSize(1100, 600);
   toplevel->setWindowTitle(fl(expw_name));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);

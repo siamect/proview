@@ -173,7 +173,6 @@ void CoXHelpQt::pop()
 
 CoXHelpQt::~CoXHelpQt()
 {
-  debug_print("~CoXHelpQt()\n");
   delete xhelpnav;
 }
 

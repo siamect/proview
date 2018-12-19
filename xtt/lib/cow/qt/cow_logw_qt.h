@@ -49,6 +49,7 @@ class CoLogWQt : public CoLogW {
 public:
   CoLogWQt(void* msg_parent_ctx, QWidget* msg_parent_wid, const char* msg_name,
       int l_show_item, pwr_tStatus* status);
+  ~CoLogWQt();
 
   QWidget* nav_widget;
   CoWowFocusTimerQt focustimer;

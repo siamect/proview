@@ -1238,7 +1238,6 @@ void GeQt::update()
 
 void GeQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("GeQtWidget::closeEvent\n");
   ge->Ge::activate_exit();
   QWidget::closeEvent(event);
 }
@@ -1263,7 +1262,6 @@ void GeQtWidget::focusInEvent(QFocusEvent* event)
 
 GeQt::~GeQt()
 {
-  debug_print("GeQt::~GeQt\n");
   if (graph->is_modified()) {
     open_yesnodia("Do you wan't to save changes", "Save", Ge::exit_save_cb,
         Ge::exit_nosave_cb);
@@ -1939,7 +1937,6 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
   subpalette_mapped = 1;
 
   // Color palette
-  debug_print("creating a scrolledcolpalwidgetqt\n");
   colpal_main_widget = scrolledcolpalwidgetqt_new(
       Ge::init_colorpalette_cb, this, &colorpalette_widget);
 
