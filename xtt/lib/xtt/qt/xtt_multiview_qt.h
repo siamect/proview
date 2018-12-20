@@ -64,10 +64,6 @@ public:
   XttTrendQt* trend[MV_SIZE];
   XttSevHistQt* sevhist[MV_SIZE];
   XttStreamQt* strmctx[MV_SIZE];
-  int comp_width[MV_SIZE];
-  int comp_height[MV_SIZE];
-  int comp_x[MV_SIZE];
-  int comp_y[MV_SIZE];
   CoWowFocusTimerQt focustimer;
 
   XttMultiViewQt(QWidget* parent_wid, void* parent_ctx, const char* name,

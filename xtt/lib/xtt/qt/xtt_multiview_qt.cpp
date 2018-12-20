@@ -161,10 +161,6 @@ XttMultiViewQt::XttMultiViewQt(QWidget* mv_parent_wid, void* mv_parent_ctx,
   memset(strmctx, 0, sizeof(strmctx));
   memset(comp_widget, 0, sizeof(comp_widget));
   memset(exchange_widget, 0, sizeof(exchange_widget));
-  memset(comp_width, 0, sizeof(comp_width));
-  memset(comp_height, 0, sizeof(comp_height));
-  memset(comp_x, 0, sizeof(comp_x));
-  memset(comp_y, 0, sizeof(comp_y));
 
   pwr_sClass_XttMultiView mv;
   *sts = gdh_GetObjectInfoAttrref(&aref, &mv, sizeof(mv));
@@ -225,50 +221,45 @@ XttMultiViewQt::XttMultiViewQt(QWidget* mv_parent_wid, void* mv_parent_ctx,
       for (int j = 0; j < rows; j++) {
         pwr_tFileName graph_name;
 
-        if (i * rows + j >= MV_SIZE) {
+        int idx = i * rows + j;
+        if (idx >= MV_SIZE) {
           escape = true;
           break;
         }
 
-        int w = comp_width[i * rows + j] = mv.Action[i * rows + j].Width;
-        int h = comp_height[i * rows + j] = mv.Action[i * rows + j].Height;
-        comp_x[i * rows + j] = mv.Action[i * rows + j].X;
-        comp_y[i * rows + j] = mv.Action[i * rows + j].Y;
-        int scrollbar = (mv.Action[i * rows + j].Options
-                        & pwr_mMultiViewElemOptionsMask_Scrollbars)
-            ? 1
-            : 0;
-        int menu = (mv.Action[i * rows + j].Options
-                   & pwr_mMultiViewElemOptionsMask_Menu)
-            ? 1
-            : 0;
-        strcpy(graph_name, mv.Action[i * rows + j].Action);
-        int type = mv.Action[i * rows + j].Type;
+        int w = mv.Action[idx].Width;
+        int h = mv.Action[idx].Height;
+        bool scrollbar = (mv.Action[idx].Options
+                        & pwr_mMultiViewElemOptionsMask_Scrollbars);
+        bool menu = (mv.Action[idx].Options
+                   & pwr_mMultiViewElemOptionsMask_Menu);
+        strcpy(graph_name, mv.Action[idx].Action);
+        int type = mv.Action[idx].Type;
 
         switch (type) {
         case pwr_eMultiViewContentEnum_AlarmList: {
           if (xnav->ev) {
-            sala[i * rows + j]
+            sala[idx]
                 = (EvAlaQt*)xnav->ev->open_alarmlist_satellite("No title",
-                    &lsts, w, h, 0, 0, mv.Action[i * rows + j].Object[0].Objid,
+                    &lsts, w, h, 0, 0, mv.Action[idx].Object[0].Objid,
                     ev_mAlaOptions_Embedded, toplevel);
-            if (!sala[i * rows + j]) {
+            if (!sala[idx]) {
               continue;
             }
-            comp_widget[i * rows + j] = sala[i * rows + j]->get_widget();
+            comp_widget[idx] = sala[idx]->get_widget();
           }
           break;
         }
         case pwr_eMultiViewContentEnum_EventList: {
           if (xnav->ev) {
-            seve[i * rows + j]
+            seve[idx]
                 = (EvEveQt*)xnav->ev->open_eventlist_satellite("No title",
-                    &lsts, w, h, 0, 0, mv.Action[i * rows + j].Object[0].Objid,
+                    &lsts, w, h, 0, 0, mv.Action[idx].Object[0].Objid,
                     ev_mAlaOptions_Embedded, toplevel);
-            if (!seve[i * rows + j]) {
+            if (!seve[idx]) {
               continue;
             }
-            comp_widget[i * rows + j] = seve[i * rows + j]->get_widget();
+            comp_widget[idx] = seve[idx]->get_widget();
           }
           break;
         }
@@ -283,10 +274,10 @@ XttMultiViewQt::XttMultiViewQt(QWidget* mv_parent_wid, void* mv_parent_ctx,
           for (int k = 0; k < 4; k++) {
             pwr_tAName oname;
 
-            if (cdh_ObjidIsNull(mv.Action[i * rows + j].Object[k].Objid)) {
+            if (cdh_ObjidIsNull(mv.Action[idx].Object[k].Objid)) {
               break;
             }
-            lsts = gdh_AttrrefToName(&mv.Action[i * rows + j].Object[k], oname,
+            lsts = gdh_AttrrefToName(&mv.Action[idx].Object[k], oname,
                 sizeof(oname), cdh_mName_volumeStrict);
             if (EVEN(lsts)) {
               break;
@@ -301,40 +292,40 @@ XttMultiViewQt::XttMultiViewQt(QWidget* mv_parent_wid, void* mv_parent_ctx,
             objectname_p = objectname;
           }
 
-          if (!feqf(mv.Action[i * rows + j].Borders[0], 0.0f)
-              || !feqf(mv.Action[i * rows + j].Borders[1], 0.0f)
-              || !feqf(mv.Action[i * rows + j].Borders[2], 0.0f)
-              || !feqf(mv.Action[i * rows + j].Borders[3], 0.0f)) {
+          if (!feqf(mv.Action[idx].Borders[0], 0.0f)
+              || !feqf(mv.Action[idx].Borders[1], 0.0f)
+              || !feqf(mv.Action[idx].Borders[2], 0.0f)
+              || !feqf(mv.Action[idx].Borders[3], 0.0f)) {
             for (int k = 0; k < 4; k++) {
-              borders[k] = mv.Action[i * rows + j].Borders[k];
+              borders[k] = mv.Action[idx].Borders[k];
             }
             bordersp = borders;
           }
 
-          gectx[i * rows + j]
+          gectx[idx]
               = new XttGeQt(toplevel, toplevel, "No title", graph_name,
                   scrollbar, menu, 0, w, h, mv_x, mv_y, 1.0, objectname_p, 0, 0,
                   ge_mOptions_Embedded, 0, bordersp, color_theme,
                   multiview_ge_command_cb, multiview_ge_get_current_objects_cb,
                   multiview_ge_is_authorized_cb, multiview_keyboard_cb);
 
-          gectx[i * rows + j]->close_cb = multiview_ge_close_cb;
-          gectx[i * rows + j]->help_cb = multiview_ge_help_cb;
-          gectx[i * rows + j]->display_in_xnav_cb
+          gectx[idx]->close_cb = multiview_ge_close_cb;
+          gectx[idx]->help_cb = multiview_ge_help_cb;
+          gectx[idx]->display_in_xnav_cb
               = multiview_ge_display_in_xnav_cb;
-          gectx[i * rows + j]->popup_menu_cb = multiview_ge_popup_menu_cb;
-          gectx[i * rows + j]->call_method_cb = multiview_ge_call_method_cb;
-          gectx[i * rows + j]->sound_cb = multiview_ge_sound_cb;
-          gectx[i * rows + j]->eventlog_cb = multiview_ge_eventlog_cb;
+          gectx[idx]->popup_menu_cb = multiview_ge_popup_menu_cb;
+          gectx[idx]->call_method_cb = multiview_ge_call_method_cb;
+          gectx[idx]->sound_cb = multiview_ge_sound_cb;
+          gectx[idx]->eventlog_cb = multiview_ge_eventlog_cb;
 
-          comp_widget[i * rows + j] = gectx[i * rows + j]->get_graph_widget();
+          comp_widget[idx] = gectx[idx]->get_graph_widget();
 
-          recall_buffer[i * rows + j].insert(graph_name, objectname_p);
+          recall_buffer[idx].insert(graph_name, objectname_p);
 
           if ((s = strchr(graph_name, '.'))) {
             *s = 0;
           }
-          appl.insert(applist_eType_Graph, (void*)gectx[i * rows + j],
+          appl.insert(applist_eType_Graph, (void*)gectx[idx],
               pwr_cNObjid, graph_name, objectname_p);
 
           break;
@@ -347,27 +338,27 @@ XttMultiViewQt::XttMultiViewQt(QWidget* mv_parent_wid, void* mv_parent_ctx,
             break;
           }
 
-          mvctx[i * rows + j]
+          mvctx[idx]
               = new XttMultiViewQt(toplevel, this, "No title", &graph_aref, w,
                   h, mv_x, mv_y, ge_mOptions_Embedded, 0, color_theme, &lsts,
                   multiview_ge_command_cb, multiview_ge_get_current_objects_cb,
                   multiview_ge_is_authorized_cb, multiview_keyboard_cb);
 
-          mvctx[i * rows + j]->close_cb = multiview_ge_close_cb;
-          mvctx[i * rows + j]->help_cb = multiview_ge_help_cb;
-          mvctx[i * rows + j]->display_in_xnav_cb
+          mvctx[idx]->close_cb = multiview_ge_close_cb;
+          mvctx[idx]->help_cb = multiview_ge_help_cb;
+          mvctx[idx]->display_in_xnav_cb
               = multiview_ge_display_in_xnav_cb;
-          mvctx[i * rows + j]->popup_menu_cb = multiview_ge_popup_menu_cb;
-          mvctx[i * rows + j]->call_method_cb = multiview_ge_call_method_cb;
-          mvctx[i * rows + j]->sound_cb = multiview_ge_sound_cb;
-          mvctx[i * rows + j]->eventlog_cb = multiview_ge_eventlog_cb;
+          mvctx[idx]->popup_menu_cb = multiview_ge_popup_menu_cb;
+          mvctx[idx]->call_method_cb = multiview_ge_call_method_cb;
+          mvctx[idx]->sound_cb = multiview_ge_sound_cb;
+          mvctx[idx]->eventlog_cb = multiview_ge_eventlog_cb;
 
-          comp_widget[i * rows + j]
-              = (QWidget*)mvctx[i * rows + j]->get_widget();
+          comp_widget[idx]
+              = (QWidget*)mvctx[idx]->get_widget();
 
-          recall_buffer[i * rows + j].insert(graph_name, 0);
+          recall_buffer[idx].insert(graph_name, 0);
 
-          appl.insert(applist_eType_MultiView, (void*)mvctx[i * rows + j],
+          appl.insert(applist_eType_MultiView, (void*)mvctx[idx],
               &aref, "", NULL);
 
           break;
@@ -378,20 +369,20 @@ XttMultiViewQt::XttMultiViewQt(QWidget* mv_parent_wid, void* mv_parent_ctx,
           pwr_tAttrRef arefv[2];
 
           lsts
-              = gdh_GetAttrRefTid(&mv.Action[i * rows + j].Object[0], &classid);
+              = gdh_GetAttrRefTid(&mv.Action[idx].Object[0], &classid);
           if (EVEN(lsts)) {
             break;
           }
 
           if (classid == pwr_cClass_PlotGroup) {
-            arefv[0] = mv.Action[i * rows + j].Object[0];
-            trend[i * rows + j] = new XttTrendQt(this, toplevel,
+            arefv[0] = mv.Action[idx].Object[0];
+            trend[idx] = new XttTrendQt(this, toplevel,
                 (char*)"No title", &widget, 0, &(arefv[0]), w, h,
                 (unsigned int)curve_mOptions_Embedded, color_theme, 0, sts);
           } else if (classid == pwr_cClass_DsTrend || classid == pwr_cClass_DsTrendCurve) {
-            arefv[0] = mv.Action[i * rows + j].Object[0];
+            arefv[0] = mv.Action[idx].Object[0];
             memset(&arefv[1], 0, sizeof(arefv[0]));
-            trend[i * rows + j] = new XttTrendQt(this, toplevel,
+            trend[idx] = new XttTrendQt(this, toplevel,
                 (char*)"No title", &widget, arefv, 0, w, h,
                 (unsigned int)curve_mOptions_Embedded, color_theme, 0, sts);
           } else {
@@ -401,13 +392,13 @@ XttMultiViewQt::XttMultiViewQt(QWidget* mv_parent_wid, void* mv_parent_ctx,
             break;
           }
 
-          trend[i * rows + j]->close_cb = multiview_trend_close_cb;
-          trend[i * rows + j]->command_cb = multiview_trend_command_cb;
-          trend[i * rows + j]->help_cb = multiview_trend_help_cb;
+          trend[idx]->close_cb = multiview_trend_close_cb;
+          trend[idx]->command_cb = multiview_trend_command_cb;
+          trend[idx]->help_cb = multiview_trend_help_cb;
 
-          comp_widget[i * rows + j] = widget;
+          comp_widget[idx] = widget;
 
-          appl.insert(applist_eType_Trend, (void*)trend[i * rows + j],
+          appl.insert(applist_eType_Trend, (void*)trend[idx],
               &arefv[0], "", NULL);
 
           break;
@@ -425,24 +416,24 @@ XttMultiViewQt::XttMultiViewQt(QWidget* mv_parent_wid, void* mv_parent_ctx,
           int oid_cnt = 0;
           pwr_tCid classid;
 
-          if (cdh_ObjidIsNull(mv.Action[i * rows + j].Object[0].Objid)) {
+          if (cdh_ObjidIsNull(mv.Action[idx].Object[0].Objid)) {
             break;
           }
 
           pwr_tAttrRef arefv[2];
-          arefv[0] = mv.Action[i * rows + j].Object[0];
+          arefv[0] = mv.Action[idx].Object[0];
           memset(&arefv[1], 0, sizeof(arefv[0]));
 
           lsts = gdh_GetAttrRefTid(&arefv[0], &classid);
           if (EVEN(lsts)) {
             break;
-          };
+          }
 
           if (classid == pwr_cClass_PlotGroup) {
             pwr_sClass_PlotGroup plot;
             pwr_tCid cid;
 
-            lsts = gdh_GetObjectInfoAttrref(&(mv.Action[i * rows + j].Object[0]), &plot, sizeof(plot));
+            lsts = gdh_GetObjectInfoAttrref(&(mv.Action[idx].Object[0]), &plot, sizeof(plot));
             if (EVEN(lsts)) {
               break;
             }
@@ -522,7 +513,7 @@ XttMultiViewQt::XttMultiViewQt(QWidget* mv_parent_wid, void* mv_parent_ctx,
             }
           } else if (classid == pwr_cClass_SevHistObject) {
             lsts = gdh_ArefANameToAref(
-                &mv.Action[i * rows + j].Object[0], "Object", &attr_aref);
+                &mv.Action[idx].Object[0], "Object", &attr_aref);
             if (EVEN(lsts)) {
               break;
             }
@@ -549,11 +540,11 @@ XttMultiViewQt::XttMultiViewQt(QWidget* mv_parent_wid, void* mv_parent_ctx,
             oidv[oid_cnt] = attr_aref.Objid;
             sevhistobjectv[oid_cnt] = true;
             strcpy(onamev[oid_cnt], "");
-            sevhist_aref = mv.Action[i * rows + j].Object[0];
+            sevhist_aref = mv.Action[idx].Object[0];
             oid_cnt = 1;
           } else if (classid == pwr_cClass_SevHist) {
             lsts = gdh_ArefANameToAref(
-                &mv.Action[i * rows + j].Object[0], "Attribute", &attr_aref);
+                &mv.Action[idx].Object[0], "Attribute", &attr_aref);
             if (EVEN(lsts)) {
               break;
             }
@@ -581,7 +572,7 @@ XttMultiViewQt::XttMultiViewQt(QWidget* mv_parent_wid, void* mv_parent_ctx,
             oidv[0] = attr_aref.Objid;
             sevhistobjectv[0] = false;
             oid_cnt = 1;
-            sevhist_aref = mv.Action[i * rows + j].Object[0];
+            sevhist_aref = mv.Action[idx].Object[0];
           } else {
             break;
           }
@@ -625,21 +616,21 @@ XttMultiViewQt::XttMultiViewQt(QWidget* mv_parent_wid, void* mv_parent_ctx,
           }
 
           QWidget* widget;
-          sevhist[i * rows + j] = new XttSevHistQt(this, toplevel,
+          sevhist[idx] = new XttSevHistQt(this, toplevel,
               (char*)"No title", &widget, oidv, anamev, onamev, sevhistobjectv,
               xnav->scctx, w, h, (unsigned int)curve_mOptions_Embedded,
               color_theme, time_ePeriod_, 0, sts);
           if (EVEN(*sts)) {
-            comp_widget[i * rows + j]
+            comp_widget[idx]
                 = error_msg("Unable to load history data", *sts);
             break;
           }
 
-          sevhist[i * rows + j]->help_cb = multiview_trend_help_cb;
-          sevhist[i * rows + j]->get_select_cb
+          sevhist[idx]->help_cb = multiview_trend_help_cb;
+          sevhist[idx]->get_select_cb
               = multiview_sevhist_get_select_cb;
 
-          comp_widget[i * rows + j] = widget;
+          comp_widget[idx] = widget;
 
           break;
         }
@@ -647,7 +638,7 @@ XttMultiViewQt::XttMultiViewQt(QWidget* mv_parent_wid, void* mv_parent_ctx,
           pwr_sClass_XttCamera xttcamera;
           pwr_tCid cid;
 
-          pwr_tObjid objid = mv.Action[i * rows + j].Object[0].Objid;
+          pwr_tObjid objid = mv.Action[idx].Object[0].Objid;
           if (cdh_ObjidIsNull(objid)) {
             break;
           }
@@ -694,16 +685,16 @@ XttMultiViewQt::XttMultiViewQt(QWidget* mv_parent_wid, void* mv_parent_ctx,
             options |= strm_mOptions_CgiParameterAuthentication;
           }
 
-          strmctx[i * rows + j] = new XttStreamQt(toplevel, this, "No title",
-              xttcamera.URL, mv.Action[i * rows + j].Width,
-              mv.Action[i * rows + j].Height, 0, 0, 0, options, 1, &aref, sts);
+          strmctx[idx] = new XttStreamQt(toplevel, this, "No title",
+              xttcamera.URL, mv.Action[idx].Width,
+              mv.Action[idx].Height, 0, 0, 0, options, 1, &aref, sts);
 
-          strmctx[i * rows + j]->close_cb = multiview_strm_close_cb;
+          strmctx[idx]->close_cb = multiview_strm_close_cb;
 
-          comp_widget[i * rows + j]
-              = (QWidget*)strmctx[i * rows + j]->get_widget();
+          comp_widget[idx]
+              = (QWidget*)strmctx[idx]->get_widget();
 
-          appl.insert(applist_eType_Stream, (void*)strmctx[i * rows + j], objid,
+          appl.insert(applist_eType_Stream, (void*)strmctx[idx], objid,
               xttcamera.Title, xttcamera.URL);
 
           break;
@@ -711,55 +702,55 @@ XttMultiViewQt::XttMultiViewQt(QWidget* mv_parent_wid, void* mv_parent_ctx,
         default:;
         }
 
-        if (mv.Action[i * rows + j].Options
+        if (mv.Action[idx].Options
             & pwr_mMultiViewElemOptionsMask_Exchangeable) {
-          exchange_widget_layout[i * rows + j] = new QHBoxLayout();
-          exchange_widget[i * rows + j]
-              = layout_to_widget(exchange_widget_layout[i * rows + j]);
-          if (comp_widget[i * rows + j]) {
-            add_expanding(exchange_widget_layout[i * rows + j],
-                comp_widget[i * rows + j]);
+          exchange_widget_layout[idx] = new QHBoxLayout();
+          exchange_widget[idx]
+              = layout_to_widget(exchange_widget_layout[idx]);
+          if (comp_widget[idx]) {
+            add_expanding(exchange_widget_layout[idx],
+                comp_widget[idx]);
           }
           switch (mv.Layout) {
           case pwr_eMultiViewLayoutEnum_Box:
-            row_widget_box->addWidget(exchange_widget[i * rows + j]);
+            row_widget_box->addWidget(exchange_widget[idx]);
             break;
           case pwr_eMultiViewLayoutEnum_Fix:
-            comp_widget[i * rows + j]->setMinimumSize(
-                mv.Action[i * rows + j].Width, mv.Action[i * rows + j].Height);
-            fixed_put(toplevel, exchange_widget[i * rows + j],
-                mv.Action[i * rows + j].X, mv.Action[i * rows + j].Y);
-            exchange_widget[i * rows + j]->show();
+            comp_widget[idx]->setMinimumSize(
+                mv.Action[idx].Width, mv.Action[idx].Height);
+            fixed_put(toplevel, exchange_widget[idx],
+                mv.Action[idx].X, mv.Action[idx].Y);
+            exchange_widget[idx]->show();
             break;
           case pwr_eMultiViewLayoutEnum_Pane:
-            row_widget_pane->addWidget(exchange_widget[i * rows + j]);
+            row_widget_pane->addWidget(exchange_widget[idx]);
             break;
           case pwr_eMultiViewLayoutEnum_Table:
             col_widget_table->addWidget(
-                exchange_widget[i * rows + j], j, i);
+                exchange_widget[idx], j, i);
             break;
           default:;
           }
         } else {
-          if (comp_widget[i * rows + j]) {
+          if (comp_widget[idx]) {
             switch (mv.Layout) {
             case pwr_eMultiViewLayoutEnum_Box:
-              row_widget_box->addWidget(comp_widget[i * rows + j]);
+              row_widget_box->addWidget(comp_widget[idx]);
               break;
             case pwr_eMultiViewLayoutEnum_Fix:
-              comp_widget[i * rows + j]->setMinimumSize(
-                  mv.Action[i * rows + j].Width,
-                  mv.Action[i * rows + j].Height);
-              fixed_put(toplevel, comp_widget[i * rows + j],
-                  mv.Action[i * rows + j].X, mv.Action[i * rows + j].Y);
-              comp_widget[i * rows + j]->show();
+              comp_widget[idx]->setMinimumSize(
+                  mv.Action[idx].Width,
+                  mv.Action[idx].Height);
+              fixed_put(toplevel, comp_widget[idx],
+                  mv.Action[idx].X, mv.Action[idx].Y);
+              comp_widget[idx]->show();
               break;
             case pwr_eMultiViewLayoutEnum_Pane:
-              row_widget_pane->addWidget(comp_widget[i * rows + j]);
+              row_widget_pane->addWidget(comp_widget[idx]);
               break;
             case pwr_eMultiViewLayoutEnum_Table:
               col_widget_table->addWidget(
-                  comp_widget[i * rows + j], j, i);
+                  comp_widget[idx], j, i);
             default:;
             }
           }
@@ -821,8 +812,6 @@ XttMultiViewQt::XttMultiViewQt(QWidget* mv_parent_wid, void* mv_parent_ctx,
       if (trend[i]) {
         trend[i]->setup();
       }
-    }
-    for (int i = 0; i < MV_SIZE; i++) {
       if (sevhist[i]) {
         sevhist[i]->setup();
       }
@@ -875,22 +864,19 @@ int XttMultiViewQt::set_subwindow_source(const char* name, char* source,
 
   for (int i = 0; i < cols; i++) {
     for (int j = 0; j < rows; j++) {
-      if (str_NoCaseStrcmp(comp_name, mv.Action[i * rows + j].Name) == 0) {
+      int idx = i * rows + j;
+      if (str_NoCaseStrcmp(comp_name, mv.Action[idx].Name) == 0) {
         if (!sub_name) {
           // Replace component
-          int w = mv.Action[i * rows + j].Width;
-          int h = mv.Action[i * rows + j].Height;
-          int scrollbar = (mv.Action[i * rows + j].Options
-                          & pwr_mMultiViewElemOptionsMask_Scrollbars)
-              ? 1
-              : 0;
-          int menu = (mv.Action[i * rows + j].Options
-                     & pwr_mMultiViewElemOptionsMask_Menu)
-              ? 1
-              : 0;
-          int type = mv.Action[i * rows + j].Type;
+          int w = mv.Action[idx].Width;
+          int h = mv.Action[idx].Height;
+          bool scrollbar = (mv.Action[idx].Options
+                          & pwr_mMultiViewElemOptionsMask_Scrollbars);
+          bool menu = (mv.Action[idx].Options
+                     & pwr_mMultiViewElemOptionsMask_Menu);
+          int type = mv.Action[idx].Type;
 
-          if (!(mv.Action[i * rows + j].Options
+          if (!(mv.Action[idx].Options
                   & pwr_mMultiViewElemOptionsMask_Exchangeable)) {
             return 0;
           }
@@ -898,37 +884,34 @@ int XttMultiViewQt::set_subwindow_source(const char* name, char* source,
           switch (type) {
           case pwr_eMultiViewContentEnum_Graph:
           case pwr_eMultiViewContentEnum_ObjectGraph: {
-            XttGeQt* ctx = new XttGeQt(toplevel, toplevel, "No title", source,
-                scrollbar, menu, 0, w, h, 0, 0, 1.0, object, 0, 0,
+            gectx[idx] = new XttGeQt(toplevel, toplevel, "No title",
+                source, scrollbar, menu, 0, w, h, 0, 0, 1.0, object, 0, 0,
                 ge_mOptions_Embedded, 0, borders, color_theme,
                 multiview_ge_command_cb, multiview_ge_get_current_objects_cb,
                 multiview_ge_is_authorized_cb, multiview_keyboard_cb);
 
-            ctx->close_cb = multiview_ge_close_cb;
-            ctx->help_cb = multiview_ge_help_cb;
-            ctx->display_in_xnav_cb = multiview_ge_display_in_xnav_cb;
-            ctx->popup_menu_cb = multiview_ge_popup_menu_cb;
-            ctx->call_method_cb = multiview_ge_call_method_cb;
-            ctx->sound_cb = multiview_ge_sound_cb;
-            ctx->eventlog_cb = multiview_ge_eventlog_cb;
+            gectx[idx]->close_cb = multiview_ge_close_cb;
+            gectx[idx]->help_cb = multiview_ge_help_cb;
+            gectx[idx]->display_in_xnav_cb = multiview_ge_display_in_xnav_cb;
+            gectx[idx]->popup_menu_cb = multiview_ge_popup_menu_cb;
+            gectx[idx]->call_method_cb = multiview_ge_call_method_cb;
+            gectx[idx]->sound_cb = multiview_ge_sound_cb;
+            gectx[idx]->eventlog_cb = multiview_ge_eventlog_cb;
 
-            QWidget* comp_w = ctx->get_graph_widget();
+            appl.remove((void*)gectx[idx]);
+            exchange_widget_layout[idx]->removeWidget(
+                comp_widget[idx]);
 
-            appl.remove((void*)gectx[i * rows + j]);
-
-            exchange_widget_layout[i * rows + j]->removeWidget(
-                comp_widget[i * rows + j]);
-            comp_w->setSizePolicy(
+            comp_widget[idx] = gectx[idx]->get_graph_widget();
+            comp_widget[idx]->setSizePolicy(
                 QSizePolicy::Expanding, QSizePolicy::Expanding);
-            exchange_widget_layout[i * rows + j]->insertWidget(0, comp_w);
-            exchange_widget[i * rows + j]->show();
+            exchange_widget_layout[idx]->insertWidget(0, comp_widget[idx]);
+            exchange_widget[idx]->show();
 
-            comp_widget[i * rows + j] = comp_w;
-            gectx[i * rows + j] = ctx;
             if (insert) {
-              recall_buffer[i * rows + j].insert(source, object);
+              recall_buffer[idx].insert(source, object);
             }
-            appl.insert(applist_eType_Graph, (void*)gectx[i * rows + j],
+            appl.insert(applist_eType_Graph, (void*)gectx[idx],
                 pwr_cNObjid, source, object);
             break;
           }
@@ -940,38 +923,34 @@ int XttMultiViewQt::set_subwindow_source(const char* name, char* source,
               break;
             }
 
-            XttMultiViewQt* ctx = new XttMultiViewQt(toplevel, this, "No title",
+            mvctx[idx] = new XttMultiViewQt(toplevel, this, "No title",
                 &source_aref, w, h, 0, 0, ge_mOptions_Embedded, 0, color_theme,
                 &sts, multiview_ge_command_cb,
                 multiview_ge_get_current_objects_cb,
                 multiview_ge_is_authorized_cb, multiview_keyboard_cb);
 
-            ctx->close_cb = multiview_ge_close_cb;
-            ctx->help_cb = multiview_ge_help_cb;
-            ctx->display_in_xnav_cb = multiview_ge_display_in_xnav_cb;
-            ctx->popup_menu_cb = multiview_ge_popup_menu_cb;
-            ctx->call_method_cb = multiview_ge_call_method_cb;
-            ctx->sound_cb = multiview_ge_sound_cb;
-            ctx->eventlog_cb = multiview_ge_eventlog_cb;
+            mvctx[idx]->close_cb = multiview_ge_close_cb;
+            mvctx[idx]->help_cb = multiview_ge_help_cb;
+            mvctx[idx]->display_in_xnav_cb = multiview_ge_display_in_xnav_cb;
+            mvctx[idx]->popup_menu_cb = multiview_ge_popup_menu_cb;
+            mvctx[idx]->call_method_cb = multiview_ge_call_method_cb;
+            mvctx[idx]->sound_cb = multiview_ge_sound_cb;
+            mvctx[idx]->eventlog_cb = multiview_ge_eventlog_cb;
 
-            QWidget* comp_w = (QWidget*)ctx->get_widget();
+            appl.remove((void*)mvctx[idx]);
+            exchange_widget_layout[idx]->removeWidget(
+                comp_widget[idx]);
 
-            appl.remove((void*)mvctx[i * rows + j]);
-
-            exchange_widget_layout[i * rows + j]->removeWidget(
-                comp_widget[i * rows + j]);
-            comp_w->setSizePolicy(
+            comp_widget[idx] = (QWidget*)mvctx[idx]->get_widget();
+            comp_widget[idx]->setSizePolicy(
                 QSizePolicy::Expanding, QSizePolicy::Expanding);
-            exchange_widget_layout[i * rows + j]->insertWidget(0, comp_w);
-            exchange_widget[i * rows + j]->show();
-
-            comp_widget[i * rows + j] = comp_w;
-            mvctx[i * rows + j] = ctx;
+            exchange_widget_layout[idx]->insertWidget(0, comp_widget[idx]);
+            exchange_widget[idx]->show();
 
             if (insert) {
-              recall_buffer[i * rows + j].insert(source, object);
+              recall_buffer[idx].insert(source, object);
             }
-            appl.insert(applist_eType_MultiView, (void*)mvctx[i * rows + j],
+            appl.insert(applist_eType_MultiView, (void*)mvctx[idx],
                 &source_aref, "", NULL);
             break;
           }
@@ -992,16 +971,15 @@ int XttMultiViewQt::set_subwindow_source(const char* name, char* source,
               break;
             }
 
-            XttTrendQt* ctx;
             if (classid == pwr_cClass_PlotGroup) {
               arefv[0] = object_aref;
-              ctx = new XttTrendQt(this, toplevel, (char*)"No title", &comp_w,
+              trend[idx] = new XttTrendQt(this, toplevel, (char*)"No title", &comp_w,
                   0, &(arefv[0]), w, h, (unsigned int)curve_mOptions_Embedded,
                   color_theme, 0, &lsts);
             } else if (classid == pwr_cClass_DsTrend || classid == pwr_cClass_DsTrendCurve) {
               arefv[0] = object_aref;
               memset(&arefv[1], 0, sizeof(arefv[0]));
-              ctx = new XttTrendQt(this, toplevel, (char*)"No title", &comp_w,
+              trend[idx] = new XttTrendQt(this, toplevel, (char*)"No title", &comp_w,
                   arefv, 0, w, h, (unsigned int)curve_mOptions_Embedded,
                   color_theme, 0, &lsts);
             } else {
@@ -1011,30 +989,28 @@ int XttMultiViewQt::set_subwindow_source(const char* name, char* source,
               break;
             }
 
-            ctx->close_cb = multiview_trend_close_cb;
-            ctx->command_cb = multiview_trend_command_cb;
-            ctx->help_cb = multiview_trend_help_cb;
+            trend[idx]->close_cb = multiview_trend_close_cb;
+            trend[idx]->command_cb = multiview_trend_command_cb;
+            trend[idx]->help_cb = multiview_trend_help_cb;
 
-            appl.remove((void*)trend[i * rows + j]);
+            appl.remove((void*)trend[idx]);
+            exchange_widget_layout[idx]->removeWidget(
+                comp_widget[idx]);
 
-            exchange_widget_layout[i * rows + j]->removeWidget(
-                comp_widget[i * rows + j]);
-            comp_w->setSizePolicy(
+            comp_widget[idx] = comp_w;
+            comp_widget[idx]->setSizePolicy(
                 QSizePolicy::Expanding, QSizePolicy::Expanding);
-            exchange_widget_layout[i * rows + j]->insertWidget(0, comp_w);
-            exchange_widget[i * rows + j]->show();
-            ctx->setup();
-
-            comp_widget[i * rows + j] = comp_w;
-            trend[i * rows + j] = ctx;
+            exchange_widget_layout[idx]->insertWidget(0, comp_widget[idx]);
+            exchange_widget[idx]->show();
+            trend[idx]->setup();
 
             if (insert) {
-              recall_buffer[i * rows + j].insert(source, object);
+              recall_buffer[idx].insert(source, object);
             }
-            appl.insert(applist_eType_Trend, (void*)trend[i * rows + j],
+            appl.insert(applist_eType_Trend, (void*)trend[idx],
                 &arefv[0], "", NULL);
 
-            mv.Action[i * rows + j].Object[0] = object_aref;
+            mv.Action[idx].Object[0] = object_aref;
             break;
           }
 
@@ -1049,7 +1025,6 @@ int XttMultiViewQt::set_subwindow_source(const char* name, char* source,
             int oid_cnt = 0;
             pwr_tCid classid;
             pwr_tStatus lsts;
-            QWidget* comp_w;
             pwr_tAttrRef arefv[2];
             pwr_tAttrRef object_aref;
 
@@ -1064,7 +1039,7 @@ int XttMultiViewQt::set_subwindow_source(const char* name, char* source,
             lsts = gdh_GetAttrRefTid(&arefv[0], &classid);
             if (EVEN(lsts)) {
               break;
-            };
+            }
 
             if (classid == pwr_cClass_PlotGroup) {
               pwr_sClass_PlotGroup plot;
@@ -1216,13 +1191,13 @@ int XttMultiViewQt::set_subwindow_source(const char* name, char* source,
             oidv[oid_cnt] = pwr_cNOid;
 
             XNav* xnav = get_xnav();
-            XttSevHistQt* ctx;
 
             if (!xnav->scctx) {
               break;
             }
 
-            ctx = new XttSevHistQt(this, toplevel, (char*)"No title", &comp_w,
+            QWidget* comp_w;
+            sevhist[idx] = new XttSevHistQt(this, toplevel, (char*)"No title", &comp_w,
                 oidv, anamev, onamev, sevhistobjectv, xnav->scctx, w, h,
                 (unsigned int)curve_mOptions_Embedded, color_theme,
                 time_ePeriod_, 0, &lsts);
@@ -1230,23 +1205,21 @@ int XttMultiViewQt::set_subwindow_source(const char* name, char* source,
               break;
             }
 
-            ctx->help_cb = multiview_trend_help_cb;
-            ctx->get_select_cb = multiview_sevhist_get_select_cb;
+            sevhist[idx]->help_cb = multiview_trend_help_cb;
+            sevhist[idx]->get_select_cb = multiview_sevhist_get_select_cb;
 
-            appl.remove((void*)trend[i * rows + j]);
+            appl.remove((void*)trend[idx]);
+            exchange_widget_layout[idx]->removeWidget(
+                comp_widget[idx]);
 
-            exchange_widget_layout[i * rows + j]->removeWidget(
-                comp_widget[i * rows + j]);
-            comp_w->setSizePolicy(
+            comp_widget[idx] = comp_w;
+            comp_widget[idx]->setSizePolicy(
                 QSizePolicy::Expanding, QSizePolicy::Expanding);
-            exchange_widget_layout[i * rows + j]->insertWidget(0, comp_w);
-            exchange_widget[i * rows + j]->show();
-            ctx->setup();
+            exchange_widget_layout[idx]->insertWidget(0, comp_widget[idx]);
+            exchange_widget[idx]->show();
+            sevhist[idx]->setup();
 
-            comp_widget[i * rows + j] = comp_w;
-            sevhist[i * rows + j] = ctx;
-
-            mv.Action[i * rows + j].Object[0] = object_aref;
+            mv.Action[idx].Object[0] = object_aref;
           }
           case pwr_eMultiViewContentEnum_Camera: {
             pwr_sClass_XttCamera xttcamera;
@@ -1264,28 +1237,25 @@ int XttMultiViewQt::set_subwindow_source(const char* name, char* source,
               break;
             }
 
-            XttStreamQt* ctx
-                = new XttStreamQt(toplevel, this, "No title", xttcamera.URL, w,
-                    h, 0, 0, 0, xttcamera.Options, 1, &object_aref, &lsts);
+            strmctx[idx] = new XttStreamQt(toplevel, this, "No title",
+                xttcamera.URL, w, h, 0, 0, 0, xttcamera.Options, 1,
+                &object_aref, &lsts);
 
-            QWidget* comp_w = (QWidget*)ctx->get_widget();
+            appl.remove((void*)strmctx[idx]);
+            exchange_widget_layout[idx]->removeWidget(
+                comp_widget[idx]);
 
-            appl.remove((void*)strmctx[i * rows + j]);
-
-            exchange_widget_layout[i * rows + j]->removeWidget(
-                comp_widget[i * rows + j]);
-            comp_w->setSizePolicy(
+            comp_widget[idx] = (QWidget*)strmctx[idx]->get_widget();
+            comp_widget[idx]->setSizePolicy(
                 QSizePolicy::Expanding, QSizePolicy::Expanding);
-            exchange_widget_layout[i * rows + j]->insertWidget(0, comp_w);
-            exchange_widget[i * rows + j]->show();
+            exchange_widget_layout[idx]->insertWidget(0, comp_widget[idx]);
+            exchange_widget[idx]->show();
 
-            comp_widget[i * rows + j] = comp_w;
-            strmctx[i * rows + j] = ctx;
             if (insert) {
-              recall_buffer[i * rows + j].insert(source, object);
+              recall_buffer[idx].insert(source, object);
             }
 
-            appl.insert(applist_eType_Stream, (void*)strmctx[i * rows + j],
+            appl.insert(applist_eType_Stream, (void*)strmctx[idx],
                 object_aref.Objid, xttcamera.Title, xttcamera.URL);
             break;
           }
@@ -1293,29 +1263,17 @@ int XttMultiViewQt::set_subwindow_source(const char* name, char* source,
           }
         } else {
           // Call set_window in component
-          int type = mv.Action[i * rows + j].Type;
-
-          switch (type) {
-          case pwr_eMultiViewContentEnum_Graph:
-          case pwr_eMultiViewContentEnum_ObjectGraph: {
-            gectx[i * rows + j]->set_subwindow_source(sub_name, source, object);
-            break;
-          }
-          case pwr_eMultiViewContentEnum_MultiView: {
-            mvctx[i * rows + j]->set_subwindow_source(
+          if (gectx[idx] != 0) {
+            gectx[idx]->set_subwindow_source(sub_name, source, object);
+          } else if (mvctx[idx] != 0) {
+            mvctx[idx]->set_subwindow_source(
                 sub_name, source, object, borders, insert);
-          }
-          default:;
           }
         }
       }
     }
   }
-  if (cont) {
-    return 1;
-  } else {
-    return GLOW__TERMINATED;
-  }
+  return cont ? 1 : GLOW__TERMINATED;
 }
 
 int XttMultiViewQt::key_pressed(int key)
@@ -1355,21 +1313,12 @@ void XttMultiViewQt::signal_send(char* signalname)
     return;
   }
 
-  for (int i = 0; i < cols; i++) {
-    for (int j = 0; j < rows; j++) {
-      // Call signal_send in component
-
-      switch (mv.Action[i * rows + j].Type) {
-      case pwr_eMultiViewContentEnum_Graph:
-      case pwr_eMultiViewContentEnum_ObjectGraph:
-        gectx[i * rows + j]->signal_send(signalname);
-        break;
-      case pwr_eMultiViewContentEnum_MultiView: {
-        mvctx[i * rows + j]->signal_send(signalname);
-        break;
-      }
-      default:;
-      }
+  for (int i = 0; i < cols * rows; i++) {
+    // Call signal_send in component
+    if (gectx[i] != 0) {
+      gectx[i]->signal_send(signalname);
+    } else if (mvctx[i] != 0) {
+      mvctx[i]->signal_send(signalname);
     }
   }
 }
