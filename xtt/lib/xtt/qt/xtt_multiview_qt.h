@@ -43,27 +43,19 @@
 
 #include <QHBoxLayout>
 
-class EvAlaQt;
-class EvEveQt;
-class XttGeQt;
-class XttTrendQt;
-class XttSevHistQt;
-class XttStreamQt;
-
 class XttMultiViewQtWidget;
+
+typedef struct {
+  int tag;
+  void* data;
+} View;
 
 class XttMultiViewQt : public XttMultiView {
 public:
-  QWidget* comp_widget[MV_SIZE];
-  QWidget* exchange_widget[MV_SIZE];
-  QHBoxLayout* exchange_widget_layout[MV_SIZE];
-  XttGeQt* gectx[MV_SIZE];
-  XttMultiViewQt* mvctx[MV_SIZE];
-  EvAlaQt* sala[MV_SIZE];
-  EvEveQt* seve[MV_SIZE];
-  XttTrendQt* trend[MV_SIZE];
-  XttSevHistQt* sevhist[MV_SIZE];
-  XttStreamQt* strmctx[MV_SIZE];
+  std::vector<QWidget*> comp_widget;
+  std::vector<QWidget*> exchange_widget;
+  std::vector<QHBoxLayout*> exchange_widget_layout;
+  std::vector<View> views;
   CoWowFocusTimerQt focustimer;
 
   XttMultiViewQt(QWidget* parent_wid, void* parent_ctx, const char* name,
@@ -83,9 +75,10 @@ public:
   int key_pressed(int key);
   void close_input_all();
   void signal_send(char* signalname);
-  QWidget* error_msg(const char* msg, pwr_tStatus sts);
 
 private:
+  void setDataAndTag(int idx, int tag, void* data);
+
   XttMultiViewQtWidget* toplevel;
 };
 
