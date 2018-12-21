@@ -75,27 +75,9 @@ void XttGeQt::set_below(int val)
       toplevel->windowFlags() | Qt::WindowStaysOnBottomHint);
 }
 
-void XttGeQtWidget::resize(int width, int height)
-{
-  int default_width;
-  int default_height;
-  float rd = 0.05;
-  ;
-
-  default_width = width + 20;
-  default_height = height + 20;
-  if (width < 300 || height < 300) {
-    rd = 0.2;
-  }
-  default_height = MIN(default_height, width * (1.0 + rd));
-  default_height = MAX(default_height, width * (1.0 - rd));
-
-  QWidget::resize(default_width, default_height);
-}
-
 void XttGeQt::set_size(int width, int height)
 {
-  toplevel->resize(width, height);
+  toplevel->resize(width + 20, height + 20);
 }
 
 void XttGeQt::ge_change_value_cb(void* ge_ctx, void* value_object, char* text)
@@ -294,7 +276,6 @@ XttGeQt::XttGeQt(QWidget* xg_parent_wid, void* xg_parent_ctx,
 
     if (options & ge_mOptions_Dialog) {
       toplevel->setWindowFlags(Qt::Dialog);
-      toplevel->setMinimumSize(window_width, window_height);
     }
 
     CoWowQt::SetWindowIcon(toplevel);

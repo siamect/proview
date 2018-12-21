@@ -46,15 +46,12 @@ CLogNavQt::CLogNavQt(
     void* clog_parent_ctx, QWidget* clog_parent_wid, QWidget** w)
     : CLogNav(clog_parent_ctx)
 {
-  debug_print("creating a scrolledbrowwidgetqt\n");
   form_widget = scrolledbrowwidgetqt_new(init_brow_cb, this, &brow_widget);
-
   *w = form_widget;
 }
 
 CLogNavQt::~CLogNavQt()
 {
-  debug_print("CLogNavQt::~CLogNavQt\n");
   delete brow;
   form_widget->close();
 }

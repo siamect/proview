@@ -150,23 +150,9 @@ WGeQt::~WGeQt()
   }
 }
 
-void WGeQtWidget::resize(int width, int height)
-{
-  int default_width;
-  int default_height;
-
-  default_width = width + 20;
-  default_height = height + 20;
-
-  default_height = MIN(default_height, width * 0.95);
-  default_height = MAX(default_height, width * 1.05);
-
-  QWidget::resize(default_width, default_height);
-}
-
 void WGeQt::set_size(int width, int height)
 {
-  toplevel->resize(width, height);
+  toplevel->resize(width + 20, height + 20);
 }
 
 void WGeQt::set_subwindow_release()
