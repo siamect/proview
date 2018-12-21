@@ -245,11 +245,9 @@ XttGeQt::XttGeQt(QWidget* xg_parent_wid, void* xg_parent_ctx,
           xg_get_current_objects_cb, xg_is_authorized_cb, xg_keyboard_cb),
       value_dialog(0)
 {
-  int window_width = 600;
-  int window_height = 500;
+  int window_width;
+  int window_height;
   pwr_tStatus sts;
-  char title[300];
-
   if (xg_width != 0 && xg_height != 0) {
     window_width = xg_width;
     window_height = xg_height;
@@ -261,11 +259,13 @@ XttGeQt::XttGeQt(QWidget* xg_parent_wid, void* xg_parent_ctx,
       window_height = 500;
     }
   }
+
+  char title[300];
   str_StrncpyCutOff(title, name, sizeof(title), 1);
 
   // Qt
   if (!(options & ge_mOptions_Embedded)) {
-    toplevel = new XttGeQtWidget(this, xg_parent_wid);
+    toplevel = new XttGeQtWidget(this);
     toplevel->setMinimumSize(window_width, window_height);
     toplevel->setWindowTitle(QString::fromLatin1(title));
     toplevel->setAttribute(Qt::WA_DeleteOnClose);
@@ -274,15 +274,7 @@ XttGeQt::XttGeQt(QWidget* xg_parent_wid, void* xg_parent_ctx,
       toplevel->setWindowFlags(Qt::CustomizeWindowHint);
     }
 
-    if (options & ge_mOptions_Dialog) {
-      toplevel->setWindowFlags(Qt::Dialog);
-    }
-
     CoWowQt::SetWindowIcon(toplevel);
-
-    if (basewidget) {
-      toplevel->setModal(true);
-    }
     if (options & ge_mOptions_IsMain) {
       CoWow::SetTransient(toplevel);
     }

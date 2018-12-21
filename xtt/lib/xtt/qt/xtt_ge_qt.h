@@ -92,12 +92,12 @@ public:
   static void message_dialog_cb(void* ge_ctx, const char* text);
 };
 
-class XttGeQtWidget : public QDialog {
+class XttGeQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  XttGeQtWidget(XttGeQt* parent_ctx, QWidget* parent)
-      : QDialog(parent), ge(parent_ctx)
+  XttGeQtWidget(XttGeQt* parent)
+      : QWidget(), ge(parent)
   {
   }
 
