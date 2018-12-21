@@ -693,11 +693,7 @@ void GeCurveQt::reset_cursor()
 
 void* GeCurveQt::get_widget()
 {
-  if (options & curve_mOptions_Embedded) {
-    return vbox;
-  } else {
-    return this;
-  }
+  return toplevel;
 }
 
 GeCurveQt::~GeCurveQt()
@@ -731,26 +727,22 @@ GeCurveQt::GeCurveQt(void* gc_parent_ctx, QWidget* parent_widget,
           gc_width, gc_height, gc_options, gc_color_theme),
       disable_timecombo_callback(0)
 {
-  int window_width = 900;
-  int window_height = 700;
+  if (cd == NULL) {
+    // Error from GeCurve constructor
+    return;
+  }
+
+  int window_width = gc_width ? gc_width : 900;
+  int window_height = gc_height ? gc_height : 700;
   const int names_height = 150;
   const int nav_height = 120;
-  float height_scale = 1;
-
-  if (gc_width != 0) {
-    window_width = gc_width;
-  }
-  if (gc_height != 0) {
-    height_scale = (float)gc_height / window_height;
-    window_height = gc_height;
-  }
 
   str_StrncpyCutOff(title, curve_name, sizeof(title), 1);
 
   // Qt
-  toplevel = new GeCurveQtWidget(this, parent_widget);
+  toplevel = new GeCurveQtWidget(this);
+  toplevel->setMinimumSize(window_width, window_height);
   if (!(options & curve_mOptions_Embedded)) {
-    toplevel->setMinimumSize(window_width, window_height);
     toplevel->setWindowTitle(convert_utf8(title));
     toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -904,16 +896,13 @@ GeCurveQt::GeCurveQt(void* gc_parent_ctx, QWidget* parent_widget,
   vbox_layout->addWidget(timetools);
   add_expanding(vbox_layout, vpaned);
 
+  toplevel->setLayout(vbox_layout);
   if (!(options & curve_mOptions_Embedded)) {
-    toplevel->setLayout(vbox_layout);
-
     toplevel->show();
-  } else {
-    vbox = layout_to_widget(vbox_layout);
-    vbox->setMinimumSize(window_width, window_height);
   }
 
   QList<int> sizes;
+  float height_scale = gc_height ? (gc_height / 700) : 1;
   sizes << names_height * height_scale;
   sizes << (window_height - names_height - nav_height) * height_scale;
   sizes << nav_height * height_scale;
@@ -949,10 +938,6 @@ GeCurveQt::GeCurveQt(void* gc_parent_ctx, QWidget* parent_widget,
       toplevel->showMinimized();
     } else if (options & curve_mOptions_Invisible) {
       toplevel->setVisible(false);
-    }
-
-    if (basewidget) {
-      toplevel->setModal(true);
     }
   }
 }

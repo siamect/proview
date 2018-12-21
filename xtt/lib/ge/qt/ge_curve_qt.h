@@ -57,7 +57,6 @@ public:
   ~GeCurveQt();
 
   GeCurveQtWidget* toplevel;
-  QWidget* vbox;
   QWidget* growcurve_main_widget;
   QWidget* growaxis_main_widget;
   QWidget* grownames_main_widget;
@@ -103,12 +102,12 @@ public:
   void* get_widget();
 };
 
-class GeCurveQtWidget : public QDialog {
+class GeCurveQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  GeCurveQtWidget(GeCurveQt* parent_ctx, QWidget* parent)
-      : QDialog(parent), curve(parent_ctx)
+  GeCurveQtWidget(GeCurveQt* parent)
+      : QWidget(), curve(parent)
   {
   }
 
