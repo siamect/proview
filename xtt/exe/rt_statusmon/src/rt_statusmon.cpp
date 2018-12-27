@@ -36,55 +36,20 @@
 
 /* rt_statusmon.cpp Status Monitor */
 
-#include <unistd.h>
-#include <sys/stat.h>
-
 #include "co_dcli.h"
 #include "co_string.h"
 
-static void usage()
-{
-  printf("\nUsage: rt_statusmon [-f windowmanager]");
-}
-
 int main(int argc, char* argv[])
 {
-  int i;
-  int found = 0;
-  char wmg[80];
-  pwr_tFileName file;
-
-  if (argc > 1) {
-    for (i = 1; i < argc; i++) {
-      if (streq(argv[i], "-f")) {
-        if (i + 1 >= argc) {
-          usage();
-          exit(0);
-        }
-        found = 1;
-        strcpy(wmg, argv[i + 1]);
-        i++;
+  for (int i = 1; i < argc; i++) {
+    if (streq(argv[i], "-f")) {
+      if (i + 1 >= argc) {
+        printf("\nUsage: rt_statusmon [-f windowmanager]");
+        exit(0);
       }
+      dcli_execute_flavour_if_exists(argv, argv[i + 1]);
     }
   }
 
-  if (!found) {
-    const char *flavours[] = {"qt","gtk"};
-    for (int i = 0; i < 2; i++) {
-      strcpy(file, "$pwr_exe/rt_statusmon_");
-      strcat(file, flavours[i]);
-      dcli_translate_filename(file, file);
-      struct stat st;
-      if (stat(file, &st) == 0) {
-        strcpy(wmg, flavours[i]);
-        break;
-      }
-    }
-  }
-
-  strcpy(file, argv[0]);
-  strcat(file, "_");
-  strcat(file, wmg);
-
-  execvp(file, argv);
+  dcli_execute_flavour(argv);
 }

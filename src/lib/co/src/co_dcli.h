@@ -134,6 +134,10 @@ void dcli_readstruct_free(dcli_sStructElement* e_list);
 
 int dcli_readstruct_get_message(char** message);
 
+void dcli_execute_flavour_if_exists(char* argv[], const char* flavour);
+
+void dcli_execute_flavour(char* argv[]);
+
 #ifdef __cplusplus
 }
 #endif

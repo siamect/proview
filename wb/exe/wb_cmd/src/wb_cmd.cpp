@@ -45,49 +45,29 @@
 
 int main(int argc, char* argv[])
 {
-  int i;
-  int found = 0;
-  char wmg[80];
   pwr_tFileName file;
 
-  if (argc > 1) {
-    for (i = 1; i < argc; i++) {
-      if (streq(argv[i], "-f")) {
-        if (i + 1 >= argc) {
-          // Wb::usage();
-          exit(0);
-        }
-        found = 1;
-        strcpy(wmg, argv[i + 1]);
-        i++;
+  for (int i = 1; i < argc; i++) {
+    if (streq(argv[i], "-f")) {
+      if (i + 1 >= argc) {
+        // Wb::usage();
+        exit(0);
       }
-    }
-    strcpy(file, argv[0]);
-    strcat(file, "_");
-    strcat(file, wmg);
-  }
-
-  if (!found) {
-    const char* flavours[] = { "qt", "gtk", "motif" };
-    for (int i = 0; i < 3; i++) {
-      strcpy(file, "$pwr_exe/wb_cmd_");
-      strcat(file, flavours[i]);
-      dcli_translate_filename(file, file);
-      struct stat st;
-      if (stat(file, &st) == 0) {
-        strcpy(wmg, flavours[i]);
-        break;
-      }
-
-      strcpy(file, "$pwr_eexe/wb_cmd_");
-      strcat(file, flavours[i]);
-      dcli_translate_filename(file, file);
-      if (stat(file, &st) == 0) {
-        strcpy(wmg, flavours[i]);
-        break;
-      }
+      dcli_execute_flavour_if_exists(argv, argv[i + 1]);
     }
   }
 
-  execvp(file, argv);
+  dcli_execute_flavour(argv);
+
+  const char* flavours[] = { "qt", "gtk", "motif" };
+  for (int i = 0; i < 3; i++) {
+    strcpy(file, "$pwr_eexe/wb_cmd_");
+    strcat(file, flavours[i]);
+    dcli_translate_filename(file, file);
+    struct stat st;
+    if (stat(file, &st) == 0) {
+      execvp(file, argv);
+      exit(0);
+    }
+  }
 }

@@ -40,6 +40,7 @@
 #include <ctype.h>
 #include <math.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "co_ccm.h"
 #include "co_cdh.h"
@@ -971,4 +972,25 @@ unsigned int dcli_random()
 
   srand(itime);
   return (unsigned int)(rand() / ((double)RAND_MAX + 1) * 999999);
+}
+
+void dcli_execute_flavour_if_exists(char* argv[], const char* flavour)
+{
+  pwr_tFileName file;
+  if (argv[0][0] != '/') {
+    strcpy(file, "$pwr_exe/");
+  }
+  strcat(file, argv[0]);
+  strcat(file, "_");
+  strcat(file, flavour);
+  dcli_translate_filename(file, file);
+  execvp(file, argv); // execvp only return if the file doesn't exist
+}
+
+void dcli_execute_flavour(char* argv[])
+{
+  const char* flavours[] = { "qt", "gtk", "motif" };
+  for (int i = 0; i < 3; i++) {
+    dcli_execute_flavour_if_exists(argv, flavours[i]);
+  }
 }

@@ -36,47 +36,20 @@
 
 /* wb.cpp -- graphical editor */
 
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/stat.h>
-
 #include "co_dcli.h"
 #include "co_string.h"
 
 int main(int argc, char* argv[])
 {
-  int i;
-  int found = 0;
-  char wmg[80];
-  pwr_tFileName file;
-
-  if (argc > 1) {
-    for (i = 1; i < argc; i++) {
-      if (streq(argv[i], "-f")) {
-        if (i + 1 >= argc) {
-          printf("sev_xtt: Syntax error\n");
-          exit(0);
-        }
-        found = 1;
-        strcpy(wmg, argv[i + 1]);
-        i++;
+  for (int i = 1; i < argc; i++) {
+    if (streq(argv[i], "-f")) {
+      if (i + 1 >= argc) {
+        printf("\nUsage: sev_xtt [-f windowmgr]");
+        exit(0);
       }
+      dcli_execute_flavour_if_exists(argv, argv[i + 1]);
     }
   }
-  if (!found) {
-    struct stat st;
 
-    strcpy(file, "$pwr_exe/sev_xtt_gtk");
-    dcli_translate_filename(file, file);
-    if (stat(file, &st) == 0)
-      strcpy(wmg, "gtk");
-    else
-      strcpy(wmg, "motif");
-  }
-
-  strcpy(file, argv[0]);
-  strcat(file, "_");
-  strcat(file, wmg);
-
-  execvp(file, argv);
+  dcli_execute_flavour(argv);
 }
