@@ -51,6 +51,7 @@ class XttTblQt : public XttTbl {
 public:
   XttTblQt(QWidget* a_parent_wid, void* a_parent_ctx, sevcli_tCtx a_sevcli,
       sevcli_sHistItem* itemlist, int item_cnt);
+  ~XttTblQt();
 
   XttTblQtWidget* toplevel;
   QWidget* brow_widget;

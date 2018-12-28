@@ -59,6 +59,8 @@ int main(int argc, char* argv[])
   unsigned int itemcnt;
   char servername[40] = "";
 
+  setDebug(1);
+
   // Get options
   for (int i = 1; i < argc; i++) {
     if (streq(argv[i], "-s") && i + 1 < argc) {
