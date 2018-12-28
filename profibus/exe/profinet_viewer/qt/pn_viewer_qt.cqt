@@ -51,16 +51,14 @@
 
 void PnViewerQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("PnViewerQtWidget::closeEvent\n");
   viewer->activate_close();
   QWidget::closeEvent(event);
 }
 
-PnViewerQt::PnViewerQt(void* v_parent_ctx, QWidget* v_parent_wid,
-    const char* v_name, const char* v_device, pwr_tStatus* status)
-    : PnViewer(v_parent_ctx, v_name, v_device, status)
+PnViewerQt::PnViewerQt(const char* v_name, const char* v_device,
+    pwr_tStatus* status) : PnViewer(NULL, v_name, v_device, status)
 {
-  toplevel = new PnViewerQtWidget(this, v_parent_wid);
+  toplevel = new PnViewerQtWidget(this);
   toplevel->setMinimumSize(800, 600);
   toplevel->setWindowTitle(fl(v_name));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
@@ -90,7 +88,7 @@ PnViewerQt::PnViewerQt(void* v_parent_ctx, QWidget* v_parent_wid,
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
       "zoom-out");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "",
-      "zoom-reset");
+      "zoom-original");
 
   // Help menu
   QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
@@ -107,7 +105,7 @@ PnViewerQt::PnViewerQt(void* v_parent_ctx, QWidget* v_parent_wid,
   value_recall = new CoWowRecall();
   cmd_entry = new CoWowEntryQt(value_recall);
   cmd_entry->setFixedHeight(25);
-  QObject::connect(cmd_entry, SIGNAL(editing_finished()), toplevel,
+  QObject::connect(cmd_entry, SIGNAL(returnPressed()), toplevel,
       SLOT(valchanged_cmd_entry()));
 
   statusbar->addWidget(msg_label);
@@ -154,6 +152,13 @@ PnViewerQt::PnViewerQt(void* v_parent_ctx, QWidget* v_parent_wid,
   cmd_entry->setVisible(false);
 
   wow = new CoWowQt(toplevel);
+}
+
+PnViewerQt::~PnViewerQt()
+{
+  if (viewernav) {
+    delete viewernav;
+  }
 }
 
 void PnViewerQt::message(char severity, const char* msg)

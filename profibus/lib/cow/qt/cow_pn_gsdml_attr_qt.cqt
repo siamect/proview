@@ -310,7 +310,7 @@ GsdmlAttrQt::GsdmlAttrQt(QWidget* a_parent_wid, void* a_parent_ctx,
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
       "zoom-out");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "",
-      "zoom-reset");
+      "zoom-original");
 
   // Help entry
   QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
@@ -335,7 +335,7 @@ GsdmlAttrQt::GsdmlAttrQt(QWidget* a_parent_wid, void* a_parent_ctx,
 
   cmd_entry = new CoWowEntryQt(&value_recall);
   cmd_entry->setFixedHeight(25);
-  QObject::connect(cmd_entry, SIGNAL(editing_finished()), toplevel,
+  QObject::connect(cmd_entry, SIGNAL(returnPressed()), toplevel,
       SLOT(valchanged_cmd_entry()));
 
   statusbar->addWidget(msg_label);

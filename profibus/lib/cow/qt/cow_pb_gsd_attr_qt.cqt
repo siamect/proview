@@ -255,7 +255,7 @@ GsdAttrQt::GsdAttrQt(QWidget* a_parent_wid, void* a_parent_ctx, void* a_object,
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
       "zoom-out");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "",
-      "zoom-reset");
+      "zoom-original");
 
   // Help entry
   QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));

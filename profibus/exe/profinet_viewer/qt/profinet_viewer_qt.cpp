@@ -49,54 +49,28 @@
 
 #include <QApplication>
 
-typedef struct {
-  QWidget* toplevel;
-  PnViewer* viewer;
-} tViewer;
-
-static void usage()
-{
-  printf("\nUsage: profinet_viewer [-l language] [device]\n");
-}
-
-static void viewer_close(void* c)
-{
-  debug_print("Shutting down...\n"); exit(0);
-}
-
 int main(int argc, char* argv[])
 {
   int i;
   int sts;
-  tViewer* ctx;
   char dev_name[20] = "eth1";
+
+  setDebug(1);
 
   QApplication app(argc, argv);
   QApplication::setStyle(new PwrStyle());
 
-  ctx = (tViewer*)calloc(1, sizeof(tViewer));
-
   setlocale(LC_NUMERIC, "POSIX");
   setlocale(LC_TIME, "en_US");
 
-  ctx->toplevel = new QWidget();
-  ctx->toplevel->setMinimumSize(100, 100);
-  ctx->toplevel->setWindowTitle(fl("Profinet Viewer"));
-  ctx->toplevel->setAttribute(Qt::WA_DeleteOnClose);
-
-  // Create help window
-  CoXHelpQt* xhelp
-      = new CoXHelpQt(ctx->toplevel, 0, xhelp_eUtility_Wtt, (int*)&sts);
-  CoXHelpQt::set_default(xhelp);
-
   for (i = 1; i < argc; i++) {
     if (streq(argv[i], "-h")) {
-      usage();
-      debug_print("Shutting down...\n"); exit(0);
+      printf("\nUsage: profinet_viewer [-l language] [device]\n");
+      exit(0);
     } else if (streq(argv[i], "-l")) {
       if (i + 1 >= argc) {
-        usage();
-        debug_print("Shutting down...\n"); exit(0);
+        printf("\nUsage: profinet_viewer [-l language] [device]\n");
+        exit(0);
       }
       Lng::set(argv[i + 1]);
       i++;
@@ -106,19 +80,20 @@ int main(int argc, char* argv[])
   }
 
   // Open window
+  PnViewerQt* viewer;
   try {
-    ctx->viewer
-        = new PnViewerQt(ctx, ctx->toplevel, "Profinet Viewer", dev_name, &sts);
-    ctx->viewer->close_cb = viewer_close;
+    viewer = new PnViewerQt("Profinet Viewer", dev_name, &sts);
   } catch (co_error& e) {
     printf("** Exception: %s\n", e.what().c_str());
     debug_print("Shutting down...\n"); exit(0);
   }
 
-  ctx->toplevel->show();
+  // Create help window
+  CoXHelpQt* xhelp = new CoXHelpQt(viewer->toplevel, 0, xhelp_eUtility_Wtt, (int*)&sts);
+  CoXHelpQt::set_default(xhelp);
 
   try {
-    ctx->viewer->update_devices();
+    viewer->update_devices();
   } catch (co_error& e) {
     printf("** Exception: %s\n", e.what().c_str());
   }
