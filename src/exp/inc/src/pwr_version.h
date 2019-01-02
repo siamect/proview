@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2018 SSAB EMEA AB.
+ * Copyright (C) 2005-2019 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -82,7 +82,7 @@
 #define pwrv_cPwrVersion SET_VERSION('V', 5, 6, 1)
 
 #define pwrv_cWbdbVersionShortStr "V56"
-#define pwrv_cPwrCopyright "Copyright (C) 2005-2018 SSAB EMEA AB"
+#define pwrv_cPwrCopyright "Copyright (C) 2005-2019 SSAB EMEA AB"
 
 #if (pwr_dHost_byteOrder == pwr_dLittleEndian)
 #define PWRV_VERSION_MAJOR (0xFF & (pwrv_cPwrVersion >> 8))
