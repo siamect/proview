@@ -39,10 +39,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#if defined PWRE_CONF_RSVG
-#include <rsvg.h>
-#endif
-
 #include <iostream>
 
 #include "cow_qt_helpers.h"
@@ -2322,25 +2318,10 @@ int GlowDrawQt::image_scale(int width, int height, glow_tImImage orig_im,
     *im = new QImage(((QImage*)orig_im)->scaled(width, height));
   } else {
 // Scale from orig_im
-
-#if defined PWRE_CONF_RSVG
-    if (im_data && *im_data && *im) {
-      RsvgHandle* handle;
-      const char* imagefile;
-
+    if (*im) {
       delete ((QImage*)*im);
-
-      handle = (RsvgHandle*)*im_data;
-      imagefile = rsvg_handle_get_base_uri(handle);
-      *im = rsvg_pixbuf_from_file_at_size(imagefile, width, height, NULL);
-    } else
-#endif
-    {
-      if (*im) {
-        delete ((QImage*)*im);
-      }
-      *im = new QImage(((QImage*)orig_im)->scaled(width, height));
     }
+    *im = new QImage(((QImage*)orig_im)->scaled(width, height));
   }
   return 1;
 }
@@ -2354,23 +2335,12 @@ int GlowDrawQt::image_load(char* imagefile, glow_tImImage* orig_im,
   if (*orig_im) {
     delete ((QImage*)*orig_im);
   }
-#if defined PWRE_CONF_RSVG
-  if (im_data && streq(strchr(imagefile, '.'), ".svg")) {
-    RsvgHandle* handle;
-
-    handle = rsvg_handle_new_from_file(imagefile, NULL);
-    *im_data = (glow_tImImage*)handle;
-    *orig_im = (glow_tImImage*)rsvg_pixbuf_from_file(imagefile, NULL);
-  } else
-#endif
-  {
-    *orig_im = new QImage(imagefile);
-    if (!*orig_im) {
-      if (im) {
-        *im = 0;
-      }
-      return 0;
+  *orig_im = new QImage(imagefile);
+  if (((QImage*)*orig_im)->isNull()) {
+    if (im) {
+      *im = 0;
     }
+    return 0;
   }
   if (im) {
     *im = new QImage(((QImage*)*orig_im)->copy());
