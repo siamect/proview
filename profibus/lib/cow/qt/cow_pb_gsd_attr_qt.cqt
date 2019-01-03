@@ -50,6 +50,8 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
+CoWowRecall GsdAttrQt::value_recall;
+
 void GsdAttrQt::message(char severity, const char* message)
 {
   msg_label->setText(fl(message));
@@ -69,7 +71,7 @@ void GsdAttrQt::set_prompt(const char* prompt)
 void GsdAttrQt::change_value()
 {
   if (input_open) {
-    cmd_input->setVisible(false);
+    cmd_entry->setVisible(false);
     set_prompt("");
     input_open = 0;
     return;
@@ -91,18 +93,18 @@ void GsdAttrQt::change_value()
     return;
   }
 
-  cmd_input->setVisible(true);
+  cmd_entry->setVisible(true);
 
   message(' ', "");
-  cmd_input->setFocus();
+  cmd_entry->setFocus();
 
   if (value) {
-    cmd_input->setText(fl(value));
+    cmd_entry->setText(fl(value));
 
     // Select the text
-    cmd_input->selectAll();
+    cmd_entry->selectAll();
   } else {
-    cmd_input->setText("");
+    cmd_entry->setText("");
   }
   set_prompt("value >");
   input_open = 1;
@@ -171,16 +173,16 @@ void GsdAttrQtWidget::activate_cmd_apply()
   attr->activate_cmd_apply();
 }
 
-void GsdAttrQtWidget::activate_cmd_input()
+void GsdAttrQtWidget::activate_cmd_entry()
 {
   attr->cmd_prompt->setVisible(false);
-  attr->cmd_input->setVisible(false);
+  attr->cmd_entry->setVisible(false);
 
   attr->attrnav->set_inputfocus();
 
   if (attr->input_open) {
-    attr->attrnav->set_attr_value(qPrintable(attr->cmd_input->text()));
-    attr->cmd_input->setVisible(false);
+    attr->attrnav->set_attr_value(qPrintable(attr->cmd_entry->text()));
+    attr->cmd_entry->setVisible(false);
     attr->set_prompt("");
     attr->input_open = 0;
   }
@@ -189,8 +191,8 @@ void GsdAttrQtWidget::activate_cmd_input()
 void GsdAttrQtWidget::focusInEvent(QFocusEvent* event)
 {
   if (!attr->focustimer.disabled()) {
-    if (attr->cmd_input->isVisible()) {
-      attr->cmd_input->setFocus();
+    if (attr->cmd_entry->isVisible()) {
+      attr->cmd_entry->setFocus();
     } else if (attr->attrnav) {
       attr->attrnav->set_inputfocus();
     }
@@ -274,14 +276,14 @@ GsdAttrQt::GsdAttrQt(QWidget* a_parent_wid, void* a_parent_ctx, void* a_object,
   cmd_prompt = new QLabel("value > ");
   cmd_prompt->setFixedHeight(25);
 
-  cmd_input = new QLineEdit();
-  cmd_input->setFixedHeight(25);
-  QObject::connect(cmd_input, SIGNAL(editingFinished()), toplevel,
-      SLOT(valchanged_cmd_input()));
+  cmd_entry = new CoWowEntryQt(&value_recall);
+  cmd_entry->setFixedHeight(25);
+  QObject::connect(cmd_entry, SIGNAL(returnPressed()), toplevel,
+      SLOT(valchanged_cmd_entry()));
 
   statusbar->addWidget(msg_label);
   statusbar->addWidget(cmd_prompt);
-  add_expanding(statusbar, cmd_input);
+  add_expanding(statusbar, cmd_entry);
 
   // Apply and Ok buttons
   QDialogButtonBox* buttons = new QDialogButtonBox();
@@ -306,7 +308,7 @@ GsdAttrQt::GsdAttrQt(QWidget* a_parent_wid, void* a_parent_ctx, void* a_object,
   toplevel->show();
 
   cmd_prompt->setVisible(false);
-  cmd_input->setVisible(false);
+  cmd_entry->setVisible(false);
 
   if (!edit_mode) {
     buttons->button(QDialogButtonBox::Ok)->setEnabled(false);

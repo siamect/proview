@@ -38,9 +38,9 @@
 
 #include "co_string.h"
 
-#include "cow_qt_helpers.h"
-
 #include "rt_pb_msg.h"
+
+#include "cow_qt_helpers.h"
 
 #include "cow_pn_gsdml_attr_qt.h"
 #include "cow_pn_gsdml_attrnav_qt.h"
@@ -60,6 +60,7 @@ void GsdmlAttrQt::message(char severity, const char* message)
 void GsdmlAttrQt::attr_help_text(const char* text)
 {
   help_text->setText(fl(text));
+  help_text->setVisible(strlen(text) > 0);
 }
 
 void GsdmlAttrQt::set_prompt(const char* prompt)
@@ -75,9 +76,6 @@ void GsdmlAttrQt::set_prompt(const char* prompt)
 
 void GsdmlAttrQt::change_value()
 {
-  int sts;
-  char* value;
-
   if (input_open) {
     cmd_entry->setVisible(false);
     set_prompt("");
@@ -90,7 +88,8 @@ void GsdmlAttrQt::change_value()
     return;
   }
 
-  sts = attrnav->check_attr_value(&value);
+  char* value;
+  int sts = attrnav->check_attr_value(&value);
   if (EVEN(sts)) {
     if (sts == PB__NOATTRSEL) {
       message('E', "No attribute is selected");
@@ -210,11 +209,6 @@ void GsdmlAttrQtWidget::activate_cmd_apply()
   attr->activate_cmd_apply();
 }
 
-void GsdmlAttrQtWidget::activate_cmd_ca()
-{
-  attr->activate_cmd_ca();
-}
-
 void GsdmlAttrQtWidget::activate_cmd_entry()
 {
   attr->cmd_prompt->setVisible(false);
@@ -247,9 +241,13 @@ void GsdmlAttrQtWidget::focusInEvent(QFocusEvent* event)
 
 void GsdmlAttrQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("GsdmlAttrQtWidget::closeEvent\n");
   attr->activate_exit();
   QWidget::closeEvent(event);
+}
+
+GsdmlAttrQt::~GsdmlAttrQt()
+{
+  delete attrnav;
 }
 
 GsdmlAttrQt::GsdmlAttrQt(QWidget* a_parent_wid, void* a_parent_ctx,
@@ -352,7 +350,7 @@ GsdmlAttrQt::GsdmlAttrQt(QWidget* a_parent_wid, void* a_parent_ctx,
   QObject::connect(buttons->button(QDialogButtonBox::Apply), SIGNAL(clicked()),
       toplevel, SLOT(activate_cmd_apply()));
   QObject::connect(buttons->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
-      toplevel, SLOT(activate_cmd_ca()));
+      toplevel, SLOT(close()));
 
   QVBoxLayout* vbox = new QVBoxLayout(toplevel);
   vbox->setMenuBar(menu_bar);
@@ -367,6 +365,7 @@ GsdmlAttrQt::GsdmlAttrQt(QWidget* a_parent_wid, void* a_parent_ctx,
 
   cmd_prompt->setVisible(false);
   cmd_entry->setVisible(false);
+  help_text->setVisible(false);
 
   if (!edit_mode) {
     buttons->button(QDialogButtonBox::Ok)->setEnabled(false);

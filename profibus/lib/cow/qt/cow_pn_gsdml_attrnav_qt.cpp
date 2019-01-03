@@ -48,7 +48,6 @@ GsdmlAttrNavQt::GsdmlAttrNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
     pwr_tStatus* status)
     : GsdmlAttrNav(xn_parent_ctx, xn_name, xn_gsdml, xn_edit_mode, status)
 {
-  debug_print("creating a scrolledbrowwidgetqt\n");
   form_widget = scrolledbrowwidgetqt_new(init_brow_cb, this, &brow_widget);
 
   *w = form_widget;
@@ -61,6 +60,7 @@ GsdmlAttrNavQt::GsdmlAttrNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
 GsdmlAttrNavQt::~GsdmlAttrNavQt()
 {
   delete trace_timerid;
+  delete wow;
   delete brow;
   form_widget->close();
 }

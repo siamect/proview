@@ -68,6 +68,7 @@ public:
   GsdmlAttrQt(QWidget* a_parent_wid, void* a_parent_ctx, void* a_object,
       pn_gsdml* a_gsdml, int a_edit_mode, const char* a_data_filename,
       pwr_tStatus* a_sts);
+  ~GsdmlAttrQt();
 
   void message(char severity, const char* message);
   void attr_help_text(const char* help_text);
@@ -108,7 +109,6 @@ public slots:
   void activate_cmd_entry();
   void activate_cmd_ok();
   void activate_cmd_apply();
-  void activate_cmd_ca();
 
   void valchanged_cmd_entry(){}
 

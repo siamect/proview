@@ -53,12 +53,13 @@ public:
   QWidget* form_widget;
   QLabel* msg_label;
   QLabel* cmd_prompt;
-  QLineEdit* cmd_input;
   QAction* menubutton_copy;
   QAction* menubutton_cut;
   QAction* menubutton_paste;
   QAction* menubutton_changevalue;
   CoWowFocusTimerQt focustimer;
+  static CoWowRecall value_recall;
+  CoWowEntryQt* cmd_entry;
 
   GsdAttrQt(QWidget* a_parent_wid, void* a_parent_ctx, void* a_object,
       pb_gsd* a_gsd, int a_edit_mode);
@@ -96,7 +97,7 @@ public slots:
   void activate_zoom_out();
   void activate_zoom_reset();
   void activate_print();
-  void activate_cmd_input();
+  void activate_cmd_entry();
   void activate_cmd_ok();
   void activate_cmd_apply();
 
