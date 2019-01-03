@@ -977,10 +977,12 @@ unsigned int dcli_random()
 void dcli_execute_flavour_if_exists(char* argv[], const char* flavour)
 {
   pwr_tFileName file;
-  if (argv[0][0] != '/') {
+  if (strchr(argv[0], '/')) {
+    strcpy(file, argv[0]);
+  } else {
     strcpy(file, "$pwr_exe/");
+    strcat(file, argv[0]);
   }
-  strcat(file, argv[0]);
   strcat(file, "_");
   strcat(file, flavour);
   dcli_translate_filename(file, file);
