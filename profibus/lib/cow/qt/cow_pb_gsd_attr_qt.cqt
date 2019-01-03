@@ -171,11 +171,6 @@ void GsdAttrQtWidget::activate_cmd_apply()
   attr->activate_cmd_apply();
 }
 
-void GsdAttrQtWidget::activate_cmd_ca()
-{
-  attr->activate_cmd_ca();
-}
-
 void GsdAttrQtWidget::activate_cmd_input()
 {
   attr->cmd_prompt->setVisible(false);
@@ -208,9 +203,13 @@ void GsdAttrQtWidget::focusInEvent(QFocusEvent* event)
 
 void GsdAttrQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("GsdAttrQtWidget::closeEvent\n");
   attr->activate_exit();
   QWidget::closeEvent(event);
+}
+
+GsdAttrQt::~GsdAttrQt()
+{
+  delete attrnav;
 }
 
 GsdAttrQt::GsdAttrQt(QWidget* a_parent_wid, void* a_parent_ctx, void* a_object,
@@ -277,7 +276,7 @@ GsdAttrQt::GsdAttrQt(QWidget* a_parent_wid, void* a_parent_ctx, void* a_object,
 
   cmd_input = new QLineEdit();
   cmd_input->setFixedHeight(25);
-  QObject::connect(cmd_input, SIGNAL(editing_finished()), toplevel,
+  QObject::connect(cmd_input, SIGNAL(editingFinished()), toplevel,
       SLOT(valchanged_cmd_input()));
 
   statusbar->addWidget(msg_label);
@@ -294,7 +293,7 @@ GsdAttrQt::GsdAttrQt(QWidget* a_parent_wid, void* a_parent_ctx, void* a_object,
   QObject::connect(buttons->button(QDialogButtonBox::Apply), SIGNAL(clicked()),
       toplevel, SLOT(activate_cmd_apply()));
   QObject::connect(buttons->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
-      toplevel, SLOT(activate_cmd_ca()));
+      toplevel, SLOT(close()));
 
   QVBoxLayout* vbox = new QVBoxLayout(toplevel);
   vbox->setMenuBar(menu_bar);

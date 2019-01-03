@@ -62,6 +62,7 @@ public:
 
   GsdAttrQt(QWidget* a_parent_wid, void* a_parent_ctx, void* a_object,
       pb_gsd* a_gsd, int a_edit_mode);
+  ~GsdAttrQt();
 
   void message(char severity, const char* message);
   void set_prompt(const char* prompt);
@@ -98,7 +99,6 @@ public slots:
   void activate_cmd_input();
   void activate_cmd_ok();
   void activate_cmd_apply();
-  void activate_cmd_ca();
 
   void valchanged_cmd_input(){}
 
