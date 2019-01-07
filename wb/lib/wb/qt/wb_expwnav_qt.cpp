@@ -46,7 +46,6 @@ WbExpWNavQt::WbExpWNavQt(void* l_parent_ctx, QWidget* l_parent_wid,
     ldh_tSession l_ldhses, int l_type, int l_editmode, QWidget** w)
     : WbExpWNav(l_parent_ctx, l_ldhses, l_type, l_editmode)
 {
-  debug_print("creating a scrolledbrowwidgetqt\n");
   form_widget
       = scrolledbrowwidgetqt_new(WbExpWNav::init_brow_cb, this, &brow_widget);
 
@@ -56,7 +55,6 @@ WbExpWNavQt::WbExpWNavQt(void* l_parent_ctx, QWidget* l_parent_wid,
 
 WbExpWNavQt::~WbExpWNavQt()
 {
-  debug_print("WbExpWNavQt::~WbExpWNavQt\n");
   delete brow;
   form_widget->close();
 }

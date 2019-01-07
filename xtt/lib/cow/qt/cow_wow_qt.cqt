@@ -749,7 +749,6 @@ CoWowModalDialogQt::CoWowModalDialogQt(QWidget* parent, const char* title,
 
 void CoWowModalDialogQt::destroy(bool destroyWindow, bool destroySubWindows)
 {
-  debug_print("Not shutting down...\n");
   setResult(wow_eModalDialogReturn_Deleted);
   QDialog::destroy(destroyWindow, destroySubWindows);
 }

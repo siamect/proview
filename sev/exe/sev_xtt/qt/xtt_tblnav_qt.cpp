@@ -47,7 +47,6 @@ TblNavQt::TblNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
     pwr_tStatus* status)
     : TblNav(xn_parent_ctx, xn_itemlist, xn_item_cnt, status)
 {
-  debug_print("creating a scrolledbrowwidgetqt\n");
   form_widget
       = scrolledbrowwidgetqt_new(TblNav::init_brow_cb, this, &brow_widget);
 

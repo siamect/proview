@@ -99,7 +99,6 @@ void WCrrQt::print()
 
 void WCrrQtWidget::closeEvent(QCloseEvent* event)
 {
-  debug_print("WCrrQtWidget::closeEvent\n");
   if (crr->close_cb) {
     (crr->close_cb)(crr->parent_ctx, crr);
   } else {
@@ -118,7 +117,6 @@ WCrrQt::WCrrQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
     int* xa_sts)
     : WCrr(xa_parent_ctx, xa_ldhses, xa_objar, xa_advanced_user, xa_sts)
 {
-  debug_print("\n");
   int sts;
   char* namep;
   int size;

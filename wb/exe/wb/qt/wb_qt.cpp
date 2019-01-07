@@ -81,7 +81,6 @@ int main(int argc, char* argv[])
   setDebug(1);
   if (argc >= 2 && streq(argv[1], "-m")) {
     wb_erep::printMethods();
-    debug_print("Shutting down...\n");
     exit(0);
   }
 
@@ -320,9 +319,4 @@ WbQt::WbQt(int argc, char* argv[]) : mainwindow(0)
     // Use timeout to get in on the top of the display
     QTimer::singleShot(100, wow->object, SLOT(DisplayWarranty()));
   }
-}
-
-WbQt::~WbQt()
-{
-  debug_print("Shutting down...\n");
 }

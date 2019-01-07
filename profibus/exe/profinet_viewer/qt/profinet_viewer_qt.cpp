@@ -85,7 +85,7 @@ int main(int argc, char* argv[])
     viewer = new PnViewerQt("Profinet Viewer", dev_name, &sts);
   } catch (co_error& e) {
     printf("** Exception: %s\n", e.what().c_str());
-    debug_print("Shutting down...\n"); exit(0);
+    exit(0);
   }
 
   // Create help window

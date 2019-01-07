@@ -51,7 +51,6 @@ void close_cb(void* ctx, void* xhelp)
 {
   ((CoXHelpQt*)xhelp)->toplevel->close();
   delete help;
-  debug_print("Shutting down...\n");
   exit(0);
 }
 

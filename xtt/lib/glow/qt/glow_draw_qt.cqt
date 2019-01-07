@@ -906,10 +906,8 @@ int GlowDrawQt::rect_helper(GlowWind* wind, int painter_type, int size, int x,
   }
 
   if (fill) {
-    // debug_print("fillRect [%d, %d, %d, %d] painter_type=%d, with color %s\n", x, y, width, height, painter_type, qPrintable(painter->brush().color().name()));
     painter->fillRect(x, y, width, height, painter->brush());
   } else {
-    // debug_print("drawRect [%d, %d, %d, %d]\n", x, y, width, height);
     painter->setBrush(Qt::NoBrush);
     painter->drawRect(x, y, width, height);
   }
@@ -955,7 +953,6 @@ int GlowDrawQt::arrow_helper(GlowWind* wind, int painter_type, int size, int x1,
 
   QPainterPath path;
   path.addPolygon(poly);
-  // debug_print("arrow (%d, %d) (%d, %d) (%d, %d)\n", x1, y1, x2, y2, x3, y3);
   painter->fillPath(path, painter->brush());
 
   return 1;
@@ -1008,10 +1005,8 @@ int GlowDrawQt::arc_helper(GlowWind* wind, int painter_type, int size, int x,
   }
 
   if (fill) {
-    // debug_print("pie [%d, %d, %d, %d], %d, %d\n", x, y, width, height, angle1, angle2);
     painter->drawPie(x, y, width, height, angle1 * 16, angle2 * 16);
   } else {
-    // debug_print("arc [%d, %d, %d, %d], %d, %d\n", x, y, width, height, angle1, angle2);
     painter->setBrush(Qt::NoBrush);
     painter->drawArc(x, y, width, height, angle1 * 16, angle2 * 16);
   }
@@ -1142,7 +1137,6 @@ int GlowDrawQt::line_helper(GlowWind* wind, int painter_type, int size, int x1,
     painter->setPen(pen);
   }
 
-  // debug_print("line (%d, %d) (%d, %d)\n", x1, y1, x2, y2);
   painter->drawLine(x1, y1, x2, y2);
 
   return 1;
@@ -1207,7 +1201,6 @@ int GlowDrawQt::polyline_helper(GlowWind* wind, int painter_type, int size,
     int cnt;
     unique_ptr<QPoint[]> qpoints = points_to_qt_points_curve(wind, points, point_cnt, &cnt);
     painter->setBrush(Qt::NoBrush);
-    // debug_print("polyline painter_type=%d, fill=%d, point_cnt=%d\n", painter_type, fill, point_cnt);
     painter->drawPolyline(qpoints.get(), cnt);
   }
 
@@ -1278,7 +1271,6 @@ int GlowDrawQt::text(GlowWind* wind, int x, int y, char* text, int len,
 
   QRect rect
       = painter->fontMetrics().boundingRect(QString::fromLocal8Bit(text, len));
-  // debug_print("text %s on %d,%d\n", text, x, y);
   painter->drawText(x, y, rect.width(), rect.height(), Qt::TextDontClip,
       QString::fromLocal8Bit(text, len));
 
@@ -1310,7 +1302,6 @@ int GlowDrawQt::text_cursor(GlowWind* wind, int x, int y, char* text, int len,
     set_clip(w, painter);
   }
 
-  // debug_print("cursor %d,%d to %d,%d\n", x + width, y + descent, x + width, y - height + descent);
   painter->drawLine(x + width, y + descent, x + width, y - height + descent);
 
   return 1;
@@ -1352,7 +1343,6 @@ int GlowDrawQt::text_erase(GlowWind* wind, int x, int y, char* text, int len,
 
   QRect rect
       = painter->fontMetrics().boundingRect(QString::fromLocal8Bit(text, len));
-  // debug_print("textErase %s on %d,%d\n", text, x, y);
   painter->drawText(x, y, rect.width(), rect.height(), Qt::TextDontClip,
       QString::fromLocal8Bit(text, len));
 
@@ -1410,7 +1400,6 @@ int GlowDrawQt::image_helper(GlowWind* wind, int x, int y, int width,
     set_clip(w, painter);
   }
 
-  // debug_print("image [%d, %d, %d, %d]\n", x, y, width, height);
   if (d) {
     painter->drawImage(QPoint(x, y), *((QImage*)image));
   } else {
@@ -1637,8 +1626,6 @@ void GlowDrawQt::copy_area(GlowWind* wind, int x, int y)
     window_height = ctx->navw.window_height;
   }
 
-  // debug_print("copy_area [%d, %d, %d, %d]\n", x, y, window_width, window_height);
-
   unique_ptr<QPainter> painterBuffer
       = get_painter(w->buffer, this, glow_eDrawType_Line, 3);
   if (x >= 0 && y >= 0) {
@@ -1690,8 +1677,6 @@ void GlowDrawQt::clear_area(
 
   unique_ptr<QPainter> painter = new QPainter(w->buffer);
   painter->setBackground(QBrush(background));
-
-  // debug_print("clear_area [%d, %d, %d, %d], color=%s\n", ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, qPrintable(painter->background().color().name()));
 
   painter->eraseRect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y);
 }
@@ -1779,8 +1764,6 @@ void GlowDrawQt::set_background(GlowWind* wind, glow_eDrawType drawtype,
     if (w->background_pixmap) {
       delete w->background_pixmap;
     }
-
-    // debug_print("set_background\n");
 
     w->background_pixmap = new QPixmap(QPixmap::fromImage(*((QImage*)image)));
     w->background_pixmap_width = pixmap_width;
@@ -2256,8 +2239,6 @@ void GlowDrawQt::image_copy(glow_tImImage orig_image, glow_tImImage* image)
     delete ((QImage*)*image);
   }
 
-  // debug_print("image_copy\n");
-
   *image = new QImage(((QImage*)orig_image)->copy());
 }
 
@@ -2269,8 +2250,6 @@ void GlowDrawQt::image_rotate(
   QTransform trans;
   trans.rotate(drot);
 
-  // debug_print("image_rotate\n");
-
   QImage* im = new QImage(((QImage*)*image)->transformed(trans));
   delete ((QImage*)*image);
   *image = (glow_tImImage)im;
@@ -2278,8 +2257,6 @@ void GlowDrawQt::image_rotate(
 
 void GlowDrawQt::image_flip_vertical(glow_tImImage* image)
 {
-  // debug_print("image_flip_vertical\n");
-
   QImage* im = new QImage(((QImage*)*image)->mirrored());
   delete ((QImage*)*image);
   *image = (glow_tImImage)im;
@@ -2287,8 +2264,6 @@ void GlowDrawQt::image_flip_vertical(glow_tImImage* image)
 
 void GlowDrawQt::image_flip_horizontal(glow_tImImage* image)
 {
-  // debug_print("image_flip_horizontal\n");
-
   QImage* im = new QImage(((QImage*)*image)->mirrored(true, false));
   delete ((QImage*)*image);
   *image = (glow_tImImage)im;
@@ -2298,8 +2273,6 @@ int GlowDrawQt::image_scale(int width, int height, glow_tImImage orig_im,
     glow_tImImage* im, glow_tImData* im_data, glow_tPixmap* im_pixmap,
     glow_tPixmap* im_mask)
 {
-  // debug_print("image_scale\n");
-
   if (width == ((QImage*)*im)->width() && height == ((QImage*)*im)->height()) {
     return 0;
   }
@@ -2371,8 +2344,6 @@ void GlowDrawQt::image_pixel_iter(glow_tImImage orig_image,
   int rgb_height;
   int rgb_width;
   int rowstride;
-
-  // debug_print("image_pixel_iter\n");
 
   if (orig_image) {
     if (image && *image != orig_image) {
@@ -2984,7 +2955,6 @@ int GlowDrawQt::text_qt(GlowWind* wind, int x, int y, char* text, int len,
     px = x;
     py = (int)(y - (1.0 - FONT_DESCENT) * height);
   }
-  // debug_print("textQt %s on %d,%d with color %s, painter_type=%d, color=%d\n", text, px, py, qPrintable(painter->pen().color().name()), painter_type, color);
   painter->drawText(px, py, rect.width(), rect.height(), Qt::TextDontClip, str);
 
   return 1;
@@ -3053,7 +3023,6 @@ int GlowDrawQt::text_erase_qt(GlowWind* wind, int x, int y, char* text, int len,
     set_clip(w, painter);
   }
 
-  // debug_print("textEraseQt %s on %d,%d\n", text, px, py);
   painter->fillRect(px, py, pw, ph, painter->brush());
 
   return 1;

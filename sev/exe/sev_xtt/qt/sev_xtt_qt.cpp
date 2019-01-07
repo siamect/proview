@@ -46,7 +46,6 @@
 
 void tbl_close_cb(void* tbl)
 {
-  debug_print("Shutting down...\n");
   exit(0);
 }
 
@@ -77,7 +76,6 @@ int main(int argc, char* argv[])
   sevcli_init(&sts, &sevcli);
   if (EVEN(sts)) {
     printf("Sev client init error %u\n", sts);
-    debug_print("Shutting down...\n");
     exit(0);
   }
 
@@ -88,7 +86,6 @@ int main(int argc, char* argv[])
   sevcli_get_itemlist(&sts, sevcli, &items, &itemcnt);
   if (EVEN(sts)) {
     printf("Sev client get itemlist error %u\n", sts);
-    debug_print("Shutting down...\n");
     exit(0);
   }
 

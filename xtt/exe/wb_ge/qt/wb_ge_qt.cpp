@@ -96,7 +96,7 @@ int main(int argc, char* argv[])
       if (streq(argv[i], "-l")) {
         if (i + 1 >= argc) {
           usage();
-          debug_print("Shutting down...\n"); exit(0);
+          exit(0);
         }
         Lng::set(argv[i + 1]);
         i++;

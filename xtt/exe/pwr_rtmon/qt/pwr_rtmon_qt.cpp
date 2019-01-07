@@ -66,7 +66,7 @@ static void rtmon_close_cb(void* ctx)
 {
   delete rtmon;
   delete xhelp;
-  debug_print("Shutting down...\n"); exit(0);
+  exit(0);
 }
 
 int main(int argc, char* argv[])
@@ -80,7 +80,7 @@ int main(int argc, char* argv[])
     fprintf(stderr, "%s ", argv[i]);
     if (streq(argv[i], "-h")) {
       usage();
-      debug_print("\nShutting down...\n"); exit(0);
+      exit(0);
     } else if (streq(argv[i], "--display") && i + 1 < argc) {
       strncpy(display, argv[i + 1], sizeof(display));
     }

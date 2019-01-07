@@ -158,7 +158,6 @@ void WGeQt::set_size(int width, int height)
 void WGeQt::set_subwindow_release()
 {
   subwindow_release = 1;
-  debug_print("Shutting down...\n");
   QApplication::exit();
 }
 
@@ -171,7 +170,6 @@ void WGeQtWidget::closeEvent(QCloseEvent* event)
 {
   if (ge->modal) {
     ge->terminated = 1;
-    debug_print("Shutting down...\n");
     QApplication::exit();
   } else {
     delete ge;
