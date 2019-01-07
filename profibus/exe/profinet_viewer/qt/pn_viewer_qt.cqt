@@ -97,14 +97,12 @@ PnViewerQt::PnViewerQt(const char* v_name, const char* v_device,
 
   // Statusbar and cmd input
   QStatusBar* statusbar = new QStatusBar();
+  statusbar->setFixedHeight(25);
   msg_label = new QLabel("");
-  msg_label->setFixedHeight(25);
   cmd_prompt = new QLabel("value > ");
-  cmd_prompt->setFixedHeight(25);
 
   value_recall = new CoWowRecall();
   cmd_entry = new CoWowEntryQt(value_recall);
-  cmd_entry->setFixedHeight(25);
   QObject::connect(cmd_entry, SIGNAL(returnPressed()), toplevel,
       SLOT(valchanged_cmd_entry()));
 

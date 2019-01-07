@@ -326,13 +326,11 @@ GsdmlAttrQt::GsdmlAttrQt(QWidget* a_parent_wid, void* a_parent_ctx,
 
   // Status bar and value input
   QStatusBar* statusbar = new QStatusBar();
+  statusbar->setFixedHeight(25);
   msg_label = new QLabel("");
-  msg_label->setFixedHeight(25);
   cmd_prompt = new QLabel("value > ");
-  cmd_prompt->setFixedHeight(25);
 
   cmd_entry = new CoWowEntryQt(&value_recall);
-  cmd_entry->setFixedHeight(25);
   QObject::connect(cmd_entry, SIGNAL(returnPressed()), toplevel,
       SLOT(valchanged_cmd_entry()));
 

@@ -1026,10 +1026,9 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
 
   // Statusbar and cmd input
   QStatusBar* statusbar = new QStatusBar();
+  statusbar->setFixedHeight(25);
   label = new QLabel("");
-  label->setFixedHeight(25);
   textinput = new QLineEdit();
-  textinput->setFixedHeight(25);
   QObject::connect(textinput, SIGNAL(returnPressed()), toplevel,
       SLOT(valchanged_textinput()));
 

@@ -1872,17 +1872,15 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
 
   // Statusbar and cmd input
   QStatusBar* statusbar = new QStatusBar();
+  statusbar->setFixedHeight(25);
   msg_label = new QLabel(fl(""));
-  msg_label->setFixedHeight(25);
   cmd_prompt = new QLabel(fl("value > "));
-  cmd_prompt->setFixedHeight(25);
 
   text_recall = new CoWowRecall();
   name_recall = new CoWowRecall();
   value_recall = new CoWowRecall();
   cmd_recall = new CoWowRecall();
   recall_entry = new CoWowEntryQt(cmd_recall);
-  recall_entry->setFixedHeight(25);
   cursor_position = new QLabel(fl(""));
   QObject::connect(recall_entry, SIGNAL(returnPressed()), toplevel,
       SLOT(valchanged_cmd_entry()));
