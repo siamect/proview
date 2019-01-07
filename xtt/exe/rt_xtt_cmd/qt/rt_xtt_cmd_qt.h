@@ -41,7 +41,7 @@
 
 class XttCmdQt : public XttCmd {
 public:
-  XttCmdQt(QWidget* w);
+  XttCmdQt();
   QWidget* brow_widget;
 };
 

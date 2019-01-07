@@ -52,12 +52,12 @@
 #include <QApplication>
 #include <QMainWindow>
 
-XttCmdQt::XttCmdQt(QWidget* w)
+XttCmdQt::XttCmdQt()
 {
   pwr_tStatus sts;
   pwr_tOName opplace = "";
 
-  xnav = new XNavQt(this, w, "Plant", &brow_widget, (xnav_sStartMenu*)root_menu,
+  xnav = new XNavQt(this, NULL, "Plant", &brow_widget, (xnav_sStartMenu*)root_menu,
       opplace, 0, &sts);
 
   xnav->message_cb = &message_cb;
@@ -67,9 +67,7 @@ XttCmdQt::XttCmdQt(QWidget* w)
 
 static int timeout_func()
 {
-  while (QApplication::hasPendingEvents()) {
-    QApplication::processEvents();
-  }
+  QApplication::processEvents();
   return 1;
 }
 
@@ -135,17 +133,13 @@ int main(int argc, char* argv[])
   strcpy(title, "Xtt Cmd");
 
   // Qt
-  QMainWindow* toplevel = new QMainWindow();
-  toplevel->setMinimumSize(400, 700);
-  toplevel->setWindowTitle(fl(title));
-  toplevel->setAttribute(Qt::WA_DeleteOnClose);
-
-  cmd = new XttCmdQt(toplevel);
-
-  toplevel->setCentralWidget(cmd->brow_widget);
-  toplevel->show();
+  cmd = new XttCmdQt();
+  cmd->brow_widget->setMinimumSize(400, 700);
+  cmd->brow_widget->setWindowTitle(fl(title));
+  cmd->brow_widget->setAttribute(Qt::WA_DeleteOnClose);
+  cmd->brow_widget->show();
   if (hide) {
-    toplevel->setVisible(false);
+    cmd->brow_widget->setVisible(false);
   }
 
   if (!quiet) {
@@ -195,8 +189,6 @@ GNU General Public License for more details.\n\n";
     str_trim(str, str);
     sts = cmd->xnav->command(str);
 
-    while (QApplication::hasPendingEvents()) {
-      QApplication::processEvents();
-    }
+    QApplication::processEvents();
   }
 }
